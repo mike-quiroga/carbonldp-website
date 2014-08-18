@@ -1,0 +1,9 @@
+direct_primary_hash=STAFFING_DPH, UserSpace1
+direct_secondary=STAFFING_DS, UserSpace1
+reverse_primary_hash=STAFFING_RPH, UserSpace1
+reverse_secondary=STAFFING_RS, UserSpace1
+long_strings=STAFFING_LS, UserSpace1
+basic_stats=STAFFING_BS, UserSpace1
+topk_stats=STAFFING_TKS, UserSpace1
+system_predicate=STAFFING_SP, UserSpace1
+data_type=STAFFING_DT, UserSpace1

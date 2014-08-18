@@ -1,0 +1,6 @@
+# List all containers (i.e. all triples whose object is ldp:Container)
+
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX  ldp: <http://www.w3.org/ns/ldp#>
+SELECT ?container
+WHERE { ?container a ldp:SimpleContainer } LIMIT 100

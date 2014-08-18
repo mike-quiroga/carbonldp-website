@@ -1,0 +1,5 @@
+# List all employees in the RDFSAMPL staffing store
+select ?employee ?name where {
+	?employee <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xyz.com/employee>.
+	?employee <http://xmlns.com/foaf/0.1/name> ?name .
+}

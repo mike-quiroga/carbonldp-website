@@ -1,0 +1,9 @@
+direct_primary_hash=PLATFORM_DPH, UserSpace1
+direct_secondary=PLATFORM_DS, UserSpace1
+reverse_primary_hash=PLATFORM_RPH, UserSpace1
+reverse_secondary=PLATFORM_RS, UserSpace1
+long_strings=PLATFORM_LS, UserSpace1
+basic_stats=PLATFORM_BS, UserSpace1
+topk_stats=PLATFORM_TKS, UserSpace1
+system_predicate=PLATFORM_SP, UserSpace1
+data_type=PLATFORM_DT, UserSpace1

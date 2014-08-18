@@ -1,0 +1,12 @@
+# Insert an example 'people' container in the virtual root 'main' container
+# See: http://www.w3.org/2012/ldp/wiki/Containers
+
+PREFIX  dcterms: <http://purl.org/dc/terms/>
+PREFIX  rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX  ldp: <http://www.w3.org/ns/ldp#>
+INSERT DATA
+{
+<http://base22.com/carbon/ldp/main-store/people/>
+   a ldp:SimpleContainer;
+   dcterms:title "Example People Container".
+}

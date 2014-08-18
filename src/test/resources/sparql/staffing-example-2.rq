@@ -1,0 +1,4 @@
+# List all types in the RDFSAMPL staffing store
+select ?subject ?isType where {
+	?subject <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> ?isType
+}

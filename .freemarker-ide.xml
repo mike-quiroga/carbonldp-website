@@ -1,0 +1,10 @@
+<config>
+	<context-values>
+		<resource
+			path="src/main/webapp/WEB-INF/freemarker/admin-cmd-message-stack.ftl">
+			<value key="msg" object-class="com.base22.carbon.model.HttpMessage" />
+		</resource>
+	</context-values>
+	<macro-library>
+	</macro-library>
+</config>

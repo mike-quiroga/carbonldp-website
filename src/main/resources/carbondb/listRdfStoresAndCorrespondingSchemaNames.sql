@@ -1,0 +1,1 @@
+SELECT storeName, schemaName FROM SYSTOOLS.RDFSTORES

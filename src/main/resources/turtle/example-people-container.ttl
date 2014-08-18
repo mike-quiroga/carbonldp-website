@@ -1,0 +1,11 @@
+# The following is the representation of a simple
+# container that you can modify and submit...
+# See: http://www.w3.org/2012/ldp/wiki/Containers
+
+@prefix dcterms: <http://purl.org/dc/terms/>.
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>.
+@prefix ldp: <http://www.w3.org/ns/ldp#>.
+
+<http://base22.com/carbon/main-store/people/>
+   a ldp:SimpleContainer;
+   dcterms:title "Example People Container".

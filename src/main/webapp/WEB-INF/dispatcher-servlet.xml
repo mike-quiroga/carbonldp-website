@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:security="http://www.springframework.org/schema/security"
+	xsi:schemaLocation="
+        http://www.springframework.org/schema/beans 
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context 
+        http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/aop
+        http://www.springframework.org/schema/aop/spring-aop.xsd
+        http://www.springframework.org/schema/mvc
+        http://www.springframework.org/schema/mvc/spring-mvc.xsd
+        http://www.springframework.org/schema/security
+		http://www.springframework.org/schema/security/spring-security-3.2.xsd
+        ">
+   
+  	<!-- === Security === -->
+	<import resource="classpath:com/base22/carbon/security/config/security-config.xml" />
+	<!-- === End: Security === -->
+   
+	<!--
+	*********************************************************************************************************
+	SCAN FOR COMPONENTS USING ANNOTATIONS
+	*********************************************************************************************************
+	-->
+	<context:component-scan base-package="com.base22.carbon" />
+	<context:annotation-config />
+	
+	<!--
+	To serve these resources with a 1-year future expiration to ensure maximum use of the browser cache 
+	and a reduction in HTTP requests made by the browser:
+	<mvc:resources mapping="/resources/**" location="/public-resources/" cache-period="31556926"/>
+	-->
+
+	<mvc:interceptors>
+  		<bean class="com.base22.carbon.interceptors.RequestInterceptor" />
+	</mvc:interceptors> 
+	
+	<mvc:annotation-driven content-negotiation-manager="contentNegotiationManager">
+		<mvc:message-converters register-defaults="false">
+			<bean class="org.springframework.http.converter.ByteArrayHttpMessageConverter" />
+			<bean class="org.springframework.http.converter.StringHttpMessageConverter" />
+			<bean class="org.springframework.http.converter.FormHttpMessageConverter" />
+			<bean class="com.base22.carbon.converters.WrapperForLDPNRMessageConverter"></bean>
+			<bean class="com.base22.carbon.converters.LDPRSourceMessageConverter"></bean>
+			<bean class="com.base22.carbon.converters.LDPResourceMessageConverter"></bean>
+			<bean class="com.base22.carbon.converters.ModelMessageConverter"></bean>
+		</mvc:message-converters>
+	</mvc:annotation-driven>
+	
+	<bean id="contentNegotiationManager" class="org.springframework.web.accept.ContentNegotiationManagerFactoryBean">
+		<property name="favorPathExtension" value="false" />
+	</bean>
+	
+	<!-- 
+	<mvc:resources location="/static/" mapping="/static/**"/>
+ 	-->
+
+	<!--
+	*********************************************************************************************************
+	CONFIGURE FREEMARKER AND THE ABILITY TO RESOLVE FREEMARKER VIEWS
+	*********************************************************************************************************
+	-->
+	<bean id="freemarkerConfig" class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer">
+		<property name="templateLoaderPath" value="/WEB-INF/views/" />
+		<property name="defaultEncoding" value="UTF-8" />
+		<!--
+		Instead of having to import the spring.ftl within each freemarker template like so:
+		<#import "/spring.ftl" as spring/>
+		We instead set it to happen automatically.
+		-->
+		<property name="freemarkerSettings">
+			<props>
+				<prop key="auto_import">spring.ftl as spring</prop>
+			</props>
+		</property>
+	</bean>
+
+	<bean id="viewResolver" class="org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver">
+		<!-- Set cache to true in PROD deployments -->
+		<property name="cache" value="false" />
+		<property name="prefix" value="" />
+		<property name="suffix" value=".ftl" />
+	</bean>
+	
+	<!-- === Internationalized Messages === -->
+	<bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
+    	<property name="basename" value="com.base22.carbon.nl.messages" />
+    	<property name="defaultEncoding" value="UTF-8" />
+	</bean>
+	<!-- === End: Internationalized Messages === -->
+
+	<!-- === Multipart Requests Resolver === -->
+	<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		
+	</bean>
+	<!-- === End: Multipart Requests Resolver === -->
+	
+</beans>

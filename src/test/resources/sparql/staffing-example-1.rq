@@ -1,0 +1,6 @@
+select ?member ?friendname where {
+	<http://xyz.com/project/robotX> <http://xyz.com/project/member> ?memberId .
+	?memberId <http://xmlns.com/foaf/0.1/name> ?member .
+	?memberId <http://xmlns.com/foaf/0.1/knows> ?friendId .
+	?friendId      <http://xmlns.com/foaf/0.1/name>  ?friendname
+}
