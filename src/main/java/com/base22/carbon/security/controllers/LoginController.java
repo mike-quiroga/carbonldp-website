@@ -33,14 +33,8 @@ public class LoginController {
 
 	static final Logger LOG = LoggerFactory.getLogger(LoginController.class);
 
-	@PreAuthorize("isAnonymous()")
-	@RequestMapping(value = "/user/login", method = RequestMethod.GET)
-	public String userLoginView(HttpServletRequest request, HttpServletResponse response) {
-		return "user.login";
-	}
-
 	@PreAuthorize("isAuthenticated()")
-	@RequestMapping(value = "auth/login", method = RequestMethod.POST)
+	@RequestMapping(value = "/auth/login", method = RequestMethod.POST)
 	public ResponseEntity<Object> authLogin(HttpServletRequest request, HttpServletResponse response) {
 		Authentication authenticationToken = SecurityContextHolder.getContext().getAuthentication();
 		if ( authenticationToken == null ) {

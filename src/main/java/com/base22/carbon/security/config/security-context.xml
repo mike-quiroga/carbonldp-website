@@ -43,45 +43,6 @@
 	</bean>
 	<!-- ====== End: Security Services ====== -->
 
-	<!-- ====== HTTP Authentication ====== -->
-	<bean id="httpAuthenticationEntryPoint" class="com.base22.carbon.security.entryPoints.HTTPAuthenticationEntryPoint" />
-	<bean id="httpAuthenticationProcessingFilter" class="org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter"
-		p:authenticationManager-ref="authenticationManager"
-		p:authenticationSuccessHandler-ref="httpAuthenticationSuccessHandler"
-		p:authenticationFailureHandler-ref="httpAuthenticationFailureHandler"
-	>
-	    <property name="usernameParameter" value="username" />
-	    <property name="passwordParameter" value="password" />
-	    <property name="requiresAuthenticationRequestMatcher">
-	    	<bean class="org.springframework.security.web.util.matcher.AntPathRequestMatcher">
-	    		<constructor-arg value="/user/check" />
-	    		<constructor-arg value="POST" />
-	    	</bean>
-	    </property>
-	</bean>
-	<bean id="httpAuthenticationSuccessHandler"
-          class="org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler">
-        <property name="defaultTargetUrl" value="/admin"/>
-        <property name="alwaysUseDefaultTargetUrl" value="true"/>
-    </bean>
-    <bean id="httpAuthenticationFailureHandler"
-          class="org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler">
-        <property name="defaultFailureUrl" value="/user/login?error=true" />
-    </bean>
-    <bean id="httpAuthenticationLogoutFilter" class="org.springframework.security.web.authentication.logout.LogoutFilter">
-    	<constructor-arg value="/user/login" />
-    	<constructor-arg>
-    		<bean class="org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler"></bean>
-    	</constructor-arg>
-    	<property name="logoutRequestMatcher">
-    		<bean class="org.springframework.security.web.util.matcher.AntPathRequestMatcher">
-	    		<constructor-arg value="/user/logout" />
-	    		<constructor-arg value="GET" />
-	    	</bean>
-    	</property>
-    </bean>
-	<!-- ====== End: HTTP Authentication ====== -->
-
 	<!-- ====== REST API Authentication ====== -->
 	<bean id="restAPIAuthenticationEntryPoint" class="com.base22.carbon.security.entryPoints.RestAPIAuthenticationEntryPoint" />
 	<bean id="restAPIcorsProcessingFilter" class="com.base22.carbon.security.filters.RestAPICorsProcessingFilter"></bean>
@@ -90,7 +51,7 @@
 		p:authenticationSuccessHandler-ref="restAPIAuthenticationSuccessHandler"
 		p:authenticationFailureHandler-ref="restAPIAuthenticationFailureHandler"
 	>
-		<constructor-arg value="/api/**" />
+		<constructor-arg value="/**" />
 	</bean>
 	<bean id="restAPIAuthenticationSuccessHandler" class="com.base22.carbon.security.handlers.RestAPIAuthenticationSuccessHandler"></bean>
     <bean id="restAPIAuthenticationFailureHandler" class="com.base22.carbon.security.handlers.RestAPIAuthenticationFailureHandler"></bean>
@@ -162,39 +123,33 @@
 		<security:authentication-provider ref="jdbcTokenAuthenticationProvider" />
 	</security:authentication-manager>
 	<!-- ====== End: Authentication Providers ====== -->
-
-	<security:http pattern="/user/**" use-expressions="true" auto-config="false" entry-point-ref="httpAuthenticationEntryPoint">
-		<security:intercept-url pattern="/user/login" access="isAnonymous()" />
-		<security:intercept-url pattern="/user/check" access="isAnonymous()" />
-		<security:intercept-url pattern="/user/logout" access="isAuthenticated()" />
-		<security:custom-filter position="FORM_LOGIN_FILTER" ref="httpAuthenticationProcessingFilter"/>
-		<security:custom-filter position="LOGOUT_FILTER" ref="httpAuthenticationLogoutFilter" />
-	</security:http>
+	
 	<security:http pattern="/auth/**" use-expressions="true" auto-config="false" create-session="stateless" entry-point-ref="restAPIBasicAuthenticationEntryPoint">
 		<security:intercept-url pattern="/auth/login" access="isAuthenticated()" />
 		<security:custom-filter ref="restAPIBasicAuthenticationProcessingFilter" position="BASIC_AUTH_FILTER" />
 		<security:custom-filter ref="restAPIAuthenticationProcessingFilter" position="FORM_LOGIN_FILTER" />
 	</security:http>
-	<security:http pattern="/admin/**" use-expressions="true" auto-config="false" disable-url-rewriting="true" entry-point-ref="httpAuthenticationEntryPoint">
-		<security:intercept-url pattern="/admin/**" access="hasAuthority('PRIV_ADMIN_PANEL')" />
-		<security:custom-filter position="FORM_LOGIN_FILTER" ref="httpAuthenticationProcessingFilter"/>
-	</security:http>
-	<security:http pattern="/apps/**" use-expressions="true" auto-config="false" disable-url-rewriting="true" entry-point-ref="httpAuthenticationEntryPoint">
-		<security:intercept-url pattern="/apps/**" access="hasAuthority('PRIV_APPS_PANEL')" />
-		<security:custom-filter position="FORM_LOGIN_FILTER" ref="httpAuthenticationProcessingFilter"/>
-	</security:http>
-	<security:http pattern="/api/**" use-expressions="true" auto-config="false" create-session="stateless" entry-point-ref="restAPIBasicAuthenticationEntryPoint">
+	
+	
+	<security:http pattern="/ldp/**" use-expressions="true" auto-config="false" create-session="stateless" entry-point-ref="restAPIBasicAuthenticationEntryPoint">
 		<security:custom-filter ref="restAPIcorsProcessingFilter" before="BASIC_AUTH_FILTER" />
 		<security:custom-filter ref="restAPIBasicAuthenticationProcessingFilter" position="BASIC_AUTH_FILTER" />
 		<security:custom-filter ref="restAPIAuthenticationProcessingFilter" position="FORM_LOGIN_FILTER" />
 		<security:custom-filter ref="restAPIApplicationContextFilter" position="LAST" />
 		
-		<security:intercept-url pattern="/api/ldp/**" access="hasAuthority('PRIV_USE_LDP_API')" />
-		<security:intercept-url pattern="/api/sparql" access="hasAuthority('PRIV_GLOBAL_SPARQL')" />
-		<security:intercept-url pattern="/api/applications" access="hasAuthority('PRIV_CREATE_APPLICATIONS')" />
-		<security:intercept-url pattern="/api/applications/**" access="hasAuthority('PRIV_USE_APPLICATIONS_API')" />
+		<security:intercept-url pattern="/ldp/**" access="hasAuthority('PRIV_USE_LDP_API')" />
 	</security:http>
 	
+	<security:http pattern="/applications/**" use-expressions="true" auto-config="false" create-session="stateless" entry-point-ref="restAPIBasicAuthenticationEntryPoint">
+		<security:custom-filter ref="restAPIcorsProcessingFilter" before="BASIC_AUTH_FILTER" />
+		<security:custom-filter ref="restAPIBasicAuthenticationProcessingFilter" position="BASIC_AUTH_FILTER" />
+		<security:custom-filter ref="restAPIAuthenticationProcessingFilter" position="FORM_LOGIN_FILTER" />
+		<security:custom-filter ref="restAPIApplicationContextFilter" position="LAST" />
+		
+		<security:intercept-url pattern="/applications" access="hasAuthority('PRIV_CREATE_APPLICATIONS')" />
+		<security:intercept-url pattern="/applications/**" access="hasAuthority('PRIV_USE_APPLICATIONS_API')" />
+	</security:http>
+		
 	<!-- ====== ACLs ====== -->
 	<!-- === ACL Expression Handler === -->
 	<bean id="expressionHandler" class="org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler">

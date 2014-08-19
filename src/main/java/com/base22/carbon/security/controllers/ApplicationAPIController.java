@@ -19,7 +19,7 @@ import com.base22.carbon.utils.HttpUtil;
 import com.hp.hpl.jena.rdf.model.Model;
 
 @Controller
-@RequestMapping(value = "/api/applications/{applicationIdentifer}")
+@RequestMapping(value = "/applications/{applicationIdentifer}")
 public class ApplicationAPIController {
 
 	@Autowired
@@ -47,7 +47,7 @@ public class ApplicationAPIController {
 		}
 	}
 
-	@RequestMapping(value = "/api/applications/{application}", method = RequestMethod.DELETE)
+	@RequestMapping(method = RequestMethod.DELETE)
 	public ResponseEntity<String> deleteApplication(@PathVariable("applicationIdentifer") String applicationIdentifier, HttpServletRequest request,
 			HttpServletResponse response) {
 		return new ResponseEntity<String>(HttpStatus.NOT_IMPLEMENTED);

@@ -21,7 +21,7 @@ public class PATCHController extends AbstractBaseRdfAPIController {
 	@Autowired
 	private PATCHRequestHandler requestHandler;
 
-	@RequestMapping(value = "/api/ldp/{dataset}/**", method = RequestMethod.PATCH)
+	@RequestMapping(value = "/ldp/{dataset}/**", method = RequestMethod.PATCH)
 	public ResponseEntity<Object> handlePatch(@PathVariable("dataset") String dataset, Model model, HttpServletRequest request, HttpServletResponse response,
 			HttpEntity<byte[]> entity) {
 

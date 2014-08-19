@@ -21,7 +21,7 @@ public class GETController extends AbstractBaseRdfAPIController {
 	@Autowired
 	private RetrieveRequestHandler retrieveHandler;
 
-	@RequestMapping(value = "/api/ldp/{application}/**", method = RequestMethod.GET)
+	@RequestMapping(value = "/ldp/{application}/**", method = RequestMethod.GET)
 	public ResponseEntity<Object> handleGET(@PathVariable("application") String applicationIdentifier, HttpServletRequest request,
 			HttpServletResponse response, HttpEntity<byte[]> entity) {
 

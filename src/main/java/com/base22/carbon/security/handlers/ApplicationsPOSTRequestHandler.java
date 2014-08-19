@@ -271,7 +271,7 @@ public class ApplicationsPOSTRequestHandler extends AbstractApplicationAPIReques
 		//@formatter:off
 		uriBuilder
 			.append(configurationService.getServerURL())
-			.append("/api/ldp/")
+			.append("/ldp/")
 			.append(requestApplication.getIdentifier())
 			.append("/")
 		;

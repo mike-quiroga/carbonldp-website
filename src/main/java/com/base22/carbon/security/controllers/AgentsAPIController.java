@@ -16,7 +16,7 @@ import com.base22.carbon.utils.HttpUtil;
 import com.hp.hpl.jena.rdf.model.Model;
 
 @Controller
-@RequestMapping(value = "/api/agents")
+@RequestMapping(value = "/agents")
 public class AgentsAPIController {
 
 	@Autowired

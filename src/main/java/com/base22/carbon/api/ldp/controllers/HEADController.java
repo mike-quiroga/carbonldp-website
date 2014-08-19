@@ -21,7 +21,7 @@ public class HEADController extends AbstractRequestHandler {
 	@Autowired
 	private RetrieveRequestHandler retrieveHandler;
 
-	@RequestMapping(value = "/api/ldp/{application}/**", method = RequestMethod.HEAD)
+	@RequestMapping(value = "/ldp/{application}/**", method = RequestMethod.HEAD)
 	public ResponseEntity<Object> handleHEAD(@PathVariable("application") String applicationIdentifier, HttpServletRequest request,
 			HttpServletResponse response, HttpEntity<byte[]> entity) {
 		if ( LOG.isTraceEnabled() ) {

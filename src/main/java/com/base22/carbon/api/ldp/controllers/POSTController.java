@@ -32,7 +32,7 @@ public class POSTController extends AbstractBaseRdfAPIController {
 	public static final String FILE_PARAMETER = "file";
 	public static final String FILE_NAME_PARAMETER = "name";
 
-	@RequestMapping(value = "/api/ldp/{application}/**", method = RequestMethod.POST, headers = "content-type!=multipart/form-data")
+	@RequestMapping(value = "/ldp/{application}/**", method = RequestMethod.POST, headers = "content-type!=multipart/form-data")
 	public ResponseEntity<Object> handleNonMultipartPost(@PathVariable("application") String applicationIdentifier, HttpServletRequest request,
 			HttpServletResponse response, HttpEntity<byte[]> entity) {
 
@@ -78,7 +78,7 @@ public class POSTController extends AbstractBaseRdfAPIController {
 
 	}
 
-	@RequestMapping(value = "/api/ldp/{application}/**", method = RequestMethod.POST, headers = "content-type=multipart/form-data")
+	@RequestMapping(value = "/ldp/{application}/**", method = RequestMethod.POST, headers = "content-type=multipart/form-data")
 	public ResponseEntity<Object> handleMultipartPost(@PathVariable("application") String applicationIdentifier,
 			@RequestParam(value = FILE_NAME_PARAMETER, required = false) String fileName,
 			@RequestParam(value = FILE_PARAMETER, required = false) MultipartFile file, HttpServletRequest request, HttpServletResponse response,

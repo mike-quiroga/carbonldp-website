@@ -19,7 +19,7 @@ import com.base22.carbon.utils.HttpUtil;
 import com.hp.hpl.jena.rdf.model.Model;
 
 @Controller
-@RequestMapping(value = "/api/applications/{appIdentifier}/roles/{appRoleUUID}")
+@RequestMapping(value = "/applications/{appIdentifier}/roles/{appRoleUUID}")
 public class ApplicationRoleAPIController {
 
 	@Autowired
