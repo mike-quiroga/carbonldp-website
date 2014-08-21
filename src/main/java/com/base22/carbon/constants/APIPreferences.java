@@ -169,4 +169,46 @@ public abstract class APIPreferences {
 			return null;
 		}
 	}
+
+	public static enum AuthenticationPreference {
+		//@formatter:off
+		COOKIE(
+			new PrefixedURI("cs", "Cookie")
+		);
+		//@formatter:on
+
+		private final PrefixedURI uri;
+		private final PrefixedURI[] uris;
+		private final Resource resource;
+
+		AuthenticationPreference(PrefixedURI... uris) {
+			this.uri = uris[0];
+			this.uris = uris;
+
+			this.resource = ResourceFactory.createResource(this.uri.getURI());
+		}
+
+		public PrefixedURI getPrefixedURI() {
+			return uri;
+		}
+
+		public PrefixedURI[] getPrefixedURIs() {
+			return this.uris;
+		}
+
+		public Resource getResource() {
+			return resource;
+		}
+
+		public static AuthenticationPreference findByURI(String uri) {
+			for (AuthenticationPreference preference : AuthenticationPreference.values()) {
+				for (PrefixedURI preferenceURI : preference.getPrefixedURIs()) {
+					if ( preferenceURI.getURI().equals(uri) || preferenceURI.getShortVersion().equals(uri) || preferenceURI.getResourceURI().equals(uri) ) {
+						return preference;
+					}
+				}
+			}
+			return null;
+		}
+	}
 }

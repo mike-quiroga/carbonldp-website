@@ -62,7 +62,7 @@
 		<constructor-arg ref="restAPIBasicAuthenticationEntryPoint" />
 	</bean>
 	<bean id="restAPIBasicAuthenticationEntryPoint"
-		class="org.springframework.security.web.authentication.www.BasicAuthenticationEntryPoint">
+		class="com.base22.carbon.security.entryPoints.BasicAuthenticationEntryPoint">
 		<property name="realmName" value="Carbon LDP"/>
 	</bean>
 	<!-- === End: Basic Authentication === -->
