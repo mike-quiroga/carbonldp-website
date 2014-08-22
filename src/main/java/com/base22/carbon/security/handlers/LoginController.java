@@ -1,4 +1,4 @@
-package com.base22.carbon.security.controllers;
+package com.base22.carbon.security.handlers;
 
 import java.util.Enumeration;
 import java.util.List;
