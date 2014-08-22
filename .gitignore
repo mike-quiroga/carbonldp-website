@@ -112,7 +112,6 @@ Session.vim
 # Eclipse
 # https://github.com/github/gitignore/blob/master/Global/Eclipse.gitignore
 *.pydevproject
-.project
 .metadata
 bin/**
 tmp/**
@@ -122,8 +121,6 @@ tmp/**/*
 *.swp
 *~.nib
 local.properties
-.classpath
-.settings/
 .loadpath
 /src/main/resources/rebel.xml
  

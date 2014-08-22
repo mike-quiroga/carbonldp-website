@@ -277,7 +277,7 @@
 		
 	</dependencies>
 	<build>
-		<finalName>carbon-ldp</finalName>
+		<finalName>api</finalName>
 	</build>
 	<organization>
 		<name>Base22, LLC.</name>
