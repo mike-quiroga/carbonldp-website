@@ -11,16 +11,15 @@ import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.token.Token;
 import org.springframework.security.core.token.TokenService;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.stereotype.Component;
 import org.springframework.web.util.CookieGenerator;
 
 import com.base22.carbon.constants.APIPreferences.AuthenticationPreference;
@@ -41,19 +40,18 @@ import com.hp.hpl.jena.rdf.model.Property;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.rdf.model.ResourceFactory;
 
-@Controller
-public class LoginController {
+@Component
+@Scope(proxyMode = ScopedProxyMode.TARGET_CLASS, value = "request")
+public class AuthLoginRequestHandler {
 
 	@Autowired
 	private ConfigurationService configurationService;
 	@Autowired
 	private TokenService tokenService;
 
-	static final Logger LOG = LoggerFactory.getLogger(LoginController.class);
+	static final Logger LOG = LoggerFactory.getLogger(AuthLoginRequestHandler.class);
 
-	@PreAuthorize("isAuthenticated()")
-	@RequestMapping(value = "/auth/login", method = RequestMethod.POST)
-	public ResponseEntity<Object> authLogin(HttpServletRequest request, HttpServletResponse response) {
+	public ResponseEntity<Object> handleRequest(HttpServletRequest request, HttpServletResponse response) throws CarbonException {
 		Authentication authenticationToken = SecurityContextHolder.getContext().getAuthentication();
 		if ( authenticationToken == null ) {
 			// TODO: FT
