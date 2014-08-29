@@ -88,10 +88,10 @@ public abstract class AbstractAPIRequestHandler {
 				throw new CarbonException(errorObject);
 			}
 
-			if ( ! matcher.match("/api/requests/*", resourceURI.replace(configurationService.getServerURL(), "")) ) {
+			if ( ! matcher.match("/requests/*", resourceURI.replace(configurationService.getServerURL(), "")) ) {
 				String friendlyMessage = "The entityBody of the request doesn't contain valid resources.";
-				String debugMessage = "Every request resource must follow the pattern /api/requests/{timestamp}.";
-				String entityBodyMessage = MessageFormat.format("The resource with URI: ''{0}'', doesn''t follow the pattern /api/requests/'{'timestamp'}'.",
+				String debugMessage = "Every request resource must follow the pattern /requests/{timestamp}.";
+				String entityBodyMessage = MessageFormat.format("The resource with URI: ''{0}'', doesn''t follow the pattern /requests/'{'timestamp'}'.",
 						resourceURI);
 
 				if ( LOG.isDebugEnabled() ) {

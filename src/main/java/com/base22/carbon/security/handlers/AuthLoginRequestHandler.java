@@ -108,7 +108,7 @@ public class AuthLoginRequestHandler {
 		//@formatter:off
 		uriBuilder
 			.append(configurationService.getServerURL())
-			.append("/api/responses/")
+			.append("/responses/")
 			.append(String.valueOf(DateTime.now().getMillis()))
 		;
 		//@formatter:on
