@@ -7,6 +7,10 @@ import java.util.Set;
 
 public abstract class Carbon {
 
+	public static final String DOMAIN = "carbonldp.com";
+	public static final String PROTOCOL = "http";
+	public static final String URL = PROTOCOL + "://" + DOMAIN;
+
 	public static final String EXTENDING_RESOURCE_SIGN = "#";
 	public static final String EXTENDING_RESOURCE_REGEX = "#";
 	public static final String SYSTEM_RESOURCE_SIGN = "#$";

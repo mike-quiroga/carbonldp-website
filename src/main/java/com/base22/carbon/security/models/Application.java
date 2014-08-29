@@ -15,8 +15,6 @@ import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.rdf.model.ResourceFactory;
 
 public class Application extends UUIDObject implements RDFRepresentable<RDFApplication> {
-	// TODO: Make this dynamic
-	public static final String BASE_URI = "http://carbonldp.com/api/applications/";
 
 	private UUID datasetUuid;
 	private String slug;
@@ -84,6 +82,8 @@ public class Application extends UUIDObject implements RDFRepresentable<RDFAppli
 	public void setApplicationRoles(HashSet<ApplicationRole> applicationRoles) {
 		this.applicationRoles = applicationRoles;
 	}
+
+	public static final String ENDPOINT = "/apps/";
 
 	public static enum Resources implements RDFResourceEnum {
 		//@formatter:off

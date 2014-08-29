@@ -21,8 +21,6 @@ import com.hp.hpl.jena.rdf.model.ResourceFactory;
 public class ApplicationRole extends UUIDObject implements GrantedAuthority, RDFRepresentable<RDFApplicationRole> {
 	private static final long serialVersionUID = 7497947873798339446L;
 
-	public static final String BASE_URI = "/roles/";
-
 	private String name;
 	private String description;
 
@@ -102,6 +100,8 @@ public class ApplicationRole extends UUIDObject implements GrantedAuthority, RDF
 		return builder.toString();
 	}
 
+	public static final String ENDPOINT = "/roles/";
+
 	public static enum Resources implements RDFResourceEnum {
 		//@formatter:off
 		CLASS(
@@ -165,10 +165,10 @@ public class ApplicationRole extends UUIDObject implements GrantedAuthority, RDF
 			new PrefixedURI("api", "parent")
 		),
 		APPLICATION(
-			new PrefixedURI("c", "application")
+			new PrefixedURI("cs", "application")
 		),
 		CHILD_ROLES(
-			new PrefixedURI("c", "hasChildRole")
+			new PrefixedURI("c", "child")
 		),
 		AGENTS(
 			new PrefixedURI("c", "hasAgent")

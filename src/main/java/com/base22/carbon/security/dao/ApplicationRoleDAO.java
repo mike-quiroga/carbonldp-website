@@ -35,12 +35,18 @@ public interface ApplicationRoleDAO {
 	@PostFilter("hasPermission(filterObject, 'READ'")
 	public List<ApplicationRole> getAllParentsOfApplicationRole(UUID applicationRoleUUID) throws CarbonException;
 
+	@PostFilter("hasPermission(filterObject, 'READ'")
+	public List<ApplicationRole> getChildrenOfApplicationRole(UUID applicationRoleUUID) throws CarbonException;
+
+	@PostFilter("hasPermission(filterObject, 'READ'")
+	public List<ApplicationRole> getAllChildrenOfApplicationRole(UUID applicationRoleUUID) throws CarbonException;
+
 	// TODO: Edit Methods
 	// TODO: Delete Methods
 
 	// --- Agent Related Methods
 
-	@PreAuthorize("hasPermission(#applicationRole, 'ADD_AGENT')")
+	@PreAuthorize("hasPermission(#applicationRole, 'ADD_AGENTS')")
 	public void addAgentToApplicationRole(ApplicationRole applicationRole, UUID agentUUID) throws CarbonException;
 
 	@PostFilter("hasPermission(filterObject, 'READ')")
@@ -49,7 +55,7 @@ public interface ApplicationRoleDAO {
 	@PostFilter("hasPermission(filterObject, 'READ'")
 	public List<ApplicationRole> getApplicationRolesOfAgent(UUID agentUUID, UUID applicationUUID) throws CarbonException;
 
-	@PreAuthorize("hasPermission(#applicationRole, 'REMOVE_AGENT')")
+	@PreAuthorize("hasPermission(#applicationRole, 'REMOVE_AGENTS')")
 	public void removeAgentFromApplicationRole(ApplicationRole applicationRole, UUID agentUUID) throws CarbonException;
 
 	// --- End: Agent Related Methods

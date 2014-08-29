@@ -58,6 +58,10 @@ public class JDBCApplicationDAO extends JdbcDAO implements ApplicationDAO {
 			application.setUuid(UUID.randomUUID());
 		}
 
+		if ( application.getSlug() == null ) {
+			application.setSlug(application.getUuidString());
+		}
+
 		// Prepare UUID
 		final String uuidString = AuthenticationUtil.minimizeUUID(application.getUuid());
 

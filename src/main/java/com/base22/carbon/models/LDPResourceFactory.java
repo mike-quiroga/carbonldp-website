@@ -105,7 +105,7 @@ public class LDPResourceFactory {
 				}
 			}
 
-			return (String[]) strings.toArray();
+			return strings.toArray(new String[strings.size()]);
 		}
 
 		@Override

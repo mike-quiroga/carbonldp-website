@@ -31,7 +31,7 @@ public class AuthAPIController {
 	static final Logger LOG = LoggerFactory.getLogger(AuthAPIController.class);
 
 	@PreAuthorize("isAuthenticated()")
-	@RequestMapping(value = "/login", method = RequestMethod.POST)
+	@RequestMapping(value = "/token", method = RequestMethod.GET)
 	public ResponseEntity<Object> getAuthToken(HttpServletRequest request, HttpServletResponse response) {
 
 		if ( LOG.isTraceEnabled() ) {

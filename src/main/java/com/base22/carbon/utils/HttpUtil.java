@@ -407,6 +407,7 @@ public abstract class HttpUtil {
 			builder.append(request.getRequestURI());
 			requestURL = builder.toString();
 		}
+
 		return requestURL;
 	}
 

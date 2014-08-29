@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import com.base22.carbon.constants.Carbon;
 import com.base22.carbon.exceptions.CarbonException;
 import com.base22.carbon.exceptions.FactoryException;
 import com.base22.carbon.models.LDPResource;
@@ -27,7 +28,7 @@ public class RDFApplicationFactory extends LDPResourceFactory implements RDFReso
 	public RDFApplication create(String resourceURI, Model model) throws CarbonException {
 		LDPResource ldpResource = super.create(resourceURI, model);
 		if ( ! isRDFApplication(ldpResource) ) {
-			throw new FactoryException("The resource isn't an ApplicationRole object.");
+			throw new FactoryException("The resource isn't an Application object.");
 		}
 		return new RDFApplicationImpl(ldpResource.getResource());
 	}
@@ -38,7 +39,8 @@ public class RDFApplicationFactory extends LDPResourceFactory implements RDFReso
 		StringBuilder uriBuilder = new StringBuilder();
 		//@formatter:off
 		uriBuilder
-			.append(Application.BASE_URI)
+			.append(Carbon.URL)
+			.append("/apps/")
 			.append(application.getUuidString())
 		;
 		//@formatter:on

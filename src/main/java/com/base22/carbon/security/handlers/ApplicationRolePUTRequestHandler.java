@@ -1,15 +1,10 @@
 package com.base22.carbon.security.handlers;
 
-import java.text.MessageFormat;
 import java.util.List;
-import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.http.HttpStatus;
@@ -18,41 +13,26 @@ import org.springframework.stereotype.Component;
 
 import com.base22.carbon.exceptions.CarbonException;
 import com.base22.carbon.models.ErrorResponse;
-import com.base22.carbon.security.dao.ApplicationRoleDAO;
 import com.base22.carbon.security.models.ACLSystemResource;
 import com.base22.carbon.security.models.ACLSystemResourceFactory;
 import com.base22.carbon.security.models.ApplicationRole;
 import com.base22.carbon.security.models.ApplicationRole.Properties;
 import com.base22.carbon.security.models.RDFApplicationRole;
 import com.base22.carbon.security.models.RDFApplicationRoleFactory;
-import com.base22.carbon.security.services.LDPPermissionService;
-import com.base22.carbon.security.services.PermissionService;
-import com.base22.carbon.security.utils.AuthenticationUtil;
-import com.base22.carbon.services.ConfigurationService;
 import com.base22.carbon.utils.HttpUtil;
 import com.hp.hpl.jena.rdf.model.Model;
 
 @Component
 @Scope(proxyMode = ScopedProxyMode.TARGET_CLASS, value = "request")
-public class ApplicationRolePUTRequestHandler {
-
-	@Autowired
-	private ApplicationRoleDAO applicationRoleDAO;
-	@Autowired
-	private ConfigurationService configurationService;
-
-	@Autowired
-	protected LDPPermissionService ldpPermissionService;
-	@Autowired
-	private PermissionService permissionService;
-
-	protected final Logger LOG = LoggerFactory.getLogger(this.getClass());
+public class ApplicationRolePUTRequestHandler extends AbstractApplicationRoleAPIRequestHandler {
 
 	public ResponseEntity<Object> replaceApplicationRole(String appIdentifier, String targetAppRoleUUID, Model requestModel, HttpServletRequest request,
 			HttpServletResponse response) throws CarbonException {
 
 		RDFApplicationRole requestRDFAppRole = getRequestRDFApplicationRole(requestModel, request);
 		ApplicationRole requestAppRole = getRequestApplicationRole(requestRDFAppRole);
+
+		// TODO: Take into account the application we are in
 		ApplicationRole targetAppRole = getTargetApplicationRole(targetAppRoleUUID);
 
 		if ( ! targetAppRoleExists(targetAppRole) ) {
@@ -70,48 +50,6 @@ public class ApplicationRolePUTRequestHandler {
 		// TODO: Apply ApplicationRole changes
 
 		return new ResponseEntity<Object>(HttpStatus.OK);
-	}
-
-	private ResponseEntity<Object> handleNonExistentAppRole(String targetAppRoleUUID, HttpServletRequest request, HttpServletResponse response) {
-		String friendlyMessage = "The application role specified wasn't found.";
-		String debugMessage = MessageFormat.format("The application role with UUID: ''{0}'', wasn''t found.", targetAppRoleUUID);
-
-		if ( LOG.isDebugEnabled() ) {
-			LOG.debug("xx handleNonExistentAppRole() > {}", debugMessage);
-		}
-
-		ErrorResponse errorObject = new ErrorResponse();
-		errorObject.setHttpStatus(HttpStatus.NOT_FOUND);
-		errorObject.setFriendlyMessage(friendlyMessage);
-		errorObject.setDebugMessage(debugMessage);
-
-		return HttpUtil.createErrorResponseEntity(errorObject);
-	}
-
-	private ApplicationRole getTargetApplicationRole(String uuidString) throws CarbonException {
-		if ( ! AuthenticationUtil.isUUIDString(uuidString) ) {
-			String friendlyMessage = "The request URL doesn't a valid UUID for the application role that will be modified.";
-
-			if ( LOG.isDebugEnabled() ) {
-				LOG.debug("xx getRequestApplicationRole() > {}", friendlyMessage);
-			}
-
-			ErrorResponse errorObject = new ErrorResponse();
-			errorObject.setHttpStatus(HttpStatus.BAD_REQUEST);
-			errorObject.setFriendlyMessage(friendlyMessage);
-
-			throw new CarbonException(errorObject);
-		}
-		UUID targetAppRoleUUID = AuthenticationUtil.restoreUUID(uuidString);
-
-		ApplicationRole targetAppRole = null;
-		try {
-			targetAppRole = applicationRoleDAO.findByUUID(targetAppRoleUUID);
-		} catch (CarbonException e) {
-			e.getErrorObject().setHttpStatus(HttpStatus.INTERNAL_SERVER_ERROR);
-			throw e;
-		}
-		return targetAppRole;
 	}
 
 	private ApplicationRole getRequestApplicationRole(RDFApplicationRole requestRDFAppRole) throws CarbonException {
@@ -133,10 +71,6 @@ public class ApplicationRolePUTRequestHandler {
 		}
 
 		return requestRDFAppRole;
-	}
-
-	private boolean targetAppRoleExists(ApplicationRole targetAppRole) {
-		return targetAppRole != null;
 	}
 
 	private void validateAppRoleChanges(ApplicationRole targetAppRole, ApplicationRole requestAppRole) throws CarbonException {

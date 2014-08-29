@@ -221,9 +221,6 @@ public class Agent extends UUIDObject implements UserDetails, CredentialsContain
 		this.localDescriptions = localDescriptions;
 	}
 
-	// TODO: Make this dynamic
-	public static final String BASE_URI = "http://carbonldp.com/api/agents/";
-
 	public static enum Resources implements RDFResourceEnum {
 		//@formatter:off
 		CLASS(

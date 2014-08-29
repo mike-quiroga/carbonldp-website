@@ -19,7 +19,7 @@ public class PUTController extends AbstractBaseRdfAPIController {
 	@Autowired
 	private PUTRequestHandler requestHandler;
 
-	@RequestMapping(value = "/ldp/{application}/**", method = RequestMethod.PUT)
+	@RequestMapping(value = { "/apps/{application}/", "/apps/{application}/**" }, method = RequestMethod.PUT)
 	public ResponseEntity<Object> handlePut(@PathVariable("application") String applicationIdentifier, HttpServletRequest request,
 			HttpServletResponse response, HttpEntity<byte[]> entity) {
 

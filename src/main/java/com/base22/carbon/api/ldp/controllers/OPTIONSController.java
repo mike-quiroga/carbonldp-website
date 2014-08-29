@@ -22,7 +22,7 @@ public class OPTIONSController extends AbstractBaseRdfAPIController {
 	@Autowired
 	private OPTIONSRequestHandler requestHandler;
 
-	@RequestMapping(value = "/ldp/{application}/**", method = RequestMethod.OPTIONS)
+	@RequestMapping(value = { "/apps/{application}/", "/apps/{application}/**" }, method = RequestMethod.OPTIONS)
 	public ResponseEntity<Object> handleOptions(@PathVariable("application") String applicationIdentifier, Model model, HttpServletRequest request,
 			HttpServletResponse response, HttpEntity<byte[]> entity) {
 

@@ -379,6 +379,27 @@ public class JDBCApplicationRoleDAO extends JdbcDAO implements ApplicationRoleDA
 						.append("ON T1._").append(UUID_FIELD).append(" = T2.").append(UUID_FIELD)
 						.append(" ORDER BY T1.lvl DESC")
 					 ;
+					/*
+					
+						SELECT 
+							HEX(T2.uuid) AS hex_uuid, 
+						    HEX(T2.parent_uuid) AS parent_hex_uuid, 
+						    HEX(T2.application_uuid) AS application_hex_uuid, 
+						    T2.name, 
+						    T2.description, 
+						    T1.lvl 
+						FROM ( 
+						    SELECT @r AS _uuid, (
+						        SELECT @r := parent_uuid 
+						        FROM application_roles 
+						        WHERE uuid = _uuid
+						    ) AS parent_uuid, @l := @l + 1 AS lvl FROM ( 
+						        SELECT @r := UNHEX(?), @l := 0 
+						    ) vars, application_roles h WHERE @r IS NOT NULL 
+						) T1 JOIN application_roles T2 ON T1._uuid = T2.uuid ORDER BY T1.lvl DESC
+					
+					 */
+					
 					//@formatter:on
 					return sqlBuilder;
 				}
@@ -413,6 +434,92 @@ public class JDBCApplicationRoleDAO extends JdbcDAO implements ApplicationRoleDA
 		}
 
 		return parentRoles;
+	}
+
+	public List<ApplicationRole> getChildrenOfApplicationRole(UUID applicationRoleUUID) throws CarbonException {
+		List<ApplicationRole> roles = null;
+
+		final String uuidString = AuthenticationUtil.minimizeUUID(applicationRoleUUID);
+
+		JDBCQueryTransactionTemplate template = new JDBCQueryTransactionTemplate();
+		try {
+			//@formatter:off
+			roles = template.execute(securityJDBCDataSource, new JDBCQueryTransactionCallback<List<ApplicationRole>>() {
+				//@formatter:off
+				@Override
+				public StringBuilder prepareSQLQuery(StringBuilder sqlBuilder) {
+					//@formatter:off
+					sqlBuilder
+						.append("SELECT *, HEX(")
+					 			.append(UUID_FIELD)
+					 		.append(") AS ").append(HEX_UUID_FIELD)
+					 		.append(", HEX(")
+					 			.append(PARENT_UUID_FIELD)
+					 		.append(") AS ").append(PARENT_HEX_UUID_FIELD)
+					 		.append(", HEX(")
+					 			.append(JDBCApplicationDAO.EXTERNAL_ID_FIELD)
+					 		.append(") AS ").append(JDBCApplicationDAO.EXTERNAL_HEX_ID_FIELD)
+						.append(" FROM ")
+							.append(TABLE)
+						.append(" WHERE ")
+							.append(PARENT_UUID_FIELD)
+						.append(" = UNHEX(?)")
+					;
+					//@formatter:on
+					return sqlBuilder;
+				}
+
+				@Override
+				public PreparedStatement prepareStatement(PreparedStatement statement) throws SQLException {
+					statement.setString(1, uuidString);
+					return statement;
+				}
+
+				@Override
+				public List<ApplicationRole> interpretResultSet(ResultSet resultSet) throws SQLException {
+					List<ApplicationRole> roles = null;
+
+					roles = populateApplicationRoles(resultSet);
+
+					return roles;
+				}
+
+			});
+		} catch (JDBCTransactionException e) {
+			if ( LOG.isErrorEnabled() ) {
+				LOG.error("<< getChildrenOfApplicationRole() > There was a problem while trying to find the children of the applicationRole with UUID: '{}'.",
+						applicationRoleUUID.toString());
+			}
+			throw e;
+		}
+
+		return roles;
+	}
+
+	public List<ApplicationRole> getAllChildrenOfApplicationRole(UUID applicationRoleUUID) throws CarbonException {
+		List<ApplicationRole> children = new ArrayList<ApplicationRole>();
+		List<ApplicationRole> firstChildren = null;
+		try {
+			firstChildren = getChildrenOfApplicationRole(applicationRoleUUID);
+		} catch (CarbonException e) {
+			// TODO: FT
+			throw e;
+		}
+
+		children.addAll(firstChildren);
+
+		for (ApplicationRole firstChild : firstChildren) {
+			List<ApplicationRole> nodeChildren = null;
+			try {
+				nodeChildren = getChildrenOfApplicationRole(firstChild.getUuid());
+			} catch (CarbonException e) {
+				// TODO: FT
+				throw e;
+			}
+			children.addAll(nodeChildren);
+		}
+
+		return children;
 	}
 
 	public void addAgentToApplicationRole(ApplicationRole applicationRole, UUID agentUUID) throws CarbonException {

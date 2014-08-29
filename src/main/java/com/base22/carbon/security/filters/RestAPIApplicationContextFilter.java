@@ -149,8 +149,8 @@ public class RestAPIApplicationContextFilter extends GenericFilterBean {
 		String applicationIdentifier = null;
 
 		String[] uriSegments = uri.split("/");
-		if ( uriSegments.length >= 4 ) {
-			applicationIdentifier = uriSegments[3];
+		if ( uriSegments.length >= 3 ) {
+			applicationIdentifier = uriSegments[2];
 		}
 
 		return applicationIdentifier;

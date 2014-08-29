@@ -20,7 +20,7 @@ public class DELETEController extends AbstractBaseRdfAPIController {
 	@Autowired
 	private DELETERequestHandler requestHandler;
 
-	@RequestMapping(value = "/ldp/{application}/**", method = RequestMethod.DELETE)
+	@RequestMapping(value = "/apps/{application}/**", method = RequestMethod.DELETE)
 	public ResponseEntity<Object> handleDelete(@PathVariable("application") String applicationIdentifier, HttpServletRequest request,
 			HttpServletResponse response) {
 

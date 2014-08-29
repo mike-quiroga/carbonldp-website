@@ -15,10 +15,6 @@ import com.github.jsonldjava.jena.JenaJSONLD;
 public class ConfigurationService {
 	static final Logger LOG = LoggerFactory.getLogger(ConfigurationService.class);
 
-	private final String DOMAIN = "carbonldp.com";
-	private final String PROTOCOL = "http";
-	private final String URL = PROTOCOL + "://" + DOMAIN;
-
 	private final String uploadsPath = "/opt/carbon/uploads/";
 
 	private final String APPLICATION_ROLE_DEFAULT_NAME = "Application Administrators";
@@ -90,11 +86,11 @@ public class ConfigurationService {
 	}
 
 	public String getServerDomain() {
-		return DOMAIN;
+		return Carbon.DOMAIN;
 	}
 
 	public String getServerURL() {
-		return this.URL;
+		return Carbon.URL;
 	}
 
 	public int getTokenCookieLifeInMinutes() {

@@ -239,9 +239,14 @@ public class JDBCAgentLoginDetailsDAO extends JdbcDAO implements AgentLoginDetai
 
 				@Override
 				public Agent interpretResultSet(ResultSet resultSet) throws SQLException {
+					List<Agent> agents = null;
 					Agent agent = null;
 
-					agent = populateAgentWithLoginDetails(resultSet);
+					agents = populateAgentWithLoginDetails(resultSet);
+
+					if ( ! agents.isEmpty() ) {
+						agent = agents.get(0);
+					}
 
 					return agent;
 				}
@@ -313,9 +318,14 @@ public class JDBCAgentLoginDetailsDAO extends JdbcDAO implements AgentLoginDetai
 
 				@Override
 				public Agent interpretResultSet(ResultSet resultSet) throws SQLException {
+					List<Agent> agents = null;
 					Agent agent = null;
 
-					agent = populateAgentWithLoginDetails(resultSet);
+					agents = populateAgentWithLoginDetails(resultSet);
+
+					if ( ! agents.isEmpty() ) {
+						agent = agents.get(0);
+					}
 
 					return agent;
 				}
@@ -370,9 +380,14 @@ public class JDBCAgentLoginDetailsDAO extends JdbcDAO implements AgentLoginDetai
 
 				@Override
 				public Agent interpretResultSet(ResultSet resultSet) throws SQLException {
+					List<Agent> agents = null;
 					Agent agent = null;
 
-					agent = populateAgentWithLoginDetails(resultSet);
+					agents = populateAgentWithLoginDetails(resultSet);
+
+					if ( ! agents.isEmpty() ) {
+						agent = agents.get(0);
+					}
 
 					return agent;
 				}
@@ -386,6 +401,82 @@ public class JDBCAgentLoginDetailsDAO extends JdbcDAO implements AgentLoginDetai
 		}
 
 		return agent;
+	}
+
+	public List<Agent> getByEmails(final String[] agentsEmails) throws CarbonException {
+		List<Agent> agents = null;
+
+		JDBCQueryTransactionTemplate template = new JDBCQueryTransactionTemplate();
+		try {
+			//@formatter:off
+			agents = template.execute(securityJDBCDataSource, new JDBCQueryTransactionCallback<List<Agent>>() {
+				//@formatter:off
+				@Override
+				public StringBuilder prepareSQLQuery(StringBuilder sqlBuilder) {
+					//@formatter:off
+					sqlBuilder
+						.append("SELECT ").append(TABLE).append(".*, HEX(")
+							.append(TABLE).append(".").append(UUID_FIELD)
+						.append(") AS ")
+							.append(HEX_UUID_FIELD)
+						.append(", ").append(EMAILS_TABLE).append(".").append(EMAIL_INDEX_FIELD)
+						.append(", ").append(EMAILS_TABLE).append(".").append(EMAIL_FIELD)
+						.append(" FROM ")
+							.append(TABLE)
+						.append(" LEFT JOIN ").append(EMAILS_TABLE)
+						.append(" ON ").append(TABLE).append(".").append(UUID_FIELD).append(" = ").append(EMAILS_TABLE).append(".").append(EXTERNAL_ID_FIELD)
+						
+						.append(" WHERE EXISTS (")
+							.append(" SELECT 1 FROM ").append(EMAILS_TABLE)
+							.append(" WHERE ").append(TABLE).append(".").append(UUID_FIELD).append(" = ").append(EXTERNAL_ID_FIELD).append(" AND ").append(EMAIL_FIELD).append(" IN (").append(preparePlaceHolders(agentsEmails.length)).append(")")
+						.append(" )")
+						
+						.append(" ORDER BY ")
+							.append(TABLE).append(".").append(UUID_FIELD).append(" ASC,")
+							.append(EMAILS_TABLE).append(".").append(EMAIL_INDEX_FIELD).append(" ASC")
+					;
+					/*
+					
+						SELECT agents.*, agent_emails.index, agent_emails.email
+						FROM agents
+						LEFT JOIN agent_emails
+						ON agents.uuid = agent_emails.agent_uuid
+						WHERE EXISTS ( 
+						    SELECT 1 FROM agent_emails 
+						    WHERE agents.uuid = agent_uuid AND email IN ("b@b.com", "d@d.com", "something@else.com")
+						)
+						ORDER BY agents.uuid, agent_emails.index
+					
+					 */
+					//@formatter:on
+					return sqlBuilder;
+				}
+
+				@Override
+				public PreparedStatement prepareStatement(PreparedStatement statement) throws SQLException {
+					setStringsInStatement(statement, agentsEmails);
+					return statement;
+				}
+
+				@Override
+				public List<Agent> interpretResultSet(ResultSet resultSet) throws SQLException {
+					List<Agent> agents = null;
+
+					agents = populateAgentWithLoginDetails(resultSet);
+
+					return agents;
+				}
+
+			});
+		} catch (JDBCTransactionException e) {
+			if ( LOG.isErrorEnabled() ) {
+				LOG.error("<< getByEmails() > There was a problem while trying to get the agents.");
+			}
+			throw e;
+		}
+
+		return agents;
+
 	}
 
 	public boolean agentEmailExists(final String email) throws CarbonException {
@@ -428,11 +519,11 @@ public class JDBCAgentLoginDetailsDAO extends JdbcDAO implements AgentLoginDetai
 		return exists;
 	}
 
-	private Agent populateAgentWithLoginDetails(ResultSet resultSet) throws SQLException {
-		Agent agent = null;
-		List<String> emails = new ArrayList<String>();
+	private List<Agent> populateAgentWithLoginDetails(ResultSet resultSet) throws SQLException {
+		List<Agent> agents = new ArrayList<Agent>();
 
-		if ( resultSet.next() ) {
+		boolean hasNextAgent = resultSet.next();
+		while (hasNextAgent) {
 			String uuidString = resultSet.getString(HEX_UUID_FIELD);
 			String fullName = resultSet.getString(NAME_FIELD);
 			String password = resultSet.getString(PASSWORD_FIELD);
@@ -442,7 +533,7 @@ public class JDBCAgentLoginDetailsDAO extends JdbcDAO implements AgentLoginDetai
 
 			String email = resultSet.getString(EMAIL_FIELD);
 
-			agent = new Agent();
+			Agent agent = new Agent();
 			agent.setUuid(uuidString);
 			agent.setFullName(fullName);
 			agent.setPassword(password);
@@ -450,18 +541,30 @@ public class JDBCAgentLoginDetailsDAO extends JdbcDAO implements AgentLoginDetai
 			agent.setSalt(salt);
 			agent.setEnabled(enabled);
 
+			List<String> emails = new ArrayList<String>();
 			emails.add(email);
 
 			// Add the other emails (if any)
-			while (resultSet.next()) {
-				email = resultSet.getString(EMAIL_FIELD);
-				emails.add(email);
-			}
+			boolean hasNextEmail = resultSet.next();
+			hasNextAgent = hasNextEmail;
 
+			while (hasNextEmail) {
+				String nextUUIDString = resultSet.getString(HEX_UUID_FIELD);
+				if ( uuidString.equals(nextUUIDString) ) {
+					email = resultSet.getString(EMAIL_FIELD);
+					emails.add(email);
+
+					hasNextEmail = resultSet.next();
+					hasNextAgent = hasNextEmail;
+
+				} else {
+					hasNextEmail = false;
+				}
+			}
 			agent.setEmails(emails);
+			agents.add(agent);
 		}
 
-		return agent;
+		return agents;
 	}
-
 }

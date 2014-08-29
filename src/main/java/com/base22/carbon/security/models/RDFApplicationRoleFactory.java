@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import com.base22.carbon.constants.Carbon;
 import com.base22.carbon.exceptions.CarbonException;
 import com.base22.carbon.exceptions.FactoryException;
 import com.base22.carbon.models.LDPResource;
@@ -38,9 +39,10 @@ public class RDFApplicationRoleFactory extends LDPResourceFactory {
 		StringBuilder uriBuilder = new StringBuilder();
 		//@formatter:off
 		uriBuilder
-			.append(Application.BASE_URI)
+			.append(Carbon.DOMAIN)
+			.append(Application.ENDPOINT)
 			.append(applicationRole.getApplicationUUID().toString())
-			.append(ApplicationRole.BASE_URI)
+			.append(ApplicationRole.ENDPOINT)
 			.append(applicationRole.getUuidString())
 		;
 		//@formatter:on
