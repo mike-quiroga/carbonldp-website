@@ -37,6 +37,15 @@ public class ApplicationRolesPOSTRequestHandler extends AbstractApplicationAPIRe
 
 		validateApplicationRole(appRole);
 
+		if ( slugWasProvided(appRole) ) {
+			sluggifyProvidedSlug(appRole);
+		} else {
+			createAppRoleSlug(appRole);
+		}
+		if ( slugIsAlreadyInUse(appRole, application) ) {
+			return handleSlugAlreadyRegistred(appRole, request, response);
+		}
+
 		ApplicationRole parentRole = getParentApplicationRole(appRole.getParentUUID());
 
 		if ( ! parentRoleExists(parentRole) ) {
@@ -56,6 +65,43 @@ public class ApplicationRolesPOSTRequestHandler extends AbstractApplicationAPIRe
 		}
 
 		return new ResponseEntity<Object>(appRole.createRDFRepresentation(), HttpStatus.CREATED);
+	}
+
+	private ResponseEntity<Object> handleSlugAlreadyRegistred(ApplicationRole appRole, HttpServletRequest request, HttpServletResponse response) {
+		String friendlyMessage = "The slug provided is already in use.";
+		String debugMessage = MessageFormat.format("The slug provided is already in use.", appRole.getSlug());
+
+		if ( LOG.isDebugEnabled() ) {
+			LOG.debug("<< handleSlugAlreadyRegistred() > {}", debugMessage);
+		}
+
+		ErrorResponse errorObject = new ErrorResponse();
+		errorObject.setHttpStatus(HttpStatus.CONFLICT);
+		errorObject.setFriendlyMessage(friendlyMessage);
+		errorObject.setDebugMessage(debugMessage);
+
+		return HttpUtil.createErrorResponseEntity(errorObject);
+	}
+
+	private boolean slugWasProvided(ApplicationRole appRole) {
+		return appRole.getSlug() != null;
+	}
+
+	private void sluggifyProvidedSlug(ApplicationRole appRole) {
+		appRole.setSlug(HttpUtil.createSlug(appRole.getSlug()));
+	}
+
+	private boolean slugIsAlreadyInUse(ApplicationRole appRole, Application application) throws CarbonException {
+		try {
+			return unsecuredApplicationRoleDAO.findBySlug(appRole.getSlug(), application.getUuid()) != null;
+		} catch (CarbonException e) {
+			e.getErrorObject().setHttpStatus(HttpStatus.INTERNAL_SERVER_ERROR);
+			throw e;
+		}
+	}
+
+	private void createAppRoleSlug(ApplicationRole appRole) {
+		appRole.setSlug(HttpUtil.createSlug(appRole.getName()));
 	}
 
 	private ResponseEntity<Object> handleNonExistentParent(ApplicationRole appRole, HttpServletRequest request, HttpServletResponse response)

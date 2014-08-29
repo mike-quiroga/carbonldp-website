@@ -43,7 +43,7 @@ public class RDFApplicationRoleFactory extends LDPResourceFactory {
 			.append(Application.ENDPOINT)
 			.append(applicationRole.getApplicationUUID().toString())
 			.append(ApplicationRole.ENDPOINT)
-			.append(applicationRole.getUuidString())
+			.append(applicationRole.getSlug())
 		;
 		//@formatter:on
 

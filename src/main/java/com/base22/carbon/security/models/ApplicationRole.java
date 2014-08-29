@@ -21,6 +21,7 @@ import com.hp.hpl.jena.rdf.model.ResourceFactory;
 public class ApplicationRole extends UUIDObject implements GrantedAuthority, RDFRepresentable<RDFApplicationRole> {
 	private static final long serialVersionUID = 7497947873798339446L;
 
+	private String slug;
 	private String name;
 	private String description;
 
@@ -29,6 +30,14 @@ public class ApplicationRole extends UUIDObject implements GrantedAuthority, RDF
 	private HashSet<ApplicationRole> childRoles;
 	private HashSet<Agent> agents;
 	private HashSet<Group> groups;
+
+	public String getSlug() {
+		return slug;
+	}
+
+	public void setSlug(String slug) {
+		this.slug = slug;
+	}
 
 	public String getName() {
 		return name;
@@ -154,6 +163,9 @@ public class ApplicationRole extends UUIDObject implements GrantedAuthority, RDF
 		//@formatter:off
 		UUID(
 			new PrefixedURI("c", "uuid")
+		),
+		SLUG(
+			new PrefixedURI("c", "slug")
 		),
 		NAME(
 			new PrefixedURI("doap", "name")

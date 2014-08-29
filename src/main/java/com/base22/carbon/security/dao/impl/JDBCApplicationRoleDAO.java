@@ -29,6 +29,7 @@ public class JDBCApplicationRoleDAO extends JdbcDAO implements ApplicationRoleDA
 	public static final String HEX_UUID_FIELD = "hex_uuid";
 	public static final String PARENT_UUID_FIELD = "parent_uuid";
 	public static final String PARENT_HEX_UUID_FIELD = "parent_hex_uuid";
+	public static final String SLUG_FIELD = "slug";
 	public static final String NAME_FIELD = "name";
 	public static final String DESCRIPTION_FIELD = "description";
 
@@ -104,10 +105,12 @@ public class JDBCApplicationRoleDAO extends JdbcDAO implements ApplicationRoleDA
 							.append(", ")
 							.append(PARENT_UUID_FIELD)
 							.append(", ")
+							.append(SLUG_FIELD)
+							.append(", ")
 							.append(NAME_FIELD)
 							.append(", ")
 							.append(DESCRIPTION_FIELD)
-						.append(") VALUES (UNHEX(?), UNHEX(?), UNHEX(?), ?, ?)")
+						.append(") VALUES (UNHEX(?), UNHEX(?), UNHEX(?), ?, ?, ?)")
 					;
 					//@formatter:on
 					return queryBuilder;
@@ -118,8 +121,9 @@ public class JDBCApplicationRoleDAO extends JdbcDAO implements ApplicationRoleDA
 					statement.setString(1, applicationRoleUUIDString);
 					statement.setString(2, applicationUUIDString);
 					setStringOrNull(statement, 3, parentUUIDStringToInsert);
-					statement.setString(4, applicationRole.getName());
-					setStringOrNull(statement, 5, applicationRole.getDescription());
+					statement.setString(4, applicationRole.getSlug());
+					statement.setString(5, applicationRole.getName());
+					setStringOrNull(statement, 6, applicationRole.getDescription());
 					return statement;
 				}
 			});
@@ -197,6 +201,77 @@ public class JDBCApplicationRoleDAO extends JdbcDAO implements ApplicationRoleDA
 		} catch (JDBCTransactionException e) {
 			if ( LOG.isErrorEnabled() ) {
 				LOG.error("<< findByUUID() > There was a problem while trying to find the applicationRole with UUID: '{}'.", applicationRoleUUID.toString());
+			}
+			throw e;
+		}
+
+		return role;
+	}
+
+	public ApplicationRole findBySlug(String slug) throws CarbonException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public ApplicationRole findBySlug(final String slug, UUID applicationUUID) throws CarbonException {
+		ApplicationRole role = null;
+
+		final String uuidString = AuthenticationUtil.minimizeUUID(applicationUUID);
+
+		JDBCQueryTransactionTemplate template = new JDBCQueryTransactionTemplate();
+		try {
+			//@formatter:off
+			role = template.execute(securityJDBCDataSource, new JDBCQueryTransactionCallback<ApplicationRole>() {
+				//@formatter:off
+				@Override
+				public StringBuilder prepareSQLQuery(StringBuilder sqlBuilder) {
+					//@formatter:off
+					sqlBuilder
+						.append("SELECT *, HEX(")
+					 			.append(UUID_FIELD)
+					 		.append(") AS ").append(HEX_UUID_FIELD)
+					 		.append(", HEX(")
+					 			.append(PARENT_UUID_FIELD)
+					 		.append(") AS ").append(PARENT_HEX_UUID_FIELD)
+					 		.append(", HEX(")
+					 			.append(JDBCApplicationDAO.EXTERNAL_ID_FIELD)
+					 		.append(") AS ").append(JDBCApplicationDAO.EXTERNAL_HEX_ID_FIELD)
+						.append(" FROM ")
+							.append(TABLE)
+						.append(" WHERE ")
+							.append(SLUG_FIELD)
+						.append(" = ? AND ")
+							.append(JDBCApplicationDAO.EXTERNAL_ID_FIELD)
+						.append("UNHEX(?)")
+					;
+					//@formatter:on
+					return sqlBuilder;
+				}
+
+				@Override
+				public PreparedStatement prepareStatement(PreparedStatement statement) throws SQLException {
+					statement.setString(1, slug);
+					statement.setString(2, uuidString);
+					return statement;
+				}
+
+				@Override
+				public ApplicationRole interpretResultSet(ResultSet resultSet) throws SQLException {
+					List<ApplicationRole> roles = null;
+
+					roles = populateApplicationRoles(resultSet);
+
+					if ( roles.isEmpty() ) {
+						return null;
+					}
+
+					return roles.get(0);
+				}
+
+			});
+		} catch (JDBCTransactionException e) {
+			if ( LOG.isErrorEnabled() ) {
+				LOG.error("<< findBySlug() > There was a problem while trying to find the applicationRole with slug: '{}'.", slug);
 			}
 			throw e;
 		}
@@ -965,11 +1040,13 @@ public class JDBCApplicationRoleDAO extends JdbcDAO implements ApplicationRoleDA
 			String uuidString = resultSet.getString(HEX_UUID_FIELD);
 			String applicationUUIDString = resultSet.getString(JDBCApplicationDAO.EXTERNAL_HEX_ID_FIELD);
 			String parentUUIDString = resultSet.getString(PARENT_HEX_UUID_FIELD);
+			String slug = resultSet.getString(SLUG_FIELD);
 			String name = resultSet.getString(NAME_FIELD);
 			String description = resultSet.getString(DESCRIPTION_FIELD);
 
 			ApplicationRole applicationRole = new ApplicationRole();
 			applicationRole.setUuid(uuidString);
+			applicationRole.setSlug(slug);
 			applicationRole.setName(name);
 			applicationRole.setDescription(description);
 
@@ -994,11 +1071,13 @@ public class JDBCApplicationRoleDAO extends JdbcDAO implements ApplicationRoleDA
 			String uuidString = resultSet.getString(HEX_UUID_FIELD);
 			String applicationUUIDString = resultSet.getString(JDBCApplicationDAO.EXTERNAL_HEX_ID_FIELD);
 			String parentUUIDString = resultSet.getString(PARENT_HEX_UUID_FIELD);
+			String slug = resultSet.getString(SLUG_FIELD);
 			String name = resultSet.getString(NAME_FIELD);
 			String description = resultSet.getString(DESCRIPTION_FIELD);
 
 			ApplicationRole applicationRole = new ApplicationRole();
 			applicationRole.setUuid(uuidString);
+			applicationRole.setSlug(slug);
 			applicationRole.setName(name);
 			applicationRole.setDescription(description);
 
