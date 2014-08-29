@@ -46,7 +46,7 @@
 				</entry>
 				<entry key="TDB">
 					<bean class="com.base22.carbon.services.TDBRepositoryService">
-						<property name="datasetDirectory" value="C:\\carbon\\TDB\\" />
+						<property name="datasetDirectory" value="/opt/carbon/TDB/" />
 					</bean>
 				</entry>
 				<entry key="ORACLE-SDB">
