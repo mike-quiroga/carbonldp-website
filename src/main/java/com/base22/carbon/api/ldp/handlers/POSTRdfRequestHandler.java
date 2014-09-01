@@ -313,7 +313,7 @@ public class POSTRdfRequestHandler extends AbstractCreationRequestHandler {
 	private void processEntityBodyModel() throws CarbonException {
 		String resourceURI = null;
 		String baseURI = this.targetURI;
-		baseURI = baseURI.startsWith("/") ? baseURI : baseURI.concat("/");
+		baseURI = baseURI.endsWith("/") ? baseURI : baseURI.concat("/");
 
 		ResIterator resourceIterator = this.requestModel.listSubjects();
 		while (resourceIterator.hasNext()) {
