@@ -9,7 +9,8 @@ public abstract class APIPreferences {
 	public static enum InteractionModel {
 		//@formatter:off
 		RDF_SOURCE( 
-			new PrefixedURI("ldp", "RDFSource")
+			new PrefixedURI("ldp", "RDFSource"),
+			new PrefixedURI("ldp", "Resource")
 		),
 		CONTAINER( 
 			new PrefixedURI("ldp", "Container"),
