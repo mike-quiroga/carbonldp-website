@@ -12,6 +12,7 @@ import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
+import com.base22.carbon.constants.APIPreferences.InteractionModel;
 import com.base22.carbon.constants.LDPC;
 import com.base22.carbon.constants.LDPC.ContainerType;
 import com.base22.carbon.constants.LDPNR;
@@ -30,6 +31,7 @@ import com.base22.carbon.models.WrapperForLDPNRFactory;
 import com.base22.carbon.security.dao.URIObjectDAO;
 import com.base22.carbon.security.models.URIObject;
 import com.base22.carbon.security.services.PermissionService;
+import com.hp.hpl.jena.graph.Node;
 import com.hp.hpl.jena.query.QuerySolution;
 import com.hp.hpl.jena.query.ResultSet;
 import com.hp.hpl.jena.rdf.model.Model;
@@ -614,6 +616,61 @@ public class LDPService {
 		}
 
 		return containerType;
+	}
+
+	public InteractionModel getDefaultInteractionModel(URIObject documentURIObject, String dataset) throws CarbonException {
+		InteractionModel interactionModel = null;
+
+		if ( LOG.isTraceEnabled() ) {
+			LOG.trace(">> getDefaultInteractionModel()");
+		}
+
+		String documentURI = documentURIObject.getURI();
+
+		SparqlQuery sparqlQuery = new SparqlQuery();
+		sparqlQuery.setType(SparqlQuery.TYPE.QUERY);
+		sparqlQuery.setDataset(dataset);
+
+		StringBuffer query = new StringBuffer();
+		//@formatter:off
+		query
+			.append("SELECT ?model WHERE { ")
+				.append("GRAPH <")
+					.append(documentURI)
+				.append("> { ")
+					.append("<")
+						.append(documentURI)
+					.append("> <")
+						.append(LDPC.DIM)
+					.append("> ?model.")
+				.append("}")
+			.append("}")
+		;
+		//@formatter:on
+
+		sparqlQuery.setQuery(query.toString());
+
+		String interactionModelURI = null;
+		ResultSet resultSet = sparqlService.select(sparqlQuery);
+		while (resultSet.hasNext() && interactionModelURI == null) {
+			QuerySolution solution = resultSet.next();
+			Node node = solution.get("model").asNode();
+			if ( node.isURI() ) {
+				interactionModelURI = node.getURI();
+			}
+		}
+		sparqlService.closeResultSet(resultSet);
+
+		if ( interactionModelURI != null ) {
+			interactionModel = InteractionModel.findByURI(interactionModelURI);
+		} else {
+			if ( LOG.isDebugEnabled() ) {
+				LOG.debug("<< getDefaultInteractionModel() < The document doesn't have a default interaction model.");
+			}
+		}
+
+		return interactionModel;
+
 	}
 
 	@PreAuthorize("hasPermission(#documentURIObject, 'READ')")
