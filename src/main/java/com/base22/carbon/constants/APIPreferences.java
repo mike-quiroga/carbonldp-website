@@ -67,19 +67,19 @@ public abstract class APIPreferences {
 			new PrefixedURI("ldp", "PreferMinimalContainer"),
 			new PrefixedURI("ldp", "PreferEmptyContainer")
 		),
-		CONTAINMENT_TRIPLES( 
-			new PrefixedURI("ldp", "PreferMembership"),
-			new PrefixedURI("c", "PreferMembershipTriples")
-		),
-		CONTAINED_RESOURCES(
-			new PrefixedURI("c", "PreferMembershipResources")
-		),
-		MEMBERSHIP_TRIPLES(
+		CONTAINMENT_TRIPLES(
 			new PrefixedURI("ldp", "PreferContainment"),
 			new PrefixedURI("c", "PreferContainmentTriples")
 		),
-		MEMBER_RESOURCES(
+		CONTAINED_RESOURCES(
 			new PrefixedURI("c", "PreferContainmentResources")
+		),
+		MEMBERSHIP_TRIPLES( 
+			new PrefixedURI("ldp", "PreferMembership"),
+			new PrefixedURI("c", "PreferMembershipTriples")
+		),
+		MEMBER_RESOURCES(
+			new PrefixedURI("c", "PreferMembershipResources")
 		);
 		
 		//@formatter:on
