@@ -90,6 +90,9 @@ public class RetrieveRequestHandler extends AbstractRequestHandler {
 			return HttpUtil.createErrorResponseEntity(e, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 
+		// Default Interaction Model
+		InteractionModel dim = getTargetDIM(documentURIObject, dataset);
+
 		// Delegate to the appropriate handler (depending on the type of the document and the preferred interaction
 		// model)
 		if ( ldpService.documentIsContainer(documentTypes) ) {
@@ -109,10 +112,18 @@ public class RetrieveRequestHandler extends AbstractRequestHandler {
 					return handleLDPContainerRetrieval(documentURIObject, dataset, documentTypes, request, response, entity);
 				}
 			}
-			if ( LOG.isDebugEnabled() ) {
-				LOG.debug("<< handleLDPResourceRetrieval() > It wasn't specified a preferred interaction model. Delegating to handleLDPContainerGet()...");
+			if ( dim == InteractionModel.RDF_SOURCE ) {
+				if ( LOG.isDebugEnabled() ) {
+					LOG.debug("<< handleLDPResourceRetrieval() > The document has a dim of RDFSource. Delegating to handleLDPRSourceRetrieval()...");
+				}
+				return handleLDPRSourceRetrieval(documentURIObject, dataset, request, response, entity);
+			} else {
+				if ( LOG.isDebugEnabled() ) {
+					LOG.debug("<< handleLDPResourceRetrieval() > It wasn't specified a preferred interaction model. Delegating to handleLDPContainerGet()...");
+				}
+				return handleLDPContainerRetrieval(documentURIObject, dataset, documentTypes, request, response, entity);
 			}
-			return handleLDPContainerRetrieval(documentURIObject, dataset, documentTypes, request, response, entity);
+
 		} else if ( ldpService.documentIsWrapperForLDPNR(documentTypes) ) {
 			if ( LOG.isDebugEnabled() ) {
 				LOG.debug("-- handleLDPResourceRetrieval() > The document is a WrapperForLDPNR");
@@ -319,6 +330,17 @@ public class RetrieveRequestHandler extends AbstractRequestHandler {
 		response.addHeader(HttpHeaders.ALLOW, "GET, HEAD, PUT, PATCH, DELETE");
 
 		return new ResponseEntity<Object>(rdfWrapper, HttpStatus.OK);
+	}
+
+	private InteractionModel getTargetDIM(URIObject documentURIObject, String dataset) throws CarbonException {
+		InteractionModel dim = null;
+		try {
+			dim = ldpService.getDefaultInteractionModel(documentURIObject, dataset);
+		} catch (CarbonException e) {
+			e.getErrorObject().setHttpStatus(HttpStatus.INTERNAL_SERVER_ERROR);
+			throw e;
+		}
+		return dim;
 	}
 
 	private List<RetrieveContainerPreference> getRetrieveContainerPreferences(HttpHeader preferHeader) {
