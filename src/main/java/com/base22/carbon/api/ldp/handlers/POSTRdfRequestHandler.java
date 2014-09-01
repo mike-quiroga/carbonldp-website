@@ -201,7 +201,7 @@ public class POSTRdfRequestHandler extends AbstractCreationRequestHandler {
 				populateRequestRDFSource();
 				this.requestRDFSource.setTimestamps();
 
-				if ( this.targetContainerType.equals(LDPC.INDIRECT) ) {
+				if ( this.targetContainerType == ContainerType.INDIRECT ) {
 					checkLDPRSourceForIndirect();
 				}
 
