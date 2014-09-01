@@ -243,7 +243,7 @@ public class DELETERequestHandler extends AbstractRequestHandler {
 
 		if ( preferHeader != null ) {
 			List<HttpHeaderValue> includePreferences = HttpHeader.filterHeaderValues(preferHeader, "include", null, null, null);
-			List<HttpHeaderValue> omitPreferences = HttpHeader.filterHeaderValues(preferHeader, "include", null, null, null);
+			List<HttpHeaderValue> omitPreferences = HttpHeader.filterHeaderValues(preferHeader, "omit", null, null, null);
 
 			for (HttpHeaderValue omitPreference : omitPreferences) {
 				DeleteContainerPreference containerPreference = DeleteContainerPreference.findByURI(omitPreference.getMainValue());
