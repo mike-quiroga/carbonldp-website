@@ -22,8 +22,8 @@ public class PATCHController extends AbstractBaseRdfAPIController {
 	private PATCHRequestHandler requestHandler;
 
 	@RequestMapping(value = { "/apps/{application}/", "/apps/{application}/**" }, method = RequestMethod.PATCH)
-	public ResponseEntity<Object> handlePatch(@PathVariable("dataset") String dataset, Model model, HttpServletRequest request, HttpServletResponse response,
-			HttpEntity<byte[]> entity) {
+	public ResponseEntity<Object> handlePatch(@PathVariable("application") String applicationIdentifier, Model model, HttpServletRequest request,
+			HttpServletResponse response, HttpEntity<byte[]> entity) {
 
 		if ( LOG.isTraceEnabled() ) {
 			LOG.trace(">> handlePatch()");

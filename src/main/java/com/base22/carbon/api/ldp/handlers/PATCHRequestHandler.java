@@ -10,13 +10,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
 
 @Component
 @Scope(proxyMode = ScopedProxyMode.TARGET_CLASS, value = "request")
 public class PATCHRequestHandler extends AbstractRequestHandler {
-	public ResponseEntity<Object> handlePATCHRequest(@PathVariable("dataset") String dataset, Model model, HttpServletRequest request,
-			HttpServletResponse response, HttpEntity<byte[]> entity) {
+	public ResponseEntity<Object> handlePATCHRequest(String applicationIdentifier, Model model, HttpServletRequest request, HttpServletResponse response,
+			HttpEntity<byte[]> entity) {
 
 		return new ResponseEntity<Object>(HttpStatus.NOT_IMPLEMENTED);
 
