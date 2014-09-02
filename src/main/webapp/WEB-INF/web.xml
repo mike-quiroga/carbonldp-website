@@ -9,9 +9,15 @@
 	<context-param>
 		<param-name>contextConfigLocation</param-name>
 		<param-value>
-			classpath:com/base22/carbon/config/database-context.xml,
-			classpath:com/base22/carbon/config/service-context.xml,
-			classpath:com/base22/carbon/security/config/security-context.xml
+			classpath:com/base22/carbon/jdbc/jdbc-context.xml,
+			classpath:com/base22/carbon/repository/service-context.xml,
+			classpath:com/base22/carbon/agents/agents-context.xml,
+			classpath:com/base22/carbon/apps/apps-context.xml,
+			classpath:com/base22/carbon/apps/roles/roles-context.xml,
+			classpath:com/base22/carbon/authentication/authentication-context.xml,
+			classpath:com/base22/carbon/authorization/authorization-context.xml,
+			classpath:com/base22/carbon/authorization/acl/acl-context.xml,
+			classpath:com/base22/carbon/groups/groups-context.xml
 		</param-value>
 	</context-param>
 	

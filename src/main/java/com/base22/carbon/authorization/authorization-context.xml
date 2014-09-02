@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:security="http://www.springframework.org/schema/security"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/security
+		http://www.springframework.org/schema/security/spring-security-3.2.xsd
+">
+
+	<bean id="platformPrivilegeDAO" class="com.base22.carbon.authorization.PrivilegeDAOJdbc">
+		<property name="securityJDBCDataSource" ref="securityJDBCDataSource" />
+	</bean>
+	<bean id="platformPlatformRoleDAO" class="com.base22.carbon.authorization.PlatformRoleDAOJdbc">
+		<property name="securityJDBCDataSource" ref="securityJDBCDataSource" />
+	</bean>
+	<bean id="platformPermissionService" class="com.base22.carbon.authorization.PermissionService">
+		<property name="aclCache" ref="aclCache" />
+		<property name="aclService" ref="aclService" />
+		<property name="transactionManager" ref="jdbcTransactionManager" />
+	</bean>
+	
+	<security:http pattern="/auth/**" use-expressions="true" auto-config="false" create-session="stateless" entry-point-ref="restAPIBasicAuthenticationEntryPoint">
+		<security:intercept-url pattern="/auth/login" access="isAuthenticated()" />
+		<security:custom-filter ref="restAPIBasicAuthenticationProcessingFilter" position="BASIC_AUTH_FILTER" />
+		<security:custom-filter ref="restAPIAuthenticationProcessingFilter" position="FORM_LOGIN_FILTER" />
+	</security:http>
+	
+	<security:http pattern="/apps/**" use-expressions="true" auto-config="false" create-session="stateless" entry-point-ref="restAPIBasicAuthenticationEntryPoint">
+		<security:custom-filter ref="restAPIcorsProcessingFilter" before="BASIC_AUTH_FILTER" />
+		<security:custom-filter ref="restAPIBasicAuthenticationProcessingFilter" position="BASIC_AUTH_FILTER" />
+		<security:custom-filter ref="restAPIAuthenticationProcessingFilter" position="FORM_LOGIN_FILTER" />
+		<security:custom-filter ref="restAPIApplicationContextFilter" position="LAST" />
+	</security:http>
+</beans>
