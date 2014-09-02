@@ -1,6 +1,7 @@
 package com.base22.carbon.exceptions;
 
 import com.base22.carbon.models.ErrorResponse;
+import com.base22.carbon.models.ErrorResponseFactory;
 
 public class CarbonException extends Exception {
 
@@ -13,12 +14,14 @@ public class CarbonException extends Exception {
 	}
 
 	public CarbonException(String friendlyMessage) {
-		errorObject = new ErrorResponse();
+		ErrorResponseFactory errorFactory = new ErrorResponseFactory();
+		errorObject = errorFactory.create();
 		errorObject.setFriendlyMessage(friendlyMessage);
 	}
 
 	public CarbonException(String friendlyMessage, String debugMessage) {
-		errorObject = new ErrorResponse();
+		ErrorResponseFactory errorFactory = new ErrorResponseFactory();
+		errorObject = errorFactory.create();
 		errorObject.setFriendlyMessage(friendlyMessage);
 		errorObject.setDebugMessage(debugMessage);
 	}

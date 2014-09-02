@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component;
 
 import com.base22.carbon.exceptions.CarbonException;
 import com.base22.carbon.models.ErrorResponse;
+import com.base22.carbon.models.ErrorResponseFactory;
 import com.base22.carbon.security.models.Agent;
 import com.base22.carbon.security.models.Agent.Properties;
 import com.base22.carbon.security.models.PlatformRole;
@@ -65,7 +66,8 @@ public class AgentsAPIRequestHandler extends AbstractApplicationAPIRequestHandle
 			LOG.debug("<< handleEmailAlreadyRegistred() > {}", debugMessage);
 		}
 
-		ErrorResponse errorObject = new ErrorResponse();
+		ErrorResponseFactory errorFactory = new ErrorResponseFactory();
+		ErrorResponse errorObject = errorFactory.create();
 		errorObject.setHttpStatus(HttpStatus.CONFLICT);
 		errorObject.setFriendlyMessage(friendlyMessage);
 		errorObject.setDebugMessage(debugMessage);
@@ -149,7 +151,8 @@ public class AgentsAPIRequestHandler extends AbstractApplicationAPIRequestHandle
 				LOG.debug("<< validateRequestRDFAgent() > {}", debugMessage);
 			}
 
-			ErrorResponse errorObject = new ErrorResponse();
+			ErrorResponseFactory errorFactory = new ErrorResponseFactory();
+			ErrorResponse errorObject = errorFactory.create();
 			errorObject.setHttpStatus(HttpStatus.BAD_REQUEST);
 			errorObject.setFriendlyMessage(friendlyMessage);
 			errorObject.setDebugMessage(debugMessage);

@@ -47,6 +47,7 @@
 			<bean class="org.springframework.http.converter.FormHttpMessageConverter" />
 			<bean class="com.base22.carbon.converters.WrapperForLDPNRMessageConverter"></bean>
 			<bean class="com.base22.carbon.converters.LDPRSourceMessageConverter"></bean>
+			<bean class="com.base22.carbon.converters.ErrorResponseMessageConverter"></bean>
 			<bean class="com.base22.carbon.converters.LDPResourceMessageConverter"></bean>
 			<bean class="com.base22.carbon.converters.ModelMessageConverter"></bean>
 		</mvc:message-converters>

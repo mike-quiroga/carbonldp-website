@@ -20,6 +20,7 @@ import com.base22.carbon.api.ldp.handlers.POSTRdfRequestHandler;
 import com.base22.carbon.constants.HttpHeaders;
 import com.base22.carbon.exceptions.CarbonException;
 import com.base22.carbon.models.ErrorResponse;
+import com.base22.carbon.models.ErrorResponseFactory;
 
 @Controller
 public class POSTController extends AbstractBaseRdfAPIController {
@@ -50,12 +51,13 @@ public class POSTController extends AbstractBaseRdfAPIController {
 				LOG.debug("<< handleNonMultipartPost() > The Content-Type wasn't specified.");
 			}
 
-			ErrorResponse errorObject = new ErrorResponse();
+			ErrorResponseFactory factory = new ErrorResponseFactory();
+			ErrorResponse errorObject = factory.create();
 			errorObject.setHttpStatus(HttpStatus.UNSUPPORTED_MEDIA_TYPE);
 			errorObject.setFriendlyMessage(friendlyMessage);
 			errorObject.setDebugMessage(debugMessage);
 			errorObject.addHeaderIssue(HttpHeaders.CONTENT_TYPE, null, "required", null);
-			return new ResponseEntity<Object>(errorObject.generateModel(), HttpStatus.UNSUPPORTED_MEDIA_TYPE);
+			return new ResponseEntity<Object>(errorObject, HttpStatus.UNSUPPORTED_MEDIA_TYPE);
 		}
 
 		Lang language = postRDFRequestHandler.getLanguageFromContentType(contentTypeHeader);
@@ -65,14 +67,14 @@ public class POSTController extends AbstractBaseRdfAPIController {
 				return postNonRDFRequestHandler.handleNonMultipartPOST(applicationIdentifier, contentTypeHeader, request, response, entity);
 			} catch (CarbonException e) {
 				// TODO: FT
-				return new ResponseEntity<Object>(e.getErrorObject().generateModel(), e.getErrorObject().getHttpStatus());
+				return new ResponseEntity<Object>(e.getErrorObject(), e.getErrorObject().getHttpStatus());
 			}
 		} else {
 			try {
 				return postRDFRequestHandler.handleRdfPOST(applicationIdentifier, request, response, entity);
 			} catch (CarbonException e) {
 				// TODO: FT
-				return new ResponseEntity<Object>(e.getErrorObject().generateModel(), e.getErrorObject().getHttpStatus());
+				return new ResponseEntity<Object>(e.getErrorObject(), e.getErrorObject().getHttpStatus());
 			}
 		}
 
@@ -92,7 +94,7 @@ public class POSTController extends AbstractBaseRdfAPIController {
 			return postNonRDFRequestHandler.handleMultipartPost(applicationIdentifier, fileName, file, request, response, entity);
 		} catch (CarbonException e) {
 			// TODO: FT
-			return new ResponseEntity<Object>(e.getErrorObject().generateModel(), e.getErrorObject().getHttpStatus());
+			return new ResponseEntity<Object>(e.getErrorObject(), e.getErrorObject().getHttpStatus());
 		}
 	}
 }

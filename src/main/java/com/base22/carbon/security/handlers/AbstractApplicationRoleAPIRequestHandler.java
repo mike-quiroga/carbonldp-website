@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 
 import com.base22.carbon.exceptions.CarbonException;
 import com.base22.carbon.models.ErrorResponse;
+import com.base22.carbon.models.ErrorResponseFactory;
 import com.base22.carbon.security.models.ApplicationRole;
 import com.base22.carbon.security.utils.AuthenticationUtil;
 import com.base22.carbon.utils.HttpUtil;
@@ -25,7 +26,8 @@ public class AbstractApplicationRoleAPIRequestHandler extends AbstractAPIRequest
 			LOG.debug("xx handleNonExistentAppRole() > {}", debugMessage);
 		}
 
-		ErrorResponse errorObject = new ErrorResponse();
+		ErrorResponseFactory errorFactory = new ErrorResponseFactory();
+		ErrorResponse errorObject = errorFactory.create();
 		errorObject.setHttpStatus(HttpStatus.NOT_FOUND);
 		errorObject.setFriendlyMessage(friendlyMessage);
 		errorObject.setDebugMessage(debugMessage);
@@ -41,7 +43,8 @@ public class AbstractApplicationRoleAPIRequestHandler extends AbstractAPIRequest
 				LOG.debug("xx getRequestApplicationRole() > {}", friendlyMessage);
 			}
 
-			ErrorResponse errorObject = new ErrorResponse();
+			ErrorResponseFactory errorFactory = new ErrorResponseFactory();
+			ErrorResponse errorObject = errorFactory.create();
 			errorObject.setHttpStatus(HttpStatus.BAD_REQUEST);
 			errorObject.setFriendlyMessage(friendlyMessage);
 

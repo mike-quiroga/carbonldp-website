@@ -9,6 +9,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 
 import com.base22.carbon.exceptions.CarbonException;
 import com.base22.carbon.models.ErrorResponse;
+import com.base22.carbon.models.ErrorResponseFactory;
 import com.base22.carbon.security.models.Application;
 import com.base22.carbon.security.tokens.AgentAuthenticationToken;
 import com.base22.carbon.security.tokens.ApplicationContextToken;
@@ -30,7 +31,8 @@ public abstract class AuthorizationUtil {
 				LOG.debug("<< getApplicationFromContext() > {}", debugMessage);
 			}
 
-			ErrorResponse errorObject = new ErrorResponse();
+			ErrorResponseFactory errorFactory = new ErrorResponseFactory();
+			ErrorResponse errorObject = errorFactory.create();
 			errorObject.setFriendlyMessage(friendlyMessage);
 			errorObject.setDebugMessage(debugMessage);
 
@@ -53,7 +55,8 @@ public abstract class AuthorizationUtil {
 				LOG.debug("<< getAgentUUIDFromContext() > {}", debugMessage);
 			}
 
-			ErrorResponse errorObject = new ErrorResponse();
+			ErrorResponseFactory errorFactory = new ErrorResponseFactory();
+			ErrorResponse errorObject = errorFactory.create();
 			errorObject.setFriendlyMessage(friendlyMessage);
 			errorObject.setDebugMessage(debugMessage);
 

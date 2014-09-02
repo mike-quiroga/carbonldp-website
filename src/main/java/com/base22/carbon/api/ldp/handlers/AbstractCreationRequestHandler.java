@@ -20,6 +20,7 @@ import com.base22.carbon.converters.ConvertInputStream;
 import com.base22.carbon.converters.ConvertString;
 import com.base22.carbon.exceptions.CarbonException;
 import com.base22.carbon.models.ErrorResponse;
+import com.base22.carbon.models.ErrorResponseFactory;
 import com.base22.carbon.models.LDPContainer;
 import com.base22.carbon.models.LDPContainerFactory;
 import com.base22.carbon.models.LDPRSource;
@@ -108,7 +109,8 @@ public abstract class AbstractCreationRequestHandler extends AbstractRequestHand
 				LOG.debug("<< populateURIObject() > The authenticated agent doesn't have DISCOVER access to the resource with URI: {}", this.targetURI);
 			}
 
-			ErrorResponse errorObject = new ErrorResponse();
+			ErrorResponseFactory factory = new ErrorResponseFactory();
+			ErrorResponse errorObject = factory.create();
 			errorObject.setFriendlyMessage(friendlyMessage);
 			errorObject.setHttpStatus(HttpStatus.NOT_FOUND);
 
@@ -137,7 +139,8 @@ public abstract class AbstractCreationRequestHandler extends AbstractRequestHand
 				LOG.debug("<< populateLanguage() > The content type specified isn't supported. Content-Type: {}", contentTypeHeader);
 			}
 
-			ErrorResponse errorObject = new ErrorResponse();
+			ErrorResponseFactory factory = new ErrorResponseFactory();
+			ErrorResponse errorObject = factory.create();
 			errorObject.setHttpStatus(HttpStatus.UNSUPPORTED_MEDIA_TYPE);
 			errorObject.setFriendlyMessage(friendlyMessage);
 			errorObject.setDebugMessage(debugMessage);
@@ -163,7 +166,8 @@ public abstract class AbstractCreationRequestHandler extends AbstractRequestHand
 				LOG.error("<< addDefaultPrefixes() > {}", debugMessage);
 			}
 
-			ErrorResponse errorObject = new ErrorResponse();
+			ErrorResponseFactory factory = new ErrorResponseFactory();
+			ErrorResponse errorObject = factory.create();
 			errorObject.setFriendlyMessage("There was a problem while processing the request.");
 			errorObject.setDebugMessage(debugMessage);
 			errorObject.setEntityBodyIssue(null, debugMessage);
@@ -182,7 +186,8 @@ public abstract class AbstractCreationRequestHandler extends AbstractRequestHand
 				LOG.debug("<< populateEntityBody() > {}", debugMessage);
 			}
 
-			ErrorResponse errorObject = new ErrorResponse();
+			ErrorResponseFactory factory = new ErrorResponseFactory();
+			ErrorResponse errorObject = factory.create();
 			errorObject.setHttpStatus(HttpStatus.BAD_REQUEST);
 			errorObject.setFriendlyMessage(debugMessage);
 			errorObject.setDebugMessage(debugMessage);
@@ -216,7 +221,8 @@ public abstract class AbstractCreationRequestHandler extends AbstractRequestHand
 			String friendlyMessage = "Unexpected Server Error.";
 			String debugMessage = "An unexpected problem related with an InputStream rised when parsing the entity body.";
 
-			ErrorResponse errorObject = new ErrorResponse();
+			ErrorResponseFactory factory = new ErrorResponseFactory();
+			ErrorResponse errorObject = factory.create();
 			errorObject.setHttpStatus(HttpStatus.INTERNAL_SERVER_ERROR);
 			errorObject.setFriendlyMessage(friendlyMessage);
 			errorObject.setDebugMessage(debugMessage);
@@ -243,7 +249,8 @@ public abstract class AbstractCreationRequestHandler extends AbstractRequestHand
 			String friendlyMessage = "Unexpected Server Error.";
 			String debugMessage = "An unexpected problem related with an InputStream rised when parsing the entity body.";
 
-			ErrorResponse errorObject = new ErrorResponse();
+			ErrorResponseFactory factory = new ErrorResponseFactory();
+			ErrorResponse errorObject = factory.create();
 			errorObject.setHttpStatus(HttpStatus.INTERNAL_SERVER_ERROR);
 			errorObject.setFriendlyMessage(friendlyMessage);
 			errorObject.setDebugMessage(debugMessage);
@@ -258,7 +265,8 @@ public abstract class AbstractCreationRequestHandler extends AbstractRequestHand
 				LOG.debug("<< parseEntityBody() > {}", debugMessage);
 			}
 
-			ErrorResponse errorObject = new ErrorResponse();
+			ErrorResponseFactory factory = new ErrorResponseFactory();
+			ErrorResponse errorObject = factory.create();
 			errorObject.setHttpStatus(HttpStatus.BAD_REQUEST);
 			errorObject.setFriendlyMessage(friendlyMessage);
 			errorObject.setDebugMessage(debugMessage);

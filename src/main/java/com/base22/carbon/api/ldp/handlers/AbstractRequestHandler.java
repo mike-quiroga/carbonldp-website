@@ -30,6 +30,7 @@ import com.base22.carbon.converters.ConvertInputStream;
 import com.base22.carbon.converters.ConvertString;
 import com.base22.carbon.exceptions.CarbonException;
 import com.base22.carbon.models.ErrorResponse;
+import com.base22.carbon.models.ErrorResponseFactory;
 import com.base22.carbon.models.HttpHeader;
 import com.base22.carbon.models.HttpHeaderValue;
 import com.base22.carbon.security.dao.URIObjectDAO;
@@ -152,7 +153,8 @@ public abstract class AbstractRequestHandler {
 				LOG.debug("<< getApplicationFromContext() > {}", debugMessage);
 			}
 
-			ErrorResponse errorObject = new ErrorResponse();
+			ErrorResponseFactory factory = new ErrorResponseFactory();
+			ErrorResponse errorObject = factory.create();
 			errorObject.setFriendlyMessage(friendlyMessage);
 			errorObject.setDebugMessage(debugMessage);
 
@@ -192,7 +194,8 @@ public abstract class AbstractRequestHandler {
 				LOG.error("<< prepareEntityBodyInputStream() > {}", debugMessage);
 			}
 
-			ErrorResponse errorObject = new ErrorResponse();
+			ErrorResponseFactory factory = new ErrorResponseFactory();
+			ErrorResponse errorObject = factory.create();
 			errorObject.setDebugMessage(debugMessage);
 			errorObject.addParameterIssue("Content-Type", null, debugMessage, charset);
 

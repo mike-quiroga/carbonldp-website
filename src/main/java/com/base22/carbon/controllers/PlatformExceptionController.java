@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import com.base22.carbon.models.ErrorResponse;
+import com.base22.carbon.models.ErrorResponseFactory;
 
 @ControllerAdvice
 public class PlatformExceptionController {
@@ -28,10 +29,11 @@ public class PlatformExceptionController {
 			LOG.debug("<< handleAccessDenied() > The access was denied.");
 		}
 
-		ErrorResponse errorObject = new ErrorResponse();
+		ErrorResponseFactory errorFactory = new ErrorResponseFactory();
+		ErrorResponse errorObject = errorFactory.create();
 		errorObject.setFriendlyMessage(friendlyMessage);
 
-		return new ResponseEntity<Object>(errorObject.generateModel(), HttpStatus.FORBIDDEN);
+		return new ResponseEntity<Object>(errorObject, HttpStatus.FORBIDDEN);
 	}
 
 	@ExceptionHandler(Exception.class)
@@ -41,9 +43,10 @@ public class PlatformExceptionController {
 			LOG.debug("<< handleAccessDenied() > Exception Stacktrace:", rawException);
 		}
 
-		ErrorResponse errorObject = new ErrorResponse();
+		ErrorResponseFactory errorFactory = new ErrorResponseFactory();
+		ErrorResponse errorObject = errorFactory.create();
 		errorObject.setFriendlyMessage(friendlyMessage);
 
-		return new ResponseEntity<Object>(errorObject.generateModel(), HttpStatus.INTERNAL_SERVER_ERROR);
+		return new ResponseEntity<Object>(errorObject, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 }

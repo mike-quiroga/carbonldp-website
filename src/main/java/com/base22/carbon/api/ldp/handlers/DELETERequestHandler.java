@@ -21,6 +21,7 @@ import com.base22.carbon.constants.APIPreferences.DeleteContainerPreference;
 import com.base22.carbon.constants.HttpHeaders;
 import com.base22.carbon.exceptions.CarbonException;
 import com.base22.carbon.models.ErrorResponse;
+import com.base22.carbon.models.ErrorResponseFactory;
 import com.base22.carbon.models.HttpHeader;
 import com.base22.carbon.models.HttpHeaderValue;
 import com.base22.carbon.models.LDPContainerQueryOptions;
@@ -92,7 +93,8 @@ public class DELETERequestHandler extends AbstractRequestHandler {
 						LOG.debug("<< handleDelete() > {}", debugMessage);
 					}
 
-					ErrorResponse errorObject = new ErrorResponse();
+					ErrorResponseFactory factory = new ErrorResponseFactory();
+					ErrorResponse errorObject = factory.create();
 					errorObject.setFriendlyMessage("The resource has been externally modified while processing the request. The request will be aborted.");
 					errorObject.setDebugMessage(debugMessage);
 					return HttpUtil.createErrorResponseEntity(errorObject, HttpStatus.PRECONDITION_FAILED);

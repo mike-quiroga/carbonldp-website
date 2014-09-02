@@ -23,6 +23,7 @@ import com.base22.carbon.constants.LDPC.ContainerType;
 import com.base22.carbon.exceptions.CarbonException;
 import com.base22.carbon.models.BASE64DecodedMultipartFile;
 import com.base22.carbon.models.ErrorResponse;
+import com.base22.carbon.models.ErrorResponseFactory;
 import com.base22.carbon.models.LDPContainer;
 import com.base22.carbon.models.LDPContainerQueryOptions;
 import com.base22.carbon.models.WrapperForLDPNR;
@@ -62,7 +63,8 @@ public class POSTNonRdfRequestHandler extends AbstractRequestHandler {
 				LOG.debug("<< getContentTypeFromHeader() > {}", debugMessage);
 			}
 
-			ErrorResponse errorObject = new ErrorResponse();
+			ErrorResponseFactory factory = new ErrorResponseFactory();
+			ErrorResponse errorObject = factory.create();
 			errorObject.setHttpStatus(HttpStatus.BAD_REQUEST);
 			errorObject.setFriendlyMessage(friendlyMessage);
 			errorObject.setDebugMessage(debugMessage);
@@ -77,7 +79,8 @@ public class POSTNonRdfRequestHandler extends AbstractRequestHandler {
 				LOG.debug("<< getContentTypeFromHeader() > {}", debugMessage);
 			}
 
-			ErrorResponse errorObject = new ErrorResponse();
+			ErrorResponseFactory factory = new ErrorResponseFactory();
+			ErrorResponse errorObject = factory.create();
 			errorObject.setHttpStatus(HttpStatus.BAD_REQUEST);
 			errorObject.setFriendlyMessage(friendlyMessage);
 			errorObject.setDebugMessage(debugMessage);
@@ -131,7 +134,8 @@ public class POSTNonRdfRequestHandler extends AbstractRequestHandler {
 			LOG.debug("<< handleNonExistingTargetResource() > {}", debugMessage);
 		}
 
-		ErrorResponse errorObject = new ErrorResponse();
+		ErrorResponseFactory factory = new ErrorResponseFactory();
+		ErrorResponse errorObject = factory.create();
 		errorObject.setHttpStatus(HttpStatus.BAD_REQUEST);
 		errorObject.setFriendlyMessage(friendlyMessage);
 		errorObject.setDebugMessage(debugMessage);
@@ -160,7 +164,8 @@ public class POSTNonRdfRequestHandler extends AbstractRequestHandler {
 			LOG.debug("<< handlePOSTToNonContainer() > {}", debugMessage);
 		}
 
-		ErrorResponse errorObject = new ErrorResponse();
+		ErrorResponseFactory factory = new ErrorResponseFactory();
+		ErrorResponse errorObject = factory.create();
 		errorObject.setHttpStatus(HttpStatus.BAD_REQUEST);
 		errorObject.setFriendlyMessage(friendlyMessage);
 		errorObject.setDebugMessage(debugMessage);
@@ -199,7 +204,8 @@ public class POSTNonRdfRequestHandler extends AbstractRequestHandler {
 			LOG.debug("<< handleExistingRequestResource() > {}", debugMessage);
 		}
 
-		ErrorResponse errorObject = new ErrorResponse();
+		ErrorResponseFactory factory = new ErrorResponseFactory();
+		ErrorResponse errorObject = factory.create();
 		errorObject.setHttpStatus(HttpStatus.CONFLICT);
 		errorObject.setFriendlyMessage(friendlyMessage);
 		errorObject.setDebugMessage(debugMessage);
@@ -242,7 +248,8 @@ public class POSTNonRdfRequestHandler extends AbstractRequestHandler {
 				LOG.debug("<< validateFileParameter() > {}", debugMessage);
 			}
 
-			ErrorResponse errorObject = new ErrorResponse();
+			ErrorResponseFactory factory = new ErrorResponseFactory();
+			ErrorResponse errorObject = factory.create();
 			errorObject.setHttpStatus(HttpStatus.BAD_REQUEST);
 			errorObject.setFriendlyMessage(friendlyMessage);
 			errorObject.setDebugMessage(debugMessage);
@@ -259,7 +266,8 @@ public class POSTNonRdfRequestHandler extends AbstractRequestHandler {
 				LOG.debug("<< validateFileParameter() > {}", debugMessage);
 			}
 
-			ErrorResponse errorObject = new ErrorResponse();
+			ErrorResponseFactory factory = new ErrorResponseFactory();
+			ErrorResponse errorObject = factory.create();
 			errorObject.setHttpStatus(HttpStatus.BAD_REQUEST);
 			errorObject.setFriendlyMessage(friendlyMessage);
 			errorObject.setDebugMessage(debugMessage);
@@ -280,7 +288,8 @@ public class POSTNonRdfRequestHandler extends AbstractRequestHandler {
 				LOG.debug("<< getTargetURIObject() > The authenticated agent doesn't have DISCOVER access to the resource with URI: {}", targetURI);
 			}
 
-			ErrorResponse errorObject = new ErrorResponse();
+			ErrorResponseFactory factory = new ErrorResponseFactory();
+			ErrorResponse errorObject = factory.create();
 			errorObject.setFriendlyMessage(friendlyMessage);
 			errorObject.setHttpStatus(HttpStatus.NOT_FOUND);
 
@@ -375,7 +384,8 @@ public class POSTNonRdfRequestHandler extends AbstractRequestHandler {
 				LOG.debug("<< getRequestURIObject() > The authenticated agent doesn't have DISCOVER access to the resource with URI: {}", requestURI);
 			}
 
-			ErrorResponse errorObject = new ErrorResponse();
+			ErrorResponseFactory factory = new ErrorResponseFactory();
+			ErrorResponse errorObject = factory.create();
 			errorObject.setFriendlyMessage(friendlyMessage);
 			errorObject.setHttpStatus(HttpStatus.BAD_REQUEST);
 

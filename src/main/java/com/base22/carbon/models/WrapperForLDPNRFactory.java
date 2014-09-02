@@ -48,6 +48,7 @@ public class WrapperForLDPNRFactory extends LDPRSourceFactory {
 
 		wrapper = new WrapperForLDPNRImpl(resource);
 		wrapper.setType(Resources.WRAPPER.getResource());
+		wrapper.setTimestamps();
 
 		String originalFileName = FileUtil.getFileName(file);
 		String extension = FileUtil.getFileExtension(file);

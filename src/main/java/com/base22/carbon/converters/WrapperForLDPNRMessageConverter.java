@@ -4,13 +4,11 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.jena.riot.Lang;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpInputMessage;
 import org.springframework.http.HttpOutputMessage;
@@ -20,14 +18,14 @@ import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.http.converter.HttpMessageNotWritableException;
 
 import com.base22.carbon.constants.LDPNR;
+import com.base22.carbon.constants.LDPR;
+import com.base22.carbon.models.HttpHeaderValue;
 import com.base22.carbon.models.WrapperForLDPNR;
 import com.base22.carbon.utils.HttpUtil;
 
 public class WrapperForLDPNRMessageConverter implements HttpMessageConverter<WrapperForLDPNR> {
 
 	protected final Log logger = LogFactory.getLog(getClass());
-
-	private List<Lang> supportedLanguages = Collections.emptyList();
 
 	public WrapperForLDPNRMessageConverter() {
 
@@ -62,7 +60,6 @@ public class WrapperForLDPNRMessageConverter implements HttpMessageConverter<Wra
 
 		if ( wrapper.getFileInputStream() == null ) {
 			// The wrapper will be sent as an LDPRSource
-			// TODO: Handle the contentType
 			LDPResourceMessageConverter converter = new LDPResourceMessageConverter();
 			converter.write(wrapper, contentType, outputMessage);
 			return;
@@ -74,6 +71,7 @@ public class WrapperForLDPNRMessageConverter implements HttpMessageConverter<Wra
 		addContentTypeHeader(headers, wrapper);
 		addLinkTypeHeaders(headers, wrapper);
 		addETagHeader(headers, wrapper);
+		addDescribedByHeader(headers, wrapper);
 
 		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
@@ -82,12 +80,22 @@ public class WrapperForLDPNRMessageConverter implements HttpMessageConverter<Wra
 		// Set the Content-Length
 		headers.add(com.base22.carbon.constants.HttpHeaders.CONTENT_LENGTH, String.valueOf(outputStream.size()));
 		outputStream.writeTo(outputMessage.getBody());
+		try {
+			outputStream.close();
+		} catch (IOException e) {
+			// TODO: FT
+		}
 
 		outputMessage.getBody().flush();
 	}
 
 	private void writeFile(WrapperForLDPNR wrapper, MediaType contentType, OutputStream outputStream) throws IOException {
 		IOUtils.copy(wrapper.getFileInputStream(), outputStream);
+		try {
+			wrapper.getFileInputStream().close();
+		} catch (IOException e) {
+			// TODO: FT
+		}
 	}
 
 	private void addLocationHeader(HttpHeaders headers, WrapperForLDPNR wrapper) {
@@ -99,12 +107,35 @@ public class WrapperForLDPNRMessageConverter implements HttpMessageConverter<Wra
 	}
 
 	private void addLinkTypeHeaders(HttpHeaders headers, WrapperForLDPNR wrapper) {
-		headers.add(com.base22.carbon.constants.HttpHeaders.LINK, LDPNR.NR_LINK_TYPE);
+		HttpHeaderValue header = null;
+
+		header = new HttpHeaderValue();
+		header.setMainValue(LDPR.Resources.CLASS.getUri());
+		header.setExtendingKey("rel");
+		header.setExtendingValue("type");
+
+		headers.add(com.base22.carbon.constants.HttpHeaders.LINK, header.toString());
+
+		header.setMainValue(LDPNR.NR_TYPE);
+
+		headers.add(com.base22.carbon.constants.HttpHeaders.LINK, header.toString());
 	}
 
 	private void addETagHeader(HttpHeaders headers, WrapperForLDPNR wrapper) {
 		if ( wrapper.getETag() != null ) {
 			headers.add(com.base22.carbon.constants.HttpHeaders.ETAG, HttpUtil.formatWeakETag(wrapper.getETag()));
 		}
+	}
+
+	private void addDescribedByHeader(HttpHeaders headers, WrapperForLDPNR wrapper) {
+		StringBuilder describedByBuilder = new StringBuilder();
+		describedByBuilder.append("<").append(wrapper.getURI()).append(">");
+
+		HttpHeaderValue headerValue = new HttpHeaderValue();
+		headerValue.setMainValue(describedByBuilder.toString());
+		headerValue.setExtendingKey("rel");
+		headerValue.setExtendingValue("describedby");
+
+		headers.add(com.base22.carbon.constants.HttpHeaders.LINK, headerValue.toString());
 	}
 }

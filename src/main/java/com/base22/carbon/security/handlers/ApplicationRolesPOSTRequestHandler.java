@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component;
 
 import com.base22.carbon.exceptions.CarbonException;
 import com.base22.carbon.models.ErrorResponse;
+import com.base22.carbon.models.ErrorResponseFactory;
 import com.base22.carbon.models.LDPResource;
 import com.base22.carbon.models.LDPResourceFactory;
 import com.base22.carbon.security.models.Application;
@@ -67,7 +68,8 @@ public class ApplicationRolesPOSTRequestHandler extends AbstractApplicationAPIRe
 			LOG.debug("xx handleNonExistentParent() > {}", debugMessage);
 		}
 
-		ErrorResponse errorObject = new ErrorResponse();
+		ErrorResponseFactory errorFactory = new ErrorResponseFactory();
+		ErrorResponse errorObject = errorFactory.create();
 		errorObject.setHttpStatus(HttpStatus.NOT_FOUND);
 		errorObject.setFriendlyMessage(friendlyMessage);
 		errorObject.setDebugMessage(debugMessage);
@@ -85,7 +87,8 @@ public class ApplicationRolesPOSTRequestHandler extends AbstractApplicationAPIRe
 			LOG.debug("xx handleParentOutsideOfApplication() > {}", debugMessage);
 		}
 
-		ErrorResponse errorObject = new ErrorResponse();
+		ErrorResponseFactory errorFactory = new ErrorResponseFactory();
+		ErrorResponse errorObject = errorFactory.create();
 		errorObject.setHttpStatus(HttpStatus.NOT_FOUND);
 		errorObject.setFriendlyMessage(friendlyMessage);
 		errorObject.setDebugMessage(debugMessage);
@@ -115,18 +118,19 @@ public class ApplicationRolesPOSTRequestHandler extends AbstractApplicationAPIRe
 
 	// TODO: Validate other properties that are not required or will be ignored
 	protected void validateApplicationRole(ApplicationRole applicationRole) throws CarbonException {
+		ErrorResponseFactory errorFactory = new ErrorResponseFactory();
 		ErrorResponse errorObject = null;
 
 		if ( applicationRole.getParentUUID() == null ) {
 			if ( errorObject == null ) {
-				errorObject = new ErrorResponse();
+				errorObject = errorFactory.create();
 			}
 
 			errorObject.addParameterIssue(ApplicationRole.Properties.PARENT.getPrefixedURI().getSlug(), null, "required", null);
 		}
 		if ( applicationRole.getName() == null ) {
 			if ( errorObject == null ) {
-				errorObject = new ErrorResponse();
+				errorObject = errorFactory.create();
 			}
 
 			errorObject.addParameterIssue(ApplicationRole.Properties.NAME.getPrefixedURI().getSlug(), null, "required", null);

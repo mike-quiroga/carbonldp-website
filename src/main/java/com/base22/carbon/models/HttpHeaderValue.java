@@ -26,13 +26,14 @@ public class HttpHeaderValue {
 			mainBuilder.append(this.mainKey).append("=");
 		}
 		if ( this.mainValue != null ) {
-			boolean specialCharacters = hasSpecialCharacters(this.mainValue);
-			if ( specialCharacters ) {
-				mainBuilder.append("\"");
-			}
 			mainBuilder.append(this.mainValue);
-			if ( specialCharacters ) {
-				mainBuilder.append("\"");
+
+			if ( ! (this.mainValue.startsWith("<") && this.mainValue.endsWith(">")) ) {
+				boolean specialCharacters = hasSpecialCharacters(this.mainValue);
+				if ( specialCharacters ) {
+					mainBuilder.insert(0, "\"");
+					mainBuilder.append("\"");
+				}
 			}
 		}
 		if ( mainBuilder.length() == 0 ) {
@@ -68,13 +69,13 @@ public class HttpHeaderValue {
 			extendingBuilder.append(this.extendingKey).append("=");
 		}
 		if ( this.extendingValue != null ) {
-			boolean specialCharacters = hasSpecialCharacters(this.extendingValue);
-			if ( specialCharacters ) {
-				extendingBuilder.append("\"");
-			}
 			extendingBuilder.append(this.extendingValue);
-			if ( specialCharacters ) {
-				extendingBuilder.append("\"");
+			if ( ! (this.extendingValue.startsWith("<") && this.extendingValue.endsWith(">")) ) {
+				boolean specialCharacters = hasSpecialCharacters(this.extendingValue);
+				if ( specialCharacters ) {
+					extendingBuilder.insert(0, "\"");
+					extendingBuilder.append("\"");
+				}
 			}
 		}
 		if ( extendingBuilder.length() == 0 ) {

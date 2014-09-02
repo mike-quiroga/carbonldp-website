@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 
 import com.base22.carbon.exceptions.CarbonException;
 import com.base22.carbon.models.ErrorResponse;
+import com.base22.carbon.models.ErrorResponseFactory;
 import com.base22.carbon.security.models.ACLSystemResource;
 import com.base22.carbon.security.models.ACLSystemResourceFactory;
 import com.base22.carbon.security.models.ApplicationRole;
@@ -124,7 +125,8 @@ public class ApplicationRolePUTRequestHandler extends AbstractApplicationRoleAPI
 				LOG.debug("<< validateAppRoleChanges() > {}", debugMessage);
 			}
 
-			ErrorResponse errorObject = new ErrorResponse();
+			ErrorResponseFactory errorFactory = new ErrorResponseFactory();
+			ErrorResponse errorObject = errorFactory.create();
 			errorObject.setHttpStatus(HttpStatus.BAD_REQUEST);
 			errorObject.setFriendlyMessage(friendlyMessage);
 			errorObject.setDebugMessage(debugMessage);
@@ -154,7 +156,8 @@ public class ApplicationRolePUTRequestHandler extends AbstractApplicationRoleAPI
 				LOG.debug("<< validateRequestAclSR() > {}", debugMessage);
 			}
 
-			ErrorResponse errorObject = new ErrorResponse();
+			ErrorResponseFactory errorFactory = new ErrorResponseFactory();
+			ErrorResponse errorObject = errorFactory.create();
 			errorObject.setHttpStatus(HttpStatus.BAD_REQUEST);
 			errorObject.setFriendlyMessage(friendlyMessage);
 			errorObject.setDebugMessage(debugMessage);

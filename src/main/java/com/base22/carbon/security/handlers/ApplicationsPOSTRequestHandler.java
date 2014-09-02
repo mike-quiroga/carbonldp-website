@@ -17,6 +17,7 @@ import org.springframework.stereotype.Component;
 
 import com.base22.carbon.exceptions.CarbonException;
 import com.base22.carbon.models.ErrorResponse;
+import com.base22.carbon.models.ErrorResponseFactory;
 import com.base22.carbon.models.LDPContainer;
 import com.base22.carbon.models.LDPContainerFactory;
 import com.base22.carbon.security.models.Application;
@@ -98,7 +99,8 @@ public class ApplicationsPOSTRequestHandler extends AbstractApplicationAPIReques
 			LOG.debug("<< handleSlugAlreadyRegistred() > {}", debugMessage);
 		}
 
-		ErrorResponse errorObject = new ErrorResponse();
+		ErrorResponseFactory errorFactory = new ErrorResponseFactory();
+		ErrorResponse errorObject = errorFactory.create();
 		errorObject.setHttpStatus(HttpStatus.CONFLICT);
 		errorObject.setFriendlyMessage(friendlyMessage);
 		errorObject.setDebugMessage(debugMessage);
@@ -181,7 +183,8 @@ public class ApplicationsPOSTRequestHandler extends AbstractApplicationAPIReques
 				LOG.debug("<< validateRequestRDFApplication() > {}", debugMessage);
 			}
 
-			ErrorResponse errorObject = new ErrorResponse();
+			ErrorResponseFactory errorFactory = new ErrorResponseFactory();
+			ErrorResponse errorObject = errorFactory.create();
 			errorObject.setHttpStatus(HttpStatus.BAD_REQUEST);
 			errorObject.setFriendlyMessage(friendlyMessage);
 			errorObject.setDebugMessage(debugMessage);

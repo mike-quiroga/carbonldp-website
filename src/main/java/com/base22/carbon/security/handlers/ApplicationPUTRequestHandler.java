@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component;
 
 import com.base22.carbon.exceptions.CarbonException;
 import com.base22.carbon.models.ErrorResponse;
+import com.base22.carbon.models.ErrorResponseFactory;
 import com.base22.carbon.security.models.ACLSystemResource;
 import com.base22.carbon.security.models.ACLSystemResourceFactory;
 import com.base22.carbon.security.models.Application;
@@ -58,7 +59,8 @@ public class ApplicationPUTRequestHandler extends AbstractApplicationAPIRequestH
 			LOG.debug("xx handleNonExistentApplication() > {}", debugMessage);
 		}
 
-		ErrorResponse errorObject = new ErrorResponse();
+		ErrorResponseFactory errorFactory = new ErrorResponseFactory();
+		ErrorResponse errorObject = errorFactory.create();
 		errorObject.setHttpStatus(HttpStatus.NOT_FOUND);
 		errorObject.setFriendlyMessage(friendlyMessage);
 		errorObject.setDebugMessage(debugMessage);
@@ -152,7 +154,8 @@ public class ApplicationPUTRequestHandler extends AbstractApplicationAPIRequestH
 				LOG.debug("<< validateAppChanges() > {}", debugMessage);
 			}
 
-			ErrorResponse errorObject = new ErrorResponse();
+			ErrorResponseFactory errorFactory = new ErrorResponseFactory();
+			ErrorResponse errorObject = errorFactory.create();
 			errorObject.setHttpStatus(HttpStatus.BAD_REQUEST);
 			errorObject.setFriendlyMessage(friendlyMessage);
 			errorObject.setDebugMessage(debugMessage);
@@ -182,7 +185,8 @@ public class ApplicationPUTRequestHandler extends AbstractApplicationAPIRequestH
 				LOG.debug("<< validateRequestAclSR() > {}", debugMessage);
 			}
 
-			ErrorResponse errorObject = new ErrorResponse();
+			ErrorResponseFactory errorFactory = new ErrorResponseFactory();
+			ErrorResponse errorObject = errorFactory.create();
 			errorObject.setHttpStatus(HttpStatus.BAD_REQUEST);
 			errorObject.setFriendlyMessage(friendlyMessage);
 			errorObject.setDebugMessage(debugMessage);

@@ -19,6 +19,7 @@ import com.base22.carbon.constants.Carbon;
 import com.base22.carbon.constants.HttpHeaders;
 import com.base22.carbon.exceptions.CarbonException;
 import com.base22.carbon.models.ErrorResponse;
+import com.base22.carbon.models.ErrorResponseFactory;
 import com.base22.carbon.security.models.ACLSystemResource;
 import com.base22.carbon.security.models.ACLSystemResourceFactory;
 import com.base22.carbon.utils.HttpUtil;
@@ -99,7 +100,8 @@ public class PUTRequestHandler extends AbstractCreationRequestHandler {
 			LOG.debug("<< handleNonConditionalPUT() > {}", debugMessage);
 		}
 
-		ErrorResponse errorObject = new ErrorResponse();
+		ErrorResponseFactory factory = new ErrorResponseFactory();
+		ErrorResponse errorObject = factory.create();
 		errorObject.setFriendlyMessage(debugMessage);
 		errorObject.setDebugMessage(debugMessage);
 		errorObject.addHeaderIssue("If-Match", null, "required", null);
@@ -178,7 +180,8 @@ public class PUTRequestHandler extends AbstractCreationRequestHandler {
 					LOG.debug("<< processRequestModel() > {}", debugMessage);
 				}
 
-				ErrorResponse errorObject = new ErrorResponse();
+				ErrorResponseFactory factory = new ErrorResponseFactory();
+				ErrorResponse errorObject = factory.create();
 				errorObject.setHttpStatus(HttpStatus.BAD_REQUEST);
 				errorObject.setFriendlyMessage(debugMessage);
 				errorObject.setDebugMessage(debugMessage);
@@ -196,7 +199,8 @@ public class PUTRequestHandler extends AbstractCreationRequestHandler {
 						LOG.debug("<< processRequestModel() > {}", debugMessage);
 					}
 
-					ErrorResponse errorObject = new ErrorResponse();
+					ErrorResponseFactory factory = new ErrorResponseFactory();
+					ErrorResponse errorObject = factory.create();
 					errorObject.setHttpStatus(HttpStatus.BAD_REQUEST);
 					errorObject.setFriendlyMessage(debugMessage);
 					errorObject.setDebugMessage(debugMessage);
@@ -219,7 +223,8 @@ public class PUTRequestHandler extends AbstractCreationRequestHandler {
 						LOG.debug("<< processRequestModel() > {}", debugMessage);
 					}
 
-					ErrorResponse errorObject = new ErrorResponse();
+					ErrorResponseFactory factory = new ErrorResponseFactory();
+					ErrorResponse errorObject = factory.create();
 					errorObject.setHttpStatus(HttpStatus.BAD_REQUEST);
 					errorObject
 							.setFriendlyMessage("In a PUT request only one document resource can exist and it needs to be the same as the request URI. Remember POST to parent, PUT to me.");
@@ -257,7 +262,8 @@ public class PUTRequestHandler extends AbstractCreationRequestHandler {
 					LOG.debug("<< handlePut() > {}", debugMessage);
 				}
 
-				ErrorResponse errorObject = new ErrorResponse();
+				ErrorResponseFactory factory = new ErrorResponseFactory();
+				ErrorResponse errorObject = factory.create();
 				errorObject.setHttpStatus(HttpStatus.PRECONDITION_FAILED);
 				errorObject.setFriendlyMessage("The resource has been externally modified while processing the request. The request will be aborted.");
 				errorObject.setDebugMessage(debugMessage);
@@ -294,7 +300,8 @@ public class PUTRequestHandler extends AbstractCreationRequestHandler {
 				LOG.debug("<< validateRequestAclSR() > {}", debugMessage);
 			}
 
-			ErrorResponse errorObject = new ErrorResponse();
+			ErrorResponseFactory errorFactory = new ErrorResponseFactory();
+			ErrorResponse errorObject = errorFactory.create();
 			errorObject.setHttpStatus(HttpStatus.BAD_REQUEST);
 			errorObject.setFriendlyMessage(friendlyMessage);
 			errorObject.setDebugMessage(debugMessage);

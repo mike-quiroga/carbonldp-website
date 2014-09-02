@@ -25,6 +25,7 @@ import com.base22.carbon.constants.APIPreferences.RetrieveContainerPreference;
 import com.base22.carbon.constants.HttpHeaders;
 import com.base22.carbon.exceptions.CarbonException;
 import com.base22.carbon.models.ErrorResponse;
+import com.base22.carbon.models.ErrorResponseFactory;
 import com.base22.carbon.models.HttpHeader;
 import com.base22.carbon.models.HttpHeaderValue;
 import com.base22.carbon.models.LDPContainer;
@@ -300,7 +301,8 @@ public class RetrieveRequestHandler extends AbstractRequestHandler {
 				LOG.error("<< handleLDPNRRetrieval() > {}", debugMessage);
 			}
 
-			ErrorResponse errorObject = new ErrorResponse();
+			ErrorResponseFactory errorFactory = new ErrorResponseFactory();
+			ErrorResponse errorObject = errorFactory.create();
 			errorObject.setFriendlyMessage("There was a problem while trying to process the request.");
 			errorObject.setDebugMessage(debugMessage);
 
@@ -318,7 +320,8 @@ public class RetrieveRequestHandler extends AbstractRequestHandler {
 		} catch (FileNotFoundException e) {
 			String debugMessage = MessageFormat.format("The file for the WrapperForLDPNR with URI: {0}, couldn't be find.", documentURI);
 
-			ErrorResponse errorObject = new ErrorResponse();
+			ErrorResponseFactory errorFactory = new ErrorResponseFactory();
+			ErrorResponse errorObject = errorFactory.create();
 			errorObject.setFriendlyMessage("There was a problem while trying to process the request.");
 			errorObject.setDebugMessage(debugMessage);
 

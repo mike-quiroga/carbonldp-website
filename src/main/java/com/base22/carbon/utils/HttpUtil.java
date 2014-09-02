@@ -431,6 +431,6 @@ public abstract class HttpUtil {
 			errorStatus = HttpStatus.I_AM_A_TEAPOT;
 			errorResponse.setHttpStatus(errorStatus);
 		}
-		return new ResponseEntity<Object>(errorResponse.generateModel(), errorStatus);
+		return new ResponseEntity<Object>(errorResponse, errorStatus);
 	}
 }

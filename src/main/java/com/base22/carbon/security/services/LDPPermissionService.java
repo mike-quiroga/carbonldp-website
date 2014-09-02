@@ -26,6 +26,7 @@ import org.springframework.stereotype.Service;
 
 import com.base22.carbon.exceptions.CarbonException;
 import com.base22.carbon.models.ErrorResponse;
+import com.base22.carbon.models.ErrorResponseFactory;
 import com.base22.carbon.models.LDPResource;
 import com.base22.carbon.security.constants.AceSR.SubjectType;
 import com.base22.carbon.security.dao.AgentLoginDetailsDAO;
@@ -177,7 +178,8 @@ public class LDPPermissionService {
 						LOG.debug("<< validateACLModification() > {}", entityBodyIssue);
 					}
 
-					ErrorResponse errorObject = new ErrorResponse();
+					ErrorResponseFactory errorFactory = new ErrorResponseFactory();
+					ErrorResponse errorObject = errorFactory.create();
 					errorObject.setHttpStatus(HttpStatus.NOT_IMPLEMENTED);
 					errorObject.setFriendlyMessage("The request can't be completed.");
 					errorObject.setDebugMessage("Assignation of permissions to something else than an Application Role hasn't been implemented.");
@@ -249,7 +251,8 @@ public class LDPPermissionService {
 				LOG.debug("<< validateACLModification() > {}", entityBodyIssue);
 			}
 
-			ErrorResponse errorObject = new ErrorResponse();
+			ErrorResponseFactory errorFactory = new ErrorResponseFactory();
+			ErrorResponse errorObject = errorFactory.create();
 			errorObject.setHttpStatus(HttpStatus.UNAUTHORIZED);
 			errorObject.setFriendlyMessage("The request can't be completed.");
 			errorObject.setDebugMessage(entityBodyIssue);
@@ -340,7 +343,8 @@ public class LDPPermissionService {
 				LOG.debug("<< validateAffectedApplicationRole() > {}", entityBodyIssue);
 			}
 
-			ErrorResponse errorObject = new ErrorResponse();
+			ErrorResponseFactory errorFactory = new ErrorResponseFactory();
+			ErrorResponse errorObject = errorFactory.create();
 			errorObject.setHttpStatus(HttpStatus.UNAUTHORIZED);
 			errorObject.setFriendlyMessage("The request can't be completed.");
 			errorObject.setDebugMessage(entityBodyIssue);
@@ -378,7 +382,8 @@ public class LDPPermissionService {
 				LOG.debug("<< validateACLModification() > {}", entityBodyIssue);
 			}
 
-			ErrorResponse errorObject = new ErrorResponse();
+			ErrorResponseFactory errorFactory = new ErrorResponseFactory();
+			ErrorResponse errorObject = errorFactory.create();
 			errorObject.setHttpStatus(HttpStatus.UNAUTHORIZED);
 			errorObject.setFriendlyMessage("The request can't be completed.");
 			errorObject.setDebugMessage(entityBodyIssue);
@@ -396,7 +401,8 @@ public class LDPPermissionService {
 			LOG.debug("<< validateACLModification() > {}", entityBodyIssue);
 		}
 
-		ErrorResponse errorObject = new ErrorResponse();
+		ErrorResponseFactory errorFactory = new ErrorResponseFactory();
+		ErrorResponse errorObject = errorFactory.create();
 		errorObject.setHttpStatus(HttpStatus.NOT_IMPLEMENTED);
 		errorObject.setFriendlyMessage("The request can't be completed.");
 		errorObject.setDebugMessage("Assignation of permissions to something else than an Application Role hasn't been implemented.");
@@ -410,7 +416,8 @@ public class LDPPermissionService {
 			LOG.debug("<< validateACLModification() > {}", entityBodyIssue);
 		}
 
-		ErrorResponse errorObject = new ErrorResponse();
+		ErrorResponseFactory errorFactory = new ErrorResponseFactory();
+		ErrorResponse errorObject = errorFactory.create();
 		errorObject.setHttpStatus(HttpStatus.NOT_IMPLEMENTED);
 		errorObject.setFriendlyMessage("The request can't be completed.");
 		errorObject.setDebugMessage("Assignation of permissions to something else than an Application Role hasn't been implemented.");

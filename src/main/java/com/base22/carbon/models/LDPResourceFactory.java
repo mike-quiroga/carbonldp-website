@@ -70,6 +70,45 @@ public class LDPResourceFactory {
 		}
 
 		@Override
+		public Integer getInteger(Property property) {
+			if ( ! this.getResource().hasProperty(property) ) {
+				return null;
+			}
+
+			Statement statement = this.getResource().getProperty(property);
+			if ( statement == null ) {
+				return null;
+			}
+
+			try {
+				return statement.getInt();
+			} catch (Exception ignore) {
+				return null;
+			}
+		}
+
+		@Override
+		public Integer[] getIntegers(Property property) {
+			List<Integer> ints = new ArrayList<Integer>();
+			if ( ! this.getResource().hasProperty(property) ) {
+				return ints.toArray(new Integer[ints.size()]);
+			}
+
+			StmtIterator iterator = this.getResource().listProperties(property);
+
+			while (iterator.hasNext()) {
+				Statement statement = iterator.next();
+
+				try {
+					ints.add(statement.getInt());
+				} catch (Exception ignore) {
+				}
+			}
+
+			return ints.toArray(new Integer[ints.size()]);
+		}
+
+		@Override
 		public String getStringProperty(Property property) {
 			if ( ! this.getResource().hasProperty(property) ) {
 				return null;
@@ -133,20 +172,26 @@ public class LDPResourceFactory {
 		}
 
 		@Override
-		public void setProperty(Property property, String value) {
-			if ( this.getResource().hasProperty(property) ) {
-				this.getResource().removeAll(property);
+		public void addProperty(Property property, int value) {
+			this.getResource().addLiteral(property, value);
+		}
+
+		@Override
+		public void addProperty(Property property, int[] values) {
+			for (int value : values) {
+				this.getResource().addLiteral(property, value);
 			}
+		}
+
+		@Override
+		public void addProperty(Property property, String value) {
 			if ( value != null ) {
 				this.getResource().addProperty(property, value);
 			}
 		}
 
 		@Override
-		public void setProperty(Property property, String[] values) {
-			if ( this.getResource().hasProperty(property) ) {
-				this.getResource().removeAll(property);
-			}
+		public void addProperty(Property property, String[] values) {
 			if ( values != null ) {
 				for (String value : values) {
 					this.getResource().addProperty(property, value);
@@ -155,12 +200,50 @@ public class LDPResourceFactory {
 		}
 
 		@Override
+		public void addProperty(Property property, UUID value) {
+
+		}
+
+		@Override
+		public void setProperty(Property property, int value) {
+			this.removeProperty(property);
+			this.addProperty(property, value);
+		}
+
+		@Override
+		public void setProperty(Property property, int[] values) {
+			this.removeProperty(property);
+			this.addProperty(property, values);
+		}
+
+		@Override
+		public void setProperty(Property property, String value) {
+			this.removeProperty(property);
+			this.addProperty(property, value);
+		}
+
+		@Override
+		public void setProperty(Property property, String[] values) {
+			this.removeProperty(property);
+			this.addProperty(property, values);
+		}
+
+		@Override
 		public void setProperty(Property property, UUID value) {
+			this.removeProperty(property);
+
 			String stringValue = null;
 			if ( value != null ) {
-				value.toString();
+				stringValue = value.toString();
 			}
 			this.setProperty(property, stringValue);
+		}
+
+		@Override
+		public void removeProperty(Property property) {
+			if ( this.getResource().hasProperty(property) ) {
+				this.getResource().removeAll(property);
+			}
 		}
 
 		@Override

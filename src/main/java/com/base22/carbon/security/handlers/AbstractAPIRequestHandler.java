@@ -11,6 +11,7 @@ import org.springframework.util.AntPathMatcher;
 
 import com.base22.carbon.exceptions.CarbonException;
 import com.base22.carbon.models.ErrorResponse;
+import com.base22.carbon.models.ErrorResponseFactory;
 import com.base22.carbon.security.dao.AgentLoginDetailsDAO;
 import com.base22.carbon.security.dao.ApplicationDAO;
 import com.base22.carbon.security.dao.ApplicationRoleDAO;
@@ -79,7 +80,8 @@ public abstract class AbstractAPIRequestHandler {
 					LOG.debug("xx getRequestModelMainResource() > {}", entityBodyMessage);
 				}
 
-				ErrorResponse errorObject = new ErrorResponse();
+				ErrorResponseFactory errorFactory = new ErrorResponseFactory();
+				ErrorResponse errorObject = errorFactory.create();
 				errorObject.setHttpStatus(HttpStatus.BAD_REQUEST);
 				errorObject.setFriendlyMessage(friendlyMessage);
 				errorObject.setDebugMessage(debugMessage);
@@ -98,7 +100,8 @@ public abstract class AbstractAPIRequestHandler {
 					LOG.debug("xx getRequestModelMainResource() > {}", entityBodyMessage);
 				}
 
-				ErrorResponse errorObject = new ErrorResponse();
+				ErrorResponseFactory errorFactory = new ErrorResponseFactory();
+				ErrorResponse errorObject = errorFactory.create();
 				errorObject.setHttpStatus(HttpStatus.BAD_REQUEST);
 				errorObject.setFriendlyMessage(friendlyMessage);
 				errorObject.setDebugMessage(debugMessage);
@@ -116,7 +119,8 @@ public abstract class AbstractAPIRequestHandler {
 						LOG.debug("xx getRequestModelMainResource() > {}", debugMessage);
 					}
 
-					ErrorResponse errorObject = new ErrorResponse();
+					ErrorResponseFactory errorFactory = new ErrorResponseFactory();
+					ErrorResponse errorObject = errorFactory.create();
 					errorObject.setHttpStatus(HttpStatus.BAD_REQUEST);
 					errorObject.setFriendlyMessage(friendlyMessage);
 					errorObject.setDebugMessage(debugMessage);

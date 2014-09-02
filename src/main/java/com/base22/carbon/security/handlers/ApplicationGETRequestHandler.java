@@ -16,6 +16,7 @@ import org.springframework.stereotype.Component;
 import com.base22.carbon.constants.HttpHeaders;
 import com.base22.carbon.exceptions.CarbonException;
 import com.base22.carbon.models.ErrorResponse;
+import com.base22.carbon.models.ErrorResponseFactory;
 import com.base22.carbon.models.HttpHeader;
 import com.base22.carbon.models.HttpHeaderValue;
 import com.base22.carbon.security.constants.AclSR;
@@ -65,7 +66,8 @@ public class ApplicationGETRequestHandler extends AbstractApplicationAPIRequestH
 			LOG.debug("xx handleNonExistentApplication() > {}", debugMessage);
 		}
 
-		ErrorResponse errorObject = new ErrorResponse();
+		ErrorResponseFactory errorFactory = new ErrorResponseFactory();
+		ErrorResponse errorObject = errorFactory.create();
 		errorObject.setHttpStatus(HttpStatus.NOT_FOUND);
 		errorObject.setFriendlyMessage(friendlyMessage);
 		errorObject.setDebugMessage(debugMessage);

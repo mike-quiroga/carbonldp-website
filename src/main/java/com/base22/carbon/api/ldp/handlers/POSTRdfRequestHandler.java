@@ -24,6 +24,7 @@ import com.base22.carbon.constants.LDPC;
 import com.base22.carbon.constants.LDPC.ContainerType;
 import com.base22.carbon.exceptions.CarbonException;
 import com.base22.carbon.models.ErrorResponse;
+import com.base22.carbon.models.ErrorResponseFactory;
 import com.base22.carbon.models.HttpHeader;
 import com.base22.carbon.models.LDPContainer;
 import com.base22.carbon.models.LDPContainerFactory;
@@ -152,7 +153,8 @@ public class POSTRdfRequestHandler extends AbstractCreationRequestHandler {
 			LOG.debug("<< processEntityBodyModel() > {}", debugMessage);
 		}
 
-		ErrorResponse errorObject = new ErrorResponse();
+		ErrorResponseFactory factory = new ErrorResponseFactory();
+		ErrorResponse errorObject = factory.create();
 		errorObject.setHttpStatus(HttpStatus.BAD_REQUEST);
 		errorObject.setFriendlyMessage(friendlyMessage);
 		errorObject.setDebugMessage(debugMessage);
@@ -299,7 +301,8 @@ public class POSTRdfRequestHandler extends AbstractCreationRequestHandler {
 				String friendlyMessage = "Unexpected Server Error.";
 				String debugMessage = "An unexpected problem related with an InputStream rised when parsing the entity body.";
 
-				ErrorResponse errorObject = new ErrorResponse();
+				ErrorResponseFactory factory = new ErrorResponseFactory();
+				ErrorResponse errorObject = factory.create();
 				errorObject.setHttpStatus(HttpStatus.INTERNAL_SERVER_ERROR);
 				errorObject.setFriendlyMessage(friendlyMessage);
 				errorObject.setDebugMessage(debugMessage);
@@ -340,7 +343,8 @@ public class POSTRdfRequestHandler extends AbstractCreationRequestHandler {
 							LOG.debug("<< processEntityBodyModel() > {}", debugMessage);
 						}
 
-						ErrorResponse errorObject = new ErrorResponse();
+						ErrorResponseFactory factory = new ErrorResponseFactory();
+						ErrorResponse errorObject = factory.create();
 						errorObject.setHttpStatus(HttpStatus.BAD_REQUEST);
 						errorObject.setFriendlyMessage(friendlyMessage);
 						errorObject.setDebugMessage(debugMessage);
@@ -375,7 +379,8 @@ public class POSTRdfRequestHandler extends AbstractCreationRequestHandler {
 								LOG.debug("<< processEntityBodyModel() > {}", debugMessage);
 							}
 
-							ErrorResponse errorObject = new ErrorResponse();
+							ErrorResponseFactory factory = new ErrorResponseFactory();
+							ErrorResponse errorObject = factory.create();
 							errorObject.setHttpStatus(HttpStatus.BAD_REQUEST);
 							errorObject.setFriendlyMessage(friendlyMessage);
 							errorObject.setDebugMessage(debugMessage);
@@ -402,7 +407,8 @@ public class POSTRdfRequestHandler extends AbstractCreationRequestHandler {
 						LOG.debug("<< processEntityBodyModel() > {}", debugMessage);
 					}
 
-					ErrorResponse errorObject = new ErrorResponse();
+					ErrorResponseFactory factory = new ErrorResponseFactory();
+					ErrorResponse errorObject = factory.create();
 					errorObject.setHttpStatus(HttpStatus.BAD_REQUEST);
 					errorObject.setFriendlyMessage(friendlyMessage);
 					errorObject.setDebugMessage(debugMessage);
@@ -423,7 +429,8 @@ public class POSTRdfRequestHandler extends AbstractCreationRequestHandler {
 							LOG.debug("<< processEntityBodyModel() > {}", entityBodyMessage);
 						}
 
-						ErrorResponse errorObject = new ErrorResponse();
+						ErrorResponseFactory factory = new ErrorResponseFactory();
+						ErrorResponse errorObject = factory.create();
 						errorObject.setHttpStatus(HttpStatus.BAD_REQUEST);
 						errorObject.setFriendlyMessage(friendlyMessage);
 						errorObject.setDebugMessage(debugMessage);
@@ -443,7 +450,8 @@ public class POSTRdfRequestHandler extends AbstractCreationRequestHandler {
 							LOG.debug("<< processEntityBodyModel() > {}", debugMessage);
 						}
 
-						ErrorResponse errorObject = new ErrorResponse();
+						ErrorResponseFactory factory = new ErrorResponseFactory();
+						ErrorResponse errorObject = factory.create();
 						errorObject.setHttpStatus(HttpStatus.BAD_REQUEST);
 						errorObject.setFriendlyMessage(friendlyMessage);
 						errorObject.setDebugMessage(debugMessage);
@@ -465,7 +473,8 @@ public class POSTRdfRequestHandler extends AbstractCreationRequestHandler {
 							LOG.debug("<< processEntityBodyModel() > {}", debugMessage);
 						}
 
-						ErrorResponse errorObject = new ErrorResponse();
+						ErrorResponseFactory factory = new ErrorResponseFactory();
+						ErrorResponse errorObject = factory.create();
 						errorObject.setHttpStatus(HttpStatus.BAD_REQUEST);
 						errorObject.setFriendlyMessage(friendlyMessage);
 						errorObject.setDebugMessage(debugMessage);
@@ -482,7 +491,8 @@ public class POSTRdfRequestHandler extends AbstractCreationRequestHandler {
 							LOG.debug("<< processEntityBodyModel() > {}", debugMessage);
 						}
 
-						ErrorResponse errorObject = new ErrorResponse();
+						ErrorResponseFactory factory = new ErrorResponseFactory();
+						ErrorResponse errorObject = factory.create();
 						errorObject.setHttpStatus(HttpStatus.BAD_REQUEST);
 						errorObject.setFriendlyMessage(friendlyMessage);
 						errorObject.setDebugMessage(debugMessage);
@@ -503,7 +513,8 @@ public class POSTRdfRequestHandler extends AbstractCreationRequestHandler {
 				LOG.debug("<< processEntityBodyModel() > {}", debugMessage);
 			}
 
-			ErrorResponse errorObject = new ErrorResponse();
+			ErrorResponseFactory factory = new ErrorResponseFactory();
+			ErrorResponse errorObject = factory.create();
 			errorObject.setHttpStatus(HttpStatus.BAD_REQUEST);
 			errorObject.setFriendlyMessage(friendlyMessage);
 			errorObject.setDebugMessage(debugMessage);
@@ -531,7 +542,8 @@ public class POSTRdfRequestHandler extends AbstractCreationRequestHandler {
 				LOG.debug("<< checkIfRequestTargetsExistingResource() > {}", debugMessage);
 			}
 
-			ErrorResponse errorObject = new ErrorResponse();
+			ErrorResponseFactory factory = new ErrorResponseFactory();
+			ErrorResponse errorObject = factory.create();
 			errorObject.setHttpStatus(HttpStatus.BAD_REQUEST);
 			errorObject.setFriendlyMessage(friendlyMessage);
 			errorObject.setDebugMessage(debugMessage);
@@ -579,7 +591,8 @@ public class POSTRdfRequestHandler extends AbstractCreationRequestHandler {
 				LOG.debug("<< populateURIObject() > The authenticated agent doesn't have DISCOVER access to the resource with URI: {}", this.targetURI);
 			}
 
-			ErrorResponse errorObject = new ErrorResponse();
+			ErrorResponseFactory factory = new ErrorResponseFactory();
+			ErrorResponse errorObject = factory.create();
 			errorObject.setFriendlyMessage(friendlyMessage);
 			errorObject.setHttpStatus(HttpStatus.BAD_REQUEST);
 
@@ -603,7 +616,8 @@ public class POSTRdfRequestHandler extends AbstractCreationRequestHandler {
 				LOG.debug("<< checkRequestLDPRSourceIsContainer() > {}", debugMessage);
 			}
 
-			ErrorResponse errorObject = new ErrorResponse();
+			ErrorResponseFactory factory = new ErrorResponseFactory();
+			ErrorResponse errorObject = factory.create();
 			errorObject.setHttpStatus(HttpStatus.BAD_REQUEST);
 			errorObject.setFriendlyMessage(friendlyMessage);
 			errorObject.setDebugMessage(debugMessage);
@@ -622,7 +636,8 @@ public class POSTRdfRequestHandler extends AbstractCreationRequestHandler {
 				LOG.debug("<< checkRequestLDPContainerIsAccessPoint() > {}", debugMessage);
 			}
 
-			ErrorResponse errorObject = new ErrorResponse();
+			ErrorResponseFactory factory = new ErrorResponseFactory();
+			ErrorResponse errorObject = factory.create();
 			errorObject.setHttpStatus(HttpStatus.BAD_REQUEST);
 			errorObject.setFriendlyMessage(friendlyMessage);
 			errorObject.setDebugMessage(debugMessage);
@@ -638,7 +653,8 @@ public class POSTRdfRequestHandler extends AbstractCreationRequestHandler {
 				LOG.debug("<< checkRequestLDPContainerIsAccessPoint() > {}", debugMessage);
 			}
 
-			ErrorResponse errorObject = new ErrorResponse();
+			ErrorResponseFactory factory = new ErrorResponseFactory();
+			ErrorResponse errorObject = factory.create();
 			errorObject.setHttpStatus(HttpStatus.BAD_REQUEST);
 			errorObject.setFriendlyMessage(friendlyMessage);
 			errorObject.setDebugMessage(debugMessage);
@@ -667,7 +683,8 @@ public class POSTRdfRequestHandler extends AbstractCreationRequestHandler {
 				LOG.debug("<< runLDPContainerChecks() > {}", debugMessage);
 			}
 
-			ErrorResponse errorObject = new ErrorResponse();
+			ErrorResponseFactory factory = new ErrorResponseFactory();
+			ErrorResponse errorObject = factory.create();
 			errorObject.setHttpStatus(HttpStatus.BAD_REQUEST);
 			errorObject.setFriendlyMessage(friendlyMessage);
 			errorObject.setDebugMessage(debugMessage);
@@ -762,7 +779,8 @@ public class POSTRdfRequestHandler extends AbstractCreationRequestHandler {
 				LOG.debug("<< checkIfAlreadyMember() > {}", debugMessage);
 			}
 
-			ErrorResponse errorObject = new ErrorResponse();
+			ErrorResponseFactory factory = new ErrorResponseFactory();
+			ErrorResponse errorObject = factory.create();
 			errorObject.setHttpStatus(HttpStatus.BAD_REQUEST);
 			errorObject.setFriendlyMessage(friendlyMessage);
 			errorObject.setDebugMessage(debugMessage);
@@ -784,7 +802,8 @@ public class POSTRdfRequestHandler extends AbstractCreationRequestHandler {
 				LOG.debug("<< checkLDPRSourceForIndirect() > {}", debugMessage);
 			}
 
-			ErrorResponse errorObject = new ErrorResponse();
+			ErrorResponseFactory factory = new ErrorResponseFactory();
+			ErrorResponse errorObject = factory.create();
 			errorObject.setHttpStatus(HttpStatus.BAD_REQUEST);
 			errorObject.setFriendlyMessage(friendlyMessage);
 			errorObject.setDebugMessage(debugMessage);
@@ -801,7 +820,8 @@ public class POSTRdfRequestHandler extends AbstractCreationRequestHandler {
 				LOG.debug("<< checkLDPRSourceForIndirect() > {}", debugMessage);
 			}
 
-			ErrorResponse errorObject = new ErrorResponse();
+			ErrorResponseFactory factory = new ErrorResponseFactory();
+			ErrorResponse errorObject = factory.create();
 			errorObject.setHttpStatus(HttpStatus.BAD_REQUEST);
 			errorObject.setFriendlyMessage(friendlyMessage);
 			errorObject.setDebugMessage(debugMessage);
