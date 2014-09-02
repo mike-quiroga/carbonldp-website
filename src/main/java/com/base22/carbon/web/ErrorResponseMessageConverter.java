@@ -8,10 +8,10 @@ import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageNotWritableException;
 
 import com.base22.carbon.Carbon;
-import com.base22.carbon.HttpHeaderValue;
-import com.base22.carbon.ldp.LDPResource;
+import com.base22.carbon.ldp.models.LDPResource;
 import com.base22.carbon.ldp.web.LDPResourceMessageConverter;
 import com.base22.carbon.models.ErrorResponse;
+import com.base22.carbon.models.HttpHeaderValue;
 
 public class ErrorResponseMessageConverter extends LDPResourceMessageConverter {
 

@@ -42,10 +42,10 @@ import com.base22.carbon.authorization.acl.CarbonACLPermissionFactory;
 import com.base22.carbon.authorization.acl.AceSR.SubjectType;
 import com.base22.carbon.groups.Group;
 import com.base22.carbon.groups.GroupDAO;
-import com.base22.carbon.ldp.LDPResource;
+import com.base22.carbon.ldp.models.LDPResource;
 import com.base22.carbon.models.ErrorResponse;
 import com.base22.carbon.models.ErrorResponseFactory;
-import com.base22.carbon.repository.LDPService;
+import com.base22.carbon.repository.services.LDPService;
 
 @Service("ldpPermissionService")
 public class LDPPermissionService {

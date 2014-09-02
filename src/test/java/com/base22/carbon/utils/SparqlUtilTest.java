@@ -10,7 +10,7 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import com.base22.carbon.ldp.SparqlUtil;
+import com.base22.carbon.sparql.SPARQLUtil;
 
 public class SparqlUtilTest {
 
@@ -33,7 +33,7 @@ public class SparqlUtilTest {
 		expectedPrefixes.put("vcard", "http://www.w3.org/2001/vcard-rdf/3.0#");
 		expectedPrefixes.put("xcard", "http://xcard.com");
 
-		assertEquals(expectedPrefixes, SparqlUtil.getNSPrefixes(sparql));
+		assertEquals(expectedPrefixes, SPARQLUtil.getNSPrefixes(sparql));
 
 		expectedPrefixes.clear();
 	}
@@ -42,14 +42,14 @@ public class SparqlUtilTest {
 	public void testGetNSPrefixesNoBrackets() {
 		sparql = "prefix vcard:   http://www.w3.org/2001/vcard-rdf/3.0# " + "prefix xcard: http://xcard.com";
 
-		assertTrue(SparqlUtil.getNSPrefixes(sparql).isEmpty());
+		assertTrue(SPARQLUtil.getNSPrefixes(sparql).isEmpty());
 	}
 
 	@Test
 	public void testGetNSPrefixesNoSpaces() {
 		sparql = "prefix vcard:<http://www.w3.org/2001/vcard-rdf/3.0#> " + "prefix xcard:<http://xcard.com>";
 
-		assertTrue(SparqlUtil.getNSPrefixes(sparql).isEmpty());
+		assertTrue(SPARQLUtil.getNSPrefixes(sparql).isEmpty());
 	}
 
 	@Test
@@ -63,7 +63,7 @@ public class SparqlUtilTest {
 				+ "DELETE WHERE { ?s ?p ?o }";
 
 		expected = expected.replaceAll("\\s+", "").toLowerCase();
-		actual = SparqlUtil.setNSPrefixes(expectedPrefixes, sparql).replaceAll("\\s+", "").toLowerCase();
+		actual = SPARQLUtil.setNSPrefixes(expectedPrefixes, sparql).replaceAll("\\s+", "").toLowerCase();
 
 		assertEquals(expected, actual);
 
@@ -77,7 +77,7 @@ public class SparqlUtilTest {
 		expected = "DELETE WHERE { ?s ?p ?o }";
 
 		expected = expected.replaceAll("\\s+", "").toLowerCase();
-		actual = SparqlUtil.setNSPrefixes(expectedPrefixes, sparql).replaceAll("\\s+", "").toLowerCase();
+		actual = SPARQLUtil.setNSPrefixes(expectedPrefixes, sparql).replaceAll("\\s+", "").toLowerCase();
 
 		assertEquals(expected, actual);
 	}

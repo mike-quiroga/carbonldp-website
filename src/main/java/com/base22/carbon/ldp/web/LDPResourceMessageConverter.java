@@ -21,7 +21,7 @@ import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.http.converter.HttpMessageNotWritableException;
 import org.springframework.util.Assert;
 
-import com.base22.carbon.ldp.LDPResource;
+import com.base22.carbon.ldp.models.LDPResource;
 
 public class LDPResourceMessageConverter implements HttpMessageConverter<LDPResource> {
 

@@ -6,6 +6,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 
+import com.base22.carbon.repository.services.RepositoryService;
+
 public class RepositoryServiceFactory {
 
 	static ApplicationContext applicationContext = null;

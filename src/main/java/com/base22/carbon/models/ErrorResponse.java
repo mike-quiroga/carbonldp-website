@@ -2,7 +2,7 @@ package com.base22.carbon.models;
 
 import org.springframework.http.HttpStatus;
 
-import com.base22.carbon.ldp.LDPResource;
+import com.base22.carbon.ldp.models.LDPResource;
 
 public interface ErrorResponse extends LDPResource {
 

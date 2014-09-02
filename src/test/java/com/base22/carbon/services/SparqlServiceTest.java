@@ -8,29 +8,29 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import com.base22.carbon.repository.DB2RepositoryService;
-import com.base22.carbon.sparql.SparqlQuery;
-import com.base22.carbon.sparql.SparqlQueryException;
-import com.base22.carbon.sparql.SparqlService;
-import com.base22.carbon.sparql.SparqlQuery.TYPE;
+import com.base22.carbon.repository.services.DB2RepositoryService;
+import com.base22.carbon.sparql.SPARQLQuery;
+import com.base22.carbon.sparql.SPARQLQueryException;
+import com.base22.carbon.sparql.SPARQLService;
+import com.base22.carbon.sparql.SPARQLQuery.TYPE;
 import com.hp.hpl.jena.query.ResultSet;
 
 public class SparqlServiceTest {
 
-	static SparqlService sparqlService;
+	static SPARQLService sparqlService;
 	static DB2RepositoryService db2;
 
 	static final String SCHEMA = "db2admin";
 	static final String DATASET = "MAIN";
 
-	static SparqlQuery sparqlQuery;
+	static SPARQLQuery sparqlQuery;
 	static ResultSet resultSet;
 
 	@BeforeClass
 	public static void setUpBeforeClass() {
-		sparqlService = new SparqlService();
+		sparqlService = new SPARQLService();
 		db2 = new DB2RepositoryService();
-		sparqlQuery = new SparqlQuery();
+		sparqlQuery = new SPARQLQuery();
 
 		db2.setDbUrl("jdbc:db2://localhost:50000/CTEST");
 		db2.setDbUsername("db2admin");
@@ -83,7 +83,7 @@ public class SparqlServiceTest {
 		assertNotNull("SELECT query should not return a null resultSet", sparqlService.select(sparqlQuery));
 	}
 
-	@Test(expected = SparqlQueryException.class)
+	@Test(expected = SPARQLQueryException.class)
 	public void testSelectInvalid() throws Exception {
 		sparqlQuery.setType(TYPE.QUERY);
 		sparqlQuery.setQuery("SELECT ?q ?p ?o ?m { ?q }");

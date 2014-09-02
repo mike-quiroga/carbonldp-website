@@ -6,11 +6,11 @@
 		http://www.springframework.org/schema/beans/spring-beans.xsd
 ">
 
-	<bean id="platformApplicationDAO" class="com.base22.carbon.apps.JDBCApplicationDAO">
+	<bean id="platformApplicationDAO" class="com.base22.carbon.apps.ApplicationDAOJdbc">
 		<property name="securityJDBCDataSource" ref="securityJDBCDataSource" />
 	</bean>
 	
-	<bean id="restAPIApplicationContextFilter" class="com.base22.carbon.apps.web.RestAPIApplicationContextFilter">
+	<bean id="restAPIApplicationContextFilter" class="com.base22.carbon.apps.web.AppContextFilter">
 		<property name="applicationDAO" ref="platformApplicationDAO" />
 		<property name="permissionService" ref="platformPermissionService" />
 		<property name="configurationService" ref="configurationService" />

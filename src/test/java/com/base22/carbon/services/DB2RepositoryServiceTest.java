@@ -10,8 +10,8 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import com.base22.carbon.repository.DB2RepositoryService;
 import com.base22.carbon.repository.RepositoryServiceException;
+import com.base22.carbon.repository.services.DB2RepositoryService;
 import com.hp.hpl.jena.query.Dataset;
 import com.hp.hpl.jena.rdf.model.Model;
 

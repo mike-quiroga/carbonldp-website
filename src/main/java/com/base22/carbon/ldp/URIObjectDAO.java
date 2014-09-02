@@ -5,6 +5,7 @@ import java.util.Set;
 import org.springframework.security.access.prepost.PostAuthorize;
 
 import com.base22.carbon.CarbonException;
+import com.base22.carbon.ldp.models.URIObject;
 
 public interface URIObjectDAO {
 	public URIObject createURIObject(URIObject uriObject) throws CarbonException;

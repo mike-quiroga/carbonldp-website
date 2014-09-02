@@ -10,10 +10,10 @@
 		http://www.springframework.org/schema/security/spring-security-3.2.xsd
 ">
 
-	<bean id="platformPrivilegeDAO" class="com.base22.carbon.authorization.JDBCPrivilegeDAO">
+	<bean id="platformPrivilegeDAO" class="com.base22.carbon.authorization.PrivilegeDAOJdbc">
 		<property name="securityJDBCDataSource" ref="securityJDBCDataSource" />
 	</bean>
-	<bean id="platformPlatformRoleDAO" class="com.base22.carbon.authorization.JDBCPlatformRoleDAO">
+	<bean id="platformPlatformRoleDAO" class="com.base22.carbon.authorization.PlatformRoleDAOJdbc">
 		<property name="securityJDBCDataSource" ref="securityJDBCDataSource" />
 	</bean>
 	<bean id="platformPermissionService" class="com.base22.carbon.authorization.PermissionService">

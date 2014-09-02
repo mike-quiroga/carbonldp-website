@@ -13,15 +13,15 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import com.base22.carbon.CarbonException;
-import com.base22.carbon.PrefixedURI;
 import com.base22.carbon.apps.Application;
 import com.base22.carbon.apps.roles.ApplicationRole;
 import com.base22.carbon.authorization.PlatformRole;
 import com.base22.carbon.authorization.Privilege;
 import com.base22.carbon.authorization.acl.AceSR;
 import com.base22.carbon.groups.Group;
-import com.base22.carbon.ldp.LDPRSource;
-import com.base22.carbon.ldp.LDPResource;
+import com.base22.carbon.ldp.models.LDPRSource;
+import com.base22.carbon.ldp.models.LDPResource;
+import com.base22.carbon.models.PrefixedURI;
 import com.base22.carbon.models.RDFPropertyEnum;
 import com.base22.carbon.models.RDFRepresentable;
 import com.base22.carbon.models.RDFResourceEnum;

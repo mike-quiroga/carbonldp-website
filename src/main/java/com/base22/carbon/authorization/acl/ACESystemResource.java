@@ -6,7 +6,7 @@ import java.util.UUID;
 import com.base22.carbon.authorization.PermissionImpl;
 import com.base22.carbon.authorization.acl.AceSR.SubjectType;
 import com.base22.carbon.authorization.acl.CarbonACLPermissionFactory.CarbonPermission;
-import com.base22.carbon.ldp.LDPSystemResource;
+import com.base22.carbon.ldp.models.LDPSystemResource;
 
 public interface ACESystemResource extends LDPSystemResource {
 	public UUID getSubjectUUID();

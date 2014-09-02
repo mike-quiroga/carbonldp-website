@@ -3,7 +3,7 @@ package com.base22.carbon.models;
 import java.util.List;
 
 import com.base22.carbon.CarbonException;
-import com.base22.carbon.ldp.LDPResource;
+import com.base22.carbon.ldp.models.LDPResource;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.Resource;
 

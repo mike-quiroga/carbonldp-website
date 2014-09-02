@@ -9,8 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.base22.carbon.HttpUtil;
-import com.base22.carbon.repository.RepositoryService;
+import com.base22.carbon.repository.services.RepositoryService;
+import com.base22.carbon.utils.HTTPUtil;
 
 public class RequestInterceptor implements HandlerInterceptor {
 
@@ -21,10 +21,10 @@ public class RequestInterceptor implements HandlerInterceptor {
 
 	public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception exception) throws Exception {
 		if ( LOG.isDebugEnabled() ) {
-			String requestURL = HttpUtil.getRequestURL(request);
+			String requestURL = HTTPUtil.getRequestURL(request);
 			// TODO: Create more accurate function for this
 			if ( ! requestURL.matches(".+/static/.+") ) {
-				LOG.debug("<< afterCompletion > Response info: {}", HttpUtil.printResponseInfo(response));
+				LOG.debug("<< afterCompletion > Response info: {}", HTTPUtil.printResponseInfo(response));
 			}
 		}
 	}

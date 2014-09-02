@@ -1,7 +1,7 @@
 package com.base22.carbon.ldp;
 
 import com.base22.carbon.Carbon;
-import com.base22.carbon.PrefixedURI;
+import com.base22.carbon.models.PrefixedURI;
 import com.hp.hpl.jena.rdf.model.Property;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.rdf.model.ResourceFactory;

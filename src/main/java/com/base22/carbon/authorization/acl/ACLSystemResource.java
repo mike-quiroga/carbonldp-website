@@ -2,7 +2,7 @@ package com.base22.carbon.authorization.acl;
 
 import java.util.List;
 
-import com.base22.carbon.ldp.LDPSystemResource;
+import com.base22.carbon.ldp.models.LDPSystemResource;
 import com.hp.hpl.jena.rdf.model.Resource;
 
 public interface ACLSystemResource extends LDPSystemResource {

@@ -18,17 +18,17 @@
 	
 	
 	<!-- ====== REST API Authentication ====== -->
-	<bean id="restAPIAuthenticationEntryPoint" class="com.base22.carbon.authentication.RestAPIAuthenticationEntryPoint" />
-	<bean id="restAPIcorsProcessingFilter" class="com.base22.carbon.web.RestAPICorsProcessingFilter"></bean>
-	<bean id="restAPIAuthenticationProcessingFilter" class="com.base22.carbon.authentication.web.RestAPIAuthenticationProcessingFilter"
+	<bean id="restAPIAuthenticationEntryPoint" class="com.base22.carbon.authentication.AuthenticationEntryPoint" />
+	<bean id="restAPIcorsProcessingFilter" class="com.base22.carbon.web.CORSProcessingFilter"></bean>
+	<bean id="restAPIAuthenticationProcessingFilter" class="com.base22.carbon.authentication.web.AuthenticationProcessingFilter"
 		p:authenticationManager-ref="authenticationManager"
 		p:authenticationSuccessHandler-ref="restAPIAuthenticationSuccessHandler"
 		p:authenticationFailureHandler-ref="restAPIAuthenticationFailureHandler"
 	>
 		<constructor-arg value="/**" />
 	</bean>
-	<bean id="restAPIAuthenticationSuccessHandler" class="com.base22.carbon.authentication.web.RestAPIAuthenticationSuccessHandler"></bean>
-    <bean id="restAPIAuthenticationFailureHandler" class="com.base22.carbon.authentication.web.RestAPIAuthenticationFailureHandler"></bean>
+	<bean id="restAPIAuthenticationSuccessHandler" class="com.base22.carbon.authentication.web.AuthenticationSuccessHandler"></bean>
+    <bean id="restAPIAuthenticationFailureHandler" class="com.base22.carbon.authentication.web.AuthenticationFailureHandler"></bean>
 	<!-- === Basic Authentication === -->
 	<bean id="restAPIBasicAuthenticationProcessingFilter"
 		class="org.springframework.security.web.authentication.www.BasicAuthenticationFilter">
@@ -51,7 +51,7 @@
 	<!-- ====== End: REST API Authentication ====== -->
 	
 	<!-- ====== Authentication Providers ====== -->
-	<bean id="jdbcUsernamePasswordAuthenticationProvider" class="com.base22.carbon.authentication.JDBCUsernamePasswordAuthenticationProvider" init-method="init">
+	<bean id="jdbcUsernamePasswordAuthenticationProvider" class="com.base22.carbon.authentication.providers.UsernamePasswordJDBCAuthenticationProvider" init-method="init">
 		<property name="jdbcDataSource" ref="securityJDBCDataSource" />
 		<property name="agentDetailsDAO" ref="platformAgentDetailsDAO" />
 		<property name="privilegeDAO" ref="platformPrivilegeDAO" />
@@ -60,7 +60,7 @@
 		<property name="configurationService" ref="configurationService" />
 		<property name="ldpService" ref="ldpService" />
 	</bean>
-	<bean id="jdbcKeyAuthenticationProvider" class="com.base22.carbon.authentication.JDBCKeyAuthenticationProvider" init-method="init">
+	<bean id="jdbcKeyAuthenticationProvider" class="com.base22.carbon.authentication.providers.KeyJDBCAuthenticationProvider" init-method="init">
 		<property name="jdbcDataSource" ref="securityJDBCDataSource" />
 		<property name="agentDetailsDAO" ref="platformAgentDetailsDAO" />
 		<property name="privilegeDAO" ref="platformPrivilegeDAO" />
@@ -69,7 +69,7 @@
 		<property name="configurationService" ref="configurationService" />
 		<property name="ldpService" ref="ldpService" />
 	</bean>
-	<bean id="jdbcTokenAuthenticationProvider" class="com.base22.carbon.authentication.JDBCTokenAuthenticationProvider" init-method="init">
+	<bean id="jdbcTokenAuthenticationProvider" class="com.base22.carbon.authentication.providers.TokenJDBCAuthenticationProvider" init-method="init">
 		<property name="jdbcDataSource" ref="securityJDBCDataSource" />
 		<property name="agentDetailsDAO" ref="platformAgentDetailsDAO" />
 		<property name="privilegeDAO" ref="platformPrivilegeDAO" />

@@ -4,10 +4,10 @@ import java.util.HashSet;
 import java.util.UUID;
 
 import com.base22.carbon.CarbonException;
-import com.base22.carbon.PrefixedURI;
 import com.base22.carbon.apps.roles.ApplicationRole;
 import com.base22.carbon.authentication.AuthenticationUtil;
-import com.base22.carbon.ldp.LDPResource;
+import com.base22.carbon.ldp.models.LDPResource;
+import com.base22.carbon.models.PrefixedURI;
 import com.base22.carbon.models.RDFPropertyEnum;
 import com.base22.carbon.models.RDFRepresentable;
 import com.base22.carbon.models.RDFResourceEnum;
@@ -16,7 +16,7 @@ import com.hp.hpl.jena.rdf.model.Property;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.rdf.model.ResourceFactory;
 
-public class Application extends UUIDObject implements RDFRepresentable<RDFApplication> {
+public class Application extends UUIDObject implements RDFRepresentable<ApplicationRDF> {
 
 	private UUID datasetUuid;
 	private String slug;
@@ -192,8 +192,8 @@ public class Application extends UUIDObject implements RDFRepresentable<RDFAppli
 
 	@Override
 	public void recoverFromLDPR(LDPResource ldpResource) throws CarbonException {
-		RDFApplicationFactory factory = new RDFApplicationFactory();
-		RDFApplication rdfApplication = factory.create(ldpResource.getResource());
+		ApplicationRDFFactory factory = new ApplicationRDFFactory();
+		ApplicationRDF rdfApplication = factory.create(ldpResource.getResource());
 
 		this.setUuid(rdfApplication.getUUID());
 		this.setSlug(rdfApplication.getSlug());
@@ -202,8 +202,8 @@ public class Application extends UUIDObject implements RDFRepresentable<RDFAppli
 	}
 
 	@Override
-	public RDFApplication createRDFRepresentation() {
-		RDFApplicationFactory factory = new RDFApplicationFactory();
+	public ApplicationRDF createRDFRepresentation() {
+		ApplicationRDFFactory factory = new ApplicationRDFFactory();
 		return factory.create(this);
 	}
 }

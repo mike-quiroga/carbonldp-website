@@ -21,8 +21,8 @@ import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.http.converter.HttpMessageNotWritableException;
 import org.springframework.util.Assert;
 
-import com.base22.carbon.HttpUtil;
-import com.base22.carbon.ldp.LDPRSource;
+import com.base22.carbon.ldp.models.LDPRSource;
+import com.base22.carbon.utils.HTTPUtil;
 
 public class LDPRSourceMessageConverter implements HttpMessageConverter<LDPRSource> {
 
@@ -146,7 +146,7 @@ public class LDPRSourceMessageConverter implements HttpMessageConverter<LDPRSour
 
 	private void addETagHeader(HttpHeaders headers, LDPRSource ldpRSource) {
 		if ( ldpRSource.getETag() != null ) {
-			headers.add(com.base22.carbon.HttpHeaders.ETAG, HttpUtil.formatWeakETag(ldpRSource.getETag()));
+			headers.add(com.base22.carbon.HttpHeaders.ETAG, HTTPUtil.formatWeakETag(ldpRSource.getETag()));
 		}
 	}
 

@@ -37,7 +37,7 @@
 		<constructor-arg>
 			<map>
 				<entry key="DB2">
-					<bean class="com.base22.carbon.repository.DB2RepositoryService">
+					<bean class="com.base22.carbon.repository.services.DB2RepositoryService">
 						<property name="dbUrl" value="jdbc:db2://localhost:50000/CARBON" />
 						<property name="dbUsername" value="db2admin" />
 						<property name="dbPassword" value="db2admin" />
@@ -45,12 +45,12 @@
 					</bean>
 				</entry>
 				<entry key="TDB">
-					<bean class="com.base22.carbon.repository.TDBRepositoryService">
+					<bean class="com.base22.carbon.repository.services.TDBRepositoryService">
 						<property name="datasetDirectory" value="/opt/carbon/TDB/" />
 					</bean>
 				</entry>
 				<entry key="ORACLE-SDB">
-					<bean class="com.base22.carbon.repository.OracleSDBRepositoryService">
+					<bean class="com.base22.carbon.repository.services.OracleSDBRepositoryService">
 						<property name="jdbcBaseURL" value="jdbc:oracle:thin:@localhost:1521:" />
 						<property name="oracleUser" value="SYSTEM" />
 						<property name="oraclePassword" value="oracleadmin" />
@@ -65,14 +65,20 @@
 	<!-- bean name ="rdfService" class="com.base22.carbon.services.RdfService" init-method="init" scope="thread" -->
 	<!-- bean name ="ldpService" class="com.base22.carbon.services.LDPService" init-method="init" scope="thread" -->
 	
-	<bean name="sparqlService" class="com.base22.carbon.sparql.SparqlService" init-method="init" scope="request">
+	<bean name="sparqlService" class="com.base22.carbon.sparql.SPARQLService" init-method="init" scope="request">
 		<property name="repositoryService" ref="repositoryService" />
 		<aop:scoped-proxy/>
 	</bean>
 
-	
-	<bean name="ldpService" class="com.base22.carbon.repository.LDPService" init-method="init" scope="request">
+	<bean name="rdfService" class="com.base22.carbon.repository.services.RDFService" init-method="init" scope="request">
+		<property name="repositoryService" ref="repositoryService" />
 		<property name="sparqlService" ref="sparqlService" />
+		<aop:scoped-proxy/>
+	</bean>
+	
+	<bean name="ldpService" class="com.base22.carbon.repository.services.LDPService" init-method="init" scope="request">
+		<property name="sparqlService" ref="sparqlService" />
+		<property name="rdfService" ref="rdfService" />
 		<aop:scoped-proxy/>
 	</bean>
 </beans>

@@ -17,11 +17,11 @@ import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.http.converter.HttpMessageNotWritableException;
 
-import com.base22.carbon.HttpHeaderValue;
-import com.base22.carbon.HttpUtil;
 import com.base22.carbon.ldp.LDPNR;
 import com.base22.carbon.ldp.LDPR;
-import com.base22.carbon.ldp.WrapperForLDPNR;
+import com.base22.carbon.ldp.models.WrapperForLDPNR;
+import com.base22.carbon.models.HttpHeaderValue;
+import com.base22.carbon.utils.HTTPUtil;
 
 public class WrapperForLDPNRMessageConverter implements HttpMessageConverter<WrapperForLDPNR> {
 
@@ -123,7 +123,7 @@ public class WrapperForLDPNRMessageConverter implements HttpMessageConverter<Wra
 
 	private void addETagHeader(HttpHeaders headers, WrapperForLDPNR wrapper) {
 		if ( wrapper.getETag() != null ) {
-			headers.add(com.base22.carbon.HttpHeaders.ETAG, HttpUtil.formatWeakETag(wrapper.getETag()));
+			headers.add(com.base22.carbon.HttpHeaders.ETAG, HTTPUtil.formatWeakETag(wrapper.getETag()));
 		}
 	}
 

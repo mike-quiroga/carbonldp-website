@@ -11,9 +11,9 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
-import com.base22.carbon.HttpUtil;
 import com.base22.carbon.models.ErrorResponse;
 import com.base22.carbon.models.ErrorResponseFactory;
+import com.base22.carbon.utils.HTTPUtil;
 
 @ControllerAdvice
 public class PlatformExceptionController {
@@ -35,7 +35,7 @@ public class PlatformExceptionController {
 		errorObject.setFriendlyMessage(friendlyMessage);
 		errorObject.setHttpStatus(HttpStatus.FORBIDDEN);
 
-		return HttpUtil.createErrorResponseEntity(errorObject);
+		return HTTPUtil.createErrorResponseEntity(errorObject);
 	}
 
 	@ExceptionHandler(Exception.class)
@@ -50,6 +50,6 @@ public class PlatformExceptionController {
 		errorObject.setFriendlyMessage(friendlyMessage);
 		errorObject.setHttpStatus(HttpStatus.INTERNAL_SERVER_ERROR);
 
-		return HttpUtil.createErrorResponseEntity(errorObject);
+		return HTTPUtil.createErrorResponseEntity(errorObject);
 	}
 }

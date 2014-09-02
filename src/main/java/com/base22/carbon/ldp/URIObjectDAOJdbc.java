@@ -17,6 +17,7 @@ import com.base22.carbon.jdbc.TransactionException;
 import com.base22.carbon.jdbc.UpdateTransactionCallback;
 import com.base22.carbon.jdbc.UpdateTransactionTemplate;
 import com.base22.carbon.jdbc.DAOJdbc;
+import com.base22.carbon.ldp.models.URIObject;
 
 @Service("uriObjectDAO")
 public class URIObjectDAOJdbc extends DAOJdbc implements URIObjectDAO {

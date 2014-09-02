@@ -1,7 +1,7 @@
 package com.base22.carbon.test.console;
 
 import com.base22.carbon.CarbonException;
-import com.base22.carbon.repository.OracleSDBRepositoryService;
+import com.base22.carbon.repository.services.OracleSDBRepositoryService;
 
 public class PrepareSDBDatasetTest {
 	public static void main(String[] args) {
