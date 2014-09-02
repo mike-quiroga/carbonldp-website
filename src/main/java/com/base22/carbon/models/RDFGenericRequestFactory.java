@@ -4,9 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import com.base22.carbon.exceptions.CarbonException;
-import com.base22.carbon.exceptions.FactoryException;
-import com.base22.carbon.security.utils.AuthenticationUtil;
+import com.base22.carbon.CarbonException;
+import com.base22.carbon.FactoryException;
+import com.base22.carbon.PrefixedURI;
+import com.base22.carbon.authentication.AuthenticationUtil;
+import com.base22.carbon.ldp.LDPResource;
+import com.base22.carbon.ldp.LDPResourceFactory;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.Property;
 import com.hp.hpl.jena.rdf.model.Resource;

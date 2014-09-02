@@ -8,9 +8,11 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import com.base22.carbon.exceptions.SparqlQueryException;
-import com.base22.carbon.models.SparqlQuery;
-import com.base22.carbon.models.SparqlQuery.TYPE;
+import com.base22.carbon.repository.DB2RepositoryService;
+import com.base22.carbon.sparql.SparqlQuery;
+import com.base22.carbon.sparql.SparqlQueryException;
+import com.base22.carbon.sparql.SparqlService;
+import com.base22.carbon.sparql.SparqlQuery.TYPE;
 import com.hp.hpl.jena.query.ResultSet;
 
 public class SparqlServiceTest {

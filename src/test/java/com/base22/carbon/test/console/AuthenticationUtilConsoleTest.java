@@ -3,8 +3,8 @@ package com.base22.carbon.test.console;
 import java.security.NoSuchAlgorithmException;
 import java.util.UUID;
 
-import com.base22.carbon.security.dao.impl.JDBCAgentLoginDetailsDAO;
-import com.base22.carbon.security.utils.AuthenticationUtil;
+import com.base22.carbon.agents.AgentDAOJdbc;
+import com.base22.carbon.authentication.AuthenticationUtil;
 
 public class AuthenticationUtilConsoleTest {
 	public static void main(String[] args) {
@@ -36,17 +36,17 @@ public class AuthenticationUtilConsoleTest {
 		StringBuilder sqlStringBuilder = new StringBuilder();
 		sqlStringBuilder
 			.append("INSERT INTO ")
-				.append(JDBCAgentLoginDetailsDAO.TABLE)
+				.append(AgentDAOJdbc.TABLE)
 			.append("(")
-				.append(JDBCAgentLoginDetailsDAO.UUID_FIELD)
+				.append(AgentDAOJdbc.UUID_FIELD)
 				.append(", ")
-				.append(JDBCAgentLoginDetailsDAO.NAME_FIELD)
+				.append(AgentDAOJdbc.NAME_FIELD)
 				.append(", ")
-				.append(JDBCAgentLoginDetailsDAO.PASSWORD_FIELD)
+				.append(AgentDAOJdbc.PASSWORD_FIELD)
 				.append(", ")
-				.append(JDBCAgentLoginDetailsDAO.KEY_FIELD)
+				.append(AgentDAOJdbc.KEY_FIELD)
 				.append(", ")
-				.append(JDBCAgentLoginDetailsDAO.SALT_FIELD)
+				.append(AgentDAOJdbc.SALT_FIELD)
 			.append(") VALUES (")
 					.append("UNHEX(\"")
 						.append(uuidString)

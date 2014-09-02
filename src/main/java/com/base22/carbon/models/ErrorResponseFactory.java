@@ -5,7 +5,10 @@ import java.util.List;
 import org.joda.time.DateTime;
 import org.springframework.http.HttpStatus;
 
-import com.base22.carbon.constants.Carbon;
+import com.base22.carbon.Carbon;
+import com.base22.carbon.HttpHeaderValue;
+import com.base22.carbon.PrefixedURI;
+import com.base22.carbon.ldp.LDPResourceFactory;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.Property;

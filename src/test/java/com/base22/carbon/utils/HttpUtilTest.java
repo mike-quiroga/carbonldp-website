@@ -7,6 +7,8 @@ import static org.junit.Assert.assertTrue;
 import org.junit.AfterClass;
 import org.junit.Test;
 
+import com.base22.carbon.HttpUtil;
+
 public class HttpUtilTest {
 
 	int httpStatusCode;

@@ -4,8 +4,8 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
-import com.base22.carbon.models.HttpHeader;
-import com.base22.carbon.models.HttpHeaderValue;
+import com.base22.carbon.HttpHeader;
+import com.base22.carbon.HttpHeaderValue;
 
 public class HttpHeaderTest {
 	@Test

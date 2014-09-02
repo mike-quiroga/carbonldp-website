@@ -10,7 +10,8 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import com.base22.carbon.exceptions.RepositoryServiceException;
+import com.base22.carbon.repository.DB2RepositoryService;
+import com.base22.carbon.repository.RepositoryServiceException;
 import com.hp.hpl.jena.query.Dataset;
 import com.hp.hpl.jena.rdf.model.Model;
 
@@ -41,7 +42,7 @@ public class DB2RepositoryServiceTest {
 		assertNotNull("Returned Model should not be null.", model);
 	}
 	
-	@Test (expected = com.base22.carbon.exceptions.RepositoryServiceException.class)
+	@Test (expected = com.base22.carbon.repository.RepositoryServiceException.class)
 	public void testGetNamedModelUsingInvalidStoreName() throws Exception {
 		assertNotNull("Returned Model should not be null.", db2RepositoryService.getNamedModel(SCHEMA, "dummystore"));
 	}

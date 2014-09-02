@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans.xsd
+">
+
+	<bean id="platformApplicationRoleDAO" class="com.base22.carbon.apps.roles.JDBCApplicationRoleDAO">
+		<property name="securityJDBCDataSource" ref="securityJDBCDataSource" />
+	</bean>
+</beans>

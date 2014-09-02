@@ -1,5 +1,9 @@
 package com.base22.carbon.services;
 
+import com.base22.carbon.repository.DB2RepositoryService;
+import com.base22.carbon.repository.RepositoryService;
+import com.base22.carbon.repository.TDBRepositoryService;
+
 public abstract class RepositoryServiceTestFactory {
 	
 	static TDBRepositoryService tbd;
