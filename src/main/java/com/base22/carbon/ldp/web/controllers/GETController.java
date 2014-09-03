@@ -4,7 +4,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,15 +21,14 @@ public class GETController extends AbstractLDPController {
 	private GETRequestHandler retrieveHandler;
 
 	@RequestMapping(value = { "/apps/{application}/", "/apps/{application}/**" }, method = RequestMethod.GET)
-	public ResponseEntity<Object> handleGET(@PathVariable("application") String applicationIdentifier, HttpServletRequest request,
-			HttpServletResponse response, HttpEntity<byte[]> entity) {
+	public ResponseEntity<Object> handleGET(@PathVariable("application") String applicationIdentifier, HttpServletRequest request, HttpServletResponse response) {
 
 		if ( LOG.isTraceEnabled() ) {
 			LOG.trace(">> handleGET()");
 		}
 
 		try {
-			return retrieveHandler.handleRetrieve(applicationIdentifier, request, response, entity);
+			return retrieveHandler.handleRetrieve(applicationIdentifier, request, response);
 		} catch (CarbonException e) {
 			return HTTPUtil.createErrorResponseEntity(e);
 		}

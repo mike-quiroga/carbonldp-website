@@ -33,7 +33,7 @@ public class POSTController extends AbstractLDPController {
 	public static final String FILE_PARAMETER = "file";
 	public static final String FILE_NAME_PARAMETER = "name";
 
-	@RequestMapping(value = { "/apps/{application}/", "/apps/{application}/**" }, method = RequestMethod.POST, headers = "content-type!=multipart/form-data")
+	@RequestMapping(value = { "/apps/{application}/", "/apps/{application}/**" }, method = RequestMethod.POST)
 	public ResponseEntity<Object> handleNonMultipartPost(@PathVariable("application") String applicationIdentifier, HttpServletRequest request,
 			HttpServletResponse response, HttpEntity<byte[]> entity) {
 
@@ -80,7 +80,7 @@ public class POSTController extends AbstractLDPController {
 
 	}
 
-	@RequestMapping(value = { "/apps/{application}/", "/apps/{application}/**" }, method = RequestMethod.POST, headers = "content-type=multipart/form-data")
+	@RequestMapping(value = { "/apps/{application}/", "/apps/{application}/**" }, method = RequestMethod.POST, consumes = "multipart/form-data")
 	public ResponseEntity<Object> handleMultipartPost(@PathVariable("application") String applicationIdentifier,
 			@RequestParam(value = FILE_NAME_PARAMETER, required = false) String fileName,
 			@RequestParam(value = FILE_PARAMETER, required = false) MultipartFile file, HttpServletRequest request, HttpServletResponse response,

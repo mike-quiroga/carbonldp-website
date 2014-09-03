@@ -36,7 +36,7 @@ import com.hp.hpl.jena.rdf.model.ResourceFactory;
 
 @Component
 @Scope(proxyMode = ScopedProxyMode.TARGET_CLASS, value = "request")
-public class POSTNonRdfRequestHandler extends AbstractRequestHandler {
+public class POSTNonRdfRequestHandler extends AbstractLDPRequestHandler {
 
 	public ResponseEntity<Object> handleNonMultipartPOST(String applicationIdentifier, String contentTypeHeader, HttpServletRequest request,
 			HttpServletResponse response, HttpEntity<byte[]> requestEntity) throws CarbonException {

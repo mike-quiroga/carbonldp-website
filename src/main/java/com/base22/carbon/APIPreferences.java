@@ -23,7 +23,11 @@ public abstract class APIPreferences {
 		),
 		WRAPPER_FOR_LDPNR(
 			new PrefixedURI("c", "WrapperForLDPNR")
-		);
+		),
+		SPARQL_ENDPOINT(
+			new PrefixedURI("sd", "Service")
+		),
+		;
 		
 		//@formatter:on
 

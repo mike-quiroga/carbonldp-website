@@ -19,7 +19,7 @@ import com.base22.carbon.utils.HTTPUtil;
 
 @Component
 @Scope(proxyMode = ScopedProxyMode.TARGET_CLASS, value = "request")
-public class OPTIONSRequestHandler extends AbstractRequestHandler {
+public class OPTIONSRequestHandler extends AbstractLDPRequestHandler {
 	public ResponseEntity<Object> handleOPTIONS(String applicationIdentifier, HttpServletRequest request, HttpServletResponse response) throws CarbonException {
 
 		if ( LOG.isTraceEnabled() ) {

@@ -17,19 +17,19 @@ import com.base22.carbon.CarbonException;
 import com.base22.carbon.authorization.PermissionService;
 import com.base22.carbon.ldp.LDPC;
 import com.base22.carbon.ldp.LDPC.ContainerType;
+import com.base22.carbon.ldp.LDPNR;
+import com.base22.carbon.ldp.LDPR;
+import com.base22.carbon.ldp.LDPRS;
+import com.base22.carbon.ldp.URIObjectDAO;
 import com.base22.carbon.ldp.models.LDPContainer;
 import com.base22.carbon.ldp.models.LDPContainerFactory;
 import com.base22.carbon.ldp.models.LDPContainerQueryOptions;
+import com.base22.carbon.ldp.models.LDPContainerQueryOptions.METHOD;
 import com.base22.carbon.ldp.models.LDPRSource;
 import com.base22.carbon.ldp.models.LDPRSourceFactory;
 import com.base22.carbon.ldp.models.URIObject;
 import com.base22.carbon.ldp.models.WrapperForLDPNR;
 import com.base22.carbon.ldp.models.WrapperForLDPNRFactory;
-import com.base22.carbon.ldp.models.LDPContainerQueryOptions.METHOD;
-import com.base22.carbon.ldp.LDPNR;
-import com.base22.carbon.ldp.LDPR;
-import com.base22.carbon.ldp.LDPRS;
-import com.base22.carbon.ldp.URIObjectDAO;
 import com.base22.carbon.sparql.SPARQLQuery;
 import com.base22.carbon.sparql.SPARQLService;
 import com.hp.hpl.jena.graph.Node;
@@ -112,6 +112,63 @@ public class LDPService {
 		}
 
 		return ldpRSource;
+	}
+
+	public LDPRSource getLDPRSourceBranch(URIObject documentURIObject, String dataset) throws CarbonException {
+		LDPRSource source = null;
+
+		String documentURI = documentURIObject.getURI();
+
+		String childrenBaseURI = documentURI.endsWith("/") ? documentURI : documentURI.concat("/");
+
+		SPARQLQuery sparqlQuery = new SPARQLQuery();
+		sparqlQuery.setType(SPARQLQuery.TYPE.QUERY);
+		sparqlQuery.setDataset(dataset);
+
+		StringBuffer query = new StringBuffer();
+		//@formatter:off
+		query
+			.append("CONSTRUCT {")
+					.append("\n\t?subject ?predicate ?object.")
+					.append("\n\t?childSubject ?childPredicate ?childObject.")
+					.append("\n\t?childSecondarySubject ?childSecondaryPredicate ?childSecondaryObject")
+			.append("\n} WHERE {")
+				.append("\n\tGRAPH <")
+					.append(documentURI)
+				.append("> {")
+					.append("\n\t\t?subject ?predicate ?object")
+				.append("\n\t}.")
+				.append("\n\tOPTIONAL {")
+					.append("\n\t\tGRAPH ?childGraphs {")
+						.append("\n\t\t\t?childSubject ?childPredicate ?childObject")
+						.append("\n\t\t\tFILTER( STRSTARTS(str(?childSubject), \"")
+							.append(childrenBaseURI)
+						.append("\") )")
+					.append("\n\t\t}")
+					.append("\n\t\tOPTIONAL {")
+						.append("\n\t\t\tGRAPH ?childSubject {")
+							.append("\n\t\t\t\t?childSecondarySubject ?childSecondaryPredicate ?childSecondaryObject")
+						.append("\n\t\t\t}.")
+					.append("\n\t\t}.")
+				.append("\n\t}.")
+			.append("\n}")
+		;
+		//@formatter:on
+		sparqlQuery.setQuery(query.toString());
+
+		Model model = sparqlService.construct(sparqlQuery);
+
+		LDPRSourceFactory factory = new LDPRSourceFactory();
+		try {
+			source = factory.create(documentURI, model);
+		} catch (CarbonException e) {
+			if ( LOG.isErrorEnabled() ) {
+				LOG.error("<< getLDPRSource() > The LDPRSource object couldn't be created.");
+			}
+			throw e;
+		}
+
+		return source;
 	}
 
 	// TODO: Refactor Method
@@ -281,7 +338,7 @@ public class LDPService {
 				.append("\n\tGRAPH ?childSubject {")
 					.append("\n\t\t?childSecondarySubject ?childSecondaryPredicate ?childSecondaryObject")
 				.append("\n\t}.")
-			.append("} WHERE {")
+			.append("\n} WHERE {")
 				.append("\n\tGRAPH <")
 					.append(documentURI)
 				.append("> {")
@@ -300,7 +357,7 @@ public class LDPService {
 						.append("\n\t\t\t}.")
 					.append("\n\t\t}.")
 				.append("\n\t}.")
-			.append("}")
+			.append("\n}")
 		;
 		//@formatter:on
 

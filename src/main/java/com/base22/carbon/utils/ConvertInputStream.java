@@ -19,4 +19,18 @@ public abstract class ConvertInputStream {
 
 		return inputStreamString;
 	}
+
+	public static String toString(InputStream inputStream, String charsetName) throws IOException {
+		String inputStreamString = null;
+
+		Scanner scanner = new Scanner(inputStream, charsetName);
+		scanner.useDelimiter("\\A");
+
+		inputStreamString = scanner.hasNext() ? scanner.next() : "";
+
+		scanner.close();
+		inputStream.close();
+
+		return inputStreamString;
+	}
 }

@@ -12,9 +12,9 @@ import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
-import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
@@ -35,30 +35,34 @@ import com.base22.carbon.models.ErrorResponse;
 import com.base22.carbon.models.ErrorResponseFactory;
 import com.base22.carbon.models.HttpHeader;
 import com.base22.carbon.models.HttpHeaderValue;
+import com.base22.carbon.sparql.SPARQLQueryPOSTRequestHandler;
 import com.base22.carbon.utils.HTTPUtil;
 
 @Component
 @Scope(proxyMode = ScopedProxyMode.TARGET_CLASS, value = "request")
-public class GETRequestHandler extends AbstractRequestHandler {
+public class GETRequestHandler extends AbstractLDPRequestHandler {
+
+	@Autowired
+	protected SPARQLQueryPOSTRequestHandler sparqlQueryRequestHandler;
 
 	//@formatter:off
-	public static final List<RetrieveContainerPreference> DEFAULT_RCP = new ArrayList<RetrieveContainerPreference>(Arrays.asList(
-			RetrieveContainerPreference.CONTAINER_PROPERTIES,
-			RetrieveContainerPreference.MEMBERSHIP_TRIPLES
-	));
-	//@formatter:on
+    public static final List<RetrieveContainerPreference> DEFAULT_RCP = new ArrayList<RetrieveContainerPreference>(Arrays.asList(
+            RetrieveContainerPreference.CONTAINER_PROPERTIES,
+            RetrieveContainerPreference.MEMBERSHIP_TRIPLES
+    ));
+    //@formatter:on
 
-	public ResponseEntity<Object> handleRetrieve(String applicationIdentifier, HttpServletRequest request, HttpServletResponse response,
-			HttpEntity<byte[]> entity) throws CarbonException {
+	public ResponseEntity<Object> handleRetrieve(String applicationIdentifier, HttpServletRequest request, HttpServletResponse response) throws CarbonException {
 
 		Application application = getApplicationFromContext();
-		String dataset = application.getDatasetName();
 
-		return this.handleLDPResourceRetrieval(dataset, request, response, entity);
+		return this.handleLDPResourceRetrieval(application, request, response);
 	}
 
-	private ResponseEntity<Object> handleLDPResourceRetrieval(String dataset, HttpServletRequest request, HttpServletResponse response,
-			HttpEntity<byte[]> entity) throws CarbonException {
+	private ResponseEntity<Object> handleLDPResourceRetrieval(Application application, HttpServletRequest request, HttpServletResponse response)
+			throws CarbonException {
+
+		String dataset = application.getDatasetName();
 
 		String documentURI = HTTPUtil.getRequestURL(request);
 		Enumeration<String> linkHeaders = request.getHeaders(HttpHeaders.LINK);
@@ -78,7 +82,6 @@ public class GETRequestHandler extends AbstractRequestHandler {
 			return HTTPUtil.createErrorResponseEntity(e, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 
-		// TODO: Decide. Should we take for granted that a document exists if it's uriObject does
 		if ( documentURIObject == null ) {
 			return new ResponseEntity<Object>(HttpStatus.NOT_FOUND);
 		}
@@ -105,24 +108,24 @@ public class GETRequestHandler extends AbstractRequestHandler {
 					if ( LOG.isDebugEnabled() ) {
 						LOG.debug("<< handleLDPResourceRetrieval() > It was specified to use an interaction model of an LDPRS. Delegating to handleLDPRSGet()...");
 					}
-					return handleLDPRSourceRetrieval(documentURIObject, dataset, request, response, entity);
+					return handleLDPRSourceRetrieval(documentURIObject, dataset, request, response);
 				} else if ( interactionModel == InteractionModel.CONTAINER ) {
 					if ( LOG.isDebugEnabled() ) {
 						LOG.debug("<< handleLDPResourceRetrieval() > It was specified to use an interaction model of an LDPC. Delegating to handleLDPContainerGet()...");
 					}
-					return handleLDPContainerRetrieval(documentURIObject, dataset, documentTypes, request, response, entity);
+					return handleLDPContainerRetrieval(documentURIObject, dataset, documentTypes, request, response);
 				}
 			}
 			if ( dim == InteractionModel.RDF_SOURCE ) {
 				if ( LOG.isDebugEnabled() ) {
 					LOG.debug("<< handleLDPResourceRetrieval() > The document has a dim of RDFSource. Delegating to handleLDPRSourceRetrieval()...");
 				}
-				return handleLDPRSourceRetrieval(documentURIObject, dataset, request, response, entity);
+				return handleLDPRSourceRetrieval(documentURIObject, dataset, request, response);
 			} else {
 				if ( LOG.isDebugEnabled() ) {
 					LOG.debug("<< handleLDPResourceRetrieval() > It wasn't specified a preferred interaction model. Delegating to handleLDPContainerGet()...");
 				}
-				return handleLDPContainerRetrieval(documentURIObject, dataset, documentTypes, request, response, entity);
+				return handleLDPContainerRetrieval(documentURIObject, dataset, documentTypes, request, response);
 			}
 
 		} else if ( ldpService.documentIsWrapperForLDPNR(documentTypes) ) {
@@ -134,29 +137,33 @@ public class GETRequestHandler extends AbstractRequestHandler {
 					if ( LOG.isDebugEnabled() ) {
 						LOG.debug("<< handleLDPResourceRetrieval() > It was specified to use an interaction model of an LDPRS. Delegating to handleLDPRSGet()...");
 					}
-					return handleLDPRSourceRetrieval(documentURIObject, dataset, request, response, entity);
+					return handleLDPRSourceRetrieval(documentURIObject, dataset, request, response);
 				} else if ( interactionModel == InteractionModel.CONTAINER ) {
 					if ( LOG.isDebugEnabled() ) {
 						LOG.debug("<< handleLDPResourceRetrieval() > It was specified to use an interaction model of an LDPNR. Delegating to handleLDPNRGet()...");
 					}
-					return handleLDPNRRetrieval(documentURIObject, dataset, request, response, entity);
+					return handleLDPNRRetrieval(documentURIObject, dataset, request, response);
 				}
 			}
 			if ( LOG.isDebugEnabled() ) {
 				LOG.debug("<< handleLDPResourceRetrieval() > It wasn't specified a preferred interaction model. Delegating to handleLDPNRGet()...");
 			}
-			return handleLDPNRRetrieval(documentURIObject, dataset, request, response, entity);
+			return handleLDPNRRetrieval(documentURIObject, dataset, request, response);
 		} else {
 			if ( LOG.isDebugEnabled() ) {
 				LOG.debug("-- handleLDPResourceRetrieval() > The document is an LDPRSource");
 				LOG.debug("<< handleLDPResourceRetrieval() > Delegating to handleLDPRSGet()...");
 			}
-			return handleLDPRSourceRetrieval(documentURIObject, dataset, request, response, entity);
+			return handleLDPRSourceRetrieval(documentURIObject, dataset, request, response);
 		}
 	}
 
+	protected boolean sparqlEndpointSpecified(InteractionModel interactionModel) {
+		return interactionModel == InteractionModel.SPARQL_ENDPOINT;
+	}
+
 	private ResponseEntity<Object> handleLDPRSourceRetrieval(URIObject documentURIObject, String dataset, HttpServletRequest request,
-			HttpServletResponse response, HttpEntity<byte[]> entity) {
+			HttpServletResponse response) {
 
 		Enumeration<String> preferHeaders = request.getHeaders(HttpHeaders.PREFER);
 		HttpHeader preferHeader = new HttpHeader(preferHeaders);
@@ -191,7 +198,7 @@ public class GETRequestHandler extends AbstractRequestHandler {
 	}
 
 	private ResponseEntity<Object> handleLDPContainerRetrieval(URIObject documentURIObject, String dataset, Set<String> documentTypes,
-			HttpServletRequest request, HttpServletResponse response, HttpEntity<byte[]> entity) {
+			HttpServletRequest request, HttpServletResponse response) {
 
 		Enumeration<String> preferHeaders = request.getHeaders(HttpHeaders.PREFER);
 		HttpHeader preferHeader = new HttpHeader(preferHeaders);
@@ -279,8 +286,8 @@ public class GETRequestHandler extends AbstractRequestHandler {
 
 	// TODO: Refactor
 	// TODO: Add ACL restrictions
-	private ResponseEntity<Object> handleLDPNRRetrieval(URIObject documentURIObject, String dataset, HttpServletRequest request, HttpServletResponse response,
-			HttpEntity<byte[]> entity) throws CarbonException {
+	private ResponseEntity<Object> handleLDPNRRetrieval(URIObject documentURIObject, String dataset, HttpServletRequest request, HttpServletResponse response)
+			throws CarbonException {
 
 		String documentURI = documentURIObject.getURI();
 

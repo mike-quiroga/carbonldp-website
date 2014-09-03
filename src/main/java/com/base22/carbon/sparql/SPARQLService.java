@@ -9,6 +9,9 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.stereotype.Service;
 
+import com.base22.carbon.CarbonException;
+import com.base22.carbon.models.ErrorResponse;
+import com.base22.carbon.models.ErrorResponseFactory;
 import com.base22.carbon.repository.RepositoryServiceException;
 import com.base22.carbon.repository.services.RepositoryService;
 import com.hp.hpl.jena.query.Dataset;
@@ -16,8 +19,10 @@ import com.hp.hpl.jena.query.Query;
 import com.hp.hpl.jena.query.QueryExecution;
 import com.hp.hpl.jena.query.QueryExecutionFactory;
 import com.hp.hpl.jena.query.QueryFactory;
+import com.hp.hpl.jena.query.QueryParseException;
 import com.hp.hpl.jena.query.ReadWrite;
 import com.hp.hpl.jena.query.ResultSet;
+import com.hp.hpl.jena.query.ResultSetFactory;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.shared.Lock;
 import com.hp.hpl.jena.update.UpdateAction;
@@ -33,6 +38,10 @@ public class SPARQLService {
 
 	static final Logger LOG = LoggerFactory.getLogger(SPARQLService.class);
 
+	public static enum Verb {
+		SELECT, CONSTRUCT, DESCRIBE, ASK
+	}
+
 	private HashMap<ResultSet, QueryExecution> queryExecutions;
 
 	public void init() {
@@ -41,38 +50,129 @@ public class SPARQLService {
 		}
 	}
 
-	/**
-	 * Validates a sparql query.
-	 * 
-	 * @param sparqlQuery
-	 *            The sparql query to validate.
-	 * 
-	 * @return true if the whole query is correct (type and syntax), false if the type isn't supported and an exception
-	 *         if the query's syntax is incorrect.
-	 * 
-	 * @throws Exception
-	 */
-	@SuppressWarnings("unused")
-	public boolean validate(SPARQLQuery sparqlQuery) throws Exception {
-		switch (sparqlQuery.getType()) {
-			case QUERY:
-				Query query = QueryFactory.create(sparqlQuery.getQuery());
-				return true;
-			case UPDATE:
-				UpdateRequest update = UpdateFactory.create(sparqlQuery.getQuery());
-				return true;
-			default:
-				return false;
+	public Query createQuery(String queryString) throws CarbonException {
+		return createQuery(queryString, false);
+	}
+
+	public Query createQuery(String queryString, boolean exposeErrors) throws CarbonException {
+		Query query = null;
+		try {
+			query = QueryFactory.create(queryString);
+		} catch (QueryParseException e) {
+			if ( exposeErrors ) {
+				if ( LOG.isErrorEnabled() ) {
+					LOG.error("-- createQuery() > The SPARQL Query: \n{}\n, couldn't be parsed.", queryString);
+				}
+
+				String friendlyMessage = "The SPARQL Query isn't valid.";
+				String debugMessage = e.getMessage();
+
+				ErrorResponseFactory errorFactory = new ErrorResponseFactory();
+				ErrorResponse errorObject = errorFactory.create();
+				errorObject.setFriendlyMessage(friendlyMessage);
+				errorObject.setDebugMessage(debugMessage);
+				throw new CarbonException(errorObject);
+			} else {
+				if ( LOG.isDebugEnabled() ) {
+					LOG.debug("xx createQuery() > Exception Stacktrace:", e);
+				}
+
+				if ( LOG.isErrorEnabled() ) {
+					LOG.error("-- createQuery() > The SPARQL Query: \n{}\n, couldn't be parsed.", queryString);
+				}
+
+				String friendlyMessage = "An unexpected exception ocurred.";
+
+				ErrorResponseFactory errorFactory = new ErrorResponseFactory();
+				ErrorResponse errorObject = errorFactory.create();
+				errorObject.setFriendlyMessage(friendlyMessage);
+				throw new CarbonException(errorObject);
+			}
+		}
+		return query;
+	}
+
+	public Verb getQueryVerb(Query query) throws CarbonException {
+		if ( query.isSelectType() ) {
+			return Verb.SELECT;
+		} else if ( query.isAskType() ) {
+			return Verb.ASK;
+		} else if ( query.isDescribeType() ) {
+			return Verb.DESCRIBE;
+		} else if ( query.isConstructType() ) {
+			return Verb.CONSTRUCT;
+		} else {
+			if ( LOG.isErrorEnabled() ) {
+				LOG.error("-- getQueryVerb() > The SPARQL Query: '{}', has a verb not supported.", query.toString());
+			}
+
+			String friendlyMessage = "An unexpected error ocurred.";
+			String debugMessage = "A SPARQL Query contains an unknown verb and cannot be completed.";
+
+			ErrorResponseFactory errorFactory = new ErrorResponseFactory();
+			ErrorResponse errorObject = errorFactory.create();
+			errorObject.setFriendlyMessage(friendlyMessage);
+			errorObject.setDebugMessage(debugMessage);
+			throw new CarbonException(errorObject);
 		}
 	}
 
-	/**
-	 * Execute a select query
-	 * 
-	 * @param sparqlQuery
-	 *            The sparql query to be executed
-	 * @return a ResultSet containing the results of the select query
-	 */
+	public ResultSet select(String sparqlQuery, String dataset) throws CarbonException {
+		Query query = createQuery(sparqlQuery);
+		return select(query, dataset);
+	}
+
+	public ResultSet select(Query query, String dataset) throws CarbonException {
+		// TODO: Implement
+		return null;
+	}
+
+	public ResultSet select(String sparqlQuery, Model domainModel) throws CarbonException {
+		Query query = createQuery(sparqlQuery);
+		return select(query, domainModel);
+	}
+
+	public ResultSet select(Query query, Model domainModel) throws CarbonException {
+		ResultSet resultSet = null;
+
+		if ( ! query.isSelectType() ) {
+			if ( LOG.isErrorEnabled() ) {
+				LOG.error("-- select() > Trying to execute non SELECT query in the select query method. Query: \n{}.", query.toString());
+			}
+
+			String friendlyMessage = "An unexpected exception ocurred.";
+
+			ErrorResponseFactory errorFactory = new ErrorResponseFactory();
+			ErrorResponse errorObject = errorFactory.create();
+			errorObject.setFriendlyMessage(friendlyMessage);
+			throw new CarbonException(errorObject);
+		}
+
+		QueryExecution execution = null;
+		try {
+			execution = QueryExecutionFactory.create(query, domainModel);
+			resultSet = execution.execSelect();
+			resultSet = ResultSetFactory.copyResults(resultSet);
+		} catch (Exception e) {
+			if ( LOG.isDebugEnabled() ) {
+				LOG.debug("xx select() > Exception Stacktrace:", e);
+			}
+
+			if ( LOG.isErrorEnabled() ) {
+				LOG.error("-- select() > The SPARQL Query: \n{}\n, couldn't be executed.", query.toString());
+			}
+
+			String friendlyMessage = "An unexpected exception ocurred.";
+
+			ErrorResponseFactory errorFactory = new ErrorResponseFactory();
+			ErrorResponse errorObject = errorFactory.create();
+			errorObject.setFriendlyMessage(friendlyMessage);
+			throw new CarbonException(errorObject);
+		}
+
+		return resultSet;
+	}
+
 	public ResultSet select(SPARQLQuery sparqlQuery) throws RepositoryServiceException, SPARQLQueryException {
 		ResultSet resultSet = null;
 		Dataset dataset = null;

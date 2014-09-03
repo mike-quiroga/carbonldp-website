@@ -32,7 +32,7 @@ import com.base22.carbon.utils.HTTPUtil;
 
 @Component
 @Scope(proxyMode = ScopedProxyMode.TARGET_CLASS, value = "request")
-public class DELETERequestHandler extends AbstractRequestHandler {
+public class DELETERequestHandler extends AbstractLDPRequestHandler {
 
 	//@formatter:off
 	public static final List<DeleteContainerPreference> DEFAULT_DCP = new ArrayList<DeleteContainerPreference>(Arrays.asList(

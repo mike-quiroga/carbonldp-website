@@ -1,26 +1,37 @@
 package com.base22.carbon.web;
 
+import java.nio.charset.UnsupportedCharsetException;
 import java.text.MessageFormat;
 
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.http.ParseException;
+import org.apache.http.entity.ContentType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.AntPathMatcher;
 
 import com.base22.carbon.CarbonException;
 import com.base22.carbon.ConfigurationService;
 import com.base22.carbon.agents.AgentDAO;
+import com.base22.carbon.apps.Application;
 import com.base22.carbon.apps.ApplicationDAO;
 import com.base22.carbon.apps.roles.ApplicationRoleDAO;
+import com.base22.carbon.authentication.ApplicationContextToken;
 import com.base22.carbon.authorization.LDPPermissionService;
 import com.base22.carbon.authorization.PermissionService;
 import com.base22.carbon.authorization.PlatformRoleDAO;
+import com.base22.carbon.ldp.URIObjectDAO;
 import com.base22.carbon.models.ErrorResponse;
 import com.base22.carbon.models.ErrorResponseFactory;
 import com.base22.carbon.repository.services.LDPService;
 import com.base22.carbon.repository.services.RepositoryService;
+import com.base22.carbon.sparql.SPARQLService;
 import com.base22.carbon.utils.HTTPUtil;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ResIterator;
@@ -45,12 +56,17 @@ public abstract class AbstractRequestHandler {
 	protected ApplicationRoleDAO unsecuredApplicationRoleDAO;
 
 	@Autowired
+	protected URIObjectDAO uriObjectDAO;
+
+	@Autowired
 	protected LDPPermissionService ldpPermissionService;
 	@Autowired
 	protected PermissionService permissionService;
 
 	@Autowired
 	protected LDPService ldpService;
+	@Autowired
+	protected SPARQLService sparqlService;
 	@Autowired
 	protected RepositoryService repositoryService;
 
@@ -130,6 +146,76 @@ public abstract class AbstractRequestHandler {
 			}
 		}
 		return documentResource;
+	}
+
+	protected boolean hasContentType(HttpServletRequest request) {
+		return request.getContentType() != null;
+	}
+
+	protected ContentType getContentType(HttpServletRequest request) throws CarbonException {
+		String contentTypeString = request.getContentType();
+
+		if ( contentTypeString == null ) {
+			String friendlyMessage = "A Content-Type wasn't specified.";
+
+			ErrorResponseFactory errorFactory = new ErrorResponseFactory();
+			ErrorResponse errorObject = errorFactory.create();
+			errorObject.setHttpStatus(HttpStatus.BAD_REQUEST);
+			errorObject.setFriendlyMessage(friendlyMessage);
+			errorObject.addHeaderIssue("Content-Type", null, "required", null);
+
+			throw new CarbonException(errorObject);
+		}
+
+		ContentType contentType = null;
+		try {
+			contentType = ContentType.parse(contentTypeString);
+		} catch (ParseException e) {
+			String friendlyMessage = "The Content-Type specified isn't supported.";
+			String debugMessage = MessageFormat.format("The Content-Type specfied: ''{0}'', couldn't be parsed.", contentTypeString);
+
+			ErrorResponseFactory errorFactory = new ErrorResponseFactory();
+			ErrorResponse errorObject = errorFactory.create();
+			errorObject.setHttpStatus(HttpStatus.BAD_REQUEST);
+			errorObject.setFriendlyMessage(friendlyMessage);
+			errorObject.setDebugMessage(debugMessage);
+			errorObject.addHeaderIssue("Content-Type", null, "invalid", contentTypeString);
+
+			throw new CarbonException(errorObject);
+		} catch (UnsupportedCharsetException e) {
+			String friendlyMessage = "The charset of the Content-Type specified isn't supported.";
+
+			ErrorResponseFactory errorFactory = new ErrorResponseFactory();
+			ErrorResponse errorObject = errorFactory.create();
+			errorObject.setHttpStatus(HttpStatus.BAD_REQUEST);
+			errorObject.setFriendlyMessage(friendlyMessage);
+			errorObject.addHeaderIssue("Content-Type", null, "unsupported", contentTypeString);
+
+			throw new CarbonException(errorObject);
+		}
+
+		return contentType;
+	}
+
+	protected Application getApplicationFromContext() throws CarbonException {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		if ( ! (authentication instanceof ApplicationContextToken) ) {
+			String friendlyMessage = "There was a problem processing your request. Please contact an administrator.";
+			String debugMessage = "The application context was never set. Can't proceed with the request.";
+
+			if ( LOG.isDebugEnabled() ) {
+				LOG.debug("<< getApplicationFromContext() > {}", debugMessage);
+			}
+
+			ErrorResponseFactory factory = new ErrorResponseFactory();
+			ErrorResponse errorObject = factory.create();
+			errorObject.setFriendlyMessage(friendlyMessage);
+			errorObject.setDebugMessage(debugMessage);
+
+			throw new CarbonException(errorObject);
+		}
+		Application application = ((ApplicationContextToken) authentication).getCurrentApplicationContext();
+		return application;
 	}
 
 }

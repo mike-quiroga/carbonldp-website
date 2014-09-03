@@ -31,7 +31,7 @@ import com.base22.carbon.utils.ConvertString;
 import com.base22.carbon.utils.HTTPUtil;
 import com.hp.hpl.jena.rdf.model.Model;
 
-public abstract class AbstractCreationRequestHandler extends AbstractRequestHandler {
+public abstract class AbstractCreationRequestHandler extends AbstractLDPRequestHandler {
 	protected HttpServletResponse response;
 	protected HttpServletRequest request;
 
