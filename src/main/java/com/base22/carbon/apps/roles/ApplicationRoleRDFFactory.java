@@ -40,7 +40,7 @@ public class ApplicationRoleRDFFactory extends LDPResourceFactory {
 		StringBuilder uriBuilder = new StringBuilder();
 		//@formatter:off
 		uriBuilder
-			.append(Carbon.DOMAIN)
+			.append(Carbon.URL)
 			.append(Application.ENDPOINT)
 			.append(applicationRole.getApplicationUUID().toString())
 			.append(ApplicationRole.ENDPOINT)
