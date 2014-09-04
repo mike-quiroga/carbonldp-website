@@ -14,48 +14,35 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.jena.atlas.web.ContentType;
 import org.apache.jena.riot.Lang;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.slf4j.Marker;
-import org.slf4j.MarkerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
-import com.base22.carbon.CarbonException;
-import com.base22.carbon.ConfigurationService;
-import com.base22.carbon.HttpHeaders;
 import com.base22.carbon.APIPreferences.InteractionModel;
+import com.base22.carbon.CarbonException;
+import com.base22.carbon.HttpHeaders;
 import com.base22.carbon.apps.Application;
 import com.base22.carbon.authentication.ApplicationContextToken;
 import com.base22.carbon.authorization.LDPPermissionService;
 import com.base22.carbon.authorization.PermissionService;
 import com.base22.carbon.authorization.acl.CarbonACLPermissionFactory.CarbonPermission;
-import com.base22.carbon.ldp.URIObjectDAO;
 import com.base22.carbon.ldp.models.URIObject;
 import com.base22.carbon.models.ErrorResponse;
 import com.base22.carbon.models.ErrorResponseFactory;
 import com.base22.carbon.models.HttpHeader;
 import com.base22.carbon.models.HttpHeaderValue;
 import com.base22.carbon.repository.services.FileService;
-import com.base22.carbon.repository.services.LDPService;
 import com.base22.carbon.repository.services.RDFService;
-import com.base22.carbon.sparql.SPARQLService;
 import com.base22.carbon.utils.ConvertInputStream;
 import com.base22.carbon.utils.ConvertString;
+import com.base22.carbon.web.AbstractRequestHandler;
 
-public abstract class AbstractRequestHandler {
-	@Autowired
-	protected URIObjectDAO uriObjectDAO;
+public abstract class AbstractLDPRequestHandler extends AbstractRequestHandler {
 
-	@Autowired
-	protected LDPService ldpService;
 	@Autowired
 	protected RDFService rdfService;
-	@Autowired
-	protected SPARQLService sparqlService;
 
 	@Autowired
 	protected LDPPermissionService ldpPermissionService;
@@ -64,11 +51,6 @@ public abstract class AbstractRequestHandler {
 
 	@Autowired
 	protected FileService fileService;
-	@Autowired
-	protected ConfigurationService configurationService;
-
-	protected final Logger LOG = LoggerFactory.getLogger(this.getClass());
-	protected final Marker FATAL = MarkerFactory.getMarker("FATAL");
 
 	protected List<Lang> supportedRDFLanguages = null;
 	protected List<MediaType> supportedMediaTypes = null;

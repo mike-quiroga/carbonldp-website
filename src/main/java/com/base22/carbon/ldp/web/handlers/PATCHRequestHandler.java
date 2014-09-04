@@ -13,7 +13,7 @@ import org.springframework.ui.Model;
 
 @Component
 @Scope(proxyMode = ScopedProxyMode.TARGET_CLASS, value = "request")
-public class PATCHRequestHandler extends AbstractRequestHandler {
+public class PATCHRequestHandler extends AbstractLDPRequestHandler {
 	public ResponseEntity<Object> handlePATCHRequest(String applicationIdentifier, Model model, HttpServletRequest request, HttpServletResponse response,
 			HttpEntity<byte[]> entity) {
 

@@ -47,6 +47,7 @@ public abstract class Carbon {
 		prefixes.put("rei", "http://www.w3.org/2004/06/rei#");
 		prefixes.put("rsa", "http://www.w3.org/ns/auth/rsa#");
 		prefixes.put("rss", "http://purl.org/rss/1.0/");
+		prefixes.put("sd", "http://www.w3.org/ns/sparql-service-description#");
 		prefixes.put("sfn", "http://www.w3.org/ns/sparql#");
 		prefixes.put("sioc", "http://rdfs.org/sioc/ns#");
 		prefixes.put("skos", "http://www.w3.org/2004/02/skos/core#");

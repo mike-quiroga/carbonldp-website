@@ -50,6 +50,8 @@
 			<bean class="com.base22.carbon.web.ErrorResponseMessageConverter"></bean>
 			<bean class="com.base22.carbon.ldp.web.LDPResourceMessageConverter"></bean>
 			<bean class="com.base22.carbon.web.ModelMessageConverter"></bean>
+			<bean class="com.base22.carbon.web.BooleanMessageConverter"></bean>
+			<bean class="com.base22.carbon.sparql.ResultSetMessageConverter"></bean>
 		</mvc:message-converters>
 	</mvc:annotation-driven>
 	

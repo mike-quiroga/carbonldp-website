@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
@@ -17,22 +18,23 @@ import com.base22.carbon.CarbonException;
 import com.base22.carbon.authorization.PermissionService;
 import com.base22.carbon.ldp.LDPC;
 import com.base22.carbon.ldp.LDPC.ContainerType;
+import com.base22.carbon.ldp.LDPNR;
+import com.base22.carbon.ldp.LDPR;
+import com.base22.carbon.ldp.LDPRS;
+import com.base22.carbon.ldp.URIObjectDAO;
 import com.base22.carbon.ldp.models.LDPContainer;
 import com.base22.carbon.ldp.models.LDPContainerFactory;
 import com.base22.carbon.ldp.models.LDPContainerQueryOptions;
+import com.base22.carbon.ldp.models.LDPContainerQueryOptions.METHOD;
 import com.base22.carbon.ldp.models.LDPRSource;
 import com.base22.carbon.ldp.models.LDPRSourceFactory;
 import com.base22.carbon.ldp.models.URIObject;
 import com.base22.carbon.ldp.models.WrapperForLDPNR;
 import com.base22.carbon.ldp.models.WrapperForLDPNRFactory;
-import com.base22.carbon.ldp.models.LDPContainerQueryOptions.METHOD;
-import com.base22.carbon.ldp.LDPNR;
-import com.base22.carbon.ldp.LDPR;
-import com.base22.carbon.ldp.LDPRS;
-import com.base22.carbon.ldp.URIObjectDAO;
 import com.base22.carbon.sparql.SPARQLQuery;
 import com.base22.carbon.sparql.SPARQLService;
 import com.hp.hpl.jena.graph.Node;
+import com.hp.hpl.jena.query.Query;
 import com.hp.hpl.jena.query.QuerySolution;
 import com.hp.hpl.jena.query.ResultSet;
 import com.hp.hpl.jena.rdf.model.Model;
@@ -114,6 +116,118 @@ public class LDPService {
 		return ldpRSource;
 	}
 
+	public LDPRSource getLDPRSourceBranch(URIObject documentURIObject, String dataset) throws CarbonException {
+		LDPRSource source = null;
+
+		String documentURI = documentURIObject.getURI();
+
+		String childrenBaseURI = documentURI.endsWith("/") ? documentURI : documentURI.concat("/");
+
+		StringBuffer query = new StringBuffer();
+		//@formatter:off
+		query
+			.append("CONSTRUCT {")
+					.append("\n\t?subject ?predicate ?object.")
+					.append("\n\t?childSubject ?childPredicate ?childObject.")
+					.append("\n\t?childSecondarySubject ?childSecondaryPredicate ?childSecondaryObject")
+			.append("\n} WHERE {")
+				.append("\n\tGRAPH <")
+					.append(documentURI)
+				.append("> {")
+					.append("\n\t\t?subject ?predicate ?object")
+				.append("\n\t}.")
+				.append("\n\tOPTIONAL {")
+					.append("\n\t\tGRAPH ?childGraphs {")
+						.append("\n\t\t\t?childSubject ?childPredicate ?childObject")
+						.append("\n\t\t\tFILTER( STRSTARTS(str(?childSubject), \"")
+							.append(childrenBaseURI)
+						.append("\") )")
+					.append("\n\t\t}")
+					.append("\n\t\tOPTIONAL {")
+						.append("\n\t\t\tGRAPH ?childSubject {")
+							.append("\n\t\t\t\t?childSecondarySubject ?childSecondaryPredicate ?childSecondaryObject")
+						.append("\n\t\t\t}.")
+					.append("\n\t\t}.")
+				.append("\n\t}.")
+			.append("\n}")
+		;
+		//@formatter:on
+
+		Model model = sparqlService.construct(query.toString(), dataset);
+
+		LDPRSourceFactory factory = new LDPRSourceFactory();
+		try {
+			source = factory.create(documentURI, model);
+		} catch (CarbonException e) {
+			if ( LOG.isErrorEnabled() ) {
+				LOG.error("<< getLDPRSource() > The LDPRSource object couldn't be created.");
+			}
+			throw e;
+		}
+
+		return source;
+	}
+
+	@PreAuthorize("hasPermission(#documentURIObject, 'EXECUTE_SPARQL_QUERY')")
+	public ResultSet executeSELECTonLDPRSource(URIObject documentURIObject, Query query, String dataset) throws CarbonException {
+		ResultSet resultSet = null;
+
+		LDPRSource rdfSourceBranch = this.getLDPRSourceBranch(documentURIObject, dataset);
+
+		try {
+			resultSet = sparqlService.select(query, rdfSourceBranch.getResource().getModel());
+		} catch (CarbonException e) {
+			e.getErrorObject().setHttpStatus(HttpStatus.INTERNAL_SERVER_ERROR);
+			throw e;
+		}
+		return resultSet;
+	}
+
+	@PreAuthorize("hasPermission(#documentURIObject, 'EXECUTE_SPARQL_QUERY')")
+	public Model executeCONSTRUCTonLDPRSource(URIObject documentURIObject, Query query, String dataset) throws CarbonException {
+		Model model = null;
+
+		LDPRSource rdfSourceBranch = this.getLDPRSourceBranch(documentURIObject, dataset);
+
+		try {
+			model = sparqlService.construct(query, rdfSourceBranch.getResource().getModel());
+		} catch (CarbonException e) {
+			e.getErrorObject().setHttpStatus(HttpStatus.INTERNAL_SERVER_ERROR);
+			throw e;
+		}
+		return model;
+	}
+
+	@PreAuthorize("hasPermission(#documentURIObject, 'EXECUTE_SPARQL_QUERY')")
+	public Model executeDESCRIBEonLDPRSource(URIObject documentURIObject, Query query, String dataset) throws CarbonException {
+		Model model = null;
+
+		LDPRSource rdfSourceBranch = this.getLDPRSourceBranch(documentURIObject, dataset);
+
+		try {
+			model = sparqlService.describe(query, rdfSourceBranch.getResource().getModel());
+		} catch (CarbonException e) {
+			e.getErrorObject().setHttpStatus(HttpStatus.INTERNAL_SERVER_ERROR);
+			throw e;
+		}
+		return model;
+	}
+
+	@PreAuthorize("hasPermission(#documentURIObject, 'EXECUTE_SPARQL_QUERY')")
+	public Boolean executeASKonLDPRSource(URIObject documentURIObject, Query query, String dataset) throws CarbonException {
+		Boolean result = null;
+
+		LDPRSource rdfSourceBranch = this.getLDPRSourceBranch(documentURIObject, dataset);
+
+		try {
+			result = sparqlService.ask(query, rdfSourceBranch.getResource().getModel());
+		} catch (CarbonException e) {
+			e.getErrorObject().setHttpStatus(HttpStatus.INTERNAL_SERVER_ERROR);
+			throw e;
+		}
+		return result;
+	}
+
 	// TODO: Refactor Method
 	@PreAuthorize("hasPermission(#documentURIObject, 'READ')")
 	public String getETagofLDPRSource(URIObject documentURIObject, String dataset) throws CarbonException {
@@ -122,10 +236,6 @@ public class LDPService {
 		LOG.trace(">> getETagofLDPRSource()");
 
 		String documentURI = documentURIObject.getURI();
-
-		SPARQLQuery sparqlQuery = new SPARQLQuery();
-		sparqlQuery.setType(SPARQLQuery.TYPE.QUERY);
-		sparqlQuery.setDataset(dataset);
 
 		StringBuffer query = new StringBuffer();
 		//@formatter:off
@@ -144,9 +254,7 @@ public class LDPService {
 		;
 		//@formatter:on
 
-		sparqlQuery.setQuery(query.toString());
-
-		ResultSet resultSet = sparqlService.select(sparqlQuery);
+		ResultSet resultSet = sparqlService.select(query.toString(), dataset);
 		if ( resultSet.hasNext() ) {
 			QuerySolution solution = resultSet.next();
 			eTag = solution.get("etag").toString();
@@ -154,8 +262,6 @@ public class LDPService {
 				LOG.debug("-- getETagofLDPRSource() > Got: {}", eTag);
 			}
 		}
-
-		sparqlService.closeResultSet(resultSet);
 
 		return eTag;
 	}
@@ -168,10 +274,6 @@ public class LDPService {
 		LOG.trace(">> getDocumentTypes()");
 
 		String documentURI = documentURIObject.getURI();
-
-		SPARQLQuery sparqlQuery = new SPARQLQuery();
-		sparqlQuery.setType(SPARQLQuery.TYPE.QUERY);
-		sparqlQuery.setDataset(dataset);
 
 		StringBuffer query = new StringBuffer();
 		//@formatter:off
@@ -190,9 +292,7 @@ public class LDPService {
 		;
 		//@formatter:on
 
-		sparqlQuery.setQuery(query.toString());
-
-		ResultSet resultSet = sparqlService.select(sparqlQuery);
+		ResultSet resultSet = sparqlService.select(query.toString(), dataset);
 		while (resultSet.hasNext()) {
 			QuerySolution solution = resultSet.next();
 			String docType = solution.get("type").toString();
@@ -201,8 +301,6 @@ public class LDPService {
 			}
 			documentTypes.add(docType);
 		}
-
-		sparqlService.closeResultSet(resultSet);
 
 		return documentTypes;
 	}
@@ -281,7 +379,7 @@ public class LDPService {
 				.append("\n\tGRAPH ?childSubject {")
 					.append("\n\t\t?childSecondarySubject ?childSecondaryPredicate ?childSecondaryObject")
 				.append("\n\t}.")
-			.append("} WHERE {")
+			.append("\n} WHERE {")
 				.append("\n\tGRAPH <")
 					.append(documentURI)
 				.append("> {")
@@ -300,7 +398,7 @@ public class LDPService {
 						.append("\n\t\t\t}.")
 					.append("\n\t\t}.")
 				.append("\n\t}.")
-			.append("}")
+			.append("\n}")
 		;
 		//@formatter:on
 
@@ -490,10 +588,6 @@ public class LDPService {
 
 		String documentURI = documentURIObject.getURI();
 
-		SPARQLQuery sparqlQuery = new SPARQLQuery();
-		sparqlQuery.setType(SPARQLQuery.TYPE.QUERY);
-		sparqlQuery.setDataset(dataset);
-
 		StringBuffer query = new StringBuffer();
 		//@formatter:off
 		query
@@ -524,9 +618,7 @@ public class LDPService {
 		;
 		//@formatter:on
 
-		sparqlQuery.setQuery(query.toString());
-
-		itIs = sparqlService.ask(sparqlQuery);
+		itIs = sparqlService.ask(query.toString(), dataset);
 
 		return itIs;
 	}
@@ -556,10 +648,6 @@ public class LDPService {
 		}
 
 		String documentURI = documentURIObject.getURI();
-
-		SPARQLQuery sparqlQuery = new SPARQLQuery();
-		sparqlQuery.setType(SPARQLQuery.TYPE.QUERY);
-		sparqlQuery.setDataset(dataset);
 
 		StringBuffer query = new StringBuffer();
 		//@formatter:off
@@ -598,15 +686,12 @@ public class LDPService {
 		;
 		//@formatter:on
 
-		sparqlQuery.setQuery(query.toString());
-
 		String containerTypeURI = null;
-		ResultSet resultSet = sparqlService.select(sparqlQuery);
+		ResultSet resultSet = sparqlService.select(query.toString(), dataset);
 		if ( resultSet.hasNext() ) {
 			QuerySolution solution = resultSet.next();
 			containerTypeURI = solution.get("type").toString();
 		}
-		sparqlService.closeResultSet(resultSet);
 
 		if ( containerTypeURI != null ) {
 			containerType = ContainerType.findByURI(containerTypeURI);
@@ -628,10 +713,6 @@ public class LDPService {
 
 		String documentURI = documentURIObject.getURI();
 
-		SPARQLQuery sparqlQuery = new SPARQLQuery();
-		sparqlQuery.setType(SPARQLQuery.TYPE.QUERY);
-		sparqlQuery.setDataset(dataset);
-
 		StringBuffer query = new StringBuffer();
 		//@formatter:off
 		query
@@ -649,10 +730,8 @@ public class LDPService {
 		;
 		//@formatter:on
 
-		sparqlQuery.setQuery(query.toString());
-
 		String interactionModelURI = null;
-		ResultSet resultSet = sparqlService.select(sparqlQuery);
+		ResultSet resultSet = sparqlService.select(query.toString(), dataset);
 		while (resultSet.hasNext() && interactionModelURI == null) {
 			QuerySolution solution = resultSet.next();
 			Node node = solution.get("model").asNode();
@@ -660,7 +739,6 @@ public class LDPService {
 				interactionModelURI = node.getURI();
 			}
 		}
-		sparqlService.closeResultSet(resultSet);
 
 		if ( interactionModelURI != null ) {
 			interactionModel = InteractionModel.findByURI(interactionModelURI);
@@ -726,10 +804,8 @@ public class LDPService {
 			LOG.debug("-- getLDPContainer() > container type: {}", containerType);
 		}
 
-		SPARQLQuery sparqlQuery = new SPARQLQuery(SPARQLQuery.TYPE.QUERY, dataset, query);
-
 		Model ldpContainerModel;
-		ldpContainerModel = sparqlService.construct(sparqlQuery);
+		ldpContainerModel = sparqlService.construct(query, dataset);
 
 		LDPContainerFactory factory = new LDPContainerFactory();
 		try {
@@ -862,11 +938,10 @@ public class LDPService {
 		}
 
 		String query = queryBuilder.toString();
-		SPARQLQuery sparqlQuery = new SPARQLQuery(SPARQLQuery.TYPE.QUERY, dataset, query);
 
 		ResultSet resultSet = null;
 		try {
-			resultSet = sparqlService.select(sparqlQuery);
+			resultSet = sparqlService.select(query, dataset);
 		} catch (CarbonException e) {
 			// TODO: FT
 			throw e;
@@ -1522,10 +1597,6 @@ public class LDPService {
 		String memberURI = memberURIObject.getURI();
 
 		StringBuffer query = new StringBuffer();
-		SPARQLQuery sparqlQuery = new SPARQLQuery();
-		sparqlQuery.setDataset(dataset);
-		sparqlQuery.setType(SPARQLQuery.TYPE.QUERY);
-
 		if ( containerType.equals(LDPC.BASIC) ) {
 			//@formatter:off
 			query
@@ -1545,9 +1616,7 @@ public class LDPService {
 			;
 			//@formatter:on
 
-			sparqlQuery.setQuery(query.toString());
-
-			isMember = sparqlService.ask(sparqlQuery);
+			isMember = sparqlService.ask(query.toString(), dataset);
 		} else if ( containerType.equals(LDPC.DIRECT) ) {
 			//@formatter:off
 			query
@@ -1575,12 +1644,9 @@ public class LDPService {
 			;
 			//@formatter:on
 
-			sparqlQuery.setQuery(query.toString());
-
-			ResultSet resultSet = sparqlService.select(sparqlQuery);
+			ResultSet resultSet = sparqlService.select(query.toString(), dataset);
 			isMember = resultSet.getRowNumber() >= 0;
 
-			sparqlService.closeResultSet(resultSet);
 		} else if ( containerType.equals(LDPC.INDIRECT) ) {
 			//@formatter:off
 			query
@@ -1615,9 +1681,7 @@ public class LDPService {
 			;
 			//@formatter:on
 
-			sparqlQuery.setQuery(query.toString());
-
-			ResultSet resultSet = sparqlService.select(sparqlQuery);
+			ResultSet resultSet = sparqlService.select(query.toString(), dataset);
 			isMember = resultSet.getRowNumber() >= 1;
 		}
 
