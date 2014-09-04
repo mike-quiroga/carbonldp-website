@@ -22,7 +22,7 @@ public class SPARQLController extends AbstractController {
 	protected SPARQLQueryPOSTRequestHandler queryHandler;
 
 	@RequestMapping(value = { "/apps/{application}/", "/apps/{application}/**" }, method = RequestMethod.POST, consumes = "application/sparql-query")
-	public ResponseEntity<Object> handleSPARQLQueryBody(@PathVariable("application") String applicationIdentifier, @RequestBody String query,
+	public ResponseEntity<Object> handleSPARQLQuery(@PathVariable("application") String applicationIdentifier, @RequestBody String query,
 			HttpServletRequest request, HttpServletResponse response) {
 
 		if ( LOG.isTraceEnabled() ) {
@@ -46,4 +46,27 @@ public class SPARQLController extends AbstractController {
 
 		return new ResponseEntity<Object>(HttpStatus.NOT_IMPLEMENTED);
 	}
+
+	@RequestMapping(value = { "/apps/{application}" }, method = RequestMethod.POST, consumes = "application/sparql-query")
+	public ResponseEntity<Object> handleAppSPARQLQuery(@PathVariable("application") String applicationIdentifier, @RequestBody String query,
+			HttpServletRequest request, HttpServletResponse response) {
+
+		if ( LOG.isTraceEnabled() ) {
+			LOG.trace(">> handleAppSPARQLQuery()");
+		}
+
+		return new ResponseEntity<Object>(HttpStatus.NOT_IMPLEMENTED);
+	}
+
+	@RequestMapping(value = { "/apps/{application}" }, method = RequestMethod.POST, consumes = "application/sparql-update")
+	public ResponseEntity<Object> handleAppSPARQLUpdate(@PathVariable("application") String applicationIdentifier, @RequestBody String query,
+			HttpServletRequest request, HttpServletResponse response) {
+
+		if ( LOG.isTraceEnabled() ) {
+			LOG.trace(">> handleAppSPARQLUpdate()");
+		}
+
+		return new ResponseEntity<Object>(HttpStatus.NOT_IMPLEMENTED);
+	}
+
 }

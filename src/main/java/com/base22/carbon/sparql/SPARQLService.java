@@ -10,19 +10,12 @@ import org.springframework.stereotype.Service;
 import com.base22.carbon.CarbonException;
 import com.base22.carbon.models.ErrorResponse;
 import com.base22.carbon.models.ErrorResponseFactory;
-import com.base22.carbon.repository.RepositoryServiceException;
 import com.base22.carbon.repository.services.RepositoryService;
-import com.hp.hpl.jena.query.Dataset;
 import com.hp.hpl.jena.query.Query;
 import com.hp.hpl.jena.query.QueryFactory;
 import com.hp.hpl.jena.query.QueryParseException;
-import com.hp.hpl.jena.query.ReadWrite;
 import com.hp.hpl.jena.query.ResultSet;
 import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.shared.Lock;
-import com.hp.hpl.jena.update.UpdateAction;
-import com.hp.hpl.jena.update.UpdateFactory;
-import com.hp.hpl.jena.update.UpdateRequest;
 
 @Service("sparqlService")
 @Scope(proxyMode = ScopedProxyMode.TARGET_CLASS, value = "request")
@@ -305,117 +298,26 @@ public class SPARQLService {
 		return executor.execute(query, domainModel);
 	}
 
-	/**
-	 * Execute an update query.
-	 * 
-	 * @param sparqlQuery
-	 *            The sparql query to be executed.
-	 * @return a boolean that represents if the query has been executed successfully
-	 */
-	public boolean update(SPARQLQuery sparqlQuery) throws SPARQLQueryException, RepositoryServiceException {
-		boolean executed = false;
-		Dataset dataset = null;
-		UpdateRequest update = null;
-
-		dataset = repositoryService.getDataset(sparqlQuery.getDataset());
-
-		if ( dataset.supportsTransactions() ) {
-			try {
-				dataset.begin(ReadWrite.WRITE);
-			} catch (Exception exception) {
-				LOG.error("The dataset couldn't be started.");
-				if ( LOG.isDebugEnabled() ) {
-					exception.printStackTrace();
-				}
-				throw new RepositoryServiceException("The dataset couldn't be started.");
-			}
-		}
+	public void update(String updateString, String datasetName) throws CarbonException {
+		SPARQLUpdateExecutor executor = new SPARQLUpdateExecutor(this.repositoryService);
 
 		try {
-			try {
-				update = UpdateFactory.create(sparqlQuery.getQuery());
-				UpdateAction.execute(update, dataset);
-				executed = true;
-			} catch (Exception exception) {
-				throw new SPARQLQueryException(sparqlQuery, "The query couldn't be parsed.");
-			}
-		} finally {
-			if ( dataset.supportsTransactions() ) {
-				try {
-					dataset.commit();
-				} catch (Exception exception) {
-					if ( LOG.isDebugEnabled() ) {
-						exception.printStackTrace();
-					}
-				}
-				try {
-					dataset.end();
-				} catch (Exception exception) {
-					if ( LOG.isDebugEnabled() ) {
-						exception.printStackTrace();
-					}
-				}
-			}
+			executor.execute(updateString, datasetName);
+		} catch (CarbonException e) {
+			// TODO: FT
+			throw e;
 		}
-
-		return executed;
 	}
 
-	/**
-	 * Execute an update query.
-	 * 
-	 * @param sparqlQuery
-	 *            The sparql query to be executed.
-	 * @return a boolean that represents if the query has been executed successfully
-	 */
-	public boolean update(SPARQLQuery sparqlQuery, String modelName) throws SPARQLQueryException, RepositoryServiceException {
-		boolean executed = false;
-		Model namedModel = null;
-		UpdateRequest update = null;
-
-		namedModel = repositoryService.getNamedModel(modelName, sparqlQuery.getDataset());
-
-		if ( namedModel.size() == 0 ) {
-			// Named model doesn't exist
-			return executed;
-		}
+	public void update(String updateString, String namedModel, String datasetName) throws CarbonException {
+		SPARQLUpdateExecutor executor = new SPARQLUpdateExecutor(this.repositoryService);
 
 		try {
-			namedModel.enterCriticalSection(Lock.WRITE);
-		} catch (Exception exception) {
-			LOG.error("The named Model couldn't be started.");
-			if ( LOG.isDebugEnabled() ) {
-				exception.printStackTrace();
-			}
-			throw new RepositoryServiceException("The named Model couldn't be started.");
+			executor.execute(updateString, datasetName, namedModel);
+		} catch (CarbonException e) {
+			// TODO: FT
+			throw e;
 		}
-
-		try {
-			try {
-				update = UpdateFactory.create(sparqlQuery.getQuery());
-				UpdateAction.execute(update, namedModel);
-				executed = true;
-			} catch (Exception exception) {
-				throw new SPARQLQueryException(sparqlQuery, "The query couldn't be parsed.");
-			}
-		} finally {
-			try {
-				namedModel.commit();
-			} catch (Exception exception) {
-				if ( LOG.isDebugEnabled() ) {
-					exception.printStackTrace();
-				}
-			}
-			try {
-				namedModel.leaveCriticalSection();
-			} catch (Exception exception) {
-				if ( LOG.isDebugEnabled() ) {
-					exception.printStackTrace();
-				}
-			}
-		}
-
-		return executed;
 	}
 
 	// Autowired setter methods, for testing purposes only

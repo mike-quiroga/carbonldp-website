@@ -31,7 +31,6 @@ import com.base22.carbon.ldp.models.LDPRSourceFactory;
 import com.base22.carbon.ldp.models.URIObject;
 import com.base22.carbon.ldp.models.WrapperForLDPNR;
 import com.base22.carbon.ldp.models.WrapperForLDPNRFactory;
-import com.base22.carbon.sparql.SPARQLQuery;
 import com.base22.carbon.sparql.SPARQLService;
 import com.hp.hpl.jena.graph.Node;
 import com.hp.hpl.jena.query.Query;
@@ -360,10 +359,6 @@ public class LDPService {
 
 		String childrenBaseURI = documentURI.endsWith("/") ? documentURI : documentURI.concat("/");
 
-		SPARQLQuery sparqlQuery = new SPARQLQuery();
-		sparqlQuery.setType(SPARQLQuery.TYPE.QUERY);
-		sparqlQuery.setDataset(dataset);
-
 		StringBuffer query = new StringBuffer();
 		//@formatter:off
 		query
@@ -402,9 +397,7 @@ public class LDPService {
 		;
 		//@formatter:on
 
-		sparqlQuery.setQuery(query.toString());
-
-		sparqlService.update(sparqlQuery);
+		sparqlService.update(query.toString(), dataset);
 
 		if ( deleteOcurrences ) {
 			try {
@@ -437,10 +430,6 @@ public class LDPService {
 
 		// TODO: Separate the childrenURI from the documentURI
 
-		SPARQLQuery sparqlQuery = new SPARQLQuery();
-		sparqlQuery.setType(SPARQLQuery.TYPE.QUERY);
-		sparqlQuery.setDataset(dataset);
-
 		StringBuffer query = new StringBuffer();
 		//@formatter:off
 		query
@@ -461,9 +450,7 @@ public class LDPService {
 		;
 		//@formatter:on
 
-		sparqlQuery.setQuery(query.toString());
-
-		sparqlService.update(sparqlQuery);
+		sparqlService.update(query.toString(), dataset);
 	}
 
 	// ========= End: LDP-RS Related Methods
@@ -1693,9 +1680,6 @@ public class LDPService {
 		String containerType = container.getTypeOfContainer();
 
 		StringBuffer query = new StringBuffer();
-		SPARQLQuery sparqlQuery = new SPARQLQuery();
-		sparqlQuery.setDataset(dataset);
-		sparqlQuery.setType(SPARQLQuery.TYPE.UPDATE);
 
 		if ( containerType.equals(LDPC.BASIC) ) {
 			//@formatter:off
@@ -1789,9 +1773,7 @@ public class LDPService {
 			//@formatter:on
 		}
 
-		sparqlQuery.setQuery(query.toString());
-
-		sparqlService.update(sparqlQuery);
+		sparqlService.update(query.toString(), dataset);
 
 	}
 
@@ -1800,9 +1782,6 @@ public class LDPService {
 		String containerType = container.getTypeOfContainer();
 
 		StringBuffer query = new StringBuffer();
-		SPARQLQuery sparqlQuery = new SPARQLQuery();
-		sparqlQuery.setDataset(dataset);
-		sparqlQuery.setType(SPARQLQuery.TYPE.UPDATE);
 
 		if ( containerType.equals(LDPC.BASIC) ) {
 			//@formatter:off
@@ -1866,17 +1845,12 @@ public class LDPService {
 			//@formatter:on
 		}
 
-		sparqlQuery.setQuery(query.toString());
-
-		sparqlService.update(sparqlQuery);
+		sparqlService.update(query.toString(), dataset);
 	}
 
 	public void addInverseMembershipTriple(LDPContainer container, String memberURI, String dataset) throws CarbonException {
 
 		StringBuffer query = new StringBuffer();
-		SPARQLQuery sparqlQuery = new SPARQLQuery();
-		sparqlQuery.setDataset(dataset);
-		sparqlQuery.setType(SPARQLQuery.TYPE.UPDATE);
 
 		//@formatter:off
 		query
@@ -1896,9 +1870,7 @@ public class LDPService {
 		;
 		//@formatter:on
 
-		sparqlQuery.setQuery(query.toString());
-
-		sparqlService.update(sparqlQuery);
+		sparqlService.update(query.toString(), dataset);
 	}
 
 	@PreAuthorize("hasPermission(#parentURIObject, 'CREATE_ACCESS_POINT')")
@@ -1929,10 +1901,6 @@ public class LDPService {
 		String accessPointURI = accessPointURIBuilder.toString();
 
 		StringBuffer query = new StringBuffer();
-
-		SPARQLQuery sparqlQuery = new SPARQLQuery();
-		sparqlQuery.setDataset(dataset);
-		sparqlQuery.setType(SPARQLQuery.TYPE.UPDATE);
 
 		//@formatter:off
 		query
@@ -1971,9 +1939,7 @@ public class LDPService {
 		;
 		//@formatter:on
 
-		sparqlQuery.setQuery(query.toString());
-
-		sparqlService.update(sparqlQuery);
+		sparqlService.update(query.toString(), dataset);
 	}
 
 	private void deleteAccessPoint(LDPContainer accessPointContainer, String dataset) throws CarbonException {
@@ -1989,10 +1955,6 @@ public class LDPService {
 		String accessPointURI = accessPointURIBuilder.toString();
 
 		StringBuffer query = new StringBuffer();
-
-		SPARQLQuery sparqlQuery = new SPARQLQuery();
-		sparqlQuery.setDataset(dataset);
-		sparqlQuery.setType(SPARQLQuery.TYPE.UPDATE);
 
 		//@formatter:off
 		query
@@ -2023,9 +1985,7 @@ public class LDPService {
 		;
 		//@formatter:on
 
-		sparqlQuery.setQuery(query.toString());
-
-		sparqlService.update(sparqlQuery);
+		sparqlService.update(query.toString(), dataset);
 	}
 
 	// TODO: Refactor method
@@ -2078,10 +2038,6 @@ public class LDPService {
 	private void deleteLDPCContainedResources(String documentURI, String dataset) throws CarbonException {
 		documentURI = documentURI.endsWith("/") ? documentURI : documentURI.concat("/");
 
-		SPARQLQuery sparqlQuery = new SPARQLQuery();
-		sparqlQuery.setType(SPARQLQuery.TYPE.QUERY);
-		sparqlQuery.setDataset(dataset);
-
 		// --- Delete ContainedResources and their occurrences
 		StringBuffer query = new StringBuffer();
 		//@formatter:off
@@ -2117,15 +2073,11 @@ public class LDPService {
 			.append("\n}")
 		;
 		//@formatter:on
-		sparqlQuery.setQuery(query.toString());
-		sparqlService.update(sparqlQuery);
+
+		sparqlService.update(query.toString(), dataset);
 	}
 
 	private void deleteLDPCMembershipTriples(String documentURI, String containerType, String dataset) throws CarbonException {
-		SPARQLQuery sparqlQuery = new SPARQLQuery();
-		sparqlQuery.setType(SPARQLQuery.TYPE.QUERY);
-		sparqlQuery.setDataset(dataset);
-
 		StringBuffer query = new StringBuffer();
 		if ( containerType.equals(LDPC.BASIC) ) {
 			//@formatter:off
@@ -2199,8 +2151,7 @@ public class LDPService {
 			//@formatter:on
 		}
 
-		sparqlQuery.setQuery(query.toString());
-		sparqlService.update(sparqlQuery);
+		sparqlService.update(query.toString(), dataset);
 	}
 
 	// ========= End: LDP-C Related Methods

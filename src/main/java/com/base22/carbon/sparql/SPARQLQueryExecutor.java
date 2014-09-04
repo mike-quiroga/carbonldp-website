@@ -1,8 +1,5 @@
 package com.base22.carbon.sparql;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.base22.carbon.CarbonException;
 import com.base22.carbon.models.ErrorResponse;
 import com.base22.carbon.models.ErrorResponseFactory;
@@ -16,10 +13,9 @@ import com.hp.hpl.jena.query.ReadWrite;
 import com.hp.hpl.jena.query.ResultSet;
 import com.hp.hpl.jena.query.ResultSetFactory;
 import com.hp.hpl.jena.rdf.model.Model;
+import com.hp.hpl.jena.shared.Lock;
 
-public class SPARQLQueryExecutor<T> {
-
-	static final Logger LOG = LoggerFactory.getLogger(SPARQLQueryExecutor.class);
+public class SPARQLQueryExecutor<T> extends SPARQLExecutor {
 
 	protected final Verb queryVerb;
 	protected final RepositoryService repositoryService;
@@ -31,13 +27,19 @@ public class SPARQLQueryExecutor<T> {
 
 	public T execute(Query query, Model domainModel) throws CarbonException {
 
+		this.enterModelCriticalSection(domainModel, Lock.READ);
+
 		QueryExecution queryExecution = this.getQueryExecution(query, domainModel);
 
 		T result = null;
 		try {
 			result = this.executeQuery(queryExecution);
 		} finally {
-			this.closeQueryExecution(queryExecution);
+			try {
+				this.closeQueryExecution(queryExecution);
+			} finally {
+				this.leaveModelCriticalSection(domainModel);
+			}
 		}
 
 		return result;
@@ -48,7 +50,7 @@ public class SPARQLQueryExecutor<T> {
 		Dataset dataset = this.getDataset(datasetName, this.repositoryService);
 
 		if ( dataset.supportsTransactions() ) {
-			this.beginDatasetTransaction(datasetName, dataset);
+			this.beginDatasetTransaction(datasetName, dataset, ReadWrite.READ);
 		}
 
 		QueryExecution queryExecution = null;
@@ -61,41 +63,12 @@ public class SPARQLQueryExecutor<T> {
 				this.closeQueryExecution(queryExecution);
 			}
 		} finally {
-			this.endDatasetTransaction(datasetName, dataset);
+			if ( dataset.supportsTransactions() ) {
+				this.endDatasetTransaction(datasetName, dataset);
+			}
 		}
 
 		return result;
-	}
-
-	protected Dataset getDataset(String datasetName, RepositoryService repositoryService) throws CarbonException {
-		Dataset dataset = null;
-		try {
-			dataset = repositoryService.getDataset(datasetName);
-		} catch (CarbonException e) {
-			// TODO: FT
-			throw e;
-		}
-		return dataset;
-	}
-
-	protected void beginDatasetTransaction(String datasetName, Dataset dataset) throws CarbonException {
-		try {
-			dataset.begin(ReadWrite.READ);
-		} catch (Exception e) {
-			if ( LOG.isDebugEnabled() ) {
-				LOG.debug("xx beginDatasetTransaction() > Exception Stacktrace:", e);
-			}
-
-			if ( LOG.isErrorEnabled() ) {
-				LOG.error("-- beginDatasetTransaction() > The dataset: couldn't be started.", datasetName);
-			}
-			String friendlyMessage = "An unexpected error ocurred.";
-
-			ErrorResponseFactory errorFactory = new ErrorResponseFactory();
-			ErrorResponse errorObject = errorFactory.create();
-			errorObject.setFriendlyMessage(friendlyMessage);
-			throw new CarbonException(errorObject);
-		}
 	}
 
 	private QueryExecution getQueryExecution(Query query, Model domainModel) throws CarbonException {
@@ -200,29 +173,6 @@ public class SPARQLQueryExecutor<T> {
 			ErrorResponse errorObject = errorFactory.create();
 			errorObject.setFriendlyMessage(friendlyMessage);
 			throw new CarbonException(errorObject);
-		}
-
-	}
-
-	private void endDatasetTransaction(String datasetName, Dataset dataset) throws CarbonException {
-		if ( dataset.supportsTransactions() ) {
-			try {
-				dataset.end();
-			} catch (Exception e) {
-				if ( LOG.isDebugEnabled() ) {
-					LOG.debug("xx endDatasetTransaction() > Exception Stacktrace:", e);
-				}
-
-				if ( LOG.isErrorEnabled() ) {
-					LOG.error("-- endDatasetTransaction() > The transaction under the dataset: '{}', couldn't be finished.", datasetName);
-				}
-				String friendlyMessage = "An unexpected error ocurred.";
-
-				ErrorResponseFactory errorFactory = new ErrorResponseFactory();
-				ErrorResponse errorObject = errorFactory.create();
-				errorObject.setFriendlyMessage(friendlyMessage);
-				throw new CarbonException(errorObject);
-			}
 		}
 
 	}

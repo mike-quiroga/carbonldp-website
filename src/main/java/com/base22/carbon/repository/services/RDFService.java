@@ -12,8 +12,6 @@ import com.base22.carbon.Carbon;
 import com.base22.carbon.CarbonException;
 import com.base22.carbon.repository.DatasetTransactionUtil;
 import com.base22.carbon.repository.RepositoryServiceException;
-import com.base22.carbon.sparql.SPARQLQuery;
-import com.base22.carbon.sparql.SPARQLQueryException;
 import com.base22.carbon.sparql.SPARQLService;
 import com.base22.carbon.utils.HTTPUtil;
 import com.hp.hpl.jena.query.Dataset;
@@ -93,24 +91,13 @@ public class RDFService {
 	 * @param dataset
 	 *            The dataset in where to insert it
 	 * @return boolean indicating if the triple was successfully added
+	 * @throws CarbonException
 	 */
-	public boolean insertTriple(String documentName, String subject, String predicate, Object object, String dataset) throws RepositoryServiceException,
-			SPARQLQueryException {
-		boolean executed = false;
-
-		// Make sure that the subject is a valid URI
-		if ( ! HTTPUtil.isValidURL(subject) || ! HTTPUtil.isValidURL(predicate) ) {
-			// TODO Handling bad data
-			return false;
-		}
-
+	public void insertTriple(String documentName, String subject, String predicate, Object object, String dataset) throws CarbonException {
 		String query = "INSERT DATA { <" + subject + "> <" + predicate + "> " + createTypedLiteral(object) + " }";
 		LOG.trace(">> query: " + query);
-		SPARQLQuery sparqlQuery = new SPARQLQuery(SPARQLQuery.TYPE.UPDATE, dataset, query);
 
-		executed = sparqlService.update(sparqlQuery, documentName);
-
-		return executed;
+		sparqlService.update(query, documentName, dataset);
 	}
 
 	/**
@@ -128,24 +115,13 @@ public class RDFService {
 	 * @param dataset
 	 *            The dataset in where to insert it
 	 * @return boolean indicating if the triple was successfully added
+	 * @throws CarbonException
 	 */
-	public boolean insertTriple(String subject, String predicate, String object, String typeOfObject, String dataset) throws RepositoryServiceException,
-			SPARQLQueryException {
-		boolean executed = false;
-
-		// Make sure that the subject is a valid URI
-		if ( ! HTTPUtil.isValidURL(subject) || ! HTTPUtil.isValidURL(predicate) || ! HTTPUtil.isValidURL(typeOfObject) ) {
-			// TODO Handling bad data
-			return false;
-		}
-
+	public void insertTriple(String subject, String predicate, String object, String typeOfObject, String dataset) throws CarbonException {
 		String query = "INSERT DATA { <" + subject + "> <" + predicate + "> \"" + object + "\"^^" + typeOfObject + " }";
 		LOG.trace(">> query: " + query);
-		SPARQLQuery sparqlQuery = new SPARQLQuery(SPARQLQuery.TYPE.UPDATE, dataset, query);
 
-		executed = sparqlService.update(sparqlQuery);
-
-		return executed;
+		sparqlService.update(query, dataset);
 	}
 
 	/**
@@ -163,22 +139,17 @@ public class RDFService {
 	 * @param dataset
 	 *            The dataset from where to delete
 	 * @return boolean indicating if the triple was successfully deleted
+	 * @throws CarbonException
 	 */
-	public boolean deleteTriples(String documentName, String subject, String predicate, Object object, String dataset) throws RepositoryServiceException,
-			SPARQLQueryException {
-		boolean executed = false;
-
+	public void deleteTriples(String documentName, String subject, String predicate, Object object, String dataset) throws CarbonException {
 		subject = (subject == null) ? "?s" : subject;
 		predicate = (predicate == null) ? "?p" : "<" + predicate + ">";
 		object = (object == null) ? "?o" : object;
 
 		String query = "DELETE WHERE { <" + subject + "> " + predicate + " " + createTypedLiteral(object) + " }";
 		LOG.trace(">> query: " + query);
-		SPARQLQuery sparqlQuery = new SPARQLQuery(SPARQLQuery.TYPE.UPDATE, dataset, query);
 
-		executed = sparqlService.update(sparqlQuery, documentName);
-
-		return executed;
+		sparqlService.update(query, documentName, dataset);
 	}
 
 	/**
@@ -250,22 +221,6 @@ public class RDFService {
 	 */
 	public boolean resourceExists(String uri, String dataset) throws CarbonException {
 		return this.triplesExist(uri, null, null, dataset);
-	}
-
-	/**
-	 * Deletes the resource from the schema's dataset that matches the provided uri
-	 * <p>
-	 * 
-	 * @param uri
-	 *            The resource URI
-	 * @param schema
-	 *            The schema were the dataset resides
-	 * @param dataset
-	 *            The dataset in where to delete
-	 * @return a boolean indicating if the resource was successfully deleted
-	 */
-	public boolean deleteResource(String uri, String dataset) throws RepositoryServiceException, SPARQLQueryException {
-		return this.deleteTriples(uri, uri, null, null, dataset);
 	}
 
 	// ==== Model Related Methods
