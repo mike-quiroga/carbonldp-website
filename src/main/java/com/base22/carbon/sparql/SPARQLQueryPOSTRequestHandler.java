@@ -1,6 +1,5 @@
 package com.base22.carbon.sparql;
 
-import java.io.ByteArrayOutputStream;
 import java.text.MessageFormat;
 
 import javax.servlet.http.HttpServletRequest;
@@ -13,18 +12,20 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Component;
 
+import com.base22.carbon.APIPreferences.InteractionModel;
 import com.base22.carbon.CarbonException;
+import com.base22.carbon.HttpHeaders;
 import com.base22.carbon.apps.Application;
-import com.base22.carbon.ldp.models.LDPRSource;
 import com.base22.carbon.ldp.models.URIObject;
 import com.base22.carbon.models.ErrorResponse;
 import com.base22.carbon.models.ErrorResponseFactory;
+import com.base22.carbon.models.HttpHeaderValue;
 import com.base22.carbon.sparql.SPARQLService.Verb;
 import com.base22.carbon.utils.HTTPUtil;
 import com.base22.carbon.web.AbstractRequestHandler;
 import com.hp.hpl.jena.query.Query;
 import com.hp.hpl.jena.query.ResultSet;
-import com.hp.hpl.jena.query.ResultSetFormatter;
+import com.hp.hpl.jena.rdf.model.Model;
 
 @Component
 @Scope(proxyMode = ScopedProxyMode.TARGET_CLASS, value = "request")
@@ -44,15 +45,11 @@ public class SPARQLQueryPOSTRequestHandler extends AbstractRequestHandler {
 
 		Query query = composeSPARQLQuery(queryString);
 
-		LDPRSource targetRDFSource = getTargetRDFSource(targetURIObject, application);
+		Object result = executeSPARQLQuery(query, targetURIObject, application);
 
-		Object results = executeSPARQLQuery(query, targetRDFSource);
+		addHeadersToResponse(response, targetURIObject);
 
-		ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-
-		ResultSetFormatter.outputAsJSON(byteArrayOutputStream, (ResultSet) results);
-
-		return new ResponseEntity<Object>(byteArrayOutputStream.toString(), HttpStatus.NOT_IMPLEMENTED);
+		return new ResponseEntity<Object>(result, HttpStatus.OK);
 	}
 
 	private ResponseEntity<Object> handleNonExistentSource(String targetURI, HttpServletRequest request, HttpServletResponse response) {
@@ -113,18 +110,7 @@ public class SPARQLQueryPOSTRequestHandler extends AbstractRequestHandler {
 		return query;
 	}
 
-	private LDPRSource getTargetRDFSource(URIObject targetURIObject, Application application) throws CarbonException {
-		LDPRSource targetRDFSource = null;
-		try {
-			targetRDFSource = ldpService.getLDPRSourceBranch(targetURIObject, application.getDatasetName());
-		} catch (CarbonException e) {
-			e.getErrorObject().setHttpStatus(HttpStatus.INTERNAL_SERVER_ERROR);
-			throw e;
-		}
-		return targetRDFSource;
-	}
-
-	private Object executeSPARQLQuery(Query query, LDPRSource targetRDFSource) throws CarbonException {
+	private Object executeSPARQLQuery(Query query, URIObject targetURIObject, Application application) throws CarbonException {
 		Object results = null;
 		Verb queryVerb = null;
 		try {
@@ -136,13 +122,16 @@ public class SPARQLQueryPOSTRequestHandler extends AbstractRequestHandler {
 
 		switch (queryVerb) {
 			case ASK:
+				results = executeASKQuery(query, targetURIObject, application);
 				break;
 			case CONSTRUCT:
+				results = executeCONSTRUCTQuery(query, targetURIObject, application);
 				break;
 			case DESCRIBE:
+				results = executeDESCRIBEQuery(query, targetURIObject, application);
 				break;
 			case SELECT:
-				results = executeSELECTQuery(query, targetRDFSource);
+				results = executeSELECTQuery(query, targetURIObject, application);
 				break;
 			default:
 				break;
@@ -151,14 +140,65 @@ public class SPARQLQueryPOSTRequestHandler extends AbstractRequestHandler {
 		return results;
 	}
 
-	private ResultSet executeSELECTQuery(Query query, LDPRSource targetRDFSource) throws CarbonException {
+	private Boolean executeASKQuery(Query query, URIObject targetURIObject, Application application) throws CarbonException {
+		Boolean result = null;
+		try {
+			result = ldpService.executeASKonLDPRSource(targetURIObject, query, application.getDatasetName());
+		} catch (CarbonException e) {
+			e.getErrorObject().setHttpStatus(HttpStatus.INTERNAL_SERVER_ERROR);
+			throw e;
+		}
+		return result;
+	}
+
+	private Model executeCONSTRUCTQuery(Query query, URIObject targetURIObject, Application application) throws CarbonException {
+		Model model = null;
+		try {
+			model = ldpService.executeCONSTRUCTonLDPRSource(targetURIObject, query, application.getDatasetName());
+		} catch (CarbonException e) {
+			e.getErrorObject().setHttpStatus(HttpStatus.INTERNAL_SERVER_ERROR);
+			throw e;
+		}
+		return model;
+	}
+
+	private Model executeDESCRIBEQuery(Query query, URIObject targetURIObject, Application application) throws CarbonException {
+		Model model = null;
+		try {
+			model = ldpService.executeDESCRIBEonLDPRSource(targetURIObject, query, application.getDatasetName());
+		} catch (CarbonException e) {
+			e.getErrorObject().setHttpStatus(HttpStatus.INTERNAL_SERVER_ERROR);
+			throw e;
+		}
+		return model;
+	}
+
+	private ResultSet executeSELECTQuery(Query query, URIObject targetURIObject, Application application) throws CarbonException {
 		ResultSet resultSet = null;
 		try {
-			resultSet = sparqlService.select(query, targetRDFSource.getResource().getModel());
+			resultSet = ldpService.executeSELECTonLDPRSource(targetURIObject, query, application.getDatasetName());
 		} catch (CarbonException e) {
 			e.getErrorObject().setHttpStatus(HttpStatus.INTERNAL_SERVER_ERROR);
 			throw e;
 		}
 		return resultSet;
+	}
+
+	private void addHeadersToResponse(HttpServletResponse response, URIObject targetURIObject) {
+		addLinkHeader(response);
+		addLocationHeader(response, targetURIObject);
+	}
+
+	private void addLinkHeader(HttpServletResponse response) {
+		HttpHeaderValue linkHeader = new HttpHeaderValue();
+		linkHeader.setMainValue(InteractionModel.SPARQL_ENDPOINT.getPrefixedURI().getResourceURI());
+		linkHeader.setExtendingKey("rel");
+		linkHeader.setExtendingValue("type");
+
+		response.addHeader(HttpHeaders.LINK, linkHeader.toString());
+	}
+
+	private void addLocationHeader(HttpServletResponse response, URIObject targetURIObject) {
+		response.addHeader(HttpHeaders.LOCATION, targetURIObject.getURI());
 	}
 }

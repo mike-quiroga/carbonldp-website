@@ -1,7 +1,5 @@
 package com.base22.carbon.sparql;
 
-import java.util.HashMap;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,13 +14,10 @@ import com.base22.carbon.repository.RepositoryServiceException;
 import com.base22.carbon.repository.services.RepositoryService;
 import com.hp.hpl.jena.query.Dataset;
 import com.hp.hpl.jena.query.Query;
-import com.hp.hpl.jena.query.QueryExecution;
-import com.hp.hpl.jena.query.QueryExecutionFactory;
 import com.hp.hpl.jena.query.QueryFactory;
 import com.hp.hpl.jena.query.QueryParseException;
 import com.hp.hpl.jena.query.ReadWrite;
 import com.hp.hpl.jena.query.ResultSet;
-import com.hp.hpl.jena.query.ResultSetFactory;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.shared.Lock;
 import com.hp.hpl.jena.update.UpdateAction;
@@ -39,10 +34,19 @@ public class SPARQLService {
 	static final Logger LOG = LoggerFactory.getLogger(SPARQLService.class);
 
 	public static enum Verb {
-		SELECT, CONSTRUCT, DESCRIBE, ASK
-	}
+		//@formatter:off
+		SELECT(ResultSet.class), 
+		CONSTRUCT(Model.class), 
+		DESCRIBE(Model.class), 
+		ASK(Boolean.class);
+		//@formatter:on
 
-	private HashMap<ResultSet, QueryExecution> queryExecutions;
+		public final Class<?> resultClass;
+
+		Verb(Class<?> resultClass) {
+			this.resultClass = resultClass;
+		}
+	}
 
 	public void init() {
 		if ( LOG.isTraceEnabled() ) {
@@ -122,19 +126,7 @@ public class SPARQLService {
 		return select(query, dataset);
 	}
 
-	public ResultSet select(Query query, String dataset) throws CarbonException {
-		// TODO: Implement
-		return null;
-	}
-
-	public ResultSet select(String sparqlQuery, Model domainModel) throws CarbonException {
-		Query query = createQuery(sparqlQuery);
-		return select(query, domainModel);
-	}
-
-	public ResultSet select(Query query, Model domainModel) throws CarbonException {
-		ResultSet resultSet = null;
-
+	public ResultSet select(Query query, String datasetName) throws CarbonException {
 		if ( ! query.isSelectType() ) {
 			if ( LOG.isErrorEnabled() ) {
 				LOG.error("-- select() > Trying to execute non SELECT query in the select query method. Query: \n{}.", query.toString());
@@ -148,18 +140,19 @@ public class SPARQLService {
 			throw new CarbonException(errorObject);
 		}
 
-		QueryExecution execution = null;
-		try {
-			execution = QueryExecutionFactory.create(query, domainModel);
-			resultSet = execution.execSelect();
-			resultSet = ResultSetFactory.copyResults(resultSet);
-		} catch (Exception e) {
-			if ( LOG.isDebugEnabled() ) {
-				LOG.debug("xx select() > Exception Stacktrace:", e);
-			}
+		SPARQLQueryExecutor<ResultSet> executor = new SPARQLQueryExecutor<ResultSet>(Verb.SELECT, this.repositoryService);
+		return executor.execute(query, datasetName);
+	}
 
+	public ResultSet select(String sparqlQuery, Model domainModel) throws CarbonException {
+		Query query = createQuery(sparqlQuery);
+		return select(query, domainModel);
+	}
+
+	public ResultSet select(Query query, Model domainModel) throws CarbonException {
+		if ( ! query.isSelectType() ) {
 			if ( LOG.isErrorEnabled() ) {
-				LOG.error("-- select() > The SPARQL Query: \n{}\n, couldn't be executed.", query.toString());
+				LOG.error("-- select() > Trying to execute non SELECT query in the select query method. Query: \n{}.", query.toString());
 			}
 
 			String friendlyMessage = "An unexpected exception ocurred.";
@@ -170,252 +163,146 @@ public class SPARQLService {
 			throw new CarbonException(errorObject);
 		}
 
-		return resultSet;
+		SPARQLQueryExecutor<ResultSet> executor = new SPARQLQueryExecutor<ResultSet>(Verb.SELECT, this.repositoryService);
+		return executor.execute(query, domainModel);
 	}
 
-	public ResultSet select(SPARQLQuery sparqlQuery) throws RepositoryServiceException, SPARQLQueryException {
-		ResultSet resultSet = null;
-		Dataset dataset = null;
-		Query query = null;
-		QueryExecution queryExecution = null;
-
-		dataset = repositoryService.getDataset(sparqlQuery.getDataset());
-		if ( dataset.supportsTransactions() ) {
-			try {
-				dataset.begin(ReadWrite.READ);
-			} catch (Exception exception) {
-				LOG.error("The dataset couldn't be started.");
-				if ( LOG.isDebugEnabled() ) {
-					exception.printStackTrace();
-				}
-				throw new RepositoryServiceException("The dataset couldn't be started.");
-			}
-		}
-
-		try {
-			query = QueryFactory.create(sparqlQuery.getQuery());
-		} catch (Exception exception) {
-			String message = "The sparql query couldn't be parsed. Reason: " + exception.getMessage();
-			LOG.error(message);
-			if ( LOG.isDebugEnabled() ) {
-				exception.printStackTrace();
-			}
-			throw new SPARQLQueryException(sparqlQuery, message);
-		}
-
-		try {
-			queryExecution = QueryExecutionFactory.create(query, dataset);
-			resultSet = queryExecution.execSelect();
-		} catch (Exception exception) {
-			LOG.error("Trying to execute non SELECT query in the select query method. Query: {}", sparqlQuery.getQuery());
-			if ( LOG.isDebugEnabled() ) {
-				exception.printStackTrace();
-			}
-			throw new SPARQLQueryException(sparqlQuery, "Trying to execute non SELECT query in the select query method.");
-		} finally {
-			// End the transaction (if supported)
-			if ( dataset.supportsTransactions() ) {
-				try {
-					dataset.end();
-				} catch (Exception exception) {
-					LOG.error("The transaction under the dataset couldn't be finished.");
-					if ( LOG.isDebugEnabled() ) {
-						exception.printStackTrace();
-					}
-					throw new RepositoryServiceException("The transaction under the dataset couldn't be finished.");
-				}
-			}
-		}
-
-		// Add the resultSet to the hashMap so the related queryExecution object can be closed later on
-		if ( queryExecutions == null ) {
-			queryExecutions = new HashMap<ResultSet, QueryExecution>();
-		}
-		queryExecutions.put(resultSet, queryExecution);
-
-		return resultSet;
+	public Model construct(String sparqlQuery, String dataset) throws CarbonException {
+		Query query = createQuery(sparqlQuery);
+		return construct(query, dataset);
 	}
 
-	/**
-	 * Execute a construct query
-	 * 
-	 * @param sparqlQuery
-	 *            The sparql query to be executed
-	 * @return a Model representing the result of the construct query.
-	 * @throws SPARQLQueryException
-	 * @throws RepositoryServiceException
-	 */
-	public Model construct(SPARQLQuery sparqlQuery) throws SPARQLQueryException, RepositoryServiceException {
-
-		Model resultModel = null;
-		Dataset dataset = null;
-		Query query = null;
-		QueryExecution queryExecution = null;
-
-		dataset = repositoryService.getDataset(sparqlQuery.getDataset());
-
-		if ( dataset.supportsTransactions() ) {
-			try {
-				dataset.begin(ReadWrite.READ);
-			} catch (Exception exception) {
-				LOG.error("The dataset couldn't be started.");
-				if ( LOG.isDebugEnabled() ) {
-					exception.printStackTrace();
-				}
-				throw new RepositoryServiceException("The dataset couldn't be started.");
+	public Model construct(Query query, String datasetName) throws CarbonException {
+		if ( ! query.isConstructType() ) {
+			if ( LOG.isErrorEnabled() ) {
+				LOG.error("-- construct() > Trying to execute non CONSTRUCT query in the select query method. Query: \n{}.", query.toString());
 			}
+
+			String friendlyMessage = "An unexpected exception ocurred.";
+
+			ErrorResponseFactory errorFactory = new ErrorResponseFactory();
+			ErrorResponse errorObject = errorFactory.create();
+			errorObject.setFriendlyMessage(friendlyMessage);
+			throw new CarbonException(errorObject);
 		}
 
-		try {
-			try {
-				query = QueryFactory.create(sparqlQuery.getQuery());
-				queryExecution = QueryExecutionFactory.create(query, dataset);
-			} catch (Exception exception) {
-				if ( LOG.isDebugEnabled() ) {
-					exception.printStackTrace();
-				}
-				throw new SPARQLQueryException(sparqlQuery, "The query couldn't be parsed.");
-			}
-			try {
-
-				resultModel = queryExecution.execConstruct();
-			} catch (Exception exception) {
-				throw new SPARQLQueryException(sparqlQuery, "Trying to execute non CONSTRUCT query in the construct query method.");
-			}
-		} finally {
-			// Try to close the queryExecution object
-			closeQueryExecution(queryExecution);
-
-			if ( dataset.supportsTransactions() ) {
-				try {
-					dataset.end();
-				} catch (Exception exception) {
-					if ( LOG.isDebugEnabled() ) {
-						exception.printStackTrace();
-					}
-				}
-			}
-		}
-
-		return resultModel;
+		SPARQLQueryExecutor<Model> executor = new SPARQLQueryExecutor<Model>(Verb.CONSTRUCT, this.repositoryService);
+		return executor.execute(query, datasetName);
 	}
 
-	/**
-	 * Execute a describe query
-	 * 
-	 * @param sparqlQuery
-	 *            The sparql query to be executed
-	 * @return a Model representing the result of the describe query.
-	 * @throws SPARQLQueryException
-	 * @throws RepositoryServiceException
-	 */
-	public Model describe(SPARQLQuery sparqlQuery) throws SPARQLQueryException, RepositoryServiceException {
-		Model resultModel = null;
-		Dataset dataset = null;
-		Query query = null;
-		QueryExecution queryExecution = null;
-
-		dataset = repositoryService.getDataset(sparqlQuery.getDataset());
-
-		if ( dataset.supportsTransactions() ) {
-			try {
-				dataset.begin(ReadWrite.READ);
-			} catch (Exception exception) {
-				LOG.error("The dataset couldn't be started.");
-				if ( LOG.isDebugEnabled() ) {
-					exception.printStackTrace();
-				}
-				throw new RepositoryServiceException("The dataset couldn't be started.");
-			}
-		}
-
-		try {
-			try {
-				query = QueryFactory.create(sparqlQuery.getQuery());
-				queryExecution = QueryExecutionFactory.create(query, dataset);
-			} catch (Exception exception) {
-				throw new SPARQLQueryException(sparqlQuery, "The query couldn't be parsed.");
-			}
-			try {
-				resultModel = queryExecution.execDescribe();
-			} catch (Exception exception) {
-				throw new SPARQLQueryException(sparqlQuery, "Trying to execute non DESCRIBE query in the describe query method.");
-			}
-		} finally {
-			// Try to close the queryExecution object
-			closeQueryExecution(queryExecution);
-
-			if ( dataset.supportsTransactions() ) {
-				try {
-					dataset.end();
-				} catch (Exception exception) {
-					if ( LOG.isDebugEnabled() ) {
-						exception.printStackTrace();
-					}
-				}
-			}
-		}
-
-		return resultModel;
+	public Model construct(String sparqlQuery, Model domainModel) throws CarbonException {
+		Query query = createQuery(sparqlQuery);
+		return construct(query, domainModel);
 	}
 
-	/**
-	 * Execute an ask query
-	 * 
-	 * @param sparqlQuery
-	 *            The sparql query to be executed
-	 * @return a boolean result of the query asked.
-	 * @throws SPARQLQueryException
-	 * @throws RepositoryServiceException
-	 */
-	public boolean ask(SPARQLQuery sparqlQuery) throws SPARQLQueryException, RepositoryServiceException {
-		boolean result;
-		Dataset dataset = null;
-		Query query = null;
-		QueryExecution queryExecution = null;
-
-		dataset = repositoryService.getDataset(sparqlQuery.getDataset());
-
-		if ( dataset.supportsTransactions() ) {
-			try {
-				dataset.begin(ReadWrite.READ);
-			} catch (Exception exception) {
-				LOG.error("The dataset couldn't be started.");
-				if ( LOG.isDebugEnabled() ) {
-					exception.printStackTrace();
-				}
-				throw new RepositoryServiceException("The dataset couldn't be started.");
+	public Model construct(Query query, Model domainModel) throws CarbonException {
+		if ( ! query.isConstructType() ) {
+			if ( LOG.isErrorEnabled() ) {
+				LOG.error("-- construct() > Trying to execute non CONSTRUCT query in the select query method. Query: \n{}.", query.toString());
 			}
+
+			String friendlyMessage = "An unexpected exception ocurred.";
+
+			ErrorResponseFactory errorFactory = new ErrorResponseFactory();
+			ErrorResponse errorObject = errorFactory.create();
+			errorObject.setFriendlyMessage(friendlyMessage);
+			throw new CarbonException(errorObject);
 		}
 
-		try {
-			try {
-				query = QueryFactory.create(sparqlQuery.getQuery());
-				queryExecution = QueryExecutionFactory.create(query, dataset);
-			} catch (Exception exception) {
-				throw new SPARQLQueryException(sparqlQuery, "The query couldn't be parsed.");
-			}
-			try {
-				result = queryExecution.execAsk();
-			} catch (Exception exception) {
-				throw new SPARQLQueryException(sparqlQuery, "Trying to execute non ASK query in the ask query method.");
-			}
-		} finally {
-			// Try to close the queryExecution object
-			closeQueryExecution(queryExecution);
+		SPARQLQueryExecutor<Model> executor = new SPARQLQueryExecutor<Model>(Verb.CONSTRUCT, this.repositoryService);
+		return executor.execute(query, domainModel);
+	}
 
-			if ( dataset.supportsTransactions() ) {
-				try {
-					dataset.end();
-				} catch (Exception exception) {
-					if ( LOG.isDebugEnabled() ) {
-						exception.printStackTrace();
-					}
-				}
+	public Model describe(String sparqlQuery, String dataset) throws CarbonException {
+		Query query = createQuery(sparqlQuery);
+		return construct(query, dataset);
+	}
+
+	public Model describe(Query query, String datasetName) throws CarbonException {
+		if ( ! query.isDescribeType() ) {
+			if ( LOG.isErrorEnabled() ) {
+				LOG.error("-- describe() > Trying to execute non DESCRIBE query in the select query method. Query: \n{}.", query.toString());
 			}
+
+			String friendlyMessage = "An unexpected exception ocurred.";
+
+			ErrorResponseFactory errorFactory = new ErrorResponseFactory();
+			ErrorResponse errorObject = errorFactory.create();
+			errorObject.setFriendlyMessage(friendlyMessage);
+			throw new CarbonException(errorObject);
 		}
 
-		return result;
+		SPARQLQueryExecutor<Model> executor = new SPARQLQueryExecutor<Model>(Verb.DESCRIBE, this.repositoryService);
+		return executor.execute(query, datasetName);
+	}
+
+	public Model describe(String sparqlQuery, Model domainModel) throws CarbonException {
+		Query query = createQuery(sparqlQuery);
+		return construct(query, domainModel);
+	}
+
+	public Model describe(Query query, Model domainModel) throws CarbonException {
+		if ( ! query.isDescribeType() ) {
+			if ( LOG.isErrorEnabled() ) {
+				LOG.error("-- describe() > Trying to execute non DESCRIBE query in the select query method. Query: \n{}.", query.toString());
+			}
+
+			String friendlyMessage = "An unexpected exception ocurred.";
+
+			ErrorResponseFactory errorFactory = new ErrorResponseFactory();
+			ErrorResponse errorObject = errorFactory.create();
+			errorObject.setFriendlyMessage(friendlyMessage);
+			throw new CarbonException(errorObject);
+		}
+
+		SPARQLQueryExecutor<Model> executor = new SPARQLQueryExecutor<Model>(Verb.DESCRIBE, this.repositoryService);
+		return executor.execute(query, domainModel);
+	}
+
+	public Boolean ask(String sparqlQuery, String dataset) throws CarbonException {
+		Query query = createQuery(sparqlQuery);
+		return ask(query, dataset);
+	}
+
+	public Boolean ask(Query query, String datasetName) throws CarbonException {
+		if ( ! query.isAskType() ) {
+			if ( LOG.isErrorEnabled() ) {
+				LOG.error("-- ask() > Trying to execute non ASK query in the select query method. Query: \n{}.", query.toString());
+			}
+
+			String friendlyMessage = "An unexpected exception ocurred.";
+
+			ErrorResponseFactory errorFactory = new ErrorResponseFactory();
+			ErrorResponse errorObject = errorFactory.create();
+			errorObject.setFriendlyMessage(friendlyMessage);
+			throw new CarbonException(errorObject);
+		}
+
+		SPARQLQueryExecutor<Boolean> executor = new SPARQLQueryExecutor<Boolean>(Verb.ASK, this.repositoryService);
+		return executor.execute(query, datasetName);
+	}
+
+	public Boolean ask(String sparqlQuery, Model domainModel) throws CarbonException {
+		Query query = createQuery(sparqlQuery);
+		return ask(query, domainModel);
+	}
+
+	public Boolean ask(Query query, Model domainModel) throws CarbonException {
+		if ( ! query.isAskType() ) {
+			if ( LOG.isErrorEnabled() ) {
+				LOG.error("-- ask() > Trying to execute non ASK query in the select query method. Query: \n{}.", query.toString());
+			}
+
+			String friendlyMessage = "An unexpected exception ocurred.";
+
+			ErrorResponseFactory errorFactory = new ErrorResponseFactory();
+			ErrorResponse errorObject = errorFactory.create();
+			errorObject.setFriendlyMessage(friendlyMessage);
+			throw new CarbonException(errorObject);
+		}
+
+		SPARQLQueryExecutor<Boolean> executor = new SPARQLQueryExecutor<Boolean>(Verb.ASK, this.repositoryService);
+		return executor.execute(query, domainModel);
 	}
 
 	/**
@@ -529,26 +416,6 @@ public class SPARQLService {
 		}
 
 		return executed;
-	}
-
-	public void closeResultSet(ResultSet resultSet) {
-		if ( queryExecutions == null ) {
-			return;
-		}
-		if ( ! queryExecutions.containsKey(resultSet) ) {
-			return;
-		}
-		closeQueryExecution(queryExecutions.get(resultSet));
-	}
-
-	private void closeQueryExecution(QueryExecution queryExecution) {
-		try {
-			queryExecution.close();
-		} catch (Exception exception) {
-			if ( LOG.isErrorEnabled() ) {
-				exception.printStackTrace();
-			}
-		}
 	}
 
 	// Autowired setter methods, for testing purposes only

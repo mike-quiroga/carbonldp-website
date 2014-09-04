@@ -61,8 +61,9 @@ public class RDFService {
 	 * @param dataset
 	 *            The dataset from where to delete
 	 * @return boolean indicating if the triple was successfully deleted
+	 * @throws CarbonException
 	 */
-	public Model constructWithTriple(String subject, String predicate, Object object, String dataset) throws RepositoryServiceException, SPARQLQueryException {
+	public Model constructWithTriple(String subject, String predicate, Object object, String dataset) throws CarbonException {
 		Model resultModel = null;
 
 		subject = (subject == null) ? "?s" : subject;
@@ -71,9 +72,8 @@ public class RDFService {
 
 		String query = "CONSTRUCT WHERE { <" + subject + "> " + predicate + " " + createTypedLiteral(object) + " }";
 		LOG.trace(">> query: {}", query);
-		SPARQLQuery sparqlQuery = new SPARQLQuery(SPARQLQuery.TYPE.QUERY, dataset, query);
 
-		resultModel = sparqlService.construct(sparqlQuery);
+		resultModel = sparqlService.construct(query, dataset);
 
 		return resultModel;
 	}
@@ -196,8 +196,9 @@ public class RDFService {
 	 * @param dataset
 	 *            The dataset in where to check
 	 * @return boolean indicating if the triple exists
+	 * @throws CarbonException
 	 */
-	public boolean triplesExist(String subject, String predicate, Object object, String dataset) throws RepositoryServiceException, SPARQLQueryException {
+	public boolean triplesExist(String subject, String predicate, Object object, String dataset) throws CarbonException {
 		boolean exists = false;
 
 		subject = (subject == null) ? "?s" : subject;
@@ -206,9 +207,8 @@ public class RDFService {
 
 		String query = "ASK { <" + subject + "> " + predicate + " " + createTypedLiteral(object) + " }";
 		LOG.trace(">> query: " + query);
-		SPARQLQuery sparqlQuery = new SPARQLQuery(SPARQLQuery.TYPE.QUERY, dataset, query);
 
-		exists = sparqlService.ask(sparqlQuery);
+		exists = sparqlService.ask(query, dataset);
 
 		return exists;
 	}
@@ -229,8 +229,9 @@ public class RDFService {
 	 * @param dataset
 	 *            The dataset from where the resource will be retrieved
 	 * @return a model of the resource that matches the uri
+	 * @throws CarbonException
 	 */
-	public Model getResourceModel(String uri, String dataset) throws RepositoryServiceException, SPARQLQueryException {
+	public Model getResourceModel(String uri, String dataset) throws CarbonException {
 		return this.constructWithTriple(uri, null, null, dataset);
 	}
 
@@ -245,8 +246,9 @@ public class RDFService {
 	 *            The schema were the dataset resides
 	 * @param dataset
 	 *            The dataset where the search will be done
+	 * @throws CarbonException
 	 */
-	public boolean resourceExists(String uri, String dataset) throws RepositoryServiceException, SPARQLQueryException {
+	public boolean resourceExists(String uri, String dataset) throws CarbonException {
 		return this.triplesExist(uri, null, null, dataset);
 	}
 
