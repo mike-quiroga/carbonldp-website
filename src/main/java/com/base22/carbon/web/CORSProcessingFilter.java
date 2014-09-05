@@ -15,6 +15,9 @@ import org.springframework.web.filter.GenericFilterBean;
 
 import com.base22.carbon.utils.HTTPUtil;
 
+/**
+ * Cross-Origin Resource Sharing filter that handles the necessary stuff for cross domain Ajax calls to work.
+ */
 public class CORSProcessingFilter extends GenericFilterBean {
 
 	static final Logger LOG = LoggerFactory.getLogger(CORSProcessingFilter.class);
