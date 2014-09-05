@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.HttpMediaTypeNotAcceptableException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -23,6 +24,24 @@ import com.base22.carbon.utils.HTTPUtil;
 public class PlatformExceptionController {
 
 	protected final Logger LOG = LoggerFactory.getLogger(this.getClass());
+
+	@ExceptionHandler(BadCredentialsException.class)
+	public ResponseEntity<Object> handleUnauthorized(HttpServletRequest request, HttpServletResponse response, Exception rawException) {
+		BadCredentialsException exception = (BadCredentialsException) rawException;
+
+		// TODO: Find a way of knowing why was the accessDenied thrown
+		String friendlyMessage = "You are not authorized to access this resource.";
+		if ( LOG.isDebugEnabled() ) {
+			LOG.debug("<< handleUnauthorized() > The request wasn't authorized.");
+		}
+
+		ErrorResponseFactory errorFactory = new ErrorResponseFactory();
+		ErrorResponse errorObject = errorFactory.create();
+		errorObject.setFriendlyMessage(friendlyMessage);
+		errorObject.setHttpStatus(HttpStatus.FORBIDDEN);
+
+		return HTTPUtil.createErrorResponseEntity(errorObject);
+	}
 
 	@ExceptionHandler(AccessDeniedException.class)
 	public ResponseEntity<Object> handleAccessDenied(HttpServletRequest request, HttpServletResponse response, Exception rawException) {

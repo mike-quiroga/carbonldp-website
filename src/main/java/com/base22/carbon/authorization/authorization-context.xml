@@ -23,9 +23,19 @@
 	</bean>
 	
 	<security:http pattern="/auth/**" use-expressions="true" auto-config="false" create-session="stateless" entry-point-ref="restAPIBasicAuthenticationEntryPoint">
-		<security:intercept-url pattern="/auth/login" access="isAuthenticated()" />
 		<security:custom-filter ref="restAPIBasicAuthenticationProcessingFilter" position="BASIC_AUTH_FILTER" />
 		<security:custom-filter ref="restAPIAuthenticationProcessingFilter" position="FORM_LOGIN_FILTER" />
+		
+		<security:intercept-url pattern="/auth/token" access="isAuthenticated()" />
+	</security:http>
+	
+	<security:http pattern="/apps" use-expressions="true" auto-config="false" create-session="stateless" entry-point-ref="restAPIBasicAuthenticationEntryPoint">
+		<security:custom-filter ref="restAPIcorsProcessingFilter" before="BASIC_AUTH_FILTER" />
+		<security:custom-filter ref="restAPIBasicAuthenticationProcessingFilter" position="BASIC_AUTH_FILTER" />
+		<security:custom-filter ref="restAPIAuthenticationProcessingFilter" position="FORM_LOGIN_FILTER" />
+		<security:custom-filter ref="restAPIApplicationContextFilter" position="LAST" />
+		
+		<security:intercept-url pattern="/apps" access="isAuthenticated()"/>
 	</security:http>
 	
 	<security:http pattern="/apps/**" use-expressions="true" auto-config="false" create-session="stateless" entry-point-ref="restAPIBasicAuthenticationEntryPoint">
@@ -33,5 +43,7 @@
 		<security:custom-filter ref="restAPIBasicAuthenticationProcessingFilter" position="BASIC_AUTH_FILTER" />
 		<security:custom-filter ref="restAPIAuthenticationProcessingFilter" position="FORM_LOGIN_FILTER" />
 		<security:custom-filter ref="restAPIApplicationContextFilter" position="LAST" />
+		
+		<security:intercept-url pattern="/apps/**" access="isAuthenticated()"/>
 	</security:http>
 </beans>
