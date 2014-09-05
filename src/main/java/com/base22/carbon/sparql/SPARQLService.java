@@ -18,6 +18,8 @@ import com.hp.hpl.jena.query.QueryFactory;
 import com.hp.hpl.jena.query.QueryParseException;
 import com.hp.hpl.jena.query.ResultSet;
 import com.hp.hpl.jena.rdf.model.Model;
+import com.hp.hpl.jena.update.UpdateFactory;
+import com.hp.hpl.jena.update.UpdateRequest;
 
 @Service("sparqlService")
 @Scope(proxyMode = ScopedProxyMode.TARGET_CLASS, value = "request")
@@ -116,6 +118,11 @@ public class SPARQLService {
 		}
 	}
 
+	@PreAuthorize("hasPermission(#application, 'EXECUTE_SPARQL_QUERY')")
+	public ResultSet select(Query query, Application application) throws CarbonException {
+		return select(query, application.getDatasetName());
+	}
+
 	public ResultSet select(String sparqlQuery, String dataset) throws CarbonException {
 		Query query = createQuery(sparqlQuery);
 		return select(query, dataset);
@@ -160,6 +167,11 @@ public class SPARQLService {
 
 		SPARQLQueryExecutor<ResultSet> executor = new SPARQLQueryExecutor<ResultSet>(Verb.SELECT, this.repositoryService);
 		return executor.execute(query, domainModel);
+	}
+
+	@PreAuthorize("hasPermission(#application, 'EXECUTE_SPARQL_QUERY')")
+	public Model construct(Query query, Application application) throws CarbonException {
+		return construct(query, application.getDatasetName());
 	}
 
 	public Model construct(String sparqlQuery, String dataset) throws CarbonException {
@@ -208,6 +220,11 @@ public class SPARQLService {
 		return executor.execute(query, domainModel);
 	}
 
+	@PreAuthorize("hasPermission(#application, 'EXECUTE_SPARQL_QUERY')")
+	public Model describe(Query query, Application application) throws CarbonException {
+		return describe(query, application.getDatasetName());
+	}
+
 	public Model describe(String sparqlQuery, String dataset) throws CarbonException {
 		Query query = createQuery(sparqlQuery);
 		return construct(query, dataset);
@@ -252,6 +269,11 @@ public class SPARQLService {
 
 		SPARQLQueryExecutor<Model> executor = new SPARQLQueryExecutor<Model>(Verb.DESCRIBE, this.repositoryService);
 		return executor.execute(query, domainModel);
+	}
+
+	@PreAuthorize("hasPermission(#application, 'EXECUTE_SPARQL_QUERY')")
+	public Boolean ask(Query query, Application application) throws CarbonException {
+		return ask(query, application.getDatasetName());
 	}
 
 	public Boolean ask(String sparqlQuery, String dataset) throws CarbonException {
@@ -300,12 +322,50 @@ public class SPARQLService {
 		return executor.execute(query, domainModel);
 	}
 
-	@PreAuthorize("hasPermission(#documentURIObject, 'EXECUTE_SPARQL_UPDATE')")
-	public void update(Application application, String updateString) throws CarbonException {
+	public UpdateRequest createUpdateRequest(String updateString, boolean exposeErrors) throws CarbonException {
+		UpdateRequest updateRequest = null;
+		try {
+			updateRequest = UpdateFactory.create(updateString);
+		} catch (Exception e) {
+			if ( exposeErrors ) {
+				if ( LOG.isErrorEnabled() ) {
+					LOG.error("-- createUpdateRequest() > The SPARQL Update: \n{}\n, couldn't be parsed.", updateString);
+				}
+
+				String friendlyMessage = "The SPARQL Query isn't valid.";
+				String debugMessage = e.getMessage();
+
+				ErrorResponseFactory errorFactory = new ErrorResponseFactory();
+				ErrorResponse errorObject = errorFactory.create();
+				errorObject.setFriendlyMessage(friendlyMessage);
+				errorObject.setDebugMessage(debugMessage);
+				throw new CarbonException(errorObject);
+			} else {
+				if ( LOG.isDebugEnabled() ) {
+					LOG.debug("xx createUpdateRequest() > Exception Stacktrace:", e);
+				}
+
+				if ( LOG.isErrorEnabled() ) {
+					LOG.error("-- createUpdateRequest() > The SPARQL Update: \n{}\n, couldn't be parsed.", updateString);
+				}
+
+				String friendlyMessage = "An unexpected exception ocurred.";
+
+				ErrorResponseFactory errorFactory = new ErrorResponseFactory();
+				ErrorResponse errorObject = errorFactory.create();
+				errorObject.setFriendlyMessage(friendlyMessage);
+				throw new CarbonException(errorObject);
+			}
+		}
+		return updateRequest;
+	}
+
+	@PreAuthorize("hasPermission(#application, 'EXECUTE_SPARQL_UPDATE')")
+	public void update(Application application, UpdateRequest updateRequest) throws CarbonException {
 		SPARQLUpdateExecutor executor = new SPARQLUpdateExecutor(this.repositoryService);
 
 		try {
-			executor.execute(updateString, application.getDatasetName());
+			executor.execute(updateRequest, application.getDatasetName());
 		} catch (CarbonException e) {
 			// TODO: FT
 			throw e;
@@ -313,10 +373,15 @@ public class SPARQLService {
 	}
 
 	public void update(String updateString, String datasetName) throws CarbonException {
+		UpdateRequest updateRequest = this.createUpdateRequest(updateString, false);
+		update(updateRequest, datasetName);
+	}
+
+	public void update(UpdateRequest updateRequest, String datasetName) throws CarbonException {
 		SPARQLUpdateExecutor executor = new SPARQLUpdateExecutor(this.repositoryService);
 
 		try {
-			executor.execute(updateString, datasetName);
+			executor.execute(updateRequest, datasetName);
 		} catch (CarbonException e) {
 			// TODO: FT
 			throw e;
@@ -324,10 +389,15 @@ public class SPARQLService {
 	}
 
 	public void update(String updateString, String namedModel, String datasetName) throws CarbonException {
+		UpdateRequest updateRequest = this.createUpdateRequest(updateString, false);
+		update(updateRequest, namedModel, datasetName);
+	}
+
+	public void update(UpdateRequest updateRequest, String namedModel, String datasetName) throws CarbonException {
 		SPARQLUpdateExecutor executor = new SPARQLUpdateExecutor(this.repositoryService);
 
 		try {
-			executor.execute(updateString, datasetName, namedModel);
+			executor.execute(updateRequest, datasetName, namedModel);
 		} catch (CarbonException e) {
 			// TODO: FT
 			throw e;

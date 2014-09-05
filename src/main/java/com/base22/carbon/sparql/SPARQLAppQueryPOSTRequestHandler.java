@@ -9,14 +9,12 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Component;
 
 import com.base22.carbon.APIPreferences.InteractionModel;
 import com.base22.carbon.CarbonException;
 import com.base22.carbon.HttpHeaders;
 import com.base22.carbon.apps.Application;
-import com.base22.carbon.ldp.models.URIObject;
 import com.base22.carbon.models.ErrorResponse;
 import com.base22.carbon.models.ErrorResponseFactory;
 import com.base22.carbon.models.HttpHeaderValue;
@@ -29,34 +27,29 @@ import com.hp.hpl.jena.rdf.model.Model;
 
 @Component
 @Scope(proxyMode = ScopedProxyMode.TARGET_CLASS, value = "request")
-public class SPARQLQueryPOSTRequestHandler extends AbstractRequestHandler {
-
-	public ResponseEntity<Object> handleRequest(String applicationIdentifier, String queryString, HttpServletRequest request, HttpServletResponse response)
+public class SPARQLAppQueryPOSTRequestHandler extends AbstractRequestHandler {
+	public ResponseEntity<Object> handleRequest(String appIdentifier, String queryString, HttpServletRequest request, HttpServletResponse response)
 			throws CarbonException {
 
-		Application application = getApplicationFromContext();
-
-		String targetURI = getTargetURI(request);
-		URIObject targetURIObject = getTargetURIObject(targetURI);
-
-		if ( targetSourceExists(targetURIObject) ) {
-			return handleNonExistentSource(targetURI, request, response);
+		Application targetApplication = getTargetApplication(appIdentifier);
+		if ( ! targetApplicationExists(targetApplication) ) {
+			return handleNonExistentApplication(appIdentifier, request, response);
 		}
 
 		queryString = SPARQLUtil.setDefaultNSPrefixes(queryString, true);
 
 		Query query = composeSPARQLQuery(queryString);
 
-		Object result = executeSPARQLQuery(query, targetURIObject, application);
+		Object result = executeSPARQLQuery(query, targetApplication);
 
-		addHeadersToResponse(response, targetURIObject);
+		addHeadersToResponse(response, targetApplication);
 
 		return new ResponseEntity<Object>(result, HttpStatus.OK);
 	}
 
-	private ResponseEntity<Object> handleNonExistentSource(String targetURI, HttpServletRequest request, HttpServletResponse response) {
-		String friendlyMessage = "The document specified wasn't found.";
-		String debugMessage = MessageFormat.format("The document with URI: ''{0}'', wasn''t found.", targetURI);
+	private ResponseEntity<Object> handleNonExistentApplication(String appIdentifier, HttpServletRequest request, HttpServletResponse response) {
+		String friendlyMessage = "The application specified wasn't found.";
+		String debugMessage = MessageFormat.format("The application with Identifier: ''{0}'', wasn''t found.", appIdentifier);
 
 		if ( LOG.isDebugEnabled() ) {
 			LOG.debug("xx handleNonExistentApplication() > {}", debugMessage);
@@ -71,34 +64,19 @@ public class SPARQLQueryPOSTRequestHandler extends AbstractRequestHandler {
 		return HTTPUtil.createErrorResponseEntity(errorObject);
 	}
 
-	private boolean targetSourceExists(URIObject targetURIObject) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	private String getTargetURI(HttpServletRequest request) {
-		return HTTPUtil.getRequestURL(request);
-	}
-
-	private URIObject getTargetURIObject(String targetURI) throws CarbonException {
-		URIObject targetURIObject = null;
+	private Application getTargetApplication(String appIdentifier) throws CarbonException {
+		Application targetApplication = null;
 		try {
-			targetURIObject = uriObjectDAO.findByURI(targetURI);
+			targetApplication = securedApplicationDAO.findByIdentifier(appIdentifier);
 		} catch (CarbonException e) {
 			e.getErrorObject().setHttpStatus(HttpStatus.INTERNAL_SERVER_ERROR);
 			throw e;
-		} catch (AccessDeniedException e) {
-			String friendlyMessage = "The document specified wasn't found.";
-			String debugMessage = MessageFormat.format("The document with URI: ''{0}'', wasn''t found.", targetURI);
-
-			ErrorResponseFactory errorFactory = new ErrorResponseFactory();
-			ErrorResponse errorObject = errorFactory.create();
-			errorObject.setHttpStatus(HttpStatus.NOT_FOUND);
-			errorObject.setFriendlyMessage(friendlyMessage);
-			errorObject.setDebugMessage(debugMessage);
-			throw new CarbonException(errorObject);
 		}
-		return targetURIObject;
+		return targetApplication;
+	}
+
+	private boolean targetApplicationExists(Application targetApplication) {
+		return targetApplication != null;
 	}
 
 	private Query composeSPARQLQuery(String queryString) throws CarbonException {
@@ -112,7 +90,7 @@ public class SPARQLQueryPOSTRequestHandler extends AbstractRequestHandler {
 		return query;
 	}
 
-	private Object executeSPARQLQuery(Query query, URIObject targetURIObject, Application application) throws CarbonException {
+	private Object executeSPARQLQuery(Query query, Application application) throws CarbonException {
 		Object results = null;
 		Verb queryVerb = null;
 		try {
@@ -124,16 +102,16 @@ public class SPARQLQueryPOSTRequestHandler extends AbstractRequestHandler {
 
 		switch (queryVerb) {
 			case ASK:
-				results = executeASKQuery(query, targetURIObject, application);
+				results = executeASKQuery(query, application);
 				break;
 			case CONSTRUCT:
-				results = executeCONSTRUCTQuery(query, targetURIObject, application);
+				results = executeCONSTRUCTQuery(query, application);
 				break;
 			case DESCRIBE:
-				results = executeDESCRIBEQuery(query, targetURIObject, application);
+				results = executeDESCRIBEQuery(query, application);
 				break;
 			case SELECT:
-				results = executeSELECTQuery(query, targetURIObject, application);
+				results = executeSELECTQuery(query, application);
 				break;
 			default:
 				break;
@@ -142,10 +120,10 @@ public class SPARQLQueryPOSTRequestHandler extends AbstractRequestHandler {
 		return results;
 	}
 
-	private Boolean executeASKQuery(Query query, URIObject targetURIObject, Application application) throws CarbonException {
+	private Boolean executeASKQuery(Query query, Application application) throws CarbonException {
 		Boolean result = null;
 		try {
-			result = ldpService.executeASKonLDPRSource(targetURIObject, query, application.getDatasetName());
+			result = sparqlService.ask(query, application);
 		} catch (CarbonException e) {
 			e.getErrorObject().setHttpStatus(HttpStatus.INTERNAL_SERVER_ERROR);
 			throw e;
@@ -153,10 +131,10 @@ public class SPARQLQueryPOSTRequestHandler extends AbstractRequestHandler {
 		return result;
 	}
 
-	private Model executeCONSTRUCTQuery(Query query, URIObject targetURIObject, Application application) throws CarbonException {
+	private Model executeCONSTRUCTQuery(Query query, Application application) throws CarbonException {
 		Model model = null;
 		try {
-			model = ldpService.executeCONSTRUCTonLDPRSource(targetURIObject, query, application.getDatasetName());
+			model = sparqlService.construct(query, application);
 		} catch (CarbonException e) {
 			e.getErrorObject().setHttpStatus(HttpStatus.INTERNAL_SERVER_ERROR);
 			throw e;
@@ -164,10 +142,10 @@ public class SPARQLQueryPOSTRequestHandler extends AbstractRequestHandler {
 		return model;
 	}
 
-	private Model executeDESCRIBEQuery(Query query, URIObject targetURIObject, Application application) throws CarbonException {
+	private Model executeDESCRIBEQuery(Query query, Application application) throws CarbonException {
 		Model model = null;
 		try {
-			model = ldpService.executeDESCRIBEonLDPRSource(targetURIObject, query, application.getDatasetName());
+			model = sparqlService.describe(query, application);
 		} catch (CarbonException e) {
 			e.getErrorObject().setHttpStatus(HttpStatus.INTERNAL_SERVER_ERROR);
 			throw e;
@@ -175,10 +153,10 @@ public class SPARQLQueryPOSTRequestHandler extends AbstractRequestHandler {
 		return model;
 	}
 
-	private ResultSet executeSELECTQuery(Query query, URIObject targetURIObject, Application application) throws CarbonException {
+	private ResultSet executeSELECTQuery(Query query, Application application) throws CarbonException {
 		ResultSet resultSet = null;
 		try {
-			resultSet = ldpService.executeSELECTonLDPRSource(targetURIObject, query, application.getDatasetName());
+			resultSet = sparqlService.select(query, application);
 		} catch (CarbonException e) {
 			e.getErrorObject().setHttpStatus(HttpStatus.INTERNAL_SERVER_ERROR);
 			throw e;
@@ -186,9 +164,9 @@ public class SPARQLQueryPOSTRequestHandler extends AbstractRequestHandler {
 		return resultSet;
 	}
 
-	private void addHeadersToResponse(HttpServletResponse response, URIObject targetURIObject) {
+	private void addHeadersToResponse(HttpServletResponse response, Application targetApplication) {
 		addLinkHeader(response);
-		addLocationHeader(response, targetURIObject);
+		// TODO: Add location header
 	}
 
 	private void addLinkHeader(HttpServletResponse response) {
@@ -198,9 +176,5 @@ public class SPARQLQueryPOSTRequestHandler extends AbstractRequestHandler {
 		linkHeader.setExtendingValue("type");
 
 		response.addHeader(HttpHeaders.LINK, linkHeader.toString());
-	}
-
-	private void addLocationHeader(HttpServletResponse response, URIObject targetURIObject) {
-		response.addHeader(HttpHeaders.LOCATION, targetURIObject.getURI());
 	}
 }

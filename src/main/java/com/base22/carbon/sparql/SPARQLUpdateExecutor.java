@@ -9,7 +9,6 @@ import com.hp.hpl.jena.query.ReadWrite;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.shared.Lock;
 import com.hp.hpl.jena.update.UpdateAction;
-import com.hp.hpl.jena.update.UpdateFactory;
 import com.hp.hpl.jena.update.UpdateRequest;
 
 public class SPARQLUpdateExecutor extends SPARQLExecutor {
@@ -20,54 +19,48 @@ public class SPARQLUpdateExecutor extends SPARQLExecutor {
 		this.repositoryService = repositoryService;
 	}
 
-	public void execute(String updateString, String datasetName, String namedModelName) throws CarbonException {
+	public void execute(UpdateRequest updateRequest, String datasetName, String namedModelName) throws CarbonException {
 		Model domainModel = this.getDomainModel(namedModelName, datasetName);
-		execute(updateString, domainModel);
+		execute(updateRequest, domainModel);
 	}
 
-	public void execute(String updateString, Model domainModel) throws CarbonException {
+	public void execute(UpdateRequest updateRequest, Model domainModel) throws CarbonException {
 		if ( domainModel.supportsTransactions() ) {
 			this.enterModelCriticalSection(domainModel, Lock.WRITE);
 		}
 
-		UpdateRequest updateRequest = null;
-
 		try {
-			updateRequest = this.getUpdateRequest(updateString);
+			this.executeUpdate(updateRequest, domainModel);
+		} finally {
 			try {
-				this.executeUpdate(updateRequest, domainModel);
-			} finally {
 				if ( domainModel.supportsTransactions() ) {
 					this.commitModel(domainModel);
 				}
-			}
-		} finally {
-			if ( domainModel.supportsTransactions() ) {
-				this.leaveModelCriticalSection(domainModel);
+			} finally {
+				if ( domainModel.supportsTransactions() ) {
+					this.leaveModelCriticalSection(domainModel);
+				}
 			}
 		}
 	}
 
-	public void execute(String updateString, String datasetName) throws CarbonException {
+	public void execute(UpdateRequest updateRequest, String datasetName) throws CarbonException {
 		Dataset dataset = this.getDataset(datasetName, this.repositoryService);
 
 		if ( dataset.supportsTransactions() ) {
-			this.beginDatasetTransaction(datasetName, dataset, ReadWrite.READ);
+			this.beginDatasetTransaction(datasetName, dataset, ReadWrite.WRITE);
 		}
-
-		UpdateRequest updateRequest = null;
 		try {
-			updateRequest = this.getUpdateRequest(updateString);
+			this.executeUpdate(updateRequest, dataset);
+		} finally {
 			try {
-				this.executeUpdate(updateRequest, dataset);
-			} finally {
 				if ( dataset.supportsTransactions() ) {
 					this.commitDataset(datasetName, dataset);
 				}
-			}
-		} finally {
-			if ( dataset.supportsTransactions() ) {
-				this.endDatasetTransaction(datasetName, dataset);
+			} finally {
+				if ( dataset.supportsTransactions() ) {
+					this.endDatasetTransaction(datasetName, dataset);
+				}
 			}
 		}
 	}
@@ -81,28 +74,6 @@ public class SPARQLUpdateExecutor extends SPARQLExecutor {
 			throw e;
 		}
 		return domainModel;
-	}
-
-	private UpdateRequest getUpdateRequest(String updateString) throws CarbonException {
-		UpdateRequest updateRequest = null;
-		try {
-			updateRequest = UpdateFactory.create(updateString);
-		} catch (Exception e) {
-			if ( LOG.isDebugEnabled() ) {
-				LOG.debug("xx getUpdateRequest() > Exception Stacktrace:", e);
-			}
-
-			if ( LOG.isErrorEnabled() ) {
-				LOG.error("-- getUpdateRequest() > The updateRequest for the update: \n{}\n couldn't be created.", updateString);
-			}
-			String friendlyMessage = "An unexpected error ocurred.";
-
-			ErrorResponseFactory errorFactory = new ErrorResponseFactory();
-			ErrorResponse errorObject = errorFactory.create();
-			errorObject.setFriendlyMessage(friendlyMessage);
-			throw new CarbonException(errorObject);
-		}
-		return updateRequest;
 	}
 
 	private void executeUpdate(UpdateRequest updateRequest, Dataset dataset) throws CarbonException {
