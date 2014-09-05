@@ -20,6 +20,8 @@ import com.base22.carbon.web.AbstractController;
 public class SPARQLController extends AbstractController {
 	@Autowired
 	protected SPARQLQueryPOSTRequestHandler queryHandler;
+	@Autowired
+	protected SPARQLAppUpdatePOSTRequestHandler appUpdateHandler;
 
 	@RequestMapping(value = { "/apps/{application}/", "/apps/{application}/**" }, method = RequestMethod.POST, consumes = "application/sparql-query")
 	public ResponseEntity<Object> handleSPARQLQuery(@PathVariable("application") String applicationIdentifier, @RequestBody String query,
@@ -66,7 +68,11 @@ public class SPARQLController extends AbstractController {
 			LOG.trace(">> handleAppSPARQLUpdate()");
 		}
 
-		return new ResponseEntity<Object>(HttpStatus.NOT_IMPLEMENTED);
+		try {
+			return appUpdateHandler.handleRequest(applicationIdentifier, query, request, response);
+		} catch (CarbonException e) {
+			return HTTPUtil.createErrorResponseEntity(e);
+		}
 	}
 
 }

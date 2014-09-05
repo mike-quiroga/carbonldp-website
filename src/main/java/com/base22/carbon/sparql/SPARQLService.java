@@ -5,9 +5,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import com.base22.carbon.CarbonException;
+import com.base22.carbon.apps.Application;
 import com.base22.carbon.models.ErrorResponse;
 import com.base22.carbon.models.ErrorResponseFactory;
 import com.base22.carbon.repository.services.RepositoryService;
@@ -296,6 +298,18 @@ public class SPARQLService {
 
 		SPARQLQueryExecutor<Boolean> executor = new SPARQLQueryExecutor<Boolean>(Verb.ASK, this.repositoryService);
 		return executor.execute(query, domainModel);
+	}
+
+	@PreAuthorize("hasPermission(#documentURIObject, 'EXECUTE_SPARQL_UPDATE')")
+	public void update(Application application, String updateString) throws CarbonException {
+		SPARQLUpdateExecutor executor = new SPARQLUpdateExecutor(this.repositoryService);
+
+		try {
+			executor.execute(updateString, application.getDatasetName());
+		} catch (CarbonException e) {
+			// TODO: FT
+			throw e;
+		}
 	}
 
 	public void update(String updateString, String datasetName) throws CarbonException {
