@@ -10,6 +10,7 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import com.base22.carbon.repository.services.TDBRepositoryService;
 import com.hp.hpl.jena.query.Dataset;
 import com.hp.hpl.jena.rdf.model.Model;
 
@@ -43,7 +44,7 @@ public class TDBRepositoryServiceTest {
 		assertNotNull("Returned Model should not be null.", model);
 	}
 
-	@Test(expected = com.base22.carbon.exceptions.RepositoryServiceException.class)
+	@Test(expected = com.base22.carbon.repository.RepositoryServiceException.class)
 	public void testGetNamedModelUsingInvalidStoreName() throws Exception {
 		documentName = "";
 		assertNotNull("Returned Model should not be null.", tDBRepositoryService.getNamedModel(documentName, "dummystore"));

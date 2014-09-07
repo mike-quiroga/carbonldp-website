@@ -6,7 +6,7 @@ import java.io.StringWriter;
 
 import org.apache.jena.riot.Lang;
 
-import com.base22.carbon.utils.RdfUtil;
+import com.base22.carbon.ldp.RdfUtil;
 import com.github.jsonldjava.jena.JenaJSONLD;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.util.FileManager;

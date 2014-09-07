@@ -5,8 +5,8 @@ import java.io.IOException;
 
 import org.apache.commons.io.FileUtils;
 
-import com.base22.carbon.exceptions.CarbonException;
-import com.base22.carbon.services.TDBRepositoryService;
+import com.base22.carbon.CarbonException;
+import com.base22.carbon.repository.services.TDBRepositoryService;
 
 public class CreateTDBDatasetTest {
 	

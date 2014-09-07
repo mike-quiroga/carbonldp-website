@@ -9,6 +9,10 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import com.base22.carbon.repository.RepositoryServiceFactory;
+import com.base22.carbon.repository.services.DB2RepositoryService;
+import com.base22.carbon.repository.services.RepositoryService;
+
 public class RepositoryServiceFactoryTest {
 	
 	static RepositoryService repositoryService;

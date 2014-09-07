@@ -19,7 +19,7 @@
         ">
    
   	<!-- === Security === -->
-	<import resource="classpath:com/base22/carbon/security/config/security-config.xml" />
+	<import resource="classpath:com/base22/carbon/security-config.xml" />
 	<!-- === End: Security === -->
    
 	<!--
@@ -37,7 +37,7 @@
 	-->
 
 	<mvc:interceptors>
-  		<bean class="com.base22.carbon.interceptors.RequestInterceptor" />
+  		<bean class="com.base22.carbon.web.RequestInterceptor" />
 	</mvc:interceptors> 
 	
 	<mvc:annotation-driven content-negotiation-manager="contentNegotiationManager">
@@ -45,10 +45,13 @@
 			<bean class="org.springframework.http.converter.ByteArrayHttpMessageConverter" />
 			<bean class="org.springframework.http.converter.StringHttpMessageConverter" />
 			<bean class="org.springframework.http.converter.FormHttpMessageConverter" />
-			<bean class="com.base22.carbon.converters.WrapperForLDPNRMessageConverter"></bean>
-			<bean class="com.base22.carbon.converters.LDPRSourceMessageConverter"></bean>
-			<bean class="com.base22.carbon.converters.LDPResourceMessageConverter"></bean>
-			<bean class="com.base22.carbon.converters.ModelMessageConverter"></bean>
+			<bean class="com.base22.carbon.ldp.web.WrapperForLDPNRMessageConverter"></bean>
+			<bean class="com.base22.carbon.ldp.web.LDPRSourceMessageConverter"></bean>
+			<bean class="com.base22.carbon.web.ErrorResponseMessageConverter"></bean>
+			<bean class="com.base22.carbon.ldp.web.LDPResourceMessageConverter"></bean>
+			<bean class="com.base22.carbon.web.ModelMessageConverter"></bean>
+			<bean class="com.base22.carbon.web.BooleanMessageConverter"></bean>
+			<bean class="com.base22.carbon.sparql.ResultSetMessageConverter"></bean>
 		</mvc:message-converters>
 	</mvc:annotation-driven>
 	
