@@ -277,34 +277,6 @@ public class POSTNonRdfRequestHandler extends AbstractLDPRequestHandler {
 		}
 	}
 
-	protected URIObject getTargetURIObject(String targetURI) throws CarbonException {
-		URIObject targetURIObject = null;
-		try {
-			targetURIObject = uriObjectDAO.findByURI(targetURI);
-		} catch (AccessDeniedException e) {
-			String friendlyMessage = "A resource with the request URI wasn't found.";
-
-			if ( LOG.isDebugEnabled() ) {
-				LOG.debug("<< getTargetURIObject() > The authenticated agent doesn't have DISCOVER access to the resource with URI: {}", targetURI);
-			}
-
-			ErrorResponseFactory factory = new ErrorResponseFactory();
-			ErrorResponse errorObject = factory.create();
-			errorObject.setFriendlyMessage(friendlyMessage);
-			errorObject.setHttpStatus(HttpStatus.NOT_FOUND);
-
-			throw new CarbonException(errorObject);
-		} catch (CarbonException e) {
-			e.getErrorObject().setHttpStatus(HttpStatus.INTERNAL_SERVER_ERROR);
-			throw e;
-		}
-		return targetURIObject;
-	}
-
-	protected boolean targetResourceExists(URIObject targetURIObject) {
-		return targetURIObject != null;
-	}
-
 	protected ContainerType getTargetContainerType(URIObject targetURIObject) throws CarbonException {
 		ContainerType containerType = null;
 		try {

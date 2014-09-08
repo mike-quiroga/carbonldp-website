@@ -35,6 +35,11 @@ public class PATCHRequestFactory extends LDPResourceFactory {
 		return violations;
 	}
 
+	public boolean isPATCHRequest(Resource resource) throws CarbonException {
+		LDPResource ldpResource = super.create(resource);
+		return isPATCHRequest(ldpResource);
+	}
+
 	public boolean isPATCHRequest(LDPResource ldpResource) {
 		return ldpResource.isOfType(Resources.CLASS.getPrefixedURI().getURI());
 	}

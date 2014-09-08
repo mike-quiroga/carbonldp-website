@@ -16,7 +16,10 @@ import org.apache.jena.atlas.web.ContentType;
 import org.apache.jena.riot.Lang;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
@@ -37,7 +40,9 @@ import com.base22.carbon.repository.services.FileService;
 import com.base22.carbon.repository.services.RDFService;
 import com.base22.carbon.utils.ConvertInputStream;
 import com.base22.carbon.utils.ConvertString;
+import com.base22.carbon.utils.HTTPUtil;
 import com.base22.carbon.web.AbstractRequestHandler;
+import com.hp.hpl.jena.rdf.model.Model;
 
 public abstract class AbstractLDPRequestHandler extends AbstractRequestHandler {
 
@@ -319,4 +324,64 @@ public abstract class AbstractLDPRequestHandler extends AbstractRequestHandler {
 		return new MediaType(contentType.getType(), contentType.getSubType());
 	}
 
+	protected String getTargetURI(HttpServletRequest request) {
+		return HTTPUtil.getRequestURL(request);
+	}
+
+	protected URIObject getTargetURIObject(String targetURI) throws CarbonException {
+		URIObject targetURIObject = null;
+		try {
+			targetURIObject = uriObjectDAO.findByURI(targetURI);
+		} catch (AccessDeniedException e) {
+			String friendlyMessage = "A resource with the request URI wasn't found.";
+
+			if ( LOG.isDebugEnabled() ) {
+				LOG.debug("<< getTargetURIObject() > The authenticated agent doesn't have DISCOVER access to the resource with URI: {}", targetURI);
+			}
+
+			ErrorResponseFactory factory = new ErrorResponseFactory();
+			ErrorResponse errorObject = factory.create();
+			errorObject.setFriendlyMessage(friendlyMessage);
+			errorObject.setHttpStatus(HttpStatus.NOT_FOUND);
+
+			throw new CarbonException(errorObject);
+		} catch (CarbonException e) {
+			e.getErrorObject().setHttpStatus(HttpStatus.INTERNAL_SERVER_ERROR);
+			throw e;
+		}
+		return targetURIObject;
+	}
+
+	protected boolean targetResourceExists(URIObject targetURIObject) {
+		return targetURIObject != null;
+	}
+
+	protected ResponseEntity<Object> handleNonExistentResource(String targetURI, Model requestModel, HttpServletRequest request, HttpServletResponse response) {
+		String friendlyMessage = "The RDFSource specified wasn't found.";
+		String debugMessage = MessageFormat.format("The RDFSource with URI: ''{0}'', wasn''t found.", targetURI);
+
+		if ( LOG.isDebugEnabled() ) {
+			LOG.debug("xx handleNonExistentResource() > {}", debugMessage);
+		}
+
+		ErrorResponseFactory errorFactory = new ErrorResponseFactory();
+		ErrorResponse errorObject = errorFactory.create();
+		errorObject.setHttpStatus(HttpStatus.NOT_FOUND);
+		errorObject.setFriendlyMessage(friendlyMessage);
+		errorObject.setDebugMessage(debugMessage);
+
+		return HTTPUtil.createErrorResponseEntity(errorObject);
+	}
+
+	protected boolean compareETags(String requestETag, String targetETag) {
+		if ( requestETag == null ) {
+			return false;
+		}
+		requestETag = requestETag.contains("\"") ? requestETag.split("\"")[1] : requestETag;
+		requestETag = requestETag.toLowerCase();
+
+		targetETag = targetETag.toLowerCase();
+
+		return targetETag.equals(requestETag);
+	}
 }

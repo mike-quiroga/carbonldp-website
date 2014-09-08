@@ -25,6 +25,7 @@ public abstract class Carbon {
 		prefixes.put("api", "http://purl.org/linked-data/api/vocab#");
 		prefixes.put("c", "http://carbonldp.com/ns/v1/platform#");
 		prefixes.put("cs", "http://carbonldp.com/ns/v1/security#");
+		prefixes.put("cp", "http://carbonldp.com/ns/v1/patch#");
 		prefixes.put("cc", "http://creativecommons.org/ns#");
 		prefixes.put("cert", "http://www.w3.org/ns/auth/cert#");
 		prefixes.put("dbp", "http://dbpedia.org/property/");

@@ -4,16 +4,17 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import com.base22.carbon.CarbonException;
 import com.base22.carbon.ldp.web.handlers.PATCHRequestHandler;
+import com.base22.carbon.utils.HTTPUtil;
+import com.hp.hpl.jena.rdf.model.Model;
 
 @Controller
 public class PATCHController extends AbstractLDPController {
@@ -22,14 +23,17 @@ public class PATCHController extends AbstractLDPController {
 	private PATCHRequestHandler requestHandler;
 
 	@RequestMapping(value = { "/apps/{application}/", "/apps/{application}/**" }, method = RequestMethod.PATCH)
-	public ResponseEntity<Object> handlePatch(@PathVariable("application") String applicationIdentifier, Model model, HttpServletRequest request,
-			HttpServletResponse response, HttpEntity<byte[]> entity) {
+	public ResponseEntity<Object> handlePATCH(@PathVariable("application") String appSlug, @RequestBody Model model, HttpServletRequest request,
+			HttpServletResponse response) {
 
 		if ( LOG.isTraceEnabled() ) {
-			LOG.trace(">> handlePatch()");
+			LOG.trace(">> handlePATCH()");
 		}
 
-		return new ResponseEntity<Object>(HttpStatus.NOT_IMPLEMENTED);
-		// return requestHandler.handlePATCHRequest(dataset, model, request, response, entity);
+		try {
+			return requestHandler.handlePATCHRequest(appSlug, model, request, response);
+		} catch (CarbonException e) {
+			return HTTPUtil.createErrorResponseEntity(e);
+		}
 	}
 }

@@ -3,13 +3,14 @@ package com.base22.carbon.sparql;
 import com.base22.carbon.CarbonException;
 import com.base22.carbon.models.ErrorResponse;
 import com.base22.carbon.models.ErrorResponseFactory;
+import com.base22.carbon.repository.services.ReadTransactionCallback;
+import com.base22.carbon.repository.services.ReadTransactionTemplate;
 import com.base22.carbon.repository.services.RepositoryService;
 import com.base22.carbon.sparql.SPARQLService.Verb;
 import com.hp.hpl.jena.query.Dataset;
 import com.hp.hpl.jena.query.Query;
 import com.hp.hpl.jena.query.QueryExecution;
 import com.hp.hpl.jena.query.QueryExecutionFactory;
-import com.hp.hpl.jena.query.ReadWrite;
 import com.hp.hpl.jena.query.ResultSet;
 import com.hp.hpl.jena.query.ResultSetFactory;
 import com.hp.hpl.jena.rdf.model.Model;
@@ -45,30 +46,29 @@ public class SPARQLQueryExecutor<T> extends SPARQLExecutor {
 		return result;
 	}
 
-	public T execute(Query query, String datasetName) throws CarbonException {
-
-		Dataset dataset = this.getDataset(datasetName, this.repositoryService);
-
-		if ( dataset.supportsTransactions() ) {
-			this.beginDatasetTransaction(datasetName, dataset, ReadWrite.READ);
-		}
-
-		QueryExecution queryExecution = null;
+	public T execute(final Query query, String datasetName) throws CarbonException {
 		T result = null;
-		try {
-			queryExecution = this.getQueryExecution(query, dataset);
-			try {
-				result = this.executeQuery(queryExecution);
-			} finally {
-				this.closeQueryExecution(queryExecution);
+		ReadTransactionTemplate<T> template = repositoryService.getReadTransactionTemplate(datasetName);
+		result = template.execute(new ReadTransactionCallback<T>() {
+
+			@Override
+			public T executeInTransaction(Dataset dataset) throws Exception {
+				T result = null;
+
+				QueryExecution queryExecution = null;
+				queryExecution = getQueryExecution(query, dataset);
+				try {
+					result = executeQuery(queryExecution);
+				} finally {
+					closeQueryExecution(queryExecution);
+				}
+
+				return result;
 			}
-		} finally {
-			if ( dataset.supportsTransactions() ) {
-				this.endDatasetTransaction(datasetName, dataset);
-			}
-		}
+		});
 
 		return result;
+
 	}
 
 	private QueryExecution getQueryExecution(Query query, Model domainModel) throws CarbonException {
