@@ -17,6 +17,7 @@ public class ConfigurationService {
 	private final String uploadsPath = "/opt/carbon/uploads/";
 
 	private final String APPLICATION_ROLE_DEFAULT_NAME = "Application Administrators";
+	private final String APPLICATION_ROLE_DEFAULT_SLUG = "app-admins";
 
 	private final String PLATFORM_DATASET = "platform";
 	private final String PLATFORM_TEST_DATASET = "platform-test";
@@ -74,6 +75,10 @@ public class ConfigurationService {
 
 	public String getDefaultRootApplicationRoleName() {
 		return APPLICATION_ROLE_DEFAULT_NAME;
+	}
+
+	public String getDefaultRootApplicationRoleSlug() {
+		return APPLICATION_ROLE_DEFAULT_SLUG;
 	}
 
 	public String getPlatformDatasetName() {

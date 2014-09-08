@@ -17,9 +17,9 @@ import org.springframework.stereotype.Component;
 
 import com.base22.carbon.CarbonException;
 import com.base22.carbon.apps.Application;
+import com.base22.carbon.apps.Application.Properties;
 import com.base22.carbon.apps.ApplicationRDF;
 import com.base22.carbon.apps.ApplicationRDFFactory;
-import com.base22.carbon.apps.Application.Properties;
 import com.base22.carbon.apps.roles.ApplicationRole;
 import com.base22.carbon.authorization.AuthorizationUtil;
 import com.base22.carbon.authorization.acl.CarbonACLPermissionFactory.CarbonPermission;
@@ -255,6 +255,7 @@ public class AppsPOSTRequestHandler extends AbstractAppRequestHandler {
 	private ApplicationRole createRootAppRole(Application requestApplication) throws CarbonException {
 		ApplicationRole appRole = new ApplicationRole();
 		appRole.setName(configurationService.getDefaultRootApplicationRoleName());
+		appRole.setSlug(configurationService.getDefaultRootApplicationRoleName());
 		try {
 			appRole = unsecuredApplicationRoleDAO.createRootApplicationRole(requestApplication, appRole);
 		} catch (CarbonException e) {
@@ -310,6 +311,9 @@ public class AppsPOSTRequestHandler extends AbstractAppRequestHandler {
                 CarbonPermission.READ,
                 CarbonPermission.UPDATE,
                 CarbonPermission.DELETE,
+                
+                CarbonPermission.EXECUTE_SPARQL_QUERY,
+                CarbonPermission.EXECUTE_SPARQL_UPDATE,
                 
                 CarbonPermission.CREATE_AGENTS,
                 CarbonPermission.EDIT_AGENTS,
