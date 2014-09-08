@@ -4,6 +4,7 @@ import java.util.Enumeration;
 import java.util.List;
 import java.util.UUID;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -83,8 +84,8 @@ public class AuthenticationGETRequestHandler {
 		generator.setCookieMaxAge(60 * configurationService.getTokenCookieLifeInMinutes());
 		generator.setCookieName("TOKEN");
 
-		generator.removeCookie(response);
 		generator.addCookie(response, token.getKey());
+		
 	}
 
 	private boolean preferCookie(HttpHeader preferHeader) {
