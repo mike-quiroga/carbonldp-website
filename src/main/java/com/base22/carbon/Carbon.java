@@ -15,6 +15,7 @@ public abstract class Carbon {
 	public static final String EXTENDING_RESOURCE_REGEX = "#";
 	public static final String SYSTEM_RESOURCE_SIGN = "#$";
 	public static final String SYSTEM_RESOURCE_REGEX = "#\\$";
+	public static final String UNIQUE_SEPARATION_SIGN = "~";
 
 	public static final Map<String, String> CONFIGURED_PREFIXES;
 	static {
