@@ -87,7 +87,7 @@ public class AgentRDFFactory extends LDPResourceFactory {
 
 		@Override
 		public String getFullName() {
-			return this.getStringProperty(Properties.FULL_NAME.getProperty());
+			return this.getString(Properties.FULL_NAME.getProperty());
 		}
 
 		@Override
@@ -97,7 +97,7 @@ public class AgentRDFFactory extends LDPResourceFactory {
 
 		@Override
 		public String getMainEmail() {
-			return this.getStringProperty(Properties.EMAIL.getProperty());
+			return this.getString(Properties.EMAIL.getProperty());
 		}
 
 		@Override
@@ -107,7 +107,7 @@ public class AgentRDFFactory extends LDPResourceFactory {
 
 		@Override
 		public String getPassword() {
-			return this.getStringProperty(Properties.PASSWORD.getProperty());
+			return this.getString(Properties.PASSWORD.getProperty());
 		}
 
 		@Override
@@ -117,7 +117,7 @@ public class AgentRDFFactory extends LDPResourceFactory {
 
 		@Override
 		public String getAPIKey() {
-			return this.getStringProperty(Properties.API_KEY.getProperty());
+			return this.getString(Properties.API_KEY.getProperty());
 		}
 
 		@Override

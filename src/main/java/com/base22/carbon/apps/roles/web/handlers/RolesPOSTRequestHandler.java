@@ -1,7 +1,6 @@
 package com.base22.carbon.apps.roles.web.handlers;
 
 import java.text.MessageFormat;
-import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -29,13 +28,14 @@ import com.hp.hpl.jena.rdf.model.Resource;
 @Scope(proxyMode = ScopedProxyMode.TARGET_CLASS, value = "request")
 public class RolesPOSTRequestHandler extends AbstractAppRequestHandler {
 
-	public ResponseEntity<Object> handleRequest(String appIdentifier, Model requestModel, HttpServletRequest request, HttpServletResponse response)
+	public ResponseEntity<Object> handleRequest(String appSlug, Model requestModel, HttpServletRequest request, HttpServletResponse response)
 			throws CarbonException {
 
 		Application application = AuthorizationUtil.getApplicationFromContext();
 
 		Resource requestResource = getRequestModelMainResource(requestModel);
 		ApplicationRole appRole = getRequestApplicationRole(requestResource);
+		appRole.setApplicationSlug(appSlug);
 
 		validateApplicationRole(appRole);
 
@@ -44,11 +44,11 @@ public class RolesPOSTRequestHandler extends AbstractAppRequestHandler {
 		} else {
 			createAppRoleSlug(appRole);
 		}
-		if ( slugIsAlreadyInUse(appRole, application) ) {
+		if ( slugIsAlreadyInUse(appRole, appSlug) ) {
 			return handleSlugAlreadyRegistred(appRole, request, response);
 		}
 
-		ApplicationRole parentRole = getParentApplicationRole(appRole.getParentUUID());
+		ApplicationRole parentRole = getParentApplicationRole(appRole.getParentSlug(), appSlug);
 
 		if ( ! parentRoleExists(parentRole) ) {
 			return handleNonExistentParent(appRole, request, response);
@@ -77,12 +77,13 @@ public class RolesPOSTRequestHandler extends AbstractAppRequestHandler {
 			LOG.debug("<< handleSlugAlreadyRegistred() > {}", debugMessage);
 		}
 
-		ErrorResponse errorObject = new ErrorResponse();
+		ErrorResponseFactory errorFactory = new ErrorResponseFactory();
+		ErrorResponse errorObject = errorFactory.create();
 		errorObject.setHttpStatus(HttpStatus.CONFLICT);
 		errorObject.setFriendlyMessage(friendlyMessage);
 		errorObject.setDebugMessage(debugMessage);
 
-		return HttpUtil.createErrorResponseEntity(errorObject);
+		return HTTPUtil.createErrorResponseEntity(errorObject);
 	}
 
 	private boolean slugWasProvided(ApplicationRole appRole) {
@@ -90,12 +91,12 @@ public class RolesPOSTRequestHandler extends AbstractAppRequestHandler {
 	}
 
 	private void sluggifyProvidedSlug(ApplicationRole appRole) {
-		appRole.setSlug(HttpUtil.createSlug(appRole.getSlug()));
+		appRole.setSlug(HTTPUtil.createSlug(appRole.getSlug()));
 	}
 
-	private boolean slugIsAlreadyInUse(ApplicationRole appRole, Application application) throws CarbonException {
+	private boolean slugIsAlreadyInUse(ApplicationRole appRole, String appSlug) throws CarbonException {
 		try {
-			return unsecuredApplicationRoleDAO.findBySlug(appRole.getSlug(), application.getUuid()) != null;
+			return unsecuredApplicationRoleDAO.findBySlug(appRole.getSlug(), appSlug) != null;
 		} catch (CarbonException e) {
 			e.getErrorObject().setHttpStatus(HttpStatus.INTERNAL_SERVER_ERROR);
 			throw e;
@@ -103,13 +104,13 @@ public class RolesPOSTRequestHandler extends AbstractAppRequestHandler {
 	}
 
 	private void createAppRoleSlug(ApplicationRole appRole) {
-		appRole.setSlug(HttpUtil.createSlug(appRole.getName()));
+		appRole.setSlug(HTTPUtil.createSlug(appRole.getName()));
 	}
 
 	private ResponseEntity<Object> handleNonExistentParent(ApplicationRole appRole, HttpServletRequest request, HttpServletResponse response)
 			throws CarbonException {
 		String friendlyMessage = "The parent role specified wasn't found.";
-		String debugMessage = MessageFormat.format("The parent role with UUID: ''{0}'', wasn''t found.", appRole.getParentUUID().toString());
+		String debugMessage = MessageFormat.format("The parent role with Slug: ''{0}'', wasn''t found.", appRole.getParentSlug());
 
 		if ( LOG.isDebugEnabled() ) {
 			LOG.debug("xx handleNonExistentParent() > {}", debugMessage);
@@ -168,7 +169,7 @@ public class RolesPOSTRequestHandler extends AbstractAppRequestHandler {
 		ErrorResponseFactory errorFactory = new ErrorResponseFactory();
 		ErrorResponse errorObject = null;
 
-		if ( applicationRole.getParentUUID() == null ) {
+		if ( applicationRole.getParentSlug() == null ) {
 			if ( errorObject == null ) {
 				errorObject = errorFactory.create();
 			}
@@ -199,10 +200,10 @@ public class RolesPOSTRequestHandler extends AbstractAppRequestHandler {
 		}
 	}
 
-	protected ApplicationRole getParentApplicationRole(UUID parentUUID) throws CarbonException {
+	protected ApplicationRole getParentApplicationRole(String string, String appSlug) throws CarbonException {
 		ApplicationRole parentRole = null;
 		try {
-			parentRole = unsecuredApplicationRoleDAO.findByUUID(parentUUID);
+			parentRole = unsecuredApplicationRoleDAO.findBySlug(string, appSlug);
 		} catch (CarbonException e) {
 			e.getErrorObject().setHttpStatus(HttpStatus.INTERNAL_SERVER_ERROR);
 			throw e;

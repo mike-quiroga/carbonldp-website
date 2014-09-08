@@ -18,13 +18,19 @@ public interface ApplicationRoleRDF extends LDPResource {
 
 	public void setDescription(String description);
 
-	public UUID getApplicationUUID();
+	public String getSlug();
 
-	public void setApplicationUUID(UUID applicationUUID);
+	public void setSlug(String slug);
 
-	public UUID getParentUUID();
+	public String getAppSlug();
 
-	public void setParentUUID(UUID parentUUID);
+	public String getAppURI();
+
+	public void setAppURI(String applicationURI);
+
+	public String getParentURI();
+
+	public void setParentURI(String parentURI);
 
 	public List<UUID> getChildRolesUUID();
 

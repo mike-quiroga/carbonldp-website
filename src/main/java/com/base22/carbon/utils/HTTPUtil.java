@@ -433,4 +433,19 @@ public abstract class HTTPUtil {
 		}
 		return new ResponseEntity<Object>(errorResponse, errorStatus);
 	}
+
+	public static String getURISlug(String parentURI) {
+		if ( parentURI == null ) {
+			return null;
+		}
+
+		String[] uriParts = parentURI.split("/");
+		String uriSlug = null;
+		if ( parentURI.endsWith("/") ) {
+			uriSlug = uriParts[uriParts.length - 2];
+		} else {
+			uriSlug = uriParts[uriParts.length - 1];
+		}
+		return uriSlug;
+	}
 }

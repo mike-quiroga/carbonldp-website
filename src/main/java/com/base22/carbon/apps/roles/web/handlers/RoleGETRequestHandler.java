@@ -3,7 +3,6 @@ package com.base22.carbon.apps.roles.web.handlers;
 import java.text.MessageFormat;
 import java.util.Enumeration;
 import java.util.List;
-import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -20,7 +19,6 @@ import com.base22.carbon.apps.Application;
 import com.base22.carbon.apps.roles.ApplicationRole;
 import com.base22.carbon.apps.roles.ApplicationRoleRDF;
 import com.base22.carbon.apps.web.handlers.AbstractAppRequestHandler;
-import com.base22.carbon.authentication.AuthenticationUtil;
 import com.base22.carbon.authorization.acl.AclSR;
 import com.base22.carbon.models.ErrorResponse;
 import com.base22.carbon.models.ErrorResponseFactory;
@@ -32,14 +30,12 @@ import com.base22.carbon.utils.HTTPUtil;
 @Scope(proxyMode = ScopedProxyMode.TARGET_CLASS, value = "request")
 public class RoleGETRequestHandler extends AbstractAppRequestHandler {
 
-	public ResponseEntity<Object> handleRequest(String appIdentifier, String appRoleUUID, HttpServletRequest request, HttpServletResponse response)
+	public ResponseEntity<Object> handleRequest(String appSlug, String appRoleSlug, HttpServletRequest request, HttpServletResponse response)
 			throws CarbonException {
 
-		UUID targetAppRoleUUID = getTargetAppRoleUUID(appRoleUUID);
-
-		ApplicationRole targetAppRole = getTargetAppRole(appIdentifier, targetAppRoleUUID);
+		ApplicationRole targetAppRole = getTargetAppRole(appSlug, appRoleSlug);
 		if ( ! targetAppRoleExists(targetAppRole) ) {
-			return handleNonExistentAppRole(appIdentifier, targetAppRoleUUID, request, response);
+			return handleNonExistentAppRole(appSlug, appRoleSlug, request, response);
 		}
 
 		ApplicationRoleRDF targetRDFAppRole = targetAppRole.createRDFRepresentation();
@@ -53,10 +49,9 @@ public class RoleGETRequestHandler extends AbstractAppRequestHandler {
 		return new ResponseEntity<Object>(targetRDFAppRole, HttpStatus.OK);
 	}
 
-	private ResponseEntity<Object> handleNonExistentAppRole(String appIdentifier, UUID targetAppRoleUUID, HttpServletRequest request,
-			HttpServletResponse response) {
+	private ResponseEntity<Object> handleNonExistentAppRole(String appSlug, String appRoleSlug, HttpServletRequest request, HttpServletResponse response) {
 		String friendlyMessage = "The applicationRole specified wasn't found.";
-		String debugMessage = MessageFormat.format("The applicationRole with the UUID: ''{0}'', wasn''t found.", targetAppRoleUUID.toString());
+		String debugMessage = MessageFormat.format("The applicationRole with the slug: ''{0}'', wasn''t found.", appRoleSlug);
 
 		if ( LOG.isDebugEnabled() ) {
 			LOG.debug("xx handleNonExistentAppRole() > {}", debugMessage);
@@ -71,27 +66,7 @@ public class RoleGETRequestHandler extends AbstractAppRequestHandler {
 		return HTTPUtil.createErrorResponseEntity(errorObject);
 	}
 
-	private UUID getTargetAppRoleUUID(String appRoleUUID) throws CarbonException {
-		if ( ! AuthenticationUtil.isUUIDString(appRoleUUID) ) {
-			String friendlyMessage = "The applicationRole identifier isn't a UUID.";
-
-			if ( LOG.isDebugEnabled() ) {
-				LOG.debug("xx handleNonExistentAppRole() > {}", friendlyMessage);
-			}
-
-			ErrorResponseFactory errorFactory = new ErrorResponseFactory();
-			ErrorResponse errorObject = errorFactory.create();
-			errorObject.setHttpStatus(HttpStatus.BAD_REQUEST);
-			errorObject.setFriendlyMessage(friendlyMessage);
-			errorObject.setDebugMessage(friendlyMessage);
-
-			throw new CarbonException(errorObject);
-		}
-
-		return AuthenticationUtil.restoreUUID(appRoleUUID);
-	}
-
-	private ApplicationRole getTargetAppRole(String appIdentifier, UUID targetAppRoleUUID) throws CarbonException {
+	private ApplicationRole getTargetAppRole(String appIdentifier, String appRoleSlug) throws CarbonException {
 		Application targetApplication = null;
 		try {
 			targetApplication = securedApplicationDAO.findByIdentifier(appIdentifier);
@@ -119,7 +94,7 @@ public class RoleGETRequestHandler extends AbstractAppRequestHandler {
 
 		ApplicationRole targetAppRole = null;
 		try {
-			targetAppRole = securedApplicationRoleDAO.findByUUID(targetAppRoleUUID);
+			targetAppRole = securedApplicationRoleDAO.findBySlug(appRoleSlug, appIdentifier);
 		} catch (CarbonException e) {
 			e.getErrorObject().setHttpStatus(HttpStatus.INTERNAL_SERVER_ERROR);
 			throw e;

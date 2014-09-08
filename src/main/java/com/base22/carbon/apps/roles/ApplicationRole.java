@@ -15,6 +15,7 @@ import com.base22.carbon.models.RDFPropertyEnum;
 import com.base22.carbon.models.RDFRepresentable;
 import com.base22.carbon.models.RDFResourceEnum;
 import com.base22.carbon.models.UUIDObject;
+import com.base22.carbon.utils.HTTPUtil;
 import com.hp.hpl.jena.rdf.model.Property;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.rdf.model.ResourceFactory;
@@ -29,7 +30,9 @@ public class ApplicationRole extends UUIDObject implements GrantedAuthority, RDF
 	private String description;
 
 	private UUID applicationUUID;
+	private String applicationSlug;
 	private UUID parentUUID;
+	private String parentSlug;
 	private HashSet<ApplicationRole> childRoles;
 	private HashSet<Agent> agents;
 	private HashSet<Group> groups;
@@ -64,6 +67,26 @@ public class ApplicationRole extends UUIDObject implements GrantedAuthority, RDF
 
 	public void setApplicationUUID(UUID applicationUUID) {
 		this.applicationUUID = applicationUUID;
+	}
+
+	public String getApplicationSlug() {
+		return applicationSlug;
+	}
+
+	public void getApplicationSlug(String slug) {
+		this.applicationSlug = slug;
+	}
+
+	public void setApplicationSlug(String slug) {
+		this.applicationSlug = slug;
+	}
+
+	public String getParentSlug() {
+		return parentSlug;
+	}
+
+	public void setParentSlug(String slug) {
+		this.parentSlug = slug;
 	}
 
 	public UUID getParentUUID() {
@@ -235,8 +258,15 @@ public class ApplicationRole extends UUIDObject implements GrantedAuthority, RDF
 		ApplicationRoleRDF rdfRole = factory.create(ldpResource.getResource());
 
 		this.setUuid(rdfRole.getUUID());
-		this.setParentUUID(rdfRole.getParentUUID());
-		this.setApplicationUUID(rdfRole.getApplicationUUID());
+		this.setSlug(rdfRole.getSlug());
+
+		String parentURI = rdfRole.getParentURI();
+		if ( parentURI != null ) {
+			String slug = HTTPUtil.getURISlug(parentURI);
+			slug = slug.endsWith("/") ? slug.substring(0, slug.length()) : slug;
+			this.setParentSlug(slug);
+		}
+
 		this.setName(rdfRole.getName());
 		this.setDescription(rdfRole.getDescription());
 	}
@@ -246,5 +276,4 @@ public class ApplicationRole extends UUIDObject implements GrantedAuthority, RDF
 		ApplicationRoleRDFFactory factory = new ApplicationRoleRDFFactory();
 		return factory.create(this);
 	}
-
 }

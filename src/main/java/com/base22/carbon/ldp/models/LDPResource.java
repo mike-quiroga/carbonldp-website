@@ -19,11 +19,19 @@ public interface LDPResource {
 
 	public Integer[] getIntegers(Property property);
 
-	public String getStringProperty(Property property);
+	public String getString(Property property);
 
-	public String[] getStringProperties(Property property);
+	public String[] getStrings(Property property);
 
 	public UUID getUUIDProperty(Property property);
+
+	public Resource getURIResource(Property property);
+
+	public Resource[] getURIResources(Property property);
+
+	public String getURIProperty(Property property);
+
+	public String[] getURIProperties(Property property);
 
 	public void addProperty(Property property, int value);
 
@@ -35,6 +43,8 @@ public interface LDPResource {
 
 	public void addProperty(Property property, UUID value);
 
+	public void addProperty(Property property, Resource resource);
+
 	public void setProperty(Property property, int value);
 
 	public void setProperty(Property property, int[] values);
@@ -44,6 +54,8 @@ public interface LDPResource {
 	public void setProperty(Property property, String[] value);
 
 	public void setProperty(Property property, UUID value);
+
+	public void setProperty(Property property, Resource resource);
 
 	public void removeProperty(Property property);
 

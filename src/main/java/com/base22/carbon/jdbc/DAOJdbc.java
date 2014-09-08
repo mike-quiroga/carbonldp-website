@@ -2,6 +2,7 @@ package com.base22.carbon.jdbc;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import org.slf4j.Logger;
@@ -24,6 +25,21 @@ public abstract class DAOJdbc {
 	public void init() {
 		if ( LOG.isTraceEnabled() ) {
 			LOG.trace(">> init()");
+		}
+	}
+
+	public String getTableColumnName(String table, String column) {
+		StringBuilder columnName = new StringBuilder();
+		columnName.append(table).append(".").append(column);
+		return columnName.toString();
+	}
+
+	public boolean resultSetHasColumn(String column, ResultSet resultSet) {
+		try {
+			resultSet.findColumn(column);
+			return true;
+		} catch (SQLException ignore) {
+			return false;
 		}
 	}
 

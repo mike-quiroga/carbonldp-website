@@ -143,7 +143,7 @@ public class GenericRequestRDFFactory extends LDPResourceFactory implements RDFR
 
 		@Override
 		public UUID[] getUUIDs() {
-			String[] uuidStrings = this.getStringProperties(Properties.UUID.getProperty());
+			String[] uuidStrings = this.getStrings(Properties.UUID.getProperty());
 			List<UUID> uuids = new ArrayList<UUID>();
 
 			for (String uuidString : uuidStrings) {

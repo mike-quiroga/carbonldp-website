@@ -1,7 +1,6 @@
 package com.base22.carbon.apps.roles.web.handlers;
 
 import java.text.MessageFormat;
-import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -11,7 +10,6 @@ import org.springframework.http.ResponseEntity;
 
 import com.base22.carbon.CarbonException;
 import com.base22.carbon.apps.roles.ApplicationRole;
-import com.base22.carbon.authentication.AuthenticationUtil;
 import com.base22.carbon.models.ErrorResponse;
 import com.base22.carbon.models.ErrorResponseFactory;
 import com.base22.carbon.utils.HTTPUtil;
@@ -19,9 +17,9 @@ import com.base22.carbon.web.AbstractRequestHandler;
 
 public class AbstractRoleRequestHandler extends AbstractRequestHandler {
 
-	protected ResponseEntity<Object> handleNonExistentAppRole(String targetAppRoleUUID, HttpServletRequest request, HttpServletResponse response) {
+	protected ResponseEntity<Object> handleNonExistentAppRole(String appRoleSlug, HttpServletRequest request, HttpServletResponse response) {
 		String friendlyMessage = "The application role specified wasn't found.";
-		String debugMessage = MessageFormat.format("The application role with UUID: ''{0}'', wasn''t found.", targetAppRoleUUID);
+		String debugMessage = MessageFormat.format("The application role with Slug: ''{0}'', wasn''t found.", appRoleSlug);
 
 		if ( LOG.isDebugEnabled() ) {
 			LOG.debug("xx handleNonExistentAppRole() > {}", debugMessage);
@@ -36,26 +34,10 @@ public class AbstractRoleRequestHandler extends AbstractRequestHandler {
 		return HTTPUtil.createErrorResponseEntity(errorObject);
 	}
 
-	protected ApplicationRole getTargetApplicationRole(String uuidString) throws CarbonException {
-		if ( ! AuthenticationUtil.isUUIDString(uuidString) ) {
-			String friendlyMessage = "The request URL doesn't a valid UUID for the application role that will be modified.";
-
-			if ( LOG.isDebugEnabled() ) {
-				LOG.debug("xx getRequestApplicationRole() > {}", friendlyMessage);
-			}
-
-			ErrorResponseFactory errorFactory = new ErrorResponseFactory();
-			ErrorResponse errorObject = errorFactory.create();
-			errorObject.setHttpStatus(HttpStatus.BAD_REQUEST);
-			errorObject.setFriendlyMessage(friendlyMessage);
-
-			throw new CarbonException(errorObject);
-		}
-		UUID targetAppRoleUUID = AuthenticationUtil.restoreUUID(uuidString);
-
+	protected ApplicationRole getTargetApplicationRole(String appRoleSlug, String appSlug) throws CarbonException {
 		ApplicationRole targetAppRole = null;
 		try {
-			targetAppRole = securedApplicationRoleDAO.findByUUID(targetAppRoleUUID);
+			targetAppRole = securedApplicationRoleDAO.findBySlug(appRoleSlug, appSlug);
 		} catch (CarbonException e) {
 			e.getErrorObject().setHttpStatus(HttpStatus.INTERNAL_SERVER_ERROR);
 			throw e;

@@ -24,17 +24,17 @@ import com.hp.hpl.jena.rdf.model.Resource;
 @Scope(proxyMode = ScopedProxyMode.TARGET_CLASS, value = "request")
 public class RolePOSTRequestHandler extends AbstractRoleRequestHandler {
 
-	public ResponseEntity<Object> handleRequest(String appIdentifier, String targetAppRoleUUID, Model requestModel, HttpServletRequest request,
+	public ResponseEntity<Object> handleRequest(String appSlug, String targetAppRoleSlug, Model requestModel, HttpServletRequest request,
 			HttpServletResponse response) throws CarbonException {
 
 		Resource requestResource = getRequestModelMainResource(requestModel);
 		GenericRequestRDF rdfGenericRequest = getRDFGenericRequest(requestResource);
 
 		// TODO: Take into account the application we are in
-		ApplicationRole targetAppRole = getTargetApplicationRole(targetAppRoleUUID);
+		ApplicationRole targetAppRole = getTargetApplicationRole(targetAppRoleSlug, appSlug);
 
 		if ( ! targetAppRoleExists(targetAppRole) ) {
-			return handleNonExistentAppRole(targetAppRoleUUID, request, response);
+			return handleNonExistentAppRole(targetAppRoleSlug, request, response);
 		}
 
 		List<Agent> targetAgents = getTargetAgents(rdfGenericRequest);
@@ -61,7 +61,7 @@ public class RolePOSTRequestHandler extends AbstractRoleRequestHandler {
 
 	private List<Agent> getTargetAgents(GenericRequestRDF rdfGenericRequest) throws CarbonException {
 		List<Agent> targetAgents = new ArrayList<Agent>();
-		String[] agentEmails = rdfGenericRequest.getStringProperties(Agent.Properties.EMAIL.getProperty());
+		String[] agentEmails = rdfGenericRequest.getStrings(Agent.Properties.EMAIL.getProperty());
 
 		try {
 			targetAgents = unsecuredAgentDetailsDAO.getByEmails(agentEmails);

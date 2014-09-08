@@ -13,9 +13,9 @@ import org.springframework.stereotype.Component;
 
 import com.base22.carbon.CarbonException;
 import com.base22.carbon.apps.roles.ApplicationRole;
+import com.base22.carbon.apps.roles.ApplicationRole.Properties;
 import com.base22.carbon.apps.roles.ApplicationRoleRDF;
 import com.base22.carbon.apps.roles.ApplicationRoleRDFFactory;
-import com.base22.carbon.apps.roles.ApplicationRole.Properties;
 import com.base22.carbon.authorization.acl.ACLSystemResource;
 import com.base22.carbon.authorization.acl.ACLSystemResourceFactory;
 import com.base22.carbon.models.ErrorResponse;
@@ -27,17 +27,17 @@ import com.hp.hpl.jena.rdf.model.Model;
 @Scope(proxyMode = ScopedProxyMode.TARGET_CLASS, value = "request")
 public class RolePUTRequestHandler extends AbstractRoleRequestHandler {
 
-	public ResponseEntity<Object> replaceApplicationRole(String appIdentifier, String targetAppRoleUUID, Model requestModel, HttpServletRequest request,
+	public ResponseEntity<Object> replaceApplicationRole(String appSlug, String appRoleSlug, Model requestModel, HttpServletRequest request,
 			HttpServletResponse response) throws CarbonException {
 
 		ApplicationRoleRDF requestRDFAppRole = getRequestRDFApplicationRole(requestModel, request);
 		ApplicationRole requestAppRole = getRequestApplicationRole(requestRDFAppRole);
 
 		// TODO: Take into account the application we are in
-		ApplicationRole targetAppRole = getTargetApplicationRole(targetAppRoleUUID);
+		ApplicationRole targetAppRole = getTargetApplicationRole(appRoleSlug, appSlug);
 
 		if ( ! targetAppRoleExists(targetAppRole) ) {
-			return handleNonExistentAppRole(targetAppRoleUUID, request, response);
+			return handleNonExistentAppRole(appRoleSlug, request, response);
 		}
 
 		validateAppRoleChanges(targetAppRole, requestAppRole);
@@ -84,7 +84,7 @@ public class RolePUTRequestHandler extends AbstractRoleRequestHandler {
 			bodyIssueBuilder.append(" > Cannot be changed.");
 		}
 
-		if ( requestAppRole.getApplicationUUID() != targetAppRole.getApplicationUUID() ) {
+		if ( ! requestAppRole.getApplicationSlug().equals(targetAppRole.getApplicationSlug()) ) {
 			if ( bodyIssueBuilder == null ) {
 				bodyIssueBuilder = new StringBuilder();
 			} else {
@@ -95,15 +95,60 @@ public class RolePUTRequestHandler extends AbstractRoleRequestHandler {
 			bodyIssueBuilder.append(" > Cannot be changed.");
 		}
 
-		if ( requestAppRole.getParentUUID() != targetAppRole.getApplicationUUID() ) {
+		if ( targetAppRole.getParentSlug() == null ) {
+			if ( requestAppRole.getParentSlug() != null ) {
+				if ( bodyIssueBuilder == null ) {
+					bodyIssueBuilder = new StringBuilder();
+				} else {
+					bodyIssueBuilder.append("\n");
+				}
+
+				bodyIssueBuilder.append(Properties.PARENT.getPrefixedURI().getSlug());
+				bodyIssueBuilder.append(" > Cannot be changed.");
+			}
+		} else {
+			if ( requestAppRole.getParentSlug() == null ) {
+				if ( bodyIssueBuilder == null ) {
+					bodyIssueBuilder = new StringBuilder();
+				} else {
+					bodyIssueBuilder.append("\n");
+				}
+
+				bodyIssueBuilder.append(Properties.PARENT.getPrefixedURI().getSlug());
+				bodyIssueBuilder.append(" > Cannot be changed.");
+
+			} else if ( ! requestAppRole.getParentSlug().equals(targetAppRole.getParentSlug()) ) {
+				if ( bodyIssueBuilder == null ) {
+					bodyIssueBuilder = new StringBuilder();
+				} else {
+					bodyIssueBuilder.append("\n");
+				}
+
+				bodyIssueBuilder.append(Properties.PARENT.getPrefixedURI().getSlug());
+				bodyIssueBuilder.append(" > Cannot be changed.");
+
+			}
+		}
+
+		if ( requestAppRole.getSlug() == null ) {
 			if ( bodyIssueBuilder == null ) {
 				bodyIssueBuilder = new StringBuilder();
 			} else {
 				bodyIssueBuilder.append("\n");
 			}
 
-			bodyIssueBuilder.append(Properties.PARENT.getPrefixedURI().getSlug());
+			bodyIssueBuilder.append(Properties.SLUG.getPrefixedURI().getSlug());
 			bodyIssueBuilder.append(" > Cannot be changed.");
+		} else if ( ! requestAppRole.getSlug().equals(targetAppRole.getSlug()) ) {
+			if ( bodyIssueBuilder == null ) {
+				bodyIssueBuilder = new StringBuilder();
+			} else {
+				bodyIssueBuilder.append("\n");
+			}
+
+			bodyIssueBuilder.append(Properties.SLUG.getPrefixedURI().getSlug());
+			bodyIssueBuilder.append(" > Cannot be changed.");
+
 		}
 
 		if ( requestAppRole.getName() == null ) {

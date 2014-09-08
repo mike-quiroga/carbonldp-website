@@ -23,8 +23,8 @@ import com.hp.hpl.jena.rdf.model.ModelFactory;
 @Component
 @Scope(proxyMode = ScopedProxyMode.TARGET_CLASS, value = "request")
 public class RolesGETRequestHandler extends AbstractAppRequestHandler {
-	public ResponseEntity<Object> handleRequest(String appIdentifier, HttpServletRequest request, HttpServletResponse response) throws CarbonException {
-		Application application = securedApplicationDAO.findByIdentifier(appIdentifier);
+	public ResponseEntity<Object> handleRequest(String appSlug, HttpServletRequest request, HttpServletResponse response) throws CarbonException {
+		Application application = getApplication(appSlug);
 
 		List<ApplicationRole> targetAppRoles = getTargetAppRoles(application);
 		List<ApplicationRoleRDF> targetRDFAppRoles = getTargetRDFAppRoles(targetAppRoles);
@@ -32,6 +32,15 @@ public class RolesGETRequestHandler extends AbstractAppRequestHandler {
 		Model combinedModel = combineTargetRDFAppRoles(targetRDFAppRoles);
 
 		return new ResponseEntity<Object>(combinedModel, HttpStatus.OK);
+	}
+
+	private Application getApplication(String appSlug) throws CarbonException {
+		try {
+			return securedApplicationDAO.findBySlug(appSlug);
+		} catch (CarbonException e) {
+			e.getErrorObject().setHttpStatus(HttpStatus.INTERNAL_SERVER_ERROR);
+			throw e;
+		}
 	}
 
 	private List<ApplicationRole> getTargetAppRoles(Application application) throws CarbonException {

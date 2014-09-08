@@ -15,8 +15,6 @@ import com.base22.carbon.authentication.AuthenticationUtil;
 import com.base22.carbon.authorization.acl.ACLSystemResource;
 import com.base22.carbon.authorization.acl.ACLSystemResourceFactory;
 import com.base22.carbon.ldp.LDPR;
-import com.base22.carbon.ldp.LDPR.Properties;
-import com.base22.carbon.ldp.LDPR.Resources;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.Property;
 import com.hp.hpl.jena.rdf.model.RDFNode;
@@ -111,7 +109,7 @@ public class LDPResourceFactory {
 		}
 
 		@Override
-		public String getStringProperty(Property property) {
+		public String getString(Property property) {
 			if ( ! this.getResource().hasProperty(property) ) {
 				return null;
 			}
@@ -129,10 +127,10 @@ public class LDPResourceFactory {
 		}
 
 		@Override
-		public String[] getStringProperties(Property property) {
+		public String[] getStrings(Property property) {
 			List<String> strings = new ArrayList<String>();
 			if ( ! this.getResource().hasProperty(property) ) {
-				return (String[]) strings.toArray();
+				return strings.toArray(new String[strings.size()]);
 			}
 
 			StmtIterator iterator = this.getResource().listProperties(property);
@@ -174,6 +172,64 @@ public class LDPResourceFactory {
 		}
 
 		@Override
+		public Resource getURIResource(Property property) {
+			if ( ! this.getResource().hasProperty(property) ) {
+				return null;
+			}
+
+			Statement statement = this.getResource().getProperty(property);
+			if ( statement == null ) {
+				return null;
+			}
+
+			RDFNode node = statement.getObject();
+			if ( ! node.isURIResource() ) {
+				return null;
+			}
+			return node.asResource();
+		}
+
+		@Override
+		public Resource[] getURIResources(Property property) {
+			List<Resource> resources = new ArrayList<Resource>();
+			if ( ! this.getResource().hasProperty(property) ) {
+				return resources.toArray(new Resource[resources.size()]);
+			}
+
+			StmtIterator iterator = this.getResource().listProperties(property);
+
+			while (iterator.hasNext()) {
+				Statement statement = iterator.next();
+
+				RDFNode node = statement.getObject();
+				if ( node.isURIResource() ) {
+					resources.add(node.asResource());
+				}
+			}
+
+			return resources.toArray(new Resource[resources.size()]);
+		}
+
+		@Override
+		public String getURIProperty(Property property) {
+			Resource resource = this.getURIResource(property);
+			if ( resource == null ) {
+				return null;
+			}
+			return resource.getURI();
+		}
+
+		@Override
+		public String[] getURIProperties(Property property) {
+			List<String> strings = new ArrayList<String>();
+			Resource[] resources = this.getURIResources(property);
+			for (Resource resource : resources) {
+				strings.add(resource.getURI());
+			}
+			return strings.toArray(new String[strings.size()]);
+		}
+
+		@Override
 		public void addProperty(Property property, int value) {
 			this.getResource().addLiteral(property, value);
 		}
@@ -203,7 +259,11 @@ public class LDPResourceFactory {
 
 		@Override
 		public void addProperty(Property property, UUID value) {
+			// TODO: Implement
+		}
 
+		public void addProperty(Property property, Resource resource) {
+			this.getResource().addProperty(property, resource);
 		}
 
 		@Override
@@ -239,6 +299,11 @@ public class LDPResourceFactory {
 				stringValue = value.toString();
 			}
 			this.setProperty(property, stringValue);
+		}
+
+		public void setProperty(Property property, Resource resource) {
+			this.removeProperty(property);
+			this.addProperty(property, resource);
 		}
 
 		@Override

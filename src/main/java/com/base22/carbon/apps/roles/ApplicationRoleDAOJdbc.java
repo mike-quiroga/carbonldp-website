@@ -19,12 +19,12 @@ import com.base22.carbon.apps.ApplicationDAOJdbc;
 import com.base22.carbon.authentication.AuthenticationUtil;
 import com.base22.carbon.groups.Group;
 import com.base22.carbon.groups.GroupDAOJdbc;
+import com.base22.carbon.jdbc.DAOJdbc;
 import com.base22.carbon.jdbc.QueryTransactionCallback;
 import com.base22.carbon.jdbc.QueryTransactionTemplate;
 import com.base22.carbon.jdbc.TransactionException;
 import com.base22.carbon.jdbc.UpdateTransactionCallback;
 import com.base22.carbon.jdbc.UpdateTransactionTemplate;
-import com.base22.carbon.jdbc.DAOJdbc;
 import com.base22.carbon.models.UUIDObject;
 
 @Service("applicationRoleDAO")
@@ -33,6 +33,7 @@ public class ApplicationRoleDAOJdbc extends DAOJdbc implements ApplicationRoleDA
 	public static final String TABLE = "application_roles";
 	public static final String UUID_FIELD = "uuid";
 	public static final String HEX_UUID_FIELD = "hex_uuid";
+	public static final String PARENT_TABLE_ALIAS = "parent_role";
 	public static final String PARENT_UUID_FIELD = "parent_uuid";
 	public static final String PARENT_HEX_UUID_FIELD = "parent_hex_uuid";
 	public static final String SLUG_FIELD = "slug";
@@ -43,6 +44,38 @@ public class ApplicationRoleDAOJdbc extends DAOJdbc implements ApplicationRoleDA
 
 	public static final String AGENTS_APPLICATION_ROLES_TABLE = "agents_application_roles";
 	public static final String APPLICATION_ROLES_GROUPS_TABLE = "application_roles_groups";
+
+	public static final String BASE_QUERY;
+	static {
+		StringBuilder sqlBuilder = new StringBuilder();
+		//@formatter:off
+		sqlBuilder
+			.append("SELECT ")
+				.append(TABLE).append(".*")
+				.append(", HEX(").append(TABLE).append(".").append(UUID_FIELD).append(") AS ").append(HEX_UUID_FIELD)
+		 		.append(", HEX(").append(TABLE).append(".").append(PARENT_UUID_FIELD).append(") AS ").append(PARENT_HEX_UUID_FIELD)
+		 		.append(", HEX(").append(TABLE).append(".").append(ApplicationDAOJdbc.EXTERNAL_ID_FIELD).append(") AS ").append(ApplicationDAOJdbc.EXTERNAL_HEX_ID_FIELD)
+		 		
+		 		// Application's Slug
+		 		.append(", ").append(ApplicationDAOJdbc.TABLE).append(".").append(ApplicationDAOJdbc.SLUG_FIELD)
+		 		
+		 		// Parent's Slug
+		 		.append(", ").append(PARENT_TABLE_ALIAS).append(".").append(SLUG_FIELD)
+		 		
+			.append(" FROM ").append(TABLE)
+				
+			// Applications Table Join
+			.append(" LEFT JOIN ").append(ApplicationDAOJdbc.TABLE)
+			.append(" ON ").append(TABLE).append(".").append(ApplicationDAOJdbc.EXTERNAL_ID_FIELD).append(" = ").append(ApplicationDAOJdbc.TABLE).append(".").append(ApplicationDAOJdbc.UUID_FIELD)
+
+			// Parent Table Join
+			.append(" LEFT JOIN ").append(TABLE).append(" AS ").append(PARENT_TABLE_ALIAS)
+			.append(" ON ").append(TABLE).append(".").append(PARENT_UUID_FIELD).append(" = ").append(PARENT_TABLE_ALIAS).append(".").append(UUID_FIELD)			
+		;
+		//@formatter:on
+
+		BASE_QUERY = sqlBuilder.toString();
+	}
 
 	public ApplicationRole createRootApplicationRole(Application application, ApplicationRole applicationRole) throws CarbonException {
 		// Check if the application has already a root application role
@@ -165,20 +198,8 @@ public class ApplicationRoleDAOJdbc extends DAOJdbc implements ApplicationRoleDA
 				public StringBuilder prepareSQLQuery(StringBuilder sqlBuilder) {
 					//@formatter:off
 					sqlBuilder
-						.append("SELECT *, HEX(")
-					 			.append(UUID_FIELD)
-					 		.append(") AS ").append(HEX_UUID_FIELD)
-					 		.append(", HEX(")
-					 			.append(PARENT_UUID_FIELD)
-					 		.append(") AS ").append(PARENT_HEX_UUID_FIELD)
-					 		.append(", HEX(")
-					 			.append(ApplicationDAOJdbc.EXTERNAL_ID_FIELD)
-					 		.append(") AS ").append(ApplicationDAOJdbc.EXTERNAL_HEX_ID_FIELD)
-						.append(" FROM ")
-							.append(TABLE)
-						.append(" WHERE ")
-							.append(UUID_FIELD)
-						.append(" = UNHEX(?)")
+						.append(BASE_QUERY)
+						.append(" WHERE ").append(TABLE).append(".").append(UUID_FIELD).append(" = UNHEX(?)")
 					;
 					//@formatter:on
 					return sqlBuilder;
@@ -214,9 +235,55 @@ public class ApplicationRoleDAOJdbc extends DAOJdbc implements ApplicationRoleDA
 		return role;
 	}
 
-	public ApplicationRole findBySlug(String slug) throws CarbonException {
-		// TODO Auto-generated method stub
-		return null;
+	@Override
+	public ApplicationRole findBySlug(final String slug, final String appSlug) throws CarbonException {
+		ApplicationRole role = null;
+
+		QueryTransactionTemplate template = new QueryTransactionTemplate();
+		try {
+			//@formatter:off
+			role = template.execute(securityJDBCDataSource, new QueryTransactionCallback<ApplicationRole>() {
+				//@formatter:off
+				@Override
+				public StringBuilder prepareSQLQuery(StringBuilder sqlBuilder) {
+					//@formatter:off
+					sqlBuilder
+						.append(BASE_QUERY)						
+						.append(" WHERE ").append(TABLE).append(".").append(SLUG_FIELD).append(" = ? AND ").append(ApplicationDAOJdbc.TABLE).append(".").append(ApplicationDAOJdbc.SLUG_FIELD).append(" = ?")
+					;
+					//@formatter:on
+					return sqlBuilder;
+				}
+
+				@Override
+				public PreparedStatement prepareStatement(PreparedStatement statement) throws SQLException {
+					statement.setString(1, slug);
+					statement.setString(2, appSlug);
+					return statement;
+				}
+
+				@Override
+				public ApplicationRole interpretResultSet(ResultSet resultSet) throws SQLException {
+					List<ApplicationRole> roles = null;
+
+					roles = populateApplicationRoles(resultSet);
+
+					if ( roles.isEmpty() ) {
+						return null;
+					}
+
+					return roles.get(0);
+				}
+
+			});
+		} catch (TransactionException e) {
+			if ( LOG.isErrorEnabled() ) {
+				LOG.error("<< findBySlug() > There was a problem while trying to find the applicationRole with slug: '{}'.", slug);
+			}
+			throw e;
+		}
+
+		return role;
 	}
 
 	public ApplicationRole findBySlug(final String slug, UUID applicationUUID) throws CarbonException {
@@ -224,31 +291,17 @@ public class ApplicationRoleDAOJdbc extends DAOJdbc implements ApplicationRoleDA
 
 		final String uuidString = AuthenticationUtil.minimizeUUID(applicationUUID);
 
-		JDBCQueryTransactionTemplate template = new JDBCQueryTransactionTemplate();
+		QueryTransactionTemplate template = new QueryTransactionTemplate();
 		try {
 			//@formatter:off
-			role = template.execute(securityJDBCDataSource, new JDBCQueryTransactionCallback<ApplicationRole>() {
+			role = template.execute(securityJDBCDataSource, new QueryTransactionCallback<ApplicationRole>() {
 				//@formatter:off
 				@Override
 				public StringBuilder prepareSQLQuery(StringBuilder sqlBuilder) {
 					//@formatter:off
 					sqlBuilder
-						.append("SELECT *, HEX(")
-					 			.append(UUID_FIELD)
-					 		.append(") AS ").append(HEX_UUID_FIELD)
-					 		.append(", HEX(")
-					 			.append(PARENT_UUID_FIELD)
-					 		.append(") AS ").append(PARENT_HEX_UUID_FIELD)
-					 		.append(", HEX(")
-					 			.append(JDBCApplicationDAO.EXTERNAL_ID_FIELD)
-					 		.append(") AS ").append(JDBCApplicationDAO.EXTERNAL_HEX_ID_FIELD)
-						.append(" FROM ")
-							.append(TABLE)
-						.append(" WHERE ")
-							.append(SLUG_FIELD)
-						.append(" = ? AND ")
-							.append(JDBCApplicationDAO.EXTERNAL_ID_FIELD)
-						.append("UNHEX(?)")
+						.append(BASE_QUERY)						
+						.append(" WHERE ").append(TABLE).append(".").append(SLUG_FIELD).append(" = ? AND ").append(TABLE).append(".").append(ApplicationDAOJdbc.EXTERNAL_ID_FIELD).append("UNHEX(?)")
 					;
 					//@formatter:on
 					return sqlBuilder;
@@ -275,7 +328,7 @@ public class ApplicationRoleDAOJdbc extends DAOJdbc implements ApplicationRoleDA
 				}
 
 			});
-		} catch (JDBCTransactionException e) {
+		} catch (TransactionException e) {
 			if ( LOG.isErrorEnabled() ) {
 				LOG.error("<< findBySlug() > There was a problem while trying to find the applicationRole with slug: '{}'.", slug);
 			}
@@ -306,22 +359,10 @@ public class ApplicationRoleDAOJdbc extends DAOJdbc implements ApplicationRoleDA
 				public StringBuilder prepareSQLQuery(StringBuilder sqlBuilder) {
 					//@formatter:off
 					sqlBuilder
-						.append("SELECT *, HEX(")
-					 			.append(UUID_FIELD)
-					 		.append(") AS ").append(HEX_UUID_FIELD)
-					 		.append(", HEX(")
-					 			.append(PARENT_UUID_FIELD)
-					 		.append(") AS ").append(PARENT_HEX_UUID_FIELD)
-					 		.append(", HEX(")
-					 			.append(ApplicationDAOJdbc.EXTERNAL_ID_FIELD)
-					 		.append(") AS ").append(ApplicationDAOJdbc.EXTERNAL_HEX_ID_FIELD)
-						.append(" FROM ")
-							.append(TABLE)
+						.append(BASE_QUERY)				
 						.append(" WHERE ")
-							.append(UUID_FIELD)
-						.append(" = UNHEX(?) AND ")
-							.append(ApplicationDAOJdbc.EXTERNAL_ID_FIELD)
-						.append(" = UNHEX(?)")
+							.append(TABLE).append(".").append(UUID_FIELD).append(" = UNHEX(?) AND ")
+							.append(TABLE).append(".").append(ApplicationDAOJdbc.EXTERNAL_ID_FIELD).append(" = UNHEX(?)")
 					;
 					//@formatter:on
 					return sqlBuilder;
@@ -373,20 +414,8 @@ public class ApplicationRoleDAOJdbc extends DAOJdbc implements ApplicationRoleDA
 				public StringBuilder prepareSQLQuery(StringBuilder sqlBuilder) {
 					//@formatter:off
 					sqlBuilder
-						.append("SELECT *, HEX(")
-					 			.append(UUID_FIELD)
-					 		.append(") AS ").append(HEX_UUID_FIELD)
-					 		.append(", HEX(")
-					 			.append(PARENT_UUID_FIELD)
-					 		.append(") AS ").append(PARENT_HEX_UUID_FIELD)
-					 		.append(", HEX(")
-					 			.append(ApplicationDAOJdbc.EXTERNAL_ID_FIELD)
-					 		.append(") AS ").append(ApplicationDAOJdbc.EXTERNAL_HEX_ID_FIELD)
-						.append(" FROM ")
-							.append(TABLE)
-						.append(" WHERE ")
-							.append(ApplicationDAOJdbc.EXTERNAL_ID_FIELD)
-						.append(" = UNHEX(?)")
+						.append(BASE_QUERY)
+						.append(" WHERE ").append(TABLE).append(".").append(ApplicationDAOJdbc.EXTERNAL_ID_FIELD).append(" = UNHEX(?)")
 					;
 					//@formatter:on
 					return sqlBuilder;
@@ -495,7 +524,7 @@ public class ApplicationRoleDAOJdbc extends DAOJdbc implements ApplicationRoleDA
 				public List<ApplicationRole> interpretResultSet(ResultSet resultSet) throws SQLException {
 					List<ApplicationRole> applicationRoles = null;
 
-					applicationRoles = populateParentApplicationRoles(resultSet);
+					applicationRoles = populateApplicationRoles(resultSet);
 
 					// Remove the last element (That is actually the child)
 					if ( ! applicationRoles.isEmpty() ) {
@@ -531,20 +560,8 @@ public class ApplicationRoleDAOJdbc extends DAOJdbc implements ApplicationRoleDA
 				public StringBuilder prepareSQLQuery(StringBuilder sqlBuilder) {
 					//@formatter:off
 					sqlBuilder
-						.append("SELECT *, HEX(")
-					 			.append(UUID_FIELD)
-					 		.append(") AS ").append(HEX_UUID_FIELD)
-					 		.append(", HEX(")
-					 			.append(PARENT_UUID_FIELD)
-					 		.append(") AS ").append(PARENT_HEX_UUID_FIELD)
-					 		.append(", HEX(")
-					 			.append(ApplicationDAOJdbc.EXTERNAL_ID_FIELD)
-					 		.append(") AS ").append(ApplicationDAOJdbc.EXTERNAL_HEX_ID_FIELD)
-						.append(" FROM ")
-							.append(TABLE)
-						.append(" WHERE ")
-							.append(PARENT_UUID_FIELD)
-						.append(" = UNHEX(?)")
+						.append(BASE_QUERY)
+						.append(" WHERE ").append(TABLE).append(".").append(PARENT_UUID_FIELD).append(" = UNHEX(?)")
 					;
 					//@formatter:on
 					return sqlBuilder;
@@ -666,18 +683,8 @@ public class ApplicationRoleDAOJdbc extends DAOJdbc implements ApplicationRoleDA
 				public StringBuilder prepareSQLQuery(StringBuilder sqlBuilder) {
 					//@formatter:off
 					sqlBuilder
-						.append("SELECT ")
-							.append(TABLE).append(".*, HEX(")
-								.append(TABLE).append(".").append(UUID_FIELD)
-							.append(") AS ").append(HEX_UUID_FIELD)
-							.append(", HEX(")
-								.append(TABLE).append(".").append(ApplicationDAOJdbc.EXTERNAL_ID_FIELD)
-							.append(") AS ").append(ApplicationDAOJdbc.EXTERNAL_HEX_ID_FIELD)
-							.append(", HEX(")
-								.append(TABLE).append(".").append(PARENT_UUID_FIELD)
-							.append(") AS ").append(PARENT_HEX_UUID_FIELD)
-						.append(" FROM ").append(AGENTS_APPLICATION_ROLES_TABLE)
-						.append(" INNER JOIN ").append(TABLE)
+						.append(BASE_QUERY)
+						.append(" INNER JOIN ").append(AGENTS_APPLICATION_ROLES_TABLE)
 						.append(" ON ").append(AGENTS_APPLICATION_ROLES_TABLE).append(".").append(EXTERNAL_ID_FIELD).append(" = ").append(TABLE).append(".").append(UUID_FIELD)
 						.append(" WHERE ").append(AGENTS_APPLICATION_ROLES_TABLE).append(".").append(AgentDAOJdbc.EXTERNAL_ID_FIELD).append(" = UNHEX(?)")
 					;
@@ -727,18 +734,8 @@ public class ApplicationRoleDAOJdbc extends DAOJdbc implements ApplicationRoleDA
 				public StringBuilder prepareSQLQuery(StringBuilder sqlBuilder) {
 					//@formatter:off
 					sqlBuilder
-						.append("SELECT ")
-							.append(TABLE).append(".*, HEX(")
-								.append(TABLE).append(".").append(UUID_FIELD)
-							.append(") AS ").append(HEX_UUID_FIELD)
-							.append(", HEX(")
-								.append(TABLE).append(".").append(ApplicationDAOJdbc.EXTERNAL_ID_FIELD)
-							.append(") AS ").append(ApplicationDAOJdbc.EXTERNAL_HEX_ID_FIELD)
-							.append(", HEX(")
-								.append(TABLE).append(".").append(PARENT_UUID_FIELD)
-							.append(") AS ").append(PARENT_HEX_UUID_FIELD)
-						.append(" FROM ").append(AGENTS_APPLICATION_ROLES_TABLE)
-						.append(" INNER JOIN ").append(TABLE)
+						.append(BASE_QUERY)
+						.append(" INNER JOIN ").append(AGENTS_APPLICATION_ROLES_TABLE)
 						.append(" ON ").append(AGENTS_APPLICATION_ROLES_TABLE).append(".").append(EXTERNAL_ID_FIELD).append(" = ").append(TABLE).append(".").append(UUID_FIELD)
 						.append(" WHERE ").append(AGENTS_APPLICATION_ROLES_TABLE).append(".").append(AgentDAOJdbc.EXTERNAL_ID_FIELD).append(" = UNHEX(?)")
 						.append(" AND ").append(TABLE).append(".").append(ApplicationDAOJdbc.EXTERNAL_ID_FIELD).append(" = UNHEX(?)")
@@ -800,18 +797,8 @@ public class ApplicationRoleDAOJdbc extends DAOJdbc implements ApplicationRoleDA
 				public StringBuilder prepareSQLQuery(StringBuilder sqlBuilder) {
 					//@formatter:off
 					sqlBuilder
-						.append("SELECT ")
-							.append(TABLE).append(".*, HEX(")
-								.append(TABLE).append(".").append(UUID_FIELD)
-							.append(") AS ").append(HEX_UUID_FIELD)
-							.append(", HEX(")
-								.append(TABLE).append(".").append(ApplicationDAOJdbc.EXTERNAL_ID_FIELD)
-							.append(") AS ").append(ApplicationDAOJdbc.EXTERNAL_HEX_ID_FIELD)
-							.append(", HEX(")
-								.append(TABLE).append(".").append(PARENT_UUID_FIELD)
-							.append(") AS ").append(PARENT_HEX_UUID_FIELD)
-						.append(" FROM ").append(APPLICATION_ROLES_GROUPS_TABLE)
-						.append(" INNER JOIN ").append(TABLE)
+						.append(BASE_QUERY)
+						.append(" INNER JOIN ").append(APPLICATION_ROLES_GROUPS_TABLE)
 						.append(" ON ").append(APPLICATION_ROLES_GROUPS_TABLE).append(".").append(EXTERNAL_ID_FIELD).append(" = ").append(TABLE).append(".").append(UUID_FIELD)
 						.append(" WHERE ").append(APPLICATION_ROLES_GROUPS_TABLE).append(".").append(GroupDAOJdbc.EXTERNAL_ID_FIELD).append(" = UNHEX(?)")
 					;
@@ -861,18 +848,8 @@ public class ApplicationRoleDAOJdbc extends DAOJdbc implements ApplicationRoleDA
 				public StringBuilder prepareSQLQuery(StringBuilder sqlBuilder) {
 					//@formatter:off
 					sqlBuilder
-						.append("SELECT ")
-							.append(TABLE).append(".*, HEX(")
-								.append(TABLE).append(".").append(UUID_FIELD)
-							.append(") AS ").append(HEX_UUID_FIELD)
-							.append(", HEX(")
-								.append(TABLE).append(".").append(ApplicationDAOJdbc.EXTERNAL_ID_FIELD)
-							.append(") AS ").append(ApplicationDAOJdbc.EXTERNAL_HEX_ID_FIELD)
-							.append(", HEX(")
-								.append(TABLE).append(".").append(PARENT_UUID_FIELD)
-							.append(") AS ").append(PARENT_HEX_UUID_FIELD)
-						.append(" FROM ").append(APPLICATION_ROLES_GROUPS_TABLE)
-						.append(" INNER JOIN ").append(TABLE)
+						.append(BASE_QUERY)
+						.append(" INNER JOIN ").append(APPLICATION_ROLES_GROUPS_TABLE)
 						.append(" ON ").append(APPLICATION_ROLES_GROUPS_TABLE).append(".").append(EXTERNAL_ID_FIELD).append(" = ").append(TABLE).append(".").append(UUID_FIELD)
 						.append(" WHERE ").append(APPLICATION_ROLES_GROUPS_TABLE).append(".").append(GroupDAOJdbc.EXTERNAL_ID_FIELD).append(" = UNHEX(?)")
 						.append(" AND ").append(TABLE).append(".").append(ApplicationDAOJdbc.EXTERNAL_ID_FIELD).append(" = UNHEX(?)")
@@ -924,18 +901,8 @@ public class ApplicationRoleDAOJdbc extends DAOJdbc implements ApplicationRoleDA
 				public StringBuilder prepareSQLQuery(StringBuilder sqlBuilder) {
 					//@formatter:off
 					sqlBuilder
-						.append("SELECT ")
-							.append(TABLE).append(".*, HEX(")
-								.append(TABLE).append(".").append(UUID_FIELD)
-							.append(") AS ").append(HEX_UUID_FIELD)
-							.append(", HEX(")
-								.append(TABLE).append(".").append(ApplicationDAOJdbc.EXTERNAL_ID_FIELD)
-							.append(") AS ").append(ApplicationDAOJdbc.EXTERNAL_HEX_ID_FIELD)
-							.append(", HEX(")
-								.append(TABLE).append(".").append(PARENT_UUID_FIELD)
-							.append(") AS ").append(PARENT_HEX_UUID_FIELD)
-						.append(" FROM ").append(APPLICATION_ROLES_GROUPS_TABLE)
-						.append(" INNER JOIN ").append(TABLE)
+						.append(BASE_QUERY)
+						.append(" INNER JOIN ").append(APPLICATION_ROLES_GROUPS_TABLE)
 						.append(" ON ").append(APPLICATION_ROLES_GROUPS_TABLE).append(".").append(EXTERNAL_ID_FIELD).append(" = ").append(TABLE).append(".").append(UUID_FIELD)
 						.append(" WHERE ").append(APPLICATION_ROLES_GROUPS_TABLE).append(".").append(GroupDAOJdbc.EXTERNAL_ID_FIELD).append(" IN (").append(prepareUUIDPlaceHolders(groupMinimizedUUIDs.length)).append(")")
 					;
@@ -984,18 +951,8 @@ public class ApplicationRoleDAOJdbc extends DAOJdbc implements ApplicationRoleDA
 				public StringBuilder prepareSQLQuery(StringBuilder sqlBuilder) {
 					//@formatter:off
 					sqlBuilder
-						.append("SELECT ")
-							.append(TABLE).append(".*, HEX(")
-								.append(TABLE).append(".").append(UUID_FIELD)
-							.append(") AS ").append(HEX_UUID_FIELD)
-							.append(", HEX(")
-								.append(TABLE).append(".").append(ApplicationDAOJdbc.EXTERNAL_ID_FIELD)
-							.append(") AS ").append(ApplicationDAOJdbc.EXTERNAL_HEX_ID_FIELD)
-							.append(", HEX(")
-								.append(TABLE).append(".").append(PARENT_UUID_FIELD)
-							.append(") AS ").append(PARENT_HEX_UUID_FIELD)
-						.append(" FROM ").append(APPLICATION_ROLES_GROUPS_TABLE)
-						.append(" INNER JOIN ").append(TABLE)
+						.append(BASE_QUERY)
+						.append(" INNER JOIN ").append(APPLICATION_ROLES_GROUPS_TABLE)
 						.append(" ON ").append(APPLICATION_ROLES_GROUPS_TABLE).append(".").append(EXTERNAL_ID_FIELD).append(" = ").append(TABLE).append(".").append(UUID_FIELD)
 						.append(" WHERE ").append(APPLICATION_ROLES_GROUPS_TABLE).append(".").append(GroupDAOJdbc.EXTERNAL_ID_FIELD).append(" IN ").append(prepareUUIDPlaceHolders(groupMinimizedUUIDs.length))
 						.append(" AND ").append(TABLE).append(".").append(ApplicationDAOJdbc.EXTERNAL_ID_FIELD).append(" = UNHEX(?)")
@@ -1038,42 +995,11 @@ public class ApplicationRoleDAOJdbc extends DAOJdbc implements ApplicationRoleDA
 
 	}
 
-	// TODO: Merge this with the unordered one
-	private List<ApplicationRole> populateParentApplicationRoles(ResultSet resultSet) throws SQLException {
-		List<ApplicationRole> applicationRoles = new ArrayList<ApplicationRole>();
-
-		while (resultSet.next()) {
-			String uuidString = resultSet.getString(HEX_UUID_FIELD);
-			String applicationUUIDString = resultSet.getString(ApplicationDAOJdbc.EXTERNAL_HEX_ID_FIELD);
-			String parentUUIDString = resultSet.getString(PARENT_HEX_UUID_FIELD);
-			String slug = resultSet.getString(SLUG_FIELD);
-			String name = resultSet.getString(NAME_FIELD);
-			String description = resultSet.getString(DESCRIPTION_FIELD);
-
-			ApplicationRole applicationRole = new ApplicationRole();
-			applicationRole.setUuid(uuidString);
-			applicationRole.setSlug(slug);
-			applicationRole.setName(name);
-			applicationRole.setDescription(description);
-
-			applicationRole.setApplicationUUID(AuthenticationUtil.restoreUUID(applicationUUIDString));
-
-			if ( parentUUIDString != null ) {
-				applicationRole.setParentUUID(AuthenticationUtil.restoreUUID(parentUUIDString));
-			} else {
-				applicationRole.setParentUUID(null);
-			}
-
-			applicationRoles.add(applicationRole);
-		}
-
-		return applicationRoles;
-	}
-
 	private List<ApplicationRole> populateApplicationRoles(ResultSet resultSet) throws SQLException {
 		List<ApplicationRole> applicationRoles = new ArrayList<ApplicationRole>();
 
 		while (resultSet.next()) {
+			// Application Role's Information
 			String uuidString = resultSet.getString(HEX_UUID_FIELD);
 			String applicationUUIDString = resultSet.getString(ApplicationDAOJdbc.EXTERNAL_HEX_ID_FIELD);
 			String parentUUIDString = resultSet.getString(PARENT_HEX_UUID_FIELD);
@@ -1095,9 +1021,24 @@ public class ApplicationRoleDAOJdbc extends DAOJdbc implements ApplicationRoleDA
 				applicationRole.setParentUUID(null);
 			}
 
+			// Application's Information
+			String appSlugColumn = getTableColumnName(ApplicationDAOJdbc.TABLE, ApplicationDAOJdbc.SLUG_FIELD);
+			if ( resultSetHasColumn(appSlugColumn, resultSet) ) {
+				String appSlug = resultSet.getString(appSlugColumn);
+				applicationRole.setApplicationSlug(appSlug);
+			}
+
+			// Parent's Information
+			String parentSlugColumn = getTableColumnName(PARENT_TABLE_ALIAS, SLUG_FIELD);
+			if ( resultSetHasColumn(parentSlugColumn, resultSet) ) {
+				String parentSlug = resultSet.getString(parentSlugColumn);
+				applicationRole.setParentSlug(parentSlug);
+			}
+
 			applicationRoles.add(applicationRole);
 		}
 
 		return applicationRoles;
 	}
+
 }

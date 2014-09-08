@@ -186,7 +186,7 @@ public class ErrorResponseFactory extends LDPResourceFactory {
 		}
 
 		public String getCarbonCode() {
-			return this.getStringProperty(Properties.CARBON_CODE.getProperty());
+			return this.getString(Properties.CARBON_CODE.getProperty());
 		}
 
 		public void setCarbonCode(String carbonCode) {
@@ -194,7 +194,7 @@ public class ErrorResponseFactory extends LDPResourceFactory {
 		}
 
 		public String getFriendlyMessage() {
-			return this.getStringProperty(Properties.FRIENDLY_MESSAGE.getProperty());
+			return this.getString(Properties.FRIENDLY_MESSAGE.getProperty());
 		}
 
 		public void setFriendlyMessage(String friendlyMessage) {
@@ -202,7 +202,7 @@ public class ErrorResponseFactory extends LDPResourceFactory {
 		}
 
 		public String getDebugMessage() {
-			return this.getStringProperty(Properties.DEBUG_MESSAGE.getProperty());
+			return this.getString(Properties.DEBUG_MESSAGE.getProperty());
 		}
 
 		public void setDebugMessage(String debugMessage) {

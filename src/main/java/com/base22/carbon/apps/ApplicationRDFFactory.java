@@ -33,26 +33,18 @@ public class ApplicationRDFFactory extends LDPResourceFactory implements RDFReso
 		return new RDFApplicationImpl(ldpResource.getResource());
 	}
 
-	public ApplicationRDF create(Application application) {
+	public ApplicationRDF create(Application app) {
 		Model model = ModelFactory.createDefaultModel();
 
-		StringBuilder uriBuilder = new StringBuilder();
-		//@formatter:off
-		uriBuilder
-			.append(Carbon.URL)
-			.append("/apps/")
-			.append(application.getUuidString())
-		;
-		//@formatter:on
+		String appURI = composeURI(app.getSlug());
 
-		Resource resource = model.createResource(uriBuilder.toString());
+		Resource resource = model.createResource(appURI);
 
 		ApplicationRDF rdfApplication = new RDFApplicationImpl(resource);
 		rdfApplication.setType(Resources.CLASS.getResource());
-		rdfApplication.setUUID(application.getUuid());
-		rdfApplication.setSlug(application.getSlug());
-		rdfApplication.setName(application.getName());
-		rdfApplication.setMasterKey(application.getMasterKey());
+		rdfApplication.setSlug(app.getSlug());
+		rdfApplication.setName(app.getName());
+		rdfApplication.setMasterKey(app.getMasterKey());
 
 		// TODO: Set the domains
 
@@ -67,6 +59,19 @@ public class ApplicationRDFFactory extends LDPResourceFactory implements RDFReso
 
 	public boolean isRDFApplication(LDPResource ldpResource) {
 		return ldpResource.isOfType(Resources.CLASS.getPrefixedURI().getURI());
+	}
+
+	public static String composeURI(String slug) {
+		StringBuilder uriBuilder = new StringBuilder();
+		//@formatter:off
+		uriBuilder
+			.append(Carbon.URL)
+			.append(Application.ENDPOINT)
+			.append(slug)
+		;
+		//@formatter:on
+
+		return uriBuilder.toString();
 	}
 
 	private class RDFApplicationImpl extends LDPResourceImpl implements ApplicationRDF {
@@ -86,7 +91,7 @@ public class ApplicationRDFFactory extends LDPResourceFactory implements RDFReso
 
 		@Override
 		public String getSlug() {
-			return this.getStringProperty(Properties.SLUG.getProperty());
+			return this.getString(Properties.SLUG.getProperty());
 		}
 
 		@Override
@@ -96,7 +101,7 @@ public class ApplicationRDFFactory extends LDPResourceFactory implements RDFReso
 
 		@Override
 		public String getName() {
-			return this.getStringProperty(Properties.NAME.getProperty());
+			return this.getString(Properties.NAME.getProperty());
 		}
 
 		@Override
@@ -106,7 +111,7 @@ public class ApplicationRDFFactory extends LDPResourceFactory implements RDFReso
 
 		@Override
 		public String getMasterKey() {
-			return this.getStringProperty(Properties.MASTER_KEY.getProperty());
+			return this.getString(Properties.MASTER_KEY.getProperty());
 		}
 
 		@Override
@@ -116,7 +121,7 @@ public class ApplicationRDFFactory extends LDPResourceFactory implements RDFReso
 
 		@Override
 		public String[] getDomains() {
-			return this.getStringProperties(Properties.DOMAIN.getProperty());
+			return this.getStrings(Properties.DOMAIN.getProperty());
 		}
 
 		@Override

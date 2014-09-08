@@ -23,7 +23,7 @@ public interface ApplicationRoleDAO {
 	public ApplicationRole findByUUID(UUID applicationRoleUUID) throws CarbonException;
 
 	@PostAuthorize("returnObject == null or hasPermission(returnObject, 'READ')")
-	public ApplicationRole findBySlug(String slug) throws CarbonException;
+	public ApplicationRole findBySlug(String slug, String appSlug) throws CarbonException;
 
 	@PostAuthorize("returnObject == null or hasPermission(returnObject, 'READ')")
 	public ApplicationRole findBySlug(String slug, UUID applicationUUID) throws CarbonException;
