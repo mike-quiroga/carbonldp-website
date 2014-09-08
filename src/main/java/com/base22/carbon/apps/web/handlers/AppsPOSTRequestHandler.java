@@ -255,7 +255,7 @@ public class AppsPOSTRequestHandler extends AbstractAppRequestHandler {
 	private ApplicationRole createRootAppRole(Application requestApplication) throws CarbonException {
 		ApplicationRole appRole = new ApplicationRole();
 		appRole.setName(configurationService.getDefaultRootApplicationRoleName());
-		appRole.setSlug(configurationService.getDefaultRootApplicationRoleName());
+		appRole.setSlug(configurationService.getDefaultRootApplicationRoleSlug());
 		try {
 			appRole = unsecuredApplicationRoleDAO.createRootApplicationRole(requestApplication, appRole);
 		} catch (CarbonException e) {
