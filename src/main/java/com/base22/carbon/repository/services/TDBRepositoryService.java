@@ -31,6 +31,9 @@ public class TDBRepositoryService implements RepositoryService {
 	protected Map<String, Model> namedModelRegistry;
 
 	public void release() throws RepositoryServiceException {
+		if ( LOG.isTraceEnabled() ) {
+			LOG.trace(">> release()");
+		}
 		closeDatasetRegistry();
 
 		// TODO: Remove this

@@ -103,47 +103,48 @@ public abstract class AbstractRequestHandler {
 				throw new CarbonException(errorObject);
 			}
 
-			if ( ! matcher.match("/requests/*", resourceURI.replace(configurationService.getServerURL(), "")) ) {
-				String friendlyMessage = "The entityBody of the request doesn't contain valid resources.";
-				String debugMessage = "Every request resource must follow the pattern /requests/{timestamp}.";
-				String entityBodyMessage = MessageFormat.format("The resource with URI: ''{0}'', doesn''t follow the pattern /requests/'{'timestamp'}'.",
-						resourceURI);
+			if ( matcher.match("/requests/*", resourceURI.replace(configurationService.getServerURL(), "")) ) {
+				if ( HTTPUtil.isDocumentResourceURI(resourceURI) ) {
+					if ( documentResource != null ) {
+						String friendlyMessage = "The entityBody of the request isn't valid.";
+						String debugMessage = "The request entityBody contains multiple document resources.";
 
-				if ( LOG.isDebugEnabled() ) {
-					LOG.debug("xx getRequestModelMainResource() > {}", entityBodyMessage);
-				}
+						if ( LOG.isDebugEnabled() ) {
+							LOG.debug("xx getRequestModelMainResource() > {}", debugMessage);
+						}
 
-				ErrorResponseFactory errorFactory = new ErrorResponseFactory();
-				ErrorResponse errorObject = errorFactory.create();
-				errorObject.setHttpStatus(HttpStatus.BAD_REQUEST);
-				errorObject.setFriendlyMessage(friendlyMessage);
-				errorObject.setDebugMessage(debugMessage);
-				errorObject.setEntityBodyIssue(null, entityBodyMessage);
+						ErrorResponseFactory errorFactory = new ErrorResponseFactory();
+						ErrorResponse errorObject = errorFactory.create();
+						errorObject.setHttpStatus(HttpStatus.BAD_REQUEST);
+						errorObject.setFriendlyMessage(friendlyMessage);
+						errorObject.setDebugMessage(debugMessage);
+						errorObject.setEntityBodyIssue(null, debugMessage);
 
-				throw new CarbonException(errorObject);
-			}
-
-			if ( HTTPUtil.isDocumentResourceURI(resourceURI) ) {
-				if ( documentResource != null ) {
-					String friendlyMessage = "The entityBody of the request isn't valid.";
-					String debugMessage = "The request entityBody contains multiple document resources.";
-
-					if ( LOG.isDebugEnabled() ) {
-						LOG.debug("xx getRequestModelMainResource() > {}", debugMessage);
+						throw new CarbonException(errorObject);
 					}
 
-					ErrorResponseFactory errorFactory = new ErrorResponseFactory();
-					ErrorResponse errorObject = errorFactory.create();
-					errorObject.setHttpStatus(HttpStatus.BAD_REQUEST);
-					errorObject.setFriendlyMessage(friendlyMessage);
-					errorObject.setDebugMessage(debugMessage);
-					errorObject.setEntityBodyIssue(null, debugMessage);
-
-					throw new CarbonException(errorObject);
+					documentResource = resource;
 				}
-
-				documentResource = resource;
 			}
+		}
+
+		if ( documentResource == null ) {
+			String friendlyMessage = "The entityBody of the request doesn't contain valid resources.";
+			String debugMessage = "There must be a resource that follows the pattern /requests/<timestamp>.";
+			String entityBodyMessage = "The request doesn't contain a resource that follows the pattern /requests/<timestamp>.";
+
+			if ( LOG.isDebugEnabled() ) {
+				LOG.debug("xx getRequestModelMainResource() > {}", entityBodyMessage);
+			}
+
+			ErrorResponseFactory errorFactory = new ErrorResponseFactory();
+			ErrorResponse errorObject = errorFactory.create();
+			errorObject.setHttpStatus(HttpStatus.BAD_REQUEST);
+			errorObject.setFriendlyMessage(friendlyMessage);
+			errorObject.setDebugMessage(debugMessage);
+			errorObject.setEntityBodyIssue(null, entityBodyMessage);
+
+			throw new CarbonException(errorObject);
 		}
 		return documentResource;
 	}
