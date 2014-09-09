@@ -23,11 +23,7 @@
 			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="src/main/webapp/WEB-INF/lib/db2jcc4.jar"/>
-	<classpathentry kind="lib" path="src/main/webapp/WEB-INF/lib/db2rdf.jar"/>
 	<classpathentry kind="lib" path="src/main/webapp/WEB-INF/lib/rdfstore.jar"/>
-	<classpathentry kind="lib" path="src/main/webapp/WEB-INF/lib/jsonld-java-jena-0.5-SNAPSHOT.jar"/>
-	<classpathentry kind="lib" path="src/main/webapp/WEB-INF/lib/jsonld-java-0.5-SNAPSHOT.jar"/>
 	<classpathentry kind="lib" path="src/main/webapp/WEB-INF/lib/ojdbc6.jar"/>
 	<classpathentry excluding="**" kind="src" output="target/test-classes" path="src/test/resources">
 		<attributes>
