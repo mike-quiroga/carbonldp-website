@@ -280,6 +280,11 @@
 			<artifactId>jsonld-java</artifactId>
 			<version>0.5.0</version>
 		</dependency>
+		<dependency>
+			<groupId>com.github.jsonld-java</groupId>
+			<artifactId>jsonld-java-jena</artifactId>
+			<version>0.4.1</version>
+		</dependency>
 	</dependencies>
 	<build>
 		<finalName></finalName>
