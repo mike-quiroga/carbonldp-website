@@ -274,7 +274,12 @@
 			<artifactId>commons-validator</artifactId>
 			<version>1.4.0</version>
 		</dependency>
-		
+
+		<dependency>
+			<groupId>com.github.jsonld-java</groupId>
+			<artifactId>jsonld-java</artifactId>
+			<version>0.5.0</version>
+		</dependency>
 	</dependencies>
 	<build>
 		<finalName></finalName>
