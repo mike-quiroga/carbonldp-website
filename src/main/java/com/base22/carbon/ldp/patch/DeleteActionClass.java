@@ -60,7 +60,9 @@ public abstract class DeleteActionClass {
 
 	public static enum Properties implements RDFPropertyEnum {
 		//@formatter:off
-		;
+		ALL_VALUES_OF(
+			new PrefixedURI("cp", "allValuesOf")
+		);
 		//@formatter:on
 
 		private final PrefixedURI[] prefixedURIs;

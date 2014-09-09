@@ -5,6 +5,7 @@ import java.text.MessageFormat;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.http.HttpStatus;
@@ -18,17 +19,19 @@ import com.base22.carbon.ldp.models.LDPRSource;
 import com.base22.carbon.ldp.models.URIObject;
 import com.base22.carbon.ldp.patch.PATCHRequest;
 import com.base22.carbon.ldp.patch.PATCHRequestFactory;
+import com.base22.carbon.ldp.patch.PATCHService;
 import com.base22.carbon.models.ErrorResponse;
 import com.base22.carbon.models.ErrorResponseFactory;
 import com.base22.carbon.utils.HTTPUtil;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.Resource;
-import com.hp.hpl.jena.rdf.model.ResourceFactory;
-import com.hp.hpl.jena.shared.Lock;
 
 @Component
 @Scope(proxyMode = ScopedProxyMode.TARGET_CLASS, value = "request")
 public class PATCHRequestHandler extends AbstractLDPRequestHandler {
+
+	@Autowired
+	protected PATCHService patchService;
 
 	public ResponseEntity<Object> handlePATCHRequest(String appSlug, Model requestModel, HttpServletRequest request, HttpServletResponse response)
 			throws CarbonException {
@@ -139,7 +142,7 @@ public class PATCHRequestHandler extends AbstractLDPRequestHandler {
 
 		validatePATCHRequestActions(patchRequest);
 
-		applyPATCHRequestActions(patchRequest, application);
+		applyPATCHRequestActions(patchRequest, targetURIObject, targetRDFSource, application);
 
 		touchTargetRDFSource(targetURIObject, targetRDFSource);
 
@@ -200,16 +203,8 @@ public class PATCHRequestHandler extends AbstractLDPRequestHandler {
 
 	}
 
-	private void applyPATCHRequestActions(PATCHRequest patchRequest, Application application) throws CarbonException {
-		Model model = rdfService.getNamedModel("http://carbonldp.com/apps/legacy/test", application.getDatasetName());
-		if ( model.supportsTransactions() ) {
-			model.begin();
-			model.enterCriticalSection(Lock.WRITE);
-			model.add(model.getResource("http://carbonldp.com/apps/legacy/test"), ResourceFactory.createProperty("http://worked.com/"), "Yeah it did");
-			model.leaveCriticalSection();
-			model.commit();
-			model.close();
-		}
+	private void applyPATCHRequestActions(PATCHRequest patchRequest, URIObject uriObject, LDPRSource rdfSource, Application application) throws CarbonException {
+		patchService.extendRDFSource(uriObject, patchRequest, application.getDatasetName());
 	}
 
 	private void touchTargetRDFSource(URIObject targetURIObject, LDPRSource targetRDFSource) {
