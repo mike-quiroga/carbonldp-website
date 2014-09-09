@@ -10,12 +10,10 @@ import org.springframework.stereotype.Service;
 
 import com.base22.carbon.Carbon;
 import com.base22.carbon.CarbonException;
-import com.base22.carbon.repository.DatasetTransactionUtil;
 import com.base22.carbon.repository.RepositoryServiceException;
 import com.base22.carbon.sparql.SPARQLService;
 import com.base22.carbon.utils.HTTPUtil;
 import com.hp.hpl.jena.query.Dataset;
-import com.hp.hpl.jena.query.ReadWrite;
 import com.hp.hpl.jena.rdf.model.Model;
 
 @Service("rdfService")
@@ -30,69 +28,11 @@ public class RDFService {
 	static final Logger LOG = LoggerFactory.getLogger(RDFService.class);
 
 	public void init() {
-		if ( LOG.isDebugEnabled() ) {
-			LOG.debug(">> init()");
+		if ( LOG.isTraceEnabled() ) {
+			LOG.trace(">> init()");
 		}
 	}
 
-	// Triples, resources, model and named graphs
-
-	/*
-	 * ------------------------------------------------------------------ Triples Methods
-	 * ------------------------------------------------------------------
-	 */
-
-	// TODO: Add security measures to the methods (Prevent SPARQL injection, etc)
-
-	/**
-	 * Construct a model with the provided triple from the specified schema's dataset
-	 * <p>
-	 * 
-	 * @param subject
-	 *            The subject of the triple(s) to delete. null = wildcard
-	 * @param predicate
-	 *            The predicate of the triple(s) to delete. null = wildcard
-	 * @param object
-	 *            The object of the triple(s) to delete. The method tries to guess the type of it. null = wildcard
-	 * @param schema
-	 *            The schema to use for the deletion
-	 * @param dataset
-	 *            The dataset from where to delete
-	 * @return boolean indicating if the triple was successfully deleted
-	 * @throws CarbonException
-	 */
-	public Model constructWithTriple(String subject, String predicate, Object object, String dataset) throws CarbonException {
-		Model resultModel = null;
-
-		subject = (subject == null) ? "?s" : subject;
-		predicate = (predicate == null) ? "?p" : "<" + predicate + ">";
-		object = (object == null) ? "?o" : object;
-
-		String query = "CONSTRUCT WHERE { <" + subject + "> " + predicate + " " + createTypedLiteral(object) + " }";
-		LOG.trace(">> query: {}", query);
-
-		resultModel = sparqlService.construct(query, dataset);
-
-		return resultModel;
-	}
-
-	/**
-	 * Adds a triple to the specified schema's dataset
-	 * <p>
-	 * 
-	 * @param subject
-	 *            The subject of the triple. Must be a valid URI representation.
-	 * @param predicate
-	 *            The predicate of the triple. Must be a valid URI representation.
-	 * @param object
-	 *            The object of the triple. The method tries to guess the type of it.
-	 * @param schema
-	 *            The schema to use for the insertion
-	 * @param dataset
-	 *            The dataset in where to insert it
-	 * @return boolean indicating if the triple was successfully added
-	 * @throws CarbonException
-	 */
 	public void insertTriple(String documentName, String subject, String predicate, Object object, String dataset) throws CarbonException {
 		String query = "INSERT DATA { <" + subject + "> <" + predicate + "> " + createTypedLiteral(object) + " }";
 		LOG.trace(">> query: " + query);
@@ -100,23 +40,6 @@ public class RDFService {
 		sparqlService.update(query, documentName, dataset);
 	}
 
-	/**
-	 * Adds a triple to the specified schema's dataset
-	 * <p>
-	 * 
-	 * @param subject
-	 *            The subject of the triple. Must be a valid URI representation.
-	 * @param predicate
-	 *            The predicate of the triple. Must be a valid URI representation.
-	 * @param object
-	 *            The object of the triple. The method tries to guess the type of it.
-	 * @param schema
-	 *            The schema to use for the insertion
-	 * @param dataset
-	 *            The dataset in where to insert it
-	 * @return boolean indicating if the triple was successfully added
-	 * @throws CarbonException
-	 */
 	public void insertTriple(String subject, String predicate, String object, String typeOfObject, String dataset) throws CarbonException {
 		String query = "INSERT DATA { <" + subject + "> <" + predicate + "> \"" + object + "\"^^" + typeOfObject + " }";
 		LOG.trace(">> query: " + query);
@@ -124,23 +47,6 @@ public class RDFService {
 		sparqlService.update(query, dataset);
 	}
 
-	/**
-	 * Deletes the triples matching the subject predicate object specified.
-	 * <p>
-	 * 
-	 * @param subject
-	 *            The subject of the triple(s) to delete. null = wildcard
-	 * @param predicate
-	 *            The predicate of the triple(s) to delete. null = wildcard
-	 * @param object
-	 *            The object of the triple(s) to delete. The method tries to guess the type of it. null = wildcard
-	 * @param schema
-	 *            The schema to use for the deletion
-	 * @param dataset
-	 *            The dataset from where to delete
-	 * @return boolean indicating if the triple was successfully deleted
-	 * @throws CarbonException
-	 */
 	public void deleteTriples(String documentName, String subject, String predicate, Object object, String dataset) throws CarbonException {
 		subject = (subject == null) ? "?s" : subject;
 		predicate = (predicate == null) ? "?p" : "<" + predicate + ">";
@@ -152,23 +58,6 @@ public class RDFService {
 		sparqlService.update(query, documentName, dataset);
 	}
 
-	/**
-	 * Checks if the triple exists in the schema's dataset
-	 * <p>
-	 * 
-	 * @param subject
-	 *            The subject of the triple(s) to check for. null = wildcard
-	 * @param predicate
-	 *            The predicate of the triple(s) to check for. null = wildcard
-	 * @param object
-	 *            The object of the triple(s) to check for. The method tries to guess the type of it. null = wildcard
-	 * @param schema
-	 *            The schema to use
-	 * @param dataset
-	 *            The dataset in where to check
-	 * @return boolean indicating if the triple exists
-	 * @throws CarbonException
-	 */
 	public boolean triplesExist(String subject, String predicate, Object object, String dataset) throws CarbonException {
 		boolean exists = false;
 
@@ -184,144 +73,103 @@ public class RDFService {
 		return exists;
 	}
 
-	/*
-	 * ------------------------------------------------------------------ Resources Methods
-	 * ------------------------------------------------------------------
-	 */
-
-	/**
-	 * Returns a Model containing the resource which subject matches the URI provided.
-	 * <p>
-	 * 
-	 * @param uri
-	 *            The resource URI to search for
-	 * @param schema
-	 *            The schema were the dataset resides
-	 * @param dataset
-	 *            The dataset from where the resource will be retrieved
-	 * @return a model of the resource that matches the uri
-	 * @throws CarbonException
-	 */
-	public Model getResourceModel(String uri, String dataset) throws CarbonException {
-		return this.constructWithTriple(uri, null, null, dataset);
-	}
-
-	/**
-	 * Checks if a resource exists in the schema's dataset that matches the provided uri
-	 * <p>
-	 * 
-	 * @return a boolean indicating if the model was successfully added
-	 * @param uri
-	 *            The resource URI to search for
-	 * @param schema
-	 *            The schema were the dataset resides
-	 * @param dataset
-	 *            The dataset where the search will be done
-	 * @throws CarbonException
-	 */
 	public boolean resourceExists(String uri, String dataset) throws CarbonException {
 		return this.triplesExist(uri, null, null, dataset);
 	}
 
-	// ==== Model Related Methods
+	public Model getNamedModel(final String name, String datasetName) throws CarbonException {
+		Model model = null;
 
-	public Model getNamedModel(String name, String dataset) throws RepositoryServiceException {
-		return repositoryService.getNamedModel(name, dataset);
+		ReadTransactionTemplate<Model> template = repositoryService.getReadTransactionTemplate(datasetName);
+		//@formatter:off
+		model = template.execute(new ReadTransactionCallback<Model>() {
+			//@formatter:on
+			@Override
+			public Model executeInTransaction(Dataset dataset) throws Exception {
+				try {
+					return dataset.getNamedModel(name);
+				} catch (Exception e) {
+					if ( LOG.isDebugEnabled() ) {
+						LOG.debug("xx getNamedModel() > Exception Stacktrace:", e);
+					}
+					if ( LOG.isErrorEnabled() ) {
+						LOG.error("<< getNamedModel() > The named model: '{}', couldn't be retrieved.", name);
+					}
+					throw new RepositoryServiceException("The named model couldn't be retrieved.");
+				}
+			}
+		});
+
+		return model;
 	}
 
-	public void addNamedModel(String modelName, Model model, String datasetName) throws CarbonException {
-		Dataset dataset = null;
-
-		try {
-			dataset = repositoryService.getDataset(datasetName);
-		} catch (RepositoryServiceException e) {
-			if ( LOG.isErrorEnabled() ) {
-				LOG.error("<< addNamedModel() > The dataset '{}', couldn't be retrieved.", datasetName);
+	public void addNamedModel(final String modelName, final Model model, String datasetName) throws CarbonException {
+		WriteTransactionTemplate template = repositoryService.getWriteTransactionTemplate(datasetName);
+		//@formatter:off
+		template.execute(new WriteTransactionCallback() {
+			//@formatter:on
+			@Override
+			public void executeInTransaction(Dataset dataset) throws Exception {
+				// TODO Auto-generated method stub
+				try {
+					dataset.addNamedModel(modelName, model);
+				} catch (Exception e) {
+					if ( LOG.isDebugEnabled() ) {
+						LOG.debug("xx addNamedModel() > Exception Stacktrace:", e);
+					}
+					if ( LOG.isErrorEnabled() ) {
+						LOG.error("<< addNamedModel() > The named model: '{}', couldn't be added.", modelName);
+					}
+				}
 			}
-			throw e;
-		}
-
-		DatasetTransactionUtil.beginDatasetTransaction(dataset, datasetName, ReadWrite.WRITE);
-
-		try {
-			dataset.addNamedModel(modelName, model);
-		} catch (Exception e) {
-			if ( LOG.isDebugEnabled() ) {
-				LOG.debug("xx addNamedModel() > Exception Stacktrace:", e);
-			}
-			if ( LOG.isErrorEnabled() ) {
-				LOG.error("<< addNamedModel() > The named model: '{}', couldn't be added.", modelName);
-			}
-		} finally {
-			DatasetTransactionUtil.closeDatasetTransaction(dataset, datasetName, true);
-		}
-
+		});
 	}
 
-	public boolean namedModelExists(String name, String datasetName) throws CarbonException {
-		if ( LOG.isTraceEnabled() ) {
-			LOG.trace(">> namedModelExists(name: '{}', datasetName: '{}')", name, datasetName);
-		}
+	public boolean namedModelExists(final String name, String datasetName) throws CarbonException {
+		Boolean exists = null;
 
-		boolean exists = false;
-		Dataset dataset = null;
-
-		try {
-			dataset = repositoryService.getDataset(datasetName);
-		} catch (RepositoryServiceException e) {
-			if ( LOG.isErrorEnabled() ) {
-				LOG.error("<< namedModelExists() > The dataset '{}', couldn't be retrieved.", datasetName);
+		ReadTransactionTemplate<Boolean> template = repositoryService.getReadTransactionTemplate(datasetName);
+		//@formatter:off
+		exists = template.execute(new ReadTransactionCallback<Boolean>() {
+			//@formatter:on
+			@Override
+			public Boolean executeInTransaction(Dataset dataset) throws Exception {
+				try {
+					return Boolean.valueOf(dataset.containsNamedModel(name));
+				} catch (Exception e) {
+					if ( LOG.isDebugEnabled() ) {
+						LOG.debug("xx namedModelExists() > Exception Stacktrace:", e);
+					}
+					if ( LOG.isErrorEnabled() ) {
+						LOG.error("<< namedModelExists() > The named model: '{}', couldn't checked for existence.", name);
+					}
+					throw new RepositoryServiceException("The named model couldn't checked for existence.");
+				}
 			}
-			throw e;
-		}
+		});
 
-		DatasetTransactionUtil.beginDatasetTransaction(dataset, datasetName, ReadWrite.READ);
-
-		try {
-			exists = dataset.containsNamedModel(name);
-		} catch (Exception e) {
-			if ( LOG.isDebugEnabled() ) {
-				LOG.debug("xx namedModelExists() > Exception Stacktrace:", e);
-			}
-			if ( LOG.isErrorEnabled() ) {
-				LOG.error("<< namedModelExists() > The named model: '{}', couldn't be checked for existence.", name);
-			}
-		} finally {
-			DatasetTransactionUtil.closeDatasetTransaction(dataset, datasetName, false);
-		}
 		return exists;
 	}
 
-	public void deleteNamedModel(String name, String datasetName) throws CarbonException {
-		if ( LOG.isTraceEnabled() ) {
-			LOG.trace(">> deleteNamedModel(name: '{}', datasetName: '{}')", name, datasetName);
-		}
-
-		Dataset dataset = null;
-
-		try {
-			dataset = repositoryService.getDataset(datasetName);
-		} catch (RepositoryServiceException e) {
-			if ( LOG.isErrorEnabled() ) {
-				LOG.error("<< deleteNamedModel() > The dataset '{}', couldn't be retrieved.", datasetName);
+	public void deleteNamedModel(final String modelName, String datasetName) throws CarbonException {
+		WriteTransactionTemplate template = repositoryService.getWriteTransactionTemplate(datasetName);
+		//@formatter:off
+		template.execute(new WriteTransactionCallback() {
+			//@formatter:on
+			@Override
+			public void executeInTransaction(Dataset dataset) throws Exception {
+				try {
+					dataset.removeNamedModel(modelName);
+				} catch (Exception e) {
+					if ( LOG.isDebugEnabled() ) {
+						LOG.debug("xx deleteNamedModel() > Exception Stacktrace:", e);
+					}
+					if ( LOG.isErrorEnabled() ) {
+						LOG.error("<< deleteNamedModel() > The named model: '{}', couldn't be deleted.", modelName);
+					}
+				}
 			}
-			throw e;
-		}
-
-		DatasetTransactionUtil.beginDatasetTransaction(dataset, datasetName, ReadWrite.WRITE);
-
-		try {
-			dataset.removeNamedModel(name);
-		} catch (Exception e) {
-			if ( LOG.isDebugEnabled() ) {
-				LOG.debug("xx deleteNamedModel() > Exception Stacktrace:", e);
-			}
-			if ( LOG.isErrorEnabled() ) {
-				LOG.error("<< deleteNamedModel() > The named model: '{}', couldn't be deleted.", name);
-			}
-		} finally {
-			DatasetTransactionUtil.closeDatasetTransaction(dataset, datasetName, true);
-		}
+		});
 	}
 
 	// ==== End: Model Related Methods

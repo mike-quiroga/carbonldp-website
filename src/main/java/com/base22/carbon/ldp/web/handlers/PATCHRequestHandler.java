@@ -1,172 +1,219 @@
 package com.base22.carbon.ldp.web.handlers;
 
+import java.text.MessageFormat;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
-import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
-import org.springframework.ui.Model;
+
+import com.base22.carbon.CarbonException;
+import com.base22.carbon.HttpHeaders;
+import com.base22.carbon.apps.Application;
+import com.base22.carbon.ldp.models.LDPRSource;
+import com.base22.carbon.ldp.models.URIObject;
+import com.base22.carbon.ldp.patch.PATCHRequest;
+import com.base22.carbon.ldp.patch.PATCHRequestFactory;
+import com.base22.carbon.models.ErrorResponse;
+import com.base22.carbon.models.ErrorResponseFactory;
+import com.base22.carbon.utils.HTTPUtil;
+import com.hp.hpl.jena.rdf.model.Model;
+import com.hp.hpl.jena.rdf.model.Resource;
+import com.hp.hpl.jena.rdf.model.ResourceFactory;
+import com.hp.hpl.jena.shared.Lock;
 
 @Component
 @Scope(proxyMode = ScopedProxyMode.TARGET_CLASS, value = "request")
 public class PATCHRequestHandler extends AbstractLDPRequestHandler {
-	public ResponseEntity<Object> handlePATCHRequest(String applicationIdentifier, Model model, HttpServletRequest request, HttpServletResponse response,
-			HttpEntity<byte[]> entity) {
+
+	public ResponseEntity<Object> handlePATCHRequest(String appSlug, Model requestModel, HttpServletRequest request, HttpServletResponse response)
+			throws CarbonException {
+
+		Application application = getApplicationFromContext();
+
+		String targetURI = getTargetURI(request);
+		URIObject targetURIObject = getTargetURIObject(targetURI);
+
+		if ( ! targetResourceExists(targetURIObject) ) {
+			return handleNonExistentResource(targetURI, requestModel, request, response);
+		}
+
+		Resource requestMainResouce = getRequestModelMainResource(requestModel);
+
+		if ( ! patchRequestWasProvided(requestMainResouce) ) {
+			return handleNonPATCHRequest(targetURI, requestModel, request, response);
+		}
+
+		PATCHRequest patchRequest = getPATCHRequest(requestMainResouce);
+
+		validatePATCHRequest(patchRequest);
+
+		LDPRSource targetRDFSource = getTargetRDFSource(targetURIObject, application);
+
+		String requestETag = getRequestETag(request);
+
+		if ( eTagWasProvided(requestETag) ) {
+			return handleConditionalPATCH(targetURIObject, patchRequest, targetRDFSource, requestETag, application, request, response);
+		} else {
+			return handleNonConditionalPATCH(targetURIObject, patchRequest, targetRDFSource, application, request, response);
+		}
+	}
+
+	private ResponseEntity<Object> handleNonPATCHRequest(String targetURI, Model requestModel, HttpServletRequest request, HttpServletResponse response) {
+		String friendlyMessage = "The request isn't a valid PATCH request.";
+		String debugMessage = "The request didn't contain a cp:PATCHRequest.";
+
+		if ( LOG.isDebugEnabled() ) {
+			LOG.debug("<< handleNonConditionalPATCH() > {}", debugMessage);
+		}
+
+		ErrorResponseFactory factory = new ErrorResponseFactory();
+		ErrorResponse errorObject = factory.create();
+		errorObject.setFriendlyMessage(friendlyMessage);
+		errorObject.setDebugMessage(debugMessage);
+
+		return HTTPUtil.createErrorResponseEntity(errorObject, HttpStatus.PRECONDITION_REQUIRED);
+
+	}
+
+	private ResponseEntity<Object> handleNonConditionalPATCH(URIObject targetURIObject, PATCHRequest patchRequest, LDPRSource targetRDFSource,
+			Application application, HttpServletRequest request, HttpServletResponse response) {
+		String debugMessage = "An If-Match header wasn't provided.";
+
+		if ( LOG.isDebugEnabled() ) {
+			LOG.debug("<< handleNonConditionalPATCH() > {}", debugMessage);
+		}
+
+		ErrorResponseFactory factory = new ErrorResponseFactory();
+		ErrorResponse errorObject = factory.create();
+		errorObject.setFriendlyMessage(debugMessage);
+		errorObject.setDebugMessage(debugMessage);
+		errorObject.addHeaderIssue("If-Match", null, "required", null);
+
+		return HTTPUtil.createErrorResponseEntity(errorObject, HttpStatus.PRECONDITION_REQUIRED);
+
+	}
+
+	private ResponseEntity<Object> handleConditionalPATCH(URIObject targetURIObject, PATCHRequest patchRequest, LDPRSource targetRDFSource, String requestETag,
+			Application application, HttpServletRequest request, HttpServletResponse response) throws CarbonException {
+
+		String targetETag = getTargetETag(targetRDFSource);
+
+		if ( targetETag == null ) {
+			if ( LOG.isErrorEnabled() ) {
+				LOG.error("xx handleConditionalPATCH() > The ");
+			}
+		} else {
+			if ( ! compareETags(requestETag, targetETag) ) {
+				return handleNonMatchinETags(targetURIObject, requestETag, targetETag, request, response);
+			}
+		}
+
+		return handlePATCHRequestActions(targetURIObject, patchRequest, targetRDFSource, requestETag, application, request, response);
+	}
+
+	private ResponseEntity<Object> handleNonMatchinETags(URIObject targetURIObject, String requestETag, String targetETag, HttpServletRequest request,
+			HttpServletResponse response) {
+		String debugMessage = MessageFormat.format("The If-Match header didn''t match the document resource ETag. If-Match: {0}, ETag: {1}", requestETag,
+				targetETag);
+
+		if ( LOG.isDebugEnabled() ) {
+			LOG.debug("<< handleNonMatchinETags() > {}", debugMessage);
+		}
+
+		ErrorResponseFactory factory = new ErrorResponseFactory();
+		ErrorResponse errorObject = factory.create();
+		errorObject.setHttpStatus(HttpStatus.PRECONDITION_FAILED);
+		errorObject.setFriendlyMessage("The resource has been externally modified while processing the request. The request will be aborted.");
+		errorObject.setDebugMessage(debugMessage);
+
+		return HTTPUtil.createErrorResponseEntity(errorObject);
+	}
+
+	private ResponseEntity<Object> handlePATCHRequestActions(URIObject targetURIObject, PATCHRequest patchRequest, LDPRSource targetRDFSource,
+			String requestETag, Application application, HttpServletRequest request, HttpServletResponse response) throws CarbonException {
+
+		validatePATCHRequestActions(patchRequest);
+
+		applyPATCHRequestActions(patchRequest, application);
+
+		touchTargetRDFSource(targetURIObject, targetRDFSource);
 
 		return new ResponseEntity<Object>(HttpStatus.NOT_IMPLEMENTED);
+	}
 
-		//@formatter:off
-		/*
-		
-		if ( LOG.isTraceEnabled() ) {
-			LOG.trace(">> handlePatch()");
-		}
-		if ( LOG.isDebugEnabled() ) {
-			LOG.debug("-- handlePatch() > request info: {}", HttpUtil.printRequestInfo(request));
-		}
-
-		String contentTypeHeader = request.getHeader(HttpHeaders.CONTENT_TYPE);
-		String charset = null;
-
-		if ( contentTypeHeader != null ) {
-			charset = getCharsetFromContentType(contentTypeHeader);
-		}
-
-		if ( ! entity.hasBody() ) {
-			LOG.error("<< handlePatch() > The request doesn't have an entity body.");
-			return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
-		}
-
-		byte[] eBody = entity.getBody();
-		InputStream entityBodyInputStream = new ByteArrayInputStream(eBody);
-
+	private boolean patchRequestWasProvided(Resource resource) throws CarbonException {
+		PATCHRequestFactory factory = new PATCHRequestFactory();
 		try {
-			if ( charset == null ) {
-				entityBodyInputStream = prepareEntityBodyInputStream(entityBodyInputStream);
-			} else {
-				entityBodyInputStream = prepareEntityBodyInputStream(entityBodyInputStream, charset);
-			}
+			return factory.isPATCHRequest(resource);
 		} catch (CarbonException e) {
-			return HttpUtil.createErrorResponseEntity(e, HttpStatus.BAD_REQUEST);
+			e.getErrorObject().setHttpStatus(HttpStatus.INTERNAL_SERVER_ERROR);
+			throw e;
 		}
+	}
 
-		// Before parsing, save the inputStrem by converting it to a String
-		String entityBodyString = null;
+	protected PATCHRequest getPATCHRequest(Resource resource) throws CarbonException {
+		PATCHRequest patchRequest = null;
+		PATCHRequestFactory factory = new PATCHRequestFactory();
 		try {
-			entityBodyString = ConvertInputStream.toString(entityBodyInputStream);
-			entityBodyInputStream = ConvertString.toInputStream(entityBodyString);
-		} catch (IOException e) {
-
+			patchRequest = factory.create(resource);
+		} catch (CarbonException e) {
+			e.getErrorObject().setHttpStatus(HttpStatus.INTERNAL_SERVER_ERROR);
+			throw e;
 		}
+		return patchRequest;
+	}
 
-		String requestURI = HttpUtil.getRequestURL(request);
+	protected void validatePATCHRequest(PATCHRequest patchRequest) {
+		// TODO Auto-generated method stub
+	}
 
-		com.hp.hpl.jena.rdf.model.Model oldDocumentModel;
-
-		TurtlePatch turtlePatch = null;
+	protected LDPRSource getTargetRDFSource(URIObject targetURIObject, Application application) throws CarbonException {
+		LDPRSource targetRDFSource = null;
 		try {
-			turtlePatch = new TurtlePatch(entityBodyString, requestURI);
-		} catch (Exception exception) {
-			LOG.error("<< handlePatch() > The entity body couldn't be parsed.");
-			return new ResponseEntity<Object>(exception.getMessage(), HttpStatus.BAD_REQUEST);
+			targetRDFSource = ldpService.getLDPRSource(targetURIObject, application.getDatasetName());
+		} catch (CarbonException e) {
+			e.getErrorObject().setHttpStatus(HttpStatus.INTERNAL_SERVER_ERROR);
+			throw e;
 		}
+		return targetRDFSource;
+	}
 
-		// Does the document exist?
-		try {
-			if ( ! rdfService.namedModelExists(requestURI, dataset) ) {
-				LOG.error("<< handlePatch() > The document doesn't exist.");
-				return new ResponseEntity<Object>(HttpStatus.NOT_FOUND);
-			}
-		} catch (CarbonException exception) {
-			return new ResponseEntity<Object>(HttpStatus.INTERNAL_SERVER_ERROR);
+	protected String getRequestETag(HttpServletRequest request) {
+		return request.getHeader(HttpHeaders.IF_MATCH);
+	}
+
+	protected boolean eTagWasProvided(String requestETag) {
+		return requestETag != null;
+	}
+
+	private String getTargetETag(LDPRSource targetRDFSource) {
+		return targetRDFSource.getETag();
+	}
+
+	private void validatePATCHRequestActions(PATCHRequest patchRequest) {
+		// TODO Auto-generated method stub
+
+	}
+
+	private void applyPATCHRequestActions(PATCHRequest patchRequest, Application application) throws CarbonException {
+		Model model = rdfService.getNamedModel("http://carbonldp.com/apps/legacy/test", application.getDatasetName());
+		if ( model.supportsTransactions() ) {
+			model.begin();
+			model.enterCriticalSection(Lock.WRITE);
+			model.add(model.getResource("http://carbonldp.com/apps/legacy/test"), ResourceFactory.createProperty("http://worked.com/"), "Yeah it did");
+			model.leaveCriticalSection();
+			model.commit();
+			model.close();
 		}
+	}
 
-		// Get the documentModel to update
-		try {
-			oldDocumentModel = rdfService.getNamedModel(requestURI, dataset);
-		} catch (CarbonException exception) {
-			return new ResponseEntity<Object>(HttpStatus.INTERNAL_SERVER_ERROR);
-		}
+	private void touchTargetRDFSource(URIObject targetURIObject, LDPRSource targetRDFSource) {
+		// TODO Auto-generated method stub
 
-		// Check the precondition
-		String etagToMatch = request.getHeader(HttpHeaders.IF_MATCH);
-		if ( etagToMatch == null ) {
-			// It already exists and the client didn't send an ETag to match
-			return new ResponseEntity<Object>(
-					"Aan If-Match header wasn't provided. The If-Match header must contain a long number that points to the desired document resource version to update.",
-					HttpStatus.PRECONDITION_REQUIRED);
-		}
-
-		Resource oldResource = oldDocumentModel.getResource(requestURI);
-
-		Long resourceETag = null, requestETag = null;
-
-		try {
-			requestETag = Long.parseLong(etagToMatch);
-		} catch (NumberFormatException e) {
-			return new ResponseEntity<Object>("The supplied If-Match header is incorrect. A long number is expected.", HttpStatus.BAD_REQUEST);
-		}
-		try {
-			resourceETag = oldResource.getProperty(LDPRS.MODIFIED_P).getLong();
-		} catch (NullPointerException exception) {
-			LOG.error(FATAL, "<< handlePatch() > Resource's etag property doesn't exist. ResourceURI: {}", requestURI);
-			return new ResponseEntity<Object>(HttpStatus.INTERNAL_SERVER_ERROR);
-		} catch (NumberFormatException exception) {
-			LOG.error(FATAL, "<< handlePatch() > Resource's etag property doesn't have the proper format (expecting long). ResourceURI: {}. ETag: {}",
-					requestURI, oldResource.getProperty(LDPRS.MODIFIED_P).toString());
-			return new ResponseEntity<Object>(HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-
-		if ( ! resourceETag.equals(requestETag) ) {
-			// ETags didn't matched!
-			LOG.error("<< handlePatch() > The If-Match header didn't match the resource ETag. If-Match: {}, ETag: {}", requestETag, resourceETag);
-			return new ResponseEntity<Object>("The If-Match header provided and the resource version didn't match (maybe it was alterated during request?).",
-					HttpStatus.PRECONDITION_FAILED);
-		}
-
-		// ETags matched, continue updating the resource
-		turtlePatch.setDefaultPrefixes(Carbon.CONFIGURED_PREFIXES);
-		String deleteQuery = turtlePatch.getDeleteQuery();
-		String insertQuery = turtlePatch.getInsertQuery();
-
-		SparqlQuery deleteSparqlQuery = new SparqlQuery(SparqlQuery.TYPE.UPDATE, dataset, deleteQuery);
-		SparqlQuery insertSparqlQuery = new SparqlQuery(SparqlQuery.TYPE.UPDATE, dataset, insertQuery);
-
-		if ( deleteQuery != null ) {
-			try {
-				sparqlService.update(deleteSparqlQuery, requestURI);
-			} catch (CarbonException exception) {
-				return new ResponseEntity<Object>(HttpStatus.INTERNAL_SERVER_ERROR);
-			}
-		}
-
-		if ( insertQuery != null ) {
-			try {
-				sparqlService.update(insertSparqlQuery, requestURI);
-			} catch (CarbonException exception) {
-				return new ResponseEntity<Object>(HttpStatus.INTERNAL_SERVER_ERROR);
-			}
-		}
-
-		Long newETag = null;
-		try {
-			newETag = ldpService.touchLDPRSource(requestURI, dataset);
-		} catch (CarbonException exception) {
-			return new ResponseEntity<Object>(HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-
-		MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
-		headers.add(HttpHeaders.LOCATION, requestURI);
-		headers.add(HttpHeaders.ETAG, HttpUtil.formatWeakETag(String.valueOf(newETag)));
-		headers.add(HttpHeaders.ACCEPT_PATCH, "text/turtle");
-
-		return new ResponseEntity<Object>("The resource has been updated.", headers, HttpStatus.OK);
-		
-		*/
-		//@formatter:on
 	}
 }

@@ -30,7 +30,7 @@ public class RequestInterceptor implements HandlerInterceptor {
 	}
 
 	public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
-		repositoryService.release();
+		// repositoryService.release();
 	}
 
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
