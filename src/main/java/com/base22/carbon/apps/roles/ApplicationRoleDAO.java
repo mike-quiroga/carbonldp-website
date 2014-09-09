@@ -37,13 +37,13 @@ public interface ApplicationRoleDAO {
 	@PostFilter("hasPermission(filterObject, 'READ')")
 	public List<ApplicationRole> getApplicationRolesOfApplication(UUID applicationUUID) throws CarbonException;
 
-	@PostFilter("hasPermission(filterObject, 'READ'")
+	@PostFilter("hasPermission(filterObject, 'READ')")
 	public List<ApplicationRole> getAllParentsOfApplicationRole(UUID applicationRoleUUID) throws CarbonException;
 
-	@PostFilter("hasPermission(filterObject, 'READ'")
+	@PostFilter("hasPermission(filterObject, 'READ')")
 	public List<ApplicationRole> getChildrenOfApplicationRole(UUID applicationRoleUUID) throws CarbonException;
 
-	@PostFilter("hasPermission(filterObject, 'READ'")
+	@PostFilter("hasPermission(filterObject, 'READ')")
 	public List<ApplicationRole> getAllChildrenOfApplicationRole(UUID applicationRoleUUID) throws CarbonException;
 
 	// TODO: Edit Methods
@@ -57,7 +57,7 @@ public interface ApplicationRoleDAO {
 	@PostFilter("hasPermission(filterObject, 'READ')")
 	public List<ApplicationRole> getApplicationRolesOfAgent(UUID agentUUID) throws CarbonException;
 
-	@PostFilter("hasPermission(filterObject, 'READ'")
+	@PostFilter("hasPermission(filterObject, 'READ')")
 	public List<ApplicationRole> getApplicationRolesOfAgent(UUID agentUUID, UUID applicationUUID) throws CarbonException;
 
 	@PreAuthorize("hasPermission(#applicationRole, 'REMOVE_AGENTS')")

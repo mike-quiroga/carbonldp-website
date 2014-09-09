@@ -7,7 +7,6 @@ import com.base22.carbon.CarbonException;
 import com.base22.carbon.FactoryException;
 import com.base22.carbon.ldp.models.LDPResource;
 import com.base22.carbon.ldp.models.LDPResourceFactory;
-import com.base22.carbon.ldp.patch.SetActionClass.Resources;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.Resource;
 
@@ -35,7 +34,11 @@ public class SetActionFactory extends LDPResourceFactory {
 	}
 
 	public boolean isSetAction(LDPResource ldpResource) {
-		return ldpResource.isOfType(Resources.CLASS.getPrefixedURI().getURI());
+		Resource resource = ldpResource.getResource();
+		if ( ! resource.isURIResource() ) {
+			return false;
+		}
+		return resource.getURI().endsWith(SetActionClass.UNIQUE_SUFIX);
 	}
 
 	protected class SetActionImpl extends LDPResourceImpl implements SetAction {

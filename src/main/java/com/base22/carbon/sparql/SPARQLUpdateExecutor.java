@@ -1,6 +1,7 @@
 package com.base22.carbon.sparql;
 
 import com.base22.carbon.CarbonException;
+import com.base22.carbon.jdbc.TransactionException;
 import com.base22.carbon.models.ErrorResponse;
 import com.base22.carbon.models.ErrorResponseFactory;
 import com.base22.carbon.repository.services.RepositoryService;
@@ -20,9 +21,28 @@ public class SPARQLUpdateExecutor extends SPARQLExecutor {
 		this.repositoryService = repositoryService;
 	}
 
-	public void execute(UpdateRequest updateRequest, String datasetName, String namedModelName) throws CarbonException {
-		Model domainModel = this.getDomainModel(namedModelName, datasetName);
-		execute(updateRequest, domainModel);
+	public void execute(final UpdateRequest updateRequest, String datasetName, final String namedModelName) throws CarbonException {
+		WriteTransactionTemplate template = repositoryService.getWriteTransactionTemplate(datasetName);
+		//@formatter:off
+		template.execute(new WriteTransactionCallback() {
+			//@formatter:on
+			@Override
+			public void executeInTransaction(Dataset dataset) throws Exception {
+				Model namedModel = null;
+				try {
+					namedModel = dataset.getNamedModel(namedModelName);
+				} catch (Exception e) {
+					if ( LOG.isDebugEnabled() ) {
+						LOG.debug("xx execute() > Exception Stacktrace:", e);
+					}
+					if ( LOG.isErrorEnabled() ) {
+						LOG.error("<< execute() > The named model: '{}', couldn't be retrieved.", namedModelName);
+					}
+					throw new TransactionException("The named model couldn't be retrieved.");
+				}
+				execute(updateRequest, namedModel);
+			}
+		});
 	}
 
 	public void execute(UpdateRequest updateRequest, Model domainModel) throws CarbonException {
@@ -55,17 +75,6 @@ public class SPARQLUpdateExecutor extends SPARQLExecutor {
 				executeUpdate(updateRequest, dataset);
 			}
 		});
-	}
-
-	private Model getDomainModel(String namedModelName, String datasetName) throws CarbonException {
-		Model domainModel = null;
-		try {
-			domainModel = this.repositoryService.getNamedModel(namedModelName, datasetName);
-		} catch (CarbonException e) {
-			// TODO: FT
-			throw e;
-		}
-		return domainModel;
 	}
 
 	private void executeUpdate(UpdateRequest updateRequest, Dataset dataset) throws CarbonException {
