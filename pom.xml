@@ -2,7 +2,7 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.base22.carbon</groupId>
-	<artifactId>carbon-ldp</artifactId>
+	<artifactId>carbon-platform</artifactId>
 	<packaging>war</packaging>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>Carbon LDP</name>
@@ -293,6 +293,9 @@
 		        <groupId>org.apache.maven.plugins</groupId>
 		        <artifactId>maven-compiler-plugin</artifactId>
 		        <configuration>
+				<excludes>
+					<exclude>src/main/java/com/base22/carbon/repository/services/DB2RepositoryService.java</exclude>
+				</excludes>
 		            <source>1.7</source>
 		            <target>1.7</target>
 		        </configuration>
