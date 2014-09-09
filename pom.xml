@@ -299,6 +299,13 @@
     		<scope>system</scope>
     		<systemPath>${project.basedir}/src/main/webapp/WEB-INF/lib/db2rdf.jar</systemPath>
 		</dependency>
+		<dependency>
+			<groupId>com.ibm.rdfstore</groupId>
+    		<artifactId>rdfstore</artifactId>
+    		<version>10.0.0</version>
+    		<scope>system</scope>
+    		<systemPath>${project.basedir}/src/main/webapp/WEB-INF/lib/rdfstore.jar</systemPath>
+		</dependency>
 	</dependencies>
 	<build>
 		<finalName></finalName>
