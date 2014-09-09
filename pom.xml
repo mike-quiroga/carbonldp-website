@@ -294,7 +294,7 @@
 		        <artifactId>maven-compiler-plugin</artifactId>
 		        <configuration>
 				<excludes>
-					<exclude>src/main/java/com/base22/carbon/repository/services/DB2RepositoryService.java</exclude>
+					<exclude>**/src/main/java/com/base22/carbon/repository/services/DB2RepositoryService.java</exclude>
 				</excludes>
 		            <source>1.7</source>
 		            <target>1.7</target>
