@@ -1,11 +1,8 @@
 package com.base22.carbon.repository.services;
 
 import java.io.File;
-import java.io.FilenameFilter;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -14,7 +11,8 @@ import org.slf4j.LoggerFactory;
 import org.slf4j.Marker;
 import org.slf4j.MarkerFactory;
 
-import com.base22.carbon.repository.DatasetTransactionUtil;
+import com.base22.carbon.CarbonException;
+import com.base22.carbon.jdbc.TransactionException;
 import com.base22.carbon.repository.RepositoryServiceException;
 import com.hp.hpl.jena.query.Dataset;
 import com.hp.hpl.jena.query.ReadWrite;
@@ -33,7 +31,6 @@ public class TDBRepositoryService implements RepositoryService {
 	protected Map<String, Model> namedModelRegistry;
 
 	public void release() throws RepositoryServiceException {
-		closeNamedModelRegistry();
 		closeDatasetRegistry();
 
 		// TODO: Remove this
@@ -53,8 +50,7 @@ public class TDBRepositoryService implements RepositoryService {
 			Entry<String, Dataset> datasetEntry = datasetIterator.next();
 			Dataset datasetToClose = datasetEntry.getValue();
 			if ( datasetToClose.isInTransaction() ) {
-				// TODO: Handle a dataset that is still in a transaction
-				datasetToClose.commit();
+				datasetToClose.end();
 			}
 			try {
 				TDB.sync(datasetToClose);
@@ -79,88 +75,6 @@ public class TDBRepositoryService implements RepositoryService {
 			}
 		}
 		datasetRegistry = null;
-	}
-
-	private void closeNamedModelRegistry() {
-		if ( namedModelRegistry == null ) {
-			return;
-		}
-		if ( namedModelRegistry.size() == 0 ) {
-			return;
-		}
-		Iterator<Entry<String, Model>> namedModelIterator = namedModelRegistry.entrySet().iterator();
-		while (namedModelIterator.hasNext()) {
-			Entry<String, Model> namedModelEntry = namedModelIterator.next();
-			Model namedModelToClose = namedModelEntry.getValue();
-
-			try {
-				TDB.sync(namedModelToClose);
-			} catch (Exception e) {
-				if ( LOG.isDebugEnabled() ) {
-					LOG.debug("xx closeNamedModelRegistry() > Exception Stacktrace:", e);
-				}
-				if ( LOG.isErrorEnabled() ) {
-					LOG.error("-- closeNamedModelRegistry() > Named model '{}' couldn't be synched.", namedModelEntry.getKey());
-				}
-			} finally {
-				try {
-					// TODO: Is this needed?
-					// namedModelToClose.close();
-				} catch (Exception e) {
-					if ( LOG.isDebugEnabled() ) {
-						LOG.debug("xx closeNamedModelRegistry() > Exception Stacktrace:", e);
-					}
-					if ( LOG.isErrorEnabled() ) {
-						LOG.error("-- closeNamedModelRegistry() > Named model '{}' Couldn't be closed.", namedModelEntry.getKey());
-					}
-				}
-			}
-		}
-		namedModelRegistry = null;
-
-	}
-
-	public Model getNamedModel(String name, String datasetName) throws RepositoryServiceException {
-		Model namedModel = null;
-
-		// Check if the dataset is already in the registry
-		if ( namedModelRegistry != null ) {
-			if ( namedModelRegistry.containsKey(name) ) {
-				return namedModelRegistry.get(name);
-			}
-		} else {
-			namedModelRegistry = new HashMap<String, Model>();
-		}
-
-		Dataset dataset = null;
-
-		try {
-			dataset = this.getDataset(datasetName);
-		} catch (RepositoryServiceException e) {
-			if ( LOG.isErrorEnabled() ) {
-				LOG.error("<< getNamedModel() > The dataset '{}', couldn't be retrieved.", datasetName);
-			}
-			throw e;
-		}
-
-		DatasetTransactionUtil.beginDatasetTransaction(dataset, datasetName, ReadWrite.READ);
-
-		try {
-			namedModel = dataset.getNamedModel(name);
-		} catch (Exception e) {
-			if ( LOG.isDebugEnabled() ) {
-				LOG.debug("xx getNamedModel() > Exception Stacktrace:", e);
-			}
-			if ( LOG.isErrorEnabled() ) {
-				LOG.error("<< getNamedModel() > The named model: '{}', couldn't be retrieved.", name);
-			}
-		} finally {
-			DatasetTransactionUtil.closeDatasetTransaction(dataset, datasetName, false);
-		}
-
-		namedModelRegistry.put(name, namedModel);
-
-		return namedModel;
 	}
 
 	public void createDataset(String datasetName) throws RepositoryServiceException {
@@ -203,7 +117,7 @@ public class TDBRepositoryService implements RepositoryService {
 		datasetRegistry.put(datasetName, dataset);
 	}
 
-	public Dataset getDataset(String datasetName) throws RepositoryServiceException {
+	private Dataset getDataset(String datasetName) throws RepositoryServiceException {
 		Dataset dataset = null;
 
 		String directory = datasetDirectory + datasetName;
@@ -242,24 +156,6 @@ public class TDBRepositoryService implements RepositoryService {
 		return dataset;
 	}
 
-	public List<String> getDatasets() throws RepositoryServiceException {
-		List<String> datasets = null;
-
-		// Get all the directories inside of the datasetDirectory
-		File file = new File(datasetDirectory);
-		String[] directories = file.list(new FilenameFilter() {
-
-			public boolean accept(File current, String name) {
-				return new File(current, name).isDirectory();
-			}
-
-		});
-
-		datasets = Arrays.asList(directories);
-
-		return datasets;
-	}
-
 	public boolean datasetExists(String datasetName) throws RepositoryServiceException {
 		boolean exists = false;
 
@@ -283,4 +179,132 @@ public class TDBRepositoryService implements RepositoryService {
 		this.datasetDirectory = datasetDirectory;
 	}
 
+	public <T> ReadTransactionTemplate<T> getReadTransactionTemplate(String datasetName) throws CarbonException {
+		Dataset dataset = this.getDataset(datasetName);
+		return new TDBReadTransactionTemplate<T>(datasetName, dataset);
+	}
+
+	public WriteTransactionTemplate getWriteTransactionTemplate(String datasetName) throws CarbonException {
+		Dataset dataset = this.getDataset(datasetName);
+		return new TDBWriteTransactionTemplate(datasetName, dataset);
+	}
+
+	private abstract class TDBTransactionTemplate {
+		protected final String datasetName;
+		protected final Dataset dataset;
+
+		TDBTransactionTemplate(String datasetName, Dataset dataset) throws TransactionException {
+			if ( ! dataset.supportsTransactions() ) {
+				if ( LOG.isErrorEnabled() ) {
+					LOG.error("<< constructor() > The dataset provided: '{}', doesn't support transactions.", datasetName);
+				}
+				throw new TransactionException("The dataset doesn't support transactions.");
+			}
+
+			this.datasetName = datasetName;
+			this.dataset = dataset;
+		}
+
+		protected void beginDatasetTransaction(ReadWrite type) throws TransactionException {
+			try {
+				dataset.begin(type);
+			} catch (Exception e) {
+				if ( LOG.isDebugEnabled() ) {
+					LOG.debug("xx beginDatasetTransaction() > Exception Stacktrace:", e);
+				}
+				if ( LOG.isErrorEnabled() ) {
+					LOG.error("<< beginDatasetTransaction() > A transaction couldn't be opened in the dataset '{}'.", datasetName);
+				}
+				throw new TransactionException("A transaction couldn't be opened in the dataset.");
+			}
+		}
+
+		protected void endDatasetTransaction() throws TransactionException {
+			try {
+				dataset.end();
+			} catch (Exception e) {
+				if ( LOG.isDebugEnabled() ) {
+					LOG.debug("xx closeDatasetTransaction() > Exception Stacktrace:", e);
+				}
+				if ( LOG.isErrorEnabled() ) {
+					LOG.error("<< closeDatasetTransaction() > A transaction couldn't be closed in the dataset '{}'.", datasetName);
+				}
+				throw new TransactionException("A transaction couldn't be finished.");
+			}
+		}
+	}
+
+	private class TDBWriteTransactionTemplate extends TDBTransactionTemplate implements WriteTransactionTemplate {
+
+		TDBWriteTransactionTemplate(String datasetName, Dataset dataset) throws TransactionException {
+			super(datasetName, dataset);
+		}
+
+		@Override
+		public void execute(WriteTransactionCallback callback) throws CarbonException {
+			beginDatasetTransaction(ReadWrite.WRITE);
+			try {
+				callback.executeInTransaction(dataset);
+				commitDatasetTransaction();
+			} catch (CarbonException e) {
+				throw e;
+			} catch (Exception e) {
+				if ( LOG.isDebugEnabled() ) {
+					LOG.debug("xx execute() > Exception Stacktrace:", e);
+				}
+				if ( LOG.isErrorEnabled() ) {
+					LOG.error("<< execute() > An error ocurred executing the callback.");
+				}
+				throw new TransactionException("An unexpected exception ocurred while executing the callback.");
+			} finally {
+				endDatasetTransaction();
+			}
+		}
+
+		private void commitDatasetTransaction() throws TransactionException {
+			try {
+				dataset.commit();
+			} catch (Exception e) {
+				if ( LOG.isDebugEnabled() ) {
+					LOG.debug("xx commitDatasetTransaction() > Exception Stacktrace:", e);
+				}
+				if ( LOG.isErrorEnabled() ) {
+					LOG.error("<< commitDatasetTransaction() > The dataset '{}', couldn't be commited.", datasetName);
+				}
+				throw new TransactionException("The dataset couldn't be commited.");
+			}
+		}
+	}
+
+	private class TDBReadTransactionTemplate<T> extends TDBTransactionTemplate implements ReadTransactionTemplate<T> {
+
+		TDBReadTransactionTemplate(String datasetName, Dataset dataset) throws TransactionException {
+			super(datasetName, dataset);
+		}
+
+		@Override
+		public T execute(ReadTransactionCallback<T> callback) throws CarbonException {
+			T result = null;
+
+			beginDatasetTransaction(ReadWrite.READ);
+			try {
+				result = callback.executeInTransaction(dataset);
+			} catch (CarbonException e) {
+				throw e;
+			} catch (Exception e) {
+				if ( LOG.isDebugEnabled() ) {
+					LOG.debug("xx execute() > Exception Stacktrace:", e);
+				}
+				if ( LOG.isErrorEnabled() ) {
+					LOG.error("<< execute() > An error ocurred executing the callback.");
+				}
+				throw new TransactionException("An unexpected exception ocurred while executing the callback.");
+			} finally {
+				endDatasetTransaction();
+			}
+
+			return result;
+		}
+
+	}
 }

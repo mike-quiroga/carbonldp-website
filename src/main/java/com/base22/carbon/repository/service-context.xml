@@ -31,29 +31,14 @@
 	<bean name="configurationService" class="com.base22.carbon.ConfigurationService" init-method="init"></bean>
 	
 	<!-- bean name="repositoryService" class="com.base22.carbon.services.RepositoryServiceFactory" factory-method="create" scope="thread" -->
-	 <bean name="repositoryService" class="com.base22.carbon.repository.RepositoryServiceFactory" factory-method="create" scope="request">
+	 <bean name="repositoryService" class="com.base22.carbon.repository.RepositoryServiceFactory" factory-method="create">
 		<!-- Change this value to toggle between the repository configuration -->
 		<constructor-arg value="TDB"></constructor-arg>
 		<constructor-arg>
 			<map>
-				<entry key="DB2">
-					<bean class="com.base22.carbon.repository.services.DB2RepositoryService">
-						<property name="dbUrl" value="jdbc:db2://localhost:50000/CARBON" />
-						<property name="dbUsername" value="db2admin" />
-						<property name="dbPassword" value="db2admin" />
-						<property name="schema" value="DB2ADMIN" />
-					</bean>
-				</entry>
 				<entry key="TDB">
 					<bean class="com.base22.carbon.repository.services.TDBRepositoryService">
 						<property name="datasetDirectory" value="/opt/carbon/TDB/" />
-					</bean>
-				</entry>
-				<entry key="ORACLE-SDB">
-					<bean class="com.base22.carbon.repository.services.OracleSDBRepositoryService">
-						<property name="jdbcBaseURL" value="jdbc:oracle:thin:@localhost:1521:" />
-						<property name="oracleUser" value="SYSTEM" />
-						<property name="oraclePassword" value="oracleadmin" />
 					</bean>
 				</entry>
 			</map>

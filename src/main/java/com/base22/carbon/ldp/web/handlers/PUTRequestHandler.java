@@ -253,8 +253,7 @@ public class PUTRequestHandler extends AbstractCreationRequestHandler {
 
 	private void checkETags() throws CarbonException {
 		if ( this.targetETag != null ) {
-			this.ifMatchHeader = this.ifMatchHeader.contains("\"") ? this.ifMatchHeader.split("\"")[1] : this.ifMatchHeader;
-			if ( ! this.targetETag.equals(ifMatchHeader) ) {
+			if ( ! compareETags(this.ifMatchHeader, this.targetETag) ) {
 				String debugMessage = MessageFormat.format("The If-Match header didn''t match the document resource ETag. If-Match: {0}, ETag: {1}",
 						this.ifMatchHeader, this.targetETag);
 

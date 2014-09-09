@@ -4,8 +4,9 @@ import com.base22.carbon.CarbonException;
 import com.base22.carbon.models.ErrorResponse;
 import com.base22.carbon.models.ErrorResponseFactory;
 import com.base22.carbon.repository.services.RepositoryService;
+import com.base22.carbon.repository.services.WriteTransactionCallback;
+import com.base22.carbon.repository.services.WriteTransactionTemplate;
 import com.hp.hpl.jena.query.Dataset;
-import com.hp.hpl.jena.query.ReadWrite;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.shared.Lock;
 import com.hp.hpl.jena.update.UpdateAction;
@@ -44,25 +45,16 @@ public class SPARQLUpdateExecutor extends SPARQLExecutor {
 		}
 	}
 
-	public void execute(UpdateRequest updateRequest, String datasetName) throws CarbonException {
-		Dataset dataset = this.getDataset(datasetName, this.repositoryService);
-
-		if ( dataset.supportsTransactions() ) {
-			this.beginDatasetTransaction(datasetName, dataset, ReadWrite.WRITE);
-		}
-		try {
-			this.executeUpdate(updateRequest, dataset);
-		} finally {
-			try {
-				if ( dataset.supportsTransactions() ) {
-					this.commitDataset(datasetName, dataset);
-				}
-			} finally {
-				if ( dataset.supportsTransactions() ) {
-					this.endDatasetTransaction(datasetName, dataset);
-				}
+	public void execute(final UpdateRequest updateRequest, String datasetName) throws CarbonException {
+		WriteTransactionTemplate template = repositoryService.getWriteTransactionTemplate(datasetName);
+		//@formatter:off
+		template.execute(new WriteTransactionCallback() {
+			//@formatter:on
+			@Override
+			public void executeInTransaction(Dataset dataset) throws Exception {
+				executeUpdate(updateRequest, dataset);
 			}
-		}
+		});
 	}
 
 	private Model getDomainModel(String namedModelName, String datasetName) throws CarbonException {
@@ -114,27 +106,6 @@ public class SPARQLUpdateExecutor extends SPARQLExecutor {
 			errorObject.setFriendlyMessage(friendlyMessage);
 			throw new CarbonException(errorObject);
 		}
-	}
-
-	private void commitDataset(String datasetName, Dataset dataset) throws CarbonException {
-		try {
-			dataset.commit();
-		} catch (Exception e) {
-			if ( LOG.isDebugEnabled() ) {
-				LOG.debug("xx commitDataset() > Exception Stacktrace:", e);
-			}
-
-			if ( LOG.isErrorEnabled() ) {
-				LOG.error("-- commitDataset() > The dataset: '{}', couldn't be commited.", datasetName);
-			}
-			String friendlyMessage = "An unexpected error ocurred.";
-
-			ErrorResponseFactory errorFactory = new ErrorResponseFactory();
-			ErrorResponse errorObject = errorFactory.create();
-			errorObject.setFriendlyMessage(friendlyMessage);
-			throw new CarbonException(errorObject);
-		}
-
 	}
 
 	private void commitModel(Model domainModel) throws CarbonException {
