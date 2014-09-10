@@ -5,6 +5,7 @@ import com.base22.carbon.jdbc.TransactionException;
 import com.base22.carbon.models.ErrorResponse;
 import com.base22.carbon.models.ErrorResponseFactory;
 import com.base22.carbon.repository.services.RepositoryService;
+import com.base22.carbon.repository.services.TransactionNamedModelCache;
 import com.base22.carbon.repository.services.WriteTransactionCallback;
 import com.base22.carbon.repository.services.WriteTransactionTemplate;
 import com.hp.hpl.jena.query.Dataset;
@@ -27,10 +28,10 @@ public class SPARQLUpdateExecutor extends SPARQLExecutor {
 		template.execute(new WriteTransactionCallback() {
 			//@formatter:on
 			@Override
-			public void executeInTransaction(Dataset dataset) throws Exception {
+			public void executeInTransaction(Dataset dataset, TransactionNamedModelCache namedModelCache) throws Exception {
 				Model namedModel = null;
 				try {
-					namedModel = dataset.getNamedModel(namedModelName);
+					namedModel = namedModelCache.getNamedModel(namedModelName);
 				} catch (Exception e) {
 					if ( LOG.isDebugEnabled() ) {
 						LOG.debug("xx execute() > Exception Stacktrace:", e);
@@ -71,7 +72,7 @@ public class SPARQLUpdateExecutor extends SPARQLExecutor {
 		template.execute(new WriteTransactionCallback() {
 			//@formatter:on
 			@Override
-			public void executeInTransaction(Dataset dataset) throws Exception {
+			public void executeInTransaction(Dataset dataset, TransactionNamedModelCache namedModelCache) throws Exception {
 				executeUpdate(updateRequest, dataset);
 			}
 		});

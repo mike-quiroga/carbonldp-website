@@ -61,10 +61,6 @@ public class SPARQLService {
 			query = QueryFactory.create(queryString);
 		} catch (QueryParseException e) {
 			if ( exposeErrors ) {
-				if ( LOG.isErrorEnabled() ) {
-					LOG.error("-- createQuery() > The SPARQL Query: \n{}\n, couldn't be parsed.", queryString);
-				}
-
 				String friendlyMessage = "The SPARQL Query isn't valid.";
 				String debugMessage = e.getMessage();
 

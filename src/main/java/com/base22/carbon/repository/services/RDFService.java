@@ -1,5 +1,7 @@
 package com.base22.carbon.repository.services;
 
+import java.util.List;
+
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,11 +12,15 @@ import org.springframework.stereotype.Service;
 
 import com.base22.carbon.Carbon;
 import com.base22.carbon.CarbonException;
+import com.base22.carbon.ldp.models.URIObject;
 import com.base22.carbon.repository.RepositoryServiceException;
 import com.base22.carbon.sparql.SPARQLService;
 import com.base22.carbon.utils.HTTPUtil;
 import com.hp.hpl.jena.query.Dataset;
 import com.hp.hpl.jena.rdf.model.Model;
+import com.hp.hpl.jena.rdf.model.Property;
+import com.hp.hpl.jena.rdf.model.Resource;
+import com.hp.hpl.jena.rdf.model.Statement;
 
 @Service("rdfService")
 @Scope(proxyMode = ScopedProxyMode.TARGET_CLASS, value = "request")
@@ -77,6 +83,61 @@ public class RDFService {
 		return this.triplesExist(uri, null, null, dataset);
 	}
 
+	public void addStatements(final URIObject uriObject, final List<Statement> statements, String datasetName) throws CarbonException {
+		WriteTransactionTemplate template = repositoryService.getWriteTransactionTemplate(datasetName);
+		addStatements(uriObject, statements, template);
+		template.execute();
+	}
+
+	public void addStatements(final URIObject uriObject, final List<Statement> statements, WriteTransactionTemplate template) throws CarbonException {
+		//@formatter:off
+		template.addCallback(new WriteTransactionCallback() {
+			//@formatter:on
+			@Override
+			public void executeInTransaction(Dataset dataset, TransactionNamedModelCache namedModelCache) throws Exception {
+				Model model = namedModelCache.getNamedModel(uriObject.getURI());
+				model.add(statements);
+			}
+		});
+	}
+
+	public void deleteStatements(final URIObject uriObject, final List<Statement> statements, String datasetName) throws CarbonException {
+		WriteTransactionTemplate template = repositoryService.getWriteTransactionTemplate(datasetName);
+		deleteStatements(uriObject, statements, template);
+		template.execute();
+	}
+
+	public void deleteStatements(final URIObject uriObject, final List<Statement> statements, WriteTransactionTemplate template) throws CarbonException {
+		//@formatter:off
+		template.addCallback(new WriteTransactionCallback() {
+			//@formatter:on
+			@Override
+			public void executeInTransaction(Dataset dataset, TransactionNamedModelCache namedModelCache) throws Exception {
+				Model model = namedModelCache.getNamedModel(uriObject.getURI());
+				model.remove(statements);
+			}
+		});
+	}
+
+	public void deleteProperty(final URIObject uriObject, final String subjectURI, final Property property, String datasetName) throws CarbonException {
+		WriteTransactionTemplate template = repositoryService.getWriteTransactionTemplate(datasetName);
+		deleteProperty(uriObject, subjectURI, property, template);
+		template.execute();
+	}
+
+	public void deleteProperty(final URIObject uriObject, final String subjectURI, final Property property, WriteTransactionTemplate template)
+			throws CarbonException {
+		template.addCallback(new WriteTransactionCallback() {
+			// @formatter:on
+			@Override
+			public void executeInTransaction(Dataset dataset, TransactionNamedModelCache namedModelCache) throws Exception {
+				Model model = namedModelCache.getNamedModel(uriObject.getURI());
+				Resource resource = model.getResource(subjectURI);
+				resource.removeAll(property);
+			}
+		});
+	}
+
 	public Model getNamedModel(final String name, String datasetName) throws CarbonException {
 		Model model = null;
 
@@ -109,7 +170,7 @@ public class RDFService {
 		template.execute(new WriteTransactionCallback() {
 			//@formatter:on
 			@Override
-			public void executeInTransaction(Dataset dataset) throws Exception {
+			public void executeInTransaction(Dataset dataset, TransactionNamedModelCache namedModelCache) throws Exception {
 				// TODO Auto-generated method stub
 				try {
 					dataset.addNamedModel(modelName, model);
@@ -157,7 +218,7 @@ public class RDFService {
 		template.execute(new WriteTransactionCallback() {
 			//@formatter:on
 			@Override
-			public void executeInTransaction(Dataset dataset) throws Exception {
+			public void executeInTransaction(Dataset dataset, TransactionNamedModelCache namedModelCache) throws Exception {
 				try {
 					dataset.removeNamedModel(modelName);
 				} catch (Exception e) {

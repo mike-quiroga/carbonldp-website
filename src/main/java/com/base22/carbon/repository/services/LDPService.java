@@ -1,5 +1,6 @@
 package com.base22.carbon.repository.services;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -28,10 +29,14 @@ import com.base22.carbon.ldp.models.LDPContainerQueryOptions;
 import com.base22.carbon.ldp.models.LDPContainerQueryOptions.METHOD;
 import com.base22.carbon.ldp.models.LDPRSource;
 import com.base22.carbon.ldp.models.LDPRSourceFactory;
+import com.base22.carbon.ldp.models.RDFSourceClass;
 import com.base22.carbon.ldp.models.URIObject;
 import com.base22.carbon.ldp.models.WrapperForLDPNR;
 import com.base22.carbon.ldp.models.WrapperForLDPNRFactory;
+import com.base22.carbon.ldp.patch.PATCHRequest;
+import com.base22.carbon.ldp.patch.PATCHService;
 import com.base22.carbon.sparql.SPARQLService;
+import com.hp.hpl.jena.datatypes.xsd.XSDDatatype;
 import com.hp.hpl.jena.graph.Node;
 import com.hp.hpl.jena.query.Query;
 import com.hp.hpl.jena.query.QuerySolution;
@@ -39,6 +44,8 @@ import com.hp.hpl.jena.query.ResultSet;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.Property;
+import com.hp.hpl.jena.rdf.model.RDFNode;
+import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.rdf.model.ResourceFactory;
 import com.hp.hpl.jena.rdf.model.Statement;
 
@@ -47,9 +54,13 @@ import com.hp.hpl.jena.rdf.model.Statement;
 public class LDPService {
 
 	@Autowired
+	private RepositoryService repositoryService;
+	@Autowired
 	private RDFService rdfService;
 	@Autowired
 	private SPARQLService sparqlService;
+	@Autowired
+	private PATCHService patchService;
 	@Autowired
 	private URIObjectDAO uriObjectDAO;
 	@Autowired
@@ -318,19 +329,25 @@ public class LDPService {
 		return realURI;
 	}
 
-	// TODO: Refactor Method
 	@PreAuthorize("hasPermission(#documentURIObject, 'UPDATE')")
-	public long touchLDPRSource(URIObject documentURIObject, String dataset) throws CarbonException {
-		String documentURI = documentURIObject.getURI();
+	public DateTime touchRDFSource(URIObject documentURIObject, String datasetName) throws CarbonException {
+		WriteTransactionTemplate template = repositoryService.getWriteTransactionTemplate(datasetName);
+		DateTime modified = touchRDFSource(documentURIObject, template);
+		template.execute();
+		return modified;
+	}
 
-		DateTime now = DateTime.now();
+	private DateTime touchRDFSource(URIObject documentURIObject, WriteTransactionTemplate template) throws CarbonException {
+		final DateTime modified = DateTime.now();
 
-		// Create remove older modified timestamp sparql query
-		rdfService.deleteTriples(documentURI, documentURI, LDPRS.MODIFIED, null, dataset);
+		rdfService.deleteProperty(documentURIObject, documentURIObject.getURI(), RDFSourceClass.Properties.MODIFIED.getProperty(), template);
 
-		// Insert the new timestamp
-		rdfService.insertTriple(documentURI, documentURI, LDPRS.MODIFIED, now.getMillis(), dataset);
-		return now.getMillis();
+		Resource resource = ResourceFactory.createResource(documentURIObject.getURI());
+		RDFNode object = ResourceFactory.createTypedLiteral(modified.toString(), XSDDatatype.XSDdateTime);
+		Statement modifiedStatement = ResourceFactory.createStatement(resource, RDFSourceClass.Properties.MODIFIED.getProperty(), object);
+		rdfService.addStatements(documentURIObject, Arrays.asList(modifiedStatement), template);
+
+		return modified;
 	}
 
 	@PreAuthorize("hasPermission(#documentURIObject, 'EXTEND')")
@@ -451,6 +468,19 @@ public class LDPService {
 		//@formatter:on
 
 		sparqlService.update(query.toString(), dataset);
+	}
+
+	@PreAuthorize("hasPermission(#documentURIObject, 'UPDATE')")
+	public DateTime patchRDFSource(URIObject documentURIObject, PATCHRequest patchRequest, String datasetName) throws CarbonException {
+		WriteTransactionTemplate template = repositoryService.getWriteTransactionTemplate(datasetName);
+
+		patchService.executePATCHRequest(documentURIObject, patchRequest, datasetName, template);
+
+		DateTime modified = touchRDFSource(documentURIObject, template);
+
+		template.execute();
+
+		return modified;
 	}
 
 	// ========= End: LDP-RS Related Methods
