@@ -22,9 +22,6 @@ public class HttpHeaderValue {
 
 	public String getMain() {
 		StringBuilder mainBuilder = new StringBuilder();
-		if ( this.mainKey != null ) {
-			mainBuilder.append(this.mainKey).append("=");
-		}
 		if ( this.mainValue != null ) {
 			mainBuilder.append(this.mainValue);
 
@@ -35,6 +32,9 @@ public class HttpHeaderValue {
 					mainBuilder.append("\"");
 				}
 			}
+		}
+		if ( this.mainKey != null ) {
+			mainBuilder.insert(0, "=").insert(0, this.mainKey);
 		}
 		if ( mainBuilder.length() == 0 ) {
 			return null;
@@ -65,9 +65,6 @@ public class HttpHeaderValue {
 
 	public String getExtending() {
 		StringBuilder extendingBuilder = new StringBuilder();
-		if ( this.extendingKey != null ) {
-			extendingBuilder.append(this.extendingKey).append("=");
-		}
 		if ( this.extendingValue != null ) {
 			extendingBuilder.append(this.extendingValue);
 			if ( ! (this.extendingValue.startsWith("<") && this.extendingValue.endsWith(">")) ) {
@@ -77,6 +74,9 @@ public class HttpHeaderValue {
 					extendingBuilder.append("\"");
 				}
 			}
+		}
+		if ( this.extendingKey != null ) {
+			extendingBuilder.insert(0, "=").insert(0, this.extendingKey);
 		}
 		if ( extendingBuilder.length() == 0 ) {
 			return null;
