@@ -3,8 +3,8 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.base22.carbon</groupId>
 	<artifactId>carbon-platform</artifactId>
-	<packaging>war</packaging>
 	<version>0.0.1-SNAPSHOT</version>
+	<packaging>war</packaging>
 	<name>Carbon LDP</name>
 	<url>http://carbonldp.com/</url>
 
