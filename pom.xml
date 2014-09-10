@@ -1,14 +1,15 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>com.base22.carbon</groupId>
+	<groupId>com.carbon</groupId>
 	<artifactId>carbon-platform</artifactId>
-	<packaging>war</packaging>
 	<version>0.0.1-SNAPSHOT</version>
+	<packaging>war</packaging>
 	<name>Carbon LDP</name>
 	<url>http://carbonldp.com/</url>
 
 	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<spring.version>4.0.3.RELEASE</spring.version>
 		<spring-security.version>3.2.2.RELEASE</spring-security.version>
 		<jackson-2-version>2.2.3</jackson-2-version>
@@ -279,7 +280,7 @@
 		</dependency>
 	</dependencies>
 	<build>
-		<finalName></finalName>
+	<finalName>carbon-platform</finalName>
 		<plugins>
 		    <plugin>
 		        <groupId>org.apache.maven.plugins</groupId>
