@@ -42,7 +42,7 @@ import com.base22.carbon.authorization.acl.CarbonACLPermissionFactory;
 import com.base22.carbon.authorization.acl.AceSR.SubjectType;
 import com.base22.carbon.groups.Group;
 import com.base22.carbon.groups.GroupDAO;
-import com.base22.carbon.ldp.models.LDPResource;
+import com.base22.carbon.ldp.models.RDFResource;
 import com.base22.carbon.models.ErrorResponse;
 import com.base22.carbon.models.ErrorResponseFactory;
 import com.base22.carbon.repository.services.LDPService;
@@ -69,7 +69,7 @@ public class LDPPermissionService {
 
 	static final Logger LOG = LoggerFactory.getLogger(LDPPermissionService.class);
 
-	public void injectACLToLDPResource(Object identityObject, LDPResource ldpResource) throws CarbonException {
+	public void injectACLToLDPResource(Object identityObject, RDFResource ldpResource) throws CarbonException {
 		Acl acl = null;
 		try {
 			acl = permissionService.getACL(identityObject);

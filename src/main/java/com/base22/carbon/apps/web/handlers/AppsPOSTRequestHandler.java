@@ -23,8 +23,8 @@ import com.base22.carbon.apps.ApplicationRDFFactory;
 import com.base22.carbon.apps.roles.ApplicationRole;
 import com.base22.carbon.authorization.AuthorizationUtil;
 import com.base22.carbon.authorization.acl.CarbonACLPermissionFactory.CarbonPermission;
-import com.base22.carbon.ldp.models.LDPContainer;
-import com.base22.carbon.ldp.models.LDPContainerFactory;
+import com.base22.carbon.ldp.models.Container;
+import com.base22.carbon.ldp.models.ContainerFactory;
 import com.base22.carbon.ldp.models.URIObject;
 import com.base22.carbon.models.ErrorResponse;
 import com.base22.carbon.models.ErrorResponseFactory;
@@ -63,7 +63,7 @@ public class AppsPOSTRequestHandler extends AbstractAppRequestHandler {
 		Sid rootAppRoleSid = registerRootAppRole(rootAppRole);
 		addAgentToRootAppRole(rootAppRole);
 
-		LDPContainer rootContainer = createRootContainer(requestApplication);
+		Container rootContainer = createRootContainer(requestApplication);
 		URIObject rootContainerUO = saveRootContainer(rootContainer, requestApplication);
 
 		addDefaultPermissionsToApplication(rootAppRoleSid, requestApplication);
@@ -269,7 +269,7 @@ public class AppsPOSTRequestHandler extends AbstractAppRequestHandler {
 		return new GrantedAuthoritySid(rootAppRole);
 	}
 
-	private LDPContainer createRootContainer(Application requestApplication) throws CarbonException {
+	private Container createRootContainer(Application requestApplication) throws CarbonException {
 		StringBuilder uriBuilder = new StringBuilder();
 
 		//@formatter:off
@@ -280,8 +280,8 @@ public class AppsPOSTRequestHandler extends AbstractAppRequestHandler {
 			.append("/")
 		;
 		
-		LDPContainerFactory containerFactory = new LDPContainerFactory();
-		LDPContainer rootContainer = null;
+		ContainerFactory containerFactory = new ContainerFactory();
+		Container rootContainer = null;
 		try {
 			rootContainer = containerFactory.createBasicContainer(uriBuilder.toString());
 		} catch (CarbonException e) {
@@ -293,7 +293,7 @@ public class AppsPOSTRequestHandler extends AbstractAppRequestHandler {
 
 	}
 
-	private URIObject saveRootContainer(LDPContainer rootContainer, Application requestApplication) throws CarbonException {
+	private URIObject saveRootContainer(Container rootContainer, Application requestApplication) throws CarbonException {
 		URIObject rootContainerUO = null;
 		try {
 			rootContainerUO = ldpService.createRootContainer(rootContainer, requestApplication.getDatasetName());

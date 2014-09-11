@@ -18,11 +18,11 @@ import com.base22.carbon.CarbonException;
 import com.base22.carbon.HttpHeaders;
 import com.base22.carbon.APIPreferences.InteractionModel;
 import com.base22.carbon.apps.Application;
-import com.base22.carbon.ldp.RdfUtil;
-import com.base22.carbon.ldp.models.LDPContainer;
-import com.base22.carbon.ldp.models.LDPContainerFactory;
-import com.base22.carbon.ldp.models.LDPRSource;
-import com.base22.carbon.ldp.models.LDPRSourceFactory;
+import com.base22.carbon.ldp.RDFUtil;
+import com.base22.carbon.ldp.models.Container;
+import com.base22.carbon.ldp.models.ContainerFactory;
+import com.base22.carbon.ldp.models.RDFSource;
+import com.base22.carbon.ldp.models.RDFSourceFactory;
 import com.base22.carbon.ldp.models.URIObject;
 import com.base22.carbon.models.ErrorResponse;
 import com.base22.carbon.models.ErrorResponseFactory;
@@ -46,16 +46,16 @@ public abstract class AbstractCreationRequestHandler extends AbstractLDPRequestH
 
 	protected String targetURI;
 	protected URIObject targetURIObject;
-	protected LDPRSource targetRDFSource;
+	protected RDFSource targetRDFSource;
 
 	protected String requestURI;
 	protected URIObject requestURIObject;
 	protected Model requestModel;
-	protected LDPRSource requestRDFSource;
-	protected LDPContainer requestContainer;
+	protected RDFSource requestRDFSource;
+	protected Container requestContainer;
 
-	protected LDPRSourceFactory ldpRSourceFactory;
-	protected LDPContainerFactory ldpContainerFactory;
+	protected RDFSourceFactory ldpRSourceFactory;
+	protected ContainerFactory ldpContainerFactory;
 
 	protected void resetGlobalVariables() {
 		this.response = null;
@@ -155,7 +155,7 @@ public abstract class AbstractCreationRequestHandler extends AbstractLDPRequestH
 	protected void addDefaultPrefixes() throws CarbonException {
 		// Set default prefixes
 		try {
-			this.entityBodyInputStream = RdfUtil.setDefaultNSPrefixes(this.entityBodyInputStream, language, true);
+			this.entityBodyInputStream = RDFUtil.setDefaultNSPrefixes(this.entityBodyInputStream, language, true);
 		} catch (IOException e) {
 			String debugMessage = "There was a problem while trying to include the default prefixes to the entity body.";
 
@@ -237,7 +237,7 @@ public abstract class AbstractCreationRequestHandler extends AbstractLDPRequestH
 
 	protected void parseEntityBody(String baseURI) throws CarbonException {
 		try {
-			this.requestModel = RdfUtil.createInMemoryModel(this.entityBodyInputStream, this.language, baseURI);
+			this.requestModel = RDFUtil.createInMemoryModel(this.entityBodyInputStream, this.language, baseURI);
 		} catch (IOException e) {
 			if ( LOG.isDebugEnabled() ) {
 				LOG.debug("xx parseEntityBody() > Exception Stacktrace:", e);
@@ -304,16 +304,16 @@ public abstract class AbstractCreationRequestHandler extends AbstractLDPRequestH
 		}
 	}
 
-	protected LDPRSourceFactory getLDPRSourceFactory() {
+	protected RDFSourceFactory getLDPRSourceFactory() {
 		if ( this.ldpRSourceFactory == null ) {
-			this.ldpRSourceFactory = new LDPRSourceFactory();
+			this.ldpRSourceFactory = new RDFSourceFactory();
 		}
 		return this.ldpRSourceFactory;
 	}
 
-	protected LDPContainerFactory getLDPContainerFactory() {
+	protected ContainerFactory getLDPContainerFactory() {
 		if ( this.ldpContainerFactory == null ) {
-			this.ldpContainerFactory = new LDPContainerFactory();
+			this.ldpContainerFactory = new ContainerFactory();
 		}
 		return this.ldpContainerFactory;
 	}

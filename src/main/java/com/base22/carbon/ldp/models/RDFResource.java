@@ -8,7 +8,7 @@ import com.base22.carbon.authorization.acl.ACLSystemResource;
 import com.hp.hpl.jena.rdf.model.Property;
 import com.hp.hpl.jena.rdf.model.Resource;
 
-public interface LDPResource {
+public interface RDFResource {
 	public Resource getResource();
 
 	public String getURI();

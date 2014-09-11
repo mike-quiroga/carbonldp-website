@@ -8,20 +8,18 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.base22.carbon.CarbonException;
 import com.base22.carbon.FactoryException;
-import com.base22.carbon.ldp.LDPNR;
-import com.base22.carbon.ldp.LDPNR.Properties;
-import com.base22.carbon.ldp.LDPNR.Resources;
-import com.base22.carbon.ldp.models.LDPRSourceFactory.LDPRSourceImpl;
+import com.base22.carbon.ldp.models.NonRDFSourceClass.Properties;
+import com.base22.carbon.ldp.models.NonRDFSourceClass.Resources;
 import com.base22.carbon.repository.FileUtil;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.rdf.model.Statement;
 
-public class WrapperForLDPNRFactory extends LDPRSourceFactory {
+public class WrapperForLDPNRFactory extends RDFSourceFactory {
 
 	public WrapperForLDPNR create(Resource resource) throws CarbonException {
-		LDPRSource rdfSource = super.create(resource);
+		RDFSource rdfSource = super.create(resource);
 		if ( ! this.isWrapperForLDPNR(rdfSource) ) {
 			throw new FactoryException("The resource isn't a WrapperForLDPNR object.");
 		}
@@ -29,7 +27,7 @@ public class WrapperForLDPNRFactory extends LDPRSourceFactory {
 	}
 
 	public WrapperForLDPNR create(String wrapperURI, Model model) throws CarbonException {
-		LDPRSource rdfSource = super.create(wrapperURI, model);
+		RDFSource rdfSource = super.create(wrapperURI, model);
 		if ( ! this.isWrapperForLDPNR(rdfSource) ) {
 			throw new FactoryException("The resource isn't a WrapperForLDPNR object.");
 		}
@@ -65,7 +63,7 @@ public class WrapperForLDPNRFactory extends LDPRSourceFactory {
 		return wrapper;
 	}
 
-	public boolean isWrapperForLDPNR(LDPResource ldpResource) {
+	public boolean isWrapperForLDPNR(RDFResource ldpResource) {
 		return ldpResource.isOfType(Resources.WRAPPER.getURI()) || ldpResource.isOfType(Resources.LDPNR.getURI());
 	}
 
@@ -79,7 +77,7 @@ public class WrapperForLDPNRFactory extends LDPRSourceFactory {
 		@Override
 		public List<String> getLinkTypes() {
 			List<String> types = super.getLinkTypes();
-			types.add(LDPNR.LINK_TYPE);
+			types.add(NonRDFSourceClass.LINK_TYPE);
 			return types;
 		}
 

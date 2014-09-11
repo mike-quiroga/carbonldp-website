@@ -9,16 +9,15 @@ import org.joda.time.format.ISODateTimeFormat;
 import com.base22.carbon.Carbon;
 import com.base22.carbon.CarbonException;
 import com.base22.carbon.FactoryException;
-import com.base22.carbon.ldp.LDPRS;
-import com.base22.carbon.ldp.models.LDPResourceFactory.LDPResourceImpl;
+import com.base22.carbon.ldp.models.RDFResourceFactory.LDPResourceImpl;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.rdf.model.Statement;
 import com.hp.hpl.jena.rdf.model.StmtIterator;
 
-public class LDPRSourceFactory extends LDPResourceFactory {
+public class RDFSourceFactory extends RDFResourceFactory {
 
-	public LDPRSource create(Resource resource) throws CarbonException {
+	public RDFSource create(Resource resource) throws CarbonException {
 		if ( ! resource.isURIResource() ) {
 			if ( LOG.isErrorEnabled() ) {
 				LOG.error("<< create() > The resource is not a named resource.");
@@ -29,7 +28,7 @@ public class LDPRSourceFactory extends LDPResourceFactory {
 	}
 
 	// TODO: Use the super class create method and add proper validation
-	public LDPRSource create(String resourceURI, Model resourceModel) throws CarbonException {
+	public RDFSource create(String resourceURI, Model resourceModel) throws CarbonException {
 		// Try to fetch the resource that matches the URI from the model provided
 		Resource resource = null;
 		try {
@@ -58,11 +57,11 @@ public class LDPRSourceFactory extends LDPResourceFactory {
 		return new LDPRSourceImpl(resource);
 	}
 
-	public LDPRSource asLDPRSource(LDPRSource original) throws CarbonException {
+	public RDFSource asLDPRSource(RDFSource original) throws CarbonException {
 		return this.create(original.getResource());
 	}
 
-	protected class LDPRSourceImpl extends LDPResourceImpl implements LDPRSource {
+	protected class LDPRSourceImpl extends LDPResourceImpl implements RDFSource {
 
 		public LDPRSourceImpl(Resource resource) {
 			super(resource);
@@ -70,7 +69,7 @@ public class LDPRSourceFactory extends LDPResourceFactory {
 
 		public DateTime getCreated() {
 			DateTime created = null;
-			Statement statement = this.resource.getProperty(LDPRS.CREATED_P);
+			Statement statement = this.resource.getProperty(RDFSourceClass.CREATED_P);
 			if ( statement == null ) {
 				return created;
 			}
@@ -85,7 +84,7 @@ public class LDPRSourceFactory extends LDPResourceFactory {
 
 		public DateTime getModified() {
 			DateTime modified = null;
-			Statement statement = this.resource.getProperty(LDPRS.MODIFIED_P);
+			Statement statement = this.resource.getProperty(RDFSourceClass.MODIFIED_P);
 			if ( statement == null ) {
 				return modified;
 			}
@@ -112,7 +111,7 @@ public class LDPRSourceFactory extends LDPResourceFactory {
 		@Override
 		public List<String> getLinkTypes() {
 			List<String> types = super.getLinkTypes();
-			types.add(LDPRS.LINK_TYPE);
+			types.add(RDFSourceClass.LINK_TYPE);
 			return types;
 		}
 
@@ -189,15 +188,15 @@ public class LDPRSourceFactory extends LDPResourceFactory {
 		}
 
 		public void setTimestamps(DateTime createdDate, DateTime modifiedDate) {
-			if ( this.resource.hasProperty(LDPRS.CREATED_P) ) {
-				this.resource.removeAll(LDPRS.CREATED_P);
+			if ( this.resource.hasProperty(RDFSourceClass.CREATED_P) ) {
+				this.resource.removeAll(RDFSourceClass.CREATED_P);
 			}
-			if ( this.resource.hasProperty(LDPRS.MODIFIED_P) ) {
-				this.resource.removeAll(LDPRS.MODIFIED_P);
+			if ( this.resource.hasProperty(RDFSourceClass.MODIFIED_P) ) {
+				this.resource.removeAll(RDFSourceClass.MODIFIED_P);
 			}
 
-			this.resource.addLiteral(LDPRS.CREATED_P, createdDate.toString());
-			this.resource.addLiteral(LDPRS.MODIFIED_P, modifiedDate.toString());
+			this.resource.addLiteral(RDFSourceClass.CREATED_P, createdDate.toString());
+			this.resource.addLiteral(RDFSourceClass.MODIFIED_P, modifiedDate.toString());
 		}
 
 		public void touch() {

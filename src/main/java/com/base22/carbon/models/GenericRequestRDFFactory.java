@@ -7,14 +7,14 @@ import java.util.UUID;
 import com.base22.carbon.CarbonException;
 import com.base22.carbon.FactoryException;
 import com.base22.carbon.authentication.AuthenticationUtil;
-import com.base22.carbon.ldp.models.LDPResource;
-import com.base22.carbon.ldp.models.LDPResourceFactory;
+import com.base22.carbon.ldp.models.RDFResourceFactory;
+import com.base22.carbon.ldp.models.RDFResource;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.Property;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.rdf.model.ResourceFactory;
 
-public class GenericRequestRDFFactory extends LDPResourceFactory implements RDFResourceFactory<GenericRequestRDF> {
+public class GenericRequestRDFFactory extends RDFResourceFactory {
 
 	public static enum Resources implements RDFResourceEnum {
 		//@formatter:off
@@ -109,7 +109,7 @@ public class GenericRequestRDFFactory extends LDPResourceFactory implements RDFR
 
 	@Override
 	public GenericRequestRDF create(Resource resource) throws CarbonException {
-		LDPResource ldpResource = super.create(resource);
+		RDFResource ldpResource = super.create(resource);
 		if ( ! isRDFGenericRequest(ldpResource) ) {
 			throw new FactoryException("The resource isn't a GenericRequest object.");
 		}
@@ -118,18 +118,17 @@ public class GenericRequestRDFFactory extends LDPResourceFactory implements RDFR
 
 	@Override
 	public GenericRequestRDF create(String resourceURI, Model model) throws CarbonException {
-		LDPResource ldpResource = super.create(resourceURI, model);
+		RDFResource ldpResource = super.create(resourceURI, model);
 		if ( ! isRDFGenericRequest(ldpResource) ) {
 			throw new FactoryException("The resource isn't a GenericRequest object.");
 		}
 		return new RDFGenericRequestImpl(ldpResource.getResource());
 	}
 
-	public boolean isRDFGenericRequest(LDPResource ldpResource) throws CarbonException {
+	public boolean isRDFGenericRequest(RDFResource ldpResource) throws CarbonException {
 		return ldpResource.isOfType(Resources.CLASS.getPrefixedURI().getURI());
 	}
 
-	@Override
 	public List<String> validate(GenericRequestRDF toValidate) {
 		// TODO: IT
 		return null;

@@ -2,7 +2,7 @@ package com.base22.carbon.ldp.models;
 
 import com.base22.carbon.APIPreferences.InteractionModel;
 
-public interface LDPContainer extends LDPRSource {
+public interface Container extends RDFSource {
 
 	public String getTypeOfContainer();
 

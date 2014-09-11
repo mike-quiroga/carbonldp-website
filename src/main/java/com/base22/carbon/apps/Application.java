@@ -6,7 +6,7 @@ import java.util.UUID;
 import com.base22.carbon.CarbonException;
 import com.base22.carbon.apps.roles.ApplicationRole;
 import com.base22.carbon.authentication.AuthenticationUtil;
-import com.base22.carbon.ldp.models.LDPResource;
+import com.base22.carbon.ldp.models.RDFResource;
 import com.base22.carbon.models.PrefixedURI;
 import com.base22.carbon.models.RDFPropertyEnum;
 import com.base22.carbon.models.RDFRepresentable;
@@ -191,7 +191,7 @@ public class Application extends UUIDObject implements RDFRepresentable<Applicat
 	}
 
 	@Override
-	public void recoverFromLDPR(LDPResource ldpResource) throws CarbonException {
+	public void recoverFromLDPR(RDFResource ldpResource) throws CarbonException {
 		ApplicationRDFFactory factory = new ApplicationRDFFactory();
 		ApplicationRDF rdfApplication = factory.create(ldpResource.getResource());
 

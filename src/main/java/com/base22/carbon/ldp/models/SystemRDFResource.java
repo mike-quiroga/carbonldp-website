@@ -1,6 +1,6 @@
 package com.base22.carbon.ldp.models;
 
 
-public interface LDPSystemResource extends LDPResource {
+public interface SystemRDFResource extends RDFResource {
 	public String getBaseURI();
 }

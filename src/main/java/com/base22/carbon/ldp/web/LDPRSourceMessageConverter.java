@@ -21,10 +21,10 @@ import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.http.converter.HttpMessageNotWritableException;
 import org.springframework.util.Assert;
 
-import com.base22.carbon.ldp.models.LDPRSource;
+import com.base22.carbon.ldp.models.RDFSource;
 import com.base22.carbon.utils.HTTPUtil;
 
-public class LDPRSourceMessageConverter implements HttpMessageConverter<LDPRSource> {
+public class LDPRSourceMessageConverter implements HttpMessageConverter<RDFSource> {
 
 	protected final Log logger = LogFactory.getLog(getClass());
 
@@ -45,7 +45,7 @@ public class LDPRSourceMessageConverter implements HttpMessageConverter<LDPRSour
 	}
 
 	protected boolean supports(Class<?> clazz) {
-		boolean supports = LDPRSource.class.isAssignableFrom(clazz);
+		boolean supports = RDFSource.class.isAssignableFrom(clazz);
 		return supports;
 	}
 
@@ -74,7 +74,7 @@ public class LDPRSourceMessageConverter implements HttpMessageConverter<LDPRSour
 	};
 
 	@Override
-	public LDPRSource read(Class<? extends LDPRSource> clazz, HttpInputMessage inputMessage) throws IOException, HttpMessageNotReadableException {
+	public RDFSource read(Class<? extends RDFSource> clazz, HttpInputMessage inputMessage) throws IOException, HttpMessageNotReadableException {
 		return null;
 	}
 
@@ -96,7 +96,7 @@ public class LDPRSourceMessageConverter implements HttpMessageConverter<LDPRSour
 	}
 
 	@Override
-	public void write(LDPRSource ldpRSource, MediaType contentType, HttpOutputMessage outputMessage) throws IOException, HttpMessageNotWritableException {
+	public void write(RDFSource ldpRSource, MediaType contentType, HttpOutputMessage outputMessage) throws IOException, HttpMessageNotWritableException {
 		HttpHeaders headers = outputMessage.getHeaders();
 
 		if ( headers.getContentType() == null ) {
@@ -124,7 +124,7 @@ public class LDPRSourceMessageConverter implements HttpMessageConverter<LDPRSour
 		outputMessage.getBody().flush();
 	}
 
-	private void writeLDPRSource(LDPRSource ldpRSource, MediaType contentType, OutputStream outputStream) throws IOException {
+	private void writeLDPRSource(RDFSource ldpRSource, MediaType contentType, OutputStream outputStream) throws IOException {
 		Lang languageToUse = null;
 		for (Lang language : supportedLanguages) {
 			if ( contentType.isCompatibleWith(contentTypeToMediaType(language.getContentType())) ) {
@@ -134,17 +134,17 @@ public class LDPRSourceMessageConverter implements HttpMessageConverter<LDPRSour
 		ldpRSource.getResource().getModel().write(outputStream, languageToUse.getName());
 	}
 
-	private void addLocationHeader(HttpHeaders headers, LDPRSource ldpRSource) {
+	private void addLocationHeader(HttpHeaders headers, RDFSource ldpRSource) {
 		headers.add(com.base22.carbon.HttpHeaders.LOCATION, ldpRSource.getURI());
 	}
 
-	private void addLinkTypeHeaders(HttpHeaders headers, LDPRSource ldpRSource) {
+	private void addLinkTypeHeaders(HttpHeaders headers, RDFSource ldpRSource) {
 		for (String types : ldpRSource.getLinkTypes()) {
 			headers.add(com.base22.carbon.HttpHeaders.LINK, types);
 		}
 	}
 
-	private void addETagHeader(HttpHeaders headers, LDPRSource ldpRSource) {
+	private void addETagHeader(HttpHeaders headers, RDFSource ldpRSource) {
 		if ( ldpRSource.getETag() != null ) {
 			headers.add(com.base22.carbon.HttpHeaders.ETAG, HTTPUtil.formatWeakETag(ldpRSource.getETag()));
 		}

@@ -16,8 +16,8 @@ import com.base22.carbon.apps.Application;
 import com.base22.carbon.apps.roles.ApplicationRole;
 import com.base22.carbon.apps.web.handlers.AbstractAppRequestHandler;
 import com.base22.carbon.authorization.AuthorizationUtil;
-import com.base22.carbon.ldp.models.LDPResource;
-import com.base22.carbon.ldp.models.LDPResourceFactory;
+import com.base22.carbon.ldp.models.RDFResource;
+import com.base22.carbon.ldp.models.RDFResourceFactory;
 import com.base22.carbon.models.ErrorResponse;
 import com.base22.carbon.models.ErrorResponseFactory;
 import com.base22.carbon.utils.HTTPUtil;
@@ -145,8 +145,8 @@ public class RolesPOSTRequestHandler extends AbstractAppRequestHandler {
 	}
 
 	protected ApplicationRole getRequestApplicationRole(Resource resource) throws CarbonException {
-		LDPResourceFactory factory = new LDPResourceFactory();
-		LDPResource ldpResource = null;
+		RDFResourceFactory factory = new RDFResourceFactory();
+		RDFResource ldpResource = null;
 		try {
 			ldpResource = factory.create(resource);
 		} catch (CarbonException e) {

@@ -17,8 +17,8 @@ import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.http.converter.HttpMessageNotWritableException;
 
-import com.base22.carbon.ldp.LDPNR;
-import com.base22.carbon.ldp.LDPR;
+import com.base22.carbon.ldp.models.NonRDFSourceClass;
+import com.base22.carbon.ldp.models.RDFResourceClass;
 import com.base22.carbon.ldp.models.WrapperForLDPNR;
 import com.base22.carbon.models.HttpHeaderValue;
 import com.base22.carbon.utils.HTTPUtil;
@@ -110,13 +110,13 @@ public class WrapperForLDPNRMessageConverter implements HttpMessageConverter<Wra
 		HttpHeaderValue header = null;
 
 		header = new HttpHeaderValue();
-		header.setMainValue(LDPR.Resources.CLASS.getUri());
+		header.setMainValue(RDFResourceClass.Resources.CLASS.getUri());
 		header.setExtendingKey("rel");
 		header.setExtendingValue("type");
 
 		headers.add(com.base22.carbon.HttpHeaders.LINK, header.toString());
 
-		header.setMainValue(LDPNR.NR_TYPE);
+		header.setMainValue(NonRDFSourceClass.NR_TYPE);
 
 		headers.add(com.base22.carbon.HttpHeaders.LINK, header.toString());
 	}

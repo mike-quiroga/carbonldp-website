@@ -2,7 +2,7 @@ package com.base22.carbon.ldp.models;
 
 import java.io.FileInputStream;
 
-public interface WrapperForLDPNR extends LDPRSource {
+public interface WrapperForLDPNR extends RDFSource {
 
 	public String getFileName();
 

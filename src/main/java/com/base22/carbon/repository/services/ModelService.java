@@ -24,16 +24,16 @@ import com.hp.hpl.jena.rdf.model.Property;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.rdf.model.Statement;
 
-@Service("rdfService")
+@Service("modelService")
 @Scope(proxyMode = ScopedProxyMode.TARGET_CLASS, value = "request")
-public class RDFService {
+public class ModelService {
 
 	@Autowired
 	private RepositoryService repositoryService;
 	@Autowired
 	private SPARQLService sparqlService;
 
-	static final Logger LOG = LoggerFactory.getLogger(RDFService.class);
+	static final Logger LOG = LoggerFactory.getLogger(ModelService.class);
 
 	public void init() {
 		if ( LOG.isTraceEnabled() ) {

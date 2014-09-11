@@ -21,7 +21,7 @@ import com.base22.carbon.CarbonException;
 import com.base22.carbon.HttpHeaders;
 import com.base22.carbon.APIPreferences.DeleteContainerPreference;
 import com.base22.carbon.apps.Application;
-import com.base22.carbon.ldp.models.LDPContainerQueryOptions;
+import com.base22.carbon.ldp.models.ContainerQueryOptions;
 import com.base22.carbon.ldp.models.URIObject;
 import com.base22.carbon.ldp.models.WrapperForLDPNR;
 import com.base22.carbon.models.ErrorResponse;
@@ -163,7 +163,7 @@ public class DELETERequestHandler extends AbstractLDPRequestHandler {
 		List<DeleteContainerPreference> preferences = getDeleteContainerPreferences(preferHeader);
 		// TODO: Remove this block when DeleteContainerPreference is accepted by the LDPService
 		// ===========
-		LDPContainerQueryOptions options = new LDPContainerQueryOptions(LDPContainerQueryOptions.METHOD.DELETE);
+		ContainerQueryOptions options = new ContainerQueryOptions(ContainerQueryOptions.METHOD.DELETE);
 		for (DeleteContainerPreference preference : preferences) {
 			switch (preference) {
 				case CONTAINED_RESOURCES:

@@ -14,7 +14,6 @@ import com.base22.carbon.FactoryException;
 import com.base22.carbon.authentication.AuthenticationUtil;
 import com.base22.carbon.authorization.acl.ACLSystemResource;
 import com.base22.carbon.authorization.acl.ACLSystemResourceFactory;
-import com.base22.carbon.ldp.LDPR;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.Property;
 import com.hp.hpl.jena.rdf.model.RDFNode;
@@ -23,22 +22,22 @@ import com.hp.hpl.jena.rdf.model.ResourceFactory;
 import com.hp.hpl.jena.rdf.model.Statement;
 import com.hp.hpl.jena.rdf.model.StmtIterator;
 
-public class LDPResourceFactory {
+public class RDFResourceFactory {
 
 	protected final Logger LOG;
 
-	public LDPResourceFactory() {
+	public RDFResourceFactory() {
 		this.LOG = LoggerFactory.getLogger(this.getClass());
 	}
 
-	public LDPResource create(Resource resource) throws CarbonException {
+	public RDFResource create(Resource resource) throws CarbonException {
 		if ( ! resource.isURIResource() ) {
 			throw new CarbonException("The resource isn't a URI Resource.");
 		}
 		return new LDPResourceImpl(resource);
 	}
 
-	public LDPResource create(String resourceURI, Model model) throws CarbonException {
+	public RDFResource create(String resourceURI, Model model) throws CarbonException {
 		// Try to fetch the resource that matches the URI from the model provided
 		Resource resource = null;
 		try {
@@ -61,7 +60,7 @@ public class LDPResourceFactory {
 
 	}
 
-	protected class LDPResourceImpl implements LDPResource {
+	protected class LDPResourceImpl implements RDFResource {
 
 		protected Resource resource;
 
@@ -316,14 +315,14 @@ public class LDPResourceFactory {
 		@Override
 		public boolean isOfType(String typeString) {
 			RDFNode type = ResourceFactory.createResource(typeString);
-			return resource.hasProperty(LDPR.Properties.RDF_TYPE.getProperty(), type);
+			return resource.hasProperty(RDFResourceClass.Properties.RDF_TYPE.getProperty(), type);
 		}
 
 		@Override
 		public Set<String> getTypes() {
 			Set<String> types = new HashSet<String>();
 
-			StmtIterator iterator = this.getResource().listProperties(LDPR.Properties.RDF_TYPE.getProperty());
+			StmtIterator iterator = this.getResource().listProperties(RDFResourceClass.Properties.RDF_TYPE.getProperty());
 
 			while (iterator.hasNext()) {
 				Statement statement = iterator.next();
@@ -347,21 +346,21 @@ public class LDPResourceFactory {
 
 		@Override
 		public void addType(Resource type) {
-			this.getResource().addProperty(LDPR.Properties.RDF_TYPE.getProperty(), type);
+			this.getResource().addProperty(RDFResourceClass.Properties.RDF_TYPE.getProperty(), type);
 		}
 
 		@Override
 		public void setType(Resource type) {
-			if ( this.getResource().hasProperty(LDPR.Properties.RDF_TYPE.getProperty()) ) {
-				this.getResource().removeAll(LDPR.Properties.RDF_TYPE.getProperty());
+			if ( this.getResource().hasProperty(RDFResourceClass.Properties.RDF_TYPE.getProperty()) ) {
+				this.getResource().removeAll(RDFResourceClass.Properties.RDF_TYPE.getProperty());
 			}
-			this.getResource().addProperty(LDPR.Properties.RDF_TYPE.getProperty(), type);
+			this.getResource().addProperty(RDFResourceClass.Properties.RDF_TYPE.getProperty(), type);
 		}
 
 		@Override
 		public void setTypes(List<Resource> types) {
-			if ( this.getResource().hasProperty(LDPR.Properties.RDF_TYPE.getProperty()) ) {
-				this.getResource().removeAll(LDPR.Properties.RDF_TYPE.getProperty());
+			if ( this.getResource().hasProperty(RDFResourceClass.Properties.RDF_TYPE.getProperty()) ) {
+				this.getResource().removeAll(RDFResourceClass.Properties.RDF_TYPE.getProperty());
 			}
 			for (Resource type : types) {
 				this.addType(type);
@@ -381,7 +380,7 @@ public class LDPResourceFactory {
 		@Override
 		public List<String> getLinkTypes() {
 			List<String> types = new ArrayList<String>();
-			types.add(LDPR.Resources.CLASS.getType());
+			types.add(RDFResourceClass.Resources.CLASS.getType());
 			return types;
 		}
 
@@ -404,11 +403,11 @@ public class LDPResourceFactory {
 
 		@Override
 		public ACLSystemResource getAclSR() {
-			if ( ! this.getResource().hasProperty(LDPR.Properties.HAS_ACL.getProperty()) ) {
+			if ( ! this.getResource().hasProperty(RDFResourceClass.Properties.HAS_ACL.getProperty()) ) {
 				return null;
 			}
 
-			Statement statement = this.getResource().getProperty(LDPR.Properties.HAS_ACL.getProperty());
+			Statement statement = this.getResource().getProperty(RDFResourceClass.Properties.HAS_ACL.getProperty());
 			if ( statement == null ) {
 				return null;
 			}
@@ -428,10 +427,10 @@ public class LDPResourceFactory {
 
 		@Override
 		public void setAclSR(ACLSystemResource aclSR) {
-			if ( this.getResource().hasProperty(LDPR.Properties.HAS_ACL.getProperty()) ) {
-				this.getResource().removeAll(LDPR.Properties.HAS_ACL.getProperty());
+			if ( this.getResource().hasProperty(RDFResourceClass.Properties.HAS_ACL.getProperty()) ) {
+				this.getResource().removeAll(RDFResourceClass.Properties.HAS_ACL.getProperty());
 			}
-			this.getResource().addProperty(LDPR.Properties.HAS_ACL.getProperty(), aclSR.getResource());
+			this.getResource().addProperty(RDFResourceClass.Properties.HAS_ACL.getProperty(), aclSR.getResource());
 		}
 	}
 }

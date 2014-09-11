@@ -9,7 +9,7 @@ import com.base22.carbon.CarbonException;
 import com.base22.carbon.agents.Agent;
 import com.base22.carbon.authorization.acl.AceSR;
 import com.base22.carbon.groups.Group;
-import com.base22.carbon.ldp.models.LDPResource;
+import com.base22.carbon.ldp.models.RDFResource;
 import com.base22.carbon.models.PrefixedURI;
 import com.base22.carbon.models.RDFPropertyEnum;
 import com.base22.carbon.models.RDFRepresentable;
@@ -253,7 +253,7 @@ public class ApplicationRole extends UUIDObject implements GrantedAuthority, RDF
 	}
 
 	@Override
-	public void recoverFromLDPR(LDPResource ldpResource) throws CarbonException {
+	public void recoverFromLDPR(RDFResource ldpResource) throws CarbonException {
 		ApplicationRoleRDFFactory factory = new ApplicationRoleRDFFactory();
 		ApplicationRoleRDF rdfRole = factory.create(ldpResource.getResource());
 

@@ -37,7 +37,7 @@ import com.base22.carbon.models.ErrorResponseFactory;
 import com.base22.carbon.models.HttpHeader;
 import com.base22.carbon.models.HttpHeaderValue;
 import com.base22.carbon.repository.services.FileService;
-import com.base22.carbon.repository.services.RDFService;
+import com.base22.carbon.repository.services.ModelService;
 import com.base22.carbon.utils.ConvertInputStream;
 import com.base22.carbon.utils.ConvertString;
 import com.base22.carbon.utils.HTTPUtil;
@@ -47,7 +47,7 @@ import com.hp.hpl.jena.rdf.model.Model;
 public abstract class AbstractLDPRequestHandler extends AbstractRequestHandler {
 
 	@Autowired
-	protected RDFService rdfService;
+	protected ModelService rdfService;
 
 	@Autowired
 	protected LDPPermissionService ldpPermissionService;

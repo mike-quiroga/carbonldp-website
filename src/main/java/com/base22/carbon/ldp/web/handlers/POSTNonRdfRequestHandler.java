@@ -20,12 +20,12 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.base22.carbon.CarbonException;
 import com.base22.carbon.HttpHeaders;
-import com.base22.carbon.ldp.LDPC.ContainerType;
-import com.base22.carbon.ldp.models.LDPContainer;
-import com.base22.carbon.ldp.models.LDPContainerQueryOptions;
+import com.base22.carbon.ldp.models.Container;
+import com.base22.carbon.ldp.models.ContainerQueryOptions;
 import com.base22.carbon.ldp.models.URIObject;
 import com.base22.carbon.ldp.models.WrapperForLDPNR;
 import com.base22.carbon.ldp.models.WrapperForLDPNRFactory;
+import com.base22.carbon.ldp.models.ContainerClass.ContainerType;
 import com.base22.carbon.models.BASE64DecodedMultipartFile;
 import com.base22.carbon.models.ErrorResponse;
 import com.base22.carbon.models.ErrorResponseFactory;
@@ -176,7 +176,7 @@ public class POSTNonRdfRequestHandler extends AbstractLDPRequestHandler {
 	private ResponseEntity<Object> handlePOSTToContainer(String fileName, MultipartFile file, URIObject targetURIObject, ContainerType targetContainerType)
 			throws CarbonException {
 
-		LDPContainer targetContainer = null;
+		Container targetContainer = null;
 		String requestURI = null;
 		URIObject requestURIObject = null;
 
@@ -193,7 +193,7 @@ public class POSTNonRdfRequestHandler extends AbstractLDPRequestHandler {
 		}
 	}
 
-	private ResponseEntity<Object> handleExistingRequestResource(String fileName, MultipartFile file, URIObject targetURIObject, LDPContainer targetContainer,
+	private ResponseEntity<Object> handleExistingRequestResource(String fileName, MultipartFile file, URIObject targetURIObject, Container targetContainer,
 			URIObject requestURIObject) throws CarbonException {
 		// TODO: NF. Version Control Support
 
@@ -214,7 +214,7 @@ public class POSTNonRdfRequestHandler extends AbstractLDPRequestHandler {
 	}
 
 	private ResponseEntity<Object> handleNonExistingRequestResource(String fileName, MultipartFile file, URIObject targetURIObject,
-			LDPContainer targetContainer, String requestURI) throws CarbonException {
+			Container targetContainer, String requestURI) throws CarbonException {
 
 		WrapperForLDPNR requestWrapper = null;
 		URIObject requestURIObject = null;
@@ -292,9 +292,9 @@ public class POSTNonRdfRequestHandler extends AbstractLDPRequestHandler {
 		return targetContainerType != null;
 	}
 
-	protected LDPContainer getTargetContainer(URIObject targetURIObject, ContainerType targetContainerType) throws CarbonException {
-		LDPContainer targetContainer = null;
-		LDPContainerQueryOptions options = new LDPContainerQueryOptions(LDPContainerQueryOptions.METHOD.GET);
+	protected Container getTargetContainer(URIObject targetURIObject, ContainerType targetContainerType) throws CarbonException {
+		Container targetContainer = null;
+		ContainerQueryOptions options = new ContainerQueryOptions(ContainerQueryOptions.METHOD.GET);
 		options.setContainerProperties(true);
 		options.setContainmentTriples(false);
 		options.setMembershipTriples(false);
@@ -387,7 +387,7 @@ public class POSTNonRdfRequestHandler extends AbstractLDPRequestHandler {
 	}
 
 	// Inverse Membership Properties
-	protected void addIfNeededIMP(URIObject targetURIObject, LDPContainer targetContainer, WrapperForLDPNR requestWrapper) throws CarbonException {
+	protected void addIfNeededIMP(URIObject targetURIObject, Container targetContainer, WrapperForLDPNR requestWrapper) throws CarbonException {
 		String memberOfRelationString = targetContainer.getMemberOfRelation();
 		if ( memberOfRelationString != null ) {
 			Property memberOfRelationProperty = ResourceFactory.createProperty(memberOfRelationString);
@@ -406,7 +406,7 @@ public class POSTNonRdfRequestHandler extends AbstractLDPRequestHandler {
 		return requestURIObject;
 	}
 
-	protected void addContainmentAndMembershipTriples(LDPContainer targetContainer, WrapperForLDPNR requestWrapper) throws CarbonException {
+	protected void addContainmentAndMembershipTriples(Container targetContainer, WrapperForLDPNR requestWrapper) throws CarbonException {
 		try {
 			ldpService.addDocumentAsContainment(targetContainer, requestWrapper, this.dataset);
 		} catch (CarbonException e) {

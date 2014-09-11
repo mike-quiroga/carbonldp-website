@@ -7,7 +7,7 @@ import org.joda.time.DateTime;
 import com.base22.carbon.CarbonException;
 import com.hp.hpl.jena.rdf.model.Resource;
 
-public interface LDPRSource extends LDPResource {
+public interface RDFSource extends RDFResource {
 
 	public DateTime getCreated();
 

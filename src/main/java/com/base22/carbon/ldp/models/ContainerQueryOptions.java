@@ -1,6 +1,6 @@
 package com.base22.carbon.ldp.models;
 
-public class LDPContainerQueryOptions {
+public class ContainerQueryOptions {
 
 	private boolean containerProperties;
 	private boolean containmentTriples;
@@ -12,7 +12,7 @@ public class LDPContainerQueryOptions {
 		GET, DELETE
 	}
 
-	public LDPContainerQueryOptions(METHOD method) {
+	public ContainerQueryOptions(METHOD method) {
 		switch (method) {
 			case DELETE:
 				this.containerProperties = false;

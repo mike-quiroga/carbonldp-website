@@ -1,4 +1,4 @@
-package com.base22.carbon.ldp;
+package com.base22.carbon.ldp.models;
 
 import com.base22.carbon.Carbon;
 import com.base22.carbon.models.PrefixedURI;
@@ -6,7 +6,7 @@ import com.hp.hpl.jena.rdf.model.Property;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.rdf.model.ResourceFactory;
 
-public abstract class LDPNR {
+public abstract class NonRDFSourceClass {
 	public static final String TYPE = Carbon.CONFIGURED_PREFIXES.get("c") + "WrapperForLDPNR";
 	public static final String LINK_TYPE = "<" + TYPE + ">; rel=\"type\"";
 

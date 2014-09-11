@@ -26,9 +26,9 @@ import com.base22.carbon.CarbonException;
 import com.base22.carbon.HttpHeaders;
 import com.base22.carbon.apps.Application;
 import com.base22.carbon.authorization.acl.AclSR;
-import com.base22.carbon.ldp.models.LDPContainer;
-import com.base22.carbon.ldp.models.LDPContainerQueryOptions;
-import com.base22.carbon.ldp.models.LDPRSource;
+import com.base22.carbon.ldp.models.Container;
+import com.base22.carbon.ldp.models.ContainerQueryOptions;
+import com.base22.carbon.ldp.models.RDFSource;
 import com.base22.carbon.ldp.models.URIObject;
 import com.base22.carbon.ldp.models.WrapperForLDPNR;
 import com.base22.carbon.models.ErrorResponse;
@@ -169,7 +169,7 @@ public class GETRequestHandler extends AbstractLDPRequestHandler {
 		HttpHeader preferHeader = new HttpHeader(preferHeaders);
 
 		// Get the LDPRSource
-		LDPRSource ldpRSource = null;
+		RDFSource ldpRSource = null;
 		try {
 			ldpRSource = ldpService.getLDPRSource(documentURIObject, dataset);
 		} catch (CarbonException e) {
@@ -210,7 +210,7 @@ public class GETRequestHandler extends AbstractLDPRequestHandler {
 		List<RetrieveContainerPreference> preferences = getRetrieveContainerPreferences(preferHeader);
 		// TODO: Remove this block when RetrieveContainerPreference is accepted by the LDPService
 		// ===========
-		LDPContainerQueryOptions options = new LDPContainerQueryOptions(LDPContainerQueryOptions.METHOD.GET);
+		ContainerQueryOptions options = new ContainerQueryOptions(ContainerQueryOptions.METHOD.GET);
 		options.setContainedResources(false);
 		options.setContainerProperties(false);
 		options.setContainmentTriples(false);
@@ -241,7 +241,7 @@ public class GETRequestHandler extends AbstractLDPRequestHandler {
 		// ===========
 
 		// Fetch the Document according to the preferences
-		LDPContainer ldpContainer = null;
+		Container ldpContainer = null;
 		try {
 			ldpContainer = ldpService.getLDPContainer(documentURIObject, dataset, containerType, options);
 		} catch (CarbonException e) {

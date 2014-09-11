@@ -2,32 +2,32 @@ package com.base22.carbon.ldp.models;
 
 import com.base22.carbon.Carbon;
 import com.base22.carbon.CarbonException;
-import com.base22.carbon.ldp.models.LDPResourceFactory.LDPResourceImpl;
+import com.base22.carbon.ldp.models.RDFResourceFactory.LDPResourceImpl;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.Resource;
 
-public abstract class LDPSystemResourceFactory extends LDPResourceFactory {
-	public LDPSystemResource create(Resource resource) throws CarbonException {
-		LDPResource ldpResource = super.create(resource);
+public abstract class SystemRDFResourceFactory extends RDFResourceFactory {
+	public SystemRDFResource create(Resource resource) throws CarbonException {
+		RDFResource ldpResource = super.create(resource);
 		if ( ! isSystemResource(ldpResource) ) {
 			throw new CarbonException("The resource's URI doesn't match the pattern of a system resource.");
 		}
 		return new LDPSystemResourceImpl(ldpResource.getResource());
 	}
 
-	public LDPSystemResource create(String resourceURI, Model model) throws CarbonException {
-		LDPResource ldpResource = super.create(resourceURI, model);
+	public SystemRDFResource create(String resourceURI, Model model) throws CarbonException {
+		RDFResource ldpResource = super.create(resourceURI, model);
 		if ( ! isSystemResource(ldpResource) ) {
 			throw new CarbonException("The resource's URI doesn't match the pattern of a system resource.");
 		}
 		return new LDPSystemResourceImpl(ldpResource.getResource());
 	}
 
-	public boolean isSystemResource(LDPResource ldpResource) {
+	public boolean isSystemResource(RDFResource ldpResource) {
 		return ldpResource.getURI().matches(".*" + Carbon.SYSTEM_RESOURCE_REGEX + ".*");
 	}
 
-	protected class LDPSystemResourceImpl extends LDPResourceImpl implements LDPSystemResource {
+	protected class LDPSystemResourceImpl extends LDPResourceImpl implements SystemRDFResource {
 		protected Resource resource;
 
 		public LDPSystemResourceImpl(Resource resource) {

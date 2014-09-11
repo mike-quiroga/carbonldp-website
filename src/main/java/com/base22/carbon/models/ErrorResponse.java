@@ -2,9 +2,9 @@ package com.base22.carbon.models;
 
 import org.springframework.http.HttpStatus;
 
-import com.base22.carbon.ldp.models.LDPResource;
+import com.base22.carbon.ldp.models.RDFResource;
 
-public interface ErrorResponse extends LDPResource {
+public interface ErrorResponse extends RDFResource {
 
 	public HttpStatus getHttpStatus();
 

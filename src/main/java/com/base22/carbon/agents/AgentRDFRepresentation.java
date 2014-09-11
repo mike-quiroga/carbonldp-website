@@ -2,9 +2,9 @@ package com.base22.carbon.agents;
 
 import java.util.UUID;
 
-import com.base22.carbon.ldp.models.LDPResource;
+import com.base22.carbon.ldp.models.RDFResource;
 
-public interface AgentRDFRepresentation extends LDPResource {
+public interface AgentRDFRepresentation extends RDFResource {
 	public UUID getUUID();
 
 	public void setUUID(UUID roleUUID);

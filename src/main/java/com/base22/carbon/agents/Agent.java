@@ -19,8 +19,8 @@ import com.base22.carbon.authorization.PlatformRole;
 import com.base22.carbon.authorization.Privilege;
 import com.base22.carbon.authorization.acl.AceSR;
 import com.base22.carbon.groups.Group;
-import com.base22.carbon.ldp.models.LDPRSource;
-import com.base22.carbon.ldp.models.LDPResource;
+import com.base22.carbon.ldp.models.RDFSource;
+import com.base22.carbon.ldp.models.RDFResource;
 import com.base22.carbon.models.PrefixedURI;
 import com.base22.carbon.models.RDFPropertyEnum;
 import com.base22.carbon.models.RDFRepresentable;
@@ -50,8 +50,8 @@ public class Agent extends UUIDObject implements UserDetails, CredentialsContain
 
 	private HashSet<? extends GrantedAuthority> authorities;
 
-	private LDPRSource globalDescription;
-	private Map<String, LDPRSource> localDescriptions;
+	private RDFSource globalDescription;
+	private Map<String, RDFSource> localDescriptions;
 
 	public Agent() {
 		this.emails = new ArrayList<String>();
@@ -211,19 +211,19 @@ public class Agent extends UUIDObject implements UserDetails, CredentialsContain
 
 	// --- End: Getters/Setters
 
-	public LDPRSource getGlobalDescription() {
+	public RDFSource getGlobalDescription() {
 		return globalDescription;
 	}
 
-	public void setGlobalDescription(LDPRSource globalDescription) {
+	public void setGlobalDescription(RDFSource globalDescription) {
 		this.globalDescription = globalDescription;
 	}
 
-	public Map<String, LDPRSource> getLocalDescriptions() {
+	public Map<String, RDFSource> getLocalDescriptions() {
 		return localDescriptions;
 	}
 
-	public void setLocalDescriptions(Map<String, LDPRSource> localDescriptions) {
+	public void setLocalDescriptions(Map<String, RDFSource> localDescriptions) {
 		this.localDescriptions = localDescriptions;
 	}
 
@@ -331,7 +331,7 @@ public class Agent extends UUIDObject implements UserDetails, CredentialsContain
 	}
 
 	@Override
-	public void recoverFromLDPR(LDPResource ldpResource) throws CarbonException {
+	public void recoverFromLDPR(RDFResource ldpResource) throws CarbonException {
 		AgentRDFFactory factory = new AgentRDFFactory();
 		AgentRDFRepresentation rdfAgent = factory.create(ldpResource.getResource());
 

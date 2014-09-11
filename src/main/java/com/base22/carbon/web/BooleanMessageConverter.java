@@ -21,7 +21,7 @@ import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.http.converter.HttpMessageNotWritableException;
 import org.springframework.util.Assert;
 
-import com.base22.carbon.ldp.RdfUtil;
+import com.base22.carbon.ldp.RDFUtil;
 
 public class BooleanMessageConverter implements HttpMessageConverter<Boolean> {
 
@@ -79,7 +79,7 @@ public class BooleanMessageConverter implements HttpMessageConverter<Boolean> {
 	}
 
 	protected InputStream addDefaultPrefixes(InputStream bodyInputStream, Lang language) throws IOException {
-		return RdfUtil.setDefaultNSPrefixes(bodyInputStream, language, true);
+		return RDFUtil.setDefaultNSPrefixes(bodyInputStream, language, true);
 	}
 
 	@Override

@@ -5,14 +5,14 @@ import java.util.List;
 
 import com.base22.carbon.CarbonException;
 import com.base22.carbon.FactoryException;
-import com.base22.carbon.ldp.models.LDPResource;
-import com.base22.carbon.ldp.models.LDPResourceFactory;
+import com.base22.carbon.ldp.models.RDFResource;
+import com.base22.carbon.ldp.models.RDFResourceFactory;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.Resource;
 
-public class DeleteActionFactory extends LDPResourceFactory {
+public class DeleteActionFactory extends RDFResourceFactory {
 	public DeleteAction create(Resource resource) throws CarbonException {
-		LDPResource ldpResource = super.create(resource);
+		RDFResource ldpResource = super.create(resource);
 		if ( ! isDeleteAction(ldpResource) ) {
 			throw new FactoryException("The resource isn't a DeleteAction object.");
 		}
@@ -20,7 +20,7 @@ public class DeleteActionFactory extends LDPResourceFactory {
 	}
 
 	public DeleteAction create(String resourceURI, Model model) throws CarbonException {
-		LDPResource ldpResource = super.create(resourceURI, model);
+		RDFResource ldpResource = super.create(resourceURI, model);
 		if ( ! isDeleteAction(ldpResource) ) {
 			throw new FactoryException("The resource isn't an DeleteAction object.");
 		}
@@ -33,7 +33,7 @@ public class DeleteActionFactory extends LDPResourceFactory {
 		return violations;
 	}
 
-	public boolean isDeleteAction(LDPResource ldpResource) {
+	public boolean isDeleteAction(RDFResource ldpResource) {
 		Resource resource = ldpResource.getResource();
 		if ( ! resource.isURIResource() ) {
 			return false;
