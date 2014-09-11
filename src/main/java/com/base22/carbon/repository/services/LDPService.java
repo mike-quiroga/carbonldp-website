@@ -35,6 +35,7 @@ import com.base22.carbon.ldp.models.WrapperForLDPNR;
 import com.base22.carbon.ldp.models.WrapperForLDPNRFactory;
 import com.base22.carbon.ldp.patch.PATCHRequest;
 import com.base22.carbon.ldp.patch.PATCHService;
+import com.base22.carbon.repository.WriteTransactionTemplate;
 import com.base22.carbon.sparql.SPARQLService;
 import com.hp.hpl.jena.datatypes.xsd.XSDDatatype;
 import com.hp.hpl.jena.graph.Node;

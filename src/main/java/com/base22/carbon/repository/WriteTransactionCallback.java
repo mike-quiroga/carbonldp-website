@@ -1,4 +1,4 @@
-package com.base22.carbon.repository.services;
+package com.base22.carbon.repository;
 
 import com.hp.hpl.jena.query.Dataset;
 

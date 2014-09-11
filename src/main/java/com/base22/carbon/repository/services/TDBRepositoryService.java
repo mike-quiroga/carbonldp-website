@@ -15,7 +15,12 @@ import org.slf4j.MarkerFactory;
 
 import com.base22.carbon.CarbonException;
 import com.base22.carbon.jdbc.TransactionException;
+import com.base22.carbon.repository.ReadTransactionCallback;
+import com.base22.carbon.repository.ReadTransactionTemplate;
 import com.base22.carbon.repository.RepositoryServiceException;
+import com.base22.carbon.repository.TransactionNamedModelCache;
+import com.base22.carbon.repository.WriteTransactionCallback;
+import com.base22.carbon.repository.WriteTransactionTemplate;
 import com.hp.hpl.jena.query.Dataset;
 import com.hp.hpl.jena.query.ReadWrite;
 import com.hp.hpl.jena.tdb.TDB;

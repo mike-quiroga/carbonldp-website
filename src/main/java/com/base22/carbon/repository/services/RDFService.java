@@ -2,7 +2,6 @@ package com.base22.carbon.repository.services;
 
 import java.util.List;
 
-import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,12 +9,15 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.stereotype.Service;
 
-import com.base22.carbon.Carbon;
 import com.base22.carbon.CarbonException;
 import com.base22.carbon.ldp.models.URIObject;
+import com.base22.carbon.repository.ReadTransactionCallback;
+import com.base22.carbon.repository.ReadTransactionTemplate;
 import com.base22.carbon.repository.RepositoryServiceException;
+import com.base22.carbon.repository.TransactionNamedModelCache;
+import com.base22.carbon.repository.WriteTransactionCallback;
+import com.base22.carbon.repository.WriteTransactionTemplate;
 import com.base22.carbon.sparql.SPARQLService;
-import com.base22.carbon.utils.HTTPUtil;
 import com.hp.hpl.jena.query.Dataset;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.Property;
@@ -37,50 +39,6 @@ public class RDFService {
 		if ( LOG.isTraceEnabled() ) {
 			LOG.trace(">> init()");
 		}
-	}
-
-	public void insertTriple(String documentName, String subject, String predicate, Object object, String dataset) throws CarbonException {
-		String query = "INSERT DATA { <" + subject + "> <" + predicate + "> " + createTypedLiteral(object) + " }";
-		LOG.trace(">> query: " + query);
-
-		sparqlService.update(query, documentName, dataset);
-	}
-
-	public void insertTriple(String subject, String predicate, String object, String typeOfObject, String dataset) throws CarbonException {
-		String query = "INSERT DATA { <" + subject + "> <" + predicate + "> \"" + object + "\"^^" + typeOfObject + " }";
-		LOG.trace(">> query: " + query);
-
-		sparqlService.update(query, dataset);
-	}
-
-	public void deleteTriples(String documentName, String subject, String predicate, Object object, String dataset) throws CarbonException {
-		subject = (subject == null) ? "?s" : subject;
-		predicate = (predicate == null) ? "?p" : "<" + predicate + ">";
-		object = (object == null) ? "?o" : object;
-
-		String query = "DELETE WHERE { <" + subject + "> " + predicate + " " + createTypedLiteral(object) + " }";
-		LOG.trace(">> query: " + query);
-
-		sparqlService.update(query, documentName, dataset);
-	}
-
-	public boolean triplesExist(String subject, String predicate, Object object, String dataset) throws CarbonException {
-		boolean exists = false;
-
-		subject = (subject == null) ? "?s" : subject;
-		predicate = (predicate == null) ? "?p" : "<" + predicate + ">";
-		object = (object == null) ? "?o" : object;
-
-		String query = "ASK { <" + subject + "> " + predicate + " " + createTypedLiteral(object) + " }";
-		LOG.trace(">> query: " + query);
-
-		exists = sparqlService.ask(query, dataset);
-
-		return exists;
-	}
-
-	public boolean resourceExists(String uri, String dataset) throws CarbonException {
-		return this.triplesExist(uri, null, null, dataset);
 	}
 
 	public void addStatements(final URIObject uriObject, final List<Statement> statements, String datasetName) throws CarbonException {
@@ -231,46 +189,6 @@ public class RDFService {
 				}
 			}
 		});
-	}
-
-	// ==== End: Model Related Methods
-
-	public static String createTypedLiteral(Object object) {
-		// Try to guess the type of the object
-		if ( object instanceof String ) {
-			// It is a string, so check if it is a valid resource URI
-			if ( HTTPUtil.isValidURL((String) object) ) {
-				// It is, add the proper syntax for the query
-				object = "<" + (String) object + ">";
-			} else if ( ((String) object).startsWith("?") ) {
-				// Don't do anything, the object is a wildcard
-			} else {
-				// It is not a valid URI, so add it as a typed string
-				object = "\"" + (String) object + "\"^^<" + Carbon.CONFIGURED_PREFIXES.get("xsd") + "string>";
-			}
-		}
-		// Numeric types
-		else if ( object instanceof Boolean ) {
-			object = "\"" + String.valueOf(object) + "\"^^<" + Carbon.CONFIGURED_PREFIXES.get("xsd") + "boolean>";
-		} else if ( object instanceof Byte ) {
-			object = "\"" + String.valueOf(object) + "\"^^<" + Carbon.CONFIGURED_PREFIXES.get("xsd") + "byte>";
-		} else if ( object instanceof Integer ) {
-			object = "\"" + String.valueOf(object) + "\"^^<" + Carbon.CONFIGURED_PREFIXES.get("xsd") + "integer>";
-		} else if ( object instanceof Double ) {
-			object = "\"" + String.valueOf(object) + "\"^^<" + Carbon.CONFIGURED_PREFIXES.get("xsd") + "double>";
-		} else if ( object instanceof Short ) {
-			object = "\"" + String.valueOf(object) + "\"^^<" + Carbon.CONFIGURED_PREFIXES.get("xsd") + "short>";
-		} else if ( object instanceof Float ) {
-			object = "\"" + String.valueOf(object) + "\"^^<" + Carbon.CONFIGURED_PREFIXES.get("xsd") + "float>";
-		} else if ( object instanceof Long ) {
-			object = "\"" + String.valueOf(object) + "\"^^<" + Carbon.CONFIGURED_PREFIXES.get("xsd") + "long>";
-		} else if ( object instanceof DateTime ) {
-			// Joda DateTime objects get a string representation in ISO8601 which is the used format in SPARQL
-			object = "\"" + object.toString() + "\"^^<" + Carbon.CONFIGURED_PREFIXES.get("xsd") + "dateTime>";
-		} else {
-			object = "\"" + object.toString() + "\"";
-		}
-		return (String) object;
 	}
 
 	public void setRepositoryService(RepositoryService repositoryService) {
