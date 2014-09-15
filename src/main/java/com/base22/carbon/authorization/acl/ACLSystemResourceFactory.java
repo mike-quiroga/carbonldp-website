@@ -6,19 +6,19 @@ import java.util.List;
 import com.base22.carbon.Carbon;
 import com.base22.carbon.CarbonException;
 import com.base22.carbon.FactoryException;
-import com.base22.carbon.ldp.models.LDPResource;
-import com.base22.carbon.ldp.models.LDPSystemResource;
-import com.base22.carbon.ldp.models.LDPSystemResourceFactory;
+import com.base22.carbon.ldp.models.RDFResource;
+import com.base22.carbon.ldp.models.SystemRDFResource;
+import com.base22.carbon.ldp.models.SystemRDFResourceFactory;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.RDFNode;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.rdf.model.Statement;
 import com.hp.hpl.jena.rdf.model.StmtIterator;
 
-public class ACLSystemResourceFactory extends LDPSystemResourceFactory {
+public class ACLSystemResourceFactory extends SystemRDFResourceFactory {
 
 	public ACLSystemResource create(Resource resource) throws CarbonException {
-		LDPSystemResource systemResource = super.create(resource);
+		SystemRDFResource systemResource = super.create(resource);
 		if ( ! this.isACLSystemResource(systemResource) ) {
 			throw new FactoryException("The resource isn't an AccessControlList object.");
 		}
@@ -26,14 +26,14 @@ public class ACLSystemResourceFactory extends LDPSystemResourceFactory {
 	}
 
 	public ACLSystemResource create(String aclURI, Model model) throws CarbonException {
-		LDPSystemResource systemResource = super.create(aclURI, model);
+		SystemRDFResource systemResource = super.create(aclURI, model);
 		if ( ! this.isACLSystemResource(systemResource) ) {
 			throw new FactoryException("The resource isn't an AccessControlList object.");
 		}
 		return new ACLSystemResourceImpl(systemResource.getResource());
 	}
 
-	public ACLSystemResource create(LDPResource accessToResource) {
+	public ACLSystemResource create(RDFResource accessToResource) {
 		ACLSystemResource aclSR = null;
 
 		StringBuilder uriBuilder = new StringBuilder();
@@ -86,7 +86,7 @@ public class ACLSystemResourceFactory extends LDPSystemResourceFactory {
 		return violations;
 	}
 
-	public boolean isACLSystemResource(LDPSystemResource systemResource) {
+	public boolean isACLSystemResource(SystemRDFResource systemResource) {
 		return systemResource.isOfType(AclSR.Resources.CLASS.getPrefixedURI().getURI());
 	}
 

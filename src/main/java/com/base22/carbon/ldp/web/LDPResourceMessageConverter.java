@@ -21,9 +21,9 @@ import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.http.converter.HttpMessageNotWritableException;
 import org.springframework.util.Assert;
 
-import com.base22.carbon.ldp.models.LDPResource;
+import com.base22.carbon.ldp.models.RDFResource;
 
-public class LDPResourceMessageConverter implements HttpMessageConverter<LDPResource> {
+public class LDPResourceMessageConverter implements HttpMessageConverter<RDFResource> {
 
 	protected final Log logger = LogFactory.getLog(getClass());
 
@@ -44,7 +44,7 @@ public class LDPResourceMessageConverter implements HttpMessageConverter<LDPReso
 	}
 
 	protected boolean supports(Class<?> clazz) {
-		boolean supports = LDPResource.class.isAssignableFrom(clazz);
+		boolean supports = RDFResource.class.isAssignableFrom(clazz);
 		return supports;
 	}
 
@@ -73,7 +73,7 @@ public class LDPResourceMessageConverter implements HttpMessageConverter<LDPReso
 	};
 
 	@Override
-	public LDPResource read(Class<? extends LDPResource> clazz, HttpInputMessage inputMessage) throws IOException, HttpMessageNotReadableException {
+	public RDFResource read(Class<? extends RDFResource> clazz, HttpInputMessage inputMessage) throws IOException, HttpMessageNotReadableException {
 		return null;
 	}
 
@@ -95,7 +95,7 @@ public class LDPResourceMessageConverter implements HttpMessageConverter<LDPReso
 	}
 
 	@Override
-	public void write(LDPResource ldpResource, MediaType contentType, HttpOutputMessage outputMessage) throws IOException, HttpMessageNotWritableException {
+	public void write(RDFResource ldpResource, MediaType contentType, HttpOutputMessage outputMessage) throws IOException, HttpMessageNotWritableException {
 		HttpHeaders headers = outputMessage.getHeaders();
 
 		if ( headers.getContentType() == null ) {
@@ -122,7 +122,7 @@ public class LDPResourceMessageConverter implements HttpMessageConverter<LDPReso
 		outputMessage.getBody().flush();
 	}
 
-	private void writeLDPResource(LDPResource ldpResource, MediaType contentType, OutputStream outputStream) throws IOException {
+	private void writeLDPResource(RDFResource ldpResource, MediaType contentType, OutputStream outputStream) throws IOException {
 		Lang languageToUse = null;
 		for (Lang language : supportedLanguages) {
 			if ( contentType.isCompatibleWith(contentTypeToMediaType(language.getContentType())) ) {
@@ -132,11 +132,11 @@ public class LDPResourceMessageConverter implements HttpMessageConverter<LDPReso
 		ldpResource.getResource().getModel().write(outputStream, languageToUse.getName());
 	}
 
-	private void addLocationHeader(HttpHeaders headers, LDPResource ldpResource) {
+	private void addLocationHeader(HttpHeaders headers, RDFResource ldpResource) {
 		headers.add(com.base22.carbon.HttpHeaders.LOCATION, ldpResource.getURI());
 	}
 
-	private void addLinkTypeHeaders(HttpHeaders headers, LDPResource ldpResource) {
+	private void addLinkTypeHeaders(HttpHeaders headers, RDFResource ldpResource) {
 		for (String types : ldpResource.getLinkTypes()) {
 			headers.add(com.base22.carbon.HttpHeaders.LINK, types);
 		}

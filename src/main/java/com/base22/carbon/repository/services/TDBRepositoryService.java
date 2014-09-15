@@ -1,8 +1,10 @@
 package com.base22.carbon.repository.services;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -13,10 +15,14 @@ import org.slf4j.MarkerFactory;
 
 import com.base22.carbon.CarbonException;
 import com.base22.carbon.jdbc.TransactionException;
+import com.base22.carbon.repository.ReadTransactionCallback;
+import com.base22.carbon.repository.ReadTransactionTemplate;
 import com.base22.carbon.repository.RepositoryServiceException;
+import com.base22.carbon.repository.TransactionNamedModelCache;
+import com.base22.carbon.repository.WriteTransactionCallback;
+import com.base22.carbon.repository.WriteTransactionTemplate;
 import com.hp.hpl.jena.query.Dataset;
 import com.hp.hpl.jena.query.ReadWrite;
-import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.tdb.TDB;
 import com.hp.hpl.jena.tdb.TDBFactory;
 
@@ -28,7 +34,6 @@ public class TDBRepositoryService implements RepositoryService {
 	static final Marker FATAL = MarkerFactory.getMarker("FATAL");
 
 	protected Map<String, Dataset> datasetRegistry;
-	protected Map<String, Model> namedModelRegistry;
 
 	public void release() throws RepositoryServiceException {
 		if ( LOG.isTraceEnabled() ) {
@@ -195,6 +200,7 @@ public class TDBRepositoryService implements RepositoryService {
 	private abstract class TDBTransactionTemplate {
 		protected final String datasetName;
 		protected final Dataset dataset;
+		protected final TransactionNamedModelCache namedModelCache;
 
 		TDBTransactionTemplate(String datasetName, Dataset dataset) throws TransactionException {
 			if ( ! dataset.supportsTransactions() ) {
@@ -206,6 +212,8 @@ public class TDBRepositoryService implements RepositoryService {
 
 			this.datasetName = datasetName;
 			this.dataset = dataset;
+
+			this.namedModelCache = new TransactionNamedModelCache(dataset);
 		}
 
 		protected void beginDatasetTransaction(ReadWrite type) throws TransactionException {
@@ -239,15 +247,18 @@ public class TDBRepositoryService implements RepositoryService {
 
 	private class TDBWriteTransactionTemplate extends TDBTransactionTemplate implements WriteTransactionTemplate {
 
+		private List<WriteTransactionCallback> callbacks;
+
 		TDBWriteTransactionTemplate(String datasetName, Dataset dataset) throws TransactionException {
 			super(datasetName, dataset);
+			callbacks = new ArrayList<WriteTransactionCallback>();
 		}
 
 		@Override
 		public void execute(WriteTransactionCallback callback) throws CarbonException {
 			beginDatasetTransaction(ReadWrite.WRITE);
 			try {
-				callback.executeInTransaction(dataset);
+				callback.executeInTransaction(dataset, namedModelCache);
 				commitDatasetTransaction();
 			} catch (CarbonException e) {
 				throw e;
@@ -275,6 +286,34 @@ public class TDBRepositoryService implements RepositoryService {
 					LOG.error("<< commitDatasetTransaction() > The dataset '{}', couldn't be commited.", datasetName);
 				}
 				throw new TransactionException("The dataset couldn't be commited.");
+			}
+		}
+
+		@Override
+		public void addCallback(WriteTransactionCallback callback) {
+			callbacks.add(callback);
+		}
+
+		@Override
+		public void execute() throws CarbonException {
+			beginDatasetTransaction(ReadWrite.WRITE);
+			try {
+				for (WriteTransactionCallback callback : callbacks) {
+					callback.executeInTransaction(dataset, namedModelCache);
+				}
+				commitDatasetTransaction();
+			} catch (CarbonException e) {
+				throw e;
+			} catch (Exception e) {
+				if ( LOG.isDebugEnabled() ) {
+					LOG.debug("xx execute() > Exception Stacktrace:", e);
+				}
+				if ( LOG.isErrorEnabled() ) {
+					LOG.error("<< execute() > An error ocurred executing the callback.");
+				}
+				throw new TransactionException("An unexpected exception ocurred while executing the callback.");
+			} finally {
+				endDatasetTransaction();
 			}
 		}
 	}

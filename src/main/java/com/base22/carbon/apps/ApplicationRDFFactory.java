@@ -9,16 +9,15 @@ import com.base22.carbon.CarbonException;
 import com.base22.carbon.FactoryException;
 import com.base22.carbon.apps.Application.Properties;
 import com.base22.carbon.apps.Application.Resources;
-import com.base22.carbon.ldp.models.LDPResource;
-import com.base22.carbon.ldp.models.LDPResourceFactory;
-import com.base22.carbon.models.RDFResourceFactory;
+import com.base22.carbon.ldp.models.RDFResourceFactory;
+import com.base22.carbon.ldp.models.RDFResource;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.Resource;
 
-public class ApplicationRDFFactory extends LDPResourceFactory implements RDFResourceFactory<ApplicationRDF> {
+public class ApplicationRDFFactory extends RDFResourceFactory {
 	public ApplicationRDF create(Resource resource) throws CarbonException {
-		LDPResource ldpResource = super.create(resource);
+		RDFResource ldpResource = super.create(resource);
 		if ( ! isRDFApplication(ldpResource) ) {
 			throw new FactoryException("The resource isn't an Application object.");
 		}
@@ -26,7 +25,7 @@ public class ApplicationRDFFactory extends LDPResourceFactory implements RDFReso
 	}
 
 	public ApplicationRDF create(String resourceURI, Model model) throws CarbonException {
-		LDPResource ldpResource = super.create(resourceURI, model);
+		RDFResource ldpResource = super.create(resourceURI, model);
 		if ( ! isRDFApplication(ldpResource) ) {
 			throw new FactoryException("The resource isn't an Application object.");
 		}
@@ -57,7 +56,7 @@ public class ApplicationRDFFactory extends LDPResourceFactory implements RDFReso
 		return violations;
 	}
 
-	public boolean isRDFApplication(LDPResource ldpResource) {
+	public boolean isRDFApplication(RDFResource ldpResource) {
 		return ldpResource.isOfType(Resources.CLASS.getPrefixedURI().getURI());
 	}
 

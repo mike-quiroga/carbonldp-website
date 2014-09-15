@@ -11,19 +11,19 @@ import com.base22.carbon.authentication.AuthenticationUtil;
 import com.base22.carbon.authorization.PermissionImpl;
 import com.base22.carbon.authorization.acl.AceSR.SubjectType;
 import com.base22.carbon.authorization.acl.CarbonACLPermissionFactory.CarbonPermission;
-import com.base22.carbon.ldp.models.LDPResource;
-import com.base22.carbon.ldp.models.LDPSystemResource;
-import com.base22.carbon.ldp.models.LDPSystemResourceFactory;
+import com.base22.carbon.ldp.models.RDFResource;
+import com.base22.carbon.ldp.models.SystemRDFResource;
+import com.base22.carbon.ldp.models.SystemRDFResourceFactory;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.RDFNode;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.rdf.model.Statement;
 import com.hp.hpl.jena.rdf.model.StmtIterator;
 
-public class ACESystemResourceFactory extends LDPSystemResourceFactory {
+public class ACESystemResourceFactory extends SystemRDFResourceFactory {
 
 	public ACESystemResource create(Resource resource) throws CarbonException {
-		LDPSystemResource systemResource = super.create(resource);
+		SystemRDFResource systemResource = super.create(resource);
 		if ( ! this.isACESystemResource(systemResource) ) {
 			throw new FactoryException("The resource isn't an AccessControlEntry object.");
 		}
@@ -31,7 +31,7 @@ public class ACESystemResourceFactory extends LDPSystemResourceFactory {
 	}
 
 	public ACESystemResource create(String aclURI, Model model) throws CarbonException {
-		LDPSystemResource systemResource = super.create(aclURI, model);
+		SystemRDFResource systemResource = super.create(aclURI, model);
 		if ( ! this.isACESystemResource(systemResource) ) {
 			throw new FactoryException("The resource isn't an AccessControlEntry object.");
 		}
@@ -121,7 +121,7 @@ public class ACESystemResourceFactory extends LDPSystemResourceFactory {
 		return violations;
 	}
 
-	public boolean isACESystemResource(LDPResource ldpResource) {
+	public boolean isACESystemResource(RDFResource ldpResource) {
 		return ldpResource.isOfType(AceSR.Resources.CLASS.getUri());
 	}
 

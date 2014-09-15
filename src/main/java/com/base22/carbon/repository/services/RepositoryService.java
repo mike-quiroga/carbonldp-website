@@ -1,7 +1,9 @@
 package com.base22.carbon.repository.services;
 
 import com.base22.carbon.CarbonException;
+import com.base22.carbon.repository.ReadTransactionTemplate;
 import com.base22.carbon.repository.RepositoryServiceException;
+import com.base22.carbon.repository.WriteTransactionTemplate;
 
 public interface RepositoryService {
 

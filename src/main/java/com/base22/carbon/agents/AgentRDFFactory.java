@@ -10,16 +10,16 @@ import com.base22.carbon.FactoryException;
 import com.base22.carbon.agents.Agent.Properties;
 import com.base22.carbon.agents.Agent.Resources;
 import com.base22.carbon.authorization.acl.ACESystemResource;
-import com.base22.carbon.ldp.models.LDPResource;
-import com.base22.carbon.ldp.models.LDPResourceFactory;
+import com.base22.carbon.ldp.models.RDFResource;
+import com.base22.carbon.ldp.models.RDFResourceFactory;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.Resource;
 
-public class AgentRDFFactory extends LDPResourceFactory {
+public class AgentRDFFactory extends RDFResourceFactory {
 
 	public AgentRDFRepresentation create(Resource resource) throws CarbonException {
-		LDPResource ldpResource = super.create(resource);
+		RDFResource ldpResource = super.create(resource);
 		if ( ! this.isRDFAgent(ldpResource) ) {
 			throw new FactoryException("The resource isn't an RDFAgent object.");
 		}
@@ -27,7 +27,7 @@ public class AgentRDFFactory extends LDPResourceFactory {
 	}
 
 	public AgentRDFRepresentation create(String rdfAgentURI, Model model) throws CarbonException {
-		LDPResource ldpResource = super.create(rdfAgentURI, model);
+		RDFResource ldpResource = super.create(rdfAgentURI, model);
 		if ( ! this.isRDFAgent(ldpResource) ) {
 			throw new FactoryException("The resource isn't an RDFAgent object.");
 		}
@@ -66,7 +66,7 @@ public class AgentRDFFactory extends LDPResourceFactory {
 		return violations;
 	}
 
-	public boolean isRDFAgent(LDPResource ldpResource) {
+	public boolean isRDFAgent(RDFResource ldpResource) {
 		return ldpResource.isOfType(Resources.CLASS.getPrefixedURI().getURI());
 	}
 

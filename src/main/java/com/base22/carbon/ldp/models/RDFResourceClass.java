@@ -1,11 +1,11 @@
-package com.base22.carbon.ldp;
+package com.base22.carbon.ldp.models;
 
 import com.base22.carbon.Carbon;
 import com.hp.hpl.jena.rdf.model.Property;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.rdf.model.ResourceFactory;
 
-public abstract class LDPR {
+public abstract class RDFResourceClass {
 	public static enum Resources {
 		//@formatter:off
 		CLASS(Carbon.CONFIGURED_PREFIXES.get("ldp"), "Resource");

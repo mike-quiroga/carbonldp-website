@@ -3,9 +3,9 @@ package com.base22.carbon.apps.roles;
 import java.util.List;
 import java.util.UUID;
 
-import com.base22.carbon.ldp.models.LDPResource;
+import com.base22.carbon.ldp.models.RDFResource;
 
-public interface ApplicationRoleRDF extends LDPResource {
+public interface ApplicationRoleRDF extends RDFResource {
 	public UUID getUUID();
 
 	public void setUUID(UUID roleUUID);

@@ -2,9 +2,9 @@ package com.base22.carbon.apps;
 
 import java.util.UUID;
 
-import com.base22.carbon.ldp.models.LDPResource;
+import com.base22.carbon.ldp.models.RDFResource;
 
-public interface ApplicationRDF extends LDPResource {
+public interface ApplicationRDF extends RDFResource {
 	public UUID getUUID();
 
 	public void setUUID(UUID uuid);

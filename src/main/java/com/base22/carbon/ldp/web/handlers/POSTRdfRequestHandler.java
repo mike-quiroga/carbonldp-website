@@ -22,12 +22,12 @@ import com.base22.carbon.CarbonException;
 import com.base22.carbon.HttpHeaders;
 import com.base22.carbon.APIPreferences.InteractionModel;
 import com.base22.carbon.apps.Application;
-import com.base22.carbon.ldp.LDPC;
-import com.base22.carbon.ldp.RdfUtil;
-import com.base22.carbon.ldp.LDPC.ContainerType;
-import com.base22.carbon.ldp.models.LDPContainer;
-import com.base22.carbon.ldp.models.LDPContainerFactory;
-import com.base22.carbon.ldp.models.LDPContainerQueryOptions;
+import com.base22.carbon.ldp.RDFUtil;
+import com.base22.carbon.ldp.models.Container;
+import com.base22.carbon.ldp.models.ContainerClass;
+import com.base22.carbon.ldp.models.ContainerFactory;
+import com.base22.carbon.ldp.models.ContainerQueryOptions;
+import com.base22.carbon.ldp.models.ContainerClass.ContainerType;
 import com.base22.carbon.models.ErrorResponse;
 import com.base22.carbon.models.ErrorResponseFactory;
 import com.base22.carbon.models.HttpHeader;
@@ -51,7 +51,7 @@ public class POSTRdfRequestHandler extends AbstractCreationRequestHandler {
 	private boolean slugCreated;
 	private ContainerType targetContainerType;
 
-	private LDPContainer targetContainer;
+	private Container targetContainer;
 
 	public ResponseEntity<Object> handleRdfPOST(@PathVariable("application") String applicationIdentifier, HttpServletRequest request,
 			HttpServletResponse response, HttpEntity<byte[]> entity) throws CarbonException {
@@ -289,7 +289,7 @@ public class POSTRdfRequestHandler extends AbstractCreationRequestHandler {
 	private void populateJenaDefaultBase() throws CarbonException {
 		if ( this.jenaDefaultBase == null ) {
 			try {
-				this.jenaDefaultBase = RdfUtil.retrieveJenaDefaultBase();
+				this.jenaDefaultBase = RDFUtil.retrieveJenaDefaultBase();
 			} catch (IOException e) {
 				if ( LOG.isDebugEnabled() ) {
 					LOG.debug("xx populateJenaDefaultBase() > Exception Stacktrace:", e);
@@ -563,7 +563,7 @@ public class POSTRdfRequestHandler extends AbstractCreationRequestHandler {
 
 	private void populateTargetContainer() throws CarbonException {
 		// Build LDPContainerQueryOptions to get the container
-		LDPContainerQueryOptions options = new LDPContainerQueryOptions(LDPContainerQueryOptions.METHOD.GET);
+		ContainerQueryOptions options = new ContainerQueryOptions(ContainerQueryOptions.METHOD.GET);
 		options.setContainerProperties(true);
 		options.setContainmentTriples(false);
 		options.setMembershipTriples(false);
@@ -628,7 +628,7 @@ public class POSTRdfRequestHandler extends AbstractCreationRequestHandler {
 	}
 
 	private void checkRequestLDPContainerIsAccessPoint() throws CarbonException {
-		if ( ! (this.requestContainer.isOfType(LDPC.DIRECT) || this.requestContainer.isOfType(LDPC.INDIRECT)) ) {
+		if ( ! (this.requestContainer.isOfType(ContainerClass.DIRECT) || this.requestContainer.isOfType(ContainerClass.INDIRECT)) ) {
 			String friendlyMessage = "The body of the request is not valid.";
 			String debugMessage = "The resource posted is not an access point (Direct or Indirect container).";
 
@@ -665,7 +665,7 @@ public class POSTRdfRequestHandler extends AbstractCreationRequestHandler {
 	}
 
 	private void runLDPContainerChecks() throws CarbonException {
-		LDPContainerFactory ldpContainerFactory = new LDPContainerFactory();
+		ContainerFactory ldpContainerFactory = new ContainerFactory();
 		List<String> containerViolations = ldpContainerFactory.validateLDPContainer(this.requestRDFSource);
 		if ( ! containerViolations.isEmpty() ) {
 			StringBuilder violationsBuilder = new StringBuilder();

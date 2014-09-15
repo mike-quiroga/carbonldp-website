@@ -5,6 +5,7 @@ import java.text.MessageFormat;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
@@ -15,7 +16,7 @@ import org.springframework.stereotype.Component;
 import com.base22.carbon.CarbonException;
 import com.base22.carbon.HttpHeaders;
 import com.base22.carbon.apps.Application;
-import com.base22.carbon.ldp.models.LDPRSource;
+import com.base22.carbon.ldp.models.RDFSource;
 import com.base22.carbon.ldp.models.URIObject;
 import com.base22.carbon.ldp.patch.PATCHRequest;
 import com.base22.carbon.ldp.patch.PATCHRequestFactory;
@@ -53,9 +54,7 @@ public class PATCHRequestHandler extends AbstractLDPRequestHandler {
 
 		PATCHRequest patchRequest = getPATCHRequest(requestMainResouce);
 
-		validatePATCHRequest(patchRequest);
-
-		LDPRSource targetRDFSource = getTargetRDFSource(targetURIObject, application);
+		RDFSource targetRDFSource = getTargetRDFSource(targetURIObject, application);
 
 		String requestETag = getRequestETag(request);
 
@@ -83,7 +82,7 @@ public class PATCHRequestHandler extends AbstractLDPRequestHandler {
 
 	}
 
-	private ResponseEntity<Object> handleNonConditionalPATCH(URIObject targetURIObject, PATCHRequest patchRequest, LDPRSource targetRDFSource,
+	private ResponseEntity<Object> handleNonConditionalPATCH(URIObject targetURIObject, PATCHRequest patchRequest, RDFSource targetRDFSource,
 			Application application, HttpServletRequest request, HttpServletResponse response) {
 		String debugMessage = "An If-Match header wasn't provided.";
 
@@ -101,7 +100,7 @@ public class PATCHRequestHandler extends AbstractLDPRequestHandler {
 
 	}
 
-	private ResponseEntity<Object> handleConditionalPATCH(URIObject targetURIObject, PATCHRequest patchRequest, LDPRSource targetRDFSource, String requestETag,
+	private ResponseEntity<Object> handleConditionalPATCH(URIObject targetURIObject, PATCHRequest patchRequest, RDFSource targetRDFSource, String requestETag,
 			Application application, HttpServletRequest request, HttpServletResponse response) throws CarbonException {
 
 		String targetETag = getTargetETag(targetRDFSource);
@@ -137,14 +136,10 @@ public class PATCHRequestHandler extends AbstractLDPRequestHandler {
 		return HTTPUtil.createErrorResponseEntity(errorObject);
 	}
 
-	private ResponseEntity<Object> handlePATCHRequestActions(URIObject targetURIObject, PATCHRequest patchRequest, LDPRSource targetRDFSource,
+	private ResponseEntity<Object> handlePATCHRequestActions(URIObject targetURIObject, PATCHRequest patchRequest, RDFSource targetRDFSource,
 			String requestETag, Application application, HttpServletRequest request, HttpServletResponse response) throws CarbonException {
 
-		validatePATCHRequestActions(patchRequest);
-
 		applyPATCHRequestActions(patchRequest, targetURIObject, targetRDFSource, application);
-
-		touchTargetRDFSource(targetURIObject, targetRDFSource);
 
 		return new ResponseEntity<Object>(HttpStatus.NOT_IMPLEMENTED);
 	}
@@ -165,18 +160,14 @@ public class PATCHRequestHandler extends AbstractLDPRequestHandler {
 		try {
 			patchRequest = factory.create(resource);
 		} catch (CarbonException e) {
-			e.getErrorObject().setHttpStatus(HttpStatus.INTERNAL_SERVER_ERROR);
+			e.getErrorObject().setHttpStatus(HttpStatus.BAD_REQUEST);
 			throw e;
 		}
 		return patchRequest;
 	}
 
-	protected void validatePATCHRequest(PATCHRequest patchRequest) {
-		// TODO Auto-generated method stub
-	}
-
-	protected LDPRSource getTargetRDFSource(URIObject targetURIObject, Application application) throws CarbonException {
-		LDPRSource targetRDFSource = null;
+	protected RDFSource getTargetRDFSource(URIObject targetURIObject, Application application) throws CarbonException {
+		RDFSource targetRDFSource = null;
 		try {
 			targetRDFSource = ldpService.getLDPRSource(targetURIObject, application.getDatasetName());
 		} catch (CarbonException e) {
@@ -194,21 +185,12 @@ public class PATCHRequestHandler extends AbstractLDPRequestHandler {
 		return requestETag != null;
 	}
 
-	private String getTargetETag(LDPRSource targetRDFSource) {
+	private String getTargetETag(RDFSource targetRDFSource) {
 		return targetRDFSource.getETag();
 	}
 
-	private void validatePATCHRequestActions(PATCHRequest patchRequest) {
-		// TODO Auto-generated method stub
-
-	}
-
-	private void applyPATCHRequestActions(PATCHRequest patchRequest, URIObject uriObject, LDPRSource rdfSource, Application application) throws CarbonException {
-		patchService.extendRDFSource(uriObject, patchRequest, application.getDatasetName());
-	}
-
-	private void touchTargetRDFSource(URIObject targetURIObject, LDPRSource targetRDFSource) {
-		// TODO Auto-generated method stub
-
+	private DateTime applyPATCHRequestActions(PATCHRequest patchRequest, URIObject uriObject, RDFSource rdfSource, Application application)
+			throws CarbonException {
+		return ldpService.patchRDFSource(uriObject, patchRequest, application.getDatasetName());
 	}
 }

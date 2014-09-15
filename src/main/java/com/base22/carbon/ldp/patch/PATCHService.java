@@ -1,5 +1,6 @@
 package com.base22.carbon.ldp.patch;
 
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -10,14 +11,17 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
-import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.base22.carbon.CarbonException;
 import com.base22.carbon.ldp.models.URIObject;
+import com.base22.carbon.models.ErrorResponse;
+import com.base22.carbon.models.ErrorResponseFactory;
+import com.base22.carbon.repository.TransactionNamedModelCache;
+import com.base22.carbon.repository.WriteTransactionCallback;
+import com.base22.carbon.repository.WriteTransactionTemplate;
 import com.base22.carbon.repository.services.RepositoryService;
-import com.base22.carbon.repository.services.WriteTransactionCallback;
-import com.base22.carbon.repository.services.WriteTransactionTemplate;
 import com.hp.hpl.jena.query.Dataset;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.Property;
@@ -36,24 +40,29 @@ public class PATCHService {
 
 	protected final Logger LOG = LoggerFactory.getLogger(this.getClass());
 
-	@PreAuthorize("hasPermission(#uriObject, 'EXTEND')")
-	public void extendRDFSource(final URIObject uriObject, final PATCHRequest patchRequest, String datasetName) throws CarbonException {
+	public void executePATCHRequest(final URIObject uriObject, final PATCHRequest patchRequest, String datasetName) throws CarbonException {
 		WriteTransactionTemplate template = repositoryService.getWriteTransactionTemplate(datasetName);
 		//@formatter:off
-		template.execute(new WriteTransactionCallback() {
+		executePATCHRequest(uriObject, patchRequest, datasetName, template);
+		template.execute();
+	}
+
+	public void executePATCHRequest(final URIObject uriObject, final PATCHRequest patchRequest, String datasetName, WriteTransactionTemplate template)
+			throws CarbonException {
+		template.addCallback(new WriteTransactionCallback() {
 			//@formatter:on
 			@Override
-			public void executeInTransaction(Dataset dataset) throws Exception {
-				Model model = dataset.getNamedModel(uriObject.getURI());
+			public void executeInTransaction(Dataset dataset, TransactionNamedModelCache namedModelCache) throws Exception {
+				Model model = namedModelCache.getNamedModel(uriObject.getURI());
 
-				executeAddActions(patchRequest, model);
-				executeSetActions(patchRequest, model);
-				executeDeleteActions(patchRequest, model);
+				executeAddActions(uriObject, patchRequest, model);
+				executeSetActions(uriObject, patchRequest, model);
+				executeDeleteActions(uriObject, patchRequest, model);
 			}
 		});
 	}
 
-	protected void executeAddActions(PATCHRequest patchRequest, Model domainModel) {
+	protected void executeAddActions(URIObject uriObject, PATCHRequest patchRequest, Model domainModel) throws CarbonException {
 		List<Statement> statementsToAdd = new ArrayList<Statement>();
 		for (AddAction action : patchRequest.getAddActions()) {
 			String realURI = action.getSubjectURI();
@@ -63,6 +72,8 @@ public class PATCHService {
 			while (iterator.hasNext()) {
 				Statement statement = changeSubject(realSubject, iterator.next());
 				Property predicate = statement.getPredicate();
+
+				validateStatement(uriObject, statement);
 
 				com.base22.carbon.ldp.patch.AddActionClass.Properties actionProperty = AddActionClass.Properties.findByURI(predicate.getURI());
 				if ( actionProperty != null ) {
@@ -82,7 +93,7 @@ public class PATCHService {
 		}
 	}
 
-	protected void executeSetActions(PATCHRequest patchRequest, Model domainModel) {
+	protected void executeSetActions(URIObject uriObject, PATCHRequest patchRequest, Model domainModel) throws CarbonException {
 		List<Statement> statementsToAdd = new ArrayList<Statement>();
 		for (SetAction action : patchRequest.getSetActions()) {
 			String realURI = action.getSubjectURI();
@@ -94,6 +105,8 @@ public class PATCHService {
 				Statement statement = changeSubject(realSubject, iterator.next());
 				Resource resourceToModify = domainModel.getResource(realURI);
 				Property predicate = statement.getPredicate();
+
+				validateStatement(uriObject, statement);
 
 				com.base22.carbon.ldp.patch.SetActionClass.Properties actionProperty = SetActionClass.Properties.findByURI(predicate.getURI());
 				if ( actionProperty != null ) {
@@ -119,7 +132,7 @@ public class PATCHService {
 		}
 	}
 
-	protected void executeDeleteActions(PATCHRequest patchRequest, Model domainModel) {
+	protected void executeDeleteActions(URIObject uriObject, PATCHRequest patchRequest, Model domainModel) throws CarbonException {
 		List<Statement> statementsToDelete = new ArrayList<Statement>();
 		for (DeleteAction action : patchRequest.getDeleteActions()) {
 			String realURI = action.getSubjectURI();
@@ -129,6 +142,8 @@ public class PATCHService {
 			while (iterator.hasNext()) {
 				Statement statement = changeSubject(realSubject, iterator.next());
 				Property predicate = statement.getPredicate();
+
+				validateStatement(uriObject, statement);
 
 				com.base22.carbon.ldp.patch.DeleteActionClass.Properties actionProperty = DeleteActionClass.Properties.findByURI(predicate.getURI());
 				if ( actionProperty != null ) {
@@ -142,7 +157,7 @@ public class PATCHService {
 	}
 
 	private void executeSpecialDeleteActionProperty(DeleteAction action, com.base22.carbon.ldp.patch.DeleteActionClass.Properties actionProperty,
-			Model domainModel, Statement statement) {
+			Model domainModel, Statement statement) throws CarbonException {
 		switch (actionProperty) {
 			case ALL_VALUES_OF:
 				deleteAllValues(action, domainModel, statement);
@@ -153,13 +168,21 @@ public class PATCHService {
 		}
 	}
 
-	private void deleteAllValues(DeleteAction action, Model domainModel, Statement statement) {
+	private void deleteAllValues(DeleteAction action, Model domainModel, Statement statement) throws CarbonException {
 		Resource subject = statement.getSubject();
 		RDFNode object = statement.getObject();
 
 		if ( ! object.isURIResource() ) {
-			// TODO: Throw exception
-			return;
+			String friendlyMessage = "The PATCH request has an invalid statement.";
+			String debugMessage = MessageFormat.format("The special property: ''{0}'', must point to an object node.",
+					DeleteActionClass.Properties.ALL_VALUES_OF.getPrefixedURI().getShortVersion());
+
+			ErrorResponseFactory errorFactory = new ErrorResponseFactory();
+			ErrorResponse errorObject = errorFactory.create();
+			errorObject.setFriendlyMessage(friendlyMessage);
+			errorObject.setDebugMessage(debugMessage);
+			errorObject.setHttpStatus(HttpStatus.BAD_REQUEST);
+			throw new CarbonException(errorObject);
 		}
 
 		Property property = ResourceFactory.createProperty(object.asResource().getURI());
@@ -171,6 +194,36 @@ public class PATCHService {
 		RDFNode object = statement.getObject();
 
 		return ResourceFactory.createStatement(newSubject, predicate, object);
+	}
 
+	private void validateStatement(URIObject uriObject, Statement statement) throws CarbonException {
+		Resource subject = statement.getSubject();
+		Property predicate = statement.getPredicate();
+
+		if ( ! subjectBelongsToDocument(uriObject, subject) ) {
+			String friendlyMessage = "The PATCH request has an invalid statement.";
+			String debugMessage = MessageFormat.format("The subject: ''{0}'', doesn't belong to the RDFSource document.", subject.getURI());
+
+			ErrorResponseFactory errorFactory = new ErrorResponseFactory();
+			ErrorResponse errorObject = errorFactory.create();
+			errorObject.setFriendlyMessage(friendlyMessage);
+			errorObject.setDebugMessage(debugMessage);
+			errorObject.setHttpStatus(HttpStatus.BAD_REQUEST);
+			throw new CarbonException(errorObject);
+		}
+	}
+
+	private boolean subjectBelongsToDocument(URIObject uriObject, Resource subject) {
+		String subjectURI = subject.getURI();
+
+		if ( ! subjectURI.startsWith(uriObject.getURI()) ) {
+			return false;
+		}
+
+		if ( subjectURI.replace(uriObject.getURI(), "").startsWith("/") ) {
+			return false;
+		}
+
+		return true;
 	}
 }

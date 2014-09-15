@@ -27,8 +27,8 @@ import com.base22.carbon.ConfigurationService;
 import com.base22.carbon.HttpHeaders;
 import com.base22.carbon.APIPreferences.AuthenticationPreference;
 import com.base22.carbon.authentication.AgentAuthenticationToken;
-import com.base22.carbon.ldp.models.LDPResource;
-import com.base22.carbon.ldp.models.LDPResourceFactory;
+import com.base22.carbon.ldp.models.RDFResource;
+import com.base22.carbon.ldp.models.RDFResourceFactory;
 import com.base22.carbon.models.HttpHeader;
 import com.base22.carbon.models.HttpHeaderValue;
 import com.base22.carbon.models.PrefixedURI;
@@ -72,7 +72,7 @@ public class AuthenticationGETRequestHandler {
 			setTokenCookie(token, response);
 		}
 
-		LDPResource tokenResource = getTokenResource(token);
+		RDFResource tokenResource = getTokenResource(token);
 
 		return new ResponseEntity<Object>(tokenResource, HttpStatus.OK);
 	}
@@ -102,7 +102,7 @@ public class AuthenticationGETRequestHandler {
 		return cookie;
 	}
 
-	private LDPResource getTokenResource(Token token) {
+	private RDFResource getTokenResource(Token token) {
 
 		StringBuilder uriBuilder = new StringBuilder();
 		//@formatter:off
@@ -116,8 +116,8 @@ public class AuthenticationGETRequestHandler {
 		Model model = ModelFactory.createDefaultModel();
 		Resource resource = model.createResource(uriBuilder.toString());
 
-		LDPResource tokenResource = null;
-		LDPResourceFactory factory = new LDPResourceFactory();
+		RDFResource tokenResource = null;
+		RDFResourceFactory factory = new RDFResourceFactory();
 		try {
 			tokenResource = factory.create(resource);
 		} catch (CarbonException e) {

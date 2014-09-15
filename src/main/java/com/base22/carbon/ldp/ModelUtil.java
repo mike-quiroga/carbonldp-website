@@ -2,6 +2,7 @@ package com.base22.carbon.ldp;
 
 import com.base22.carbon.Carbon;
 import com.hp.hpl.jena.rdf.model.Model;
+import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.update.UpdateAction;
 import com.hp.hpl.jena.update.UpdateFactory;
 import com.hp.hpl.jena.update.UpdateRequest;
@@ -39,5 +40,9 @@ public class ModelUtil {
 
 		UpdateRequest update = UpdateFactory.create(query);
 		UpdateAction.execute(update, model);
+	}
+
+	public static Model createDetachedCopy(Model atachedModel) {
+		return atachedModel.difference(ModelFactory.createDefaultModel());
 	}
 }

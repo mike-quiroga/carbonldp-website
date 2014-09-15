@@ -14,17 +14,17 @@ import com.base22.carbon.apps.Application;
 import com.base22.carbon.apps.ApplicationRDFFactory;
 import com.base22.carbon.apps.roles.ApplicationRole.Properties;
 import com.base22.carbon.apps.roles.ApplicationRole.Resources;
-import com.base22.carbon.ldp.models.LDPResource;
-import com.base22.carbon.ldp.models.LDPResourceFactory;
+import com.base22.carbon.ldp.models.RDFResource;
+import com.base22.carbon.ldp.models.RDFResourceFactory;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.rdf.model.ResourceFactory;
 
-public class ApplicationRoleRDFFactory extends LDPResourceFactory {
+public class ApplicationRoleRDFFactory extends RDFResourceFactory {
 
 	public ApplicationRoleRDF create(Resource resource) throws CarbonException {
-		LDPResource ldpResource = super.create(resource);
+		RDFResource ldpResource = super.create(resource);
 		if ( ! isRDFApplicationRole(ldpResource) ) {
 			throw new FactoryException("The resource isn't an ApplicationRole object.");
 		}
@@ -32,7 +32,7 @@ public class ApplicationRoleRDFFactory extends LDPResourceFactory {
 	}
 
 	public ApplicationRoleRDF create(String resourceURI, Model model) throws CarbonException {
-		LDPResource ldpResource = super.create(resourceURI, model);
+		RDFResource ldpResource = super.create(resourceURI, model);
 		if ( ! isRDFApplicationRole(ldpResource) ) {
 			throw new FactoryException("The resource isn't an ApplicationRole object.");
 		}
@@ -71,7 +71,7 @@ public class ApplicationRoleRDFFactory extends LDPResourceFactory {
 		return violations;
 	}
 
-	public boolean isRDFApplicationRole(LDPResource ldpResource) {
+	public boolean isRDFApplicationRole(RDFResource ldpResource) {
 		return ldpResource.isOfType(Resources.CLASS.getPrefixedURI().getURI());
 	}
 

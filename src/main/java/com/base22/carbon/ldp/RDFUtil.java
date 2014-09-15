@@ -10,7 +10,7 @@ import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.ResIterator;
 
-public class RdfUtil {
+public class RDFUtil {
 	
 	public static String getResourceParentURI(String uri) {
 		String parentURI = null;

@@ -55,7 +55,7 @@
 		<aop:scoped-proxy/>
 	</bean>
 
-	<bean name="rdfService" class="com.base22.carbon.repository.services.RDFService" init-method="init" scope="request">
+	<bean name="modelService" class="com.base22.carbon.repository.services.ModelService" init-method="init" scope="request">
 		<property name="repositoryService" ref="repositoryService" />
 		<property name="sparqlService" ref="sparqlService" />
 		<aop:scoped-proxy/>
@@ -63,7 +63,7 @@
 	
 	<bean name="ldpService" class="com.base22.carbon.repository.services.LDPService" init-method="init" scope="request">
 		<property name="sparqlService" ref="sparqlService" />
-		<property name="rdfService" ref="rdfService" />
+		<property name="modelService" ref="modelService" />
 		<aop:scoped-proxy/>
 	</bean>
 </beans>

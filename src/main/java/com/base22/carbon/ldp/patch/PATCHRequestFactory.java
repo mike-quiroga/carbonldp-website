@@ -5,16 +5,16 @@ import java.util.List;
 
 import com.base22.carbon.CarbonException;
 import com.base22.carbon.FactoryException;
-import com.base22.carbon.ldp.models.LDPResource;
-import com.base22.carbon.ldp.models.LDPResourceFactory;
+import com.base22.carbon.ldp.models.RDFResource;
+import com.base22.carbon.ldp.models.RDFResourceFactory;
 import com.base22.carbon.ldp.patch.PATCHRequestClass.Properties;
 import com.base22.carbon.ldp.patch.PATCHRequestClass.Resources;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.Resource;
 
-public class PATCHRequestFactory extends LDPResourceFactory {
+public class PATCHRequestFactory extends RDFResourceFactory {
 	public PATCHRequestImpl create(Resource resource) throws CarbonException {
-		LDPResource ldpResource = super.create(resource);
+		RDFResource ldpResource = super.create(resource);
 		if ( ! isPATCHRequest(ldpResource) ) {
 			throw new FactoryException("The resource isn't a PATCHRequest object.");
 		}
@@ -22,7 +22,7 @@ public class PATCHRequestFactory extends LDPResourceFactory {
 	}
 
 	public PATCHRequestImpl create(String resourceURI, Model model) throws CarbonException {
-		LDPResource ldpResource = super.create(resourceURI, model);
+		RDFResource ldpResource = super.create(resourceURI, model);
 		if ( ! isPATCHRequest(ldpResource) ) {
 			throw new FactoryException("The resource isn't an PATCHRequest object.");
 		}
@@ -36,11 +36,11 @@ public class PATCHRequestFactory extends LDPResourceFactory {
 	}
 
 	public boolean isPATCHRequest(Resource resource) throws CarbonException {
-		LDPResource ldpResource = super.create(resource);
+		RDFResource ldpResource = super.create(resource);
 		return isPATCHRequest(ldpResource);
 	}
 
-	public boolean isPATCHRequest(LDPResource ldpResource) {
+	public boolean isPATCHRequest(RDFResource ldpResource) {
 		return ldpResource.isOfType(Resources.CLASS.getPrefixedURI().getURI());
 	}
 

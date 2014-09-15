@@ -1,25 +1,39 @@
-package com.base22.carbon.models;
+package com.base22.carbon.ldp.models;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
-
-import com.base22.carbon.CarbonException;
-import com.base22.carbon.FactoryException;
-import com.base22.carbon.authentication.AuthenticationUtil;
-import com.base22.carbon.ldp.models.RDFResourceFactory;
-import com.base22.carbon.ldp.models.RDFResource;
-import com.hp.hpl.jena.rdf.model.Model;
+import com.base22.carbon.Carbon;
+import com.base22.carbon.models.PrefixedURI;
+import com.base22.carbon.models.RDFPropertyEnum;
+import com.base22.carbon.models.RDFResourceEnum;
 import com.hp.hpl.jena.rdf.model.Property;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.rdf.model.ResourceFactory;
 
-public class GenericRequestRDFFactory extends RDFResourceFactory {
+public abstract class RDFSourceClass {
+	public static final String TYPE = Carbon.CONFIGURED_PREFIXES.get("ldp").concat("RDFSource");
+	public static final String LINK_TYPE = "<" + TYPE + ">; rel=\"type\"";
+
+	public static final String CREATED = Carbon.CONFIGURED_PREFIXES.get("c") + "created";
+	public static final Property CREATED_P = ResourceFactory.createProperty(CREATED);
+
+	public static final String MODIFIED = Carbon.CONFIGURED_PREFIXES.get("c") + "modified";
+	public static final Property MODIFIED_P = ResourceFactory.createProperty(MODIFIED);
+
+	public static final String HAS_ACCESS_POINT = Carbon.CONFIGURED_PREFIXES.get("c") + "accessPoint";
+	public static final Property HAS_ACCESS_POINT_P = ResourceFactory.createProperty(HAS_ACCESS_POINT);
+
+	// TODO: Move this?
+	public static final String ACCESS_POINT_CLASS = Carbon.CONFIGURED_PREFIXES.get("c") + "AccessPoint";
+	public static final String ACCESS_POINT_PREFIX = Carbon.SYSTEM_RESOURCE_SIGN + "accessPoint-";
+	public static final String CONTAINER = Carbon.CONFIGURED_PREFIXES.get("c") + "container";
+	public static final Property CONTAINER_P = ResourceFactory.createProperty(CONTAINER);
+
+	public static final String FOR_PROPERTY = Carbon.CONFIGURED_PREFIXES.get("c") + "forProperty";
+	public static final Property FOR_PROPERTY_P = ResourceFactory.createProperty(FOR_PROPERTY);
 
 	public static enum Resources implements RDFResourceEnum {
 		//@formatter:off
 		CLASS(
-			new PrefixedURI("c", "GenericRequest")
+			new PrefixedURI("ldp", "RDFSource")
 		);
 		//@formatter:on
 
@@ -63,11 +77,16 @@ public class GenericRequestRDFFactory extends RDFResourceFactory {
 		}
 	}
 
-	// TODO: Finish Vocabulary
 	public static enum Properties implements RDFPropertyEnum {
 		//@formatter:off
-		UUID(
-			new PrefixedURI("c", "uuid")
+		CREATED(
+			new PrefixedURI("c", "created")
+		),
+		MODIFIED(
+			new PrefixedURI("c", "modified")
+		),
+		HAS_ACCESS_POINT(
+			new PrefixedURI("c", "accessPoint")
 		);
 		//@formatter:on
 
@@ -107,52 +126,4 @@ public class GenericRequestRDFFactory extends RDFResourceFactory {
 		}
 	}
 
-	@Override
-	public GenericRequestRDF create(Resource resource) throws CarbonException {
-		RDFResource ldpResource = super.create(resource);
-		if ( ! isRDFGenericRequest(ldpResource) ) {
-			throw new FactoryException("The resource isn't a GenericRequest object.");
-		}
-		return new RDFGenericRequestImpl(resource);
-	}
-
-	@Override
-	public GenericRequestRDF create(String resourceURI, Model model) throws CarbonException {
-		RDFResource ldpResource = super.create(resourceURI, model);
-		if ( ! isRDFGenericRequest(ldpResource) ) {
-			throw new FactoryException("The resource isn't a GenericRequest object.");
-		}
-		return new RDFGenericRequestImpl(ldpResource.getResource());
-	}
-
-	public boolean isRDFGenericRequest(RDFResource ldpResource) throws CarbonException {
-		return ldpResource.isOfType(Resources.CLASS.getPrefixedURI().getURI());
-	}
-
-	public List<String> validate(GenericRequestRDF toValidate) {
-		// TODO: IT
-		return null;
-	}
-
-	protected class RDFGenericRequestImpl extends LDPResourceImpl implements GenericRequestRDF {
-
-		public RDFGenericRequestImpl(Resource resource) {
-			super(resource);
-		}
-
-		@Override
-		public UUID[] getUUIDs() {
-			String[] uuidStrings = this.getStrings(Properties.UUID.getProperty());
-			List<UUID> uuids = new ArrayList<UUID>();
-
-			for (String uuidString : uuidStrings) {
-				if ( AuthenticationUtil.isUUIDString(uuidString) ) {
-					uuids.add(AuthenticationUtil.restoreUUID(uuidString));
-				}
-			}
-
-			return (UUID[]) uuids.toArray();
-		}
-
-	}
 }

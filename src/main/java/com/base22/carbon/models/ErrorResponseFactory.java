@@ -6,14 +6,14 @@ import org.joda.time.DateTime;
 import org.springframework.http.HttpStatus;
 
 import com.base22.carbon.Carbon;
-import com.base22.carbon.ldp.models.LDPResourceFactory;
+import com.base22.carbon.ldp.models.RDFResourceFactory;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.Property;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.rdf.model.ResourceFactory;
 
-public class ErrorResponseFactory extends LDPResourceFactory {
+public class ErrorResponseFactory extends RDFResourceFactory {
 
 	public static final String BASE = "/errors/";
 

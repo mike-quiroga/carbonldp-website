@@ -1,5 +1,6 @@
 package com.base22.carbon.repository.services;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -16,22 +17,26 @@ import org.springframework.stereotype.Service;
 import com.base22.carbon.APIPreferences.InteractionModel;
 import com.base22.carbon.CarbonException;
 import com.base22.carbon.authorization.PermissionService;
-import com.base22.carbon.ldp.LDPC;
-import com.base22.carbon.ldp.LDPC.ContainerType;
-import com.base22.carbon.ldp.LDPNR;
-import com.base22.carbon.ldp.LDPR;
-import com.base22.carbon.ldp.LDPRS;
 import com.base22.carbon.ldp.URIObjectDAO;
-import com.base22.carbon.ldp.models.LDPContainer;
-import com.base22.carbon.ldp.models.LDPContainerFactory;
-import com.base22.carbon.ldp.models.LDPContainerQueryOptions;
-import com.base22.carbon.ldp.models.LDPContainerQueryOptions.METHOD;
-import com.base22.carbon.ldp.models.LDPRSource;
-import com.base22.carbon.ldp.models.LDPRSourceFactory;
+import com.base22.carbon.ldp.models.Container;
+import com.base22.carbon.ldp.models.ContainerFactory;
+import com.base22.carbon.ldp.models.ContainerQueryOptions;
+import com.base22.carbon.ldp.models.ContainerClass.ContainerType;
+import com.base22.carbon.ldp.models.ContainerQueryOptions.METHOD;
+import com.base22.carbon.ldp.models.ContainerClass;
+import com.base22.carbon.ldp.models.NonRDFSourceClass;
+import com.base22.carbon.ldp.models.RDFResourceClass;
+import com.base22.carbon.ldp.models.RDFSource;
+import com.base22.carbon.ldp.models.RDFSourceClass;
+import com.base22.carbon.ldp.models.RDFSourceFactory;
 import com.base22.carbon.ldp.models.URIObject;
 import com.base22.carbon.ldp.models.WrapperForLDPNR;
 import com.base22.carbon.ldp.models.WrapperForLDPNRFactory;
+import com.base22.carbon.ldp.patch.PATCHRequest;
+import com.base22.carbon.ldp.patch.PATCHService;
+import com.base22.carbon.repository.WriteTransactionTemplate;
 import com.base22.carbon.sparql.SPARQLService;
+import com.hp.hpl.jena.datatypes.xsd.XSDDatatype;
 import com.hp.hpl.jena.graph.Node;
 import com.hp.hpl.jena.query.Query;
 import com.hp.hpl.jena.query.QuerySolution;
@@ -39,6 +44,8 @@ import com.hp.hpl.jena.query.ResultSet;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.Property;
+import com.hp.hpl.jena.rdf.model.RDFNode;
+import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.rdf.model.ResourceFactory;
 import com.hp.hpl.jena.rdf.model.Statement;
 
@@ -47,9 +54,13 @@ import com.hp.hpl.jena.rdf.model.Statement;
 public class LDPService {
 
 	@Autowired
-	private RDFService rdfService;
+	private RepositoryService repositoryService;
+	@Autowired
+	private ModelService modelService;
 	@Autowired
 	private SPARQLService sparqlService;
+	@Autowired
+	private PATCHService patchService;
 	@Autowired
 	private URIObjectDAO uriObjectDAO;
 	@Autowired
@@ -63,7 +74,7 @@ public class LDPService {
 	// ========= LDP-RS Related Methods
 
 	@PreAuthorize("hasPermission(#parentURIObject, 'CREATE_LDPRS')")
-	public URIObject createChildLDPRSource(LDPRSource ldpRSource, URIObject parentURIObject, String dataset) throws CarbonException {
+	public URIObject createChildLDPRSource(RDFSource ldpRSource, URIObject parentURIObject, String dataset) throws CarbonException {
 		String documentURI = ldpRSource.getURI();
 
 		// Create the URIObject for the LDPRSource
@@ -77,7 +88,7 @@ public class LDPService {
 		// Add the namedModel to the dataset
 		Model sourceModel = ldpRSource.getResource().getModel();
 		try {
-			rdfService.addNamedModel(documentURI, sourceModel, dataset);
+			modelService.addNamedModel(documentURI, sourceModel, dataset);
 		} catch (CarbonException e) {
 			throw e;
 		}
@@ -94,15 +105,15 @@ public class LDPService {
 	// TODO: Refactor Method
 	// TODO: Take into account secured properties
 	@PreAuthorize("hasPermission(#documentURIObject, 'READ')")
-	public LDPRSource getLDPRSource(URIObject documentURIObject, String dataset) throws CarbonException {
-		LDPRSource ldpRSource = null;
+	public RDFSource getLDPRSource(URIObject documentURIObject, String dataset) throws CarbonException {
+		RDFSource ldpRSource = null;
 
 		String documentURI = documentURIObject.getURI();
 
-		Model model = rdfService.getNamedModel(documentURI, dataset);
+		Model model = modelService.getNamedModel(documentURI, dataset);
 		model = model.difference(ModelFactory.createDefaultModel());
 
-		LDPRSourceFactory factory = new LDPRSourceFactory();
+		RDFSourceFactory factory = new RDFSourceFactory();
 		try {
 			ldpRSource = factory.create(documentURI, model);
 		} catch (CarbonException e) {
@@ -115,8 +126,8 @@ public class LDPService {
 		return ldpRSource;
 	}
 
-	public LDPRSource getLDPRSourceBranch(URIObject documentURIObject, String dataset) throws CarbonException {
-		LDPRSource source = null;
+	public RDFSource getLDPRSourceBranch(URIObject documentURIObject, String dataset) throws CarbonException {
+		RDFSource source = null;
 
 		String documentURI = documentURIObject.getURI();
 
@@ -154,7 +165,7 @@ public class LDPService {
 
 		Model model = sparqlService.construct(query.toString(), dataset);
 
-		LDPRSourceFactory factory = new LDPRSourceFactory();
+		RDFSourceFactory factory = new RDFSourceFactory();
 		try {
 			source = factory.create(documentURI, model);
 		} catch (CarbonException e) {
@@ -171,7 +182,7 @@ public class LDPService {
 	public ResultSet executeSELECTonLDPRSource(URIObject documentURIObject, Query query, String dataset) throws CarbonException {
 		ResultSet resultSet = null;
 
-		LDPRSource rdfSourceBranch = this.getLDPRSourceBranch(documentURIObject, dataset);
+		RDFSource rdfSourceBranch = this.getLDPRSourceBranch(documentURIObject, dataset);
 
 		try {
 			resultSet = sparqlService.select(query, rdfSourceBranch.getResource().getModel());
@@ -186,7 +197,7 @@ public class LDPService {
 	public Model executeCONSTRUCTonLDPRSource(URIObject documentURIObject, Query query, String dataset) throws CarbonException {
 		Model model = null;
 
-		LDPRSource rdfSourceBranch = this.getLDPRSourceBranch(documentURIObject, dataset);
+		RDFSource rdfSourceBranch = this.getLDPRSourceBranch(documentURIObject, dataset);
 
 		try {
 			model = sparqlService.construct(query, rdfSourceBranch.getResource().getModel());
@@ -201,7 +212,7 @@ public class LDPService {
 	public Model executeDESCRIBEonLDPRSource(URIObject documentURIObject, Query query, String dataset) throws CarbonException {
 		Model model = null;
 
-		LDPRSource rdfSourceBranch = this.getLDPRSourceBranch(documentURIObject, dataset);
+		RDFSource rdfSourceBranch = this.getLDPRSourceBranch(documentURIObject, dataset);
 
 		try {
 			model = sparqlService.describe(query, rdfSourceBranch.getResource().getModel());
@@ -216,7 +227,7 @@ public class LDPService {
 	public Boolean executeASKonLDPRSource(URIObject documentURIObject, Query query, String dataset) throws CarbonException {
 		Boolean result = null;
 
-		LDPRSource rdfSourceBranch = this.getLDPRSourceBranch(documentURIObject, dataset);
+		RDFSource rdfSourceBranch = this.getLDPRSourceBranch(documentURIObject, dataset);
 
 		try {
 			result = sparqlService.ask(query, rdfSourceBranch.getResource().getModel());
@@ -246,7 +257,7 @@ public class LDPService {
 					.append("<")
 						.append(documentURI)
 						.append("> <")
-							.append(LDPRS.MODIFIED)
+							.append(RDFSourceClass.MODIFIED)
 						.append("> ?etag.")
 				.append("}")
 			.append("}")
@@ -284,7 +295,7 @@ public class LDPService {
 					.append("<")
 						.append(documentURI)
 					.append("> <")
-						.append(LDPR.Properties.RDF_TYPE.getUri())
+						.append(RDFResourceClass.Properties.RDF_TYPE.getUri())
 					.append("> ?type.")
 				.append("}")
 			.append("}")
@@ -307,34 +318,40 @@ public class LDPService {
 	public String getRealURIofLDPRSource(String documentURI, String dataset) throws CarbonException {
 		String realURI = null;
 
-		if ( rdfService.namedModelExists(documentURI, dataset) ) {
+		if ( modelService.namedModelExists(documentURI, dataset) ) {
 			realURI = documentURI;
 		}
 		documentURI = documentURI.concat("/");
-		if ( rdfService.namedModelExists(documentURI, dataset) ) {
+		if ( modelService.namedModelExists(documentURI, dataset) ) {
 			realURI = documentURI;
 		}
 
 		return realURI;
 	}
 
-	// TODO: Refactor Method
 	@PreAuthorize("hasPermission(#documentURIObject, 'UPDATE')")
-	public long touchLDPRSource(URIObject documentURIObject, String dataset) throws CarbonException {
-		String documentURI = documentURIObject.getURI();
+	public DateTime touchRDFSource(URIObject documentURIObject, String datasetName) throws CarbonException {
+		WriteTransactionTemplate template = repositoryService.getWriteTransactionTemplate(datasetName);
+		DateTime modified = touchRDFSource(documentURIObject, template);
+		template.execute();
+		return modified;
+	}
 
-		DateTime now = DateTime.now();
+	private DateTime touchRDFSource(URIObject documentURIObject, WriteTransactionTemplate template) throws CarbonException {
+		final DateTime modified = DateTime.now();
 
-		// Create remove older modified timestamp sparql query
-		rdfService.deleteTriples(documentURI, documentURI, LDPRS.MODIFIED, null, dataset);
+		modelService.deleteProperty(documentURIObject, documentURIObject.getURI(), RDFSourceClass.Properties.MODIFIED.getProperty(), template);
 
-		// Insert the new timestamp
-		rdfService.insertTriple(documentURI, documentURI, LDPRS.MODIFIED, now.getMillis(), dataset);
-		return now.getMillis();
+		Resource resource = ResourceFactory.createResource(documentURIObject.getURI());
+		RDFNode object = ResourceFactory.createTypedLiteral(modified.toString(), XSDDatatype.XSDdateTime);
+		Statement modifiedStatement = ResourceFactory.createStatement(resource, RDFSourceClass.Properties.MODIFIED.getProperty(), object);
+		modelService.addStatements(documentURIObject, Arrays.asList(modifiedStatement), template);
+
+		return modified;
 	}
 
 	@PreAuthorize("hasPermission(#documentURIObject, 'EXTEND')")
-	public void replaceLDPRSource(LDPRSource ldpRSource, URIObject documentURIObject, String dataset) throws CarbonException {
+	public void replaceLDPRSource(RDFSource ldpRSource, URIObject documentURIObject, String dataset) throws CarbonException {
 		try {
 			deleteLDPRSource(documentURIObject, false, dataset);
 		} catch (CarbonException e) {
@@ -344,7 +361,7 @@ public class LDPService {
 		// Add the namedModel to the dataset
 		Model sourceModel = ldpRSource.getResource().getModel();
 		try {
-			rdfService.addNamedModel(documentURIObject.getURI(), sourceModel, dataset);
+			modelService.addNamedModel(documentURIObject.getURI(), sourceModel, dataset);
 		} catch (CarbonException e) {
 			// TODO: FT
 			throw e;
@@ -453,6 +470,19 @@ public class LDPService {
 		sparqlService.update(query.toString(), dataset);
 	}
 
+	@PreAuthorize("hasPermission(#documentURIObject, 'UPDATE')")
+	public DateTime patchRDFSource(URIObject documentURIObject, PATCHRequest patchRequest, String datasetName) throws CarbonException {
+		WriteTransactionTemplate template = repositoryService.getWriteTransactionTemplate(datasetName);
+
+		patchService.executePATCHRequest(documentURIObject, patchRequest, datasetName, template);
+
+		DateTime modified = touchRDFSource(documentURIObject, template);
+
+		template.execute();
+
+		return modified;
+	}
+
 	// ========= End: LDP-RS Related Methods
 	// ========= LDP-NR Related Methods
 
@@ -471,7 +501,7 @@ public class LDPService {
 		// Add the namedModel to the dataset
 		Model sourceModel = wrapper.getResource().getModel();
 		try {
-			rdfService.addNamedModel(documentURI, sourceModel, dataset);
+			modelService.addNamedModel(documentURI, sourceModel, dataset);
 		} catch (CarbonException e) {
 			throw e;
 		}
@@ -493,7 +523,7 @@ public class LDPService {
 
 		Model model = null;
 		try {
-			model = rdfService.getNamedModel(documentURI, dataset);
+			model = modelService.getNamedModel(documentURI, dataset);
 		} catch (CarbonException e) {
 			throw e;
 		}
@@ -515,7 +545,7 @@ public class LDPService {
 	public boolean documentIsWrapperForLDPNR(Set<String> documentTypes) {
 		boolean itIs = false;
 
-		if ( documentTypes.contains(LDPNR.TYPE) ) {
+		if ( documentTypes.contains(NonRDFSourceClass.TYPE) ) {
 			itIs = true;
 		}
 
@@ -526,7 +556,7 @@ public class LDPService {
 	// ========= LDP-C Related Methods
 
 	@PreAuthorize("hasAuthority('PRIV_CREATE_APPLICATIONS')")
-	public URIObject createRootContainer(LDPContainer container, String dataset) throws CarbonException {
+	public URIObject createRootContainer(Container container, String dataset) throws CarbonException {
 		String documentURI = container.getURI();
 
 		// Create the URIObject for the LDPRSource
@@ -540,7 +570,7 @@ public class LDPService {
 		// Add the namedModel to the dataset
 		Model sourceModel = container.getResource().getModel();
 		try {
-			rdfService.addNamedModel(documentURI, sourceModel, dataset);
+			modelService.addNamedModel(documentURI, sourceModel, dataset);
 		} catch (CarbonException e) {
 			throw e;
 		}
@@ -550,7 +580,7 @@ public class LDPService {
 
 	// TODO: Implement
 	@PreAuthorize("hasPermission(#parentURIObject, 'CREATE_LDPC')")
-	public URIObject createChildLDPContainer(LDPContainer container, URIObject parentURIObject, String dataset) throws CarbonException {
+	public URIObject createChildLDPContainer(Container container, URIObject parentURIObject, String dataset) throws CarbonException {
 		return createChildLDPRSource(container, parentURIObject, dataset);
 	}
 
@@ -558,11 +588,11 @@ public class LDPService {
 	public boolean documentIsContainer(Set<String> documentTypes) {
 		boolean itIs = false;
 
-		if ( documentTypes.contains(LDPC.BASIC) )
+		if ( documentTypes.contains(ContainerClass.BASIC) )
 			itIs = true;
-		if ( documentTypes.contains(LDPC.DIRECT) )
+		if ( documentTypes.contains(ContainerClass.DIRECT) )
 			itIs = true;
-		if ( documentTypes.contains(LDPC.INDIRECT) )
+		if ( documentTypes.contains(ContainerClass.INDIRECT) )
 			itIs = true;
 
 		return itIs;
@@ -585,19 +615,19 @@ public class LDPService {
 					.append("<")
 						.append(documentURI)
 					.append("> <")
-						.append(LDPR.Properties.RDF_TYPE.getUri())
+						.append(RDFResourceClass.Properties.RDF_TYPE.getUri())
 					.append("> ?type.")
 					.append("FILTER(")
 						.append("?type = <")
-							.append(LDPC.BASIC)
+							.append(ContainerClass.BASIC)
 						.append(">")
 						.append("||")
 						.append("?type = <")
-							.append(LDPC.DIRECT)
+							.append(ContainerClass.DIRECT)
 						.append(">")
 						.append("||")
 						.append("?type = <")
-							.append(LDPC.INDIRECT)
+							.append(ContainerClass.INDIRECT)
 						.append(">")
 					.append(")")
 				.append("}")
@@ -614,12 +644,12 @@ public class LDPService {
 	public String getDocumentContainerType(Set<String> documentTypes) {
 
 		for (String docType : documentTypes) {
-			if ( docType.equalsIgnoreCase(LDPC.BASIC) ) {
-				return LDPC.BASIC;
-			} else if ( docType.equalsIgnoreCase(LDPC.DIRECT) ) {
-				return LDPC.DIRECT;
-			} else if ( docType.equalsIgnoreCase(LDPC.INDIRECT) ) {
-				return LDPC.INDIRECT;
+			if ( docType.equalsIgnoreCase(ContainerClass.BASIC) ) {
+				return ContainerClass.BASIC;
+			} else if ( docType.equalsIgnoreCase(ContainerClass.DIRECT) ) {
+				return ContainerClass.DIRECT;
+			} else if ( docType.equalsIgnoreCase(ContainerClass.INDIRECT) ) {
+				return ContainerClass.INDIRECT;
 			}
 		}
 
@@ -646,7 +676,7 @@ public class LDPService {
 					.append("<")
 						.append(documentURI)
 					.append("> <")
-						.append(LDPR.Properties.RDF_TYPE.getUri())
+						.append(RDFResourceClass.Properties.RDF_TYPE.getUri())
 					.append("> ?type.")
 					.append("FILTER(")
 		;
@@ -710,7 +740,7 @@ public class LDPService {
 					.append("<")
 						.append(documentURI)
 					.append("> <")
-						.append(LDPC.DIM)
+						.append(ContainerClass.DIM)
 					.append("> ?model.")
 				.append("}")
 			.append("}")
@@ -740,17 +770,17 @@ public class LDPService {
 	}
 
 	@PreAuthorize("hasPermission(#documentURIObject, 'READ')")
-	public LDPContainer getLDPContainer(URIObject documentURIObject, String dataset) throws CarbonException {
-		return getLDPContainer(documentURIObject, dataset, new LDPContainerQueryOptions(LDPContainerQueryOptions.METHOD.GET));
+	public Container getLDPContainer(URIObject documentURIObject, String dataset) throws CarbonException {
+		return getLDPContainer(documentURIObject, dataset, new ContainerQueryOptions(ContainerQueryOptions.METHOD.GET));
 	}
 
 	@PreAuthorize("hasPermission(#documentURIObject, 'READ')")
-	public LDPContainer getLDPContainer(URIObject documentURIObject, String dataset, String containerType) throws CarbonException {
-		return getLDPContainer(documentURIObject, dataset, containerType, new LDPContainerQueryOptions(LDPContainerQueryOptions.METHOD.GET));
+	public Container getLDPContainer(URIObject documentURIObject, String dataset, String containerType) throws CarbonException {
+		return getLDPContainer(documentURIObject, dataset, containerType, new ContainerQueryOptions(ContainerQueryOptions.METHOD.GET));
 	}
 
 	@PreAuthorize("hasPermission(#documentURIObject, 'READ')")
-	public LDPContainer getLDPContainer(URIObject documentURIObject, String dataset, LDPContainerQueryOptions options) throws CarbonException {
+	public Container getLDPContainer(URIObject documentURIObject, String dataset, ContainerQueryOptions options) throws CarbonException {
 		ContainerType containerType = null;
 
 		try {
@@ -764,23 +794,23 @@ public class LDPService {
 			throw new CarbonException("");
 		}
 
-		return getLDPContainer(documentURIObject, dataset, containerType.getURI(), new LDPContainerQueryOptions(LDPContainerQueryOptions.METHOD.GET));
+		return getLDPContainer(documentURIObject, dataset, containerType.getURI(), new ContainerQueryOptions(ContainerQueryOptions.METHOD.GET));
 	}
 
 	// TODO: Refactor Method
 	@PreAuthorize("hasPermission(#documentURIObject, 'READ')")
-	public LDPContainer getLDPContainer(URIObject documentURIObject, String dataset, String containerType, LDPContainerQueryOptions options)
+	public Container getLDPContainer(URIObject documentURIObject, String dataset, String containerType, ContainerQueryOptions options)
 			throws CarbonException {
-		LDPContainer ldpContainer = null;
+		Container ldpContainer = null;
 
 		String documentURI = documentURIObject.getURI();
 
 		String query = null;
-		if ( containerType.equals(LDPC.BASIC) ) {
+		if ( containerType.equals(ContainerClass.BASIC) ) {
 			query = prepareLDPBasicContainerQuery(documentURI, options);
-		} else if ( containerType.equals(LDPC.DIRECT) ) {
+		} else if ( containerType.equals(ContainerClass.DIRECT) ) {
 			query = prepareLDPDirectContainerQuery(documentURI, options);
-		} else if ( containerType.equals(LDPC.INDIRECT) ) {
+		} else if ( containerType.equals(ContainerClass.INDIRECT) ) {
 			query = prepareLDPIndirectContainerQuery(documentURI, options);
 		} else {
 			// TODO: Finish this
@@ -794,7 +824,7 @@ public class LDPService {
 		Model ldpContainerModel;
 		ldpContainerModel = sparqlService.construct(query, dataset);
 
-		LDPContainerFactory factory = new LDPContainerFactory();
+		ContainerFactory factory = new ContainerFactory();
 		try {
 			ldpContainer = factory.create(documentURI, ldpContainerModel);
 		} catch (CarbonException e) {
@@ -815,7 +845,7 @@ public class LDPService {
 		String documentURI = documentURIObject.getURI();
 		StringBuilder queryBuilder = new StringBuilder();
 
-		if ( containerType.equals(LDPC.BASIC) ) {
+		if ( containerType.equals(ContainerClass.BASIC) ) {
 			//@formatter:off
 			queryBuilder
 				.append("SELECT (COUNT(distinct ?containedObjects) as ?contained) (COUNT(distinct ?memberObjects) as ?members)")
@@ -827,7 +857,7 @@ public class LDPService {
 							.append("\n\t\t\t<")
 								.append(documentURI)
 							.append("> <")
-							.append(LDPC.CONTAINS)
+							.append(ContainerClass.CONTAINS)
 							.append("> ?containedObjects.")
 						.append("\n\t\t}")
 					.append("\n\t}.")
@@ -838,14 +868,14 @@ public class LDPService {
 							.append("\n\t\t\t<")
 								.append(documentURI)
 							.append("> <")
-							.append(LDPC.DEFAULT_HAS_MEMBER_RELATION)
+							.append(ContainerClass.DEFAULT_HAS_MEMBER_RELATION)
 							.append("> ?memberObjects.")
 						.append("\n\t\t}")
 					.append("\n\t}.")
 				.append("\n}")
 			;
 			//@formatter:on
-		} else if ( containerType.equals(LDPC.DIRECT) ) {
+		} else if ( containerType.equals(ContainerClass.DIRECT) ) {
 			//@formatter:off
 			queryBuilder
 				.append("SELECT (COUNT(distinct ?containedObjects) as ?contained) (COUNT(distinct ?memberObjects) as ?members)")
@@ -857,7 +887,7 @@ public class LDPService {
 							.append("\n\t\t\t<")
 								.append(documentURI)
 							.append("> <")
-							.append(LDPC.CONTAINS)
+							.append(ContainerClass.CONTAINS)
 							.append("> ?containedObjects.")
 						.append("\n\t\t}")
 					.append("\n\t}.")
@@ -868,10 +898,10 @@ public class LDPService {
 							.append(documentURI)
 						.append("> ")
 						.append("\n\t\t\t<")
-						.append(LDPC.MEMBERSHIP_RESOURCE)
+						.append(ContainerClass.MEMBERSHIP_RESOURCE)
 						.append("> ?membershipResource;")
 						.append("\n\t\t\t<")
-						.append(LDPC.HAS_MEMBER_RELATION)
+						.append(ContainerClass.HAS_MEMBER_RELATION)
 						.append("> ?hasMemberRelation.")
 					.append("\n\t}")
 					.append("\n\tOPTIONAL {")
@@ -882,7 +912,7 @@ public class LDPService {
 				.append("\n}")
 			;
 			//@formatter:on
-		} else if ( containerType.equals(LDPC.INDIRECT) ) {
+		} else if ( containerType.equals(ContainerClass.INDIRECT) ) {
 			//@formatter:off
 			queryBuilder
 				.append("SELECT (COUNT(distinct ?containedObjects) as ?contained) (COUNT(distinct ?memberObjects) as ?members)")
@@ -894,7 +924,7 @@ public class LDPService {
 							.append("\n\t\t\t<")
 								.append(documentURI)
 							.append("> <")
-							.append(LDPC.CONTAINS)
+							.append(ContainerClass.CONTAINS)
 							.append("> ?containedObjects.")
 						.append("\n\t\t}")
 					.append("\n\t}.")
@@ -905,10 +935,10 @@ public class LDPService {
 							.append(documentURI)
 						.append("> ")
 						.append("\n\t\t\t<")
-						.append(LDPC.MEMBERSHIP_RESOURCE)
+						.append(ContainerClass.MEMBERSHIP_RESOURCE)
 						.append("> ?membershipResource;")
 						.append("\n\t\t\t<")
-						.append(LDPC.HAS_MEMBER_RELATION)
+						.append(ContainerClass.HAS_MEMBER_RELATION)
 						.append("> ?hasMemberRelation.")
 					.append("\n\t}")
 					.append("\n\tOPTIONAL {")
@@ -954,7 +984,7 @@ public class LDPService {
 	}
 
 	//@formatter:off
-	private String prepareLDPBasicContainerQuery(String documentURI, LDPContainerQueryOptions options) {
+	private String prepareLDPBasicContainerQuery(String documentURI, ContainerQueryOptions options) {
 		StringBuffer query = new StringBuffer();
 				
 		if( options.includeContainerProperties() && !options.includeContainmentTriples() && !options.includeMembershipTriples() ) {
@@ -974,9 +1004,9 @@ public class LDPService {
 							.append(documentURI)
 						.append("> ?containerPredicate ?containerObject.")
 						.append("\n\t\tFILTER( ?containerPredicate != <")
-						.append(LDPC.CONTAINS)
+						.append(ContainerClass.CONTAINS)
 						.append("> && ?containerPredicate != <")
-						.append(LDPC.DEFAULT_HAS_MEMBER_RELATION)
+						.append(ContainerClass.DEFAULT_HAS_MEMBER_RELATION)
 						.append("> )")
 					.append("\n\t}")
 				.append("\n}")
@@ -999,7 +1029,7 @@ public class LDPService {
 							.append(documentURI)
 						.append("> ?containerPredicate ?containerObject.")
 						.append("\n\t\tFILTER( ?containerPredicate != <")
-						.append(LDPC.DEFAULT_HAS_MEMBER_RELATION)
+						.append(ContainerClass.DEFAULT_HAS_MEMBER_RELATION)
 						.append("> )")
 					.append("\n\t}")
 				.append("\n}")
@@ -1022,7 +1052,7 @@ public class LDPService {
 							.append(documentURI)
 						.append("> ?containerPredicate ?containerObject.")
 						.append("\n\t\tFILTER( ?containerPredicate != <")
-						.append(LDPC.CONTAINS)
+						.append(ContainerClass.CONTAINS)
 						.append("> )")
 					.append("\n\t}")
 				.append("\n}")
@@ -1063,7 +1093,7 @@ public class LDPService {
 					.append("\n\t<")
 						.append(documentURI)
 					.append("> <")
-						.append(LDPC.CONTAINS)
+						.append(ContainerClass.CONTAINS)
 					.append("> ?containedObjects.")
 				.append("\n} WHERE {")
 					.append("\n\t\t GRAPH <")
@@ -1072,7 +1102,7 @@ public class LDPService {
 						.append("\n\t\t\t <")
 							.append(documentURI)
 						.append("> <")
-							.append(LDPC.CONTAINS)
+							.append(ContainerClass.CONTAINS)
 						.append("> ?containedObjects.")
 					.append("\n\t\t}.")
 				.append("\n}")
@@ -1087,7 +1117,7 @@ public class LDPService {
 					.append("\n\t<")
 						.append(documentURI)
 					.append("> <")
-						.append(LDPC.DEFAULT_HAS_MEMBER_RELATION)
+						.append(ContainerClass.DEFAULT_HAS_MEMBER_RELATION)
 					.append("> ?membershipObjects.")
 				.append("\n} WHERE {")
 					.append("\n\t\t GRAPH <")
@@ -1096,7 +1126,7 @@ public class LDPService {
 						.append("\n\t\t\t <")
 							.append(documentURI)
 						.append("> <")
-							.append(LDPC.DEFAULT_HAS_MEMBER_RELATION)
+							.append(ContainerClass.DEFAULT_HAS_MEMBER_RELATION)
 						.append("> ?membershipObjects.")
 					.append("\n\t\t}.")
 				.append("\n}")
@@ -1112,10 +1142,10 @@ public class LDPService {
 						.append(documentURI)
 					.append(">")
 						.append("\n\t\t<")
-							.append(LDPC.CONTAINS)
+							.append(ContainerClass.CONTAINS)
 						.append("> ?containedObjects;")
 						.append("\n\t\t<")
-							.append(LDPC.DEFAULT_HAS_MEMBER_RELATION)
+							.append(ContainerClass.DEFAULT_HAS_MEMBER_RELATION)
 						.append("> ?membershipObjects.")
 				.append("\n} WHERE {")
 					.append("\n\t\t GRAPH <")
@@ -1125,10 +1155,10 @@ public class LDPService {
 							.append(documentURI)
 						.append(">")
 							.append("\n\t\t\t\t<")
-								.append(LDPC.CONTAINS)
+								.append(ContainerClass.CONTAINS)
 							.append("> ?containedObjects;")
 							.append("\n\t\t\t\t<")
-								.append(LDPC.DEFAULT_HAS_MEMBER_RELATION)
+								.append(ContainerClass.DEFAULT_HAS_MEMBER_RELATION)
 							.append("> ?membershipObjects.")
 					.append("\n\t\t}.")
 				.append("\n}")
@@ -1140,7 +1170,7 @@ public class LDPService {
 	//@formatter:on
 
 	//@formatter:off
-	private String prepareLDPDirectContainerQuery(String documentURI, LDPContainerQueryOptions options) {
+	private String prepareLDPDirectContainerQuery(String documentURI, ContainerQueryOptions options) {
 		StringBuffer query = new StringBuffer();
 				
 		if( options.includeContainerProperties() && !options.includeContainmentTriples() && !options.includeMembershipTriples() ) {
@@ -1159,7 +1189,7 @@ public class LDPService {
 							.append(documentURI)
 						.append("> ?containerPredicate ?containerObject.")
 						.append("\n\t\tFILTER( ?containerPredicate != <")
-						.append(LDPC.CONTAINS)
+						.append(ContainerClass.CONTAINS)
 						.append(">)")
 					.append("\n\t}")
 				.append("\n}")
@@ -1202,13 +1232,13 @@ public class LDPService {
 						.append(">")
 							.append("\n\t\t\t\t?containerPredicate ?containerObject;")
 							.append("\n\t\t\t\t<")
-								.append(LDPC.MEMBERSHIP_RESOURCE)
+								.append(ContainerClass.MEMBERSHIP_RESOURCE)
 							.append("> ?membershipResource;")
 							.append("\n\t\t\t\t<")
-								.append(LDPC.HAS_MEMBER_RELATION)
+								.append(ContainerClass.HAS_MEMBER_RELATION)
 							.append("> ?hasMemberRelation.")
 							.append("\n\t\tFILTER( ?containerPredicate != <")
-							.append(LDPC.CONTAINS)
+							.append(ContainerClass.CONTAINS)
 							.append(">)")
 					.append("\n\t\t}.")
 					.append("\n\t\tOPTIONAL {")
@@ -1237,10 +1267,10 @@ public class LDPService {
 						.append(">")
 							.append("\n\t\t\t\t?containerPredicate ?containerObject;")
 							.append("\n\t\t\t\t<")
-							.append(LDPC.MEMBERSHIP_RESOURCE)
+							.append(ContainerClass.MEMBERSHIP_RESOURCE)
 							.append("> ?membershipResource;")
 							.append("\n\t\t\t\t<")
-							.append(LDPC.HAS_MEMBER_RELATION)
+							.append(ContainerClass.HAS_MEMBER_RELATION)
 							.append("> ?hasMemberRelation.")
 					.append("\n\t\t}.")
 					.append("\n\t\tOPTIONAL {")
@@ -1265,7 +1295,7 @@ public class LDPService {
 					.append("\n\t<")
 						.append(documentURI)
 					.append("> <")
-					.append(LDPC.CONTAINS)
+					.append(ContainerClass.CONTAINS)
 					.append("> ?containedObjects ")
 				.append("\n} WHERE {")
 					.append("\n\t GRAPH <")
@@ -1274,7 +1304,7 @@ public class LDPService {
 						.append("\n\t\t <")
 							.append(documentURI)
 						.append("> <")
-						.append(LDPC.CONTAINS)
+						.append(ContainerClass.CONTAINS)
 						.append("> ?containedObjects ")
 					.append("\n\t}")
 				.append("\n}")
@@ -1294,10 +1324,10 @@ public class LDPService {
 							.append(documentURI)
 						.append(">")
 							.append("\n\t\t\t\t<")
-							.append(LDPC.MEMBERSHIP_RESOURCE)
+							.append(ContainerClass.MEMBERSHIP_RESOURCE)
 							.append("> ?membershipResource;")
 							.append("\n\t\t\t\t<")
-							.append(LDPC.HAS_MEMBER_RELATION)
+							.append(ContainerClass.HAS_MEMBER_RELATION)
 							.append("> ?hasMemberRelation.")
 					.append("\n\t\t}.")
 					.append("\n\t\tOPTIONAL {")
@@ -1316,7 +1346,7 @@ public class LDPService {
 					.append("\n\t<")
 						.append(documentURI)
 					.append("> <")
-					.append(LDPC.CONTAINS)
+					.append(ContainerClass.CONTAINS)
 					.append("> ?containedObjects ")
 					.append("\n\t?membershipResource ?hasMemberRelation ?members.")
 				.append("\n} WHERE {")
@@ -1327,13 +1357,13 @@ public class LDPService {
 							.append(documentURI)
 						.append(">")
 							.append("\n\t\t\t\t<")
-							.append(LDPC.CONTAINS)
+							.append(ContainerClass.CONTAINS)
 							.append("> ?containedObjects")
 							.append("\n\t\t\t\t<")
-							.append(LDPC.MEMBERSHIP_RESOURCE)
+							.append(ContainerClass.MEMBERSHIP_RESOURCE)
 							.append("> ?membershipResource;")
 							.append("\n\t\t\t\t<")
-							.append(LDPC.HAS_MEMBER_RELATION)
+							.append(ContainerClass.HAS_MEMBER_RELATION)
 							.append("> ?hasMemberRelation.")
 					.append("\n\t\t}.")
 					.append("\n\t\tOPTIONAL {")
@@ -1350,7 +1380,7 @@ public class LDPService {
 	//@formatter:on
 
 	//@formatter:off
-	private String prepareLDPIndirectContainerQuery(String documentURI, LDPContainerQueryOptions options) {
+	private String prepareLDPIndirectContainerQuery(String documentURI, ContainerQueryOptions options) {
 		StringBuffer query = new StringBuffer();
 				
 		if( options.includeContainerProperties() && !options.includeContainmentTriples() && !options.includeMembershipTriples() ) {
@@ -1369,7 +1399,7 @@ public class LDPService {
 							.append(documentURI)
 						.append("> ?containerPredicate ?containerObject.")
 						.append("\n\t\tFILTER( ?containerPredicate != <")
-						.append(LDPC.CONTAINS)
+						.append(ContainerClass.CONTAINS)
 						.append(">)")
 					.append("\n\t}")
 				.append("\n}")
@@ -1412,13 +1442,13 @@ public class LDPService {
 						.append(">")
 							.append("\n\t\t\t\t?containerPredicate ?containerObject;")
 							.append("\n\t\t\t\t<")
-								.append(LDPC.MEMBERSHIP_RESOURCE)
+								.append(ContainerClass.MEMBERSHIP_RESOURCE)
 							.append("> ?membershipResource;")
 							.append("\n\t\t\t\t<")
-								.append(LDPC.HAS_MEMBER_RELATION)
+								.append(ContainerClass.HAS_MEMBER_RELATION)
 							.append("> ?hasMemberRelation.")
 							.append("\n\t\tFILTER( ?containerPredicate != <")
-							.append(LDPC.CONTAINS)
+							.append(ContainerClass.CONTAINS)
 							.append(">)")
 					.append("\n\t\t}.")
 					.append("\n\t\tOPTIONAL {")
@@ -1447,10 +1477,10 @@ public class LDPService {
 						.append(">")
 							.append("\n\t\t\t\t?containerPredicate ?containerObject;")
 							.append("\n\t\t\t\t<")
-							.append(LDPC.MEMBERSHIP_RESOURCE)
+							.append(ContainerClass.MEMBERSHIP_RESOURCE)
 							.append("> ?membershipResource;")
 							.append("\n\t\t\t\t<")
-							.append(LDPC.HAS_MEMBER_RELATION)
+							.append(ContainerClass.HAS_MEMBER_RELATION)
 							.append("> ?hasMemberRelation.")
 					.append("\n\t\t}.")
 					.append("\n\t\tOPTIONAL {")
@@ -1475,7 +1505,7 @@ public class LDPService {
 					.append("\n\t<")
 						.append(documentURI)
 					.append("> <")
-					.append(LDPC.CONTAINS)
+					.append(ContainerClass.CONTAINS)
 					.append("> ?containedObjects ")
 				.append("\n} WHERE {")
 					.append("\n\t GRAPH <")
@@ -1484,7 +1514,7 @@ public class LDPService {
 						.append("\n\t\t <")
 							.append(documentURI)
 						.append("> <")
-						.append(LDPC.CONTAINS)
+						.append(ContainerClass.CONTAINS)
 						.append("> ?containedObjects ")
 					.append("\n\t}")
 				.append("\n}")
@@ -1504,10 +1534,10 @@ public class LDPService {
 							.append(documentURI)
 						.append(">")
 							.append("\n\t\t\t\t<")
-							.append(LDPC.MEMBERSHIP_RESOURCE)
+							.append(ContainerClass.MEMBERSHIP_RESOURCE)
 							.append("> ?membershipResource;")
 							.append("\n\t\t\t\t<")
-							.append(LDPC.HAS_MEMBER_RELATION)
+							.append(ContainerClass.HAS_MEMBER_RELATION)
 							.append("> ?hasMemberRelation.")
 					.append("\n\t\t}.")
 					.append("\n\t\tOPTIONAL {")
@@ -1526,7 +1556,7 @@ public class LDPService {
 					.append("\n\t<")
 						.append(documentURI)
 					.append("> <")
-					.append(LDPC.CONTAINS)
+					.append(ContainerClass.CONTAINS)
 					.append("> ?containedObjects ")
 					.append("\n\t?membershipResource ?hasMemberRelation ?members.")
 				.append("\n} WHERE {")
@@ -1537,13 +1567,13 @@ public class LDPService {
 							.append(documentURI)
 						.append(">")
 							.append("\n\t\t\t\t<")
-							.append(LDPC.CONTAINS)
+							.append(ContainerClass.CONTAINS)
 							.append("> ?containedObjects")
 							.append("\n\t\t\t\t<")
-							.append(LDPC.MEMBERSHIP_RESOURCE)
+							.append(ContainerClass.MEMBERSHIP_RESOURCE)
 							.append("> ?membershipResource;")
 							.append("\n\t\t\t\t<")
-							.append(LDPC.HAS_MEMBER_RELATION)
+							.append(ContainerClass.HAS_MEMBER_RELATION)
 							.append("> ?hasMemberRelation.")
 					.append("\n\t\t}.")
 					.append("\n\t\tOPTIONAL {")
@@ -1584,7 +1614,7 @@ public class LDPService {
 		String memberURI = memberURIObject.getURI();
 
 		StringBuffer query = new StringBuffer();
-		if ( containerType.equals(LDPC.BASIC) ) {
+		if ( containerType.equals(ContainerClass.BASIC) ) {
 			//@formatter:off
 			query
 				.append("ASK {")
@@ -1594,7 +1624,7 @@ public class LDPService {
 						.append("\n\t\t<")
 							.append(containerURI)
 						.append("> <")
-						.append(LDPC.DEFAULT_HAS_MEMBER_RELATION)
+						.append(ContainerClass.DEFAULT_HAS_MEMBER_RELATION)
 						.append("> <")
 							.append(memberURI)
 						.append(">.")
@@ -1604,7 +1634,7 @@ public class LDPService {
 			//@formatter:on
 
 			isMember = sparqlService.ask(query.toString(), dataset);
-		} else if ( containerType.equals(LDPC.DIRECT) ) {
+		} else if ( containerType.equals(ContainerClass.DIRECT) ) {
 			//@formatter:off
 			query
 				.append("SELECT ?membershipResource ?membershipProperty ?membershipObject WHERE {")
@@ -1615,10 +1645,10 @@ public class LDPService {
 							.append(containerURI)
 						.append("> ")
 							.append("\n\t\t\t<")
-							.append(LDPC.MEMBERSHIP_RESOURCE)
+							.append(ContainerClass.MEMBERSHIP_RESOURCE)
 							.append("> ?membershipResource;")
 							.append("\n\t\t\t<")
-							.append(LDPC.HAS_MEMBER_RELATION)
+							.append(ContainerClass.HAS_MEMBER_RELATION)
 							.append("> ?membershipRelation.")
 					.append("\n\t}.")
 					.append("\n\tGRAPH ?membershipResource {")
@@ -1634,7 +1664,7 @@ public class LDPService {
 			ResultSet resultSet = sparqlService.select(query.toString(), dataset);
 			isMember = resultSet.getRowNumber() >= 0;
 
-		} else if ( containerType.equals(LDPC.INDIRECT) ) {
+		} else if ( containerType.equals(ContainerClass.INDIRECT) ) {
 			//@formatter:off
 			query
 				.append("SELECT ?membershipResource ?membershipProperty ?membershipObject WHERE {")
@@ -1645,13 +1675,13 @@ public class LDPService {
 							.append(containerURI)
 						.append("> ")
 							.append("\n\t\t\t<")
-							.append(LDPC.MEMBERSHIP_RESOURCE)
+							.append(ContainerClass.MEMBERSHIP_RESOURCE)
 							.append("> ?membershipResource;")
 							.append("\n\t\t\t<")
-							.append(LDPC.HAS_MEMBER_RELATION)
+							.append(ContainerClass.HAS_MEMBER_RELATION)
 							.append("> ?membershipRelation;")
 							.append("\n\t\t\t<")
-							.append(LDPC.ICR)
+							.append(ContainerClass.ICR)
 							.append("> ?icr.")
 					.append("\n\t}.")
 					.append("\n\tGRAPH <")
@@ -1676,12 +1706,12 @@ public class LDPService {
 	}
 
 	// TODO: Decide. Should we make this private?
-	public void addDocumentAsContainment(LDPContainer container, LDPRSource document, String dataset) throws CarbonException {
+	public void addDocumentAsContainment(Container container, RDFSource document, String dataset) throws CarbonException {
 		String containerType = container.getTypeOfContainer();
 
 		StringBuffer query = new StringBuffer();
 
-		if ( containerType.equals(LDPC.BASIC) ) {
+		if ( containerType.equals(ContainerClass.BASIC) ) {
 			//@formatter:off
 			query
 				.append("INSERT DATA {")
@@ -1692,12 +1722,12 @@ public class LDPService {
 							.append(container.getURI())
 						.append(">")
 							.append("\n\t\t\t<")
-								.append(LDPC.CONTAINS)
+								.append(ContainerClass.CONTAINS)
 								.append("> <")
 								.append(document.getURI())
 								.append(">;")
 							.append("\n\t\t\t<")
-								.append(LDPC.DEFAULT_HAS_MEMBER_RELATION)
+								.append(ContainerClass.DEFAULT_HAS_MEMBER_RELATION)
 								.append("> <")
 								.append(document.getURI())
 								.append(">.")
@@ -1705,7 +1735,7 @@ public class LDPService {
 				.append("}")
 			;
 			//@formatter:on
-		} else if ( containerType.equals(LDPC.DIRECT) ) {
+		} else if ( containerType.equals(ContainerClass.DIRECT) ) {
 			//@formatter:off
 			query
 				.append("INSERT DATA {")
@@ -1716,7 +1746,7 @@ public class LDPService {
 							.append(container.getURI())
 						.append(">")
 							.append("\n\t\t\t<")
-								.append(LDPC.CONTAINS)
+								.append(ContainerClass.CONTAINS)
 								.append("> <")
 								.append(document.getURI())
 								.append(">.")
@@ -1736,7 +1766,7 @@ public class LDPService {
 				.append("}")
 			;
 			//@formatter:on
-		} else if ( containerType.equals(LDPC.INDIRECT) ) {
+		} else if ( containerType.equals(ContainerClass.INDIRECT) ) {
 			//@formatter:off
 			// TODO: Handle different types of objects?
 			Property icrPredicate = ResourceFactory.createProperty(container.getInsertedContentRelation());
@@ -1751,7 +1781,7 @@ public class LDPService {
 							.append(container.getURI())
 						.append(">")
 							.append("\n\t\t\t<")
-								.append(LDPC.CONTAINS)
+								.append(ContainerClass.CONTAINS)
 								.append("> <")
 								.append(document.getURI())
 								.append(">.")
@@ -1778,12 +1808,12 @@ public class LDPService {
 	}
 
 	// TODO: Decide. How are we going to relate a URIObject with a LDPContainer object?
-	public void addDocumentAsMember(LDPContainer container, LDPRSource document, String dataset) throws CarbonException {
+	public void addDocumentAsMember(Container container, RDFSource document, String dataset) throws CarbonException {
 		String containerType = container.getTypeOfContainer();
 
 		StringBuffer query = new StringBuffer();
 
-		if ( containerType.equals(LDPC.BASIC) ) {
+		if ( containerType.equals(ContainerClass.BASIC) ) {
 			//@formatter:off
 			query
 				.append("INSERT DATA {")
@@ -1793,7 +1823,7 @@ public class LDPService {
 						.append("\n\t\t<")
 							.append(container.getURI())
 						.append("> <")
-							.append(LDPC.DEFAULT_HAS_MEMBER_RELATION)
+							.append(ContainerClass.DEFAULT_HAS_MEMBER_RELATION)
 							.append("> <")
 							.append(document.getURI())
 							.append(">.")
@@ -1801,7 +1831,7 @@ public class LDPService {
 				.append("}")
 			;
 			//@formatter:on
-		} else if ( containerType.equals(LDPC.DIRECT) ) {
+		} else if ( containerType.equals(ContainerClass.DIRECT) ) {
 			//@formatter:off
 			query
 				.append("INSERT DATA {")
@@ -1820,7 +1850,7 @@ public class LDPService {
 				.append("}")
 			;
 			//@formatter:on
-		} else if ( containerType.equals(LDPC.INDIRECT) ) {
+		} else if ( containerType.equals(ContainerClass.INDIRECT) ) {
 			//@formatter:off
 			// TODO: Handle different types of objects?
 			Property icrPredicate = ResourceFactory.createProperty(container.getInsertedContentRelation());
@@ -1848,7 +1878,7 @@ public class LDPService {
 		sparqlService.update(query.toString(), dataset);
 	}
 
-	public void addInverseMembershipTriple(LDPContainer container, String memberURI, String dataset) throws CarbonException {
+	public void addInverseMembershipTriple(Container container, String memberURI, String dataset) throws CarbonException {
 
 		StringBuffer query = new StringBuffer();
 
@@ -1874,7 +1904,7 @@ public class LDPService {
 	}
 
 	@PreAuthorize("hasPermission(#parentURIObject, 'CREATE_ACCESS_POINT')")
-	public URIObject createAccessPoint(LDPContainer accessPointContainer, URIObject parentURIObject, String dataset) throws CarbonException {
+	public URIObject createAccessPoint(Container accessPointContainer, URIObject parentURIObject, String dataset) throws CarbonException {
 		URIObject uriObject = createChildLDPRSource(accessPointContainer, parentURIObject, dataset);
 		try {
 			addAccessPoint(accessPointContainer, parentURIObject, dataset);
@@ -1887,14 +1917,14 @@ public class LDPService {
 
 	// TODO: Decide. Should we make this private?
 	@PreAuthorize("hasPermission(#parentURIObject, 'CREATE_ACCESS_POINT')")
-	public void addAccessPoint(LDPContainer accessPointContainer, URIObject parentURIObject, String dataset) throws CarbonException {
+	public void addAccessPoint(Container accessPointContainer, URIObject parentURIObject, String dataset) throws CarbonException {
 		String resourceURI = parentURIObject.getURI();
 
 		StringBuffer accessPointURIBuilder = new StringBuffer();
 		//@formatter:off
 		accessPointURIBuilder
 			.append(resourceURI)
-			.append(LDPRS.ACCESS_POINT_PREFIX)
+			.append(RDFSourceClass.ACCESS_POINT_PREFIX)
 			.append(accessPointContainer.getSlug())
 		;
 		//@formatter:on
@@ -1911,7 +1941,7 @@ public class LDPService {
 					.append("\n\t\t<")
 						.append(resourceURI)
 					.append("> <")
-						.append(LDPRS.HAS_ACCESS_POINT)
+						.append(RDFSourceClass.HAS_ACCESS_POINT)
 					.append("> <")
 						.append(accessPointURI)
 					.append(">.")
@@ -1920,17 +1950,17 @@ public class LDPService {
 						.append(accessPointURI)
 					.append(">")
 						.append("\n\t\t\t<")
-							.append(LDPR.Properties.RDF_TYPE.getUri())
+							.append(RDFResourceClass.Properties.RDF_TYPE.getUri())
 						.append("> <")
-							.append(LDPRS.ACCESS_POINT_CLASS)
+							.append(RDFSourceClass.ACCESS_POINT_CLASS)
 						.append(">;")
 						.append("\n\t\t\t<")
-							.append(LDPRS.CONTAINER)
+							.append(RDFSourceClass.CONTAINER)
 						.append("> <")
 							.append(accessPointContainer.getURI())
 						.append(">;")
 						.append("\n\t\t\t<")
-							.append(LDPRS.FOR_PROPERTY)
+							.append(RDFSourceClass.FOR_PROPERTY)
 						.append("> <")
 							.append(accessPointContainer.getMembershipTriplesPredicate())
 						.append(">.")
@@ -1942,13 +1972,13 @@ public class LDPService {
 		sparqlService.update(query.toString(), dataset);
 	}
 
-	private void deleteAccessPoint(LDPContainer accessPointContainer, String dataset) throws CarbonException {
+	private void deleteAccessPoint(Container accessPointContainer, String dataset) throws CarbonException {
 		String resourceURI = accessPointContainer.getMembershipResourceURI();
 		StringBuffer accessPointURIBuilder = new StringBuffer();
 		//@formatter:off
 		accessPointURIBuilder
 			.append(resourceURI)
-			.append(LDPRS.ACCESS_POINT_PREFIX)
+			.append(RDFSourceClass.ACCESS_POINT_PREFIX)
 			.append(accessPointContainer.getSlug())
 		;
 		//@formatter:on
@@ -1968,7 +1998,7 @@ public class LDPService {
 					.append("\n\t\t<")
 						.append(resourceURI)
 					.append("> <")
-						.append(LDPRS.HAS_ACCESS_POINT)
+						.append(RDFSourceClass.HAS_ACCESS_POINT)
 					.append("> <")
 						.append(accessPointURI)
 					.append(">.")
@@ -1990,7 +2020,7 @@ public class LDPService {
 
 	// TODO: Refactor method
 	@PreAuthorize("hasPermission(#containerURIObject, 'DELETE')")
-	public void deleteLDPContainer(URIObject containerURIObject, String dataset, String containerType, LDPContainerQueryOptions options) throws CarbonException {
+	public void deleteLDPContainer(URIObject containerURIObject, String dataset, String containerType, ContainerQueryOptions options) throws CarbonException {
 
 		String documentURI = containerURIObject.getURI();
 
@@ -2001,16 +2031,16 @@ public class LDPService {
 		if ( deleteContainer ) {
 			// The container is going to be deleted (same as a simple LDPRSource)
 
-			if ( containerType.equals(LDPC.DIRECT) || containerType.equals(LDPC.INDIRECT) ) {
+			if ( containerType.equals(ContainerClass.DIRECT) || containerType.equals(ContainerClass.INDIRECT) ) {
 				// Delete the accessPoint related to the container
-				LDPContainerQueryOptions onlyContainerOptions = new LDPContainerQueryOptions(METHOD.GET);
+				ContainerQueryOptions onlyContainerOptions = new ContainerQueryOptions(METHOD.GET);
 				onlyContainerOptions.setContainerProperties(true);
 				onlyContainerOptions.setContainmentTriples(false);
 				onlyContainerOptions.setContainedResources(false);
 				onlyContainerOptions.setMembershipTriples(false);
 				onlyContainerOptions.setMemberResources(false);
 
-				LDPContainer container = null;
+				Container container = null;
 				try {
 					container = getLDPContainer(containerURIObject, dataset, containerType, onlyContainerOptions);
 				} catch (CarbonException e) {
@@ -2079,7 +2109,7 @@ public class LDPService {
 
 	private void deleteLDPCMembershipTriples(String documentURI, String containerType, String dataset) throws CarbonException {
 		StringBuffer query = new StringBuffer();
-		if ( containerType.equals(LDPC.BASIC) ) {
+		if ( containerType.equals(ContainerClass.BASIC) ) {
 			//@formatter:off
 			query
 				.append("DELETE WHERE {")
@@ -2089,13 +2119,13 @@ public class LDPService {
 						.append("\n\t\t<")
 							.append(documentURI)
 						.append("> <")
-						.append(LDPC.DEFAULT_HAS_MEMBER_RELATION)
+						.append(ContainerClass.DEFAULT_HAS_MEMBER_RELATION)
 						.append("> ?member.")
 					.append("\n\t}")
 				.append("\n}")
 			;
 			//@formatter:on
-		} else if ( containerType.equals(LDPC.DIRECT) ) {
+		} else if ( containerType.equals(ContainerClass.DIRECT) ) {
 			//@formatter:off
 			query
 				.append("DELETE {")
@@ -2110,10 +2140,10 @@ public class LDPService {
 							.append(documentURI)
 						.append(">")
 							.append("\n\t\t\t<")
-								.append(LDPC.MEMBERSHIP_RESOURCE)
+								.append(ContainerClass.MEMBERSHIP_RESOURCE)
 							.append("> ?membershipResource;")
 							.append("\n\t\t\t<")
-								.append(LDPC.HAS_MEMBER_RELATION)
+								.append(ContainerClass.HAS_MEMBER_RELATION)
 							.append("> ?hasMemberRelation.")
 					.append("\n\t}")
 					.append("\n\tGRAPH ?membershipResource {")
@@ -2122,7 +2152,7 @@ public class LDPService {
 				.append("\n}")
 			;
 			//@formatter:on
-		} else if ( containerType.equals(LDPC.INDIRECT) ) {
+		} else if ( containerType.equals(ContainerClass.INDIRECT) ) {
 			//@formatter:off
 			query
 				.append("DELETE {")
@@ -2137,10 +2167,10 @@ public class LDPService {
 							.append(documentURI)
 						.append(">")
 							.append("\n\t\t\t<")
-								.append(LDPC.MEMBERSHIP_RESOURCE)
+								.append(ContainerClass.MEMBERSHIP_RESOURCE)
 							.append("> ?membershipResource;")
 							.append("\n\t\t\t<")
-								.append(LDPC.HAS_MEMBER_RELATION)
+								.append(ContainerClass.HAS_MEMBER_RELATION)
 							.append("> ?hasMemberRelation.")
 					.append("\n\t}")
 					.append("\n\tGRAPH ?membershipResource {")
@@ -2156,8 +2186,8 @@ public class LDPService {
 
 	// ========= End: LDP-C Related Methods
 
-	public void setRdfService(RDFService rdfService) {
-		this.rdfService = rdfService;
+	public void setModelService(ModelService modelService) {
+		this.modelService = modelService;
 	}
 
 	public void setSparqlService(SPARQLService sparqlService) {
