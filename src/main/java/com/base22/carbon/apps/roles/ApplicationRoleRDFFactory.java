@@ -90,7 +90,7 @@ public class ApplicationRoleRDFFactory extends RDFResourceFactory {
 		return uriBuilder.toString();
 	}
 
-	private class RDFApplicationRoleImpl extends LDPResourceImpl implements ApplicationRoleRDF {
+	private class RDFApplicationRoleImpl extends RDFResourceImpl implements ApplicationRoleRDF {
 		public RDFApplicationRoleImpl(Resource resource) {
 			super(resource);
 		}

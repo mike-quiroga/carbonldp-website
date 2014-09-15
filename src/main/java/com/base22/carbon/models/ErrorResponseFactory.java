@@ -148,7 +148,7 @@ public class ErrorResponseFactory extends RDFResourceFactory {
 		}
 	}
 
-	protected class ErrorResponseImpl extends LDPResourceImpl implements ErrorResponse {
+	protected class ErrorResponseImpl extends RDFResourceImpl implements ErrorResponse {
 		public ErrorResponseImpl(Resource resource) {
 			super(resource);
 		}

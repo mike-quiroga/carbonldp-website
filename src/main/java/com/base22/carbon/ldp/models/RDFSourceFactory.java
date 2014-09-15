@@ -9,7 +9,7 @@ import org.joda.time.format.ISODateTimeFormat;
 import com.base22.carbon.Carbon;
 import com.base22.carbon.CarbonException;
 import com.base22.carbon.FactoryException;
-import com.base22.carbon.ldp.models.RDFResourceFactory.LDPResourceImpl;
+import com.base22.carbon.ldp.models.RDFResourceFactory.RDFResourceImpl;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.rdf.model.Statement;
@@ -61,7 +61,7 @@ public class RDFSourceFactory extends RDFResourceFactory {
 		return this.create(original.getResource());
 	}
 
-	protected class LDPRSourceImpl extends LDPResourceImpl implements RDFSource {
+	protected class LDPRSourceImpl extends RDFResourceImpl implements RDFSource {
 
 		public LDPRSourceImpl(Resource resource) {
 			super(resource);

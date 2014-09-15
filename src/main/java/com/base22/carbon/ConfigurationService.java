@@ -2,9 +2,12 @@ package com.base22.carbon;
 
 import java.util.Set;
 
+import javax.annotation.PostConstruct;
+
 import org.apache.jena.riot.Lang;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.base22.carbon.apps.Application;
@@ -26,6 +29,10 @@ public class ConfigurationService {
 
 	private final String DEFAULT_PLATFORM_ROLE = "ROLE_APP_DEVELOPER";
 
+	@Value("${carbon.platform.version}")
+	private String version;
+
+	@PostConstruct
 	public void init() {
 		if ( LOG.isTraceEnabled() ) {
 			LOG.trace(">> init()");
@@ -33,6 +40,17 @@ public class ConfigurationService {
 
 		// Initializing JSON-LD Jena support
 		initializeJSONLDSupport();
+
+		if ( LOG.isDebugEnabled() ) {
+			StringBuilder configuration = new StringBuilder();
+			//@formatter:off
+			configuration
+				.append("\n\tVersion: ")
+				.append(getPlatformVersion())
+			;
+			//@formatter:on
+			LOG.debug("-- Configuration Loaded: {}", configuration.toString());
+		}
 	}
 
 	private void initializeJSONLDSupport() {
@@ -108,5 +126,9 @@ public class ConfigurationService {
 	// TODO: Move this?...
 	public String getDefaultPlatformRole() {
 		return DEFAULT_PLATFORM_ROLE;
+	}
+
+	public String getPlatformVersion() {
+		return this.version;
 	}
 }

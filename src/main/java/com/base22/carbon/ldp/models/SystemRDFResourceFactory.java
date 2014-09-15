@@ -2,7 +2,7 @@ package com.base22.carbon.ldp.models;
 
 import com.base22.carbon.Carbon;
 import com.base22.carbon.CarbonException;
-import com.base22.carbon.ldp.models.RDFResourceFactory.LDPResourceImpl;
+import com.base22.carbon.ldp.models.RDFResourceFactory.RDFResourceImpl;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.Resource;
 
@@ -27,7 +27,7 @@ public abstract class SystemRDFResourceFactory extends RDFResourceFactory {
 		return ldpResource.getURI().matches(".*" + Carbon.SYSTEM_RESOURCE_REGEX + ".*");
 	}
 
-	protected class LDPSystemResourceImpl extends LDPResourceImpl implements SystemRDFResource {
+	protected class LDPSystemResourceImpl extends RDFResourceImpl implements SystemRDFResource {
 		protected Resource resource;
 
 		public LDPSystemResourceImpl(Resource resource) {

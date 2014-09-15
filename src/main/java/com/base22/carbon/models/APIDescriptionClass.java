@@ -1,25 +1,14 @@
 package com.base22.carbon.models;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
-
-import com.base22.carbon.CarbonException;
-import com.base22.carbon.FactoryException;
-import com.base22.carbon.authentication.AuthenticationUtil;
-import com.base22.carbon.ldp.models.RDFResourceFactory;
-import com.base22.carbon.ldp.models.RDFResource;
-import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.Property;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.rdf.model.ResourceFactory;
 
-public class GenericRequestRDFFactory extends RDFResourceFactory {
-
+public class APIDescriptionClass {
 	public static enum Resources implements RDFResourceEnum {
 		//@formatter:off
 		CLASS(
-			new PrefixedURI("c", "GenericRequest")
+			new PrefixedURI("api", "API")
 		);
 		//@formatter:on
 
@@ -63,11 +52,10 @@ public class GenericRequestRDFFactory extends RDFResourceFactory {
 		}
 	}
 
-	// TODO: Finish Vocabulary
 	public static enum Properties implements RDFPropertyEnum {
 		//@formatter:off
-		UUID(
-			new PrefixedURI("c", "uuid")
+		VERSION(
+			new PrefixedURI("doap", "version")
 		);
 		//@formatter:on
 
@@ -105,54 +93,5 @@ public class GenericRequestRDFFactory extends RDFResourceFactory {
 			}
 			return null;
 		}
-	}
-
-	@Override
-	public GenericRequestRDF create(Resource resource) throws CarbonException {
-		RDFResource ldpResource = super.create(resource);
-		if ( ! isRDFGenericRequest(ldpResource) ) {
-			throw new FactoryException("The resource isn't a GenericRequest object.");
-		}
-		return new RDFGenericRequestImpl(resource);
-	}
-
-	@Override
-	public GenericRequestRDF create(String resourceURI, Model model) throws CarbonException {
-		RDFResource ldpResource = super.create(resourceURI, model);
-		if ( ! isRDFGenericRequest(ldpResource) ) {
-			throw new FactoryException("The resource isn't a GenericRequest object.");
-		}
-		return new RDFGenericRequestImpl(ldpResource.getResource());
-	}
-
-	public boolean isRDFGenericRequest(RDFResource ldpResource) throws CarbonException {
-		return ldpResource.isOfType(Resources.CLASS.getPrefixedURI().getURI());
-	}
-
-	public List<String> validate(GenericRequestRDF toValidate) {
-		// TODO: IT
-		return null;
-	}
-
-	protected class RDFGenericRequestImpl extends RDFResourceImpl implements GenericRequestRDF {
-
-		public RDFGenericRequestImpl(Resource resource) {
-			super(resource);
-		}
-
-		@Override
-		public UUID[] getUUIDs() {
-			String[] uuidStrings = this.getStrings(Properties.UUID.getProperty());
-			List<UUID> uuids = new ArrayList<UUID>();
-
-			for (String uuidString : uuidStrings) {
-				if ( AuthenticationUtil.isUUIDString(uuidString) ) {
-					uuids.add(AuthenticationUtil.restoreUUID(uuidString));
-				}
-			}
-
-			return (UUID[]) uuids.toArray();
-		}
-
 	}
 }

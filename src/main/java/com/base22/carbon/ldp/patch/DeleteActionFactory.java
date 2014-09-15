@@ -41,7 +41,7 @@ public class DeleteActionFactory extends RDFResourceFactory {
 		return resource.getURI().endsWith(DeleteActionClass.UNIQUE_SUFIX);
 	}
 
-	protected class DeleteActionImpl extends LDPResourceImpl implements DeleteAction {
+	protected class DeleteActionImpl extends RDFResourceImpl implements DeleteAction {
 
 		public DeleteActionImpl(Resource resource) {
 			super(resource);

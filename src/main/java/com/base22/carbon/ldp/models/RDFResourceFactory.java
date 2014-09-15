@@ -15,6 +15,7 @@ import com.base22.carbon.authentication.AuthenticationUtil;
 import com.base22.carbon.authorization.acl.ACLSystemResource;
 import com.base22.carbon.authorization.acl.ACLSystemResourceFactory;
 import com.hp.hpl.jena.rdf.model.Model;
+import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.Property;
 import com.hp.hpl.jena.rdf.model.RDFNode;
 import com.hp.hpl.jena.rdf.model.Resource;
@@ -34,7 +35,7 @@ public class RDFResourceFactory {
 		if ( ! resource.isURIResource() ) {
 			throw new CarbonException("The resource isn't a URI Resource.");
 		}
-		return new LDPResourceImpl(resource);
+		return new RDFResourceImpl(resource);
 	}
 
 	public RDFResource create(String resourceURI, Model model) throws CarbonException {
@@ -56,15 +57,21 @@ public class RDFResourceFactory {
 			throw new FactoryException("The resource couldn't be retrieved from the model.");
 		}
 
-		return new LDPResourceImpl(resource);
-
+		return new RDFResourceImpl(resource);
 	}
 
-	protected class LDPResourceImpl implements RDFResource {
+	public RDFResource create(String uri) {
+		Model model = ModelFactory.createDefaultModel();
+		Resource resource = model.createResource(uri);
+
+		return new RDFResourceImpl(resource);
+	}
+
+	protected class RDFResourceImpl implements RDFResource {
 
 		protected Resource resource;
 
-		public LDPResourceImpl(Resource resource) {
+		public RDFResourceImpl(Resource resource) {
 			this.resource = resource;
 		}
 

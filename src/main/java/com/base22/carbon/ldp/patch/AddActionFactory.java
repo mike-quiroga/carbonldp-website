@@ -41,7 +41,7 @@ public class AddActionFactory extends RDFResourceFactory {
 		return resource.getURI().endsWith(AddActionClass.UNIQUE_SUFIX);
 	}
 
-	protected class AddActionImpl extends LDPResourceImpl implements AddAction {
+	protected class AddActionImpl extends RDFResourceImpl implements AddAction {
 
 		public AddActionImpl(Resource resource) {
 			super(resource);

@@ -73,7 +73,7 @@ public class ApplicationRDFFactory extends RDFResourceFactory {
 		return uriBuilder.toString();
 	}
 
-	private class RDFApplicationImpl extends LDPResourceImpl implements ApplicationRDF {
+	private class RDFApplicationImpl extends RDFResourceImpl implements ApplicationRDF {
 		public RDFApplicationImpl(Resource resource) {
 			super(resource);
 		}

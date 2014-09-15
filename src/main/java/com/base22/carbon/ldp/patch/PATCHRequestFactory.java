@@ -44,7 +44,7 @@ public class PATCHRequestFactory extends RDFResourceFactory {
 		return ldpResource.isOfType(Resources.CLASS.getPrefixedURI().getURI());
 	}
 
-	protected class PATCHRequestImpl extends LDPResourceImpl implements PATCHRequest {
+	protected class PATCHRequestImpl extends RDFResourceImpl implements PATCHRequest {
 
 		public PATCHRequestImpl(Resource resource) {
 			super(resource);

@@ -70,7 +70,7 @@ public class AgentRDFFactory extends RDFResourceFactory {
 		return ldpResource.isOfType(Resources.CLASS.getPrefixedURI().getURI());
 	}
 
-	protected class RDFAgentImpl extends LDPResourceImpl implements AgentRDFRepresentation {
+	protected class RDFAgentImpl extends RDFResourceImpl implements AgentRDFRepresentation {
 		public RDFAgentImpl(Resource resource) {
 			super(resource);
 		}

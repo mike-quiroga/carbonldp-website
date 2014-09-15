@@ -41,7 +41,7 @@ public class SetActionFactory extends RDFResourceFactory {
 		return resource.getURI().endsWith(SetActionClass.UNIQUE_SUFIX);
 	}
 
-	protected class SetActionImpl extends LDPResourceImpl implements SetAction {
+	protected class SetActionImpl extends RDFResourceImpl implements SetAction {
 
 		public SetActionImpl(Resource resource) {
 			super(resource);
