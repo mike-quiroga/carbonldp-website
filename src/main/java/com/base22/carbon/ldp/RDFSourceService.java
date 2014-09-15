@@ -1,4 +1,4 @@
-package com.base22.carbon.repository.services;
+package com.base22.carbon.ldp;
 
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
@@ -6,8 +6,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import com.base22.carbon.CarbonException;
-import com.base22.carbon.ldp.AbstractLDPService;
-import com.base22.carbon.ldp.ModelUtil;
 import com.base22.carbon.ldp.models.RDFSource;
 import com.base22.carbon.ldp.models.RDFSourceFactory;
 import com.base22.carbon.ldp.models.URIObject;
