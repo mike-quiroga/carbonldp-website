@@ -141,7 +141,7 @@ public class PATCHRequestHandler extends AbstractLDPRequestHandler {
 
 		applyPATCHRequestActions(patchRequest, targetURIObject, targetRDFSource, application);
 
-		return new ResponseEntity<Object>(HttpStatus.NOT_IMPLEMENTED);
+		return new ResponseEntity<Object>(HttpStatus.OK);
 	}
 
 	private boolean patchRequestWasProvided(Resource resource) throws CarbonException {
