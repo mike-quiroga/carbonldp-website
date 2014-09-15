@@ -1,9 +1,0 @@
-direct_primary_hash=MAIN_DPH, UserSpace1
-direct_secondary=MAIN_DS, UserSpace1
-reverse_primary_hash=MAIN_RPH, UserSpace1
-reverse_secondary=MAIN_RS, UserSpace1
-long_strings=MAIN_LS, UserSpace1
-basic_stats=MAIN_BS, UserSpace1
-topk_stats=MAIN_TKS, UserSpace1
-system_predicate=MAIN_SP, UserSpace1
-data_type=MAIN_DT, UserSpace1
