@@ -153,7 +153,7 @@ public class ModelMessageConverter implements HttpMessageConverter<Model> {
 		writeModel(model, contentType, outputStream);
 
 		// Set the Content-Length
-		headers.add(com.base22.carbon.HttpHeaders.CONTENT_LENGTH, String.valueOf(outputStream.size()));
+		headers.add(com.base22.carbon.HTTPHeaders.CONTENT_LENGTH, String.valueOf(outputStream.size()));
 		outputStream.writeTo(outputMessage.getBody());
 
 		outputMessage.getBody().flush();

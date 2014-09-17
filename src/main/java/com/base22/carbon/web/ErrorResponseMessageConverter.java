@@ -61,7 +61,7 @@ public class ErrorResponseMessageConverter extends LDPResourceMessageConverter {
 		headerValue.setExtendingKey("rel");
 		headerValue.setExtendingValue("describedby");
 
-		headers.add(com.base22.carbon.HttpHeaders.LINK, headerValue.toString());
+		headers.add(com.base22.carbon.HTTPHeaders.LINK, headerValue.toString());
 	}
 
 }

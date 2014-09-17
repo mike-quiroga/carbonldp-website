@@ -15,7 +15,7 @@ import org.springframework.web.HttpMediaTypeNotAcceptableException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
-import com.base22.carbon.HttpHeaders;
+import com.base22.carbon.HTTPHeaders;
 import com.base22.carbon.models.ErrorResponse;
 import com.base22.carbon.models.ErrorResponseFactory;
 import com.base22.carbon.utils.HTTPUtil;
@@ -65,7 +65,7 @@ public class PlatformExceptionController {
 	public ResponseEntity<Object> handleNotAcceptable(HttpServletRequest request, HttpServletResponse response, Exception rawException) {
 		HttpMediaTypeNotAcceptableException exception = (HttpMediaTypeNotAcceptableException) rawException;
 
-		String accept = request.getHeader(HttpHeaders.ACCEPT);
+		String accept = request.getHeader(HTTPHeaders.ACCEPT);
 
 		String debugMessage = null;
 		if ( accept != null ) {

@@ -14,7 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
 import com.base22.carbon.CarbonException;
-import com.base22.carbon.HttpHeaders;
+import com.base22.carbon.HTTPHeaders;
 import com.base22.carbon.apps.Application;
 import com.base22.carbon.apps.ApplicationRDF;
 import com.base22.carbon.authorization.acl.AclSR;
@@ -29,7 +29,7 @@ import com.base22.carbon.utils.HTTPUtil;
 public class AppGETRequestHandler extends AbstractAppRequestHandler {
 	public ResponseEntity<Object> handleRequest(String appIdentifier, HttpServletRequest request, HttpServletResponse response) throws CarbonException {
 
-		Enumeration<String> preferHeaders = request.getHeaders(HttpHeaders.PREFER);
+		Enumeration<String> preferHeaders = request.getHeaders(HTTPHeaders.PREFER);
 		HttpHeader preferHeader = new HttpHeader(preferHeaders);
 
 		Application targetApplication = getTargetApplication(appIdentifier);

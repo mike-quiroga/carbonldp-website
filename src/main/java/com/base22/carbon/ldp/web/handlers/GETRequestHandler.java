@@ -23,7 +23,7 @@ import org.springframework.stereotype.Component;
 import com.base22.carbon.APIPreferences.InteractionModel;
 import com.base22.carbon.APIPreferences.RetrieveContainerPreference;
 import com.base22.carbon.CarbonException;
-import com.base22.carbon.HttpHeaders;
+import com.base22.carbon.HTTPHeaders;
 import com.base22.carbon.apps.Application;
 import com.base22.carbon.authorization.acl.AclSR;
 import com.base22.carbon.ldp.models.Container;
@@ -65,7 +65,7 @@ public class GETRequestHandler extends AbstractLDPRequestHandler {
 		String dataset = application.getDatasetName();
 
 		String documentURI = HTTPUtil.getRequestURL(request);
-		Enumeration<String> linkHeaders = request.getHeaders(HttpHeaders.LINK);
+		Enumeration<String> linkHeaders = request.getHeaders(HTTPHeaders.LINK);
 		HttpHeader linkHeader = new HttpHeader(linkHeaders);
 
 		// Get the preferred interaction model (if specified)
@@ -165,7 +165,7 @@ public class GETRequestHandler extends AbstractLDPRequestHandler {
 	private ResponseEntity<Object> handleLDPRSourceRetrieval(URIObject documentURIObject, String dataset, HttpServletRequest request,
 			HttpServletResponse response) {
 
-		Enumeration<String> preferHeaders = request.getHeaders(HttpHeaders.PREFER);
+		Enumeration<String> preferHeaders = request.getHeaders(HTTPHeaders.PREFER);
 		HttpHeader preferHeader = new HttpHeader(preferHeaders);
 
 		// Get the LDPRSource
@@ -200,7 +200,7 @@ public class GETRequestHandler extends AbstractLDPRequestHandler {
 	private ResponseEntity<Object> handleLDPContainerRetrieval(URIObject documentURIObject, String dataset, Set<String> documentTypes,
 			HttpServletRequest request, HttpServletResponse response) {
 
-		Enumeration<String> preferHeaders = request.getHeaders(HttpHeaders.PREFER);
+		Enumeration<String> preferHeaders = request.getHeaders(HTTPHeaders.PREFER);
 		HttpHeader preferHeader = new HttpHeader(preferHeaders);
 
 		// Get the container type
@@ -337,7 +337,7 @@ public class GETRequestHandler extends AbstractLDPRequestHandler {
 
 		rdfWrapper.setFileInputStream(fileInputStream);
 
-		response.addHeader(HttpHeaders.ALLOW, "GET, HEAD, PUT, PATCH, DELETE");
+		response.addHeader(HTTPHeaders.ALLOW, "GET, HEAD, PUT, PATCH, DELETE");
 
 		return new ResponseEntity<Object>(rdfWrapper, HttpStatus.OK);
 	}
@@ -405,7 +405,7 @@ public class GETRequestHandler extends AbstractLDPRequestHandler {
 				header.setMainValue("representation");
 				header.setExtendingKey("include");
 				header.setExtendingValue(preference.getPrefixedURI().getURI());
-				response.addHeader(HttpHeaders.PREFERENCE_APPLIED, header.toString());
+				response.addHeader(HTTPHeaders.PREFERENCE_APPLIED, header.toString());
 			}
 		}
 
@@ -416,7 +416,7 @@ public class GETRequestHandler extends AbstractLDPRequestHandler {
 				header.setMainValue("representation");
 				header.setExtendingKey("include");
 				header.setExtendingValue(defaultPreference.getPrefixedURI().getURI());
-				response.addHeader(HttpHeaders.PREFERENCE_APPLIED, header.toString());
+				response.addHeader(HTTPHeaders.PREFERENCE_APPLIED, header.toString());
 			}
 		}
 	}

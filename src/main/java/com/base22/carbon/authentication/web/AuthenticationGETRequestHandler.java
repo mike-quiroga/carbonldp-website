@@ -24,7 +24,7 @@ import org.springframework.web.util.CookieGenerator;
 
 import com.base22.carbon.CarbonException;
 import com.base22.carbon.ConfigurationService;
-import com.base22.carbon.HttpHeaders;
+import com.base22.carbon.HTTPHeaders;
 import com.base22.carbon.APIPreferences.AuthenticationPreference;
 import com.base22.carbon.authentication.AgentAuthenticationToken;
 import com.base22.carbon.ldp.models.RDFResource;
@@ -66,7 +66,7 @@ public class AuthenticationGETRequestHandler {
 
 		Token token = tokenService.allocateToken(agentUUID.toString());
 
-		Enumeration<String> preferHeaders = request.getHeaders(HttpHeaders.PREFER);
+		Enumeration<String> preferHeaders = request.getHeaders(HTTPHeaders.PREFER);
 		HttpHeader preferHeader = new HttpHeader(preferHeaders);
 		if ( preferCookie(preferHeader) ) {
 			setTokenCookie(token, response);

@@ -18,7 +18,7 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Component;
 
 import com.base22.carbon.CarbonException;
-import com.base22.carbon.HttpHeaders;
+import com.base22.carbon.HTTPHeaders;
 import com.base22.carbon.APIPreferences.DeleteContainerPreference;
 import com.base22.carbon.apps.Application;
 import com.base22.carbon.ldp.models.ContainerQueryOptions;
@@ -54,7 +54,7 @@ public class DELETERequestHandler extends AbstractLDPRequestHandler {
 
 		String documentURI = HTTPUtil.getRequestURL(request);
 
-		String ifMatchHeader = request.getHeader(HttpHeaders.IF_MATCH);
+		String ifMatchHeader = request.getHeader(HTTPHeaders.IF_MATCH);
 
 		// Check if there is a named graph that matches the request URI
 		URIObject documentURIObject = null;
@@ -153,7 +153,7 @@ public class DELETERequestHandler extends AbstractLDPRequestHandler {
 	private ResponseEntity<Object> handleLDPContainerDeletion(URIObject documentURIObject, Set<String> documentTypes, String dataset,
 			HttpServletRequest request, HttpServletResponse response) {
 
-		Enumeration<String> preferHeaders = request.getHeaders(HttpHeaders.PREFER);
+		Enumeration<String> preferHeaders = request.getHeaders(HTTPHeaders.PREFER);
 		HttpHeader preferHeader = new HttpHeader(preferHeaders);
 
 		// Get the container type
@@ -275,7 +275,7 @@ public class DELETERequestHandler extends AbstractLDPRequestHandler {
 				HttpHeaderValue header = new HttpHeaderValue();
 				header.setMainKey("include");
 				header.setMainValue(preference.getPrefixedURI().getURI());
-				response.addHeader(HttpHeaders.PREFERENCE_APPLIED, header.toString());
+				response.addHeader(HTTPHeaders.PREFERENCE_APPLIED, header.toString());
 			}
 		}
 
@@ -284,7 +284,7 @@ public class DELETERequestHandler extends AbstractLDPRequestHandler {
 				HttpHeaderValue header = new HttpHeaderValue();
 				header.setMainKey("omit");
 				header.setMainValue(defaultPreference.getPrefixedURI().getURI());
-				response.addHeader(HttpHeaders.PREFERENCE_APPLIED, header.toString());
+				response.addHeader(HTTPHeaders.PREFERENCE_APPLIED, header.toString());
 			}
 		}
 	}

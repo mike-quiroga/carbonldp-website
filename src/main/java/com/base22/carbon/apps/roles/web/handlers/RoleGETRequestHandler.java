@@ -14,7 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
 import com.base22.carbon.CarbonException;
-import com.base22.carbon.HttpHeaders;
+import com.base22.carbon.HTTPHeaders;
 import com.base22.carbon.apps.Application;
 import com.base22.carbon.apps.roles.ApplicationRole;
 import com.base22.carbon.apps.roles.ApplicationRoleRDF;
@@ -40,7 +40,7 @@ public class RoleGETRequestHandler extends AbstractAppRequestHandler {
 
 		ApplicationRoleRDF targetRDFAppRole = targetAppRole.createRDFRepresentation();
 
-		Enumeration<String> preferHeaders = request.getHeaders(HttpHeaders.PREFER);
+		Enumeration<String> preferHeaders = request.getHeaders(HTTPHeaders.PREFER);
 		HttpHeader preferHeader = new HttpHeader(preferHeaders);
 		if ( includeACL(preferHeader) ) {
 			injectACLToTargetAppRole(targetAppRole, targetRDFAppRole, response);

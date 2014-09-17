@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import com.base22.carbon.Carbon;
 import com.base22.carbon.CarbonException;
-import com.base22.carbon.HttpHeaders;
+import com.base22.carbon.HTTPHeaders;
 import com.base22.carbon.authorization.acl.ACLSystemResource;
 import com.base22.carbon.authorization.acl.ACLSystemResourceFactory;
 import com.base22.carbon.ldp.ModelUtil;
@@ -133,10 +133,10 @@ public class PUTRequestHandler extends AbstractCreationRequestHandler {
 
 		replaceTargetRDFSource();
 
-		response.addHeader(HttpHeaders.LOCATION, this.targetURI);
-		response.addHeader(HttpHeaders.ETAG, HTTPUtil.formatWeakETag(this.requestRDFSource.getETag()));
+		response.addHeader(HTTPHeaders.LOCATION, this.targetURI);
+		response.addHeader(HTTPHeaders.ETAG, HTTPUtil.formatWeakETag(this.requestRDFSource.getETag()));
 		for (String type : this.requestRDFSource.getLinkTypes()) {
-			response.addHeader(HttpHeaders.LINK, type);
+			response.addHeader(HTTPHeaders.LINK, type);
 		}
 
 		if ( LOG.isDebugEnabled() ) {
@@ -161,7 +161,7 @@ public class PUTRequestHandler extends AbstractCreationRequestHandler {
 	}
 
 	private void populateIfMatchHeader() throws CarbonException {
-		this.ifMatchHeader = this.request.getHeader(HttpHeaders.IF_MATCH);
+		this.ifMatchHeader = this.request.getHeader(HTTPHeaders.IF_MATCH);
 	}
 
 	private void processRequestModel() throws CarbonException {

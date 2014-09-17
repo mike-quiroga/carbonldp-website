@@ -15,7 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.access.AccessDeniedException;
 
 import com.base22.carbon.CarbonException;
-import com.base22.carbon.HttpHeaders;
+import com.base22.carbon.HTTPHeaders;
 import com.base22.carbon.APIPreferences.InteractionModel;
 import com.base22.carbon.apps.Application;
 import com.base22.carbon.ldp.RDFUtil;
@@ -126,7 +126,7 @@ public abstract class AbstractCreationRequestHandler extends AbstractLDPRequestH
 	}
 
 	protected void populateLanguage() throws CarbonException {
-		String contentTypeHeader = request.getHeader(HttpHeaders.CONTENT_TYPE);
+		String contentTypeHeader = request.getHeader(HTTPHeaders.CONTENT_TYPE);
 
 		this.language = getLanguageFromContentType(contentTypeHeader);
 		if ( language == null ) {
@@ -144,7 +144,7 @@ public abstract class AbstractCreationRequestHandler extends AbstractLDPRequestH
 			errorObject.setHttpStatus(HttpStatus.UNSUPPORTED_MEDIA_TYPE);
 			errorObject.setFriendlyMessage(friendlyMessage);
 			errorObject.setDebugMessage(debugMessage);
-			errorObject.addHeaderIssue(HttpHeaders.CONTENT_TYPE, null, contentTypeMessage, contentTypeHeader);
+			errorObject.addHeaderIssue(HTTPHeaders.CONTENT_TYPE, null, contentTypeMessage, contentTypeHeader);
 
 			throw new CarbonException(errorObject);
 		}

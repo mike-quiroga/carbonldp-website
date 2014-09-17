@@ -78,7 +78,7 @@ public class WrapperForLDPNRMessageConverter implements HttpMessageConverter<Wra
 		writeFile(wrapper, contentType, outputStream);
 
 		// Set the Content-Length
-		headers.add(com.base22.carbon.HttpHeaders.CONTENT_LENGTH, String.valueOf(outputStream.size()));
+		headers.add(com.base22.carbon.HTTPHeaders.CONTENT_LENGTH, String.valueOf(outputStream.size()));
 		outputStream.writeTo(outputMessage.getBody());
 		try {
 			outputStream.close();
@@ -99,11 +99,11 @@ public class WrapperForLDPNRMessageConverter implements HttpMessageConverter<Wra
 	}
 
 	private void addLocationHeader(HttpHeaders headers, WrapperForLDPNR wrapper) {
-		headers.add(com.base22.carbon.HttpHeaders.LOCATION, wrapper.getURI());
+		headers.add(com.base22.carbon.HTTPHeaders.LOCATION, wrapper.getURI());
 	}
 
 	private void addContentTypeHeader(HttpHeaders headers, WrapperForLDPNR wrapper) {
-		headers.add(com.base22.carbon.HttpHeaders.CONTENT_TYPE, wrapper.getContentType());
+		headers.add(com.base22.carbon.HTTPHeaders.CONTENT_TYPE, wrapper.getContentType());
 	}
 
 	private void addLinkTypeHeaders(HttpHeaders headers, WrapperForLDPNR wrapper) {
@@ -114,16 +114,16 @@ public class WrapperForLDPNRMessageConverter implements HttpMessageConverter<Wra
 		header.setExtendingKey("rel");
 		header.setExtendingValue("type");
 
-		headers.add(com.base22.carbon.HttpHeaders.LINK, header.toString());
+		headers.add(com.base22.carbon.HTTPHeaders.LINK, header.toString());
 
 		header.setMainValue(NonRDFSourceClass.NR_TYPE);
 
-		headers.add(com.base22.carbon.HttpHeaders.LINK, header.toString());
+		headers.add(com.base22.carbon.HTTPHeaders.LINK, header.toString());
 	}
 
 	private void addETagHeader(HttpHeaders headers, WrapperForLDPNR wrapper) {
 		if ( wrapper.getETag() != null ) {
-			headers.add(com.base22.carbon.HttpHeaders.ETAG, HTTPUtil.formatWeakETag(wrapper.getETag()));
+			headers.add(com.base22.carbon.HTTPHeaders.ETAG, HTTPUtil.formatWeakETag(wrapper.getETag()));
 		}
 	}
 
@@ -136,6 +136,6 @@ public class WrapperForLDPNRMessageConverter implements HttpMessageConverter<Wra
 		headerValue.setExtendingKey("rel");
 		headerValue.setExtendingValue("describedby");
 
-		headers.add(com.base22.carbon.HttpHeaders.LINK, headerValue.toString());
+		headers.add(com.base22.carbon.HTTPHeaders.LINK, headerValue.toString());
 	}
 }

@@ -118,7 +118,7 @@ public class BooleanMessageConverter implements HttpMessageConverter<Boolean> {
 		writeBoolean(value, mediaType, outputStream);
 
 		// Set the Content-Length
-		headers.add(com.base22.carbon.HttpHeaders.CONTENT_LENGTH, String.valueOf(outputStream.size()));
+		headers.add(com.base22.carbon.HTTPHeaders.CONTENT_LENGTH, String.valueOf(outputStream.size()));
 		outputStream.writeTo(outputMessage.getBody());
 
 		outputMessage.getBody().flush();

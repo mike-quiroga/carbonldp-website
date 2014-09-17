@@ -116,7 +116,7 @@ public class LDPResourceMessageConverter implements HttpMessageConverter<RDFReso
 		writeLDPResource(ldpResource, contentType, outputStream);
 
 		// Set the Content-Length
-		headers.add(com.base22.carbon.HttpHeaders.CONTENT_LENGTH, String.valueOf(outputStream.size()));
+		headers.add(com.base22.carbon.HTTPHeaders.CONTENT_LENGTH, String.valueOf(outputStream.size()));
 		outputStream.writeTo(outputMessage.getBody());
 
 		outputMessage.getBody().flush();
@@ -133,12 +133,12 @@ public class LDPResourceMessageConverter implements HttpMessageConverter<RDFReso
 	}
 
 	private void addLocationHeader(HttpHeaders headers, RDFResource ldpResource) {
-		headers.add(com.base22.carbon.HttpHeaders.LOCATION, ldpResource.getURI());
+		headers.add(com.base22.carbon.HTTPHeaders.LOCATION, ldpResource.getURI());
 	}
 
 	private void addLinkTypeHeaders(HttpHeaders headers, RDFResource ldpResource) {
 		for (String types : ldpResource.getLinkTypes()) {
-			headers.add(com.base22.carbon.HttpHeaders.LINK, types);
+			headers.add(com.base22.carbon.HTTPHeaders.LINK, types);
 		}
 	}
 

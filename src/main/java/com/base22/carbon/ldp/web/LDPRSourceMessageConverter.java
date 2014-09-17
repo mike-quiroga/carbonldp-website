@@ -21,6 +21,7 @@ import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.http.converter.HttpMessageNotWritableException;
 import org.springframework.util.Assert;
 
+import com.base22.carbon.HTTPHeaders;
 import com.base22.carbon.ldp.models.RDFSource;
 import com.base22.carbon.utils.HTTPUtil;
 
@@ -118,7 +119,7 @@ public class LDPRSourceMessageConverter implements HttpMessageConverter<RDFSourc
 		writeLDPRSource(ldpRSource, contentType, outputStream);
 
 		// Set the Content-Length
-		headers.add(com.base22.carbon.HttpHeaders.CONTENT_LENGTH, String.valueOf(outputStream.size()));
+		headers.add(HTTPHeaders.CONTENT_LENGTH, String.valueOf(outputStream.size()));
 		outputStream.writeTo(outputMessage.getBody());
 
 		outputMessage.getBody().flush();
@@ -135,18 +136,18 @@ public class LDPRSourceMessageConverter implements HttpMessageConverter<RDFSourc
 	}
 
 	private void addLocationHeader(HttpHeaders headers, RDFSource ldpRSource) {
-		headers.add(com.base22.carbon.HttpHeaders.LOCATION, ldpRSource.getURI());
+		headers.add(HTTPHeaders.LOCATION, ldpRSource.getURI());
 	}
 
 	private void addLinkTypeHeaders(HttpHeaders headers, RDFSource ldpRSource) {
 		for (String types : ldpRSource.getLinkTypes()) {
-			headers.add(com.base22.carbon.HttpHeaders.LINK, types);
+			headers.add(HTTPHeaders.LINK, types);
 		}
 	}
 
 	private void addETagHeader(HttpHeaders headers, RDFSource ldpRSource) {
 		if ( ldpRSource.getETag() != null ) {
-			headers.add(com.base22.carbon.HttpHeaders.ETAG, HTTPUtil.formatWeakETag(ldpRSource.getETag()));
+			headers.add(HTTPHeaders.ETAG, HTTPUtil.formatWeakETag(ldpRSource.getETag()));
 		}
 	}
 

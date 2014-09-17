@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.base22.carbon.CarbonException;
-import com.base22.carbon.HttpHeaders;
+import com.base22.carbon.HTTPHeaders;
 import com.base22.carbon.ldp.web.handlers.POSTNonRdfRequestHandler;
 import com.base22.carbon.ldp.web.handlers.POSTRdfRequestHandler;
 import com.base22.carbon.models.ErrorResponse;
@@ -42,7 +42,7 @@ public class POSTController extends AbstractLDPController {
 		}
 
 		// Check if the Content-Type header is missing
-		String contentTypeHeader = request.getHeader(HttpHeaders.CONTENT_TYPE);
+		String contentTypeHeader = request.getHeader(HTTPHeaders.CONTENT_TYPE);
 		if ( contentTypeHeader == null ) {
 			String friendlyMessage = "A media type wasn't specified.";
 			String debugMessage = "The Content-Type header doesn't specify a media type for the entity body.";
@@ -56,7 +56,7 @@ public class POSTController extends AbstractLDPController {
 			errorObject.setHttpStatus(HttpStatus.UNSUPPORTED_MEDIA_TYPE);
 			errorObject.setFriendlyMessage(friendlyMessage);
 			errorObject.setDebugMessage(debugMessage);
-			errorObject.addHeaderIssue(HttpHeaders.CONTENT_TYPE, null, "required", null);
+			errorObject.addHeaderIssue(HTTPHeaders.CONTENT_TYPE, null, "required", null);
 			return new ResponseEntity<Object>(errorObject, HttpStatus.UNSUPPORTED_MEDIA_TYPE);
 		}
 

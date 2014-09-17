@@ -25,7 +25,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 
 import com.base22.carbon.APIPreferences.InteractionModel;
 import com.base22.carbon.CarbonException;
-import com.base22.carbon.HttpHeaders;
+import com.base22.carbon.HTTPHeaders;
 import com.base22.carbon.apps.Application;
 import com.base22.carbon.authentication.ApplicationContextToken;
 import com.base22.carbon.authorization.LDPPermissionService;
@@ -267,31 +267,31 @@ public abstract class AbstractLDPRequestHandler extends AbstractRequestHandler {
 
 	protected void addAllowHeadersForLDPRS(URIObject documentURIObject, HttpServletResponse response) {
 		if ( permissionService.hasPermission(CarbonPermission.READ.getPermission(), documentURIObject) ) {
-			response.addHeader(HttpHeaders.ALLOW, "GET");
-			response.addHeader(HttpHeaders.ALLOW, "HEAD");
+			response.addHeader(HTTPHeaders.ALLOW, "GET");
+			response.addHeader(HTTPHeaders.ALLOW, "HEAD");
 		}
 		if ( permissionService.hasPermission(CarbonPermission.CREATE_ACCESS_POINT.getPermission(), documentURIObject) ) {
-			response.addHeader(HttpHeaders.ALLOW, "POST");
-			response.addHeader(HttpHeaders.ACCEPT_POST, "text/turtle");
-			response.addHeader(HttpHeaders.ACCEPT_POST, "application/ld+json");
+			response.addHeader(HTTPHeaders.ALLOW, "POST");
+			response.addHeader(HTTPHeaders.ACCEPT_POST, "text/turtle");
+			response.addHeader(HTTPHeaders.ACCEPT_POST, "application/ld+json");
 		}
 		if ( permissionService.hasPermission(CarbonPermission.UPDATE.getPermission(), documentURIObject) ) {
-			response.addHeader(HttpHeaders.ALLOW, "PUT");
-			response.addHeader(HttpHeaders.ACCEPT_PUT, "text/turtle");
-			response.addHeader(HttpHeaders.ACCEPT_PUT, "application/ld+json");
-			response.addHeader(HttpHeaders.ALLOW, "PATCH");
-			response.addHeader(HttpHeaders.ACCEPT_PATCH, "text/turtle");
-			response.addHeader(HttpHeaders.ACCEPT_PATCH, "application/ld+json");
+			response.addHeader(HTTPHeaders.ALLOW, "PUT");
+			response.addHeader(HTTPHeaders.ACCEPT_PUT, "text/turtle");
+			response.addHeader(HTTPHeaders.ACCEPT_PUT, "application/ld+json");
+			response.addHeader(HTTPHeaders.ALLOW, "PATCH");
+			response.addHeader(HTTPHeaders.ACCEPT_PATCH, "text/turtle");
+			response.addHeader(HTTPHeaders.ACCEPT_PATCH, "application/ld+json");
 		}
 		if ( permissionService.hasPermission(CarbonPermission.DELETE.getPermission(), documentURIObject) ) {
-			response.addHeader(HttpHeaders.ALLOW, "DELETE");
+			response.addHeader(HTTPHeaders.ALLOW, "DELETE");
 		}
 	}
 
 	protected void addAllowHeadersForLDPC(URIObject documentURIObject, HttpServletResponse response) {
 		if ( permissionService.hasPermission(CarbonPermission.READ.getPermission(), documentURIObject) ) {
-			response.addHeader(HttpHeaders.ALLOW, "GET");
-			response.addHeader(HttpHeaders.ALLOW, "HEAD");
+			response.addHeader(HTTPHeaders.ALLOW, "GET");
+			response.addHeader(HTTPHeaders.ALLOW, "HEAD");
 		}
 		// TODO: All of this capabilities should be informed separately
 		if ( permissionService.hasPermission(CarbonPermission.CREATE_LDPRS.getPermission(), documentURIObject)
@@ -299,20 +299,20 @@ public abstract class AbstractLDPRequestHandler extends AbstractRequestHandler {
 				|| permissionService.hasPermission(CarbonPermission.CREATE_WFLDPNR.getPermission(), documentURIObject)
 				|| permissionService.hasPermission(CarbonPermission.CREATE_ACCESS_POINT.getPermission(), documentURIObject)
 				|| permissionService.hasPermission(CarbonPermission.ADD_MEMBER.getPermission(), documentURIObject) ) {
-			response.addHeader(HttpHeaders.ALLOW, "POST");
-			response.addHeader(HttpHeaders.ACCEPT_POST, "text/turtle");
-			response.addHeader(HttpHeaders.ACCEPT_POST, "application/ld+json");
+			response.addHeader(HTTPHeaders.ALLOW, "POST");
+			response.addHeader(HTTPHeaders.ACCEPT_POST, "text/turtle");
+			response.addHeader(HTTPHeaders.ACCEPT_POST, "application/ld+json");
 		}
 		if ( permissionService.hasPermission(CarbonPermission.UPDATE.getPermission(), documentURIObject) ) {
-			response.addHeader(HttpHeaders.ALLOW, "PUT");
-			response.addHeader(HttpHeaders.ACCEPT_PUT, "text/turtle");
-			response.addHeader(HttpHeaders.ACCEPT_PUT, "application/ld+json");
-			response.addHeader(HttpHeaders.ALLOW, "PATCH");
-			response.addHeader(HttpHeaders.ACCEPT_PATCH, "text/turtle");
-			response.addHeader(HttpHeaders.ACCEPT_PATCH, "application/ld+json");
+			response.addHeader(HTTPHeaders.ALLOW, "PUT");
+			response.addHeader(HTTPHeaders.ACCEPT_PUT, "text/turtle");
+			response.addHeader(HTTPHeaders.ACCEPT_PUT, "application/ld+json");
+			response.addHeader(HTTPHeaders.ALLOW, "PATCH");
+			response.addHeader(HTTPHeaders.ACCEPT_PATCH, "text/turtle");
+			response.addHeader(HTTPHeaders.ACCEPT_PATCH, "application/ld+json");
 		}
 		if ( permissionService.hasPermission(CarbonPermission.DELETE.getPermission(), documentURIObject) ) {
-			response.addHeader(HttpHeaders.ALLOW, "DELETE");
+			response.addHeader(HTTPHeaders.ALLOW, "DELETE");
 		}
 	}
 

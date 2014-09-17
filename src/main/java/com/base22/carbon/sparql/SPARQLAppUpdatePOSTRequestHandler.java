@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 
 import com.base22.carbon.APIPreferences.InteractionModel;
 import com.base22.carbon.CarbonException;
-import com.base22.carbon.HttpHeaders;
+import com.base22.carbon.HTTPHeaders;
 import com.base22.carbon.apps.Application;
 import com.base22.carbon.models.ErrorResponse;
 import com.base22.carbon.models.ErrorResponseFactory;
@@ -107,6 +107,6 @@ public class SPARQLAppUpdatePOSTRequestHandler extends AbstractRequestHandler {
 		linkHeader.setExtendingKey("rel");
 		linkHeader.setExtendingValue("type");
 
-		response.addHeader(HttpHeaders.LINK, linkHeader.toString());
+		response.addHeader(HTTPHeaders.LINK, linkHeader.toString());
 	}
 }

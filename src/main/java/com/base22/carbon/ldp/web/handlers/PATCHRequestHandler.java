@@ -14,7 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
 import com.base22.carbon.CarbonException;
-import com.base22.carbon.HttpHeaders;
+import com.base22.carbon.HTTPHeaders;
 import com.base22.carbon.apps.Application;
 import com.base22.carbon.ldp.models.RDFSource;
 import com.base22.carbon.ldp.models.URIObject;
@@ -178,7 +178,7 @@ public class PATCHRequestHandler extends AbstractLDPRequestHandler {
 	}
 
 	protected String getRequestETag(HttpServletRequest request) {
-		return request.getHeader(HttpHeaders.IF_MATCH);
+		return request.getHeader(HTTPHeaders.IF_MATCH);
 	}
 
 	protected boolean eTagWasProvided(String requestETag) {

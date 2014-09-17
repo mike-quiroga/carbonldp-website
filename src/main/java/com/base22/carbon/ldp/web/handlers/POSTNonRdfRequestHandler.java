@@ -19,7 +19,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.base22.carbon.CarbonException;
-import com.base22.carbon.HttpHeaders;
+import com.base22.carbon.HTTPHeaders;
 import com.base22.carbon.ldp.models.Container;
 import com.base22.carbon.ldp.models.ContainerQueryOptions;
 import com.base22.carbon.ldp.models.URIObject;
@@ -93,7 +93,7 @@ public class POSTNonRdfRequestHandler extends AbstractLDPRequestHandler {
 
 	public String generateFileName(HttpServletRequest request) {
 		String fileName = null;
-		String slugHeader = request.getHeader(HttpHeaders.SLUG);
+		String slugHeader = request.getHeader(HTTPHeaders.SLUG);
 		if ( slugHeader == null ) {
 			// TODO: Enhance this
 			DateTime now = DateTime.now();

@@ -19,7 +19,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import com.base22.carbon.CarbonException;
-import com.base22.carbon.HttpHeaders;
+import com.base22.carbon.HTTPHeaders;
 import com.base22.carbon.APIPreferences.InteractionModel;
 import com.base22.carbon.apps.Application;
 import com.base22.carbon.ldp.RDFUtil;
@@ -170,10 +170,10 @@ public class POSTRdfRequestHandler extends AbstractCreationRequestHandler {
 			return HTTPUtil.createErrorResponseEntity(e);
 		}
 
-		response.addHeader(HttpHeaders.LOCATION, requestURI);
-		response.addHeader(HttpHeaders.ETAG, HTTPUtil.formatWeakETag(this.requestContainer.getETag()));
+		response.addHeader(HTTPHeaders.LOCATION, requestURI);
+		response.addHeader(HTTPHeaders.ETAG, HTTPUtil.formatWeakETag(this.requestContainer.getETag()));
 		for (String type : this.requestContainer.getLinkTypes()) {
-			response.addHeader(HttpHeaders.LINK, type);
+			response.addHeader(HTTPHeaders.LINK, type);
 		}
 
 		if ( LOG.isDebugEnabled() ) {
@@ -227,10 +227,10 @@ public class POSTRdfRequestHandler extends AbstractCreationRequestHandler {
 			return HTTPUtil.createErrorResponseEntity(e);
 		}
 
-		response.addHeader(HttpHeaders.LOCATION, requestURI);
-		response.addHeader(HttpHeaders.ETAG, HTTPUtil.formatWeakETag(this.requestRDFSource.getETag()));
+		response.addHeader(HTTPHeaders.LOCATION, requestURI);
+		response.addHeader(HTTPHeaders.ETAG, HTTPUtil.formatWeakETag(this.requestRDFSource.getETag()));
 		for (String type : this.requestRDFSource.getLinkTypes()) {
-			response.addHeader(HttpHeaders.LINK, type);
+			response.addHeader(HTTPHeaders.LINK, type);
 		}
 
 		if ( LOG.isDebugEnabled() ) {
@@ -272,14 +272,14 @@ public class POSTRdfRequestHandler extends AbstractCreationRequestHandler {
 	}
 
 	private void populateSlug() throws CarbonException {
-		this.slugHeader = request.getHeader(HttpHeaders.SLUG);
+		this.slugHeader = request.getHeader(HTTPHeaders.SLUG);
 		if ( this.slugHeader != null ) {
 			this.slugHeader = HTTPUtil.createSlug(slugHeader);
 		}
 	}
 
 	private void populateInteractionModel() throws CarbonException {
-		Enumeration<String> linkHeaders = request.getHeaders(HttpHeaders.LINK);
+		Enumeration<String> linkHeaders = request.getHeaders(HTTPHeaders.LINK);
 		HttpHeader linkHeader = new HttpHeader(linkHeaders);
 
 		this.interactionModel = getInteractionModel(linkHeader);

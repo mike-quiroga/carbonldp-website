@@ -3,7 +3,7 @@ package com.base22.carbon.sparql;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.base22.carbon.HttpHeaders;
+import com.base22.carbon.HTTPHeaders;
 import com.base22.carbon.models.PrefixedURI;
 import com.base22.carbon.models.RDFResourceEnum;
 import com.hp.hpl.jena.rdf.model.Resource;
@@ -65,7 +65,7 @@ public class SPARQLEndpoint {
 			StringBuilder linkBuilder = new StringBuilder();
 			//@formatter:off
 			linkBuilder
-				.append(HttpHeaders.LINK)
+				.append(HTTPHeaders.LINK)
 				.append("!=")
 				.append(prefixedURI.getURI())
 			;
@@ -75,7 +75,7 @@ public class SPARQLEndpoint {
 			linkBuilder = new StringBuilder();
 			//@formatter:off
 			linkBuilder
-				.append(HttpHeaders.LINK)
+				.append(HTTPHeaders.LINK)
 				.append("!=")
 				.append(prefixedURI.getShortVersion())
 			;
