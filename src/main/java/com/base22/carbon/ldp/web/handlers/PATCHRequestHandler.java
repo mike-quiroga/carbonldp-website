@@ -139,8 +139,8 @@ public class PATCHRequestHandler extends AbstractLDPRequestHandler {
 	private ResponseEntity<Object> handlePATCHRequestActions(URIObject targetURIObject, PATCHRequest patchRequest, RDFSource targetRDFSource,
 			String requestETag, Application application, HttpServletRequest request, HttpServletResponse response) throws CarbonException {
 
-		applyPATCHRequestActions(patchRequest, targetURIObject, targetRDFSource, application);
-
+		DateTime newETag = applyPATCHRequestActions(patchRequest, targetURIObject, targetRDFSource, application);
+		response.setHeader(HTTPHeaders.ETAG, newETag.toString());
 		return new ResponseEntity<Object>(HttpStatus.OK);
 	}
 
