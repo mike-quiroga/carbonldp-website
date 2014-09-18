@@ -37,6 +37,16 @@ public class AppController {
 		}
 	}
 
+	@RequestMapping(method = RequestMethod.HEAD)
+	public ResponseEntity<Object> headApplication(@PathVariable("applicationIdentifer") String applicationIdentifier, HttpServletRequest request,
+			HttpServletResponse response) {
+		try {
+			return getRequestHandler.handleRequest(applicationIdentifier, request, response);
+		} catch (CarbonException e) {
+			return HTTPUtil.createErrorResponseEntity(e);
+		}
+	}
+
 	@RequestMapping(method = RequestMethod.PUT)
 	public ResponseEntity<Object> modifyApplication(@PathVariable("applicationIdentifer") String applicationIdentifier, @RequestBody Model requestModel,
 			HttpServletRequest request, HttpServletResponse response) {

@@ -27,4 +27,13 @@ public class PlatformAPIController extends AbstractController {
 			return HTTPUtil.createErrorResponseEntity(e);
 		}
 	}
+
+	@RequestMapping(method = RequestMethod.HEAD)
+	public ResponseEntity<Object> headAPIDescription(HttpServletRequest request, HttpServletResponse response) {
+		try {
+			return getHandler.handleRequest(request, response);
+		} catch (CarbonException e) {
+			return HTTPUtil.createErrorResponseEntity(e);
+		}
+	}
 }

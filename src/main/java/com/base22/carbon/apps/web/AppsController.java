@@ -35,6 +35,15 @@ public class AppsController {
 		}
 	}
 
+	@RequestMapping(method = RequestMethod.HEAD)
+	public ResponseEntity<Object> headApplications(HttpServletRequest request, HttpServletResponse response) {
+		try {
+			return getRequestHandler.handleRequest(request, response);
+		} catch (CarbonException e) {
+			return HTTPUtil.createErrorResponseEntity(e);
+		}
+	}
+
 	@PreAuthorize("hasAuthority('PRIV_CREATE_APPLICATIONS')")
 	@RequestMapping(method = RequestMethod.POST)
 	public ResponseEntity<Object> createApplication(@RequestBody Model requestModel, HttpServletRequest request, HttpServletResponse response) {

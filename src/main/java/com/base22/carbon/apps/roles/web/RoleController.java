@@ -42,6 +42,17 @@ public class RoleController {
 		}
 	}
 
+	@RequestMapping(method = RequestMethod.HEAD)
+	public ResponseEntity<Object> headApplicationRole(@PathVariable("appIdentifier") String appIdentifier, @PathVariable("appRoleUUID") String appRoleUUID,
+			HttpServletRequest request, HttpServletResponse response) {
+
+		try {
+			return getRequestHandler.handleRequest(appIdentifier, appRoleUUID, request, response);
+		} catch (CarbonException e) {
+			return HTTPUtil.createErrorResponseEntity(e);
+		}
+	}
+
 	@RequestMapping(method = RequestMethod.PUT)
 	public ResponseEntity<Object> modifyApplicationRole(@PathVariable("appIdentifier") String appIdentifier, @PathVariable("appRoleUUID") String appRoleUUID,
 			@RequestBody Model requestModel, HttpServletRequest request, HttpServletResponse response) {
