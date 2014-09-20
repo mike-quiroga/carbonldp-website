@@ -47,6 +47,8 @@ public class CORSProcessingFilter extends GenericFilterBean {
 			}
 		}
 		response.addHeader("Access-Control-Allow-Origin", "*");
+		response.addHeader("Access-Control-Allow-Credentials", "true");
+		response.addHeader("Access-Control-Allow-Headers", request.getHeader("Access-Control-Request-Headers"));
 
 		// TODO: Create the tables needed for application-domain configuration
 		// TODO: Use this application-domain configuration when intercepting the CORS request
