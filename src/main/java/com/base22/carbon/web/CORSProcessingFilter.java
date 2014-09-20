@@ -28,6 +28,17 @@ public class CORSProcessingFilter extends GenericFilterBean {
 		HttpServletResponse response = (HttpServletResponse) servletResponse;
 
 		LOG.debug(HTTPUtil.printRequestInfo(request));
+
+		String origin = request.getHeader("Origin");
+		if ( origin != null ) {
+			response.addHeader("Access-Control-Allow-Origin", origin);
+		} else {
+			response.addHeader("Access-Control-Allow-Origin", "*");
+		}
+
+		response.addHeader("Access-Control-Allow-Credentials", "true");
+		response.addHeader("Access-Control-Allow-Headers", request.getHeader("Access-Control-Request-Headers"));
+
 		String method = request.getMethod();
 		if ( method.equals("OPTIONS") ) {
 			if ( request.getHeader("access-control-request-method") != null ) {
@@ -35,10 +46,7 @@ public class CORSProcessingFilter extends GenericFilterBean {
 					LOG.trace(">> doFilter() > CORS request intercepted.");
 				}
 
-				response.addHeader("Access-Control-Allow-Origin", "*");
 				response.addHeader("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE, OPTIONS");
-				response.addHeader("Access-Control-Allow-Credentials", "true");
-				response.addHeader("Access-Control-Allow-Headers", request.getHeader("Access-Control-Request-Headers"));
 				response.getWriter().print("OK");
 				response.getWriter().flush();
 
@@ -46,9 +54,6 @@ public class CORSProcessingFilter extends GenericFilterBean {
 				return;
 			}
 		}
-		response.addHeader("Access-Control-Allow-Origin", "*");
-		response.addHeader("Access-Control-Allow-Credentials", "true");
-		response.addHeader("Access-Control-Allow-Headers", request.getHeader("Access-Control-Request-Headers"));
 
 		// TODO: Create the tables needed for application-domain configuration
 		// TODO: Use this application-domain configuration when intercepting the CORS request
