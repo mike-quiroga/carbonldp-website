@@ -15,6 +15,7 @@ import com.base22.carbon.APIPreferences.InteractionModel;
 import com.base22.carbon.CarbonException;
 import com.base22.carbon.HTTPHeaders;
 import com.base22.carbon.apps.Application;
+import com.base22.carbon.models.EmptyResponse;
 import com.base22.carbon.models.ErrorResponse;
 import com.base22.carbon.models.ErrorResponseFactory;
 import com.base22.carbon.models.HttpHeaderValue;
@@ -41,7 +42,7 @@ public class SPARQLAppUpdatePOSTRequestHandler extends AbstractRequestHandler {
 
 		addHeadersToResponse(response, targetApplication);
 
-		return new ResponseEntity<Object>(HttpStatus.OK);
+		return new ResponseEntity<Object>(new EmptyResponse(), HttpStatus.OK);
 	}
 
 	private ResponseEntity<Object> handleNonExistentApplication(String appIdentifier, HttpServletRequest request, HttpServletResponse response) {

@@ -21,6 +21,7 @@ import com.base22.carbon.ldp.models.URIObject;
 import com.base22.carbon.ldp.patch.PATCHRequest;
 import com.base22.carbon.ldp.patch.PATCHRequestFactory;
 import com.base22.carbon.ldp.patch.PATCHService;
+import com.base22.carbon.models.EmptyResponse;
 import com.base22.carbon.models.ErrorResponse;
 import com.base22.carbon.models.ErrorResponseFactory;
 import com.base22.carbon.utils.HTTPUtil;
@@ -141,7 +142,7 @@ public class PATCHRequestHandler extends AbstractLDPRequestHandler {
 
 		DateTime newETag = applyPATCHRequestActions(patchRequest, targetURIObject, targetRDFSource, application);
 		response.setHeader(HTTPHeaders.ETAG, newETag.toString());
-		return new ResponseEntity<Object>(HttpStatus.OK);
+		return new ResponseEntity<Object>(new EmptyResponse(), HttpStatus.OK);
 	}
 
 	private boolean patchRequestWasProvided(Resource resource) throws CarbonException {

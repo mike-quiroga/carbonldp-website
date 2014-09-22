@@ -17,13 +17,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Component;
 
+import com.base22.carbon.APIPreferences.DeleteContainerPreference;
 import com.base22.carbon.CarbonException;
 import com.base22.carbon.HTTPHeaders;
-import com.base22.carbon.APIPreferences.DeleteContainerPreference;
 import com.base22.carbon.apps.Application;
 import com.base22.carbon.ldp.models.ContainerQueryOptions;
 import com.base22.carbon.ldp.models.URIObject;
 import com.base22.carbon.ldp.models.WrapperForLDPNR;
+import com.base22.carbon.models.EmptyResponse;
 import com.base22.carbon.models.ErrorResponse;
 import com.base22.carbon.models.ErrorResponseFactory;
 import com.base22.carbon.models.HttpHeader;
@@ -62,13 +63,13 @@ public class DELETERequestHandler extends AbstractLDPRequestHandler {
 			documentURIObject = uriObjectDAO.findByURI(documentURI);
 		} catch (AccessDeniedException e) {
 			// TODO: FT - Log it? -
-			return new ResponseEntity<Object>(HttpStatus.NOT_FOUND);
+			return new ResponseEntity<Object>(new EmptyResponse(), HttpStatus.NOT_FOUND);
 		} catch (CarbonException e) {
 			return HTTPUtil.createErrorResponseEntity(e, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 
 		if ( documentURIObject == null ) {
-			return new ResponseEntity<Object>(HttpStatus.NOT_FOUND);
+			return new ResponseEntity<Object>(new EmptyResponse(), HttpStatus.NOT_FOUND);
 		}
 
 		if ( ifMatchHeader != null ) {
@@ -147,7 +148,7 @@ public class DELETERequestHandler extends AbstractLDPRequestHandler {
 			return HTTPUtil.createErrorResponseEntity(e, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 
-		return new ResponseEntity<Object>(HttpStatus.OK);
+		return new ResponseEntity<Object>(new EmptyResponse(), HttpStatus.OK);
 	}
 
 	private ResponseEntity<Object> handleLDPContainerDeletion(URIObject documentURIObject, Set<String> documentTypes, String dataset,
@@ -173,7 +174,7 @@ public class DELETERequestHandler extends AbstractLDPRequestHandler {
 					options.setContainerProperties(true);
 					break;
 				case MEMBERSHIP_RESOURCES:
-					return new ResponseEntity<Object>(HttpStatus.NOT_IMPLEMENTED);
+					return new ResponseEntity<Object>(new EmptyResponse(), HttpStatus.NOT_IMPLEMENTED);
 				case MEMBERSHIP_TRIPLES:
 					options.setMembershipTriples(true);
 					break;
@@ -194,7 +195,7 @@ public class DELETERequestHandler extends AbstractLDPRequestHandler {
 
 		addPreferencesApplied(response, preferences);
 
-		return new ResponseEntity<Object>(HttpStatus.OK);
+		return new ResponseEntity<Object>(new EmptyResponse(), HttpStatus.OK);
 	}
 
 	private ResponseEntity<Object> handleLDPNRDeletion(URIObject targetURIObject, String dataset, HttpServletRequest request, HttpServletResponse response)
@@ -208,7 +209,7 @@ public class DELETERequestHandler extends AbstractLDPRequestHandler {
 
 		deleteWrapperForLDPNR(targetURIObject, targetWrapper);
 
-		return new ResponseEntity<Object>(HttpStatus.OK);
+		return new ResponseEntity<Object>(new EmptyResponse(), HttpStatus.OK);
 	}
 
 	private WrapperForLDPNR getTargetWrapper(URIObject targetURIObject) throws CarbonException {

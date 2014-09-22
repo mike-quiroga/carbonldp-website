@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.base22.carbon.CarbonException;
+import com.base22.carbon.models.EmptyResponse;
 import com.base22.carbon.utils.HTTPUtil;
 import com.base22.carbon.web.AbstractController;
 
@@ -49,7 +50,7 @@ public class SPARQLController extends AbstractController {
 			LOG.trace(">> handleSPARQLUpdate()");
 		}
 
-		return new ResponseEntity<Object>(HttpStatus.NOT_IMPLEMENTED);
+		return new ResponseEntity<Object>(new EmptyResponse(), HttpStatus.NOT_IMPLEMENTED);
 	}
 
 	@RequestMapping(value = { "/apps/{application}" }, method = RequestMethod.POST, consumes = "application/sparql-query")

@@ -49,6 +49,7 @@
 			<bean class="com.base22.carbon.ldp.web.WrapperForLDPNRMessageConverter"></bean>
 			<bean class="com.base22.carbon.ldp.web.LDPRSourceMessageConverter"></bean>
 			<bean class="com.base22.carbon.web.ErrorResponseMessageConverter"></bean>
+			<bean class="com.base22.carbon.web.EmptyResponseMessageConverter"></bean>
 			<bean class="com.base22.carbon.ldp.web.LDPResourceMessageConverter"></bean>
 			<bean class="com.base22.carbon.web.ModelMessageConverter"></bean>
 			<bean class="com.base22.carbon.web.BooleanMessageConverter"></bean>

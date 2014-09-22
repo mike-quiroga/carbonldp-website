@@ -21,6 +21,7 @@ import com.base22.carbon.HTTPHeaders;
 import com.base22.carbon.authorization.acl.ACLSystemResource;
 import com.base22.carbon.authorization.acl.ACLSystemResourceFactory;
 import com.base22.carbon.ldp.ModelUtil;
+import com.base22.carbon.models.EmptyResponse;
 import com.base22.carbon.models.ErrorResponse;
 import com.base22.carbon.models.ErrorResponseFactory;
 import com.base22.carbon.utils.HTTPUtil;
@@ -80,7 +81,7 @@ public class PUTRequestHandler extends AbstractCreationRequestHandler {
 
 	private ResponseEntity<Object> handlePUTNonExisting() throws CarbonException {
 		// TODO: FT
-		return new ResponseEntity<Object>(HttpStatus.NOT_FOUND);
+		return new ResponseEntity<Object>(new EmptyResponse(), HttpStatus.NOT_FOUND);
 	}
 
 	private ResponseEntity<Object> handlePUTExisting() throws CarbonException {
@@ -143,7 +144,7 @@ public class PUTRequestHandler extends AbstractCreationRequestHandler {
 			LOG.debug("<< handleConditionalPUT() > The resource: {} was modified.", requestURI);
 		}
 
-		return new ResponseEntity<Object>(HttpStatus.OK);
+		return new ResponseEntity<Object>(new EmptyResponse(), HttpStatus.OK);
 	}
 
 	protected void resetGlobalVariables() {

@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 import com.base22.carbon.CarbonException;
 import com.base22.carbon.agents.Agent;
 import com.base22.carbon.apps.roles.ApplicationRole;
+import com.base22.carbon.models.EmptyResponse;
 import com.base22.carbon.models.GenericRequestRDF;
 import com.base22.carbon.models.GenericRequestRDFFactory;
 import com.hp.hpl.jena.rdf.model.Model;
@@ -44,7 +45,7 @@ public class RolePOSTRequestHandler extends AbstractRoleRequestHandler {
 		addTargetAgentsToTargetAppRole(targetAppRole, targetAgents);
 
 		// TODO: Construct a more descriptive response (Were all the agents added?, etc.)
-		return new ResponseEntity<Object>(HttpStatus.OK);
+		return new ResponseEntity<Object>(new EmptyResponse(), HttpStatus.OK);
 	}
 
 	private GenericRequestRDF getRDFGenericRequest(Resource requestResource) throws CarbonException {

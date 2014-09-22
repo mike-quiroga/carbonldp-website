@@ -18,6 +18,7 @@ import com.base22.carbon.apps.roles.ApplicationRoleRDF;
 import com.base22.carbon.apps.roles.ApplicationRoleRDFFactory;
 import com.base22.carbon.authorization.acl.ACLSystemResource;
 import com.base22.carbon.authorization.acl.ACLSystemResourceFactory;
+import com.base22.carbon.models.EmptyResponse;
 import com.base22.carbon.models.ErrorResponse;
 import com.base22.carbon.models.ErrorResponseFactory;
 import com.base22.carbon.utils.HTTPUtil;
@@ -50,7 +51,7 @@ public class RolePUTRequestHandler extends AbstractRoleRequestHandler {
 
 		// TODO: Apply ApplicationRole changes
 
-		return new ResponseEntity<Object>(HttpStatus.OK);
+		return new ResponseEntity<Object>(new EmptyResponse(), HttpStatus.OK);
 	}
 
 	private ApplicationRole getRequestApplicationRole(ApplicationRoleRDF requestRDFAppRole) throws CarbonException {

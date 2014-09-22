@@ -31,6 +31,7 @@ import com.base22.carbon.ldp.models.ContainerQueryOptions;
 import com.base22.carbon.ldp.models.RDFSource;
 import com.base22.carbon.ldp.models.URIObject;
 import com.base22.carbon.ldp.models.WrapperForLDPNR;
+import com.base22.carbon.models.EmptyResponse;
 import com.base22.carbon.models.ErrorResponse;
 import com.base22.carbon.models.ErrorResponseFactory;
 import com.base22.carbon.models.HttpHeader;
@@ -77,13 +78,13 @@ public class GETRequestHandler extends AbstractLDPRequestHandler {
 			documentURIObject = uriObjectDAO.findByURI(documentURI);
 		} catch (AccessDeniedException e) {
 			// TODO: FT - Log it? -
-			return new ResponseEntity<Object>(HttpStatus.NOT_FOUND);
+			return new ResponseEntity<Object>(new EmptyResponse(), HttpStatus.NOT_FOUND);
 		} catch (CarbonException e) {
 			return HTTPUtil.createErrorResponseEntity(e, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 
 		if ( documentURIObject == null ) {
-			return new ResponseEntity<Object>(HttpStatus.NOT_FOUND);
+			return new ResponseEntity<Object>(new EmptyResponse(), HttpStatus.NOT_FOUND);
 		}
 
 		// Get the types of the document

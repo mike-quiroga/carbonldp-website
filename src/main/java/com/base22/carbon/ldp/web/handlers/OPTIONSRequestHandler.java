@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 import com.base22.carbon.CarbonException;
 import com.base22.carbon.apps.Application;
 import com.base22.carbon.ldp.models.URIObject;
+import com.base22.carbon.models.EmptyResponse;
 import com.base22.carbon.utils.HTTPUtil;
 
 @Component
@@ -37,14 +38,14 @@ public class OPTIONSRequestHandler extends AbstractLDPRequestHandler {
 			documentURIObject = uriObjectDAO.findByURI(documentURI);
 		} catch (AccessDeniedException e) {
 			// TODO: FT - Log it? -
-			return new ResponseEntity<Object>(HttpStatus.NOT_FOUND);
+			return new ResponseEntity<Object>(new EmptyResponse(), HttpStatus.NOT_FOUND);
 		} catch (CarbonException e) {
 			return HTTPUtil.createErrorResponseEntity(e, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 
 		// TODO: Decide. Should we take for granted that a document exists if its uriObject does
 		if ( documentURIObject == null ) {
-			return new ResponseEntity<Object>(HttpStatus.NOT_FOUND);
+			return new ResponseEntity<Object>(new EmptyResponse(), HttpStatus.NOT_FOUND);
 		}
 
 		// Get the types of the document
@@ -67,6 +68,6 @@ public class OPTIONSRequestHandler extends AbstractLDPRequestHandler {
 			addAllowHeadersForLDPRS(documentURIObject, response);
 		}
 
-		return new ResponseEntity<Object>(HttpStatus.OK);
+		return new ResponseEntity<Object>(new EmptyResponse(), HttpStatus.OK);
 	}
 }

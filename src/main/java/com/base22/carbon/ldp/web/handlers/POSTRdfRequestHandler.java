@@ -18,16 +18,17 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.PathVariable;
 
+import com.base22.carbon.APIPreferences.InteractionModel;
 import com.base22.carbon.CarbonException;
 import com.base22.carbon.HTTPHeaders;
-import com.base22.carbon.APIPreferences.InteractionModel;
 import com.base22.carbon.apps.Application;
 import com.base22.carbon.ldp.RDFUtil;
 import com.base22.carbon.ldp.models.Container;
 import com.base22.carbon.ldp.models.ContainerClass;
+import com.base22.carbon.ldp.models.ContainerClass.ContainerType;
 import com.base22.carbon.ldp.models.ContainerFactory;
 import com.base22.carbon.ldp.models.ContainerQueryOptions;
-import com.base22.carbon.ldp.models.ContainerClass.ContainerType;
+import com.base22.carbon.models.EmptyResponse;
 import com.base22.carbon.models.ErrorResponse;
 import com.base22.carbon.models.ErrorResponseFactory;
 import com.base22.carbon.models.HttpHeader;
@@ -179,7 +180,7 @@ public class POSTRdfRequestHandler extends AbstractCreationRequestHandler {
 		if ( LOG.isDebugEnabled() ) {
 			LOG.debug("<< handlePOSTExistingToRDFSource() > An accesspoint was created for the resource: '{}'.", requestURI);
 		}
-		return new ResponseEntity<Object>(HttpStatus.CREATED);
+		return new ResponseEntity<Object>(new EmptyResponse(), HttpStatus.CREATED);
 	}
 
 	private ResponseEntity<Object> handlePOSTToContainer() {
@@ -236,7 +237,7 @@ public class POSTRdfRequestHandler extends AbstractCreationRequestHandler {
 		if ( LOG.isDebugEnabled() ) {
 			LOG.debug("<< handlePOSTToContainer() > The resource was created and it was inserted into a container.");
 		}
-		return new ResponseEntity<Object>(HttpStatus.CREATED);
+		return new ResponseEntity<Object>(new EmptyResponse(), HttpStatus.CREATED);
 	}
 
 	private ResponseEntity<Object> handlePOSTExistingResourceToContainer() {
@@ -251,7 +252,7 @@ public class POSTRdfRequestHandler extends AbstractCreationRequestHandler {
 		} catch (CarbonException e) {
 			return HTTPUtil.createErrorResponseEntity(e);
 		}
-		return new ResponseEntity<Object>(HttpStatus.OK);
+		return new ResponseEntity<Object>(new EmptyResponse(), HttpStatus.OK);
 	}
 
 	protected void resetGlobalVariables() {
