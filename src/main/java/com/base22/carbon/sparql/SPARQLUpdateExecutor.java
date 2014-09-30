@@ -68,8 +68,13 @@ public class SPARQLUpdateExecutor extends SPARQLExecutor {
 
 	public void execute(final UpdateRequest updateRequest, String datasetName) throws CarbonException {
 		WriteTransactionTemplate template = repositoryService.getWriteTransactionTemplate(datasetName);
+		execute(updateRequest, template);
+		template.execute();
+	}
+
+	public void execute(final UpdateRequest updateRequest, WriteTransactionTemplate template) throws CarbonException {
 		//@formatter:off
-		template.execute(new WriteTransactionCallback() {
+		template.addCallback(new WriteTransactionCallback() {
 			//@formatter:on
 			@Override
 			public void executeInTransaction(Dataset dataset, TransactionNamedModelCache namedModelCache) throws Exception {

@@ -124,8 +124,13 @@ public class ModelService {
 
 	public void addNamedModel(final String modelName, final Model model, String datasetName) throws CarbonException {
 		WriteTransactionTemplate template = repositoryService.getWriteTransactionTemplate(datasetName);
+		addNamedModel(modelName, model, template);
+		template.execute();
+	}
+
+	public void addNamedModel(final String modelName, final Model model, WriteTransactionTemplate template) throws CarbonException {
 		//@formatter:off
-		template.execute(new WriteTransactionCallback() {
+		template.addCallback(new WriteTransactionCallback() {
 			//@formatter:on
 			@Override
 			public void executeInTransaction(Dataset dataset, TransactionNamedModelCache namedModelCache) throws Exception {

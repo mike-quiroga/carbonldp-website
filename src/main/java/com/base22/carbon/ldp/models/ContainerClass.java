@@ -2,6 +2,7 @@ package com.base22.carbon.ldp.models;
 
 import com.base22.carbon.Carbon;
 import com.base22.carbon.models.PrefixedURI;
+import com.base22.carbon.models.RDFPropertyEnum;
 import com.hp.hpl.jena.rdf.model.Property;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.rdf.model.ResourceFactory;
@@ -71,6 +72,67 @@ public abstract class ContainerClass {
 
 	// --- End: Container Types
 	// --- Container Properties
+
+	public static enum Properties implements RDFPropertyEnum {
+		//@formatter:off
+		CONTAINS(
+			new PrefixedURI("ldp", "contains")
+		),
+		MEMBERSHIP_RESOURCE(
+			new PrefixedURI("ldp", "membershipResource")
+		),
+		HAS_MEMBER_RELATION(
+			new PrefixedURI("ldp", "hasMemberRelation")
+		),
+		MEMBER_OF_RELATION(
+			new PrefixedURI("ldp", "memberOfRelation")
+		),
+		INSERTED_CONTENT_RELATION(
+			new PrefixedURI("ldp", "insertedContentRelation")
+		),
+		DEFAULT_INTERACTION_MODEL(
+			new PrefixedURI("c", "defaultInteractionModel")
+		),
+		DEFAULT_HAS_MEMBER_RELATION(
+			new PrefixedURI("ldp", "member")	
+		);
+		//@formatter:on
+
+		private final PrefixedURI[] prefixedURIs;
+		private final Property[] properties;
+
+		Properties(PrefixedURI... uris) {
+			this.prefixedURIs = uris;
+
+			this.properties = new Property[uris.length];
+			for (int i = 0; i < uris.length; i++) {
+				this.properties[i] = ResourceFactory.createProperty(uris[i].getURI());
+			}
+		}
+
+		public PrefixedURI getPrefixedURI() {
+			return prefixedURIs[0];
+		}
+
+		public PrefixedURI[] getPrefixedURIs() {
+			return this.prefixedURIs;
+		}
+
+		public Property getProperty() {
+			return this.properties[0];
+		}
+
+		public static Properties findByURI(String uri) {
+			for (Properties property : Properties.values()) {
+				for (PrefixedURI propertyURI : property.getPrefixedURIs()) {
+					if ( propertyURI.getURI().equals(uri) || propertyURI.getShortVersion().equals(uri) ) {
+						return property;
+					}
+				}
+			}
+			return null;
+		}
+	}
 
 	// Containment triples' predicate
 	public static final String CONTAINS = Carbon.CONFIGURED_PREFIXES.get("ldp") + "contains";

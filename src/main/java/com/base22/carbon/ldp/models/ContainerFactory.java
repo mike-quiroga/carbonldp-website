@@ -1,12 +1,12 @@
 package com.base22.carbon.ldp.models;
 
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.base22.carbon.APIPreferences.InteractionModel;
 import com.base22.carbon.CarbonException;
 import com.base22.carbon.FactoryException;
-import com.base22.carbon.APIPreferences.InteractionModel;
-import com.base22.carbon.ldp.models.RDFResourceClass.Properties;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.Property;
@@ -18,7 +18,7 @@ import com.hp.hpl.jena.rdf.model.StmtIterator;
 public class ContainerFactory extends RDFSourceFactory {
 
 	public Container create(RDFSource ldpRSource) throws CarbonException {
-		if ( ! isValidContainer(ldpRSource) ) {
+		if ( ! isContainer(ldpRSource) ) {
 			if ( LOG.isErrorEnabled() ) {
 				LOG.error("<< create() > The resource is not a container.");
 			}
@@ -265,14 +265,20 @@ public class ContainerFactory extends RDFSourceFactory {
 			if ( membershipResourceIterator.hasNext() ) {
 				violations.add("membershipResource > Points to multiple values.");
 			}
+		} else {
+			violations.add("membershipResource > Isn't defined.");
 		}
 
 		if ( ldpRSource.getResource().hasProperty(ContainerClass.MEMBER_OF_RELATION_P) ) {
 			violations.addAll(checkMemberOfRelation(ldpRSource));
 		}
+
 		if ( ldpRSource.getResource().hasProperty(ContainerClass.HAS_MEMBER_RELATION_P) ) {
 			violations.addAll(checkHasMemberRelation(ldpRSource));
+		} else {
+			violations.add(MessageFormat.format("{0} > Isn't defined.", ContainerClass.Properties.HAS_MEMBER_RELATION.getPrefixedURI().getShortVersion()));
 		}
+
 		if ( ldpRSource.getResource().hasProperty(ContainerClass.DIM_P) ) {
 			violations.addAll(checkDefaultInteractionModel(ldpRSource));
 		}
@@ -304,14 +310,20 @@ public class ContainerFactory extends RDFSourceFactory {
 			if ( membershipResourceIterator.hasNext() ) {
 				violations.add("membershipResource > Points to multiple values.");
 			}
+		} else {
+			violations.add("membershipResource > Isn't defined.");
 		}
 
 		if ( ldpRSource.getResource().hasProperty(ContainerClass.MEMBER_OF_RELATION_P) ) {
 			violations.addAll(checkMemberOfRelation(ldpRSource));
 		}
+
 		if ( ldpRSource.getResource().hasProperty(ContainerClass.HAS_MEMBER_RELATION_P) ) {
 			violations.addAll(checkHasMemberRelation(ldpRSource));
+		} else {
+			violations.add(MessageFormat.format("{0} > Isn't defined.", ContainerClass.Properties.HAS_MEMBER_RELATION.getPrefixedURI().getShortVersion()));
 		}
+
 		if ( ldpRSource.getResource().hasProperty(ContainerClass.DIM_P) ) {
 			violations.addAll(checkDefaultInteractionModel(ldpRSource));
 		}

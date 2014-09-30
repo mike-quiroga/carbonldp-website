@@ -1,8 +1,16 @@
 package com.base22.carbon.ldp;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.base22.carbon.Carbon;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
+import com.hp.hpl.jena.rdf.model.Property;
+import com.hp.hpl.jena.rdf.model.Resource;
+import com.hp.hpl.jena.rdf.model.ResourceFactory;
+import com.hp.hpl.jena.rdf.model.Statement;
+import com.hp.hpl.jena.rdf.model.StmtIterator;
 import com.hp.hpl.jena.update.UpdateAction;
 import com.hp.hpl.jena.update.UpdateFactory;
 import com.hp.hpl.jena.update.UpdateRequest;
@@ -44,5 +52,40 @@ public class ModelUtil {
 
 	public static Model createDetachedCopy(Model atachedModel) {
 		return atachedModel.difference(ModelFactory.createDefaultModel());
+	}
+
+	public static Resource renameResource(Resource resource, String newURI, Model model) {
+		Resource nullResource = null;
+		Property nullProperty = null;
+
+		Resource newResource = ResourceFactory.createResource(newURI);
+
+		List<Statement> statementsToAdd = new ArrayList<Statement>();
+		List<Statement> statementsToRemove = new ArrayList<Statement>();
+
+		StmtIterator subjectIterator = model.listStatements(resource, nullProperty, nullResource);
+		while (subjectIterator.hasNext()) {
+			Statement statementToRemove = subjectIterator.next();
+			Statement statementToAdd = ResourceFactory.createStatement(newResource, statementToRemove.getPredicate(), statementToRemove.getObject());
+
+			statementsToRemove.add(statementToRemove);
+			statementsToAdd.add(statementToAdd);
+		}
+
+		StmtIterator objectIterator = model.listStatements(nullResource, nullProperty, resource);
+		while (objectIterator.hasNext()) {
+			Statement statementToRemove = objectIterator.next();
+			Statement statementToAdd = ResourceFactory.createStatement(statementToRemove.getSubject(), statementToRemove.getPredicate(), newResource);
+
+			statementsToRemove.add(statementToRemove);
+			statementsToAdd.add(statementToAdd);
+		}
+
+		model.remove(statementsToRemove);
+		model.add(statementsToAdd);
+
+		newResource = model.getResource(newURI);
+
+		return newResource;
 	}
 }

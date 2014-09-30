@@ -6,8 +6,15 @@ public class HttpHeaderValue {
 	private String extendingKey = null;
 	private String extendingValue = null;
 
+	private boolean checkSpecialCharacters = true;
+
 	public HttpHeaderValue() {
 		this.mainValue = "";
+	}
+
+	public HttpHeaderValue(boolean checkSpecialCharacters) {
+		this.mainValue = "";
+		this.checkSpecialCharacters = checkSpecialCharacters;
 	}
 
 	public HttpHeaderValue(String headerValue) {
@@ -27,7 +34,7 @@ public class HttpHeaderValue {
 
 			if ( ! (this.mainValue.startsWith("<") && this.mainValue.endsWith(">")) ) {
 				boolean specialCharacters = hasSpecialCharacters(this.mainValue);
-				if ( specialCharacters ) {
+				if ( specialCharacters && checkSpecialCharacters ) {
 					mainBuilder.insert(0, "\"");
 					mainBuilder.append("\"");
 				}
@@ -69,7 +76,7 @@ public class HttpHeaderValue {
 			extendingBuilder.append(this.extendingValue);
 			if ( ! (this.extendingValue.startsWith("<") && this.extendingValue.endsWith(">")) ) {
 				boolean specialCharacters = hasSpecialCharacters(this.extendingValue);
-				if ( specialCharacters ) {
+				if ( specialCharacters && checkSpecialCharacters ) {
 					extendingBuilder.insert(0, "\"");
 					extendingBuilder.append("\"");
 				}

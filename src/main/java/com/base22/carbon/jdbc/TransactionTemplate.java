@@ -19,6 +19,7 @@ public abstract class TransactionTemplate {
 		Connection connection = null;
 		try {
 			connection = dataSource.getConnection();
+			connection.setAutoCommit(false);
 		} catch (SQLException e) {
 			if ( LOG.isDebugEnabled() ) {
 				LOG.debug("xx getConnection() > Exception Stacktrace:", e);

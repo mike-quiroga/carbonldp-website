@@ -4,19 +4,20 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 
 import com.base22.carbon.CarbonException;
-import com.base22.carbon.DAOException;
+import com.base22.carbon.jdbc.BatchUpdateTransactionCallback;
+import com.base22.carbon.jdbc.DAOJdbc;
 import com.base22.carbon.jdbc.QueryTransactionCallback;
 import com.base22.carbon.jdbc.QueryTransactionTemplate;
+import com.base22.carbon.jdbc.SingleUpdateTransactionCallback;
 import com.base22.carbon.jdbc.TransactionException;
-import com.base22.carbon.jdbc.UpdateTransactionCallback;
 import com.base22.carbon.jdbc.UpdateTransactionTemplate;
-import com.base22.carbon.jdbc.DAOJdbc;
 import com.base22.carbon.ldp.models.URIObject;
 
 @Service("uriObjectDAO")
@@ -40,12 +41,11 @@ public class URIObjectDAOJdbc extends DAOJdbc implements URIObjectDAO {
 		final String uri = uriObject.getURI();
 
 		// Insert the uriObject
-		int insertionResult;
-		UpdateTransactionTemplate template = new UpdateTransactionTemplate();
+		UpdateTransactionTemplate template = new UpdateTransactionTemplate(securityJDBCDataSource);
 		try {
 			//@formatter:off
-					insertionResult = template.execute(securityJDBCDataSource, new UpdateTransactionCallback() {
-						//@formatter:on
+			template.execute(new SingleUpdateTransactionCallback() {
+				//@formatter:on
 				@Override
 				public StringBuilder prepareSQLQuery(StringBuilder queryBuilder) {
 					//@formatter:off
@@ -76,15 +76,110 @@ public class URIObjectDAOJdbc extends DAOJdbc implements URIObjectDAO {
 			throw e;
 		}
 
-		if ( insertionResult != 1 ) {
-			// TODO: Can we get the reason in this case?
-			if ( LOG.isErrorEnabled() ) {
-				LOG.error("<< createURIObject() > The URIObject couldn't be created.");
+		return uriObject;
+	}
+
+	public List<URIObject> createURIObjects(final List<URIObject> uriObjects) throws CarbonException {
+		for (URIObject uriObject : uriObjects) {
+			if ( uriObject.getUuid() == null ) {
+				// The UUID wasn't set, create one
+				UUID uuid = UUID.randomUUID();
+				uriObject.setUuid(uuid);
 			}
-			throw new DAOException("The URIObject couldn't be created.");
 		}
 
-		return uriObject;
+		// Insert the uriObject
+		UpdateTransactionTemplate template = new UpdateTransactionTemplate(securityJDBCDataSource);
+
+		//@formatter:off
+		template.execute(new BatchUpdateTransactionCallback() {
+			//@formatter:on
+
+			@Override
+			public StringBuilder prepareSQLQuery(StringBuilder queryBuilder) {
+				//@formatter:off
+				queryBuilder
+					.append("INSERT INTO ")
+					.append(TABLE)
+					.append(" (")
+						.append(UUID_FIELD)
+						.append(", ")
+						.append(URI_FIELD)
+					.append(") VALUES (UNHEX(?), ?)")
+				;
+				//@formatter:on
+				return queryBuilder;
+			}
+
+			@Override
+			public PreparedStatement prepareStatement(PreparedStatement statement) throws SQLException {
+				for (URIObject uriObject : uriObjects) {
+					String uuidString = uriObject.getMinimizedUuidString();
+					String uri = uriObject.getURI();
+
+					statement.setString(1, uuidString);
+					statement.setString(2, uri);
+					statement.addBatch();
+				}
+				return statement;
+			}
+		});
+
+		return uriObjects;
+	}
+
+	public boolean uriObjectsExist(final List<String> uris) throws CarbonException {
+		QueryTransactionTemplate template = new QueryTransactionTemplate();
+
+		Boolean exist = null;
+		try {
+			//@formatter:off
+			exist = template.execute(securityJDBCDataSource, new QueryTransactionCallback<Boolean>() {
+				//@formatter:on
+				@Override
+				public StringBuilder prepareSQLQuery(StringBuilder queryBuilder) {
+					//@formatter:off
+					queryBuilder
+						.append("SELECT COUNT(1) FROM ")
+							.append(TABLE)
+						.append(" WHERE ")
+							.append(URI_FIELD)
+						.append(" IN (").append(preparePlaceHolders(uris.size())).append(")")
+					;
+					//@formatter:on
+					return queryBuilder;
+				}
+
+				@Override
+				public PreparedStatement prepareStatement(PreparedStatement statement) throws SQLException {
+					setStringsInStatement(statement, uris.toArray(new String[uris.size()]));
+					return statement;
+				}
+
+				@Override
+				public Boolean interpretResultSet(ResultSet resultSet) throws SQLException {
+					Boolean exist = false;
+					if ( resultSet.next() ) {
+						if ( resultSet.getInt(1) >= 1 ) {
+							exist = true;
+						}
+					}
+					return exist;
+				}
+
+			});
+		} catch (CarbonException e) {
+			if ( LOG.isErrorEnabled() ) {
+				LOG.error("<< uriObjectsAlreadyExist() > There was a problem while trying to check for existence the uris: '{}'.", uris.toString());
+			}
+			throw e;
+		}
+
+		if ( exist == null ) {
+			exist = false;
+		}
+
+		return exist;
 	}
 
 	@Override
@@ -156,96 +251,72 @@ public class URIObjectDAOJdbc extends DAOJdbc implements URIObjectDAO {
 
 	@Override
 	public void deleteURIObject(URIObject uriObject, final boolean deleteChildren) throws CarbonException {
+		UpdateTransactionTemplate template = new UpdateTransactionTemplate(securityJDBCDataSource);
+		deleteURIObject(uriObject, deleteChildren, template);
+		template.execute();
+	}
+
+	public void deleteURIObject(URIObject uriObject, final boolean deleteChildren, UpdateTransactionTemplate template) throws CarbonException {
 		// Prepare UUID
 		final String uri = uriObject.getURI();
 
-		// Insert the uriObject
-		int deletionResult;
-		UpdateTransactionTemplate template = new UpdateTransactionTemplate();
-		try {
-			//@formatter:off
-			deletionResult = template.execute(securityJDBCDataSource, new UpdateTransactionCallback() {
+		//@formatter:off
+		template.addCallback(new SingleUpdateTransactionCallback() {
+			//@formatter:on
+			@Override
+			public StringBuilder prepareSQLQuery(StringBuilder queryBuilder) {
+				//@formatter:off
+				queryBuilder
+					.append("DELETE FROM ")
+					.append(TABLE)
+					.append(" WHERE ")
+						.append(URI_FIELD)
+						.append(" = ")
+						.append("?")
+				;
 				//@formatter:on
-				@Override
-				public StringBuilder prepareSQLQuery(StringBuilder queryBuilder) {
-					//@formatter:off
-					queryBuilder
-						.append("DELETE FROM ")
-						.append(TABLE)
-						.append(" WHERE ")
-							.append(URI_FIELD)
-							.append(" = ")
-							.append("?")
-					;
-					//@formatter:on
-					return queryBuilder;
-				}
-
-				@Override
-				public PreparedStatement prepareStatement(PreparedStatement statement) throws SQLException {
-					statement.setString(1, uri);
-					return statement;
-				}
-			});
-		} catch (TransactionException e) {
-			if ( LOG.isErrorEnabled() ) {
-				LOG.error("<< deleteURIObject() > The URIObject couldn't be deleted.");
+				return queryBuilder;
 			}
-			throw e;
-		}
 
-		if ( deletionResult != 1 ) {
-			// TODO: Can we get the reason in this case?
-			if ( LOG.isErrorEnabled() ) {
-				LOG.error("<< deleteURIObject() > The URIObject couldn't be deleted.");
+			@Override
+			public PreparedStatement prepareStatement(PreparedStatement statement) throws SQLException {
+				statement.setString(1, uri);
+				return statement;
 			}
-			throw new DAOException("The URIObject couldn't be deleted.");
-		}
+		});
 
-		try {
-			deleteChildrenURIObjects(uri);
-		} catch (CarbonException e) {
-			// TODO: FT
-			throw e;
+		if ( deleteChildren ) {
+			deleteChildrenURIObjects(uri, template);
 		}
 	}
 
-	private void deleteChildrenURIObjects(String uri) throws CarbonException {
+	private void deleteChildrenURIObjects(String uri, UpdateTransactionTemplate template) throws CarbonException {
 		final String childrenURIBase = uri.endsWith("/") ? uri : uri.concat("/");
-		// Insert the uriObject
-		int deletionResult;
-		UpdateTransactionTemplate template = new UpdateTransactionTemplate();
-		try {
-			//@formatter:off
-			deletionResult = template.execute(securityJDBCDataSource, new UpdateTransactionCallback() {
-				//@formatter:on
-				@Override
-				public StringBuilder prepareSQLQuery(StringBuilder queryBuilder) {
-					//@formatter:off
-					queryBuilder
-						.append("DELETE FROM ")
-						.append(TABLE)
-						.append(" WHERE ")
-							.append(URI_FIELD)
-							.append(" LIKE ")
-							.append("?")
-					;
-					//@formatter:on
-					return queryBuilder;
-				}
 
-				@Override
-				public PreparedStatement prepareStatement(PreparedStatement statement) throws SQLException {
-					statement.setString(1, childrenURIBase + "%");
-					return statement;
-				}
-			});
-		} catch (TransactionException e) {
-			if ( LOG.isErrorEnabled() ) {
-				LOG.error("<< deleteChildrenURIObjects() > The URIObject couldn't be deleted.");
+		//@formatter:off
+		template.addCallback(new SingleUpdateTransactionCallback() {
+			//@formatter:on
+			@Override
+			public StringBuilder prepareSQLQuery(StringBuilder queryBuilder) {
+				//@formatter:off
+				queryBuilder
+					.append("DELETE FROM ")
+					.append(TABLE)
+					.append(" WHERE ")
+						.append(URI_FIELD)
+						.append(" LIKE ")
+						.append("?")
+				;
+				//@formatter:on
+				return queryBuilder;
 			}
-			throw e;
-		}
+
+			@Override
+			public PreparedStatement prepareStatement(PreparedStatement statement) throws SQLException {
+				statement.setString(1, childrenURIBase + "%");
+				return statement;
+			}
+		});
 	}
 
 	@Override

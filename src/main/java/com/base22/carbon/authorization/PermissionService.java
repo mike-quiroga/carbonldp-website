@@ -263,6 +263,39 @@ public class PermissionService {
 		});
 	}
 
+	public void setParentToMany(final List<? extends Object> children, Object parent) throws CarbonException {
+		final ObjectIdentity parentObjectIdentity = new ObjectIdentityImpl(parent);
+
+		TransactionTemplate tt = new TransactionTemplate(transactionManager);
+		tt.execute(new TransactionCallbackWithoutResult() {
+
+			@Override
+			protected void doInTransactionWithoutResult(TransactionStatus status) {
+				MutableAcl parentACL = null;
+				try {
+					parentACL = (MutableAcl) aclService.readAclById(parentObjectIdentity);
+				} catch (NotFoundException nfe) {
+					parentACL = aclService.createAcl(parentObjectIdentity);
+				}
+
+				for (Object child : children) {
+					ObjectIdentity childObjectIdentity = new ObjectIdentityImpl(child);
+
+					MutableAcl childACL = null;
+					try {
+						childACL = (MutableAcl) aclService.readAclById(childObjectIdentity);
+					} catch (NotFoundException nfe) {
+						childACL = aclService.createAcl(childObjectIdentity);
+					}
+
+					childACL.setParent(parentACL);
+
+					aclService.updateAcl(childACL);
+				}
+			}
+		});
+	}
+
 	public void emptyACL(Object object) throws CarbonException {
 		final ObjectIdentity objectIdentity = new ObjectIdentityImpl(object);
 

@@ -14,9 +14,9 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.AccessDeniedException;
 
+import com.base22.carbon.APIPreferences.InteractionModel;
 import com.base22.carbon.CarbonException;
 import com.base22.carbon.HTTPHeaders;
-import com.base22.carbon.APIPreferences.InteractionModel;
 import com.base22.carbon.apps.Application;
 import com.base22.carbon.ldp.RDFUtil;
 import com.base22.carbon.ldp.models.Container;
@@ -205,6 +205,36 @@ public abstract class AbstractCreationRequestHandler extends AbstractLDPRequestH
 		}
 	}
 
+	@SuppressWarnings("resource")
+	protected InputStream getBodyInputStream(HttpEntity<byte[]> entityBody) throws CarbonException {
+		if ( (! entityBody.hasBody()) || entityBody.getBody().length == 0 ) {
+			String debugMessage = "The request doesn't have an entity body.";
+
+			if ( LOG.isDebugEnabled() ) {
+				LOG.debug("<< populateEntityBody() > {}", debugMessage);
+			}
+
+			ErrorResponseFactory factory = new ErrorResponseFactory();
+			ErrorResponse errorObject = factory.create();
+			errorObject.setHttpStatus(HttpStatus.BAD_REQUEST);
+			errorObject.setFriendlyMessage(debugMessage);
+			errorObject.setDebugMessage(debugMessage);
+			errorObject.setEntityBodyIssue(null, "required");
+
+			throw new CarbonException(errorObject);
+		}
+
+		InputStream bodyInputStream = new ByteArrayInputStream(entityBody.getBody());
+
+		try {
+			bodyInputStream = prepareEntityBodyInputStream(bodyInputStream);
+		} catch (CarbonException e) {
+			throw e;
+		}
+
+		return bodyInputStream;
+	}
+
 	protected void saveEntityBodyInString() throws CarbonException {
 		this.entityBodyString = null;
 		try {
@@ -274,6 +304,51 @@ public abstract class AbstractCreationRequestHandler extends AbstractLDPRequestH
 
 			throw new CarbonException(errorObject);
 		}
+	}
+
+	protected Model parseEntityBody(String baseURI, InputStream bodyInputStream, Lang language) throws CarbonException {
+		Model model = null;
+
+		try {
+			model = RDFUtil.createInMemoryModel(bodyInputStream, language, baseURI);
+		} catch (IOException e) {
+			if ( LOG.isDebugEnabled() ) {
+				LOG.debug("xx parseEntityBody() > Exception Stacktrace:", e);
+			}
+			if ( LOG.isErrorEnabled() ) {
+				LOG.error("<< parseEntityBody() > There was a problem while converting the entityBodyInputStream to a String.");
+			}
+
+			String friendlyMessage = "Unexpected Server Error.";
+			String debugMessage = "An unexpected problem related with an InputStream rised when parsing the entity body.";
+
+			ErrorResponseFactory factory = new ErrorResponseFactory();
+			ErrorResponse errorObject = factory.create();
+			errorObject.setHttpStatus(HttpStatus.INTERNAL_SERVER_ERROR);
+			errorObject.setFriendlyMessage(friendlyMessage);
+			errorObject.setDebugMessage(debugMessage);
+
+			throw new CarbonException(errorObject);
+		} catch (RiotException e) {
+			// The entity body couldn't be parsed
+			String friendlyMessage = "The body of the request is not valid.";
+			String debugMessage = "The entity body couldn't be parsed.";
+
+			if ( LOG.isDebugEnabled() ) {
+				LOG.debug("<< parseEntityBody() > {}", debugMessage);
+			}
+
+			ErrorResponseFactory factory = new ErrorResponseFactory();
+			ErrorResponse errorObject = factory.create();
+			errorObject.setHttpStatus(HttpStatus.BAD_REQUEST);
+			errorObject.setFriendlyMessage(friendlyMessage);
+			errorObject.setDebugMessage(debugMessage);
+			errorObject.setEntityBodyIssue(null, e.getMessage());
+
+			throw new CarbonException(errorObject);
+		}
+
+		return model;
 	}
 
 	protected void populateRequestRDFSource() throws CarbonException {

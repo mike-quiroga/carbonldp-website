@@ -321,7 +321,12 @@ public class RDFResourceFactory {
 
 		@Override
 		public boolean isOfType(String typeString) {
-			RDFNode type = ResourceFactory.createResource(typeString);
+			Resource type = ResourceFactory.createResource(typeString);
+			return isOfType(type);
+		}
+
+		@Override
+		public boolean isOfType(Resource type) {
 			return resource.hasProperty(RDFResourceClass.Properties.RDF_TYPE.getProperty(), type);
 		}
 

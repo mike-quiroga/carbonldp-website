@@ -11,9 +11,11 @@ import java.util.Map.Entry;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.joda.time.DateTime;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.AntPathMatcher;
 
 import com.base22.carbon.Carbon;
 import com.base22.carbon.CarbonException;
@@ -411,6 +413,13 @@ public abstract class HTTPUtil {
 		return requestURL;
 	}
 
+	public static String createGenericRequestURI() {
+		DateTime now = DateTime.now();
+		StringBuilder uriBuilder = new StringBuilder();
+		uriBuilder.append(Carbon.URL).append("/requests/").append(String.valueOf(now.getMillis()));
+		return uriBuilder.toString();
+	}
+
 	public static ResponseEntity<Object> createErrorResponseEntity(CarbonException e) {
 		return HTTPUtil.createErrorResponseEntity(e.getErrorObject());
 	}
@@ -447,5 +456,35 @@ public abstract class HTTPUtil {
 			uriSlug = uriParts[uriParts.length - 1];
 		}
 		return uriSlug;
+	}
+
+	public static boolean isInlineResourceURIOf(String inlineResourceURI, String documentResourceURI) {
+		return inlineResourceURI.startsWith(documentResourceURI.concat(Carbon.EXTENDING_RESOURCE_SIGN));
+	}
+
+	public static boolean isGenericRequestURI(String uri) {
+		AntPathMatcher matcher = new AntPathMatcher();
+		return matcher.match("/requests/*", uri.replace(Carbon.URL, ""));
+	}
+
+	public static String getLocalSlug(String uri) {
+		int symbolIndex = uri.indexOf(Carbon.EXTENDING_RESOURCE_SIGN);
+		if ( uri.length() < (symbolIndex + 2) ) {
+			return "";
+		} else {
+			return uri.substring(uri.indexOf(Carbon.EXTENDING_RESOURCE_SIGN) + 1);
+		}
+	}
+
+	public static boolean isImmediateChildURI(String childURI, String parentURI) {
+		AntPathMatcher matcher = new AntPathMatcher();
+
+		childURI = childURI.replace(Carbon.URL, "");
+		childURI = childURI.endsWith("/") ? childURI.substring(0, childURI.length() - 2) : childURI;
+
+		parentURI = parentURI.replace(Carbon.URL, "");
+		parentURI = parentURI.endsWith("/") ? parentURI.concat("*") : parentURI.concat("/*");
+
+		return matcher.match(parentURI, childURI);
 	}
 }

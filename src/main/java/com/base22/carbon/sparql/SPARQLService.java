@@ -12,6 +12,7 @@ import com.base22.carbon.CarbonException;
 import com.base22.carbon.apps.Application;
 import com.base22.carbon.models.ErrorResponse;
 import com.base22.carbon.models.ErrorResponseFactory;
+import com.base22.carbon.repository.WriteTransactionTemplate;
 import com.base22.carbon.repository.services.RepositoryService;
 import com.hp.hpl.jena.query.Query;
 import com.hp.hpl.jena.query.QueryFactory;
@@ -373,11 +374,27 @@ public class SPARQLService {
 		update(updateRequest, datasetName);
 	}
 
+	public void update(String updateString, WriteTransactionTemplate template) throws CarbonException {
+		UpdateRequest updateRequest = this.createUpdateRequest(updateString, false);
+		update(updateRequest, template);
+	}
+
 	public void update(UpdateRequest updateRequest, String datasetName) throws CarbonException {
 		SPARQLUpdateExecutor executor = new SPARQLUpdateExecutor(this.repositoryService);
 
 		try {
 			executor.execute(updateRequest, datasetName);
+		} catch (CarbonException e) {
+			// TODO: FT
+			throw e;
+		}
+	}
+
+	public void update(UpdateRequest updateRequest, WriteTransactionTemplate template) throws CarbonException {
+		SPARQLUpdateExecutor executor = new SPARQLUpdateExecutor(this.repositoryService);
+
+		try {
+			executor.execute(updateRequest, template);
 		} catch (CarbonException e) {
 			// TODO: FT
 			throw e;

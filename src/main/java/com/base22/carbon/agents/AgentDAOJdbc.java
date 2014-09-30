@@ -13,12 +13,12 @@ import org.springframework.stereotype.Service;
 import com.base22.carbon.CarbonException;
 import com.base22.carbon.DAOException;
 import com.base22.carbon.authentication.AuthenticationUtil;
+import com.base22.carbon.jdbc.DAOJdbc;
 import com.base22.carbon.jdbc.QueryTransactionCallback;
 import com.base22.carbon.jdbc.QueryTransactionTemplate;
+import com.base22.carbon.jdbc.SingleUpdateTransactionCallback;
 import com.base22.carbon.jdbc.TransactionException;
-import com.base22.carbon.jdbc.UpdateTransactionCallback;
 import com.base22.carbon.jdbc.UpdateTransactionTemplate;
-import com.base22.carbon.jdbc.DAOJdbc;
 
 @Service("agentDetailsDAO")
 public class AgentDAOJdbc extends DAOJdbc implements AgentDAO {
@@ -71,13 +71,11 @@ public class AgentDAOJdbc extends DAOJdbc implements AgentDAO {
 
 		final String hashedPasswordToInsert = hashedPassword;
 
-		// TODO: Support statement batches
 		// Save the agent's login details
-		int insertionResult;
-		UpdateTransactionTemplate template = new UpdateTransactionTemplate();
+		UpdateTransactionTemplate template = new UpdateTransactionTemplate(securityJDBCDataSource);
 		try {
 			//@formatter:off
-			insertionResult = template.execute(securityJDBCDataSource, new UpdateTransactionCallback() {
+			template.execute(new SingleUpdateTransactionCallback() {
 				//@formatter:on
 				@Override
 				public StringBuilder prepareSQLQuery(StringBuilder queryBuilder) {
@@ -122,14 +120,6 @@ public class AgentDAOJdbc extends DAOJdbc implements AgentDAO {
 			throw e;
 		}
 
-		if ( insertionResult != 1 ) {
-			// TODO: Can we get the reason in this case?
-			if ( LOG.isErrorEnabled() ) {
-				LOG.error("<< registerAgentLoginDetails() > The agentLoginDetails couldn't be registered.");
-			}
-			throw new DAOException("The agentLoginDetails couldn't be registered.");
-		}
-
 		addEmailToAgent(agentUUID, 1, agent.getMainEmail());
 
 		agent.setUuid(agentUUID);
@@ -142,11 +132,10 @@ public class AgentDAOJdbc extends DAOJdbc implements AgentDAO {
 	public void addEmailToAgent(UUID agentUUID, final int index, final String email) throws CarbonException {
 		final String uuidString = AuthenticationUtil.minimizeUUID(agentUUID);
 
-		int insertionResult;
-		UpdateTransactionTemplate template = new UpdateTransactionTemplate();
+		UpdateTransactionTemplate template = new UpdateTransactionTemplate(securityJDBCDataSource);
 		try {
 			//@formatter:off
-			insertionResult = template.execute(securityJDBCDataSource, new UpdateTransactionCallback() {
+			template.execute(new SingleUpdateTransactionCallback() {
 				//@formatter:on
 				@Override
 				public StringBuilder prepareSQLQuery(StringBuilder queryBuilder) {
@@ -179,14 +168,6 @@ public class AgentDAOJdbc extends DAOJdbc implements AgentDAO {
 				LOG.error("<< addEmailToAgent() > The agentLoginDetails couldn't be registered.");
 			}
 			throw e;
-		}
-
-		if ( insertionResult != 1 ) {
-			// TODO: Can we get the reason in this case?
-			if ( LOG.isErrorEnabled() ) {
-				LOG.error("<< addEmailToAgent() > The agentLoginDetails couldn't be registered.");
-			}
-			throw new DAOException("The email couldn't be added to the agent.");
 		}
 
 	}

@@ -9,15 +9,14 @@ import java.util.UUID;
 import org.springframework.stereotype.Service;
 
 import com.base22.carbon.CarbonException;
-import com.base22.carbon.DAOException;
 import com.base22.carbon.agents.AgentDAOJdbc;
 import com.base22.carbon.authentication.AuthenticationUtil;
+import com.base22.carbon.jdbc.DAOJdbc;
 import com.base22.carbon.jdbc.QueryTransactionCallback;
 import com.base22.carbon.jdbc.QueryTransactionTemplate;
+import com.base22.carbon.jdbc.SingleUpdateTransactionCallback;
 import com.base22.carbon.jdbc.TransactionException;
-import com.base22.carbon.jdbc.UpdateTransactionCallback;
 import com.base22.carbon.jdbc.UpdateTransactionTemplate;
-import com.base22.carbon.jdbc.DAOJdbc;
 
 @Service("groupDAO")
 public class GroupDAOJdbc extends DAOJdbc implements GroupDAO {
@@ -58,11 +57,10 @@ public class GroupDAOJdbc extends DAOJdbc implements GroupDAO {
 		final String groupUUIDString = group.getMinimizedUuidString();
 		final String agentUUIDString = AuthenticationUtil.minimizeUUID(agentUUID);
 
-		int insertionResult;
-		UpdateTransactionTemplate template = new UpdateTransactionTemplate();
+		UpdateTransactionTemplate template = new UpdateTransactionTemplate(securityJDBCDataSource);
 		try {
 			//@formatter:off
-			insertionResult = template.execute(securityJDBCDataSource, new UpdateTransactionCallback() {
+			template.execute(new SingleUpdateTransactionCallback() {
 				//@formatter:on
 				@Override
 				public StringBuilder prepareSQLQuery(StringBuilder queryBuilder) {
@@ -88,14 +86,6 @@ public class GroupDAOJdbc extends DAOJdbc implements GroupDAO {
 				LOG.error("<< addAgentToGroup() > The agent: '{}', couldn't be added to the group: '{}'.", agentUUID.toString(), group.getUuidString());
 			}
 			throw e;
-		}
-
-		if ( insertionResult != 1 ) {
-			// TODO: Can we get the reason in this case?
-			if ( LOG.isErrorEnabled() ) {
-				LOG.error("<< addAgentToGroup() > The agent: '{}', couldn't be added to the group: '{}'.", agentUUID.toString(), group.getUuidString());
-			}
-			throw new DAOException("The agent couldn't be added to the group.");
 		}
 	}
 

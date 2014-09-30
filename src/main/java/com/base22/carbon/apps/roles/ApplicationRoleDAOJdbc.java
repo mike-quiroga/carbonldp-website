@@ -22,8 +22,8 @@ import com.base22.carbon.groups.GroupDAOJdbc;
 import com.base22.carbon.jdbc.DAOJdbc;
 import com.base22.carbon.jdbc.QueryTransactionCallback;
 import com.base22.carbon.jdbc.QueryTransactionTemplate;
+import com.base22.carbon.jdbc.SingleUpdateTransactionCallback;
 import com.base22.carbon.jdbc.TransactionException;
-import com.base22.carbon.jdbc.UpdateTransactionCallback;
 import com.base22.carbon.jdbc.UpdateTransactionTemplate;
 import com.base22.carbon.models.UUIDObject;
 
@@ -125,11 +125,10 @@ public class ApplicationRoleDAOJdbc extends DAOJdbc implements ApplicationRoleDA
 		}
 		final String parentUUIDStringToInsert = parentUUIDString;
 
-		int insertionResult;
-		UpdateTransactionTemplate template = new UpdateTransactionTemplate();
+		UpdateTransactionTemplate template = new UpdateTransactionTemplate(securityJDBCDataSource);
 		try {
 			//@formatter:off
-			insertionResult = template.execute(securityJDBCDataSource, new UpdateTransactionCallback() {
+			template.execute(new SingleUpdateTransactionCallback() {
 				//@formatter:on
 				@Override
 				public StringBuilder prepareSQLQuery(StringBuilder queryBuilder) {
@@ -171,14 +170,6 @@ public class ApplicationRoleDAOJdbc extends DAOJdbc implements ApplicationRoleDA
 				LOG.error("<< createApplicationRole() > The applicationRole with UUID: '{}', couldn't be created.", applicationRole.getUuidString());
 			}
 			throw e;
-		}
-
-		if ( insertionResult != 1 ) {
-			// TODO: Can we get the reason in this case?
-			if ( LOG.isErrorEnabled() ) {
-				LOG.error("<< createApplicationRole() > The applicationRole with UUID: '{}', couldn't be created.", applicationRole.getUuidString());
-			}
-			throw new DAOException("The applicationRole couldn't be created.");
 		}
 
 		return applicationRole;
@@ -624,11 +615,10 @@ public class ApplicationRoleDAOJdbc extends DAOJdbc implements ApplicationRoleDA
 		final String applicationRoleUUIDString = applicationRole.getMinimizedUuidString();
 		final String agentUUIDString = AuthenticationUtil.minimizeUUID(agentUUID);
 
-		int insertionResult;
-		UpdateTransactionTemplate template = new UpdateTransactionTemplate();
+		UpdateTransactionTemplate template = new UpdateTransactionTemplate(securityJDBCDataSource);
 		try {
 			//@formatter:off
-			insertionResult = template.execute(securityJDBCDataSource, new UpdateTransactionCallback() {
+			template.execute(new SingleUpdateTransactionCallback() {
 				//@formatter:on
 				@Override
 				public StringBuilder prepareSQLQuery(StringBuilder queryBuilder) {
@@ -656,17 +646,6 @@ public class ApplicationRoleDAOJdbc extends DAOJdbc implements ApplicationRoleDA
 			}
 			throw e;
 		}
-
-		if ( insertionResult != 1 ) {
-			// TODO: Can we get the reason in this case?
-			if ( LOG.isErrorEnabled() ) {
-				LOG.error("<< addAgentToApplicationRole() > The agent: '{}', couldn't be added to the applicationRole: '{}'.", agentUUID.toString(),
-						applicationRole.getUuidString());
-			}
-			throw new DAOException("The agent couldn't be added to the applicationRole.");
-		}
-
-		// TODO Auto-generated method stub
 	}
 
 	public List<ApplicationRole> getApplicationRolesOfAgent(UUID agentUUID) throws CarbonException {

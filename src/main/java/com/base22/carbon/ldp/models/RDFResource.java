@@ -61,6 +61,8 @@ public interface RDFResource {
 
 	public List<String> getLinkTypes();
 
+	public boolean isOfType(Resource type);
+
 	public boolean isOfType(String typeString);
 
 	public Set<String> getTypes();

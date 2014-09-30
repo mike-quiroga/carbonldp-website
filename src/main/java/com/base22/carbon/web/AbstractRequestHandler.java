@@ -2,6 +2,8 @@ package com.base22.carbon.web;
 
 import java.nio.charset.UnsupportedCharsetException;
 import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -26,6 +28,10 @@ import com.base22.carbon.authentication.ApplicationContextToken;
 import com.base22.carbon.authorization.LDPPermissionService;
 import com.base22.carbon.authorization.PermissionService;
 import com.base22.carbon.authorization.PlatformRoleDAO;
+import com.base22.carbon.ldp.BasicContainerService;
+import com.base22.carbon.ldp.DirectContainerService;
+import com.base22.carbon.ldp.IndirectContainerService;
+import com.base22.carbon.ldp.RDFSourceService;
 import com.base22.carbon.ldp.URIObjectDAO;
 import com.base22.carbon.models.ErrorResponse;
 import com.base22.carbon.models.ErrorResponseFactory;
@@ -64,6 +70,15 @@ public abstract class AbstractRequestHandler {
 	protected PermissionService permissionService;
 
 	@Autowired
+	protected IndirectContainerService indirectContainerService;
+	@Autowired
+	protected DirectContainerService directContainerService;
+	@Autowired
+	protected BasicContainerService basicContainerService;
+	@Autowired
+	@Qualifier("s_RDFSourceService")
+	protected RDFSourceService rdfSourceService;
+	@Autowired
 	protected LDPService ldpService;
 	@Autowired
 	protected SPARQLService sparqlService;
@@ -74,6 +89,86 @@ public abstract class AbstractRequestHandler {
 	protected ConfigurationService configurationService;
 
 	protected final Logger LOG = LoggerFactory.getLogger(this.getClass());
+
+	protected boolean hasGenericRequestResources(Model requestModel) throws CarbonException {
+		AntPathMatcher matcher = new AntPathMatcher();
+
+		ResIterator iterator = requestModel.listSubjects();
+		while (iterator.hasNext()) {
+			Resource resource = iterator.next();
+			String resourceURI = resource.getURI();
+
+			if ( matcher.match("/requests/*", resourceURI.replace(configurationService.getServerURL(), "")) ) {
+				if ( HTTPUtil.isDocumentResourceURI(resourceURI) ) {
+					return true;
+				}
+			}
+		}
+
+		return false;
+	}
+
+	protected Resource[] getDocumentResources(Model requestModel) {
+		List<Resource> documentResources = new ArrayList<Resource>();
+
+		ResIterator iterator = requestModel.listSubjects();
+		while (iterator.hasNext()) {
+			Resource resource = iterator.next();
+			String resourceURI = resource.getURI();
+
+			if ( HTTPUtil.isDocumentResourceURI(resourceURI) ) {
+				documentResources.add(resource);
+			}
+		}
+
+		return documentResources.toArray(new Resource[documentResources.size()]);
+	}
+
+	protected Resource[] getInlineResourcesOf(Resource documentResource, Model requestModel) {
+		List<Resource> inlineResources = new ArrayList<Resource>();
+
+		String documentResourceURI = documentResource.getURI();
+
+		ResIterator iterator = requestModel.listSubjects();
+		while (iterator.hasNext()) {
+			Resource resource = iterator.next();
+			String resourceURI = resource.getURI();
+
+			if ( HTTPUtil.isInlineResourceURIOf(resourceURI, documentResourceURI) ) {
+				inlineResources.add(resource);
+			}
+		}
+
+		return inlineResources.toArray(new Resource[inlineResources.size()]);
+	}
+
+	protected Resource[] getExternalResources(Resource[] documentResources, Model requestModel) {
+		List<Resource> externalResources = new ArrayList<Resource>();
+
+		ResIterator iterator = requestModel.listSubjects();
+		while (iterator.hasNext()) {
+			Resource resource = iterator.next();
+			String resourceURI = resource.getURI();
+
+			boolean sharesBase = false;
+			for (Resource documentResource : documentResources) {
+				String documentResourceURI = documentResource.getURI();
+				if ( resourceURI.equals(documentResourceURI) ) {
+					sharesBase = true;
+					break;
+				} else if ( HTTPUtil.isInlineResourceURIOf(resourceURI, documentResourceURI) ) {
+					sharesBase = true;
+					break;
+				}
+			}
+
+			if ( ! sharesBase ) {
+				externalResources.add(resource);
+			}
+		}
+
+		return externalResources.toArray(new Resource[externalResources.size()]);
+	}
 
 	protected Resource getRequestModelMainResource(Model requestModel) throws CarbonException {
 		Resource documentResource = null;

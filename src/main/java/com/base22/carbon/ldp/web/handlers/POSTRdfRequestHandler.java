@@ -1,161 +1,206 @@
 package com.base22.carbon.ldp.web.handlers;
 
-import java.io.IOException;
+import java.io.InputStream;
 import java.text.MessageFormat;
-import java.util.Enumeration;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.jena.riot.Lang;
 import org.joda.time.DateTime;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.PathVariable;
 
 import com.base22.carbon.APIPreferences.InteractionModel;
+import com.base22.carbon.APIPreferences.RetrieveContainerPreference;
+import com.base22.carbon.Carbon;
 import com.base22.carbon.CarbonException;
 import com.base22.carbon.HTTPHeaders;
 import com.base22.carbon.apps.Application;
-import com.base22.carbon.ldp.RDFUtil;
+import com.base22.carbon.ldp.ModelUtil;
 import com.base22.carbon.ldp.models.Container;
 import com.base22.carbon.ldp.models.ContainerClass;
 import com.base22.carbon.ldp.models.ContainerClass.ContainerType;
 import com.base22.carbon.ldp.models.ContainerFactory;
-import com.base22.carbon.ldp.models.ContainerQueryOptions;
+import com.base22.carbon.ldp.models.NonRDFSourceClass;
+import com.base22.carbon.ldp.models.RDFSource;
+import com.base22.carbon.ldp.models.RDFSourceFactory;
+import com.base22.carbon.ldp.models.URIObject;
 import com.base22.carbon.models.EmptyResponse;
 import com.base22.carbon.models.ErrorResponse;
 import com.base22.carbon.models.ErrorResponseFactory;
 import com.base22.carbon.models.HttpHeader;
+import com.base22.carbon.models.HttpHeaderValue;
 import com.base22.carbon.utils.HTTPUtil;
+import com.hp.hpl.jena.rdf.model.Model;
+import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.Property;
-import com.hp.hpl.jena.rdf.model.ResIterator;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.rdf.model.ResourceFactory;
 import com.hp.hpl.jena.rdf.model.Statement;
+import com.hp.hpl.jena.rdf.model.StmtIterator;
 
 @Component
 @Scope(proxyMode = ScopedProxyMode.TARGET_CLASS, value = "request")
 public class POSTRdfRequestHandler extends AbstractCreationRequestHandler {
-	private String slugHeader;
 
-	private InteractionModel interactionModel;
+	private final static Resource[] invalidTypesForRDFSources;
+	static {
+		//@formatter:off
+		List<Resource> invalidTypes = Arrays.asList(
+			ContainerClass.ContainerType.BASIC.getResource(),
+			NonRDFSourceClass.Resources.WRAPPER.getResource(),
+			NonRDFSourceClass.Resources.LDPNR.getResource()
+		);
+		//@formatter:on
 
-	private String jenaDefaultBase;
+		invalidTypesForRDFSources = invalidTypes.toArray(new Resource[invalidTypes.size()]);
+	}
 
-	private boolean addABase;
-	private boolean slugCreated;
-	private ContainerType targetContainerType;
+	private final static Resource[] invalidTypesForContainers;
+	static {
+		//@formatter:off
+		List<Resource> invalidTypes = Arrays.asList(
+			ContainerClass.ContainerType.DIRECT.getResource(),
+			ContainerClass.ContainerType.INDIRECT.getResource(),
+			NonRDFSourceClass.Resources.WRAPPER.getResource(),
+			NonRDFSourceClass.Resources.LDPNR.getResource()
+		);
+		//@formatter:on
 
-	private Container targetContainer;
+		invalidTypesForContainers = invalidTypes.toArray(new Resource[invalidTypes.size()]);
+	}
 
-	public ResponseEntity<Object> handleRdfPOST(@PathVariable("application") String applicationIdentifier, HttpServletRequest request,
-			HttpServletResponse response, HttpEntity<byte[]> entity) throws CarbonException {
+	public ResponseEntity<Object> handleTurtleRDFPost(String appSlug, HttpServletRequest request, HttpServletResponse response, HttpEntity<byte[]> entity)
+			throws CarbonException {
+
+		String genericRequestURI = HTTPUtil.createGenericRequestURI();
+		InputStream requestBodyInputStream = getBodyInputStream(entity);
+		Model requestModel = parseEntityBody(genericRequestURI, requestBodyInputStream, Lang.TURTLE);
+
+		return handleRDFPost(appSlug, requestModel, request, response);
+	}
+
+	public ResponseEntity<Object> handleRDFPost(String appSlug, Model requestModel, HttpServletRequest request, HttpServletResponse response)
+			throws CarbonException {
 
 		if ( LOG.isTraceEnabled() ) {
-			LOG.trace(">> handleNonMultipartPost()");
+			LOG.trace(">> handleRDFPost()");
 		}
 
-		resetGlobalVariables();
+		Application app = getApplicationFromContext();
 
-		this.request = request;
-		this.response = response;
-		this.targetURI = HTTPUtil.getRequestURL(request);
+		String targetURI = getTargetURI(request);
+		URIObject targetURIObject = getTargetURIObject(targetURI);
 
-		Application application = getApplicationFromContext();
-		this.dataset = application.getDatasetName();
+		if ( ! targetResourceExists(targetURIObject) ) {
+			return handleNonExistentResource(targetURI, requestModel, request, response);
+		}
 
-		try {
-			populateLanguage();
-			populateSlug();
+		Resource[] documentResources = getDocumentResources(requestModel);
 
-			populateTargetURIObject();
+		if ( documentResources.length == 0 ) {
+			return handleRequestWithNoDocumentResources(app, targetURIObject, documentResources, requestModel, request, response);
+		}
 
-			populateEntityBody(entity);
-			addDefaultPrefixes();
-			saveEntityBodyInString();
+		// Search for resources that do not have the documentResource's URI as a base
+		Resource[] externalResources = getExternalResources(documentResources, requestModel);
+		if ( externalResources.length != 0 ) {
+			return handleRequestWithExternalResources(externalResources, request, response);
+		}
 
-			// Initial entity body parse to see if it is valid
-			parseEntityBody(null);
+		Map<String, RDFSource> requestRDFSources = null;
+		requestRDFSources = getRequestRDFSources(targetURIObject, documentResources, requestModel, request);
 
-			populateJenaDefaultBase();
+		if ( requestRDFSourcesAlreadyExist(requestRDFSources, app) ) {
+			return handlePOSTExistentRDFSources(app, request, response);
+		}
 
-			processEntityBodyModel();
-			if ( addABase ) {
-				resetEntityBodyInputStream();
+		HttpHeader linkHeader = new HttpHeader(request.getHeaders(HTTPHeaders.LINK));
+		InteractionModel interactionModel = getInteractionModel(linkHeader);
 
-				if ( slugCreated ) {
-					parseEntityBody(this.requestURI);
-				} else {
-					String baseURI = this.targetURI.endsWith("/") ? this.targetURI : this.targetURI.concat("/");
-					parseEntityBody(baseURI);
-				}
+		ContainerType targetContainerType = getTargetContainerType(app, targetURIObject);
+		if ( targetResourceIsContainer(targetContainerType) ) {
+			InteractionModel dim = getDefaultInteractionModel(targetURIObject, app);
+			dim = dim == null ? InteractionModel.CONTAINER : dim;
+			interactionModel = interactionModel == null ? dim : interactionModel;
+
+			switch (interactionModel) {
+				case CONTAINER:
+					return handlePOSTToContainer(app, targetURIObject, requestRDFSources, targetContainerType, request, response);
+				case RDF_SOURCE:
+					return handlePOSTToRDFSource(app, targetURIObject, requestRDFSources, request, response);
+				default:
+					return handleInvalidInteractionModel(interactionModel, targetURIObject, request, response);
 			}
-
-			// ModelUtil.removeServerManagedProperties(requestModel);
-
-			checkIfRequestTargetsExistingResource();
-
-			populateInteractionModel();
-
-			populateTargetContainerType();
-
-		} catch (CarbonException e) {
-			return HTTPUtil.createErrorResponseEntity(e);
-		}
-
-		if ( this.targetContainerType == null ) {
-			// It was posted to an LDPRSource
-			return handlePOSTToLDPRSource();
 		} else {
-			if ( interactionModel == InteractionModel.RDF_SOURCE ) {
-				return handlePOSTToLDPRSource();
+			interactionModel = interactionModel == null ? InteractionModel.RDF_SOURCE : interactionModel;
+
+			switch (interactionModel) {
+				case RDF_SOURCE:
+					return handlePOSTToRDFSource(app, targetURIObject, requestRDFSources, request, response);
+				default:
+					return handleInvalidInteractionModel(interactionModel, targetURIObject, request, response);
 			}
-			return handlePOSTToContainer();
 		}
 	}
 
-	private ResponseEntity<Object> handlePOSTToLDPRSource() {
-		try {
-			populateTargetRDFSource();
-
-			populateRequestURIObject();
-			populateRequestRDFSource();
-			this.requestRDFSource.setTimestamps();
-
-			checkRequestLDPRSourceIsContainer();
-
-			runLDPContainerChecks();
-			populateRequestContainer();
-
-			checkRequestLDPContainerIsAccessPoint();
-
-			if ( requestDocumentExists() ) {
-				return handlePOSTExistingToRDFSource();
-			} else {
-				return handlePOSTNonExistingToRDFSource();
-			}
-
-		} catch (CarbonException e) {
-			return HTTPUtil.createErrorResponseEntity(e);
+	private List<String> getRequestURIs(Map<String, RDFSource> requestRDFSources) {
+		List<String> uris = new ArrayList<String>();
+		for (RDFSource requestRDFSource : requestRDFSources.values()) {
+			uris.add(requestRDFSource.getURI());
 		}
+		return uris;
 	}
 
-	private ResponseEntity<Object> handlePOSTExistingToRDFSource() {
-		String friendlyMessage = "The body of the request is not valid.";
-		String debugMessage = "The request's entity body contains a resource with the same URI as the request URI. Remember POST to parent, PUT to me.";
+	private ResponseEntity<Object> handlePOSTExistentRDFSources(Application app, HttpServletRequest request, HttpServletResponse response) {
+		String friendlyMessage = "One or more URIs already exists.";
+		String debugMessage = "One or more RDFSources have a URI that is already taken.";
 
 		if ( LOG.isDebugEnabled() ) {
-			LOG.debug("<< processEntityBodyModel() > {}", debugMessage);
+			LOG.debug("<< handlePOSTExistentRDFSources() > {}", debugMessage);
 		}
 
 		ErrorResponseFactory factory = new ErrorResponseFactory();
 		ErrorResponse errorObject = factory.create();
+		errorObject.setHttpStatus(HttpStatus.CONFLICT);
+		errorObject.setFriendlyMessage(friendlyMessage);
+		errorObject.setDebugMessage(debugMessage);
+
+		return HTTPUtil.createErrorResponseEntity(errorObject);
+	}
+
+	private boolean requestRDFSourcesAlreadyExist(Map<String, RDFSource> requestRDFSources, Application app) throws CarbonException {
+		List<String> uris = getRequestURIs(requestRDFSources);
+		try {
+			return rdfSourceService.rdfSourcesExist(uris);
+		} catch (CarbonException e) {
+			e.getErrorObject().setHttpStatus(HttpStatus.INTERNAL_SERVER_ERROR);
+			throw e;
+		}
+	}
+
+	private ResponseEntity<Object> handleInvalidInteractionModel(InteractionModel interactionModel2, URIObject targetURIObject, HttpServletRequest request,
+			HttpServletResponse response) {
+		String friendlyMessage = "The entityBody of the request isn't valid.";
+		String debugMessage = "The request specifies an interaction model that isn't valid in this context.";
+
+		if ( LOG.isDebugEnabled() ) {
+			LOG.debug("xx handleInvalidInteractionModel() > {}", debugMessage);
+		}
+
+		ErrorResponseFactory errorFactory = new ErrorResponseFactory();
+		ErrorResponse errorObject = errorFactory.create();
 		errorObject.setHttpStatus(HttpStatus.BAD_REQUEST);
 		errorObject.setFriendlyMessage(friendlyMessage);
 		errorObject.setDebugMessage(debugMessage);
@@ -164,358 +209,315 @@ public class POSTRdfRequestHandler extends AbstractCreationRequestHandler {
 		return HTTPUtil.createErrorResponseEntity(errorObject);
 	}
 
-	private ResponseEntity<Object> handlePOSTNonExistingToRDFSource() {
-		try {
-			createAccessPoint();
-		} catch (CarbonException e) {
-			return HTTPUtil.createErrorResponseEntity(e);
-		}
+	private ResponseEntity<Object> handlePOSTToContainer(Application app, URIObject targetURIObject, Map<String, RDFSource> requestRDFSources,
+			ContainerType targetContainerType, HttpServletRequest request, HttpServletResponse response) throws CarbonException {
 
-		response.addHeader(HTTPHeaders.LOCATION, requestURI);
-		response.addHeader(HTTPHeaders.ETAG, HTTPUtil.formatWeakETag(this.requestContainer.getETag()));
-		for (String type : this.requestContainer.getLinkTypes()) {
-			response.addHeader(HTTPHeaders.LINK, type);
-		}
+		Container targetContainer = getTargetContainer(targetURIObject, targetContainerType, app);
 
-		if ( LOG.isDebugEnabled() ) {
-			LOG.debug("<< handlePOSTExistingToRDFSource() > An accesspoint was created for the resource: '{}'.", requestURI);
-		}
+		List<RDFSource> childRDFSources = new ArrayList<RDFSource>();
+		List<Container> childBasicContainers = new ArrayList<Container>();
+
+		validateAndPopulateChildren(childRDFSources, childBasicContainers, requestRDFSources, targetContainerType, targetContainer);
+
+		DateTime etag = createContainerChildren(childRDFSources, childBasicContainers, targetURIObject, targetContainer, targetContainerType, app);
+
+		setLocationHeaders(response, requestRDFSources);
+		response.addHeader(HTTPHeaders.ETAG, HTTPUtil.formatWeakETag(etag.toString()));
+
 		return new ResponseEntity<Object>(new EmptyResponse(), HttpStatus.CREATED);
 	}
 
-	private ResponseEntity<Object> handlePOSTToContainer() {
+	private DateTime createContainerChildren(List<RDFSource> childRDFSources, List<Container> childBasicContainers, URIObject targetURIObject,
+			Container targetContainer, ContainerType targetContainerType, Application app) throws CarbonException {
 		try {
-			populateTargetContainer();
-		} catch (CarbonException e) {
-			return HTTPUtil.createErrorResponseEntity(e);
-		}
+			switch (targetContainerType) {
+				case BASIC:
+					return basicContainerService.createChildren(childRDFSources, childBasicContainers, targetURIObject, targetContainer, app.getDatasetName());
+				case DIRECT:
+					return directContainerService.createChildren(childRDFSources, childBasicContainers, targetURIObject, targetContainer, app.getDatasetName());
+				case INDIRECT:
+					return indirectContainerService.createChildren(childRDFSources, childBasicContainers, targetURIObject, targetContainer,
+							app.getDatasetName());
+				default:
+					return null;
 
-		InteractionModel dim = targetContainer.getDefaultInteractionModel();
-		if ( dim != null ) {
-			if ( dim.equals(InteractionModel.RDF_SOURCE) ) {
-				return handlePOSTToLDPRSource();
-			}
-		}
-
-		try {
-			populateRequestURIObject();
-
-			if ( ! requestDocumentExists() ) {
-				populateRequestRDFSource();
-				this.requestRDFSource.setTimestamps();
-
-				if ( this.targetContainerType == ContainerType.INDIRECT ) {
-					checkLDPRSourceForIndirect();
-				}
-
-				// Inverse Membership Property
-				addIMPToNonExistingIfNeeded();
-
-				if ( getLDPContainerFactory().isContainer(this.requestRDFSource) ) {
-					runLDPContainerChecks();
-					populateRequestContainer();
-
-					createChildLDPContainer();
-				} else {
-					createChildLDPRSource();
-				}
-
-				addContainmentAndMembershipTriples();
-			} else {
-				return handlePOSTExistingResourceToContainer();
 			}
 		} catch (CarbonException e) {
-			return HTTPUtil.createErrorResponseEntity(e);
-		}
-
-		response.addHeader(HTTPHeaders.LOCATION, requestURI);
-		response.addHeader(HTTPHeaders.ETAG, HTTPUtil.formatWeakETag(this.requestRDFSource.getETag()));
-		for (String type : this.requestRDFSource.getLinkTypes()) {
-			response.addHeader(HTTPHeaders.LINK, type);
-		}
-
-		if ( LOG.isDebugEnabled() ) {
-			LOG.debug("<< handlePOSTToContainer() > The resource was created and it was inserted into a container.");
-		}
-		return new ResponseEntity<Object>(new EmptyResponse(), HttpStatus.CREATED);
-	}
-
-	private ResponseEntity<Object> handlePOSTExistingResourceToContainer() {
-		// TODO: Define this process a little bit better
-		try {
-			checkIfAlreadyMember();
-
-			addMembershipTriples();
-
-			// Inverse MembershipTriples
-			addIMPToExistingIfNeeded();
-		} catch (CarbonException e) {
-			return HTTPUtil.createErrorResponseEntity(e);
-		}
-		return new ResponseEntity<Object>(new EmptyResponse(), HttpStatus.OK);
-	}
-
-	protected void resetGlobalVariables() {
-		super.resetGlobalVariables();
-
-		this.slugHeader = null;
-
-		this.interactionModel = null;
-
-		this.jenaDefaultBase = null;
-
-		this.addABase = false;
-		this.slugCreated = false;
-
-		this.targetContainerType = null;
-
-		this.targetContainer = null;
-	}
-
-	private void populateSlug() throws CarbonException {
-		this.slugHeader = request.getHeader(HTTPHeaders.SLUG);
-		if ( this.slugHeader != null ) {
-			this.slugHeader = HTTPUtil.createSlug(slugHeader);
+			e.getErrorObject().setHttpStatus(HttpStatus.INTERNAL_SERVER_ERROR);
+			throw e;
 		}
 	}
 
-	private void populateInteractionModel() throws CarbonException {
-		Enumeration<String> linkHeaders = request.getHeaders(HTTPHeaders.LINK);
-		HttpHeader linkHeader = new HttpHeader(linkHeaders);
+	private void validateAndPopulateChildren(List<RDFSource> childRDFSources, List<Container> childBasicContainers, Map<String, RDFSource> requestRDFSources,
+			ContainerType targetContainerType, Container targetContainer) throws CarbonException {
+		ContainerFactory containerFactory = new ContainerFactory();
+		Iterator<RDFSource> iterator = requestRDFSources.values().iterator();
+		while (iterator.hasNext()) {
+			RDFSource requestRDFSource = iterator.next();
 
-		this.interactionModel = getInteractionModel(linkHeader);
-	}
-
-	// TODO: This could be substituted by a constant when it is in a stable environment
-	private void populateJenaDefaultBase() throws CarbonException {
-		if ( this.jenaDefaultBase == null ) {
-			try {
-				this.jenaDefaultBase = RDFUtil.retrieveJenaDefaultBase();
-			} catch (IOException e) {
-				if ( LOG.isDebugEnabled() ) {
-					LOG.debug("xx populateJenaDefaultBase() > Exception Stacktrace:", e);
-				}
-				if ( LOG.isErrorEnabled() ) {
-					LOG.error("<< populateJenaDefaultBase() > There was a problem while trying to get the JenaDefaultBase.");
-				}
-
-				String friendlyMessage = "Unexpected Server Error.";
-				String debugMessage = "An unexpected problem related with an InputStream rised when parsing the entity body.";
-
-				ErrorResponseFactory factory = new ErrorResponseFactory();
-				ErrorResponse errorObject = factory.create();
-				errorObject.setHttpStatus(HttpStatus.INTERNAL_SERVER_ERROR);
-				errorObject.setFriendlyMessage(friendlyMessage);
-				errorObject.setDebugMessage(debugMessage);
-
-				throw new CarbonException(errorObject);
-			}
-		}
-	}
-
-	// TODO: Break this
-	private void processEntityBodyModel() throws CarbonException {
-		String resourceURI = null;
-		String baseURI = this.targetURI;
-		baseURI = baseURI.endsWith("/") ? baseURI : baseURI.concat("/");
-
-		ResIterator resourceIterator = this.requestModel.listSubjects();
-		while (resourceIterator.hasNext()) {
-			Resource resource = resourceIterator.next();
-			resourceURI = resource.getURI();
-
-			// Check if the URI is relative
-			if ( resourceURI.startsWith(jenaDefaultBase) ) {
-				// Relative URI
-				addABase = true;
-				// Remove the defaultBase
-				resourceURI = resourceURI.replace(jenaDefaultBase, "");
-				// Check if is a document resource (independently resolvable)
-				if ( ! resourceURI.matches("#(?:.+)") ) {
-					// It is
-					// Check if another documentURI was already found
-					if ( requestURI != null ) {
-						// Another document resource is present
-						String friendlyMessage = "The body of the request is not valid.";
-						String debugMessage = "The request's entity body contains multiple document resources.";
-						String entityBodyMessage = "Multiple document resources.";
-
-						if ( LOG.isDebugEnabled() ) {
-							LOG.debug("<< processEntityBodyModel() > {}", debugMessage);
-						}
-
-						ErrorResponseFactory factory = new ErrorResponseFactory();
-						ErrorResponse errorObject = factory.create();
-						errorObject.setHttpStatus(HttpStatus.BAD_REQUEST);
-						errorObject.setFriendlyMessage(friendlyMessage);
-						errorObject.setDebugMessage(debugMessage);
-						errorObject.setEntityBodyIssue(null, entityBodyMessage);
-
-						throw new CarbonException(errorObject);
-					}
-					// Check if it is a null URI
-					if ( resourceURI.trim().length() == 0 ) {
-						// It is, a Slug needs to be created
-						// Check if a Slug was specified in the header
-						if ( this.slugHeader == null ) {
-							// It wasn't
-							// Create a slug
-							// TODO: Create a function to give priority and use different properties
-							DateTime now = DateTime.now();
-							this.slugHeader = String.valueOf(now.getMillis());
-						}
-						this.slugCreated = true;
-					} else {
-						// Remove possible / sign
-						resourceURI = resourceURI.startsWith("/") ? resourceURI.substring(0, resourceURI.length() - 1) : resourceURI;
-						// Check if the resourceURI is only one level below
-						if ( resourceURI.matches("(?:.+)/(?:.+)") ) {
-							// It isn't
-							String friendlyMessage = "The body of the request is not valid.";
-							String debugMessage = "The document resource URI must be just a level below the request URI.";
-							String entityBodyMessage = MessageFormat.format(
-									"The document resource with URI: ''{0}'', isn't a direct child of the request URI.", resourceURI);
-
-							if ( LOG.isDebugEnabled() ) {
-								LOG.debug("<< processEntityBodyModel() > {}", debugMessage);
-							}
-
-							ErrorResponseFactory factory = new ErrorResponseFactory();
-							ErrorResponse errorObject = factory.create();
-							errorObject.setHttpStatus(HttpStatus.BAD_REQUEST);
-							errorObject.setFriendlyMessage(friendlyMessage);
-							errorObject.setDebugMessage(debugMessage);
-							errorObject.setEntityBodyIssue(null, entityBodyMessage);
-
-							throw new CarbonException(errorObject);
-						}
-						this.slugHeader = resourceURI;
-					}
-					// Append the slug to form the new documentURI
-					this.requestURI = this.targetURI.endsWith("/") ? this.targetURI.concat(this.slugHeader) : this.targetURI.concat("/").concat(slugHeader);
-				} else {
-					// TODO: Check secondary resource URI
-				}
-
-			} else {
-				// Non relative URI
-				// Check if it is a valid URL
-				if ( ! HTTPUtil.isValidURL(resourceURI) ) {
-					String friendlyMessage = "The body of the request is not valid.";
-					String debugMessage = MessageFormat.format("The resourceURI: ''{0}'', isn't a valid URL.", resourceURI);
+			// Check for invalidTypes
+			for (Resource invalidType : invalidTypesForContainers) {
+				if ( requestRDFSource.isOfType(invalidType) ) {
+					String friendlyMessage = "The entityBody of the request isn't valid.";
+					String debugMessage = MessageFormat.format("The request targets a Container and Containers can't create resources of type: ''{0}''.",
+							invalidType.getURI());
 
 					if ( LOG.isDebugEnabled() ) {
-						LOG.debug("<< processEntityBodyModel() > {}", debugMessage);
+						LOG.debug("xx handleInvalidInteractionModel() > {}", debugMessage);
 					}
 
-					ErrorResponseFactory factory = new ErrorResponseFactory();
-					ErrorResponse errorObject = factory.create();
+					ErrorResponseFactory errorFactory = new ErrorResponseFactory();
+					ErrorResponse errorObject = errorFactory.create();
 					errorObject.setHttpStatus(HttpStatus.BAD_REQUEST);
 					errorObject.setFriendlyMessage(friendlyMessage);
 					errorObject.setDebugMessage(debugMessage);
 					errorObject.setEntityBodyIssue(null, debugMessage);
 
 					throw new CarbonException(errorObject);
-				} else {
-					// Check if the URI isn't outside of the domain/dataset
-
-					if ( ! resourceURI.startsWith(baseURI) ) {
-						// CASE 4b: The requestURI and the resourceURI share the same server but not the dataset
-						// CASE 4c: The requestURI and the resourceURI don't share the same server neither the dataset
-						String friendlyMessage = "The body of the request is not valid.";
-						String debugMessage = "A resource in the entity body doesn't have for a base the request URI.";
-						String entityBodyMessage = MessageFormat.format("The resource with URI: ''{0}'' doesn't have for a base the request URI.", resourceURI);
-
-						if ( LOG.isDebugEnabled() ) {
-							LOG.debug("<< processEntityBodyModel() > {}", entityBodyMessage);
-						}
-
-						ErrorResponseFactory factory = new ErrorResponseFactory();
-						ErrorResponse errorObject = factory.create();
-						errorObject.setHttpStatus(HttpStatus.BAD_REQUEST);
-						errorObject.setFriendlyMessage(friendlyMessage);
-						errorObject.setDebugMessage(debugMessage);
-						errorObject.setEntityBodyIssue(null, entityBodyMessage);
-
-						throw new CarbonException(errorObject);
-					}
-					// Check if the resourceURI is only one level below
-					if ( resourceURI.replace(baseURI, "").matches("(?:.+)/(?:.+)") ) {
-						// It isn't
-						String friendlyMessage = "The body of the request is not valid.";
-						String debugMessage = "The document resource URI must be just a level below the request URI.";
-						String entityBodyMessage = MessageFormat.format("The document resource with URI: ''{0}'', isn't a direct child of the request URI.",
-								resourceURI);
-
-						if ( LOG.isDebugEnabled() ) {
-							LOG.debug("<< processEntityBodyModel() > {}", debugMessage);
-						}
-
-						ErrorResponseFactory factory = new ErrorResponseFactory();
-						ErrorResponse errorObject = factory.create();
-						errorObject.setHttpStatus(HttpStatus.BAD_REQUEST);
-						errorObject.setFriendlyMessage(friendlyMessage);
-						errorObject.setDebugMessage(debugMessage);
-						errorObject.setEntityBodyIssue(null, entityBodyMessage);
-
-						throw new CarbonException(errorObject);
-					}
-				}
-				// Check if it is a document resource (independently resolvable)
-				if ( ! resourceURI.matches("(?:.+)#(?:.+)") ) {
-					// It is
-					if ( this.requestURI != null ) {
-						// Another document resource is present
-						String friendlyMessage = "The body of the request is not valid.";
-						String debugMessage = "The request's entity body contains multiple document resources.";
-						String entityBodyMessage = "Multiple document resources.";
-
-						if ( LOG.isDebugEnabled() ) {
-							LOG.debug("<< processEntityBodyModel() > {}", debugMessage);
-						}
-
-						ErrorResponseFactory factory = new ErrorResponseFactory();
-						ErrorResponse errorObject = factory.create();
-						errorObject.setHttpStatus(HttpStatus.BAD_REQUEST);
-						errorObject.setFriendlyMessage(friendlyMessage);
-						errorObject.setDebugMessage(debugMessage);
-						errorObject.setEntityBodyIssue(null, entityBodyMessage);
-
-						throw new CarbonException(errorObject);
-					}
-					// Check if the document resourceURI is the same as the requestURI
-					if ( resourceURI.equals(targetURI) ) {
-						String friendlyMessage = "The body of the request is not valid.";
-						String debugMessage = "The request's entity body contains a resource with the same URI as the request URI. Remember POST to parent, PUT to me.";
-
-						if ( LOG.isDebugEnabled() ) {
-							LOG.debug("<< processEntityBodyModel() > {}", debugMessage);
-						}
-
-						ErrorResponseFactory factory = new ErrorResponseFactory();
-						ErrorResponse errorObject = factory.create();
-						errorObject.setHttpStatus(HttpStatus.BAD_REQUEST);
-						errorObject.setFriendlyMessage(friendlyMessage);
-						errorObject.setDebugMessage(debugMessage);
-						errorObject.setEntityBodyIssue(null, debugMessage);
-
-						throw new CarbonException(errorObject);
-					}
-					this.requestURI = resourceURI;
 				}
 			}
-		}
-		// Check if a document resource was present
-		if ( this.requestURI == null ) {
-			String friendlyMessage = "The body of the request is not valid.";
-			String debugMessage = "The request's entity body doesn't contain a document resource.";
 
-			if ( LOG.isDebugEnabled() ) {
-				LOG.debug("<< processEntityBodyModel() > {}", debugMessage);
+			if ( requestRDFSource.isOfType(ContainerClass.ContainerType.BASIC.getResource()) ) {
+				try {
+					requestContainer = containerFactory.create(requestRDFSource);
+				} catch (CarbonException e) {
+					e.getErrorObject().setHttpStatus(HttpStatus.INTERNAL_SERVER_ERROR);
+					throw e;
+				}
+				validateContainer(requestContainer);
+				childBasicContainers.add(requestContainer);
+			} else {
+				// validateRDFSource(rdfSource);
+				childRDFSources.add(requestRDFSource);
 			}
 
-			ErrorResponseFactory factory = new ErrorResponseFactory();
-			ErrorResponse errorObject = factory.create();
+			if ( targetContainerType == ContainerType.INDIRECT ) {
+				validateIndirectContainerChild(targetContainer, requestRDFSource);
+			}
+		}
+	}
+
+	private Container getTargetContainer(URIObject targetURIObject, ContainerType targetContainerType, Application app) throws CarbonException {
+		List<RetrieveContainerPreference> preferences = Arrays.asList(RetrieveContainerPreference.CONTAINER_PROPERTIES);
+
+		try {
+			switch (targetContainerType) {
+				case BASIC:
+					return basicContainerService.get(targetURIObject, preferences, app.getDatasetName());
+				case DIRECT:
+					return directContainerService.get(targetURIObject, preferences, app.getDatasetName());
+				case INDIRECT:
+					return indirectContainerService.get(targetURIObject, preferences, app.getDatasetName());
+				default:
+					return null;
+
+			}
+		} catch (CarbonException e) {
+			e.getErrorObject().setHttpStatus(HttpStatus.INTERNAL_SERVER_ERROR);
+			throw e;
+		}
+	}
+
+	private ResponseEntity<Object> handlePOSTToRDFSource(Application app, URIObject targetURIObject, Map<String, RDFSource> requestRDFSources,
+			HttpServletRequest request, HttpServletResponse response) throws CarbonException {
+
+		List<Container> requestAccessPoints = getRequestAccessPoints(requestRDFSources, targetURIObject);
+
+		DateTime etag = null;
+		try {
+			etag = rdfSourceService.createAccessPoints(requestAccessPoints, targetURIObject, app.getDatasetName());
+		} catch (CarbonException e) {
+			e.getErrorObject().setHttpStatus(HttpStatus.INTERNAL_SERVER_ERROR);
+			throw e;
+		}
+
+		setLocationHeaders(response, requestRDFSources);
+		response.addHeader(HTTPHeaders.ETAG, HTTPUtil.formatWeakETag(etag.toString()));
+
+		if ( LOG.isDebugEnabled() ) {
+			LOG.debug("<< handlePOSTToRDFSource() > The resource was created and it was inserted into a container.");
+		}
+
+		return new ResponseEntity<Object>(new EmptyResponse(), HttpStatus.CREATED);
+	}
+
+	private List<Container> getRequestAccessPoints(Map<String, RDFSource> requestRDFSources, URIObject targetURIObject) throws CarbonException {
+		List<Container> requestAccessPoints = new ArrayList<Container>();
+		ContainerFactory containerFactory = new ContainerFactory();
+		Iterator<RDFSource> iterator = requestRDFSources.values().iterator();
+		while (iterator.hasNext()) {
+			RDFSource rdfSource = iterator.next();
+			// Check for invalidTypes
+			for (Resource invalidType : invalidTypesForRDFSources) {
+				if ( rdfSource.isOfType(invalidType) ) {
+					String friendlyMessage = "The entityBody of the request isn't valid.";
+					String debugMessage = MessageFormat.format("The request targets an RDFSource and RDFSources can't create resources of type: {0}.",
+							invalidType.getURI());
+
+					if ( LOG.isDebugEnabled() ) {
+						LOG.debug("xx handleInvalidInteractionModel() > {}", debugMessage);
+					}
+
+					ErrorResponseFactory errorFactory = new ErrorResponseFactory();
+					ErrorResponse errorObject = errorFactory.create();
+					errorObject.setHttpStatus(HttpStatus.BAD_REQUEST);
+					errorObject.setFriendlyMessage(friendlyMessage);
+					errorObject.setDebugMessage(debugMessage);
+					errorObject.setEntityBodyIssue(null, debugMessage);
+
+					throw new CarbonException(errorObject);
+				}
+			}
+
+			Container requestContainer = null;
+			if ( rdfSource.isOfType(ContainerClass.ContainerType.DIRECT.getResource())
+					|| rdfSource.isOfType(ContainerClass.ContainerType.INDIRECT.getResource()) ) {
+				try {
+					requestContainer = containerFactory.create(rdfSource);
+				} catch (CarbonException e) {
+					e.getErrorObject().setHttpStatus(HttpStatus.INTERNAL_SERVER_ERROR);
+					throw e;
+				}
+
+				validateContainer(requestContainer);
+				validateAccessPoint(targetURIObject, requestContainer);
+			} else {
+				// The request is of an irrelevant type and thus it is treated as an RDFSource
+				String friendlyMessage = "The body of the request is not valid.";
+				String debugMessage = "One of the resource posted is not an AccessPoint (Direct/Indirect container) and it was posted to an RDFSource. RDFSources only support creating AccessPoints for themselves, not direct childs.";
+
+				if ( LOG.isDebugEnabled() ) {
+					LOG.debug("<< checkRequestLDPRSourceIsContainer() > {}", debugMessage);
+				}
+
+				ErrorResponseFactory factory = new ErrorResponseFactory();
+				ErrorResponse errorObject = factory.create();
+				errorObject.setHttpStatus(HttpStatus.BAD_REQUEST);
+				errorObject.setFriendlyMessage(friendlyMessage);
+				errorObject.setDebugMessage(debugMessage);
+				errorObject.setEntityBodyIssue(null, debugMessage);
+
+				throw new CarbonException(errorObject);
+			}
+
+			requestAccessPoints.add(requestContainer);
+		}
+
+		return requestAccessPoints;
+	}
+
+	private ResponseEntity<Object> handleRequestWithNoDocumentResources(Application app, URIObject targetURIObject, Resource[] documentResources,
+			Model requestModel, HttpServletRequest request, HttpServletResponse response) throws CarbonException {
+
+		String friendlyMessage = "The entityBody of the request isn't valid.";
+		String debugMessage = "The request entityBody doesn't contain a document resource.";
+
+		if ( LOG.isDebugEnabled() ) {
+			LOG.debug("xx handleRequestWithNoDocumentResources() > {}", debugMessage);
+		}
+
+		ErrorResponseFactory errorFactory = new ErrorResponseFactory();
+		ErrorResponse errorObject = errorFactory.create();
+		errorObject.setHttpStatus(HttpStatus.BAD_REQUEST);
+		errorObject.setFriendlyMessage(friendlyMessage);
+		errorObject.setDebugMessage(debugMessage);
+		errorObject.setEntityBodyIssue(null, debugMessage);
+
+		return HTTPUtil.createErrorResponseEntity(errorObject);
+
+	}
+
+	private Map<String, RDFSource> getRequestRDFSources(URIObject targetURIObject, Resource[] documentResources, Model requestModel, HttpServletRequest request)
+			throws CarbonException {
+		Map<String, RDFSource> requestRDFSources = new HashMap<String, RDFSource>();
+
+		RDFSourceFactory factory = new RDFSourceFactory();
+
+		for (int i = 0; i < documentResources.length; i++) {
+			Resource documentResource = documentResources[i];
+			String originalURI = documentResource.getURI();
+
+			documentResource = processDocumentResource(targetURIObject, documentResource, requestModel, request);
+			Model documentModel = generateDocumentModel(documentResource, requestModel);
+			documentResource = documentModel.getResource(documentResource.getURI());
+
+			RDFSource requestRDFSource = null;
+			try {
+				requestRDFSource = factory.create(documentResource);
+			} catch (CarbonException e) {
+				e.getErrorObject().setHttpStatus(HttpStatus.INTERNAL_SERVER_ERROR);
+				throw e;
+			}
+
+			requestRDFSources.put(originalURI, requestRDFSource);
+		}
+
+		return requestRDFSources;
+	}
+
+	private boolean targetResourceIsContainer(ContainerType targetContainerType) {
+		return targetContainerType != null;
+	}
+
+	private ResponseEntity<Object> handleRequestWithExternalResources(Resource[] externalResources, HttpServletRequest request, HttpServletResponse response)
+			throws CarbonException {
+
+		String friendlyMessage = "The entityBody of the request isn't valid.";
+		String debugMessage = "The request entityBody contains inline resources that don't belong to any of the documentResources in the request.";
+
+		if ( LOG.isDebugEnabled() ) {
+			LOG.debug("xx handleRequestWithExternalResources() > {}", debugMessage);
+		}
+
+		ErrorResponseFactory errorFactory = new ErrorResponseFactory();
+		ErrorResponse errorObject = errorFactory.create();
+		errorObject.setHttpStatus(HttpStatus.BAD_REQUEST);
+		errorObject.setFriendlyMessage(friendlyMessage);
+		errorObject.setDebugMessage(debugMessage);
+		errorObject.setEntityBodyIssue(null, debugMessage);
+
+		return HTTPUtil.createErrorResponseEntity(errorObject);
+	}
+
+	private Resource processDocumentResource(URIObject targetURIObject, Resource documentResource, Model requestModel, HttpServletRequest request)
+			throws CarbonException {
+		if ( HTTPUtil.isGenericRequestURI(documentResource.getURI()) ) {
+			return processResourceWithGenericRequestURI(targetURIObject, documentResource, requestModel, request);
+		} else {
+			return processResourceWithDefinedURI(targetURIObject, documentResource, requestModel, request);
+		}
+	}
+
+	private Resource processResourceWithGenericRequestURI(URIObject targetURIObject, Resource documentResource, Model requestModel, HttpServletRequest request)
+			throws CarbonException {
+		Resource[] inlineResources = getInlineResourcesOf(documentResource, requestModel);
+
+		// Forge a URI for the Document Resource and rename it
+		String forgedURI = forgeDocumentResourceURI(documentResource, targetURIObject, request);
+		documentResource = ModelUtil.renameResource(documentResource, forgedURI, requestModel);
+
+		// Rename the inlineResources
+		for (int i = 0; i < inlineResources.length; i++) {
+			Resource inlineResource = inlineResources[i];
+			String newInlineResourceURI = forgeInlineResourceURI(inlineResource, forgedURI);
+			inlineResources[i] = ModelUtil.renameResource(inlineResource, newInlineResourceURI, requestModel);
+		}
+
+		return documentResource;
+	}
+
+	private Resource processResourceWithDefinedURI(URIObject targetURIObject, Resource documentResource, Model requestModel, HttpServletRequest request)
+			throws CarbonException {
+		if ( ! HTTPUtil.isImmediateChildURI(documentResource.getURI(), targetURIObject.getURI()) ) {
+			String friendlyMessage = "The entityBody of the request isn't valid.";
+			String debugMessage = "The request entityBody contains a resource that isn't an immediate child of the target resource.";
+
+			if ( LOG.isDebugEnabled() ) {
+				LOG.debug("xx processResourceWithDefinedURI() > {}", debugMessage);
+			}
+
+			ErrorResponseFactory errorFactory = new ErrorResponseFactory();
+			ErrorResponse errorObject = errorFactory.create();
 			errorObject.setHttpStatus(HttpStatus.BAD_REQUEST);
 			errorObject.setFriendlyMessage(friendlyMessage);
 			errorObject.setDebugMessage(debugMessage);
@@ -523,151 +525,91 @@ public class POSTRdfRequestHandler extends AbstractCreationRequestHandler {
 
 			throw new CarbonException(errorObject);
 		}
+
+		return documentResource;
 	}
 
-	private void checkIfRequestTargetsExistingResource() throws CarbonException {
-		boolean requestResourceExists = false;
+	private String forgeDocumentResourceURI(Resource documentResource, URIObject targetURIObject, HttpServletRequest request) {
+		StringBuilder uriBuilder = new StringBuilder();
+		uriBuilder.append(targetURIObject.getURI());
 
-		try {
-			requestResourceExists = rdfService.namedModelExists(targetURI, dataset);
-		} catch (CarbonException e) {
-			e.getErrorObject().setHttpStatus(HttpStatus.INTERNAL_SERVER_ERROR);
-			throw e;
+		if ( ! targetURIObject.getURI().endsWith("/") ) {
+			uriBuilder.append("/");
 		}
 
-		if ( ! requestResourceExists ) {
-			String friendlyMessage = "The resource doesn't exist.";
-			String debugMessage = "The request URI doesn't point to an existing resource.";
+		uriBuilder.append(forgeSlug(documentResource, targetURIObject, request));
 
-			if ( LOG.isDebugEnabled() ) {
-				LOG.debug("<< checkIfRequestTargetsExistingResource() > {}", debugMessage);
+		return uriBuilder.toString();
+	}
+
+	private String forgeSlug(Resource documentResource, URIObject targetURIObject, HttpServletRequest request) {
+		String slug = request.getHeader(HTTPHeaders.SLUG);
+		if ( slug != null ) {
+			slug = slug.endsWith("/") ? HTTPUtil.createSlug(slug).concat("/") : HTTPUtil.createSlug(slug);
+		}
+
+		DateTime now = DateTime.now();
+		return String.valueOf(now.getMillis());
+	}
+
+	private String forgeInlineResourceURI(Resource inlineResource, String documentResourceURI) {
+		String localSlug = HTTPUtil.getLocalSlug(inlineResource.getURI());
+		StringBuilder uriBuilder = new StringBuilder();
+		//@formatter:off
+		uriBuilder
+			.append(documentResourceURI)
+			.append(Carbon.EXTENDING_RESOURCE_SIGN)
+			.append(localSlug)
+		;
+		//@formatter:on
+		return uriBuilder.toString();
+	}
+
+	private Model generateDocumentModel(Resource documentResource, Model requestModel) {
+		Model documentModel = ModelFactory.createDefaultModel();
+
+		List<Statement> statements = new ArrayList<Statement>();
+		// Add statements of the documentResource
+		StmtIterator docResIterator = documentResource.listProperties();
+		while (docResIterator.hasNext()) {
+			statements.add(docResIterator.next());
+		}
+
+		// Add statements of the inlineResources
+		Resource[] inlineResources = getInlineResourcesOf(documentResource, requestModel);
+		for (Resource inlineResource : inlineResources) {
+			StmtIterator inResIterator = inlineResource.listProperties();
+			while (inResIterator.hasNext()) {
+				statements.add(inResIterator.next());
 			}
-
-			ErrorResponseFactory factory = new ErrorResponseFactory();
-			ErrorResponse errorObject = factory.create();
-			errorObject.setHttpStatus(HttpStatus.BAD_REQUEST);
-			errorObject.setFriendlyMessage(friendlyMessage);
-			errorObject.setDebugMessage(debugMessage);
-
-			throw new CarbonException(errorObject);
 		}
+
+		documentModel.add(statements);
+
+		return documentModel;
 	}
 
-	private void populateTargetContainerType() throws CarbonException {
+	private ContainerType getTargetContainerType(Application app, URIObject targetURIObject) throws CarbonException {
 		try {
-			this.targetContainerType = ldpService.getDocumentContainerType(this.targetURIObject, this.dataset);
-		} catch (CarbonException e) {
-			e.getErrorObject().setHttpStatus(HttpStatus.INTERNAL_SERVER_ERROR);
-			throw e;
-		}
-	}
-
-	private void populateTargetContainer() throws CarbonException {
-		// Build LDPContainerQueryOptions to get the container
-		ContainerQueryOptions options = new ContainerQueryOptions(ContainerQueryOptions.METHOD.GET);
-		options.setContainerProperties(true);
-		options.setContainmentTriples(false);
-		options.setMembershipTriples(false);
-		options.setContainedResources(false);
-		options.setMemberResources(false);
-
-		// Get the LDPContainer
-		this.targetContainer = null;
-		try {
-			this.targetContainer = ldpService.getLDPContainer(this.targetURIObject, dataset, targetContainerType.getURI(), options);
-		} catch (CarbonException e) {
-			e.getErrorObject().setHttpStatus(HttpStatus.INTERNAL_SERVER_ERROR);
-			throw e;
-		}
-	}
-
-	public void populateRequestURIObject() throws CarbonException {
-		try {
-			this.requestURIObject = uriObjectDAO.findByURI(this.requestURI);
-		} catch (AccessDeniedException e) {
-			// TODO: FT - Log it? -
-			String friendlyMessage = "The request resource can't be handled with that URI.";
-
-			if ( LOG.isDebugEnabled() ) {
-				LOG.debug("<< populateURIObject() > The authenticated agent doesn't have DISCOVER access to the resource with URI: {}", this.targetURI);
-			}
-
-			ErrorResponseFactory factory = new ErrorResponseFactory();
-			ErrorResponse errorObject = factory.create();
-			errorObject.setFriendlyMessage(friendlyMessage);
-			errorObject.setHttpStatus(HttpStatus.BAD_REQUEST);
-
-			throw new CarbonException(errorObject);
+			return ldpService.getDocumentContainerType(targetURIObject, app.getDatasetName());
 		} catch (CarbonException e) {
 			e.getErrorObject().setHttpStatus(HttpStatus.INTERNAL_SERVER_ERROR);
 			throw e;
 		}
 	}
 
-	public boolean requestDocumentExists() {
-		return this.requestURIObject != null;
-	}
-
-	private void checkRequestLDPRSourceIsContainer() throws CarbonException {
-		if ( ! getLDPContainerFactory().isContainer(this.requestRDFSource) ) {
-			String friendlyMessage = "The body of the request is not valid.";
-			String debugMessage = "The resource posted is not a container and it was posted to an LDPRSource. LDPRSources only support creating Access Points for themselves, not direct childs.";
-
-			if ( LOG.isDebugEnabled() ) {
-				LOG.debug("<< checkRequestLDPRSourceIsContainer() > {}", debugMessage);
-			}
-
-			ErrorResponseFactory factory = new ErrorResponseFactory();
-			ErrorResponse errorObject = factory.create();
-			errorObject.setHttpStatus(HttpStatus.BAD_REQUEST);
-			errorObject.setFriendlyMessage(friendlyMessage);
-			errorObject.setDebugMessage(debugMessage);
-			errorObject.setEntityBodyIssue(null, debugMessage);
-
-			throw new CarbonException(errorObject);
+	private InteractionModel getDefaultInteractionModel(URIObject targetURIObject, Application app) throws CarbonException {
+		try {
+			return ldpService.getDefaultInteractionModel(targetURIObject, app.getDatasetName());
+		} catch (CarbonException e) {
+			e.getErrorObject().setHttpStatus(HttpStatus.INTERNAL_SERVER_ERROR);
+			throw e;
 		}
 	}
 
-	private void checkRequestLDPContainerIsAccessPoint() throws CarbonException {
-		if ( ! (this.requestContainer.isOfType(ContainerClass.DIRECT) || this.requestContainer.isOfType(ContainerClass.INDIRECT)) ) {
-			String friendlyMessage = "The body of the request is not valid.";
-			String debugMessage = "The resource posted is not an access point (Direct or Indirect container).";
-
-			if ( LOG.isDebugEnabled() ) {
-				LOG.debug("<< checkRequestLDPContainerIsAccessPoint() > {}", debugMessage);
-			}
-
-			ErrorResponseFactory factory = new ErrorResponseFactory();
-			ErrorResponse errorObject = factory.create();
-			errorObject.setHttpStatus(HttpStatus.BAD_REQUEST);
-			errorObject.setFriendlyMessage(friendlyMessage);
-			errorObject.setDebugMessage(debugMessage);
-			errorObject.setEntityBodyIssue(null, debugMessage);
-
-			throw new CarbonException(errorObject);
-		}
-		if ( ! this.requestContainer.getMembershipResourceURI().equals(this.targetURI) ) {
-			String friendlyMessage = "The body of the request is not valid.";
-			String debugMessage = "The resource posted doesn't have for a membershipResource the resource with the request URI.";
-
-			if ( LOG.isDebugEnabled() ) {
-				LOG.debug("<< checkRequestLDPContainerIsAccessPoint() > {}", debugMessage);
-			}
-
-			ErrorResponseFactory factory = new ErrorResponseFactory();
-			ErrorResponse errorObject = factory.create();
-			errorObject.setHttpStatus(HttpStatus.BAD_REQUEST);
-			errorObject.setFriendlyMessage(friendlyMessage);
-			errorObject.setDebugMessage(debugMessage);
-			errorObject.setEntityBodyIssue(null, debugMessage);
-
-			throw new CarbonException(errorObject);
-		}
-	}
-
-	private void runLDPContainerChecks() throws CarbonException {
-		ContainerFactory ldpContainerFactory = new ContainerFactory();
-		List<String> containerViolations = ldpContainerFactory.validateLDPContainer(this.requestRDFSource);
+	private void validateContainer(RDFSource rdfSource) throws CarbonException {
+		ContainerFactory containerFactory = new ContainerFactory();
+		List<String> containerViolations = containerFactory.validateLDPContainer(rdfSource);
 		if ( ! containerViolations.isEmpty() ) {
 			StringBuilder violationsBuilder = new StringBuilder();
 			violationsBuilder.append("The container isn't valid. Violations:");
@@ -695,112 +637,25 @@ public class POSTRdfRequestHandler extends AbstractCreationRequestHandler {
 		}
 	}
 
-	private void addIMPToNonExistingIfNeeded() {
-		String memberOfRelationString = this.targetContainer.getMemberOfRelation();
-		if ( memberOfRelationString != null ) {
-			Property memberOfRelationProperty = ResourceFactory.createProperty(memberOfRelationString);
-			this.requestRDFSource.getResource().addProperty(memberOfRelationProperty, this.targetContainer.getResource());
-		}
-	}
+	private void validateIndirectContainerChild(Container targetContainer, RDFSource requestRDFSource) throws CarbonException {
+		String icrURI = targetContainer.getInsertedContentRelation();
 
-	private void addIMPToExistingIfNeeded() throws CarbonException {
-		if ( this.targetContainer.getMemberOfRelation() != null ) {
-			try {
-				ldpService.addInverseMembershipTriple(this.targetContainer, this.requestURI, this.dataset);
-			} catch (CarbonException e) {
-				e.getErrorObject().setHttpStatus(HttpStatus.INTERNAL_SERVER_ERROR);
-				throw e;
+		if ( icrURI == null ) {
+			if ( LOG.isErrorEnabled() ) {
+				LOG.error("xx validateIndirectContainerChild > The container: '{}', doesn't have an ICR.", targetContainer.getURI());
 			}
 		}
-	}
 
-	private void addContainmentAndMembershipTriples() throws CarbonException {
-		// Add containment and membership triples to the container
-		try {
-			ldpService.addDocumentAsContainment(this.targetContainer, this.requestRDFSource, this.dataset);
-		} catch (CarbonException e) {
-			e.getErrorObject().setHttpStatus(HttpStatus.INTERNAL_SERVER_ERROR);
-			throw e;
-		}
-	}
-
-	private void addMembershipTriples() throws CarbonException {
-		// Add membership triples
-		try {
-			ldpService.addDocumentAsMember(this.targetContainer, this.requestRDFSource, this.dataset);
-		} catch (CarbonException e) {
-			e.getErrorObject().setHttpStatus(HttpStatus.INTERNAL_SERVER_ERROR);
-			throw e;
-		}
-	}
-
-	private void createAccessPoint() throws CarbonException {
-		try {
-			this.requestURIObject = ldpService.createAccessPoint(this.requestContainer, this.targetURIObject, this.dataset);
-		} catch (CarbonException e) {
-			e.getErrorObject().setHttpStatus(HttpStatus.INTERNAL_SERVER_ERROR);
-			throw e;
-		}
-	}
-
-	private void createChildLDPRSource() throws CarbonException {
-		try {
-			ldpService.createChildLDPRSource(this.requestRDFSource, this.targetURIObject, this.dataset);
-		} catch (CarbonException e) {
-			e.getErrorObject().setHttpStatus(HttpStatus.INTERNAL_SERVER_ERROR);
-			throw e;
-		}
-	}
-
-	private void createChildLDPContainer() throws CarbonException {
-		try {
-			ldpService.createChildLDPContainer(this.requestContainer, this.targetURIObject, this.dataset);
-		} catch (CarbonException e) {
-			e.getErrorObject().setHttpStatus(HttpStatus.INTERNAL_SERVER_ERROR);
-			throw e;
-		}
-	}
-
-	private void checkIfAlreadyMember() throws CarbonException {
-		boolean alreadyMember = false;
-
-		try {
-			alreadyMember = ldpService
-					.resourceIsMemberOfContainer(this.targetURIObject, this.requestURIObject, this.dataset, this.targetContainerType.getURI());
-		} catch (CarbonException e) {
-			e.getErrorObject().setHttpStatus(HttpStatus.INTERNAL_SERVER_ERROR);
-			throw e;
-		}
-
-		if ( alreadyMember ) {
-			String friendlyMessage = "The resource was already a member.";
-			String debugMessage = MessageFormat.format("The resource with URI: ''{}'', is already a member of this container.", this.requestURI);
-
-			if ( LOG.isDebugEnabled() ) {
-				LOG.debug("<< checkIfAlreadyMember() > {}", debugMessage);
-			}
-
-			ErrorResponseFactory factory = new ErrorResponseFactory();
-			ErrorResponse errorObject = factory.create();
-			errorObject.setHttpStatus(HttpStatus.BAD_REQUEST);
-			errorObject.setFriendlyMessage(friendlyMessage);
-			errorObject.setDebugMessage(debugMessage);
-
-			throw new CarbonException(errorObject);
-		}
-	}
-
-	private void checkLDPRSourceForIndirect() throws CarbonException {
-		Property icrPredicate = ResourceFactory.createProperty(this.targetContainer.getInsertedContentRelation());
-		Statement membershipObjectStatement = this.requestRDFSource.getResource().getProperty(icrPredicate);
+		Property icrPredicate = ResourceFactory.createProperty(icrURI);
+		Statement membershipObjectStatement = requestRDFSource.getResource().getProperty(icrPredicate);
 
 		if ( membershipObjectStatement == null ) {
 			String friendlyMessage = "The body of the request is not valid.";
 			String debugMessage = MessageFormat.format("The resource doesn''t contain the property ''{0}'' that the indirect container demands.",
-					this.targetContainer.getInsertedContentRelation());
+					targetContainer.getInsertedContentRelation());
 
 			if ( LOG.isDebugEnabled() ) {
-				LOG.debug("<< checkLDPRSourceForIndirect() > {}", debugMessage);
+				LOG.debug("<< validateIndirectContainerChild() > {}", debugMessage);
 			}
 
 			ErrorResponseFactory factory = new ErrorResponseFactory();
@@ -814,11 +669,10 @@ public class POSTRdfRequestHandler extends AbstractCreationRequestHandler {
 		}
 		if ( ! membershipObjectStatement.getObject().isURIResource() ) {
 			String friendlyMessage = "The body of the request is not valid.";
-			String debugMessage = MessageFormat.format("The resource's property ''{0}'' isn't a valid URI node.",
-					this.targetContainer.getInsertedContentRelation());
+			String debugMessage = MessageFormat.format("The resource's property ''{0}'' isn't a valid URI node.", targetContainer.getInsertedContentRelation());
 
 			if ( LOG.isDebugEnabled() ) {
-				LOG.debug("<< checkLDPRSourceForIndirect() > {}", debugMessage);
+				LOG.debug("<< validateIndirectContainerChild() > {}", debugMessage);
 			}
 
 			ErrorResponseFactory factory = new ErrorResponseFactory();
@@ -830,5 +684,47 @@ public class POSTRdfRequestHandler extends AbstractCreationRequestHandler {
 
 			throw new CarbonException(errorObject);
 		}
+	}
+
+	private void validateAccessPoint(URIObject targetURIObject, Container requestContainer) throws CarbonException {
+		String membershipResource = requestContainer.getMembershipResourceURI();
+		if ( ! membershipResource.equals(targetURIObject.getURI()) ) {
+			String friendlyMessage = "The entityBody of the request isn't valid.";
+			String debugMessage = "The request entityBody contains an AccessPoint that doesn't belong to the request URI.";
+
+			if ( LOG.isDebugEnabled() ) {
+				LOG.debug("xx validateAccessPoint() > {}", debugMessage);
+			}
+
+			ErrorResponseFactory errorFactory = new ErrorResponseFactory();
+			ErrorResponse errorObject = errorFactory.create();
+			errorObject.setHttpStatus(HttpStatus.BAD_REQUEST);
+			errorObject.setFriendlyMessage(friendlyMessage);
+			errorObject.setDebugMessage(debugMessage);
+			errorObject.setEntityBodyIssue(null, debugMessage);
+
+			throw new CarbonException(errorObject);
+		}
+	}
+
+	private void setLocationHeaders(HttpServletResponse response, Map<String, RDFSource> requestRDFSources) {
+		HttpHeader locationHeaders = new HttpHeader();
+		if ( requestRDFSources.size() == 1 ) {
+			RDFSource requestRDFSource = requestRDFSources.values().iterator().next();
+
+			HttpHeaderValue locationHeader = new HttpHeaderValue(false);
+			locationHeader.setMainValue(requestRDFSource.getURI());
+			locationHeaders.addHeaderValue(locationHeader);
+		} else {
+			for (String originalURI : requestRDFSources.keySet()) {
+				RDFSource requestRDFSource = requestRDFSources.get(originalURI);
+
+				HttpHeaderValue locationHeader = new HttpHeaderValue();
+				locationHeader.setMainKey(HTTPUtil.getURISlug(originalURI));
+				locationHeader.setMainValue(requestRDFSource.getURI());
+				locationHeaders.addHeaderValue(locationHeader);
+			}
+		}
+		response.setHeader(HTTPHeaders.LOCATION, locationHeaders.toString());
 	}
 }

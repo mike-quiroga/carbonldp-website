@@ -12,12 +12,12 @@ import com.base22.carbon.CarbonException;
 import com.base22.carbon.DAOException;
 import com.base22.carbon.agents.Agent;
 import com.base22.carbon.agents.AgentDAOJdbc;
+import com.base22.carbon.jdbc.DAOJdbc;
 import com.base22.carbon.jdbc.QueryTransactionCallback;
 import com.base22.carbon.jdbc.QueryTransactionTemplate;
+import com.base22.carbon.jdbc.SingleUpdateTransactionCallback;
 import com.base22.carbon.jdbc.TransactionException;
-import com.base22.carbon.jdbc.UpdateTransactionCallback;
 import com.base22.carbon.jdbc.UpdateTransactionTemplate;
-import com.base22.carbon.jdbc.DAOJdbc;
 
 @Service("roleDAO")
 public class PlatformRoleDAOJdbc extends DAOJdbc implements PlatformRoleDAO {
@@ -37,11 +37,10 @@ public class PlatformRoleDAOJdbc extends DAOJdbc implements PlatformRoleDAO {
 			throw new DAOException("The name of the platformRole can't be null.");
 		}
 
-		int insertionResult;
-		UpdateTransactionTemplate template = new UpdateTransactionTemplate();
+		UpdateTransactionTemplate template = new UpdateTransactionTemplate(securityJDBCDataSource);
 		try {
 			//@formatter:off
-			insertionResult = template.execute(securityJDBCDataSource, new UpdateTransactionCallback() {
+			template.execute(new SingleUpdateTransactionCallback() {
 				//@formatter:on
 				@Override
 				public StringBuilder prepareSQLQuery(StringBuilder queryBuilder) {
@@ -72,14 +71,6 @@ public class PlatformRoleDAOJdbc extends DAOJdbc implements PlatformRoleDAO {
 				LOG.error("<< createRole() > The platformRole couldn't be created.");
 			}
 			throw e;
-		}
-
-		if ( insertionResult != 1 ) {
-			// TODO: Can we get the reason in this case?
-			if ( LOG.isErrorEnabled() ) {
-				LOG.error("<< createRole() > The platformRole couldn't be created.");
-			}
-			throw new DAOException("The platformRole couldn't be created.");
 		}
 	}
 
@@ -195,11 +186,10 @@ public class PlatformRoleDAOJdbc extends DAOJdbc implements PlatformRoleDAO {
 		final String agentUUIDString = agent.getMinimizedUuidString();
 		final long roleID = role.getID();
 
-		int insertionResult;
-		UpdateTransactionTemplate template = new UpdateTransactionTemplate();
+		UpdateTransactionTemplate template = new UpdateTransactionTemplate(securityJDBCDataSource);
 		try {
 			//@formatter:off
-			insertionResult = template.execute(securityJDBCDataSource, new UpdateTransactionCallback() {
+			template.execute(new SingleUpdateTransactionCallback() {
 				//@formatter:on
 				@Override
 				public StringBuilder prepareSQLQuery(StringBuilder queryBuilder) {
@@ -231,15 +221,6 @@ public class PlatformRoleDAOJdbc extends DAOJdbc implements PlatformRoleDAO {
 						String.valueOf(role.getID()));
 			}
 			throw e;
-		}
-
-		if ( insertionResult != 1 ) {
-			// TODO: Can we get the reason in this case?
-			if ( LOG.isErrorEnabled() ) {
-				LOG.error("<< addAgentToRole() > The agent with UUID: '{}', couldn't be added to the platformRole with ID: '{}'.", agent.getUuidString(),
-						String.valueOf(role.getID()));
-			}
-			throw new DAOException("The agent couldn't be added to the platformRole.");
 		}
 
 	}
