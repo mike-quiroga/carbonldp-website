@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 
 import com.base22.carbon.CarbonException;
 import com.base22.carbon.apps.Application;
-import com.base22.carbon.apps.Application.Properties;
+import com.base22.carbon.apps.ApplicationClass.Properties;
 import com.base22.carbon.apps.ApplicationRDF;
 import com.base22.carbon.apps.ApplicationRDFFactory;
 import com.base22.carbon.authorization.acl.ACLSystemResource;

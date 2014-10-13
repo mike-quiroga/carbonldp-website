@@ -12,9 +12,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
+import com.base22.carbon.Carbon;
 import com.base22.carbon.CarbonException;
 import com.base22.carbon.apps.Application;
 import com.base22.carbon.apps.ApplicationRDF;
+import com.base22.carbon.ldp.models.Container;
+import com.base22.carbon.ldp.models.ContainerClass;
+import com.base22.carbon.ldp.models.ContainerFactory;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 
@@ -24,9 +28,9 @@ public class AppsGETRequestHandler extends AbstractAppRequestHandler {
 	public ResponseEntity<Object> handleRequest(HttpServletRequest request, HttpServletResponse response) throws CarbonException {
 		List<Application> targetApplications = getTargetApplications();
 		List<ApplicationRDF> targetRDFApplications = getRDFTargetApplications(targetApplications);
-		Model combinedApplicationsModel = combineRDFTargetApplications(targetRDFApplications);
+		Container appsContainer = getAppsContainer(targetRDFApplications);
 
-		return new ResponseEntity<Object>(combinedApplicationsModel, HttpStatus.OK);
+		return new ResponseEntity<Object>(appsContainer, HttpStatus.OK);
 	}
 
 	private List<Application> getTargetApplications() throws CarbonException {
@@ -56,5 +60,25 @@ public class AppsGETRequestHandler extends AbstractAppRequestHandler {
 			combinedModel.add(rdfApplication.getResource().getModel());
 		}
 		return combinedModel;
+	}
+
+	private Container getAppsContainer(List<ApplicationRDF> targetRDFApplications) throws CarbonException {
+		StringBuilder uriBuilder = new StringBuilder();
+		uriBuilder.append(Carbon.URL).append("/apps/");
+
+		Container appsContainer = null;
+		ContainerFactory factory = new ContainerFactory();
+		try {
+			appsContainer = factory.createBasicContainer(uriBuilder.toString());
+		} catch (CarbonException e) {
+			e.getErrorObject().setHttpStatus(HttpStatus.INTERNAL_SERVER_ERROR);
+			throw e;
+		}
+
+		for (ApplicationRDF targetRDFApplication : targetRDFApplications) {
+			appsContainer.addProperty(ContainerClass.Properties.DEFAULT_HAS_MEMBER_RELATION.getProperty(), targetRDFApplication.getResource());
+		}
+
+		return appsContainer;
 	}
 }

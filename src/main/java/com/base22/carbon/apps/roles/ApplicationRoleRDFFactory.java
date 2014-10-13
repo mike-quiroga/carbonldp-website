@@ -10,7 +10,7 @@ import org.springframework.util.AntPathMatcher;
 import com.base22.carbon.Carbon;
 import com.base22.carbon.CarbonException;
 import com.base22.carbon.FactoryException;
-import com.base22.carbon.apps.Application;
+import com.base22.carbon.apps.ApplicationClass;
 import com.base22.carbon.apps.ApplicationRDFFactory;
 import com.base22.carbon.apps.roles.ApplicationRole.Properties;
 import com.base22.carbon.apps.roles.ApplicationRole.Resources;
@@ -80,7 +80,7 @@ public class ApplicationRoleRDFFactory extends RDFResourceFactory {
 		//@formatter:off
 		uriBuilder
 			.append(Carbon.URL)
-			.append(Application.ENDPOINT)
+			.append(ApplicationClass.ENDPOINT)
 			.append(appSlug)
 			.append(ApplicationRole.ENDPOINT)
 			.append(roleSlug)
@@ -141,7 +141,7 @@ public class ApplicationRoleRDFFactory extends RDFResourceFactory {
 			//@formatter:off
 			appSlugPattern
 				.append(Carbon.URL)
-				.append(Application.ENDPOINT)
+				.append(ApplicationClass.ENDPOINT)
 				.append("{appSlug}")
 				.append(ApplicationRole.ENDPOINT)
 				.append("**")

@@ -7,10 +7,10 @@ import java.util.UUID;
 import com.base22.carbon.Carbon;
 import com.base22.carbon.CarbonException;
 import com.base22.carbon.FactoryException;
-import com.base22.carbon.apps.Application.Properties;
-import com.base22.carbon.apps.Application.Resources;
-import com.base22.carbon.ldp.models.RDFResourceFactory;
+import com.base22.carbon.apps.ApplicationClass.Properties;
+import com.base22.carbon.apps.ApplicationClass.Resources;
 import com.base22.carbon.ldp.models.RDFResource;
+import com.base22.carbon.ldp.models.RDFResourceFactory;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.Resource;
@@ -65,7 +65,7 @@ public class ApplicationRDFFactory extends RDFResourceFactory {
 		//@formatter:off
 		uriBuilder
 			.append(Carbon.URL)
-			.append(Application.ENDPOINT)
+			.append(ApplicationClass.ENDPOINT)
 			.append(slug)
 		;
 		//@formatter:on
