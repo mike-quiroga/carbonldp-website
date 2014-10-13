@@ -546,6 +546,7 @@ public class POSTRdfRequestHandler extends AbstractCreationRequestHandler {
 		String slug = request.getHeader(HTTPHeaders.SLUG);
 		if ( slug != null ) {
 			slug = slug.endsWith("/") ? HTTPUtil.createSlug(slug).concat("/") : HTTPUtil.createSlug(slug);
+			return slug;
 		}
 
 		DateTime now = DateTime.now();

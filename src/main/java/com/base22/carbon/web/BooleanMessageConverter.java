@@ -32,7 +32,8 @@ public class BooleanMessageConverter implements HttpMessageConverter<Boolean> {
 	public BooleanMessageConverter() {
 		//@formatter:off
 		setSupportedMediaTypes(Arrays.asList(
-			new MediaType("text", "plain")
+			new MediaType("text", "plain"),
+			new MediaType("application", "json")
 		));
 		//@formatter:on
 	}
