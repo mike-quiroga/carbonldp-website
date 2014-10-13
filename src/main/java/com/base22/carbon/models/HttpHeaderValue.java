@@ -6,8 +6,15 @@ public class HttpHeaderValue {
 	private String extendingKey = null;
 	private String extendingValue = null;
 
+	private boolean checkSpecialCharacters = true;
+
 	public HttpHeaderValue() {
 		this.mainValue = "";
+	}
+
+	public HttpHeaderValue(boolean checkSpecialCharacters) {
+		this.mainValue = "";
+		this.checkSpecialCharacters = checkSpecialCharacters;
 	}
 
 	public HttpHeaderValue(String headerValue) {
@@ -22,18 +29,19 @@ public class HttpHeaderValue {
 
 	public String getMain() {
 		StringBuilder mainBuilder = new StringBuilder();
-		if ( this.mainKey != null ) {
-			mainBuilder.append(this.mainKey).append("=");
-		}
 		if ( this.mainValue != null ) {
-			boolean specialCharacters = hasSpecialCharacters(this.mainValue);
-			if ( specialCharacters ) {
-				mainBuilder.append("\"");
-			}
 			mainBuilder.append(this.mainValue);
-			if ( specialCharacters ) {
-				mainBuilder.append("\"");
+
+			if ( ! (this.mainValue.startsWith("<") && this.mainValue.endsWith(">")) ) {
+				boolean specialCharacters = hasSpecialCharacters(this.mainValue);
+				if ( specialCharacters && checkSpecialCharacters ) {
+					mainBuilder.insert(0, "\"");
+					mainBuilder.append("\"");
+				}
 			}
+		}
+		if ( this.mainKey != null ) {
+			mainBuilder.insert(0, "=").insert(0, this.mainKey);
 		}
 		if ( mainBuilder.length() == 0 ) {
 			return null;
@@ -64,18 +72,18 @@ public class HttpHeaderValue {
 
 	public String getExtending() {
 		StringBuilder extendingBuilder = new StringBuilder();
-		if ( this.extendingKey != null ) {
-			extendingBuilder.append(this.extendingKey).append("=");
-		}
 		if ( this.extendingValue != null ) {
-			boolean specialCharacters = hasSpecialCharacters(this.extendingValue);
-			if ( specialCharacters ) {
-				extendingBuilder.append("\"");
-			}
 			extendingBuilder.append(this.extendingValue);
-			if ( specialCharacters ) {
-				extendingBuilder.append("\"");
+			if ( ! (this.extendingValue.startsWith("<") && this.extendingValue.endsWith(">")) ) {
+				boolean specialCharacters = hasSpecialCharacters(this.extendingValue);
+				if ( specialCharacters && checkSpecialCharacters ) {
+					extendingBuilder.insert(0, "\"");
+					extendingBuilder.append("\"");
+				}
 			}
+		}
+		if ( this.extendingKey != null ) {
+			extendingBuilder.insert(0, "=").insert(0, this.extendingKey);
 		}
 		if ( extendingBuilder.length() == 0 ) {
 			return null;

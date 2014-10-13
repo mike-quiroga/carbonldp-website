@@ -1,19 +1,19 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>com.base22.carbon</groupId>
-	<artifactId>carbon-ldp</artifactId>
-	<packaging>war</packaging>
+	<groupId>com.carbon</groupId>
+	<artifactId>carbon-platform</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
+	<packaging>war</packaging>
 	<name>Carbon LDP</name>
 	<url>http://carbonldp.com/</url>
 
 	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<spring.version>4.0.3.RELEASE</spring.version>
 		<spring-security.version>3.2.2.RELEASE</spring-security.version>
 		<jackson-2-version>2.2.3</jackson-2-version>
-		<jena.version>2.11.1</jena.version>
-		<jena-sdb.version>1.4.1</jena-sdb.version>
+		<jena.version>2.12.0</jena.version>
 		<mysql-connector.version>5.1.30</mysql-connector.version>
 	</properties>
 
@@ -179,13 +179,6 @@
 			<version>${jena.version}</version>
 		</dependency>
 		<!-- === End: Core === -->
-		<!-- === SDB === -->
-		<dependency>
-			<groupId>org.apache.jena</groupId>
-			<artifactId>jena-sdb</artifactId>
-			<version>${jena-sdb.version}</version>
-		</dependency>
-		<!-- === End: SDB === -->
 		<!-- ====== End: Jena ====== -->
 		
 		<!-- Forces anything logged with SLF4J to delegate to logback. -->
@@ -274,10 +267,28 @@
 			<artifactId>commons-validator</artifactId>
 			<version>1.4.0</version>
 		</dependency>
-		
+
+		<dependency>
+			<groupId>com.github.jsonld-java</groupId>
+			<artifactId>jsonld-java</artifactId>
+			<version>0.5.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.github.jsonld-java</groupId>
+			<artifactId>jsonld-java-jena</artifactId>
+			<version>0.4.1</version>
+		</dependency>
 	</dependencies>
 	<build>
-		<finalName></finalName>
+		<resources>
+			<resource>
+				<directory>${basedir}/src/main/java</directory>
+				<excludes>
+					<exclude>**/*.java</exclude>
+				</excludes>
+			</resource>
+		</resources>
+		<finalName>carbon-platform</finalName>
 		<plugins>
 		    <plugin>
 		        <groupId>org.apache.maven.plugins</groupId>

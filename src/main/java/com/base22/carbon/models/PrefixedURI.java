@@ -1,6 +1,7 @@
 package com.base22.carbon.models;
 
-import com.base22.carbon.constants.Carbon;
+import com.base22.carbon.Carbon;
+
 
 public class PrefixedURI {
 	private final String prefix;
