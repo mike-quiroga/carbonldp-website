@@ -14,6 +14,9 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.jena.atlas.web.ContentType;
 import org.apache.jena.riot.Lang;
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormatter;
+import org.joda.time.format.ISODateTimeFormat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
@@ -373,15 +376,29 @@ public abstract class AbstractLDPRequestHandler extends AbstractRequestHandler {
 		return HTTPUtil.createErrorResponseEntity(errorObject);
 	}
 
-	protected boolean compareETags(String requestETag, String targetETag) {
+	protected boolean compareETags(String requestETag, String targetETag) throws CarbonException {
 		if ( requestETag == null ) {
 			return false;
 		}
 		requestETag = requestETag.contains("\"") ? requestETag.split("\"")[1] : requestETag;
-		requestETag = requestETag.toLowerCase();
 
-		targetETag = targetETag.toLowerCase();
+		DateTimeFormatter parser = ISODateTimeFormat.dateTimeParser();
+		DateTime requestETagDateTime = null;
+		DateTime targetETagDateTime = null;
 
-		return targetETag.equals(requestETag);
+		try {
+			requestETagDateTime = parser.parseDateTime(requestETag);
+		} catch (Exception e) {
+			// TODO: FT
+			return false;
+		}
+		try {
+			targetETagDateTime = parser.parseDateTime(targetETag);
+		} catch (Exception e) {
+			// TODO: FT
+			return false;
+		}
+
+		return requestETagDateTime.getMillis() == targetETagDateTime.getMillis();
 	}
 }

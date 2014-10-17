@@ -1,5 +1,6 @@
 package com.base22.carbon.ldp.web.handlers;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -28,6 +29,7 @@ import com.base22.carbon.CarbonException;
 import com.base22.carbon.HTTPHeaders;
 import com.base22.carbon.apps.Application;
 import com.base22.carbon.ldp.ModelUtil;
+import com.base22.carbon.ldp.RDFUtil;
 import com.base22.carbon.ldp.models.Container;
 import com.base22.carbon.ldp.models.ContainerClass;
 import com.base22.carbon.ldp.models.ContainerClass.ContainerType;
@@ -86,6 +88,29 @@ public class POSTRdfRequestHandler extends AbstractCreationRequestHandler {
 
 		String genericRequestURI = HTTPUtil.createGenericRequestURI();
 		InputStream requestBodyInputStream = getBodyInputStream(entity);
+
+		try {
+			requestBodyInputStream = RDFUtil.setDefaultNSPrefixes(requestBodyInputStream, Lang.TURTLE, true);
+		} catch (IOException e) {
+
+			String friendlyMessage = "The entityBody couldn't be parsed.";
+			String debugMessage = "There was an internal server error while parsing the entityBody.";
+
+			if ( LOG.isDebugEnabled() ) {
+				LOG.debug("xx handleTurtleRDFPost() > Exception Stacktrace:", e);
+			}
+			if ( LOG.isErrorEnabled() ) {
+				LOG.error("-- handleTurtleRDFPost() > There was a problem while converting the entityBodyInputStream to a String.");
+			}
+
+			ErrorResponseFactory errorFactory = new ErrorResponseFactory();
+			ErrorResponse errorObject = errorFactory.create();
+			errorObject.setHttpStatus(HttpStatus.INTERNAL_SERVER_ERROR);
+			errorObject.setFriendlyMessage(friendlyMessage);
+			errorObject.setDebugMessage(debugMessage);
+			errorObject.setEntityBodyIssue(null, debugMessage);
+		}
+
 		Model requestModel = parseEntityBody(genericRequestURI, requestBodyInputStream, Lang.TURTLE);
 
 		return handleRDFPost(appSlug, requestModel, request, response);
