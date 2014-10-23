@@ -24,6 +24,7 @@ import org.springframework.http.converter.HttpMessageNotWritableException;
 import org.springframework.util.Assert;
 
 import com.base22.carbon.ldp.RDFUtil;
+import com.base22.carbon.utils.HTTPUtil;
 import com.hp.hpl.jena.rdf.model.Model;
 
 public class ModelMessageConverter implements HttpMessageConverter<Model> {
@@ -104,9 +105,11 @@ public class ModelMessageConverter implements HttpMessageConverter<Model> {
 
 		bodyInputStream = addDefaultPrefixes(bodyInputStream, languageToUse);
 
+		String genericRequestURI = HTTPUtil.createGenericRequestURI();
+
 		Model model = null;
 		try {
-			model = RDFUtil.createInMemoryModel(bodyInputStream, languageToUse, null);
+			model = RDFUtil.createInMemoryModel(bodyInputStream, languageToUse, genericRequestURI);
 		} catch (RiotException e) {
 			throw new HttpMessageNotReadableException("The entityBody of the request couldn't be parsed into an RDF Model.", e);
 		}
