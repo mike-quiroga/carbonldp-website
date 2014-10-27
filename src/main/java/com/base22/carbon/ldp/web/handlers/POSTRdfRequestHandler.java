@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -460,6 +461,7 @@ public class POSTRdfRequestHandler extends AbstractCreationRequestHandler {
 
 	private Map<String, RDFSource> getRequestRDFSources(URIObject targetURIObject, Resource[] documentResources, Model requestModel, HttpServletRequest request)
 			throws CarbonException {
+		Map<Resource, String> originalURIs = new HashMap<Resource, String>();
 		Map<String, RDFSource> requestRDFSources = new HashMap<String, RDFSource>();
 
 		RDFSourceFactory factory = new RDFSourceFactory();
@@ -468,7 +470,13 @@ public class POSTRdfRequestHandler extends AbstractCreationRequestHandler {
 			Resource documentResource = documentResources[i];
 			String originalURI = documentResource.getURI();
 
-			documentResource = processDocumentResource(targetURIObject, documentResource, requestModel, request);
+			documentResources[i] = processDocumentResource(targetURIObject, documentResource, requestModel, request);
+			originalURIs.put(documentResources[i], originalURI);
+		}
+
+		for (int i = 0; i < documentResources.length; i++) {
+			Resource documentResource = documentResources[i];
+			String originalURI = originalURIs.get(documentResource);
 			Model documentModel = generateDocumentModel(documentResource, requestModel);
 			documentResource = documentModel.getResource(documentResource.getURI());
 
@@ -596,8 +604,8 @@ public class POSTRdfRequestHandler extends AbstractCreationRequestHandler {
 			return slug;
 		}
 
-		DateTime now = DateTime.now();
-		return String.valueOf(now.getMillis());
+		Random random = new Random();
+		return String.valueOf(Math.abs(random.nextLong()));
 	}
 
 	private String forgeInlineResourceURI(Resource inlineResource, String documentResourceURI) {
