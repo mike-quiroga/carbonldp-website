@@ -20,11 +20,11 @@ import com.base22.carbon.CarbonException;
 import com.base22.carbon.HTTPHeaders;
 import com.base22.carbon.authorization.acl.ACLSystemResource;
 import com.base22.carbon.authorization.acl.ACLSystemResourceFactory;
-import com.base22.carbon.ldp.ModelUtil;
 import com.base22.carbon.models.EmptyResponse;
 import com.base22.carbon.models.ErrorResponse;
 import com.base22.carbon.models.ErrorResponseFactory;
 import com.base22.carbon.utils.HTTPUtil;
+import com.base22.carbon.utils.ModelUtil;
 import com.hp.hpl.jena.rdf.model.ResIterator;
 import com.hp.hpl.jena.rdf.model.Resource;
 

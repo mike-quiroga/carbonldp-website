@@ -17,6 +17,7 @@ import com.base22.carbon.ldp.models.RDFSourceClass;
 import com.base22.carbon.ldp.models.RDFSourceFactory;
 import com.base22.carbon.ldp.models.URIObject;
 import com.base22.carbon.repository.WriteTransactionTemplate;
+import com.base22.carbon.utils.ModelUtil;
 import com.hp.hpl.jena.datatypes.xsd.XSDDatatype;
 import com.hp.hpl.jena.query.Query;
 import com.hp.hpl.jena.query.ResultSet;

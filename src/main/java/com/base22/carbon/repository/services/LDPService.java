@@ -2,6 +2,7 @@ package com.base22.carbon.repository.services;
 
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.joda.time.DateTime;
@@ -19,11 +20,11 @@ import com.base22.carbon.CarbonException;
 import com.base22.carbon.authorization.PermissionService;
 import com.base22.carbon.ldp.URIObjectDAO;
 import com.base22.carbon.ldp.models.Container;
+import com.base22.carbon.ldp.models.ContainerClass;
+import com.base22.carbon.ldp.models.ContainerClass.ContainerType;
 import com.base22.carbon.ldp.models.ContainerFactory;
 import com.base22.carbon.ldp.models.ContainerQueryOptions;
-import com.base22.carbon.ldp.models.ContainerClass.ContainerType;
 import com.base22.carbon.ldp.models.ContainerQueryOptions.METHOD;
-import com.base22.carbon.ldp.models.ContainerClass;
 import com.base22.carbon.ldp.models.NonRDFSourceClass;
 import com.base22.carbon.ldp.models.RDFResourceClass;
 import com.base22.carbon.ldp.models.RDFSource;
@@ -588,12 +589,9 @@ public class LDPService {
 	public boolean documentIsContainer(Set<String> documentTypes) {
 		boolean itIs = false;
 
-		if ( documentTypes.contains(ContainerClass.BASIC) )
-			itIs = true;
-		if ( documentTypes.contains(ContainerClass.DIRECT) )
-			itIs = true;
-		if ( documentTypes.contains(ContainerClass.INDIRECT) )
-			itIs = true;
+		if ( documentTypes.contains(ContainerClass.BASIC) ) itIs = true;
+		if ( documentTypes.contains(ContainerClass.DIRECT) ) itIs = true;
+		if ( documentTypes.contains(ContainerClass.INDIRECT) ) itIs = true;
 
 		return itIs;
 	}
@@ -799,8 +797,7 @@ public class LDPService {
 
 	// TODO: Refactor Method
 	@PreAuthorize("hasPermission(#documentURIObject, 'READ')")
-	public Container getLDPContainer(URIObject documentURIObject, String dataset, String containerType, ContainerQueryOptions options)
-			throws CarbonException {
+	public Container getLDPContainer(URIObject documentURIObject, String dataset, String containerType, ContainerQueryOptions options) throws CarbonException {
 		Container ldpContainer = null;
 
 		String documentURI = documentURIObject.getURI();
@@ -2028,26 +2025,26 @@ public class LDPService {
 		boolean deleteContainedResources = options.includeContainmentTriples() || options.includeContainedResources();
 		boolean deleteMembershipTriples = options.includeMembershipTriples();
 
+		ContainerQueryOptions onlyContainerOptions = new ContainerQueryOptions(METHOD.GET);
+		onlyContainerOptions.setContainerProperties(true);
+		onlyContainerOptions.setContainmentTriples(true);
+		onlyContainerOptions.setContainedResources(false);
+		onlyContainerOptions.setMembershipTriples(false);
+		onlyContainerOptions.setMemberResources(false);
+
+		Container container = null;
+		try {
+			container = getLDPContainer(containerURIObject, dataset, containerType, onlyContainerOptions);
+		} catch (CarbonException e) {
+			// TODO: Add message to debug stack trace
+			throw e;
+		}
+
 		if ( deleteContainer ) {
 			// The container is going to be deleted (same as a simple LDPRSource)
 
 			if ( containerType.equals(ContainerClass.DIRECT) || containerType.equals(ContainerClass.INDIRECT) ) {
 				// Delete the accessPoint related to the container
-				ContainerQueryOptions onlyContainerOptions = new ContainerQueryOptions(METHOD.GET);
-				onlyContainerOptions.setContainerProperties(true);
-				onlyContainerOptions.setContainmentTriples(false);
-				onlyContainerOptions.setContainedResources(false);
-				onlyContainerOptions.setMembershipTriples(false);
-				onlyContainerOptions.setMemberResources(false);
-
-				Container container = null;
-				try {
-					container = getLDPContainer(containerURIObject, dataset, containerType, onlyContainerOptions);
-				} catch (CarbonException e) {
-					// TODO: Add message to debug stack trace
-					throw e;
-				}
-
 				deleteLDPRSource(containerURIObject, true, dataset);
 				deleteAccessPoint(container, dataset);
 			} else {
@@ -2056,7 +2053,13 @@ public class LDPService {
 
 		} else {
 			if ( deleteContainedResources ) {
-				deleteLDPCContainedResources(documentURI, dataset);
+				List<String> containedResourceURIs = Arrays.asList(container.listContainedResourceURIs());
+				if ( containedResourceURIs.size() != 0 ) {
+					List<URIObject> containedResourceURIObjects = uriObjectDAO.getByURIs(containedResourceURIs);
+					for (URIObject containedResourceURIObject : containedResourceURIObjects) {
+						deleteLDPRSource(containedResourceURIObject, true, dataset);
+					}
+				}
 			}
 		}
 		if ( deleteMembershipTriples ) {

@@ -28,8 +28,6 @@ import com.base22.carbon.Carbon;
 import com.base22.carbon.CarbonException;
 import com.base22.carbon.HTTPHeaders;
 import com.base22.carbon.apps.Application;
-import com.base22.carbon.ldp.ModelUtil;
-import com.base22.carbon.ldp.RDFUtil;
 import com.base22.carbon.ldp.models.Container;
 import com.base22.carbon.ldp.models.ContainerClass;
 import com.base22.carbon.ldp.models.ContainerClass.ContainerType;
@@ -44,6 +42,8 @@ import com.base22.carbon.models.ErrorResponseFactory;
 import com.base22.carbon.models.HttpHeader;
 import com.base22.carbon.models.HttpHeaderValue;
 import com.base22.carbon.utils.HTTPUtil;
+import com.base22.carbon.utils.ModelUtil;
+import com.base22.carbon.utils.RDFUtil;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.Property;
@@ -86,7 +86,13 @@ public class POSTRdfRequestHandler extends AbstractCreationRequestHandler {
 	public ResponseEntity<Object> handleTurtleRDFPost(String appSlug, HttpServletRequest request, HttpServletResponse response, HttpEntity<byte[]> entity)
 			throws CarbonException {
 
-		String genericRequestURI = HTTPUtil.createGenericRequestURI();
+		//@formatter:off
+		String genericRequestURI = (new StringBuilder())
+				.append(HTTPUtil.createGenericRequestURI())
+				.append("/")
+				.toString()
+		;
+		//@formatter:on
 		InputStream requestBodyInputStream = getBodyInputStream(entity);
 
 		try {
@@ -518,15 +524,21 @@ public class POSTRdfRequestHandler extends AbstractCreationRequestHandler {
 		Resource[] inlineResources = getInlineResourcesOf(documentResource, requestModel);
 
 		// Forge a URI for the Document Resource and rename it
+		String originalURI = documentResource.getURI();
 		String forgedURI = forgeDocumentResourceURI(documentResource, targetURIObject, request);
 		documentResource = ModelUtil.renameResource(documentResource, forgedURI, requestModel);
+		requestModel = ModelUtil.renameBase(originalURI, forgedURI, requestModel);
 
+		//@formatter:off
+		/*
 		// Rename the inlineResources
 		for (int i = 0; i < inlineResources.length; i++) {
 			Resource inlineResource = inlineResources[i];
 			String newInlineResourceURI = forgeInlineResourceURI(inlineResource, forgedURI);
 			inlineResources[i] = ModelUtil.renameResource(inlineResource, newInlineResourceURI, requestModel);
 		}
+		*/
+		//@formatter:on
 
 		return documentResource;
 	}
@@ -568,9 +580,19 @@ public class POSTRdfRequestHandler extends AbstractCreationRequestHandler {
 	}
 
 	private String forgeSlug(Resource documentResource, URIObject targetURIObject, HttpServletRequest request) {
+		String genericRequestURISlug = HTTPUtil.getGenericRequestURISlug(documentResource.getURI());
+		if ( genericRequestURISlug != null ) {
+			genericRequestURISlug = genericRequestURISlug.endsWith("/") ? HTTPUtil.createSlug(genericRequestURISlug).concat("/") : HTTPUtil
+					.createSlug(genericRequestURISlug);
+			return genericRequestURISlug;
+		}
+
 		String slug = request.getHeader(HTTPHeaders.SLUG);
 		if ( slug != null ) {
-			slug = slug.endsWith("/") ? HTTPUtil.createSlug(slug).concat("/") : HTTPUtil.createSlug(slug);
+			if ( slug.endsWith(Carbon.TRAILING_SLASH) ) {
+				slug = slug.substring(0, slug.length() - 1);
+				slug = HTTPUtil.createSlug(slug).concat(Carbon.TRAILING_SLASH);
+			} else slug = HTTPUtil.createSlug(slug);
 			return slug;
 		}
 

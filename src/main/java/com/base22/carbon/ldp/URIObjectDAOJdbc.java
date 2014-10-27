@@ -3,6 +3,7 @@ package com.base22.carbon.ldp;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -244,9 +245,56 @@ public class URIObjectDAOJdbc extends DAOJdbc implements URIObjectDAO {
 	}
 
 	@Override
-	public Set<URIObject> getByURIs(String... uris) {
-		// TODO Auto-generated method stub
-		return null;
+	public List<URIObject> getByURIs(final List<String> uris) throws CarbonException {
+		List<URIObject> uriObjects = null;
+
+		QueryTransactionTemplate template = new QueryTransactionTemplate();
+		try {
+			//@formatter:off
+			uriObjects = template.execute(securityJDBCDataSource, new QueryTransactionCallback<List<URIObject>>() {
+				//@formatter:off
+				@Override
+				public StringBuilder prepareSQLQuery(StringBuilder sqlBuilder) {
+					//@formatter:off
+					sqlBuilder
+						.append("SELECT *, HEX(")
+							.append(UUID_FIELD)
+						.append(") AS ")
+							.append(HEX_UUID_FIELD)
+						.append(" FROM ")
+							.append(TABLE)
+						.append(" WHERE ")
+							.append(URI_FIELD)
+						.append(" IN (").append(preparePlaceHolders(uris.size())).append(")")
+					;
+					//@formatter:on
+					return sqlBuilder;
+				}
+
+				@Override
+				public PreparedStatement prepareStatement(PreparedStatement statement) throws SQLException {
+					setStringsInStatement(statement, uris.toArray(new String[uris.size()]));
+					return statement;
+				}
+
+				@Override
+				public List<URIObject> interpretResultSet(ResultSet resultSet) throws SQLException {
+					List<URIObject> uriObjects = null;
+
+					uriObjects = populateURIObjectsList(resultSet);
+
+					return uriObjects;
+				}
+
+			});
+		} catch (TransactionException e) {
+			if ( LOG.isErrorEnabled() ) {
+				LOG.error("<< getByURIs() > There was a problem while trying to get the URIObjects.");
+			}
+			throw e;
+		}
+
+		return uriObjects;
 	}
 
 	@Override
@@ -323,6 +371,22 @@ public class URIObjectDAOJdbc extends DAOJdbc implements URIObjectDAO {
 	public void deleteURIObjects(URIObject... uriObjects) {
 		// TODO Auto-generated method stub
 
+	}
+
+	private List<URIObject> populateURIObjectsList(ResultSet resultSet) throws SQLException {
+		List<URIObject> uriObjects = new ArrayList<URIObject>();
+
+		while (resultSet.next()) {
+			String uuidString = resultSet.getString(HEX_UUID_FIELD);
+			String uri = resultSet.getString(URI_FIELD);
+
+			URIObject uriObject = new URIObject(uri);
+			uriObject.setUuid(uuidString);
+
+			uriObjects.add(uriObject);
+		}
+
+		return uriObjects;
 	}
 
 	private Set<URIObject> populateURIObjects(ResultSet resultSet) throws SQLException {

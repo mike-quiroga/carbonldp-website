@@ -1,11 +1,10 @@
-package com.base22.carbon.ldp;
+package com.base22.carbon.utils;
 
 import java.io.IOException;
 import java.io.InputStream;
 
 import org.apache.jena.riot.Lang;
 
-import com.base22.carbon.utils.ConvertString;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.ResIterator;

@@ -464,7 +464,26 @@ public abstract class HTTPUtil {
 
 	public static boolean isGenericRequestURI(String uri) {
 		AntPathMatcher matcher = new AntPathMatcher();
-		return matcher.match("/requests/*", uri.replace(Carbon.URL, ""));
+		uri = uri.replace(Carbon.URL, "");
+		return matcher.match("/requests/**", uri);
+	}
+
+	public static String getGenericRequestURISlug(String uri) {
+		AntPathMatcher matcher = new AntPathMatcher();
+		uri = uri.replace(Carbon.URL, "");
+		uri = matcher.extractPathWithinPattern("/requests/**", uri);
+
+		int index = uri.indexOf("/");
+		if ( index == - 1 ) {
+			// The timestamp is the last piece of the generic request URI
+			return null;
+		}
+		if ( (index + 1) == uri.length() ) {
+			// "/" is the last character
+			return null;
+		}
+		return uri.substring(index + 1);
+
 	}
 
 	public static String getLocalSlug(String uri) {

@@ -18,7 +18,6 @@ import com.base22.carbon.APIPreferences.InteractionModel;
 import com.base22.carbon.CarbonException;
 import com.base22.carbon.HTTPHeaders;
 import com.base22.carbon.apps.Application;
-import com.base22.carbon.ldp.RDFUtil;
 import com.base22.carbon.ldp.models.Container;
 import com.base22.carbon.ldp.models.ContainerFactory;
 import com.base22.carbon.ldp.models.RDFSource;
@@ -29,6 +28,7 @@ import com.base22.carbon.models.ErrorResponseFactory;
 import com.base22.carbon.utils.ConvertInputStream;
 import com.base22.carbon.utils.ConvertString;
 import com.base22.carbon.utils.HTTPUtil;
+import com.base22.carbon.utils.RDFUtil;
 import com.hp.hpl.jena.rdf.model.Model;
 
 public abstract class AbstractCreationRequestHandler extends AbstractLDPRequestHandler {

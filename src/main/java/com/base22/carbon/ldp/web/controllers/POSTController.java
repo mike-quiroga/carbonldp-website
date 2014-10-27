@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.base22.carbon.CarbonException;
+import com.base22.carbon.HTTPHeaders;
 import com.base22.carbon.ldp.web.handlers.POSTNonRdfRequestHandler;
 import com.base22.carbon.ldp.web.handlers.POSTRdfRequestHandler;
 import com.base22.carbon.utils.HTTPUtil;
@@ -67,6 +68,22 @@ public class POSTController extends AbstractLDPController {
 
 		try {
 			return postRDFRequestHandler.handleRDFPost(appSlug, requestModel, request, response);
+		} catch (CarbonException e) {
+			return HTTPUtil.createErrorResponseEntity(e);
+		}
+	}
+
+	@RequestMapping(value = { "/apps/{application}/", "/apps/{application}/**" }, method = RequestMethod.POST)
+	public ResponseEntity<Object> handleNonRDFPost(String appSlug, HttpServletRequest request, HttpServletResponse response, HttpEntity<byte[]> requestEntity) {
+
+		if ( LOG.isTraceEnabled() ) {
+			LOG.trace(">> handleNonRDFPost()");
+		}
+
+		String contentTypeHeader = request.getHeader(HTTPHeaders.CONTENT_TYPE);
+
+		try {
+			return postNonRDFRequestHandler.handleNonMultipartPOST(appSlug, contentTypeHeader, request, response, requestEntity);
 		} catch (CarbonException e) {
 			return HTTPUtil.createErrorResponseEntity(e);
 		}

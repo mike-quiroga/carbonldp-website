@@ -11,6 +11,7 @@ public abstract class Carbon {
 	public static final String PROTOCOL = "http";
 	public static final String URL = PROTOCOL + "://" + DOMAIN;
 
+	public static final String TRAILING_SLASH = "/";
 	public static final String EXTENDING_RESOURCE_SIGN = "#";
 	public static final String EXTENDING_RESOURCE_REGEX = "#";
 	public static final String SYSTEM_RESOURCE_SIGN = "#$";

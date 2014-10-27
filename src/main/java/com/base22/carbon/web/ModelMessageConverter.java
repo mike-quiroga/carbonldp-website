@@ -23,8 +23,8 @@ import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.http.converter.HttpMessageNotWritableException;
 import org.springframework.util.Assert;
 
-import com.base22.carbon.ldp.RDFUtil;
 import com.base22.carbon.utils.HTTPUtil;
+import com.base22.carbon.utils.RDFUtil;
 import com.hp.hpl.jena.rdf.model.Model;
 
 public class ModelMessageConverter implements HttpMessageConverter<Model> {
@@ -105,7 +105,13 @@ public class ModelMessageConverter implements HttpMessageConverter<Model> {
 
 		bodyInputStream = addDefaultPrefixes(bodyInputStream, languageToUse);
 
-		String genericRequestURI = HTTPUtil.createGenericRequestURI();
+		//@formatter:off
+		String genericRequestURI = (new StringBuilder())
+				.append(HTTPUtil.createGenericRequestURI())
+				.append("/")
+				.toString()
+		;
+		//@formatter:on
 
 		Model model = null;
 		try {

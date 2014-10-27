@@ -436,12 +436,9 @@ public class ContainerFactory extends RDFSourceFactory {
 		}
 
 		public String getTypeOfContainer() {
-			if ( isOfType(ContainerClass.BASIC) )
-				return ContainerClass.BASIC;
-			if ( isOfType(ContainerClass.DIRECT) )
-				return ContainerClass.DIRECT;
-			if ( isOfType(ContainerClass.INDIRECT) )
-				return ContainerClass.INDIRECT;
+			if ( isOfType(ContainerClass.BASIC) ) return ContainerClass.BASIC;
+			if ( isOfType(ContainerClass.DIRECT) ) return ContainerClass.DIRECT;
+			if ( isOfType(ContainerClass.INDIRECT) ) return ContainerClass.INDIRECT;
 			return null;
 		}
 
@@ -533,13 +530,16 @@ public class ContainerFactory extends RDFSourceFactory {
 			return null;
 		}
 
+		public String[] listContainedResourceURIs() {
+			return this.getURIProperties(ContainerClass.Properties.CONTAINS.getProperty());
+		}
+
 		public void removeContainerTriples() {
 			StmtIterator stmtIterator = this.resource.listProperties();
 			while (stmtIterator.hasNext()) {
 				Statement statement = stmtIterator.next();
 				Property propertyToRemove = statement.getPredicate();
-				if ( propertyToRemove.getURI() != ContainerClass.CONTAINS )
-					this.resource.removeAll(propertyToRemove);
+				if ( propertyToRemove.getURI() != ContainerClass.CONTAINS ) this.resource.removeAll(propertyToRemove);
 			}
 		}
 

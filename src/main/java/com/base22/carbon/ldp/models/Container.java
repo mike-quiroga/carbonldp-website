@@ -16,6 +16,8 @@ public interface Container extends RDFSource {
 
 	public InteractionModel getDefaultInteractionModel();
 
+	public String[] listContainedResourceURIs();
+
 	public void removeContainerTriples();
 
 	public void removeContainmentTriples();

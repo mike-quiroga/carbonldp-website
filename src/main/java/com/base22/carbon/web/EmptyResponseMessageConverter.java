@@ -23,8 +23,8 @@ import org.springframework.http.converter.HttpMessageNotWritableException;
 import org.springframework.util.Assert;
 
 import com.base22.carbon.HTTPHeaders;
-import com.base22.carbon.ldp.RDFUtil;
 import com.base22.carbon.models.EmptyResponse;
+import com.base22.carbon.utils.RDFUtil;
 
 public class EmptyResponseMessageConverter implements HttpMessageConverter<EmptyResponse> {
 
