@@ -1,9 +1,7 @@
 package com.base22.carbon;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 
 public abstract class Carbon {
 
@@ -12,6 +10,15 @@ public abstract class Carbon {
 	public static final String URL = PROTOCOL + "://" + DOMAIN;
 
 	public static final String TRAILING_SLASH = "/";
+	public static final String EMPTY_STRING = "";
+	public static final String SPACE = " ";
+	public static final String TAB = "\t";
+	public static final String SINGLE_QUOTE = "'";
+	public static final String PERIOD = ".";
+	public static final String DOUBLE_QUOTE = "\"";
+
+	public static final String HTTP = "http";
+	public static final String HTTPS = "https";
 	public static final String EXTENDING_RESOURCE_SIGN = "#";
 	public static final String EXTENDING_RESOURCE_REGEX = "#";
 	public static final String SYSTEM_RESOURCE_SIGN = "#$";
@@ -62,18 +69,5 @@ public abstract class Carbon {
 		prefixes.put("xsd", "http://www.w3.org/2001/XMLSchema#");
 
 		CONFIGURED_PREFIXES = prefixes;
-	}
-
-	public static final Set<String> RESERVED_APPLICATION_NAMES;
-	static {
-		// TODO: This could be loaded from a dynamic source
-		HashSet<String> reservedAppNames = new HashSet<String>();
-
-		reservedAppNames.add("applications");
-		reservedAppNames.add("platform");
-		// TODO: This shouldn't be a reserved application name, for now it will be to keep the sparql client working
-		reservedAppNames.add("sparql");
-
-		RESERVED_APPLICATION_NAMES = reservedAppNames;
 	}
 }

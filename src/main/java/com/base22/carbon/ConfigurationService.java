@@ -1,7 +1,5 @@
 package com.base22.carbon;
 
-import java.util.Set;
-
 import javax.annotation.PostConstruct;
 
 import org.apache.jena.riot.Lang;
@@ -101,10 +99,6 @@ public class ConfigurationService {
 
 	public String getPlatformDatasetName() {
 		return PLATFORM_DATASET;
-	}
-
-	public Set<String> getReservedApplicationNames() {
-		return Carbon.RESERVED_APPLICATION_NAMES;
 	}
 
 	public String getServerDomain() {

@@ -95,6 +95,9 @@ public abstract class ContainerClass {
 		),
 		DEFAULT_HAS_MEMBER_RELATION(
 			new PrefixedURI("ldp", "member")	
+		),
+		DEFAULT_RETRIEVE_PREFERENCE(
+			new PrefixedURI("c", "defaultRetrievePreference")
 		);
 		//@formatter:on
 

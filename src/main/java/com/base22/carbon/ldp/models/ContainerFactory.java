@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.base22.carbon.APIPreferences.InteractionModel;
+import com.base22.carbon.APIPreferences.RetrieveContainerPreference;
 import com.base22.carbon.CarbonException;
 import com.base22.carbon.FactoryException;
 import com.hp.hpl.jena.rdf.model.Model;
@@ -528,6 +529,22 @@ public class ContainerFactory extends RDFSourceFactory {
 			}
 
 			return null;
+		}
+
+		public List<RetrieveContainerPreference> listDefaultRetrievePreferences() {
+			List<RetrieveContainerPreference> preferences = new ArrayList<RetrieveContainerPreference>();
+
+			Property defaultRetrievePreference = ContainerClass.Properties.DEFAULT_RETRIEVE_PREFERENCE.getProperty();
+			if ( ! this.getResource().hasProperty(defaultRetrievePreference) ) return preferences;
+
+			String[] uris = this.getURIProperties(defaultRetrievePreference);
+			for (String uri : uris) {
+				RetrieveContainerPreference preference = RetrieveContainerPreference.findByURI(uri);
+				if ( preference == null ) continue;
+				preferences.add(preference);
+			}
+
+			return preferences;
 		}
 
 		public String[] listContainedResourceURIs() {

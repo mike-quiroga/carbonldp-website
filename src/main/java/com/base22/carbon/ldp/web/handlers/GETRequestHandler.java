@@ -27,6 +27,7 @@ import com.base22.carbon.HTTPHeaders;
 import com.base22.carbon.apps.Application;
 import com.base22.carbon.authorization.acl.AclSR;
 import com.base22.carbon.ldp.models.Container;
+import com.base22.carbon.ldp.models.ContainerFactory;
 import com.base22.carbon.ldp.models.ContainerQueryOptions;
 import com.base22.carbon.ldp.models.RDFSource;
 import com.base22.carbon.ldp.models.URIObject;
@@ -199,7 +200,7 @@ public class GETRequestHandler extends AbstractLDPRequestHandler {
 	}
 
 	private ResponseEntity<Object> handleLDPContainerRetrieval(URIObject documentURIObject, String dataset, Set<String> documentTypes,
-			HttpServletRequest request, HttpServletResponse response) {
+			HttpServletRequest request, HttpServletResponse response) throws CarbonException {
 
 		Enumeration<String> preferHeaders = request.getHeaders(HTTPHeaders.PREFER);
 		HttpHeader preferHeader = new HttpHeader(preferHeaders);
@@ -207,8 +208,13 @@ public class GETRequestHandler extends AbstractLDPRequestHandler {
 		// Get the container type
 		String containerType = ldpService.getDocumentContainerType(documentTypes);
 
+		// Get the container as an RDFSource to process the properties needed
+		RDFSource targetRDFSource = ldpService.getLDPRSource(documentURIObject, dataset);
+		ContainerFactory factory = new ContainerFactory();
+		Container targetContainer = factory.create(targetRDFSource);
+
 		// Check for preferences to apply
-		List<RetrieveContainerPreference> preferences = getRetrieveContainerPreferences(preferHeader);
+		List<RetrieveContainerPreference> preferences = getRetrieveContainerPreferences(preferHeader, targetContainer);
 		// TODO: Remove this block when RetrieveContainerPreference is accepted by the LDPService
 		// ===========
 		ContainerQueryOptions options = new ContainerQueryOptions(ContainerQueryOptions.METHOD.GET);
@@ -354,8 +360,10 @@ public class GETRequestHandler extends AbstractLDPRequestHandler {
 		return dim;
 	}
 
-	private List<RetrieveContainerPreference> getRetrieveContainerPreferences(HttpHeader preferHeader) {
-		List<RetrieveContainerPreference> preferences = new ArrayList<RetrieveContainerPreference>(DEFAULT_RCP);
+	private List<RetrieveContainerPreference> getRetrieveContainerPreferences(HttpHeader preferHeader, Container targetContainer) {
+		List<RetrieveContainerPreference> defaultPreferences = new ArrayList<RetrieveContainerPreference>(DEFAULT_RCP);
+		List<RetrieveContainerPreference> containerDefinedPreferences = targetContainer.listDefaultRetrievePreferences();
+		List<RetrieveContainerPreference> preferences = containerDefinedPreferences.isEmpty() ? defaultPreferences : containerDefinedPreferences;
 
 		if ( preferHeader != null ) {
 			List<HttpHeaderValue> includePreferences = HttpHeader.filterHeaderValues(preferHeader, "return", "representation", "include", null);

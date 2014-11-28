@@ -141,15 +141,6 @@ public class AppsPOSTRequestHandler extends AbstractAppRequestHandler {
 
 				bodyIssueBuilder.append(Properties.SLUG.getPrefixedURI().getSlug());
 				bodyIssueBuilder.append(" > Required.");
-			} else if ( configurationService.getReservedApplicationNames().contains(requestRDFApplication.getSlug()) ) {
-				if ( bodyIssueBuilder == null ) {
-					bodyIssueBuilder = new StringBuilder();
-				} else {
-					bodyIssueBuilder.append("\n");
-				}
-
-				bodyIssueBuilder.append(Properties.SLUG.getPrefixedURI().getSlug());
-				bodyIssueBuilder.append(" > It is a reserved word. Please use another one.");
 			}
 		}
 

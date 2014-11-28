@@ -83,6 +83,8 @@ public class AppContextFilter extends GenericFilterBean {
 			filterChain.doFilter(request, response);
 			return;
 		}
+		//@formatter:off
+		/*
 		// Check if it is not a reserved application name
 		if ( configurationService.getReservedApplicationNames().contains(applicationIdentifier) ) {
 			// It is reserved, return
@@ -92,6 +94,8 @@ public class AppContextFilter extends GenericFilterBean {
 			filterChain.doFilter(request, response);
 			return;
 		}
+		*/
+		//@formatter:on
 
 		Application application = null;
 		try {
