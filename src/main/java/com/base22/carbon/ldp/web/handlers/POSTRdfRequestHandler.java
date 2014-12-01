@@ -588,11 +588,13 @@ public class POSTRdfRequestHandler extends AbstractCreationRequestHandler {
 	}
 
 	private String forgeSlug(Resource documentResource, URIObject targetURIObject, HttpServletRequest request) {
-		String genericRequestURISlug = HTTPUtil.getGenericRequestURISlug(documentResource.getURI());
-		if ( genericRequestURISlug != null ) {
-			genericRequestURISlug = genericRequestURISlug.endsWith("/") ? HTTPUtil.createSlug(genericRequestURISlug).concat("/") : HTTPUtil
-					.createSlug(genericRequestURISlug);
-			return genericRequestURISlug;
+		String uriSlug = HTTPUtil.getGenericRequestURISlug(documentResource.getURI());
+		if ( uriSlug != null ) {
+			if ( uriSlug.endsWith(Carbon.TRAILING_SLASH) ) {
+				uriSlug = uriSlug.substring(0, uriSlug.length() - 1);
+				uriSlug = HTTPUtil.createSlug(uriSlug).concat(Carbon.TRAILING_SLASH);
+			} else uriSlug = HTTPUtil.createSlug(uriSlug);
+			return uriSlug;
 		}
 
 		String slug = request.getHeader(HTTPHeaders.SLUG);

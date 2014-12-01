@@ -339,8 +339,7 @@ public abstract class HTTPUtil {
 		StringBuilder buf = new StringBuilder();
 		for (int idx = 0; idx < origin.length(); ++idx) {
 			char ch = origin.charAt(idx);
-			if ( ch < 128 )
-				buf.append(ch);
+			if ( ch < 128 ) buf.append(ch);
 		}
 		origin = buf.toString();
 		return origin;
@@ -471,6 +470,10 @@ public abstract class HTTPUtil {
 	public static String getGenericRequestURISlug(String uri) {
 		AntPathMatcher matcher = new AntPathMatcher();
 		uri = uri.replace(Carbon.URL, "");
+
+		// The matcher removes the ending slash (if it finds one)
+		boolean hasTrailingSlash = uri.endsWith(Carbon.TRAILING_SLASH);
+
 		uri = matcher.extractPathWithinPattern("/requests/**", uri);
 
 		int index = uri.indexOf("/");
@@ -482,8 +485,10 @@ public abstract class HTTPUtil {
 			// "/" is the last character
 			return null;
 		}
-		return uri.substring(index + 1);
 
+		uri = uri.substring(index + 1);
+		uri = hasTrailingSlash ? uri.concat(Carbon.TRAILING_SLASH) : uri;
+		return uri;
 	}
 
 	public static String getLocalSlug(String uri) {
