@@ -16,6 +16,7 @@ import org.springframework.security.acls.model.Sid;
 import org.springframework.util.Assert;
 
 import com.base22.carbon.authorization.acl.CarbonACLPermission;
+import com.base22.carbon.authorization.acl.CarbonACLPermissionFactory.CarbonPermission;
 
 public class CarbonPermissionGrantingStrategy implements PermissionGrantingStrategy {
 	private final transient AuditLogger auditLogger;
@@ -98,7 +99,14 @@ public class CarbonPermissionGrantingStrategy implements PermissionGrantingStrat
 		// Defaults
 		// TODO: Take into account defaults
 		if ( LOG.isDebugEnabled() ) {
-			LOG.debug("<< isGranted() > NOT FOUND");
+
+			// TODO: Remove this (or optimize it)
+			for (Permission permission : permissions) {
+				CarbonPermission carbonPermission = CarbonPermission.findByMask(permission.getMask());
+				LOG.debug("-- isGranted() > NOT FOUND: {}", carbonPermission.getPrefixedURI().getShortVersion());
+			}
+
+			LOG.debug("<< isGranted() > NOT GRANTED");
 		}
 		return false;
 	}

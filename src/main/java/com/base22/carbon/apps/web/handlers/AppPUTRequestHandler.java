@@ -39,7 +39,7 @@ public class AppPUTRequestHandler extends AbstractAppRequestHandler {
 			return handleNonExistentApplication(appIdentifier, request, response);
 		}
 
-		validateAppChanges(targetApplication, requestApplication);
+		// validateAppChanges(targetApplication, requestApplication);
 
 		ACLSystemResource requestAclSR = requestRDFApplication.getAclSR();
 		if ( requestAclSR != null ) {

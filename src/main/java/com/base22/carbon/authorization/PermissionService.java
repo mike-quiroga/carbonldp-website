@@ -104,7 +104,7 @@ public class PermissionService {
 
 				MutableAcl acl = null;
 				try {
-					acl = (MutableAcl) aclService.readAclById(oi);
+					acl = (MutableAcl) aclService.readAclById(oi, Arrays.asList(sid));
 				} catch (NotFoundException nfe) {
 					acl = aclService.createAcl(oi);
 				}
@@ -119,6 +119,8 @@ public class PermissionService {
 
 				boolean granted = false;
 				for (AccessControlEntry ace : aces) {
+					if ( ! ace.getSid().equals(sid) ) continue;
+
 					boolean deleteEntry = false;
 					Permission permissionToInsert = null;
 					boolean insertGranting = false;

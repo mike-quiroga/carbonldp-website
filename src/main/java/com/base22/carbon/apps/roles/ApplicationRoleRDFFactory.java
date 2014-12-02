@@ -47,6 +47,7 @@ public class ApplicationRoleRDFFactory extends RDFResourceFactory {
 		Resource resource = model.createResource(roleURI);
 
 		RDFApplicationRoleImpl role = new RDFApplicationRoleImpl(resource);
+		role.setUUID(appRole.getUuid());
 		role.setType(Resources.CLASS.getResource());
 		role.setSlug(appRole.getSlug());
 		role.setName(appRole.getName());

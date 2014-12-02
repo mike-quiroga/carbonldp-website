@@ -37,9 +37,9 @@ import com.base22.carbon.authorization.acl.ACESystemResource;
 import com.base22.carbon.authorization.acl.ACESystemResourceFactory;
 import com.base22.carbon.authorization.acl.ACLSystemResource;
 import com.base22.carbon.authorization.acl.ACLSystemResourceFactory;
+import com.base22.carbon.authorization.acl.AceSR.SubjectType;
 import com.base22.carbon.authorization.acl.CarbonACLPermission;
 import com.base22.carbon.authorization.acl.CarbonACLPermissionFactory;
-import com.base22.carbon.authorization.acl.AceSR.SubjectType;
 import com.base22.carbon.groups.Group;
 import com.base22.carbon.groups.GroupDAO;
 import com.base22.carbon.ldp.models.RDFResource;
@@ -424,12 +424,16 @@ public class LDPPermissionService {
 	}
 
 	private void applyACLModifications(Object object, Map<Sid, Map<Boolean, ACESystemResource>> aclModifications) throws CarbonException {
+		//@formatter:off
+		/*
 		try {
 			permissionService.emptyACL(object);
 		} catch (CarbonException e) {
 			// TODO: FT
 			throw e;
 		}
+		*/
+		//@formatter:on
 
 		for (Entry<Sid, Map<Boolean, ACESystemResource>> modifications : aclModifications.entrySet()) {
 			Sid sid = modifications.getKey();

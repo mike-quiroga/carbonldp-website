@@ -1,7 +1,6 @@
 package com.base22.carbon.authorization.acl;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -11,7 +10,7 @@ import org.springframework.security.acls.domain.CumulativePermission;
 import org.springframework.security.acls.domain.PermissionFactory;
 import org.springframework.security.acls.model.Permission;
 
-import com.base22.carbon.Carbon;
+import com.base22.carbon.models.PrefixedURI;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.rdf.model.ResourceFactory;
 
@@ -21,72 +20,151 @@ public final class CarbonACLPermissionFactory implements PermissionFactory {
 
 	public static enum CarbonPermission {
 		//@formatter:off
-		DISCOVER("cs", "Discover", 1 << 0),
-		READ("cs", "Read", 1 << 1),
-		UPDATE("cs", "Update", 1 << 2),
-		EXTEND("cs", "Extend", 1 << 3),
-		DELETE("cs", "Delete", 1 << 4),
+		DISCOVER(
+			1 << 0,
+			new PrefixedURI("cs", "Discover")
+		),
+		READ(
+			1 << 1,
+			new PrefixedURI("cs", "Read")
+		),
+		UPDATE(
+			1 << 2,
+			new PrefixedURI("cs", "Update")
+		),
+		EXTEND(
+			1 << 3,
+			new PrefixedURI("cs", "Extend")
+		),
+		DELETE(
+			1 << 4,
+			new PrefixedURI("cs", "Delete")
+		),
 
-		DOWNLOAD("cs", "Download", 1 << 5),
+		DOWNLOAD(
+			1 << 5,
+			new PrefixedURI("cs", "Download")
+		),
 
-		CREATE_LDPRS("cs", "CreateLDPRS", 1 << 6),
-		CREATE_LDPC("cs", "CreateLDPC", 1 << 7),
-		CREATE_WFLDPNR("cs", "Upload", 1 << 8),
-		CREATE_ACCESS_POINT("cs", "CreateAccessPoints", 1 << 9),
+		CREATE_LDPRS(
+			1 << 6,
+			new PrefixedURI("cs", "CreateLDPRS")
+		),
+		CREATE_LDPC(
+			1 << 7,
+			new PrefixedURI("cs", "CreateLDPC")
+		),
+		CREATE_WFLDPNR(
+			1 << 8,
+			new PrefixedURI("cs", "Upload")
+		),
+		CREATE_ACCESS_POINT(
+			1 << 9,
+			new PrefixedURI("cs", "CreateAccessPoints")
+		),
 
-		ADD_MEMBER("cs", "AddMembers", 1 << 10),
+		ADD_MEMBER(
+			1 << 10,
+			new PrefixedURI("cs", "AddMembers")
+		),
 
-		EXECUTE_SPARQL_QUERY("cs", "SparqlQuery", 1 << 11),
-		EXECUTE_SPARQL_UPDATE("cs", "SparqlUpdate", 1 << 12),
+		EXECUTE_SPARQL_QUERY(
+			1 << 11,
+			new PrefixedURI("cs", "SparqlQuery")
+		),
+		EXECUTE_SPARQL_UPDATE(
+			1 << 12,
+			new PrefixedURI("cs", "SparqlUpdate")
+		),
 
-		ADD_AGENTS("cs", "AddAgents", 1 << 13),
-		REMOVE_AGENTS("cs", "RemoveAgents", 1 << 14),
-		CREATE_AGENTS("cs", "CreateAgents", 1 << 15),
-		EDIT_AGENTS("cs", "EditAgents", 1 << 16),
-		DELETE_AGENTS("cs", "DeleteAgents", 1 << 17),
+		ADD_AGENTS(
+			1 << 13,
+			new PrefixedURI("cs", "AddAgents")
+		),
+		REMOVE_AGENTS(
+			1 << 14,
+			new PrefixedURI("cs", "RemoveAgents")
+		),
+		CREATE_AGENTS(
+			1 << 15,
+			new PrefixedURI("cs", "CreateAgents")
+		),
+		EDIT_AGENTS(
+			1 << 16,
+			new PrefixedURI("cs", "EditAgents")
+		),
+		DELETE_AGENTS(
+			1 << 17,
+			new PrefixedURI("cs", "DeleteAgents")
+		),
 
-		CREATE_CHILDREN("cs", "CreateChildren", 1 << 18),
-		MANAGE_ACLS("cs", "ManageACLs", 1 << 19),
+		CREATE_CHILDREN(
+			1 << 18,
+			new PrefixedURI("cs", "CreateChildren")
+		),
+		MANAGE_ACLS(
+			1 << 19,
+			new PrefixedURI("cs", "ManageACLs")
+		),
 
-		ADD_GROUPS("cs", "AddGroups", 1 << 20),
-		REMOVE_GROUPS("cs", "RemoveGroups", 1 << 21),
+		ADD_GROUPS(
+			1 << 20,
+			new PrefixedURI("cs", "AddGroups")
+		),
+		REMOVE_GROUPS(
+			1 << 21,
+			new PrefixedURI("cs", "RemoveGroups")
+		),
 
-		ACCESS_API("cs", "AccessAPI", 1 << 22),
-		ACCESS_DEV_GUI("cs", "AccessDevGUI", 1 << 23),
-		ACCESS_SPARQL_CLIENT("cs", "AccessSPARQLClient", 1 << 24),
-		ACCESS_REST_CLIENT("cs", "AccessRESTClient", 1 << 25),
-		ACCESS_LD_EXPLORER("cs", "AccessLDExplorer", 1 << 26);		//formatter:on
+		ACCESS_API(
+			1 << 22,
+			new PrefixedURI("cs", "AccessAPI")
+		),
+		ACCESS_DEV_GUI(
+			1 << 23,
+			new PrefixedURI("cs", "AccessDevGUI")
+		),
+		ACCESS_SPARQL_CLIENT(
+			1 << 24,
+			new PrefixedURI("cs", "AccessSPARQLClient")
+		),
+		ACCESS_REST_CLIENT(
+			1 << 25,
+			new PrefixedURI("cs", "AccessRESTClient")
+		),
+		ACCESS_LD_EXPLORER(
+			1 << 26,
+			new PrefixedURI("cs", "AccessLDExplorer")
+		);		
+		//formatter:on
+
+		private final PrefixedURI prefixedURI;
+		private final PrefixedURI[] prefixedURIs;
+		private final Resource resource;
 		
-		private String prefix;
-		private String slug;
-		private String uri;
-		private Resource resource;
 		private int mask;
 		private CarbonACLPermission permission;
 
-		CarbonPermission(String prefix, String slug, int mask) {
-			this.prefix = Carbon.CONFIGURED_PREFIXES.get(prefix);
-			this.slug = slug;
-			this.uri = this.prefix.concat(slug);
-			this.resource = ResourceFactory.createResource(this.uri);
+		CarbonPermission(int mask, PrefixedURI... uris) {
+			this.prefixedURI = uris[0];
+			this.prefixedURIs = uris;
+
+			this.resource = ResourceFactory.createResource(this.prefixedURI.getURI());
+			
 			this.mask = mask;
 			this.permission = new CarbonACLPermission(this);
 		}
 
-		public String getPrefix() {
-			return this.prefix;
-		}
-		
-		public String getSlug() {
-			return this.slug;
+		public PrefixedURI getPrefixedURI() {
+			return prefixedURI;
 		}
 
-		public String getURI() {
-			return this.uri;
+		public PrefixedURI[] getPrefixedURIs() {
+			return this.prefixedURIs;
 		}
 
 		public Resource getResource() {
-			return this.resource;
+			return resource;
 		}
 		
 		public int getMask() {
@@ -98,19 +176,24 @@ public final class CarbonACLPermissionFactory implements PermissionFactory {
 		}
 
 		public static CarbonPermission findByURI(String uri) {
-			List<CarbonPermission> permission = findByURIs(Arrays.asList(uri));
-			if(permission.size() == 0) {
-				return null;
+			for (CarbonPermission permission : CarbonPermission.values()) {
+				for (PrefixedURI permissionURI : permission.getPrefixedURIs()) {
+					if ( permissionURI.getURI().equals(uri) || permissionURI.getShortVersion().equals(uri) || permissionURI.getResourceURI().equals(uri) ) {
+						return permission;
+					}
+				}
 			}
-			return permission.get(0);
+			return null;
 		}
 		
 		public static List<CarbonPermission> findByURIs(List<String> uris) {
 			List<CarbonPermission> permissions = new ArrayList<CarbonPermission>();
 			for (CarbonPermission permission : CarbonPermission.values()) {
 				for(String uri : uris) {
-					if(permission.getURI().equals(uri)) {
-						permissions.add(permission);
+					for (PrefixedURI permissionURI : permission.getPrefixedURIs()) {
+						if ( permissionURI.getURI().equals(uri) || permissionURI.getShortVersion().equals(uri) || permissionURI.getResourceURI().equals(uri) ) {
+							permissions.add(permission);
+						}
 					}
 				}
 			}

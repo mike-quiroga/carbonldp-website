@@ -299,8 +299,10 @@ public class AppsPOSTRequestHandler extends AbstractAppRequestHandler {
 		try {
 			//@formatter:off
             permissionService.grantPermissions(rootAppRoleSid, requestApplication, CarbonPermission.getACLPermissionList(Arrays.asList(
-                CarbonPermission.READ,
+                CarbonPermission.DISCOVER,
+            	CarbonPermission.READ,
                 CarbonPermission.UPDATE,
+                CarbonPermission.EXTEND,
                 CarbonPermission.DELETE,
                 
                 CarbonPermission.EXECUTE_SPARQL_QUERY,
@@ -309,14 +311,8 @@ public class AppsPOSTRequestHandler extends AbstractAppRequestHandler {
                 CarbonPermission.CREATE_AGENTS,
                 CarbonPermission.EDIT_AGENTS,
                 CarbonPermission.DELETE_AGENTS,
-                CarbonPermission.ADD_AGENTS,
-                CarbonPermission.REMOVE_AGENTS,
                 
-                CarbonPermission.MANAGE_ACLS,
-                
-                CarbonPermission.ACCESS_API,
-                CarbonPermission.ACCESS_DEV_GUI,
-                CarbonPermission.ACCESS_SPARQL_CLIENT   
+                CarbonPermission.ACCESS_API
             )));
             //@formatter:on
 		} catch (CarbonException e) {
@@ -334,6 +330,8 @@ public class AppsPOSTRequestHandler extends AbstractAppRequestHandler {
                 CarbonPermission.UPDATE,
                 CarbonPermission.EXTEND,
                 CarbonPermission.DELETE,
+                
+                CarbonPermission.DOWNLOAD,
                 
                 CarbonPermission.CREATE_LDPRS,
                 CarbonPermission.CREATE_LDPC,
@@ -360,12 +358,15 @@ public class AppsPOSTRequestHandler extends AbstractAppRequestHandler {
                 CarbonPermission.DISCOVER,
                 CarbonPermission.READ,
                 CarbonPermission.UPDATE,
+                CarbonPermission.EXTEND,
                 CarbonPermission.DELETE,
                 
                 CarbonPermission.ADD_AGENTS,
                 CarbonPermission.REMOVE_AGENTS,
                 
                 CarbonPermission.CREATE_CHILDREN,
+                
+                CarbonPermission.MANAGE_ACLS,
                 
                 CarbonPermission.ADD_GROUPS,
                 CarbonPermission.REMOVE_GROUPS

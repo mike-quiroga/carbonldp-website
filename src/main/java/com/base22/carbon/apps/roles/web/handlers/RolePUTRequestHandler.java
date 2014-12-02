@@ -41,7 +41,7 @@ public class RolePUTRequestHandler extends AbstractRoleRequestHandler {
 			return handleNonExistentAppRole(appRoleSlug, request, response);
 		}
 
-		validateAppRoleChanges(targetAppRole, requestAppRole);
+		// validateAppRoleChanges(targetAppRole, requestAppRole);
 
 		ACLSystemResource requestAclSR = requestRDFAppRole.getAclSR();
 		if ( requestAclSR != null ) {
