@@ -1,11 +1,11 @@
 package com.base22.carbon.utils;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 
 import java.util.Random;
 import java.util.Set;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.hp.hpl.jena.rdf.model.Model;
@@ -16,29 +16,34 @@ import com.hp.hpl.jena.rdf.model.ResourceFactory;
 
 public class ModelUtilTest {
 
+	@Ignore("Not yet implemented")
 	@Test
 	public void testRemoveServerManagedProperties() {
-		fail("Not yet implemented"); // TODO
+		// TODO
 	}
 
+	@Ignore("Not yet implemented")
 	@Test
 	public void testRemoveSystemResources() {
-		fail("Not yet implemented"); // TODO
+		// TODO
 	}
 
+	@Ignore("Not yet implemented")
 	@Test
 	public void testCreateDetachedCopy() {
-		fail("Not yet implemented"); // TODO
+		// TODO
 	}
 
+	@Ignore("Not yet implemented")
 	@Test
 	public void testRenameResource() {
-		fail("Not yet implemented"); // TODO
+		// TODO
 	}
 
+	@Ignore("Not yet implemented")
 	@Test
 	public void testRenameBase() {
-		fail("Not yet implemented"); // TODO
+		// TODO
 	}
 
 	@Test
