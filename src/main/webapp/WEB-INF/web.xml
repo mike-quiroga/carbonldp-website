@@ -9,27 +9,8 @@
 	<context-param>
 		<param-name>contextConfigLocation</param-name>
 		<param-value>
-			classpath:com/base22/carbon/jdbc/jdbc-context.xml,
-			classpath:com/base22/carbon/repository/service-context.xml,
-			classpath:com/base22/carbon/agents/agents-context.xml,
-			classpath:com/base22/carbon/apps/apps-context.xml,
-			classpath:com/base22/carbon/apps/roles/roles-context.xml,
-			classpath:com/base22/carbon/authentication/authentication-context.xml,
-			classpath:com/base22/carbon/authorization/authorization-context.xml,
-			classpath:com/base22/carbon/authorization/acl/acl-context.xml,
-			classpath:com/base22/carbon/groups/groups-context.xml
 		</param-value>
 	</context-param>
-	
-	<filter>
-		<filter-name>springSecurityFilterChain</filter-name>
-		<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
-	</filter>
-	<filter-mapping>
-		<filter-name>springSecurityFilterChain</filter-name>
-		<url-pattern>/*</url-pattern>
-	</filter-mapping>
-  	
   	
   	<listener>
     	<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
