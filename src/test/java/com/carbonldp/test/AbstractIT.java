@@ -22,7 +22,7 @@ import com.carbonldp.repository.WriteTransactionCallback;
 import com.carbonldp.repository.WriteTransactionTemplate;
 import com.carbonldp.repository.services.RepositoryService;
 
-@Test
+@Test(groups = "integration-tests")
 //@formatter:off
 @ContextHierarchy({
   @ContextConfiguration(locations = { "file:src/main/webapp/WEB-INF/dispatcher-servlet.xml" }),

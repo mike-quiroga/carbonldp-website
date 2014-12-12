@@ -1,0 +1,15 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
+ 
+<suite name="carbon-platform - Unit Tests" verbose="1" >
+	<test name="Unit Tests">
+	<groups>
+		<run>
+			<include name="unit-tests"/>
+		</run>
+		</groups>
+	
+		<packages>
+			<package name="com.carbonldp.*"/>
+		</packages>
+	</test>
+</suite>
