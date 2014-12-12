@@ -127,6 +127,8 @@ tmp/**/*
 *~.nib
 local.properties
 .loadpath
+.freemarker-ide.xml
+.springBeans
 /src/main/resources/rebel.xml
  
 # External tool builders
