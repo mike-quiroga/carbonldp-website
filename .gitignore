@@ -116,6 +116,7 @@ Session.vim
 *.pydevproject
 .project
 .classpath
+.settings/
 .metadata
 bin/**
 tmp/**
