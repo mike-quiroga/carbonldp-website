@@ -6,6 +6,8 @@
 
 reports/
 
+test-output/
+
 # IntelliJ
 .idea/
 *.iml
@@ -112,6 +114,8 @@ Session.vim
 # Eclipse
 # https://github.com/github/gitignore/blob/master/Global/Eclipse.gitignore
 *.pydevproject
+.project
+.classpath
 .metadata
 bin/**
 tmp/**
