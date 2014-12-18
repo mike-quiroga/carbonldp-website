@@ -15,6 +15,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import com.carbonldp.commons.utils.LiteralUtil;
+import com.carbonldp.commons.utils.ValueUtil;
 import com.carbonldp.repository.ReadTransactionCallback;
 import com.carbonldp.repository.ReadTransactionTemplate;
 import com.carbonldp.repository.WriteTransactionCallback;
@@ -92,7 +94,7 @@ public class LocalRepositoryServiceIT extends AbstractIT {
 		// TODO: Move these resources into a static class
 		final Resource testResource = valueFactory.createURI(testResourceURI);
 		final URI dummyProperty = valueFactory.createURI("http://www.example.org/vocabulary#dummy");
-		final Literal dummyValue = valueFactory.createLiteral("I'm a dummy literal");
+		final Literal dummyValue = valueFactory.createLiteral(true);
 
 		WriteTransactionTemplate writeTemplate = repositoryService.getWriteTransactionTemplate(testRepositoryID);
 		writeTemplate.addCallback(new WriteTransactionCallback() {
@@ -115,7 +117,13 @@ public class LocalRepositoryServiceIT extends AbstractIT {
 
 				if ( statements.hasNext() ) {
 					Statement statement = statements.next();
-					return statement.getObject().stringValue().equals(dummyValue.stringValue());
+					org.openrdf.model.Value object = statement.getObject();
+					if ( ValueUtil.isLiteral(object) ) {
+						Literal literal = ValueUtil.getLiteral(object);
+						if ( LiteralUtil.isBoolean(literal) ) {
+							return literal.booleanValue() == dummyValue.booleanValue();
+						}
+					}
 				}
 				return false;
 			}

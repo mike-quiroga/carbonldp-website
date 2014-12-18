@@ -1,24 +1,16 @@
 package com.carbonldp.repository;
 
-import com.carbonldp.CarbonException;
+import com.carbonldp.CarbonRuntimeException;
 
-public class RepositoryRuntimeException extends CarbonException {
+public class RepositoryRuntimeException extends CarbonRuntimeException {
 	private static final long serialVersionUID = - 8852740381268423530L;
 
-	public RepositoryRuntimeException() {
-		super();
+	public RepositoryRuntimeException(int errorCode) {
+		super(errorCode);
 	}
 
-	public RepositoryRuntimeException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
-		super(message, cause, enableSuppression, writableStackTrace);
-	}
-
-	public RepositoryRuntimeException(String message, Throwable cause) {
-		super(message, cause);
-	}
-
-	public RepositoryRuntimeException(String message) {
-		super(message);
+	public RepositoryRuntimeException(int errorCode, Throwable cause) {
+		super(errorCode, cause);
 	}
 
 	public RepositoryRuntimeException(Throwable cause) {

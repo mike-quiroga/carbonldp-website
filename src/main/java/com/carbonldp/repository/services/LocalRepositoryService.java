@@ -20,7 +20,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.carbonldp.AbstractService;
-import com.carbonldp.CarbonException;
+import com.carbonldp.CarbonRuntimeException;
 import com.carbonldp.repository.ReadOnlyRepositoryConnection;
 import com.carbonldp.repository.ReadTransactionCallback;
 import com.carbonldp.repository.ReadTransactionTemplate;
@@ -43,8 +43,7 @@ public class LocalRepositoryService extends AbstractService implements Repositor
 			if ( LOG.isErrorEnabled() ) {
 				LOG.error("xx init() > The manager of the directory: '{}', couldn't be retrieved.", directory);
 			}
-			// TODO: FT
-			throw new RepositoryRuntimeException(".", e);
+			throw new RepositoryRuntimeException(0x0002, e);
 		}
 	}
 
@@ -61,8 +60,7 @@ public class LocalRepositoryService extends AbstractService implements Repositor
 			if ( LOG.isErrorEnabled() ) {
 				LOG.error("xx createRepository() > The repository: '{}', couldn't be created.", repositoryID);
 			}
-			// TODO: FT
-			throw new RepositoryRuntimeException(".", e);
+			throw new RepositoryRuntimeException(0x0003, e);
 		}
 
 		Repository repository = null;
@@ -72,8 +70,7 @@ public class LocalRepositoryService extends AbstractService implements Repositor
 			if ( LOG.isErrorEnabled() ) {
 				LOG.error("xx createRepository() > The repository: '{}', was created but couldn't be retrieved back.", repositoryID);
 			}
-			// TODO: FT
-			throw new RepositoryRuntimeException(".", e);
+			throw new RepositoryRuntimeException(0x0004, e);
 		}
 
 		try {
@@ -82,8 +79,7 @@ public class LocalRepositoryService extends AbstractService implements Repositor
 			if ( LOG.isErrorEnabled() ) {
 				LOG.error("xx createRepository() > The repository: '{}', couldn't be initialized.", repositoryID);
 			}
-			// TODO: FT
-			throw new RepositoryRuntimeException(".", e);
+			throw new RepositoryRuntimeException(0x0005, e);
 		}
 	}
 
@@ -95,8 +91,7 @@ public class LocalRepositoryService extends AbstractService implements Repositor
 			if ( LOG.isErrorEnabled() ) {
 				LOG.error("xx repositoryExists() > There was a problem checking existance of the repository: '{}'.", repositoryID);
 			}
-			// TODO: FT
-			throw new RepositoryRuntimeException(".", e);
+			throw new RepositoryRuntimeException(0x0006, e);
 		}
 	}
 
@@ -108,8 +103,7 @@ public class LocalRepositoryService extends AbstractService implements Repositor
 			if ( LOG.isErrorEnabled() ) {
 				LOG.error("xx getConnection() > The repository: '{}', couldn't be retrieved.", repositoryID);
 			}
-			// TODO: FT
-			throw new RepositoryRuntimeException(".", e);
+			throw new RepositoryRuntimeException(0x0007, e);
 		}
 		RepositoryConnection connection;
 		try {
@@ -118,8 +112,7 @@ public class LocalRepositoryService extends AbstractService implements Repositor
 			if ( LOG.isErrorEnabled() ) {
 				LOG.error("xx getConnection() > A connection from the repository: '{}', couldn't be retrieved.", repositoryID);
 			}
-			// TODO: FT
-			throw new RepositoryRuntimeException(".", e);
+			throw new RepositoryRuntimeException(0x0008, e);
 		}
 
 		return connection;
@@ -145,8 +138,7 @@ public class LocalRepositoryService extends AbstractService implements Repositor
 			if ( LOG.isErrorEnabled() ) {
 				LOG.error("xx deleteRepository() > The repository: '{}', couldn't be deleted.", repositoryID);
 			}
-			// TODO: FT
-			throw new RepositoryRuntimeException(".", e);
+			throw new RepositoryRuntimeException(0x0009, e);
 		}
 	}
 
@@ -167,8 +159,7 @@ public class LocalRepositoryService extends AbstractService implements Repositor
 				if ( LOG.isErrorEnabled() ) {
 					LOG.error("<< beginTransaction > The transaction couldn't be started.");
 				}
-				// TODO: FT
-				throw new RepositoryRuntimeException(".", e);
+				throw new RepositoryRuntimeException(0x000A, e);
 			}
 		}
 
@@ -201,10 +192,10 @@ public class LocalRepositoryService extends AbstractService implements Repositor
 				return callback.executeInTransaction(connection);
 			} catch (RepositoryException e) {
 				throw new RepositoryRuntimeException(e);
-			} catch (CarbonException e) {
+			} catch (CarbonRuntimeException e) {
 				throw e;
 			} catch (Throwable e) {
-				throw new CarbonException(e);
+				throw new CarbonRuntimeException(e);
 			} finally {
 				closeConnection();
 			}
@@ -237,12 +228,12 @@ public class LocalRepositoryService extends AbstractService implements Repositor
 			} catch (RepositoryException e) {
 				rollbackTransaction();
 				throw new RepositoryRuntimeException(e);
-			} catch (CarbonException e) {
+			} catch (CarbonRuntimeException e) {
 				rollbackTransaction();
 				throw e;
 			} catch (Throwable e) {
 				rollbackTransaction();
-				throw new CarbonException(e);
+				throw new CarbonRuntimeException(e);
 			} finally {
 				closeConnection();
 			}
@@ -261,8 +252,7 @@ public class LocalRepositoryService extends AbstractService implements Repositor
 				if ( LOG.isErrorEnabled() ) {
 					LOG.error("xx rollbackTransaction() > The transaction couldn't be rolled back.");
 				}
-				// TODO: FT
-				throw new RepositoryRuntimeException(".", e);
+				throw new RepositoryRuntimeException(0x000B, e);
 			}
 		}
 
@@ -271,10 +261,9 @@ public class LocalRepositoryService extends AbstractService implements Repositor
 				connection.commit();
 			} catch (RepositoryException e) {
 				if ( LOG.isErrorEnabled() ) {
-					LOG.error("xx commitTransaction() > The transaction couldn't be commited.");
+					LOG.error("xx commitTransaction() > The transaction couldn't be committed.");
 				}
-				// TODO: FT
-				throw new RepositoryRuntimeException(".", e);
+				throw new RepositoryRuntimeException(0x000C, e);
 			}
 		}
 	}

@@ -112,12 +112,12 @@ public class ReadOnlyRepositoryConnection implements RepositoryConnection {
 
 	@Override
 	public Update prepareUpdate(QueryLanguage ql, String update) throws RepositoryException, MalformedQueryException {
-		throw new RepositoryRuntimeException("Calling update operation on ReadOnly connection.");
+		throw new RepositoryRuntimeException(0x0001);
 	}
 
 	@Override
 	public Update prepareUpdate(QueryLanguage ql, String update, String baseURI) throws RepositoryException, MalformedQueryException {
-		throw new RepositoryRuntimeException("Calling update operation on ReadOnly connection.");
+		throw new RepositoryRuntimeException(0x0001);
 	}
 
 	@Override
@@ -170,7 +170,7 @@ public class ReadOnlyRepositoryConnection implements RepositoryConnection {
 
 	@Override
 	public boolean isAutoCommit() throws RepositoryException {
-		throw new RepositoryRuntimeException("Calling update operation on ReadOnly connection.");
+		throw new RepositoryRuntimeException(0x0001);
 	}
 
 	@Override
@@ -180,82 +180,82 @@ public class ReadOnlyRepositoryConnection implements RepositoryConnection {
 
 	@Override
 	public void begin() throws RepositoryException {
-		throw new RepositoryRuntimeException("Calling update operation on ReadOnly connection.");
+		throw new RepositoryRuntimeException(0x0001);
 	}
 
 	@Override
 	public void commit() throws RepositoryException {
-		throw new RepositoryRuntimeException("Calling update operation on ReadOnly connection.");
+		throw new RepositoryRuntimeException(0x0001);
 	}
 
 	@Override
 	public void rollback() throws RepositoryException {
-		throw new RepositoryRuntimeException("Calling update operation on ReadOnly connection.");
+		throw new RepositoryRuntimeException(0x0001);
 	}
 
 	@Override
 	public void add(InputStream in, String baseURI, RDFFormat dataFormat, Resource... contexts) throws IOException, RDFParseException, RepositoryException {
-		throw new RepositoryRuntimeException("Calling update operation on ReadOnly connection.");
+		throw new RepositoryRuntimeException(0x0001);
 	}
 
 	@Override
 	public void add(Reader reader, String baseURI, RDFFormat dataFormat, Resource... contexts) throws IOException, RDFParseException, RepositoryException {
-		throw new RepositoryRuntimeException("Calling update operation on ReadOnly connection.");
+		throw new RepositoryRuntimeException(0x0001);
 	}
 
 	@Override
 	public void add(URL url, String baseURI, RDFFormat dataFormat, Resource... contexts) throws IOException, RDFParseException, RepositoryException {
-		throw new RepositoryRuntimeException("Calling update operation on ReadOnly connection.");
+		throw new RepositoryRuntimeException(0x0001);
 	}
 
 	@Override
 	public void add(File file, String baseURI, RDFFormat dataFormat, Resource... contexts) throws IOException, RDFParseException, RepositoryException {
-		throw new RepositoryRuntimeException("Calling update operation on ReadOnly connection.");
+		throw new RepositoryRuntimeException(0x0001);
 	}
 
 	@Override
 	public void add(Resource subject, URI predicate, Value object, Resource... contexts) throws RepositoryException {
-		throw new RepositoryRuntimeException("Calling update operation on ReadOnly connection.");
+		throw new RepositoryRuntimeException(0x0001);
 	}
 
 	@Override
 	public void add(Statement st, Resource... contexts) throws RepositoryException {
-		throw new RepositoryRuntimeException("Calling update operation on ReadOnly connection.");
+		throw new RepositoryRuntimeException(0x0001);
 	}
 
 	@Override
 	public void add(Iterable<? extends Statement> statements, Resource... contexts) throws RepositoryException {
-		throw new RepositoryRuntimeException("Calling update operation on ReadOnly connection.");
+		throw new RepositoryRuntimeException(0x0001);
 	}
 
 	@Override
 	public <E extends Exception> void add(Iteration<? extends Statement, E> statements, Resource... contexts) throws RepositoryException, E {
-		throw new RepositoryRuntimeException("Calling update operation on ReadOnly connection.");
+		throw new RepositoryRuntimeException(0x0001);
 	}
 
 	@Override
 	public void remove(Resource subject, URI predicate, Value object, Resource... contexts) throws RepositoryException {
-		throw new RepositoryRuntimeException("Calling update operation on ReadOnly connection.");
+		throw new RepositoryRuntimeException(0x0001);
 	}
 
 	@Override
 	public void remove(Statement st, Resource... contexts) throws RepositoryException {
-		throw new RepositoryRuntimeException("Calling update operation on ReadOnly connection.");
+		throw new RepositoryRuntimeException(0x0001);
 	}
 
 	@Override
 	public void remove(Iterable<? extends Statement> statements, Resource... contexts) throws RepositoryException {
-		throw new RepositoryRuntimeException("Calling update operation on ReadOnly connection.");
+		throw new RepositoryRuntimeException(0x0001);
 	}
 
 	@Override
 	public <E extends Exception> void remove(Iteration<? extends Statement, E> statements, Resource... contexts) throws RepositoryException, E {
-		throw new RepositoryRuntimeException("Calling update operation on ReadOnly connection.");
+		throw new RepositoryRuntimeException(0x0001);
 	}
 
 	@Override
 	public void clear(Resource... contexts) throws RepositoryException {
-		throw new RepositoryRuntimeException("Calling update operation on ReadOnly connection.");
+		throw new RepositoryRuntimeException(0x0001);
 	}
 
 	@Override
@@ -270,17 +270,17 @@ public class ReadOnlyRepositoryConnection implements RepositoryConnection {
 
 	@Override
 	public void setNamespace(String prefix, String name) throws RepositoryException {
-		throw new RepositoryRuntimeException("Calling update operation on ReadOnly connection.");
+		throw new RepositoryRuntimeException(0x0001);
 	}
 
 	@Override
 	public void removeNamespace(String prefix) throws RepositoryException {
-		throw new RepositoryRuntimeException("Calling update operation on ReadOnly connection.");
+		throw new RepositoryRuntimeException(0x0001);
 	}
 
 	@Override
 	public void clearNamespaces() throws RepositoryException {
-		throw new RepositoryRuntimeException("Calling update operation on ReadOnly connection.");
+		throw new RepositoryRuntimeException(0x0001);
 	}
 
 }

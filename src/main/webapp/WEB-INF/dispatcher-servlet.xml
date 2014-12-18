@@ -22,14 +22,18 @@
 	Scan for components using annotations
 	-->
 	<context:component-scan base-package="com.carbonldp" />
-	<context:property-placeholder location="classpath*:config.properties"/>
-	<context:annotation-config />
 	
-	<!--
-	To serve these resources with a 1-year future expiration to ensure maximum use of the browser cache 
-	and a reduction in HTTP requests made by the browser:
-	<mvc:resources mapping="/resources/**" location="/public-resources/" cache-period="31556926"/>
-	-->
+	<bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="ignoreUnresolvablePlaceholders" value="true" />
+		<property name="locations">
+			<list>
+				<value>classpath:config.properties</value>
+				<value>classpath:error-codes.properties</value>
+			</list>
+		</property>
+	</bean>
+	
+	<context:annotation-config />
 	
 	<mvc:annotation-driven content-negotiation-manager="contentNegotiationManager">
 		<mvc:message-converters register-defaults="false">
