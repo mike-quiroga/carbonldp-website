@@ -1,6 +1,6 @@
 package com.carbonldp.repository;
 
-import com.carbonldp.CarbonRuntimeException;
+import com.carbonldp.commons.exceptions.CarbonRuntimeException;
 
 public class RepositoryRuntimeException extends CarbonRuntimeException {
 	private static final long serialVersionUID = - 8852740381268423530L;

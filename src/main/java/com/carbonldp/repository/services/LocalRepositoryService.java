@@ -20,7 +20,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.carbonldp.AbstractService;
-import com.carbonldp.CarbonRuntimeException;
+import com.carbonldp.commons.exceptions.CarbonRuntimeException;
 import com.carbonldp.repository.ReadOnlyRepositoryConnection;
 import com.carbonldp.repository.ReadTransactionCallback;
 import com.carbonldp.repository.ReadTransactionTemplate;
