@@ -18,27 +18,34 @@ import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
+import com.carbonldp.repository.RepositoryIDProvider;
 import com.carbonldp.repository.WriteTransactionCallback;
 import com.carbonldp.repository.WriteTransactionTemplate;
+import com.carbonldp.repository.services.RDFDocumentService;
 import com.carbonldp.repository.services.RepositoryService;
 
 @Test(groups = "integration-tests")
 //@formatter:off
 @ContextHierarchy({
-  @ContextConfiguration(locations = { "file:src/main/webapp/WEB-INF/dispatcher-servlet.xml" }),
-  @ContextConfiguration(locations = { "classpath:test-config.xml" }),
+	@ContextConfiguration(locations = { "classpath*:META-INF/spring/applicationContext*.xml" }),
+	@ContextConfiguration(locations = { "file:src/main/webapp/WEB-INF/dispatcher-servlet.xml" }),
+	@ContextConfiguration(locations = { "classpath:test-config.xml" }),
 })
 //@formatter:on
 public abstract class AbstractIT extends AbstractTestNGSpringContextTests {
 	@Autowired
 	protected RepositoryService repositoryService;
+	@Autowired
+	protected RepositoryIDProvider repositoryIDProvider;
+	@Autowired
+	protected RDFDocumentService rdfDocumentService;
 
-	protected final String testRepositoryID = "test-repository";
-	protected final String testResourceURI = "http://carbonldp.com/apps/test-app/resource";
+	protected final String testRepositoryID = "test-blog";
+	protected final String testResourceURI = "http://carbonldp.com/apps/test-blog/posts/";
 
 	protected final ValueFactory valueFactory = ValueFactoryImpl.getInstance();
 
-	private final String testDataLocation = "test-data.trig";
+	private final String testDataLocation = "test-model.trig";
 
 	@Override
 	@BeforeSuite
