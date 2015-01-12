@@ -18,22 +18,12 @@
 		http://www.springframework.org/schema/security/spring-security-3.2.xsd
         ">
    
-	<!--
-	Scan for components using annotations
-	-->
-	<context:component-scan base-package="com.carbonldp" />
 	
-	<bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
-		<property name="ignoreUnresolvablePlaceholders" value="true" />
-		<property name="locations">
-			<list>
-				<value>classpath:config.properties</value>
-				<value>classpath:error-codes.properties</value>
-			</list>
-		</property>
-	</bean>
-	
-	<context:annotation-config />
+   
+	<!-- Scan for components using annotations -->
+	<context:component-scan base-package="com.carbonldp" use-default-filters="false">
+	    <context:include-filter expression="org.springframework.stereotype.Controller" type="annotation" />
+	</context:component-scan>
 	
 	<mvc:annotation-driven content-negotiation-manager="contentNegotiationManager">
 		<mvc:message-converters register-defaults="false">

@@ -1,0 +1,135 @@
+@prefix acl:		<http://www.w3.org/ns/auth/acl#>.
+@prefix api:		<http://purl.org/linked-data/api/vocab#>.
+@prefix c:			<http://carbonldp.com/ns/v1/platform#>.
+@prefix cs:			<http://carbonldp.com/ns/v1/security#>.
+@prefix cp:			<http://carbonldp.com/ns/v1/patch#>.
+@prefix cc:			<http://creativecommons.org/ns#>.
+@prefix cert:		<http://www.w3.org/ns/auth/cert#>.
+@prefix dbp:		<http://dbpedia.org/property/>.
+@prefix dc:			<http://purl.org/dc/terms/>.
+@prefix dc11:		<http://purl.org/dc/elements/1.1/>.
+@prefix dcterms:	<http://purl.org/dc/terms/>.
+@prefix doap:		<http://usefulinc.com/ns/doap#>.
+@prefix example:	<http://example.org/ns#>.
+@prefix ex:			<http://example.org/ns#>.
+@prefix exif:		<http://www.w3.org/2003/12/exif/ns#>.
+@prefix fn:			<http://www.w3.org/2005/xpath-functions#>.
+@prefix foaf:		<http://xmlns.com/foaf/0.1/>.
+@prefix geo:		<http://www.w3.org/2003/01/geo/wgs84_pos#>.
+@prefix geonames:	<http://www.geonames.org/ontology#>.
+@prefix gr:			<http://purl.org/goodrelations/v1#>.
+@prefix http:		<http://www.w3.org/2006/http#>.
+@prefix ldp:		<http://www.w3.org/ns/ldp#>.
+@prefix log:		<http://www.w3.org/2000/10/swap/log#>.
+@prefix owl:		<http://www.w3.org/2002/07/owl#>.
+@prefix rdf:		<http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
+@prefix rdfs:		<http://www.w3.org/2000/01/rdf-schema#>.
+@prefix rei:		<http://www.w3.org/2004/06/rei#>.
+@prefix rsa:		<http://www.w3.org/ns/auth/rsa#>.
+@prefix rss:		<http://purl.org/rss/1.0/>.
+@prefix sd:			<http://www.w3.org/ns/sparql-service-description#>.
+@prefix sfn:		<http://www.w3.org/ns/sparql#>.
+@prefix sioc:		<http://rdfs.org/sioc/ns#>.
+@prefix skos:		<http://www.w3.org/2004/02/skos/core#>.
+@prefix swrc:		<http://swrc.ontoware.org/ontology#>.
+@prefix types:		<http://rdfs.org/sioc/types#>.
+@prefix vcard:		<http://www.w3.org/2001/vcard-rdf/3.0#>.
+@prefix wot:		<http://xmlns.com/wot/0.1/>.
+@prefix xhtml:		<http://www.w3.org/1999/xhtml#>.
+@prefix xsd:		<http://www.w3.org/2001/XMLSchema#>.
+
+@base <http://carbonldp.com/apps/test-blog/>.
+
+<posts/> {
+	<posts/> 
+		a 				ldp:BasicContainer;
+		rdfs:label 		"Container to hold all the blog posts.";
+		ldp:contains 	
+			<posts/post-1>,
+			<posts/post-2>,
+			<posts/post-3>;
+		ldp:member
+			<posts/post-1>,
+			<posts/post-2>,
+			<posts/post-3>.
+}
+<posts/post-1> {
+	<posts/post-1>
+		a				ex:BlogPost;
+		ex:title		"Post #1";
+		ex:content		"&lt;h1&gt;One morning, when Gregor Samsa woke from troubled dreams.&lt;/h1&gt;&lt;p&gt;One morning, when Gregor Samsa woke from troubled dreams, he found himself transformed in his bed into a horrible vermin. He lay on his armour-like back, and if he lifted his head a little he could see his brown belly, slightly domed and divided by arches into stiff sections. The bedding was hardly able to cover &lt;strong&gt;strong&lt;/strong&gt; it and seemed ready to slide off any moment. His many legs, pitifully thin compared with the size of the rest of him, &lt;a class=&quot;external ext&quot; href=&quot;#&quot;&gt;link&lt;/a&gt; waved about helplessly as he looked. &quot;What's happened to me? &quot; he thought. It wasn't a dream. His room, a proper human room although a little too small, lay peacefully between its four familiar walls.&lt;/p&gt;&lt;h1&gt;One morning, when Gregor Samsa woke from troubled dreams.&lt;/h1&gt;&lt;h2&gt;The bedding was hardly able to cover it.&lt;/h2&gt;&lt;p&gt;It showed a lady fitted out with a fur hat and fur boa who sat upright, raising a heavy fur muff that covered the whole of her lower arm towards the viewer.&lt;/p&gt;&lt;h2&gt;The bedding was hardly able to cover it.&lt;/h2&gt;&lt;p&gt;It showed a lady fitted out with a fur hat and fur boa who sat upright, raising a heavy fur muff that covered the whole of her lower arm towards the viewer.&lt;/p&gt;&lt;ul&gt; &lt;li&gt;Lorem ipsum dolor sit amet consectetuer.&lt;/li&gt;&lt;li&gt;Aenean commodo ligula eget dolor.&lt;/li&gt;&lt;li&gt;Aenean massa cum sociis natoque penatibus.&lt;/li&gt;&lt;/ul&gt;&lt;p&gt;It showed a lady fitted out with a fur hat and fur boa who sat upright, raising a heavy fur muff that covered the whole of her lower arm towards the viewer.&lt;/p&gt;&lt;form action=&quot;#&quot; method=&quot;post&quot;&gt; &lt;fieldset&gt; &lt;label for=&quot;name&quot;&gt;Name:&lt;/label&gt; &lt;input type=&quot;text&quot; id=&quot;name&quot; placeholder=&quot;Enter your full name&quot;/&gt; &lt;label for=&quot;email&quot;&gt;Email:&lt;/label&gt; &lt;input type=&quot;email&quot; id=&quot;email&quot; placeholder=&quot;Enter your email address&quot;/&gt; &lt;label for=&quot;message&quot;&gt;Message:&lt;/label&gt; &lt;textarea id=&quot;message&quot; placeholder=&quot;What's on your mind?&quot;&gt;&lt;/textarea&gt; &lt;input type=&quot;submit&quot; value=&quot;Send message&quot;/&gt; &lt;/fieldset&gt;&lt;/form&gt;&lt;p&gt;It showed a lady fitted out with a fur hat and fur boa who sat upright, raising a heavy fur muff that covered the whole of her lower arm towards the viewer.&lt;/p&gt;&lt;table class=&quot;data&quot;&gt; &lt;tr&gt; &lt;th&gt;Entry Header 1&lt;/th&gt; &lt;th&gt;Entry Header 2&lt;/th&gt; &lt;th&gt;Entry Header 3&lt;/th&gt; &lt;th&gt;Entry Header 4&lt;/th&gt; &lt;/tr&gt;&lt;tr&gt; &lt;td&gt;Entry First Line 1&lt;/td&gt;&lt;td&gt;Entry First Line 2&lt;/td&gt;&lt;td&gt;Entry First Line 3&lt;/td&gt;&lt;td&gt;Entry First Line 4&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt; &lt;td&gt;Entry Line 1&lt;/td&gt;&lt;td&gt;Entry Line 2&lt;/td&gt;&lt;td&gt;Entry Line 3&lt;/td&gt;&lt;td&gt;Entry Line 4&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt; &lt;td&gt;Entry Last Line 1&lt;/td&gt;&lt;td&gt;Entry Last Line 2&lt;/td&gt;&lt;td&gt;Entry Last Line 3&lt;/td&gt;&lt;td&gt;Entry Last Line 4&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;p&gt;It showed a lady fitted out with a fur hat and fur boa who sat upright, raising a heavy fur muff that covered the whole of her lower arm towards the viewer.&lt;/p&gt;";
+		c:accessPoint	<posts/post-1/comments/>;
+		ex:comment
+			<posts/post-1/comments/aca5645b-da59-4752-9229-17d3a7d6514a>,
+			<posts/post-1/comments/6e7ad6d4-51a0-4689-8b3a-dfedb4f34497>,
+			<posts/post-1/comments/comment-with-title-1>.
+		# TODO: Add author
+}
+<posts/post-1/comments/> {
+	<posts/post-1/comments/>
+		a 						ldp:DirectContainer;
+		ldp:membershipResource 	<posts/post-1>;
+		ldp:hasMemberRelation 	ex:comment;
+		ldp:memberOfRelation	ex:post;
+		ldp:contains
+			<posts/post-1/comments/aca5645b-da59-4752-9229-17d3a7d6514a>,
+			<posts/post-1/comments/6e7ad6d4-51a0-4689-8b3a-dfedb4f34497>,
+			<posts/post-1/comments/comment-with-title-1>.
+}
+<posts/post-1/comments/aca5645b-da59-4752-9229-17d3a7d6514a> {
+	<posts/post-1/comments/aca5645b-da59-4752-9229-17d3a7d6514a>
+		a 			ex:Comment;
+		ex:post 	<posts/post-1>;
+		ex:content	"&lt;h1&gt;One morning, when Gregor Samsa woke from troubled dreams.&lt;/h1&gt;&lt;p&gt;One morning, when Gregor Samsa woke from troubled dreams, he found himself transformed in his bed into a horrible vermin. He lay on his armour-like back, and if he lifted his head a little he could see his brown belly, slightly domed and divided by arches into stiff sections. The bedding was hardly able to cover &lt;strong&gt;strong&lt;/strong&gt; it and seemed ready to slide off any moment. His many legs, pitifully thin compared with the size of the rest of him, &lt;a class=&quot;external ext&quot; href=&quot;#&quot;&gt;link&lt;/a&gt; waved about helplessly as he looked. &quot;What's happened to me? &quot; he thought. It wasn't a dream. His room, a proper human room although a little too small, lay peacefully between its four familiar walls.&lt;/p&gt;&lt;h1&gt;One morning, when Gregor Samsa woke from troubled dreams.&lt;/h1&gt;&lt;h2&gt;The bedding was hardly able to cover it.&lt;/h2&gt;&lt;p&gt;It showed a lady fitted out with a fur hat and fur boa who sat upright, raising a heavy fur muff that covered the whole of her lower arm towards the viewer.&lt;/p&gt;&lt;h2&gt;The bedding was hardly able to cover it.&lt;/h2&gt;&lt;p&gt;It showed a lady fitted out with a fur hat and fur boa who sat upright, raising a heavy fur muff that covered the whole of her lower arm towards the viewer.&lt;/p&gt;&lt;ul&gt; &lt;li&gt;Lorem ipsum dolor sit amet consectetuer.&lt;/li&gt;&lt;li&gt;Aenean commodo ligula eget dolor.&lt;/li&gt;&lt;li&gt;Aenean massa cum sociis natoque penatibus.&lt;/li&gt;&lt;/ul&gt;&lt;p&gt;It showed a lady fitted out with a fur hat and fur boa who sat upright, raising a heavy fur muff that covered the whole of her lower arm towards the viewer.&lt;/p&gt;&lt;form action=&quot;#&quot; method=&quot;post&quot;&gt; &lt;fieldset&gt; &lt;label for=&quot;name&quot;&gt;Name:&lt;/label&gt; &lt;input type=&quot;text&quot; id=&quot;name&quot; placeholder=&quot;Enter your full name&quot;/&gt; &lt;label for=&quot;email&quot;&gt;Email:&lt;/label&gt; &lt;input type=&quot;email&quot; id=&quot;email&quot; placeholder=&quot;Enter your email address&quot;/&gt; &lt;label for=&quot;message&quot;&gt;Message:&lt;/label&gt; &lt;textarea id=&quot;message&quot; placeholder=&quot;What's on your mind?&quot;&gt;&lt;/textarea&gt; &lt;input type=&quot;submit&quot; value=&quot;Send message&quot;/&gt; &lt;/fieldset&gt;&lt;/form&gt;&lt;p&gt;It showed a lady fitted out with a fur hat and fur boa who sat upright, raising a heavy fur muff that covered the whole of her lower arm towards the viewer.&lt;/p&gt;&lt;table class=&quot;data&quot;&gt; &lt;tr&gt; &lt;th&gt;Entry Header 1&lt;/th&gt; &lt;th&gt;Entry Header 2&lt;/th&gt; &lt;th&gt;Entry Header 3&lt;/th&gt; &lt;th&gt;Entry Header 4&lt;/th&gt; &lt;/tr&gt;&lt;tr&gt; &lt;td&gt;Entry First Line 1&lt;/td&gt;&lt;td&gt;Entry First Line 2&lt;/td&gt;&lt;td&gt;Entry First Line 3&lt;/td&gt;&lt;td&gt;Entry First Line 4&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt; &lt;td&gt;Entry Line 1&lt;/td&gt;&lt;td&gt;Entry Line 2&lt;/td&gt;&lt;td&gt;Entry Line 3&lt;/td&gt;&lt;td&gt;Entry Line 4&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt; &lt;td&gt;Entry Last Line 1&lt;/td&gt;&lt;td&gt;Entry Last Line 2&lt;/td&gt;&lt;td&gt;Entry Last Line 3&lt;/td&gt;&lt;td&gt;Entry Last Line 4&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;p&gt;It showed a lady fitted out with a fur hat and fur boa who sat upright, raising a heavy fur muff that covered the whole of her lower arm towards the viewer.&lt;/p&gt;".
+		# TODO: Add author
+}
+<posts/post-1/comments/6e7ad6d4-51a0-4689-8b3a-dfedb4f34497> {
+	<posts/post-1/comments/6e7ad6d4-51a0-4689-8b3a-dfedb4f34497>
+		a 			ex:Comment;
+		ex:post 	<posts/post-1>;
+		ex:content	"&lt;h1&gt;One morning, when Gregor Samsa woke from troubled dreams.&lt;/h1&gt;&lt;p&gt;One morning, when Gregor Samsa woke from troubled dreams, he found himself transformed in his bed into a horrible vermin. He lay on his armour-like back, and if he lifted his head a little he could see his brown belly, slightly domed and divided by arches into stiff sections. The bedding was hardly able to cover &lt;strong&gt;strong&lt;/strong&gt; it and seemed ready to slide off any moment. His many legs, pitifully thin compared with the size of the rest of him, &lt;a class=&quot;external ext&quot; href=&quot;#&quot;&gt;link&lt;/a&gt; waved about helplessly as he looked. &quot;What's happened to me? &quot; he thought. It wasn't a dream. His room, a proper human room although a little too small, lay peacefully between its four familiar walls.&lt;/p&gt;&lt;h1&gt;One morning, when Gregor Samsa woke from troubled dreams.&lt;/h1&gt;&lt;h2&gt;The bedding was hardly able to cover it.&lt;/h2&gt;&lt;p&gt;It showed a lady fitted out with a fur hat and fur boa who sat upright, raising a heavy fur muff that covered the whole of her lower arm towards the viewer.&lt;/p&gt;&lt;h2&gt;The bedding was hardly able to cover it.&lt;/h2&gt;&lt;p&gt;It showed a lady fitted out with a fur hat and fur boa who sat upright, raising a heavy fur muff that covered the whole of her lower arm towards the viewer.&lt;/p&gt;&lt;ul&gt; &lt;li&gt;Lorem ipsum dolor sit amet consectetuer.&lt;/li&gt;&lt;li&gt;Aenean commodo ligula eget dolor.&lt;/li&gt;&lt;li&gt;Aenean massa cum sociis natoque penatibus.&lt;/li&gt;&lt;/ul&gt;&lt;p&gt;It showed a lady fitted out with a fur hat and fur boa who sat upright, raising a heavy fur muff that covered the whole of her lower arm towards the viewer.&lt;/p&gt;&lt;form action=&quot;#&quot; method=&quot;post&quot;&gt; &lt;fieldset&gt; &lt;label for=&quot;name&quot;&gt;Name:&lt;/label&gt; &lt;input type=&quot;text&quot; id=&quot;name&quot; placeholder=&quot;Enter your full name&quot;/&gt; &lt;label for=&quot;email&quot;&gt;Email:&lt;/label&gt; &lt;input type=&quot;email&quot; id=&quot;email&quot; placeholder=&quot;Enter your email address&quot;/&gt; &lt;label for=&quot;message&quot;&gt;Message:&lt;/label&gt; &lt;textarea id=&quot;message&quot; placeholder=&quot;What's on your mind?&quot;&gt;&lt;/textarea&gt; &lt;input type=&quot;submit&quot; value=&quot;Send message&quot;/&gt; &lt;/fieldset&gt;&lt;/form&gt;&lt;p&gt;It showed a lady fitted out with a fur hat and fur boa who sat upright, raising a heavy fur muff that covered the whole of her lower arm towards the viewer.&lt;/p&gt;&lt;table class=&quot;data&quot;&gt; &lt;tr&gt; &lt;th&gt;Entry Header 1&lt;/th&gt; &lt;th&gt;Entry Header 2&lt;/th&gt; &lt;th&gt;Entry Header 3&lt;/th&gt; &lt;th&gt;Entry Header 4&lt;/th&gt; &lt;/tr&gt;&lt;tr&gt; &lt;td&gt;Entry First Line 1&lt;/td&gt;&lt;td&gt;Entry First Line 2&lt;/td&gt;&lt;td&gt;Entry First Line 3&lt;/td&gt;&lt;td&gt;Entry First Line 4&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt; &lt;td&gt;Entry Line 1&lt;/td&gt;&lt;td&gt;Entry Line 2&lt;/td&gt;&lt;td&gt;Entry Line 3&lt;/td&gt;&lt;td&gt;Entry Line 4&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt; &lt;td&gt;Entry Last Line 1&lt;/td&gt;&lt;td&gt;Entry Last Line 2&lt;/td&gt;&lt;td&gt;Entry Last Line 3&lt;/td&gt;&lt;td&gt;Entry Last Line 4&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;p&gt;It showed a lady fitted out with a fur hat and fur boa who sat upright, raising a heavy fur muff that covered the whole of her lower arm towards the viewer.&lt;/p&gt;".
+		# TODO: Add author
+}
+<posts/post-1/comments/comment-with-title-1> {
+	<posts/post-1/comments/comment-with-title-1>
+		a 			ex:Comment;
+		ex:post 	<posts/post-1>;
+		ex:title 	"Comment with title 1";
+		ex:content	"&lt;h1&gt;One morning, when Gregor Samsa woke from troubled dreams.&lt;/h1&gt;&lt;p&gt;One morning, when Gregor Samsa woke from troubled dreams, he found himself transformed in his bed into a horrible vermin. He lay on his armour-like back, and if he lifted his head a little he could see his brown belly, slightly domed and divided by arches into stiff sections. The bedding was hardly able to cover &lt;strong&gt;strong&lt;/strong&gt; it and seemed ready to slide off any moment. His many legs, pitifully thin compared with the size of the rest of him, &lt;a class=&quot;external ext&quot; href=&quot;#&quot;&gt;link&lt;/a&gt; waved about helplessly as he looked. &quot;What's happened to me? &quot; he thought. It wasn't a dream. His room, a proper human room although a little too small, lay peacefully between its four familiar walls.&lt;/p&gt;&lt;h1&gt;One morning, when Gregor Samsa woke from troubled dreams.&lt;/h1&gt;&lt;h2&gt;The bedding was hardly able to cover it.&lt;/h2&gt;&lt;p&gt;It showed a lady fitted out with a fur hat and fur boa who sat upright, raising a heavy fur muff that covered the whole of her lower arm towards the viewer.&lt;/p&gt;&lt;h2&gt;The bedding was hardly able to cover it.&lt;/h2&gt;&lt;p&gt;It showed a lady fitted out with a fur hat and fur boa who sat upright, raising a heavy fur muff that covered the whole of her lower arm towards the viewer.&lt;/p&gt;&lt;ul&gt; &lt;li&gt;Lorem ipsum dolor sit amet consectetuer.&lt;/li&gt;&lt;li&gt;Aenean commodo ligula eget dolor.&lt;/li&gt;&lt;li&gt;Aenean massa cum sociis natoque penatibus.&lt;/li&gt;&lt;/ul&gt;&lt;p&gt;It showed a lady fitted out with a fur hat and fur boa who sat upright, raising a heavy fur muff that covered the whole of her lower arm towards the viewer.&lt;/p&gt;&lt;form action=&quot;#&quot; method=&quot;post&quot;&gt; &lt;fieldset&gt; &lt;label for=&quot;name&quot;&gt;Name:&lt;/label&gt; &lt;input type=&quot;text&quot; id=&quot;name&quot; placeholder=&quot;Enter your full name&quot;/&gt; &lt;label for=&quot;email&quot;&gt;Email:&lt;/label&gt; &lt;input type=&quot;email&quot; id=&quot;email&quot; placeholder=&quot;Enter your email address&quot;/&gt; &lt;label for=&quot;message&quot;&gt;Message:&lt;/label&gt; &lt;textarea id=&quot;message&quot; placeholder=&quot;What's on your mind?&quot;&gt;&lt;/textarea&gt; &lt;input type=&quot;submit&quot; value=&quot;Send message&quot;/&gt; &lt;/fieldset&gt;&lt;/form&gt;&lt;p&gt;It showed a lady fitted out with a fur hat and fur boa who sat upright, raising a heavy fur muff that covered the whole of her lower arm towards the viewer.&lt;/p&gt;&lt;table class=&quot;data&quot;&gt; &lt;tr&gt; &lt;th&gt;Entry Header 1&lt;/th&gt; &lt;th&gt;Entry Header 2&lt;/th&gt; &lt;th&gt;Entry Header 3&lt;/th&gt; &lt;th&gt;Entry Header 4&lt;/th&gt; &lt;/tr&gt;&lt;tr&gt; &lt;td&gt;Entry First Line 1&lt;/td&gt;&lt;td&gt;Entry First Line 2&lt;/td&gt;&lt;td&gt;Entry First Line 3&lt;/td&gt;&lt;td&gt;Entry First Line 4&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt; &lt;td&gt;Entry Line 1&lt;/td&gt;&lt;td&gt;Entry Line 2&lt;/td&gt;&lt;td&gt;Entry Line 3&lt;/td&gt;&lt;td&gt;Entry Line 4&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt; &lt;td&gt;Entry Last Line 1&lt;/td&gt;&lt;td&gt;Entry Last Line 2&lt;/td&gt;&lt;td&gt;Entry Last Line 3&lt;/td&gt;&lt;td&gt;Entry Last Line 4&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;p&gt;It showed a lady fitted out with a fur hat and fur boa who sat upright, raising a heavy fur muff that covered the whole of her lower arm towards the viewer.&lt;/p&gt;".
+		# TODO: Add author
+}
+<posts/post-2> {
+	<posts/post-2>
+		a				ex:BlogPost;
+		ex:title		"Post #2";
+		ex:content		<posts/post-2#body>;
+		c:accessPoint	<posts/post-2/comments/>.
+		# TODO: Add author
+	<posts/post-2#body>
+		a				ex:BlogPostBody;
+		ex:content		"&lt;h1&gt;One morning, when Gregor Samsa woke from troubled dreams.&lt;/h1&gt;&lt;p&gt;One morning, when Gregor Samsa woke from troubled dreams, he found himself transformed in his bed into a horrible vermin. He lay on his armour-like back, and if he lifted his head a little he could see his brown belly, slightly domed and divided by arches into stiff sections. The bedding was hardly able to cover &lt;strong&gt;strong&lt;/strong&gt; it and seemed ready to slide off any moment. His many legs, pitifully thin compared with the size of the rest of him, &lt;a class=&quot;external ext&quot; href=&quot;#&quot;&gt;link&lt;/a&gt; waved about helplessly as he looked. &quot;What's happened to me? &quot; he thought. It wasn't a dream. His room, a proper human room although a little too small, lay peacefully between its four familiar walls.&lt;/p&gt;&lt;h1&gt;One morning, when Gregor Samsa woke from troubled dreams.&lt;/h1&gt;&lt;h2&gt;The bedding was hardly able to cover it.&lt;/h2&gt;&lt;p&gt;It showed a lady fitted out with a fur hat and fur boa who sat upright, raising a heavy fur muff that covered the whole of her lower arm towards the viewer.&lt;/p&gt;&lt;h2&gt;The bedding was hardly able to cover it.&lt;/h2&gt;&lt;p&gt;It showed a lady fitted out with a fur hat and fur boa who sat upright, raising a heavy fur muff that covered the whole of her lower arm towards the viewer.&lt;/p&gt;&lt;ul&gt; &lt;li&gt;Lorem ipsum dolor sit amet consectetuer.&lt;/li&gt;&lt;li&gt;Aenean commodo ligula eget dolor.&lt;/li&gt;&lt;li&gt;Aenean massa cum sociis natoque penatibus.&lt;/li&gt;&lt;/ul&gt;&lt;p&gt;It showed a lady fitted out with a fur hat and fur boa who sat upright, raising a heavy fur muff that covered the whole of her lower arm towards the viewer.&lt;/p&gt;&lt;form action=&quot;#&quot; method=&quot;post&quot;&gt; &lt;fieldset&gt; &lt;label for=&quot;name&quot;&gt;Name:&lt;/label&gt; &lt;input type=&quot;text&quot; id=&quot;name&quot; placeholder=&quot;Enter your full name&quot;/&gt; &lt;label for=&quot;email&quot;&gt;Email:&lt;/label&gt; &lt;input type=&quot;email&quot; id=&quot;email&quot; placeholder=&quot;Enter your email address&quot;/&gt; &lt;label for=&quot;message&quot;&gt;Message:&lt;/label&gt; &lt;textarea id=&quot;message&quot; placeholder=&quot;What's on your mind?&quot;&gt;&lt;/textarea&gt; &lt;input type=&quot;submit&quot; value=&quot;Send message&quot;/&gt; &lt;/fieldset&gt;&lt;/form&gt;&lt;p&gt;It showed a lady fitted out with a fur hat and fur boa who sat upright, raising a heavy fur muff that covered the whole of her lower arm towards the viewer.&lt;/p&gt;&lt;table class=&quot;data&quot;&gt; &lt;tr&gt; &lt;th&gt;Entry Header 1&lt;/th&gt; &lt;th&gt;Entry Header 2&lt;/th&gt; &lt;th&gt;Entry Header 3&lt;/th&gt; &lt;th&gt;Entry Header 4&lt;/th&gt; &lt;/tr&gt;&lt;tr&gt; &lt;td&gt;Entry First Line 1&lt;/td&gt;&lt;td&gt;Entry First Line 2&lt;/td&gt;&lt;td&gt;Entry First Line 3&lt;/td&gt;&lt;td&gt;Entry First Line 4&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt; &lt;td&gt;Entry Line 1&lt;/td&gt;&lt;td&gt;Entry Line 2&lt;/td&gt;&lt;td&gt;Entry Line 3&lt;/td&gt;&lt;td&gt;Entry Line 4&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt; &lt;td&gt;Entry Last Line 1&lt;/td&gt;&lt;td&gt;Entry Last Line 2&lt;/td&gt;&lt;td&gt;Entry Last Line 3&lt;/td&gt;&lt;td&gt;Entry Last Line 4&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;p&gt;It showed a lady fitted out with a fur hat and fur boa who sat upright, raising a heavy fur muff that covered the whole of her lower arm towards the viewer.&lt;/p&gt;";
+		ex:format		"HTML".
+		# TODO: Add author
+}
+<posts/post-2/comments/> {
+	<posts/post-2/comments/>
+		a 						ldp:DirectContainer;
+		ldp:membershipResource 	<posts/post-2>;
+		ldp:hasMemberRelation 	ex:comment;
+		ldp:memberOfRelation	ex:post.
+}
+<posts/post-3> {
+	<posts/post-3>
+		a				ex:BlogPost;
+		ex:title		"Post #3";
+		ex:content		"&lt;h1&gt;One morning, when Gregor Samsa woke from troubled dreams.&lt;/h1&gt;&lt;p&gt;One morning, when Gregor Samsa woke from troubled dreams, he found himself transformed in his bed into a horrible vermin. He lay on his armour-like back, and if he lifted his head a little he could see his brown belly, slightly domed and divided by arches into stiff sections. The bedding was hardly able to cover &lt;strong&gt;strong&lt;/strong&gt; it and seemed ready to slide off any moment. His many legs, pitifully thin compared with the size of the rest of him, &lt;a class=&quot;external ext&quot; href=&quot;#&quot;&gt;link&lt;/a&gt; waved about helplessly as he looked. &quot;What's happened to me? &quot; he thought. It wasn't a dream. His room, a proper human room although a little too small, lay peacefully between its four familiar walls.&lt;/p&gt;&lt;h1&gt;One morning, when Gregor Samsa woke from troubled dreams.&lt;/h1&gt;&lt;h2&gt;The bedding was hardly able to cover it.&lt;/h2&gt;&lt;p&gt;It showed a lady fitted out with a fur hat and fur boa who sat upright, raising a heavy fur muff that covered the whole of her lower arm towards the viewer.&lt;/p&gt;&lt;h2&gt;The bedding was hardly able to cover it.&lt;/h2&gt;&lt;p&gt;It showed a lady fitted out with a fur hat and fur boa who sat upright, raising a heavy fur muff that covered the whole of her lower arm towards the viewer.&lt;/p&gt;&lt;ul&gt; &lt;li&gt;Lorem ipsum dolor sit amet consectetuer.&lt;/li&gt;&lt;li&gt;Aenean commodo ligula eget dolor.&lt;/li&gt;&lt;li&gt;Aenean massa cum sociis natoque penatibus.&lt;/li&gt;&lt;/ul&gt;&lt;p&gt;It showed a lady fitted out with a fur hat and fur boa who sat upright, raising a heavy fur muff that covered the whole of her lower arm towards the viewer.&lt;/p&gt;&lt;form action=&quot;#&quot; method=&quot;post&quot;&gt; &lt;fieldset&gt; &lt;label for=&quot;name&quot;&gt;Name:&lt;/label&gt; &lt;input type=&quot;text&quot; id=&quot;name&quot; placeholder=&quot;Enter your full name&quot;/&gt; &lt;label for=&quot;email&quot;&gt;Email:&lt;/label&gt; &lt;input type=&quot;email&quot; id=&quot;email&quot; placeholder=&quot;Enter your email address&quot;/&gt; &lt;label for=&quot;message&quot;&gt;Message:&lt;/label&gt; &lt;textarea id=&quot;message&quot; placeholder=&quot;What's on your mind?&quot;&gt;&lt;/textarea&gt; &lt;input type=&quot;submit&quot; value=&quot;Send message&quot;/&gt; &lt;/fieldset&gt;&lt;/form&gt;&lt;p&gt;It showed a lady fitted out with a fur hat and fur boa who sat upright, raising a heavy fur muff that covered the whole of her lower arm towards the viewer.&lt;/p&gt;&lt;table class=&quot;data&quot;&gt; &lt;tr&gt; &lt;th&gt;Entry Header 1&lt;/th&gt; &lt;th&gt;Entry Header 2&lt;/th&gt; &lt;th&gt;Entry Header 3&lt;/th&gt; &lt;th&gt;Entry Header 4&lt;/th&gt; &lt;/tr&gt;&lt;tr&gt; &lt;td&gt;Entry First Line 1&lt;/td&gt;&lt;td&gt;Entry First Line 2&lt;/td&gt;&lt;td&gt;Entry First Line 3&lt;/td&gt;&lt;td&gt;Entry First Line 4&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt; &lt;td&gt;Entry Line 1&lt;/td&gt;&lt;td&gt;Entry Line 2&lt;/td&gt;&lt;td&gt;Entry Line 3&lt;/td&gt;&lt;td&gt;Entry Line 4&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt; &lt;td&gt;Entry Last Line 1&lt;/td&gt;&lt;td&gt;Entry Last Line 2&lt;/td&gt;&lt;td&gt;Entry Last Line 3&lt;/td&gt;&lt;td&gt;Entry Last Line 4&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;p&gt;It showed a lady fitted out with a fur hat and fur boa who sat upright, raising a heavy fur muff that covered the whole of her lower arm towards the viewer.&lt;/p&gt;";
+		c:accessPoint	<posts/post-3/comments/>.
+		# TODO: Add author
+}
+<posts/post-3/comments/> {
+	<posts/post-3/comments/>
+		a 						ldp:DirectContainer;
+		ldp:membershipResource 	<posts/post-3>;
+		ldp:hasMemberRelation 	ex:comment;
+		ldp:memberOfRelation	ex:post.
+}

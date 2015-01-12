@@ -73,8 +73,7 @@ public class LocalRepositoryServiceIT extends AbstractIT {
 
 				// TODO: Move these resources into a static class
 				Resource testResource = valueFactory.createURI(testResourceURI);
-				URI nameProperty = valueFactory.createURI("http://www.example.org/vocabulary#name");
-				RepositoryResult<Statement> statements = connection.getStatements(testResource, nameProperty, null, false, testResource);
+				RepositoryResult<Statement> statements = connection.getStatements(testResource, null, null, false, testResource);
 				results[2] = statements.hasNext();
 
 				return results;

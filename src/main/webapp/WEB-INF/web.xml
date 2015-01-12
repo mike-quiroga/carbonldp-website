@@ -11,13 +11,13 @@
 	<context-param>
 		<param-name>contextConfigLocation</param-name>
 		<param-value>
+			classpath*:META-INF/spring/applicationContext*.xml
 		</param-value>
 	</context-param>
-  	
-  	<listener>
+	<listener>
     	<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
   	</listener>
-  
+	
 	
 	<listener>
     	<listener-class>org.springframework.web.context.request.RequestContextListener</listener-class>
@@ -38,12 +38,5 @@
 		<servlet-name>dispatcher</servlet-name>
 		<url-pattern>/</url-pattern>
 	</servlet-mapping>
-
-	<!-- Additional mappings to the dispatcher representing additional stores 
-		here. -->
-
-	<welcome-file-list>
-		<welcome-file>dispatcher</welcome-file>
-	</welcome-file-list>
 
 </web-app>

@@ -3,8 +3,6 @@ package com.carbonldp.repository.services;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.annotation.PostConstruct;
-
 import org.openrdf.repository.Repository;
 import org.openrdf.repository.RepositoryConnection;
 import org.openrdf.repository.RepositoryException;
@@ -12,11 +10,10 @@ import org.openrdf.repository.config.RepositoryConfig;
 import org.openrdf.repository.config.RepositoryConfigException;
 import org.openrdf.repository.config.RepositoryImplConfig;
 import org.openrdf.repository.manager.RepositoryManager;
-import org.openrdf.repository.manager.RepositoryProvider;
 import org.openrdf.repository.sail.config.SailRepositoryConfig;
 import org.openrdf.sail.config.SailImplConfig;
 import org.openrdf.sail.nativerdf.config.NativeStoreConfig;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.carbonldp.AbstractService;
@@ -30,22 +27,9 @@ import com.carbonldp.repository.WriteTransactionTemplate;
 
 @Service
 public class LocalRepositoryService extends AbstractService implements RepositoryService {
+
+	@Autowired
 	private RepositoryManager manager;
-
-	@Value("${repositories.directory}")
-	private String directory;
-
-	@PostConstruct
-	public void init() {
-		try {
-			manager = RepositoryProvider.getRepositoryManager(directory);
-		} catch (RepositoryConfigException | RepositoryException e) {
-			if ( LOG.isErrorEnabled() ) {
-				LOG.error("xx init() > The manager of the directory: '{}', couldn't be retrieved.", directory);
-			}
-			throw new RepositoryRuntimeException(0x0002, e);
-		}
-	}
 
 	@Override
 	public void createRepository(String repositoryID) {

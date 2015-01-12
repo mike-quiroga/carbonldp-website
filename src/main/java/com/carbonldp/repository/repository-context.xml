@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+    xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/beans 
+		http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context 
+        http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/tx
+        http://www.springframework.org/schema/tx/spring-tx.xsd
+        http://www.springframework.org/schema/aop
+        http://www.springframework.org/schema/aop/spring-aop.xsd
+	">
+	
+	<context:annotation-config/>
+	<context:component-scan base-package="org.openrdf.spring"/>
+	<tx:annotation-driven transaction-manager="transactionManager"/>
+	
+	<bean id="repositoryManager" class="org.openrdf.repository.manager.LocalRepositoryManager"
+	      init-method="initialize" destroy-method="shutDown">
+	    <constructor-arg>
+	        <bean class="java.io.File">
+	            <constructor-arg value="${repositories.directory}"/>
+	        </bean>
+	    </constructor-arg>
+	</bean>
+	
+	<!-- <bean name="connectionFactory" class="org.openrdf.spring.DynamicRepositoryManagerConnectionFactory" scope="prototype"> -->
+	<bean name="connectionFactory" class="org.openrdf.spring.DynamicRepositoryManagerConnectionFactory">
+	    <constructor-arg ref="repositoryManager"/>
+	    <constructor-arg ref="repositoryIDProvider" />
+	</bean>
+	
+	<!-- <bean id="repositoryIDProvider" class="com.carbonldp.repository.RepositoryIDProvider" scope="prototype"></bean> -->
+	<bean id="repositoryIDProvider" class="com.carbonldp.repository.RepositoryIDProvider"></bean>
+	
+	<bean id="transactionManager" class="org.openrdf.spring.SesameTransactionManager">
+	    <constructor-arg ref="connectionFactory"/>
+	</bean>
+
+	<!-- ====== Transactional Services ====== -->
+	<bean id="rdfDocumentService" class="com.carbonldp.repository.services.RDFDocumentService"></bean>
+	<!-- ====== Services ====== -->
+</beans>
