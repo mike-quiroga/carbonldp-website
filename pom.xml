@@ -193,6 +193,21 @@
 			<scope>test</scope>
 		</dependency>
 		<!-- ====== End: Testing ====== -->
+		
+		<!-- ====== Local Projects ====== -->
+		<dependency>
+			<groupId>com.carbonldp</groupId>
+			<artifactId>carbon-commons</artifactId>
+			<version>0.0.1</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.openrdf.sesame</groupId>
+			<artifactId>sesame-spring</artifactId>
+			<version>2.7.14</version>
+			<scope>compile</scope>
+		</dependency>
+		<!-- ====== End: Local Projects ====== -->
 	</dependencies>
 	<build>
 		<resources>
