@@ -23,6 +23,7 @@
 	<!-- Scan for components using annotations -->
 	<context:component-scan base-package="com.carbonldp" use-default-filters="false">
 	    <context:include-filter expression="org.springframework.stereotype.Controller" type="annotation" />
+	    <context:include-filter expression="com.carbonldp.web.RequestHandler" type="annotation"/>
 	</context:component-scan>
 	
 	<mvc:annotation-driven content-negotiation-manager="contentNegotiationManager">

@@ -19,18 +19,20 @@
 	<context:component-scan base-package="org.openrdf.spring"/>
 	<tx:annotation-driven transaction-manager="transactionManager"/>
 	
+	<!-- ====== Applications Context ====== -->
+	<!-- === Application Repositories Configuration === -->
 	<bean id="repositoryManager" class="org.openrdf.repository.manager.LocalRepositoryManager"
 	      init-method="initialize" destroy-method="shutDown">
 	    <constructor-arg>
 	        <bean class="java.io.File">
-	            <constructor-arg value="${repositories.directory}"/>
+	            <constructor-arg value="${repositories.directory}" />
 	        </bean>
 	    </constructor-arg>
 	</bean>
 	
 	<!-- <bean name="connectionFactory" class="org.openrdf.spring.DynamicRepositoryManagerConnectionFactory" scope="prototype"> -->
 	<bean name="connectionFactory" class="org.openrdf.spring.DynamicRepositoryManagerConnectionFactory">
-	    <constructor-arg ref="repositoryManager"/>
+	    <constructor-arg ref="repositoryManager" />
 	    <constructor-arg ref="repositoryIDProvider" />
 	</bean>
 	
@@ -38,10 +40,44 @@
 	<bean id="repositoryIDProvider" class="com.carbonldp.repository.RepositoryIDProvider"></bean>
 	
 	<bean id="transactionManager" class="org.openrdf.spring.SesameTransactionManager">
-	    <constructor-arg ref="connectionFactory"/>
+	    <constructor-arg ref="connectionFactory" />
 	</bean>
-
-	<!-- ====== Transactional Services ====== -->
-	<bean id="rdfDocumentService" class="com.carbonldp.repository.services.RDFDocumentService"></bean>
-	<!-- ====== Services ====== -->
+	<!-- === End: Application Repositories Configuration === -->
+	
+	<!-- === Application Services === -->
+	<bean id="rdfDocumentService" class="com.carbonldp.repository.services.RDFDocumentService" scope="prototype">
+		<constructor-arg ref="connectionFactory" />
+	</bean>
+	<!-- === End: Application Services === -->
+	<!-- ====== End: Applications Context ====== -->
+	
+	<!-- ====== Platform Context ====== -->
+	<!-- === Platform Repository Configuration === -->
+	<bean id="platformRepository" class="org.openrdf.repository.sail.SailRepository" init-method="initialize">
+		<constructor-arg>
+			<bean id="platformStore" class="org.openrdf.sail.nativerdf.NativeStore">
+				<constructor-arg>
+					<bean class="java.io.File">
+						<constructor-arg value="${repositories.platform.directory}" />
+					</bean>
+				</constructor-arg>
+			</bean>
+		</constructor-arg>
+	</bean>
+	<bean id="platformConnectionFactory" class="org.openrdf.spring.RepositoryConnectionFactory">
+		<constructor-arg ref="platformRepository" />
+	</bean>
+	<bean id="platformTransactionManager" class="org.openrdf.spring.SesameTransactionManager">
+		<constructor-arg ref="platformConnectionFactory" />
+	</bean>
+	<!-- === End: Platform Repository Configuration === -->
+	
+	<!-- === Platform Services === -->
+	<bean id="agentService" class="com.carbonldp.agents.AgentService">
+		<constructor-arg ref="platformConnectionFactory" />
+	</bean>
+	<!-- === End: Platform Services === -->
+	
+	<!-- ====== End: Platform Context ====== -->
+	
 </beans>

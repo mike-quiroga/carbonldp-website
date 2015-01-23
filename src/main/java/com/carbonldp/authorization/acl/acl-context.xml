@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans.xsd
+">
+
+	<!-- ====== ACLs ====== -->
+	<!-- === ACL Expression Handler === -->
+	<bean id="expressionHandler" class="org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler">
+		<property name="permissionEvaluator" ref="permissionEvaluator" />
+		<!--
+			Add Cache Optimizer
+			<property name="permissionCacheOptimizer">
+	            <bean class="org.springframework.security.acls.AclPermissionCacheOptimizer">
+	                <constructor-arg ref="aclService"/>
+	            </bean>
+	        </property>
+		-->
+	</bean>
+	<!-- === End: ACL Expression Handler === -->
+	<!-- === End: ACL Permission Evaluator === -->
+	<bean id="permissionEvaluator" class="com.carbonldp.authorization.acl.CarbonPermissionEvaluator"></bean>
+	<!-- === End: ACL Permission Evaluator === -->
+	<!-- === ACL Service === -->
+	<bean id="sesameACLService" class="com.carbonldp.authorization.acl.SesameACLService" scope="prototype"></bean>
+	<!-- === End: ACL Service === -->
+	<!-- ====== End: ACLs ====== -->
+</beans>

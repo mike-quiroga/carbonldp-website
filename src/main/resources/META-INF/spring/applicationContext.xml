@@ -15,7 +15,7 @@
         http://www.springframework.org/schema/aop/spring-aop.xsd
 	">
 	
-	<bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+	<bean class="org.springframework.context.support.PropertySourcesPlaceholderConfigurer">
 		<property name="ignoreUnresolvablePlaceholders" value="true" />
 		<property name="locations">
 			<list>
@@ -25,9 +25,14 @@
 		</property>
 	</bean>
 	
+	<import resource="classpath:com/carbonldp/security/security-context.xml" />
+	<import resource="classpath:com/carbonldp/authentication/authentication-context.xml" />
+	<import resource="classpath:com/carbonldp/authorization/authorization-context.xml" />
+	<import resource="classpath:com/carbonldp/authorization/acl/acl-context.xml" />
 	<import resource="classpath:com/carbonldp/repository/repository-context.xml" />
 	
 	<context:component-scan base-package="com.carbonldp">
 	    <context:exclude-filter expression="org.springframework.stereotype.Controller" type="annotation"/>
+	    <context:exclude-filter expression="com.carbonldp.web.RequestHandler" type="annotation"/>
 	</context:component-scan>
 </beans>
