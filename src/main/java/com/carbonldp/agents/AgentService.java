@@ -6,9 +6,7 @@ import static com.carbonldp.commons.Consts.TAB;
 import org.openrdf.model.URI;
 import org.openrdf.spring.SesameConnectionFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.access.prepost.PreAuthorize;
 
-import com.carbonldp.authentication.RunWith;
 import com.carbonldp.repository.services.AbstractSesameService;
 
 public class AgentService extends AbstractSesameService {
@@ -38,8 +36,6 @@ public class AgentService extends AbstractSesameService {
 		findByEmailQuery = queryBuilder.toString();
 	}
 
-	@RunWith(roles = { "SYSTEM" })
-	@PreAuthorize("")
 	public Agent findByEmail(String email) {
 		return null;
 	}

@@ -1,4 +1,4 @@
-package com.carbonldp.repository.services;
+package com.carbonldp.test.repository.services;
 
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
