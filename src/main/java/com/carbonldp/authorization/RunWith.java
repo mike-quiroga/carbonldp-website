@@ -1,4 +1,4 @@
-package com.carbonldp.authentication;
+package com.carbonldp.authorization;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

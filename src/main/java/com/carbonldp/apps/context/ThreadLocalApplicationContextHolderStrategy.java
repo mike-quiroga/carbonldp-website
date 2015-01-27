@@ -19,10 +19,7 @@ public final class ThreadLocalApplicationContextHolderStrategy implements Applic
 	public ApplicationContext getContext() {
 		ApplicationContext context = contextHolder.get();
 
-		if ( context == null ) {
-			context = createEmptyContext();
-			contextHolder.set(context);
-		}
+		if ( context == null ) context = createEmptyContext();
 
 		return context;
 	}
@@ -33,6 +30,8 @@ public final class ThreadLocalApplicationContextHolderStrategy implements Applic
 	}
 
 	public ApplicationContext createEmptyContext() {
-		return new ApplicationContext();
+		ApplicationContext context = new ApplicationContext();
+		contextHolder.set(context);
+		return context;
 	}
 }

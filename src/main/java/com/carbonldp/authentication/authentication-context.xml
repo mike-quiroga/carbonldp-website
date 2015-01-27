@@ -13,14 +13,12 @@
 	
 
 	<security:authentication-manager alias="authenticationManager">
-		<security:authentication-provider ref="runAsAuthenticationProvider" />
 		<security:authentication-provider ref="sesameUsernamePasswordAuthenticationProvider" />
 	</security:authentication-manager>
-	
+		
 	<!-- ====== REST API Authentication ====== -->
 	<!-- === Basic Authentication === -->
-	<bean id="restAPIBasicAuthenticationProcessingFilter"
-		class="org.springframework.security.web.authentication.www.BasicAuthenticationFilter">
+	<bean id="restAPIBasicAuthenticationProcessingFilter" class="org.springframework.security.web.authentication.www.BasicAuthenticationFilter">
 		<constructor-arg ref="authenticationManager" />
 		<constructor-arg ref="restAPIBasicAuthenticationEntryPoint" />
 	</bean>
@@ -33,18 +31,8 @@
 	
 	<!-- ====== Authentication Providers ====== -->
 	<!-- === Username/Password Sesame === -->
-	<bean id="sesameUsernamePasswordAuthenticationProvider" class="com.carbonldp.authentication.SesameUsernamePasswordAuthenticationProvider" init-method="init">
-		<constructor-arg ref="agentService" />
-	</bean>
+	<bean id="sesameUsernamePasswordAuthenticationProvider" class="com.carbonldp.authentication.SesameUsernamePasswordAuthenticationProvider" init-method="init"></bean>
 	<!-- === End: Username/Password Sesame Provider === -->
-	<!-- === Run-As === -->
-	<bean id="runAsManager" class="com.carbonldp.authentication.AnnotationBasedRunAsManager">
-		<property name="key" value="QAARcZJiUSCHXzPzLnvI" />
-	</bean>
-	<bean id="runAsAuthenticationProvider" class="org.springframework.security.access.intercept.RunAsImplAuthenticationProvider">
-		<property name="key" value="QAARcZJiUSCHXzPzLnvI" />
-	</bean>
-	<!-- === End: Run-As === -->
 	<!-- === Anonymous === -->
 	<bean id="anonymousAuthenticationProcessingFilter" class="org.springframework.security.web.authentication.AnonymousAuthenticationFilter">
 		<constructor-arg value="pNuuj24Tr7pYv5j6I7mn" />

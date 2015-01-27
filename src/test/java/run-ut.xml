@@ -9,7 +9,7 @@
 		</groups>
 	
 		<packages>
-			<package name="com.carbonldp.*"/>
+			<package name="com.carbonldp.test.*"/>
 		</packages>
 	</test>
 </suite>

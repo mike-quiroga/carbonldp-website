@@ -18,7 +18,7 @@ import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
-import com.carbonldp.repository.RepositoryIDProvider;
+import com.carbonldp.repository.ApplicationContextRepositoryIDProvider;
 import com.carbonldp.repository.WriteTransactionCallback;
 import com.carbonldp.repository.WriteTransactionTemplate;
 import com.carbonldp.repository.services.RDFDocumentService;
@@ -36,7 +36,7 @@ public abstract class AbstractIT extends AbstractTestNGSpringContextTests {
 	@Autowired
 	protected RepositoryService repositoryService;
 	@Autowired
-	protected RepositoryIDProvider repositoryIDProvider;
+	protected ApplicationContextRepositoryIDProvider repositoryIDProvider;
 	@Autowired
 	protected RDFDocumentService rdfDocumentService;
 

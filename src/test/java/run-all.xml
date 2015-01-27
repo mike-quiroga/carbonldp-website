@@ -3,7 +3,7 @@
 <suite name="carbon-platform - All Tests" verbose="1" >
   <test name="All Tests">
     <packages>
-      <package name="com.carbonldp.*" />
+      <package name="com.carbonldp.test.*" />
    </packages>
  </test>
 </suite>

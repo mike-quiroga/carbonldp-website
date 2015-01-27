@@ -1,19 +1,19 @@
 package com.carbonldp.authentication;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 
+import com.carbonldp.agents.Agent;
 import com.carbonldp.agents.AgentService;
+import com.carbonldp.authorization.RunWith;
 
 public class SesameUsernamePasswordAuthenticationProvider extends AbstractAuthenticationProvider {
 
-	private final AgentService agentService;
-
-	public SesameUsernamePasswordAuthenticationProvider(AgentService agentService) {
-		this.agentService = agentService;
-	}
+	@Autowired
+	private AgentService agentService;
 
 	public void init() {
 		if ( LOG.isTraceEnabled() ) {
@@ -21,6 +21,7 @@ public class SesameUsernamePasswordAuthenticationProvider extends AbstractAuthen
 		}
 	}
 
+	@RunWith(roles = { "ROLE_SYSTEM" })
 	public Authentication authenticate(Authentication authentication) throws AuthenticationException {
 		Object rawPrincipal = authentication.getPrincipal();
 		Object rawCredentials = authentication.getCredentials();
@@ -36,8 +37,11 @@ public class SesameUsernamePasswordAuthenticationProvider extends AbstractAuthen
 			throw new BadCredentialsException("Wrong credentials");
 		}
 
-		agentService.findByEmail("some-email");
+		Agent agent = agentService.findByEmail(username);
 
+		if ( agent == null ) {
+			throw new BadCredentialsException("Wrong credentials");
+		}
 		// TODO: Find agent based on the username (email)
 		// TODO: Hash password and compare it with the one stored
 		// TODO: Create the AuthenticationToken

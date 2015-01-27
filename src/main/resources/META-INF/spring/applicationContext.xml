@@ -25,6 +25,8 @@
 		</property>
 	</bean>
 	
+	<aop:aspectj-autoproxy />
+	
 	<import resource="classpath:com/carbonldp/security/security-context.xml" />
 	<import resource="classpath:com/carbonldp/apps/context/app-context.xml" />
 	<import resource="classpath:com/carbonldp/authentication/authentication-context.xml" />

@@ -13,4 +13,9 @@ public class Application extends RDFDocument {
 		super(base, context);
 	}
 
+	public String getRepositoryID() {
+		// TODO
+		return null;
+	}
+
 }
