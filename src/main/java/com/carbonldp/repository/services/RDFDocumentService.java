@@ -20,7 +20,6 @@ import org.openrdf.query.QueryLanguage;
 import org.openrdf.repository.RepositoryConnection;
 import org.openrdf.repository.RepositoryException;
 import org.openrdf.repository.RepositoryResult;
-import org.openrdf.spring.SesameConnectionFactory;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.carbonldp.commons.models.RDFDocument;
@@ -30,10 +29,6 @@ import com.carbonldp.repository.RepositoryRuntimeException;
 
 //@Service("rdfDocumentService")
 public class RDFDocumentService extends AbstractSesameService {
-
-	public RDFDocumentService(SesameConnectionFactory connectionFactory) {
-		super(connectionFactory);
-	}
 
 	private static final String documentExistsQuery;
 	static {

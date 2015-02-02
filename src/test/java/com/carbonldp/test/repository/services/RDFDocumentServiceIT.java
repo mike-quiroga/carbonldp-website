@@ -1,8 +1,5 @@
 package com.carbonldp.test.repository.services;
 
-import static org.testng.Assert.assertTrue;
-
-import org.openrdf.model.impl.URIImpl;
 import org.testng.annotations.Test;
 
 import com.carbonldp.test.AbstractIT;
@@ -30,8 +27,7 @@ public class RDFDocumentServiceIT extends AbstractIT {
 
 	@Test
 	public void documentExists() {
-		repositoryIDProvider.setRepositoryID(testRepositoryID);
-		assertTrue(rdfDocumentService.documentExists(new URIImpl(testResourceURI)));
+
 	}
 
 	@Test

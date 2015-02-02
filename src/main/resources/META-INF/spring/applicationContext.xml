@@ -15,18 +15,9 @@
         http://www.springframework.org/schema/aop/spring-aop.xsd
 	">
 	
-	<bean class="org.springframework.context.support.PropertySourcesPlaceholderConfigurer">
-		<property name="ignoreUnresolvablePlaceholders" value="true" />
-		<property name="locations">
-			<list>
-				<value>classpath:config.properties</value>
-				<value>classpath:error-codes.properties</value>
-			</list>
-		</property>
-	</bean>
-	
 	<aop:aspectj-autoproxy />
 	
+	<import resource="classpath:com/carbonldp/config-context.xml" />
 	<import resource="classpath:com/carbonldp/security/security-context.xml" />
 	<import resource="classpath:com/carbonldp/apps/context/app-context.xml" />
 	<import resource="classpath:com/carbonldp/authentication/authentication-context.xml" />

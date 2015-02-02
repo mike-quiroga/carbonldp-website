@@ -13,16 +13,15 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 
+import com.carbonldp.AbstractAspect;
 import com.carbonldp.authentication.TemporaryAuthorizationToken;
 
 @Aspect
-public class SecurityContextExchanger {
+public class SecurityContextExchanger extends AbstractAspect {
 
 	protected final Logger LOG = LoggerFactory.getLogger(this.getClass());
 
-	// TODO: Add a kinded and a scoping designators to improve performance
-	// See http://docs.spring.io/spring/docs/current/spring-framework-reference/html/aop.html#writing-good-pointcuts
-	@Before("@annotation(runWith)")
+	@Before("inCarbonLDPPackage() && @annotation(runWith)")
 	public void exchangeSecurityContext(RunWith runWith) {
 		if ( LOG.isTraceEnabled() ) {
 			LOG.trace(">> exchangeSecurityContext()");
@@ -43,9 +42,7 @@ public class SecurityContextExchanger {
 		}
 	}
 
-	// TODO: Add a kinded and a scoping designators to improve performance
-	// See http://docs.spring.io/spring/docs/current/spring-framework-reference/html/aop.html#writing-good-pointcuts
-	@After("@annotation(runWith)")
+	@After("inCarbonLDPPackage() && @annotation(runWith)")
 	public void restoreSecurityContext(RunWith runWith) {
 		if ( LOG.isTraceEnabled() ) {
 			LOG.trace(">> restoreSecurityContext()");

@@ -4,7 +4,6 @@ import static com.carbonldp.commons.Consts.NEW_LINE;
 import static com.carbonldp.commons.Consts.TAB;
 
 import org.openrdf.model.URI;
-import org.openrdf.spring.SesameConnectionFactory;
 import org.springframework.beans.factory.annotation.Value;
 
 import com.carbonldp.repository.services.AbstractSesameService;
@@ -13,10 +12,6 @@ public class AgentService extends AbstractSesameService {
 
 	@Value("${platform.agents.container}")
 	private String agentContainerURI;
-
-	public AgentService(SesameConnectionFactory connectionFactory) {
-		super(connectionFactory);
-	}
 
 	private static final String findByEmailQuery;
 	static {

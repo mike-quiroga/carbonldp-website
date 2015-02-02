@@ -18,6 +18,6 @@
 		</constructor-arg>
 	</bean>
 	
-	<bean id="applicationService" class="com.carbonldp.apps.ApplicationService"></bean>
-
+	<bean class="com.carbonldp.apps.context.ApplicationContextExchanger"></bean>
+	
 </beans>

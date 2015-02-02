@@ -1,6 +1,5 @@
 package com.carbonldp.apps.context;
 
-
 public interface ApplicationContextHolderStrategy {
 	public void clearContext();
 

@@ -1,13 +1,12 @@
 package com.carbonldp.repository.services;
 
 import org.openrdf.spring.SesameConnectionFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.carbonldp.AbstractService;
 
 public abstract class AbstractSesameService extends AbstractService {
-	protected final SesameConnectionFactory connectionFactory;
 
-	public AbstractSesameService(SesameConnectionFactory connectionFactory) {
-		this.connectionFactory = connectionFactory;
-	}
+	@Autowired
+	protected SesameConnectionFactory connectionFactory;
 }

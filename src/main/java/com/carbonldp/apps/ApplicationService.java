@@ -1,5 +1,7 @@
 package com.carbonldp.apps;
 
-public class ApplicationService {
+import com.carbonldp.repository.services.AbstractSesameService;
+
+public class ApplicationService extends AbstractSesameService {
 
 }
