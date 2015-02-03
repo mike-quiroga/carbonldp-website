@@ -64,6 +64,7 @@ public class Install {
 		return repository;
 	}
 
+	// TODO: Instead of loading a file, build the resources dynamically
 	private void loadDefaultResourcesfile(Repository repository, String resourcesFile, String baseURI) {
 		InputStream inputStream = getClass().getClassLoader().getResourceAsStream(resourcesFile);
 

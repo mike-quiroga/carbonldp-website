@@ -17,10 +17,10 @@ import org.testng.annotations.Test;
 
 import com.carbonldp.commons.utils.LiteralUtil;
 import com.carbonldp.commons.utils.ValueUtil;
-import com.carbonldp.repository.ReadTransactionCallback;
-import com.carbonldp.repository.ReadTransactionTemplate;
-import com.carbonldp.repository.WriteTransactionCallback;
-import com.carbonldp.repository.WriteTransactionTemplate;
+import com.carbonldp.repository.sesame.ReadTransactionCallback;
+import com.carbonldp.repository.sesame.ReadTransactionTemplate;
+import com.carbonldp.repository.sesame.WriteTransactionCallback;
+import com.carbonldp.repository.sesame.WriteTransactionTemplate;
 import com.carbonldp.test.AbstractIT;
 
 public class LocalRepositoryServiceIT extends AbstractIT {

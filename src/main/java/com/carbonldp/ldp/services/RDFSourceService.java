@@ -1,11 +1,23 @@
 package com.carbonldp.ldp.services;
 
-import org.springframework.context.annotation.Scope;
-import org.springframework.context.annotation.ScopedProxyMode;
-import org.springframework.stereotype.Service;
+import org.joda.time.DateTime;
+import org.openrdf.model.URI;
 
-@Service("rdfSourceService")
-@Scope(proxyMode = ScopedProxyMode.TARGET_CLASS, value = "request")
-public class RDFSourceService extends AbstractLDPService {
+import com.carbonldp.commons.models.Container;
+import com.carbonldp.commons.models.RDFSource;
 
+public interface RDFSourceService {
+	public RDFSource exists(URI sourceURI);
+
+	public RDFSource get(URI sourceURI);
+
+	public DateTime touch(URI sourceURI);
+
+	public DateTime touch(URI sourceURI, DateTime modified);
+
+	public void addAccessPoint(URI sourceURI, Container accessPoint);
+
+	public void update(RDFSource source);
+
+	public void delete(URI sourceURI);
 }

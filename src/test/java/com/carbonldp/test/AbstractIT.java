@@ -18,11 +18,11 @@ import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
-import com.carbonldp.repository.ApplicationContextRepositoryIDProvider;
-import com.carbonldp.repository.WriteTransactionCallback;
-import com.carbonldp.repository.WriteTransactionTemplate;
-import com.carbonldp.repository.services.RDFDocumentService;
-import com.carbonldp.repository.services.RepositoryService;
+import com.carbonldp.repository.sesame.ApplicationContextRepositoryIDProvider;
+import com.carbonldp.repository.sesame.WriteTransactionCallback;
+import com.carbonldp.repository.sesame.WriteTransactionTemplate;
+import com.carbonldp.repository.sesame.services.SesameRDFDocumentRepository;
+import com.carbonldp.repository.sesame.services.RepositoryService;
 
 @Test(groups = "integration-tests")
 //@formatter:off
@@ -38,7 +38,7 @@ public abstract class AbstractIT extends AbstractTestNGSpringContextTests {
 	@Autowired
 	protected ApplicationContextRepositoryIDProvider repositoryIDProvider;
 	@Autowired
-	protected RDFDocumentService rdfDocumentService;
+	protected SesameRDFDocumentRepository rdfDocumentService;
 
 	protected final String testRepositoryID = "test-blog";
 	protected final String testResourceURI = "http://carbonldp.com/apps/test-blog/posts/";

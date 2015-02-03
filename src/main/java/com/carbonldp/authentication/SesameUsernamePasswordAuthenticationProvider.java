@@ -1,6 +1,5 @@
 package com.carbonldp.authentication;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -12,8 +11,11 @@ import com.carbonldp.authorization.RunWith;
 
 public class SesameUsernamePasswordAuthenticationProvider extends AbstractAuthenticationProvider {
 
-	@Autowired
-	private AgentService agentService;
+	private final AgentService agentService;
+
+	public SesameUsernamePasswordAuthenticationProvider(AgentService agentService) {
+		this.agentService = agentService;
+	}
 
 	public void init() {
 		if ( LOG.isTraceEnabled() ) {
