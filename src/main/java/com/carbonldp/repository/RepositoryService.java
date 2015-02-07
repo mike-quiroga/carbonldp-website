@@ -1,7 +1,7 @@
-package com.carbonldp.repository.sesame.services;
+package com.carbonldp.repository;
 
-import com.carbonldp.repository.sesame.ReadTransactionTemplate;
-import com.carbonldp.repository.sesame.WriteTransactionTemplate;
+import com.carbonldp.repository.txn.ReadTransactionTemplate;
+import com.carbonldp.repository.txn.WriteTransactionTemplate;
 
 public interface RepositoryService {
 	public void createRepository(String repositoryID);

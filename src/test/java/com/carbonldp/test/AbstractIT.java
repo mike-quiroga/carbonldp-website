@@ -18,11 +18,11 @@ import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
-import com.carbonldp.repository.sesame.ApplicationContextRepositoryIDProvider;
-import com.carbonldp.repository.sesame.WriteTransactionCallback;
-import com.carbonldp.repository.sesame.WriteTransactionTemplate;
-import com.carbonldp.repository.sesame.services.SesameRDFDocumentRepository;
-import com.carbonldp.repository.sesame.services.RepositoryService;
+import com.carbonldp.repository.RepositoryService;
+import com.carbonldp.repository.SesameRDFDocumentRepository;
+import com.carbonldp.repository.txn.ApplicationContextRepositoryIDProvider;
+import com.carbonldp.repository.txn.WriteTransactionCallback;
+import com.carbonldp.repository.txn.WriteTransactionTemplate;
 
 @Test(groups = "integration-tests")
 //@formatter:off

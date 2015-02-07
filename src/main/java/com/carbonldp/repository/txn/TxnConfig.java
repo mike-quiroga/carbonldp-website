@@ -1,4 +1,4 @@
-package com.carbonldp.repository;
+package com.carbonldp.repository.txn;
 
 import java.io.File;
 
@@ -18,7 +18,6 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import com.carbonldp.ConfigurationRepository;
-import com.carbonldp.repository.sesame.ApplicationContextConnectionFactory;
 
 @Configuration
 @ComponentScan("org.openrdf.spring")

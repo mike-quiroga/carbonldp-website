@@ -15,7 +15,7 @@ import org.openrdf.sail.nativerdf.NativeStore;
 
 public class Install {
 
-	public static String propertiesFile = "config.properties";
+	public static String propertiesFile = "local-config.properties";
 	public static String defaultResourcesFile = "platform-default.trig";
 
 	public static void main(String[] args) {

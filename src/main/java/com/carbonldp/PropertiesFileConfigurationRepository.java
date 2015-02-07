@@ -2,7 +2,7 @@ package com.carbonldp;
 
 import org.springframework.beans.factory.annotation.Value;
 
-public class PropertiesFileConfigurationRepository extends AbstractService implements ConfigurationRepository {
+public class PropertiesFileConfigurationRepository extends AbstractComponent implements ConfigurationRepository {
 
 	@Value("${repositories.apps.directory}")
 	private String appsRepositoryDirectory;

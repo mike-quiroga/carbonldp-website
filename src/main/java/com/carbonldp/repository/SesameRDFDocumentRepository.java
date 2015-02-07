@@ -1,4 +1,4 @@
-package com.carbonldp.repository.sesame.services;
+package com.carbonldp.repository;
 
 import static com.carbonldp.commons.Consts.NEW_LINE;
 import static com.carbonldp.commons.Consts.TAB;
@@ -26,12 +26,10 @@ import org.springframework.transaction.annotation.Transactional;
 import com.carbonldp.commons.models.RDFDocument;
 import com.carbonldp.commons.utils.RDFDocumentUtil;
 import com.carbonldp.exceptions.StupidityException;
-import com.carbonldp.repository.RDFDocumentRepository;
-import com.carbonldp.repository.sesame.AbstractSesameService;
-import com.carbonldp.repository.sesame.RepositoryRuntimeException;
+import com.carbonldp.repository.txn.RepositoryRuntimeException;
 
 @Transactional
-public class SesameRDFDocumentRepository extends AbstractSesameService implements RDFDocumentRepository {
+public class SesameRDFDocumentRepository extends AbstractSesameRepository implements RDFDocumentRepository {
 
 	public SesameRDFDocumentRepository(SesameConnectionFactory connectionFactory) {
 		super(connectionFactory);

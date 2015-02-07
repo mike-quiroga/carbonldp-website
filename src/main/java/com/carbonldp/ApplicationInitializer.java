@@ -51,9 +51,9 @@ public class ApplicationInitializer implements WebApplicationInitializer {
 		//@formatter:off
 		rootContext.register(
 			ConfigurationConfig.class,
-			AppContextConfig.class,
 			SecurityConfig.class,
-			RepositoryConfig.class
+			RepositoryConfig.class,
+			AppContextConfig.class
 		);
 		//@formatter:on
 		return rootContext;

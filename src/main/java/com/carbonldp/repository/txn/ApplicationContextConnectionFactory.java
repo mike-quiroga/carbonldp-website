@@ -1,4 +1,4 @@
-package com.carbonldp.repository.sesame;
+package com.carbonldp.repository.txn;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;

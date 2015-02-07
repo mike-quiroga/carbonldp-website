@@ -1,4 +1,4 @@
-package com.carbonldp.repository.sesame.services;
+package com.carbonldp.repository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,17 +16,17 @@ import org.openrdf.sail.nativerdf.config.NativeStoreConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.carbonldp.AbstractService;
+import com.carbonldp.AbstractComponent;
 import com.carbonldp.commons.exceptions.CarbonRuntimeException;
-import com.carbonldp.repository.sesame.ReadOnlyRepositoryConnection;
-import com.carbonldp.repository.sesame.ReadTransactionCallback;
-import com.carbonldp.repository.sesame.ReadTransactionTemplate;
-import com.carbonldp.repository.sesame.RepositoryRuntimeException;
-import com.carbonldp.repository.sesame.WriteTransactionCallback;
-import com.carbonldp.repository.sesame.WriteTransactionTemplate;
+import com.carbonldp.repository.txn.ReadOnlyRepositoryConnection;
+import com.carbonldp.repository.txn.ReadTransactionCallback;
+import com.carbonldp.repository.txn.ReadTransactionTemplate;
+import com.carbonldp.repository.txn.RepositoryRuntimeException;
+import com.carbonldp.repository.txn.WriteTransactionCallback;
+import com.carbonldp.repository.txn.WriteTransactionTemplate;
 
 @Service
-public class LocalRepositoryService extends AbstractService implements RepositoryService {
+public class LocalRepositoryService extends AbstractComponent implements RepositoryService {
 
 	@Autowired
 	private RepositoryManager manager;

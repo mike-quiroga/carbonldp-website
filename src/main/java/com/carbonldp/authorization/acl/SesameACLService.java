@@ -1,7 +1,7 @@
 package com.carbonldp.authorization.acl;
 
-import com.carbonldp.AbstractService;
+import com.carbonldp.AbstractComponent;
 
-public class SesameACLService extends AbstractService {
+public class SesameACLService extends AbstractComponent {
 
 }

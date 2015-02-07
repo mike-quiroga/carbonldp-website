@@ -19,11 +19,15 @@ public abstract class AbstractWebSecurityConfigurerAdapter extends WebSecurityCo
 	@Qualifier("basicAuthenticationEntryPoint")
 	protected AuthenticationEntryPoint basicAuthenticationEntryPoint;
 
-	@Autowired
 	protected AppContextPersistanceFilter appContextPersistanceFilter;
 
 	protected AbstractWebSecurityConfigurerAdapter() {
 		super(true);
+	}
+
+	@Autowired
+	public void setAppContextPersistanceFilter(AppContextPersistanceFilter appContextPersistanceFilter) {
+		this.appContextPersistanceFilter = appContextPersistanceFilter;
 	}
 
 	@Override

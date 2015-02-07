@@ -6,15 +6,13 @@ import static com.carbonldp.commons.Consts.TAB;
 import org.openrdf.model.URI;
 import org.openrdf.spring.SesameConnectionFactory;
 
-import com.carbonldp.repository.sesame.AbstractSesameService;
+import com.carbonldp.repository.AbstractSesameService;
+import com.carbonldp.repository.RDFDocumentRepository;
 
 public class SesameAgentService extends AbstractSesameService implements AgentService {
 
-	private final String agentContainerURI;
-
-	public SesameAgentService(SesameConnectionFactory connectionFactory, String agentContainerURI) {
-		super(connectionFactory);
-		this.agentContainerURI = agentContainerURI;
+	public SesameAgentService(SesameConnectionFactory connectionFactory, RDFDocumentRepository documentRepository) {
+		super(connectionFactory, documentRepository);
 	}
 
 	private static final String findByEmailQuery;

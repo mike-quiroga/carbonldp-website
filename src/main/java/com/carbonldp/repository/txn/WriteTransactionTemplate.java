@@ -1,4 +1,4 @@
-package com.carbonldp.repository.sesame;
+package com.carbonldp.repository.txn;
 
 public interface WriteTransactionTemplate {
 	public void addCallback(WriteTransactionCallback callback);

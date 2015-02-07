@@ -7,12 +7,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.carbonldp.commons.models.Container;
 import com.carbonldp.commons.models.RDFSource;
+import com.carbonldp.repository.RDFDocumentRepository;
 
 @Transactional
 public class SesameRDFSourceService extends AbstractSesameLDPService implements RDFSourceService {
 
-	public SesameRDFSourceService(SesameConnectionFactory connectionFactory) {
-		super(connectionFactory);
+	public SesameRDFSourceService(SesameConnectionFactory connectionFactory, RDFDocumentRepository documentRepository) {
+		super(connectionFactory, documentRepository);
 	}
 
 	@Override

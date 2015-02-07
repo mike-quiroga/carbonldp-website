@@ -7,7 +7,7 @@ import org.slf4j.MarkerFactory;
 
 import com.carbonldp.commons.Consts;
 
-public abstract class AbstractService {
+public abstract class AbstractComponent {
 	protected final Logger LOG = LoggerFactory.getLogger(this.getClass());
 	protected final Marker FATAL = MarkerFactory.getMarker(Consts.FATAL);
 }
