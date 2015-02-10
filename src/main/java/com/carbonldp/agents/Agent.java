@@ -9,9 +9,9 @@ import org.springframework.security.core.CredentialsContainer;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import com.carbonldp.commons.models.RDFSource;
+import com.carbonldp.commons.models.BasicContainer;
 
-public class Agent extends RDFSource implements UserDetails, CredentialsContainer {
+public class Agent extends BasicContainer implements UserDetails, CredentialsContainer {
 
 	private static final long serialVersionUID = - 789740820771320672L;
 
@@ -36,8 +36,16 @@ public class Agent extends RDFSource implements UserDetails, CredentialsContaine
 		return this.getString(AgentDescription.Property.PASSWORD);
 	}
 
+	public Set<URI> getPlatformRoles() {
+		return this.getURIs(AgentDescription.Property.PLATFORM_ROLE);
+	}
+
 	public boolean addEmail(String email) {
 		return this.set(AgentDescription.Property.EMAIL.getURI(), email);
+	}
+
+	public boolean addPlatformRole(URI platformRole) {
+		return this.add(AgentDescription.Property.PLATFORM_ROLE.getURI(), platformRole);
 	}
 
 	public boolean setName(String name) {

@@ -1,5 +1,9 @@
 package com.carbonldp.repository;
 
-public interface RDFResourceRepository {
+import java.util.Set;
 
+import org.openrdf.model.URI;
+
+public interface RDFResourceRepository {
+	public Set<URI> getTypes(URI resourceURI);
 }

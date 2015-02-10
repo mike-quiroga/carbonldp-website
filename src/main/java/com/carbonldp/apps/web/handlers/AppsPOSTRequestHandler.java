@@ -9,7 +9,7 @@ import com.carbonldp.web.AbstractRequestHandler;
 import com.carbonldp.web.RequestHandler;
 
 @RequestHandler
-public class ApplicationsPOSTRequestHandler extends AbstractRequestHandler {
+public class AppsPOSTRequestHandler extends AbstractRequestHandler {
 	public ResponseEntity<Object> handleRequest(HttpServletRequest request, HttpServletResponse response) {
 
 		// TODO: Validate RDFDocument resources

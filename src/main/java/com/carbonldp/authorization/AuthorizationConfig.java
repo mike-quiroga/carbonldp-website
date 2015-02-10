@@ -13,6 +13,12 @@ import org.springframework.security.web.context.SecurityContextPersistenceFilter
 @EnableWebSecurity
 @Order(Ordered.LOWEST_PRECEDENCE)
 public class AuthorizationConfig extends AbstractWebSecurityConfigurerAdapter {
+
+	private interface EntryPointOrder {
+		public static final int APPS = 1;
+		public static final int PLATFORM = 2;
+	}
+
 	@Bean
 	@Override
 	public AuthenticationManager authenticationManagerBean() throws Exception {
@@ -31,20 +37,52 @@ public class AuthorizationConfig extends AbstractWebSecurityConfigurerAdapter {
 	}
 
 	@Configuration
-	@Order(1)
+	@Order(EntryPointOrder.APPS)
 	public static class AppsEntryPointConfig extends AbstractWebSecurityConfigurerAdapter {
 		@Override
 		protected void configure(HttpSecurity http) throws Exception {
 			super.configure(http);
 			//@formatter:off
-			http.antMatcher("/apps/**")
-				.exceptionHandling()
-					.authenticationEntryPoint(basicAuthenticationEntryPoint)
-					.and()
-				.addFilterBefore(appContextPersistanceFilter, SecurityContextPersistenceFilter.class)
-				.addFilter(basicAuthenticationFilter)
-				.authorizeRequests()
-					.anyRequest().authenticated()
+			http
+				.antMatcher("/apps/?*/**")
+					.exceptionHandling()
+						.authenticationEntryPoint(basicAuthenticationEntryPoint)
+						.and()
+					.addFilterBefore(appContextPersistanceFilter, SecurityContextPersistenceFilter.class)
+					.addFilter(basicAuthenticationFilter)
+					.authorizeRequests()
+						.anyRequest().authenticated().and()
+			;
+			//@formatter:on
+		}
+	}
+
+	@Configuration
+	@Order(EntryPointOrder.PLATFORM)
+	public static class PlatformEntryPointConfig extends AbstractWebSecurityConfigurerAdapter {
+		@Override
+		protected void configure(HttpSecurity http) throws Exception {
+			super.configure(http);
+			//@formatter:off
+			http
+				.antMatcher("/platform/**")
+					.exceptionHandling()
+						.authenticationEntryPoint(basicAuthenticationEntryPoint)
+						.and()
+					.addFilter(basicAuthenticationFilter)
+					.authorizeRequests()
+						.antMatchers("/platform/apps/")
+							.authenticated()
+						.antMatchers("/platform/apps/?*/")
+							.authenticated()
+						.antMatchers("/platform/roles/")
+							.authenticated()
+						.antMatchers("/platform/roles/?*/")
+							.authenticated()
+						.antMatchers("/platform/permissions/")
+							.authenticated()
+						.antMatchers("/platform/permissions/?*/")
+							.authenticated()			
 			;
 			//@formatter:on
 		}

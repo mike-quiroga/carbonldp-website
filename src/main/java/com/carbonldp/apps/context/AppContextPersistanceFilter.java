@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.openrdf.model.URI;
 import org.openrdf.model.impl.URIImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.acls.model.NotFoundException;
 import org.springframework.web.filter.GenericFilterBean;
 
 import com.carbonldp.PropertiesFileConfigurationRepository;
@@ -56,8 +57,8 @@ public class AppContextPersistanceFilter extends GenericFilterBean {
 		Application application = repository.getApplication(applicationURI);
 
 		if ( application == null ) {
-			// Application not found
-			// TODO: Handle application not found
+			// TODO: Handle this correctly
+			throw new NotFoundException("Application not found");
 		}
 
 		AppContext context = AppContextHolder.createEmptyContext();

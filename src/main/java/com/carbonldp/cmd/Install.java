@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
+import org.openrdf.model.Resource;
 import org.openrdf.repository.Repository;
 import org.openrdf.repository.RepositoryConnection;
 import org.openrdf.repository.RepositoryException;
@@ -31,6 +32,7 @@ public class Install {
 
 	private void execute() {
 		Repository platformRepository = getRepository(this.properties.getProperty("repositories.platform.directory"));
+		emptyRepository(platformRepository);
 		loadDefaultResourcesfile(platformRepository, defaultResourcesFile, this.properties.getProperty("platform.url"));
 	}
 
@@ -62,6 +64,27 @@ public class Install {
 			throw new RuntimeException("The repository in the directory: '" + repositoryFile + "', couldn't be initialized.", e);
 		}
 		return repository;
+	}
+
+	private void emptyRepository(Repository repository) {
+		RepositoryConnection connection;
+		try {
+			connection = repository.getConnection();
+		} catch (RepositoryException e) {
+			throw new RuntimeException("A connection couldn't be retrieved.", e);
+		}
+
+		try {
+			connection.remove((Resource) null, null, null);
+		} catch (RepositoryException e) {
+			throw new RuntimeException("The resources couldn't be loaded.", e);
+		} finally {
+			try {
+				connection.close();
+			} catch (RepositoryException e) {
+				throw new RuntimeException("The connection couldn't be closed.", e);
+			}
+		}
 	}
 
 	// TODO: Instead of loading a file, build the resources dynamically

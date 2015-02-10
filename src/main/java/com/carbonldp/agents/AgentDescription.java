@@ -42,7 +42,8 @@ public final class AgentDescription {
 		NAME("http://carbonldp.com/ns/v1/security#name"),
 		EMAIL("http://www.w3.org/2001/vcard-rdf/3.0#email"),
 		PASSWORD("http://carbonldp.com/ns/v1/security#password"),
-		SALT("http://carbonldp.com/ns/v1/security#salt")
+		SALT("http://carbonldp.com/ns/v1/security#salt"),
+		PLATFORM_ROLE("http://carbonldp.com/ns/v1/security#platformRole")
 		;
 		//@formatter:on
 

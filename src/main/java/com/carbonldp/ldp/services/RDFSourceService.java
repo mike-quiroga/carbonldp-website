@@ -1,5 +1,7 @@
 package com.carbonldp.ldp.services;
 
+import java.util.Set;
+
 import org.joda.time.DateTime;
 import org.openrdf.model.URI;
 
@@ -10,6 +12,8 @@ public interface RDFSourceService {
 	public RDFSource exists(URI sourceURI);
 
 	public RDFSource get(URI sourceURI);
+
+	public Set<RDFSource> get(Set<URI> sourceURIs);
 
 	public DateTime touch(URI sourceURI);
 

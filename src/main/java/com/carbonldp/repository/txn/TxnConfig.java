@@ -3,6 +3,7 @@ package com.carbonldp.repository.txn;
 import java.io.File;
 
 import org.openrdf.repository.Repository;
+import org.openrdf.repository.RepositoryException;
 import org.openrdf.repository.manager.LocalRepositoryManager;
 import org.openrdf.repository.manager.RepositoryManager;
 import org.openrdf.repository.sail.SailRepository;
@@ -44,6 +45,14 @@ public class TxnConfig {
 		String repositoryDirectory = configurationRepository.getPlatformRepositoryDirectory();
 		NativeStore platformConfig = new NativeStore(new File(repositoryDirectory));
 		SailRepository platformRepository = new SailRepository(platformConfig);
+
+		try {
+			platformRepository.initialize();
+		} catch (RepositoryException e) {
+			// TODO: Add error code
+			throw new RepositoryRuntimeException(e);
+		}
+
 		return platformRepository;
 	}
 

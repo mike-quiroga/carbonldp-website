@@ -19,11 +19,17 @@ public interface ConfigurationRepository {
 
 	public String getPlatformAgentsContainerURL();
 
+	public String getPlatformRolesContainer();
+
+	public String getPlatformRolesContainerURL();
+
 	public String getApplicationsEntryPoint();
 
 	public String getApplicationsEntryPointURL();
 
 	public String getRealmName();
+
+	public String forgeGenericRequestURL();
 
 	public Boolean enforceEndingSlash();
 }

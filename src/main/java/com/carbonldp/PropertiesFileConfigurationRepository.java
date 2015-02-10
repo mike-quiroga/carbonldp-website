@@ -1,5 +1,9 @@
 package com.carbonldp;
 
+import static com.carbonldp.commons.Consts.SLASH;
+
+import java.util.Random;
+
 import org.springframework.beans.factory.annotation.Value;
 
 public class PropertiesFileConfigurationRepository extends AbstractComponent implements ConfigurationRepository {
@@ -23,16 +27,32 @@ public class PropertiesFileConfigurationRepository extends AbstractComponent imp
 	private String platformAgentsContainer;
 	@Value("${platform.agents.container.url}")
 	private String platformAgentsContainerURL;
+	@Value("${platform.roles.container}")
+	private String platformRolesContainer;
+	@Value("${platform.roles.container.url}")
+	private String platformRolesContainerURL;
+
 	@Value("${applications.entrypoint}")
 	private String applicationsEntryPoint;
 	@Value("${applications.entrypoint.url}")
 	private String applicationsEntryPointURL;
+
+	@Value("${generic-request}")
+	private String genericRequest;
+	@Value("${generic-request.url}")
+	private String genericRequestURL;
 
 	@Value("${authentication.realm-name}")
 	private String realmName;
 
 	@Value("${config.enforce-ending-slash}")
 	private Boolean _enforceEndingSlash;
+
+	private Random random;
+
+	public PropertiesFileConfigurationRepository() {
+		this.random = new Random();
+	}
 
 	public String getPlatformRepositoryDirectory() {
 		return platformRepositoryDirectory;
@@ -70,6 +90,16 @@ public class PropertiesFileConfigurationRepository extends AbstractComponent imp
 		return platformAgentsContainerURL;
 	}
 
+	@Override
+	public String getPlatformRolesContainer() {
+		return platformRolesContainer;
+	}
+
+	@Override
+	public String getPlatformRolesContainerURL() {
+		return platformRolesContainerURL;
+	}
+
 	public String getApplicationsEntryPoint() {
 		return applicationsEntryPoint;
 	}
@@ -80,6 +110,13 @@ public class PropertiesFileConfigurationRepository extends AbstractComponent imp
 
 	public String getRealmName() {
 		return realmName;
+	}
+
+	public String forgeGenericRequestURL() {
+		StringBuilder urlBuilder = new StringBuilder();
+		urlBuilder.append(this.genericRequestURL).append(random.nextLong());
+		if ( enforceEndingSlash() ) urlBuilder.append(SLASH);
+		return urlBuilder.toString();
 	}
 
 	public Boolean enforceEndingSlash() {

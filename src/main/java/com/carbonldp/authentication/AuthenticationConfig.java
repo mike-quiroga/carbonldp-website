@@ -12,6 +12,7 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationFi
 
 import com.carbonldp.ConfigurationRepository;
 import com.carbonldp.agents.AgentService;
+import com.carbonldp.authorization.PlatformRoleService;
 import com.carbonldp.authorization.SecurityContextExchanger;
 
 @Configuration
@@ -24,6 +25,8 @@ public class AuthenticationConfig {
 	private ConfigurationRepository configurationRepository;
 	@Autowired
 	private AgentService agentService;
+	@Autowired
+	private PlatformRoleService platformRoleService;
 
 	@Autowired
 	public void configureGlobal(AuthenticationManagerBuilder auth) {
@@ -32,7 +35,7 @@ public class AuthenticationConfig {
 
 	@Bean
 	public AuthenticationProvider sesameUsernamePasswordAuthenticationProvider() {
-		return new SesameUsernamePasswordAuthenticationProvider(agentService);
+		return new SesameUsernamePasswordAuthenticationProvider(agentService, platformRoleService);
 	}
 
 	@Bean

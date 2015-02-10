@@ -85,6 +85,7 @@ public class SesameRDFDocumentRepository extends AbstractSesameRepository implem
 		RepositoryResult<Statement> statementsIterator;
 		try {
 			statementsIterator = connection.getStatements(null, null, null, false, documentURI);
+			if ( ! statementsIterator.hasNext() ) return null;
 		} catch (RepositoryException e) {
 			if ( LOG.isErrorEnabled() ) {
 				LOG.error("xx getDocument() > The statements couldn't be retrieved.");
@@ -113,7 +114,6 @@ public class SesameRDFDocumentRepository extends AbstractSesameRepository implem
 		}
 
 		AbstractModel model = retrieveModel(statementsIterator);
-
 		return RDFDocumentUtil.getDocuments(model, documentURIs);
 	}
 

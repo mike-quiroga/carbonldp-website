@@ -38,29 +38,97 @@
 @prefix xhtml:		<http://www.w3.org/1999/xhtml#>.
 @prefix xsd:		<http://www.w3.org/2001/XMLSchema#>.
 
-<apps/> {
-	<apps/>
-		a 	ldp:BasicContainer.
-}
-<agents/> {
-	<agents/>
-		a 	ldp:BasicContainer.
-}
+
 <platform/> {
 	<platform/>
 		a 	ldp:BasicContainer;
+		ldp:hasMemberRelation ldp:member;
 		ldp:contains
+			<platform/apps/>,
+			<platform/agents/>,
 			<platform/roles/>,
 			<platform/permissions/>;
 		ldp:member
+			<platform/apps/>,
+			<platform/agents/>,
 			<platform/roles/>,
 			<platform/permissions/>.
 }
+<platform/apps/> {
+	<platform/apps/>
+		a 	ldp:BasicContainer;
+		ldp:hasMemberRelation ldp:member.
+}
+<platform/agents/> {
+	<platform/agents/>
+		a 	ldp:BasicContainer;
+		ldp:hasMemberRelation ldp:member;
+		ldp:contains 
+			<platform/agents/admin/>;
+		ldp:member
+			<platform/agents/admin/>.
+}
+<platform/agents/admin/> {
+	<platform/agents/admin/>
+		a 	cs:Agent, ldp:BasicContainer;
+		c:defaultInteractionModel	ldp:RDFSource;
+		ldp:hasMemberRelation ldp:member;
+		vcard:email 
+			"admin@carbonldp.com";
+		cs:salt	"53cfbrng0bft2vqkoq4p8mpcmd";
+		cs:password	"52efa2610ca01ea3dd0253204fa7c4ede694be75c51386504003be25df4bb6c2";
+		cs:platformRole
+			<platform/roles/something-else/>,
+			<platform/roles/admin/>.
+}
 <platform/roles/> {
 	<platform/roles/>
-		a 	ldp:BasicContainer.
+		a 	ldp:BasicContainer;
+		ldp:hasMemberRelation ldp:member;
+		ldp:contains
+			<platform/roles/admin/>;
+		ldp:member
+			<platform/roles/admin/>.
+}
+<platform/roles/admin/> {
+	<platform/roles/admin/>
+		a 	cs:PlatformRole, ldp:BasicContainer;
+		c:defaultInteractionModel	ldp:RDFSource;
+		ldp:hasMemberRelation ldp:member;
+		c:accessPoint	
+			<platform/roles/admin/agents/>,
+			<platform/roles/admin/permissions/>;
+		cs:agent
+			<platform/agents/admin/>;
+		cs:permission
+			<platform/permissions/create-applications/>.
+}
+<platform/roles/admin/agents/> {
+	<platform/roles/admin/agents/>
+		a 	ldp:DirectContainer;
+		ldp:membershipResource	<platform/roles/admin/>;
+		ldp:hasMemberRelation	cs:agent;
+		ldp:memberOfRelation	cs:platformRole.
+}
+<platform/roles/admin/permissions/> {
+	<platform/roles/admin/permissions/>
+		a 	ldp:DirectContainer;
+		ldp:membershipResource	<platform/roles/admin/>;
+		ldp:hasMemberRelation	cs:permission.
 }
 <platform/permissions/> {
 	<platform/permissions/>
-		a 	ldp:BasicContainer.
+		a 	ldp:BasicContainer;
+		ldp:hasMemberRelation ldp:member;
+		ldp:contains
+			<platform/permissions/create-applications/>;
+		ldp:member
+			<platform/permissions/create-applications/>.
+}
+<platform/permissions/create-applications/> {
+	<platform/permissions/create-applications/>
+		a	cs:PlatformPermission, ldp:BasicContainer;
+		c:defaultInteractionModel	ldp:RDFSource;
+		ldp:hasMemberRelation ldp:member;
+		cs:name	"Create Applications".
 }

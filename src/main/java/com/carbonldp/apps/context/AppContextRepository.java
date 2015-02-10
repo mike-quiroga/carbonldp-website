@@ -14,15 +14,15 @@ import com.carbonldp.apps.Application;
  *
  */
 public class AppContextRepository {
-	private AppService appRepository;
+	private AppService appService;
 
 	@Autowired
 	public void setAppService(AppService appService) {
-		this.appRepository = appService;
+		this.appService = appService;
 	}
 
 	public Application getApplication(URI applicationURI) {
 		// TODO: Implement cache support
-		return appRepository.get(applicationURI);
+		return appService.get(applicationURI);
 	}
 }

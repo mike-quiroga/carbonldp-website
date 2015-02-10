@@ -7,9 +7,9 @@ import org.openrdf.model.impl.AbstractModel;
 
 import com.carbonldp.commons.apps.ApplicationDescription.Property;
 import com.carbonldp.commons.apps.ApplicationDescription.SystemManagedProperty;
-import com.carbonldp.commons.models.RDFResource;
+import com.carbonldp.commons.models.BasicContainer;
 
-public class Application extends RDFResource {
+public class Application extends BasicContainer {
 
 	private static final long serialVersionUID = 640544665380079388L;
 

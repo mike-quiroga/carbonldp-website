@@ -4,11 +4,8 @@ import org.openrdf.spring.SesameConnectionFactory;
 
 public abstract class AbstractSesameService extends AbstractSesameRepository {
 
-	protected final RDFDocumentRepository documentRepository;
-
-	public AbstractSesameService(SesameConnectionFactory connectionFactory, RDFDocumentRepository documentRepository) {
+	public AbstractSesameService(SesameConnectionFactory connectionFactory) {
 		super(connectionFactory);
-		this.documentRepository = documentRepository;
 	}
 
 }

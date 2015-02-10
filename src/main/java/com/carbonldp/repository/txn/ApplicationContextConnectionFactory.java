@@ -20,15 +20,14 @@ import com.carbonldp.apps.context.AppContextImpl;
 
 /**
  * <p>
- * Handles connections to multiple {@link org.openrdf.repository.Repository}s. Depending on the
- * {@link AppContextHolder}, it can manage connections from the platform repository or the applications
- * repositories manager.
+ * Handles connections to multiple {@link org.openrdf.repository.Repository}s. Depending on the {@link AppContextHolder}
+ * , it can manage connections from the platform repository or the applications repositories manager.
  * </p>
  * <p/>
  * <p>
- * <b>Caution!</b> When changing the {@link AppContextImpl} in the {@link AppContextHolder} while in a
- * transaction, be sure to return to the previous {@link AppContextImpl} before the transactional method
- * finishes so the transaction ends properly.
+ * <b>Caution!</b> When changing the {@link AppContextImpl} in the {@link AppContextHolder} while in a transaction, be
+ * sure to return to the previous {@link AppContextImpl} before the transactional method finishes so the transaction
+ * ends properly.
  * </p>
  * 
  * @author MiguelAraCo

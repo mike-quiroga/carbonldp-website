@@ -3,18 +3,22 @@ package com.carbonldp.apps;
 import org.openrdf.model.URI;
 import org.openrdf.spring.SesameConnectionFactory;
 
-import com.carbonldp.commons.models.RDFDocument;
+import com.carbonldp.ldp.services.ContainerService;
+import com.carbonldp.ldp.services.RDFSourceService;
 import com.carbonldp.repository.AbstractSesameService;
-import com.carbonldp.repository.RDFDocumentRepository;
 
-public class SesameAppService extends AbstractSesameService implements AppService {
-	public SesameAppService(SesameConnectionFactory connectionFactory, RDFDocumentRepository documentRepository) {
-		super(connectionFactory, documentRepository);
+public final class SesameAppService extends AbstractSesameService implements AppService {
+	private final RDFSourceService sourceService;
+	private final ContainerService containerService;
+
+	public SesameAppService(SesameConnectionFactory connectionFactory, RDFSourceService sourceService, ContainerService containerService) {
+		super(connectionFactory);
+		this.sourceService = sourceService;
+		this.containerService = containerService;
 	}
 
 	public Application get(URI appURI) {
-		RDFDocument document = documentRepository.getDocument(appURI);
-
+		// TODO: Implement
 		return null;
 	}
 }
