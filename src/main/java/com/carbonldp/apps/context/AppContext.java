@@ -1,11 +1,11 @@
 package com.carbonldp.apps.context;
 
-import com.carbonldp.apps.Application;
+import com.carbonldp.commons.apps.App;
 
 public interface AppContext {
-	public Application getApplication();
+	public App getApplication();
 
-	public void setApplication(Application application);
+	public void setApplication(App application);
 
 	public boolean isEmpty();
 }

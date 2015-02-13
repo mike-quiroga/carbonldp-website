@@ -3,10 +3,11 @@ package com.carbonldp.apps.web;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.openrdf.model.Model;
+import org.openrdf.model.impl.AbstractModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -20,7 +21,7 @@ public class AppsController extends AbstractController {
 	private AppsPOSTRequestHandler postRequestHandler;
 
 	@RequestMapping(method = RequestMethod.POST)
-	public ResponseEntity<Object> createApplication(Model requestModel, HttpServletRequest request, HttpServletResponse response) {
-		return postRequestHandler.handleRequest(request, response);
+	public ResponseEntity<Object> createApplication(@RequestBody AbstractModel requestModel, HttpServletRequest request, HttpServletResponse response) {
+		return postRequestHandler.handleRequest(requestModel, request, response);
 	}
 }

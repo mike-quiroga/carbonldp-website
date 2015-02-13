@@ -11,8 +11,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.openrdf.model.Model;
 import org.openrdf.model.Statement;
+import org.openrdf.model.impl.AbstractModel;
 import org.openrdf.model.impl.LinkedHashModel;
 import org.openrdf.rio.RDFFormat;
 import org.openrdf.rio.RDFHandlerException;
@@ -33,7 +33,7 @@ import org.springframework.util.Assert;
 import com.carbonldp.ConfigurationRepository;
 import com.carbonldp.commons.utils.MediaTypeUtil;
 
-public class ModelMessageConverter implements HttpMessageConverter<Model> {
+public class AbstractModelMessageConverter implements HttpMessageConverter<AbstractModel> {
 
 	private List<RDFFormat> supportedFormats = Collections.emptyList();
 	private List<MediaType> supportedMediaTypes = Collections.emptyList();
@@ -41,7 +41,7 @@ public class ModelMessageConverter implements HttpMessageConverter<Model> {
 
 	private ConfigurationRepository configurationRepository;
 
-	public ModelMessageConverter(ConfigurationRepository configurationRepository) {
+	public AbstractModelMessageConverter(ConfigurationRepository configurationRepository) {
 		Assert.notNull(configurationRepository);
 
 		//@formatter:off
@@ -59,7 +59,7 @@ public class ModelMessageConverter implements HttpMessageConverter<Model> {
 	}
 
 	private boolean supports(Class<?> clazz) {
-		return Model.class.isAssignableFrom(clazz);
+		return AbstractModel.class.isAssignableFrom(clazz);
 	}
 
 	@Override
@@ -98,7 +98,7 @@ public class ModelMessageConverter implements HttpMessageConverter<Model> {
 	}
 
 	@Override
-	public Model read(Class<? extends Model> clazz, HttpInputMessage inputMessage) throws IOException, HttpMessageNotReadableException {
+	public AbstractModel read(Class<? extends AbstractModel> clazz, HttpInputMessage inputMessage) throws IOException, HttpMessageNotReadableException {
 		MediaType mediaType = inputMessage.getHeaders().getContentType();
 
 		RDFFormat formatToUse;
@@ -108,7 +108,7 @@ public class ModelMessageConverter implements HttpMessageConverter<Model> {
 		InputStream bodyInputStream = inputMessage.getBody();
 
 		RDFParser parser = Rio.createParser(formatToUse);
-		Model model = new LinkedHashModel();
+		AbstractModel model = new LinkedHashModel();
 		String baseURI = configurationRepository.forgeGenericRequestURL();
 
 		parser.setRDFHandler(new StatementCollector(model));
@@ -123,7 +123,7 @@ public class ModelMessageConverter implements HttpMessageConverter<Model> {
 	}
 
 	@Override
-	public void write(Model model, MediaType contentType, HttpOutputMessage outputMessage) throws IOException, HttpMessageNotWritableException {
+	public void write(AbstractModel model, MediaType contentType, HttpOutputMessage outputMessage) throws IOException, HttpMessageNotWritableException {
 		HttpHeaders headers = outputMessage.getHeaders();
 
 		if ( headers.getContentType() == null ) {
@@ -152,7 +152,7 @@ public class ModelMessageConverter implements HttpMessageConverter<Model> {
 		outputMessage.getBody().flush();
 	}
 
-	private void writeModel(Model model, RDFFormat format, OutputStream outputStream) throws RDFHandlerException {
+	private void writeModel(AbstractModel model, RDFFormat format, OutputStream outputStream) throws RDFHandlerException {
 		RDFWriter writer = Rio.createWriter(format, outputStream);
 		writer.startRDF();
 		for (Statement statement : model) {

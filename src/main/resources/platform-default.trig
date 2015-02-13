@@ -47,12 +47,12 @@
 			<platform/apps/>,
 			<platform/agents/>,
 			<platform/roles/>,
-			<platform/permissions/>;
+			<platform/privileges/>;
 		ldp:member
 			<platform/apps/>,
 			<platform/agents/>,
 			<platform/roles/>,
-			<platform/permissions/>.
+			<platform/privileges/>.
 }
 <platform/apps/> {
 	<platform/apps/>
@@ -78,7 +78,6 @@
 		cs:salt	"53cfbrng0bft2vqkoq4p8mpcmd";
 		cs:password	"52efa2610ca01ea3dd0253204fa7c4ede694be75c51386504003be25df4bb6c2";
 		cs:platformRole
-			<platform/roles/something-else/>,
 			<platform/roles/admin/>.
 }
 <platform/roles/> {
@@ -97,11 +96,11 @@
 		ldp:hasMemberRelation ldp:member;
 		c:accessPoint	
 			<platform/roles/admin/agents/>,
-			<platform/roles/admin/permissions/>;
+			<platform/roles/admin/privileges/>;
 		cs:agent
 			<platform/agents/admin/>;
-		cs:permission
-			<platform/permissions/create-applications/>.
+		cs:platformPrivilege
+			<platform/privileges/create-applications/>.
 }
 <platform/roles/admin/agents/> {
 	<platform/roles/admin/agents/>
@@ -110,24 +109,24 @@
 		ldp:hasMemberRelation	cs:agent;
 		ldp:memberOfRelation	cs:platformRole.
 }
-<platform/roles/admin/permissions/> {
-	<platform/roles/admin/permissions/>
+<platform/roles/admin/privileges/> {
+	<platform/roles/admin/privileges/>
 		a 	ldp:DirectContainer;
 		ldp:membershipResource	<platform/roles/admin/>;
-		ldp:hasMemberRelation	cs:permission.
+		ldp:hasMemberRelation	cs:platformPrivilege.
 }
-<platform/permissions/> {
-	<platform/permissions/>
+<platform/privileges/> {
+	<platform/privileges/>
 		a 	ldp:BasicContainer;
 		ldp:hasMemberRelation ldp:member;
 		ldp:contains
-			<platform/permissions/create-applications/>;
+			<platform/privileges/create-applications/>;
 		ldp:member
-			<platform/permissions/create-applications/>.
+			<platform/privileges/create-applications/>.
 }
-<platform/permissions/create-applications/> {
-	<platform/permissions/create-applications/>
-		a	cs:PlatformPermission, ldp:BasicContainer;
+<platform/privileges/create-applications/> {
+	<platform/privileges/create-applications/>
+		a	cs:PlatformPrivilege, ldp:BasicContainer;
 		c:defaultInteractionModel	ldp:RDFSource;
 		ldp:hasMemberRelation ldp:member;
 		cs:name	"Create Applications".

@@ -1,10 +1,12 @@
 package com.carbonldp;
 
+import static com.carbonldp.commons.Consts.EMPTY_STRING;
 import static com.carbonldp.commons.Consts.SLASH;
 
 import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.util.AntPathMatcher;
 
 public class PropertiesFileConfigurationRepository extends AbstractComponent implements ConfigurationRepository {
 
@@ -31,6 +33,10 @@ public class PropertiesFileConfigurationRepository extends AbstractComponent imp
 	private String platformRolesContainer;
 	@Value("${platform.roles.container.url}")
 	private String platformRolesContainerURL;
+	@Value("${platform.privileges.container}")
+	private String platformPrivilegesContainer;
+	@Value("${platform.privileges.container.url}")
+	private String platformPrivilegesContainerURL;
 
 	@Value("${applications.entrypoint}")
 	private String applicationsEntryPoint;
@@ -100,6 +106,16 @@ public class PropertiesFileConfigurationRepository extends AbstractComponent imp
 		return platformRolesContainerURL;
 	}
 
+	@Override
+	public String getPlatformPrivilegesContainer() {
+		return platformPrivilegesContainer;
+	}
+
+	@Override
+	public String getPlatformPrivilegesContainerURL() {
+		return platformPrivilegesContainerURL;
+	}
+
 	public String getApplicationsEntryPoint() {
 		return applicationsEntryPoint;
 	}
@@ -112,11 +128,55 @@ public class PropertiesFileConfigurationRepository extends AbstractComponent imp
 		return realmName;
 	}
 
+	@Override
+	public boolean isGenericRequest(String uri) {
+		AntPathMatcher matcher = new AntPathMatcher();
+		uri = uri.replace(getPlatformURL(), EMPTY_STRING);
+
+		return matcher.match(getGenericRequestPattern(), uri);
+	}
+
+	@Override
+	public String getGenericRequestSlug(String uri) {
+		AntPathMatcher matcher = new AntPathMatcher();
+		uri = uri.replace(getPlatformURL(), EMPTY_STRING);
+
+		// The matcher removes the ending slash (if it finds one)
+		boolean hasTrailingSlash = uri.endsWith(SLASH);
+
+		matcher.extractPathWithinPattern(getGenericRequestPattern(), uri);
+
+		int index = uri.indexOf(SLASH);
+		if ( index == - 1 ) {
+			// The timestamp is the last piece of the generic request URI
+			return null;
+		}
+		if ( (index + 1) == uri.length() ) {
+			// "/" is the last character
+			return null;
+		}
+
+		StringBuilder slugBuilder = new StringBuilder();
+		slugBuilder.append(uri.substring(index + 1));
+		if ( hasTrailingSlash ) slugBuilder.append(SLASH);
+
+		return slugBuilder.toString();
+	}
+
 	public String forgeGenericRequestURL() {
 		StringBuilder urlBuilder = new StringBuilder();
 		urlBuilder.append(this.genericRequestURL).append(random.nextLong());
 		if ( enforceEndingSlash() ) urlBuilder.append(SLASH);
 		return urlBuilder.toString();
+	}
+
+	private String getGenericRequestPattern() {
+		StringBuilder patternBuilder = new StringBuilder();
+		if ( ! this.genericRequest.startsWith(SLASH) ) patternBuilder.append(SLASH);
+		patternBuilder.append(this.genericRequest);
+		if ( ! this.genericRequest.endsWith(SLASH) ) patternBuilder.append(SLASH);
+		patternBuilder.append("?*/**/");
+		return patternBuilder.toString();
 	}
 
 	public Boolean enforceEndingSlash() {

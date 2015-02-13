@@ -3,6 +3,7 @@ package com.carbonldp.apps;
 import org.openrdf.model.URI;
 import org.openrdf.spring.SesameConnectionFactory;
 
+import com.carbonldp.commons.apps.App;
 import com.carbonldp.ldp.services.ContainerService;
 import com.carbonldp.ldp.services.RDFSourceService;
 import com.carbonldp.repository.AbstractSesameService;
@@ -17,7 +18,7 @@ public final class SesameAppService extends AbstractSesameService implements App
 		this.containerService = containerService;
 	}
 
-	public Application get(URI appURI) {
+	public App get(URI appURI) {
 		// TODO: Implement
 		return null;
 	}

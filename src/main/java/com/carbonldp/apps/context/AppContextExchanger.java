@@ -6,7 +6,7 @@ import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
 
 import com.carbonldp.AbstractAspect;
-import com.carbonldp.apps.Application;
+import com.carbonldp.commons.apps.App;
 
 @Aspect
 public class AppContextExchanger extends AbstractAspect {
@@ -29,11 +29,11 @@ public class AppContextExchanger extends AbstractAspect {
 	}
 
 	@Pointcut("inCarbonLDPPackage() && args(application,..) && @annotation(com.carbonldp.apps.context.RunInAppContext)")
-	private void runInAppContext(Application application) {
+	private void runInAppContext(App application) {
 	}
 
 	@Before("runInAppContext(application)")
-	public void exchangeForApplicationContext(Application application) {
+	public void exchangeForApplicationContext(App application) {
 		AppContext originalContext = AppContextHolder.getContext();
 		AppContext applicationContext = new TemporaryAppContext(originalContext);
 		applicationContext.setApplication(application);
@@ -42,7 +42,7 @@ public class AppContextExchanger extends AbstractAspect {
 	}
 
 	@After("runInAppContext(application)")
-	public void restoreFromApplicationContext(Application application) {
+	public void restoreFromApplicationContext(App application) {
 		restoreContext();
 	}
 

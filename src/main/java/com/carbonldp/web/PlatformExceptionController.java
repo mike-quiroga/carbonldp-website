@@ -10,9 +10,17 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import com.carbonldp.web.exceptions.AbstractWebRuntimeException;
+
 @ControllerAdvice
 public class PlatformExceptionController {
 	protected final Logger LOG = LoggerFactory.getLogger(this.getClass());
+
+	@ExceptionHandler(AbstractWebRuntimeException.class)
+	public ResponseEntity<Object> handleAbstractWebRuntimeException(HttpServletRequest request, HttpServletResponse response, Exception rawException) {
+		AbstractWebRuntimeException exception = (AbstractWebRuntimeException) rawException;
+		return exception.toResponseEntity();
+	}
 
 	@ExceptionHandler(Exception.class)
 	public ResponseEntity<Object> handleUnexpectedException(HttpServletRequest request, HttpServletResponse response, Exception rawException) {

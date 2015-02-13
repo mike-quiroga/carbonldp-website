@@ -4,7 +4,7 @@ import org.openrdf.model.URI;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.carbonldp.apps.AppService;
-import com.carbonldp.apps.Application;
+import com.carbonldp.commons.apps.App;
 
 /**
  * Retrieves an <code>Application</code> to save it in the <code>ApplicationContext</code>. Can implement it's own cache
@@ -21,7 +21,7 @@ public class AppContextRepository {
 		this.appService = appService;
 	}
 
-	public Application getApplication(URI applicationURI) {
+	public App getApplication(URI applicationURI) {
 		// TODO: Implement cache support
 		return appService.get(applicationURI);
 	}

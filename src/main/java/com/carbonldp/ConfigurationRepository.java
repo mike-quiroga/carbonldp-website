@@ -23,11 +23,19 @@ public interface ConfigurationRepository {
 
 	public String getPlatformRolesContainerURL();
 
+	public String getPlatformPrivilegesContainer();
+
+	public String getPlatformPrivilegesContainerURL();
+
 	public String getApplicationsEntryPoint();
 
 	public String getApplicationsEntryPointURL();
 
 	public String getRealmName();
+
+	public boolean isGenericRequest(String uri);
+
+	public String getGenericRequestSlug(String uri);
 
 	public String forgeGenericRequestURL();
 

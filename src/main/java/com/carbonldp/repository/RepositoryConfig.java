@@ -16,7 +16,9 @@ import com.carbonldp.agents.AgentService;
 import com.carbonldp.agents.SesameAgentService;
 import com.carbonldp.apps.AppService;
 import com.carbonldp.apps.SesameAppService;
+import com.carbonldp.authorization.PlatformPrivilegeService;
 import com.carbonldp.authorization.PlatformRoleService;
+import com.carbonldp.authorization.SesamePlatformPrivilegeService;
 import com.carbonldp.authorization.SesamePlatformRoleService;
 import com.carbonldp.ldp.services.ContainerService;
 import com.carbonldp.ldp.services.RDFSourceService;
@@ -75,8 +77,14 @@ public class RepositoryConfig {
 
 	@Bean
 	public PlatformRoleService platformRoleService() {
-		URI agentsContainerURI = new URIImpl(configurationRepository.getPlatformRolesContainerURL());
-		return new SesamePlatformRoleService(connectionFactory, rdfSourceService(), containerService(), agentsContainerURI);
+		URI platformRolesContainerURI = new URIImpl(configurationRepository.getPlatformRolesContainerURL());
+		return new SesamePlatformRoleService(connectionFactory, rdfSourceService(), containerService(), platformRolesContainerURI);
+	}
+
+	@Bean
+	public PlatformPrivilegeService platformPrivilegeService() {
+		URI platformPrivilegesContainerURI = new URIImpl(configurationRepository.getPlatformPrivilegesContainerURL());
+		return new SesamePlatformPrivilegeService(connectionFactory, rdfSourceService(), containerService(), platformPrivilegesContainerURI);
 	}
 
 	@Bean

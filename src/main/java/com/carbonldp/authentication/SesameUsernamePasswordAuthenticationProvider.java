@@ -7,21 +7,20 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.carbonldp.agents.Agent;
 import com.carbonldp.agents.AgentService;
+import com.carbonldp.authorization.PlatformPrivilegeService;
 import com.carbonldp.authorization.PlatformRoleService;
 import com.carbonldp.authorization.RunWith;
 import com.carbonldp.commons.utils.AuthenticationUtil;
 
-public class SesameUsernamePasswordAuthenticationProvider extends AbstractAuthenticationProvider {
+public class SesameUsernamePasswordAuthenticationProvider extends AbstractSesameAuthenticationProvider {
 
-	private final AgentService agentService;
-	private final PlatformRoleService platformRoleService;
-
-	public SesameUsernamePasswordAuthenticationProvider(AgentService agentService, PlatformRoleService platformRoleService) {
-		this.agentService = agentService;
-		this.platformRoleService = platformRoleService;
+	public SesameUsernamePasswordAuthenticationProvider(AgentService agentService, PlatformRoleService platformRoleService,
+			PlatformPrivilegeService platformPrivilegeService) {
+		super(agentService, platformRoleService, platformPrivilegeService);
 	}
 
 	public void init() {
@@ -30,6 +29,7 @@ public class SesameUsernamePasswordAuthenticationProvider extends AbstractAuthen
 		}
 	}
 
+	@Transactional
 	@RunWith(roles = { "ROLE_SYSTEM" })
 	public Authentication authenticate(Authentication authentication) throws AuthenticationException {
 		Object rawPrincipal = authentication.getPrincipal();
@@ -60,12 +60,11 @@ public class SesameUsernamePasswordAuthenticationProvider extends AbstractAuthen
 			throw new AuthenticationServiceException("Password validation failed");
 		}
 
-		if ( agent.getPassword().equals(hashedPassword) ) {
-			platformRoleService.getPlatformRolesOfAgent(agent);
-			// TODO: Create authentication token
+		if ( ! agent.getPassword().equals(hashedPassword) ) {
+			throw new BadCredentialsException("Wrong credentials");
 		}
 
-		throw new BadCredentialsException("Wrong credentials");
+		return createAgentAuthenticationToken(agent);
 	}
 
 	public boolean supports(Class<?> authentication) {

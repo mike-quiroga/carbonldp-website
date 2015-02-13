@@ -1,6 +1,5 @@
 package com.carbonldp.web;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +12,7 @@ import org.springframework.http.converter.FormHttpMessageConverter;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.multipart.MultipartResolver;
 import org.springframework.web.multipart.support.StandardServletMultipartResolver;
 import org.springframework.web.servlet.config.annotation.ContentNegotiationConfigurer;
@@ -28,6 +28,7 @@ import com.carbonldp.ConfigurationRepository;
 		useDefaultFilters = false,
 		basePackages = { "com.carbonldp" },
 		includeFilters = {
+			@ComponentScan.Filter(type = FilterType.ANNOTATION, value = ControllerAdvice.class),
 			@ComponentScan.Filter(type = FilterType.ANNOTATION, value = Controller.class),
 			@ComponentScan.Filter(type = FilterType.ANNOTATION, value = RequestHandler.class)
 		}
@@ -40,8 +41,6 @@ public class WebConfig extends WebMvcConfigurerAdapter {
 
 	@Override
 	public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
-		converters = new ArrayList<HttpMessageConverter<?>>();
-
 		converters.add(modelMessageConverter());
 		converters.add(new ByteArrayHttpMessageConverter());
 		converters.add(new StringHttpMessageConverter());
@@ -60,7 +59,7 @@ public class WebConfig extends WebMvcConfigurerAdapter {
 	}
 
 	@Bean
-	public ModelMessageConverter modelMessageConverter() {
-		return new ModelMessageConverter(configurationRepository);
+	public AbstractModelMessageConverter modelMessageConverter() {
+		return new AbstractModelMessageConverter(configurationRepository);
 	}
 }

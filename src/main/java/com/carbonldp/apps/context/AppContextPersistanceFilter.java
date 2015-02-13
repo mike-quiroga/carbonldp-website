@@ -19,7 +19,7 @@ import org.springframework.security.acls.model.NotFoundException;
 import org.springframework.web.filter.GenericFilterBean;
 
 import com.carbonldp.PropertiesFileConfigurationRepository;
-import com.carbonldp.apps.Application;
+import com.carbonldp.commons.apps.App;
 
 public class AppContextPersistanceFilter extends GenericFilterBean {
 
@@ -54,7 +54,7 @@ public class AppContextPersistanceFilter extends GenericFilterBean {
 			// TODO: Handle it
 		}
 
-		Application application = repository.getApplication(applicationURI);
+		App application = repository.getApplication(applicationURI);
 
 		if ( application == null ) {
 			// TODO: Handle this correctly

@@ -1,15 +1,15 @@
 package com.carbonldp.apps.context;
 
-import com.carbonldp.apps.Application;
+import com.carbonldp.commons.apps.App;
 
 public class AppContextImpl implements AppContext {
-	private Application application;
+	private App application;
 
-	public Application getApplication() {
+	public App getApplication() {
 		return this.application;
 	}
 
-	public void setApplication(Application application) {
+	public void setApplication(App application) {
 		this.application = application;
 	}
 
