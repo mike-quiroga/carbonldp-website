@@ -2,7 +2,7 @@ package com.carbonldp.cmd;
 
 import java.security.NoSuchAlgorithmException;
 
-import com.carbonldp.commons.utils.AuthenticationUtil;
+import com.carbonldp.utils.AuthenticationUtil;
 
 public class PasswordHasher {
 

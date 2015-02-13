@@ -1,7 +1,7 @@
 package com.carbonldp.authentication;
 
-import static com.carbonldp.commons.Consts.COMMA;
-import static com.carbonldp.commons.Consts.SPACE;
+import static com.carbonldp.Consts.COMMA;
+import static com.carbonldp.Consts.SPACE;
 
 import java.util.Collection;
 import java.util.Collections;

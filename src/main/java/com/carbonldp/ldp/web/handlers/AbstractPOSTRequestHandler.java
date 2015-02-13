@@ -1,6 +1,6 @@
 package com.carbonldp.ldp.web.handlers;
 
-import static com.carbonldp.commons.Consts.SLASH;
+import static com.carbonldp.Consts.SLASH;
 
 import java.util.Random;
 
@@ -9,9 +9,9 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.openrdf.model.URI;
 
-import com.carbonldp.commons.HTTPHeaders;
-import com.carbonldp.commons.models.RDFResource;
-import com.carbonldp.commons.utils.HTTPUtil;
+import com.carbonldp.HTTPHeaders;
+import com.carbonldp.models.RDFResource;
+import com.carbonldp.utils.HTTPUtil;
 import com.carbonldp.web.AbstractRequestHandler;
 
 public abstract class AbstractPOSTRequestHandler extends AbstractRequestHandler {

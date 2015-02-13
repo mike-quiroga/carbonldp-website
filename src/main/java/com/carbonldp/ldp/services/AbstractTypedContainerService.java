@@ -17,12 +17,12 @@ import org.openrdf.repository.RepositoryConnection;
 import org.openrdf.repository.RepositoryException;
 import org.openrdf.spring.SesameConnectionFactory;
 
-import com.carbonldp.commons.utils.SPARQLUtil;
-import com.carbonldp.commons.utils.ValueUtil;
 import com.carbonldp.exceptions.StupidityException;
 import com.carbonldp.repository.RDFDocumentRepository;
 import com.carbonldp.repository.RDFResourceRepository;
 import com.carbonldp.repository.txn.RepositoryRuntimeException;
+import com.carbonldp.utils.SPARQLUtil;
+import com.carbonldp.utils.ValueUtil;
 
 public abstract class AbstractTypedContainerService extends AbstractSesameLDPService implements TypedContainerService {
 

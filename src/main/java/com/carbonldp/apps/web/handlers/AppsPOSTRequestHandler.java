@@ -1,7 +1,7 @@
 package com.carbonldp.apps.web.handlers;
 
-import static com.carbonldp.commons.Consts.EMPTY_STRING;
-import static com.carbonldp.commons.Consts.SLASH;
+import static com.carbonldp.Consts.EMPTY_STRING;
+import static com.carbonldp.Consts.SLASH;
 
 import java.util.Iterator;
 import java.util.List;
@@ -18,12 +18,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.Assert;
 
-import com.carbonldp.commons.apps.AppFactory;
-import com.carbonldp.commons.models.Infraction;
-import com.carbonldp.commons.models.RDFResource;
-import com.carbonldp.commons.utils.URIUtil;
-import com.carbonldp.commons.utils.ValueUtil;
+import com.carbonldp.apps.AppFactory;
 import com.carbonldp.ldp.web.handlers.AbstractPOSTRequestHandler;
+import com.carbonldp.models.Infraction;
+import com.carbonldp.models.RDFResource;
+import com.carbonldp.utils.URIUtil;
+import com.carbonldp.utils.ValueUtil;
 import com.carbonldp.web.RequestHandler;
 import com.carbonldp.web.exceptions.BadRequestException;
 

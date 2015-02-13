@@ -1,7 +1,7 @@
 package com.carbonldp;
 
-import static com.carbonldp.commons.Consts.EMPTY_STRING;
-import static com.carbonldp.commons.Consts.SLASH;
+import static com.carbonldp.Consts.EMPTY_STRING;
+import static com.carbonldp.Consts.SLASH;
 
 import java.util.Random;
 

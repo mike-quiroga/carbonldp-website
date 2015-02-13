@@ -5,8 +5,8 @@ import java.util.Set;
 import org.joda.time.DateTime;
 import org.openrdf.model.URI;
 
-import com.carbonldp.commons.models.Container;
-import com.carbonldp.commons.models.RDFSource;
+import com.carbonldp.models.Container;
+import com.carbonldp.models.RDFSource;
 
 public interface RDFSourceService {
 	public RDFSource exists(URI sourceURI);

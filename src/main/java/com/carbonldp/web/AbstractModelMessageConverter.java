@@ -31,7 +31,7 @@ import org.springframework.http.converter.HttpMessageNotWritableException;
 import org.springframework.util.Assert;
 
 import com.carbonldp.ConfigurationRepository;
-import com.carbonldp.commons.utils.MediaTypeUtil;
+import com.carbonldp.utils.MediaTypeUtil;
 
 public class AbstractModelMessageConverter implements HttpMessageConverter<AbstractModel> {
 

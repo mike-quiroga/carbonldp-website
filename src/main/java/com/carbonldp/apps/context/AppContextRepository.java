@@ -3,8 +3,8 @@ package com.carbonldp.apps.context;
 import org.openrdf.model.URI;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.carbonldp.apps.App;
 import com.carbonldp.apps.AppService;
-import com.carbonldp.commons.apps.App;
 
 /**
  * Retrieves an <code>Application</code> to save it in the <code>ApplicationContext</code>. Can implement it's own cache

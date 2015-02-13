@@ -14,10 +14,10 @@ import org.springframework.security.access.PermissionEvaluator;
 import org.springframework.security.core.Authentication;
 
 import com.carbonldp.authorization.acl.ACEDescription.Permission;
-import com.carbonldp.commons.descriptions.RDFNodeEnum;
-import com.carbonldp.commons.models.URIObject;
-import com.carbonldp.commons.utils.RDFNodeUtil;
-import com.carbonldp.commons.utils.URIUtil;
+import com.carbonldp.descriptions.RDFNodeEnum;
+import com.carbonldp.models.URIObject;
+import com.carbonldp.utils.RDFNodeUtil;
+import com.carbonldp.utils.URIUtil;
 
 public class CarbonPermissionEvaluator implements PermissionEvaluator {
 	protected final Logger LOG = LoggerFactory.getLogger(this.getClass());

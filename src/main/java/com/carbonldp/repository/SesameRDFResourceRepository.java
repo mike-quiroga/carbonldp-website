@@ -14,8 +14,8 @@ import org.openrdf.repository.RepositoryResult;
 import org.openrdf.spring.SesameConnectionFactory;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.carbonldp.commons.descriptions.RDFResourceDescription;
-import com.carbonldp.commons.models.RDFResource;
+import com.carbonldp.descriptions.RDFResourceDescription;
+import com.carbonldp.models.RDFResource;
 import com.carbonldp.repository.txn.RepositoryRuntimeException;
 
 @Transactional

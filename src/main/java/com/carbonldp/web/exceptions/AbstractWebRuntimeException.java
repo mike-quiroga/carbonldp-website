@@ -3,7 +3,7 @@ package com.carbonldp.web.exceptions;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import com.carbonldp.commons.exceptions.CarbonNoStackTraceRuntimeException;
+import com.carbonldp.exceptions.CarbonNoStackTraceRuntimeException;
 
 public abstract class AbstractWebRuntimeException extends CarbonNoStackTraceRuntimeException {
 

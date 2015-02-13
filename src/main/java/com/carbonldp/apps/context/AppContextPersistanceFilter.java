@@ -1,7 +1,7 @@
 package com.carbonldp.apps.context;
 
-import static com.carbonldp.commons.Consts.EMPTY_STRING;
-import static com.carbonldp.commons.Consts.SLASH;
+import static com.carbonldp.Consts.EMPTY_STRING;
+import static com.carbonldp.Consts.SLASH;
 
 import java.io.IOException;
 
@@ -19,7 +19,7 @@ import org.springframework.security.acls.model.NotFoundException;
 import org.springframework.web.filter.GenericFilterBean;
 
 import com.carbonldp.PropertiesFileConfigurationRepository;
-import com.carbonldp.commons.apps.App;
+import com.carbonldp.apps.App;
 
 public class AppContextPersistanceFilter extends GenericFilterBean {
 

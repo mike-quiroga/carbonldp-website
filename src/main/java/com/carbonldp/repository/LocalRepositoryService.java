@@ -17,7 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.carbonldp.AbstractComponent;
-import com.carbonldp.commons.exceptions.CarbonRuntimeException;
+import com.carbonldp.exceptions.CarbonRuntimeException;
 import com.carbonldp.repository.txn.ReadOnlyRepositoryConnection;
 import com.carbonldp.repository.txn.ReadTransactionCallback;
 import com.carbonldp.repository.txn.ReadTransactionTemplate;

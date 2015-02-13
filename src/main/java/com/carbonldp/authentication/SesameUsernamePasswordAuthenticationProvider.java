@@ -14,7 +14,7 @@ import com.carbonldp.agents.AgentService;
 import com.carbonldp.authorization.PlatformPrivilegeService;
 import com.carbonldp.authorization.PlatformRoleService;
 import com.carbonldp.authorization.RunWith;
-import com.carbonldp.commons.utils.AuthenticationUtil;
+import com.carbonldp.utils.AuthenticationUtil;
 
 public class SesameUsernamePasswordAuthenticationProvider extends AbstractSesameAuthenticationProvider {
 

@@ -15,13 +15,13 @@ import org.springframework.beans.factory.annotation.Value;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import com.carbonldp.commons.utils.LiteralUtil;
-import com.carbonldp.commons.utils.ValueUtil;
 import com.carbonldp.repository.txn.ReadTransactionCallback;
 import com.carbonldp.repository.txn.ReadTransactionTemplate;
 import com.carbonldp.repository.txn.WriteTransactionCallback;
 import com.carbonldp.repository.txn.WriteTransactionTemplate;
 import com.carbonldp.test.AbstractIT;
+import com.carbonldp.utils.LiteralUtil;
+import com.carbonldp.utils.ValueUtil;
 
 public class LocalRepositoryServiceIT extends AbstractIT {
 	@Value("${repositories.directory}")

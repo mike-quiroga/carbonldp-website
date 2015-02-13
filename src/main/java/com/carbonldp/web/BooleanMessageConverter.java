@@ -19,7 +19,7 @@ import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.http.converter.HttpMessageNotWritableException;
 import org.springframework.util.Assert;
 
-import com.carbonldp.commons.HTTPHeaders;
+import com.carbonldp.HTTPHeaders;
 
 public class BooleanMessageConverter implements HttpMessageConverter<Boolean> {
 

@@ -9,7 +9,7 @@ import org.springframework.security.core.CredentialsContainer;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import com.carbonldp.commons.models.BasicContainer;
+import com.carbonldp.models.BasicContainer;
 
 public class Agent extends BasicContainer implements UserDetails, CredentialsContainer {
 

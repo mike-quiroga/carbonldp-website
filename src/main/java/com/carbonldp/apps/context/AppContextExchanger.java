@@ -6,7 +6,7 @@ import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
 
 import com.carbonldp.AbstractAspect;
-import com.carbonldp.commons.apps.App;
+import com.carbonldp.apps.App;
 
 @Aspect
 public class AppContextExchanger extends AbstractAspect {

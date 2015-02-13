@@ -5,7 +5,7 @@ import java.util.Set;
 
 import org.openrdf.model.URI;
 
-import com.carbonldp.commons.models.RDFDocument;
+import com.carbonldp.models.RDFDocument;
 
 public interface RDFDocumentRepository {
 	public boolean documentExists(URI documentURI);

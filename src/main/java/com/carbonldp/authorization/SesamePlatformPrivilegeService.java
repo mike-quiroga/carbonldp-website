@@ -7,10 +7,10 @@ import org.openrdf.model.URI;
 import org.openrdf.spring.SesameConnectionFactory;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.carbonldp.commons.descriptions.ContainerDescription.Type;
-import com.carbonldp.commons.models.RDFSource;
+import com.carbonldp.descriptions.ContainerDescription.Type;
 import com.carbonldp.ldp.services.ContainerService;
 import com.carbonldp.ldp.services.RDFSourceService;
+import com.carbonldp.models.RDFSource;
 import com.carbonldp.repository.AbstractSesameService;
 
 @Transactional

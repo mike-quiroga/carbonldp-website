@@ -9,11 +9,11 @@ import org.openrdf.model.Value;
 import org.openrdf.spring.SesameConnectionFactory;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.carbonldp.commons.descriptions.ContainerDescription;
-import com.carbonldp.commons.descriptions.ContainerDescription.Type;
-import com.carbonldp.commons.utils.RDFNodeUtil;
+import com.carbonldp.descriptions.ContainerDescription;
+import com.carbonldp.descriptions.ContainerDescription.Type;
 import com.carbonldp.repository.RDFDocumentRepository;
 import com.carbonldp.repository.RDFResourceRepository;
+import com.carbonldp.utils.RDFNodeUtil;
 
 @Transactional
 public class SesameContainerService extends AbstractSesameLDPService implements ContainerService {

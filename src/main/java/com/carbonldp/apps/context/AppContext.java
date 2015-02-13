@@ -1,6 +1,6 @@
 package com.carbonldp.apps.context;
 
-import com.carbonldp.commons.apps.App;
+import com.carbonldp.apps.App;
 
 public interface AppContext {
 	public App getApplication();

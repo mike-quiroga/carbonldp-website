@@ -1,7 +1,7 @@
 package com.carbonldp.repository;
 
-import static com.carbonldp.commons.Consts.NEW_LINE;
-import static com.carbonldp.commons.Consts.TAB;
+import static com.carbonldp.Consts.NEW_LINE;
+import static com.carbonldp.Consts.TAB;
 import info.aduna.iteration.Iterations;
 
 import java.util.Collection;
@@ -23,10 +23,10 @@ import org.openrdf.repository.RepositoryResult;
 import org.openrdf.spring.SesameConnectionFactory;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.carbonldp.commons.models.RDFDocument;
-import com.carbonldp.commons.utils.RDFDocumentUtil;
 import com.carbonldp.exceptions.StupidityException;
+import com.carbonldp.models.RDFDocument;
 import com.carbonldp.repository.txn.RepositoryRuntimeException;
+import com.carbonldp.utils.RDFDocumentUtil;
 
 @Transactional
 public class SesameRDFDocumentRepository extends AbstractSesameRepository implements RDFDocumentRepository {

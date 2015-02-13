@@ -1,7 +1,7 @@
 package com.carbonldp.ldp.services;
 
-import static com.carbonldp.commons.Consts.NEW_LINE;
-import static com.carbonldp.commons.Consts.TAB;
+import static com.carbonldp.Consts.NEW_LINE;
+import static com.carbonldp.Consts.TAB;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -25,9 +25,9 @@ import org.openrdf.repository.RepositoryResult;
 import org.openrdf.spring.SesameConnectionFactory;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.carbonldp.commons.models.Container;
-import com.carbonldp.commons.models.RDFSource;
 import com.carbonldp.exceptions.StupidityException;
+import com.carbonldp.models.Container;
+import com.carbonldp.models.RDFSource;
 import com.carbonldp.repository.RDFDocumentRepository;
 import com.carbonldp.repository.RDFResourceRepository;
 import com.carbonldp.repository.txn.RepositoryRuntimeException;

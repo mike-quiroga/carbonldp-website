@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.slf4j.Marker;
 import org.slf4j.MarkerFactory;
 
-import com.carbonldp.commons.Consts;
+import com.carbonldp.Consts;
 
 public abstract class AbstractComponent {
 	protected final Logger LOG = LoggerFactory.getLogger(this.getClass());

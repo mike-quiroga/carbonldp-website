@@ -10,11 +10,11 @@ import org.openrdf.model.impl.ValueFactoryImpl;
 import org.openrdf.spring.SesameConnectionFactory;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.carbonldp.commons.models.RDFSource;
-import com.carbonldp.commons.utils.RDFNodeUtil;
 import com.carbonldp.ldp.services.ContainerService;
 import com.carbonldp.ldp.services.RDFSourceService;
+import com.carbonldp.models.RDFSource;
 import com.carbonldp.repository.AbstractSesameService;
+import com.carbonldp.utils.RDFNodeUtil;
 
 @Transactional
 public class SesameAgentService extends AbstractSesameService implements AgentService {

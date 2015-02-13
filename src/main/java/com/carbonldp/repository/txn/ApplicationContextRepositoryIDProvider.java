@@ -2,8 +2,8 @@ package com.carbonldp.repository.txn;
 
 import org.openrdf.spring.DynamicRepositoryManagerConnectionFactory.RepositoryIdProvider;
 
+import com.carbonldp.apps.App;
 import com.carbonldp.apps.context.AppContextHolder;
-import com.carbonldp.commons.apps.App;
 
 public class ApplicationContextRepositoryIDProvider implements RepositoryIdProvider {
 

@@ -6,7 +6,7 @@ import java.util.Set;
 import org.openrdf.model.URI;
 import org.openrdf.model.Value;
 
-import com.carbonldp.commons.descriptions.ContainerDescription.Type;
+import com.carbonldp.descriptions.ContainerDescription.Type;
 
 public interface TypedContainerService {
 	public boolean supports(Type containerType);

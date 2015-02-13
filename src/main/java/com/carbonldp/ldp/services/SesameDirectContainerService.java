@@ -1,7 +1,7 @@
 package com.carbonldp.ldp.services;
 
-import static com.carbonldp.commons.Consts.NEW_LINE;
-import static com.carbonldp.commons.Consts.TAB;
+import static com.carbonldp.Consts.NEW_LINE;
+import static com.carbonldp.Consts.TAB;
 
 import java.util.Map;
 import java.util.Set;
@@ -10,11 +10,11 @@ import org.openrdf.model.URI;
 import org.openrdf.model.Value;
 import org.openrdf.spring.SesameConnectionFactory;
 
-import com.carbonldp.commons.descriptions.ContainerDescription;
-import com.carbonldp.commons.descriptions.ContainerDescription.Type;
-import com.carbonldp.commons.utils.RDFNodeUtil;
+import com.carbonldp.descriptions.ContainerDescription;
+import com.carbonldp.descriptions.ContainerDescription.Type;
 import com.carbonldp.repository.RDFDocumentRepository;
 import com.carbonldp.repository.RDFResourceRepository;
+import com.carbonldp.utils.RDFNodeUtil;
 
 public class SesameDirectContainerService extends AbstractTypedContainerService {
 
