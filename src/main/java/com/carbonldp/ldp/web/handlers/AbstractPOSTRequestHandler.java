@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.openrdf.model.URI;
+import org.openrdf.model.impl.URIImpl;
 
 import com.carbonldp.HTTPHeaders;
 import com.carbonldp.models.RDFResource;
@@ -21,7 +22,12 @@ public abstract class AbstractPOSTRequestHandler extends AbstractRequestHandler 
 		return null;
 	}
 
-	protected String forgeDocumentResourceURI(RDFResource documentResource, String parentURI, HttpServletRequest request) {
+	protected URI forgeUniqueURI(RDFResource requestResource, String parentURI, HttpServletRequest request) {
+		// TODO: Check that the resourceURI is unique and if not forge another one
+		return forgeDocumentResourceURI(requestResource, parentURI, request);
+	}
+
+	protected URI forgeDocumentResourceURI(RDFResource documentResource, String parentURI, HttpServletRequest request) {
 		StringBuilder uriBuilder = new StringBuilder();
 		uriBuilder.append(parentURI);
 
@@ -29,7 +35,7 @@ public abstract class AbstractPOSTRequestHandler extends AbstractRequestHandler 
 
 		uriBuilder.append(forgeSlug(documentResource, parentURI, request));
 
-		return uriBuilder.toString();
+		return new URIImpl(uriBuilder.toString());
 	}
 
 	private String forgeSlug(RDFResource documentResource, String parentURI, HttpServletRequest request) {
@@ -41,11 +47,14 @@ public abstract class AbstractPOSTRequestHandler extends AbstractRequestHandler 
 				slug = slug.substring(0, slug.length() - 1);
 				slug = HTTPUtil.createSlug(slug).concat(SLASH);
 			} else slug = HTTPUtil.createSlug(slug);
-			return slug;
+		} else {
+			Random random = new Random();
+			slug = String.valueOf(Math.abs(random.nextLong()));
 		}
 
-		Random random = new Random();
-		return String.valueOf(Math.abs(random.nextLong()));
+		if ( configurationRepository.enforceEndingSlash() && ! slug.endsWith(SLASH) ) slug = slug.concat(SLASH);
+
+		return slug;
 	}
 
 }

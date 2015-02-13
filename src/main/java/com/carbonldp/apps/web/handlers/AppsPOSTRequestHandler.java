@@ -22,6 +22,7 @@ import com.carbonldp.apps.AppFactory;
 import com.carbonldp.ldp.web.handlers.AbstractPOSTRequestHandler;
 import com.carbonldp.models.Infraction;
 import com.carbonldp.models.RDFResource;
+import com.carbonldp.utils.ModelUtil;
 import com.carbonldp.utils.URIUtil;
 import com.carbonldp.utils.ValueUtil;
 import com.carbonldp.web.RequestHandler;
@@ -40,15 +41,16 @@ public class AppsPOSTRequestHandler extends AbstractPOSTRequestHandler {
 		String targetURI = getTargetURI(request);
 
 		if ( hasGenericRequestURI(requestResource) ) {
-			URI forgedURI = forgeUniqueURI(requestResource, request);
+			URI forgedURI = forgeUniqueURI(requestResource, targetURI, request);
 			requestResource = renameResource(requestResource, forgedURI);
 		} else {
 			validateRequestResourceRelativeness(requestResource, targetURI);
 			checkRequestResourceAvailability(requestResource);
 		}
 
-		// TODO: Forge the new Application's URI
-		// TODO: Change the Application's URI
+		URI resourceContext = requestResource.getURI();
+		requestResource = addMissingContext(requestResource, resourceContext);
+
 		// TODO: Create repository for the application
 		// TODO: Store repositoryID in the Application
 		// TODO: Create default resources in the Application's repository
@@ -58,11 +60,16 @@ public class AppsPOSTRequestHandler extends AbstractPOSTRequestHandler {
 		// TODO: Create application in the platform's Applications container
 
 		// TODO: FT: Return OK
-		return new ResponseEntity<Object>(requestModel, HttpStatus.OK);
+		return new ResponseEntity<Object>(requestResource, HttpStatus.OK);
+	}
+
+	private RDFResource addMissingContext(RDFResource requestResource, URI resourceContext) {
+		AbstractModel modifiedModel = ModelUtil.replaceContext(requestResource.getBaseModel(), null, resourceContext);
+		return new RDFResource(modifiedModel, requestResource.getURI());
 	}
 
 	private void checkRequestResourceAvailability(RDFResource requestResource) {
-
+		// TODO
 	}
 
 	private void validateRequestResourceRelativeness(RDFResource requestResource, String targetURI) {
@@ -90,13 +97,8 @@ public class AppsPOSTRequestHandler extends AbstractPOSTRequestHandler {
 	}
 
 	private RDFResource renameResource(RDFResource requestResource, URI forgedURI) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	private URI forgeUniqueURI(RDFResource requestResource, HttpServletRequest request) {
-		// TODO Auto-generated method stub
-		return null;
+		AbstractModel renamedModel = ModelUtil.replaceSubject(requestResource.getBaseModel(), requestResource.getURI(), forgedURI);
+		return new RDFResource(renamedModel, forgedURI, null);
 	}
 
 	private boolean hasGenericRequestURI(RDFResource resource) {
@@ -112,14 +114,13 @@ public class AppsPOSTRequestHandler extends AbstractPOSTRequestHandler {
 		Resource subject = subjects.iterator().next();
 
 		if ( ValueUtil.isBNode(subject) ) {
-			throw new BadRequestException(0);
+			throw new BadRequestException("Blank nodes are currently not supported.");
 		}
 
 		URI subjectURI = ValueUtil.getURI(subject);
 
 		if ( URIUtil.hasFragment(subjectURI) ) {
-			// TODO: Add error code
-			throw new BadRequestException(0);
+			throw new BadRequestException("The request cannot be a fragmented resource.");
 		}
 	}
 

@@ -131,7 +131,7 @@ public class PropertiesFileConfigurationRepository extends AbstractComponent imp
 	@Override
 	public boolean isGenericRequest(String uri) {
 		AntPathMatcher matcher = new AntPathMatcher();
-		uri = uri.replace(getPlatformURL(), EMPTY_STRING);
+		uri = uri.replace(getPlatformURL(), SLASH);
 
 		return matcher.match(getGenericRequestPattern(), uri);
 	}
@@ -144,7 +144,7 @@ public class PropertiesFileConfigurationRepository extends AbstractComponent imp
 		// The matcher removes the ending slash (if it finds one)
 		boolean hasTrailingSlash = uri.endsWith(SLASH);
 
-		matcher.extractPathWithinPattern(getGenericRequestPattern(), uri);
+		uri = matcher.extractPathWithinPattern(getGenericRequestPattern(), uri);
 
 		int index = uri.indexOf(SLASH);
 		if ( index == - 1 ) {
