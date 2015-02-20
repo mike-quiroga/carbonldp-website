@@ -14,24 +14,28 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.openrdf.model.URI;
 import org.openrdf.model.impl.URIImpl;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.acls.model.NotFoundException;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.filter.GenericFilterBean;
 
 import com.carbonldp.PropertiesFileConfigurationRepository;
 import com.carbonldp.apps.App;
+import com.carbonldp.apps.AppService;
 
 public class AppContextPersistanceFilter extends GenericFilterBean {
+	protected final Logger LOG = LoggerFactory.getLogger(this.getClass());
 
 	static final String FILTER_APPLIED = "__carbon_acpf_applied";
 
-	private final AppContextRepository repository;
+	private final AppService appService;
 
 	@Autowired
 	private PropertiesFileConfigurationRepository configurationService;
 
-	public AppContextPersistanceFilter(AppContextRepository repository) {
-		this.repository = repository;
+	public AppContextPersistanceFilter(AppService appService) {
+		this.appService = appService;
 	}
 
 	@Override
@@ -47,22 +51,30 @@ public class AppContextPersistanceFilter extends GenericFilterBean {
 		HttpServletRequest httpRequest = (HttpServletRequest) request;
 		HttpServletResponse httpResponse = (HttpServletResponse) response;
 
-		URI applicationURI = getTargetApplicationURI(httpRequest, httpResponse);
+		URI rootContainerURI = getRootContainerURI(httpRequest, httpResponse);
 
-		if ( applicationURI == null ) {
-			// The URI doesn't match an ApplicationURI
-			// TODO: Handle it
+		if ( rootContainerURI == null ) {
+			// The URI doesn't match an App's Root Container URI
+			// TODO: Add more information
+			request.removeAttribute(FILTER_APPLIED);
+			httpResponse.setStatus(HttpStatus.NOT_FOUND.value());
+			return;
 		}
 
-		App application = repository.getApplication(applicationURI);
+		App app = appService.findByRootContainer(rootContainerURI);
 
-		if ( application == null ) {
-			// TODO: Handle this correctly
-			throw new NotFoundException("Application not found");
+		if ( app == null ) {
+			// TODO: Add more information
+			request.removeAttribute(FILTER_APPLIED);
+			httpResponse.setStatus(HttpStatus.NOT_FOUND.value());
+			return;
 		}
 
 		AppContext context = AppContextHolder.createEmptyContext();
-		context.setApplication(application);
+		context.setApplication(app);
+		if ( LOG.isDebugEnabled() ) {
+			LOG.debug("AppContext set to: '{}'", app);
+		}
 
 		try {
 			chain.doFilter(request, response);
@@ -70,19 +82,19 @@ public class AppContextPersistanceFilter extends GenericFilterBean {
 			AppContextHolder.clearContext();
 			request.removeAttribute(FILTER_APPLIED);
 
-			if ( logger.isDebugEnabled() ) {
-				logger.debug("ApplicationContext cleared");
+			if ( LOG.isDebugEnabled() ) {
+				LOG.debug("AppContext cleared");
 			}
 		}
 	}
 
-	private URI getTargetApplicationURI(HttpServletRequest httpRequest, HttpServletResponse httpResponse) {
+	private URI getRootContainerURI(HttpServletRequest httpRequest, HttpServletResponse httpResponse) {
 		String requestURI = httpRequest.getRequestURI();
 		requestURI = requestURI.startsWith(SLASH) ? requestURI.substring(1) : requestURI;
 
-		if ( ! requestURI.startsWith(configurationService.getApplicationsEntryPoint()) ) return null;
+		if ( ! requestURI.startsWith(configurationService.getAppsEntryPoint()) ) return null;
 
-		requestURI = requestURI.replace(configurationService.getApplicationsEntryPoint(), EMPTY_STRING);
+		requestURI = requestURI.replace(configurationService.getAppsEntryPoint(), EMPTY_STRING);
 
 		if ( requestURI.isEmpty() ) return null;
 
@@ -92,8 +104,7 @@ public class AppContextPersistanceFilter extends GenericFilterBean {
 		else applicationSlug = requestURI.substring(0, slashIndex);
 
 		StringBuilder uriBuilder = new StringBuilder();
-		// TODO: Decide. Should we enforce the ending slash here?
-		uriBuilder.append(configurationService.getApplicationsEntryPointURL()).append(applicationSlug).append(SLASH);
+		uriBuilder.append(configurationService.getAppsEntryPointURL()).append(applicationSlug).append(SLASH);
 		return new URIImpl(uriBuilder.toString());
 	}
 

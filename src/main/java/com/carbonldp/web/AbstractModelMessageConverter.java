@@ -6,21 +6,27 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.openrdf.model.Resource;
 import org.openrdf.model.Statement;
+import org.openrdf.model.URI;
+import org.openrdf.model.ValueFactory;
 import org.openrdf.model.impl.AbstractModel;
 import org.openrdf.model.impl.LinkedHashModel;
+import org.openrdf.model.impl.URIImpl;
+import org.openrdf.model.impl.ValueFactoryImpl;
 import org.openrdf.rio.RDFFormat;
 import org.openrdf.rio.RDFHandlerException;
 import org.openrdf.rio.RDFParseException;
 import org.openrdf.rio.RDFParser;
 import org.openrdf.rio.RDFWriter;
 import org.openrdf.rio.Rio;
-import org.openrdf.rio.helpers.StatementCollector;
+import org.openrdf.rio.helpers.RDFHandlerBase;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpInputMessage;
 import org.springframework.http.HttpOutputMessage;
@@ -32,6 +38,8 @@ import org.springframework.util.Assert;
 
 import com.carbonldp.ConfigurationRepository;
 import com.carbonldp.utils.MediaTypeUtil;
+import com.carbonldp.utils.URIUtil;
+import com.carbonldp.utils.ValueUtil;
 
 public class AbstractModelMessageConverter implements HttpMessageConverter<AbstractModel> {
 
@@ -111,7 +119,7 @@ public class AbstractModelMessageConverter implements HttpMessageConverter<Abstr
 		AbstractModel model = new LinkedHashModel();
 		String baseURI = configurationRepository.forgeGenericRequestURL();
 
-		parser.setRDFHandler(new StatementCollector(model));
+		parser.setRDFHandler(new DocumentRDFHandler(model));
 
 		try {
 			parser.parse(bodyInputStream, baseURI);
@@ -182,4 +190,30 @@ public class AbstractModelMessageConverter implements HttpMessageConverter<Abstr
 		return (! this.supportedFormats.isEmpty() ? this.supportedFormats.get(0) : null);
 	}
 
+	private class DocumentRDFHandler extends RDFHandlerBase {
+		private final Collection<Statement> statements;
+		private final ValueFactory valueFactory;
+
+		public DocumentRDFHandler(Collection<Statement> statements) {
+			this.statements = statements;
+			this.valueFactory = ValueFactoryImpl.getInstance();
+		}
+
+		@Override
+		public void handleStatement(Statement statement) throws RDFHandlerException {
+			Resource contextResource = statement.getContext();
+			if ( contextResource != null ) throw new RDFHandlerException("Named graphs aren't supported.");
+
+			Resource subjectResource = statement.getSubject();
+			if ( ValueUtil.isBNode(subjectResource) ) throw new RDFHandlerException("BNodes aren't supported.");
+
+			URI subject = ValueUtil.getURI(subjectResource);
+			URI context;
+			if ( ! URIUtil.hasFragment(subject) ) context = subject;
+			else context = new URIImpl(URIUtil.getDocumentURI(subject.stringValue()));
+
+			Statement documentStatement = valueFactory.createStatement(subject, statement.getPredicate(), statement.getObject(), context);
+			statements.add(documentStatement);
+		}
+	}
 }

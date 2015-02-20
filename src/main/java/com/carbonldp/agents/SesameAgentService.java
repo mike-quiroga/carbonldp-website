@@ -10,6 +10,7 @@ import org.openrdf.model.impl.ValueFactoryImpl;
 import org.openrdf.spring.SesameConnectionFactory;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.carbonldp.descriptions.ContainerDescription.Type;
 import com.carbonldp.ldp.services.ContainerService;
 import com.carbonldp.ldp.services.RDFSourceService;
 import com.carbonldp.models.RDFSource;
@@ -21,6 +22,8 @@ public class SesameAgentService extends AbstractSesameService implements AgentSe
 	private final RDFSourceService sourceService;
 	private final ContainerService containerService;
 	private final URI agentsContainerURI;
+
+	private final Type agentsContainerType = Type.BASIC;
 
 	public SesameAgentService(SesameConnectionFactory connectionFactory, RDFSourceService sourceService, ContainerService containerService,
 			URI agentsContainerURI) {
@@ -45,7 +48,7 @@ public class SesameAgentService extends AbstractSesameService implements AgentSe
 		Map<String, Value> bindings = new HashMap<String, Value>();
 		bindings.put("email", ValueFactoryImpl.getInstance().createLiteral(email));
 
-		Set<URI> memberURIs = containerService.findMembers(agentsContainerURI, findByEmail_selector, bindings);
+		Set<URI> memberURIs = containerService.findMembers(agentsContainerURI, findByEmail_selector, bindings, agentsContainerType);
 		if ( memberURIs.isEmpty() ) return null;
 		if ( memberURIs.size() > 1 ) {
 			// TODO: Add error number

@@ -43,6 +43,8 @@ public class RepositoryConfig {
 	private ConfigurationRepository configurationRepository;
 	@Autowired
 	private SesameConnectionFactory connectionFactory;
+	@Autowired
+	private RepositoryService appRepositoryService;
 
 	@Bean
 	protected RDFResourceRepository rdfResourceRepository() {
@@ -66,12 +68,12 @@ public class RepositoryConfig {
 		typedServices.add(new SesameDirectContainerService(connectionFactory, rdfResourceRepository(), rdfDocumentRepository()));
 		typedServices.add(new SesameIndirectContainerService(connectionFactory, rdfResourceRepository(), rdfDocumentRepository()));
 
-		return new SesameContainerService(connectionFactory, rdfResourceRepository(), rdfDocumentRepository(), typedServices);
+		return new SesameContainerService(connectionFactory, rdfResourceRepository(), rdfDocumentRepository(), rdfSourceService(), typedServices);
 	}
 
 	@Bean
 	public AgentService agentService() {
-		URI agentsContainerURI = new URIImpl(configurationRepository.getPlatformAppsContainerURL());
+		URI agentsContainerURI = new URIImpl(configurationRepository.getPlatformAgentsContainerURL());
 		return new SesameAgentService(connectionFactory, rdfSourceService(), containerService(), agentsContainerURI);
 	}
 
@@ -89,6 +91,11 @@ public class RepositoryConfig {
 
 	@Bean
 	public AppService appService() {
-		return new SesameAppService(connectionFactory, rdfSourceService(), containerService());
+		URI appsContainerURI = new URIImpl(configurationRepository.getPlatformAppsContainerURL());
+		SesameAppService service = new SesameAppService(connectionFactory, rdfDocumentRepository(), rdfSourceService(), containerService(),
+				appRepositoryService);
+		service.setAppsContainerURI(appsContainerURI);
+		service.setAppsEntryPoint(configurationRepository.getAppsEntryPointURL());
+		return service;
 	}
 }

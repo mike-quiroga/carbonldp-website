@@ -38,10 +38,10 @@ public class PropertiesFileConfigurationRepository extends AbstractComponent imp
 	@Value("${platform.privileges.container.url}")
 	private String platformPrivilegesContainerURL;
 
-	@Value("${applications.entrypoint}")
-	private String applicationsEntryPoint;
-	@Value("${applications.entrypoint.url}")
-	private String applicationsEntryPointURL;
+	@Value("${apps.entrypoint}")
+	private String appsEntryPoint;
+	@Value("${apps.entrypoint.url}")
+	private String appsEntryPointURL;
 
 	@Value("${generic-request}")
 	private String genericRequest;
@@ -116,12 +116,12 @@ public class PropertiesFileConfigurationRepository extends AbstractComponent imp
 		return platformPrivilegesContainerURL;
 	}
 
-	public String getApplicationsEntryPoint() {
-		return applicationsEntryPoint;
+	public String getAppsEntryPoint() {
+		return appsEntryPoint;
 	}
 
-	public String getApplicationsEntryPointURL() {
-		return applicationsEntryPointURL;
+	public String getAppsEntryPointURL() {
+		return appsEntryPointURL;
 	}
 
 	public String getRealmName() {
@@ -165,7 +165,7 @@ public class PropertiesFileConfigurationRepository extends AbstractComponent imp
 
 	public String forgeGenericRequestURL() {
 		StringBuilder urlBuilder = new StringBuilder();
-		urlBuilder.append(this.genericRequestURL).append(random.nextLong());
+		urlBuilder.append(this.genericRequestURL).append(Math.abs(random.nextLong()));
 		if ( enforceEndingSlash() ) urlBuilder.append(SLASH);
 		return urlBuilder.toString();
 	}

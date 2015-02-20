@@ -6,9 +6,11 @@ import static com.carbonldp.Consts.TAB;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.lang3.NotImplementedException;
 import org.openrdf.model.URI;
 import org.openrdf.model.Value;
 import org.openrdf.spring.SesameConnectionFactory;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.carbonldp.descriptions.ContainerDescription;
 import com.carbonldp.descriptions.ContainerDescription.Type;
@@ -16,7 +18,8 @@ import com.carbonldp.repository.RDFDocumentRepository;
 import com.carbonldp.repository.RDFResourceRepository;
 import com.carbonldp.utils.RDFNodeUtil;
 
-public class SesameIndirectContainerService extends AbstractTypedContainerService {
+@Transactional
+public class SesameIndirectContainerService extends AbstractAccessPointService {
 
 	public SesameIndirectContainerService(SesameConnectionFactory connectionFactory, RDFResourceRepository resourceRepository,
 			RDFDocumentRepository documentRepository) {
@@ -26,6 +29,12 @@ public class SesameIndirectContainerService extends AbstractTypedContainerServic
 	@Override
 	public boolean supports(Type containerType) {
 		return containerType == Type.INDIRECT;
+	}
+
+	@Override
+	public boolean isMember(URI containerURI, URI possibleMemberURI) {
+		// TODO: Implement
+		throw new NotImplementedException("Not implemented.");
 	}
 
 	private static final String findMembers_query;

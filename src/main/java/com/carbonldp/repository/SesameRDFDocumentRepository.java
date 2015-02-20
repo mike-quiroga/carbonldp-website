@@ -66,7 +66,7 @@ public class SesameRDFDocumentRepository extends AbstractSesameRepository implem
 			throw new RepositoryRuntimeException(e);
 		}
 
-		query.setBinding("?graphName", documentURI);
+		query.setBinding("graphName", documentURI);
 
 		try {
 			return query.evaluate();

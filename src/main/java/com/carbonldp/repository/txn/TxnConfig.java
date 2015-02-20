@@ -19,6 +19,8 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import com.carbonldp.ConfigurationRepository;
+import com.carbonldp.repository.LocalRepositoryService;
+import com.carbonldp.repository.RepositoryService;
 
 @Configuration
 @ComponentScan("org.openrdf.spring")
@@ -35,6 +37,11 @@ public class TxnConfig {
 	@Bean
 	public SesameConnectionFactory connectionFactory() {
 		return new ApplicationContextConnectionFactory(platformConnectionFactory(), appsRepositoryManager());
+	}
+
+	@Bean
+	public RepositoryService appRepositoryService() {
+		return new LocalRepositoryService(appsRepositoryManager());
 	}
 
 	private RepositoryConnectionFactory platformConnectionFactory() {
@@ -56,7 +63,8 @@ public class TxnConfig {
 		return platformRepository;
 	}
 
-	private RepositoryManager appsRepositoryManager() {
+	@Bean
+	protected RepositoryManager appsRepositoryManager() {
 		String repositoryDirectory = configurationRepository.getAppsRepositoryDirectory();
 		return new LocalRepositoryManager(new File(repositoryDirectory));
 	}

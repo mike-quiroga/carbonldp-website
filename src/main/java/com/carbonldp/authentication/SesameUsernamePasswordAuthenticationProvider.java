@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.carbonldp.agents.Agent;
 import com.carbonldp.agents.AgentService;
+import com.carbonldp.apps.context.RunInPlatformContext;
 import com.carbonldp.authorization.PlatformPrivilegeService;
 import com.carbonldp.authorization.PlatformRoleService;
 import com.carbonldp.authorization.RunWith;
@@ -31,6 +32,7 @@ public class SesameUsernamePasswordAuthenticationProvider extends AbstractSesame
 
 	@Transactional
 	@RunWith(roles = { "ROLE_SYSTEM" })
+	@RunInPlatformContext
 	public Authentication authenticate(Authentication authentication) throws AuthenticationException {
 		Object rawPrincipal = authentication.getPrincipal();
 		Object rawCredentials = authentication.getCredentials();

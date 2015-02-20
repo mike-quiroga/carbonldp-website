@@ -1,4 +1,4 @@
-package com.carbonldp.ldp.web.controllers;
+package com.carbonldp.ldp.web;
 
 import com.carbonldp.web.AbstractController;
 

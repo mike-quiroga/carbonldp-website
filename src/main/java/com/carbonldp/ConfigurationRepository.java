@@ -27,9 +27,9 @@ public interface ConfigurationRepository {
 
 	public String getPlatformPrivilegesContainerURL();
 
-	public String getApplicationsEntryPoint();
+	public String getAppsEntryPoint();
 
-	public String getApplicationsEntryPointURL();
+	public String getAppsEntryPointURL();
 
 	public String getRealmName();
 

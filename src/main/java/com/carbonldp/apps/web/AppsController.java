@@ -11,14 +11,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import com.carbonldp.apps.web.handlers.AppsPOSTRequestHandler;
+import com.carbonldp.apps.web.handlers.AppsPOSTHandler;
 import com.carbonldp.web.AbstractController;
 
 @Controller
 @RequestMapping(value = "/platform/apps/")
 public class AppsController extends AbstractController {
 	@Autowired
-	private AppsPOSTRequestHandler postRequestHandler;
+	private AppsPOSTHandler postRequestHandler;
 
 	@RequestMapping(method = RequestMethod.POST)
 	public ResponseEntity<Object> createApplication(@RequestBody AbstractModel requestModel, HttpServletRequest request, HttpServletResponse response) {

@@ -5,7 +5,6 @@ import static com.carbonldp.Consts.SLASH;
 
 import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -14,12 +13,15 @@ import org.openrdf.model.Model;
 import org.openrdf.model.Resource;
 import org.openrdf.model.URI;
 import org.openrdf.model.impl.AbstractModel;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.Assert;
 
+import com.carbonldp.apps.App;
 import com.carbonldp.apps.AppFactory;
-import com.carbonldp.ldp.web.handlers.AbstractPOSTRequestHandler;
+import com.carbonldp.apps.AppService;
+import com.carbonldp.ldp.web.AbstractPOSTRequestHandler;
 import com.carbonldp.models.Infraction;
 import com.carbonldp.models.RDFResource;
 import com.carbonldp.utils.ModelUtil;
@@ -27,9 +29,18 @@ import com.carbonldp.utils.URIUtil;
 import com.carbonldp.utils.ValueUtil;
 import com.carbonldp.web.RequestHandler;
 import com.carbonldp.web.exceptions.BadRequestException;
+import com.carbonldp.web.exceptions.ConflictException;
 
 @RequestHandler
-public class AppsPOSTRequestHandler extends AbstractPOSTRequestHandler {
+public class AppsPOSTHandler extends AbstractPOSTRequestHandler {
+
+	private final AppService appService;
+
+	@Autowired
+	public AppsPOSTHandler(AppService appService) {
+		this.appService = appService;
+	}
+
 	public ResponseEntity<Object> handleRequest(AbstractModel requestModel, HttpServletRequest request, HttpServletResponse response) {
 		validateRequestModel(requestModel);
 
@@ -38,29 +49,41 @@ public class AppsPOSTRequestHandler extends AbstractPOSTRequestHandler {
 
 		validateRequestResource(requestResource);
 
-		String targetURI = getTargetURI(request);
+		String targetURI = getTargetURL(request);
 
 		if ( hasGenericRequestURI(requestResource) ) {
 			URI forgedURI = forgeUniqueURI(requestResource, targetURI, request);
 			requestResource = renameResource(requestResource, forgedURI);
 		} else {
 			validateRequestResourceRelativeness(requestResource, targetURI);
-			checkRequestResourceAvailability(requestResource);
 		}
+
+		// TODO: After ensuring uniqueness, move this back into the "else" right above
+		checkRequestResourceAvailability(requestResource);
 
 		URI resourceContext = requestResource.getURI();
 		requestResource = addMissingContext(requestResource, resourceContext);
 
-		// TODO: Create repository for the application
-		// TODO: Store repositoryID in the Application
-		// TODO: Create default resources in the Application's repository
-		// -- TODO: Root Container
-		// -- TODO: Application Roles Container
-		// -- TODO: ACLs
-		// TODO: Create application in the platform's Applications container
+		App app = new App(requestResource.getBaseModel(), requestResource.getURI());
 
-		// TODO: FT: Return OK
+		app = appService.create(app);
+		appService.initialize(app);
+
 		return new ResponseEntity<Object>(requestResource, HttpStatus.OK);
+	}
+
+	@Override
+	protected void validateRequestResourcesNumber(int size) {
+		super.validateRequestResourcesNumber(size);
+		if ( size > 1 ) throw new BadRequestException("The request cannot contain more than one rdf resource.");
+	}
+
+	@Override
+	protected void validateRequestResource(Resource subject) {
+		super.validateRequestResource(subject);
+		if ( URIUtil.hasFragment(ValueUtil.getURI(subject)) ) {
+			throw new BadRequestException("The request resource cannot have a fragment in its URI.");
+		}
 	}
 
 	private RDFResource addMissingContext(RDFResource requestResource, URI resourceContext) {
@@ -69,7 +92,13 @@ public class AppsPOSTRequestHandler extends AbstractPOSTRequestHandler {
 	}
 
 	private void checkRequestResourceAvailability(RDFResource requestResource) {
-		// TODO
+		if ( sourceWithURIExists(requestResource.getURI()) ) {
+			throw new ConflictException("The URI is already in use.");
+		}
+	}
+
+	private boolean sourceWithURIExists(URI sourceURI) {
+		return sourceService.exists(sourceURI);
 	}
 
 	private void validateRequestResourceRelativeness(RDFResource requestResource, String targetURI) {
@@ -103,25 +132,6 @@ public class AppsPOSTRequestHandler extends AbstractPOSTRequestHandler {
 
 	private boolean hasGenericRequestURI(RDFResource resource) {
 		return configurationRepository.isGenericRequest(resource.getURI().stringValue());
-	}
-
-	private void validateRequestModel(Model requestModel) {
-		Set<Resource> subjects = requestModel.subjects();
-		if ( subjects.size() != 1 ) {
-			throw new BadRequestException("The request contains more than one RDF resource.");
-		}
-
-		Resource subject = subjects.iterator().next();
-
-		if ( ValueUtil.isBNode(subject) ) {
-			throw new BadRequestException("Blank nodes are currently not supported.");
-		}
-
-		URI subjectURI = ValueUtil.getURI(subject);
-
-		if ( URIUtil.hasFragment(subjectURI) ) {
-			throw new BadRequestException("The request cannot be a fragmented resource.");
-		}
 	}
 
 	private void validateRequestResource(RDFResource requestResource) {

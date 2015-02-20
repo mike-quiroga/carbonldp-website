@@ -13,8 +13,6 @@ import org.openrdf.repository.manager.RepositoryManager;
 import org.openrdf.repository.sail.config.SailRepositoryConfig;
 import org.openrdf.sail.config.SailImplConfig;
 import org.openrdf.sail.nativerdf.config.NativeStoreConfig;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 import com.carbonldp.AbstractComponent;
 import com.carbonldp.exceptions.CarbonRuntimeException;
@@ -25,11 +23,18 @@ import com.carbonldp.repository.txn.RepositoryRuntimeException;
 import com.carbonldp.repository.txn.WriteTransactionCallback;
 import com.carbonldp.repository.txn.WriteTransactionTemplate;
 
-@Service
 public class LocalRepositoryService extends AbstractComponent implements RepositoryService {
 
-	@Autowired
-	private RepositoryManager manager;
+	private final RepositoryManager manager;
+
+	public LocalRepositoryService(RepositoryManager manager) {
+		if ( ! manager.isInitialized() ) try {
+			manager.initialize();
+		} catch (RepositoryException e) {
+			throw new RepositoryRuntimeException(0x000D);
+		}
+		this.manager = manager;
+	}
 
 	@Override
 	public void createRepository(String repositoryID) {

@@ -9,11 +9,13 @@ import com.carbonldp.models.Container;
 import com.carbonldp.models.RDFSource;
 
 public interface RDFSourceService {
-	public RDFSource exists(URI sourceURI);
+	public boolean exists(URI sourceURI);
 
 	public RDFSource get(URI sourceURI);
 
 	public Set<RDFSource> get(Set<URI> sourceURIs);
+
+	public URI getDefaultInteractionModel(URI targetURI);
 
 	public DateTime touch(URI sourceURI);
 
