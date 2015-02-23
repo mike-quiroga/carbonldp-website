@@ -171,7 +171,7 @@ public abstract class AbstractPOSTRequestHandler extends AbstractRequestHandler 
 			if ( ! ValueUtil.isURI(subject) ) continue;
 			URI subjectURI = ValueUtil.getURI(subject);
 			if ( URIUtil.hasFragment(subjectURI) ) continue;
-			RDFResource documentResource = new RDFResource(requestModel, subjectURI, null);
+			RDFResource documentResource = new RDFResource(requestModel, subjectURI);
 			documentResources.add(documentResource);
 		}
 		return documentResources;

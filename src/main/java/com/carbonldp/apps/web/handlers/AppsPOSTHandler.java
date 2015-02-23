@@ -45,7 +45,7 @@ public class AppsPOSTHandler extends AbstractPOSTRequestHandler {
 		validateRequestModel(requestModel);
 
 		URI requestSubject = getRequestSubject(requestModel);
-		RDFResource requestResource = new RDFResource(requestModel, requestSubject, null);
+		RDFResource requestResource = new RDFResource(requestModel, requestSubject);
 
 		validateRequestResource(requestResource);
 
@@ -127,7 +127,7 @@ public class AppsPOSTHandler extends AbstractPOSTRequestHandler {
 
 	private RDFResource renameResource(RDFResource requestResource, URI forgedURI) {
 		AbstractModel renamedModel = ModelUtil.replaceSubject(requestResource.getBaseModel(), requestResource.getURI(), forgedURI);
-		return new RDFResource(renamedModel, forgedURI, null);
+		return new RDFResource(renamedModel, forgedURI);
 	}
 
 	private boolean hasGenericRequestURI(RDFResource resource) {
