@@ -61,11 +61,11 @@ public class AbstractModelMessageConverterUT extends AbstractUT {
 		subj = factory.createURI("http://example.org/rob");
 		pred = factory.createURI("http://example.org/is-a");
 		obj = factory.createURI("http://example.org/stark");
-		model.add(subj, pred, obj, subj);
+		model.add(subj, pred, obj);
 		subj = factory.createURI("http://example.org/rob");
 		pred = factory.createURI("http://example.org/lives-in");
 		obj = factory.createURI("http://example.org/winterfell");
-		model.add(subj, pred, obj, subj);
+		model.add(subj, pred, obj);
 	}
 
 	@Test
@@ -114,11 +114,11 @@ public class AbstractModelMessageConverterUT extends AbstractUT {
 		subj = factory.createURI("http://example.org/rob");
 		pred = factory.createURI("http://example.org/is-a");
 		obj = factory.createURI("http://example.org/stark");
-		model.add(subj, pred, obj, subj);
+		model.add(subj, pred, obj);
 		subj = factory.createURI("http://example.org/rob");
 		pred = factory.createURI("http://example.org/lives-in");
 		obj = factory.createURI("http://example.org/winterfell");
-		model.add(subj, pred, obj, subj);
+		model.add(subj, pred, obj);
 
 		outputStream = new MockOutputStreamImpl();
 		outputMessage = new MockHttpOutputMessage(outputStream);

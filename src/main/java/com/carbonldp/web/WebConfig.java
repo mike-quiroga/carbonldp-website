@@ -20,6 +20,7 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 import com.carbonldp.ConfigurationRepository;
+import com.carbonldp.ldp.web.RDFSourceMessageConverter;
 
 @Configuration
 @EnableWebMvc
@@ -41,7 +42,9 @@ public class WebConfig extends WebMvcConfigurerAdapter {
 
 	@Override
 	public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
+		converters.add(rdfSourceMessageConverter());
 		converters.add(modelMessageConverter());
+		converters.add(emptyResponseMessageConverter());
 		converters.add(new ByteArrayHttpMessageConverter());
 		converters.add(new StringHttpMessageConverter());
 		converters.add(new FormHttpMessageConverter());
@@ -61,5 +64,15 @@ public class WebConfig extends WebMvcConfigurerAdapter {
 	@Bean
 	public AbstractModelMessageConverter modelMessageConverter() {
 		return new AbstractModelMessageConverter(configurationRepository);
+	}
+
+	@Bean
+	public RDFSourceMessageConverter rdfSourceMessageConverter() {
+		return new RDFSourceMessageConverter();
+	}
+
+	@Bean
+	public EmptyResponseMessageConverter emptyResponseMessageConverter() {
+		return new EmptyResponseMessageConverter();
 	}
 }

@@ -31,7 +31,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.carbonldp.descriptions.ContainerDescription;
 import com.carbonldp.descriptions.RDFSourceDescription;
 import com.carbonldp.exceptions.StupidityException;
-import com.carbonldp.models.Container;
+import com.carbonldp.models.AccessPoint;
 import com.carbonldp.models.RDFSource;
 import com.carbonldp.repository.RDFDocumentRepository;
 import com.carbonldp.repository.RDFResourceRepository;
@@ -206,20 +206,31 @@ public class SesameRDFSourceService extends AbstractSesameLDPService implements 
 
 	@Override
 	public DateTime touch(URI sourceURI) {
-		// TODO Auto-generated method stub
-		return null;
+		DateTime now = DateTime.now();
+		return touch(sourceURI, now);
 	}
 
 	@Override
 	public DateTime touch(URI sourceURI, DateTime modified) {
-		// TODO Auto-generated method stub
-		return null;
+		resourceRepository.remove(sourceURI, RDFSourceDescription.Property.MODIFIED);
+		resourceRepository.add(sourceURI, RDFSourceDescription.Property.MODIFIED.getURI(), modified);
+		return modified;
 	}
 
 	@Override
-	public void addAccessPoint(URI sourceURI, Container accessPoint) {
-		// TODO Auto-generated method stub
+	public void createAccessPoint(URI sourceURI, AccessPoint accessPoint) {
+		documentRepository.addDocument(accessPoint.getDocument());
+		addAccessPoint(sourceURI, accessPoint);
+	}
 
+	private void addAccessPoint(URI sourceURI, AccessPoint accessPoint) {
+		RepositoryConnection connection = connectionFactory.getConnection();
+		try {
+			connection.add(sourceURI, RDFSourceDescription.Property.ACCESS_POINT.getURI(), accessPoint.getURI(), sourceURI);
+		} catch (RepositoryException e) {
+			// TODO: Add error number
+			throw new RepositoryRuntimeException(e);
+		}
 	}
 
 	@Override

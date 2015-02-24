@@ -5,7 +5,7 @@ import java.util.Set;
 import org.joda.time.DateTime;
 import org.openrdf.model.URI;
 
-import com.carbonldp.models.Container;
+import com.carbonldp.models.AccessPoint;
 import com.carbonldp.models.RDFSource;
 
 public interface RDFSourceService {
@@ -21,7 +21,7 @@ public interface RDFSourceService {
 
 	public DateTime touch(URI sourceURI, DateTime modified);
 
-	public void addAccessPoint(URI sourceURI, Container accessPoint);
+	public void createAccessPoint(URI sourceURI, AccessPoint accessPoint);
 
 	public void update(RDFSource source);
 
