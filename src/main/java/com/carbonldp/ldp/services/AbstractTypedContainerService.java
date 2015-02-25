@@ -8,10 +8,12 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import org.openrdf.model.Statement;
 import org.openrdf.model.URI;
 import org.openrdf.model.Value;
 import org.openrdf.query.BindingSet;
 import org.openrdf.query.BooleanQuery;
+import org.openrdf.query.GraphQuery;
 import org.openrdf.query.MalformedQueryException;
 import org.openrdf.query.QueryEvaluationException;
 import org.openrdf.query.QueryLanguage;
@@ -24,6 +26,8 @@ import org.openrdf.spring.SesameConnectionFactory;
 import com.carbonldp.descriptions.ContainerDescription;
 import com.carbonldp.exceptions.StupidityException;
 import com.carbonldp.models.RDFSource;
+import com.carbonldp.repository.DocumentGraphQueryResultHandler;
+import com.carbonldp.repository.GraphQueryResultHandler;
 import com.carbonldp.repository.RDFDocumentRepository;
 import com.carbonldp.repository.RDFResourceRepository;
 import com.carbonldp.repository.txn.RepositoryRuntimeException;
@@ -146,6 +150,48 @@ public abstract class AbstractTypedContainerService extends AbstractSesameLDPSer
 			// TODO: Add error number
 			throw new RepositoryRuntimeException(e);
 		}
+	}
+
+	protected Set<Statement> getProperties(URI containerURI, String getProperties_query) {
+		RepositoryConnection connection = connectionFactory.getConnection();
+
+		GraphQuery query;
+		try {
+			query = connection.prepareGraphQuery(QueryLanguage.SPARQL, getProperties_query);
+		} catch (RepositoryException e) {
+			throw new RepositoryRuntimeException(e);
+		} catch (MalformedQueryException e) {
+			throw new StupidityException(e);
+		}
+
+		query.setBinding("containerURI", containerURI);
+
+		Set<Statement> statements = new HashSet<Statement>();
+		GraphQueryResultHandler handler = new DocumentGraphQueryResultHandler(statements);
+		handler.handleQuery(query);
+
+		return statements;
+	}
+
+	protected Set<Statement> getMembershipTriples(URI containerURI, String getMembershipTriples_query) {
+		RepositoryConnection connection = connectionFactory.getConnection();
+
+		GraphQuery query;
+		try {
+			query = connection.prepareGraphQuery(QueryLanguage.SPARQL, getMembershipTriples_query);
+		} catch (RepositoryException e) {
+			throw new RepositoryRuntimeException(e);
+		} catch (MalformedQueryException e) {
+			throw new StupidityException(e);
+		}
+
+		query.setBinding("containerURI", containerURI);
+
+		Set<Statement> statements = new HashSet<Statement>();
+		GraphQueryResultHandler handler = new DocumentGraphQueryResultHandler(statements);
+		handler.handleQuery(query);
+
+		return statements;
 	}
 
 	protected abstract URI getMembershipResource(URI containerURI);

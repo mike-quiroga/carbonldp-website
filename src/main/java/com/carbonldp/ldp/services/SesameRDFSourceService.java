@@ -10,13 +10,10 @@ import org.joda.time.DateTime;
 import org.openrdf.model.Resource;
 import org.openrdf.model.Statement;
 import org.openrdf.model.URI;
-import org.openrdf.model.ValueFactory;
 import org.openrdf.model.impl.AbstractModel;
 import org.openrdf.model.impl.LinkedHashModel;
-import org.openrdf.model.impl.ValueFactoryImpl;
 import org.openrdf.query.BooleanQuery;
 import org.openrdf.query.GraphQuery;
-import org.openrdf.query.GraphQueryResult;
 import org.openrdf.query.MalformedQueryException;
 import org.openrdf.query.QueryEvaluationException;
 import org.openrdf.query.QueryLanguage;
@@ -33,6 +30,9 @@ import com.carbonldp.descriptions.RDFSourceDescription;
 import com.carbonldp.exceptions.StupidityException;
 import com.carbonldp.models.AccessPoint;
 import com.carbonldp.models.RDFSource;
+import com.carbonldp.repository.ConnectionActionCallback;
+import com.carbonldp.repository.DocumentGraphQueryResultHandler;
+import com.carbonldp.repository.GraphQueryResultHandler;
 import com.carbonldp.repository.RDFDocumentRepository;
 import com.carbonldp.repository.RDFResourceRepository;
 import com.carbonldp.repository.txn.RepositoryRuntimeException;
@@ -119,18 +119,8 @@ public class SesameRDFSourceService extends AbstractSesameLDPService implements 
 		query.setBinding("sourceURI", sourceURI);
 
 		AbstractModel model = new LinkedHashModel();
-		ValueFactory factory = ValueFactoryImpl.getInstance();
-		try {
-			GraphQueryResult result = query.evaluate();
-			if ( ! result.hasNext() ) return null;
-			while (result.hasNext()) {
-				Statement statement = result.next();
-				model.add(factory.createStatement(statement.getSubject(), statement.getPredicate(), statement.getObject(), sourceURI));
-			}
-		} catch (QueryEvaluationException e) {
-			// TODO: Add error code
-			throw new RepositoryRuntimeException(e);
-		}
+		GraphQueryResultHandler handler = new DocumentGraphQueryResultHandler(model);
+		handler.handleQuery(query);
 
 		return new RDFSource(model, sourceURI);
 	}
@@ -138,19 +128,19 @@ public class SesameRDFSourceService extends AbstractSesameLDPService implements 
 	// TODO: Decide. Should it return empty objects?
 	@Override
 	public Set<RDFSource> get(Set<URI> sourceURIs) {
-		RepositoryConnection connection = connectionFactory.getConnection();
-		Resource[] contexts = sourceURIs.toArray(new Resource[sourceURIs.size()]);
+		final Resource[] contexts = sourceURIs.toArray(new Resource[sourceURIs.size()]);
 
-		AbstractModel model = new LinkedHashModel();
-		try {
-			RepositoryResult<Statement> statements = connection.getStatements(null, null, null, false, contexts);
-			while (statements.hasNext()) {
-				model.add(statements.next());
+		AbstractModel model = actionTemplate.execute(new ConnectionActionCallback<AbstractModel>() {
+			@Override
+			public AbstractModel doWithConnection(RepositoryConnection connection) throws RepositoryException {
+				AbstractModel model = new LinkedHashModel();
+				RepositoryResult<Statement> statements = connection.getStatements(null, null, null, false, contexts);
+				while (statements.hasNext()) {
+					model.add(statements.next());
+				}
+				return model;
 			}
-		} catch (RepositoryException e) {
-			// TODO: Add error code
-			throw new RepositoryRuntimeException(e);
-		}
+		});
 
 		Set<RDFSource> sources = new HashSet<RDFSource>();
 		for (URI sourceURI : sourceURIs) {
@@ -158,6 +148,11 @@ public class SesameRDFSourceService extends AbstractSesameLDPService implements 
 		}
 
 		return sources;
+	}
+
+	@Override
+	public DateTime getModified(URI sourceURI) {
+		return resourceRepository.getDate(sourceURI, RDFSourceDescription.Property.MODIFIED);
 	}
 
 	private static final String getDefaultInteractionModel_query;

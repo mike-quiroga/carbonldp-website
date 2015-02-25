@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.carbonldp.apps.web.handlers.AppResourceGETHandler;
 import com.carbonldp.apps.web.handlers.AppResourcePOSTHandler;
 import com.carbonldp.apps.web.handlers.AppResourcePOSTNonRDFHandler;
 import com.carbonldp.ldp.web.AbstractLDPController;
@@ -26,20 +27,21 @@ public class AppResourceController extends AbstractLDPController {
 	private static final String FILE_NAME_PARAMETER = "name";
 
 	@Autowired
+	private AppResourceGETHandler getRDFHandler;
+
+	@Autowired
 	private AppResourcePOSTHandler postRDFHandler;
 	@Autowired
 	private AppResourcePOSTNonRDFHandler postNonRDFHandler;
 
 	@RequestMapping(method = RequestMethod.HEAD)
 	public ResponseEntity<Object> handleHEAD(HttpServletRequest request, HttpServletResponse response) {
-		// TODO: Implement
-		return new ResponseEntity<Object>(HttpStatus.NOT_IMPLEMENTED);
+		return getRDFHandler.handleRequest(request, response);
 	}
 
 	@RequestMapping(method = RequestMethod.GET)
 	public ResponseEntity<Object> handleGET(HttpServletRequest request, HttpServletResponse response) {
-		// TODO: Implement
-		return new ResponseEntity<Object>(HttpStatus.NOT_IMPLEMENTED);
+		return getRDFHandler.handleRequest(request, response);
 	}
 
 	//@formatter:off

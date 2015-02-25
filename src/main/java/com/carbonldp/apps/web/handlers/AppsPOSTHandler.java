@@ -1,8 +1,5 @@
 package com.carbonldp.apps.web.handlers;
 
-import static com.carbonldp.Consts.EMPTY_STRING;
-import static com.carbonldp.Consts.SLASH;
-
 import java.util.Iterator;
 import java.util.List;
 
@@ -99,39 +96,6 @@ public class AppsPOSTHandler extends AbstractPOSTRequestHandler {
 
 	private boolean sourceWithURIExists(URI sourceURI) {
 		return sourceService.exists(sourceURI);
-	}
-
-	private void validateRequestResourceRelativeness(RDFResource requestResource, String targetURI) {
-		String resourceURI = requestResource.getURI().stringValue();
-		targetURI = targetURI.endsWith(SLASH) ? targetURI : targetURI.concat(SLASH);
-		if ( ! resourceURI.startsWith(targetURI) ) {
-			throw new BadRequestException("A request resource's URI doesn't have the request URI as a base.");
-		}
-
-		String relativeURI = resourceURI.replace(targetURI, EMPTY_STRING);
-		if ( relativeURI.length() == 0 ) {
-			throw new BadRequestException("A request resource's URI is the same as the request URI. Remember POST to parent, PUT to me.");
-		}
-
-		int slashIndex = relativeURI.indexOf(SLASH);
-		if ( slashIndex == - 1 ) {
-			if ( configurationRepository.enforceEndingSlash() ) {
-				throw new BadRequestException("A request resource's URI doesn't end up in a slash.");
-			}
-		}
-
-		if ( (slashIndex + 1) < relativeURI.length() ) {
-			throw new BadRequestException("A request resource's URI isn't an immediate child of the request URI.");
-		}
-	}
-
-	private RDFResource renameResource(RDFResource requestResource, URI forgedURI) {
-		AbstractModel renamedModel = ModelUtil.replaceSubject(requestResource.getBaseModel(), requestResource.getURI(), forgedURI);
-		return new RDFResource(renamedModel, forgedURI);
-	}
-
-	private boolean hasGenericRequestURI(RDFResource resource) {
-		return configurationRepository.isGenericRequest(resource.getURI().stringValue());
 	}
 
 	private void validateRequestResource(RDFResource requestResource) {

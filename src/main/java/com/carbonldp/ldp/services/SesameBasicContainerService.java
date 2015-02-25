@@ -6,6 +6,7 @@ import static com.carbonldp.Consts.TAB;
 import java.util.Map;
 import java.util.Set;
 
+import org.openrdf.model.Statement;
 import org.openrdf.model.URI;
 import org.openrdf.model.Value;
 import org.openrdf.spring.SesameConnectionFactory;
@@ -54,6 +55,57 @@ public class SesameBasicContainerService extends AbstractTypedContainerService {
 	@Override
 	protected URI getMembershipResource(URI containerURI) {
 		return containerURI;
+	}
+
+	private static final String getProperties_query;
+	static {
+		StringBuilder queryBuilder = new StringBuilder();
+		//@formatter:off
+		queryBuilder
+			.append("CONSTRUCT {").append(NEW_LINE)
+			.append(TAB).append("?containerURI ?p ?o").append(NEW_LINE)
+			.append("} WHERE {").append(NEW_LINE)
+			.append(TAB).append("GRAPH ?containerURI {").append(NEW_LINE)
+			.append(TAB).append(TAB).append(RDFNodeUtil.generatePredicateStatement("?containerURI", "?hasMemberRelation", ContainerDescription.Property.HAS_MEMBER_RELATION)).append(NEW_LINE)
+			.append(TAB).append(TAB).append("?containerURI ?p ?o.").append(NEW_LINE)
+			.append(TAB).append(TAB).append("FILTER(").append(NEW_LINE)
+			.append(TAB).append(TAB).append(TAB).append("(?p != ?hasMemberRelation)").append(NEW_LINE)
+			.append(TAB).append(TAB).append(TAB).append("&&").append(NEW_LINE)
+			.append(TAB).append(TAB).append(TAB).append("(?p NOT ").append(RDFNodeUtil.generateINOperator(ContainerDescription.Property.CONTAINS)).append(")").append(NEW_LINE)
+			.append(TAB).append(TAB).append(")").append(NEW_LINE)
+			.append(TAB).append("}").append(NEW_LINE)
+			.append("}")
+		;
+		//@formatter:on
+		getProperties_query = queryBuilder.toString();
+	}
+
+	@Override
+	public Set<Statement> getProperties(URI containerURI) {
+		return getProperties(containerURI, getProperties_query);
+	}
+
+	private static final String getMembershipTriples_query;
+	static {
+		StringBuilder queryBuilder = new StringBuilder();
+		//@formatter:off
+		queryBuilder
+			.append("CONSTRUCT {").append(NEW_LINE)
+			.append(TAB).append("?containerURI ?hasMemberRelation ?members").append(NEW_LINE)
+			.append("} WHERE {").append(NEW_LINE)
+			.append(TAB).append("GRAPH ?containerURI {").append(NEW_LINE)
+			.append(TAB).append(TAB).append(RDFNodeUtil.generatePredicateStatement("?containerURI", "?hasMemberRelation", ContainerDescription.Property.HAS_MEMBER_RELATION)).append(NEW_LINE)
+			.append(TAB).append(TAB).append("?containerURI ?hasMemberRelation ?members").append(NEW_LINE)
+			.append(TAB).append("}").append(NEW_LINE)
+			.append("}")
+		;
+		//@formatter:on
+		getMembershipTriples_query = queryBuilder.toString();
+	}
+
+	@Override
+	public Set<Statement> getMembershipTriples(URI containerURI) {
+		return getMembershipTriples(containerURI, getMembershipTriples_query);
 	}
 
 	private static final String findMembers_query;

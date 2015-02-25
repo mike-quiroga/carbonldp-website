@@ -3,6 +3,9 @@ package com.carbonldp.ldp.services;
 import static com.carbonldp.Consts.NEW_LINE;
 import static com.carbonldp.Consts.TAB;
 
+import java.util.Set;
+
+import org.openrdf.model.Statement;
 import org.openrdf.model.URI;
 import org.openrdf.query.MalformedQueryException;
 import org.openrdf.query.QueryEvaluationException;
@@ -72,5 +75,56 @@ public abstract class AbstractAccessPointService extends AbstractTypedContainerS
 			// TODO: Add error number
 			throw new RepositoryRuntimeException(e);
 		}
+	}
+
+	private static final String getProperties_query;
+	static {
+		StringBuilder queryBuilder = new StringBuilder();
+		//@formatter:off
+		queryBuilder
+			.append("CONSTRUCT {").append(NEW_LINE)
+			.append(TAB).append("?containerURI ?p ?o").append(NEW_LINE)
+			.append("} WHERE {").append(NEW_LINE)
+			.append(TAB).append("GRAPH ?containerURI {").append(NEW_LINE)
+			.append(TAB).append(TAB).append("?containerURI ?p ?o.").append(NEW_LINE)
+			.append(TAB).append(TAB).append("FILTER(").append(NEW_LINE)
+			.append(TAB).append(TAB).append(TAB).append("(?p NOT ").append(RDFNodeUtil.generateINOperator(ContainerDescription.Property.CONTAINS)).append(")").append(NEW_LINE)
+			.append(TAB).append(TAB).append(")").append(NEW_LINE)
+			.append(TAB).append("}").append(NEW_LINE)
+			.append("}")
+		;
+		//@formatter:on
+		getProperties_query = queryBuilder.toString();
+	}
+
+	@Override
+	public Set<Statement> getProperties(URI containerURI) {
+		return getProperties(containerURI, getProperties_query);
+	}
+
+	private static final String getMembershipTriples_query;
+	static {
+		StringBuilder queryBuilder = new StringBuilder();
+		//@formatter:off
+		queryBuilder
+			.append("CONSTRUCT {").append(NEW_LINE)
+			.append(TAB).append("?membershipResource ?hasMemberRelation ?members").append(NEW_LINE)
+			.append("} WHERE {").append(NEW_LINE)
+			.append(TAB).append("GRAPH ?containerURI {").append(NEW_LINE)
+			.append(TAB).append(TAB).append(RDFNodeUtil.generatePredicateStatement("?containerURI", "?hasMemberRelation", ContainerDescription.Property.HAS_MEMBER_RELATION)).append(NEW_LINE)
+			.append(TAB).append(TAB).append(RDFNodeUtil.generatePredicateStatement("?containerURI", "?membershipResource", ContainerDescription.Property.MEMBERSHIP_RESOURCE)).append(NEW_LINE)
+			.append(TAB).append("}").append(NEW_LINE)
+			.append(TAB).append("GRAPH ?membershipResource {").append(NEW_LINE)
+			.append(TAB).append(TAB).append("?membershipResource ?hasMemberRelation ?members").append(NEW_LINE)
+			.append(TAB).append("}").append(NEW_LINE)
+			.append("}")
+		;
+		//@formatter:on
+		getMembershipTriples_query = queryBuilder.toString();
+	}
+
+	@Override
+	public Set<Statement> getMembershipTriples(URI containerURI) {
+		return getMembershipTriples(containerURI, getMembershipTriples_query);
 	}
 }

@@ -17,6 +17,8 @@ public interface RDFSourceService {
 
 	public URI getDefaultInteractionModel(URI targetURI);
 
+	public DateTime getModified(URI sourceURI);
+
 	public DateTime touch(URI sourceURI);
 
 	public DateTime touch(URI sourceURI, DateTime modified);
