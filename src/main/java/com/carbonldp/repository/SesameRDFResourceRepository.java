@@ -2,9 +2,13 @@ package com.carbonldp.repository;
 
 import info.aduna.iteration.Iterations;
 
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormatter;
+import org.joda.time.format.ISODateTimeFormat;
+import org.openrdf.model.Literal;
 import org.openrdf.model.Statement;
 import org.openrdf.model.URI;
 import org.openrdf.model.Value;
@@ -19,10 +23,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.carbonldp.descriptions.RDFNodeEnum;
 import com.carbonldp.descriptions.RDFResourceDescription;
+import com.carbonldp.models.PrefixedURI;
 import com.carbonldp.models.RDFResource;
 import com.carbonldp.repository.txn.RepositoryRuntimeException;
 import com.carbonldp.utils.LiteralUtil;
 import com.carbonldp.utils.URIUtil;
+import com.carbonldp.utils.ValueUtil;
 
 @Transactional
 public class SesameRDFResourceRepository extends AbstractSesameRepository implements RDFResourceRepository {
@@ -35,273 +41,783 @@ public class SesameRDFResourceRepository extends AbstractSesameRepository implem
 	}
 
 	@Override
-	public boolean hasProperty(URI resourceURI, URI pred) {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean hasProperty(final URI resourceURI, final URI pred) {
+		final URI documentURI = getDocumentURI(resourceURI);
+		return actionTemplate.execute(new ConnectionActionCallback<Boolean>() {
+			@Override
+			public Boolean doWithConnection(RepositoryConnection connection) throws RepositoryException {
+				RepositoryResult<Statement> statements = connection.getStatements(resourceURI, pred, null, false, documentURI);
+				return statements.hasNext();
+			}
+		});
 	}
 
 	@Override
-	public boolean hasProperty(URI resourceURI, RDFNodeEnum pred) {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean hasProperty(final URI resourceURI, final RDFNodeEnum pred) {
+		final URI documentURI = getDocumentURI(resourceURI);
+		return actionTemplate.execute(new ConnectionActionCallback<Boolean>() {
+			@Override
+			public Boolean doWithConnection(RepositoryConnection connection) throws RepositoryException {
+				for (PrefixedURI predURI : pred.getURIs()) {
+					RepositoryResult<Statement> statements = connection.getStatements(resourceURI, predURI, null, false, documentURI);
+					if ( statements.hasNext() ) return statements.hasNext();
+				}
+				return false;
+			}
+		});
 	}
 
 	@Override
-	public boolean contains(URI resourceURI, URI pred, Value obj) {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean contains(final URI resourceURI, final URI pred, final Value obj) {
+		final URI documentURI = getDocumentURI(resourceURI);
+		return actionTemplate.execute(new ConnectionActionCallback<Boolean>() {
+			@Override
+			public Boolean doWithConnection(RepositoryConnection connection) throws RepositoryException {
+				RepositoryResult<Statement> statements = connection.getStatements(resourceURI, pred, obj, false, documentURI);
+				return statements.hasNext();
+			}
+		});
 	}
 
 	@Override
-	public boolean contains(URI resourceURI, RDFNodeEnum pred, Value obj) {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean contains(final URI resourceURI, final RDFNodeEnum pred, final Value obj) {
+		final URI documentURI = getDocumentURI(resourceURI);
+		return actionTemplate.execute(new ConnectionActionCallback<Boolean>() {
+			@Override
+			public Boolean doWithConnection(RepositoryConnection connection) throws RepositoryException {
+				for (PrefixedURI predURI : pred.getURIs()) {
+					RepositoryResult<Statement> statements = connection.getStatements(resourceURI, predURI, obj, false, documentURI);
+					if ( statements.hasNext() ) return statements.hasNext();
+				}
+				return false;
+			}
+		});
 	}
 
 	@Override
-	public boolean contains(URI resourceURI, RDFNodeEnum pred, RDFNodeEnum obj) {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean contains(final URI resourceURI, final RDFNodeEnum pred, final RDFNodeEnum obj) {
+		final URI documentURI = getDocumentURI(resourceURI);
+		return actionTemplate.execute(new ConnectionActionCallback<Boolean>() {
+			@Override
+			public Boolean doWithConnection(RepositoryConnection connection) throws RepositoryException {
+				for (PrefixedURI predURI : pred.getURIs()) {
+					for (PrefixedURI objValue : obj.getURIs()) {
+						RepositoryResult<Statement> statements = connection.getStatements(resourceURI, predURI, objValue, false, documentURI);
+						if ( statements.hasNext() ) return statements.hasNext();
+					}
+				}
+				return false;
+			}
+		});
 	}
 
 	@Override
-	public Value getProperty(URI resourceURI, URI pred) {
-		// TODO Auto-generated method stub
-		return null;
+	public Value getProperty(final URI resourceURI, final URI pred) {
+		final URI documentURI = getDocumentURI(resourceURI);
+		return actionTemplate.execute(new ConnectionActionCallback<Value>() {
+			@Override
+			public Value doWithConnection(RepositoryConnection connection) throws RepositoryException {
+				RepositoryResult<Statement> statements = connection.getStatements(resourceURI, pred, null, false, documentURI);
+				if ( statements.hasNext() ) {
+					return statements.next().getObject();
+				}
+				return null;
+			}
+		});
 	}
 
 	@Override
-	public Value getProperty(URI resourceURI, RDFNodeEnum pred) {
-		// TODO Auto-generated method stub
-		return null;
+	public Value getProperty(final URI resourceURI, final RDFNodeEnum pred) {
+		final URI documentURI = getDocumentURI(resourceURI);
+		return actionTemplate.execute(new ConnectionActionCallback<Value>() {
+			@Override
+			public Value doWithConnection(RepositoryConnection connection) throws RepositoryException {
+				for (URI predURI : pred.getURIs()) {
+					RepositoryResult<Statement> statements = connection.getStatements(resourceURI, predURI, null, false, documentURI);
+					if ( statements.hasNext() ) {
+						return (statements.next().getObject());
+					}
+				}
+				return null;
+			}
+		});
 	}
 
 	@Override
-	public Set<Value> getProperties(URI resourceURI, URI pred) {
-		// TODO Auto-generated method stub
-		return null;
+	public Set<Value> getProperties(final URI resourceURI, final URI pred) {
+		final URI documentURI = getDocumentURI(resourceURI);
+		return actionTemplate.execute(new ConnectionActionCallback<Set<Value>>() {
+			@Override
+			public Set<Value> doWithConnection(RepositoryConnection connection) throws RepositoryException {
+				Set<Value> properties = new LinkedHashSet<Value>();
+				RepositoryResult<Statement> statements = connection.getStatements(resourceURI, pred, null, false, documentURI);
+				while (statements.hasNext()) {
+					properties.add(statements.next().getObject());
+				}
+				return properties;
+			}
+		});
 	}
 
 	@Override
-	public Set<Value> getProperties(URI resourceURI, RDFNodeEnum pred) {
-		// TODO Auto-generated method stub
-		return null;
+	public Set<Value> getProperties(final URI resourceURI, final RDFNodeEnum pred) {
+		final URI documentURI = getDocumentURI(resourceURI);
+		return actionTemplate.execute(new ConnectionActionCallback<Set<Value>>() {
+			@Override
+			public Set<Value> doWithConnection(RepositoryConnection connection) throws RepositoryException {
+				Set<Value> properties = new LinkedHashSet<Value>();
+				for (URI predURI : pred.getURIs()) {
+					RepositoryResult<Statement> statements = connection.getStatements(resourceURI, predURI, null, false, documentURI);
+					while (statements.hasNext()) {
+						properties.add(statements.next().getObject());
+					}
+				}
+				return properties;
+			}
+		});
 	}
 
 	@Override
-	public URI getURI(URI resourceURI, URI pred) {
-		// TODO Auto-generated method stub
-		return null;
+	public URI getURI(final URI resourceURI, final URI pred) {
+		final URI documentURI = getDocumentURI(resourceURI);
+		return actionTemplate.execute(new ConnectionActionCallback<URI>() {
+			@Override
+			public URI doWithConnection(RepositoryConnection connection) throws RepositoryException {
+				RepositoryResult<Statement> statements = connection.getStatements(resourceURI, pred, null, false, documentURI);
+				if ( statements.hasNext() ) {
+					Value value = statements.next().getObject();
+					if ( ValueUtil.isURI(value) ) return ValueUtil.getURI(value);
+				}
+				return null;
+			}
+		});
 	}
 
 	@Override
-	public URI getURI(URI resourceURI, RDFNodeEnum pred) {
-		// TODO Auto-generated method stub
-		return null;
+	public URI getURI(final URI resourceURI, final RDFNodeEnum pred) {
+		final URI documentURI = getDocumentURI(resourceURI);
+		return actionTemplate.execute(new ConnectionActionCallback<URI>() {
+			@Override
+			public URI doWithConnection(RepositoryConnection connection) throws RepositoryException {
+				for (URI predURI : pred.getURIs()) {
+					RepositoryResult<Statement> statements = connection.getStatements(resourceURI, predURI, null, false, documentURI);
+					if ( statements.hasNext() ) {
+						Value value = statements.next().getObject();
+						if ( ValueUtil.isURI(value) ) return ValueUtil.getURI(value);
+					}
+				}
+				return null;
+			}
+		});
 	}
 
 	@Override
-	public Set<URI> getURIs(URI resourceURI, URI pred) {
-		// TODO Auto-generated method stub
-		return null;
+	public Set<URI> getURIs(final URI resourceURI, final URI pred) {
+		final URI documentURI = getDocumentURI(resourceURI);
+		return actionTemplate.execute(new ConnectionActionCallback<Set<URI>>() {
+			@Override
+			public Set<URI> doWithConnection(RepositoryConnection connection) throws RepositoryException {
+				Set<URI> properties = new LinkedHashSet<URI>();
+				RepositoryResult<Statement> statements = connection.getStatements(resourceURI, pred, null, false, documentURI);
+				while (statements.hasNext()) {
+					Value value = statements.next().getObject();
+					if ( ValueUtil.isURI(value) ) properties.add(ValueUtil.getURI(value));
+				}
+				return properties;
+			}
+		});
 	}
 
 	@Override
-	public Set<URI> getURIs(URI resourceURI, RDFNodeEnum pred) {
-		// TODO Auto-generated method stub
-		return null;
+	public Set<URI> getURIs(final URI resourceURI, final RDFNodeEnum pred) {
+		final URI documentURI = getDocumentURI(resourceURI);
+		return actionTemplate.execute(new ConnectionActionCallback<Set<URI>>() {
+			@Override
+			public Set<URI> doWithConnection(RepositoryConnection connection) throws RepositoryException {
+				Set<URI> properties = new LinkedHashSet<URI>();
+				for (URI predURI : pred.getURIs()) {
+					RepositoryResult<Statement> statements = connection.getStatements(resourceURI, predURI, null, false, documentURI);
+					while (statements.hasNext()) {
+						Value value = statements.next().getObject();
+						if ( ValueUtil.isURI(value) ) properties.add(ValueUtil.getURI(value));
+
+					}
+				}
+				return properties;
+			}
+		});
 	}
 
 	@Override
-	public Boolean getBoolean(URI resourceURI, URI pred) {
-		// TODO Auto-generated method stub
-		return null;
+	public Boolean getBoolean(final URI resourceURI, final URI pred) {
+		final URI documentURI = getDocumentURI(resourceURI);
+		return actionTemplate.execute(new ConnectionActionCallback<Boolean>() {
+			@Override
+			public Boolean doWithConnection(RepositoryConnection connection) throws RepositoryException {
+				RepositoryResult<Statement> statements = connection.getStatements(resourceURI, pred, null, false, documentURI);
+				if ( statements.hasNext() ) {
+					Value value = statements.next().getObject();
+					if ( ValueUtil.isLiteral(value) && LiteralUtil.isBoolean((Literal) value) ) return Boolean.parseBoolean(value.toString());
+				}
+				return null;
+			}
+		});
 	}
 
 	@Override
-	public Boolean getBoolean(URI resourceURI, RDFNodeEnum pred) {
-		// TODO Auto-generated method stub
-		return null;
+	public Boolean getBoolean(final URI resourceURI, final RDFNodeEnum pred) {
+		final URI documentURI = getDocumentURI(resourceURI);
+		return actionTemplate.execute(new ConnectionActionCallback<Boolean>() {
+			@Override
+			public Boolean doWithConnection(RepositoryConnection connection) throws RepositoryException {
+				for (URI predURI : pred.getURIs()) {
+					RepositoryResult<Statement> statements = connection.getStatements(resourceURI, predURI, null, false, documentURI);
+					if ( statements.hasNext() ) {
+						Value value = statements.next().getObject();
+						if ( ValueUtil.isLiteral(value) && LiteralUtil.isBoolean((Literal) value) ) return Boolean.parseBoolean(value.toString());
+					}
+				}
+				return null;
+			}
+		});
 	}
 
 	@Override
-	public Set<Boolean> getBooleans(URI resourceURI, URI pred) {
-		// TODO Auto-generated method stub
-		return null;
+	public Set<Boolean> getBooleans(final URI resourceURI, final URI pred) {
+		final URI documentURI = getDocumentURI(resourceURI);
+		return actionTemplate.execute(new ConnectionActionCallback<Set<Boolean>>() {
+			@Override
+			public Set<Boolean> doWithConnection(RepositoryConnection connection) throws RepositoryException {
+				Set<Boolean> properties = new LinkedHashSet<Boolean>();
+				RepositoryResult<Statement> statements = connection.getStatements(resourceURI, pred, null, false, documentURI);
+				while (statements.hasNext()) {
+					Value value = statements.next().getObject();
+					if ( ValueUtil.isLiteral(value) && LiteralUtil.isBoolean((Literal) value) ) properties.add(Boolean.parseBoolean(value.toString()));
+				}
+				return properties;
+			}
+		});
 	}
 
 	@Override
-	public Set<Boolean> getBooleans(URI resourceURI, RDFNodeEnum pred) {
-		// TODO Auto-generated method stub
-		return null;
+	public Set<Boolean> getBooleans(final URI resourceURI, final RDFNodeEnum pred) {
+		final URI documentURI = getDocumentURI(resourceURI);
+		return actionTemplate.execute(new ConnectionActionCallback<Set<Boolean>>() {
+			@Override
+			public Set<Boolean> doWithConnection(RepositoryConnection connection) throws RepositoryException {
+				Set<Boolean> properties = new LinkedHashSet<Boolean>();
+				for (URI predURI : pred.getURIs()) {
+					RepositoryResult<Statement> statements = connection.getStatements(resourceURI, predURI, null, false, documentURI);
+					while (statements.hasNext()) {
+						Value value = statements.next().getObject();
+						if ( ValueUtil.isLiteral(value) && LiteralUtil.isBoolean((Literal) value) ) properties.add(Boolean.parseBoolean(value.toString()));
+
+					}
+				}
+				return properties;
+			}
+		});
 	}
 
 	@Override
-	public Byte getByte(URI resourceURI, URI pred) {
-		// TODO Auto-generated method stub
-		return null;
+	public Byte getByte(final URI resourceURI, final URI pred) {
+		final URI documentURI = getDocumentURI(resourceURI);
+		return actionTemplate.execute(new ConnectionActionCallback<Byte>() {
+			@Override
+			public Byte doWithConnection(RepositoryConnection connection) throws RepositoryException {
+				RepositoryResult<Statement> statements = connection.getStatements(resourceURI, pred, null, false, documentURI);
+				if ( statements.hasNext() ) {
+					Value value = statements.next().getObject();
+					if ( ValueUtil.isLiteral(value) && LiteralUtil.isByte((Literal) value) ) return Byte.parseByte(value.toString());
+				}
+				return null;
+			}
+		});
 	}
 
 	@Override
-	public Byte getByte(URI resourceURI, RDFNodeEnum pred) {
-		// TODO Auto-generated method stub
-		return null;
+	public Byte getByte(final URI resourceURI, final RDFNodeEnum pred) {
+		final URI documentURI = getDocumentURI(resourceURI);
+		return actionTemplate.execute(new ConnectionActionCallback<Byte>() {
+			@Override
+			public Byte doWithConnection(RepositoryConnection connection) throws RepositoryException {
+				for (URI predURI : pred.getURIs()) {
+					RepositoryResult<Statement> statements = connection.getStatements(resourceURI, predURI, null, false, documentURI);
+					if ( statements.hasNext() ) {
+						Value value = statements.next().getObject();
+						if ( ValueUtil.isLiteral(value) && LiteralUtil.isByte((Literal) value) ) return Byte.parseByte(value.toString());
+					}
+				}
+				return null;
+			}
+		});
 	}
 
 	@Override
-	public Set<Byte> getBytes(URI resourceURI, URI pred) {
-		// TODO Auto-generated method stub
-		return null;
+	public Set<Byte> getBytes(final URI resourceURI, final URI pred) {
+		final URI documentURI = getDocumentURI(resourceURI);
+		return actionTemplate.execute(new ConnectionActionCallback<Set<Byte>>() {
+			@Override
+			public Set<Byte> doWithConnection(RepositoryConnection connection) throws RepositoryException {
+				Set<Byte> properties = new LinkedHashSet<Byte>();
+				RepositoryResult<Statement> statements = connection.getStatements(resourceURI, pred, null, false, documentURI);
+				while (statements.hasNext()) {
+					Value value = statements.next().getObject();
+					if ( ValueUtil.isLiteral(value) && LiteralUtil.isByte((Literal) value) ) properties.add(Byte.parseByte(value.toString()));
+				}
+				return properties;
+			}
+		});
 	}
 
 	@Override
-	public Set<Byte> getBytes(URI resourceURI, RDFNodeEnum pred) {
-		// TODO Auto-generated method stub
-		return null;
+	public Set<Byte> getBytes(final URI resourceURI, final RDFNodeEnum pred) {
+		final URI documentURI = getDocumentURI(resourceURI);
+		return actionTemplate.execute(new ConnectionActionCallback<Set<Byte>>() {
+			@Override
+			public Set<Byte> doWithConnection(RepositoryConnection connection) throws RepositoryException {
+				Set<Byte> properties = new LinkedHashSet<Byte>();
+				for (URI predURI : pred.getURIs()) {
+					RepositoryResult<Statement> statements = connection.getStatements(resourceURI, predURI, null, false, documentURI);
+					while (statements.hasNext()) {
+						Value value = statements.next().getObject();
+						if ( ValueUtil.isLiteral(value) && LiteralUtil.isByte((Literal) value) ) properties.add(Byte.parseByte(value.toString()));
+
+					}
+				}
+				return properties;
+			}
+		});
 	}
 
 	@Override
-	public DateTime getDate(URI resourceURI, URI pred) {
-		// TODO Auto-generated method stub
-		return null;
+	public DateTime getDate(final URI resourceURI, final URI pred) {
+		final URI documentURI = getDocumentURI(resourceURI);
+		return actionTemplate.execute(new ConnectionActionCallback<DateTime>() {
+			@Override
+			public DateTime doWithConnection(RepositoryConnection connection) throws RepositoryException {
+				DateTimeFormatter parser = ISODateTimeFormat.dateTimeParser();
+				RepositoryResult<Statement> statements = connection.getStatements(resourceURI, pred, null, false, documentURI);
+				if ( statements.hasNext() ) {
+					Value value = statements.next().getObject();
+					if ( ValueUtil.isLiteral(value) && LiteralUtil.isDate((Literal) value) ) return (parser.parseDateTime(value.toString()));
+				}
+				return null;
+			}
+		});
 	}
 
 	@Override
-	public DateTime getDate(URI resourceURI, RDFNodeEnum pred) {
-		// TODO Auto-generated method stub
-		return null;
+	public DateTime getDate(final URI resourceURI, final RDFNodeEnum pred) {
+		final URI documentURI = getDocumentURI(resourceURI);
+		return actionTemplate.execute(new ConnectionActionCallback<DateTime>() {
+			@Override
+			public DateTime doWithConnection(RepositoryConnection connection) throws RepositoryException {
+				DateTimeFormatter parser = ISODateTimeFormat.dateTimeParser();
+				for (URI predURI : pred.getURIs()) {
+					RepositoryResult<Statement> statements = connection.getStatements(resourceURI, predURI, null, false, documentURI);
+					if ( statements.hasNext() ) {
+						Value value = statements.next().getObject();
+						if ( ValueUtil.isLiteral(value) && LiteralUtil.isDate((Literal) value) ) return (parser.parseDateTime(value.toString()));
+					}
+				}
+				return null;
+			}
+		});
 	}
 
 	@Override
-	public Set<DateTime> getDates(URI resourceURI, URI pred) {
-		// TODO Auto-generated method stub
-		return null;
+	public Set<DateTime> getDates(final URI resourceURI, final URI pred) {
+		final URI documentURI = getDocumentURI(resourceURI);
+		return actionTemplate.execute(new ConnectionActionCallback<Set<DateTime>>() {
+			@Override
+			public Set<DateTime> doWithConnection(RepositoryConnection connection) throws RepositoryException {
+				Set<DateTime> properties = new LinkedHashSet<DateTime>();
+				DateTimeFormatter parser = ISODateTimeFormat.dateTimeParser();
+				RepositoryResult<Statement> statements = connection.getStatements(resourceURI, pred, null, false, documentURI);
+				while (statements.hasNext()) {
+					Value value = statements.next().getObject();
+					if ( ValueUtil.isLiteral(value) && LiteralUtil.isDate((Literal) value) ) properties.add(parser.parseDateTime(value.toString()));
+				}
+				return properties;
+			}
+		});
 	}
 
 	@Override
-	public Set<DateTime> getDates(URI resourceURI, RDFNodeEnum pred) {
-		// TODO Auto-generated method stub
-		return null;
+	public Set<DateTime> getDates(final URI resourceURI, final RDFNodeEnum pred) {
+		final URI documentURI = getDocumentURI(resourceURI);
+		return actionTemplate.execute(new ConnectionActionCallback<Set<DateTime>>() {
+			@Override
+			public Set<DateTime> doWithConnection(RepositoryConnection connection) throws RepositoryException {
+				Set<DateTime> properties = new LinkedHashSet<DateTime>();
+				DateTimeFormatter parser = ISODateTimeFormat.dateTimeParser();
+				for (URI predURI : pred.getURIs()) {
+					RepositoryResult<Statement> statements = connection.getStatements(resourceURI, predURI, null, false, documentURI);
+					while (statements.hasNext()) {
+						Value value = statements.next().getObject();
+						if ( ValueUtil.isLiteral(value) && LiteralUtil.isDate((Literal) value) ) properties.add(parser.parseDateTime(value.toString()));
+
+					}
+				}
+				return properties;
+			}
+		});
 	}
 
 	@Override
-	public Double getDouble(URI resourceURI, URI pred) {
-		// TODO Auto-generated method stub
-		return null;
+	public Double getDouble(final URI resourceURI, final URI pred) {
+		final URI documentURI = getDocumentURI(resourceURI);
+		return actionTemplate.execute(new ConnectionActionCallback<Double>() {
+			@Override
+			public Double doWithConnection(RepositoryConnection connection) throws RepositoryException {
+				RepositoryResult<Statement> statements = connection.getStatements(resourceURI, pred, null, false, documentURI);
+				if ( statements.hasNext() ) {
+					Value value = statements.next().getObject();
+					if ( ValueUtil.isLiteral(value) && LiteralUtil.isDouble((Literal) value) ) return (Double.parseDouble(value.toString()));
+				}
+				return null;
+			}
+		});
 	}
 
 	@Override
-	public Double getDouble(URI resourceURI, RDFNodeEnum pred) {
-		// TODO Auto-generated method stub
-		return null;
+	public Double getDouble(final URI resourceURI, final RDFNodeEnum pred) {
+		final URI documentURI = getDocumentURI(resourceURI);
+		return actionTemplate.execute(new ConnectionActionCallback<Double>() {
+			@Override
+			public Double doWithConnection(RepositoryConnection connection) throws RepositoryException {
+				for (URI predURI : pred.getURIs()) {
+					RepositoryResult<Statement> statements = connection.getStatements(resourceURI, predURI, null, false, documentURI);
+					if ( statements.hasNext() ) {
+						Value value = statements.next().getObject();
+						if ( ValueUtil.isLiteral(value) && LiteralUtil.isDouble((Literal) value) ) return (Double.parseDouble(value.toString()));
+					}
+				}
+				return null;
+			}
+		});
 	}
 
 	@Override
-	public Set<Double> getDoubles(URI resourceURI, URI pred) {
-		// TODO Auto-generated method stub
-		return null;
+	public Set<Double> getDoubles(final URI resourceURI, final URI pred) {
+		final URI documentURI = getDocumentURI(resourceURI);
+		return actionTemplate.execute(new ConnectionActionCallback<Set<Double>>() {
+			@Override
+			public Set<Double> doWithConnection(RepositoryConnection connection) throws RepositoryException {
+				Set<Double> properties = new LinkedHashSet<Double>();
+				RepositoryResult<Statement> statements = connection.getStatements(resourceURI, pred, null, false, documentURI);
+				while (statements.hasNext()) {
+					Value value = statements.next().getObject();
+					if ( ValueUtil.isLiteral(value) && LiteralUtil.isDouble((Literal) value) ) properties.add(Double.parseDouble(value.toString()));
+				}
+				return properties;
+			}
+		});
 	}
 
 	@Override
-	public Set<Double> getDoubles(URI resourceURI, RDFNodeEnum pred) {
-		// TODO Auto-generated method stub
-		return null;
+	public Set<Double> getDoubles(final URI resourceURI, final RDFNodeEnum pred) {
+		final URI documentURI = getDocumentURI(resourceURI);
+		return actionTemplate.execute(new ConnectionActionCallback<Set<Double>>() {
+			@Override
+			public Set<Double> doWithConnection(RepositoryConnection connection) throws RepositoryException {
+				Set<Double> properties = new LinkedHashSet<Double>();
+				for (URI predURI : pred.getURIs()) {
+					RepositoryResult<Statement> statements = connection.getStatements(resourceURI, predURI, null, false, documentURI);
+					while (statements.hasNext()) {
+						Value value = statements.next().getObject();
+						if ( ValueUtil.isLiteral(value) && LiteralUtil.isDouble((Literal) value) ) properties.add(Double.parseDouble(value.toString()));
+
+					}
+				}
+				return properties;
+			}
+		});
 	}
 
 	@Override
-	public Float getFloat(URI resourceURI, URI pred) {
-		// TODO Auto-generated method stub
-		return null;
+	public Float getFloat(final URI resourceURI, final URI pred) {
+		final URI documentURI = getDocumentURI(resourceURI);
+		return actionTemplate.execute(new ConnectionActionCallback<Float>() {
+			@Override
+			public Float doWithConnection(RepositoryConnection connection) throws RepositoryException {
+				RepositoryResult<Statement> statements = connection.getStatements(resourceURI, pred, null, false, documentURI);
+				if ( statements.hasNext() ) {
+					Value value = statements.next().getObject();
+					if ( ValueUtil.isLiteral(value) && LiteralUtil.isFloat((Literal) value) ) return (Float.parseFloat(value.toString()));
+				}
+				return null;
+			}
+		});
 	}
 
 	@Override
-	public Float getFloat(URI resourceURI, RDFNodeEnum pred) {
-		// TODO Auto-generated method stub
-		return null;
+	public Float getFloat(final URI resourceURI, final RDFNodeEnum pred) {
+		final URI documentURI = getDocumentURI(resourceURI);
+		return actionTemplate.execute(new ConnectionActionCallback<Float>() {
+			@Override
+			public Float doWithConnection(RepositoryConnection connection) throws RepositoryException {
+				for (URI predURI : pred.getURIs()) {
+					RepositoryResult<Statement> statements = connection.getStatements(resourceURI, predURI, null, false, documentURI);
+					if ( statements.hasNext() ) {
+						Value value = statements.next().getObject();
+						if ( ValueUtil.isLiteral(value) && LiteralUtil.isFloat((Literal) value) ) return (Float.parseFloat(value.toString()));
+					}
+				}
+				return null;
+			}
+		});
 	}
 
 	@Override
-	public Set<Float> getFloats(URI resourceURI, URI pred) {
-		// TODO Auto-generated method stub
-		return null;
+	public Set<Float> getFloats(final URI resourceURI, final URI pred) {
+		final URI documentURI = getDocumentURI(resourceURI);
+		return actionTemplate.execute(new ConnectionActionCallback<Set<Float>>() {
+			@Override
+			public Set<Float> doWithConnection(RepositoryConnection connection) throws RepositoryException {
+				Set<Float> properties = new LinkedHashSet<Float>();
+				RepositoryResult<Statement> statements = connection.getStatements(resourceURI, pred, null, false, documentURI);
+				while (statements.hasNext()) {
+					Value value = statements.next().getObject();
+					if ( ValueUtil.isLiteral(value) && LiteralUtil.isFloat((Literal) value) ) properties.add(Float.parseFloat(value.toString()));
+				}
+				return properties;
+			}
+		});
 	}
 
 	@Override
-	public Set<Float> getFloats(URI resourceURI, RDFNodeEnum pred) {
-		// TODO Auto-generated method stub
-		return null;
+	public Set<Float> getFloats(final URI resourceURI, final RDFNodeEnum pred) {
+		final URI documentURI = getDocumentURI(resourceURI);
+		return actionTemplate.execute(new ConnectionActionCallback<Set<Float>>() {
+			@Override
+			public Set<Float> doWithConnection(RepositoryConnection connection) throws RepositoryException {
+				Set<Float> properties = new LinkedHashSet<Float>();
+				for (URI predURI : pred.getURIs()) {
+					RepositoryResult<Statement> statements = connection.getStatements(resourceURI, predURI, null, false, documentURI);
+					while (statements.hasNext()) {
+						Value value = statements.next().getObject();
+						if ( ValueUtil.isLiteral(value) && LiteralUtil.isFloat((Literal) value) ) properties.add(Float.parseFloat(value.toString()));
+
+					}
+				}
+				return properties;
+			}
+		});
 	}
 
 	@Override
-	public Integer getInteger(URI resourceURI, URI pred) {
-		// TODO Auto-generated method stub
-		return null;
+	public Integer getInteger(final URI resourceURI, final URI pred) {
+		final URI documentURI = getDocumentURI(resourceURI);
+		return actionTemplate.execute(new ConnectionActionCallback<Integer>() {
+			@Override
+			public Integer doWithConnection(RepositoryConnection connection) throws RepositoryException {
+				RepositoryResult<Statement> statements = connection.getStatements(resourceURI, pred, null, false, documentURI);
+				if ( statements.hasNext() ) {
+					Value value = statements.next().getObject();
+					if ( ValueUtil.isLiteral(value) && LiteralUtil.isInteger((Literal) value) ) return (Integer.parseInt(value.toString()));
+				}
+				return null;
+			}
+		});
 	}
 
 	@Override
-	public Integer getInteger(URI resourceURI, RDFNodeEnum pred) {
-		// TODO Auto-generated method stub
-		return null;
+	public Integer getInteger(final URI resourceURI, final RDFNodeEnum pred) {
+		final URI documentURI = getDocumentURI(resourceURI);
+		return actionTemplate.execute(new ConnectionActionCallback<Integer>() {
+			@Override
+			public Integer doWithConnection(RepositoryConnection connection) throws RepositoryException {
+				for (URI predURI : pred.getURIs()) {
+					RepositoryResult<Statement> statements = connection.getStatements(resourceURI, predURI, null, false, documentURI);
+					if ( statements.hasNext() ) {
+						Value value = statements.next().getObject();
+						if ( ValueUtil.isLiteral(value) && LiteralUtil.isInteger((Literal) value) ) return (Integer.parseInt(value.toString()));
+					}
+				}
+				return null;
+			}
+		});
 	}
 
 	@Override
-	public Set<Integer> getIntegers(URI resourceURI, URI pred) {
-		// TODO Auto-generated method stub
-		return null;
+	public Set<Integer> getIntegers(final URI resourceURI, final URI pred) {
+		final URI documentURI = getDocumentURI(resourceURI);
+		return actionTemplate.execute(new ConnectionActionCallback<Set<Integer>>() {
+			@Override
+			public Set<Integer> doWithConnection(RepositoryConnection connection) throws RepositoryException {
+				Set<Integer> properties = new LinkedHashSet<Integer>();
+				RepositoryResult<Statement> statements = connection.getStatements(resourceURI, pred, null, false, documentURI);
+				while (statements.hasNext()) {
+					Value value = statements.next().getObject();
+					if ( ValueUtil.isLiteral(value) && LiteralUtil.isInteger((Literal) value) ) properties.add(Integer.parseInt(value.toString()));
+				}
+				return properties;
+			}
+		});
 	}
 
 	@Override
-	public Set<Integer> getIntegers(URI resourceURI, RDFNodeEnum pred) {
-		// TODO Auto-generated method stub
-		return null;
+	public Set<Integer> getIntegers(final URI resourceURI, final RDFNodeEnum pred) {
+		final URI documentURI = getDocumentURI(resourceURI);
+		return actionTemplate.execute(new ConnectionActionCallback<Set<Integer>>() {
+			@Override
+			public Set<Integer> doWithConnection(RepositoryConnection connection) throws RepositoryException {
+				Set<Integer> properties = new LinkedHashSet<Integer>();
+				for (URI predURI : pred.getURIs()) {
+					RepositoryResult<Statement> statements = connection.getStatements(resourceURI, predURI, null, false, documentURI);
+					while (statements.hasNext()) {
+						Value value = statements.next().getObject();
+						if ( ValueUtil.isLiteral(value) && LiteralUtil.isInteger((Literal) value) ) properties.add(Integer.parseInt(value.toString()));
+
+					}
+				}
+				return properties;
+			}
+		});
 	}
 
 	@Override
-	public Long getLong(URI resourceURI, URI pred) {
-		// TODO Auto-generated method stub
-		return null;
+	public Long getLong(final URI resourceURI, final URI pred) {
+		final URI documentURI = getDocumentURI(resourceURI);
+		return actionTemplate.execute(new ConnectionActionCallback<Long>() {
+			@Override
+			public Long doWithConnection(RepositoryConnection connection) throws RepositoryException {
+				RepositoryResult<Statement> statements = connection.getStatements(resourceURI, pred, null, false, documentURI);
+				if ( statements.hasNext() ) {
+					Value value = statements.next().getObject();
+					if ( ValueUtil.isLiteral(value) && LiteralUtil.isLong((Literal) value) ) return (Long.parseLong(value.toString()));
+				}
+				return null;
+			}
+		});
 	}
 
 	@Override
-	public Long getLong(URI resourceURI, RDFNodeEnum pred) {
-		// TODO Auto-generated method stub
-		return null;
+	public Long getLong(final URI resourceURI, final RDFNodeEnum pred) {
+		final URI documentURI = getDocumentURI(resourceURI);
+		return actionTemplate.execute(new ConnectionActionCallback<Long>() {
+			@Override
+			public Long doWithConnection(RepositoryConnection connection) throws RepositoryException {
+				for (URI predURI : pred.getURIs()) {
+					RepositoryResult<Statement> statements = connection.getStatements(resourceURI, predURI, null, false, documentURI);
+					if ( statements.hasNext() ) {
+						Value value = statements.next().getObject();
+						if ( ValueUtil.isLiteral(value) && LiteralUtil.isLong((Literal) value) ) return (Long.parseLong(value.toString()));
+					}
+				}
+				return null;
+			}
+		});
 	}
 
 	@Override
-	public Set<Long> getLongs(URI resourceURI, URI pred) {
-		// TODO Auto-generated method stub
-		return null;
+	public Set<Long> getLongs(final URI resourceURI, final URI pred) {
+		final URI documentURI = getDocumentURI(resourceURI);
+		return actionTemplate.execute(new ConnectionActionCallback<Set<Long>>() {
+			@Override
+			public Set<Long> doWithConnection(RepositoryConnection connection) throws RepositoryException {
+				Set<Long> properties = new LinkedHashSet<Long>();
+				RepositoryResult<Statement> statements = connection.getStatements(resourceURI, pred, null, false, documentURI);
+				while (statements.hasNext()) {
+					Value value = statements.next().getObject();
+					if ( ValueUtil.isLiteral(value) && LiteralUtil.isLong((Literal) value) ) properties.add(Long.parseLong(value.toString()));
+				}
+				return properties;
+			}
+		});
 	}
 
 	@Override
-	public Set<Long> getLongs(URI resourceURI, RDFNodeEnum pred) {
-		// TODO Auto-generated method stub
-		return null;
+	public Set<Long> getLongs(final URI resourceURI, final RDFNodeEnum pred) {
+		final URI documentURI = getDocumentURI(resourceURI);
+		return actionTemplate.execute(new ConnectionActionCallback<Set<Long>>() {
+			@Override
+			public Set<Long> doWithConnection(RepositoryConnection connection) throws RepositoryException {
+				Set<Long> properties = new LinkedHashSet<Long>();
+				for (URI predURI : pred.getURIs()) {
+					RepositoryResult<Statement> statements = connection.getStatements(resourceURI, predURI, null, false, documentURI);
+					while (statements.hasNext()) {
+						Value value = statements.next().getObject();
+						if ( ValueUtil.isLiteral(value) && LiteralUtil.isLong((Literal) value) ) properties.add(Long.parseLong(value.toString()));
+
+					}
+				}
+				return properties;
+			}
+		});
 	}
 
 	@Override
-	public Short getShort(URI resourceURI, URI pred) {
-		// TODO Auto-generated method stub
-		return null;
+	public Short getShort(final URI resourceURI, final URI pred) {
+		final URI documentURI = getDocumentURI(resourceURI);
+		return actionTemplate.execute(new ConnectionActionCallback<Short>() {
+			@Override
+			public Short doWithConnection(RepositoryConnection connection) throws RepositoryException {
+				RepositoryResult<Statement> statements = connection.getStatements(resourceURI, pred, null, false, documentURI);
+				if ( statements.hasNext() ) {
+					Value value = statements.next().getObject();
+					if ( ValueUtil.isLiteral(value) && LiteralUtil.isShort((Literal) value) ) return (Short.parseShort(value.toString()));
+				}
+				return null;
+			}
+		});
 	}
 
 	@Override
-	public Short getShort(URI resourceURI, RDFNodeEnum pred) {
-		// TODO Auto-generated method stub
-		return null;
+	public Short getShort(final URI resourceURI, final RDFNodeEnum pred) {
+		final URI documentURI = getDocumentURI(resourceURI);
+		return actionTemplate.execute(new ConnectionActionCallback<Short>() {
+			@Override
+			public Short doWithConnection(RepositoryConnection connection) throws RepositoryException {
+				for (URI predURI : pred.getURIs()) {
+					RepositoryResult<Statement> statements = connection.getStatements(resourceURI, predURI, null, false, documentURI);
+					if ( statements.hasNext() ) {
+						Value value = statements.next().getObject();
+						if ( ValueUtil.isLiteral(value) && LiteralUtil.isShort((Literal) value) ) return (Short.parseShort(value.toString()));
+					}
+				}
+				return null;
+			}
+		});
 	}
 
 	@Override
-	public Set<Short> getShorts(URI resourceURI, URI pred) {
-		// TODO Auto-generated method stub
-		return null;
+	public Set<Short> getShorts(final URI resourceURI, final URI pred) {
+		final URI documentURI = getDocumentURI(resourceURI);
+		return actionTemplate.execute(new ConnectionActionCallback<Set<Short>>() {
+			@Override
+			public Set<Short> doWithConnection(RepositoryConnection connection) throws RepositoryException {
+				Set<Short> properties = new LinkedHashSet<Short>();
+				RepositoryResult<Statement> statements = connection.getStatements(resourceURI, pred, null, false, documentURI);
+				while (statements.hasNext()) {
+					Value value = statements.next().getObject();
+					if ( ValueUtil.isLiteral(value) && LiteralUtil.isShort((Literal) value) ) properties.add(Short.parseShort(value.toString()));
+				}
+				return properties;
+			}
+		});
 	}
 
 	@Override
-	public Set<Short> getShorts(URI resourceURI, RDFNodeEnum pred) {
-		// TODO Auto-generated method stub
-		return null;
+	public Set<Short> getShorts(final URI resourceURI, final RDFNodeEnum pred) {
+		final URI documentURI = getDocumentURI(resourceURI);
+		return actionTemplate.execute(new ConnectionActionCallback<Set<Short>>() {
+			@Override
+			public Set<Short> doWithConnection(RepositoryConnection connection) throws RepositoryException {
+				Set<Short> properties = new LinkedHashSet<Short>();
+				for (URI predURI : pred.getURIs()) {
+					RepositoryResult<Statement> statements = connection.getStatements(resourceURI, predURI, null, false, documentURI);
+					while (statements.hasNext()) {
+						Value value = statements.next().getObject();
+						if ( ValueUtil.isLiteral(value) && LiteralUtil.isShort((Literal) value) ) properties.add(Short.parseShort(value.toString()));
+
+					}
+				}
+				return properties;
+			}
+		});
 	}
 
 	@Override
@@ -311,9 +827,21 @@ public class SesameRDFResourceRepository extends AbstractSesameRepository implem
 	}
 
 	@Override
-	public String getString(URI resourceURI, RDFNodeEnum pred) {
-		// TODO Auto-generated method stub
-		return null;
+	public String getString(final URI resourceURI, final RDFNodeEnum pred) {
+		final URI documentURI = getDocumentURI(resourceURI);
+		return actionTemplate.execute(new ConnectionActionCallback<String>() {
+			@Override
+			public String doWithConnection(RepositoryConnection connection) throws RepositoryException {
+				for (URI predURI : pred.getURIs()) {
+					RepositoryResult<Statement> statements = connection.getStatements(resourceURI, predURI, null, false, documentURI);
+					if ( statements.hasNext() ) {
+						Value value = statements.next().getObject();
+						if ( ValueUtil.isLiteral(value) && LiteralUtil.isString((Literal) value) ) return (value.toString());
+					}
+				}
+				return null;
+			}
+		});
 	}
 
 	@Override
@@ -329,15 +857,40 @@ public class SesameRDFResourceRepository extends AbstractSesameRepository implem
 	}
 
 	@Override
-	public Set<String> getStrings(URI resourceURI, URI pred) {
-		// TODO Auto-generated method stub
-		return null;
+	public Set<String> getStrings(final URI resourceURI, final URI pred) {
+		final URI documentURI = getDocumentURI(resourceURI);
+		return actionTemplate.execute(new ConnectionActionCallback<Set<String>>() {
+			@Override
+			public Set<String> doWithConnection(RepositoryConnection connection) throws RepositoryException {
+				Set<String> properties = new LinkedHashSet<String>();
+				RepositoryResult<Statement> statements = connection.getStatements(resourceURI, pred, null, false, documentURI);
+				while (statements.hasNext()) {
+					Value value = statements.next().getObject();
+					if ( ValueUtil.isLiteral(value) && LiteralUtil.isString((Literal) value) ) properties.add(value.toString());
+				}
+				return properties;
+			}
+		});
 	}
 
 	@Override
-	public Set<String> getStrings(URI resourceURI, RDFNodeEnum pred) {
-		// TODO Auto-generated method stub
-		return null;
+	public Set<String> getStrings(final URI resourceURI, final RDFNodeEnum pred) {
+		final URI documentURI = getDocumentURI(resourceURI);
+		return actionTemplate.execute(new ConnectionActionCallback<Set<String>>() {
+			@Override
+			public Set<String> doWithConnection(RepositoryConnection connection) throws RepositoryException {
+				Set<String> properties = new LinkedHashSet<String>();
+				for (URI predURI : pred.getURIs()) {
+					RepositoryResult<Statement> statements = connection.getStatements(resourceURI, predURI, null, false, documentURI);
+					while (statements.hasNext()) {
+						Value value = statements.next().getObject();
+						if ( ValueUtil.isLiteral(value) && LiteralUtil.isString((Literal) value) ) properties.add(value.toString());
+
+					}
+				}
+				return properties;
+			}
+		});
 	}
 
 	@Override
