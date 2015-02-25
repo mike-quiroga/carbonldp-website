@@ -12,9 +12,11 @@ import org.openrdf.model.Literal;
 import org.openrdf.model.Statement;
 import org.openrdf.model.URI;
 import org.openrdf.model.Value;
+import org.openrdf.model.ValueFactory;
 import org.openrdf.model.impl.AbstractModel;
 import org.openrdf.model.impl.LinkedHashModel;
 import org.openrdf.model.impl.URIImpl;
+import org.openrdf.model.impl.ValueFactoryImpl;
 import org.openrdf.repository.RepositoryConnection;
 import org.openrdf.repository.RepositoryException;
 import org.openrdf.repository.RepositoryResult;
@@ -184,7 +186,7 @@ public class SesameRDFResourceRepository extends AbstractSesameRepository implem
 			@Override
 			public URI doWithConnection(RepositoryConnection connection) throws RepositoryException {
 				RepositoryResult<Statement> statements = connection.getStatements(resourceURI, pred, null, false, documentURI);
-				if ( statements.hasNext() ) {
+				while (statements.hasNext()) {
 					Value value = statements.next().getObject();
 					if ( ValueUtil.isURI(value) ) return ValueUtil.getURI(value);
 				}
@@ -201,7 +203,7 @@ public class SesameRDFResourceRepository extends AbstractSesameRepository implem
 			public URI doWithConnection(RepositoryConnection connection) throws RepositoryException {
 				for (URI predURI : pred.getURIs()) {
 					RepositoryResult<Statement> statements = connection.getStatements(resourceURI, predURI, null, false, documentURI);
-					if ( statements.hasNext() ) {
+					while (statements.hasNext()) {
 						Value value = statements.next().getObject();
 						if ( ValueUtil.isURI(value) ) return ValueUtil.getURI(value);
 					}
@@ -255,9 +257,9 @@ public class SesameRDFResourceRepository extends AbstractSesameRepository implem
 			@Override
 			public Boolean doWithConnection(RepositoryConnection connection) throws RepositoryException {
 				RepositoryResult<Statement> statements = connection.getStatements(resourceURI, pred, null, false, documentURI);
-				if ( statements.hasNext() ) {
+				while (statements.hasNext()) {
 					Value value = statements.next().getObject();
-					if ( ValueUtil.isLiteral(value) && LiteralUtil.isBoolean((Literal) value) ) return Boolean.parseBoolean(value.toString());
+					if ( ValueUtil.isLiteral(value) && LiteralUtil.isBoolean((Literal) value) ) return Boolean.parseBoolean(value.stringValue());
 				}
 				return null;
 			}
@@ -272,9 +274,9 @@ public class SesameRDFResourceRepository extends AbstractSesameRepository implem
 			public Boolean doWithConnection(RepositoryConnection connection) throws RepositoryException {
 				for (URI predURI : pred.getURIs()) {
 					RepositoryResult<Statement> statements = connection.getStatements(resourceURI, predURI, null, false, documentURI);
-					if ( statements.hasNext() ) {
+					while (statements.hasNext()) {
 						Value value = statements.next().getObject();
-						if ( ValueUtil.isLiteral(value) && LiteralUtil.isBoolean((Literal) value) ) return Boolean.parseBoolean(value.toString());
+						if ( ValueUtil.isLiteral(value) && LiteralUtil.isBoolean((Literal) value) ) return Boolean.parseBoolean(value.stringValue());
 					}
 				}
 				return null;
@@ -292,7 +294,7 @@ public class SesameRDFResourceRepository extends AbstractSesameRepository implem
 				RepositoryResult<Statement> statements = connection.getStatements(resourceURI, pred, null, false, documentURI);
 				while (statements.hasNext()) {
 					Value value = statements.next().getObject();
-					if ( ValueUtil.isLiteral(value) && LiteralUtil.isBoolean((Literal) value) ) properties.add(Boolean.parseBoolean(value.toString()));
+					if ( ValueUtil.isLiteral(value) && LiteralUtil.isBoolean((Literal) value) ) properties.add(Boolean.parseBoolean(value.stringValue()));
 				}
 				return properties;
 			}
@@ -310,7 +312,7 @@ public class SesameRDFResourceRepository extends AbstractSesameRepository implem
 					RepositoryResult<Statement> statements = connection.getStatements(resourceURI, predURI, null, false, documentURI);
 					while (statements.hasNext()) {
 						Value value = statements.next().getObject();
-						if ( ValueUtil.isLiteral(value) && LiteralUtil.isBoolean((Literal) value) ) properties.add(Boolean.parseBoolean(value.toString()));
+						if ( ValueUtil.isLiteral(value) && LiteralUtil.isBoolean((Literal) value) ) properties.add(Boolean.parseBoolean(value.stringValue()));
 
 					}
 				}
@@ -326,9 +328,9 @@ public class SesameRDFResourceRepository extends AbstractSesameRepository implem
 			@Override
 			public Byte doWithConnection(RepositoryConnection connection) throws RepositoryException {
 				RepositoryResult<Statement> statements = connection.getStatements(resourceURI, pred, null, false, documentURI);
-				if ( statements.hasNext() ) {
+				while (statements.hasNext()) {
 					Value value = statements.next().getObject();
-					if ( ValueUtil.isLiteral(value) && LiteralUtil.isByte((Literal) value) ) return Byte.parseByte(value.toString());
+					if ( ValueUtil.isLiteral(value) && LiteralUtil.isByte((Literal) value) ) return Byte.parseByte(value.stringValue());
 				}
 				return null;
 			}
@@ -343,9 +345,9 @@ public class SesameRDFResourceRepository extends AbstractSesameRepository implem
 			public Byte doWithConnection(RepositoryConnection connection) throws RepositoryException {
 				for (URI predURI : pred.getURIs()) {
 					RepositoryResult<Statement> statements = connection.getStatements(resourceURI, predURI, null, false, documentURI);
-					if ( statements.hasNext() ) {
+					while (statements.hasNext()) {
 						Value value = statements.next().getObject();
-						if ( ValueUtil.isLiteral(value) && LiteralUtil.isByte((Literal) value) ) return Byte.parseByte(value.toString());
+						if ( ValueUtil.isLiteral(value) && LiteralUtil.isByte((Literal) value) ) return Byte.parseByte(value.stringValue());
 					}
 				}
 				return null;
@@ -363,7 +365,7 @@ public class SesameRDFResourceRepository extends AbstractSesameRepository implem
 				RepositoryResult<Statement> statements = connection.getStatements(resourceURI, pred, null, false, documentURI);
 				while (statements.hasNext()) {
 					Value value = statements.next().getObject();
-					if ( ValueUtil.isLiteral(value) && LiteralUtil.isByte((Literal) value) ) properties.add(Byte.parseByte(value.toString()));
+					if ( ValueUtil.isLiteral(value) && LiteralUtil.isByte((Literal) value) ) properties.add(Byte.parseByte(value.stringValue()));
 				}
 				return properties;
 			}
@@ -381,7 +383,7 @@ public class SesameRDFResourceRepository extends AbstractSesameRepository implem
 					RepositoryResult<Statement> statements = connection.getStatements(resourceURI, predURI, null, false, documentURI);
 					while (statements.hasNext()) {
 						Value value = statements.next().getObject();
-						if ( ValueUtil.isLiteral(value) && LiteralUtil.isByte((Literal) value) ) properties.add(Byte.parseByte(value.toString()));
+						if ( ValueUtil.isLiteral(value) && LiteralUtil.isByte((Literal) value) ) properties.add(Byte.parseByte(value.stringValue()));
 
 					}
 				}
@@ -398,9 +400,9 @@ public class SesameRDFResourceRepository extends AbstractSesameRepository implem
 			public DateTime doWithConnection(RepositoryConnection connection) throws RepositoryException {
 				DateTimeFormatter parser = ISODateTimeFormat.dateTimeParser();
 				RepositoryResult<Statement> statements = connection.getStatements(resourceURI, pred, null, false, documentURI);
-				if ( statements.hasNext() ) {
+				while (statements.hasNext()) {
 					Value value = statements.next().getObject();
-					if ( ValueUtil.isLiteral(value) && LiteralUtil.isDate((Literal) value) ) return (parser.parseDateTime(value.toString()));
+					if ( ValueUtil.isLiteral(value) && LiteralUtil.isDate((Literal) value) ) return (parser.parseDateTime(value.stringValue()));
 				}
 				return null;
 			}
@@ -416,9 +418,9 @@ public class SesameRDFResourceRepository extends AbstractSesameRepository implem
 				DateTimeFormatter parser = ISODateTimeFormat.dateTimeParser();
 				for (URI predURI : pred.getURIs()) {
 					RepositoryResult<Statement> statements = connection.getStatements(resourceURI, predURI, null, false, documentURI);
-					if ( statements.hasNext() ) {
+					while (statements.hasNext()) {
 						Value value = statements.next().getObject();
-						if ( ValueUtil.isLiteral(value) && LiteralUtil.isDate((Literal) value) ) return (parser.parseDateTime(value.toString()));
+						if ( ValueUtil.isLiteral(value) && LiteralUtil.isDate((Literal) value) ) return (parser.parseDateTime(value.stringValue()));
 					}
 				}
 				return null;
@@ -437,7 +439,7 @@ public class SesameRDFResourceRepository extends AbstractSesameRepository implem
 				RepositoryResult<Statement> statements = connection.getStatements(resourceURI, pred, null, false, documentURI);
 				while (statements.hasNext()) {
 					Value value = statements.next().getObject();
-					if ( ValueUtil.isLiteral(value) && LiteralUtil.isDate((Literal) value) ) properties.add(parser.parseDateTime(value.toString()));
+					if ( ValueUtil.isLiteral(value) && LiteralUtil.isDate((Literal) value) ) properties.add(parser.parseDateTime(value.stringValue()));
 				}
 				return properties;
 			}
@@ -456,7 +458,7 @@ public class SesameRDFResourceRepository extends AbstractSesameRepository implem
 					RepositoryResult<Statement> statements = connection.getStatements(resourceURI, predURI, null, false, documentURI);
 					while (statements.hasNext()) {
 						Value value = statements.next().getObject();
-						if ( ValueUtil.isLiteral(value) && LiteralUtil.isDate((Literal) value) ) properties.add(parser.parseDateTime(value.toString()));
+						if ( ValueUtil.isLiteral(value) && LiteralUtil.isDate((Literal) value) ) properties.add(parser.parseDateTime(value.stringValue()));
 
 					}
 				}
@@ -472,9 +474,9 @@ public class SesameRDFResourceRepository extends AbstractSesameRepository implem
 			@Override
 			public Double doWithConnection(RepositoryConnection connection) throws RepositoryException {
 				RepositoryResult<Statement> statements = connection.getStatements(resourceURI, pred, null, false, documentURI);
-				if ( statements.hasNext() ) {
+				while (statements.hasNext()) {
 					Value value = statements.next().getObject();
-					if ( ValueUtil.isLiteral(value) && LiteralUtil.isDouble((Literal) value) ) return (Double.parseDouble(value.toString()));
+					if ( ValueUtil.isLiteral(value) && LiteralUtil.isDouble((Literal) value) ) return (Double.parseDouble(value.stringValue()));
 				}
 				return null;
 			}
@@ -489,9 +491,9 @@ public class SesameRDFResourceRepository extends AbstractSesameRepository implem
 			public Double doWithConnection(RepositoryConnection connection) throws RepositoryException {
 				for (URI predURI : pred.getURIs()) {
 					RepositoryResult<Statement> statements = connection.getStatements(resourceURI, predURI, null, false, documentURI);
-					if ( statements.hasNext() ) {
+					while (statements.hasNext()) {
 						Value value = statements.next().getObject();
-						if ( ValueUtil.isLiteral(value) && LiteralUtil.isDouble((Literal) value) ) return (Double.parseDouble(value.toString()));
+						if ( ValueUtil.isLiteral(value) && LiteralUtil.isDouble((Literal) value) ) return (Double.parseDouble(value.stringValue()));
 					}
 				}
 				return null;
@@ -509,7 +511,7 @@ public class SesameRDFResourceRepository extends AbstractSesameRepository implem
 				RepositoryResult<Statement> statements = connection.getStatements(resourceURI, pred, null, false, documentURI);
 				while (statements.hasNext()) {
 					Value value = statements.next().getObject();
-					if ( ValueUtil.isLiteral(value) && LiteralUtil.isDouble((Literal) value) ) properties.add(Double.parseDouble(value.toString()));
+					if ( ValueUtil.isLiteral(value) && LiteralUtil.isDouble((Literal) value) ) properties.add(Double.parseDouble(value.stringValue()));
 				}
 				return properties;
 			}
@@ -527,7 +529,7 @@ public class SesameRDFResourceRepository extends AbstractSesameRepository implem
 					RepositoryResult<Statement> statements = connection.getStatements(resourceURI, predURI, null, false, documentURI);
 					while (statements.hasNext()) {
 						Value value = statements.next().getObject();
-						if ( ValueUtil.isLiteral(value) && LiteralUtil.isDouble((Literal) value) ) properties.add(Double.parseDouble(value.toString()));
+						if ( ValueUtil.isLiteral(value) && LiteralUtil.isDouble((Literal) value) ) properties.add(Double.parseDouble(value.stringValue()));
 
 					}
 				}
@@ -543,9 +545,9 @@ public class SesameRDFResourceRepository extends AbstractSesameRepository implem
 			@Override
 			public Float doWithConnection(RepositoryConnection connection) throws RepositoryException {
 				RepositoryResult<Statement> statements = connection.getStatements(resourceURI, pred, null, false, documentURI);
-				if ( statements.hasNext() ) {
+				while (statements.hasNext()) {
 					Value value = statements.next().getObject();
-					if ( ValueUtil.isLiteral(value) && LiteralUtil.isFloat((Literal) value) ) return (Float.parseFloat(value.toString()));
+					if ( ValueUtil.isLiteral(value) && LiteralUtil.isFloat((Literal) value) ) return (Float.parseFloat(value.stringValue()));
 				}
 				return null;
 			}
@@ -560,9 +562,9 @@ public class SesameRDFResourceRepository extends AbstractSesameRepository implem
 			public Float doWithConnection(RepositoryConnection connection) throws RepositoryException {
 				for (URI predURI : pred.getURIs()) {
 					RepositoryResult<Statement> statements = connection.getStatements(resourceURI, predURI, null, false, documentURI);
-					if ( statements.hasNext() ) {
+					while (statements.hasNext()) {
 						Value value = statements.next().getObject();
-						if ( ValueUtil.isLiteral(value) && LiteralUtil.isFloat((Literal) value) ) return (Float.parseFloat(value.toString()));
+						if ( ValueUtil.isLiteral(value) && LiteralUtil.isFloat((Literal) value) ) return (Float.parseFloat(value.stringValue()));
 					}
 				}
 				return null;
@@ -580,7 +582,7 @@ public class SesameRDFResourceRepository extends AbstractSesameRepository implem
 				RepositoryResult<Statement> statements = connection.getStatements(resourceURI, pred, null, false, documentURI);
 				while (statements.hasNext()) {
 					Value value = statements.next().getObject();
-					if ( ValueUtil.isLiteral(value) && LiteralUtil.isFloat((Literal) value) ) properties.add(Float.parseFloat(value.toString()));
+					if ( ValueUtil.isLiteral(value) && LiteralUtil.isFloat((Literal) value) ) properties.add(Float.parseFloat(value.stringValue()));
 				}
 				return properties;
 			}
@@ -598,7 +600,7 @@ public class SesameRDFResourceRepository extends AbstractSesameRepository implem
 					RepositoryResult<Statement> statements = connection.getStatements(resourceURI, predURI, null, false, documentURI);
 					while (statements.hasNext()) {
 						Value value = statements.next().getObject();
-						if ( ValueUtil.isLiteral(value) && LiteralUtil.isFloat((Literal) value) ) properties.add(Float.parseFloat(value.toString()));
+						if ( ValueUtil.isLiteral(value) && LiteralUtil.isFloat((Literal) value) ) properties.add(Float.parseFloat(value.stringValue()));
 
 					}
 				}
@@ -614,9 +616,9 @@ public class SesameRDFResourceRepository extends AbstractSesameRepository implem
 			@Override
 			public Integer doWithConnection(RepositoryConnection connection) throws RepositoryException {
 				RepositoryResult<Statement> statements = connection.getStatements(resourceURI, pred, null, false, documentURI);
-				if ( statements.hasNext() ) {
+				while (statements.hasNext()) {
 					Value value = statements.next().getObject();
-					if ( ValueUtil.isLiteral(value) && LiteralUtil.isInteger((Literal) value) ) return (Integer.parseInt(value.toString()));
+					if ( ValueUtil.isLiteral(value) && LiteralUtil.isInteger((Literal) value) ) return (Integer.parseInt(value.stringValue()));
 				}
 				return null;
 			}
@@ -631,9 +633,9 @@ public class SesameRDFResourceRepository extends AbstractSesameRepository implem
 			public Integer doWithConnection(RepositoryConnection connection) throws RepositoryException {
 				for (URI predURI : pred.getURIs()) {
 					RepositoryResult<Statement> statements = connection.getStatements(resourceURI, predURI, null, false, documentURI);
-					if ( statements.hasNext() ) {
+					while (statements.hasNext()) {
 						Value value = statements.next().getObject();
-						if ( ValueUtil.isLiteral(value) && LiteralUtil.isInteger((Literal) value) ) return (Integer.parseInt(value.toString()));
+						if ( ValueUtil.isLiteral(value) && LiteralUtil.isInteger((Literal) value) ) return (Integer.parseInt(value.stringValue()));
 					}
 				}
 				return null;
@@ -651,7 +653,7 @@ public class SesameRDFResourceRepository extends AbstractSesameRepository implem
 				RepositoryResult<Statement> statements = connection.getStatements(resourceURI, pred, null, false, documentURI);
 				while (statements.hasNext()) {
 					Value value = statements.next().getObject();
-					if ( ValueUtil.isLiteral(value) && LiteralUtil.isInteger((Literal) value) ) properties.add(Integer.parseInt(value.toString()));
+					if ( ValueUtil.isLiteral(value) && LiteralUtil.isInteger((Literal) value) ) properties.add(Integer.parseInt(value.stringValue()));
 				}
 				return properties;
 			}
@@ -669,7 +671,7 @@ public class SesameRDFResourceRepository extends AbstractSesameRepository implem
 					RepositoryResult<Statement> statements = connection.getStatements(resourceURI, predURI, null, false, documentURI);
 					while (statements.hasNext()) {
 						Value value = statements.next().getObject();
-						if ( ValueUtil.isLiteral(value) && LiteralUtil.isInteger((Literal) value) ) properties.add(Integer.parseInt(value.toString()));
+						if ( ValueUtil.isLiteral(value) && LiteralUtil.isInteger((Literal) value) ) properties.add(Integer.parseInt(value.stringValue()));
 
 					}
 				}
@@ -685,9 +687,9 @@ public class SesameRDFResourceRepository extends AbstractSesameRepository implem
 			@Override
 			public Long doWithConnection(RepositoryConnection connection) throws RepositoryException {
 				RepositoryResult<Statement> statements = connection.getStatements(resourceURI, pred, null, false, documentURI);
-				if ( statements.hasNext() ) {
+				while (statements.hasNext()) {
 					Value value = statements.next().getObject();
-					if ( ValueUtil.isLiteral(value) && LiteralUtil.isLong((Literal) value) ) return (Long.parseLong(value.toString()));
+					if ( ValueUtil.isLiteral(value) && LiteralUtil.isLong((Literal) value) ) return (Long.parseLong(value.stringValue()));
 				}
 				return null;
 			}
@@ -702,9 +704,9 @@ public class SesameRDFResourceRepository extends AbstractSesameRepository implem
 			public Long doWithConnection(RepositoryConnection connection) throws RepositoryException {
 				for (URI predURI : pred.getURIs()) {
 					RepositoryResult<Statement> statements = connection.getStatements(resourceURI, predURI, null, false, documentURI);
-					if ( statements.hasNext() ) {
+					while (statements.hasNext()) {
 						Value value = statements.next().getObject();
-						if ( ValueUtil.isLiteral(value) && LiteralUtil.isLong((Literal) value) ) return (Long.parseLong(value.toString()));
+						if ( ValueUtil.isLiteral(value) && LiteralUtil.isLong((Literal) value) ) return (Long.parseLong(value.stringValue()));
 					}
 				}
 				return null;
@@ -722,7 +724,7 @@ public class SesameRDFResourceRepository extends AbstractSesameRepository implem
 				RepositoryResult<Statement> statements = connection.getStatements(resourceURI, pred, null, false, documentURI);
 				while (statements.hasNext()) {
 					Value value = statements.next().getObject();
-					if ( ValueUtil.isLiteral(value) && LiteralUtil.isLong((Literal) value) ) properties.add(Long.parseLong(value.toString()));
+					if ( ValueUtil.isLiteral(value) && LiteralUtil.isLong((Literal) value) ) properties.add(Long.parseLong(value.stringValue()));
 				}
 				return properties;
 			}
@@ -740,7 +742,7 @@ public class SesameRDFResourceRepository extends AbstractSesameRepository implem
 					RepositoryResult<Statement> statements = connection.getStatements(resourceURI, predURI, null, false, documentURI);
 					while (statements.hasNext()) {
 						Value value = statements.next().getObject();
-						if ( ValueUtil.isLiteral(value) && LiteralUtil.isLong((Literal) value) ) properties.add(Long.parseLong(value.toString()));
+						if ( ValueUtil.isLiteral(value) && LiteralUtil.isLong((Literal) value) ) properties.add(Long.parseLong(value.stringValue()));
 
 					}
 				}
@@ -756,9 +758,9 @@ public class SesameRDFResourceRepository extends AbstractSesameRepository implem
 			@Override
 			public Short doWithConnection(RepositoryConnection connection) throws RepositoryException {
 				RepositoryResult<Statement> statements = connection.getStatements(resourceURI, pred, null, false, documentURI);
-				if ( statements.hasNext() ) {
+				while (statements.hasNext()) {
 					Value value = statements.next().getObject();
-					if ( ValueUtil.isLiteral(value) && LiteralUtil.isShort((Literal) value) ) return (Short.parseShort(value.toString()));
+					if ( ValueUtil.isLiteral(value) && LiteralUtil.isShort((Literal) value) ) return (Short.parseShort(value.stringValue()));
 				}
 				return null;
 			}
@@ -773,9 +775,9 @@ public class SesameRDFResourceRepository extends AbstractSesameRepository implem
 			public Short doWithConnection(RepositoryConnection connection) throws RepositoryException {
 				for (URI predURI : pred.getURIs()) {
 					RepositoryResult<Statement> statements = connection.getStatements(resourceURI, predURI, null, false, documentURI);
-					if ( statements.hasNext() ) {
+					while (statements.hasNext()) {
 						Value value = statements.next().getObject();
-						if ( ValueUtil.isLiteral(value) && LiteralUtil.isShort((Literal) value) ) return (Short.parseShort(value.toString()));
+						if ( ValueUtil.isLiteral(value) && LiteralUtil.isShort((Literal) value) ) return (Short.parseShort(value.stringValue()));
 					}
 				}
 				return null;
@@ -793,7 +795,7 @@ public class SesameRDFResourceRepository extends AbstractSesameRepository implem
 				RepositoryResult<Statement> statements = connection.getStatements(resourceURI, pred, null, false, documentURI);
 				while (statements.hasNext()) {
 					Value value = statements.next().getObject();
-					if ( ValueUtil.isLiteral(value) && LiteralUtil.isShort((Literal) value) ) properties.add(Short.parseShort(value.toString()));
+					if ( ValueUtil.isLiteral(value) && LiteralUtil.isShort((Literal) value) ) properties.add(Short.parseShort(value.stringValue()));
 				}
 				return properties;
 			}
@@ -811,7 +813,7 @@ public class SesameRDFResourceRepository extends AbstractSesameRepository implem
 					RepositoryResult<Statement> statements = connection.getStatements(resourceURI, predURI, null, false, documentURI);
 					while (statements.hasNext()) {
 						Value value = statements.next().getObject();
-						if ( ValueUtil.isLiteral(value) && LiteralUtil.isShort((Literal) value) ) properties.add(Short.parseShort(value.toString()));
+						if ( ValueUtil.isLiteral(value) && LiteralUtil.isShort((Literal) value) ) properties.add(Short.parseShort(value.stringValue()));
 
 					}
 				}
@@ -821,9 +823,19 @@ public class SesameRDFResourceRepository extends AbstractSesameRepository implem
 	}
 
 	@Override
-	public String getString(URI resourceURI, URI pred) {
-		// TODO Auto-generated method stub
-		return null;
+	public String getString(final URI resourceURI, final URI pred) {
+		final URI documentURI = getDocumentURI(resourceURI);
+		return actionTemplate.execute(new ConnectionActionCallback<String>() {
+			@Override
+			public String doWithConnection(RepositoryConnection connection) throws RepositoryException {
+				RepositoryResult<Statement> statements = connection.getStatements(resourceURI, pred, null, false, documentURI);
+				while (statements.hasNext()) {
+					Value value = statements.next().getObject();
+					if ( ValueUtil.isLiteral(value) && LiteralUtil.isString((Literal) value) ) return (value.stringValue());
+				}
+				return null;
+			}
+		});
 	}
 
 	@Override
@@ -836,7 +848,7 @@ public class SesameRDFResourceRepository extends AbstractSesameRepository implem
 					RepositoryResult<Statement> statements = connection.getStatements(resourceURI, predURI, null, false, documentURI);
 					if ( statements.hasNext() ) {
 						Value value = statements.next().getObject();
-						if ( ValueUtil.isLiteral(value) && LiteralUtil.isString((Literal) value) ) return (value.toString());
+						if ( ValueUtil.isLiteral(value) && LiteralUtil.isString((Literal) value) ) return (value.stringValue());
 					}
 				}
 				return null;
@@ -845,15 +857,50 @@ public class SesameRDFResourceRepository extends AbstractSesameRepository implem
 	}
 
 	@Override
-	public String getString(URI resourceURI, URI pred, Set<String> languages) {
-		// TODO Auto-generated method stub
-		return null;
+	public String getString(final URI resourceURI, final URI pred, final Set<String> languages) {
+		final URI documentURI = getDocumentURI(resourceURI);
+		return actionTemplate.execute(new ConnectionActionCallback<String>() {
+			@Override
+			public String doWithConnection(RepositoryConnection connection) throws RepositoryException {
+				RepositoryResult<Statement> statements = connection.getStatements(resourceURI, pred, null, false, documentURI);
+				while (statements.hasNext()) {
+					Value value = statements.next().getObject();
+					if ( ValueUtil.isLiteral(value) && LiteralUtil.isString((Literal) value) ) {
+						Literal literal = (Literal) value;
+						String language = literal.getLanguage();
+						if ( languages == null || languages.isEmpty() ) {
+							if ( language == null ) return literal.stringValue();
+						} else if ( languages.contains(language) ) return (value.stringValue());
+					}
+				}
+				return null;
+			}
+		});
 	}
 
 	@Override
-	public String getString(URI resourceURI, RDFNodeEnum pred, Set<String> languages) {
-		// TODO Auto-generated method stub
-		return null;
+	public String getString(final URI resourceURI, final RDFNodeEnum pred, final Set<String> languages) {
+		final URI documentURI = getDocumentURI(resourceURI);
+		return actionTemplate.execute(new ConnectionActionCallback<String>() {
+			@Override
+			public String doWithConnection(RepositoryConnection connection) throws RepositoryException {
+				for (URI predURI : pred.getURIs()) {
+					RepositoryResult<Statement> statements = connection.getStatements(resourceURI, predURI, null, false, documentURI);
+					while (statements.hasNext()) {
+						Value value = statements.next().getObject();
+						if ( ValueUtil.isLiteral(value) && LiteralUtil.isString((Literal) value) ) {
+							Literal literal = (Literal) value;
+							String language = literal.getLanguage();
+							if ( languages == null || languages.isEmpty() ) {
+								if ( language == null ) return literal.stringValue();
+							}
+							return (value.stringValue());
+						}
+					}
+				}
+				return null;
+			}
+		});
 	}
 
 	@Override
@@ -866,7 +913,7 @@ public class SesameRDFResourceRepository extends AbstractSesameRepository implem
 				RepositoryResult<Statement> statements = connection.getStatements(resourceURI, pred, null, false, documentURI);
 				while (statements.hasNext()) {
 					Value value = statements.next().getObject();
-					if ( ValueUtil.isLiteral(value) && LiteralUtil.isString((Literal) value) ) properties.add(value.toString());
+					if ( ValueUtil.isLiteral(value) && LiteralUtil.isString((Literal) value) ) properties.add(value.stringValue());
 				}
 				return properties;
 			}
@@ -884,7 +931,7 @@ public class SesameRDFResourceRepository extends AbstractSesameRepository implem
 					RepositoryResult<Statement> statements = connection.getStatements(resourceURI, predURI, null, false, documentURI);
 					while (statements.hasNext()) {
 						Value value = statements.next().getObject();
-						if ( ValueUtil.isLiteral(value) && LiteralUtil.isString((Literal) value) ) properties.add(value.toString());
+						if ( ValueUtil.isLiteral(value) && LiteralUtil.isString((Literal) value) ) properties.add(value.stringValue());
 
 					}
 				}
@@ -894,30 +941,93 @@ public class SesameRDFResourceRepository extends AbstractSesameRepository implem
 	}
 
 	@Override
-	public Set<String> getStrings(URI resourceURI, URI pred, Set<String> languages) {
-		// TODO Auto-generated method stub
-		return null;
+	public Set<String> getStrings(final URI resourceURI, final URI pred, final Set<String> languages) {
+		final URI documentURI = getDocumentURI(resourceURI);
+		return actionTemplate.execute(new ConnectionActionCallback<Set<String>>() {
+			@Override
+			public Set<String> doWithConnection(RepositoryConnection connection) throws RepositoryException {
+				Set<String> properties = new LinkedHashSet<String>();
+				RepositoryResult<Statement> statements = connection.getStatements(resourceURI, pred, null, false, documentURI);
+				while (statements.hasNext()) {
+					Value value = statements.next().getObject();
+					if ( ValueUtil.isLiteral(value) && LiteralUtil.isString((Literal) value) ) {
+						Literal literal = (Literal) value;
+						String language = literal.getLanguage();
+						if ( languages == null || languages.isEmpty() ) {
+							if ( language == null ) properties.add(literal.stringValue());
+						}
+						properties.add(value.stringValue());
+					}
+				}
+				return properties;
+			}
+		});
 	}
 
 	@Override
-	public Set<String> getStrings(URI resourceURI, RDFNodeEnum pred, Set<String> languages) {
-		// TODO Auto-generated method stub
-		return null;
+	public Set<String> getStrings(final URI resourceURI, final RDFNodeEnum pred, final Set<String> languages) {
+		final URI documentURI = getDocumentURI(resourceURI);
+		return actionTemplate.execute(new ConnectionActionCallback<Set<String>>() {
+			@Override
+			public Set<String> doWithConnection(RepositoryConnection connection) throws RepositoryException {
+				Set<String> properties = new LinkedHashSet<String>();
+				for (URI predURI : pred.getURIs()) {
+					RepositoryResult<Statement> statements = connection.getStatements(resourceURI, predURI, null, false, documentURI);
+					while (statements.hasNext()) {
+						Value value = statements.next().getObject();
+						if ( ValueUtil.isLiteral(value) && LiteralUtil.isString((Literal) value) ) {
+							Literal literal = (Literal) value;
+							String language = literal.getLanguage();
+							if ( languages == null || languages.isEmpty() ) {
+								if ( language == null ) properties.add(value.stringValue());
+							} else if ( languages.contains(language) ) {
+								properties.add(literal.stringValue());
+							}
+						}
+
+					}
+				}
+				return properties;
+			}
+		});
 	}
 
 	@Override
-	public void add(URI resourceURI, URI pred, Value obj) {
-		// TODO
+	public void add(final URI resourceURI, final URI pred, Value obj) {
+		final URI documentURI = getDocumentURI(resourceURI);
+		final Value literal = obj;
+		actionTemplate.execute(new EmptyConnectionActionCallback() {
+			@Override
+			public void doWithConnection(RepositoryConnection connection) throws RepositoryException {
+				connection.add(resourceURI, pred, literal, documentURI);
+			}
+		});
 	}
 
 	@Override
-	public void add(URI resourceURI, URI pred, boolean obj) {
-		// TODO
+	public void add(final URI resourceURI, final URI pred, boolean obj) {
+		ValueFactory factory = ValueFactoryImpl.getInstance();
+		final URI documentURI = getDocumentURI(resourceURI);
+		final Value literal = factory.createLiteral(obj);
+		actionTemplate.execute(new EmptyConnectionActionCallback() {
+			@Override
+			public void doWithConnection(RepositoryConnection connection) throws RepositoryException {
+				connection.add(resourceURI, pred, literal, documentURI);
+			}
+		});
 	}
 
 	@Override
-	public void add(URI resourceURI, URI pred, byte obj) {
-		// TODO
+	public void add(final URI resourceURI, final URI pred, byte obj) {
+		ValueFactory factory = ValueFactoryImpl.getInstance();
+		final URI documentURI = getDocumentURI(resourceURI);
+		final Value literal = factory.createLiteral(obj);
+		actionTemplate.execute(new EmptyConnectionActionCallback() {
+			@Override
+			public void doWithConnection(RepositoryConnection connection) throws RepositoryException {
+				connection.add(resourceURI, pred, literal, documentURI);
+			}
+		});
 	}
 
 	@Override
@@ -933,43 +1043,105 @@ public class SesameRDFResourceRepository extends AbstractSesameRepository implem
 	}
 
 	@Override
-	public void add(URI resourceURI, URI pred, double obj) {
-		// TODO
+	public void add(final URI resourceURI, final URI pred, double obj) {
+		ValueFactory factory = ValueFactoryImpl.getInstance();
+		final URI documentURI = getDocumentURI(resourceURI);
+		final Value literal = factory.createLiteral(obj);
+		actionTemplate.execute(new EmptyConnectionActionCallback() {
+			@Override
+			public void doWithConnection(RepositoryConnection connection) throws RepositoryException {
+				connection.add(resourceURI, pred, literal, documentURI);
+			}
+		});
 	}
 
 	@Override
-	public void add(URI resourceURI, URI pred, float obj) {
-		// TODO
+	public void add(final URI resourceURI, final URI pred, float obj) {
+		ValueFactory factory = ValueFactoryImpl.getInstance();
+		final URI documentURI = getDocumentURI(resourceURI);
+		final Value literal = factory.createLiteral(obj);
+		actionTemplate.execute(new EmptyConnectionActionCallback() {
+			@Override
+			public void doWithConnection(RepositoryConnection connection) throws RepositoryException {
+				connection.add(resourceURI, pred, literal, documentURI);
+			}
+		});
 	}
 
 	@Override
-	public void add(URI resourceURI, URI pred, int obj) {
-		// TODO
+	public void add(final URI resourceURI, final URI pred, int obj) {
+		ValueFactory factory = ValueFactoryImpl.getInstance();
+		final URI documentURI = getDocumentURI(resourceURI);
+		final Value literal = factory.createLiteral(obj);
+		actionTemplate.execute(new EmptyConnectionActionCallback() {
+			@Override
+			public void doWithConnection(RepositoryConnection connection) throws RepositoryException {
+				connection.add(resourceURI, pred, literal, documentURI);
+			}
+		});
 	}
 
 	@Override
-	public void add(URI resourceURI, URI pred, long obj) {
-		// TODO
+	public void add(final URI resourceURI, final URI pred, long obj) {
+		ValueFactory factory = ValueFactoryImpl.getInstance();
+		final URI documentURI = getDocumentURI(resourceURI);
+		final Value literal = factory.createLiteral(obj);
+		actionTemplate.execute(new EmptyConnectionActionCallback() {
+			@Override
+			public void doWithConnection(RepositoryConnection connection) throws RepositoryException {
+				connection.add(resourceURI, pred, literal, documentURI);
+			}
+		});
 	}
 
 	@Override
-	public void add(URI resourceURI, URI pred, short obj) {
-		// TODO
+	public void add(final URI resourceURI, final URI pred, short obj) {
+		ValueFactory factory = ValueFactoryImpl.getInstance();
+		final URI documentURI = getDocumentURI(resourceURI);
+		final Value literal = factory.createLiteral(obj);
+		actionTemplate.execute(new EmptyConnectionActionCallback() {
+			@Override
+			public void doWithConnection(RepositoryConnection connection) throws RepositoryException {
+				connection.add(resourceURI, pred, literal, documentURI);
+			}
+		});
 	}
 
 	@Override
-	public void add(URI resourceURI, URI pred, String obj) {
-		// TODO
+	public void add(final URI resourceURI, final URI pred, String obj) {
+		ValueFactory factory = ValueFactoryImpl.getInstance();
+		final URI documentURI = getDocumentURI(resourceURI);
+		final Value literal = factory.createLiteral(obj);
+		actionTemplate.execute(new EmptyConnectionActionCallback() {
+			@Override
+			public void doWithConnection(RepositoryConnection connection) throws RepositoryException {
+				connection.add(resourceURI, pred, literal, documentURI);
+			}
+		});
 	}
 
 	@Override
-	public void add(URI resourceURI, URI pred, String obj, String language) {
-		// TODO
+	public void add(final URI resourceURI, final URI pred, String obj, String language) {
+		ValueFactory factory = ValueFactoryImpl.getInstance();
+		final URI documentURI = getDocumentURI(resourceURI);
+		final Value literal = factory.createLiteral(obj, language);
+		actionTemplate.execute(new EmptyConnectionActionCallback() {
+			@Override
+			public void doWithConnection(RepositoryConnection connection) throws RepositoryException {
+				connection.add(resourceURI, pred, literal, documentURI);
+			}
+		});
 	}
 
 	@Override
-	public void remove(URI resourceURI, URI pred) {
-		// TODO Auto-generated method stub
+	public void remove(final URI resourceURI, final URI pred) {
+		final URI documentURI = getDocumentURI(resourceURI);
+		actionTemplate.execute(new EmptyConnectionActionCallback() {
+			@Override
+			public void doWithConnection(RepositoryConnection connection) throws RepositoryException {
+				connection.remove(resourceURI, pred, null, documentURI);
+			}
+		});
 	}
 
 	@Override
@@ -986,119 +1158,307 @@ public class SesameRDFResourceRepository extends AbstractSesameRepository implem
 	}
 
 	@Override
-	public void remove(URI resourceURI, URI pred, Value obj) {
-		// TODO Auto-generated method stub
+	public void remove(final URI resourceURI, final URI pred, final Value obj) {
+		final URI documentURI = getDocumentURI(resourceURI);
+		actionTemplate.execute(new EmptyConnectionActionCallback() {
+			@Override
+			public void doWithConnection(RepositoryConnection connection) throws RepositoryException {
+				connection.remove(resourceURI, pred, obj, documentURI);
+			}
+		});
 	}
 
 	@Override
-	public void remove(URI resourceURI, URI pred, boolean obj) {
-		// TODO Auto-generated method stub
+	public void remove(final URI resourceURI, final URI pred, final boolean obj) {
+		ValueFactory factory = ValueFactoryImpl.getInstance();
+		final URI documentURI = getDocumentURI(resourceURI);
+		final Value literal = factory.createLiteral(obj);
+		actionTemplate.execute(new EmptyConnectionActionCallback() {
+			@Override
+			public void doWithConnection(RepositoryConnection connection) throws RepositoryException {
+				connection.remove(resourceURI, pred, literal, documentURI);
+			}
+		});
 	}
 
 	@Override
-	public void remove(URI resourceURI, URI pred, byte obj) {
-		// TODO Auto-generated method stub
+	public void remove(final URI resourceURI, final URI pred, byte obj) {
+		ValueFactory factory = ValueFactoryImpl.getInstance();
+		final URI documentURI = getDocumentURI(resourceURI);
+		final Value literal = factory.createLiteral(obj);
+		actionTemplate.execute(new EmptyConnectionActionCallback() {
+			@Override
+			public void doWithConnection(RepositoryConnection connection) throws RepositoryException {
+				connection.remove(resourceURI, pred, literal, documentURI);
+			}
+		});
 	}
 
 	@Override
-	public void remove(URI resourceURI, URI pred, DateTime obj) {
-		// TODO Auto-generated method stub
+	public void remove(final URI resourceURI, final URI pred, DateTime obj) {
+		final URI documentURI = getDocumentURI(resourceURI);
+		final Value literal = LiteralUtil.get(obj);
+		actionTemplate.execute(new EmptyConnectionActionCallback() {
+			@Override
+			public void doWithConnection(RepositoryConnection connection) throws RepositoryException {
+				connection.remove(resourceURI, pred, literal, documentURI);
+			}
+		});
 	}
 
 	@Override
-	public void remove(URI resourceURI, URI pred, double obj) {
-		// TODO Auto-generated method stub
+	public void remove(final URI resourceURI, final URI pred, double obj) {
+		ValueFactory factory = ValueFactoryImpl.getInstance();
+		final URI documentURI = getDocumentURI(resourceURI);
+		final Value literal = factory.createLiteral(obj);
+		actionTemplate.execute(new EmptyConnectionActionCallback() {
+			@Override
+			public void doWithConnection(RepositoryConnection connection) throws RepositoryException {
+				connection.remove(resourceURI, pred, literal, documentURI);
+			}
+		});
 	}
 
 	@Override
-	public void remove(URI resourceURI, URI pred, float obj) {
-		// TODO Auto-generated method stub
+	public void remove(final URI resourceURI, final URI pred, float obj) {
+		ValueFactory factory = ValueFactoryImpl.getInstance();
+		final URI documentURI = getDocumentURI(resourceURI);
+		final Value literal = factory.createLiteral(obj);
+		actionTemplate.execute(new EmptyConnectionActionCallback() {
+			@Override
+			public void doWithConnection(RepositoryConnection connection) throws RepositoryException {
+				connection.remove(resourceURI, pred, literal, documentURI);
+			}
+		});
 	}
 
 	@Override
-	public void remove(URI resourceURI, URI pred, int obj) {
-		// TODO Auto-generated method stub
+	public void remove(final URI resourceURI, final URI pred, int obj) {
+		ValueFactory factory = ValueFactoryImpl.getInstance();
+		final URI documentURI = getDocumentURI(resourceURI);
+		final Value literal = factory.createLiteral(obj);
+		actionTemplate.execute(new EmptyConnectionActionCallback() {
+			@Override
+			public void doWithConnection(RepositoryConnection connection) throws RepositoryException {
+				connection.remove(resourceURI, pred, literal, documentURI);
+			}
+		});
 	}
 
 	@Override
-	public void remove(URI resourceURI, URI pred, long obj) {
-		// TODO Auto-generated method stub
+	public void remove(final URI resourceURI, final URI pred, long obj) {
+		ValueFactory factory = ValueFactoryImpl.getInstance();
+		final URI documentURI = getDocumentURI(resourceURI);
+		final Value literal = factory.createLiteral(obj);
+		actionTemplate.execute(new EmptyConnectionActionCallback() {
+			@Override
+			public void doWithConnection(RepositoryConnection connection) throws RepositoryException {
+				connection.remove(resourceURI, pred, literal, documentURI);
+			}
+		});
 	}
 
 	@Override
-	public void remove(URI resourceURI, URI pred, short obj) {
-		// TODO Auto-generated method stub
+	public void remove(final URI resourceURI, final URI pred, short obj) {
+		ValueFactory factory = ValueFactoryImpl.getInstance();
+		final URI documentURI = getDocumentURI(resourceURI);
+		final Value literal = factory.createLiteral(obj);
+		actionTemplate.execute(new EmptyConnectionActionCallback() {
+			@Override
+			public void doWithConnection(RepositoryConnection connection) throws RepositoryException {
+				connection.remove(resourceURI, pred, literal, documentURI);
+			}
+		});
 	}
 
 	@Override
-	public void remove(URI resourceURI, URI pred, String obj) {
-		// TODO Auto-generated method stub
+	public void remove(final URI resourceURI, final URI pred, String obj) {
+		ValueFactory factory = ValueFactoryImpl.getInstance();
+		final URI documentURI = getDocumentURI(resourceURI);
+		final Value literal = factory.createLiteral(obj);
+		actionTemplate.execute(new EmptyConnectionActionCallback() {
+			@Override
+			public void doWithConnection(RepositoryConnection connection) throws RepositoryException {
+				connection.remove(resourceURI, pred, literal, documentURI);
+			}
+		});
 	}
 
 	@Override
-	public void remove(URI resourceURI, URI pred, String obj, String language) {
-		// TODO Auto-generated method stub
+	public void remove(final URI resourceURI, final URI pred, String obj, String language) {
+		ValueFactory factory = ValueFactoryImpl.getInstance();
+		final URI documentURI = getDocumentURI(resourceURI);
+		final Value literal = factory.createLiteral(obj, language);
+		actionTemplate.execute(new EmptyConnectionActionCallback() {
+			@Override
+			public void doWithConnection(RepositoryConnection connection) throws RepositoryException {
+				connection.remove(resourceURI, pred, literal, documentURI);
+			}
+		});
 	}
 
 	@Override
-	public void set(URI resourceURI, URI pred, Value obj) {
-		// TODO
+	public void set(final URI resourceURI, final URI pred, Value obj) {
+		final Value literal = obj;
+		final URI documentURI = getDocumentURI(resourceURI);
+		actionTemplate.execute(new EmptyConnectionActionCallback() {
+			@Override
+			public void doWithConnection(RepositoryConnection connection) throws RepositoryException {
+				connection.remove(resourceURI, pred, null, documentURI);
+				connection.add(resourceURI, pred, literal, documentURI);
+			}
+		});
 	}
 
 	@Override
-	public void set(URI resourceURI, URI pred, boolean obj) {
-		// TODO
+	public void set(final URI resourceURI, final URI pred, boolean obj) {
+		ValueFactory factory = ValueFactoryImpl.getInstance();
+		final Value literal = factory.createLiteral(obj);
+		final URI documentURI = getDocumentURI(resourceURI);
+		actionTemplate.execute(new EmptyConnectionActionCallback() {
+			@Override
+			public void doWithConnection(RepositoryConnection connection) throws RepositoryException {
+				connection.remove(resourceURI, pred, null, documentURI);
+				connection.add(resourceURI, pred, literal, documentURI);
+			}
+		});
 	}
 
 	@Override
-	public void set(URI resourceURI, URI pred, byte obj) {
-		// TODO
+	public void set(final URI resourceURI, final URI pred, byte obj) {
+		ValueFactory factory = ValueFactoryImpl.getInstance();
+		final Value literal = factory.createLiteral(obj);
+		final URI documentURI = getDocumentURI(resourceURI);
+		actionTemplate.execute(new EmptyConnectionActionCallback() {
+			@Override
+			public void doWithConnection(RepositoryConnection connection) throws RepositoryException {
+				connection.remove(resourceURI, pred, null, documentURI);
+				connection.add(resourceURI, pred, literal, documentURI);
+			}
+		});
 	}
 
 	@Override
-	public void set(URI resourceURI, URI pred, DateTime obj) {
-		// TODO
+	public void set(final URI resourceURI, final URI pred, DateTime obj) {
+		final Value literal = LiteralUtil.get(obj);
+		final URI documentURI = getDocumentURI(resourceURI);
+		actionTemplate.execute(new EmptyConnectionActionCallback() {
+			@Override
+			public void doWithConnection(RepositoryConnection connection) throws RepositoryException {
+				connection.remove(resourceURI, pred, null, documentURI);
+				connection.add(resourceURI, pred, literal, documentURI);
+			}
+		});
 	}
 
 	@Override
-	public void set(URI resourceURI, URI pred, double obj) {
-		// TODO
+	public void set(final URI resourceURI, final URI pred, double obj) {
+		ValueFactory factory = ValueFactoryImpl.getInstance();
+		final Value literal = factory.createLiteral(obj);
+		final URI documentURI = getDocumentURI(resourceURI);
+		actionTemplate.execute(new EmptyConnectionActionCallback() {
+			@Override
+			public void doWithConnection(RepositoryConnection connection) throws RepositoryException {
+				connection.remove(resourceURI, pred, null, documentURI);
+				connection.add(resourceURI, pred, literal, documentURI);
+			}
+		});
 	}
 
 	@Override
-	public void set(URI resourceURI, URI pred, float obj) {
-		// TODO
+	public void set(final URI resourceURI, final URI pred, float obj) {
+		ValueFactory factory = ValueFactoryImpl.getInstance();
+		final Value literal = factory.createLiteral(obj);
+		final URI documentURI = getDocumentURI(resourceURI);
+		actionTemplate.execute(new EmptyConnectionActionCallback() {
+			@Override
+			public void doWithConnection(RepositoryConnection connection) throws RepositoryException {
+				connection.remove(resourceURI, pred, null, documentURI);
+				connection.add(resourceURI, pred, literal, documentURI);
+			}
+		});
 	}
 
 	@Override
-	public void set(URI resourceURI, URI pred, int obj) {
-		// TODO
+	public void set(final URI resourceURI, final URI pred, int obj) {
+		ValueFactory factory = ValueFactoryImpl.getInstance();
+		final Value literal = factory.createLiteral(obj);
+		final URI documentURI = getDocumentURI(resourceURI);
+		actionTemplate.execute(new EmptyConnectionActionCallback() {
+			@Override
+			public void doWithConnection(RepositoryConnection connection) throws RepositoryException {
+				connection.remove(resourceURI, pred, null, documentURI);
+				connection.add(resourceURI, pred, literal, documentURI);
+			}
+		});
 	}
 
 	@Override
-	public void set(URI resourceURI, URI pred, long obj) {
-		// TODO
+	public void set(final URI resourceURI, final URI pred, long obj) {
+		ValueFactory factory = ValueFactoryImpl.getInstance();
+		final Value literal = factory.createLiteral(obj);
+		final URI documentURI = getDocumentURI(resourceURI);
+		actionTemplate.execute(new EmptyConnectionActionCallback() {
+			@Override
+			public void doWithConnection(RepositoryConnection connection) throws RepositoryException {
+				connection.remove(resourceURI, pred, null, documentURI);
+				connection.add(resourceURI, pred, literal, documentURI);
+			}
+		});
 	}
 
 	@Override
-	public void set(URI resourceURI, URI pred, short obj) {
-		// TODO
+	public void set(final URI resourceURI, final URI pred, short obj) {
+		ValueFactory factory = ValueFactoryImpl.getInstance();
+		final Value literal = factory.createLiteral(obj);
+		final URI documentURI = getDocumentURI(resourceURI);
+		actionTemplate.execute(new EmptyConnectionActionCallback() {
+			@Override
+			public void doWithConnection(RepositoryConnection connection) throws RepositoryException {
+				connection.remove(resourceURI, pred, null, documentURI);
+				connection.add(resourceURI, pred, literal, documentURI);
+			}
+		});
 	}
 
 	@Override
-	public void set(URI resourceURI, URI pred, String obj) {
-		// TODO
+	public void set(final URI resourceURI, final URI pred, String obj) {
+		ValueFactory factory = ValueFactoryImpl.getInstance();
+		final Value literal = factory.createLiteral(obj);
+		final URI documentURI = getDocumentURI(resourceURI);
+		actionTemplate.execute(new EmptyConnectionActionCallback() {
+			@Override
+			public void doWithConnection(RepositoryConnection connection) throws RepositoryException {
+				connection.remove(resourceURI, pred, null, documentURI);
+				connection.add(resourceURI, pred, literal, documentURI);
+			}
+		});
 	}
 
 	@Override
-	public void set(URI resourceURI, URI pred, String obj, String language) {
-		// TODO
+	public void set(final URI resourceURI, final URI pred, String obj, String language) {
+		ValueFactory factory = ValueFactoryImpl.getInstance();
+		final Value literal = factory.createLiteral(obj, language);
+		final URI documentURI = getDocumentURI(resourceURI);
+		actionTemplate.execute(new EmptyConnectionActionCallback() {
+			@Override
+			public void doWithConnection(RepositoryConnection connection) throws RepositoryException {
+				connection.remove(resourceURI, pred, null, documentURI);
+				connection.add(resourceURI, pred, literal, documentURI);
+			}
+		});
 	}
 
 	@Override
-	public boolean hasType(URI resourceURI, URI type) {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean hasType(final URI resourceURI, final URI type) {
+		final URI documentURI = getDocumentURI(resourceURI);
+		return actionTemplate.execute(new ConnectionActionCallback<Boolean>() {
+			@Override
+			public Boolean doWithConnection(RepositoryConnection connection) throws RepositoryException {
+				RepositoryResult<Statement> statements = connection.getStatements(resourceURI, null, type, false, documentURI);
+				return statements.hasNext();
+			}
+		});
 	}
 
 	@Override
