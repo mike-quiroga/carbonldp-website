@@ -71,12 +71,15 @@ public class SesameContainerService extends AbstractSesameLDPService implements 
 			switch (preference) {
 				case CONTAINER_PROPERTIES:
 					container.getBaseModel().addAll(getProperties(containerURI));
+					break;
 				case CONTAINMENT_TRIPLES:
 					container.getBaseModel().addAll(getContainmentTriples(containerURI));
+					break;
 				case CONTAINED_RESOURCES:
 					throw new NotImplementedException();
 				case MEMBERSHIP_TRIPLES:
 					container.getBaseModel().addAll(getMembershipTriples(containerURI));
+					break;
 				case MEMBER_RESOURCES:
 					throw new NotImplementedException();
 				default:

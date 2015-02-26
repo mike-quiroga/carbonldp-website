@@ -14,7 +14,6 @@ import com.carbonldp.descriptions.RDFResourceDescription;
 import com.carbonldp.descriptions.RDFSourceDescription;
 import com.carbonldp.models.HTTPHeaderValue;
 import com.carbonldp.models.RDFSource;
-import com.carbonldp.utils.HTTPUtil;
 import com.carbonldp.web.ModelMessageConverter;
 
 public class RDFSourceMessageConverter extends ModelMessageConverter<RDFSource> {
@@ -58,6 +57,6 @@ public class RDFSourceMessageConverter extends ModelMessageConverter<RDFSource> 
 	}
 
 	private void setETagHeader(RDFSource model, HttpHeaders headers) {
-		headers.set(HTTPHeaders.ETAG, HTTPUtil.formatWeakETag(model.getModified().toString()));
+		headers.set(HTTPHeaders.ETAG, model.getETag());
 	}
 }

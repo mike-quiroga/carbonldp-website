@@ -160,7 +160,7 @@ public class SesameRDFSourceService extends AbstractSesameLDPService implements 
 		StringBuilder queryBuilder = new StringBuilder();
 		//@formatter:off
 		queryBuilder
-			.append("SELECT ?sourceURI WHERE {").append(NEW_LINE)
+			.append("SELECT ?dim WHERE {").append(NEW_LINE)
 			.append(TAB).append("GRAPH ?sourceURI {").append(NEW_LINE)
 			.append(TAB).append(TAB).append(RDFNodeUtil.generatePredicateStatement("?sourceURI", "?dim", RDFSourceDescription.Property.DEFAULT_INTERACTION_MODEL)).append(NEW_LINE)
 			.append(TAB).append(TAB).append("FILTER(isURI(?dim)).").append(NEW_LINE)
@@ -174,7 +174,7 @@ public class SesameRDFSourceService extends AbstractSesameLDPService implements 
 
 	// TODO: Create a more generic method instead of this specific one
 	@Override
-	public URI getDefaultInteractionModel(URI containerURI) {
+	public URI getDefaultInteractionModel(URI sourceURI) {
 		RepositoryConnection connection = connectionFactory.getConnection();
 
 		TupleQuery query;
@@ -187,7 +187,7 @@ public class SesameRDFSourceService extends AbstractSesameLDPService implements 
 			throw new StupidityException(e);
 		}
 
-		query.setBinding("sourceURI", containerURI);
+		query.setBinding("sourceURI", sourceURI);
 
 		try {
 			TupleQueryResult result = query.evaluate();

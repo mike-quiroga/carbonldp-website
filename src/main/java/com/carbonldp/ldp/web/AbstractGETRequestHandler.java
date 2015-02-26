@@ -7,6 +7,7 @@ import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.joda.time.DateTime;
 import org.openrdf.model.URI;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -74,23 +75,39 @@ public abstract class AbstractGETRequestHandler extends AbstractLDPRequestHandle
 
 		// TODO: Add Allow Headers (depending on security)
 
-		return createRDFSourceResponse(source);
+		setAppliedPreferenceHeaders();
+		return new ResponseEntity<Object>(source, HttpStatus.OK);
 	}
 
 	protected ResponseEntity<Object> handleContainerRetrieval(URI targetURI) {
 		Set<ContainerRetrievalPreference> containerRetrievalPreferences = getContainerRetrievalPreferences(targetURI);
 		Container container = containerService.get(targetURI, containerRetrievalPreferences);
+
+		ensureETagIsPresent(container, containerRetrievalPreferences);
+
 		// TODO: Add Container related information to the request (number of contained resources and members)
+
 		// TODO: Add Allow Headers (depending on security)
 
-		// TODO: Implement it
+		setAppliedPreferenceHeaders();
 		return new ResponseEntity<Object>(container, HttpStatus.OK);
 	}
 
+	private void ensureETagIsPresent(Container container, Set<ContainerRetrievalPreference> containerRetrievalPreferences) {
+		if ( ! containerRetrievalPreferences.contains(ContainerRetrievalPreference.CONTAINER_PROPERTIES) ) {
+			DateTime modified = sourceService.getModified(container.getURI());
+			container.setETag(modified);
+		}
+	}
+
 	private Set<ContainerRetrievalPreference> getContainerRetrievalPreferences(URI targetURI) {
+		Set<ContainerRetrievalPreference> preferences = new HashSet<ContainerRetrievalPreference>();
 		Set<ContainerRetrievalPreference> defaultPreferences = getDefaultContainerRetrievalPreferences();
 		Set<ContainerRetrievalPreference> containerDefinedPreferences = containerService.getRetrievalPreferences(targetURI);
-		defaultPreferences = containerDefinedPreferences.isEmpty() ? defaultPreferences : containerDefinedPreferences;
+
+		if ( containerDefinedPreferences.isEmpty() ) preferences.addAll(defaultPreferences);
+		else preferences.addAll(containerDefinedPreferences);
+
 		return getContainerRetrievalPreferences(defaultPreferences, request);
 	}
 
@@ -132,10 +149,5 @@ public abstract class AbstractGETRequestHandler extends AbstractLDPRequestHandle
 	protected ResponseEntity<Object> handleSPARQLEndpointRetrieval(URI targetURI) {
 		// TODO: Implement it
 		return new ResponseEntity<Object>(HttpStatus.NOT_IMPLEMENTED);
-	}
-
-	protected ResponseEntity<Object> createRDFSourceResponse(RDFSource source) {
-		setAppliedPreferenceHeaders();
-		return new ResponseEntity<Object>(source, HttpStatus.OK);
 	}
 }
