@@ -1,7 +1,6 @@
 package com.carbonldp.repository;
 
-import info.aduna.iteration.Iterations;
-
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -13,8 +12,6 @@ import org.openrdf.model.Statement;
 import org.openrdf.model.URI;
 import org.openrdf.model.Value;
 import org.openrdf.model.ValueFactory;
-import org.openrdf.model.impl.AbstractModel;
-import org.openrdf.model.impl.LinkedHashModel;
 import org.openrdf.model.impl.URIImpl;
 import org.openrdf.model.impl.ValueFactoryImpl;
 import org.openrdf.repository.RepositoryConnection;
@@ -26,8 +23,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.carbonldp.descriptions.RDFNodeEnum;
 import com.carbonldp.descriptions.RDFResourceDescription;
 import com.carbonldp.models.PrefixedURI;
-import com.carbonldp.models.RDFResource;
-import com.carbonldp.repository.txn.RepositoryRuntimeException;
 import com.carbonldp.utils.LiteralUtil;
 import com.carbonldp.utils.URIUtil;
 import com.carbonldp.utils.ValueUtil;
@@ -1462,43 +1457,72 @@ public class SesameRDFResourceRepository extends AbstractSesameRepository implem
 	}
 
 	@Override
-	public boolean hasType(URI resourceURI, RDFNodeEnum type) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public Set<URI> getTypes(URI resourceURI) {
-		RepositoryConnection connection = connectionFactory.getConnection();
-		AbstractModel model = new LinkedHashModel();
-		for (URI predicate : RDFResourceDescription.Property.TYPE.getURIs()) {
-			RepositoryResult<Statement> statements;
-			try {
-				statements = connection.getStatements(resourceURI, predicate, null, false, resourceURI);
-				model.addAll(Iterations.asSet(statements));
-			} catch (RepositoryException e) {
-				// TODO: Add error code
-				throw new RepositoryRuntimeException(e);
+	public boolean hasType(final URI resourceURI, final RDFNodeEnum type) {
+		final URI documentURI = getDocumentURI(resourceURI);
+		return actionTemplate.execute(new ConnectionActionCallback<Boolean>() {
+			@Override
+			public Boolean doWithConnection(RepositoryConnection connection) throws RepositoryException {
+				for (URI typeURI : type.getURIs()) {
+					RepositoryResult<Statement> statements = connection.getStatements(resourceURI, null, typeURI, false, documentURI);
+					if ( statements.hasNext() ) return true;
+				}
+				return false;
 			}
-
-		}
-		RDFResource resource = new RDFResource(model, resourceURI);
-		return resource.getTypes();
+		});
 	}
 
 	@Override
-	public void addType(URI resourceURI, URI type) {
-		// TODO
+	public Set<URI> getTypes(final URI resourceURI) {
+		final URI documentURI = getDocumentURI(resourceURI);
+		return actionTemplate.execute(new ConnectionActionCallback<Set<URI>>() {
+			@Override
+			public Set<URI> doWithConnection(RepositoryConnection connection) throws RepositoryException {
+				Set<URI> types = new HashSet<URI>();
+				for (URI predicate : RDFResourceDescription.Property.TYPE.getURIs()) {
+					RepositoryResult<Statement> statements = connection.getStatements(resourceURI, predicate, null, false, documentURI);
+					while (statements.hasNext()) {
+						Statement statement = statements.next();
+						Value object = statement.getObject();
+						if ( ValueUtil.isURI(object) ) types.add(ValueUtil.getURI(object));
+					}
+				}
+				return types;
+			}
+		});
 	}
 
 	@Override
-	public void removeType(URI resourceURI, URI type) {
-		// TODO Auto-generated method stub
+	public void addType(final URI resourceURI, final URI type) {
+		final URI documentURI = getDocumentURI(resourceURI);
+		actionTemplate.execute(new EmptyConnectionActionCallback() {
+			@Override
+			public void doWithConnection(RepositoryConnection connection) throws RepositoryException {
+				connection.add(resourceURI, RDFResourceDescription.Property.TYPE.getURI(), type, documentURI);
+			}
+		});
 	}
 
 	@Override
-	public void setType(URI resourceURI, URI type) {
-		// TODO
+	public void removeType(final URI resourceURI, final URI type) {
+		final URI documentURI = getDocumentURI(resourceURI);
+		actionTemplate.execute(new EmptyConnectionActionCallback() {
+			@Override
+			public void doWithConnection(RepositoryConnection connection) throws RepositoryException {
+				connection.remove(resourceURI, null, type, documentURI);
+			}
+		});
+	}
+
+	@Override
+	public void setType(final URI resourceURI, final URI type) {
+		final URI documentURI = getDocumentURI(resourceURI);
+		actionTemplate.execute(new EmptyConnectionActionCallback() {
+			@Override
+			public void doWithConnection(RepositoryConnection connection) throws RepositoryException {
+				connection.remove(resourceURI, null, type, documentURI);
+				connection.add(resourceURI, RDFResourceDescription.Property.TYPE.getURI(), type, documentURI);
+			}
+		});
 	}
 
 	private URI getDocumentURI(URI resourceURI) {
