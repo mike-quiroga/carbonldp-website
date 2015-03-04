@@ -1,6 +1,6 @@
 package com.carbonldp.authorization;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.aspectj.lang.annotation.After;
@@ -9,8 +9,6 @@ import org.aspectj.lang.annotation.Before;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import com.carbonldp.AbstractAspect;
@@ -27,14 +25,12 @@ public class SecurityContextExchanger extends AbstractAspect {
 			LOG.trace(">> exchangeSecurityContext()");
 		}
 
-		String[] roles = runWith.roles();
-		List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
-		for (String role : roles) {
-			authorities.add(new SimpleGrantedAuthority(role));
-		}
+		List<Platform.Role> platformRoles = Arrays.asList(runWith.platformRoles());
+		List<Platform.Privilege> platformPrivileges = Arrays.asList(runWith.platformPrivileges());
 
 		Authentication originalAuthentication = SecurityContextHolder.getContext().getAuthentication();
-		Authentication newAuthentication = new TemporaryAuthorizationToken(authorities, originalAuthentication);
+		Authentication newAuthentication = new TemporaryAuthorizationToken(originalAuthentication, platformRoles, platformPrivileges);
+
 		SecurityContextHolder.getContext().setAuthentication(newAuthentication);
 
 		if ( LOG.isDebugEnabled() ) {

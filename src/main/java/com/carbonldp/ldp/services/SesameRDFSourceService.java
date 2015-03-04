@@ -14,23 +14,18 @@ import org.openrdf.model.impl.AbstractModel;
 import org.openrdf.model.impl.LinkedHashModel;
 import org.openrdf.query.BooleanQuery;
 import org.openrdf.query.GraphQuery;
-import org.openrdf.query.MalformedQueryException;
 import org.openrdf.query.QueryEvaluationException;
 import org.openrdf.query.QueryLanguage;
 import org.openrdf.query.TupleQuery;
 import org.openrdf.query.TupleQueryResult;
-import org.openrdf.repository.RepositoryConnection;
-import org.openrdf.repository.RepositoryException;
 import org.openrdf.repository.RepositoryResult;
 import org.openrdf.spring.SesameConnectionFactory;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.carbonldp.descriptions.ContainerDescription;
 import com.carbonldp.descriptions.RDFSourceDescription;
-import com.carbonldp.exceptions.StupidityException;
 import com.carbonldp.models.AccessPoint;
 import com.carbonldp.models.RDFSource;
-import com.carbonldp.repository.ConnectionActionCallback;
 import com.carbonldp.repository.DocumentGraphQueryResultHandler;
 import com.carbonldp.repository.GraphQueryResultHandler;
 import com.carbonldp.repository.RDFDocumentRepository;
@@ -63,17 +58,9 @@ public class SesameRDFSourceService extends AbstractSesameLDPService implements 
 
 	@Override
 	public boolean exists(URI sourceURI) {
-		RepositoryConnection connection = connectionFactory.getConnection();
-
-		BooleanQuery query;
-		try {
-			query = connection.prepareBooleanQuery(QueryLanguage.SPARQL, exists_query);
-		} catch (RepositoryException e) {
-			// TODO: Add error code
-			throw new RepositoryRuntimeException(e);
-		} catch (MalformedQueryException e) {
-			throw new StupidityException(e);
-		}
+		BooleanQuery query = connectionTemplate.read((connection) -> {
+			return connection.prepareBooleanQuery(QueryLanguage.SPARQL, exists_query);
+		});
 
 		query.setBinding("sourceURI", sourceURI);
 
@@ -104,17 +91,9 @@ public class SesameRDFSourceService extends AbstractSesameLDPService implements 
 
 	@Override
 	public RDFSource get(URI sourceURI) {
-		RepositoryConnection connection = connectionFactory.getConnection();
-
-		GraphQuery query;
-		try {
-			query = connection.prepareGraphQuery(QueryLanguage.SPARQL, get_query);
-		} catch (RepositoryException e) {
-			// TODO: Add error code
-			throw new RepositoryRuntimeException(e);
-		} catch (MalformedQueryException e) {
-			throw new StupidityException(e);
-		}
+		GraphQuery query = connectionTemplate.read((connection) -> {
+			return connection.prepareGraphQuery(QueryLanguage.SPARQL, get_query);
+		});
 
 		query.setBinding("sourceURI", sourceURI);
 
@@ -128,23 +107,20 @@ public class SesameRDFSourceService extends AbstractSesameLDPService implements 
 	// TODO: Decide. Should it return empty objects?
 	@Override
 	public Set<RDFSource> get(Set<URI> sourceURIs) {
-		final Resource[] contexts = sourceURIs.toArray(new Resource[sourceURIs.size()]);
+		Resource[] contexts = sourceURIs.toArray(new Resource[sourceURIs.size()]);
 
-		AbstractModel model = actionTemplate.execute(new ConnectionActionCallback<AbstractModel>() {
-			@Override
-			public AbstractModel doWithConnection(RepositoryConnection connection) throws RepositoryException {
-				AbstractModel model = new LinkedHashModel();
-				RepositoryResult<Statement> statements = connection.getStatements(null, null, null, false, contexts);
-				while (statements.hasNext()) {
-					model.add(statements.next());
-				}
-				return model;
+		AbstractModel sourcesModel = connectionTemplate.read((connection) -> {
+			AbstractModel model = new LinkedHashModel();
+			RepositoryResult<Statement> statements = connection.getStatements(null, null, null, false, contexts);
+			while (statements.hasNext()) {
+				model.add(statements.next());
 			}
+			return model;
 		});
 
 		Set<RDFSource> sources = new HashSet<RDFSource>();
 		for (URI sourceURI : sourceURIs) {
-			sources.add(new RDFSource(model, sourceURI));
+			sources.add(new RDFSource(sourcesModel, sourceURI));
 		}
 
 		return sources;
@@ -175,17 +151,9 @@ public class SesameRDFSourceService extends AbstractSesameLDPService implements 
 	// TODO: Create a more generic method instead of this specific one
 	@Override
 	public URI getDefaultInteractionModel(URI sourceURI) {
-		RepositoryConnection connection = connectionFactory.getConnection();
-
-		TupleQuery query;
-		try {
-			query = connection.prepareTupleQuery(QueryLanguage.SPARQL, getDefaultInteractionModel_query);
-		} catch (RepositoryException e) {
-			// TODO: Add error number
-			throw new RepositoryRuntimeException(e);
-		} catch (MalformedQueryException e) {
-			throw new StupidityException(e);
-		}
+		TupleQuery query = connectionTemplate.read((connection) -> {
+			return connection.prepareTupleQuery(QueryLanguage.SPARQL, getDefaultInteractionModel_query);
+		});
 
 		query.setBinding("sourceURI", sourceURI);
 
@@ -219,13 +187,9 @@ public class SesameRDFSourceService extends AbstractSesameLDPService implements 
 	}
 
 	private void addAccessPoint(URI sourceURI, AccessPoint accessPoint) {
-		RepositoryConnection connection = connectionFactory.getConnection();
-		try {
+		connectionTemplate.write((connection) -> {
 			connection.add(sourceURI, RDFSourceDescription.Property.ACCESS_POINT.getURI(), accessPoint.getURI(), sourceURI);
-		} catch (RepositoryException e) {
-			// TODO: Add error number
-			throw new RepositoryRuntimeException(e);
-		}
+		});
 	}
 
 	@Override

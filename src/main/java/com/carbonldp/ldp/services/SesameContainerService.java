@@ -12,39 +12,31 @@ import org.openrdf.model.Statement;
 import org.openrdf.model.URI;
 import org.openrdf.model.Value;
 import org.openrdf.query.GraphQuery;
-import org.openrdf.query.MalformedQueryException;
 import org.openrdf.query.QueryLanguage;
-import org.openrdf.repository.RepositoryConnection;
-import org.openrdf.repository.RepositoryException;
 import org.openrdf.spring.SesameConnectionFactory;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.carbonldp.descriptions.APIPreferences.ContainerRetrievalPreference;
 import com.carbonldp.descriptions.ContainerDescription;
 import com.carbonldp.descriptions.ContainerDescription.Type;
-import com.carbonldp.exceptions.StupidityException;
 import com.carbonldp.models.Container;
 import com.carbonldp.models.ContainerFactory;
 import com.carbonldp.models.RDFSource;
 import com.carbonldp.repository.DocumentGraphQueryResultHandler;
-import com.carbonldp.repository.EmptyConnectionActionCallback;
 import com.carbonldp.repository.GraphQueryResultHandler;
 import com.carbonldp.repository.RDFDocumentRepository;
 import com.carbonldp.repository.RDFResourceRepository;
-import com.carbonldp.repository.txn.RepositoryRuntimeException;
 import com.carbonldp.utils.RDFNodeUtil;
 import com.carbonldp.web.exceptions.NotImplementedException;
 
 @Transactional
 public class SesameContainerService extends AbstractSesameLDPService implements ContainerService {
 
-	private final RDFSourceService sourceService;
 	private final List<TypedContainerService> typedContainerServices;
 
 	public SesameContainerService(SesameConnectionFactory connectionFactory, RDFResourceRepository resourceRepository,
-			RDFDocumentRepository documentRepository, RDFSourceService sourceService, List<TypedContainerService> typedContainerServices) {
+			RDFDocumentRepository documentRepository, List<TypedContainerService> typedContainerServices) {
 		super(connectionFactory, resourceRepository, documentRepository);
-		this.sourceService = sourceService;
 		this.typedContainerServices = typedContainerServices;
 	}
 
@@ -132,16 +124,9 @@ public class SesameContainerService extends AbstractSesameLDPService implements 
 
 	@Override
 	public Set<Statement> getContainmentTriples(URI containerURI) {
-		RepositoryConnection connection = connectionFactory.getConnection();
-
-		GraphQuery query;
-		try {
-			query = connection.prepareGraphQuery(QueryLanguage.SPARQL, getContainmentTriples_query);
-		} catch (RepositoryException e) {
-			throw new RepositoryRuntimeException(e);
-		} catch (MalformedQueryException e) {
-			throw new StupidityException(e);
-		}
+		GraphQuery query = connectionTemplate.read((connection) -> {
+			return connection.prepareGraphQuery(QueryLanguage.SPARQL, getContainmentTriples_query);
+		});
 
 		query.setBinding("containerURI", containerURI);
 
@@ -218,11 +203,8 @@ public class SesameContainerService extends AbstractSesameLDPService implements 
 	}
 
 	private void addContainedResource(final URI containerURI, final URI resourceURI) {
-		actionTemplate.execute(new EmptyConnectionActionCallback() {
-			@Override
-			public void doWithConnection(RepositoryConnection connection) throws RepositoryException {
-				connection.add(containerURI, ContainerDescription.Property.CONTAINS.getURI(), resourceURI, containerURI);
-			}
+		connectionTemplate.write((connection) -> {
+			connection.add(containerURI, ContainerDescription.Property.CONTAINS.getURI(), resourceURI, containerURI);
 		});
 	}
 

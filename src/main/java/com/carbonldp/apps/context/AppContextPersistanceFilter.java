@@ -22,20 +22,19 @@ import org.springframework.web.filter.GenericFilterBean;
 
 import com.carbonldp.PropertiesFileConfigurationRepository;
 import com.carbonldp.apps.App;
-import com.carbonldp.apps.AppService;
 
 public class AppContextPersistanceFilter extends GenericFilterBean {
 	protected final Logger LOG = LoggerFactory.getLogger(this.getClass());
 
 	static final String FILTER_APPLIED = "__carbon_acpf_applied";
 
-	private final AppService appService;
+	private final AppContextRepository appContextRepository;
 
 	@Autowired
 	private PropertiesFileConfigurationRepository configurationService;
 
-	public AppContextPersistanceFilter(AppService appService) {
-		this.appService = appService;
+	public AppContextPersistanceFilter(AppContextRepository appContextRepository) {
+		this.appContextRepository = appContextRepository;
 	}
 
 	@Override
@@ -61,7 +60,7 @@ public class AppContextPersistanceFilter extends GenericFilterBean {
 			return;
 		}
 
-		App app = appService.findByRootContainer(rootContainerURI);
+		App app = appContextRepository.getApp(rootContainerURI);
 
 		if ( app == null ) {
 			// TODO: Add more information

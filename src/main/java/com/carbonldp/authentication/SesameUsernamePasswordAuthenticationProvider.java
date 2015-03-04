@@ -10,19 +10,12 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.carbonldp.agents.Agent;
-import com.carbonldp.agents.AgentService;
 import com.carbonldp.apps.context.RunInPlatformContext;
-import com.carbonldp.authorization.PlatformPrivilegeService;
-import com.carbonldp.authorization.PlatformRoleService;
+import com.carbonldp.authorization.Platform;
 import com.carbonldp.authorization.RunWith;
 import com.carbonldp.utils.AuthenticationUtil;
 
 public class SesameUsernamePasswordAuthenticationProvider extends AbstractSesameAuthenticationProvider {
-
-	public SesameUsernamePasswordAuthenticationProvider(AgentService agentService, PlatformRoleService platformRoleService,
-			PlatformPrivilegeService platformPrivilegeService) {
-		super(agentService, platformRoleService, platformPrivilegeService);
-	}
 
 	public void init() {
 		if ( LOG.isTraceEnabled() ) {
@@ -31,7 +24,7 @@ public class SesameUsernamePasswordAuthenticationProvider extends AbstractSesame
 	}
 
 	@Transactional
-	@RunWith(roles = { "ROLE_SYSTEM" })
+	@RunWith(platformRoles = { Platform.Role.SYSTEM })
 	@RunInPlatformContext
 	public Authentication authenticate(Authentication authentication) throws AuthenticationException {
 		Object rawPrincipal = authentication.getPrincipal();

@@ -12,6 +12,8 @@ import com.carbonldp.ldp.services.ContainerService;
 import com.carbonldp.ldp.services.RDFSourceService;
 import com.carbonldp.models.RDFSource;
 import com.carbonldp.repository.AbstractSesameService;
+import com.carbonldp.utils.RDFNodeUtil;
+import com.carbonldp.utils.URIUtil;
 
 @Transactional
 public class SesamePlatformPrivilegeService extends AbstractSesameService implements PlatformPrivilegeService {
@@ -47,5 +49,10 @@ public class SesamePlatformPrivilegeService extends AbstractSesameService implem
 		}
 
 		return privileges;
+	}
+
+	public Set<Platform.Privilege> getRepresentations(Set<PlatformPrivilege> platformPrivilegeResources) {
+		Set<URI> privilegeURIs = URIUtil.getURIs(platformPrivilegeResources);
+		return RDFNodeUtil.findByURIs(privilegeURIs, Platform.Privilege.class);
 	}
 }

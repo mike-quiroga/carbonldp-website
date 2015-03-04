@@ -12,6 +12,8 @@ import com.carbonldp.ldp.services.ContainerService;
 import com.carbonldp.ldp.services.RDFSourceService;
 import com.carbonldp.models.RDFSource;
 import com.carbonldp.repository.AbstractSesameService;
+import com.carbonldp.utils.RDFNodeUtil;
+import com.carbonldp.utils.URIUtil;
 
 public class SesamePlatformRoleService extends AbstractSesameService implements PlatformRoleService {
 	private final RDFSourceService sourceService;
@@ -28,13 +30,18 @@ public class SesamePlatformRoleService extends AbstractSesameService implements 
 		this.platformRolesContainerURI = platformRolesContainerURI;
 	}
 
-	public Set<PlatformRole> getPlatformRolesOfAgent(Agent agent) {
+	public Set<PlatformRole> get(Agent agent) {
+		Set<PlatformRole> platformRoles = new HashSet<PlatformRole>();
 		Set<URI> platformRolesURIs = containerService.filterMembers(platformRolesContainerURI, agent.getPlatformRoles(), platformRolesContainerType);
 		Set<RDFSource> sources = sourceService.get(platformRolesURIs);
-		Set<PlatformRole> platformRoles = new HashSet<PlatformRole>();
 		for (RDFSource source : sources) {
-			platformRoles.add(new PlatformRole(source.getBaseModel(), source.getURI()));
+			platformRoles.add(new PlatformRole(source));
 		}
 		return platformRoles;
+	}
+
+	public Set<Platform.Role> getRepresentations(Set<PlatformRole> platformRoleResources) {
+		Set<URI> platformRolesURIs = URIUtil.getURIs(platformRoleResources);
+		return RDFNodeUtil.findByURIs(platformRolesURIs, Platform.Role.class);
 	}
 }

@@ -2,9 +2,9 @@ package com.carbonldp.authentication;
 
 import java.util.Collection;
 
-import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
+
+import com.carbonldp.authorization.Platform;
 
 public class TemporaryAuthorizationToken extends AbstractAuthenticationToken {
 
@@ -12,10 +12,22 @@ public class TemporaryAuthorizationToken extends AbstractAuthenticationToken {
 
 	private final Authentication originalAuthenticationObject;
 
-	public TemporaryAuthorizationToken(Collection<? extends GrantedAuthority> authorities, Authentication originalAuthenticationObject) {
-		super(authorities);
+	public TemporaryAuthorizationToken(Authentication originalAuthenticationObject, Collection<Platform.Role> platformRoles,
+			Collection<Platform.Privilege> platformPrivileges) {
+		super(platformRoles, platformPrivileges);
+
 		this.originalAuthenticationObject = originalAuthenticationObject;
+
 		setAuthenticated(true);
+	}
+
+	public Authentication getOriginalAuthenticationObject() {
+		return originalAuthenticationObject;
+	}
+
+	@Override
+	public String getName() {
+		return "[TemporaryAuthorization]";
 	}
 
 	@Override
@@ -24,11 +36,12 @@ public class TemporaryAuthorizationToken extends AbstractAuthenticationToken {
 	}
 
 	@Override
-	public Object getPrincipal() {
+	public Object getDetails() {
 		return null;
 	}
 
-	public Authentication getOriginalAuthenticationObject() {
-		return originalAuthenticationObject;
+	@Override
+	public Object getPrincipal() {
+		return null;
 	}
 }
