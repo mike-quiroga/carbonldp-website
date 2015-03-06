@@ -20,7 +20,7 @@ public class AppContextImpl implements AppContext {
 	@Override
 	public int hashCode() {
 		if ( this.application == null ) {
-			return - 1;
+			return -1;
 		} else {
 			return this.application.hashCode();
 		}
@@ -29,12 +29,12 @@ public class AppContextImpl implements AppContext {
 	@Override
 	public String toString() {
 		StringBuilder stringBuilder = new StringBuilder();
-		stringBuilder.append(super.toString());
+		stringBuilder.append( super.toString() );
 
 		if ( isEmpty() ) {
-			stringBuilder.append(": Empty ApplicationContext");
+			stringBuilder.append( ": Empty ApplicationContext" );
 		} else {
-			stringBuilder.append(": Authentication: ").append(this.application);
+			stringBuilder.append( ": Authentication: " ).append( this.application );
 		}
 
 		return stringBuilder.toString();

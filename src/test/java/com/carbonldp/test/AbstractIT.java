@@ -1,8 +1,10 @@
 package com.carbonldp.test;
 
-import java.io.File;
-import java.io.IOException;
-
+import com.carbonldp.repository.RepositoryService;
+import com.carbonldp.repository.SesameRDFDocumentRepository;
+import com.carbonldp.repository.txn.ApplicationContextRepositoryIDProvider;
+import com.carbonldp.repository.txn.WriteTransactionCallback;
+import com.carbonldp.repository.txn.WriteTransactionTemplate;
 import org.openrdf.model.ValueFactory;
 import org.openrdf.model.impl.ValueFactoryImpl;
 import org.openrdf.repository.RepositoryConnection;
@@ -18,19 +20,16 @@ import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
-import com.carbonldp.repository.RepositoryService;
-import com.carbonldp.repository.SesameRDFDocumentRepository;
-import com.carbonldp.repository.txn.ApplicationContextRepositoryIDProvider;
-import com.carbonldp.repository.txn.WriteTransactionCallback;
-import com.carbonldp.repository.txn.WriteTransactionTemplate;
+import java.io.File;
+import java.io.IOException;
 
-@Test(groups = "integration-tests")
+@Test( groups = "integration-tests" )
 //@formatter:off
-@ContextHierarchy({
-	@ContextConfiguration(locations = { "classpath*:META-INF/spring/applicationContext*.xml" }),
-	@ContextConfiguration(locations = { "file:src/main/webapp/WEB-INF/dispatcher-servlet.xml" }),
-	@ContextConfiguration(locations = { "classpath:test-config.xml" }),
-})
+@ContextHierarchy( {
+		@ContextConfiguration( locations = {"classpath*:META-INF/spring/applicationContext*.xml"} ),
+		@ContextConfiguration( locations = {"file:src/main/webapp/WEB-INF/dispatcher-servlet.xml"} ),
+		@ContextConfiguration( locations = {"classpath:test-config.xml"} ),
+} )
 //@formatter:on
 public abstract class AbstractIT extends AbstractTestNGSpringContextTests {
 	@Autowired
@@ -55,36 +54,36 @@ public abstract class AbstractIT extends AbstractTestNGSpringContextTests {
 
 	@BeforeTest
 	public void setRepository() {
-		if ( ! repositoryService.repositoryExists(testRepositoryID) ) {
-			repositoryService.createRepository(testRepositoryID);
+		if ( !repositoryService.repositoryExists( testRepositoryID ) ) {
+			repositoryService.createRepository( testRepositoryID );
 		}
 
-		WriteTransactionTemplate template = repositoryService.getWriteTransactionTemplate(testRepositoryID);
+		WriteTransactionTemplate template = repositoryService.getWriteTransactionTemplate( testRepositoryID );
 		// Clean the repository
-		template.addCallback(new WriteTransactionCallback() {
+		template.addCallback( new WriteTransactionCallback() {
 
 			@Override
 			public void executeInTransaction(RepositoryConnection connection) throws RepositoryException {
 				connection.clear();
 			}
-		});
+		} );
 
-		Resource testDataResoure = new ClassPathResource(testDataLocation);
+		Resource testDataResoure = new ClassPathResource( testDataLocation );
 		final File testDataFile;
 		try {
 			testDataFile = testDataResoure.getFile();
-		} catch (IOException e) {
-			throw new RuntimeException(e);
+		} catch ( IOException e ) {
+			throw new RuntimeException( e );
 		}
 
 		// Add data
-		template.addCallback(new WriteTransactionCallback() {
+		template.addCallback( new WriteTransactionCallback() {
 
 			@Override
 			public void executeInTransaction(RepositoryConnection connection) throws Exception {
-				connection.add(testDataFile, "", RDFFormat.TRIG);
+				connection.add( testDataFile, "", RDFFormat.TRIG );
 			}
-		});
+		} );
 
 		template.execute();
 	}

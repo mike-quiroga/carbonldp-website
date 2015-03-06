@@ -1,14 +1,13 @@
 package com.carbonldp;
 
+import com.carbonldp.spring.DependencyInjectorListener;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 
-import com.carbonldp.spring.DependencyInjectorListener;
-
 @Configuration
-@PropertySource("classpath:${APP_ENV:local}-config.properties")
+@PropertySource( "classpath:${APP_ENV:local}-config.properties" )
 public class ConfigurationConfig {
 
 	@Bean

@@ -1,11 +1,6 @@
 package com.carbonldp.spring;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.lang.reflect.Parameter;
-import java.util.ArrayList;
-import java.util.List;
-
+import com.carbonldp.exceptions.StupidityException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
@@ -15,11 +10,15 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 
-import com.carbonldp.exceptions.StupidityException;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.lang.reflect.Parameter;
+import java.util.ArrayList;
+import java.util.List;
 
 public class DependencyInjectorListener implements BeanPostProcessor, ApplicationContextAware, ApplicationListener<ContextRefreshedEvent> {
 
-	protected final Logger LOG = LoggerFactory.getLogger(this.getClass());
+	protected final Logger LOG = LoggerFactory.getLogger( this.getClass() );
 
 	private ApplicationContext applicationContext;
 
@@ -33,10 +32,10 @@ public class DependencyInjectorListener implements BeanPostProcessor, Applicatio
 	@Override
 	public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
 		Method[] methods = bean.getClass().getMethods();
-		for (Method method : methods) {
-			Inject injectAnnotation = method.getAnnotation(Inject.class);
+		for ( Method method : methods ) {
+			Inject injectAnnotation = method.getAnnotation( Inject.class );
 			if ( injectAnnotation != null ) {
-				beansNeedingInjection.add(bean);
+				beansNeedingInjection.add( bean );
 				break;
 			}
 		}
@@ -49,47 +48,47 @@ public class DependencyInjectorListener implements BeanPostProcessor, Applicatio
 	}
 
 	private void injectBeans() {
-		for (Object bean : beansNeedingInjection) {
+		for ( Object bean : beansNeedingInjection ) {
 			Method[] methods = bean.getClass().getMethods();
-			for (Method method : methods) {
-				Inject injectAnnotation = method.getAnnotation(Inject.class);
+			for ( Method method : methods ) {
+				Inject injectAnnotation = method.getAnnotation( Inject.class );
 				if ( injectAnnotation == null ) continue;
 
 				Object dependency = null;
 
 				String beanID = injectAnnotation.id();
-				if ( wasAssigned(beanID) ) dependency = getDependency(beanID);
-				else dependency = getDependencyFromParameterClass(method);
+				if ( wasAssigned( beanID ) ) dependency = getDependency( beanID );
+				else dependency = getDependencyFromParameterClass( method );
 
 				try {
-					method.invoke(bean, dependency);
-				} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-					throw new StupidityException(e);
+					method.invoke( bean, dependency );
+				} catch ( IllegalAccessException | IllegalArgumentException | InvocationTargetException e ) {
+					throw new StupidityException( e );
 				}
 			}
 		}
 	}
 
 	private Object getDependency(String beanID) {
-		return this.applicationContext.getBean(beanID);
+		return this.applicationContext.getBean( beanID );
 	}
 
 	private Object getDependencyFromParameterClass(Method method) {
-		Class<?> dependencyClass = getDependencyClassFromParameter(method);
-		return this.applicationContext.getBean(dependencyClass);
+		Class<?> dependencyClass = getDependencyClassFromParameter( method );
+		return this.applicationContext.getBean( dependencyClass );
 	}
 
 	private Class<?> getDependencyClassFromParameter(Method method) {
 		Parameter[] parameters = method.getParameters();
-		if ( parameters.length > 1 ) throw new StupidityException("The method annotated isn't a setter.");
-		for (Parameter parameter : method.getParameters()) {
+		if ( parameters.length > 1 ) throw new StupidityException( "The method annotated isn't a setter." );
+		for ( Parameter parameter : method.getParameters() ) {
 			return parameter.getType();
 		}
-		throw new StupidityException("The method annotated doesn't have a parameter");
+		throw new StupidityException( "The method annotated doesn't have a parameter" );
 	}
 
 	private boolean wasAssigned(String id) {
-		return ! "[unassigned]".equals(id);
+		return !"[unassigned]".equals( id );
 	}
 
 	@Override

@@ -1,17 +1,7 @@
 package com.carbonldp.repository;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.openrdf.model.URI;
-import org.openrdf.model.impl.URIImpl;
-import org.openrdf.spring.SesameConnectionFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
-
 import com.carbonldp.ConfigurationRepository;
+import com.carbonldp.Vars;
 import com.carbonldp.agents.AgentService;
 import com.carbonldp.agents.SesameAgentService;
 import com.carbonldp.apps.AppService;
@@ -22,22 +12,25 @@ import com.carbonldp.authorization.SesamePlatformPrivilegeService;
 import com.carbonldp.authorization.SesamePlatformRoleService;
 import com.carbonldp.authorization.acl.ACLRepository;
 import com.carbonldp.authorization.acl.SesameACLRepository;
-import com.carbonldp.ldp.services.ContainerService;
-import com.carbonldp.ldp.services.RDFSourceService;
-import com.carbonldp.ldp.services.SesameBasicContainerService;
-import com.carbonldp.ldp.services.SesameContainerService;
-import com.carbonldp.ldp.services.SesameDirectContainerService;
-import com.carbonldp.ldp.services.SesameIndirectContainerService;
-import com.carbonldp.ldp.services.SesameRDFSourceService;
-import com.carbonldp.ldp.services.TypedContainerService;
+import com.carbonldp.ldp.services.*;
 import com.carbonldp.repository.txn.TxnConfig;
+import org.openrdf.model.URI;
+import org.openrdf.model.impl.URIImpl;
+import org.openrdf.spring.SesameConnectionFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Configuration
 //@formatter:off
 @Import(
-	value = {
-		TxnConfig.class
-	}
+		value = {
+				TxnConfig.class
+		}
 )
 //@formatter:on
 public class RepositoryConfig {
@@ -50,59 +43,58 @@ public class RepositoryConfig {
 
 	@Bean
 	protected RDFResourceRepository resourceRepository() {
-		return new SesameRDFResourceRepository(connectionFactory);
+		return new SesameRDFResourceRepository( connectionFactory );
 	}
 
 	@Bean
 	protected RDFDocumentRepository documentRepository() {
-		return new SesameRDFDocumentRepository(connectionFactory);
+		return new SesameRDFDocumentRepository( connectionFactory );
 	}
 
 	@Bean
 	public RDFSourceService sourceService() {
-		return new SesameRDFSourceService(connectionFactory, resourceRepository(), documentRepository());
+		return new SesameRDFSourceService( connectionFactory, resourceRepository(), documentRepository() );
 	}
 
 	@Bean
 	public ContainerService containerService() {
 		List<TypedContainerService> typedServices = new ArrayList<TypedContainerService>();
-		typedServices.add(new SesameBasicContainerService(connectionFactory, resourceRepository(), documentRepository()));
-		typedServices.add(new SesameDirectContainerService(connectionFactory, resourceRepository(), documentRepository()));
-		typedServices.add(new SesameIndirectContainerService(connectionFactory, resourceRepository(), documentRepository()));
+		typedServices.add( new SesameBasicContainerService( connectionFactory, resourceRepository(), documentRepository() ) );
+		typedServices.add( new SesameDirectContainerService( connectionFactory, resourceRepository(), documentRepository() ) );
+		typedServices.add( new SesameIndirectContainerService( connectionFactory, resourceRepository(), documentRepository() ) );
 
-		return new SesameContainerService(connectionFactory, resourceRepository(), documentRepository(), typedServices);
+		return new SesameContainerService( connectionFactory, resourceRepository(), documentRepository(), typedServices );
 	}
 
 	@Bean
 	public AgentService agentService() {
-		URI agentsContainerURI = new URIImpl(configurationRepository.getPlatformAgentsContainerURL());
-		return new SesameAgentService(connectionFactory, sourceService(), containerService(), agentsContainerURI);
+		URI agentsContainerURI = new URIImpl( Vars.getAgentsContainerURL() );
+		return new SesameAgentService( connectionFactory, sourceService(), containerService(), agentsContainerURI );
 	}
 
 	@Bean
 	public PlatformRoleService platformRoleService() {
-		URI platformRolesContainerURI = new URIImpl(configurationRepository.getPlatformRolesContainerURL());
-		return new SesamePlatformRoleService(connectionFactory, sourceService(), containerService(), platformRolesContainerURI);
+		URI platformRolesContainerURI = new URIImpl( Vars.getRolesContainerURL() );
+		return new SesamePlatformRoleService( connectionFactory, sourceService(), containerService(), platformRolesContainerURI );
 	}
 
 	@Bean
 	public PlatformPrivilegeService platformPrivilegeService() {
-		URI platformPrivilegesContainerURI = new URIImpl(configurationRepository.getPlatformPrivilegesContainerURL());
-		return new SesamePlatformPrivilegeService(connectionFactory, sourceService(), containerService(), platformPrivilegesContainerURI);
+		URI platformPrivilegesContainerURI = new URIImpl( Vars.getPrivilegesContainerURL() );
+		return new SesamePlatformPrivilegeService( connectionFactory, sourceService(), containerService(), platformPrivilegesContainerURI );
 	}
 
 	@Bean
 	public AppService appService() {
-		URI appsContainerURI = new URIImpl(configurationRepository.getPlatformAppsContainerURL());
-		SesameAppService service = new SesameAppService(connectionFactory, documentRepository(), sourceService(), containerService(),
-				appRepositoryService);
-		service.setAppsContainerURI(appsContainerURI);
-		service.setAppsEntryPoint(configurationRepository.getAppsEntryPointURL());
+		URI appsContainerURI = new URIImpl( Vars.getAppsContainerURL() );
+		SesameAppService service = new SesameAppService( connectionFactory, documentRepository(), sourceService(), containerService(), appRepositoryService );
+		service.setAppsContainerURI( appsContainerURI );
+		service.setAppsEntryPoint( Vars.getAppsEntryPointURL() );
 		return service;
 	}
 
 	@Bean
 	public ACLRepository aclRepository() {
-		return new SesameACLRepository(connectionFactory, resourceRepository(), documentRepository());
+		return new SesameACLRepository( connectionFactory, resourceRepository(), documentRepository() );
 	}
 }

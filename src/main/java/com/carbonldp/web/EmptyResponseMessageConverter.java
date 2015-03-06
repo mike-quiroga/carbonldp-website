@@ -1,15 +1,7 @@
 package com.carbonldp.web;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import com.carbonldp.models.EmptyResponse;
+import com.carbonldp.utils.MediaTypeUtil;
 import org.openrdf.rio.RDFFormat;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpInputMessage;
@@ -20,8 +12,10 @@ import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.http.converter.HttpMessageNotWritableException;
 import org.springframework.util.Assert;
 
-import com.carbonldp.models.EmptyResponse;
-import com.carbonldp.utils.MediaTypeUtil;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.util.*;
 
 public class EmptyResponseMessageConverter implements HttpMessageConverter<EmptyResponse> {
 
@@ -33,18 +27,18 @@ public class EmptyResponseMessageConverter implements HttpMessageConverter<Empty
 	public EmptyResponseMessageConverter() {
 		//@formatter:off
 		setSupportedFormats(
-			Arrays.asList(
-				RDFFormat.TURTLE,
-				RDFFormat.JSONLD,
-				RDFFormat.RDFJSON,
-				RDFFormat.RDFXML
-			)
+				Arrays.asList(
+						RDFFormat.TURTLE,
+						RDFFormat.JSONLD,
+						RDFFormat.RDFJSON,
+						RDFFormat.RDFXML
+				)
 		);
 		//@formatter:on
 	}
 
 	private boolean supports(Class<?> clazz) {
-		return EmptyResponse.class.isAssignableFrom(clazz);
+		return EmptyResponse.class.isAssignableFrom( clazz );
 	}
 
 	@Override
@@ -54,14 +48,14 @@ public class EmptyResponseMessageConverter implements HttpMessageConverter<Empty
 
 	@Override
 	public boolean canWrite(Class<?> clazz, MediaType mediaType) {
-		return supports(clazz) && canWrite(mediaType);
+		return supports( clazz ) && canWrite( mediaType );
 	}
 
 	private boolean canWrite(MediaType mediaType) {
-		if ( mediaType == null || MediaType.ALL.equals(mediaType) ) return true;
+		if ( mediaType == null || MediaType.ALL.equals( mediaType ) ) return true;
 
-		for (MediaType supportedMediaType : getSupportedMediaTypes()) {
-			if ( supportedMediaType.isCompatibleWith(mediaType) ) return true;
+		for ( MediaType supportedMediaType : getSupportedMediaTypes() ) {
+			if ( supportedMediaType.isCompatibleWith( mediaType ) ) return true;
 		}
 
 		return false;
@@ -83,26 +77,26 @@ public class EmptyResponseMessageConverter implements HttpMessageConverter<Empty
 
 		if ( headers.getContentType() == null ) {
 			if ( contentType == null || contentType.isWildcardType() || contentType.isWildcardSubtype() ) {
-				contentType = MediaTypeUtil.fromString(this.getDefaultFormat().getDefaultMIMEType());
+				contentType = MediaTypeUtil.fromString( this.getDefaultFormat().getDefaultMIMEType() );
 			}
 			if ( contentType != null ) {
-				headers.setContentType(contentType);
+				headers.setContentType( contentType );
 			}
 		}
 
-		RDFFormat formatToUse = this.mediaTypeFormats.get(contentType);
+		RDFFormat formatToUse = this.mediaTypeFormats.get( contentType );
 
 		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
 		try {
-			writeEmptyResponse(response, formatToUse, outputStream);
-		} catch (IOException e) {
-			throw new HttpMessageNotWritableException("The empty response couldn't be wrote to an RDF document.", e);
+			writeEmptyResponse( response, formatToUse, outputStream );
+		} catch ( IOException e ) {
+			throw new HttpMessageNotWritableException( "The empty response couldn't be wrote to an RDF document.", e );
 		}
 
 		// TODO: Set the Content-Length
 
-		outputStream.writeTo(outputMessage.getBody());
+		outputStream.writeTo( outputMessage.getBody() );
 
 		outputMessage.getBody().flush();
 	}
@@ -110,34 +104,34 @@ public class EmptyResponseMessageConverter implements HttpMessageConverter<Empty
 	private void writeEmptyResponse(EmptyResponse response, RDFFormat format, OutputStream outputStream) throws IOException {
 		String emptyResponseString = null;
 
-		if ( format.equals(RDFFormat.JSONLD) ) {
+		if ( format.equals( RDFFormat.JSONLD ) ) {
 			emptyResponseString = "{}";
 		} else {
 			emptyResponseString = "";
 		}
 
-		outputStream.write(emptyResponseString.getBytes());
+		outputStream.write( emptyResponseString.getBytes() );
 	}
 
 	private void setSupportedFormats(List<RDFFormat> supportedFormats) {
-		Assert.notEmpty(supportedFormats, "'supportedFormats' must not be empty");
+		Assert.notEmpty( supportedFormats, "'supportedFormats' must not be empty" );
 
 		this.supportedMediaTypes = new ArrayList<MediaType>();
 		this.mediaTypeFormats = new HashMap<MediaType, RDFFormat>();
 
-		for (RDFFormat format : supportedFormats) {
-			List<MediaType> mediaTypes = MediaTypeUtil.fromStrings(format.getMIMETypes());
-			for (MediaType mediaType : mediaTypes) {
-				this.mediaTypeFormats.put(mediaType, format);
+		for ( RDFFormat format : supportedFormats ) {
+			List<MediaType> mediaTypes = MediaTypeUtil.fromStrings( format.getMIMETypes() );
+			for ( MediaType mediaType : mediaTypes ) {
+				this.mediaTypeFormats.put( mediaType, format );
 			}
-			this.supportedMediaTypes.addAll(mediaTypes);
+			this.supportedMediaTypes.addAll( mediaTypes );
 		}
 
 		this.supportedFormats = supportedFormats;
 	}
 
 	private RDFFormat getDefaultFormat() {
-		return (! this.supportedFormats.isEmpty() ? this.supportedFormats.get(0) : null);
+		return (!this.supportedFormats.isEmpty() ? this.supportedFormats.get( 0 ) : null);
 	}
 
 }

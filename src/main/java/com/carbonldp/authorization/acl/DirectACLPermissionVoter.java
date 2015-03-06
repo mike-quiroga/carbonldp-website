@@ -1,18 +1,17 @@
 package com.carbonldp.authorization.acl;
 
-import java.util.Map;
-import java.util.Set;
-
-import org.openrdf.model.URI;
-
 import com.carbonldp.authorization.acl.ACEDescription.Permission;
 import com.carbonldp.descriptions.RDFNodeEnum;
 import com.carbonldp.web.exceptions.NotImplementedException;
+import org.openrdf.model.URI;
+
+import java.util.Map;
+import java.util.Set;
 
 public class DirectACLPermissionVoter extends AbstractACLPermissionVoter implements ACLPermissionVoter {
 
 	public DirectACLPermissionVoter(ACLRepository aclRepository) {
-		super(aclRepository);
+		super( aclRepository );
 	}
 
 	@Override

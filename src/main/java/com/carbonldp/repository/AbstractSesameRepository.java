@@ -1,8 +1,7 @@
 package com.carbonldp.repository;
 
-import org.openrdf.spring.SesameConnectionFactory;
-
 import com.carbonldp.AbstractComponent;
+import org.openrdf.spring.SesameConnectionFactory;
 
 public class AbstractSesameRepository extends AbstractComponent {
 	protected final SesameConnectionFactory connectionFactory;
@@ -10,6 +9,6 @@ public class AbstractSesameRepository extends AbstractComponent {
 
 	public AbstractSesameRepository(SesameConnectionFactory connectionFactory) {
 		this.connectionFactory = connectionFactory;
-		connectionTemplate = new ConnectionRWTemplate(connectionFactory);
+		connectionTemplate = new ConnectionRWTemplate( connectionFactory );
 	}
 }

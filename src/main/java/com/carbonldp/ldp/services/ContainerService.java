@@ -1,16 +1,15 @@
 package com.carbonldp.ldp.services;
 
-import java.util.Map;
-import java.util.Set;
-
-import org.openrdf.model.Statement;
-import org.openrdf.model.URI;
-import org.openrdf.model.Value;
-
 import com.carbonldp.descriptions.APIPreferences.ContainerRetrievalPreference;
 import com.carbonldp.descriptions.ContainerDescription.Type;
 import com.carbonldp.models.Container;
 import com.carbonldp.models.RDFSource;
+import org.openrdf.model.Statement;
+import org.openrdf.model.URI;
+import org.openrdf.model.Value;
+
+import java.util.Map;
+import java.util.Set;
 
 public interface ContainerService {
 	public boolean isMember(URI containerURI, URI possibleMemberURI);

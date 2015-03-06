@@ -1,14 +1,13 @@
 package com.carbonldp.ldp.services;
 
-import java.util.Map;
-import java.util.Set;
-
+import com.carbonldp.descriptions.ContainerDescription.Type;
+import com.carbonldp.models.RDFSource;
 import org.openrdf.model.Statement;
 import org.openrdf.model.URI;
 import org.openrdf.model.Value;
 
-import com.carbonldp.descriptions.ContainerDescription.Type;
-import com.carbonldp.models.RDFSource;
+import java.util.Map;
+import java.util.Set;
 
 public interface TypedContainerService {
 	public boolean supports(Type containerType);

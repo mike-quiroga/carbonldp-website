@@ -1,10 +1,9 @@
 package com.carbonldp.ldp.services;
 
-import org.openrdf.spring.SesameConnectionFactory;
-
 import com.carbonldp.repository.AbstractSesameService;
 import com.carbonldp.repository.RDFDocumentRepository;
 import com.carbonldp.repository.RDFResourceRepository;
+import org.openrdf.spring.SesameConnectionFactory;
 
 public abstract class AbstractSesameLDPService extends AbstractSesameService {
 
@@ -13,7 +12,7 @@ public abstract class AbstractSesameLDPService extends AbstractSesameService {
 
 	public AbstractSesameLDPService(SesameConnectionFactory connectionFactory, RDFResourceRepository resourceRepository,
 			RDFDocumentRepository documentRepository) {
-		super(connectionFactory);
+		super( connectionFactory );
 		this.resourceRepository = resourceRepository;
 		this.documentRepository = documentRepository;
 	}

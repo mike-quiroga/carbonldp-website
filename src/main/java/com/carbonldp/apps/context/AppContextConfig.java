@@ -10,7 +10,7 @@ public class AppContextConfig {
 
 	@Bean
 	public AppContextPersistanceFilter appContextPersistanceFilter() {
-		return new AppContextPersistanceFilter(appContextRepository());
+		return new AppContextPersistanceFilter( appContextRepository() );
 	}
 
 	@Bean

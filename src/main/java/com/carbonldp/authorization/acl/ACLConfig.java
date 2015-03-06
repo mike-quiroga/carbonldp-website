@@ -17,7 +17,7 @@ public class ACLConfig extends GlobalMethodSecurityConfiguration {
 	@Override
 	protected MethodSecurityExpressionHandler createExpressionHandler() {
 		DefaultMethodSecurityExpressionHandler handler = new DefaultMethodSecurityExpressionHandler();
-		handler.setPermissionEvaluator(permissionEvaluator());
+		handler.setPermissionEvaluator( permissionEvaluator() );
 
 		return handler;
 	}
@@ -26,8 +26,8 @@ public class ACLConfig extends GlobalMethodSecurityConfiguration {
 	public PermissionEvaluator permissionEvaluator() {
 		//@formatter:off
 		return new ACLPermissionEvaluator(
-			systemRoleACLPermissionVoter(),
-			directACLPermissionVoter()
+				systemRoleACLPermissionVoter(),
+				directACLPermissionVoter()
 		);
 		//@formatter:on
 	}
@@ -39,6 +39,6 @@ public class ACLConfig extends GlobalMethodSecurityConfiguration {
 
 	@Bean
 	public ACLPermissionVoter directACLPermissionVoter() {
-		return new DirectACLPermissionVoter(aclRepository);
+		return new DirectACLPermissionVoter( aclRepository );
 	}
 }

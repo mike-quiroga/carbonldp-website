@@ -1,8 +1,9 @@
 package com.carbonldp.apps.web;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import com.carbonldp.apps.web.handlers.AppResourceGETHandler;
+import com.carbonldp.apps.web.handlers.AppResourcePOSTHandler;
+import com.carbonldp.apps.web.handlers.AppResourcePOSTNonRDFHandler;
+import com.carbonldp.ldp.web.AbstractLDPController;
 import org.openrdf.model.impl.AbstractModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,13 +15,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.carbonldp.apps.web.handlers.AppResourceGETHandler;
-import com.carbonldp.apps.web.handlers.AppResourcePOSTHandler;
-import com.carbonldp.apps.web.handlers.AppResourcePOSTNonRDFHandler;
-import com.carbonldp.ldp.web.AbstractLDPController;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 @Controller
-@RequestMapping(value = { "/apps/?*/", "/apps/?*/**" })
+@RequestMapping( value = {"/apps/?*/", "/apps/?*/**"} )
 public class AppResourceController extends AbstractLDPController {
 
 	private static final String FILE_PARAMETER = "file";
@@ -34,61 +33,61 @@ public class AppResourceController extends AbstractLDPController {
 	@Autowired
 	private AppResourcePOSTNonRDFHandler postNonRDFHandler;
 
-	@RequestMapping(method = RequestMethod.HEAD)
+	@RequestMapping( method = RequestMethod.HEAD )
 	public ResponseEntity<Object> handleHEAD(HttpServletRequest request, HttpServletResponse response) {
-		return getRDFHandler.handleRequest(request, response);
+		return getRDFHandler.handleRequest( request, response );
 	}
 
-	@RequestMapping(method = RequestMethod.GET)
+	@RequestMapping( method = RequestMethod.GET )
 	public ResponseEntity<Object> handleGET(HttpServletRequest request, HttpServletResponse response) {
-		return getRDFHandler.handleRequest(request, response);
+		return getRDFHandler.handleRequest( request, response );
 	}
 
 	//@formatter:off
-	@RequestMapping(method = RequestMethod.POST, consumes = { 
-		"application/ld+json",
-		"text/turtle"
-	})
+	@RequestMapping( method = RequestMethod.POST, consumes = {
+			"application/ld+json",
+			"text/turtle"
+	} )
 	//@formatter:on
 	public ResponseEntity<Object> handleRDFPost(@RequestBody AbstractModel requestModel, HttpServletRequest request, HttpServletResponse response) {
-		return postRDFHandler.handleRequest(requestModel, request, response);
+		return postRDFHandler.handleRequest( requestModel, request, response );
 	}
 
-	@RequestMapping(method = RequestMethod.POST)
+	@RequestMapping( method = RequestMethod.POST )
 	public ResponseEntity<Object> handleNonRDFPost(@RequestBody AbstractModel requestModel, HttpServletRequest request, HttpServletResponse response) {
 		// TODO: Implement
-		return new ResponseEntity<Object>(HttpStatus.NOT_IMPLEMENTED);
+		return new ResponseEntity<Object>( HttpStatus.NOT_IMPLEMENTED );
 	}
 
-	@RequestMapping(method = RequestMethod.POST, consumes = "multipart/form-data")
+	@RequestMapping( method = RequestMethod.POST, consumes = "multipart/form-data" )
 	//@formatter:off
 	public ResponseEntity<Object> handleMultipartPost(
-		@RequestParam(value = FILE_NAME_PARAMETER, required = false) String fileName,
-		@RequestParam(value = FILE_PARAMETER, required = false) MultipartFile file,
-		HttpServletRequest request, 
-		HttpServletResponse response
-		//@formatter:on
+			@RequestParam( value = FILE_NAME_PARAMETER, required = false ) String fileName,
+			@RequestParam( value = FILE_PARAMETER, required = false ) MultipartFile file,
+			HttpServletRequest request,
+			HttpServletResponse response
+			//@formatter:on
 	) {
 		// TODO: Implement
-		return new ResponseEntity<Object>(HttpStatus.NOT_IMPLEMENTED);
+		return new ResponseEntity<Object>( HttpStatus.NOT_IMPLEMENTED );
 	}
 
-	@RequestMapping(method = RequestMethod.PUT)
+	@RequestMapping( method = RequestMethod.PUT )
 	public ResponseEntity<Object> handlePUT(HttpServletRequest request, HttpServletResponse response) {
 		// TODO: Implement
-		return new ResponseEntity<Object>(HttpStatus.NOT_IMPLEMENTED);
+		return new ResponseEntity<Object>( HttpStatus.NOT_IMPLEMENTED );
 	}
 
-	@RequestMapping(method = RequestMethod.PATCH)
+	@RequestMapping( method = RequestMethod.PATCH )
 	public ResponseEntity<Object> handlePATCH(HttpServletRequest request, HttpServletResponse response) {
 		// TODO: Implement
-		return new ResponseEntity<Object>(HttpStatus.NOT_IMPLEMENTED);
+		return new ResponseEntity<Object>( HttpStatus.NOT_IMPLEMENTED );
 	}
 
-	@RequestMapping(method = RequestMethod.DELETE)
+	@RequestMapping( method = RequestMethod.DELETE )
 	public ResponseEntity<Object> handleDELETE(HttpServletRequest request, HttpServletResponse response) {
 		// TODO: Implement
-		return new ResponseEntity<Object>(HttpStatus.NOT_IMPLEMENTED);
+		return new ResponseEntity<Object>( HttpStatus.NOT_IMPLEMENTED );
 	}
 
 }

@@ -1,11 +1,10 @@
 package com.carbonldp.repository;
 
-import java.util.Collection;
-import java.util.Set;
-
+import com.carbonldp.models.RDFDocument;
 import org.openrdf.model.URI;
 
-import com.carbonldp.models.RDFDocument;
+import java.util.Collection;
+import java.util.Set;
 
 public interface RDFDocumentRepository {
 	public boolean documentExists(URI documentURI);

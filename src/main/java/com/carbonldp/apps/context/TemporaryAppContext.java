@@ -4,7 +4,7 @@ public class TemporaryAppContext extends AppContextImpl implements AppContext {
 
 	private AppContext originalContext;
 
-	public TemporaryAppContext(AppContext originalContext) {
+	public TemporaryAppContext( AppContext originalContext ) {
 		this.originalContext = originalContext;
 	}
 
@@ -12,7 +12,7 @@ public class TemporaryAppContext extends AppContextImpl implements AppContext {
 		return originalContext;
 	}
 
-	public void setOriginalContext(AppContext originalContext) {
+	public void setOriginalContext( AppContext originalContext ) {
 		this.originalContext = originalContext;
 	}
 

@@ -1,13 +1,6 @@
 package com.carbonldp.web;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-
+import com.carbonldp.HTTPHeaders;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.http.HttpHeaders;
@@ -19,25 +12,31 @@ import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.http.converter.HttpMessageNotWritableException;
 import org.springframework.util.Assert;
 
-import com.carbonldp.HTTPHeaders;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 public class BooleanMessageConverter implements HttpMessageConverter<Boolean> {
 
-	protected final Log logger = LogFactory.getLog(getClass());
+	protected final Log logger = LogFactory.getLog( getClass() );
 
 	private List<MediaType> supportedMediaTypes = Collections.emptyList();
 
 	public BooleanMessageConverter() {
 		//@formatter:off
-		setSupportedMediaTypes(Arrays.asList(
-			new MediaType("text", "plain"),
-			new MediaType("application", "json")
-		));
+		setSupportedMediaTypes( Arrays.asList(
+				new MediaType( "text", "plain" ),
+				new MediaType( "application", "json" )
+		) );
 		//@formatter:on
 	}
 
 	protected boolean supports(Class<?> clazz) {
-		return Boolean.class.isAssignableFrom(clazz);
+		return Boolean.class.isAssignableFrom( clazz );
 	}
 
 	@Override
@@ -46,26 +45,28 @@ public class BooleanMessageConverter implements HttpMessageConverter<Boolean> {
 	}
 
 	public void setSupportedMediaTypes(List<MediaType> supportedMediaTypes) {
-		Assert.notEmpty(supportedMediaTypes, "'supportedMediaTypes' must not be empty");
-		this.supportedMediaTypes = new ArrayList<MediaType>(supportedMediaTypes);
+		Assert.notEmpty( supportedMediaTypes, "'supportedMediaTypes' must not be empty" );
+		this.supportedMediaTypes = new ArrayList<MediaType>( supportedMediaTypes );
 	}
 
 	protected MediaType getDefaultMediaType() {
-		return (! supportedMediaTypes.isEmpty() ? supportedMediaTypes.get(0) : null);
+		return (!supportedMediaTypes.isEmpty() ? supportedMediaTypes.get( 0 ) : null);
 	}
 
 	@Override
 	public boolean canRead(java.lang.Class<?> clazz, MediaType mediaType) {
 		// return supports(clazz) && canRead(mediaType);
 		return false;
-	};
+	}
+
+	;
 
 	protected boolean canRead(MediaType mediaType) {
-		if ( mediaType == null || MediaType.ALL.equals(mediaType) ) {
+		if ( mediaType == null || MediaType.ALL.equals( mediaType ) ) {
 			return true;
 		}
-		for (MediaType supportedMediaType : getSupportedMediaTypes()) {
-			if ( supportedMediaType.isCompatibleWith(mediaType) ) {
+		for ( MediaType supportedMediaType : getSupportedMediaTypes() ) {
+			if ( supportedMediaType.isCompatibleWith( mediaType ) ) {
 				return true;
 			}
 		}
@@ -79,15 +80,15 @@ public class BooleanMessageConverter implements HttpMessageConverter<Boolean> {
 
 	@Override
 	public boolean canWrite(Class<?> clazz, MediaType mediaType) {
-		return supports(clazz) && canWrite(mediaType);
+		return supports( clazz ) && canWrite( mediaType );
 	}
 
 	protected boolean canWrite(MediaType mediaType) {
-		if ( mediaType == null || MediaType.ALL.equals(mediaType) ) {
+		if ( mediaType == null || MediaType.ALL.equals( mediaType ) ) {
 			return true;
 		}
-		for (MediaType supportedMediaType : getSupportedMediaTypes()) {
-			if ( supportedMediaType.isCompatibleWith(mediaType) ) {
+		for ( MediaType supportedMediaType : getSupportedMediaTypes() ) {
+			if ( supportedMediaType.isCompatibleWith( mediaType ) ) {
 				return true;
 			}
 		}
@@ -103,24 +104,24 @@ public class BooleanMessageConverter implements HttpMessageConverter<Boolean> {
 				mediaType = getDefaultMediaType();
 			}
 			if ( mediaType != null ) {
-				headers.setContentType(mediaType);
+				headers.setContentType( mediaType );
 			}
 		}
 
 		// TODO: Optimize the way Content-Length is set
 		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
-		writeBoolean(value, mediaType, outputStream);
+		writeBoolean( value, mediaType, outputStream );
 
 		// Set the Content-Length
-		headers.add(HTTPHeaders.CONTENT_LENGTH, String.valueOf(outputStream.size()));
-		outputStream.writeTo(outputMessage.getBody());
+		headers.add( HTTPHeaders.CONTENT_LENGTH, String.valueOf( outputStream.size() ) );
+		outputStream.writeTo( outputMessage.getBody() );
 
 		outputMessage.getBody().flush();
 	}
 
 	private void writeBoolean(Boolean value, MediaType contentType, OutputStream outputStream) throws IOException {
-		String booleanString = String.valueOf(value);
-		outputStream.write(booleanString.getBytes());
+		String booleanString = String.valueOf( value );
+		outputStream.write( booleanString.getBytes() );
 	}
 }

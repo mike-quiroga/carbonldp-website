@@ -1,21 +1,16 @@
 package com.carbonldp.authentication;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-
-import org.openrdf.model.URI;
-
 import com.carbonldp.agents.Agent;
 import com.carbonldp.agents.AgentService;
 import com.carbonldp.apps.AppRole;
 import com.carbonldp.apps.context.AppContextHolder;
-import com.carbonldp.authorization.Platform;
-import com.carbonldp.authorization.PlatformPrivilege;
-import com.carbonldp.authorization.PlatformPrivilegeService;
-import com.carbonldp.authorization.PlatformRole;
-import com.carbonldp.authorization.PlatformRoleService;
+import com.carbonldp.authorization.*;
 import com.carbonldp.spring.Inject;
+import org.openrdf.model.URI;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 public abstract class AbstractSesameAuthenticationProvider extends AbstractAuthenticationProvider {
 	protected AgentService agentService;
@@ -24,17 +19,17 @@ public abstract class AbstractSesameAuthenticationProvider extends AbstractAuthe
 	protected PlatformPrivilegeService platformPrivilegeService;
 
 	protected AgentAuthenticationToken createAgentAuthenticationToken(Agent agent) {
-		Set<PlatformRole> platformRoles = platformRoleService.get(agent);
-		Set<PlatformPrivilege> platformPrivileges = platformPrivilegeService.get(platformRoles);
+		Set<PlatformRole> platformRoles = platformRoleService.get( agent );
+		Set<PlatformPrivilege> platformPrivileges = platformPrivilegeService.get( platformRoles );
 
-		Set<Platform.Role> platformRoleRepresentations = platformRoleService.getRepresentations(platformRoles);
-		Set<Platform.Privilege> platformPrivilegeRepresentations = platformPrivilegeService.getRepresentations(platformPrivileges);
+		Set<Platform.Role> platformRoleRepresentations = platformRoleService.getRepresentations( platformRoles );
+		Set<Platform.Privilege> platformPrivilegeRepresentations = platformPrivilegeService.getRepresentations( platformPrivileges );
 
-		Map<URI, Set<AppRole>> appsRoles = getAppsRoles(agent);
+		Map<URI, Set<AppRole>> appsRoles = getAppsRoles( agent );
 
-		AgentAuthenticationToken token = new AgentAuthenticationToken(agent, platformRoleRepresentations, platformPrivilegeRepresentations, appsRoles);
+		AgentAuthenticationToken token = new AgentAuthenticationToken( agent, platformRoleRepresentations, platformPrivilegeRepresentations, appsRoles );
 		token.eraseCredentials();
-		token.setAuthenticated(true);
+		token.setAuthenticated( true );
 		return token;
 	}
 

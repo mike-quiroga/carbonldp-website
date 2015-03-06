@@ -14,7 +14,7 @@ public final class AppContextHolder {
 	}
 
 	private static void populateStrategy() {
-		switch (strategy) {
+		switch ( strategy ) {
 			case THREAD_LOCAL:
 				strategyHolder = new ThreadLocalAppContextHolderStrategy();
 				break;
@@ -28,7 +28,7 @@ public final class AppContextHolder {
 	}
 
 	public static void setContext(AppContext context) {
-		strategyHolder.setContext(context);
+		strategyHolder.setContext( context );
 	}
 
 	public static void clearContext() {

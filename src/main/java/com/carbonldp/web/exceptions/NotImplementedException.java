@@ -7,15 +7,15 @@ public class NotImplementedException extends AbstractWebRuntimeException {
 	private static final HttpStatus defaultStatus = HttpStatus.NOT_IMPLEMENTED;
 
 	public NotImplementedException() {
-		this(0);
+		this( 0 );
 	}
 
 	public NotImplementedException(int errorCode) {
-		super(errorCode, defaultStatus);
+		super( errorCode, defaultStatus );
 	}
 
 	public NotImplementedException(String message) {
-		super(message, defaultStatus);
+		super( message, defaultStatus );
 	}
 
 }

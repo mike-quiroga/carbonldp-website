@@ -7,10 +7,10 @@ public class NotFoundException extends AbstractWebRuntimeException {
 	private static final HttpStatus defaultStatus = HttpStatus.NOT_FOUND;
 
 	public NotFoundException(int errorCode) {
-		super(errorCode, defaultStatus);
+		super( errorCode, defaultStatus );
 	}
 
 	public NotFoundException(String message) {
-		super(message, defaultStatus);
+		super( message, defaultStatus );
 	}
 }

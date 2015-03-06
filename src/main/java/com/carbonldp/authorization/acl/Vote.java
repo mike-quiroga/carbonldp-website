@@ -4,7 +4,6 @@ public enum Vote {
 	//@formatter:off
 	GRANT,
 	ABSTAIN,
-	DENY,
-	;
+	DENY,;
 	//@formatter:on
 }

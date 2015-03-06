@@ -1,7 +1,7 @@
 package com.carbonldp.web;
 
-import java.util.List;
-
+import com.carbonldp.ConfigurationRepository;
+import com.carbonldp.ldp.web.RDFSourceMessageConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -19,19 +19,18 @@ import org.springframework.web.servlet.config.annotation.ContentNegotiationConfi
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
-import com.carbonldp.ConfigurationRepository;
-import com.carbonldp.ldp.web.RDFSourceMessageConverter;
+import java.util.List;
 
 @Configuration
 @EnableWebMvc
 //@formatter:off
 @ComponentScan(
 		useDefaultFilters = false,
-		basePackages = { "com.carbonldp" },
+		basePackages = {"com.carbonldp"},
 		includeFilters = {
-			@ComponentScan.Filter(type = FilterType.ANNOTATION, value = ControllerAdvice.class),
-			@ComponentScan.Filter(type = FilterType.ANNOTATION, value = Controller.class),
-			@ComponentScan.Filter(type = FilterType.ANNOTATION, value = RequestHandler.class)
+				@ComponentScan.Filter( type = FilterType.ANNOTATION, value = ControllerAdvice.class ),
+				@ComponentScan.Filter( type = FilterType.ANNOTATION, value = Controller.class ),
+				@ComponentScan.Filter( type = FilterType.ANNOTATION, value = RequestHandler.class )
 		}
 )
 //@formatter:on
@@ -42,18 +41,18 @@ public class WebConfig extends WebMvcConfigurerAdapter {
 
 	@Override
 	public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
-		converters.add(rdfSourceMessageConverter());
-		converters.add(modelMessageConverter());
-		converters.add(emptyResponseMessageConverter());
-		converters.add(new ByteArrayHttpMessageConverter());
-		converters.add(new StringHttpMessageConverter());
-		converters.add(new FormHttpMessageConverter());
+		converters.add( rdfSourceMessageConverter() );
+		converters.add( modelMessageConverter() );
+		converters.add( emptyResponseMessageConverter() );
+		converters.add( new ByteArrayHttpMessageConverter() );
+		converters.add( new StringHttpMessageConverter() );
+		converters.add( new FormHttpMessageConverter() );
 	}
 
 	@Override
 	public void configureContentNegotiation(ContentNegotiationConfigurer configurer) {
-		super.configureContentNegotiation(configurer);
-		configurer.favorPathExtension(false);
+		super.configureContentNegotiation( configurer );
+		configurer.favorPathExtension( false );
 	}
 
 	@Bean
@@ -63,7 +62,7 @@ public class WebConfig extends WebMvcConfigurerAdapter {
 
 	@Bean
 	public AbstractModelMessageConverter modelMessageConverter() {
-		return new AbstractModelMessageConverter(configurationRepository);
+		return new AbstractModelMessageConverter( configurationRepository );
 	}
 
 	@Bean

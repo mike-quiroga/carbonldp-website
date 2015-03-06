@@ -1,12 +1,11 @@
 package com.carbonldp.repository;
 
+import com.carbonldp.exceptions.StupidityException;
+import com.carbonldp.repository.txn.RepositoryRuntimeException;
 import org.openrdf.query.MalformedQueryException;
 import org.openrdf.repository.RepositoryConnection;
 import org.openrdf.repository.RepositoryException;
 import org.openrdf.spring.SesameConnectionFactory;
-
-import com.carbonldp.exceptions.StupidityException;
-import com.carbonldp.repository.txn.RepositoryRuntimeException;
 
 public class ConnectionRWTemplate {
 	private final SesameConnectionFactory connectionFactory;
@@ -18,26 +17,26 @@ public class ConnectionRWTemplate {
 	public void write(WriteCallback callback) {
 		RepositoryConnection connection = connectionFactory.getConnection();
 		try {
-			callback.doWithConnection(connection);
-		} catch (RepositoryException e) {
-			throw new RepositoryRuntimeException(e);
-		} catch (MalformedQueryException e) {
-			throw new StupidityException(e);
-		} catch (Exception e) {
-			throw new RepositoryRuntimeException(e);
+			callback.doWithConnection( connection );
+		} catch ( RepositoryException e ) {
+			throw new RepositoryRuntimeException( e );
+		} catch ( MalformedQueryException e ) {
+			throw new StupidityException( e );
+		} catch ( Exception e ) {
+			throw new RepositoryRuntimeException( e );
 		}
 	}
 
 	public <E> E read(ReadCallback<E> callback) {
 		RepositoryConnection connection = connectionFactory.getConnection();
 		try {
-			return callback.doWithConnection(connection);
-		} catch (RepositoryException e) {
-			throw new RepositoryRuntimeException(e);
-		} catch (MalformedQueryException e) {
-			throw new StupidityException(e);
-		} catch (Exception e) {
-			throw new RepositoryRuntimeException(e);
+			return callback.doWithConnection( connection );
+		} catch ( RepositoryException e ) {
+			throw new RepositoryRuntimeException( e );
+		} catch ( MalformedQueryException e ) {
+			throw new StupidityException( e );
+		} catch ( Exception e ) {
+			throw new RepositoryRuntimeException( e );
 		}
 	}
 

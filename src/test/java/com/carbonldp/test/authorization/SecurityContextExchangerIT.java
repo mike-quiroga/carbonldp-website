@@ -1,12 +1,11 @@
 package com.carbonldp.test.authorization;
 
-import static org.testng.Assert.assertNull;
-
+import com.carbonldp.test.AbstractIT;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.testng.annotations.Test;
 
-import com.carbonldp.test.AbstractIT;
+import static org.testng.Assert.assertNull;
 
 public class SecurityContextExchangerIT extends AbstractIT {
 
@@ -16,11 +15,11 @@ public class SecurityContextExchangerIT extends AbstractIT {
 	@Test
 	public void securityContextChange() {
 		if ( SecurityContextHolder.getContext().getAuthentication() != null ) {
-			SecurityContextHolder.getContext().setAuthentication(null);
+			SecurityContextHolder.getContext().setAuthentication( null );
 		}
 
 		serviceMock.doSomethingWithAnotherSecurityContext();
 
-		assertNull(SecurityContextHolder.getContext().getAuthentication());
+		assertNull( SecurityContextHolder.getContext().getAuthentication() );
 	}
 }

@@ -11,7 +11,7 @@ import org.springframework.security.web.context.SecurityContextPersistenceFilter
 
 @Configuration
 @EnableWebSecurity
-@Order(Ordered.LOWEST_PRECEDENCE)
+@Order( Ordered.LOWEST_PRECEDENCE )
 public class AuthorizationConfig extends AbstractWebSecurityConfigurerAdapter {
 
 	private interface EntryPointOrder {
@@ -27,62 +27,62 @@ public class AuthorizationConfig extends AbstractWebSecurityConfigurerAdapter {
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		super.configure(http);
+		super.configure( http );
 		//@formatter:off
-		http.antMatcher("/**")
+		http.antMatcher( "/**" )
 			.authorizeRequests()
-				.anyRequest().permitAll()
+			.anyRequest().permitAll()
 		;
 		//@formatter:on
 	}
 
 	@Configuration
-	@Order(EntryPointOrder.APPS)
+	@Order( EntryPointOrder.APPS )
 	public static class AppsEntryPointConfig extends AbstractWebSecurityConfigurerAdapter {
 		@Override
 		protected void configure(HttpSecurity http) throws Exception {
-			super.configure(http);
+			super.configure( http );
 			//@formatter:off
 			http
-				.antMatcher("/apps/?*/**")
+					.antMatcher( "/apps/?*/**" )
 					.exceptionHandling()
-						.authenticationEntryPoint(basicAuthenticationEntryPoint)
-						.and()
-					.addFilterBefore(appContextPersistanceFilter, SecurityContextPersistenceFilter.class)
-					.addFilter(basicAuthenticationFilter)
+					.authenticationEntryPoint( basicAuthenticationEntryPoint )
+					.and()
+					.addFilterBefore( appContextPersistanceFilter, SecurityContextPersistenceFilter.class )
+					.addFilter( basicAuthenticationFilter )
 					.authorizeRequests()
-						.anyRequest().authenticated().and()
+					.anyRequest().authenticated().and()
 			;
 			//@formatter:on
 		}
 	}
 
 	@Configuration
-	@Order(EntryPointOrder.PLATFORM)
+	@Order( EntryPointOrder.PLATFORM )
 	public static class PlatformEntryPointConfig extends AbstractWebSecurityConfigurerAdapter {
 		@Override
 		protected void configure(HttpSecurity http) throws Exception {
-			super.configure(http);
+			super.configure( http );
 			//@formatter:off
 			http
-				.antMatcher("/platform/**")
+					.antMatcher( "/platform/**" )
 					.exceptionHandling()
-						.authenticationEntryPoint(basicAuthenticationEntryPoint)
-						.and()
-					.addFilter(basicAuthenticationFilter)
+					.authenticationEntryPoint( basicAuthenticationEntryPoint )
+					.and()
+					.addFilter( basicAuthenticationFilter )
 					.authorizeRequests()
-						.antMatchers("/platform/apps/")
-							.authenticated()
-						.antMatchers("/platform/apps/?*/")
-							.authenticated()
-						.antMatchers("/platform/roles/")
-							.authenticated()
-						.antMatchers("/platform/roles/?*/")
-							.authenticated()
-						.antMatchers("/platform/permissions/")
-							.authenticated()
-						.antMatchers("/platform/permissions/?*/")
-							.authenticated()			
+					.antMatchers( "/platform/apps/" )
+					.authenticated()
+					.antMatchers( "/platform/apps/?*/" )
+					.authenticated()
+					.antMatchers( "/platform/roles/" )
+					.authenticated()
+					.antMatchers( "/platform/roles/?*/" )
+					.authenticated()
+					.antMatchers( "/platform/permissions/" )
+					.authenticated()
+					.antMatchers( "/platform/permissions/?*/" )
+					.authenticated()
 			;
 			//@formatter:on
 		}

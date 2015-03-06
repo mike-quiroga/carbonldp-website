@@ -1,15 +1,15 @@
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
- 
-<suite name="carbon-platform - Integration Tests" verbose="1" >
-	<test name="Integration Tests">
-	<groups>
-		<run>
-			<include name="integration-tests"/>
-		</run>
-		</groups>
-	
-		<packages>
-			<package name="com.carbonldp.test.*"/>
-		</packages>
-	</test>
+
+<suite name="carbon-platform - Integration Tests" verbose="1">
+    <test name="Integration Tests">
+        <groups>
+            <run>
+                <include name="integration-tests"/>
+            </run>
+        </groups>
+
+        <packages>
+            <package name="com.carbonldp.test.*"/>
+        </packages>
+    </test>
 </suite>
