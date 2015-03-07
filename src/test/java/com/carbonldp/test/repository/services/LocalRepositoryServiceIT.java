@@ -9,6 +9,8 @@ import org.openrdf.model.Literal;
 import org.openrdf.model.Resource;
 import org.openrdf.model.Statement;
 import org.openrdf.model.URI;
+import org.openrdf.model.ValueFactory;
+import org.openrdf.model.impl.ValueFactoryImpl;
 import org.openrdf.repository.RepositoryConnection;
 import org.openrdf.repository.RepositoryResult;
 import org.springframework.beans.factory.annotation.Value;
@@ -28,6 +30,7 @@ public class LocalRepositoryServiceIT extends AbstractIT {
 	private String directory;
 
 	private final String dummyRepositoryID = "dummy-repository";
+	protected final ValueFactory valueFactory = ValueFactoryImpl.getInstance();
 
 	@BeforeMethod
 	public void tearDummyRepository() {
