@@ -1,8 +1,8 @@
 package com.carbonldp.repository.txn;
 
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-
+import com.carbonldp.apps.context.AppContext;
+import com.carbonldp.apps.context.AppContextHolder;
+import com.carbonldp.apps.context.AppContextImpl;
 import org.openrdf.repository.Repository;
 import org.openrdf.repository.RepositoryConnection;
 import org.openrdf.repository.RepositoryException;
@@ -14,9 +14,8 @@ import org.openrdf.spring.SesameTransactionException;
 import org.openrdf.spring.SesameTransactionObject;
 import org.springframework.beans.factory.DisposableBean;
 
-import com.carbonldp.apps.context.AppContext;
-import com.carbonldp.apps.context.AppContextHolder;
-import com.carbonldp.apps.context.AppContextImpl;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * <p>
@@ -29,9 +28,8 @@ import com.carbonldp.apps.context.AppContextImpl;
  * sure to return to the previous {@link AppContextImpl} before the transactional method finishes so the transaction
  * ends properly.
  * </p>
- * 
- * @author MiguelAraCo
  *
+ * @author MiguelAraCo
  */
 public class ApplicationContextConnectionFactory implements SesameConnectionFactory, DisposableBean {
 
@@ -43,7 +41,7 @@ public class ApplicationContextConnectionFactory implements SesameConnectionFact
 	public ApplicationContextConnectionFactory(RepositoryConnectionFactory platformConnectionFactory, RepositoryManager appsRepositoryManager) {
 		this.platformConnectionFactory = platformConnectionFactory;
 		this.appsRepositoryManager = appsRepositoryManager;
-		this.appsRepositoryConnectionFactoryMap = new ConcurrentHashMap<String, RepositoryConnectionFactory>(128);
+		this.appsRepositoryConnectionFactoryMap = new ConcurrentHashMap<String, RepositoryConnectionFactory>( 128 );
 	}
 
 	@Override
@@ -63,7 +61,7 @@ public class ApplicationContextConnectionFactory implements SesameConnectionFact
 
 	@Override
 	public void endTransaction(boolean rollback) throws RepositoryException {
-		getRepositoryConnectionFactory().endTransaction(rollback);
+		getRepositoryConnectionFactory().endTransaction( rollback );
 	}
 
 	@Override
@@ -82,7 +80,7 @@ public class ApplicationContextConnectionFactory implements SesameConnectionFact
 	}
 
 	private void destroyAppsRepositoryConnectionFactories() throws Exception {
-		for (RepositoryConnectionFactory appRepositoryConnectionFactory : appsRepositoryConnectionFactoryMap.values()) {
+		for ( RepositoryConnectionFactory appRepositoryConnectionFactory : appsRepositoryConnectionFactoryMap.values() ) {
 			appRepositoryConnectionFactory.destroy();
 		}
 
@@ -96,9 +94,10 @@ public class ApplicationContextConnectionFactory implements SesameConnectionFact
 
 		String appRepositoryID = context.getApplication().getRepositoryID();
 
-		if ( ! appsRepositoryConnectionFactoryMap.containsKey(appRepositoryID) ) initializeAppRepositoryConnectionFactory(appRepositoryID);
+		if ( !appsRepositoryConnectionFactoryMap.containsKey( appRepositoryID ) )
+			initializeAppRepositoryConnectionFactory( appRepositoryID );
 
-		RepositoryConnectionFactory repositoryConnectionFactory = appsRepositoryConnectionFactoryMap.get(appRepositoryID);
+		RepositoryConnectionFactory repositoryConnectionFactory = appsRepositoryConnectionFactoryMap.get( appRepositoryID );
 
 		return repositoryConnectionFactory;
 	}
@@ -107,17 +106,17 @@ public class ApplicationContextConnectionFactory implements SesameConnectionFact
 		Repository repository;
 
 		try {
-			repository = appsRepositoryManager.getRepository(appRepositoryID);
-		} catch (RepositoryConfigException | RepositoryException e) {
-			throw new SesameTransactionException(e);
+			repository = appsRepositoryManager.getRepository( appRepositoryID );
+		} catch ( RepositoryConfigException | RepositoryException e ) {
+			throw new SesameTransactionException( e );
 		}
 
 		if ( repository == null ) {
 			// TODO: Add error code
-			throw new SesameTransactionException("No such repository: " + appRepositoryID);
+			throw new SesameTransactionException( "No such repository: " + appRepositoryID );
 		}
 
-		RepositoryConnectionFactory connectionFactory = new RepositoryConnectionFactory(repository);
-		appsRepositoryConnectionFactoryMap.put(appRepositoryID, connectionFactory);
+		RepositoryConnectionFactory connectionFactory = new RepositoryConnectionFactory( repository );
+		appsRepositoryConnectionFactoryMap.put( appRepositoryID, connectionFactory );
 	}
 }

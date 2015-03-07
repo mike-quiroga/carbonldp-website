@@ -1,8 +1,7 @@
 package com.carbonldp.test.repository.services;
 
-import org.testng.annotations.Test;
-
 import com.carbonldp.test.AbstractIT;
+import org.testng.annotations.Test;
 
 public class RDFDocumentServiceIT extends AbstractIT {
 	@Test

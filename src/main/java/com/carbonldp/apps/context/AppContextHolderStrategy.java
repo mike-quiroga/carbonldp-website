@@ -5,7 +5,7 @@ public interface AppContextHolderStrategy {
 
 	public AppContext getContext();
 
-	public void setContext(AppContext context);
+	public void setContext( AppContext context );
 
 	public AppContext createEmptyContext();
 }

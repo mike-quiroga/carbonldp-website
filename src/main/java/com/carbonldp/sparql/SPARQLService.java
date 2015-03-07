@@ -1,6 +1,5 @@
 package com.carbonldp.sparql;
 
-import com.carbonldp.AbstractComponent;
+public interface SPARQLService {
 
-public class SPARQLService extends AbstractComponent {
 }

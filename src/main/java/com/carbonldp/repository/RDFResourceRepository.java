@@ -1,12 +1,11 @@
 package com.carbonldp.repository;
 
-import java.util.Set;
-
+import com.carbonldp.descriptions.RDFNodeEnum;
 import org.joda.time.DateTime;
 import org.openrdf.model.URI;
 import org.openrdf.model.Value;
 
-import com.carbonldp.descriptions.RDFNodeEnum;
+import java.util.Set;
 
 public interface RDFResourceRepository {
 	public boolean hasProperty(URI resourceURI, URI pred);

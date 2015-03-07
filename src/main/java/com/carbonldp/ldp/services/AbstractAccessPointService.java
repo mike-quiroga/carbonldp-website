@@ -1,18 +1,5 @@
 package com.carbonldp.ldp.services;
 
-import static com.carbonldp.Consts.NEW_LINE;
-import static com.carbonldp.Consts.TAB;
-
-import org.openrdf.model.URI;
-import org.openrdf.query.MalformedQueryException;
-import org.openrdf.query.QueryEvaluationException;
-import org.openrdf.query.QueryLanguage;
-import org.openrdf.query.TupleQuery;
-import org.openrdf.query.TupleQueryResult;
-import org.openrdf.repository.RepositoryConnection;
-import org.openrdf.repository.RepositoryException;
-import org.openrdf.spring.SesameConnectionFactory;
-
 import com.carbonldp.descriptions.ContainerDescription;
 import com.carbonldp.exceptions.MalformedDataException;
 import com.carbonldp.exceptions.StupidityException;
@@ -21,26 +8,50 @@ import com.carbonldp.repository.RDFResourceRepository;
 import com.carbonldp.repository.txn.RepositoryRuntimeException;
 import com.carbonldp.utils.RDFNodeUtil;
 import com.carbonldp.utils.ValueUtil;
+import org.openrdf.model.Statement;
+import org.openrdf.model.URI;
+import org.openrdf.query.*;
+import org.openrdf.repository.RepositoryConnection;
+import org.openrdf.repository.RepositoryException;
+import org.openrdf.spring.SesameConnectionFactory;
+
+import java.util.Set;
+
+import static com.carbonldp.Consts.NEW_LINE;
+import static com.carbonldp.Consts.TAB;
 
 public abstract class AbstractAccessPointService extends AbstractTypedContainerService {
 
 	public AbstractAccessPointService(SesameConnectionFactory connectionFactory, RDFResourceRepository resourceRepository,
 			RDFDocumentRepository documentRepository) {
-		super(connectionFactory, resourceRepository, documentRepository);
+		super( connectionFactory, resourceRepository, documentRepository );
 	}
 
 	private static final String getMembershipResource_query;
+
 	static {
 		StringBuilder queryBuilder = new StringBuilder();
 		//@formatter:off
 		queryBuilder
-			.append("SELECT ?membershipResource WHERE {").append(NEW_LINE)
-			.append(TAB).append("GRAPH ?containerURI {").append(NEW_LINE)
-			.append(TAB).append(TAB).append(RDFNodeUtil.generatePredicateStatement("?containerURI", "?membershipResource", ContainerDescription.Property.MEMBERSHIP_RESOURCE)).append(NEW_LINE)
-			.append(TAB).append(TAB).append("FILTER(isURI(?membershipResource)).").append(NEW_LINE)
-			.append(TAB).append("}").append(NEW_LINE)
-			.append("}").append(NEW_LINE)
-			.append("LIMIT 1")
+				.append( "SELECT ?membershipResource WHERE {" )
+				.append( NEW_LINE )
+				.append( TAB )
+				.append( "GRAPH ?containerURI {" )
+				.append( NEW_LINE )
+				.append( TAB )
+				.append( TAB )
+				.append( RDFNodeUtil.generatePredicateStatement( "?containerURI", "?membershipResource", ContainerDescription.Property.MEMBERSHIP_RESOURCE ) )
+				.append( NEW_LINE )
+				.append( TAB )
+				.append( TAB )
+				.append( "FILTER(isURI(?membershipResource))." )
+				.append( NEW_LINE )
+				.append( TAB )
+				.append( "}" )
+				.append( NEW_LINE )
+				.append( "}" )
+				.append( NEW_LINE )
+				.append( "LIMIT 1" )
 		;
 		//@formatter:on
 		getMembershipResource_query = queryBuilder.toString();
@@ -52,25 +63,122 @@ public abstract class AbstractAccessPointService extends AbstractTypedContainerS
 
 		TupleQuery query;
 		try {
-			query = connection.prepareTupleQuery(QueryLanguage.SPARQL, getMembershipResource_query);
-		} catch (RepositoryException e) {
+			query = connection.prepareTupleQuery( QueryLanguage.SPARQL, getMembershipResource_query );
+		} catch ( RepositoryException e ) {
 			// TODO: Add error number
-			throw new RepositoryRuntimeException(e);
-		} catch (MalformedQueryException e) {
-			throw new StupidityException(e);
+			throw new RepositoryRuntimeException( e );
+		} catch ( MalformedQueryException e ) {
+			throw new StupidityException( e );
 		}
 
-		query.setBinding("containerURI", containerURI);
+		query.setBinding( "containerURI", containerURI );
 
 		try {
 			TupleQueryResult result = query.evaluate();
-			if ( ! result.hasNext() ) {
+			if ( !result.hasNext() ) {
 				// TODO: Add error number
-				throw new MalformedDataException(0);
-			} else return ValueUtil.getURI(result.next().getBinding("membershipResource").getValue());
-		} catch (QueryEvaluationException e) {
+				throw new MalformedDataException( 0 );
+			} else return ValueUtil.getURI( result.next().getBinding( "membershipResource" ).getValue() );
+		} catch ( QueryEvaluationException e ) {
 			// TODO: Add error number
-			throw new RepositoryRuntimeException(e);
+			throw new RepositoryRuntimeException( e );
 		}
+	}
+
+	private static final String getProperties_query;
+
+	static {
+		StringBuilder queryBuilder = new StringBuilder();
+		//@formatter:off
+		queryBuilder
+				.append( "CONSTRUCT {" )
+				.append( NEW_LINE )
+				.append( TAB )
+				.append( "?containerURI ?p ?o" )
+				.append( NEW_LINE )
+				.append( "} WHERE {" )
+				.append( NEW_LINE )
+				.append( TAB )
+				.append( "GRAPH ?containerURI {" )
+				.append( NEW_LINE )
+				.append( TAB )
+				.append( TAB )
+				.append( "?containerURI ?p ?o." )
+				.append( NEW_LINE )
+				.append( TAB )
+				.append( TAB )
+				.append( "FILTER(" )
+				.append( NEW_LINE )
+				.append( TAB )
+				.append( TAB )
+				.append( TAB )
+				.append( "(?p NOT " )
+				.append( RDFNodeUtil.generateINOperator( ContainerDescription.Property.CONTAINS ) )
+				.append( ")" )
+				.append( NEW_LINE )
+				.append( TAB )
+				.append( TAB )
+				.append( ")" )
+				.append( NEW_LINE )
+				.append( TAB )
+				.append( "}" )
+				.append( NEW_LINE )
+				.append( "}" )
+		;
+		//@formatter:on
+		getProperties_query = queryBuilder.toString();
+	}
+
+	@Override
+	public Set<Statement> getProperties(URI containerURI) {
+		return getProperties( containerURI, getProperties_query );
+	}
+
+	private static final String getMembershipTriples_query;
+
+	static {
+		StringBuilder queryBuilder = new StringBuilder();
+		//@formatter:off
+		queryBuilder
+				.append( "CONSTRUCT {" )
+				.append( NEW_LINE )
+				.append( TAB )
+				.append( "?membershipResource ?hasMemberRelation ?members" )
+				.append( NEW_LINE )
+				.append( "} WHERE {" )
+				.append( NEW_LINE )
+				.append( TAB )
+				.append( "GRAPH ?containerURI {" )
+				.append( NEW_LINE )
+				.append( TAB )
+				.append( TAB )
+				.append( RDFNodeUtil.generatePredicateStatement( "?containerURI", "?hasMemberRelation", ContainerDescription.Property.HAS_MEMBER_RELATION ) )
+				.append( NEW_LINE )
+				.append( TAB )
+				.append( TAB )
+				.append( RDFNodeUtil.generatePredicateStatement( "?containerURI", "?membershipResource", ContainerDescription.Property.MEMBERSHIP_RESOURCE ) )
+				.append( NEW_LINE )
+				.append( TAB )
+				.append( "}" )
+				.append( NEW_LINE )
+				.append( TAB )
+				.append( "GRAPH ?membershipResource {" )
+				.append( NEW_LINE )
+				.append( TAB )
+				.append( TAB )
+				.append( "?membershipResource ?hasMemberRelation ?members" )
+				.append( NEW_LINE )
+				.append( TAB )
+				.append( "}" )
+				.append( NEW_LINE )
+				.append( "}" )
+		;
+		//@formatter:on
+		getMembershipTriples_query = queryBuilder.toString();
+	}
+
+	@Override
+	public Set<Statement> getMembershipTriples(URI containerURI) {
+		return getMembershipTriples( containerURI, getMembershipTriples_query );
 	}
 }

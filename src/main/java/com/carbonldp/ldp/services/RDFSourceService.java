@@ -1,21 +1,24 @@
 package com.carbonldp.ldp.services;
 
-import java.util.Set;
-
-import org.joda.time.DateTime;
-import org.openrdf.model.URI;
-
 import com.carbonldp.models.AccessPoint;
 import com.carbonldp.models.RDFSource;
+import org.joda.time.DateTime;
+import org.openrdf.model.URI;
+import org.springframework.security.access.prepost.PreAuthorize;
+
+import java.util.Set;
 
 public interface RDFSourceService {
 	public boolean exists(URI sourceURI);
 
+	@PreAuthorize( "hasPermission(#sourceURI, 'READ')" )
 	public RDFSource get(URI sourceURI);
 
 	public Set<RDFSource> get(Set<URI> sourceURIs);
 
 	public URI getDefaultInteractionModel(URI targetURI);
+
+	public DateTime getModified(URI sourceURI);
 
 	public DateTime touch(URI sourceURI);
 

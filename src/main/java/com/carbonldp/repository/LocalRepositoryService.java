@@ -1,8 +1,8 @@
 package com.carbonldp.repository;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import com.carbonldp.AbstractComponent;
+import com.carbonldp.exceptions.CarbonRuntimeException;
+import com.carbonldp.repository.txn.*;
 import org.openrdf.repository.Repository;
 import org.openrdf.repository.RepositoryConnection;
 import org.openrdf.repository.RepositoryException;
@@ -14,24 +14,18 @@ import org.openrdf.repository.sail.config.SailRepositoryConfig;
 import org.openrdf.sail.config.SailImplConfig;
 import org.openrdf.sail.nativerdf.config.NativeStoreConfig;
 
-import com.carbonldp.AbstractComponent;
-import com.carbonldp.exceptions.CarbonRuntimeException;
-import com.carbonldp.repository.txn.ReadOnlyRepositoryConnection;
-import com.carbonldp.repository.txn.ReadTransactionCallback;
-import com.carbonldp.repository.txn.ReadTransactionTemplate;
-import com.carbonldp.repository.txn.RepositoryRuntimeException;
-import com.carbonldp.repository.txn.WriteTransactionCallback;
-import com.carbonldp.repository.txn.WriteTransactionTemplate;
+import java.util.ArrayList;
+import java.util.List;
 
 public class LocalRepositoryService extends AbstractComponent implements RepositoryService {
 
 	private final RepositoryManager manager;
 
 	public LocalRepositoryService(RepositoryManager manager) {
-		if ( ! manager.isInitialized() ) try {
+		if ( !manager.isInitialized() ) try {
 			manager.initialize();
-		} catch (RepositoryException e) {
-			throw new RepositoryRuntimeException(0x000D);
+		} catch ( RepositoryException e ) {
+			throw new RepositoryRuntimeException( 0x000D );
 		}
 		this.manager = manager;
 	}
@@ -39,69 +33,69 @@ public class LocalRepositoryService extends AbstractComponent implements Reposit
 	@Override
 	public void createRepository(String repositoryID) {
 		SailImplConfig sailConfig = new NativeStoreConfig();
-		RepositoryImplConfig repositoryTypeSpec = new SailRepositoryConfig(sailConfig);
+		RepositoryImplConfig repositoryTypeSpec = new SailRepositoryConfig( sailConfig );
 
-		RepositoryConfig repositoryConfig = new RepositoryConfig(repositoryID, repositoryTypeSpec);
+		RepositoryConfig repositoryConfig = new RepositoryConfig( repositoryID, repositoryTypeSpec );
 
 		try {
-			manager.addRepositoryConfig(repositoryConfig);
-		} catch (RepositoryException | RepositoryConfigException e) {
+			manager.addRepositoryConfig( repositoryConfig );
+		} catch ( RepositoryException | RepositoryConfigException e ) {
 			if ( LOG.isErrorEnabled() ) {
-				LOG.error("xx createRepository() > The repository: '{}', couldn't be created.", repositoryID);
+				LOG.error( "xx createRepository() > The repository: '{}', couldn't be created.", repositoryID );
 			}
-			throw new RepositoryRuntimeException(0x0003, e);
+			throw new RepositoryRuntimeException( 0x0003, e );
 		}
 
 		Repository repository = null;
 		try {
-			repository = manager.getRepository(repositoryID);
-		} catch (RepositoryConfigException | RepositoryException e) {
+			repository = manager.getRepository( repositoryID );
+		} catch ( RepositoryConfigException | RepositoryException e ) {
 			if ( LOG.isErrorEnabled() ) {
-				LOG.error("xx createRepository() > The repository: '{}', was created but couldn't be retrieved back.", repositoryID);
+				LOG.error( "xx createRepository() > The repository: '{}', was created but couldn't be retrieved back.", repositoryID );
 			}
-			throw new RepositoryRuntimeException(0x0004, e);
+			throw new RepositoryRuntimeException( 0x0004, e );
 		}
 
 		try {
 			repository.initialize();
-		} catch (RepositoryException e) {
+		} catch ( RepositoryException e ) {
 			if ( LOG.isErrorEnabled() ) {
-				LOG.error("xx createRepository() > The repository: '{}', couldn't be initialized.", repositoryID);
+				LOG.error( "xx createRepository() > The repository: '{}', couldn't be initialized.", repositoryID );
 			}
-			throw new RepositoryRuntimeException(0x0005, e);
+			throw new RepositoryRuntimeException( 0x0005, e );
 		}
 	}
 
 	@Override
 	public boolean repositoryExists(String repositoryID) {
 		try {
-			return manager.hasRepositoryConfig(repositoryID);
-		} catch (RepositoryException | RepositoryConfigException e) {
+			return manager.hasRepositoryConfig( repositoryID );
+		} catch ( RepositoryException | RepositoryConfigException e ) {
 			if ( LOG.isErrorEnabled() ) {
-				LOG.error("xx repositoryExists() > There was a problem checking existance of the repository: '{}'.", repositoryID);
+				LOG.error( "xx repositoryExists() > There was a problem checking existance of the repository: '{}'.", repositoryID );
 			}
-			throw new RepositoryRuntimeException(0x0006, e);
+			throw new RepositoryRuntimeException( 0x0006, e );
 		}
 	}
 
 	private RepositoryConnection getConnection(String repositoryID) {
 		Repository repository;
 		try {
-			repository = manager.getRepository(repositoryID);
-		} catch (RepositoryConfigException | RepositoryException e) {
+			repository = manager.getRepository( repositoryID );
+		} catch ( RepositoryConfigException | RepositoryException e ) {
 			if ( LOG.isErrorEnabled() ) {
-				LOG.error("xx getConnection() > The repository: '{}', couldn't be retrieved.", repositoryID);
+				LOG.error( "xx getConnection() > The repository: '{}', couldn't be retrieved.", repositoryID );
 			}
-			throw new RepositoryRuntimeException(0x0007, e);
+			throw new RepositoryRuntimeException( 0x0007, e );
 		}
 		RepositoryConnection connection;
 		try {
 			connection = repository.getConnection();
-		} catch (RepositoryException e) {
+		} catch ( RepositoryException e ) {
 			if ( LOG.isErrorEnabled() ) {
-				LOG.error("xx getConnection() > A connection from the repository: '{}', couldn't be retrieved.", repositoryID);
+				LOG.error( "xx getConnection() > A connection from the repository: '{}', couldn't be retrieved.", repositoryID );
 			}
-			throw new RepositoryRuntimeException(0x0008, e);
+			throw new RepositoryRuntimeException( 0x0008, e );
 		}
 
 		return connection;
@@ -109,25 +103,25 @@ public class LocalRepositoryService extends AbstractComponent implements Reposit
 
 	@Override
 	public <T> ReadTransactionTemplate<T> getReadTransactionTemplate(String repositoryID) {
-		RepositoryConnection connection = getConnection(repositoryID);
-		return new LocalReadTransactionTemplate<T>(connection);
+		RepositoryConnection connection = getConnection( repositoryID );
+		return new LocalReadTransactionTemplate<T>( connection );
 	}
 
 	@Override
 	public WriteTransactionTemplate getWriteTransactionTemplate(String repositoryID) {
-		RepositoryConnection connection = getConnection(repositoryID);
-		return new LocalWriteTransactionTemplate(connection);
+		RepositoryConnection connection = getConnection( repositoryID );
+		return new LocalWriteTransactionTemplate( connection );
 	}
 
 	@Override
 	public void deleteRepository(String repositoryID) {
 		try {
-			manager.removeRepository(repositoryID);
-		} catch (RepositoryException | RepositoryConfigException e) {
+			manager.removeRepository( repositoryID );
+		} catch ( RepositoryException | RepositoryConfigException e ) {
 			if ( LOG.isErrorEnabled() ) {
-				LOG.error("xx deleteRepository() > The repository: '{}', couldn't be deleted.", repositoryID);
+				LOG.error( "xx deleteRepository() > The repository: '{}', couldn't be deleted.", repositoryID );
 			}
-			throw new RepositoryRuntimeException(0x0009, e);
+			throw new RepositoryRuntimeException( 0x0009, e );
 		}
 	}
 
@@ -144,23 +138,23 @@ public class LocalRepositoryService extends AbstractComponent implements Reposit
 		protected void beginTransaction() {
 			try {
 				connection.begin();
-			} catch (RepositoryException e) {
+			} catch ( RepositoryException e ) {
 				if ( LOG.isErrorEnabled() ) {
-					LOG.error("<< beginTransaction > The transaction couldn't be started.");
+					LOG.error( "<< beginTransaction > The transaction couldn't be started." );
 				}
-				throw new RepositoryRuntimeException(0x000A, e);
+				throw new RepositoryRuntimeException( 0x000A, e );
 			}
 		}
 
 		protected void closeConnection() {
 			try {
 				connection.close();
-			} catch (RepositoryException e) {
+			} catch ( RepositoryException e ) {
 				if ( LOG.isDebugEnabled() ) {
-					LOG.debug("xx closeConnection > Exception Stacktrace:", e);
+					LOG.debug( "xx closeConnection > Exception Stacktrace:", e );
 				}
 				if ( LOG.isErrorEnabled() ) {
-					LOG.error("<< closeConnection > The connection couldn't be closed.");
+					LOG.error( "<< closeConnection > The connection couldn't be closed." );
 				}
 			}
 		}
@@ -171,20 +165,20 @@ public class LocalRepositoryService extends AbstractComponent implements Reposit
 
 		public LocalReadTransactionTemplate(RepositoryConnection connection) {
 			super();
-			RepositoryConnection readOnlyConnection = new ReadOnlyRepositoryConnection(connection);
+			RepositoryConnection readOnlyConnection = new ReadOnlyRepositoryConnection( connection );
 			this.connection = readOnlyConnection;
 		}
 
 		@Override
 		public T execute(ReadTransactionCallback<T> callback) {
 			try {
-				return callback.executeInTransaction(connection);
-			} catch (RepositoryException e) {
-				throw new RepositoryRuntimeException(e);
-			} catch (CarbonRuntimeException e) {
+				return callback.executeInTransaction( connection );
+			} catch ( RepositoryException e ) {
+				throw new RepositoryRuntimeException( e );
+			} catch ( CarbonRuntimeException e ) {
 				throw e;
-			} catch (Throwable e) {
-				throw new CarbonRuntimeException(e);
+			} catch ( Throwable e ) {
+				throw new CarbonRuntimeException( e );
 			} finally {
 				closeConnection();
 			}
@@ -196,33 +190,33 @@ public class LocalRepositoryService extends AbstractComponent implements Reposit
 		private List<WriteTransactionCallback> callbacks;
 
 		public LocalWriteTransactionTemplate(RepositoryConnection connection) {
-			super(connection);
+			super( connection );
 			callbacks = new ArrayList<WriteTransactionCallback>();
 		}
 
 		@Override
 		public void addCallback(WriteTransactionCallback callback) {
-			callbacks.add(callback);
+			callbacks.add( callback );
 		}
 
 		@Override
 		public void execute() {
 			beginTransaction();
 			try {
-				for (WriteTransactionCallback callback : callbacks) {
-					callback.executeInTransaction(connection);
+				for ( WriteTransactionCallback callback : callbacks ) {
+					callback.executeInTransaction( connection );
 				}
 
 				commitTransaction();
-			} catch (RepositoryException e) {
+			} catch ( RepositoryException e ) {
 				rollbackTransaction();
-				throw new RepositoryRuntimeException(e);
-			} catch (CarbonRuntimeException e) {
+				throw new RepositoryRuntimeException( e );
+			} catch ( CarbonRuntimeException e ) {
 				rollbackTransaction();
 				throw e;
-			} catch (Throwable e) {
+			} catch ( Throwable e ) {
 				rollbackTransaction();
-				throw new CarbonRuntimeException(e);
+				throw new CarbonRuntimeException( e );
 			} finally {
 				closeConnection();
 			}
@@ -230,29 +224,29 @@ public class LocalRepositoryService extends AbstractComponent implements Reposit
 
 		@Override
 		public void execute(WriteTransactionCallback callback) {
-			addCallback(callback);
+			addCallback( callback );
 			execute();
 		}
 
 		protected void rollbackTransaction() {
 			try {
 				connection.rollback();
-			} catch (RepositoryException e) {
+			} catch ( RepositoryException e ) {
 				if ( LOG.isErrorEnabled() ) {
-					LOG.error("xx rollbackTransaction() > The transaction couldn't be rolled back.");
+					LOG.error( "xx rollbackTransaction() > The transaction couldn't be rolled back." );
 				}
-				throw new RepositoryRuntimeException(0x000B, e);
+				throw new RepositoryRuntimeException( 0x000B, e );
 			}
 		}
 
 		protected void commitTransaction() {
 			try {
 				connection.commit();
-			} catch (RepositoryException e) {
+			} catch ( RepositoryException e ) {
 				if ( LOG.isErrorEnabled() ) {
-					LOG.error("xx commitTransaction() > The transaction couldn't be committed.");
+					LOG.error( "xx commitTransaction() > The transaction couldn't be committed." );
 				}
-				throw new RepositoryRuntimeException(0x000C, e);
+				throw new RepositoryRuntimeException( 0x000C, e );
 			}
 		}
 	}

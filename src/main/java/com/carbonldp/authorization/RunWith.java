@@ -5,8 +5,10 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-@Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.METHOD)
+@Retention( RetentionPolicy.RUNTIME )
+@Target( ElementType.METHOD )
 public @interface RunWith {
-	String[] roles();
+	Platform.Role[] platformRoles() default {};
+
+	Platform.Privilege[] platformPrivileges() default {};
 }

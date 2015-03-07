@@ -4,9 +4,8 @@ import org.springframework.util.Assert;
 
 /**
  * A <code>ThreadLocal</code>-based implementation of {@link AppContextHolderStrategy}.
- * 
- * @author MiguelAraCo
  *
+ * @author MiguelAraCo
  * @see java.lang.ThreadLocal
  */
 public final class ThreadLocalAppContextHolderStrategy implements AppContextHolderStrategy {
@@ -25,13 +24,13 @@ public final class ThreadLocalAppContextHolderStrategy implements AppContextHold
 	}
 
 	public void setContext(AppContext context) {
-		Assert.notNull(context, "Only non-null ApplicationContext instances are permitted");
-		contextHolder.set(context);
+		Assert.notNull( context, "Only non-null ApplicationContext instances are permitted" );
+		contextHolder.set( context );
 	}
 
 	public AppContext createEmptyContext() {
 		AppContext context = new AppContextImpl();
-		contextHolder.set(context);
+		contextHolder.set( context );
 		return context;
 	}
 }

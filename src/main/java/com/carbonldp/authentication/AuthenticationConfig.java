@@ -1,5 +1,7 @@
 package com.carbonldp.authentication;
 
+import com.carbonldp.ConfigurationRepository;
+import com.carbonldp.authorization.SecurityContextExchanger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -10,12 +12,6 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
-import com.carbonldp.ConfigurationRepository;
-import com.carbonldp.agents.AgentService;
-import com.carbonldp.authorization.PlatformPrivilegeService;
-import com.carbonldp.authorization.PlatformRoleService;
-import com.carbonldp.authorization.SecurityContextExchanger;
-
 @Configuration
 @EnableAspectJAutoProxy
 public class AuthenticationConfig {
@@ -24,32 +20,26 @@ public class AuthenticationConfig {
 	private AuthenticationManager authenticationManager;
 	@Autowired
 	private ConfigurationRepository configurationRepository;
-	@Autowired
-	private AgentService agentService;
-	@Autowired
-	private PlatformRoleService platformRoleService;
-	@Autowired
-	private PlatformPrivilegeService platformPrivilegeService;
 
 	@Autowired
 	public void configureGlobal(AuthenticationManagerBuilder auth) {
-		auth.authenticationProvider(sesameUsernamePasswordAuthenticationProvider());
+		auth.authenticationProvider( sesameUsernamePasswordAuthenticationProvider() );
 	}
 
 	@Bean
 	public AuthenticationProvider sesameUsernamePasswordAuthenticationProvider() {
-		return new SesameUsernamePasswordAuthenticationProvider(agentService, platformRoleService, platformPrivilegeService);
+		return new SesameUsernamePasswordAuthenticationProvider();
 	}
 
 	@Bean
 	public BasicAuthenticationFilter basicAuthenticationFilter() {
-		return new BasicAuthenticationFilter(authenticationManager, basicAuthenticationEntryPoint());
+		return new BasicAuthenticationFilter( authenticationManager, basicAuthenticationEntryPoint() );
 	}
 
 	@Bean
 	public AuthenticationEntryPoint basicAuthenticationEntryPoint() {
 		BasicAuthenticationEntryPoint entryPoint = new BasicAuthenticationEntryPoint();
-		entryPoint.setRealmName(configurationRepository.getRealmName());
+		entryPoint.setRealmName( configurationRepository.getRealmName() );
 		return entryPoint;
 	}
 
