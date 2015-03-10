@@ -8,8 +8,8 @@ import com.carbonldp.models.BasicContainer;
 import com.carbonldp.models.BasicContainerFactory;
 import com.carbonldp.models.RDFSource;
 import com.carbonldp.models.RDFSourceFactory;
-import com.carbonldp.repository.AbstractSesameRepository;
 import com.carbonldp.rdf.RDFDocumentRepository;
+import com.carbonldp.repository.AbstractSesameRepository;
 import com.carbonldp.repository.RepositoryService;
 import com.carbonldp.utils.RDFNodeUtil;
 import com.carbonldp.utils.URIUtil;
@@ -25,7 +25,7 @@ import java.util.Set;
 import java.util.UUID;
 
 @Transactional
-public final class SesameAppRepository extends AbstractSesameRepository implements AppRepository {
+public class SesameAppRepository extends AbstractSesameRepository implements AppRepository {
 	private final RDFDocumentRepository documentRepository;
 	private final RDFSourceRepository sourceService;
 	private final ContainerRepository containerRepository;
