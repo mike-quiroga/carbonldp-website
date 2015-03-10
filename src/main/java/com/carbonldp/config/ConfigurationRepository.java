@@ -1,4 +1,4 @@
-package com.carbonldp;
+package com.carbonldp.config;
 
 public interface ConfigurationRepository {
 	public String getRealmName();

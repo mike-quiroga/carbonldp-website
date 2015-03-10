@@ -1,4 +1,4 @@
-package com.carbonldp;
+package com.carbonldp.config;
 
 import com.carbonldp.spring.DependencyInjectorListener;
 import org.springframework.context.annotation.Bean;

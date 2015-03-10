@@ -1,5 +1,7 @@
 package com.carbonldp.authorization.acl;
 
-public interface ACLRepository {
+import org.openrdf.model.URI;
 
+public interface ACLRepository {
+	public ACL getResourceACL( URI resourceURI );
 }

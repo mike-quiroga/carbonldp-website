@@ -1,6 +1,6 @@
 package com.carbonldp.ldp.web;
 
-import com.carbonldp.ConfigurationRepository;
+import com.carbonldp.config.ConfigurationRepository;
 import com.carbonldp.HTTPHeaders;
 import com.carbonldp.Vars;
 import com.carbonldp.descriptions.APIPreferences.InteractionModel;

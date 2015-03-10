@@ -1,6 +1,6 @@
 package com.carbonldp.web;
 
-import com.carbonldp.ConfigurationRepository;
+import com.carbonldp.config.ConfigurationRepository;
 import com.carbonldp.utils.URIUtil;
 import com.carbonldp.utils.ValueUtil;
 import org.openrdf.model.Resource;

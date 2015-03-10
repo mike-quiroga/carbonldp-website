@@ -1,6 +1,6 @@
 package com.carbonldp.apps.context;
 
-import com.carbonldp.PropertiesFileConfigurationRepository;
+import com.carbonldp.config.PropertiesFileConfigurationRepository;
 import com.carbonldp.Vars;
 import com.carbonldp.apps.App;
 import org.openrdf.model.URI;

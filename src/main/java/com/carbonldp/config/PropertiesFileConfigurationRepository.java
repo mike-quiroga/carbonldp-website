@@ -1,5 +1,7 @@
-package com.carbonldp;
+package com.carbonldp.config;
 
+import com.carbonldp.AbstractComponent;
+import com.carbonldp.Vars;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.util.AntPathMatcher;
 

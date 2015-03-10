@@ -35,8 +35,8 @@ public final class SesameAppService extends AbstractSesameService implements App
 
 	private final Type appsContainerType = Type.BASIC;
 
-	public SesameAppService(SesameConnectionFactory connectionFactory, RDFDocumentRepository documentRepository, RDFSourceService sourceService,
-			ContainerService containerService, RepositoryService appRepositoryService) {
+	public SesameAppService( SesameConnectionFactory connectionFactory, RDFDocumentRepository documentRepository, RDFSourceService sourceService,
+		ContainerService containerService, RepositoryService appRepositoryService ) {
 		super( connectionFactory );
 		this.documentRepository = documentRepository;
 		this.sourceService = sourceService;
@@ -45,14 +45,14 @@ public final class SesameAppService extends AbstractSesameService implements App
 	}
 
 	@Override
-	public boolean exists(URI appURI) {
+	public boolean exists( URI appURI ) {
 		// TODO: This method should ask specifically for an Application Source
 		return sourceService.exists( appURI );
 	}
 
 	@Override
-	public App get(URI appURI) {
-		if ( !containerService.isMember( appsContainerURI, appURI, appsContainerType ) ) return null;
+	public App get( URI appURI ) {
+		if ( ! containerService.isMember( appsContainerURI, appURI, appsContainerType ) ) return null;
 
 		RDFSource appSource = sourceService.get( appURI );
 		if ( appSource == null ) return null;
@@ -72,7 +72,7 @@ public final class SesameAppService extends AbstractSesameService implements App
 	}
 
 	@Override
-	public App findByRootContainer(URI rootContainerURI) {
+	public App findByRootContainer( URI rootContainerURI ) {
 		Map<String, Value> bindings = new HashMap<String, Value>();
 		bindings.put( "rootContainer", rootContainerURI );
 
@@ -88,7 +88,7 @@ public final class SesameAppService extends AbstractSesameService implements App
 	}
 
 	@Override
-	public App create(App app) {
+	public App create( App app ) {
 		createAppRepository( app );
 
 		URI rootContainerURI = forgeRootContainerURI( app );
@@ -101,7 +101,7 @@ public final class SesameAppService extends AbstractSesameService implements App
 
 	@Override
 	@RunInAppContext
-	public void initialize(App app) {
+	public void initialize( App app ) {
 		RDFSource containerSource = RDFSourceFactory.create( app.getRootContainerURI() );
 		BasicContainer rootContainer = BasicContainerFactory.create( containerSource );
 		documentRepository.addDocument( rootContainer.getDocument() );
@@ -112,28 +112,28 @@ public final class SesameAppService extends AbstractSesameService implements App
 		// -- TODO: ACLs
 	}
 
-	private void createAppRepository(App app) {
+	private void createAppRepository( App app ) {
 		String repositoryID = generateAppRepositoryID( app );
 		appRepositoryService.createRepository( repositoryID );
 		app.setRepositoryID( repositoryID );
 	}
 
-	private String generateAppRepositoryID(App app) {
+	private String generateAppRepositoryID( App app ) {
 		return UUID.randomUUID().toString();
 	}
 
-	private URI forgeRootContainerURI(App app) {
+	private URI forgeRootContainerURI( App app ) {
 		String appSlug = URIUtil.getSlug( app.getURI() );
 		StringBuilder uriBuilder = new StringBuilder();
 		uriBuilder.append( appsEntryPoint ).append( appSlug );
 		return new URIImpl( uriBuilder.toString() );
 	}
 
-	public void setAppsContainerURI(URI appsContainerURI) {
+	public void setAppsContainerURI( URI appsContainerURI ) {
 		this.appsContainerURI = appsContainerURI;
 	}
 
-	public void setAppsEntryPoint(String appsEntryPoint) {
+	public void setAppsEntryPoint( String appsEntryPoint ) {
 		this.appsEntryPoint = appsEntryPoint;
 	}
 }

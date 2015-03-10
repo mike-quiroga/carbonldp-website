@@ -1,10 +1,15 @@
 package com.carbonldp.web;
 
 import com.carbonldp.web.exceptions.AbstractWebRuntimeException;
+import com.carbonldp.web.exceptions.ForbiddenException;
+import com.carbonldp.web.exceptions.UnauthorizedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
@@ -15,14 +20,24 @@ import javax.servlet.http.HttpServletResponse;
 public class PlatformExceptionController {
 	protected final Logger LOG = LoggerFactory.getLogger( this.getClass() );
 
+	@ExceptionHandler( AccessDeniedException.class )
+	public ResponseEntity<Object> handleAccessDeniedException( HttpServletRequest request, HttpServletResponse response, Exception rawException ) {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		AbstractWebRuntimeException webException;
+		if ( authentication == null || ! authentication.isAuthenticated() ) webException = new UnauthorizedException( "The intended action requires an authenticated agent." );
+		else webException = new ForbiddenException( "The intended action is forbidden for this authentication." );
+
+		return handleAbstractWebRuntimeException( request, response, webException );
+	}
+
 	@ExceptionHandler( AbstractWebRuntimeException.class )
-	public ResponseEntity<Object> handleAbstractWebRuntimeException(HttpServletRequest request, HttpServletResponse response, Exception rawException) {
+	public ResponseEntity<Object> handleAbstractWebRuntimeException( HttpServletRequest request, HttpServletResponse response, Exception rawException ) {
 		AbstractWebRuntimeException exception = (AbstractWebRuntimeException) rawException;
 		return exception.toResponseEntity();
 	}
 
 	@ExceptionHandler( Exception.class )
-	public ResponseEntity<Object> handleUnexpectedException(HttpServletRequest request, HttpServletResponse response, Exception rawException) {
+	public ResponseEntity<Object> handleUnexpectedException( HttpServletRequest request, HttpServletResponse response, Exception rawException ) {
 		if ( LOG.isDebugEnabled() ) {
 			LOG.debug( "<< handleUnexpectedException() > Exception Stacktrace: ", rawException );
 		}

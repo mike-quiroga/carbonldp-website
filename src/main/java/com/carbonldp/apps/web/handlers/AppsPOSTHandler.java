@@ -32,11 +32,11 @@ public class AppsPOSTHandler extends AbstractPOSTRequestHandler {
 	private final AppService appService;
 
 	@Autowired
-	public AppsPOSTHandler(AppService appService) {
+	public AppsPOSTHandler( AppService appService ) {
 		this.appService = appService;
 	}
 
-	public ResponseEntity<Object> handleRequest(AbstractModel requestModel, HttpServletRequest request, HttpServletResponse response) {
+	public ResponseEntity<Object> handleRequest( AbstractModel requestModel, HttpServletRequest request, HttpServletResponse response ) {
 		validateRequestModel( requestModel );
 
 		URI requestSubject = getRequestSubject( requestModel );
@@ -68,42 +68,42 @@ public class AppsPOSTHandler extends AbstractPOSTRequestHandler {
 	}
 
 	@Override
-	protected void validateRequestResourcesNumber(int size) {
+	protected void validateRequestResourcesNumber( int size ) {
 		super.validateRequestResourcesNumber( size );
 		if ( size > 1 ) throw new BadRequestException( "The request cannot contain more than one rdf resource." );
 	}
 
 	@Override
-	protected void validateRequestResource(Resource subject) {
+	protected void validateRequestResource( Resource subject ) {
 		super.validateRequestResource( subject );
 		if ( URIUtil.hasFragment( ValueUtil.getURI( subject ) ) ) {
 			throw new BadRequestException( "The request resource cannot have a fragment in its URI." );
 		}
 	}
 
-	private RDFResource addMissingContext(RDFResource requestResource, URI resourceContext) {
+	private RDFResource addMissingContext( RDFResource requestResource, URI resourceContext ) {
 		AbstractModel modifiedModel = ModelUtil.replaceContext( requestResource.getBaseModel(), null, resourceContext );
 		return new RDFResource( modifiedModel, requestResource.getURI() );
 	}
 
-	private void checkRequestResourceAvailability(RDFResource requestResource) {
+	private void checkRequestResourceAvailability( RDFResource requestResource ) {
 		if ( sourceWithURIExists( requestResource.getURI() ) ) {
 			throw new ConflictException( "The URI is already in use." );
 		}
 	}
 
-	private boolean sourceWithURIExists(URI sourceURI) {
+	private boolean sourceWithURIExists( URI sourceURI ) {
 		return sourceService.exists( sourceURI );
 	}
 
-	private void validateRequestResource(RDFResource requestResource) {
+	private void validateRequestResource( RDFResource requestResource ) {
 		List<Infraction> infractions = AppFactory.validate( requestResource, false );
-		if ( !infractions.isEmpty() ) {
+		if ( ! infractions.isEmpty() ) {
 			throw new BadRequestException( 0 );
 		}
 	}
 
-	private URI getRequestSubject(Model requestModel) {
+	private URI getRequestSubject( Model requestModel ) {
 		Assert.notEmpty( requestModel );
 		Iterator<Resource> subjectsIterator = requestModel.subjects().iterator();
 		while ( subjectsIterator.hasNext() ) {

@@ -1,7 +1,9 @@
 package com.carbonldp;
 
 import com.carbonldp.apps.context.AppContextConfig;
+import com.carbonldp.config.ConfigurationConfig;
 import com.carbonldp.repository.RepositoryConfig;
+import com.carbonldp.repository.txn.TxnConfig;
 import com.carbonldp.security.SecurityConfig;
 import com.carbonldp.utils.PropertiesUtil;
 import com.carbonldp.web.WebConfig;
@@ -86,10 +88,11 @@ public class ApplicationInitializer implements WebApplicationInitializer {
 	private AnnotationConfigWebApplicationContext createRootContext() {
 		AnnotationConfigWebApplicationContext rootContext = new AnnotationConfigWebApplicationContext();
 		rootContext.register(
+			TxnConfig.class,
 			ConfigurationConfig.class,
-			SecurityConfig.class,
 			RepositoryConfig.class,
-			AppContextConfig.class
+			AppContextConfig.class,
+			SecurityConfig.class
 		);
 		return rootContext;
 	}
