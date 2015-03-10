@@ -1,4 +1,4 @@
-package com.carbonldp.repository;
+package com.carbonldp.rdf;
 
 import com.carbonldp.descriptions.RDFNodeEnum;
 import org.joda.time.DateTime;

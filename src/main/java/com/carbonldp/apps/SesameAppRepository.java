@@ -9,7 +9,7 @@ import com.carbonldp.models.BasicContainerFactory;
 import com.carbonldp.models.RDFSource;
 import com.carbonldp.models.RDFSourceFactory;
 import com.carbonldp.repository.AbstractSesameRepository;
-import com.carbonldp.repository.RDFDocumentRepository;
+import com.carbonldp.rdf.RDFDocumentRepository;
 import com.carbonldp.repository.RepositoryService;
 import com.carbonldp.utils.RDFNodeUtil;
 import com.carbonldp.utils.URIUtil;

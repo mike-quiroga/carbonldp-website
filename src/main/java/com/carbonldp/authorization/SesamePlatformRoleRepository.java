@@ -14,14 +14,14 @@ import org.openrdf.spring.SesameConnectionFactory;
 import java.util.HashSet;
 import java.util.Set;
 
-public class SesamePlatformRoleService extends AbstractSesameRepository implements PlatformRoleService {
+public class SesamePlatformRoleRepository extends AbstractSesameRepository implements PlatformRoleRepository {
 	private final RDFSourceRepository sourceService;
 	private final ContainerRepository containerRepository;
 	private final URI platformRolesContainerURI;
 
 	private final Type platformRolesContainerType = Type.BASIC;
 
-	public SesamePlatformRoleService( SesameConnectionFactory connectionFactory, RDFSourceRepository sourceService, ContainerRepository containerRepository,
+	public SesamePlatformRoleRepository( SesameConnectionFactory connectionFactory, RDFSourceRepository sourceService, ContainerRepository containerRepository,
 		URI platformRolesContainerURI ) {
 		super( connectionFactory );
 		this.sourceService = sourceService;

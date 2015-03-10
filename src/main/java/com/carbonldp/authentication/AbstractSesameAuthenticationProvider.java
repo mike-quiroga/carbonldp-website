@@ -15,15 +15,15 @@ import java.util.Set;
 public abstract class AbstractSesameAuthenticationProvider extends AbstractAuthenticationProvider {
 	protected AgentRepository agentRepository;
 
-	protected PlatformRoleService platformRoleService;
-	protected PlatformPrivilegeService platformPrivilegeService;
+	protected PlatformRoleRepository platformRoleRepository;
+	protected PlatformPrivilegeRepository platformPrivilegeRepository;
 
 	protected AgentAuthenticationToken createAgentAuthenticationToken(Agent agent) {
-		Set<PlatformRole> platformRoles = platformRoleService.get( agent );
-		Set<PlatformPrivilege> platformPrivileges = platformPrivilegeService.get( platformRoles );
+		Set<PlatformRole> platformRoles = platformRoleRepository.get( agent );
+		Set<PlatformPrivilege> platformPrivileges = platformPrivilegeRepository.get( platformRoles );
 
-		Set<Platform.Role> platformRoleRepresentations = platformRoleService.getRepresentations( platformRoles );
-		Set<Platform.Privilege> platformPrivilegeRepresentations = platformPrivilegeService.getRepresentations( platformPrivileges );
+		Set<Platform.Role> platformRoleRepresentations = platformRoleRepository.getRepresentations( platformRoles );
+		Set<Platform.Privilege> platformPrivilegeRepresentations = platformPrivilegeRepository.getRepresentations( platformPrivileges );
 
 		Map<URI, Set<AppRole>> appsRoles = getAppsRoles( agent );
 
@@ -47,12 +47,12 @@ public abstract class AbstractSesameAuthenticationProvider extends AbstractAuthe
 	}
 
 	@Inject
-	public void setPlatformRoleService(PlatformRoleService platformRoleService) {
-		this.platformRoleService = platformRoleService;
+	public void setPlatformRoleRepository(PlatformRoleRepository platformRoleRepository ) {
+		this.platformRoleRepository = platformRoleRepository;
 	}
 
 	@Inject
-	public void setPlatformPrivilegeService(PlatformPrivilegeService platformPrivilegeService) {
-		this.platformPrivilegeService = platformPrivilegeService;
+	public void setPlatformPrivilegeRepository(PlatformPrivilegeRepository platformPrivilegeRepository ) {
+		this.platformPrivilegeRepository = platformPrivilegeRepository;
 	}
 }

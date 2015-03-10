@@ -2,7 +2,8 @@ package com.carbonldp;
 
 import com.carbonldp.apps.context.AppContextConfig;
 import com.carbonldp.config.ConfigurationConfig;
-import com.carbonldp.repository.RepositoryConfig;
+import com.carbonldp.config.RepositoriesConfig;
+import com.carbonldp.config.ServicesConfig;
 import com.carbonldp.repository.txn.TxnConfig;
 import com.carbonldp.security.SecurityConfig;
 import com.carbonldp.utils.PropertiesUtil;
@@ -90,7 +91,8 @@ public class ApplicationInitializer implements WebApplicationInitializer {
 		rootContext.register(
 			TxnConfig.class,
 			ConfigurationConfig.class,
-			RepositoryConfig.class,
+			RepositoriesConfig.class,
+			ServicesConfig.class,
 			AppContextConfig.class,
 			SecurityConfig.class
 		);

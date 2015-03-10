@@ -1,7 +1,8 @@
-package com.carbonldp.repository;
+package com.carbonldp.rdf;
 
 import com.carbonldp.exceptions.StupidityException;
 import com.carbonldp.models.RDFDocument;
+import com.carbonldp.repository.AbstractSesameRepository;
 import com.carbonldp.repository.txn.RepositoryRuntimeException;
 import com.carbonldp.utils.RDFDocumentUtil;
 import info.aduna.iteration.Iterations;

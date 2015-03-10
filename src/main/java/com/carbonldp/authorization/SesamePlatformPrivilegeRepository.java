@@ -15,14 +15,14 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Transactional
-public class SesamePlatformPrivilegeService extends AbstractSesameRepository implements PlatformPrivilegeService {
+public class SesamePlatformPrivilegeRepository extends AbstractSesameRepository implements PlatformPrivilegeRepository {
 	private final RDFSourceRepository sourceService;
 	private final ContainerRepository containerRepository;
 	private final URI platformPrivilegesContainerURI;
 
 	private final Type platformPrivilegesContainerType = Type.BASIC;
 
-	public SesamePlatformPrivilegeService( SesameConnectionFactory connectionFactory, RDFSourceRepository sourceService, ContainerRepository containerRepository,
+	public SesamePlatformPrivilegeRepository( SesameConnectionFactory connectionFactory, RDFSourceRepository sourceService, ContainerRepository containerRepository,
 		URI platformPrivilegesContainerURI ) {
 		super( connectionFactory );
 		this.sourceService = sourceService;
