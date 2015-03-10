@@ -1,7 +1,8 @@
-package com.carbonldp.ldp.services;
+package com.carbonldp.ldp.containers;
 
 import com.carbonldp.descriptions.ContainerDescription;
 import com.carbonldp.exceptions.StupidityException;
+import com.carbonldp.ldp.AbstractSesameLDPRepository;
 import com.carbonldp.models.RDFSource;
 import com.carbonldp.repository.DocumentGraphQueryResultHandler;
 import com.carbonldp.repository.GraphQueryResultHandler;
@@ -27,10 +28,10 @@ import java.util.Set;
 import static com.carbonldp.Consts.NEW_LINE;
 import static com.carbonldp.Consts.TAB;
 
-public abstract class AbstractTypedContainerService extends AbstractSesameLDPService implements TypedContainerService {
+public abstract class AbstractTypedContainerRepository extends AbstractSesameLDPRepository implements TypedContainerRepository {
 
-	public AbstractTypedContainerService(SesameConnectionFactory connectionFactory, RDFResourceRepository resourceRepository,
-			RDFDocumentRepository documentRepository) {
+	public AbstractTypedContainerRepository( SesameConnectionFactory connectionFactory, RDFResourceRepository resourceRepository,
+		RDFDocumentRepository documentRepository ) {
 		super( connectionFactory, resourceRepository, documentRepository );
 	}
 

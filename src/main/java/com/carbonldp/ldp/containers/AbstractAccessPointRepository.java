@@ -1,4 +1,4 @@
-package com.carbonldp.ldp.services;
+package com.carbonldp.ldp.containers;
 
 import com.carbonldp.descriptions.ContainerDescription;
 import com.carbonldp.exceptions.MalformedDataException;
@@ -20,10 +20,10 @@ import java.util.Set;
 import static com.carbonldp.Consts.NEW_LINE;
 import static com.carbonldp.Consts.TAB;
 
-public abstract class AbstractAccessPointService extends AbstractTypedContainerService {
+public abstract class AbstractAccessPointRepository extends AbstractTypedContainerRepository {
 
-	public AbstractAccessPointService(SesameConnectionFactory connectionFactory, RDFResourceRepository resourceRepository,
-			RDFDocumentRepository documentRepository) {
+	public AbstractAccessPointRepository( SesameConnectionFactory connectionFactory, RDFResourceRepository resourceRepository,
+		RDFDocumentRepository documentRepository ) {
 		super( connectionFactory, resourceRepository, documentRepository );
 	}
 

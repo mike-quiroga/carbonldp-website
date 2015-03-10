@@ -1,8 +1,9 @@
-package com.carbonldp.ldp.services;
+package com.carbonldp.ldp.containers;
 
 import com.carbonldp.descriptions.APIPreferences.ContainerRetrievalPreference;
 import com.carbonldp.descriptions.ContainerDescription;
 import com.carbonldp.descriptions.ContainerDescription.Type;
+import com.carbonldp.ldp.AbstractSesameLDPRepository;
 import com.carbonldp.models.Container;
 import com.carbonldp.models.ContainerFactory;
 import com.carbonldp.models.RDFSource;
@@ -29,14 +30,14 @@ import static com.carbonldp.Consts.NEW_LINE;
 import static com.carbonldp.Consts.TAB;
 
 @Transactional
-public class SesameContainerService extends AbstractSesameLDPService implements ContainerService {
+public class SesameContainerRepository extends AbstractSesameLDPRepository implements ContainerRepository {
 
-	private final List<TypedContainerService> typedContainerServices;
+	private final List<TypedContainerRepository> typedContainerRepositories;
 
-	public SesameContainerService(SesameConnectionFactory connectionFactory, RDFResourceRepository resourceRepository,
-			RDFDocumentRepository documentRepository, List<TypedContainerService> typedContainerServices) {
+	public SesameContainerRepository( SesameConnectionFactory connectionFactory, RDFResourceRepository resourceRepository,
+		RDFDocumentRepository documentRepository, List<TypedContainerRepository> typedContainerRepositories ) {
 		super( connectionFactory, resourceRepository, documentRepository );
-		this.typedContainerServices = typedContainerServices;
+		this.typedContainerRepositories = typedContainerRepositories;
 	}
 
 	@Override
@@ -219,8 +220,8 @@ public class SesameContainerService extends AbstractSesameLDPService implements 
 		} );
 	}
 
-	private TypedContainerService getService(Type containerType) {
-		for ( TypedContainerService service : typedContainerServices ) {
+	private TypedContainerRepository getService(Type containerType) {
+		for ( TypedContainerRepository service : typedContainerRepositories ) {
 			if ( service.supports( containerType ) ) return service;
 		}
 		return null;

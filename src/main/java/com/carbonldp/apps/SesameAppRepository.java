@@ -2,13 +2,13 @@ package com.carbonldp.apps;
 
 import com.carbonldp.apps.context.RunInAppContext;
 import com.carbonldp.descriptions.ContainerDescription.Type;
-import com.carbonldp.ldp.services.ContainerService;
-import com.carbonldp.ldp.services.RDFSourceService;
+import com.carbonldp.ldp.containers.ContainerRepository;
+import com.carbonldp.ldp.sources.RDFSourceRepository;
 import com.carbonldp.models.BasicContainer;
 import com.carbonldp.models.BasicContainerFactory;
 import com.carbonldp.models.RDFSource;
 import com.carbonldp.models.RDFSourceFactory;
-import com.carbonldp.repository.AbstractSesameService;
+import com.carbonldp.repository.AbstractSesameRepository;
 import com.carbonldp.repository.RDFDocumentRepository;
 import com.carbonldp.repository.RepositoryService;
 import com.carbonldp.utils.RDFNodeUtil;
@@ -25,22 +25,22 @@ import java.util.Set;
 import java.util.UUID;
 
 @Transactional
-public final class SesameAppService extends AbstractSesameService implements AppService {
+public final class SesameAppRepository extends AbstractSesameRepository implements AppRepository {
 	private final RDFDocumentRepository documentRepository;
-	private final RDFSourceService sourceService;
-	private final ContainerService containerService;
+	private final RDFSourceRepository sourceService;
+	private final ContainerRepository containerRepository;
 	private final RepositoryService appRepositoryService;
 	private URI appsContainerURI;
 	private String appsEntryPoint;
 
 	private final Type appsContainerType = Type.BASIC;
 
-	public SesameAppService( SesameConnectionFactory connectionFactory, RDFDocumentRepository documentRepository, RDFSourceService sourceService,
-		ContainerService containerService, RepositoryService appRepositoryService ) {
+	public SesameAppRepository( SesameConnectionFactory connectionFactory, RDFDocumentRepository documentRepository, RDFSourceRepository sourceService,
+		ContainerRepository containerRepository, RepositoryService appRepositoryService ) {
 		super( connectionFactory );
 		this.documentRepository = documentRepository;
 		this.sourceService = sourceService;
-		this.containerService = containerService;
+		this.containerRepository = containerRepository;
 		this.appRepositoryService = appRepositoryService;
 	}
 
@@ -52,7 +52,7 @@ public final class SesameAppService extends AbstractSesameService implements App
 
 	@Override
 	public App get( URI appURI ) {
-		if ( ! containerService.isMember( appsContainerURI, appURI, appsContainerType ) ) return null;
+		if ( ! containerRepository.isMember( appsContainerURI, appURI, appsContainerType ) ) return null;
 
 		RDFSource appSource = sourceService.get( appURI );
 		if ( appSource == null ) return null;
@@ -76,7 +76,7 @@ public final class SesameAppService extends AbstractSesameService implements App
 		Map<String, Value> bindings = new HashMap<String, Value>();
 		bindings.put( "rootContainer", rootContainerURI );
 
-		Set<URI> memberURIs = containerService.findMembers( appsContainerURI, findByRootContainer_selector, bindings, appsContainerType );
+		Set<URI> memberURIs = containerRepository.findMembers( appsContainerURI, findByRootContainer_selector, bindings, appsContainerType );
 		if ( memberURIs.isEmpty() ) return null;
 		if ( memberURIs.size() > 1 ) {
 			// TODO: Add error number
@@ -94,7 +94,7 @@ public final class SesameAppService extends AbstractSesameService implements App
 		URI rootContainerURI = forgeRootContainerURI( app );
 		app.setRootContainerURI( rootContainerURI );
 
-		containerService.createChild( appsContainerURI, app, appsContainerType );
+		containerRepository.createChild( appsContainerURI, app, appsContainerType );
 
 		return app;
 	}

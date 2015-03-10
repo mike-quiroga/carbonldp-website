@@ -1,13 +1,11 @@
 package com.carbonldp.apps.context;
 
-import com.carbonldp.config.PropertiesFileConfigurationRepository;
 import com.carbonldp.Vars;
 import com.carbonldp.apps.App;
 import org.openrdf.model.URI;
 import org.openrdf.model.impl.URIImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.filter.GenericFilterBean;
 
@@ -28,9 +26,6 @@ public class AppContextPersistanceFilter extends GenericFilterBean {
 	static final String FILTER_APPLIED = "__carbon_acpf_applied";
 
 	private final AppContextRepository appContextRepository;
-
-	@Autowired
-	private PropertiesFileConfigurationRepository configurationService;
 
 	public AppContextPersistanceFilter( AppContextRepository appContextRepository ) {
 		this.appContextRepository = appContextRepository;

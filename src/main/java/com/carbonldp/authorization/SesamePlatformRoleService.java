@@ -2,10 +2,10 @@ package com.carbonldp.authorization;
 
 import com.carbonldp.agents.Agent;
 import com.carbonldp.descriptions.ContainerDescription.Type;
-import com.carbonldp.ldp.services.ContainerService;
-import com.carbonldp.ldp.services.RDFSourceService;
+import com.carbonldp.ldp.containers.ContainerRepository;
+import com.carbonldp.ldp.sources.RDFSourceRepository;
 import com.carbonldp.models.RDFSource;
-import com.carbonldp.repository.AbstractSesameService;
+import com.carbonldp.repository.AbstractSesameRepository;
 import com.carbonldp.utils.RDFNodeUtil;
 import com.carbonldp.utils.URIUtil;
 import org.openrdf.model.URI;
@@ -14,24 +14,24 @@ import org.openrdf.spring.SesameConnectionFactory;
 import java.util.HashSet;
 import java.util.Set;
 
-public class SesamePlatformRoleService extends AbstractSesameService implements PlatformRoleService {
-	private final RDFSourceService sourceService;
-	private final ContainerService containerService;
+public class SesamePlatformRoleService extends AbstractSesameRepository implements PlatformRoleService {
+	private final RDFSourceRepository sourceService;
+	private final ContainerRepository containerRepository;
 	private final URI platformRolesContainerURI;
 
 	private final Type platformRolesContainerType = Type.BASIC;
 
-	public SesamePlatformRoleService(SesameConnectionFactory connectionFactory, RDFSourceService sourceService, ContainerService containerService,
-			URI platformRolesContainerURI) {
+	public SesamePlatformRoleService( SesameConnectionFactory connectionFactory, RDFSourceRepository sourceService, ContainerRepository containerRepository,
+		URI platformRolesContainerURI ) {
 		super( connectionFactory );
 		this.sourceService = sourceService;
-		this.containerService = containerService;
+		this.containerRepository = containerRepository;
 		this.platformRolesContainerURI = platformRolesContainerURI;
 	}
 
-	public Set<PlatformRole> get(Agent agent) {
+	public Set<PlatformRole> get( Agent agent ) {
 		Set<PlatformRole> platformRoles = new HashSet<PlatformRole>();
-		Set<URI> platformRolesURIs = containerService.filterMembers( platformRolesContainerURI, agent.getPlatformRoles(), platformRolesContainerType );
+		Set<URI> platformRolesURIs = containerRepository.filterMembers( platformRolesContainerURI, agent.getPlatformRoles(), platformRolesContainerType );
 		Set<RDFSource> sources = sourceService.get( platformRolesURIs );
 		for ( RDFSource source : sources ) {
 			platformRoles.add( new PlatformRole( source ) );
@@ -39,7 +39,7 @@ public class SesamePlatformRoleService extends AbstractSesameService implements 
 		return platformRoles;
 	}
 
-	public Set<Platform.Role> getRepresentations(Set<PlatformRole> platformRoleResources) {
+	public Set<Platform.Role> getRepresentations( Set<PlatformRole> platformRoleResources ) {
 		Set<URI> platformRolesURIs = URIUtil.getURIs( platformRoleResources );
 		return RDFNodeUtil.findByURIs( platformRolesURIs, Platform.Role.class );
 	}

@@ -1,11 +1,11 @@
 package com.carbonldp.ldp.web;
 
-import com.carbonldp.config.ConfigurationRepository;
 import com.carbonldp.HTTPHeaders;
 import com.carbonldp.Vars;
+import com.carbonldp.config.ConfigurationRepository;
 import com.carbonldp.descriptions.APIPreferences.InteractionModel;
-import com.carbonldp.ldp.services.ContainerService;
-import com.carbonldp.ldp.services.RDFSourceService;
+import com.carbonldp.ldp.containers.ContainerService;
+import com.carbonldp.ldp.sources.RDFSourceService;
 import com.carbonldp.models.HTTPHeader;
 import com.carbonldp.models.HTTPHeaderValue;
 import com.carbonldp.utils.RDFNodeUtil;

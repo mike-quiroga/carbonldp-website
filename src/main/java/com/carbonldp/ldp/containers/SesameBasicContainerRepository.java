@@ -1,4 +1,4 @@
-package com.carbonldp.ldp.services;
+package com.carbonldp.ldp.containers;
 
 import com.carbonldp.descriptions.ContainerDescription;
 import com.carbonldp.descriptions.ContainerDescription.Type;
@@ -18,10 +18,10 @@ import static com.carbonldp.Consts.NEW_LINE;
 import static com.carbonldp.Consts.TAB;
 
 @Transactional
-public class SesameBasicContainerService extends AbstractTypedContainerService {
+public class SesameBasicContainerRepository extends AbstractTypedContainerRepository {
 
-	public SesameBasicContainerService(SesameConnectionFactory connectionFactory, RDFResourceRepository resourceRepository,
-			RDFDocumentRepository documentRepository) {
+	public SesameBasicContainerRepository( SesameConnectionFactory connectionFactory, RDFResourceRepository resourceRepository,
+		RDFDocumentRepository documentRepository ) {
 		super( connectionFactory, resourceRepository, documentRepository );
 	}
 

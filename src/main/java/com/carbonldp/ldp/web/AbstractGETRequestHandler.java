@@ -45,11 +45,11 @@ public abstract class AbstractGETRequestHandler extends AbstractLDPRequestHandle
 	}
 
 	@Transactional
-	public ResponseEntity<Object> handleRequest(HttpServletRequest request, HttpServletResponse response) {
+	public ResponseEntity<Object> handleRequest( HttpServletRequest request, HttpServletResponse response ) {
 		setUp( request, response );
 
 		URI targetURI = getTargetURI( request );
-		if ( !sourceService.exists( targetURI ) ) throw new NotFoundException( "The resource wasn't found" );
+		if ( ! sourceService.exists( targetURI ) ) throw new NotFoundException( "The resource wasn't found" );
 
 		InteractionModel interactionModel = getInteractionModel( targetURI );
 		switch ( interactionModel ) {
@@ -67,7 +67,7 @@ public abstract class AbstractGETRequestHandler extends AbstractLDPRequestHandle
 		}
 	}
 
-	protected ResponseEntity<Object> handleRDFSourceRetrieval(URI targetURI) {
+	protected ResponseEntity<Object> handleRDFSourceRetrieval( URI targetURI ) {
 		// TODO: Take into account preferences (ACL, System Managed Properties, etc.)
 
 		RDFSource source = sourceService.get( targetURI );
@@ -78,7 +78,7 @@ public abstract class AbstractGETRequestHandler extends AbstractLDPRequestHandle
 		return new ResponseEntity<Object>( source, HttpStatus.OK );
 	}
 
-	protected ResponseEntity<Object> handleContainerRetrieval(URI targetURI) {
+	protected ResponseEntity<Object> handleContainerRetrieval( URI targetURI ) {
 		Set<ContainerRetrievalPreference> containerRetrievalPreferences = getContainerRetrievalPreferences( targetURI );
 		Container container = containerService.get( targetURI, containerRetrievalPreferences );
 
@@ -92,14 +92,14 @@ public abstract class AbstractGETRequestHandler extends AbstractLDPRequestHandle
 		return new ResponseEntity<Object>( container, HttpStatus.OK );
 	}
 
-	private void ensureETagIsPresent(Container container, Set<ContainerRetrievalPreference> containerRetrievalPreferences) {
-		if ( !containerRetrievalPreferences.contains( ContainerRetrievalPreference.CONTAINER_PROPERTIES ) ) {
+	private void ensureETagIsPresent( Container container, Set<ContainerRetrievalPreference> containerRetrievalPreferences ) {
+		if ( ! containerRetrievalPreferences.contains( ContainerRetrievalPreference.CONTAINER_PROPERTIES ) ) {
 			DateTime modified = sourceService.getModified( container.getURI() );
 			container.setETag( modified );
 		}
 	}
 
-	private Set<ContainerRetrievalPreference> getContainerRetrievalPreferences(URI targetURI) {
+	private Set<ContainerRetrievalPreference> getContainerRetrievalPreferences( URI targetURI ) {
 		Set<ContainerRetrievalPreference> preferences = new HashSet<ContainerRetrievalPreference>();
 		Set<ContainerRetrievalPreference> defaultPreferences = getDefaultContainerRetrievalPreferences();
 		Set<ContainerRetrievalPreference> containerDefinedPreferences = containerService.getRetrievalPreferences( targetURI );
@@ -110,7 +110,7 @@ public abstract class AbstractGETRequestHandler extends AbstractLDPRequestHandle
 		return getContainerRetrievalPreferences( defaultPreferences, request );
 	}
 
-	private Set<ContainerRetrievalPreference> getContainerRetrievalPreferences(Set<ContainerRetrievalPreference> defaultPreferences, HttpServletRequest request) {
+	private Set<ContainerRetrievalPreference> getContainerRetrievalPreferences( Set<ContainerRetrievalPreference> defaultPreferences, HttpServletRequest request ) {
 		HTTPHeader preferHeader = new HTTPHeader( request.getHeaders( HTTPHeaders.PREFER ) );
 		List<HTTPHeaderValue> includePreferences = HTTPHeader.filterHeaderValues( preferHeader, "return", "representation", "include", null );
 		List<HTTPHeaderValue> omitPreferences = HTTPHeader.filterHeaderValues( preferHeader, "return", "representation", "omit", null );
@@ -127,7 +127,7 @@ public abstract class AbstractGETRequestHandler extends AbstractLDPRequestHandle
 		for ( HTTPHeaderValue includePreference : includePreferences ) {
 			ContainerRetrievalPreference containerPreference = RDFNodeUtil.findByURI( includePreference.getExtendingValue(), ContainerRetrievalPreference.class );
 			if ( containerPreference != null ) {
-				if ( !defaultPreferences.contains( containerPreference ) ) {
+				if ( ! defaultPreferences.contains( containerPreference ) ) {
 					defaultPreferences.add( containerPreference );
 				}
 			}
@@ -140,12 +140,12 @@ public abstract class AbstractGETRequestHandler extends AbstractLDPRequestHandle
 		return DEFAULT_RCP;
 	}
 
-	protected ResponseEntity<Object> handleNonRDFRetrieval(URI targetURI) {
+	protected ResponseEntity<Object> handleNonRDFRetrieval( URI targetURI ) {
 		// TODO: Implement it
 		return new ResponseEntity<Object>( HttpStatus.NOT_IMPLEMENTED );
 	}
 
-	protected ResponseEntity<Object> handleSPARQLEndpointRetrieval(URI targetURI) {
+	protected ResponseEntity<Object> handleSPARQLEndpointRetrieval( URI targetURI ) {
 		// TODO: Implement it
 		return new ResponseEntity<Object>( HttpStatus.NOT_IMPLEMENTED );
 	}

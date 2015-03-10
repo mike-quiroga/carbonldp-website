@@ -1,7 +1,8 @@
-package com.carbonldp.ldp.services;
+package com.carbonldp.ldp.sources;
 
 import com.carbonldp.descriptions.ContainerDescription;
 import com.carbonldp.descriptions.RDFSourceDescription;
+import com.carbonldp.ldp.AbstractSesameLDPRepository;
 import com.carbonldp.models.AccessPoint;
 import com.carbonldp.models.RDFSource;
 import com.carbonldp.repository.DocumentGraphQueryResultHandler;
@@ -29,9 +30,9 @@ import static com.carbonldp.Consts.NEW_LINE;
 import static com.carbonldp.Consts.TAB;
 
 @Transactional
-public class SesameRDFSourceService extends AbstractSesameLDPService implements RDFSourceService {
+public class SesameRDFSourceRepository extends AbstractSesameLDPRepository implements RDFSourceRepository {
 
-	public SesameRDFSourceService(SesameConnectionFactory connectionFactory, RDFResourceRepository resourceRepository, RDFDocumentRepository documentRepository) {
+	public SesameRDFSourceRepository( SesameConnectionFactory connectionFactory, RDFResourceRepository resourceRepository, RDFDocumentRepository documentRepository ) {
 		super( connectionFactory, resourceRepository, documentRepository );
 	}
 

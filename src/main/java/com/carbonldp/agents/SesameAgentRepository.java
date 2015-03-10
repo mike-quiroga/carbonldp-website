@@ -1,10 +1,10 @@
 package com.carbonldp.agents;
 
 import com.carbonldp.descriptions.ContainerDescription.Type;
-import com.carbonldp.ldp.services.ContainerService;
-import com.carbonldp.ldp.services.RDFSourceService;
+import com.carbonldp.ldp.containers.ContainerRepository;
+import com.carbonldp.ldp.sources.RDFSourceRepository;
 import com.carbonldp.models.RDFSource;
-import com.carbonldp.repository.AbstractSesameService;
+import com.carbonldp.repository.AbstractSesameRepository;
 import com.carbonldp.utils.RDFNodeUtil;
 import org.openrdf.model.URI;
 import org.openrdf.model.Value;
@@ -17,18 +17,18 @@ import java.util.Map;
 import java.util.Set;
 
 @Transactional
-public class SesameAgentService extends AbstractSesameService implements AgentService {
-	private final RDFSourceService sourceService;
-	private final ContainerService containerService;
+public class SesameAgentRepository extends AbstractSesameRepository implements AgentRepository {
+	private final RDFSourceRepository sourceService;
+	private final ContainerRepository containerRepository;
 	private final URI agentsContainerURI;
 
 	private final Type agentsContainerType = Type.BASIC;
 
-	public SesameAgentService(SesameConnectionFactory connectionFactory, RDFSourceService sourceService, ContainerService containerService,
-			URI agentsContainerURI) {
+	public SesameAgentRepository( SesameConnectionFactory connectionFactory, RDFSourceRepository sourceService, ContainerRepository containerRepository,
+		URI agentsContainerURI ) {
 		super( connectionFactory );
 		this.sourceService = sourceService;
-		this.containerService = containerService;
+		this.containerRepository = containerRepository;
 		this.agentsContainerURI = agentsContainerURI;
 	}
 
@@ -44,11 +44,11 @@ public class SesameAgentService extends AbstractSesameService implements AgentSe
 		findByEmail_selector = queryBuilder.toString();
 	}
 
-	public Agent findByEmail(String email) {
+	public Agent findByEmail( String email ) {
 		Map<String, Value> bindings = new HashMap<String, Value>();
 		bindings.put( "email", ValueFactoryImpl.getInstance().createLiteral( email ) );
 
-		Set<URI> memberURIs = containerService.findMembers( agentsContainerURI, findByEmail_selector, bindings, agentsContainerType );
+		Set<URI> memberURIs = containerRepository.findMembers( agentsContainerURI, findByEmail_selector, bindings, agentsContainerType );
 		if ( memberURIs.isEmpty() ) return null;
 		if ( memberURIs.size() > 1 ) {
 			// TODO: Add error number
@@ -63,7 +63,7 @@ public class SesameAgentService extends AbstractSesameService implements AgentSe
 		return new Agent( agentSource.getBaseModel(), agentURI );
 	}
 
-	public Agent findByURI(URI uri) {
+	public Agent findByURI( URI uri ) {
 		// TODO
 		return null;
 	}

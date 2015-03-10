@@ -2,7 +2,7 @@ package com.carbonldp.apps.web.handlers;
 
 import com.carbonldp.apps.App;
 import com.carbonldp.apps.AppFactory;
-import com.carbonldp.apps.AppService;
+import com.carbonldp.apps.AppRepository;
 import com.carbonldp.ldp.web.AbstractPOSTRequestHandler;
 import com.carbonldp.models.Infraction;
 import com.carbonldp.models.RDFResource;
@@ -29,11 +29,11 @@ import java.util.List;
 @RequestHandler
 public class AppsPOSTHandler extends AbstractPOSTRequestHandler {
 
-	private final AppService appService;
+	private final AppRepository appRepository;
 
 	@Autowired
-	public AppsPOSTHandler( AppService appService ) {
-		this.appService = appService;
+	public AppsPOSTHandler( AppRepository appRepository ) {
+		this.appRepository = appRepository;
 	}
 
 	public ResponseEntity<Object> handleRequest( AbstractModel requestModel, HttpServletRequest request, HttpServletResponse response ) {
@@ -61,8 +61,8 @@ public class AppsPOSTHandler extends AbstractPOSTRequestHandler {
 
 		App app = new App( requestResource.getBaseModel(), requestResource.getURI() );
 
-		app = appService.create( app );
-		appService.initialize( app );
+		app = appRepository.create( app );
+		appRepository.initialize( app );
 
 		return new ResponseEntity<Object>( requestResource, HttpStatus.OK );
 	}

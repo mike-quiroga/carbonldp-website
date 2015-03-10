@@ -1,10 +1,10 @@
 package com.carbonldp.authorization;
 
 import com.carbonldp.descriptions.ContainerDescription.Type;
-import com.carbonldp.ldp.services.ContainerService;
-import com.carbonldp.ldp.services.RDFSourceService;
+import com.carbonldp.ldp.containers.ContainerRepository;
+import com.carbonldp.ldp.sources.RDFSourceRepository;
 import com.carbonldp.models.RDFSource;
-import com.carbonldp.repository.AbstractSesameService;
+import com.carbonldp.repository.AbstractSesameRepository;
 import com.carbonldp.utils.RDFNodeUtil;
 import com.carbonldp.utils.URIUtil;
 import org.openrdf.model.URI;
@@ -15,22 +15,22 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Transactional
-public class SesamePlatformPrivilegeService extends AbstractSesameService implements PlatformPrivilegeService {
-	private final RDFSourceService sourceService;
-	private final ContainerService containerService;
+public class SesamePlatformPrivilegeService extends AbstractSesameRepository implements PlatformPrivilegeService {
+	private final RDFSourceRepository sourceService;
+	private final ContainerRepository containerRepository;
 	private final URI platformPrivilegesContainerURI;
 
 	private final Type platformPrivilegesContainerType = Type.BASIC;
 
-	public SesamePlatformPrivilegeService(SesameConnectionFactory connectionFactory, RDFSourceService sourceService, ContainerService containerService,
-			URI platformPrivilegesContainerURI) {
+	public SesamePlatformPrivilegeService( SesameConnectionFactory connectionFactory, RDFSourceRepository sourceService, ContainerRepository containerRepository,
+		URI platformPrivilegesContainerURI ) {
 		super( connectionFactory );
 		this.sourceService = sourceService;
-		this.containerService = containerService;
+		this.containerRepository = containerRepository;
 		this.platformPrivilegesContainerURI = platformPrivilegesContainerURI;
 	}
 
-	public Set<PlatformPrivilege> get(Set<PlatformRole> platformRoles) {
+	public Set<PlatformPrivilege> get( Set<PlatformRole> platformRoles ) {
 		Set<PlatformPrivilege> privileges = new HashSet<PlatformPrivilege>();
 		if ( platformRoles.isEmpty() ) return privileges;
 
@@ -39,7 +39,7 @@ public class SesamePlatformPrivilegeService extends AbstractSesameService implem
 			privilegeURIs.addAll( role.getPrivileges() );
 		}
 
-		privilegeURIs = containerService.filterMembers( platformPrivilegesContainerURI, privilegeURIs, platformPrivilegesContainerType );
+		privilegeURIs = containerRepository.filterMembers( platformPrivilegesContainerURI, privilegeURIs, platformPrivilegesContainerType );
 		if ( privilegeURIs.isEmpty() ) return privileges;
 
 		Set<RDFSource> sources = sourceService.get( privilegeURIs );
@@ -50,7 +50,7 @@ public class SesamePlatformPrivilegeService extends AbstractSesameService implem
 		return privileges;
 	}
 
-	public Set<Platform.Privilege> getRepresentations(Set<PlatformPrivilege> platformPrivilegeResources) {
+	public Set<Platform.Privilege> getRepresentations( Set<PlatformPrivilege> platformPrivilegeResources ) {
 		Set<URI> privilegeURIs = URIUtil.getURIs( platformPrivilegeResources );
 		return RDFNodeUtil.findByURIs( privilegeURIs, Platform.Privilege.class );
 	}

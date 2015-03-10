@@ -1,7 +1,7 @@
 package com.carbonldp.authentication;
 
 import com.carbonldp.agents.Agent;
-import com.carbonldp.agents.AgentService;
+import com.carbonldp.agents.AgentRepository;
 import com.carbonldp.apps.AppRole;
 import com.carbonldp.apps.context.AppContextHolder;
 import com.carbonldp.authorization.*;
@@ -13,7 +13,7 @@ import java.util.Map;
 import java.util.Set;
 
 public abstract class AbstractSesameAuthenticationProvider extends AbstractAuthenticationProvider {
-	protected AgentService agentService;
+	protected AgentRepository agentRepository;
 
 	protected PlatformRoleService platformRoleService;
 	protected PlatformPrivilegeService platformPrivilegeService;
@@ -42,8 +42,8 @@ public abstract class AbstractSesameAuthenticationProvider extends AbstractAuthe
 	}
 
 	@Inject
-	public void setAgentService(AgentService agentService) {
-		this.agentService = agentService;
+	public void setAgentRepository(AgentRepository agentRepository ) {
+		this.agentRepository = agentRepository;
 	}
 
 	@Inject

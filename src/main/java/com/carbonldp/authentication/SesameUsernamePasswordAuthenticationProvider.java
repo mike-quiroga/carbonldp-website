@@ -25,11 +25,11 @@ public class SesameUsernamePasswordAuthenticationProvider extends AbstractSesame
 	@Transactional
 	@RunWith( platformRoles = {Platform.Role.SYSTEM} )
 	@RunInPlatformContext
-	public Authentication authenticate(Authentication authentication) throws AuthenticationException {
+	public Authentication authenticate( Authentication authentication ) throws AuthenticationException {
 		Object rawPrincipal = authentication.getPrincipal();
 		Object rawCredentials = authentication.getCredentials();
 
-		if ( !(rawPrincipal.getClass().equals( String.class ) && rawCredentials.getClass().equals( String.class )) ) {
+		if ( ! ( rawPrincipal.getClass().equals( String.class ) && rawCredentials.getClass().equals( String.class ) ) ) {
 			throw new BadCredentialsException( "Wrong credentials" );
 		}
 
@@ -40,7 +40,7 @@ public class SesameUsernamePasswordAuthenticationProvider extends AbstractSesame
 			throw new BadCredentialsException( "Wrong credentials" );
 		}
 
-		Agent agent = agentService.findByEmail( username );
+		Agent agent = agentRepository.findByEmail( username );
 
 		if ( agent == null ) throw new BadCredentialsException( "Wrong credentials" );
 
@@ -54,14 +54,14 @@ public class SesameUsernamePasswordAuthenticationProvider extends AbstractSesame
 			throw new AuthenticationServiceException( "Password validation failed" );
 		}
 
-		if ( !agent.getPassword().equals( hashedPassword ) ) {
+		if ( ! agent.getPassword().equals( hashedPassword ) ) {
 			throw new BadCredentialsException( "Wrong credentials" );
 		}
 
 		return createAgentAuthenticationToken( agent );
 	}
 
-	public boolean supports(Class<?> authentication) {
+	public boolean supports( Class<?> authentication ) {
 		if ( UsernamePasswordAuthenticationToken.class.isAssignableFrom( authentication ) ) {
 			return true;
 		}

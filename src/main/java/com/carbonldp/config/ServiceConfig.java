@@ -1,15 +1,17 @@
 package com.carbonldp.config;
 
 import com.carbonldp.Vars;
-import com.carbonldp.agents.AgentService;
-import com.carbonldp.agents.SesameAgentService;
-import com.carbonldp.apps.AppService;
-import com.carbonldp.apps.SesameAppService;
+import com.carbonldp.agents.AgentRepository;
+import com.carbonldp.agents.SesameAgentRepository;
+import com.carbonldp.apps.AppRepository;
+import com.carbonldp.apps.SesameAppRepository;
 import com.carbonldp.authorization.PlatformPrivilegeService;
 import com.carbonldp.authorization.PlatformRoleService;
 import com.carbonldp.authorization.SesamePlatformPrivilegeService;
 import com.carbonldp.authorization.SesamePlatformRoleService;
-import com.carbonldp.ldp.services.*;
+import com.carbonldp.ldp.containers.*;
+import com.carbonldp.ldp.sources.RDFSourceRepository;
+import com.carbonldp.ldp.sources.SesameRDFSourceRepository;
 import com.carbonldp.repository.RDFDocumentRepository;
 import com.carbonldp.repository.RDFResourceRepository;
 import com.carbonldp.repository.RepositoryService;
@@ -35,24 +37,24 @@ public class ServiceConfig {
 	private RepositoryService appRepositoryService;
 
 	@Bean
-	public RDFSourceService sourceService() {
-		return new SesameRDFSourceService( connectionFactory, resourceRepository, documentRepository );
+	public RDFSourceRepository sourceService() {
+		return new SesameRDFSourceRepository( connectionFactory, resourceRepository, documentRepository );
 	}
 
 	@Bean
-	public ContainerService containerService() {
-		List<TypedContainerService> typedServices = new ArrayList<TypedContainerService>();
-		typedServices.add( new SesameBasicContainerService( connectionFactory, resourceRepository, documentRepository ) );
-		typedServices.add( new SesameDirectContainerService( connectionFactory, resourceRepository, documentRepository ) );
-		typedServices.add( new SesameIndirectContainerService( connectionFactory, resourceRepository, documentRepository ) );
+	public ContainerRepository containerService() {
+		List<TypedContainerRepository> typedServices = new ArrayList<TypedContainerRepository>();
+		typedServices.add( new SesameBasicContainerRepository( connectionFactory, resourceRepository, documentRepository ) );
+		typedServices.add( new SesameDirectContainerRepository( connectionFactory, resourceRepository, documentRepository ) );
+		typedServices.add( new SesameIndirectContainerRepository( connectionFactory, resourceRepository, documentRepository ) );
 
-		return new SesameContainerService( connectionFactory, resourceRepository, documentRepository, typedServices );
+		return new SesameContainerRepository( connectionFactory, resourceRepository, documentRepository, typedServices );
 	}
 
 	@Bean
-	public AgentService agentService() {
+	public AgentRepository agentService() {
 		URI agentsContainerURI = new URIImpl( Vars.getAgentsContainerURL() );
-		return new SesameAgentService( connectionFactory, sourceService(), containerService(), agentsContainerURI );
+		return new SesameAgentRepository( connectionFactory, sourceService(), containerService(), agentsContainerURI );
 	}
 
 	@Bean
@@ -68,9 +70,9 @@ public class ServiceConfig {
 	}
 
 	@Bean
-	public AppService appService() {
+	public AppRepository appService() {
 		URI appsContainerURI = new URIImpl( Vars.getAppsContainerURL() );
-		SesameAppService service = new SesameAppService( connectionFactory, documentRepository, sourceService(), containerService(), appRepositoryService );
+		SesameAppRepository service = new SesameAppRepository( connectionFactory, documentRepository, sourceService(), containerService(), appRepositoryService );
 		service.setAppsContainerURI( appsContainerURI );
 		service.setAppsEntryPoint( Vars.getAppsEntryPointURL() );
 		return service;

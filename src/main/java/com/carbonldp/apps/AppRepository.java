@@ -2,7 +2,7 @@ package com.carbonldp.apps;
 
 import org.openrdf.model.URI;
 
-public interface AppService {
+public interface AppRepository {
 	public boolean exists( URI appURI );
 
 	public App get( URI appURI );
