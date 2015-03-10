@@ -36,13 +36,13 @@ public class RepositoriesConfig {
 	private SesameConnectionFactory connectionFactory;
 
 	@Bean
-	protected RDFResourceRepository resourceRepository() {
+	public RDFResourceRepository resourceRepository() {
 		Assert.notNull( connectionFactory );
 		return new SesameRDFResourceRepository( connectionFactory );
 	}
 
 	@Bean
-	protected RDFDocumentRepository documentRepository() {
+	public RDFDocumentRepository documentRepository() {
 		Assert.notNull( connectionFactory );
 		return new SesameRDFDocumentRepository( connectionFactory );
 	}

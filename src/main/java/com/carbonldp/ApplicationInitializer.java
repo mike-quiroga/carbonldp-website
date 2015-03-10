@@ -92,9 +92,9 @@ public class ApplicationInitializer implements WebApplicationInitializer {
 			TxnConfig.class,
 			ConfigurationConfig.class,
 			RepositoriesConfig.class,
-			ServicesConfig.class,
 			AppContextConfig.class,
-			SecurityConfig.class
+			SecurityConfig.class,
+			ServicesConfig.class
 		);
 		return rootContext;
 	}

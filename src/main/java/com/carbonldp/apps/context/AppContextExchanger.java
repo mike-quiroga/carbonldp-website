@@ -2,12 +2,15 @@ package com.carbonldp.apps.context;
 
 import com.carbonldp.AbstractAspect;
 import com.carbonldp.apps.App;
+import com.carbonldp.config.AspectOrder;
 import org.aspectj.lang.annotation.After;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
+import org.springframework.core.annotation.Order;
 
 @Aspect
+@Order( AspectOrder.APP_CONTEXT_EXCHANGER )
 public class AppContextExchanger extends AbstractAspect {
 
 	@Pointcut( "inCarbonLDPPackage() && @annotation(com.carbonldp.apps.context.RunInPlatformContext)" )
@@ -48,7 +51,7 @@ public class AppContextExchanger extends AbstractAspect {
 	private void restoreContext() {
 		AppContext currentContext = AppContextHolder.getContext();
 		if ( ! ( currentContext instanceof TemporaryAppContext ) ) {
-			// TODO: Throw exception. The authentication has changed during the method call
+			throw new IllegalStateException( "The authentication has changed during the method call." );
 		}
 
 		AppContext originalContext = ( (TemporaryAppContext) currentContext ).getOriginalContext();
