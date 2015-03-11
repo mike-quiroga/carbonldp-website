@@ -1,9 +1,17 @@
 package com.carbonldp.test.web;
 
-import com.carbonldp.ConfigurationRepository;
-import com.carbonldp.test.AbstractUT;
-import com.carbonldp.utils.ModelUtil;
-import com.carbonldp.web.AbstractModelMessageConverter;
+import static com.carbonldp.Consts.EMPTY_STRING;
+import static com.carbonldp.Consts.SLASH;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.assertTrue;
+
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.Random;
+
 import org.openrdf.model.URI;
 import org.openrdf.model.ValueFactory;
 import org.openrdf.model.impl.AbstractModel;
@@ -19,15 +27,10 @@ import org.springframework.util.AntPathMatcher;
 import org.springframework.util.Assert;
 import org.testng.annotations.Test;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.Random;
-
-import static com.carbonldp.Consts.EMPTY_STRING;
-import static com.carbonldp.Consts.SLASH;
-import static org.testng.Assert.*;
+import com.carbonldp.ConfigurationRepository;
+import com.carbonldp.test.AbstractUT;
+import com.carbonldp.utils.ModelUtil;
+import com.carbonldp.web.AbstractModelMessageConverter;
 
 public class AbstractModelMessageConverterUT extends AbstractUT {
 	AbstractModel model;
@@ -48,82 +51,82 @@ public class AbstractModelMessageConverterUT extends AbstractUT {
 
 	@Override
 	protected void setUp() {
-		mediaTypeAcceptable = new MediaType( "application", "xml" );
-		mediaTypeNotAcceptable = new MediaType( "String" );
-		mediaTypeAll = new MediaType( "*" );
+		mediaTypeAcceptable = new MediaType("application", "xml");
+		mediaTypeNotAcceptable = new MediaType("String");
+		mediaTypeAll = new MediaType("*");
 		configurationRepository = new ConfigurationRepositoryImpl();
-		messageConverter = new AbstractModelMessageConverter( configurationRepository );
+		messageConverter = new AbstractModelMessageConverter(configurationRepository);
 
 		model = new LinkedHashModel();
-		subj = factory.createURI( "http://example.org/rob" );
-		pred = factory.createURI( "http://example.org/is-a" );
-		obj = factory.createURI( "http://example.org/stark" );
-		model.add( subj, pred, obj );
-		subj = factory.createURI( "http://example.org/rob" );
-		pred = factory.createURI( "http://example.org/lives-in" );
-		obj = factory.createURI( "http://example.org/winterfell" );
-		model.add( subj, pred, obj );
+		subj = factory.createURI("http://example.org/rob");
+		pred = factory.createURI("http://example.org/is-a");
+		obj = factory.createURI("http://example.org/stark");
+		model.add(subj, pred, obj);
+		subj = factory.createURI("http://example.org/rob");
+		pred = factory.createURI("http://example.org/lives-in");
+		obj = factory.createURI("http://example.org/winterfell");
+		model.add(subj, pred, obj);
 	}
 
 	@Test
 	public void canReadTest() {
-		assertTrue( messageConverter.canRead( LinkedHashModel.class, mediaTypeAcceptable ) );
-		assertFalse( messageConverter.canRead( LinkedHashModel.class, mediaTypeNotAcceptable ) );
-		assertTrue( messageConverter.canRead( LinkedHashModel.class, mediaTypeAll ) );
+		assertTrue(messageConverter.canRead(LinkedHashModel.class, mediaTypeAcceptable));
+		assertFalse(messageConverter.canRead(LinkedHashModel.class, mediaTypeNotAcceptable));
+		assertTrue(messageConverter.canRead(LinkedHashModel.class, mediaTypeAll));
 	}
 
 	@Test
 	public void canWriteTest() {
-		assertTrue( messageConverter.canRead( AbstractModel.class, mediaTypeAcceptable ) );
-		assertFalse( messageConverter.canRead( AbstractModel.class, mediaTypeNotAcceptable ) );
-		assertTrue( messageConverter.canRead( AbstractModel.class, mediaTypeAll ) );
+		assertTrue(messageConverter.canRead(AbstractModel.class, mediaTypeAcceptable));
+		assertFalse(messageConverter.canRead(AbstractModel.class, mediaTypeNotAcceptable));
+		assertTrue(messageConverter.canRead(AbstractModel.class, mediaTypeAll));
 
-		for ( MediaType supportedMediaType : messageConverter.getSupportedMediaTypes() ) {
-			System.out.println( supportedMediaType.getType() + " " + supportedMediaType.getSubtype() );
+		for (MediaType supportedMediaType : messageConverter.getSupportedMediaTypes()) {
+			System.out.println(supportedMediaType.getType() + " " + supportedMediaType.getSubtype());
 		}
 	}
 
 	@Test
 	public void readTest() {
 		try {
-			inputMessage = new MockHttpInputMessage( ModelUtil.getInputStream( model ) );
-			modelRead = messageConverter.read( LinkedHashModel.class, inputMessage );
-		} catch ( HttpMessageNotReadableException e ) {
-			throw new RuntimeException( e );
-		} catch ( IOException e ) {
-			throw new RuntimeException( e );
+			inputMessage = new MockHttpInputMessage(ModelUtil.getInputStream(model));
+			modelRead = messageConverter.read(LinkedHashModel.class, inputMessage);
+		} catch (HttpMessageNotReadableException e) {
+			throw new RuntimeException(e);
+		} catch (IOException e) {
+			throw new RuntimeException(e);
 		}
-		assertTrue( model.equals( modelRead ) );
+		assertTrue(model.equals(modelRead));
 		model.clear();
-		inputMessage = new MockHttpInputMessage( ModelUtil.getInputStream( model ) );
+		inputMessage = new MockHttpInputMessage(ModelUtil.getInputStream(model));
 		try {
-			modelRead = messageConverter.read( LinkedHashModel.class, inputMessage );
-		} catch ( HttpMessageNotReadableException | IOException e ) {
-			throw new RuntimeException( "model nor propertly initialized", e );
+			modelRead = messageConverter.read(LinkedHashModel.class, inputMessage);
+		} catch (HttpMessageNotReadableException | IOException e) {
+			throw new RuntimeException("model nor propertly initialized", e);
 
 		}
-		assertEquals( modelRead.size(), 0 );
+		assertEquals(modelRead.size(), 0);
 	}
 
 	@Test
 	public void writeTest() {
 		model.clear();
-		subj = factory.createURI( "http://example.org/rob" );
-		pred = factory.createURI( "http://example.org/is-a" );
-		obj = factory.createURI( "http://example.org/stark" );
-		model.add( subj, pred, obj );
-		subj = factory.createURI( "http://example.org/rob" );
-		pred = factory.createURI( "http://example.org/lives-in" );
-		obj = factory.createURI( "http://example.org/winterfell" );
-		model.add( subj, pred, obj );
+		subj = factory.createURI("http://example.org/rob");
+		pred = factory.createURI("http://example.org/is-a");
+		obj = factory.createURI("http://example.org/stark");
+		model.add(subj, pred, obj);
+		subj = factory.createURI("http://example.org/rob");
+		pred = factory.createURI("http://example.org/lives-in");
+		obj = factory.createURI("http://example.org/winterfell");
+		model.add(subj, pred, obj);
 
 		outputStream = new MockOutputStreamImpl();
-		outputMessage = new MockHttpOutputMessage( outputStream );
+		outputMessage = new MockHttpOutputMessage(outputStream);
 		try {
-			messageConverter.write( model, outputMessage.getHeaders().getContentType(), outputMessage );
-			assertTrue( outputStream.getFlush() );
-		} catch ( HttpMessageNotWritableException | IOException e ) {
-			throw new RuntimeException( "model nor propertly initialized", e );
+			messageConverter.write(model, outputMessage.getHeaders().getContentType(), outputMessage);
+			assertTrue(outputStream.getFlush());
+		} catch (HttpMessageNotWritableException | IOException e) {
+			throw new RuntimeException("model nor propertly initialized", e);
 		}
 
 	}
@@ -151,7 +154,7 @@ class MockOutputStreamImpl extends OutputStream {
 			count = 1;
 		} else {
 			byte[] newBuf = new byte[buf.length + 1];
-			for ( int i = 0; i < buf.length; i++ ) {
+			for (int i = 0; i < buf.length; i++) {
 				newBuf[i] = buf[i];
 			}
 			b &= 255;
@@ -163,7 +166,7 @@ class MockOutputStreamImpl extends OutputStream {
 
 	public void flush() {
 		flush = true;
-		System.out.println( "" + buf.length );
+		System.out.println("" + buf.length);
 	}
 
 }
@@ -231,26 +234,6 @@ class ConfigurationRepositoryImpl implements ConfigurationRepository {
 		return platformAgentsContainerURL;
 	}
 
-	@Override
-	public String getPlatformRolesContainer() {
-		return platformRolesContainer;
-	}
-
-	@Override
-	public String getPlatformRolesContainerURL() {
-		return platformRolesContainerURL;
-	}
-
-	@Override
-	public String getPlatformPrivilegesContainer() {
-		return platformPrivilegesContainer;
-	}
-
-	@Override
-	public String getPlatformPrivilegesContainerURL() {
-		return platformPrivilegesContainerURL;
-	}
-
 	public String getApplicationsEntryPoint() {
 		return applicationsEntryPoint;
 	}
@@ -266,23 +249,23 @@ class ConfigurationRepositoryImpl implements ConfigurationRepository {
 	@Override
 	public boolean isGenericRequest(String uri) {
 		AntPathMatcher matcher = new AntPathMatcher();
-		uri = uri.replace( getPlatformURL(), SLASH );
+		uri = uri.replace(getPlatformURL(), SLASH);
 
-		return matcher.match( getGenericRequestPattern(), uri );
+		return matcher.match(getGenericRequestPattern(), uri);
 	}
 
 	@Override
 	public String getGenericRequestSlug(String uri) {
 		AntPathMatcher matcher = new AntPathMatcher();
-		uri = uri.replace( getPlatformURL(), EMPTY_STRING );
+		uri = uri.replace(getPlatformURL(), EMPTY_STRING);
 
 		// The matcher removes the ending slash (if it finds one)
-		boolean hasTrailingSlash = uri.endsWith( SLASH );
+		boolean hasTrailingSlash = uri.endsWith(SLASH);
 
-		uri = matcher.extractPathWithinPattern( getGenericRequestPattern(), uri );
+		uri = matcher.extractPathWithinPattern(getGenericRequestPattern(), uri);
 
-		int index = uri.indexOf( SLASH );
-		if ( index == -1 ) {
+		int index = uri.indexOf(SLASH);
+		if ( index == - 1 ) {
 			// The timestamp is the last piece of the generic request URI
 			return null;
 		}
@@ -292,42 +275,30 @@ class ConfigurationRepositoryImpl implements ConfigurationRepository {
 		}
 
 		StringBuilder slugBuilder = new StringBuilder();
-		slugBuilder.append( uri.substring( index + 1 ) );
-		if ( hasTrailingSlash ) slugBuilder.append( SLASH );
+		slugBuilder.append(uri.substring(index + 1));
+		if ( hasTrailingSlash ) slugBuilder.append(SLASH);
 
 		return slugBuilder.toString();
 	}
 
 	public String forgeGenericRequestURL() {
 		StringBuilder urlBuilder = new StringBuilder();
-		urlBuilder.append( this.genericRequestURL ).append( random.nextLong() );
-		if ( enforceEndingSlash() ) urlBuilder.append( SLASH );
+		urlBuilder.append(this.genericRequestURL).append(random.nextLong());
+		if ( enforceEndingSlash() ) urlBuilder.append(SLASH);
 		return urlBuilder.toString();
 	}
 
 	private String getGenericRequestPattern() {
 		StringBuilder patternBuilder = new StringBuilder();
-		if ( !this.genericRequest.startsWith( SLASH ) ) patternBuilder.append( SLASH );
-		patternBuilder.append( this.genericRequest );
-		if ( !this.genericRequest.endsWith( SLASH ) ) patternBuilder.append( SLASH );
-		patternBuilder.append( "?*/**/" );
+		if ( ! this.genericRequest.startsWith(SLASH) ) patternBuilder.append(SLASH);
+		patternBuilder.append(this.genericRequest);
+		if ( ! this.genericRequest.endsWith(SLASH) ) patternBuilder.append(SLASH);
+		patternBuilder.append("?*/**/");
 		return patternBuilder.toString();
 	}
 
 	public Boolean enforceEndingSlash() {
 		return _enforceEndingSlash;
-	}
-
-	@Override
-	public String getAppsEntryPoint() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public String getAppsEntryPointURL() {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 }
@@ -338,7 +309,7 @@ class MockHttpOutputMessage implements HttpOutputMessage {
 
 	public MockHttpOutputMessage(OutputStream body) {
 		this.body = body;
-		headers.setContentType( new MediaType( "application", "ld+json" ) );
+		headers.setContentType(new MediaType("application", "ld+json"));
 	}
 
 	@Override
@@ -361,13 +332,13 @@ class MockHttpInputMessage implements HttpInputMessage {
 	private final InputStream body;
 
 	public MockHttpInputMessage(byte[] contents) {
-		this.body = (contents != null) ? new ByteArrayInputStream( contents ) : null;
+		this.body = (contents != null) ? new ByteArrayInputStream(contents) : null;
 	}
 
 	public MockHttpInputMessage(InputStream body) {
-		Assert.notNull( body, "'body' must not be null" );
+		Assert.notNull(body, "'body' must not be null");
 		this.body = body;
-		headers.setContentType( new MediaType( "application", "ld+json" ) );
+		headers.setContentType(new MediaType("application", "ld+json"));
 	}
 
 	@Override

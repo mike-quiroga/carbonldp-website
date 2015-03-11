@@ -7,6 +7,7 @@ import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 
 import com.carbonldp.ConfigurationRepository;
 import com.carbonldp.PropertiesFileConfigurationRepository;
+import com.carbonldp.spring.DependencyInjectorListener;
 
 @Configuration
 @PropertySource({ "classpath:${APP_ENV:local}-config.properties", "classpath:config.properties" })
@@ -20,5 +21,10 @@ public class ConfigurationConfig {
 	@Bean
 	public ConfigurationRepository configurationRepository() {
 		return new PropertiesFileConfigurationRepository();
+	}
+
+	@Bean
+	public DependencyInjectorListener dependencyInjector() {
+		return new DependencyInjectorListener();
 	}
 }

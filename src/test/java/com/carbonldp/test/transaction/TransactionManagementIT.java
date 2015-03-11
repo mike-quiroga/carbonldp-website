@@ -1,39 +1,55 @@
 package com.carbonldp.test.transaction;
 
-import static com.carbonldp.Consts.NEW_LINE;
-import static com.carbonldp.Consts.TAB;
+import static org.testng.Assert.assertFalse;
 
+import org.openrdf.model.Resource;
+import org.openrdf.model.URI;
+import org.openrdf.model.impl.URIImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.testng.annotations.Test;
 
+import com.carbonldp.Vars;
+import com.carbonldp.agents.AgentDescription;
 import com.carbonldp.test.AbstractIT;
-import com.carbonldp.test.Transactions;
+import com.carbonldp.test.TransactionActionTemplate;
+import com.carbonldp.utils.RDFNodeUtil;
 
 @Transactional
 public class TransactionManagementIT extends AbstractIT {
 
 	@Autowired
-	private Transactions transactions;
+	private TransactionActionTemplate transactionTemplate;
 
 	private String query;
 
-	@Test
-	public void testTest() {
+	private static final String findByEmail_selector;
+	static {
 		StringBuilder queryBuilder = new StringBuilder();
 		//@formatter:off
 		queryBuilder
-			.append("CONSTRUCT {").append(NEW_LINE)
-			.append(TAB).append("?s ?p ?o").append(NEW_LINE)
-			.append("} WHERE {").append(NEW_LINE)
-			.append(TAB).append("GRAPH ?sourceURI {").append(NEW_LINE)
-			.append(TAB).append(TAB).append("?s ?p ?o").append(NEW_LINE)
-			.append(TAB).append("}").append(NEW_LINE)
-			.append("}")
+				.append( RDFNodeUtil.generatePredicateStatement( "?members", "?email", AgentDescription.Property.EMAIL ) )
 		;
 		//@formatter:on
-		query = queryBuilder.toString();
-		transactions.transaction();
+		findByEmail_selector = queryBuilder.toString();
+	}
+
+	@Test
+	public void rollBackTest() {
+		transactionTemplate.writeInTransaction((connection) -> {
+			URI agentsContainerURI = new URIImpl(Vars.getAgentsContainerURL());
+
+			Resource subject;
+			Resource predicate;
+			Resource object;
+			connection.add(subject, predicate, object, contexts);
+
+			throw new RuntimeException();
+		});
+
+		transactionTemplate.readInTransaction((connection) -> {
+			assertFalse(connection.hasStatement(null, arg1, arg2, arg3, arg4));
+		});
 
 	}
 }

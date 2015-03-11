@@ -30,21 +30,16 @@ import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
+import com.carbonldp.Vars;
 import com.carbonldp.apps.App;
 import com.carbonldp.apps.AppFactory;
 import com.carbonldp.apps.AppService;
-import com.carbonldp.apps.context.AppContextConfig;
-import com.carbonldp.repository.RepositoryConfig;
-import com.carbonldp.security.SecurityConfig;
+import com.carbonldp.utils.PropertiesUtil;
 
 @Test(groups = "integration-tests")
 //@formatter:off
 @ContextHierarchy({
-	@ContextConfiguration(classes = ConfigurationConfig.class),
-	@ContextConfiguration(classes = RepositoryConfig.class),
-	@ContextConfiguration(classes = AppContextConfig.class),
-	@ContextConfiguration(classes = TestConfig.class),
-	@ContextConfiguration(classes = SecurityConfig.class)
+	@ContextConfiguration(classes = TestConfig.class)
 })
 //@formatter:on
 public abstract class AbstractIT extends AbstractTestNGSpringContextTests {
@@ -73,19 +68,26 @@ public abstract class AbstractIT extends AbstractTestNGSpringContextTests {
 	private final Properties properties;
 
 	protected AbstractIT() {
+
 		this.properties = loadProperties(propertiesFile);
+		PropertiesUtil.resolveProperties(properties);
 		erasePlatformRepositoryDirectory(properties);
 		eraseAppsRepositoryDirectory(properties);
 		loadPlatformRepositoryDefaultData(properties);
+		Vars.init(properties);
 	}
 
 	private Properties loadProperties(String fileName) {
 		Properties properties = new Properties();
-		InputStream input = getClass().getClassLoader().getResourceAsStream(fileName);
+		InputStream inputTest = getClass().getClassLoader().getResourceAsStream(fileName);
+		InputStream input = getClass().getClassLoader().getResourceAsStream("local-config.properties");
+
 		if ( input == null ) throw new RuntimeException("Properties file not found");
+		if ( inputTest == null ) throw new RuntimeException("Properties file not found");
 
 		try {
 			properties.load(input);
+			properties.load(inputTest);
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		} finally {
