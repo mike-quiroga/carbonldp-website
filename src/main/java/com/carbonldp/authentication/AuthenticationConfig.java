@@ -1,6 +1,6 @@
 package com.carbonldp.authentication;
 
-import com.carbonldp.ConfigurationRepository;
+import com.carbonldp.config.ConfigurationRepository;
 import com.carbonldp.authorization.SecurityContextExchanger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;

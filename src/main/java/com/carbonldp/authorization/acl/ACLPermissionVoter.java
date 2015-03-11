@@ -1,7 +1,7 @@
 package com.carbonldp.authorization.acl;
 
 import com.carbonldp.authorization.acl.ACEDescription.Permission;
-import com.carbonldp.descriptions.RDFNodeEnum;
+import com.carbonldp.rdf.RDFNodeEnum;
 import org.openrdf.model.URI;
 
 import java.util.Map;

@@ -1,7 +1,7 @@
 package com.carbonldp.authentication;
 
 import com.carbonldp.agents.Agent;
-import com.carbonldp.agents.AgentService;
+import com.carbonldp.agents.AgentRepository;
 import com.carbonldp.apps.AppRole;
 import com.carbonldp.apps.context.AppContextHolder;
 import com.carbonldp.authorization.*;
@@ -13,17 +13,17 @@ import java.util.Map;
 import java.util.Set;
 
 public abstract class AbstractSesameAuthenticationProvider extends AbstractAuthenticationProvider {
-	protected AgentService agentService;
+	protected AgentRepository agentRepository;
 
-	protected PlatformRoleService platformRoleService;
-	protected PlatformPrivilegeService platformPrivilegeService;
+	protected PlatformRoleRepository platformRoleRepository;
+	protected PlatformPrivilegeRepository platformPrivilegeRepository;
 
 	protected AgentAuthenticationToken createAgentAuthenticationToken(Agent agent) {
-		Set<PlatformRole> platformRoles = platformRoleService.get( agent );
-		Set<PlatformPrivilege> platformPrivileges = platformPrivilegeService.get( platformRoles );
+		Set<PlatformRole> platformRoles = platformRoleRepository.get( agent );
+		Set<PlatformPrivilege> platformPrivileges = platformPrivilegeRepository.get( platformRoles );
 
-		Set<Platform.Role> platformRoleRepresentations = platformRoleService.getRepresentations( platformRoles );
-		Set<Platform.Privilege> platformPrivilegeRepresentations = platformPrivilegeService.getRepresentations( platformPrivileges );
+		Set<Platform.Role> platformRoleRepresentations = platformRoleRepository.getRepresentations( platformRoles );
+		Set<Platform.Privilege> platformPrivilegeRepresentations = platformPrivilegeRepository.getRepresentations( platformPrivileges );
 
 		Map<URI, Set<AppRole>> appsRoles = getAppsRoles( agent );
 
@@ -42,17 +42,17 @@ public abstract class AbstractSesameAuthenticationProvider extends AbstractAuthe
 	}
 
 	@Inject
-	public void setAgentService(AgentService agentService) {
-		this.agentService = agentService;
+	public void setAgentRepository(AgentRepository agentRepository ) {
+		this.agentRepository = agentRepository;
 	}
 
 	@Inject
-	public void setPlatformRoleService(PlatformRoleService platformRoleService) {
-		this.platformRoleService = platformRoleService;
+	public void setPlatformRoleRepository(PlatformRoleRepository platformRoleRepository ) {
+		this.platformRoleRepository = platformRoleRepository;
 	}
 
 	@Inject
-	public void setPlatformPrivilegeService(PlatformPrivilegeService platformPrivilegeService) {
-		this.platformPrivilegeService = platformPrivilegeService;
+	public void setPlatformPrivilegeRepository(PlatformPrivilegeRepository platformPrivilegeRepository ) {
+		this.platformPrivilegeRepository = platformPrivilegeRepository;
 	}
 }

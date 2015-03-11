@@ -1,6 +1,6 @@
 package com.carbonldp.repository.txn;
 
-import com.carbonldp.ConfigurationRepository;
+import com.carbonldp.config.ConfigurationRepository;
 import com.carbonldp.Vars;
 import com.carbonldp.repository.LocalRepositoryService;
 import com.carbonldp.repository.RepositoryService;

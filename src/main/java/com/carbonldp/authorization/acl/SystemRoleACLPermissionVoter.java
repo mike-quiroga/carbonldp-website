@@ -4,7 +4,7 @@ import com.carbonldp.AbstractComponent;
 import com.carbonldp.authorization.Platform;
 import com.carbonldp.authorization.PlatformRoleDescription;
 import com.carbonldp.authorization.acl.ACEDescription.Permission;
-import com.carbonldp.descriptions.RDFNodeEnum;
+import com.carbonldp.rdf.RDFNodeEnum;
 import com.carbonldp.utils.RDFNodeUtil;
 import org.openrdf.model.URI;
 

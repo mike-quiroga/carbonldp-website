@@ -9,15 +9,13 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 
 @Configuration
 @EnableGlobalMethodSecurity( prePostEnabled = true )
-//@formatter:off
 @Import(
-		value = {
-				AuthenticationConfig.class,
-				AuthorizationConfig.class,
-				ACLConfig.class
-		}
+	value = {
+		ACLConfig.class,
+		AuthenticationConfig.class,
+		AuthorizationConfig.class,
+	}
 )
-//@formatter:on
 public class SecurityConfig {
 
 }

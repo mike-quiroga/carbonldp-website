@@ -1,5 +1,6 @@
 package com.carbonldp.apps.web;
 
+import com.carbonldp.apps.web.handlers.AppsGETHandler;
 import com.carbonldp.apps.web.handlers.AppsPOSTHandler;
 import com.carbonldp.web.AbstractController;
 import org.openrdf.model.impl.AbstractModel;
@@ -17,10 +18,17 @@ import javax.servlet.http.HttpServletResponse;
 @RequestMapping( value = "/platform/apps/" )
 public class AppsController extends AbstractController {
 	@Autowired
+	private AppsGETHandler getRequestHandler;
+	@Autowired
 	private AppsPOSTHandler postRequestHandler;
 
+	@RequestMapping( method = RequestMethod.GET )
+	public ResponseEntity<Object> getApplication( HttpServletRequest request, HttpServletResponse response ) {
+		return getRequestHandler.handleRequest( request, response );
+	}
+
 	@RequestMapping( method = RequestMethod.POST )
-	public ResponseEntity<Object> createApplication(@RequestBody AbstractModel requestModel, HttpServletRequest request, HttpServletResponse response) {
+	public ResponseEntity<Object> createApplication( @RequestBody AbstractModel requestModel, HttpServletRequest request, HttpServletResponse response ) {
 		return postRequestHandler.handleRequest( requestModel, request, response );
 	}
 }

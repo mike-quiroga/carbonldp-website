@@ -8,6 +8,8 @@ import org.springframework.security.access.expression.method.DefaultMethodSecuri
 import org.springframework.security.access.expression.method.MethodSecurityExpressionHandler;
 import org.springframework.security.config.annotation.method.configuration.GlobalMethodSecurityConfiguration;
 
+import javax.annotation.PostConstruct;
+
 @Configuration
 public class ACLConfig extends GlobalMethodSecurityConfiguration {
 
@@ -24,12 +26,22 @@ public class ACLConfig extends GlobalMethodSecurityConfiguration {
 
 	@Bean
 	public PermissionEvaluator permissionEvaluator() {
-		//@formatter:off
 		return new ACLPermissionEvaluator(
-				systemRoleACLPermissionVoter(),
-				directACLPermissionVoter()
+			systemRoleACLPermissionVoter(),
+			directACLPermissionVoter()
 		);
-		//@formatter:on
+	}
+
+	/**
+	 * PermissionEvaluator was being requested in early steps of bean initialization. Thus, Spring eagerly initialized it and its dependencies.
+	 * directACLPermissionVoter needed the autowired field ACLRepository, but because of the eager initialization, it was getting a null value.
+	 * This method solves that problem by injecting it after all the autowired is resolved.
+	 * <p/>
+	 * TODO: Find who is causing this eager initialization and try to reorder the beans to solve the dependency cycle.
+	 */
+	@PostConstruct
+	public void injectACLRepository() {
+		( (AbstractACLPermissionVoter) directACLPermissionVoter() ).setACLRepository( aclRepository );
 	}
 
 	@Bean
@@ -39,6 +51,6 @@ public class ACLConfig extends GlobalMethodSecurityConfiguration {
 
 	@Bean
 	public ACLPermissionVoter directACLPermissionVoter() {
-		return new DirectACLPermissionVoter( aclRepository );
+		return new DirectACLPermissionVoter();
 	}
 }

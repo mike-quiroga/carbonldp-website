@@ -1,6 +1,6 @@
 package com.carbonldp.web;
 
-import com.carbonldp.ConfigurationRepository;
+import com.carbonldp.config.ConfigurationRepository;
 import com.carbonldp.ldp.web.RDFSourceMessageConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;

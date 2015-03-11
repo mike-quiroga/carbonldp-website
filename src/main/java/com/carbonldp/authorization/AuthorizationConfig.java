@@ -26,7 +26,7 @@ public class AuthorizationConfig extends AbstractWebSecurityConfigurerAdapter {
 	}
 
 	@Override
-	protected void configure(HttpSecurity http) throws Exception {
+	protected void configure( HttpSecurity http ) throws Exception {
 		super.configure( http );
 		//@formatter:off
 		http.antMatcher( "/**" )
@@ -40,7 +40,7 @@ public class AuthorizationConfig extends AbstractWebSecurityConfigurerAdapter {
 	@Order( EntryPointOrder.APPS )
 	public static class AppsEntryPointConfig extends AbstractWebSecurityConfigurerAdapter {
 		@Override
-		protected void configure(HttpSecurity http) throws Exception {
+		protected void configure( HttpSecurity http ) throws Exception {
 			super.configure( http );
 			//@formatter:off
 			http
@@ -61,7 +61,7 @@ public class AuthorizationConfig extends AbstractWebSecurityConfigurerAdapter {
 	@Order( EntryPointOrder.PLATFORM )
 	public static class PlatformEntryPointConfig extends AbstractWebSecurityConfigurerAdapter {
 		@Override
-		protected void configure(HttpSecurity http) throws Exception {
+		protected void configure( HttpSecurity http ) throws Exception {
 			super.configure( http );
 			//@formatter:off
 			http

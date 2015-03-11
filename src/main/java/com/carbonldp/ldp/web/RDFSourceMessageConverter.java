@@ -1,11 +1,11 @@
 package com.carbonldp.ldp.web;
 
 import com.carbonldp.HTTPHeaders;
-import com.carbonldp.descriptions.RDFNodeEnum;
-import com.carbonldp.descriptions.RDFResourceDescription;
-import com.carbonldp.descriptions.RDFSourceDescription;
+import com.carbonldp.rdf.RDFNodeEnum;
+import com.carbonldp.rdf.RDFResourceDescription;
+import com.carbonldp.ldp.sources.RDFSourceDescription;
 import com.carbonldp.models.HTTPHeaderValue;
-import com.carbonldp.models.RDFSource;
+import com.carbonldp.ldp.sources.RDFSource;
 import com.carbonldp.web.ModelMessageConverter;
 import org.openrdf.model.Model;
 import org.springframework.http.HttpHeaders;

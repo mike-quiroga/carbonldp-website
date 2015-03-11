@@ -1,7 +1,7 @@
 package com.carbonldp.agents;
 
-import com.carbonldp.descriptions.RDFNodeEnum;
-import com.carbonldp.models.PrefixedURI;
+import com.carbonldp.rdf.RDFNodeEnum;
+import com.carbonldp.rdf.PrefixedURI;
 
 public final class AgentDescription {
 	private AgentDescription() {
