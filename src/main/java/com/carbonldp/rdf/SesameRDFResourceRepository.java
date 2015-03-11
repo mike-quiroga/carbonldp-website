@@ -3,7 +3,6 @@ package com.carbonldp.rdf;
 import com.carbonldp.descriptions.RDFNodeEnum;
 import com.carbonldp.descriptions.RDFResourceDescription;
 import com.carbonldp.models.PrefixedURI;
-import com.carbonldp.rdf.RDFResourceRepository;
 import com.carbonldp.repository.AbstractSesameRepository;
 import com.carbonldp.utils.LiteralUtil;
 import com.carbonldp.utils.URIUtil;
@@ -25,12 +24,12 @@ import java.util.Set;
 @Transactional
 public class SesameRDFResourceRepository extends AbstractSesameRepository implements RDFResourceRepository {
 
-	public SesameRDFResourceRepository(SesameConnectionFactory connectionFactory) {
+	public SesameRDFResourceRepository( SesameConnectionFactory connectionFactory ) {
 		super( connectionFactory );
 	}
 
 	@Override
-	public boolean hasProperty(final URI resourceURI, final URI pred) {
+	public boolean hasProperty( final URI resourceURI, final URI pred ) {
 		final URI documentURI = getDocumentURI( resourceURI );
 		return connectionTemplate.read( connection -> {
 			RepositoryResult<Statement> statements = connection.getStatements( resourceURI, pred, null, false, documentURI );
@@ -39,7 +38,7 @@ public class SesameRDFResourceRepository extends AbstractSesameRepository implem
 	}
 
 	@Override
-	public boolean hasProperty(final URI resourceURI, final RDFNodeEnum pred) {
+	public boolean hasProperty( final URI resourceURI, final RDFNodeEnum pred ) {
 		final URI documentURI = getDocumentURI( resourceURI );
 		return connectionTemplate.read( connection -> {
 			for ( PrefixedURI predURI : pred.getURIs() ) {
@@ -51,7 +50,7 @@ public class SesameRDFResourceRepository extends AbstractSesameRepository implem
 	}
 
 	@Override
-	public boolean contains(final URI resourceURI, final URI pred, final Value obj) {
+	public boolean contains( final URI resourceURI, final URI pred, final Value obj ) {
 		final URI documentURI = getDocumentURI( resourceURI );
 		return connectionTemplate.read( connection -> {
 			RepositoryResult<Statement> statements = connection.getStatements( resourceURI, pred, obj, false, documentURI );
@@ -60,7 +59,7 @@ public class SesameRDFResourceRepository extends AbstractSesameRepository implem
 	}
 
 	@Override
-	public boolean contains(final URI resourceURI, final RDFNodeEnum pred, final Value obj) {
+	public boolean contains( final URI resourceURI, final RDFNodeEnum pred, final Value obj ) {
 		final URI documentURI = getDocumentURI( resourceURI );
 		return connectionTemplate.read( connection -> {
 			for ( PrefixedURI predURI : pred.getURIs() ) {
@@ -72,7 +71,7 @@ public class SesameRDFResourceRepository extends AbstractSesameRepository implem
 	}
 
 	@Override
-	public boolean contains(final URI resourceURI, final RDFNodeEnum pred, final RDFNodeEnum obj) {
+	public boolean contains( final URI resourceURI, final RDFNodeEnum pred, final RDFNodeEnum obj ) {
 		final URI documentURI = getDocumentURI( resourceURI );
 		return connectionTemplate.read( connection -> {
 			for ( PrefixedURI predURI : pred.getURIs() ) {
@@ -86,7 +85,7 @@ public class SesameRDFResourceRepository extends AbstractSesameRepository implem
 	}
 
 	@Override
-	public Value getProperty(final URI resourceURI, final URI pred) {
+	public Value getProperty( final URI resourceURI, final URI pred ) {
 		final URI documentURI = getDocumentURI( resourceURI );
 		return connectionTemplate.read( connection -> {
 			RepositoryResult<Statement> statements = connection.getStatements( resourceURI, pred, null, false, documentURI );
@@ -98,13 +97,13 @@ public class SesameRDFResourceRepository extends AbstractSesameRepository implem
 	}
 
 	@Override
-	public Value getProperty(final URI resourceURI, final RDFNodeEnum pred) {
+	public Value getProperty( final URI resourceURI, final RDFNodeEnum pred ) {
 		final URI documentURI = getDocumentURI( resourceURI );
 		return connectionTemplate.read( connection -> {
 			for ( URI predURI : pred.getURIs() ) {
 				RepositoryResult<Statement> statements = connection.getStatements( resourceURI, predURI, null, false, documentURI );
 				if ( statements.hasNext() ) {
-					return (statements.next().getObject());
+					return ( statements.next().getObject() );
 				}
 			}
 			return null;
@@ -112,7 +111,7 @@ public class SesameRDFResourceRepository extends AbstractSesameRepository implem
 	}
 
 	@Override
-	public Set<Value> getProperties(final URI resourceURI, final URI pred) {
+	public Set<Value> getProperties( final URI resourceURI, final URI pred ) {
 		final URI documentURI = getDocumentURI( resourceURI );
 		return connectionTemplate.read( connection -> {
 			Set<Value> properties = new LinkedHashSet<Value>();
@@ -125,7 +124,7 @@ public class SesameRDFResourceRepository extends AbstractSesameRepository implem
 	}
 
 	@Override
-	public Set<Value> getProperties(final URI resourceURI, final RDFNodeEnum pred) {
+	public Set<Value> getProperties( final URI resourceURI, final RDFNodeEnum pred ) {
 		final URI documentURI = getDocumentURI( resourceURI );
 		return connectionTemplate.read( connection -> {
 			Set<Value> properties = new LinkedHashSet<Value>();
@@ -140,7 +139,7 @@ public class SesameRDFResourceRepository extends AbstractSesameRepository implem
 	}
 
 	@Override
-	public URI getURI(final URI resourceURI, final URI pred) {
+	public URI getURI( final URI resourceURI, final URI pred ) {
 		final URI documentURI = getDocumentURI( resourceURI );
 		return connectionTemplate.read( connection -> {
 			RepositoryResult<Statement> statements = connection.getStatements( resourceURI, pred, null, false, documentURI );
@@ -153,7 +152,7 @@ public class SesameRDFResourceRepository extends AbstractSesameRepository implem
 	}
 
 	@Override
-	public URI getURI(final URI resourceURI, final RDFNodeEnum pred) {
+	public URI getURI( final URI resourceURI, final RDFNodeEnum pred ) {
 		final URI documentURI = getDocumentURI( resourceURI );
 		return connectionTemplate.read( connection -> {
 			for ( URI predURI : pred.getURIs() ) {
@@ -168,7 +167,7 @@ public class SesameRDFResourceRepository extends AbstractSesameRepository implem
 	}
 
 	@Override
-	public Set<URI> getURIs(final URI resourceURI, final URI pred) {
+	public Set<URI> getURIs( final URI resourceURI, final URI pred ) {
 		final URI documentURI = getDocumentURI( resourceURI );
 		return connectionTemplate.read( connection -> {
 			Set<URI> properties = new LinkedHashSet<URI>();
@@ -182,7 +181,7 @@ public class SesameRDFResourceRepository extends AbstractSesameRepository implem
 	}
 
 	@Override
-	public Set<URI> getURIs(final URI resourceURI, final RDFNodeEnum pred) {
+	public Set<URI> getURIs( final URI resourceURI, final RDFNodeEnum pred ) {
 		final URI documentURI = getDocumentURI( resourceURI );
 		return connectionTemplate.read( connection -> {
 			Set<URI> properties = new LinkedHashSet<URI>();
@@ -199,7 +198,7 @@ public class SesameRDFResourceRepository extends AbstractSesameRepository implem
 	}
 
 	@Override
-	public Boolean getBoolean(final URI resourceURI, final URI pred) {
+	public Boolean getBoolean( final URI resourceURI, final URI pred ) {
 		final URI documentURI = getDocumentURI( resourceURI );
 		return connectionTemplate.read( connection -> {
 			RepositoryResult<Statement> statements = connection.getStatements( resourceURI, pred, null, false, documentURI );
@@ -213,7 +212,7 @@ public class SesameRDFResourceRepository extends AbstractSesameRepository implem
 	}
 
 	@Override
-	public Boolean getBoolean(final URI resourceURI, final RDFNodeEnum pred) {
+	public Boolean getBoolean( final URI resourceURI, final RDFNodeEnum pred ) {
 		final URI documentURI = getDocumentURI( resourceURI );
 		return connectionTemplate.read( connection -> {
 			for ( URI predURI : pred.getURIs() ) {
@@ -229,7 +228,7 @@ public class SesameRDFResourceRepository extends AbstractSesameRepository implem
 	}
 
 	@Override
-	public Set<Boolean> getBooleans(final URI resourceURI, final URI pred) {
+	public Set<Boolean> getBooleans( final URI resourceURI, final URI pred ) {
 		final URI documentURI = getDocumentURI( resourceURI );
 		return connectionTemplate.read( connection -> {
 			Set<Boolean> properties = new LinkedHashSet<Boolean>();
@@ -244,7 +243,7 @@ public class SesameRDFResourceRepository extends AbstractSesameRepository implem
 	}
 
 	@Override
-	public Set<Boolean> getBooleans(final URI resourceURI, final RDFNodeEnum pred) {
+	public Set<Boolean> getBooleans( final URI resourceURI, final RDFNodeEnum pred ) {
 		final URI documentURI = getDocumentURI( resourceURI );
 		return connectionTemplate.read( connection -> {
 			Set<Boolean> properties = new LinkedHashSet<Boolean>();
@@ -262,7 +261,7 @@ public class SesameRDFResourceRepository extends AbstractSesameRepository implem
 	}
 
 	@Override
-	public Byte getByte(final URI resourceURI, final URI pred) {
+	public Byte getByte( final URI resourceURI, final URI pred ) {
 		final URI documentURI = getDocumentURI( resourceURI );
 		return connectionTemplate.read( connection -> {
 			RepositoryResult<Statement> statements = connection.getStatements( resourceURI, pred, null, false, documentURI );
@@ -276,7 +275,7 @@ public class SesameRDFResourceRepository extends AbstractSesameRepository implem
 	}
 
 	@Override
-	public Byte getByte(final URI resourceURI, final RDFNodeEnum pred) {
+	public Byte getByte( final URI resourceURI, final RDFNodeEnum pred ) {
 		final URI documentURI = getDocumentURI( resourceURI );
 		return connectionTemplate.read( connection -> {
 			for ( URI predURI : pred.getURIs() ) {
@@ -292,7 +291,7 @@ public class SesameRDFResourceRepository extends AbstractSesameRepository implem
 	}
 
 	@Override
-	public Set<Byte> getBytes(final URI resourceURI, final URI pred) {
+	public Set<Byte> getBytes( final URI resourceURI, final URI pred ) {
 		final URI documentURI = getDocumentURI( resourceURI );
 		return connectionTemplate.read( connection -> {
 			Set<Byte> properties = new LinkedHashSet<Byte>();
@@ -307,7 +306,7 @@ public class SesameRDFResourceRepository extends AbstractSesameRepository implem
 	}
 
 	@Override
-	public Set<Byte> getBytes(final URI resourceURI, final RDFNodeEnum pred) {
+	public Set<Byte> getBytes( final URI resourceURI, final RDFNodeEnum pred ) {
 		final URI documentURI = getDocumentURI( resourceURI );
 		return connectionTemplate.read( connection -> {
 			Set<Byte> properties = new LinkedHashSet<Byte>();
@@ -325,7 +324,7 @@ public class SesameRDFResourceRepository extends AbstractSesameRepository implem
 	}
 
 	@Override
-	public DateTime getDate(final URI resourceURI, final URI pred) {
+	public DateTime getDate( final URI resourceURI, final URI pred ) {
 		final URI documentURI = getDocumentURI( resourceURI );
 		return connectionTemplate.read( connection -> {
 			DateTimeFormatter parser = ISODateTimeFormat.dateTimeParser();
@@ -333,14 +332,14 @@ public class SesameRDFResourceRepository extends AbstractSesameRepository implem
 			while ( statements.hasNext() ) {
 				Value value = statements.next().getObject();
 				if ( ValueUtil.isLiteral( value ) && LiteralUtil.isDate( (Literal) value ) )
-					return (parser.parseDateTime( value.stringValue() ));
+					return ( parser.parseDateTime( value.stringValue() ) );
 			}
 			return null;
 		} );
 	}
 
 	@Override
-	public DateTime getDate(final URI resourceURI, final RDFNodeEnum pred) {
+	public DateTime getDate( final URI resourceURI, final RDFNodeEnum pred ) {
 		final URI documentURI = getDocumentURI( resourceURI );
 		return connectionTemplate.read( connection -> {
 			DateTimeFormatter parser = ISODateTimeFormat.dateTimeParser();
@@ -349,7 +348,7 @@ public class SesameRDFResourceRepository extends AbstractSesameRepository implem
 				while ( statements.hasNext() ) {
 					Value value = statements.next().getObject();
 					if ( ValueUtil.isLiteral( value ) && LiteralUtil.isDate( (Literal) value ) )
-						return (parser.parseDateTime( value.stringValue() ));
+						return ( parser.parseDateTime( value.stringValue() ) );
 				}
 			}
 			return null;
@@ -357,7 +356,7 @@ public class SesameRDFResourceRepository extends AbstractSesameRepository implem
 	}
 
 	@Override
-	public Set<DateTime> getDates(final URI resourceURI, final URI pred) {
+	public Set<DateTime> getDates( final URI resourceURI, final URI pred ) {
 		final URI documentURI = getDocumentURI( resourceURI );
 		return connectionTemplate.read( connection -> {
 			Set<DateTime> properties = new LinkedHashSet<DateTime>();
@@ -373,7 +372,7 @@ public class SesameRDFResourceRepository extends AbstractSesameRepository implem
 	}
 
 	@Override
-	public Set<DateTime> getDates(final URI resourceURI, final RDFNodeEnum pred) {
+	public Set<DateTime> getDates( final URI resourceURI, final RDFNodeEnum pred ) {
 		final URI documentURI = getDocumentURI( resourceURI );
 		return connectionTemplate.read( connection -> {
 			Set<DateTime> properties = new LinkedHashSet<DateTime>();
@@ -392,21 +391,21 @@ public class SesameRDFResourceRepository extends AbstractSesameRepository implem
 	}
 
 	@Override
-	public Double getDouble(final URI resourceURI, final URI pred) {
+	public Double getDouble( final URI resourceURI, final URI pred ) {
 		final URI documentURI = getDocumentURI( resourceURI );
 		return connectionTemplate.read( connection -> {
 			RepositoryResult<Statement> statements = connection.getStatements( resourceURI, pred, null, false, documentURI );
 			while ( statements.hasNext() ) {
 				Value value = statements.next().getObject();
 				if ( ValueUtil.isLiteral( value ) && LiteralUtil.isDouble( (Literal) value ) )
-					return (Double.parseDouble( value.stringValue() ));
+					return ( Double.parseDouble( value.stringValue() ) );
 			}
 			return null;
 		} );
 	}
 
 	@Override
-	public Double getDouble(final URI resourceURI, final RDFNodeEnum pred) {
+	public Double getDouble( final URI resourceURI, final RDFNodeEnum pred ) {
 		final URI documentURI = getDocumentURI( resourceURI );
 		return connectionTemplate.read( connection -> {
 			for ( URI predURI : pred.getURIs() ) {
@@ -414,7 +413,7 @@ public class SesameRDFResourceRepository extends AbstractSesameRepository implem
 				while ( statements.hasNext() ) {
 					Value value = statements.next().getObject();
 					if ( ValueUtil.isLiteral( value ) && LiteralUtil.isDouble( (Literal) value ) )
-						return (Double.parseDouble( value.stringValue() ));
+						return ( Double.parseDouble( value.stringValue() ) );
 				}
 			}
 			return null;
@@ -422,7 +421,7 @@ public class SesameRDFResourceRepository extends AbstractSesameRepository implem
 	}
 
 	@Override
-	public Set<Double> getDoubles(final URI resourceURI, final URI pred) {
+	public Set<Double> getDoubles( final URI resourceURI, final URI pred ) {
 		final URI documentURI = getDocumentURI( resourceURI );
 		return connectionTemplate.read( connection -> {
 			Set<Double> properties = new LinkedHashSet<Double>();
@@ -437,7 +436,7 @@ public class SesameRDFResourceRepository extends AbstractSesameRepository implem
 	}
 
 	@Override
-	public Set<Double> getDoubles(final URI resourceURI, final RDFNodeEnum pred) {
+	public Set<Double> getDoubles( final URI resourceURI, final RDFNodeEnum pred ) {
 		final URI documentURI = getDocumentURI( resourceURI );
 		return connectionTemplate.read( connection -> {
 			Set<Double> properties = new LinkedHashSet<Double>();
@@ -455,21 +454,21 @@ public class SesameRDFResourceRepository extends AbstractSesameRepository implem
 	}
 
 	@Override
-	public Float getFloat(final URI resourceURI, final URI pred) {
+	public Float getFloat( final URI resourceURI, final URI pred ) {
 		final URI documentURI = getDocumentURI( resourceURI );
 		return connectionTemplate.read( connection -> {
 			RepositoryResult<Statement> statements = connection.getStatements( resourceURI, pred, null, false, documentURI );
 			while ( statements.hasNext() ) {
 				Value value = statements.next().getObject();
 				if ( ValueUtil.isLiteral( value ) && LiteralUtil.isFloat( (Literal) value ) )
-					return (Float.parseFloat( value.stringValue() ));
+					return ( Float.parseFloat( value.stringValue() ) );
 			}
 			return null;
 		} );
 	}
 
 	@Override
-	public Float getFloat(final URI resourceURI, final RDFNodeEnum pred) {
+	public Float getFloat( final URI resourceURI, final RDFNodeEnum pred ) {
 		final URI documentURI = getDocumentURI( resourceURI );
 		return connectionTemplate.read( connection -> {
 			for ( URI predURI : pred.getURIs() ) {
@@ -477,7 +476,7 @@ public class SesameRDFResourceRepository extends AbstractSesameRepository implem
 				while ( statements.hasNext() ) {
 					Value value = statements.next().getObject();
 					if ( ValueUtil.isLiteral( value ) && LiteralUtil.isFloat( (Literal) value ) )
-						return (Float.parseFloat( value.stringValue() ));
+						return ( Float.parseFloat( value.stringValue() ) );
 				}
 			}
 			return null;
@@ -485,7 +484,7 @@ public class SesameRDFResourceRepository extends AbstractSesameRepository implem
 	}
 
 	@Override
-	public Set<Float> getFloats(final URI resourceURI, final URI pred) {
+	public Set<Float> getFloats( final URI resourceURI, final URI pred ) {
 		final URI documentURI = getDocumentURI( resourceURI );
 		return connectionTemplate.read( connection -> {
 			Set<Float> properties = new LinkedHashSet<Float>();
@@ -500,7 +499,7 @@ public class SesameRDFResourceRepository extends AbstractSesameRepository implem
 	}
 
 	@Override
-	public Set<Float> getFloats(final URI resourceURI, final RDFNodeEnum pred) {
+	public Set<Float> getFloats( final URI resourceURI, final RDFNodeEnum pred ) {
 		final URI documentURI = getDocumentURI( resourceURI );
 		return connectionTemplate.read( connection -> {
 			Set<Float> properties = new LinkedHashSet<Float>();
@@ -518,21 +517,21 @@ public class SesameRDFResourceRepository extends AbstractSesameRepository implem
 	}
 
 	@Override
-	public Integer getInteger(final URI resourceURI, final URI pred) {
+	public Integer getInteger( final URI resourceURI, final URI pred ) {
 		final URI documentURI = getDocumentURI( resourceURI );
 		return connectionTemplate.read( connection -> {
 			RepositoryResult<Statement> statements = connection.getStatements( resourceURI, pred, null, false, documentURI );
 			while ( statements.hasNext() ) {
 				Value value = statements.next().getObject();
 				if ( ValueUtil.isLiteral( value ) && LiteralUtil.isInteger( (Literal) value ) )
-					return (Integer.parseInt( value.stringValue() ));
+					return ( Integer.parseInt( value.stringValue() ) );
 			}
 			return null;
 		} );
 	}
 
 	@Override
-	public Integer getInteger(final URI resourceURI, final RDFNodeEnum pred) {
+	public Integer getInteger( final URI resourceURI, final RDFNodeEnum pred ) {
 		final URI documentURI = getDocumentURI( resourceURI );
 		return connectionTemplate.read( connection -> {
 			for ( URI predURI : pred.getURIs() ) {
@@ -540,7 +539,7 @@ public class SesameRDFResourceRepository extends AbstractSesameRepository implem
 				while ( statements.hasNext() ) {
 					Value value = statements.next().getObject();
 					if ( ValueUtil.isLiteral( value ) && LiteralUtil.isInteger( (Literal) value ) )
-						return (Integer.parseInt( value.stringValue() ));
+						return ( Integer.parseInt( value.stringValue() ) );
 				}
 			}
 			return null;
@@ -548,7 +547,7 @@ public class SesameRDFResourceRepository extends AbstractSesameRepository implem
 	}
 
 	@Override
-	public Set<Integer> getIntegers(final URI resourceURI, final URI pred) {
+	public Set<Integer> getIntegers( final URI resourceURI, final URI pred ) {
 		final URI documentURI = getDocumentURI( resourceURI );
 		return connectionTemplate.read( connection -> {
 			Set<Integer> properties = new LinkedHashSet<Integer>();
@@ -563,7 +562,7 @@ public class SesameRDFResourceRepository extends AbstractSesameRepository implem
 	}
 
 	@Override
-	public Set<Integer> getIntegers(final URI resourceURI, final RDFNodeEnum pred) {
+	public Set<Integer> getIntegers( final URI resourceURI, final RDFNodeEnum pred ) {
 		final URI documentURI = getDocumentURI( resourceURI );
 		return connectionTemplate.read( connection -> {
 			Set<Integer> properties = new LinkedHashSet<Integer>();
@@ -581,14 +580,14 @@ public class SesameRDFResourceRepository extends AbstractSesameRepository implem
 	}
 
 	@Override
-	public Long getLong(final URI resourceURI, final URI pred) {
+	public Long getLong( final URI resourceURI, final URI pred ) {
 		final URI documentURI = getDocumentURI( resourceURI );
 		return connectionTemplate.read( connection -> {
 			RepositoryResult<Statement> statements = connection.getStatements( resourceURI, pred, null, false, documentURI );
 			while ( statements.hasNext() ) {
 				Value value = statements.next().getObject();
 				if ( ValueUtil.isLiteral( value ) && LiteralUtil.isLong( (Literal) value ) )
-					return (Long.parseLong( value.stringValue() ));
+					return ( Long.parseLong( value.stringValue() ) );
 			}
 			return null;
 
@@ -596,7 +595,7 @@ public class SesameRDFResourceRepository extends AbstractSesameRepository implem
 	}
 
 	@Override
-	public Long getLong(final URI resourceURI, final RDFNodeEnum pred) {
+	public Long getLong( final URI resourceURI, final RDFNodeEnum pred ) {
 		final URI documentURI = getDocumentURI( resourceURI );
 		return connectionTemplate.read( connection -> {
 			for ( URI predURI : pred.getURIs() ) {
@@ -604,7 +603,7 @@ public class SesameRDFResourceRepository extends AbstractSesameRepository implem
 				while ( statements.hasNext() ) {
 					Value value = statements.next().getObject();
 					if ( ValueUtil.isLiteral( value ) && LiteralUtil.isLong( (Literal) value ) )
-						return (Long.parseLong( value.stringValue() ));
+						return ( Long.parseLong( value.stringValue() ) );
 				}
 			}
 			return null;
@@ -612,7 +611,7 @@ public class SesameRDFResourceRepository extends AbstractSesameRepository implem
 	}
 
 	@Override
-	public Set<Long> getLongs(final URI resourceURI, final URI pred) {
+	public Set<Long> getLongs( final URI resourceURI, final URI pred ) {
 		final URI documentURI = getDocumentURI( resourceURI );
 		return connectionTemplate.read( connection -> {
 			Set<Long> properties = new LinkedHashSet<Long>();
@@ -627,7 +626,7 @@ public class SesameRDFResourceRepository extends AbstractSesameRepository implem
 	}
 
 	@Override
-	public Set<Long> getLongs(final URI resourceURI, final RDFNodeEnum pred) {
+	public Set<Long> getLongs( final URI resourceURI, final RDFNodeEnum pred ) {
 		final URI documentURI = getDocumentURI( resourceURI );
 		return connectionTemplate.read( connection -> {
 			Set<Long> properties = new LinkedHashSet<Long>();
@@ -645,21 +644,21 @@ public class SesameRDFResourceRepository extends AbstractSesameRepository implem
 	}
 
 	@Override
-	public Short getShort(final URI resourceURI, final URI pred) {
+	public Short getShort( final URI resourceURI, final URI pred ) {
 		final URI documentURI = getDocumentURI( resourceURI );
 		return connectionTemplate.read( connection -> {
 			RepositoryResult<Statement> statements = connection.getStatements( resourceURI, pred, null, false, documentURI );
 			while ( statements.hasNext() ) {
 				Value value = statements.next().getObject();
 				if ( ValueUtil.isLiteral( value ) && LiteralUtil.isShort( (Literal) value ) )
-					return (Short.parseShort( value.stringValue() ));
+					return ( Short.parseShort( value.stringValue() ) );
 			}
 			return null;
 		} );
 	}
 
 	@Override
-	public Short getShort(final URI resourceURI, final RDFNodeEnum pred) {
+	public Short getShort( final URI resourceURI, final RDFNodeEnum pred ) {
 		final URI documentURI = getDocumentURI( resourceURI );
 		return connectionTemplate.read( connection -> {
 			for ( URI predURI : pred.getURIs() ) {
@@ -667,7 +666,7 @@ public class SesameRDFResourceRepository extends AbstractSesameRepository implem
 				while ( statements.hasNext() ) {
 					Value value = statements.next().getObject();
 					if ( ValueUtil.isLiteral( value ) && LiteralUtil.isShort( (Literal) value ) )
-						return (Short.parseShort( value.stringValue() ));
+						return ( Short.parseShort( value.stringValue() ) );
 				}
 			}
 			return null;
@@ -675,7 +674,7 @@ public class SesameRDFResourceRepository extends AbstractSesameRepository implem
 	}
 
 	@Override
-	public Set<Short> getShorts(final URI resourceURI, final URI pred) {
+	public Set<Short> getShorts( final URI resourceURI, final URI pred ) {
 		final URI documentURI = getDocumentURI( resourceURI );
 		return connectionTemplate.read( connection -> {
 			Set<Short> properties = new LinkedHashSet<Short>();
@@ -690,7 +689,7 @@ public class SesameRDFResourceRepository extends AbstractSesameRepository implem
 	}
 
 	@Override
-	public Set<Short> getShorts(final URI resourceURI, final RDFNodeEnum pred) {
+	public Set<Short> getShorts( final URI resourceURI, final RDFNodeEnum pred ) {
 		final URI documentURI = getDocumentURI( resourceURI );
 		return connectionTemplate.read( connection -> {
 			Set<Short> properties = new LinkedHashSet<Short>();
@@ -708,21 +707,21 @@ public class SesameRDFResourceRepository extends AbstractSesameRepository implem
 	}
 
 	@Override
-	public String getString(final URI resourceURI, final URI pred) {
+	public String getString( final URI resourceURI, final URI pred ) {
 		final URI documentURI = getDocumentURI( resourceURI );
 		return connectionTemplate.read( connection -> {
 			RepositoryResult<Statement> statements = connection.getStatements( resourceURI, pred, null, false, documentURI );
 			while ( statements.hasNext() ) {
 				Value value = statements.next().getObject();
 				if ( ValueUtil.isLiteral( value ) && LiteralUtil.isString( (Literal) value ) )
-					return (value.stringValue());
+					return ( value.stringValue() );
 			}
 			return null;
 		} );
 	}
 
 	@Override
-	public String getString(final URI resourceURI, final RDFNodeEnum pred) {
+	public String getString( final URI resourceURI, final RDFNodeEnum pred ) {
 		final URI documentURI = getDocumentURI( resourceURI );
 		return connectionTemplate.read( connection -> {
 			for ( URI predURI : pred.getURIs() ) {
@@ -730,7 +729,7 @@ public class SesameRDFResourceRepository extends AbstractSesameRepository implem
 				if ( statements.hasNext() ) {
 					Value value = statements.next().getObject();
 					if ( ValueUtil.isLiteral( value ) && LiteralUtil.isString( (Literal) value ) )
-						return (value.stringValue());
+						return ( value.stringValue() );
 				}
 			}
 			return null;
@@ -738,7 +737,7 @@ public class SesameRDFResourceRepository extends AbstractSesameRepository implem
 	}
 
 	@Override
-	public String getString(final URI resourceURI, final URI pred, final Set<String> languages) {
+	public String getString( final URI resourceURI, final URI pred, final Set<String> languages ) {
 		final URI documentURI = getDocumentURI( resourceURI );
 		return connectionTemplate.read( connection -> {
 			RepositoryResult<Statement> statements = connection.getStatements( resourceURI, pred, null, false, documentURI );
@@ -749,7 +748,7 @@ public class SesameRDFResourceRepository extends AbstractSesameRepository implem
 					String language = literal.getLanguage();
 					if ( languages == null || languages.isEmpty() ) {
 						if ( language == null ) return literal.stringValue();
-					} else if ( languages.contains( language ) ) return (value.stringValue());
+					} else if ( languages.contains( language ) ) return ( value.stringValue() );
 				}
 			}
 			return null;
@@ -757,7 +756,7 @@ public class SesameRDFResourceRepository extends AbstractSesameRepository implem
 	}
 
 	@Override
-	public String getString(final URI resourceURI, final RDFNodeEnum pred, final Set<String> languages) {
+	public String getString( final URI resourceURI, final RDFNodeEnum pred, final Set<String> languages ) {
 		final URI documentURI = getDocumentURI( resourceURI );
 		return connectionTemplate.read( connection -> {
 			for ( URI predURI : pred.getURIs() ) {
@@ -770,7 +769,7 @@ public class SesameRDFResourceRepository extends AbstractSesameRepository implem
 						if ( languages == null || languages.isEmpty() ) {
 							if ( language == null ) return literal.stringValue();
 						}
-						return (value.stringValue());
+						return ( value.stringValue() );
 					}
 				}
 			}
@@ -779,7 +778,7 @@ public class SesameRDFResourceRepository extends AbstractSesameRepository implem
 	}
 
 	@Override
-	public Set<String> getStrings(final URI resourceURI, final URI pred) {
+	public Set<String> getStrings( final URI resourceURI, final URI pred ) {
 		final URI documentURI = getDocumentURI( resourceURI );
 		return connectionTemplate.read( connection -> {
 			Set<String> properties = new LinkedHashSet<String>();
@@ -794,7 +793,7 @@ public class SesameRDFResourceRepository extends AbstractSesameRepository implem
 	}
 
 	@Override
-	public Set<String> getStrings(final URI resourceURI, final RDFNodeEnum pred) {
+	public Set<String> getStrings( final URI resourceURI, final RDFNodeEnum pred ) {
 		final URI documentURI = getDocumentURI( resourceURI );
 		return connectionTemplate.read( connection -> {
 			Set<String> properties = new LinkedHashSet<String>();
@@ -812,7 +811,7 @@ public class SesameRDFResourceRepository extends AbstractSesameRepository implem
 	}
 
 	@Override
-	public Set<String> getStrings(final URI resourceURI, final URI pred, final Set<String> languages) {
+	public Set<String> getStrings( final URI resourceURI, final URI pred, final Set<String> languages ) {
 		final URI documentURI = getDocumentURI( resourceURI );
 		return connectionTemplate.read( connection -> {
 			Set<String> properties = new LinkedHashSet<String>();
@@ -833,7 +832,7 @@ public class SesameRDFResourceRepository extends AbstractSesameRepository implem
 	}
 
 	@Override
-	public Set<String> getStrings(final URI resourceURI, final RDFNodeEnum pred, final Set<String> languages) {
+	public Set<String> getStrings( final URI resourceURI, final RDFNodeEnum pred, final Set<String> languages ) {
 		final URI documentURI = getDocumentURI( resourceURI );
 		return connectionTemplate.read( connection -> {
 			Set<String> properties = new LinkedHashSet<String>();
@@ -858,7 +857,7 @@ public class SesameRDFResourceRepository extends AbstractSesameRepository implem
 	}
 
 	@Override
-	public void add(final URI resourceURI, final URI pred, Value obj) {
+	public void add( final URI resourceURI, final URI pred, Value obj ) {
 		final URI documentURI = getDocumentURI( resourceURI );
 		final Value literal = obj;
 		connectionTemplate.write( connection -> {
@@ -867,7 +866,7 @@ public class SesameRDFResourceRepository extends AbstractSesameRepository implem
 	}
 
 	@Override
-	public void add(final URI resourceURI, final URI pred, boolean obj) {
+	public void add( final URI resourceURI, final URI pred, boolean obj ) {
 		ValueFactory factory = ValueFactoryImpl.getInstance();
 		final URI documentURI = getDocumentURI( resourceURI );
 		final Value literal = factory.createLiteral( obj );
@@ -877,7 +876,7 @@ public class SesameRDFResourceRepository extends AbstractSesameRepository implem
 	}
 
 	@Override
-	public void add(final URI resourceURI, final URI pred, byte obj) {
+	public void add( final URI resourceURI, final URI pred, byte obj ) {
 		ValueFactory factory = ValueFactoryImpl.getInstance();
 		final URI documentURI = getDocumentURI( resourceURI );
 		final Value literal = factory.createLiteral( obj );
@@ -887,7 +886,7 @@ public class SesameRDFResourceRepository extends AbstractSesameRepository implem
 	}
 
 	@Override
-	public void add(final URI resourceURI, final URI pred, DateTime obj) {
+	public void add( final URI resourceURI, final URI pred, DateTime obj ) {
 		final URI documentURI = getDocumentURI( resourceURI );
 		final Value literal = LiteralUtil.get( obj );
 		connectionTemplate.write( connection -> {
@@ -896,7 +895,7 @@ public class SesameRDFResourceRepository extends AbstractSesameRepository implem
 	}
 
 	@Override
-	public void add(final URI resourceURI, final URI pred, double obj) {
+	public void add( final URI resourceURI, final URI pred, double obj ) {
 		ValueFactory factory = ValueFactoryImpl.getInstance();
 		final URI documentURI = getDocumentURI( resourceURI );
 		final Value literal = factory.createLiteral( obj );
@@ -906,7 +905,7 @@ public class SesameRDFResourceRepository extends AbstractSesameRepository implem
 	}
 
 	@Override
-	public void add(final URI resourceURI, final URI pred, float obj) {
+	public void add( final URI resourceURI, final URI pred, float obj ) {
 		ValueFactory factory = ValueFactoryImpl.getInstance();
 		final URI documentURI = getDocumentURI( resourceURI );
 		final Value literal = factory.createLiteral( obj );
@@ -916,7 +915,7 @@ public class SesameRDFResourceRepository extends AbstractSesameRepository implem
 	}
 
 	@Override
-	public void add(final URI resourceURI, final URI pred, int obj) {
+	public void add( final URI resourceURI, final URI pred, int obj ) {
 		ValueFactory factory = ValueFactoryImpl.getInstance();
 		final URI documentURI = getDocumentURI( resourceURI );
 		final Value literal = factory.createLiteral( obj );
@@ -926,7 +925,7 @@ public class SesameRDFResourceRepository extends AbstractSesameRepository implem
 	}
 
 	@Override
-	public void add(final URI resourceURI, final URI pred, long obj) {
+	public void add( final URI resourceURI, final URI pred, long obj ) {
 		ValueFactory factory = ValueFactoryImpl.getInstance();
 		final URI documentURI = getDocumentURI( resourceURI );
 		final Value literal = factory.createLiteral( obj );
@@ -936,7 +935,7 @@ public class SesameRDFResourceRepository extends AbstractSesameRepository implem
 	}
 
 	@Override
-	public void add(final URI resourceURI, final URI pred, short obj) {
+	public void add( final URI resourceURI, final URI pred, short obj ) {
 		ValueFactory factory = ValueFactoryImpl.getInstance();
 		final URI documentURI = getDocumentURI( resourceURI );
 		final Value literal = factory.createLiteral( obj );
@@ -946,7 +945,7 @@ public class SesameRDFResourceRepository extends AbstractSesameRepository implem
 	}
 
 	@Override
-	public void add(final URI resourceURI, final URI pred, String obj) {
+	public void add( final URI resourceURI, final URI pred, String obj ) {
 		ValueFactory factory = ValueFactoryImpl.getInstance();
 		final URI documentURI = getDocumentURI( resourceURI );
 		final Value literal = factory.createLiteral( obj );
@@ -956,7 +955,7 @@ public class SesameRDFResourceRepository extends AbstractSesameRepository implem
 	}
 
 	@Override
-	public void add(final URI resourceURI, final URI pred, String obj, String language) {
+	public void add( final URI resourceURI, final URI pred, String obj, String language ) {
 		ValueFactory factory = ValueFactoryImpl.getInstance();
 		final URI documentURI = getDocumentURI( resourceURI );
 		final Value literal = factory.createLiteral( obj, language );
@@ -966,7 +965,7 @@ public class SesameRDFResourceRepository extends AbstractSesameRepository implem
 	}
 
 	@Override
-	public void remove(final URI resourceURI, final URI pred) {
+	public void remove( final URI resourceURI, final URI pred ) {
 		final URI documentURI = getDocumentURI( resourceURI );
 		connectionTemplate.write( connection -> {
 			connection.remove( resourceURI, pred, null, documentURI );
@@ -974,7 +973,7 @@ public class SesameRDFResourceRepository extends AbstractSesameRepository implem
 	}
 
 	@Override
-	public void remove(final URI resourceURI, final RDFNodeEnum pred) {
+	public void remove( final URI resourceURI, final RDFNodeEnum pred ) {
 		final URI documentURI = getDocumentURI( resourceURI );
 		connectionTemplate.write( connection -> {
 			for ( URI predURI : pred.getURIs() ) {
@@ -984,7 +983,7 @@ public class SesameRDFResourceRepository extends AbstractSesameRepository implem
 	}
 
 	@Override
-	public void remove(final URI resourceURI, final URI pred, final Value obj) {
+	public void remove( final URI resourceURI, final URI pred, final Value obj ) {
 		final URI documentURI = getDocumentURI( resourceURI );
 		connectionTemplate.write( connection -> {
 			connection.remove( resourceURI, pred, obj, documentURI );
@@ -992,7 +991,7 @@ public class SesameRDFResourceRepository extends AbstractSesameRepository implem
 	}
 
 	@Override
-	public void remove(final URI resourceURI, final URI pred, final boolean obj) {
+	public void remove( final URI resourceURI, final URI pred, final boolean obj ) {
 		ValueFactory factory = ValueFactoryImpl.getInstance();
 		final URI documentURI = getDocumentURI( resourceURI );
 		final Value literal = factory.createLiteral( obj );
@@ -1002,7 +1001,7 @@ public class SesameRDFResourceRepository extends AbstractSesameRepository implem
 	}
 
 	@Override
-	public void remove(final URI resourceURI, final URI pred, byte obj) {
+	public void remove( final URI resourceURI, final URI pred, byte obj ) {
 		ValueFactory factory = ValueFactoryImpl.getInstance();
 		final URI documentURI = getDocumentURI( resourceURI );
 		final Value literal = factory.createLiteral( obj );
@@ -1012,7 +1011,7 @@ public class SesameRDFResourceRepository extends AbstractSesameRepository implem
 	}
 
 	@Override
-	public void remove(final URI resourceURI, final URI pred, DateTime obj) {
+	public void remove( final URI resourceURI, final URI pred, DateTime obj ) {
 		final URI documentURI = getDocumentURI( resourceURI );
 		final Value literal = LiteralUtil.get( obj );
 		connectionTemplate.write( connection -> {
@@ -1021,7 +1020,7 @@ public class SesameRDFResourceRepository extends AbstractSesameRepository implem
 	}
 
 	@Override
-	public void remove(final URI resourceURI, final URI pred, double obj) {
+	public void remove( final URI resourceURI, final URI pred, double obj ) {
 		ValueFactory factory = ValueFactoryImpl.getInstance();
 		final URI documentURI = getDocumentURI( resourceURI );
 		final Value literal = factory.createLiteral( obj );
@@ -1031,7 +1030,7 @@ public class SesameRDFResourceRepository extends AbstractSesameRepository implem
 	}
 
 	@Override
-	public void remove(final URI resourceURI, final URI pred, float obj) {
+	public void remove( final URI resourceURI, final URI pred, float obj ) {
 		ValueFactory factory = ValueFactoryImpl.getInstance();
 		final URI documentURI = getDocumentURI( resourceURI );
 		final Value literal = factory.createLiteral( obj );
@@ -1041,7 +1040,7 @@ public class SesameRDFResourceRepository extends AbstractSesameRepository implem
 	}
 
 	@Override
-	public void remove(final URI resourceURI, final URI pred, int obj) {
+	public void remove( final URI resourceURI, final URI pred, int obj ) {
 		ValueFactory factory = ValueFactoryImpl.getInstance();
 		final URI documentURI = getDocumentURI( resourceURI );
 		final Value literal = factory.createLiteral( obj );
@@ -1051,7 +1050,7 @@ public class SesameRDFResourceRepository extends AbstractSesameRepository implem
 	}
 
 	@Override
-	public void remove(final URI resourceURI, final URI pred, long obj) {
+	public void remove( final URI resourceURI, final URI pred, long obj ) {
 		ValueFactory factory = ValueFactoryImpl.getInstance();
 		final URI documentURI = getDocumentURI( resourceURI );
 		final Value literal = factory.createLiteral( obj );
@@ -1061,7 +1060,7 @@ public class SesameRDFResourceRepository extends AbstractSesameRepository implem
 	}
 
 	@Override
-	public void remove(final URI resourceURI, final URI pred, short obj) {
+	public void remove( final URI resourceURI, final URI pred, short obj ) {
 		ValueFactory factory = ValueFactoryImpl.getInstance();
 		final URI documentURI = getDocumentURI( resourceURI );
 		final Value literal = factory.createLiteral( obj );
@@ -1071,7 +1070,7 @@ public class SesameRDFResourceRepository extends AbstractSesameRepository implem
 	}
 
 	@Override
-	public void remove(final URI resourceURI, final URI pred, String obj) {
+	public void remove( final URI resourceURI, final URI pred, String obj ) {
 		ValueFactory factory = ValueFactoryImpl.getInstance();
 		final URI documentURI = getDocumentURI( resourceURI );
 		final Value literal = factory.createLiteral( obj );
@@ -1081,7 +1080,7 @@ public class SesameRDFResourceRepository extends AbstractSesameRepository implem
 	}
 
 	@Override
-	public void remove(final URI resourceURI, final URI pred, String obj, String language) {
+	public void remove( final URI resourceURI, final URI pred, String obj, String language ) {
 		ValueFactory factory = ValueFactoryImpl.getInstance();
 		final URI documentURI = getDocumentURI( resourceURI );
 		final Value literal = factory.createLiteral( obj, language );
@@ -1091,7 +1090,7 @@ public class SesameRDFResourceRepository extends AbstractSesameRepository implem
 	}
 
 	@Override
-	public void set(final URI resourceURI, final URI pred, Value obj) {
+	public void set( final URI resourceURI, final URI pred, Value obj ) {
 		final Value literal = obj;
 		final URI documentURI = getDocumentURI( resourceURI );
 		connectionTemplate.write( connection -> {
@@ -1101,7 +1100,7 @@ public class SesameRDFResourceRepository extends AbstractSesameRepository implem
 	}
 
 	@Override
-	public void set(final URI resourceURI, final URI pred, boolean obj) {
+	public void set( final URI resourceURI, final URI pred, boolean obj ) {
 		ValueFactory factory = ValueFactoryImpl.getInstance();
 		final Value literal = factory.createLiteral( obj );
 		final URI documentURI = getDocumentURI( resourceURI );
@@ -1112,7 +1111,7 @@ public class SesameRDFResourceRepository extends AbstractSesameRepository implem
 	}
 
 	@Override
-	public void set(final URI resourceURI, final URI pred, byte obj) {
+	public void set( final URI resourceURI, final URI pred, byte obj ) {
 		ValueFactory factory = ValueFactoryImpl.getInstance();
 		final Value literal = factory.createLiteral( obj );
 		final URI documentURI = getDocumentURI( resourceURI );
@@ -1123,7 +1122,7 @@ public class SesameRDFResourceRepository extends AbstractSesameRepository implem
 	}
 
 	@Override
-	public void set(final URI resourceURI, final URI pred, DateTime obj) {
+	public void set( final URI resourceURI, final URI pred, DateTime obj ) {
 		final Value literal = LiteralUtil.get( obj );
 		final URI documentURI = getDocumentURI( resourceURI );
 		connectionTemplate.write( connection -> {
@@ -1133,7 +1132,7 @@ public class SesameRDFResourceRepository extends AbstractSesameRepository implem
 	}
 
 	@Override
-	public void set(final URI resourceURI, final URI pred, double obj) {
+	public void set( final URI resourceURI, final URI pred, double obj ) {
 		ValueFactory factory = ValueFactoryImpl.getInstance();
 		final Value literal = factory.createLiteral( obj );
 		final URI documentURI = getDocumentURI( resourceURI );
@@ -1144,7 +1143,7 @@ public class SesameRDFResourceRepository extends AbstractSesameRepository implem
 	}
 
 	@Override
-	public void set(final URI resourceURI, final URI pred, float obj) {
+	public void set( final URI resourceURI, final URI pred, float obj ) {
 		ValueFactory factory = ValueFactoryImpl.getInstance();
 		final Value literal = factory.createLiteral( obj );
 		final URI documentURI = getDocumentURI( resourceURI );
@@ -1155,7 +1154,7 @@ public class SesameRDFResourceRepository extends AbstractSesameRepository implem
 	}
 
 	@Override
-	public void set(final URI resourceURI, final URI pred, int obj) {
+	public void set( final URI resourceURI, final URI pred, int obj ) {
 		ValueFactory factory = ValueFactoryImpl.getInstance();
 		final Value literal = factory.createLiteral( obj );
 		final URI documentURI = getDocumentURI( resourceURI );
@@ -1166,7 +1165,7 @@ public class SesameRDFResourceRepository extends AbstractSesameRepository implem
 	}
 
 	@Override
-	public void set(final URI resourceURI, final URI pred, long obj) {
+	public void set( final URI resourceURI, final URI pred, long obj ) {
 		ValueFactory factory = ValueFactoryImpl.getInstance();
 		final Value literal = factory.createLiteral( obj );
 		final URI documentURI = getDocumentURI( resourceURI );
@@ -1177,7 +1176,7 @@ public class SesameRDFResourceRepository extends AbstractSesameRepository implem
 	}
 
 	@Override
-	public void set(final URI resourceURI, final URI pred, short obj) {
+	public void set( final URI resourceURI, final URI pred, short obj ) {
 		ValueFactory factory = ValueFactoryImpl.getInstance();
 		final Value literal = factory.createLiteral( obj );
 		final URI documentURI = getDocumentURI( resourceURI );
@@ -1188,7 +1187,7 @@ public class SesameRDFResourceRepository extends AbstractSesameRepository implem
 	}
 
 	@Override
-	public void set(final URI resourceURI, final URI pred, String obj) {
+	public void set( final URI resourceURI, final URI pred, String obj ) {
 		ValueFactory factory = ValueFactoryImpl.getInstance();
 		final Value literal = factory.createLiteral( obj );
 		final URI documentURI = getDocumentURI( resourceURI );
@@ -1199,7 +1198,7 @@ public class SesameRDFResourceRepository extends AbstractSesameRepository implem
 	}
 
 	@Override
-	public void set(final URI resourceURI, final URI pred, String obj, String language) {
+	public void set( final URI resourceURI, final URI pred, String obj, String language ) {
 		ValueFactory factory = ValueFactoryImpl.getInstance();
 		final Value literal = factory.createLiteral( obj, language );
 		final URI documentURI = getDocumentURI( resourceURI );
@@ -1210,7 +1209,7 @@ public class SesameRDFResourceRepository extends AbstractSesameRepository implem
 	}
 
 	@Override
-	public boolean hasType(final URI resourceURI, final URI type) {
+	public boolean hasType( final URI resourceURI, final URI type ) {
 		final URI documentURI = getDocumentURI( resourceURI );
 		return connectionTemplate.read( connection -> {
 			RepositoryResult<Statement> statements = connection.getStatements( resourceURI, null, type, false, documentURI );
@@ -1219,7 +1218,7 @@ public class SesameRDFResourceRepository extends AbstractSesameRepository implem
 	}
 
 	@Override
-	public boolean hasType(final URI resourceURI, final RDFNodeEnum type) {
+	public boolean hasType( final URI resourceURI, final RDFNodeEnum type ) {
 		final URI documentURI = getDocumentURI( resourceURI );
 		return connectionTemplate.read( connection -> {
 			for ( URI typeURI : type.getURIs() ) {
@@ -1231,7 +1230,7 @@ public class SesameRDFResourceRepository extends AbstractSesameRepository implem
 	}
 
 	@Override
-	public Set<URI> getTypes(final URI resourceURI) {
+	public Set<URI> getTypes( final URI resourceURI ) {
 		final URI documentURI = getDocumentURI( resourceURI );
 		return connectionTemplate.read( connection -> {
 			Set<URI> types = new HashSet<URI>();
@@ -1248,7 +1247,7 @@ public class SesameRDFResourceRepository extends AbstractSesameRepository implem
 	}
 
 	@Override
-	public void addType(final URI resourceURI, final URI type) {
+	public void addType( final URI resourceURI, final URI type ) {
 		final URI documentURI = getDocumentURI( resourceURI );
 		connectionTemplate.write( connection -> {
 			connection.add( resourceURI, RDFResourceDescription.Property.TYPE.getURI(), type, documentURI );
@@ -1256,7 +1255,7 @@ public class SesameRDFResourceRepository extends AbstractSesameRepository implem
 	}
 
 	@Override
-	public void removeType(final URI resourceURI, final URI type) {
+	public void removeType( final URI resourceURI, final URI type ) {
 		final URI documentURI = getDocumentURI( resourceURI );
 		connectionTemplate.write( connection -> {
 			connection.remove( resourceURI, null, type, documentURI );
@@ -1264,7 +1263,7 @@ public class SesameRDFResourceRepository extends AbstractSesameRepository implem
 	}
 
 	@Override
-	public void setType(final URI resourceURI, final URI type) {
+	public void setType( final URI resourceURI, final URI type ) {
 		final URI documentURI = getDocumentURI( resourceURI );
 		connectionTemplate.write( connection -> {
 			connection.remove( resourceURI, null, type, documentURI );
@@ -1272,8 +1271,8 @@ public class SesameRDFResourceRepository extends AbstractSesameRepository implem
 		} );
 	}
 
-	private URI getDocumentURI(URI resourceURI) {
-		if ( !URIUtil.hasFragment( resourceURI ) ) return resourceURI;
+	private URI getDocumentURI( URI resourceURI ) {
+		if ( ! URIUtil.hasFragment( resourceURI ) ) return resourceURI;
 		return new URIImpl( URIUtil.getDocumentURI( resourceURI.stringValue() ) );
 	}
 

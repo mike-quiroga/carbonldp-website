@@ -28,10 +28,11 @@ import java.util.Set;
 import static com.carbonldp.Consts.NEW_LINE;
 import static com.carbonldp.Consts.TAB;
 
+// TODO: LDP-331
 @Transactional
 public class SesameRDFDocumentRepository extends AbstractSesameRepository implements RDFDocumentRepository {
 
-	public SesameRDFDocumentRepository(SesameConnectionFactory connectionFactory) {
+	public SesameRDFDocumentRepository( SesameConnectionFactory connectionFactory ) {
 		super( connectionFactory );
 	}
 
@@ -51,7 +52,7 @@ public class SesameRDFDocumentRepository extends AbstractSesameRepository implem
 		documentExistsQuery = queryBuilder.toString();
 	}
 
-	public boolean documentExists(URI documentURI) {
+	public boolean documentExists( URI documentURI ) {
 		RepositoryConnection connection = connectionFactory.getConnection();
 
 		BooleanQuery query;
@@ -80,13 +81,13 @@ public class SesameRDFDocumentRepository extends AbstractSesameRepository implem
 		}
 	}
 
-	public RDFDocument getDocument(URI documentURI) {
+	public RDFDocument getDocument( URI documentURI ) {
 		RepositoryConnection connection = connectionFactory.getConnection();
 
 		RepositoryResult<Statement> statementsIterator;
 		try {
 			statementsIterator = connection.getStatements( null, null, null, false, documentURI );
-			if ( !statementsIterator.hasNext() ) return null;
+			if ( ! statementsIterator.hasNext() ) return null;
 		} catch ( RepositoryException e ) {
 			if ( LOG.isErrorEnabled() ) {
 				LOG.error( "xx getDocument() > The statements couldn't be retrieved." );
@@ -99,7 +100,7 @@ public class SesameRDFDocumentRepository extends AbstractSesameRepository implem
 		return new RDFDocument( model, documentURI );
 	}
 
-	public Set<RDFDocument> getDocuments(Collection<? extends URI> documentURIs) {
+	public Set<RDFDocument> getDocuments( Collection<? extends URI> documentURIs ) {
 		RepositoryConnection connection = connectionFactory.getConnection();
 
 		URI[] contexts = documentURIs.toArray( new URI[documentURIs.size()] );
@@ -118,7 +119,7 @@ public class SesameRDFDocumentRepository extends AbstractSesameRepository implem
 		return RDFDocumentUtil.getDocuments( model, documentURIs );
 	}
 
-	public void addDocument(RDFDocument document) {
+	public void addDocument( RDFDocument document ) {
 		RepositoryConnection connection = connectionFactory.getConnection();
 
 		try {
@@ -132,13 +133,13 @@ public class SesameRDFDocumentRepository extends AbstractSesameRepository implem
 		}
 	}
 
-	public void addDocuments(Collection<RDFDocument> documents) {
+	public void addDocuments( Collection<RDFDocument> documents ) {
 		for ( RDFDocument document : documents ) {
 			addDocument( document );
 		}
 	}
 
-	public void deleteDocument(URI documentURI) {
+	public void deleteDocument( URI documentURI ) {
 		RepositoryConnection connection = connectionFactory.getConnection();
 
 		// Remove ambiguity
@@ -154,7 +155,7 @@ public class SesameRDFDocumentRepository extends AbstractSesameRepository implem
 		}
 	}
 
-	public void deleteDocuments(Collection<URI> documentURIs) {
+	public void deleteDocuments( Collection<URI> documentURIs ) {
 		RepositoryConnection connection = connectionFactory.getConnection();
 
 		URI[] contexts = documentURIs.toArray( new URI[documentURIs.size()] );
@@ -171,7 +172,7 @@ public class SesameRDFDocumentRepository extends AbstractSesameRepository implem
 		}
 	}
 
-	private AbstractModel retrieveModel(RepositoryResult<Statement> statementsIterator) {
+	private AbstractModel retrieveModel( RepositoryResult<Statement> statementsIterator ) {
 		Set<Statement> statements = new HashSet<Statement>();
 		try {
 			Iterations.addAll( statementsIterator, statements );
