@@ -2,7 +2,7 @@ package com.carbonldp.authorization.acl;
 
 import com.carbonldp.Consts;
 import com.carbonldp.ldp.AbstractSesameLDPRepository;
-import com.carbonldp.models.RDFDocument;
+import com.carbonldp.rdf.RDFDocument;
 import com.carbonldp.rdf.RDFDocumentRepository;
 import com.carbonldp.rdf.RDFResourceRepository;
 import com.carbonldp.utils.URIUtil;

@@ -3,8 +3,6 @@ package com.carbonldp.ldp.containers;
 import com.carbonldp.descriptions.APIPreferences;
 import com.carbonldp.ldp.AbstractSesameLDPService;
 import com.carbonldp.ldp.sources.RDFSourceRepository;
-import com.carbonldp.models.BasicContainer;
-import com.carbonldp.models.Container;
 import org.joda.time.DateTime;
 import org.openrdf.model.URI;
 import org.springframework.transaction.annotation.Transactional;

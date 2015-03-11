@@ -1,8 +1,8 @@
 package com.carbonldp.authorization.acl;
 
 import com.carbonldp.authorization.acl.ACEDescription.Permission;
-import com.carbonldp.descriptions.RDFNodeEnum;
-import com.carbonldp.models.URIObject;
+import com.carbonldp.rdf.RDFNodeEnum;
+import com.carbonldp.rdf.URIObject;
 import com.carbonldp.utils.RDFNodeUtil;
 import com.carbonldp.utils.URIUtil;
 import org.apache.commons.lang3.NotImplementedException;

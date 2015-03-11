@@ -1,6 +1,5 @@
 package com.carbonldp.rdf;
 
-import com.carbonldp.models.RDFDocument;
 import org.openrdf.model.URI;
 
 import java.util.Collection;

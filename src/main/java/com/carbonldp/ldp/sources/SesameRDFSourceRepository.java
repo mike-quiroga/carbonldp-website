@@ -1,10 +1,8 @@
 package com.carbonldp.ldp.sources;
 
-import com.carbonldp.descriptions.ContainerDescription;
-import com.carbonldp.descriptions.RDFSourceDescription;
+import com.carbonldp.ldp.containers.ContainerDescription;
 import com.carbonldp.ldp.AbstractSesameLDPRepository;
-import com.carbonldp.models.AccessPoint;
-import com.carbonldp.models.RDFSource;
+import com.carbonldp.ldp.containers.AccessPoint;
 import com.carbonldp.repository.DocumentGraphQueryResultHandler;
 import com.carbonldp.repository.GraphQueryResultHandler;
 import com.carbonldp.rdf.RDFDocumentRepository;

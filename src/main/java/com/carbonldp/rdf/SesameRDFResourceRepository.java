@@ -1,8 +1,5 @@
 package com.carbonldp.rdf;
 
-import com.carbonldp.descriptions.RDFNodeEnum;
-import com.carbonldp.descriptions.RDFResourceDescription;
-import com.carbonldp.models.PrefixedURI;
 import com.carbonldp.repository.AbstractSesameRepository;
 import com.carbonldp.utils.LiteralUtil;
 import com.carbonldp.utils.URIUtil;

@@ -1,9 +1,8 @@
 package com.carbonldp.ldp.containers;
 
-import com.carbonldp.descriptions.ContainerDescription;
 import com.carbonldp.exceptions.StupidityException;
 import com.carbonldp.ldp.AbstractSesameLDPRepository;
-import com.carbonldp.models.RDFSource;
+import com.carbonldp.ldp.sources.RDFSource;
 import com.carbonldp.repository.DocumentGraphQueryResultHandler;
 import com.carbonldp.repository.GraphQueryResultHandler;
 import com.carbonldp.rdf.RDFDocumentRepository;

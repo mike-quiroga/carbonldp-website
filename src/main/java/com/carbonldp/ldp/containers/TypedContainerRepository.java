@@ -1,7 +1,7 @@
 package com.carbonldp.ldp.containers;
 
-import com.carbonldp.descriptions.ContainerDescription.Type;
-import com.carbonldp.models.RDFSource;
+import com.carbonldp.ldp.containers.ContainerDescription.Type;
+import com.carbonldp.ldp.sources.RDFSource;
 import org.openrdf.model.Statement;
 import org.openrdf.model.URI;
 import org.openrdf.model.Value;

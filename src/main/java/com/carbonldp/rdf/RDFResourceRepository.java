@@ -1,6 +1,5 @@
 package com.carbonldp.rdf;
 
-import com.carbonldp.descriptions.RDFNodeEnum;
 import org.joda.time.DateTime;
 import org.openrdf.model.URI;
 import org.openrdf.model.Value;

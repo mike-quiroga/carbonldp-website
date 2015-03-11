@@ -5,7 +5,7 @@ import com.carbonldp.apps.AppFactory;
 import com.carbonldp.apps.AppService;
 import com.carbonldp.ldp.web.AbstractPOSTRequestHandler;
 import com.carbonldp.models.Infraction;
-import com.carbonldp.models.RDFResource;
+import com.carbonldp.rdf.RDFResource;
 import com.carbonldp.utils.ModelUtil;
 import com.carbonldp.utils.URIUtil;
 import com.carbonldp.utils.ValueUtil;

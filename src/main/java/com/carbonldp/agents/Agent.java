@@ -1,6 +1,6 @@
 package com.carbonldp.agents;
 
-import com.carbonldp.models.BasicContainer;
+import com.carbonldp.ldp.containers.BasicContainer;
 import org.openrdf.model.URI;
 import org.openrdf.model.impl.AbstractModel;
 import org.springframework.security.core.CredentialsContainer;

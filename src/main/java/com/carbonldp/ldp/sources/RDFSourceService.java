@@ -1,7 +1,6 @@
 package com.carbonldp.ldp.sources;
 
-import com.carbonldp.models.AccessPoint;
-import com.carbonldp.models.RDFSource;
+import com.carbonldp.ldp.containers.AccessPoint;
 import org.joda.time.DateTime;
 import org.openrdf.model.URI;
 

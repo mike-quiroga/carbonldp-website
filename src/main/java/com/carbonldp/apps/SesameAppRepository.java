@@ -1,13 +1,13 @@
 package com.carbonldp.apps;
 
 import com.carbonldp.apps.context.RunInAppContext;
-import com.carbonldp.descriptions.ContainerDescription.Type;
+import com.carbonldp.ldp.containers.ContainerDescription.Type;
 import com.carbonldp.ldp.containers.ContainerRepository;
 import com.carbonldp.ldp.sources.RDFSourceRepository;
-import com.carbonldp.models.BasicContainer;
-import com.carbonldp.models.BasicContainerFactory;
-import com.carbonldp.models.RDFSource;
-import com.carbonldp.models.RDFSourceFactory;
+import com.carbonldp.ldp.containers.BasicContainer;
+import com.carbonldp.ldp.containers.BasicContainerFactory;
+import com.carbonldp.ldp.sources.RDFSource;
+import com.carbonldp.ldp.sources.RDFSourceFactory;
 import com.carbonldp.rdf.RDFDocumentRepository;
 import com.carbonldp.repository.AbstractSesameRepository;
 import com.carbonldp.repository.RepositoryService;

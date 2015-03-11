@@ -1,6 +1,5 @@
 package com.carbonldp.ldp.containers;
 
-import com.carbonldp.descriptions.ContainerDescription;
 import com.carbonldp.exceptions.MalformedDataException;
 import com.carbonldp.exceptions.StupidityException;
 import com.carbonldp.rdf.RDFDocumentRepository;

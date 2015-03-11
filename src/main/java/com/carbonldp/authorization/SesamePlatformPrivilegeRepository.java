@@ -1,9 +1,9 @@
 package com.carbonldp.authorization;
 
-import com.carbonldp.descriptions.ContainerDescription.Type;
+import com.carbonldp.ldp.containers.ContainerDescription.Type;
 import com.carbonldp.ldp.containers.ContainerRepository;
 import com.carbonldp.ldp.sources.RDFSourceRepository;
-import com.carbonldp.models.RDFSource;
+import com.carbonldp.ldp.sources.RDFSource;
 import com.carbonldp.repository.AbstractSesameRepository;
 import com.carbonldp.utils.RDFNodeUtil;
 import com.carbonldp.utils.URIUtil;
