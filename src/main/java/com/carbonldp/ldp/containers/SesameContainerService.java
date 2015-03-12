@@ -4,6 +4,7 @@ import com.carbonldp.authorization.acl.ACLRepository;
 import com.carbonldp.descriptions.APIPreferences;
 import com.carbonldp.ldp.AbstractSesameLDPService;
 import com.carbonldp.ldp.sources.RDFSourceRepository;
+import com.carbonldp.spring.TransactionWrapper;
 import org.joda.time.DateTime;
 import org.openrdf.model.URI;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,8 +14,8 @@ import java.util.Set;
 @Transactional
 public class SesameContainerService extends AbstractSesameLDPService implements ContainerService {
 
-	public SesameContainerService( RDFSourceRepository sourceRepository, ContainerRepository containerRepository, ACLRepository aclRepository ) {
-		super( sourceRepository, containerRepository, aclRepository );
+	public SesameContainerService( TransactionWrapper transactionWrapper, RDFSourceRepository sourceRepository, ContainerRepository containerRepository, ACLRepository aclRepository ) {
+		super( transactionWrapper, sourceRepository, containerRepository, aclRepository );
 	}
 
 	@Override

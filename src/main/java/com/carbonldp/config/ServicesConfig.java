@@ -10,6 +10,7 @@ import com.carbonldp.ldp.containers.SesameContainerService;
 import com.carbonldp.ldp.sources.RDFSourceRepository;
 import com.carbonldp.ldp.sources.RDFSourceService;
 import com.carbonldp.ldp.sources.SesameRDFSourceService;
+import com.carbonldp.spring.TransactionWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -29,11 +30,16 @@ public class ServicesConfig {
 	private AppRepository appRepository;
 
 	@Bean
+	protected TransactionWrapper transactionWrapper() {
+		return new TransactionWrapper();
+	}
+
+	@Bean
 	public RDFSourceService sourceService() {
 		Assert.notNull( sourceRepository );
 		Assert.notNull( containerRepository );
 		Assert.notNull( aclRepository );
-		return new SesameRDFSourceService( sourceRepository, containerRepository, aclRepository );
+		return new SesameRDFSourceService( transactionWrapper(), sourceRepository, containerRepository, aclRepository );
 	}
 
 	@Bean
@@ -41,7 +47,7 @@ public class ServicesConfig {
 		Assert.notNull( sourceRepository );
 		Assert.notNull( containerRepository );
 		Assert.notNull( aclRepository );
-		return new SesameContainerService( sourceRepository, containerRepository, aclRepository );
+		return new SesameContainerService( transactionWrapper(), sourceRepository, containerRepository, aclRepository );
 	}
 
 	@Bean
@@ -49,6 +55,6 @@ public class ServicesConfig {
 		Assert.notNull( sourceRepository );
 		Assert.notNull( containerRepository );
 		Assert.notNull( appRepository );
-		return new SesameAppService( sourceRepository, containerRepository, aclRepository, appRepository );
+		return new SesameAppService( transactionWrapper(), sourceRepository, containerRepository, aclRepository, appRepository );
 	}
 }
