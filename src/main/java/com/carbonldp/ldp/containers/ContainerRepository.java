@@ -11,38 +11,39 @@ import java.util.Map;
 import java.util.Set;
 
 public interface ContainerRepository {
-	public boolean isMember(URI containerURI, URI possibleMemberURI);
+	public boolean isMember( URI containerURI, URI possibleMemberURI );
 
-	public boolean isMember(URI containerURI, URI possibleMemberURI, Type containerType);
+	public boolean isMember( URI containerURI, URI possibleMemberURI, Type containerType );
 
-	public Container get(URI containerURI, Set<ContainerRetrievalPreference> preferences);
+	public Container get( URI containerURI, Set<ContainerRetrievalPreference> preferences );
 
-	public Type getContainerType(URI containerURI);
+	public Type getContainerType( URI containerURI );
 
-	public Set<Statement> getProperties(URI containerURI);
+	public Set<Statement> getProperties( URI containerURI );
 
-	public Set<Statement> getProperties(URI containerURI, Type containerType);
+	public Set<Statement> getProperties( URI containerURI, Type containerType );
 
-	public Set<Statement> getContainmentTriples(URI containerURI);
+	public Set<Statement> getContainmentTriples( URI containerURI );
 
-	public Set<Statement> getMembershipTriples(URI containerURI);
+	public Set<Statement> getMembershipTriples( URI containerURI );
 
-	public Set<Statement> getMembershipTriples(URI containerURI, Type containerType);
+	public Set<Statement> getMembershipTriples( URI containerURI, Type containerType );
 
-	public Set<ContainerRetrievalPreference> getRetrievalPreferences(URI containerURI);
+	public Set<ContainerRetrievalPreference> getRetrievalPreferences( URI containerURI );
 
-	public Set<URI> findMembers(URI containerURI, String sparqlSelector, Map<String, Value> bindings);
+	public Set<URI> findMembers( URI containerURI, String sparqlSelector, Map<String, Value> bindings );
 
-	public Set<URI> findMembers(URI containerURI, String sparqlSelector, Map<String, Value> bindings, Type containerType);
+	public Set<URI> findMembers( URI containerURI, String sparqlSelector, Map<String, Value> bindings, Type containerType );
 
-	public Set<URI> filterMembers(URI containerURI, Set<URI> possibleMemberURIs);
+	public Set<URI> filterMembers( URI containerURI, Set<URI> possibleMemberURIs );
 
-	public Set<URI> filterMembers(URI containerURI, Set<URI> possibleMemberURIs, Type containerType);
+	public Set<URI> filterMembers( URI containerURI, Set<URI> possibleMemberURIs, Type containerType );
 
-	public void createChild(URI containerURI, RDFSource child);
+	public void create( Container rootContainer );
 
-	public void createChild(URI containerURI, RDFSource child, Type containerType);
+	public void createChild( URI containerURI, RDFSource child );
 
-	public void addMember(URI containerURI, RDFSource member);
+	public void createChild( URI containerURI, RDFSource child, Type containerType );
 
+	public void addMember( URI containerURI, RDFSource member );
 }

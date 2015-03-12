@@ -138,6 +138,14 @@ public class SesameRDFDocumentRepository extends AbstractSesameRepository implem
 		}
 	}
 
+	@Override
+	public void update( RDFDocument document ) {
+		connectionTemplate.write( connection -> {
+			connection.remove( document.subjectSelector(), document.predicateSelector(), document.objectSelector(), document.contextSelector() );
+			addDocument( document );
+		} );
+	}
+
 	public void deleteDocument( URI documentURI ) {
 		RepositoryConnection connection = connectionFactory.getConnection();
 

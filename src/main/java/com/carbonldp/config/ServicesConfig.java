@@ -3,6 +3,7 @@ package com.carbonldp.config;
 import com.carbonldp.apps.AppRepository;
 import com.carbonldp.apps.AppService;
 import com.carbonldp.apps.SesameAppService;
+import com.carbonldp.authorization.acl.ACLRepository;
 import com.carbonldp.ldp.containers.ContainerRepository;
 import com.carbonldp.ldp.containers.ContainerService;
 import com.carbonldp.ldp.containers.SesameContainerService;
@@ -19,10 +20,11 @@ public class ServicesConfig {
 
 	@Autowired
 	private RDFSourceRepository sourceRepository;
-
 	@Autowired
 	private ContainerRepository containerRepository;
 
+	@Autowired
+	private ACLRepository aclRepository;
 	@Autowired
 	private AppRepository appRepository;
 
@@ -30,14 +32,16 @@ public class ServicesConfig {
 	public RDFSourceService sourceService() {
 		Assert.notNull( sourceRepository );
 		Assert.notNull( containerRepository );
-		return new SesameRDFSourceService( sourceRepository, containerRepository );
+		Assert.notNull( aclRepository );
+		return new SesameRDFSourceService( sourceRepository, containerRepository, aclRepository );
 	}
 
 	@Bean
 	public ContainerService containerService() {
 		Assert.notNull( sourceRepository );
 		Assert.notNull( containerRepository );
-		return new SesameContainerService( sourceRepository, containerRepository );
+		Assert.notNull( aclRepository );
+		return new SesameContainerService( sourceRepository, containerRepository, aclRepository );
 	}
 
 	@Bean
@@ -45,6 +49,6 @@ public class ServicesConfig {
 		Assert.notNull( sourceRepository );
 		Assert.notNull( containerRepository );
 		Assert.notNull( appRepository );
-		return new SesameAppService( sourceRepository, containerRepository, appRepository );
+		return new SesameAppService( sourceRepository, containerRepository, aclRepository, appRepository );
 	}
 }
