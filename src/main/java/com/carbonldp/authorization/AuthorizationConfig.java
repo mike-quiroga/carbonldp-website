@@ -7,6 +7,7 @@ import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.security.web.context.SecurityContextPersistenceFilter;
 
 @Configuration
@@ -42,18 +43,17 @@ public class AuthorizationConfig extends AbstractWebSecurityConfigurerAdapter {
 		@Override
 		protected void configure( HttpSecurity http ) throws Exception {
 			super.configure( http );
-			//@formatter:off
 			http
-					.antMatcher( "/apps/?*/**" )
-					.exceptionHandling()
-					.authenticationEntryPoint( basicAuthenticationEntryPoint )
-					.and()
-					.addFilterBefore( appContextPersistanceFilter, SecurityContextPersistenceFilter.class )
-					.addFilter( basicAuthenticationFilter )
-					.authorizeRequests()
-					.anyRequest().authenticated().and()
+				.antMatcher( "/apps/?*/**" )
+				.exceptionHandling()
+				.authenticationEntryPoint( basicAuthenticationEntryPoint )
+				.and()
+				.addFilterBefore( appContextPersistenceFilter, SecurityContextPersistenceFilter.class )
+				.addFilter( basicAuthenticationFilter )
+				.addFilterAfter( appRolePersistenceFilter, BasicAuthenticationFilter.class )
+				.authorizeRequests()
+				.anyRequest().authenticated().and()
 			;
-			//@formatter:on
 		}
 	}
 

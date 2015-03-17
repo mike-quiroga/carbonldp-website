@@ -25,7 +25,7 @@ public class SesameBasicContainerRepository extends AbstractTypedContainerReposi
 	}
 
 	@Override
-	public boolean supports(Type containerType) {
+	public boolean supports( Type containerType ) {
 		return containerType == Type.BASIC;
 	}
 
@@ -58,12 +58,12 @@ public class SesameBasicContainerRepository extends AbstractTypedContainerReposi
 	}
 
 	@Override
-	public boolean isMember(URI containerURI, URI possibleMemberURI) {
+	public boolean isMember( URI containerURI, URI possibleMemberURI ) {
 		return isMember( containerURI, possibleMemberURI, isMember_query );
 	}
 
 	@Override
-	protected URI getMembershipResource(URI containerURI) {
+	protected URI getMembershipResource( URI containerURI ) {
 		return containerURI;
 	}
 
@@ -126,7 +126,7 @@ public class SesameBasicContainerRepository extends AbstractTypedContainerReposi
 	}
 
 	@Override
-	public Set<Statement> getProperties(URI containerURI) {
+	public Set<Statement> getProperties( URI containerURI ) {
 		return getProperties( containerURI, getProperties_query );
 	}
 
@@ -164,7 +164,7 @@ public class SesameBasicContainerRepository extends AbstractTypedContainerReposi
 	}
 
 	@Override
-	public Set<Statement> getMembershipTriples(URI containerURI) {
+	public Set<Statement> getMembershipTriples( URI containerURI ) {
 		return getMembershipTriples( containerURI, getMembershipTriples_query );
 	}
 
@@ -207,7 +207,7 @@ public class SesameBasicContainerRepository extends AbstractTypedContainerReposi
 	}
 
 	@Override
-	public Set<URI> findMembers(URI containerURI, String sparqlSelector, Map<String, Value> bindings) {
+	public Set<URI> findMembers( URI containerURI, String sparqlSelector, Map<String, Value> bindings ) {
 		return findMembers( containerURI, sparqlSelector, bindings, findMembers_query );
 	}
 
@@ -244,7 +244,7 @@ public class SesameBasicContainerRepository extends AbstractTypedContainerReposi
 	}
 
 	@Override
-	public Set<URI> filterMembers(URI containerURI, Set<URI> possibleMemberURIs) {
+	public Set<URI> filterMembers( URI containerURI, Set<URI> possibleMemberURIs ) {
 		return filterMembers( containerURI, possibleMemberURIs, filterMembers_query );
 	}
 }

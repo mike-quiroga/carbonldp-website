@@ -1,7 +1,8 @@
 package com.carbonldp.apps;
 
-import com.carbonldp.Vars;
 import com.carbonldp.agents.Agent;
+import com.carbonldp.apps.roles.AppRoleRepository;
+import com.carbonldp.authentication.AgentAuthenticationToken;
 import com.carbonldp.authorization.acl.ACEDescription;
 import com.carbonldp.authorization.acl.ACL;
 import com.carbonldp.authorization.acl.ACLRepository;
@@ -10,26 +11,29 @@ import com.carbonldp.ldp.containers.BasicContainer;
 import com.carbonldp.ldp.containers.BasicContainerFactory;
 import com.carbonldp.ldp.containers.Container;
 import com.carbonldp.ldp.containers.ContainerRepository;
-import com.carbonldp.ldp.sources.RDFSource;
-import com.carbonldp.ldp.sources.RDFSourceFactory;
 import com.carbonldp.ldp.sources.RDFSourceRepository;
 import com.carbonldp.rdf.RDFResource;
 import com.carbonldp.spring.TransactionWrapper;
+import com.carbonldp.utils.URIUtil;
 import org.openrdf.model.URI;
-import org.openrdf.model.impl.LinkedHashModel;
-import org.openrdf.model.impl.URIImpl;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Assert;
 
 import java.util.Arrays;
 
 @Transactional
 public class SesameAppService extends AbstractSesameLDPService implements AppService {
 	private final AppRepository appRepository;
+	private final AppRoleRepository appRoleRepository;
 
-	public SesameAppService( TransactionWrapper transactionWrapper, RDFSourceRepository sourceRepository, ContainerRepository containerRepository, ACLRepository aclRepository, AppRepository appRepository ) {
+	public SesameAppService( TransactionWrapper transactionWrapper, RDFSourceRepository sourceRepository, ContainerRepository containerRepository, ACLRepository aclRepository, AppRepository appRepository, AppRoleRepository appRoleRepository ) {
 		super( transactionWrapper, sourceRepository, containerRepository, aclRepository );
+		Assert.notNull( appRepository );
 		this.appRepository = appRepository;
+		Assert.notNull( appRoleRepository );
+		this.appRoleRepository = appRoleRepository;
 	}
 
 	@Override
@@ -51,23 +55,22 @@ public class SesameAppService extends AbstractSesameLDPService implements AppSer
 	private void initialize( App app ) {
 		Container rootContainer = createRootContainer( app );
 		ACL rootContainerACL = createRootContainerACL( rootContainer );
-		Container appRolesContainer = createAppRolesContainer( rootContainer.getURI() );
-		ACL appRolesContainerACL = creatAppRolesContainerACL( appRolesContainer );
-		AppRole appAdminRole = createAppAdminRole( appRolesContainer );
-		// TODO: Create appRoles container
-		// TODO: Create app-admin appRole
-		// TODO:
 
-		// TODO: Remove this, the main appRole should be the subject
-		Agent agent = (Agent) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		aclRepository.grantPermissions( rootContainerACL, Arrays.asList( agent ), Arrays.asList(
-			ACEDescription.Permission.READ
-		) );
+		Container appRolesContainer = appRoleRepository.createAppRolesContainer( rootContainer.getURI() );
+		ACL appRolesContainerACL = createAppRolesContainerACL( appRolesContainer );
+
+		AppRole appAdminRole = createAppAdminRole( appRolesContainer );
+		ACL appAdminRoleACL = createAppAdminRoleACL( appAdminRole );
+
+		addCurrentAgentToAppAdminRole( appAdminRole );
+
+		addDefaultPermissions( appAdminRole, rootContainerACL );
+
+		// TODO: Finish this
 	}
 
 	private BasicContainer createRootContainer( App app ) {
-		RDFSource containerSource = RDFSourceFactory.create( app.getRootContainerURI() );
-		BasicContainer rootContainer = BasicContainerFactory.create( containerSource );
+		BasicContainer rootContainer = BasicContainerFactory.create( new RDFResource( app.getRootContainerURI() ) );
 		containerRepository.create( rootContainer );
 		return rootContainer;
 	}
@@ -76,28 +79,36 @@ public class SesameAppService extends AbstractSesameLDPService implements AppSer
 		return aclRepository.createACL( rootContainer.getDocument() );
 	}
 
-	private BasicContainer createAppRolesContainer( URI rootContainerURI ) {
-		URI appRolesContainerURI = createAppRolesContainerURI( rootContainerURI );
-		RDFResource resource = new RDFResource( new LinkedHashModel(), appRolesContainerURI );
-		BasicContainer appRolesContainer = BasicContainerFactory.create( resource );
-		containerRepository.createChild( rootContainerURI, appRolesContainer );
-		return appRolesContainer;
-	}
-
-	private ACL creatAppRolesContainerACL( Container appRolesContainer ) {
+	private ACL createAppRolesContainerACL( Container appRolesContainer ) {
 		return aclRepository.createACL( appRolesContainer.getDocument() );
 	}
 
-	private URI createAppRolesContainerURI( URI rootContainerURI ) {
-		StringBuilder uriBuilder = new StringBuilder();
-		uriBuilder.append( rootContainerURI )
-				  .append( Vars.getAppRolesContainer() )
-		;
-		return new URIImpl( uriBuilder.toString() );
+	private AppRole createAppAdminRole( Container appRolesContainer ) {
+		URI appAdminRoleURI = getAppAdminRoleURI( appRolesContainer );
+		AppRole appAdminRole = AppRoleFactory.create( new RDFResource( appAdminRoleURI ) );
+		appAdminRole = appRoleRepository.create( appAdminRole );
+		return appAdminRole;
 	}
 
-	private AppRole createAppAdminRole( Container appRolesContainer ) {
-		// TODO
-		return null;
+	private URI getAppAdminRoleURI( Container appRolesContainer ) {
+		return URIUtil.createChildURI( appRolesContainer.getURI(), "app-admin/" );
+	}
+
+	private ACL createAppAdminRoleACL( AppRole appAdminRole ) {
+		return aclRepository.createACL( appAdminRole.getDocument() );
+	}
+
+	private void addCurrentAgentToAppAdminRole( AppRole appAdminRole ) {
+		Authentication rawAuthentication = SecurityContextHolder.getContext().getAuthentication();
+		if ( rawAuthentication == null ) throw new IllegalStateException( "The security context is empty" );
+		if ( ! ( rawAuthentication instanceof AgentAuthenticationToken ) ) throw new IllegalStateException( "The authentication token isn't supported." );
+		Agent agent = ( (AgentAuthenticationToken) rawAuthentication ).getAgent();
+		appRoleRepository.addAgent( appAdminRole.getURI(), agent );
+	}
+
+	private void addDefaultPermissions( AppRole appAdminRole, ACL rootContainerACL ) {
+		aclRepository.grantPermissions( rootContainerACL, Arrays.asList( appAdminRole ), Arrays.asList(
+			ACEDescription.Permission.READ
+		) );
 	}
 }

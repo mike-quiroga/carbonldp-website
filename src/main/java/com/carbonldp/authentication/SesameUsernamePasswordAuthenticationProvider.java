@@ -1,8 +1,11 @@
 package com.carbonldp.authentication;
 
 import com.carbonldp.agents.Agent;
+import com.carbonldp.agents.AgentRepository;
 import com.carbonldp.apps.context.RunInPlatformContext;
 import com.carbonldp.authorization.Platform;
+import com.carbonldp.authorization.PlatformPrivilegeRepository;
+import com.carbonldp.authorization.PlatformRoleRepository;
 import com.carbonldp.authorization.RunWith;
 import com.carbonldp.utils.AuthenticationUtil;
 import org.springframework.security.authentication.AuthenticationServiceException;
@@ -15,6 +18,10 @@ import org.springframework.transaction.annotation.Transactional;
 import java.security.NoSuchAlgorithmException;
 
 public class SesameUsernamePasswordAuthenticationProvider extends AbstractSesameAuthenticationProvider {
+
+	public SesameUsernamePasswordAuthenticationProvider( AgentRepository agentRepository, PlatformRoleRepository platformRoleRepository, PlatformPrivilegeRepository platformPrivilegeRepository ) {
+		super( agentRepository, platformRoleRepository, platformPrivilegeRepository );
+	}
 
 	public void init() {
 		if ( LOG.isTraceEnabled() ) {

@@ -1,7 +1,12 @@
 package com.carbonldp.authentication;
 
-import com.carbonldp.config.ConfigurationRepository;
+import com.carbonldp.agents.AgentRepository;
+import com.carbonldp.apps.roles.AppRolePersistenceFilter;
+import com.carbonldp.apps.roles.AppRoleRepository;
+import com.carbonldp.authorization.PlatformPrivilegeRepository;
+import com.carbonldp.authorization.PlatformRoleRepository;
 import com.carbonldp.authorization.SecurityContextExchanger;
+import com.carbonldp.config.ConfigurationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -22,13 +27,27 @@ public class AuthenticationConfig {
 	private ConfigurationRepository configurationRepository;
 
 	@Autowired
-	public void configureGlobal(AuthenticationManagerBuilder auth) {
+	private AgentRepository agentRepository;
+	@Autowired
+	private PlatformRoleRepository platformRoleRepository;
+	@Autowired
+	private PlatformPrivilegeRepository platformPrivilegeRepository;
+	@Autowired
+	private AppRoleRepository appRoleRepository;
+
+	@Autowired
+	public void configureGlobal( AuthenticationManagerBuilder auth ) {
 		auth.authenticationProvider( sesameUsernamePasswordAuthenticationProvider() );
 	}
 
 	@Bean
 	public AuthenticationProvider sesameUsernamePasswordAuthenticationProvider() {
-		return new SesameUsernamePasswordAuthenticationProvider();
+		return new SesameUsernamePasswordAuthenticationProvider( agentRepository, platformRoleRepository, platformPrivilegeRepository );
+	}
+
+	@Bean
+	public AppRolePersistenceFilter appRolePersistenceFilter() {
+		return new AppRolePersistenceFilter( appRoleRepository );
 	}
 
 	@Bean

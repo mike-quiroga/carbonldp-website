@@ -13,15 +13,10 @@ import com.carbonldp.web.exceptions.NotImplementedException;
 import org.openrdf.model.Statement;
 import org.openrdf.model.URI;
 import org.openrdf.model.Value;
-import org.openrdf.query.GraphQuery;
-import org.openrdf.query.QueryLanguage;
 import org.openrdf.spring.SesameConnectionFactory;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import static com.carbonldp.Consts.NEW_LINE;
 import static com.carbonldp.Consts.TAB;
@@ -106,44 +101,29 @@ public class SesameContainerRepository extends AbstractSesameLDPRepository imple
 
 	static {
 		StringBuilder queryBuilder = new StringBuilder();
-		//@formatter:off
 		queryBuilder
-				.append( "CONSTRUCT {" )
-				.append( NEW_LINE )
-				.append( TAB )
-				.append( "?containerURI ?p ?o" )
-				.append( NEW_LINE )
-				.append( "} WHERE {" )
-				.append( NEW_LINE )
-				.append( TAB )
-				.append( "GRAPH ?containerURI {" )
-				.append( NEW_LINE )
-				.append( TAB )
-				.append( TAB )
-				.append( RDFNodeUtil.generatePredicateStatement( "?containerURI", "?p", "?o", ContainerDescription.Property.CONTAINS ) )
-				.append( NEW_LINE )
-				.append( TAB )
-				.append( "}" )
-				.append( NEW_LINE )
-				.append( "}" )
+			.append( "CONSTRUCT {" ).append( NEW_LINE )
+			.append( TAB ).append( "?containerURI ?p ?o" ).append( NEW_LINE )
+			.append( "} WHERE {" ).append( NEW_LINE )
+			.append( TAB ).append( "GRAPH ?containerURI {" ).append( NEW_LINE )
+			.append( TAB ).append( TAB ).append( RDFNodeUtil.generatePredicateStatement( "?containerURI", "?p", "?o", ContainerDescription.Property.CONTAINS ) ).append( NEW_LINE )
+			.append( TAB ).append( "}" ).append( NEW_LINE )
+			.append( "}" )
 		;
-		//@formatter:on
 		getContainmentTriples_query = queryBuilder.toString();
 	}
 
 	@Override
 	public Set<Statement> getContainmentTriples( URI containerURI ) {
-		GraphQuery query = connectionTemplate.read( ( connection ) -> {
-			return connection.prepareGraphQuery( QueryLanguage.SPARQL, getContainmentTriples_query );
+		Map<String, Value> bindings = new HashMap<>();
+		bindings.put( "containerURI", containerURI );
+		return sparqlTemplate.executeGraphQuery( getContainmentTriples_query, bindings, queryResult -> {
+			Set<Statement> statements = new HashSet<>();
+			GraphQueryResultHandler handler = new DocumentGraphQueryResultHandler( statements );
+			handler.handle( queryResult );
+
+			return statements;
 		} );
-
-		query.setBinding( "containerURI", containerURI );
-
-		Set<Statement> statements = new HashSet<Statement>();
-		GraphQueryResultHandler handler = new DocumentGraphQueryResultHandler( statements );
-		handler.handleQuery( query );
-
-		return statements;
 	}
 
 	@Override
@@ -200,11 +180,6 @@ public class SesameContainerRepository extends AbstractSesameLDPRepository imple
 	}
 
 	@Override
-	public void create( Container container ) {
-		documentRepository.addDocument( container.getDocument() );
-	}
-
-	@Override
 	public void createChild( URI containerURI, RDFSource child, Type containerType ) {
 		addContainedResource( containerURI, child.getURI() );
 		child = getService( containerType ).addMember( containerURI, child );
@@ -212,14 +187,25 @@ public class SesameContainerRepository extends AbstractSesameLDPRepository imple
 	}
 
 	@Override
-	public void addMember( URI containerURI, RDFSource member ) {
-		// TODO
+	public void create( Container container ) {
+		documentRepository.addDocument( container.getDocument() );
 	}
 
-	private void addContainedResource( final URI containerURI, final URI resourceURI ) {
-		connectionTemplate.write( ( connection ) -> {
-			connection.add( containerURI, ContainerDescription.Property.CONTAINS.getURI(), resourceURI, containerURI );
-		} );
+	@Override
+	public void addMember( URI containerURI, RDFSource member ) {
+		Type containerType = getContainerType( containerURI );
+		if ( containerType == null ) throw new IllegalStateException( "The resource isn't a container." );
+
+		addMember( containerURI, member, containerType );
+	}
+
+	@Override
+	public void addMember( URI containerURI, RDFSource member, Type containerType ) {
+		getService( containerType ).addMember( containerURI, member );
+	}
+
+	private void addContainedResource( URI containerURI, URI resourceURI ) {
+		connectionTemplate.write( ( connection ) -> connection.add( containerURI, ContainerDescription.Property.CONTAINS.getURI(), resourceURI, containerURI ) );
 	}
 
 	private TypedContainerRepository getService( Type containerType ) {

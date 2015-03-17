@@ -1,6 +1,6 @@
 package com.carbonldp.authorization;
 
-import com.carbonldp.apps.context.AppContextPersistanceFilter;
+import com.carbonldp.apps.context.AppContextPersistenceFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -20,14 +20,18 @@ public abstract class AbstractWebSecurityConfigurerAdapter extends WebSecurityCo
 	protected AuthenticationEntryPoint basicAuthenticationEntryPoint;
 
 	@Autowired
-	protected AppContextPersistanceFilter appContextPersistanceFilter;
+	@Qualifier( "appRolePersistenceFilter" )
+	protected Filter appRolePersistenceFilter;
+
+	@Autowired
+	protected AppContextPersistenceFilter appContextPersistenceFilter;
 
 	protected AbstractWebSecurityConfigurerAdapter() {
 		super( true );
 	}
 
 	@Override
-	protected void configure(HttpSecurity http) throws Exception {
+	protected void configure( HttpSecurity http ) throws Exception {
 		//@formatter:off
 		http
 				// TODO: Protect against CSRF using another method

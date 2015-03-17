@@ -1,5 +1,6 @@
 package com.carbonldp.repository.txn;
 
+import com.carbonldp.AbstractComponent;
 import com.carbonldp.apps.context.AppContext;
 import com.carbonldp.apps.context.AppContextHolder;
 import com.carbonldp.apps.context.AppContextImpl;
@@ -31,42 +32,83 @@ import java.util.concurrent.ConcurrentHashMap;
  *
  * @author MiguelAraCo
  */
-public class ApplicationContextConnectionFactory implements SesameConnectionFactory, DisposableBean {
+public class ApplicationContextConnectionFactory extends AbstractComponent implements SesameConnectionFactory, DisposableBean {
 
 	private final RepositoryConnectionFactory platformConnectionFactory;
 
 	private final RepositoryManager appsRepositoryManager;
 	private final Map<String, RepositoryConnectionFactory> appsRepositoryConnectionFactoryMap;
 
-	public ApplicationContextConnectionFactory(RepositoryConnectionFactory platformConnectionFactory, RepositoryManager appsRepositoryManager) {
+	public ApplicationContextConnectionFactory( RepositoryConnectionFactory platformConnectionFactory, RepositoryManager appsRepositoryManager ) {
 		this.platformConnectionFactory = platformConnectionFactory;
 		this.appsRepositoryManager = appsRepositoryManager;
-		this.appsRepositoryConnectionFactoryMap = new ConcurrentHashMap<String, RepositoryConnectionFactory>( 128 );
+		this.appsRepositoryConnectionFactoryMap = new ConcurrentHashMap<>( 128 );
 	}
 
 	@Override
 	public RepositoryConnection getConnection() {
-		return getRepositoryConnectionFactory().getConnection();
+		RepositoryConnectionFactory connectionFactory = getRepositoryConnectionFactory();
+
+		if ( LOG.isDebugEnabled() ) {
+			if ( connectionFactory == platformConnectionFactory ) LOG.debug( "getConnection << PLATFORM context" );
+			else LOG.debug( "getConnection << AppContext: {}", AppContextHolder.getContext().getApplication() );
+		}
+
+		return connectionFactory.getConnection();
 	}
 
 	@Override
 	public void closeConnection() {
-		getRepositoryConnectionFactory().closeConnection();
+		RepositoryConnectionFactory connectionFactory = getRepositoryConnectionFactory();
+
+		if ( LOG.isDebugEnabled() ) {
+			if ( connectionFactory == platformConnectionFactory ) LOG.debug( "getConnection << PLATFORM context" );
+			else LOG.debug( "closeConnection << AppContext: {}", AppContextHolder.getContext().getApplication() );
+		}
+
+		connectionFactory.closeConnection();
 	}
 
 	@Override
 	public SesameTransactionObject createTransaction() throws RepositoryException {
-		return getRepositoryConnectionFactory().createTransaction();
+		RepositoryConnectionFactory connectionFactory = getRepositoryConnectionFactory();
+
+		if ( LOG.isDebugEnabled() ) {
+			if ( connectionFactory == platformConnectionFactory ) LOG.debug( "getConnection << PLATFORM context" );
+			else LOG.debug( "createTransaction << AppContext: {}", AppContextHolder.getContext().getApplication() );
+		}
+
+		return connectionFactory.createTransaction();
 	}
 
 	@Override
-	public void endTransaction(boolean rollback) throws RepositoryException {
-		getRepositoryConnectionFactory().endTransaction( rollback );
+	public void endTransaction( boolean rollback ) throws RepositoryException {
+		RepositoryConnectionFactory connectionFactory = getRepositoryConnectionFactory();
+
+		if ( LOG.isDebugEnabled() ) {
+			if ( rollback ) {
+				if ( connectionFactory == platformConnectionFactory ) LOG.debug( "endTransaction << ROLLBACK - PLATFORM context" );
+				else LOG.debug( "endTransaction << ROLLBACK - AppContext: {}", AppContextHolder.getContext().getApplication() );
+			} else {
+				if ( connectionFactory == platformConnectionFactory ) LOG.debug( "endTransaction << COMMIT - PLATFORM context" );
+				else LOG.debug( "endTransaction << COMMIT - AppContext: {}", AppContextHolder.getContext().getApplication() );
+
+			}
+		}
+
+		connectionFactory.endTransaction( rollback );
 	}
 
 	@Override
 	public SesameTransactionObject getLocalTransactionObject() {
-		return getRepositoryConnectionFactory().getLocalTransactionObject();
+		RepositoryConnectionFactory connectionFactory = getRepositoryConnectionFactory();
+
+		if ( LOG.isDebugEnabled() ) {
+			if ( connectionFactory == platformConnectionFactory ) LOG.debug( "getLocalTransactionObject << PLATFORM context" );
+			else LOG.debug( "getLocalTransactionObject << AppContext: {}", AppContextHolder.getContext().getApplication() );
+		}
+
+		return connectionFactory.getLocalTransactionObject();
 	}
 
 	@Override
@@ -94,15 +136,12 @@ public class ApplicationContextConnectionFactory implements SesameConnectionFact
 
 		String appRepositoryID = context.getApplication().getRepositoryID();
 
-		if ( !appsRepositoryConnectionFactoryMap.containsKey( appRepositoryID ) )
-			initializeAppRepositoryConnectionFactory( appRepositoryID );
+		if ( ! appsRepositoryConnectionFactoryMap.containsKey( appRepositoryID ) ) initializeAppRepositoryConnectionFactory( appRepositoryID );
 
-		RepositoryConnectionFactory repositoryConnectionFactory = appsRepositoryConnectionFactoryMap.get( appRepositoryID );
-
-		return repositoryConnectionFactory;
+		return appsRepositoryConnectionFactoryMap.get( appRepositoryID );
 	}
 
-	private void initializeAppRepositoryConnectionFactory(String appRepositoryID) {
+	private void initializeAppRepositoryConnectionFactory( String appRepositoryID ) {
 		Repository repository;
 
 		try {

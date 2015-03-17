@@ -1,6 +1,7 @@
 package com.carbonldp.rdf;
 
 import com.carbonldp.repository.AbstractSesameRepository;
+import com.carbonldp.repository.ConnectionRWTemplate;
 import com.carbonldp.utils.LiteralUtil;
 import com.carbonldp.utils.URIUtil;
 import com.carbonldp.utils.ValueUtil;
@@ -15,7 +16,6 @@ import org.openrdf.spring.SesameConnectionFactory;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashSet;
-import java.util.LinkedHashSet;
 import java.util.Set;
 
 @Transactional
@@ -26,738 +26,821 @@ public class SesameRDFResourceRepository extends AbstractSesameRepository implem
 	}
 
 	@Override
-	public boolean hasProperty( final URI resourceURI, final URI pred ) {
-		final URI documentURI = getDocumentURI( resourceURI );
-		return connectionTemplate.read( connection -> {
-			RepositoryResult<Statement> statements = connection.getStatements( resourceURI, pred, null, false, documentURI );
-			return statements.hasNext();
-		} );
+	public boolean hasProperty( URI resourceURI, URI pred ) {
+		URI documentURI = getDocumentURI( resourceURI );
+		return statementExists( connection -> connection.getStatements( resourceURI, pred, null, false, documentURI ) );
 	}
 
 	@Override
-	public boolean hasProperty( final URI resourceURI, final RDFNodeEnum pred ) {
-		final URI documentURI = getDocumentURI( resourceURI );
-		return connectionTemplate.read( connection -> {
-			for ( PrefixedURI predURI : pred.getURIs() ) {
-				RepositoryResult<Statement> statements = connection.getStatements( resourceURI, predURI, null, false, documentURI );
-				if ( statements.hasNext() ) return statements.hasNext();
+	public boolean hasProperty( URI resourceURI, RDFNodeEnum pred ) {
+		URI documentURI = getDocumentURI( resourceURI );
+		for ( PrefixedURI predURI : pred.getURIs() ) {
+			boolean hasProperty = statementExists(
+				connection -> connection.getStatements( resourceURI, predURI, null, false, documentURI )
+			);
+			if ( hasProperty ) return true;
+		}
+		return false;
+	}
+
+	@Override
+	public boolean contains( URI resourceURI, URI pred, Value obj ) {
+		URI documentURI = getDocumentURI( resourceURI );
+		return statementExists( connection -> connection.getStatements( resourceURI, pred, obj, false, documentURI ) );
+	}
+
+	@Override
+	public boolean contains( URI resourceURI, RDFNodeEnum pred, Value obj ) {
+		URI documentURI = getDocumentURI( resourceURI );
+		for ( PrefixedURI predURI : pred.getURIs() ) {
+			boolean hasProperty = statementExists(
+				connection -> connection.getStatements( resourceURI, predURI, obj, false, documentURI )
+			);
+			if ( hasProperty ) return true;
+		}
+		return false;
+	}
+
+	@Override
+	public boolean contains( URI resourceURI, RDFNodeEnum pred, RDFNodeEnum obj ) {
+		URI documentURI = getDocumentURI( resourceURI );
+		for ( PrefixedURI predURI : pred.getURIs() ) {
+			for ( PrefixedURI objValue : obj.getURIs() ) {
+				boolean hasProperty = statementExists(
+					connection -> connection.getStatements( resourceURI, predURI, objValue, false, documentURI )
+				);
+				if ( hasProperty ) return true;
 			}
-			return false;
-		} );
+		}
+		return false;
+	}
+
+	private boolean statementExists( ConnectionRWTemplate.RepositoryResultRetriever<Statement> retriever ) {
+		return connectionTemplate.readStatements( retriever, RepositoryResult::hasNext );
 	}
 
 	@Override
-	public boolean contains( final URI resourceURI, final URI pred, final Value obj ) {
-		final URI documentURI = getDocumentURI( resourceURI );
-		return connectionTemplate.read( connection -> {
-			RepositoryResult<Statement> statements = connection.getStatements( resourceURI, pred, obj, false, documentURI );
-			return statements.hasNext();
-		} );
-	}
-
-	@Override
-	public boolean contains( final URI resourceURI, final RDFNodeEnum pred, final Value obj ) {
-		final URI documentURI = getDocumentURI( resourceURI );
-		return connectionTemplate.read( connection -> {
-			for ( PrefixedURI predURI : pred.getURIs() ) {
-				RepositoryResult<Statement> statements = connection.getStatements( resourceURI, predURI, obj, false, documentURI );
-				if ( statements.hasNext() ) return statements.hasNext();
-			}
-			return false;
-		} );
-	}
-
-	@Override
-	public boolean contains( final URI resourceURI, final RDFNodeEnum pred, final RDFNodeEnum obj ) {
-		final URI documentURI = getDocumentURI( resourceURI );
-		return connectionTemplate.read( connection -> {
-			for ( PrefixedURI predURI : pred.getURIs() ) {
-				for ( PrefixedURI objValue : obj.getURIs() ) {
-					RepositoryResult<Statement> statements = connection.getStatements( resourceURI, predURI, objValue, false, documentURI );
-					if ( statements.hasNext() ) return statements.hasNext();
-				}
-			}
-			return false;
-		} );
-	}
-
-	@Override
-	public Value getProperty( final URI resourceURI, final URI pred ) {
-		final URI documentURI = getDocumentURI( resourceURI );
-		return connectionTemplate.read( connection -> {
-			RepositoryResult<Statement> statements = connection.getStatements( resourceURI, pred, null, false, documentURI );
-			if ( statements.hasNext() ) {
+	public Value getProperty( URI resourceURI, URI pred ) {
+		URI documentURI = getDocumentURI( resourceURI );
+		return connectionTemplate.readStatements(
+			connection -> connection.getStatements( resourceURI, pred, null, false, documentURI ),
+			statements -> {
+				if ( ! statements.hasNext() ) return null;
 				return statements.next().getObject();
 			}
-			return null;
-		} );
+		);
 	}
 
 	@Override
-	public Value getProperty( final URI resourceURI, final RDFNodeEnum pred ) {
-		final URI documentURI = getDocumentURI( resourceURI );
-		return connectionTemplate.read( connection -> {
-			for ( URI predURI : pred.getURIs() ) {
-				RepositoryResult<Statement> statements = connection.getStatements( resourceURI, predURI, null, false, documentURI );
-				if ( statements.hasNext() ) {
-					return ( statements.next().getObject() );
+	public Value getProperty( URI resourceURI, RDFNodeEnum pred ) {
+		URI documentURI = getDocumentURI( resourceURI );
+		for ( URI predURI : pred.getURIs() ) {
+			Value object = connectionTemplate.readStatements(
+				connection -> connection.getStatements( resourceURI, predURI, null, false, documentURI ),
+				statements -> {
+					if ( ! statements.hasNext() ) return null;
+					return statements.next().getObject();
 				}
-			}
-			return null;
-		} );
+			);
+			if ( object != null ) return object;
+		}
+		return null;
 	}
 
 	@Override
-	public Set<Value> getProperties( final URI resourceURI, final URI pred ) {
-		final URI documentURI = getDocumentURI( resourceURI );
-		return connectionTemplate.read( connection -> {
-			Set<Value> properties = new LinkedHashSet<Value>();
-			RepositoryResult<Statement> statements = connection.getStatements( resourceURI, pred, null, false, documentURI );
-			while ( statements.hasNext() ) {
-				properties.add( statements.next().getObject() );
-			}
-			return properties;
-		} );
-	}
-
-	@Override
-	public Set<Value> getProperties( final URI resourceURI, final RDFNodeEnum pred ) {
-		final URI documentURI = getDocumentURI( resourceURI );
-		return connectionTemplate.read( connection -> {
-			Set<Value> properties = new LinkedHashSet<Value>();
-			for ( URI predURI : pred.getURIs() ) {
-				RepositoryResult<Statement> statements = connection.getStatements( resourceURI, predURI, null, false, documentURI );
+	public Set<Value> getProperties( URI resourceURI, URI pred ) {
+		URI documentURI = getDocumentURI( resourceURI );
+		return connectionTemplate.readStatements(
+			connection -> connection.getStatements( resourceURI, pred, null, false, documentURI ),
+			statements -> {
+				Set<Value> properties = new HashSet<>();
 				while ( statements.hasNext() ) {
 					properties.add( statements.next().getObject() );
 				}
+				return properties;
 			}
-			return properties;
-		} );
+		);
 	}
 
 	@Override
-	public URI getURI( final URI resourceURI, final URI pred ) {
-		final URI documentURI = getDocumentURI( resourceURI );
-		return connectionTemplate.read( connection -> {
-			RepositoryResult<Statement> statements = connection.getStatements( resourceURI, pred, null, false, documentURI );
-			while ( statements.hasNext() ) {
-				Value value = statements.next().getObject();
-				if ( ValueUtil.isURI( value ) ) return ValueUtil.getURI( value );
-			}
-			return null;
-		} );
+	public Set<Value> getProperties( URI resourceURI, RDFNodeEnum pred ) {
+		URI documentURI = getDocumentURI( resourceURI );
+		Set<Value> properties = new HashSet<>();
+		for ( URI predURI : pred.getURIs() ) {
+			connectionTemplate.readStatements(
+				connection -> connection.getStatements( resourceURI, predURI, null, false, documentURI ),
+				statements -> {
+					while ( statements.hasNext() ) {
+						properties.add( statements.next().getObject() );
+					}
+					return null;
+				}
+			);
+		}
+		return properties;
 	}
 
 	@Override
-	public URI getURI( final URI resourceURI, final RDFNodeEnum pred ) {
-		final URI documentURI = getDocumentURI( resourceURI );
-		return connectionTemplate.read( connection -> {
-			for ( URI predURI : pred.getURIs() ) {
-				RepositoryResult<Statement> statements = connection.getStatements( resourceURI, predURI, null, false, documentURI );
+	public URI getURI( URI resourceURI, URI pred ) {
+		URI documentURI = getDocumentURI( resourceURI );
+		return connectionTemplate.readStatements(
+			connection -> connection.getStatements( resourceURI, pred, null, false, documentURI ),
+			statements -> {
 				while ( statements.hasNext() ) {
 					Value value = statements.next().getObject();
 					if ( ValueUtil.isURI( value ) ) return ValueUtil.getURI( value );
 				}
+				return null;
 			}
-			return null;
-		} );
+		);
 	}
 
 	@Override
-	public Set<URI> getURIs( final URI resourceURI, final URI pred ) {
-		final URI documentURI = getDocumentURI( resourceURI );
-		return connectionTemplate.read( connection -> {
-			Set<URI> properties = new LinkedHashSet<URI>();
-			RepositoryResult<Statement> statements = connection.getStatements( resourceURI, pred, null, false, documentURI );
-			while ( statements.hasNext() ) {
-				Value value = statements.next().getObject();
-				if ( ValueUtil.isURI( value ) ) properties.add( ValueUtil.getURI( value ) );
-			}
-			return properties;
-		} );
+	public URI getURI( URI resourceURI, RDFNodeEnum pred ) {
+		URI documentURI = getDocumentURI( resourceURI );
+		for ( URI predURI : pred.getURIs() ) {
+			URI object = connectionTemplate.readStatements(
+				connection -> connection.getStatements( resourceURI, predURI, null, false, documentURI ),
+				statements -> {
+					while ( statements.hasNext() ) {
+						Value value = statements.next().getObject();
+						if ( ValueUtil.isURI( value ) ) return ValueUtil.getURI( value );
+					}
+					return null;
+				}
+			);
+			if ( object != null ) return object;
+		}
+		return null;
 	}
 
 	@Override
-	public Set<URI> getURIs( final URI resourceURI, final RDFNodeEnum pred ) {
-		final URI documentURI = getDocumentURI( resourceURI );
-		return connectionTemplate.read( connection -> {
-			Set<URI> properties = new LinkedHashSet<URI>();
-			for ( URI predURI : pred.getURIs() ) {
-				RepositoryResult<Statement> statements = connection.getStatements( resourceURI, predURI, null, false, documentURI );
+	public Set<URI> getURIs( URI resourceURI, URI pred ) {
+		URI documentURI = getDocumentURI( resourceURI );
+		return connectionTemplate.readStatements(
+			connection -> connection.getStatements( resourceURI, pred, null, false, documentURI ),
+			statements -> {
+				Set<URI> properties = new HashSet<>();
 				while ( statements.hasNext() ) {
 					Value value = statements.next().getObject();
 					if ( ValueUtil.isURI( value ) ) properties.add( ValueUtil.getURI( value ) );
-
 				}
+				return properties;
 			}
-			return properties;
-		} );
+		);
 	}
 
 	@Override
-	public Boolean getBoolean( final URI resourceURI, final URI pred ) {
-		final URI documentURI = getDocumentURI( resourceURI );
-		return connectionTemplate.read( connection -> {
-			RepositoryResult<Statement> statements = connection.getStatements( resourceURI, pred, null, false, documentURI );
-			while ( statements.hasNext() ) {
-				Value value = statements.next().getObject();
-				if ( ValueUtil.isLiteral( value ) && LiteralUtil.isBoolean( (Literal) value ) )
-					return Boolean.parseBoolean( value.stringValue() );
-			}
-			return null;
-		} );
+	public Set<URI> getURIs( URI resourceURI, RDFNodeEnum pred ) {
+		URI documentURI = getDocumentURI( resourceURI );
+		Set<URI> properties = new HashSet<>();
+		for ( URI predURI : pred.getURIs() ) {
+			connectionTemplate.readStatements(
+				connection -> connection.getStatements( resourceURI, predURI, null, false, documentURI ),
+				statements -> {
+					while ( statements.hasNext() ) {
+						Value value = statements.next().getObject();
+						if ( ValueUtil.isURI( value ) ) properties.add( ValueUtil.getURI( value ) );
+					}
+					return null;
+				}
+			);
+		}
+		return properties;
 	}
 
 	@Override
-	public Boolean getBoolean( final URI resourceURI, final RDFNodeEnum pred ) {
-		final URI documentURI = getDocumentURI( resourceURI );
-		return connectionTemplate.read( connection -> {
-			for ( URI predURI : pred.getURIs() ) {
-				RepositoryResult<Statement> statements = connection.getStatements( resourceURI, predURI, null, false, documentURI );
+	public Boolean getBoolean( URI resourceURI, URI pred ) {
+		URI documentURI = getDocumentURI( resourceURI );
+		return connectionTemplate.readStatements(
+			connection -> connection.getStatements( resourceURI, pred, null, false, documentURI ),
+			statements -> {
 				while ( statements.hasNext() ) {
 					Value value = statements.next().getObject();
-					if ( ValueUtil.isLiteral( value ) && LiteralUtil.isBoolean( (Literal) value ) )
-						return Boolean.parseBoolean( value.stringValue() );
+					if ( ValueUtil.isLiteral( value ) && LiteralUtil.isBoolean( (Literal) value ) ) return Boolean.parseBoolean( value.stringValue() );
 				}
+				return null;
 			}
-			return null;
-		} );
+		);
 	}
 
 	@Override
-	public Set<Boolean> getBooleans( final URI resourceURI, final URI pred ) {
-		final URI documentURI = getDocumentURI( resourceURI );
-		return connectionTemplate.read( connection -> {
-			Set<Boolean> properties = new LinkedHashSet<Boolean>();
-			RepositoryResult<Statement> statements = connection.getStatements( resourceURI, pred, null, false, documentURI );
-			while ( statements.hasNext() ) {
-				Value value = statements.next().getObject();
-				if ( ValueUtil.isLiteral( value ) && LiteralUtil.isBoolean( (Literal) value ) )
-					properties.add( Boolean.parseBoolean( value.stringValue() ) );
-			}
-			return properties;
-		} );
+	public Boolean getBoolean( URI resourceURI, RDFNodeEnum pred ) {
+		URI documentURI = getDocumentURI( resourceURI );
+		for ( URI predURI : pred.getURIs() ) {
+			Boolean object = connectionTemplate.readStatements(
+				connection -> connection.getStatements( resourceURI, predURI, null, false, documentURI ),
+				statements -> {
+					while ( statements.hasNext() ) {
+						Value value = statements.next().getObject();
+						if ( ValueUtil.isLiteral( value ) && LiteralUtil.isBoolean( (Literal) value ) ) return Boolean.parseBoolean( value.stringValue() );
+					}
+					return null;
+				}
+			);
+			if ( object != null ) return object;
+		}
+		return null;
 	}
 
 	@Override
-	public Set<Boolean> getBooleans( final URI resourceURI, final RDFNodeEnum pred ) {
-		final URI documentURI = getDocumentURI( resourceURI );
-		return connectionTemplate.read( connection -> {
-			Set<Boolean> properties = new LinkedHashSet<Boolean>();
-			for ( URI predURI : pred.getURIs() ) {
-				RepositoryResult<Statement> statements = connection.getStatements( resourceURI, predURI, null, false, documentURI );
+	public Set<Boolean> getBooleans( URI resourceURI, URI pred ) {
+		URI documentURI = getDocumentURI( resourceURI );
+		return connectionTemplate.readStatements(
+			connection -> connection.getStatements( resourceURI, pred, null, false, documentURI ),
+			statements -> {
+				Set<Boolean> properties = new HashSet<>();
 				while ( statements.hasNext() ) {
 					Value value = statements.next().getObject();
-					if ( ValueUtil.isLiteral( value ) && LiteralUtil.isBoolean( (Literal) value ) )
-						properties.add( Boolean.parseBoolean( value.stringValue() ) );
-
+					if ( ValueUtil.isLiteral( value ) && LiteralUtil.isBoolean( (Literal) value ) ) properties.add( Boolean.parseBoolean( value.stringValue() ) );
 				}
+				return properties;
 			}
-			return properties;
-		} );
+		);
 	}
 
 	@Override
-	public Byte getByte( final URI resourceURI, final URI pred ) {
-		final URI documentURI = getDocumentURI( resourceURI );
-		return connectionTemplate.read( connection -> {
-			RepositoryResult<Statement> statements = connection.getStatements( resourceURI, pred, null, false, documentURI );
-			while ( statements.hasNext() ) {
-				Value value = statements.next().getObject();
-				if ( ValueUtil.isLiteral( value ) && LiteralUtil.isByte( (Literal) value ) )
-					return Byte.parseByte( value.stringValue() );
-			}
-			return null;
-		} );
+	public Set<Boolean> getBooleans( URI resourceURI, RDFNodeEnum pred ) {
+		URI documentURI = getDocumentURI( resourceURI );
+		Set<Boolean> properties = new HashSet<>();
+		for ( URI predURI : pred.getURIs() ) {
+			connectionTemplate.readStatements(
+				connection -> connection.getStatements( resourceURI, predURI, null, false, documentURI ),
+				statements -> {
+					while ( statements.hasNext() ) {
+						Value value = statements.next().getObject();
+						if ( ValueUtil.isLiteral( value ) && LiteralUtil.isBoolean( (Literal) value ) ) properties.add( Boolean.parseBoolean( value.stringValue() ) );
+					}
+					return null;
+				}
+			);
+		}
+		return properties;
 	}
 
 	@Override
-	public Byte getByte( final URI resourceURI, final RDFNodeEnum pred ) {
-		final URI documentURI = getDocumentURI( resourceURI );
-		return connectionTemplate.read( connection -> {
-			for ( URI predURI : pred.getURIs() ) {
-				RepositoryResult<Statement> statements = connection.getStatements( resourceURI, predURI, null, false, documentURI );
+	public Byte getByte( URI resourceURI, URI pred ) {
+		URI documentURI = getDocumentURI( resourceURI );
+		return connectionTemplate.readStatements(
+			connection -> connection.getStatements( resourceURI, pred, null, false, documentURI ),
+			statements -> {
 				while ( statements.hasNext() ) {
 					Value value = statements.next().getObject();
-					if ( ValueUtil.isLiteral( value ) && LiteralUtil.isByte( (Literal) value ) )
-						return Byte.parseByte( value.stringValue() );
+					if ( ValueUtil.isLiteral( value ) && LiteralUtil.isByte( (Literal) value ) ) return Byte.parseByte( value.stringValue() );
 				}
+				return null;
 			}
-			return null;
-		} );
+		);
 	}
 
 	@Override
-	public Set<Byte> getBytes( final URI resourceURI, final URI pred ) {
-		final URI documentURI = getDocumentURI( resourceURI );
-		return connectionTemplate.read( connection -> {
-			Set<Byte> properties = new LinkedHashSet<Byte>();
-			RepositoryResult<Statement> statements = connection.getStatements( resourceURI, pred, null, false, documentURI );
-			while ( statements.hasNext() ) {
-				Value value = statements.next().getObject();
-				if ( ValueUtil.isLiteral( value ) && LiteralUtil.isByte( (Literal) value ) )
-					properties.add( Byte.parseByte( value.stringValue() ) );
-			}
-			return properties;
-		} );
+	public Byte getByte( URI resourceURI, RDFNodeEnum pred ) {
+		URI documentURI = getDocumentURI( resourceURI );
+		for ( URI predURI : pred.getURIs() ) {
+			Byte object = connectionTemplate.readStatements(
+				connection -> connection.getStatements( resourceURI, predURI, null, false, documentURI ),
+				statements -> {
+					while ( statements.hasNext() ) {
+						Value value = statements.next().getObject();
+						if ( ValueUtil.isLiteral( value ) && LiteralUtil.isByte( (Literal) value ) ) return Byte.parseByte( value.stringValue() );
+					}
+					return null;
+				}
+			);
+			if ( object != null ) return object;
+		}
+		return null;
 	}
 
 	@Override
-	public Set<Byte> getBytes( final URI resourceURI, final RDFNodeEnum pred ) {
-		final URI documentURI = getDocumentURI( resourceURI );
-		return connectionTemplate.read( connection -> {
-			Set<Byte> properties = new LinkedHashSet<Byte>();
-			for ( URI predURI : pred.getURIs() ) {
-				RepositoryResult<Statement> statements = connection.getStatements( resourceURI, predURI, null, false, documentURI );
+	public Set<Byte> getBytes( URI resourceURI, URI pred ) {
+		URI documentURI = getDocumentURI( resourceURI );
+		return connectionTemplate.readStatements(
+			connection -> connection.getStatements( resourceURI, pred, null, false, documentURI ),
+			statements -> {
+				Set<Byte> properties = new HashSet<>();
 				while ( statements.hasNext() ) {
 					Value value = statements.next().getObject();
-					if ( ValueUtil.isLiteral( value ) && LiteralUtil.isByte( (Literal) value ) )
-						properties.add( Byte.parseByte( value.stringValue() ) );
-
+					if ( ValueUtil.isLiteral( value ) && LiteralUtil.isByte( (Literal) value ) ) properties.add( Byte.parseByte( value.stringValue() ) );
 				}
+				return properties;
 			}
-			return properties;
-		} );
+		);
 	}
 
 	@Override
-	public DateTime getDate( final URI resourceURI, final URI pred ) {
-		final URI documentURI = getDocumentURI( resourceURI );
-		return connectionTemplate.read( connection -> {
-			DateTimeFormatter parser = ISODateTimeFormat.dateTimeParser();
-			RepositoryResult<Statement> statements = connection.getStatements( resourceURI, pred, null, false, documentURI );
-			while ( statements.hasNext() ) {
-				Value value = statements.next().getObject();
-				if ( ValueUtil.isLiteral( value ) && LiteralUtil.isDate( (Literal) value ) )
-					return ( parser.parseDateTime( value.stringValue() ) );
-			}
-			return null;
-		} );
+	public Set<Byte> getBytes( URI resourceURI, RDFNodeEnum pred ) {
+		URI documentURI = getDocumentURI( resourceURI );
+		Set<Byte> properties = new HashSet<>();
+		for ( URI predURI : pred.getURIs() ) {
+			connectionTemplate.readStatements(
+				connection -> connection.getStatements( resourceURI, predURI, null, false, documentURI ),
+				statements -> {
+					while ( statements.hasNext() ) {
+						Value value = statements.next().getObject();
+						if ( ValueUtil.isLiteral( value ) && LiteralUtil.isByte( (Literal) value ) ) properties.add( Byte.parseByte( value.stringValue() ) );
+					}
+					return null;
+				}
+			);
+		}
+		return properties;
 	}
 
 	@Override
-	public DateTime getDate( final URI resourceURI, final RDFNodeEnum pred ) {
-		final URI documentURI = getDocumentURI( resourceURI );
-		return connectionTemplate.read( connection -> {
-			DateTimeFormatter parser = ISODateTimeFormat.dateTimeParser();
-			for ( URI predURI : pred.getURIs() ) {
-				RepositoryResult<Statement> statements = connection.getStatements( resourceURI, predURI, null, false, documentURI );
+	public DateTime getDate( URI resourceURI, URI pred ) {
+		URI documentURI = getDocumentURI( resourceURI );
+		DateTimeFormatter parser = ISODateTimeFormat.dateTimeParser();
+		return connectionTemplate.readStatements(
+			connection -> connection.getStatements( resourceURI, pred, null, false, documentURI ),
+			statements -> {
 				while ( statements.hasNext() ) {
 					Value value = statements.next().getObject();
-					if ( ValueUtil.isLiteral( value ) && LiteralUtil.isDate( (Literal) value ) )
-						return ( parser.parseDateTime( value.stringValue() ) );
+					if ( ValueUtil.isLiteral( value ) && LiteralUtil.isDate( (Literal) value ) ) return ( parser.parseDateTime( value.stringValue() ) );
 				}
+				return null;
 			}
-			return null;
-		} );
+		);
 	}
 
 	@Override
-	public Set<DateTime> getDates( final URI resourceURI, final URI pred ) {
-		final URI documentURI = getDocumentURI( resourceURI );
-		return connectionTemplate.read( connection -> {
-			Set<DateTime> properties = new LinkedHashSet<DateTime>();
-			DateTimeFormatter parser = ISODateTimeFormat.dateTimeParser();
-			RepositoryResult<Statement> statements = connection.getStatements( resourceURI, pred, null, false, documentURI );
-			while ( statements.hasNext() ) {
-				Value value = statements.next().getObject();
-				if ( ValueUtil.isLiteral( value ) && LiteralUtil.isDate( (Literal) value ) )
-					properties.add( parser.parseDateTime( value.stringValue() ) );
-			}
-			return properties;
-		} );
+	public DateTime getDate( URI resourceURI, RDFNodeEnum pred ) {
+		DateTimeFormatter parser = ISODateTimeFormat.dateTimeParser();
+		URI documentURI = getDocumentURI( resourceURI );
+		for ( URI predURI : pred.getURIs() ) {
+			DateTime object = connectionTemplate.readStatements(
+				connection -> connection.getStatements( resourceURI, predURI, null, false, documentURI ),
+				statements -> {
+					while ( statements.hasNext() ) {
+						Value value = statements.next().getObject();
+						if ( ValueUtil.isLiteral( value ) && LiteralUtil.isDate( (Literal) value ) ) return ( parser.parseDateTime( value.stringValue() ) );
+					}
+					return null;
+				}
+			);
+			if ( object != null ) return object;
+		}
+		return null;
 	}
 
 	@Override
-	public Set<DateTime> getDates( final URI resourceURI, final RDFNodeEnum pred ) {
-		final URI documentURI = getDocumentURI( resourceURI );
-		return connectionTemplate.read( connection -> {
-			Set<DateTime> properties = new LinkedHashSet<DateTime>();
-			DateTimeFormatter parser = ISODateTimeFormat.dateTimeParser();
-			for ( URI predURI : pred.getURIs() ) {
-				RepositoryResult<Statement> statements = connection.getStatements( resourceURI, predURI, null, false, documentURI );
+	public Set<DateTime> getDates( URI resourceURI, URI pred ) {
+		DateTimeFormatter parser = ISODateTimeFormat.dateTimeParser();
+		URI documentURI = getDocumentURI( resourceURI );
+		return connectionTemplate.readStatements(
+			connection -> connection.getStatements( resourceURI, pred, null, false, documentURI ),
+			statements -> {
+				Set<DateTime> properties = new HashSet<>();
 				while ( statements.hasNext() ) {
 					Value value = statements.next().getObject();
 					if ( ValueUtil.isLiteral( value ) && LiteralUtil.isDate( (Literal) value ) )
 						properties.add( parser.parseDateTime( value.stringValue() ) );
-
 				}
+				return properties;
 			}
-			return properties;
-		} );
+		);
 	}
 
 	@Override
-	public Double getDouble( final URI resourceURI, final URI pred ) {
-		final URI documentURI = getDocumentURI( resourceURI );
-		return connectionTemplate.read( connection -> {
-			RepositoryResult<Statement> statements = connection.getStatements( resourceURI, pred, null, false, documentURI );
-			while ( statements.hasNext() ) {
-				Value value = statements.next().getObject();
-				if ( ValueUtil.isLiteral( value ) && LiteralUtil.isDouble( (Literal) value ) )
-					return ( Double.parseDouble( value.stringValue() ) );
-			}
-			return null;
-		} );
+	public Set<DateTime> getDates( URI resourceURI, RDFNodeEnum pred ) {
+		DateTimeFormatter parser = ISODateTimeFormat.dateTimeParser();
+		URI documentURI = getDocumentURI( resourceURI );
+		Set<DateTime> properties = new HashSet<>();
+		for ( URI predURI : pred.getURIs() ) {
+			connectionTemplate.readStatements(
+				connection -> connection.getStatements( resourceURI, predURI, null, false, documentURI ),
+				statements -> {
+					while ( statements.hasNext() ) {
+						Value value = statements.next().getObject();
+						if ( ValueUtil.isLiteral( value ) && LiteralUtil.isDate( (Literal) value ) ) properties.add( parser.parseDateTime( value.stringValue() ) );
+					}
+					return null;
+				}
+			);
+		}
+		return properties;
 	}
 
 	@Override
-	public Double getDouble( final URI resourceURI, final RDFNodeEnum pred ) {
-		final URI documentURI = getDocumentURI( resourceURI );
-		return connectionTemplate.read( connection -> {
-			for ( URI predURI : pred.getURIs() ) {
-				RepositoryResult<Statement> statements = connection.getStatements( resourceURI, predURI, null, false, documentURI );
+	public Double getDouble( URI resourceURI, URI pred ) {
+		URI documentURI = getDocumentURI( resourceURI );
+		return connectionTemplate.readStatements(
+			connection -> connection.getStatements( resourceURI, pred, null, false, documentURI ),
+			statements -> {
 				while ( statements.hasNext() ) {
 					Value value = statements.next().getObject();
-					if ( ValueUtil.isLiteral( value ) && LiteralUtil.isDouble( (Literal) value ) )
-						return ( Double.parseDouble( value.stringValue() ) );
+					if ( ValueUtil.isLiteral( value ) && LiteralUtil.isDouble( (Literal) value ) ) return Double.parseDouble( value.stringValue() );
 				}
+				return null;
 			}
-			return null;
-		} );
+		);
 	}
 
 	@Override
-	public Set<Double> getDoubles( final URI resourceURI, final URI pred ) {
-		final URI documentURI = getDocumentURI( resourceURI );
-		return connectionTemplate.read( connection -> {
-			Set<Double> properties = new LinkedHashSet<Double>();
-			RepositoryResult<Statement> statements = connection.getStatements( resourceURI, pred, null, false, documentURI );
-			while ( statements.hasNext() ) {
-				Value value = statements.next().getObject();
-				if ( ValueUtil.isLiteral( value ) && LiteralUtil.isDouble( (Literal) value ) )
-					properties.add( Double.parseDouble( value.stringValue() ) );
-			}
-			return properties;
-		} );
+	public Double getDouble( URI resourceURI, RDFNodeEnum pred ) {
+		URI documentURI = getDocumentURI( resourceURI );
+		for ( URI predURI : pred.getURIs() ) {
+			Double object = connectionTemplate.readStatements(
+				connection -> connection.getStatements( resourceURI, predURI, null, false, documentURI ),
+				statements -> {
+					while ( statements.hasNext() ) {
+						Value value = statements.next().getObject();
+						if ( ValueUtil.isLiteral( value ) && LiteralUtil.isDouble( (Literal) value ) ) return Double.parseDouble( value.stringValue() );
+					}
+					return null;
+				}
+			);
+			if ( object != null ) return object;
+		}
+		return null;
 	}
 
 	@Override
-	public Set<Double> getDoubles( final URI resourceURI, final RDFNodeEnum pred ) {
-		final URI documentURI = getDocumentURI( resourceURI );
-		return connectionTemplate.read( connection -> {
-			Set<Double> properties = new LinkedHashSet<Double>();
-			for ( URI predURI : pred.getURIs() ) {
-				RepositoryResult<Statement> statements = connection.getStatements( resourceURI, predURI, null, false, documentURI );
+	public Set<Double> getDoubles( URI resourceURI, URI pred ) {
+		URI documentURI = getDocumentURI( resourceURI );
+		return connectionTemplate.readStatements(
+			connection -> connection.getStatements( resourceURI, pred, null, false, documentURI ),
+			statements -> {
+				Set<Double> properties = new HashSet<>();
 				while ( statements.hasNext() ) {
 					Value value = statements.next().getObject();
-					if ( ValueUtil.isLiteral( value ) && LiteralUtil.isDouble( (Literal) value ) )
-						properties.add( Double.parseDouble( value.stringValue() ) );
-
+					if ( ValueUtil.isLiteral( value ) && LiteralUtil.isDouble( (Literal) value ) ) properties.add( Double.parseDouble( value.stringValue() ) );
 				}
+				return properties;
 			}
-			return properties;
-		} );
+		);
 	}
 
 	@Override
-	public Float getFloat( final URI resourceURI, final URI pred ) {
-		final URI documentURI = getDocumentURI( resourceURI );
-		return connectionTemplate.read( connection -> {
-			RepositoryResult<Statement> statements = connection.getStatements( resourceURI, pred, null, false, documentURI );
-			while ( statements.hasNext() ) {
-				Value value = statements.next().getObject();
-				if ( ValueUtil.isLiteral( value ) && LiteralUtil.isFloat( (Literal) value ) )
-					return ( Float.parseFloat( value.stringValue() ) );
-			}
-			return null;
-		} );
+	public Set<Double> getDoubles( URI resourceURI, RDFNodeEnum pred ) {
+		URI documentURI = getDocumentURI( resourceURI );
+		Set<Double> properties = new HashSet<>();
+		for ( URI predURI : pred.getURIs() ) {
+			connectionTemplate.readStatements(
+				connection -> connection.getStatements( resourceURI, predURI, null, false, documentURI ),
+				statements -> {
+					while ( statements.hasNext() ) {
+						Value value = statements.next().getObject();
+						if ( ValueUtil.isLiteral( value ) && LiteralUtil.isDouble( (Literal) value ) ) properties.add( Double.parseDouble( value.stringValue() ) );
+					}
+					return null;
+				}
+			);
+		}
+		return properties;
 	}
 
 	@Override
-	public Float getFloat( final URI resourceURI, final RDFNodeEnum pred ) {
-		final URI documentURI = getDocumentURI( resourceURI );
-		return connectionTemplate.read( connection -> {
-			for ( URI predURI : pred.getURIs() ) {
-				RepositoryResult<Statement> statements = connection.getStatements( resourceURI, predURI, null, false, documentURI );
+	public Float getFloat( URI resourceURI, URI pred ) {
+		URI documentURI = getDocumentURI( resourceURI );
+		return connectionTemplate.readStatements(
+			connection -> connection.getStatements( resourceURI, pred, null, false, documentURI ),
+			statements -> {
 				while ( statements.hasNext() ) {
 					Value value = statements.next().getObject();
-					if ( ValueUtil.isLiteral( value ) && LiteralUtil.isFloat( (Literal) value ) )
-						return ( Float.parseFloat( value.stringValue() ) );
+					if ( ValueUtil.isLiteral( value ) && LiteralUtil.isFloat( (Literal) value ) ) return Float.parseFloat( value.stringValue() );
 				}
+				return null;
 			}
-			return null;
-		} );
+		);
 	}
 
 	@Override
-	public Set<Float> getFloats( final URI resourceURI, final URI pred ) {
-		final URI documentURI = getDocumentURI( resourceURI );
-		return connectionTemplate.read( connection -> {
-			Set<Float> properties = new LinkedHashSet<Float>();
-			RepositoryResult<Statement> statements = connection.getStatements( resourceURI, pred, null, false, documentURI );
-			while ( statements.hasNext() ) {
-				Value value = statements.next().getObject();
-				if ( ValueUtil.isLiteral( value ) && LiteralUtil.isFloat( (Literal) value ) )
-					properties.add( Float.parseFloat( value.stringValue() ) );
-			}
-			return properties;
-		} );
+	public Float getFloat( URI resourceURI, RDFNodeEnum pred ) {
+		URI documentURI = getDocumentURI( resourceURI );
+		for ( URI predURI : pred.getURIs() ) {
+			Float object = connectionTemplate.readStatements(
+				connection -> connection.getStatements( resourceURI, predURI, null, false, documentURI ),
+				statements -> {
+					while ( statements.hasNext() ) {
+						Value value = statements.next().getObject();
+						if ( ValueUtil.isLiteral( value ) && LiteralUtil.isFloat( (Literal) value ) ) return Float.parseFloat( value.stringValue() );
+					}
+					return null;
+				}
+			);
+			if ( object != null ) return object;
+		}
+		return null;
 	}
 
 	@Override
-	public Set<Float> getFloats( final URI resourceURI, final RDFNodeEnum pred ) {
-		final URI documentURI = getDocumentURI( resourceURI );
-		return connectionTemplate.read( connection -> {
-			Set<Float> properties = new LinkedHashSet<Float>();
-			for ( URI predURI : pred.getURIs() ) {
-				RepositoryResult<Statement> statements = connection.getStatements( resourceURI, predURI, null, false, documentURI );
+	public Set<Float> getFloats( URI resourceURI, URI pred ) {
+		URI documentURI = getDocumentURI( resourceURI );
+		return connectionTemplate.readStatements(
+			connection -> connection.getStatements( resourceURI, pred, null, false, documentURI ),
+			statements -> {
+				Set<Float> properties = new HashSet<>();
 				while ( statements.hasNext() ) {
 					Value value = statements.next().getObject();
-					if ( ValueUtil.isLiteral( value ) && LiteralUtil.isFloat( (Literal) value ) )
-						properties.add( Float.parseFloat( value.stringValue() ) );
-
+					if ( ValueUtil.isLiteral( value ) && LiteralUtil.isFloat( (Literal) value ) ) properties.add( Float.parseFloat( value.stringValue() ) );
 				}
+				return properties;
 			}
-			return properties;
-		} );
+		);
 	}
 
 	@Override
-	public Integer getInteger( final URI resourceURI, final URI pred ) {
-		final URI documentURI = getDocumentURI( resourceURI );
-		return connectionTemplate.read( connection -> {
-			RepositoryResult<Statement> statements = connection.getStatements( resourceURI, pred, null, false, documentURI );
-			while ( statements.hasNext() ) {
-				Value value = statements.next().getObject();
-				if ( ValueUtil.isLiteral( value ) && LiteralUtil.isInteger( (Literal) value ) )
-					return ( Integer.parseInt( value.stringValue() ) );
-			}
-			return null;
-		} );
+	public Set<Float> getFloats( URI resourceURI, RDFNodeEnum pred ) {
+		URI documentURI = getDocumentURI( resourceURI );
+		Set<Float> properties = new HashSet<>();
+		for ( URI predURI : pred.getURIs() ) {
+			connectionTemplate.readStatements(
+				connection -> connection.getStatements( resourceURI, predURI, null, false, documentURI ),
+				statements -> {
+					while ( statements.hasNext() ) {
+						Value value = statements.next().getObject();
+						if ( ValueUtil.isLiteral( value ) && LiteralUtil.isFloat( (Literal) value ) ) properties.add( Float.parseFloat( value.stringValue() ) );
+					}
+					return null;
+				}
+			);
+		}
+		return properties;
 	}
 
 	@Override
-	public Integer getInteger( final URI resourceURI, final RDFNodeEnum pred ) {
-		final URI documentURI = getDocumentURI( resourceURI );
-		return connectionTemplate.read( connection -> {
-			for ( URI predURI : pred.getURIs() ) {
-				RepositoryResult<Statement> statements = connection.getStatements( resourceURI, predURI, null, false, documentURI );
+	public Integer getInteger( URI resourceURI, URI pred ) {
+		URI documentURI = getDocumentURI( resourceURI );
+		return connectionTemplate.readStatements(
+			connection -> connection.getStatements( resourceURI, pred, null, false, documentURI ),
+			statements -> {
 				while ( statements.hasNext() ) {
 					Value value = statements.next().getObject();
-					if ( ValueUtil.isLiteral( value ) && LiteralUtil.isInteger( (Literal) value ) )
-						return ( Integer.parseInt( value.stringValue() ) );
+					if ( ValueUtil.isLiteral( value ) && LiteralUtil.isInteger( (Literal) value ) ) return Integer.parseInt( value.stringValue() );
 				}
+				return null;
 			}
-			return null;
-		} );
+		);
 	}
 
 	@Override
-	public Set<Integer> getIntegers( final URI resourceURI, final URI pred ) {
-		final URI documentURI = getDocumentURI( resourceURI );
-		return connectionTemplate.read( connection -> {
-			Set<Integer> properties = new LinkedHashSet<Integer>();
-			RepositoryResult<Statement> statements = connection.getStatements( resourceURI, pred, null, false, documentURI );
-			while ( statements.hasNext() ) {
-				Value value = statements.next().getObject();
-				if ( ValueUtil.isLiteral( value ) && LiteralUtil.isInteger( (Literal) value ) )
-					properties.add( Integer.parseInt( value.stringValue() ) );
-			}
-			return properties;
-		} );
+	public Integer getInteger( URI resourceURI, RDFNodeEnum pred ) {
+		URI documentURI = getDocumentURI( resourceURI );
+		for ( URI predURI : pred.getURIs() ) {
+			Integer object = connectionTemplate.readStatements(
+				connection -> connection.getStatements( resourceURI, predURI, null, false, documentURI ),
+				statements -> {
+					while ( statements.hasNext() ) {
+						Value value = statements.next().getObject();
+						if ( ValueUtil.isLiteral( value ) && LiteralUtil.isInteger( (Literal) value ) ) return Integer.parseInt( value.stringValue() );
+					}
+					return null;
+				}
+			);
+			if ( object != null ) return object;
+		}
+		return null;
 	}
 
 	@Override
-	public Set<Integer> getIntegers( final URI resourceURI, final RDFNodeEnum pred ) {
-		final URI documentURI = getDocumentURI( resourceURI );
-		return connectionTemplate.read( connection -> {
-			Set<Integer> properties = new LinkedHashSet<Integer>();
-			for ( URI predURI : pred.getURIs() ) {
-				RepositoryResult<Statement> statements = connection.getStatements( resourceURI, predURI, null, false, documentURI );
+	public Set<Integer> getIntegers( URI resourceURI, URI pred ) {
+		URI documentURI = getDocumentURI( resourceURI );
+		return connectionTemplate.readStatements(
+			connection -> connection.getStatements( resourceURI, pred, null, false, documentURI ),
+			statements -> {
+				Set<Integer> properties = new HashSet<>();
 				while ( statements.hasNext() ) {
 					Value value = statements.next().getObject();
-					if ( ValueUtil.isLiteral( value ) && LiteralUtil.isInteger( (Literal) value ) )
-						properties.add( Integer.parseInt( value.stringValue() ) );
-
+					if ( ValueUtil.isLiteral( value ) && LiteralUtil.isInteger( (Literal) value ) ) properties.add( Integer.parseInt( value.stringValue() ) );
 				}
+				return properties;
 			}
-			return properties;
-		} );
+		);
 	}
 
 	@Override
-	public Long getLong( final URI resourceURI, final URI pred ) {
-		final URI documentURI = getDocumentURI( resourceURI );
-		return connectionTemplate.read( connection -> {
-			RepositoryResult<Statement> statements = connection.getStatements( resourceURI, pred, null, false, documentURI );
-			while ( statements.hasNext() ) {
-				Value value = statements.next().getObject();
-				if ( ValueUtil.isLiteral( value ) && LiteralUtil.isLong( (Literal) value ) )
-					return ( Long.parseLong( value.stringValue() ) );
-			}
-			return null;
-
-		} );
+	public Set<Integer> getIntegers( URI resourceURI, RDFNodeEnum pred ) {
+		URI documentURI = getDocumentURI( resourceURI );
+		Set<Integer> properties = new HashSet<>();
+		for ( URI predURI : pred.getURIs() ) {
+			connectionTemplate.readStatements(
+				connection -> connection.getStatements( resourceURI, predURI, null, false, documentURI ),
+				statements -> {
+					while ( statements.hasNext() ) {
+						Value value = statements.next().getObject();
+						if ( ValueUtil.isLiteral( value ) && LiteralUtil.isInteger( (Literal) value ) ) properties.add( Integer.parseInt( value.stringValue() ) );
+					}
+					return null;
+				}
+			);
+		}
+		return properties;
 	}
 
 	@Override
-	public Long getLong( final URI resourceURI, final RDFNodeEnum pred ) {
-		final URI documentURI = getDocumentURI( resourceURI );
-		return connectionTemplate.read( connection -> {
-			for ( URI predURI : pred.getURIs() ) {
-				RepositoryResult<Statement> statements = connection.getStatements( resourceURI, predURI, null, false, documentURI );
+	public Long getLong( URI resourceURI, URI pred ) {
+		URI documentURI = getDocumentURI( resourceURI );
+		return connectionTemplate.readStatements(
+			connection -> connection.getStatements( resourceURI, pred, null, false, documentURI ),
+			statements -> {
 				while ( statements.hasNext() ) {
 					Value value = statements.next().getObject();
-					if ( ValueUtil.isLiteral( value ) && LiteralUtil.isLong( (Literal) value ) )
-						return ( Long.parseLong( value.stringValue() ) );
+					if ( ValueUtil.isLiteral( value ) && LiteralUtil.isLong( (Literal) value ) ) return Long.parseLong( value.stringValue() );
 				}
+				return null;
 			}
-			return null;
-		} );
+		);
 	}
 
 	@Override
-	public Set<Long> getLongs( final URI resourceURI, final URI pred ) {
-		final URI documentURI = getDocumentURI( resourceURI );
-		return connectionTemplate.read( connection -> {
-			Set<Long> properties = new LinkedHashSet<Long>();
-			RepositoryResult<Statement> statements = connection.getStatements( resourceURI, pred, null, false, documentURI );
-			while ( statements.hasNext() ) {
-				Value value = statements.next().getObject();
-				if ( ValueUtil.isLiteral( value ) && LiteralUtil.isLong( (Literal) value ) )
-					properties.add( Long.parseLong( value.stringValue() ) );
-			}
-			return properties;
-		} );
+	public Long getLong( URI resourceURI, RDFNodeEnum pred ) {
+		URI documentURI = getDocumentURI( resourceURI );
+		for ( URI predURI : pred.getURIs() ) {
+			Long object = connectionTemplate.readStatements(
+				connection -> connection.getStatements( resourceURI, predURI, null, false, documentURI ),
+				statements -> {
+					while ( statements.hasNext() ) {
+						Value value = statements.next().getObject();
+						if ( ValueUtil.isLiteral( value ) && LiteralUtil.isLong( (Literal) value ) ) return Long.parseLong( value.stringValue() );
+					}
+					return null;
+				}
+			);
+			if ( object != null ) return object;
+		}
+		return null;
 	}
 
 	@Override
-	public Set<Long> getLongs( final URI resourceURI, final RDFNodeEnum pred ) {
-		final URI documentURI = getDocumentURI( resourceURI );
-		return connectionTemplate.read( connection -> {
-			Set<Long> properties = new LinkedHashSet<Long>();
-			for ( URI predURI : pred.getURIs() ) {
-				RepositoryResult<Statement> statements = connection.getStatements( resourceURI, predURI, null, false, documentURI );
+	public Set<Long> getLongs( URI resourceURI, URI pred ) {
+		URI documentURI = getDocumentURI( resourceURI );
+		return connectionTemplate.readStatements(
+			connection -> connection.getStatements( resourceURI, pred, null, false, documentURI ),
+			statements -> {
+				Set<Long> properties = new HashSet<>();
 				while ( statements.hasNext() ) {
 					Value value = statements.next().getObject();
-					if ( ValueUtil.isLiteral( value ) && LiteralUtil.isLong( (Literal) value ) )
-						properties.add( Long.parseLong( value.stringValue() ) );
-
+					if ( ValueUtil.isLiteral( value ) && LiteralUtil.isLong( (Literal) value ) ) properties.add( Long.parseLong( value.stringValue() ) );
 				}
+				return properties;
 			}
-			return properties;
-		} );
+		);
 	}
 
 	@Override
-	public Short getShort( final URI resourceURI, final URI pred ) {
-		final URI documentURI = getDocumentURI( resourceURI );
-		return connectionTemplate.read( connection -> {
-			RepositoryResult<Statement> statements = connection.getStatements( resourceURI, pred, null, false, documentURI );
-			while ( statements.hasNext() ) {
-				Value value = statements.next().getObject();
-				if ( ValueUtil.isLiteral( value ) && LiteralUtil.isShort( (Literal) value ) )
-					return ( Short.parseShort( value.stringValue() ) );
-			}
-			return null;
-		} );
+	public Set<Long> getLongs( URI resourceURI, RDFNodeEnum pred ) {
+		URI documentURI = getDocumentURI( resourceURI );
+		Set<Long> properties = new HashSet<>();
+		for ( URI predURI : pred.getURIs() ) {
+			connectionTemplate.readStatements(
+				connection -> connection.getStatements( resourceURI, predURI, null, false, documentURI ),
+				statements -> {
+					while ( statements.hasNext() ) {
+						Value value = statements.next().getObject();
+						if ( ValueUtil.isLiteral( value ) && LiteralUtil.isLong( (Literal) value ) ) properties.add( Long.parseLong( value.stringValue() ) );
+					}
+					return null;
+				}
+			);
+		}
+		return properties;
 	}
 
 	@Override
-	public Short getShort( final URI resourceURI, final RDFNodeEnum pred ) {
-		final URI documentURI = getDocumentURI( resourceURI );
-		return connectionTemplate.read( connection -> {
-			for ( URI predURI : pred.getURIs() ) {
-				RepositoryResult<Statement> statements = connection.getStatements( resourceURI, predURI, null, false, documentURI );
+	public Short getShort( URI resourceURI, URI pred ) {
+		URI documentURI = getDocumentURI( resourceURI );
+		return connectionTemplate.readStatements(
+			connection -> connection.getStatements( resourceURI, pred, null, false, documentURI ),
+			statements -> {
 				while ( statements.hasNext() ) {
 					Value value = statements.next().getObject();
-					if ( ValueUtil.isLiteral( value ) && LiteralUtil.isShort( (Literal) value ) )
-						return ( Short.parseShort( value.stringValue() ) );
+					if ( ValueUtil.isLiteral( value ) && LiteralUtil.isShort( (Literal) value ) ) return Short.parseShort( value.stringValue() );
 				}
+				return null;
 			}
-			return null;
-		} );
+		);
 	}
 
 	@Override
-	public Set<Short> getShorts( final URI resourceURI, final URI pred ) {
-		final URI documentURI = getDocumentURI( resourceURI );
-		return connectionTemplate.read( connection -> {
-			Set<Short> properties = new LinkedHashSet<Short>();
-			RepositoryResult<Statement> statements = connection.getStatements( resourceURI, pred, null, false, documentURI );
-			while ( statements.hasNext() ) {
-				Value value = statements.next().getObject();
-				if ( ValueUtil.isLiteral( value ) && LiteralUtil.isShort( (Literal) value ) )
-					properties.add( Short.parseShort( value.stringValue() ) );
-			}
-			return properties;
-		} );
+	public Short getShort( URI resourceURI, RDFNodeEnum pred ) {
+		URI documentURI = getDocumentURI( resourceURI );
+		for ( URI predURI : pred.getURIs() ) {
+			Short object = connectionTemplate.readStatements(
+				connection -> connection.getStatements( resourceURI, predURI, null, false, documentURI ),
+				statements -> {
+					while ( statements.hasNext() ) {
+						Value value = statements.next().getObject();
+						if ( ValueUtil.isLiteral( value ) && LiteralUtil.isShort( (Literal) value ) ) return Short.parseShort( value.stringValue() );
+					}
+					return null;
+				}
+			);
+			if ( object != null ) return object;
+		}
+		return null;
 	}
 
 	@Override
-	public Set<Short> getShorts( final URI resourceURI, final RDFNodeEnum pred ) {
-		final URI documentURI = getDocumentURI( resourceURI );
-		return connectionTemplate.read( connection -> {
-			Set<Short> properties = new LinkedHashSet<Short>();
-			for ( URI predURI : pred.getURIs() ) {
-				RepositoryResult<Statement> statements = connection.getStatements( resourceURI, predURI, null, false, documentURI );
+	public Set<Short> getShorts( URI resourceURI, URI pred ) {
+		URI documentURI = getDocumentURI( resourceURI );
+		return connectionTemplate.readStatements(
+			connection -> connection.getStatements( resourceURI, pred, null, false, documentURI ),
+			statements -> {
+				Set<Short> properties = new HashSet<>();
 				while ( statements.hasNext() ) {
 					Value value = statements.next().getObject();
-					if ( ValueUtil.isLiteral( value ) && LiteralUtil.isShort( (Literal) value ) )
-						properties.add( Short.parseShort( value.stringValue() ) );
-
+					if ( ValueUtil.isLiteral( value ) && LiteralUtil.isShort( (Literal) value ) ) properties.add( Short.parseShort( value.stringValue() ) );
 				}
+				return properties;
 			}
-			return properties;
-		} );
+		);
 	}
 
 	@Override
-	public String getString( final URI resourceURI, final URI pred ) {
-		final URI documentURI = getDocumentURI( resourceURI );
-		return connectionTemplate.read( connection -> {
-			RepositoryResult<Statement> statements = connection.getStatements( resourceURI, pred, null, false, documentURI );
-			while ( statements.hasNext() ) {
-				Value value = statements.next().getObject();
-				if ( ValueUtil.isLiteral( value ) && LiteralUtil.isString( (Literal) value ) )
-					return ( value.stringValue() );
-			}
-			return null;
-		} );
+	public Set<Short> getShorts( URI resourceURI, RDFNodeEnum pred ) {
+		URI documentURI = getDocumentURI( resourceURI );
+		Set<Short> properties = new HashSet<>();
+		for ( URI predURI : pred.getURIs() ) {
+			connectionTemplate.readStatements(
+				connection -> connection.getStatements( resourceURI, predURI, null, false, documentURI ),
+				statements -> {
+					while ( statements.hasNext() ) {
+						Value value = statements.next().getObject();
+						if ( ValueUtil.isLiteral( value ) && LiteralUtil.isShort( (Literal) value ) ) properties.add( Short.parseShort( value.stringValue() ) );
+					}
+					return null;
+				}
+			);
+		}
+		return properties;
 	}
 
 	@Override
-	public String getString( final URI resourceURI, final RDFNodeEnum pred ) {
-		final URI documentURI = getDocumentURI( resourceURI );
-		return connectionTemplate.read( connection -> {
-			for ( URI predURI : pred.getURIs() ) {
-				RepositoryResult<Statement> statements = connection.getStatements( resourceURI, predURI, null, false, documentURI );
-				if ( statements.hasNext() ) {
+	public String getString( URI resourceURI, URI pred ) {
+		URI documentURI = getDocumentURI( resourceURI );
+		return connectionTemplate.readStatements(
+			connection -> connection.getStatements( resourceURI, pred, null, false, documentURI ),
+			statements -> {
+				while ( statements.hasNext() ) {
 					Value value = statements.next().getObject();
-					if ( ValueUtil.isLiteral( value ) && LiteralUtil.isString( (Literal) value ) )
-						return ( value.stringValue() );
+					if ( ValueUtil.isLiteral( value ) && LiteralUtil.isString( (Literal) value ) ) return value.stringValue();
 				}
+				return null;
 			}
-			return null;
-		} );
+		);
 	}
 
 	@Override
-	public String getString( final URI resourceURI, final URI pred, final Set<String> languages ) {
-		final URI documentURI = getDocumentURI( resourceURI );
-		return connectionTemplate.read( connection -> {
-			RepositoryResult<Statement> statements = connection.getStatements( resourceURI, pred, null, false, documentURI );
-			while ( statements.hasNext() ) {
-				Value value = statements.next().getObject();
-				if ( ValueUtil.isLiteral( value ) && LiteralUtil.isString( (Literal) value ) ) {
-					Literal literal = (Literal) value;
-					String language = literal.getLanguage();
-					if ( languages == null || languages.isEmpty() ) {
-						if ( language == null ) return literal.stringValue();
-					} else if ( languages.contains( language ) ) return ( value.stringValue() );
+	public String getString( URI resourceURI, RDFNodeEnum pred ) {
+		URI documentURI = getDocumentURI( resourceURI );
+		for ( URI predURI : pred.getURIs() ) {
+			String object = connectionTemplate.readStatements(
+				connection -> connection.getStatements( resourceURI, predURI, null, false, documentURI ),
+				statements -> {
+					while ( statements.hasNext() ) {
+						Value value = statements.next().getObject();
+						if ( ValueUtil.isLiteral( value ) && LiteralUtil.isString( (Literal) value ) ) return value.stringValue();
+					}
+					return null;
 				}
-			}
-			return null;
-		} );
+			);
+			if ( object != null ) return object;
+		}
+		return null;
 	}
 
 	@Override
-	public String getString( final URI resourceURI, final RDFNodeEnum pred, final Set<String> languages ) {
-		final URI documentURI = getDocumentURI( resourceURI );
-		return connectionTemplate.read( connection -> {
-			for ( URI predURI : pred.getURIs() ) {
-				RepositoryResult<Statement> statements = connection.getStatements( resourceURI, predURI, null, false, documentURI );
+	public Set<String> getStrings( URI resourceURI, URI pred ) {
+		URI documentURI = getDocumentURI( resourceURI );
+		return connectionTemplate.readStatements(
+			connection -> connection.getStatements( resourceURI, pred, null, false, documentURI ),
+			statements -> {
+				Set<String> properties = new HashSet<>();
+				while ( statements.hasNext() ) {
+					Value value = statements.next().getObject();
+					if ( ValueUtil.isLiteral( value ) && LiteralUtil.isString( (Literal) value ) ) properties.add( value.stringValue() );
+				}
+				return properties;
+			}
+		);
+	}
+
+	@Override
+	public Set<String> getStrings( URI resourceURI, RDFNodeEnum pred ) {
+		URI documentURI = getDocumentURI( resourceURI );
+		Set<String> properties = new HashSet<>();
+		for ( URI predURI : pred.getURIs() ) {
+			connectionTemplate.readStatements(
+				connection -> connection.getStatements( resourceURI, predURI, null, false, documentURI ),
+				statements -> {
+					while ( statements.hasNext() ) {
+						Value value = statements.next().getObject();
+						if ( ValueUtil.isLiteral( value ) && LiteralUtil.isString( (Literal) value ) ) properties.add( value.stringValue() );
+					}
+					return null;
+				}
+			);
+		}
+		return properties;
+	}
+
+	@Override
+	public String getString( URI resourceURI, URI pred, Set<String> languages ) {
+		URI documentURI = getDocumentURI( resourceURI );
+		return connectionTemplate.readStatements(
+			connection -> connection.getStatements( resourceURI, pred, null, false, documentURI ),
+			statements -> {
 				while ( statements.hasNext() ) {
 					Value value = statements.next().getObject();
 					if ( ValueUtil.isLiteral( value ) && LiteralUtil.isString( (Literal) value ) ) {
@@ -765,213 +848,184 @@ public class SesameRDFResourceRepository extends AbstractSesameRepository implem
 						String language = literal.getLanguage();
 						if ( languages == null || languages.isEmpty() ) {
 							if ( language == null ) return literal.stringValue();
+						} else if ( languages.contains( language ) ) return ( value.stringValue() );
+					}
+				}
+				return null;
+			}
+		);
+	}
+
+	@Override
+	public String getString( URI resourceURI, RDFNodeEnum pred, Set<String> languages ) {
+		URI documentURI = getDocumentURI( resourceURI );
+		for ( URI predURI : pred.getURIs() ) {
+			String object = connectionTemplate.readStatements(
+				connection -> connection.getStatements( resourceURI, predURI, null, false, documentURI ),
+				statements -> {
+					while ( statements.hasNext() ) {
+						Value value = statements.next().getObject();
+						if ( ValueUtil.isLiteral( value ) && LiteralUtil.isString( (Literal) value ) ) {
+							Literal literal = (Literal) value;
+							String language = literal.getLanguage();
+							if ( languages == null || languages.isEmpty() ) {
+								if ( language == null ) return literal.stringValue();
+							}
+							return ( value.stringValue() );
 						}
-						return ( value.stringValue() );
 					}
+					return null;
 				}
-			}
-			return null;
-		} );
+			);
+			if ( object != null ) return object;
+		}
+		return null;
 	}
 
 	@Override
-	public Set<String> getStrings( final URI resourceURI, final URI pred ) {
-		final URI documentURI = getDocumentURI( resourceURI );
-		return connectionTemplate.read( connection -> {
-			Set<String> properties = new LinkedHashSet<String>();
-			RepositoryResult<Statement> statements = connection.getStatements( resourceURI, pred, null, false, documentURI );
-			while ( statements.hasNext() ) {
-				Value value = statements.next().getObject();
-				if ( ValueUtil.isLiteral( value ) && LiteralUtil.isString( (Literal) value ) )
-					properties.add( value.stringValue() );
-			}
-			return properties;
-		} );
-	}
-
-	@Override
-	public Set<String> getStrings( final URI resourceURI, final RDFNodeEnum pred ) {
-		final URI documentURI = getDocumentURI( resourceURI );
-		return connectionTemplate.read( connection -> {
-			Set<String> properties = new LinkedHashSet<String>();
-			for ( URI predURI : pred.getURIs() ) {
-				RepositoryResult<Statement> statements = connection.getStatements( resourceURI, predURI, null, false, documentURI );
-				while ( statements.hasNext() ) {
-					Value value = statements.next().getObject();
-					if ( ValueUtil.isLiteral( value ) && LiteralUtil.isString( (Literal) value ) )
-						properties.add( value.stringValue() );
-
-				}
-			}
-			return properties;
-		} );
-	}
-
-	@Override
-	public Set<String> getStrings( final URI resourceURI, final URI pred, final Set<String> languages ) {
-		final URI documentURI = getDocumentURI( resourceURI );
-		return connectionTemplate.read( connection -> {
-			Set<String> properties = new LinkedHashSet<String>();
-			RepositoryResult<Statement> statements = connection.getStatements( resourceURI, pred, null, false, documentURI );
-			while ( statements.hasNext() ) {
-				Value value = statements.next().getObject();
-				if ( ValueUtil.isLiteral( value ) && LiteralUtil.isString( (Literal) value ) ) {
-					Literal literal = (Literal) value;
-					String language = literal.getLanguage();
-					if ( languages == null || languages.isEmpty() ) {
-						if ( language == null ) properties.add( literal.stringValue() );
-					}
-					properties.add( value.stringValue() );
-				}
-			}
-			return properties;
-		} );
-	}
-
-	@Override
-	public Set<String> getStrings( final URI resourceURI, final RDFNodeEnum pred, final Set<String> languages ) {
-		final URI documentURI = getDocumentURI( resourceURI );
-		return connectionTemplate.read( connection -> {
-			Set<String> properties = new LinkedHashSet<String>();
-			for ( URI predURI : pred.getURIs() ) {
-				RepositoryResult<Statement> statements = connection.getStatements( resourceURI, predURI, null, false, documentURI );
+	public Set<String> getStrings( URI resourceURI, URI pred, Set<String> languages ) {
+		URI documentURI = getDocumentURI( resourceURI );
+		return connectionTemplate.readStatements(
+			connection -> connection.getStatements( resourceURI, pred, null, false, documentURI ),
+			statements -> {
+				Set<String> properties = new HashSet<>();
 				while ( statements.hasNext() ) {
 					Value value = statements.next().getObject();
 					if ( ValueUtil.isLiteral( value ) && LiteralUtil.isString( (Literal) value ) ) {
 						Literal literal = (Literal) value;
 						String language = literal.getLanguage();
 						if ( languages == null || languages.isEmpty() ) {
-							if ( language == null ) properties.add( value.stringValue() );
-						} else if ( languages.contains( language ) ) {
-							properties.add( literal.stringValue() );
+							if ( language == null ) properties.add( literal.stringValue() );
+						}
+						properties.add( value.stringValue() );
+					}
+				}
+				return properties;
+			}
+		);
+	}
+
+	@Override
+	public Set<String> getStrings( URI resourceURI, RDFNodeEnum pred, Set<String> languages ) {
+		URI documentURI = getDocumentURI( resourceURI );
+		Set<String> properties = new HashSet<>();
+		for ( URI predURI : pred.getURIs() ) {
+			connectionTemplate.readStatements(
+				connection -> connection.getStatements( resourceURI, predURI, null, false, documentURI ),
+				statements -> {
+					while ( statements.hasNext() ) {
+						Value value = statements.next().getObject();
+						if ( ValueUtil.isLiteral( value ) && LiteralUtil.isString( (Literal) value ) ) {
+							Literal literal = (Literal) value;
+							String language = literal.getLanguage();
+							if ( languages == null || languages.isEmpty() ) {
+								if ( language == null ) properties.add( value.stringValue() );
+							} else if ( languages.contains( language ) ) {
+								properties.add( literal.stringValue() );
+							}
 						}
 					}
-
+					return null;
 				}
-			}
-			return properties;
-		} );
+			);
+		}
+		return properties;
 	}
 
 	@Override
-	public void add( final URI resourceURI, final URI pred, Value obj ) {
-		final URI documentURI = getDocumentURI( resourceURI );
-		final Value literal = obj;
-		connectionTemplate.write( connection -> {
-			connection.add( resourceURI, pred, literal, documentURI );
-		} );
+	public void add( URI resourceURI, URI pred, Value obj ) {
+		URI documentURI = getDocumentURI( resourceURI );
+		connectionTemplate.write( connection -> connection.add( resourceURI, pred, obj, documentURI ) );
 	}
 
 	@Override
-	public void add( final URI resourceURI, final URI pred, boolean obj ) {
+	public void add( URI resourceURI, URI pred, boolean obj ) {
 		ValueFactory factory = ValueFactoryImpl.getInstance();
-		final URI documentURI = getDocumentURI( resourceURI );
-		final Value literal = factory.createLiteral( obj );
-		connectionTemplate.write( connection -> {
-			connection.add( resourceURI, pred, literal, documentURI );
-		} );
+		URI documentURI = getDocumentURI( resourceURI );
+		Value literal = factory.createLiteral( obj );
+		connectionTemplate.write( connection -> connection.add( resourceURI, pred, literal, documentURI ) );
 	}
 
 	@Override
-	public void add( final URI resourceURI, final URI pred, byte obj ) {
+	public void add( URI resourceURI, URI pred, byte obj ) {
 		ValueFactory factory = ValueFactoryImpl.getInstance();
-		final URI documentURI = getDocumentURI( resourceURI );
-		final Value literal = factory.createLiteral( obj );
-		connectionTemplate.write( connection -> {
-			connection.add( resourceURI, pred, literal, documentURI );
-		} );
+		URI documentURI = getDocumentURI( resourceURI );
+		Value literal = factory.createLiteral( obj );
+		connectionTemplate.write( connection -> connection.add( resourceURI, pred, literal, documentURI ) );
 	}
 
 	@Override
-	public void add( final URI resourceURI, final URI pred, DateTime obj ) {
-		final URI documentURI = getDocumentURI( resourceURI );
-		final Value literal = LiteralUtil.get( obj );
-		connectionTemplate.write( connection -> {
-			connection.add( resourceURI, pred, literal, documentURI );
-		} );
+	public void add( URI resourceURI, URI pred, DateTime obj ) {
+		URI documentURI = getDocumentURI( resourceURI );
+		Value literal = LiteralUtil.get( obj );
+		connectionTemplate.write( connection -> connection.add( resourceURI, pred, literal, documentURI ) );
 	}
 
 	@Override
-	public void add( final URI resourceURI, final URI pred, double obj ) {
+	public void add( URI resourceURI, URI pred, double obj ) {
 		ValueFactory factory = ValueFactoryImpl.getInstance();
-		final URI documentURI = getDocumentURI( resourceURI );
-		final Value literal = factory.createLiteral( obj );
-		connectionTemplate.write( connection -> {
-			connection.add( resourceURI, pred, literal, documentURI );
-		} );
+		URI documentURI = getDocumentURI( resourceURI );
+		Value literal = factory.createLiteral( obj );
+		connectionTemplate.write( connection -> connection.add( resourceURI, pred, literal, documentURI ) );
 	}
 
 	@Override
-	public void add( final URI resourceURI, final URI pred, float obj ) {
+	public void add( URI resourceURI, URI pred, float obj ) {
 		ValueFactory factory = ValueFactoryImpl.getInstance();
-		final URI documentURI = getDocumentURI( resourceURI );
-		final Value literal = factory.createLiteral( obj );
-		connectionTemplate.write( connection -> {
-			connection.add( resourceURI, pred, literal, documentURI );
-		} );
+		URI documentURI = getDocumentURI( resourceURI );
+		Value literal = factory.createLiteral( obj );
+		connectionTemplate.write( connection -> connection.add( resourceURI, pred, literal, documentURI ) );
 	}
 
 	@Override
-	public void add( final URI resourceURI, final URI pred, int obj ) {
+	public void add( URI resourceURI, URI pred, int obj ) {
 		ValueFactory factory = ValueFactoryImpl.getInstance();
-		final URI documentURI = getDocumentURI( resourceURI );
-		final Value literal = factory.createLiteral( obj );
-		connectionTemplate.write( connection -> {
-			connection.add( resourceURI, pred, literal, documentURI );
-		} );
+		URI documentURI = getDocumentURI( resourceURI );
+		Value literal = factory.createLiteral( obj );
+		connectionTemplate.write( connection -> connection.add( resourceURI, pred, literal, documentURI ) );
 	}
 
 	@Override
-	public void add( final URI resourceURI, final URI pred, long obj ) {
+	public void add( URI resourceURI, URI pred, long obj ) {
 		ValueFactory factory = ValueFactoryImpl.getInstance();
-		final URI documentURI = getDocumentURI( resourceURI );
-		final Value literal = factory.createLiteral( obj );
-		connectionTemplate.write( connection -> {
-			connection.add( resourceURI, pred, literal, documentURI );
-		} );
+		URI documentURI = getDocumentURI( resourceURI );
+		Value literal = factory.createLiteral( obj );
+		connectionTemplate.write( connection -> connection.add( resourceURI, pred, literal, documentURI ) );
 	}
 
 	@Override
-	public void add( final URI resourceURI, final URI pred, short obj ) {
+	public void add( URI resourceURI, URI pred, short obj ) {
 		ValueFactory factory = ValueFactoryImpl.getInstance();
-		final URI documentURI = getDocumentURI( resourceURI );
-		final Value literal = factory.createLiteral( obj );
-		connectionTemplate.write( connection -> {
-			connection.add( resourceURI, pred, literal, documentURI );
-		} );
+		URI documentURI = getDocumentURI( resourceURI );
+		Value literal = factory.createLiteral( obj );
+		connectionTemplate.write( connection -> connection.add( resourceURI, pred, literal, documentURI ) );
 	}
 
 	@Override
-	public void add( final URI resourceURI, final URI pred, String obj ) {
+	public void add( URI resourceURI, URI pred, String obj ) {
 		ValueFactory factory = ValueFactoryImpl.getInstance();
-		final URI documentURI = getDocumentURI( resourceURI );
-		final Value literal = factory.createLiteral( obj );
-		connectionTemplate.write( connection -> {
-			connection.add( resourceURI, pred, literal, documentURI );
-		} );
+		URI documentURI = getDocumentURI( resourceURI );
+		Value literal = factory.createLiteral( obj );
+		connectionTemplate.write( connection -> connection.add( resourceURI, pred, literal, documentURI ) );
 	}
 
 	@Override
-	public void add( final URI resourceURI, final URI pred, String obj, String language ) {
+	public void add( URI resourceURI, URI pred, String obj, String language ) {
 		ValueFactory factory = ValueFactoryImpl.getInstance();
-		final URI documentURI = getDocumentURI( resourceURI );
-		final Value literal = factory.createLiteral( obj, language );
-		connectionTemplate.write( connection -> {
-			connection.add( resourceURI, pred, literal, documentURI );
-		} );
+		URI documentURI = getDocumentURI( resourceURI );
+		Value literal = factory.createLiteral( obj, language );
+		connectionTemplate.write( connection -> connection.add( resourceURI, pred, literal, documentURI ) );
 	}
 
 	@Override
-	public void remove( final URI resourceURI, final URI pred ) {
-		final URI documentURI = getDocumentURI( resourceURI );
-		connectionTemplate.write( connection -> {
-			connection.remove( resourceURI, pred, null, documentURI );
-		} );
+	public void remove( URI resourceURI, URI pred ) {
+		URI documentURI = getDocumentURI( resourceURI );
+		connectionTemplate.write( connection -> connection.remove( resourceURI, pred, null, documentURI ) );
 	}
 
 	@Override
-	public void remove( final URI resourceURI, final RDFNodeEnum pred ) {
-		final URI documentURI = getDocumentURI( resourceURI );
+	public void remove( URI resourceURI, RDFNodeEnum pred ) {
+		URI documentURI = getDocumentURI( resourceURI );
 		connectionTemplate.write( connection -> {
 			for ( URI predURI : pred.getURIs() ) {
 				connection.remove( resourceURI, predURI, null, documentURI );
@@ -980,116 +1034,104 @@ public class SesameRDFResourceRepository extends AbstractSesameRepository implem
 	}
 
 	@Override
-	public void remove( final URI resourceURI, final URI pred, final Value obj ) {
-		final URI documentURI = getDocumentURI( resourceURI );
-		connectionTemplate.write( connection -> {
-			connection.remove( resourceURI, pred, obj, documentURI );
-		} );
+	public void remove( URI resourceURI, URI pred, Value obj ) {
+		URI documentURI = getDocumentURI( resourceURI );
+		connectionTemplate.write( connection -> connection.remove( resourceURI, pred, obj, documentURI ) );
 	}
 
 	@Override
-	public void remove( final URI resourceURI, final URI pred, final boolean obj ) {
+	public void remove( URI resourceURI, URI pred, boolean obj ) {
 		ValueFactory factory = ValueFactoryImpl.getInstance();
-		final URI documentURI = getDocumentURI( resourceURI );
-		final Value literal = factory.createLiteral( obj );
-		connectionTemplate.write( connection -> {
-			connection.remove( resourceURI, pred, literal, documentURI );
-		} );
+		URI documentURI = getDocumentURI( resourceURI );
+		Value literal = factory.createLiteral( obj );
+		connectionTemplate.write( connection -> connection.remove( resourceURI, pred, literal, documentURI ) );
 	}
 
 	@Override
-	public void remove( final URI resourceURI, final URI pred, byte obj ) {
+	public void remove( URI resourceURI, URI pred, byte obj ) {
 		ValueFactory factory = ValueFactoryImpl.getInstance();
-		final URI documentURI = getDocumentURI( resourceURI );
-		final Value literal = factory.createLiteral( obj );
-		connectionTemplate.write( connection -> {
-			connection.remove( resourceURI, pred, literal, documentURI );
-		} );
+		URI documentURI = getDocumentURI( resourceURI );
+		Value literal = factory.createLiteral( obj );
+		connectionTemplate.write( connection -> connection.remove( resourceURI, pred, literal, documentURI ) );
 	}
 
 	@Override
-	public void remove( final URI resourceURI, final URI pred, DateTime obj ) {
-		final URI documentURI = getDocumentURI( resourceURI );
-		final Value literal = LiteralUtil.get( obj );
-		connectionTemplate.write( connection -> {
-			connection.remove( resourceURI, pred, literal, documentURI );
-		} );
+	public void remove( URI resourceURI, URI pred, DateTime obj ) {
+		URI documentURI = getDocumentURI( resourceURI );
+		Value literal = LiteralUtil.get( obj );
+		connectionTemplate.write( connection -> connection.remove( resourceURI, pred, literal, documentURI ) );
 	}
 
 	@Override
-	public void remove( final URI resourceURI, final URI pred, double obj ) {
+	public void remove( URI resourceURI, URI pred, double obj ) {
 		ValueFactory factory = ValueFactoryImpl.getInstance();
-		final URI documentURI = getDocumentURI( resourceURI );
-		final Value literal = factory.createLiteral( obj );
-		connectionTemplate.write( connection -> {
-			connection.remove( resourceURI, pred, literal, documentURI );
-		} );
+		URI documentURI = getDocumentURI( resourceURI );
+		Value literal = factory.createLiteral( obj );
+		connectionTemplate.write( connection -> connection.remove( resourceURI, pred, literal, documentURI ) );
 	}
 
 	@Override
-	public void remove( final URI resourceURI, final URI pred, float obj ) {
+	public void remove( URI resourceURI, URI pred, float obj ) {
 		ValueFactory factory = ValueFactoryImpl.getInstance();
-		final URI documentURI = getDocumentURI( resourceURI );
-		final Value literal = factory.createLiteral( obj );
-		connectionTemplate.write( connection -> {
-			connection.remove( resourceURI, pred, literal, documentURI );
-		} );
+		URI documentURI = getDocumentURI( resourceURI );
+		Value literal = factory.createLiteral( obj );
+		connectionTemplate.write( connection -> connection.remove( resourceURI, pred, literal, documentURI ) );
 	}
 
 	@Override
-	public void remove( final URI resourceURI, final URI pred, int obj ) {
+	public void remove( URI resourceURI, URI pred, int obj ) {
 		ValueFactory factory = ValueFactoryImpl.getInstance();
-		final URI documentURI = getDocumentURI( resourceURI );
-		final Value literal = factory.createLiteral( obj );
-		connectionTemplate.write( connection -> {
-			connection.remove( resourceURI, pred, literal, documentURI );
-		} );
+		URI documentURI = getDocumentURI( resourceURI );
+		Value literal = factory.createLiteral( obj );
+		connectionTemplate.write( connection -> connection.remove( resourceURI, pred, literal, documentURI ) );
 	}
 
 	@Override
-	public void remove( final URI resourceURI, final URI pred, long obj ) {
+	public void remove( URI resourceURI, URI pred, long obj ) {
 		ValueFactory factory = ValueFactoryImpl.getInstance();
-		final URI documentURI = getDocumentURI( resourceURI );
-		final Value literal = factory.createLiteral( obj );
-		connectionTemplate.write( connection -> {
-			connection.remove( resourceURI, pred, literal, documentURI );
-		} );
+		URI documentURI = getDocumentURI( resourceURI );
+		Value literal = factory.createLiteral( obj );
+		connectionTemplate.write( connection -> connection.remove( resourceURI, pred, literal, documentURI ) );
 	}
 
 	@Override
-	public void remove( final URI resourceURI, final URI pred, short obj ) {
+	public void remove( URI resourceURI, URI pred, short obj ) {
 		ValueFactory factory = ValueFactoryImpl.getInstance();
-		final URI documentURI = getDocumentURI( resourceURI );
-		final Value literal = factory.createLiteral( obj );
-		connectionTemplate.write( connection -> {
-			connection.remove( resourceURI, pred, literal, documentURI );
-		} );
+		URI documentURI = getDocumentURI( resourceURI );
+		Value literal = factory.createLiteral( obj );
+		connectionTemplate.write( connection -> connection.remove( resourceURI, pred, literal, documentURI ) );
 	}
 
 	@Override
-	public void remove( final URI resourceURI, final URI pred, String obj ) {
+	public void remove( URI resourceURI, URI pred, String obj ) {
 		ValueFactory factory = ValueFactoryImpl.getInstance();
-		final URI documentURI = getDocumentURI( resourceURI );
-		final Value literal = factory.createLiteral( obj );
-		connectionTemplate.write( connection -> {
-			connection.remove( resourceURI, pred, literal, documentURI );
-		} );
+		URI documentURI = getDocumentURI( resourceURI );
+		Value literal = factory.createLiteral( obj );
+		connectionTemplate.write( connection -> connection.remove( resourceURI, pred, literal, documentURI ) );
 	}
 
 	@Override
-	public void remove( final URI resourceURI, final URI pred, String obj, String language ) {
+	public void remove( URI resourceURI, URI pred, String obj, String language ) {
 		ValueFactory factory = ValueFactoryImpl.getInstance();
-		final URI documentURI = getDocumentURI( resourceURI );
-		final Value literal = factory.createLiteral( obj, language );
+		URI documentURI = getDocumentURI( resourceURI );
+		Value literal = factory.createLiteral( obj, language );
+		connectionTemplate.write( connection -> connection.remove( resourceURI, pred, literal, documentURI ) );
+	}
+
+	@Override
+	public void set( URI resourceURI, URI pred, Value obj ) {
+		URI documentURI = getDocumentURI( resourceURI );
 		connectionTemplate.write( connection -> {
-			connection.remove( resourceURI, pred, literal, documentURI );
+			connection.remove( resourceURI, pred, null, documentURI );
+			connection.add( resourceURI, pred, obj, documentURI );
 		} );
 	}
 
 	@Override
-	public void set( final URI resourceURI, final URI pred, Value obj ) {
-		final Value literal = obj;
-		final URI documentURI = getDocumentURI( resourceURI );
+	public void set( URI resourceURI, URI pred, boolean obj ) {
+		ValueFactory factory = ValueFactoryImpl.getInstance();
+		Value literal = factory.createLiteral( obj );
+		URI documentURI = getDocumentURI( resourceURI );
 		connectionTemplate.write( connection -> {
 			connection.remove( resourceURI, pred, null, documentURI );
 			connection.add( resourceURI, pred, literal, documentURI );
@@ -1097,10 +1139,10 @@ public class SesameRDFResourceRepository extends AbstractSesameRepository implem
 	}
 
 	@Override
-	public void set( final URI resourceURI, final URI pred, boolean obj ) {
+	public void set( URI resourceURI, URI pred, byte obj ) {
 		ValueFactory factory = ValueFactoryImpl.getInstance();
-		final Value literal = factory.createLiteral( obj );
-		final URI documentURI = getDocumentURI( resourceURI );
+		Value literal = factory.createLiteral( obj );
+		URI documentURI = getDocumentURI( resourceURI );
 		connectionTemplate.write( connection -> {
 			connection.remove( resourceURI, pred, null, documentURI );
 			connection.add( resourceURI, pred, literal, documentURI );
@@ -1108,10 +1150,20 @@ public class SesameRDFResourceRepository extends AbstractSesameRepository implem
 	}
 
 	@Override
-	public void set( final URI resourceURI, final URI pred, byte obj ) {
+	public void set( URI resourceURI, URI pred, DateTime obj ) {
+		Value literal = LiteralUtil.get( obj );
+		URI documentURI = getDocumentURI( resourceURI );
+		connectionTemplate.write( connection -> {
+			connection.remove( resourceURI, pred, null, documentURI );
+			connection.add( resourceURI, pred, literal, documentURI );
+		} );
+	}
+
+	@Override
+	public void set( URI resourceURI, URI pred, double obj ) {
 		ValueFactory factory = ValueFactoryImpl.getInstance();
-		final Value literal = factory.createLiteral( obj );
-		final URI documentURI = getDocumentURI( resourceURI );
+		Value literal = factory.createLiteral( obj );
+		URI documentURI = getDocumentURI( resourceURI );
 		connectionTemplate.write( connection -> {
 			connection.remove( resourceURI, pred, null, documentURI );
 			connection.add( resourceURI, pred, literal, documentURI );
@@ -1119,20 +1171,10 @@ public class SesameRDFResourceRepository extends AbstractSesameRepository implem
 	}
 
 	@Override
-	public void set( final URI resourceURI, final URI pred, DateTime obj ) {
-		final Value literal = LiteralUtil.get( obj );
-		final URI documentURI = getDocumentURI( resourceURI );
-		connectionTemplate.write( connection -> {
-			connection.remove( resourceURI, pred, null, documentURI );
-			connection.add( resourceURI, pred, literal, documentURI );
-		} );
-	}
-
-	@Override
-	public void set( final URI resourceURI, final URI pred, double obj ) {
+	public void set( URI resourceURI, URI pred, float obj ) {
 		ValueFactory factory = ValueFactoryImpl.getInstance();
-		final Value literal = factory.createLiteral( obj );
-		final URI documentURI = getDocumentURI( resourceURI );
+		Value literal = factory.createLiteral( obj );
+		URI documentURI = getDocumentURI( resourceURI );
 		connectionTemplate.write( connection -> {
 			connection.remove( resourceURI, pred, null, documentURI );
 			connection.add( resourceURI, pred, literal, documentURI );
@@ -1140,10 +1182,10 @@ public class SesameRDFResourceRepository extends AbstractSesameRepository implem
 	}
 
 	@Override
-	public void set( final URI resourceURI, final URI pred, float obj ) {
+	public void set( URI resourceURI, URI pred, int obj ) {
 		ValueFactory factory = ValueFactoryImpl.getInstance();
-		final Value literal = factory.createLiteral( obj );
-		final URI documentURI = getDocumentURI( resourceURI );
+		Value literal = factory.createLiteral( obj );
+		URI documentURI = getDocumentURI( resourceURI );
 		connectionTemplate.write( connection -> {
 			connection.remove( resourceURI, pred, null, documentURI );
 			connection.add( resourceURI, pred, literal, documentURI );
@@ -1151,10 +1193,10 @@ public class SesameRDFResourceRepository extends AbstractSesameRepository implem
 	}
 
 	@Override
-	public void set( final URI resourceURI, final URI pred, int obj ) {
+	public void set( URI resourceURI, URI pred, long obj ) {
 		ValueFactory factory = ValueFactoryImpl.getInstance();
-		final Value literal = factory.createLiteral( obj );
-		final URI documentURI = getDocumentURI( resourceURI );
+		Value literal = factory.createLiteral( obj );
+		URI documentURI = getDocumentURI( resourceURI );
 		connectionTemplate.write( connection -> {
 			connection.remove( resourceURI, pred, null, documentURI );
 			connection.add( resourceURI, pred, literal, documentURI );
@@ -1162,10 +1204,10 @@ public class SesameRDFResourceRepository extends AbstractSesameRepository implem
 	}
 
 	@Override
-	public void set( final URI resourceURI, final URI pred, long obj ) {
+	public void set( URI resourceURI, URI pred, short obj ) {
 		ValueFactory factory = ValueFactoryImpl.getInstance();
-		final Value literal = factory.createLiteral( obj );
-		final URI documentURI = getDocumentURI( resourceURI );
+		Value literal = factory.createLiteral( obj );
+		URI documentURI = getDocumentURI( resourceURI );
 		connectionTemplate.write( connection -> {
 			connection.remove( resourceURI, pred, null, documentURI );
 			connection.add( resourceURI, pred, literal, documentURI );
@@ -1173,10 +1215,10 @@ public class SesameRDFResourceRepository extends AbstractSesameRepository implem
 	}
 
 	@Override
-	public void set( final URI resourceURI, final URI pred, short obj ) {
+	public void set( URI resourceURI, URI pred, String obj ) {
 		ValueFactory factory = ValueFactoryImpl.getInstance();
-		final Value literal = factory.createLiteral( obj );
-		final URI documentURI = getDocumentURI( resourceURI );
+		Value literal = factory.createLiteral( obj );
+		URI documentURI = getDocumentURI( resourceURI );
 		connectionTemplate.write( connection -> {
 			connection.remove( resourceURI, pred, null, documentURI );
 			connection.add( resourceURI, pred, literal, documentURI );
@@ -1184,10 +1226,10 @@ public class SesameRDFResourceRepository extends AbstractSesameRepository implem
 	}
 
 	@Override
-	public void set( final URI resourceURI, final URI pred, String obj ) {
+	public void set( URI resourceURI, URI pred, String obj, String language ) {
 		ValueFactory factory = ValueFactoryImpl.getInstance();
-		final Value literal = factory.createLiteral( obj );
-		final URI documentURI = getDocumentURI( resourceURI );
+		Value literal = factory.createLiteral( obj, language );
+		URI documentURI = getDocumentURI( resourceURI );
 		connectionTemplate.write( connection -> {
 			connection.remove( resourceURI, pred, null, documentURI );
 			connection.add( resourceURI, pred, literal, documentURI );
@@ -1195,77 +1237,36 @@ public class SesameRDFResourceRepository extends AbstractSesameRepository implem
 	}
 
 	@Override
-	public void set( final URI resourceURI, final URI pred, String obj, String language ) {
-		ValueFactory factory = ValueFactoryImpl.getInstance();
-		final Value literal = factory.createLiteral( obj, language );
-		final URI documentURI = getDocumentURI( resourceURI );
-		connectionTemplate.write( connection -> {
-			connection.remove( resourceURI, pred, null, documentURI );
-			connection.add( resourceURI, pred, literal, documentURI );
-		} );
+	public boolean hasType( URI resourceURI, URI type ) {
+		return contains( resourceURI, RDFResourceDescription.Property.TYPE, type );
 	}
 
 	@Override
-	public boolean hasType( final URI resourceURI, final URI type ) {
-		final URI documentURI = getDocumentURI( resourceURI );
-		return connectionTemplate.read( connection -> {
-			RepositoryResult<Statement> statements = connection.getStatements( resourceURI, null, type, false, documentURI );
-			return statements.hasNext();
-		} );
+	public boolean hasType( URI resourceURI, RDFNodeEnum type ) {
+		return contains( resourceURI, RDFResourceDescription.Property.TYPE, type );
 	}
 
 	@Override
-	public boolean hasType( final URI resourceURI, final RDFNodeEnum type ) {
-		final URI documentURI = getDocumentURI( resourceURI );
-		return connectionTemplate.read( connection -> {
-			for ( URI typeURI : type.getURIs() ) {
-				RepositoryResult<Statement> statements = connection.getStatements( resourceURI, null, typeURI, false, documentURI );
-				if ( statements.hasNext() ) return true;
-			}
-			return false;
-		} );
+	public Set<URI> getTypes( URI resourceURI ) {
+		return getURIs( resourceURI, RDFResourceDescription.Property.TYPE );
 	}
 
 	@Override
-	public Set<URI> getTypes( final URI resourceURI ) {
-		final URI documentURI = getDocumentURI( resourceURI );
-		return connectionTemplate.read( connection -> {
-			Set<URI> types = new HashSet<URI>();
-			for ( URI predicate : RDFResourceDescription.Property.TYPE.getURIs() ) {
-				RepositoryResult<Statement> statements = connection.getStatements( resourceURI, predicate, null, false, documentURI );
-				while ( statements.hasNext() ) {
-					Statement statement = statements.next();
-					Value object = statement.getObject();
-					if ( ValueUtil.isURI( object ) ) types.add( ValueUtil.getURI( object ) );
-				}
-			}
-			return types;
-		} );
+	public void addType( URI resourceURI, URI type ) {
+		add( resourceURI, RDFResourceDescription.Property.TYPE.getURI(), type );
 	}
 
 	@Override
-	public void addType( final URI resourceURI, final URI type ) {
-		final URI documentURI = getDocumentURI( resourceURI );
-		connectionTemplate.write( connection -> {
-			connection.add( resourceURI, RDFResourceDescription.Property.TYPE.getURI(), type, documentURI );
-		} );
+	public void removeType( URI resourceURI, URI type ) {
+		for ( URI predURI : RDFResourceDescription.Property.TYPE.getURIs() ) {
+			remove( resourceURI, predURI, type );
+		}
 	}
 
 	@Override
-	public void removeType( final URI resourceURI, final URI type ) {
-		final URI documentURI = getDocumentURI( resourceURI );
-		connectionTemplate.write( connection -> {
-			connection.remove( resourceURI, null, type, documentURI );
-		} );
-	}
-
-	@Override
-	public void setType( final URI resourceURI, final URI type ) {
-		final URI documentURI = getDocumentURI( resourceURI );
-		connectionTemplate.write( connection -> {
-			connection.remove( resourceURI, null, type, documentURI );
-			connection.add( resourceURI, RDFResourceDescription.Property.TYPE.getURI(), type, documentURI );
-		} );
+	public void setType( URI resourceURI, URI type ) {
+		remove( resourceURI, RDFResourceDescription.Property.TYPE );
+		addType( resourceURI, type );
 	}
 
 	private URI getDocumentURI( URI resourceURI ) {

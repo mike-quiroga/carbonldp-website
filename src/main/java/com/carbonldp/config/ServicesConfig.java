@@ -1,6 +1,7 @@
 package com.carbonldp.config;
 
 import com.carbonldp.apps.AppRepository;
+import com.carbonldp.apps.roles.AppRoleRepository;
 import com.carbonldp.apps.AppService;
 import com.carbonldp.apps.SesameAppService;
 import com.carbonldp.authorization.acl.ACLRepository;
@@ -14,7 +15,6 @@ import com.carbonldp.spring.TransactionWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.util.Assert;
 
 @Configuration
 public class ServicesConfig {
@@ -26,8 +26,6 @@ public class ServicesConfig {
 
 	@Autowired
 	private ACLRepository aclRepository;
-	@Autowired
-	private AppRepository appRepository;
 
 	@Bean
 	protected TransactionWrapper transactionWrapper() {
@@ -36,25 +34,16 @@ public class ServicesConfig {
 
 	@Bean
 	public RDFSourceService sourceService() {
-		Assert.notNull( sourceRepository );
-		Assert.notNull( containerRepository );
-		Assert.notNull( aclRepository );
 		return new SesameRDFSourceService( transactionWrapper(), sourceRepository, containerRepository, aclRepository );
 	}
 
 	@Bean
 	public ContainerService containerService() {
-		Assert.notNull( sourceRepository );
-		Assert.notNull( containerRepository );
-		Assert.notNull( aclRepository );
 		return new SesameContainerService( transactionWrapper(), sourceRepository, containerRepository, aclRepository );
 	}
 
 	@Bean
-	public AppService appService() {
-		Assert.notNull( sourceRepository );
-		Assert.notNull( containerRepository );
-		Assert.notNull( appRepository );
-		return new SesameAppService( transactionWrapper(), sourceRepository, containerRepository, aclRepository, appRepository );
+	public AppService appService( AppRepository appRepository, AppRoleRepository appRoleRepository ) {
+		return new SesameAppService( transactionWrapper(), sourceRepository, containerRepository, aclRepository, appRepository, appRoleRepository );
 	}
 }

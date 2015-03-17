@@ -28,7 +28,8 @@ public class ACLConfig extends GlobalMethodSecurityConfiguration {
 	public PermissionEvaluator permissionEvaluator() {
 		return new ACLPermissionEvaluator(
 			systemRoleACLPermissionVoter(),
-			directACLPermissionVoter()
+			directACLPermissionVoter(),
+			inheritanceACLPermissionVoter()
 		);
 	}
 
@@ -42,6 +43,7 @@ public class ACLConfig extends GlobalMethodSecurityConfiguration {
 	@PostConstruct
 	public void injectACLRepository() {
 		( (AbstractACLPermissionVoter) directACLPermissionVoter() ).setACLRepository( aclRepository );
+		( (AbstractACLPermissionVoter) inheritanceACLPermissionVoter() ).setACLRepository( aclRepository );
 	}
 
 	@Bean
@@ -52,5 +54,10 @@ public class ACLConfig extends GlobalMethodSecurityConfiguration {
 	@Bean
 	public ACLPermissionVoter directACLPermissionVoter() {
 		return new DirectACLPermissionVoter();
+	}
+
+	@Bean
+	public ACLPermissionVoter inheritanceACLPermissionVoter() {
+		return new InheritanceACLPermissionVoter();
 	}
 }
