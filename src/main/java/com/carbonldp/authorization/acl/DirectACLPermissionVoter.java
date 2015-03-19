@@ -3,7 +3,6 @@ package com.carbonldp.authorization.acl;
 import com.carbonldp.authorization.acl.ACEDescription.Permission;
 import com.carbonldp.rdf.RDFNodeEnum;
 import com.carbonldp.utils.ACLUtil;
-import com.carbonldp.utils.RDFResourceUtil;
 import com.carbonldp.web.exceptions.NotImplementedException;
 import org.openrdf.model.URI;
 
@@ -19,7 +18,7 @@ public class DirectACLPermissionVoter extends AbstractACLPermissionVoter impleme
 		if ( acl == null || acl.isEmpty() ) return Vote.ABSTAIN;
 
 		Map<Permission, ACE> permissionACE = new HashMap<>();
-		Set<ACE> aces = RDFResourceUtil.getResourceViews( acl.getACEntries(), acl.getBaseModel(), ACE.class );
+		Set<ACE> aces = ACEFactory.get( acl, acl.getACEntries() );
 		for ( ACE ace : aces ) {
 			if ( ! ACLUtil.aceRefersToSubjects( ace, subjects ) ) continue;
 			for ( Permission permission : permissions ) {

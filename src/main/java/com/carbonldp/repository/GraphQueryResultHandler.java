@@ -2,18 +2,16 @@ package com.carbonldp.repository;
 
 import com.carbonldp.repository.txn.RepositoryRuntimeException;
 import org.openrdf.model.Statement;
-import org.openrdf.query.GraphQuery;
 import org.openrdf.query.GraphQueryResult;
 import org.openrdf.query.QueryEvaluationException;
 
 public abstract class GraphQueryResultHandler implements StatementsHandler {
-	public void handleQuery(GraphQuery query) {
+	public void handle( GraphQueryResult queryResult ) {
 		try {
-			GraphQueryResult result = query.evaluate();
 			start();
 			boolean continueLoop = true;
-			while ( result.hasNext() && continueLoop ) {
-				Statement statement = result.next();
+			while ( queryResult.hasNext() && continueLoop ) {
+				Statement statement = queryResult.next();
 				continueLoop = handleStatement( statement );
 			}
 			end();

@@ -10,7 +10,4 @@ public interface AppRepository {
 	public App findByRootContainer( URI rootContainerURI );
 
 	public App create( App app );
-
-	public void initialize( App app );
-
 }

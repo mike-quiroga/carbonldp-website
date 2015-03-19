@@ -2,55 +2,36 @@ package com.carbonldp.apps.context;
 
 import com.carbonldp.Vars;
 import com.carbonldp.apps.App;
+import com.carbonldp.web.AbstractUniqueFilter;
 import org.openrdf.model.URI;
 import org.openrdf.model.impl.URIImpl;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.filter.GenericFilterBean;
 
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 
 import static com.carbonldp.Consts.EMPTY_STRING;
 import static com.carbonldp.Consts.SLASH;
 
-public class AppContextPersistanceFilter extends GenericFilterBean {
-	protected final Logger LOG = LoggerFactory.getLogger( this.getClass() );
-
-	static final String FILTER_APPLIED = "__carbon_acpf_applied";
+public class AppContextPersistenceFilter extends AbstractUniqueFilter {
+	public static final String FILTER_APPLIED = "__carbon_acpf_applied";
 
 	private final AppContextRepository appContextRepository;
 
-	public AppContextPersistanceFilter( AppContextRepository appContextRepository ) {
+	public AppContextPersistenceFilter( AppContextRepository appContextRepository ) {
+		super( FILTER_APPLIED );
 		this.appContextRepository = appContextRepository;
 	}
 
 	@Override
-	public void doFilter( ServletRequest request, ServletResponse response, FilterChain chain ) throws IOException, ServletException {
-		if ( request.getAttribute( FILTER_APPLIED ) != null ) {
-			// Ensure that filter is only applied once per request
-			chain.doFilter( request, response );
-			return;
-		}
-
-		request.setAttribute( FILTER_APPLIED, Boolean.TRUE );
-
-		HttpServletRequest httpRequest = (HttpServletRequest) request;
-		HttpServletResponse httpResponse = (HttpServletResponse) response;
-
-		URI rootContainerURI = getRootContainerURI( httpRequest, httpResponse );
+	protected void applyFilter( HttpServletRequest request, HttpServletResponse response ) {
+		URI rootContainerURI = getRootContainerURI( request, response );
 
 		if ( rootContainerURI == null ) {
 			// The URI doesn't match an App's Root Container URI
 			// TODO: Add more information
 			request.removeAttribute( FILTER_APPLIED );
-			httpResponse.setStatus( HttpStatus.NOT_FOUND.value() );
+			response.setStatus( HttpStatus.NOT_FOUND.value() );
 			return;
 		}
 
@@ -59,7 +40,7 @@ public class AppContextPersistanceFilter extends GenericFilterBean {
 		if ( app == null ) {
 			// TODO: Add more information
 			request.removeAttribute( FILTER_APPLIED );
-			httpResponse.setStatus( HttpStatus.NOT_FOUND.value() );
+			response.setStatus( HttpStatus.NOT_FOUND.value() );
 			return;
 		}
 
@@ -68,17 +49,12 @@ public class AppContextPersistanceFilter extends GenericFilterBean {
 		if ( LOG.isDebugEnabled() ) {
 			LOG.debug( "AppContext set to: '{}'", app );
 		}
+	}
 
-		try {
-			chain.doFilter( request, response );
-		} finally {
-			AppContextHolder.clearContext();
-			request.removeAttribute( FILTER_APPLIED );
-
-			if ( LOG.isDebugEnabled() ) {
-				LOG.debug( "AppContext cleared" );
-			}
-		}
+	@Override
+	protected void cleanFilter() {
+		AppContextHolder.clearContext();
+		if ( LOG.isDebugEnabled() ) LOG.debug( "AppContext now cleared, as request processing completed" );
 	}
 
 	private URI getRootContainerURI( HttpServletRequest httpRequest, HttpServletResponse httpResponse ) {

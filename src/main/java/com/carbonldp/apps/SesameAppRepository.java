@@ -1,13 +1,9 @@
 package com.carbonldp.apps;
 
-import com.carbonldp.apps.context.RunInAppContext;
 import com.carbonldp.ldp.containers.ContainerDescription.Type;
 import com.carbonldp.ldp.containers.ContainerRepository;
-import com.carbonldp.ldp.sources.RDFSourceRepository;
-import com.carbonldp.ldp.containers.BasicContainer;
-import com.carbonldp.ldp.containers.BasicContainerFactory;
 import com.carbonldp.ldp.sources.RDFSource;
-import com.carbonldp.ldp.sources.RDFSourceFactory;
+import com.carbonldp.ldp.sources.RDFSourceRepository;
 import com.carbonldp.rdf.RDFDocumentRepository;
 import com.carbonldp.repository.AbstractSesameRepository;
 import com.carbonldp.repository.RepositoryService;
@@ -97,19 +93,6 @@ public class SesameAppRepository extends AbstractSesameRepository implements App
 		containerRepository.createChild( appsContainerURI, app, appsContainerType );
 
 		return app;
-	}
-
-	@Override
-	@RunInAppContext
-	public void initialize( App app ) {
-		RDFSource containerSource = RDFSourceFactory.create( app.getRootContainerURI() );
-		BasicContainer rootContainer = BasicContainerFactory.create( containerSource );
-		documentRepository.addDocument( rootContainer.getDocument() );
-
-		// TODO: Create default resources in the Application's repository
-		// -- TODO: Root Container
-		// -- TODO: Application Roles Container
-		// -- TODO: ACLs
 	}
 
 	private void createAppRepository( App app ) {

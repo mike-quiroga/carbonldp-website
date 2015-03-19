@@ -16,7 +16,10 @@ public interface RDFDocumentRepository {
 
 	public void addDocuments( Collection<RDFDocument> documents );
 
+	public void update( RDFDocument document );
+
 	public void deleteDocument( URI documentURI );
 
 	public void deleteDocuments( Collection<URI> documentURIs );
+
 }
