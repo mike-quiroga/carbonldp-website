@@ -7,17 +7,22 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
 import com.carbonldp.apps.context.AppContextConfig;
-import com.carbonldp.ldp.services.ContainerService;
-import com.carbonldp.repository.RepositoryConfig;
+import com.carbonldp.config.ConfigurationConfig;
+import com.carbonldp.config.RepositoriesConfig;
+import com.carbonldp.config.ServicesConfig;
+import com.carbonldp.ldp.containers.ContainerService;
+import com.carbonldp.repository.txn.TxnConfig;
 import com.carbonldp.security.SecurityConfig;
 
 @Configuration
 //@formatter:off
 @Import({ 
+		TxnConfig.class,
 		SecurityConfig.class,
 		ConfigurationConfig.class,
 		AppContextConfig.class,
-		RepositoryConfig.class 
+		RepositoriesConfig.class,
+		ServicesConfig.class
 })
 //@formatter:on
 public class TestConfig {

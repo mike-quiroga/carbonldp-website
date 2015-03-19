@@ -5,8 +5,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 
-import com.carbonldp.ConfigurationRepository;
-import com.carbonldp.PropertiesFileConfigurationRepository;
+import com.carbonldp.config.ConfigurationRepository;
+import com.carbonldp.config.PropertiesFileConfigurationRepository;
 import com.carbonldp.spring.DependencyInjectorListener;
 
 @Configuration

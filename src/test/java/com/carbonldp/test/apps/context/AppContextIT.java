@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.testng.annotations.Test;
 
 import com.carbonldp.apps.App;
+import com.carbonldp.apps.AppRepository;
 import com.carbonldp.apps.context.AppContext;
 import com.carbonldp.apps.context.AppContextHolder;
 import com.carbonldp.apps.context.AppContextPersistanceFilter;
@@ -29,7 +30,12 @@ public class AppContextIT extends AbstractIT {
 	@Autowired
 	private AppContextPersistanceFilter appContextPersistanceFilter;
 
+	@Autowired
+	private AppRepository appRepository;
+
 	static final String FILTER_APPLIED = "__carbon_acpf_applied";
+
+	AppContext context = AppContextHolder.createEmptyContext();
 
 	@Test
 	public void avoidFilterSecondTimeTest() {
@@ -44,6 +50,7 @@ public class AppContextIT extends AbstractIT {
 			throw new RuntimeException(e);
 		}
 		Mockito.verify(request, Mockito.never()).getRequestURI();
+		context.setApplication(null);
 	}
 
 	@Test
@@ -60,7 +67,7 @@ public class AppContextIT extends AbstractIT {
 			throw new RuntimeException(e);
 		}
 		Mockito.verify(response).setStatus(404);
-
+		context.setApplication(null);
 	}
 
 	@Test
@@ -77,6 +84,39 @@ public class AppContextIT extends AbstractIT {
 			throw new RuntimeException(e);
 		}
 		Mockito.verify(response).setStatus(404);
+		context.setApplication(null);
+	}
+
+	@Test
+	public void plattformToAppContextExchangerTest() {
+		App app = appRepository.findByRootContainer(new URIImpl("http://local.carbonldp.com/apps/test-blog/"));
+		context.setApplication(null);
+		assertTrue(context.isEmpty());
+		applicationContextTemplate.runInAppContext(app, new ActionCallback() {
+			@Override
+			public void run() {
+				assertEquals(AppContextHolder.getContext().getApplication().getURI().stringValue(), "http://local.carbonldp.com/apps/test-blog/");
+
+			}
+
+		});
+		context.setApplication(null);
+	}
+
+	@Test
+	public void appToPlatformContextExchangerTest() {
+		App app = appRepository.findByRootContainer(new URIImpl("http://local.carbonldp.com/apps/test-blog/"));
+		context.setApplication(app);
+		app = AppContextHolder.getContext().getApplication();
+		assertEquals(app.getURI().stringValue(), "http://local.carbonldp.com/apps/test-blog/");
+
+		platformContextTemplate.runInPlatformContext(new ActionCallback() {
+			@Override
+			public void run() {
+				assertTrue(AppContextHolder.getContext().isEmpty());
+			}
+		});
+		context.setApplication(null);
 	}
 
 	@Test
@@ -93,38 +133,7 @@ public class AppContextIT extends AbstractIT {
 			throw new RuntimeException(e);
 		}
 		Mockito.verify(request).removeAttribute(FILTER_APPLIED);
-
-	}
-
-	@Test
-	public void appToPlatformContextExchangerTest() {
-		App app = appService.findByRootContainer(new URIImpl("http://local.carbonldp.com/apps/test-blog/"));
-		AppContext context = AppContextHolder.createEmptyContext();
-		context.setApplication(app);
-		app = AppContextHolder.getContext().getApplication();
-		assertEquals(app.getURI().stringValue(), "http://local.carbonldp.com/apps/test-blog/");
-
-		platformContextTemplate.runInPlatformContext(new ActionCallback() {
-			@Override
-			public void run() {
-				assertTrue(AppContextHolder.getContext().isEmpty());
-			}
-		});
-	}
-
-	@Test
-	public void plattformToAppContextExchangerTest() {
-		App app = appService.findByRootContainer(new URIImpl("http://local.carbonldp.com/apps/test-blog/"));
-		AppContext context = AppContextHolder.createEmptyContext();
-		assertTrue(context.isEmpty());
-		applicationContextTemplate.runInPlatformContext(app, new ActionCallback() {
-			@Override
-			public void run() {
-				assertEquals(AppContextHolder.getContext().getApplication().getURI().stringValue(), "http://local.carbonldp.com/apps/test-blog/");
-
-			}
-
-		});
+		context.setApplication(null);
 	}
 
 }

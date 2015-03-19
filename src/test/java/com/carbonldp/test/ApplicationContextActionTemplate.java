@@ -1,14 +1,18 @@
 package com.carbonldp.test;
 
-import org.springframework.transaction.annotation.Transactional;
-
 import com.carbonldp.apps.App;
 import com.carbonldp.apps.context.RunInAppContext;
+import com.carbonldp.apps.context.RunInPlatformContext;
 
 public class ApplicationContextActionTemplate {
-	@Transactional
+
 	@RunInAppContext
-	public void runInPlatformContext(App application, ActionCallback action) {
+	public void runInAppContext(App application, ActionCallback action) {
+		action.run();
+	}
+
+	@RunInPlatformContext
+	public void runInPlatformContext(ActionCallback action) {
 		action.run();
 	}
 }
