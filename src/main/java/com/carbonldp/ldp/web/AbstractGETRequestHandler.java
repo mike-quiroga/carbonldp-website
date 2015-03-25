@@ -1,13 +1,15 @@
 package com.carbonldp.ldp.web;
 
 import com.carbonldp.HTTPHeaders;
+import com.carbonldp.descriptions.APIPreferences;
 import com.carbonldp.descriptions.APIPreferences.ContainerRetrievalPreference;
 import com.carbonldp.descriptions.APIPreferences.InteractionModel;
 import com.carbonldp.ldp.containers.Container;
+import com.carbonldp.ldp.sources.RDFSource;
 import com.carbonldp.models.HTTPHeader;
 import com.carbonldp.models.HTTPHeaderValue;
-import com.carbonldp.ldp.sources.RDFSource;
 import com.carbonldp.utils.RDFNodeUtil;
+import com.carbonldp.web.exceptions.BadRequestException;
 import com.carbonldp.web.exceptions.NotFoundException;
 import org.joda.time.DateTime;
 import org.openrdf.model.URI;
@@ -23,18 +25,16 @@ import java.util.Set;
 
 public abstract class AbstractGETRequestHandler extends AbstractLDPRequestHandler {
 
-	//@formatter:off
 	private static final Set<ContainerRetrievalPreference> DEFAULT_RCP;
 
 	static {
-		DEFAULT_RCP = new HashSet<ContainerRetrievalPreference>();
+		DEFAULT_RCP = new HashSet<>();
 		DEFAULT_RCP.add( ContainerRetrievalPreference.CONTAINER_PROPERTIES );
 		DEFAULT_RCP.add( ContainerRetrievalPreference.MEMBERSHIP_TRIPLES );
 	}
-	//@formatter:on
 
 	public AbstractGETRequestHandler() {
-		Set<InteractionModel> supportedInteractionModels = new HashSet<InteractionModel>();
+		Set<InteractionModel> supportedInteractionModels = new HashSet<>();
 		supportedInteractionModels.add( InteractionModel.RDF_SOURCE );
 		supportedInteractionModels.add( InteractionModel.CONTAINER );
 		supportedInteractionModels.add( InteractionModel.SPARQL_ENDPOINT );
@@ -75,11 +75,13 @@ public abstract class AbstractGETRequestHandler extends AbstractLDPRequestHandle
 		// TODO: Add Allow Headers (depending on security)
 
 		setAppliedPreferenceHeaders();
-		return new ResponseEntity<Object>( source, HttpStatus.OK );
+		addTypeLinkHeader( InteractionModel.RDF_SOURCE );
+		return new ResponseEntity<>( source, HttpStatus.OK );
 	}
 
 	protected ResponseEntity<Object> handleContainerRetrieval( URI targetURI ) {
 		Set<ContainerRetrievalPreference> containerRetrievalPreferences = getContainerRetrievalPreferences( targetURI );
+
 		Container container = containerService.get( targetURI, containerRetrievalPreferences );
 
 		ensureETagIsPresent( container, containerRetrievalPreferences );
@@ -89,7 +91,8 @@ public abstract class AbstractGETRequestHandler extends AbstractLDPRequestHandle
 		// TODO: Add Allow Headers (depending on security)
 
 		setAppliedPreferenceHeaders();
-		return new ResponseEntity<Object>( container, HttpStatus.OK );
+		addContainerTypeLinkHeader( container );
+		return new ResponseEntity<>( container, HttpStatus.OK );
 	}
 
 	private void ensureETagIsPresent( Container container, Set<ContainerRetrievalPreference> containerRetrievalPreferences ) {
@@ -100,14 +103,14 @@ public abstract class AbstractGETRequestHandler extends AbstractLDPRequestHandle
 	}
 
 	private Set<ContainerRetrievalPreference> getContainerRetrievalPreferences( URI targetURI ) {
-		Set<ContainerRetrievalPreference> preferences = new HashSet<ContainerRetrievalPreference>();
+		Set<ContainerRetrievalPreference> preferences = new HashSet<>();
 		Set<ContainerRetrievalPreference> defaultPreferences = getDefaultContainerRetrievalPreferences();
 		Set<ContainerRetrievalPreference> containerDefinedPreferences = containerService.getRetrievalPreferences( targetURI );
 
 		if ( containerDefinedPreferences.isEmpty() ) preferences.addAll( defaultPreferences );
 		else preferences.addAll( containerDefinedPreferences );
 
-		return getContainerRetrievalPreferences( defaultPreferences, request );
+		return getContainerRetrievalPreferences( preferences, request );
 	}
 
 	private Set<ContainerRetrievalPreference> getContainerRetrievalPreferences( Set<ContainerRetrievalPreference> defaultPreferences, HttpServletRequest request ) {
@@ -115,22 +118,24 @@ public abstract class AbstractGETRequestHandler extends AbstractLDPRequestHandle
 		List<HTTPHeaderValue> includePreferences = HTTPHeader.filterHeaderValues( preferHeader, "return", "representation", "include", null );
 		List<HTTPHeaderValue> omitPreferences = HTTPHeader.filterHeaderValues( preferHeader, "return", "representation", "omit", null );
 
+		Set<APIPreferences.ContainerRetrievalPreference> appliedPreferences = new HashSet<>();
+
 		for ( HTTPHeaderValue omitPreference : omitPreferences ) {
 			ContainerRetrievalPreference containerPreference = RDFNodeUtil.findByURI( omitPreference.getExtendingValue(), ContainerRetrievalPreference.class );
-			if ( containerPreference != null ) {
-				if ( defaultPreferences.contains( containerPreference ) ) {
-					defaultPreferences.remove( containerPreference );
-				}
-			}
+			if ( containerPreference == null ) continue;
+
+			// TODO: Add AppliedPreference Header
+			appliedPreferences.add( containerPreference );
+			if ( defaultPreferences.contains( containerPreference ) ) defaultPreferences.remove( containerPreference );
 		}
 
 		for ( HTTPHeaderValue includePreference : includePreferences ) {
 			ContainerRetrievalPreference containerPreference = RDFNodeUtil.findByURI( includePreference.getExtendingValue(), ContainerRetrievalPreference.class );
-			if ( containerPreference != null ) {
-				if ( ! defaultPreferences.contains( containerPreference ) ) {
-					defaultPreferences.add( containerPreference );
-				}
-			}
+			if ( containerPreference == null ) continue;
+
+			// TODO: Add AppliedPreference Header
+			if ( appliedPreferences.contains( containerPreference ) ) throw new BadRequestException( "The prefer header contains overlapping preferences." );
+			if ( ! defaultPreferences.contains( containerPreference ) ) defaultPreferences.add( containerPreference );
 		}
 
 		return defaultPreferences;
@@ -142,11 +147,11 @@ public abstract class AbstractGETRequestHandler extends AbstractLDPRequestHandle
 
 	protected ResponseEntity<Object> handleNonRDFRetrieval( URI targetURI ) {
 		// TODO: Implement it
-		return new ResponseEntity<Object>( HttpStatus.NOT_IMPLEMENTED );
+		return new ResponseEntity<>( HttpStatus.NOT_IMPLEMENTED );
 	}
 
 	protected ResponseEntity<Object> handleSPARQLEndpointRetrieval( URI targetURI ) {
 		// TODO: Implement it
-		return new ResponseEntity<Object>( HttpStatus.NOT_IMPLEMENTED );
+		return new ResponseEntity<>( HttpStatus.NOT_IMPLEMENTED );
 	}
 }

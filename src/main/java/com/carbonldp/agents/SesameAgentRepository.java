@@ -2,8 +2,8 @@ package com.carbonldp.agents;
 
 import com.carbonldp.ldp.containers.ContainerDescription.Type;
 import com.carbonldp.ldp.containers.ContainerRepository;
-import com.carbonldp.ldp.sources.RDFSourceRepository;
 import com.carbonldp.ldp.sources.RDFSource;
+import com.carbonldp.ldp.sources.RDFSourceRepository;
 import com.carbonldp.repository.AbstractSesameRepository;
 import com.carbonldp.utils.RDFNodeUtil;
 import org.openrdf.model.URI;
@@ -45,7 +45,7 @@ public class SesameAgentRepository extends AbstractSesameRepository implements A
 	}
 
 	public Agent findByEmail( String email ) {
-		Map<String, Value> bindings = new HashMap<String, Value>();
+		Map<String, Value> bindings = new HashMap<>();
 		bindings.put( "email", ValueFactoryImpl.getInstance().createLiteral( email ) );
 
 		Set<URI> memberURIs = containerRepository.findMembers( agentsContainerURI, findByEmail_selector, bindings, agentsContainerType );

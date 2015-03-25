@@ -21,8 +21,8 @@ public class LocalRepositoryService extends AbstractComponent implements Reposit
 
 	private final RepositoryManager manager;
 
-	public LocalRepositoryService(RepositoryManager manager) {
-		if ( !manager.isInitialized() ) try {
+	public LocalRepositoryService( RepositoryManager manager ) {
+		if ( ! manager.isInitialized() ) try {
 			manager.initialize();
 		} catch ( RepositoryException e ) {
 			throw new RepositoryRuntimeException( 0x000D );
@@ -31,7 +31,8 @@ public class LocalRepositoryService extends AbstractComponent implements Reposit
 	}
 
 	@Override
-	public void createRepository(String repositoryID) {
+	public void createRepository( String repositoryID ) {
+		// TODO: Make this configurable
 		SailImplConfig sailConfig = new NativeStoreConfig();
 		RepositoryImplConfig repositoryTypeSpec = new SailRepositoryConfig( sailConfig );
 
@@ -67,7 +68,7 @@ public class LocalRepositoryService extends AbstractComponent implements Reposit
 	}
 
 	@Override
-	public boolean repositoryExists(String repositoryID) {
+	public boolean repositoryExists( String repositoryID ) {
 		try {
 			return manager.hasRepositoryConfig( repositoryID );
 		} catch ( RepositoryException | RepositoryConfigException e ) {
@@ -78,7 +79,7 @@ public class LocalRepositoryService extends AbstractComponent implements Reposit
 		}
 	}
 
-	private RepositoryConnection getConnection(String repositoryID) {
+	private RepositoryConnection getConnection( String repositoryID ) {
 		Repository repository;
 		try {
 			repository = manager.getRepository( repositoryID );
@@ -102,19 +103,19 @@ public class LocalRepositoryService extends AbstractComponent implements Reposit
 	}
 
 	@Override
-	public <T> ReadTransactionTemplate<T> getReadTransactionTemplate(String repositoryID) {
+	public <T> ReadTransactionTemplate<T> getReadTransactionTemplate( String repositoryID ) {
 		RepositoryConnection connection = getConnection( repositoryID );
 		return new LocalReadTransactionTemplate<T>( connection );
 	}
 
 	@Override
-	public WriteTransactionTemplate getWriteTransactionTemplate(String repositoryID) {
+	public WriteTransactionTemplate getWriteTransactionTemplate( String repositoryID ) {
 		RepositoryConnection connection = getConnection( repositoryID );
 		return new LocalWriteTransactionTemplate( connection );
 	}
 
 	@Override
-	public void deleteRepository(String repositoryID) {
+	public void deleteRepository( String repositoryID ) {
 		try {
 			manager.removeRepository( repositoryID );
 		} catch ( RepositoryException | RepositoryConfigException e ) {
@@ -131,7 +132,7 @@ public class LocalRepositoryService extends AbstractComponent implements Reposit
 		public LocalTransactionTemplate() {
 		}
 
-		public LocalTransactionTemplate(RepositoryConnection connection) {
+		public LocalTransactionTemplate( RepositoryConnection connection ) {
 			this.connection = connection;
 		}
 
@@ -163,14 +164,14 @@ public class LocalRepositoryService extends AbstractComponent implements Reposit
 
 	private class LocalReadTransactionTemplate<T> extends LocalTransactionTemplate implements ReadTransactionTemplate<T> {
 
-		public LocalReadTransactionTemplate(RepositoryConnection connection) {
+		public LocalReadTransactionTemplate( RepositoryConnection connection ) {
 			super();
 			RepositoryConnection readOnlyConnection = new ReadOnlyRepositoryConnection( connection );
 			this.connection = readOnlyConnection;
 		}
 
 		@Override
-		public T execute(ReadTransactionCallback<T> callback) {
+		public T execute( ReadTransactionCallback<T> callback ) {
 			try {
 				return callback.executeInTransaction( connection );
 			} catch ( RepositoryException e ) {
@@ -189,13 +190,13 @@ public class LocalRepositoryService extends AbstractComponent implements Reposit
 
 		private List<WriteTransactionCallback> callbacks;
 
-		public LocalWriteTransactionTemplate(RepositoryConnection connection) {
+		public LocalWriteTransactionTemplate( RepositoryConnection connection ) {
 			super( connection );
-			callbacks = new ArrayList<WriteTransactionCallback>();
+			callbacks = new ArrayList<>();
 		}
 
 		@Override
-		public void addCallback(WriteTransactionCallback callback) {
+		public void addCallback( WriteTransactionCallback callback ) {
 			callbacks.add( callback );
 		}
 
@@ -223,7 +224,7 @@ public class LocalRepositoryService extends AbstractComponent implements Reposit
 		}
 
 		@Override
-		public void execute(WriteTransactionCallback callback) {
+		public void execute( WriteTransactionCallback callback ) {
 			addCallback( callback );
 			execute();
 		}

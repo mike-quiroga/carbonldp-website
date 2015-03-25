@@ -1,8 +1,5 @@
-package com.carbonldp.apps.web;
+package com.carbonldp.apps.resources;
 
-import com.carbonldp.apps.web.handlers.AppResourceGETHandler;
-import com.carbonldp.apps.web.handlers.AppResourcePOSTHandler;
-import com.carbonldp.apps.web.handlers.AppResourcePOSTNonRDFHandler;
 import com.carbonldp.ldp.web.AbstractLDPController;
 import org.openrdf.model.impl.AbstractModel;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,14 +29,18 @@ public class AppResourceController extends AbstractLDPController {
 	private AppResourcePOSTHandler postRDFHandler;
 	@Autowired
 	private AppResourcePOSTNonRDFHandler postNonRDFHandler;
+	@Autowired
+	private AppResourcePUTHandler putHandler;
+	@Autowired
+	private AppResourceDELETEHandler deleteHandler;
 
 	@RequestMapping( method = RequestMethod.HEAD )
-	public ResponseEntity<Object> handleHEAD(HttpServletRequest request, HttpServletResponse response) {
+	public ResponseEntity<Object> handleHEAD( HttpServletRequest request, HttpServletResponse response ) {
 		return getRDFHandler.handleRequest( request, response );
 	}
 
 	@RequestMapping( method = RequestMethod.GET )
-	public ResponseEntity<Object> handleGET(HttpServletRequest request, HttpServletResponse response) {
+	public ResponseEntity<Object> handleGET( HttpServletRequest request, HttpServletResponse response ) {
 		return getRDFHandler.handleRequest( request, response );
 	}
 
@@ -49,12 +50,12 @@ public class AppResourceController extends AbstractLDPController {
 			"text/turtle"
 	} )
 	//@formatter:on
-	public ResponseEntity<Object> handleRDFPost(@RequestBody AbstractModel requestModel, HttpServletRequest request, HttpServletResponse response) {
+	public ResponseEntity<Object> handleRDFPost( @RequestBody AbstractModel requestModel, HttpServletRequest request, HttpServletResponse response ) {
 		return postRDFHandler.handleRequest( requestModel, request, response );
 	}
 
 	@RequestMapping( method = RequestMethod.POST )
-	public ResponseEntity<Object> handleNonRDFPost(@RequestBody AbstractModel requestModel, HttpServletRequest request, HttpServletResponse response) {
+	public ResponseEntity<Object> handleNonRDFPost( @RequestBody AbstractModel requestModel, HttpServletRequest request, HttpServletResponse response ) {
 		// TODO: Implement
 		return new ResponseEntity<Object>( HttpStatus.NOT_IMPLEMENTED );
 	}
@@ -73,21 +74,19 @@ public class AppResourceController extends AbstractLDPController {
 	}
 
 	@RequestMapping( method = RequestMethod.PUT )
-	public ResponseEntity<Object> handlePUT(HttpServletRequest request, HttpServletResponse response) {
-		// TODO: Implement
-		return new ResponseEntity<Object>( HttpStatus.NOT_IMPLEMENTED );
+	public ResponseEntity<Object> handlePUT( @RequestBody AbstractModel requestModel, HttpServletRequest request, HttpServletResponse response ) {
+		return putHandler.handleRequest( requestModel, request, response );
 	}
 
 	@RequestMapping( method = RequestMethod.PATCH )
-	public ResponseEntity<Object> handlePATCH(HttpServletRequest request, HttpServletResponse response) {
+	public ResponseEntity<Object> handlePATCH( HttpServletRequest request, HttpServletResponse response ) {
 		// TODO: Implement
 		return new ResponseEntity<Object>( HttpStatus.NOT_IMPLEMENTED );
 	}
 
 	@RequestMapping( method = RequestMethod.DELETE )
-	public ResponseEntity<Object> handleDELETE(HttpServletRequest request, HttpServletResponse response) {
-		// TODO: Implement
-		return new ResponseEntity<Object>( HttpStatus.NOT_IMPLEMENTED );
+	public ResponseEntity<Object> handleDELETE( HttpServletRequest request, HttpServletResponse response ) {
+		return deleteHandler.handleRequest( request, response );
 	}
 
 }

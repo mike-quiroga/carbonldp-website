@@ -10,6 +10,7 @@ import org.openrdf.model.Value;
 import org.openrdf.spring.SesameConnectionFactory;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -35,22 +36,11 @@ public class SesameBasicContainerRepository extends AbstractTypedContainerReposi
 		StringBuilder queryBuilder = new StringBuilder();
 		//@formatter:off
 		queryBuilder
-				.append( "ASK {" )
-				.append( NEW_LINE )
-				.append( TAB )
-				.append( "GRAPH ?containerURI {" )
-				.append( NEW_LINE )
-				.append( TAB )
-				.append( TAB )
-				.append( RDFNodeUtil.generatePredicateStatement( "?containerURI", "?hasMemberRelation", ContainerDescription.Property.HAS_MEMBER_RELATION ) )
-				.append( NEW_LINE )
-				.append( TAB )
-				.append( TAB )
-				.append( "?containerURI ?hasMemberRelation ?member" )
-				.append( NEW_LINE )
-				.append( TAB )
-				.append( "}" )
-				.append( NEW_LINE )
+				.append( "ASK {" ).append( NEW_LINE )
+				.append( TAB ).append( "GRAPH ?containerURI {" ).append( NEW_LINE )
+				.append( TAB ).append( TAB ).append( RDFNodeUtil.generatePredicateStatement( "?containerURI", "?hasMemberRelation", ContainerDescription.Property.HAS_MEMBER_RELATION ) ).append( NEW_LINE )
+				.append( TAB ).append( TAB ).append( "?containerURI ?hasMemberRelation ?member" ).append( NEW_LINE )
+				.append( TAB ).append( "}" ).append( NEW_LINE )
 				.append( "}" )
 		;
 		//@formatter:on
@@ -73,52 +63,20 @@ public class SesameBasicContainerRepository extends AbstractTypedContainerReposi
 		StringBuilder queryBuilder = new StringBuilder();
 		//@formatter:off
 		queryBuilder
-				.append( "CONSTRUCT {" )
-				.append( NEW_LINE )
-				.append( TAB )
-				.append( "?containerURI ?p ?o" )
-				.append( NEW_LINE )
-				.append( "} WHERE {" )
-				.append( NEW_LINE )
-				.append( TAB )
-				.append( "GRAPH ?containerURI {" )
-				.append( NEW_LINE )
-				.append( TAB )
-				.append( TAB )
-				.append( RDFNodeUtil.generatePredicateStatement( "?containerURI", "?hasMemberRelation", ContainerDescription.Property.HAS_MEMBER_RELATION ) )
-				.append( NEW_LINE )
-				.append( TAB )
-				.append( TAB )
-				.append( "?containerURI ?p ?o." )
-				.append( NEW_LINE )
-				.append( TAB )
-				.append( TAB )
-				.append( "FILTER(" )
-				.append( NEW_LINE )
-				.append( TAB )
-				.append( TAB )
-				.append( TAB )
-				.append( "(?p != ?hasMemberRelation)" )
-				.append( NEW_LINE )
-				.append( TAB )
-				.append( TAB )
-				.append( TAB )
-				.append( "&&" )
-				.append( NEW_LINE )
-				.append( TAB )
-				.append( TAB )
-				.append( TAB )
-				.append( "(?p NOT " )
+				.append( "CONSTRUCT {" ).append( NEW_LINE )
+				.append( TAB ).append( "?containerURI ?p ?o" ).append( NEW_LINE )
+				.append( "} WHERE {" ).append( NEW_LINE )
+				.append( TAB ).append( "GRAPH ?containerURI {" ).append( NEW_LINE )
+				.append( TAB ).append( TAB ).append( RDFNodeUtil.generatePredicateStatement( "?containerURI", "?hasMemberRelation", ContainerDescription.Property.HAS_MEMBER_RELATION ) ).append( NEW_LINE )
+				.append( TAB ).append( TAB ).append( "?containerURI ?p ?o." ).append( NEW_LINE )
+				.append( TAB ).append( TAB ).append( "FILTER(" ).append( NEW_LINE )
+				.append( TAB ).append( TAB ).append( TAB ).append( "(?p != ?hasMemberRelation)" ).append( NEW_LINE )
+				.append( TAB ).append( TAB ).append( TAB ).append( "&&" ).append( NEW_LINE )
+				.append( TAB ).append( TAB ).append( TAB ).append( "(?p NOT " )
 				.append( RDFNodeUtil.generateINOperator( ContainerDescription.Property.CONTAINS ) )
-				.append( ")" )
-				.append( NEW_LINE )
-				.append( TAB )
-				.append( TAB )
-				.append( ")" )
-				.append( NEW_LINE )
-				.append( TAB )
-				.append( "}" )
-				.append( NEW_LINE )
+				.append( ")" ).append( NEW_LINE )
+				.append( TAB ).append( TAB ).append( ")" ).append( NEW_LINE )
+				.append( TAB ).append( "}" ).append( NEW_LINE )
 				.append( "}" )
 		;
 		//@formatter:on
@@ -136,27 +94,13 @@ public class SesameBasicContainerRepository extends AbstractTypedContainerReposi
 		StringBuilder queryBuilder = new StringBuilder();
 		//@formatter:off
 		queryBuilder
-				.append( "CONSTRUCT {" )
-				.append( NEW_LINE )
-				.append( TAB )
-				.append( "?containerURI ?hasMemberRelation ?members" )
-				.append( NEW_LINE )
-				.append( "} WHERE {" )
-				.append( NEW_LINE )
-				.append( TAB )
-				.append( "GRAPH ?containerURI {" )
-				.append( NEW_LINE )
-				.append( TAB )
-				.append( TAB )
-				.append( RDFNodeUtil.generatePredicateStatement( "?containerURI", "?hasMemberRelation", ContainerDescription.Property.HAS_MEMBER_RELATION ) )
-				.append( NEW_LINE )
-				.append( TAB )
-				.append( TAB )
-				.append( "?containerURI ?hasMemberRelation ?members" )
-				.append( NEW_LINE )
-				.append( TAB )
-				.append( "}" )
-				.append( NEW_LINE )
+				.append( "CONSTRUCT {" ).append( NEW_LINE )
+				.append( TAB ).append( "?containerURI ?hasMemberRelation ?members" ).append( NEW_LINE )
+				.append( "} WHERE {" ).append( NEW_LINE )
+				.append( TAB ).append( "GRAPH ?containerURI {" ).append( NEW_LINE )
+				.append( TAB ).append( TAB ).append( RDFNodeUtil.generatePredicateStatement( "?containerURI", "?hasMemberRelation", ContainerDescription.Property.HAS_MEMBER_RELATION ) ).append( NEW_LINE )
+				.append( TAB ).append( TAB ).append( "?containerURI ?hasMemberRelation ?members" ).append( NEW_LINE )
+				.append( TAB ).append( "}" ).append( NEW_LINE )
 				.append( "}" )
 		;
 		//@formatter:on
@@ -174,32 +118,14 @@ public class SesameBasicContainerRepository extends AbstractTypedContainerReposi
 		StringBuilder queryBuilder = new StringBuilder();
 		//@formatter:off
 		queryBuilder
-				.append( "SELECT ?members WHERE {" )
-				.append( NEW_LINE )
-				.append( TAB )
-				.append( "GRAPH ?containerURI {" )
-				.append( NEW_LINE )
-				.append( TAB )
-				.append( TAB )
-				.append( RDFNodeUtil.generatePredicateStatement( "?containerURI", "?hasMemberRelation", ContainerDescription.Property.HAS_MEMBER_RELATION ) )
-				.append( NEW_LINE )
-				.append( TAB )
-				.append( TAB )
-				.append( "?containerURI ?hasMemberRelation ?members" )
-				.append( NEW_LINE )
-				.append( TAB )
-				.append( "}" )
-				.append( NEW_LINE )
-				.append( TAB )
-				.append( "GRAPH ?members {" )
-				.append( NEW_LINE )
-				.append( TAB )
-				.append( TAB )
-				.append( "%1$s" )
-				.append( NEW_LINE )
-				.append( TAB )
-				.append( "}" )
-				.append( NEW_LINE )
+				.append( "SELECT ?members WHERE {" ).append( NEW_LINE )
+				.append( TAB ).append( "GRAPH ?containerURI {" ).append( NEW_LINE )
+				.append( TAB ).append( TAB ).append( RDFNodeUtil.generatePredicateStatement( "?containerURI", "?hasMemberRelation", ContainerDescription.Property.HAS_MEMBER_RELATION ) ).append( NEW_LINE )
+				.append( TAB ).append( TAB ).append( "?containerURI ?hasMemberRelation ?members" ).append( NEW_LINE )
+				.append( TAB ).append( "}" ).append( NEW_LINE )
+				.append( TAB ).append( "GRAPH ?members {" ).append( NEW_LINE )
+				.append( TAB ).append( TAB ).append( "%1$s" ).append( NEW_LINE )
+				.append( TAB ).append( "}" ).append( NEW_LINE )
 				.append( "}" )
 		;
 		//@formatter:on
@@ -217,26 +143,12 @@ public class SesameBasicContainerRepository extends AbstractTypedContainerReposi
 		StringBuilder queryBuilder = new StringBuilder();
 		//@formatter:off
 		queryBuilder
-				.append( "SELECT ?members WHERE {" )
-				.append( NEW_LINE )
-				.append( TAB )
-				.append( "GRAPH ?containerURI {" )
-				.append( NEW_LINE )
-				.append( TAB )
-				.append( TAB )
-				.append( RDFNodeUtil.generatePredicateStatement( "?containerURI", "?hasMemberRelation", ContainerDescription.Property.HAS_MEMBER_RELATION ) )
-				.append( NEW_LINE )
-				.append( TAB )
-				.append( TAB )
-				.append( "?containerURI ?hasMemberRelation ?members." )
-				.append( NEW_LINE )
-				.append( TAB )
-				.append( TAB )
-				.append( "%1$s" )
-				.append( NEW_LINE )
-				.append( TAB )
-				.append( "}" )
-				.append( NEW_LINE )
+				.append( "SELECT ?members WHERE {" ).append( NEW_LINE )
+				.append( TAB ).append( "GRAPH ?containerURI {" ).append( NEW_LINE )
+				.append( TAB ).append( TAB ).append( RDFNodeUtil.generatePredicateStatement( "?containerURI", "?hasMemberRelation", ContainerDescription.Property.HAS_MEMBER_RELATION ) ).append( NEW_LINE )
+				.append( TAB ).append( TAB ).append( "?containerURI ?hasMemberRelation ?members." ).append( NEW_LINE )
+				.append( TAB ).append( TAB ).append( "%1$s" ).append( NEW_LINE )
+				.append( TAB ).append( "}" ).append( NEW_LINE )
 				.append( "}" )
 		;
 		//@formatter:on
@@ -246,5 +158,37 @@ public class SesameBasicContainerRepository extends AbstractTypedContainerReposi
 	@Override
 	public Set<URI> filterMembers( URI containerURI, Set<URI> possibleMemberURIs ) {
 		return filterMembers( containerURI, possibleMemberURIs, filterMembers_query );
+	}
+
+	private static final String removeMembersQuery;
+
+	static {
+		removeMembersQuery = "" +
+			"DELETE {" + NEW_LINE +
+			TAB + "GRAPH ?containerURI {" + NEW_LINE +
+			TAB + TAB + "?containerURI ?hasMemberRelation ?containedURI" + NEW_LINE +
+			TAB + "}." + NEW_LINE +
+			TAB + "GRAPH ?containedURI {" + NEW_LINE +
+			TAB + TAB + "?containedURI ?memberOfRelation ?containerURI" + NEW_LINE +
+			TAB + "}." + NEW_LINE +
+			"} WHERE {" + NEW_LINE +
+			TAB + "GRAPH ?containerURI {" + NEW_LINE +
+			TAB + TAB + RDFNodeUtil.generatePredicateStatement( "?containerURI", "?hasMemberRelation", ContainerDescription.Property.HAS_MEMBER_RELATION ) + NEW_LINE +
+			TAB + TAB + "?containerURI ?hasMemberRelation ?containedURI" + NEW_LINE +
+			TAB + "}." + NEW_LINE +
+			TAB + "OPTIONAL {" + NEW_LINE +
+			TAB + TAB + "GRAPH ?containedURI {" + NEW_LINE +
+			TAB + TAB + TAB + "?containedURI ?memberOfRelation ?containerURI" + NEW_LINE +
+			TAB + TAB + "}." + NEW_LINE +
+			TAB + "}." + NEW_LINE +
+			"}"
+		;
+	}
+
+	@Override
+	public void removeMembers( URI containerURI ) {
+		Map<String, Value> bindings = new HashMap<>();
+		bindings.put( "containerURI", containerURI );
+		sparqlTemplate.executeUpdate( removeMembersQuery, bindings );
 	}
 }

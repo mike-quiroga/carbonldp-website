@@ -4,8 +4,8 @@ import com.carbonldp.Vars;
 import com.carbonldp.agents.AgentRepository;
 import com.carbonldp.agents.SesameAgentRepository;
 import com.carbonldp.apps.AppRepository;
-import com.carbonldp.apps.roles.AppRoleRepository;
 import com.carbonldp.apps.SesameAppRepository;
+import com.carbonldp.apps.roles.AppRoleRepository;
 import com.carbonldp.apps.roles.SesameAppRoleRepository;
 import com.carbonldp.authorization.PlatformPrivilegeRepository;
 import com.carbonldp.authorization.PlatformRoleRepository;
@@ -73,7 +73,7 @@ public class RepositoriesConfig {
 		typedServices.add( directContainerRepository() );
 		typedServices.add( indirectContainerRepository() );
 
-		return new SesameContainerRepository( connectionFactory, resourceRepository(), documentRepository(), typedServices );
+		return new SesameContainerRepository( connectionFactory, resourceRepository(), documentRepository(), sourceRepository(), typedServices );
 	}
 
 	@Bean

@@ -1,4 +1,4 @@
-package com.carbonldp.apps.web.handlers;
+package com.carbonldp.apps.resources;
 
 import com.carbonldp.descriptions.APIPreferences.InteractionModel;
 import com.carbonldp.ldp.web.AbstractPOSTRequestHandler;

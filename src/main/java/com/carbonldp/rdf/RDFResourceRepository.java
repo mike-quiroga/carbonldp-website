@@ -194,5 +194,4 @@ public interface RDFResourceRepository {
 	public void removeType( URI resourceURI, URI type );
 
 	public void setType( URI resourceURI, URI type );
-
 }

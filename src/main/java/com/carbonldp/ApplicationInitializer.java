@@ -6,6 +6,7 @@ import com.carbonldp.config.RepositoriesConfig;
 import com.carbonldp.config.ServicesConfig;
 import com.carbonldp.repository.txn.TxnConfig;
 import com.carbonldp.security.SecurityConfig;
+import com.carbonldp.spring.SpringProfile;
 import com.carbonldp.utils.PropertiesUtil;
 import com.carbonldp.web.WebConfig;
 import org.springframework.beans.factory.config.PropertiesFactoryBean;

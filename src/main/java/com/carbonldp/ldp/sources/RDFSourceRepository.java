@@ -26,4 +26,8 @@ public interface RDFSourceRepository {
 	public void update( RDFSource source );
 
 	public void delete( URI sourceURI );
+
+	public void deleteOccurrences( URI sourceURI, boolean includeChildrens );
+
+	public void replace( RDFSource source );
 }

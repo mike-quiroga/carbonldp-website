@@ -1,4 +1,4 @@
-package com.carbonldp.apps.web.handlers;
+package com.carbonldp.apps.web;
 
 import com.carbonldp.apps.App;
 import com.carbonldp.apps.AppFactory;
@@ -61,9 +61,9 @@ public class AppsPOSTHandler extends AbstractPOSTRequestHandler {
 
 		App app = new App( requestResource.getBaseModel(), requestResource.getURI() );
 
-		app = appService.create( app );
+		appService.create( app );
 
-		return new ResponseEntity<>( requestResource, HttpStatus.OK );
+		return new ResponseEntity<>( HttpStatus.OK );
 	}
 
 	@Override

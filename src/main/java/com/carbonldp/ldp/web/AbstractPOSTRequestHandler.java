@@ -2,25 +2,15 @@ package com.carbonldp.ldp.web;
 
 import com.carbonldp.HTTPHeaders;
 import com.carbonldp.descriptions.APIPreferences.InteractionModel;
-import com.carbonldp.ldp.containers.BasicContainerDescription;
-import com.carbonldp.ldp.containers.DirectContainerDescription;
-import com.carbonldp.ldp.containers.IndirectContainerDescription;
+import com.carbonldp.ldp.containers.*;
+import com.carbonldp.models.EmptyResponse;
 import com.carbonldp.rdf.RDFNodeEnum;
-import com.carbonldp.ldp.containers.AccessPoint;
-import com.carbonldp.ldp.containers.AccessPointFactory;
-import com.carbonldp.ldp.containers.BasicContainer;
-import com.carbonldp.ldp.containers.BasicContainerFactory;
-import com.carbonldp.ldp.sources.RDFSource;
-import com.carbonldp.models.*;
 import com.carbonldp.rdf.RDFResource;
 import com.carbonldp.utils.HTTPUtil;
 import com.carbonldp.utils.ModelUtil;
-import com.carbonldp.utils.URIUtil;
-import com.carbonldp.utils.ValueUtil;
 import com.carbonldp.web.exceptions.BadRequestException;
 import com.carbonldp.web.exceptions.NotFoundException;
 import org.joda.time.DateTime;
-import org.openrdf.model.Resource;
 import org.openrdf.model.URI;
 import org.openrdf.model.impl.AbstractModel;
 import org.openrdf.model.impl.URIImpl;
@@ -30,12 +20,14 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Random;
 
 import static com.carbonldp.Consts.EMPTY_STRING;
 import static com.carbonldp.Consts.SLASH;
 
-public abstract class AbstractPOSTRequestHandler extends AbstractLDPRequestHandler {
+public abstract class AbstractPOSTRequestHandler extends AbstractRequestWithBodyHandler {
 
 	private final static RDFNodeEnum[] invalidTypesForRDFSources;
 
@@ -134,107 +126,18 @@ public abstract class AbstractPOSTRequestHandler extends AbstractLDPRequestHandl
 		} );
 
 		requestDocumentResource = getDocumentResourceWithFinalURI( requestBasicContainer, targetURI.stringValue() );
-		if ( ! requestDocumentResource.equals( requestBasicContainer.getURI() ) ) {
-			requestBasicContainer = new BasicContainer( requestDocumentResource );
-		}
+		if ( ! requestDocumentResource.equals( requestBasicContainer.getURI() ) ) requestBasicContainer = new BasicContainer( requestDocumentResource );
 
 		DateTime creationTime = containerService.createChild( targetURI, requestBasicContainer );
 
-		return createCreatedResponse( requestBasicContainer, creationTime );
+		return createCreatedResponse( requestDocumentResource, creationTime );
 	}
 
 	protected ResponseEntity<Object> createCreatedResponse( RDFResource createdResource, DateTime creationTime ) {
 		response.setHeader( HTTPHeaders.LOCATION, createdResource.getURI().stringValue() );
 		response.setHeader( HTTPHeaders.ETAG, HTTPUtil.formatWeakETag( creationTime.toString() ) );
 
-		return new ResponseEntity<Object>( new EmptyResponse(), HttpStatus.CREATED );
-	}
-
-	protected void validateRequestModel( AbstractModel requestModel ) {
-		Set<Resource> subjects = requestModel.subjects();
-		validateRequestResourcesNumber( subjects.size() );
-
-		for ( Resource subject : subjects )
-			validateRequestResource( subject );
-	}
-
-	protected void validateRequestResourcesNumber( int number ) {
-		if ( number == 0 ) throw new BadRequestException( "The request doesn't contain rdf resources." );
-	}
-
-	protected void validateRequestResource( Resource subject ) {
-		if ( ValueUtil.isBNode( subject ) ) throw new BadRequestException( "Blank nodes are not supported." );
-	}
-
-	protected Set<RDFResource> getRequestDocumentResources( AbstractModel requestModel ) {
-		Set<RDFResource> documentResources = new HashSet<RDFResource>();
-		for ( Resource subject : requestModel.subjects() ) {
-			if ( ! ValueUtil.isURI( subject ) ) continue;
-			URI subjectURI = ValueUtil.getURI( subject );
-			if ( URIUtil.hasFragment( subjectURI ) ) continue;
-			RDFResource documentResource = new RDFResource( requestModel, subjectURI );
-			documentResources.add( documentResource );
-		}
-		return documentResources;
-	}
-
-	protected RDFResource getRequestDocumentResource( AbstractModel requestModel ) {
-		RDFResource documentResource = null;
-		for ( Resource subject : requestModel.subjects() ) {
-			if ( ! ValueUtil.isURI( subject ) ) continue;
-			URI subjectURI = ValueUtil.getURI( subject );
-			if ( URIUtil.hasFragment( subjectURI ) ) continue;
-			if ( documentResource != null )
-				throw new BadRequestException( "The request contains more than one document resource." );
-			documentResource = new RDFResource( requestModel, subjectURI );
-		}
-		return documentResource;
-	}
-
-	protected <E extends RDFSource> Set<E> processDocumentResources( Set<RDFResource> requestDocumentResources, ResourceProcessor<E> resourceProcessor ) {
-		validateRequestDocumentResourcesNumber( requestDocumentResources.size() );
-
-		Set<E> processedResources = new HashSet<E>();
-		for ( RDFResource documentResource : requestDocumentResources ) {
-			processedResources.add( resourceProcessor.processResource( documentResource ) );
-		}
-		return processedResources;
-	}
-
-	protected <E extends RDFSource> E processDocumentResource( RDFResource requestDocumentResource, ResourceProcessor<E> resourceProcessor ) {
-		if ( requestDocumentResource == null )
-			throw new BadRequestException( "The request doesn't contain a document resource." );
-		return resourceProcessor.processResource( requestDocumentResource );
-	}
-
-	protected void validateRequestDocumentResourcesNumber( int number ) {
-		if ( number == 0 ) throw new BadRequestException( "The request doesn't contain " );
-	}
-
-	protected void seekForOrphanFragments( AbstractModel requestModel, RDFResource requestDocumentResource ) {
-		for ( Resource subject : requestModel.subjects() ) {
-			if ( ! ValueUtil.isURI( subject ) ) continue;
-			URI subjectURI = ValueUtil.getURI( subject );
-			if ( ! URIUtil.hasFragment( subjectURI ) ) continue;
-			URI documentURI = new URIImpl( URIUtil.getDocumentURI( subjectURI.stringValue() ) );
-			if ( ! requestDocumentResource.getURI().equals( documentURI ) ) {
-				throw new BadRequestException( "The request contains orphan fragments." );
-			}
-		}
-	}
-
-	// TODO: Optimize this
-	protected void seekForOrphanFragments( AbstractModel requestModel, Set<RDFResource> requestDocumentResources ) {
-		for ( Resource subject : requestModel.subjects() ) {
-			if ( ! ValueUtil.isURI( subject ) ) continue;
-			URI subjectURI = ValueUtil.getURI( subject );
-			if ( ! URIUtil.hasFragment( subjectURI ) ) continue;
-			URI documentURI = new URIImpl( URIUtil.getDocumentURI( subjectURI.stringValue() ) );
-			RDFResource fragmentResource = new RDFResource( requestModel, documentURI );
-			if ( ! requestDocumentResources.contains( fragmentResource ) ) {
-				throw new BadRequestException( "All fragment resources must be accompanied by their document resource" );
-			}
-		}
+		return new ResponseEntity<>( new EmptyResponse(), HttpStatus.CREATED );
 	}
 
 	protected RDFResource getDocumentResourceWithFinalURI( RDFResource documentResource, String parentURI ) {
@@ -245,10 +148,6 @@ public abstract class AbstractPOSTRequestHandler extends AbstractLDPRequestHandl
 			validateRequestResourceRelativeness( documentResource, parentURI );
 		}
 		return documentResource;
-	}
-
-	protected boolean hasGenericRequestURI( RDFResource resource ) {
-		return configurationRepository.isGenericRequest( resource.getURI().stringValue() );
 	}
 
 	protected URI forgeUniqueURI( RDFResource requestResource, String parentURI, HttpServletRequest request ) {
@@ -315,10 +214,6 @@ public abstract class AbstractPOSTRequestHandler extends AbstractLDPRequestHandl
 																										   .stringValue(), forgedURI
 			.stringValue() );
 		return new RDFResource( renamedModel, forgedURI );
-	}
-
-	protected interface ResourceProcessor<E> {
-		public E processResource( RDFResource resource );
 	}
 
 }

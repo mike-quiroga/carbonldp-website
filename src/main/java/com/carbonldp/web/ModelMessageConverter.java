@@ -29,31 +29,29 @@ public abstract class ModelMessageConverter<E extends Model> implements HttpMess
 	private final boolean canRead;
 	private final boolean canWrite;
 
-	protected ModelMessageConverter(boolean canRead, boolean canWrite) {
-		//@formatter:off
+	protected ModelMessageConverter( boolean canRead, boolean canWrite ) {
 		setSupportedFormats(
-				Arrays.asList(
-						RDFFormat.TURTLE,
-						RDFFormat.JSONLD,
-						RDFFormat.RDFJSON,
-						RDFFormat.RDFXML
-				)
+			Arrays.asList(
+				RDFFormat.TURTLE,
+				RDFFormat.JSONLD,
+				RDFFormat.RDFJSON,
+				RDFFormat.RDFXML
+			)
 		);
-		//@formatter:on
 
 		this.canRead = canRead;
 		this.canWrite = canWrite;
 	}
 
-	protected abstract boolean supports(Class<?> clazz);
+	protected abstract boolean supports( Class<?> clazz );
 
 	@Override
-	public boolean canRead(Class<?> clazz, MediaType mediaType) {
-		if ( !canRead ) return false;
+	public boolean canRead( Class<?> clazz, MediaType mediaType ) {
+		if ( ! canRead ) return false;
 		return supports( clazz ) && canRead( mediaType );
 	}
 
-	protected boolean canRead(MediaType mediaType) {
+	protected boolean canRead( MediaType mediaType ) {
 		if ( mediaType == null || MediaType.ALL.equals( mediaType ) ) return true;
 
 		for ( MediaType supportedMediaType : getSupportedMediaTypes() ) {
@@ -64,12 +62,12 @@ public abstract class ModelMessageConverter<E extends Model> implements HttpMess
 	}
 
 	@Override
-	public boolean canWrite(Class<?> clazz, MediaType mediaType) {
-		if ( !canWrite ) return false;
+	public boolean canWrite( Class<?> clazz, MediaType mediaType ) {
+		if ( ! canWrite ) return false;
 		return supports( clazz ) && canWrite( mediaType );
 	}
 
-	protected boolean canWrite(MediaType mediaType) {
+	protected boolean canWrite( MediaType mediaType ) {
 		if ( mediaType == null || MediaType.ALL.equals( mediaType ) ) return true;
 
 		for ( MediaType supportedMediaType : getSupportedMediaTypes() ) {
@@ -84,17 +82,17 @@ public abstract class ModelMessageConverter<E extends Model> implements HttpMess
 	}
 
 	protected RDFFormat getDefaultFormat() {
-		return (!this.supportedFormats.isEmpty() ? this.supportedFormats.get( 0 ) : null);
+		return ( ! this.supportedFormats.isEmpty() ? this.supportedFormats.get( 0 ) : null );
 	}
 
 	@Override
-	public E read(Class<? extends E> clazz, HttpInputMessage inputMessage) throws IOException, HttpMessageNotReadableException {
+	public E read( Class<? extends E> clazz, HttpInputMessage inputMessage ) throws IOException, HttpMessageNotReadableException {
 		throw new IllegalStateException();
 	}
 
 	@Override
-	public void write(E model, MediaType contentType, HttpOutputMessage outputMessage) throws IOException, HttpMessageNotWritableException {
-		if ( !canWrite ) throw new IllegalStateException();
+	public void write( E model, MediaType contentType, HttpOutputMessage outputMessage ) throws IOException, HttpMessageNotWritableException {
+		if ( ! canWrite ) throw new IllegalStateException();
 
 		HttpHeaders headers = outputMessage.getHeaders();
 		setContentType( contentType, headers );
@@ -104,15 +102,15 @@ public abstract class ModelMessageConverter<E extends Model> implements HttpMess
 
 	}
 
-	protected Model getModelToWrite(E model) {
+	protected Model getModelToWrite( E model ) {
 		return model;
 	}
 
-	protected void setAdditionalHeaders(E model, HttpHeaders headers) {
+	protected void setAdditionalHeaders( E model, HttpHeaders headers ) {
 		// Should be override if needed
 	}
 
-	private void setContentType(MediaType contentType, HttpHeaders headers) {
+	private void setContentType( MediaType contentType, HttpHeaders headers ) {
 		if ( headers.getContentType() == null ) {
 			if ( contentType == null || contentType.isWildcardType() || contentType.isWildcardSubtype() ) {
 				contentType = MediaTypeUtil.fromString( this.getDefaultFormat().getDefaultMIMEType() );
@@ -123,7 +121,7 @@ public abstract class ModelMessageConverter<E extends Model> implements HttpMess
 		}
 	}
 
-	protected void writeModel(Model model, RDFFormat format, HttpOutputMessage outputMessage) throws IOException, HttpMessageNotWritableException {
+	protected void writeModel( Model model, RDFFormat format, HttpOutputMessage outputMessage ) throws IOException, HttpMessageNotWritableException {
 		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
 		RDFWriter writer = Rio.createWriter( format, outputStream );
@@ -143,11 +141,11 @@ public abstract class ModelMessageConverter<E extends Model> implements HttpMess
 		outputMessage.getBody().flush();
 	}
 
-	private void setContentLength(HttpOutputMessage outputMessage, ByteArrayOutputStream outputStream) {
+	private void setContentLength( HttpOutputMessage outputMessage, ByteArrayOutputStream outputStream ) {
 		outputMessage.getHeaders().add( HTTPHeaders.CONTENT_LENGTH, String.valueOf( outputStream.size() ) );
 	}
 
-	protected void setSupportedFormats(List<RDFFormat> supportedFormats) {
+	protected void setSupportedFormats( List<RDFFormat> supportedFormats ) {
 		Assert.notEmpty( supportedFormats, "'supportedFormats' must not be empty" );
 
 		this.supportedMediaTypes = new ArrayList<MediaType>();

@@ -23,6 +23,8 @@ public interface ContainerRepository {
 
 	public Set<Statement> getProperties( URI containerURI, Type containerType );
 
+	public Set<URI> getContainedURIs( URI containerURI );
+
 	public Set<Statement> getContainmentTriples( URI containerURI );
 
 	public Set<Statement> getMembershipTriples( URI containerURI );
@@ -48,4 +50,10 @@ public interface ContainerRepository {
 	public void addMember( URI containerURI, RDFSource member );
 
 	public void addMember( URI containerURI, RDFSource member, Type containerType );
+
+	public void removeMembers( URI targetURI );
+
+	public void removeMembers( URI targetURI, Type containerType );
+
+	public void deleteContainedResources( URI targetURI );
 }

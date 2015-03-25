@@ -1,7 +1,5 @@
 package com.carbonldp.apps.web;
 
-import com.carbonldp.apps.web.handlers.AppsGETHandler;
-import com.carbonldp.apps.web.handlers.AppsPOSTHandler;
 import com.carbonldp.web.AbstractController;
 import org.openrdf.model.impl.AbstractModel;
 import org.springframework.beans.factory.annotation.Autowired;

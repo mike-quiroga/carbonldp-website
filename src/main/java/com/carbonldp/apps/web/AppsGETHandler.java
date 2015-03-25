@@ -1,4 +1,4 @@
-package com.carbonldp.apps.web.handlers;
+package com.carbonldp.apps.web;
 
 import com.carbonldp.ldp.web.AbstractGETRequestHandler;
 import com.carbonldp.web.RequestHandler;

@@ -1,12 +1,13 @@
 package com.carbonldp.repository.txn;
 
-import com.carbonldp.config.ConfigurationRepository;
 import com.carbonldp.Vars;
+import com.carbonldp.config.ConfigurationRepository;
 import com.carbonldp.repository.LocalRepositoryService;
 import com.carbonldp.repository.RepositoryService;
 import org.openrdf.repository.Repository;
 import org.openrdf.repository.RepositoryException;
 import org.openrdf.repository.manager.LocalRepositoryManager;
+import org.openrdf.repository.manager.RemoteRepositoryManager;
 import org.openrdf.repository.manager.RepositoryManager;
 import org.openrdf.repository.sail.SailRepository;
 import org.openrdf.sail.nativerdf.NativeStore;
@@ -65,7 +66,12 @@ public class TxnConfig {
 
 	@Bean
 	protected RepositoryManager appsRepositoryManager() {
-		String repositoryDirectory = Vars.getAppsRepositoryDirectory();
-		return new LocalRepositoryManager( new File( repositoryDirectory ) );
+		if ( Vars.appsUseRemoteManager() ) {
+			String remoteManagerURL = Vars.getAppsRemoteManagerURL();
+			return new RemoteRepositoryManager( remoteManagerURL );
+		} else {
+			String repositoryDirectory = Vars.getAppsRepositoryDirectory();
+			return new LocalRepositoryManager( new File( repositoryDirectory ) );
+		}
 	}
 }
