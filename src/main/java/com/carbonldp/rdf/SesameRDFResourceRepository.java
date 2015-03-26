@@ -11,7 +11,6 @@ import org.joda.time.format.ISODateTimeFormat;
 import org.openrdf.model.*;
 import org.openrdf.model.impl.URIImpl;
 import org.openrdf.model.impl.ValueFactoryImpl;
-import org.openrdf.repository.RepositoryResult;
 import org.openrdf.spring.SesameConnectionFactory;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -76,7 +75,10 @@ public class SesameRDFResourceRepository extends AbstractSesameRepository implem
 	}
 
 	private boolean statementExists( ConnectionRWTemplate.RepositoryResultRetriever<Statement> retriever ) {
-		return connectionTemplate.readStatements( retriever, RepositoryResult::hasNext );
+		return connectionTemplate.readStatements(
+			retriever,
+			repositoryResult -> repositoryResult.hasNext()
+		);
 	}
 
 	@Override
