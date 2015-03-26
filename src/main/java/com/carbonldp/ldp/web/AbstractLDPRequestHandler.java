@@ -148,8 +148,7 @@ public abstract class AbstractLDPRequestHandler extends AbstractRequestHandler {
 		return request.getHeader( HTTPHeaders.IF_MATCH );
 	}
 
-	protected void checkPrecondition( URI targetURI ) {
-		String requestETag = getRequestETag();
+	protected void checkPrecondition( URI targetURI, String requestETag ) {
 		if ( requestETag == null ) throw new PreconditionRequiredException();
 
 		DateTime eTagDateTime;

@@ -2,7 +2,6 @@ package com.carbonldp.ldp.sources;
 
 import com.carbonldp.ldp.AbstractSesameLDPRepository;
 import com.carbonldp.ldp.containers.AccessPoint;
-import com.carbonldp.ldp.containers.ContainerDescription;
 import com.carbonldp.rdf.RDFDocumentRepository;
 import com.carbonldp.rdf.RDFResourceRepository;
 import com.carbonldp.repository.DocumentGraphQueryResultHandler;
@@ -114,20 +113,18 @@ public class SesameRDFSourceRepository extends AbstractSesameLDPRepository imple
 		return resourceRepository.getDate( sourceURI, RDFSourceDescription.Property.MODIFIED );
 	}
 
-	private static final String getDefaultInteractionModel_query;
+	private static final String getDefaultInteractionModelQuery;
 
 	static {
-		StringBuilder queryBuilder = new StringBuilder();
-		queryBuilder
-			.append( "SELECT ?dim WHERE {" ).append( NEW_LINE )
-			.append( TAB ).append( "GRAPH ?sourceURI {" ).append( NEW_LINE )
-			.append( TAB ).append( TAB ).append( RDFNodeUtil.generatePredicateStatement( "?sourceURI", "?dim", RDFSourceDescription.Property.DEFAULT_INTERACTION_MODEL ) ).append( NEW_LINE )
-			.append( TAB ).append( TAB ).append( "FILTER(isURI(?dim))." ).append( NEW_LINE )
-			.append( TAB ).append( "}" ).append( NEW_LINE )
-			.append( "}" ).append( NEW_LINE )
-			.append( "LIMIT 1" )
+		getDefaultInteractionModelQuery = "" +
+			"SELECT ?dim WHERE {" + NEW_LINE +
+			TAB + "GRAPH ?sourceURI {" + NEW_LINE +
+			TAB + TAB + RDFNodeUtil.generatePredicateStatement( "?sourceURI", "?dim", RDFSourceDescription.Property.DEFAULT_INTERACTION_MODEL ) + NEW_LINE +
+			TAB + TAB + "FILTER( isURI(?dim) )." + NEW_LINE +
+			TAB + "}" + NEW_LINE +
+			"}" + NEW_LINE +
+			"LIMIT 1"
 		;
-		getDefaultInteractionModel_query = queryBuilder.toString();
 	}
 
 	// TODO: Create a more generic method instead of this specific one
@@ -135,8 +132,8 @@ public class SesameRDFSourceRepository extends AbstractSesameLDPRepository imple
 	public URI getDefaultInteractionModel( URI sourceURI ) {
 		Map<String, Value> bindings = new HashMap<>();
 		bindings.put( "sourceURI", sourceURI );
-		return sparqlTemplate.executeTupleQuery( getDefaultInteractionModel_query, bindings, queryResult -> {
-			if ( ! queryResult.hasNext() ) return ContainerDescription.Default.HAS_MEMBER_RELATION.getURI();
+		return sparqlTemplate.executeTupleQuery( getDefaultInteractionModelQuery, bindings, queryResult -> {
+			if ( ! queryResult.hasNext() ) return null;
 			else return ValueUtil.getURI( queryResult.next().getBinding( "dim" ).getValue() );
 		} );
 	}

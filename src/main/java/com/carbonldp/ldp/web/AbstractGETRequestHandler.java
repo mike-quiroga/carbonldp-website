@@ -41,7 +41,7 @@ public abstract class AbstractGETRequestHandler extends AbstractLDPRequestHandle
 		supportedInteractionModels.add( InteractionModel.WRAPPER_FOR_LDPNR );
 		setSupportedInteractionModels( supportedInteractionModels );
 
-		setDefaultInteractionModel( InteractionModel.RDF_SOURCE );
+		setDefaultInteractionModel( InteractionModel.CONTAINER );
 	}
 
 	@Transactional

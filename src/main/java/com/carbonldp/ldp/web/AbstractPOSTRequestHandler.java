@@ -9,6 +9,7 @@ import com.carbonldp.rdf.RDFResource;
 import com.carbonldp.utils.HTTPUtil;
 import com.carbonldp.utils.ModelUtil;
 import com.carbonldp.web.exceptions.BadRequestException;
+import com.carbonldp.web.exceptions.ConflictException;
 import com.carbonldp.web.exceptions.NotFoundException;
 import org.joda.time.DateTime;
 import org.openrdf.model.URI;
@@ -20,9 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 import static com.carbonldp.Consts.EMPTY_STRING;
 import static com.carbonldp.Consts.SLASH;
@@ -54,6 +53,15 @@ public abstract class AbstractPOSTRequestHandler extends AbstractRequestWithBody
 		//@formatter:on
 
 		invalidTypesForContainers = invalidTypes.toArray( new RDFNodeEnum[invalidTypes.size()] );
+	}
+
+	public AbstractPOSTRequestHandler() {
+		Set<InteractionModel> supportedInteractionModels = new HashSet<>();
+		supportedInteractionModels.add( InteractionModel.RDF_SOURCE );
+		supportedInteractionModels.add( InteractionModel.CONTAINER );
+		setSupportedInteractionModels( supportedInteractionModels );
+
+		setDefaultInteractionModel( InteractionModel.CONTAINER );
 	}
 
 	@Transactional
@@ -151,8 +159,12 @@ public abstract class AbstractPOSTRequestHandler extends AbstractRequestWithBody
 	}
 
 	protected URI forgeUniqueURI( RDFResource requestResource, String parentURI, HttpServletRequest request ) {
+		URI uniqueURI = forgeDocumentResourceURI( requestResource, parentURI, request );
+
 		// TODO: Check that the resourceURI is unique and if not forge another one
-		return forgeDocumentResourceURI( requestResource, parentURI, request );
+		if ( sourceService.exists( uniqueURI ) ) throw new ConflictException( "The URI is already in use." );
+
+		return uniqueURI;
 	}
 
 	protected URI forgeDocumentResourceURI( RDFResource documentResource, String parentURI, HttpServletRequest request ) {
@@ -207,6 +219,8 @@ public abstract class AbstractPOSTRequestHandler extends AbstractRequestWithBody
 		if ( ( slashIndex + 1 ) < relativeURI.length() ) {
 			throw new BadRequestException( "A request resource's URI isn't an immediate child of the request URI." );
 		}
+
+		if ( sourceService.exists( requestResource.getURI() ) ) throw new ConflictException( "The URI is already in use." );
 	}
 
 	protected RDFResource renameResource( RDFResource requestResource, URI forgedURI ) {

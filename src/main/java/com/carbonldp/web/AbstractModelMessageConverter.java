@@ -30,11 +30,9 @@ public class AbstractModelMessageConverter extends ModelMessageConverter<Abstrac
 
 	@Override
 	public AbstractModel read( Class<? extends AbstractModel> clazz, HttpInputMessage inputMessage ) throws IOException, HttpMessageNotReadableException {
-		MediaType mediaType = inputMessage.getHeaders().getContentType();
+		MediaType requestMediaType = inputMessage.getHeaders().getContentType();
 
-		RDFFormat formatToUse;
-		if ( this.mediaTypeFormats.containsKey( mediaType ) ) formatToUse = this.mediaTypeFormats.get( mediaType );
-		else formatToUse = this.getDefaultFormat();
+		RDFFormat formatToUse = getFormatToUse( requestMediaType );
 
 		InputStream bodyInputStream = inputMessage.getBody();
 
@@ -51,5 +49,12 @@ public class AbstractModelMessageConverter extends ModelMessageConverter<Abstrac
 		}
 
 		return model;
+	}
+
+	private RDFFormat getFormatToUse( MediaType requestMediaType ) {
+		for ( MediaType supportedMediaType : this.mediaTypeFormats.keySet() ) {
+			if ( supportedMediaType.isCompatibleWith( requestMediaType ) ) return this.mediaTypeFormats.get( supportedMediaType );
+		}
+		return this.getDefaultFormat();
 	}
 }

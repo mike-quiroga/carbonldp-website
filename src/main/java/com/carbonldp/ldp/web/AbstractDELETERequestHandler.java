@@ -32,13 +32,23 @@ public class AbstractDELETERequestHandler extends AbstractLDPRequestHandler {
 		DEFAULT_CDP = Collections.unmodifiableSet( tempCDP );
 	}
 
+	public AbstractDELETERequestHandler() {
+		Set<APIPreferences.InteractionModel> supportedInteractionModels = new HashSet<>();
+		supportedInteractionModels.add( APIPreferences.InteractionModel.RDF_SOURCE );
+		supportedInteractionModels.add( APIPreferences.InteractionModel.CONTAINER );
+		setSupportedInteractionModels( supportedInteractionModels );
+
+		setDefaultInteractionModel( APIPreferences.InteractionModel.CONTAINER );
+	}
+
 	public ResponseEntity<Object> handleRequest( HttpServletRequest request, HttpServletResponse response ) {
 		setUp( request, response );
 
 		URI targetURI = getTargetURI( request );
 		if ( ! sourceService.exists( targetURI ) ) throw new NotFoundException( "The resource wasn't found" );
 
-		checkPrecondition( targetURI );
+		String requestETag = getRequestETag();
+		checkPrecondition( targetURI, requestETag );
 
 		APIPreferences.InteractionModel interactionModel = getInteractionModel( targetURI );
 		switch ( interactionModel ) {
@@ -78,6 +88,13 @@ public class AbstractDELETERequestHandler extends AbstractLDPRequestHandler {
 
 	protected ResponseEntity<Object> createSuccessfulDeleteResponse() {
 		return new ResponseEntity<>( new EmptyResponse(), HttpStatus.OK );
+	}
+
+	@Override
+	protected void checkPrecondition( URI targetURI, String requestETag ) {
+		// TODO: Make this check a class variable (preconditionRequired = true/false)
+		if ( requestETag == null ) return;
+		super.checkPrecondition( targetURI, requestETag );
 	}
 
 	protected Set<APIPreferences.ContainerDeletePreference> getContainerDeletePreferences( URI targetURI ) {

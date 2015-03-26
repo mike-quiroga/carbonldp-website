@@ -37,7 +37,8 @@ public abstract class AbstractPUTRequestHandler extends AbstractRequestWithBodyH
 			throw new NotFoundException( "The target resource wasn't found." );
 		}
 
-		checkPrecondition( targetURI );
+		String requestETag = getRequestETag();
+		checkPrecondition( targetURI, requestETag );
 		validateRequestModel( requestModel );
 
 		RDFResource requestDocumentResource = getRequestDocumentResource( requestModel );
