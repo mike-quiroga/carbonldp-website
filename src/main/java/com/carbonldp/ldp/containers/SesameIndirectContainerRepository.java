@@ -35,58 +35,50 @@ public class SesameIndirectContainerRepository extends AbstractAccessPointReposi
 		throw new NotImplementedException( "Not implemented." );
 	}
 
-	private static final String findMembers_query;
+	private static final String findMembersQuery;
 
 	static {
-		StringBuilder queryBuilder = new StringBuilder();
-		//@formatter:off
-		queryBuilder
-				.append( "SELECT ?members WHERE {" ).append( NEW_LINE )
-				.append( TAB ).append( "GRAPH ?containerURI {" ).append( NEW_LINE )
-				.append( TAB ).append( TAB ).append( RDFNodeUtil.generatePredicateStatement( "?containerURI", "?hasMemberRelation", ContainerDescription.Property.HAS_MEMBER_RELATION ) ).append( NEW_LINE )
-				.append( TAB ).append( TAB ).append( RDFNodeUtil.generatePredicateStatement( "?containerURI", "?membershipResource", ContainerDescription.Property.MEMBERSHIP_RESOURCE ) ).append( NEW_LINE )
-				.append( TAB ).append( "}" ).append( NEW_LINE )
-				.append( TAB ).append( "GRAPH ?membershipResource {" ).append( NEW_LINE )
-				.append( TAB ).append( TAB ).append( "membershipResource ?hasMemberRelation ?members" ).append( NEW_LINE )
-				.append( TAB ).append( "}" ).append( NEW_LINE )
-				.append( TAB ).append( "GRAPH ?members {" ).append( NEW_LINE )
-				.append( TAB ).append( TAB ).append( "%1$s" ).append( NEW_LINE )
-				.append( TAB ).append( "}" ).append( NEW_LINE )
-				.append( "}" )
+		findMembersQuery = "" +
+			"SELECT ?members WHERE {" + NEW_LINE +
+			TAB + "GRAPH ?containerURI {" + NEW_LINE +
+			TAB + TAB + RDFNodeUtil.generatePredicateStatement( "?containerURI", "?hasMemberRelation", ContainerDescription.Property.HAS_MEMBER_RELATION ) + NEW_LINE +
+			TAB + TAB + RDFNodeUtil.generatePredicateStatement( "?containerURI", "?membershipResource", ContainerDescription.Property.MEMBERSHIP_RESOURCE ) + NEW_LINE +
+			TAB + "}" + NEW_LINE +
+			TAB + "GRAPH ?membershipResource {" + NEW_LINE +
+			TAB + TAB + "membershipResource ?hasMemberRelation ?members" + NEW_LINE +
+			TAB + "}" + NEW_LINE +
+			TAB + "GRAPH ?members {" + NEW_LINE +
+			TAB + TAB + "%1$s" + NEW_LINE +
+			TAB + "}" + NEW_LINE +
+			"}"
 		;
-		//@formatter:on
-		findMembers_query = queryBuilder.toString();
 	}
 
 	@Override
 	public Set<URI> findMembers( URI containerURI, String sparqlSelector, Map<String, Value> bindings ) {
-		return findMembers( containerURI, sparqlSelector, bindings, findMembers_query );
+		return findMembers( containerURI, sparqlSelector, bindings, findMembersQuery );
 	}
 
-	private static final String filterMembers_query;
+	private static final String filterMembersQuery;
 
 	static {
-		StringBuilder queryBuilder = new StringBuilder();
-		//@formatter:off
-		queryBuilder
-				.append( "SELECT ?members WHERE {" ).append( NEW_LINE )
-				.append( TAB ).append( "GRAPH ?containerURI {" ).append( NEW_LINE )
-				.append( TAB ).append( TAB ).append( RDFNodeUtil.generatePredicateStatement( "?containerURI", "?hasMemberRelation", ContainerDescription.Property.HAS_MEMBER_RELATION ) ).append( NEW_LINE )
-				.append( TAB ).append( TAB ).append( RDFNodeUtil.generatePredicateStatement( "?containerURI", "?membershipResource", ContainerDescription.Property.MEMBERSHIP_RESOURCE ) ).append( NEW_LINE )
-				.append( TAB ).append( "}" ).append( NEW_LINE )
-				.append( TAB ).append( "GRAPH ?membershipResource {" ).append( NEW_LINE )
-				.append( TAB ).append( TAB ).append( "membershipResource ?hasMemberRelation ?members." ).append( NEW_LINE )
-				.append( TAB ).append( TAB ).append( "%1$s" ).append( NEW_LINE )
-				.append( TAB ).append( "}" ).append( NEW_LINE )
-				.append( "}" )
+		filterMembersQuery = "" +
+			"SELECT ?members WHERE {" + NEW_LINE +
+			TAB + "GRAPH ?containerURI {" + NEW_LINE +
+			TAB + TAB + RDFNodeUtil.generatePredicateStatement( "?containerURI", "?hasMemberRelation", ContainerDescription.Property.HAS_MEMBER_RELATION ) + NEW_LINE +
+			TAB + TAB + RDFNodeUtil.generatePredicateStatement( "?containerURI", "?membershipResource", ContainerDescription.Property.MEMBERSHIP_RESOURCE ) + NEW_LINE +
+			TAB + "}" + NEW_LINE +
+			TAB + "GRAPH ?membershipResource {" + NEW_LINE +
+			TAB + TAB + "membershipResource ?hasMemberRelation ?members." + NEW_LINE +
+			TAB + TAB + "%1$s" + NEW_LINE +
+			TAB + "}" + NEW_LINE +
+			"}"
 		;
-		//@formatter:on
-		filterMembers_query = queryBuilder.toString();
 	}
 
 	@Override
 	public Set<URI> filterMembers( URI containerURI, Set<URI> possibleMemberURIs ) {
-		return filterMembers( containerURI, possibleMemberURIs, filterMembers_query );
+		return filterMembers( containerURI, possibleMemberURIs, filterMembersQuery );
 	}
 
 }

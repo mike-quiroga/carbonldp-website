@@ -224,9 +224,7 @@ public abstract class AbstractPOSTRequestHandler extends AbstractRequestWithBody
 	}
 
 	protected RDFResource renameResource( RDFResource requestResource, URI forgedURI ) {
-		AbstractModel renamedModel = ModelUtil.replaceBase( requestResource.getBaseModel(), requestResource.getURI()
-																										   .stringValue(), forgedURI
-			.stringValue() );
+		AbstractModel renamedModel = ModelUtil.replaceBase( requestResource.getBaseModel(), requestResource.getURI().stringValue(), forgedURI.stringValue() );
 		return new RDFResource( renamedModel, forgedURI );
 	}
 

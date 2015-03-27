@@ -155,7 +155,7 @@ public abstract class AbstractLDPRequestHandler extends AbstractRequestHandler {
 		try {
 			eTagDateTime = HTTPUtil.getETagDateTime( requestETag );
 		} catch ( IllegalArgumentException e ) {
-			throw new BadRequestException( "The ETag provided can't be recognized." );
+			throw new PreconditionFailedException( "The ETag provided can't be recognized." );
 		}
 
 		DateTime modified = sourceService.getModified( targetURI );

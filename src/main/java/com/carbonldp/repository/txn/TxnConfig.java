@@ -1,7 +1,6 @@
 package com.carbonldp.repository.txn;
 
 import com.carbonldp.Vars;
-import com.carbonldp.config.ConfigurationRepository;
 import com.carbonldp.repository.LocalRepositoryService;
 import com.carbonldp.repository.RepositoryService;
 import org.openrdf.repository.Repository;
@@ -14,7 +13,6 @@ import org.openrdf.sail.nativerdf.NativeStore;
 import org.openrdf.spring.RepositoryConnectionFactory;
 import org.openrdf.spring.SesameConnectionFactory;
 import org.openrdf.spring.SesameTransactionManager;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -27,9 +25,6 @@ import java.io.File;
 @ComponentScan( "org.openrdf.spring" )
 @EnableTransactionManagement
 public class TxnConfig {
-	@Autowired
-	private ConfigurationRepository configurationRepository;
-
 	@Bean
 	public PlatformTransactionManager transactionManager() {
 		return new SesameTransactionManager( connectionFactory() );
