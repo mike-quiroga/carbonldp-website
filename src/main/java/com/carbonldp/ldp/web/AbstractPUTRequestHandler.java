@@ -1,15 +1,11 @@
 package com.carbonldp.ldp.web;
 
 import com.carbonldp.descriptions.APIPreferences;
-import com.carbonldp.ldp.sources.RDFSource;
-import com.carbonldp.models.EmptyResponse;
 import com.carbonldp.rdf.RDFResource;
 import com.carbonldp.web.exceptions.BadRequestException;
 import com.carbonldp.web.exceptions.NotFoundException;
-import org.joda.time.DateTime;
 import org.openrdf.model.URI;
 import org.openrdf.model.impl.AbstractModel;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,7 +15,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Transactional
-public abstract class AbstractPUTRequestHandler extends AbstractRequestWithBodyHandler {
+public abstract class AbstractPUTRequestHandler<E extends RDFResource> extends AbstractRequestWithBodyHandler<E> {
 
 	public AbstractPUTRequestHandler() {
 		Set<APIPreferences.InteractionModel> supportedInteractionModels = new HashSet<>();
@@ -42,17 +38,16 @@ public abstract class AbstractPUTRequestHandler extends AbstractRequestWithBodyH
 		validateRequestModel( requestModel );
 
 		RDFResource requestDocumentResource = getRequestDocumentResource( requestModel );
-		RDFSource requestSource = processDocumentResource( requestDocumentResource, documentResource -> {
-			if ( ! targetURI.equals( documentResource.getURI() ) ) throw new BadRequestException( "The documentResource's URI, sent in the request, is different to the request URI. Remember POST to parent, PUT to me." );
-			return new RDFSource( documentResource );
-		} );
+		validateDocumentResource( targetURI, requestDocumentResource );
+		E documentResourceView = getDocumentResourceView( requestDocumentResource );
+		validateDocumentResourceView( documentResourceView );
 
 		seekForOrphanFragments( requestModel, requestDocumentResource );
 
 		APIPreferences.InteractionModel interactionModel = getInteractionModel( targetURI );
 		switch ( interactionModel ) {
 			case RDF_SOURCE:
-				return handlePUTToRDFSource( targetURI, requestSource );
+				return handlePUTToRDFSource( targetURI, documentResourceView );
 			case CONTAINER:
 			case LDPNR:
 			case WRAPPER_FOR_LDPNR:
@@ -63,11 +58,13 @@ public abstract class AbstractPUTRequestHandler extends AbstractRequestWithBodyH
 		}
 	}
 
-	private ResponseEntity<Object> handlePUTToRDFSource( URI targetURI, RDFSource requestSource ) {
-		DateTime modified = sourceService.replace( requestSource );
-
-		setETagHeader( modified );
-		addTypeLinkHeader( APIPreferences.InteractionModel.RDF_SOURCE );
-		return new ResponseEntity<>( new EmptyResponse(), HttpStatus.OK );
+	@Override
+	protected void validateDocumentResource( URI targetURI, RDFResource requestDocumentResource ) {
+		super.validateDocumentResource( targetURI, requestDocumentResource );
+		if ( ! targetURI.equals( requestDocumentResource.getURI() ) ) throw new BadRequestException( "The documentResource's URI, sent in the request, is different to the request URI. Remember POST to parent, PUT to me." );
 	}
+
+	protected abstract E getDocumentResourceView( RDFResource requestDocumentResource );
+
+	protected abstract ResponseEntity<Object> handlePUTToRDFSource( URI targetURI, E requestDocumentResource );
 }

@@ -32,6 +32,8 @@ public class AppResourceController extends AbstractLDPController {
 	@Autowired
 	private AppResourcePUTHandler putHandler;
 	@Autowired
+	private AppResourcePATCHHandler patchHandler;
+	@Autowired
 	private AppResourceDELETEHandler deleteHandler;
 
 	@RequestMapping( method = RequestMethod.HEAD )
@@ -79,9 +81,8 @@ public class AppResourceController extends AbstractLDPController {
 	}
 
 	@RequestMapping( method = RequestMethod.PATCH )
-	public ResponseEntity<Object> handlePATCH( HttpServletRequest request, HttpServletResponse response ) {
-		// TODO: Implement
-		return new ResponseEntity<Object>( HttpStatus.NOT_IMPLEMENTED );
+	public ResponseEntity<Object> handlePATCH( @RequestBody AbstractModel requestModel, HttpServletRequest request, HttpServletResponse response ) {
+		return patchHandler.handleRequest( requestModel, request, response );
 	}
 
 	@RequestMapping( method = RequestMethod.DELETE )

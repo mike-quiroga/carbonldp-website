@@ -3,15 +3,13 @@ package com.carbonldp.web;
 import com.carbonldp.config.ConfigurationRepository;
 import com.carbonldp.ldp.web.RDFSourceMessageConverter;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.FilterType;
+import org.springframework.context.annotation.*;
 import org.springframework.http.converter.ByteArrayHttpMessageConverter;
 import org.springframework.http.converter.FormHttpMessageConverter;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.multipart.MultipartResolver;
 import org.springframework.web.multipart.support.StandardServletMultipartResolver;
@@ -23,24 +21,24 @@ import java.util.List;
 
 @Configuration
 @EnableWebMvc
-//@formatter:off
+@EnableTransactionManagement
+@EnableAspectJAutoProxy
 @ComponentScan(
-		useDefaultFilters = false,
-		basePackages = {"com.carbonldp"},
-		includeFilters = {
-				@ComponentScan.Filter( type = FilterType.ANNOTATION, value = ControllerAdvice.class ),
-				@ComponentScan.Filter( type = FilterType.ANNOTATION, value = Controller.class ),
-				@ComponentScan.Filter( type = FilterType.ANNOTATION, value = RequestHandler.class )
-		}
+	useDefaultFilters = false,
+	basePackages = {"com.carbonldp"},
+	includeFilters = {
+		@ComponentScan.Filter( type = FilterType.ANNOTATION, value = ControllerAdvice.class ),
+		@ComponentScan.Filter( type = FilterType.ANNOTATION, value = Controller.class ),
+		@ComponentScan.Filter( type = FilterType.ANNOTATION, value = RequestHandler.class )
+	}
 )
-//@formatter:on
 public class WebConfig extends WebMvcConfigurerAdapter {
 
 	@Autowired
 	private ConfigurationRepository configurationRepository;
 
 	@Override
-	public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
+	public void configureMessageConverters( List<HttpMessageConverter<?>> converters ) {
 		converters.add( rdfSourceMessageConverter() );
 		converters.add( modelMessageConverter() );
 		converters.add( emptyResponseMessageConverter() );
@@ -50,7 +48,7 @@ public class WebConfig extends WebMvcConfigurerAdapter {
 	}
 
 	@Override
-	public void configureContentNegotiation(ContentNegotiationConfigurer configurer) {
+	public void configureContentNegotiation( ContentNegotiationConfigurer configurer ) {
 		super.configureContentNegotiation( configurer );
 		configurer.favorPathExtension( false );
 	}

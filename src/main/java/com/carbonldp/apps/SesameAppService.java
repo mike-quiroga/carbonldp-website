@@ -6,15 +6,19 @@ import com.carbonldp.authentication.AgentAuthenticationToken;
 import com.carbonldp.authorization.acl.ACEDescription;
 import com.carbonldp.authorization.acl.ACL;
 import com.carbonldp.authorization.acl.ACLRepository;
+import com.carbonldp.exceptions.ResourceDoesntExistException;
 import com.carbonldp.ldp.AbstractSesameLDPService;
 import com.carbonldp.ldp.containers.BasicContainer;
 import com.carbonldp.ldp.containers.BasicContainerFactory;
 import com.carbonldp.ldp.containers.Container;
 import com.carbonldp.ldp.containers.ContainerRepository;
 import com.carbonldp.ldp.sources.RDFSourceRepository;
+import com.carbonldp.rdf.RDFDocument;
 import com.carbonldp.rdf.RDFResource;
 import com.carbonldp.spring.TransactionWrapper;
+import com.carbonldp.utils.RDFResourceUtil;
 import com.carbonldp.utils.URIUtil;
+import org.openrdf.model.Statement;
 import org.openrdf.model.URI;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -22,6 +26,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import java.util.Arrays;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Transactional
 public class SesameAppService extends AbstractSesameLDPService implements AppService {
@@ -37,12 +43,78 @@ public class SesameAppService extends AbstractSesameLDPService implements AppSer
 	}
 
 	@Override
+	public boolean exists( URI appURI ) {
+		return appRepository.exists( appURI );
+	}
+
+	@Override
+	public App get( URI appURI ) {
+		if ( ! exists( appURI ) ) throw new ResourceDoesntExistException();
+		return appRepository.get( appURI );
+	}
+
+	@Override
+	public Set<String> getDomains( URI appURI ) {
+		// TODO: Implement
+		throw new RuntimeException( "Not Implemented" );
+	}
+
+	@Override
 	public App create( App app ) {
-		final App createdApp = appRepository.create( app );
+		// TODO: Check that the App doesn't exist
+		// TODO: Validate app resource
 
+		App createdApp = appRepository.create( app );
 		transactionWrapper.runInAppcontext( app, () -> initialize( createdApp ) );
-
 		return createdApp;
+	}
+
+	@Override
+	public void addDomain( String domain ) {
+		// TODO: Implement
+		throw new RuntimeException( "Not Implemented" );
+	}
+
+	@Override
+	public void setDomains( Set<String> domains ) {
+		// TODO: Implement
+		throw new RuntimeException( "Not Implemented" );
+	}
+
+	@Override
+	public void removeDomain( String domain ) {
+		// TODO: Implement
+		throw new RuntimeException( "Not Implemented" );
+	}
+
+	@Override
+	public void replace( App app ) {
+		URI appURI = app.getURI();
+
+		if ( ! exists( appURI ) ) throw new ResourceDoesntExistException();
+		App originalApp = appRepository.get( appURI );
+		RDFDocument originalDocument = originalApp.getDocument();
+
+		RDFDocument newDocument = app.getDocument();
+
+		Set<Statement> statementsToAdd = newDocument.stream().filter( statement -> ! originalDocument.contains( statement ) ).collect( Collectors.toSet() );
+		Set<RDFResource> resourceViewsToAdd = RDFResourceUtil.getResourceViews( statementsToAdd );
+		// TODO: Validate the resource views don't target restricted properties
+
+		Set<Statement> statementsToDelete = originalDocument.stream().filter( statement -> ! newDocument.contains( statement ) ).collect( Collectors.toSet() );
+		Set<RDFResource> resourceViewsToDelete = RDFResourceUtil.getResourceViews( statementsToDelete );
+		// TODO: Validate the resource views don't target restricted properties
+
+		sourceRepository.substract( appURI, resourceViewsToDelete );
+		sourceRepository.add( appURI, resourceViewsToAdd );
+
+		sourceRepository.touch( appURI );
+	}
+
+	@Override
+	public void delete( App app ) {
+		// TODO: Implement
+		throw new RuntimeException( "Not Implemented" );
 	}
 
 	/**

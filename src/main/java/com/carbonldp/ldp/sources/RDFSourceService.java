@@ -1,32 +1,44 @@
 package com.carbonldp.ldp.sources;
 
 import com.carbonldp.ldp.containers.AccessPoint;
+import com.carbonldp.rdf.RDFResource;
 import org.joda.time.DateTime;
 import org.openrdf.model.URI;
 import org.springframework.security.access.prepost.PreAuthorize;
+
+import java.util.Collection;
 
 public interface RDFSourceService {
 	// @PreAuthorize( "hasPermission(#sourceURI, 'READ')" )
 	boolean exists( URI sourceURI );
 
 	@PreAuthorize( "hasPermission(#sourceURI, 'READ')" )
-	public RDFSource get( URI sourceURI );
+	RDFSource get( URI sourceURI );
 
 	@PreAuthorize( "hasPermission(#sourceURI, 'READ')" )
-	public DateTime getModified( URI uri );
+	DateTime getModified( URI sourceURI );
 
 	@PreAuthorize( "hasPermission(#sourceURI, 'READ')" )
-	public URI getDefaultInteractionModel( URI sourceURI );
+	URI getDefaultInteractionModel( URI sourceURI );
 
 	@PreAuthorize( "hasPermission(#parentURI, 'CREATE_ACCESS_POINT')" )
-	public DateTime createAccessPoint( URI parentURI, AccessPoint accessPoint );
+	DateTime createAccessPoint( URI parentURI, AccessPoint accessPoint );
 
-	@PreAuthorize( "hasPermission(#parentURI, 'UPDATE')" )
-	public void touch( URI sourceURI, DateTime now );
+	@PreAuthorize( "hasPermission(#sourceURI, 'UPDATE')" )
+	void touch( URI sourceURI, DateTime now );
+
+	@PreAuthorize( "hasPermission(#sourceURI, 'UPDATE')" )
+	void add( URI sourceURI, Collection<RDFResource> resourceViews );
+
+	@PreAuthorize( "hasPermission(#sourceURI, 'UPDATE')" )
+	void set( URI sourceURI, Collection<RDFResource> resourceViews );
 
 	@PreAuthorize( "hasPermission(#source, 'UPDATE')" )
-	public DateTime replace( RDFSource source );
+	DateTime replace( RDFSource source );
+
+	@PreAuthorize( "hasPermission(#sourceURI, 'UPDATE')" )
+	void substract( URI sourceURI, Collection<RDFResource> resourceViews );
 
 	@PreAuthorize( "hasPermission(#sourceURI, 'DELETE')" )
-	public void delete( URI sourceURI );
+	void delete( URI sourceURI );
 }

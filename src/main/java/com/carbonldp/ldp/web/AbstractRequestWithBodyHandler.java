@@ -1,6 +1,5 @@
 package com.carbonldp.ldp.web;
 
-import com.carbonldp.ldp.sources.RDFSource;
 import com.carbonldp.rdf.RDFResource;
 import com.carbonldp.utils.URIUtil;
 import com.carbonldp.utils.ValueUtil;
@@ -13,7 +12,7 @@ import org.openrdf.model.impl.URIImpl;
 import java.util.HashSet;
 import java.util.Set;
 
-public class AbstractRequestWithBodyHandler extends AbstractLDPRequestHandler {
+public abstract class AbstractRequestWithBodyHandler<E extends RDFResource> extends AbstractLDPRequestHandler {
 
 	protected boolean hasGenericRequestURI( RDFResource resource ) {
 		return configurationRepository.isGenericRequest( resource.getURI().stringValue() );
@@ -21,13 +20,14 @@ public class AbstractRequestWithBodyHandler extends AbstractLDPRequestHandler {
 
 	protected Set<RDFResource> getRequestDocumentResources( AbstractModel requestModel ) {
 		Set<RDFResource> documentResources = new HashSet<>();
-		for ( Resource subject : requestModel.subjects() ) {
-			if ( ! ValueUtil.isURI( subject ) ) continue;
-			URI subjectURI = ValueUtil.getURI( subject );
-			if ( URIUtil.hasFragment( subjectURI ) ) continue;
-			RDFResource documentResource = new RDFResource( requestModel, subjectURI );
-			documentResources.add( documentResource );
-		}
+		requestModel.subjects()
+					.stream()
+					.filter( ValueUtil::isURI )
+					.map( ValueUtil::getURI )
+					.filter( uri -> ! URIUtil.hasFragment( uri ) )
+					.map( uri -> new RDFResource( requestModel, uri ) )
+					.forEach( documentResources::add )
+		;
 		return documentResources;
 	}
 
@@ -60,7 +60,7 @@ public class AbstractRequestWithBodyHandler extends AbstractLDPRequestHandler {
 		if ( ValueUtil.isBNode( subject ) ) throw new BadRequestException( "Blank nodes are not supported." );
 	}
 
-	protected <E extends RDFSource> Set<E> processDocumentResources( Set<RDFResource> requestDocumentResources, ResourceProcessor<E> resourceProcessor ) {
+	protected Set<E> processDocumentResources( Set<RDFResource> requestDocumentResources, ResourceProcessor<E> resourceProcessor ) {
 		validateRequestDocumentResourcesNumber( requestDocumentResources.size() );
 
 		Set<E> processedResources = new HashSet<E>();
@@ -70,11 +70,20 @@ public class AbstractRequestWithBodyHandler extends AbstractLDPRequestHandler {
 		return processedResources;
 	}
 
-	protected <E extends RDFSource> E processDocumentResource( RDFResource requestDocumentResource, ResourceProcessor<E> resourceProcessor ) {
-		if ( requestDocumentResource == null )
-			throw new BadRequestException( "The request doesn't contain a document resource." );
+	protected <E extends RDFResource> E processDocumentResource( RDFResource requestDocumentResource, ResourceProcessor<E> resourceProcessor ) {
+		if ( requestDocumentResource == null ) handleRequestWithNoDocumentResource();
 		return resourceProcessor.processResource( requestDocumentResource );
 	}
+
+	protected void validateDocumentResource( URI targetURI, RDFResource requestDocumentResource ) {
+		if ( requestDocumentResource == null ) handleRequestWithNoDocumentResource();
+	}
+
+	protected void handleRequestWithNoDocumentResource() {
+		throw new BadRequestException( "The request doesn't contain a document resource." );
+	}
+
+	protected abstract void validateDocumentResourceView( E documentResourceView );
 
 	protected void validateRequestDocumentResourcesNumber( int number ) {
 		if ( number == 0 ) throw new BadRequestException( "The request doesn't contain " );
@@ -107,7 +116,7 @@ public class AbstractRequestWithBodyHandler extends AbstractLDPRequestHandler {
 	}
 
 	@FunctionalInterface
-	protected interface ResourceProcessor<E> {
-		public E processResource( RDFResource resource );
+	protected interface ResourceProcessor<J> {
+		public J processResource( RDFResource resource );
 	}
 }

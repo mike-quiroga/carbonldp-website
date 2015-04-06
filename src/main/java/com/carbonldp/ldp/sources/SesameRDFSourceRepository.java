@@ -3,6 +3,7 @@ package com.carbonldp.ldp.sources;
 import com.carbonldp.ldp.AbstractSesameLDPRepository;
 import com.carbonldp.ldp.containers.AccessPoint;
 import com.carbonldp.rdf.RDFDocumentRepository;
+import com.carbonldp.rdf.RDFResource;
 import com.carbonldp.rdf.RDFResourceRepository;
 import com.carbonldp.repository.DocumentGraphQueryResultHandler;
 import com.carbonldp.repository.GraphQueryResultHandler;
@@ -18,6 +19,7 @@ import org.openrdf.model.impl.LinkedHashModel;
 import org.openrdf.spring.SesameConnectionFactory;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -152,6 +154,18 @@ public class SesameRDFSourceRepository extends AbstractSesameLDPRepository imple
 	}
 
 	@Override
+	public void add( URI sourceURI, Collection<RDFResource> resourceViews ) {
+		for ( RDFResource resourceView : resourceViews ) {
+			URI resourceViewURI = resourceView.getURI();
+			Map<URI, Set<Value>> propertiesMap = resourceView.getPropertiesMap();
+			for ( URI predicate : propertiesMap.keySet() ) {
+				Set<Value> values = propertiesMap.get( predicate );
+				resourceRepository.add( resourceViewURI, predicate, values );
+			}
+		}
+	}
+
+	@Override
 	public void createAccessPoint( URI sourceURI, AccessPoint accessPoint ) {
 		documentRepository.addDocument( accessPoint.getDocument() );
 		addAccessPoint( sourceURI, accessPoint );
@@ -172,7 +186,31 @@ public class SesameRDFSourceRepository extends AbstractSesameLDPRepository imple
 	@Override
 	public void replace( RDFSource source ) {
 		documentRepository.update( source.getDocument() );
+	}
 
+	@Override
+	public void set( URI sourceURI, Collection<RDFResource> resourceViews ) {
+		for ( RDFResource resourceView : resourceViews ) {
+			URI resourceViewURI = resourceView.getURI();
+			Map<URI, Set<Value>> propertiesMap = resourceView.getPropertiesMap();
+			for ( URI predicate : propertiesMap.keySet() ) {
+				Set<Value> values = propertiesMap.get( predicate );
+				resourceRepository.remove( resourceViewURI, predicate );
+				resourceRepository.add( resourceViewURI, predicate, values );
+			}
+		}
+	}
+
+	@Override
+	public void substract( URI sourceURI, Collection<RDFResource> resourceViews ) {
+		for ( RDFResource resourceView : resourceViews ) {
+			URI resourceViewURI = resourceView.getURI();
+			Map<URI, Set<Value>> propertiesMap = resourceView.getPropertiesMap();
+			for ( URI predicate : propertiesMap.keySet() ) {
+				Set<Value> values = propertiesMap.get( predicate );
+				resourceRepository.remove( resourceViewURI, predicate, values );
+			}
+		}
 	}
 
 	private static final String deleteWithChildrenQuery;

@@ -26,7 +26,7 @@ import java.util.*;
 import static com.carbonldp.Consts.EMPTY_STRING;
 import static com.carbonldp.Consts.SLASH;
 
-public abstract class AbstractPOSTRequestHandler extends AbstractRequestWithBodyHandler {
+public abstract class AbstractPOSTRequestHandler<E extends RDFResource> extends AbstractRequestWithBodyHandler<E> {
 
 	private final static RDFNodeEnum[] invalidTypesForRDFSources;
 
