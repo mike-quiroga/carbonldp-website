@@ -1,5 +1,6 @@
 package com.carbonldp.test;
 
+import com.carbonldp.apps.AppService;
 import org.openrdf.spring.SesameConnectionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -28,7 +29,8 @@ import com.carbonldp.security.SecurityConfig;
 public class TestConfig {
 	@Autowired
 	private SesameConnectionFactory connectionFactory;
-
+	@Autowired
+	private AppService appService;
 	@Autowired
 	private ContainerService containerService;
 
@@ -44,7 +46,12 @@ public class TestConfig {
 
 	@Bean
 	public TransactionActionTemplate transactions() {
-		return new TransactionActionTemplate(connectionFactory);
+		return new TransactionActionTemplate( connectionFactory );
+	}
+
+	@Bean
+	public SystemSecurityContext systemSecurityConxext() {
+		return new SystemSecurityContext( appService );
 	}
 
 }
