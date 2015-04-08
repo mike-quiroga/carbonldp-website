@@ -22,7 +22,8 @@ public class DirectACLPermissionVoter extends AbstractACLPermissionVoter impleme
 		for ( ACE ace : aces ) {
 			if ( ! ACLUtil.aceRefersToSubjects( ace, subjects ) ) continue;
 			for ( Permission permission : permissions ) {
-				if ( ! ace.getPermissions().contains( permission ) ) continue;
+				Set<Permission> acePermissions = ace.getPermissions();
+				if ( ! acePermissions.contains( permission ) ) continue;
 				if ( permissionACE.containsKey( permission ) ) {
 					// More than one ACE talks about the same permission
 					// TODO: Handle subject class priority

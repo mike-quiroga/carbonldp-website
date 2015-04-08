@@ -32,17 +32,15 @@ public abstract class AbstractWebSecurityConfigurerAdapter extends WebSecurityCo
 
 	@Override
 	protected void configure( HttpSecurity http ) throws Exception {
-		//@formatter:off
 		http
-				// TODO: Protect against CSRF using another method
-				// .csrf().and()
-				.addFilter( new WebAsyncManagerIntegrationFilter() )
-				.headers().and()
-				.sessionManagement().and()
-				.securityContext().and()
-				.anonymous().and()
-				.servletApi()
+			// TODO: Protect against CSRF using another method
+			// .csrf().and()
+			.addFilter( new WebAsyncManagerIntegrationFilter() )
+			.headers().and()
+			.sessionManagement().and()
+			.securityContext().and()
+			.anonymous().and()
+			.servletApi()
 		;
-		//@formatter:on
 	}
 }

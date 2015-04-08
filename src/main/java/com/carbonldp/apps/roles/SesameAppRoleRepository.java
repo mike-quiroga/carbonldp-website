@@ -58,6 +58,15 @@ public class SesameAppRoleRepository extends AbstractSesameLDPRepository impleme
 	}
 
 	@Override
+	public AppRole get( URI appRoleURI ) {
+		Assert.notNull( appRoleURI );
+
+		RDFSource roleSource = sourceRepository.get( appRoleURI );
+		if ( roleSource == null ) return null;
+		return new AppRole( roleSource );
+	}
+
+	@Override
 	public Set<AppRole> get( Agent agent ) {
 		Assert.notNull( agent );
 

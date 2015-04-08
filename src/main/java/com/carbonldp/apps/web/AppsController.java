@@ -15,18 +15,15 @@ import javax.servlet.http.HttpServletResponse;
 @Controller
 @RequestMapping( value = "/platform/apps/" )
 public class AppsController extends AbstractController {
-	@Autowired
-	private AppsGETHandler getRequestHandler;
-	@Autowired
-	private AppsPOSTHandler postRequestHandler;
-
-	@RequestMapping( method = RequestMethod.GET )
-	public ResponseEntity<Object> getApplication( HttpServletRequest request, HttpServletResponse response ) {
-		return getRequestHandler.handleRequest( request, response );
-	}
+	private AppsRDFPostHandler postRequestHandler;
 
 	@RequestMapping( method = RequestMethod.POST )
 	public ResponseEntity<Object> createApplication( @RequestBody AbstractModel requestModel, HttpServletRequest request, HttpServletResponse response ) {
 		return postRequestHandler.handleRequest( requestModel, request, response );
+	}
+
+	@Autowired
+	public void setPOSTRequestHandler( AppsRDFPostHandler postRequestHandler ) {
+		this.postRequestHandler = postRequestHandler;
 	}
 }

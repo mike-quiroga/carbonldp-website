@@ -1,11 +1,14 @@
 package com.carbonldp.ldp.web;
 
 import com.carbonldp.descriptions.APIPreferences;
+import com.carbonldp.models.EmptyResponse;
 import com.carbonldp.rdf.RDFResource;
 import com.carbonldp.web.exceptions.BadRequestException;
 import com.carbonldp.web.exceptions.NotFoundException;
+import org.joda.time.DateTime;
 import org.openrdf.model.URI;
 import org.openrdf.model.impl.AbstractModel;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,16 +41,13 @@ public abstract class AbstractPUTRequestHandler<E extends RDFResource> extends A
 		validateRequestModel( requestModel );
 
 		RDFResource requestDocumentResource = getRequestDocumentResource( requestModel );
-		validateDocumentResource( targetURI, requestDocumentResource );
-		E documentResourceView = getDocumentResourceView( requestDocumentResource );
-		validateDocumentResourceView( documentResourceView );
 
 		seekForOrphanFragments( requestModel, requestDocumentResource );
 
 		APIPreferences.InteractionModel interactionModel = getInteractionModel( targetURI );
 		switch ( interactionModel ) {
 			case RDF_SOURCE:
-				return handlePUTToRDFSource( targetURI, documentResourceView );
+				return handlePUTToRDFSource( targetURI, requestDocumentResource );
 			case CONTAINER:
 			case LDPNR:
 			case WRAPPER_FOR_LDPNR:
@@ -66,5 +66,23 @@ public abstract class AbstractPUTRequestHandler<E extends RDFResource> extends A
 
 	protected abstract E getDocumentResourceView( RDFResource requestDocumentResource );
 
-	protected abstract ResponseEntity<Object> handlePUTToRDFSource( URI targetURI, E requestDocumentResource );
+	protected ResponseEntity<Object> handlePUTToRDFSource( URI targetURI, RDFResource requestDocumentResource ) {
+		validateDocumentResource( targetURI, requestDocumentResource );
+		E documentResourceView = getDocumentResourceView( requestDocumentResource );
+		validateDocumentResourceView( documentResourceView );
+
+		replaceResource( targetURI, documentResourceView );
+
+		addTypeLinkHeader( APIPreferences.InteractionModel.RDF_SOURCE );
+		return createSuccessfulResponse( targetURI );
+	}
+
+	protected ResponseEntity<Object> createSuccessfulResponse( URI affectedResourceURI ) {
+		DateTime modified = sourceService.getModified( affectedResourceURI );
+
+		setETagHeader( modified );
+		return new ResponseEntity<>( new EmptyResponse(), HttpStatus.OK );
+	}
+
+	protected abstract void replaceResource( URI targetURI, E documentResourceView );
 }

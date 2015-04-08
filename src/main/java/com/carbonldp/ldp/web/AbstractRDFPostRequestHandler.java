@@ -26,36 +26,31 @@ import java.util.*;
 import static com.carbonldp.Consts.EMPTY_STRING;
 import static com.carbonldp.Consts.SLASH;
 
-public abstract class AbstractPOSTRequestHandler<E extends RDFResource> extends AbstractRequestWithBodyHandler<E> {
+@Transactional
+public abstract class AbstractRDFPostRequestHandler<E extends BasicContainer> extends AbstractRequestWithBodyHandler<E> {
 
 	private final static RDFNodeEnum[] invalidTypesForRDFSources;
 
 	static {
-		//@formatter:off
 		List<? extends RDFNodeEnum> invalidTypes = Arrays.asList(
-				BasicContainerDescription.Resource.CLASS
-				// TODO: Add LDPNR, NRWRAPPER
+			BasicContainerDescription.Resource.CLASS
+			// TODO: Add LDPNR, NRWRAPPER
 		);
-		//@formatter:on
-
 		invalidTypesForRDFSources = invalidTypes.toArray( new RDFNodeEnum[invalidTypes.size()] );
 	}
 
 	private final static RDFNodeEnum[] invalidTypesForContainers;
 
 	static {
-		//@formatter:off
 		List<? extends RDFNodeEnum> invalidTypes = Arrays.asList(
-				DirectContainerDescription.Resource.CLASS,
-				IndirectContainerDescription.Resource.CLASS
-				// TODO: Add LDPNR, NRWRAPPER
+			DirectContainerDescription.Resource.CLASS,
+			IndirectContainerDescription.Resource.CLASS
+			// TODO: Add LDPNR, NRWRAPPER
 		);
-		//@formatter:on
-
 		invalidTypesForContainers = invalidTypes.toArray( new RDFNodeEnum[invalidTypes.size()] );
 	}
 
-	public AbstractPOSTRequestHandler() {
+	public AbstractRDFPostRequestHandler() {
 		Set<InteractionModel> supportedInteractionModels = new HashSet<>();
 		supportedInteractionModels.add( InteractionModel.RDF_SOURCE );
 		supportedInteractionModels.add( InteractionModel.CONTAINER );
@@ -64,7 +59,6 @@ public abstract class AbstractPOSTRequestHandler<E extends RDFResource> extends 
 		setDefaultInteractionModel( InteractionModel.CONTAINER );
 	}
 
-	@Transactional
 	public ResponseEntity<Object> handleRequest( AbstractModel requestModel, HttpServletRequest request, HttpServletResponse response ) {
 		setUp( request, response );
 
@@ -112,10 +106,13 @@ public abstract class AbstractPOSTRequestHandler<E extends RDFResource> extends 
 
 		DateTime creationTime = sourceService.createAccessPoint( targetURI, requestAccessPoint );
 
-		return createCreatedResponse( requestAccessPoint, creationTime );
+		return generateCreatedResponse( requestAccessPoint, creationTime );
 	}
 
 	private ResponseEntity<Object> handlePOSTToContainer( URI targetURI, RDFResource requestDocumentResource ) {
+
+		validateDocumentResource( targetURI, requestDocumentResource );
+
 		BasicContainer requestBasicContainer = processDocumentResource( requestDocumentResource, resource -> {
 			for ( RDFNodeEnum invalidType : invalidTypesForContainers ) {
 				if ( resource.hasType( invalidType ) )
@@ -136,16 +133,31 @@ public abstract class AbstractPOSTRequestHandler<E extends RDFResource> extends 
 		requestDocumentResource = getDocumentResourceWithFinalURI( requestBasicContainer, targetURI.stringValue() );
 		if ( ! requestDocumentResource.equals( requestBasicContainer.getURI() ) ) requestBasicContainer = new BasicContainer( requestDocumentResource );
 
-		DateTime creationTime = containerService.createChild( targetURI, requestBasicContainer );
+		E documentResourceView = getDocumentResourceView( requestBasicContainer );
+		validateDocumentResourceView( documentResourceView );
 
-		return createCreatedResponse( requestDocumentResource, creationTime );
+		createChild( targetURI, documentResourceView );
+
+		DateTime modified = sourceService.getModified( documentResourceView.getURI() );
+		return generateCreatedResponse( documentResourceView, modified );
 	}
 
-	protected ResponseEntity<Object> createCreatedResponse( RDFResource createdResource, DateTime creationTime ) {
-		response.setHeader( HTTPHeaders.LOCATION, createdResource.getURI().stringValue() );
-		response.setHeader( HTTPHeaders.ETAG, HTTPUtil.formatWeakETag( creationTime.toString() ) );
+	protected abstract E getDocumentResourceView( BasicContainer requestBasicContainer );
 
+	protected abstract void createChild( URI targetURI, E documentResourceView );
+
+	private ResponseEntity<Object> generateCreatedResponse( RDFResource resourceCreated, DateTime creationTime ) {
+		setETagHeader( creationTime );
+		setLocationHeader( resourceCreated );
 		return new ResponseEntity<>( new EmptyResponse(), HttpStatus.CREATED );
+	}
+
+	protected ResponseEntity<Object> generateCreatedResponse( AccessPoint accessPointCreated, DateTime creationTime ) {
+		return generateCreatedResponse( (RDFResource) accessPointCreated, creationTime );
+	}
+
+	protected ResponseEntity<Object> generateCreatedResponse( E childCreated, DateTime creationTime ) {
+		return generateCreatedResponse( (RDFResource) childCreated, creationTime );
 	}
 
 	protected RDFResource getDocumentResourceWithFinalURI( RDFResource documentResource, String parentURI ) {

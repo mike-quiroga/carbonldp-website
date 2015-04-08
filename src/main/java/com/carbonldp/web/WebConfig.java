@@ -2,6 +2,7 @@ package com.carbonldp.web;
 
 import com.carbonldp.config.ConfigurationRepository;
 import com.carbonldp.ldp.web.RDFSourceMessageConverter;
+import com.carbonldp.log.ControllerCallsLogger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.*;
 import org.springframework.http.converter.ByteArrayHttpMessageConverter;
@@ -25,12 +26,12 @@ import java.util.List;
 @EnableAspectJAutoProxy
 @ComponentScan(
 	useDefaultFilters = false,
-	basePackages = {"com.carbonldp"},
 	includeFilters = {
 		@ComponentScan.Filter( type = FilterType.ANNOTATION, value = ControllerAdvice.class ),
 		@ComponentScan.Filter( type = FilterType.ANNOTATION, value = Controller.class ),
 		@ComponentScan.Filter( type = FilterType.ANNOTATION, value = RequestHandler.class )
-	}
+	},
+	basePackages = {"com.carbonldp"}
 )
 public class WebConfig extends WebMvcConfigurerAdapter {
 
@@ -71,5 +72,10 @@ public class WebConfig extends WebMvcConfigurerAdapter {
 	@Bean
 	public EmptyResponseMessageConverter emptyResponseMessageConverter() {
 		return new EmptyResponseMessageConverter();
+	}
+
+	@Bean
+	public ControllerCallsLogger controllerCallsLogger() {
+		return new ControllerCallsLogger();
 	}
 }

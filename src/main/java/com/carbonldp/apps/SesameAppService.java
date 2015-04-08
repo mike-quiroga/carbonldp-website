@@ -6,6 +6,7 @@ import com.carbonldp.authentication.AgentAuthenticationToken;
 import com.carbonldp.authorization.acl.ACEDescription;
 import com.carbonldp.authorization.acl.ACL;
 import com.carbonldp.authorization.acl.ACLRepository;
+import com.carbonldp.exceptions.ResourceAlreadyExistsException;
 import com.carbonldp.exceptions.ResourceDoesntExistException;
 import com.carbonldp.ldp.AbstractSesameLDPService;
 import com.carbonldp.ldp.containers.BasicContainer;
@@ -60,13 +61,33 @@ public class SesameAppService extends AbstractSesameLDPService implements AppSer
 	}
 
 	@Override
-	public App create( App app ) {
-		// TODO: Check that the App doesn't exist
+	public void create( App app ) {
+		if ( exists( app.getURI() ) ) throw new ResourceAlreadyExistsException();
 		// TODO: Validate app resource
 
 		App createdApp = appRepository.create( app );
-		transactionWrapper.runInAppcontext( app, () -> initialize( createdApp ) );
-		return createdApp;
+		ACL appACL = createAppACL( createdApp );
+
+		AppRole adminRole = transactionWrapper.runInAppcontext( app, () -> {
+			Container rootContainer = createRootContainer( app );
+			ACL rootContainerACL = createRootContainerACL( rootContainer );
+
+			Container appRolesContainer = appRoleRepository.createAppRolesContainer( rootContainer.getURI() );
+			ACL appRolesContainerACL = createAppRolesContainerACL( appRolesContainer );
+
+			AppRole appAdminRole = createAppAdminRole( appRolesContainer );
+			ACL appAdminRoleACL = createAppAdminRoleACL( appAdminRole );
+
+			addCurrentAgentToAppAdminRole( appAdminRole );
+
+			addDefaultPermissions( appAdminRole, rootContainerACL );
+
+			return appAdminRole;
+		} );
+
+		addAppDefaultPermissions( adminRole, appACL );
+
+		sourceRepository.touch( createdApp.getURI() );
 	}
 
 	@Override
@@ -117,28 +138,8 @@ public class SesameAppService extends AbstractSesameLDPService implements AppSer
 		throw new RuntimeException( "Not Implemented" );
 	}
 
-	/**
-	 * Creates the initial resources of an app.
-	 * <b>Needs to be called inside the app's context.</b>
-	 *
-	 * @param app
-	 * 	The app to initialize
-	 */
-	private void initialize( App app ) {
-		Container rootContainer = createRootContainer( app );
-		ACL rootContainerACL = createRootContainerACL( rootContainer );
-
-		Container appRolesContainer = appRoleRepository.createAppRolesContainer( rootContainer.getURI() );
-		ACL appRolesContainerACL = createAppRolesContainerACL( appRolesContainer );
-
-		AppRole appAdminRole = createAppAdminRole( appRolesContainer );
-		ACL appAdminRoleACL = createAppAdminRoleACL( appAdminRole );
-
-		addCurrentAgentToAppAdminRole( appAdminRole );
-
-		addDefaultPermissions( appAdminRole, rootContainerACL );
-
-		// TODO: Finish this
+	private ACL createAppACL( App app ) {
+		return aclRepository.createACL( app.getDocument() );
 	}
 
 	private BasicContainer createRootContainer( App app ) {
@@ -182,11 +183,20 @@ public class SesameAppService extends AbstractSesameLDPService implements AppSer
 		aclRepository.grantPermissions( rootContainerACL, Arrays.asList( appAdminRole ), Arrays.asList(
 			ACEDescription.Permission.READ,
 			ACEDescription.Permission.UPDATE,
+			// TODO: The app-admin role shouldn't have DELETE permissions on the rootContainer
 			ACEDescription.Permission.DELETE,
 
 			ACEDescription.Permission.CREATE_ACCESS_POINT,
 			ACEDescription.Permission.CREATE_CHILD,
 			ACEDescription.Permission.ADD_MEMBER
+		) );
+	}
+
+	private void addAppDefaultPermissions( AppRole adminRole, ACL appACL ) {
+		aclRepository.grantPermissions( appACL, Arrays.asList( adminRole ), Arrays.asList(
+			ACEDescription.Permission.READ,
+			ACEDescription.Permission.UPDATE,
+			ACEDescription.Permission.DELETE
 		) );
 	}
 }

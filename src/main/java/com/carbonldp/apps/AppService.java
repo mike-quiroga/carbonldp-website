@@ -11,7 +11,7 @@ public interface AppService {
 
 	public Set<String> getDomains( URI appURI );
 
-	public App create( App app );
+	public void create( App app );
 
 	public void addDomain( String domain );
 
