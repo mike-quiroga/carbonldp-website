@@ -77,28 +77,64 @@ public abstract class AbstractAccessPointRepository extends AbstractTypedContain
 		return getProperties( containerURI, getProperties_query );
 	}
 
-	private static final String getMembershipTriples_query;
+	private static final String getMembershipTriplesQuery;
 
 	static {
-		StringBuilder queryBuilder = new StringBuilder();
-		queryBuilder
-			.append( "CONSTRUCT {" ).append( NEW_LINE )
-			.append( TAB ).append( "?membershipResource ?hasMemberRelation ?members" ).append( NEW_LINE )
-			.append( "} WHERE {" ).append( NEW_LINE )
-			.append( TAB ).append( "GRAPH ?containerURI {" ).append( NEW_LINE )
-			.append( TAB ).append( TAB ).append( RDFNodeUtil.generatePredicateStatement( "?containerURI", "?hasMemberRelation", ContainerDescription.Property.HAS_MEMBER_RELATION ) ).append( NEW_LINE )
-			.append( TAB ).append( TAB ).append( RDFNodeUtil.generatePredicateStatement( "?containerURI", "?membershipResource", ContainerDescription.Property.MEMBERSHIP_RESOURCE ) ).append( NEW_LINE )
-			.append( TAB ).append( "}" ).append( NEW_LINE )
-			.append( TAB ).append( "GRAPH ?membershipResource {" ).append( NEW_LINE )
-			.append( TAB ).append( TAB ).append( "?membershipResource ?hasMemberRelation ?members" ).append( NEW_LINE )
-			.append( TAB ).append( "}" ).append( NEW_LINE )
-			.append( "}" )
+		getMembershipTriplesQuery = "" +
+			"CONSTRUCT {" + NEW_LINE +
+			TAB + "?membershipResource ?hasMemberRelation ?members" + NEW_LINE +
+			"} WHERE {" + NEW_LINE +
+			TAB + "GRAPH ?containerURI {" + NEW_LINE +
+			TAB + TAB + getHasMemberRelationSPARQL( "?containerURI", "?hasMemberRelation", 2 ) + NEW_LINE +
+			TAB + TAB + RDFNodeUtil.generatePredicateStatement( "?containerURI", "?membershipResource", ContainerDescription.Property.MEMBERSHIP_RESOURCE ) + NEW_LINE +
+			TAB + "}" + NEW_LINE +
+			TAB + "GRAPH ?membershipResource {" + NEW_LINE +
+			TAB + TAB + "?membershipResource ?hasMemberRelation ?members" + NEW_LINE +
+			TAB + "}" + NEW_LINE +
+			"}"
 		;
-		getMembershipTriples_query = queryBuilder.toString();
 	}
 
 	@Override
 	public Set<Statement> getMembershipTriples( URI containerURI ) {
-		return getMembershipTriples( containerURI, getMembershipTriples_query );
+		return getMembershipTriples( containerURI, getMembershipTriplesQuery );
+	}
+
+	private static final String removeMembersQuery;
+
+	static {
+		removeMembersQuery = "" +
+			"DELETE {" + NEW_LINE +
+			TAB + "GRAPH ?membershipResource {" + NEW_LINE +
+			TAB + TAB + "?membershipResource ?hasMemberRelation ?member" + NEW_LINE +
+			TAB + "}" + NEW_LINE +
+			TAB + "GRAPH ?member {" + NEW_LINE +
+			TAB + TAB + "?member ?memberOfRelation ?container" + NEW_LINE +
+			TAB + "}" + NEW_LINE +
+			"} WHERE {" + NEW_LINE +
+			TAB + "GRAPH ?container {" + NEW_LINE +
+			TAB + TAB + getHasMemberRelationSPARQL( "?containerURI", "?hasMemberRelation", 2 ) + NEW_LINE +
+			TAB + TAB + RDFNodeUtil.generatePredicateStatement( "?container", "?membershipResource", ContainerDescription.Property.MEMBERSHIP_RESOURCE ) + NEW_LINE +
+			TAB + "}" + NEW_LINE +
+			TAB + "GRAPH ?membershipResource {" + NEW_LINE +
+			TAB + TAB + "?membershipResource ?hasMemberRelation ?member" + NEW_LINE +
+			TAB + "}" + NEW_LINE +
+			TAB + "OPTIONAL {" + NEW_LINE +
+			TAB + TAB + "GRAPH ?container {" + NEW_LINE +
+			TAB + TAB + TAB + RDFNodeUtil.generatePredicateStatement( "?container", "?memberOfRelation", ContainerDescription.Property.MEMBER_OF_RELATION ) + NEW_LINE +
+			TAB + TAB + "}" + NEW_LINE +
+			TAB + TAB + "GRAPH ?member {" + NEW_LINE +
+			TAB + TAB + TAB + "?member ?memberOfRelation ?container" + NEW_LINE +
+			TAB + TAB + "}" + NEW_LINE +
+			TAB + "}" + NEW_LINE +
+			"}"
+		;
+	}
+
+	@Override
+	public void removeMembers( URI containerURI ) {
+		Map<String, Value> bindings = new HashMap<>();
+		bindings.put( "container", containerURI );
+		sparqlTemplate.executeUpdate( removeMembersQuery, bindings );
 	}
 }

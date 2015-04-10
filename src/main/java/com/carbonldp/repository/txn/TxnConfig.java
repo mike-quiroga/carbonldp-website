@@ -1,19 +1,18 @@
 package com.carbonldp.repository.txn;
 
-import com.carbonldp.config.ConfigurationRepository;
 import com.carbonldp.Vars;
 import com.carbonldp.repository.LocalRepositoryService;
 import com.carbonldp.repository.RepositoryService;
 import org.openrdf.repository.Repository;
 import org.openrdf.repository.RepositoryException;
 import org.openrdf.repository.manager.LocalRepositoryManager;
+import org.openrdf.repository.manager.RemoteRepositoryManager;
 import org.openrdf.repository.manager.RepositoryManager;
 import org.openrdf.repository.sail.SailRepository;
 import org.openrdf.sail.nativerdf.NativeStore;
 import org.openrdf.spring.RepositoryConnectionFactory;
 import org.openrdf.spring.SesameConnectionFactory;
 import org.openrdf.spring.SesameTransactionManager;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -26,9 +25,6 @@ import java.io.File;
 @ComponentScan( "org.openrdf.spring" )
 @EnableTransactionManagement
 public class TxnConfig {
-	@Autowired
-	private ConfigurationRepository configurationRepository;
-
 	@Bean
 	public PlatformTransactionManager transactionManager() {
 		return new SesameTransactionManager( connectionFactory() );
@@ -65,7 +61,12 @@ public class TxnConfig {
 
 	@Bean
 	protected RepositoryManager appsRepositoryManager() {
-		String repositoryDirectory = Vars.getAppsRepositoryDirectory();
-		return new LocalRepositoryManager( new File( repositoryDirectory ) );
+		if ( Vars.appsUseRemoteManager() ) {
+			String remoteManagerURL = Vars.getAppsRemoteManagerURL();
+			return new RemoteRepositoryManager( remoteManagerURL );
+		} else {
+			String repositoryDirectory = Vars.getAppsRepositoryDirectory();
+			return new LocalRepositoryManager( new File( repositoryDirectory ) );
+		}
 	}
 }

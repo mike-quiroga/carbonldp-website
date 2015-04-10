@@ -2,13 +2,14 @@ package com.carbonldp.ldp.sources;
 
 import com.carbonldp.ldp.AbstractSesameLDPRepository;
 import com.carbonldp.ldp.containers.AccessPoint;
-import com.carbonldp.ldp.containers.ContainerDescription;
 import com.carbonldp.rdf.RDFDocumentRepository;
+import com.carbonldp.rdf.RDFResource;
 import com.carbonldp.rdf.RDFResourceRepository;
 import com.carbonldp.repository.DocumentGraphQueryResultHandler;
 import com.carbonldp.repository.GraphQueryResultHandler;
 import com.carbonldp.utils.RDFNodeUtil;
 import com.carbonldp.utils.ValueUtil;
+import com.carbonldp.web.exceptions.NotImplementedException;
 import org.joda.time.DateTime;
 import org.openrdf.model.Resource;
 import org.openrdf.model.URI;
@@ -18,6 +19,7 @@ import org.openrdf.model.impl.LinkedHashModel;
 import org.openrdf.spring.SesameConnectionFactory;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -113,20 +115,18 @@ public class SesameRDFSourceRepository extends AbstractSesameLDPRepository imple
 		return resourceRepository.getDate( sourceURI, RDFSourceDescription.Property.MODIFIED );
 	}
 
-	private static final String getDefaultInteractionModel_query;
+	private static final String getDefaultInteractionModelQuery;
 
 	static {
-		StringBuilder queryBuilder = new StringBuilder();
-		queryBuilder
-			.append( "SELECT ?dim WHERE {" ).append( NEW_LINE )
-			.append( TAB ).append( "GRAPH ?sourceURI {" ).append( NEW_LINE )
-			.append( TAB ).append( TAB ).append( RDFNodeUtil.generatePredicateStatement( "?sourceURI", "?dim", RDFSourceDescription.Property.DEFAULT_INTERACTION_MODEL ) ).append( NEW_LINE )
-			.append( TAB ).append( TAB ).append( "FILTER(isURI(?dim))." ).append( NEW_LINE )
-			.append( TAB ).append( "}" ).append( NEW_LINE )
-			.append( "}" ).append( NEW_LINE )
-			.append( "LIMIT 1" )
+		getDefaultInteractionModelQuery = "" +
+			"SELECT ?dim WHERE {" + NEW_LINE +
+			TAB + "GRAPH ?sourceURI {" + NEW_LINE +
+			TAB + TAB + RDFNodeUtil.generatePredicateStatement( "?sourceURI", "?dim", RDFSourceDescription.Property.DEFAULT_INTERACTION_MODEL ) + NEW_LINE +
+			TAB + TAB + "FILTER( isURI(?dim) )." + NEW_LINE +
+			TAB + "}" + NEW_LINE +
+			"}" + NEW_LINE +
+			"LIMIT 1"
 		;
-		getDefaultInteractionModel_query = queryBuilder.toString();
 	}
 
 	// TODO: Create a more generic method instead of this specific one
@@ -134,8 +134,8 @@ public class SesameRDFSourceRepository extends AbstractSesameLDPRepository imple
 	public URI getDefaultInteractionModel( URI sourceURI ) {
 		Map<String, Value> bindings = new HashMap<>();
 		bindings.put( "sourceURI", sourceURI );
-		return sparqlTemplate.executeTupleQuery( getDefaultInteractionModel_query, bindings, queryResult -> {
-			if ( ! queryResult.hasNext() ) return ContainerDescription.Default.HAS_MEMBER_RELATION.getURI();
+		return sparqlTemplate.executeTupleQuery( getDefaultInteractionModelQuery, bindings, queryResult -> {
+			if ( ! queryResult.hasNext() ) return null;
 			else return ValueUtil.getURI( queryResult.next().getBinding( "dim" ).getValue() );
 		} );
 	}
@@ -151,6 +151,18 @@ public class SesameRDFSourceRepository extends AbstractSesameLDPRepository imple
 		resourceRepository.remove( sourceURI, RDFSourceDescription.Property.MODIFIED );
 		resourceRepository.add( sourceURI, RDFSourceDescription.Property.MODIFIED.getURI(), modified );
 		return modified;
+	}
+
+	@Override
+	public void add( URI sourceURI, Collection<RDFResource> resourceViews ) {
+		for ( RDFResource resourceView : resourceViews ) {
+			URI resourceViewURI = resourceView.getURI();
+			Map<URI, Set<Value>> propertiesMap = resourceView.getPropertiesMap();
+			for ( URI predicate : propertiesMap.keySet() ) {
+				Set<Value> values = propertiesMap.get( predicate );
+				resourceRepository.add( resourceViewURI, predicate, values );
+			}
+		}
 	}
 
 	@Override
@@ -172,8 +184,96 @@ public class SesameRDFSourceRepository extends AbstractSesameLDPRepository imple
 	}
 
 	@Override
-	public void delete( URI sourceURI ) {
-		// TODO Auto-generated method stub
-
+	public void replace( RDFSource source ) {
+		documentRepository.update( source.getDocument() );
 	}
+
+	@Override
+	public void set( URI sourceURI, Collection<RDFResource> resourceViews ) {
+		for ( RDFResource resourceView : resourceViews ) {
+			URI resourceViewURI = resourceView.getURI();
+			Map<URI, Set<Value>> propertiesMap = resourceView.getPropertiesMap();
+			for ( URI predicate : propertiesMap.keySet() ) {
+				Set<Value> values = propertiesMap.get( predicate );
+				resourceRepository.remove( resourceViewURI, predicate );
+				resourceRepository.add( resourceViewURI, predicate, values );
+			}
+		}
+	}
+
+	@Override
+	public void substract( URI sourceURI, Collection<RDFResource> resourceViews ) {
+		for ( RDFResource resourceView : resourceViews ) {
+			URI resourceViewURI = resourceView.getURI();
+			Map<URI, Set<Value>> propertiesMap = resourceView.getPropertiesMap();
+			for ( URI predicate : propertiesMap.keySet() ) {
+				Set<Value> values = propertiesMap.get( predicate );
+				resourceRepository.remove( resourceViewURI, predicate, values );
+			}
+		}
+	}
+
+	private static final String deleteWithChildrenQuery;
+
+	static {
+		deleteWithChildrenQuery = "" +
+			"DELETE {" + NEW_LINE +
+			TAB + "GRAPH ?sourceURI {" + NEW_LINE +
+			TAB + TAB + "?sourceSubject ?sourcePredicate ?sourceObject" + NEW_LINE +
+			TAB + "}" + NEW_LINE +
+			TAB + "GRAPH ?childGraph {" + NEW_LINE +
+			TAB + TAB + "?childSubject ?childPredicate ?childObject" + NEW_LINE +
+			TAB + "}" + NEW_LINE +
+			"} WHERE {" + NEW_LINE +
+			// DELETE Source's document
+			TAB + "GRAPH ?sourceURI {" + NEW_LINE +
+			TAB + TAB + "?sourceSubject ?sourcePredicate ?sourceObject" + NEW_LINE +
+			TAB + "}" + NEW_LINE +
+			TAB + "OPTIONAL {" + NEW_LINE +
+			// DELETE Children Graphs
+			TAB + TAB + "GRAPH ?childGraph {" + NEW_LINE +
+			TAB + TAB + TAB + "?childSubject ?childPredicate ?childObject" + NEW_LINE +
+			TAB + TAB + "}" + NEW_LINE +
+			TAB + TAB + "FILTER( STRSTARTS( STR(?childGraph), STR(?sourceURI) ) )" + NEW_LINE +
+			TAB + "}" + NEW_LINE +
+			"}"
+		;
+	}
+
+	@Override
+	public void delete( URI sourceURI ) {
+		Map<String, Value> bindings = new HashMap<>();
+		bindings.put( "sourceURI", sourceURI );
+		sparqlTemplate.executeUpdate( deleteWithChildrenQuery, bindings );
+	}
+
+	private static final String deleteOcurrencesIncludingChildrenQuery;
+
+	static {
+		deleteOcurrencesIncludingChildrenQuery = "" +
+			"DELETE {" + NEW_LINE +
+			TAB + "GRAPH ?graph {" + NEW_LINE +
+			TAB + TAB + "?subject ?predicate ?object" + NEW_LINE +
+			TAB + "}." + NEW_LINE +
+			"} WHERE {" + NEW_LINE +
+			TAB + "GRAPH ?graph {" + NEW_LINE +
+			TAB + TAB + "?subject ?predicate ?object" + NEW_LINE +
+			TAB + TAB + "FILTER( " + NEW_LINE +
+			TAB + TAB + TAB + "STRSTARTS( str(?predicate), str(?sourceURI) )" + NEW_LINE +
+			TAB + TAB + TAB + " || " + NEW_LINE +
+			TAB + TAB + TAB + "( isURI(?object) && STRSTARTS( str(?object), str(?sourceURI) ) )" + NEW_LINE +
+			TAB + TAB + ")" + NEW_LINE +
+			TAB + "}." + NEW_LINE +
+			"}"
+		;
+	}
+
+	@Override
+	public void deleteOccurrences( URI sourceURI, boolean includeChildrens ) {
+		Map<String, Value> bindings = new HashMap<>();
+		bindings.put( "sourceURI", sourceURI );
+		if ( includeChildrens ) sparqlTemplate.executeUpdate( deleteOcurrencesIncludingChildrenQuery, bindings );
+		else throw new NotImplementedException();
+	}
+
 }

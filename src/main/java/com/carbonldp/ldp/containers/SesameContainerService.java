@@ -29,6 +29,11 @@ public class SesameContainerService extends AbstractSesameLDPService implements 
 	}
 
 	@Override
+	public ContainerDescription.Type getContainerType( URI containerURI ) {
+		return containerRepository.getContainerType( containerURI );
+	}
+
+	@Override
 	public DateTime createChild( URI containerURI, BasicContainer basicContainer ) {
 		DateTime creationTime = DateTime.now();
 
@@ -39,5 +44,21 @@ public class SesameContainerService extends AbstractSesameLDPService implements 
 		sourceRepository.touch( containerURI, creationTime );
 
 		return creationTime;
+	}
+
+	@Override
+	public void removeMembers( URI targetURI ) {
+		// TODO: Should the resource be touched here?
+		containerRepository.removeMembers( targetURI );
+	}
+
+	@Override
+	public void deleteContainedResources( URI targetURI ) {
+		containerRepository.deleteContainedResources( targetURI );
+	}
+
+	@Override
+	public void delete( URI targetURI ) {
+		sourceRepository.delete( targetURI );
 	}
 }

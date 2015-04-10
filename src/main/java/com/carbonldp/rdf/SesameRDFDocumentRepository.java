@@ -28,14 +28,14 @@ public class SesameRDFDocumentRepository extends AbstractSesameRepository implem
 	public boolean documentExists( URI documentURI ) {
 		return connectionTemplate.readStatements(
 			connection -> connection.getStatements( null, null, null, false, documentURI ),
-			RepositoryResult::hasNext
+			repositoryResult -> repositoryResult.hasNext()
 		);
 	}
 
 	public RDFDocument getDocument( URI documentURI ) {
 		AbstractModel model = connectionTemplate.readStatements(
 			connection -> connection.getStatements( null, null, null, false, documentURI ),
-			this::retrieveModel
+			repositoryResult -> retrieveModel( repositoryResult )
 		);
 		return new RDFDocument( model, documentURI );
 	}
@@ -44,7 +44,7 @@ public class SesameRDFDocumentRepository extends AbstractSesameRepository implem
 		URI[] contexts = documentURIs.toArray( new URI[documentURIs.size()] );
 		AbstractModel model = connectionTemplate.readStatements(
 			connection -> connection.getStatements( null, null, null, false, contexts ),
-			this::retrieveModel
+			repositoryResult -> retrieveModel( repositoryResult )
 		);
 		return RDFDocumentUtil.getDocuments( model, documentURIs );
 	}

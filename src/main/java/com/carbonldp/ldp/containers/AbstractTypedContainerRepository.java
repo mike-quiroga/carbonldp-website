@@ -56,7 +56,7 @@ public abstract class AbstractTypedContainerRepository extends AbstractSesameLDP
 	}
 
 	// TODO: Create a more generic method instead of this specific one
-	protected URI getHasMemberRelation( URI containerURI ) {
+	protected URI getHasMemberRelationSPARQL( URI containerURI ) {
 		Map<String, Value> bindings = new HashMap<>();
 		bindings.put( "containerURI", containerURI );
 
@@ -157,7 +157,7 @@ public abstract class AbstractTypedContainerRepository extends AbstractSesameLDP
 	}
 
 	protected void addHasMemberRelation( URI containerURI, URI memberURI ) {
-		URI hasMemberRelation = getHasMemberRelation( containerURI );
+		URI hasMemberRelation = getHasMemberRelationSPARQL( containerURI );
 		URI membershipResource = getMembershipResource( containerURI );
 
 		this.addHasMemberRelation( membershipResource, hasMemberRelation, memberURI );
@@ -180,6 +180,21 @@ public abstract class AbstractTypedContainerRepository extends AbstractSesameLDP
 	public RDFSource addMember( URI containerURI, RDFSource member ) {
 		addHasMemberRelation( containerURI, member.getURI() );
 		return addMemberOfRelation( containerURI, member );
+	}
+
+	protected static String getHasMemberRelationSPARQL( String containerVar, String hasMemberRelationVar, int numberOfTabs ) {
+		String tabs = SPARQLUtil.createTabs( numberOfTabs );
+
+		String sparql;
+		sparql = "# GET ldp:hasMemberRelation or bind default values" + NEW_LINE +
+			tabs + "OPTIONAL {" + NEW_LINE +
+			tabs + TAB + SPARQLUtil.assignVar( "?hasMemberRelationPredicate", ContainerDescription.Property.HAS_MEMBER_RELATION ) + NEW_LINE +
+			tabs + TAB + containerVar + " ?hasMemberRelationPredicate ?hmr" + NEW_LINE +
+			tabs + "}" + NEW_LINE +
+			tabs + SPARQLUtil.assignVar( "?defaultHasMemberRelation", ContainerDescription.Default.HAS_MEMBER_RELATION ) + NEW_LINE +
+			tabs + "BIND( IF( BOUND( ?hmr ), ?hmr, ?defaultHasMemberRelation ) AS " + hasMemberRelationVar + ")"
+		;
+		return sparql;
 	}
 
 }

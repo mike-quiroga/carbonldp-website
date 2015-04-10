@@ -47,26 +47,12 @@ public class ApplicationContextConnectionFactory extends AbstractComponent imple
 
 	@Override
 	public RepositoryConnection getConnection() {
-		RepositoryConnectionFactory connectionFactory = getRepositoryConnectionFactory();
-
-		if ( LOG.isDebugEnabled() ) {
-			if ( connectionFactory == platformConnectionFactory ) LOG.debug( "getConnection << PLATFORM context" );
-			else LOG.debug( "getConnection << AppContext: {}", AppContextHolder.getContext().getApplication() );
-		}
-
-		return connectionFactory.getConnection();
+		return getRepositoryConnectionFactory().getConnection();
 	}
 
 	@Override
 	public void closeConnection() {
-		RepositoryConnectionFactory connectionFactory = getRepositoryConnectionFactory();
-
-		if ( LOG.isDebugEnabled() ) {
-			if ( connectionFactory == platformConnectionFactory ) LOG.debug( "getConnection << PLATFORM context" );
-			else LOG.debug( "closeConnection << AppContext: {}", AppContextHolder.getContext().getApplication() );
-		}
-
-		connectionFactory.closeConnection();
+		getRepositoryConnectionFactory().closeConnection();
 	}
 
 	@Override
@@ -78,7 +64,7 @@ public class ApplicationContextConnectionFactory extends AbstractComponent imple
 			else LOG.debug( "createTransaction << AppContext: {}", AppContextHolder.getContext().getApplication() );
 		}
 
-		return connectionFactory.createTransaction();
+		return getRepositoryConnectionFactory().createTransaction();
 	}
 
 	@Override
@@ -101,14 +87,7 @@ public class ApplicationContextConnectionFactory extends AbstractComponent imple
 
 	@Override
 	public SesameTransactionObject getLocalTransactionObject() {
-		RepositoryConnectionFactory connectionFactory = getRepositoryConnectionFactory();
-
-		if ( LOG.isDebugEnabled() ) {
-			if ( connectionFactory == platformConnectionFactory ) LOG.debug( "getLocalTransactionObject << PLATFORM context" );
-			else LOG.debug( "getLocalTransactionObject << AppContext: {}", AppContextHolder.getContext().getApplication() );
-		}
-
-		return connectionFactory.getLocalTransactionObject();
+		return getRepositoryConnectionFactory().getLocalTransactionObject();
 	}
 
 	@Override

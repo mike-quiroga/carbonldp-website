@@ -4,10 +4,14 @@ import com.carbonldp.apps.context.AppContextConfig;
 import com.carbonldp.config.ConfigurationConfig;
 import com.carbonldp.config.RepositoriesConfig;
 import com.carbonldp.config.ServicesConfig;
+import com.carbonldp.log.LOGConfig;
 import com.carbonldp.repository.txn.TxnConfig;
 import com.carbonldp.security.SecurityConfig;
+import com.carbonldp.spring.SpringProfile;
 import com.carbonldp.utils.PropertiesUtil;
+import com.carbonldp.web.RequestLoggerFilter;
 import com.carbonldp.web.WebConfig;
+import org.fusesource.jansi.AnsiConsole;
 import org.springframework.beans.factory.config.PropertiesFactoryBean;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
@@ -18,7 +22,6 @@ import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
 import org.springframework.web.filter.DelegatingFilterProxy;
 import org.springframework.web.servlet.DispatcherServlet;
-import org.springframework.web.util.Log4jConfigListener;
 
 import javax.servlet.*;
 import java.io.IOException;
@@ -31,8 +34,7 @@ public class ApplicationInitializer implements WebApplicationInitializer {
 
 	@Override
 	public void onStartup( ServletContext container ) throws ServletException {
-
-		addLog4jListener( container );
+		AnsiConsole.systemInstall();
 
 		SpringProfile activeProfile = getActiveProfile();
 		Properties configProperties = loadConfigProperties( activeProfile );
@@ -41,6 +43,7 @@ public class ApplicationInitializer implements WebApplicationInitializer {
 		AnnotationConfigWebApplicationContext rootContext = createRootContext();
 		addContextLifecycleManagerListener( rootContext, container );
 
+		addLoggingFilter( container );
 		addSecurityFilterChain( container );
 
 		AnnotationConfigWebApplicationContext dispatcherContext = createDispatcherContext();
@@ -81,11 +84,6 @@ public class ApplicationInitializer implements WebApplicationInitializer {
 		Vars.init( properties );
 	}
 
-	private void addLog4jListener( ServletContext container ) {
-		container.setInitParameter( "log4jConfigLocation", "classpath:log4j.properties" );
-		container.addListener( new Log4jConfigListener() );
-	}
-
 	private AnnotationConfigWebApplicationContext createRootContext() {
 		AnnotationConfigWebApplicationContext rootContext = new AnnotationConfigWebApplicationContext();
 		rootContext.register(
@@ -94,13 +92,19 @@ public class ApplicationInitializer implements WebApplicationInitializer {
 			RepositoriesConfig.class,
 			AppContextConfig.class,
 			SecurityConfig.class,
-			ServicesConfig.class
+			ServicesConfig.class,
+			LOGConfig.class
 		);
 		return rootContext;
 	}
 
 	private void addContextLifecycleManagerListener( WebApplicationContext context, ServletContext container ) {
 		container.addListener( new ContextLoaderListener( context ) );
+	}
+
+	private void addLoggingFilter( ServletContext container ) {
+		FilterRegistration.Dynamic loggerFilter = container.addFilter( RequestLoggerFilter.DEFAULT_FILTER_NAME, new RequestLoggerFilter() );
+		loggerFilter.addMappingForUrlPatterns( EnumSet.allOf( DispatcherType.class ), false, "/*" );
 	}
 
 	private void addSecurityFilterChain( ServletContext container ) {

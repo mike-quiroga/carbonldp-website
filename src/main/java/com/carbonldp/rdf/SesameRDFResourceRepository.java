@@ -11,10 +11,10 @@ import org.joda.time.format.ISODateTimeFormat;
 import org.openrdf.model.*;
 import org.openrdf.model.impl.URIImpl;
 import org.openrdf.model.impl.ValueFactoryImpl;
-import org.openrdf.repository.RepositoryResult;
 import org.openrdf.spring.SesameConnectionFactory;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -76,7 +76,10 @@ public class SesameRDFResourceRepository extends AbstractSesameRepository implem
 	}
 
 	private boolean statementExists( ConnectionRWTemplate.RepositoryResultRetriever<Statement> retriever ) {
-		return connectionTemplate.readStatements( retriever, RepositoryResult::hasNext );
+		return connectionTemplate.readStatements(
+			retriever,
+			repositoryResult -> repositoryResult.hasNext()
+		);
 	}
 
 	@Override
@@ -939,6 +942,16 @@ public class SesameRDFResourceRepository extends AbstractSesameRepository implem
 	}
 
 	@Override
+	public void add( URI resourceURI, URI predicate, Collection<Value> values ) {
+		URI documentURI = getDocumentURI( resourceURI );
+		connectionTemplate.write( connection -> {
+			for ( Value value : values ) {
+				connection.add( resourceURI, predicate, value, documentURI );
+			}
+		} );
+	}
+
+	@Override
 	public void add( URI resourceURI, URI pred, boolean obj ) {
 		ValueFactory factory = ValueFactoryImpl.getInstance();
 		URI documentURI = getDocumentURI( resourceURI );
@@ -1037,6 +1050,16 @@ public class SesameRDFResourceRepository extends AbstractSesameRepository implem
 	public void remove( URI resourceURI, URI pred, Value obj ) {
 		URI documentURI = getDocumentURI( resourceURI );
 		connectionTemplate.write( connection -> connection.remove( resourceURI, pred, obj, documentURI ) );
+	}
+
+	@Override
+	public void remove( URI resourceURI, URI predicate, Set<Value> values ) {
+		URI documentURI = getDocumentURI( resourceURI );
+		connectionTemplate.write( connection -> {
+			for ( Value value : values ) {
+				connection.remove( resourceURI, predicate, value, documentURI );
+			}
+		} );
 	}
 
 	@Override

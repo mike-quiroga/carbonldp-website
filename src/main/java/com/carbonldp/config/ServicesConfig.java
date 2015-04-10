@@ -1,9 +1,9 @@
 package com.carbonldp.config;
 
 import com.carbonldp.apps.AppRepository;
-import com.carbonldp.apps.roles.AppRoleRepository;
 import com.carbonldp.apps.AppService;
 import com.carbonldp.apps.SesameAppService;
+import com.carbonldp.apps.roles.AppRoleRepository;
 import com.carbonldp.authorization.acl.ACLRepository;
 import com.carbonldp.ldp.containers.ContainerRepository;
 import com.carbonldp.ldp.containers.ContainerService;

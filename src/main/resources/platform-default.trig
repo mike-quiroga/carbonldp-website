@@ -54,6 +54,26 @@
 			<platform/roles/>,
 			<platform/privileges/>.
 }
+<platform/~acl/> {
+	<platform/~acl/>
+		a cs:AccessControlList;
+		cs:accessTo <platform/>;
+		cs:accessControlEntry <platform/~acl/#ace-235235234234>.
+	<platform/~acl/#ace-235235234234>
+		a cs:AccessControlEntry;
+		cs:subjectClass cs:PlatformRole;
+		cs:subject <platform/roles/admin/>;
+		cs:granting "true"^^xsd:boolean;
+		cs:permission
+			cs:Read,
+			cs:Update,
+			cs:Delete,
+			cs:CreateChild,
+			cs:CreateAccessPoint,
+			cs:Download,
+			cs:Upload,
+			cs:AddMember.
+}
 <platform/apps/> {
 	<platform/apps/>
 		a 	ldp:BasicContainer;

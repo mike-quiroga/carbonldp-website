@@ -4,6 +4,7 @@ import com.carbonldp.descriptions.APIPreferences.ContainerRetrievalPreference;
 import com.carbonldp.ldp.AbstractSesameLDPRepository;
 import com.carbonldp.ldp.containers.ContainerDescription.Type;
 import com.carbonldp.ldp.sources.RDFSource;
+import com.carbonldp.ldp.sources.RDFSourceRepository;
 import com.carbonldp.rdf.RDFDocumentRepository;
 import com.carbonldp.rdf.RDFResourceRepository;
 import com.carbonldp.repository.DocumentGraphQueryResultHandler;
@@ -15,6 +16,7 @@ import org.openrdf.model.URI;
 import org.openrdf.model.Value;
 import org.openrdf.spring.SesameConnectionFactory;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Assert;
 
 import java.util.*;
 
@@ -24,11 +26,18 @@ import static com.carbonldp.Consts.TAB;
 @Transactional
 public class SesameContainerRepository extends AbstractSesameLDPRepository implements ContainerRepository {
 
+	private final RDFSourceRepository sourceRepository;
 	private final List<TypedContainerRepository> typedContainerRepositories;
 
 	public SesameContainerRepository( SesameConnectionFactory connectionFactory, RDFResourceRepository resourceRepository,
-		RDFDocumentRepository documentRepository, List<TypedContainerRepository> typedContainerRepositories ) {
+		RDFDocumentRepository documentRepository, RDFSourceRepository sourceRepository, List<TypedContainerRepository> typedContainerRepositories ) {
 		super( connectionFactory, resourceRepository, documentRepository );
+
+		Assert.notNull( sourceRepository );
+		this.sourceRepository = sourceRepository;
+
+		Assert.notNull( typedContainerRepositories );
+		Assert.notEmpty( typedContainerRepositories );
 		this.typedContainerRepositories = typedContainerRepositories;
 	}
 
@@ -42,7 +51,7 @@ public class SesameContainerRepository extends AbstractSesameLDPRepository imple
 
 	@Override
 	public boolean isMember( URI containerURI, URI possibleMemberURI, Type containerType ) {
-		return getService( containerType ).isMember( containerURI, possibleMemberURI );
+		return getTypedRepository( containerType ).isMember( containerURI, possibleMemberURI );
 	}
 
 	@Override
@@ -77,11 +86,7 @@ public class SesameContainerRepository extends AbstractSesameLDPRepository imple
 	@Override
 	public Type getContainerType( URI containerURI ) {
 		Set<URI> resourceTypes = resourceRepository.getTypes( containerURI );
-		for ( URI resourceType : resourceTypes ) {
-			Type containerType = RDFNodeUtil.findByURI( resourceType, ContainerDescription.Type.class );
-			if ( containerType != null ) return containerType;
-		}
-		return null;
+		return ContainerFactory.getContainerType( resourceTypes );
 	}
 
 	@Override
@@ -94,7 +99,12 @@ public class SesameContainerRepository extends AbstractSesameLDPRepository imple
 
 	@Override
 	public Set<Statement> getProperties( URI containerURI, Type containerType ) {
-		return getService( containerType ).getProperties( containerURI );
+		return getTypedRepository( containerType ).getProperties( containerURI );
+	}
+
+	@Override
+	public Set<URI> getContainedURIs( URI containerURI ) {
+		return resourceRepository.getURIs( containerURI, ContainerDescription.Property.CONTAINS );
 	}
 
 	private static final String getContainmentTriples_query;
@@ -136,7 +146,7 @@ public class SesameContainerRepository extends AbstractSesameLDPRepository imple
 
 	@Override
 	public Set<Statement> getMembershipTriples( URI containerURI, Type containerType ) {
-		return getService( containerType ).getMembershipTriples( containerURI );
+		return getTypedRepository( containerType ).getMembershipTriples( containerURI );
 	}
 
 	@Override
@@ -155,7 +165,7 @@ public class SesameContainerRepository extends AbstractSesameLDPRepository imple
 
 	@Override
 	public Set<URI> findMembers( URI containerURI, String sparqlSelector, Map<String, Value> bindings, Type containerType ) {
-		return getService( containerType ).findMembers( containerURI, sparqlSelector, bindings );
+		return getTypedRepository( containerType ).findMembers( containerURI, sparqlSelector, bindings );
 	}
 
 	@Override
@@ -168,7 +178,7 @@ public class SesameContainerRepository extends AbstractSesameLDPRepository imple
 
 	@Override
 	public Set<URI> filterMembers( URI containerURI, Set<URI> possibleMemberURIs, Type containerType ) {
-		return getService( containerType ).filterMembers( containerURI, possibleMemberURIs );
+		return getTypedRepository( containerType ).filterMembers( containerURI, possibleMemberURIs );
 	}
 
 	@Override
@@ -182,7 +192,7 @@ public class SesameContainerRepository extends AbstractSesameLDPRepository imple
 	@Override
 	public void createChild( URI containerURI, RDFSource child, Type containerType ) {
 		addContainedResource( containerURI, child.getURI() );
-		child = getService( containerType ).addMember( containerURI, child );
+		child = getTypedRepository( containerType ).addMember( containerURI, child );
 		documentRepository.addDocument( child.getDocument() );
 	}
 
@@ -201,17 +211,40 @@ public class SesameContainerRepository extends AbstractSesameLDPRepository imple
 
 	@Override
 	public void addMember( URI containerURI, RDFSource member, Type containerType ) {
-		getService( containerType ).addMember( containerURI, member );
+		getTypedRepository( containerType ).addMember( containerURI, member );
+	}
+
+	@Override
+	public void removeMembers( URI containerURI ) {
+		Type containerType = getContainerType( containerURI );
+		if ( containerType == null ) throw new IllegalStateException( "The resource isn't a container." );
+
+		removeMembers( containerURI, containerType );
+	}
+
+	@Override
+	public void removeMembers( URI containerURI, Type containerType ) {
+		getTypedRepository( containerType ).removeMembers( containerURI );
+	}
+
+	@Override
+	public void deleteContainedResources( URI containerURI ) {
+		Set<URI> containedURIs = getContainedURIs( containerURI );
+		// TODO: Optimize this
+		for ( URI containedURI : containedURIs ) {
+			sourceRepository.delete( containedURI );
+			sourceRepository.deleteOccurrences( containedURI, true );
+		}
 	}
 
 	private void addContainedResource( URI containerURI, URI resourceURI ) {
 		connectionTemplate.write( ( connection ) -> connection.add( containerURI, ContainerDescription.Property.CONTAINS.getURI(), resourceURI, containerURI ) );
 	}
 
-	private TypedContainerRepository getService( Type containerType ) {
+	private TypedContainerRepository getTypedRepository( Type containerType ) {
 		for ( TypedContainerRepository service : typedContainerRepositories ) {
 			if ( service.supports( containerType ) ) return service;
 		}
-		return null;
+		throw new IllegalArgumentException( "The containerType provided isn't supported" );
 	}
 }

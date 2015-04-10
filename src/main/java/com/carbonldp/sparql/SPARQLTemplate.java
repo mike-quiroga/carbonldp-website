@@ -70,11 +70,20 @@ public class SPARQLTemplate {
 		} );
 	}
 
-	private void setBindings( Query query, Map<String, Value> bindings ) {
+	public void executeUpdate( String updateString, Map<String, Value> bindings ) {
+		connectionTemplate.write( connection -> {
+			Update update = connection.prepareUpdate( QueryLanguage.SPARQL, updateString );
+			if ( bindings != null ) setBindings( update, bindings );
+
+			update.execute();
+		} );
+	}
+
+	private void setBindings( Operation operation, Map<String, Value> bindings ) {
 		for ( String bindingName : bindings.keySet() ) {
 			bindingName = getBindingName( bindingName );
 			Value bindingValue = bindings.get( bindingName );
-			query.setBinding( bindingName, bindingValue );
+			operation.setBinding( bindingName, bindingValue );
 		}
 	}
 

@@ -10,6 +10,7 @@ import org.openrdf.model.Value;
 import org.openrdf.spring.SesameConnectionFactory;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -29,37 +30,22 @@ public class SesameBasicContainerRepository extends AbstractTypedContainerReposi
 		return containerType == Type.BASIC;
 	}
 
-	private static final String isMember_query;
+	private static final String isMemberQuery;
 
 	static {
-		StringBuilder queryBuilder = new StringBuilder();
-		//@formatter:off
-		queryBuilder
-				.append( "ASK {" )
-				.append( NEW_LINE )
-				.append( TAB )
-				.append( "GRAPH ?containerURI {" )
-				.append( NEW_LINE )
-				.append( TAB )
-				.append( TAB )
-				.append( RDFNodeUtil.generatePredicateStatement( "?containerURI", "?hasMemberRelation", ContainerDescription.Property.HAS_MEMBER_RELATION ) )
-				.append( NEW_LINE )
-				.append( TAB )
-				.append( TAB )
-				.append( "?containerURI ?hasMemberRelation ?member" )
-				.append( NEW_LINE )
-				.append( TAB )
-				.append( "}" )
-				.append( NEW_LINE )
-				.append( "}" )
+		isMemberQuery = "" +
+			"ASK {" + NEW_LINE +
+			TAB + "GRAPH ?containerURI {" + NEW_LINE +
+			TAB + TAB + getHasMemberRelationSPARQL( "?containerURI", "?hasMemberRelation", 2 ) + NEW_LINE +
+			TAB + TAB + "?containerURI ?hasMemberRelation ?member" + NEW_LINE +
+			TAB + "}" + NEW_LINE +
+			"}"
 		;
-		//@formatter:on
-		isMember_query = queryBuilder.toString();
 	}
 
 	@Override
 	public boolean isMember( URI containerURI, URI possibleMemberURI ) {
-		return isMember( containerURI, possibleMemberURI, isMember_query );
+		return isMember( containerURI, possibleMemberURI, isMemberQuery );
 	}
 
 	@Override
@@ -67,184 +53,120 @@ public class SesameBasicContainerRepository extends AbstractTypedContainerReposi
 		return containerURI;
 	}
 
-	private static final String getProperties_query;
+	private static final String getPropertiesQuery;
 
 	static {
-		StringBuilder queryBuilder = new StringBuilder();
-		//@formatter:off
-		queryBuilder
-				.append( "CONSTRUCT {" )
-				.append( NEW_LINE )
-				.append( TAB )
-				.append( "?containerURI ?p ?o" )
-				.append( NEW_LINE )
-				.append( "} WHERE {" )
-				.append( NEW_LINE )
-				.append( TAB )
-				.append( "GRAPH ?containerURI {" )
-				.append( NEW_LINE )
-				.append( TAB )
-				.append( TAB )
-				.append( RDFNodeUtil.generatePredicateStatement( "?containerURI", "?hasMemberRelation", ContainerDescription.Property.HAS_MEMBER_RELATION ) )
-				.append( NEW_LINE )
-				.append( TAB )
-				.append( TAB )
-				.append( "?containerURI ?p ?o." )
-				.append( NEW_LINE )
-				.append( TAB )
-				.append( TAB )
-				.append( "FILTER(" )
-				.append( NEW_LINE )
-				.append( TAB )
-				.append( TAB )
-				.append( TAB )
-				.append( "(?p != ?hasMemberRelation)" )
-				.append( NEW_LINE )
-				.append( TAB )
-				.append( TAB )
-				.append( TAB )
-				.append( "&&" )
-				.append( NEW_LINE )
-				.append( TAB )
-				.append( TAB )
-				.append( TAB )
-				.append( "(?p NOT " )
-				.append( RDFNodeUtil.generateINOperator( ContainerDescription.Property.CONTAINS ) )
-				.append( ")" )
-				.append( NEW_LINE )
-				.append( TAB )
-				.append( TAB )
-				.append( ")" )
-				.append( NEW_LINE )
-				.append( TAB )
-				.append( "}" )
-				.append( NEW_LINE )
-				.append( "}" )
+		getPropertiesQuery = "" +
+			"CONSTRUCT {" + NEW_LINE +
+			TAB + "?containerURI ?p ?o" + NEW_LINE +
+			"} WHERE {" + NEW_LINE +
+			TAB + "GRAPH ?containerURI {" + NEW_LINE +
+			TAB + TAB + getHasMemberRelationSPARQL( "?containerURI", "?hasMemberRelation", 2 ) + NEW_LINE +
+			TAB + TAB + "?containerURI ?p ?o." + NEW_LINE +
+			TAB + TAB + "FILTER(" + NEW_LINE +
+			TAB + TAB + TAB + "(?p != ?hasMemberRelation)" + NEW_LINE +
+			TAB + TAB + TAB + "&&" + NEW_LINE +
+			TAB + TAB + TAB + "(?p NOT " + RDFNodeUtil.generateINOperator( ContainerDescription.Property.CONTAINS ) + ")" + NEW_LINE +
+			TAB + TAB + ")" + NEW_LINE +
+			TAB + "}" + NEW_LINE +
+			"}"
 		;
-		//@formatter:on
-		getProperties_query = queryBuilder.toString();
 	}
 
 	@Override
 	public Set<Statement> getProperties( URI containerURI ) {
-		return getProperties( containerURI, getProperties_query );
+		return getProperties( containerURI, getPropertiesQuery );
 	}
 
-	private static final String getMembershipTriples_query;
+	private static final String getMembershipTriplesQuery;
 
 	static {
-		StringBuilder queryBuilder = new StringBuilder();
-		//@formatter:off
-		queryBuilder
-				.append( "CONSTRUCT {" )
-				.append( NEW_LINE )
-				.append( TAB )
-				.append( "?containerURI ?hasMemberRelation ?members" )
-				.append( NEW_LINE )
-				.append( "} WHERE {" )
-				.append( NEW_LINE )
-				.append( TAB )
-				.append( "GRAPH ?containerURI {" )
-				.append( NEW_LINE )
-				.append( TAB )
-				.append( TAB )
-				.append( RDFNodeUtil.generatePredicateStatement( "?containerURI", "?hasMemberRelation", ContainerDescription.Property.HAS_MEMBER_RELATION ) )
-				.append( NEW_LINE )
-				.append( TAB )
-				.append( TAB )
-				.append( "?containerURI ?hasMemberRelation ?members" )
-				.append( NEW_LINE )
-				.append( TAB )
-				.append( "}" )
-				.append( NEW_LINE )
-				.append( "}" )
+		getMembershipTriplesQuery = "" +
+			"CONSTRUCT {" + NEW_LINE +
+			TAB + "?containerURI ?hasMemberRelation ?members" + NEW_LINE +
+			"} WHERE {" + NEW_LINE +
+			TAB + "GRAPH ?containerURI {" + NEW_LINE +
+			TAB + TAB + getHasMemberRelationSPARQL( "?containerURI", "?hasMemberRelation", 2 ) + NEW_LINE +
+			TAB + TAB + "?containerURI ?hasMemberRelation ?members" + NEW_LINE +
+			TAB + "}" + NEW_LINE +
+			"}"
 		;
-		//@formatter:on
-		getMembershipTriples_query = queryBuilder.toString();
 	}
 
 	@Override
 	public Set<Statement> getMembershipTriples( URI containerURI ) {
-		return getMembershipTriples( containerURI, getMembershipTriples_query );
+		return getMembershipTriples( containerURI, getMembershipTriplesQuery );
 	}
 
-	private static final String findMembers_query;
+	private static final String findMembersQuery;
 
 	static {
-		StringBuilder queryBuilder = new StringBuilder();
-		//@formatter:off
-		queryBuilder
-				.append( "SELECT ?members WHERE {" )
-				.append( NEW_LINE )
-				.append( TAB )
-				.append( "GRAPH ?containerURI {" )
-				.append( NEW_LINE )
-				.append( TAB )
-				.append( TAB )
-				.append( RDFNodeUtil.generatePredicateStatement( "?containerURI", "?hasMemberRelation", ContainerDescription.Property.HAS_MEMBER_RELATION ) )
-				.append( NEW_LINE )
-				.append( TAB )
-				.append( TAB )
-				.append( "?containerURI ?hasMemberRelation ?members" )
-				.append( NEW_LINE )
-				.append( TAB )
-				.append( "}" )
-				.append( NEW_LINE )
-				.append( TAB )
-				.append( "GRAPH ?members {" )
-				.append( NEW_LINE )
-				.append( TAB )
-				.append( TAB )
-				.append( "%1$s" )
-				.append( NEW_LINE )
-				.append( TAB )
-				.append( "}" )
-				.append( NEW_LINE )
-				.append( "}" )
+		findMembersQuery = "" +
+			"SELECT ?members WHERE {" + NEW_LINE +
+			TAB + "GRAPH ?containerURI {" + NEW_LINE +
+			TAB + TAB + getHasMemberRelationSPARQL( "?containerURI", "?hasMemberRelation", 2 ) + NEW_LINE +
+			TAB + TAB + "?containerURI ?hasMemberRelation ?members" + NEW_LINE +
+			TAB + "}" + NEW_LINE +
+			TAB + "GRAPH ?members {" + NEW_LINE +
+			TAB + TAB + "%1$s" + NEW_LINE +
+			TAB + "}" + NEW_LINE +
+			"}"
 		;
-		//@formatter:on
-		findMembers_query = queryBuilder.toString();
 	}
 
 	@Override
 	public Set<URI> findMembers( URI containerURI, String sparqlSelector, Map<String, Value> bindings ) {
-		return findMembers( containerURI, sparqlSelector, bindings, findMembers_query );
+		return findMembers( containerURI, sparqlSelector, bindings, findMembersQuery );
 	}
 
-	private static final String filterMembers_query;
+	private static final String filterMembersQuery;
 
 	static {
-		StringBuilder queryBuilder = new StringBuilder();
-		//@formatter:off
-		queryBuilder
-				.append( "SELECT ?members WHERE {" )
-				.append( NEW_LINE )
-				.append( TAB )
-				.append( "GRAPH ?containerURI {" )
-				.append( NEW_LINE )
-				.append( TAB )
-				.append( TAB )
-				.append( RDFNodeUtil.generatePredicateStatement( "?containerURI", "?hasMemberRelation", ContainerDescription.Property.HAS_MEMBER_RELATION ) )
-				.append( NEW_LINE )
-				.append( TAB )
-				.append( TAB )
-				.append( "?containerURI ?hasMemberRelation ?members." )
-				.append( NEW_LINE )
-				.append( TAB )
-				.append( TAB )
-				.append( "%1$s" )
-				.append( NEW_LINE )
-				.append( TAB )
-				.append( "}" )
-				.append( NEW_LINE )
-				.append( "}" )
+		filterMembersQuery = "" +
+			"SELECT ?members WHERE {" + NEW_LINE +
+			TAB + "GRAPH ?containerURI {" + NEW_LINE +
+			TAB + TAB + getHasMemberRelationSPARQL( "?containerURI", "?hasMemberRelation", 2 ) + NEW_LINE +
+			TAB + TAB + "?containerURI ?hasMemberRelation ?members." + NEW_LINE +
+			TAB + TAB + "%1$s" + NEW_LINE +
+			TAB + "}" + NEW_LINE +
+			"}"
 		;
-		//@formatter:on
-		filterMembers_query = queryBuilder.toString();
 	}
 
 	@Override
 	public Set<URI> filterMembers( URI containerURI, Set<URI> possibleMemberURIs ) {
-		return filterMembers( containerURI, possibleMemberURIs, filterMembers_query );
+		return filterMembers( containerURI, possibleMemberURIs, filterMembersQuery );
+	}
+
+	private static final String removeMembersQuery;
+
+	static {
+		removeMembersQuery = "" +
+			"DELETE {" + NEW_LINE +
+			TAB + "GRAPH ?containerURI {" + NEW_LINE +
+			TAB + TAB + "?containerURI ?hasMemberRelation ?containedURI" + NEW_LINE +
+			TAB + "}." + NEW_LINE +
+			TAB + "GRAPH ?containedURI {" + NEW_LINE +
+			TAB + TAB + "?containedURI ?memberOfRelation ?containerURI" + NEW_LINE +
+			TAB + "}." + NEW_LINE +
+			"} WHERE {" + NEW_LINE +
+			TAB + "GRAPH ?containerURI {" + NEW_LINE +
+			TAB + TAB + getHasMemberRelationSPARQL( "?containerURI", "?hasMemberRelation", 2 ) + NEW_LINE +
+			TAB + TAB + "?containerURI ?hasMemberRelation ?containedURI" + NEW_LINE +
+			TAB + "}." + NEW_LINE +
+			TAB + "OPTIONAL {" + NEW_LINE +
+			TAB + TAB + "GRAPH ?containedURI {" + NEW_LINE +
+			TAB + TAB + TAB + "?containedURI ?memberOfRelation ?containerURI" + NEW_LINE +
+			TAB + TAB + "}." + NEW_LINE +
+			TAB + "}." + NEW_LINE +
+			"}"
+		;
+	}
+
+	@Override
+	public void removeMembers( URI containerURI ) {
+		Map<String, Value> bindings = new HashMap<>();
+		bindings.put( "containerURI", containerURI );
+		sparqlTemplate.executeUpdate( removeMembersQuery, bindings );
 	}
 }

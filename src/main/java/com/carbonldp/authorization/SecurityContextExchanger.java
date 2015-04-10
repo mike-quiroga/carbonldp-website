@@ -5,8 +5,6 @@ import com.carbonldp.authentication.TemporaryAuthorizationToken;
 import org.aspectj.lang.annotation.After;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
@@ -16,10 +14,8 @@ import java.util.List;
 @Aspect
 public class SecurityContextExchanger extends AbstractAspect {
 
-	protected final Logger LOG = LoggerFactory.getLogger( this.getClass() );
-
 	@Before( "inCarbonLDPPackage() && @annotation(runWith)" )
-	public void exchangeSecurityContext(RunWith runWith) {
+	public void exchangeSecurityContext( RunWith runWith ) {
 		if ( LOG.isTraceEnabled() ) {
 			LOG.trace( ">> exchangeSecurityContext()" );
 		}
@@ -38,17 +34,17 @@ public class SecurityContextExchanger extends AbstractAspect {
 	}
 
 	@After( "inCarbonLDPPackage() && @annotation(runWith)" )
-	public void restoreSecurityContext(RunWith runWith) {
+	public void restoreSecurityContext( RunWith runWith ) {
 		if ( LOG.isTraceEnabled() ) {
 			LOG.trace( ">> restoreSecurityContext()" );
 		}
 
 		Authentication currentAuthentication = SecurityContextHolder.getContext().getAuthentication();
-		if ( !(currentAuthentication instanceof TemporaryAuthorizationToken) ) {
+		if ( ! ( currentAuthentication instanceof TemporaryAuthorizationToken ) ) {
 			// TODO: Throw exception. The authentication has changed during the method call
 		}
 
-		Authentication originalAuthentication = ((TemporaryAuthorizationToken) currentAuthentication).getOriginalAuthenticationObject();
+		Authentication originalAuthentication = ( (TemporaryAuthorizationToken) currentAuthentication ).getOriginalAuthenticationObject();
 		SecurityContextHolder.getContext().setAuthentication( originalAuthentication );
 
 		if ( LOG.isDebugEnabled() ) {

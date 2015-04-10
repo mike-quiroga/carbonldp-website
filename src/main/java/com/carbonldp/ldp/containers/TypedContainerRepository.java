@@ -23,4 +23,6 @@ public interface TypedContainerRepository {
 	public Set<URI> filterMembers( URI containerURI, Set<URI> possibleMemberURIs );
 
 	public RDFSource addMember( URI containerURI, RDFSource member );
+
+	public void removeMembers( URI containerURI );
 }

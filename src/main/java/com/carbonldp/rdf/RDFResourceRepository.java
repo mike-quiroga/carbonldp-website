@@ -4,6 +4,7 @@ import org.joda.time.DateTime;
 import org.openrdf.model.URI;
 import org.openrdf.model.Value;
 
+import java.util.Collection;
 import java.util.Set;
 
 public interface RDFResourceRepository {
@@ -115,6 +116,8 @@ public interface RDFResourceRepository {
 
 	public void add( URI resourceURI, URI pred, Value obj );
 
+	public void add( URI resourceViewURI, URI predicate, Collection<Value> values );
+
 	public void add( URI resourceURI, URI pred, boolean obj );
 
 	public void add( URI resourceURI, URI pred, byte obj );
@@ -140,6 +143,8 @@ public interface RDFResourceRepository {
 	public void remove( URI resourceURI, RDFNodeEnum pred );
 
 	public void remove( URI resourceURI, URI pred, Value obj );
+
+	public void remove( URI resourceViewURI, URI predicate, Set<Value> values );
 
 	public void remove( URI resourceURI, URI pred, boolean obj );
 

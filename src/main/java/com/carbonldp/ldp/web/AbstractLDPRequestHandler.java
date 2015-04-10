@@ -4,14 +4,25 @@ import com.carbonldp.HTTPHeaders;
 import com.carbonldp.Vars;
 import com.carbonldp.config.ConfigurationRepository;
 import com.carbonldp.descriptions.APIPreferences.InteractionModel;
+import com.carbonldp.ldp.containers.Container;
+import com.carbonldp.ldp.containers.ContainerDescription;
+import com.carbonldp.ldp.containers.ContainerFactory;
 import com.carbonldp.ldp.containers.ContainerService;
 import com.carbonldp.ldp.sources.RDFSourceService;
 import com.carbonldp.models.HTTPHeader;
 import com.carbonldp.models.HTTPHeaderValue;
-import com.carbonldp.utils.RDFNodeUtil;
+import com.carbonldp.rdf.RDFNodeEnum;
+import com.carbonldp.rdf.RDFResource;
+import com.carbonldp.rdf.URIObject;
+import com.carbonldp.utils.*;
 import com.carbonldp.web.AbstractRequestHandler;
 import com.carbonldp.web.exceptions.BadRequestException;
+import com.carbonldp.web.exceptions.PreconditionFailedException;
+import com.carbonldp.web.exceptions.PreconditionRequiredException;
+import org.joda.time.DateTime;
+import org.openrdf.model.Resource;
 import org.openrdf.model.URI;
+import org.openrdf.model.impl.AbstractModel;
 import org.openrdf.model.impl.URIImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -109,6 +120,58 @@ public abstract class AbstractLDPRequestHandler extends AbstractRequestHandler {
 	protected void setAppliedPreferenceHeaders() {
 		for ( HTTPHeaderValue appliedPreference : appliedPreferences ) {
 			response.addHeader( HTTPHeaders.PREFERENCE_APPLIED, appliedPreference.toString() );
+		}
+	}
+
+	protected void setETagHeader( DateTime modifiedTime ) {
+		response.setHeader( HTTPHeaders.ETAG, HTTPUtil.formatWeakETag( modifiedTime.toString() ) );
+	}
+
+	protected void setLocationHeader( URIObject uriObject ) {
+		response.setHeader( HTTPHeaders.LOCATION, uriObject.getURI().stringValue() );
+	}
+
+	protected void addTypeLinkHeader( RDFNodeEnum interactionModel ) {
+		HTTPHeaderValue header = HTTPHeaderUtil.createLinkTypeHeader( interactionModel.getURI() );
+		response.addHeader( HTTPHeaders.LINK, header.toString() );
+	}
+
+	protected void addContainerTypeLinkHeader( Container container ) {
+		ContainerDescription.Type containerType = ContainerFactory.getContainerType( container );
+		if ( containerType == null ) containerType = containerService.getContainerType( container.getURI() );
+
+		addTypeLinkHeader( ContainerDescription.Resource.CLASS );
+		addTypeLinkHeader( containerType );
+	}
+
+	protected String getRequestETag() {
+		return request.getHeader( HTTPHeaders.IF_MATCH );
+	}
+
+	protected void checkPrecondition( URI targetURI, String requestETag ) {
+		if ( requestETag == null ) throw new PreconditionRequiredException();
+
+		DateTime eTagDateTime;
+		try {
+			eTagDateTime = HTTPUtil.getETagDateTime( requestETag );
+		} catch ( IllegalArgumentException e ) {
+			throw new PreconditionFailedException( "The ETag provided can't be recognized." );
+		}
+
+		DateTime modified = sourceService.getModified( targetURI );
+
+		if ( ! modified.equals( eTagDateTime ) ) throw new PreconditionFailedException();
+	}
+
+	protected void seekForOrphanFragments( AbstractModel requestModel, RDFResource requestDocumentResource ) {
+		for ( Resource subject : requestModel.subjects() ) {
+			if ( ! ValueUtil.isURI( subject ) ) continue;
+			URI subjectURI = ValueUtil.getURI( subject );
+			if ( ! URIUtil.hasFragment( subjectURI ) ) continue;
+			URI documentURI = new URIImpl( URIUtil.getDocumentURI( subjectURI.stringValue() ) );
+			if ( ! requestDocumentResource.getURI().equals( documentURI ) ) {
+				throw new BadRequestException( "The request contains orphan fragments." );
+			}
 		}
 	}
 

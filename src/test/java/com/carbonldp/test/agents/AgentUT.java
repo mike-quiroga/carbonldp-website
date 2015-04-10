@@ -1,6 +1,6 @@
 package com.carbonldp.test.agents;
 
-import com.carbonldp.test.AbstractUT;
+import com.carbonldp.test.web.AbstractUT;
 
 public class AgentUT extends AbstractUT {
 
