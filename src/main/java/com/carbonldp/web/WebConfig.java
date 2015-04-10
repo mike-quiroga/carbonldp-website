@@ -40,7 +40,7 @@ public class WebConfig extends WebMvcConfigurerAdapter {
 	private ConfigurationRepository configurationRepository;
 
 	@Override
-	public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
+	public void configureMessageConverters( List<HttpMessageConverter<?>> converters ) {
 		converters.add( rdfSourceMessageConverter() );
 		converters.add( modelMessageConverter() );
 		converters.add( emptyResponseMessageConverter() );
@@ -50,7 +50,7 @@ public class WebConfig extends WebMvcConfigurerAdapter {
 	}
 
 	@Override
-	public void configureContentNegotiation(ContentNegotiationConfigurer configurer) {
+	public void configureContentNegotiation( ContentNegotiationConfigurer configurer ) {
 		super.configureContentNegotiation( configurer );
 		configurer.favorPathExtension( false );
 	}

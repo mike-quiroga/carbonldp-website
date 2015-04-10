@@ -1,6 +1,9 @@
 package com.carbonldp.authorization;
 
 import com.carbonldp.apps.context.AppContextPersistenceFilter;
+import com.carbonldp.apps.roles.AppRolePersistenceFilter;
+import com.carbonldp.web.cors.CORSAppContextFilter;
+import com.carbonldp.web.cors.CORSPlatformContextFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -21,10 +24,22 @@ public abstract class AbstractWebSecurityConfigurerAdapter extends WebSecurityCo
 
 	@Autowired
 	@Qualifier( "appRolePersistenceFilter" )
-	protected Filter appRolePersistenceFilter;
+	protected AppRolePersistenceFilter appRolePersistenceFilter;
+
+	@Autowired
+	protected CORSAppContextFilter corsAppContextFilter;
+
+	@Autowired
+	protected CORSPlatformContextFilter corsPlatformContextFilter;
 
 	@Autowired
 	protected AppContextPersistenceFilter appContextPersistenceFilter;
+
+	// @Autowired
+	// protected CORSAppContextFilter corsAppContextFilter;
+
+	// @Autowired
+	// protected CORSPlatformContextFilter corsPlatformContextFilter;
 
 	protected AbstractWebSecurityConfigurerAdapter() {
 		super( true );

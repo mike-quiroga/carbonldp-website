@@ -1,5 +1,6 @@
 package com.carbonldp.test.repository.services;
 
+import com.carbonldp.repository.RepositoryService;
 import com.carbonldp.repository.txn.ReadTransactionCallback;
 import com.carbonldp.repository.txn.ReadTransactionTemplate;
 import com.carbonldp.repository.txn.WriteTransactionCallback;
@@ -15,6 +16,7 @@ import org.openrdf.model.ValueFactory;
 import org.openrdf.model.impl.ValueFactoryImpl;
 import org.openrdf.repository.RepositoryConnection;
 import org.openrdf.repository.RepositoryResult;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -30,6 +32,9 @@ public class LocalRepositoryServiceIT extends AbstractIT {
 
 	private final String dummyRepositoryID = "dummy-repository";
 	protected final ValueFactory valueFactory = ValueFactoryImpl.getInstance();
+
+	@Autowired
+	RepositoryService repositoryService;
 
 	@BeforeMethod
 	public void tearDummyRepository() {
@@ -67,7 +72,7 @@ public class LocalRepositoryServiceIT extends AbstractIT {
 		boolean[] results = template.execute( new ReadTransactionCallback<boolean[]>() {
 
 			@Override
-			public boolean[] executeInTransaction(RepositoryConnection connection) throws Exception {
+			public boolean[] executeInTransaction( RepositoryConnection connection ) throws Exception {
 				boolean[] results = new boolean[3];
 
 				results[0] = connection != null;
@@ -101,7 +106,7 @@ public class LocalRepositoryServiceIT extends AbstractIT {
 		writeTemplate.addCallback( new WriteTransactionCallback() {
 
 			@Override
-			public void executeInTransaction(RepositoryConnection connection) throws Exception {
+			public void executeInTransaction( RepositoryConnection connection ) throws Exception {
 				connection.add( testResource, dummyProperty, dummyValue, testResource );
 			}
 		} );
@@ -112,7 +117,7 @@ public class LocalRepositoryServiceIT extends AbstractIT {
 		boolean valueWasPersisted = readTemplate.execute( new ReadTransactionCallback<Boolean>() {
 
 			@Override
-			public Boolean executeInTransaction(RepositoryConnection connection) throws Exception {
+			public Boolean executeInTransaction( RepositoryConnection connection ) throws Exception {
 				// TODO: Move these resources into a static class
 				RepositoryResult<Statement> statements = connection.getStatements( testResource, dummyProperty, null, false, testResource );
 

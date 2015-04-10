@@ -7,6 +7,8 @@ import com.carbonldp.authorization.PlatformPrivilegeRepository;
 import com.carbonldp.authorization.PlatformRoleRepository;
 import com.carbonldp.authorization.SecurityContextExchanger;
 import com.carbonldp.config.ConfigurationRepository;
+import com.carbonldp.web.cors.CORSAppContextFilter;
+import com.carbonldp.web.cors.CORSPlatformContextFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -65,5 +67,15 @@ public class AuthenticationConfig {
 	@Bean
 	public SecurityContextExchanger securityContexyExchanger() {
 		return new SecurityContextExchanger();
+	}
+
+	@Bean
+	public CORSAppContextFilter corsAppContextFilter() {
+		return new CORSAppContextFilter();
+	}
+
+	@Bean
+	public CORSPlatformContextFilter corsPlatformContextFilter() {
+		return new CORSPlatformContextFilter();
 	}
 }

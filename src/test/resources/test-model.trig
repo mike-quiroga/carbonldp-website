@@ -40,6 +40,11 @@
 
 @base <http://local.carbonldp.com/apps/test-blog/>.
 
+<>{
+	<>
+		a ldp:BasicContainer.
+}
+
 <posts/> {
 	<posts/> 
 		a 				ldp:BasicContainer;

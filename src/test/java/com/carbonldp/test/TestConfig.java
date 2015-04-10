@@ -15,16 +15,14 @@ import com.carbonldp.repository.txn.TxnConfig;
 import com.carbonldp.security.SecurityConfig;
 
 @Configuration
-//@formatter:off
-@Import({ 
-		TxnConfig.class,
-		SecurityConfig.class,
-		ConfigurationConfig.class,
-		AppContextConfig.class,
-		RepositoriesConfig.class,
-		ServicesConfig.class
-})
-//@formatter:on
+@Import( {
+	TxnConfig.class,
+	ConfigurationConfig.class,
+	RepositoriesConfig.class,
+	AppContextConfig.class,
+	SecurityConfig.class,
+	ServicesConfig.class
+} )
 public class TestConfig {
 	@Autowired
 	private SesameConnectionFactory connectionFactory;
@@ -44,7 +42,7 @@ public class TestConfig {
 
 	@Bean
 	public TransactionActionTemplate transactions() {
-		return new TransactionActionTemplate(connectionFactory);
+		return new TransactionActionTemplate( connectionFactory );
 	}
 
 }
