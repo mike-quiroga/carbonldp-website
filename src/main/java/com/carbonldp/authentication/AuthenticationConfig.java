@@ -10,6 +10,7 @@ import com.carbonldp.config.ConfigurationRepository;
 import com.carbonldp.web.cors.CORSAppContextFilter;
 import com.carbonldp.web.cors.CORSPlatformContextFilter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
@@ -29,7 +30,8 @@ public class AuthenticationConfig {
 	private ConfigurationRepository configurationRepository;
 
 	@Autowired
-	private AgentRepository agentRepository;
+	@Qualifier( "platformAgentRepository" )
+	private AgentRepository platformAgentRepository;
 	@Autowired
 	private PlatformRoleRepository platformRoleRepository;
 	@Autowired
@@ -39,12 +41,12 @@ public class AuthenticationConfig {
 
 	@Autowired
 	public void configureGlobal( AuthenticationManagerBuilder auth ) {
-		auth.authenticationProvider( sesameUsernamePasswordAuthenticationProvider() );
+		auth.authenticationProvider( platformAgentUsernamePasswordAuthenticationProvider() );
 	}
 
 	@Bean
-	public AuthenticationProvider sesameUsernamePasswordAuthenticationProvider() {
-		return new SesameUsernamePasswordAuthenticationProvider( agentRepository, platformRoleRepository, platformPrivilegeRepository );
+	public AuthenticationProvider platformAgentUsernamePasswordAuthenticationProvider() {
+		return new PlatformAgentUsernamePasswordAuthenticationProvider( platformAgentRepository, platformRoleRepository, platformPrivilegeRepository );
 	}
 
 	@Bean
@@ -65,7 +67,7 @@ public class AuthenticationConfig {
 	}
 
 	@Bean
-	public SecurityContextExchanger securityContexyExchanger() {
+	public SecurityContextExchanger securityContextExchanger() {
 		return new SecurityContextExchanger();
 	}
 
@@ -77,5 +79,15 @@ public class AuthenticationConfig {
 	@Bean
 	public CORSPlatformContextFilter corsPlatformContextFilter() {
 		return new CORSPlatformContextFilter();
+	}
+
+	@Bean
+	public AnonymousAuthenticationProvider anonymousAuthenticationProvider() {
+		return new AnonymousAuthenticationProvider( platformRoleRepository, platformPrivilegeRepository );
+	}
+
+	@Bean
+	public AnonymousAuthenticationFilter anonymousTokenExtenderFilter() {
+		return new AnonymousAuthenticationFilter( anonymousAuthenticationProvider() );
 	}
 }

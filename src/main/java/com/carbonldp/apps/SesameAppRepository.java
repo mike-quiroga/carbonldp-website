@@ -48,7 +48,7 @@ public class SesameAppRepository extends AbstractSesameRepository implements App
 
 	@Override
 	public App get( URI appURI ) {
-		if ( ! containerRepository.isMember( appsContainerURI, appURI, appsContainerType ) ) return null;
+		if ( ! containerRepository.hasMember( appsContainerURI, appURI, appsContainerType ) ) return null;
 
 		RDFSource appSource = sourceService.get( appURI );
 		if ( appSource == null ) return null;

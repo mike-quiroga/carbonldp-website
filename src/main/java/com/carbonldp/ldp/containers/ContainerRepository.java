@@ -11,9 +11,13 @@ import java.util.Map;
 import java.util.Set;
 
 public interface ContainerRepository {
-	public boolean isMember( URI containerURI, URI possibleMemberURI );
+	public boolean hasMember( URI containerURI, URI possibleMemberURI );
 
-	public boolean isMember( URI containerURI, URI possibleMemberURI, Type containerType );
+	public boolean hasMember( URI containerURI, URI possibleMemberURI, Type containerType );
+
+	public boolean hasMembers( URI containerURI, String sparqlSelector, Map<String, Value> bindings );
+
+	public boolean hasMembers( URI containerURI, String sparqlSelector, Map<String, Value> bindings, Type containerType );
 
 	public Container get( URI containerURI, Set<ContainerRetrievalPreference> preferences );
 

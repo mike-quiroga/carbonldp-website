@@ -52,7 +52,8 @@
 			<platform/apps/>,
 			<platform/agents/>,
 			<platform/roles/>,
-			<platform/privileges/>.
+			<platform/privileges/>;
+		cs:accessControlList <platform/~acl>.
 }
 <platform/~acl/> {
 	<platform/~acl/>
@@ -86,7 +87,21 @@
 		ldp:contains 
 			<platform/agents/admin/>;
 		ldp:member
-			<platform/agents/admin/>.
+			<platform/agents/admin/>;
+		cs:accessControlList <platform/agents/~acl>.
+}
+<platform/agents/~acl/> {
+	<platform/agents/~acl/>
+		a cs:AccessControlList;
+		cs:accessTo <platform/agents/>;
+		cs:accessControlEntry <platform/agents/~acl/#ace-234234235234>.
+	<platform/agents/~acl/#ace-234234235234>
+		a cs:AccessControlEntry;
+		cs:subjectClass cs:PlatformRole;
+		cs:subject <platform/roles/anonymous/>;
+		cs:granting "true"^^xsd:boolean;
+		cs:permission
+			cs:CreateChild.
 }
 <platform/agents/admin/> {
 	<platform/agents/admin/>
@@ -105,9 +120,11 @@
 		a 	ldp:BasicContainer;
 		ldp:hasMemberRelation ldp:member;
 		ldp:contains
-			<platform/roles/admin/>;
+			<platform/roles/admin/>,
+			<platform/roles/anonymous/>;
 		ldp:member
-			<platform/roles/admin/>.
+			<platform/roles/admin/>,
+			<platform/roles/anonymous/>.
 }
 <platform/roles/admin/> {
 	<platform/roles/admin/>
@@ -133,6 +150,20 @@
 	<platform/roles/admin/privileges/>
 		a 	ldp:DirectContainer;
 		ldp:membershipResource	<platform/roles/admin/>;
+		ldp:hasMemberRelation	cs:platformPrivilege.
+}
+<platform/roles/anonymous/> {
+	<platform/roles/anonymous/>
+		a 	cs:PlatformRole, ldp:BasicContainer;
+		c:defaultInteractionModel	ldp:RDFSource;
+		ldp:hasMemberRelation ldp:member;
+		c:accessPoint
+			<platform/roles/anonymous/privileges/>.
+}
+<platform/roles/anonymous/privileges/> {
+	<platform/roles/anonymous/privileges/>
+		a 	ldp:DirectContainer;
+		ldp:membershipResource	<platform/roles/anonymous/>;
 		ldp:hasMemberRelation	cs:platformPrivilege.
 }
 <platform/privileges/> {

@@ -11,6 +11,7 @@ import com.carbonldp.rdf.RDFNodeEnum;
 import com.carbonldp.rdf.RDFResource;
 import com.carbonldp.utils.RDFNodeUtil;
 import org.openrdf.model.URI;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 
 import java.util.*;
@@ -27,6 +28,8 @@ public final class SubjectsRetrievalStrategy {
 			return getSubjects( (AgentAuthenticationToken) authentication );
 		if ( authentication instanceof AbstractAuthenticationToken )
 			return getSubjects( (AbstractAuthenticationToken) authentication );
+		if ( authentication instanceof AnonymousAuthenticationToken )
+			return getSubjects( (AnonymousAuthenticationToken) authentication );
 
 		throw new IllegalArgumentException( "The authentication token isn't supported." );
 	}
@@ -53,6 +56,14 @@ public final class SubjectsRetrievalStrategy {
 		addAppRoles( subjects, authentication );
 
 		return subjects;
+	}
+
+	public static Map<RDFNodeEnum, Set<URI>> getSubjects( AnonymousAuthenticationToken authentication ) {
+		Map<RDFNodeEnum, Set<URI>> subjects = new HashMap<>();
+
+		return subjects;
+
+		// TODO:
 	}
 
 	private static void addAgent( Map<RDFNodeEnum, Set<URI>> subjects, AgentAuthenticationToken authentication ) {

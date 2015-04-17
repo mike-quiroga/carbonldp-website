@@ -39,6 +39,14 @@ public abstract class AbstractTypedContainerRepository extends AbstractSesameLDP
 		return sparqlTemplate.executeBooleanQuery( isMember_query, bindings );
 	}
 
+	protected boolean hasMembers( URI containerURI, String sparqlSelector, Map<String, Value> bindings, String hasMembersQuery ) {
+		String queryString = String.format( hasMembersQuery, sparqlSelector );
+
+		bindings.put( "containerURI", containerURI );
+
+		return sparqlTemplate.executeBooleanQuery( queryString, bindings );
+	}
+
 	private static final String getHasMemberRelation_query;
 
 	static {

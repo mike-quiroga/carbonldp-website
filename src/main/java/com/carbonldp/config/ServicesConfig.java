@@ -1,5 +1,8 @@
 package com.carbonldp.config;
 
+import com.carbonldp.agents.platform.PlatformAgentRepository;
+import com.carbonldp.agents.platform.PlatformAgentService;
+import com.carbonldp.agents.platform.SesamePlatformAgentService;
 import com.carbonldp.apps.AppRepository;
 import com.carbonldp.apps.AppService;
 import com.carbonldp.apps.SesameAppService;
@@ -45,5 +48,10 @@ public class ServicesConfig {
 	@Bean
 	public AppService appService( AppRepository appRepository, AppRoleRepository appRoleRepository ) {
 		return new SesameAppService( transactionWrapper(), sourceRepository, containerRepository, aclRepository, appRepository, appRoleRepository );
+	}
+
+	@Bean
+	public PlatformAgentService platformAgentService( PlatformAgentRepository platformAgentRepository ) {
+		return new SesamePlatformAgentService( transactionWrapper(), sourceRepository, containerRepository, aclRepository, platformAgentRepository );
 	}
 }

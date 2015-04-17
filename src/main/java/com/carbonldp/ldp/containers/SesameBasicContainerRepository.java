@@ -44,8 +44,27 @@ public class SesameBasicContainerRepository extends AbstractTypedContainerReposi
 	}
 
 	@Override
-	public boolean isMember( URI containerURI, URI possibleMemberURI ) {
+	public boolean hasMember( URI containerURI, URI possibleMemberURI ) {
 		return isMember( containerURI, possibleMemberURI, isMemberQuery );
+	}
+
+	private static final String hasMembersQuery;
+
+	static {
+		hasMembersQuery = "" +
+			"ASK {" + NEW_LINE +
+			TAB + "GRAPH ?containerURI {" + NEW_LINE +
+			TAB + TAB + getHasMemberRelationSPARQL( "?containerURI", "?hasMemberRelation", 2 ) + NEW_LINE +
+			TAB + TAB + "?containerURI ?hasMemberRelation ?members" + NEW_LINE +
+			TAB + TAB + "%1$s" + NEW_LINE +
+			TAB + "}" + NEW_LINE +
+			"}"
+		;
+	}
+
+	@Override
+	public boolean hasMembers( URI containerURI, String sparqlSelector, Map<String, Value> bindings ) {
+		return hasMembers( containerURI, sparqlSelector, bindings, hasMembersQuery );
 	}
 
 	@Override

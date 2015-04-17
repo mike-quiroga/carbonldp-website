@@ -30,12 +30,10 @@ public class AuthorizationConfig extends AbstractWebSecurityConfigurerAdapter {
 	@Override
 	protected void configure( HttpSecurity http ) throws Exception {
 		super.configure( http );
-		//@formatter:off
 		http.antMatcher( "/**" )
 			.authorizeRequests()
 			.anyRequest().permitAll()
 		;
-		//@formatter:on
 	}
 
 	@Configuration
@@ -46,15 +44,11 @@ public class AuthorizationConfig extends AbstractWebSecurityConfigurerAdapter {
 			super.configure( http );
 			http
 				.antMatcher( "/apps/?*/**" )
-				.exceptionHandling()
-				.authenticationEntryPoint( basicAuthenticationEntryPoint )
-				.and()
 				.addFilterBefore( appContextPersistenceFilter, SecurityContextPersistenceFilter.class )
 				.addFilterAfter( corsAppContextFilter, AppContextPersistenceFilter.class )
-				.addFilter( basicAuthenticationFilter )
 				.addFilterAfter( appRolePersistenceFilter, BasicAuthenticationFilter.class )
 				.authorizeRequests()
-				.anyRequest().authenticated().and()
+				.anyRequest().permitAll()
 			;
 		}
 	}
@@ -68,24 +62,20 @@ public class AuthorizationConfig extends AbstractWebSecurityConfigurerAdapter {
 			//@formatter:off
 			http
 					.antMatcher( "/platform/**" )
-					.exceptionHandling()
-					.authenticationEntryPoint( basicAuthenticationEntryPoint )
-					.and()
 					.addFilterBefore( corsPlatformContextFilter, SecurityContextPersistenceFilter.class )
-					.addFilter( basicAuthenticationFilter )
 					.authorizeRequests()
 					.antMatchers( "/platform/apps/" )
-					.authenticated()
+					.permitAll()
 					.antMatchers( "/platform/apps/?*/" )
-					.authenticated()
+					.permitAll()
 					.antMatchers( "/platform/roles/" )
-					.authenticated()
+					.permitAll()
 					.antMatchers( "/platform/roles/?*/" )
-					.authenticated()
+					.permitAll()
 					.antMatchers( "/platform/permissions/" )
-					.authenticated()
+					.permitAll()
 					.antMatchers( "/platform/permissions/?*/" )
-					.authenticated()
+					.permitAll()
 			;
 			//@formatter:on
 		}

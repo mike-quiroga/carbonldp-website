@@ -2,55 +2,37 @@ package com.carbonldp.authentication;
 
 import com.carbonldp.agents.Agent;
 import com.carbonldp.agents.AgentRepository;
-import com.carbonldp.apps.context.RunInPlatformContext;
-import com.carbonldp.authorization.Platform;
 import com.carbonldp.authorization.PlatformPrivilegeRepository;
 import com.carbonldp.authorization.PlatformRoleRepository;
-import com.carbonldp.authorization.RunWith;
 import com.carbonldp.utils.AuthenticationUtil;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.security.NoSuchAlgorithmException;
 
-public class SesameUsernamePasswordAuthenticationProvider extends AbstractSesameAuthenticationProvider {
-
+public abstract class SesameUsernamePasswordAuthenticationProvider extends AbstractSesameAuthenticationProvider {
 	public SesameUsernamePasswordAuthenticationProvider( AgentRepository agentRepository, PlatformRoleRepository platformRoleRepository, PlatformPrivilegeRepository platformPrivilegeRepository ) {
 		super( agentRepository, platformRoleRepository, platformPrivilegeRepository );
 	}
 
-	public void init() {
-		if ( LOG.isTraceEnabled() ) {
-			LOG.trace( "Username/Password Authentication enabled through Sesame" );
-		}
+	protected String getUsername( Authentication authentication ) {
+		Object rawPrincipal = authentication.getPrincipal();
+		if ( ! ( rawPrincipal instanceof String ) ) throw new BadCredentialsException( "Wrong credentials" );
+		return (String) rawPrincipal;
 	}
 
-	@Transactional
-	@RunWith( platformRoles = {Platform.Role.SYSTEM} )
-	@RunInPlatformContext
-	public Authentication authenticate( Authentication authentication ) throws AuthenticationException {
-		Object rawPrincipal = authentication.getPrincipal();
+	protected String getPassword( Authentication authentication ) {
 		Object rawCredentials = authentication.getCredentials();
+		if ( ! ( rawCredentials instanceof String ) ) throw new BadCredentialsException( "Wrong credentials" );
+		return (String) rawCredentials;
+	}
 
-		if ( ! ( rawPrincipal.getClass().equals( String.class ) && rawCredentials.getClass().equals( String.class ) ) ) {
-			throw new BadCredentialsException( "Wrong credentials" );
-		}
+	protected void validateCredentials( String username, String password ) {
+		if ( username.trim().length() == 0 || password.trim().length() == 0 ) throw new BadCredentialsException( "Wrong credentials" );
+	}
 
-		String username = (String) rawPrincipal;
-		String password = (String) rawCredentials;
-
-		if ( username.trim().length() == 0 || password.trim().length() == 0 ) {
-			throw new BadCredentialsException( "Wrong credentials" );
-		}
-
-		Agent agent = agentRepository.findByEmail( username );
-
-		if ( agent == null ) throw new BadCredentialsException( "Wrong credentials" );
-
+	protected String getHashedPassword( String password, Agent agent ) {
 		String salt = agent.getSalt();
 		String saltedPassword = AuthenticationUtil.saltPassword( password, salt );
 		String hashedPassword = null;
@@ -61,17 +43,10 @@ public class SesameUsernamePasswordAuthenticationProvider extends AbstractSesame
 			throw new AuthenticationServiceException( "Password validation failed" );
 		}
 
-		if ( ! agent.getPassword().equals( hashedPassword ) ) {
-			throw new BadCredentialsException( "Wrong credentials" );
-		}
-
-		return createAgentAuthenticationToken( agent );
+		return hashedPassword;
 	}
 
-	public boolean supports( Class<?> authentication ) {
-		if ( UsernamePasswordAuthenticationToken.class.isAssignableFrom( authentication ) ) {
-			return true;
-		}
-		return false;
+	protected boolean passwordsMatch( String hashedPasword, Agent agent ) {
+		return hashedPasword.equals( agent.getPassword() );
 	}
 }

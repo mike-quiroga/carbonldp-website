@@ -28,10 +28,10 @@ public class SesameDirectContainerRepository extends AbstractAccessPointReposito
 		return containerType == Type.DIRECT;
 	}
 
-	private static final String isMemberQuery;
+	private static final String hasMemberQuery;
 
 	static {
-		isMemberQuery = "" +
+		hasMemberQuery = "" +
 			"ASK {" + NEW_LINE +
 			TAB + "GRAPH ?containerURI {" + NEW_LINE +
 			TAB + TAB + getHasMemberRelationSPARQL( "?containerURI", "?hasMemberRelation", 2 ) + NEW_LINE +
@@ -45,8 +45,30 @@ public class SesameDirectContainerRepository extends AbstractAccessPointReposito
 	}
 
 	@Override
-	public boolean isMember( URI containerURI, URI possibleMemberURI ) {
-		return isMember( containerURI, possibleMemberURI, isMemberQuery );
+	public boolean hasMember( URI containerURI, URI possibleMemberURI ) {
+		return isMember( containerURI, possibleMemberURI, hasMemberQuery );
+	}
+
+	private static final String hasMembersQuery;
+
+	static {
+		hasMembersQuery = "" +
+			"ASK {" + NEW_LINE +
+			TAB + "GRAPH ?containerURI {" + NEW_LINE +
+			TAB + TAB + getHasMemberRelationSPARQL( "?containerURI", "?hasMemberRelation", 2 ) + NEW_LINE +
+			TAB + TAB + RDFNodeUtil.generatePredicateStatement( "?containerURI", "?membershipResource", ContainerDescription.Property.MEMBERSHIP_RESOURCE ) + NEW_LINE +
+			TAB + "}" + NEW_LINE +
+			TAB + "GRAPH ?membershipResource {" + NEW_LINE +
+			TAB + TAB + "?membershipResource ?hasMemberRelation ?members" + NEW_LINE +
+			TAB + TAB + "%1$s" + NEW_LINE +
+			TAB + "}" + NEW_LINE +
+			"}"
+		;
+	}
+
+	@Override
+	public boolean hasMembers( URI containerURI, String sparqlSelector, Map<String, Value> bindings ) {
+		return hasMembers( containerURI, sparqlSelector, bindings, hasMembersQuery );
 	}
 
 	private static final String findMembersQuery;

@@ -16,4 +16,9 @@ public class LOGConfig {
 	public RepositoryCallsLogger repositoryCallsLogger() {
 		return new RepositoryCallsLogger();
 	}
+
+	@Bean
+	public ProviderCallsLogger providerCallsLogger() {
+		return new ProviderCallsLogger();
+	}
 }

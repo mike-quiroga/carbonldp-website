@@ -12,7 +12,9 @@ import java.util.Set;
 public interface TypedContainerRepository {
 	public boolean supports( Type containerType );
 
-	public boolean isMember( URI containerURI, URI possibleMemberURI );
+	public boolean hasMember( URI containerURI, URI possibleMemberURI );
+
+	public boolean hasMembers( URI containerURI, String sparqlSelector, Map<String, Value> bindings );
 
 	public Set<Statement> getMembershipTriples( URI containerURI );
 

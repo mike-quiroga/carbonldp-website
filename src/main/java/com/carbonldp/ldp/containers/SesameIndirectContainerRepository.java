@@ -30,9 +30,15 @@ public class SesameIndirectContainerRepository extends AbstractAccessPointReposi
 	}
 
 	@Override
-	public boolean isMember( URI containerURI, URI possibleMemberURI ) {
+	public boolean hasMember( URI containerURI, URI possibleMemberURI ) {
 		// TODO: Implement
 		throw new NotImplementedException( "Not implemented." );
+	}
+
+	@Override
+	public boolean hasMembers( URI containerURI, String sparqlSelector, Map<String, Value> bindings ) {
+		// TODO: Implement
+		throw new RuntimeException( "Not Implemented" );
 	}
 
 	private static final String findMembersQuery;

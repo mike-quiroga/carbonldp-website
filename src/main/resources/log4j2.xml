@@ -7,7 +7,7 @@
         </Console>
     </Appenders>
     <Loggers>
-        <Logger name="org.springframework" level="WARN"/>
+        <Logger name="org.springframework" level="DEBUG"/>
         <Logger name="org.openrdf" level="WARN"/>
         <Logger name="com.carbonldp" level="TRACE"/>
 

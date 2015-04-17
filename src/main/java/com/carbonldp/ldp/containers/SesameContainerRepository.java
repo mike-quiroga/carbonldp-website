@@ -42,16 +42,29 @@ public class SesameContainerRepository extends AbstractSesameLDPRepository imple
 	}
 
 	@Override
-	public boolean isMember( URI containerURI, URI possibleMemberURI ) {
+	public boolean hasMember( URI containerURI, URI possibleMemberURI ) {
 		Type containerType = getContainerType( containerURI );
 		if ( containerType == null ) throw new IllegalStateException( "The resource isn't a container." );
 
-		return isMember( containerURI, possibleMemberURI, containerType );
+		return hasMember( containerURI, possibleMemberURI, containerType );
 	}
 
 	@Override
-	public boolean isMember( URI containerURI, URI possibleMemberURI, Type containerType ) {
-		return getTypedRepository( containerType ).isMember( containerURI, possibleMemberURI );
+	public boolean hasMember( URI containerURI, URI possibleMemberURI, Type containerType ) {
+		return getTypedRepository( containerType ).hasMember( containerURI, possibleMemberURI );
+	}
+
+	@Override
+	public boolean hasMembers( URI containerURI, String sparqlSelector, Map<String, Value> bindings ) {
+		Type containerType = getContainerType( containerURI );
+		if ( containerType == null ) throw new IllegalStateException( "The resource isn't a container." );
+
+		return hasMembers( containerURI, sparqlSelector, bindings, containerType );
+	}
+
+	@Override
+	public boolean hasMembers( URI containerURI, String sparqlSelector, Map<String, Value> bindings, Type containerType ) {
+		return getTypedRepository( containerType ).hasMembers( containerURI, sparqlSelector, bindings );
 	}
 
 	@Override

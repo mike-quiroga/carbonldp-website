@@ -3,7 +3,11 @@ package com.carbonldp.agents;
 import org.openrdf.model.URI;
 
 public interface AgentRepository {
-	public Agent findByEmail( String email );
+	public boolean exists( URI agentURI );
 
-	public Agent findByURI( URI uri );
+	public boolean existsWithEmail( String email );
+
+	public Agent get( URI uri );
+
+	public Agent findByEmail( String email );
 }

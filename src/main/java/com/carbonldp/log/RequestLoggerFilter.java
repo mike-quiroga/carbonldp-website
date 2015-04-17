@@ -1,4 +1,4 @@
-package com.carbonldp.web;
+package com.carbonldp.log;
 
 import com.carbonldp.Consts;
 import com.carbonldp.utils.HTTPUtil;
@@ -46,7 +46,7 @@ public class RequestLoggerFilter extends GenericFilterBean {
 			try {
 				chain.doFilter( request, response );
 			} catch ( Throwable e ) {
-				LOG.error( FATAL, "An exception reached the top of the chain. Exception: {}", e.toString() );
+				LOG.error( FATAL, "An exception reached the top of the chain. Exception: {}", e );
 			} finally {
 				LOG.debug( HTTPUtil.printResponseInfo( response ) );
 			}

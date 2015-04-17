@@ -14,6 +14,7 @@
         <spring-security.version>4.0.0.RELEASE</spring-security.version>
         <sesame.version>2.8.1</sesame.version>
         <jackson-2-version>2.2.3</jackson-2-version>
+        <freemarker-version>2.3.22</freemarker-version>
     </properties>
 
     <dependencies>
@@ -193,6 +194,15 @@
             <version>1.8.4</version>
         </dependency>
 
+        <!-- ====== Template Engines ====== -->
+        <!-- === Freemarker === -->
+        <dependency>
+            <groupId>org.freemarker</groupId>
+            <artifactId>freemarker</artifactId>
+            <version>${freemarker-version}</version>
+        </dependency>
+        <!-- === End: Freemarker === -->
+        <!-- ====== End: Template Engines ====== -->
 
         <dependency>
             <groupId>org.apache.tomcat</groupId>

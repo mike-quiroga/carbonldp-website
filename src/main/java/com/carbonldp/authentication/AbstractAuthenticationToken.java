@@ -11,7 +11,7 @@ import java.util.*;
 import static com.carbonldp.Consts.*;
 
 public abstract class AbstractAuthenticationToken implements Authentication {
-	private static final long serialVersionUID = -636371825136099459L;
+	private static final long serialVersionUID = - 636371825136099459L;
 
 	protected final Set<GrantedAuthority> grantedAuthorities;
 
@@ -20,7 +20,7 @@ public abstract class AbstractAuthenticationToken implements Authentication {
 
 	private boolean authenticated = false;
 
-	public AbstractAuthenticationToken(Collection<Platform.Role> platformRoles, Collection<Platform.Privilege> platformPrivileges) {
+	public AbstractAuthenticationToken( Collection<Platform.Role> platformRoles, Collection<Platform.Privilege> platformPrivileges ) {
 		Set<GrantedAuthority> tempAuthorities = new HashSet<GrantedAuthority>();
 
 		this.platformRoles = getUnmodifiableCopy( platformRoles );
@@ -52,11 +52,11 @@ public abstract class AbstractAuthenticationToken implements Authentication {
 	}
 
 	@Override
-	public void setAuthenticated(boolean authenticated) throws IllegalArgumentException {
+	public void setAuthenticated( boolean authenticated ) throws IllegalArgumentException {
 		this.authenticated = authenticated;
 	}
 
-	private <E> Set<E> getUnmodifiableCopy(Collection<E> items) {
+	private <E> Set<E> getUnmodifiableCopy( Collection<E> items ) {
 		Set<E> temp = new HashSet<E>();
 		for ( E item : items ) {
 			Assert.notNull( item );
@@ -65,20 +65,20 @@ public abstract class AbstractAuthenticationToken implements Authentication {
 		return Collections.unmodifiableSet( temp );
 	}
 
-	private void addPlatformRoles(Set<GrantedAuthority> tempAuthorities) {
+	private void addPlatformRoles( Set<GrantedAuthority> tempAuthorities ) {
 		for ( Platform.Role platformRole : this.platformRoles ) {
-			String authorityName = (new StringBuilder()).append( PLATFORM_ROLE_PREFIX )
-														.append( platformRole.name() )
-														.toString();
+			String authorityName = ( new StringBuilder() ).append( PLATFORM_ROLE_PREFIX )
+														  .append( platformRole.name() )
+														  .toString();
 			tempAuthorities.add( new SimpleGrantedAuthority( authorityName ) );
 		}
 	}
 
-	private void addPlatformPrivileges(Set<GrantedAuthority> tempAuthorities) {
+	private void addPlatformPrivileges( Set<GrantedAuthority> tempAuthorities ) {
 		for ( Platform.Privilege platformPrivilege : this.platformPrivileges ) {
-			String authorityName = (new StringBuilder()).append( PLATFORM_PRIVILEGE_PREFIX )
-														.append( platformPrivilege.name() )
-														.toString();
+			String authorityName = ( new StringBuilder() ).append( PLATFORM_PRIVILEGE_PREFIX )
+														  .append( platformPrivilege.name() )
+														  .toString();
 			tempAuthorities.add( new SimpleGrantedAuthority( authorityName ) );
 		}
 	}
@@ -87,47 +87,35 @@ public abstract class AbstractAuthenticationToken implements Authentication {
 	public String toString() {
 		StringBuilder stringBuilder = new StringBuilder();
 
-		//@formatter:off
 		stringBuilder
-				.append( super.toString() ).append( ": (" )
-				.append( this.getName() ).append( COMMA ).append( SPACE )
-				.append( "Authenticated: " ).append( this.isAuthenticated() ).append( COMMA ).append( SPACE )
+			.append( super.toString() ).append( ": (" )
+			.append( this.getName() ).append( COMMA ).append( SPACE )
+			.append( "Authenticated: " ).append( this.isAuthenticated() ).append( COMMA ).append( SPACE )
+			.append( "PlatformRoles: (" )
 		;
-		//@formatter:on
 
-		//@formatter:off
-		stringBuilder
-				.append( "PlatformRoles: (" )
-		;
-		//@formatter:on
 		Iterator<Platform.Role> platformRoleIterator = this.platformRoles.iterator();
-		if ( !platformRoleIterator.hasNext() ) stringBuilder.append( "- NONE -" );
+		if ( ! platformRoleIterator.hasNext() ) stringBuilder.append( "- NONE -" );
 		while ( platformRoleIterator.hasNext() ) {
 			stringBuilder.append( platformRoleIterator.next().name() );
 			if ( platformRoleIterator.hasNext() ) stringBuilder.append( COMMA ).append( SPACE );
 		}
-		//@formatter:off
-		stringBuilder
-				.append( ")" ).append( COMMA ).append( SPACE )
-		;
-		//@formatter:on
 
-		//@formatter:off
 		stringBuilder
-				.append( "PlatformPrivileges: (" )
+			.append( ")" ).append( COMMA ).append( SPACE )
+			.append( "PlatformPrivileges: (" )
 		;
-		//@formatter:on
+
 		Iterator<Platform.Privilege> platformPrivilegeIterator = this.platformPrivileges.iterator();
-		if ( !platformPrivilegeIterator.hasNext() ) stringBuilder.append( "- NONE -" );
+		if ( ! platformPrivilegeIterator.hasNext() ) stringBuilder.append( "- NONE -" );
 		while ( platformPrivilegeIterator.hasNext() ) {
 			stringBuilder.append( platformPrivilegeIterator.next().name() ).append( COMMA ).append( SPACE );
 			if ( platformRoleIterator.hasNext() ) stringBuilder.append( COMMA ).append( SPACE );
 		}
-		//@formatter:off
+
 		stringBuilder
-				.append( "))" )
+			.append( "))" )
 		;
-		//@formatter:on
 
 		return stringBuilder.toString();
 	}
