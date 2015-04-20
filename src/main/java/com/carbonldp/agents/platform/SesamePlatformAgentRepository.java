@@ -20,16 +20,16 @@ import java.util.Set;
 
 @Transactional
 public class SesamePlatformAgentRepository extends AbstractSesameRepository implements PlatformAgentRepository {
-	private final RDFSourceRepository sourceService;
+	private final RDFSourceRepository sourceRepository;
 	private final ContainerRepository containerRepository;
 	private final URI agentsContainerURI;
 
 	private final Type agentsContainerType = Type.BASIC;
 
-	public SesamePlatformAgentRepository( SesameConnectionFactory connectionFactory, RDFSourceRepository sourceService, ContainerRepository containerRepository,
+	public SesamePlatformAgentRepository( SesameConnectionFactory connectionFactory, RDFSourceRepository sourceRepository, ContainerRepository containerRepository,
 		URI agentsContainerURI ) {
 		super( connectionFactory );
-		this.sourceService = sourceService;
+		this.sourceRepository = sourceRepository;
 		this.containerRepository = containerRepository;
 		this.agentsContainerURI = agentsContainerURI;
 	}
@@ -74,10 +74,14 @@ public class SesamePlatformAgentRepository extends AbstractSesameRepository impl
 
 		URI agentURI = memberURIs.iterator().next();
 
-		RDFSource agentSource = sourceService.get( agentURI );
+		RDFSource agentSource = sourceRepository.get( agentURI );
 		if ( agentSource == null ) return null;
 
 		return new Agent( agentSource.getBaseModel(), agentURI );
+	}
+
+	public void create( Agent agent ) {
+
 	}
 
 }

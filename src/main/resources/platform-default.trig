@@ -101,6 +101,7 @@
 		cs:subject <platform/roles/anonymous/>;
 		cs:granting "true"^^xsd:boolean;
 		cs:permission
+			cs:Read,
 			cs:CreateChild.
 }
 <platform/agents/admin/> {
@@ -109,7 +110,7 @@
 		c:defaultInteractionModel	ldp:RDFSource;
 		ldp:hasMemberRelation ldp:member;
 		vcard:email 
-			"admin@carbonldp.com";
+			"admin@carbonldp.com"^^xsd:string;
 		cs:salt	"53cfbrng0bft2vqkoq4p8mpcmd";
 		cs:password	"52efa2610ca01ea3dd0253204fa7c4ede694be75c51386504003be25df4bb6c2";
 		cs:platformRole

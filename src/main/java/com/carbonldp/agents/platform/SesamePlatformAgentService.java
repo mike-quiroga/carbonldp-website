@@ -7,6 +7,7 @@ import com.carbonldp.ldp.AbstractSesameLDPService;
 import com.carbonldp.ldp.containers.ContainerRepository;
 import com.carbonldp.ldp.sources.RDFSourceRepository;
 import com.carbonldp.spring.TransactionWrapper;
+import com.carbonldp.utils.AuthenticationUtil;
 import org.springframework.util.Assert;
 
 public class SesamePlatformAgentService extends AbstractSesameLDPService implements PlatformAgentService {
@@ -24,7 +25,12 @@ public class SesamePlatformAgentService extends AbstractSesameLDPService impleme
 		// TODO: Validate agent
 		String email = agent.getEmails().iterator().next();
 		if ( platformAgentRepository.existsWithEmail( email ) ) throw new ResourceAlreadyExistsException();
-		// TODO: Disable agent
+
+		setAgentPasswordFields( agent );
+		agent.setEnabled( false );
+
+		platformAgentRepository.create( agent );
+
 		// TODO: Create agent
 		// TODO: Create validation resource
 		// TODO: Create "resend validation" resource
@@ -33,4 +39,15 @@ public class SesamePlatformAgentService extends AbstractSesameLDPService impleme
 		// TODO: Implement
 		throw new RuntimeException( "Not Implemented" );
 	}
+
+	private void setAgentPasswordFields( Agent agent ) {
+		String password = agent.getPassword();
+		String salt = AuthenticationUtil.generateRandomSalt();
+		String saltedPassword = AuthenticationUtil.saltPassword( password, salt );
+		String hashedPassword = AuthenticationUtil.hashPassword( saltedPassword );
+
+		agent.setSalt( salt );
+		agent.setPassword( hashedPassword );
+	}
+
 }

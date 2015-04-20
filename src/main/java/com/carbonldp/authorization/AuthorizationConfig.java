@@ -17,8 +17,8 @@ import org.springframework.security.web.context.SecurityContextPersistenceFilter
 public class AuthorizationConfig extends AbstractWebSecurityConfigurerAdapter {
 
 	private interface EntryPointOrder {
-		public static final int APPS = 1;
-		public static final int PLATFORM = 2;
+		int APPS = 1;
+		int PLATFORM = 2;
 	}
 
 	@Bean
@@ -30,10 +30,14 @@ public class AuthorizationConfig extends AbstractWebSecurityConfigurerAdapter {
 	@Override
 	protected void configure( HttpSecurity http ) throws Exception {
 		super.configure( http );
-		http.antMatcher( "/**" )
-			.authorizeRequests()
-			.anyRequest().permitAll()
+		//@formatter:off
+		http
+			.antMatcher( "/**" )
+				.authorizeRequests()
+					.anyRequest()
+						.permitAll()
 		;
+		//@formatter:on
 	}
 
 	@Configuration
@@ -42,14 +46,17 @@ public class AuthorizationConfig extends AbstractWebSecurityConfigurerAdapter {
 		@Override
 		protected void configure( HttpSecurity http ) throws Exception {
 			super.configure( http );
+			//@formatter:off
 			http
 				.antMatcher( "/apps/?*/**" )
-				.addFilterBefore( appContextPersistenceFilter, SecurityContextPersistenceFilter.class )
-				.addFilterAfter( corsAppContextFilter, AppContextPersistenceFilter.class )
-				.addFilterAfter( appRolePersistenceFilter, BasicAuthenticationFilter.class )
-				.authorizeRequests()
-				.anyRequest().permitAll()
+					.addFilterBefore( appContextPersistenceFilter, SecurityContextPersistenceFilter.class )
+					.addFilterAfter( corsAppContextFilter, AppContextPersistenceFilter.class )
+					.addFilterAfter( appRolePersistenceFilter, BasicAuthenticationFilter.class )
+					.authorizeRequests()
+						.anyRequest()
+							.permitAll()
 			;
+			//@formatter:on
 		}
 	}
 
@@ -61,21 +68,21 @@ public class AuthorizationConfig extends AbstractWebSecurityConfigurerAdapter {
 			super.configure( http );
 			//@formatter:off
 			http
-					.antMatcher( "/platform/**" )
+				.antMatcher( "/platform/**" )
 					.addFilterBefore( corsPlatformContextFilter, SecurityContextPersistenceFilter.class )
 					.authorizeRequests()
-					.antMatchers( "/platform/apps/" )
-					.permitAll()
-					.antMatchers( "/platform/apps/?*/" )
-					.permitAll()
-					.antMatchers( "/platform/roles/" )
-					.permitAll()
-					.antMatchers( "/platform/roles/?*/" )
-					.permitAll()
-					.antMatchers( "/platform/permissions/" )
-					.permitAll()
-					.antMatchers( "/platform/permissions/?*/" )
-					.permitAll()
+						.antMatchers( "/platform/apps/" )
+							.permitAll()
+						.antMatchers( "/platform/apps/?*/" )
+							.permitAll()
+						.antMatchers( "/platform/roles/" )
+							.permitAll()
+						.antMatchers( "/platform/roles/?*/" )
+							.permitAll()
+						.antMatchers( "/platform/permissions/" )
+							.permitAll()
+						.antMatchers( "/platform/permissions/?*/" )
+							.permitAll()
 			;
 			//@formatter:on
 		}
