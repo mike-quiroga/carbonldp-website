@@ -189,7 +189,7 @@ public class SesameAppService extends AbstractSesameLDPService implements AppSer
 			ACEDescription.Permission.CREATE_ACCESS_POINT,
 			ACEDescription.Permission.CREATE_CHILD,
 			ACEDescription.Permission.ADD_MEMBER
-		) );
+		), true );
 	}
 
 	private void addAppDefaultPermissions( AppRole adminRole, ACL appACL ) {
@@ -197,6 +197,6 @@ public class SesameAppService extends AbstractSesameLDPService implements AppSer
 			ACEDescription.Permission.READ,
 			ACEDescription.Permission.UPDATE,
 			ACEDescription.Permission.DELETE
-		) );
+		), true );
 	}
 }

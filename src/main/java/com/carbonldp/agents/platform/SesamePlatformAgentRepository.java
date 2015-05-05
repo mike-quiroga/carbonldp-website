@@ -81,7 +81,6 @@ public class SesamePlatformAgentRepository extends AbstractSesameRepository impl
 	}
 
 	public void create( Agent agent ) {
-
+		containerRepository.createChild( agentsContainerURI, agent, agentsContainerType );
 	}
-
 }

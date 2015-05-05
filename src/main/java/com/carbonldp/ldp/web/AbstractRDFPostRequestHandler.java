@@ -146,18 +146,18 @@ public abstract class AbstractRDFPostRequestHandler<E extends BasicContainer> ex
 
 	protected abstract void createChild( URI targetURI, E documentResourceView );
 
-	private ResponseEntity<Object> generateCreatedResponse( RDFResource resourceCreated, DateTime creationTime ) {
-		setETagHeader( creationTime );
-		setLocationHeader( resourceCreated );
-		return new ResponseEntity<>( new EmptyResponse(), HttpStatus.CREATED );
-	}
-
 	protected ResponseEntity<Object> generateCreatedResponse( AccessPoint accessPointCreated, DateTime creationTime ) {
 		return generateCreatedResponse( (RDFResource) accessPointCreated, creationTime );
 	}
 
 	protected ResponseEntity<Object> generateCreatedResponse( E childCreated, DateTime creationTime ) {
 		return generateCreatedResponse( (RDFResource) childCreated, creationTime );
+	}
+
+	private ResponseEntity<Object> generateCreatedResponse( RDFResource resourceCreated, DateTime creationTime ) {
+		if ( creationTime != null ) setETagHeader( creationTime );
+		setLocationHeader( resourceCreated );
+		return new ResponseEntity<>( new EmptyResponse(), HttpStatus.CREATED );
 	}
 
 	protected RDFResource getDocumentResourceWithFinalURI( RDFResource documentResource, String parentURI ) {

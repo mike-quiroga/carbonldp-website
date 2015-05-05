@@ -44,43 +44,78 @@ public class SesameACLRepository extends AbstractSesameLDPRepository implements 
 	}
 
 	@Override
-	public void grantPermissions( URI resourceURI, Collection<ACLSubject> subjects, Collection<ACEDescription.Permission> permissions ) {
+	public void grantPermissions( URI resourceURI, Collection<ACLSubject> subjects, Collection<ACEDescription.Permission> permissions, boolean inheritable ) {
 		ACL acl = getResourceACL( resourceURI );
-		grantPermissions( acl, subjects, permissions );
+		grantPermissions( acl, subjects, permissions, inheritable );
 	}
 
 	@Override
-	public void grantPermissions( ACL acl, Collection<ACLSubject> subjects, Collection<ACEDescription.Permission> permissions ) {
+	public void grantPermissions( ACL acl, Collection<ACLSubject> subjects, Collection<ACEDescription.Permission> permissions, boolean inheritable ) {
 		Map<RDFNodeEnum, Set<URI>> subjectsMap = ACLUtil.getSubjectsMap( subjects );
 
 		for ( RDFNodeEnum subjectClass : subjectsMap.keySet() ) {
 			Set<URI> subjectURIs = subjectsMap.get( subjectClass );
-			grantPermissions( acl, subjectClass, subjectURIs, permissions );
+			grantPermissions( acl, subjectClass, subjectURIs, permissions, inheritable );
 		}
+
+		if ( inheritable ) addInheritablePermissions( acl, subjects, permissions, true );
 
 		documentRepository.update( acl.getDocument() );
 	}
 
-	private void grantPermissions( ACL acl, RDFNodeEnum subjectClass, Collection<URI> subjectURIs, Collection<ACEDescription.Permission> permissions ) {
-		Set<ACE> aces = ACLUtil.getRelevantACEs( acl, subjectClass, subjectURIs );
+	private void grantPermissions( ACL acl, RDFNodeEnum subjectClass, Collection<URI> subjectURIs, Collection<ACEDescription.Permission> permissions, boolean inheritable ) {
+		Set<ACE> aces = ACLUtil.getRelatedACEs( acl, subjectClass, subjectURIs );
 		if ( aces.isEmpty() ) {
 			ACE ace = ACEFactory.create( acl, subjectClass, subjectURIs, permissions, true );
 			acl.addACEntry( ace.getURI() );
 		} else {
-			// Implement
+			// TODO: Implement
 			throw new NotImplementedException();
 		}
 	}
 
 	@Override
-	public void denyPermissions( URI resourceURI, Collection<ACLSubject> subjects, Collection<ACEDescription.Permission> permissions ) {
+	public void addInheritablePermissions( URI resourceURI, Collection<ACLSubject> subjects, Collection<ACEDescription.Permission> permissions, boolean granting ) {
 		ACL acl = getResourceACL( resourceURI );
-		denyPermissions( acl, subjects, permissions );
+		addInheritablePermissions( acl, subjects, permissions, granting );
 	}
 
 	@Override
-	public void denyPermissions( ACL acl, Collection<ACLSubject> subjects, Collection<ACEDescription.Permission> permissions ) {
-		// TODO
+	public void addInheritablePermissions( ACL acl, Collection<ACLSubject> subjects, Collection<ACEDescription.Permission> permissions, boolean granting ) {
+		Map<RDFNodeEnum, Set<URI>> subjectsMap = ACLUtil.getSubjectsMap( subjects );
+
+		for ( RDFNodeEnum subjectClass : subjectsMap.keySet() ) {
+			Set<URI> subjectURIs = subjectsMap.get( subjectClass );
+			addInheritablePermissions( acl, subjectClass, subjectURIs, permissions, granting );
+		}
+
+		documentRepository.update( acl.getDocument() );
+	}
+
+	private void addInheritablePermissions( ACL acl, RDFNodeEnum subjectClass, Collection<URI> subjectURIs, Collection<ACEDescription.Permission> permissions, boolean granting ) {
+		Set<ACE> aces = ACLUtil.getRelatedInheritableACEs( acl, subjectClass, subjectURIs );
+		if ( aces.isEmpty() ) {
+			ACE ace = ACEFactory.create( acl, subjectClass, subjectURIs, permissions, granting );
+			acl.addInheritableEntry( ace.getURI() );
+		} else {
+			// TODO: Implement
+			throw new NotImplementedException();
+		}
+	}
+
+	@Override
+	public void denyPermissions( URI resourceURI, Collection<ACLSubject> subjects, Collection<ACEDescription.Permission> permissions, boolean inheritable ) {
+		ACL acl = getResourceACL( resourceURI );
+		denyPermissions( acl, subjects, permissions, inheritable );
+	}
+
+	@Override
+	public void denyPermissions( ACL acl, Collection<ACLSubject> subjects, Collection<ACEDescription.Permission> permissions, boolean inheritable ) {
+
+		if ( inheritable ) addInheritablePermissions( acl, subjects, permissions, false );
+
+		// TODO: FT
+		throw new NotImplementedException();
 	}
 
 	private URI getACLUri( URI objectURI ) {

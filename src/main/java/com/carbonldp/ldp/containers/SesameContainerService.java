@@ -3,6 +3,7 @@ package com.carbonldp.ldp.containers;
 import com.carbonldp.authorization.acl.ACLRepository;
 import com.carbonldp.descriptions.APIPreferences;
 import com.carbonldp.ldp.AbstractSesameLDPService;
+import com.carbonldp.ldp.sources.RDFSource;
 import com.carbonldp.ldp.sources.RDFSourceRepository;
 import com.carbonldp.spring.TransactionWrapper;
 import org.joda.time.DateTime;
@@ -44,6 +45,13 @@ public class SesameContainerService extends AbstractSesameLDPService implements 
 		sourceRepository.touch( containerURI, creationTime );
 
 		return creationTime;
+	}
+
+	@Override
+	public void addMember( URI containerURI, RDFSource member ) {
+		// TODO: Check if the container exists
+		// TODO: Check if the member exists
+		containerRepository.addMember( containerURI, member );
 	}
 
 	@Override
