@@ -1,2 +1,0 @@
-<http://xyz.com/org/legal/approvals/OS98765>	<http://www.w3.org/1999/02/22-rdf-syntax-ns#type>	<http://xyz.com/org/legal/software/approval> .
-<http://xyz.com/org/legal/approvals/WP76543>	<http://www.w3.org/1999/02/22-rdf-syntax-ns#type>	<http://xyz.com/org/legal/workpermit/approval> .

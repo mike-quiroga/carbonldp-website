@@ -6,13 +6,14 @@
 
 reports/
 
+test-output/
+
 # IntelliJ
 .idea/
 *.iml
 *.iws
 
 # Maven
-log/
 target/
 
 # SASS
@@ -112,6 +113,9 @@ Session.vim
 # Eclipse
 # https://github.com/github/gitignore/blob/master/Global/Eclipse.gitignore
 *.pydevproject
+.project
+.classpath
+.settings/
 .metadata
 bin/**
 tmp/**
@@ -122,6 +126,8 @@ tmp/**/*
 *~.nib
 local.properties
 .loadpath
+.freemarker-ide.xml
+.springBeans
 /src/main/resources/rebel.xml
  
 # External tool builders

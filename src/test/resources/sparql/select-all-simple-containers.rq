@@ -1,4 +1,0 @@
-PREFIX rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
-PREFIX ldp:     <http://www.w3.org/ns/ldp#>
-
-SELECT ?subject WHERE { ?subject rdf:type ldp:SimpleContainer } LIMIT 100

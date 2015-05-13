@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration>
+    <Appenders>
+        <Console name="STDOUT" target="SYSTEM_OUT">
+            <PatternLayout
+                    pattern="%highlight{%-5p}{STYLE=Logback} [%40c{1.}] -- %highlight{%m}{STYLE=Logback}%n"/>
+        </Console>
+    </Appenders>
+    <Loggers>
+        <Logger name="org.springframework" level="WARN"/>
+        <Logger name="org.openrdf" level="WARN"/>
+        <Logger name="com.carbonldp" level="TRACE"/>
+
+        <Root level="DEBUG">
+            <AppenderRef ref="STDOUT"/>
+        </Root>
+    </Loggers>
+</Configuration>

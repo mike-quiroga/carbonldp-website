@@ -1,0 +1,238 @@
+@prefix acl:		<http://www.w3.org/ns/auth/acl#>.
+@prefix api:		<http://purl.org/linked-data/api/vocab#>.
+@prefix c:			<http://carbonldp.com/ns/v1/platform#>.
+@prefix cs:			<http://carbonldp.com/ns/v1/security#>.
+@prefix cp:			<http://carbonldp.com/ns/v1/patch#>.
+@prefix cc:			<http://creativecommons.org/ns#>.
+@prefix cert:		<http://www.w3.org/ns/auth/cert#>.
+@prefix dbp:		<http://dbpedia.org/property/>.
+@prefix dc:			<http://purl.org/dc/terms/>.
+@prefix dc11:		<http://purl.org/dc/elements/1.1/>.
+@prefix dcterms:	<http://purl.org/dc/terms/>.
+@prefix doap:		<http://usefulinc.com/ns/doap#>.
+@prefix example:	<http://example.org/ns#>.
+@prefix ex:			<http://example.org/ns#>.
+@prefix exif:		<http://www.w3.org/2003/12/exif/ns#>.
+@prefix fn:			<http://www.w3.org/2005/xpath-functions#>.
+@prefix foaf:		<http://xmlns.com/foaf/0.1/>.
+@prefix geo:		<http://www.w3.org/2003/01/geo/wgs84_pos#>.
+@prefix geonames:	<http://www.geonames.org/ontology#>.
+@prefix gr:			<http://purl.org/goodrelations/v1#>.
+@prefix http:		<http://www.w3.org/2006/http#>.
+@prefix ldp:		<http://www.w3.org/ns/ldp#>.
+@prefix log:		<http://www.w3.org/2000/10/swap/log#>.
+@prefix owl:		<http://www.w3.org/2002/07/owl#>.
+@prefix rdf:		<http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
+@prefix rdfs:		<http://www.w3.org/2000/01/rdf-schema#>.
+@prefix rei:		<http://www.w3.org/2004/06/rei#>.
+@prefix rsa:		<http://www.w3.org/ns/auth/rsa#>.
+@prefix rss:		<http://purl.org/rss/1.0/>.
+@prefix sd:			<http://www.w3.org/ns/sparql-service-description#>.
+@prefix sfn:		<http://www.w3.org/ns/sparql#>.
+@prefix sioc:		<http://rdfs.org/sioc/ns#>.
+@prefix skos:		<http://www.w3.org/2004/02/skos/core#>.
+@prefix swrc:		<http://swrc.ontoware.org/ontology#>.
+@prefix types:		<http://rdfs.org/sioc/types#>.
+@prefix vcard:		<http://www.w3.org/2001/vcard-rdf/3.0#>.
+@prefix wot:		<http://xmlns.com/wot/0.1/>.
+@prefix xhtml:		<http://www.w3.org/1999/xhtml#>.
+@prefix xsd:		<http://www.w3.org/2001/XMLSchema#>.
+
+
+<platform/> {
+	<platform/>
+		a 	ldp:BasicContainer;
+		ldp:hasMemberRelation ldp:member;
+		ldp:contains
+			<platform/apps/>,
+			<platform/agents/>,
+			<platform/roles/>,
+			<platform/privileges/>;
+		ldp:member
+			<platform/apps/>,
+			<platform/agents/>,
+			<platform/roles/>,
+			<platform/privileges/>;
+		cs:accessControlList <platform/~acl>.
+}
+<platform/~acl/> {
+	<platform/~acl/>
+		a cs:AccessControlList;
+		cs:accessTo <platform/>;
+		cs:accessControlEntry <platform/~acl/#ace-235235234234>.
+	<platform/~acl/#ace-235235234234>
+		a cs:AccessControlEntry;
+		cs:subjectClass cs:PlatformRole;
+		cs:subject <platform/roles/admin/>;
+		cs:granting "true"^^xsd:boolean;
+		cs:permission
+			cs:Read,
+			cs:Update,
+			cs:Delete,
+			cs:CreateChild,
+			cs:CreateAccessPoint,
+			cs:Download,
+			cs:Upload,
+			cs:AddMember.
+}
+<platform/apps/> {
+	<platform/apps/>
+		a 	ldp:BasicContainer;
+		ldp:hasMemberRelation ldp:member.
+}
+<platform/agents/> {
+	<platform/agents/>
+		a 	ldp:BasicContainer;
+		ldp:hasMemberRelation ldp:member;
+		ldp:contains 
+			<platform/agents/admin/>;
+		ldp:member
+			<platform/agents/admin/>;
+		cs:accessControlList <platform/agents/~acl>.
+}
+<platform/agents/~acl/> {
+	<platform/agents/~acl/>
+		a cs:AccessControlList;
+		cs:accessTo <platform/agents/>;
+		cs:accessControlEntry <platform/agents/~acl/#ace-234234235234>.
+	<platform/agents/~acl/#ace-234234235234>
+		a cs:AccessControlEntry;
+		cs:subjectClass cs:PlatformRole;
+		cs:subject <platform/roles/anonymous/>;
+		cs:granting "true"^^xsd:boolean;
+		cs:permission
+			cs:Read,
+			cs:CreateChild.
+}
+<platform/agents/admin/> {
+	<platform/agents/admin/>
+		a 	cs:Agent, ldp:BasicContainer;
+		c:defaultInteractionModel	ldp:RDFSource;
+		ldp:hasMemberRelation ldp:member;
+		vcard:email 
+			"admin@carbonldp.com"^^xsd:string;
+		cs:salt	"53cfbrng0bft2vqkoq4p8mpcmd";
+		cs:password	"52efa2610ca01ea3dd0253204fa7c4ede694be75c51386504003be25df4bb6c2";
+		cs:enabled "true"^^xsd:boolean;
+		cs:platformRole
+			<platform/roles/admin/>.
+}
+<platform/roles/> {
+	<platform/roles/>
+		a 	ldp:BasicContainer;
+		ldp:hasMemberRelation ldp:member;
+		ldp:contains
+			<platform/roles/admin/>,
+			<platform/roles/app-developer/>,
+			<platform/roles/registered-agent/>,
+			<platform/roles/anonymous/>;
+		ldp:member
+			<platform/roles/admin/>,
+			<platform/roles/app-developer/>,
+            <platform/roles/registered-agent/>,
+			<platform/roles/anonymous/>.
+}
+<platform/roles/admin/> {
+	<platform/roles/admin/>
+		a 	cs:PlatformRole, ldp:BasicContainer;
+		c:defaultInteractionModel	ldp:RDFSource;
+		ldp:hasMemberRelation ldp:member;
+		c:accessPoint	
+			<platform/roles/admin/agents/>,
+			<platform/roles/admin/privileges/>;
+		cs:agent
+			<platform/agents/admin/>;
+		cs:platformPrivilege
+			<platform/privileges/create-applications/>.
+}
+<platform/roles/admin/agents/> {
+	<platform/roles/admin/agents/>
+		a 	ldp:DirectContainer;
+		ldp:membershipResource	<platform/roles/admin/>;
+		ldp:hasMemberRelation	cs:agent;
+		ldp:memberOfRelation	cs:platformRole.
+}
+<platform/roles/admin/privileges/> {
+	<platform/roles/admin/privileges/>
+		a 	ldp:DirectContainer;
+		ldp:membershipResource	<platform/roles/admin/>;
+		ldp:hasMemberRelation	cs:platformPrivilege.
+}
+<platform/roles/app-developer/> {
+	<platform/roles/app-developer/>
+		a 	cs:PlatformRole, ldp:BasicContainer;
+		c:defaultInteractionModel	ldp:RDFSource;
+		ldp:hasMemberRelation ldp:member;
+		c:accessPoint
+			<platform/roles/app-developer/agents/>,
+			<platform/roles/app-developer/privileges/>;
+		cs:platformPrivilege
+			<platform/privileges/create-applications/>.
+}
+<platform/roles/app-developer/agents/> {
+	<platform/roles/app-developer/agents/>
+		a 	ldp:DirectContainer;
+		ldp:membershipResource	<platform/roles/app-developer/>;
+		ldp:hasMemberRelation	cs:agent;
+		ldp:memberOfRelation	cs:platformRole.
+}
+<platform/roles/app-developer/privileges/> {
+	<platform/roles/app-developer/privileges/>
+		a 	ldp:DirectContainer;
+		ldp:membershipResource	<platform/roles/app-developer/>;
+		ldp:hasMemberRelation	cs:platformPrivilege.
+}
+<platform/roles/registered-agent/> {
+	<platform/roles/registered-agent/>
+		a 	cs:PlatformRole, ldp:BasicContainer;
+		c:defaultInteractionModel	ldp:RDFSource;
+		ldp:hasMemberRelation ldp:member;
+		c:accessPoint
+			<platform/roles/registered-agent/agents/>,
+			<platform/roles/registered-agent/privileges/>;
+		cs:platformPrivilege
+			<platform/privileges/create-applications/>.
+}
+<platform/roles/registered-agent/agents/> {
+	<platform/roles/registered-agent/agents/>
+		a 	ldp:DirectContainer;
+		ldp:membershipResource	<platform/roles/registered-agent/>;
+		ldp:hasMemberRelation	cs:agent;
+		ldp:memberOfRelation	cs:platformRole.
+}
+<platform/roles/registered-agent/privileges/> {
+	<platform/roles/registered-agent/privileges/>
+		a 	ldp:DirectContainer;
+		ldp:membershipResource	<platform/roles/registered-agent/>;
+		ldp:hasMemberRelation	cs:platformPrivilege.
+}
+<platform/roles/anonymous/> {
+	<platform/roles/anonymous/>
+		a 	cs:PlatformRole, ldp:BasicContainer;
+		c:defaultInteractionModel	ldp:RDFSource;
+		ldp:hasMemberRelation ldp:member;
+		c:accessPoint
+			<platform/roles/anonymous/privileges/>.
+}
+<platform/roles/anonymous/privileges/> {
+	<platform/roles/anonymous/privileges/>
+		a 	ldp:DirectContainer;
+		ldp:membershipResource	<platform/roles/anonymous/>;
+		ldp:hasMemberRelation	cs:platformPrivilege.
+}
+<platform/privileges/> {
+	<platform/privileges/>
+		a 	ldp:BasicContainer;
+		ldp:hasMemberRelation ldp:member;
+		ldp:contains
+			<platform/privileges/create-applications/>;
+		ldp:member
+			<platform/privileges/create-applications/>.
+}
+<platform/privileges/create-applications/> {
+	<platform/privileges/create-applications/>
+		a	cs:PlatformPrivilege, ldp:BasicContainer;
+		c:defaultInteractionModel	ldp:RDFSource;
+		ldp:hasMemberRelation ldp:member;
+		cs:name	"Create Applications".
+}
