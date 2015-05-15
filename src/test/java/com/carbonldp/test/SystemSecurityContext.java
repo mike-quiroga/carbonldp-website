@@ -36,6 +36,6 @@ public class SystemSecurityContext {
 	}
 
 	public void createApp( App app ) {
-		app = appService.create( app );
+		appService.create( app );
 	}
 }

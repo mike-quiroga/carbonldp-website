@@ -228,7 +228,7 @@ public abstract class AbstractIT extends AbstractTestNGSpringContextTests {
 		}
 
 		SecurityContextHolder.getContext().setAuthentication( authToken );
-		app = appService.create( app );
+		appService.create( app );
 
 	}
 
