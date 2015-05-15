@@ -2,6 +2,7 @@ package com.carbonldp.config;
 
 import com.carbonldp.AbstractComponent;
 import com.carbonldp.Vars;
+import com.carbonldp.mail.MailSettings;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.util.AntPathMatcher;
 
@@ -17,6 +18,24 @@ public class PropertiesFileConfigurationRepository extends AbstractComponent imp
 
 	@Value( "${config.enforce-ending-slash}" )
 	private Boolean _enforceEndingSlash;
+
+	@Value( "${config.platform.agents.require-validation}" )
+	private boolean requireAgentValidation;
+
+	@Value( "${config.mail.host}" )
+	private String mailHost;
+	@Value( "${config.mail.protocol}" )
+	private String mailProtocol;
+	@Value( "${config.mail.port}" )
+	private int mailPort;
+	@Value( "${config.mail.username}" )
+	private String mailUsername;
+	@Value( "${config.mail.password}" )
+	private String mailPassword;
+	@Value( "${config.mail.smtp.auth:false}" )
+	private boolean useSMTPAuth;
+	@Value( "${config.mail.smtp.tls:false}" )
+	private boolean useTLS;
 
 	private Random random;
 
@@ -81,6 +100,26 @@ public class PropertiesFileConfigurationRepository extends AbstractComponent imp
 
 	public Boolean enforceEndingSlash() {
 		return _enforceEndingSlash;
+	}
+
+	@Override
+	public boolean requireAgentEmailValidation() {
+		return requireAgentValidation;
+	}
+
+	@Override
+	public MailSettings getMailSettings() {
+		MailSettings settings = new MailSettings();
+
+		settings.setHost( mailHost );
+		settings.setPort( mailPort );
+		settings.setProtocol( mailProtocol );
+		settings.setUsername( mailUsername );
+		settings.setPassword( mailPassword );
+		settings.useSMTPAuth( useSMTPAuth );
+		settings.useTLS( useTLS );
+
+		return settings;
 	}
 
 }

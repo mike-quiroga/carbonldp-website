@@ -5,11 +5,12 @@ import com.carbonldp.config.ConfigurationConfig;
 import com.carbonldp.config.RepositoriesConfig;
 import com.carbonldp.config.ServicesConfig;
 import com.carbonldp.log.LOGConfig;
+import com.carbonldp.log.RequestLoggerFilter;
+import com.carbonldp.mail.MailConfig;
 import com.carbonldp.repository.txn.TxnConfig;
 import com.carbonldp.security.SecurityConfig;
 import com.carbonldp.spring.SpringProfile;
 import com.carbonldp.utils.PropertiesUtil;
-import com.carbonldp.log.RequestLoggerFilter;
 import com.carbonldp.web.WebConfig;
 import org.fusesource.jansi.AnsiConsole;
 import org.springframework.beans.factory.config.PropertiesFactoryBean;
@@ -93,6 +94,7 @@ public class ApplicationInitializer implements WebApplicationInitializer {
 			AppContextConfig.class,
 			SecurityConfig.class,
 			ServicesConfig.class,
+			MailConfig.class,
 			LOGConfig.class
 		);
 		return rootContext;

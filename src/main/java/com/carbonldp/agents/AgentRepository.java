@@ -10,4 +10,6 @@ public interface AgentRepository {
 	public Agent get( URI uri );
 
 	public Agent findByEmail( String email );
+
+	public void create( Agent agent );
 }

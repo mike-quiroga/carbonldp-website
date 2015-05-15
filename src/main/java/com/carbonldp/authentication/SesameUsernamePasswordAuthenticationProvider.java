@@ -5,11 +5,8 @@ import com.carbonldp.agents.AgentRepository;
 import com.carbonldp.authorization.PlatformPrivilegeRepository;
 import com.carbonldp.authorization.PlatformRoleRepository;
 import com.carbonldp.utils.AuthenticationUtil;
-import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
-
-import java.security.NoSuchAlgorithmException;
 
 public abstract class SesameUsernamePasswordAuthenticationProvider extends AbstractSesameAuthenticationProvider {
 	public SesameUsernamePasswordAuthenticationProvider( AgentRepository agentRepository, PlatformRoleRepository platformRoleRepository, PlatformPrivilegeRepository platformPrivilegeRepository ) {
@@ -35,15 +32,7 @@ public abstract class SesameUsernamePasswordAuthenticationProvider extends Abstr
 	protected String getHashedPassword( String password, Agent agent ) {
 		String salt = agent.getSalt();
 		String saltedPassword = AuthenticationUtil.saltPassword( password, salt );
-		String hashedPassword = null;
-
-		try {
-			hashedPassword = AuthenticationUtil.hashPassword( saltedPassword );
-		} catch ( NoSuchAlgorithmException exception ) {
-			throw new AuthenticationServiceException( "Password validation failed" );
-		}
-
-		return hashedPassword;
+		return AuthenticationUtil.hashPassword( saltedPassword );
 	}
 
 	protected boolean passwordsMatch( String hashedPasword, Agent agent ) {

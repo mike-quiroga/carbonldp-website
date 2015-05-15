@@ -59,7 +59,8 @@
 	<platform/~acl/>
 		a cs:AccessControlList;
 		cs:accessTo <platform/>;
-		cs:accessControlEntry <platform/~acl/#ace-235235234234>.
+		cs:accessControlEntry <platform/~acl/#ace-235235234234>;
+		cs:inheritableEntry <platform/~acl/#ace-235235234234>.
 	<platform/~acl/#ace-235235234234>
 		a cs:AccessControlEntry;
 		cs:subjectClass cs:PlatformRole;
@@ -101,6 +102,7 @@
 		cs:subject <platform/roles/anonymous/>;
 		cs:granting "true"^^xsd:boolean;
 		cs:permission
+			cs:Read,
 			cs:CreateChild.
 }
 <platform/agents/admin/> {
@@ -109,9 +111,10 @@
 		c:defaultInteractionModel	ldp:RDFSource;
 		ldp:hasMemberRelation ldp:member;
 		vcard:email 
-			"admin@carbonldp.com";
+			"admin@carbonldp.com"^^xsd:string;
 		cs:salt	"53cfbrng0bft2vqkoq4p8mpcmd";
 		cs:password	"52efa2610ca01ea3dd0253204fa7c4ede694be75c51386504003be25df4bb6c2";
+		cs:enabled "true"^^xsd:boolean;
 		cs:platformRole
 			<platform/roles/admin/>.
 }
@@ -121,9 +124,13 @@
 		ldp:hasMemberRelation ldp:member;
 		ldp:contains
 			<platform/roles/admin/>,
+			<platform/roles/app-developer/>,
+			<platform/roles/registered-agent/>,
 			<platform/roles/anonymous/>;
 		ldp:member
 			<platform/roles/admin/>,
+			<platform/roles/app-developer/>,
+            <platform/roles/registered-agent/>,
 			<platform/roles/anonymous/>.
 }
 <platform/roles/admin/> {
@@ -150,6 +157,54 @@
 	<platform/roles/admin/privileges/>
 		a 	ldp:DirectContainer;
 		ldp:membershipResource	<platform/roles/admin/>;
+		ldp:hasMemberRelation	cs:platformPrivilege.
+}
+<platform/roles/app-developer/> {
+	<platform/roles/app-developer/>
+		a 	cs:PlatformRole, ldp:BasicContainer;
+		c:defaultInteractionModel	ldp:RDFSource;
+		ldp:hasMemberRelation ldp:member;
+		c:accessPoint
+			<platform/roles/app-developer/agents/>,
+			<platform/roles/app-developer/privileges/>;
+		cs:platformPrivilege
+			<platform/privileges/create-applications/>.
+}
+<platform/roles/app-developer/agents/> {
+	<platform/roles/app-developer/agents/>
+		a 	ldp:DirectContainer;
+		ldp:membershipResource	<platform/roles/app-developer/>;
+		ldp:hasMemberRelation	cs:agent;
+		ldp:memberOfRelation	cs:platformRole.
+}
+<platform/roles/app-developer/privileges/> {
+	<platform/roles/app-developer/privileges/>
+		a 	ldp:DirectContainer;
+		ldp:membershipResource	<platform/roles/app-developer/>;
+		ldp:hasMemberRelation	cs:platformPrivilege.
+}
+<platform/roles/registered-agent/> {
+	<platform/roles/registered-agent/>
+		a 	cs:PlatformRole, ldp:BasicContainer;
+		c:defaultInteractionModel	ldp:RDFSource;
+		ldp:hasMemberRelation ldp:member;
+		c:accessPoint
+			<platform/roles/registered-agent/agents/>,
+			<platform/roles/registered-agent/privileges/>;
+		cs:platformPrivilege
+			<platform/privileges/create-applications/>.
+}
+<platform/roles/registered-agent/agents/> {
+	<platform/roles/registered-agent/agents/>
+		a 	ldp:DirectContainer;
+		ldp:membershipResource	<platform/roles/registered-agent/>;
+		ldp:hasMemberRelation	cs:agent;
+		ldp:memberOfRelation	cs:platformRole.
+}
+<platform/roles/registered-agent/privileges/> {
+	<platform/roles/registered-agent/privileges/>
+		a 	ldp:DirectContainer;
+		ldp:membershipResource	<platform/roles/registered-agent/>;
 		ldp:hasMemberRelation	cs:platformPrivilege.
 }
 <platform/roles/anonymous/> {

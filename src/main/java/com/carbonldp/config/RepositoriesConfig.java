@@ -3,6 +3,8 @@ package com.carbonldp.config;
 import com.carbonldp.Vars;
 import com.carbonldp.agents.platform.PlatformAgentRepository;
 import com.carbonldp.agents.platform.SesamePlatformAgentRepository;
+import com.carbonldp.agents.validators.AgentValidatorRepository;
+import com.carbonldp.agents.validators.SesameAgentValidatorRepository;
 import com.carbonldp.apps.AppRepository;
 import com.carbonldp.apps.SesameAppRepository;
 import com.carbonldp.apps.roles.AppRoleRepository;
@@ -80,6 +82,11 @@ public class RepositoriesConfig {
 	public PlatformAgentRepository platformAgentRepository() {
 		URI agentsContainerURI = new URIImpl( Vars.getAgentsContainerURL() );
 		return new SesamePlatformAgentRepository( connectionFactory, sourceRepository(), containerRepository(), agentsContainerURI );
+	}
+
+	@Bean
+	public AgentValidatorRepository agentValidatorRepository() {
+		return new SesameAgentValidatorRepository( connectionFactory, resourceRepository(), documentRepository() );
 	}
 
 	@Bean

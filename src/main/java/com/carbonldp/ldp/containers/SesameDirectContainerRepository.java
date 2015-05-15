@@ -38,7 +38,7 @@ public class SesameDirectContainerRepository extends AbstractAccessPointReposito
 			TAB + TAB + RDFNodeUtil.generatePredicateStatement( "?containerURI", "?membershipResource", ContainerDescription.Property.MEMBERSHIP_RESOURCE ) + NEW_LINE +
 			TAB + "}" + NEW_LINE +
 			TAB + "GRAPH ?membershipResource {" + NEW_LINE +
-			TAB + TAB + "?membershipResource ?hasMemberRelation ?member" + NEW_LINE +
+			TAB + TAB + "?membershipResource ?hasMemberRelation ?member." + NEW_LINE +
 			TAB + "}" + NEW_LINE +
 			"}"
 		;
@@ -59,7 +59,7 @@ public class SesameDirectContainerRepository extends AbstractAccessPointReposito
 			TAB + TAB + RDFNodeUtil.generatePredicateStatement( "?containerURI", "?membershipResource", ContainerDescription.Property.MEMBERSHIP_RESOURCE ) + NEW_LINE +
 			TAB + "}" + NEW_LINE +
 			TAB + "GRAPH ?membershipResource {" + NEW_LINE +
-			TAB + TAB + "?membershipResource ?hasMemberRelation ?members" + NEW_LINE +
+			TAB + TAB + "?membershipResource ?hasMemberRelation ?members." + NEW_LINE +
 			TAB + TAB + "%1$s" + NEW_LINE +
 			TAB + "}" + NEW_LINE +
 			"}"
@@ -81,7 +81,7 @@ public class SesameDirectContainerRepository extends AbstractAccessPointReposito
 			TAB + TAB + RDFNodeUtil.generatePredicateStatement( "?containerURI", "?membershipResource", ContainerDescription.Property.MEMBERSHIP_RESOURCE ) + NEW_LINE +
 			TAB + "}" + NEW_LINE +
 			TAB + "GRAPH ?membershipResource {" + NEW_LINE +
-			TAB + TAB + "?membershipResource ?hasMemberRelation ?members" + NEW_LINE +
+			TAB + TAB + "?membershipResource ?hasMemberRelation ?members." + NEW_LINE +
 			TAB + "}" + NEW_LINE +
 			TAB + "GRAPH ?members {" + NEW_LINE +
 			TAB + TAB + "%1$s" + NEW_LINE +

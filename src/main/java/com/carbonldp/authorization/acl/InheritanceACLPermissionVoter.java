@@ -27,7 +27,7 @@ public class InheritanceACLPermissionVoter extends AbstractACLPermissionVoter im
 			ACL parentACL = aclRepository.getResourceACL( parentURI );
 			if ( parentACL == null || parentACL.isEmpty() ) continue;
 
-			Map<ACEDescription.Permission, Set<ACE>> permissionsACEs = getRelatedACEs( parentACL, subjects, permissionsToGrant );
+			Map<ACEDescription.Permission, Set<ACE>> permissionsACEs = ACLUtil.getRelatedInheritableACEs( parentACL, subjects, permissionsToGrant );
 			if ( permissionsACEs.isEmpty() ) continue;
 
 			for ( ACEDescription.Permission acePermission : permissionsACEs.keySet() ) {

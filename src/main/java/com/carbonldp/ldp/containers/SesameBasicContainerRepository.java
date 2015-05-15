@@ -37,7 +37,7 @@ public class SesameBasicContainerRepository extends AbstractTypedContainerReposi
 			"ASK {" + NEW_LINE +
 			TAB + "GRAPH ?containerURI {" + NEW_LINE +
 			TAB + TAB + getHasMemberRelationSPARQL( "?containerURI", "?hasMemberRelation", 2 ) + NEW_LINE +
-			TAB + TAB + "?containerURI ?hasMemberRelation ?member" + NEW_LINE +
+			TAB + TAB + "?containerURI ?hasMemberRelation ?member." + NEW_LINE +
 			TAB + "}" + NEW_LINE +
 			"}"
 		;
@@ -55,7 +55,9 @@ public class SesameBasicContainerRepository extends AbstractTypedContainerReposi
 			"ASK {" + NEW_LINE +
 			TAB + "GRAPH ?containerURI {" + NEW_LINE +
 			TAB + TAB + getHasMemberRelationSPARQL( "?containerURI", "?hasMemberRelation", 2 ) + NEW_LINE +
-			TAB + TAB + "?containerURI ?hasMemberRelation ?members" + NEW_LINE +
+			TAB + TAB + "?containerURI ?hasMemberRelation ?members." + NEW_LINE +
+			TAB + "}" + NEW_LINE +
+			TAB + "GRAPH ?members {" + NEW_LINE +
 			TAB + TAB + "%1$s" + NEW_LINE +
 			TAB + "}" + NEW_LINE +
 			"}"
@@ -106,7 +108,7 @@ public class SesameBasicContainerRepository extends AbstractTypedContainerReposi
 			"} WHERE {" + NEW_LINE +
 			TAB + "GRAPH ?containerURI {" + NEW_LINE +
 			TAB + TAB + getHasMemberRelationSPARQL( "?containerURI", "?hasMemberRelation", 2 ) + NEW_LINE +
-			TAB + TAB + "?containerURI ?hasMemberRelation ?members" + NEW_LINE +
+			TAB + TAB + "?containerURI ?hasMemberRelation ?members." + NEW_LINE +
 			TAB + "}" + NEW_LINE +
 			"}"
 		;
@@ -124,7 +126,7 @@ public class SesameBasicContainerRepository extends AbstractTypedContainerReposi
 			"SELECT ?members WHERE {" + NEW_LINE +
 			TAB + "GRAPH ?containerURI {" + NEW_LINE +
 			TAB + TAB + getHasMemberRelationSPARQL( "?containerURI", "?hasMemberRelation", 2 ) + NEW_LINE +
-			TAB + TAB + "?containerURI ?hasMemberRelation ?members" + NEW_LINE +
+			TAB + TAB + "?containerURI ?hasMemberRelation ?members." + NEW_LINE +
 			TAB + "}" + NEW_LINE +
 			TAB + "GRAPH ?members {" + NEW_LINE +
 			TAB + TAB + "%1$s" + NEW_LINE +
@@ -163,19 +165,19 @@ public class SesameBasicContainerRepository extends AbstractTypedContainerReposi
 		removeMembersQuery = "" +
 			"DELETE {" + NEW_LINE +
 			TAB + "GRAPH ?containerURI {" + NEW_LINE +
-			TAB + TAB + "?containerURI ?hasMemberRelation ?containedURI" + NEW_LINE +
+			TAB + TAB + "?containerURI ?hasMemberRelation ?containedURI." + NEW_LINE +
 			TAB + "}." + NEW_LINE +
 			TAB + "GRAPH ?containedURI {" + NEW_LINE +
-			TAB + TAB + "?containedURI ?memberOfRelation ?containerURI" + NEW_LINE +
+			TAB + TAB + "?containedURI ?memberOfRelation ?containerURI." + NEW_LINE +
 			TAB + "}." + NEW_LINE +
 			"} WHERE {" + NEW_LINE +
 			TAB + "GRAPH ?containerURI {" + NEW_LINE +
 			TAB + TAB + getHasMemberRelationSPARQL( "?containerURI", "?hasMemberRelation", 2 ) + NEW_LINE +
-			TAB + TAB + "?containerURI ?hasMemberRelation ?containedURI" + NEW_LINE +
+			TAB + TAB + "?containerURI ?hasMemberRelation ?containedUR.I" + NEW_LINE +
 			TAB + "}." + NEW_LINE +
 			TAB + "OPTIONAL {" + NEW_LINE +
 			TAB + TAB + "GRAPH ?containedURI {" + NEW_LINE +
-			TAB + TAB + TAB + "?containedURI ?memberOfRelation ?containerURI" + NEW_LINE +
+			TAB + TAB + TAB + "?containedURI ?memberOfRelation ?containerURI." + NEW_LINE +
 			TAB + TAB + "}." + NEW_LINE +
 			TAB + "}." + NEW_LINE +
 			"}"
