@@ -59,7 +59,8 @@
 	<platform/~acl/>
 		a cs:AccessControlList;
 		cs:accessTo <platform/>;
-		cs:accessControlEntry <platform/~acl/#ace-235235234234>.
+		cs:accessControlEntry <platform/~acl/#ace-235235234234>;
+		cs:inheritableEntry <platform/~acl/#ace-235235234234>.
 	<platform/~acl/#ace-235235234234>
 		a cs:AccessControlEntry;
 		cs:subjectClass cs:PlatformRole;
