@@ -275,6 +275,9 @@
                     <exclude>**/*.java</exclude>
                 </excludes>
             </resource>
+            <resource>
+                <directory>${basedir}/src/main/resources</directory>
+            </resource>
         </resources>
         <finalName>carbon-platform</finalName>
         <plugins>
