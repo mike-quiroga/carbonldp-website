@@ -54,7 +54,7 @@ public class ApplicationInitializer implements WebApplicationInitializer {
 	}
 
 	private SpringProfile getActiveProfile() {
-		String springProfiles = System.getenv( "Dspring.profiles.active" );
+		String springProfiles = System.getProperty( "spring.profiles.active" );
 		String[] profiles = springProfiles.split( COMMA );
 		for ( String profile : profiles ) {
 			SpringProfile springProfile = SpringProfile.findByName( profile.trim() );
