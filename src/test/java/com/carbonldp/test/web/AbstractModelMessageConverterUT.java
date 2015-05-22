@@ -1,6 +1,7 @@
 package com.carbonldp.test.web;
 
 import com.carbonldp.config.ConfigurationRepository;
+import com.carbonldp.mail.MailSettings;
 import com.carbonldp.test.AbstractUT;
 import com.carbonldp.utils.ModelUtil;
 import com.carbonldp.web.AbstractModelMessageConverter;
@@ -296,6 +297,18 @@ class ConfigurationRepositoryImpl implements ConfigurationRepository {
 
 	public Boolean enforceEndingSlash() {
 		return _enforceEndingSlash;
+	}
+
+	@Override
+	public boolean requireAgentEmailValidation() {
+		// TODO: Implement
+		throw new RuntimeException( "Not Implemented" );
+	}
+
+	@Override
+	public MailSettings getMailSettings() {
+		// TODO: Implement
+		throw new RuntimeException( "Not Implemented" );
 	}
 
 }
