@@ -30,7 +30,7 @@ public class AppRolePersistenceFilter extends AbstractUniqueFilter {
 		if ( appContext.isEmpty() ) throw new IllegalStateException( "The filter needs to execute inside of an appContext." );
 
 		Authentication rawAuthentication = SecurityContextHolder.getContext().getAuthentication();
-		if ( rawAuthentication == null ) throw new IllegalStateException( "The filter needs to execute when an Authentication object has already been created." );
+		if ( rawAuthentication == null ) return;
 
 		if ( ! ( rawAuthentication instanceof AppRolesHolder ) ) {
 			if ( LOG.isDebugEnabled() ) {

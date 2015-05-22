@@ -17,6 +17,7 @@ public abstract class CORSContextFilter extends AbstractUniqueFilter {
 
 		if ( ! isOriginAllowed( origin ) ) return;
 
+		response.addHeader( "Access-Control-Allow-Credentials", "true" );
 		response.addHeader( "Access-Control-Allow-Origin", origin );
 		if ( isPreflightRequest( request ) ) addPreflightHeaders( request, response );
 	}
