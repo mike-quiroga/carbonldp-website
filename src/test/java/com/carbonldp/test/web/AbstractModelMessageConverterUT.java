@@ -33,6 +33,7 @@ import static org.testng.Assert.*;
 public class AbstractModelMessageConverterUT extends AbstractUT {
 	AbstractModel model;
 	AbstractModel modelRead;
+	LinkedHashModel compareModel;
 	MediaType mediaTypeAcceptable;
 	MediaType mediaTypeNotAcceptable;
 	MediaType mediaTypeAll;
@@ -56,14 +57,17 @@ public class AbstractModelMessageConverterUT extends AbstractUT {
 		messageConverter = new AbstractModelMessageConverter( configurationRepository );
 
 		model = new LinkedHashModel();
+		compareModel = new LinkedHashModel();
 		subj = factory.createURI( "http://example.org/rob" );
 		pred = factory.createURI( "http://example.org/is-a" );
 		obj = factory.createURI( "http://example.org/stark" );
 		model.add( subj, pred, obj );
+		compareModel.add( subj, pred, obj, subj );
 		subj = factory.createURI( "http://example.org/rob" );
 		pred = factory.createURI( "http://example.org/lives-in" );
 		obj = factory.createURI( "http://example.org/winterfell" );
 		model.add( subj, pred, obj );
+		compareModel.add( subj, pred, obj, subj );
 	}
 
 	@Test
@@ -94,7 +98,7 @@ public class AbstractModelMessageConverterUT extends AbstractUT {
 		} catch ( IOException e ) {
 			throw new RuntimeException( e );
 		}
-		assertTrue( model.equals( modelRead ) );
+		assertTrue( compareModel.equals( modelRead ) );
 		model.clear();
 		inputMessage = new MockHttpInputMessage( ModelUtil.getInputStream( model ) );
 		try {

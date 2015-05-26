@@ -5,6 +5,7 @@
         <groups>
             <run>
                 <include name="unit-tests"/>
+                <exclude name="integration-tests"/>
             </run>
         </groups>
 
