@@ -3,6 +3,7 @@ package com.carbonldp.web;
 import com.carbonldp.config.ConfigurationRepository;
 import com.carbonldp.ldp.web.RDFSourceMessageConverter;
 import com.carbonldp.log.ControllerCallsLogger;
+import com.carbonldp.rdf.RDFResourceMessageConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.*;
 import org.springframework.http.converter.ByteArrayHttpMessageConverter;
@@ -41,6 +42,7 @@ public class WebConfig extends WebMvcConfigurerAdapter {
 	@Override
 	public void configureMessageConverters( List<HttpMessageConverter<?>> converters ) {
 		converters.add( rdfSourceMessageConverter() );
+		converters.add( rdfResourceMessageConverter() );
 		converters.add( modelMessageConverter() );
 		converters.add( emptyResponseMessageConverter() );
 		converters.add( new ByteArrayHttpMessageConverter() );
@@ -62,6 +64,11 @@ public class WebConfig extends WebMvcConfigurerAdapter {
 	@Bean
 	public AbstractModelMessageConverter modelMessageConverter() {
 		return new AbstractModelMessageConverter( configurationRepository );
+	}
+
+	@Bean
+	public RDFResourceMessageConverter rdfResourceMessageConverter() {
+		return new RDFResourceMessageConverter();
 	}
 
 	@Bean

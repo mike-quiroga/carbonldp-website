@@ -1,0 +1,35 @@
+package com.carbonldp.rdf;
+
+import com.carbonldp.HTTPHeaders;
+import com.carbonldp.models.HTTPHeaderValue;
+import com.carbonldp.utils.HTTPHeaderUtil;
+import com.carbonldp.web.ModelMessageConverter;
+import org.openrdf.model.Model;
+import org.springframework.http.HttpHeaders;
+
+public class RDFResourceMessageConverter extends ModelMessageConverter<RDFResource> {
+
+	public RDFResourceMessageConverter() {
+		super( false, true );
+	}
+
+	@Override
+	protected boolean supports( Class<?> clazz ) {
+		return RDFResource.class.isAssignableFrom( clazz );
+	}
+
+	@Override
+	protected Model getModelToWrite( RDFResource model ) {
+		return model.getDocument();
+	}
+
+	@Override
+	protected void setAdditionalHeaders( RDFResource model, HttpHeaders headers ) {
+		addRDFResourceLinkHeader( headers );
+	}
+
+	private void addRDFResourceLinkHeader( HttpHeaders headers ) {
+		HTTPHeaderValue typeHeader = HTTPHeaderUtil.createLinkTypeHeader( RDFResourceDescription.Resource.CLASS.getURI() );
+		headers.add( HTTPHeaders.LINK, typeHeader.toString() );
+	}
+}

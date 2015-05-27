@@ -44,11 +44,13 @@
 		a 	ldp:BasicContainer;
 		ldp:hasMemberRelation ldp:member;
 		ldp:contains
+			<platform/api/>,
 			<platform/apps/>,
 			<platform/agents/>,
 			<platform/roles/>,
 			<platform/privileges/>;
 		ldp:member
+			<platform/api/>,
 			<platform/apps/>,
 			<platform/agents/>,
 			<platform/roles/>,

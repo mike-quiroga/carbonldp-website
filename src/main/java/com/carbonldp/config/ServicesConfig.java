@@ -15,6 +15,8 @@ import com.carbonldp.ldp.containers.SesameContainerService;
 import com.carbonldp.ldp.sources.RDFSourceRepository;
 import com.carbonldp.ldp.sources.RDFSourceService;
 import com.carbonldp.ldp.sources.SesameRDFSourceService;
+import com.carbonldp.platform.api.PlatformAPIRepository;
+import com.carbonldp.platform.api.PlatformAPIService;
 import com.carbonldp.spring.TransactionWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -24,12 +26,20 @@ import org.springframework.context.annotation.Configuration;
 public class ServicesConfig {
 
 	@Autowired
+	private PlatformAPIRepository platformAPIRepository;
+
+	@Autowired
 	private RDFSourceRepository sourceRepository;
 	@Autowired
 	private ContainerRepository containerRepository;
 
 	@Autowired
 	private ACLRepository aclRepository;
+
+	@Bean
+	public PlatformAPIService platformAPIService() {
+		return new PlatformAPIService( platformAPIRepository );
+	}
 
 	@Bean
 	protected TransactionWrapper transactionWrapper() {

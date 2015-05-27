@@ -1,5 +1,6 @@
-package com.carbonldp.web;
+package com.carbonldp.platform.api;
 
+import com.carbonldp.web.AbstractController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -10,19 +11,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 @Controller
-@RequestMapping( value = "api" )
+@RequestMapping( value = "platform/api/" )
 public class PlatformAPIController extends AbstractController {
 
 	@Autowired
 	private PlatformAPIGetRequestHandler getHandler;
 
-	@RequestMapping( method = RequestMethod.GET )
-	public ResponseEntity<Object> getAPIDescription(HttpServletRequest request, HttpServletResponse response) {
-		return getHandler.handleRequest( request, response );
-	}
-
-	@RequestMapping( method = RequestMethod.HEAD )
-	public ResponseEntity<Object> headAPIDescription(HttpServletRequest request, HttpServletResponse response) {
+	@RequestMapping( method = {RequestMethod.GET, RequestMethod.HEAD} )
+	public ResponseEntity<Object> getAPIDescription( HttpServletRequest request, HttpServletResponse response ) {
 		return getHandler.handleRequest( request, response );
 	}
 }

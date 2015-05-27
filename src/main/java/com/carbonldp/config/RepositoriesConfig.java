@@ -18,25 +18,52 @@ import com.carbonldp.authorization.acl.SesameACLRepository;
 import com.carbonldp.ldp.containers.*;
 import com.carbonldp.ldp.sources.RDFSourceRepository;
 import com.carbonldp.ldp.sources.SesameRDFSourceRepository;
+import com.carbonldp.platform.api.PlatformAPIRepository;
 import com.carbonldp.rdf.RDFDocumentRepository;
 import com.carbonldp.rdf.RDFResourceRepository;
 import com.carbonldp.rdf.SesameRDFDocumentRepository;
 import com.carbonldp.rdf.SesameRDFResourceRepository;
 import com.carbonldp.repository.RepositoryService;
+import com.carbonldp.utils.PropertiesUtil;
 import org.openrdf.model.URI;
 import org.openrdf.model.impl.URIImpl;
 import org.openrdf.spring.SesameConnectionFactory;
+import org.springframework.beans.factory.BeanInitializationException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.PropertiesFactoryBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 
 @Configuration
 public class RepositoriesConfig {
 	@Autowired
 	private SesameConnectionFactory connectionFactory;
+
+	@Bean
+	public PlatformAPIRepository platformAPIRepository() {
+		Resource propertiesFile = new ClassPathResource( "project.properties" );
+		PropertiesFactoryBean factory = new PropertiesFactoryBean();
+		factory.setLocation( propertiesFile );
+
+		Properties properties;
+		try {
+			factory.afterPropertiesSet();
+			properties = factory.getObject();
+		} catch ( IOException e ) {
+			throw new BeanInitializationException( "Couldn't load the platform properties file.", e );
+		}
+
+		PropertiesUtil.resolveProperties( properties );
+
+		return new PlatformAPIRepository( properties );
+	}
 
 	@Bean
 	public RDFResourceRepository resourceRepository() {
