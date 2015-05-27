@@ -3,16 +3,39 @@ package com.carbonldp.config;
 import com.carbonldp.spring.DependencyInjectorListener;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.annotation.Profile;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 
 @Configuration
-@PropertySource( "classpath:${APP_ENV:local}-config.properties" )
 public class ConfigurationConfig {
 
-	@Bean
-	public static PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer() {
-		return new PropertySourcesPlaceholderConfigurer();
+	private static final Resource[] LOCAL_PROPERTIES = new ClassPathResource[]{
+		new ClassPathResource( "local-config.properties" ),
+	};
+	private static final Resource[] DEV_PROPERTIES = new ClassPathResource[]{
+		new ClassPathResource( "dev-config.properties" ),
+	};
+
+	@Profile( "local" )
+	public static class LocalConfig {
+		@Bean
+		public static PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer() {
+			PropertySourcesPlaceholderConfigurer configurer = new PropertySourcesPlaceholderConfigurer();
+			configurer.setLocations( LOCAL_PROPERTIES );
+			return configurer;
+		}
+	}
+
+	@Profile( "dev" )
+	public static class DevConfig {
+		@Bean
+		public static PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer() {
+			PropertySourcesPlaceholderConfigurer configurer = new PropertySourcesPlaceholderConfigurer();
+			configurer.setLocations( DEV_PROPERTIES );
+			return configurer;
+		}
 	}
 
 	@Bean
