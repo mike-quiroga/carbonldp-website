@@ -30,6 +30,7 @@ public abstract class SesameUsernamePasswordAuthenticationProvider extends Abstr
 	}
 
 	protected String getHashedPassword( String password, Agent agent ) {
+		//TODO LDP-376
 		String salt = agent.getSalt();
 		String saltedPassword = AuthenticationUtil.saltPassword( password, salt );
 		return AuthenticationUtil.hashPassword( saltedPassword );

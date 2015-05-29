@@ -1,9 +1,23 @@
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
 
-<suite name="carbon-platform - All Tests" verbose="1">
+<suite name="carbon-platform - All Tests">
     <test name="All Tests">
-        <packages>
-            <package name="com.carbonldp.test.*"/>
-        </packages>
+        <classes>
+            <class name="com.carbonldp.test.agents.AgentUT"/>
+            <class name="com.carbonldp.test.web.AbstractModelMessageConverterUT"/>
+
+            <class name="com.carbonldp.test.transaction.TransactionManagementIT"/>
+            <class name="com.carbonldp.test.apps.context.AppContextIT"/>
+
+            <class name="com.carbonldp.test.authentication.UsernameAndPasswordAuthenticationIT"/>
+            <class name="com.carbonldp.test.authorization.SecurityContextExchangerIT"/>
+            <class name="com.carbonldp.test.rdf.RDFDocumentRepositoryIT"/>
+
+            <class name="com.carbonldp.test.repository.services.RDFDocumentServiceIT"/>
+            <class name="com.carbonldp.test.transaction.TransactionManagementIT"/>
+            <class name="com.carbonldp.test.web.cors.CORSAppContextFilterIT"/>
+            <class name="com.carbonldp.test.web.cors.CORSPlatformContextFilterIT"/>
+
+        </classes>
     </test>
 </suite>

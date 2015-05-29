@@ -105,6 +105,7 @@ public class AppContextIT extends AbstractIT {
 	public void appToPlatformContextExchangerTest() {
 		App app = appRepository.findByRootContainer( new URIImpl( "http://local.carbonldp.com/apps/test-blog/" ) );
 		context.setApplication( app );
+		AppContextHolder.setContext( context );
 		app = AppContextHolder.getContext().getApplication();
 		assertEquals( app.getURI().stringValue(), "http://local.carbonldp.com/apps/test-blog/" );
 

@@ -14,7 +14,6 @@ import org.openrdf.repository.RepositoryException;
 import org.openrdf.repository.RepositoryResult;
 import org.openrdf.repository.sail.SailRepository;
 import org.openrdf.sail.memory.MemoryStore;
-import org.testng.annotations.Test;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
@@ -29,7 +28,7 @@ public class TransactionalImplications {
 		this.valueFactory = ValueFactoryImpl.getInstance();
 	}
 
-	@Test
+	//@Test
 	public void readUsingSPARQL() {
 		transactionFactory.enterAndRollback( template -> {
 			URI firstResourceURI = new URIImpl( "http://example.org/resources/1" );
@@ -53,7 +52,7 @@ public class TransactionalImplications {
 		} );
 	}
 
-	@Test
+	//@Test
 	public void readInDifferentTransaction() {
 		Repository repository = getRepository();
 		TransactionFactory transactionFactory = new TransactionFactory( repository );
@@ -87,7 +86,7 @@ public class TransactionalImplications {
 		} );
 	}
 
-	@Test
+	//@Test
 	public void readUsingSesame() {
 		transactionFactory.enterAndRollback( template -> {
 			URI firstResourceURI = new URIImpl( "http://example.org/resources/1" );
@@ -303,17 +302,17 @@ public class TransactionalImplications {
 		}
 	}
 
-	@FunctionalInterface
+	//@FunctionalInterface
 	public interface TransactionalAction {
 		public void execute( TransactionTemplate template ) throws Exception;
 	}
 
-	@FunctionalInterface
+	//@FunctionalInterface
 	public interface Read<R> {
 		public R execute( RepositoryConnection repositoryConnection ) throws Exception;
 	}
 
-	@FunctionalInterface
+	//@FunctionalInterface
 	public interface Write {
 		public void execute( RepositoryConnection repositoryConnection ) throws Exception;
 	}

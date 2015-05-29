@@ -34,6 +34,8 @@ public class RDFResourceRepositoryIT extends AbstractIT {
 	@Test
 	public void hasProperty_URI_RDFNdeEnum_Test() {
 		RDFNodeEnum pred = Property.B;
+		System.out.println( resourceRepository.toString() );
+
 		assertEquals( resourceRepository.hasProperty( subj, pred ), true );
 	}
 

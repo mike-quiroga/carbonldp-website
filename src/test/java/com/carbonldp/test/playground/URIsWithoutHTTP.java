@@ -7,11 +7,10 @@ import org.openrdf.repository.RepositoryConnection;
 import org.openrdf.repository.RepositoryException;
 import org.openrdf.repository.sail.SailRepository;
 import org.openrdf.sail.memory.MemoryStore;
-import org.testng.annotations.Test;
 
 public class URIsWithoutHTTP {
 
-	@Test
+	//@Test
 	public void Test() {
 		Repository repo = new SailRepository( new MemoryStore() );
 		URI URI = new URIImpl( "://www.example.org/" );

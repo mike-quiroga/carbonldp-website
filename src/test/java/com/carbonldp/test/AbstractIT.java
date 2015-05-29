@@ -12,6 +12,7 @@ import org.openrdf.model.URI;
 import org.openrdf.model.ValueFactory;
 import org.openrdf.model.impl.AbstractModel;
 import org.openrdf.model.impl.LinkedHashModel;
+import org.openrdf.model.impl.URIImpl;
 import org.openrdf.model.impl.ValueFactoryImpl;
 import org.openrdf.repository.Repository;
 import org.openrdf.repository.RepositoryConnection;
@@ -33,6 +34,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.Test;
 
 import java.io.File;
@@ -65,16 +67,22 @@ public abstract class AbstractIT extends AbstractTestNGSpringContextTests {
 	private final String testDataLocation = "test-model.trig";
 	private final String platformDefaultDataLocation = "platform-default.trig";
 
-	private final Properties properties;
+	private Properties properties;
 
 	protected AbstractIT() {
-
 		this.properties = loadProperties( propertiesFile );
 		PropertiesUtil.resolveProperties( properties );
 		erasePlatformRepositoryDirectory( properties );
 		eraseAppsRepositoryDirectory( properties );
 		loadPlatformRepositoryDefaultData( properties );
-		Vars.init( properties );
+		if ( ! Vars.isInitialized() )
+			Vars.init( properties );
+	}
+
+	@BeforeSuite
+	public void hello() {
+		LOG.debug( "something something" );
+
 	}
 
 	private Properties loadProperties( String fileName ) {
@@ -228,7 +236,10 @@ public abstract class AbstractIT extends AbstractTestNGSpringContextTests {
 		}
 
 		SecurityContextHolder.getContext().setAuthentication( authToken );
-		appService.create( app );
+
+		// This if is needed here, lines above this are neccesary to run every time before each class.
+		if ( ! appService.exists( new URIImpl( testResourceURI ) ) )
+			appService.create( app );
 
 	}
 

@@ -2,15 +2,9 @@
 
 <suite name="carbon-platform - Unit Tests" verbose="1">
     <test name="Unit Tests">
-        <groups>
-            <run>
-                <include name="unit-tests"/>
-                <exclude name="integration-tests"/>
-            </run>
-        </groups>
-
-        <packages>
-            <package name="com.carbonldp.test.*"/>
-        </packages>
+        <classes>
+            <class name="com.carbonldp.test.agents.AgentUT"/>
+            <class name="com.carbonldp.test.web.AbstractModelMessageConverterUT"/>
+        </classes>
     </test>
 </suite>

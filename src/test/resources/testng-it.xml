@@ -1,16 +1,20 @@
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
 
-<suite name="carbon-platform - Integration Tests" verbose="1">
+<suite name="carbon-platform - Integration Tests">
     <test name="Integration Tests">
-        <groups>
-            <run>
-                <include name="integration-tests"/>
-                <exclude name="unit-test"/>
-            </run>
-        </groups>
+        <classes>
+            <class name="com.carbonldp.test.transaction.TransactionManagementIT"/>
+            <class name="com.carbonldp.test.apps.context.AppContextIT"/>
 
-        <packages>
-            <package name="com.carbonldp.test.*"/>
-        </packages>
+            <class name="com.carbonldp.test.authentication.UsernameAndPasswordAuthenticationIT"/>
+            <class name="com.carbonldp.test.authorization.SecurityContextExchangerIT"/>
+            <class name="com.carbonldp.test.rdf.RDFDocumentRepositoryIT"/>
+
+            <class name="com.carbonldp.test.repository.services.RDFDocumentServiceIT"/>
+            <class name="com.carbonldp.test.transaction.TransactionManagementIT"/>
+            <class name="com.carbonldp.test.web.cors.CORSAppContextFilterIT"/>
+            <class name="com.carbonldp.test.web.cors.CORSPlatformContextFilterIT"/>
+
+        </classes>
     </test>
 </suite>
