@@ -8,11 +8,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.InputStream;
 
 @Controller
 @RequestMapping( "/**" )
@@ -23,6 +23,7 @@ public class DefaultLDPController extends AbstractLDPController {
 	private BaseOPTIONSRequestHandler optionsHandler;
 	private BaseGETRequestHandler getHandler;
 	private BaseRDFPostRequestHandler rdfPOSTHandler;
+	private BaseNonRDFPostRequestHandler nonRDFPostHandler;
 	private BasePUTRequestHandler putHandler;
 	private BasePATCHRequestHandler patchHandler;
 	private BaseDELETERequestHandler deleteHandler;
@@ -47,18 +48,16 @@ public class DefaultLDPController extends AbstractLDPController {
 	}
 
 	@RequestMapping( method = RequestMethod.POST )
-	public ResponseEntity<Object> handleNonRDFPost( @RequestBody AbstractModel requestModel, HttpServletRequest request, HttpServletResponse response ) {
-		// TODO: Implement
-		throw new NotImplementedException();
+	public ResponseEntity<Object> handleNonRDFPost( InputStream requestBody, HttpServletRequest request, HttpServletResponse response ) {
+		// TODO: Implementing
+		return nonRDFPostHandler.handleRequest( requestBody, request, response );
+
+		//throw new NotImplementedException();
 	}
 
 	@RequestMapping( method = RequestMethod.POST, consumes = "multipart/form-data" )
-	public ResponseEntity<Object> handleMultipartPost(
-		@RequestParam( value = FILE_NAME_PARAMETER, required = false ) String fileName,
-		@RequestParam( value = FILE_PARAMETER, required = false ) MultipartFile file,
-		HttpServletRequest request,
-		HttpServletResponse response
-	) {
+	public ResponseEntity<Object> handleMultipartPost( MultipartFile requestBody, HttpServletRequest request, HttpServletResponse response ) {
+		return nonRDFPostHandler.handleMultipartRequest( requestBody, request, response );
 		// TODO: Implement
 		throw new NotImplementedException();
 	}
