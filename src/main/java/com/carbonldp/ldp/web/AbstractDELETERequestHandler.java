@@ -116,7 +116,11 @@ public class AbstractDELETERequestHandler extends AbstractLDPRequestHandler {
 		Set<APIPreferences.ContainerDeletePreference> appliedPreferences = new HashSet<>();
 
 		for ( HTTPHeaderValue omitPreference : omitPreferences ) {
-			APIPreferences.ContainerDeletePreference containerPreference = RDFNodeUtil.findByURI( omitPreference.getExtendingValue(), APIPreferences.ContainerDeletePreference.class );
+			//TODO  LDP-377
+			String preference = omitPreference.getMainValue();
+			if ( preference == null || preference.isEmpty() )
+				continue;
+			APIPreferences.ContainerDeletePreference containerPreference = RDFNodeUtil.findByURI( preference, APIPreferences.ContainerDeletePreference.class );
 			if ( containerPreference == null ) continue;
 
 			appliedPreferences.add( containerPreference );
@@ -125,7 +129,13 @@ public class AbstractDELETERequestHandler extends AbstractLDPRequestHandler {
 		}
 
 		for ( HTTPHeaderValue includePreference : includePreferences ) {
-			APIPreferences.ContainerDeletePreference containerPreference = RDFNodeUtil.findByURI( includePreference.getExtendingValue(), APIPreferences.ContainerDeletePreference.class );
+			//TODO  LDP-377
+			String preference = includePreference.getMainValue();
+			if ( preference == null || preference.isEmpty() )
+				continue;
+			if ( includePreference.getMain() == null || includePreference.getMain().isEmpty() )
+				continue;
+			APIPreferences.ContainerDeletePreference containerPreference = RDFNodeUtil.findByURI( preference, APIPreferences.ContainerDeletePreference.class );
 			if ( containerPreference == null ) continue;
 
 			// TODO: Add AppliedPreference Header

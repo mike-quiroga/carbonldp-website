@@ -101,7 +101,6 @@ public abstract class AbstractRequestWithBodyHandler<E extends RDFResource> exte
 		}
 	}
 
-	// TODO: Optimize this
 	protected void seekForOrphanFragments( AbstractModel requestModel, Set<RDFResource> requestDocumentResources ) {
 		for ( Resource subject : requestModel.subjects() ) {
 			if ( ! ValueUtil.isURI( subject ) ) continue;
