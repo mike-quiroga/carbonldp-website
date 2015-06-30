@@ -8,6 +8,7 @@ import com.carbonldp.ldp.containers.Container;
 import com.carbonldp.ldp.containers.ContainerDescription;
 import com.carbonldp.ldp.containers.ContainerFactory;
 import com.carbonldp.ldp.containers.ContainerService;
+import com.carbonldp.ldp.nonrdf.NonRDFResourceService;
 import com.carbonldp.ldp.sources.RDFSourceService;
 import com.carbonldp.models.HTTPHeader;
 import com.carbonldp.models.HTTPHeaderValue;
@@ -45,6 +46,7 @@ public abstract class AbstractLDPRequestHandler extends AbstractRequestHandler {
 
 	protected RDFSourceService sourceService;
 	protected ContainerService containerService;
+	protected NonRDFResourceService nonRdfResourceService;
 
 	protected HttpServletRequest request;
 	protected HttpServletResponse response;
@@ -204,6 +206,11 @@ public abstract class AbstractLDPRequestHandler extends AbstractRequestHandler {
 	@Autowired
 	public void setContainerService( ContainerService containerService ) {
 		this.containerService = containerService;
+	}
+
+	@Autowired
+	public void setNonRDFResourceService( NonRDFResourceService nonRdfResourceService ) {
+		this.nonRdfResourceService = nonRdfResourceService;
 	}
 
 }

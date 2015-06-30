@@ -85,4 +85,9 @@ public class WebConfig extends WebMvcConfigurerAdapter {
 	public ControllerCallsLogger controllerCallsLogger() {
 		return new ControllerCallsLogger();
 	}
+
+	@Bean
+	public NonRDFResourceMessageConverter nonRDFResourceMessageConverter() {
+		return new NonRDFResourceMessageConverter();
+	}
 }

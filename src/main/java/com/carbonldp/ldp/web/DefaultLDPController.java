@@ -48,17 +48,12 @@ public class DefaultLDPController extends AbstractLDPController {
 	}
 
 	@RequestMapping( method = RequestMethod.POST )
-	public ResponseEntity<Object> handleNonRDFPost( InputStream requestBody, HttpServletRequest request, HttpServletResponse response ) {
-		// TODO: Implementing
-		return nonRDFPostHandler.handleRequest( requestBody, request, response );
-
-		//throw new NotImplementedException();
+	public ResponseEntity<Object> handleNonRDFPost( InputStream bodyInputStram, HttpServletRequest request, HttpServletResponse response ) {
+		return nonRDFPostHandler.handleRequest( bodyInputStram, request, response );
 	}
 
-	@RequestMapping( method = RequestMethod.POST, consumes = "multipart/form-data" )
+	@RequestMapping( method = RequestMethod.POST, consumes = "multipart/*" )
 	public ResponseEntity<Object> handleMultipartPost( MultipartFile requestBody, HttpServletRequest request, HttpServletResponse response ) {
-		return nonRDFPostHandler.handleMultipartRequest( requestBody, request, response );
-		// TODO: Implement
 		throw new NotImplementedException();
 	}
 
@@ -94,4 +89,7 @@ public class DefaultLDPController extends AbstractLDPController {
 
 	@Autowired
 	public void setDeleteHandler( BaseDELETERequestHandler deleteHandler ) { this.deleteHandler = deleteHandler; }
+
+	@Autowired
+	public void setNonRDFPostHandler( BaseNonRDFPostRequestHandler baseNonRDFPostRequestHandler ) {this.nonRDFPostHandler = baseNonRDFPostRequestHandler;}
 }

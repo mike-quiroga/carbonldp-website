@@ -6,6 +6,7 @@ import org.joda.time.DateTime;
 import org.openrdf.model.URI;
 import org.springframework.security.access.prepost.PreAuthorize;
 
+import java.io.File;
 import java.util.Set;
 
 public interface ContainerService {
@@ -32,4 +33,7 @@ public interface ContainerService {
 
 	// TODO: Add permission validation
 	public void delete( URI targetURI );
+
+	//TODO: Add permission validation
+	public void createNonRDFResource( URI targetURI, URI resourceURI, File resourceFile, String mimeType );
 }

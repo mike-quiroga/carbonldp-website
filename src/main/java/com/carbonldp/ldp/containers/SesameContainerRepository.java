@@ -3,11 +3,15 @@ package com.carbonldp.ldp.containers;
 import com.carbonldp.descriptions.APIPreferences.ContainerRetrievalPreference;
 import com.carbonldp.ldp.AbstractSesameLDPRepository;
 import com.carbonldp.ldp.containers.ContainerDescription.Type;
+import com.carbonldp.ldp.nonrdf.RDFRepresentation;
+import com.carbonldp.ldp.nonrdf.RDFRepresentationFactory;
+import com.carbonldp.ldp.nonrdf.RDFRepresentationRepository;
 import com.carbonldp.ldp.sources.RDFSource;
 import com.carbonldp.ldp.sources.RDFSourceRepository;
 import com.carbonldp.rdf.RDFDocumentRepository;
 import com.carbonldp.rdf.RDFResourceRepository;
 import com.carbonldp.repository.DocumentGraphQueryResultHandler;
+import com.carbonldp.repository.FileRepository;
 import com.carbonldp.repository.GraphQueryResultHandler;
 import com.carbonldp.utils.RDFNodeUtil;
 import com.carbonldp.web.exceptions.NotImplementedException;
@@ -15,9 +19,11 @@ import org.openrdf.model.Statement;
 import org.openrdf.model.URI;
 import org.openrdf.model.Value;
 import org.openrdf.spring.SesameConnectionFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
+import java.io.File;
 import java.util.*;
 
 import static com.carbonldp.Consts.NEW_LINE;
@@ -28,6 +34,12 @@ public class SesameContainerRepository extends AbstractSesameLDPRepository imple
 
 	private final RDFSourceRepository sourceRepository;
 	private final List<TypedContainerRepository> typedContainerRepositories;
+
+	@Autowired
+	RDFRepresentationRepository rdfRepresentationRepository;
+
+	@Autowired
+	FileRepository localFileRepository;
 
 	public SesameContainerRepository( SesameConnectionFactory connectionFactory, RDFResourceRepository resourceRepository,
 		RDFDocumentRepository documentRepository, RDFSourceRepository sourceRepository, List<TypedContainerRepository> typedContainerRepositories ) {
@@ -212,6 +224,36 @@ public class SesameContainerRepository extends AbstractSesameLDPRepository imple
 	@Override
 	public void create( Container container ) {
 		documentRepository.addDocument( container.getDocument() );
+	}
+
+	@Override
+	public void createNonRDFResource( URI targetURI, URI resourceURI, File requestEntity, String contentType ) {
+
+		RDFRepresentation rdfRepresentation = createRDFRepresentation( resourceURI, requestEntity, contentType );
+		rdfRepresentationRepository.create( targetURI, rdfRepresentation );
+		addMember( targetURI, rdfRepresentation );
+
+	}
+
+	private RDFRepresentation createRDFRepresentation( URI resourceURI, File file, String contentType ) {
+
+		//TODO implement the Metadata of the file
+		String uuid = saveFile( resourceURI, file );
+		RDFRepresentation rdfRepresentation = RDFRepresentationFactory.create( resourceURI );
+		rdfRepresentation.setSize( file.getTotalSpace() );
+		rdfRepresentation.setContentType( contentType );
+		rdfRepresentation.setUuid( uuid );
+
+		return rdfRepresentation;
+	}
+
+	private String saveFile( URI resourceURI, File file ) {
+
+		String uuid = UUID.randomUUID().toString();
+//		App app = AppContextHolder.getContext().getApplication();
+//		localFileRepository.save( resourceURI, file, app );
+
+		return uuid;
 	}
 
 	@Override

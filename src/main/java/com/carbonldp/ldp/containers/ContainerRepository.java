@@ -7,6 +7,7 @@ import org.openrdf.model.Statement;
 import org.openrdf.model.URI;
 import org.openrdf.model.Value;
 
+import java.io.File;
 import java.util.Map;
 import java.util.Set;
 
@@ -46,6 +47,8 @@ public interface ContainerRepository {
 	public Set<URI> filterMembers( URI containerURI, Set<URI> possibleMemberURIs, Type containerType );
 
 	public void create( Container rootContainer );
+
+	public void createNonRDFResource( URI targetURI, URI resourceURI, File requestEntity, String contentType );
 
 	public void createChild( URI containerURI, RDFSource child );
 

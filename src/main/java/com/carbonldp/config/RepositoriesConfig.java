@@ -16,6 +16,8 @@ import com.carbonldp.authorization.SesamePlatformRoleRepository;
 import com.carbonldp.authorization.acl.ACLRepository;
 import com.carbonldp.authorization.acl.SesameACLRepository;
 import com.carbonldp.ldp.containers.*;
+import com.carbonldp.ldp.nonrdf.RDFRepresentationRepository;
+import com.carbonldp.ldp.nonrdf.SesameRDFRepresentationRepository;
 import com.carbonldp.ldp.sources.RDFSourceRepository;
 import com.carbonldp.ldp.sources.SesameRDFSourceRepository;
 import com.carbonldp.platform.api.PlatformAPIRepository;
@@ -23,6 +25,8 @@ import com.carbonldp.rdf.RDFDocumentRepository;
 import com.carbonldp.rdf.RDFResourceRepository;
 import com.carbonldp.rdf.SesameRDFDocumentRepository;
 import com.carbonldp.rdf.SesameRDFResourceRepository;
+import com.carbonldp.repository.FileRepository;
+import com.carbonldp.repository.LocalFileRepository;
 import com.carbonldp.repository.RepositoryService;
 import com.carbonldp.utils.PropertiesUtil;
 import org.openrdf.model.URI;
@@ -63,6 +67,16 @@ public class RepositoriesConfig {
 		PropertiesUtil.resolveProperties( properties );
 
 		return new PlatformAPIRepository( properties );
+	}
+
+	@Bean
+	public FileRepository fileRepository() {
+		return new LocalFileRepository( connectionFactory );
+	}
+
+	@Bean
+	public RDFRepresentationRepository rdfRepresentationRepository() {
+		return new SesameRDFRepresentationRepository( connectionFactory, resourceRepository(), documentRepository() );
 	}
 
 	@Bean
