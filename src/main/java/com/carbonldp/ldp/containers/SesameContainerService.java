@@ -5,11 +5,9 @@ import com.carbonldp.descriptions.APIPreferences;
 import com.carbonldp.ldp.AbstractSesameLDPService;
 import com.carbonldp.ldp.sources.RDFSource;
 import com.carbonldp.ldp.sources.RDFSourceRepository;
-import com.carbonldp.repository.FileRepository;
 import com.carbonldp.spring.TransactionWrapper;
 import org.joda.time.DateTime;
 import org.openrdf.model.URI;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.File;
@@ -17,9 +15,6 @@ import java.util.Set;
 
 @Transactional
 public class SesameContainerService extends AbstractSesameLDPService implements ContainerService {
-
-	@Autowired
-	FileRepository fileRepository;
 
 	public SesameContainerService( TransactionWrapper transactionWrapper, RDFSourceRepository sourceRepository, ContainerRepository containerRepository, ACLRepository aclRepository ) {
 		super( transactionWrapper, sourceRepository, containerRepository, aclRepository );
@@ -54,12 +49,11 @@ public class SesameContainerService extends AbstractSesameLDPService implements 
 	}
 
 	@Override
-	public void createNonRDFResource( URI targetURI, URI resourceURI, File resourceFile, String mimeType ) {
+	public void createNonRDFResource( URI targetURI, URI resourceURI, File resourceFile, String mediaType ) {
 		// TODO: Check if the container exists (targetURI)
-		// TODO: Check if the resource exists (resourceURI)
-		DateTime creationTime = DateTime.now();
-		containerRepository.createNonRDFResource( targetURI, resourceURI, resourceFile, mimeType );
-		sourceRepository.touch( targetURI, creationTime );
+		// TODO: Check if the resource exists (resourceURI)s
+
+		containerRepository.createNonRDFResource( targetURI, resourceURI, resourceFile, mediaType );
 	}
 
 	@Override
@@ -83,11 +77,5 @@ public class SesameContainerService extends AbstractSesameLDPService implements 
 	@Override
 	public void delete( URI targetURI ) {
 		sourceRepository.delete( targetURI );
-	}
-
-	private void checkFileExistance( URI resourceURI ) {
-		if ( fileRepository.exists( resourceURI ) ) {
-			throw new RuntimeException( "Location file is already in use" );
-		}
 	}
 }

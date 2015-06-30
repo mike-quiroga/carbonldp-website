@@ -56,8 +56,7 @@ public class AbstractDELETERequestHandler extends AbstractLDPRequestHandler {
 				return handleRDFSourceDeletion( targetURI );
 			case CONTAINER:
 				return handleContainerDeletion( targetURI );
-			case WRAPPER_FOR_LDPNR:
-			case LDPNR:
+			case NON_RDF_RESOURCE:
 				return handleNonRDFDeletion( targetURI );
 			case SPARQL_ENDPOINT:
 			default:

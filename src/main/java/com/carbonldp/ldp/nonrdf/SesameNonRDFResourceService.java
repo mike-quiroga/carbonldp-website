@@ -9,7 +9,6 @@ import com.carbonldp.spring.TransactionWrapper;
 import com.carbonldp.web.exceptions.NotImplementedException;
 
 import java.io.File;
-import java.io.InputStream;
 import java.util.UUID;
 
 public class SesameNonRDFResourceService extends AbstractSesameLDPService implements NonRDFResourceService {
@@ -23,14 +22,10 @@ public class SesameNonRDFResourceService extends AbstractSesameLDPService implem
 
 	@Override
 	public File getResource( RDFRepresentation rdfRepresentation ) {
-		String uuidString = rdfRepresentation.getUuid();
+		String uuidString = rdfRepresentation.getUUID();
 		UUID uuid = UUID.fromString( uuidString );
-		InputStream inputStream = fileRepository.getFileAsInputStream( uuid );
-		return inputStreamToFile( inputStream );
-	}
 
-	private File inputStreamToFile( InputStream inputStream ) {
-		//TODO Implement
+		// TODO: Finish this
 		throw new NotImplementedException();
 	}
 }

@@ -1,6 +1,7 @@
 package com.carbonldp.web;
 
 import com.carbonldp.config.ConfigurationRepository;
+import com.carbonldp.ldp.nonrdf.NonRDFResourceMessageConverter;
 import com.carbonldp.ldp.web.RDFSourceMessageConverter;
 import com.carbonldp.log.ControllerCallsLogger;
 import com.carbonldp.rdf.RDFResourceMessageConverter;

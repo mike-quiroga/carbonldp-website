@@ -1,8 +1,7 @@
 package com.carbonldp.ldp.nonrdf;
 
-import org.openrdf.model.URI;
+import java.io.File;
 
 public interface RDFRepresentationRepository {
-
-	public void create( URI containerURI, RDFRepresentation rdfRepresentation );
+	public void create( RDFRepresentation rdfRepresentation, File file, String mimeType );
 }

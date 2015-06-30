@@ -58,13 +58,8 @@ public abstract class AbstractPATCHRequestHandler<T extends PATCHRequest> extend
 		switch ( interactionModel ) {
 			case RDF_SOURCE:
 				return handlePATCHToRDFSource( targetURI, patchRequest );
-			case CONTAINER:
-			case LDPNR:
-			case WRAPPER_FOR_LDPNR:
-			case SPARQL_ENDPOINT:
-				throw new BadRequestException( "The interaction model provided isn't supported in PATCH requests." );
 			default:
-				throw new IllegalStateException();
+				throw new BadRequestException( "The interaction model provided isn't supported in PATCH requests." );
 		}
 	}
 

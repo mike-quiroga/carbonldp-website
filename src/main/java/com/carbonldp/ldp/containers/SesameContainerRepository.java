@@ -11,15 +11,14 @@ import com.carbonldp.ldp.sources.RDFSourceRepository;
 import com.carbonldp.rdf.RDFDocumentRepository;
 import com.carbonldp.rdf.RDFResourceRepository;
 import com.carbonldp.repository.DocumentGraphQueryResultHandler;
-import com.carbonldp.repository.FileRepository;
 import com.carbonldp.repository.GraphQueryResultHandler;
 import com.carbonldp.utils.RDFNodeUtil;
 import com.carbonldp.web.exceptions.NotImplementedException;
+import org.joda.time.DateTime;
 import org.openrdf.model.Statement;
 import org.openrdf.model.URI;
 import org.openrdf.model.Value;
 import org.openrdf.spring.SesameConnectionFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
@@ -35,14 +34,10 @@ public class SesameContainerRepository extends AbstractSesameLDPRepository imple
 	private final RDFSourceRepository sourceRepository;
 	private final List<TypedContainerRepository> typedContainerRepositories;
 
-	@Autowired
-	RDFRepresentationRepository rdfRepresentationRepository;
-
-	@Autowired
-	FileRepository localFileRepository;
+	private RDFRepresentationRepository rdfRepresentationRepository;
 
 	public SesameContainerRepository( SesameConnectionFactory connectionFactory, RDFResourceRepository resourceRepository,
-		RDFDocumentRepository documentRepository, RDFSourceRepository sourceRepository, List<TypedContainerRepository> typedContainerRepositories ) {
+		RDFDocumentRepository documentRepository, RDFSourceRepository sourceRepository, List<TypedContainerRepository> typedContainerRepositories, RDFRepresentationRepository rdfRepresentationRepository ) {
 		super( connectionFactory, resourceRepository, documentRepository );
 
 		Assert.notNull( sourceRepository );
@@ -51,6 +46,9 @@ public class SesameContainerRepository extends AbstractSesameLDPRepository imple
 		Assert.notNull( typedContainerRepositories );
 		Assert.notEmpty( typedContainerRepositories );
 		this.typedContainerRepositories = typedContainerRepositories;
+
+		Assert.notNull( rdfRepresentationRepository );
+		this.rdfRepresentationRepository = rdfRepresentationRepository;
 	}
 
 	@Override
@@ -135,17 +133,15 @@ public class SesameContainerRepository extends AbstractSesameLDPRepository imple
 	private static final String getContainmentTriples_query;
 
 	static {
-		StringBuilder queryBuilder = new StringBuilder();
-		queryBuilder
-			.append( "CONSTRUCT {" ).append( NEW_LINE )
-			.append( TAB ).append( "?containerURI ?p ?o" ).append( NEW_LINE )
-			.append( "} WHERE {" ).append( NEW_LINE )
-			.append( TAB ).append( "GRAPH ?containerURI {" ).append( NEW_LINE )
-			.append( TAB ).append( TAB ).append( RDFNodeUtil.generatePredicateStatement( "?containerURI", "?p", "?o", ContainerDescription.Property.CONTAINS ) ).append( NEW_LINE )
-			.append( TAB ).append( "}" ).append( NEW_LINE )
-			.append( "}" )
+		getContainmentTriples_query = "" +
+			"CONSTRUCT {" + NEW_LINE +
+			TAB + "?containerURI ?p ?o" + NEW_LINE +
+			"} WHERE {" + NEW_LINE +
+			TAB + "GRAPH ?containerURI {" + NEW_LINE +
+			TAB + TAB + RDFNodeUtil.generatePredicateStatement( "?containerURI", "?p", "?o", ContainerDescription.Property.CONTAINS ) + NEW_LINE +
+			TAB + "}" + NEW_LINE +
+			"}"
 		;
-		getContainmentTriples_query = queryBuilder.toString();
 	}
 
 	@Override
@@ -227,33 +223,17 @@ public class SesameContainerRepository extends AbstractSesameLDPRepository imple
 	}
 
 	@Override
-	public void createNonRDFResource( URI targetURI, URI resourceURI, File requestEntity, String contentType ) {
+	public void createNonRDFResource( URI containerURI, URI resourceURI, File requestEntity, String mediaType ) {
+		DateTime creationTime = DateTime.now();
 
-		RDFRepresentation rdfRepresentation = createRDFRepresentation( resourceURI, requestEntity, contentType );
-		rdfRepresentationRepository.create( targetURI, rdfRepresentation );
-		addMember( targetURI, rdfRepresentation );
-
-	}
-
-	private RDFRepresentation createRDFRepresentation( URI resourceURI, File file, String contentType ) {
-
-		//TODO implement the Metadata of the file
-		String uuid = saveFile( resourceURI, file );
 		RDFRepresentation rdfRepresentation = RDFRepresentationFactory.create( resourceURI );
-		rdfRepresentation.setSize( file.getTotalSpace() );
-		rdfRepresentation.setContentType( contentType );
-		rdfRepresentation.setUuid( uuid );
+		rdfRepresentation.setTimestamps( creationTime );
+		rdfRepresentationRepository.create( rdfRepresentation, requestEntity, mediaType );
 
-		return rdfRepresentation;
-	}
+		addContainedResource( containerURI, rdfRepresentation.getURI() );
 
-	private String saveFile( URI resourceURI, File file ) {
-
-		String uuid = UUID.randomUUID().toString();
-//		App app = AppContextHolder.getContext().getApplication();
-//		localFileRepository.save( resourceURI, file, app );
-
-		return uuid;
+		addMember( containerURI, rdfRepresentation );
+		sourceRepository.touch( containerURI, creationTime );
 	}
 
 	@Override

@@ -1,8 +1,6 @@
-package com.carbonldp.web;
+package com.carbonldp.ldp.nonrdf;
 
 import com.carbonldp.HTTPHeaders;
-import com.carbonldp.ldp.nonrdf.RDFRepresentation;
-import com.carbonldp.ldp.nonrdf.RDFRepresentationDescription;
 import com.carbonldp.ldp.web.AbstractGETRequestHandler;
 import com.carbonldp.models.HTTPHeaderValue;
 import com.carbonldp.rdf.RDFResourceDescription;
@@ -32,12 +30,7 @@ public class NonRDFResourceMessageConverter implements HttpMessageConverter<Abst
 		RDFRepresentation rdfRepresentation = wrapper.getRdfRepresentation();
 		File file = wrapper.getFile();
 
-//		if ( inputStream == null ) {
-//			// The wrapper will be sent as an LDPRSource
-//			LDPResourceMessageConverter converter = new LDPResourceMessageConverter();
-//			converter.write(wrapper, contentType, outputMessage);
-//			return;
-//		}
+		// TODO: Check that the requested mediaType matches the stored one
 
 		HttpHeaders headers = httpOutputMessage.getHeaders();
 
@@ -46,21 +39,16 @@ public class NonRDFResourceMessageConverter implements HttpMessageConverter<Abst
 		addLinkTypeHeaders( headers );
 		addETagHeader( headers, rdfRepresentation );
 		addDescribedByHeader( headers, rdfRepresentation );
+		addContentLength( headers, wrapper );
 
 		writeFile( file, httpOutputMessage );
-		// Set the Content-Length
-
-		headers.add( HTTPHeaders.CONTENT_LENGTH, String.valueOf( file.getTotalSpace() ) );
 
 		httpOutputMessage.getBody().flush();
 	}
 
-	private void writeFile( File file, HttpOutputMessage httpOutputMessage ) {
-		try {
-			Files.copy( file, httpOutputMessage.getBody() );
-		} catch ( IOException e ) {
-			throw new RuntimeException( "file couldn't be loaded, nested Exception:", e );
-		}
+	private void addContentLength( HttpHeaders headers, AbstractGETRequestHandler.RDFRepresentationFileWrapper wrapper ) {
+		// TODO: Use already stored size
+		headers.add( HTTPHeaders.CONTENT_LENGTH, String.valueOf( wrapper.getFile().getTotalSpace() ) );
 	}
 
 	private void addDescribedByHeader( HttpHeaders headers, RDFRepresentation rdfRepresentation ) {
@@ -89,9 +77,7 @@ public class NonRDFResourceMessageConverter implements HttpMessageConverter<Abst
 	}
 
 	private void addLinkTypeHeaders( HttpHeaders headers ) {
-		HTTPHeaderValue header = null;
-
-		header = new HTTPHeaderValue();
+		HTTPHeaderValue header = new HTTPHeaderValue();
 
 		header.setMainValue( RDFResourceDescription.Resource.CLASS.getURI().stringValue() );
 		header.setExtendingKey( "rel" );
@@ -102,6 +88,14 @@ public class NonRDFResourceMessageConverter implements HttpMessageConverter<Abst
 		header.setMainValue( RDFRepresentationDescription.Resource.NON_RDF_RESOURCE.getURI().stringValue() );
 
 		headers.add( HTTPHeaders.LINK, header.toString() );
+	}
+
+	private void writeFile( File file, HttpOutputMessage httpOutputMessage ) {
+		try {
+			Files.copy( file, httpOutputMessage.getBody() );
+		} catch ( IOException e ) {
+			throw new RuntimeException( "file couldn't be loaded, nested Exception:", e );
+		}
 	}
 
 	@Override

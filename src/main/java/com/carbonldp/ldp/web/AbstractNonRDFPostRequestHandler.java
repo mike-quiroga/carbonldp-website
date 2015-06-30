@@ -46,8 +46,6 @@ public abstract class AbstractNonRDFPostRequestHandler extends AbstractLDPReques
 	}
 
 	private ResponseEntity<Object> handleRequest( File file, URI targetURI ) {
-		setUp( request, response );
-
 		String contentType = request.getContentType();
 		if ( contentType == null ) throw new BadRequestException( "A Content-Type needs to be specified." );
 
@@ -56,42 +54,48 @@ public abstract class AbstractNonRDFPostRequestHandler extends AbstractLDPReques
 		switch ( interactionModel ) {
 			case CONTAINER:
 				return handlePOSTToContainer( targetURI, file, contentType );
-			case RDF_SOURCE:
-				throw new BadRequestException( "POSTing a NonRDFResource using an interaction model of ldp:RDFSource isn't supported." );
 			default:
-				throw new IllegalStateException();
+				throw new BadRequestException( "The interaction model specified isn't supported when POSTing a NonRDFResource." );
 		}
 	}
 
 	private File createTemporaryFile( InputStream inputStream ) {
 		File temporaryFile;
-		FileOutputStream outputStream = null;
+		FileOutputStream outputStream;
 		try {
 			temporaryFile = File.createTempFile( createRandomSlug(), null );
 			temporaryFile.deleteOnExit(); // TODO: See if this makes the VM log warnings/errors
 
 			outputStream = new FileOutputStream( temporaryFile );
-			IOUtils.copy( inputStream, outputStream );
+			try {
+				IOUtils.copy( inputStream, outputStream );
+			} finally {
+				try {
+					outputStream.close();
+				} catch ( IOException e ) {
+					LOG.warn( "The outputStream couldn't be closed. Exception: ", e );
+				}
+			}
 		} catch ( IOException | SecurityException e ) {
 			throw new RuntimeException( "The temporary file couldn't be created. Exception:", e );
 		} finally {
 			try {
 				inputStream.close();
-				outputStream.close();
 			} catch ( IOException e ) {
-				LOG.error( "The inputStream couldn't be closed. Exception: ", e );
+				LOG.warn( "The inputStream couldn't be closed. Exception: ", e );
 			}
 		}
 		return temporaryFile;
 	}
 
 	private void deleteTemporaryFile( File file ) {
-		boolean wasDeleted;
+		boolean wasDeleted = false;
 		try {
 			wasDeleted = file.delete();
 		} catch ( SecurityException e ) {
-			LOG.error( "A temporary file couldn't be deleted. Exception:", e );
+			LOG.warn( "A temporary file couldn't be deleted. Exception:", e );
 		}
+		if ( ! wasDeleted ) LOG.warn( "The temporary file: '{}', couldn't be deleted.", file.toString() );
 	}
 
 	private ResponseEntity<Object> handlePOSTToContainer( URI targetURI, File requestEntity, String contentType ) {
@@ -122,7 +126,6 @@ public abstract class AbstractNonRDFPostRequestHandler extends AbstractLDPReques
 
 	private String createRandomSlug() {
 		Random random = new Random();
-		String slug = String.valueOf( Math.abs( random.nextLong() ) );
-		return slug;
+		return String.valueOf( Math.abs( random.nextLong() ) );
 	}
 }

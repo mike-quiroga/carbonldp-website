@@ -1,14 +1,12 @@
 package com.carbonldp.repository;
 
-import org.openrdf.model.URI;
-
-import java.io.InputStream;
+import java.io.File;
 import java.util.UUID;
 
 public interface FileRepository {
+	public boolean exists( UUID uuid );
 
-	boolean exists( URI slug );
+	public File get( UUID uuid );
 
-	InputStream getFileAsInputStream( UUID uuid );
-
+	public UUID save( File file );
 }

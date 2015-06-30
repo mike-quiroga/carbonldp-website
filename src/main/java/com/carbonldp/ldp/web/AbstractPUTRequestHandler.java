@@ -48,13 +48,8 @@ public abstract class AbstractPUTRequestHandler<E extends RDFResource> extends A
 		switch ( interactionModel ) {
 			case RDF_SOURCE:
 				return handlePUTToRDFSource( targetURI, requestDocumentResource );
-			case CONTAINER:
-			case LDPNR:
-			case WRAPPER_FOR_LDPNR:
-			case SPARQL_ENDPOINT:
-				throw new BadRequestException( "The interaction model provided isn't supported in PUT requests." );
 			default:
-				throw new IllegalStateException();
+				throw new BadRequestException( "The interaction model provided isn't supported in PUT requests." );
 		}
 	}
 

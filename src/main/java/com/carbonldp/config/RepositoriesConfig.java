@@ -71,12 +71,12 @@ public class RepositoriesConfig {
 
 	@Bean
 	public FileRepository fileRepository() {
-		return new LocalFileRepository( connectionFactory );
+		return new LocalFileRepository();
 	}
 
 	@Bean
 	public RDFRepresentationRepository rdfRepresentationRepository() {
-		return new SesameRDFRepresentationRepository( connectionFactory, resourceRepository(), documentRepository() );
+		return new SesameRDFRepresentationRepository( connectionFactory, resourceRepository(), documentRepository(), fileRepository() );
 	}
 
 	@Bean
@@ -116,7 +116,7 @@ public class RepositoriesConfig {
 		typedServices.add( directContainerRepository() );
 		typedServices.add( indirectContainerRepository() );
 
-		return new SesameContainerRepository( connectionFactory, resourceRepository(), documentRepository(), sourceRepository(), typedServices );
+		return new SesameContainerRepository( connectionFactory, resourceRepository(), documentRepository(), sourceRepository(), typedServices, rdfRepresentationRepository() );
 	}
 
 	@Bean

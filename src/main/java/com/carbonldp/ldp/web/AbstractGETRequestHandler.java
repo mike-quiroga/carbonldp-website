@@ -39,9 +39,8 @@ public abstract class AbstractGETRequestHandler extends AbstractLDPRequestHandle
 		Set<InteractionModel> supportedInteractionModels = new HashSet<>();
 		supportedInteractionModels.add( InteractionModel.RDF_SOURCE );
 		supportedInteractionModels.add( InteractionModel.CONTAINER );
+		supportedInteractionModels.add( InteractionModel.NON_RDF_RESOURCE );
 		supportedInteractionModels.add( InteractionModel.SPARQL_ENDPOINT );
-		supportedInteractionModels.add( InteractionModel.WRAPPER_FOR_LDPNR );
-		supportedInteractionModels.add( InteractionModel.LDPNR );
 		setSupportedInteractionModels( supportedInteractionModels );
 
 		setDefaultInteractionModel( InteractionModel.CONTAINER );
@@ -56,12 +55,11 @@ public abstract class AbstractGETRequestHandler extends AbstractLDPRequestHandle
 
 		InteractionModel interactionModel = getInteractionModel( targetURI );
 		switch ( interactionModel ) {
-			case WRAPPER_FOR_LDPNR:
 			case RDF_SOURCE:
 				return handleRDFSourceRetrieval( targetURI );
 			case CONTAINER:
 				return handleContainerRetrieval( targetURI );
-			case LDPNR:
+			case NON_RDF_RESOURCE:
 				return handleNonRDFRetrieval( targetURI );
 			case SPARQL_ENDPOINT:
 				return handleSPARQLEndpointRetrieval( targetURI );
@@ -150,30 +148,19 @@ public abstract class AbstractGETRequestHandler extends AbstractLDPRequestHandle
 
 	protected ResponseEntity<Object> handleNonRDFRetrieval( URI targetURI ) {
 		// TODO: Implement it
-		RDFRepresentation rdfRepresentation = getRdfRepresentation( targetURI );
+		// TODO: Check if the target resource is an RDFRepresentation. If not, throw BadRequestException
+		// TODO: Get RDFRepresentation from Service getRDFRepresentation( URI );
+		// TODO: Get RDFRepresentation's File from Service get( rdfRepresentation );
 
-		File file = nonRdfResourceService.getResource( rdfRepresentation );
-		rdfRepresentation.getModified();
-		RDFRepresentationFileWrapper wrapper = createWrapper( rdfRepresentation, file );
+		RDFRepresentation rdfRepresentation = null;
+		File file = null;
 
-		return new ResponseEntity<>( wrapper, HttpStatus.OK );
-
-	}
-
-	protected RDFRepresentationFileWrapper createWrapper( RDFRepresentation rdfRepresentation, File file ) {
-		return new RDFRepresentationFileWrapper( rdfRepresentation, file );
+		return new ResponseEntity<>( new RDFRepresentationFileWrapper( rdfRepresentation, file ), HttpStatus.OK );
 	}
 
 	protected ResponseEntity<Object> handleSPARQLEndpointRetrieval( URI targetURI ) {
 		// TODO: Implement it
 		return new ResponseEntity<>( HttpStatus.NOT_IMPLEMENTED );
-	}
-
-	private RDFRepresentation getRdfRepresentation( URI targetURI ) {
-		Set<ContainerRetrievalPreference> containerRetrievalPreferences = getContainerRetrievalPreferences( targetURI );
-		Container container = containerService.get( targetURI, containerRetrievalPreferences );
-		return new RDFRepresentation( container );
-
 	}
 
 	public class RDFRepresentationFileWrapper {
