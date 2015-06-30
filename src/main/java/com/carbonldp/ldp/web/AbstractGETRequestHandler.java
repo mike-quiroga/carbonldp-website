@@ -39,7 +39,7 @@ public abstract class AbstractGETRequestHandler extends AbstractLDPRequestHandle
 		Set<InteractionModel> supportedInteractionModels = new HashSet<>();
 		supportedInteractionModels.add( InteractionModel.RDF_SOURCE );
 		supportedInteractionModels.add( InteractionModel.CONTAINER );
-		supportedInteractionModels.add( InteractionModel.NON_RDF_RESOURCE );
+		supportedInteractionModels.add( InteractionModel.NON_RDF_SOURCE );
 		supportedInteractionModels.add( InteractionModel.SPARQL_ENDPOINT );
 		setSupportedInteractionModels( supportedInteractionModels );
 
@@ -59,7 +59,7 @@ public abstract class AbstractGETRequestHandler extends AbstractLDPRequestHandle
 				return handleRDFSourceRetrieval( targetURI );
 			case CONTAINER:
 				return handleContainerRetrieval( targetURI );
-			case NON_RDF_RESOURCE:
+			case NON_RDF_SOURCE:
 				return handleNonRDFRetrieval( targetURI );
 			case SPARQL_ENDPOINT:
 				return handleSPARQLEndpointRetrieval( targetURI );
