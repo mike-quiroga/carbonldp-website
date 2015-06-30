@@ -12,8 +12,8 @@ import com.carbonldp.authorization.acl.ACLRepository;
 import com.carbonldp.ldp.containers.ContainerRepository;
 import com.carbonldp.ldp.containers.ContainerService;
 import com.carbonldp.ldp.containers.SesameContainerService;
-import com.carbonldp.ldp.nonrdf.NonRDFResourceService;
-import com.carbonldp.ldp.nonrdf.SesameNonRDFResourceService;
+import com.carbonldp.ldp.nonrdf.NonRDFSourceService;
+import com.carbonldp.ldp.nonrdf.SesameNonRDFSourceService;
 import com.carbonldp.ldp.sources.RDFSourceRepository;
 import com.carbonldp.ldp.sources.RDFSourceService;
 import com.carbonldp.ldp.sources.SesameRDFSourceService;
@@ -72,7 +72,7 @@ public class ServicesConfig {
 
 	//TODO add LocalFileRepository into properties
 	@Bean
-	public NonRDFResourceService nonRDFResourceService() {
-		return new SesameNonRDFResourceService( transactionWrapper(), sourceRepository, containerRepository, aclRepository, fileRepository );
+	public NonRDFSourceService nonRDFResourceService() {
+		return new SesameNonRDFSourceService( transactionWrapper(), sourceRepository, containerRepository, aclRepository, fileRepository );
 	}
 }

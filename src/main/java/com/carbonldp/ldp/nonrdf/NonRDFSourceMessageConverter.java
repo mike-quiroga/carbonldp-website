@@ -19,7 +19,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
-public class NonRDFResourceMessageConverter implements HttpMessageConverter<AbstractGETRequestHandler.RDFRepresentationFileWrapper> {
+public class NonRDFSourceMessageConverter implements HttpMessageConverter<AbstractGETRequestHandler.RDFRepresentationFileWrapper> {
 
 	protected boolean supports( Class<?> clazz ) {
 		return AbstractGETRequestHandler.RDFRepresentationFileWrapper.class.isAssignableFrom( clazz );
@@ -85,7 +85,7 @@ public class NonRDFResourceMessageConverter implements HttpMessageConverter<Abst
 
 		headers.add( HTTPHeaders.LINK, header.toString() );
 
-		header.setMainValue( RDFRepresentationDescription.Resource.NON_RDF_RESOURCE.getURI().stringValue() );
+		header.setMainValue( RDFRepresentationDescription.Resource.NON_RDF_SOURCE.getURI().stringValue() );
 
 		headers.add( HTTPHeaders.LINK, header.toString() );
 	}

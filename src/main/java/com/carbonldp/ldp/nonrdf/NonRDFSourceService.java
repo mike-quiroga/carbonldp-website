@@ -2,7 +2,7 @@ package com.carbonldp.ldp.nonrdf;
 
 import java.io.File;
 
-public interface NonRDFResourceService {
+public interface NonRDFSourceService {
 
 	public File getResource( RDFRepresentation rdfRepresentation );
 }

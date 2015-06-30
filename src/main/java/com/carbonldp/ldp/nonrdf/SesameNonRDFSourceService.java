@@ -11,11 +11,11 @@ import com.carbonldp.web.exceptions.NotImplementedException;
 import java.io.File;
 import java.util.UUID;
 
-public class SesameNonRDFResourceService extends AbstractSesameLDPService implements NonRDFResourceService {
+public class SesameNonRDFSourceService extends AbstractSesameLDPService implements NonRDFSourceService {
 
 	FileRepository fileRepository;
 
-	public SesameNonRDFResourceService( TransactionWrapper transactionWrapper, RDFSourceRepository sourceRepository, ContainerRepository containerRepository, ACLRepository aclRepository, FileRepository fileRepository ) {
+	public SesameNonRDFSourceService( TransactionWrapper transactionWrapper, RDFSourceRepository sourceRepository, ContainerRepository containerRepository, ACLRepository aclRepository, FileRepository fileRepository ) {
 		super( transactionWrapper, sourceRepository, containerRepository, aclRepository );
 		this.fileRepository = fileRepository;
 	}

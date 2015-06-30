@@ -34,7 +34,7 @@ public abstract class AbstractRDFPostRequestHandler<E extends BasicContainer> ex
 	static {
 		List<? extends RDFNodeEnum> invalidTypes = Arrays.asList(
 			BasicContainerDescription.Resource.CLASS
-			// TODO: Add NON_RDF_RESOURCE, NRWRAPPER
+			// TODO: Add NON_RDF_SOURCE, NRWRAPPER
 		);
 		invalidTypesForRDFSources = invalidTypes.toArray( new RDFNodeEnum[invalidTypes.size()] );
 	}
@@ -45,7 +45,7 @@ public abstract class AbstractRDFPostRequestHandler<E extends BasicContainer> ex
 		List<? extends RDFNodeEnum> invalidTypes = Arrays.asList(
 			DirectContainerDescription.Resource.CLASS,
 			IndirectContainerDescription.Resource.CLASS
-			// TODO: Add NON_RDF_RESOURCE, NRWRAPPER
+			// TODO: Add NON_RDF_SOURCE, NRWRAPPER
 		);
 		invalidTypesForContainers = invalidTypes.toArray( new RDFNodeEnum[invalidTypes.size()] );
 	}
