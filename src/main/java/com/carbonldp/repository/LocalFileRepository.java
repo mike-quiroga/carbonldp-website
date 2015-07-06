@@ -43,6 +43,7 @@ public class LocalFileRepository implements FileRepository {
 		return fileUUID;
 	}
 
+	@Override
 	public void delete( UUID fileUUID ) {
 		File file = get( fileUUID );
 		boolean deleted;

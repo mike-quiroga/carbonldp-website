@@ -147,15 +147,15 @@ public abstract class AbstractGETRequestHandler extends AbstractLDPRequestHandle
 	}
 
 	protected ResponseEntity<Object> handleNonRDFRetrieval( URI targetURI ) {
-		// TODO: Implement it
-		// TODO: Check if the target resource is an RDFRepresentation. If not, throw BadRequestException
-		// TODO: Get RDFRepresentation from Service getRDFRepresentation( URI );
-		// TODO: Get RDFRepresentation's File from Service get( rdfRepresentation );
-
-		RDFRepresentation rdfRepresentation = null;
-		File file = null;
+		isRDFRepresentation( targetURI );
+		RDFRepresentation rdfRepresentation = new RDFRepresentation( sourceService.get( targetURI ) );
+		File file = nonRdfSourceService.getResource( rdfRepresentation );
 
 		return new ResponseEntity<>( new RDFRepresentationFileWrapper( rdfRepresentation, file ), HttpStatus.OK );
+	}
+
+	private void isRDFRepresentation( URI targetURI ) {
+		if ( ! nonRdfSourceService.isRDFRepresentation( targetURI ) ) throw new BadRequestException( "The URI provided does not belong to a nonRDFSource" );
 	}
 
 	protected ResponseEntity<Object> handleSPARQLEndpointRetrieval( URI targetURI ) {

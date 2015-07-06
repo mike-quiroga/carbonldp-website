@@ -24,8 +24,7 @@ public class SesameRDFRepresentationRepository extends AbstractSesameLDPReposito
 	@Override
 	public void create( RDFRepresentation rdfRepresentation, File file, String mediaType ) {
 		UUID fileUUID = fileRepository.save( file );
-
-		rdfRepresentation.setSize( file.getTotalSpace() );
+		rdfRepresentation.setSize( file.length() );
 		rdfRepresentation.setMediaType( mediaType );
 		rdfRepresentation.setUUID( fileUUID );
 

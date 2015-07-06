@@ -23,7 +23,7 @@ public class DefaultLDPController extends AbstractLDPController {
 	private BaseOPTIONSRequestHandler optionsHandler;
 	private BaseGETRequestHandler getHandler;
 	private BaseRDFPostRequestHandler rdfPOSTHandler;
-	private BaseNonRDFPostRequestHandler nonRDFPostHandler;
+	private BaseNonRDFPOSTRequestHandler nonRDFPostHandler;
 	private BasePUTRequestHandler putHandler;
 	private BasePATCHRequestHandler patchHandler;
 	private BaseDELETERequestHandler deleteHandler;
@@ -82,7 +82,7 @@ public class DefaultLDPController extends AbstractLDPController {
 	public void setRdfPOSTHandler( BaseRDFPostRequestHandler rdfPOSTHandler ) { this.rdfPOSTHandler = rdfPOSTHandler; }
 
 	@Autowired
-	public void setNonRDFPostHandler( BaseNonRDFPostRequestHandler baseNonRDFPostRequestHandler ) {this.nonRDFPostHandler = baseNonRDFPostRequestHandler;}
+	public void setNonRDFPostHandler( BaseNonRDFPOSTRequestHandler baseNonRDFPostRequestHandler ) {this.nonRDFPostHandler = baseNonRDFPostRequestHandler;}
 
 	@Autowired
 	public void setPutHandler( BasePUTRequestHandler putHandler ) { this.putHandler = putHandler; }

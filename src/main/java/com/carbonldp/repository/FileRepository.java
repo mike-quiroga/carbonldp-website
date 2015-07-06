@@ -9,4 +9,6 @@ public interface FileRepository {
 	public File get( UUID uuid );
 
 	public UUID save( File file );
+
+	public void delete( UUID uuid );
 }
