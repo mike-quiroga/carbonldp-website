@@ -42,6 +42,7 @@ public class WebConfig extends WebMvcConfigurerAdapter {
 
 	@Override
 	public void configureMessageConverters( List<HttpMessageConverter<?>> converters ) {
+		converters.add( nonRDFSourceMessageConverter() );
 		converters.add( rdfSourceMessageConverter() );
 		converters.add( rdfResourceMessageConverter() );
 		converters.add( modelMessageConverter() );
@@ -75,6 +76,11 @@ public class WebConfig extends WebMvcConfigurerAdapter {
 	@Bean
 	public RDFSourceMessageConverter rdfSourceMessageConverter() {
 		return new RDFSourceMessageConverter();
+	}
+
+	@Bean
+	public NonRDFSourceMessageConverter nonRDFSourceMessageConverter() {
+		return new NonRDFSourceMessageConverter();
 	}
 
 	@Bean
