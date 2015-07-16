@@ -33,6 +33,13 @@ public class SesameNonRDFSourceService extends AbstractSesameLDPService implemen
 	@Override
 	public boolean isRDFRepresentation( URI targetURI ) {
 		RDFSource source = sourceRepository.get( targetURI );
-		return source.getTypes().contains( RDFRepresentationDescription.Resource.NON_RDF_SOURCE.getURI() );
+		return source.getTypes().contains( RDFRepresentationDescription.Resource.CLASS.getURI() );
+	}
+
+	@Override
+	public void deleteResource( RDFRepresentation rdfRepresentation ) {
+		String uuidString = rdfRepresentation.getUUID();
+		UUID uuid = UUID.fromString( uuidString );
+		fileRepository.delete( uuid );
 	}
 }

@@ -50,8 +50,9 @@ public class SesameContainerService extends AbstractSesameLDPService implements 
 
 	@Override
 	public void createNonRDFResource( URI targetURI, URI resourceURI, File resourceFile, String mediaType ) {
-		// TODO: Check if the container exists (targetURI)
-		// TODO: Check if the resource exists (resourceURI)s
+		// TODO: Throw the right exceptions
+		if ( ! sourceRepository.exists( targetURI ) ) throw new RuntimeException( "The target URI does not exists" );
+		if ( sourceRepository.exists( resourceURI ) ) throw new RuntimeException( "The resource already exists" );
 
 		containerRepository.createNonRDFResource( targetURI, resourceURI, resourceFile, mediaType );
 	}

@@ -73,11 +73,20 @@ public abstract class AbstractGETRequestHandler extends AbstractLDPRequestHandle
 
 		RDFSource source = sourceService.get( targetURI );
 
-		// TODO: Add Allow Headers (depending on security)
+		addRDFSourceAllowHeaders( targetURI, response );
 
 		setAppliedPreferenceHeaders();
 		addTypeLinkHeader( InteractionModel.RDF_SOURCE );
 		return new ResponseEntity<>( source, HttpStatus.OK );
+	}
+
+	private void addRDFSourceAllowHeaders( URI targetURI, HttpServletResponse response ) {
+		// TODO: Base this on the security model
+		response.addHeader( HTTPHeaders.ALLOW, "GET, POST, PUT, PATCH, DELETE, OPTIONS" );
+
+		response.addHeader( HTTPHeaders.ACCEPT_POST, "application/ld+json, text/turtle" );
+		response.addHeader( HTTPHeaders.ACCEPT_PUT, "application/ld+json, text/turtle" );
+		response.addHeader( HTTPHeaders.ACCEPT_PATCH, "application/ld+json, text/turtle" );
 	}
 
 	protected ResponseEntity<Object> handleContainerRetrieval( URI targetURI ) {
@@ -89,11 +98,20 @@ public abstract class AbstractGETRequestHandler extends AbstractLDPRequestHandle
 
 		// TODO: Add Container related information to the request (number of contained resources and members)
 
-		// TODO: Add Allow Headers (depending on security)
+		addContainerAllowHeaders( targetURI, response );
 
 		setAppliedPreferenceHeaders();
 		addContainerTypeLinkHeader( container );
 		return new ResponseEntity<>( container, HttpStatus.OK );
+	}
+
+	private void addContainerAllowHeaders( URI targetURI, HttpServletResponse response ) {
+		// TODO: Base this on the security model
+		response.addHeader( HTTPHeaders.ALLOW, "GET, POST, PUT, PATCH, DELETE, OPTIONS" );
+
+		response.addHeader( HTTPHeaders.ACCEPT_POST, "application/ld+json, text/turtle" );
+		response.addHeader( HTTPHeaders.ACCEPT_PUT, "application/ld+json, text/turtle" );
+		response.addHeader( HTTPHeaders.ACCEPT_PATCH, "application/ld+json, text/turtle" );
 	}
 
 	private void ensureETagIsPresent( Container container, Set<ContainerRetrievalPreference> containerRetrievalPreferences ) {
@@ -151,7 +169,16 @@ public abstract class AbstractGETRequestHandler extends AbstractLDPRequestHandle
 		RDFRepresentation rdfRepresentation = new RDFRepresentation( sourceService.get( targetURI ) );
 		File file = nonRdfSourceService.getResource( rdfRepresentation );
 
+		addNonRDFAllowHeader( targetURI, response );
+
 		return new ResponseEntity<>( new RDFRepresentationFileWrapper( rdfRepresentation, file ), HttpStatus.OK );
+	}
+
+	private void addNonRDFAllowHeader( URI targetURI, HttpServletResponse response ) {
+		// TODO: Base this on the security model
+		response.addHeader( HTTPHeaders.ALLOW, "GET, PUT, DELETE, OPTIONS" );
+
+		response.addHeader( HTTPHeaders.ACCEPT_PUT, "*/*" );
 	}
 
 	private void isRDFRepresentation( URI targetURI ) {

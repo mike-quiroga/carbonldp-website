@@ -7,6 +7,7 @@ import com.carbonldp.ldp.nonrdf.RDFRepresentation;
 import com.carbonldp.ldp.nonrdf.RDFRepresentationFactory;
 import com.carbonldp.ldp.nonrdf.RDFRepresentationRepository;
 import com.carbonldp.ldp.sources.RDFSource;
+import com.carbonldp.ldp.sources.RDFSourceDescription;
 import com.carbonldp.ldp.sources.RDFSourceRepository;
 import com.carbonldp.rdf.RDFDocumentRepository;
 import com.carbonldp.rdf.RDFResourceRepository;
@@ -227,6 +228,8 @@ public class SesameContainerRepository extends AbstractSesameLDPRepository imple
 		DateTime creationTime = DateTime.now();
 
 		RDFRepresentation rdfRepresentation = RDFRepresentationFactory.create( resourceURI );
+
+		rdfRepresentation.add( RDFSourceDescription.Property.DEFAULT_INTERACTION_MODEL.getURI(), RDFSourceDescription.Resource.CLASS.getURI() );
 		rdfRepresentation.setTimestamps( creationTime );
 		rdfRepresentationRepository.create( rdfRepresentation, requestEntity, mediaType );
 

@@ -2,6 +2,7 @@ package com.carbonldp.ldp.web;
 
 import com.carbonldp.HTTPHeaders;
 import com.carbonldp.descriptions.APIPreferences;
+import com.carbonldp.ldp.nonrdf.RDFRepresentation;
 import com.carbonldp.models.EmptyResponse;
 import com.carbonldp.models.HTTPHeader;
 import com.carbonldp.models.HTTPHeaderValue;
@@ -36,6 +37,7 @@ public class AbstractDELETERequestHandler extends AbstractLDPRequestHandler {
 		Set<APIPreferences.InteractionModel> supportedInteractionModels = new HashSet<>();
 		supportedInteractionModels.add( APIPreferences.InteractionModel.RDF_SOURCE );
 		supportedInteractionModels.add( APIPreferences.InteractionModel.CONTAINER );
+		supportedInteractionModels.add( APIPreferences.InteractionModel.NON_RDF_SOURCE );
 		setSupportedInteractionModels( supportedInteractionModels );
 
 		setDefaultInteractionModel( APIPreferences.InteractionModel.CONTAINER );
@@ -81,8 +83,17 @@ public class AbstractDELETERequestHandler extends AbstractLDPRequestHandler {
 	}
 
 	protected ResponseEntity<Object> handleNonRDFDeletion( URI targetURI ) {
-		// TODO: Implement
-		throw new NotImplementedException();
+		isRDFRepresentation( targetURI );
+		RDFRepresentation rdfRepresentation = new RDFRepresentation( sourceService.get( targetURI ) );
+		nonRdfSourceService.deleteResource( rdfRepresentation);
+		sourceService.delete( targetURI);
+
+
+		return createSuccessfulDeleteResponse();
+	}
+
+	private void isRDFRepresentation( URI targetURI ) {
+		if ( ! nonRdfSourceService.isRDFRepresentation( targetURI ) ) throw new BadRequestException( "The URI provided does not belong to a nonRDFSource" );
 	}
 
 	protected ResponseEntity<Object> createSuccessfulDeleteResponse() {

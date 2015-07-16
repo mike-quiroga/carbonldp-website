@@ -173,7 +173,7 @@ public class SesameBasicContainerRepository extends AbstractTypedContainerReposi
 			"} WHERE {" + NEW_LINE +
 			TAB + "GRAPH ?containerURI {" + NEW_LINE +
 			TAB + TAB + getHasMemberRelationSPARQL( "?containerURI", "?hasMemberRelation", 2 ) + NEW_LINE +
-			TAB + TAB + "?containerURI ?hasMemberRelation ?containedUR.I" + NEW_LINE +
+			TAB + TAB + "?containerURI ?hasMemberRelation ?containedURI." + NEW_LINE +
 			TAB + "}." + NEW_LINE +
 			TAB + "OPTIONAL {" + NEW_LINE +
 			TAB + TAB + "GRAPH ?containedURI {" + NEW_LINE +

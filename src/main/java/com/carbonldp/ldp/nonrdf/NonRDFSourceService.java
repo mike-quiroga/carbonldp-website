@@ -9,4 +9,6 @@ public interface NonRDFSourceService {
 	public File getResource( RDFRepresentation rdfRepresentation );
 
 	public boolean isRDFRepresentation( URI targetURI );
+
+	public void deleteResource( RDFRepresentation rdfRepresentation );
 }
