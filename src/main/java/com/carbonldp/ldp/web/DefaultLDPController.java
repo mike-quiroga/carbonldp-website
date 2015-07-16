@@ -30,8 +30,7 @@ public class DefaultLDPController extends AbstractLDPController {
 
 	@RequestMapping( method = RequestMethod.OPTIONS )
 	public ResponseEntity<Object> handleOPTIONS( HttpServletRequest request, HttpServletResponse response ) {
-		// TODO: Implement
-		throw new NotImplementedException();
+		return optionsHandler.handleRequest( request, response );
 	}
 
 	@RequestMapping( method = {RequestMethod.GET, RequestMethod.HEAD} )

@@ -5,8 +5,8 @@
 # ----- Project ignores
 
 reports/
-
 test-output/
+playground/
 
 # IntelliJ
 .idea/

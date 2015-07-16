@@ -1,5 +1,6 @@
 package com.carbonldp.ldp.nonrdf;
 
+import com.carbonldp.Consts;
 import com.carbonldp.HTTPHeaders;
 import com.carbonldp.http.Link;
 import com.carbonldp.ldp.web.AbstractGETRequestHandler;
@@ -51,18 +52,8 @@ public class NonRDFSourceMessageConverter implements HttpMessageConverter<Abstra
 
 	private void addDescribedByHeader( HttpHeaders headers, RDFRepresentation rdfRepresentation ) {
 		Link link = new Link( rdfRepresentation.getURI().stringValue() );
-		link.addRelationship( "describedby" );
+		link.addRelationshipType( Consts.DESCRIBED_BY );
 		link.setAnchor( rdfRepresentation.getURI().stringValue() );
-
-//		String describedBy = "<" + rdfRepresentation.getURI().stringValue() + ">";
-//
-//		HTTPHeaderValue headerValue = new HTTPHeaderValue();
-//		headerValue.setMainValue( describedBy );
-//		headerValue.setExtendingKey( "rel" );
-//		headerValue.setExtendingValue( "describedby" );
-//
-//		String linkHeader = headerValue.toString();
-//		linkHeader += "; anchor=" + rdfRepresentation.getURI().stringValue();
 
 		headers.add( HTTPHeaders.LINK, link.toString() );
 	}
@@ -83,20 +74,12 @@ public class NonRDFSourceMessageConverter implements HttpMessageConverter<Abstra
 
 	private void addLinkTypeHeaders( HttpHeaders headers ) {
 		Link link = new Link( RDFResourceDescription.Resource.CLASS.getURI().stringValue() );
-		link.addRelationship( "type" );
-
-//		HTTPHeaderValue header = new HTTPHeaderValue();
-//
-//		header.setMainValue( RDFResourceDescription.Resource.CLASS.getURI().stringValue() );
-//		header.setExtendingKey( "rel" );
-//		header.setExtendingValue( "type" );
+		link.addRelationshipType( Consts.TYPE );
 
 		headers.add( HTTPHeaders.LINK, link.toString() );
 
 		link = new Link( RDFRepresentationDescription.Resource.NON_RDF_SOURCE.getURI().stringValue() );
-		link.addRelationship( "type" );
-
-//		header.setMainValue( RDFRepresentationDescription.Resource.NON_RDF_SOURCE.getURI().stringValue() );
+		link.addRelationshipType( Consts.TYPE );
 
 		headers.add( HTTPHeaders.LINK, link.toString() );
 	}

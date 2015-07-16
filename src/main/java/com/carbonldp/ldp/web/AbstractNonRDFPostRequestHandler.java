@@ -1,7 +1,9 @@
 package com.carbonldp.ldp.web;
 
+import com.carbonldp.Consts;
 import com.carbonldp.HTTPHeaders;
 import com.carbonldp.descriptions.APIPreferences;
+import com.carbonldp.http.Link;
 import com.carbonldp.models.EmptyResponse;
 import com.carbonldp.web.exceptions.BadRequestException;
 import com.carbonldp.web.exceptions.NotFoundException;
@@ -110,16 +112,26 @@ public abstract class AbstractNonRDFPOSTRequestHandler extends AbstractLDPReques
 	private ResponseEntity<Object> generateCreatedResponse( URI resourceURI, DateTime creationTime ) {
 		response.setHeader( HTTPHeaders.LOCATION, resourceURI.stringValue() );
 		if ( creationTime != null ) setETagHeader( creationTime );
+
+		addDescribedByHeader( response, resourceURI );
 		return new ResponseEntity<>( new EmptyResponse(), HttpStatus.CREATED );
+	}
+
+	private void addDescribedByHeader( HttpServletResponse response, URI resourceURI ) {
+		Link link = new Link( resourceURI.stringValue() );
+		link.addRelationshipType( Consts.DESCRIBED_BY );
+		link.setAnchor( resourceURI.stringValue() );
+
+		response.addHeader( HTTPHeaders.LINK, link.toString() );
 	}
 
 	private URI forgeURI( URI parentURI, HttpServletRequest request ) {
 		String parentURIString = parentURI.stringValue();
-		String slug = request.getHeader( "Slug" );
+		String slug = request.getHeader( HTTPHeaders.SLUG );
 		if ( slug == null || slug.isEmpty() ) slug = createRandomSlug();
-		if ( parentURIString.endsWith( "/" ) ) slug = parentURIString.concat( slug );
-		else slug = parentURIString.concat( "/" + slug );
-		if ( ! slug.endsWith( "/" ) ) slug += "/";
+		if ( parentURIString.endsWith( Consts.SLASH ) ) slug = parentURIString.concat( slug );
+		else slug = parentURIString.concat( Consts.SLASH + slug );
+		if ( ! slug.endsWith( Consts.SLASH ) ) slug += Consts.SLASH;
 
 		return new URIImpl( slug );
 	}

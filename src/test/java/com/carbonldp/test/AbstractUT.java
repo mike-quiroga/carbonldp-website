@@ -29,6 +29,8 @@ public abstract class AbstractUT {
 	protected final String testAppURI = "http://carbonldp.com/apps/test-blog";
 	protected final URI rootContainerURI = new URIImpl( testAppURI + "/" );
 	protected final URI postsContainerURI = new URIImpl( testAppURI + "/posts/" );
+	protected final String appFileDirectory = "/opt/carbon-test";
+	protected final String platformFileDirectory = "/opt/carbon-test/platform/repository";
 
 	@BeforeClass
 	protected void init() {

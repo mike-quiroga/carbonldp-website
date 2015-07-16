@@ -1,8 +1,8 @@
 package com.carbonldp.rdf;
 
+import com.carbonldp.Consts;
 import com.carbonldp.HTTPHeaders;
-import com.carbonldp.models.HTTPHeaderValue;
-import com.carbonldp.utils.HTTPHeaderUtil;
+import com.carbonldp.http.Link;
 import com.carbonldp.web.ModelMessageConverter;
 import org.openrdf.model.Model;
 import org.springframework.http.HttpHeaders;
@@ -29,7 +29,8 @@ public class RDFResourceMessageConverter extends ModelMessageConverter<RDFResour
 	}
 
 	private void addRDFResourceLinkHeader( HttpHeaders headers ) {
-		HTTPHeaderValue typeHeader = HTTPHeaderUtil.createLinkTypeHeader( RDFResourceDescription.Resource.CLASS.getURI() );
-		headers.add( HTTPHeaders.LINK, typeHeader.toString() );
+		Link link = new Link( RDFResourceDescription.Resource.CLASS.getURI().stringValue() );
+		link.addRelationshipType( Consts.TYPE );
+		headers.add( HTTPHeaders.LINK, link.toString() );
 	}
 }

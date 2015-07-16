@@ -61,22 +61,32 @@ public abstract class AbstractIT extends AbstractTestNGSpringContextTests {
 	protected final Logger LOG = LoggerFactory.getLogger( this.getClass() );
 
 	private final String propertiesFile = "config.properties";
-	private final String platformRepositoryLocationProperty = "repositories.platform.directory";
-	private final String appsRepositoryLocationProperty = "repositories.apps.directory";
+	private final String platformRepositoryLocationProperty = "repositories.platform.sesame.directory";
+	private final String appsRepositoryLocationProperty = "repositories.apps.sesame.directory";
+	private final String appsRepositoryFilesLocationProperty = "repositories.apps.files.directory";
+	private final String platformRepositoryFilesLocationProperty = "repositories.platform.files.directory";
 
 	private final String testDataLocation = "test-model.trig";
 	private final String platformDefaultDataLocation = "platform-default.trig";
 
-	private Properties properties;
+	protected Properties properties;
 
 	protected AbstractIT() {
 		this.properties = loadProperties( propertiesFile );
 		PropertiesUtil.resolveProperties( properties );
+		if ( ! Vars.isInitialized() ) Vars.init( properties );
 		erasePlatformRepositoryDirectory( properties );
 		eraseAppsRepositoryDirectory( properties );
 		loadPlatformRepositoryDefaultData( properties );
-		if ( ! Vars.isInitialized() )
-			Vars.init( properties );
+		createRepositoryFilesDirectory( appsRepositoryFilesLocationProperty );
+		createRepositoryFilesDirectory( platformRepositoryFilesLocationProperty );
+
+	}
+
+	private void createRepositoryFilesDirectory( String appsRepositoryFilesLocationProperty ) {
+		File dir = new File( properties.getProperty( appsRepositoryFilesLocationProperty ) );
+		boolean done = dir.mkdir();
+
 	}
 
 	@BeforeSuite
@@ -140,7 +150,7 @@ public abstract class AbstractIT extends AbstractTestNGSpringContextTests {
 
 	private void deleteDirectory( File directory ) throws IOException {
 		if ( ! directory.isDirectory() ) {
-			throw new RuntimeException( "The isn't pointing to a directory." );
+			return;
 		}
 
 		if ( directory.list().length != 0 ) {
@@ -234,7 +244,6 @@ public abstract class AbstractIT extends AbstractTestNGSpringContextTests {
 		} catch ( BadCredentialsException e ) {
 			throw new RuntimeException( e );
 		}
-
 		SecurityContextHolder.getContext().setAuthentication( authToken );
 
 		// This if is needed here, lines above this are neccesary to run every time before each class.
