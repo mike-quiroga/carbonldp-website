@@ -24,9 +24,9 @@ import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
 
-public abstract class AbstractNonRDFPOSTRequestHandler extends AbstractLDPRequestHandler {
+public abstract class AbstractNonRDFPostRequestHandler extends AbstractLDPRequestHandler {
 
-	public AbstractNonRDFPOSTRequestHandler() {
+	public AbstractNonRDFPostRequestHandler() {
 		Set<APIPreferences.InteractionModel> supportedInteractionModels = new HashSet<>();
 		supportedInteractionModels.add( APIPreferences.InteractionModel.CONTAINER );
 		setSupportedInteractionModels( supportedInteractionModels );

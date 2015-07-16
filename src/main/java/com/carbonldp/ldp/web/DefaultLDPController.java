@@ -23,7 +23,7 @@ public class DefaultLDPController extends AbstractLDPController {
 	private BaseOPTIONSRequestHandler optionsHandler;
 	private BaseGETRequestHandler getHandler;
 	private BaseRDFPostRequestHandler rdfPOSTHandler;
-	private BaseNonRDFPOSTRequestHandler nonRDFPostHandler;
+	private BaseNonRDFPostRequestHandler nonRDFPostHandler;
 	private BasePUTRequestHandler putHandler;
 	private BasePATCHRequestHandler patchHandler;
 	private BaseDELETERequestHandler deleteHandler;
@@ -47,8 +47,8 @@ public class DefaultLDPController extends AbstractLDPController {
 	}
 
 	@RequestMapping( method = RequestMethod.POST )
-	public ResponseEntity<Object> handleNonRDFPost( InputStream bodyInputStram, HttpServletRequest request, HttpServletResponse response ) {
-		return nonRDFPostHandler.handleRequest( bodyInputStram, request, response );
+	public ResponseEntity<Object> handleNonRDFPost( InputStream bodyInputStream, HttpServletRequest request, HttpServletResponse response ) {
+		return nonRDFPostHandler.handleRequest( bodyInputStream, request, response );
 	}
 
 	@RequestMapping( method = RequestMethod.POST, consumes = "multipart/*" )
@@ -81,7 +81,7 @@ public class DefaultLDPController extends AbstractLDPController {
 	public void setRdfPOSTHandler( BaseRDFPostRequestHandler rdfPOSTHandler ) { this.rdfPOSTHandler = rdfPOSTHandler; }
 
 	@Autowired
-	public void setNonRDFPostHandler( BaseNonRDFPOSTRequestHandler baseNonRDFPostRequestHandler ) {this.nonRDFPostHandler = baseNonRDFPostRequestHandler;}
+	public void setNonRDFPostHandler( BaseNonRDFPostRequestHandler baseNonRDFPostRequestHandler ) {this.nonRDFPostHandler = baseNonRDFPostRequestHandler;}
 
 	@Autowired
 	public void setPutHandler( BasePUTRequestHandler putHandler ) { this.putHandler = putHandler; }
