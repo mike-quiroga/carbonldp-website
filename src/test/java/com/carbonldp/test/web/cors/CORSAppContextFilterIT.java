@@ -1,12 +1,16 @@
 package com.carbonldp.test.web.cors;
 
+import com.carbonldp.Consts;
 import com.carbonldp.apps.App;
 import com.carbonldp.apps.AppRepository;
 import com.carbonldp.apps.context.AppContext;
 import com.carbonldp.apps.context.AppContextHolder;
+import com.carbonldp.namespaces.C;
 import com.carbonldp.test.AbstractIT;
 import org.mockito.Mockito;
+import org.openrdf.model.ValueFactory;
 import org.openrdf.model.impl.URIImpl;
+import org.openrdf.model.impl.ValueFactoryImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.testng.annotations.Test;
@@ -21,6 +25,8 @@ public class CORSAppContextFilterIT extends AbstractIT {
 	@Qualifier( "corsAppContextFilter" )
 	private Filter corsAppContextFilter;
 
+	ValueFactory valueFactory = new ValueFactoryImpl();
+
 	@Autowired
 	private AppRepository appRepository;
 
@@ -29,12 +35,13 @@ public class CORSAppContextFilterIT extends AbstractIT {
 
 	private void setUp() {
 		app = appRepository.findByRootContainer( new URIImpl( "http://local.carbonldp.com/apps/test-blog/" ) );
-		app.addDomain( "http://www.test.com/" );
+		app.addDomain( valueFactory.createLiteral( "http://www.test.com/", Consts.XSD.STRING.getURI() ) );
+		app.addDomain( valueFactory.createLiteral( "(http://|https://)www\\.regex\\d\\.com/[\\s\\S]*", C.Class.REGULAR_EXPRESSION.getURI() ) );
 		context.setApplication( null );
 	}
 
 	@Test
-	public void filterAllowTest() {
+	public void filterAllowExactDomainTest() {
 		HttpServletRequest request = Mockito.mock( HttpServletRequest.class );
 		HttpServletResponse response = Mockito.mock( HttpServletResponse.class );
 		FilterChain chain = Mockito.mock( FilterChain.class );
@@ -76,5 +83,50 @@ public class CORSAppContextFilterIT extends AbstractIT {
 		Mockito.verify( response, Mockito.never() ).addHeader( "Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE, OPTIONS" );
 		context.setApplication( null );
 
+	}
+
+	//TODO: accept all, check with complete address, check with regex
+
+	@Test
+	public void filterAllowRegExTest() {
+		HttpServletRequest request = Mockito.mock( HttpServletRequest.class );
+		HttpServletResponse response = Mockito.mock( HttpServletResponse.class );
+		FilterChain chain = Mockito.mock( FilterChain.class );
+		Mockito.when( request.getHeader( "Origin" ) ).thenReturn( "http://www.regex8.com/blog/posts/post/comment/" );
+		Mockito.when( request.getHeader( "Access-Control-Request-Method" ) ).thenReturn( "OPTIONS" );
+
+		setUp();
+		applicationContextTemplate.runInAppContext( app, () -> {
+			try {
+				corsAppContextFilter.doFilter( request, response, chain );
+			} catch ( Exception e ) {
+				throw new RuntimeException( "Filter not executed correctly", e );
+			}
+		} );
+		Mockito.verify( response ).addHeader( "Access-Control-Allow-Origin", "http://www.regex8.com/blog/posts/post/comment/" );
+		Mockito.verify( response ).addHeader( "Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE, OPTIONS" );
+		context.setApplication( null );
+	}
+
+	@Test
+	public void filterAllowAllTest() {
+		HttpServletRequest request = Mockito.mock( HttpServletRequest.class );
+		HttpServletResponse response = Mockito.mock( HttpServletResponse.class );
+		FilterChain chain = Mockito.mock( FilterChain.class );
+		Mockito.when( request.getHeader( "Origin" ) ).thenReturn( "http://www.all-allowed-origins.com/" );
+		Mockito.when( request.getHeader( "Access-Control-Request-Method" ) ).thenReturn( "OPTIONS" );
+
+		setUp();
+		app.addDomain( C.Class.ALL_ORIGINS.getURI() );
+		applicationContextTemplate.runInAppContext( app, () -> {
+			try {
+				corsAppContextFilter.doFilter( request, response, chain );
+			} catch ( Exception e ) {
+				throw new RuntimeException( "Filter not executed correctly", e );
+			}
+		} );
+		Mockito.verify( response ).addHeader( "Access-Control-Allow-Origin", "http://www.all-allowed-origins.com/" );
+		Mockito.verify( response ).addHeader( "Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE, OPTIONS" );
+		context.setApplication( null );
 	}
 }

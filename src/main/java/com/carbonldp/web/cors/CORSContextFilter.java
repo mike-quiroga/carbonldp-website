@@ -18,6 +18,7 @@ public abstract class CORSContextFilter extends AbstractUniqueFilter {
 		if ( ! isOriginAllowed( origin ) ) return;
 
 		response.addHeader( "Access-Control-Allow-Credentials", "true" );
+		
 		response.addHeader( "Access-Control-Allow-Origin", origin );
 		if ( isPreflightRequest( request ) ) addPreflightHeaders( request, response );
 	}
@@ -32,6 +33,6 @@ public abstract class CORSContextFilter extends AbstractUniqueFilter {
 
 	private void addPreflightHeaders( HttpServletRequest request, HttpServletResponse response ) {
 		response.addHeader( "Access-Control-Allow-Headers", request.getHeader( "Access-Control-Request-Headers" ) );
-		response.addHeader( "Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE, OPTIONS" );
+		response.addHeader( "Access-Control-Allow-Methods", "GET, HEAD, POST, PUT, PATCH, DELETE, OPTIONS" );
 	}
 }
