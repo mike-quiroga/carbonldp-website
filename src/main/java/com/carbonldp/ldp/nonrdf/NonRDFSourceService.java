@@ -11,4 +11,6 @@ public interface NonRDFSourceService {
 	public boolean isRDFRepresentation( URI targetURI );
 
 	public void deleteResource( RDFRepresentation rdfRepresentation );
+
+	public void replace( RDFRepresentation rdfRepresentation, File requestEntity );
 }

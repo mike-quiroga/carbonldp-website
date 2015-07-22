@@ -18,9 +18,9 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Transactional
-public abstract class AbstractPUTRequestHandler<E extends RDFResource> extends AbstractRequestWithBodyHandler<E> {
+public abstract class AbstractRDFPutRequestHandler<E extends RDFResource> extends AbstractRequestWithBodyHandler<E> {
 
-	public AbstractPUTRequestHandler() {
+	public AbstractRDFPutRequestHandler() {
 		Set<APIPreferences.InteractionModel> supportedInteractionModels = new HashSet<>();
 		supportedInteractionModels.add( APIPreferences.InteractionModel.RDF_SOURCE );
 		setSupportedInteractionModels( supportedInteractionModels );

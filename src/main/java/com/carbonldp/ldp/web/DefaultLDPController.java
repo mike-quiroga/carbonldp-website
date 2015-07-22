@@ -24,7 +24,8 @@ public class DefaultLDPController extends AbstractLDPController {
 	private BaseGETRequestHandler getHandler;
 	private BaseRDFPostRequestHandler rdfPOSTHandler;
 	private BaseNonRDFPostRequestHandler nonRDFPostHandler;
-	private BasePUTRequestHandler putHandler;
+	private BaseRDFPutRequestHandler putRDFHandler;
+	private BaseNonRDFPutRequestHandler putNonRDFHandler;
 	private BasePATCHRequestHandler patchHandler;
 	private BaseDELETERequestHandler deleteHandler;
 
@@ -56,9 +57,17 @@ public class DefaultLDPController extends AbstractLDPController {
 		throw new NotImplementedException();
 	}
 
+	@RequestMapping( method = RequestMethod.PUT, consumes = {
+		"application/ld+json",
+		"text/turtle"
+	} )
+	public ResponseEntity<Object> handleRDFPUT( @RequestBody AbstractModel requestModel, HttpServletRequest request, HttpServletResponse response ) {
+		return putRDFHandler.handleRequest( requestModel, request, response );
+	}
+
 	@RequestMapping( method = RequestMethod.PUT )
-	public ResponseEntity<Object> handlePUT( @RequestBody AbstractModel requestModel, HttpServletRequest request, HttpServletResponse response ) {
-		return putHandler.handleRequest( requestModel, request, response );
+	public ResponseEntity<Object> handleNonRDFPUT( InputStream bodyInputStream, HttpServletRequest request, HttpServletResponse response ) {
+		return putNonRDFHandler.handleRequest( bodyInputStream, request, response );
 	}
 
 	@RequestMapping( method = RequestMethod.PATCH )
@@ -84,7 +93,10 @@ public class DefaultLDPController extends AbstractLDPController {
 	public void setNonRDFPostHandler( BaseNonRDFPostRequestHandler baseNonRDFPostRequestHandler ) {this.nonRDFPostHandler = baseNonRDFPostRequestHandler;}
 
 	@Autowired
-	public void setPutHandler( BasePUTRequestHandler putHandler ) { this.putHandler = putHandler; }
+	public void setPutRDFHandler( BaseRDFPutRequestHandler putRDFHandler ) { this.putRDFHandler = putRDFHandler; }
+
+	@Autowired
+	public void setPutNonRDFHandler( BaseNonRDFPutRequestHandler putNonRDFHandler ) {this.putNonRDFHandler = putNonRDFHandler;}
 
 	@Autowired
 	public void setPatchHandler( BasePATCHRequestHandler patchHandler ) { this.patchHandler = patchHandler; }

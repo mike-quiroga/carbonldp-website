@@ -19,6 +19,7 @@ import com.carbonldp.ldp.sources.RDFSourceService;
 import com.carbonldp.ldp.sources.SesameRDFSourceService;
 import com.carbonldp.platform.api.PlatformAPIRepository;
 import com.carbonldp.platform.api.PlatformAPIService;
+import com.carbonldp.rdf.RDFResourceRepository;
 import com.carbonldp.repository.FileRepository;
 import com.carbonldp.spring.TransactionWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +40,9 @@ public class ServicesConfig {
 	private FileRepository fileRepository;
 	@Autowired
 	private ACLRepository aclRepository;
+
+	@Autowired
+	private RDFResourceRepository resourceRepository;
 
 	@Bean
 	public PlatformAPIService platformAPIService() {
@@ -73,6 +77,6 @@ public class ServicesConfig {
 	//TODO add LocalFileRepository into properties
 	@Bean
 	public NonRDFSourceService nonRDFResourceService() {
-		return new SesameNonRDFSourceService( transactionWrapper(), sourceRepository, containerRepository, aclRepository, fileRepository );
+		return new SesameNonRDFSourceService( transactionWrapper(), sourceRepository, containerRepository, aclRepository, fileRepository, resourceRepository );
 	}
 }

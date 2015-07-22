@@ -6,7 +6,7 @@ import com.carbonldp.web.RequestHandler;
 import org.openrdf.model.URI;
 
 @RequestHandler
-public class BasePUTRequestHandler extends AbstractPUTRequestHandler<RDFSource> {
+public class BaseRDFPutRequestHandler extends AbstractRDFPutRequestHandler<RDFSource> {
 	@Override
 	protected RDFSource getDocumentResourceView( RDFResource requestDocumentResource ) {
 		return new RDFSource( requestDocumentResource );
