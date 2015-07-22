@@ -1,9 +1,11 @@
 package com.carbonldp.ldp.web;
 
+import com.carbonldp.Consts;
 import com.carbonldp.HTTPHeaders;
 import com.carbonldp.Vars;
 import com.carbonldp.config.ConfigurationRepository;
 import com.carbonldp.descriptions.APIPreferences.InteractionModel;
+import com.carbonldp.http.Link;
 import com.carbonldp.ldp.containers.Container;
 import com.carbonldp.ldp.containers.ContainerDescription;
 import com.carbonldp.ldp.containers.ContainerFactory;
@@ -134,8 +136,10 @@ public abstract class AbstractLDPRequestHandler extends AbstractRequestHandler {
 	}
 
 	protected void addTypeLinkHeader( RDFNodeEnum interactionModel ) {
-		HTTPHeaderValue header = HTTPHeaderUtil.createLinkTypeHeader( interactionModel.getURI() );
-		response.addHeader( HTTPHeaders.LINK, header.toString() );
+		Link link = new Link( interactionModel.getURI().stringValue() );
+		link.addRelationshipType( Consts.TYPE );
+
+		response.addHeader( HTTPHeaders.LINK, link.toString() );
 	}
 
 	protected void addContainerTypeLinkHeader( Container container ) {
