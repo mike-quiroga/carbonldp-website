@@ -5,6 +5,9 @@ import com.carbonldp.ldp.nonrdf.NonRDFSourceMessageConverter;
 import com.carbonldp.ldp.web.RDFSourceMessageConverter;
 import com.carbonldp.log.ControllerCallsLogger;
 import com.carbonldp.rdf.RDFResourceMessageConverter;
+import com.carbonldp.sparql.SPARQLBooleanMessageConverter;
+import com.carbonldp.sparql.SPARQLGraphMessageConverter;
+import com.carbonldp.sparql.SPARQLTupleMessageConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.*;
 import org.springframework.http.converter.ByteArrayHttpMessageConverter;
@@ -42,11 +45,14 @@ public class WebConfig extends WebMvcConfigurerAdapter {
 
 	@Override
 	public void configureMessageConverters( List<HttpMessageConverter<?>> converters ) {
+		converters.add( sparqlTupleMessageConverter() );
 		converters.add( nonRDFSourceMessageConverter() );
 		converters.add( rdfSourceMessageConverter() );
 		converters.add( rdfResourceMessageConverter() );
 		converters.add( modelMessageConverter() );
 		converters.add( emptyResponseMessageConverter() );
+		converters.add( sparqlBooleanMessageConverter() );
+		converters.add( sparqlGraphMessageConverter() );
 		converters.add( new ByteArrayHttpMessageConverter() );
 		converters.add( new StringHttpMessageConverter() );
 		converters.add( new FormHttpMessageConverter() );
@@ -94,7 +100,17 @@ public class WebConfig extends WebMvcConfigurerAdapter {
 	}
 
 	@Bean
-	public NonRDFSourceMessageConverter nonRDFResourceMessageConverter() {
-		return new NonRDFSourceMessageConverter();
+	public SPARQLTupleMessageConverter sparqlTupleMessageConverter() {
+		return new SPARQLTupleMessageConverter();
+	}
+
+	@Bean
+	public SPARQLGraphMessageConverter sparqlGraphMessageConverter() {
+		return new SPARQLGraphMessageConverter();
+	}
+
+	@Bean
+	public SPARQLBooleanMessageConverter sparqlBooleanMessageConverter() {
+		return new SPARQLBooleanMessageConverter();
 	}
 }

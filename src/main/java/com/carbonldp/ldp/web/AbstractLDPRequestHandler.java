@@ -17,6 +17,7 @@ import com.carbonldp.models.HTTPHeaderValue;
 import com.carbonldp.rdf.RDFNodeEnum;
 import com.carbonldp.rdf.RDFResource;
 import com.carbonldp.rdf.URIObject;
+import com.carbonldp.sparql.SPARQLService;
 import com.carbonldp.utils.*;
 import com.carbonldp.web.AbstractRequestHandler;
 import com.carbonldp.web.exceptions.BadRequestException;
@@ -49,6 +50,7 @@ public abstract class AbstractLDPRequestHandler extends AbstractRequestHandler {
 	protected RDFSourceService sourceService;
 	protected ContainerService containerService;
 	protected NonRDFSourceService nonRdfSourceService;
+	protected SPARQLService sparqlService;
 
 	protected HttpServletRequest request;
 	protected HttpServletResponse response;
@@ -215,6 +217,11 @@ public abstract class AbstractLDPRequestHandler extends AbstractRequestHandler {
 	@Autowired
 	public void setNonRDFResourceService( NonRDFSourceService nonRdfSourceService ) {
 		this.nonRdfSourceService = nonRdfSourceService;
+	}
+
+	@Autowired
+	public void setSparqlService( SPARQLService sparqlService ) {
+		this.sparqlService = sparqlService;
 	}
 
 }
