@@ -48,8 +48,8 @@ public abstract class AbstractRequestWithBodyHandler<E extends RDFResource> exte
 		Set<Resource> subjects = requestModel.subjects();
 		validateRequestResourcesNumber( subjects.size() );
 
-		for ( Resource subject : subjects )
-			validateRequestResource( subject );
+//		for ( Resource subject : subjects )
+//			validateRequestResource( subject );
 	}
 
 	protected void validateRequestResourcesNumber( int number ) {

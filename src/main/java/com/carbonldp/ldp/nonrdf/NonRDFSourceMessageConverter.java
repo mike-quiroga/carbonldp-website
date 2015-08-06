@@ -106,7 +106,7 @@ public class NonRDFSourceMessageConverter implements HttpMessageConverter<Abstra
 
 	@Override
 	public AbstractGETRequestHandler.RDFRepresentationFileWrapper read( Class clazz, HttpInputMessage httpInputMessage ) throws IOException, HttpMessageNotReadableException {
-		return null;
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
