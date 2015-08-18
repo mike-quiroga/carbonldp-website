@@ -13,22 +13,73 @@ import org.openrdf.sail.nativerdf.NativeStore;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 
 public class Install {
-
-	public static String propertiesFile = "local-config.properties";
+	public static String propertiesFile = "-config.properties";
 	public static String defaultResourcesFile = "platform-default.trig";
+	private static Map<String, String> defaultArguments = new HashMap<String, String>() {{
+		put( "env", "local" );
+	}};
 
 	public static void main( String[] args ) {
-		Install install = new Install();
+		Map<String, String> arguments = parseArguments( args );
+
+		Install install = new Install( arguments );
+
 		install.execute();
 	}
 
-	private Properties properties;
+	private static Map<String, String> parseArguments( String[] args ) {
+		Map<String, String> arguments = new HashMap<>( Install.defaultArguments );
 
-	private Install() {
-		this.properties = readPropertiesFile( propertiesFile );
+		for ( int i = 0, length = args.length; i < length; i++ ) {
+			String argument = args[i];
+			if ( Install.isKey( argument ) ) {
+				String key = Install.getArgumentKey( argument );
+				String value = Install.getArgumentValue( args[++ i] );
+				arguments.put( key, value );
+			} else if ( Install.isFlag( argument ) ) {
+				String flag = Install.getArgumentFlag( argument );
+				arguments.put( flag, "true" );
+			}
+		}
+
+		return arguments;
+	}
+
+	private static String getArgumentFlag( String argument ) {
+		if ( argument.length() <= 2 ) throw new IllegalArgumentException( "A name needs to be specified when adding a flag." );
+		return argument.substring( 2 );
+	}
+
+	private static String getArgumentKey( String argument ) {
+		if ( argument.length() <= 1 ) throw new IllegalArgumentException( "The key of an argument cannot be empty." );
+		return argument.substring( 1 );
+	}
+
+	private static String getArgumentValue( String arg ) {
+		if ( arg.startsWith( "-" ) ) throw new IllegalArgumentException( "An argument value cannot start with '-'." );
+
+		return arg;
+	}
+
+	private static boolean isKey( String argument ) {
+		return argument.startsWith( "-" ) && ! argument.startsWith( "--" );
+	}
+
+	private static boolean isFlag( String argument ) {
+		return argument.startsWith( "--" );
+	}
+
+	private Properties properties;
+	private String environment;
+
+	private Install( Map<String, String> arguments ) {
+		this.setEnvironment( arguments.get( "env" ) );
+		this.properties = readPropertiesFile( this.environment.concat( Install.propertiesFile ) );
 	}
 
 	private void execute() {
@@ -39,7 +90,7 @@ public class Install {
 
 	private Properties readPropertiesFile( String propertiesFile ) {
 		Properties properties = new Properties();
-		InputStream inputStream = null;
+		InputStream inputStream;
 
 		inputStream = getClass().getClassLoader().getResourceAsStream( propertiesFile );
 
@@ -114,5 +165,9 @@ public class Install {
 				throw new RuntimeException( "The connection couldn't be closed.", e );
 			}
 		}
+	}
+
+	public void setEnvironment( String environment ) {
+		this.environment = environment;
 	}
 }
