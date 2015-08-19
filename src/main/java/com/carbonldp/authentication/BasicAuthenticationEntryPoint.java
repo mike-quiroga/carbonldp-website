@@ -13,7 +13,7 @@ public class BasicAuthenticationEntryPoint implements AuthenticationEntryPoint {
 	private String realmName;
 
 	@Override
-	public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
+	public void commence( HttpServletRequest request, HttpServletResponse response, AuthenticationException authException ) throws IOException, ServletException {
 		response.addHeader( "WWW-Authenticate", "Basic realm=\"" + realmName + "\"" );
 		response.setStatus( HttpStatus.SC_UNAUTHORIZED );
 	}
@@ -22,7 +22,7 @@ public class BasicAuthenticationEntryPoint implements AuthenticationEntryPoint {
 		return realmName;
 	}
 
-	public void setRealmName(String realmName) {
+	public void setRealmName( String realmName ) {
 		this.realmName = realmName;
 	}
 }

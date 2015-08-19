@@ -85,9 +85,8 @@ public class AbstractDELETERequestHandler extends AbstractLDPRequestHandler {
 	protected ResponseEntity<Object> handleNonRDFDeletion( URI targetURI ) {
 		isRDFRepresentation( targetURI );
 		RDFRepresentation rdfRepresentation = new RDFRepresentation( sourceService.get( targetURI ) );
-		nonRdfSourceService.deleteResource( rdfRepresentation);
-		sourceService.delete( targetURI);
-
+		nonRdfSourceService.deleteResource( rdfRepresentation );
+		sourceService.delete( targetURI );
 
 		return createSuccessfulDeleteResponse();
 	}

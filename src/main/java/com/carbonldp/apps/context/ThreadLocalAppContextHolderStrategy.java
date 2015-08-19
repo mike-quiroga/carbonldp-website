@@ -23,7 +23,7 @@ public final class ThreadLocalAppContextHolderStrategy implements AppContextHold
 		return context;
 	}
 
-	public void setContext(AppContext context) {
+	public void setContext( AppContext context ) {
 		Assert.notNull( context, "Only non-null ApplicationContext instances are permitted" );
 		contextHolder.set( context );
 	}

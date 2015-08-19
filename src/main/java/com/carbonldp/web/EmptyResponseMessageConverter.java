@@ -37,21 +37,21 @@ public class EmptyResponseMessageConverter implements HttpMessageConverter<Empty
 		//@formatter:on
 	}
 
-	private boolean supports(Class<?> clazz) {
+	private boolean supports( Class<?> clazz ) {
 		return EmptyResponse.class.isAssignableFrom( clazz );
 	}
 
 	@Override
-	public boolean canRead(Class<?> clazz, MediaType mediaType) {
+	public boolean canRead( Class<?> clazz, MediaType mediaType ) {
 		return false;
 	}
 
 	@Override
-	public boolean canWrite(Class<?> clazz, MediaType mediaType) {
+	public boolean canWrite( Class<?> clazz, MediaType mediaType ) {
 		return supports( clazz ) && canWrite( mediaType );
 	}
 
-	private boolean canWrite(MediaType mediaType) {
+	private boolean canWrite( MediaType mediaType ) {
 		if ( mediaType == null || MediaType.ALL.equals( mediaType ) ) return true;
 
 		for ( MediaType supportedMediaType : getSupportedMediaTypes() ) {
@@ -67,12 +67,12 @@ public class EmptyResponseMessageConverter implements HttpMessageConverter<Empty
 	}
 
 	@Override
-	public EmptyResponse read(Class<? extends EmptyResponse> clazz, HttpInputMessage inputMessage) throws IOException, HttpMessageNotReadableException {
+	public EmptyResponse read( Class<? extends EmptyResponse> clazz, HttpInputMessage inputMessage ) throws IOException, HttpMessageNotReadableException {
 		return null;
 	}
 
 	@Override
-	public void write(EmptyResponse response, MediaType contentType, HttpOutputMessage outputMessage) throws IOException, HttpMessageNotWritableException {
+	public void write( EmptyResponse response, MediaType contentType, HttpOutputMessage outputMessage ) throws IOException, HttpMessageNotWritableException {
 		HttpHeaders headers = outputMessage.getHeaders();
 
 		if ( headers.getContentType() == null ) {
@@ -101,7 +101,7 @@ public class EmptyResponseMessageConverter implements HttpMessageConverter<Empty
 		outputMessage.getBody().flush();
 	}
 
-	private void writeEmptyResponse(EmptyResponse response, RDFFormat format, OutputStream outputStream) throws IOException {
+	private void writeEmptyResponse( EmptyResponse response, RDFFormat format, OutputStream outputStream ) throws IOException {
 		String emptyResponseString = null;
 
 		if ( format.equals( RDFFormat.JSONLD ) ) {
@@ -113,7 +113,7 @@ public class EmptyResponseMessageConverter implements HttpMessageConverter<Empty
 		outputStream.write( emptyResponseString.getBytes() );
 	}
 
-	private void setSupportedFormats(List<RDFFormat> supportedFormats) {
+	private void setSupportedFormats( List<RDFFormat> supportedFormats ) {
 		Assert.notEmpty( supportedFormats, "'supportedFormats' must not be empty" );
 
 		this.supportedMediaTypes = new ArrayList<MediaType>();
@@ -131,7 +131,7 @@ public class EmptyResponseMessageConverter implements HttpMessageConverter<Empty
 	}
 
 	private RDFFormat getDefaultFormat() {
-		return (!this.supportedFormats.isEmpty() ? this.supportedFormats.get( 0 ) : null);
+		return ( ! this.supportedFormats.isEmpty() ? this.supportedFormats.get( 0 ) : null );
 	}
 
 }

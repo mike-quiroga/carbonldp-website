@@ -1,6 +1,5 @@
 package com.carbonldp.test.rdf;
 
-import com.carbonldp.rdf.PrefixedURI;
 import com.carbonldp.rdf.RDFNodeEnum;
 import com.carbonldp.rdf.RDFResourceRepository;
 import com.carbonldp.test.AbstractIT;
@@ -817,13 +816,12 @@ public class RDFResourceRepositoryIT extends AbstractIT {
 		resourceRepository.removeType( subj, newType );
 	}
 
-	private static enum Property implements RDFNodeEnum {
-		//@formatter:off
+	private enum Property implements RDFNodeEnum {
 		TYPE(
 			"http://example.org/ns#BlogPost"
 		),
 		A(
-			 "http://local.carbonldp.com/apps/test-blog/posts/post-1/comments/"
+			"http://local.carbonldp.com/apps/test-blog/posts/post-1/comments/"
 		),
 		B(
 			"http://carbonldp.com/ns/v1/platform#accessPoint"
@@ -857,30 +855,28 @@ public class RDFResourceRepositoryIT extends AbstractIT {
 		),
 		EXAMPLE(
 			"http://example.org/ns#example"
-		)
-		;
-		//@formatter:on
+		);
 
-		private final PrefixedURI[] prefixedURIs;
+		private final URI[] uris;
 
-		private Property( String... uris ) {
+		Property( String... uris ) {
 			if ( uris.length <= 0 ) throw new IllegalArgumentException( "At least one uri needs to be specified" );
-			this.prefixedURIs = new PrefixedURI[uris.length];
+			this.uris = new URI[uris.length];
 			int i = 0;
 			for ( String uri : uris ) {
-				this.prefixedURIs[i] = new PrefixedURI( uri );
+				this.uris[i] = new URIImpl( uri );
 				i++;
 			}
 		}
 
 		@Override
-		public PrefixedURI getURI() {
-			return this.prefixedURIs[0];
+		public URI getURI() {
+			return this.uris[0];
 		}
 
 		@Override
-		public PrefixedURI[] getURIs() {
-			return this.prefixedURIs;
+		public URI[] getURIs() {
+			return this.uris;
 		}
 	}
 }

@@ -15,13 +15,13 @@ public class DocumentGraphQueryResultHandler extends GraphQueryResultHandler {
 	private final Collection<Statement> statements;
 	private final ValueFactory valueFactory;
 
-	public DocumentGraphQueryResultHandler(Collection<Statement> statements) {
+	public DocumentGraphQueryResultHandler( Collection<Statement> statements ) {
 		this.statements = statements;
 		this.valueFactory = ValueFactoryImpl.getInstance();
 	}
 
 	@Override
-	public boolean handleStatement(Statement statement) {
+	public boolean handleStatement( Statement statement ) {
 		Resource contextResource = statement.getContext();
 		if ( contextResource != null ) throw new IllegalArgumentException( "Named graphs aren't supported." );
 
@@ -30,7 +30,7 @@ public class DocumentGraphQueryResultHandler extends GraphQueryResultHandler {
 
 		URI subject = ValueUtil.getURI( subjectResource );
 		URI context;
-		if ( !URIUtil.hasFragment( subject ) ) context = subject;
+		if ( ! URIUtil.hasFragment( subject ) ) context = subject;
 		else context = new URIImpl( URIUtil.getDocumentURI( subject.stringValue() ) );
 
 		Statement documentStatement = valueFactory.createStatement( subject, statement.getPredicate(), statement.getObject(), context );

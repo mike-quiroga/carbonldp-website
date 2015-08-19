@@ -8,7 +8,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Random;
 
-
 public class AbstractNonRDFRequestHandler extends AbstractLDPRequestHandler {
 
 	protected File createTemporaryFile( InputStream inputStream ) {

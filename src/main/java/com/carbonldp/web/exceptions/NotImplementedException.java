@@ -10,11 +10,11 @@ public class NotImplementedException extends AbstractWebRuntimeException {
 		this( 0 );
 	}
 
-	public NotImplementedException(int errorCode) {
+	public NotImplementedException( int errorCode ) {
 		super( errorCode, defaultStatus );
 	}
 
-	public NotImplementedException(String message) {
+	public NotImplementedException( String message ) {
 		super( message, defaultStatus );
 	}
 
