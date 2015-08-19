@@ -41,7 +41,6 @@ public class AbstractModelMessageConverter extends ModelMessageConverter<Abstrac
 		String baseURI = configurationRepository.forgeGenericRequestURL();
 
 		parser.setRDFHandler( new DocumentRDFHandler( model ) );
-
 		try {
 			parser.parse( bodyInputStream, baseURI );
 		} catch ( RDFParseException | RDFHandlerException e ) {

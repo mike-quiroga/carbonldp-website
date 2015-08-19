@@ -58,7 +58,7 @@ public class CORSAppContextFilterIT extends AbstractIT {
 			}
 		} );
 		Mockito.verify( response ).addHeader( "Access-Control-Allow-Origin", "http://www.test.com/" );
-		Mockito.verify( response ).addHeader( "Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE, OPTIONS" );
+		Mockito.verify( response ).addHeader( "Access-Control-Allow-Methods", "GET, HEAD, POST, PUT, PATCH, DELETE, OPTIONS" );
 		context.setApplication( null );
 	}
 
@@ -80,7 +80,7 @@ public class CORSAppContextFilterIT extends AbstractIT {
 			}
 		} );
 		Mockito.verify( response, Mockito.never() ).addHeader( "Access-Control-Allow-Origin", "http://www.test.com/" );
-		Mockito.verify( response, Mockito.never() ).addHeader( "Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE, OPTIONS" );
+		Mockito.verify( response, Mockito.never() ).addHeader( "Access-Control-Allow-Methods", "GET, HEAD, POST, PUT, PATCH, DELETE, OPTIONS" );
 		context.setApplication( null );
 
 	}
@@ -104,7 +104,7 @@ public class CORSAppContextFilterIT extends AbstractIT {
 			}
 		} );
 		Mockito.verify( response ).addHeader( "Access-Control-Allow-Origin", "http://www.regex8.com/blog/posts/post/comment/" );
-		Mockito.verify( response ).addHeader( "Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE, OPTIONS" );
+		Mockito.verify( response ).addHeader( "Access-Control-Allow-Methods", "GET, HEAD, POST, PUT, PATCH, DELETE, OPTIONS" );
 		context.setApplication( null );
 	}
 
@@ -126,7 +126,7 @@ public class CORSAppContextFilterIT extends AbstractIT {
 			}
 		} );
 		Mockito.verify( response ).addHeader( "Access-Control-Allow-Origin", "http://www.all-allowed-origins.com/" );
-		Mockito.verify( response ).addHeader( "Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE, OPTIONS" );
+		Mockito.verify( response ).addHeader( "Access-Control-Allow-Methods", "GET, HEAD, POST, PUT, PATCH, DELETE, OPTIONS" );
 		context.setApplication( null );
 	}
 }
