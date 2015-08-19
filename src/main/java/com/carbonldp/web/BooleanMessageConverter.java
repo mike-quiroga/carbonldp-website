@@ -35,7 +35,7 @@ public class BooleanMessageConverter implements HttpMessageConverter<Boolean> {
 		//@formatter:on
 	}
 
-	protected boolean supports(Class<?> clazz) {
+	protected boolean supports( Class<?> clazz ) {
 		return Boolean.class.isAssignableFrom( clazz );
 	}
 
@@ -44,24 +44,24 @@ public class BooleanMessageConverter implements HttpMessageConverter<Boolean> {
 		return this.supportedMediaTypes;
 	}
 
-	public void setSupportedMediaTypes(List<MediaType> supportedMediaTypes) {
+	public void setSupportedMediaTypes( List<MediaType> supportedMediaTypes ) {
 		Assert.notEmpty( supportedMediaTypes, "'supportedMediaTypes' must not be empty" );
 		this.supportedMediaTypes = new ArrayList<MediaType>( supportedMediaTypes );
 	}
 
 	protected MediaType getDefaultMediaType() {
-		return (!supportedMediaTypes.isEmpty() ? supportedMediaTypes.get( 0 ) : null);
+		return ( ! supportedMediaTypes.isEmpty() ? supportedMediaTypes.get( 0 ) : null );
 	}
 
 	@Override
-	public boolean canRead(java.lang.Class<?> clazz, MediaType mediaType) {
+	public boolean canRead( java.lang.Class<?> clazz, MediaType mediaType ) {
 		// return supports(clazz) && canRead(mediaType);
 		return false;
 	}
 
 	;
 
-	protected boolean canRead(MediaType mediaType) {
+	protected boolean canRead( MediaType mediaType ) {
 		if ( mediaType == null || MediaType.ALL.equals( mediaType ) ) {
 			return true;
 		}
@@ -74,16 +74,16 @@ public class BooleanMessageConverter implements HttpMessageConverter<Boolean> {
 	}
 
 	@Override
-	public Boolean read(Class<? extends Boolean> clazz, HttpInputMessage inputMessage) throws IOException, HttpMessageNotReadableException {
+	public Boolean read( Class<? extends Boolean> clazz, HttpInputMessage inputMessage ) throws IOException, HttpMessageNotReadableException {
 		return null;
 	}
 
 	@Override
-	public boolean canWrite(Class<?> clazz, MediaType mediaType) {
+	public boolean canWrite( Class<?> clazz, MediaType mediaType ) {
 		return supports( clazz ) && canWrite( mediaType );
 	}
 
-	protected boolean canWrite(MediaType mediaType) {
+	protected boolean canWrite( MediaType mediaType ) {
 		if ( mediaType == null || MediaType.ALL.equals( mediaType ) ) {
 			return true;
 		}
@@ -96,7 +96,7 @@ public class BooleanMessageConverter implements HttpMessageConverter<Boolean> {
 	}
 
 	@Override
-	public void write(Boolean value, MediaType mediaType, HttpOutputMessage outputMessage) throws IOException, HttpMessageNotWritableException {
+	public void write( Boolean value, MediaType mediaType, HttpOutputMessage outputMessage ) throws IOException, HttpMessageNotWritableException {
 		HttpHeaders headers = outputMessage.getHeaders();
 
 		if ( headers.getContentType() == null ) {
@@ -120,7 +120,7 @@ public class BooleanMessageConverter implements HttpMessageConverter<Boolean> {
 		outputMessage.getBody().flush();
 	}
 
-	private void writeBoolean(Boolean value, MediaType contentType, OutputStream outputStream) throws IOException {
+	private void writeBoolean( Boolean value, MediaType contentType, OutputStream outputStream ) throws IOException {
 		String booleanString = String.valueOf( value );
 		outputStream.write( booleanString.getBytes() );
 	}

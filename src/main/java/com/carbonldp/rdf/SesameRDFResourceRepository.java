@@ -34,7 +34,7 @@ public class SesameRDFResourceRepository extends AbstractSesameRepository implem
 	@Override
 	public boolean hasProperty( URI resourceURI, RDFNodeEnum pred ) {
 		URI documentURI = getDocumentURI( resourceURI );
-		for ( PrefixedURI predURI : pred.getURIs() ) {
+		for ( URI predURI : pred.getURIs() ) {
 			boolean hasProperty = statementExists(
 				connection -> connection.getStatements( resourceURI, predURI, null, false, documentURI )
 			);
@@ -52,7 +52,7 @@ public class SesameRDFResourceRepository extends AbstractSesameRepository implem
 	@Override
 	public boolean contains( URI resourceURI, RDFNodeEnum pred, Value obj ) {
 		URI documentURI = getDocumentURI( resourceURI );
-		for ( PrefixedURI predURI : pred.getURIs() ) {
+		for ( URI predURI : pred.getURIs() ) {
 			boolean hasProperty = statementExists(
 				connection -> connection.getStatements( resourceURI, predURI, obj, false, documentURI )
 			);
@@ -64,8 +64,8 @@ public class SesameRDFResourceRepository extends AbstractSesameRepository implem
 	@Override
 	public boolean contains( URI resourceURI, RDFNodeEnum pred, RDFNodeEnum obj ) {
 		URI documentURI = getDocumentURI( resourceURI );
-		for ( PrefixedURI predURI : pred.getURIs() ) {
-			for ( PrefixedURI objValue : obj.getURIs() ) {
+		for ( URI predURI : pred.getURIs() ) {
+			for ( URI objValue : obj.getURIs() ) {
 				boolean hasProperty = statementExists(
 					connection -> connection.getStatements( resourceURI, predURI, objValue, false, documentURI )
 				);

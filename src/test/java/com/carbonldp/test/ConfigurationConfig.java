@@ -1,16 +1,15 @@
 package com.carbonldp.test;
 
+import com.carbonldp.config.ConfigurationRepository;
+import com.carbonldp.config.PropertiesFileConfigurationRepository;
+import com.carbonldp.spring.DependencyInjectorListener;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 
-import com.carbonldp.config.ConfigurationRepository;
-import com.carbonldp.config.PropertiesFileConfigurationRepository;
-import com.carbonldp.spring.DependencyInjectorListener;
-
 @Configuration
-@PropertySource({ "classpath:${APP_ENV:local}-config.properties", "classpath:config.properties" })
+@PropertySource( {"classpath:${APP_ENV:local}-config.properties", "classpath:config.properties"} )
 public class ConfigurationConfig {
 
 	@Bean

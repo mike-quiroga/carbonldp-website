@@ -7,12 +7,12 @@ import com.carbonldp.apps.context.RunInPlatformContext;
 public class ApplicationContextActionTemplate {
 
 	@RunInAppContext
-	public void runInAppContext(App application, ActionCallback action) {
+	public void runInAppContext( App application, ActionCallback action ) {
 		action.run();
 	}
 
 	@RunInPlatformContext
-	public void runInPlatformContext(ActionCallback action) {
+	public void runInPlatformContext( ActionCallback action ) {
 		action.run();
 	}
 }

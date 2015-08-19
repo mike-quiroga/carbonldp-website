@@ -1,11 +1,11 @@
 package com.carbonldp.test.web.cors;
 
-import com.carbonldp.Consts;
 import com.carbonldp.apps.App;
 import com.carbonldp.apps.AppRepository;
 import com.carbonldp.apps.context.AppContext;
 import com.carbonldp.apps.context.AppContextHolder;
 import com.carbonldp.namespaces.C;
+import com.carbonldp.namespaces.XSD;
 import com.carbonldp.test.AbstractIT;
 import org.mockito.Mockito;
 import org.openrdf.model.ValueFactory;
@@ -35,8 +35,8 @@ public class CORSAppContextFilterIT extends AbstractIT {
 
 	private void setUp() {
 		app = appRepository.findByRootContainer( new URIImpl( "http://local.carbonldp.com/apps/test-blog/" ) );
-		app.addDomain( valueFactory.createLiteral( "http://www.test.com/", Consts.XSD.STRING.getURI() ) );
-		app.addDomain( valueFactory.createLiteral( "(http://|https://)www\\.regex\\d\\.com/[\\s\\S]*", C.Class.REGULAR_EXPRESSION.getURI() ) );
+		app.addDomain( valueFactory.createLiteral( "http://www.test.com/", new URIImpl( XSD.Properties.STRING ) ) );
+		app.addDomain( valueFactory.createLiteral( "(http://|https://)www\\.regex\\d\\.com/[\\s\\S]*", new URIImpl( C.Classes.REGULAR_EXPRESSION ) ) );
 		context.setApplication( null );
 	}
 
@@ -117,7 +117,7 @@ public class CORSAppContextFilterIT extends AbstractIT {
 		Mockito.when( request.getHeader( "Access-Control-Request-Method" ) ).thenReturn( "OPTIONS" );
 
 		setUp();
-		app.addDomain( C.Class.ALL_ORIGINS.getURI() );
+		app.addDomain( new URIImpl( C.Classes.ALL_ORIGINS ) );
 		applicationContextTemplate.runInAppContext( app, () -> {
 			try {
 				corsAppContextFilter.doFilter( request, response, chain );

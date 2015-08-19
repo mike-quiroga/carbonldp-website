@@ -1,6 +1,5 @@
 package com.carbonldp.log;
 
-import com.carbonldp.log.AbstractComponentCallsLogger;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 

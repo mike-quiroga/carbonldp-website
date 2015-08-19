@@ -11,5 +11,4 @@ public class SesameAgentValidatorService extends AbstractSesameLDPService implem
 		super( transactionWrapper, sourceRepository, containerRepository, aclRepository );
 	}
 
-
 }

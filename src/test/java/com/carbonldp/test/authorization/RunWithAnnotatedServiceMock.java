@@ -19,7 +19,7 @@ public class RunWithAnnotatedServiceMock {
 		assertNotNull( authentication );
 		assertTrue( authentication instanceof TemporaryAuthorizationToken );
 
-		Set<Platform.Role> platformRoles = ((TemporaryAuthorizationToken) authentication).getPlatformRoles();
+		Set<Platform.Role> platformRoles = ( (TemporaryAuthorizationToken) authentication ).getPlatformRoles();
 		assertTrue( platformRoles.contains( Platform.Role.SYSTEM ) );
 		assertEquals( platformRoles.size(), 1 );
 	}

@@ -27,7 +27,7 @@ public final class AppContextHolder {
 		return strategyHolder.getContext();
 	}
 
-	public static void setContext(AppContext context) {
+	public static void setContext( AppContext context ) {
 		strategyHolder.setContext( context );
 	}
 
