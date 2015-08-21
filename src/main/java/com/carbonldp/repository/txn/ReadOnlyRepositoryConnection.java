@@ -17,7 +17,7 @@ public class ReadOnlyRepositoryConnection implements RepositoryConnection {
 
 	private final RepositoryConnection connection;
 
-	public ReadOnlyRepositoryConnection(RepositoryConnection connection) {
+	public ReadOnlyRepositoryConnection( RepositoryConnection connection ) {
 		this.connection = connection;
 	}
 
@@ -27,7 +27,7 @@ public class ReadOnlyRepositoryConnection implements RepositoryConnection {
 	}
 
 	@Override
-	public void setParserConfig(ParserConfig config) {
+	public void setParserConfig( ParserConfig config ) {
 		connection.setParserConfig( config );
 	}
 
@@ -52,52 +52,52 @@ public class ReadOnlyRepositoryConnection implements RepositoryConnection {
 	}
 
 	@Override
-	public Query prepareQuery(QueryLanguage ql, String query) throws RepositoryException, MalformedQueryException {
+	public Query prepareQuery( QueryLanguage ql, String query ) throws RepositoryException, MalformedQueryException {
 		return connection.prepareQuery( ql, query );
 	}
 
 	@Override
-	public Query prepareQuery(QueryLanguage ql, String query, String baseURI) throws RepositoryException, MalformedQueryException {
+	public Query prepareQuery( QueryLanguage ql, String query, String baseURI ) throws RepositoryException, MalformedQueryException {
 		return connection.prepareQuery( ql, query, baseURI );
 	}
 
 	@Override
-	public TupleQuery prepareTupleQuery(QueryLanguage ql, String query) throws RepositoryException, MalformedQueryException {
+	public TupleQuery prepareTupleQuery( QueryLanguage ql, String query ) throws RepositoryException, MalformedQueryException {
 		return connection.prepareTupleQuery( ql, query );
 	}
 
 	@Override
-	public TupleQuery prepareTupleQuery(QueryLanguage ql, String query, String baseURI) throws RepositoryException, MalformedQueryException {
+	public TupleQuery prepareTupleQuery( QueryLanguage ql, String query, String baseURI ) throws RepositoryException, MalformedQueryException {
 		return connection.prepareTupleQuery( ql, query, baseURI );
 	}
 
 	@Override
-	public GraphQuery prepareGraphQuery(QueryLanguage ql, String query) throws RepositoryException, MalformedQueryException {
+	public GraphQuery prepareGraphQuery( QueryLanguage ql, String query ) throws RepositoryException, MalformedQueryException {
 		return connection.prepareGraphQuery( ql, query );
 	}
 
 	@Override
-	public GraphQuery prepareGraphQuery(QueryLanguage ql, String query, String baseURI) throws RepositoryException, MalformedQueryException {
+	public GraphQuery prepareGraphQuery( QueryLanguage ql, String query, String baseURI ) throws RepositoryException, MalformedQueryException {
 		return connection.prepareGraphQuery( ql, query, baseURI );
 	}
 
 	@Override
-	public BooleanQuery prepareBooleanQuery(QueryLanguage ql, String query) throws RepositoryException, MalformedQueryException {
+	public BooleanQuery prepareBooleanQuery( QueryLanguage ql, String query ) throws RepositoryException, MalformedQueryException {
 		return connection.prepareBooleanQuery( ql, query );
 	}
 
 	@Override
-	public BooleanQuery prepareBooleanQuery(QueryLanguage ql, String query, String baseURI) throws RepositoryException, MalformedQueryException {
+	public BooleanQuery prepareBooleanQuery( QueryLanguage ql, String query, String baseURI ) throws RepositoryException, MalformedQueryException {
 		return connection.prepareBooleanQuery( ql, query, baseURI );
 	}
 
 	@Override
-	public Update prepareUpdate(QueryLanguage ql, String update) throws RepositoryException, MalformedQueryException {
+	public Update prepareUpdate( QueryLanguage ql, String update ) throws RepositoryException, MalformedQueryException {
 		throw new RepositoryRuntimeException( 0x0001 );
 	}
 
 	@Override
-	public Update prepareUpdate(QueryLanguage ql, String update, String baseURI) throws RepositoryException, MalformedQueryException {
+	public Update prepareUpdate( QueryLanguage ql, String update, String baseURI ) throws RepositoryException, MalformedQueryException {
 		throw new RepositoryRuntimeException( 0x0001 );
 	}
 
@@ -107,34 +107,34 @@ public class ReadOnlyRepositoryConnection implements RepositoryConnection {
 	}
 
 	@Override
-	public RepositoryResult<Statement> getStatements(Resource subj, URI pred, Value obj, boolean includeInferred, Resource... contexts)
-			throws RepositoryException {
+	public RepositoryResult<Statement> getStatements( Resource subj, URI pred, Value obj, boolean includeInferred, Resource... contexts )
+		throws RepositoryException {
 		return connection.getStatements( subj, pred, obj, includeInferred, contexts );
 	}
 
 	@Override
-	public boolean hasStatement(Resource subj, URI pred, Value obj, boolean includeInferred, Resource... contexts) throws RepositoryException {
+	public boolean hasStatement( Resource subj, URI pred, Value obj, boolean includeInferred, Resource... contexts ) throws RepositoryException {
 		return connection.hasStatement( subj, pred, obj, includeInferred, contexts );
 	}
 
 	@Override
-	public boolean hasStatement(Statement st, boolean includeInferred, Resource... contexts) throws RepositoryException {
+	public boolean hasStatement( Statement st, boolean includeInferred, Resource... contexts ) throws RepositoryException {
 		return connection.hasStatement( st, includeInferred, contexts );
 	}
 
 	@Override
-	public void exportStatements(Resource subj, URI pred, Value obj, boolean includeInferred, RDFHandler handler, Resource... contexts)
-			throws RepositoryException, RDFHandlerException {
+	public void exportStatements( Resource subj, URI pred, Value obj, boolean includeInferred, RDFHandler handler, Resource... contexts )
+		throws RepositoryException, RDFHandlerException {
 		connection.exportStatements( subj, pred, obj, includeInferred, handler, contexts );
 	}
 
 	@Override
-	public void export(RDFHandler handler, Resource... contexts) throws RepositoryException, RDFHandlerException {
+	public void export( RDFHandler handler, Resource... contexts ) throws RepositoryException, RDFHandlerException {
 		connection.export( handler, contexts );
 	}
 
 	@Override
-	public long size(Resource... contexts) throws RepositoryException {
+	public long size( Resource... contexts ) throws RepositoryException {
 		return connection.size( contexts );
 	}
 
@@ -145,7 +145,7 @@ public class ReadOnlyRepositoryConnection implements RepositoryConnection {
 
 	@Deprecated
 	@Override
-	public void setAutoCommit(boolean autoCommit) throws RepositoryException {
+	public void setAutoCommit( boolean autoCommit ) throws RepositoryException {
 		connection.setAutoCommit( autoCommit );
 	}
 
@@ -160,7 +160,7 @@ public class ReadOnlyRepositoryConnection implements RepositoryConnection {
 	}
 
 	@Override
-	public void setIsolationLevel(IsolationLevel level) throws IllegalStateException {
+	public void setIsolationLevel( IsolationLevel level ) throws IllegalStateException {
 
 	}
 
@@ -175,7 +175,7 @@ public class ReadOnlyRepositoryConnection implements RepositoryConnection {
 	}
 
 	@Override
-	public void begin(IsolationLevel level) throws RepositoryException {
+	public void begin( IsolationLevel level ) throws RepositoryException {
 
 	}
 
@@ -190,67 +190,67 @@ public class ReadOnlyRepositoryConnection implements RepositoryConnection {
 	}
 
 	@Override
-	public void add(InputStream in, String baseURI, RDFFormat dataFormat, Resource... contexts) throws IOException, RDFParseException, RepositoryException {
+	public void add( InputStream in, String baseURI, RDFFormat dataFormat, Resource... contexts ) throws IOException, RDFParseException, RepositoryException {
 		throw new RepositoryRuntimeException( 0x0001 );
 	}
 
 	@Override
-	public void add(Reader reader, String baseURI, RDFFormat dataFormat, Resource... contexts) throws IOException, RDFParseException, RepositoryException {
+	public void add( Reader reader, String baseURI, RDFFormat dataFormat, Resource... contexts ) throws IOException, RDFParseException, RepositoryException {
 		throw new RepositoryRuntimeException( 0x0001 );
 	}
 
 	@Override
-	public void add(URL url, String baseURI, RDFFormat dataFormat, Resource... contexts) throws IOException, RDFParseException, RepositoryException {
+	public void add( URL url, String baseURI, RDFFormat dataFormat, Resource... contexts ) throws IOException, RDFParseException, RepositoryException {
 		throw new RepositoryRuntimeException( 0x0001 );
 	}
 
 	@Override
-	public void add(File file, String baseURI, RDFFormat dataFormat, Resource... contexts) throws IOException, RDFParseException, RepositoryException {
+	public void add( File file, String baseURI, RDFFormat dataFormat, Resource... contexts ) throws IOException, RDFParseException, RepositoryException {
 		throw new RepositoryRuntimeException( 0x0001 );
 	}
 
 	@Override
-	public void add(Resource subject, URI predicate, Value object, Resource... contexts) throws RepositoryException {
+	public void add( Resource subject, URI predicate, Value object, Resource... contexts ) throws RepositoryException {
 		throw new RepositoryRuntimeException( 0x0001 );
 	}
 
 	@Override
-	public void add(Statement st, Resource... contexts) throws RepositoryException {
+	public void add( Statement st, Resource... contexts ) throws RepositoryException {
 		throw new RepositoryRuntimeException( 0x0001 );
 	}
 
 	@Override
-	public void add(Iterable<? extends Statement> statements, Resource... contexts) throws RepositoryException {
+	public void add( Iterable<? extends Statement> statements, Resource... contexts ) throws RepositoryException {
 		throw new RepositoryRuntimeException( 0x0001 );
 	}
 
 	@Override
-	public <E extends Exception> void add(Iteration<? extends Statement, E> statements, Resource... contexts) throws RepositoryException, E {
+	public <E extends Exception> void add( Iteration<? extends Statement, E> statements, Resource... contexts ) throws RepositoryException, E {
 		throw new RepositoryRuntimeException( 0x0001 );
 	}
 
 	@Override
-	public void remove(Resource subject, URI predicate, Value object, Resource... contexts) throws RepositoryException {
+	public void remove( Resource subject, URI predicate, Value object, Resource... contexts ) throws RepositoryException {
 		throw new RepositoryRuntimeException( 0x0001 );
 	}
 
 	@Override
-	public void remove(Statement st, Resource... contexts) throws RepositoryException {
+	public void remove( Statement st, Resource... contexts ) throws RepositoryException {
 		throw new RepositoryRuntimeException( 0x0001 );
 	}
 
 	@Override
-	public void remove(Iterable<? extends Statement> statements, Resource... contexts) throws RepositoryException {
+	public void remove( Iterable<? extends Statement> statements, Resource... contexts ) throws RepositoryException {
 		throw new RepositoryRuntimeException( 0x0001 );
 	}
 
 	@Override
-	public <E extends Exception> void remove(Iteration<? extends Statement, E> statements, Resource... contexts) throws RepositoryException, E {
+	public <E extends Exception> void remove( Iteration<? extends Statement, E> statements, Resource... contexts ) throws RepositoryException, E {
 		throw new RepositoryRuntimeException( 0x0001 );
 	}
 
 	@Override
-	public void clear(Resource... contexts) throws RepositoryException {
+	public void clear( Resource... contexts ) throws RepositoryException {
 		throw new RepositoryRuntimeException( 0x0001 );
 	}
 
@@ -260,17 +260,17 @@ public class ReadOnlyRepositoryConnection implements RepositoryConnection {
 	}
 
 	@Override
-	public String getNamespace(String prefix) throws RepositoryException {
+	public String getNamespace( String prefix ) throws RepositoryException {
 		return connection.getNamespace( prefix );
 	}
 
 	@Override
-	public void setNamespace(String prefix, String name) throws RepositoryException {
+	public void setNamespace( String prefix, String name ) throws RepositoryException {
 		throw new RepositoryRuntimeException( 0x0001 );
 	}
 
 	@Override
-	public void removeNamespace(String prefix) throws RepositoryException {
+	public void removeNamespace( String prefix ) throws RepositoryException {
 		throw new RepositoryRuntimeException( 0x0001 );
 	}
 

@@ -48,5 +48,4 @@ public class PlatformAgentUsernamePasswordAuthenticationProvider extends SesameU
 		return UsernamePasswordAuthenticationToken.class.isAssignableFrom( authentication );
 	}
 
-
 }

@@ -40,20 +40,20 @@ public class UsernameAndPasswordAuthenticationIT extends AbstractIT {
 
 	}
 
-	@Test
+	// TODO: LDP-376
+	@Test( enabled = false )
 	public void invalidUsername() {
 		Authentication authentication = Mockito.mock( Authentication.class );
 
 		Mockito.when( authentication.getPrincipal() ).thenReturn( "invalid@carbonldp.com" );
 		Mockito.when( authentication.getCredentials() ).thenReturn( "username" );
-		//TODO LDP-376
+
 		try {
 			sesameUsernamePasswordAuthenticationProvider.authenticate( authentication );
 			fail();
 		} catch ( BadCredentialsException e ) {
 
 		}
-
 	}
 
 	@Test

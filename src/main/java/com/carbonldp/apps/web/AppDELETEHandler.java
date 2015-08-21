@@ -5,5 +5,5 @@ import com.carbonldp.web.RequestHandler;
 
 @RequestHandler
 public class AppDELETEHandler extends AbstractDELETERequestHandler {
-	
+
 }

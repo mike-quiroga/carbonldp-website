@@ -37,7 +37,7 @@ public class ACLConfig extends GlobalMethodSecurityConfiguration {
 	 * PermissionEvaluator was being requested in early steps of bean initialization. Thus, Spring eagerly initialized it and its dependencies.
 	 * directACLPermissionVoter needed the autowired field ACLRepository, but because of the eager initialization, it was getting a null value.
 	 * This method solves that problem by injecting it after all the autowired is resolved.
-	 * <p/>
+	 * <p>
 	 * TODO: Find who is causing this eager initialization and try to reorder the beans to solve the dependency cycle.
 	 */
 	@PostConstruct

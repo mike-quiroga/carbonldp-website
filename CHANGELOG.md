@@ -1,2 +1,2 @@
-# 1.0.0 (August 18, 2014)
-* Creation of the project
+# 0.9.0 (2015/08/18)
+* Added RepositoryUpdater system.

@@ -7,12 +7,12 @@ import java.util.Collection;
 
 public class TemporaryAuthorizationToken extends AbstractAuthenticationToken {
 
-	private static final long serialVersionUID = -717042178885895374L;
+	private static final long serialVersionUID = - 717042178885895374L;
 
 	private final Authentication originalAuthenticationObject;
 
-	public TemporaryAuthorizationToken(Authentication originalAuthenticationObject, Collection<Platform.Role> platformRoles,
-			Collection<Platform.Privilege> platformPrivileges) {
+	public TemporaryAuthorizationToken( Authentication originalAuthenticationObject, Collection<Platform.Role> platformRoles,
+		Collection<Platform.Privilege> platformPrivileges ) {
 		super( platformRoles, platformPrivileges );
 
 		this.originalAuthenticationObject = originalAuthenticationObject;

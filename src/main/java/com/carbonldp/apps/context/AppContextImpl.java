@@ -9,7 +9,7 @@ public class AppContextImpl implements AppContext {
 		return this.application;
 	}
 
-	public void setApplication(App application) {
+	public void setApplication( App application ) {
 		this.application = application;
 	}
 
@@ -20,7 +20,7 @@ public class AppContextImpl implements AppContext {
 	@Override
 	public int hashCode() {
 		if ( this.application == null ) {
-			return -1;
+			return - 1;
 		} else {
 			return this.application.hashCode();
 		}

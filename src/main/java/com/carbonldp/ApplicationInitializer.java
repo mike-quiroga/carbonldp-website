@@ -7,6 +7,7 @@ import com.carbonldp.config.ServicesConfig;
 import com.carbonldp.log.LOGConfig;
 import com.carbonldp.log.RequestLoggerFilter;
 import com.carbonldp.mail.MailConfig;
+import com.carbonldp.repository.RepositoriesUpdater;
 import com.carbonldp.repository.txn.TxnConfig;
 import com.carbonldp.security.SecurityConfig;
 import com.carbonldp.spring.SpringProfile;
@@ -40,6 +41,9 @@ public class ApplicationInitializer implements WebApplicationInitializer {
 		SpringProfile activeProfile = getActiveProfile();
 		Properties configProperties = loadConfigProperties( activeProfile );
 		loadGlobalVars( configProperties );
+
+		RepositoriesUpdater repositoriesUpdater = new RepositoriesUpdater();
+		if ( ! repositoriesUpdater.repositoriesAreUpToDate() ) repositoriesUpdater.updateRepositories();
 
 		AnnotationConfigWebApplicationContext rootContext = createRootContext();
 		addContextLifecycleManagerListener( rootContext, container );

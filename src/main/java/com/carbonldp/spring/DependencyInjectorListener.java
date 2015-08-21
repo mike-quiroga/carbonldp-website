@@ -25,12 +25,12 @@ public class DependencyInjectorListener implements BeanPostProcessor, Applicatio
 	private final List<Object> beansNeedingInjection = new ArrayList<Object>();
 
 	@Override
-	public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
+	public Object postProcessAfterInitialization( Object bean, String beanName ) throws BeansException {
 		return bean;
 	}
 
 	@Override
-	public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
+	public Object postProcessBeforeInitialization( Object bean, String beanName ) throws BeansException {
 		Method[] methods = bean.getClass().getMethods();
 		for ( Method method : methods ) {
 			Inject injectAnnotation = method.getAnnotation( Inject.class );
@@ -43,7 +43,7 @@ public class DependencyInjectorListener implements BeanPostProcessor, Applicatio
 	}
 
 	@Override
-	public void onApplicationEvent(ContextRefreshedEvent event) {
+	public void onApplicationEvent( ContextRefreshedEvent event ) {
 		injectBeans();
 	}
 
@@ -69,16 +69,16 @@ public class DependencyInjectorListener implements BeanPostProcessor, Applicatio
 		}
 	}
 
-	private Object getDependency(String beanID) {
+	private Object getDependency( String beanID ) {
 		return this.applicationContext.getBean( beanID );
 	}
 
-	private Object getDependencyFromParameterClass(Method method) {
+	private Object getDependencyFromParameterClass( Method method ) {
 		Class<?> dependencyClass = getDependencyClassFromParameter( method );
 		return this.applicationContext.getBean( dependencyClass );
 	}
 
-	private Class<?> getDependencyClassFromParameter(Method method) {
+	private Class<?> getDependencyClassFromParameter( Method method ) {
 		Parameter[] parameters = method.getParameters();
 		if ( parameters.length > 1 ) throw new StupidityException( "The method annotated isn't a setter." );
 		for ( Parameter parameter : method.getParameters() ) {
@@ -87,12 +87,12 @@ public class DependencyInjectorListener implements BeanPostProcessor, Applicatio
 		throw new StupidityException( "The method annotated doesn't have a parameter" );
 	}
 
-	private boolean wasAssigned(String id) {
-		return !"[unassigned]".equals( id );
+	private boolean wasAssigned( String id ) {
+		return ! "[unassigned]".equals( id );
 	}
 
 	@Override
-	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+	public void setApplicationContext( ApplicationContext applicationContext ) throws BeansException {
 		this.applicationContext = applicationContext;
 	}
 }
