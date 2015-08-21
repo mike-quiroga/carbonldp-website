@@ -19,7 +19,8 @@ import java.util.Set;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 
-//TODO finish it when transactions are done.
+// TODO: LDP-331 - Finish it after issue has been fixed
+@Test( enabled = false )
 public class RDFDocumentRepositoryIT extends AbstractIT {
 
 	@Autowired

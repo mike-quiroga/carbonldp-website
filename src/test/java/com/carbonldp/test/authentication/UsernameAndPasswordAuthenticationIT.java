@@ -4,7 +4,6 @@ import com.carbonldp.test.AbstractIT;
 import org.mockito.Mockito;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
-import org.testng.SkipException;
 import org.testng.annotations.Test;
 
 import static org.testng.Assert.fail;
@@ -41,21 +40,20 @@ public class UsernameAndPasswordAuthenticationIT extends AbstractIT {
 
 	}
 
-	@Test
+	// TODO: LDP-376
+	@Test( enabled = false )
 	public void invalidUsername() {
-		if ( true ) throw new SkipException( "fix in progres LDP-376" );
 		Authentication authentication = Mockito.mock( Authentication.class );
 
 		Mockito.when( authentication.getPrincipal() ).thenReturn( "invalid@carbonldp.com" );
 		Mockito.when( authentication.getCredentials() ).thenReturn( "username" );
-		//TODO LDP-376
+
 		try {
 			sesameUsernamePasswordAuthenticationProvider.authenticate( authentication );
 			fail();
 		} catch ( BadCredentialsException e ) {
 
 		}
-
 	}
 
 	@Test
