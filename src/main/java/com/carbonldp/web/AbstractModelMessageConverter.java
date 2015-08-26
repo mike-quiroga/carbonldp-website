@@ -49,11 +49,4 @@ public class AbstractModelMessageConverter extends ModelMessageConverter<Abstrac
 
 		return model;
 	}
-
-	private RDFFormat getFormatToUse( MediaType requestMediaType ) {
-		for ( MediaType supportedMediaType : this.mediaTypeFormats.keySet() ) {
-			if ( supportedMediaType.isCompatibleWith( requestMediaType ) ) return this.mediaTypeFormats.get( supportedMediaType );
-		}
-		return this.getDefaultFormat();
-	}
 }

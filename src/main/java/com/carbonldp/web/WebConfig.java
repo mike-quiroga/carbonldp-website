@@ -70,6 +70,11 @@ public class WebConfig extends WebMvcConfigurerAdapter {
 	}
 
 	@Bean
+	public RDFDocumentMessageConverter rdfDocumentMessageConverter() {
+		return new RDFDocumentMessageConverter( configurationRepository );
+	}
+
+	@Bean
 	public AbstractModelMessageConverter modelMessageConverter() {
 		return new AbstractModelMessageConverter( configurationRepository );
 	}
