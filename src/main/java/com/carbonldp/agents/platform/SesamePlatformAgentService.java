@@ -108,7 +108,7 @@ public class SesamePlatformAgentService extends AbstractSesameLDPService impleme
 		URI defaultPlatformRoleURI = getDefaultPlatformRoleURI();
 		URI roleAgentsContainerURI = getRoleAgentsContainerURI( defaultPlatformRoleURI );
 
-		containerRepository.addMember( roleAgentsContainerURI, agent );
+		containerRepository.addMember( roleAgentsContainerURI, agent.getURI() );
 	}
 
 	private URI getRoleAgentsContainerURI( URI defaultPlatformRoleURI ) {

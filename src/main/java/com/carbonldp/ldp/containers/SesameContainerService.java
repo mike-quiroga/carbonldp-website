@@ -3,14 +3,15 @@ package com.carbonldp.ldp.containers;
 import com.carbonldp.authorization.acl.ACLRepository;
 import com.carbonldp.descriptions.APIPreferences;
 import com.carbonldp.ldp.AbstractSesameLDPService;
-import com.carbonldp.ldp.sources.RDFSource;
 import com.carbonldp.ldp.sources.RDFSourceRepository;
 import com.carbonldp.spring.TransactionWrapper;
+import com.carbonldp.web.exceptions.BadRequestException;
 import org.joda.time.DateTime;
 import org.openrdf.model.URI;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.File;
+import java.util.Iterator;
 import java.util.Set;
 
 @Transactional
@@ -58,9 +59,18 @@ public class SesameContainerService extends AbstractSesameLDPService implements 
 	}
 
 	@Override
-	public void addMember( URI containerURI, RDFSource member ) {
-		// TODO: Check if the container exists
+	public void addMembers( URI containerURI, Set<URI> members ) {
+		Iterator<URI> iterator = members.iterator();
+		while ( iterator.hasNext() ) {
+			addMember( containerURI, iterator.next() );
+		}
+
+	}
+
+	@Override
+	public void addMember( URI containerURI, URI member ) {
 		// TODO: Check if the member exists
+		if ( ! sourceRepository.exists( containerURI ) ) throw new BadRequestException( "The target resource wasn't found." );
 		containerRepository.addMember( containerURI, member );
 	}
 

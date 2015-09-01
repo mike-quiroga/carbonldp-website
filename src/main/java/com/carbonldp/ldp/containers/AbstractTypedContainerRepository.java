@@ -1,7 +1,6 @@
 package com.carbonldp.ldp.containers;
 
 import com.carbonldp.ldp.AbstractSesameLDPRepository;
-import com.carbonldp.ldp.sources.RDFSource;
 import com.carbonldp.rdf.RDFDocumentRepository;
 import com.carbonldp.rdf.RDFResourceRepository;
 import com.carbonldp.repository.DocumentGraphQueryResultHandler;
@@ -175,19 +174,17 @@ public abstract class AbstractTypedContainerRepository extends AbstractSesameLDP
 		connectionTemplate.write( connection -> connection.add( membershipResource, hasMemberRelation, memberURI, membershipResource ) );
 	}
 
-	protected RDFSource addMemberOfRelation( URI containerURI, RDFSource member ) {
+	protected void addMemberOfRelation( URI containerURI, URI member ) {
 		URI memberOfRelation = getMemberOfRelation( containerURI );
 		URI membershipResource = getMembershipResource( containerURI );
 
-		if ( memberOfRelation != null ) member.add( memberOfRelation, membershipResource );
-
-		return member;
 	}
 
 	@Override
-	public RDFSource addMember( URI containerURI, RDFSource member ) {
-		addHasMemberRelation( containerURI, member.getURI() );
-		return addMemberOfRelation( containerURI, member );
+	public void addMember( URI containerURI, URI member ) {
+		addHasMemberRelation( containerURI, member );
+		// TODO: check for permissions, pending design
+		//addMemberOfRelation( containerURI, member );
 	}
 
 	protected static String getHasMemberRelationSPARQL( String containerVar, String hasMemberRelationVar, int numberOfTabs ) {

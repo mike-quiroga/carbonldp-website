@@ -19,7 +19,7 @@ public class AbstractOPTIONSRequestHandler extends AbstractLDPRequestHandler {
 		URI resourceURI = getTargetURI( request );
 		if ( isRDFRepresentation( resourceURI ) ) addDescribedByHeader( response, resourceURI );
 
-		return new ResponseEntity<Object>( HttpStatus.OK );
+		return new ResponseEntity<>( HttpStatus.OK );
 	}
 
 	private boolean isRDFRepresentation( URI resourceURI ) {

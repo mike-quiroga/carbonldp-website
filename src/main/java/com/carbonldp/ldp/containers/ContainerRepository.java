@@ -54,9 +54,9 @@ public interface ContainerRepository {
 
 	public void createChild( URI containerURI, RDFSource child, Type containerType );
 
-	public void addMember( URI containerURI, RDFSource member );
+	public void addMember( URI containerURI, URI member );
 
-	public void addMember( URI containerURI, RDFSource member, Type containerType );
+	public void addMember( URI containerURI, URI member, Type containerType );
 
 	public void removeMembers( URI targetURI );
 

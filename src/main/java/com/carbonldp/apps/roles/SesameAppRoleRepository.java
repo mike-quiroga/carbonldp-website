@@ -92,7 +92,7 @@ public class SesameAppRoleRepository extends AbstractSesameLDPRepository impleme
 	@Override
 	public void addAgent( URI appRoleURI, Agent agent ) {
 		URI agentsContainer = getAgentsContainerURI( appRoleURI );
-		containerRepository.addMember( agentsContainer, agent );
+		containerRepository.addMember( agentsContainer, agent.getURI() );
 	}
 
 	@Override

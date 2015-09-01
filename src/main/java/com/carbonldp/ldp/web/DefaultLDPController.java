@@ -47,7 +47,7 @@ public class DefaultLDPController extends AbstractLDPController {
 		return rdfPOSTHandler.handleRequest( requestModel, request, response );
 	}
 
-	@RequestMapping( method = RequestMethod.POST )
+	@RequestMapping( method = RequestMethod.POST)
 	public ResponseEntity<Object> handleNonRDFPost( InputStream bodyInputStream, HttpServletRequest request, HttpServletResponse response ) {
 		return nonRDFPostHandler.handleRequest( bodyInputStream, request, response );
 	}

@@ -10,35 +10,36 @@ import java.util.Collection;
 
 public interface RDFSourceService {
 	// @PreAuthorize( "hasPermission(#sourceURI, 'READ')" )
-	boolean exists( URI sourceURI );
+	public boolean exists( URI sourceURI );
 
 	@PreAuthorize( "hasPermission(#sourceURI, 'READ')" )
-	RDFSource get( URI sourceURI );
+	public RDFSource get( URI sourceURI );
 
 	// @PreAuthorize( "hasPermission(#sourceURI, 'READ')" )
-	DateTime getModified( URI sourceURI );
+	public DateTime getModified( URI sourceURI );
 
 	@PreAuthorize( "hasPermission(#sourceURI, 'READ')" )
-	URI getDefaultInteractionModel( URI sourceURI );
+	public URI getDefaultInteractionModel( URI sourceURI );
 
 	@PreAuthorize( "hasPermission(#parentURI, 'CREATE_ACCESS_POINT')" )
-	DateTime createAccessPoint( URI parentURI, AccessPoint accessPoint );
+	public DateTime createAccessPoint( URI parentURI, AccessPoint accessPoint );
 
 	@PreAuthorize( "hasPermission(#sourceURI, 'UPDATE')" )
-	void touch( URI sourceURI, DateTime now );
+	public void touch( URI sourceURI, DateTime now );
 
 	@PreAuthorize( "hasPermission(#sourceURI, 'UPDATE')" )
-	void add( URI sourceURI, Collection<RDFResource> resourceViews );
+	public void add( URI sourceURI, Collection<RDFResource> resourceViews );
 
 	@PreAuthorize( "hasPermission(#sourceURI, 'UPDATE')" )
-	void set( URI sourceURI, Collection<RDFResource> resourceViews );
+	public void set( URI sourceURI, Collection<RDFResource> resourceViews );
 
 	@PreAuthorize( "hasPermission(#source, 'UPDATE')" )
-	DateTime replace( RDFSource source );
+	public DateTime replace( RDFSource source );
 
 	@PreAuthorize( "hasPermission(#sourceURI, 'UPDATE')" )
-	void substract( URI sourceURI, Collection<RDFResource> resourceViews );
+	public void substract( URI sourceURI, Collection<RDFResource> resourceViews );
 
 	@PreAuthorize( "hasPermission(#sourceURI, 'DELETE')" )
-	void delete( URI sourceURI );
+	public void delete( URI sourceURI );
+
 }

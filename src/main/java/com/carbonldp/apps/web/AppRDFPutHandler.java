@@ -8,6 +8,7 @@ import com.carbonldp.rdf.RDFResource;
 import com.carbonldp.web.RequestHandler;
 import com.carbonldp.web.exceptions.BadRequestException;
 import org.openrdf.model.URI;
+import org.openrdf.model.impl.AbstractModel;
 import org.springframework.beans.factory.annotation.Autowired;
 
 @RequestHandler

@@ -214,7 +214,7 @@ public class SesameContainerRepository extends AbstractSesameLDPRepository imple
 	@Override
 	public void createChild( URI containerURI, RDFSource child, Type containerType ) {
 		addContainedResource( containerURI, child.getURI() );
-		child = getTypedRepository( containerType ).addMember( containerURI, child );
+		getTypedRepository( containerType ).addMember( containerURI, child.getURI() );
 		documentRepository.addDocument( child.getDocument() );
 	}
 
@@ -235,12 +235,12 @@ public class SesameContainerRepository extends AbstractSesameLDPRepository imple
 
 		addContainedResource( containerURI, rdfRepresentation.getURI() );
 
-		addMember( containerURI, rdfRepresentation );
+		addMember( containerURI, resourceURI );
 		sourceRepository.touch( containerURI, creationTime );
 	}
 
 	@Override
-	public void addMember( URI containerURI, RDFSource member ) {
+	public void addMember( URI containerURI, URI member ) {
 		Type containerType = getContainerType( containerURI );
 		if ( containerType == null ) throw new IllegalStateException( "The resource isn't a container." );
 
@@ -248,7 +248,7 @@ public class SesameContainerRepository extends AbstractSesameLDPRepository imple
 	}
 
 	@Override
-	public void addMember( URI containerURI, RDFSource member, Type containerType ) {
+	public void addMember( URI containerURI, URI member, Type containerType ) {
 		getTypedRepository( containerType ).addMember( containerURI, member );
 	}
 

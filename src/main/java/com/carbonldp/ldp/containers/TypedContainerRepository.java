@@ -1,7 +1,6 @@
 package com.carbonldp.ldp.containers;
 
 import com.carbonldp.ldp.containers.ContainerDescription.Type;
-import com.carbonldp.ldp.sources.RDFSource;
 import org.openrdf.model.Statement;
 import org.openrdf.model.URI;
 import org.openrdf.model.Value;
@@ -24,7 +23,7 @@ public interface TypedContainerRepository {
 
 	public Set<URI> filterMembers( URI containerURI, Set<URI> possibleMemberURIs );
 
-	public RDFSource addMember( URI containerURI, RDFSource member );
+	public void addMember( URI containerURI, URI member );
 
 	public void removeMembers( URI containerURI );
 }

@@ -95,7 +95,7 @@ public abstract class AbstractRDFPostRequestHandler<E extends BasicContainer> ex
 				throw new BadRequestException( "RDFSource interaction model can only create AccessPoints." );
 			if ( ! AccessPointFactory.isValid( resource, targetURI, false ) )
 				throw new BadRequestException( "An AccessPoint sent isn't valid." );
-			// TODO: Check for system managed properties
+			// TODO: Check for system managed properties (created, modified)
 			return AccessPointFactory.getAccessPoint( resource );
 		} );
 
