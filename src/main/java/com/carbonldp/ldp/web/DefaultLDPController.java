@@ -1,5 +1,6 @@
 package com.carbonldp.ldp.web;
 
+import com.carbonldp.rdf.RDFDocument;
 import com.carbonldp.web.exceptions.NotImplementedException;
 import org.openrdf.model.impl.AbstractModel;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,8 +43,8 @@ public class DefaultLDPController extends AbstractLDPController {
 		"application/ld+json",
 		"text/turtle"
 	} )
-	public ResponseEntity<Object> handleRDFPost( @RequestBody AbstractModel requestModel, HttpServletRequest request, HttpServletResponse response ) {
-		return rdfPOSTHandler.handleRequest( requestModel, request, response );
+	public ResponseEntity<Object> handleRDFPost( @RequestBody RDFDocument document, HttpServletRequest request, HttpServletResponse response ) {
+		return rdfPOSTHandler.handleRequest( document, request, response );
 	}
 
 	@RequestMapping( method = RequestMethod.POST )

@@ -4,6 +4,7 @@ import com.carbonldp.HTTPHeaders;
 import com.carbonldp.descriptions.APIPreferences.InteractionModel;
 import com.carbonldp.ldp.containers.*;
 import com.carbonldp.models.EmptyResponse;
+import com.carbonldp.rdf.RDFDocument;
 import com.carbonldp.rdf.RDFNodeEnum;
 import com.carbonldp.rdf.RDFResource;
 import com.carbonldp.utils.HTTPUtil;
@@ -59,18 +60,13 @@ public abstract class AbstractRDFPostRequestHandler<E extends BasicContainer> ex
 		setDefaultInteractionModel( InteractionModel.CONTAINER );
 	}
 
-	public ResponseEntity<Object> handleRequest( AbstractModel requestModel, HttpServletRequest request, HttpServletResponse response ) {
+	public ResponseEntity<Object> handleRequest( RDFDocument document, HttpServletRequest request, HttpServletResponse response ) {
 		setUp( request, response );
 
 		URI targetURI = getTargetURI( request );
-		if ( ! targetResourceExists( targetURI ) ) {
-			throw new NotFoundException( "The target resource wasn't found." );
-		}
+		if ( ! targetResourceExists( targetURI ) ) throw new NotFoundException( "The target resource wasn't found." );
 
-		validateRequestModel( requestModel );
-
-		RDFResource requestDocumentResource = getRequestDocumentResource( requestModel );
-		seekForOrphanFragments( requestModel, requestDocumentResource );
+		RDFResource requestDocumentResource = document.getDocumentResource();
 
 		InteractionModel interactionModel = getInteractionModel( targetURI );
 
@@ -85,19 +81,8 @@ public abstract class AbstractRDFPostRequestHandler<E extends BasicContainer> ex
 
 	}
 
-	private ResponseEntity<Object> handlePOSTToRDFSource( final URI targetURI, RDFResource requestDocumentResource ) {
-		AccessPoint requestAccessPoint = processDocumentResource( requestDocumentResource, resource -> {
-			for ( RDFNodeEnum invalidType : invalidTypesForRDFSources ) {
-				if ( resource.hasType( invalidType ) )
-					throw new BadRequestException( "One of the resources sent in the request contains an invalid type." );
-			}
-			if ( ! AccessPointFactory.isAccessPoint( resource ) )
-				throw new BadRequestException( "RDFSource interaction model can only create AccessPoints." );
-			if ( ! AccessPointFactory.isValid( resource, targetURI, false ) )
-				throw new BadRequestException( "An AccessPoint sent isn't valid." );
-			// TODO: Check for system managed properties
-			return AccessPointFactory.getAccessPoint( resource );
-		} );
+	private ResponseEntity<Object> handlePOSTToRDFSource( URI targetURI, RDFResource requestDocumentResource ) {
+		AccessPoint requestAccessPoint = getRequestAccessPoint( targetURI, requestDocumentResource );
 
 		requestDocumentResource = getDocumentResourceWithFinalURI( requestAccessPoint, targetURI.stringValue() );
 		if ( ! requestDocumentResource.equals( requestAccessPoint.getURI() ) ) {
@@ -109,26 +94,24 @@ public abstract class AbstractRDFPostRequestHandler<E extends BasicContainer> ex
 		return generateCreatedResponse( requestAccessPoint, creationTime );
 	}
 
+	private AccessPoint getRequestAccessPoint( URI targetURI, RDFResource requestDocumentResource ) {
+		for ( RDFNodeEnum invalidType : invalidTypesForRDFSources ) {
+			if ( requestDocumentResource.hasType( invalidType ) )
+				throw new BadRequestException( "One of the resources sent in the request contains an invalid type." );
+		}
+		if ( ! AccessPointFactory.isAccessPoint( requestDocumentResource ) )
+			throw new BadRequestException( "RDFSource interaction model can only create AccessPoints." );
+		if ( ! AccessPointFactory.isValid( requestDocumentResource, targetURI, false ) )
+			throw new BadRequestException( "An AccessPoint sent isn't valid." );
+		// TODO: Check for system managed properties
+		return AccessPointFactory.getAccessPoint( requestDocumentResource );
+	}
+
 	private ResponseEntity<Object> handlePOSTToContainer( URI targetURI, RDFResource requestDocumentResource ) {
 
 		validateDocumentResource( targetURI, requestDocumentResource );
 
-		BasicContainer requestBasicContainer = processDocumentResource( requestDocumentResource, resource -> {
-			for ( RDFNodeEnum invalidType : invalidTypesForContainers ) {
-				if ( resource.hasType( invalidType ) )
-					throw new BadRequestException( "One of the resources sent in the request contains an invalid type." );
-			}
-			if ( BasicContainerFactory.isBasicContainer( resource ) ) {
-				if ( ! BasicContainerFactory.isValid( resource ) )
-					throw new BadRequestException( "A BasicContainer sent isn't valid." );
-				// TODO: Check for system managed properties
-				return new BasicContainer( resource );
-			} else {
-				BasicContainer basicContainer = BasicContainerFactory.create( resource );
-				basicContainer.setDefaultInteractionModel( InteractionModel.RDF_SOURCE );
-				return basicContainer;
-			}
-		} );
+		BasicContainer requestBasicContainer = getRequestBasicContainer( requestDocumentResource );
 
 		requestDocumentResource = getDocumentResourceWithFinalURI( requestBasicContainer, targetURI.stringValue() );
 		if ( ! requestDocumentResource.equals( requestBasicContainer.getURI() ) ) requestBasicContainer = new BasicContainer( requestDocumentResource );
@@ -140,6 +123,23 @@ public abstract class AbstractRDFPostRequestHandler<E extends BasicContainer> ex
 
 		DateTime modified = sourceService.getModified( documentResourceView.getURI() );
 		return generateCreatedResponse( documentResourceView, modified );
+	}
+
+	private BasicContainer getRequestBasicContainer( RDFResource requestDocumentResource ) {
+		for ( RDFNodeEnum invalidType : invalidTypesForContainers ) {
+			if ( requestDocumentResource.hasType( invalidType ) )
+				throw new BadRequestException( "One of the resources sent in the request contains an invalid type." );
+		}
+		if ( BasicContainerFactory.isBasicContainer( requestDocumentResource ) ) {
+			if ( ! BasicContainerFactory.isValid( requestDocumentResource ) )
+				throw new BadRequestException( "A BasicContainer sent isn't valid." );
+			// TODO: Check for system managed properties
+			return new BasicContainer( requestDocumentResource );
+		} else {
+			BasicContainer basicContainer = BasicContainerFactory.create( requestDocumentResource );
+			basicContainer.setDefaultInteractionModel( InteractionModel.RDF_SOURCE );
+			return basicContainer;
+		}
 	}
 
 	protected abstract E getDocumentResourceView( BasicContainer requestBasicContainer );
