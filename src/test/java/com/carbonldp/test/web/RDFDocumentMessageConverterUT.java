@@ -2,7 +2,7 @@ package com.carbonldp.test.web;
 
 import com.carbonldp.config.ConfigurationRepository;
 import com.carbonldp.rdf.RDFDocument;
-import com.carbonldp.web.RDFDocumentMessageConverter;
+import com.carbonldp.web.converters.RDFDocumentMessageConverter;
 import org.mockito.Mockito;
 import org.openrdf.model.Resource;
 import org.openrdf.model.Statement;

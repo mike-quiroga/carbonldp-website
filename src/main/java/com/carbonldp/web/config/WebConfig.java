@@ -1,4 +1,4 @@
-package com.carbonldp.web;
+package com.carbonldp.web.config;
 
 import com.carbonldp.config.ConfigurationRepository;
 import com.carbonldp.ldp.nonrdf.NonRDFSourceMessageConverter;
@@ -8,6 +8,10 @@ import com.carbonldp.rdf.RDFResourceMessageConverter;
 import com.carbonldp.sparql.SPARQLBooleanMessageConverter;
 import com.carbonldp.sparql.SPARQLGraphMessageConverter;
 import com.carbonldp.sparql.SPARQLTupleMessageConverter;
+import com.carbonldp.web.*;
+import com.carbonldp.web.converters.AbstractModelMessageConverter;
+import com.carbonldp.web.converters.EmptyResponseMessageConverter;
+import com.carbonldp.web.converters.RDFDocumentMessageConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.*;
 import org.springframework.http.converter.ByteArrayHttpMessageConverter;
@@ -20,13 +24,13 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.multipart.MultipartResolver;
 import org.springframework.web.multipart.support.StandardServletMultipartResolver;
 import org.springframework.web.servlet.config.annotation.ContentNegotiationConfigurer;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 import java.util.List;
 
 @Configuration
-@EnableWebMvc
+// This import replaces the need of using @EnableWebMvc
+@Import( value = CustomWebMVCConfigurationSupport.class )
 @EnableTransactionManagement
 @EnableAspectJAutoProxy
 @ComponentScan(
@@ -49,6 +53,7 @@ public class WebConfig extends WebMvcConfigurerAdapter {
 		converters.add( nonRDFSourceMessageConverter() );
 		converters.add( rdfSourceMessageConverter() );
 		converters.add( rdfResourceMessageConverter() );
+		converters.add( rdfDocumentMessageConverter() );
 		converters.add( modelMessageConverter() );
 		converters.add( emptyResponseMessageConverter() );
 		converters.add( sparqlBooleanMessageConverter() );

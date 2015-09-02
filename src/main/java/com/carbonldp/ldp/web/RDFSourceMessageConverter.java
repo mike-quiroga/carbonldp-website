@@ -6,7 +6,7 @@ import com.carbonldp.http.Link;
 import com.carbonldp.ldp.nonrdf.RDFRepresentationDescription;
 import com.carbonldp.ldp.sources.RDFSource;
 import com.carbonldp.rdf.RDFResourceDescription;
-import com.carbonldp.web.ModelMessageConverter;
+import com.carbonldp.web.converters.ModelMessageConverter;
 import org.openrdf.model.Model;
 import org.openrdf.model.Value;
 import org.springframework.http.HttpHeaders;

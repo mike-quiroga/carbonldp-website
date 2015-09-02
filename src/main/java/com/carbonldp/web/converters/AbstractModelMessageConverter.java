@@ -1,10 +1,10 @@
-package com.carbonldp.web;
+package com.carbonldp.web.converters;
 
 import com.carbonldp.config.ConfigurationRepository;
-import com.carbonldp.rdf.DocumentRDFHandler;
 import org.openrdf.model.impl.AbstractModel;
 import org.openrdf.model.impl.LinkedHashModel;
 import org.openrdf.rio.*;
+import org.openrdf.rio.helpers.StatementCollector;
 import org.springframework.http.HttpInputMessage;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -40,7 +40,7 @@ public class AbstractModelMessageConverter extends ModelMessageConverter<Abstrac
 		AbstractModel model = new LinkedHashModel();
 		String baseURI = configurationRepository.forgeGenericRequestURL();
 
-		parser.setRDFHandler( new DocumentRDFHandler( model ) );
+		parser.setRDFHandler( new StatementCollector( model ) );
 		try {
 			parser.parse( bodyInputStream, baseURI );
 		} catch ( RDFParseException | RDFHandlerException e ) {

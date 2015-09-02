@@ -4,7 +4,7 @@ import com.carbonldp.config.ConfigurationRepository;
 import com.carbonldp.mail.MailSettings;
 import com.carbonldp.test.AbstractUT;
 import com.carbonldp.utils.ModelUtil;
-import com.carbonldp.web.AbstractModelMessageConverter;
+import com.carbonldp.web.converters.AbstractModelMessageConverter;
 import org.openrdf.model.URI;
 import org.openrdf.model.ValueFactory;
 import org.openrdf.model.impl.AbstractModel;

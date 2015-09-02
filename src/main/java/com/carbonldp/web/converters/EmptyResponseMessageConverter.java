@@ -1,4 +1,4 @@
-package com.carbonldp.web;
+package com.carbonldp.web.converters;
 
 import com.carbonldp.models.EmptyResponse;
 import com.carbonldp.utils.MediaTypeUtil;

@@ -3,7 +3,7 @@ package com.carbonldp.rdf;
 import com.carbonldp.Consts;
 import com.carbonldp.HTTPHeaders;
 import com.carbonldp.http.Link;
-import com.carbonldp.web.ModelMessageConverter;
+import com.carbonldp.web.converters.ModelMessageConverter;
 import org.openrdf.model.Model;
 import org.springframework.http.HttpHeaders;
 
