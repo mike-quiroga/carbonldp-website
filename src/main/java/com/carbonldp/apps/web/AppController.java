@@ -1,5 +1,6 @@
 package com.carbonldp.apps.web;
 
+import com.carbonldp.rdf.RDFDocument;
 import com.carbonldp.web.AbstractController;
 import com.carbonldp.web.exceptions.NotImplementedException;
 import org.openrdf.model.impl.AbstractModel;
@@ -21,8 +22,8 @@ public class AppController extends AbstractController {
 	private AppDELETEHandler deleteHandler;
 
 	@RequestMapping( method = RequestMethod.PUT )
-	public ResponseEntity<Object> replaceApp( @RequestBody AbstractModel requestModel, HttpServletRequest request, HttpServletResponse response ) {
-		return putHandler.handleRequest( requestModel, request, response );
+	public ResponseEntity<Object> replaceApp( @RequestBody RDFDocument requestdocument, HttpServletRequest request, HttpServletResponse response ) {
+		return putHandler.handleRequest( requestdocument, request, response );
 	}
 
 	@RequestMapping( method = RequestMethod.PATCH )

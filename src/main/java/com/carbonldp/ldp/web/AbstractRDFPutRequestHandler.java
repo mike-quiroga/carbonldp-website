@@ -2,12 +2,12 @@ package com.carbonldp.ldp.web;
 
 import com.carbonldp.descriptions.APIPreferences;
 import com.carbonldp.models.EmptyResponse;
+import com.carbonldp.rdf.RDFDocument;
 import com.carbonldp.rdf.RDFResource;
 import com.carbonldp.web.exceptions.BadRequestException;
 import com.carbonldp.web.exceptions.NotFoundException;
 import org.joda.time.DateTime;
 import org.openrdf.model.URI;
-import org.openrdf.model.impl.AbstractModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,7 +28,7 @@ public abstract class AbstractRDFPutRequestHandler<E extends RDFResource> extend
 		setDefaultInteractionModel( APIPreferences.InteractionModel.RDF_SOURCE );
 	}
 
-	public ResponseEntity<Object> handleRequest( AbstractModel requestModel, HttpServletRequest request, HttpServletResponse response ) {
+	public ResponseEntity<Object> handleRequest( RDFDocument requestDocument, HttpServletRequest request, HttpServletResponse response ) {
 		setUp( request, response );
 
 		URI targetURI = getTargetURI( request );
@@ -38,11 +38,8 @@ public abstract class AbstractRDFPutRequestHandler<E extends RDFResource> extend
 
 		String requestETag = getRequestETag();
 		checkPrecondition( targetURI, requestETag );
-		validateRequestModel( requestModel );
 
-		RDFResource requestDocumentResource = getRequestDocumentResource( requestModel );
-
-		seekForOrphanFragments( requestModel, requestDocumentResource );
+		RDFResource requestDocumentResource = requestDocument.getDocumentResource();
 
 		APIPreferences.InteractionModel interactionModel = getInteractionModel( targetURI );
 		switch ( interactionModel ) {

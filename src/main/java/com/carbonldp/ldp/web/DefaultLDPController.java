@@ -43,8 +43,8 @@ public class DefaultLDPController extends AbstractLDPController {
 		"application/ld+json",
 		"text/turtle"
 	} )
-	public ResponseEntity<Object> handleRDFPost( @RequestBody RDFDocument document, HttpServletRequest request, HttpServletResponse response ) {
-		return rdfPOSTHandler.handleRequest( document, request, response );
+	public ResponseEntity<Object> handleRDFPost( @RequestBody RDFDocument requestDocument, HttpServletRequest request, HttpServletResponse response ) {
+		return rdfPOSTHandler.handleRequest( requestDocument, request, response );
 	}
 
 	@RequestMapping( method = RequestMethod.POST )
@@ -66,8 +66,8 @@ public class DefaultLDPController extends AbstractLDPController {
 		"application/ld+json",
 		"text/turtle"
 	} )
-	public ResponseEntity<Object> handleRDFPUT( @RequestBody AbstractModel requestModel, HttpServletRequest request, HttpServletResponse response ) {
-		return putRDFHandler.handleRequest( requestModel, request, response );
+	public ResponseEntity<Object> handleRDFPUT( @RequestBody RDFDocument requestDocument, HttpServletRequest request, HttpServletResponse response ) {
+		return putRDFHandler.handleRequest( requestDocument, request, response );
 	}
 
 	@RequestMapping( method = RequestMethod.PUT )
