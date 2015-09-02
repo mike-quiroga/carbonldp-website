@@ -213,9 +213,10 @@ public class SesameContainerRepository extends AbstractSesameLDPRepository imple
 
 	@Override
 	public void createChild( URI containerURI, RDFSource child, Type containerType ) {
+		documentRepository.addDocument( child.getDocument() );
 		addContainedResource( containerURI, child.getURI() );
 		getTypedRepository( containerType ).addMember( containerURI, child.getURI() );
-		documentRepository.addDocument( child.getDocument() );
+
 	}
 
 	@Override

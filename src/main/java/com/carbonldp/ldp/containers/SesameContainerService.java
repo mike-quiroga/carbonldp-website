@@ -11,7 +11,6 @@ import org.openrdf.model.URI;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.File;
-import java.util.Iterator;
 import java.util.Set;
 
 @Transactional
@@ -60,11 +59,9 @@ public class SesameContainerService extends AbstractSesameLDPService implements 
 
 	@Override
 	public void addMembers( URI containerURI, Set<URI> members ) {
-		Iterator<URI> iterator = members.iterator();
-		while ( iterator.hasNext() ) {
-			addMember( containerURI, iterator.next() );
+		for ( URI member : members ) {
+			addMember( containerURI, member );
 		}
-
 	}
 
 	@Override
