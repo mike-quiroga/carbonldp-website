@@ -11,7 +11,7 @@ import com.carbonldp.sparql.SPARQLTupleMessageConverter;
 import com.carbonldp.web.*;
 import com.carbonldp.web.converters.AbstractModelMessageConverter;
 import com.carbonldp.web.converters.EmptyResponseMessageConverter;
-import com.carbonldp.web.converters.RDFDocumentMessageConverter;
+import com.carbonldp.rdf.RDFDocumentMessageConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.*;
 import org.springframework.http.converter.ByteArrayHttpMessageConverter;
