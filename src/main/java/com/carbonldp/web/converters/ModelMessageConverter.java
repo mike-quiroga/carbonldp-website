@@ -1,4 +1,4 @@
-package com.carbonldp.web;
+package com.carbonldp.web.converters;
 
 import com.carbonldp.HTTPHeaders;
 import com.carbonldp.utils.MediaTypeUtil;
@@ -35,7 +35,8 @@ public abstract class ModelMessageConverter<E extends Model> implements HttpMess
 				RDFFormat.TURTLE,
 				RDFFormat.JSONLD,
 				RDFFormat.RDFJSON,
-				RDFFormat.RDFXML
+				RDFFormat.RDFXML,
+				RDFFormat.TRIG
 			)
 		);
 
@@ -79,6 +80,13 @@ public abstract class ModelMessageConverter<E extends Model> implements HttpMess
 
 	public List<MediaType> getSupportedMediaTypes() {
 		return this.supportedMediaTypes;
+	}
+
+	protected RDFFormat getFormatToUse( MediaType requestMediaType ) {
+		for ( MediaType supportedMediaType : this.mediaTypeFormats.keySet() ) {
+			if ( supportedMediaType.isCompatibleWith( requestMediaType ) ) return this.mediaTypeFormats.get( supportedMediaType );
+		}
+		return this.getDefaultFormat();
 	}
 
 	protected RDFFormat getDefaultFormat() {

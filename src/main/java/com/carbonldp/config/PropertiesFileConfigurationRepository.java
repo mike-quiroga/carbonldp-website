@@ -17,7 +17,7 @@ public class PropertiesFileConfigurationRepository extends AbstractComponent imp
 	private String realmName;
 
 	@Value( "${config.enforce-ending-slash}" )
-	private Boolean _enforceEndingSlash;
+	private Boolean enforceEndingSlash;
 
 	@Value( "${config.platform.agents.require-validation}" )
 	private boolean requireAgentValidation;
@@ -37,7 +37,7 @@ public class PropertiesFileConfigurationRepository extends AbstractComponent imp
 	@Value( "${config.mail.smtp.tls:false}" )
 	private boolean useTLS;
 
-	private Random random;
+	private final Random random;
 
 	public PropertiesFileConfigurationRepository() {
 		this.random = new Random();
@@ -99,7 +99,7 @@ public class PropertiesFileConfigurationRepository extends AbstractComponent imp
 	}
 
 	public Boolean enforceEndingSlash() {
-		return _enforceEndingSlash;
+		return enforceEndingSlash;
 	}
 
 	@Override
@@ -121,5 +121,4 @@ public class PropertiesFileConfigurationRepository extends AbstractComponent imp
 
 		return settings;
 	}
-
 }

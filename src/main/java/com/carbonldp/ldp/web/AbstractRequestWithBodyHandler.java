@@ -48,7 +48,6 @@ public abstract class AbstractRequestWithBodyHandler<E extends RDFResource> exte
 		Set<Resource> subjects = requestModel.subjects();
 		validateRequestResourcesNumber( subjects.size() );
 
-		//TODO: now allowing BNodes
 //		for ( Resource subject : subjects )
 //			validateRequestResource( subject );
 	}

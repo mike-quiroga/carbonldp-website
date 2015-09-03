@@ -1,7 +1,7 @@
 package com.carbonldp.apps.web;
 
+import com.carbonldp.rdf.RDFDocument;
 import com.carbonldp.web.AbstractController;
-import org.openrdf.model.impl.AbstractModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -21,8 +21,8 @@ public class AppsController extends AbstractController {
 		"application/ld+json",
 		"text/turtle"
 	} )
-	public ResponseEntity<Object> createApplication( @RequestBody AbstractModel requestModel, HttpServletRequest request, HttpServletResponse response ) {
-		return postRequestHandler.handleRequest( requestModel, request, response );
+	public ResponseEntity<Object> createApplication( @RequestBody RDFDocument requestDocument, HttpServletRequest request, HttpServletResponse response ) {
+		return postRequestHandler.handleRequest( requestDocument, request, response );
 	}
 
 	@Autowired

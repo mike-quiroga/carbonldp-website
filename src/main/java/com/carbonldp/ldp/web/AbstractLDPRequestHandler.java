@@ -17,10 +17,8 @@ import com.carbonldp.models.HTTPHeaderValue;
 import com.carbonldp.rdf.RDFNodeEnum;
 import com.carbonldp.rdf.RDFResource;
 import com.carbonldp.rdf.URIObject;
-import com.carbonldp.utils.HTTPUtil;
-import com.carbonldp.utils.RDFNodeUtil;
-import com.carbonldp.utils.URIUtil;
-import com.carbonldp.utils.ValueUtil;
+import com.carbonldp.sparql.SPARQLService;
+import com.carbonldp.utils.*;
 import com.carbonldp.web.AbstractRequestHandler;
 import com.carbonldp.web.exceptions.BadRequestException;
 import com.carbonldp.web.exceptions.PreconditionFailedException;
@@ -52,6 +50,7 @@ public abstract class AbstractLDPRequestHandler extends AbstractRequestHandler {
 	protected RDFSourceService sourceService;
 	protected ContainerService containerService;
 	protected NonRDFSourceService nonRdfSourceService;
+	protected SPARQLService sparqlService;
 
 	protected HttpServletRequest request;
 	protected HttpServletResponse response;
@@ -95,6 +94,7 @@ public abstract class AbstractLDPRequestHandler extends AbstractRequestHandler {
 
 	private InteractionModel getRequestInteractionModel( HttpServletRequest request ) {
 		HTTPHeader preferHeader = new HTTPHeader( request.getHeaders( HTTPHeaders.PREFER ) );
+		
 		// TODO: Move this to a constants file
 		List<HTTPHeaderValue> filteredValues = HTTPHeader.filterHeaderValues( preferHeader, null, null, "rel", "interaction-model" );
 		int size = filteredValues.size();
@@ -218,6 +218,11 @@ public abstract class AbstractLDPRequestHandler extends AbstractRequestHandler {
 	@Autowired
 	public void setNonRDFResourceService( NonRDFSourceService nonRdfSourceService ) {
 		this.nonRdfSourceService = nonRdfSourceService;
+	}
+
+	@Autowired
+	public void setSparqlService( SPARQLService sparqlService ) {
+		this.sparqlService = sparqlService;
 	}
 
 }

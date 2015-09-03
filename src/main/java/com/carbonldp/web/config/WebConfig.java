@@ -1,10 +1,17 @@
-package com.carbonldp.web;
+package com.carbonldp.web.config;
 
 import com.carbonldp.config.ConfigurationRepository;
 import com.carbonldp.ldp.nonrdf.NonRDFSourceMessageConverter;
 import com.carbonldp.ldp.web.RDFSourceMessageConverter;
 import com.carbonldp.log.ControllerCallsLogger;
 import com.carbonldp.rdf.RDFResourceMessageConverter;
+import com.carbonldp.sparql.SPARQLBooleanMessageConverter;
+import com.carbonldp.sparql.SPARQLGraphMessageConverter;
+import com.carbonldp.sparql.SPARQLTupleMessageConverter;
+import com.carbonldp.web.*;
+import com.carbonldp.web.converters.AbstractModelMessageConverter;
+import com.carbonldp.web.converters.EmptyResponseMessageConverter;
+import com.carbonldp.web.converters.RDFDocumentMessageConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.*;
 import org.springframework.http.converter.ByteArrayHttpMessageConverter;
@@ -17,13 +24,13 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.multipart.MultipartResolver;
 import org.springframework.web.multipart.support.StandardServletMultipartResolver;
 import org.springframework.web.servlet.config.annotation.ContentNegotiationConfigurer;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 import java.util.List;
 
 @Configuration
-@EnableWebMvc
+// This import replaces the need of using @EnableWebMvc
+@Import( value = CustomWebMVCConfigurationSupport.class )
 @EnableTransactionManagement
 @EnableAspectJAutoProxy
 @ComponentScan(
@@ -42,11 +49,15 @@ public class WebConfig extends WebMvcConfigurerAdapter {
 
 	@Override
 	public void configureMessageConverters( List<HttpMessageConverter<?>> converters ) {
+		converters.add( sparqlTupleMessageConverter() );
 		converters.add( nonRDFSourceMessageConverter() );
 		converters.add( rdfSourceMessageConverter() );
 		converters.add( rdfResourceMessageConverter() );
+		converters.add( rdfDocumentMessageConverter() );
 		converters.add( modelMessageConverter() );
 		converters.add( emptyResponseMessageConverter() );
+		converters.add( sparqlBooleanMessageConverter() );
+		converters.add( sparqlGraphMessageConverter() );
 		converters.add( new ByteArrayHttpMessageConverter() );
 		converters.add( new StringHttpMessageConverter() );
 		converters.add( new FormHttpMessageConverter() );
@@ -61,6 +72,11 @@ public class WebConfig extends WebMvcConfigurerAdapter {
 	@Bean
 	public MultipartResolver multipartResolver() {
 		return new StandardServletMultipartResolver();
+	}
+
+	@Bean
+	public RDFDocumentMessageConverter rdfDocumentMessageConverter() {
+		return new RDFDocumentMessageConverter( configurationRepository );
 	}
 
 	@Bean
@@ -94,7 +110,17 @@ public class WebConfig extends WebMvcConfigurerAdapter {
 	}
 
 	@Bean
-	public NonRDFSourceMessageConverter nonRDFResourceMessageConverter() {
-		return new NonRDFSourceMessageConverter();
+	public SPARQLTupleMessageConverter sparqlTupleMessageConverter() {
+		return new SPARQLTupleMessageConverter();
+	}
+
+	@Bean
+	public SPARQLGraphMessageConverter sparqlGraphMessageConverter() {
+		return new SPARQLGraphMessageConverter();
+	}
+
+	@Bean
+	public SPARQLBooleanMessageConverter sparqlBooleanMessageConverter() {
+		return new SPARQLBooleanMessageConverter();
 	}
 }

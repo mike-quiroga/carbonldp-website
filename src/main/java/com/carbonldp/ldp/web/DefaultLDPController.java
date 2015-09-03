@@ -1,5 +1,6 @@
 package com.carbonldp.ldp.web;
 
+import com.carbonldp.rdf.RDFDocument;
 import com.carbonldp.web.exceptions.NotImplementedException;
 import org.openrdf.model.impl.AbstractModel;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,9 +18,6 @@ import java.io.InputStream;
 @Controller
 @RequestMapping( "/**" )
 public class DefaultLDPController extends AbstractLDPController {
-	private static final String FILE_PARAMETER = "file";
-	private static final String FILE_NAME_PARAMETER = "name";
-
 	private BaseOPTIONSRequestHandler optionsHandler;
 	private BaseGETRequestHandler getHandler;
 	private BaseRDFPostRequestHandler rdfPOSTHandler;
@@ -28,6 +26,8 @@ public class DefaultLDPController extends AbstractLDPController {
 	private BaseNonRDFPutRequestHandler putNonRDFHandler;
 	private BasePATCHRequestHandler patchHandler;
 	private BaseDELETERequestHandler deleteHandler;
+
+	private BaseSPARQLQueryPOSTRequestHandler sparqlQueryHandler;
 
 	@RequestMapping( method = RequestMethod.OPTIONS )
 	public ResponseEntity<Object> handleOPTIONS( HttpServletRequest request, HttpServletResponse response ) {
@@ -43,13 +43,18 @@ public class DefaultLDPController extends AbstractLDPController {
 		"application/ld+json",
 		"text/turtle"
 	} )
-	public ResponseEntity<Object> handleRDFPost( @RequestBody AbstractModel requestModel, HttpServletRequest request, HttpServletResponse response ) {
-		return rdfPOSTHandler.handleRequest( requestModel, request, response );
+	public ResponseEntity<Object> handleRDFPost( @RequestBody RDFDocument requestDocument, HttpServletRequest request, HttpServletResponse response ) {
+		return rdfPOSTHandler.handleRequest( requestDocument, request, response );
 	}
 
 	@RequestMapping( method = RequestMethod.POST)
 	public ResponseEntity<Object> handleNonRDFPost( InputStream bodyInputStream, HttpServletRequest request, HttpServletResponse response ) {
 		return nonRDFPostHandler.handleRequest( bodyInputStream, request, response );
+	}
+
+	@RequestMapping( method = RequestMethod.POST, consumes = "application/sparql-query" )
+	public ResponseEntity<Object> handleSPARQLPost( @RequestBody String query, HttpServletRequest request, HttpServletResponse response ) {
+		return sparqlQueryHandler.handleRequest( query, request, response );
 	}
 
 	@RequestMapping( method = RequestMethod.POST, consumes = "multipart/*" )
@@ -61,8 +66,8 @@ public class DefaultLDPController extends AbstractLDPController {
 		"application/ld+json",
 		"text/turtle"
 	} )
-	public ResponseEntity<Object> handleRDFPUT( @RequestBody AbstractModel requestModel, HttpServletRequest request, HttpServletResponse response ) {
-		return putRDFHandler.handleRequest( requestModel, request, response );
+	public ResponseEntity<Object> handleRDFPUT( @RequestBody RDFDocument requestDocument, HttpServletRequest request, HttpServletResponse response ) {
+		return putRDFHandler.handleRequest( requestDocument, request, response );
 	}
 
 	@RequestMapping( method = RequestMethod.PUT )
@@ -87,10 +92,13 @@ public class DefaultLDPController extends AbstractLDPController {
 	public void setGetHandler( BaseGETRequestHandler getHandler ) { this.getHandler = getHandler; }
 
 	@Autowired
-	public void setRdfPOSTHandler( BaseRDFPostRequestHandler rdfPOSTHandler ) { this.rdfPOSTHandler = rdfPOSTHandler; }
+	public void setRDFPOSTHandler( BaseRDFPostRequestHandler rdfPOSTHandler ) { this.rdfPOSTHandler = rdfPOSTHandler; }
 
 	@Autowired
 	public void setNonRDFPostHandler( BaseNonRDFPostRequestHandler baseNonRDFPostRequestHandler ) {this.nonRDFPostHandler = baseNonRDFPostRequestHandler;}
+
+	@Autowired
+	public void setSPARQLQueryHandler( BaseSPARQLQueryPOSTRequestHandler sparqlQueryHandler ) { this.sparqlQueryHandler = sparqlQueryHandler; }
 
 	@Autowired
 	public void setPutRDFHandler( BaseRDFPutRequestHandler putRDFHandler ) { this.putRDFHandler = putRDFHandler; }

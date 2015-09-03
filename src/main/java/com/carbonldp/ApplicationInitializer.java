@@ -12,7 +12,7 @@ import com.carbonldp.repository.txn.TxnConfig;
 import com.carbonldp.security.SecurityConfig;
 import com.carbonldp.spring.SpringProfile;
 import com.carbonldp.utils.PropertiesUtil;
-import com.carbonldp.web.WebConfig;
+import com.carbonldp.web.config.WebConfig;
 import org.fusesource.jansi.AnsiConsole;
 import org.springframework.beans.factory.config.PropertiesFactoryBean;
 import org.springframework.core.io.ClassPathResource;

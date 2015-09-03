@@ -1,4 +1,4 @@
-package com.carbonldp.web;
+package com.carbonldp.web.converters;
 
 import com.carbonldp.models.EmptyResponse;
 import com.carbonldp.utils.MediaTypeUtil;
@@ -116,8 +116,8 @@ public class EmptyResponseMessageConverter implements HttpMessageConverter<Empty
 	private void setSupportedFormats( List<RDFFormat> supportedFormats ) {
 		Assert.notEmpty( supportedFormats, "'supportedFormats' must not be empty" );
 
-		this.supportedMediaTypes = new ArrayList<MediaType>();
-		this.mediaTypeFormats = new HashMap<MediaType, RDFFormat>();
+		this.supportedMediaTypes = new ArrayList<>();
+		this.mediaTypeFormats = new HashMap<>();
 
 		for ( RDFFormat format : supportedFormats ) {
 			List<MediaType> mediaTypes = MediaTypeUtil.fromStrings( format.getMIMETypes() );
