@@ -1,9 +1,9 @@
-package com.carbonldp.web.converters;
+package com.carbonldp.rdf;
 
 import com.carbonldp.config.ConfigurationRepository;
-import com.carbonldp.rdf.RDFDocument;
 import com.carbonldp.utils.URIUtil;
 import com.carbonldp.utils.ValueUtil;
+import com.carbonldp.web.converters.ModelMessageConverter;
 import org.openrdf.model.Resource;
 import org.openrdf.model.Statement;
 import org.openrdf.model.URI;
