@@ -4,6 +4,7 @@ import com.carbonldp.config.ConfigurationRepository;
 import com.carbonldp.utils.URIUtil;
 import com.carbonldp.utils.ValueUtil;
 import com.carbonldp.web.converters.ModelMessageConverter;
+import com.carbonldp.web.exceptions.BadRequestException;
 import org.openrdf.model.Resource;
 import org.openrdf.model.Statement;
 import org.openrdf.model.URI;
@@ -60,8 +61,10 @@ public class RDFDocumentMessageConverter extends ModelMessageConverter<RDFDocume
 		parser.setRDFHandler( documentRDFHandler );
 		try {
 			parser.parse( bodyInputStream, baseURI );
-		} catch ( RDFParseException | RDFHandlerException e ) {
-			throw new HttpMessageNotReadableException( "The message couldn't be parsed into an RDFDocument.", e );
+		} catch ( RDFParseException e ) {
+			throw new HttpMessageNotReadableException( "The attempt of parsing the request's body as: '" + formatToUse.getName() + "', failed. Reason: " + e.getMessage(), e );
+		} catch ( RDFHandlerException e ) {
+			throw new BadRequestException( e.getMessage() );
 		}
 
 		return documentRDFHandler.getDocument();

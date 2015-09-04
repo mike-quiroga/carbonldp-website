@@ -33,6 +33,6 @@ public abstract class AbstractWebRuntimeException extends CarbonNoStackTraceRunt
 		HttpStatus httpStatus = getHTTPStatus();
 		if ( httpStatus == null ) httpStatus = defaultHttpStatus;
 
-		return new ResponseEntity<Object>( httpStatus );
+		return new ResponseEntity<>( httpStatus );
 	}
 }

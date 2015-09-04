@@ -1,10 +1,12 @@
 package com.carbonldp.web;
 
 import com.carbonldp.web.exceptions.AbstractWebRuntimeException;
+import com.carbonldp.web.exceptions.BadRequestException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -22,6 +24,12 @@ public class PlatformExceptionController {
 		return exception.toResponseEntity();
 	}
 
+	@ExceptionHandler( HttpMessageNotReadableException.class )
+	public ResponseEntity<Object> handleHttpMessageNotReadableException( HttpServletRequest request, HttpServletResponse response, Exception rawException ) {
+		HttpMessageNotReadableException exception = (HttpMessageNotReadableException) rawException;
+		return new BadRequestException( exception.getMessage() ).toResponseEntity();
+	}
+
 	@ExceptionHandler( Exception.class )
 	public ResponseEntity<Object> handleUnexpectedException( HttpServletRequest request, HttpServletResponse response, Exception rawException ) {
 		// AccessDeniedException is handled in the ExceptionTranslationFilter
@@ -31,6 +39,6 @@ public class PlatformExceptionController {
 
 		// TODO: Create RDF error description
 
-		return new ResponseEntity<Object>( rawException.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR );
+		return new ResponseEntity<>( rawException.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR );
 	}
 }
