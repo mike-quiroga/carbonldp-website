@@ -1,4 +1,4 @@
-package com.carbonldp.ldp.web;
+package com.carbonldp.ldp.nonrdf;
 
 import com.carbonldp.Consts;
 import com.carbonldp.HTTPHeaders;

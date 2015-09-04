@@ -3,16 +3,15 @@ package com.carbonldp.apps.web;
 import com.carbonldp.apps.App;
 import com.carbonldp.apps.AppFactory;
 import com.carbonldp.apps.AppService;
-import com.carbonldp.ldp.web.AbstractRDFPutRequestHandler;
+import com.carbonldp.ldp.sources.AbstractPUTRequestHandler;
 import com.carbonldp.rdf.RDFResource;
 import com.carbonldp.web.RequestHandler;
 import com.carbonldp.web.exceptions.BadRequestException;
 import org.openrdf.model.URI;
-import org.openrdf.model.impl.AbstractModel;
 import org.springframework.beans.factory.annotation.Autowired;
 
 @RequestHandler
-public class AppRDFPutHandler extends AbstractRDFPutRequestHandler<App> {
+public class AppRDFPutToRDFSourceHandler extends AbstractPUTRequestHandler<App> {
 
 	private AppService appService;
 

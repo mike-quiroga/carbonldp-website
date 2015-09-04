@@ -17,7 +17,7 @@ import javax.servlet.http.HttpServletResponse;
 @Controller
 @RequestMapping( value = "/platform/apps/?*/" )
 public class AppController extends AbstractController {
-	private AppRDFPutHandler putHandler;
+	private AppRDFPutToRDFSourceHandler putHandler;
 	private AppPATCHHandler patchHandler;
 	private AppDELETEHandler deleteHandler;
 
@@ -38,7 +38,7 @@ public class AppController extends AbstractController {
 	}
 
 	@Autowired
-	public void setPUTHandler( AppRDFPutHandler putHandler ) {
+	public void setPUTHandler( AppRDFPutToRDFSourceHandler putHandler ) {
 		this.putHandler = putHandler;
 	}
 

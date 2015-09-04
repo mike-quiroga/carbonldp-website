@@ -1,8 +1,6 @@
-package com.carbonldp.ldp.web;
+package com.carbonldp.ldp.nonrdf;
 
 import com.carbonldp.descriptions.APIPreferences;
-import com.carbonldp.ldp.nonrdf.RDFRepresentation;
-import com.carbonldp.ldp.nonrdf.RDFRepresentationDescription;
 import com.carbonldp.models.EmptyResponse;
 import com.carbonldp.web.exceptions.BadRequestException;
 import com.carbonldp.web.exceptions.NotFoundException;

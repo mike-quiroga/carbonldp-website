@@ -1,5 +1,6 @@
-package com.carbonldp.ldp.web;
+package com.carbonldp.ldp.nonrdf;
 
+import com.carbonldp.ldp.web.AbstractLDPRequestHandler;
 import org.apache.commons.io.IOUtils;
 
 import java.io.File;

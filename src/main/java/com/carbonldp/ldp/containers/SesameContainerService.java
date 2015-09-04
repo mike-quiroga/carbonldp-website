@@ -62,6 +62,7 @@ public class SesameContainerService extends AbstractSesameLDPService implements 
 		for ( URI member : members ) {
 			addMember( containerURI, member );
 		}
+
 	}
 
 	@Override
@@ -69,6 +70,7 @@ public class SesameContainerService extends AbstractSesameLDPService implements 
 		// TODO: Check if the member exists
 		if ( ! sourceRepository.exists( containerURI ) ) throw new BadRequestException( "The target resource wasn't found." );
 		containerRepository.addMember( containerURI, member );
+
 	}
 
 	@Override

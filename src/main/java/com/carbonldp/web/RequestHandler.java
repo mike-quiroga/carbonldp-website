@@ -13,5 +13,5 @@ import java.lang.annotation.Target;
 @Component
 @Transactional
 public @interface RequestHandler {
-
+	String value() default "";
 }

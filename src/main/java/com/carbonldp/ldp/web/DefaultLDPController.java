@@ -1,5 +1,7 @@
 package com.carbonldp.ldp.web;
 
+import com.carbonldp.ldp.nonrdf.BaseNonRDFPostRequestHandler;
+import com.carbonldp.ldp.sources.InteractionModelController;
 import com.carbonldp.rdf.RDFDocument;
 import com.carbonldp.web.exceptions.NotImplementedException;
 import org.openrdf.model.impl.AbstractModel;
@@ -22,12 +24,13 @@ public class DefaultLDPController extends AbstractLDPController {
 	private BaseGETRequestHandler getHandler;
 	private BaseRDFPostRequestHandler rdfPOSTHandler;
 	private BaseNonRDFPostRequestHandler nonRDFPostHandler;
-	private BaseRDFPutRequestHandler putRDFHandler;
-	private BaseNonRDFPutRequestHandler putNonRDFHandler;
+
 	private BasePATCHRequestHandler patchHandler;
 	private BaseDELETERequestHandler deleteHandler;
 
 	private BaseSPARQLQueryPOSTRequestHandler sparqlQueryHandler;
+
+	private InteractionModelController rdfSourceController;
 
 	@RequestMapping( method = RequestMethod.OPTIONS )
 	public ResponseEntity<Object> handleOPTIONS( HttpServletRequest request, HttpServletResponse response ) {
@@ -47,7 +50,7 @@ public class DefaultLDPController extends AbstractLDPController {
 		return rdfPOSTHandler.handleRequest( requestDocument, request, response );
 	}
 
-	@RequestMapping( method = RequestMethod.POST)
+	@RequestMapping( method = RequestMethod.POST )
 	public ResponseEntity<Object> handleNonRDFPost( InputStream bodyInputStream, HttpServletRequest request, HttpServletResponse response ) {
 		return nonRDFPostHandler.handleRequest( bodyInputStream, request, response );
 	}
@@ -62,17 +65,9 @@ public class DefaultLDPController extends AbstractLDPController {
 		throw new NotImplementedException();
 	}
 
-	@RequestMapping( method = RequestMethod.PUT, consumes = {
-		"application/ld+json",
-		"text/turtle"
-	} )
-	public ResponseEntity<Object> handleRDFPUT( @RequestBody RDFDocument requestDocument, HttpServletRequest request, HttpServletResponse response ) {
-		return putRDFHandler.handleRequest( requestDocument, request, response );
-	}
-
 	@RequestMapping( method = RequestMethod.PUT )
-	public ResponseEntity<Object> handleNonRDFPUT( InputStream bodyInputStream, HttpServletRequest request, HttpServletResponse response ) {
-		return putNonRDFHandler.handleRequest( bodyInputStream, request, response );
+	public ResponseEntity<Object> handleDefaultRDFPUT( @RequestBody RDFDocument requestDocument, HttpServletRequest request, HttpServletResponse response ) {
+		return rdfSourceController.handleRDFPUTToRDFSource( requestDocument, request, response );
 	}
 
 	@RequestMapping( method = RequestMethod.PATCH )
@@ -101,14 +96,11 @@ public class DefaultLDPController extends AbstractLDPController {
 	public void setSPARQLQueryHandler( BaseSPARQLQueryPOSTRequestHandler sparqlQueryHandler ) { this.sparqlQueryHandler = sparqlQueryHandler; }
 
 	@Autowired
-	public void setPutRDFHandler( BaseRDFPutRequestHandler putRDFHandler ) { this.putRDFHandler = putRDFHandler; }
-
-	@Autowired
-	public void setPutNonRDFHandler( BaseNonRDFPutRequestHandler putNonRDFHandler ) {this.putNonRDFHandler = putNonRDFHandler;}
-
-	@Autowired
 	public void setPatchHandler( BasePATCHRequestHandler patchHandler ) { this.patchHandler = patchHandler; }
 
 	@Autowired
 	public void setDeleteHandler( BaseDELETERequestHandler deleteHandler ) { this.deleteHandler = deleteHandler; }
+
+	@Autowired
+	public void setRdfSourceController( InteractionModelController rdfSourceController ) { this.rdfSourceController = rdfSourceController; }
 }
