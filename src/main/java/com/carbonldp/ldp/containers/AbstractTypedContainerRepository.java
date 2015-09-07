@@ -124,8 +124,6 @@ public abstract class AbstractTypedContainerRepository extends AbstractSesameLDP
 		} );
 	}
 
-	protected abstract URI getMembershipResource( URI containerURI );
-
 	protected Set<URI> findMembers( URI containerURI, String sparqlSelector, Map<String, Value> bindings, String findMembers_query ) {
 		String queryString = String.format( findMembers_query, sparqlSelector );
 

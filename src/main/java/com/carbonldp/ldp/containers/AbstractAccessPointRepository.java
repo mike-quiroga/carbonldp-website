@@ -42,7 +42,8 @@ public abstract class AbstractAccessPointRepository extends AbstractTypedContain
 	}
 
 	// TODO: Create a more generic method instead of this specific one
-	protected URI getMembershipResource( URI containerURI ) {
+	@Override
+	public URI getMembershipResource( URI containerURI ) {
 		Map<String, Value> bindings = new HashMap<>();
 		bindings.put( "containerURI", containerURI );
 		return sparqlTemplate.executeTupleQuery( getMembershipResource_query, bindings, queryResult -> {

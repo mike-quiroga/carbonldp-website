@@ -280,7 +280,8 @@ public class SesameContainerRepository extends AbstractSesameLDPRepository imple
 		connectionTemplate.write( ( connection ) -> connection.add( containerURI, ContainerDescription.Property.CONTAINS.getURI(), resourceURI, containerURI ) );
 	}
 
-	private TypedContainerRepository getTypedRepository( Type containerType ) {
+	@Override
+	public TypedContainerRepository getTypedRepository( Type containerType ) {
 		for ( TypedContainerRepository service : typedContainerRepositories ) {
 			if ( service.supports( containerType ) ) return service;
 		}

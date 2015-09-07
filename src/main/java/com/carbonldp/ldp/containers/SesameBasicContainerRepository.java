@@ -70,7 +70,7 @@ public class SesameBasicContainerRepository extends AbstractTypedContainerReposi
 	}
 
 	@Override
-	protected URI getMembershipResource( URI containerURI ) {
+	public URI getMembershipResource( URI containerURI ) {
 		return containerURI;
 	}
 
