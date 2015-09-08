@@ -67,8 +67,12 @@ public class AbstractDELETERequestHandler extends AbstractLDPRequestHandler {
 	}
 
 	protected ResponseEntity<Object> handleRDFSourceDeletion( URI targetURI ) {
-		sourceService.delete( targetURI );
+		delete( targetURI );
 		return createSuccessfulDeleteResponse();
+	}
+
+	protected void delete( URI targetURI ) {
+		sourceService.delete( targetURI );
 	}
 
 	protected ResponseEntity<Object> handleContainerDeletion( URI targetURI ) {

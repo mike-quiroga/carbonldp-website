@@ -2,7 +2,6 @@ package com.carbonldp.apps.web;
 
 import com.carbonldp.rdf.RDFDocument;
 import com.carbonldp.web.AbstractController;
-import com.carbonldp.web.exceptions.NotImplementedException;
 import org.openrdf.model.impl.AbstractModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -33,8 +32,8 @@ public class AppController extends AbstractController {
 
 	@RequestMapping( method = RequestMethod.DELETE )
 	public ResponseEntity<Object> deleteApp( HttpServletRequest request, HttpServletResponse response ) {
-		// TODO: Implement
-		throw new NotImplementedException();
+		return deleteHandler.handleRequest( request, response );
+
 	}
 
 	@Autowired

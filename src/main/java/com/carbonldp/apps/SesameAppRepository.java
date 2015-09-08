@@ -95,10 +95,20 @@ public class SesameAppRepository extends AbstractSesameRepository implements App
 		return app;
 	}
 
+	public void delete( App app ) {
+
+		deleteAppRepository( app );
+		sourceService.delete( app.getRootContainerURI() );
+	}
+
 	private void createAppRepository( App app ) {
 		String repositoryID = generateAppRepositoryID( app );
 		appRepositoryService.createRepository( repositoryID );
 		app.setRepositoryID( repositoryID );
+	}
+
+	private void deleteAppRepository( App app ) {
+		appRepositoryService.deleteRepository( app.getRepositoryID() );
 	}
 
 	private String generateAppRepositoryID( App app ) {

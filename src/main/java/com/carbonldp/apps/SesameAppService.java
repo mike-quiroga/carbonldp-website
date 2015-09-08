@@ -91,6 +91,15 @@ public class SesameAppService extends AbstractSesameLDPService implements AppSer
 	}
 
 	@Override
+	public void delete( URI appURI ) {
+		if ( ! exists( appURI ) ) throw new ResourceDoesntExistException();
+
+		App app = appRepository.get( appURI );
+		appRepository.delete( app );
+		sourceRepository.delete( appURI );
+	}
+
+	@Override
 	public void addDomain( String domain ) {
 		// TODO: Implement
 		throw new RuntimeException( "Not Implemented" );
@@ -130,12 +139,6 @@ public class SesameAppService extends AbstractSesameLDPService implements AppSer
 		sourceRepository.add( appURI, resourceViewsToAdd );
 
 		sourceRepository.touch( appURI );
-	}
-
-	@Override
-	public void delete( App app ) {
-		// TODO: Implement
-		throw new RuntimeException( "Not Implemented" );
 	}
 
 	private ACL createAppACL( App app ) {
@@ -198,5 +201,9 @@ public class SesameAppService extends AbstractSesameLDPService implements AppSer
 			ACEDescription.Permission.UPDATE,
 			ACEDescription.Permission.DELETE
 		), true );
+	}
+
+	private void removePermisions() {
+
 	}
 }

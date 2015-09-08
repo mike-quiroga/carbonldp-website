@@ -117,7 +117,8 @@ public abstract class AbstractGETRequestHandler extends AbstractLDPRequestHandle
 	private void ensureETagIsPresent( Container container, Set<ContainerRetrievalPreference> containerRetrievalPreferences ) {
 		if ( ! containerRetrievalPreferences.contains( ContainerRetrievalPreference.CONTAINER_PROPERTIES ) ) {
 			DateTime modified = sourceService.getModified( container.getURI() );
-			container.setETag( modified );
+			if ( modified != null )
+				container.setETag( modified );
 		}
 	}
 
