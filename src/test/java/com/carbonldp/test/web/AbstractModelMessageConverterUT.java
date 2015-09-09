@@ -14,7 +14,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpInputMessage;
 import org.springframework.http.HttpOutputMessage;
 import org.springframework.http.MediaType;
-import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.http.converter.HttpMessageNotWritableException;
 import org.springframework.util.AntPathMatcher;
 import org.springframework.util.Assert;
@@ -26,14 +25,12 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Random;
 
-import static com.carbonldp.Consts.EMPTY_STRING;
-import static com.carbonldp.Consts.SLASH;
+import static com.carbonldp.Consts.*;
 import static org.testng.Assert.*;
 
 public class AbstractModelMessageConverterUT extends AbstractUT {
 	AbstractModel model;
 	AbstractModel modelRead;
-	LinkedHashModel compareModel;
 	MediaType mediaTypeAcceptable;
 	MediaType mediaTypeNotAcceptable;
 	MediaType mediaTypeAll;
@@ -57,17 +54,14 @@ public class AbstractModelMessageConverterUT extends AbstractUT {
 		messageConverter = new AbstractModelMessageConverter( configurationRepository );
 
 		model = new LinkedHashModel();
-		compareModel = new LinkedHashModel();
 		subj = factory.createURI( "http://example.org/rob" );
 		pred = factory.createURI( "http://example.org/is-a" );
 		obj = factory.createURI( "http://example.org/stark" );
 		model.add( subj, pred, obj );
-		compareModel.add( subj, pred, obj, subj );
 		subj = factory.createURI( "http://example.org/rob" );
 		pred = factory.createURI( "http://example.org/lives-in" );
 		obj = factory.createURI( "http://example.org/winterfell" );
 		model.add( subj, pred, obj );
-		compareModel.add( subj, pred, obj, subj );
 	}
 
 	@Test
@@ -89,24 +83,17 @@ public class AbstractModelMessageConverterUT extends AbstractUT {
 	}
 
 	@Test
-	public void readTest() {
-		try {
-			inputMessage = new MockHttpInputMessage( ModelUtil.getInputStream( model ) );
-			modelRead = messageConverter.read( LinkedHashModel.class, inputMessage );
-		} catch ( HttpMessageNotReadableException e ) {
-			throw new RuntimeException( e );
-		} catch ( IOException e ) {
-			throw new RuntimeException( e );
-		}
-		assertTrue( compareModel.equals( modelRead ) );
-		model.clear();
+	public void readTest() throws Exception {
 		inputMessage = new MockHttpInputMessage( ModelUtil.getInputStream( model ) );
-		try {
-			modelRead = messageConverter.read( LinkedHashModel.class, inputMessage );
-		} catch ( HttpMessageNotReadableException | IOException e ) {
-			throw new RuntimeException( "model nor propertly initialized", e );
+		modelRead = messageConverter.read( LinkedHashModel.class, inputMessage );
 
-		}
+		assertTrue( model.equals( modelRead ) );
+
+		model.clear();
+
+		inputMessage = new MockHttpInputMessage( ModelUtil.getInputStream( model ) );
+		modelRead = messageConverter.read( LinkedHashModel.class, inputMessage );
+
 		assertEquals( modelRead.size(), 0 );
 	}
 

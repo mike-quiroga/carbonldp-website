@@ -1,8 +1,9 @@
-package com.carbonldp.test.web;
+package com.carbonldp.test.rdf;
 
 import com.carbonldp.config.ConfigurationRepository;
 import com.carbonldp.rdf.RDFDocument;
 import com.carbonldp.rdf.RDFDocumentMessageConverter;
+import com.carbonldp.web.exceptions.BadRequestException;
 import org.mockito.Mockito;
 import org.openrdf.model.Resource;
 import org.openrdf.model.Statement;
@@ -12,7 +13,6 @@ import org.openrdf.rio.RDFFormat;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpInputMessage;
 import org.springframework.http.MediaType;
-import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -79,7 +79,7 @@ public class RDFDocumentMessageConverterUT {
 		assertEquals( contexts.get( 0 ), expectedDocumentURI );
 	}
 
-	@Test( expectedExceptions = {HttpMessageNotReadableException.class} )
+	@Test( expectedExceptions = {BadRequestException.class} )
 	public void read__AbsoluteURIs_NoNamedGraphs_URIsBelongToMultipleDocuments__ThrowException() throws Exception {
 		RDFDocumentMessageConverter messageConverter = new RDFDocumentMessageConverter( this.configurationRepository );
 
@@ -144,7 +144,7 @@ public class RDFDocumentMessageConverterUT {
 		assertEquals( contexts.get( 0 ), expectedDocumentURI );
 	}
 
-	@Test( expectedExceptions = {HttpMessageNotReadableException.class} )
+	@Test( expectedExceptions = {BadRequestException.class} )
 	public void read__AbsoluteURIs_MultipleNamedGraphs_URIsBelongToASingleDocument__ThrowException() throws Exception {
 		RDFDocumentMessageConverter messageConverter = new RDFDocumentMessageConverter( this.configurationRepository );
 
@@ -175,7 +175,7 @@ public class RDFDocumentMessageConverterUT {
 		messageConverter.read( RDFDocument.class, inputMessage );
 	}
 
-	@Test( expectedExceptions = {HttpMessageNotReadableException.class} )
+	@Test( expectedExceptions = {BadRequestException.class} )
 	public void read__AbsoluteURIs_SingleNamedGraph_GeneralGraph__ThrowException() throws Exception {
 		RDFDocumentMessageConverter messageConverter = new RDFDocumentMessageConverter( this.configurationRepository );
 
@@ -256,8 +256,8 @@ public class RDFDocumentMessageConverterUT {
 		assertEquals( contexts.get( 0 ), expectedDocumentURI );
 	}
 
-	@Test( expectedExceptions = {HttpMessageNotReadableException.class} )
-	public void read__OnlyBlankNodes_NoNamedGraphs__ThrowException() throws Exception {
+	@Test
+	public void read__OnlyBlankNodes_NoNamedGraphs__CreateDocumentUsingGenericURI() throws Exception {
 		RDFDocumentMessageConverter messageConverter = new RDFDocumentMessageConverter( this.configurationRepository );
 
 		String body = "" +
@@ -267,7 +267,15 @@ public class RDFDocumentMessageConverterUT {
 
 		HttpInputMessage inputMessage = prepareHTTPInputMessage( body, RDFFormat.TRIG );
 
-		messageConverter.read( RDFDocument.class, inputMessage );
+		RDFDocument document = messageConverter.read( RDFDocument.class, inputMessage );
+
+		URI expectedDocumentURI = new URIImpl( this.configurationRepository.forgeGenericRequestURL() );
+		assertNotNull( document );
+		assertEquals( document.getResources().size(), 1 );
+
+		List<Resource> contexts = document.stream().map( Statement::getContext ).distinct().collect( Collectors.toList() );
+		assertEquals( contexts.size(), 1 );
+		assertEquals( contexts.get( 0 ), expectedDocumentURI );
 	}
 
 	@Test

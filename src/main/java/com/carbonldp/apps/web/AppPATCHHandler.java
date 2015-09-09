@@ -1,6 +1,6 @@
 package com.carbonldp.apps.web;
 
-import com.carbonldp.ldp.web.AbstractPATCHRequestHandler;
+import com.carbonldp.ldp.sources.AbstractPATCHRequestHandler;
 import com.carbonldp.web.RequestHandler;
 import org.openrdf.model.URI;
 

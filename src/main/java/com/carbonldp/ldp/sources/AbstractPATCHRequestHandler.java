@@ -1,16 +1,16 @@
-package com.carbonldp.ldp.web;
+package com.carbonldp.ldp.sources;
 
 import com.carbonldp.descriptions.APIPreferences;
 import com.carbonldp.ldp.patch.*;
+import com.carbonldp.ldp.web.AbstractLDPRequestHandler;
 import com.carbonldp.models.EmptyResponse;
-import com.carbonldp.models.Infraction;
+import com.carbonldp.rdf.RDFNode;
 import com.carbonldp.rdf.RDFResource;
 import com.carbonldp.utils.RDFNodeUtil;
-import com.carbonldp.utils.URIUtil;
-import com.carbonldp.utils.ValueUtil;
 import com.carbonldp.web.exceptions.BadRequestException;
 import com.carbonldp.web.exceptions.NotFoundException;
 import org.joda.time.DateTime;
+import org.openrdf.model.Resource;
 import org.openrdf.model.Statement;
 import org.openrdf.model.URI;
 import org.openrdf.model.impl.AbstractModel;
@@ -22,12 +22,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 @Transactional
-public abstract class AbstractPATCHRequestHandler<T extends PATCHRequest> extends AbstractRequestWithBodyHandler<T> {
+public abstract class AbstractPATCHRequestHandler extends AbstractLDPRequestHandler {
 
 	public AbstractPATCHRequestHandler() {
 		Set<APIPreferences.InteractionModel> supportedInteractionModels = new HashSet<>();
@@ -41,29 +40,34 @@ public abstract class AbstractPATCHRequestHandler<T extends PATCHRequest> extend
 		setUp( request, response );
 
 		URI targetURI = getTargetURI( request );
-		if ( ! targetResourceExists( targetURI ) ) {
-			throw new NotFoundException( "The target resource wasn't found." );
-		}
+		if ( ! targetResourceExists( targetURI ) ) throw new NotFoundException( "The target resource wasn't found." );
 
 		String requestETag = getRequestETag();
 		checkPrecondition( targetURI, requestETag );
-		validateRequestModel( requestModel );
+
+		// TODO: Validate subjects
 
 		PATCHRequest patchRequest = getPATCHRequest( requestModel );
 
-		validateDocumentResourceView( patchRequest );
-		validateAdditionalResources( requestModel, patchRequest, targetURI );
+		// validateDocumentResourceView( patchRequest );
+		// validateAdditionalResources( requestModel, patchRequest, targetURI );
 
-		APIPreferences.InteractionModel interactionModel = getInteractionModel( targetURI );
-		switch ( interactionModel ) {
-			case RDF_SOURCE:
-				return handlePATCHToRDFSource( targetURI, patchRequest );
-			default:
-				throw new BadRequestException( "The interaction model provided isn't supported in PATCH requests." );
-		}
+		Set<DeleteAction> deleteActions = getDeleteActions( patchRequest );
+		executeDeleteActions( targetURI, deleteActions );
+
+		Set<SetAction> setActions = getSetActions( patchRequest );
+		executeSetActions( targetURI, setActions );
+
+		Set<AddAction> addActions = getAddActions( patchRequest );
+		executeAddActions( targetURI, addActions );
+
+		DateTime eTag = sourceService.getModified( targetURI );
+		setETagHeader( eTag );
+
+		return new ResponseEntity<>( new EmptyResponse(), HttpStatus.OK );
 	}
 
-	@Override
+	/*
 	protected void validateDocumentResourceView( PATCHRequest patchRequest ) {
 		if ( patchRequest == null ) throw new BadRequestException( "The request doesn't contain a cp:PATCHRequest object." );
 		List<Infraction> infractions = PATCHRequestFactory.validate( patchRequest );
@@ -82,45 +86,32 @@ public abstract class AbstractPATCHRequestHandler<T extends PATCHRequest> extend
 		;
 	}
 
+
 	private boolean belongsToRequestDomain( URI targetURI, URI uri ) {
 		return URIUtil.isImmediateChild( targetURI.stringValue(), uri.stringValue() );
 	}
-
-	protected ResponseEntity<Object> handlePATCHToRDFSource( URI targetURI, PATCHRequest patchRequest ) {
-		Set<DeleteAction> deleteActions = getDeleteActions( patchRequest );
-		executeDeleteActions( targetURI, deleteActions );
-
-		Set<SetAction> setActions = getSetActions( patchRequest );
-		executeSetActions( targetURI, setActions );
-
-		Set<AddAction> addActions = getAddActions( patchRequest );
-		executeAddActions( targetURI, addActions );
-
-		DateTime eTag = sourceService.getModified( targetURI );
-		setETagHeader( eTag );
-
-		return new ResponseEntity<>( new EmptyResponse(), HttpStatus.OK );
-	}
+	*/
 
 	private PATCHRequest getPATCHRequest( AbstractModel requestModel ) {
-		Set<RDFResource> documentResources = getRequestDocumentResources( requestModel );
-
 		PATCHRequest patchRequest = null;
-		for ( RDFResource documentResource : documentResources ) {
-			if ( hasGenericRequestURI( documentResource ) ) {
-				if ( PATCHRequestFactory.is( documentResource ) ) {
-					if ( patchRequest != null ) throw new BadRequestException( "The request contains multiple cp:PATCHRequest." );
-					patchRequest = new PATCHRequest( documentResource );
-				} else throw new BadRequestException( "A resource with a generic URI isn't a cp:PATCHRequest." );
-			}
+		for ( Resource subject : requestModel.subjects() ) {
+			RDFNode node = new RDFNode( requestModel, subject );
+			if ( ! node.hasType( PATCHRequestDescription.Resource.CLASS ) ) continue;
+
+			if ( patchRequest != null ) throw new BadRequestException( "Multiple PATCHRequests on a single request" );
+
+			patchRequest = new PATCHRequest( node );
 		}
+
+		if ( patchRequest == null ) throw new BadRequestException( "The request didn't contain a cp:PATCHRequest" );
+
 		return patchRequest;
 	}
 
 	private Set<DeleteAction> getDeleteActions( PATCHRequest patchRequest ) {
 		return patchRequest.getDeleteActions()
 						   .stream()
-						   .map( uri -> new RDFResource( patchRequest.getBaseModel(), uri ) )
+						   .map( uri -> new RDFNode( patchRequest.getBaseModel(), uri ) )
 						   .map( DeleteAction::new )
 						   .collect( Collectors.toSet() )
 			;
@@ -160,7 +151,7 @@ public abstract class AbstractPATCHRequestHandler<T extends PATCHRequest> extend
 	private Set<SetAction> getSetActions( PATCHRequest patchRequest ) {
 		return patchRequest.getSetActions()
 						   .stream()
-						   .map( uri -> new RDFResource( patchRequest.getBaseModel(), uri ) )
+						   .map( uri -> new RDFNode( patchRequest.getBaseModel(), uri ) )
 						   .map( SetAction::new )
 						   .collect( Collectors.toSet() )
 			;
@@ -201,7 +192,7 @@ public abstract class AbstractPATCHRequestHandler<T extends PATCHRequest> extend
 	private Set<AddAction> getAddActions( PATCHRequest patchRequest ) {
 		return patchRequest.getAddActions()
 						   .stream()
-						   .map( uri -> new RDFResource( patchRequest.getBaseModel(), uri ) )
+						   .map( uri -> new RDFNode( patchRequest.getBaseModel(), uri ) )
 						   .map( AddAction::new )
 						   .collect( Collectors.toSet() )
 			;

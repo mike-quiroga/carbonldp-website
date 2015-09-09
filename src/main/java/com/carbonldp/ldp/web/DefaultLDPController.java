@@ -25,7 +25,6 @@ public class DefaultLDPController extends AbstractLDPController {
 	private BaseRDFPostRequestHandler rdfPOSTHandler;
 	private BaseNonRDFPostRequestHandler nonRDFPostHandler;
 
-	private BasePATCHRequestHandler patchHandler;
 	private BaseDELETERequestHandler deleteHandler;
 
 	private BaseSPARQLQueryPOSTRequestHandler sparqlQueryHandler;
@@ -71,8 +70,8 @@ public class DefaultLDPController extends AbstractLDPController {
 	}
 
 	@RequestMapping( method = RequestMethod.PATCH )
-	public ResponseEntity<Object> handlePATCH( @RequestBody AbstractModel requestModel, HttpServletRequest request, HttpServletResponse response ) {
-		return patchHandler.handleRequest( requestModel, request, response );
+	public ResponseEntity<Object> handleDefaultPATCH( @RequestBody AbstractModel requestModel, HttpServletRequest request, HttpServletResponse response ) {
+		return rdfSourceController.handlePATCHToRDFSource( requestModel, request, response );
 	}
 
 	@RequestMapping( method = RequestMethod.DELETE )
@@ -94,9 +93,6 @@ public class DefaultLDPController extends AbstractLDPController {
 
 	@Autowired
 	public void setSPARQLQueryHandler( BaseSPARQLQueryPOSTRequestHandler sparqlQueryHandler ) { this.sparqlQueryHandler = sparqlQueryHandler; }
-
-	@Autowired
-	public void setPatchHandler( BasePATCHRequestHandler patchHandler ) { this.patchHandler = patchHandler; }
 
 	@Autowired
 	public void setDeleteHandler( BaseDELETERequestHandler deleteHandler ) { this.deleteHandler = deleteHandler; }
