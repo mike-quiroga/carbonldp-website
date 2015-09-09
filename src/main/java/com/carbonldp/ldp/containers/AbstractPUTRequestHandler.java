@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 
 /**
  * @author MiguelAraCo
- * @since _version_
+ * @since 0.10.0-ALPHA
  */
 public abstract class AbstractPUTRequestHandler<E extends RDFResource> extends AbstractRequestWithBodyHandler<E> {
 	@Override

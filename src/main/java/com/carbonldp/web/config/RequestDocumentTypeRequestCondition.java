@@ -16,7 +16,7 @@ import java.util.Set;
 
 /**
  * @author MiguelAraCo
- * @since _version_
+ * @since 0.10.0-ALPHA
  */
 public class RequestDocumentTypeRequestCondition extends AbstractRequestCondition<RequestDocumentTypeRequestCondition> {
 	private final Set<APIPreferences.RequestDocumentType> requiredTypes;

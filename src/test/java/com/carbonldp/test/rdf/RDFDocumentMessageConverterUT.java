@@ -28,7 +28,7 @@ import static org.testng.Assert.*;
 
 /**
  * @author MiguelAraCo
- * @since _version_
+ * @since 0.10.0-ALPHA
  */
 public class RDFDocumentMessageConverterUT {
 	protected String genericRequestURIString = "http://example.org/";

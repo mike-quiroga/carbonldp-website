@@ -27,7 +27,7 @@ import java.util.Set;
 
 /**
  * @author MiguelAraCo
- * @since _version_
+ * @since 0.10.0-ALPHA
  */
 public class RDFDocumentMessageConverter extends ModelMessageConverter<RDFDocument> {
 

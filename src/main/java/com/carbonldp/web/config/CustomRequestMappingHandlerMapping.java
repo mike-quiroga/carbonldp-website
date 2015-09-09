@@ -8,7 +8,7 @@ import java.lang.reflect.Method;
 
 /**
  * @author MiguelAraCo
- * @since _version_
+ * @since 0.10.0-ALPHA
  */
 public class CustomRequestMappingHandlerMapping extends RequestMappingHandlerMapping {
 	@Override

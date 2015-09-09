@@ -19,7 +19,7 @@ import java.util.Set;
  * @see CustomRequestMappingHandlerMapping
  * @see org.springframework.web.servlet.mvc.condition.HeadersRequestCondition
  * @see org.springframework.web.servlet.mvc.method.RequestMappingInfo
- * @since _version_
+ * @since 0.10.0-ALPHA
  */
 public class InteractionModelRequestCondition extends AbstractRequestCondition<InteractionModelRequestCondition> {
 	private final Set<APIPreferences.InteractionModel> interactionModels;

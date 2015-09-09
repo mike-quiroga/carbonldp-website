@@ -15,7 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 
 /**
  * @author MiguelAraCo
- * @since _version_
+ * @since 0.10.0-ALPHA
  */
 @Controller( "container:interactionModelController" )
 @InteractionModel( APIPreferences.InteractionModel.CONTAINER )
