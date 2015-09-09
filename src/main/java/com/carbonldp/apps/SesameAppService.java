@@ -93,10 +93,7 @@ public class SesameAppService extends AbstractSesameLDPService implements AppSer
 	@Override
 	public void delete( URI appURI ) {
 		if ( ! exists( appURI ) ) throw new ResourceDoesntExistException();
-
-		App app = appRepository.get( appURI );
-		appRepository.delete( app );
-		sourceRepository.delete( appURI );
+		appRepository.delete( appURI );
 	}
 
 	@Override
@@ -201,9 +198,5 @@ public class SesameAppService extends AbstractSesameLDPService implements AppSer
 			ACEDescription.Permission.UPDATE,
 			ACEDescription.Permission.DELETE
 		), true );
-	}
-
-	private void removePermisions() {
-
 	}
 }

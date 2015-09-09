@@ -11,5 +11,5 @@ public interface AppRepository {
 
 	public App create( App app );
 
-	public void delete( App app );
+	public void delete( URI appURI );
 }

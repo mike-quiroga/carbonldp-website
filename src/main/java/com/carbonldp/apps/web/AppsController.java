@@ -1,7 +1,9 @@
 package com.carbonldp.apps.web;
 
+import com.carbonldp.descriptions.APIPreferences;
 import com.carbonldp.rdf.RDFDocument;
 import com.carbonldp.web.AbstractController;
+import com.carbonldp.web.config.InteractionModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -17,10 +19,8 @@ import javax.servlet.http.HttpServletResponse;
 public class AppsController extends AbstractController {
 	private AppsRDFPostHandler postRequestHandler;
 
-	@RequestMapping( method = RequestMethod.POST, consumes = {
-		"application/ld+json",
-		"text/turtle"
-	} )
+	@InteractionModel( APIPreferences.InteractionModel.CONTAINER )
+	@RequestMapping( method = RequestMethod.POST )
 	public ResponseEntity<Object> createApplication( @RequestBody RDFDocument requestDocument, HttpServletRequest request, HttpServletResponse response ) {
 		return postRequestHandler.handleRequest( requestDocument, request, response );
 	}
