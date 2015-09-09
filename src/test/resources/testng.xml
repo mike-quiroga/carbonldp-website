@@ -1,23 +1,32 @@
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
 
 <suite name="carbon-platform - All Tests">
-    <test name="All Tests">
-        <classes>
-            <class name="com.carbonldp.test.agents.AgentUT"/>
-            <class name="com.carbonldp.test.web.AbstractModelMessageConverterUT"/>
+    <listeners>
+        <listener class-name="com.carbonldp.test.DisableTestClassInterceptor">
+            <test name="Unit Tests">
+                <classes>
+                    <class name="com.carbonldp.test.agents.AgentUT"/>
+                    <class name="com.carbonldp.test.web.AbstractModelMessageConverterUT"/>
+                    <class name="com.carbonldp.test.rdf.RDFDocumentMessageConverterUT"/>
+                </classes>
+            </test>
 
-            <class name="com.carbonldp.test.transaction.TransactionManagementIT"/>
-            <class name="com.carbonldp.test.apps.context.AppContextIT"/>
+            <test name="Integration Tests">
+                <classes>
+                    <class name="com.carbonldp.test.transaction.TransactionManagementIT"/>
+                    <class name="com.carbonldp.test.apps.context.AppContextIT"/>
 
-            <class name="com.carbonldp.test.authentication.UsernameAndPasswordAuthenticationIT"/>
-            <class name="com.carbonldp.test.authorization.SecurityContextExchangerIT"/>
-            <class name="com.carbonldp.test.rdf.RDFDocumentRepositoryIT"/>
+                    <class name="com.carbonldp.test.authentication.UsernameAndPasswordAuthenticationIT"/>
+                    <class name="com.carbonldp.test.authorization.SecurityContextExchangerIT"/>
+                    <class name="com.carbonldp.test.rdf.RDFDocumentRepositoryIT"/>
 
-            <class name="com.carbonldp.test.repository.services.RDFDocumentServiceIT"/>
-            <class name="com.carbonldp.test.transaction.TransactionManagementIT"/>
-            <class name="com.carbonldp.test.web.cors.CORSAppContextFilterIT"/>
-            <class name="com.carbonldp.test.web.cors.CORSPlatformContextFilterIT"/>
+                    <class name="com.carbonldp.test.repository.services.RDFDocumentServiceIT"/>
+                    <class name="com.carbonldp.test.transaction.TransactionManagementIT"/>
+                    <class name="com.carbonldp.test.web.cors.CORSAppContextFilterIT"/>
+                    <class name="com.carbonldp.test.web.cors.CORSPlatformContextFilterIT"/>
+                </classes>
+            </test>
 
-        </classes>
-    </test>
+        </listener>
+    </listeners>
 </suite>

@@ -8,7 +8,7 @@ import java.util.Set;
 
 /**
  * @author MiguelAraCo
- * @since _version_
+ * @since 0.10.0-ALPHA
  */
 @RequestHandler( "container:basePUTRequestHandler" )
 public class BasePUTRequestHandler extends AbstractPUTRequestHandler<RDFResource> {

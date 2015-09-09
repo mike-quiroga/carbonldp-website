@@ -7,7 +7,7 @@ import java.lang.annotation.*;
 /**
  * @author MiguelAraCo
  * @see org.springframework.web.bind.annotation.RequestMapping
- * @since _version_
+ * @since 0.10.0-ALPHA
  */
 @Target( {ElementType.METHOD, ElementType.TYPE} )
 @Retention( RetentionPolicy.RUNTIME )

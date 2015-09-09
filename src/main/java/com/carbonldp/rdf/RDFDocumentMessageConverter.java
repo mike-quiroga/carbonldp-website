@@ -27,7 +27,7 @@ import java.util.Set;
 
 /**
  * @author MiguelAraCo
- * @since _version_
+ * @since 0.10.0-ALPHA
  */
 public class RDFDocumentMessageConverter extends ModelMessageConverter<RDFDocument> {
 
@@ -58,7 +58,9 @@ public class RDFDocumentMessageConverter extends ModelMessageConverter<RDFDocume
 		String baseURI = configurationRepository.forgeGenericRequestURL();
 
 		DocumentRDFHandler documentRDFHandler = new DocumentRDFHandler();
+		documentRDFHandler.setDefaultContext( new URIImpl( baseURI ) );
 		parser.setRDFHandler( documentRDFHandler );
+
 		try {
 			parser.parse( bodyInputStream, baseURI );
 		} catch ( RDFParseException e ) {
@@ -78,6 +80,8 @@ public class RDFDocumentMessageConverter extends ModelMessageConverter<RDFDocume
 		private Boolean explicit = null;
 
 		private final ValueFactory valueFactory;
+
+		private URI defaultContext;
 		private URI context;
 
 		public DocumentRDFHandler() {
@@ -118,7 +122,12 @@ public class RDFDocumentMessageConverter extends ModelMessageConverter<RDFDocume
 
 		@Override
 		public void endRDF() throws RDFHandlerException {
-			if ( this.context == null ) throw new RDFHandlerException( "The model doesn't define (directly or indirectly) any context the RDFDocument can be based on." );
+			if ( this.context == null ) {
+				if ( this.defaultContext == null ) throw new RDFHandlerException( "The model doesn't define (directly or indirectly) any context the RDFDocument can be based on." );
+
+				this.context = this.defaultContext;
+			}
+
 			for ( Statement contextLessStatement : this.contextLessStatements ) {
 				Statement statement = valueFactory.createStatement( contextLessStatement.getSubject(), contextLessStatement.getPredicate(), contextLessStatement.getObject(), this.context );
 				this.documentModel.add( statement );
@@ -129,6 +138,10 @@ public class RDFDocumentMessageConverter extends ModelMessageConverter<RDFDocume
 
 		public RDFDocument getDocument() {
 			return this.document;
+		}
+
+		public void setDefaultContext( URI context ) {
+			this.defaultContext = context;
 		}
 	}
 }

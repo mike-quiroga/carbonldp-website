@@ -1,4 +1,4 @@
-package com.carbonldp.ldp.web;
+package com.carbonldp.ldp.sources;
 
 import com.carbonldp.web.RequestHandler;
 

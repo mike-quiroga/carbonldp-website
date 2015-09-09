@@ -1,6 +1,5 @@
 package com.carbonldp.web.config;
 
-import com.carbonldp.web.config.CustomRequestMappingHandlerMapping;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.DelegatingWebMvcConfiguration;
 import org.springframework.web.servlet.config.annotation.PathMatchConfigurer;
@@ -9,7 +8,7 @@ import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandl
 
 /**
  * @author MiguelAraCo
- * @since _version_
+ * @since 0.10.0-ALPHA
  */
 @Configuration
 public class CustomWebMVCConfigurationSupport extends DelegatingWebMvcConfiguration {

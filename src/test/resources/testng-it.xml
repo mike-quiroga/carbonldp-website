@@ -3,7 +3,6 @@
 <suite name="carbon-platform - Integration Tests">
     <listeners>
         <listener class-name="com.carbonldp.test.DisableTestClassInterceptor">
-
             <test name="Integration Tests">
                 <classes>
                     <class name="com.carbonldp.test.transaction.TransactionManagementIT"/>

@@ -6,7 +6,7 @@ import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author MiguelAraCo
- * @since _version_
+ * @since 0.10.0-ALPHA
  */
 public class CustomRequestConditionsHolder implements RequestCondition<CustomRequestConditionsHolder> {
 	private final InteractionModelRequestCondition interactionModelsCondition;
