@@ -5,6 +5,7 @@
         <classes>
             <class name="com.carbonldp.test.agents.AgentUT"/>
             <class name="com.carbonldp.test.web.AbstractModelMessageConverterUT"/>
+            <class name="com.carbonldp.test.rdf.RDFDocumentMessageConverterUT"/>
         </classes>
     </test>
 </suite>
