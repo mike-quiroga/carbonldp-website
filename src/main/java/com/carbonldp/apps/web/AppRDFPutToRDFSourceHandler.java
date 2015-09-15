@@ -28,11 +28,9 @@ public class AppRDFPutToRDFSourceHandler extends AbstractPUTRequestHandler<App> 
 
 	@Override
 	protected void replaceResource( URI targetURI, App documentResourceView ) {
+
 		appService.replace( documentResourceView );
 	}
-
-	@Override
-	protected void validateDocumentResourceView( App documentResourceView ) {}
 
 	@Autowired
 	public void setAppService( AppService appService ) {

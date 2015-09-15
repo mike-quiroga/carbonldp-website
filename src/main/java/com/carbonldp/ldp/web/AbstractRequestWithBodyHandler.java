@@ -83,8 +83,6 @@ public abstract class AbstractRequestWithBodyHandler<E extends RDFResource> exte
 		throw new BadRequestException( "The request doesn't contain a document resource." );
 	}
 
-	protected abstract void validateDocumentResourceView( E documentResourceView );
-
 	protected void validateRequestDocumentResourcesNumber( int number ) {
 		if ( number == 0 ) throw new BadRequestException( "The request doesn't contain " );
 	}

@@ -26,10 +26,6 @@ import java.util.stream.Collectors;
  * @since 0.10.0-ALPHA
  */
 public abstract class AbstractPUTRequestHandler<E extends RDFResource> extends AbstractRequestWithBodyHandler<E> {
-	@Override
-	protected void validateDocumentResourceView( E documentResourceView ) {
-
-	}
 
 	public ResponseEntity<Object> handleRequest( AbstractModel requestModel, HttpServletRequest request, HttpServletResponse response ) {
 		setUp( request, response );
@@ -54,7 +50,10 @@ public abstract class AbstractPUTRequestHandler<E extends RDFResource> extends A
 	protected abstract void addMembers( URI targetUri, Set<URI> members );
 
 	protected Set<URI> getMembers( AbstractModel requestModel ) {
-		return requestModel.objects().stream().map( ValueUtil::getURI ).collect( Collectors.toCollection( () -> new LinkedHashSet<>() ) );
+		return requestModel.objects()
+						   .stream()
+						   .map( ValueUtil::getURI )
+						   .collect( Collectors.toCollection( () -> new LinkedHashSet<>() ) );
 	}
 
 	protected void validatePutRequestModel( AbstractModel requestModel ) {

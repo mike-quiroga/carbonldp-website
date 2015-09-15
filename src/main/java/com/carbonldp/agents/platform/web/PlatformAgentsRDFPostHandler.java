@@ -19,12 +19,6 @@ public class PlatformAgentsRDFPostHandler extends AbstractRDFPostRequestHandler<
 	private PlatformAgentService platformAgentService;
 
 	@Override
-	protected void validateDocumentResourceView( Agent documentResourceView ) {
-		// TODO: Implement
-		// throw new RuntimeException( "Not Implemented" );
-	}
-
-	@Override
 	protected Agent getDocumentResourceView( BasicContainer requestBasicContainer ) {
 		return new Agent( requestBasicContainer );
 	}

@@ -1,6 +1,7 @@
 package com.carbonldp.agents.platform;
 
 import com.carbonldp.agents.Agent;
+import com.carbonldp.agents.AgentFactory;
 import com.carbonldp.agents.AgentValidator;
 import com.carbonldp.agents.AgentValidatorFactory;
 import com.carbonldp.agents.validators.AgentValidatorRepository;
@@ -59,7 +60,6 @@ public class SesamePlatformAgentService extends AbstractSesameLDPService impleme
 
 	@Override
 	public void register( Agent agent ) {
-		// TODO: Validate agent
 		String email = agent.getEmails().iterator().next();
 		if ( platformAgentRepository.existsWithEmail( email ) ) throw new ResourceAlreadyExistsException();
 
@@ -71,6 +71,7 @@ public class SesamePlatformAgentService extends AbstractSesameLDPService impleme
 		else agent.setEnabled( true );
 
 		addAgentToDefaultPlatformRole( agent );
+		validate(agent);
 
 		platformAgentRepository.create( agent );
 		ACL agentACL = aclRepository.createACL( agent.getDocument() );
@@ -84,6 +85,10 @@ public class SesamePlatformAgentService extends AbstractSesameLDPService impleme
 			sendValidationEmail( agent, validator );
 			// TODO: Create "resend validation" resource
 		}
+	}
+
+	private void validate(Agent agent){
+		if( AgentFactory.validate(agent)!=null)throw new IllegalArgumentException( "malformed Agent");
 	}
 
 	private void setAgentPasswordFields( Agent agent ) {

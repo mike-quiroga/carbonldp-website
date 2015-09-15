@@ -4,6 +4,7 @@ import com.carbonldp.authorization.acl.ACLRepository;
 import com.carbonldp.descriptions.APIPreferences;
 import com.carbonldp.ldp.AbstractSesameLDPService;
 import com.carbonldp.ldp.sources.RDFSourceRepository;
+import com.carbonldp.rdf.RDFResource;
 import com.carbonldp.spring.TransactionWrapper;
 import com.carbonldp.web.exceptions.BadRequestException;
 import org.joda.time.DateTime;
@@ -39,8 +40,9 @@ public class SesameContainerService extends AbstractSesameLDPService implements 
 	public DateTime createChild( URI containerURI, BasicContainer basicContainer ) {
 		DateTime creationTime = DateTime.now();
 		URI membershipResource = containerRepository.getTypedRepository( this.getContainerType( containerURI ) ).getMembershipResource( containerURI );
-
 		basicContainer.setTimestamps( creationTime );
+		validate( basicContainer );
+
 		containerRepository.createChild( containerURI, basicContainer );
 		aclRepository.createACL( basicContainer.getDocument() );
 
@@ -51,6 +53,10 @@ public class SesameContainerService extends AbstractSesameLDPService implements 
 		}
 
 		return creationTime;
+	}
+
+	protected void validate( RDFResource toValidate ) {
+		if ( ! BasicContainerFactory.isValid( toValidate ) ) throw new IllegalArgumentException( "invalid resource" );
 	}
 
 	@Override

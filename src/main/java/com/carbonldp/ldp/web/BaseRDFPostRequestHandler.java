@@ -15,7 +15,4 @@ public class BaseRDFPostRequestHandler extends AbstractRDFPostRequestHandler<Bas
 	protected void createChild( URI targetURI, BasicContainer documentResourceView ) {
 		containerService.createChild( targetURI, documentResourceView );
 	}
-
-	@Override
-	protected void validateDocumentResourceView( BasicContainer documentResourceView ) {}
 }

@@ -58,7 +58,7 @@ public class AbstractNonRDFPutRequestHandler extends AbstractNonRDFRequestHandle
 	private ResponseEntity<Object> handlePUTToContainer( URI targetURI, File requestEntity, String contentType ) {
 		RDFRepresentation rdfRepresentation = new RDFRepresentation( sourceService.get( targetURI ) );
 
-		nonRdfSourceService.replace( rdfRepresentation, requestEntity );
+		nonRdfSourceService.replace( rdfRepresentation, requestEntity, contentType );
 
 		addTypeLinkHeader( RDFRepresentationDescription.Resource.CLASS );
 		return createSuccessfulResponse( targetURI );

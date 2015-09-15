@@ -33,7 +33,6 @@ public abstract class AbstractPUTRequestHandler<E extends RDFResource> extends A
 
 		validateDocumentResource( targetURI, requestDocumentResource );
 		E documentResourceView = getDocumentResourceView( requestDocumentResource );
-		validateDocumentResourceView( documentResourceView );
 
 		replaceResource( targetURI, documentResourceView );
 
@@ -45,6 +44,7 @@ public abstract class AbstractPUTRequestHandler<E extends RDFResource> extends A
 	protected void validateDocumentResource( URI targetURI, RDFResource requestDocumentResource ) {
 		super.validateDocumentResource( targetURI, requestDocumentResource );
 		if ( ! targetURI.equals( requestDocumentResource.getURI() ) ) throw new BadRequestException( "The documentResource's URI, sent in the request, is different to the request URI. Remember POST to parent, PUT to me." );
+
 	}
 
 	protected abstract E getDocumentResourceView( RDFResource requestDocumentResource );
