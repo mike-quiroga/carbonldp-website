@@ -6,9 +6,6 @@
 
 reports/
 test-output/
-playground/
-/playground/
-*/playground/
 
 # IntelliJ
 .idea/
