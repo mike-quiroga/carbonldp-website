@@ -1,6 +1,8 @@
 package com.carbonldp.playground;
 
 import com.carbonldp.AbstractComponent;
+import com.carbonldp.repository.security.SecuredNativeStoreConfig;
+import com.carbonldp.repository.security.SecuredNativeStoreFactory;
 import org.openrdf.model.impl.AbstractModel;
 import org.openrdf.model.impl.LinkedHashModel;
 import org.openrdf.query.*;
@@ -17,8 +19,6 @@ import org.openrdf.rio.Rio;
 import org.openrdf.rio.helpers.StatementCollector;
 import org.openrdf.sail.config.SailImplConfig;
 import org.openrdf.sail.config.SailRegistry;
-import org.openrdf.sail.nativerdf.CarbonStoreConfig;
-import org.openrdf.sail.nativerdf.CarbonStoreFactory;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -54,7 +54,7 @@ public class RepositoryManagerTest extends AbstractComponent {
 			"	?s ?p ?o " +
 			"}";
 
-		SailRegistry.getInstance().add( new CarbonStoreFactory() );
+		SailRegistry.getInstance().add( new SecuredNativeStoreFactory() );
 
 		RepositoryManager manager = new LocalRepositoryManager( new File( "/opt/carbon-test" ) );
 		if ( ! manager.isInitialized() ) manager.initialize();
@@ -79,7 +79,7 @@ public class RepositoryManagerTest extends AbstractComponent {
 	}
 
 	private void registerRepositoryConfig( RepositoryManager manager ) throws Exception {
-		SailImplConfig sailConfig = new CarbonStoreConfig();
+		SailImplConfig sailConfig = new SecuredNativeStoreConfig();
 		RepositoryImplConfig repositoryTypeSpec = new SailRepositoryConfig( sailConfig );
 
 		RepositoryConfig repositoryConfig = new RepositoryConfig( "test", repositoryTypeSpec );

@@ -2,6 +2,7 @@ package com.carbonldp.repository;
 
 import com.carbonldp.AbstractComponent;
 import com.carbonldp.exceptions.CarbonRuntimeException;
+import com.carbonldp.repository.security.SecuredNativeStoreConfig;
 import com.carbonldp.repository.txn.*;
 import org.openrdf.repository.Repository;
 import org.openrdf.repository.RepositoryConnection;
@@ -12,7 +13,6 @@ import org.openrdf.repository.config.RepositoryImplConfig;
 import org.openrdf.repository.manager.RepositoryManager;
 import org.openrdf.repository.sail.config.SailRepositoryConfig;
 import org.openrdf.sail.config.SailImplConfig;
-import org.openrdf.sail.nativerdf.config.NativeStoreConfig;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +33,7 @@ public class LocalRepositoryService extends AbstractComponent implements Reposit
 	@Override
 	public void createRepository( String repositoryID ) {
 		// TODO: Make this configurable
-		SailImplConfig sailConfig = new NativeStoreConfig();
+		SailImplConfig sailConfig = new SecuredNativeStoreConfig();
 		RepositoryImplConfig repositoryTypeSpec = new SailRepositoryConfig( sailConfig );
 
 		RepositoryConfig repositoryConfig = new RepositoryConfig( repositoryID, repositoryTypeSpec );

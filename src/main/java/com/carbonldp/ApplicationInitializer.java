@@ -23,6 +23,7 @@ import org.springframework.web.context.ContextLoaderListener;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
 import org.springframework.web.filter.DelegatingFilterProxy;
+import org.springframework.web.filter.RequestContextFilter;
 import org.springframework.web.servlet.DispatcherServlet;
 
 import javax.servlet.*;
@@ -48,6 +49,7 @@ public class ApplicationInitializer implements WebApplicationInitializer {
 		AnnotationConfigWebApplicationContext rootContext = createRootContext();
 		addContextLifecycleManagerListener( rootContext, container );
 
+		addRequestContextFilter( container );
 		addLoggingFilter( container );
 		addSecurityFilterChain( container );
 
@@ -108,6 +110,11 @@ public class ApplicationInitializer implements WebApplicationInitializer {
 		container.addListener( new ContextLoaderListener( context ) );
 	}
 
+	private void addRequestContextFilter( ServletContext container ) {
+		FilterRegistration.Dynamic filter = container.addFilter( "REQUEST_CONTEXT_FILTER", new RequestContextFilter() );
+		filter.addMappingForUrlPatterns( EnumSet.allOf( DispatcherType.class ), false, "/*" );
+	}
+
 	private void addLoggingFilter( ServletContext container ) {
 		FilterRegistration.Dynamic loggerFilter = container.addFilter( RequestLoggerFilter.DEFAULT_FILTER_NAME, new RequestLoggerFilter() );
 		loggerFilter.addMappingForUrlPatterns( EnumSet.allOf( DispatcherType.class ), false, "/*" );
@@ -138,5 +145,4 @@ public class ApplicationInitializer implements WebApplicationInitializer {
 		// TODO: When implementing multipart, verify these settings
 		dispatcher.setMultipartConfig( new MultipartConfigElement( "/tmp", 1024 * 1024 * 5, 1024 * 1024 * 5 * 5, 1024 * 1024 ) );
 	}
-
 }

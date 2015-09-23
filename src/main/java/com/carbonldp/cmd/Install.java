@@ -1,5 +1,6 @@
 package com.carbonldp.cmd;
 
+import com.carbonldp.repository.security.SecuredNativeStore;
 import com.carbonldp.utils.PropertiesUtil;
 import org.openrdf.model.Resource;
 import org.openrdf.repository.Repository;
@@ -8,7 +9,6 @@ import org.openrdf.repository.RepositoryException;
 import org.openrdf.repository.sail.SailRepository;
 import org.openrdf.rio.RDFFormat;
 import org.openrdf.rio.RDFParseException;
-import org.openrdf.sail.nativerdf.NativeStore;
 
 import java.io.File;
 import java.io.IOException;
@@ -111,7 +111,7 @@ public class Install {
 
 	private Repository getRepository( String repositoryFile ) {
 		File repositoryDir = new File( repositoryFile );
-		Repository repository = new SailRepository( new NativeStore( repositoryDir ) );
+		Repository repository = new SailRepository( new SecuredNativeStore( repositoryDir ) );
 		try {
 			repository.initialize();
 		} catch ( RepositoryException e ) {
