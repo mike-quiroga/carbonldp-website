@@ -47,7 +47,7 @@ public class AbstractDELETERequestHandler extends AbstractLDPRequestHandler {
 		setUp( request, response );
 
 		URI targetURI = getTargetURI( request );
-		if ( ! sourceService.exists( targetURI ) ) throw new NotFoundException( "The resource wasn't found" );
+		if ( ! sourceService.exists( targetURI ) ) throw new NotFoundException();
 
 		String requestETag = getRequestETag();
 		checkPrecondition( targetURI, requestETag );
@@ -92,7 +92,7 @@ public class AbstractDELETERequestHandler extends AbstractLDPRequestHandler {
 	}
 
 	private void isRDFRepresentation( URI targetURI ) {
-		if ( ! nonRdfSourceService.isRDFRepresentation( targetURI ) ) throw new BadRequestException( "The URI provided does not belong to a nonRDFSource" );
+		if ( ! nonRdfSourceService.isRDFRepresentation( targetURI ) ) throw new BadRequestException( 0x4003 );
 	}
 
 	protected ResponseEntity<Object> createSuccessfulDeleteResponse() {
@@ -148,7 +148,7 @@ public class AbstractDELETERequestHandler extends AbstractLDPRequestHandler {
 			if ( containerPreference == null ) continue;
 
 			// TODO: Add AppliedPreference Header
-			if ( appliedPreferences.contains( containerPreference ) ) throw new BadRequestException( "The prefer header contains overlapping preferences." );
+			if ( appliedPreferences.contains( containerPreference ) ) throw new BadRequestException( 0x5001 );
 			if ( ! defaultPreferences.contains( containerPreference ) ) defaultPreferences.add( containerPreference );
 		}
 

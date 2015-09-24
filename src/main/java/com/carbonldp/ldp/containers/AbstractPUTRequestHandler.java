@@ -1,8 +1,10 @@
 package com.carbonldp.ldp.containers;
 
 import com.carbonldp.descriptions.APIPreferences;
+import com.carbonldp.exceptions.InvalidResourceException;
 import com.carbonldp.ldp.web.AbstractRequestWithBodyHandler;
 import com.carbonldp.models.EmptyResponse;
+import com.carbonldp.models.Infraction;
 import com.carbonldp.namespaces.C;
 import com.carbonldp.rdf.RDFResource;
 import com.carbonldp.utils.ValueUtil;
@@ -12,6 +14,7 @@ import org.joda.time.DateTime;
 import org.openrdf.model.Statement;
 import org.openrdf.model.URI;
 import org.openrdf.model.impl.AbstractModel;
+import org.openrdf.model.impl.URIImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -32,7 +35,7 @@ public abstract class AbstractPUTRequestHandler<E extends RDFResource> extends A
 
 		URI targetURI = getTargetURI( request );
 		if ( ! targetResourceExists( targetURI ) ) {
-			throw new NotFoundException( "The target resource wasn't found." );
+			throw new NotFoundException();
 		}
 
 		String requestETag = getRequestETag();
@@ -58,9 +61,9 @@ public abstract class AbstractPUTRequestHandler<E extends RDFResource> extends A
 
 	protected void validatePutRequestModel( AbstractModel requestModel ) {
 		for ( Statement statement : requestModel ) {
-			if ( ! ValueUtil.isBNode( statement.getSubject() ) ) throw new BadRequestException( "All subjects must be BNodes" );
-			if ( ! statement.getPredicate().stringValue().equals( C.Properties.ADD_MEMBER ) ) throw new BadRequestException( "Unsupported predicate" );
-			if ( ! ValueUtil.isURI( statement.getObject() ) ) throw new BadRequestException( "All objects must be URIs" );
+			if ( ! ValueUtil.isBNode( statement.getSubject() ) ) throw new BadRequestException( 0x200D );
+			if ( ! statement.getPredicate().stringValue().equals( C.Properties.ADD_MEMBER ) ) throw new BadRequestException( 0x200E );
+			if ( ! ValueUtil.isURI( statement.getObject() ) ) throw new InvalidResourceException( new Infraction( 0x200B, new URIImpl( C.Properties.ADD_MEMBER ) ) );
 		}
 	}
 

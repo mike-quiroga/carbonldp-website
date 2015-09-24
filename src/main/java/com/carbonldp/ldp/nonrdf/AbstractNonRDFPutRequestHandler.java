@@ -31,7 +31,7 @@ public class AbstractNonRDFPutRequestHandler extends AbstractNonRDFRequestHandle
 	public ResponseEntity<Object> handleRequest( InputStream bodyInputStream, HttpServletRequest request, HttpServletResponse response ) {
 		setUp( request, response );
 		URI targetURI = getTargetURI( request );
-		if ( ! targetResourceExists( targetURI ) ) throw new NotFoundException( "The target resource wasn't found." );
+		if ( ! targetResourceExists( targetURI ) ) throw new NotFoundException();
 
 		File file = createTemporaryFile( bodyInputStream );
 		try {
@@ -43,7 +43,7 @@ public class AbstractNonRDFPutRequestHandler extends AbstractNonRDFRequestHandle
 
 	private ResponseEntity<Object> handleRequest( File file, URI targetURI ) {
 		String contentType = request.getContentType();
-		if ( contentType == null ) throw new BadRequestException( "A Content-Type needs to be specified." );
+		if ( contentType == null ) throw new BadRequestException( 0x4004 );
 
 		APIPreferences.InteractionModel interactionModel = getInteractionModel( targetURI );
 
@@ -51,7 +51,7 @@ public class AbstractNonRDFPutRequestHandler extends AbstractNonRDFRequestHandle
 			case NON_RDF_SOURCE:
 				return handlePUTToContainer( targetURI, file, contentType );
 			default:
-				throw new BadRequestException( "The interaction model specified isn't supported when POSTing a NonRDFResource." );
+				throw new BadRequestException( 0x4002 );
 		}
 	}
 

@@ -9,10 +9,12 @@ import com.carbonldp.authorization.acl.ACLRepository;
 import com.carbonldp.exceptions.ResourceAlreadyExistsException;
 import com.carbonldp.exceptions.ResourceDoesntExistException;
 import com.carbonldp.ldp.AbstractSesameLDPService;
-import com.carbonldp.ldp.containers.*;
+import com.carbonldp.ldp.containers.BasicContainer;
+import com.carbonldp.ldp.containers.BasicContainerFactory;
+import com.carbonldp.ldp.containers.Container;
+import com.carbonldp.ldp.containers.ContainerRepository;
 import com.carbonldp.ldp.sources.RDFSourceRepository;
 import com.carbonldp.models.Infraction;
-import com.carbonldp.namespaces.RDF;
 import com.carbonldp.rdf.RDFDocument;
 import com.carbonldp.rdf.RDFResource;
 import com.carbonldp.spring.TransactionWrapper;
@@ -20,14 +22,14 @@ import com.carbonldp.utils.RDFResourceUtil;
 import com.carbonldp.utils.URIUtil;
 import org.openrdf.model.Statement;
 import org.openrdf.model.URI;
-import org.openrdf.model.Value;
-import org.openrdf.model.impl.URIImpl;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.LinkedHashSet;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Transactional
@@ -113,6 +115,7 @@ public class SesameAppService extends AbstractSesameLDPService implements AppSer
 		URI appURI = app.getURI();
 
 		if ( ! exists( appURI ) ) throw new ResourceDoesntExistException();
+		validate( app );
 		App originalApp = appRepository.get( appURI );
 		RDFDocument originalDocument = originalApp.getDocument();
 
@@ -210,16 +213,5 @@ public class SesameAppService extends AbstractSesameLDPService implements AppSer
 
 	protected void validate( App app ) {
 		if ( ! AppFactory.validate( app ).isEmpty() ) throw new IllegalArgumentException( "malformed App resource" );
-	}
-
-	protected static List<Infraction> hasAppType( RDFResource resource ) {
-		Set<Value> types = resource.filter( null, new URIImpl( RDF.Properties.TYPE ), null ).objects();
-		List<Infraction> infractions = new ArrayList<>();
-		if ( types == null || types.isEmpty() ) {
-			infractions.add( new Infraction() );
-			return infractions;
-		}
-		if ( ! types.contains( ContainerDescription.Type.BASIC.getURI() ) ) infractions.add( new Infraction() );
-		return infractions;
 	}
 }

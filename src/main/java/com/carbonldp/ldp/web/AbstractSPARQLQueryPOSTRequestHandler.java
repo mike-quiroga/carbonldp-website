@@ -18,7 +18,7 @@ public class AbstractSPARQLQueryPOSTRequestHandler extends AbstractLDPRequestHan
 			return new ResponseEntity<>( HttpStatus.BAD_REQUEST );
 		URI targetURI = getTargetURI( request );
 		if ( ! targetResourceExists( targetURI ) ) {
-			throw new NotFoundException( "The target resource wasn't found." );
+			throw new NotFoundException();
 		}
 
 		SPARQLResult result = sparqlService.executeSPARQLQuery( queryString, targetURI );

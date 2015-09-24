@@ -1,5 +1,8 @@
 package com.carbonldp.web;
 
+import com.carbonldp.errors.ErrorResponse;
+import com.carbonldp.errors.ErrorResponseFactory;
+import com.carbonldp.exceptions.InvalidResourceException;
 import com.carbonldp.web.exceptions.AbstractWebRuntimeException;
 import com.carbonldp.web.exceptions.BadRequestException;
 import org.slf4j.Logger;
@@ -34,11 +37,16 @@ public class PlatformExceptionController {
 	public ResponseEntity<Object> handleUnexpectedException( HttpServletRequest request, HttpServletResponse response, Exception rawException ) {
 		// AccessDeniedException is handled in the ExceptionTranslationFilter
 		if ( rawException instanceof AccessDeniedException ) throw (AccessDeniedException) rawException;
-
 		if ( LOG.isDebugEnabled() ) LOG.debug( "<< handleUnexpectedException() > Exception Stacktrace: ", rawException );
+		ErrorResponse error = ErrorResponseFactory.create( 0xF000, HttpStatus.INTERNAL_SERVER_ERROR );
 
-		// TODO: Create RDF error description
+		return new ResponseEntity<>( error, HttpStatus.INTERNAL_SERVER_ERROR );
+	}
 
-		return new ResponseEntity<>( rawException.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR );
+	@ExceptionHandler( InvalidResourceException.class )
+	public ResponseEntity<Object> handleIllegalArgumentException( HttpServletRequest request, HttpServletResponse response, InvalidResourceException exception ) {
+		ErrorResponse error = ErrorResponseFactory.create( exception.getInfractions(), HttpStatus.BAD_REQUEST );
+
+		return new ResponseEntity<>( error, HttpStatus.BAD_REQUEST );
 	}
 }

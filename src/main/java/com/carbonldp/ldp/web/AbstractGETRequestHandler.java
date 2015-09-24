@@ -51,7 +51,7 @@ public abstract class AbstractGETRequestHandler extends AbstractLDPRequestHandle
 		setUp( request, response );
 
 		URI targetURI = getTargetURI( request );
-		if ( ! sourceService.exists( targetURI ) ) throw new NotFoundException( "The resource wasn't found" );
+		if ( ! sourceService.exists( targetURI ) ) throw new NotFoundException();
 
 		InteractionModel interactionModel = getInteractionModel( targetURI );
 		switch ( interactionModel ) {
@@ -153,7 +153,7 @@ public abstract class AbstractGETRequestHandler extends AbstractLDPRequestHandle
 			if ( containerPreference == null ) continue;
 
 			// TODO: Add AppliedPreference Header
-			if ( appliedPreferences.contains( containerPreference ) ) throw new BadRequestException( "The prefer header contains overlapping preferences." );
+			if ( appliedPreferences.contains( containerPreference ) ) throw new BadRequestException( 0x5001 );
 			if ( ! defaultPreferences.contains( containerPreference ) ) defaultPreferences.add( containerPreference );
 		}
 
@@ -182,7 +182,7 @@ public abstract class AbstractGETRequestHandler extends AbstractLDPRequestHandle
 	}
 
 	private void isRDFRepresentation( URI targetURI ) {
-		if ( ! nonRdfSourceService.isRDFRepresentation( targetURI ) ) throw new BadRequestException( "The URI provided does not belong to a nonRDFSource" );
+		if ( ! nonRdfSourceService.isRDFRepresentation( targetURI ) ) throw new BadRequestException( 0x4003 );
 	}
 
 	protected ResponseEntity<Object> handleSPARQLEndpointRetrieval( URI targetURI ) {

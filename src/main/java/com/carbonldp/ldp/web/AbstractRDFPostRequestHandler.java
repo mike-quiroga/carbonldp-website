@@ -64,7 +64,7 @@ public abstract class AbstractRDFPostRequestHandler<E extends BasicContainer> ex
 		setUp( request, response );
 
 		URI targetURI = getTargetURI( request );
-		if ( ! targetResourceExists( targetURI ) ) throw new NotFoundException( "The target resource wasn't found." );
+		if ( ! targetResourceExists( targetURI ) ) throw new NotFoundException( );
 
 		RDFResource requestDocumentResource = document.getDocumentResource();
 
