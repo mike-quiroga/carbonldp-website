@@ -23,7 +23,7 @@ import java.util.UUID;
 @Transactional
 public class SesameAppRepository extends AbstractSesameRepository implements AppRepository {
 	private final RDFDocumentRepository documentRepository;
-	private final RDFSourceRepository sourceService;
+	private final RDFSourceRepository sourceRepository;
 	private final ContainerRepository containerRepository;
 	private final RepositoryService appRepositoryService;
 	private URI appsContainerURI;
@@ -31,11 +31,11 @@ public class SesameAppRepository extends AbstractSesameRepository implements App
 
 	private final Type appsContainerType = Type.BASIC;
 
-	public SesameAppRepository( SesameConnectionFactory connectionFactory, RDFDocumentRepository documentRepository, RDFSourceRepository sourceService,
+	public SesameAppRepository( SesameConnectionFactory connectionFactory, RDFDocumentRepository documentRepository, RDFSourceRepository sourceRepository,
 		ContainerRepository containerRepository, RepositoryService appRepositoryService ) {
 		super( connectionFactory );
 		this.documentRepository = documentRepository;
-		this.sourceService = sourceService;
+		this.sourceRepository = sourceRepository;
 		this.containerRepository = containerRepository;
 		this.appRepositoryService = appRepositoryService;
 	}
@@ -43,33 +43,24 @@ public class SesameAppRepository extends AbstractSesameRepository implements App
 	@Override
 	public boolean exists( URI appURI ) {
 		// TODO: This method should ask specifically for an Application Source
-		return sourceService.exists( appURI );
+		return sourceRepository.exists( appURI );
 	}
 
 	@Override
 	public App get( URI appURI ) {
 		if ( ! containerRepository.hasMember( appsContainerURI, appURI, appsContainerType ) ) return null;
 
-		RDFSource appSource = sourceService.get( appURI );
+		RDFSource appSource = sourceRepository.get( appURI );
 		if ( appSource == null ) return null;
 		return new App( appSource.getBaseModel(), appSource.getURI() );
 	}
 
-	private static final String findByRootContainer_selector;
-
-	static {
-		StringBuilder queryBuilder = new StringBuilder();
-		//@formatter:off
-		queryBuilder
-				.append( RDFNodeUtil.generatePredicateStatement( "?members", "?rootContainer", AppDescription.Property.ROOT_CONTAINER ) )
-		;
-		//@formatter:on
-		findByRootContainer_selector = queryBuilder.toString();
-	}
+	private static final String findByRootContainer_selector = "" +
+		RDFNodeUtil.generatePredicateStatement( "?members", "?rootContainer", AppDescription.Property.ROOT_CONTAINER );
 
 	@Override
 	public App findByRootContainer( URI rootContainerURI ) {
-		Map<String, Value> bindings = new HashMap<String, Value>();
+		Map<String, Value> bindings = new HashMap<>();
 		bindings.put( "rootContainer", rootContainerURI );
 
 		Set<URI> memberURIs = containerRepository.findMembers( appsContainerURI, findByRootContainer_selector, bindings, appsContainerType );
@@ -95,10 +86,20 @@ public class SesameAppRepository extends AbstractSesameRepository implements App
 		return app;
 	}
 
+	public void delete( URI appURI ) {
+		App app = this.get( appURI );
+		sourceRepository.delete( appURI );
+		deleteAppRepository( app );
+	}
+
 	private void createAppRepository( App app ) {
 		String repositoryID = generateAppRepositoryID( app );
 		appRepositoryService.createRepository( repositoryID );
 		app.setRepositoryID( repositoryID );
+	}
+
+	private void deleteAppRepository( App app ) {
+		appRepositoryService.deleteRepository( app.getRepositoryID() );
 	}
 
 	private String generateAppRepositoryID( App app ) {
@@ -107,9 +108,7 @@ public class SesameAppRepository extends AbstractSesameRepository implements App
 
 	private URI forgeRootContainerURI( App app ) {
 		String appSlug = URIUtil.getSlug( app.getURI() );
-		StringBuilder uriBuilder = new StringBuilder();
-		uriBuilder.append( appsEntryPoint ).append( appSlug );
-		return new URIImpl( uriBuilder.toString() );
+		return new URIImpl( appsEntryPoint + appSlug );
 	}
 
 	public void setAppsContainerURI( URI appsContainerURI ) {

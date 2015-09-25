@@ -21,5 +21,5 @@ public interface AppService {
 
 	public void replace( App app );
 
-	public void delete( App app );
+	public void delete( URI appURI );
 }

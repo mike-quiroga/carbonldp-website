@@ -14,7 +14,6 @@ import com.carbonldp.ldp.containers.BasicContainerFactory;
 import com.carbonldp.ldp.containers.Container;
 import com.carbonldp.ldp.containers.ContainerRepository;
 import com.carbonldp.ldp.sources.RDFSourceRepository;
-import com.carbonldp.models.Infraction;
 import com.carbonldp.rdf.RDFDocument;
 import com.carbonldp.rdf.RDFResource;
 import com.carbonldp.spring.TransactionWrapper;
@@ -28,7 +27,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import java.util.Arrays;
-import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -65,7 +63,7 @@ public class SesameAppService extends AbstractSesameLDPService implements AppSer
 	@Override
 	public void create( App app ) {
 		if ( exists( app.getURI() ) ) throw new ResourceAlreadyExistsException();
-		validate( app );
+		// TODO: Validate app resource
 
 		App createdApp = appRepository.create( app );
 		ACL appACL = createAppACL( createdApp );
@@ -93,6 +91,12 @@ public class SesameAppService extends AbstractSesameLDPService implements AppSer
 	}
 
 	@Override
+	public void delete( URI appURI ) {
+		if ( ! exists( appURI ) ) throw new ResourceDoesntExistException();
+		appRepository.delete( appURI );
+	}
+
+	@Override
 	public void addDomain( String domain ) {
 		// TODO: Implement
 		throw new RuntimeException( "Not Implemented" );
@@ -115,7 +119,6 @@ public class SesameAppService extends AbstractSesameLDPService implements AppSer
 		URI appURI = app.getURI();
 
 		if ( ! exists( appURI ) ) throw new ResourceDoesntExistException();
-		validate( app );
 		App originalApp = appRepository.get( appURI );
 		RDFDocument originalDocument = originalApp.getDocument();
 
@@ -123,30 +126,16 @@ public class SesameAppService extends AbstractSesameLDPService implements AppSer
 
 		Set<Statement> statementsToAdd = newDocument.stream().filter( statement -> ! originalDocument.contains( statement ) ).collect( Collectors.toSet() );
 		Set<RDFResource> resourceViewsToAdd = RDFResourceUtil.getResourceViews( statementsToAdd );
-		containsSystemManagedProperties( resourceViewsToAdd );
+		// TODO: Validate the resource views don't target restricted properties
 
 		Set<Statement> statementsToDelete = originalDocument.stream().filter( statement -> ! newDocument.contains( statement ) ).collect( Collectors.toSet() );
 		Set<RDFResource> resourceViewsToDelete = RDFResourceUtil.getResourceViews( statementsToDelete );
-		containsSystemManagedProperties( resourceViewsToDelete );
+		// TODO: Validate the resource views don't target restricted properties
 
 		sourceRepository.substract( appURI, resourceViewsToDelete );
 		sourceRepository.add( appURI, resourceViewsToAdd );
 
 		sourceRepository.touch( appURI );
-	}
-
-	private void containsSystemManagedProperties( Set<RDFResource> resources ) {
-		Set<Infraction> infractions = new LinkedHashSet<>();
-		for ( RDFResource resource : resources ) {
-			infractions.addAll( AppFactory.validateSystemManagedProperties( resource ) );
-		}
-		if ( ! infractions.isEmpty() ) throw new IllegalArgumentException( "System managed properties an not be changd" );
-	}
-
-	@Override
-	public void delete( App app ) {
-		// TODO: Implement
-		throw new RuntimeException( "Not Implemented" );
 	}
 
 	private ACL createAppACL( App app ) {
@@ -209,9 +198,5 @@ public class SesameAppService extends AbstractSesameLDPService implements AppSer
 			ACEDescription.Permission.UPDATE,
 			ACEDescription.Permission.DELETE
 		), true );
-	}
-
-	protected void validate( App app ) {
-		if ( ! AppFactory.validate( app ).isEmpty() ) throw new IllegalArgumentException( "malformed App resource" );
 	}
 }
