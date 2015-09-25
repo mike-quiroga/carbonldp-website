@@ -64,7 +64,7 @@ public abstract class AbstractRDFPostRequestHandler<E extends BasicContainer> ex
 		setUp( request, response );
 
 		URI targetURI = getTargetURI( request );
-		if ( ! targetResourceExists( targetURI ) ) throw new NotFoundException( );
+		if ( ! targetResourceExists( targetURI ) ) throw new NotFoundException();
 
 		RDFResource requestDocumentResource = document.getDocumentResource();
 
@@ -209,26 +209,26 @@ public abstract class AbstractRDFPostRequestHandler<E extends BasicContainer> ex
 		String resourceURI = requestResource.getURI().stringValue();
 		targetURI = targetURI.endsWith( SLASH ) ? targetURI : targetURI.concat( SLASH );
 		if ( ! resourceURI.startsWith( targetURI ) ) {
-			throw new BadRequestException( "A request resource's URI doesn't have the request URI as a base." );
+			throw new BadRequestException( 0x2014 );
 		}
 
 		String relativeURI = resourceURI.replace( targetURI, EMPTY_STRING );
 		if ( relativeURI.length() == 0 ) {
-			throw new BadRequestException( "A request resource's URI is the same as the request URI. Remember POST to parent, PUT to me." );
+			throw new BadRequestException( 0x2010 );
 		}
 
 		int slashIndex = relativeURI.indexOf( SLASH );
 		if ( slashIndex == - 1 ) {
 			if ( configurationRepository.enforceEndingSlash() ) {
-				throw new BadRequestException( "A request resource's URI doesn't end up in a slash." );
+				throw new BadRequestException( 0x2013 );
 			}
 		}
 
 		if ( ( slashIndex + 1 ) < relativeURI.length() ) {
-			throw new BadRequestException( "A request resource's URI isn't an immediate child of the request URI." );
+			throw new BadRequestException( 0x2012 );
 		}
 
-		if ( sourceService.exists( requestResource.getURI() ) ) throw new ConflictException( "The URI is already in use." );
+		if ( sourceService.exists( requestResource.getURI() ) ) throw new ConflictException( 0x2011 );
 	}
 
 	protected RDFResource renameResource( RDFResource requestResource, URI forgedURI ) {
