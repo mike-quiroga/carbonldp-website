@@ -57,7 +57,7 @@ public class SesameRDFSourceService extends AbstractSesameLDPService implements 
 		if ( ! exists( parentURI ) ) throw new ResourceDoesntExistException();
 		DateTime creationTime = DateTime.now();
 		accessPoint.setTimestamps( creationTime );
-		AccessPointFactory.isValid( accessPoint, parentURI );
+		AccessPointFactory.getInstance().isValid( accessPoint, parentURI );
 		sourceRepository.createAccessPoint( parentURI, accessPoint );
 		sourceRepository.touch( parentURI, creationTime );
 
@@ -122,9 +122,9 @@ public class SesameRDFSourceService extends AbstractSesameLDPService implements 
 		Set<Infraction> infractions = new LinkedHashSet<>();
 		for ( RDFResource resource : resources ) {
 			if ( type.equals( ContainerDescription.Type.BASIC ) )
-				infractions.addAll( BasicContainerFactory.validateSystemManagedProperties( resource ) );
+				infractions.addAll( BasicContainerFactory.getInstance().validateSystemManagedProperties( resource ) );
 			else
-				infractions.addAll( AccessPointFactory.validateSystemManagedProperties( resource ) );
+				infractions.addAll( AccessPointFactory.getInstance().validateSystemManagedProperties( resource ) );
 		}
 		if ( ! infractions.isEmpty() ) throw new IllegalArgumentException( "System managed properties can not be changed" );
 	}
@@ -151,7 +151,7 @@ public class SesameRDFSourceService extends AbstractSesameLDPService implements 
 
 	private void validateSystemManagedProperties( Collection<RDFResource> resourceViews ) {
 		for ( RDFResource resource : resourceViews ) {
-			if ( ! BasicContainerFactory.validateSystemManagedProperties( resource ).isEmpty() ) throw new IllegalArgumentException( "System properties can not be changed" );
+			if ( ! BasicContainerFactory.getInstance().validateSystemManagedProperties( resource ).isEmpty() ) throw new IllegalArgumentException( "System properties can not be changed" );
 		}
 	}
 

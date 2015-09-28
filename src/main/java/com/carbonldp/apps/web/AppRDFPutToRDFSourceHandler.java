@@ -19,7 +19,7 @@ public class AppRDFPutToRDFSourceHandler extends AbstractPUTRequestHandler<App> 
 	@Override
 	protected void validateDocumentResource( URI targetURI, RDFResource requestDocumentResource ) {
 		super.validateDocumentResource( targetURI, requestDocumentResource );
-		if ( ! AppFactory.is( requestDocumentResource ) ) throw new InvalidResourceException( new Infraction(0x2007)  );
+		if ( ! AppFactory.getInstance().is( requestDocumentResource ) ) throw new InvalidResourceException( new Infraction( 0x2007 ) );
 	}
 
 	@Override

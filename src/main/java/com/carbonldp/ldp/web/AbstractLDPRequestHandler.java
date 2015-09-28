@@ -94,7 +94,7 @@ public abstract class AbstractLDPRequestHandler extends AbstractRequestHandler {
 
 	private InteractionModel getRequestInteractionModel( HttpServletRequest request ) {
 		HTTPHeader preferHeader = new HTTPHeader( request.getHeaders( HTTPHeaders.PREFER ) );
-		
+
 		// TODO: Move this to a constants file
 		List<HTTPHeaderValue> filteredValues = HTTPHeader.filterHeaderValues( preferHeader, null, null, "rel", "interaction-model" );
 		int size = filteredValues.size();
@@ -146,7 +146,7 @@ public abstract class AbstractLDPRequestHandler extends AbstractRequestHandler {
 	}
 
 	protected void addContainerTypeLinkHeader( Container container ) {
-		ContainerDescription.Type containerType = ContainerFactory.getContainerType( container );
+		ContainerDescription.Type containerType = ContainerFactory.getInstance().getContainerType( container );
 		if ( containerType == null ) containerType = containerService.getContainerType( container.getURI() );
 
 		addTypeLinkHeader( ContainerDescription.Resource.CLASS );

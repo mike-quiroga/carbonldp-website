@@ -91,7 +91,7 @@ public class SesamePlatformAgentService extends AbstractSesameLDPService impleme
 	}
 
 	private void validate( Agent agent ) {
-		List<Infraction> infractions = AgentFactory.validate( agent );
+		List<Infraction> infractions = AgentFactory.getInstance().validate( agent );
 		if ( ! infractions.isEmpty() ) throw new InvalidResourceException( infractions );
 	}
 
@@ -130,7 +130,7 @@ public class SesamePlatformAgentService extends AbstractSesameLDPService impleme
 	}
 
 	private AgentValidator createAgentValidator( Agent agent ) {
-		AgentValidator validator = AgentValidatorFactory.create( agent );
+		AgentValidator validator = AgentValidatorFactory.getInstance().create( agent );
 		agentValidatorRepository.create( validator );
 		return validator;
 	}
