@@ -38,7 +38,7 @@ public class PlatformExceptionController {
 		// AccessDeniedException is handled in the ExceptionTranslationFilter
 		if ( rawException instanceof AccessDeniedException ) throw (AccessDeniedException) rawException;
 		if ( LOG.isDebugEnabled() ) LOG.debug( "<< handleUnexpectedException() > Exception Stacktrace: ", rawException );
-		ErrorResponse error = ErrorResponseFactory.create( 0xF000, HttpStatus.INTERNAL_SERVER_ERROR );
+		ErrorResponse error = ErrorResponseFactory.create( 0xF000,"there was an unexpected error", HttpStatus.INTERNAL_SERVER_ERROR );
 
 		return new ResponseEntity<>( error, HttpStatus.INTERNAL_SERVER_ERROR );
 	}

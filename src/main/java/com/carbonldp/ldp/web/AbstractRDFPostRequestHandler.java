@@ -170,7 +170,7 @@ public abstract class AbstractRDFPostRequestHandler<E extends BasicContainer> ex
 		URI uniqueURI = forgeDocumentResourceURI( requestResource, parentURI, request );
 
 		// TODO: Check that the resourceURI is unique and if not forge another one
-		if ( sourceService.exists( uniqueURI ) ) throw new ConflictException( "The URI is already in use." );
+		if ( sourceService.exists( uniqueURI ) ) throw new ConflictException( 0x2011 );
 
 		return uniqueURI;
 	}

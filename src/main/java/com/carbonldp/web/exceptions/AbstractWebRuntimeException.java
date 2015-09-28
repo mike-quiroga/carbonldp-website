@@ -37,7 +37,10 @@ public abstract class AbstractWebRuntimeException extends CarbonNoStackTraceRunt
 		if ( httpStatus == null ) httpStatus = defaultHttpStatus;
 		int errorCode = getErrorCode();
 		if ( errorCode == 0 ) errorCode = defaultCarbonCode;
-		ErrorResponse error = ErrorResponseFactory.create( errorCode, httpStatus );
+		String message = getMessage();
+		if ( message == null ) message = "an unexpected error has occurred";
+
+		ErrorResponse error = ErrorResponseFactory.create( errorCode, message, httpStatus );
 
 		return new ResponseEntity<>( error, httpStatus );
 	}
