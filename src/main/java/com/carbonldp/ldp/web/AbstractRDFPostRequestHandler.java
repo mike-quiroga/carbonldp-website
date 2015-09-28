@@ -86,7 +86,7 @@ public abstract class AbstractRDFPostRequestHandler<E extends BasicContainer> ex
 
 		requestDocumentResource = getDocumentResourceWithFinalURI( requestAccessPoint, targetURI.stringValue() );
 		if ( ! requestDocumentResource.equals( requestAccessPoint.getURI() ) ) {
-			requestAccessPoint = AccessPointFactory.getAccessPoint( requestDocumentResource );
+			requestAccessPoint = AccessPointFactory.getInstance().getAccessPoint( requestDocumentResource );
 		}
 
 		DateTime creationTime = sourceService.createAccessPoint( targetURI, requestAccessPoint );
@@ -99,10 +99,10 @@ public abstract class AbstractRDFPostRequestHandler<E extends BasicContainer> ex
 			if ( requestDocumentResource.hasType( invalidType ) )
 				throw new BadRequestException( "One of the resources sent in the request contains an invalid type." );
 		}
-		if ( ! AccessPointFactory.isAccessPoint( requestDocumentResource ) )
+		if ( ! AccessPointFactory.getInstance().isAccessPoint( requestDocumentResource ) )
 			throw new BadRequestException( "RDFSource interaction model can only create AccessPoints." );
 		validateSystemManagedProperties( requestDocumentResource );
-		return AccessPointFactory.getAccessPoint( requestDocumentResource );
+		return AccessPointFactory.getInstance().getAccessPoint( requestDocumentResource );
 	}
 
 	private ResponseEntity<Object> handlePOSTToContainer( URI targetURI, RDFResource requestDocumentResource ) {
@@ -124,7 +124,7 @@ public abstract class AbstractRDFPostRequestHandler<E extends BasicContainer> ex
 	}
 
 	private void validateSystemManagedProperties( RDFResource resource ) {
-		if ( ! ContainerFactory.validateSystemManagedProperties( resource ).isEmpty() ) throw new BadRequestException( "Resource sent has System managed properties in it" );
+		if ( ! ContainerFactory.getInstance().validateSystemManagedProperties( resource ).isEmpty() ) throw new BadRequestException( "Resource sent has System managed properties in it" );
 	}
 
 	private BasicContainer getRequestBasicContainer( RDFResource requestDocumentResource ) {
@@ -132,7 +132,7 @@ public abstract class AbstractRDFPostRequestHandler<E extends BasicContainer> ex
 			if ( requestDocumentResource.hasType( invalidType ) )
 				throw new BadRequestException( "One of the resources sent in the request contains an invalid type." );
 		}
-		BasicContainer basicContainer = BasicContainerFactory.create( requestDocumentResource );
+		BasicContainer basicContainer = BasicContainerFactory.getInstance().create( requestDocumentResource );
 		if ( basicContainer.getDefaultInteractionModel() == null )
 			basicContainer.setDefaultInteractionModel( InteractionModel.RDF_SOURCE );
 		return basicContainer;

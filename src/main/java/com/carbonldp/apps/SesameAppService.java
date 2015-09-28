@@ -149,7 +149,7 @@ public class SesameAppService extends AbstractSesameLDPService implements AppSer
 	}
 
 	private BasicContainer createRootContainer( App app ) {
-		BasicContainer rootContainer = BasicContainerFactory.create( new RDFResource( app.getRootContainerURI() ) );
+		BasicContainer rootContainer = BasicContainerFactory.getInstance().create( new RDFResource( app.getRootContainerURI() ) );
 		containerRepository.create( rootContainer );
 		return rootContainer;
 	}
@@ -164,7 +164,7 @@ public class SesameAppService extends AbstractSesameLDPService implements AppSer
 
 	private AppRole createAppAdminRole( Container appRolesContainer ) {
 		URI appAdminRoleURI = getAppAdminRoleURI( appRolesContainer );
-		AppRole appAdminRole = AppRoleFactory.create( new RDFResource( appAdminRoleURI ) );
+		AppRole appAdminRole = AppRoleFactory.getInstance().create( new RDFResource( appAdminRoleURI ) );
 		appAdminRole = appRoleRepository.create( appAdminRole );
 		return appAdminRole;
 	}
@@ -209,13 +209,13 @@ public class SesameAppService extends AbstractSesameLDPService implements AppSer
 	private void validateSystemProperties( Set<RDFResource> resourceViews ) {
 		List<Infraction> infractions = new ArrayList<>();
 		for ( RDFResource resource : resourceViews ) {
-			infractions.addAll( AppFactory.validateSystemManagedProperties( resource ) );
+			infractions.addAll( AppFactory.getInstance().validateSystemManagedProperties( resource ) );
 		}
 		if ( ! infractions.isEmpty() ) throw new InvalidResourceException( infractions );
 	}
 
 	private void validate( App app ) {
-		List<Infraction> infractions = AppFactory.validate( app );
+		List<Infraction> infractions = AppFactory.getInstance().validate( app );
 		if ( ! infractions.isEmpty() ) throw new InvalidResourceException( infractions );
 	}
 }

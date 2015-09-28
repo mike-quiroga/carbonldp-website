@@ -232,7 +232,7 @@ public abstract class AbstractIT extends AbstractTestNGSpringContextTests {
 		}
 		URI appURI = factory.createURI( testResourceURI );
 		Container container = new BasicContainer( model, appURI );
-		App app = AppFactory.create( container, appURI.stringValue(), testRepositoryID );
+		App app = AppFactory.getInstance().create( container, appURI.stringValue(), testRepositoryID );
 
 		Authentication authentication = Mockito.mock( Authentication.class );
 

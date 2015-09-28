@@ -83,7 +83,7 @@ public class SesameContainerRepository extends AbstractSesameLDPRepository imple
 		Type containerType = getContainerType( containerURI );
 		if ( containerType == null ) throw new IllegalStateException( "The resource isn't a container." );
 
-		Container container = ContainerFactory.get( containerURI, containerType );
+		Container container = ContainerFactory.getInstance().get( containerURI, containerType );
 		for ( ContainerRetrievalPreference preference : preferences ) {
 			switch ( preference ) {
 				case CONTAINER_PROPERTIES:
@@ -110,7 +110,7 @@ public class SesameContainerRepository extends AbstractSesameLDPRepository imple
 	@Override
 	public Type getContainerType( URI containerURI ) {
 		Set<URI> resourceTypes = resourceRepository.getTypes( containerURI );
-		return ContainerFactory.getContainerType( resourceTypes );
+		return ContainerFactory.getInstance().getContainerType( resourceTypes );
 	}
 
 	@Override
