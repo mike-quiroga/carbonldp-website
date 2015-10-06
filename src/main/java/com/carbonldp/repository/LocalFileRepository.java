@@ -4,6 +4,7 @@ import com.carbonldp.Consts;
 import com.carbonldp.Vars;
 import com.carbonldp.apps.context.AppContext;
 import com.carbonldp.apps.context.AppContextHolder;
+import com.carbonldp.exceptions.FileException;
 
 import java.io.File;
 import java.io.IOException;
@@ -52,7 +53,7 @@ public class LocalFileRepository implements FileRepository {
 		} catch ( SecurityException e ) {
 			throw new RuntimeException( "The file couldn't be deleted. Exception:", e );
 		}
-		if ( ! deleted ) throw new RuntimeException( "The file couldn't be deleted." );
+		if ( ! deleted ) throw new FileException( 0x1010 );
 	}
 
 	private void copyFile( File file, String filePath ) {
@@ -82,9 +83,9 @@ public class LocalFileRepository implements FileRepository {
 			} catch ( SecurityException e ) {
 				throw new RuntimeException( "The parent directory couldn't be created. Exception:", e );
 			}
-			if ( ! created ) throw new RuntimeException( "The parent directory couldn't be created." );
+			if ( ! created ) throw new FileException( 0x4006 );
 		} else {
-			if ( ! directory.isDirectory() ) throw new RuntimeException( "The configured directory is not a directory." );
+			if ( ! directory.isDirectory() ) throw new FileException( 0x1013 );
 		}
 	}
 

@@ -2,8 +2,11 @@ package com.carbonldp.ldp.web;
 
 import com.carbonldp.HTTPHeaders;
 import com.carbonldp.descriptions.APIPreferences.InteractionModel;
+import com.carbonldp.exceptions.InvalidResourceException;
 import com.carbonldp.ldp.containers.*;
+import com.carbonldp.ldp.nonrdf.RDFRepresentationDescription;
 import com.carbonldp.models.EmptyResponse;
+import com.carbonldp.models.Infraction;
 import com.carbonldp.rdf.RDFDocument;
 import com.carbonldp.rdf.RDFNodeEnum;
 import com.carbonldp.rdf.RDFResource;
@@ -34,8 +37,9 @@ public abstract class AbstractRDFPostRequestHandler<E extends BasicContainer> ex
 
 	static {
 		List<? extends RDFNodeEnum> invalidTypes = Arrays.asList(
-			BasicContainerDescription.Resource.CLASS
-			// TODO: Add NON_RDF_SOURCE, NRWRAPPER
+			BasicContainerDescription.Resource.CLASS,
+			RDFRepresentationDescription.Resource.NON_RDF_SOURCE
+			// TODO: NRWRAPPER
 		);
 		invalidTypesForRDFSources = invalidTypes.toArray( new RDFNodeEnum[invalidTypes.size()] );
 	}
@@ -97,10 +101,10 @@ public abstract class AbstractRDFPostRequestHandler<E extends BasicContainer> ex
 	private AccessPoint getRequestAccessPoint( RDFResource requestDocumentResource ) {
 		for ( RDFNodeEnum invalidType : invalidTypesForRDFSources ) {
 			if ( requestDocumentResource.hasType( invalidType ) )
-				throw new BadRequestException( "One of the resources sent in the request contains an invalid type." );
+				throw new BadRequestException( new Infraction( 0x200C, "rdf.type", invalidType.getURI().stringValue() ) );
 		}
 		if ( ! AccessPointFactory.getInstance().isAccessPoint( requestDocumentResource ) )
-			throw new BadRequestException( "RDFSource interaction model can only create AccessPoints." );
+			throw new BadRequestException( 0x2104 );
 		validateSystemManagedProperties( requestDocumentResource );
 		return AccessPointFactory.getInstance().getAccessPoint( requestDocumentResource );
 	}
@@ -124,13 +128,14 @@ public abstract class AbstractRDFPostRequestHandler<E extends BasicContainer> ex
 	}
 
 	private void validateSystemManagedProperties( RDFResource resource ) {
-		if ( ! ContainerFactory.getInstance().validateSystemManagedProperties( resource ).isEmpty() ) throw new BadRequestException( "Resource sent has System managed properties in it" );
+		List<Infraction> infractions = ContainerFactory.getInstance().validateSystemManagedProperties( resource );
+		if ( ! infractions.isEmpty() ) throw new InvalidResourceException( infractions );
 	}
 
 	private BasicContainer getRequestBasicContainer( RDFResource requestDocumentResource ) {
 		for ( RDFNodeEnum invalidType : invalidTypesForContainers ) {
 			if ( requestDocumentResource.hasType( invalidType ) )
-				throw new BadRequestException( "One of the resources sent in the request contains an invalid type." );
+				throw new BadRequestException( new Infraction( 0x200C, "rdf.type", invalidType.getURI().stringValue() ) );
 		}
 		BasicContainer basicContainer = BasicContainerFactory.getInstance().create( requestDocumentResource );
 		if ( basicContainer.getDefaultInteractionModel() == null )
@@ -170,7 +175,7 @@ public abstract class AbstractRDFPostRequestHandler<E extends BasicContainer> ex
 		URI uniqueURI = forgeDocumentResourceURI( requestResource, parentURI, request );
 
 		// TODO: Check that the resourceURI is unique and if not forge another one
-		if ( sourceService.exists( uniqueURI ) ) throw new ConflictException( 0x2011 );
+		if ( sourceService.exists( uniqueURI ) ) throw new ConflictException( 0x2008 );
 
 		return uniqueURI;
 	}
@@ -209,26 +214,26 @@ public abstract class AbstractRDFPostRequestHandler<E extends BasicContainer> ex
 		String resourceURI = requestResource.getURI().stringValue();
 		targetURI = targetURI.endsWith( SLASH ) ? targetURI : targetURI.concat( SLASH );
 		if ( ! resourceURI.startsWith( targetURI ) ) {
-			throw new BadRequestException( 0x2014 );
+			throw new BadRequestException( 0x200B );
 		}
 
 		String relativeURI = resourceURI.replace( targetURI, EMPTY_STRING );
 		if ( relativeURI.length() == 0 ) {
-			throw new BadRequestException( 0x2010 );
+			throw new BadRequestException( 0x2203 );
 		}
 
 		int slashIndex = relativeURI.indexOf( SLASH );
 		if ( slashIndex == - 1 ) {
 			if ( configurationRepository.enforceEndingSlash() ) {
-				throw new BadRequestException( 0x2013 );
+				throw new BadRequestException( 0x200A );
 			}
 		}
 
 		if ( ( slashIndex + 1 ) < relativeURI.length() ) {
-			throw new BadRequestException( 0x2012 );
+			throw new BadRequestException( 0x2009 );
 		}
 
-		if ( sourceService.exists( requestResource.getURI() ) ) throw new ConflictException( 0x2011 );
+		if ( sourceService.exists( requestResource.getURI() ) ) throw new ConflictException( 0x2008 );
 	}
 
 	protected RDFResource renameResource( RDFResource requestResource, URI forgedURI ) {

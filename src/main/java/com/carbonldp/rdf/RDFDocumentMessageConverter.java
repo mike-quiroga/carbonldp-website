@@ -1,6 +1,7 @@
 package com.carbonldp.rdf;
 
 import com.carbonldp.config.ConfigurationRepository;
+import com.carbonldp.models.Infraction;
 import com.carbonldp.utils.URIUtil;
 import com.carbonldp.utils.ValueUtil;
 import com.carbonldp.web.converters.ModelMessageConverter;
@@ -64,9 +65,9 @@ public class RDFDocumentMessageConverter extends ModelMessageConverter<RDFDocume
 		try {
 			parser.parse( bodyInputStream, baseURI );
 		} catch ( RDFParseException e ) {
-			throw new HttpMessageNotReadableException( "The attempt of parsing the request's body as: '" + formatToUse.getName() + "', failed. Reason: " + e.getMessage(), e );
+			throw new HttpMessageNotReadableException( "The attempt of parsing the request's body as: '" + formatToUse.getName() + "', failed." );
 		} catch ( RDFHandlerException e ) {
-			throw new BadRequestException( e.getMessage() );
+			throw new BadRequestException( new Infraction( 0x6001, "formatToUse", formatToUse.getName() ) );
 		}
 
 		return documentRDFHandler.getDocument();

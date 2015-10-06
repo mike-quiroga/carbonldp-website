@@ -38,7 +38,7 @@ public class PlatformAgentsRDFPostHandler extends AbstractRDFPostRequestHandler<
 		try {
 			platformAgentService.register( documentResourceView );
 		} catch ( ResourceAlreadyExistsException e ) {
-			throw new ConflictException( "An agent already exists with that email" );
+			throw new ConflictException( 0x2210 );
 		}
 	}
 

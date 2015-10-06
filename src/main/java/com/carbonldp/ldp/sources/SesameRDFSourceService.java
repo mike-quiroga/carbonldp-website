@@ -1,6 +1,7 @@
 package com.carbonldp.ldp.sources;
 
 import com.carbonldp.authorization.acl.ACLRepository;
+import com.carbonldp.exceptions.InvalidResourceException;
 import com.carbonldp.exceptions.ResourceDoesntExistException;
 import com.carbonldp.ldp.AbstractSesameLDPService;
 import com.carbonldp.ldp.containers.*;
@@ -15,10 +16,7 @@ import org.openrdf.model.Statement;
 import org.openrdf.model.URI;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collection;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Transactional
@@ -75,7 +73,7 @@ public class SesameRDFSourceService extends AbstractSesameLDPService implements 
 		if ( ! exists( sourceURI ) ) throw new ResourceDoesntExistException();
 
 		validateResourcesBelongToSource( sourceURI, resourceViews );
-		validateSystemManagedProperties( resourceViews );
+		containsImmutableProperties( resourceViews );
 
 		sourceRepository.add( sourceURI, resourceViews );
 
@@ -85,7 +83,7 @@ public class SesameRDFSourceService extends AbstractSesameLDPService implements 
 	@Override
 	public void set( URI sourceURI, Collection<RDFResource> resourceViews ) {
 		if ( ! exists( sourceURI ) ) throw new ResourceDoesntExistException();
-		validateSystemManagedProperties( resourceViews );
+		containsImmutableProperties( resourceViews );
 		validateResourcesBelongToSource( sourceURI, resourceViews );
 
 		sourceRepository.set( sourceURI, resourceViews );
@@ -100,15 +98,14 @@ public class SesameRDFSourceService extends AbstractSesameLDPService implements 
 		RDFSource originalSource = get( source.getURI() );
 		RDFDocument originalDocument = originalSource.getDocument();
 		RDFDocument newDocument = source.getDocument();
-		ContainerDescription.Type type = containerRepository.getContainerType( source.getURI() );
 
 		Set<Statement> statementsToAdd = newDocument.stream().filter( statement -> ! originalDocument.contains( statement ) ).collect( Collectors.toSet() );
 		Set<RDFResource> resourceViewsToAdd = RDFResourceUtil.getResourceViews( statementsToAdd );
-		containsSystemManagedProperties( type, resourceViewsToAdd );
+		containsImmutableProperties( resourceViewsToAdd );
 
 		Set<Statement> statementsToDelete = originalDocument.stream().filter( statement -> ! newDocument.contains( statement ) ).collect( Collectors.toSet() );
 		Set<RDFResource> resourceViewsToDelete = RDFResourceUtil.getResourceViews( statementsToDelete );
-		containsSystemManagedProperties( type, resourceViewsToDelete );
+		containsImmutableProperties( resourceViewsToDelete );
 
 		substract( originalSource.getURI(), resourceViewsToDelete );
 		add( originalSource.getURI(), resourceViewsToAdd );
@@ -118,15 +115,13 @@ public class SesameRDFSourceService extends AbstractSesameLDPService implements 
 		return modifiedTime;
 	}
 
-	private void containsSystemManagedProperties( ContainerDescription.Type type, Set<RDFResource> resources ) {
-		Set<Infraction> infractions = new LinkedHashSet<>();
+	private void containsImmutableProperties( Collection<RDFResource> resources ) {
+		List<Infraction> infractions = new ArrayList<>();
 		for ( RDFResource resource : resources ) {
-			if ( type.equals( ContainerDescription.Type.BASIC ) )
-				infractions.addAll( BasicContainerFactory.getInstance().validateSystemManagedProperties( resource ) );
-			else
-				infractions.addAll( AccessPointFactory.getInstance().validateSystemManagedProperties( resource ) );
+			infractions.addAll( ContainerFactory.getInstance().validateImmutableProperties( resource ) );
+			infractions.addAll( ContainerFactory.getInstance().validateSystemManagedProperties( resource ) );
 		}
-		if ( ! infractions.isEmpty() ) throw new IllegalArgumentException( "System managed properties can not be changed" );
+		if ( ! infractions.isEmpty() ) throw new InvalidResourceException( infractions );
 	}
 
 	@Override
@@ -134,7 +129,7 @@ public class SesameRDFSourceService extends AbstractSesameLDPService implements 
 		if ( ! exists( sourceURI ) ) throw new ResourceDoesntExistException();
 
 		validateResourcesBelongToSource( sourceURI, resourceViews );
-		validateSystemManagedProperties( resourceViews );
+		containsImmutableProperties( resourceViews );
 
 		sourceRepository.substract( sourceURI, resourceViews );
 

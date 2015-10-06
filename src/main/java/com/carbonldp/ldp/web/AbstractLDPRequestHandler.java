@@ -99,17 +99,17 @@ public abstract class AbstractLDPRequestHandler extends AbstractRequestHandler {
 		List<HTTPHeaderValue> filteredValues = HTTPHeader.filterHeaderValues( preferHeader, null, null, "rel", "interaction-model" );
 		int size = filteredValues.size();
 		if ( size == 0 ) return null;
-		if ( size > 1 ) throw new BadRequestException( "The request defines more than 1 interaction model to apply." );
+		if ( size > 1 ) throw new BadRequestException( 0x5002 );
 
 		String interactionModelURI = filteredValues.get( 0 ).getMainValue();
 		InteractionModel interactionModel = RDFNodeUtil.findByURI( interactionModelURI, InteractionModel.class );
-		if ( interactionModel == null ) throw new BadRequestException( "The defined interaction-model cannot be recognized." );
+		if ( interactionModel == null ) throw new BadRequestException( 0x5003 );
 		return interactionModel;
 	}
 
 	private void checkInteractionModelSupport( InteractionModel requestInteractionModel ) {
 		if ( ! getSupportedInteractionModels().contains( requestInteractionModel ) ) {
-			throw new BadRequestException( "The interaction-model defined is not supported in this entrypoint." );
+			throw new BadRequestException( 0x5004 );
 		}
 	}
 
@@ -164,12 +164,12 @@ public abstract class AbstractLDPRequestHandler extends AbstractRequestHandler {
 		try {
 			eTagDateTime = HTTPUtil.getETagDateTime( requestETag );
 		} catch ( IllegalArgumentException e ) {
-			throw new PreconditionFailedException( "The ETag provided can't be recognized." );
+			throw new PreconditionFailedException( 0x5005 );
 		}
 
 		DateTime modified = sourceService.getModified( targetURI );
 
-		if ( ! modified.equals( eTagDateTime ) ) throw new PreconditionFailedException();
+		if ( ! modified.equals( eTagDateTime ) ) throw new PreconditionFailedException( 0x5006 );
 	}
 
 	protected void seekForOrphanFragments( AbstractModel requestModel, RDFResource requestDocumentResource ) {

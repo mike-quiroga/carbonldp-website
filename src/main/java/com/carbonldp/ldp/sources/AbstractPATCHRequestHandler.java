@@ -17,7 +17,6 @@ import org.openrdf.model.Resource;
 import org.openrdf.model.Statement;
 import org.openrdf.model.URI;
 import org.openrdf.model.impl.AbstractModel;
-import org.openrdf.model.impl.URIImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
@@ -102,12 +101,12 @@ public abstract class AbstractPATCHRequestHandler extends AbstractLDPRequestHand
 			RDFNode node = new RDFNode( requestModel, subject );
 			if ( ! node.hasType( PATCHRequestDescription.Resource.CLASS ) ) continue;
 
-			if ( patchRequest != null ) throw new BadRequestException( 0x200F );
+			if ( patchRequest != null ) throw new BadRequestException( 0x2301 );
 
 			patchRequest = new PATCHRequest( node );
 		}
 
-		if ( patchRequest == null ) throw new InvalidResourceException( new Infraction( 0x2009, new URIImpl( CP.Classes.PATCH_REQUEST ) ) );
+		if ( patchRequest == null ) throw new InvalidResourceException( new Infraction( 0x2003, "property", CP.Classes.PATCH_REQUEST ) );
 
 		return patchRequest;
 	}

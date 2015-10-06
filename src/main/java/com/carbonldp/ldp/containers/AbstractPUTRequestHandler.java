@@ -14,7 +14,6 @@ import org.joda.time.DateTime;
 import org.openrdf.model.Statement;
 import org.openrdf.model.URI;
 import org.openrdf.model.impl.AbstractModel;
-import org.openrdf.model.impl.URIImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -61,9 +60,9 @@ public abstract class AbstractPUTRequestHandler<E extends RDFResource> extends A
 
 	protected void validatePutRequestModel( AbstractModel requestModel ) {
 		for ( Statement statement : requestModel ) {
-			if ( ! ValueUtil.isBNode( statement.getSubject() ) ) throw new BadRequestException( 0x200D );
-			if ( ! statement.getPredicate().stringValue().equals( C.Properties.ADD_MEMBER ) ) throw new BadRequestException( 0x200E );
-			if ( ! ValueUtil.isURI( statement.getObject() ) ) throw new InvalidResourceException( new Infraction( 0x200B, new URIImpl( C.Properties.ADD_MEMBER ) ) );
+			if ( ! ValueUtil.isBNode( statement.getSubject() ) ) throw new BadRequestException( 0x2201 );
+			if ( ! statement.getPredicate().stringValue().equals( C.Properties.ADD_MEMBER ) ) throw new BadRequestException( 0x2202 );
+			if ( ! ValueUtil.isURI( statement.getObject() ) ) throw new InvalidResourceException( new Infraction( 0x2005, "property", C.Properties.ADD_MEMBER ) );
 		}
 	}
 

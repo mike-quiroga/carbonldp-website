@@ -4,9 +4,10 @@ import org.springframework.http.HttpStatus;
 
 public class PreconditionRequiredException extends AbstractWebRuntimeException {
 	private static final HttpStatus defaultStatus = HttpStatus.PRECONDITION_REQUIRED;
+	private static final int defaultErrorCode = 0x5007;
 
 	public PreconditionRequiredException() {
-		this( 0 );
+		this( defaultErrorCode );
 	}
 
 	public PreconditionRequiredException( int errorCode ) {

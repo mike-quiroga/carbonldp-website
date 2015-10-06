@@ -3,6 +3,7 @@ package com.carbonldp.web.exceptions;
 import com.carbonldp.errors.ErrorResponse;
 import com.carbonldp.errors.ErrorResponseFactory;
 import com.carbonldp.exceptions.CarbonNoStackTraceRuntimeException;
+import com.carbonldp.models.Infraction;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -23,6 +24,9 @@ public abstract class AbstractWebRuntimeException extends CarbonNoStackTraceRunt
 		super( message );
 		setHttpStatus( httpStatus );
 	}
+	public AbstractWebRuntimeException( Infraction infraction ) {
+		super( infraction );
+	}
 
 	public HttpStatus getHTTPStatus() {
 		return this.httpStatus;
@@ -42,6 +46,6 @@ public abstract class AbstractWebRuntimeException extends CarbonNoStackTraceRunt
 
 		ErrorResponse error = ErrorResponseFactory.create( errorCode, message, httpStatus );
 
-		return new ResponseEntity<>( error, httpStatus );
+		return new ResponseEntity<>( error.getBaseModel(), httpStatus );
 	}
 }
