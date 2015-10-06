@@ -1,13 +1,12 @@
 package com.carbonldp.ldp.containers;
 
-import com.carbonldp.exceptions.MisleadingInformationException;
+import com.carbonldp.exceptions.IllegalArgumentException;
 import com.carbonldp.ldp.containers.ContainerDescription.Type;
 import com.carbonldp.models.Infraction;
 import com.carbonldp.rdf.RDFDocumentRepository;
 import com.carbonldp.rdf.RDFResourceRepository;
 import com.carbonldp.utils.RDFNodeUtil;
 import com.carbonldp.utils.ValueUtil;
-import com.carbonldp.web.exceptions.BadRequestException;
 import org.apache.commons.lang3.NotImplementedException;
 import org.openrdf.model.URI;
 import org.openrdf.model.Value;
@@ -127,11 +126,10 @@ public class SesameIndirectContainerRepository extends AbstractAccessPointReposi
 			if ( queryResult.hasNext() ) {
 				BindingSet bindingSet = queryResult.next();
 				membershipObject = bindingSet.getValue( "membershipObject" );
-				// TODO: this is a web error, what should be don with this?
-				if ( queryResult.hasNext() ) throw new BadRequestException( new Infraction( 0x2004, "property", "The membership object" ) );
-			} else throw new MisleadingInformationException( 0x2105 );
+				if ( queryResult.hasNext() ) throw new IllegalArgumentException( new Infraction( 0x2004, "property", "The membership object" ) );
+			} else throw new IllegalArgumentException( 0x2105 );
 
-			if ( ! ValueUtil.isURI( membershipObject ) ) throw new MisleadingInformationException( new Infraction( 0x2005, "property", "The primary topic" ) );
+			if ( ! ValueUtil.isURI( membershipObject ) ) throw new IllegalArgumentException( new Infraction( 0x2005, "property", "The primary topic" ) );
 
 			return ValueUtil.getURI( membershipObject );
 		} );
