@@ -65,7 +65,7 @@ public class RDFDocumentMessageConverter extends ModelMessageConverter<RDFDocume
 		try {
 			parser.parse( bodyInputStream, baseURI );
 		} catch ( RDFParseException e ) {
-			throw new HttpMessageNotReadableException( "The attempt of parsing the request's body as: '" + formatToUse.getName() + "', failed." );
+			throw new HttpMessageNotReadableException( "The attempt of parsing the request body as: '" + formatToUse.getName() + "', failed." );
 		} catch ( RDFHandlerException e ) {
 			throw new BadRequestException( new Infraction( 0x6001, "formatToUse", formatToUse.getName() ) );
 		}
