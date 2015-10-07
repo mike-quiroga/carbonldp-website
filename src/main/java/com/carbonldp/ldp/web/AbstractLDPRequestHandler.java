@@ -2,7 +2,6 @@ package com.carbonldp.ldp.web;
 
 import com.carbonldp.Consts;
 import com.carbonldp.HTTPHeaders;
-import com.carbonldp.Vars;
 import com.carbonldp.config.ConfigurationRepository;
 import com.carbonldp.descriptions.APIPreferences.InteractionModel;
 import com.carbonldp.http.Link;
@@ -69,16 +68,8 @@ public abstract class AbstractLDPRequestHandler extends AbstractRequestHandler {
 		return sourceService.exists( targetURI );
 	}
 
-	protected String getTargetURL( HttpServletRequest request ) {
-		String requestURI = request.getRequestURI();
-		String platformDomain = Vars.getHost();
-		StringBuilder targetURIBuilder = new StringBuilder();
-		targetURIBuilder.append( platformDomain.substring( 0, platformDomain.length() - 1 ) ).append( requestURI );
-		return targetURIBuilder.toString();
-	}
-
 	protected URI getTargetURI( HttpServletRequest request ) {
-		String url = getTargetURL( request );
+		String url = RequestUtil.getRequestURL( request );
 		return new URIImpl( url );
 	}
 
@@ -94,7 +85,7 @@ public abstract class AbstractLDPRequestHandler extends AbstractRequestHandler {
 
 	private InteractionModel getRequestInteractionModel( HttpServletRequest request ) {
 		HTTPHeader preferHeader = new HTTPHeader( request.getHeaders( HTTPHeaders.PREFER ) );
-		
+
 		// TODO: Move this to a constants file
 		List<HTTPHeaderValue> filteredValues = HTTPHeader.filterHeaderValues( preferHeader, null, null, "rel", "interaction-model" );
 		int size = filteredValues.size();

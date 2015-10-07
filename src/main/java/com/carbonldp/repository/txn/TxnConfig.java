@@ -1,6 +1,8 @@
 package com.carbonldp.repository.txn;
 
 import com.carbonldp.Vars;
+import com.carbonldp.repository.security.SecuredNativeStore;
+import com.carbonldp.repository.security.SecuredNativeStoreFactory;
 import com.carbonldp.repository.LocalRepositoryService;
 import com.carbonldp.repository.RepositoryService;
 import org.openrdf.repository.Repository;
@@ -9,7 +11,7 @@ import org.openrdf.repository.manager.LocalRepositoryManager;
 import org.openrdf.repository.manager.RemoteRepositoryManager;
 import org.openrdf.repository.manager.RepositoryManager;
 import org.openrdf.repository.sail.SailRepository;
-import org.openrdf.sail.nativerdf.NativeStore;
+import org.openrdf.sail.config.SailRegistry;
 import org.openrdf.spring.RepositoryConnectionFactory;
 import org.openrdf.spring.SesameConnectionFactory;
 import org.openrdf.spring.SesameTransactionManager;
@@ -46,8 +48,8 @@ public class TxnConfig {
 
 	private Repository platformRepository() {
 		String repositoryDirectory = Vars.getPlatformRepositoryDirectory();
-		NativeStore platformConfig = new NativeStore( new File( repositoryDirectory ) );
-		SailRepository platformRepository = new SailRepository( platformConfig );
+		SecuredNativeStore sail = new SecuredNativeStore( new File( repositoryDirectory ) );
+		SailRepository platformRepository = new SailRepository( sail );
 
 		try {
 			platformRepository.initialize();
@@ -65,6 +67,8 @@ public class TxnConfig {
 			String remoteManagerURL = Vars.getAppsRemoteManagerURL();
 			return new RemoteRepositoryManager( remoteManagerURL );
 		} else {
+			SailRegistry.getInstance().add( new SecuredNativeStoreFactory() );
+
 			String repositoryDirectory = Vars.getAppsRepositoryDirectory();
 			return new LocalRepositoryManager( new File( repositoryDirectory ) );
 		}

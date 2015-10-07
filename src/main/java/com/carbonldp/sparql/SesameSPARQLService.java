@@ -11,7 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Transactional
 public class SesameSPARQLService extends AbstractSesameRepository implements SPARQLService {
-	//TODO: check about RDF dataset with the URL
+	// TODO: check about RDF dataset with the URL
 	private SPARQLResult sparqlResult;
 
 	public SesameSPARQLService( SesameConnectionFactory connectionFactory ) {
@@ -41,19 +41,15 @@ public class SesameSPARQLService extends AbstractSesameRepository implements SPA
 	}
 
 	private SPARQLResult executeSPARQLBooleanQuery( String queryString ) {
-		return new SPARQLBooleanResult( sparqlTemplate.executeBooleanQuery( queryString ) );
-
+		return SecuredRepositoryTemplate.execute( () -> new SPARQLBooleanResult( sparqlTemplate.executeBooleanQuery( queryString ) ) );
 	}
 
 	private SPARQLResult executeSPARQLTupleQuery( String queryString ) {
-		return new SPARQLTupleResult(
-			sparqlTemplate.executeTupleQuery( queryString, queryResult -> InMemoryTupleQueryResult.from( queryResult )
-			) );
+		return SecuredRepositoryTemplate.execute( () -> new SPARQLTupleResult( sparqlTemplate.executeTupleQuery( queryString, InMemoryTupleQueryResult::from ) ) );
 	}
 
 	private SPARQLResult executeSPARQLGraphedQuery( String queryString ) {
-		return new SPARQLGraphResult(
-			sparqlTemplate.executeGraphQuery( queryString, queryResult -> queryResult ) );
+		return SecuredRepositoryTemplate.execute( () -> new SPARQLGraphResult( sparqlTemplate.executeGraphQuery( queryString, InMemoryGraphQueryResult::from ) ) );
 	}
 
 }

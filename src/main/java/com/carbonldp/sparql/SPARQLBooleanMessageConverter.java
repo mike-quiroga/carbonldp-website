@@ -31,9 +31,7 @@ public class SPARQLBooleanMessageConverter extends SPARQLMessageConverter<SPARQL
 			outputStream = outputMessage.getBody();
 			QueryResultIO.writeBoolean( result, this.mediaTypeFormats.get( contentType ), outputStream );
 			outputStream.flush();
-		} catch ( IOException e ) {
-			throw new RuntimeException( "unable to write response body, nested Exception: ", e );
-		} catch ( QueryResultHandlerException e ) {
+		} catch ( IOException | QueryResultHandlerException e ) {
 			throw new RuntimeException( "unable to write response body, nested Exception: ", e );
 		}
 
