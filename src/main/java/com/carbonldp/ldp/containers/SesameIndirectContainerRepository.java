@@ -1,11 +1,12 @@
 package com.carbonldp.ldp.containers;
 
+import com.carbonldp.exceptions.IllegalArgumentException;
 import com.carbonldp.ldp.containers.ContainerDescription.Type;
+import com.carbonldp.models.Infraction;
 import com.carbonldp.rdf.RDFDocumentRepository;
 import com.carbonldp.rdf.RDFResourceRepository;
 import com.carbonldp.utils.RDFNodeUtil;
 import com.carbonldp.utils.ValueUtil;
-import com.carbonldp.web.exceptions.BadRequestException;
 import org.apache.commons.lang3.NotImplementedException;
 import org.openrdf.model.URI;
 import org.openrdf.model.Value;
@@ -125,12 +126,10 @@ public class SesameIndirectContainerRepository extends AbstractAccessPointReposi
 			if ( queryResult.hasNext() ) {
 				BindingSet bindingSet = queryResult.next();
 				membershipObject = bindingSet.getValue( "membershipObject" );
-				if ( queryResult.hasNext() ) throw new BadRequestException( "The resource has more than one membershipObject" );
-				// TODO: Design which error should be thrown in here
-			} else throw new RuntimeException( "The resource does not have enough information to be an indirect container member" );
+				if ( queryResult.hasNext() ) throw new IllegalArgumentException( new Infraction( 0x2004, "property", "The membership object" ) );
+			} else throw new IllegalArgumentException( 0x2105 );
 
-			// TODO: Design which error should be thrown in here
-			if ( ! ValueUtil.isURI( membershipObject ) ) throw new RuntimeException( "primary topic is nor a URI" );
+			if ( ! ValueUtil.isURI( membershipObject ) ) throw new IllegalArgumentException( new Infraction( 0x2005, "property", "The primary topic" ) );
 
 			return ValueUtil.getURI( membershipObject );
 		} );

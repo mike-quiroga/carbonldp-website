@@ -28,9 +28,6 @@ public class AppsRDFPostHandler extends AbstractRDFPostRequestHandler<App> {
 		appService.create( documentResourceView );
 	}
 
-	@Override
-	protected void validateDocumentResourceView( App documentResourceView ) {}
-
 	/*
 		public ResponseEntity<Object> handleRequest( AbstractModel requestModel, HttpServletRequest request, HttpServletResponse response ) {
 			validateRequestModel( requestModel );

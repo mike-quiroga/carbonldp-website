@@ -43,6 +43,9 @@ public class ApplicationInitializer implements WebApplicationInitializer {
 		Properties configProperties = loadConfigProperties( activeProfile );
 		loadGlobalVars( configProperties );
 
+		Properties errorCodes = loadErrorCodes();
+		loadErrorCodesVars( errorCodes );
+
 		RepositoriesUpdater repositoriesUpdater = new RepositoriesUpdater();
 		if ( ! repositoriesUpdater.repositoriesAreUpToDate() ) repositoriesUpdater.updateRepositories();
 
@@ -69,6 +72,22 @@ public class ApplicationInitializer implements WebApplicationInitializer {
 		return SpringProfile.DEFAULT;
 	}
 
+	private Properties loadErrorCodes() throws ServletException {
+		Resource propertiesFile = new ClassPathResource( "error-codes.properties" );
+		PropertiesFactoryBean factory = new PropertiesFactoryBean();
+		factory.setLocation( propertiesFile );
+		Properties properties;
+
+		try {
+			factory.afterPropertiesSet();
+			properties = factory.getObject();
+		} catch ( IOException e ) {
+			throw new ServletException( "Couldn't load the error codess file.", e );
+		}
+
+		return properties;
+	}
+
 	private Properties loadConfigProperties( SpringProfile activeProfile ) throws ServletException {
 		Resource propertiesFile = new ClassPathResource( activeProfile.getName() + "-config.properties" );
 		PropertiesFactoryBean factory = new PropertiesFactoryBean();
@@ -85,6 +104,10 @@ public class ApplicationInitializer implements WebApplicationInitializer {
 		PropertiesUtil.resolveProperties( properties );
 
 		return properties;
+	}
+
+	private void loadErrorCodesVars( Properties properties ) {
+		Vars.loadErrorCodes( properties );
 	}
 
 	private void loadGlobalVars( Properties properties ) {

@@ -19,12 +19,6 @@ public class PlatformAgentsRDFPostHandler extends AbstractRDFPostRequestHandler<
 	private PlatformAgentService platformAgentService;
 
 	@Override
-	protected void validateDocumentResourceView( Agent documentResourceView ) {
-		// TODO: Implement
-		// throw new RuntimeException( "Not Implemented" );
-	}
-
-	@Override
 	protected Agent getDocumentResourceView( BasicContainer requestBasicContainer ) {
 		return new Agent( requestBasicContainer );
 	}
@@ -44,7 +38,7 @@ public class PlatformAgentsRDFPostHandler extends AbstractRDFPostRequestHandler<
 		try {
 			platformAgentService.register( documentResourceView );
 		} catch ( ResourceAlreadyExistsException e ) {
-			throw new ConflictException( "An agent already exists with that email" );
+			throw new ConflictException( 0x2210 );
 		}
 	}
 

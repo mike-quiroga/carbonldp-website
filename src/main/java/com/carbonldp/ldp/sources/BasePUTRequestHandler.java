@@ -16,9 +16,4 @@ public class BasePUTRequestHandler extends AbstractPUTRequestHandler<RDFSource> 
 		sourceService.replace( documentResourceView );
 	}
 
-	@Override
-	protected void validateDocumentResourceView( RDFSource documentResourceView ) {
-
-	}
-
 }

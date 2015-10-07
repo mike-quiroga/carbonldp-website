@@ -1,9 +1,12 @@
 package com.carbonldp.ldp.sources;
 
 import com.carbonldp.descriptions.APIPreferences;
+import com.carbonldp.exceptions.InvalidResourceException;
 import com.carbonldp.ldp.patch.*;
 import com.carbonldp.ldp.web.AbstractLDPRequestHandler;
 import com.carbonldp.models.EmptyResponse;
+import com.carbonldp.models.Infraction;
+import com.carbonldp.namespaces.CP;
 import com.carbonldp.rdf.RDFNode;
 import com.carbonldp.rdf.RDFResource;
 import com.carbonldp.utils.RDFNodeUtil;
@@ -40,7 +43,7 @@ public abstract class AbstractPATCHRequestHandler extends AbstractLDPRequestHand
 		setUp( request, response );
 
 		URI targetURI = getTargetURI( request );
-		if ( ! targetResourceExists( targetURI ) ) throw new NotFoundException( "The target resource wasn't found." );
+		if ( ! targetResourceExists( targetURI ) ) throw new NotFoundException();
 
 		String requestETag = getRequestETag();
 		checkPrecondition( targetURI, requestETag );
@@ -98,12 +101,12 @@ public abstract class AbstractPATCHRequestHandler extends AbstractLDPRequestHand
 			RDFNode node = new RDFNode( requestModel, subject );
 			if ( ! node.hasType( PATCHRequestDescription.Resource.CLASS ) ) continue;
 
-			if ( patchRequest != null ) throw new BadRequestException( "Multiple PATCHRequests on a single request" );
+			if ( patchRequest != null ) throw new BadRequestException( 0x2301 );
 
 			patchRequest = new PATCHRequest( node );
 		}
 
-		if ( patchRequest == null ) throw new BadRequestException( "The request didn't contain a cp:PATCHRequest" );
+		if ( patchRequest == null ) throw new InvalidResourceException( new Infraction( 0x2003, "property", CP.Classes.PATCH_REQUEST ) );
 
 		return patchRequest;
 	}

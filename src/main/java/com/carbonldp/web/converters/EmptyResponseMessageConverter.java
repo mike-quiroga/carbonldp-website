@@ -1,5 +1,6 @@
 package com.carbonldp.web.converters;
 
+import com.carbonldp.HTTPHeaders;
 import com.carbonldp.models.EmptyResponse;
 import com.carbonldp.utils.MediaTypeUtil;
 import org.openrdf.rio.RDFFormat;
@@ -94,11 +95,15 @@ public class EmptyResponseMessageConverter implements HttpMessageConverter<Empty
 			throw new HttpMessageNotWritableException( "The empty response couldn't be wrote to an RDF document.", e );
 		}
 
-		// TODO: Set the Content-Length
+		setContentLength( outputMessage, outputStream );
 
 		outputStream.writeTo( outputMessage.getBody() );
 
 		outputMessage.getBody().flush();
+	}
+
+	private void setContentLength( HttpOutputMessage outputMessage, ByteArrayOutputStream outputStream ) {
+		outputMessage.getHeaders().add( HTTPHeaders.CONTENT_LENGTH, String.valueOf( outputStream.size() ) );
 	}
 
 	private void writeEmptyResponse( EmptyResponse response, RDFFormat format, OutputStream outputStream ) throws IOException {

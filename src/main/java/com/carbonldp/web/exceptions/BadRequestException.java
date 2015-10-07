@@ -1,5 +1,6 @@
 package com.carbonldp.web.exceptions;
 
+import com.carbonldp.models.Infraction;
 import org.springframework.http.HttpStatus;
 
 public class BadRequestException extends AbstractWebRuntimeException {
@@ -12,5 +13,9 @@ public class BadRequestException extends AbstractWebRuntimeException {
 
 	public BadRequestException( String message ) {
 		super( message, defaultStatus );
+	}
+
+	public BadRequestException( Infraction infraction ) {
+		super( infraction );
 	}
 }

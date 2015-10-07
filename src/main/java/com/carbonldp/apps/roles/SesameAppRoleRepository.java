@@ -80,7 +80,7 @@ public class SesameAppRoleRepository extends AbstractSesameLDPRepository impleme
 
 		Set<URI> appRoleURIs = containerRepository.findMembers( appRolesContainerURI, getByAgent_query, bindings, appRolesContainerType );
 		Set<RDFSource> appRoleSources = sourceRepository.get( appRoleURIs );
-		return AppRoleFactory.get( appRoleSources );
+		return AppRoleFactory.getInstance().get( appRoleSources );
 	}
 
 	@Override
@@ -108,7 +108,7 @@ public class SesameAppRoleRepository extends AbstractSesameLDPRepository impleme
 	@Override
 	public Container createAppRolesContainer( URI rootContainerURI ) {
 		URI appRolesContainerURI = getContainerURI( rootContainerURI );
-		BasicContainer appRolesContainer = BasicContainerFactory.create( new RDFResource( appRolesContainerURI ) );
+		BasicContainer appRolesContainer = BasicContainerFactory.getInstance().create( new RDFResource( appRolesContainerURI ) );
 		containerRepository.createChild( rootContainerURI, appRolesContainer );
 		return appRolesContainer;
 	}
@@ -138,7 +138,7 @@ public class SesameAppRoleRepository extends AbstractSesameLDPRepository impleme
 	private Container createAgentsContainer( AppRole appRole ) {
 		URI agentsContainerURI = getAgentsContainerURI( appRole.getURI() );
 		RDFResource resource = new RDFResource( agentsContainerURI );
-		DirectContainer container = DirectContainerFactory.create( resource, appRole.getURI(), AppRoleDescription.Property.AGENT.getURI() );
+		DirectContainer container = DirectContainerFactory.getInstance().create( resource, appRole.getURI(), AppRoleDescription.Property.AGENT.getURI() );
 		sourceRepository.createAccessPoint( appRole.getURI(), container );
 		return container;
 	}

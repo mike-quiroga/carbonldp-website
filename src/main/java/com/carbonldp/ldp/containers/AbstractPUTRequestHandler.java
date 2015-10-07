@@ -1,8 +1,10 @@
 package com.carbonldp.ldp.containers;
 
 import com.carbonldp.descriptions.APIPreferences;
+import com.carbonldp.exceptions.InvalidResourceException;
 import com.carbonldp.ldp.web.AbstractRequestWithBodyHandler;
 import com.carbonldp.models.EmptyResponse;
+import com.carbonldp.models.Infraction;
 import com.carbonldp.namespaces.C;
 import com.carbonldp.rdf.RDFResource;
 import com.carbonldp.utils.ValueUtil;
@@ -26,17 +28,13 @@ import java.util.stream.Collectors;
  * @since 0.10.0-ALPHA
  */
 public abstract class AbstractPUTRequestHandler<E extends RDFResource> extends AbstractRequestWithBodyHandler<E> {
-	@Override
-	protected void validateDocumentResourceView( E documentResourceView ) {
-
-	}
 
 	public ResponseEntity<Object> handleRequest( AbstractModel requestModel, HttpServletRequest request, HttpServletResponse response ) {
 		setUp( request, response );
 
 		URI targetURI = getTargetURI( request );
 		if ( ! targetResourceExists( targetURI ) ) {
-			throw new NotFoundException( "The target resource wasn't found." );
+			throw new NotFoundException();
 		}
 
 		String requestETag = getRequestETag();
@@ -54,14 +52,17 @@ public abstract class AbstractPUTRequestHandler<E extends RDFResource> extends A
 	protected abstract void addMembers( URI targetUri, Set<URI> members );
 
 	protected Set<URI> getMembers( AbstractModel requestModel ) {
-		return requestModel.objects().stream().map( ValueUtil::getURI ).collect( Collectors.toCollection( () -> new LinkedHashSet<>() ) );
+		return requestModel.objects()
+						   .stream()
+						   .map( ValueUtil::getURI )
+						   .collect( Collectors.toCollection( () -> new LinkedHashSet<>() ) );
 	}
 
 	protected void validatePutRequestModel( AbstractModel requestModel ) {
 		for ( Statement statement : requestModel ) {
-			if ( ! ValueUtil.isBNode( statement.getSubject() ) ) throw new BadRequestException( "All subjects must be BNodes" );
-			if ( ! statement.getPredicate().stringValue().equals( C.Properties.ADD_MEMBER ) ) throw new BadRequestException( "Unsupported predicate" );
-			if ( ! ValueUtil.isURI( statement.getObject() ) ) throw new BadRequestException( "All objects must be URIs" );
+			if ( ! ValueUtil.isBNode( statement.getSubject() ) ) throw new BadRequestException( 0x2201 );
+			if ( ! statement.getPredicate().stringValue().equals( C.Properties.ADD_MEMBER ) ) throw new BadRequestException( 0x2202 );
+			if ( ! ValueUtil.isURI( statement.getObject() ) ) throw new InvalidResourceException( new Infraction( 0x2005, "property", C.Properties.ADD_MEMBER ) );
 		}
 	}
 

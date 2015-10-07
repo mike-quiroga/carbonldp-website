@@ -2,8 +2,11 @@ package com.carbonldp.ldp.web;
 
 import com.carbonldp.HTTPHeaders;
 import com.carbonldp.descriptions.APIPreferences.InteractionModel;
+import com.carbonldp.exceptions.InvalidResourceException;
 import com.carbonldp.ldp.containers.*;
+import com.carbonldp.ldp.nonrdf.RDFRepresentationDescription;
 import com.carbonldp.models.EmptyResponse;
+import com.carbonldp.models.Infraction;
 import com.carbonldp.rdf.RDFDocument;
 import com.carbonldp.rdf.RDFNodeEnum;
 import com.carbonldp.rdf.RDFResource;
@@ -34,8 +37,9 @@ public abstract class AbstractRDFPostRequestHandler<E extends BasicContainer> ex
 
 	static {
 		List<? extends RDFNodeEnum> invalidTypes = Arrays.asList(
-			BasicContainerDescription.Resource.CLASS
-			// TODO: Add NON_RDF_SOURCE, NRWRAPPER
+			BasicContainerDescription.Resource.CLASS,
+			RDFRepresentationDescription.Resource.NON_RDF_SOURCE
+			// TODO: NRWRAPPER
 		);
 		invalidTypesForRDFSources = invalidTypes.toArray( new RDFNodeEnum[invalidTypes.size()] );
 	}
@@ -64,7 +68,7 @@ public abstract class AbstractRDFPostRequestHandler<E extends BasicContainer> ex
 		setUp( request, response );
 
 		URI targetURI = getTargetURI( request );
-		if ( ! targetResourceExists( targetURI ) ) throw new NotFoundException( "The target resource wasn't found." );
+		if ( ! targetResourceExists( targetURI ) ) throw new NotFoundException();
 
 		RDFResource requestDocumentResource = document.getDocumentResource();
 
@@ -82,11 +86,11 @@ public abstract class AbstractRDFPostRequestHandler<E extends BasicContainer> ex
 	}
 
 	private ResponseEntity<Object> handlePOSTToRDFSource( URI targetURI, RDFResource requestDocumentResource ) {
-		AccessPoint requestAccessPoint = getRequestAccessPoint( targetURI, requestDocumentResource );
+		AccessPoint requestAccessPoint = getRequestAccessPoint( requestDocumentResource );
 
 		requestDocumentResource = getDocumentResourceWithFinalURI( requestAccessPoint, targetURI.stringValue() );
 		if ( ! requestDocumentResource.equals( requestAccessPoint.getURI() ) ) {
-			requestAccessPoint = AccessPointFactory.getAccessPoint( requestDocumentResource );
+			requestAccessPoint = AccessPointFactory.getInstance().getAccessPoint( requestDocumentResource );
 		}
 
 		DateTime creationTime = sourceService.createAccessPoint( targetURI, requestAccessPoint );
@@ -94,30 +98,28 @@ public abstract class AbstractRDFPostRequestHandler<E extends BasicContainer> ex
 		return generateCreatedResponse( requestAccessPoint, creationTime );
 	}
 
-	private AccessPoint getRequestAccessPoint( URI targetURI, RDFResource requestDocumentResource ) {
+	private AccessPoint getRequestAccessPoint( RDFResource requestDocumentResource ) {
 		for ( RDFNodeEnum invalidType : invalidTypesForRDFSources ) {
 			if ( requestDocumentResource.hasType( invalidType ) )
-				throw new BadRequestException( "One of the resources sent in the request contains an invalid type." );
+				throw new BadRequestException( new Infraction( 0x200C, "rdf.type", invalidType.getURI().stringValue() ) );
 		}
-		if ( ! AccessPointFactory.isAccessPoint( requestDocumentResource ) )
-			throw new BadRequestException( "RDFSource interaction model can only create AccessPoints." );
-		if ( ! AccessPointFactory.isValid( requestDocumentResource, targetURI, false ) )
-			throw new BadRequestException( "An AccessPoint sent isn't valid." );
-		// TODO: Check for system managed properties
-		return AccessPointFactory.getAccessPoint( requestDocumentResource );
+		if ( ! AccessPointFactory.getInstance().isAccessPoint( requestDocumentResource ) )
+			throw new BadRequestException( 0x2104 );
+		validateSystemManagedProperties( requestDocumentResource );
+		return AccessPointFactory.getInstance().getAccessPoint( requestDocumentResource );
 	}
 
 	private ResponseEntity<Object> handlePOSTToContainer( URI targetURI, RDFResource requestDocumentResource ) {
 
 		validateDocumentResource( targetURI, requestDocumentResource );
 
+		validateSystemManagedProperties( requestDocumentResource );
 		BasicContainer requestBasicContainer = getRequestBasicContainer( requestDocumentResource );
 
 		requestDocumentResource = getDocumentResourceWithFinalURI( requestBasicContainer, targetURI.stringValue() );
 		if ( ! requestDocumentResource.equals( requestBasicContainer.getURI() ) ) requestBasicContainer = new BasicContainer( requestDocumentResource );
 
 		E documentResourceView = getDocumentResourceView( requestBasicContainer );
-		validateDocumentResourceView( documentResourceView );
 
 		createChild( targetURI, documentResourceView );
 
@@ -125,21 +127,20 @@ public abstract class AbstractRDFPostRequestHandler<E extends BasicContainer> ex
 		return generateCreatedResponse( documentResourceView, modified );
 	}
 
+	private void validateSystemManagedProperties( RDFResource resource ) {
+		List<Infraction> infractions = ContainerFactory.getInstance().validateSystemManagedProperties( resource );
+		if ( ! infractions.isEmpty() ) throw new InvalidResourceException( infractions );
+	}
+
 	private BasicContainer getRequestBasicContainer( RDFResource requestDocumentResource ) {
 		for ( RDFNodeEnum invalidType : invalidTypesForContainers ) {
 			if ( requestDocumentResource.hasType( invalidType ) )
-				throw new BadRequestException( "One of the resources sent in the request contains an invalid type." );
+				throw new BadRequestException( new Infraction( 0x200C, "rdf.type", invalidType.getURI().stringValue() ) );
 		}
-		if ( BasicContainerFactory.isBasicContainer( requestDocumentResource ) ) {
-			if ( ! BasicContainerFactory.isValid( requestDocumentResource ) )
-				throw new BadRequestException( "A BasicContainer sent isn't valid." );
-			// TODO: Check for system managed properties
-			return new BasicContainer( requestDocumentResource );
-		} else {
-			BasicContainer basicContainer = BasicContainerFactory.create( requestDocumentResource );
+		BasicContainer basicContainer = BasicContainerFactory.getInstance().create( requestDocumentResource );
+		if ( basicContainer.getDefaultInteractionModel() == null )
 			basicContainer.setDefaultInteractionModel( InteractionModel.RDF_SOURCE );
-			return basicContainer;
-		}
+		return basicContainer;
 	}
 
 	protected abstract E getDocumentResourceView( BasicContainer requestBasicContainer );
@@ -174,7 +175,7 @@ public abstract class AbstractRDFPostRequestHandler<E extends BasicContainer> ex
 		URI uniqueURI = forgeDocumentResourceURI( requestResource, parentURI, request );
 
 		// TODO: Check that the resourceURI is unique and if not forge another one
-		if ( sourceService.exists( uniqueURI ) ) throw new ConflictException( "The URI is already in use." );
+		if ( sourceService.exists( uniqueURI ) ) throw new ConflictException( 0x2008 );
 
 		return uniqueURI;
 	}
@@ -213,26 +214,26 @@ public abstract class AbstractRDFPostRequestHandler<E extends BasicContainer> ex
 		String resourceURI = requestResource.getURI().stringValue();
 		targetURI = targetURI.endsWith( SLASH ) ? targetURI : targetURI.concat( SLASH );
 		if ( ! resourceURI.startsWith( targetURI ) ) {
-			throw new BadRequestException( "A request resource's URI doesn't have the request URI as a base." );
+			throw new BadRequestException( 0x200B );
 		}
 
 		String relativeURI = resourceURI.replace( targetURI, EMPTY_STRING );
 		if ( relativeURI.length() == 0 ) {
-			throw new BadRequestException( "A request resource's URI is the same as the request URI. Remember POST to parent, PUT to me." );
+			throw new BadRequestException( 0x2203 );
 		}
 
 		int slashIndex = relativeURI.indexOf( SLASH );
 		if ( slashIndex == - 1 ) {
 			if ( configurationRepository.enforceEndingSlash() ) {
-				throw new BadRequestException( "A request resource's URI doesn't end up in a slash." );
+				throw new BadRequestException( 0x200A );
 			}
 		}
 
 		if ( ( slashIndex + 1 ) < relativeURI.length() ) {
-			throw new BadRequestException( "A request resource's URI isn't an immediate child of the request URI." );
+			throw new BadRequestException( 0x2009 );
 		}
 
-		if ( sourceService.exists( requestResource.getURI() ) ) throw new ConflictException( "The URI is already in use." );
+		if ( sourceService.exists( requestResource.getURI() ) ) throw new ConflictException( 0x2008 );
 	}
 
 	protected RDFResource renameResource( RDFResource requestResource, URI forgedURI ) {

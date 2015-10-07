@@ -23,7 +23,7 @@ public abstract class AbstractPUTRequestHandler<E extends RDFResource> extends A
 
 		URI targetURI = getTargetURI( request );
 		if ( ! targetResourceExists( targetURI ) ) {
-			throw new NotFoundException( "The target resource wasn't found." );
+			throw new NotFoundException();
 		}
 
 		String requestETag = getRequestETag();
@@ -33,7 +33,6 @@ public abstract class AbstractPUTRequestHandler<E extends RDFResource> extends A
 
 		validateDocumentResource( targetURI, requestDocumentResource );
 		E documentResourceView = getDocumentResourceView( requestDocumentResource );
-		validateDocumentResourceView( documentResourceView );
 
 		replaceResource( targetURI, documentResourceView );
 
@@ -44,7 +43,8 @@ public abstract class AbstractPUTRequestHandler<E extends RDFResource> extends A
 	@Override
 	protected void validateDocumentResource( URI targetURI, RDFResource requestDocumentResource ) {
 		super.validateDocumentResource( targetURI, requestDocumentResource );
-		if ( ! targetURI.equals( requestDocumentResource.getURI() ) ) throw new BadRequestException( "The documentResource's URI, sent in the request, is different to the request URI. Remember POST to parent, PUT to me." );
+		if ( ! targetURI.equals( requestDocumentResource.getURI() ) ) throw new BadRequestException( 0x2203 );
+
 	}
 
 	protected abstract E getDocumentResourceView( RDFResource requestDocumentResource );

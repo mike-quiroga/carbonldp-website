@@ -2,10 +2,12 @@ package com.carbonldp.ldp.containers;
 
 import com.carbonldp.authorization.acl.ACLRepository;
 import com.carbonldp.descriptions.APIPreferences;
+import com.carbonldp.exceptions.ResourceAlreadyExistsException;
+import com.carbonldp.exceptions.ResourceDoesntExistException;
 import com.carbonldp.ldp.AbstractSesameLDPService;
 import com.carbonldp.ldp.sources.RDFSourceRepository;
+import com.carbonldp.rdf.RDFResource;
 import com.carbonldp.spring.TransactionWrapper;
-import com.carbonldp.web.exceptions.BadRequestException;
 import org.joda.time.DateTime;
 import org.openrdf.model.URI;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,8 +41,9 @@ public class SesameContainerService extends AbstractSesameLDPService implements 
 	public DateTime createChild( URI containerURI, BasicContainer basicContainer ) {
 		DateTime creationTime = DateTime.now();
 		URI membershipResource = containerRepository.getTypedRepository( this.getContainerType( containerURI ) ).getMembershipResource( containerURI );
-
 		basicContainer.setTimestamps( creationTime );
+		validate( basicContainer );
+
 		containerRepository.createChild( containerURI, basicContainer );
 		aclRepository.createACL( basicContainer.getDocument() );
 
@@ -53,11 +56,14 @@ public class SesameContainerService extends AbstractSesameLDPService implements 
 		return creationTime;
 	}
 
+	protected void validate( RDFResource toValidate ) {
+		if ( ! BasicContainerFactory.getInstance().isValid( toValidate ) ) throw new IllegalArgumentException( "invalid resource" );
+	}
+
 	@Override
 	public void createNonRDFResource( URI targetURI, URI resourceURI, File resourceFile, String mediaType ) {
-		// TODO: Throw the right exceptions
-		if ( ! sourceRepository.exists( targetURI ) ) throw new RuntimeException( "The target URI does not exists" );
-		if ( sourceRepository.exists( resourceURI ) ) throw new RuntimeException( "The resource already exists" );
+		if ( ! sourceRepository.exists( targetURI ) ) throw new ResourceDoesntExistException();
+		if ( sourceRepository.exists( resourceURI ) ) throw new ResourceAlreadyExistsException();
 
 		containerRepository.createNonRDFResource( targetURI, resourceURI, resourceFile, mediaType );
 	}
@@ -77,7 +83,7 @@ public class SesameContainerService extends AbstractSesameLDPService implements 
 	@Override
 	public void addMember( URI containerURI, URI member ) {
 		// TODO: Check if the member exists
-		if ( ! sourceRepository.exists( containerURI ) ) throw new BadRequestException( "The target resource wasn't found." );
+		if ( ! sourceRepository.exists( containerURI ) ) throw new ResourceDoesntExistException();
 		containerRepository.addMember( containerURI, member );
 
 	}

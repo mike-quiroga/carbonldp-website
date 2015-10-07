@@ -1,5 +1,6 @@
 package com.carbonldp.ldp.web;
 
+import com.carbonldp.models.Infraction;
 import com.carbonldp.rdf.RDFResource;
 import com.carbonldp.utils.URIUtil;
 import com.carbonldp.utils.ValueUtil;
@@ -13,7 +14,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 public abstract class AbstractRequestWithBodyHandler<E extends RDFResource> extends AbstractLDPRequestHandler {
-
+	// TODO: delete validations that are no longer in use.
 	protected boolean hasGenericRequestURI( RDFResource resource ) {
 		return configurationRepository.isGenericRequest( resource.getURI().stringValue() );
 	}
@@ -53,7 +54,7 @@ public abstract class AbstractRequestWithBodyHandler<E extends RDFResource> exte
 	}
 
 	protected void validateRequestResourcesNumber( int number ) {
-		if ( number == 0 ) throw new BadRequestException( "The request doesn't contain rdf resources." );
+		if ( number == 0 ) throw new BadRequestException( new Infraction( 0x2001, "rdf.type", "" ) );
 	}
 
 	protected void validateRequestResource( Resource subject ) {
@@ -83,10 +84,8 @@ public abstract class AbstractRequestWithBodyHandler<E extends RDFResource> exte
 		throw new BadRequestException( "The request doesn't contain a document resource." );
 	}
 
-	protected abstract void validateDocumentResourceView( E documentResourceView );
-
 	protected void validateRequestDocumentResourcesNumber( int number ) {
-		if ( number == 0 ) throw new BadRequestException( "The request doesn't contain " );
+		if ( number == 0 ) throw new BadRequestException( "The request doesn't contain any resources " );
 	}
 
 	protected void seekForOrphanFragments( AbstractModel requestModel, RDFResource requestDocumentResource ) {

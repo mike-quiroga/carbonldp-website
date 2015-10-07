@@ -25,7 +25,7 @@ public class SesameSPARQLService extends AbstractSesameRepository implements SPA
 		try {
 			query = QueryParserUtil.parseQuery( QueryLanguage.SPARQL, queryString, targetURI.stringValue() );
 		} catch ( MalformedQueryException e ) {
-			throw new BadRequestException( "Query submitted was malformed, nested Exception: " + e.toString() );
+			throw new BadRequestException(0x2401);
 		}
 		if ( query instanceof ParsedBooleanQuery ) {// ask query
 			sparqlResult = executeSPARQLBooleanQuery( queryString );
@@ -34,7 +34,7 @@ public class SesameSPARQLService extends AbstractSesameRepository implements SPA
 		} else if ( query instanceof ParsedGraphQuery ) {// construct or describe query
 			sparqlResult = executeSPARQLGraphedQuery( queryString );
 		} else {
-			throw new BadRequestException( "Query submitted was malformed" );
+			throw new BadRequestException(0x2401 );
 		}
 
 		return sparqlResult;

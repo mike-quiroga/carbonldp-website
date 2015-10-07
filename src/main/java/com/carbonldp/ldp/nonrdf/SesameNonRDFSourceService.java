@@ -50,16 +50,23 @@ public class SesameNonRDFSourceService extends AbstractSesameLDPService implemen
 	}
 
 	@Override
-	public void replace( RDFRepresentation rdfRepresentation, File requestEntity ) {
+	public void replace( RDFRepresentation rdfRepresentation, File requestEntity, String contentType ) {
 		DateTime modifiedTime = DateTime.now();
 
 		UUID uuid = fileRepository.save( requestEntity );
 		deleteResource( rdfRepresentation );
 		setUuid( rdfRepresentation, uuid );
+		setContentType( rdfRepresentation, contentType );
 		setSize( rdfRepresentation, requestEntity );
 
 		sourceRepository.touch( rdfRepresentation.getURI(), modifiedTime );
 
+	}
+
+	private void setContentType( RDFRepresentation rdfRepresentation, String contentType ) {
+		URI rdfRepresentationUri = rdfRepresentation.getURI();
+		resourceRepository.remove( rdfRepresentationUri, RDFRepresentationDescription.Property.MEDIA_TYPE.getURI() );
+		resourceRepository.add( rdfRepresentationUri, RDFRepresentationDescription.Property.MEDIA_TYPE.getURI(), contentType );
 	}
 
 	private void setSize( RDFRepresentation rdfRepresentation, File requestEntity ) {

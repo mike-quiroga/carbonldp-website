@@ -6,6 +6,7 @@ import com.carbonldp.authentication.AgentAuthenticationToken;
 import com.carbonldp.authorization.acl.ACEDescription;
 import com.carbonldp.authorization.acl.ACL;
 import com.carbonldp.authorization.acl.ACLRepository;
+import com.carbonldp.exceptions.InvalidResourceException;
 import com.carbonldp.exceptions.ResourceAlreadyExistsException;
 import com.carbonldp.exceptions.ResourceDoesntExistException;
 import com.carbonldp.ldp.AbstractSesameLDPService;
@@ -14,11 +15,13 @@ import com.carbonldp.ldp.containers.BasicContainerFactory;
 import com.carbonldp.ldp.containers.Container;
 import com.carbonldp.ldp.containers.ContainerRepository;
 import com.carbonldp.ldp.sources.RDFSourceRepository;
+import com.carbonldp.models.Infraction;
 import com.carbonldp.rdf.RDFDocument;
 import com.carbonldp.rdf.RDFResource;
 import com.carbonldp.spring.TransactionWrapper;
 import com.carbonldp.utils.RDFResourceUtil;
 import com.carbonldp.utils.URIUtil;
+import com.carbonldp.web.exceptions.NotFoundException;
 import org.openrdf.model.Statement;
 import org.openrdf.model.URI;
 import org.springframework.security.core.Authentication;
@@ -26,7 +29,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -63,7 +68,7 @@ public class SesameAppService extends AbstractSesameLDPService implements AppSer
 	@Override
 	public void create( App app ) {
 		if ( exists( app.getURI() ) ) throw new ResourceAlreadyExistsException();
-		// TODO: Validate app resource
+		validate( app );
 
 		App createdApp = appRepository.create( app );
 		ACL appACL = createAppACL( createdApp );
@@ -92,7 +97,7 @@ public class SesameAppService extends AbstractSesameLDPService implements AppSer
 
 	@Override
 	public void delete( URI appURI ) {
-		if ( ! exists( appURI ) ) throw new ResourceDoesntExistException();
+		if ( ! exists( appURI ) ) throw new NotFoundException();
 		appRepository.delete( appURI );
 	}
 
@@ -117,8 +122,9 @@ public class SesameAppService extends AbstractSesameLDPService implements AppSer
 	@Override
 	public void replace( App app ) {
 		URI appURI = app.getURI();
+		validate( app );
 
-		if ( ! exists( appURI ) ) throw new ResourceDoesntExistException();
+		if ( ! exists( appURI ) ) throw new NotFoundException();
 		App originalApp = appRepository.get( appURI );
 		RDFDocument originalDocument = originalApp.getDocument();
 
@@ -126,11 +132,11 @@ public class SesameAppService extends AbstractSesameLDPService implements AppSer
 
 		Set<Statement> statementsToAdd = newDocument.stream().filter( statement -> ! originalDocument.contains( statement ) ).collect( Collectors.toSet() );
 		Set<RDFResource> resourceViewsToAdd = RDFResourceUtil.getResourceViews( statementsToAdd );
-		// TODO: Validate the resource views don't target restricted properties
+		validateSystemProperties( resourceViewsToAdd );
 
 		Set<Statement> statementsToDelete = originalDocument.stream().filter( statement -> ! newDocument.contains( statement ) ).collect( Collectors.toSet() );
 		Set<RDFResource> resourceViewsToDelete = RDFResourceUtil.getResourceViews( statementsToDelete );
-		// TODO: Validate the resource views don't target restricted properties
+		validateSystemProperties( resourceViewsToDelete );
 
 		sourceRepository.substract( appURI, resourceViewsToDelete );
 		sourceRepository.add( appURI, resourceViewsToAdd );
@@ -143,7 +149,7 @@ public class SesameAppService extends AbstractSesameLDPService implements AppSer
 	}
 
 	private BasicContainer createRootContainer( App app ) {
-		BasicContainer rootContainer = BasicContainerFactory.create( new RDFResource( app.getRootContainerURI() ) );
+		BasicContainer rootContainer = BasicContainerFactory.getInstance().create( new RDFResource( app.getRootContainerURI() ) );
 		containerRepository.create( rootContainer );
 		return rootContainer;
 	}
@@ -158,7 +164,7 @@ public class SesameAppService extends AbstractSesameLDPService implements AppSer
 
 	private AppRole createAppAdminRole( Container appRolesContainer ) {
 		URI appAdminRoleURI = getAppAdminRoleURI( appRolesContainer );
-		AppRole appAdminRole = AppRoleFactory.create( new RDFResource( appAdminRoleURI ) );
+		AppRole appAdminRole = AppRoleFactory.getInstance().create( new RDFResource( appAdminRoleURI ) );
 		appAdminRole = appRoleRepository.create( appAdminRole );
 		return appAdminRole;
 	}
@@ -198,5 +204,18 @@ public class SesameAppService extends AbstractSesameLDPService implements AppSer
 			ACEDescription.Permission.UPDATE,
 			ACEDescription.Permission.DELETE
 		), true );
+	}
+
+	private void validateSystemProperties( Set<RDFResource> resourceViews ) {
+		List<Infraction> infractions = new ArrayList<>();
+		for ( RDFResource resource : resourceViews ) {
+			infractions.addAll( AppFactory.getInstance().validateSystemManagedProperties( resource ) );
+		}
+		if ( ! infractions.isEmpty() ) throw new InvalidResourceException( infractions );
+	}
+
+	private void validate( App app ) {
+		List<Infraction> infractions = AppFactory.getInstance().validate( app );
+		if ( ! infractions.isEmpty() ) throw new InvalidResourceException( infractions );
 	}
 }

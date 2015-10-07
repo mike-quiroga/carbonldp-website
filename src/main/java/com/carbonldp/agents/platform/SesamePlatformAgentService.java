@@ -1,6 +1,7 @@
 package com.carbonldp.agents.platform;
 
 import com.carbonldp.agents.Agent;
+import com.carbonldp.agents.AgentFactory;
 import com.carbonldp.agents.AgentValidator;
 import com.carbonldp.agents.AgentValidatorFactory;
 import com.carbonldp.agents.validators.AgentValidatorRepository;
@@ -9,11 +10,13 @@ import com.carbonldp.authorization.acl.ACEDescription;
 import com.carbonldp.authorization.acl.ACL;
 import com.carbonldp.authorization.acl.ACLRepository;
 import com.carbonldp.config.ConfigurationRepository;
+import com.carbonldp.exceptions.InvalidResourceException;
 import com.carbonldp.exceptions.ResourceAlreadyExistsException;
 import com.carbonldp.exceptions.StupidityException;
 import com.carbonldp.ldp.AbstractSesameLDPService;
 import com.carbonldp.ldp.containers.ContainerRepository;
 import com.carbonldp.ldp.sources.RDFSourceRepository;
+import com.carbonldp.models.Infraction;
 import com.carbonldp.spring.TransactionWrapper;
 import com.carbonldp.utils.AuthenticationUtil;
 import freemarker.template.*;
@@ -32,6 +35,7 @@ import javax.mail.internet.MimeMessage;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Transactional
@@ -59,7 +63,6 @@ public class SesamePlatformAgentService extends AbstractSesameLDPService impleme
 
 	@Override
 	public void register( Agent agent ) {
-		// TODO: Validate agent
 		String email = agent.getEmails().iterator().next();
 		if ( platformAgentRepository.existsWithEmail( email ) ) throw new ResourceAlreadyExistsException();
 
@@ -71,6 +74,7 @@ public class SesamePlatformAgentService extends AbstractSesameLDPService impleme
 		else agent.setEnabled( true );
 
 		addAgentToDefaultPlatformRole( agent );
+		validate( agent );
 
 		platformAgentRepository.create( agent );
 		ACL agentACL = aclRepository.createACL( agent.getDocument() );
@@ -84,6 +88,11 @@ public class SesamePlatformAgentService extends AbstractSesameLDPService impleme
 			sendValidationEmail( agent, validator );
 			// TODO: Create "resend validation" resource
 		}
+	}
+
+	private void validate( Agent agent ) {
+		List<Infraction> infractions = AgentFactory.getInstance().validate( agent );
+		if ( ! infractions.isEmpty() ) throw new InvalidResourceException( infractions );
 	}
 
 	private void setAgentPasswordFields( Agent agent ) {
@@ -121,7 +130,7 @@ public class SesamePlatformAgentService extends AbstractSesameLDPService impleme
 	}
 
 	private AgentValidator createAgentValidator( Agent agent ) {
-		AgentValidator validator = AgentValidatorFactory.create( agent );
+		AgentValidator validator = AgentValidatorFactory.getInstance().create( agent );
 		agentValidatorRepository.create( validator );
 		return validator;
 	}
