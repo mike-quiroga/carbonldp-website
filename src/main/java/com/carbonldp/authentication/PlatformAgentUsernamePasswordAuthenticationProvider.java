@@ -37,6 +37,8 @@ public class PlatformAgentUsernamePasswordAuthenticationProvider extends SesameU
 
 		Agent agent = agentRepository.findByEmail( username );
 
+		if ( agent == null ) throw new BadCredentialsException( "Wrong credentials" );
+
 		String hashedPassword = getHashedPassword( password, agent );
 
 		if ( ! passwordsMatch( hashedPassword, agent ) ) throw new BadCredentialsException( "Wrong credentials" );

@@ -8,12 +8,12 @@ import com.carbonldp.log.LOGConfig;
 import com.carbonldp.log.RequestLoggerFilter;
 import com.carbonldp.mail.MailConfig;
 import com.carbonldp.repository.RepositoriesUpdater;
+import com.carbonldp.repository.security.SecuredNativeStoreFactory;
 import com.carbonldp.repository.txn.TxnConfig;
 import com.carbonldp.security.SecurityConfig;
-import com.carbonldp.spring.SpringProfile;
-import com.carbonldp.utils.PropertiesUtil;
 import com.carbonldp.web.config.WebConfig;
 import org.fusesource.jansi.AnsiConsole;
+import org.openrdf.sail.config.SailRegistry;
 import org.springframework.beans.factory.config.PropertiesFactoryBean;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
@@ -31,20 +31,18 @@ import java.io.IOException;
 import java.util.EnumSet;
 import java.util.Properties;
 
-import static com.carbonldp.Consts.COMMA;
-
 public class ApplicationInitializer implements WebApplicationInitializer {
 
 	@Override
 	public void onStartup( ServletContext container ) throws ServletException {
 		AnsiConsole.systemInstall();
 
-		SpringProfile activeProfile = getActiveProfile();
-		Properties configProperties = loadConfigProperties( activeProfile );
-		loadGlobalVars( configProperties );
+		Vars.initialize();
 
 		Properties errorCodes = loadErrorCodes();
-		loadErrorCodesVars( errorCodes );
+		ErrorCodes.populate( errorCodes );
+
+		SailRegistry.getInstance().add( new SecuredNativeStoreFactory() );
 
 		RepositoriesUpdater repositoriesUpdater = new RepositoriesUpdater();
 		if ( ! repositoriesUpdater.repositoriesAreUpToDate() ) repositoriesUpdater.updateRepositories();
@@ -62,16 +60,6 @@ public class ApplicationInitializer implements WebApplicationInitializer {
 		setMultipartConfig( dispatcher );
 	}
 
-	private SpringProfile getActiveProfile() {
-		String springProfiles = System.getProperty( "spring.profiles.active" );
-		String[] profiles = springProfiles.split( COMMA );
-		for ( String profile : profiles ) {
-			SpringProfile springProfile = SpringProfile.findByName( profile.trim() );
-			if ( springProfile != null ) return springProfile;
-		}
-		return SpringProfile.DEFAULT;
-	}
-
 	private Properties loadErrorCodes() throws ServletException {
 		Resource propertiesFile = new ClassPathResource( "error-codes.properties" );
 		PropertiesFactoryBean factory = new PropertiesFactoryBean();
@@ -86,32 +74,6 @@ public class ApplicationInitializer implements WebApplicationInitializer {
 		}
 
 		return properties;
-	}
-
-	private Properties loadConfigProperties( SpringProfile activeProfile ) throws ServletException {
-		Resource propertiesFile = new ClassPathResource( activeProfile.getName() + "-config.properties" );
-		PropertiesFactoryBean factory = new PropertiesFactoryBean();
-		factory.setLocation( propertiesFile );
-
-		Properties properties;
-		try {
-			factory.afterPropertiesSet();
-			properties = factory.getObject();
-		} catch ( IOException e ) {
-			throw new ServletException( "Couldn't load the config properties file.", e );
-		}
-
-		PropertiesUtil.resolveProperties( properties );
-
-		return properties;
-	}
-
-	private void loadErrorCodesVars( Properties properties ) {
-		Vars.loadErrorCodes( properties );
-	}
-
-	private void loadGlobalVars( Properties properties ) {
-		Vars.init( properties );
 	}
 
 	private AnnotationConfigWebApplicationContext createRootContext() {

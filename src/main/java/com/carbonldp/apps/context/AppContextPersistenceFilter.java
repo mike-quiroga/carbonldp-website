@@ -61,9 +61,9 @@ public class AppContextPersistenceFilter extends AbstractUniqueFilter {
 		String requestURI = httpRequest.getRequestURI();
 		requestURI = requestURI.startsWith( SLASH ) ? requestURI.substring( 1 ) : requestURI;
 
-		if ( ! requestURI.startsWith( Vars.getAppsEntryPoint() ) ) return null;
+		if ( ! requestURI.startsWith( Vars.getInstance().getAppsEntryPoint() ) ) return null;
 
-		requestURI = requestURI.replace( Vars.getAppsEntryPoint(), EMPTY_STRING );
+		requestURI = requestURI.replace( Vars.getInstance().getAppsEntryPoint(), EMPTY_STRING );
 
 		if ( requestURI.isEmpty() ) return null;
 
@@ -73,7 +73,7 @@ public class AppContextPersistenceFilter extends AbstractUniqueFilter {
 		else applicationSlug = requestURI.substring( 0, slashIndex );
 
 		StringBuilder uriBuilder = new StringBuilder();
-		uriBuilder.append( Vars.getAppsEntryPointURL() ).append( applicationSlug ).append( SLASH );
+		uriBuilder.append( Vars.getInstance().getAppsEntryPointURL() ).append( applicationSlug ).append( SLASH );
 		return new URIImpl( uriBuilder.toString() );
 	}
 

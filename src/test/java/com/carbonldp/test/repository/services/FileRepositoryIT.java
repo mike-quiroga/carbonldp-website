@@ -99,7 +99,7 @@ public class FileRepositoryIT extends AbstractIT {
 	private String getFilesDirectory() {
 		String directory;
 		AppContext appContext = AppContextHolder.getContext();
-		directory = Vars.getAppsFilesDirectory();
+		directory = Vars.getInstance().getAppsFilesDirectory();
 		if ( ! directory.endsWith( Consts.SLASH ) ) directory = directory.concat( Consts.SLASH );
 		directory = directory.concat( appContext.getApplication().getRepositoryID() );
 		return directory;

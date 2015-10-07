@@ -50,7 +50,7 @@ public class PropertiesFileConfigurationRepository extends AbstractComponent imp
 	@Override
 	public boolean isGenericRequest( String uri ) {
 		AntPathMatcher matcher = new AntPathMatcher();
-		uri = uri.replace( Vars.getHost(), SLASH );
+		uri = uri.replace( Vars.getInstance().getHost(), SLASH );
 
 		return matcher.match( getGenericRequestPattern(), uri );
 	}
@@ -58,7 +58,7 @@ public class PropertiesFileConfigurationRepository extends AbstractComponent imp
 	@Override
 	public String getGenericRequestSlug( String uri ) {
 		AntPathMatcher matcher = new AntPathMatcher();
-		uri = uri.replace( Vars.getHost(), EMPTY_STRING );
+		uri = uri.replace( Vars.getInstance().getHost(), EMPTY_STRING );
 
 		// The matcher removes the ending slash (if it finds one)
 		boolean hasTrailingSlash = uri.endsWith( SLASH );
@@ -84,16 +84,16 @@ public class PropertiesFileConfigurationRepository extends AbstractComponent imp
 
 	public String forgeGenericRequestURL() {
 		StringBuilder urlBuilder = new StringBuilder();
-		urlBuilder.append( Vars.getGenericRequestURL() ).append( Math.abs( random.nextLong() ) );
+		urlBuilder.append( Vars.getInstance().getGenericRequestURL() ).append( Math.abs( random.nextLong() ) );
 		if ( enforceEndingSlash() ) urlBuilder.append( SLASH );
 		return urlBuilder.toString();
 	}
 
 	private String getGenericRequestPattern() {
 		StringBuilder patternBuilder = new StringBuilder();
-		if ( ! Vars.getGenericRequest().startsWith( SLASH ) ) patternBuilder.append( SLASH );
-		patternBuilder.append( Vars.getGenericRequest() );
-		if ( ! Vars.getGenericRequest().endsWith( SLASH ) ) patternBuilder.append( SLASH );
+		if ( ! Vars.getInstance().getGenericRequest().startsWith( SLASH ) ) patternBuilder.append( SLASH );
+		patternBuilder.append( Vars.getInstance().getGenericRequest() );
+		if ( ! Vars.getInstance().getGenericRequest().endsWith( SLASH ) ) patternBuilder.append( SLASH );
 		patternBuilder.append( "?*/**/" );
 		return patternBuilder.toString();
 	}

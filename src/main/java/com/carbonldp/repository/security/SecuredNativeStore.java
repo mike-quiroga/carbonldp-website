@@ -75,7 +75,10 @@ public class SecuredNativeStore extends NativeStore {
 
 		@Override
 		public void remove() throws IOException {
-			throw new IOException();
+			if ( ! this.hasNext() ) return;
+
+			this.originalIteration.remove();
+			this.nextStatement = null;
 		}
 
 		private boolean canBeAccess( Statement statement ) {

@@ -1,7 +1,6 @@
 package com.carbonldp.repository;
 
 import com.carbonldp.AbstractComponent;
-import com.carbonldp.exceptions.CarbonRuntimeException;
 import com.carbonldp.repository.security.SecuredNativeStoreConfig;
 import com.carbonldp.repository.txn.*;
 import org.openrdf.repository.Repository;
@@ -13,9 +12,6 @@ import org.openrdf.repository.config.RepositoryImplConfig;
 import org.openrdf.repository.manager.RepositoryManager;
 import org.openrdf.repository.sail.config.SailRepositoryConfig;
 import org.openrdf.sail.config.SailImplConfig;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class LocalRepositoryService extends AbstractComponent implements RepositoryService {
 
@@ -105,13 +101,13 @@ public class LocalRepositoryService extends AbstractComponent implements Reposit
 	@Override
 	public <T> ReadTransactionTemplate<T> getReadTransactionTemplate( String repositoryID ) {
 		RepositoryConnection connection = getConnection( repositoryID );
-		return new LocalReadTransactionTemplate<T>( connection );
+		return new ReadTransactionTemplateImpl<>( connection );
 	}
 
 	@Override
 	public WriteTransactionTemplate getWriteTransactionTemplate( String repositoryID ) {
 		RepositoryConnection connection = getConnection( repositoryID );
-		return new LocalWriteTransactionTemplate( connection );
+		return new WriteTransactionTemplateImpl( connection );
 	}
 
 	@Override
@@ -123,132 +119,6 @@ public class LocalRepositoryService extends AbstractComponent implements Reposit
 				LOG.error( "xx deleteRepository() > The repository: '{}', couldn't be deleted.", repositoryID );
 			}
 			throw new RepositoryRuntimeException( 0x0009, e );
-		}
-	}
-
-	private abstract class LocalTransactionTemplate {
-		protected RepositoryConnection connection;
-
-		public LocalTransactionTemplate() {
-		}
-
-		public LocalTransactionTemplate( RepositoryConnection connection ) {
-			this.connection = connection;
-		}
-
-		protected void beginTransaction() {
-			try {
-				connection.begin();
-			} catch ( RepositoryException e ) {
-				if ( LOG.isErrorEnabled() ) {
-					LOG.error( "<< beginTransaction > The transaction couldn't be started." );
-				}
-				throw new RepositoryRuntimeException( 0x000A, e );
-			}
-		}
-
-		protected void closeConnection() {
-			try {
-				connection.close();
-			} catch ( RepositoryException e ) {
-				if ( LOG.isDebugEnabled() ) {
-					LOG.debug( "xx closeConnection > Exception Stacktrace:", e );
-				}
-				if ( LOG.isErrorEnabled() ) {
-					LOG.error( "<< closeConnection > The connection couldn't be closed." );
-				}
-			}
-		}
-
-	}
-
-	private class LocalReadTransactionTemplate<T> extends LocalTransactionTemplate implements ReadTransactionTemplate<T> {
-
-		public LocalReadTransactionTemplate( RepositoryConnection connection ) {
-			super();
-			RepositoryConnection readOnlyConnection = new ReadOnlyRepositoryConnection( connection );
-			this.connection = readOnlyConnection;
-		}
-
-		@Override
-		public T execute( ReadTransactionCallback<T> callback ) {
-			try {
-				return callback.executeInTransaction( connection );
-			} catch ( RepositoryException e ) {
-				throw new RepositoryRuntimeException( e );
-			} catch ( CarbonRuntimeException e ) {
-				throw e;
-			} catch ( Throwable e ) {
-				throw new CarbonRuntimeException( e );
-			} finally {
-				closeConnection();
-			}
-		}
-	}
-
-	private class LocalWriteTransactionTemplate extends LocalTransactionTemplate implements WriteTransactionTemplate {
-
-		private List<WriteTransactionCallback> callbacks;
-
-		public LocalWriteTransactionTemplate( RepositoryConnection connection ) {
-			super( connection );
-			callbacks = new ArrayList<>();
-		}
-
-		@Override
-		public void addCallback( WriteTransactionCallback callback ) {
-			callbacks.add( callback );
-		}
-
-		@Override
-		public void execute() {
-			beginTransaction();
-			try {
-				for ( WriteTransactionCallback callback : callbacks ) {
-					callback.executeInTransaction( connection );
-				}
-
-				commitTransaction();
-			} catch ( RepositoryException e ) {
-				rollbackTransaction();
-				throw new RepositoryRuntimeException( e );
-			} catch ( CarbonRuntimeException e ) {
-				rollbackTransaction();
-				throw e;
-			} catch ( Throwable e ) {
-				rollbackTransaction();
-				throw new CarbonRuntimeException( e );
-			} finally {
-				closeConnection();
-			}
-		}
-
-		@Override
-		public void execute( WriteTransactionCallback callback ) {
-			addCallback( callback );
-			execute();
-		}
-
-		protected void rollbackTransaction() {
-			try {
-				connection.rollback();
-			} catch ( RepositoryException e ) {
-				if ( LOG.isErrorEnabled() ) {
-					LOG.error( "xx rollbackTransaction() > The transaction couldn't be rolled back." );
-				}
-				throw new RepositoryRuntimeException( 0x000B, e );
-			}
-		}
-
-		protected void commitTransaction() {
-			try {
-				connection.commit();
-			} catch ( RepositoryException e ) {
-				if ( LOG.isErrorEnabled() ) {
-					LOG.error( "xx commitTransaction() > The transaction couldn't be committed." );
-				}
-				throw new RepositoryRuntimeException( 0x000C, e );
-			}
 		}
 	}
 }

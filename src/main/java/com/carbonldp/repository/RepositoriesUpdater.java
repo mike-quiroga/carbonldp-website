@@ -4,6 +4,7 @@ import com.carbonldp.AbstractComponent;
 import com.carbonldp.Consts;
 import com.carbonldp.Vars;
 import com.carbonldp.repository.updates.UpdateAction1o0o0;
+import com.carbonldp.repository.updates.UpdateAction1o1o0;
 import com.carbonldp.utils.Action;
 import com.google.common.io.Files;
 
@@ -23,6 +24,7 @@ public class RepositoriesUpdater extends AbstractComponent {
 
 	private static Map<RepositoryVersion, Action> versionsUpdates = new HashMap<RepositoryVersion, Action>() {{
 		put( new RepositoryVersion( "1.0.0" ), new UpdateAction1o0o0() );
+		put( new RepositoryVersion( "1.1.0" ), new UpdateAction1o1o0() );
 	}};
 
 	public boolean repositoriesAreUpToDate() {
@@ -93,7 +95,7 @@ public class RepositoriesUpdater extends AbstractComponent {
 	}
 
 	private File getVersionFile() {
-		String versionFileDir = Vars.getRepositoriesDirectory() + Consts.SLASH + RepositoriesUpdater.versionFileName;
+		String versionFileDir = Vars.getInstance().getRepositoriesDirectory() + Consts.SLASH + RepositoriesUpdater.versionFileName;
 		return new File( versionFileDir );
 	}
 }

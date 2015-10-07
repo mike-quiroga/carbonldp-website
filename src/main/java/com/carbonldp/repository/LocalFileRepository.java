@@ -99,9 +99,9 @@ public class LocalFileRepository implements FileRepository {
 	private String getFilesDirectory() {
 		String directory;
 		AppContext appContext = AppContextHolder.getContext();
-		if ( appContext.isEmpty() ) directory = Vars.getPlatformFilesDirectory();
+		if ( appContext.isEmpty() ) directory = Vars.getInstance().getPlatformFilesDirectory();
 		else {
-			directory = Vars.getAppsFilesDirectory();
+			directory = Vars.getInstance().getAppsFilesDirectory();
 			if ( ! directory.endsWith( Consts.SLASH ) ) directory = directory.concat( Consts.SLASH );
 			directory = directory.concat( appContext.getApplication().getRepositoryID() );
 		}

@@ -74,7 +74,7 @@ public abstract class AbstractIT extends AbstractTestNGSpringContextTests {
 	protected AbstractIT() {
 		this.properties = loadProperties( propertiesFile );
 		PropertiesUtil.resolveProperties( properties );
-		if ( ! Vars.isInitialized() ) Vars.init( properties );
+		if ( ! Vars.hasBeenInitialized() ) Vars.initialize( properties );
 		erasePlatformRepositoryDirectory( properties );
 		eraseAppsRepositoryDirectory( properties );
 		loadPlatformRepositoryDefaultData( properties );

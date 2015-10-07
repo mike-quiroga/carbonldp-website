@@ -18,7 +18,6 @@ public class AppDELETEHandler extends AbstractDELETERequestHandler {
 
 	@Override
 	protected void delete( URI targetURI ) {
-
 		appService.delete( targetURI );
 	}
 

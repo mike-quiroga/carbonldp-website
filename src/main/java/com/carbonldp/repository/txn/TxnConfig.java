@@ -1,17 +1,15 @@
 package com.carbonldp.repository.txn;
 
 import com.carbonldp.Vars;
-import com.carbonldp.repository.security.SecuredNativeStore;
-import com.carbonldp.repository.security.SecuredNativeStoreFactory;
 import com.carbonldp.repository.LocalRepositoryService;
 import com.carbonldp.repository.RepositoryService;
+import com.carbonldp.repository.security.SecuredNativeStore;
 import org.openrdf.repository.Repository;
 import org.openrdf.repository.RepositoryException;
 import org.openrdf.repository.manager.LocalRepositoryManager;
 import org.openrdf.repository.manager.RemoteRepositoryManager;
 import org.openrdf.repository.manager.RepositoryManager;
 import org.openrdf.repository.sail.SailRepository;
-import org.openrdf.sail.config.SailRegistry;
 import org.openrdf.spring.RepositoryConnectionFactory;
 import org.openrdf.spring.SesameConnectionFactory;
 import org.openrdf.spring.SesameTransactionManager;
@@ -47,7 +45,7 @@ public class TxnConfig {
 	}
 
 	private Repository platformRepository() {
-		String repositoryDirectory = Vars.getPlatformRepositoryDirectory();
+		String repositoryDirectory = Vars.getInstance().getPlatformRepositoryDirectory();
 		SecuredNativeStore sail = new SecuredNativeStore( new File( repositoryDirectory ) );
 		SailRepository platformRepository = new SailRepository( sail );
 
@@ -63,13 +61,11 @@ public class TxnConfig {
 
 	@Bean
 	protected RepositoryManager appsRepositoryManager() {
-		if ( Vars.appsUseRemoteManager() ) {
-			String remoteManagerURL = Vars.getAppsRemoteManagerURL();
+		if ( Vars.getInstance().appsUseRemoteManager() ) {
+			String remoteManagerURL = Vars.getInstance().getAppsRemoteManagerURL();
 			return new RemoteRepositoryManager( remoteManagerURL );
 		} else {
-			SailRegistry.getInstance().add( new SecuredNativeStoreFactory() );
-
-			String repositoryDirectory = Vars.getAppsRepositoryDirectory();
+			String repositoryDirectory = Vars.getInstance().getAppsRepositoryDirectory();
 			return new LocalRepositoryManager( new File( repositoryDirectory ) );
 		}
 	}

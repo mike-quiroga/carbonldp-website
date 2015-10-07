@@ -123,7 +123,7 @@ public class RepositoriesConfig {
 
 	@Bean
 	public PlatformAgentRepository platformAgentRepository() {
-		URI agentsContainerURI = new URIImpl( Vars.getAgentsContainerURL() );
+		URI agentsContainerURI = new URIImpl( Vars.getInstance().getAgentsContainerURL() );
 		return new SesamePlatformAgentRepository( connectionFactory, sourceRepository(), containerRepository(), agentsContainerURI );
 	}
 
@@ -134,30 +134,30 @@ public class RepositoriesConfig {
 
 	@Bean
 	public PlatformRoleRepository platformRoleRepository() {
-		URI platformRolesContainerURI = new URIImpl( Vars.getRolesContainerURL() );
+		URI platformRolesContainerURI = new URIImpl( Vars.getInstance().getRolesContainerURL() );
 		return new SesamePlatformRoleRepository( connectionFactory, sourceRepository(), containerRepository(), platformRolesContainerURI );
 	}
 
 	@Bean
 	public PlatformPrivilegeRepository platformPrivilegeRepository() {
-		URI platformPrivilegesContainerURI = new URIImpl( Vars.getPrivilegesContainerURL() );
+		URI platformPrivilegesContainerURI = new URIImpl( Vars.getInstance().getPrivilegesContainerURL() );
 		return new SesamePlatformPrivilegeRepository( connectionFactory, sourceRepository(), containerRepository(), platformPrivilegesContainerURI );
 	}
 
 	@Bean
 	public AppRepository appRepository( RepositoryService appRepositoryService ) {
-		URI appsContainerURI = new URIImpl( Vars.getAppsContainerURL() );
+		URI appsContainerURI = new URIImpl( Vars.getInstance().getAppsContainerURL() );
 		SesameAppRepository service = new SesameAppRepository( connectionFactory, documentRepository(), sourceRepository(), containerRepository(), appRepositoryService );
 		service.setAppsContainerURI( appsContainerURI );
-		service.setAppsEntryPoint( Vars.getAppsEntryPointURL() );
+		service.setAppsEntryPoint( Vars.getInstance().getAppsEntryPointURL() );
 		return service;
 	}
 
 	@Bean
 	public AppRoleRepository appRoleRepository() {
 		SesameAppRoleRepository repository = new SesameAppRoleRepository( connectionFactory, resourceRepository(), documentRepository(), sourceRepository(), containerRepository() );
-		repository.setAppRoleContainerSlug( Vars.getAppRolesContainer() );
-		repository.setAgentsContainerSlug( Vars.getAppRoleAgentsContainer() );
+		repository.setAppRoleContainerSlug( Vars.getInstance().getAppRolesContainer() );
+		repository.setAgentsContainerSlug( Vars.getInstance().getAppRoleAgentsContainer() );
 		return repository;
 	}
 

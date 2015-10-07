@@ -12,10 +12,10 @@ public class UpdateAction1o0o0 extends AbstractUpdateAction {
 	private static final String resourcesFile = "platform-default.trig";
 
 	@Override
-	public void run() {
-		Repository platformRepository = getRepository( Vars.getPlatformRepositoryDirectory() );
+	public void execute() throws Exception {
+		Repository platformRepository = getRepository( Vars.getInstance().getPlatformRepositoryDirectory() );
 		emptyRepository( platformRepository );
-		loadResourcesFile( platformRepository, resourcesFile, Vars.getHost() );
+		loadResourcesFile( platformRepository, resourcesFile, Vars.getInstance().getHost() );
 		closeRepository( platformRepository );
 	}
 }

@@ -51,7 +51,7 @@ public class InheritanceACLPermissionVoter extends AbstractACLPermissionVoter im
 	}
 
 	private URI getPlatformsRootContainerURI() {
-		return new URIImpl( Vars.getMainContainerURL() );
+		return new URIImpl( Vars.getInstance().getMainContainerURL() );
 	}
 
 	private URI getAppRootContainerURI() {
