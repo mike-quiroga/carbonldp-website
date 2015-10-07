@@ -5,6 +5,7 @@ import com.carbonldp.errors.ErrorResponse;
 import com.carbonldp.errors.ErrorResponseFactory;
 import com.carbonldp.exceptions.CarbonNoStackTraceRuntimeException;
 import com.carbonldp.exceptions.InvalidResourceException;
+import com.carbonldp.models.Infraction;
 import com.carbonldp.web.exceptions.AbstractWebRuntimeException;
 import com.carbonldp.web.exceptions.BadRequestException;
 import org.slf4j.Logger;
@@ -51,7 +52,7 @@ public class PlatformExceptionController {
 		// AccessDeniedException is handled in the ExceptionTranslationFilter
 		if ( rawException instanceof AccessDeniedException ) throw (AccessDeniedException) rawException;
 		if ( LOG.isErrorEnabled() ) LOG.debug( "<< handleUnexpectedException() > Exception Stacktrace: ", rawException );
-		ErrorResponse error = ErrorResponseFactory.create( 0xF000, Vars.getErrorMessage( 0xF000 ), HttpStatus.INTERNAL_SERVER_ERROR );
+		ErrorResponse error = ErrorResponseFactory.create( new Infraction( 0xFFFF ), HttpStatus.INTERNAL_SERVER_ERROR );
 
 		return new ResponseEntity<>( error.getBaseModel(), HttpStatus.INTERNAL_SERVER_ERROR );
 	}

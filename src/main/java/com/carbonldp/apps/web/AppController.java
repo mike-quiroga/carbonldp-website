@@ -21,8 +21,8 @@ public class AppController extends AbstractController {
 	private AppDELETEHandler deleteHandler;
 
 	@RequestMapping( method = RequestMethod.PUT )
-	public ResponseEntity<Object> replaceApp( @RequestBody RDFDocument requestdocument, HttpServletRequest request, HttpServletResponse response ) {
-		return putHandler.handleRequest( requestdocument, request, response );
+	public ResponseEntity<Object> replaceApp( @RequestBody RDFDocument requestDocument, HttpServletRequest request, HttpServletResponse response ) {
+		return putHandler.handleRequest( requestDocument, request, response );
 	}
 
 	@RequestMapping( method = RequestMethod.PATCH )
