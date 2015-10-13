@@ -1,8 +1,8 @@
 @prefix acl:		<http://www.w3.org/ns/auth/acl#>.
 @prefix api:		<http://purl.org/linked-data/api/vocab#>.
-@prefix c:			<http://carbonldp.com/ns/v1/platform#>.
-@prefix cs:			<http://carbonldp.com/ns/v1/security#>.
-@prefix cp:			<http://carbonldp.com/ns/v1/patch#>.
+@prefix c:			<https://carbonldp.com/ns/v1/platform#>.
+@prefix cs:			<https://carbonldp.com/ns/v1/security#>.
+@prefix cp:			<https://carbonldp.com/ns/v1/patch#>.
 @prefix cc:			<http://creativecommons.org/ns#>.
 @prefix cert:		<http://www.w3.org/ns/auth/cert#>.
 @prefix dbp:		<http://dbpedia.org/property/>.
@@ -42,7 +42,13 @@
 
 <>{
 	<>
-		a ldp:BasicContainer.
+		a ldp:BasicContainer,
+			ldp:RDFSource,
+			ldp:Container;
+        c:created "2015-10-09T03:20:31.614-05:00"^^xsd:dateTime;
+        c:modified "2015-10-09T03:20:31.614-05:00"^^xsd:dateTime;
+        ldp:hasMemberRelation	ldp:member.
+
 }
 
 <posts/> {

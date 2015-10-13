@@ -87,13 +87,13 @@ public class AppContextIT extends AbstractIT {
 
 	@Test
 	public void plattformToAppContextExchangerTest() {
-		App app = appRepository.findByRootContainer( new URIImpl( "http://local.carbonldp.com/apps/test-blog/" ) );
+		App app = appRepository.findByRootContainer( new URIImpl( testResourceURI ) );
 		context.setApplication( null );
 		assertTrue( context.isEmpty() );
 		applicationContextTemplate.runInAppContext( app, new ActionCallback() {
 			@Override
 			public void run() {
-				assertEquals( AppContextHolder.getContext().getApplication().getURI().stringValue(), "http://local.carbonldp.com/apps/test-blog/" );
+				assertEquals( AppContextHolder.getContext().getApplication().getURI().stringValue(), testResourceURI );
 
 			}
 
@@ -103,11 +103,11 @@ public class AppContextIT extends AbstractIT {
 
 	@Test
 	public void appToPlatformContextExchangerTest() {
-		App app = appRepository.findByRootContainer( new URIImpl( "http://local.carbonldp.com/apps/test-blog/" ) );
+		App app = appRepository.findByRootContainer( new URIImpl( testResourceURI ) );
 		context.setApplication( app );
 		AppContextHolder.setContext( context );
 		app = AppContextHolder.getContext().getApplication();
-		assertEquals( app.getURI().stringValue(), "http://local.carbonldp.com/apps/test-blog/" );
+		assertEquals( app.getURI().stringValue(), testResourceURI );
 
 		platformContextTemplate.runInPlatformContext( new ActionCallback() {
 			@Override
@@ -122,7 +122,7 @@ public class AppContextIT extends AbstractIT {
 	public void successfullAppContextEnableTest() {
 		HttpServletRequest request = Mockito.mock( HttpServletRequest.class );
 		HttpServletResponse response = Mockito.mock( HttpServletResponse.class );
-		FilterChain chain = new ChainMock();
+		FilterChain chain = new ChainMock( testResourceURI );
 
 		Mockito.when( request.getAttribute( FILTER_APPLIED ) ).thenReturn( null );
 		Mockito.when( request.getRequestURI() ).thenReturn( "apps/test-blog/" );
@@ -138,11 +138,16 @@ public class AppContextIT extends AbstractIT {
 }
 
 class ChainMock implements FilterChain {
+	String testResourceURI;
+
+	public ChainMock( String testResourceURI ) {
+		this.testResourceURI = testResourceURI;
+	}
 
 	@Override
 	public void doFilter( ServletRequest request, ServletResponse response ) throws IOException, ServletException {
 		// TODO Auto-generated method stub
 		App app = AppContextHolder.getContext().getApplication();
-		assertEquals( app.getURI().stringValue(), "http://local.carbonldp.com/apps/test-blog/" );
+		assertEquals( app.getURI().stringValue(), testResourceURI );
 	}
 }

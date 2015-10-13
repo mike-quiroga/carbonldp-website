@@ -3,9 +3,11 @@ package com.carbonldp.test;
 import com.carbonldp.Vars;
 import com.carbonldp.apps.App;
 import com.carbonldp.apps.AppFactory;
+import com.carbonldp.apps.AppRepository;
 import com.carbonldp.apps.AppService;
 import com.carbonldp.ldp.containers.BasicContainer;
 import com.carbonldp.ldp.containers.Container;
+import com.carbonldp.repository.security.SecuredNativeStoreFactory;
 import com.carbonldp.utils.PropertiesUtil;
 import org.mockito.Mockito;
 import org.openrdf.model.URI;
@@ -23,6 +25,7 @@ import org.openrdf.rio.RDFParseException;
 import org.openrdf.rio.RDFParser;
 import org.openrdf.rio.Rio;
 import org.openrdf.rio.helpers.StatementCollector;
+import org.openrdf.sail.config.SailRegistry;
 import org.openrdf.sail.nativerdf.NativeStore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,7 +37,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
 import org.testng.annotations.BeforeClass;
-import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.Test;
 
 import java.io.File;
@@ -48,6 +50,9 @@ public abstract class AbstractIT extends AbstractTestNGSpringContextTests {
 
 	@Autowired
 	protected AppService appService;
+
+	@Autowired
+	protected AppRepository appRepository;
 	@Autowired
 	protected PlatformContextActionTemplate platformContextTemplate;
 	@Autowired
@@ -56,7 +61,7 @@ public abstract class AbstractIT extends AbstractTestNGSpringContextTests {
 	protected AuthenticationProvider sesameUsernamePasswordAuthenticationProvider;
 
 	protected final String testRepositoryID = "test-blog";
-	protected final String testResourceURI = "http://local.carbonldp.com/apps/test-blog/";
+	protected final String testResourceURI = "https://local.carbonldp.com/apps/test-blog/";
 
 	protected final Logger LOG = LoggerFactory.getLogger( this.getClass() );
 
@@ -66,12 +71,13 @@ public abstract class AbstractIT extends AbstractTestNGSpringContextTests {
 	private final String appsRepositoryFilesLocationProperty = "repositories.apps.files.directory";
 	private final String platformRepositoryFilesLocationProperty = "repositories.platform.files.directory";
 
-	private final String testDataLocation = "test-model.trig";
+	private final String testDataLocation = "app-model-test.trig";
 	private final String platformDefaultDataLocation = "platform-default.trig";
 
 	protected Properties properties;
 
-	protected AbstractIT() {
+	public AbstractIT() {
+		SailRegistry.getInstance().add( new SecuredNativeStoreFactory() );
 		this.properties = loadProperties( propertiesFile );
 		PropertiesUtil.resolveProperties( properties );
 		if ( ! Vars.hasBeenInitialized() ) Vars.initialize( properties );
@@ -85,14 +91,6 @@ public abstract class AbstractIT extends AbstractTestNGSpringContextTests {
 
 	private void createRepositoryFilesDirectory( String appsRepositoryFilesLocationProperty ) {
 		File dir = new File( properties.getProperty( appsRepositoryFilesLocationProperty ) );
-		boolean done = dir.mkdir();
-
-	}
-
-	@BeforeSuite
-	public void hello() {
-		LOG.debug( "something something" );
-
 	}
 
 	private Properties loadProperties( String fileName ) {
@@ -233,7 +231,6 @@ public abstract class AbstractIT extends AbstractTestNGSpringContextTests {
 		URI appURI = factory.createURI( testResourceURI );
 		Container container = new BasicContainer( model, appURI );
 		App app = AppFactory.getInstance().create( container, appURI.stringValue(), testRepositoryID );
-
 		Authentication authentication = Mockito.mock( Authentication.class );
 
 		Mockito.when( authentication.getPrincipal() ).thenReturn( "admin@carbonldp.com" );
@@ -246,9 +243,8 @@ public abstract class AbstractIT extends AbstractTestNGSpringContextTests {
 		}
 		SecurityContextHolder.getContext().setAuthentication( authToken );
 
-		// This if is needed here, lines above this are neccesary to run every time before each class.
+		// This if is needed here, lines above this are necessary to run every time before each class.
 		if ( ! appService.exists( new URIImpl( testResourceURI ) ) )
 			appService.create( app );
-
 	}
 }

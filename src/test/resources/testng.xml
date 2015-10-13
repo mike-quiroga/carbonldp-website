@@ -20,7 +20,6 @@
                     <class name="com.carbonldp.test.authorization.SecurityContextExchangerIT"/>
                     <class name="com.carbonldp.test.rdf.RDFDocumentRepositoryIT"/>
 
-                    <class name="com.carbonldp.test.repository.services.RDFDocumentServiceIT"/>
                     <class name="com.carbonldp.test.transaction.TransactionManagementIT"/>
                     <class name="com.carbonldp.test.web.cors.CORSAppContextFilterIT"/>
                     <class name="com.carbonldp.test.web.cors.CORSPlatformContextFilterIT"/>

@@ -61,7 +61,7 @@ public abstract class AbstractLDPRequestHandler extends AbstractRequestHandler {
 	protected void setUp( HttpServletRequest request, HttpServletResponse response ) {
 		this.request = request;
 		this.response = response;
-		this.appliedPreferences = new ArrayList<HTTPHeaderValue>();
+		this.appliedPreferences = new ArrayList<>();
 	}
 
 	protected boolean targetResourceExists( URI targetURI ) {

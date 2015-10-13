@@ -30,11 +30,17 @@ public class CORSAppContextFilterIT extends AbstractIT {
 	@Autowired
 	private AppRepository appRepository;
 
-	AppContext context = AppContextHolder.createEmptyContext();
+	AppContext context;
 	App app;
 
+	public CORSAppContextFilterIT() {
+		context = AppContextHolder.createEmptyContext();
+	}
+
 	private void setUp() {
-		app = appRepository.findByRootContainer( new URIImpl( "http://local.carbonldp.com/apps/test-blog/" ) );
+		if ( ! appService.exists( new URIImpl( testResourceURI ) ) )
+			throw new RuntimeException( "App not found" );
+		app = appRepository.findByRootContainer( new URIImpl( testResourceURI ) );
 		app.addDomain( valueFactory.createLiteral( "http://www.test.com/", new URIImpl( XSD.Properties.STRING ) ) );
 		app.addDomain( valueFactory.createLiteral( "(http://|https://)www\\.regex\\d\\.com/[\\s\\S]*", new URIImpl( C.Classes.REGULAR_EXPRESSION ) ) );
 		context.setApplication( null );

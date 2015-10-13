@@ -29,4 +29,5 @@ public class AppsController extends AbstractController {
 	public void setPOSTRequestHandler( AppsRDFPostHandler postRequestHandler ) {
 		this.postRequestHandler = postRequestHandler;
 	}
+
 }
