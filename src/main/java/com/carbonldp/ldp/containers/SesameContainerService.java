@@ -82,10 +82,25 @@ public class SesameContainerService extends AbstractSesameLDPService implements 
 
 	@Override
 	public void addMember( URI containerURI, URI member ) {
-		// TODO: Check if the member exists
 		if ( ! sourceRepository.exists( containerURI ) ) throw new ResourceDoesntExistException();
 		containerRepository.addMember( containerURI, member );
 
+	}
+
+	@Override
+	public void removeSelectiveMembers( URI containerURI, Set<URI> members ) {
+		DateTime creationTime = DateTime.now();
+		URI membershipResource = containerRepository.getTypedRepository( this.getContainerType( containerURI ) ).getMembershipResource( containerURI );
+		for ( URI member : members ) {
+			removeSingleMember( containerURI, member );
+		}
+		sourceRepository.touch( membershipResource, creationTime );
+
+	}
+
+	@Override
+	public void removeSingleMember( URI containerURI, URI member ) {
+		containerRepository.deleteMember( containerURI, member );
 	}
 
 	@Override

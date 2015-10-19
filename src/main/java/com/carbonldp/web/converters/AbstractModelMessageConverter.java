@@ -35,6 +35,7 @@ public class AbstractModelMessageConverter extends ModelMessageConverter<Abstrac
 		RDFFormat formatToUse = getFormatToUse( requestMediaType );
 
 		InputStream bodyInputStream = inputMessage.getBody();
+		if ( bodyInputStream == null ) return new LinkedHashModel();
 
 		RDFParser parser = Rio.createParser( formatToUse );
 		AbstractModel model = new LinkedHashModel();

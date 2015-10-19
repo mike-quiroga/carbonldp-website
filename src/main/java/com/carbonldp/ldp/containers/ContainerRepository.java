@@ -56,6 +56,8 @@ public interface ContainerRepository {
 
 	public void addMember( URI containerURI, URI member );
 
+	public void deleteMember( URI containerURI, URI member );
+
 	public void addMember( URI containerURI, URI member, Type containerType );
 
 	public void removeMembers( URI targetURI );
