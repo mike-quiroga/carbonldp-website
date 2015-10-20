@@ -14,4 +14,6 @@ import java.lang.annotation.*;
 @Documented
 public @interface InteractionModel {
 	APIPreferences.InteractionModel[] value();
+
+	boolean handlesDefault() default false;
 }

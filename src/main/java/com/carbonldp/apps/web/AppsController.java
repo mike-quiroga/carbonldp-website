@@ -19,7 +19,7 @@ import javax.servlet.http.HttpServletResponse;
 public class AppsController extends AbstractController {
 	private AppsRDFPostHandler postRequestHandler;
 
-	@InteractionModel( APIPreferences.InteractionModel.CONTAINER )
+	@InteractionModel( value = {APIPreferences.InteractionModel.CONTAINER}, handlesDefault = true )
 	@RequestMapping( method = RequestMethod.POST )
 	public ResponseEntity<Object> createApplication( @RequestBody RDFDocument requestDocument, HttpServletRequest request, HttpServletResponse response ) {
 		return postRequestHandler.handleRequest( requestDocument, request, response );
