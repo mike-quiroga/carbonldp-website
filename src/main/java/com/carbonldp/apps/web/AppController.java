@@ -31,7 +31,7 @@ public class AppController extends AbstractController {
 	}
 
 	@RequestMapping( method = RequestMethod.DELETE )
-	public ResponseEntity<Object> deleteAppWithBody( @RequestBody( required = false ) AbstractModel requestModel, HttpServletRequest request, HttpServletResponse response ) {
+	public ResponseEntity<Object> deleteApp( @RequestBody( required = false ) AbstractModel requestModel, HttpServletRequest request, HttpServletResponse response ) {
 		return deleteHandler.handleRequest( requestModel, request, response );
 
 	}

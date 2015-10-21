@@ -114,6 +114,11 @@ public class SesameIndirectContainerRepository extends AbstractAccessPointReposi
 		//addMemberOfRelation( containerURI, member );
 	}
 
+	@Override
+	public void removeMember( URI containerURI, URI memberURI ) {
+		throw new NotImplementedException("unable to Remove");
+	}
+
 	private URI getMembershipObject( URI containerURI, URI member ) {
 		String queryString = getMembershipObjectQuery;
 

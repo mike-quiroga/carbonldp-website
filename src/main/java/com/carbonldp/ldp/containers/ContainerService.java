@@ -22,7 +22,7 @@ public interface ContainerService {
 	public DateTime createChild( URI containerURI, BasicContainer basicContainer );
 
 	@PreAuthorize( "hasPermission(#containerURI, 'ADD_MEMBER')" )
-	public void addMembers( URI containerURI, Set<URI> members );
+	public void addMembers( URI containerURI, AddMembersAction members );
 
 	@PreAuthorize( "hasPermission(#containerURI, 'ADD_MEMBER')" )
 	public void addMember( URI containerURI, URI member );
@@ -31,10 +31,10 @@ public interface ContainerService {
 	public void removeMembers( URI targetURI );
 
 	// TODO: Add permision validation
-	public void removeSelectiveMembers( URI targetUri, Set<URI> members );
+	public void removeMembers( URI targetUri, RemoveMembersAction members );
 
 	// TODO: Add permision validation
-	public void removeSingleMember( URI containerURI, URI member );
+	public void removeMember( URI containerURI, URI member );
 
 	// TODO: Add permission validation
 	public void deleteContainedResources( URI targetURI );

@@ -254,16 +254,15 @@ public class SesameContainerRepository extends AbstractSesameLDPRepository imple
 	}
 
 	@Override
-	public void deleteMember( URI containerURI, URI member ) {
+	public void removeMember( URI containerURI, URI member ) {
 		Type containerType = getContainerType( containerURI );
 		if ( containerType == null ) throw new IllegalStateException( "The resource isn't a container." );
 
-		deleteMember( containerURI, member, containerType );
+		removeMember( containerURI, member, containerType );
 	}
 
-	protected void deleteMember( URI containerURI, URI member, Type containerType ) {
-		getTypedRepository( containerType ).deleteMember( containerURI, member );
-		// TODO: create deleteMember for indirectContainer
+	protected void removeMember( URI containerURI, URI member, Type containerType ) {
+		getTypedRepository( containerType ).removeMember( containerURI, member );
 	}
 
 	@Override

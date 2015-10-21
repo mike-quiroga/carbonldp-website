@@ -69,11 +69,11 @@ public class SesameContainerService extends AbstractSesameLDPService implements 
 	}
 
 	@Override
-	public void addMembers( URI containerURI, Set<URI> members ) {
+	public void addMembers( URI containerURI, AddMembersAction members ) {
 		DateTime creationTime = DateTime.now();
 		URI membershipResource = containerRepository.getTypedRepository( this.getContainerType( containerURI ) ).getMembershipResource( containerURI );
 
-		for ( URI member : members ) {
+		for ( URI member : members.getMembers() ) {
 			addMember( containerURI, member );
 		}
 
@@ -88,19 +88,19 @@ public class SesameContainerService extends AbstractSesameLDPService implements 
 	}
 
 	@Override
-	public void removeSelectiveMembers( URI containerURI, Set<URI> members ) {
-		DateTime creationTime = DateTime.now();
+	public void removeMembers( URI containerURI, RemoveMembersAction members ) {
+		DateTime modifiedTime = DateTime.now();
 		URI membershipResource = containerRepository.getTypedRepository( this.getContainerType( containerURI ) ).getMembershipResource( containerURI );
-		for ( URI member : members ) {
-			removeSingleMember( containerURI, member );
+		for ( URI member : members.getMembers() ) {
+			removeMember( containerURI, member );
 		}
-		sourceRepository.touch( membershipResource, creationTime );
+		sourceRepository.touch( membershipResource, modifiedTime );
 
 	}
 
 	@Override
-	public void removeSingleMember( URI containerURI, URI member ) {
-		containerRepository.deleteMember( containerURI, member );
+	public void removeMember( URI containerURI, URI member ) {
+		containerRepository.removeMember( containerURI, member );
 	}
 
 	@Override

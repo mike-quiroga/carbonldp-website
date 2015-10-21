@@ -5,13 +5,9 @@ import com.carbonldp.exceptions.InvalidResourceException;
 import com.carbonldp.ldp.web.AbstractRequestWithBodyHandler;
 import com.carbonldp.models.EmptyResponse;
 import com.carbonldp.models.Infraction;
-import com.carbonldp.namespaces.C;
 import com.carbonldp.rdf.RDFResource;
-import com.carbonldp.utils.ValueUtil;
-import com.carbonldp.web.exceptions.BadRequestException;
 import com.carbonldp.web.exceptions.NotFoundException;
 import org.joda.time.DateTime;
-import org.openrdf.model.Statement;
 import org.openrdf.model.URI;
 import org.openrdf.model.impl.AbstractModel;
 import org.springframework.http.HttpStatus;
@@ -19,9 +15,7 @@ import org.springframework.http.ResponseEntity;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.LinkedHashSet;
-import java.util.Set;
-import java.util.stream.Collectors;
+import java.util.List;
 
 /**
  * @author MiguelAraCo
@@ -39,31 +33,24 @@ public abstract class AbstractPUTRequestHandler<E extends RDFResource> extends A
 
 		String requestETag = getRequestETag();
 		checkPrecondition( targetURI, requestETag );
+
 		validatePutRequestModel( requestModel );
-
-		Set<URI> members = getMembers( requestModel );
-
-		addMembers( targetURI, members );
+		AddMembersAction membersToAdd = getMembersToAdd( requestModel );
+		addMembers( targetURI, membersToAdd );
 
 		addTypeLinkHeader( APIPreferences.InteractionModel.RDF_SOURCE );
 		return createSuccessfulResponse( targetURI );
 	}
 
-	protected abstract void addMembers( URI targetUri, Set<URI> members );
+	protected abstract void addMembers( URI targetUri, AddMembersAction members );
 
-	protected Set<URI> getMembers( AbstractModel requestModel ) {
-		return requestModel.objects()
-						   .stream()
-						   .map( ValueUtil::getURI )
-						   .collect( Collectors.toCollection( () -> new LinkedHashSet<>() ) );
+	protected AddMembersAction getMembersToAdd( AbstractModel requestModel ) {
+		return AddMembersActionFactory.getInstance().create( requestModel );
 	}
 
 	protected void validatePutRequestModel( AbstractModel requestModel ) {
-		for ( Statement statement : requestModel ) {
-			if ( ! ValueUtil.isBNode( statement.getSubject() ) ) throw new BadRequestException( 0x2201 );
-			if ( ! statement.getPredicate().stringValue().equals( C.Properties.ADD_MEMBER ) ) throw new BadRequestException( 0x2202 );
-			if ( ! ValueUtil.isURI( statement.getObject() ) ) throw new InvalidResourceException( new Infraction( 0x2005, "property", C.Properties.ADD_MEMBER ) );
-		}
+		List<Infraction> infractions = AddMembersActionFactory.getInstance().validate( requestModel );
+		if ( ! infractions.isEmpty() ) throw new InvalidResourceException( infractions );
 	}
 
 	protected ResponseEntity<Object> createSuccessfulResponse( URI affectedResourceURI ) {

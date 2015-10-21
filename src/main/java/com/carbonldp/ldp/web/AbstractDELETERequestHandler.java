@@ -3,18 +3,17 @@ package com.carbonldp.ldp.web;
 import com.carbonldp.HTTPHeaders;
 import com.carbonldp.descriptions.APIPreferences;
 import com.carbonldp.exceptions.InvalidResourceException;
+import com.carbonldp.ldp.containers.RemoveMembersAction;
+import com.carbonldp.ldp.containers.RemoveMembersActionFactory;
 import com.carbonldp.ldp.nonrdf.RDFRepresentation;
 import com.carbonldp.models.EmptyResponse;
 import com.carbonldp.models.HTTPHeader;
 import com.carbonldp.models.HTTPHeaderValue;
 import com.carbonldp.models.Infraction;
-import com.carbonldp.namespaces.C;
 import com.carbonldp.utils.RDFNodeUtil;
-import com.carbonldp.utils.ValueUtil;
 import com.carbonldp.web.exceptions.BadRequestException;
 import com.carbonldp.web.exceptions.NotFoundException;
 import com.carbonldp.web.exceptions.NotImplementedException;
-import org.openrdf.model.Statement;
 import org.openrdf.model.URI;
 import org.openrdf.model.impl.AbstractModel;
 import org.springframework.http.HttpStatus;
@@ -23,8 +22,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @Transactional
 public class AbstractDELETERequestHandler extends AbstractLDPRequestHandler {
@@ -93,23 +94,17 @@ public class AbstractDELETERequestHandler extends AbstractLDPRequestHandler {
 
 	protected void removeSelectiveMembers( AbstractModel requestModel, URI targetURI ) {
 		validateDeleteRequestModel( requestModel );
-		Set<URI> members = getMembers( requestModel );
-		containerService.removeSelectiveMembers( targetURI, members );
+		RemoveMembersAction membersToRemove = getMembersToRemove( requestModel );
+		containerService.removeMembers( targetURI, membersToRemove );
 	}
 
-	protected Set<URI> getMembers( AbstractModel requestModel ) {
-		return requestModel.objects()
-						   .stream()
-						   .map( ValueUtil::getURI )
-						   .collect( Collectors.toCollection( () -> new LinkedHashSet<>() ) );
+	protected RemoveMembersAction getMembersToRemove( AbstractModel requestModel ) {
+		return RemoveMembersActionFactory.getInstance().create( requestModel );
 	}
 
 	protected void validateDeleteRequestModel( AbstractModel requestModel ) {
-		for ( Statement statement : requestModel ) {
-			if ( ! ValueUtil.isBNode( statement.getSubject() ) ) throw new BadRequestException( 0x2201 );
-			if ( ! statement.getPredicate().stringValue().equals( C.Properties.DELETE_MEMBER ) ) throw new BadRequestException( 0x2202 );
-			if ( ! ValueUtil.isURI( statement.getObject() ) ) throw new InvalidResourceException( new Infraction( 0x2005, "property", C.Properties.DELETE_MEMBER ) );
-		}
+		List<Infraction> infractions = RemoveMembersActionFactory.getInstance().validate( requestModel );
+		if ( ! infractions.isEmpty() ) throw new InvalidResourceException( infractions );
 	}
 
 	protected ResponseEntity<Object> handleNonRDFDeletion( URI targetURI ) {

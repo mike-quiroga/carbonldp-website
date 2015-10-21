@@ -75,7 +75,7 @@ public class DefaultLDPController extends AbstractLDPController {
 	}
 
 	@RequestMapping( method = RequestMethod.DELETE )
-	public ResponseEntity<Object> handleDELETEWithoutBody( @RequestBody( required = false ) AbstractModel requestModel, HttpServletRequest request, HttpServletResponse response ) {
+	public ResponseEntity<Object> handleDELETE( @RequestBody( required = false ) AbstractModel requestModel, HttpServletRequest request, HttpServletResponse response ) {
 		return deleteHandler.handleRequest( requestModel, request, response );
 	}
 

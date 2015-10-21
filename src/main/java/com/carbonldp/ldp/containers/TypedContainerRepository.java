@@ -25,7 +25,7 @@ public interface TypedContainerRepository {
 
 	public void addMember( URI containerURI, URI member );
 
-	public void deleteMember( URI containerURI, URI member );
+	public void removeMember( URI containerURI, URI member );
 
 	public void removeMembers( URI containerURI );
 

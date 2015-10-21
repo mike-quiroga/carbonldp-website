@@ -186,7 +186,7 @@ public abstract class AbstractTypedContainerRepository extends AbstractSesameLDP
 	}
 
 	@Override
-	public void deleteMember( URI containerURI, URI memberURI ) {
+	public void removeMember( URI containerURI, URI memberURI ) {
 		URI hasMemberRelation = getHasMemberRelationSPARQL( containerURI );
 		URI membershipResource = getMembershipResource( containerURI );
 
@@ -195,7 +195,7 @@ public abstract class AbstractTypedContainerRepository extends AbstractSesameLDP
 	}
 
 	protected void deleteMembershipTriple( URI membershipResource, URI hasMemberRelation, URI memberURI ) {
-		connectionTemplate.write( connection -> connection.remove(  membershipResource, hasMemberRelation, memberURI, membershipResource ) );
+		connectionTemplate.write( connection -> connection.remove( membershipResource, hasMemberRelation, memberURI, membershipResource ) );
 	}
 
 	protected static String getHasMemberRelationSPARQL( String containerVar, String hasMemberRelationVar, int numberOfTabs ) {
