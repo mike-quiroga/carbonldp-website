@@ -116,7 +116,7 @@ public class SesameIndirectContainerRepository extends AbstractAccessPointReposi
 
 	@Override
 	public void removeMember( URI containerURI, URI memberURI ) {
-		throw new NotImplementedException("unable to Remove");
+		throw new NotImplementedException( "Remove indirect container members is not implemented yet" );
 	}
 
 	private URI getMembershipObject( URI containerURI, URI member ) {
