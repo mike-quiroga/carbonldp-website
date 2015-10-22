@@ -1,6 +1,8 @@
 package com.carbonldp.config;
 
 import com.carbonldp.Vars;
+import com.carbonldp.agents.app.AppAgentRepository;
+import com.carbonldp.agents.app.SesameAppAgentRepository;
 import com.carbonldp.agents.platform.PlatformAgentRepository;
 import com.carbonldp.agents.platform.SesamePlatformAgentRepository;
 import com.carbonldp.agents.validators.AgentValidatorRepository;
@@ -157,6 +159,13 @@ public class RepositoriesConfig {
 	public AppRoleRepository appRoleRepository() {
 		SesameAppRoleRepository repository = new SesameAppRoleRepository( connectionFactory, resourceRepository(), documentRepository(), sourceRepository(), containerRepository() );
 		repository.setAppRoleContainerSlug( Vars.getInstance().getAppRolesContainer() );
+		repository.setAgentsContainerSlug( Vars.getInstance().getAppRoleAgentsContainer() );
+		return repository;
+	}
+
+	@Bean
+	public AppAgentRepository appAgentRepository() {
+		SesameAppAgentRepository repository = new SesameAppAgentRepository( connectionFactory, resourceRepository(), documentRepository(), sourceRepository(), containerRepository() );
 		repository.setAgentsContainerSlug( Vars.getInstance().getAppRoleAgentsContainer() );
 		return repository;
 	}
