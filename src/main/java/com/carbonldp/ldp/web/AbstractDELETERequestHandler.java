@@ -12,6 +12,7 @@ import com.carbonldp.models.HTTPHeaderValue;
 import com.carbonldp.models.Infraction;
 import com.carbonldp.rdf.RDFDocument;
 import com.carbonldp.utils.RDFNodeUtil;
+import com.carbonldp.utils.ValueUtil;
 import com.carbonldp.web.exceptions.BadRequestException;
 import com.carbonldp.web.exceptions.NotFoundException;
 import com.carbonldp.web.exceptions.NotImplementedException;
@@ -22,10 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Transactional
 public class AbstractDELETERequestHandler extends AbstractLDPRequestHandler {
@@ -102,8 +100,13 @@ public class AbstractDELETERequestHandler extends AbstractLDPRequestHandler {
 		return RemoveMembersActionFactory.getInstance().create( requestModel );
 	}
 
-	protected void validateDeleteRequest( RDFDocument toValidate ) {
-		List<Infraction> infractions = RemoveMembersActionFactory.getInstance().validateSubject( toValidate );
+	protected void validateDeleteRequest( RDFDocument requestDocument ) {
+		List<Infraction> infractions = new ArrayList<>();
+		if ( requestDocument.subjects().size() != 1 )
+			infractions.add( new Infraction( 0x2201 ) );
+		else if ( ! ValueUtil.isBNode( requestDocument.subjectResource() ) )
+			infractions.add( new Infraction( 0x2201 ) );
+
 		if ( ! infractions.isEmpty() ) throw new InvalidResourceException( infractions );
 	}
 

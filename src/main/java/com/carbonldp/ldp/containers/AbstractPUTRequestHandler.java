@@ -7,14 +7,17 @@ import com.carbonldp.models.EmptyResponse;
 import com.carbonldp.models.Infraction;
 import com.carbonldp.rdf.RDFDocument;
 import com.carbonldp.rdf.RDFResource;
+import com.carbonldp.utils.ValueUtil;
 import com.carbonldp.web.exceptions.NotFoundException;
 import org.joda.time.DateTime;
 import org.openrdf.model.URI;
+import org.openrdf.model.impl.AbstractModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -35,7 +38,7 @@ public abstract class AbstractPUTRequestHandler<E extends RDFResource> extends A
 		checkPrecondition( targetURI, requestETag );
 
 		validateRequest( requestDocument );
-		AddMembersAction membersToAdd = getMembersToAdd( requestDocument );
+		AddMembersAction membersToAdd = getMembers( requestDocument );
 		addMembers( targetURI, membersToAdd );
 
 		addTypeLinkHeader( APIPreferences.InteractionModel.RDF_SOURCE );
@@ -44,12 +47,17 @@ public abstract class AbstractPUTRequestHandler<E extends RDFResource> extends A
 
 	protected abstract void addMembers( URI targetUri, AddMembersAction members );
 
-	protected AddMembersAction getMembersToAdd( RDFDocument requestDocument ) {
+	protected AddMembersAction getMembers( RDFDocument requestDocument ) {
 		return AddMembersActionFactory.getInstance().create( requestDocument );
 	}
 
 	protected void validateRequest( RDFDocument requestDocument ) {
-		List<Infraction> infractions = AddMembersActionFactory.getInstance().validateSubject( requestDocument );
+		List<Infraction> infractions = new ArrayList<>();
+		if ( requestDocument.subjects().size() != 1 )
+			infractions.add( new Infraction( 0x2201 ) );
+		else if ( ! ValueUtil.isBNode( requestDocument.subjectResource() ) )
+			infractions.add( new Infraction( 0x2201 ) );
+
 		if ( ! infractions.isEmpty() ) throw new InvalidResourceException( infractions );
 	}
 
