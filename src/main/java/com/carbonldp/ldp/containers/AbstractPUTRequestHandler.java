@@ -5,11 +5,11 @@ import com.carbonldp.exceptions.InvalidResourceException;
 import com.carbonldp.ldp.web.AbstractRequestWithBodyHandler;
 import com.carbonldp.models.EmptyResponse;
 import com.carbonldp.models.Infraction;
+import com.carbonldp.rdf.RDFDocument;
 import com.carbonldp.rdf.RDFResource;
 import com.carbonldp.web.exceptions.NotFoundException;
 import org.joda.time.DateTime;
 import org.openrdf.model.URI;
-import org.openrdf.model.impl.AbstractModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -23,7 +23,7 @@ import java.util.List;
  */
 public abstract class AbstractPUTRequestHandler<E extends RDFResource> extends AbstractRequestWithBodyHandler<E> {
 
-	public ResponseEntity<Object> handleRequest( AbstractModel requestModel, HttpServletRequest request, HttpServletResponse response ) {
+	public ResponseEntity<Object> handleRequest( RDFDocument requestDocument, HttpServletRequest request, HttpServletResponse response ) {
 		setUp( request, response );
 
 		URI targetURI = getTargetURI( request );
@@ -34,8 +34,8 @@ public abstract class AbstractPUTRequestHandler<E extends RDFResource> extends A
 		String requestETag = getRequestETag();
 		checkPrecondition( targetURI, requestETag );
 
-		validatePutRequestModel( requestModel );
-		AddMembersAction membersToAdd = getMembersToAdd( requestModel );
+		validateRequest( requestDocument );
+		AddMembersAction membersToAdd = getMembersToAdd( requestDocument );
 		addMembers( targetURI, membersToAdd );
 
 		addTypeLinkHeader( APIPreferences.InteractionModel.RDF_SOURCE );
@@ -44,12 +44,12 @@ public abstract class AbstractPUTRequestHandler<E extends RDFResource> extends A
 
 	protected abstract void addMembers( URI targetUri, AddMembersAction members );
 
-	protected AddMembersAction getMembersToAdd( AbstractModel requestModel ) {
-		return AddMembersActionFactory.getInstance().create( requestModel );
+	protected AddMembersAction getMembersToAdd( RDFDocument requestDocument ) {
+		return AddMembersActionFactory.getInstance().create( requestDocument );
 	}
 
-	protected void validatePutRequestModel( AbstractModel requestModel ) {
-		List<Infraction> infractions = AddMembersActionFactory.getInstance().validate( requestModel );
+	protected void validateRequest( RDFDocument requestDocument ) {
+		List<Infraction> infractions = AddMembersActionFactory.getInstance().validateSubject( requestDocument );
 		if ( ! infractions.isEmpty() ) throw new InvalidResourceException( infractions );
 	}
 

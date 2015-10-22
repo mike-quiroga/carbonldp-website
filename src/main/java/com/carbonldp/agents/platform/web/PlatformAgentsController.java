@@ -2,7 +2,6 @@ package com.carbonldp.agents.platform.web;
 
 import com.carbonldp.ldp.web.AbstractLDPController;
 import com.carbonldp.rdf.RDFDocument;
-import org.openrdf.model.impl.AbstractModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -29,8 +28,8 @@ public class PlatformAgentsController extends AbstractLDPController {
 	}
 
 	@RequestMapping( method = RequestMethod.DELETE )
-	public ResponseEntity<Object> deleteAgent( @RequestBody( required = false ) AbstractModel requestModel, HttpServletRequest request, HttpServletResponse response ) {
-		return deleteRequestHandler.handleRequest( requestModel, request, response );
+	public ResponseEntity<Object> deleteAgent( @RequestBody( required = false ) RDFDocument requestDocument, HttpServletRequest request, HttpServletResponse response ) {
+		return deleteRequestHandler.handleRequest( requestDocument, request, response );
 	}
 
 	@Autowired

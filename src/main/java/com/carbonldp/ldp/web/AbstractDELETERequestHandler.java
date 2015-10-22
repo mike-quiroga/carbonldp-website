@@ -10,12 +10,12 @@ import com.carbonldp.models.EmptyResponse;
 import com.carbonldp.models.HTTPHeader;
 import com.carbonldp.models.HTTPHeaderValue;
 import com.carbonldp.models.Infraction;
+import com.carbonldp.rdf.RDFDocument;
 import com.carbonldp.utils.RDFNodeUtil;
 import com.carbonldp.web.exceptions.BadRequestException;
 import com.carbonldp.web.exceptions.NotFoundException;
 import com.carbonldp.web.exceptions.NotImplementedException;
 import org.openrdf.model.URI;
-import org.openrdf.model.impl.AbstractModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
@@ -48,7 +48,7 @@ public class AbstractDELETERequestHandler extends AbstractLDPRequestHandler {
 		setDefaultInteractionModel( APIPreferences.InteractionModel.CONTAINER );
 	}
 
-	public ResponseEntity<Object> handleRequest( AbstractModel requestModel, HttpServletRequest request, HttpServletResponse response ) {
+	public ResponseEntity<Object> handleRequest( RDFDocument requestBody, HttpServletRequest request, HttpServletResponse response ) {
 		setUp( request, response );
 
 		URI targetURI = getTargetURI( request );
@@ -62,7 +62,7 @@ public class AbstractDELETERequestHandler extends AbstractLDPRequestHandler {
 			case RDF_SOURCE:
 				return handleRDFSourceDeletion( targetURI );
 			case CONTAINER:
-				return handleContainerDeletion( requestModel, targetURI );
+				return handleContainerDeletion( requestBody, targetURI );
 			case NON_RDF_SOURCE:
 				return handleNonRDFDeletion( targetURI );
 			case SPARQL_ENDPOINT:
@@ -80,30 +80,30 @@ public class AbstractDELETERequestHandler extends AbstractLDPRequestHandler {
 		sourceService.delete( targetURI );
 	}
 
-	protected ResponseEntity<Object> handleContainerDeletion( AbstractModel requestModel, URI targetURI ) {
+	protected ResponseEntity<Object> handleContainerDeletion( RDFDocument request, URI targetURI ) {
 		Set<APIPreferences.ContainerDeletePreference> deletePreferences = getContainerDeletePreferences( targetURI );
 
 		if ( deletePreferences.contains( APIPreferences.ContainerDeletePreference.MEMBERSHIP_RESOURCES ) ) throw new NotImplementedException();
 		if ( deletePreferences.contains( APIPreferences.ContainerDeletePreference.MEMBERSHIP_TRIPLES ) ) containerService.removeMembers( targetURI );
 		if ( deletePreferences.contains( APIPreferences.ContainerDeletePreference.CONTAINED_RESOURCES ) ) containerService.deleteContainedResources( targetURI );
 		if ( deletePreferences.contains( APIPreferences.ContainerDeletePreference.CONTAINER ) ) containerService.delete( targetURI );
-		if ( deletePreferences.contains( APIPreferences.ContainerDeletePreference.SELECTED_MEMBERSHIP_TRIPLES ) ) removeSelectiveMembers( requestModel, targetURI );
+		if ( deletePreferences.contains( APIPreferences.ContainerDeletePreference.SELECTED_MEMBERSHIP_TRIPLES ) ) removeSelectiveMembers( request, targetURI );
 
 		return createSuccessfulDeleteResponse();
 	}
 
-	protected void removeSelectiveMembers( AbstractModel requestModel, URI targetURI ) {
-		validateDeleteRequestModel( requestModel );
-		RemoveMembersAction membersToRemove = getMembersToRemove( requestModel );
+	protected void removeSelectiveMembers( RDFDocument requestBody, URI targetURI ) {
+		validateDeleteRequest( requestBody );
+		RemoveMembersAction membersToRemove = getMembersToRemove( requestBody );
 		containerService.removeMembers( targetURI, membersToRemove );
 	}
 
-	protected RemoveMembersAction getMembersToRemove( AbstractModel requestModel ) {
+	protected RemoveMembersAction getMembersToRemove( RDFDocument requestModel ) {
 		return RemoveMembersActionFactory.getInstance().create( requestModel );
 	}
 
-	protected void validateDeleteRequestModel( AbstractModel requestModel ) {
-		List<Infraction> infractions = RemoveMembersActionFactory.getInstance().validate( requestModel );
+	protected void validateDeleteRequest( RDFDocument toValidate ) {
+		List<Infraction> infractions = RemoveMembersActionFactory.getInstance().validateSubject( toValidate );
 		if ( ! infractions.isEmpty() ) throw new InvalidResourceException( infractions );
 	}
 

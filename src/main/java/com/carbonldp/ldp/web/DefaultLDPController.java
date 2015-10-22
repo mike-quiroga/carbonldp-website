@@ -75,8 +75,8 @@ public class DefaultLDPController extends AbstractLDPController {
 	}
 
 	@RequestMapping( method = RequestMethod.DELETE )
-	public ResponseEntity<Object> handleDELETE( @RequestBody( required = false ) AbstractModel requestModel, HttpServletRequest request, HttpServletResponse response ) {
-		return deleteHandler.handleRequest( requestModel, request, response );
+	public ResponseEntity<Object> handleDELETE( @RequestBody( required = false ) RDFDocument requestBody, HttpServletRequest request, HttpServletResponse response ) {
+		return deleteHandler.handleRequest( requestBody, request, response );
 	}
 
 	@Autowired
