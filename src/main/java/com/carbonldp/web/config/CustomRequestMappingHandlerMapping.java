@@ -31,14 +31,14 @@ public class CustomRequestMappingHandlerMapping extends RequestMappingHandlerMap
 		InteractionModel interactionModel = AnnotationUtils.findAnnotation( handlerType, InteractionModel.class );
 		if ( interactionModel == null ) return new InteractionModelRequestCondition();
 
-		return new InteractionModelRequestCondition( interactionModel.value() );
+		return new InteractionModelRequestCondition( interactionModel.value(), interactionModel.handlesDefault() );
 	}
 
 	private InteractionModelRequestCondition getInteractionModelRequestCondition( Method method ) {
 		InteractionModel interactionModel = AnnotationUtils.findAnnotation( method, InteractionModel.class );
 		if ( interactionModel == null ) return new InteractionModelRequestCondition();
 
-		return new InteractionModelRequestCondition( interactionModel.value() );
+		return new InteractionModelRequestCondition( interactionModel.value(), interactionModel.handlesDefault() );
 	}
 
 	private RequestDocumentTypeRequestCondition getRequestDocumentTypeRequestCondition( Class<?> handlerType ) {

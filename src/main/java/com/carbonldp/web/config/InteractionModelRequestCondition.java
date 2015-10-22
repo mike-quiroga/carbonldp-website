@@ -23,9 +23,16 @@ import java.util.Set;
  */
 public class InteractionModelRequestCondition extends AbstractRequestCondition<InteractionModelRequestCondition> {
 	private final Set<APIPreferences.InteractionModel> interactionModels;
+	private final boolean handlesDefault;
 
 	public InteractionModelRequestCondition( APIPreferences.InteractionModel... interactionModels ) {
 		this.interactionModels = new HashSet<>( Arrays.asList( interactionModels ) );
+		this.handlesDefault = false;
+	}
+
+	public InteractionModelRequestCondition( APIPreferences.InteractionModel[] interactionModels, boolean handlesDefault ) {
+		this.interactionModels = new HashSet<>( Arrays.asList( interactionModels ) );
+		this.handlesDefault = handlesDefault;
 	}
 
 	@Override
@@ -48,7 +55,10 @@ public class InteractionModelRequestCondition extends AbstractRequestCondition<I
 		if ( this.getInteractionModels().size() == 0 ) return this;
 
 		APIPreferences.InteractionModel requestInteractionModel = getRequestInteractionModel( request );
-		if ( requestInteractionModel == null ) return null;
+		if ( requestInteractionModel == null ) {
+			if ( this.handlesDefault ) return this;
+			else return null;
+		}
 
 		for ( APIPreferences.InteractionModel interactionModel : this.getInteractionModels() ) {
 			if ( interactionModel.equals( requestInteractionModel ) ) return this;
