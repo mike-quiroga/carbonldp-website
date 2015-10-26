@@ -165,8 +165,8 @@ public class RepositoriesConfig {
 
 	@Bean
 	public AppAgentRepository appAgentRepository() {
-		SesameAppAgentRepository repository = new SesameAppAgentRepository( connectionFactory, resourceRepository(), documentRepository(), sourceRepository(), containerRepository() );
-		repository.setAgentsContainerSlug( Vars.getInstance().getAppRoleAgentsContainer() );
+		SesameAppAgentRepository repository = new SesameAppAgentRepository( connectionFactory, sourceRepository(), containerRepository() );
+		repository.setAgentsContainerSlug(  Vars.getInstance().getAppRoleAgentsContainer() );
 		return repository;
 	}
 

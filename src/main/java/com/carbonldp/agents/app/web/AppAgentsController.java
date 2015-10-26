@@ -2,6 +2,7 @@ package com.carbonldp.agents.app.web;
 
 import com.carbonldp.ldp.web.AbstractLDPController;
 import com.carbonldp.rdf.RDFDocument;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -17,8 +18,11 @@ import javax.servlet.http.HttpServletResponse;
  */
 
 @Controller
-@RequestMapping( value = "/**/agents/" )
+@RequestMapping( value = "/apps/*/agents/" )
 public class AppAgentsController extends AbstractLDPController {
+
+	private AppAgentsRDFPostHandler postRequestHandler;
+	private AppAgentsRDFDeleteHandler deleteRequestHandler;
 
 	@RequestMapping( method = RequestMethod.POST, consumes = {
 		"application/ld+json",
@@ -26,6 +30,21 @@ public class AppAgentsController extends AbstractLDPController {
 	} )
 	public ResponseEntity<Object> registerAgent( @RequestBody RDFDocument requestDocument, HttpServletRequest request, HttpServletResponse response ) {
 		return postRequestHandler.handleRequest( requestDocument, request, response );
+	}
+
+	@RequestMapping( method = RequestMethod.DELETE )
+	public ResponseEntity<Object> deleteAgent( HttpServletRequest request, HttpServletResponse response ) {
+		return deleteRequestHandler.handleRequest( request, response );
+	}
+
+	@Autowired
+	public void setPOSTRequestHandler( AppAgentsRDFPostHandler postRequestHandler ) {
+		this.postRequestHandler = postRequestHandler;
+	}
+
+	@Autowired
+	public void setDeleteRequestHandler( AppAgentsRDFDeleteHandler deleteRequestHandler ) {
+		this.deleteRequestHandler = deleteRequestHandler;
 	}
 
 }

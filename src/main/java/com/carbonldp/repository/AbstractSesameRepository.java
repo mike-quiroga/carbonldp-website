@@ -14,4 +14,6 @@ public class AbstractSesameRepository extends AbstractComponent {
 		connectionTemplate = new ConnectionRWTemplate( connectionFactory );
 		sparqlTemplate = new SPARQLTemplate( connectionFactory );
 	}
+
+
 }
