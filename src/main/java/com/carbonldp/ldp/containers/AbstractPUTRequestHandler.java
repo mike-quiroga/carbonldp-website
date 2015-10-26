@@ -11,7 +11,6 @@ import com.carbonldp.utils.ValueUtil;
 import com.carbonldp.web.exceptions.NotFoundException;
 import org.joda.time.DateTime;
 import org.openrdf.model.URI;
-import org.openrdf.model.impl.AbstractModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -48,7 +47,7 @@ public abstract class AbstractPUTRequestHandler<E extends RDFResource> extends A
 	protected abstract void addMembers( URI targetUri, AddMembersAction members );
 
 	protected AddMembersAction getMembers( RDFDocument requestDocument ) {
-		return AddMembersActionFactory.getInstance().create( requestDocument );
+		return new AddMembersAction( requestDocument.getDocumentResource() );
 	}
 
 	protected void validateRequest( RDFDocument requestDocument ) {

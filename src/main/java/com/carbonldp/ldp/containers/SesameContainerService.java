@@ -2,13 +2,10 @@ package com.carbonldp.ldp.containers;
 
 import com.carbonldp.authorization.acl.ACLRepository;
 import com.carbonldp.descriptions.APIPreferences;
-import com.carbonldp.exceptions.InvalidResourceException;
 import com.carbonldp.exceptions.ResourceAlreadyExistsException;
 import com.carbonldp.exceptions.ResourceDoesntExistException;
 import com.carbonldp.ldp.AbstractSesameLDPService;
 import com.carbonldp.ldp.sources.RDFSourceRepository;
-import com.carbonldp.models.Infraction;
-import com.carbonldp.namespaces.C;
 import com.carbonldp.rdf.RDFResource;
 import com.carbonldp.spring.TransactionWrapper;
 import org.joda.time.DateTime;
@@ -16,7 +13,6 @@ import org.openrdf.model.URI;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.File;
-import java.util.List;
 import java.util.Set;
 
 @Transactional
@@ -64,11 +60,6 @@ public class SesameContainerService extends AbstractSesameLDPService implements 
 		if ( ! BasicContainerFactory.getInstance().isValid( toValidate ) ) throw new IllegalArgumentException( "invalid resource" );
 	}
 
-	protected void validate( MembersAction membersAction ) {
-		List<Infraction> infractions = MembersActionFactory.getInstance().validate( membersAction );
-		if ( ! infractions.isEmpty() ) throw new InvalidResourceException( infractions );
-	}
-
 	@Override
 	public void createNonRDFResource( URI targetURI, URI resourceURI, File resourceFile, String mediaType ) {
 		if ( ! sourceRepository.exists( targetURI ) ) throw new ResourceDoesntExistException();
@@ -77,21 +68,12 @@ public class SesameContainerService extends AbstractSesameLDPService implements 
 		containerRepository.createNonRDFResource( targetURI, resourceURI, resourceFile, mediaType );
 	}
 
-	private void isAddMembersAction( AddMembersAction toValidate ) {
-		if ( ! AddMembersActionFactory.getInstance().is( toValidate ) ) throw new InvalidResourceException( new Infraction( 0x2001, "rdf.type", C.Classes.ADD_MEMBER ) );
-	}
-
-	private void isRemoveMemberAction( RemoveMembersAction toValidate ) {
-		if ( ! RemoveMembersActionFactory.getInstance().is( toValidate ) ) throw new InvalidResourceException( new Infraction( 0x2001, "rdf.type", C.Classes.REMOVE_MEMBER ) );
-	}
-
 	@Override
-	public void addMembers( URI containerURI, AddMembersAction members ) {
-		isAddMembersAction( members );
-		validate( members );
+	public void addMembers( URI containerURI, Set<URI> members ) {
+
 		DateTime modifiedTime = DateTime.now();
 		URI membershipResource = containerRepository.getTypedRepository( this.getContainerType( containerURI ) ).getMembershipResource( containerURI );
-		for ( URI member : members.getMembers() ) {
+		for ( URI member : members ) {
 			addMember( containerURI, member );
 		}
 
@@ -106,12 +88,10 @@ public class SesameContainerService extends AbstractSesameLDPService implements 
 	}
 
 	@Override
-	public void removeMembers( URI containerURI, RemoveMembersAction members ) {
-		validate( members );
-		isRemoveMemberAction( members );
+	public void removeMembers( URI containerURI, Set<URI> members ) {
 		DateTime modifiedTime = DateTime.now();
 		URI membershipResource = containerRepository.getTypedRepository( this.getContainerType( containerURI ) ).getMembershipResource( containerURI );
-		for ( URI member : members.getMembers() ) {
+		for ( URI member : members ) {
 			removeMember( containerURI, member );
 		}
 		sourceRepository.touch( membershipResource, modifiedTime );

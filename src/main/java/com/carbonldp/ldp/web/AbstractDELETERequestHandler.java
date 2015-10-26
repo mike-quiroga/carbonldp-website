@@ -10,6 +10,7 @@ import com.carbonldp.models.EmptyResponse;
 import com.carbonldp.models.HTTPHeader;
 import com.carbonldp.models.HTTPHeaderValue;
 import com.carbonldp.models.Infraction;
+import com.carbonldp.namespaces.C;
 import com.carbonldp.rdf.RDFDocument;
 import com.carbonldp.utils.RDFNodeUtil;
 import com.carbonldp.utils.ValueUtil;
@@ -92,12 +93,24 @@ public class AbstractDELETERequestHandler extends AbstractLDPRequestHandler {
 
 	protected void removeSelectiveMembers( RDFDocument requestBody, URI targetURI ) {
 		validateDeleteRequest( requestBody );
-		RemoveMembersAction membersToRemove = getMembersToRemove( requestBody );
-		containerService.removeMembers( targetURI, membersToRemove );
+		RemoveMembersAction members = getMembers( requestBody );
+		isRemoveMemberAction( members );
+		validate( members );
+
+		containerService.removeMembers( targetURI, members.getMembers() );
 	}
 
-	protected RemoveMembersAction getMembersToRemove( RDFDocument requestModel ) {
-		return RemoveMembersActionFactory.getInstance().create( requestModel );
+	private void isRemoveMemberAction( RemoveMembersAction toValidate ) {
+		if ( ! RemoveMembersActionFactory.getInstance().is( toValidate ) ) throw new InvalidResourceException( new Infraction( 0x2001, "rdf.type", C.Classes.REMOVE_MEMBER ) );
+	}
+
+	protected void validate( RemoveMembersAction membersAction ) {
+		List<Infraction> infractions = RemoveMembersActionFactory.getInstance().validate( membersAction );
+		if ( ! infractions.isEmpty() ) throw new InvalidResourceException( infractions );
+	}
+
+	protected RemoveMembersAction getMembers( RDFDocument requestModel ) {
+		return new RemoveMembersAction( requestModel.getDocumentResource() );
 	}
 
 	protected void validateDeleteRequest( RDFDocument requestDocument ) {
