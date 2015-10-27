@@ -1,3 +1,8 @@
+# 0.13.0(2015/08/26)
+* Members can now be selectively remove from a container
+* Members can now be added to a container
+# 0.12.0 (2015/08/14)
+* Error responses are now returned with an error description
 # 0.11.0 (2015/09/09)
 * Apps can now be deleted
 # 0.10.0 (2015/09/08)
