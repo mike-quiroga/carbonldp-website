@@ -10,7 +10,6 @@ import com.carbonldp.models.EmptyResponse;
 import com.carbonldp.models.HTTPHeader;
 import com.carbonldp.models.HTTPHeaderValue;
 import com.carbonldp.models.Infraction;
-import com.carbonldp.namespaces.C;
 import com.carbonldp.rdf.RDFDocument;
 import com.carbonldp.utils.RDFNodeUtil;
 import com.carbonldp.utils.ValueUtil;
@@ -79,29 +78,24 @@ public class AbstractDELETERequestHandler extends AbstractLDPRequestHandler {
 		sourceService.delete( targetURI );
 	}
 
-	protected ResponseEntity<Object> handleContainerDeletion( RDFDocument request, URI targetURI ) {
+	protected ResponseEntity<Object> handleContainerDeletion( RDFDocument requestDocument, URI targetURI ) {
 		Set<APIPreferences.ContainerDeletePreference> deletePreferences = getContainerDeletePreferences( targetURI );
 
 		if ( deletePreferences.contains( APIPreferences.ContainerDeletePreference.MEMBERSHIP_RESOURCES ) ) throw new NotImplementedException();
 		if ( deletePreferences.contains( APIPreferences.ContainerDeletePreference.MEMBERSHIP_TRIPLES ) ) containerService.removeMembers( targetURI );
 		if ( deletePreferences.contains( APIPreferences.ContainerDeletePreference.CONTAINED_RESOURCES ) ) containerService.deleteContainedResources( targetURI );
 		if ( deletePreferences.contains( APIPreferences.ContainerDeletePreference.CONTAINER ) ) containerService.delete( targetURI );
-		if ( deletePreferences.contains( APIPreferences.ContainerDeletePreference.SELECTED_MEMBERSHIP_TRIPLES ) ) removeSelectiveMembers( request, targetURI );
+		if ( deletePreferences.contains( APIPreferences.ContainerDeletePreference.SELECTED_MEMBERSHIP_TRIPLES ) ) removeSelectiveMembers( requestDocument, targetURI );
 
 		return createSuccessfulDeleteResponse();
 	}
 
-	protected void removeSelectiveMembers( RDFDocument requestBody, URI targetURI ) {
-		validateDeleteRequest( requestBody );
-		RemoveMembersAction members = getMembers( requestBody );
-		isRemoveMemberAction( members );
+	protected void removeSelectiveMembers( RDFDocument requestDocument, URI targetURI ) {
+		validateRequestDocument( requestDocument );
+		RemoveMembersAction members = new RemoveMembersAction( requestDocument.getDocumentResource() );
 		validate( members );
 
 		containerService.removeMembers( targetURI, members.getMembers() );
-	}
-
-	private void isRemoveMemberAction( RemoveMembersAction toValidate ) {
-		if ( ! RemoveMembersActionFactory.getInstance().is( toValidate ) ) throw new InvalidResourceException( new Infraction( 0x2001, "rdf.type", C.Classes.REMOVE_MEMBER ) );
 	}
 
 	protected void validate( RemoveMembersAction membersAction ) {
@@ -109,11 +103,7 @@ public class AbstractDELETERequestHandler extends AbstractLDPRequestHandler {
 		if ( ! infractions.isEmpty() ) throw new InvalidResourceException( infractions );
 	}
 
-	protected RemoveMembersAction getMembers( RDFDocument requestModel ) {
-		return new RemoveMembersAction( requestModel.getDocumentResource() );
-	}
-
-	protected void validateDeleteRequest( RDFDocument requestDocument ) {
+	protected void validateRequestDocument( RDFDocument requestDocument ) {
 		List<Infraction> infractions = new ArrayList<>();
 		if ( requestDocument.subjects().size() != 1 )
 			infractions.add( new Infraction( 0x2201 ) );

@@ -261,7 +261,8 @@ public class SesameContainerRepository extends AbstractSesameLDPRepository imple
 		removeMember( containerURI, member, containerType );
 	}
 
-	protected void removeMember( URI containerURI, URI member, Type containerType ) {
+	@Override
+	public void removeMember( URI containerURI, URI member, Type containerType ) {
 		getTypedRepository( containerType ).removeMember( containerURI, member );
 	}
 

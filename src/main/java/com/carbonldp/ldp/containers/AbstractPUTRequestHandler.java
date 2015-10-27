@@ -37,18 +37,14 @@ public abstract class AbstractPUTRequestHandler<E extends RDFResource> extends A
 		checkPrecondition( targetURI, requestETag );
 
 		validateRequest( requestDocument );
-		AddMembersAction membersToAdd = getMembers( requestDocument );
-		addMembers( targetURI, membersToAdd );
+		AddMembersAction membersAction = new AddMembersAction( requestDocument.getDocumentResource() );
+		executeAction( targetURI, membersAction );
 
 		addTypeLinkHeader( APIPreferences.InteractionModel.RDF_SOURCE );
 		return createSuccessfulResponse( targetURI );
 	}
 
-	protected abstract void addMembers( URI targetUri, AddMembersAction members );
-
-	protected AddMembersAction getMembers( RDFDocument requestDocument ) {
-		return new AddMembersAction( requestDocument.getDocumentResource() );
-	}
+	protected abstract void executeAction( URI targetUri, AddMembersAction members );
 
 	protected void validateRequest( RDFDocument requestDocument ) {
 		List<Infraction> infractions = new ArrayList<>();

@@ -34,7 +34,7 @@ public class SesameDirectContainerRepository extends AbstractAccessPointReposito
 		hasMemberQuery = "" +
 			"ASK {" + NEW_LINE +
 			TAB + "GRAPH ?containerURI {" + NEW_LINE +
-			TAB + TAB + getHasMemberRelationSPARQL( "?containerURI", "?hasMemberRelation", 2 ) + NEW_LINE +
+			TAB + TAB + getHasMemberRelation( "?containerURI", "?hasMemberRelation", 2 ) + NEW_LINE +
 			TAB + TAB + RDFNodeUtil.generatePredicateStatement( "?containerURI", "?membershipResource", ContainerDescription.Property.MEMBERSHIP_RESOURCE ) + NEW_LINE +
 			TAB + "}" + NEW_LINE +
 			TAB + "GRAPH ?membershipResource {" + NEW_LINE +
@@ -55,7 +55,7 @@ public class SesameDirectContainerRepository extends AbstractAccessPointReposito
 		hasMembersQuery = "" +
 			"ASK {" + NEW_LINE +
 			TAB + "GRAPH ?containerURI {" + NEW_LINE +
-			TAB + TAB + getHasMemberRelationSPARQL( "?containerURI", "?hasMemberRelation", 2 ) + NEW_LINE +
+			TAB + TAB + getHasMemberRelation( "?containerURI", "?hasMemberRelation", 2 ) + NEW_LINE +
 			TAB + TAB + RDFNodeUtil.generatePredicateStatement( "?containerURI", "?membershipResource", ContainerDescription.Property.MEMBERSHIP_RESOURCE ) + NEW_LINE +
 			TAB + "}" + NEW_LINE +
 			TAB + "GRAPH ?membershipResource {" + NEW_LINE +
@@ -77,7 +77,7 @@ public class SesameDirectContainerRepository extends AbstractAccessPointReposito
 		findMembersQuery = "" +
 			"SELECT ?members WHERE {" + NEW_LINE +
 			TAB + "GRAPH ?containerURI {" + NEW_LINE +
-			TAB + TAB + getHasMemberRelationSPARQL( "?containerURI", "?hasMemberRelation", 2 ) + NEW_LINE +
+			TAB + TAB + getHasMemberRelation( "?containerURI", "?hasMemberRelation", 2 ) + NEW_LINE +
 			TAB + TAB + RDFNodeUtil.generatePredicateStatement( "?containerURI", "?membershipResource", ContainerDescription.Property.MEMBERSHIP_RESOURCE ) + NEW_LINE +
 			TAB + "}" + NEW_LINE +
 			TAB + "GRAPH ?membershipResource {" + NEW_LINE +
@@ -101,7 +101,7 @@ public class SesameDirectContainerRepository extends AbstractAccessPointReposito
 		filterMembersQuery = "" +
 			"SELECT ?members WHERE {" + NEW_LINE +
 			TAB + "GRAPH ?containerURI {" + NEW_LINE +
-			TAB + TAB + getHasMemberRelationSPARQL( "?containerURI", "?hasMemberRelation", 2 ) + NEW_LINE +
+			TAB + TAB + getHasMemberRelation( "?containerURI", "?hasMemberRelation", 2 ) + NEW_LINE +
 			TAB + TAB + RDFNodeUtil.generatePredicateStatement( "?containerURI", "?membershipResource", ContainerDescription.Property.MEMBERSHIP_RESOURCE ) + NEW_LINE +
 			TAB + "}" + NEW_LINE +
 			TAB + "GRAPH ?membershipResource {" + NEW_LINE +
