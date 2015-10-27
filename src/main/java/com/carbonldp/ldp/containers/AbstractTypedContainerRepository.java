@@ -198,7 +198,7 @@ public abstract class AbstractTypedContainerRepository extends AbstractSesameLDP
 		connectionTemplate.write( connection -> connection.remove( membershipResource, hasMemberRelation, memberURI, membershipResource ) );
 	}
 
-	protected static String getHasMemberRelation( String containerVar, String hasMemberRelationVar, int numberOfTabs ) {
+	protected static String getHasMemberRelationSPARQL( String containerVar, String hasMemberRelationVar, int numberOfTabs ) {
 		String tabs = SPARQLUtil.createTabs( numberOfTabs );
 
 		String sparql;
