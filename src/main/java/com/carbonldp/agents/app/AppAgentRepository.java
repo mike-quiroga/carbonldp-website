@@ -6,11 +6,11 @@ import org.openrdf.model.URI;
 
 /**
  * @author NestorVenegas
- * @since 0.10.1-ALPHA
+ * @since _version_
  */
 public interface AppAgentRepository {
 
-	public Container createAppRolesContainer( URI rootContainerURI );
+	public Container createAppAgentsContainer( URI rootContainerURI );
 
 	public boolean existsWithEmail( String email );
 

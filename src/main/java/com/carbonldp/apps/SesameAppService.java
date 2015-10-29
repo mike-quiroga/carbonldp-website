@@ -86,12 +86,12 @@ public class SesameAppService extends AbstractSesameLDPService implements AppSer
 			AppRole appAdminRole = createAppAdminRole( appRolesContainer );
 			ACL appAdminRoleACL = createAppAdminRoleACL( appAdminRole );
 
-			Container appAgentsContainer = appAgentsRepository.createAppRolesContainer( rootContainer.getURI() );
+			Container appAgentsContainer = appAgentsRepository.createAppAgentsContainer( rootContainer.getURI() );
 			ACL appAgentsContainerACL = createAppAgentsACL( appAgentsContainer );
 
 			addCurrentAgentToAppAdminRole( appAdminRole );
 
-			addAdminPermissions( appAdminRole, rootContainerACL );
+			addDefaultPermissions( appAdminRole, rootContainerACL );
 
 			return appAdminRole;
 		} );
@@ -195,7 +195,7 @@ public class SesameAppService extends AbstractSesameLDPService implements AppSer
 		appRoleRepository.addAgent( appAdminRole.getURI(), agent );
 	}
 
-	private void addAdminPermissions( AppRole appAdminRole, ACL rootContainerACL ) {
+	private void addDefaultPermissions( AppRole appAdminRole, ACL rootContainerACL ) {
 		aclRepository.grantPermissions( rootContainerACL, Arrays.asList( appAdminRole ), Arrays.asList(
 			ACEDescription.Permission.READ,
 			ACEDescription.Permission.UPDATE,

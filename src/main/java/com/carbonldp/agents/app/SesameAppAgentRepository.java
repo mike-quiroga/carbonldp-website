@@ -48,7 +48,7 @@ public class SesameAppAgentRepository extends AbstractSesameRepository implement
 	}
 
 	@Override
-	public Container createAppRolesContainer( URI rootContainerURI ) {
+	public Container createAppAgentsContainer( URI rootContainerURI ) {
 		URI appRolesContainerURI = getContainerURI( rootContainerURI );
 		BasicContainer appAgentsContainer = BasicContainerFactory.getInstance().create( new RDFResource( appRolesContainerURI ) );
 		containerRepository.createChild( rootContainerURI, appAgentsContainer );

@@ -4,6 +4,7 @@ import com.carbonldp.agents.Agent;
 import com.carbonldp.agents.AgentFactory;
 import com.carbonldp.agents.validators.AgentValidatorRepository;
 import com.carbonldp.apps.App;
+import com.carbonldp.apps.context.AppContextHolder;
 import com.carbonldp.apps.roles.AppRoleRepository;
 import com.carbonldp.authorization.acl.ACLRepository;
 import com.carbonldp.config.ConfigurationRepository;
@@ -45,7 +46,7 @@ public class SesameAppAgentService extends AbstractSesameLDPService implements A
 	}
 
 	@Override
-	public void register( App app, Agent agent ) {
+	public void register( Agent agent ) {
 		String email = agent.getEmails().iterator().next();
 		if ( appAgentRepository.existsWithEmail( email ) ) throw new ResourceAlreadyExistsException();
 		setAgentPasswordFields( agent );
@@ -53,7 +54,7 @@ public class SesameAppAgentService extends AbstractSesameLDPService implements A
 		if ( requireValidation ) agent.setEnabled( false );
 		else agent.setEnabled( true );
 		validate( agent );
-
+		App app = AppContextHolder.getContext().getApplication();
 		appAgentRepository.create( app.getRootContainerURI(), agent );
 
 	}

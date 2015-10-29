@@ -1,7 +1,6 @@
 package com.carbonldp.agents.app;
 
 import com.carbonldp.agents.Agent;
-import com.carbonldp.apps.App;
 
 /**
  * @author NestorVenegas
@@ -10,5 +9,5 @@ import com.carbonldp.apps.App;
 public interface AppAgentService {
 
 	// TODO: add security
-	public void register( App app, Agent agent );
+	public void register( Agent agent );
 }

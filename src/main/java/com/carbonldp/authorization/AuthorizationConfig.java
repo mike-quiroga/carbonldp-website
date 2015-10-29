@@ -42,7 +42,7 @@ public class AuthorizationConfig extends AbstractWebSecurityConfigurerAdapter {
 
 	@Configuration
 	@Order( EntryPointOrder.APPS )
-	public static class NAppsEntryPointConfig extends AbstractWebSecurityConfigurerAdapter {
+	public static class AppsEntryPointConfig extends AbstractWebSecurityConfigurerAdapter {
 		@Override
 		protected void configure( HttpSecurity http ) throws Exception {
 			super.configure( http );
