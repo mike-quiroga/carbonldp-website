@@ -30,6 +30,12 @@ public interface ContainerService {
 	// TODO: Add permission validation
 	public void removeMembers( URI targetURI );
 
+	// TODO: Add permision validation
+	public void removeMembers( URI targetUri, Set<URI> members );
+
+	// TODO: Add permision validation
+	public void removeMember( URI containerURI, URI member );
+
 	// TODO: Add permission validation
 	public void deleteContainedResources( URI targetURI );
 

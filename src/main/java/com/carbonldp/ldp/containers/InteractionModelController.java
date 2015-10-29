@@ -1,8 +1,8 @@
 package com.carbonldp.ldp.containers;
 
 import com.carbonldp.descriptions.APIPreferences;
+import com.carbonldp.rdf.RDFDocument;
 import com.carbonldp.web.config.InteractionModel;
-import org.openrdf.model.impl.AbstractModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -25,8 +25,8 @@ public class InteractionModelController {
 	private BasePUTRequestHandler putRequestHandler;
 
 	@RequestMapping( method = RequestMethod.PUT )
-	public ResponseEntity<Object> handleRDFPUT( @RequestBody AbstractModel requestModel, HttpServletRequest request, HttpServletResponse response ) {
-		return putRequestHandler.handleRequest( requestModel, request, response );
+	public ResponseEntity<Object> handleRDFPUT( @RequestBody RDFDocument requestDocument, HttpServletRequest request, HttpServletResponse response ) {
+		return putRequestHandler.handleRequest( requestDocument, request, response );
 	}
 
 	@Autowired

@@ -2,11 +2,17 @@ package com.carbonldp.ldp.web;
 
 import com.carbonldp.HTTPHeaders;
 import com.carbonldp.descriptions.APIPreferences;
+import com.carbonldp.exceptions.InvalidResourceException;
+import com.carbonldp.ldp.containers.RemoveMembersAction;
+import com.carbonldp.ldp.containers.RemoveMembersActionFactory;
 import com.carbonldp.ldp.nonrdf.RDFRepresentation;
 import com.carbonldp.models.EmptyResponse;
 import com.carbonldp.models.HTTPHeader;
 import com.carbonldp.models.HTTPHeaderValue;
+import com.carbonldp.models.Infraction;
+import com.carbonldp.rdf.RDFDocument;
 import com.carbonldp.utils.RDFNodeUtil;
+import com.carbonldp.utils.ValueUtil;
 import com.carbonldp.web.exceptions.BadRequestException;
 import com.carbonldp.web.exceptions.NotFoundException;
 import com.carbonldp.web.exceptions.NotImplementedException;
@@ -17,10 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Transactional
 public class AbstractDELETERequestHandler extends AbstractLDPRequestHandler {
@@ -43,7 +46,7 @@ public class AbstractDELETERequestHandler extends AbstractLDPRequestHandler {
 		setDefaultInteractionModel( APIPreferences.InteractionModel.CONTAINER );
 	}
 
-	public ResponseEntity<Object> handleRequest( HttpServletRequest request, HttpServletResponse response ) {
+	public ResponseEntity<Object> handleRequest( RDFDocument requestBody, HttpServletRequest request, HttpServletResponse response ) {
 		setUp( request, response );
 
 		URI targetURI = getTargetURI( request );
@@ -57,7 +60,7 @@ public class AbstractDELETERequestHandler extends AbstractLDPRequestHandler {
 			case RDF_SOURCE:
 				return handleRDFSourceDeletion( targetURI );
 			case CONTAINER:
-				return handleContainerDeletion( targetURI );
+				return handleContainerDeletion( requestBody, targetURI );
 			case NON_RDF_SOURCE:
 				return handleNonRDFDeletion( targetURI );
 			case SPARQL_ENDPOINT:
@@ -75,15 +78,39 @@ public class AbstractDELETERequestHandler extends AbstractLDPRequestHandler {
 		sourceService.delete( targetURI );
 	}
 
-	protected ResponseEntity<Object> handleContainerDeletion( URI targetURI ) {
+	protected ResponseEntity<Object> handleContainerDeletion( RDFDocument requestDocument, URI targetURI ) {
 		Set<APIPreferences.ContainerDeletePreference> deletePreferences = getContainerDeletePreferences( targetURI );
 
 		if ( deletePreferences.contains( APIPreferences.ContainerDeletePreference.MEMBERSHIP_RESOURCES ) ) throw new NotImplementedException();
 		if ( deletePreferences.contains( APIPreferences.ContainerDeletePreference.MEMBERSHIP_TRIPLES ) ) containerService.removeMembers( targetURI );
 		if ( deletePreferences.contains( APIPreferences.ContainerDeletePreference.CONTAINED_RESOURCES ) ) containerService.deleteContainedResources( targetURI );
 		if ( deletePreferences.contains( APIPreferences.ContainerDeletePreference.CONTAINER ) ) containerService.delete( targetURI );
+		if ( deletePreferences.contains( APIPreferences.ContainerDeletePreference.SELECTED_MEMBERSHIP_TRIPLES ) ) removeSelectiveMembers( requestDocument, targetURI );
 
 		return createSuccessfulDeleteResponse();
+	}
+
+	protected void removeSelectiveMembers( RDFDocument requestDocument, URI targetURI ) {
+		validateRequestDocument( requestDocument );
+		RemoveMembersAction members = new RemoveMembersAction( requestDocument.getDocumentResource() );
+		validate( members );
+
+		containerService.removeMembers( targetURI, members.getMembers() );
+	}
+
+	protected void validate( RemoveMembersAction membersAction ) {
+		List<Infraction> infractions = RemoveMembersActionFactory.getInstance().validate( membersAction );
+		if ( ! infractions.isEmpty() ) throw new InvalidResourceException( infractions );
+	}
+
+	protected void validateRequestDocument( RDFDocument requestDocument ) {
+		List<Infraction> infractions = new ArrayList<>();
+		if ( requestDocument.subjects().size() != 1 )
+			infractions.add( new Infraction( 0x2201 ) );
+		else if ( ! ValueUtil.isBNode( requestDocument.subjectResource() ) )
+			infractions.add( new Infraction( 0x2201 ) );
+
+		if ( ! infractions.isEmpty() ) throw new InvalidResourceException( infractions );
 	}
 
 	protected ResponseEntity<Object> handleNonRDFDeletion( URI targetURI ) {

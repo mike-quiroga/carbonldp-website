@@ -63,7 +63,7 @@ public abstract class AbstractTypedContainerRepository extends AbstractSesameLDP
 	}
 
 	// TODO: Create a more generic method instead of this specific one
-	protected URI getHasMemberRelationSPARQL( URI containerURI ) {
+	protected URI getHasMemberRelation( URI containerURI ) {
 		Map<String, Value> bindings = new HashMap<>();
 		bindings.put( "containerURI", containerURI );
 
@@ -162,7 +162,7 @@ public abstract class AbstractTypedContainerRepository extends AbstractSesameLDP
 	}
 
 	protected void addHasMemberRelation( URI containerURI, URI memberURI ) {
-		URI hasMemberRelation = getHasMemberRelationSPARQL( containerURI );
+		URI hasMemberRelation = getHasMemberRelation( containerURI );
 		URI membershipResource = getMembershipResource( containerURI );
 
 		this.addHasMemberRelation( membershipResource, hasMemberRelation, memberURI );
@@ -183,6 +183,19 @@ public abstract class AbstractTypedContainerRepository extends AbstractSesameLDP
 		addHasMemberRelation( containerURI, member );
 		// TODO: check for permissions, pending design
 		//addMemberOfRelation( containerURI, member );
+	}
+
+	@Override
+	public void removeMember( URI containerURI, URI memberURI ) {
+		URI hasMemberRelation = getHasMemberRelation( containerURI );
+		URI membershipResource = getMembershipResource( containerURI );
+
+		this.deleteMembershipTriple( membershipResource, hasMemberRelation, memberURI );
+
+	}
+
+	protected void deleteMembershipTriple( URI membershipResource, URI hasMemberRelation, URI memberURI ) {
+		connectionTemplate.write( connection -> connection.remove( membershipResource, hasMemberRelation, memberURI, membershipResource ) );
 	}
 
 	protected static String getHasMemberRelationSPARQL( String containerVar, String hasMemberRelationVar, int numberOfTabs ) {
