@@ -47,17 +47,14 @@ public class SesameAppAgentService extends AbstractSesameLDPService implements A
 	@Override
 	public void register( App app, Agent agent ) {
 		String email = agent.getEmails().iterator().next();
-		transactionWrapper.runInAppcontext( app, () -> {
-			if ( appAgentRepository.existsWithEmail( email ) ) throw new ResourceAlreadyExistsException();
-			setAgentPasswordFields( agent );
+		if ( appAgentRepository.existsWithEmail( email ) ) throw new ResourceAlreadyExistsException();
+		setAgentPasswordFields( agent );
+		boolean requireValidation = configurationRepository.requireAgentEmailValidation();
+		if ( requireValidation ) agent.setEnabled( false );
+		else agent.setEnabled( true );
+		validate( agent );
 
-			boolean requireValidation = configurationRepository.requireAgentEmailValidation();
-			if ( requireValidation ) agent.setEnabled( false );
-			else agent.setEnabled( true );
-			validate( agent );
-
-			appAgentRepository.create( app.getRootContainerURI(), agent );
-		} );
+		appAgentRepository.create( app.getRootContainerURI(), agent );
 
 	}
 

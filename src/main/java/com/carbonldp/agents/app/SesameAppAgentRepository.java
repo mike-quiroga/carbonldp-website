@@ -14,7 +14,6 @@ import com.carbonldp.utils.RDFNodeUtil;
 import com.carbonldp.utils.URIUtil;
 import org.openrdf.model.URI;
 import org.openrdf.model.Value;
-import org.openrdf.model.impl.URIImpl;
 import org.openrdf.model.impl.ValueFactoryImpl;
 import org.openrdf.spring.SesameConnectionFactory;
 import org.springframework.transaction.annotation.Transactional;
@@ -57,9 +56,9 @@ public class SesameAppAgentRepository extends AbstractSesameRepository implement
 	}
 
 	public boolean existsWithEmail( String email ) {
-		URI appURI = AppContextHolder.getContext().getApplication().getURI();
+		URI appURI = AppContextHolder.getContext().getApplication().getRootContainerURI();
 		// TODO: throw error if there's no app context
-		URI agentsContainerURI = new URIImpl( appURI.stringValue() + containerSlug );
+		URI agentsContainerURI = getContainerURI( appURI );
 
 		Map<String, Value> bindings = new HashMap<>();
 		bindings.put( "email", ValueFactoryImpl.getInstance().createLiteral( email ) );

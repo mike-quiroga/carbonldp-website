@@ -3,6 +3,7 @@ package com.carbonldp.agents.app.web;
 import com.carbonldp.agents.Agent;
 import com.carbonldp.agents.app.AppAgentService;
 import com.carbonldp.apps.App;
+import com.carbonldp.apps.context.AppContextHolder;
 import com.carbonldp.authentication.AnonymousAuthenticationToken;
 import com.carbonldp.exceptions.ResourceAlreadyExistsException;
 import com.carbonldp.ldp.containers.BasicContainer;
@@ -31,7 +32,7 @@ public class AppAgentsRDFPostHandler extends AbstractRDFPostRequestHandler<Agent
 
 	@Override
 	protected void createChild( URI targetURI, Agent documentResourceView ) {
-		App app = new App( sourceService.get( targetURI ) );
+		App app = AppContextHolder.getContext().getApplication();
 		if ( isAnonymousRequest() ) registerAgent( app, documentResourceView );
 		else createAgent( app, documentResourceView );
 	}
