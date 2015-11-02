@@ -1,0 +1,9 @@
+<div>
+	Go to Route: <br>
+	<a [router-link]="[ '/Home' ]">Home</a> | <a [router-link]="[ '/Login' ]">Login</a> | <a [router-link]="[ '/SignUp' ]">SignUp</a>
+</div>
+<div>
+	Route selected: <router-outlet></router-outlet>
+</div>
+
+<button (click)="getCarbonVersion()">{{carbonVersion}}</button>

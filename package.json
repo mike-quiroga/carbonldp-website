@@ -1,0 +1,48 @@
+{
+  "name": "carbon-website",
+  "version": "0.0.0",
+  "description": "Public Website for carbonldp.com",
+  "main": "dist/index.html",
+  "scripts": {
+    "test": "gulp test"
+  },
+  "author": "Base22",
+  "license": "ISC",
+  "devDependencies": {
+    "gulp": "^3.9.0",
+    "gulp-autoprefixer": "^3.1.0",
+    "gulp-sass": "^2.1.0",
+    "gulp-scss-lint": "^0.3.7",
+    "gulp-sourcemaps": "^1.6.0",
+    "gulp-tslint": "^3.5.0",
+    "gulp-util": "^3.0.7",
+    "jspm": "^0.16.14",
+    "live-server": "^0.8.2",
+    "systemjs-builder": "^0.14.10",
+    "tsd": "^0.6.5"
+  },
+  "jspm": {
+    "directories": {
+      "baseURL": "src"
+    },
+    "dependencies": {
+      "angular2": "npm:angular2@^2.0.0-alpha.45",
+      "bootstrap-sass": "github:twbs/bootstrap-sass@^3.3.5",
+      "carbonldp-sdk": "npm:carbonldp-sdk@^0.9.1-ALPHA",
+      "css": "github:systemjs/plugin-css@^0.1.19",
+      "html": "github:systemjs/plugin-text@^0.0.3",
+      "jquery": "github:components/jquery@^2.1.4",
+      "jsonld": "npm:jsonld@^0.4.2",
+      "reflect-metadata": "npm:reflect-metadata@^0.1.2",
+      "scss": "github:screendriver/plugin-sass@^0.0.8",
+      "semantic-ui": "github:Semantic-Org/Semantic-UI@^2.1.5",
+      "zone.js": "npm:zone.js@^0.5.8"
+    },
+    "devDependencies": {
+      "babel": "npm:babel-core@^5.8.24",
+      "babel-runtime": "npm:babel-runtime@^5.8.24",
+      "core-js": "npm:core-js@^1.1.4",
+      "typescript": "npm:typescript@^1.6.2"
+    }
+  }
+}
