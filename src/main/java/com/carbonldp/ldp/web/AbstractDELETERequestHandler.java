@@ -92,7 +92,8 @@ public class AbstractDELETERequestHandler extends AbstractLDPRequestHandler {
 
 	protected void removeSelectiveMembers( RDFDocument requestDocument, URI targetURI ) {
 		validateRequestDocument( requestDocument );
-		RemoveMembersAction members = new RemoveMembersAction( requestDocument.getDocumentResource() );
+
+		RemoveMembersAction members = new RemoveMembersAction( requestDocument.getBaseModel(), requestDocument.subjectResource() );
 		validate( members );
 
 		containerService.removeMembers( targetURI, members.getMembers() );

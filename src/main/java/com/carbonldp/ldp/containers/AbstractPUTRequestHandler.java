@@ -37,7 +37,7 @@ public abstract class AbstractPUTRequestHandler<E extends RDFResource> extends A
 		checkPrecondition( targetURI, requestETag );
 
 		validateRequest( requestDocument );
-		AddMembersAction membersAction = new AddMembersAction( requestDocument.getDocumentResource() );
+		AddMembersAction membersAction = new AddMembersAction( requestDocument.getBaseModel(), requestDocument.subjectResource() );
 		executeAction( targetURI, membersAction );
 
 		addTypeLinkHeader( APIPreferences.InteractionModel.RDF_SOURCE );

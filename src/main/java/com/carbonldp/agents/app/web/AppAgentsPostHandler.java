@@ -1,7 +1,7 @@
 package com.carbonldp.agents.app.web;
 
 import com.carbonldp.agents.Agent;
-import com.carbonldp.agents.AgentsRDFPostHandler;
+import com.carbonldp.agents.AgentsPostHandler;
 import com.carbonldp.agents.app.AppAgentService;
 import com.carbonldp.exceptions.ResourceAlreadyExistsException;
 import com.carbonldp.web.RequestHandler;
@@ -14,7 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  */
 
 @RequestHandler
-public class AppAgentsRDFPostHandler extends AgentsRDFPostHandler {
+public class AppAgentsPostHandler extends AgentsPostHandler {
 
 	private AppAgentService appAgentService;
 

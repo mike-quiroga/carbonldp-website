@@ -1,9 +1,6 @@
 package com.carbonldp.agents.platform;
 
-import com.carbonldp.agents.Agent;
-import com.carbonldp.agents.AgentFactory;
-import com.carbonldp.agents.AgentValidator;
-import com.carbonldp.agents.AgentValidatorFactory;
+import com.carbonldp.agents.*;
 import com.carbonldp.agents.validators.AgentValidatorRepository;
 import com.carbonldp.authorization.Platform;
 import com.carbonldp.authorization.acl.ACEDescription;
@@ -40,12 +37,12 @@ import java.util.Map;
 
 @Transactional
 public class SesamePlatformAgentService extends AbstractSesameLDPService implements PlatformAgentService {
-	private PlatformAgentRepository platformAgentRepository;
+	private AgentRepository platformAgentRepository;
 	private AgentValidatorRepository agentValidatorRepository;
 	private JavaMailSender mailSender;
 	private ConfigurationRepository configurationRepository;
 
-	public SesamePlatformAgentService( TransactionWrapper transactionWrapper, RDFSourceRepository sourceRepository, ContainerRepository containerRepository, ACLRepository aclRepository, PlatformAgentRepository platformAgentRepository, AgentValidatorRepository agentValidatorRepository ) {
+	public SesamePlatformAgentService( TransactionWrapper transactionWrapper, RDFSourceRepository sourceRepository, ContainerRepository containerRepository, ACLRepository aclRepository, AgentRepository platformAgentRepository, AgentValidatorRepository agentValidatorRepository ) {
 		super( transactionWrapper, sourceRepository, containerRepository, aclRepository );
 
 		Assert.notNull( platformAgentRepository );

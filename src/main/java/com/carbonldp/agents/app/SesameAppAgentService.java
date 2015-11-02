@@ -2,9 +2,8 @@ package com.carbonldp.agents.app;
 
 import com.carbonldp.agents.Agent;
 import com.carbonldp.agents.AgentFactory;
+import com.carbonldp.agents.AgentRepository;
 import com.carbonldp.agents.validators.AgentValidatorRepository;
-import com.carbonldp.apps.App;
-import com.carbonldp.apps.context.AppContextHolder;
 import com.carbonldp.apps.roles.AppRoleRepository;
 import com.carbonldp.authorization.acl.ACLRepository;
 import com.carbonldp.config.ConfigurationRepository;
@@ -30,12 +29,12 @@ import java.util.List;
 @Transactional
 public class SesameAppAgentService extends AbstractSesameLDPService implements AppAgentService {
 
-	private AppAgentRepository appAgentRepository;
+	private AgentRepository appAgentRepository;
 	private AgentValidatorRepository agentValidatorRepository;
 	private AppRoleRepository appRoleRepository;
 	private ConfigurationRepository configurationRepository;
 
-	public SesameAppAgentService( TransactionWrapper transactionWrapper, RDFSourceRepository sourceRepository, ContainerRepository containerRepository, ACLRepository aclRepository, AppAgentRepository appAgentRepository, AgentValidatorRepository agentValidatorRepository ) {
+	public SesameAppAgentService( TransactionWrapper transactionWrapper, RDFSourceRepository sourceRepository, ContainerRepository containerRepository, ACLRepository aclRepository, AgentRepository appAgentRepository, AgentValidatorRepository agentValidatorRepository ) {
 		super( transactionWrapper, sourceRepository, containerRepository, aclRepository );
 
 		Assert.notNull( appAgentRepository );
@@ -54,8 +53,7 @@ public class SesameAppAgentService extends AbstractSesameLDPService implements A
 		if ( requireValidation ) agent.setEnabled( false );
 		else agent.setEnabled( true );
 		validate( agent );
-		App app = AppContextHolder.getContext().getApplication();
-		appAgentRepository.create( app.getRootContainerURI(), agent );
+		appAgentRepository.create( agent );
 
 	}
 
