@@ -1,7 +1,6 @@
 package com.carbonldp.agents.app;
 
-import com.carbonldp.agents.Agent;
-import com.carbonldp.agents.AgentDescription;
+import com.carbonldp.agents.SesameAgentsRepository;
 import com.carbonldp.apps.context.AppContextHolder;
 import com.carbonldp.ldp.containers.BasicContainer;
 import com.carbonldp.ldp.containers.BasicContainerFactory;
@@ -9,18 +8,11 @@ import com.carbonldp.ldp.containers.Container;
 import com.carbonldp.ldp.containers.ContainerRepository;
 import com.carbonldp.ldp.sources.RDFSourceRepository;
 import com.carbonldp.rdf.RDFResource;
-import com.carbonldp.repository.AbstractSesameRepository;
-import com.carbonldp.utils.RDFNodeUtil;
 import com.carbonldp.utils.URIUtil;
 import org.openrdf.model.URI;
-import org.openrdf.model.Value;
-import org.openrdf.model.impl.ValueFactoryImpl;
 import org.openrdf.spring.SesameConnectionFactory;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * @author NestorVenegas
@@ -28,26 +20,14 @@ import java.util.Map;
  */
 
 @Transactional
-public class SesameAppAgentRepository extends AbstractSesameRepository implements AppAgentRepository {
-
-	private final RDFSourceRepository sourceRepository;
-	private final ContainerRepository containerRepository;
+public class SesameAppAgentRepository extends SesameAgentsRepository implements AppAgentRepository {
 
 	private String containerSlug;
 
-	private static final String existsWithEmailSelector;
-
-	static {
-		existsWithEmailSelector = RDFNodeUtil.generatePredicateStatement( "?members", "?email", AgentDescription.Property.EMAIL );
-	}
-
 	public SesameAppAgentRepository( SesameConnectionFactory connectionFactory, RDFSourceRepository sourceRepository, ContainerRepository containerRepository ) {
-		super( connectionFactory );
-		this.sourceRepository = sourceRepository;
-		this.containerRepository = containerRepository;
+		super( connectionFactory, sourceRepository, containerRepository );
 	}
 
-	@Override
 	public Container createAppAgentsContainer( URI rootContainerURI ) {
 		URI appRolesContainerURI = getContainerURI( rootContainerURI );
 		BasicContainer appAgentsContainer = BasicContainerFactory.getInstance().create( new RDFResource( appRolesContainerURI ) );
@@ -55,21 +35,11 @@ public class SesameAppAgentRepository extends AbstractSesameRepository implement
 		return appAgentsContainer;
 	}
 
-	public boolean existsWithEmail( String email ) {
-		URI appURI = AppContextHolder.getContext().getApplication().getRootContainerURI();
-		// TODO: throw error if there's no app context
-		URI agentsContainerURI = getContainerURI( appURI );
-
-		Map<String, Value> bindings = new HashMap<>();
-		bindings.put( "email", ValueFactoryImpl.getInstance().createLiteral( email ) );
-
-		return containerRepository.hasMembers( agentsContainerURI, existsWithEmailSelector, bindings );
-	}
-
 	@Override
-	public void create( URI appURI, Agent agent ) {
-		URI containerURI = getContainerURI( appURI );
-		containerRepository.createChild( containerURI, agent, containerRepository.getContainerType( containerURI ) );
+	protected URI getAgentsContainerURI() {
+		URI appURI = AppContextHolder.getContext().getApplication().getRootContainerURI();
+		if ( appURI == null ) throw new RuntimeException( "app agent repository should be running in App context" );
+		return getContainerURI( appURI );
 	}
 
 	private URI getContainerURI( URI rootContainerURI ) {
