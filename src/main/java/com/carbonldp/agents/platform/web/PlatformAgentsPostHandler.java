@@ -1,7 +1,7 @@
 package com.carbonldp.agents.platform.web;
 
 import com.carbonldp.agents.Agent;
-import com.carbonldp.agents.AgentsRDFPostHandler;
+import com.carbonldp.agents.AgentsPostHandler;
 import com.carbonldp.agents.platform.PlatformAgentService;
 import com.carbonldp.exceptions.ResourceAlreadyExistsException;
 import com.carbonldp.web.RequestHandler;
@@ -9,7 +9,7 @@ import com.carbonldp.web.exceptions.ConflictException;
 import org.springframework.beans.factory.annotation.Autowired;
 
 @RequestHandler
-public class PlatformAgentsRDFPostHandler extends AgentsRDFPostHandler {
+public class PlatformAgentsPostHandler extends AgentsPostHandler {
 
 	private PlatformAgentService platformAgentService;
 

@@ -1,4 +1,4 @@
-package com.carbonldp.agents.platform.web;
+package com.carbonldp.agents.app.web;
 
 import com.carbonldp.ldp.web.AbstractDELETERequestHandler;
 import com.carbonldp.web.RequestHandler;
@@ -11,7 +11,7 @@ import org.openrdf.model.URI;
  */
 
 @RequestHandler
-public class PlatformAgentsRDFDeleteHandler extends AbstractDELETERequestHandler {
+public class AppAgentsDeleteHandler extends AbstractDELETERequestHandler {
 
 	@Override
 	public void delete( URI targetURI ) {
@@ -20,5 +20,4 @@ public class PlatformAgentsRDFDeleteHandler extends AbstractDELETERequestHandler
 		// TODO: delete ACL
 		throw new NotImplementedException();
 	}
-
 }

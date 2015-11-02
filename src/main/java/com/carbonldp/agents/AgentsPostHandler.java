@@ -11,7 +11,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
  * @author NestorVenegas
  * @since _version_
  */
-public abstract class AgentsRDFPostHandler extends AbstractRDFPostRequestHandler<Agent> {
+public abstract class AgentsPostHandler extends AbstractRDFPostRequestHandler<Agent> {
 
 	@Override
 	protected Agent getDocumentResourceView( BasicContainer requestBasicContainer ) {
@@ -25,11 +25,13 @@ public abstract class AgentsRDFPostHandler extends AbstractRDFPostRequestHandler
 	}
 
 	protected boolean isAnonymousRequest() {
+		// TODO: move this function tu SecurityUtil
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		return authentication == null || authentication instanceof AnonymousAuthenticationToken;
 	}
 
 	protected abstract void createAgent( Agent documentResourceView );
+
 	protected abstract void registerAgent( Agent documentResourceView );
 
 }
