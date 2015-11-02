@@ -22,7 +22,6 @@ public class AppsAgentUsernamePasswordAuthenticationProvider extends SesameUsern
 	@Transactional
 	@RunWith( platformRoles = {Platform.Role.SYSTEM} )
 	@RunInAppContext
-	@Override
 	public Authentication authenticate( Authentication authentication ) throws AuthenticationException {
 		if ( AppContextHolder.getContext().isEmpty() ) return null;
 		String username = getUsername( authentication );

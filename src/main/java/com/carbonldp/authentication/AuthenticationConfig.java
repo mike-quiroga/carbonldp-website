@@ -37,6 +37,10 @@ public class AuthenticationConfig {
 	private PlatformPrivilegeRepository platformPrivilegeRepository;
 	@Autowired
 	private AppRoleRepository appRoleRepository;
+	@Autowired
+	@Qualifier("appAgentRepository")
+	private AgentRepository appAgentRepository;
+
 
 	@Autowired
 	public void configureGlobal( AuthenticationManagerBuilder auth ) {
@@ -49,8 +53,8 @@ public class AuthenticationConfig {
 	}
 
 	@Bean
-	public AppsAgentUsernamePasswordAuthenticationProvider appsAgentUsernamePasswordAuthenticationProvider(){
-		return new AppsAgentUsernamePasswordAuthenticationProvider( appAgentRepository,appRoleRepository,
+	public AppsAgentUsernamePasswordAuthenticationProvider appsAgentUsernamePasswordAuthenticationProvider() {
+		return new AppsAgentUsernamePasswordAuthenticationProvider( appAgentRepository, platformRoleRepository, platformPrivilegeRepository );
 	}
 
 	@Bean
