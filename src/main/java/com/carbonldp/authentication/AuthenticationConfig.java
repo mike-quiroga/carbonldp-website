@@ -15,6 +15,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
@@ -38,9 +39,8 @@ public class AuthenticationConfig {
 	@Autowired
 	private AppRoleRepository appRoleRepository;
 	@Autowired
-	@Qualifier("appAgentRepository")
+	@Qualifier( "appAgentRepository" )
 	private AgentRepository appAgentRepository;
-
 
 	@Autowired
 	public void configureGlobal( AuthenticationManagerBuilder auth ) {
@@ -48,12 +48,12 @@ public class AuthenticationConfig {
 	}
 
 	@Bean
-	public PlatformAgentUsernamePasswordAuthenticationProvider platformAgentUsernamePasswordAuthenticationProvider() {
+	public AuthenticationProvider platformAgentUsernamePasswordAuthenticationProvider() {
 		return new PlatformAgentUsernamePasswordAuthenticationProvider( platformAgentRepository, platformRoleRepository, platformPrivilegeRepository );
 	}
 
 	@Bean
-	public AppsAgentUsernamePasswordAuthenticationProvider appsAgentUsernamePasswordAuthenticationProvider() {
+	public AuthenticationProvider appsAgentUsernamePasswordAuthenticationProvider() {
 		return new AppsAgentUsernamePasswordAuthenticationProvider( appAgentRepository, platformRoleRepository, platformPrivilegeRepository );
 	}
 
