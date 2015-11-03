@@ -7,6 +7,8 @@ import Home from 'app/views/home/component';
 import Login from 'app/views/login/component';
 import SignUp from 'app/views/signup/component';
 
+import ModalComponent from 'app/components/modal';
+
 import template from './template.html!';
 
 @Component({
@@ -14,7 +16,7 @@ import template from './template.html!';
 })
 @View({
 	template: template,
-	directives: [ ROUTER_DIRECTIVES ]
+	directives: [ ROUTER_DIRECTIVES, ModalComponent ]
 })
 @RouteConfig([
 	{ path: '/', redirectTo: '/home' },

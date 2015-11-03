@@ -5,6 +5,7 @@
 # ----- Project ignores
 
 src/jspm_packages/**
+src/semantic/dist/**
 
 reports/
 

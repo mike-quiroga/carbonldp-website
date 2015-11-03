@@ -11,6 +11,7 @@
   "devDependencies": {
     "gulp": "^3.9.0",
     "gulp-autoprefixer": "^3.1.0",
+    "gulp-chug": "^0.4.2",
     "gulp-sass": "^2.1.0",
     "gulp-scss-lint": "^0.3.7",
     "gulp-sourcemaps": "^1.6.0",
@@ -29,6 +30,7 @@
       "angular2": "npm:angular2@^2.0.0-alpha.45",
       "bootstrap-sass": "github:twbs/bootstrap-sass@^3.3.5",
       "carbonldp-sdk": "npm:carbonldp-sdk@^0.9.1-ALPHA",
+      "clean-css": "npm:clean-css@^3.4.6",
       "css": "github:systemjs/plugin-css@^0.1.19",
       "html": "github:systemjs/plugin-text@^0.0.3",
       "jquery": "github:components/jquery@^2.1.4",
