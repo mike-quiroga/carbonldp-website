@@ -45,6 +45,7 @@ public class AuthenticationConfig {
 	@Autowired
 	public void configureGlobal( AuthenticationManagerBuilder auth ) {
 		auth.authenticationProvider( platformAgentUsernamePasswordAuthenticationProvider() );
+		auth.authenticationProvider( appsAgentUsernamePasswordAuthenticationProvider());
 	}
 
 	@Bean
