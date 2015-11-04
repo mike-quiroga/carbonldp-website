@@ -25,6 +25,10 @@ import com.carbonldp.spring.TransactionWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.core.token.KeyBasedPersistenceTokenService;
+import org.springframework.security.core.token.TokenService;
+
+import java.security.SecureRandom;
 
 @Configuration
 public class ServicesConfig {
@@ -43,6 +47,15 @@ public class ServicesConfig {
 
 	@Autowired
 	private RDFResourceRepository resourceRepository;
+
+	@Bean
+	public TokenService tokenService() {
+		KeyBasedPersistenceTokenService tokenService = new KeyBasedPersistenceTokenService();
+		tokenService.setServerSecret( "W4KSqaZe8EcVCZF2afW8" );
+		tokenService.setServerInteger( 9936 );
+		tokenService.setSecureRandom( new SecureRandom() );
+		return tokenService;
+	}
 
 	@Bean
 	public PlatformAPIService platformAPIService() {
