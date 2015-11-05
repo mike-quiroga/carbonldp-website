@@ -36,42 +36,30 @@ import java.util.List;
 import java.util.Map;
 
 @Transactional
-public class SesamePlatformAgentService extends AbstractSesameLDPService implements PlatformAgentService {
+public class SesamePlatformAgentService extends SesameAgentsService {
 	private AgentRepository platformAgentRepository;
-	private AgentValidatorRepository agentValidatorRepository;
-	private JavaMailSender mailSender;
-	private ConfigurationRepository configurationRepository;
 
 	public SesamePlatformAgentService( TransactionWrapper transactionWrapper, RDFSourceRepository sourceRepository, ContainerRepository containerRepository, ACLRepository aclRepository, AgentRepository platformAgentRepository, AgentValidatorRepository agentValidatorRepository ) {
-		super( transactionWrapper, sourceRepository, containerRepository, aclRepository );
+		super( transactionWrapper, sourceRepository, containerRepository, aclRepository, agentValidatorRepository );
 
 		Assert.notNull( platformAgentRepository );
 		this.platformAgentRepository = platformAgentRepository;
-
-		Assert.notNull( agentValidatorRepository );
-		this.agentValidatorRepository = agentValidatorRepository;
-	}
-
-	@PostConstruct
-	public void init() {
-		Assert.notNull( mailSender );
-		Assert.notNull( configurationRepository );
 	}
 
 	@Override
 	public void register( Agent agent ) {
+		setSalt( agent );
+		boolean requireValidation = configurationRepository.requireAgentEmailValidation();
+		if ( requireValidation ) agent.setEnabled( false );
+		else agent.setEnabled( true );
+		validate( agent );
+
 		String email = agent.getEmails().iterator().next();
 		if ( platformAgentRepository.existsWithEmail( email ) ) throw new ResourceAlreadyExistsException();
 
 		setAgentPasswordFields( agent );
 
-		boolean requireValidation = configurationRepository.requireAgentEmailValidation();
-
-		if ( requireValidation ) agent.setEnabled( false );
-		else agent.setEnabled( true );
-
 		addAgentToDefaultPlatformRole( agent );
-		validate( agent );
 
 		platformAgentRepository.create( agent );
 		ACL agentACL = aclRepository.createACL( agent.getDocument() );
@@ -85,21 +73,6 @@ public class SesamePlatformAgentService extends AbstractSesameLDPService impleme
 			sendValidationEmail( agent, validator );
 			// TODO: Create "resend validation" resource
 		}
-	}
-
-	private void validate( Agent agent ) {
-		List<Infraction> infractions = AgentFactory.getInstance().validate( agent );
-		if ( ! infractions.isEmpty() ) throw new InvalidResourceException( infractions );
-	}
-
-	private void setAgentPasswordFields( Agent agent ) {
-		String password = agent.getPassword();
-		String salt = AuthenticationUtil.generateRandomSalt();
-		String saltedPassword = AuthenticationUtil.saltPassword( password, salt );
-		String hashedPassword = AuthenticationUtil.hashPassword( saltedPassword );
-
-		agent.setSalt( salt );
-		agent.setPassword( hashedPassword );
 	}
 
 	private void addAgentDefaultPermissions( Agent agent, ACL agentACL ) {
@@ -124,93 +97,6 @@ public class SesamePlatformAgentService extends AbstractSesameLDPService impleme
 
 	private URI getDefaultPlatformRoleURI() {
 		return Platform.Role.APP_DEVELOPER.getURI();
-	}
-
-	private AgentValidator createAgentValidator( Agent agent ) {
-		AgentValidator validator = AgentValidatorFactory.getInstance().create( agent );
-		agentValidatorRepository.create( validator );
-		return validator;
-	}
-
-	private void addValidatorDefaultPermissions( ACL validatorACL ) {
-		aclRepository.grantPermissions( validatorACL, Arrays.asList( Platform.Role.ANONYMOUS.asRDFResource() ), Arrays.asList(
-			ACEDescription.Permission.READ
-		), false );
-	}
-
-	private void sendValidationEmail( Agent agent, AgentValidator validator ) {
-		String emailText = null;
-		try {
-			emailText = prepareEmailText( agent, validator );
-		} catch ( IOException e ) {
-
-		}
-
-		MimeMessage message = mailSender.createMimeMessage();
-		MimeMessageHelper messageHelper = new MimeMessageHelper( message );
-
-		String receiptEmail = agent.getEmails().stream().findFirst().get();
-		// TODO: Make this configurable
-		String senderEmail = "no-reply@carbonldp.com";
-
-		// TODO: Implement correctly
-		try {
-			messageHelper.setTo( receiptEmail );
-			messageHelper.setText( emailText, true );
-			messageHelper.setFrom( senderEmail );
-		} catch ( MessagingException e ) {
-			throw new StupidityException( e );
-		}
-
-		mailSender.send( message );
-	}
-
-	// TODO: Store it in an RDFResource
-	// TODO: Design the template
-	private static final String emailTemplate;
-
-	static {
-		emailTemplate = "" +
-			"Validate your email by clicking this link: <a link=\"${validatorURI}\">${validatorURI}</a>"
-		;
-	}
-
-	private String prepareEmailText( Agent agent, AgentValidator validator ) throws IOException {
-		// TODO: Make this a singleton, creating it each time is expensive
-		// TODO: Make the version a constant
-		Version freemarkerVersion = new Version( "2.3.22" );
-		Configuration templateConfiguration = new Configuration( freemarkerVersion );
-		DefaultObjectWrapperBuilder objectWrapperBuilder = new DefaultObjectWrapperBuilder( freemarkerVersion );
-		templateConfiguration.setObjectWrapper( objectWrapperBuilder.build() );
-
-		// TODO: Cache the template, parsing the string over and over again is expensive
-		Template template = new Template( "email-validation", emailTemplate, templateConfiguration );
-
-		Map<String, Object> model = getEmailTemplateModel( agent, validator );
-
-		String emailText = null;
-		try {
-			emailText = FreeMarkerTemplateUtils.processTemplateIntoString( template, model );
-		} catch ( TemplateException e ) {
-			throw new StupidityException( e );
-		}
-
-		return emailText;
-	}
-
-	private Map<String, Object> getEmailTemplateModel( Agent agent, AgentValidator validator ) {
-		Map<String, Object> model = new HashMap<>();
-
-		model.put( "validatorURI", validator.getURI() );
-		// TODO: Finish
-
-		return model;
-	}
-
-	@Autowired
-	public void setMailSender( JavaMailSender mailSender ) {
-		Assert.notNull( mailSender );
-		this.mailSender = mailSender;
 	}
 
 	@Autowired

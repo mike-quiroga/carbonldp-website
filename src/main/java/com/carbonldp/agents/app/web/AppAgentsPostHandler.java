@@ -1,12 +1,13 @@
 package com.carbonldp.agents.app.web;
 
 import com.carbonldp.agents.Agent;
+import com.carbonldp.agents.AgentService;
 import com.carbonldp.agents.AgentsPostHandler;
-import com.carbonldp.agents.app.AppAgentService;
 import com.carbonldp.exceptions.ResourceAlreadyExistsException;
 import com.carbonldp.web.RequestHandler;
 import com.carbonldp.web.exceptions.ConflictException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 
 /**
  * @author NestorVenegas
@@ -14,9 +15,9 @@ import org.springframework.beans.factory.annotation.Autowired;
  */
 
 @RequestHandler
-public class AppAgentsPostHandler extends AgentsPostHandler {
+public class AppAgentsPOSTHandler extends AgentsPostHandler {
 
-	private AppAgentService appAgentService;
+	private AgentService appAgentService;
 
 	protected void createAgent( Agent documentResourceView ) {
 		// TODO: Implement
@@ -32,7 +33,8 @@ public class AppAgentsPostHandler extends AgentsPostHandler {
 	}
 
 	@Autowired
-	public void setAppAgentService( AppAgentService appAgentService ) {
+	@Qualifier( "appAgentService" )
+	public void setAppAgentService( AgentService appAgentService ) {
 		this.appAgentService = appAgentService;
 	}
 
