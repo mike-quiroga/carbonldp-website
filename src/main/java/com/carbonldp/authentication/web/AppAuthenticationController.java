@@ -16,8 +16,8 @@ import javax.servlet.http.HttpServletResponse;
  */
 
 @Controller
-@RequestMapping( "/platform/auth-tokens/" )
-public class PlatformAuthenticationController extends AbstractLDPController {
+@RequestMapping( "/apps/*/auth-tokens/" )
+public class AppAuthenticationController extends AbstractLDPController {
 
 	AuthenticationRequestHandler authenticationHandler;
 

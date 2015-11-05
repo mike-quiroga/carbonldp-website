@@ -2,8 +2,12 @@ package com.carbonldp.authentication.web;
 
 import com.carbonldp.authentication.AgentAuthenticationToken;
 import com.carbonldp.authentication.TokenRepresentation;
+import com.carbonldp.authentication.TokenRepresentationDescription;
 import com.carbonldp.ldp.web.AbstractLDPRequestHandler;
+import com.carbonldp.rdf.RDFResourceDescription;
+import com.carbonldp.web.RequestHandler;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -18,6 +22,7 @@ import javax.servlet.http.HttpServletResponse;
  * @author NestorVenegas
  * @since _version_
  */
+@RequestHandler
 public class AuthenticationRequestHandler extends AbstractLDPRequestHandler {
 
 	@Autowired
@@ -34,11 +39,16 @@ public class AuthenticationRequestHandler extends AbstractLDPRequestHandler {
 
 		TokenRepresentation tokenRepresentation = getTokenRepresentation( token );
 
+		return new ResponseEntity<>( tokenRepresentation, HttpStatus.OK );
+
 	}
 
 	private TokenRepresentation getTokenRepresentation( Token token ) {
 		TokenRepresentation tokenRepresentation = new TokenRepresentation();
-
+		tokenRepresentation.addType( TokenRepresentationDescription.Resource.CLASS.getURI() );
+		tokenRepresentation.addType( RDFResourceDescription.Resource.VOLATILE.getURI() );
+		tokenRepresentation.setTokenKey( token.getKey() );
+		return tokenRepresentation;
 	}
 
 }
