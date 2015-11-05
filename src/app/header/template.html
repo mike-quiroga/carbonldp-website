@@ -1,0 +1,34 @@
+<div class="ui fixed inverted stackable transition menu">
+	<div class="ui container">
+		<a class="item logo" [router-link]="[ '/Home' ]"><img src="assets/images/carbon-ldp-logo.png" /></a>
+		<a class="item" [router-link]="[ '/Home' ]" [ng-class]="{active: isActive('/Home') }">Home</a>
+		<a class="item" [router-link]="[ '/Blog' ]" [ng-class]="{active: isActive('/Blog') }">Blog</a>
+		<div class="ui dropdown link item">
+			<span class="text">Documentation</span>
+			<i class="dropdown icon"></i>
+			<div class="menu">
+				<a class="item" href="#">Introduction</a>
+				<a class="item" href="#">General Concepts</a>
+				<div class="divider"></div>
+				<div class="header">JavaScript SDK</div>
+				<a class="item" href="#">Getting Started</a>
+				<a class="item" href="#">Hello World</a>
+				<a class="item" href="#">Developer Guide</a>
+				<a class="item" href="#">API</a>
+				<div class="divider"></div>
+				<div class="header">REST API</div>
+				<a class="item" href="#">Getting Started</a>
+				<a class="item" href="#">Hello World</a>
+				<a class="item" href="#">API</a>
+			</div>
+		</div>
+		<div class="right menu">
+			<div class="item">
+				<a class="ui inverted button">Log in</a>
+			</div>
+			<div class="item">
+				<a class="ui inverted button">Sign up</a>
+			</div>
+		</div>
+	</div>
+</div>

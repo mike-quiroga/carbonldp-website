@@ -8,7 +8,11 @@ System.config({
     "app/*": "app/*",
     "semantic-ui/*": "semantic/dist/*"
   },
-
+  typescriptOptions: {
+    "emitDecoratorData": true,
+    "experimentalDecorators": true,
+    "module": "commonjs"
+  },
   packages: {
     "app": {
       "defaultExtension": "ts"

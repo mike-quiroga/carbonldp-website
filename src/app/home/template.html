@@ -1,0 +1,86 @@
+<div class="ui inverted vertical center aligned segment">
+	<div class="ui container">
+		<!-- TODO: Create a Component for this menu so it can be reused -->
+		<div class="ui large secondary inverted stackable menu">
+			<a class="header item" [router-link]="[ '/Home' ]" [ng-class]="{active: isActive('/Home') }">Home</a>
+			<a class="item" [router-link]="[ '/Blog' ]" [ng-class]="{active: isActive('/Blog') }">Blog</a>
+			<div class="ui dropdown link item">
+				<span class="text">Documentation</span>
+				<i class="dropdown icon"></i>
+				<div class="menu">
+					<a class="item" href="#">Introduction</a>
+					<a class="item" href="#">General Concepts</a>
+					<div class="divider"></div>
+					<div class="header">JavaScript SDK</div>
+					<a class="item" href="#">Getting Started</a>
+					<a class="item" href="#">Hello World</a>
+					<a class="item" href="#">Developer Guide</a>
+					<a class="item" href="#">API</a>
+					<div class="divider"></div>
+					<div class="header">REST API</div>
+					<a class="item" href="#">Getting Started</a>
+					<a class="item" href="#">Hello World</a>
+					<a class="item" href="#">API</a>
+				</div>
+			</div>
+			<div class="right item">
+				<a class="ui inverted button">Log in</a>
+				<a class="ui inverted button">Sign up</a>
+			</div>
+		</div>
+	</div>
+	<div class="ui text container">
+		<carbon-logo></carbon-logo>
+		<h1>Create powerful semantic apps</h1>
+		<button class="ui inverted orange massive button">Get Started</button>
+	</div>
+</div>
+<div class="ui container">
+	<div class="ui vertical stripe segment">
+		<div class="ui middle aligned stackable grid container">
+			<div class="row">
+				<div class="ten wide column">
+					<h2>Innovation for the Next Web</h2>
+					<p>In his 2009 TED talk, Tim Berners-Lee (a.k.a. The Father of the Web) urged us onward toward the complete vision for the World Wide Web. "It's called Linked Data," he said. "I want you to make it. I want you to demand it." We're working to achieve that vision by creating an innovation platform that can transform your enterprise and give you new advantages from advanced technology.</p>
+				</div>
+				<div class="five wide right floated right aligned column">
+					<img src="assets/images/berners-lee.png" />
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="ui vertical stripe segment">
+		<div class="ui middle aligned stackable grid container">
+			<div class="row">
+				<div class="five wide left floated left aligned column">
+					<img src="assets/images/w3c-semantic-web.png" />
+				</div>
+				<div class="ten wide column">
+					<h2>Standards Based</h2>
+					<p>Carbon LDP is based on Semantic Web standards developed by the World Wide Web Consortium (W3C) with contributions from industry leaders such as IBM, Microsoft, and Oracle. Base22 is a member of the W3C and participated in the development of the specification for the Linked Data Platform (LDP). Carbon LDP is a fully compliant LDP server that will integrate and interoperate with industry tools from leading vendors.</p>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="ui vertical stripe segment">
+		<div class="ui middle aligned stackable grid container">
+			<div class="row">
+				<div class="ten wide column">
+					<h2>What Developers Really Want</h2>
+					<p>As enterprise-class web engineers, our work takes us behind the scenes at world-leading organizations. We know how industry titans use information technology and where many of their pain-points exist. But we're not just filling gaps - we're creating an entirely new paradigm that can transform the way you work. They say that "necessity is the mother of invention." Carbon is the platform we've always wanted, so we're building it. We think you're going to love it too.</p>
+				</div>
+				<div class="five wide right floated right aligned column">
+					<img src="assets/images/web-developers.png" />
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="ui orange inverted vertical center aligned segment">
+	<h2>Sign up to receive news and get notified when we launch!</h2>
+	<div class="ui action input">
+		<input type="text" placeholder="your@email.com">
+		<button class="ui secondary button">Sign up</button>
+	</div>
+	<p>Promise, we don't spam :)</p>
+</div>

@@ -4,6 +4,12 @@
 # Include your project-specific ignores in this section
 # ----- Project ignores
 
+src/assets/**/*.css
+src/assets/**/*.map
+
+src/app/**/*.css
+src/app/**/*.map
+
 src/jspm_packages/**
 src/semantic/dist/**
 

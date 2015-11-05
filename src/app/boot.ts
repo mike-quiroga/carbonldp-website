@@ -5,9 +5,9 @@ import { bootstrap, provide, FORM_PROVIDERS } from 'angular2/angular2';
 import { ROUTER_PROVIDERS, APP_BASE_HREF } from 'angular2/router';
 import { HTTP_PROVIDERS } from 'angular2/http';
 
-import App from 'app/component';
+import AppComponent from 'app/AppComponent';
 
-bootstrap( App, [
+bootstrap( AppComponent, [
 	FORM_PROVIDERS,
 	ROUTER_PROVIDERS,
 	HTTP_PROVIDERS,

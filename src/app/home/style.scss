@@ -1,0 +1,36 @@
+home {
+	> .ui.segment:nth-child(1) {
+		min-height: 95vh;
+
+		> .text {
+			margin-top: 20vh;
+		}
+	}
+
+	.ui.menu > .right.item > .button {
+		margin-left: 0.5em;
+	}
+
+	> .ui.segment:last-child {
+		padding: 3em 0;
+
+		h2 {
+			margin-bottom: 2em;
+		}
+
+		.ui.action.input {
+			margin-bottom: 1em;
+		}
+	}
+}
+
+.ui.stripe.segment {
+	padding: 6em 0;
+
+	h2 {
+		font-size: 2em;
+	}
+	p {
+		font-size: 1.3em;
+	}
+}
