@@ -9,6 +9,7 @@ import BlogView from 'app/blog/BlogView';
 import HeaderComponent from 'app/header/HeaderComponent';
 import FooterComponent from 'app/footer/FooterComponent';
 import template from './template.html!';
+import './style.css!';
 
 @Component({
 	selector: 'app',

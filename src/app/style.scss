@@ -1,0 +1,22 @@
+app {
+	width: 100%;
+	height: 100%;
+
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+
+	> .page-content {
+		width: 100%;
+		flex: 1 1 auto;
+
+		.main {
+			margin-top: 6em;
+		}
+	}
+
+	> footer {
+		width: 100%;
+		flex: 0 0 auto;
+	}
+}

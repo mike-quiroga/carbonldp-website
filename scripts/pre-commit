@@ -1,0 +1,4 @@
+#!/bin/bash
+gulp build
+git add -f dist/*
+exit 0

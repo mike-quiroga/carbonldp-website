@@ -360,7 +360,7 @@
   display: inline-block;
   vertical-align: middle;
   margin: -0.3em 0em;
-  width: 2.5em;
+  width: 8em;
 }
 .ui.vertical.menu .item > img:not(.ui):only-child {
   display: block;

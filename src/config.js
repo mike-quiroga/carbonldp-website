@@ -2,17 +2,19 @@ System.config({
   baseURL: "/",
   defaultJSExtensions: true,
   transpiler: "typescript",
+  typescriptOptions: {
+    "module": "commonjs",
+    "emitDecoratorData": true,
+    "experimentalDecorators": true,
+    "noImplicitAny": false
+  },
   paths: {
     "npm:*": "jspm_packages/npm/*",
     "github:*": "jspm_packages/github/*",
     "app/*": "app/*",
     "semantic-ui/*": "semantic/dist/*"
   },
-  typescriptOptions: {
-    "emitDecoratorData": true,
-    "experimentalDecorators": true,
-    "module": "commonjs"
-  },
+
   packages: {
     "app": {
       "defaultExtension": "ts"

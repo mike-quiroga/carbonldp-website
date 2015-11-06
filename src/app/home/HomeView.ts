@@ -21,6 +21,7 @@ export default class HomeView {
 	element:ElementRef;
 	$element:JQuery;
 	$mainMenu:JQuery;
+	$carbonLogo:JQuery;
 
 	constructor( router:Router, element: ElementRef ){
 		this.router = router;
@@ -30,24 +31,16 @@ export default class HomeView {
 	afterViewInit():void {
 		this.$element = $( this.element.nativeElement );
 		this.$mainMenu = $( 'header > .menu' );
+		this.$carbonLogo = this.$element.find( 'carbon-logo' );
 
 		this.hideMainMenu();
 		this.createDropdownMenus();
-
-		var view:HomeView = this;
-		this.$element.find( 'carbon-logo' ).visibility({
-			once: false,
-			onBottomPassedReverse: function( calculations ) {
-				view.toggleMainMenu();
-			},
-			onBottomPassed: function( calculations ) {
-				view.toggleMainMenu();
-			}
-		});
+		this.addMenuVisibilityHandlers();
 	}
 
 	onDeactivate():void {
-		//this.showMainMenu();
+		this.removeMenuVisibilityHandlers();
+		this.showMainMenu();
 	}
 
 	isActive( route:string ):boolean {
@@ -56,11 +49,13 @@ export default class HomeView {
 	}
 
 	showMainMenu():void {
-		this.$mainMenu.show();
+		if( this.$mainMenu.is( ':visible' ) ) return;
+		this.toggleMainMenu();
 	}
 
 	hideMainMenu():void {
-		this.$mainMenu.hide();
+		if( ! this.$mainMenu.is( ':visible' ) ) return;
+		this.toggleMainMenu();
 	}
 
 	toggleMainMenu():void {
@@ -71,5 +66,22 @@ export default class HomeView {
 		this.$element.find( '.ui.dropdown' ).dropdown({
 			on: 'hover'
 		});
+	}
+
+	addMenuVisibilityHandlers():void {
+		var view:HomeView = this;
+		this.$carbonLogo.visibility({
+			once: false,
+			onBottomPassedReverse: function( calculations ) {
+				view.hideMainMenu();
+			},
+			onBottomPassed: function( calculations ) {
+				view.showMainMenu();
+			}
+		});
+	}
+
+	removeMenuVisibilityHandlers():void {
+		this.$carbonLogo.visibility( 'destroy' );
 	}
 }

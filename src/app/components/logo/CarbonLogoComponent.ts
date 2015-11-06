@@ -43,7 +43,7 @@ export default class CarbonLogoComponent {
 	}
 
 	causeRedraw():void {
-		if( this.element.nativeElement.offsetHeight && false ) return;
+		this.$element.hide().show(0);
 	}
 
 	setBackgroundColorBasedOnParents():void {

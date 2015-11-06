@@ -4,6 +4,7 @@
   "description": "Public Website for carbonldp.com",
   "main": "dist/index.html",
   "scripts": {
+    "preinstall": "node scripts/copy-hooks.js",
     "test": "gulp test"
   },
   "author": "Base22",

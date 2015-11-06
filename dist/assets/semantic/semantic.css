@@ -668,6 +668,10 @@ input::selection {
 /*******************************
          Site Overrides
 *******************************/
+
+.main.container {
+  margin-top: 7em;
+}
 /*!
  * # Semantic UI 2.1.5 - Button
  * http://github.com/semantic-org/semantic-ui/
@@ -19936,7 +19940,7 @@ ol.ui.horizontal.list li:before,
   display: inline-block;
   vertical-align: middle;
   margin: -0.3em 0em;
-  width: 2.5em;
+  width: 8em;
 }
 
 .ui.vertical.menu .item > img:not(.ui):only-child {

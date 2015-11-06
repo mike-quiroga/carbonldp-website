@@ -1,5 +1,5 @@
 var gulp = require( 'gulp' );
-var gutil = require( 'gulp-util' );
+var util = require( 'gulp-util' );
 var chug = require( 'gulp-chug' );
 var watch = require( 'gulp-watch' );
 
@@ -31,14 +31,19 @@ gulp.task( 'ts-lint', function() {
 	;
 });
 
-gulp.task( 'serve', [ 'build-semantic' ], function( done ) {
+gulp.task( 'serve', [ 'build-semantic', 'compile-styles' ], function() {
 	gulp.src( 'src/semantic/gulpfile.js', { read: false } )
 		.pipe( chug({
 			tasks: [ 'watch' ]
 		}) )
 	;
 
-	watch( 'src/**/*.scss', [ 'compile-styles' ]);
+	watch( config.source.sass, function( file ) {
+		util.log( 'SCSS file changed: ', file.path );
+		gulp.start( 'compile-styles' );
+	}).on( 'error', function( error ) {
+		util.log( util.colors.red( 'Error' ), error.message );
+	});
 
 	return liveServer.start({
 		root: 'src',
