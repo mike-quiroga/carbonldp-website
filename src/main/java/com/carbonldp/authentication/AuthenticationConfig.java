@@ -3,6 +3,7 @@ package com.carbonldp.authentication;
 import com.carbonldp.agents.AgentRepository;
 import com.carbonldp.apps.roles.AppRolePersistenceFilter;
 import com.carbonldp.apps.roles.AppRoleRepository;
+import com.carbonldp.authentication.token.TokenAuthenticationFilter;
 import com.carbonldp.authorization.PlatformPrivilegeRepository;
 import com.carbonldp.authorization.PlatformRoleRepository;
 import com.carbonldp.authorization.SecurityContextExchanger;
@@ -57,6 +58,11 @@ public class AuthenticationConfig {
 	@Bean
 	public BasicAuthenticationFilter basicAuthenticationFilter() {
 		return new BasicAuthenticationFilter( authenticationManager, basicAuthenticationEntryPoint() );
+	}
+
+	@Bean
+	public TokenAuthenticationFilter tokenAuthenticationFilter() {
+		return new TokenAuthenticationFilter();
 	}
 
 	@Bean

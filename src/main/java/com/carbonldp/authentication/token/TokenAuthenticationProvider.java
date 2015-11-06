@@ -1,11 +1,16 @@
-package com.carbonldp.authentication;
+package com.carbonldp.authentication.token;
 
 import com.carbonldp.agents.AgentRepository;
+import com.carbonldp.apps.context.RunInPlatformContext;
+import com.carbonldp.authentication.AbstractSesameAuthenticationProvider;
+import com.carbonldp.authorization.Platform;
 import com.carbonldp.authorization.PlatformPrivilegeRepository;
 import com.carbonldp.authorization.PlatformRoleRepository;
+import com.carbonldp.authorization.RunWith;
 import com.carbonldp.web.exceptions.NotImplementedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @author NestorVenegas
@@ -16,7 +21,9 @@ public class TokenAuthenticationProvider extends AbstractSesameAuthenticationPro
 		super( agentRepository, platformRoleRepository, platformPrivilegeRepository );
 	}
 
-	@Override
+	@Transactional
+	@RunWith( platformRoles = {Platform.Role.SYSTEM} )
+	@RunInPlatformContext
 	public Authentication authenticate( Authentication authentication ) throws AuthenticationException {
 		throw new NotImplementedException();
 	}
