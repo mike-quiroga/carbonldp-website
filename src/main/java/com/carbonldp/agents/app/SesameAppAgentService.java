@@ -37,15 +37,16 @@ public class SesameAppAgentService extends SesameAgentsService {
 
 	@Override
 	public void register( Agent agent ) {
-		setSalt( agent );
-		boolean requireValidation = configurationRepository.requireAgentEmailValidation();
-		if ( requireValidation ) agent.setEnabled( false );
-		else agent.setEnabled( true );
 		validate( agent );
 
 		String email = agent.getEmails().iterator().next();
 		if ( appAgentRepository.existsWithEmail( email ) ) throw new ResourceAlreadyExistsException();
 		setAgentPasswordFields( agent );
+
+		boolean requireValidation = configurationRepository.requireAgentEmailValidation();
+		if ( requireValidation ) agent.setEnabled( false );
+		else agent.setEnabled( true );
+		
 		appAgentRepository.create( agent );
 
 		if ( requireValidation ) {

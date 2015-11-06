@@ -1,39 +1,26 @@
 package com.carbonldp.agents.platform;
 
-import com.carbonldp.agents.*;
+import com.carbonldp.agents.Agent;
+import com.carbonldp.agents.AgentRepository;
+import com.carbonldp.agents.AgentValidator;
+import com.carbonldp.agents.SesameAgentsService;
 import com.carbonldp.agents.validators.AgentValidatorRepository;
 import com.carbonldp.authorization.Platform;
 import com.carbonldp.authorization.acl.ACEDescription;
 import com.carbonldp.authorization.acl.ACL;
 import com.carbonldp.authorization.acl.ACLRepository;
 import com.carbonldp.config.ConfigurationRepository;
-import com.carbonldp.exceptions.InvalidResourceException;
 import com.carbonldp.exceptions.ResourceAlreadyExistsException;
-import com.carbonldp.exceptions.StupidityException;
-import com.carbonldp.ldp.AbstractSesameLDPService;
 import com.carbonldp.ldp.containers.ContainerRepository;
 import com.carbonldp.ldp.sources.RDFSourceRepository;
-import com.carbonldp.models.Infraction;
 import com.carbonldp.spring.TransactionWrapper;
-import com.carbonldp.utils.AuthenticationUtil;
-import freemarker.template.*;
 import org.openrdf.model.URI;
 import org.openrdf.model.impl.URIImpl;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
 import org.springframework.util.Assert;
 
-import javax.annotation.PostConstruct;
-import javax.mail.MessagingException;
-import javax.mail.internet.MimeMessage;
-import java.io.IOException;
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 @Transactional
 public class SesamePlatformAgentService extends SesameAgentsService {
@@ -48,14 +35,15 @@ public class SesamePlatformAgentService extends SesameAgentsService {
 
 	@Override
 	public void register( Agent agent ) {
-		setSalt( agent );
-		boolean requireValidation = configurationRepository.requireAgentEmailValidation();
-		if ( requireValidation ) agent.setEnabled( false );
-		else agent.setEnabled( true );
+
 		validate( agent );
 
 		String email = agent.getEmails().iterator().next();
 		if ( platformAgentRepository.existsWithEmail( email ) ) throw new ResourceAlreadyExistsException();
+
+		boolean requireValidation = configurationRepository.requireAgentEmailValidation();
+		if ( requireValidation ) agent.setEnabled( false );
+		else agent.setEnabled( true );
 
 		setAgentPasswordFields( agent );
 

@@ -59,15 +59,12 @@ public abstract class SesameAgentsService extends AbstractSesameLDPService imple
 
 	protected void setAgentPasswordFields( Agent agent ) {
 		String password = agent.getPassword();
-		String saltedPassword = AuthenticationUtil.saltPassword( password, agent.getSalt() );
-		String hashedPassword = AuthenticationUtil.hashPassword( saltedPassword );
-
-		agent.setPassword( hashedPassword );
-	}
-
-	protected void setSalt( Agent agent ) {
 		String salt = AuthenticationUtil.generateRandomSalt();
 		agent.setSalt( salt );
+		String saltedPassword = AuthenticationUtil.saltPassword( password, agent.getSalt() );
+		String hashedPassword = AuthenticationUtil.hashPassword( saltedPassword );
+		// TODO: use hashed password so it can be differentiated from the client sended one
+		agent.setPassword( hashedPassword );
 	}
 
 	protected void addValidatorDefaultPermissions( ACL validatorACL ) {
