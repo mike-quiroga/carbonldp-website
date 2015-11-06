@@ -1,15 +1,15 @@
 {
   "name": "carbon-website",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Public Website for carbonldp.com",
   "main": "dist/index.html",
-  "scripts": {
-    "preinstall": "node scripts/copy-hooks.js",
-    "postinstall": "./node_modules/.bin/jspm install",
-    "test": "./node_modules/.bin/gulp test"
-  },
   "author": "Base22",
-  "license": "ISC",
+  "license": "UNLICENSED",
+  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "https://source.base22.com/scm/ldp/carbon-website.git"
+  },
   "devDependencies": {
     "gulp": "^3.9.0",
     "gulp-autoprefixer": "^3.1.0",
@@ -25,6 +25,13 @@
     "semantic-ui": "^2.1.5",
     "systemjs-builder": "^0.14.10",
     "tsd": "^0.6.5"
+  },
+  "scripts": {
+    "preinstall": "node scripts/copy-hooks.js",
+    "postinstall": "./node_modules/.bin/jspm install",
+
+    "start": "./node_modules/.bin/gulp serve",
+    "test": "./node_modules/.bin/gulp test"
   },
   "jspm": {
     "directories": {
