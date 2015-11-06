@@ -6,7 +6,7 @@ import org.openrdf.model.URI;
 
 /**
  * @author NestorVenegas
- * @since _version_
+ * @since 0.14.0_ALPHA
  */
 public interface AppAgentRepository extends AgentRepository {
 	public Container createAppAgentsContainer( URI rootContainerURI );

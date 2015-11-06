@@ -32,7 +32,7 @@ import java.util.Map;
 
 /**
  * @author NestorVenegas
- * @since _version_
+ * @since 0.14.0_ALPHA
  */
 public abstract class SesameAgentsService extends AbstractSesameLDPService implements AgentService {
 	protected JavaMailSender mailSender;

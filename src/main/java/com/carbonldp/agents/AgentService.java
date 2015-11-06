@@ -4,7 +4,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 
 /**
  * @author NestorVenegas
- * @since _version_
+ * @since 0.14.0_ALPHA
  */
 public interface AgentService {
 	@PreAuthorize( "! isAuthenticated() or hasRole('ROLE_ANONYMOUS')" )
