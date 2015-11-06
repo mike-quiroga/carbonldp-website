@@ -18,8 +18,10 @@
     "gulp-sourcemaps": "^1.6.0",
     "gulp-tslint": "^3.5.0",
     "gulp-util": "^3.0.7",
+    "gulp-watch": "^4.3.5",
     "jspm": "^0.16.14",
     "live-server": "^0.8.2",
+    "semantic-ui": "^2.1.5",
     "systemjs-builder": "^0.14.10",
     "tsd": "^0.6.5"
   },
@@ -38,7 +40,6 @@
       "jsonld": "npm:jsonld@^0.4.2",
       "reflect-metadata": "npm:reflect-metadata@^0.1.2",
       "scss": "github:screendriver/plugin-sass@^0.0.8",
-      "semantic-ui": "github:Semantic-Org/Semantic-UI@^2.1.5",
       "zone.js": "npm:zone.js@^0.5.8"
     },
     "devDependencies": {
