@@ -5,7 +5,8 @@
   "main": "dist/index.html",
   "scripts": {
     "preinstall": "node scripts/copy-hooks.js",
-    "test": "gulp test"
+    "postinstall": "./node_modules/.bin/jspm install",
+    "test": "./node_modules/.bin/gulp test"
   },
   "author": "Base22",
   "license": "ISC",
