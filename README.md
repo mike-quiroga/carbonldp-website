@@ -3,7 +3,7 @@ Source code for carbonldp.com
 
 ## Development Setup
 1. Install Dependencies
-  - [node.js](https://nodejs.org/en/)
+    - [node.js](https://nodejs.org/en/)
 2. cd into the project's root directory
 3. run `npm install`
 4. To start the application server run `npm start`
