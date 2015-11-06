@@ -1,9 +1,12 @@
-package com.carbonldp.agents.platform;
+package com.carbonldp.agents;
 
-import com.carbonldp.agents.Agent;
 import org.springframework.security.access.prepost.PreAuthorize;
 
-public interface PlatformAgentService {
+/**
+ * @author NestorVenegas
+ * @since 0.14.0_ALPHA
+ */
+public interface AgentService {
 	@PreAuthorize( "! isAuthenticated() or hasRole('ROLE_ANONYMOUS')" )
 	public void register( Agent agent );
 }

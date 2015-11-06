@@ -1,4 +1,4 @@
-package com.carbonldp.agents.platform.web;
+package com.carbonldp.agents.app.web;
 
 import com.carbonldp.ldp.web.AbstractLDPController;
 import com.carbonldp.rdf.RDFDocument;
@@ -12,12 +12,17 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-@Controller
-@RequestMapping( value = "/platform/agents/" )
-public class PlatformAgentsController extends AbstractLDPController {
+/**
+ * @author NestorVenegas
+ * @since 0.14.0_ALPHA
+ */
 
-	private PlatformAgentsPOSTHandler postRequestHandler;
-	private PlatformAgentsDELETEHandler deleteRequestHandler;
+@Controller
+@RequestMapping( value = "/apps/*/agents/" )
+public class AppAgentsController extends AbstractLDPController {
+
+	private AppAgentsPOSTHandler postRequestHandler;
+	private AppAgentsDELETEHandler deleteRequestHandler;
 
 	@RequestMapping( method = RequestMethod.POST, consumes = {
 		"application/ld+json",
@@ -33,12 +38,13 @@ public class PlatformAgentsController extends AbstractLDPController {
 	}
 
 	@Autowired
-	public void setPOSTRequestHandler( PlatformAgentsPOSTHandler postRequestHandler ) {
+	public void setPOSTRequestHandler( AppAgentsPOSTHandler postRequestHandler ) {
 		this.postRequestHandler = postRequestHandler;
 	}
 
 	@Autowired
-	public void setDeleteRequestHandler( PlatformAgentsDELETEHandler deleteRequestHandler ) {
+	public void setDeleteRequestHandler( AppAgentsDELETEHandler deleteRequestHandler ) {
 		this.deleteRequestHandler = deleteRequestHandler;
 	}
+
 }
