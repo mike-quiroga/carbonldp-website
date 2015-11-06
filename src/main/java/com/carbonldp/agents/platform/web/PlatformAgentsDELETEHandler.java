@@ -7,11 +7,11 @@ import org.openrdf.model.URI;
 
 /**
  * @author NestorVenegas
- * @since _version_
+ * @since 0.14.0_ALPHA
  */
 
 @RequestHandler
-public class PlatformAgentsRDFDeleteHandler extends AbstractDELETERequestHandler {
+public class PlatformAgentsDELETEHandler extends AbstractDELETERequestHandler {
 
 	@Override
 	public void delete( URI targetURI ) {

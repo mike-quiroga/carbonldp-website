@@ -1,7 +1,9 @@
 package com.carbonldp.config;
 
-import com.carbonldp.agents.platform.PlatformAgentRepository;
-import com.carbonldp.agents.platform.PlatformAgentService;
+import com.carbonldp.agents.AgentRepository;
+import com.carbonldp.agents.AgentService;
+import com.carbonldp.agents.app.AppAgentRepository;
+import com.carbonldp.agents.app.SesameAppAgentService;
 import com.carbonldp.agents.platform.SesamePlatformAgentService;
 import com.carbonldp.agents.validators.AgentValidatorRepository;
 import com.carbonldp.apps.AppRepository;
@@ -65,13 +67,18 @@ public class ServicesConfig {
 	}
 
 	@Bean
-	public AppService appService( AppRepository appRepository, AppRoleRepository appRoleRepository ) {
-		return new SesameAppService( transactionWrapper(), sourceRepository, containerRepository, aclRepository, appRepository, appRoleRepository );
+	public AppService appService( AppRepository appRepository, AppRoleRepository appRoleRepository, AppAgentRepository appAgentsRepository ) {
+		return new SesameAppService( transactionWrapper(), sourceRepository, containerRepository, aclRepository, appRepository, appRoleRepository, appAgentsRepository );
 	}
 
 	@Bean
-	public PlatformAgentService platformAgentService( PlatformAgentRepository platformAgentRepository, AgentValidatorRepository agentValidatorRepository ) {
+	public AgentService platformAgentService( AgentRepository platformAgentRepository, AgentValidatorRepository agentValidatorRepository ) {
 		return new SesamePlatformAgentService( transactionWrapper(), sourceRepository, containerRepository, aclRepository, platformAgentRepository, agentValidatorRepository );
+	}
+
+	@Bean
+	public AgentService appAgentService( AgentRepository appAgentRepository, AgentValidatorRepository agentValidatorRepository ) {
+		return new SesameAppAgentService( transactionWrapper(), sourceRepository, containerRepository, aclRepository, appAgentRepository, agentValidatorRepository );
 	}
 
 	//TODO add LocalFileRepository into properties
