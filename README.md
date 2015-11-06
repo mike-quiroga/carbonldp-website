@@ -10,23 +10,23 @@ Source code for carbonldp.com
 
 ## Gulp Tasks
 - `build`: Build the source code and prepare it for production (inside of the dist/ folder)
-- `serve`: Same as `nmp start`. Will start a live-server instance with the source code.
+- `serve`: Same as `npm start`. Will start a live-server instance with the source code.
 
 ## File Structure
 - `dist`: Compiled files. Ready to be served.
 - `node_modules`: npm dependencies (don't touch them)
 - `scripts`: Auxiliary directory to store npm scripts
-  - `copy-hooks.js`: npm script that will copy the `pre-commit` file to `.git`
-  - `pre-commit`: bash script triggered before a `git commmit`. Will build the application and add everything in the `dist` folder to the commit.
+    - `copy-hooks.js`: npm script that will copy the `pre-commit` file to `.git`
+    - `pre-commit`: bash script triggered before a `git commmit`. Will build the application and add everything in the `dist` folder to the commit.
 - `src`: All source files
-  - `app`: Source files for the Angular2 application
-  - `assets`: Any asset (image, json, etc.). Before adding stylesheets think if they belong to a component, or can be added to the semantic-ui theme
-    - `images`: General images
-  - `jspm_packages`: jspm dependencies (don't touch them)
-  - `semantic`: Source code for the semantic-ui theme
-  - `typings`: TypeScript description files (partly managed by [tsd](https://github.com/DefinitelyTyped/tsd))
-  - `config.js`: jspm configuration file
-  - `index.html`: Entry point for the website
+    - `app`: Source files for the Angular2 application
+    - `assets`: Any asset (image, json, etc.). Before adding stylesheets think if they belong to a component, or can be added to the semantic-ui theme
+        - `images`: General images
+    - `jspm_packages`: jspm dependencies (don't touch them)
+    - `semantic`: Source code for the semantic-ui theme
+    - `typings`: TypeScript description files (partly managed by [tsd](https://github.com/DefinitelyTyped/tsd))
+    - `config.js`: jspm configuration file
+    - `index.html`: Entry point for the website
 - `.gitignore`: Ignore file for git
 - `gulpfile.js`: Gulp configuration file
 - `package.json`: npm configuration file

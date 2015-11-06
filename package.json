@@ -3,7 +3,17 @@
   "version": "0.1.0",
   "description": "Public Website for carbonldp.com",
   "main": "dist/index.html",
-  "author": "Base22",
+  "author": "Base22 LLC",,
+  "contributors": [
+    {
+      "name": "Miguel Aragón",
+      "email": "miguel.aragon@base22.com"
+    },
+    {
+      "name": "Cody Burleson",
+      "email": "cody.burleson@base22.com"
+    }
+  ],
   "license": "UNLICENSED",
   "private": true,
   "repository": {
