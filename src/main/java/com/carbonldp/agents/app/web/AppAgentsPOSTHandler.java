@@ -1,17 +1,23 @@
-package com.carbonldp.agents.platform.web;
+package com.carbonldp.agents.app.web;
 
 import com.carbonldp.agents.Agent;
+import com.carbonldp.agents.AgentService;
 import com.carbonldp.agents.AgentsPostHandler;
-import com.carbonldp.agents.platform.PlatformAgentService;
 import com.carbonldp.exceptions.ResourceAlreadyExistsException;
 import com.carbonldp.web.RequestHandler;
 import com.carbonldp.web.exceptions.ConflictException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+
+/**
+ * @author NestorVenegas
+ * @since 0.14.0_ALPHA
+ */
 
 @RequestHandler
-public class PlatformAgentsPostHandler extends AgentsPostHandler {
+public class AppAgentsPOSTHandler extends AgentsPostHandler {
 
-	private PlatformAgentService platformAgentService;
+	private AgentService appAgentService;
 
 	protected void createAgent( Agent documentResourceView ) {
 		// TODO: Implement
@@ -20,14 +26,16 @@ public class PlatformAgentsPostHandler extends AgentsPostHandler {
 
 	protected void registerAgent( Agent documentResourceView ) {
 		try {
-			platformAgentService.register( documentResourceView );
+			appAgentService.register( documentResourceView );
 		} catch ( ResourceAlreadyExistsException e ) {
 			throw new ConflictException( 0x2210 );
 		}
 	}
 
 	@Autowired
-	public void setPlatformAgentService( PlatformAgentService platformAgentService ) {
-		this.platformAgentService = platformAgentService;
+	@Qualifier( "appAgentService" )
+	public void setAppAgentService( AgentService appAgentService ) {
+		this.appAgentService = appAgentService;
 	}
+
 }

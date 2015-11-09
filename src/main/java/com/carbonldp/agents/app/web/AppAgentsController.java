@@ -14,15 +14,15 @@ import javax.servlet.http.HttpServletResponse;
 
 /**
  * @author NestorVenegas
- * @since _version_
+ * @since 0.14.0_ALPHA
  */
 
 @Controller
 @RequestMapping( value = "/apps/*/agents/" )
 public class AppAgentsController extends AbstractLDPController {
 
-	private AppAgentsPostHandler postRequestHandler;
-	private AppAgentsDeleteHandler deleteRequestHandler;
+	private AppAgentsPOSTHandler postRequestHandler;
+	private AppAgentsDELETEHandler deleteRequestHandler;
 
 	@RequestMapping( method = RequestMethod.POST, consumes = {
 		"application/ld+json",
@@ -38,12 +38,12 @@ public class AppAgentsController extends AbstractLDPController {
 	}
 
 	@Autowired
-	public void setPOSTRequestHandler( AppAgentsPostHandler postRequestHandler ) {
+	public void setPOSTRequestHandler( AppAgentsPOSTHandler postRequestHandler ) {
 		this.postRequestHandler = postRequestHandler;
 	}
 
 	@Autowired
-	public void setDeleteRequestHandler( AppAgentsDeleteHandler deleteRequestHandler ) {
+	public void setDeleteRequestHandler( AppAgentsDELETEHandler deleteRequestHandler ) {
 		this.deleteRequestHandler = deleteRequestHandler;
 	}
 

@@ -16,8 +16,8 @@ import javax.servlet.http.HttpServletResponse;
 @RequestMapping( value = "/platform/agents/" )
 public class PlatformAgentsController extends AbstractLDPController {
 
-	private PlatformAgentsPostHandler postRequestHandler;
-	private PlatformAgentsDeleteHandler deleteRequestHandler;
+	private PlatformAgentsPOSTHandler postRequestHandler;
+	private PlatformAgentsDELETEHandler deleteRequestHandler;
 
 	@RequestMapping( method = RequestMethod.POST, consumes = {
 		"application/ld+json",
@@ -33,12 +33,12 @@ public class PlatformAgentsController extends AbstractLDPController {
 	}
 
 	@Autowired
-	public void setPOSTRequestHandler( PlatformAgentsPostHandler postRequestHandler ) {
+	public void setPOSTRequestHandler( PlatformAgentsPOSTHandler postRequestHandler ) {
 		this.postRequestHandler = postRequestHandler;
 	}
 
 	@Autowired
-	public void setDeleteRequestHandler( PlatformAgentsDeleteHandler deleteRequestHandler ) {
+	public void setDeleteRequestHandler( PlatformAgentsDELETEHandler deleteRequestHandler ) {
 		this.deleteRequestHandler = deleteRequestHandler;
 	}
 }
