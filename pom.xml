@@ -239,6 +239,12 @@
             <version>2.3</version>
         </dependency>
 
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt</artifactId>
+            <version>0.6.0</version>
+        </dependency>
+
         <!-- ====== Testing ====== -->
         <dependency>
             <groupId>org.testng</groupId>
