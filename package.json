@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "description": "Public Website for carbonldp.com",
   "main": "dist/index.html",
-  "author": "Base22 LLC",,
+  "author": "Base22 LLC",
   "contributors": [
     {
       "name": "Miguel Aragón",
@@ -39,7 +39,6 @@
   "scripts": {
     "preinstall": "node scripts/copy-hooks.js",
     "postinstall": "./node_modules/.bin/jspm install",
-
     "start": "./node_modules/.bin/gulp serve",
     "test": "./node_modules/.bin/gulp test"
   },
@@ -57,7 +56,7 @@
       "jquery": "github:components/jquery@^2.1.4",
       "jsonld": "npm:jsonld@^0.4.2",
       "reflect-metadata": "npm:reflect-metadata@^0.1.2",
-      "scss": "github:screendriver/plugin-sass@^0.0.8",
+      "scss": "github:mobilexag/plugin-sass@^0.0.8",
       "zone.js": "npm:zone.js@^0.5.8"
     },
     "devDependencies": {
