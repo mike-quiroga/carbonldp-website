@@ -13,6 +13,7 @@ Source code for [carbonldp.com](https://carbonldp.com)
 ## Gulp Tasks
 
 Gulp defines two tasks:
+
 1. `build`: Same as `npm install`. Build the source code and prepare it for production (inside of the dist/ folder).
 2. `serve`: Same as `npm start`. Will start a live-server instance with the source code.
 
