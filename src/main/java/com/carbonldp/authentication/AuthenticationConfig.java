@@ -4,6 +4,7 @@ import com.carbonldp.agents.AgentRepository;
 import com.carbonldp.apps.roles.AppRolePersistenceFilter;
 import com.carbonldp.apps.roles.AppRoleRepository;
 import com.carbonldp.authentication.token.TokenAuthenticationFilter;
+import com.carbonldp.authentication.token.TokenAuthenticationProvider;
 import com.carbonldp.authorization.PlatformPrivilegeRepository;
 import com.carbonldp.authorization.PlatformRoleRepository;
 import com.carbonldp.authorization.SecurityContextExchanger;
@@ -43,11 +44,17 @@ public class AuthenticationConfig {
 	@Autowired
 	public void configureGlobal( AuthenticationManagerBuilder auth ) {
 		auth.authenticationProvider( platformAgentUsernamePasswordAuthenticationProvider() );
+		auth.authenticationProvider( tokenAuthenticationProvider() );
 	}
 
 	@Bean
 	public AuthenticationProvider platformAgentUsernamePasswordAuthenticationProvider() {
 		return new PlatformAgentUsernamePasswordAuthenticationProvider( platformAgentRepository, platformRoleRepository, platformPrivilegeRepository );
+	}
+
+	@Bean
+	public AuthenticationProvider tokenAuthenticationProvider() {
+		return new TokenAuthenticationProvider( platformAgentRepository, platformRoleRepository, platformPrivilegeRepository );
 	}
 
 	@Bean

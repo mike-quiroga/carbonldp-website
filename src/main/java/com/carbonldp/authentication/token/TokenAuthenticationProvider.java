@@ -30,6 +30,7 @@ public class TokenAuthenticationProvider extends AbstractSesameAuthenticationPro
 
 	@Override
 	public boolean supports( Class<?> aClass ) {
+
 		throw new NotImplementedException();
 	}
 }
