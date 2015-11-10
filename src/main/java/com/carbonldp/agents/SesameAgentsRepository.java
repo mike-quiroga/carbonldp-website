@@ -51,7 +51,7 @@ public abstract class SesameAgentsRepository extends AbstractSesameRepository im
 
 	@Override
 	public Agent get( URI uri ) {
-		return null;
+		return new Agent( sourceRepository.get( uri ) );
 	}
 
 	@Override
