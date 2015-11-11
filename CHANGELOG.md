@@ -1,3 +1,5 @@
+# 0.15.0(2015/11/11)
+* Application agents can now be authenticated
 # 0.14.0(2015/11/06)
 * Application agents can now be created
 # 0.13.0(2015/08/26)

@@ -14,8 +14,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.transaction.annotation.Transactional;
 
-public class AppsAgentUsernamePasswordAuthenticationProvider extends SesameUsernamePasswordAuthenticationProvider {
-	public AppsAgentUsernamePasswordAuthenticationProvider( AgentRepository agentRepository, PlatformRoleRepository platformRoleRepository, PlatformPrivilegeRepository platformPrivilegeRepository ) {
+public class AppAgentUsernamePasswordAuthenticationProvider extends SesameUsernamePasswordAuthenticationProvider {
+	public AppAgentUsernamePasswordAuthenticationProvider( AgentRepository agentRepository, PlatformRoleRepository platformRoleRepository, PlatformPrivilegeRepository platformPrivilegeRepository ) {
 		super( agentRepository, platformRoleRepository, platformPrivilegeRepository );
 	}
 

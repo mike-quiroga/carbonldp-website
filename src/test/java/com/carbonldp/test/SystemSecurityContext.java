@@ -19,7 +19,6 @@ public class SystemSecurityContext {
 	protected PlatformAgentUsernamePasswordAuthenticationProvider sesameUsernamePasswordAuthenticationProvider;
 
 	@Autowired
-
 	protected AppService appService;
 
 	public SystemSecurityContext( AppService appService ) {

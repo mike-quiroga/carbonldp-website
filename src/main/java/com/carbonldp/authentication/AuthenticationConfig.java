@@ -55,7 +55,7 @@ public class AuthenticationConfig {
 
 	@Bean
 	public AuthenticationProvider appsAgentUsernamePasswordAuthenticationProvider() {
-		return new AppsAgentUsernamePasswordAuthenticationProvider( appAgentRepository, platformRoleRepository, platformPrivilegeRepository );
+		return new AppAgentUsernamePasswordAuthenticationProvider( appAgentRepository, platformRoleRepository, platformPrivilegeRepository );
 	}
 
 	@Bean
