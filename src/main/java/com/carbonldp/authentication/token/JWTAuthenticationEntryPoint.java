@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * @author Dev
+ * @author NestorVenegas
  * @since _version_
  */
 public class JWTAuthenticationEntryPoint implements AuthenticationEntryPoint {
