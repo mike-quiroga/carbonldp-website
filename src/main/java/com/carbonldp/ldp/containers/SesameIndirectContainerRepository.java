@@ -111,7 +111,7 @@ public class SesameIndirectContainerRepository extends AbstractAccessPointReposi
 		URI membershipObject = getMembershipObject( containerURI, member );
 		addHasMemberRelation( containerURI, membershipObject );
 		// TODO: check for permissions, pending design
-		//addMemberOfRelation( containerURI, member );
+		addMemberOfRelation( containerURI, member );
 	}
 
 	@Override
