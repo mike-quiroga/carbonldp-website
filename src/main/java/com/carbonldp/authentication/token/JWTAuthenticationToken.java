@@ -6,11 +6,11 @@ import org.springframework.security.authentication.AbstractAuthenticationToken;
 import java.util.Collection;
 
 /**
- * @author NestorVenegas
- * @since _version_
- * <p>
  * This class holds the identifier of the identified Agent that gave it's credentials via Token
- * http://jwt.io/introduction/
+ *
+ * @author NestorVenegas
+ * @see <a href="http://jwt.io/introduction/">JWT Introduction</a>
+ * @since _version_
  */
 
 public class JWTAuthenticationToken extends AbstractAuthenticationToken {

@@ -96,7 +96,7 @@ public class JWTAuthenticationFilter extends GenericFilterBean implements Filter
 					   .getBody()
 					   .getSubject();
 		} catch ( UnsupportedJwtException | MalformedJwtException | SignatureException | ExpiredJwtException | IllegalArgumentException e ) {
-			throw new BadCredentialsException( "The JSON Web Token isn't valid." );
+			throw new BadCredentialsException( "The JSON Web Token isn't valid, nested exception: ", e );
 		}
 	}
 }
