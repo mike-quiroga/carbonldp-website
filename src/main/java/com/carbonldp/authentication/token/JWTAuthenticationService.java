@@ -13,7 +13,7 @@ import java.util.Date;
 
 /**
  * @author NestorVenegas
- * @since 0.15.0_ALPHA
+ * @since 0.15.0-ALPHA
  */
 public class JWTAuthenticationService extends AbstractComponent implements TokenService {
 

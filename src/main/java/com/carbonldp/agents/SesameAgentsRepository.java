@@ -17,7 +17,7 @@ import java.util.Set;
 
 /**
  * @author Nestor
- * @since 0.14.0_ALPHA
+ * @since 0.14.0-ALPHA
  */
 public abstract class SesameAgentsRepository extends AbstractSesameRepository implements AgentRepository {
 	protected final RDFSourceRepository sourceRepository;
