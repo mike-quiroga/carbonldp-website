@@ -26,7 +26,7 @@ import java.io.IOException;
 
 /**
  * @author NestorVenegas
- * @since _version_
+ * @since 0.15.0_ALPHA
  */
 public class JWTAuthenticationFilter extends GenericFilterBean implements Filter {
 	protected final Logger LOG = LoggerFactory.getLogger( this.getClass() );

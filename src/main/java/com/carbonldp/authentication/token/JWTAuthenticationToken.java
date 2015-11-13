@@ -10,7 +10,7 @@ import java.util.Collection;
  *
  * @author NestorVenegas
  * @see <a href="http://jwt.io/introduction/">JWT Introduction</a>
- * @since _version_
+ * @since 0.15.0_ALPHA
  */
 
 public class JWTAuthenticationToken extends AbstractAuthenticationToken {

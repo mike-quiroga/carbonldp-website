@@ -4,8 +4,8 @@ import com.carbonldp.authentication.Token;
 
 /**
  * @author NestorVenegas
- * @since _version_
+ * @since 0.15.0_ALPHA
  */
-public interface AuthenticationService {
+public interface TokenService {
 	public Token createToken();
 }

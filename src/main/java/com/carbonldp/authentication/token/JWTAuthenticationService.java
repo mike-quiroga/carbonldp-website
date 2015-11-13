@@ -13,9 +13,9 @@ import java.util.Date;
 
 /**
  * @author NestorVenegas
- * @since _version_
+ * @since 0.15.0_ALPHA
  */
-public class JWTAuthenticationService extends AbstractComponent implements AuthenticationService {
+public class JWTAuthenticationService extends AbstractComponent implements TokenService {
 
 	public Token createToken() {
 		Date expTime = new Date( System.currentTimeMillis() + Vars.getInstance().getTokenExpirationTime() );

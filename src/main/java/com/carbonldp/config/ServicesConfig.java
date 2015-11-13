@@ -10,7 +10,7 @@ import com.carbonldp.apps.AppRepository;
 import com.carbonldp.apps.AppService;
 import com.carbonldp.apps.SesameAppService;
 import com.carbonldp.apps.roles.AppRoleRepository;
-import com.carbonldp.authentication.token.AuthenticationService;
+import com.carbonldp.authentication.token.TokenService;
 import com.carbonldp.authentication.token.JWTAuthenticationService;
 import com.carbonldp.authorization.acl.ACLRepository;
 import com.carbonldp.ldp.containers.ContainerRepository;
@@ -49,7 +49,7 @@ public class ServicesConfig {
 	private RDFResourceRepository resourceRepository;
 
 	@Bean
-	public AuthenticationService authenticationService() {
+	public TokenService tokenService() {
 		return new JWTAuthenticationService();
 	}
 

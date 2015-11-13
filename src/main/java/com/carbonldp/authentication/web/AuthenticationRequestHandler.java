@@ -1,7 +1,7 @@
 package com.carbonldp.authentication.web;
 
 import com.carbonldp.authentication.Token;
-import com.carbonldp.authentication.token.AuthenticationService;
+import com.carbonldp.authentication.token.TokenService;
 import com.carbonldp.ldp.web.AbstractLDPRequestHandler;
 import com.carbonldp.web.RequestHandler;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,19 +14,19 @@ import javax.servlet.http.HttpServletResponse;
 
 /**
  * @author NestorVenegas
- * @since _version_
+ * @since 0.15.0_ALPHA
  */
 @RequestHandler
 public class AuthenticationRequestHandler extends AbstractLDPRequestHandler {
 
 	@Autowired
-	AuthenticationService authenticationService;
+	TokenService tokenService;
 
 	@Transactional
 	public ResponseEntity<Object> handleRequest( HttpServletRequest request, HttpServletResponse response ) {
 		setUp( request, response );
 
-		Token token = authenticationService.createToken();
+		Token token = tokenService.createToken();
 
 		return new ResponseEntity<>( token, HttpStatus.OK );
 
