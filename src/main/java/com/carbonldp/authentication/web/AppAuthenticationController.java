@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 
 /**
  * @author NestorVenegas
- * @since 0.15.0_ALPHA
+ * @since 0.15.0-ALPHA
  */
 
 @Controller

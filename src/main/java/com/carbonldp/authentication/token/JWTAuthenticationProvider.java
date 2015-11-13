@@ -16,7 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @author NestorVenegas
- * @since 0.15.0_ALPHA
+ * @since 0.15.0-ALPHA
  */
 public class JWTAuthenticationProvider extends AbstractSesameAuthenticationProvider {
 	public JWTAuthenticationProvider( AgentRepository agentRepository, PlatformRoleRepository platformRoleRepository, PlatformPrivilegeRepository platformPrivilegeRepository ) {
