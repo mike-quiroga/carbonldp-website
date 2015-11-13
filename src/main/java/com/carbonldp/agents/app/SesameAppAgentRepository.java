@@ -29,8 +29,8 @@ public class SesameAppAgentRepository extends SesameAgentsRepository implements 
 	}
 
 	public Container createAppAgentsContainer( URI rootContainerURI ) {
-		URI appRolesContainerURI = getContainerURI( rootContainerURI );
-		BasicContainer appAgentsContainer = BasicContainerFactory.getInstance().create( new RDFResource( appRolesContainerURI ) );
+		URI appAgentsContainerURI = getContainerURI( rootContainerURI );
+		BasicContainer appAgentsContainer = BasicContainerFactory.getInstance().create( new RDFResource( appAgentsContainerURI ) );
 		containerRepository.createChild( rootContainerURI, appAgentsContainer );
 		return appAgentsContainer;
 	}

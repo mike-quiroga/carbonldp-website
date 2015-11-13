@@ -4,6 +4,7 @@ import com.carbonldp.agents.Agent;
 import com.carbonldp.agents.app.AppAgentRepository;
 import com.carbonldp.apps.roles.AppRoleRepository;
 import com.carbonldp.authentication.AgentAuthenticationToken;
+import com.carbonldp.authentication.token.app.AppTokenRepository;
 import com.carbonldp.authorization.acl.ACEDescription;
 import com.carbonldp.authorization.acl.ACL;
 import com.carbonldp.authorization.acl.ACLRepository;
@@ -40,15 +41,17 @@ import java.util.stream.Collectors;
 public class SesameAppService extends AbstractSesameLDPService implements AppService {
 	private final AppRepository appRepository;
 	private final AppRoleRepository appRoleRepository;
-	private final AppAgentRepository appAgentsRepository;
+	private final AppAgentRepository appAgentRepository;
+	private final AppTokenRepository appTokensRepository;
 
-	public SesameAppService( TransactionWrapper transactionWrapper, RDFSourceRepository sourceRepository, ContainerRepository containerRepository, ACLRepository aclRepository, AppRepository appRepository, AppRoleRepository appRoleRepository, AppAgentRepository appAgentsRepository ) {
+	public SesameAppService( TransactionWrapper transactionWrapper, RDFSourceRepository sourceRepository, ContainerRepository containerRepository, ACLRepository aclRepository, AppRepository appRepository, AppRoleRepository appRoleRepository, AppAgentRepository appAgentRepository, AppTokenRepository appTokenRepository ) {
 		super( transactionWrapper, sourceRepository, containerRepository, aclRepository );
 		Assert.notNull( appRepository );
 		this.appRepository = appRepository;
 		Assert.notNull( appRoleRepository );
 		this.appRoleRepository = appRoleRepository;
-		this.appAgentsRepository = appAgentsRepository;
+		this.appAgentRepository = appAgentRepository;
+		this.appTokensRepository = appTokenRepository;
 	}
 
 	@Override
@@ -86,8 +89,11 @@ public class SesameAppService extends AbstractSesameLDPService implements AppSer
 			AppRole appAdminRole = createAppAdminRole( appRolesContainer );
 			ACL appAdminRoleACL = createAppAdminRoleACL( appAdminRole );
 
-			Container appAgentsContainer = appAgentsRepository.createAppAgentsContainer( rootContainer.getURI() );
+			Container appAgentsContainer = appAgentRepository.createAppAgentsContainer( rootContainer.getURI() );
 			ACL appAgentsContainerACL = createAppAgentsACL( appAgentsContainer );
+
+			Container appTokensContainer = appTokensRepository.createAppTokensContainer( rootContainer.getURI() );
+			ACL appTokensContainerACL = createAppTokensACL( appTokensContainer );
 
 			addCurrentAgentToAppAdminRole( appAdminRole );
 
@@ -170,6 +176,10 @@ public class SesameAppService extends AbstractSesameLDPService implements AppSer
 
 	private ACL createAppAgentsACL( Container appAgentsContainer ) {
 		return aclRepository.createACL( appAgentsContainer.getDocument() );
+	}
+
+	private ACL createAppTokensACL( Container appTokensContainer ) {
+		return aclRepository.createACL( appTokensContainer.getDocument() );
 	}
 
 	private AppRole createAppAdminRole( Container appRolesContainer ) {
