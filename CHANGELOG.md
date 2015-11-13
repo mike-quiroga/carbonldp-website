@@ -1,3 +1,5 @@
+# 0.15.0 (2015/11/12)
+* Authentication can now be made via JWT
 # 0.14.1 (2015/11/12)
 * Fix memberOfRelation for containers
 # 0.14.0 (2015/11/06)

@@ -5,6 +5,7 @@ import com.carbonldp.apps.roles.AppRolePersistenceFilter;
 import com.carbonldp.authentication.AnonymousAuthenticationFilter;
 import com.carbonldp.authentication.AnonymousAuthenticationToken;
 import com.carbonldp.authentication.CustomExceptionHandlingConfigurer;
+import com.carbonldp.authentication.token.JWTAuthenticationFilter;
 import com.carbonldp.web.cors.CORSAppContextFilter;
 import com.carbonldp.web.cors.CORSPlatformContextFilter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.AuthenticationEntryPoint;
+import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter;
 
 import javax.servlet.Filter;
@@ -26,6 +28,9 @@ public abstract class AbstractWebSecurityConfigurerAdapter extends WebSecurityCo
 	@Autowired
 	@Qualifier( "basicAuthenticationEntryPoint" )
 	protected AuthenticationEntryPoint basicAuthenticationEntryPoint;
+
+	@Autowired
+	protected JWTAuthenticationFilter jwtAuthenticationFilter;
 
 	@Autowired
 	@Qualifier( "appRolePersistenceFilter" )
@@ -69,6 +74,7 @@ public abstract class AbstractWebSecurityConfigurerAdapter extends WebSecurityCo
 				.authenticationTrustResolver( authenticationTrustResolver )
 			.and()
 			.addFilter( basicAuthenticationFilter )
+			.addFilterAfter( jwtAuthenticationFilter, BasicAuthenticationFilter.class )
 			.addFilterAfter( anonymousAuthenticationFilter, org.springframework.security.web.authentication.AnonymousAuthenticationFilter.class )
 		;
 		//@formatter:on

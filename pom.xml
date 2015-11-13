@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.carbonldp</groupId>
     <artifactId>carbon-platform-SESAME</artifactId>
-    <version>0.14.1-ALPHA</version>
+    <version>0.15.0-ALPHA</version>
     <packaging>war</packaging>
     <name>Carbon LDP</name>
     <url>http://carbonldp.com/</url>
@@ -237,6 +237,12 @@
             <groupId>joda-time</groupId>
             <artifactId>joda-time</artifactId>
             <version>2.3</version>
+        </dependency>
+
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt</artifactId>
+            <version>0.6.0</version>
         </dependency>
 
         <!-- ====== Testing ====== -->
