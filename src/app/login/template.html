@@ -1,0 +1,29 @@
+<div class="ui main middle aligned center aligned grid container">
+	<div class="row">
+		<form id="loginForm" [ng-form-model]="loginForm" class="ui form large" role="form" (submit)="onSubmit()">
+			<div class="ui segment">
+				<div class="field" [class.error]="(eMail.touched && !eMail.valid) || (submitted && !eMail.valid)">
+					<div class="ui left icon input">
+						<i class="user icon"></i>
+						<input type="text" #eMail name="eMail" placeholder="E-mail address" ng-control="eMail">
+					</div>
+				</div>
+				<div class="field" [class.error]="(passWord.touched && !passWord.valid)  || (submitted && !passWord.valid)">
+					<div class="ui left icon input">
+						<i class="lock icon"></i>
+						<input type="password" #passWord name="passWord" placeholder="Password" ng-control="passWord">
+					</div>
+				</div>
+				<button type="submit" class="ui fluid large orange submit button">Login</button>
+			</div>
+			<div [style.display]="((submitted || eMail.touched || passWord.touched) && (!loginForm.valid || errorMessage != null))? 'block' : 'none'" class="ui error message">
+				<ul class="list">
+					<li *ng-if="(submitted || eMail.touched) && eMail.hasError('required')">Email is required</li>
+					<li *ng-if="(submitted || eMail.touched) && eMail.hasError('invalidEmail')">Enter a valid email address.</li>
+					<li *ng-if="(submitted || passWord.touched) && passWord.hasError('required')">Password is required</li>
+					<li *ng-if="submitted && errorMessage != null">{{errorMessage}}</li>
+				</ul>
+			</div>
+		</form>
+	</div>
+</div>
