@@ -10,6 +10,8 @@ import com.carbonldp.apps.AppRepository;
 import com.carbonldp.apps.SesameAppRepository;
 import com.carbonldp.apps.roles.AppRoleRepository;
 import com.carbonldp.apps.roles.SesameAppRoleRepository;
+import com.carbonldp.authentication.token.app.AppTokenRepository;
+import com.carbonldp.authentication.token.app.SesameAppTokenRepository;
 import com.carbonldp.authorization.PlatformPrivilegeRepository;
 import com.carbonldp.authorization.PlatformRoleRepository;
 import com.carbonldp.authorization.SesamePlatformPrivilegeRepository;
@@ -166,6 +168,13 @@ public class RepositoriesConfig {
 	public AgentRepository appAgentRepository() {
 		SesameAppAgentRepository repository = new SesameAppAgentRepository( connectionFactory, sourceRepository(), containerRepository() );
 		repository.setAgentsContainerSlug( Vars.getInstance().getAppAgentsContainer() );
+		return repository;
+	}
+
+	@Bean
+	public AppTokenRepository appTokenRepository() {
+		SesameAppTokenRepository repository = new SesameAppTokenRepository( connectionFactory, containerRepository() );
+		repository.setTokensContainerSlug( Vars.getInstance().getAppTokensContainer() );
 		return repository;
 	}
 

@@ -1,3 +1,5 @@
+# 0.15.1 (2015/11/13)
+* Create token-auth container in Platform and apps repositories
 # 0.15.0 (2015/11/12)
 * Authentication can now be made via JWT
 # 0.14.1 (2015/11/12)
