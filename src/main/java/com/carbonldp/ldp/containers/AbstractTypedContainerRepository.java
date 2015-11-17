@@ -175,14 +175,14 @@ public abstract class AbstractTypedContainerRepository extends AbstractSesameLDP
 	protected void addMemberOfRelation( URI containerURI, URI member ) {
 		URI memberOfRelation = getMemberOfRelation( containerURI );
 		URI membershipResource = getMembershipResource( containerURI );
-
+		if ( memberOfRelation != null ) connectionTemplate.write( connection -> connection.add( member, memberOfRelation, membershipResource, member ) );
 	}
 
 	@Override
 	public void addMember( URI containerURI, URI member ) {
 		addHasMemberRelation( containerURI, member );
 		// TODO: check for permissions, pending design
-		//addMemberOfRelation( containerURI, member );
+		addMemberOfRelation( containerURI, member );
 	}
 
 	@Override

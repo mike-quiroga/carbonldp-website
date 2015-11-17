@@ -9,7 +9,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 
 /**
  * @author NestorVenegas
- * @since 0.14.0_ALPHA
+ * @since 0.14.0-ALPHA
  */
 public abstract class AgentsPostHandler extends AbstractRDFPostRequestHandler<Agent> {
 

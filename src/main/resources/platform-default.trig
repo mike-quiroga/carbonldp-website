@@ -48,13 +48,15 @@
 			<platform/apps/>,
 			<platform/agents/>,
 			<platform/roles/>,
-			<platform/privileges/>;
+			<platform/privileges/>,
+			<platform/auth-tokens/>;
 		ldp:member
 			<platform/api/>,
 			<platform/apps/>,
 			<platform/agents/>,
 			<platform/roles/>,
-			<platform/privileges/>;
+			<platform/privileges/>,
+			<platform/auth-tokens/>;
 		cs:accessControlList <platform/~acl>.
 }
 <platform/~acl/> {
@@ -238,4 +240,9 @@
 		c:defaultInteractionModel	ldp:RDFSource;
 		ldp:hasMemberRelation ldp:member;
 		cs:name	"Create Applications".
+}
+<platform/auth-tokens/> {
+	<platform/auth-tokens/>
+		a 	ldp:BasicContainer;
+		c:defaultInteractionModel	ldp:Container.
 }

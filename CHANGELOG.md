@@ -1,8 +1,12 @@
-# 0.15.0(2015/11/11)
-* Application agents can now be authenticated
-# 0.14.0(2015/11/06)
+# 0.15.1 (2015/11/13)
+* Create token-auth container in Platform and apps repositories
+# 0.15.0 (2015/11/12)
+* Authentication can now be made via JWT
+# 0.14.1 (2015/11/12)
+* Fix memberOfRelation for containers
+# 0.14.0 (2015/11/06)
 * Application agents can now be created
-# 0.13.0(2015/08/26)
+# 0.13.0 (2015/08/26)
 * Members can now be selectively remove from a container
 * Members can now be added to a container
 # 0.12.0 (2015/08/14)

@@ -16,7 +16,7 @@ import org.springframework.util.Assert;
 
 /**
  * @author NestorVenegas
- * @since 0.14.0_ALPHA
+ * @since 0.14.0-ALPHA
  */
 
 @Transactional
@@ -29,8 +29,8 @@ public class SesameAppAgentRepository extends SesameAgentsRepository implements 
 	}
 
 	public Container createAppAgentsContainer( URI rootContainerURI ) {
-		URI appRolesContainerURI = getContainerURI( rootContainerURI );
-		BasicContainer appAgentsContainer = BasicContainerFactory.getInstance().create( new RDFResource( appRolesContainerURI ) );
+		URI appAgentsContainerURI = getContainerURI( rootContainerURI );
+		BasicContainer appAgentsContainer = BasicContainerFactory.getInstance().create( new RDFResource( appAgentsContainerURI ) );
 		containerRepository.createChild( rootContainerURI, appAgentsContainer );
 		return appAgentsContainer;
 	}

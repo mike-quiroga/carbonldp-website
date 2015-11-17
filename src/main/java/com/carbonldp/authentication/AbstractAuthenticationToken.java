@@ -21,7 +21,7 @@ public abstract class AbstractAuthenticationToken implements Authentication {
 	private boolean authenticated = false;
 
 	public AbstractAuthenticationToken( Collection<Platform.Role> platformRoles, Collection<Platform.Privilege> platformPrivileges ) {
-		Set<GrantedAuthority> tempAuthorities = new HashSet<GrantedAuthority>();
+		Set<GrantedAuthority> tempAuthorities = new HashSet<>();
 
 		this.platformRoles = getUnmodifiableCopy( platformRoles );
 		addPlatformRoles( tempAuthorities );
