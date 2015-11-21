@@ -1,6 +1,8 @@
-# 0.15.3 (2015/11/12)
+# 0.15.4 (2015/11/20)
+* FIX CORS requests not returning header Access-Control-Expose-Headers
+# 0.15.3 (2015/11/20)
 * Fix application/rdf+json not returning a body
-# 0.15.2 (2015/11/21)
+# 0.15.2 (2015/11/20)
 * Throw proper error when an authentication token is requested without credentials
 # 0.15.1 (2015/11/13)
 * Create token-auth container in Platform and apps repositories
