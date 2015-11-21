@@ -1,3 +1,5 @@
+# 0.15.2 (2015/11/21)
+* Throw proper error when an authentication token is requested without credentials
 # 0.15.1 (2015/11/13)
 * Create token-auth container in Platform and apps repositories
 # 0.15.0 (2015/11/12)
