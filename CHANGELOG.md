@@ -1,3 +1,5 @@
+# 0.15.3 (2015/11/12)
+* Fix application/rdf+json not returning a body
 # 0.15.2 (2015/11/21)
 * Throw proper error when an authentication token is requested without credentials
 # 0.15.1 (2015/11/13)
