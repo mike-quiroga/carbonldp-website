@@ -7,6 +7,7 @@ import com.carbonldp.apps.AppRepository;
 import com.carbonldp.apps.AppService;
 import com.carbonldp.ldp.containers.BasicContainer;
 import com.carbonldp.ldp.containers.Container;
+import com.carbonldp.rdf.RDFResourceRepository;
 import com.carbonldp.repository.security.SecuredNativeStoreFactory;
 import com.carbonldp.utils.PropertiesUtil;
 import org.mockito.Mockito;
@@ -30,6 +31,7 @@ import org.openrdf.sail.nativerdf.NativeStore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
@@ -37,6 +39,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.Test;
 
 import java.io.File;
@@ -50,7 +53,8 @@ public abstract class AbstractIT extends AbstractTestNGSpringContextTests {
 
 	@Autowired
 	protected AppService appService;
-
+	@Autowired
+	protected RDFResourceRepository resourceRepository;
 	@Autowired
 	protected AppRepository appRepository;
 	@Autowired
@@ -58,6 +62,7 @@ public abstract class AbstractIT extends AbstractTestNGSpringContextTests {
 	@Autowired
 	protected ApplicationContextActionTemplate applicationContextTemplate;
 	@Autowired
+	@Qualifier( "platformAgentUsernamePasswordAuthenticationProvider" )
 	protected AuthenticationProvider sesameUsernamePasswordAuthenticationProvider;
 
 	protected final String testRepositoryID = "test-blog";
@@ -76,7 +81,8 @@ public abstract class AbstractIT extends AbstractTestNGSpringContextTests {
 
 	protected Properties properties;
 
-	public AbstractIT() {
+	@BeforeSuite
+	public void initialize() {
 		SailRegistry.getInstance().add( new SecuredNativeStoreFactory() );
 		this.properties = loadProperties( propertiesFile );
 		PropertiesUtil.resolveProperties( properties );

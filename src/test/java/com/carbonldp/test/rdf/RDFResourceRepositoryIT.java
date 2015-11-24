@@ -1,7 +1,6 @@
 package com.carbonldp.test.rdf;
 
 import com.carbonldp.rdf.RDFNodeEnum;
-import com.carbonldp.rdf.RDFResourceRepository;
 import com.carbonldp.test.AbstractIT;
 import com.carbonldp.utils.LiteralUtil;
 import org.joda.time.DateTime;
@@ -12,7 +11,6 @@ import org.openrdf.model.Value;
 import org.openrdf.model.ValueFactory;
 import org.openrdf.model.impl.URIImpl;
 import org.openrdf.model.impl.ValueFactoryImpl;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.testng.annotations.Test;
 
 import java.util.HashSet;
@@ -24,10 +22,9 @@ import static org.testng.Assert.assertEquals;
 public class RDFResourceRepositoryIT extends AbstractIT {
 	private DateTimeFormatter formatter = DateTimeFormat.forPattern( "yyyy-MM-dd HH:mm:ss" );
 
-	@Autowired
-	private RDFResourceRepository resourceRepository;
 
-	URI subj = new URIImpl( "http://local.carbonldp.com/apps/test-blog/posts/post-1" );
+
+	URI subj = new URIImpl( "http://local.carbonldp.com/apps/test-blog/posts/post-1/" );
 	ValueFactory factory = ValueFactoryImpl.getInstance();
 
 	@Test

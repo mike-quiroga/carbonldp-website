@@ -1,5 +1,6 @@
 package com.carbonldp.test.web.cors;
 
+import com.carbonldp.HTTPHeaders;
 import com.carbonldp.apps.AppRepository;
 import com.carbonldp.apps.context.AppContext;
 import com.carbonldp.apps.context.AppContextHolder;
@@ -39,7 +40,20 @@ public class CORSPlatformContextFilterIT extends AbstractIT {
 				throw new RuntimeException( "Filter not executed correctly", e );
 			}
 		} );
+
+		String exposeHeaders = HTTPHeaders.ACCEPT_PATCH + "," +
+			HTTPHeaders.ACCEPT_POST + "," +
+			HTTPHeaders.ACCEPT_PUT + "," +
+			HTTPHeaders.ALLOW + "," +
+			HTTPHeaders.CONTENT_LENGTH + "," +
+			HTTPHeaders.ETAG + "," +
+			HTTPHeaders.LINK + "," +
+			HTTPHeaders.LOCATION + "," +
+			HTTPHeaders.PREFER + "," +
+			HTTPHeaders.PREFERENCE_APPLIED;
+
 		Mockito.verify( response ).addHeader( "Access-Control-Allow-Origin", "http://www.test.com/" );
 		Mockito.verify( response ).addHeader( "Access-Control-Allow-Methods", "GET, HEAD, POST, PUT, PATCH, DELETE, OPTIONS" );
+		Mockito.verify( response ).addHeader( " Access-Control-Allow-Headers header ", exposeHeaders );
 	}
 }
