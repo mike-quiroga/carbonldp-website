@@ -24,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -145,5 +146,16 @@ public class SesameAppRoleRepository extends AbstractSesameLDPRepository impleme
 
 	private URI getAgentsContainerURI( URI appRoleURI ) {
 		return URIUtil.createChildURI( appRoleURI, agentsContainerSlug );
+	}
+
+	public Set<URI> getParents( URI appRoleUri ) {
+		Set<URI> parents = new LinkedHashSet<>();
+		AppRole appRole = (AppRole) sourceRepository.get( appRoleUri );
+		for ( URI parentUri = appRole.getParent(); parentUri != null; parentUri = appRole.getParent() ) {
+			parents.add( parentUri );
+			appRole = (AppRole) sourceRepository.get( parentUri );
+		}
+
+		return parents;
 	}
 }

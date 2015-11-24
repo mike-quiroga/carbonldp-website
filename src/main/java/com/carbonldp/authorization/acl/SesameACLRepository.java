@@ -92,6 +92,11 @@ public class SesameACLRepository extends AbstractSesameLDPRepository implements 
 		documentRepository.update( acl.getDocument() );
 	}
 
+	@Override
+	public void replace( ACL acl ) {
+		documentRepository.update( acl.getDocument() );
+	}
+
 	private void addInheritablePermissions( ACL acl, RDFNodeEnum subjectClass, Collection<URI> subjectURIs, Collection<ACEDescription.Permission> permissions, boolean granting ) {
 		Set<ACE> aces = ACLUtil.getRelatedInheritableACEs( acl, subjectClass, subjectURIs );
 		if ( aces.isEmpty() ) {

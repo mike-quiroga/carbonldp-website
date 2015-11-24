@@ -32,6 +32,7 @@ import com.carbonldp.spring.TransactionWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.access.PermissionEvaluator;
 
 @Configuration
 public class ServicesConfig {
@@ -53,6 +54,12 @@ public class ServicesConfig {
 	@Autowired
 	private RDFResourceRepository resourceRepository;
 
+	@Autowired
+	private PermissionEvaluator permissionEvaluator;
+
+	@Autowired
+	private AppRoleRepository appRoleRepository;
+
 	@Bean
 	public TokenService tokenService() {
 		return new JWTAuthenticationService();
@@ -70,7 +77,7 @@ public class ServicesConfig {
 
 	@Bean
 	public ACLService aclService() {
-		return new SesameACLService( transactionWrapper(), sourceRepository, containerRepository, aclRepository );
+		return new SesameACLService( transactionWrapper(), sourceRepository, containerRepository, aclRepository, permissionEvaluator, appRoleRepository );
 	}
 
 	@Bean
