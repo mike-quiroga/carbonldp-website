@@ -63,8 +63,12 @@
 	<platform/~acl/>
 		a cs:AccessControlList;
 		cs:accessTo <platform/>;
-		cs:accessControlEntry <platform/~acl/#ace-235235234234>;
-		cs:inheritableEntry <platform/~acl/#ace-235235234234>.
+		cs:accessControlEntry
+			<platform/~acl/#ace-235235234234>,
+			<platform/~acl/#ace-235235234235>;
+		cs:inheritableEntry
+			<platform/~acl/#ace-235235234234>,
+			<platform/~acl/#ace-235235234235>.
 	<platform/~acl/#ace-235235234234>
 		a cs:AccessControlEntry;
 		cs:subjectClass cs:PlatformRole;
@@ -79,6 +83,12 @@
 			cs:Download,
 			cs:Upload,
 			cs:AddMember.
+	<platform/~acl/#ace-235235234235>
+		a cs:AccessControlEntry;
+		cs:subjectClass cs:PlatformRole;
+		cs:subject <platform/roles/app-developer/>;
+		cs:granting "true"^^xsd:boolean;
+		cs:permission cs:Read.
 }
 <platform/apps/> {
 	<platform/apps/>
