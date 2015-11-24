@@ -7,7 +7,6 @@ import com.carbonldp.apps.AppRepository;
 import com.carbonldp.apps.AppService;
 import com.carbonldp.ldp.containers.BasicContainer;
 import com.carbonldp.ldp.containers.Container;
-import com.carbonldp.rdf.RDFResourceRepository;
 import com.carbonldp.repository.security.SecuredNativeStoreFactory;
 import com.carbonldp.utils.PropertiesUtil;
 import org.mockito.Mockito;
@@ -39,7 +38,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
 import org.testng.annotations.BeforeClass;
-import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.Test;
 
 import java.io.File;
@@ -53,8 +51,7 @@ public abstract class AbstractIT extends AbstractTestNGSpringContextTests {
 
 	@Autowired
 	protected AppService appService;
-	@Autowired
-	protected RDFResourceRepository resourceRepository;
+
 	@Autowired
 	protected AppRepository appRepository;
 	@Autowired
@@ -62,7 +59,7 @@ public abstract class AbstractIT extends AbstractTestNGSpringContextTests {
 	@Autowired
 	protected ApplicationContextActionTemplate applicationContextTemplate;
 	@Autowired
-	@Qualifier( "platformAgentUsernamePasswordAuthenticationProvider" )
+	@Qualifier("platformAgentUsernamePasswordAuthenticationProvider")
 	protected AuthenticationProvider sesameUsernamePasswordAuthenticationProvider;
 
 	protected final String testRepositoryID = "test-blog";
@@ -81,8 +78,7 @@ public abstract class AbstractIT extends AbstractTestNGSpringContextTests {
 
 	protected Properties properties;
 
-	@BeforeSuite
-	public void initialize() {
+	public AbstractIT() {
 		SailRegistry.getInstance().add( new SecuredNativeStoreFactory() );
 		this.properties = loadProperties( propertiesFile );
 		PropertiesUtil.resolveProperties( properties );

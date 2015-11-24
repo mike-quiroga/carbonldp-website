@@ -5,6 +5,7 @@ import com.carbonldp.Vars;
 import com.carbonldp.authentication.AgentAuthenticationToken;
 import com.carbonldp.authentication.Token;
 import com.carbonldp.authentication.TokenFactory;
+import com.carbonldp.exceptions.StupidityException;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -21,8 +22,7 @@ public class JWTAuthenticationService extends AbstractComponent implements Token
 		Date expTime = new Date( System.currentTimeMillis() + Vars.getInstance().getTokenExpirationTime() );
 		SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-		if ( ! ( authentication instanceof AgentAuthenticationToken ) ) throw new RuntimeException( "authentication is not an instance of AgentAuthenticationToken" );
+		if ( ! ( authentication instanceof AgentAuthenticationToken ) ) throw new StupidityException( "authentication is not an instance of AgentAuthenticationToken" );
 		AgentAuthenticationToken agentToken = (AgentAuthenticationToken) authentication;
 		String agentTokenString = agentToken.getAgent().getSubject().stringValue();
 
