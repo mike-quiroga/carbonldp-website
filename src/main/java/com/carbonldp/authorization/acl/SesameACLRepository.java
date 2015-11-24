@@ -66,7 +66,7 @@ public class SesameACLRepository extends AbstractSesameLDPRepository implements 
 	private void grantPermissions( ACL acl, RDFNodeEnum subjectClass, Collection<URI> subjectURIs, Collection<ACEDescription.Permission> permissions, boolean inheritable ) {
 		Set<ACE> aces = ACLUtil.getRelatedACEs( acl, subjectClass, subjectURIs );
 		if ( aces.isEmpty() ) {
-			ACE ace = ACEFactory.create( acl, subjectClass, subjectURIs, permissions, true );
+			ACE ace = ACEFactory.getInstance().create( acl, subjectClass, subjectURIs, permissions, true );
 			acl.addACEntry( ace.getURI() );
 		} else {
 			// TODO: Implement
@@ -100,7 +100,7 @@ public class SesameACLRepository extends AbstractSesameLDPRepository implements 
 	private void addInheritablePermissions( ACL acl, RDFNodeEnum subjectClass, Collection<URI> subjectURIs, Collection<ACEDescription.Permission> permissions, boolean granting ) {
 		Set<ACE> aces = ACLUtil.getRelatedInheritableACEs( acl, subjectClass, subjectURIs );
 		if ( aces.isEmpty() ) {
-			ACE ace = ACEFactory.create( acl, subjectClass, subjectURIs, permissions, granting );
+			ACE ace = ACEFactory.getInstance().create( acl, subjectClass, subjectURIs, permissions, granting );
 			acl.addInheritableEntry( ace.getURI() );
 		} else {
 			// TODO: Implement

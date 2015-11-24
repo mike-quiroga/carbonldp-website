@@ -5,6 +5,7 @@ import com.carbonldp.apps.App;
 import com.carbonldp.apps.AppFactory;
 import com.carbonldp.apps.AppRepository;
 import com.carbonldp.apps.AppService;
+import com.carbonldp.authorization.acl.ACLService;
 import com.carbonldp.ldp.containers.BasicContainer;
 import com.carbonldp.ldp.containers.Container;
 import com.carbonldp.repository.security.SecuredNativeStoreFactory;
@@ -30,6 +31,7 @@ import org.openrdf.sail.nativerdf.NativeStore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
@@ -58,7 +60,10 @@ public abstract class AbstractIT extends AbstractTestNGSpringContextTests {
 	@Autowired
 	protected ApplicationContextActionTemplate applicationContextTemplate;
 	@Autowired
+	@Qualifier("platformAgentUsernamePasswordAuthenticationProvider")
 	protected AuthenticationProvider sesameUsernamePasswordAuthenticationProvider;
+	@Autowired
+	protected ACLService aclService;
 
 	protected final String testRepositoryID = "test-blog";
 	protected final String testResourceURI = "https://local.carbonldp.com/apps/test-blog/";

@@ -235,6 +235,7 @@ public class SesameACLService extends AbstractSesameLDPService implements ACLSer
 				repeatedAces.add( directAce );
 				directIterator.remove();
 				inheritableIterator.remove();
+				break;
 			}
 		}
 		return repeatedAces;
