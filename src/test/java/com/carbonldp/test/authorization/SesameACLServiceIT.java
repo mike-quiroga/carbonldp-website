@@ -19,6 +19,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
+import java.util.Map;
 import java.util.Set;
 
 public class SesameACLServiceIT extends AbstractIT {
@@ -159,6 +160,44 @@ public class SesameACLServiceIT extends AbstractIT {
 		} catch ( IllegalAccessException e ) {
 			throw new SkipException( "can't use the method", e );
 		} catch ( InvocationTargetException e ) {
+			throw new SkipException( "can't use the method", e );
+		}
+	}
+
+	@Test
+	public void getACESubjectsIT() {
+
+		try {
+			Method privateMethod = SesameACLService.class.getDeclaredMethod( "getACESubjects", Set.class );
+			privateMethod.setAccessible( true );
+			Map<URI, ACE> aceSubjects = (Map<URI, ACE>) privateMethod.invoke( aclService, aces1 );
+			Assert.assertEquals( aceSubjects.size(), 2 );
+			for ( URI subject : aceSubjects.keySet() ) {
+				Assert.assertTrue( aceSubjects.get( subject ).getSubjects().iterator().next().equals( subject ) );
+			}
+
+		} catch ( NoSuchMethodException e ) {
+			throw new SkipException( "can't use the method", e );
+		} catch ( InvocationTargetException e ) {
+			throw new SkipException( "can't use the method", e );
+		} catch ( IllegalAccessException e ) {
+			throw new SkipException( "can't use the method", e );
+		}
+
+	}
+
+	@Test( dependsOnMethods = "getACESubjectsIT" )
+	public void updateAcesTest() {
+		try {
+			Method privateMethod = SesameACLService.class.getDeclaredMethod( "updateAces", Set.class, ACE.class, boolean.class );
+			privateMethod.setAccessible( true );
+			Set<ACE> updatedAcesSet = (Set<ACE>) privateMethod.invoke( aclService, );
+
+		} catch ( NoSuchMethodException e ) {
+			throw new SkipException( "can't use the method", e );
+		} catch ( InvocationTargetException e ) {
+			throw new SkipException( "can't use the method", e );
+		} catch ( IllegalAccessException e ) {
 			throw new SkipException( "can't use the method", e );
 		}
 	}

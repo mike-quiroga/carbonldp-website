@@ -67,7 +67,7 @@ public class SesameACLRepository extends AbstractSesameLDPRepository implements 
 		Set<ACE> aces = ACLUtil.getRelatedACEs( acl, subjectClass, subjectURIs );
 		if ( aces.isEmpty() ) {
 			ACE ace = ACEFactory.getInstance().create( acl, subjectClass, subjectURIs, permissions, true );
-			acl.addACEntry( ace.getURI() );
+			acl.addACEntry( ace.getSubject() );
 		} else {
 			// TODO: Implement
 			throw new NotImplementedException();
@@ -101,7 +101,7 @@ public class SesameACLRepository extends AbstractSesameLDPRepository implements 
 		Set<ACE> aces = ACLUtil.getRelatedInheritableACEs( acl, subjectClass, subjectURIs );
 		if ( aces.isEmpty() ) {
 			ACE ace = ACEFactory.getInstance().create( acl, subjectClass, subjectURIs, permissions, granting );
-			acl.addInheritableEntry( ace.getURI() );
+			acl.addInheritableEntry( ace.getSubject() );
 		} else {
 			// TODO: Implement
 			throw new NotImplementedException();
