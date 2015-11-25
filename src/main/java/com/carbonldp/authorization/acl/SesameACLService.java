@@ -193,29 +193,29 @@ public class SesameACLService extends AbstractSesameLDPService implements ACLSer
 
 		for ( ACE ace : acesDirectGranting ) {
 			acl.addACEntry( ace.getSubject() );
-			acl.addAll( ace );
+			acl.getBaseModel().addAll( ace );
 		}
 		for ( ACE ace : acesDirectDenying ) {
 			acl.addACEntry( ace.getSubject() );
-			acl.addAll( ace );
+			acl.getBaseModel().addAll( ace );
 		}
 		for ( ACE ace : acesInheritableGranting ) {
 			acl.addInheritableEntry( ace.getSubject() );
-			acl.addAll( ace );
+			acl.getBaseModel().addAll( ace );
 		}
 		for ( ACE ace : acesInheritableDenying ) {
 			acl.addInheritableEntry( ace.getSubject() );
-			acl.addAll( ace );
+			acl.getBaseModel().addAll( ace );
 		}
 		for ( ACE ace : repeatedAcesGranting ) {
 			acl.addACEntry( ace.getSubject() );
 			acl.addInheritableEntry( ace.getSubject() );
-			acl.addAll( ace );
+			acl.getBaseModel().addAll( ace );
 		}
 		for ( ACE ace : repeatedAcesDenying ) {
 			acl.addACEntry( ace.getSubject() );
 			acl.addInheritableEntry( ace.getSubject() );
-			acl.addAll( ace );
+			acl.getBaseModel().addAll( ace );
 		}
 
 		return acl;
