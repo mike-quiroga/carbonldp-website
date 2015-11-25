@@ -5,13 +5,14 @@ import com.carbonldp.authorization.acl.ACE;
 import com.carbonldp.authorization.acl.ACEDescription;
 import com.carbonldp.authorization.acl.SesameACLService;
 import com.carbonldp.test.AbstractIT;
+import org.openrdf.model.Resource;
 import org.openrdf.model.URI;
 import org.openrdf.model.ValueFactory;
 import org.openrdf.model.impl.LinkedHashModel;
 import org.openrdf.model.impl.ValueFactoryImpl;
 import org.testng.Assert;
 import org.testng.SkipException;
-import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.lang.reflect.InvocationTargetException;
@@ -24,8 +25,8 @@ public class SesameACLServiceIT extends AbstractIT {
 
 	ValueFactory valueFactory;
 
-	String role1 = "https://local.carbonldp.com/apps/test-blog/roles/blog-admin/";
-	String role2 = "https://local.carbonldp.com/apps/test-blog/roles/app-admin/";
+	URI role1;
+	URI role2;
 
 	ACE ace1;
 	ACE ace2;
@@ -34,34 +35,25 @@ public class SesameACLServiceIT extends AbstractIT {
 	Set<ACE> aces2;
 	Set<ACE> aces3;
 
-	@BeforeClass
+	@BeforeMethod
 	protected void setUp() {
 		valueFactory = new ValueFactoryImpl();
-		ace1 = new ACE( new LinkedHashModel(), valueFactory.createURI( "https://local.carbonldp.com/apps/test-blog/~acl/#ace-1" ) );
-		ace1.addType( ACEDescription.Resource.CLASS.getURI() );
-		ace1.setSubjectClass( AppRoleDescription.Resource.CLASS.getURI() );
-		ace1.addSubject( valueFactory.createURI( role1 ) );
-		ace1.setGranting( true );
-		ace1.addPermission( ACEDescription.Permission.READ );
-		ace1.addPermission( ACEDescription.Permission.ADD_MEMBER );
-		ace1.addPermission( ACEDescription.Permission.DELETE );
+		role1 = valueFactory.createURI( "https://local.carbonldp.com/apps/test-blog/roles/blog-admin/" );
+		role2 = valueFactory.createURI( "https://local.carbonldp.com/apps/test-blog/roles/app-admin/" );
 
-		ace2 = new ACE( new LinkedHashModel(), valueFactory.createURI( "https://local.carbonldp.com/apps/test-blog/~acl/#ace-2" ) );
-		ace2.addType( ACEDescription.Resource.CLASS.getURI() );
-		ace2.setSubjectClass( AppRoleDescription.Resource.CLASS.getURI() );
-		ace2.addSubject( valueFactory.createURI( role2 ) );
-		ace2.setGranting( true );
-		ace2.addPermission( ACEDescription.Permission.READ );
-		ace2.addPermission( ACEDescription.Permission.ADD_MEMBER );
-		ace2.addPermission( ACEDescription.Permission.DELETE );
+		Set<ACEDescription.Permission> permissions1 = new LinkedHashSet<>();
+		permissions1.add( ACEDescription.Permission.READ );
+		permissions1.add( ACEDescription.Permission.ADD_MEMBER );
+		permissions1.add( ACEDescription.Permission.DELETE );
 
-		ace3 = new ACE( new LinkedHashModel(), valueFactory.createURI( "https://local.carbonldp.com/apps/test-blog/~acl/#ace-3" ) );
-		ace3.addType( ACEDescription.Resource.CLASS.getURI() );
-		ace3.setSubjectClass( AppRoleDescription.Resource.CLASS.getURI() );
-		ace3.addSubject( valueFactory.createURI( role2 ) );
-		ace3.setGranting( true );
-		ace3.addPermission( ACEDescription.Permission.READ );
-		ace3.addPermission( ACEDescription.Permission.ADD_MEMBER );
+		ace1 = createAce( valueFactory.createURI( "https://local.carbonldp.com/apps/test-blog/~acl/#ace-1" ), role1, true, permissions1 );
+		ace2 = createAce( valueFactory.createURI( "https://local.carbonldp.com/apps/test-blog/~acl/#ace-2" ), role2, true, permissions1 );
+
+		Set<ACEDescription.Permission> permissions2 = new LinkedHashSet<>();
+		permissions2.add( ACEDescription.Permission.READ );
+		permissions2.add( ACEDescription.Permission.ADD_MEMBER );
+
+		ace3 = createAce( valueFactory.createURI( "https://local.carbonldp.com/apps/test-blog/~acl/#ace-3" ), role2, true, permissions2 );
 
 		aces1 = new LinkedHashSet<>();
 		aces1.add( ace1 );
@@ -75,6 +67,16 @@ public class SesameACLServiceIT extends AbstractIT {
 		aces3.add( ace1 );
 		aces3.add( ace2 );
 		aces3.add( ace3 );
+	}
+
+	private ACE createAce( Resource aclResource, URI role, boolean granting, Set<ACEDescription.Permission> permissions ) {
+		ACE ace = new ACE( new LinkedHashModel(), aclResource );
+		ace.addType( ACEDescription.Resource.CLASS.getURI() );
+		ace.setSubjectClass( AppRoleDescription.Resource.CLASS.getURI() );
+		ace.addSubject( role );
+		ace.setGranting( granting );
+		permissions.forEach( ace::addPermission );
+		return ace;
 	}
 
 	@Test
@@ -109,7 +111,7 @@ public class SesameACLServiceIT extends AbstractIT {
 		}
 	}
 
-	@Test
+	@Test( dependsOnMethods = {"hasSamePermissionsTrueTest", "hasSamePermissionsFalseTest"} )
 	public void getRepeatedAcesTest() {
 		try {
 			Method privateMethod = SesameACLService.class.getDeclaredMethod( "getRepeatedAces", Set.class, Set.class );
@@ -127,7 +129,7 @@ public class SesameACLServiceIT extends AbstractIT {
 		}
 	}
 
-	@Test( priority = 1 )
+	@Test( dependsOnMethods = {"hasSamePermissionsTrueTest", "hasSamePermissionsFalseTest"} )
 	public void fuseQuadrantTest() {
 		try {
 			Method privateMethod = SesameACLService.class.getDeclaredMethod( "fuseQuadrant", Set.class );
@@ -142,13 +144,13 @@ public class SesameACLServiceIT extends AbstractIT {
 			boolean containsRole2;
 			boolean containsRole;
 			if ( fusedAce1.getSubjects().size() == 2 ) {
-				containsRole1 = subjects1.contains( valueFactory.createURI( role1 ) );
-				containsRole2 = subjects1.contains( valueFactory.createURI( role2 ) );
-				containsRole = subjects2.contains( valueFactory.createURI( role2 ) );
+				containsRole1 = subjects1.contains( role1 );
+				containsRole2 = subjects1.contains( role2 );
+				containsRole = subjects2.contains( role2 );
 			} else {
-				containsRole = subjects1.contains( valueFactory.createURI( role2 ) );
-				containsRole1 = subjects2.contains( valueFactory.createURI( role1 ) );
-				containsRole2 = subjects2.contains( valueFactory.createURI( role2 ) );
+				containsRole = subjects1.contains( role2 );
+				containsRole1 = subjects2.contains( role1 );
+				containsRole2 = subjects2.contains( role2 );
 			}
 			Assert.assertTrue( containsRole1 && containsRole2 && containsRole );
 			Assert.assertTrue( fusedQuadrant.size() == 2 );
