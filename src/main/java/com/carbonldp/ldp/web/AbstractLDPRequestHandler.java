@@ -80,7 +80,7 @@ public abstract class AbstractLDPRequestHandler extends AbstractRequestHandler {
 			appliedPreferences.add( interactionModelApplied );
 			return requestInteractionModel;
 		}
-		return getDefaultInteractionModel( targetURI );
+		return getDefaultInteractionModel();
 	}
 
 	private InteractionModel getRequestInteractionModel( HttpServletRequest request ) {
