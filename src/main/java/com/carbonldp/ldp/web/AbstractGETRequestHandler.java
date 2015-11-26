@@ -69,7 +69,7 @@ public abstract class AbstractGETRequestHandler extends AbstractLDPRequestHandle
 	}
 
 	protected APIPreferences.InteractionModel getDefaultInteractionModel() {
-		return InteractionModel.RDF_SOURCE;
+		return InteractionModel.CONTAINER;
 	}
 
 	protected ResponseEntity<Object> handleRDFSourceRetrieval( URI targetURI ) {

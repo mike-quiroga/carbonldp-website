@@ -1,10 +1,11 @@
 package com.carbonldp.web;
 
-import com.carbonldp.Vars;
+import com.carbonldp.HTTPHeaders;
 import com.carbonldp.errors.ErrorResponse;
 import com.carbonldp.errors.ErrorResponseFactory;
 import com.carbonldp.exceptions.CarbonNoStackTraceRuntimeException;
 import com.carbonldp.exceptions.InvalidResourceException;
+import com.carbonldp.http.Link;
 import com.carbonldp.models.Infraction;
 import com.carbonldp.web.exceptions.AbstractWebRuntimeException;
 import com.carbonldp.web.exceptions.BadRequestException;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Set;
 
 @ControllerAdvice
 public class PlatformExceptionController {
@@ -60,7 +62,15 @@ public class PlatformExceptionController {
 	@ExceptionHandler( InvalidResourceException.class )
 	public ResponseEntity<Object> handleIllegalArgumentException( HttpServletRequest request, HttpServletResponse response, InvalidResourceException exception ) {
 		ErrorResponse error = ErrorResponseFactory.create( exception.getInfractions(), HttpStatus.BAD_REQUEST );
-
+		addConstrainedByLinkHeader( response, error.getCarbonCodes() );
 		return new ResponseEntity<>( error.getBaseModel(), HttpStatus.BAD_REQUEST );
 	}
+
+	private void addConstrainedByLinkHeader( HttpServletResponse response, Set<Integer> carbonCodes ) {
+		Link link = new Link( carbonCodes.toString() );
+		link.addRelationshipType( "http://www.w3.org/ns/ldp#constrainedBy" );
+		response.addHeader( HTTPHeaders.LINK, link.toString() );
+
+	}
+
 }
