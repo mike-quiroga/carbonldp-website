@@ -68,6 +68,10 @@ public abstract class AbstractGETRequestHandler extends AbstractLDPRequestHandle
 		}
 	}
 
+	protected APIPreferences.InteractionModel getDefaultInteractionModel() {
+		return InteractionModel.RDF_SOURCE;
+	}
+
 	protected ResponseEntity<Object> handleRDFSourceRetrieval( URI targetURI ) {
 		// TODO: Take into account preferences (ACL, System Managed Properties, etc.)
 

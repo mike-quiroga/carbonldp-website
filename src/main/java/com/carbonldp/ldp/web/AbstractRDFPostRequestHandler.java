@@ -1,6 +1,7 @@
 package com.carbonldp.ldp.web;
 
 import com.carbonldp.HTTPHeaders;
+import com.carbonldp.descriptions.APIPreferences;
 import com.carbonldp.descriptions.APIPreferences.InteractionModel;
 import com.carbonldp.exceptions.InvalidResourceException;
 import com.carbonldp.ldp.containers.*;
@@ -73,7 +74,7 @@ public abstract class AbstractRDFPostRequestHandler<E extends BasicContainer> ex
 		RDFResource requestDocumentResource = document.getDocumentResource();
 
 		InteractionModel interactionModel = getInteractionModel( targetURI );
-
+		
 		switch ( interactionModel ) {
 			case RDF_SOURCE:
 				return handlePOSTToRDFSource( targetURI, requestDocumentResource );
@@ -83,6 +84,10 @@ public abstract class AbstractRDFPostRequestHandler<E extends BasicContainer> ex
 				throw new IllegalStateException();
 		}
 
+	}
+
+	protected APIPreferences.InteractionModel getDefaultInteractionModel() {
+		return APIPreferences.InteractionModel.CONTAINER;
 	}
 
 	private ResponseEntity<Object> handlePOSTToRDFSource( URI targetURI, RDFResource requestDocumentResource ) {
