@@ -29,6 +29,10 @@ public class SesameACLServiceIT extends AbstractIT {
 	ACE ace3;
 	ACE ace4;
 	ACE ace5;
+	ACE ace6;
+	ACE ace7;
+	ACE ace8;
+	ACE ace9;
 
 	Set<ACE> aces1;
 	Set<ACE> aces2;
@@ -37,12 +41,17 @@ public class SesameACLServiceIT extends AbstractIT {
 	Set<ACE> directAcesFalse;
 	Set<ACE> inheritableAcesFalse;
 
+	Set<ACE> newPermissions1;
+	Set<ACE> newPermissions2;
+	Set<ACE> newPermissions3;
+
 	URI aclUri;
 	URI accessToURI;
 
 	ACL acl;
 
-	Map<Boolean, Map<Boolean, Set<ACE>>> permissions;
+	Map<Boolean, Map<Boolean, Set<ACE>>> permissions1;
+	Map<Boolean, Map<Boolean, Set<ACE>>> permissions2;
 	Map<Boolean, Set<ACE>> directPermissions;
 	Map<Boolean, Set<ACE>> inheritablePermissions;
 
@@ -70,6 +79,14 @@ public class SesameACLServiceIT extends AbstractIT {
 
 		ace5 = createAce( valueFactory.createURI( "https://local.carbonldp.com/apps/test-blog/~acl/#ace-5" ), role1, false, permissions1 );
 
+		ace6 = createAce( valueFactory.createURI( "https://local.carbonldp.com/apps/test-blog/~acl/#ace-6" ), role2, true, permissions2 );
+
+		ace7 = createAce( valueFactory.createURI( "https://local.carbonldp.com/apps/test-blog/~acl/#ace-7" ), role2, false, permissions2 );
+
+		ace8 = createAce( valueFactory.createURI( "https://local.carbonldp.com/apps/test-blog/~acl/#ace-8" ), role1, false, permissions1 );
+
+		ace9 = createAce( valueFactory.createURI( "https://local.carbonldp.com/apps/test-blog/~acl/#ace-9" ), role1, true, permissions1 );
+
 		aces1 = new LinkedHashSet<>();
 		aces1.add( ace1 );
 		aces1.add( ace2 );
@@ -92,13 +109,22 @@ public class SesameACLServiceIT extends AbstractIT {
 		inheritableAcesFalse = new LinkedHashSet<>();
 		inheritableAcesFalse.add( ace5 );
 
+		newPermissions1 = new LinkedHashSet<>();
+		newPermissions1.add( ace6 );
+		newPermissions1.add( ace9 );
+
+		newPermissions2 = new LinkedHashSet<>();
+		newPermissions2.add( ace7 );
+
+		newPermissions3 = new LinkedHashSet<>();
+		newPermissions3.add( ace8 );
+
 		aclUri = valueFactory.createURI( "https://local.carbonldp.com/apps/test-blog/~acl/" );
 		accessToURI = valueFactory.createURI( "https://local.carbonldp.com/apps/test-blog/" );
 
 		acl = ACLFactory.create( aclUri, accessToURI );
 
-		createMapPermissions();
-
+		createMapsPermissions();
 	}
 
 	private ACE createAce( Resource aclResource, URI role, boolean granting, Set<ACEDescription.Permission> permissions ) {
@@ -111,8 +137,9 @@ public class SesameACLServiceIT extends AbstractIT {
 		return ace;
 	}
 
-	private void createMapPermissions() {
-		permissions = new LinkedHashMap<>();
+	private void createMapsPermissions() {
+		permissions1 = new LinkedHashMap<>();
+		permissions2 = new LinkedHashMap<>();
 		directPermissions = new LinkedHashMap<>();
 		inheritablePermissions = new LinkedHashMap<>();
 
@@ -122,8 +149,20 @@ public class SesameACLServiceIT extends AbstractIT {
 		inheritablePermissions.put( true, inheritableAcesTrue );
 		inheritablePermissions.put( false, inheritableAcesFalse );
 
-		permissions.put( true, directPermissions );
-		permissions.put( false, inheritablePermissions );
+		permissions1.put( true, directPermissions );
+		permissions1.put( false, inheritablePermissions );
+
+		directPermissions = new LinkedHashMap<>();
+		inheritablePermissions = new LinkedHashMap<>();
+
+		directPermissions.put( true, newPermissions1 );
+		directPermissions.put( false, newPermissions2 );
+
+		inheritablePermissions.put( true, new LinkedHashSet<>() );
+		inheritablePermissions.put( false, newPermissions3 );
+
+		permissions2.put( true, directPermissions );
+		permissions2.put( false, inheritablePermissions );
 	}
 
 	@Test
@@ -215,7 +254,7 @@ public class SesameACLServiceIT extends AbstractIT {
 		try {
 			Method privateMethod = SesameACLService.class.getDeclaredMethod( "addPermissions", Map.class, ACL.class );
 			privateMethod.setAccessible( true );
-			ACL newAcl = (ACL) privateMethod.invoke( aclService, permissions, acl );
+			ACL newAcl = (ACL) privateMethod.invoke( aclService, permissions1, acl );
 			Assert.assertEquals( newAcl.getAccessTo(), acl.getAccessTo() );
 			Set<ACE> directACEs = ACEFactory.getInstance().get( newAcl.getBaseModel(), newAcl.getACEntries() );
 			Set<ACE> inheritableACEs = ACEFactory.getInstance().get( newAcl.getBaseModel(), newAcl.getInheritableEntries() );
@@ -240,17 +279,256 @@ public class SesameACLServiceIT extends AbstractIT {
 	}
 
 	@Test
-	public void compareAcesTest() {
+	public void compareAcesToAdd() {
+		compareAcesTest( inheritableAcesTrue, aces1 );
+	}
+
+	@Test
+	public void compareAcesToRemove() {
+		compareAcesTest( aces1, inheritableAcesTrue );
+	}
+
+	private void compareAcesTest( Set<ACE> set1, Set<ACE> set2 ) {
 		try {
 			Method privateMethod = SesameACLService.class.getDeclaredMethod( "compareAces", Set.class, Set.class );
 			privateMethod.setAccessible( true );
-			Set<ACE> aces = (Set<ACE>) privateMethod.invoke( aclService, aces1, aces2 );
-			Assert.assertFalse( aces.isEmpty());
+			Set<ACE> aces = (Set<ACE>) privateMethod.invoke( aclService, set1, set2 );
+			Assert.assertEquals( aces.size(), 2 );
+			Iterator<ACE> iterator = aces.iterator();
+			ACE differencesAce1 = iterator.next();
+			ACE differencesAce2 = iterator.next();
+			Set<ACEDescription.Permission> changedPermissions1 = differencesAce1.getPermissions();
+			Set<ACEDescription.Permission> changedPermissions2 = differencesAce2.getPermissions();
+			if ( changedPermissions1.size() == 3 ) {
+				Assert.assertEquals( changedPermissions2.size(), 1 );
+				Assert.assertTrue( changedPermissions1.contains( ACEDescription.Permission.READ ) );
+				Assert.assertTrue( changedPermissions1.contains( ACEDescription.Permission.ADD_MEMBER ) );
+				Assert.assertTrue( changedPermissions1.contains( ACEDescription.Permission.DELETE ) );
+				Assert.assertTrue( changedPermissions2.contains( ACEDescription.Permission.DELETE ) );
+				Assert.assertTrue( differencesAce1.getSubjects().iterator().next().equals( role1 ) );
+				Assert.assertTrue( differencesAce2.getSubjects().iterator().next().equals( role2 ) );
+			} else {
+				Assert.assertEquals( changedPermissions2.size(), 3 );
+				Assert.assertEquals( changedPermissions1.size(), 1 );
+				Assert.assertTrue( changedPermissions2.contains( ACEDescription.Permission.READ ) );
+				Assert.assertTrue( changedPermissions2.contains( ACEDescription.Permission.ADD_MEMBER ) );
+				Assert.assertTrue( changedPermissions2.contains( ACEDescription.Permission.DELETE ) );
+				Assert.assertTrue( changedPermissions1.contains( ACEDescription.Permission.DELETE ) );
+				Assert.assertTrue( differencesAce2.getSubjects().iterator().next().equals( role1 ) );
+				Assert.assertTrue( differencesAce1.getSubjects().iterator().next().equals( role2 ) );
+			}
+
 		} catch ( NoSuchMethodException e ) {
 			throw new SkipException( "can't use the method", e );
 		} catch ( IllegalAccessException e ) {
 			throw new SkipException( "can't use the method", e );
 		} catch ( InvocationTargetException e ) {
+			throw new SkipException( "can't use the method", e );
+		}
+	}
+
+	@Test
+	public void comparePermissionsTest() {
+		try {
+			Method privateMethod = SesameACLService.class.getDeclaredMethod( "comparePermissions", Map.class, Map.class );
+			privateMethod.setAccessible( true );
+			permissions1.get( true ).get( true ).remove( ace3 );
+			Set<ACE> aces = (Set<ACE>) privateMethod.invoke( aclService, permissions1, permissions2 );
+			Assert.assertEquals( aces.size(), 2 );
+			Iterator<ACE> iterator = aces.iterator();
+			ACE differencesAce1 = iterator.next();
+			ACE differencesAce2 = iterator.next();
+			Set<ACEDescription.Permission> changedPermissions1 = differencesAce1.getPermissions();
+			Set<ACEDescription.Permission> changedPermissions2 = differencesAce2.getPermissions();
+			if ( changedPermissions1.size() == 2 ) {
+				Assert.assertEquals( changedPermissions2.size(), 1 );
+				Assert.assertTrue( changedPermissions1.contains( ACEDescription.Permission.READ ) );
+				Assert.assertTrue( changedPermissions1.contains( ACEDescription.Permission.ADD_MEMBER ) );
+				Assert.assertTrue( changedPermissions2.contains( ACEDescription.Permission.DELETE ) );
+				Assert.assertTrue( differencesAce1.getSubjects().iterator().next().equals( role2 ) );
+				Assert.assertTrue( differencesAce2.getSubjects().iterator().next().equals( role2 ) );
+			} else {
+				Assert.assertEquals( changedPermissions2.size(), 2 );
+				Assert.assertEquals( changedPermissions1.size(), 1 );
+				Assert.assertTrue( changedPermissions2.contains( ACEDescription.Permission.READ ) );
+				Assert.assertTrue( changedPermissions2.contains( ACEDescription.Permission.ADD_MEMBER ) );
+				Assert.assertTrue( changedPermissions1.contains( ACEDescription.Permission.DELETE ) );
+				Assert.assertTrue( differencesAce2.getSubjects().iterator().next().equals( role2 ) );
+				Assert.assertTrue( differencesAce1.getSubjects().iterator().next().equals( role2 ) );
+			}
+
+		} catch ( NoSuchMethodException e ) {
+			throw new SkipException( "can't use the method", e );
+		} catch ( InvocationTargetException e ) {
+			throw new SkipException( "can't use the method", e );
+		} catch ( IllegalAccessException e ) {
+			throw new SkipException( "can't use the method", e );
+		}
+	}
+
+	@Test
+	public void getACESubjectsIT() {
+		try {
+			Method privateMethod = SesameACLService.class.getDeclaredMethod( "getACESubjects", Set.class );
+			privateMethod.setAccessible( true );
+			Map<URI, ACE> aceSubjects = (Map<URI, ACE>) privateMethod.invoke( aclService, aces1 );
+			Assert.assertEquals( aceSubjects.size(), 2 );
+			for ( URI subject : aceSubjects.keySet() ) {
+				Assert.assertTrue( aceSubjects.get( subject ).getSubjects().iterator().next().equals( subject ) );
+			}
+
+		} catch ( NoSuchMethodException e ) {
+			throw new SkipException( "can't use the method", e );
+		} catch ( InvocationTargetException e ) {
+			throw new SkipException( "can't use the method", e );
+		} catch ( IllegalAccessException e ) {
+			throw new SkipException( "can't use the method", e );
+		}
+	}
+
+	@Test
+	public void updateAcesAddPermissionTest() {
+		try {
+			Method privateMethod = SesameACLService.class.getDeclaredMethod( "updateAces", Set.class, ACE.class, boolean.class );
+			privateMethod.setAccessible( true );
+			aces1.remove( ace2 );
+			aces1.add( ace3 );
+			Set<ACE> acesUpdated = (Set<ACE>) privateMethod.invoke( aclService, aces1, ace2, true );
+			Assert.assertEquals( acesUpdated.size(), 2 );
+			Iterator<ACE> iterator = acesUpdated.iterator();
+			ACE aceUpdated1 = iterator.next();
+			ACE aceUpdated2 = iterator.next();
+			Set<ACEDescription.Permission> updatedPermissions1 = aceUpdated1.getPermissions();
+			Set<ACEDescription.Permission> updatedPermissions2 = aceUpdated2.getPermissions();
+			Assert.assertEquals( updatedPermissions1, updatedPermissions2 );
+		} catch ( NoSuchMethodException e ) {
+			throw new SkipException( "can't use the method", e );
+		} catch ( InvocationTargetException e ) {
+			throw new SkipException( "can't use the method", e );
+		} catch ( IllegalAccessException e ) {
+			throw new SkipException( "can't use the method", e );
+		}
+	}
+
+	@Test
+	public void updateAcesAddAceTest() {
+		try {
+			Method privateMethod = SesameACLService.class.getDeclaredMethod( "updateAces", Set.class, ACE.class, boolean.class );
+			privateMethod.setAccessible( true );
+			aces1.remove( ace2 );
+			Set<ACE> acesUpdated = (Set<ACE>) privateMethod.invoke( aclService, aces1, ace2, true );
+			Assert.assertEquals( acesUpdated.size(), 2 );
+			Iterator<ACE> iterator = acesUpdated.iterator();
+			ACE aceUpdated1 = iterator.next();
+			ACE aceUpdated2 = iterator.next();
+			Set<ACEDescription.Permission> updatedPermissions1 = aceUpdated1.getPermissions();
+			Set<ACEDescription.Permission> updatedPermissions2 = aceUpdated2.getPermissions();
+			Assert.assertEquals( updatedPermissions1, updatedPermissions2 );
+		} catch ( NoSuchMethodException e ) {
+			throw new SkipException( "can't use the method", e );
+		} catch ( InvocationTargetException e ) {
+			throw new SkipException( "can't use the method", e );
+		} catch ( IllegalAccessException e ) {
+			throw new SkipException( "can't use the method", e );
+		}
+	}
+
+	@Test
+	public void updateAcesWrongGrantingTest() {
+		try {
+			Method privateMethod = SesameACLService.class.getDeclaredMethod( "updateAces", Set.class, ACE.class, boolean.class );
+			privateMethod.setAccessible( true );
+			aces1.remove( ace2 );
+			Set<ACE> acesUpdated = (Set<ACE>) privateMethod.invoke( aclService, aces1, ace2, false );
+			Assert.assertEquals( aces1, acesUpdated );
+		} catch ( NoSuchMethodException e ) {
+			throw new SkipException( "can't use the method", e );
+		} catch ( InvocationTargetException e ) {
+			throw new SkipException( "can't use the method", e );
+		} catch ( IllegalAccessException e ) {
+			throw new SkipException( "can't use the method", e );
+		}
+	}
+
+	@Test
+	public void updateAcesNoNewPermissionTest() {
+		try {
+			Method privateMethod = SesameACLService.class.getDeclaredMethod( "updateAces", Set.class, ACE.class, boolean.class );
+			privateMethod.setAccessible( true );
+			Set<ACE> acesUpdated = (Set<ACE>) privateMethod.invoke( aclService, aces1, ace3, false );
+			Assert.assertEquals( aces1, acesUpdated );
+		} catch ( NoSuchMethodException e ) {
+			throw new SkipException( "can't use the method", e );
+		} catch ( InvocationTargetException e ) {
+			throw new SkipException( "can't use the method", e );
+		} catch ( IllegalAccessException e ) {
+			throw new SkipException( "can't use the method", e );
+		}
+	}
+
+	@Test
+	public void updateACEListTest() {
+		try {
+			Method privateMethod = SesameACLService.class.getDeclaredMethod( "updateACEList", Set.class );
+			privateMethod.setAccessible( true );
+			Set<ACE> directAces = new LinkedHashSet<>();
+			directAces.addAll( aces1 );
+			directAces.add( ace4 );
+			Map<Boolean, Set<ACE>> dividedAces = (Map<Boolean, Set<ACE>>) privateMethod.invoke( aclService, directAces );
+			Set<ACE> grantingAces = dividedAces.get( true );
+			Set<ACE> denyingAces = dividedAces.get( false );
+			Assert.assertEquals( grantingAces.size(), 2 );
+			Assert.assertEquals( denyingAces.size(), 1 );
+			for ( ACE ace : grantingAces ) {
+				Assert.assertTrue( ace.isGranting() );
+			}
+			for ( ACE ace : denyingAces ) {
+				Assert.assertFalse( ace.isGranting() );
+			}
+		} catch ( NoSuchMethodException e ) {
+			throw new SkipException( "can't use the method", e );
+		} catch ( InvocationTargetException e ) {
+			throw new SkipException( "can't use the method", e );
+		} catch ( IllegalAccessException e ) {
+			throw new SkipException( "can't use the method", e );
+		}
+	}
+
+	@Test
+	public void getPermissionsTest() {
+		try {
+			Method privateMethod = SesameACLService.class.getDeclaredMethod( "getPermissions", ACL.class );
+			privateMethod.setAccessible( true );
+
+			acl.addACEntry( ace2.getSubject() );
+			acl.addACEntry( ace3.getSubject() );
+			acl.addACEntry( ace4.getSubject() );
+			acl.addInheritableEntry( ace1.getSubject() );
+			acl.addInheritableEntry( ace5.getSubject() );
+
+			acl.getBaseModel().addAll( ace1 );
+			acl.getBaseModel().addAll( ace2 );
+			acl.getBaseModel().addAll( ace3 );
+			acl.getBaseModel().addAll( ace4 );
+			acl.getBaseModel().addAll( ace5 );
+
+			Map<Boolean, Map<Boolean, Set<ACE>>> aclPermissions = (Map<Boolean, Map<Boolean, Set<ACE>>>) privateMethod.invoke( aclService, acl );
+
+			Assert.assertEquals( aclPermissions.get( true ).get( true ).size(), 1 );
+			Assert.assertEquals( aclPermissions.get( true ).get( false ).size(), 1 );
+			Assert.assertEquals( aclPermissions.get( false ).get( true ).size(), 1 );
+			Assert.assertEquals( aclPermissions.get( false ).get( false ).size(), 1 );
+
+			Assert.assertEquals( aclPermissions.get( true ).get( true ).iterator().next().getPermissions().size(), 3 );
+			Assert.assertEquals( aclPermissions.get( true ).get( false ).iterator().next().getPermissions().size(), 2 );
+			Assert.assertEquals( aclPermissions.get( false ).get( true ).iterator().next().getPermissions().size(), 3 );
+			Assert.assertEquals( aclPermissions.get( false ).get( false ).iterator().next().getPermissions().size(), 3 );
+
+		} catch ( NoSuchMethodException e ) {
+			throw new SkipException( "can't use the method", e );
+		} catch ( InvocationTargetException e ) {
+			throw new SkipException( "can't use the method", e );
+		} catch ( IllegalAccessException e ) {
 			throw new SkipException( "can't use the method", e );
 		}
 	}

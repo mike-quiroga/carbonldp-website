@@ -26,6 +26,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class SesameACLService extends AbstractSesameLDPService implements ACLService {
 	ValueFactory valueFactory;
@@ -138,9 +139,9 @@ public class SesameACLService extends AbstractSesameLDPService implements ACLSer
 
 					for ( ACEDescription.Permission permission : newAce.getPermissions() ) {
 						if ( ace.getPermissions().contains( permission ) ) {
-							ace.getPermissions().remove( permission );
+							ace.removePermission( permission );
 						} else {
-							aceToAdd.getPermissions().add( permission );
+							aceToAdd.addPermission( permission );
 						}
 					}
 
@@ -148,14 +149,12 @@ public class SesameACLService extends AbstractSesameLDPService implements ACLSer
 						permissionsToModify.add( ace );
 					}
 					if ( ! aceToAdd.getPermissions().isEmpty() ) {
-						newAce.addType( ACEDescription.Resource.CLASS.getURI() );
-						newAce.setSubjectClass( ace.getSubjectClass() );
-						newAce.addSubject( ace.getSubjects().iterator().next() );
-						newAce.setGranting( ace.isGranting() );
+						aceToAdd.addType( ACEDescription.Resource.CLASS.getURI() );
+						aceToAdd.setSubjectClass( ace.getSubjectClass() );
+						aceToAdd.addSubject( ace.getSubjects().iterator().next() );
+						aceToAdd.setGranting( ace.isGranting() );
 						permissionsToModify.add( aceToAdd );
 					}
-
-					aces.remove( ace );
 					addAllPermissions = false;
 					break;
 				}
@@ -164,9 +163,7 @@ public class SesameACLService extends AbstractSesameLDPService implements ACLSer
 				permissionsToModify.add( newAce );
 			}
 		}
-		if ( ! aces.isEmpty() ) {
-			permissionsToModify.addAll( aces );
-		}
+		permissionsToModify.addAll( aces.stream().filter( ace -> ! ace.getPermissions().isEmpty() ).collect( Collectors.toList() ) );
 		return permissionsToModify;
 	}
 
