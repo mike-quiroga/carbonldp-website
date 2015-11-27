@@ -24,15 +24,16 @@ public class SesameACLServiceIT extends AbstractIT {
 	URI role1;
 	URI role2;
 
-	ACE ace1;
-	ACE ace2;
-	ACE ace3;
-	ACE ace4;
-	ACE ace5;
-	ACE ace6;
-	ACE ace7;
-	ACE ace8;
-	ACE ace9;
+	ACE aceRAD1T;
+	ACE aceRAD2T;
+	ACE aceRA2T;
+	ACE aceRA2F;
+	ACE aceRAD1F;
+	ACE aceRA2TClone;
+	ACE aceRA2FClone;
+	ACE aceRAD1FClone;
+	ACE aceRAD1TClone;
+	ACE aceRA1F;
 
 	Set<ACE> aces1;
 	Set<ACE> aces2;
@@ -66,58 +67,53 @@ public class SesameACLServiceIT extends AbstractIT {
 		permissions1.add( ACEDescription.Permission.ADD_MEMBER );
 		permissions1.add( ACEDescription.Permission.DELETE );
 
-		ace1 = createAce( valueFactory.createURI( "https://local.carbonldp.com/apps/test-blog/~acl/#ace-1" ), role1, true, permissions1 );
-		ace2 = createAce( valueFactory.createURI( "https://local.carbonldp.com/apps/test-blog/~acl/#ace-2" ), role2, true, permissions1 );
+		aceRAD1T = createAce( valueFactory.createURI( "https://local.carbonldp.com/apps/test-blog/~acl/#ace-1" ), role1, true, permissions1 );
+		aceRAD2T = createAce( valueFactory.createURI( "https://local.carbonldp.com/apps/test-blog/~acl/#ace-2" ), role2, true, permissions1 );
 
 		Set<ACEDescription.Permission> permissions2 = new LinkedHashSet<>();
 		permissions2.add( ACEDescription.Permission.READ );
 		permissions2.add( ACEDescription.Permission.ADD_MEMBER );
 
-		ace3 = createAce( valueFactory.createURI( "https://local.carbonldp.com/apps/test-blog/~acl/#ace-3" ), role2, true, permissions2 );
-
-		ace4 = createAce( valueFactory.createURI( "https://local.carbonldp.com/apps/test-blog/~acl/#ace-4" ), role2, false, permissions2 );
-
-		ace5 = createAce( valueFactory.createURI( "https://local.carbonldp.com/apps/test-blog/~acl/#ace-5" ), role1, false, permissions1 );
-
-		ace6 = createAce( valueFactory.createURI( "https://local.carbonldp.com/apps/test-blog/~acl/#ace-6" ), role2, true, permissions2 );
-
-		ace7 = createAce( valueFactory.createURI( "https://local.carbonldp.com/apps/test-blog/~acl/#ace-7" ), role2, false, permissions2 );
-
-		ace8 = createAce( valueFactory.createURI( "https://local.carbonldp.com/apps/test-blog/~acl/#ace-8" ), role1, false, permissions1 );
-
-		ace9 = createAce( valueFactory.createURI( "https://local.carbonldp.com/apps/test-blog/~acl/#ace-9" ), role1, true, permissions1 );
+		aceRA2T = createAce( valueFactory.createURI( "https://local.carbonldp.com/apps/test-blog/~acl/#ace-3" ), role2, true, permissions2 );
+		aceRA2F = createAce( valueFactory.createURI( "https://local.carbonldp.com/apps/test-blog/~acl/#ace-4" ), role2, false, permissions2 );
+		aceRAD1F = createAce( valueFactory.createURI( "https://local.carbonldp.com/apps/test-blog/~acl/#ace-5" ), role1, false, permissions1 );
+		aceRA2TClone = createAce( valueFactory.createURI( "https://local.carbonldp.com/apps/test-blog/~acl/#ace-6" ), role2, true, permissions2 );
+		aceRA2FClone = createAce( valueFactory.createURI( "https://local.carbonldp.com/apps/test-blog/~acl/#ace-7" ), role2, false, permissions2 );
+		aceRAD1FClone = createAce( valueFactory.createURI( "https://local.carbonldp.com/apps/test-blog/~acl/#ace-8" ), role1, false, permissions1 );
+		aceRAD1TClone = createAce( valueFactory.createURI( "https://local.carbonldp.com/apps/test-blog/~acl/#ace-9" ), role1, true, permissions1 );
+		aceRA1F = createAce( valueFactory.createURI( "https://local.carbonldp.com/apps/test-blog/~acl/#ace-10" ), role1, false, permissions2 );
 
 		aces1 = new LinkedHashSet<>();
-		aces1.add( ace1 );
-		aces1.add( ace2 );
+		aces1.add( aceRAD1T );
+		aces1.add( aceRAD2T );
 
 		aces2 = new LinkedHashSet<>();
-		aces2.add( ace2 );
-		aces2.add( ace3 );
+		aces2.add( aceRAD2T );
+		aces2.add( aceRA2T );
 
 		directAcesTrue = new LinkedHashSet<>();
-		directAcesTrue.add( ace1 );
-		directAcesTrue.add( ace2 );
-		directAcesTrue.add( ace3 );
+		directAcesTrue.add( aceRAD1T );
+		directAcesTrue.add( aceRAD2T );
+		directAcesTrue.add( aceRA2T );
 
 		inheritableAcesTrue = new LinkedHashSet<>();
-		inheritableAcesTrue.add( ace3 );
+		inheritableAcesTrue.add( aceRA2T );
 
 		directAcesFalse = new LinkedHashSet<>();
-		directAcesFalse.add( ace4 );
+		directAcesFalse.add( aceRA2F );
 
 		inheritableAcesFalse = new LinkedHashSet<>();
-		inheritableAcesFalse.add( ace5 );
+		inheritableAcesFalse.add( aceRAD1F );
 
 		newPermissions1 = new LinkedHashSet<>();
-		newPermissions1.add( ace6 );
-		newPermissions1.add( ace9 );
+		newPermissions1.add( aceRA2TClone );
+		newPermissions1.add( aceRAD1TClone );
 
 		newPermissions2 = new LinkedHashSet<>();
-		newPermissions2.add( ace7 );
+		newPermissions2.add( aceRA2FClone );
 
 		newPermissions3 = new LinkedHashSet<>();
-		newPermissions3.add( ace8 );
+		newPermissions3.add( aceRAD1FClone );
 
 		aclUri = valueFactory.createURI( "https://local.carbonldp.com/apps/test-blog/~acl/" );
 		accessToURI = valueFactory.createURI( "https://local.carbonldp.com/apps/test-blog/" );
@@ -166,11 +162,84 @@ public class SesameACLServiceIT extends AbstractIT {
 	}
 
 	@Test
+	public void replaceTest() {
+		configureOldACL();
+		ACL newAcl = ACLFactory.create( acl.getURI(), acl.getAccessTo() );
+
+		newAcl.addACEntry( aceRA2T.getSubject() );
+		newAcl.addACEntry( aceRAD1F.getSubject() );
+		newAcl.addInheritableEntry( aceRAD1T.getSubject() );
+		newAcl.addInheritableEntry( aceRAD1FClone.getSubject() );
+
+		newAcl.getBaseModel().addAll( aceRA2T );
+		newAcl.getBaseModel().addAll( aceRAD1F );
+		newAcl.getBaseModel().addAll( aceRAD1T );
+		newAcl.getBaseModel().addAll( aceRAD1FClone );
+
+		aclService.replace( newAcl );
+
+		ACL modifiedAcl = aclService.get( newAcl.getURI() );
+
+		Set<Resource> directAcesRsources = modifiedAcl.getACEntries();
+		Set<Resource> inheritableAcesRsources = modifiedAcl.getInheritableEntries();
+
+		Assert.assertEquals( directAcesRsources.size(), 2 );
+		Assert.assertEquals( inheritableAcesRsources.size(), 2 );
+
+		Set<ACE> aces = ACEFactory.getInstance().get( acl.getBaseModel(), acl.getACEntries() );
+		aces.addAll( ACEFactory.getInstance().get( acl.getBaseModel(), acl.getInheritableEntries() ) );
+
+		Assert.assertEquals( aces.size(), 3 );
+
+		Set<ACE> mustHaveAces = new LinkedHashSet<>();
+		mustHaveAces.add( aceRA2T );
+		mustHaveAces.add( aceRAD1F );
+		mustHaveAces.add( aceRAD1T );
+
+		for ( ACE mustHaveAce : mustHaveAces ) {
+			boolean areTheSame = false;
+			for ( ACE ace : aces ) {
+				if ( ! hasSameParmissions( ace, mustHaveAce ) ) continue;
+				if ( ace.isGranting() != mustHaveAce.isGranting() ) continue;
+				if ( ! ace.getSubjects().iterator().next().equals( mustHaveAce.getSubjects().iterator().next() ) ) continue;
+				areTheSame = true;
+				break;
+			}
+			Assert.assertTrue( areTheSame );
+		}
+
+	}
+
+	private boolean hasSameParmissions( ACE ace1, ACE ace2 ) {
+		Set<ACEDescription.Permission> ace1Permissions = ace1.getPermissions();
+		Set<ACEDescription.Permission> ace2Permissions = ace2.getPermissions();
+		if ( ace1Permissions.size() != ace2Permissions.size() ) return false;
+		for ( ACEDescription.Permission permission : ace2Permissions )
+			if ( ! ace1Permissions.contains( permission ) ) return false;
+		return true;
+	}
+
+	private void configureOldACL() {
+
+		acl.addACEntry( aceRAD2T.getSubject() );
+		acl.addACEntry( aceRAD1F.getSubject() );
+		acl.addInheritableEntry( aceRAD1T.getSubject() );
+		acl.addInheritableEntry( aceRA1F.getSubject() );
+
+		acl.getBaseModel().addAll( aceRAD2T );
+		acl.getBaseModel().addAll( aceRAD1F );
+		acl.getBaseModel().addAll( aceRAD1T );
+		acl.getBaseModel().addAll( aceRA1F );
+
+		aclRepository.createACL( acl.getDocument() );
+	}
+
+	@Test
 	public void hasSamePermissionsTrueTest() {
 		try {
 			Method privateMethod = SesameACLService.class.getDeclaredMethod( "hasSamePermissions", ACE.class, ACE.class );
 			privateMethod.setAccessible( true );
-			Boolean equals = (Boolean) privateMethod.invoke( aclService, ace1, ace2 );
+			Boolean equals = (Boolean) privateMethod.invoke( aclService, aceRAD1T, aceRAD2T );
 			Assert.assertTrue( equals );
 		} catch ( NoSuchMethodException e ) {
 			throw new SkipException( "can't use the method", e );
@@ -186,7 +255,7 @@ public class SesameACLServiceIT extends AbstractIT {
 		try {
 			Method privateMethod = SesameACLService.class.getDeclaredMethod( "hasSamePermissions", ACE.class, ACE.class );
 			privateMethod.setAccessible( true );
-			Boolean equals = (Boolean) privateMethod.invoke( aclService, ace1, ace3 );
+			Boolean equals = (Boolean) privateMethod.invoke( aclService, aceRAD1T, aceRA2T );
 			Assert.assertFalse( equals );
 		} catch ( NoSuchMethodException e ) {
 			throw new SkipException( "can't use the method", e );
@@ -203,9 +272,9 @@ public class SesameACLServiceIT extends AbstractIT {
 			Method privateMethod = SesameACLService.class.getDeclaredMethod( "getRepeatedAces", Set.class, Set.class );
 			privateMethod.setAccessible( true );
 			Set<ACE> repeatedAces = (Set<ACE>) privateMethod.invoke( aclService, aces1, aces2 );
-			Assert.assertTrue( aces1.size() == 1 && aces1.contains( ace1 ) );
-			Assert.assertTrue( aces2.size() == 1 && aces2.contains( ace3 ) );
-			Assert.assertTrue( repeatedAces.size() == 1 && repeatedAces.contains( ace2 ) );
+			Assert.assertTrue( aces1.size() == 1 && aces1.contains( aceRAD1T ) );
+			Assert.assertTrue( aces2.size() == 1 && aces2.contains( aceRA2T ) );
+			Assert.assertTrue( repeatedAces.size() == 1 && repeatedAces.contains( aceRAD2T ) );
 		} catch ( NoSuchMethodException e ) {
 			throw new SkipException( "can't use the method", e );
 		} catch ( IllegalAccessException e ) {
@@ -260,12 +329,12 @@ public class SesameACLServiceIT extends AbstractIT {
 			Set<ACE> inheritableACEs = ACEFactory.getInstance().get( newAcl.getBaseModel(), newAcl.getInheritableEntries() );
 			Assert.assertEquals( directACEs.size(), 3 );
 			Assert.assertEquals( inheritableACEs.size(), 2 );
-			Assert.assertTrue( directACEs.contains( ace3 ) );
-			Assert.assertTrue( directACEs.contains( ace4 ) );
-			Assert.assertTrue( inheritableACEs.contains( ace3 ) );
-			Assert.assertTrue( inheritableACEs.contains( ace5 ) );
-			directACEs.remove( ace3 );
-			directACEs.remove( ace4 );
+			Assert.assertTrue( directACEs.contains( aceRA2T ) );
+			Assert.assertTrue( directACEs.contains( aceRA2F ) );
+			Assert.assertTrue( inheritableACEs.contains( aceRA2T ) );
+			Assert.assertTrue( inheritableACEs.contains( aceRAD1F ) );
+			directACEs.remove( aceRA2T );
+			directACEs.remove( aceRA2F );
 			Assert.assertEquals( directACEs.iterator().next().getSubjects().size(), 2 );
 			Assert.assertTrue( directACEs.iterator().next().getSubjects().contains( role1 ) );
 			Assert.assertTrue( directACEs.iterator().next().getSubjects().contains( role2 ) );
@@ -332,7 +401,7 @@ public class SesameACLServiceIT extends AbstractIT {
 		try {
 			Method privateMethod = SesameACLService.class.getDeclaredMethod( "comparePermissions", Map.class, Map.class );
 			privateMethod.setAccessible( true );
-			permissions1.get( true ).get( true ).remove( ace3 );
+			permissions1.get( true ).get( true ).remove( aceRA2T );
 			Set<ACE> aces = (Set<ACE>) privateMethod.invoke( aclService, permissions1, permissions2 );
 			Assert.assertEquals( aces.size(), 2 );
 			Iterator<ACE> iterator = aces.iterator();
@@ -391,9 +460,9 @@ public class SesameACLServiceIT extends AbstractIT {
 		try {
 			Method privateMethod = SesameACLService.class.getDeclaredMethod( "updateAces", Set.class, ACE.class, boolean.class );
 			privateMethod.setAccessible( true );
-			aces1.remove( ace2 );
-			aces1.add( ace3 );
-			Set<ACE> acesUpdated = (Set<ACE>) privateMethod.invoke( aclService, aces1, ace2, true );
+			aces1.remove( aceRAD2T );
+			aces1.add( aceRA2T );
+			Set<ACE> acesUpdated = (Set<ACE>) privateMethod.invoke( aclService, aces1, aceRAD2T, true );
 			Assert.assertEquals( acesUpdated.size(), 2 );
 			Iterator<ACE> iterator = acesUpdated.iterator();
 			ACE aceUpdated1 = iterator.next();
@@ -415,8 +484,8 @@ public class SesameACLServiceIT extends AbstractIT {
 		try {
 			Method privateMethod = SesameACLService.class.getDeclaredMethod( "updateAces", Set.class, ACE.class, boolean.class );
 			privateMethod.setAccessible( true );
-			aces1.remove( ace2 );
-			Set<ACE> acesUpdated = (Set<ACE>) privateMethod.invoke( aclService, aces1, ace2, true );
+			aces1.remove( aceRAD2T );
+			Set<ACE> acesUpdated = (Set<ACE>) privateMethod.invoke( aclService, aces1, aceRAD2T, true );
 			Assert.assertEquals( acesUpdated.size(), 2 );
 			Iterator<ACE> iterator = acesUpdated.iterator();
 			ACE aceUpdated1 = iterator.next();
@@ -438,8 +507,8 @@ public class SesameACLServiceIT extends AbstractIT {
 		try {
 			Method privateMethod = SesameACLService.class.getDeclaredMethod( "updateAces", Set.class, ACE.class, boolean.class );
 			privateMethod.setAccessible( true );
-			aces1.remove( ace2 );
-			Set<ACE> acesUpdated = (Set<ACE>) privateMethod.invoke( aclService, aces1, ace2, false );
+			aces1.remove( aceRAD2T );
+			Set<ACE> acesUpdated = (Set<ACE>) privateMethod.invoke( aclService, aces1, aceRAD2T, false );
 			Assert.assertEquals( aces1, acesUpdated );
 		} catch ( NoSuchMethodException e ) {
 			throw new SkipException( "can't use the method", e );
@@ -455,7 +524,7 @@ public class SesameACLServiceIT extends AbstractIT {
 		try {
 			Method privateMethod = SesameACLService.class.getDeclaredMethod( "updateAces", Set.class, ACE.class, boolean.class );
 			privateMethod.setAccessible( true );
-			Set<ACE> acesUpdated = (Set<ACE>) privateMethod.invoke( aclService, aces1, ace3, false );
+			Set<ACE> acesUpdated = (Set<ACE>) privateMethod.invoke( aclService, aces1, aceRA2T, false );
 			Assert.assertEquals( aces1, acesUpdated );
 		} catch ( NoSuchMethodException e ) {
 			throw new SkipException( "can't use the method", e );
@@ -473,7 +542,7 @@ public class SesameACLServiceIT extends AbstractIT {
 			privateMethod.setAccessible( true );
 			Set<ACE> directAces = new LinkedHashSet<>();
 			directAces.addAll( aces1 );
-			directAces.add( ace4 );
+			directAces.add( aceRA2F );
 			Map<Boolean, Set<ACE>> dividedAces = (Map<Boolean, Set<ACE>>) privateMethod.invoke( aclService, directAces );
 			Set<ACE> grantingAces = dividedAces.get( true );
 			Set<ACE> denyingAces = dividedAces.get( false );
@@ -500,17 +569,17 @@ public class SesameACLServiceIT extends AbstractIT {
 			Method privateMethod = SesameACLService.class.getDeclaredMethod( "getPermissions", ACL.class );
 			privateMethod.setAccessible( true );
 
-			acl.addACEntry( ace2.getSubject() );
-			acl.addACEntry( ace3.getSubject() );
-			acl.addACEntry( ace4.getSubject() );
-			acl.addInheritableEntry( ace1.getSubject() );
-			acl.addInheritableEntry( ace5.getSubject() );
+			acl.addACEntry( aceRAD2T.getSubject() );
+			acl.addACEntry( aceRA2T.getSubject() );
+			acl.addACEntry( aceRA2F.getSubject() );
+			acl.addInheritableEntry( aceRAD1T.getSubject() );
+			acl.addInheritableEntry( aceRAD1F.getSubject() );
 
-			acl.getBaseModel().addAll( ace1 );
-			acl.getBaseModel().addAll( ace2 );
-			acl.getBaseModel().addAll( ace3 );
-			acl.getBaseModel().addAll( ace4 );
-			acl.getBaseModel().addAll( ace5 );
+			acl.getBaseModel().addAll( aceRAD1T );
+			acl.getBaseModel().addAll( aceRAD2T );
+			acl.getBaseModel().addAll( aceRA2T );
+			acl.getBaseModel().addAll( aceRA2F );
+			acl.getBaseModel().addAll( aceRAD1F );
 
 			Map<Boolean, Map<Boolean, Set<ACE>>> aclPermissions = (Map<Boolean, Map<Boolean, Set<ACE>>>) privateMethod.invoke( aclService, acl );
 
