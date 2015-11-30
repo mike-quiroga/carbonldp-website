@@ -1,16 +1,25 @@
 package com.carbonldp.apps.roles.web;
 
-import com.carbonldp.web.exceptions.NotImplementedException;
+import com.carbonldp.ldp.web.AbstractLDPController;
+import com.carbonldp.rdf.RDFDocument;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 @Controller
 @RequestMapping( value = "apps/*/roles/" )
-public class AppRolesController {
+public class AppRolesController extends AbstractLDPController {
+
+	private AppRolesPOSTHandler postRequestHandler;
+
 	@RequestMapping( method = RequestMethod.POST )
-	public void createAppRole() {
-		// TODO: Implement it
-		throw new NotImplementedException();
+	public ResponseEntity<Object> createAppRole( @RequestBody RDFDocument requestDocument, HttpServletRequest request, HttpServletResponse response ) {
+		return postRequestHandler.handleRequest( requestDocument, request, response );
 	}
+
 }
