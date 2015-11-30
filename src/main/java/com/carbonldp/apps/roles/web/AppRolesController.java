@@ -4,6 +4,7 @@ import com.carbonldp.descriptions.APIPreferences;
 import com.carbonldp.ldp.web.AbstractLDPController;
 import com.carbonldp.rdf.RDFDocument;
 import com.carbonldp.web.config.InteractionModel;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -17,11 +18,11 @@ import javax.servlet.http.HttpServletResponse;
 @RequestMapping( value = "apps/*/roles/" )
 public class AppRolesController extends AbstractLDPController {
 
-	private AppRolesPOSTHandler postRequestHandler;
+	private AppRolesPOSTHandler appRolesPostHandler;
 
 	@RequestMapping( method = RequestMethod.POST )
 	public ResponseEntity<Object> createAppRole( @RequestBody RDFDocument requestDocument, HttpServletRequest request, HttpServletResponse response ) {
-		return postRequestHandler.handleRequest( requestDocument, request, response );
+		return appRolesPostHandler.handleRequest( requestDocument, request, response );
 	}
 
 	@InteractionModel( APIPreferences.InteractionModel.CONTAINER )
@@ -30,4 +31,8 @@ public class AppRolesController extends AbstractLDPController {
 
 	}
 
+	@Autowired
+	public void setAppRolesPOSTHandler( AppRolesPOSTHandler appRolesPostHandler ) {
+		this.appRolesPostHandler = appRolesPostHandler;
+	}
 }

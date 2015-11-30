@@ -22,4 +22,6 @@ public interface AppRoleRepository {
 
 	public Container createAppRolesContainer( URI rootContainerURI );
 
+	public boolean exists( URI appRoleURI );
+
 }

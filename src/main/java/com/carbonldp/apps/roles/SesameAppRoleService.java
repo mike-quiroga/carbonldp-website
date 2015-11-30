@@ -1,6 +1,5 @@
 package com.carbonldp.apps.roles;
 
-import com.carbonldp.apps.AppRepository;
 import com.carbonldp.apps.AppRole;
 import com.carbonldp.apps.AppRoleFactory;
 import com.carbonldp.apps.context.AppContextHolder;
@@ -19,7 +18,6 @@ import org.openrdf.model.URI;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.util.Assert;
 
 import java.util.List;
 import java.util.Set;
@@ -29,19 +27,18 @@ import java.util.Set;
  * @since _version_
  */
 public class SesameAppRoleService extends AbstractSesameLDPService implements AppRoleService {
-	private final AppRepository appRepository;
+	private final AppRoleRepository appRoleRepository;
 	private final ContainerService containerService;
 
-	public SesameAppRoleService( TransactionWrapper transactionWrapper, RDFSourceRepository sourceRepository, ContainerRepository containerRepository, ACLRepository aclRepository, AppRepository appRepository, ContainerService containerService ) {
+	public SesameAppRoleService( TransactionWrapper transactionWrapper, RDFSourceRepository sourceRepository, ContainerRepository containerRepository, ACLRepository aclRepository, ContainerService containerService, AppRoleRepository appRoleRepository ) {
 		super( transactionWrapper, sourceRepository, containerRepository, aclRepository );
-		Assert.notNull( appRepository );
-		this.appRepository = appRepository;
+		this.appRoleRepository = appRoleRepository;
 		this.containerService = containerService;
 	}
 
 	@Override
 	public boolean exists( URI appRoleURI ) {
-		return appRepository.exists( appRoleURI );
+		return appRoleRepository.exists( appRoleURI );
 	}
 
 	@Override
@@ -49,6 +46,7 @@ public class SesameAppRoleService extends AbstractSesameLDPService implements Ap
 		if ( exists( appRole.getURI() ) ) throw new ResourceAlreadyExistsException();
 		validate( appRole );
 
+		appRoleRepository.create( appRole );
 	}
 
 	@Override
@@ -63,7 +61,6 @@ public class SesameAppRoleService extends AbstractSesameLDPService implements Ap
 		if ( ! sourceRepository.exists( containerURI ) ) throw new ResourceDoesntExistException();
 		hasPermissions();
 		containerService.addMember( containerURI, member );
-
 	}
 
 	private void validate( AppRole appRole ) {
