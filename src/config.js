@@ -34,6 +34,7 @@ System.config({
     "bootstrap-sass": "github:twbs/bootstrap-sass@3.3.5",
     "carbonldp-sdk": "npm:carbonldp-sdk@0.9.1-ALPHA",
     "clean-css": "npm:clean-css@3.4.6",
+    "codemirror": "npm:codemirror@5.8.0",
     "core-js": "npm:core-js@1.2.3",
     "css": "github:systemjs/plugin-css@0.1.19",
     "html": "github:systemjs/plugin-text@0.0.3",
@@ -47,7 +48,7 @@ System.config({
       "assert": "npm:assert@1.3.0"
     },
     "github:jspm/nodelibs-buffer@0.1.0": {
-      "buffer": "npm:buffer@3.5.1"
+      "buffer": "npm:buffer@3.5.2"
     },
     "github:jspm/nodelibs-constants@0.1.0": {
       "constants-browserify": "npm:constants-browserify@0.0.1"
@@ -186,7 +187,7 @@ System.config({
       "buffer": "github:jspm/nodelibs-buffer@0.1.0",
       "systemjs-json": "github:systemjs/plugin-json@0.1.0"
     },
-    "npm:buffer@3.5.1": {
+    "npm:buffer@3.5.2": {
       "base64-js": "npm:base64-js@0.0.8",
       "ieee754": "npm:ieee754@1.1.6",
       "is-array": "npm:is-array@1.0.1"
@@ -215,6 +216,10 @@ System.config({
       "source-map": "npm:source-map@0.4.4",
       "url": "github:jspm/nodelibs-url@0.1.0",
       "util": "github:jspm/nodelibs-util@0.1.0"
+    },
+    "npm:codemirror@5.8.0": {
+      "buffer": "github:jspm/nodelibs-buffer@0.1.0",
+      "process": "github:jspm/nodelibs-process@0.1.2"
     },
     "npm:commander@2.8.1": {
       "child_process": "github:jspm/nodelibs-child_process@0.1.0",
