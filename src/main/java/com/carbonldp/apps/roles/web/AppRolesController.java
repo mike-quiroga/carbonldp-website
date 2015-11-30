@@ -1,7 +1,9 @@
 package com.carbonldp.apps.roles.web;
 
+import com.carbonldp.descriptions.APIPreferences;
 import com.carbonldp.ldp.web.AbstractLDPController;
 import com.carbonldp.rdf.RDFDocument;
+import com.carbonldp.web.config.InteractionModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -20,6 +22,12 @@ public class AppRolesController extends AbstractLDPController {
 	@RequestMapping( method = RequestMethod.POST )
 	public ResponseEntity<Object> createAppRole( @RequestBody RDFDocument requestDocument, HttpServletRequest request, HttpServletResponse response ) {
 		return postRequestHandler.handleRequest( requestDocument, request, response );
+	}
+
+	@InteractionModel( APIPreferences.InteractionModel.CONTAINER )
+	@RequestMapping( method = RequestMethod.PUT )
+	public void defineParentChildRelation( @RequestBody RDFDocument requestDocument, HttpServletRequest request, HttpServletResponse response ) {
+
 	}
 
 }

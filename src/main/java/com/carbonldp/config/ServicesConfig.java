@@ -10,6 +10,8 @@ import com.carbonldp.apps.AppRepository;
 import com.carbonldp.apps.AppService;
 import com.carbonldp.apps.SesameAppService;
 import com.carbonldp.apps.roles.AppRoleRepository;
+import com.carbonldp.apps.roles.AppRoleService;
+import com.carbonldp.apps.roles.SesameAppRoleService;
 import com.carbonldp.authentication.token.TokenService;
 import com.carbonldp.authentication.token.JWTAuthenticationService;
 import com.carbonldp.authentication.token.app.AppTokenRepository;
@@ -74,6 +76,11 @@ public class ServicesConfig {
 	@Bean
 	public ContainerService containerService() {
 		return new SesameContainerService( transactionWrapper(), sourceRepository, containerRepository, aclRepository );
+	}
+
+	@Bean
+	public AppRoleService appRoleService() {
+		return new SesameAppRoleService( transactionWrapper(), sourceRepository, containerRepository, aclRepository, containerService() );
 	}
 
 	@Bean
