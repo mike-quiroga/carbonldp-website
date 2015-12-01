@@ -7,20 +7,20 @@ import 'semantic-ui/semantic';
 import CarbonLogoComponent from 'app/components/logo/CarbonLogoComponent';
 
 import template from './template.html!';
-
-@Component({
+import "./style.css!";
+@Component( {
 	selector: 'header',
 	template: template,
 	directives: [ CORE_DIRECTIVES, ROUTER_DIRECTIVES, CarbonLogoComponent ]
-})
+} )
 export default class HeaderComponent {
-	static parameters = [[ Router ], [ ElementRef ]];
+	static parameters = [ [ Router ], [ ElementRef ] ];
 
 	router:Router;
 	element:ElementRef;
 	$element;
 
-	constructor( router:Router, element: ElementRef ){
+	constructor( router:Router, element:ElementRef ) {
 		this.router = router;
 		this.element = element;
 	}
@@ -28,6 +28,7 @@ export default class HeaderComponent {
 	afterViewInit():void {
 		this.$element = $( this.element.nativeElement );
 		this.createDropdownMenus();
+		this.createCollapsableMenus();
 	}
 
 	isActive( route:string ):boolean {
@@ -36,8 +37,17 @@ export default class HeaderComponent {
 	}
 
 	createDropdownMenus():void {
-		this.$element.find( '.ui.dropdown' ).dropdown({
+		this.$element.find( '.ui.dropdown' ).dropdown( {
 			on: 'hover'
-		});
+		} );
+	}
+
+	createCollapsableMenus():void {
+		let verticalMenu:JQuery = this.$element.find( ".ui.vertical.menu" );
+		this.$element.find( ".right.menu.open" ).on( "click", function ( e ) {
+			e.preventDefault();
+			verticalMenu.toggle();
+		} );
+		verticalMenu.toggle();
 	}
 }
