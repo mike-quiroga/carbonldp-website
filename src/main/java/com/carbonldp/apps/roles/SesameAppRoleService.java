@@ -1,6 +1,5 @@
 package com.carbonldp.apps.roles;
 
-import com.carbonldp.apps.AppRepository;
 import com.carbonldp.apps.AppRole;
 import com.carbonldp.apps.AppRoleFactory;
 import com.carbonldp.apps.context.AppContextHolder;
@@ -30,6 +29,8 @@ import java.util.Set;
  * @since _version_
  */
 public class SesameAppRoleService extends AbstractSesameLDPService implements AppRoleService {
+	private final AppRepository appRepository;
+	private final AppRoleRepository appRoleRepository;
 	private final ContainerService containerService;
 	private final AppRoleRepository appRoleRepository;
 
@@ -41,7 +42,7 @@ public class SesameAppRoleService extends AbstractSesameLDPService implements Ap
 
 	@Override
 	public boolean exists( URI appRoleURI ) {
-
+		return appRoleRepository.exists( appRoleURI );
 	}
 
 	@Override
@@ -49,6 +50,7 @@ public class SesameAppRoleService extends AbstractSesameLDPService implements Ap
 		if ( exists( appRole.getURI() ) ) throw new ResourceAlreadyExistsException();
 		validate( appRole );
 
+		appRoleRepository.create( appRole );
 	}
 
 	@Override

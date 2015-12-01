@@ -51,7 +51,6 @@ public class ServicesConfig {
 	private AppTokenRepository appTokenRepository;
 	@Autowired
 	private AppRoleRepository appRoleRepository;
-
 	@Autowired
 	private RDFResourceRepository resourceRepository;
 

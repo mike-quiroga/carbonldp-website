@@ -153,4 +153,9 @@ public class SesameAppRoleRepository extends AbstractSesameLDPRepository impleme
 		return URIUtil.createChildURI( appRoleURI, agentsContainerSlug );
 	}
 
+	@Override
+	public boolean exists( URI appRoleURI ) {
+		// TODO: This method should ask specifically for an Application Source
+		return sourceRepository.exists( appRoleURI );
+	}
 }
