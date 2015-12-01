@@ -14,7 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  * @since _version_
  */
 @RequestHandler
-public class AppRolesTOCHANGEHandler extends AbstractRDFPostRequestHandler<AppRole> {
+public class AppRolesPOSTHandler extends AbstractRDFPostRequestHandler<AppRole> {
 
 	private final AppRoleService appRoleService;
 
@@ -29,7 +29,7 @@ public class AppRolesTOCHANGEHandler extends AbstractRDFPostRequestHandler<AppRo
 	}
 
 	@Autowired
-	public AppRolesTOCHANGEHandler( AppRoleService appRoleService ) {
+	public AppRolesPOSTHandler( AppRoleService appRoleService ) {
 		this.appRoleService = appRoleService;
 	}
 }
