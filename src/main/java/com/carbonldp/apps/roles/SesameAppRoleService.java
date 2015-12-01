@@ -5,22 +5,22 @@ import com.carbonldp.apps.AppRoleFactory;
 import com.carbonldp.apps.context.AppContextHolder;
 import com.carbonldp.authentication.AgentAuthenticationToken;
 import com.carbonldp.authorization.acl.ACLRepository;
-import com.carbonldp.exceptions.AlreadyHasAParentException;
-import com.carbonldp.exceptions.InvalidResourceException;
-import com.carbonldp.exceptions.ResourceAlreadyExistsException;
-import com.carbonldp.exceptions.ResourceDoesntExistException;
+import com.carbonldp.exceptions.*;
 import com.carbonldp.ldp.AbstractSesameLDPService;
 import com.carbonldp.ldp.containers.ContainerRepository;
 import com.carbonldp.ldp.containers.ContainerService;
 import com.carbonldp.ldp.sources.RDFSourceRepository;
 import com.carbonldp.models.Infraction;
 import com.carbonldp.spring.TransactionWrapper;
+import org.joda.time.DateTime;
 import org.openrdf.model.URI;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -29,8 +29,6 @@ import java.util.Set;
  * @since _version_
  */
 public class SesameAppRoleService extends AbstractSesameLDPService implements AppRoleService {
-	private final AppRepository appRepository;
-	private final AppRoleRepository appRoleRepository;
 	private final ContainerService containerService;
 	private final AppRoleRepository appRoleRepository;
 
@@ -54,22 +52,26 @@ public class SesameAppRoleService extends AbstractSesameLDPService implements Ap
 	}
 
 	@Override
-	public void addChildMembers( URI parentRole, Set<URI> childss ) {
-		for ( URI member : childss ) {
+	public void addChildMembers( URI parentRole, Set<URI> childs ) {
+		for ( URI member : childs ) {
 			addChildMember( parentRole, member );
 		}
 	}
 
 	@Override
-	public void addChildMember( URI parentRole, URI child ) {
-		if ( ! sourceRepository.exists( parentRole ) ) throw new ResourceDoesntExistException();
-		validateAddChild( parentRole );
+	public void addChildMember( URI parentRoleURI, URI child ) {
+		if ( ! sourceRepository.exists( parentRoleURI ) ) throw new ResourceDoesntExistException();
+		validateAddChild( parentRoleURI );
 		validateHasParent( child );
-		containerService.addMember( parentRole, child );
+		containerService.addMember( parentRoleURI, child );
+
+		DateTime modifiedTime = DateTime.now();
+		sourceRepository.touch( parentRoleURI, modifiedTime );
 
 	}
 
 	private void validateHasParent( URI childURI ) {
+		if ( ! sourceRepository.exists( childURI ) ) throw new ResourceDoesntExistException();
 		Set<URI> parentsRoles = appRoleRepository.getParentsURI( childURI );
 		if ( ! parentsRoles.isEmpty() ) throw new AlreadyHasAParentException();
 	}
@@ -85,6 +87,7 @@ public class SesameAppRoleService extends AbstractSesameLDPService implements Ap
 		AgentAuthenticationToken agentAuthenticationToken = (AgentAuthenticationToken) authentication;
 		Set<AppRole> agentAppRoles = agentAuthenticationToken.getAppRoles( AppContextHolder.getContext().getApplication().getURI() );
 		Set<URI> parentsRoles = appRoleRepository.getParentsURI( parentRole );
+		parentsRoles.add( parentRole );
 		boolean isParent = false;
 		for ( AppRole appRole : agentAppRoles ) {
 			if ( parentsRoles.contains( appRole.getSubject() ) ) {
@@ -92,7 +95,13 @@ public class SesameAppRoleService extends AbstractSesameLDPService implements Ap
 				break;
 			}
 		}
-		if ( isParent ) throw new BadCredentialsException( "Unauthorized" );
+
+		if ( ! isParent ) {
+			Map<String, String> parametersException = new LinkedHashMap<>();
+			parametersException.put( "action", "add child" );
+			parametersException.put( "uri", parentRole.stringValue() );
+			throw new AuthorizationException( new Infraction( 0x7001, parametersException ) );
+		}
 	}
 }
 

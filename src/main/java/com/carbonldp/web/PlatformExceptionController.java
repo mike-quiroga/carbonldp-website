@@ -1,8 +1,8 @@
 package com.carbonldp.web;
 
-import com.carbonldp.Vars;
 import com.carbonldp.errors.ErrorResponse;
 import com.carbonldp.errors.ErrorResponseFactory;
+import com.carbonldp.exceptions.AuthorizationException;
 import com.carbonldp.exceptions.CarbonNoStackTraceRuntimeException;
 import com.carbonldp.exceptions.InvalidResourceException;
 import com.carbonldp.models.Infraction;
@@ -55,6 +55,12 @@ public class PlatformExceptionController {
 		ErrorResponse error = ErrorResponseFactory.create( new Infraction( 0xFFFF ), HttpStatus.INTERNAL_SERVER_ERROR );
 
 		return new ResponseEntity<>( error.getBaseModel(), HttpStatus.INTERNAL_SERVER_ERROR );
+	}
+
+	@ExceptionHandler( AuthorizationException.class )
+	public ResponseEntity<Object> handleAuthorizationException( HttpServletRequest request, HttpServletResponse response, AuthorizationException exception ) {
+		ErrorResponse error = ErrorResponseFactory.create( exception.getErrorCode(), exception.getMessage(), HttpStatus.UNAUTHORIZED );
+		return new ResponseEntity<>( error.getBaseModel(), HttpStatus.UNAUTHORIZED );
 	}
 
 	@ExceptionHandler( InvalidResourceException.class )

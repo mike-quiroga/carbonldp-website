@@ -15,24 +15,30 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 @Controller
-@RequestMapping( value = "apps/*/roles/" )
+
 public class AppRolesController extends AbstractLDPController {
 
-	private AppRolesPostHandler postRequestHandler;
+	private AppRolesPostHandler postHandler;
+	private AppRolesPUTHandler putHandler;
 
-	@RequestMapping( method = RequestMethod.POST )
+	@RequestMapping( method = RequestMethod.POST, value = "apps/*/roles/" )
 	public ResponseEntity<Object> createAppRole( @RequestBody RDFDocument requestDocument, HttpServletRequest request, HttpServletResponse response ) {
-		return appRolesPostHandler.handleRequest( requestDocument, request, response );
+		return postHandler.handleRequest( requestDocument, request, response );
 	}
 
 	@InteractionModel( APIPreferences.InteractionModel.CONTAINER )
-	@RequestMapping( method = RequestMethod.PUT )
-	public void defineParentChildRelation( @RequestBody RDFDocument requestDocument, HttpServletRequest request, HttpServletResponse response ) {
-
+	@RequestMapping( method = RequestMethod.PUT, value = "apps/*/roles/*/" )
+	public ResponseEntity<Object> defineParentChildRelation( @RequestBody RDFDocument requestDocument, HttpServletRequest request, HttpServletResponse response ) {
+		return putHandler.handleRequest( requestDocument, request, response );
 	}
 
 	@Autowired
-	public void setAppRolesPOSTHandler( AppRolesPOSTHandler appRolesPostHandler ) {
-		this.appRolesPostHandler = appRolesPostHandler;
+	public void setAppRolesPOSTHandler( AppRolesPostHandler appRolesPostHandler ) {
+		this.postHandler = appRolesPostHandler;
+	}
+
+	@Autowired
+	public void setAppRolesPutHandler( AppRolesPUTHandler putHandler ) {
+		this.putHandler = putHandler;
 	}
 }
