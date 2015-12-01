@@ -7,6 +7,7 @@ import java.util.Set;
 
 /**
  * @author JorgeEspinosa
+ * @author NestorVenegas
  * @since _version_
  */
 public interface AppRoleService {
@@ -14,7 +15,7 @@ public interface AppRoleService {
 
 	public void create( AppRole appRole );
 
-	public void addChildMembers( URI containerURI, Set<URI> members );
+	public void addChildMembers( URI parentRole, Set<URI> childs );
 
-	public void addChildMember( URI containerURI, URI member );
+	public void addChildMember( URI parentRole, URI child );
 }

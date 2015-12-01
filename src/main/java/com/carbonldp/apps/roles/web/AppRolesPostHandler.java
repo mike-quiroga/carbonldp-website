@@ -9,7 +9,7 @@ import org.openrdf.model.URI;
  * @author JorgeEspinosa
  * @since _version_
  */
-public class AppRolesPOSTHandler extends AbstractRDFPostRequestHandler<AppRole> {
+public class AppRolesPostHandler extends AbstractRDFPostRequestHandler<AppRole> {
 	@Override
 	protected AppRole getDocumentResourceView( BasicContainer requestBasicContainer ) {
 		return null;

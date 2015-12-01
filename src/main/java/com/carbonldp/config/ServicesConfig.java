@@ -49,6 +49,8 @@ public class ServicesConfig {
 	private ACLRepository aclRepository;
 	@Autowired
 	private AppTokenRepository appTokenRepository;
+	@Autowired
+	private AppRoleRepository appRoleRepository;
 
 	@Autowired
 	private RDFResourceRepository resourceRepository;
@@ -80,7 +82,7 @@ public class ServicesConfig {
 
 	@Bean
 	public AppRoleService appRoleService() {
-		return new SesameAppRoleService( transactionWrapper(), sourceRepository, containerRepository, aclRepository, containerService() );
+		return new SesameAppRoleService( transactionWrapper(), sourceRepository, containerRepository, aclRepository, containerService(), appRoleRepository );
 	}
 
 	@Bean

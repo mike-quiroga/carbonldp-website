@@ -17,7 +17,7 @@ import javax.servlet.http.HttpServletResponse;
 @RequestMapping( value = "apps/*/roles/" )
 public class AppRolesController extends AbstractLDPController {
 
-	private AppRolesPOSTHandler postRequestHandler;
+	private AppRolesPostHandler postRequestHandler;
 
 	@RequestMapping( method = RequestMethod.POST )
 	public ResponseEntity<Object> createAppRole( @RequestBody RDFDocument requestDocument, HttpServletRequest request, HttpServletResponse response ) {

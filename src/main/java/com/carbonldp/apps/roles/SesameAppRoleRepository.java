@@ -15,6 +15,7 @@ import com.carbonldp.ldp.sources.RDFSourceRepository;
 import com.carbonldp.rdf.RDFDocumentRepository;
 import com.carbonldp.rdf.RDFResource;
 import com.carbonldp.rdf.RDFResourceRepository;
+import com.carbonldp.sparql.SPARQLTemplate;
 import com.carbonldp.utils.RDFNodeUtil;
 import com.carbonldp.utils.URIUtil;
 import org.openrdf.model.URI;
@@ -113,6 +114,11 @@ public class SesameAppRoleRepository extends AbstractSesameLDPRepository impleme
 		return appRolesContainer;
 	}
 
+	@Override
+	public Set<URI> getParentsURI( URI appRole ) {
+		sparqlTemplate.executeTupleQuery( getParentsSPARQL, SPARQLTemplate.TupleQueryResultHandler<Set<URI>>);
+	}
+
 	public void setAppRoleContainerSlug( String slug ) {
 		Assert.notNull( slug );
 		this.containerSlug = slug;
@@ -146,4 +152,5 @@ public class SesameAppRoleRepository extends AbstractSesameLDPRepository impleme
 	private URI getAgentsContainerURI( URI appRoleURI ) {
 		return URIUtil.createChildURI( appRoleURI, agentsContainerSlug );
 	}
+
 }
