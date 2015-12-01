@@ -18,7 +18,7 @@ import javax.servlet.http.HttpServletResponse;
 
 public class AppRolesController extends AbstractLDPController {
 
-	private AppRolesPostHandler postHandler;
+	private AppRolesTOCHANGEHandler postHandler;
 	private AppRolesPUTHandler putHandler;
 
 	@RequestMapping( method = RequestMethod.POST, value = "apps/*/roles/" )
@@ -33,7 +33,7 @@ public class AppRolesController extends AbstractLDPController {
 	}
 
 	@Autowired
-	public void setAppRolesPOSTHandler( AppRolesPostHandler appRolesPostHandler ) {
+	public void setAppRolesPOSTHandler( AppRolesTOCHANGEHandler appRolesPostHandler ) {
 		this.postHandler = appRolesPostHandler;
 	}
 
