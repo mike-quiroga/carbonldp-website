@@ -17,7 +17,7 @@ import java.util.List;
  */
 
 @RequestHandler
-public class AppRolesPUTAgentsHanlder extends AbstractPUTRequestHandler {
+public class AppRolesPUTAgentsHandler extends AbstractPUTRequestHandler {
 
 	@Override
 	protected void executeAction( URI targetUri, AddMembersAction members ) {

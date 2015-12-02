@@ -13,12 +13,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.PrimitiveIterator;
 
 @Controller
 public class AppRolesController extends AbstractLDPController {
 
-	private AppRolesPUTAgentsHanlder appRolesPUTAgentsHanlder;
+	private AppRolesPUTAgentsHandler appRolesPUTAgentsHandler;
 
 	@RequestMapping( method = RequestMethod.POST, value = "apps/*/roles/" )
 	public void createAppRole() {
@@ -29,10 +28,10 @@ public class AppRolesController extends AbstractLDPController {
 	@RequestMapping( method = RequestMethod.PUT, value = "apps/*/roles/*/agents/" )
 	@InteractionModel( APIPreferences.InteractionModel.CONTAINER )
 	public ResponseEntity<Object> addAgentToRole( RDFDocument requestDocument, HttpServletRequest request, HttpServletResponse response ) {
-		return appRolesPUTAgentsHanlder.handleRequest( requestDocument, request, response );
+		return appRolesPUTAgentsHandler.handleRequest( requestDocument, request, response );
 	}
 
 	@Autowired
-	public void setAppRolesPUTAgentsHanlder( AppRolesPUTAgentsHanlder appRolesPUTAgentsHanlder ) {this.appRolesPUTAgentsHanlder = appRolesPUTAgentsHanlder;}
+	public void setAppRolesPUTAgentsHandler( AppRolesPUTAgentsHandler appRolesPUTAgentsHandler ) {this.appRolesPUTAgentsHandler = appRolesPUTAgentsHandler;}
 
 }

@@ -10,6 +10,8 @@ import com.carbonldp.apps.AppRepository;
 import com.carbonldp.apps.AppService;
 import com.carbonldp.apps.SesameAppService;
 import com.carbonldp.apps.roles.AppRoleRepository;
+import com.carbonldp.apps.roles.AppRoleService;
+import com.carbonldp.apps.roles.SesameAppRoleService;
 import com.carbonldp.authentication.token.TokenService;
 import com.carbonldp.authentication.token.JWTAuthenticationService;
 import com.carbonldp.authentication.token.app.AppTokenRepository;
@@ -51,6 +53,9 @@ public class ServicesConfig {
 	@Autowired
 	private RDFResourceRepository resourceRepository;
 
+	@Autowired
+	private AppRoleRepository appRoleRepository;
+
 	@Bean
 	public TokenService tokenService() {
 		return new JWTAuthenticationService();
@@ -79,6 +84,11 @@ public class ServicesConfig {
 	@Bean
 	public AppService appService( AppRepository appRepository, AppRoleRepository appRoleRepository, AppAgentRepository appAgentsRepository ) {
 		return new SesameAppService( transactionWrapper(), sourceRepository, containerRepository, aclRepository, appRepository, appRoleRepository, appAgentsRepository, appTokenRepository );
+	}
+
+	@Bean
+	public AppRoleService appRoleService() {
+		return new SesameAppRoleService( transactionWrapper(), sourceRepository, containerRepository, aclRepository, containerService(), appRoleRepository );
 	}
 
 	@Bean

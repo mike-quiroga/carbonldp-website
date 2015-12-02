@@ -3,6 +3,7 @@ package com.carbonldp.ldp.sources;
 import com.carbonldp.ldp.AbstractSesameLDPRepository;
 import com.carbonldp.ldp.containers.AccessPoint;
 import com.carbonldp.rdf.RDFDocumentRepository;
+import com.carbonldp.rdf.RDFNodeEnum;
 import com.carbonldp.rdf.RDFResource;
 import com.carbonldp.rdf.RDFResourceRepository;
 import com.carbonldp.repository.DocumentGraphQueryResultHandler;
@@ -16,13 +17,11 @@ import org.openrdf.model.URI;
 import org.openrdf.model.Value;
 import org.openrdf.model.impl.AbstractModel;
 import org.openrdf.model.impl.LinkedHashModel;
+import org.openrdf.model.vocabulary.RDF;
 import org.openrdf.spring.SesameConnectionFactory;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.carbonldp.Consts.NEW_LINE;
@@ -199,6 +198,20 @@ public class SesameRDFSourceRepository extends AbstractSesameLDPRepository imple
 				resourceRepository.add( resourceViewURI, predicate, values );
 			}
 		}
+	}
+
+	private static final String isQuery;
+
+	static {
+		isQuery = "ASK  { ?resource " + RDF.TYPE + "  ?type }";
+	}
+
+	@Override
+	public boolean is( URI resourceURI, RDFNodeEnum type ) {
+		Map<String, Value> bindings = new LinkedHashMap<>();
+		bindings.put( "resource", resourceURI );
+		bindings.put( "type", type.getURI() );
+		return sparqlTemplate.executeBooleanQuery( isQuery, bindings );
 	}
 
 	@Override
