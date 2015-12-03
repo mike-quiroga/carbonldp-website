@@ -26,6 +26,11 @@ public class AclPUTRequestHandler extends AbstractPUTRequestHandler<ACL> {
 		aclService.replace( documentResourceView );
 	}
 
+	@Override
+	protected void checkPrecondition( URI targetURI, String requestETag ) {
+		// TODO: delete this method when ETag stops being time stamp based
+	}
+
 	@Autowired
 	public void setAclService( ACLService aclService ) {this.aclService = aclService;}
 }

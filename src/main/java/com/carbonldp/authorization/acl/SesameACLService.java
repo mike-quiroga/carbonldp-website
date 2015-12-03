@@ -51,7 +51,6 @@ public class SesameACLService extends AbstractSesameLDPService implements ACLSer
 		Map<Boolean, Map<Boolean, Set<ACE>>> permissions = getPermissions( get( newAcl.getURI() ) );
 		Map<Boolean, Map<Boolean, Set<ACE>>> newPermissions = getPermissions( newAcl );
 
-		//key tells us whether we are going to add or delete the permission
 		Set<ACE> permissionsToModify = comparePermissions( permissions, newPermissions );
 
 		validate( permissionsToModify, newAcl.getAccessTo() );
@@ -94,6 +93,7 @@ public class SesameACLService extends AbstractSesameLDPService implements ACLSer
 					Set<AppRole> appRoles = agentAuthenticationToken.getAppRoles( app.getURI() );
 					URI appRoleToModify = ace.getSubjects().iterator().next();
 					Set<URI> parentsRoles = appRoleRepository.getParentsURI( appRoleToModify );
+					parentsRoles.add( appRoleToModify );
 					for ( AppRole appRole : appRoles ) {
 						if ( parentsRoles.contains( appRole.getSubject() ) ) {
 							isParent = true;
@@ -103,12 +103,15 @@ public class SesameACLService extends AbstractSesameLDPService implements ACLSer
 					if ( ! isParent ) throw new BadCredentialsException( "you don't have permissions to modify this resource" );
 					break;
 				case PLATFORM_ROLE:
+					throw new NotImplementedException();
+				default:
+					throw new InvalidResourceException( new Infraction( 0x2005, "property", ACEDescription.Property.SUBJECT_CLASS.getURI().stringValue() ) );
 
 			}
 
 			// check if the logged one has the permissions that he want to modify
 			for ( ACEDescription.Permission permission : ace.getPermissions() )
-				if ( permissionEvaluator.hasPermission( agentAuthenticationToken, accessTo, permission ) )
+				if ( ! permissionEvaluator.hasPermission( agentAuthenticationToken, accessTo, permission ) )
 					throw new BadCredentialsException( "you don't have permissions to modify this resource" );
 		}
 	}
