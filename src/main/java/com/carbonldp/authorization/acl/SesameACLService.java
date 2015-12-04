@@ -16,6 +16,7 @@ import com.carbonldp.spring.TransactionWrapper;
 import com.carbonldp.utils.RDFNodeUtil;
 import com.carbonldp.web.exceptions.NotImplementedException;
 import org.joda.time.DateTime;
+import org.openrdf.model.Resource;
 import org.openrdf.model.URI;
 import org.openrdf.model.ValueFactory;
 import org.openrdf.model.impl.LinkedHashModel;
@@ -65,8 +66,8 @@ public class SesameACLService extends AbstractSesameLDPService implements ACLSer
 	private void validateProperties( ACL newAcl ) {
 		List<Infraction> infractions = ACLFactory.getInstance().validate( newAcl );
 
-		Set<ACE> aces = ACEFactory.getInstance().get( newAcl.getBaseModel(), newAcl.getACEntries() );
-		aces.addAll( ACEFactory.getInstance().get( newAcl.getBaseModel(), newAcl.getInheritableEntries() ) );
+		Set<ACE> aces = ACEFactory.getInstance().get( newAcl.getBaseModel(), newAcl.getACEntries(), newAcl.getURI() );
+		aces.addAll( ACEFactory.getInstance().get( newAcl.getBaseModel(), newAcl.getInheritableEntries(), newAcl.getURI() ) );
 		for ( ACE ace : aces ) {
 			infractions.addAll( ACEFactory.getInstance().validate( ace ) );
 		}
@@ -93,7 +94,6 @@ public class SesameACLService extends AbstractSesameLDPService implements ACLSer
 					Set<AppRole> appRoles = agentAuthenticationToken.getAppRoles( app.getURI() );
 					URI appRoleToModify = ace.getSubjects().iterator().next();
 					Set<URI> parentsRoles = appRoleRepository.getParentsURI( appRoleToModify );
-					parentsRoles.add( appRoleToModify );
 					for ( AppRole appRole : appRoles ) {
 						if ( parentsRoles.contains( appRole.getSubject() ) ) {
 							isParent = true;
@@ -138,7 +138,8 @@ public class SesameACLService extends AbstractSesameLDPService implements ACLSer
 			for ( ACE ace : aces ) {
 				addAllPermissions = true;
 				if ( ace.getSubjects().iterator().next().equals( newAce.getSubjects().iterator().next() ) ) {
-					ACE aceToAdd = new ACE( new LinkedHashModel(), valueFactory.createBNode() );
+					Resource context = ace.getDefaultContext();
+					ACE aceToAdd = new ACE( new LinkedHashModel(), valueFactory.createBNode(), context );
 
 					for ( ACEDescription.Permission permission : newAce.getPermissions() ) {
 						if ( ace.getPermissions().contains( permission ) ) {
@@ -171,8 +172,8 @@ public class SesameACLService extends AbstractSesameLDPService implements ACLSer
 	}
 
 	private Map<Boolean, Map<Boolean, Set<ACE>>> getPermissions( ACL acl ) {
-		Set<ACE> aces = ACEFactory.getInstance().get( acl.getBaseModel(), acl.getACEntries() );
-		Set<ACE> inheritableAces = ACEFactory.getInstance().get( acl.getBaseModel(), acl.getInheritableEntries() );
+		Set<ACE> aces = ACEFactory.getInstance().get( acl.getBaseModel(), acl.getACEntries(), acl.getURI() );
+		Set<ACE> inheritableAces = ACEFactory.getInstance().get( acl.getBaseModel(), acl.getInheritableEntries(), acl.getURI() );
 		Map<Boolean, Map<Boolean, Set<ACE>>> permissions = new LinkedHashMap<>();
 		permissions.put( true, updateACEList( aces ) );
 		permissions.put( false, updateACEList( inheritableAces ) );
@@ -291,7 +292,8 @@ public class SesameACLService extends AbstractSesameLDPService implements ACLSer
 		for ( URI subject : subjects ) {
 			ACE newAce = newACESubjects.get( subject );
 			if ( newAce == null ) {
-				newAce = new ACE( new LinkedHashModel(), valueFactory.createBNode() );
+				Resource context = ace.getDefaultContext();
+				newAce = new ACE( new LinkedHashModel(), valueFactory.createBNode(), context );
 				newAce.addType( ACEDescription.Resource.CLASS.getURI() );
 				newAce.setSubjectClass( ace.getSubjectClass() );
 				newAce.addSubject( subject );
