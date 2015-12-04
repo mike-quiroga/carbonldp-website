@@ -10,6 +10,7 @@ import com.carbonldp.exceptions.AuthorizationException;
 import com.carbonldp.exceptions.InvalidRDFTypeException;
 import com.carbonldp.exceptions.ResourceDoesntExistException;
 import com.carbonldp.ldp.AbstractSesameLDPService;
+import com.carbonldp.ldp.containers.ContainerDescription;
 import com.carbonldp.ldp.containers.ContainerRepository;
 import com.carbonldp.ldp.containers.ContainerService;
 import com.carbonldp.ldp.sources.RDFSourceDescription;
@@ -79,8 +80,9 @@ public class SesameAppRoleService extends AbstractSesameLDPService implements Ap
 		return isAgent( agent );
 	}
 
-	private void validatePermissionToAddAgent( URI role ) {
-
+	private void validatePermissionToAddAgent( URI appRoleAgentContainerURI ) {
+		ContainerDescription.Type containerType = containerRepository.getContainerType( appRoleAgentContainerURI );
+		URI role = containerRepository.getTypedRepository( containerType ).getMembershipResource( appRoleAgentContainerURI );
 		if ( ! isMemberOfRoleHierarchy( role ) ) {
 			Map<String, String> parametersException = new LinkedHashMap<>();
 			parametersException.put( "action", "add agent" );

@@ -8,6 +8,7 @@ import com.carbonldp.web.exceptions.NotImplementedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -27,7 +28,7 @@ public class AppRolesController extends AbstractLDPController {
 
 	@RequestMapping( method = RequestMethod.PUT, value = "apps/*/roles/*/agents/" )
 	@InteractionModel( APIPreferences.InteractionModel.CONTAINER )
-	public ResponseEntity<Object> addAgentToRole( RDFDocument requestDocument, HttpServletRequest request, HttpServletResponse response ) {
+	public ResponseEntity<Object> addAgentToRole( @RequestBody RDFDocument requestDocument, HttpServletRequest request, HttpServletResponse response ) {
 		return appRolesPUTAgentsHandler.handleRequest( requestDocument, request, response );
 	}
 
