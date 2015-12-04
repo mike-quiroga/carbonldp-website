@@ -1,6 +1,7 @@
 package com.carbonldp.apps.roles;
 
 import com.carbonldp.apps.AppRole;
+import com.carbonldp.apps.AppRoleDescription;
 import com.carbonldp.apps.AppRoleFactory;
 import com.carbonldp.apps.context.AppContextHolder;
 import com.carbonldp.authentication.AgentAuthenticationToken;
@@ -60,7 +61,9 @@ public class SesameAppRoleService extends AbstractSesameLDPService implements Ap
 
 	@Override
 	public void addChildMember( URI parentRoleURI, URI child ) {
-		if ( ! sourceRepository.exists( parentRoleURI ) ) throw new ResourceDoesntExistException();
+		if ( ( ! sourceRepository.exists( parentRoleURI ) ) || ( ! sourceRepository.exists( child ) ) ) throw new ResourceDoesntExistException();
+		if ( ! sourceRepository.is( child, AppRoleDescription.Resource.CLASS ) ) throw new InvalidResourceException( new Infraction( 0x2001, "rdf.type", AppRoleDescription.Resource.CLASS.getURI().stringValue() ) );
+
 		validateAddChild( parentRoleURI );
 		validateHasParent( child );
 		containerService.addMember( parentRoleURI, child );

@@ -60,15 +60,18 @@ public class SesameRDFSourceRepository extends AbstractSesameLDPRepository imple
 	}
 
 	static {
-		isQuery = "ASK  { ?resource " + RDF.TYPE + "  ?type }";
+		isQuery = "ASK  { ?resource <" + RDF.TYPE + ">  ?type }";
 	}
 
 	@Override
 	public boolean is( URI resourceURI, RDFNodeEnum type ) {
-		Map<String, Value> bindings = new LinkedHashMap<>();
-		bindings.put( "resource", resourceURI );
-		bindings.put( "type", type.getURI() );
-		return sparqlTemplate.executeBooleanQuery( isQuery, bindings );
+		for ( URI typeURI : type.getURIs() ) {
+			Map<String, Value> bindings = new LinkedHashMap<>();
+			bindings.put( "resource", resourceURI );
+			bindings.put( "type", typeURI );
+			if ( sparqlTemplate.executeBooleanQuery( isQuery, bindings ) ) return true;
+		}
+		return false;
 	}
 
 	private static final String get_query;
