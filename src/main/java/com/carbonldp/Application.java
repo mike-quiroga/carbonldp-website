@@ -1,5 +1,7 @@
 package com.carbonldp;
 
+import com.beust.jcommander.JCommander;
+import com.beust.jcommander.Parameter;
 import com.carbonldp.apps.context.AppContextConfig;
 import com.carbonldp.config.ConfigurationConfig;
 import com.carbonldp.config.RepositoriesConfig;
@@ -17,6 +19,7 @@ import org.eclipse.jetty.server.handler.ContextHandler;
 import org.eclipse.jetty.webapp.Configuration;
 import org.eclipse.jetty.webapp.WebAppContext;
 import org.fusesource.jansi.AnsiConsole;
+import org.openrdf.rio.trig.TriGParserFactory;
 import org.openrdf.sail.config.SailRegistry;
 import org.springframework.beans.factory.config.PropertiesFactoryBean;
 import org.springframework.core.io.ClassPathResource;
@@ -40,10 +43,12 @@ import java.util.Properties;
  */
 public class Application {
 	public static void main( String[] args ) throws Exception {
-		new Application().start();
+		new Application().start( args );
 	}
 
-	private void start() throws Exception {
+	private void start( String[] args ) throws Exception {
+		Arguments arguments = parseArguments( args );
+
 		AnsiConsole.systemInstall();
 
 		Vars.initialize();
@@ -53,10 +58,13 @@ public class Application {
 
 		SailRegistry.getInstance().add( new SecuredNativeStoreFactory() );
 
+		TriGParserFactory factory = new TriGParserFactory();
+		System.out.println( factory.toString() );
+
 		RepositoriesUpdater repositoriesUpdater = new RepositoriesUpdater();
 		if ( ! repositoriesUpdater.repositoriesAreUpToDate() ) repositoriesUpdater.updateRepositories();
 
-		Server server = new Server( 8083 );
+		Server server = new Server( arguments.port );
 
 		WebAppContext contextHandler = new WebAppContext();
 		contextHandler.setErrorHandler( null );
@@ -67,7 +75,6 @@ public class Application {
 		contextHandler.addEventListener( new ServletContextLoaderListener( createRootContext() ) {
 			@Override
 			public void contextInitialized( ServletContextEvent event ) {
-
 				ContextHandler.Context servletContext = (ContextHandler.Context) event.getServletContext();
 
 				servletContext.setExtendedListenerTypes( true );
@@ -92,6 +99,12 @@ public class Application {
 		server.setHandler( contextHandler );
 		server.start();
 		server.join();
+	}
+
+	private Arguments parseArguments( String[] args ) {
+		Arguments arguments = new Arguments();
+		new JCommander( arguments, args );
+		return arguments;
 	}
 
 	private Properties loadErrorCodes() throws ServletException {
@@ -123,10 +136,6 @@ public class Application {
 			LOGConfig.class
 		);
 		return rootContext;
-	}
-
-	private void addContextLifecycleManagerListener( WebApplicationContext context, ServletContext container ) {
-		container.addListener( new ServletContextLoaderListener( context ) );
 	}
 
 	private void addRequestContextFilter( ServletContext container ) {
@@ -165,9 +174,15 @@ public class Application {
 		dispatcher.setMultipartConfig( new MultipartConfigElement( "/tmp", 1024 * 1024 * 5, 1024 * 1024 * 5 * 5, 1024 * 1024 ) );
 	}
 
+	// This class makes ContextLoaderListener compatible with Jetty by implementing javax.servlet.ServletContextListener
 	private class ServletContextLoaderListener extends ContextLoaderListener implements ServletContextListener {
 		public ServletContextLoaderListener( WebApplicationContext context ) {
 			super( context );
 		}
+	}
+
+	public class Arguments {
+		@Parameter( names = "-port", description = "Port to listen to" )
+		private Integer port = 8080;
 	}
 }
