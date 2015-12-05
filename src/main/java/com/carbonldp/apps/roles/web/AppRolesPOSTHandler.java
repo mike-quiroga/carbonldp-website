@@ -20,7 +20,7 @@ public class AppRolesPOSTHandler extends AbstractRDFPostRequestHandler<AppRole> 
 
 	@Override
 	protected AppRole getDocumentResourceView( BasicContainer requestBasicContainer ) {
-		return AppRoleFactory.getInstance().create( requestBasicContainer);
+		return AppRoleFactory.getInstance().create( requestBasicContainer );
 	}
 
 	@Override
