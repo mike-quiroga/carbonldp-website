@@ -1,9 +1,9 @@
 package com.carbonldp.apps.roles;
 
 import com.carbonldp.agents.AgentDescription;
+import com.carbonldp.agents.platform.PlatformAgentRepository;
 import com.carbonldp.apps.AppRole;
 import com.carbonldp.apps.context.AppContextHolder;
-import com.carbonldp.apps.context.RunInPlatformContext;
 import com.carbonldp.authentication.AgentAuthenticationToken;
 import com.carbonldp.authorization.acl.ACLRepository;
 import com.carbonldp.exceptions.AuthorizationException;
@@ -13,7 +13,6 @@ import com.carbonldp.ldp.AbstractSesameLDPService;
 import com.carbonldp.ldp.containers.ContainerDescription;
 import com.carbonldp.ldp.containers.ContainerRepository;
 import com.carbonldp.ldp.containers.ContainerService;
-import com.carbonldp.ldp.sources.RDFSourceDescription;
 import com.carbonldp.ldp.sources.RDFSourceRepository;
 import com.carbonldp.models.Infraction;
 import com.carbonldp.spring.TransactionWrapper;
@@ -36,11 +35,13 @@ import java.util.Set;
 public class SesameAppRoleService extends AbstractSesameLDPService implements AppRoleService {
 	protected final ContainerService containerService;
 	protected final AppRoleRepository appRoleRepository;
+	protected final PlatformAgentRepository platformAgentRepository;
 
-	public SesameAppRoleService( TransactionWrapper transactionWrapper, RDFSourceRepository sourceRepository, ContainerRepository containerRepository, ACLRepository aclRepository, ContainerService containerService, AppRoleRepository appRoleRepository ) {
+	public SesameAppRoleService( TransactionWrapper transactionWrapper, RDFSourceRepository sourceRepository, ContainerRepository containerRepository, ACLRepository aclRepository, ContainerService containerService, AppRoleRepository appRoleRepository, PlatformAgentRepository platformAgentRepository ) {
 		super( transactionWrapper, sourceRepository, containerRepository, aclRepository );
 		this.appRoleRepository = appRoleRepository;
 		this.containerService = containerService;
+		this.platformAgentRepository = platformAgentRepository;
 	}
 
 	@Override
@@ -53,7 +54,7 @@ public class SesameAppRoleService extends AbstractSesameLDPService implements Ap
 	@Override
 	public void addAgentMember( URI appRoleAgentContainerURI, URI agent ) {
 		if ( ( ! sourceRepository.exists( appRoleAgentContainerURI ) ) ) throw new ResourceDoesntExistException();
-		if ( ! isAppAgent( agent ) && ! isPlatformAgent( agent ) ) throw new ResourceDoesntExistException();
+		if ( ! isAppAgent( agent ) && ! isPlatformAgent( agent ) ) throw new InvalidRDFTypeException( new Infraction( 0x2001, "rdf.type", AgentDescription.Resource.CLASS.getURI().stringValue() ) );
 		validatePermissionToAddAgent( appRoleAgentContainerURI );
 
 		containerService.addMember( appRoleAgentContainerURI, agent );
@@ -70,14 +71,13 @@ public class SesameAppRoleService extends AbstractSesameLDPService implements Ap
 	private boolean isAgent( URI agent ) {
 		if ( sourceRepository.exists( agent ) ) {
 			if ( sourceRepository.is( agent, AgentDescription.Resource.CLASS ) ) return true;
-			else throw new InvalidRDFTypeException( new Infraction( 0x2001, "rdf.type", RDFSourceDescription.Resource.CLASS.getURI().stringValue() ) );
+			else throw new InvalidRDFTypeException( new Infraction( 0x2001, "rdf.type", AgentDescription.Resource.CLASS.getURI().stringValue()) );
 		}
 		return false;
 	}
 
-	@RunInPlatformContext
 	private boolean isPlatformAgent( URI agent ) {
-		return isAgent( agent );
+		return platformAgentRepository.exists( agent );
 	}
 
 	private void validatePermissionToAddAgent( URI appRoleAgentContainerURI ) {
