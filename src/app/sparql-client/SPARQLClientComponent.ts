@@ -3,19 +3,21 @@ import {
 	CORE_DIRECTIVES, FORM_DIRECTIVES,
 	ElementRef,NgStyle
 } from 'angular2/angular2';
+import {ResponseComponent, SPARQLResponseType} from './response/responseComponent';
+import {ResultsetComponent, SPARQLFormats} from "./resultset/resultsetComponent";
+import * as CodeMirrorComponent from "app/components/code-mirror/CodeMirrorComponent";
+
 import $ from 'jquery';
 import 'semantic-ui/semantic';
-import * as CodeMirrorComponent from "app/components/code-mirror/CodeMirrorComponent";
+
 import template from './template.html!';
-import {SPARQLResponse, SPARQLResponseType} from './response/responseView';
-import {Resultset, SPARQLFormats} from "./resultset/resultset";
 import "./style.css!";
 
 
 @Component( {
 	selector: 'sparql-client',
 	template: template,
-	directives: [ CORE_DIRECTIVES, FORM_DIRECTIVES, CodeMirrorComponent.Class, SPARQLResponse, NgStyle ]
+	directives: [ CORE_DIRECTIVES, FORM_DIRECTIVES, CodeMirrorComponent.Class, ResponseComponent, NgStyle, ResponseComponent ]
 } )
 export default class SPARQLClientComponent {
 	static parameters = [ [ ElementRef ] ];
@@ -41,45 +43,8 @@ export default class SPARQLClientComponent {
 		query: "Query",
 		update: "Update"
 	};
-	//SPARQLQueryOperations:SPARQLQueryOperations = <SPARQLQueryOperations>{
-	//	select: <SPARQLQueryOperation>{
-	//		name: 'SELECT',
-	//		formats: [
-	//			{value: "table", name: "Friendly Table"},
-	//			{value: "xml", name: "XML"},
-	//			{value: "csv", name: "CSV"},
-	//			{value: "tsv", name: "TSV"}
-	//		]
-	//	},
-	//	describe: <SPARQLQueryOperation>{
-	//		name: 'DESCRIBE',
-	//		formats: [
-	//			{value: "json-ld", name: "JSON-LD"},
-	//			{value: "turtle", name: "TURTLE"},
-	//			{value: "json-rdf", name: "RDF/JSON"},
-	//			{value: "xml", name: "RDF/XML"},
-	//			{value: "n3", name: "N3"}
-	//		]
-	//	},
-	//	construct: <SPARQLQueryOperation>{
-	//		name: 'CONSTRUCT',
-	//		formats: [
-	//			{value: "json-ld", name: "JSON-LD"},
-	//			{value: "turtle", name: "TURTLE"},
-	//			{value: "json-rdf", name: "RDF/JSON"},
-	//			{value: "xml", name: "RDF/XML"},
-	//			{value: "n3", name: "N3"}
-	//		]
-	//	},
-	//	ask: <SPARQLQueryOperation>{
-	//		name: 'ASK',
-	//		formats: [
-	//			{value: "boolean", name: "Boolean"}
-	//		]
-	//	},
-	//};
 	SPARQLQueryOperations:SPARQLQueryOperations = <SPARQLQueryOperations>{
-		select: <SPARQLQueryOperation>{
+		select: {
 			name: 'SELECT',
 			formats: [
 				{value: SPARQLFormats.table, name: "Friendly Table"},
@@ -88,39 +53,38 @@ export default class SPARQLClientComponent {
 				{value: SPARQLFormats.tsv, name: "TSV"}
 			]
 		},
-		describe: <SPARQLQueryOperation>{
+		describe: {
 			name: 'DESCRIBE',
 			formats: [
-				{value: SPARQLFormats.json_ld, name: "JSON-LD"},
+				{value: SPARQLFormats.jsonLD, name: "JSON-LD"},
 				{value: SPARQLFormats.turtle, name: "TURTLE"},
-				{value: SPARQLFormats.json_rdf, name: "RDF/JSON"},
-				{value: SPARQLFormats.rdfxml, name: "RDF/XML"},
+				{value: SPARQLFormats.jsonRDF, name: "RDF/JSON"},
+				{value: SPARQLFormats.rdfXML, name: "RDF/XML"},
 				{value: SPARQLFormats.n3, name: "N3"}
 			]
 		},
-		construct: <SPARQLQueryOperation>{
+		construct: {
 			name: 'CONSTRUCT',
 			formats: [
-				{value: SPARQLFormats.json_ld, name: "JSON-LD"},
+				{value: SPARQLFormats.jsonLD, name: "JSON-LD"},
 				{value: SPARQLFormats.turtle, name: "TURTLE"},
-				{value: SPARQLFormats.json_rdf, name: "RDF/JSON"},
-				{value: SPARQLFormats.rdfxml, name: "RDF/XML"},
+				{value: SPARQLFormats.jsonRDF, name: "RDF/JSON"},
+				{value: SPARQLFormats.rdfXML, name: "RDF/XML"},
 				{value: SPARQLFormats.n3, name: "N3"}
 			]
 		},
-		ask: <SPARQLQueryOperation>{
+		ask: {
 			name: 'ASK',
 			formats: [
-				{value: SPARQLFormats.bool, name: "Boolean"}
+				{value: SPARQLFormats.boolean, name: "Boolean"}
 			]
-		},
+		}
 	};
 
 	isQueryType:boolean;
 	isQueryType:boolean = true;
 	isSending:boolean = false;
 	isSaving:boolean = false;
-	isSavingMessage:string = "";
 	responses:SPARQLClientResponse[] = [];
 
 
@@ -132,81 +96,25 @@ export default class SPARQLClientComponent {
 		format: null,
 		name: ""
 	};
-	//currentQueryId:Number;
 	formatsAvailable = [];
-	savedQueries:SPARQLQuery[] = this.getLocalSavedQueries() || [];
+	savedQueries:SPARQLQuery[] = [];
 	sidebar:JQuery;
+
 	//Buttons
-	btnValidate:JQuery;
-	btnExecute:JQuery;
 	btnsGroupSaveQuery:JQuery;
 	btnSaveQuery:JQuery;
 	btnSave:JQuery;
 	btnSaveAs:JQuery;
 
-
-	//TODO: Remove this variable
-	dummyDataForTable:any = {
-		"head": {
-			"vars": [ "context", "subject", "predicate", "object" ]
-		},
-		"results": {
-			"bindings": [
-				{
-					"context": {"type": "uri", "value": "http://example.org/book/book6"},
-					"subject": {"type": "uri", "value": "http://example.org/book/book6"},
-					"predicate": {"type": "uri", "value": "http://example.org/book/book6"},
-					"object": {"type": "literal", "value": "Harry Potter and the Half-Blood Prince"}
-				},
-				{
-					"context": {"type": "uri", "value": "http://example.org/book/book6"},
-					"subject": {"type": "uri", "value": "http://example.org/book/book6#fragment"},
-					"predicate": {"type": "uri", "value": "http://example.org/book/book6#fragment"},
-					"object": {"type": "uri", "value": "http://example.org/book/book7"}
-				},
-				{
-					"context": {"type": "uri", "value": "http://example.org/book/book7"},
-					"subject": {"type": "uri", "value": "http://example.org/book/book7"},
-					"predicate": {"type": "uri", "value": "http://example.org/book/book7"},
-					"object": {"type": "literal", "value": "Harry Potter and the Deathly Hallows"}
-				},
-				{
-					"context": {"type": "uri", "value": "http://example.org/book/book5"},
-					"subject": {"type": "uri", "value": "http://example.org/book/book5"},
-					"predicate": {"type": "uri", "value": "http://example.org/book/book5"},
-					"object": {"type": "literal", "value": "Harry Potter and the Order of the Phoenix"}
-				},
-				{
-					"context": {"type": "uri", "value": "http://example.org/book/book4"},
-					"subject": {"type": "uri", "value": "http://example.org/book/book4"},
-					"predicate": {"type": "uri", "value": "http://example.org/book/book4"},
-					"object": {"type": "literal", "value": "1000", "datatype": "http://www.w3.org/2001/XMLSchema#integer"}
-				},
-				{
-					"context": {"type": "uri", "value": "http://example.org/book/book2"},
-					"subject": {"type": "uri", "value": "http://example.org/book/book2"},
-					"predicate": {"type": "uri", "value": "http://example.org/book/book2"},
-					"object": {"type": "literal", "value": "Harry Potter and the Chamber of Secrets"}
-				},
-				{
-					"context": {"type": "uri", "value": "http://example.org/book/book3"},
-					"subject": {"type": "uri", "value": "http://example.org/book/book3"},
-					"predicate": {"type": "uri", "value": "http://example.org/book/book3"},
-					"object": {"type": "literal", "value": "Harry Potter and the Prisoner Of Azkaban"}
-				},
-				{
-					"context": {"type": "uri", "value": "http://example.org/book/book1"},
-					"subject": {"type": "uri", "value": "http://example.org/book/book1"},
-					"predicate": {"type": "uri", "value": "http://example.org/book/book1"},
-					"object": {"type": "literal", "value": "Harry Potter and the Philosopher's Stone"}
-				}
-			]
-		}
-	};
+	regExpSelect:RegExp = new RegExp( "((.|\n)+)?SELECT((.|\n)+)?", "i" );
+	regExpConstruct:RegExp = new RegExp( "((.|\n)+)?CONSTRUCT((.|\n)+)?", "i" );
+	regExpAsk:RegExp = new RegExp( "((.|\n)+)?ASK((.|\n)+)?", "i" );
+	regExpDescribe:RegExp = new RegExp( "((.|\n)+)?DESCRIBE((.|\n)+)?", "i" );
 
 	constructor( element:ElementRef ) {
 		this.element = element;
 		this.isSending = false;
+		this.savedQueries = this.getLocalSavedQueries() || [];
 	}
 
 	afterViewInit():void {
@@ -224,7 +132,7 @@ export default class SPARQLClientComponent {
 	//:JQueryEventObject
 	onChangeQueryType( $event ):void {
 		let type:string = $event.target.value;
-		this.isQueryType = type == "Query";
+		this.isQueryType = type === "Query";
 	}
 
 
@@ -235,7 +143,7 @@ export default class SPARQLClientComponent {
 	sparqlChanged():void {
 		let operation:string = this.getSPARQLOperation( this.sparql );
 		if ( operation !== null && this.SPARQLQueryOperations[ operation.toLocaleLowerCase() ] ) {
-			if ( operation == this.currentQuery.operation ) return;
+			if ( operation === this.currentQuery.operation ) return;
 			operation = operation.toLowerCase();
 			this.currentQuery.format = this.currentQuery.format ? this.currentQuery.format : this.SPARQLQueryOperations[ operation ].formats[ 0 ].value;
 			this.currentQuery.operation = operation;
@@ -255,22 +163,18 @@ export default class SPARQLClientComponent {
 	getSPARQLOperation( query:string ):string {
 		let regExpModel:string = "((.|\n)+)?";
 		switch ( true ) {
-			case (new RegExp( regExpModel + "SELECT" + regExpModel, "i" )).test( query ):
+			case (this.regExpSelect.test( query )):
 				return this.SPARQLQueryOperations.select.name;
-			case (new RegExp( regExpModel + "CONSTRUCT" + regExpModel, "i" )).test( query ):
+			case (this.regExpConstruct.test( query )):
 				return this.SPARQLQueryOperations.construct.name;
-			case (new RegExp( regExpModel + "ASK" + regExpModel, "i" )).test( query ):
+			case (this.regExpAsk.test( query )):
 				return this.SPARQLQueryOperations.ask.name;
-			case (new RegExp( regExpModel + "DESCRIBE" + regExpModel, "i" )).test( query ):
+			case (this.regExpDescribe.test( query )):
 				return this.SPARQLQueryOperations.describe.name;
 			default:
 				return null;
 		}
 	}
-
-	isEmpty( value:any ):boolean {
-		return (value == "" || value == null);
-	};
 
 	onExecute():void {
 		this.isSending = true;
@@ -297,11 +201,11 @@ export default class SPARQLClientComponent {
 
 		promise.then(
 			( response ) => {
-				//console.log( "Carbon Response Succes: %o", response );
+				//Carbon Response Success
 				this.isSending = false;
 			},
 			( response ) => {
-				//console.log( "Carbon Response Fail: %o", response );
+				//Carbon Response Fail
 				this.isSending = false;
 			}
 		);
@@ -393,7 +297,7 @@ export default class SPARQLClientComponent {
 				let afterTimestamp:Number = (new Date()).valueOf();
 				var duration:number = afterTimestamp - beforeTimestamp;
 
-				let response = new SPARQLClientResponse();
+				let response:SPARQLClientResponse = new SPARQLClientResponse();
 				response.sparql = sparqlQuery;
 				response.endpointURL = endpointURL;
 				response.duration = duration;
@@ -403,7 +307,11 @@ export default class SPARQLClientComponent {
 				response.operation = this.getSPARQLOperation( sparqlQuery );
 				response.format = format;
 
-				this.responses.push( response );
+				let responsesLengh:number = this.responses.length, i:number;
+				for ( i = responsesLengh; i > 0; i -- ) {
+					this.responses[ i ] = this.responses[ i - 1 ];
+				}
+				this.responses[ 0 ] = response;
 				resolve( response );
 			}
 		);
@@ -503,6 +411,12 @@ export default class SPARQLClientComponent {
 		this.responses = [];
 	}
 
+	onRemove( response:any ):void {
+		let idx:Number = this.responses.indexOf( response );
+		if ( idx > - 1 )
+			this.responses.splice( idx, 1 );
+	}
+
 	onClickSaveQuery():void {
 		let query:SPARQLQuery = <SPARQLQuery>{
 			endpoint: this.currentQuery.endpoint,
@@ -516,13 +430,9 @@ export default class SPARQLClientComponent {
 		this.savedQueries = this.getLocalSavedQueries();
 		this.savedQueries.push( query );
 		this.updateLocalSavedQueries();
-		//console.log( this.currentQuery );
-		//this.sidebar.sidebar( 'toggle' );
 		this.isSaving = true;
-		this.isSavingMessage = "Saving...";
 		setInterval( () => {
 			this.isSaving = false;
-			this.isSavingMessage = "";
 		}, 500 );
 	}
 
@@ -530,7 +440,7 @@ export default class SPARQLClientComponent {
 		this.savedQueries = this.getLocalSavedQueries();
 		let queryIdx:Number = - 1;
 		this.savedQueries.forEach( ( iteratingQuery:SPARQLQuery, index:Number )=> {
-			if ( iteratingQuery.id == this.currentQuery.id ) {
+			if ( iteratingQuery.id === this.currentQuery.id ) {
 				queryIdx = index;
 			}
 		} );
@@ -548,7 +458,6 @@ export default class SPARQLClientComponent {
 			this.currentQuery.id = this.savedQueries.length;
 			this.savedQueries.push( this.currentQuery );
 		}
-		//console.log( this.currentQuery );
 		this.updateLocalSavedQueries();
 	}
 
@@ -556,10 +465,7 @@ export default class SPARQLClientComponent {
 		this.currentQuery = this.savedQueries[ index ];
 		let format = this.currentQuery.format;
 		this.sparql = this.currentQuery.content;
-		//console.log( format );
 		this.currentQuery.format = format;
-		//console.log( this.currentQuery );
-		//this.currentQueryId = this.currentQuery.id;
 
 		this.initializeSavedQueriesSidebar();
 	}
@@ -584,12 +490,6 @@ export default class SPARQLClientComponent {
 	updateLocalSavedQueries():void {
 		window.localStorage.setItem( "savedQueries", JSON.stringify( this.savedQueries ) );
 	}
-
-	//returnSomethingDependingOnArgument<T>( argument:T ):T {
-	//	let something:number = this.returnSomethingDependingOnArgument( "" );
-	//
-	//	return null;
-	//}
 
 
 }

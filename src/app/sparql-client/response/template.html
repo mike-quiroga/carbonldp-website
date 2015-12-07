@@ -1,7 +1,4 @@
-<!--<div class="ui sixteen wide column accordion" style="">-->
 <div [ng-class]="['ui', 'sixteen', 'wide', 'column', 'accordion']">
-	<!--<div *ng-class="['ui', 'top', 'attached', 'menu', 'title']">-->
-	<!--<div [ng-class]="ui top attached menu title">-->
 	<div [ng-class]="['ui', 'top', 'attached', 'menu', 'title', response.type]">
 		<div class="header item">
 			<span>{{response.operation}} </span>
@@ -12,11 +9,11 @@
 				<button class="ui button btn-toggle"><i class="dropdown icon"></i></button>
 				<button class="ui button btn-settings"><i class="configure icon"></i></button>
 				<button class="ui button btn-refresh"><i class="refresh icon"></i></button>
-				<button (click)="onClose()" class="ui button btn-close"><i class="remove icon"></i></button>
+				<!--<button (click)="onClose()" class="ui button btn-close"><i class="remove icon"></i></button>-->
+				<button (click)="onRemoveResponse()" class="ui button btn-close"><i class="remove icon"></i></button>
 			</div>
 		</div>
 	</div>
-	<!--<div class="ui bottom attached segment content">-->
 	<div [ng-class]="['ui', 'bottom', 'attached', 'segment', 'content', response.type]">
 		<div class="ui pointing secondary tabular menu">
 			<a class="item active" [attr.data-tab]="index+'_first'" data-tab="first">Results</a>
@@ -26,7 +23,6 @@
 		<div class="tabs">
 			<!-- Resultset Table -->
 			<resultset class="ui active tab" [outputformat]="response.format" [resultset]="response.resultset" [attr.data-tab]="index+'_first'" data-tab="first">
-				<!--<resultset-table [resultset]="response.resultset"></resultset-table>-->
 			</resultset>
 			<!-- End: Resultset Table -->
 			<!-- Response data -->

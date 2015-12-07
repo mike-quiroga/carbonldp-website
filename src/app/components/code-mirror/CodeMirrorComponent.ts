@@ -4,15 +4,33 @@ import CodeMirror from 'codemirror/lib/codemirror';
 
 import 'codemirror/mode/javascript/javascript';
 import 'codemirror/mode/sparql/sparql';
+import 'codemirror/mode/xml/xml';
+import 'codemirror/mode/turtle/turtle';
 
 import 'codemirror/lib/codemirror.css!';
 import 'codemirror/theme/mbo.css!';
 import EventEmitter = webdriver.EventEmitter;
 
 export class Mode {
-	static get JAVASCRIPT():string { return "javascript"; }
+	static get JAVASCRIPT():string { return "text/javascript"; }
 
-	static get SPARQL():string { return "sparql"; }
+	static get XML():string { return "application/xml"; }
+
+	static get JSONLD():string { return "application/ld+json"; }
+
+	static get JSONDRDF():string { return "application/json"; }
+
+	static get N3():string { return "text/turtle"; }
+
+	static get RDFXML():string { return "application/xml"; }
+
+	static get CSV():string { return "text/plain"; }
+
+	static get TSV():string { return "text/plain"; }
+
+	static get TURTLE():string { return "text/turtle"; }
+
+	static get SPARQL():string { return "application/sparql-query"; }
 }
 
 @Component( {
@@ -38,7 +56,7 @@ export class Class {
 
 	afterViewInit():void {
 		// Clear of existing content inside code mirror
-		(<HTMLElement>document.querySelector( "code-mirror" )).innerHTML = "";
+		this.element.nativeElement.innerHTML = "";
 		this.codeMirror = CodeMirror( this.element.nativeElement, {
 			lineNumbers: true,
 			indentWithTabs: true,
@@ -46,7 +64,8 @@ export class Class {
 			electricChars: false,
 			mode: this.mode,
 			theme: "mbo",
-			value: this.value
+			value: this.value,
+			readOnly: this.readOnly
 		} );
 
 		this.codeMirror.on( "change", ( changeObject ) => {

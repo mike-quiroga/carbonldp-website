@@ -6,82 +6,6 @@
 			</h3>
 		</div>
 	</div>
-	<!--<div class="row">-->
-	<!--<div class="ui sixteen wide column segment">-->
-	<!--<resultset-table [resultset]="dummyDataForTable"></resultset-table>-->
-	<!--</div>-->
-	<!--</div>-->
-	<!-- /row -->
-	<!--<div class="row">-->
-	<!--<div class="ui column segment" [ng-class]="{loading: isSending}">-->
-	<!--<div class="ui grid form">-->
-	<!--<div class="fields row">-->
-	<!--<div class="three wide middle aligned right aligned column">-->
-	<!--<label>Endpoint URI:</label>-->
-	<!--</div>-->
-	<!--<div class="thirteen wide column field">-->
-	<!--<input placeholder="https://example.com/parent/.../resource/" [(ng-model)]="currentQuery.endpoint" type="text">-->
-	<!--</div>-->
-	<!--</div>-->
-	<!--<div class="fields row">-->
-	<!--<div class="three wide middle aligned right aligned column">-->
-	<!--<label>Type:</label>-->
-	<!--</div>-->
-	<!--<div class="three wide column field">-->
-	<!--<select #queryType class="ui dropdown" [(ng-model)]="currentQuery.type" (change)="onChangeQueryType($event)">-->
-	<!--<option value="{{SPARQLTypes.query}}">{{SPARQLTypes.query}}</option>-->
-	<!--<option value="{{SPARQLTypes.update}}">{{SPARQLTypes.update}}</option>-->
-	<!--</select>-->
-	<!--</div>-->
-	<!--</div>-->
-	<!--<div class="fields row">-->
-	<!--<div class="three wide right aligned column">-->
-	<!--<label>Query:</label>-->
-	<!--</div>-->
-	<!--<div class="thirteen wide column field">-->
-	<!--<code-mirror [mode]="codeMirrorMode.SPARQL" [read-only]="isSending" [(value)]="sparql"></code-mirror>-->
-	<!--</div>-->
-	<!--</div>-->
-	<!--<div class="fields row" *ng-if="currentQuery.type == 'Query'">-->
-	<!--<div class="three wide right aligned column">-->
-	<!--<label>Output Format:</label>-->
-	<!--</div>-->
-	<!--<div class="three wide column field">-->
-	<!--<select class="ui dropdown" [(ng-model)]="currentQuery.format" [disabled]="isSending || isEmpty(currentQuery.operation)">-->
-	<!--<option *ng-for="#format of formatsAvailable" [value]="format">{{format.name}}</option>-->
-	<!--</select>-->
-	<!--</div>-->
-	<!--</div>-->
-	<!--<div class="fields row">-->
-	<!--<div class="three wide right aligned column">-->
-	<!--</div>-->
-	<!--<div class="six wide column field">-->
-	<!--<button class="ui button">-->
-	<!--<i class="checkmark icon"></i>-->
-	<!--Validate-->
-	<!--</button>-->
-	<!--<button class="ui blue button" (click)="onExecute()">-->
-	<!--<i class="play icon"></i>-->
-	<!--Execute-->
-	<!--</button>-->
-	<!--</div>-->
-	<!--<div class="four wide column field">-->
-	<!--<input placeholder="name of the query" type="text">-->
-	<!--</div>-->
-	<!--<div class="three wide column field">-->
-	<!--<button class="ui button"-->
-	<!--[disabled]="currentQuery.endpoint && !currentQuery.format && !currentQuery.content">-->
-	<!--<i class="star icon"></i>-->
-	<!--Save Query-->
-	<!--</button>-->
-	<!--</div>-->
-	<!--</div>-->
-	<!--&lt;!&ndash; /fields row &ndash;&gt;-->
-	<!--</div>-->
-	<!--&lt;!&ndash; /form &ndash;&gt;-->
-	<!--</div>-->
-	<!--&lt;!&ndash; /column &ndash;&gt;-->
-	<!--</div>-->
 	<div class="row query-builder">
 		<div class="column">
 			<div class="ui top attached menu">
@@ -93,7 +17,6 @@
 				</div>
 			</div>
 			<div class="ui middle attached segment pushable">
-				<!--<div class="ui inverted labeled icon left inline vertical sidebar menu queries-list">-->
 				<div class="ui inverted right vertical very wide dimmed sidebar menu queries-list">
 					<p *ng-if="savedQueries.length == 0">
 						No saved queries yet.
@@ -104,7 +27,7 @@
 						</button>
 						<span class="name">{{query.name}}</span>
 						<br/>
-						<span class="operation" [ng-class]="query.operation">{{query.operation}}</span>
+						<span class="operation" [ng-class]="query.operation.toLowerCase()">{{query.operation.toLowerCase()}}</span>
 					</a>
 				</div>
 				<div class="pusher">
@@ -144,7 +67,7 @@
 											<label>Output Format:</label>
 										</div>
 										<div class="three wide column field">
-											<select class="ui dropdown" [(ng-model)]="currentQuery.format" [disabled]="isSending || isEmpty(currentQuery.operation)">
+											<select class="ui dropdown" [(ng-model)]="currentQuery.format" [disabled]="isSending || !currentQuery.operation">
 												<option *ng-for="#format of formatsAvailable" [value]="format.value">{{format.name}}</option>
 											</select>
 										</div>
@@ -170,9 +93,13 @@
 								</div>
 								<!-- /form -->
 							</div>
+							<!-- /row -->
 						</div>
+						<!-- /form -->
 					</div>
+					<!-- /segment -->
 				</div>
+				<!-- /pusher -->
 			</div>
 			<div class="ui bottom attached segment">
 				<div class="ui grid form row">
@@ -210,31 +137,20 @@
 			</div>
 		</div>
 	</div>
-	<!-- /row -->
-	<!--<div class="row">-->
-	<!--<div class="ui sixteen wide column segment">-->
-	<!--<p>Your Query:</p>-->
-	<!--<hr>-->
-	<!--<p>-->
-	<!--Endpoint: {{currentQuery.endpoint}}<br>-->
-	<!--Query: {{currentQuery.content}}<br>-->
-	<!--Format: {{!!currentQuery.format}}-->
-	<!--</p>-->
-	<!--</div>-->
-	<!--</div>-->
-	<!-- /row -->
 	<div class="row">
 		<div class="column">
 			<h3>
 				Response Stack
-				<button class="negative ui button" (click)="onEmptyStack()">
+				<button class="negative ui button"
+				        [disabled]="responses.length<=0"
+				        (click)="onEmptyStack()">
 					<i class="trash outline icon"></i>
-					Empty Stack
+					Empty Stack <span *ng-if="responses.length>0">({{responses.length}})</span>
 				</button>
 			</h3>
 		</div>
 	</div>
-	<sparql-response class="row" *ng-for="#response of responses; #i =index" [response]="response" [index]="i" [responses]="responses"></sparql-response>
+	<sparql-response class="row" *ng-for="#response of responses; #i =index" [response]="response" (on-remove)="onRemove($event)"></sparql-response>
 
 	<div class="row"></div>
 	<div class="row"></div>
