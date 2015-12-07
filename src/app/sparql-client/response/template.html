@@ -22,13 +22,10 @@
 		</div>
 		<div class="tabs">
 			<!-- Resultset Table -->
-			<resultset class="ui active tab" [outputformat]="response.format" [resultset]="response.resultset" [attr.data-tab]="index+'_first'" data-tab="first">
-			</resultset>
+			<resultset class="ui active tab" [outputformat]="response.format" [resultset]="response.resultset" [attr.data-tab]="index+'_first'" data-tab="first"></resultset>
 			<!-- End: Resultset Table -->
 			<!-- Response data -->
-			<pre class="ui tab secondary segment" [attr.data-tab]="index+'_second'" data-tab="second">
-				{{response.data}}
-			</pre>
+			<pre class="ui tab secondary segment" [attr.data-tab]="index+'_second'" data-tab="second">{{response.data}}</pre>
 			<!-- End: Response data -->
 			<!-- SPARQL Request -->
 			<div class="ui tab segment" [attr.data-tab]="index+'_third'" data-tab="third">

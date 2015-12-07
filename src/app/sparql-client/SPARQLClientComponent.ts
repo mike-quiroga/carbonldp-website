@@ -3,8 +3,8 @@ import {
 	CORE_DIRECTIVES, FORM_DIRECTIVES,
 	ElementRef,NgStyle
 } from 'angular2/angular2';
-import {ResponseComponent, SPARQLResponseType} from './response/responseComponent';
-import {ResultsetComponent, SPARQLFormats} from "./resultset/resultsetComponent";
+import { ResponseComponent, SPARQLResponseType } from './response/ResponseComponent';
+import { ResultsetComponent, SPARQLFormats } from "./resultset/ResultsetComponent";
 import * as CodeMirrorComponent from "app/components/code-mirror/CodeMirrorComponent";
 
 import $ from 'jquery';
@@ -29,7 +29,7 @@ export default class SPARQLClientComponent {
 
 	get codeMirrorMode() { return CodeMirrorComponent.Mode; }
 
-	private _sparql:string = "Hello World";
+	private _sparql:string = "";
 	get sparql():string { return this._sparql; }
 
 	set sparql( value:string ) {

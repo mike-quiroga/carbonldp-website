@@ -22,7 +22,7 @@ bootstrap( AppComponent, [
 	FORM_PROVIDERS,
 	ROUTER_PROVIDERS,
 	HTTP_PROVIDERS,
-	provide( APP_BASE_HREF, { useValue: '/' } ),
+	provide( APP_BASE_HREF, { useValue: window.location.pathname } ),
 
 	CARBON_PROVIDER,
 

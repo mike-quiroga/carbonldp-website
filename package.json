@@ -32,7 +32,7 @@
     "gulp-watch": "^4.3.5",
     "jspm": "^0.16.14",
     "live-server": "^0.8.2",
-    "semantic-ui": "^2.1.5",
+    "semantic-ui": "2.1.5",
     "systemjs-builder": "^0.14.10",
     "tsd": "^0.6.5"
   },
