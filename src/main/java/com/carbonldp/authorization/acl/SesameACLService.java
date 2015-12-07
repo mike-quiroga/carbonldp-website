@@ -15,11 +15,8 @@ import com.carbonldp.models.Infraction;
 import com.carbonldp.spring.TransactionWrapper;
 import com.carbonldp.utils.RDFNodeUtil;
 import com.carbonldp.web.exceptions.NotImplementedException;
-import org.joda.time.DateTime;
-import org.openrdf.model.Resource;
 import org.openrdf.model.URI;
 import org.openrdf.model.ValueFactory;
-import org.openrdf.model.impl.LinkedHashModel;
 import org.openrdf.model.impl.ValueFactoryImpl;
 import org.springframework.security.access.PermissionEvaluator;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -27,7 +24,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class SesameACLService extends AbstractSesameLDPService implements ACLService {
 	ValueFactory valueFactory;
@@ -36,34 +32,143 @@ public class SesameACLService extends AbstractSesameLDPService implements ACLSer
 
 	public SesameACLService( TransactionWrapper transactionWrapper, RDFSourceRepository sourceRepository, ContainerRepository containerRepository, ACLRepository aclRepository, PermissionEvaluator permissionEvaluator, AppRoleRepository appRoleRepository ) {
 		super( transactionWrapper, sourceRepository, containerRepository, aclRepository );
+
 		this.permissionEvaluator = permissionEvaluator;
 		this.appRoleRepository = appRoleRepository;
-		valueFactory = new ValueFactoryImpl();
+		this.valueFactory = new ValueFactoryImpl();
 	}
 
 	@Override
-	public void replace( ACL newAcl ) {
-		if ( ! sourceRepository.exists( newAcl.getURI() ) ) throw new ResourceDoesntExistException();
-		validateProperties( newAcl );
+	public ACL get( URI aclURI ) {
+		return new ACL( sourceRepository.get( aclURI ), aclURI );
+	}
 
-		DateTime modifiedTime = DateTime.now();
+	@Override
+	public void replace( ACL newACL ) {
+		URI aclURI = newACL.getURI();
 
-		//first boolean tell us whether it is inheritable(false) or direct(true), the second boolean tells us whether the Ace is for granting(true) or denying(false) permissions
-		Map<Boolean, Map<Boolean, Set<ACE>>> permissions = getPermissions( get( newAcl.getURI() ) );
-		Map<Boolean, Map<Boolean, Set<ACE>>> newPermissions = getPermissions( newAcl );
+		if ( ! sourceRepository.exists( aclURI ) ) throw new ResourceDoesntExistException();
+		validateACL( newACL );
 
-		Set<ACE> permissionsToModify = comparePermissions( permissions, newPermissions );
+		ACL oldACL = get( aclURI );
 
-		validate( permissionsToModify, newAcl.getAccessTo() );
-		ACL aclToPersist = ACLFactory.create( newAcl.getURI(), newAcl.getAccessTo() );
-		aclToPersist = addPermissions( newPermissions, aclToPersist );
+		Map<Subject, SubjectPermissions> oldACLSubjects = getACLSubjects( oldACL );
+		Map<Subject, SubjectPermissions> newACLSubjects = getACLSubjects( newACL );
+
+		Map<ModifyType, Map<Subject, SubjectPermissions>> subjectPermissionsToModify = getSubjectPermissionsToModify( oldACLSubjects, newACLSubjects );
+
+		validateModifications( subjectPermissionsToModify, newACL.getAccessTo() );
+
+		ACL aclToPersist = generateACL( aclURI, newACL.getAccessTo(), newACLSubjects );
 
 		aclRepository.replace( aclToPersist );
 
-		sourceRepository.touch( newAcl.getURI(), modifiedTime );
+		sourceRepository.touch( aclURI );
 	}
 
-	private void validateProperties( ACL newAcl ) {
+	private ACL generateACL( URI aclURI, URI accessTo, Map<Subject, SubjectPermissions> subjectPermissionsToModify ) {
+		ACL acl = ACLFactory.create( aclURI, accessTo );
+
+		for ( Subject subject : subjectPermissionsToModify.keySet() ) {
+			for ( InheritanceType inheritanceType : InheritanceType.values() ) {
+				for ( PermissionType permissionType : PermissionType.values() ) {
+					ACEDescription.SubjectType subjectType = RDFNodeUtil.findByURI( subject.getSubjectClass(), ACEDescription.SubjectType.class );
+					Set<ACEDescription.Permission> permissions = subjectPermissionsToModify.get( subject ).get( inheritanceType ).get( permissionType );
+					boolean granting = permissionType == PermissionType.GRANTING;
+
+					ACE ace = ACEFactory.getInstance().create( acl, subjectType, subject.getURI(), permissions, granting );
+
+					if ( inheritanceType == InheritanceType.DIRECT ) {
+						acl.addACEntry( ace.getSubject() );
+					} else if ( inheritanceType == InheritanceType.INHERITABLE ) {
+						acl.addInheritableEntry( ace.getSubject() );
+					}
+				}
+			}
+		}
+
+		return acl;
+	}
+
+	private Map<ModifyType, Map<Subject, SubjectPermissions>> getSubjectPermissionsToModify( Map<Subject, SubjectPermissions> oldACLSubjects, Map<Subject, SubjectPermissions> newACLSubjects ) {
+		Map<ModifyType, Map<Subject, SubjectPermissions>> subjectPermissionsToModify = new HashMap<>();
+		subjectPermissionsToModify.put( ModifyType.ADD, new HashMap<>() );
+		subjectPermissionsToModify.put( ModifyType.REMOVE, new HashMap<>() );
+
+		for ( Subject subject : newACLSubjects.keySet() ) {
+			SubjectPermissions newSubjectPermissions = newACLSubjects.get( subject );
+
+			if ( ! oldACLSubjects.containsKey( subject ) ) {
+				subjectPermissionsToModify.get( ModifyType.ADD ).put( subject, newSubjectPermissions );
+				continue;
+			}
+
+			SubjectPermissions oldSubjectPermissions = oldACLSubjects.get( subject );
+
+			for ( InheritanceType inheritanceType : InheritanceType.values() ) {
+				for ( PermissionType permissionType : PermissionType.values() ) {
+					Set<ACEDescription.Permission> oldPermissions = oldSubjectPermissions.get( inheritanceType ).get( permissionType );
+					Set<ACEDescription.Permission> newPermissions = newSubjectPermissions.get( inheritanceType ).get( permissionType );
+
+					Set<ACEDescription.Permission> addedPermissions = new HashSet<>( newPermissions );
+					Set<ACEDescription.Permission> removedPermissions = new HashSet<>( oldPermissions );
+
+					addedPermissions.removeAll( oldPermissions );
+					removedPermissions.removeAll( newPermissions );
+
+					if ( ! addedPermissions.isEmpty() ) {
+						Map<Subject, SubjectPermissions> addedSubjectPermissions = subjectPermissionsToModify.get( ModifyType.ADD );
+						if ( ! addedSubjectPermissions.containsKey( subject ) ) {
+							addedSubjectPermissions.put( subject, new SubjectPermissions() );
+						}
+						addedSubjectPermissions.get( subject ).get( inheritanceType ).get( permissionType ).addAll( addedPermissions );
+					}
+
+					if ( ! removedPermissions.isEmpty() ) {
+						Map<Subject, SubjectPermissions> removedSubjectPermissions = subjectPermissionsToModify.get( ModifyType.REMOVE );
+						if ( ! removedSubjectPermissions.containsKey( subject ) ) {
+							removedSubjectPermissions.put( subject, new SubjectPermissions() );
+						}
+						removedSubjectPermissions.get( subject ).get( inheritanceType ).get( permissionType ).addAll( removedPermissions );
+					}
+				}
+			}
+		}
+
+		return subjectPermissionsToModify;
+	}
+
+	private Map<Subject, SubjectPermissions> getACLSubjects( ACL acl ) {
+		Map<Subject, SubjectPermissions> aclSubjects = new HashMap<>();
+
+		Set<ACE> aces = ACEFactory.getInstance().get( acl.getBaseModel(), acl.getACEntries(), acl.getURI() );
+		addACEsSubjects( aces, InheritanceType.DIRECT, aclSubjects );
+
+		Set<ACE> inheritableAces = ACEFactory.getInstance().get( acl.getBaseModel(), acl.getInheritableEntries(), acl.getURI() );
+		addACEsSubjects( aces, InheritanceType.INHERITABLE, aclSubjects );
+
+		return aclSubjects;
+	}
+
+	private void addACEsSubjects( Set<ACE> aces, InheritanceType inheritanceType, Map<Subject, SubjectPermissions> aclSubjects ) {
+		for ( ACE ace : aces ) {
+			for ( URI aceSubject : ace.getSubjects() ) {
+				Subject subject = new Subject( aceSubject, ace.getSubjectClass() );
+				SubjectPermissions subjectPermissions;
+				if ( ! aclSubjects.containsKey( subject ) ) {
+					aclSubjects.put( subject, new SubjectPermissions() );
+				}
+				subjectPermissions = aclSubjects.get( subject );
+
+				PermissionType permissionType = ace.isGranting() ? PermissionType.GRANTING : PermissionType.DENYING;
+
+				Set<ACEDescription.Permission> permissions = subjectPermissions.get( inheritanceType ).get( permissionType );
+				permissions.addAll( ace.getPermissions() );
+			}
+		}
+	}
+
+	private void validateACL( ACL newAcl ) {
 		List<Infraction> infractions = ACLFactory.getInstance().validate( newAcl );
 
 		Set<ACE> aces = ACEFactory.getInstance().get( newAcl.getBaseModel(), newAcl.getACEntries(), newAcl.getURI() );
@@ -74,26 +179,30 @@ public class SesameACLService extends AbstractSesameLDPService implements ACLSer
 		if ( ! infractions.isEmpty() ) throw new InvalidResourceException( infractions );
 	}
 
-	private void validate( Set<ACE> permissionsToModify, URI accessTo ) {
+	private void validateModifications( Map<ModifyType, Map<Subject, SubjectPermissions>> subjectPermissionsToModify, URI accessTo ) {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		if ( ! ( authentication instanceof AgentAuthenticationToken ) ) throw new IllegalArgumentException( "The authentication token isn't supported." );
 		AgentAuthenticationToken agentAuthenticationToken = (AgentAuthenticationToken) authentication;
 
-		for ( ACE ace : permissionsToModify ) {
+		Set<Subject> affectedSubjects = getAffectedSubjects( subjectPermissionsToModify );
+		Set<ACEDescription.Permission> affectedPermissions = getAffectedPermissions( subjectPermissionsToModify );
 
-			//check if the logged one is parent of the modified one
-			ACEDescription.SubjectType subjectClass = RDFNodeUtil.findByURI( ace.getSubjectClass(), ACEDescription.SubjectType.class );
-			if ( subjectClass == null ) throw new StupidityException( "there's no subjectClass property in the ACE" );
+		for ( Subject subject : affectedSubjects ) {
+			ACEDescription.SubjectType subjectClass = RDFNodeUtil.findByURI( subject.getSubjectClass(), ACEDescription.SubjectType.class );
+			if ( subjectClass == null ) throw new StupidityException( "There's no subjectClass property in the ACE" );
 			switch ( subjectClass ) {
 				case AGENT:
 					throw new NotImplementedException();
 				case APP_ROLE:
-					boolean isParent = false;
 					App app = AppContextHolder.getContext().getApplication();
-					if ( app == null ) throw new RuntimeException( "unable to add an app role permission on a platform" );
+					if ( app == null ) throw new IllegalStateException( "Unable to add an app role permission on the platform context" );
+
 					Set<AppRole> appRoles = agentAuthenticationToken.getAppRoles( app.getURI() );
-					URI appRoleToModify = ace.getSubjects().iterator().next();
+
+					URI appRoleToModify = subject.getURI();
 					Set<URI> parentsRoles = appRoleRepository.getParentsURI( appRoleToModify );
+
+					boolean isParent = false;
 					for ( AppRole appRole : appRoles ) {
 						if ( parentsRoles.contains( appRole.getSubject() ) ) {
 							isParent = true;
@@ -108,212 +217,100 @@ public class SesameACLService extends AbstractSesameLDPService implements ACLSer
 					throw new InvalidResourceException( new Infraction( 0x2005, "property", ACEDescription.Property.SUBJECT_CLASS.getURI().stringValue() ) );
 
 			}
+		}
 
-			// check if the logged one has the permissions that he want to modify
-			for ( ACEDescription.Permission permission : ace.getPermissions() )
-				if ( ! permissionEvaluator.hasPermission( agentAuthenticationToken, accessTo, permission ) )
-					throw new BadCredentialsException( "you don't have permissions to modify this resource" );
+		for ( ACEDescription.Permission permission : affectedPermissions ) {
+			if ( ! permissionEvaluator.hasPermission( agentAuthenticationToken, accessTo, permission ) ) {
+				throw new BadCredentialsException( "You don't have permissions to modify this resource" );
+			}
 		}
 	}
 
-	private Set<ACE> comparePermissions( Map<Boolean, Map<Boolean, Set<ACE>>> permissions, Map<Boolean, Map<Boolean, Set<ACE>>> newPermissions ) {
-		Set<ACE> permissionsToModify = new LinkedHashSet<>();
-
-		permissionsToModify.addAll( compareAces( permissions.get( true ).get( true ), newPermissions.get( true ).get( true ) ) );
-
-		permissionsToModify.addAll( compareAces( permissions.get( true ).get( false ), newPermissions.get( true ).get( false ) ) );
-
-		permissionsToModify.addAll( compareAces( permissions.get( false ).get( true ), newPermissions.get( false ).get( true ) ) );
-
-		permissionsToModify.addAll( compareAces( permissions.get( false ).get( false ), newPermissions.get( false ).get( false ) ) );
-
-		return permissionsToModify;
+	private Set<Subject> getAffectedSubjects( Map<ModifyType, Map<Subject, SubjectPermissions>> subjectPermissionsToModify ) {
+		Set<Subject> affectedSubjects = new HashSet<>();
+		for ( ModifyType modifyType : ModifyType.values() ) {
+			affectedSubjects.addAll( subjectPermissionsToModify.get( modifyType ).keySet() );
+		}
+		return affectedSubjects;
 	}
 
-	private Set<ACE> compareAces( Set<ACE> aces, Set<ACE> newAces ) {
-		Set<ACE> permissionsToModify = new LinkedHashSet<>();
-
-		for ( ACE newAce : newAces ) {
-			boolean addAllPermissions = true;
-			for ( ACE ace : aces ) {
-				addAllPermissions = true;
-				if ( ace.getSubjects().iterator().next().equals( newAce.getSubjects().iterator().next() ) ) {
-					Resource context = ace.getDefaultContext();
-					ACE aceToAdd = new ACE( new LinkedHashModel(), valueFactory.createBNode(), context );
-
-					for ( ACEDescription.Permission permission : newAce.getPermissions() ) {
-						if ( ace.getPermissions().contains( permission ) ) {
-							ace.removePermission( permission );
-						} else {
-							aceToAdd.addPermission( permission );
-						}
+	private Set<ACEDescription.Permission> getAffectedPermissions( Map<ModifyType, Map<Subject, SubjectPermissions>> subjectPermissionsToModify ) {
+		Set<ACEDescription.Permission> affectedPermissions = new HashSet<>();
+		for ( ModifyType modifyType : ModifyType.values() ) {
+			for ( SubjectPermissions subject : subjectPermissionsToModify.get( modifyType ).values() ) {
+				for ( InheritanceType inheritanceType : InheritanceType.values() ) {
+					for ( PermissionType permissionType : PermissionType.values() ) {
+						affectedPermissions.addAll( subjectPermissionsToModify.get( modifyType ).get( subject ).get( inheritanceType ).get( permissionType ) );
 					}
-
-					if ( ! ace.getPermissions().isEmpty() ) {
-						permissionsToModify.add( ace );
-					}
-					if ( ! aceToAdd.getPermissions().isEmpty() ) {
-						aceToAdd.addType( ACEDescription.Resource.CLASS.getURI() );
-						aceToAdd.setSubjectClass( ace.getSubjectClass() );
-						aceToAdd.addSubject( ace.getSubjects().iterator().next() );
-						aceToAdd.setGranting( ace.isGranting() );
-						permissionsToModify.add( aceToAdd );
-					}
-					addAllPermissions = false;
-					break;
 				}
 			}
-			if ( addAllPermissions ) {
-				permissionsToModify.add( newAce );
-			}
 		}
-		permissionsToModify.addAll( aces.stream().filter( ace -> ! ace.getPermissions().isEmpty() ).collect( Collectors.toList() ) );
-		return permissionsToModify;
+		return affectedPermissions;
 	}
 
-	private Map<Boolean, Map<Boolean, Set<ACE>>> getPermissions( ACL acl ) {
-		Set<ACE> aces = ACEFactory.getInstance().get( acl.getBaseModel(), acl.getACEntries(), acl.getURI() );
-		Set<ACE> inheritableAces = ACEFactory.getInstance().get( acl.getBaseModel(), acl.getInheritableEntries(), acl.getURI() );
-		Map<Boolean, Map<Boolean, Set<ACE>>> permissions = new LinkedHashMap<>();
-		permissions.put( true, updateACEList( aces ) );
-		permissions.put( false, updateACEList( inheritableAces ) );
-
-		return permissions;
+	private enum InheritanceType {
+		INHERITABLE,
+		DIRECT
 	}
 
-	private ACL addPermissions( Map<Boolean, Map<Boolean, Set<ACE>>> permissions, ACL acl ) {
-		Set<ACE> repeatedAcesGranting = getRepeatedAces( permissions.get( true ).get( false ), permissions.get( false ).get( false ) );
-		Set<ACE> repeatedAcesDenying = getRepeatedAces( permissions.get( true ).get( true ), permissions.get( false ).get( true ) );
-
-		Set<ACE> acesDirectGranting = fuseQuadrant( permissions.get( true ).get( true ) );
-		Set<ACE> acesDirectDenying = fuseQuadrant( permissions.get( true ).get( false ) );
-		Set<ACE> acesInheritableGranting = fuseQuadrant( permissions.get( false ).get( true ) );
-		Set<ACE> acesInheritableDenying = fuseQuadrant( permissions.get( false ).get( false ) );
-		repeatedAcesGranting = fuseQuadrant( repeatedAcesGranting );
-		repeatedAcesDenying = fuseQuadrant( repeatedAcesDenying );
-
-		for ( ACE ace : acesDirectGranting ) {
-			acl.addACEntry( ace.getSubject() );
-			acl.getBaseModel().addAll( ace );
-		}
-		for ( ACE ace : acesDirectDenying ) {
-			acl.addACEntry( ace.getSubject() );
-			acl.getBaseModel().addAll( ace );
-		}
-		for ( ACE ace : acesInheritableGranting ) {
-			acl.addInheritableEntry( ace.getSubject() );
-			acl.getBaseModel().addAll( ace );
-		}
-		for ( ACE ace : acesInheritableDenying ) {
-			acl.addInheritableEntry( ace.getSubject() );
-			acl.getBaseModel().addAll( ace );
-		}
-		for ( ACE ace : repeatedAcesGranting ) {
-			acl.addACEntry( ace.getSubject() );
-			acl.addInheritableEntry( ace.getSubject() );
-			acl.getBaseModel().addAll( ace );
-		}
-		for ( ACE ace : repeatedAcesDenying ) {
-			acl.addACEntry( ace.getSubject() );
-			acl.addInheritableEntry( ace.getSubject() );
-			acl.getBaseModel().addAll( ace );
-		}
-
-		return acl;
-
+	private enum PermissionType {
+		GRANTING,
+		DENYING
 	}
 
-	private Set<ACE> getRepeatedAces( Set<ACE> directAces, Set<ACE> inheritableAces ) {
-		Set<ACE> repeatedAces = new LinkedHashSet<>();
-		for ( Iterator<ACE> directIterator = directAces.iterator(); directIterator.hasNext(); ) {
-			ACE directAce = directIterator.next();
-			URI directSubject = directAce.getSubjects().iterator().next();
-			for ( Iterator<ACE> inheritableIterator = inheritableAces.iterator(); inheritableIterator.hasNext(); ) {
-				ACE inheritableAce = inheritableIterator.next();
-				URI inheritableSubject = inheritableAce.getSubjects().iterator().next();
-				if ( ! directSubject.equals( inheritableSubject ) ) continue;
-				if ( ! hasSamePermissions( directAce, inheritableAce ) ) continue;
-				repeatedAces.add( directAce );
-				directIterator.remove();
-				inheritableIterator.remove();
-				break;
-			}
+	private enum ModifyType {
+		ADD,
+		REMOVE
+	}
+
+	private class SubjectPermissions extends HashMap<InheritanceType, Map<PermissionType, Set<ACEDescription.Permission>>> {
+		public SubjectPermissions() {
+			super();
+
+			this.put( InheritanceType.DIRECT, new HashMap<>() );
+			this.get( InheritanceType.DIRECT ).put( PermissionType.GRANTING, new HashSet<>() );
+			this.get( InheritanceType.DIRECT ).put( PermissionType.DENYING, new HashSet<>() );
+
+			this.put( InheritanceType.INHERITABLE, new HashMap<>() );
+			this.get( InheritanceType.INHERITABLE ).put( PermissionType.GRANTING, new HashSet<>() );
+			this.get( InheritanceType.INHERITABLE ).put( PermissionType.DENYING, new HashSet<>() );
 		}
-		return repeatedAces;
 	}
 
-	private Set<ACE> fuseQuadrant( Set<ACE> rawAces ) {
-		Set<ACE> fusedAces = new LinkedHashSet<>();
-		while ( ! rawAces.isEmpty() ) {
-			boolean isDuplicated = false;
-			ACE rawAce = rawAces.iterator().next();
-			for ( ACE ace : fusedAces ) {
-				if ( ! hasSamePermissions( ace, rawAce ) ) continue;
-				ace.addSubject( rawAce.getSubjects().iterator().next() );
-				isDuplicated = true;
-				break;
-			}
-			if ( ! isDuplicated )
-				fusedAces.add( rawAce );
-			rawAces.remove( rawAce );
+	private class Subject {
+		private URI uri;
+		private URI subjectClass;
+
+		public Subject( URI uri, URI subjectClass ) {
+			this.uri = uri;
+			this.subjectClass = subjectClass;
 		}
-		return fusedAces;
-	}
 
-	private boolean hasSamePermissions( ACE ace1, ACE ace2 ) {
-		Set<ACEDescription.Permission> ace1Permissions = ace1.getPermissions();
-		Set<ACEDescription.Permission> ace2Permissions = ace2.getPermissions();
-		if ( ace1Permissions.size() != ace2Permissions.size() ) return false;
-		for ( ACEDescription.Permission permission : ace2Permissions )
-			if ( ! ace1Permissions.contains( permission ) ) return false;
-
-		return true;
-	}
-
-	private Map<Boolean, Set<ACE>> updateACEList( Set<ACE> aces ) {
-		Set<ACE> grantingAces = new LinkedHashSet<>();
-		Set<ACE> denyingAces = new LinkedHashSet<>();
-		for ( ACE ace : aces ) {
-			grantingAces = updateAces( grantingAces, ace, true );
-			denyingAces = updateAces( denyingAces, ace, false );
+		public URI getURI() {
+			return uri;
 		}
-		Map<Boolean, Set<ACE>> newAcesMap = new LinkedHashMap<>();
-		newAcesMap.put( true, grantingAces );
-		newAcesMap.put( false, denyingAces );
-		return newAcesMap;
-	}
 
-	private Set<ACE> updateAces( Set<ACE> aces, ACE ace, boolean granting ) {
-		if ( ace.isGranting() != granting ) return aces;
-
-		Set<URI> subjects = ace.getSubjects();
-		Map<URI, ACE> newACESubjects = getACESubjects( aces );
-
-		for ( URI subject : subjects ) {
-			ACE newAce = newACESubjects.get( subject );
-			if ( newAce == null ) {
-				Resource context = ace.getDefaultContext();
-				newAce = new ACE( new LinkedHashModel(), valueFactory.createBNode(), context );
-				newAce.addType( ACEDescription.Resource.CLASS.getURI() );
-				newAce.setSubjectClass( ace.getSubjectClass() );
-				newAce.addSubject( subject );
-				newAce.setGranting( granting );
-				ace.getPermissions().forEach( newAce::addPermission );
-
-				aces.add( newAce );
-			} else {ace.getPermissions().forEach( newAce::addPermission );}
+		public URI getSubjectClass() {
+			return subjectClass;
 		}
-		return aces;
-	}
 
-	private Map<URI, ACE> getACESubjects( Set<ACE> aces ) {
-		Map<URI, ACE> aceSubjects = new LinkedHashMap<>();
-		for ( ACE ace : aces ) {aceSubjects.put( ace.getSubjects().iterator().next(), ace );}
-		return aceSubjects;
-	}
+		@Override
+		public boolean equals( Object o ) {
+			if ( this == o ) return true;
+			if ( o == null || getClass() != o.getClass() ) return false;
 
-	@Override
-	public ACL get( URI aclURI ) {
-		return new ACL( sourceRepository.get( aclURI ), aclURI );
+			Subject that = (Subject) o;
+
+			if ( uri != null ? ! uri.equals( that.uri ) : that.uri != null ) return false;
+			return ! ( subjectClass != null ? ! subjectClass.equals( that.subjectClass ) : that.subjectClass != null );
+
+		}
+
+		@Override
+		public int hashCode() {
+			int result = uri != null ? uri.hashCode() : 0;
+			result = 31 * result + ( subjectClass != null ? subjectClass.hashCode() : 0 );
+			return result;
+		}
 	}
 }
