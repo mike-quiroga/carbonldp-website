@@ -145,7 +145,7 @@ public class SesameACLService extends AbstractSesameLDPService implements ACLSer
 		addACEsSubjects( aces, InheritanceType.DIRECT, aclSubjects );
 
 		Set<ACE> inheritableAces = ACEFactory.getInstance().get( acl.getBaseModel(), acl.getInheritableEntries(), acl.getURI() );
-		addACEsSubjects( aces, InheritanceType.INHERITABLE, aclSubjects );
+		addACEsSubjects( inheritableAces, InheritanceType.INHERITABLE, aclSubjects );
 
 		return aclSubjects;
 	}
@@ -228,7 +228,7 @@ public class SesameACLService extends AbstractSesameLDPService implements ACLSer
 
 	private Set<Subject> getAffectedSubjects( Map<ModifyType, Map<Subject, SubjectPermissions>> subjectPermissionsToModify ) {
 		Set<Subject> affectedSubjects = new HashSet<>();
-		for ( ModifyType modifyType : ModifyType.values() ) {
+		for ( ModifyType modifyType : subjectPermissionsToModify.keySet() ) {
 			affectedSubjects.addAll( subjectPermissionsToModify.get( modifyType ).keySet() );
 		}
 		return affectedSubjects;
@@ -236,10 +236,10 @@ public class SesameACLService extends AbstractSesameLDPService implements ACLSer
 
 	private Set<ACEDescription.Permission> getAffectedPermissions( Map<ModifyType, Map<Subject, SubjectPermissions>> subjectPermissionsToModify ) {
 		Set<ACEDescription.Permission> affectedPermissions = new HashSet<>();
-		for ( ModifyType modifyType : ModifyType.values() ) {
-			for ( SubjectPermissions subject : subjectPermissionsToModify.get( modifyType ).values() ) {
-				for ( InheritanceType inheritanceType : InheritanceType.values() ) {
-					for ( PermissionType permissionType : PermissionType.values() ) {
+		for ( ModifyType modifyType : subjectPermissionsToModify.keySet() ) {
+			for ( Subject subject : subjectPermissionsToModify.get( modifyType ).keySet() ) {
+				for ( InheritanceType inheritanceType : subjectPermissionsToModify.get( modifyType ).get( subject ).keySet() ) {
+					for ( PermissionType permissionType : subjectPermissionsToModify.get( modifyType ).get( subject ).get( inheritanceType ).keySet() ) {
 						affectedPermissions.addAll( subjectPermissionsToModify.get( modifyType ).get( subject ).get( inheritanceType ).get( permissionType ) );
 					}
 				}
@@ -248,22 +248,22 @@ public class SesameACLService extends AbstractSesameLDPService implements ACLSer
 		return affectedPermissions;
 	}
 
-	private enum InheritanceType {
+	public enum InheritanceType {
 		INHERITABLE,
 		DIRECT
 	}
 
-	private enum PermissionType {
+	public enum PermissionType {
 		GRANTING,
 		DENYING
 	}
 
-	private enum ModifyType {
+	public enum ModifyType {
 		ADD,
 		REMOVE
 	}
 
-	private class SubjectPermissions extends HashMap<InheritanceType, Map<PermissionType, Set<ACEDescription.Permission>>> {
+	public static class SubjectPermissions extends HashMap<InheritanceType, Map<PermissionType, Set<ACEDescription.Permission>>> {
 		public SubjectPermissions() {
 			super();
 
@@ -277,7 +277,7 @@ public class SesameACLService extends AbstractSesameLDPService implements ACLSer
 		}
 	}
 
-	private class Subject {
+	public static class Subject {
 		private URI uri;
 		private URI subjectClass;
 
