@@ -55,13 +55,33 @@ public class SesameAppRoleService extends AbstractSesameLDPService implements Ap
 	public void addAgentMember( URI appRoleAgentContainerURI, URI agent ) {
 		if ( ( ! sourceRepository.exists( appRoleAgentContainerURI ) ) ) throw new ResourceDoesntExistException();
 		if ( ! isAppAgent( agent ) && ! isPlatformAgent( agent ) ) throw new InvalidRDFTypeException( new Infraction( 0x2001, "rdf.type", AgentDescription.Resource.CLASS.getURI().stringValue() ) );
-		validatePermissionToAddAgent( appRoleAgentContainerURI );
+		validatePermissionToModifyAgent( appRoleAgentContainerURI );
 
 		containerService.addMember( appRoleAgentContainerURI, agent );
 
 		DateTime modifiedTime = DateTime.now();
 		URI membershipResource = containerRepository.getTypedRepository( containerService.getContainerType( appRoleAgentContainerURI ) ).getMembershipResource( appRoleAgentContainerURI );
 		sourceRepository.touch( membershipResource, modifiedTime );
+	}
+
+	@Override
+	public void removeAgentMembers( URI appRoleAgentContainerURI, Set<URI> agents ) {
+		for ( URI agent : agents ) {
+			removeAgentMember( appRoleAgentContainerURI, agent );
+		}
+	}
+
+	@Override
+	public void removeAgentMember( URI appRoleAgentContainerURI, URI agent ) {
+		if ( ( ! sourceRepository.exists( appRoleAgentContainerURI ) ) ) throw new ResourceDoesntExistException();
+		if ( ! isAppAgent( agent ) && ! isPlatformAgent( agent ) ) throw new InvalidRDFTypeException( new Infraction( 0x2001, "rdf.type", AgentDescription.Resource.CLASS.getURI().stringValue() ) );
+
+		validatePermissionToModifyAgent( appRoleAgentContainerURI );
+
+		containerService.removeMember( appRoleAgentContainerURI, agent );
+
+		URI membershipResource = containerRepository.getTypedRepository( containerService.getContainerType( appRoleAgentContainerURI ) ).getMembershipResource( appRoleAgentContainerURI );
+		sourceRepository.touch( membershipResource );
 	}
 
 	private boolean isAppAgent( URI agent ) {
@@ -71,7 +91,7 @@ public class SesameAppRoleService extends AbstractSesameLDPService implements Ap
 	private boolean isAgent( URI agent ) {
 		if ( sourceRepository.exists( agent ) ) {
 			if ( sourceRepository.is( agent, AgentDescription.Resource.CLASS ) ) return true;
-			else throw new InvalidRDFTypeException( new Infraction( 0x2001, "rdf.type", AgentDescription.Resource.CLASS.getURI().stringValue()) );
+			else throw new InvalidRDFTypeException( new Infraction( 0x2001, "rdf.type", AgentDescription.Resource.CLASS.getURI().stringValue() ) );
 		}
 		return false;
 	}
@@ -80,7 +100,7 @@ public class SesameAppRoleService extends AbstractSesameLDPService implements Ap
 		return platformAgentRepository.exists( agent );
 	}
 
-	private void validatePermissionToAddAgent( URI appRoleAgentContainerURI ) {
+	private void validatePermissionToModifyAgent( URI appRoleAgentContainerURI ) {
 		ContainerDescription.Type containerType = containerRepository.getContainerType( appRoleAgentContainerURI );
 		URI role = containerRepository.getTypedRepository( containerType ).getMembershipResource( appRoleAgentContainerURI );
 		if ( ! isMemberOfRoleHierarchy( role ) ) {
@@ -97,7 +117,6 @@ public class SesameAppRoleService extends AbstractSesameLDPService implements Ap
 		AgentAuthenticationToken agentAuthenticationToken = (AgentAuthenticationToken) authentication;
 		Set<AppRole> agentAppRoles = agentAuthenticationToken.getAppRoles( AppContextHolder.getContext().getApplication().getURI() );
 		Set<URI> parentsRoles = appRoleRepository.getParentsURI( role );
-		parentsRoles.add( role );
 		for ( AppRole appRole : agentAppRoles ) {
 			if ( parentsRoles.contains( appRole.getSubject() ) ) {
 				return true;
@@ -105,5 +124,4 @@ public class SesameAppRoleService extends AbstractSesameLDPService implements Ap
 		}
 		return false;
 	}
-
 }

@@ -214,7 +214,8 @@ public class SesameAppService extends AbstractSesameLDPService implements AppSer
 
 			ACEDescription.Permission.CREATE_ACCESS_POINT,
 			ACEDescription.Permission.CREATE_CHILD,
-			ACEDescription.Permission.ADD_MEMBER
+			ACEDescription.Permission.ADD_MEMBER,
+			ACEDescription.Permission.REMOVE_MEMBER
 		), true );
 	}
 

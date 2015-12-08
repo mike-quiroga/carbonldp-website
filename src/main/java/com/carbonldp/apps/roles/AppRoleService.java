@@ -15,4 +15,8 @@ public interface AppRoleService {
 	public void addAgentMembers( URI targetUri, Set<URI> agents );
 
 	public void addAgentMember( URI appRole, URI agent );
+
+	public void removeAgentMembers( URI appRoleAgentContainerURI, Set<URI> agents );
+
+	public void removeAgentMember( URI appRoleAgentContainerURI, URI agent );
 }
