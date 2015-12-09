@@ -4,6 +4,7 @@
 		<div class="ui large secondary inverted stackable menu">
 			<a class="header item" [router-link]="[ '/Home' ]" [ng-class]="{active: isActive('/Home') }">Home</a>
 			<a class="item" [router-link]="[ '/Blog' ]" [ng-class]="{active: isActive('/Blog') }">Blog</a>
+			<a class="item" [router-link]="[ '/SPARQLClient' ]" [ng-class]="{active: isActive('/SPARQLClient') }"><i class="terminal icon"></i> SPARQL Editor</a>
 
 			<div class="ui dropdown link item">
 				<span class="text">Documentation</span>
@@ -34,7 +35,9 @@
 		</div>
 	</div>
 	<div class="ui text container">
-		<carbon-logo></carbon-logo>
+		<!--<carbon-logo></carbon-logo>-->
+		<img class="carbon-logo" src="assets/images/carbon-ldp-logo-white.png"/>
+
 		<h1>Create powerful semantic apps</h1>
 		<button class="ui inverted orange massive button">Get Started</button>
 	</div>
