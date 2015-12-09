@@ -18,7 +18,7 @@ public class DirectACLPermissionVoter extends AbstractACLPermissionVoter impleme
 		if ( acl == null || acl.isEmpty() ) return Vote.ABSTAIN;
 
 		Map<Permission, ACE> permissionACE = new HashMap<>();
-		Set<ACE> aces = ACEFactory.get( acl, acl.getACEntries() );
+		Set<ACE> aces = ACEFactory.getInstance().get( acl, acl.getACEntries() );
 		for ( ACE ace : aces ) {
 			if ( ! ACLUtil.aceRefersToSubjects( ace, subjects ) ) continue;
 			for ( Permission permission : permissions ) {

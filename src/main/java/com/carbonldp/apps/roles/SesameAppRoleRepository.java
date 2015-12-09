@@ -17,15 +17,15 @@ import com.carbonldp.rdf.RDFResource;
 import com.carbonldp.rdf.RDFResourceRepository;
 import com.carbonldp.utils.RDFNodeUtil;
 import com.carbonldp.utils.URIUtil;
+import com.carbonldp.utils.ValueUtil;
 import org.openrdf.model.URI;
 import org.openrdf.model.Value;
+import org.openrdf.query.BindingSet;
 import org.openrdf.spring.SesameConnectionFactory;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 @Transactional
 public class SesameAppRoleRepository extends AbstractSesameLDPRepository implements AppRoleRepository {
@@ -35,6 +35,7 @@ public class SesameAppRoleRepository extends AbstractSesameLDPRepository impleme
 
 	private String containerSlug;
 	private String agentsContainerSlug;
+	private static String getParentsQuery;
 
 	private final ContainerDescription.Type appRolesContainerType = ContainerDescription.Type.BASIC;
 
@@ -146,4 +147,29 @@ public class SesameAppRoleRepository extends AbstractSesameLDPRepository impleme
 	private URI getAgentsContainerURI( URI appRoleURI ) {
 		return URIUtil.createChildURI( appRoleURI, agentsContainerSlug );
 	}
+
+	static {
+		getParentsQuery = "SELECT ?parentURI\n" +
+			"WHERE {\n" +
+			"  ?childURI <" + AppRoleDescription.Property.PARENT_ROLE.getURI().stringValue() + ">+ ?parentURI\n" +
+			"}";
+	}
+
+	@Override
+	public Set<URI> getParentsURI( URI appRoleURI ) {
+		Map<String, Value> bindings = new LinkedHashMap<>();
+
+		bindings.put( "childURI", appRoleURI );
+		return sparqlTemplate.executeTupleQuery( getParentsQuery, bindings, queryResult -> {
+			Set<URI> parents = new HashSet<>();
+			while ( queryResult.hasNext() ) {
+				BindingSet bindingSet = queryResult.next();
+				Value member = bindingSet.getValue( "parentURI" );
+				if ( ValueUtil.isURI( member ) ) parents.add( ValueUtil.getURI( member ) );
+			}
+
+			return parents;
+		} );
+	}
+
 }
