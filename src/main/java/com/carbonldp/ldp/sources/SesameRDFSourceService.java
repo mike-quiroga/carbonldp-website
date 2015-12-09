@@ -131,7 +131,7 @@ public class SesameRDFSourceService extends AbstractSesameLDPService implements 
 		validateResourcesBelongToSource( sourceURI, resourceViews );
 		containsImmutableProperties( resourceViews );
 
-		sourceRepository.substract( sourceURI, resourceViews );
+		sourceRepository.subtract( sourceURI, resourceViews );
 
 		sourceRepository.touch( sourceURI );
 	}

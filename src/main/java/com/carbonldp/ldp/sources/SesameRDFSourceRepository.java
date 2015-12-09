@@ -218,7 +218,7 @@ public class SesameRDFSourceRepository extends AbstractSesameLDPRepository imple
 	}
 
 	@Override
-	public void substract( URI sourceURI, Collection<RDFResource> resourceViews ) {
+	public void subtract( URI sourceURI, Collection<RDFResource> resourceViews ) {
 		for ( RDFResource resourceView : resourceViews ) {
 			URI resourceViewURI = resourceView.getURI();
 			Map<URI, Set<Value>> propertiesMap = resourceView.getPropertiesMap();
