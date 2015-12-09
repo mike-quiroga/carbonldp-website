@@ -18,6 +18,11 @@ import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * @author NestorVenegas
+ * @since 0.16.0-ALPHA
+ */
+
 public class SesameACLServiceIT extends AbstractIT {
 
 	private ValueFactory valueFactory;

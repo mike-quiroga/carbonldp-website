@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * @author NestorVenegas
- * @since _version_
+ * @since 0.16.0-ALPHA
  */
 @RequestHandler
 public class AclPUTRequestHandler extends AbstractPUTRequestHandler<ACL> {
