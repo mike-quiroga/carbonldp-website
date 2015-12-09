@@ -30,7 +30,7 @@ public interface RDFSourceRepository {
 
 	public void update( RDFSource source );
 
-	public void substract( URI sourceURI, Collection<RDFResource> statementsToDelete );
+	public void subtract( URI sourceURI, Collection<RDFResource> statementsToDelete );
 
 	public void delete( URI sourceURI );
 
