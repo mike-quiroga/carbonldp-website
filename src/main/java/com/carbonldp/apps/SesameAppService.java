@@ -150,7 +150,7 @@ public class SesameAppService extends AbstractSesameLDPService implements AppSer
 		Set<RDFResource> resourceViewsToDelete = RDFResourceUtil.getResourceViews( statementsToDelete );
 		validateSystemProperties( resourceViewsToDelete );
 
-		sourceRepository.substract( appURI, resourceViewsToDelete );
+		sourceRepository.subtract( appURI, resourceViewsToDelete );
 		sourceRepository.add( appURI, resourceViewsToAdd );
 
 		sourceRepository.touch( appURI );

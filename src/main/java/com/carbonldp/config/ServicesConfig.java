@@ -14,6 +14,8 @@ import com.carbonldp.authentication.token.TokenService;
 import com.carbonldp.authentication.token.JWTAuthenticationService;
 import com.carbonldp.authentication.token.app.AppTokenRepository;
 import com.carbonldp.authorization.acl.ACLRepository;
+import com.carbonldp.authorization.acl.ACLService;
+import com.carbonldp.authorization.acl.SesameACLService;
 import com.carbonldp.ldp.containers.ContainerRepository;
 import com.carbonldp.ldp.containers.ContainerService;
 import com.carbonldp.ldp.containers.SesameContainerService;
@@ -30,13 +32,13 @@ import com.carbonldp.spring.TransactionWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.access.PermissionEvaluator;
 
 @Configuration
 public class ServicesConfig {
 
 	@Autowired
 	private PlatformAPIRepository platformAPIRepository;
-
 	@Autowired
 	private RDFSourceRepository sourceRepository;
 	@Autowired
@@ -47,9 +49,12 @@ public class ServicesConfig {
 	private ACLRepository aclRepository;
 	@Autowired
 	private AppTokenRepository appTokenRepository;
-
 	@Autowired
 	private RDFResourceRepository resourceRepository;
+	@Autowired
+	private PermissionEvaluator permissionEvaluator;
+	@Autowired
+	private AppRoleRepository appRoleRepository;
 
 	@Bean
 	public TokenService tokenService() {
@@ -64,6 +69,11 @@ public class ServicesConfig {
 	@Bean
 	protected TransactionWrapper transactionWrapper() {
 		return new TransactionWrapper();
+	}
+
+	@Bean
+	public ACLService aclService() {
+		return new SesameACLService( transactionWrapper(), sourceRepository, containerRepository, aclRepository, permissionEvaluator, appRoleRepository );
 	}
 
 	@Bean
