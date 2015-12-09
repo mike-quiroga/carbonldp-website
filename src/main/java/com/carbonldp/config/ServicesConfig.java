@@ -56,9 +56,6 @@ public class ServicesConfig {
 	@Autowired
 	private RDFResourceRepository resourceRepository;
 	@Autowired
-	private AppRoleRepository appRoleRepository;
-
-	@Autowired
 	private PermissionEvaluator permissionEvaluator;
 
 	@Autowired
