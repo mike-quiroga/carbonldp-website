@@ -66,14 +66,17 @@ public class SesameACLService extends AbstractSesameLDPService implements ACLSer
 		sourceRepository.touch( aclURI );
 	}
 
+	// TODO: compact the resulting ACL
 	private ACL generateACL( URI aclURI, URI accessTo, Map<Subject, SubjectPermissions> subjectPermissionsToModify ) {
 		ACL acl = ACLFactory.create( aclURI, accessTo );
 
 		for ( Subject subject : subjectPermissionsToModify.keySet() ) {
-			for ( InheritanceType inheritanceType : InheritanceType.values() ) {
-				for ( PermissionType permissionType : PermissionType.values() ) {
+			for ( InheritanceType inheritanceType : subjectPermissionsToModify.get( subject ).keySet() ) {
+				for ( PermissionType permissionType : subjectPermissionsToModify.get( subject ).get( inheritanceType ).keySet() ) {
 					ACEDescription.SubjectType subjectType = RDFNodeUtil.findByURI( subject.getSubjectClass(), ACEDescription.SubjectType.class );
 					Set<ACEDescription.Permission> permissions = subjectPermissionsToModify.get( subject ).get( inheritanceType ).get( permissionType );
+					if ( permissions.isEmpty() || permissions.size() == 0 ) continue;
+
 					boolean granting = permissionType == PermissionType.GRANTING;
 
 					ACE ace = ACEFactory.getInstance().create( acl, subjectType, subject.getURI(), permissions, granting );
@@ -94,19 +97,26 @@ public class SesameACLService extends AbstractSesameLDPService implements ACLSer
 		Map<ModifyType, Map<Subject, SubjectPermissions>> subjectPermissionsToModify = new HashMap<>();
 		subjectPermissionsToModify.put( ModifyType.ADD, new HashMap<>() );
 		subjectPermissionsToModify.put( ModifyType.REMOVE, new HashMap<>() );
+		Set<Subject> subjects = new HashSet<>();
+		subjects.addAll( oldACLSubjects.keySet() );
+		subjects.addAll( newACLSubjects.keySet() );
 
-		for ( Subject subject : newACLSubjects.keySet() ) {
+		for ( Subject subject : subjects ) {
 			SubjectPermissions newSubjectPermissions = newACLSubjects.get( subject );
+			SubjectPermissions oldSubjectPermissions = oldACLSubjects.get( subject );
 
 			if ( ! oldACLSubjects.containsKey( subject ) ) {
 				subjectPermissionsToModify.get( ModifyType.ADD ).put( subject, newSubjectPermissions );
 				continue;
 			}
 
-			SubjectPermissions oldSubjectPermissions = oldACLSubjects.get( subject );
+			if ( ! newACLSubjects.containsKey( subject ) ) {
+				subjectPermissionsToModify.get( ModifyType.REMOVE ).put( subject, oldSubjectPermissions );
+				continue;
+			}
 
-			for ( InheritanceType inheritanceType : InheritanceType.values() ) {
-				for ( PermissionType permissionType : PermissionType.values() ) {
+			for ( InheritanceType inheritanceType : oldSubjectPermissions.keySet() ) {
+				for ( PermissionType permissionType : oldSubjectPermissions.get( inheritanceType ).keySet() ) {
 					Set<ACEDescription.Permission> oldPermissions = oldSubjectPermissions.get( inheritanceType ).get( permissionType );
 					Set<ACEDescription.Permission> newPermissions = newSubjectPermissions.get( inheritanceType ).get( permissionType );
 
