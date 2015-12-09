@@ -25,9 +25,9 @@ public class RDFResourceRepositoryIT extends AbstractIT {
 	private DateTimeFormatter formatter = DateTimeFormat.forPattern( "yyyy-MM-dd HH:mm:ss" );
 
 	@Autowired
-	private RDFResourceRepository resourceRepository;
+	RDFResourceRepository resourceRepository;
 
-	URI subj = new URIImpl( "http://local.carbonldp.com/apps/test-blog/posts/post-1" );
+	URI subj = new URIImpl( "http://local.carbonldp.com/apps/test-blog/posts/post-1/" );
 	ValueFactory factory = ValueFactoryImpl.getInstance();
 
 	@Test

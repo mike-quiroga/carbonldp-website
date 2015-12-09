@@ -171,4 +171,29 @@ public class SesameAppRoleRepository extends AbstractSesameLDPRepository impleme
 	private URI getAgentsContainerURI( URI appRoleURI ) {
 		return URIUtil.createChildURI( appRoleURI, agentsContainerSlug );
 	}
+
+	static {
+		getParentsQuery = "SELECT ?parentURI\n" +
+			"WHERE {\n" +
+			"  ?childURI <" + AppRoleDescription.Property.PARENT_ROLE.getURI().stringValue() + ">+ ?parentURI\n" +
+			"}";
+	}
+
+	@Override
+	public Set<URI> getParentsURI( URI appRoleURI ) {
+		Map<String, Value> bindings = new LinkedHashMap<>();
+
+		bindings.put( "childURI", appRoleURI );
+		return sparqlTemplate.executeTupleQuery( getParentsQuery, bindings, queryResult -> {
+			Set<URI> parents = new HashSet<>();
+			while ( queryResult.hasNext() ) {
+				BindingSet bindingSet = queryResult.next();
+				Value member = bindingSet.getValue( "parentURI" );
+				if ( ValueUtil.isURI( member ) ) parents.add( ValueUtil.getURI( member ) );
+			}
+
+			return parents;
+		} );
+	}
+
 }

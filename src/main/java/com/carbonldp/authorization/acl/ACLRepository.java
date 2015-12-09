@@ -22,4 +22,6 @@ public interface ACLRepository {
 
 	public void addInheritablePermissions( ACL acl, Collection<ACLSubject> subjects, Collection<ACEDescription.Permission> permissions, boolean granting );
 
+	public void replace( ACL acl );
+
 }

@@ -22,5 +22,6 @@ public interface AppRoleRepository {
 
 	public Container createAppRolesContainer( URI rootContainerURI );
 
-	Set<URI> getParentsURI( URI childRole );
+	public Set<URI> getParentsURI( URI appRoleUri );
+
 }
