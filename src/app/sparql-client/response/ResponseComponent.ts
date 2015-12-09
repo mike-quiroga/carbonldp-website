@@ -13,7 +13,7 @@ import "./style.css!";
 
 @Component( {
 	selector: 'sparql-response',
-	directives: [ CORE_DIRECTIVES, NgClass, /*ResultsetComponent,*/ CodeMirrorComponent.Class, ResultsetTableComponent ],
+	directives: [ CORE_DIRECTIVES, NgClass, CodeMirrorComponent.Class, ResultsetTableComponent ],
 	template: template
 } )
 export class ResponseComponent {
