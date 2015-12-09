@@ -1,2 +1,0 @@
-<code-mirror *ng-if="outputformat != SPARQLFormats.table && outputformat != SPARQLFormats.boolean" [mode]="outputformat" [read-only]="'nocursor'" [(value)]="value"></code-mirror>
-<resultset-table *ng-if="outputformat === SPARQLFormats.table" [resultset]="resultset"></resultset-table>

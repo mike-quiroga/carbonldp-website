@@ -1,5 +1,5 @@
 import {
-	Component, Input,
+	Component, Input, Output, SimpleChange, EventEmitter
 	CORE_DIRECTIVES,
 	ElementRef
 } from 'angular2/angular2';
@@ -26,6 +26,7 @@ export class ResultsetTableComponent {
 	tableBody:HTMLTableElement;
 
 	@Input() resultset:any;
+	@Output() resultsetChange:EventEmitter = new EventEmitter();
 
 	constructor( element:ElementRef ) {
 		this.element = element;
@@ -35,6 +36,16 @@ export class ResultsetTableComponent {
 		this.$element = $( this.element.nativeElement );
 		if ( this.resultset != null && this.resultset.head != null )
 			this.buildTable();
+	}
+
+	onChanges( changeRecord:any ):void {
+		if ( "resultset" in changeRecord ) {
+			let change:SimpleChange = changeRecord.resultset;
+			if ( change.currentValue !== change.previousValue ) {
+				this.resultset = change.currentValue;
+				this.buildTable();
+			}
+		}
 	}
 
 	buildTable() {
@@ -48,7 +59,6 @@ export class ResultsetTableComponent {
 		let td:HTMLElement = document.createElement( "tr" );
 		// Loop through the heads in the data and add them to the table header
 		this.resultset.head.vars.forEach( ( value:string, index:number ) => {
-			//console.log( "%o %o", index, value );
 			let th:HTMLElement = document.createElement( "th" );
 			th.className = "center aligned";
 			th.innerHTML = value;
@@ -122,7 +132,7 @@ export class ResultsetTableComponent {
 			// Add the cell to the row
 			this.tableBody.appendChild( tr );
 		} );
-		this.$element.html( "" );
-		this.$element.append( this.table );
+		this.element.nativeElement.innerHTML = "";
+		this.element.nativeElement.appendChild( this.table );
 	}
 }

@@ -3,8 +3,7 @@ import {
 	CORE_DIRECTIVES, FORM_DIRECTIVES,
 	ElementRef,NgStyle
 } from 'angular2/angular2';
-import { ResponseComponent, SPARQLResponseType } from './response/ResponseComponent';
-import { ResultsetComponent, SPARQLFormats } from "./resultset/ResultsetComponent";
+import { ResponseComponent, SPARQLResponseType, SPARQLFormats, SPARQLClientResponse, SPARQLQuery } from './response/ResponseComponent';
 import * as CodeMirrorComponent from "app/components/code-mirror/CodeMirrorComponent";
 
 import $ from 'jquery';
@@ -142,11 +141,10 @@ export default class SPARQLClientComponent {
 	 */
 	sparqlChanged():void {
 		let operation:string = this.getSPARQLOperation( this.sparql );
-		if ( operation !== null && this.SPARQLQueryOperations[ operation.toLocaleLowerCase() ] ) {
-			if ( operation === this.currentQuery.operation ) return;
+		if ( operation !== null && this.SPARQLQueryOperations[ operation.toLowerCase() ] ) {
 			operation = operation.toLowerCase();
 			this.currentQuery.format = this.currentQuery.format ? this.currentQuery.format : this.SPARQLQueryOperations[ operation ].formats[ 0 ].value;
-			this.currentQuery.operation = operation;
+			this.currentQuery.operation = operation.toUpperCase();
 			this.formatsAvailable = this.SPARQLQueryOperations[ operation ].formats;
 		} else {
 			this.currentQuery.format = null;
@@ -176,21 +174,55 @@ export default class SPARQLClientComponent {
 		}
 	}
 
+	onReExecute( originalResponse:SPARQLClientResponse ):void {
+		originalResponse.isReExecuting = true;
+		this.execute( originalResponse.query, originalResponse ).then(
+			( newResponse:SPARQLClientResponse ) => {
+				originalResponse.isReExecuting = false;
+				originalResponse.duration = newResponse.duration;
+				originalResponse.resultset = newResponse.resultset;
+				originalResponse.query = newResponse.query;
+				originalResponse.data = newResponse.data;
+			}
+		);
+	}
+
 	onExecute():void {
 		this.isSending = true;
-		let endpointURL:string = this.currentQuery.endpoint;
-		let sparqlQuery:string = this.currentQuery.content;
-		let format:string = this.currentQuery.format;
+		let query:SPARQLQuery = <SPARQLQuery>{
+			endpoint: this.currentQuery.endpoint,
+			type: this.currentQuery.type,
+			content: this.currentQuery.content,
+			operation: this.currentQuery.operation.toUpperCase(),
+			format: this.currentQuery.format,
+			name: this.currentQuery.name,
+			id: null
+		};
+
+		this.execute( query, null ).then(
+			( response ) => {
+				this.addResponse( response );
+				return response;
+			}
+		);
+	}
+
+	execute( query:SPARQLQuery, activeResponse?:SPARQLClientResponse ):Promise<SPARQLClientResponse> {
 		/*
 			var endpointURL = $scope.app.getURI() + query.endpoint;
 		*/
+
+		let type = query.type;
+		if ( activeResponse ) {
+			query = activeResponse.query;
+		}
 		let promise:Promise = null;
-		switch ( this.currentQuery.type ) {
+		switch ( type ) {
 			case this.SPARQLTypes.query:
-				promise = this.executeQuery( endpointURL, sparqlQuery, format );
+				promise = this.executeQuery( query );
 				break;
 			case this.SPARQLTypes.update:
-				promise = this.executeUpdate( endpointURL, sparqlQuery );
+				promise = this.executeUpdate( query );
 				break;
 			default:
 				// Unsupported Operation
@@ -199,32 +231,31 @@ export default class SPARQLClientComponent {
 				} );
 		}
 
-		promise.then(
+		return promise.then(
 			( response ) => {
-				//Carbon Response Success
+				// Carbon Response Success
 				this.isSending = false;
+				return response;
 			},
-			( response ) => {
+			( error ) => {
 				//Carbon Response Fail
 				this.isSending = false;
+				return error;
 			}
 		);
 	}
 
-	executeQuery( endpointURL:string, sparqlQuery:string, format:string ):Promise {
+	executeQuery( query:SPARQLQuery ):Promise {
 		this.isSending = true;
-		if ( ! ! this.currentQuery.operation ) {
-			this.currentQuery.operation = this.currentQuery.operation.toUpperCase();
-		}
-		switch ( this.currentQuery.operation ) {
+		switch ( query.operation ) {
 			case this.SPARQLQueryOperations.select.name:
-				return this.executeSelect( endpointURL, sparqlQuery, format );
+				return this.executeSelect( query );
 			case this.SPARQLQueryOperations.describe.name:
-				return this.executeModelQuery( endpointURL, sparqlQuery, format );
+				return this.executeModelQuery( query );
 			case this.SPARQLQueryOperations.construct.name:
-				return this.executeModelQuery( endpointURL, sparqlQuery, format );
+				return this.executeModelQuery( query );
 			case this.SPARQLQueryOperations.ask.name:
-				return this.executeAsk( endpointURL, sparqlQuery, format );
+				return this.executeAsk( query );
 			default:
 				// Unsupported Operation
 				return new Promise( ( resolve:()=>string, reject:( msg:string )=>string )=> {
@@ -233,9 +264,9 @@ export default class SPARQLClientComponent {
 		}
 	}
 
-	executeSelect( endpointURL:string, sparqlQuery:string, format:string ):Promise {
+	executeSelect( query:SPARQLQuery ):Promise<SPARQLClientResponse> {
 		return new Promise(
-			( resolve:( response:any )=>any, reject:( str:string )=>void )=> {
+			( resolve:( response:any )=>SPARQLClientResponse, reject:( str:string )=>string )=> {
 				let beforeTimestamp:Number = (new Date()).valueOf();
 				let resultset = {
 					"head": {
@@ -295,31 +326,136 @@ export default class SPARQLClientComponent {
 					}
 				};
 				let afterTimestamp:Number = (new Date()).valueOf();
-				var duration:number = afterTimestamp - beforeTimestamp;
+				let duration:number = afterTimestamp - beforeTimestamp;
+
+				let random = Math.floor( Math.random() * 10 );
+				if ( random % 2 == 0 ) {
+					resultset = {
+						"head": {
+							"vars": [ "context", "subject", "predicate", "object" ]
+						},
+						"results": {
+							"bindings": [
+								{
+									"context": {"type": "uri", "value": "http://example.org/book/book6"},
+									"subject": {"type": "uri", "value": "http://example.org/book/book6"},
+									"predicate": {"type": "uri", "value": "http://example.org/book/book6"},
+									"object": {"type": "literal", "value": "Harry Potter and the Half-Blood Prince"}
+								},
+							]
+						}
+					};
+				}
 
 				let response:SPARQLClientResponse = new SPARQLClientResponse();
-				response.sparql = sparqlQuery;
-				response.endpointURL = endpointURL;
 				response.duration = duration;
 				response.resultset = resultset;
 				response.setData( resultset );
-				response.type = <string>SPARQLResponseType.success;
-				response.operation = this.getSPARQLOperation( sparqlQuery );
-				response.format = format;
+				response.result = <string>SPARQLResponseType.success;
+				response.query = query;
 
-				let responsesLengh:number = this.responses.length, i:number;
-				for ( i = responsesLengh; i > 0; i -- ) {
-					this.responses[ i ] = this.responses[ i - 1 ];
+				resolve( response );
+			}
+		);
+	}
+
+	executeModelQuery( query:SPARQLQuery ):Promise<SPARQLClientResponse> {
+		return new Promise(
+			( resolve:( response:any )=>SPARQLClientResponse, reject:( str:string )=>string )=> {
+				let beforeTimestamp:Number = (new Date()).valueOf();
+				let resultset = {
+					"head": {
+						"vars": [ "context", "subject", "predicate", "object" ]
+					},
+					"results": {
+						"bindings": [
+							{
+								"context": {"type": "uri", "value": "http://example.org/book/book6"},
+								"subject": {"type": "uri", "value": "http://example.org/book/book6"},
+								"predicate": {"type": "uri", "value": "http://example.org/book/book6"},
+								"object": {"type": "literal", "value": "Harry Potter and the Half-Blood Prince"}
+							},
+							{
+								"context": {"type": "uri", "value": "http://example.org/book/book6"},
+								"subject": {"type": "uri", "value": "http://example.org/book/book6#fragment"},
+								"predicate": {"type": "uri", "value": "http://example.org/book/book6#fragment"},
+								"object": {"type": "uri", "value": "http://example.org/book/book7"}
+							},
+							{
+								"context": {"type": "uri", "value": "http://example.org/book/book7"},
+								"subject": {"type": "uri", "value": "http://example.org/book/book7"},
+								"predicate": {"type": "uri", "value": "http://example.org/book/book7"},
+								"object": {"type": "literal", "value": "Harry Potter and the Deathly Hallows"}
+							},
+							{
+								"context": {"type": "uri", "value": "http://example.org/book/book5"},
+								"subject": {"type": "uri", "value": "http://example.org/book/book5"},
+								"predicate": {"type": "uri", "value": "http://example.org/book/book5"},
+								"object": {"type": "literal", "value": "Harry Potter and the Order of the Phoenix"}
+							},
+							{
+								"context": {"type": "uri", "value": "http://example.org/book/book4"},
+								"subject": {"type": "uri", "value": "http://example.org/book/book4"},
+								"predicate": {"type": "uri", "value": "http://example.org/book/book4"},
+								"object": {"type": "literal", "value": "1000", "datatype": "http://www.w3.org/2001/XMLSchema#integer"}
+							},
+							{
+								"context": {"type": "uri", "value": "http://example.org/book/book2"},
+								"subject": {"type": "uri", "value": "http://example.org/book/book2"},
+								"predicate": {"type": "uri", "value": "http://example.org/book/book2"},
+								"object": {"type": "literal", "value": "Harry Potter and the Chamber of Secrets"}
+							},
+							{
+								"context": {"type": "uri", "value": "http://example.org/book/book3"},
+								"subject": {"type": "uri", "value": "http://example.org/book/book3"},
+								"predicate": {"type": "uri", "value": "http://example.org/book/book3"},
+								"object": {"type": "literal", "value": "Harry Potter and the Prisoner Of Azkaban"}
+							},
+							{
+								"context": {"type": "uri", "value": "http://example.org/book/book1"},
+								"subject": {"type": "uri", "value": "http://example.org/book/book1"},
+								"predicate": {"type": "uri", "value": "http://example.org/book/book1"},
+								"object": {"type": "literal", "value": "Harry Potter and the Philosopher's Stone"}
+							}
+						]
+					}
+				};
+				let afterTimestamp:Number = (new Date()).valueOf();
+				let duration:number = afterTimestamp - beforeTimestamp;
+				let random = Math.floor( Math.random() * 10 );
+				if ( random % 2 == 0 ) {
+					resultset = {
+						"head": {
+							"vars": [ "context", "subject", "predicate", "object" ]
+						},
+						"results": {
+							"bindings": [
+								{
+									"context": {"type": "uri", "value": "http://example.org/book/book6"},
+									"subject": {"type": "uri", "value": "http://example.org/book/book6"},
+									"predicate": {"type": "uri", "value": "http://example.org/book/book6"},
+									"object": {"type": "literal", "value": "Harry Potter and the Half-Blood Prince"}
+								},
+							]
+						}
+					};
 				}
-				this.responses[ 0 ] = response;
+
+				let response = new SPARQLClientResponse();
+				response.duration = duration;
+				response.resultset = resultset;
+				response.setData( resultset );
+				response.result = <string>SPARQLResponseType.success;
+				response.query = query;
+
 				resolve( response );
 			}
 		);
 	}
 
-	executeModelQuery( endpointURL:string, sparqlQuery:string, format:string ):Promise {
+	executeAsk( query:SPARQLQuery ):Promise<SPARQLClientResponse> {
 		return new Promise(
-			( resolve:( response:any )=>any, reject:( str:string )=>void )=> {
+			( resolve:( response:any )=>SPARQLClientResponse, reject:( str:string )=>string )=> {
 				let beforeTimestamp:Number = (new Date()).valueOf();
 				let resultset = {
 					"head": {
@@ -333,67 +469,85 @@ export default class SPARQLClientComponent {
 								"predicate": {"type": "uri", "value": "http://example.org/book/book6"},
 								"object": {"type": "literal", "value": "Harry Potter and the Half-Blood Prince"}
 							},
-						]
-					}
-				};
-				let afterTimestamp:Number = (new Date()).valueOf();
-				var duration:number = afterTimestamp - beforeTimestamp;
-
-				let response = new SPARQLClientResponse();
-				response.sparql = sparqlQuery;
-				response.endpointURL = endpointURL;
-				response.duration = duration;
-				response.resultset = resultset;
-				response.setData( resultset );
-				response.type = <string>SPARQLResponseType.success;
-				response.operation = this.getSPARQLOperation( sparqlQuery );
-				response.format = format;
-
-				this.responses.push( response );
-				resolve( response );
-			}
-		);
-	}
-
-	executeAsk( endpointURL:string, sparqlQuery:string, format:string ):Promise {
-		return new Promise(
-			( resolve:( response:any )=>any, reject:( str:string )=>void )=> {
-				let beforeTimestamp:Number = (new Date()).valueOf();
-				let resultset = {
-					"head": {
-						"vars": [ "context", "subject", "predicate", "object" ]
-					},
-					"results": {
-						"bindings": [
 							{
 								"context": {"type": "uri", "value": "http://example.org/book/book6"},
-								"subject": {"type": "uri", "value": "http://example.org/book/book6"},
-								"predicate": {"type": "uri", "value": "http://example.org/book/book6"},
-								"object": {"type": "literal", "value": "Harry Potter and the Half-Blood Prince"}
+								"subject": {"type": "uri", "value": "http://example.org/book/book6#fragment"},
+								"predicate": {"type": "uri", "value": "http://example.org/book/book6#fragment"},
+								"object": {"type": "uri", "value": "http://example.org/book/book7"}
 							},
+							{
+								"context": {"type": "uri", "value": "http://example.org/book/book7"},
+								"subject": {"type": "uri", "value": "http://example.org/book/book7"},
+								"predicate": {"type": "uri", "value": "http://example.org/book/book7"},
+								"object": {"type": "literal", "value": "Harry Potter and the Deathly Hallows"}
+							},
+							{
+								"context": {"type": "uri", "value": "http://example.org/book/book5"},
+								"subject": {"type": "uri", "value": "http://example.org/book/book5"},
+								"predicate": {"type": "uri", "value": "http://example.org/book/book5"},
+								"object": {"type": "literal", "value": "Harry Potter and the Order of the Phoenix"}
+							},
+							{
+								"context": {"type": "uri", "value": "http://example.org/book/book4"},
+								"subject": {"type": "uri", "value": "http://example.org/book/book4"},
+								"predicate": {"type": "uri", "value": "http://example.org/book/book4"},
+								"object": {"type": "literal", "value": "1000", "datatype": "http://www.w3.org/2001/XMLSchema#integer"}
+							},
+							{
+								"context": {"type": "uri", "value": "http://example.org/book/book2"},
+								"subject": {"type": "uri", "value": "http://example.org/book/book2"},
+								"predicate": {"type": "uri", "value": "http://example.org/book/book2"},
+								"object": {"type": "literal", "value": "Harry Potter and the Chamber of Secrets"}
+							},
+							{
+								"context": {"type": "uri", "value": "http://example.org/book/book3"},
+								"subject": {"type": "uri", "value": "http://example.org/book/book3"},
+								"predicate": {"type": "uri", "value": "http://example.org/book/book3"},
+								"object": {"type": "literal", "value": "Harry Potter and the Prisoner Of Azkaban"}
+							},
+							{
+								"context": {"type": "uri", "value": "http://example.org/book/book1"},
+								"subject": {"type": "uri", "value": "http://example.org/book/book1"},
+								"predicate": {"type": "uri", "value": "http://example.org/book/book1"},
+								"object": {"type": "literal", "value": "Harry Potter and the Philosopher's Stone"}
+							}
 						]
 					}
 				};
 				let afterTimestamp:Number = (new Date()).valueOf();
-				var duration:number = afterTimestamp - beforeTimestamp;
+				let duration:number = afterTimestamp - beforeTimestamp;
+				let random = Math.floor( Math.random() * 10 );
+				if ( random % 2 == 0 ) {
+					resultset = {
+						"head": {
+							"vars": [ "context", "subject", "predicate", "object" ]
+						},
+						"results": {
+							"bindings": [
+								{
+									"context": {"type": "uri", "value": "http://example.org/book/book6"},
+									"subject": {"type": "uri", "value": "http://example.org/book/book6"},
+									"predicate": {"type": "uri", "value": "http://example.org/book/book6"},
+									"object": {"type": "literal", "value": "Harry Potter and the Half-Blood Prince"}
+								},
+							]
+						}
+					};
+				}
 
 				let response = new SPARQLClientResponse();
-				response.sparql = sparqlQuery;
-				response.endpointURL = endpointURL;
 				response.duration = duration;
 				response.resultset = resultset;
 				response.setData( resultset );
-				response.type = <string>SPARQLResponseType.success;
-				response.operation = this.getSPARQLOperation( sparqlQuery );
-				response.format = format;
+				response.result = <string>SPARQLResponseType.success;
+				response.query = query;
 
-				this.responses.push( response );
 				resolve( response );
 			}
 		);
 	}
 
-	executeUpdate( endpointURL:string, sparqlQuery:string ):Promise {
+	executeUpdate( query:SPARQLQuery ):Promise {
 		return new Promise();
 	}
 
@@ -417,6 +571,19 @@ export default class SPARQLClientComponent {
 			this.responses.splice( idx, 1 );
 	}
 
+	onConfigureResponse( response:SPARQLClientResponse ):void {
+		this.currentQuery = response.query;
+		this.sparql = response.query.content;
+	}
+
+	addResponse( response:SPARQLClientResponse ):void {
+		let responsesLengh:number = this.responses.length, i:number;
+		for ( i = responsesLengh; i > 0; i -- ) {
+			this.responses[ i ] = this.responses[ i - 1 ];
+		}
+		this.responses[ 0 ] = response;
+	}
+
 	onClickSaveQuery():void {
 		let query:SPARQLQuery = <SPARQLQuery>{
 			endpoint: this.currentQuery.endpoint,
@@ -436,7 +603,7 @@ export default class SPARQLClientComponent {
 		}, 500 );
 	}
 
-	onClickUpdate():void {
+	onClickSaveExistingQuery():void {
 		this.savedQueries = this.getLocalSavedQueries();
 		let queryIdx:Number = - 1;
 		this.savedQueries.forEach( ( iteratingQuery:SPARQLQuery, index:Number )=> {
@@ -463,10 +630,7 @@ export default class SPARQLClientComponent {
 
 	onClickQuery( index:number ) {
 		this.currentQuery = this.savedQueries[ index ];
-		let format = this.currentQuery.format;
 		this.sparql = this.currentQuery.content;
-		this.currentQuery.format = format;
-
 		this.initializeSavedQueriesSidebar();
 	}
 
@@ -484,6 +648,8 @@ export default class SPARQLClientComponent {
 	}
 
 	getLocalSavedQueries():SPARQLQuery[] {
+		if ( ! window.localStorage.getItem( "savedQueries" ) )
+			this.updateLocalSavedQueries();
 		return <SPARQLQuery[]>JSON.parse( window.localStorage.getItem( "savedQueries" ) );
 	}
 
@@ -494,15 +660,6 @@ export default class SPARQLClientComponent {
 
 }
 
-export interface SPARQLQuery {
-	endpoint:string;
-	type:string;
-	content:string;
-	operation:string;
-	format:string;
-	name:string;
-	id:number;
-}
 export interface SPARQLQueryOperationFormat {
 	name:string;
 	value:string;
@@ -520,19 +677,4 @@ export interface SPARQLQueryOperations {
 export interface SPARQLTypes {
 	query:string;
 	update:string;
-}
-
-export class SPARQLClientResponse {
-	operation:string = null;
-	sparql:string = null;
-	endpointURL:string = null;
-	duration:number = null;
-	resultset:any = null;
-	data:string = null;
-	type:string = null;
-	format:string = null;
-
-	setData( data ):void {
-		this.data = JSON.stringify( data, null, 2 );
-	}
 }

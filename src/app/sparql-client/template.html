@@ -103,7 +103,7 @@
 			</div>
 			<div class="ui bottom attached segment">
 				<div class="ui grid form row">
-					<div class="nine wide column field">
+					<div class="nine wide column">
 						<input placeholder="name of the query" type="text" [(ng-model)]="currentQuery.name">
 					</div>
 					<div class="seven wide column field">
@@ -116,9 +116,9 @@
 							<span>Save Query</span>
 						</button>
 						<div class="ui teal buttons btnsGroupSaveQuery"
-						     [style.display]="currentQuery.id>=0? '':'none'">
+						     [style.display]="currentQuery.id != null && currentQuery.id != undefined? '':'none'">
 							<button class="ui button btnSave"
-							        (click)="onClickUpdate()">
+							        (click)="onClickSaveExistingQuery()">
 								<span>Save Query</span>
 							</button>
 							<div class="ui floating dropdown icon button">
@@ -150,8 +150,13 @@
 			</h3>
 		</div>
 	</div>
-	<sparql-response class="row" *ng-for="#response of responses; #i =index" [response]="response" (on-remove)="onRemove($event)"></sparql-response>
-
+	<!--<sparql-response class="row" *ng-for="#response of responses; #i =index" [response]="response" (on-remove)="onRemove($event)" (on-configure)="onConfigureResponse($event)" (on-re-execute)="onReExecute($event)" [(is-re-executing)]="isReExecuting"></sparql-response>-->
+	<sparql-response class="row"
+	                 *ng-for="#response of responses; #i =index"
+	                 [response]="response"
+	                 (on-remove)="onRemove($event)"
+	                 (on-configure)="onConfigureResponse($event)"
+	                 (on-re-execute)="onReExecute($event)"></sparql-response>
 	<div class="row"></div>
 	<div class="row"></div>
 	<div class="row"></div>
