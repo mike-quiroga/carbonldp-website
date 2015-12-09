@@ -3,9 +3,9 @@ import {
 	CORE_DIRECTIVES, FORM_DIRECTIVES,
 	ElementRef, EventEmitter, SimpleChange, NgClass
 } from "angular2/angular2";
-import SPARQLClientComponent from "../SPARQLClientComponent";
+import SPARQLClientComponent from "./../SPARQLClientComponent";
 import * as CodeMirrorComponent from "app/components/code-mirror/CodeMirrorComponent";
-import { ResultsetTableComponent } from "../resultset-table/ResultsetTableComponent";
+import { ResultsetTableComponent } from "./../resultset-table/ResultsetTableComponent";
 import $ from "jquery";
 import "semantic-ui/semantic";
 import template from "./template.html!";
