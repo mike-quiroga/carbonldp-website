@@ -3,7 +3,11 @@ package com.carbonldp.ldp.nonrdf;
 import com.carbonldp.Consts;
 import com.carbonldp.HTTPHeaders;
 import com.carbonldp.http.Link;
+import com.carbonldp.ldp.containers.BasicContainerDescription;
+import com.carbonldp.ldp.containers.ContainerDescription;
+import com.carbonldp.ldp.sources.RDFSourceDescription;
 import com.carbonldp.ldp.web.AbstractGETRequestHandler;
+import com.carbonldp.rdf.RDFNodeEnum;
 import com.carbonldp.rdf.RDFResourceDescription;
 import com.carbonldp.utils.HTTPUtil;
 import org.springframework.http.HttpHeaders;
@@ -72,16 +76,28 @@ public class NonRDFSourceMessageConverter implements HttpMessageConverter<Abstra
 		headers.add( HTTPHeaders.LOCATION, rdfRepresentation.getURI().stringValue() );
 	}
 
+	protected String addTypeLinkHeader( RDFNodeEnum interactionModel ) {
+		Link link = new Link( interactionModel.getURI().stringValue() );
+		link.addRelationshipType( Consts.TYPE );
+
+		return link.toString();
+	}
+
+	protected String addInteractionModelLinkHeader( RDFNodeEnum interactionModel ) {
+		Link link = new Link( interactionModel.getURI().stringValue() );
+		link.addRelationshipType( Consts.INTERACTION_MODEL );
+
+		return link.toString();
+	}
+
 	private void addLinkTypeHeaders( HttpHeaders headers ) {
-		Link link = new Link( RDFResourceDescription.Resource.CLASS.getURI().stringValue() );
-		link.addRelationshipType( Consts.TYPE );
+		headers.add( HTTPHeaders.LINK, addTypeLinkHeader( RDFResourceDescription.Resource.CLASS ) );
+		headers.add( HTTPHeaders.LINK, addTypeLinkHeader( RDFRepresentationDescription.Resource.NON_RDF_SOURCE ) );
+		headers.add( HTTPHeaders.LINK, addTypeLinkHeader( RDFSourceDescription.Resource.CLASS ) );
+		headers.add( HTTPHeaders.LINK, addTypeLinkHeader( ContainerDescription.Resource.CLASS ) );
+		headers.add( HTTPHeaders.LINK, addTypeLinkHeader( BasicContainerDescription.Resource.CLASS ) );
 
-		headers.add( HTTPHeaders.LINK, link.toString() );
-
-		link = new Link( RDFRepresentationDescription.Resource.NON_RDF_SOURCE.getURI().stringValue() );
-		link.addRelationshipType( Consts.TYPE );
-
-		headers.add( HTTPHeaders.LINK, link.toString() );
+		headers.add( HTTPHeaders.LINK, addInteractionModelLinkHeader( RDFRepresentationDescription.Resource.NON_RDF_SOURCE ));
 	}
 
 	private void writeFile( File file, HttpOutputMessage httpOutputMessage ) {

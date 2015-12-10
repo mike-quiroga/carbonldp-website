@@ -5,6 +5,8 @@ import com.carbonldp.descriptions.APIPreferences;
 import com.carbonldp.descriptions.APIPreferences.ContainerRetrievalPreference;
 import com.carbonldp.descriptions.APIPreferences.InteractionModel;
 import com.carbonldp.ldp.containers.Container;
+import com.carbonldp.ldp.containers.ContainerDescription;
+import com.carbonldp.ldp.containers.ContainerFactory;
 import com.carbonldp.ldp.nonrdf.RDFRepresentation;
 import com.carbonldp.ldp.sources.RDFSource;
 import com.carbonldp.models.HTTPHeader;
@@ -69,7 +71,7 @@ public abstract class AbstractGETRequestHandler extends AbstractLDPRequestHandle
 	}
 
 	protected APIPreferences.InteractionModel getDefaultInteractionModel() {
-		return InteractionModel.CONTAINER;
+		return InteractionModel.RDF_SOURCE;
 	}
 
 	protected ResponseEntity<Object> handleRDFSourceRetrieval( URI targetURI ) {
@@ -80,7 +82,11 @@ public abstract class AbstractGETRequestHandler extends AbstractLDPRequestHandle
 		addRDFSourceAllowHeaders( targetURI, response );
 
 		setAppliedPreferenceHeaders();
+		ContainerDescription.Type containerType = containerService.getContainerType( targetURI );
+
+		if ( containerType != null ) addContainerTypeLinkHeader( containerType );
 		addTypeLinkHeader( InteractionModel.RDF_SOURCE );
+		addInteractionModelLinkHeader( InteractionModel.RDF_SOURCE );
 		return new ResponseEntity<>( source, HttpStatus.OK );
 	}
 
@@ -105,7 +111,11 @@ public abstract class AbstractGETRequestHandler extends AbstractLDPRequestHandle
 		addContainerAllowHeaders( targetURI, response );
 
 		setAppliedPreferenceHeaders();
-		addContainerTypeLinkHeader( container );
+		ContainerDescription.Type containerType = ContainerFactory.getInstance().getContainerType( container );
+		if ( containerType == null ) containerType = containerService.getContainerType( container.getURI() );
+
+		addContainerTypeLinkHeader( containerType );
+		addInteractionModelLinkHeader( containerType );
 		return new ResponseEntity<>( container, HttpStatus.OK );
 	}
 

@@ -5,11 +5,10 @@ import com.carbonldp.HTTPHeaders;
 import com.carbonldp.config.ConfigurationRepository;
 import com.carbonldp.descriptions.APIPreferences.InteractionModel;
 import com.carbonldp.http.Link;
-import com.carbonldp.ldp.containers.Container;
 import com.carbonldp.ldp.containers.ContainerDescription;
-import com.carbonldp.ldp.containers.ContainerFactory;
 import com.carbonldp.ldp.containers.ContainerService;
 import com.carbonldp.ldp.nonrdf.NonRDFSourceService;
+import com.carbonldp.ldp.sources.RDFSourceDescription;
 import com.carbonldp.ldp.sources.RDFSourceService;
 import com.carbonldp.models.HTTPHeader;
 import com.carbonldp.models.HTTPHeaderValue;
@@ -80,7 +79,7 @@ public abstract class AbstractLDPRequestHandler extends AbstractRequestHandler {
 			appliedPreferences.add( interactionModelApplied );
 			return requestInteractionModel;
 		}
-		return getDefaultInteractionModel();
+		return getDefaultInteractionModel( targetURI );
 	}
 
 	private InteractionModel getRequestInteractionModel( HttpServletRequest request ) {
@@ -136,12 +135,19 @@ public abstract class AbstractLDPRequestHandler extends AbstractRequestHandler {
 		response.addHeader( HTTPHeaders.LINK, link.toString() );
 	}
 
-	protected void addContainerTypeLinkHeader( Container container ) {
-		ContainerDescription.Type containerType = ContainerFactory.getInstance().getContainerType( container );
-		if ( containerType == null ) containerType = containerService.getContainerType( container.getURI() );
+	protected void addInteractionModelLinkHeader( RDFNodeEnum interactionModel ) {
+		Link link = new Link( interactionModel.getURI().stringValue() );
+		link.addRelationshipType( Consts.INTERACTION_MODEL );
+
+		response.addHeader( HTTPHeaders.LINK, link.toString() );
+	}
+
+	protected void addContainerTypeLinkHeader( ContainerDescription.Type containerType ) {
 
 		addTypeLinkHeader( ContainerDescription.Resource.CLASS );
 		addTypeLinkHeader( containerType );
+		addTypeLinkHeader( RDFSourceDescription.Resource.CLASS );
+
 	}
 
 	protected String getRequestETag() {
