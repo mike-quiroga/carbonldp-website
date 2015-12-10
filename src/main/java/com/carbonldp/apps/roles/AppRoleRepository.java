@@ -18,10 +18,11 @@ public interface AppRoleRepository {
 
 	public void addAgent( URI appRole, Agent agent );
 
-	public AppRole create( AppRole appRole );
-
 	public Container createAppRolesContainer( URI rootContainerURI );
 
-	public Set<URI> getParentsURI( URI appRoleUri );
+	public Set<URI> getParentsURI( URI appRole );
 
+	public URI getContainerURI();
+
+	public URI getAgentsContainerURI( URI appRoleURI );
 }
