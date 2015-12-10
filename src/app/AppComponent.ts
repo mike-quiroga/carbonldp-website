@@ -6,6 +6,7 @@ import Carbon from 'carbonldp-sdk';
 import HomeView from 'app/home/HomeView';
 import BlogView from 'app/blog/BlogView';
 import LoginView from 'app/login/LoginView';
+import ContentView from 'app/content/ContentView';
 
 import HeaderComponent from 'app/header/HeaderComponent';
 import FooterComponent from 'app/footer/FooterComponent';
@@ -21,7 +22,8 @@ import './style.css!';
 	{path: '/', redirectTo: '/Home'},
 	{path: '/Home', as: 'Home', component: HomeView},
 	{path: '/Blog', as: 'Blog', component: BlogView},
-	{path: '/Login', as: 'Login', component: LoginView}
+	{path: '/Login', as: 'Login', component: LoginView},
+    {path: '/docs/:id', as: 'Docs', component: ContentView},
 ] )
 export default class App {
 

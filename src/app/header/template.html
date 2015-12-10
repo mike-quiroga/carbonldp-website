@@ -17,8 +17,10 @@
 				<a class="item" href="#">API</a>
 				<div class="divider"></div>
 				<div class="header">REST API</div>
-				<a class="item" href="#">Getting Started</a>
-				<a class="item" href="#">Hello World</a>
+				<a class="item" [router-link]="[ '/Docs', {id: 'getting-started-with-the-rest-api'} ]">Getting Started</a>
+				<a class="item" [router-link]="[ '/Docs', {id: 'interaction-models'} ]">Interaction Models</a>
+                <a class="item" [router-link]="[ '/Docs', {id: 'agents'} ]">Agents</a>
+                <a class="item" [router-link]="[ '/Docs', {id: 'applications'} ]">Applications</a>
 				<a class="item" href="#">API</a>
 			</div>
 		</div>
