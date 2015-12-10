@@ -69,19 +69,13 @@ gulp.task( 'compile-styles', function() {
 	;
 });
 
-gulp.task( 'build', [ 'build-semantic', 'copy-semantic', 'copy-assets' ], function( done ) {
+gulp.task( 'build', [ 'build-semantic', 'copy-semantic', 'copy-assets' ], function() {
 	return jspm.bundleSFX( 'app/boot.ts', 'dist/main.sfx.js', {
 		minify: true,
 		mangle: true,
 		lowResSourceMaps: false,
 		sourceMaps: true
-	}).then(
-		function() {
-			done();
-		}, function( error ) {
-			done( error );
-		}
-	);
+	});
 });
 
 gulp.task( 'build-semantic', function() {

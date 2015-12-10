@@ -1,5 +1,5 @@
 /*!
- * # Semantic UI 2.1.6 - Search
+ * # Semantic UI 2.1.5 - Search
  * http://github.com/semantic-org/semantic-ui/
  *
  *
@@ -317,7 +317,7 @@ $.fn.search = function(parameters) {
             ;
             if(promptElement) {
               module.verbose('Triggering native blur event');
-              events.initEvent('blur', false, false);
+              events.initEvent('blur', false, true);
               promptElement.dispatchEvent(events);
             }
           }

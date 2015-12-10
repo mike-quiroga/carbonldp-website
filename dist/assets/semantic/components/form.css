@@ -1,5 +1,5 @@
 /*!
- * # Semantic UI 2.1.6 - Form
+ * # Semantic UI 2.1.5 - Form
  * http://github.com/semantic-org/semantic-ui/
  *
  *
@@ -1068,3 +1068,6 @@
          Site Overrides
 *******************************/
 
+.ui.grid > .fields.row {
+  padding: 0 0 1em;
+}
