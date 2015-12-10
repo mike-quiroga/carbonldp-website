@@ -31,12 +31,17 @@ gulp.task( 'ts-lint', function() {
 	;
 });
 
-gulp.task( 'serve', [ 'build-semantic', 'compile-styles' ], function() {
+gulp.task( 'serve', [
+    //'build-semantic',
+    'compile-styles' ],
+    function() {
+    /*
 	gulp.src( 'src/semantic/gulpfile.js', { read: false } )
 		.pipe( chug({
 			tasks: [ 'watch' ]
 		}) )
 	;
+	*/
 
 	watch( config.source.sass, function( file ) {
 		util.log( 'SCSS file changed: ', file.path );
