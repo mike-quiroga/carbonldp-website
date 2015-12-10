@@ -58,7 +58,7 @@ public class SesameAppRoleService extends AbstractSesameLDPService implements Ap
 	}
 
 	@Override
-	public void addChilds( URI parentRole, Set<URI> childs ) {
+	public void addChildren( URI parentRole, Set<URI> childs ) {
 		for ( URI member : childs ) {
 			addChild( parentRole, member );
 		}
