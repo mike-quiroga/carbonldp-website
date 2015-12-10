@@ -39,7 +39,6 @@ public class ServicesConfig {
 
 	@Autowired
 	private PlatformAPIRepository platformAPIRepository;
-
 	@Autowired
 	private RDFSourceRepository sourceRepository;
 	@Autowired
@@ -50,13 +49,10 @@ public class ServicesConfig {
 	private ACLRepository aclRepository;
 	@Autowired
 	private AppTokenRepository appTokenRepository;
-
 	@Autowired
 	private RDFResourceRepository resourceRepository;
-
 	@Autowired
 	private PermissionEvaluator permissionEvaluator;
-
 	@Autowired
 	private AppRoleRepository appRoleRepository;
 
