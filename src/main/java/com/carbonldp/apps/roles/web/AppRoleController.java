@@ -20,14 +20,13 @@ import javax.servlet.http.HttpServletResponse;
  */
 
 @Controller
-
-@InteractionModel( APIPreferences.InteractionModel.CONTAINER )
 @RequestMapping( value = "apps/*/roles/*/" )
 public class AppRoleController extends AbstractLDPController {
 
 	private AppRolePUTHandler putHandler;
 
 	@RequestMapping( method = RequestMethod.PUT)
+	@InteractionModel( APIPreferences.InteractionModel.CONTAINER )
 	public ResponseEntity<Object> defineParentChildRelation( @RequestBody RDFDocument requestDocument, HttpServletRequest request, HttpServletResponse response ) {
 		return putHandler.handleRequest( requestDocument, request, response );
 	}

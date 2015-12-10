@@ -13,14 +13,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 @Controller
-
-@RequestMapping(value = "apps/*/roles/" )
+@RequestMapping( value = "apps/*/roles/" )
 public class AppRolesController extends AbstractLDPController {
 
 	private AppRolesPOSTHandler postHandler;
 
-	@RequestMapping( method = RequestMethod.POST)
-		public ResponseEntity<Object> createAppRole( @RequestBody RDFDocument requestDocument, HttpServletRequest request, HttpServletResponse response ) {
+	@RequestMapping( method = RequestMethod.POST )
+	public ResponseEntity<Object> createAppRole( @RequestBody RDFDocument requestDocument, HttpServletRequest request, HttpServletResponse response ) {
 		return postHandler.handleRequest( requestDocument, request, response );
 	}
 

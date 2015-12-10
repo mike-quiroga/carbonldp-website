@@ -34,7 +34,7 @@ public class SesameAppRoleService extends AbstractSesameLDPService implements Ap
 	private final AppRoleRepository appRoleRepository;
 	private final RDFSourceService sourceService;
 
-	public SesameAppRoleService( TransactionWrapper transactionWrapper, RDFSourceRepository sourceRepository, ContainerRepository containerRepository, ACLRepository aclRepository, ContainerService containerService, AppRoleRepository appRoleRepository, RDFSourceService sourceService) {
+	public SesameAppRoleService( TransactionWrapper transactionWrapper, RDFSourceRepository sourceRepository, ContainerRepository containerRepository, ACLRepository aclRepository, ContainerService containerService, AppRoleRepository appRoleRepository, RDFSourceService sourceService ) {
 		super( transactionWrapper, sourceRepository, containerRepository, aclRepository );
 		this.appRoleRepository = appRoleRepository;
 		this.containerService = containerService;
@@ -58,14 +58,14 @@ public class SesameAppRoleService extends AbstractSesameLDPService implements Ap
 	}
 
 	@Override
-	public void addChildMembers( URI parentRole, Set<URI> childs ) {
+	public void addChilds( URI parentRole, Set<URI> childs ) {
 		for ( URI member : childs ) {
-			addChildMember( parentRole, member );
+			addChild( parentRole, member );
 		}
 	}
 
 	@Override
-	public void addChildMember( URI parentRoleURI, URI child ) {
+	public void addChild( URI parentRoleURI, URI child ) {
 		if ( ( ! sourceRepository.exists( parentRoleURI ) ) || ( ! sourceRepository.exists( child ) ) ) throw new ResourceDoesntExistException();
 		if ( ! sourceRepository.is( child, AppRoleDescription.Resource.CLASS ) ) throw new InvalidResourceException( new Infraction( 0x2001, "rdf.type", AppRoleDescription.Resource.CLASS.getURI().stringValue() ) );
 

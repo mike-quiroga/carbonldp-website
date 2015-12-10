@@ -29,7 +29,7 @@ public class AppRolesPOSTHandler extends AbstractRDFPostRequestHandler<AppRole> 
 	}
 
 	@Autowired
-	public AppRolesPOSTHandler( AppRoleService appRoleService ) {
+	public void setAppRolesPOSTHandler( AppRoleService appRoleService ) {
 		this.appRoleService = appRoleService;
 	}
 }

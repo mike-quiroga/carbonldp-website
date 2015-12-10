@@ -1,3 +1,5 @@
+# 0.18.0 (2015/12/10)
+* appRoles can now be created and related among themselves
 # 0.17.0 (2015/12/10)
 * ACLs can be retrieved
 # 0.16.0 (2015/12/08)

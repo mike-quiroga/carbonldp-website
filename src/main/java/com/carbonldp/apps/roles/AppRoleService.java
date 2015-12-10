@@ -14,7 +14,7 @@ public interface AppRoleService {
 
 	public void create( AppRole appRole );
 
-	public void addChildMembers( URI parentRole, Set<URI> childs );
+	public void addChilds( URI parentRole, Set<URI> childs );
 
-	public void addChildMember( URI parentRole, URI child );
+	public void addChild( URI parentRole, URI child );
 }

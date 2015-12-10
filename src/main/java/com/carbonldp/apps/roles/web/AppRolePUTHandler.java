@@ -26,7 +26,7 @@ public class AppRolePUTHandler extends AbstractPUTRequestHandler<AppRole> {
 	@Override
 	protected void executeAction( URI targetUri, AddMembersAction members ) {
 		validate( members );
-		appRoleService.addChildMembers( targetUri, members.getMembers() );
+		appRoleService.addChilds( targetUri, members.getMembers() );
 	}
 
 	protected void validate( MembersAction membersAction ) {
