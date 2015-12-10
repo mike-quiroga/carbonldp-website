@@ -31,7 +31,8 @@ export default class HomeView {
 	afterViewInit():void {
 		this.$element = $( this.element.nativeElement );
 		this.$mainMenu = $( 'header > .menu' );
-		this.$carbonLogo = this.$element.find( 'carbon-logo' );
+		//this.$carbonLogo = this.$element.find( 'carbon-logo' );
+		this.$carbonLogo = this.$element.find( 'img.carbon-logo' );
 
 		this.hideMainMenu();
 		this.createDropdownMenus();

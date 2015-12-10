@@ -1,6 +1,6 @@
 {
   "name": "carbon-website",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Public Website for carbonldp.com",
   "main": "dist/index.html",
   "author": "Base22 LLC",
@@ -32,7 +32,7 @@
     "gulp-watch": "^4.3.5",
     "jspm": "^0.16.14",
     "live-server": "^0.8.2",
-    "semantic-ui": "^2.1.5",
+    "semantic-ui": "2.1.5",
     "systemjs-builder": "^0.14.10",
     "tsd": "^0.6.5"
   },
@@ -51,6 +51,7 @@
       "bootstrap-sass": "github:twbs/bootstrap-sass@^3.3.5",
       "carbonldp-sdk": "npm:carbonldp-sdk@^0.9.1-ALPHA",
       "clean-css": "npm:clean-css@^3.4.6",
+      "codemirror": "npm:codemirror@^5.8.0",
       "css": "github:systemjs/plugin-css@^0.1.19",
       "html": "github:systemjs/plugin-text@^0.0.3",
       "jquery": "github:components/jquery@^2.1.4",
