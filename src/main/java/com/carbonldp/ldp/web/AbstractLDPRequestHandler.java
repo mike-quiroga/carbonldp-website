@@ -51,7 +51,7 @@ public abstract class AbstractLDPRequestHandler extends AbstractRequestHandler {
 	protected ContainerService containerService;
 	protected NonRDFSourceService nonRdfSourceService;
 	protected SPARQLService sparqlService;
-	protected AppRoleService appRoleService;
+
 
 	protected HttpServletRequest request;
 	protected HttpServletResponse response;
@@ -216,11 +216,6 @@ public abstract class AbstractLDPRequestHandler extends AbstractRequestHandler {
 	@Autowired
 	public void setSparqlService( SPARQLService sparqlService ) {
 		this.sparqlService = sparqlService;
-	}
-
-	@Autowired
-	public void setAppRoleService( AppRoleService appRoleService ) {
-		this.appRoleService = appRoleService;
 	}
 
 }

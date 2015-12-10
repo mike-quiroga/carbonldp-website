@@ -16,7 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 @RequestHandler
 public class AppRolesPOSTHandler extends AbstractRDFPostRequestHandler<AppRole> {
 
-	private final AppRoleService appRoleService;
+	private AppRoleService appRoleService;
 
 	@Override
 	protected AppRole getDocumentResourceView( BasicContainer requestBasicContainer ) {
