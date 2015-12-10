@@ -8,7 +8,7 @@ import java.util.Set;
 /**
  * @author JorgeEspinosa
  * @author NestorVenegas
- * @since _version_
+ * @since 0.18.0-ALPHA
  */
 public interface AppRoleService {
 

@@ -16,7 +16,7 @@ import java.util.List;
 
 /**
  * @author NestorVenegas
- * @since _version_
+ * @since 0.18.0-ALPHA
  */
 @RequestHandler
 public class AppRolePUTHandler extends AbstractPUTRequestHandler<AppRole> {

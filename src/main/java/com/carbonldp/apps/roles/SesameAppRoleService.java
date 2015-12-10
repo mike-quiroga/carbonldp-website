@@ -27,7 +27,7 @@ import java.util.Set;
 /**
  * @author NestorVenegas
  * @author JorgeEspinosa
- * @since _version_
+ * @since 0.18.0-ALPHA
  */
 public class SesameAppRoleService extends AbstractSesameLDPService implements AppRoleService {
 	private final ContainerService containerService;
