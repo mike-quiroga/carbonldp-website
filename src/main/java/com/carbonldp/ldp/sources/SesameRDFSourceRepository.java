@@ -30,6 +30,8 @@ import static com.carbonldp.Consts.TAB;
 @Transactional
 public class SesameRDFSourceRepository extends AbstractSesameLDPRepository implements RDFSourceRepository {
 
+	private static String isQuery;
+
 	public SesameRDFSourceRepository( SesameConnectionFactory connectionFactory, RDFResourceRepository resourceRepository, RDFDocumentRepository documentRepository ) {
 		super( connectionFactory, resourceRepository, documentRepository );
 	}
@@ -199,8 +201,6 @@ public class SesameRDFSourceRepository extends AbstractSesameLDPRepository imple
 			}
 		}
 	}
-
-	private static final String isQuery;
 
 	static {
 		isQuery = "ASK  { ?resource <" + RDF.TYPE + ">  ?type }";

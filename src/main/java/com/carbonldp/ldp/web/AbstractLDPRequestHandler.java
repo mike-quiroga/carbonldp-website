@@ -53,6 +53,7 @@ public abstract class AbstractLDPRequestHandler extends AbstractRequestHandler {
 	protected SPARQLService sparqlService;
 	protected AppRoleService appRoleService;
 
+
 	protected HttpServletRequest request;
 	protected HttpServletResponse response;
 	protected List<HTTPHeaderValue> appliedPreferences;
