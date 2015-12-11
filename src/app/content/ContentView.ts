@@ -37,50 +37,46 @@ export default class ContentView {
         console.log("-- ContentView -> Got id: " + id);
 
 
-        /*
-         let document = this.contentService.getDocumentById(id).then(
-         ( doc ) => {
-         console.log("-- ContentView -> document: " + doc);
-         }
-         ).catch( console.error );
-         */
-
-
-        /*
+        // START: OPTION A -------------------------------------------------------------------------
+        // USE THIS TO LOAD A TEMPLATE DIRECTLY FROM TEMPLATE URL
         @Component({
             selector: 'compiled-component',
-            //directives: [CodeMirrorComponent.Class]
+            directives: [CodeMirrorComponent.Class],
+            templateUrl: 'http://127.0.0.1:8080/assets/documents/' + id + '.html'
         })
-        @View({ templateUrl: 'http://127.0.0.1:8080/assets/documents/' + id + '.html'})
         class CompiledComponent {
 
-            testProperty:string = "component in scope";
+            //testProperty:string = "component in scope";
 
         };
 
         dynamicComponentLoader.loadIntoLocation(CompiledComponent, elementRef, 'container');
-        */
+        // END: OPTION A ---------------------------------------------------------------------------
+
+
+        // START: OPTION B: ------------------------------------------------------------------------
+        // USE THIS TO LOAD A TEMPLATE DYNAMICALLY FROM HTTP USING A SERVICE
 
         /*
-        content:string = `hello mojo`;
-
-        let contentComponent:() => {} = function () {
-            //this.content = "Nothing; I'm just a dummy!";
-        };
-        Reflect.decorate( [ Component( {template: content, directives: [ CORE_DIRECTIVES, ROUTER_DIRECTIVES, CodeMirrorComponent.Class ]} ) ], contentComponent );
-        this.dynamicComponentLoader.loadIntoLocation( contentComponent, this.elementRef, "container" );
-        */
-
         this.contentService.getDocumentById( id ).then(
             ( content )=> {
-                //this.blogPost.content = content;
-                let contentComponent:() => {} = function () {
-                    //this.content = "Hello!";
+                @Component({
+                    selector: 'compiled-component',
+                    directives: [CodeMirrorComponent.Class],
+                    template: content
+                })
+                class CompiledComponent {
+
+                    //testProperty:string = "component in scope";
+
                 };
-                Reflect.decorate( [ Component( {template: content, directives: [ CORE_DIRECTIVES, ROUTER_DIRECTIVES, CodeMirrorComponent.Class ]} ) ], contentComponent );
-                this.dynamicComponentLoader.loadIntoLocation( contentComponent, this.elementRef, "container" );
+
+                dynamicComponentLoader.loadIntoLocation(CompiledComponent, elementRef, 'container');
             }
         );
+        */
+
+        // END: OPTION B --------------------------------------------------------------------------
 
 
 
