@@ -42,7 +42,11 @@ export default class ContentService {
         return new Promise<string>( ( resolve, reject ) => {
 
 
-            this.http.get('app/content/documents/' + id + '.html')
+            let url = window.location.href;
+            let arr = url.split("/");
+            let protocolHostAndPort = arr[0] + "//" + arr[2]
+
+            this.http.get(protocolHostAndPort + '/assets/documents/' + id + '.html')
                 .map(res => res.text())
                 .subscribe(
                     data => this.data = data,

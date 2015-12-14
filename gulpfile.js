@@ -28,20 +28,15 @@ gulp.task( 'ts-lint', function() {
 	return gulp.src( config.source.typescript )
 		.pipe( tslint() )
 		.pipe( tslint.report( 'prose' ) )
-	;
+		;
 });
 
-gulp.task( 'serve', [
-    //'build-semantic',
-    'compile-styles' ],
-    function() {
-    /*
+gulp.task( 'serve', [ 'build-semantic', 'compile-styles' ], function() {
 	gulp.src( 'src/semantic/gulpfile.js', { read: false } )
 		.pipe( chug({
 			tasks: [ 'watch' ]
 		}) )
 	;
-	*/
 
 	watch( config.source.sass, function( file ) {
 		util.log( 'SCSS file changed: ', file.path );
@@ -66,7 +61,7 @@ gulp.task( 'compile-styles', function() {
 		}) )
 		.pipe( sourcemaps.write( '.' ) )
 		.pipe( gulp.dest( '.' ) )
-	;
+		;
 });
 
 gulp.task( 'build', [ 'build-semantic', 'copy-semantic', 'copy-assets' ], function() {
@@ -83,7 +78,7 @@ gulp.task( 'build-semantic', function() {
 		.pipe( chug({
 			tasks: [ 'build' ]
 		}) )
-	;
+		;
 });
 
 gulp.task( 'copy-semantic', [ 'build-semantic' ], function() {
