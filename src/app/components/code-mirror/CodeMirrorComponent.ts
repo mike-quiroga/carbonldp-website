@@ -35,13 +35,14 @@ export class Mode {
 
 @Component( {
 	selector: 'code-mirror',
-	template: ''
+	template: '<ng-content></ng-content>'
 } )
 export class Class {
 	static parameters = [ [ ElementRef ] ];
 
 	element:ElementRef;
 	codeMirror:CodeMirror;
+	hasPre:boolean;
 
 	@Input() mode:string = Mode.JAVASCRIPT;
 	@Input() readOnly:boolean = false;
@@ -54,8 +55,33 @@ export class Class {
 		this.element = element;
 	}
 
+	onDestroy() {
+		//if ( this.hasPre ) {
+		//	this.element.nativeElement.innerHTML = "<pre>" + this.codeMirror.getValue() + "</pre>";
+		//}
+		this.element.nativeElement.innerHTML = this.codeMirror.getValue();
+	}
+
 	afterViewInit():void {
-		// Clear of existing content inside code mirror
+		// Check if there are pre tags with code
+		if ( ! ! this.element.nativeElement.querySelector( "pre" ) ) {
+			this.hasPre = true;
+		}
+		if ( ! this.value ) {
+			if ( this.hasPre ) {
+				let pres:any = this.element.nativeElement.querySelector( "pre" );
+				if ( pres.length > 0 ) {
+					// use everything inside the first pre
+					this.value = pres[ 0 ].innerHTML;
+				} else {
+					// use everything inside the pre
+					this.value = pres.innerHTML;
+				}
+			} else {
+				// not a pre, then use the everything inside code-mirror tag
+				this.value = this.element.nativeElement.innerHTML;
+			}
+		}
 		this.element.nativeElement.innerHTML = "";
 		this.codeMirror = CodeMirror( this.element.nativeElement, {
 			lineNumbers: true,
