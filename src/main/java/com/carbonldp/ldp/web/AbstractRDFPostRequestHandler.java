@@ -6,6 +6,7 @@ import com.carbonldp.descriptions.APIPreferences.InteractionModel;
 import com.carbonldp.exceptions.InvalidResourceException;
 import com.carbonldp.ldp.containers.*;
 import com.carbonldp.ldp.nonrdf.RDFRepresentationDescription;
+import com.carbonldp.ldp.sources.RDFSourceDescription;
 import com.carbonldp.models.EmptyResponse;
 import com.carbonldp.models.Infraction;
 import com.carbonldp.rdf.RDFDocument;
@@ -74,7 +75,7 @@ public abstract class AbstractRDFPostRequestHandler<E extends BasicContainer> ex
 		RDFResource requestDocumentResource = document.getDocumentResource();
 
 		InteractionModel interactionModel = getInteractionModel( targetURI );
-		
+
 		switch ( interactionModel ) {
 			case RDF_SOURCE:
 				return handlePOSTToRDFSource( targetURI, requestDocumentResource );
@@ -93,7 +94,7 @@ public abstract class AbstractRDFPostRequestHandler<E extends BasicContainer> ex
 	private ResponseEntity<Object> handlePOSTToRDFSource( URI targetURI, RDFResource requestDocumentResource ) {
 		AccessPoint requestAccessPoint = getRequestAccessPoint( requestDocumentResource );
 
-		requestDocumentResource = getDocumentResourceWithFinalURI( requestAccessPoint, targetURI.stringValue() );
+		requestDocumentResource = getDocumentResourceWithFinalURI( requestAccessPoint, targetURI );
 		if ( ! requestDocumentResource.equals( requestAccessPoint.getURI() ) ) {
 			requestAccessPoint = AccessPointFactory.getInstance().getAccessPoint( requestDocumentResource );
 		}
@@ -121,7 +122,7 @@ public abstract class AbstractRDFPostRequestHandler<E extends BasicContainer> ex
 		validateSystemManagedProperties( requestDocumentResource );
 		BasicContainer requestBasicContainer = getRequestBasicContainer( requestDocumentResource );
 
-		requestDocumentResource = getDocumentResourceWithFinalURI( requestBasicContainer, targetURI.stringValue() );
+		requestDocumentResource = getDocumentResourceWithFinalURI( requestBasicContainer, targetURI );
 		if ( ! requestDocumentResource.equals( requestBasicContainer.getURI() ) ) requestBasicContainer = new BasicContainer( requestDocumentResource );
 
 		E documentResourceView = getDocumentResourceView( requestBasicContainer );
@@ -142,10 +143,20 @@ public abstract class AbstractRDFPostRequestHandler<E extends BasicContainer> ex
 			if ( requestDocumentResource.hasType( invalidType ) )
 				throw new BadRequestException( new Infraction( 0x200C, "rdf.type", invalidType.getURI().stringValue() ) );
 		}
-		BasicContainer basicContainer = BasicContainerFactory.getInstance().create( requestDocumentResource );
-		if ( basicContainer.getDefaultInteractionModel() == null )
-			basicContainer.setDefaultInteractionModel( InteractionModel.RDF_SOURCE );
+		BasicContainer basicContainer;
+		if ( ( ! hasDefaultInteractionModel( requestDocumentResource ) ) && ( requestDocumentResource.hasType( ContainerDescription.Resource.CLASS ) || requestDocumentResource.hasType( BasicContainerDescription.Resource.CLASS ) ) ) {
+			basicContainer = BasicContainerFactory.getInstance().create( requestDocumentResource );
+		} else {
+			basicContainer = BasicContainerFactory.getInstance().create( requestDocumentResource );
+			if ( basicContainer.getDefaultInteractionModel() == null )
+				basicContainer.setDefaultInteractionModel( InteractionModel.RDF_SOURCE );
+		}
+
 		return basicContainer;
+	}
+
+	private boolean hasDefaultInteractionModel( RDFResource requestDocumentResource ) {
+		return requestDocumentResource.hasProperty( RDFSourceDescription.Property.DEFAULT_INTERACTION_MODEL );
 	}
 
 	protected abstract E getDocumentResourceView( BasicContainer requestBasicContainer );
@@ -166,12 +177,12 @@ public abstract class AbstractRDFPostRequestHandler<E extends BasicContainer> ex
 		return new ResponseEntity<>( new EmptyResponse(), HttpStatus.CREATED );
 	}
 
-	protected RDFResource getDocumentResourceWithFinalURI( RDFResource documentResource, String parentURI ) {
-		if ( hasGenericRequestURI( documentResource ) ) {
-			URI forgedURI = forgeUniqueURI( documentResource, parentURI, request );
+	protected RDFResource getDocumentResourceWithFinalURI( RDFResource documentResource, URI parentURI ) {
+		if ( documentResource.getURI().equals( parentURI ) ){
+			URI forgedURI = forgeUniqueURI( documentResource, parentURI.stringValue(), request );
 			documentResource = renameResource( documentResource, forgedURI );
-		} else {
-			validateRequestResourceRelativeness( documentResource, parentURI );
+		}else{
+			validateRequestResourceRelativeness( documentResource, parentURI.stringValue() );
 		}
 		return documentResource;
 	}

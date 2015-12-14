@@ -2,6 +2,7 @@ package com.carbonldp.rdf;
 
 import com.carbonldp.config.ConfigurationRepository;
 import com.carbonldp.models.Infraction;
+import com.carbonldp.utils.RequestUtil;
 import com.carbonldp.utils.URIUtil;
 import com.carbonldp.utils.ValueUtil;
 import com.carbonldp.web.converters.ModelMessageConverter;
@@ -56,7 +57,7 @@ public class RDFDocumentMessageConverter extends ModelMessageConverter<RDFDocume
 
 		RDFParser parser = Rio.createParser( formatToUse );
 
-		String baseURI = configurationRepository.forgeGenericRequestURL();
+		String baseURI = RequestUtil.getRequestURL();
 
 		DocumentRDFHandler documentRDFHandler = new DocumentRDFHandler();
 		documentRDFHandler.setDefaultContext( new URIImpl( baseURI ) );
