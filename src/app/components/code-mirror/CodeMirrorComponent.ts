@@ -42,7 +42,6 @@ export class Class {
 
 	element:ElementRef;
 	codeMirror:CodeMirror;
-	hasPre:boolean;
 
 	@Input() mode:string = Mode.JAVASCRIPT;
 	@Input() readOnly:boolean = false;
@@ -56,31 +55,29 @@ export class Class {
 	}
 
 	onDestroy() {
-		//if ( this.hasPre ) {
-		//	this.element.nativeElement.innerHTML = "<pre>" + this.codeMirror.getValue() + "</pre>";
-		//}
 		this.element.nativeElement.innerHTML = this.codeMirror.getValue();
 	}
 
-	afterViewInit():void {
-		// Check if there are pre tags with code
-		if ( ! ! this.element.nativeElement.querySelector( "pre" ) ) {
-			this.hasPre = true;
-		}
-		if ( ! this.value ) {
-			if ( this.hasPre ) {
-				let pres:any = this.element.nativeElement.querySelector( "pre" );
-				if ( pres.length > 0 ) {
-					// use everything inside the first pre
-					this.value = pres[ 0 ].innerHTML;
-				} else {
-					// use everything inside the pre
-					this.value = pres.innerHTML;
-				}
+	private getValue():string {
+		let pres:any = this.element.nativeElement.querySelector( "pre" );
+		if ( pres ) {
+			if ( pres.length > 0 ) {
+				// use everything inside the first pre
+				return pres[ 0 ].innerHTML;
 			} else {
-				// not a pre, then use the everything inside code-mirror tag
-				this.value = this.element.nativeElement.innerHTML;
+				// use everything inside the pre
+				return pres.innerHTML;
 			}
+		} else {
+			// no pre's, then use the everything inside code-mirror tag
+			return this.element.nativeElement.innerHTML;
+		}
+		return "";
+	}
+
+	afterViewInit():void {
+		if ( ! this.value ) {
+			this.value = this.getValue();
 		}
 		this.element.nativeElement.innerHTML = "";
 		this.codeMirror = CodeMirror( this.element.nativeElement, {
