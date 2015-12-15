@@ -26,8 +26,7 @@ import org.springframework.util.Assert;
 import java.io.File;
 import java.util.*;
 
-import static com.carbonldp.Consts.NEW_LINE;
-import static com.carbonldp.Consts.TAB;
+import static com.carbonldp.Consts.*;
 
 @Transactional
 public class SesameContainerRepository extends AbstractSesameLDPRepository implements ContainerRepository {
@@ -279,6 +278,7 @@ public class SesameContainerRepository extends AbstractSesameLDPRepository imple
 		getTypedRepository( containerType ).removeMembers( containerURI );
 	}
 
+	/*
 	@Override
 	public void deleteContainedResources( URI containerURI ) {
 		Set<URI> containedURIs = getContainedURIs( containerURI );
@@ -288,6 +288,7 @@ public class SesameContainerRepository extends AbstractSesameLDPRepository imple
 			sourceRepository.deleteOccurrences( containedURI, true );
 		}
 	}
+	*/
 
 	private void addContainedResource( URI containerURI, URI resourceURI ) {
 		connectionTemplate.write( ( connection ) -> connection.add( containerURI, ContainerDescription.Property.CONTAINS.getURI(), resourceURI, containerURI ) );

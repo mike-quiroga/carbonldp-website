@@ -85,7 +85,7 @@ public class ServicesConfig {
 
 	@Bean
 	public ContainerService containerService() {
-		return new SesameContainerService( transactionWrapper(), sourceRepository, containerRepository, aclRepository );
+		return new SesameContainerService( transactionWrapper(), sourceRepository, containerRepository, aclRepository, sourceService() );
 	}
 
 	@Bean

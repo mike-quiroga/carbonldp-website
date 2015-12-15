@@ -6,6 +6,7 @@ import com.carbonldp.exceptions.ResourceAlreadyExistsException;
 import com.carbonldp.exceptions.ResourceDoesntExistException;
 import com.carbonldp.ldp.AbstractSesameLDPService;
 import com.carbonldp.ldp.sources.RDFSourceRepository;
+import com.carbonldp.ldp.sources.RDFSourceService;
 import com.carbonldp.rdf.RDFResource;
 import com.carbonldp.spring.TransactionWrapper;
 import org.joda.time.DateTime;
@@ -18,8 +19,11 @@ import java.util.Set;
 @Transactional
 public class SesameContainerService extends AbstractSesameLDPService implements ContainerService {
 
-	public SesameContainerService( TransactionWrapper transactionWrapper, RDFSourceRepository sourceRepository, ContainerRepository containerRepository, ACLRepository aclRepository ) {
+	private final RDFSourceService sourceService;
+
+	public SesameContainerService( TransactionWrapper transactionWrapper, RDFSourceRepository sourceRepository, ContainerRepository containerRepository, ACLRepository aclRepository, RDFSourceService sourceService ) {
 		super( transactionWrapper, sourceRepository, containerRepository, aclRepository );
+		this.sourceService = sourceService;
 	}
 
 	@Override
@@ -110,7 +114,11 @@ public class SesameContainerService extends AbstractSesameLDPService implements 
 
 	@Override
 	public void deleteContainedResources( URI targetURI ) {
-		containerRepository.deleteContainedResources( targetURI );
+		Set<URI> containedURIs = containerRepository.getContainedURIs( targetURI );
+		for ( URI containedURI : containedURIs ) {
+			sourceService.delete( containedURI );
+			sourceRepository.deleteOccurrences( containedURI, true );
+		}
 	}
 
 	@Override

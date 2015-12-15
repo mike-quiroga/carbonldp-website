@@ -66,7 +66,5 @@ public interface ContainerRepository {
 
 	public void removeMembers( URI targetURI, Type containerType );
 
-	public void deleteContainedResources( URI targetURI );
-
 	public TypedContainerRepository getTypedRepository( Type containerType );
 }
