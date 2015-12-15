@@ -4,6 +4,7 @@ import com.carbonldp.HTTPHeaders;
 import com.carbonldp.descriptions.APIPreferences;
 import com.carbonldp.descriptions.APIPreferences.InteractionModel;
 import com.carbonldp.exceptions.InvalidResourceException;
+import com.carbonldp.exceptions.InvalidResourceURIException;
 import com.carbonldp.ldp.containers.*;
 import com.carbonldp.ldp.nonrdf.RDFRepresentationDescription;
 import com.carbonldp.ldp.sources.RDFSourceDescription;
@@ -178,10 +179,10 @@ public abstract class AbstractRDFPostRequestHandler<E extends BasicContainer> ex
 	}
 
 	protected RDFResource getDocumentResourceWithFinalURI( RDFResource documentResource, URI parentURI ) {
-		if ( documentResource.getURI().equals( parentURI ) ){
+		if ( documentResource.getURI().equals( parentURI ) ) {
 			URI forgedURI = forgeUniqueURI( documentResource, parentURI.stringValue(), request );
 			documentResource = renameResource( documentResource, forgedURI );
-		}else{
+		} else {
 			validateRequestResourceRelativeness( documentResource, parentURI.stringValue() );
 		}
 		return documentResource;
@@ -208,7 +209,7 @@ public abstract class AbstractRDFPostRequestHandler<E extends BasicContainer> ex
 	}
 
 	private String forgeSlug( RDFResource documentResource, String parentURI, HttpServletRequest request ) {
-		String uriSlug = configurationRepository.getGenericRequestSlug( documentResource.getURI().stringValue() );
+		String uriSlug = getGenericRequestSlug( documentResource.getURI().stringValue(), parentURI );
 		String slug = uriSlug != null ? uriSlug : request.getHeader( HTTPHeaders.SLUG );
 
 		if ( slug != null ) {
@@ -226,11 +227,17 @@ public abstract class AbstractRDFPostRequestHandler<E extends BasicContainer> ex
 		return slug;
 	}
 
+	protected String getGenericRequestSlug( String documentURI, String parentURI ) {
+		if ( documentURI.equals( parentURI ) ) return null;
+		if ( ! documentURI.contains( parentURI ) ) throw new InvalidResourceURIException();
+		return documentURI.substring( parentURI.length() );
+	}
+
 	protected void validateRequestResourceRelativeness( RDFResource requestResource, String targetURI ) {
 		String resourceURI = requestResource.getURI().stringValue();
 		targetURI = targetURI.endsWith( SLASH ) ? targetURI : targetURI.concat( SLASH );
 		if ( ! resourceURI.startsWith( targetURI ) ) {
-			throw new BadRequestException( 0x200B );
+			throw new InvalidResourceURIException();
 		}
 
 		String relativeURI = resourceURI.replace( targetURI, EMPTY_STRING );
@@ -253,7 +260,8 @@ public abstract class AbstractRDFPostRequestHandler<E extends BasicContainer> ex
 	}
 
 	protected RDFResource renameResource( RDFResource requestResource, URI forgedURI ) {
-		AbstractModel renamedModel = ModelUtil.replaceBase( requestResource.getBaseModel(), requestResource.getURI().stringValue(), forgedURI.stringValue() );
+		AbstractModel renamedModel = ModelUtil.replaceSubject( requestResource.getBaseModel(), requestResource.getURI(), forgedURI );
+		renamedModel = ModelUtil.replaceContext( renamedModel, requestResource.getURI(), forgedURI );
 		return new RDFResource( renamedModel, forgedURI );
 	}
 
