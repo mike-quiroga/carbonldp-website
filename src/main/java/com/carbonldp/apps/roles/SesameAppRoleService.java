@@ -5,8 +5,6 @@ import com.carbonldp.agents.platform.PlatformAgentRepository;
 import com.carbonldp.apps.AppRole;
 import com.carbonldp.apps.AppRoleDescription;
 import com.carbonldp.apps.AppRoleFactory;
-import com.carbonldp.apps.context.AppContextHolder;
-import com.carbonldp.authentication.AgentAuthenticationToken;
 import com.carbonldp.authorization.acl.ACLRepository;
 import com.carbonldp.exceptions.*;
 import com.carbonldp.ldp.AbstractSesameLDPService;
@@ -18,13 +16,8 @@ import com.carbonldp.rdf.RDFResource;
 import com.carbonldp.spring.TransactionWrapper;
 import org.joda.time.DateTime;
 import org.openrdf.model.URI;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 /**
@@ -45,19 +38,18 @@ public class SesameAppRoleService extends AbstractSesameLDPService implements Ap
 		this.sourceService = sourceService;
 		this.platformAgentRepository = platformAgentRepository;
 	}
-	
+
 	@Override
-	public void addAgentMembers( URI appRoleAgentContainerURI, Set<URI> agents ) {
+	public void addAgents( URI appRoleAgentContainerURI, Set<URI> agents ) {
 		for ( URI agent : agents ) {
-			addAgentMember( appRoleAgentContainerURI, agent );
+			addAgent( appRoleAgentContainerURI, agent );
 		}
 	}
-	
+
 	@Override
-	public void addAgentMember( URI appRoleAgentContainerURI, URI agent ) {
+	public void addAgent( URI appRoleAgentContainerURI, URI agent ) {
 		if ( ( ! sourceRepository.exists( appRoleAgentContainerURI ) ) ) throw new ResourceDoesntExistException();
 		if ( ! isAppAgent( agent ) && ! isPlatformAgent( agent ) ) throw new InvalidRDFTypeException( new Infraction( 0x2001, "rdf.type", AgentDescription.Resource.CLASS.getURI().stringValue() ) );
-		validatePermissionToAddAgent( appRoleAgentContainerURI );
 
 		containerService.addMember( appRoleAgentContainerURI, agent );
 
@@ -112,7 +104,7 @@ public class SesameAppRoleService extends AbstractSesameLDPService implements Ap
 		List<Infraction> infractions = AppRoleFactory.getInstance().validate( appRole );
 		if ( ! infractions.isEmpty() ) throw new InvalidResourceException( infractions );
 	}
-	
+
 	private boolean isAppAgent( URI agent ) {
 		return isAgent( agent );
 	}
@@ -120,39 +112,13 @@ public class SesameAppRoleService extends AbstractSesameLDPService implements Ap
 	private boolean isAgent( URI agent ) {
 		if ( sourceRepository.exists( agent ) ) {
 			if ( sourceRepository.is( agent, AgentDescription.Resource.CLASS ) ) return true;
-			else throw new InvalidRDFTypeException( new Infraction( 0x2001, "rdf.type", AgentDescription.Resource.CLASS.getURI().stringValue()) );
+			else throw new InvalidRDFTypeException( new Infraction( 0x2001, "rdf.type", AgentDescription.Resource.CLASS.getURI().stringValue() ) );
 		}
 		return false;
 	}
 
 	private boolean isPlatformAgent( URI agent ) {
 		return platformAgentRepository.exists( agent );
-	}
-
-	private void validatePermissionToAddAgent( URI appRoleAgentContainerURI ) {
-		ContainerDescription.Type containerType = containerRepository.getContainerType( appRoleAgentContainerURI );
-		URI role = containerRepository.getTypedRepository( containerType ).getMembershipResource( appRoleAgentContainerURI );
-		if ( ! isMemberOfRoleHierarchy( role ) ) {
-			Map<String, String> parametersException = new LinkedHashMap<>();
-			parametersException.put( "action", "add agent" );
-			parametersException.put( "uri", role.stringValue() );
-			throw new AuthorizationException( new Infraction( 0x7001, parametersException ) );
-		}
-	}
-
-	private boolean isMemberOfRoleHierarchy( URI role ) {
-		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		if ( ! ( authentication instanceof AgentAuthenticationToken ) ) throw new BadCredentialsException( "invalid authentication token" );
-		AgentAuthenticationToken agentAuthenticationToken = (AgentAuthenticationToken) authentication;
-		Set<AppRole> agentAppRoles = agentAuthenticationToken.getAppRoles( AppContextHolder.getContext().getApplication().getURI() );
-		Set<URI> parentsRoles = appRoleRepository.getParentsURI( role );
-		parentsRoles.add( role );
-		for ( AppRole appRole : agentAppRoles ) {
-			if ( parentsRoles.contains( appRole.getSubject() ) ) {
-				return true;
-			}
-		}
-		return false;
 	}
 }
 

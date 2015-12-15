@@ -9,6 +9,7 @@ import com.carbonldp.rdf.RDFResourceRepository;
 import com.carbonldp.repository.DocumentGraphQueryResultHandler;
 import com.carbonldp.repository.GraphQueryResultHandler;
 import com.carbonldp.utils.RDFNodeUtil;
+import com.carbonldp.utils.SPARQLUtil;
 import com.carbonldp.utils.ValueUtil;
 import com.carbonldp.web.exceptions.NotImplementedException;
 import org.joda.time.DateTime;
@@ -24,13 +25,13 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static com.carbonldp.Consts.NEW_LINE;
-import static com.carbonldp.Consts.TAB;
+import static com.carbonldp.Consts.*;
 
 @Transactional
 public class SesameRDFSourceRepository extends AbstractSesameLDPRepository implements RDFSourceRepository {
 
 	private static String isQuery;
+	private static String isQueryClosure;
 
 	public SesameRDFSourceRepository( SesameConnectionFactory connectionFactory, RDFResourceRepository resourceRepository, RDFDocumentRepository documentRepository ) {
 		super( connectionFactory, resourceRepository, documentRepository );
@@ -203,18 +204,19 @@ public class SesameRDFSourceRepository extends AbstractSesameLDPRepository imple
 	}
 
 	static {
-		isQuery = "ASK  { ?resource <" + RDF.TYPE + ">  ?type }";
+		isQuery = "ASK {" + NEW_LINE +
+			" ?resource " + LESS_THAN + RDF.TYPE + MORE_THAN + " ?rdfType.";
+	}
+
+	static {
+		isQueryClosure = " }";
 	}
 
 	@Override
 	public boolean is( URI resourceURI, RDFNodeEnum type ) {
-		for ( URI typeURI : type.getURIs() ) {
-			Map<String, Value> bindings = new LinkedHashMap<>();
-			bindings.put( "resource", resourceURI );
-			bindings.put( "type", typeURI );
-			if ( sparqlTemplate.executeBooleanQuery( isQuery, bindings ) ) return true;
-		}
-		return false;
+		Map<String, Value> bindings = new LinkedHashMap<>();
+		bindings.put( "resource", resourceURI );
+		return sparqlTemplate.executeBooleanQuery( isQuery + SPARQLUtil.assignVar( "rdfType", type ) + isQueryClosure, bindings );
 	}
 
 	@Override

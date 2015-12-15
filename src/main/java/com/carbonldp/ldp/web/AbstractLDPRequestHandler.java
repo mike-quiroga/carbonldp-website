@@ -2,7 +2,6 @@ package com.carbonldp.ldp.web;
 
 import com.carbonldp.Consts;
 import com.carbonldp.HTTPHeaders;
-import com.carbonldp.apps.roles.AppRoleService;
 import com.carbonldp.config.ConfigurationRepository;
 import com.carbonldp.descriptions.APIPreferences.InteractionModel;
 import com.carbonldp.http.Link;
@@ -51,7 +50,7 @@ public abstract class AbstractLDPRequestHandler extends AbstractRequestHandler {
 	protected ContainerService containerService;
 	protected NonRDFSourceService nonRdfSourceService;
 	protected SPARQLService sparqlService;
-	protected AppRoleService appRoleService;
+
 
 
 	protected HttpServletRequest request;
@@ -217,11 +216,6 @@ public abstract class AbstractLDPRequestHandler extends AbstractRequestHandler {
 	@Autowired
 	public void setSparqlService( SPARQLService sparqlService ) {
 		this.sparqlService = sparqlService;
-	}
-
-	@Autowired
-	public void setAppRoleService( AppRoleService appRoleService ) {
-		this.appRoleService = appRoleService;
 	}
 
 }
