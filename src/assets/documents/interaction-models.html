@@ -1,7 +1,107 @@
-<h1>Interaction Models</h1>
+<div class="ui icon yellow message">
+    <i class="warning sign icon"></i>
+    <div class="content">
+        <div class="header">Pre-release Documentation</div>
+        <p>Although Carbon LDP is not yet released, we're publishing documentation as it is prepared so that you can
+            preview what's in store.</p>
+    </div>
+</div>
 
-<b><code-mirror [mode]="json" [read-only]="'nocursor'" [value]="'content'"></code-mirror></b>
 
-<p></p>
+    <h1>Interaction Models</h1>
 
-<b><code-mirror [mode]="json" [read-only]="'nocursor'" [value]="'some other content'"></code-mirror></b>
+    <p>
+        When you interact with a given document on the Carbon server, you can specify a model that
+        governs how the server behaves with respect to it. A document in Carbon can be treated as an LDP
+        Container and an LDP RDF Source, or in some cases, an LDP Non-RDF Source (such as a binary file).
+        When you want the server to treat a given document as one type or
+        another, you can specify which model you prefer with an HTTP header in the client request.</p>
+
+    <p>The preferred interaction model is specified by the HTTP <code>Prefer</code> header, which must have one of
+        the following values:</p>
+
+    <ul>
+        <li><code>http://www.w3.org/ns/ldp#Container; rel=interaction-model</code></li>
+        <li><code>http://www.w3.org/ns/ldp#RDFSource; rel=interaction-model</code></li>
+        <li><code>http://www.w3.org/ns/ldp#NonRDFSource; rel=interaction-model</code></li>
+    </ul>
+
+
+    <h2>Container Behavior</h2>
+
+    <p>When you want the server to treat a document as an LDP Container, use the following interaction model in your
+        request:</p>
+
+    <p>
+    <div class="ui blue horizontal label">HTTP Prefer</div>
+    <code>http://www.w3.org/ns/ldp#Container;
+        rel=interaction-model</code></p>
+
+    <p>As the name implies, LDP Containers contain things. Well, they don't literally contain things in the same way
+        that folders might, but the concept is similar. A container is itself an RDF Source with triples that link to a
+        set
+        of one or more members. So, when you want the server to behave in a way that helps you manage members in a
+        collection, you'll want to make requests that specify the LDP Container interaction model.</p>
+
+    <div class="ui message">
+        <p>When a server is behaving with the Container interaction model, it can respond to client requests for
+            creation,
+            modification, and/or enumeration of its members.</p>
+    </div>
+
+    <p>A Container is also an LDP RDF Source, so while it has a special function as a membership controller, it may also
+        represent additional data that is valuable to the clients that access it. In other words, in addition to having
+        membership and/or containment triples, it can still have a variety of triples or properties that are specific to
+        the resource it represents.</p>
+
+
+
+    <h2>LDP RDF Source Behavior</h2>
+
+    <p>When you want the server to treat a document as an LDP RDF Source, use the following interaction model in your
+        request:</p>
+
+    <p>
+    <div class="ui blue horizontal label">HTTP Prefer</div>
+    <code>http://www.w3.org/ns/ldp#RDFSource;
+        rel=interaction-model</code></p>
+
+    <p>An LDP RDF Source is an RDF graph or the <em>source</em> of one or more arbitrary triples that share the same
+        subject URI. When we use the LDP RDF Source model for a document, we're generally referring to the document as
+        the
+        resource it represents - some real world resource, for example. You typically prefer this model when your
+        working
+        only
+        with the document itself, or properties of the document.</p>
+
+    <div class="ui message">
+        <p>When a server is behaving with the RDF Source interaction model, it applies no special features for managing
+            members or non-RDF &quot;files&quot;. Use the RDF Source model when you're interested only in the document
+            itself - reading the triples or properties it contains, updating or deleting them, and adding new ones. You
+            can
+            also use the model to create a document with a given URI that will not be contained by any given Container
+            (i.e. to create an <em>access point</em>).</p>
+    </div>
+
+
+
+    <h2>LDP NonRDF Source Behavior</h2>
+
+    <p>An LDP Non-RDF Source is a resource whose state is not represented in RDF. For example, these can be binary or
+        text documents that do not have useful RDF representations (i.e. &quot;files&quot;). When dealing with a Non-RDF
+        Source, Carbon may still manage metadata about the resource using server-managed properties. You might also want
+        to
+        manage your own metadata about the resource, which you could do using the RDF Source interaction model on the
+        same
+        URI. But the context of the non-RDF interaction model is the non-RDF resource itself.</p>
+
+    <p>
+    <div class="ui blue horizontal label">HTTP Prefer</div>
+    <code>http://www.w3.org/ns/ldp#NonRDFSource;
+        rel=interaction-model</code></p>
+
+    <div class="ui message">
+        <p>When a server is behaving with the Non-RDF Source interaction model, it treats the given resource as a
+            non-RDF
+            &quot;file&quot;.</p>
+    </div>
