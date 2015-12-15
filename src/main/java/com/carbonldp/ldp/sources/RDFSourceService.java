@@ -9,13 +9,12 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import java.util.Collection;
 
 public interface RDFSourceService {
-	// @PreAuthorize( "hasPermission(#sourceURI, 'READ')" )
 	public boolean exists( URI sourceURI );
 
 	@PreAuthorize( "hasPermission(#sourceURI, 'READ')" )
 	public RDFSource get( URI sourceURI );
 
-	// @PreAuthorize( "hasPermission(#sourceURI, 'READ')" )
+	@PreAuthorize( "hasPermission(#sourceURI, 'READ')" )
 	public DateTime getModified( URI sourceURI );
 
 	@PreAuthorize( "hasPermission(#sourceURI, 'READ')" )

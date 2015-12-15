@@ -13,10 +13,7 @@ import com.carbonldp.exceptions.InvalidResourceException;
 import com.carbonldp.exceptions.ResourceAlreadyExistsException;
 import com.carbonldp.exceptions.ResourceDoesntExistException;
 import com.carbonldp.ldp.AbstractSesameLDPService;
-import com.carbonldp.ldp.containers.BasicContainer;
-import com.carbonldp.ldp.containers.BasicContainerFactory;
-import com.carbonldp.ldp.containers.Container;
-import com.carbonldp.ldp.containers.ContainerRepository;
+import com.carbonldp.ldp.containers.*;
 import com.carbonldp.ldp.sources.RDFSourceRepository;
 import com.carbonldp.models.Infraction;
 import com.carbonldp.rdf.RDFDocument;
@@ -45,8 +42,9 @@ public class SesameAppService extends AbstractSesameLDPService implements AppSer
 	private final AppAgentRepository appAgentRepository;
 	private final AppTokenRepository appTokensRepository;
 	private final AppRoleService appRoleService;
+	private final ContainerService containerService;
 
-	public SesameAppService( TransactionWrapper transactionWrapper, RDFSourceRepository sourceRepository, ContainerRepository containerRepository, ACLRepository aclRepository, AppRepository appRepository, AppRoleRepository appRoleRepository, AppAgentRepository appAgentRepository, AppTokenRepository appTokenRepository, AppRoleService appRoleService ) {
+	public SesameAppService( TransactionWrapper transactionWrapper, RDFSourceRepository sourceRepository, ContainerRepository containerRepository, ACLRepository aclRepository, AppRepository appRepository, AppRoleRepository appRoleRepository, AppAgentRepository appAgentRepository, AppTokenRepository appTokenRepository, ContainerService containerService, AppRoleService appRoleService ) {
 		super( transactionWrapper, sourceRepository, containerRepository, aclRepository );
 		Assert.notNull( appRepository );
 		this.appRepository = appRepository;
@@ -54,6 +52,7 @@ public class SesameAppService extends AbstractSesameLDPService implements AppSer
 		this.appRoleRepository = appRoleRepository;
 		this.appAgentRepository = appAgentRepository;
 		this.appTokensRepository = appTokenRepository;
+		this.containerService = containerService;
 		this.appRoleService = appRoleService;
 	}
 
@@ -79,7 +78,8 @@ public class SesameAppService extends AbstractSesameLDPService implements AppSer
 		if ( exists( app.getURI() ) ) throw new ResourceAlreadyExistsException();
 		validate( app );
 
-		App createdApp = appRepository.create( app );
+		App createdApp = appRepository.createPlatformAppRepository( app );
+		containerService.createChild( appRepository.getPlatformAppContainerURI(), app );
 		ACL appACL = createAppACL( createdApp );
 
 		AppRole adminRole = transactionWrapper.runWithSystemPermissionsInAppContext( app, () -> {
@@ -219,7 +219,8 @@ public class SesameAppService extends AbstractSesameLDPService implements AppSer
 
 			ACEDescription.Permission.CREATE_ACCESS_POINT,
 			ACEDescription.Permission.CREATE_CHILD,
-			ACEDescription.Permission.ADD_MEMBER
+			ACEDescription.Permission.ADD_MEMBER,
+			ACEDescription.Permission.REMOVE_MEMBER
 		), true );
 	}
 

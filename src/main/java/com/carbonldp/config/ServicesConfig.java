@@ -95,7 +95,7 @@ public class ServicesConfig {
 
 	@Bean
 	public AppService appService( AppRepository appRepository, AppRoleRepository appRoleRepository, AppAgentRepository appAgentsRepository ) {
-		return new SesameAppService( transactionWrapper(), sourceRepository, containerRepository, aclRepository, appRepository, appRoleRepository, appAgentsRepository, appTokenRepository, appRoleService() );
+		return new SesameAppService( transactionWrapper(), sourceRepository, containerRepository, aclRepository, appRepository, appRoleRepository, appAgentsRepository, appTokenRepository, containerService(), appRoleService() );
 	}
 
 	@Bean
