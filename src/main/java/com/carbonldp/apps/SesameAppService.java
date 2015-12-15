@@ -216,11 +216,14 @@ public class SesameAppService extends AbstractSesameLDPService implements AppSer
 			ACEDescription.Permission.UPDATE,
 			// TODO: The app-admin role shouldn't have DELETE permissions on the rootContainer
 			ACEDescription.Permission.DELETE,
+
 			ACEDescription.Permission.UPLOAD,
+			ACEDescription.Permission.DOWNLOAD,
 
 			ACEDescription.Permission.CREATE_ACCESS_POINT,
 			ACEDescription.Permission.CREATE_CHILD,
-			ACEDescription.Permission.ADD_MEMBER
+			ACEDescription.Permission.ADD_MEMBER,
+			ACEDescription.Permission.REMOVE_MEMBER
 		), true );
 	}
 
