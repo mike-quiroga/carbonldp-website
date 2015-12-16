@@ -4,7 +4,11 @@ import ContentService from 'app/content/ContentService';
 
 import * as CodeMirrorComponent from "app/components/code-mirror/CodeMirrorComponent";
 
+import $ from 'jquery';
+import 'semantic-ui/semantic';
+
 import template from './template.html!';
+import ComponentRef = ng.ComponentRef;
 
 @Component({
     // Selector matches the route alias?
@@ -21,6 +25,8 @@ export default class ContentView {
     routeParams: RouteParams;
     dynamicComponentLoader: DynamicComponentLoader;
     elementRef:ElementRef;
+    $element;
+    compiledComponent;
 
     constructor( router:Router, contentService:ContentService, routeParams:RouteParams ,  dynamicComponentLoader: DynamicComponentLoader, elementRef:ElementRef) {
 
@@ -31,10 +37,12 @@ export default class ContentView {
         this.routeParams = routeParams;
         this.dynamicComponentLoader = dynamicComponentLoader;
         this.elementRef = elementRef;
+        this.compiledComponent = CompiledComponent;
 
         let id = this.routeParams.get('id');
 
-        console.log("-- ContentView -> Got id: " + id);
+
+        // console.log("-- ContentView -> Got id: " + id);
 
 
         // START: OPTION A -------------------------------------------------------------------------
@@ -46,11 +54,28 @@ export default class ContentView {
         })
         class CompiledComponent {
 
-            //testProperty:string = "component in scope";
+            elementRef:ElementRef;
+            $element;
+
+            initialize(component:ComponentRef):void {
+                this.elementRef =  component.location;
+                this.$element = $( this.elementRef.nativeElement );
+                this.createAccordions();
+            }
+
+            public createAccordions():void {
+                this.$element.find( '.ui.accordion' ).accordion();
+            }
 
         };
 
-        dynamicComponentLoader.loadIntoLocation(CompiledComponent, elementRef, 'container');
+        dynamicComponentLoader.loadIntoLocation(CompiledComponent, elementRef, 'container').then(
+            ( componentRef:ComponentRef ) => {
+                let compiledComponent:CompiledComponent = componentRef.instance;
+                compiledComponent.initialize(componentRef);
+            }
+        ).catch( console.error );
+
         // END: OPTION A ---------------------------------------------------------------------------
 
 
@@ -78,8 +103,7 @@ export default class ContentView {
 
         // END: OPTION B --------------------------------------------------------------------------
 
-
-
     }
 
 }
+
