@@ -54,12 +54,17 @@ export default class ContentView {
         })
         class CompiledComponent {
 
+            static parameters = [ [ElementRef]];
+
             elementRef:ElementRef;
             $element;
 
-            initialize(component:ComponentRef):void {
-                this.elementRef =  component.location;
+            constructor(elementRef:ElementRef) {
+                this.elementRef = elementRef;
                 this.$element = $( this.elementRef.nativeElement );
+            }
+
+            afterViewInit():void {
                 this.createAccordions();
             }
 
@@ -69,12 +74,7 @@ export default class ContentView {
 
         };
 
-        dynamicComponentLoader.loadIntoLocation(CompiledComponent, elementRef, 'container').then(
-            ( componentRef:ComponentRef ) => {
-                let compiledComponent:CompiledComponent = componentRef.instance;
-                compiledComponent.initialize(componentRef);
-            }
-        ).catch( console.error );
+        dynamicComponentLoader.loadIntoLocation(CompiledComponent, elementRef, 'container');
 
         // END: OPTION A ---------------------------------------------------------------------------
 
