@@ -1,6 +1,7 @@
 package com.carbonldp.ldp.sources;
 
 import com.carbonldp.ldp.containers.AccessPoint;
+import com.carbonldp.rdf.RDFNodeEnum;
 import com.carbonldp.rdf.RDFResource;
 import org.joda.time.DateTime;
 import org.openrdf.model.URI;
@@ -10,6 +11,8 @@ import java.util.Set;
 
 public interface RDFSourceRepository {
 	public boolean exists( URI sourceURI );
+
+	boolean is( URI resourceURI, RDFNodeEnum type );
 
 	public RDFSource get( URI sourceURI );
 

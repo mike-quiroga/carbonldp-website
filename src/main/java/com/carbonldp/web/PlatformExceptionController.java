@@ -4,6 +4,7 @@ import com.carbonldp.HTTPHeaders;
 import com.carbonldp.Vars;
 import com.carbonldp.errors.ErrorResponse;
 import com.carbonldp.errors.ErrorResponseFactory;
+import com.carbonldp.exceptions.AuthorizationException;
 import com.carbonldp.exceptions.CarbonNoStackTraceRuntimeException;
 import com.carbonldp.exceptions.InvalidResourceException;
 import com.carbonldp.http.Link;
@@ -59,6 +60,12 @@ public class PlatformExceptionController {
 		return new ResponseEntity<>( error.getBaseModel(), HttpStatus.INTERNAL_SERVER_ERROR );
 	}
 
+	@ExceptionHandler( AuthorizationException.class )
+	public ResponseEntity<Object> handleAuthorizationException( HttpServletRequest request, HttpServletResponse response, AuthorizationException exception ) {
+		ErrorResponse error = ErrorResponseFactory.create( exception.getErrorCode(), exception.getMessage(), HttpStatus.FORBIDDEN );
+		return new ResponseEntity<>( error.getBaseModel(), HttpStatus.FORBIDDEN );
+	}
+
 	@ExceptionHandler( InvalidResourceException.class )
 	public ResponseEntity<Object> handleIllegalArgumentException( HttpServletRequest request, HttpServletResponse response, InvalidResourceException exception ) {
 		ErrorResponse error = ErrorResponseFactory.create( exception.getInfractions(), HttpStatus.BAD_REQUEST );
@@ -67,7 +74,7 @@ public class PlatformExceptionController {
 	}
 
 	private void addConstrainedByLinkHeader( HttpServletResponse response, String restringedBy ) {
-		Link link = new Link(restringedBy );
+		Link link = new Link( restringedBy );
 		link.addRelationshipType( "http://www.w3.org/ns/ldp#constrainedBy" );
 		response.addHeader( HTTPHeaders.LINK, link.toString() );
 
