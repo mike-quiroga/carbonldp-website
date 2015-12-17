@@ -19,7 +19,7 @@ import java.util.List;
  */
 
 @RequestHandler
-public class AppRolesPUTAgentsHandler extends AbstractPUTRequestHandler {
+public class AppRolePUTAgentsHandler extends AbstractPUTRequestHandler {
 
 	protected AppRoleService appRoleService;
 

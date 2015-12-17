@@ -27,13 +27,13 @@ public interface ContainerService {
 	@PreAuthorize( "hasPermission(#containerURI, 'ADD_MEMBER')" )
 	public void addMember( URI containerURI, URI member );
 
-	@PreAuthorize( "hasPermission(#targetURI, 'REMOVE_MEMBER')" )
+	//@PreAuthorize( "hasPermission(#targetURI, 'REMOVE_MEMBER')" )
 	public void removeMembers( URI targetURI );
 
-	@PreAuthorize( "hasPermission(#targetURI, 'REMOVE_MEMBER')" )
+	//@PreAuthorize( "hasPermission(#targetURI, 'REMOVE_MEMBER')" )
 	public void removeMembers( URI targetUri, Set<URI> members );
 
-	@PreAuthorize( "hasPermission(#containerURI, 'REMOVE_MEMBER')" )
+	//@PreAuthorize( "hasPermission(#containerURI, 'REMOVE_MEMBER')" )
 	public void removeMember( URI containerURI, URI member );
 
 	public void deleteContainedResources( URI targetURI );
