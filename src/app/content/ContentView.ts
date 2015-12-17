@@ -50,7 +50,8 @@ export default class ContentView {
         @Component({
             selector: 'compiled-component',
             directives: [CodeMirrorComponent.Class],
-            templateUrl: 'http://127.0.0.1:8080/assets/documents/' + id + '.html'
+            //templateUrl: 'http://127.0.0.1:8080/assets/documents/' + id + '.html'
+            templateUrl: '/assets/documents/' + id
         })
         class CompiledComponent {
 
