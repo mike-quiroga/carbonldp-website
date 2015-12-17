@@ -51,6 +51,8 @@ public abstract class AbstractLDPRequestHandler extends AbstractRequestHandler {
 	protected NonRDFSourceService nonRdfSourceService;
 	protected SPARQLService sparqlService;
 
+
+
 	protected HttpServletRequest request;
 	protected HttpServletResponse response;
 	protected List<HTTPHeaderValue> appliedPreferences;

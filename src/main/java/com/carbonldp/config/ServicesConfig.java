@@ -4,17 +4,17 @@ import com.carbonldp.agents.AgentRepository;
 import com.carbonldp.agents.AgentService;
 import com.carbonldp.agents.app.AppAgentRepository;
 import com.carbonldp.agents.app.SesameAppAgentService;
+import com.carbonldp.agents.platform.PlatformAgentRepository;
 import com.carbonldp.agents.platform.SesamePlatformAgentService;
 import com.carbonldp.agents.validators.AgentValidatorRepository;
 import com.carbonldp.apps.AppRepository;
-import com.carbonldp.apps.AppRole;
 import com.carbonldp.apps.AppService;
 import com.carbonldp.apps.SesameAppService;
 import com.carbonldp.apps.roles.AppRoleRepository;
 import com.carbonldp.apps.roles.AppRoleService;
 import com.carbonldp.apps.roles.SesameAppRoleService;
-import com.carbonldp.authentication.token.TokenService;
 import com.carbonldp.authentication.token.JWTAuthenticationService;
+import com.carbonldp.authentication.token.TokenService;
 import com.carbonldp.authentication.token.app.AppTokenRepository;
 import com.carbonldp.authorization.acl.ACLRepository;
 import com.carbonldp.authorization.acl.ACLService;
@@ -42,7 +42,6 @@ public class ServicesConfig {
 
 	@Autowired
 	private PlatformAPIRepository platformAPIRepository;
-
 	@Autowired
 	private RDFSourceRepository sourceRepository;
 	@Autowired
@@ -56,8 +55,9 @@ public class ServicesConfig {
 	@Autowired
 	private RDFResourceRepository resourceRepository;
 	@Autowired
+	private PlatformAgentRepository platformAgentRepository;
+	@Autowired
 	private PermissionEvaluator permissionEvaluator;
-
 	@Autowired
 	private AppRoleRepository appRoleRepository;
 
@@ -92,8 +92,13 @@ public class ServicesConfig {
 	}
 
 	@Bean
+	public AppRoleService appRoleService() {
+		return new SesameAppRoleService( transactionWrapper(), sourceRepository, containerRepository, aclRepository, containerService(), appRoleRepository, sourceService(), platformAgentRepository );
+	}
+
+	@Bean
 	public AppService appService( AppRepository appRepository, AppRoleRepository appRoleRepository, AppAgentRepository appAgentsRepository ) {
-		return new SesameAppService( transactionWrapper(), sourceRepository, containerRepository, aclRepository, appRepository, appRoleRepository, appAgentsRepository, appTokenRepository );
+		return new SesameAppService( transactionWrapper(), sourceRepository, containerRepository, aclRepository, appRepository, appRoleRepository, appAgentsRepository, appTokenRepository, appRoleService() );
 	}
 
 	@Bean
@@ -104,11 +109,6 @@ public class ServicesConfig {
 	@Bean
 	public AgentService appAgentService( AgentRepository appAgentRepository, AgentValidatorRepository agentValidatorRepository ) {
 		return new SesameAppAgentService( transactionWrapper(), sourceRepository, containerRepository, aclRepository, appAgentRepository, agentValidatorRepository );
-	}
-
-	@Bean
-	public AppRoleService appRoleService() {
-		return new SesameAppRoleService( transactionWrapper(), sourceRepository, containerRepository, aclRepository, appRoleRepository );
 	}
 
 	//TODO add LocalFileRepository into properties

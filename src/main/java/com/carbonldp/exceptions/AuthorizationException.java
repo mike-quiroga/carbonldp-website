@@ -5,7 +5,7 @@ import com.carbonldp.models.Infraction;
 /**
  * @author NestorVenegas
  * @author JorgeEspinosa
- * @since _version_
+ * @since 0.18.0-ALPHA
  */
 public class AuthorizationException extends CarbonNoStackTraceRuntimeException {
 

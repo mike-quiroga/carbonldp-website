@@ -98,16 +98,6 @@ public class SesameAppRoleRepository extends AbstractSesameLDPRepository impleme
 	}
 
 	@Override
-	public AppRole create( AppRole appRole ) {
-		URI containerURI = getContainerURI();
-		containerRepository.createChild( containerURI, appRole );
-
-		Container agentsContainer = createAgentsContainer( appRole );
-		// TODO: Decide. Should the ACL be created here?
-		return appRole;
-	}
-
-	@Override
 	public Container createAppRolesContainer( URI rootContainerURI ) {
 		URI appRolesContainerURI = getContainerURI( rootContainerURI );
 		BasicContainer appRolesContainer = BasicContainerFactory.getInstance().create( new RDFResource( appRolesContainerURI ) );
@@ -135,7 +125,7 @@ public class SesameAppRoleRepository extends AbstractSesameLDPRepository impleme
 		this.agentsContainerSlug = slug;
 	}
 
-	private URI getContainerURI() {
+	public URI getContainerURI() {
 		AppContext appContext = AppContextHolder.getContext();
 		if ( appContext.isEmpty() ) throw new IllegalStateException( "The rootContainerURI cannot be retrieved from the platform context." );
 		URI rootContainerURI = appContext.getApplication().getRootContainerURI();
@@ -147,15 +137,7 @@ public class SesameAppRoleRepository extends AbstractSesameLDPRepository impleme
 		return URIUtil.createChildURI( rootContainerURI, containerSlug );
 	}
 
-	private Container createAgentsContainer( AppRole appRole ) {
-		URI agentsContainerURI = getAgentsContainerURI( appRole.getURI() );
-		RDFResource resource = new RDFResource( agentsContainerURI );
-		DirectContainer container = DirectContainerFactory.getInstance().create( resource, appRole.getURI(), AppRoleDescription.Property.AGENT.getURI() );
-		sourceRepository.createAccessPoint( appRole.getURI(), container );
-		return container;
-	}
-
-	private URI getAgentsContainerURI( URI appRoleURI ) {
+	public URI getAgentsContainerURI( URI appRoleURI ) {
 		return URIUtil.createChildURI( appRoleURI, agentsContainerSlug );
 	}
 

@@ -1,7 +1,7 @@
 package com.carbonldp.apps.roles.web;
 
+import com.carbonldp.ldp.web.AbstractLDPController;
 import com.carbonldp.rdf.RDFDocument;
-import com.carbonldp.web.exceptions.NotImplementedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -13,23 +13,18 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 @Controller
-public class AppRolesController {
+@RequestMapping( value = "apps/*/roles/" )
+public class AppRolesController extends AbstractLDPController {
 
-	private AppRolesDELETEHandler deleteHandler;
+	private AppRolesPOSTHandler postHandler;
 
-	@RequestMapping( method = RequestMethod.POST, value = "apps/*/roles/" )
-	public void createAppRole() {
-		// TODO: Implement it
-		throw new NotImplementedException();
-	}
-
-	@RequestMapping( method = RequestMethod.DELETE, value = "apps/*/roles/*/" )
-	public ResponseEntity<Object> deleteApp( @RequestBody( required = false ) RDFDocument requestDocument, HttpServletRequest request, HttpServletResponse response ) {
-		return deleteHandler.handleRequest( requestDocument, request, response );
+	@RequestMapping( method = RequestMethod.POST )
+	public ResponseEntity<Object> createAppRole( @RequestBody RDFDocument requestDocument, HttpServletRequest request, HttpServletResponse response ) {
+		return postHandler.handleRequest( requestDocument, request, response );
 	}
 
 	@Autowired
-	public void setDELETEHandler( AppRolesDELETEHandler deleteHandler ) {
-		this.deleteHandler = deleteHandler;
+	public void setAppRolesPOSTHandler( AppRolesPOSTHandler appRolesPostHandler ) {
+		this.postHandler = appRolesPostHandler;
 	}
 }
