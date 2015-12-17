@@ -212,7 +212,7 @@ public class SesameRDFSourceRepository extends AbstractSesameLDPRepository imple
 		Map<String, Value> bindings = new LinkedHashMap<>();
 		bindings.put( "resource", resourceURI );
 
-		Map values = new HashMap<>();
+		Map<String, String> values = new HashMap<>();
 		values.put( "values", SPARQLUtil.assignVar( "rdfType", type ) );
 		StrSubstitutor sub = new StrSubstitutor( values, "${", "}" );
 
