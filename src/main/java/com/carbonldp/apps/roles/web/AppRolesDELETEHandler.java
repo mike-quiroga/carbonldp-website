@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * @author JorgeEspinosa
- * @since _version_
+ * @since 0.20.0-ALPHA
  */
 @RequestHandler
 public class AppRolesDELETEHandler extends AbstractDELETERequestHandler {
