@@ -9,8 +9,10 @@ import com.carbonldp.rdf.RDFResourceRepository;
 import com.carbonldp.repository.DocumentGraphQueryResultHandler;
 import com.carbonldp.repository.GraphQueryResultHandler;
 import com.carbonldp.utils.RDFNodeUtil;
+import com.carbonldp.utils.SPARQLUtil;
 import com.carbonldp.utils.ValueUtil;
 import com.carbonldp.web.exceptions.NotImplementedException;
+import org.apache.commons.lang3.text.StrSubstitutor;
 import org.joda.time.DateTime;
 import org.openrdf.model.Resource;
 import org.openrdf.model.URI;
@@ -24,11 +26,12 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static com.carbonldp.Consts.NEW_LINE;
-import static com.carbonldp.Consts.TAB;
+import static com.carbonldp.Consts.*;
 
 @Transactional
 public class SesameRDFSourceRepository extends AbstractSesameLDPRepository implements RDFSourceRepository {
+
+	private static String isQuery;
 
 	public SesameRDFSourceRepository( SesameConnectionFactory connectionFactory, RDFResourceRepository resourceRepository, RDFDocumentRepository documentRepository ) {
 		super( connectionFactory, resourceRepository, documentRepository );
@@ -50,28 +53,11 @@ public class SesameRDFSourceRepository extends AbstractSesameLDPRepository imple
 		exists_query = queryBuilder.toString();
 	}
 
-	private static String isQuery;
-
 	@Override
 	public boolean exists( URI sourceURI ) {
 		Map<String, Value> bindings = new HashMap<>();
 		bindings.put( "sourceURI", sourceURI );
 		return sparqlTemplate.executeBooleanQuery( exists_query, bindings );
-	}
-
-	static {
-		isQuery = "ASK  { ?resource <" + RDF.TYPE + ">  ?type }";
-	}
-
-	@Override
-	public boolean is( URI resourceURI, RDFNodeEnum type ) {
-		for ( URI typeURI : type.getURIs() ) {
-			Map<String, Value> bindings = new LinkedHashMap<>();
-			bindings.put( "resource", resourceURI );
-			bindings.put( "type", typeURI );
-			if ( sparqlTemplate.executeBooleanQuery( isQuery, bindings ) ) return true;
-		}
-		return false;
 	}
 
 	private static final String get_query;
@@ -215,6 +201,22 @@ public class SesameRDFSourceRepository extends AbstractSesameLDPRepository imple
 				resourceRepository.add( resourceViewURI, predicate, values );
 			}
 		}
+	}
+
+	static {
+		isQuery = "ASK { ?resource " + LESS_THAN + RDF.TYPE + MORE_THAN + " ?rdfType." + "${values} }";
+	}
+
+	@Override
+	public boolean is( URI resourceURI, RDFNodeEnum type ) {
+		Map<String, Value> bindings = new LinkedHashMap<>();
+		bindings.put( "resource", resourceURI );
+
+		Map<String, String> values = new HashMap<>();
+		values.put( "values", SPARQLUtil.assignVar( "rdfType", type ) );
+		StrSubstitutor sub = new StrSubstitutor( values, "${", "}" );
+
+		return sparqlTemplate.executeBooleanQuery( sub.replace( isQuery ), bindings );
 	}
 
 	@Override

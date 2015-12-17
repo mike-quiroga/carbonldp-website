@@ -1,3 +1,5 @@
+# 0.19.0 (2015/12/11)
+* Existing agents can now be added as members of an appRole
 # 0.18.0 (2015/12/10)
 * appRoles can now be created and related among themselves
 # 0.17.0 (2015/12/10)

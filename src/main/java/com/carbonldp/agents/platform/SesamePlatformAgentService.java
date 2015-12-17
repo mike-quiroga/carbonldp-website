@@ -92,5 +92,4 @@ public class SesamePlatformAgentService extends SesameAgentsService {
 		Assert.notNull( configurationRepository );
 		this.configurationRepository = configurationRepository;
 	}
-
 }
