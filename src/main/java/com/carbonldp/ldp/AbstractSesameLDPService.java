@@ -1,5 +1,6 @@
 package com.carbonldp.ldp;
 
+import com.carbonldp.agents.AgentRepository;
 import com.carbonldp.authorization.acl.ACLRepository;
 import com.carbonldp.ldp.containers.BasicContainer;
 import com.carbonldp.ldp.containers.ContainerRepository;

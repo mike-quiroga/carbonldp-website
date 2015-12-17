@@ -1,18 +1,14 @@
 package com.carbonldp.apps.roles;
 
+import com.carbonldp.agents.AgentDescription;
+import com.carbonldp.agents.platform.PlatformAgentRepository;
 import com.carbonldp.apps.AppRole;
 import com.carbonldp.apps.AppRoleDescription;
 import com.carbonldp.apps.AppRoleFactory;
 import com.carbonldp.authorization.acl.ACLRepository;
-import com.carbonldp.exceptions.AlreadyHasAParentException;
-import com.carbonldp.exceptions.InvalidResourceException;
-import com.carbonldp.exceptions.ResourceAlreadyExistsException;
-import com.carbonldp.exceptions.ResourceDoesntExistException;
+import com.carbonldp.exceptions.*;
 import com.carbonldp.ldp.AbstractSesameLDPService;
-import com.carbonldp.ldp.containers.ContainerRepository;
-import com.carbonldp.ldp.containers.ContainerService;
-import com.carbonldp.ldp.containers.DirectContainer;
-import com.carbonldp.ldp.containers.DirectContainerFactory;
+import com.carbonldp.ldp.containers.*;
 import com.carbonldp.ldp.sources.RDFSourceRepository;
 import com.carbonldp.ldp.sources.RDFSourceService;
 import com.carbonldp.models.Infraction;
@@ -33,12 +29,33 @@ public class SesameAppRoleService extends AbstractSesameLDPService implements Ap
 	private final ContainerService containerService;
 	private final AppRoleRepository appRoleRepository;
 	private final RDFSourceService sourceService;
+	protected final PlatformAgentRepository platformAgentRepository;
 
-	public SesameAppRoleService( TransactionWrapper transactionWrapper, RDFSourceRepository sourceRepository, ContainerRepository containerRepository, ACLRepository aclRepository, ContainerService containerService, AppRoleRepository appRoleRepository, RDFSourceService sourceService ) {
+	public SesameAppRoleService( TransactionWrapper transactionWrapper, RDFSourceRepository sourceRepository, ContainerRepository containerRepository, ACLRepository aclRepository, ContainerService containerService, AppRoleRepository appRoleRepository, RDFSourceService sourceService, PlatformAgentRepository platformAgentRepository ) {
 		super( transactionWrapper, sourceRepository, containerRepository, aclRepository );
 		this.appRoleRepository = appRoleRepository;
 		this.containerService = containerService;
 		this.sourceService = sourceService;
+		this.platformAgentRepository = platformAgentRepository;
+	}
+
+	@Override
+	public void addAgents( URI appRoleAgentContainerURI, Set<URI> agents ) {
+		for ( URI agent : agents ) {
+			addAgent( appRoleAgentContainerURI, agent );
+		}
+	}
+
+	@Override
+	public void addAgent( URI appRoleAgentContainerURI, URI agent ) {
+		if ( ( ! sourceRepository.exists( appRoleAgentContainerURI ) ) ) throw new ResourceDoesntExistException();
+		if ( ! isAppAgent( agent ) && ! isPlatformAgent( agent ) ) throw new InvalidRDFTypeException( new Infraction( 0x2001, "rdf.type", AgentDescription.Resource.CLASS.getURI().stringValue() ) );
+
+		containerService.addMember( appRoleAgentContainerURI, agent );
+
+		DateTime modifiedTime = DateTime.now();
+		URI membershipResource = containerRepository.getTypedRepository( containerService.getContainerType( appRoleAgentContainerURI ) ).getMembershipResource( appRoleAgentContainerURI );
+		sourceRepository.touch( membershipResource, modifiedTime );
 	}
 
 	@Override
@@ -86,6 +103,22 @@ public class SesameAppRoleService extends AbstractSesameLDPService implements Ap
 	private void validate( AppRole appRole ) {
 		List<Infraction> infractions = AppRoleFactory.getInstance().validate( appRole );
 		if ( ! infractions.isEmpty() ) throw new InvalidResourceException( infractions );
+	}
+
+	private boolean isAppAgent( URI agent ) {
+		return isAgent( agent );
+	}
+
+	private boolean isAgent( URI agent ) {
+		if ( sourceRepository.exists( agent ) ) {
+			if ( sourceRepository.is( agent, AgentDescription.Resource.CLASS ) ) return true;
+			else throw new InvalidRDFTypeException( new Infraction( 0x2001, "rdf.type", AgentDescription.Resource.CLASS.getURI().stringValue() ) );
+		}
+		return false;
+	}
+
+	private boolean isPlatformAgent( URI agent ) {
+		return platformAgentRepository.exists( agent );
 	}
 }
 

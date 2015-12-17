@@ -4,6 +4,7 @@ import com.carbonldp.agents.AgentRepository;
 import com.carbonldp.agents.AgentService;
 import com.carbonldp.agents.app.AppAgentRepository;
 import com.carbonldp.agents.app.SesameAppAgentService;
+import com.carbonldp.agents.platform.PlatformAgentRepository;
 import com.carbonldp.agents.platform.SesamePlatformAgentService;
 import com.carbonldp.agents.validators.AgentValidatorRepository;
 import com.carbonldp.apps.AppRepository;
@@ -54,6 +55,8 @@ public class ServicesConfig {
 	@Autowired
 	private RDFResourceRepository resourceRepository;
 	@Autowired
+	private PlatformAgentRepository platformAgentRepository;
+	@Autowired
 	private PermissionEvaluator permissionEvaluator;
 	@Autowired
 	private AppRoleRepository appRoleRepository;
@@ -90,7 +93,7 @@ public class ServicesConfig {
 
 	@Bean
 	public AppRoleService appRoleService() {
-		return new SesameAppRoleService( transactionWrapper(), sourceRepository, containerRepository, aclRepository, containerService(), appRoleRepository, sourceService() );
+		return new SesameAppRoleService( transactionWrapper(), sourceRepository, containerRepository, aclRepository, containerService(), appRoleRepository, sourceService(), platformAgentRepository );
 	}
 
 	@Bean

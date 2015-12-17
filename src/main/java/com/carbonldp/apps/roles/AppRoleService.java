@@ -12,9 +12,13 @@ import java.util.Set;
  */
 public interface AppRoleService {
 
+	public void addAgents( URI targetUri, Set<URI> agents );
+
 	public void create( AppRole appRole );
 
 	public void addChildren( URI parentRole, Set<URI> childs );
+
+	public void addAgent( URI appRole, URI agent );
 
 	public void addChild( URI parentRole, URI child );
 }

@@ -12,8 +12,6 @@ import java.util.Set;
 public interface RDFSourceRepository {
 	public boolean exists( URI sourceURI );
 
-	boolean is( URI resourceURI, RDFNodeEnum type );
-
 	public RDFSource get( URI sourceURI );
 
 	public Set<RDFSource> get( Set<URI> sourceURIs );
@@ -41,4 +39,6 @@ public interface RDFSourceRepository {
 	public void replace( RDFSource source );
 
 	public void set( URI sourceURI, Collection<RDFResource> resourceViews );
+
+	boolean is( URI resourceURI, RDFNodeEnum type );
 }
