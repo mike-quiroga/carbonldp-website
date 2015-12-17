@@ -95,7 +95,7 @@ public abstract class AbstractRDFPostRequestHandler<E extends BasicContainer> ex
 	private ResponseEntity<Object> handlePOSTToRDFSource( URI targetURI, RDFResource requestDocumentResource ) {
 		AccessPoint requestAccessPoint = getRequestAccessPoint( requestDocumentResource );
 
-		requestDocumentResource = getDocumentResourceWithFinalURI( requestAccessPoint, targetURI );
+		requestDocumentResource = getDocumentResourceWithFinalURI( requestAccessPoint, targetURI.stringValue() );
 		if ( ! requestDocumentResource.equals( requestAccessPoint.getURI() ) ) {
 			requestAccessPoint = AccessPointFactory.getInstance().getAccessPoint( requestDocumentResource );
 		}
@@ -123,7 +123,7 @@ public abstract class AbstractRDFPostRequestHandler<E extends BasicContainer> ex
 		validateSystemManagedProperties( requestDocumentResource );
 		BasicContainer requestBasicContainer = getRequestBasicContainer( requestDocumentResource );
 
-		requestDocumentResource = getDocumentResourceWithFinalURI( requestBasicContainer, targetURI );
+		requestDocumentResource = getDocumentResourceWithFinalURI( requestBasicContainer, targetURI.stringValue() );
 		if ( ! requestDocumentResource.equals( requestBasicContainer.getURI() ) ) requestBasicContainer = new BasicContainer( requestDocumentResource );
 
 		E documentResourceView = getDocumentResourceView( requestBasicContainer );
@@ -178,12 +178,12 @@ public abstract class AbstractRDFPostRequestHandler<E extends BasicContainer> ex
 		return new ResponseEntity<>( new EmptyResponse(), HttpStatus.CREATED );
 	}
 
-	protected RDFResource getDocumentResourceWithFinalURI( RDFResource documentResource, URI parentURI ) {
-		if ( documentResource.getURI().equals( parentURI ) ) {
-			URI forgedURI = forgeUniqueURI( documentResource, parentURI.stringValue(), request );
+	protected RDFResource getDocumentResourceWithFinalURI( RDFResource documentResource, String parentURI ) {
+		if ( hasGenericRequestURI( documentResource ) ) {
+			URI forgedURI = forgeUniqueURI( documentResource, parentURI, request );
 			documentResource = renameResource( documentResource, forgedURI );
 		} else {
-			validateRequestResourceRelativeness( documentResource, parentURI.stringValue() );
+			validateRequestResourceRelativeness( documentResource, parentURI );
 		}
 		return documentResource;
 	}
@@ -209,7 +209,7 @@ public abstract class AbstractRDFPostRequestHandler<E extends BasicContainer> ex
 	}
 
 	private String forgeSlug( RDFResource documentResource, String parentURI, HttpServletRequest request ) {
-		String uriSlug = getGenericRequestSlug( documentResource.getURI().stringValue(), parentURI );
+		String uriSlug = configurationRepository.getGenericRequestSlug( documentResource.getURI().stringValue() );
 		String slug = uriSlug != null ? uriSlug : request.getHeader( HTTPHeaders.SLUG );
 
 		if ( slug != null ) {
@@ -225,12 +225,6 @@ public abstract class AbstractRDFPostRequestHandler<E extends BasicContainer> ex
 		if ( configurationRepository.enforceEndingSlash() && ! slug.endsWith( SLASH ) ) slug = slug.concat( SLASH );
 
 		return slug;
-	}
-
-	protected String getGenericRequestSlug( String documentURI, String parentURI ) {
-		if ( documentURI.equals( parentURI ) ) return null;
-		if ( ! documentURI.contains( parentURI ) ) throw new InvalidResourceURIException();
-		return documentURI.substring( parentURI.length() );
 	}
 
 	protected void validateRequestResourceRelativeness( RDFResource requestResource, String targetURI ) {
@@ -260,8 +254,7 @@ public abstract class AbstractRDFPostRequestHandler<E extends BasicContainer> ex
 	}
 
 	protected RDFResource renameResource( RDFResource requestResource, URI forgedURI ) {
-		AbstractModel renamedModel = ModelUtil.replaceSubject( requestResource.getBaseModel(), requestResource.getURI(), forgedURI );
-		renamedModel = ModelUtil.replaceContext( renamedModel, requestResource.getURI(), forgedURI );
+		AbstractModel renamedModel = ModelUtil.replaceBase( requestResource.getBaseModel(), requestResource.getURI().stringValue(), forgedURI.stringValue() );
 		return new RDFResource( renamedModel, forgedURI );
 	}
 
