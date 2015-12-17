@@ -12,6 +12,7 @@ import com.carbonldp.utils.RDFNodeUtil;
 import com.carbonldp.utils.SPARQLUtil;
 import com.carbonldp.utils.ValueUtil;
 import com.carbonldp.web.exceptions.NotImplementedException;
+import org.apache.commons.lang3.text.StrSubstitutor;
 import org.joda.time.DateTime;
 import org.openrdf.model.Resource;
 import org.openrdf.model.URI;
@@ -31,7 +32,6 @@ import static com.carbonldp.Consts.*;
 public class SesameRDFSourceRepository extends AbstractSesameLDPRepository implements RDFSourceRepository {
 
 	private static String isQuery;
-	private static String isQueryClosure;
 
 	public SesameRDFSourceRepository( SesameConnectionFactory connectionFactory, RDFResourceRepository resourceRepository, RDFDocumentRepository documentRepository ) {
 		super( connectionFactory, resourceRepository, documentRepository );
@@ -204,19 +204,19 @@ public class SesameRDFSourceRepository extends AbstractSesameLDPRepository imple
 	}
 
 	static {
-		isQuery = "ASK {" + NEW_LINE +
-			" ?resource " + LESS_THAN + RDF.TYPE + MORE_THAN + " ?rdfType.";
-	}
-
-	static {
-		isQueryClosure = " }";
+		isQuery = "ASK { ?resource " + LESS_THAN + RDF.TYPE + MORE_THAN + " ?rdfType." + "${values} }";
 	}
 
 	@Override
 	public boolean is( URI resourceURI, RDFNodeEnum type ) {
 		Map<String, Value> bindings = new LinkedHashMap<>();
 		bindings.put( "resource", resourceURI );
-		return sparqlTemplate.executeBooleanQuery( isQuery + SPARQLUtil.assignVar( "rdfType", type ) + isQueryClosure, bindings );
+
+		Map values = new HashMap<>();
+		values.put( "values", SPARQLUtil.assignVar( "rdfType", type ) );
+		StrSubstitutor sub = new StrSubstitutor( values, "${", "}" );
+
+		return sparqlTemplate.executeBooleanQuery( sub.replace( isQuery ), bindings );
 	}
 
 	@Override
