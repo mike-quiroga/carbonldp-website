@@ -1,15 +1,16 @@
-h1 a {
-	color: orange;
-}
-
-h1 a:hover {
-	color: darkorange;
-}
-
-h1 a:visited {
-	color: orangered;
-}
-
-a:hover {
-	text-decoration: underline;
+blog-post-thumbnail {
+	h1 {
+		a {
+			color: orange;
+		}
+		a:hover {
+			color: darkorange;
+		}
+		a:visited {
+			color: orangered;
+		}
+	}
+	a:hover {
+		text-decoration: underline;
+	}
 }

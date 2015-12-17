@@ -12,7 +12,7 @@ import template from './template.html!';
 import './style.css!';
 
 @Component( {
-	selector: 'blog-test',
+	selector: 'blog',
 	template: template,
 	directives: [ CORE_DIRECTIVES, ROUTER_DIRECTIVES, BlogPostThumbnailView, CodeMirrorComponent.Class ],
 	providers: [ ContentService ]

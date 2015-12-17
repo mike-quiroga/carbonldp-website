@@ -10,7 +10,7 @@ import template from './template.html!';
 import './style.css!';
 
 @Component( {
-	selector: 'blog-post-summary',
+	selector: 'blog-post-thumbnail',
 	template: template,
 	directives: [ CORE_DIRECTIVES, ROUTER_DIRECTIVES, CodeMirrorComponent.Class ]
 } )
