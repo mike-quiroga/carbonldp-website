@@ -21,11 +21,11 @@ public interface AppRoleRepository {
 
 	public Container createAppRolesContainer( URI rootContainerURI );
 
-	public void delete( URI appRoleURI );
-
 	public Set<URI> getParentsURI( URI appRoleURI );
 
 	public URI getContainerURI();
 
 	public URI getAgentsContainerURI( URI appRoleURI );
+
+	public void delete( URI appRoleURI );
 }

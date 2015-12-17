@@ -14,8 +14,6 @@ public interface AppRoleService {
 
 	public boolean exists( URI appURI );
 
-	public void delete( URI appURI );
-
 	public void addAgents( URI targetUri, Set<URI> agents );
 
 	public void create( AppRole appRole );
@@ -25,5 +23,7 @@ public interface AppRoleService {
 	public void addAgent( URI appRole, URI agent );
 
 	public void addChild( URI parentRole, URI child );
+
+	public void delete( URI appURI );
 
 }

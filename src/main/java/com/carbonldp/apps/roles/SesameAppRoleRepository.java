@@ -59,6 +59,16 @@ public class SesameAppRoleRepository extends AbstractSesameLDPRepository impleme
 		getByAgent_query = queryBuilder.toString();
 	}
 
+	public void setAppRoleContainerSlug( String slug ) {
+		Assert.notNull( slug );
+		this.containerSlug = slug;
+	}
+
+	public void setAgentsContainerSlug( String slug ) {
+		Assert.notNull( slug );
+		this.agentsContainerSlug = slug;
+	}
+
 	@Override
 	public AppRole get( URI appRoleURI ) {
 		Assert.notNull( appRoleURI );
@@ -110,21 +120,6 @@ public class SesameAppRoleRepository extends AbstractSesameLDPRepository impleme
 		return sourceRepository.exists( appRoleURI );
 	}
 
-	@Override
-	public void delete( URI appRoleURI ) {
-		sourceRepository.delete( appRoleURI );
-	}
-
-	public void setAppRoleContainerSlug( String slug ) {
-		Assert.notNull( slug );
-		this.containerSlug = slug;
-	}
-
-	public void setAgentsContainerSlug( String slug ) {
-		Assert.notNull( slug );
-		this.agentsContainerSlug = slug;
-	}
-
 	public URI getContainerURI() {
 		AppContext appContext = AppContextHolder.getContext();
 		if ( appContext.isEmpty() ) throw new IllegalStateException( "The rootContainerURI cannot be retrieved from the platform context." );
@@ -163,6 +158,11 @@ public class SesameAppRoleRepository extends AbstractSesameLDPRepository impleme
 
 			return parents;
 		} );
+	}
+
+	@Override
+	public void delete( URI appRoleURI ) {
+		sourceRepository.delete( appRoleURI );
 	}
 
 }
