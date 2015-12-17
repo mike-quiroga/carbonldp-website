@@ -7,6 +7,7 @@ import HomeView from 'app/home/HomeView';
 import BlogView from 'app/blog/BlogView';
 import LoginView from 'app/login/LoginView';
 import SPARQLClientComponent from 'app/sparql-client/SPARQLClientComponent';
+import CarbonUI from 'app/carbon-ui/CarbonUI';
 
 import HeaderComponent from 'app/header/HeaderComponent';
 import FooterComponent from 'app/footer/FooterComponent';
@@ -23,7 +24,8 @@ import './style.css!';
 	{path: '/Home', as: 'Home', component: HomeView},
 	{path: '/Blog', as: 'Blog', component: BlogView},
 	{path: '/Login', as: 'Login', component: LoginView},
-	{path: '/sparql-client', as: 'SPARQLClient', component: SPARQLClientComponent}
+	{path: '/sparql-client', as: 'SPARQLClient', component: SPARQLClientComponent},
+	{path: '/carbon-ui', as: 'CarbonUI', component: CarbonUI}
 ] )
 export default class App {
 
