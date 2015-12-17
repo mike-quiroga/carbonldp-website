@@ -35,7 +35,7 @@ export class Mode {
 
 @Component( {
 	selector: 'code-mirror',
-	template: ''
+	template: '<ng-content></ng-content>'
 } )
 export class Class {
 	static parameters = [ [ ElementRef ] ];
@@ -54,8 +54,31 @@ export class Class {
 		this.element = element;
 	}
 
+	onDestroy() {
+		this.element.nativeElement.innerHTML = this.codeMirror.getValue();
+	}
+
+	private getValue():string {
+		let pres:any = this.element.nativeElement.querySelector( "pre" );
+		if ( pres ) {
+			if ( pres.length > 0 ) {
+				// use everything inside the first pre
+				return pres[ 0 ].innerHTML;
+			} else {
+				// use everything inside the pre
+				return pres.innerHTML;
+			}
+		} else {
+			// no pre's, then use the everything inside code-mirror tag
+			return this.element.nativeElement.innerHTML;
+		}
+		return "";
+	}
+
 	afterViewInit():void {
-		// Clear of existing content inside code mirror
+		if ( ! this.value ) {
+			this.value = this.getValue();
+		}
 		this.element.nativeElement.innerHTML = "";
 		this.codeMirror = CodeMirror( this.element.nativeElement, {
 			lineNumbers: true,
