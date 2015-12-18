@@ -37,7 +37,7 @@ export default class ContentView {
         this.routeParams = routeParams;
         this.dynamicComponentLoader = dynamicComponentLoader;
         this.elementRef = elementRef;
-        //this.compiledComponent = CompiledComponent;
+        this.compiledComponent = CompiledComponent;
 
         let id = this.routeParams.get('id');
 
@@ -47,17 +47,15 @@ export default class ContentView {
 
         // START: OPTION A -------------------------------------------------------------------------
         // USE THIS TO LOAD A TEMPLATE DIRECTLY FROM TEMPLATE URL
-
         @Component({
             selector: 'compiled-component',
             directives: [CodeMirrorComponent.Class],
-            templateUrl: 'http://127.0.0.1:8080/assets/documents/' + id
+            //templateUrl: 'http://127.0.0.1:8080/assets/documents/' + id + '.html'
+            templateUrl: '/assets/documents/' + id
         })
         class CompiledComponent {
 
             static parameters = [ [ElementRef]];
-
-            host:string = "example.carbonldp.com";
 
             elementRef:ElementRef;
             $element;
@@ -69,32 +67,15 @@ export default class ContentView {
 
             afterViewInit():void {
                 this.createAccordions();
-                this.evalJavaScript();
             }
 
-            createAccordions():void {
+            public createAccordions():void {
                 this.$element.find( '.ui.accordion' ).accordion();
-            }
-
-            /*
-            Allows for the use of inline JavaScript in content, hidden DIV tags with
-            CSS class="script".
-
-            <div style="display:none" class="script">
-                alert('SNIPPET 1');
-            </div>
-             */
-            evalJavaScript():void {
-                this.$element.find('.script').each(function (index, $elm) {
-                    eval($elm.innerText);
-                });
             }
 
         };
 
         dynamicComponentLoader.loadIntoLocation(CompiledComponent, elementRef, 'container');
-
-
 
         // END: OPTION A ---------------------------------------------------------------------------
 
@@ -120,7 +101,6 @@ export default class ContentView {
             }
         );
         */
-
 
         // END: OPTION B --------------------------------------------------------------------------
 

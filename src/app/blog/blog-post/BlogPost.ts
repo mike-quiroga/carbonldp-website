@@ -1,9 +1,11 @@
 export class BlogPost {
+	id:number;
 	title:string;
-	content:string;
-	creationDate:string;
-	author:string;
 	filename:string;
+	creationDate:Date;
+	author:string;
+	excerpt:string;
+	content:string;
 }
 
 export default BlogPost;
