@@ -14,7 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  * @since 0.18.0-ALPHA
  */
 @RequestHandler
-public class AppRolePOSTHandler extends AbstractRDFPostRequestHandler<AppRole> {
+public class AppRolesPOSTHandler extends AbstractRDFPostRequestHandler<AppRole> {
 
 	private AppRoleService appRoleService;
 
