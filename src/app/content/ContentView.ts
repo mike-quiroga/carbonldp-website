@@ -41,7 +41,6 @@ export default class ContentView {
 
         let id = this.routeParams.get('id');
 
-
         // console.log("-- ContentView -> Got id: " + id);
 
 
@@ -59,6 +58,8 @@ export default class ContentView {
 
             elementRef:ElementRef;
             $element;
+
+            host:string = "dev.carbonldp.com";
 
             constructor(elementRef:ElementRef) {
                 this.elementRef = elementRef;
