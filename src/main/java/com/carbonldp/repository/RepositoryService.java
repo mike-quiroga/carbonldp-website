@@ -12,6 +12,5 @@ public interface RepositoryService {
 
 	public WriteTransactionTemplate getWriteTransactionTemplate( String repositoryID );
 
-	//@PreAuthorize( "hasPermission(#repositoryURI, 'DELETE')" )
 	public void deleteRepository( String repositoryID );
 }
