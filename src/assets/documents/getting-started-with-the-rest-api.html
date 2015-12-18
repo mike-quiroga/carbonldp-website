@@ -29,6 +29,8 @@
     JavaScript SDK, all functions of the platform are available through the REST API in a way that conforms to the W3C
     <a href="http://www.w3.org/TR/ldp/">Linked Data Platform 1.0</a> specification.</p>
 
+<h3>About the application</h3>
+
 <p>A taxonomy is a controlled vocabulary of terms, organized in a hierarchy, that can be used for classifying and
     organizing information. Taxonomies are commonly used in web applications. Their terms are used for tagging content
     and as facets to help users filter and find. In this guide, we'll use the REST API to create a simple, but useful
@@ -36,6 +38,8 @@
     fundamental Linked Data Platform concepts. You'll also have a useful application that you can use to create and
     manage a single 'canonical' source of terms such as a corporate enterprise taxonomy. Other applications will be
     able to consume and use the service using the very same API.</p>
+
+<p>In this guide, we'll use the following steps to complete the application:</p>
 
 <ol>
     <li>Create an account on carbonldp.com</li>
@@ -148,10 +152,12 @@
     </div>
     <div class="content">
         <p>The <code>Prefer</code> header uses a link relation to specify the <em>interaction model</em> of the target
-            resource, which is the resource we're posting to - the /platform/agents/ container. By using this header,
+            resource, which is the resource we're posting to - the <code>/platform/agents/</code> container. By using
+            this header,
             we're specifying the desired behavior of the resource. Because we're adding a member resource to the target
-            container, we need it to behave like a container as opposed to an RDFSource or a NonRDFSource. In all,
-            Carbon supports the following interaction model values for the Prefer header:</p>
+            container, we need it to behave like a container as opposed to an <code>RDFSource</code> or a <code>NonRDFSource</code>.
+            In all,
+            Carbon supports the following interaction model values for the <code>Prefer</code> header:</p>
         <ul>
             <li>
                 <code>http://www.w3.org/ns/ldp#Container; rel=interaction-model</code>
@@ -169,7 +175,8 @@
         Slug
     </div>
     <div class="content">
-        <p>The <code>Slug</code> header is intended to give the server a hint as to how to mint a new URI for the resource being
+        <p>The <code>Slug</code> header is intended to give the server a hint as to how to mint a new URI for the
+            resource being
             created. If a slug is not provided, Carbon will generate a random number for the URI of the agent. In this
             case, however, we're specifying a preference to use john-doe. Therefore, if it is available for use, the
             server will mint the following URI:</p>
@@ -181,9 +188,12 @@
     </div>
     <div class="content">
 
-        <p>The body of the request is an RDF graph of triples written in Turtle, which we told the server we'd be using in the Content-Type header.</p>
-        <p>Using Turtle's @prefix directive we declare short prefix names so that we don't have to repeat long URIs in the triples that follow.</p>
-        <p>Following is a brief description of each of the required triples that come after the namespace declarations:</p>
+        <p>The body of the request is an RDF graph of triples written in Turtle, which we told the server we'd be using
+            in the Content-Type header.</p>
+        <p>Using Turtle's @prefix directive we declare short prefix names so that we don't have to repeat long URIs in
+            the triples that follow.</p>
+        <p>Following is a brief description of each of the required triples that come after the namespace
+            declarations:</p>
         <p> </p>
         <table class="ui celled table">
             <thead>
@@ -208,10 +218,14 @@
             <tr>
                 <td colspan="3">
                     <p>
-                        The subject specifies an empty value relative to the base URI. In turtle, URIs are written enclosed in '&lt;' and '&gt;' and may be absolute RDF URI References or relative to the current base URI. <br/>The token 'a' in the predicate position always specifies the RDF type of the resource, which is a short way of writing:
+                        The subject specifies an empty value relative to the base URI. In turtle, URIs are written
+                        enclosed in '&lt;' and '&gt;' and may be absolute RDF URI References or relative to the current
+                        base URI. <br/>The token 'a' in the predicate position always specifies the RDF type of the
+                        resource, which is a short way of writing:
                     </p>
                     <code>http://www.w3.org/1999/02/22-rdf-syntax-ns#type</code>
-                    <p>In the object position, we specify the RDF type as being an Agent from the Carbon LDP security vocabulary.</p>
+                    <p>In the object position, we specify the RDF type as being an Agent from the Carbon LDP security
+                        vocabulary.</p>
                 </td>
             </tr>
             <tr>
@@ -226,7 +240,8 @@
                 </td>
             </tr>
             <tr>
-                <td colspan="3">The name is a literal string that should specify a common name for the user; we recommend using the first and last name.
+                <td colspan="3">The name is a literal string that should specify a common name for the user; we
+                    recommend using the first and last name.
                 </td>
             </tr>
             <tr>
@@ -241,7 +256,8 @@
                 </td>
             </tr>
             <tr>
-                <td colspan="3">The email is a literal string that should be a valid contact email address for the user. This will also serve as the login user ID.
+                <td colspan="3">The email is a literal string that should be a valid contact email address for the user.
+                    This will also serve as the login user ID.
                 </td>
             </tr>
             <tr>
@@ -296,9 +312,10 @@
     </tbody>
 </table>
 
-<p><br/>Examine the new Agent resource</p>
+<h2>Examine the new Agent resource</h2>
 
-<p>Now, let's take a look at the newly created resource by issuing a GET request to the URI that was minted for the
+<p>Now, let's take a look at the newly created resource by issuing a <code>GET</code> request to the URI that was minted
+    for the
     resource. </p>
 
 <p>Create the following HTTP request to get the platform Agent.</p>
@@ -436,7 +453,8 @@
 <h1>Create an application</h1>
 
 <p>With your newly created platform account, you can now create an Application.</p>
-<p>To create an application, issue the following request. Be sure to use your own unique name for the Slug or omit the Slug. You should also provide a unique name for the application in the body of the request.</p>
+<p>To create an application, issue the following request. Be sure to use your own unique name for the Slug or omit the
+    Slug. You should also provide a unique name for the application in the body of the request.</p>
 
 <p>
 <div class="ui blue horizontal label">GET</div>
@@ -474,7 +492,8 @@
     </tr>
     </tbody>
 </table>
-<p>Body (required)</p>
+
+<p><strong>Body (required)</strong></p>
 
 
 <textarea #example3 class="hidden">
@@ -579,7 +598,6 @@ a
 </code-mirror>
 
 
-
 <h1>Model the application (vocabulary, resources, containers)</h1>
 
 <p>Now that we have an application root created, we can begin to create RDF documents in the application. We could start
@@ -635,18 +653,15 @@ a
     vocabulary." Sounds right up our alley, doesn't it? When we investigate SKOS, we not only see that it will suit
     the needs of our app, but that it provides a lot of clues about how we should model everything.
 </p>
-<h2>
-    Mini SKOS Simple Knowledge Organization System primer\
-</h2>
+
+<h2>Mini SKOS Simple Knowledge Organization System primer</h2>
+
 <p><strong>skos:Concept</strong></p>
 
 <p>SKOS introduces the class <code>skos:Concept</code>, which allows implementors to assert that a given resource is a
     concept. This is done in two steps:</p>
 <ol>
-    <li>by creating (or reusing) a Uniform Resource Identifier (URI [<cite> <a
-            href="http://www.w3.org/TR/2009/NOTE-skos-primer-20090818/#URI">URI</a> </cite>]) to uniquely identify the
-        concept.
-    </li>
+    <li>by creating (or reusing) a Uniform Resource Identifier (URI) to uniquely identify the concept.</li>
     <li>by asserting in RDF, using the property <code>rdf:type</code>, that the resource identified by this URI is of
         type <code>skos:Concept</code>.
     </li>
@@ -656,9 +671,9 @@ a
     resources that represent taxonomy terms, we simply need to assert that it's an rdf:type skos:Concept. For
     example:</p>
 
-<pre>&lt;Carbon-document-URI&gt; a skos:Concept.</pre>
+<p><code>&lt;Carbon-document-URI&gt; a skos:Concept.</code></p>
 
-<p>(Remember, 'a' in turtle is shorthand for rdf:type).</p>
+<p>(Remember, '<code>a</code>' in turtle is shorthand for <code>rdf:type</code>).</p>
 
 <p>
     <strong>skos:prefLabel</strong>
@@ -667,11 +682,28 @@ a
 <p>A SKOS Concept can have a preferred lexical label, which will be useful in representing it in a user interface. We'll
     be able to define a label for a concept as shown below.</p>
 
-<pre>INSERT</pre>
+<textarea #example55 class="hidden">
+<carbon-document-uri> rdf:type skos:Concept;
+    skos:prefLabel "animals".
+</textarea>
+
+<code-mirror class="ui text left aligned basic segment"
+             [mode]="'turtle'"
+             [read-only]="'nocursor'" [value]="example55.value">
+</code-mirror>
 
 <p>We can also support locale-specific labels.</p>
 
-<pre>INSERT</pre>
+<textarea #example56 class="hidden">
+<carbon-document-uri> rdf:type skos:Concept;
+    skos:prefLabel "animals"@en;
+    skos:prefLabel "animaux"@fr.
+</textarea>
+
+<code-mirror class="ui text left aligned basic segment"
+             [mode]="'turtle'"
+             [read-only]="'nocursor'" [value]="example56.value">
+</code-mirror>
 
 <p>There is also a skos:altLabel and a skos:hiddenLabel, which can be used in the future, but we'll keep it simple for
     now and just stick to the skos:prefLabel.</p>
@@ -686,7 +718,17 @@ a
     is narrower in meaning (i.e. more specific) than another. For example:
 </p>
 
-<pre>INSERT</pre>
+
+<textarea #example57 class="hidden">
+<carbon-document-uri> rdf:type skos:Concept;
+    skos:prefLabel "animals"@en;
+    skos:narrower ex:mammals.
+</textarea>
+
+<code-mirror class="ui text left aligned basic segment"
+             [mode]="'turtle'"
+             [read-only]="'nocursor'" [value]="example57.value">
+</code-mirror>
 
 <p>
     In SKOS, there is also the notion of a skos:related link, which is used to assert an associative relationship. But
@@ -721,8 +763,23 @@ a
 </p>
 <p>Here's an example of what an instance of a ConceptScheme with four top concepts might look like:</p>
 
-<pre>INSERT
-</pre>
+<textarea #example58 class="hidden">
+<carbon-document-uri> rdf:type skos:ConceptScheme;
+    dct:title "Content Topics";
+    skos:hasTopConcept
+    <carbon-document-uri>;
+        skos:hasTopConcept
+        <carbon-document-uri>;
+            skos:hasTopConcept
+            <carbon-document-uri>;
+                skos:hasTopConcept
+                <carbon-document-uri>;
+</textarea>
+
+<code-mirror class="ui text left aligned basic segment"
+             [mode]="'turtle'"
+             [read-only]="'nocursor'" [value]="example58.value">
+</code-mirror>
 
 <p>
     We now have all that we need to for the classes and properties required for our app. Relationships (links)
@@ -733,31 +790,35 @@ a
     Before we move on, it's worth mentioning that prefixes we've used come from the following namespaces.
 </p>
 
-<p>Namespaces used</p>
-<pre>INSERT</pre>
+<p><b>Namespaces used</b></p>
 
+<textarea #example59 class="hidden">
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+</textarea>
+
+<code-mirror class="ui text left aligned basic segment"
+             [mode]="'turtle'"
+             [read-only]="'nocursor'" [value]="example59.value">
+</code-mirror>
 
 <p>There's more to SKOS than what we've covered here, so if you're interested in learning more, the following are good
     reference resources:</p>
 <ul>
-    <li>
-        <a href="http://www.w3.org/2004/02/skos/intro">Introduction to SKOS</a>
-    </li>
-    <li>
-        <a href="http://www.w3.org/TR/2009/NOTE-skos-primer-20090818/">SKOS Simple Knowledge Organization System
-            Primer</a>
-    </li>
-    <li>
-        <p>
-            <a href="http://www.w3.org/TR/skos-reference/">SKOS Simple Knowledge Organization System Reference</a>
-        </p>
-    </li>
+    <li><a href="http://www.w3.org/2004/02/skos/intro">Introduction to SKOS</a></li>
+    <li><a href="http://www.w3.org/TR/2009/NOTE-skos-primer-20090818/">SKOS Simple Knowledge Organization System
+        Primer</a></li>
+    <li><a href="http://www.w3.org/TR/skos-reference/">SKOS Simple Knowledge Organization System Reference</a></li>
 </ul>
+
 <h2>Consider the role of LDP containers</h2>
+
 <p>It may seem intuitive to model the container behavior for our application in such that each concept is a container to
     its narrower concepts. Or, in other words, so that narrower concepts are represented as membership triples on their
     broader concepts.</p>
+
 <p>Let's imagine the following simple taxonomy, for example:</p>
+
 <ul>
     <li>Topics (ConceptScheme)
         <ul>
@@ -803,14 +864,19 @@ a
     mind that the fully qualified URI for each concept will also include the host and the base URI to the app. In this
     model, just one level deeper from the top concept could produce the following URI:
 </p>
-<pre>http://dev.carbonlp.com/platform/apps/taxonomy-hub/topics/development/javascript</pre>
+
+<p><code>http://dev.carbonlp.com/platform/apps/taxonomy-hub/topics/development/javascript</code></p>
+
 <p>You can see how the addition of just a few more levels could lengthen the URI significantly.</p>
+
 <p>Another possible problem is that it creates a tight coupling between the URI for each concept and the location of the
     concept in a hierarchy. When you move categories around, you'd have to revise the URIs for several other concepts to
     keep the implication in tact. Furthermore, if you ever wanted to share concepts between branches of a taxonomy, or
     across multiple taxonomies, the implication of the URI would only be logical in one of the cases. </p>
+
 <p>Finally, there is a more elegant approach for leveraging container behavior that can reduce the work required to
-    manage the taxonomies. </p>
+    manage the taxonomies.</p>
+
 <ul>
     <li>
         taxonomy-hub/schemes/
@@ -834,16 +900,21 @@ a
         </ul>
     </li>
 </ul>
-<p>We've flattened things out a bit so that all concepts are direct children of the topics/ container. We've also added
+<p>We've flattened things out a bit so that all concepts are direct children of the <code>topics/</code> container.
+    We've also added
     a new container called top-concepts to help us identify and manage which, of all the concepts, are those that should
     be root concepts in the scheme. </p>
-<p>As we work with this alternative approach, you'll begin to see why it's an improvement.</p>
-<h1>Create application resources</h1>
-<h2>Create the schemes/ container</h2>
-<p>Let's start by creating the schemes/ container. Since the application will always have only one schemes/ container,
-    this will be a one-time affair.</p>
-<p>Create the following request.</p>
 
+<p>As we work with this alternative approach, you'll begin to see why it's an improvement.</p>
+
+<h1>Create application resources</h1>
+
+<h2>Create the schemes/ container</h2>
+
+<p>Let's start by creating the <code>schemes/</code> container. Since the application will always have only one <code>schemes/</code>
+    container, this will be a one-time affair.</p>
+
+<p>Create the following request.</p>
 
 <p>
 <div class="ui blue horizontal label">POST</div>
@@ -885,17 +956,29 @@ a
     </tbody>
 </table>
 
-<p>Body (required)</p>
+<p><strong>Body (required)</strong></p>
 
-<pre>INSERT</pre>
+<textarea #example60 class="hidden">
+@prefix ldp:            <http://www.w3.org/ns/ldp#>.
+
+<>
+    a   ldp:BasicContainer.
+</textarea>
+
+<code-mirror class="ui text left aligned basic segment"
+             [mode]="'turtle'"
+             [read-only]="'nocursor'" [value]="example60.value">
+</code-mirror>
 
 
 <p>We're specifying a Basic Container so that membership will automatically be recorded on the container when new
     schemes are posted, which will provide an easy way to list available schemes.</p>
 <p>Issue the request. A successful response should provide the HTTP status code 201 Created.</p>
+
 <h2>Create example Concept Scheme</h2>
 
-<p>Now that we have the schemes/ container, we can create one or more Concept Scheme containers within it. Since this is
+<p>Now that we have the <code>schemes/</code> container, we can create one or more Concept Scheme containers within it.
+    Since this is
     an action that would likely be repeated by end-users, it would make sense to incorporate the capability into a user
     interface. For now, however, let's be clear on what is required for the underlying HTTP request.</p>
 
@@ -940,27 +1023,48 @@ a
     </tbody>
 </table>
 
-<p>Body (required)</p>
-<pre>
-INSERT
-</pre>
+<p><strong>Body (required)</strong></p>
+
+<textarea #example61 class="hidden">
+@prefix ldp:            <http://www.w3.org/ns/ldp#> .
+@prefix skos:           <http://www.w3.org/2004/02/skos/core#> .
+@prefix dct:            <http://purl.org/dc/terms/> .
+<>
+    a ldp:BasicContainer, skos:ConceptScheme;
+    ldp:memberOfRelation skos:inScheme;
+    dct:title "Topics".
+</textarea>
+
+<code-mirror class="ui text left aligned basic segment"
+             [mode]="'turtle'"
+             [read-only]="'nocursor'" [value]="example61.value">
+</code-mirror>
+
 
 <p>Take note of the following triple on the container:</p>
-<pre>&lt;&gt; ldp:memberOfRelation skos:inScheme</pre>
+
+<p><code>&lt;&gt; ldp:memberOfRelation skos:inScheme</code></p>
+
 <p>This configures the container to automatically add a link in each member that is added to the container. Whenever we
     POST a new concept into this scheme, Carbon will automatically add the following triple to the concept document:</p>
-<pre>&lt;concept-uri&gt; skos:inScheme &lt;https://{{host}}/apps/taxonomy-hub/schemes/&gt;</pre>
-<p>
-    <span>Create and issue the request. A successful request should result in HTT status 201 Created.</span>
-</p>
-<p>
-    <span>This illustrates an interesting use of BasicContainer behavior. In the next step, we'll see another interesting use of container behavior with a DirectContainer.</span>
-</p>
+
+<p><code>&lt;concept-uri&gt; skos:inScheme &lt;https://{{host}}/apps/taxonomy-hub/schemes/&gt;</code></p>
+
+<p>Create and issue the request. A successful request should result in HTT status 201 Created.</p>
+
+<p>This illustrates an interesting use of BasicContainer behavior. In the next step, we'll see another interesting use
+    of container behavior with a DirectContainer.</p>
+
 <h2>Create the top-concepts/ Direct Container</h2>
-<p>As stated earlier, the top-concepts/ container will give us an easy way to list the root concepts in a taxonomy. Our
-    application should therefore create a top-concepts/ container in every scheme/ created. You'd likely want to
-    automate the creation of this container in the function that creates the scheme/ container, but for now, we'll do it
+
+<p>As stated earlier, the <code>top-concepts/</code> container will give us an easy way to list the root concepts in a
+    taxonomy. Our
+    application should therefore create a <code>top-concepts/</code> container in every <code>scheme/</code> created.
+    You'd likely want to
+    automate the creation of this container in the function that creates the <code>scheme/</code> container, but for
+    now, we'll do it
     by hand to complete the exercise.</p>
+
 <p>This time, we'll make use of a Direct Container. A Direct Container creates an access point that helps you manage
     membership triples in another container.</p>
 
@@ -1002,40 +1106,66 @@ INSERT
     </tbody>
 </table>
 
-<p>Body (required)</p>
+<p><strong>Body (required)</strong></p>
 
-<pre>INSERT</pre>
+
+<textarea #example70 class="hidden">
+@prefix ldp:            <http://www.w3.org/ns/ldp#> .
+@prefix skos:           <http://www.w3.org/2004/02/skos/core#> .
+
+<>
+    a ldp:DirectContainer;
+    ldp:membershipResource <https://dev.carbonldp.com/apps/taxonomy-hub/schemes/topics/>;
+    ldp:hasMemberRelation skos:hasTopConcept.
+</textarea>
+
+<code-mirror class="ui text left aligned basic segment"
+             [mode]="'turtle'"
+             [read-only]="'nocursor'" [value]="example70.value">
+</code-mirror>
+
+
+<p>Notice, this time, we use the Prefer header to set the interaction model to RDF Source instead of Container. This
+    keeps the <code>topics/</code> container that we're posting to from recognizing the <code>top-concepts/</code>
+    container as a member. That is to say, it keeps it from recording a membership triple for the
+    <code>top-concepts/</code>
+    container. The outcome we want is for all concepts to be listed as members of the <code>topics/</code> container,
+    but not the
+    <code>top-concepts/</code> container.</p>
 <p>
-    <span> <br/> </span>
-</p>
-<p>
-    <span>Notice, this time, we use the Prefer header to set the interaction model to RDF Source instead of Container. This keeps the topics/ container that we're posting to from recognizing the top-concepts/ container as a member. That is to say, it keeps it from recording a membership triple for the top-concepts/ container. The outcome we want is for all concepts to be listed as members of the topics/ container, but not the top-concepts/ container.</span>
-</p>
-<p>
-    <span>The </span>ldp:membershipResource <span style="color: rgb(0,0,0);">predicate of this Direct Container specifies an entirely different resource where membership triples should be written. Whenever we post to this container (the top-concepts/ container), a membership triple will be written to the specified resource, which is the topics/ container. In other words, if we later put a Concept to the top-concepts/ container, that concept will become a member of the topics/ container. Why would we want to do this? To understand, we have to consider the </span>ldp:hasMemberRelation
-    predicate, which is also used.<br/> <br/>Whenever the top-concepts/ container writes a membership triple to the
-    container specified by ldp:membershipResource, it will use the predicate skos:hasTopConcept to represent that
-    membership relationship because of what's defined by ldp:hasMemberRelation. This feature exists so that we can use a
+    The ldp:membershipResource predicate of this Direct Container specifies an entirely different resource where
+    membership triples should be written. Whenever we post to this container (the <code>top-concepts/</code> container),
+    a membership triple will be written to the specified resource, which is the <code>topics/</code> container. In other
+    words, if we
+    later put a Concept to the <code>top-concepts/</code> container, that concept will become a member of the <code>topics/</code>
+    container. Why would we want to do this? To understand, we have to consider the <code>ldp:hasMemberRelation</code>
+    predicate, which is also used.</p>
+
+<p>Whenever the <code>top-concepts/</code> container writes a membership triple to the container specified by <code>ldp:membershipResource</code>,
+    it will use the predicate <code>skos:hasTopConcept</code> to represent that membership relationship because of what's defined
+    by <code>ldp:hasMemberRelation</code>. This feature exists so that we can use a
     different vocabulary other than the standard LDP vocabulary to represent membership relations. When we post to
-    top-concepts/, for example, the following statement will be added to the topics/ container:</p>
-<pre>&lt;https://{{host}}/apps/taxonomy-hub/schemes/topics/&gt; skos:hasTopConcept &lt;member-URI&gt;</pre>
-<p>We will not be posting to the top-concepts/ container to create new documents. Instead, we'll post new concepts to
-    the topics/ container to create them and then later put the top concepts into the top-concepts/ container. If you
+    <code>top-concepts/</code>, for example, the following statement will be added to the <code>topics/</code> container:</p>
+
+<p><code>&lt;https://{{host}}/apps/taxonomy-hub/schemes/topics/&gt; skos:hasTopConcept &lt;member-URI&gt;</code></p>
+
+<p>We will not be posting to the <code>top-concepts/</code> container to create new documents. Instead, we'll post new concepts to
+    the <code>topics/</code> container to create them and then later put the top concepts into the <code>top-concepts/</code> container. If you
     <em>post</em> a new resource to a container, the container creates a membership triple and a containment triple, but
     if you <em>put</em> an existing resource to a container, the container creates only a membership triple.</p>
-<p>
-    <span>Issue the request. A successful response should provide the HTTP status code 201 Created.</span>
-</p>
+
+<p>Issue the request. A successful response should provide the HTTP status code 201 Created.</p>
+
 <h2>Create a root Concept</h2>
+
 <p>Now, we're ready to start creating concepts in our Topics taxonomy. This, of course, is a function that the GUI of
     our app would probably handle, but doing a few manually is important to this learning exercise.</p>
-<p>For our first Concept, create the following request.</p>
 
+<p>For our first Concept, create the following request.</p>
 
 <p>
 <div class="ui blue horizontal label">POST</div>
 <code>https://{{host}}/apps/taxonomy-hub/schemes/topics/</code></p>
-
 
 <table class="ui celled table">
     <thead>
@@ -1071,44 +1201,59 @@ INSERT
     </tbody>
 </table>
 
-<p>Body (required)</p>
+<p><strong>Body (required)</strong></p>
 
-<pre>INSERT
-</pre>
+<textarea #example71 class="hidden">
+@prefix ldp:            <http://www.w3.org/ns/ldp#> .
+@prefix skos:           <http://www.w3.org/2004/02/skos/core#> .
+
+<>
+    a ldp:BasicContainer, skos:Concept;
+    ldp:hasMemberRelation skos:narrower;
+    ldp:memberOfRelation skos:broader;
+    skos:prefLabel "Design"@en;
+    skos:prefLabel "Diseño"@es.
+</textarea>
+
+<code-mirror class="ui text left aligned basic segment"
+             [mode]="'turtle'"
+             [read-only]="'nocursor'" [value]="example71.value">
+</code-mirror>
 
 <p>Notice, this time that the ldp:hasMemberRelation is skos:narrower. That means that any concept that is later PUT to
-    this container will force a membership triple to be written on the container using <span>skos:narrower as the predicate.</span>
+    this container will force a membership triple to be written on the container using <code>skos:narrower as the predicate.</code>
 </p>
-<p>The  ldp:memberOfRelation allows the inverse to be true. Any concept that is added to the membership of this
-    container will get a triple written to it, which defines this concept as its skos:broader concept. When we add the
-    Information Architecture concept as a member, for example, the information-architecture/ resource will receive the
+<p>The <code>ldp:memberOfRelation</code> allows the inverse to be true. Any concept that is added to the membership of this
+    container will get a triple written to it, which defines this concept as its <code>skos:broader</code> concept. When we add the
+    Information Architecture concept as a member, for example, the <code>information-architecture/</code> resource will receive the
     following triple. </p>
-<pre>&lt;...topics/design/information-architecture/&gt; skos:broader &lt;......topics/design/&gt;</pre>
+
+<p><code>&lt;...topics/design/information-architecture/&gt; skos:broader &lt;......topics/design/&gt;</code></p>
+
 <p>As we can see now, features of a container support what's needed to use the SKOS vocabulary. From any concept, we
     have a way to look both downwards and upwards in the hierarchy.</p>
-<p>Issue the request.<span> A successful response should provide the HTTP status code 201 Created.</span>
-</p>
-<h2>
-    <span>Add root Concepts as member of the scheme</span>
-</h2>
+
+<p>Issue the request. A successful response should provide the HTTP status code 201 Created.</p>
+
+<h2>Add root Concepts as member of the scheme</h2>
+
 <p>Now that the root concept is created, it is a member of its parent container. In other words, its parent container,
     <em>topics</em>, links to it with the following membership triple:</p>
-<pre>&lt;&gt; &lt;http://www.w3.org/ns/ldp#member&gt; &lt;https://{{host}}/apps/taxonomy-hub/schemes/topics/design/&gt;</pre>
+
+<p><code>&lt;&gt; &lt;http://www.w3.org/ns/ldp#member&gt; &lt;https://{{host}}/apps/taxonomy-hub/schemes/topics/design/&gt;</code></p>
+
 <p>Since the parent container is a BasicContainer, the concept is also contained by it. The parent container expresses
     this relationship with the following containment triple:</p>
-<pre>&lt;&gt; &lt;http://www.w3.org/ns/ldp#contains&gt; &lt;https://{{host}}/apps/taxonomy-hub/schemes/topics/design/&gt;</pre>
-<p>
-    <span>What's needed now is to identify the root concept as a member of the topics scheme with the skos:hasTopConcept relation. This will be done when we PUT the concept to the top-concepts container.</span>
-</p>
-<p>
-    <span>Create the following request.</span>
-</p>
 
+<p><code>&lt;&gt; &lt;http://www.w3.org/ns/ldp#contains&gt; &lt;https://{{host}}/apps/taxonomy-hub/schemes/topics/design/&gt;</code></p>
+
+<p>What's needed now is to identify the root concept as a member of the topics scheme with the skos:hasTopConcept relation. This will be done when we PUT the concept to the top-concepts container.</p>
+
+<p><span>Create the following request.</span></p>
 
 <p>
 <div class="ui blue horizontal label">POST</div>
 <code>https://{{host}}/apps/taxonomy-hub/schemes/topics/top-concepts/</code></p>
-
 
 <table class="ui celled table">
     <thead>
@@ -1147,23 +1292,41 @@ INSERT
     </tbody>
 </table>
 
-<p>Body (required)</p>
+<p><strong>Body (required)</strong></p>
 
-<pre>INSERT</pre>
+
+<textarea #example72 class="hidden">
+@prefix c:   <https://carbonldp.com/ns/v1/platform#> .
+
+_:b0
+    a c:AddMemberAction;
+    c:member <https://local.carbonldp.com/apps/taxonomy-hub/schemes/topics/design/>.
+</textarea>
+
+<code-mirror class="ui text left aligned basic segment"
+             [mode]="'turtle'"
+             [read-only]="'nocursor'" [value]="example72.value">
+</code-mirror>
 
 
 <p>Notice that the Carbon vocabulary is used. The class of the resource is a Carbon AddMemberAction with the specified
     member to add to the container we're putting it to.</p>
+
 <p>Issue the request. A successful response should provide 200 OK.</p>
-<p>Now, if you examine the {{host}}/apps/taxonomy-hub/schemes/topics/ container (GET), you'll see the membership triple
-    link to the design/ concept written as skos:hasTopConcept.
+
+<p>Now, if you examine the <code>{{host}}/apps/taxonomy-hub/schemes/topics/</code> container (GET), you'll see the membership triple
+    link to the <code>design/</code> concept written as <code>skos:hasTopConcept</code>.
 </p>
-<p>(Note: There seems to be a bug here when doing GET on top-concepts/; we should see membership here too. It doesn't
-    hinder moving on.
-    Note that after each PUT to the top-concepts container, the ETag is not changing either. So, that might be a clue
-    that
-    the issue could be at the WRITE level and not just in the READ AND RENDER.)
-</p>
+
+
+<div class="ui warning message">
+    <i class="close icon"></i>
+    <div class="header">
+        Known Issue
+    </div>
+    <p>There seems to be a bug here when doing <code>GET</code> on <code>top-concepts/</code>; we should see membership here too. An issue has been opened.</p>
+</div>
+
 <p>
     In the same way, let's add the other top concept, Development Tools. Create and issue the following request, which
     should result in the 201 Created status code.
@@ -1207,12 +1370,27 @@ INSERT
     </tbody>
 </table>
 
-<p>Body (required)</p>
-<pre>INSERT
-</pre>
+<p><strong>Body (required)</strong></p>
 
-<p>Again, identify this <span>root concept as a member of the topics scheme with the skos:hasTopConcept relation, which is done when we PUT the concept to the top-concepts container.</span>
-</p>
+
+<textarea #example74 class="hidden">
+@prefix ldp:            <http://www.w3.org/ns/ldp#> .
+@prefix skos:           <http://www.w3.org/2004/02/skos/core#> .
+
+<>
+    a ldp:BasicContainer, skos:Concept;
+    ldp:hasMemberRelation skos:narrower;
+    ldp:memberOfRelation skos:broader;
+    skos:prefLabel "Technology".
+</textarea>
+
+<code-mirror class="ui text left aligned basic segment"
+             [mode]="'turtle'"
+             [read-only]="'nocursor'" [value]="example74.value">
+</code-mirror>
+
+<p>Again, identify this root concept as a member of the topics scheme with the skos:hasTopConcept relation, which is
+    done when we PUT the concept to the top-concepts container.</p>
 
 <p>
 <div class="ui blue horizontal label">PUT</div>
@@ -1259,17 +1437,27 @@ INSERT
     </tbody>
 </table>
 
-<p>Body (required)</p>
-<pre>INSERT
-</pre>
-<p> </p>
-<p>Next, let's create one of the second-level concepts, <span style="font-size: 18.4px;line-height: 1.42857;">Information Architecture (Concept 1.1), which is a narrower concept of the Design top concept we already created. Create and issue the following request.</span>
-</p>
+<p><strong>Body (required)</strong></p>
+
+<textarea #example80 class="hidden">
+@prefix c:   <https://carbonldp.com/ns/v1/platform#> .
+
+_:b0
+    a c:AddMemberAction;
+    c:member <https://local.carbonldp.com/apps/taxonomy-hub/schemes/topics/technology/>.
+</textarea>
+
+<code-mirror class="ui text left aligned basic segment"
+             [mode]="'turtle'"
+             [read-only]="'nocursor'" [value]="example80.value">
+</code-mirror>
+
+<p>Next, let's create one of the second-level concepts, Information Architecture (Concept 1.1), which is a narrower
+    concept of the Design top concept we already created. Create and issue the following request.</p>
 
 <p>
 <div class="ui blue horizontal label">POST</div>
 <code>https://{{host}}/apps/taxonomy-hub/schemes/topics/</code></p>
-
 
 <table class="ui celled table">
     <thead>
@@ -1292,11 +1480,7 @@ INSERT
     </tr>
     <tr>
         <td>Prefer</td>
-        <td>
-        <span class="nolink"> <span class="nolink">
-            <span class="nolink">http://www.w3.org/ns/ldp#Container</span>
-          </span> </span>; rel=interaction-model
-        </td>
+        <td>http://www.w3.org/ns/ldp#Container; rel=interaction-model</td>
         <td>Yes</td>
     </tr>
     <tr>
@@ -1306,10 +1490,27 @@ INSERT
     </tr>
     </tbody>
 </table>
-<p>Body (required)</p>
-<pre>
-INSERT
-</pre>
+
+<p><strong>Body (required)</strong></p>
+
+
+<textarea #example83 class="hidden">
+@prefix ldp:            <http://www.w3.org/ns/ldp#> .
+@prefix skos:           <http://www.w3.org/2004/02/skos/core#> .
+
+<>
+    a ldp:BasicContainer, skos:Concept;
+    ldp:hasMemberRelation skos:narrower;
+    ldp:memberOfRelation skos:broader;
+    skos:prefLabel "Information Architecture".
+</textarea>
+
+<code-mirror class="ui text left aligned basic segment"
+             [mode]="'turtle'"
+             [read-only]="'nocursor'" [value]="example83.value">
+</code-mirror>
+
+
 <p>Next, we must make <span>Information Architecture (Concept 1.1) a narrower concept of Design (Concept 1) by adding it to the Design concept's container membership.</span>
 </p>
 <p>
@@ -1341,13 +1542,7 @@ INSERT
     </tr>
     <tr>
         <td>Prefer</td>
-        <td>
-        <span class="nolink">
-          <span class="nolink">
-            <span class="nolink">
-              <span class="nolink">http://www.w3.org/ns/ldp#Container</span>
-            </span>
-          </span> </span>; rel=interaction-model
+        <td>http://www.w3.org/ns/ldp#Container; rel=interaction-model
         </td>
         <td>Yes</td>
     </tr>
@@ -1361,21 +1556,32 @@ INSERT
     </tbody>
 </table>
 
-<p>Body (required)</p>
-<pre>INSERT
-</pre>
+<p><strong>Body (required)</strong></p>
 
-<p>
-    <span>If you examine the design/ container now, you will see the membership triple for the information-architecture/ container. It is not defined by skos:narrower, but that's OK because we can assume that members of the container are narrower concepts of it. What we do find, however, is that the information-architecture/ concept has a skos:broader link to its parent, which gives us a way back up the hierarchy if needed. Great.</span>
-</p>
 
-<p>
-    <span>Finally, we will add the 2.1, 2.2, and 2.3 and also make them members of the parent Concept 2. Create and issue the remainder </span>
-</p>
-<p>
-    <strong>Create Concept 2.1</strong>
-</p>
+<textarea #example85 class="hidden">
+@prefix c:   <https://carbonldp.com/ns/v1/platform#> .
 
+_:b0
+    a c:AddMemberAction;
+    c:member <https://local.carbonldp.com/apps/taxonomy-hub/schemes/topics/information-architecture/>.
+</textarea>
+
+<code-mirror class="ui text left aligned basic segment"
+             [mode]="'turtle'"
+             [read-only]="'nocursor'" [value]="example85.value">
+</code-mirror>
+
+<p>If you examine the <code>design/</code> container now, you will see the membership triple for the
+    <code>information-architecture/</code> container. It is not defined by <code>skos:narrower</code>, but that's OK
+    because we can assume that members of the container are narrower concepts of it. What we do find, however, is that
+    the information-architecture/ concept has a skos:broader link to its parent, which gives us a way back up the
+    hierarchy if needed. Great.</p>
+
+<p>Finally, we will add the 2.1, 2.2, and 2.3 and also make them members of the parent Concept 2. Create and issue the
+    remaining concepts.</p>
+
+<p><strong>Create Concept 2.1</strong></p>
 
 <p>
 <div class="ui blue horizontal label">POST</div>
@@ -1403,31 +1609,36 @@ INSERT
     </tr>
     <tr>
         <td>Prefer</td>
-        <td>
-        <span class="nolink"> <span class="nolink">
-            <span class="nolink">
-              <span class="nolink">http://www.w3.org/ns/ldp#Container</span>
-            </span>
-          </span> </span>; rel=interaction-model
-        </td>
+        <td>http://www.w3.org/ns/ldp#Container; rel=interaction-model</td>
         <td>Yes</td>
     </tr>
     <tr>
         <td>Slug</td>
         <td>html5</td>
-        <td> No</td>
+        <td>No</td>
     </tr>
     </tbody>
 </table>
 
-<p>Body (required)</p>
-<pre>
-    INSERT
-</pre>
+<p><strong>Body (required)</strong></p>
 
-<p>
-    <strong>Create Concept 2.2</strong>
-</p>
+<textarea #example86 class="hidden">
+@prefix ldp:            <http://www.w3.org/ns/ldp#> .
+@prefix skos:           <http://www.w3.org/2004/02/skos/core#> .
+
+<>
+    a ldp:BasicContainer, skos:Concept;
+    ldp:hasMemberRelation skos:narrower;
+    ldp:memberOfRelation skos:broader;
+    skos:prefLabel "HTML5".
+</textarea>
+
+<code-mirror class="ui text left aligned basic segment"
+             [mode]="'turtle'"
+             [read-only]="'nocursor'" [value]="example86.value">
+</code-mirror>
+
+<p><strong>Create Concept 2.2</strong></p>
 
 <p>
 <div class="ui blue horizontal label">POST</div>
@@ -1454,32 +1665,36 @@ INSERT
     </tr>
     <tr>
         <td>Prefer</td>
-        <td>
-        <span class="nolink"> <span class="nolink">
-            <span class="nolink">
-              <span class="nolink">http://www.w3.org/ns/ldp#Container</span>
-            </span>
-          </span> </span>; rel=interaction-model
-        </td>
+        <td>http://www.w3.org/ns/ldp#Container; rel=interaction-model</td>
         <td>Yes</td>
     </tr>
     <tr>
         <td>Slug</td>
         <td>javascript</td>
-        <td> No</td>
+        <td>No</td>
     </tr>
     </tbody>
 </table>
 
-<p>Body (required)</p>
+<p><strong>Body (required)</strong></p>
 
-<pre>
-INSERT
-</pre>
+<textarea #example87 class="hidden">
+@prefix ldp:            <http://www.w3.org/ns/ldp#> .
+@prefix skos:           <http://www.w3.org/2004/02/skos/core#> .
 
-<p>
-    <strong>Add Concept 2.1 to membership of parent</strong>
-</p>
+<>
+    a ldp:BasicContainer, skos:Concept;
+    ldp:hasMemberRelation skos:narrower;
+    ldp:memberOfRelation skos:broader;
+    skos:prefLabel "JavaScript".
+</textarea>
+
+<code-mirror class="ui text left aligned basic segment"
+             [mode]="'turtle'"
+             [read-only]="'nocursor'" [value]="example87.value">
+</code-mirror>
+
+<p><strong>Add Concept 2.1 to membership of parent</strong></p>
 
 <p>
 <div class="ui blue horizontal label">PUT</div>
@@ -1519,9 +1734,21 @@ INSERT
     </tr>
     </tbody>
 </table>
-<p>Body (required)</p>
 
-<pre>INSERT</pre>
+<p><strong>Body (required)</strong></p>
+
+<textarea #example89 class="hidden">
+@prefix c:   <https://carbonldp.com/ns/v1/platform#> .
+
+_:b0
+    a c:AddMemberAction;
+    c:member <https://local.carbonldp.com/apps/taxonomy-hub/schemes/topics/html5/>.
+</textarea>
+
+<code-mirror class="ui text left aligned basic segment"
+             [mode]="'turtle'"
+             [read-only]="'nocursor'" [value]="example89.value">
+</code-mirror>
 
 <p><strong>Add Concept 2.2 to membership of parent</strong></p>
 
@@ -1563,10 +1790,41 @@ INSERT
     </tbody>
 </table>
 
-<p>Body (required)</p>
+<p><strong>Body (required)</strong></p>
 
-<pre>INSERT</pre>
+<textarea #example1 class="hidden">
+@prefix c:   <https://carbonldp.com/ns/v1/platform#> .
+
+_:b0
+    a c:AddMemberAction;
+    c:member <https://local.carbonldp.com/apps/taxonomy-hub/schemes/topics/javascript/>.
+</textarea>
+
+<code-mirror class="ui text left aligned basic segment"
+             [mode]="'turtle'"
+             [read-only]="'nocursor'" [value]="example1.value">
+</code-mirror>
 
 <p>Congratulations! The example taxonomy is complete. Of course, in the real-world, you would probably much rather
     manage a taxonomy through a graphical user interface, but working with resources using Carbon's lower-level REST API
     has helped to illustrate some very important concepts about how the platform works.</p>
+
+<h2>Create application roles</h2>
+
+<p><em>Not Yet Documented</em></p>
+
+<h2>Assign permissions on your application structure to the application roles</h2>
+
+<p><em>Not Yet Documented</em></p>
+
+<h2>Create one or more application users</h2>
+
+<p><em>Not Yet Documented</em></p>
+
+<h2>Assign users to roles</h2>
+
+<p><em>Not Yet Documented</em></p>
+
+<h2>Optional: Create a front-end user-interface</h2>
+
+<p><em>Not Yet Documented</em></p>
