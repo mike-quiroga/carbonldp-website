@@ -17,27 +17,11 @@ export default class ContentService {
 
     constructor(carbon:Carbon, http:Http)
     {
-
-        console.log(">> ContentService -> constructed");
-
         this.carbon = carbon;
         this.http = http;
-
-        /*
-        this.http.get('app/content/documents/test.html')
-            .map(res => res.text())
-            .subscribe(
-                data => this.data = data,
-                err => console.log(err),
-                () => console.log('Request Complete')
-            );
-        */
-
     }
 
     getDocumentById(id:string):Promise<string> {
-
-        console.log(">> ContentService.getDocumentById() -> id: " + id);
 
         return new Promise<string>( ( resolve, reject ) => {
 
@@ -46,15 +30,13 @@ export default class ContentService {
             let arr = url.split("/");
             let protocolHostAndPort = arr[0] + "//" + arr[2]
 
-            this.http.get(protocolHostAndPort + '/assets/documents/' + id + '.html')
+            this.http.get(protocolHostAndPort + '/assets/documents/' + id)
                 .map(res => res.text())
                 .subscribe(
                     data => this.data = data,
                     err => console.log(err),
                     () => resolve( this.data )
                 );
-
-            //resolve( this.data );
 
         });
     }
