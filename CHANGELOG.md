@@ -1,4 +1,6 @@
-# 0.16.0
+# 0.17.0 (2015/12/10)
+* ACLs can be retrieved
+# 0.16.0 (2015/12/08)
 * ACLs can now be modified
 # 0.15.4 (2015/11/20)
 * FIX CORS requests not returning header Access-Control-Expose-Headers
