@@ -1,16 +1,33 @@
-<span>This guide describes how to build a Taxonomy Hub example application using the REST API. </span>The REST API provides a way for applications to interact with the Carbon platform using HTTP verbs (GET, POST, PUT, DELETE, etc.) and
-<span style="color: rgb(37,37,37);"> </span>resources<span
-        style="color: rgb(37,37,37);"> identified by </span>URIs. Although developers may prefer to use the App Dev UI and the JavaScript SDK, all functions of the platform are available through the REST API in a way that conforms to the W3C
-<a href="http://www.w3.org/TR/ldp/">Linked Data Platform 1.0</a> specification. <br/> <br/>
-
-<ul>
-    <li>Some URI's featured in this documentation may use the dev.carbonldp.com domain. This should be changed later.
-    </li>
-</ul>
+<div class="ui breadcrumb">
+    <span class="section">Documentation</span>
+    <i class="right chevron icon divider"></i>
+    <span class="section">REST API</span>
+    <i class="right arrow icon divider"></i>
+    <div class="active section">Getting Started</div>
+</div>
 
 <h1>Getting Started With the REST API</h1>
 
+
+<div class="ui icon yellow message">
+    <i class="warning sign icon"></i>
+    <div class="content">
+        <div class="header">Pre-release Documentation</div>
+        <p>Although Carbon LDP is not yet released, we're publishing documentation as it is prepared so that you can
+            preview what's in store.</p>
+        <p><b>Note:</b> Some URI's featured in this documentation may use the &quot;{{host}}&quot; domain,
+            which is inoperable.
+        </p>
+    </div>
+</div>
+
 <h2>Introduction</h2>
+
+<p>This guide describes how to build a Taxonomy Hub example application using the REST API. The REST API
+    provides a way for applications to interact with the Carbon platform using HTTP verbs (GET, POST, PUT, DELETE,
+    etc.) and resources identified by URIs. Although developers may prefer to use the App Dev UI and the
+    JavaScript SDK, all functions of the platform are available through the REST API in a way that conforms to the W3C
+    <a href="http://www.w3.org/TR/ldp/">Linked Data Platform 1.0</a> specification.</p>
 
 <p>A taxonomy is a controlled vocabulary of terms, organized in a hierarchy, that can be used for classifying and
     organizing information. Taxonomies are commonly used in web applications. Their terms are used for tagging content
@@ -37,7 +54,7 @@
     recommend <a href="https://www.getpostman.com/">Postman</a>. It's a great tool, it's free, and it's the one we'll be
     featuring in this guide. But feel free to
     use the tool you're most comfortable with.
-    <br/>
+    <br/><br/>
     <img src="/assets/images/postman-logo.png" width="197" height="68">
 </p>
 
@@ -45,15 +62,16 @@
 
 <p>To interact with Carbon through the REST API, we'll need an account on carbonldp.com. Even this can be done through
     the REST API, so let's start by issuing a POST to create a new Carbon account. The resource that comprises a Carbon
-    account is known as an <em>Agent</em>, a <em>platform agent</em> to be precise. Later, you will learn about <em>application
-        agents</em>, which represent accounts specifically for users of the applications you build.</p>
+    account is known as an <em>Agent</em>, a <em>platform agent</em> to be precise. Later, you will learn about 
+    <em>application agents</em>, which represent accounts specifically for users of the applications you build.</p>
 
 <h2>Create the request</h2>
 
 <p>Create the following HTTP request to create a platform account.</p>
 
-<p><div class="ui blue horizontal label">POST</div>
-<code>https://dev.carbonldp.com/platform/agents/</code></p>
+<p>
+<div class="ui blue horizontal label">POST</div>
+<code>https://{{host}}/platform/agents/</code></p>
 
 <table class="ui celled table">
     <thead>
@@ -86,7 +104,21 @@
     </tbody>
 </table>
 
-<pre>INSERT</pre>
+<textarea #example1 class="hidden">
+@prefix cs:         <https://carbonldp.com/ns/v1/security#>.
+@prefix vcard:      <http://www.w3.org/2001/vcard-rdf/3.0#>.
+
+    <>
+    a   cs:Agent;
+    cs:name "Jane Doe";
+    vcard:email "jane.doe@example.org";
+    cs:password "MyStr0ngP@ssw0rd#".
+</textarea>
+
+<code-mirror class="ui text left aligned basic segment"
+             [mode]="'turtle'"
+             [read-only]="'nocursor'" [value]="example1.value">
+</code-mirror>
 
 <h2>Review the request</h2>
 
@@ -99,10 +131,11 @@
         Content-Type
     </div>
     <div class="content">
-        <p>Since the request method is POST, the Content-Type HTTP header tells the platform what kind of content to expect in
-            the body of the request. We use turtle (Terse RDF Triple Language) in our documentation because it's brief and
-            clean. Once you understand the turtle syntax, you'll find that it's very easy to read and write. In all, Carbon
-            supports the following content types:</p>
+        <p>Since the request method is POST, the Content-Type HTTP header tells the platform what kind of content to
+            expect in the body of the request. We use turtle (Terse RDF Triple Language) in our documentation because
+            it's brief
+            and clean. Once you understand the turtle syntax, you'll find that it's very easy to read and write. In all,
+            Carbon supports the following content types:</p>
         <ul>
             <li>Turtle: text/turtle</li>
             <li>JSON-LD: application/ld+json</li>
@@ -114,11 +147,11 @@
         Prefer
     </div>
     <div class="content">
-        <p>The Prefer header uses a link relation to specify the <em>interaction model</em> of the target resource, which is the
-            resource we're posting to - the /platform/agents/ container. By using this header, we're specifying the desired
-            behavior of the resource. Because we're adding a member resource to the target container, we need it to behave like
-            a container as opposed to an RDFSource or a NonRDFSource. In all, Carbon supports the following interaction model
-            values for the Prefer header:</p>
+        <p>The <code>Prefer</code> header uses a link relation to specify the <em>interaction model</em> of the target
+            resource, which is the resource we're posting to - the /platform/agents/ container. By using this header,
+            we're specifying the desired behavior of the resource. Because we're adding a member resource to the target
+            container, we need it to behave like a container as opposed to an RDFSource or a NonRDFSource. In all,
+            Carbon supports the following interaction model values for the Prefer header:</p>
         <ul>
             <li>
                 <code>http://www.w3.org/ns/ldp#Container; rel=interaction-model</code>
@@ -129,9 +162,6 @@
             <li>
                 <code>http://www.w3.org/ns/ldp#NonRDFSource; rel=interaction-model</code>
             </li>
-            <li>
-                <code>SPARQL (TO DO)</code>
-            </li>
         </ul>
     </div>
     <div class="title">
@@ -139,11 +169,11 @@
         Slug
     </div>
     <div class="content">
-        <p>The Slug header is intended to give the server a hint as to how to mint a new URI for the resource being created. If
-            a slug is not provided, Carbon will generate a random number for the URI of the agent. In this case, however, we're
-            specifying a preference to use john-doe. Therefore, if it is available for use, the server will mint the following
-            URI:</p>
-        <p><code>https://dev.carbonldp.com/platform/agents/jane-doe/</code></p>
+        <p>The <code>Slug</code> header is intended to give the server a hint as to how to mint a new URI for the resource being
+            created. If a slug is not provided, Carbon will generate a random number for the URI of the agent. In this
+            case, however, we're specifying a preference to use john-doe. Therefore, if it is available for use, the
+            server will mint the following URI:</p>
+        <p><code>https://{{host}}/platform/agents/jane-doe/</code></p>
     </div>
     <div class="title">
         <i class="dropdown icon"></i>
@@ -151,10 +181,8 @@
     </div>
     <div class="content">
 
-        <p>The body of the request is an RDF graph of triples written in Turtle, which we told the server we'd be using in the
-            Content-Type header.</p>
-        <p>Using Turtle's @prefix directive we declare short prefix names so that we don't have to repeat long URIs in the
-            triples that follow. </p>
+        <p>The body of the request is an RDF graph of triples written in Turtle, which we told the server we'd be using in the Content-Type header.</p>
+        <p>Using Turtle's @prefix directive we declare short prefix names so that we don't have to repeat long URIs in the triples that follow.</p>
         <p>Following is a brief description of each of the required triples that come after the namespace declarations:</p>
         <p> </p>
         <table class="ui celled table">
@@ -180,12 +208,10 @@
             <tr>
                 <td colspan="3">
                     <p>
-                        <span style="color: rgb(0,0,0);">The subject specifies an empty value relative to the base URI. In turtle, URIs are written enclosed in '&lt;' and '&gt;' and may be absolute RDF URI References or relative to the current base URI. <br/>The token 'a' in the predicate position always specifies the RDF type of the resource, which is a short way of writing:</span>
+                        The subject specifies an empty value relative to the base URI. In turtle, URIs are written enclosed in '&lt;' and '&gt;' and may be absolute RDF URI References or relative to the current base URI. <br/>The token 'a' in the predicate position always specifies the RDF type of the resource, which is a short way of writing:
                     </p>
                     <code>http://www.w3.org/1999/02/22-rdf-syntax-ns#type</code>
-                    <p>
-                        <span style="color: rgb(0,0,0);"> <br/>In the object position, we specify the RDF type as being an Agent from the Carbon LDP security vocabulary.</span>
-                    </p>
+                    <p>In the object position, we specify the RDF type as being an Agent from the Carbon LDP security vocabulary.</p>
                 </td>
             </tr>
             <tr>
@@ -200,8 +226,7 @@
                 </td>
             </tr>
             <tr>
-                <td colspan="3">The name is a literal string that should specify a common name for the user; we recommend using
-                    the first and last name.
+                <td colspan="3">The name is a literal string that should specify a common name for the user; we recommend using the first and last name.
                 </td>
             </tr>
             <tr>
@@ -216,8 +241,7 @@
                 </td>
             </tr>
             <tr>
-                <td colspan="3">The email is a literal string that should be a valid contact email address for the user. This
-                    will also serve as the login user ID.
+                <td colspan="3">The email is a literal string that should be a valid contact email address for the user. This will also serve as the login user ID.
                 </td>
             </tr>
             <tr>
@@ -266,7 +290,7 @@
     <tr>
         <td>Location</td>
         <td>
-            <span>https://dev.carbonldp.com/platform/agents/jane-doe/</span>
+            <span>https://{{host}}/platform/agents/jane-doe/</span>
         </td>
     </tr>
     </tbody>
@@ -279,8 +303,9 @@
 
 <p>Create the following HTTP request to get the platform Agent.</p>
 
-<p><div class="ui blue horizontal label">GET</div>
-<code>https://dev.carbonldp.com/platform/agents/jane-doe/</code></p>
+<p>
+<div class="ui blue horizontal label">GET</div>
+<code>https://{{host}}/platform/agents/jane-doe/</code></p>
 
 <p>You will need to authorize the request using the username and password of the that was given in the body of the
     former POST request.</p>
@@ -328,25 +353,95 @@
     </tbody>
 </table>
 
-<p>200 OK</p>
+<p><strong>200 OK</strong></p>
 
-<pre>INSERT</pre>
+<textarea #example2 class="hidden">
+[
+  {
+    "@graph": [
+      {
+        "@id": "https://{{host}}/platform/agents/jane-doe/",
+        "@type": [
+          "http://www.w3.org/ns/ldp#BasicContainer",
+          "http://www.w3.org/ns/ldp#RDFSource",
+          "http://www.w3.org/ns/ldp#Container",
+          "https://carbonldp.com/ns/v1/security#Agent"
+        ],
+        "http://www.w3.org/2001/vcard-rdf/3.0#email": [
+          {
+            "@value": "jane.doe@example.org"
+          }
+        ],
+        "http://www.w3.org/ns/ldp#hasMemberRelation": [
+          {
+            "@id": "http://www.w3.org/ns/ldp#member"
+          }
+        ],
+        "https://carbonldp.com/ns/v1/platform#created": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#dateTime",
+            "@value": "2015-11-13T22:28:46.101Z"
+          }
+        ],
+        "https://carbonldp.com/ns/v1/platform#defaultInteractionModel": [
+          {
+            "@id": "http://www.w3.org/ns/ldp#RDFSource"
+          }
+        ],
+        "https://carbonldp.com/ns/v1/platform#modified": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#dateTime",
+            "@value": "2015-11-13T22:28:46.101Z"
+          }
+        ],
+        "https://carbonldp.com/ns/v1/security#enabled": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#boolean",
+            "@value": "true"
+          }
+        ],
+        "https://carbonldp.com/ns/v1/security#name": [
+          {
+            "@value": "Jane Doe"
+          }
+        ],
+        "https://carbonldp.com/ns/v1/security#password": [
+          {
+            "@value": "6bdabc50688f615775a82963ce381ab5df8be9447cb4a806b1cd8d919e1174bb"
+          }
+        ],
+        "https://carbonldp.com/ns/v1/security#platformRole": [
+          {
+            "@id": "https://{{host}}/platform/roles/app-developer/"
+          }
+        ],
+        "https://carbonldp.com/ns/v1/security#salt": [
+          {
+            "@value": "ot8lotu5vb9r0siuqb7ip2ep8j"
+          }
+        ]
+      }
+    ],
+    "@id": "https://{{host}}/platform/agents/jane-doe/"
+  }
+]
+</textarea>
+
+<code-mirror class="ui text left aligned basic segment"
+             [mode]="'json'"
+             [read-only]="'nocursor'" [value]="example2.value">
+</code-mirror>
+
 
 <h1>Create an application</h1>
 
-<p>With your newly created platform account, you can now create an Application.<br/> <br/>To create an application,
-    issue the following request. Be sure to use your own unique name for the Slug or omit the Slug. You should also
-    provide a unique name for the application in the body of the request.</p>
-
+<p>With your newly created platform account, you can now create an Application.</p>
+<p>To create an application, issue the following request. Be sure to use your own unique name for the Slug or omit the Slug. You should also provide a unique name for the application in the body of the request.</p>
 
 <p>
 <div class="ui blue horizontal label">GET</div>
-<code>https://dev.carbonldp.com/platform/apps/</code></p>
+<code>https://{{host}}/platform/apps/</code></p>
 
-
-<p>
-    <span style="font-size: 18.4px;line-height: 1.42857;"> </span>
-</p>
 <table class="ui celled table">
     <thead>
     <tr>
@@ -364,9 +459,7 @@
     </tr>
     <tr>
         <td>Prefer</td>
-        <td>
-            <span class="nolink">http://www.w3.org/ns/ldp#Container</span>; rel=interaction-model
-        </td>
+        <td>http://www.w3.org/ns/ldp#Container</span>; rel=interaction-model</td>
         <td>Yes</td>
     </tr>
     <tr>
@@ -383,23 +476,38 @@
 </table>
 <p>Body (required)</p>
 
-<pre>INSERT</pre>
+
+<textarea #example3 class="hidden">
+@prefix cs:         <https://carbonldp.com/ns/v1/security#>.
+<>
+    a   cs:Application;
+    cs:name "Taxonomy Hub".
+</textarea>
+
+<code-mirror class="ui text left aligned basic segment"
+             [mode]="'turtle'"
+             [read-only]="'nocursor'" [value]="example3.value">
+</code-mirror>
 
 <p>Issue the POST request.</p>
 
 <p>A successful request will result in HTTP status code 201 Created. It will also respond with the server-minted URI for
     the Application resource, which in the case of our example is:</p>
 
-<pre>https://dev.carbonldp.com/platform/apps/taxonomy-hub/</pre>
+<p><code>https://{{host}}/platform/apps/taxonomy-hub/</code></p>
 
 <h2>Examine the application root container</h2>
 
 <p>You can always verify a newly created resource by issuing a GET request to its URI, but it's important to keep in
     mind that the URI created for the Application only references the metadata resource for your application. When a new
     Application is created, Carbon also creates an access point at the following URI:</p>
-<pre>https://dev.carbonldp.com/apps/&lt;app-slug&gt;/</pre>
+
+<p><code>https://{{host}}/apps/&lt;app-slug&gt;/</code></p>
+
 <p>So, in the case of our example, the application's access point or root URI would be:</p>
-<pre>https://dev.carbonldp.com/apps/taxonomy-hub/</pre>
+
+<p><code>https://{{host}}/apps/taxonomy-hub/</code></p>
+
 <p>The difference between this URI and the URI of the Application metadata resource is the absence of the
     /platform segment after the host name.</p>
 
@@ -407,7 +515,7 @@
 
 <p>
 <div class="ui blue horizontal label">GET</div>
-<code>https://dev.carbonldp.com/apps/taxonomy-hub/</code></p>
+<code>https://{{host}}/apps/taxonomy-hub/</code></p>
 
 
 <table class="ui celled table">
@@ -440,9 +548,36 @@
     you will typically find Turtle to be a little more compact and easier to read.
 </p>
 
-<p>Example root container for an app</p>
+<p><strong>Example root container for an app</strong></p>
 
-<pre>INSERT</pre>
+
+<textarea #example4 class="hidden">
+<https://dev.carbonldp.com/apps/taxonomy-hub/>
+<https://carbonldp.com/ns/v1/platform#modified> "2015-11-13T22:36:00.710Z"^^
+<http://www.w3.org/2001/XMLSchema#dateTime> ;
+a
+<http://www.w3.org/ns/ldp#Container> ;
+
+<https://carbonldp.com/ns/v1/platform#created> "2015-11-13T22:36:00.710Z"^^
+<http://www.w3.org/2001/XMLSchema#dateTime> ;
+a
+<http://www.w3.org/ns/ldp#BasicContainer> ;
+
+<http://www.w3.org/ns/ldp#hasMemberRelation>
+<http://www.w3.org/ns/ldp#member> ;
+a
+<http://www.w3.org/ns/ldp#RDFSource> ;
+
+<http://www.w3.org/ns/ldp#member>
+<https://dev.carbonldp.com/apps/taxonomy-hub/roles/> ,
+<https://dev.carbonldp.com/apps/taxonomy-hub/agents/> .
+</textarea>
+
+<code-mirror class="ui text left aligned basic segment"
+             [mode]="'turtle'"
+             [read-only]="'nocursor'" [value]="example4.value">
+</code-mirror>
+
 
 
 <h1>Model the application (vocabulary, resources, containers)</h1>
@@ -665,7 +800,8 @@
 <p>Though Carbon enforces no restriction on doing this, there are a few reasons why we might not want to.</p>
 <p>
     First, as the depth of your taxonomy increases, so too does the length of your concept URIs. We should keep in
-    mind that the fully qualified URI for each concept will also include the host and the base URI to the app. In this model, just one level deeper from the top concept could produce the following URI:
+    mind that the fully qualified URI for each concept will also include the host and the base URI to the app. In this
+    model, just one level deeper from the top concept could produce the following URI:
 </p>
 <pre>http://dev.carbonlp.com/platform/apps/taxonomy-hub/topics/development/javascript</pre>
 <p>You can see how the addition of just a few more levels could lengthen the URI significantly.</p>
@@ -686,7 +822,7 @@
                         top-concepts/
                     </li>
                     <li>
-                       design/
+                        design/
                     </li>
                     <li>information-architecture/</span>
                     </li>
@@ -711,7 +847,7 @@
 
 <p>
 <div class="ui blue horizontal label">POST</div>
-<code>https://dev.carbonldp.com/apps/taxonomy-hub/</code></p>
+<code>https://{{host}}/apps/taxonomy-hub/</code></p>
 
 
 <table class="ui celled table">
@@ -765,7 +901,7 @@
 
 <p>
 <div class="ui blue horizontal label">POST</div>
-<code>https://dev.carbonldp.com/apps/taxonomy-hub/schemes/</code></p>
+<code>https://{{host}}/apps/taxonomy-hub/schemes/</code></p>
 
 
 <table class="ui celled table">
@@ -813,7 +949,7 @@ INSERT
 <pre>&lt;&gt; ldp:memberOfRelation skos:inScheme</pre>
 <p>This configures the container to automatically add a link in each member that is added to the container. Whenever we
     POST a new concept into this scheme, Carbon will automatically add the following triple to the concept document:</p>
-<pre>&lt;concept-uri&gt; skos:inScheme &lt;https://dev.carbonldp.com/apps/taxonomy-hub/schemes/&gt;</pre>
+<pre>&lt;concept-uri&gt; skos:inScheme &lt;https://{{host}}/apps/taxonomy-hub/schemes/&gt;</pre>
 <p>
     <span>Create and issue the request. A successful request should result in HTT status 201 Created.</span>
 </p>
@@ -832,7 +968,7 @@ INSERT
 
 <p>
 <div class="ui blue horizontal label">POST</div>
-<code>https://dev.carbonldp.com/apps/taxonomy-hub/schemes/topics/</code></p>
+<code>https://{{host}}/apps/taxonomy-hub/schemes/topics/</code></p>
 
 <table class="ui celled table">
     <thead>
@@ -882,7 +1018,7 @@ INSERT
     membership relationship because of what's defined by ldp:hasMemberRelation. This feature exists so that we can use a
     different vocabulary other than the standard LDP vocabulary to represent membership relations. When we post to
     top-concepts/, for example, the following statement will be added to the topics/ container:</p>
-<pre>&lt;https://dev.carbonldp.com/apps/taxonomy-hub/schemes/topics/&gt; skos:hasTopConcept &lt;member-URI&gt;</pre>
+<pre>&lt;https://{{host}}/apps/taxonomy-hub/schemes/topics/&gt; skos:hasTopConcept &lt;member-URI&gt;</pre>
 <p>We will not be posting to the top-concepts/ container to create new documents. Instead, we'll post new concepts to
     the topics/ container to create them and then later put the top concepts into the top-concepts/ container. If you
     <em>post</em> a new resource to a container, the container creates a membership triple and a containment triple, but
@@ -898,7 +1034,7 @@ INSERT
 
 <p>
 <div class="ui blue horizontal label">POST</div>
-<code>https://dev.carbonldp.com/apps/taxonomy-hub/schemes/topics/</code></p>
+<code>https://{{host}}/apps/taxonomy-hub/schemes/topics/</code></p>
 
 
 <table class="ui celled table">
@@ -957,10 +1093,10 @@ INSERT
 </h2>
 <p>Now that the root concept is created, it is a member of its parent container. In other words, its parent container,
     <em>topics</em>, links to it with the following membership triple:</p>
-<pre>&lt;&gt; &lt;http://www.w3.org/ns/ldp#member&gt; &lt;https://dev.carbonldp.com/apps/taxonomy-hub/schemes/topics/design/&gt;</pre>
+<pre>&lt;&gt; &lt;http://www.w3.org/ns/ldp#member&gt; &lt;https://{{host}}/apps/taxonomy-hub/schemes/topics/design/&gt;</pre>
 <p>Since the parent container is a BasicContainer, the concept is also contained by it. The parent container expresses
     this relationship with the following containment triple:</p>
-<pre>&lt;&gt; &lt;http://www.w3.org/ns/ldp#contains&gt; &lt;https://dev.carbonldp.com/apps/taxonomy-hub/schemes/topics/design/&gt;</pre>
+<pre>&lt;&gt; &lt;http://www.w3.org/ns/ldp#contains&gt; &lt;https://{{host}}/apps/taxonomy-hub/schemes/topics/design/&gt;</pre>
 <p>
     <span>What's needed now is to identify the root concept as a member of the topics scheme with the skos:hasTopConcept relation. This will be done when we PUT the concept to the top-concepts container.</span>
 </p>
@@ -971,7 +1107,7 @@ INSERT
 
 <p>
 <div class="ui blue horizontal label">POST</div>
-<code>https://dev.carbonldp.com/apps/taxonomy-hub/schemes/topics/top-concepts/</code></p>
+<code>https://{{host}}/apps/taxonomy-hub/schemes/topics/top-concepts/</code></p>
 
 
 <table class="ui celled table">
@@ -1022,18 +1158,20 @@ INSERT
 <p>Now, if you examine the {{host}}/apps/taxonomy-hub/schemes/topics/ container (GET), you'll see the membership triple
     link to the design/ concept written as skos:hasTopConcept.
 </p>
-<p>(Note: There seems to be a bug here when doing GET on top-concepts/; we should see membership here too. It doesn't hinder moving on.
-    Note that after each PUT to the top-concepts container, the ETag is not changing either. So, that might be a clue that
+<p>(Note: There seems to be a bug here when doing GET on top-concepts/; we should see membership here too. It doesn't
+    hinder moving on.
+    Note that after each PUT to the top-concepts container, the ETag is not changing either. So, that might be a clue
+    that
     the issue could be at the WRITE level and not just in the READ AND RENDER.)
 </p>
 <p>
-   In the same way, let's add the other top concept, Development Tools. Create and issue the following request, which
+    In the same way, let's add the other top concept, Development Tools. Create and issue the following request, which
     should result in the 201 Created status code.
 </p>
 
 <p>
 <div class="ui blue horizontal label">POST</div>
-<code>https://dev.carbonldp.com/apps/taxonomy-hub/schemes/topics/</code></p>
+<code>https://{{host}}/apps/taxonomy-hub/schemes/topics/</code></p>
 
 
 <table class="ui celled table">
@@ -1078,7 +1216,7 @@ INSERT
 
 <p>
 <div class="ui blue horizontal label">PUT</div>
-<code>https://dev.carbonldp.com/apps/taxonomy-hub/schemes/topics/top-concepts/</code></p>
+<code>https://{{host}}/apps/taxonomy-hub/schemes/topics/top-concepts/</code></p>
 
 
 <table class="ui celled table">
@@ -1130,7 +1268,7 @@ INSERT
 
 <p>
 <div class="ui blue horizontal label">POST</div>
-<code>https://dev.carbonldp.com/apps/taxonomy-hub/schemes/topics/</code></p>
+<code>https://{{host}}/apps/taxonomy-hub/schemes/topics/</code></p>
 
 
 <table class="ui celled table">
@@ -1180,7 +1318,7 @@ INSERT
 
 <p>
 <div class="ui blue horizontal label">PUT</div>
-<code>https://dev.carbonldp.com/apps/taxonomy-hub/schemes/topics/design/</code></p>
+<code>https://{{host}}/apps/taxonomy-hub/schemes/topics/design/</code></p>
 
 <table class="ui celled table">
     <thead>
@@ -1241,7 +1379,7 @@ INSERT
 
 <p>
 <div class="ui blue horizontal label">POST</div>
-<code>https://dev.carbonldp.com/apps/taxonomy-hub/schemes/topics/</code></p>
+<code>https://{{host}}/apps/taxonomy-hub/schemes/topics/</code></p>
 
 
 <table class="ui celled table">
@@ -1293,7 +1431,7 @@ INSERT
 
 <p>
 <div class="ui blue horizontal label">POST</div>
-<code>https://dev.carbonldp.com/apps/taxonomy-hub/schemes/topics/</code></p>
+<code>https://{{host}}/apps/taxonomy-hub/schemes/topics/</code></p>
 
 <table class="ui celled table">
     <thead>
@@ -1345,7 +1483,7 @@ INSERT
 
 <p>
 <div class="ui blue horizontal label">PUT</div>
-<code>https://dev.carbonldp.com/apps/taxonomy-hub/schemes/topics/technology/</code></p>
+<code>https://{{host}}/apps/taxonomy-hub/schemes/topics/technology/</code></p>
 
 
 <table class="ui celled table">
@@ -1389,7 +1527,7 @@ INSERT
 
 <p>
 <div class="ui blue horizontal label">PUT</div>
-<code>https://dev.carbonldp.com/apps/taxonomy-hub/schemes/topics/technology/</code></p>
+<code>https://{{host}}/apps/taxonomy-hub/schemes/topics/technology/</code></p>
 
 <table class="ui celled table">
     <thead>
@@ -1432,8 +1570,3 @@ INSERT
 <p>Congratulations! The example taxonomy is complete. Of course, in the real-world, you would probably much rather
     manage a taxonomy through a graphical user interface, but working with resources using Carbon's lower-level REST API
     has helped to illustrate some very important concepts about how the platform works.</p>
-
-
-<script>
-    $('.ui.accordion').accordion();
-</script>
