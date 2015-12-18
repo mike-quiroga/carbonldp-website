@@ -58,8 +58,8 @@ public class PlatformExceptionController {
 	}
 
 	@ExceptionHandler( AuthorizationException.class )
-	public ResponseEntity<Object> hanleAuthorizationException( HttpServletRequest request, HttpServletResponse response, AuthorizationException exception ) {
-		ErrorResponse error = ErrorResponseFactory.create( exception.getErrorCode(), exception.getMessage(), HttpStatus.UNAUTHORIZED );
+	public ResponseEntity<Object> handleAuthorizationException( HttpServletRequest request, HttpServletResponse response, AuthorizationException exception ) {
+		ErrorResponse error = ErrorResponseFactory.create( exception.getErrorCode(), exception.getMessage(), HttpStatus.FORBIDDEN );
 		return new ResponseEntity<>( error.getBaseModel(), HttpStatus.FORBIDDEN );
 	}
 
