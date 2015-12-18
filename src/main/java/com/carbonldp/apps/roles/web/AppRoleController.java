@@ -24,7 +24,7 @@ public class AppRoleController extends AbstractLDPController {
 
 	private AppRolePUTHandler putHandler;
 	private AppRolePOSTHandler postHandler;
-	private AppRolesDELETEHandler deleteHandler;
+	private AppRoleDELETEHandler deleteHandler;
 
 	@RequestMapping( method = RequestMethod.PUT, value = "apps/*/roles/*/" )
 	@InteractionModel( APIPreferences.InteractionModel.CONTAINER )
@@ -32,13 +32,13 @@ public class AppRoleController extends AbstractLDPController {
 		return putHandler.handleRequest( requestDocument, request, response );
 	}
 
-	@RequestMapping( method = RequestMethod.DELETE )
+	@RequestMapping( method = RequestMethod.DELETE, value = "apps/*/roles/*/" )
 	public ResponseEntity<Object> deleteApp( @RequestBody( required = false ) RDFDocument requestDocument, HttpServletRequest request, HttpServletResponse response ) {
 		return deleteHandler.handleRequest( requestDocument, request, response );
 	}
 
 	@Autowired
-	public void setDELETEHandler( AppRolesDELETEHandler deleteHandler ) {
+	public void setDELETEHandler( AppRoleDELETEHandler deleteHandler ) {
 		this.deleteHandler = deleteHandler;
 	}
 
