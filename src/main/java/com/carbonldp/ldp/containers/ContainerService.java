@@ -27,21 +27,21 @@ public interface ContainerService {
 	@PreAuthorize( "hasPermission(#containerURI, 'ADD_MEMBER')" )
 	public void addMember( URI containerURI, URI member );
 
-	// TODO: Add permission validation
+	//@PreAuthorize( "hasPermission(#targetURI, 'REMOVE_MEMBER')" )
 	public void removeMembers( URI targetURI );
 
-	// TODO: Add permision validation
+	//@PreAuthorize( "hasPermission(#targetURI, 'REMOVE_MEMBER')" )
 	public void removeMembers( URI targetUri, Set<URI> members );
 
-	// TODO: Add permision validation
+	//@PreAuthorize( "hasPermission(#containerURI, 'REMOVE_MEMBER')" )
 	public void removeMember( URI containerURI, URI member );
 
 	// TODO: Add permission validation
 	public void deleteContainedResources( URI targetURI );
 
-	// TODO: Add permission validation
+	@PreAuthorize( "hasPermission(#targetURI, 'DELETE')" )
 	public void delete( URI targetURI );
 
-	//TODO: Add permission validation
+	// TODO: Add permission validation
 	public void createNonRDFResource( URI targetURI, URI resourceURI, File resourceFile, String mimeType );
 }
