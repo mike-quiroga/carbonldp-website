@@ -9,18 +9,13 @@ import org.openrdf.model.URI;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
- * @author arima
- * @since _version_
+ * @author JorgeEspinosa
+ * @since 0.21.0-ALPHA
  */
 @RequestHandler
 public class AppRolesDELETEAgentsHandler extends AbstractDELETERequestHandler {
 
 	AppRoleService appRoleService;
-
-	@Autowired
-	public AppRolesDELETEAgentsHandler( AppRoleService appRoleService ) {
-		this.appRoleService = appRoleService;
-	}
 
 	@Override
 	protected void removeSelectiveMembers( RDFDocument requestDocument, URI targetURI ) {
@@ -32,4 +27,8 @@ public class AppRolesDELETEAgentsHandler extends AbstractDELETERequestHandler {
 		appRoleService.removeAgentMembers( targetURI, members.getMembers() );
 	}
 
+	@Autowired
+	public AppRolesDELETEAgentsHandler( AppRoleService appRoleService ) {
+		this.appRoleService = appRoleService;
+	}
 }
