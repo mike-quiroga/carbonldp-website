@@ -1,10 +1,7 @@
 package com.carbonldp.apps.roles.web;
 
-import com.carbonldp.descriptions.APIPreferences;
 import com.carbonldp.ldp.web.AbstractLDPController;
 import com.carbonldp.rdf.RDFDocument;
-import com.carbonldp.web.config.InteractionModel;
-import com.carbonldp.web.exceptions.NotImplementedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -19,7 +16,6 @@ import javax.servlet.http.HttpServletResponse;
 @RequestMapping( value = "apps/*/roles/" )
 public class AppRolesController extends AbstractLDPController {
 
-
 	private AppRolesPOSTHandler postHandler;
 
 	@RequestMapping( method = RequestMethod.POST )
@@ -31,5 +27,4 @@ public class AppRolesController extends AbstractLDPController {
 	public void setAppRolesPOSTHandler( AppRolesPOSTHandler appRolesPostHandler ) {
 		this.postHandler = appRolesPostHandler;
 	}
-
 }

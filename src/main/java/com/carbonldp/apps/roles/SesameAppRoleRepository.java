@@ -35,6 +35,7 @@ public class SesameAppRoleRepository extends AbstractSesameLDPRepository impleme
 
 	private String containerSlug;
 	private String agentsContainerSlug;
+
 	private static String getParentsQuery;
 
 	private final ContainerDescription.Type appRolesContainerType = ContainerDescription.Type.BASIC;
@@ -56,6 +57,16 @@ public class SesameAppRoleRepository extends AbstractSesameLDPRepository impleme
 			.append( RDFNodeUtil.generatePredicateStatement( "?members", "?agent", AppRoleDescription.Property.AGENT ) )
 		;
 		getByAgent_query = queryBuilder.toString();
+	}
+
+	public void setAppRoleContainerSlug( String slug ) {
+		Assert.notNull( slug );
+		this.containerSlug = slug;
+	}
+
+	public void setAgentsContainerSlug( String slug ) {
+		Assert.notNull( slug );
+		this.agentsContainerSlug = slug;
 	}
 
 	@Override
@@ -104,14 +115,9 @@ public class SesameAppRoleRepository extends AbstractSesameLDPRepository impleme
 		return appRolesContainer;
 	}
 
-	public void setAppRoleContainerSlug( String slug ) {
-		Assert.notNull( slug );
-		this.containerSlug = slug;
-	}
-
-	public void setAgentsContainerSlug( String slug ) {
-		Assert.notNull( slug );
-		this.agentsContainerSlug = slug;
+	@Override
+	public boolean exists( URI appRoleURI ) {
+		return sourceRepository.exists( appRoleURI );
 	}
 
 	public URI getContainerURI() {
@@ -152,6 +158,11 @@ public class SesameAppRoleRepository extends AbstractSesameLDPRepository impleme
 
 			return parents;
 		} );
+	}
+
+	@Override
+	public void delete( URI appRoleURI ) {
+		sourceRepository.delete( appRoleURI );
 	}
 
 }
