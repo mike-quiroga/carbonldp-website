@@ -3,6 +3,8 @@ package com.carbonldp.spring;
 import com.carbonldp.apps.App;
 import com.carbonldp.apps.context.RunInAppContext;
 import com.carbonldp.apps.context.RunInPlatformContext;
+import com.carbonldp.authorization.Platform;
+import com.carbonldp.authorization.RunWith;
 import com.carbonldp.utils.Action;
 import com.carbonldp.utils.ActionWithResult;
 import org.springframework.transaction.annotation.Propagation;
@@ -37,4 +39,11 @@ public class TransactionWrapper {
 	public <E> E runInAppcontext( App app, ActionWithResult<E> action ) {
 		return action.run();
 	}
+
+	@RunWith( platformRoles = Platform.Role.SYSTEM )
+	@RunInAppContext
+	public <E> E runWithSystemPermissionsInAppContext( App app, ActionWithResult<E> action ) {
+		return action.run();
+	}
+
 }
