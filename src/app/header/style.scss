@@ -8,3 +8,9 @@ header .mobile.only.row .ui.dropdown.item .menu {
 	position: static;
 	margin-top: 15px;
 }
+
+/* Remove padding from left and right of primary navigation so that elements align exactly with page perimiter. */
+header .ui.grid > * {
+	padding-left: 0;
+	padding-right: 0;
+}

@@ -26,6 +26,10 @@ article.ui.vertical.segment {
 	padding-bottom:56px;
 }
 
+p.larger {
+	font-size: 16px;
+}
+
 .hidden {display:none}
 
 code {
@@ -41,3 +45,8 @@ pre, code {
 	font-size: 13px;
 	line-height: 16px;
 }
+
+.ui.menu a.logo {
+	padding-left:0;
+}
+

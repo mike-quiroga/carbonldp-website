@@ -1,3 +1,15 @@
+<article class="ui vertical segment">
+
+<div class="ui breadcrumb">
+    <span class="section">Documentation</span>
+    <i class="right chevron icon divider"></i>
+    <span class="section">REST API</span>
+    <i class="right arrow icon divider"></i>
+    <div class="active section">Interaction Models</div>
+</div>
+
+<h1>Interaction Models</h1>
+
 <div class="ui icon yellow message">
     <i class="warning sign icon"></i>
     <div class="content">
@@ -6,9 +18,6 @@
             preview what's in store.</p>
     </div>
 </div>
-
-
-<h1>Interaction Models</h1>
 
 <p>
     When you interact with a given document on the Carbon server, you can specify a model that
@@ -34,8 +43,7 @@
 
 <p>
 <div class="ui blue horizontal label">HTTP Prefer</div>
-<code>http://www.w3.org/ns/ldp#Container;
-    rel=interaction-model</code></p>
+<code>http://www.w3.org/ns/ldp#Container; rel=interaction-model</code></p>
 
 <p>As the name implies, LDP Containers contain things. Well, they don't literally contain things in the same way
     that folders might, but the concept is similar. A container is itself an RDF Source with triples that link to a
@@ -62,16 +70,12 @@
 
 <p>
 <div class="ui blue horizontal label">HTTP Prefer</div>
-<code>http://www.w3.org/ns/ldp#RDFSource;
-    rel=interaction-model</code></p>
+<code>http://www.w3.org/ns/ldp#RDFSource; rel=interaction-model</code></p>
 
 <p>An LDP RDF Source is an RDF graph or the <em>source</em> of one or more arbitrary triples that share the same
     subject URI. When we use the LDP RDF Source model for a document, we're generally referring to the document as
-    the
-    resource it represents - some real world resource, for example. You typically prefer this model when your
-    working
-    only
-    with the document itself, or properties of the document.</p>
+    the resource it represents - some real world resource, for example. You typically prefer this model when your
+    working only with the document itself, or properties of the document.</p>
 
 <div class="ui message">
     <p>When a server is behaving with the RDF Source interaction model, it applies no special features for managing
@@ -95,11 +99,11 @@
 
 <p>
 <div class="ui blue horizontal label">HTTP Prefer</div>
-<code>http://www.w3.org/ns/ldp#NonRDFSource;
-    rel=interaction-model</code></p>
+<code>http://www.w3.org/ns/ldp#NonRDFSource; rel=interaction-model</code></p>
 
 <div class="ui message">
     <p>When a server is behaving with the Non-RDF Source interaction model, it treats the given resource as a
         non-RDF
         &quot;file&quot;.</p>
 </div>
+</article>

@@ -59,16 +59,42 @@ export default class ContentView {
             elementRef:ElementRef;
             $element;
 
+            $container;
+            $sectionHeaders;
+            $followMenu;
+
             host:string = "dev.carbonldp.com";
 
             constructor(elementRef:ElementRef) {
                 this.elementRef = elementRef;
                 this.$element = $( this.elementRef.nativeElement );
+
+
             }
 
             afterViewInit():void {
                 this.createAccordions();
                 this.evalJavascript();
+
+                this.$container = $('article');
+                this.$sectionHeaders = this.$container.children('h2');
+                this.$followMenu = this.$element.find('.following.menu');
+
+                let _self = this;
+
+                this.$sectionHeaders.visibility({
+                    observeChanges: false,
+                    once: false,
+                    offset: 50,
+                    onTopPassed: function() {
+                        _self.activateSection(this);
+                    },
+                    onTopPassedReverse: function() {
+                        _self.activatePrevious();
+                    }
+                });
+
+
             }
 
             createAccordions():void {
@@ -82,6 +108,52 @@ export default class ContentView {
                     eval( scripts[ i ].textContent );
                 }
             }
+
+            activateSection(elm):void {
+
+                console.log(">> activateSection()");
+
+                var
+                    $section       = $(elm),
+                    index          = this.$sectionHeaders.index($section),
+                    $followSection = this.$followMenu.children('.item'),
+                    $activeSection = $followSection.eq(index),
+                    isActive       = $activeSection.hasClass('active')
+                    ;
+                if(!isActive) {
+                    $followSection.filter('.active')
+                        .removeClass('active')
+                    ;
+                    $activeSection
+                        .addClass('active')
+                    ;
+                    this.$followMenu
+                        .accordion('open', index)
+                    ;
+                }
+
+            }
+
+            activatePrevious():void {
+
+                console.log(">> activatePrevious()");
+
+                var
+                    $menuItems  = this.$followMenu.children('.item'),
+                    $section    = $menuItems.filter('.active'),
+                    index       = $menuItems.index($section)
+                    ;
+                if($section.prev().size() > 0) {
+                    $section
+                        .removeClass('active')
+                        .prev('.item')
+                        .addClass('active')
+                    ;
+                    this.$followMenu.accordion('open', index - 1);
+                }
+
+            }
+
 
         };
 
