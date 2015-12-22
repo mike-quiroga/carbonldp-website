@@ -24,6 +24,11 @@ export default class CarbonUI {
 	$element:JQuery;
 
 	mainMenu:JQuery;
+	elementsTabContent:JQuery;
+	collectionsTabContent:JQuery;
+	viewsTabContent:JQuery;
+	modulesTabContent:JQuery;
+
 
 	constructor( element:ElementRef ) {
 		this.element = element;
@@ -32,9 +37,45 @@ export default class CarbonUI {
 	afterViewInit():void {
 		this.$element = $( this.element.nativeElement );
 		this.mainMenu = this.$element.find( ".mainhead .menu " );
-		console.log( this.mainMenu );
-		let x = this.mainMenu.find( ".item" ).tab();
-		console.log( x );
-		//this.$element.find( "carbon-ui .mainhead .menu .item" ).tab();
+		this.mainMenu.find( ".item" ).tab();
+		this.elementsTabContent = this.$element.find( '.ui.tab[data-tab="elements"]' );
+		this.collectionsTabContent = this.$element.find( '.ui.tab[data-tab="collections"]' );
+		this.viewsTabContent = this.$element.find( '.ui.tab[data-tab="views"]' );
+		this.modulesTabContent = this.$element.find( '.ui.tab[data-tab="modules"]' );
+
+		this.enableCollectionsJavascript();
+		this.enableViewsJavascript();
+		this.enableModulesJavascript();
+	}
+
+	enableCollectionsJavascript():void {
+		this.collectionsTabContent.find( ".ui.dropdown" ).dropdown();
+		this.collectionsTabContent.find( ".ui.checkbox" ).checkbox();
+		this.collectionsTabContent.find( ".menu a.item" ).on( "click", function () {
+			if ( ! $( this ).hasClass( "dropdown" ) ) {
+				$( this )
+					.addClass( "active" )
+					.closest( ".ui.menu" )
+					.find( "item" )
+					.not( $( this ) )
+					.removeClass( "active" )
+				;
+			}
+		} );
+		this.collectionsTabContent.find( ".message .close" ).on( "click", function () {
+			$( this ).closest( ".message" ).transition( "scale out" );
+		} );
+	}
+
+	enableViewsJavascript():void {
+		this.viewsTabContent.find( ".star.rating" ).rating();
+		this.viewsTabContent.find( ".card .dimmer" ).dimmer( {
+			on: "hover"
+		} );
+	}
+
+	enableModulesJavascript():void {
+		this.modulesTabContent.find( ".ui.accordion" ).accordion();
+		this.modulesTabContent.find( ".ui.checkbox" ).checkbox();
 	}
 }
