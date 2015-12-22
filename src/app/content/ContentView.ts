@@ -93,14 +93,17 @@ export default class ContentView {
                         _self.activatePrevious();
                     }
                 });
-
-
             }
 
             createAccordions():void {
                 this.$element.find( '.ui.accordion' ).accordion();
             }
 
+            // Enables the use of inline JavaScript by placing script in hidden DIV elements with class
+            // "script".
+            // <div class="script">...</div>
+            // Yes, we know that Angular frowns upon this. It shouldn't be used for the wrong things.
+            // But there ARE rare cases where this is handy.
             evalJavascript():void {
                 let scripts:any[] = this.elementRef.nativeElement.querySelectorAll( ".script" );
                 let i:number = 0, scriptLength = scripts.length;
@@ -109,6 +112,8 @@ export default class ContentView {
                 }
             }
 
+            // Expands accordion sections as you scroll through the H2 elements
+            // on the page.
             activateSection(elm):void {
 
                 console.log(">> activateSection()");
@@ -134,6 +139,8 @@ export default class ContentView {
 
             }
 
+            // Contracts accordion sections as you scroll through the H2 elements
+            // on the page.
             activatePrevious():void {
 
                 console.log(">> activatePrevious()");
