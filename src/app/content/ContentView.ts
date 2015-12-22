@@ -68,10 +68,19 @@ export default class ContentView {
 
             afterViewInit():void {
                 this.createAccordions();
+                this.evalJavascript();
             }
 
-            public createAccordions():void {
+            createAccordions():void {
                 this.$element.find( '.ui.accordion' ).accordion();
+            }
+
+            evalJavascript():void {
+                let scripts:any[] = this.elementRef.nativeElement.querySelectorAll( ".script" );
+                let i:number = 0, scriptLength = scripts.length;
+                for ( i; i < scriptLength; i ++ ) {
+                    eval( scripts[ i ].textContent );
+                }
             }
 
         };
