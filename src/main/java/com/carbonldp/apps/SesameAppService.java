@@ -3,6 +3,7 @@ package com.carbonldp.apps;
 import com.carbonldp.agents.Agent;
 import com.carbonldp.agents.app.AppAgentRepository;
 import com.carbonldp.apps.roles.AppRoleRepository;
+import com.carbonldp.apps.roles.AppRoleService;
 import com.carbonldp.authentication.AgentAuthenticationToken;
 import com.carbonldp.authentication.token.app.AppTokenRepository;
 import com.carbonldp.authorization.acl.ACEDescription;
@@ -43,8 +44,9 @@ public class SesameAppService extends AbstractSesameLDPService implements AppSer
 	private final AppRoleRepository appRoleRepository;
 	private final AppAgentRepository appAgentRepository;
 	private final AppTokenRepository appTokensRepository;
+	private final AppRoleService appRoleService;
 
-	public SesameAppService( TransactionWrapper transactionWrapper, RDFSourceRepository sourceRepository, ContainerRepository containerRepository, ACLRepository aclRepository, AppRepository appRepository, AppRoleRepository appRoleRepository, AppAgentRepository appAgentRepository, AppTokenRepository appTokenRepository ) {
+	public SesameAppService( TransactionWrapper transactionWrapper, RDFSourceRepository sourceRepository, ContainerRepository containerRepository, ACLRepository aclRepository, AppRepository appRepository, AppRoleRepository appRoleRepository, AppAgentRepository appAgentRepository, AppTokenRepository appTokenRepository, AppRoleService appRoleService ) {
 		super( transactionWrapper, sourceRepository, containerRepository, aclRepository );
 		Assert.notNull( appRepository );
 		this.appRepository = appRepository;
@@ -52,6 +54,7 @@ public class SesameAppService extends AbstractSesameLDPService implements AppSer
 		this.appRoleRepository = appRoleRepository;
 		this.appAgentRepository = appAgentRepository;
 		this.appTokensRepository = appTokenRepository;
+		this.appRoleService = appRoleService;
 	}
 
 	@Override
@@ -79,12 +82,13 @@ public class SesameAppService extends AbstractSesameLDPService implements AppSer
 		App createdApp = appRepository.create( app );
 		ACL appACL = createAppACL( createdApp );
 
-		AppRole adminRole = transactionWrapper.runInAppcontext( app, () -> {
+		AppRole adminRole = transactionWrapper.runWithSystemPermissionsInAppContext( app, () -> {
 			Container rootContainer = createRootContainer( app );
 			ACL rootContainerACL = createRootContainerACL( rootContainer );
 
 			Container appRolesContainer = appRoleRepository.createAppRolesContainer( rootContainer.getURI() );
 			ACL appRolesContainerACL = createAppRolesContainerACL( appRolesContainer );
+			Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
 			AppRole appAdminRole = createAppAdminRole( appRolesContainer );
 			ACL appAdminRoleACL = createAppAdminRoleACL( appAdminRole );
@@ -95,12 +99,12 @@ public class SesameAppService extends AbstractSesameLDPService implements AppSer
 			Container appTokensContainer = appTokensRepository.createAppTokensContainer( rootContainer.getURI() );
 			ACL appTokensContainerACL = createAppTokensACL( appTokensContainer );
 
-			addCurrentAgentToAppAdminRole( appAdminRole );
-
 			addDefaultPermissions( appAdminRole, rootContainerACL );
 
 			return appAdminRole;
 		} );
+
+		transactionWrapper.runInAppcontext( app, () -> addCurrentAgentToAppAdminRole( adminRole ) );
 
 		addAppDefaultPermissions( adminRole, appACL );
 
@@ -150,7 +154,7 @@ public class SesameAppService extends AbstractSesameLDPService implements AppSer
 		Set<RDFResource> resourceViewsToDelete = RDFResourceUtil.getResourceViews( statementsToDelete );
 		validateSystemProperties( resourceViewsToDelete );
 
-		sourceRepository.substract( appURI, resourceViewsToDelete );
+		sourceRepository.subtract( appURI, resourceViewsToDelete );
 		sourceRepository.add( appURI, resourceViewsToAdd );
 
 		sourceRepository.touch( appURI );
@@ -185,7 +189,8 @@ public class SesameAppService extends AbstractSesameLDPService implements AppSer
 	private AppRole createAppAdminRole( Container appRolesContainer ) {
 		URI appAdminRoleURI = getAppAdminRoleURI( appRolesContainer );
 		AppRole appAdminRole = AppRoleFactory.getInstance().create( new RDFResource( appAdminRoleURI ) );
-		appAdminRole = appRoleRepository.create( appAdminRole );
+		appAdminRole.setName( "App admin." );
+		appRoleService.create( appAdminRole );
 		return appAdminRole;
 	}
 

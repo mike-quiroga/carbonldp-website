@@ -1,6 +1,7 @@
 package com.carbonldp.ldp.sources;
 
 import com.carbonldp.ldp.containers.AccessPoint;
+import com.carbonldp.rdf.RDFNodeEnum;
 import com.carbonldp.rdf.RDFResource;
 import org.joda.time.DateTime;
 import org.openrdf.model.URI;
@@ -29,7 +30,7 @@ public interface RDFSourceRepository {
 
 	public void update( RDFSource source );
 
-	public void substract( URI sourceURI, Collection<RDFResource> statementsToDelete );
+	public void subtract( URI sourceURI, Collection<RDFResource> statementsToDelete );
 
 	public void delete( URI sourceURI );
 
@@ -38,4 +39,6 @@ public interface RDFSourceRepository {
 	public void replace( RDFSource source );
 
 	public void set( URI sourceURI, Collection<RDFResource> resourceViews );
+
+	boolean is( URI resourceURI, RDFNodeEnum type );
 }

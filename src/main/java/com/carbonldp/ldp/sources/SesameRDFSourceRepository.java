@@ -3,33 +3,35 @@ package com.carbonldp.ldp.sources;
 import com.carbonldp.ldp.AbstractSesameLDPRepository;
 import com.carbonldp.ldp.containers.AccessPoint;
 import com.carbonldp.rdf.RDFDocumentRepository;
+import com.carbonldp.rdf.RDFNodeEnum;
 import com.carbonldp.rdf.RDFResource;
 import com.carbonldp.rdf.RDFResourceRepository;
 import com.carbonldp.repository.DocumentGraphQueryResultHandler;
 import com.carbonldp.repository.GraphQueryResultHandler;
 import com.carbonldp.utils.RDFNodeUtil;
+import com.carbonldp.utils.SPARQLUtil;
 import com.carbonldp.utils.ValueUtil;
 import com.carbonldp.web.exceptions.NotImplementedException;
+import org.apache.commons.lang3.text.StrSubstitutor;
 import org.joda.time.DateTime;
 import org.openrdf.model.Resource;
 import org.openrdf.model.URI;
 import org.openrdf.model.Value;
 import org.openrdf.model.impl.AbstractModel;
 import org.openrdf.model.impl.LinkedHashModel;
+import org.openrdf.model.vocabulary.RDF;
 import org.openrdf.spring.SesameConnectionFactory;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
-import static com.carbonldp.Consts.NEW_LINE;
-import static com.carbonldp.Consts.TAB;
+import static com.carbonldp.Consts.*;
 
 @Transactional
 public class SesameRDFSourceRepository extends AbstractSesameLDPRepository implements RDFSourceRepository {
+
+	private static String isQuery;
 
 	public SesameRDFSourceRepository( SesameConnectionFactory connectionFactory, RDFResourceRepository resourceRepository, RDFDocumentRepository documentRepository ) {
 		super( connectionFactory, resourceRepository, documentRepository );
@@ -201,8 +203,24 @@ public class SesameRDFSourceRepository extends AbstractSesameLDPRepository imple
 		}
 	}
 
+	static {
+		isQuery = "ASK { ?resource " + LESS_THAN + RDF.TYPE + MORE_THAN + " ?rdfType." + "${values} }";
+	}
+
 	@Override
-	public void substract( URI sourceURI, Collection<RDFResource> resourceViews ) {
+	public boolean is( URI resourceURI, RDFNodeEnum type ) {
+		Map<String, Value> bindings = new LinkedHashMap<>();
+		bindings.put( "resource", resourceURI );
+
+		Map<String, String> values = new HashMap<>();
+		values.put( "values", SPARQLUtil.assignVar( "rdfType", type ) );
+		StrSubstitutor sub = new StrSubstitutor( values, "${", "}" );
+
+		return sparqlTemplate.executeBooleanQuery( sub.replace( isQuery ), bindings );
+	}
+
+	@Override
+	public void subtract( URI sourceURI, Collection<RDFResource> resourceViews ) {
 		for ( RDFResource resourceView : resourceViews ) {
 			URI resourceViewURI = resourceView.getURI();
 			Map<URI, Set<Value>> propertiesMap = resourceView.getPropertiesMap();
