@@ -30,7 +30,6 @@ public class AppRoleAgentsController extends AbstractLDPController {
 	public ResponseEntity<Object> addAgentToRole( @RequestBody RDFDocument requestDocument, HttpServletRequest request, HttpServletResponse response ) {
 		return appRoleAgentsPUTHandler.handleRequest( requestDocument, request, response );
 	}
-
 	@Autowired
 	public void setAppRoleAgentsPUTHandler( AppRoleAgentsPUTHandler appRoleAgentsPUTHandler ) {this.appRoleAgentsPUTHandler = appRoleAgentsPUTHandler;}
 }

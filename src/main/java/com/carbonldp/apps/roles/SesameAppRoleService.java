@@ -77,13 +77,6 @@ public class SesameAppRoleService extends AbstractSesameLDPService implements Ap
 	}
 
 	@Override
-	public void removeAgents( URI appRoleAgentContainerURI, Set<URI> agents ) {
-		for ( URI agent : agents ) {
-			removeAgent( appRoleAgentContainerURI, agent );
-		}
-	}
-
-	@Override
 	public void addChildren( URI parentRole, Set<URI> childs ) {
 		for ( URI member : childs ) {
 			addChild( parentRole, member );
@@ -107,16 +100,6 @@ public class SesameAppRoleService extends AbstractSesameLDPService implements Ap
 	public void delete( URI appRoleURI ) {
 		if ( ! exists( appRoleURI ) ) throw new ResourceDoesntExistException();
 		appRoleRepository.delete( appRoleURI );
-	}
-
-	public void removeAgent( URI appRoleAgentContainerURI, URI agent ) {
-		if ( ( ! sourceRepository.exists( appRoleAgentContainerURI ) ) ) throw new ResourceDoesntExistException();
-		if ( ! isAppAgent( agent ) && ! isPlatformAgent( agent ) ) throw new InvalidRDFTypeException( new Infraction( 0x2001, "rdf.type", AgentDescription.Resource.CLASS.getURI().stringValue() ) );
-
-		containerService.removeMember( appRoleAgentContainerURI, agent );
-
-		URI membershipResource = containerRepository.getTypedRepository( containerService.getContainerType( appRoleAgentContainerURI ) ).getMembershipResource( appRoleAgentContainerURI );
-		sourceRepository.touch( membershipResource );
 	}
 
 	private void validate( AppRole appRole ) {
