@@ -2,6 +2,7 @@ package com.carbonldp.apps.roles;
 
 import com.carbonldp.apps.AppRole;
 import org.openrdf.model.URI;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.util.Set;
 
@@ -26,7 +27,9 @@ public interface AppRoleService {
 
 	public void delete( URI appURI );
 
-	public void removeAgentMembers( URI appRoleAgentContainerURI, Set<URI> agents );
+	@PreAuthorize( "hasPermission(#appRoleAgentContainerURI, 'REMOVE_MEMBER')" )
+	public void removeAgents( URI appRoleAgentContainerURI, Set<URI> agents );
 
-	public void removeAgentMember( URI appRoleAgentContainerURI, URI agent );
+	@PreAuthorize( "hasPermission(#appRoleAgentContainerURI, 'REMOVE_MEMBER')" )
+	public void removeAgent( URI appRoleAgentContainerURI, URI agent );
 }

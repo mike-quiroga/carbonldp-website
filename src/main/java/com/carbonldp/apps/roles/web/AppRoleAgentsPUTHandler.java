@@ -18,7 +18,7 @@ import java.util.List;
  * @since 0.19.0-ALPHA
  */
 @RequestHandler
-public class AppRolesPUTAgentsHandler extends AbstractPUTRequestHandler<RDFResource> {
+public class AppRoleAgentsPUTHandler extends AbstractPUTRequestHandler<RDFResource> {
 
 	protected AppRoleService appRoleService;
 

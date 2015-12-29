@@ -5,12 +5,13 @@ import com.carbonldp.agents.platform.PlatformAgentRepository;
 import com.carbonldp.apps.AppRole;
 import com.carbonldp.apps.AppRoleDescription;
 import com.carbonldp.apps.AppRoleFactory;
-import com.carbonldp.apps.context.AppContextHolder;
-import com.carbonldp.authentication.AgentAuthenticationToken;
 import com.carbonldp.authorization.acl.ACLRepository;
 import com.carbonldp.exceptions.*;
 import com.carbonldp.ldp.AbstractSesameLDPService;
-import com.carbonldp.ldp.containers.*;
+import com.carbonldp.ldp.containers.ContainerRepository;
+import com.carbonldp.ldp.containers.ContainerService;
+import com.carbonldp.ldp.containers.DirectContainer;
+import com.carbonldp.ldp.containers.DirectContainerFactory;
 import com.carbonldp.ldp.sources.RDFSourceRepository;
 import com.carbonldp.ldp.sources.RDFSourceService;
 import com.carbonldp.models.Infraction;
@@ -18,13 +19,8 @@ import com.carbonldp.rdf.RDFResource;
 import com.carbonldp.spring.TransactionWrapper;
 import org.joda.time.DateTime;
 import org.openrdf.model.URI;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 /**
@@ -81,9 +77,9 @@ public class SesameAppRoleService extends AbstractSesameLDPService implements Ap
 	}
 
 	@Override
-	public void removeAgentMembers( URI appRoleAgentContainerURI, Set<URI> agents ) {
+	public void removeAgents( URI appRoleAgentContainerURI, Set<URI> agents ) {
 		for ( URI agent : agents ) {
-			removeAgentMember( appRoleAgentContainerURI, agent );
+			removeAgent( appRoleAgentContainerURI, agent );
 		}
 	}
 
@@ -113,11 +109,9 @@ public class SesameAppRoleService extends AbstractSesameLDPService implements Ap
 		appRoleRepository.delete( appRoleURI );
 	}
 
-	public void removeAgentMember( URI appRoleAgentContainerURI, URI agent ) {
+	public void removeAgent( URI appRoleAgentContainerURI, URI agent ) {
 		if ( ( ! sourceRepository.exists( appRoleAgentContainerURI ) ) ) throw new ResourceDoesntExistException();
 		if ( ! isAppAgent( agent ) && ! isPlatformAgent( agent ) ) throw new InvalidRDFTypeException( new Infraction( 0x2001, "rdf.type", AgentDescription.Resource.CLASS.getURI().stringValue() ) );
-
-		validatePermissionToModifyAgent( appRoleAgentContainerURI );
 
 		containerService.removeMember( appRoleAgentContainerURI, agent );
 
@@ -144,31 +138,6 @@ public class SesameAppRoleService extends AbstractSesameLDPService implements Ap
 
 	private boolean isPlatformAgent( URI agent ) {
 		return platformAgentRepository.exists( agent );
-	}
-
-	private void validatePermissionToModifyAgent( URI appRoleAgentContainerURI ) {
-		ContainerDescription.Type containerType = containerRepository.getContainerType( appRoleAgentContainerURI );
-		URI role = containerRepository.getTypedRepository( containerType ).getMembershipResource( appRoleAgentContainerURI );
-		if ( ! isMemberOfRoleHierarchy( role ) ) {
-			Map<String, String> parametersException = new LinkedHashMap<>();
-			parametersException.put( "action", "add agent" );
-			parametersException.put( "uri", role.stringValue() );
-			throw new AuthorizationException( new Infraction( 0x7001, parametersException ) );
-		}
-	}
-
-	private boolean isMemberOfRoleHierarchy( URI role ) {
-		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		if ( ! ( authentication instanceof AgentAuthenticationToken ) ) throw new BadCredentialsException( "invalid authentication token" );
-		AgentAuthenticationToken agentAuthenticationToken = (AgentAuthenticationToken) authentication;
-		Set<AppRole> agentAppRoles = agentAuthenticationToken.getAppRoles( AppContextHolder.getContext().getApplication().getURI() );
-		Set<URI> parentsRoles = appRoleRepository.getParentsURI( role );
-		for ( AppRole appRole : agentAppRoles ) {
-			if ( parentsRoles.contains( appRole.getSubject() ) ) {
-				return true;
-			}
-		}
-		return false;
 	}
 
 	private void createAgentsContainer( AppRole appRole ) {

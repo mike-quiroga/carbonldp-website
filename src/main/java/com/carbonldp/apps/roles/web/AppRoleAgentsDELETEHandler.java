@@ -13,7 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  * @since 0.21.0-ALPHA
  */
 @RequestHandler
-public class AppRolesDELETEAgentsHandler extends AbstractDELETERequestHandler {
+public class AppRoleAgentsDELETEHandler extends AbstractDELETERequestHandler {
 
 	AppRoleService appRoleService;
 
@@ -24,11 +24,11 @@ public class AppRolesDELETEAgentsHandler extends AbstractDELETERequestHandler {
 		RemoveMembersAction members = new RemoveMembersAction( requestDocument.getBaseModel(), requestDocument.subjectResource() );
 		validate( members );
 
-		appRoleService.removeAgentMembers( targetURI, members.getMembers() );
+		appRoleService.removeAgents( targetURI, members.getMembers() );
 	}
 
 	@Autowired
-	public AppRolesDELETEAgentsHandler( AppRoleService appRoleService ) {
+	public void setAppRoleService( AppRoleService appRoleService ) {
 		this.appRoleService = appRoleService;
 	}
 }
