@@ -38,6 +38,7 @@
 					</div>
 				</div>
 
+				<!--
 				<div class="right menu">
 					<div class="item">
 						<a class="ui button">Log in</a>
@@ -46,13 +47,14 @@
 						<a class="ui button">Sign up</a>
 					</div>
 				</div>
+				-->
 
 			</div>
 		</div>
 	</div>
 
 	<div class="mobile only row">
-		<div class="ui fixed inverted menu">
+		<div class="ui fixed menu">
 			<a class="item logo" [router-link]="[ '/Home' ]"><img class="ui small image logo" src="assets/images/carbon-logo-150x48.png"/></a>
 
 			<div class="menu">
@@ -70,7 +72,7 @@
 				</a>
 			</div>
 		</div>
-		<div class="ui fixed inverted vertical menu">
+		<div class="ui fixed vertical menu">
 			<a class="item" [router-link]="[ '/Home' ]" [ng-class]="{active: isActive('/Home') }">Home</a>
 			<a class="item" [router-link]="[ '/Blog' ]" [ng-class]="{active: isActive('/Blog') }">Blog</a>
 			<a class="item" [router-link]="[ '/SPARQLClient' ]" [ng-class]="{active: isActive('/SPARQLClient') }"><i class="terminal icon"></i> SPARQL Editor</a>
