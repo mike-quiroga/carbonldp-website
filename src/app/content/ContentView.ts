@@ -10,6 +10,8 @@ import 'semantic-ui/semantic';
 import template from './template.html!';
 import ComponentRef = ng.ComponentRef;
 
+import "./style.css!";
+
 @Component({
     // Selector matches the route alias?
     selector: 'compiled-content',
