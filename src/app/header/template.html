@@ -1,13 +1,10 @@
 <div class="ui grid">
-	<div class="computer tablet only row">
-	<span class="section">Documentation</span>
-	<i class="right arrow icon divider"></i>
-	<div class="active section">Essential Concepts</div>
-		<div class="ui inverted fixed menu navbar grid">
 
+	<div class="computer tablet only row">
+		<div class="ui top fixed borderless menu" id="primary-nav">
 			<div class="ui container">
 
-				<a class="item logo" [router-link]="[ '/Home' ]"><img class="ui medium image" src="assets/images/carbon-ldp-logo-sm.png"/></a>
+				<a class="item logo" [router-link]="[ '/Home' ]"><img class="ui small image logo" src="assets/images/carbon-logo-150x48.png"/></a>
 
 				<a class="item" [router-link]="[ '/Home' ]" [ng-class]="{active: isActive('/Home') }">Home</a>
 				<a class="item" [router-link]="[ '/Blog' ]" [ng-class]="{active: isActive('/Blog') }">Blog</a>
@@ -41,20 +38,24 @@
 					</div>
 				</div>
 
+				<!--
 				<div class="right menu">
 					<div class="item">
-						<a class="ui inverted button">Log in</a>
+						<a class="ui button">Log in</a>
 					</div>
 					<div class="item">
-						<a class="ui inverted button">Sign up</a>
+						<a class="ui button">Sign up</a>
 					</div>
 				</div>
+				-->
+
 			</div>
 		</div>
 	</div>
+
 	<div class="mobile only row">
-		<div class="ui fixed inverted menu">
-			<a class="item logo" [router-link]="[ '/Home' ]"><img class="ui small image" src="assets/images/carbon-ldp-logo-sm.png"/></a>
+		<div class="ui fixed menu">
+			<a class="item logo" [router-link]="[ '/Home' ]"><img class="ui small image logo" src="assets/images/carbon-logo-150x48.png"/></a>
 
 			<div class="menu">
 				<div class="item">
@@ -71,7 +72,7 @@
 				</a>
 			</div>
 		</div>
-		<div class="ui fixed inverted vertical menu">
+		<div class="ui fixed vertical menu">
 			<a class="item" [router-link]="[ '/Home' ]" [ng-class]="{active: isActive('/Home') }">Home</a>
 			<a class="item" [router-link]="[ '/Blog' ]" [ng-class]="{active: isActive('/Blog') }">Blog</a>
 			<a class="item" [router-link]="[ '/SPARQLClient' ]" [ng-class]="{active: isActive('/SPARQLClient') }"><i class="terminal icon"></i> SPARQL Editor</a>
@@ -103,7 +104,6 @@
 					<a class="item" [router-link]="[ '/Docs', {id: 'interaction-models.html'} ]">Interaction Models</a>
 				</div>
 			</div>
-
 		</div>
 	</div>
 </div>
