@@ -1,0 +1,17 @@
+compiled-content {
+
+	section {
+		margin-top: 2em;
+		padding-top: 2em;
+	}
+
+	nav {
+		.sticky {
+			.item.active {
+				a {
+					text-decoration: underline;
+				}
+			}
+		}
+	}
+}
