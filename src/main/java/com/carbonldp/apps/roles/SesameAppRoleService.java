@@ -68,7 +68,6 @@ public class SesameAppRoleService extends AbstractSesameLDPService implements Ap
 		sourceRepository.touch( membershipResource, modifiedTime );
 	}
 
-	@Override
 	public void create( AppRole appRole ) {
 		if ( sourceRepository.exists( appRole.getURI() ) ) throw new ResourceAlreadyExistsException();
 		validate( appRole );
@@ -103,19 +102,6 @@ public class SesameAppRoleService extends AbstractSesameLDPService implements Ap
 		appRoleRepository.delete( appRoleURI );
 	}
 
-	private void createAgentsContainer( AppRole appRole ) {
-		URI agentsContainerURI = appRoleRepository.getAgentsContainerURI( appRole.getURI() );
-		RDFResource resource = new RDFResource( agentsContainerURI );
-		DirectContainer container = DirectContainerFactory.getInstance().create( resource, appRole.getURI(), AppRoleDescription.Property.AGENT.getURI() );
-		sourceService.createAccessPoint( appRole.getURI(), container );
-	}
-
-	private void validateHasParent( URI childURI ) {
-		if ( ! sourceRepository.exists( childURI ) ) throw new ResourceDoesntExistException();
-		Set<URI> parentsRoles = appRoleRepository.getParentsURI( childURI );
-		if ( ! parentsRoles.isEmpty() ) throw new AlreadyHasAParentException();
-	}
-
 	private void validate( AppRole appRole ) {
 		List<Infraction> infractions = AppRoleFactory.getInstance().validate( appRole );
 		if ( ! infractions.isEmpty() ) throw new InvalidResourceException( infractions );
@@ -135,5 +121,18 @@ public class SesameAppRoleService extends AbstractSesameLDPService implements Ap
 
 	private boolean isPlatformAgent( URI agent ) {
 		return platformAgentRepository.exists( agent );
+	}
+
+	private void createAgentsContainer( AppRole appRole ) {
+		URI agentsContainerURI = appRoleRepository.getAgentsContainerURI( appRole.getURI() );
+		RDFResource resource = new RDFResource( agentsContainerURI );
+		DirectContainer container = DirectContainerFactory.getInstance().create( resource, appRole.getURI(), AppRoleDescription.Property.AGENT.getURI() );
+		sourceService.createAccessPoint( appRole.getURI(), container );
+	}
+
+	private void validateHasParent( URI childURI ) {
+		if ( ! sourceRepository.exists( childURI ) ) throw new ResourceDoesntExistException();
+		Set<URI> parentsRoles = appRoleRepository.getParentsURI( childURI );
+		if ( ! parentsRoles.isEmpty() ) throw new AlreadyHasAParentException();
 	}
 }

@@ -23,14 +23,14 @@ import javax.servlet.http.HttpServletResponse;
 @RequestMapping( value = "apps/*/roles/*/agents/" )
 public class AppRoleAgentsController extends AbstractLDPController {
 
-	private AppRolePUTAgentsHandler appRolePUTAgentsHandler;
+	private AppRoleAgentsPUTHandler appRoleAgentsPUTHandler;
 
 	@RequestMapping( method = RequestMethod.PUT )
 	@InteractionModel( APIPreferences.InteractionModel.CONTAINER )
 	public ResponseEntity<Object> addAgentToRole( @RequestBody RDFDocument requestDocument, HttpServletRequest request, HttpServletResponse response ) {
-		return appRolePUTAgentsHandler.handleRequest( requestDocument, request, response );
+		return appRoleAgentsPUTHandler.handleRequest( requestDocument, request, response );
 	}
 
 	@Autowired
-	public void setAppRolePUTAgentsHandler( AppRolePUTAgentsHandler appRolePUTAgentsHandler ) {this.appRolePUTAgentsHandler = appRolePUTAgentsHandler;}
+	public void setAppRoleAgentsPUTHandler( AppRoleAgentsPUTHandler appRoleAgentsPUTHandler ) { this.appRoleAgentsPUTHandler = appRoleAgentsPUTHandler; }
 }

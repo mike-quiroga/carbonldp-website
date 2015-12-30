@@ -28,10 +28,10 @@ public interface ContainerService {
 	public void addMember( URI containerURI, URI member );
 
 	@PreAuthorize( "hasPermission(#containerURI, 'REMOVE_MEMBER')" )
-	public void removeMembers( URI containerURI );
+	public void removeMembers( URI targetURI );
 
 	@PreAuthorize( "hasPermission(#containerURI, 'REMOVE_MEMBER')" )
-	public void removeMembers( URI containerURI, Set<URI> members );
+	public void removeMembers( URI targetUri, Set<URI> members );
 
 	@PreAuthorize( "hasPermission(#containerURI, 'REMOVE_MEMBER')" )
 	public void removeMember( URI containerURI, URI member );
