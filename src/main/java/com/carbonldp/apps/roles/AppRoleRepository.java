@@ -9,6 +9,7 @@ import org.openrdf.model.URI;
 import java.util.Set;
 
 public interface AppRoleRepository {
+	public boolean exists( URI appRoleURI );
 
 	public AppRole get( URI appRoleURI );
 
@@ -18,8 +19,13 @@ public interface AppRoleRepository {
 
 	public void addAgent( URI appRole, Agent agent );
 
-	public AppRole create( AppRole appRole );
-
 	public Container createAppRolesContainer( URI rootContainerURI );
 
+	public Set<URI> getParentsURI( URI appRoleURI );
+
+	public URI getContainerURI();
+
+	public URI getAgentsContainerURI( URI appRoleURI );
+
+	public void delete( URI appRoleURI );
 }

@@ -17,15 +17,15 @@ import com.carbonldp.rdf.RDFResource;
 import com.carbonldp.rdf.RDFResourceRepository;
 import com.carbonldp.utils.RDFNodeUtil;
 import com.carbonldp.utils.URIUtil;
+import com.carbonldp.utils.ValueUtil;
 import org.openrdf.model.URI;
 import org.openrdf.model.Value;
+import org.openrdf.query.BindingSet;
 import org.openrdf.spring.SesameConnectionFactory;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 @Transactional
 public class SesameAppRoleRepository extends AbstractSesameLDPRepository implements AppRoleRepository {
@@ -35,6 +35,8 @@ public class SesameAppRoleRepository extends AbstractSesameLDPRepository impleme
 
 	private String containerSlug;
 	private String agentsContainerSlug;
+
+	private static String getParentsQuery;
 
 	private final ContainerDescription.Type appRolesContainerType = ContainerDescription.Type.BASIC;
 
@@ -55,6 +57,16 @@ public class SesameAppRoleRepository extends AbstractSesameLDPRepository impleme
 			.append( RDFNodeUtil.generatePredicateStatement( "?members", "?agent", AppRoleDescription.Property.AGENT ) )
 		;
 		getByAgent_query = queryBuilder.toString();
+	}
+
+	public void setAppRoleContainerSlug( String slug ) {
+		Assert.notNull( slug );
+		this.containerSlug = slug;
+	}
+
+	public void setAgentsContainerSlug( String slug ) {
+		Assert.notNull( slug );
+		this.agentsContainerSlug = slug;
 	}
 
 	@Override
@@ -96,16 +108,6 @@ public class SesameAppRoleRepository extends AbstractSesameLDPRepository impleme
 	}
 
 	@Override
-	public AppRole create( AppRole appRole ) {
-		URI containerURI = getContainerURI();
-		containerRepository.createChild( containerURI, appRole );
-
-		Container agentsContainer = createAgentsContainer( appRole );
-		// TODO: Decide. Should the ACL be created here?
-		return appRole;
-	}
-
-	@Override
 	public Container createAppRolesContainer( URI rootContainerURI ) {
 		URI appRolesContainerURI = getContainerURI( rootContainerURI );
 		BasicContainer appRolesContainer = BasicContainerFactory.getInstance().create( new RDFResource( appRolesContainerURI ) );
@@ -113,17 +115,12 @@ public class SesameAppRoleRepository extends AbstractSesameLDPRepository impleme
 		return appRolesContainer;
 	}
 
-	public void setAppRoleContainerSlug( String slug ) {
-		Assert.notNull( slug );
-		this.containerSlug = slug;
+	@Override
+	public boolean exists( URI appRoleURI ) {
+		return sourceRepository.exists( appRoleURI );
 	}
 
-	public void setAgentsContainerSlug( String slug ) {
-		Assert.notNull( slug );
-		this.agentsContainerSlug = slug;
-	}
-
-	private URI getContainerURI() {
+	public URI getContainerURI() {
 		AppContext appContext = AppContextHolder.getContext();
 		if ( appContext.isEmpty() ) throw new IllegalStateException( "The rootContainerURI cannot be retrieved from the platform context." );
 		URI rootContainerURI = appContext.getApplication().getRootContainerURI();
@@ -135,15 +132,37 @@ public class SesameAppRoleRepository extends AbstractSesameLDPRepository impleme
 		return URIUtil.createChildURI( rootContainerURI, containerSlug );
 	}
 
-	private Container createAgentsContainer( AppRole appRole ) {
-		URI agentsContainerURI = getAgentsContainerURI( appRole.getURI() );
-		RDFResource resource = new RDFResource( agentsContainerURI );
-		DirectContainer container = DirectContainerFactory.getInstance().create( resource, appRole.getURI(), AppRoleDescription.Property.AGENT.getURI() );
-		sourceRepository.createAccessPoint( appRole.getURI(), container );
-		return container;
-	}
-
-	private URI getAgentsContainerURI( URI appRoleURI ) {
+	public URI getAgentsContainerURI( URI appRoleURI ) {
 		return URIUtil.createChildURI( appRoleURI, agentsContainerSlug );
 	}
+
+	static {
+		getParentsQuery = "SELECT ?parentURI\n" +
+			"WHERE {\n" +
+			"  ?childURI <" + AppRoleDescription.Property.PARENT_ROLE.getURI().stringValue() + ">+ ?parentURI\n" +
+			"}";
+	}
+
+	@Override
+	public Set<URI> getParentsURI( URI appRoleURI ) {
+		Map<String, Value> bindings = new LinkedHashMap<>();
+
+		bindings.put( "childURI", appRoleURI );
+		return sparqlTemplate.executeTupleQuery( getParentsQuery, bindings, queryResult -> {
+			Set<URI> parents = new HashSet<>();
+			while ( queryResult.hasNext() ) {
+				BindingSet bindingSet = queryResult.next();
+				Value member = bindingSet.getValue( "parentURI" );
+				if ( ValueUtil.isURI( member ) ) parents.add( ValueUtil.getURI( member ) );
+			}
+
+			return parents;
+		} );
+	}
+
+	@Override
+	public void delete( URI appRoleURI ) {
+		sourceRepository.delete( appRoleURI );
+	}
+
 }
