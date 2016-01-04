@@ -1,31 +1,20 @@
 package com.carbonldp.ldp.nonrdf;
 
-import com.carbonldp.authorization.acl.ACLRepository;
 import com.carbonldp.ldp.AbstractSesameLDPService;
-import com.carbonldp.ldp.containers.ContainerRepository;
 import com.carbonldp.ldp.sources.RDFSource;
-import com.carbonldp.ldp.sources.RDFSourceRepository;
 import com.carbonldp.rdf.RDFResourceRepository;
 import com.carbonldp.repository.FileRepository;
-import com.carbonldp.spring.TransactionWrapper;
 import org.joda.time.DateTime;
 import org.openrdf.model.URI;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.File;
 import java.util.UUID;
 
-@Transactional
 public class SesameNonRDFSourceService extends AbstractSesameLDPService implements NonRDFSourceService {
 
 	protected FileRepository fileRepository;
 	protected RDFResourceRepository resourceRepository;
-
-	public SesameNonRDFSourceService( TransactionWrapper transactionWrapper, RDFSourceRepository sourceRepository, ContainerRepository containerRepository, ACLRepository aclRepository, FileRepository fileRepository, RDFResourceRepository resourceRepository ) {
-		super( transactionWrapper, sourceRepository, containerRepository, aclRepository );
-		this.fileRepository = fileRepository;
-		this.resourceRepository = resourceRepository;
-	}
 
 	@Override
 	public File getResource( RDFRepresentation rdfRepresentation ) {
@@ -80,4 +69,10 @@ public class SesameNonRDFSourceService extends AbstractSesameLDPService implemen
 		resourceRepository.remove( rdfRepresentationUri, RDFRepresentationDescription.Property.UUID.getURI() );
 		resourceRepository.add( rdfRepresentationUri, RDFRepresentationDescription.Property.UUID.getURI(), uuid.toString() );
 	}
+
+	@Autowired
+	public void setFileRepository( FileRepository fileRepository ) { this.fileRepository = fileRepository; }
+
+	@Autowired
+	public void setResourceRepository( RDFResourceRepository resourceRepository ) { this.resourceRepository = resourceRepository; }
 }

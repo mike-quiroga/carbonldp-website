@@ -1,30 +1,21 @@
 package com.carbonldp.ldp.containers;
 
-import com.carbonldp.authorization.acl.ACLRepository;
 import com.carbonldp.descriptions.APIPreferences;
 import com.carbonldp.exceptions.ResourceAlreadyExistsException;
 import com.carbonldp.exceptions.ResourceDoesntExistException;
 import com.carbonldp.ldp.AbstractSesameLDPService;
-import com.carbonldp.ldp.sources.RDFSourceRepository;
 import com.carbonldp.ldp.sources.RDFSourceService;
 import com.carbonldp.rdf.RDFResource;
-import com.carbonldp.spring.TransactionWrapper;
 import org.joda.time.DateTime;
 import org.openrdf.model.URI;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.File;
 import java.util.Set;
 
-@Transactional
 public class SesameContainerService extends AbstractSesameLDPService implements ContainerService {
 
-	private final RDFSourceService sourceService;
-
-	public SesameContainerService( TransactionWrapper transactionWrapper, RDFSourceRepository sourceRepository, ContainerRepository containerRepository, ACLRepository aclRepository, RDFSourceService sourceService ) {
-		super( transactionWrapper, sourceRepository, containerRepository, aclRepository );
-		this.sourceService = sourceService;
-	}
+	private RDFSourceService sourceService;
 
 	@Override
 	public Container get( URI containerURI, Set<APIPreferences.ContainerRetrievalPreference> containerRetrievalPreferences ) {
@@ -125,4 +116,7 @@ public class SesameContainerService extends AbstractSesameLDPService implements 
 	public void delete( URI targetURI ) {
 		sourceRepository.delete( targetURI );
 	}
+
+	@Autowired
+	public void setRDFSourceService( RDFSourceService rdfSourceService ) { this.sourceService = rdfSourceService; }
 }

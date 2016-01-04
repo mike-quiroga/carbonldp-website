@@ -1,39 +1,22 @@
 package com.carbonldp.agents.app;
 
 import com.carbonldp.agents.Agent;
-import com.carbonldp.agents.AgentRepository;
 import com.carbonldp.agents.AgentValidator;
 import com.carbonldp.agents.SesameAgentsService;
-import com.carbonldp.agents.validators.AgentValidatorRepository;
 import com.carbonldp.apps.roles.AppRoleRepository;
 import com.carbonldp.authorization.acl.ACL;
-import com.carbonldp.authorization.acl.ACLRepository;
-import com.carbonldp.config.ConfigurationRepository;
 import com.carbonldp.exceptions.ResourceAlreadyExistsException;
-import com.carbonldp.ldp.containers.ContainerRepository;
-import com.carbonldp.ldp.sources.RDFSourceRepository;
-import com.carbonldp.spring.TransactionWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.Assert;
 
 /**
  * @author NestorVenegas
  * @since 0.14.0-ALPHA
  */
 
-@Transactional
 public class SesameAppAgentService extends SesameAgentsService {
 
-	private AgentRepository appAgentRepository;
-	private AppRoleRepository appRoleRepository;
-
-	public SesameAppAgentService( TransactionWrapper transactionWrapper, RDFSourceRepository sourceRepository, ContainerRepository containerRepository, ACLRepository aclRepository, AgentRepository appAgentRepository, AgentValidatorRepository agentValidatorRepository ) {
-		super( transactionWrapper, sourceRepository, containerRepository, aclRepository, agentValidatorRepository );
-
-		Assert.notNull( appAgentRepository );
-		this.appAgentRepository = appAgentRepository;
-	}
+	protected AppAgentRepository appAgentRepository;
+	protected AppRoleRepository appRoleRepository;
 
 	@Override
 	public void register( Agent agent ) {
@@ -61,13 +44,8 @@ public class SesameAppAgentService extends SesameAgentsService {
 	}
 
 	@Autowired
-	public void setConfigurationRepository( ConfigurationRepository configurationRepository ) {
-		Assert.notNull( configurationRepository );
-		this.configurationRepository = configurationRepository;
-	}
+	public void setAppAgentRepository( AppAgentRepository appAgentRepository ) { this.appAgentRepository = appAgentRepository; }
 
 	@Autowired
-	public void setAppRoleRepository( AppRoleRepository appRoleRepository ) {
-		this.appRoleRepository = appRoleRepository;
-	}
+	public void setAppRoleRepository( AppRoleRepository appRoleRepository ) { this.appRoleRepository = appRoleRepository; }
 }

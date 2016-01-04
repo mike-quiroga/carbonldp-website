@@ -9,15 +9,13 @@ import com.carbonldp.exceptions.InvalidResourceException;
 import com.carbonldp.exceptions.ResourceDoesntExistException;
 import com.carbonldp.exceptions.StupidityException;
 import com.carbonldp.ldp.AbstractSesameLDPService;
-import com.carbonldp.ldp.containers.ContainerRepository;
-import com.carbonldp.ldp.sources.RDFSourceRepository;
 import com.carbonldp.models.Infraction;
-import com.carbonldp.spring.TransactionWrapper;
 import com.carbonldp.utils.RDFNodeUtil;
 import com.carbonldp.web.exceptions.NotImplementedException;
 import org.openrdf.model.URI;
 import org.openrdf.model.ValueFactory;
 import org.openrdf.model.impl.ValueFactoryImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.PermissionEvaluator;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
@@ -26,15 +24,12 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import java.util.*;
 
 public class SesameACLService extends AbstractSesameLDPService implements ACLService {
-	ValueFactory valueFactory;
-	PermissionEvaluator permissionEvaluator;
-	AppRoleRepository appRoleRepository;
+	protected ValueFactory valueFactory;
+	protected PermissionEvaluator permissionEvaluator;
+	protected AppRoleRepository appRoleRepository;
 
-	public SesameACLService( TransactionWrapper transactionWrapper, RDFSourceRepository sourceRepository, ContainerRepository containerRepository, ACLRepository aclRepository, PermissionEvaluator permissionEvaluator, AppRoleRepository appRoleRepository ) {
-		super( transactionWrapper, sourceRepository, containerRepository, aclRepository );
-
+	public SesameACLService( PermissionEvaluator permissionEvaluator ) {
 		this.permissionEvaluator = permissionEvaluator;
-		this.appRoleRepository = appRoleRepository;
 		this.valueFactory = new ValueFactoryImpl();
 	}
 
@@ -257,6 +252,9 @@ public class SesameACLService extends AbstractSesameLDPService implements ACLSer
 		}
 		return affectedPermissions;
 	}
+
+	@Autowired
+	public void setAppRoleRepository( AppRoleRepository appRoleRepository ) { this.appRoleRepository = appRoleRepository; }
 
 	public enum InheritanceType {
 		INHERITABLE,
