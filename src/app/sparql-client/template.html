@@ -59,7 +59,7 @@
 											<label>Query:</label>
 										</div>
 										<div class="thirteen wide column field">
-											<code-mirror [mode]="codeMirrorMode.SPARQL" [read-only]="isSending" [(value)]="sparql"></code-mirror>
+											<code-mirror [mode]="codeMirrorMode.SPARQL" [read-only]="isSending" [(value)]="sparql" [show-line-numbers]="true"></code-mirror>
 										</div>
 									</div>
 									<div class="fields row" *ng-if="currentQuery.type == 'Query'">
