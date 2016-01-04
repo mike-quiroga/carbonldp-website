@@ -77,5 +77,19 @@ export default class CarbonUI {
 	enableModulesJavascript():void {
 		this.modulesTabContent.find( ".ui.accordion" ).accordion();
 		this.modulesTabContent.find( ".ui.checkbox" ).checkbox();
+		let $pageDimmer = $( ".demo.page.dimmer" ),
+			$demo:JQuery = this.modulesTabContent.find( ".dimmer.demo" ),
+			$showButton:JQuery = this.modulesTabContent.find( ".show.button" ),
+			$pageButton:JQuery = this.modulesTabContent.find( ".page.button" ),
+			$hideButton:JQuery = this.modulesTabContent.find( ".hide.button" );
+		$showButton.on( "click", function () {
+			$( this ).closest( '.demo' ).find( '.segment' ).dimmer( 'show' );
+		} );
+		$hideButton.on( "click", function () {
+			$( this ).closest( '.demo' ).find( '.segment' ).dimmer( 'hide' );
+		} );
+		this.modulesTabContent.find( ".ui.dropdown" ).dropdown();
+		this.modulesTabContent.find( ".ui.menu .dropdown" ).dropdown( {on: 'hover'} );
+
 	}
 }
