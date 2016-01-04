@@ -1,3 +1,5 @@
+# 0.22.0 (2016/01/04)
+* App agents can now authenticate
 # 0.21.0 (2015/12/17)
 * Agents can now be removed from an AppRole
 # 0.20.0 (2015/12/17)
