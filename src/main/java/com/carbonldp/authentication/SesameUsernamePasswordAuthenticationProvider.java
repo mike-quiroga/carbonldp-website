@@ -36,7 +36,7 @@ public abstract class SesameUsernamePasswordAuthenticationProvider extends Abstr
 		return AuthenticationUtil.hashPassword( saltedPassword );
 	}
 
-	protected boolean passwordsMatch( String hashedPasword, Agent agent ) {
-		return hashedPasword.equals( agent.getPassword() );
+	protected boolean passwordsMatch( String hashedPassword, Agent agent ) {
+		return hashedPassword.equals( agent.getPassword() );
 	}
 }
