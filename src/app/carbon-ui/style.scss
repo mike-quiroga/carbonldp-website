@@ -1,3 +1,22 @@
-carbon-ui .main.demo {
-	margin-right: 318px;
+carbon-ui {
+	.main.demo {
+		margin-right: 318px;
+	}
+	[data-tab="modules"] {
+		.popup {
+			.position.example {
+				.segment {
+					width: 250px;
+					height: 250px;
+					padding: 0;
+				}
+				.icon {
+					margin: 0;
+					font-size: 1.5em;
+					height: auto;
+
+				}
+			}
+		}
+	}
 }
