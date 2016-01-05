@@ -8,7 +8,10 @@ import com.carbonldp.apps.AppRoleFactory;
 import com.carbonldp.authorization.acl.ACLRepository;
 import com.carbonldp.exceptions.*;
 import com.carbonldp.ldp.AbstractSesameLDPService;
-import com.carbonldp.ldp.containers.*;
+import com.carbonldp.ldp.containers.ContainerRepository;
+import com.carbonldp.ldp.containers.ContainerService;
+import com.carbonldp.ldp.containers.DirectContainer;
+import com.carbonldp.ldp.containers.DirectContainerFactory;
 import com.carbonldp.ldp.sources.RDFSourceRepository;
 import com.carbonldp.ldp.sources.RDFSourceService;
 import com.carbonldp.models.Infraction;
@@ -25,7 +28,9 @@ import java.util.Set;
  * @author JorgeEspinosa
  * @since 0.18.0-ALPHA
  */
+
 public class SesameAppRoleService extends AbstractSesameLDPService implements AppRoleService {
+
 	private final ContainerService containerService;
 	private final AppRoleRepository appRoleRepository;
 	private final RDFSourceService sourceService;
@@ -37,6 +42,11 @@ public class SesameAppRoleService extends AbstractSesameLDPService implements Ap
 		this.containerService = containerService;
 		this.sourceService = sourceService;
 		this.platformAgentRepository = platformAgentRepository;
+	}
+
+	@Override
+	public boolean exists( URI appRoleURI ) {
+		return appRoleRepository.exists( appRoleURI );
 	}
 
 	@Override
@@ -58,20 +68,12 @@ public class SesameAppRoleService extends AbstractSesameLDPService implements Ap
 		sourceRepository.touch( membershipResource, modifiedTime );
 	}
 
-	@Override
 	public void create( AppRole appRole ) {
 		if ( sourceRepository.exists( appRole.getURI() ) ) throw new ResourceAlreadyExistsException();
 		validate( appRole );
 
 		containerService.createChild( appRoleRepository.getContainerURI(), appRole );
 		createAgentsContainer( appRole );
-	}
-
-	private void createAgentsContainer( AppRole appRole ) {
-		URI agentsContainerURI = appRoleRepository.getAgentsContainerURI( appRole.getURI() );
-		RDFResource resource = new RDFResource( agentsContainerURI );
-		DirectContainer container = DirectContainerFactory.getInstance().create( resource, appRole.getURI(), AppRoleDescription.Property.AGENT.getURI() );
-		sourceService.createAccessPoint( appRole.getURI(), container );
 	}
 
 	@Override
@@ -94,10 +96,10 @@ public class SesameAppRoleService extends AbstractSesameLDPService implements Ap
 
 	}
 
-	private void validateHasParent( URI childURI ) {
-		if ( ! sourceRepository.exists( childURI ) ) throw new ResourceDoesntExistException();
-		Set<URI> parentsRoles = appRoleRepository.getParentsURI( childURI );
-		if ( ! parentsRoles.isEmpty() ) throw new AlreadyHasAParentException();
+	@Override
+	public void delete( URI appRoleURI ) {
+		if ( ! exists( appRoleURI ) ) throw new ResourceDoesntExistException();
+		appRoleRepository.delete( appRoleURI );
 	}
 
 	private void validate( AppRole appRole ) {
@@ -120,6 +122,17 @@ public class SesameAppRoleService extends AbstractSesameLDPService implements Ap
 	private boolean isPlatformAgent( URI agent ) {
 		return platformAgentRepository.exists( agent );
 	}
+
+	private void createAgentsContainer( AppRole appRole ) {
+		URI agentsContainerURI = appRoleRepository.getAgentsContainerURI( appRole.getURI() );
+		RDFResource resource = new RDFResource( agentsContainerURI );
+		DirectContainer container = DirectContainerFactory.getInstance().create( resource, appRole.getURI(), AppRoleDescription.Property.AGENT.getURI() );
+		sourceService.createAccessPoint( appRole.getURI(), container );
+	}
+
+	private void validateHasParent( URI childURI ) {
+		if ( ! sourceRepository.exists( childURI ) ) throw new ResourceDoesntExistException();
+		Set<URI> parentsRoles = appRoleRepository.getParentsURI( childURI );
+		if ( ! parentsRoles.isEmpty() ) throw new AlreadyHasAParentException();
+	}
 }
-
-

@@ -1,7 +1,11 @@
+# 0.21.0 (2015/12/17)
+* Agents can now be removed from an AppRole
+# 0.20.0 (2015/12/17)
+* AppRoles can now be deleted
 # 0.19.0 (2015/12/11)
 * Existing agents can now be added as members of an appRole
 # 0.18.0 (2015/12/10)
-* appRoles can now be created and related among themselves
+* AppRoles can now be created and related among themselves
 # 0.17.0 (2015/12/10)
 * ACLs can be retrieved
 # 0.16.0 (2015/12/08)
