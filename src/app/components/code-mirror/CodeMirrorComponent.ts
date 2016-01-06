@@ -46,6 +46,8 @@ export class Class {
 	@Input() mode:string = Mode.JAVASCRIPT;
 	@Input() readOnly:boolean = false;
 	@Input() noCursor:boolean = false;
+	@Input() showLineNumbers:boolean = true;
+	@Input() scroll:boolean = true;
 
 	@Input() value:string = "";
 	@Output() valueChange:EventEmitter = new EventEmitter();
@@ -81,7 +83,7 @@ export class Class {
 		}
 		this.element.nativeElement.innerHTML = "";
 		this.codeMirror = CodeMirror( this.element.nativeElement, {
-			lineNumbers: true,
+			lineNumbers: this.showLineNumbers,
 			indentWithTabs: true,
 			smartIndent: false,
 			electricChars: false,
@@ -90,6 +92,9 @@ export class Class {
 			value: this.value,
 			readOnly: this.readOnly
 		} );
+		if ( ! this.scroll ) {
+			this.element.nativeElement.children[ 0 ].style.height = "auto";
+		}
 
 		this.codeMirror.on( "change", ( changeObject ) => {
 			this.value = this.codeMirror.getValue();
