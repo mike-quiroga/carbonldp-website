@@ -39,7 +39,7 @@ import java.util.Properties;
 
 /**
  * @author MiguelAraCo
- * @since _version_
+ * @since 0.23.0-ALPHA
  */
 public class Application {
 	public static void main( String[] args ) throws Exception {
