@@ -4,9 +4,9 @@ import com.carbonldp.agents.Agent;
 import com.carbonldp.agents.AgentRepository;
 import com.carbonldp.apps.App;
 import com.carbonldp.apps.AppService;
+import com.carbonldp.authentication.PlatformAgentUsernamePasswordAuthenticationProvider;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
@@ -16,8 +16,9 @@ public class SystemSecurityContext {
 	protected AgentRepository agentRepository;
 
 	@Autowired
-	protected AuthenticationProvider sesameUsernamePasswordAuthenticationProvider;
+	protected PlatformAgentUsernamePasswordAuthenticationProvider sesameUsernamePasswordAuthenticationProvider;
 
+	@Autowired
 	protected AppService appService;
 
 	public SystemSecurityContext( AppService appService ) {
