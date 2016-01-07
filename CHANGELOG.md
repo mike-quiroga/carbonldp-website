@@ -1,3 +1,5 @@
+# 0.21.0 (2015/12/17)
+* Agents can now be removed from an AppRole
 # 0.20.0 (2015/12/17)
 * AppRoles can now be deleted
 # 0.19.0 (2015/12/11)

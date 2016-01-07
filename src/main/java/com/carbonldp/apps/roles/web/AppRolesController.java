@@ -24,7 +24,5 @@ public class AppRolesController extends AbstractLDPController {
 	}
 
 	@Autowired
-	public void setAppRolesPOSTHandler( AppRolesPOSTHandler appRolesPostHandler ) {
-		this.postHandler = appRolesPostHandler;
-	}
+	public void setAppRolesPOSTHandler( AppRolesPOSTHandler appRolesPostHandler ) {this.postHandler = appRolesPostHandler;}
 }
