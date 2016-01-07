@@ -1,3 +1,5 @@
+# 0.23.0 (2016/01/07)
+* carbon-platform has now an embedded Jetty instance; meaning it can now run as a jar application
 # 0.22.0 (2016/01/04)
 * App agents can now authenticate
 # 0.21.0 (2015/12/17)
