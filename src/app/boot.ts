@@ -10,22 +10,21 @@ import Carbon from 'carbonldp-sdk';
 import AppComponent from 'app/AppComponent';
 
 import { CONTENT_PROVIDERS } from 'app/content/Content';
+import { BLOG_PROVIDERS } from 'app/blog/Blog';
 
 const CARBON_PROVIDER = provide( Carbon, {
 	useFactory: () => {
 		var carbon = new Carbon();
 		carbon.setSetting( 'domain', 'dev.carbonldp.com' );
 	}
-});
+} );
 
 bootstrap( AppComponent, [
 	FORM_PROVIDERS,
 	ROUTER_PROVIDERS,
 	HTTP_PROVIDERS,
-	provide( APP_BASE_HREF, { useValue: window.location.pathname } ),
-
+	provide( APP_BASE_HREF, {useValue: window.location.pathname} ),
 	CARBON_PROVIDER,
-
-	
-    CONTENT_PROVIDERS
-]);
+	CONTENT_PROVIDERS,
+	BLOG_PROVIDERS
+] );

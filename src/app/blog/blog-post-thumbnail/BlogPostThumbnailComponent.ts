@@ -14,7 +14,7 @@ import './style.css!';
 	template: template,
 	directives: [ CORE_DIRECTIVES, ROUTER_DIRECTIVES, CodeMirrorComponent.Class ]
 } )
-export default class BlogPostThumbnailView {
+export default class BlogPostThumbnailComponent {
 	static parameters = [ [ Router ], [ ElementRef ], [ DynamicComponentLoader ], [ ContentService ] ];
 
 	router:Router;
@@ -46,7 +46,7 @@ export default class BlogPostThumbnailView {
 
 	afterViewInit():void {
 		let excerpt:string = this.blogPost.excerpt;
-		if ( this.blogPost.filename ) {
+		if ( !! this.blogPost.filename ) {
 			@Component( {
 				selector: 'compiled-component',
 				directives: [ CORE_DIRECTIVES, ROUTER_DIRECTIVES, CodeMirrorComponent.Class ],
