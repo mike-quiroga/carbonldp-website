@@ -27,13 +27,13 @@ public interface ContainerService {
 	@PreAuthorize( "hasPermission(#containerURI, 'ADD_MEMBER')" )
 	public void addMember( URI containerURI, URI member );
 
-	// TODO: Add permission validation
+	@PreAuthorize( "hasPermission(#containerURI, 'REMOVE_MEMBER')" )
 	public void removeMembers( URI targetURI );
 
-	// TODO: Add permision validation
+	@PreAuthorize( "hasPermission(#containerURI, 'REMOVE_MEMBER')" )
 	public void removeMembers( URI targetUri, Set<URI> members );
 
-	// TODO: Add permision validation
+	@PreAuthorize( "hasPermission(#containerURI, 'REMOVE_MEMBER')" )
 	public void removeMember( URI containerURI, URI member );
 
 	// TODO: Add permission validation

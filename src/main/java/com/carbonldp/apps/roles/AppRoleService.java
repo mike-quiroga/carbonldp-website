@@ -25,5 +25,4 @@ public interface AppRoleService {
 	public void addChild( URI parentRole, URI child );
 
 	public void delete( URI appURI );
-
 }
