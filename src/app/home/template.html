@@ -17,7 +17,8 @@
 			<div class="mobile only row">
 				<div class="three wide column"></div>
 				<div class="ten wide column">
-					<img class="ui image medium centered carbon-logo" src="assets/images/carbon-ldp-logo-lg.png" style="margin-top:40px"/>
+					<img class="ui image medium centered carbon-logo" src="assets/images/carbon-ldp-logo-lg.png"
+						 style="margin-top:40px"/>
 					<h4 style="color:#e1dfdf">Carbon LDP is a cloud-based Linked Data Platform for building, hosting,
 						managing, and running web applications of all types - Web Services, Mobile, Big Data,
 						Analytics, IoT, Cognitive, etc.</h4>
@@ -34,7 +35,8 @@
 
 		<!-- button class="ui inverted orange massive button">Get Started</button -->
 
-		<h4>Sign up to receive news and get notified when we launch!</h4>
+		<a #anchor href="#signup" (click)="scrollTo($event,anchor)">Sign up to receive news and get notified when we
+			launch!</a>
 
 		<!--
 		<div class="ui action input">
@@ -104,7 +106,7 @@
 	</div>
 </div>
 
-<div class="ui orange inverted vertical center aligned segment">
+<div class="ui orange inverted vertical center aligned segment" id="signup">
 	<h2>Sign up to receive news and get notified when we launch!</h2>
 
 	<div class="ui action input">
