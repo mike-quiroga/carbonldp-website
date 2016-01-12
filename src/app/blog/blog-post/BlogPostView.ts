@@ -1,10 +1,10 @@
-import { Component, CORE_DIRECTIVES, Input, DynamicComponentLoader, ElementRef } from 'angular2/angular2';
+import { Component, CORE_DIRECTIVES, Input, DynamicComponentLoader, ElementRef, Type } from 'angular2/angular2';
 import { ROUTER_DIRECTIVES, ROUTER_PROVIDERS, Router, Instruction, RouteParams } from 'angular2/router';
 
 import $ from 'jquery';
 import 'semantic-ui/semantic';
 
-import ContentService from "./../../content/ContentService";
+import BlogService from "./../service/BlogService";
 import BlogPost from './BlogPost';
 import * as CodeMirrorComponent from "app/components/code-mirror/CodeMirrorComponent";
 import template from './template.html!';
@@ -14,15 +14,15 @@ import './style.css!';
 	selector: 'blog-post',
 	template: template,
 	directives: [ CORE_DIRECTIVES, ROUTER_DIRECTIVES, CodeMirrorComponent.Class ],
-	providers: [ ContentService ]
+	providers: [ BlogService ]
 } )
 export default class BlogPostView {
-	static parameters = [ [ Router ], [ ElementRef ], [ DynamicComponentLoader ], [ RouteParams ], [ ContentService ] ];
+	static parameters = [ [ Router ], [ ElementRef ], [ DynamicComponentLoader ], [ RouteParams ], [ BlogService ] ];
 
 	router:Router;
 	dcl:DynamicComponentLoader;
 	routeParams:RouteParams;
-	contentService:ContentService;
+	blogService:BlogService;
 
 	element:ElementRef;
 	$element:JQuery;
@@ -32,12 +32,12 @@ export default class BlogPostView {
 
 	get codeMirrorMode() { return CodeMirrorComponent.Mode; }
 
-	constructor( router:Router, element:ElementRef, dcl:DynamicComponentLoader, routeParams:RouteParams, contentService:ContentService ) {
+	constructor( router:Router, element:ElementRef, dcl:DynamicComponentLoader, routeParams:RouteParams, blogService:BlogService ) {
 		this.router = router;
 		this.element = element;
 		this.dcl = dcl;
 		this.routeParams = routeParams;
-		this.contentService = contentService;
+		this.blogService = blogService;
 
 		this.postid = <number>this.routeParams.get( 'id' );
 
@@ -45,36 +45,13 @@ export default class BlogPostView {
 
 
 	onActivate():void {
-		if ( this.postid !== undefined && this.postid !== null ) {
-			this.contentService.getPost( this.postid ).then(
+		if ( typeof this.postid === "undefined" || this.postid === null ) {
+			return;
+		} else {
+			this.blogService.getPost( this.postid ).then(
 				( post )=> {
 					let fileName:string = post.filename;
-					@Component( {
-						selector: 'compiled-component',
-						directives: [ CORE_DIRECTIVES, ROUTER_DIRECTIVES, CodeMirrorComponent.Class ],
-						templateUrl: "/assets/blog-posts/" + fileName
-					} )
-					class CompiledComponent {
-						static parameters = [ [ ElementRef ] ];
-						element:ElementRef;
-
-						constructor( element:ElementRef ) {
-							this.element = element;
-						}
-
-						afterViewInit():void {
-							this.evalJavascript();
-						}
-
-						evalJavascript():void {
-							let scripts:any[] = this.element.nativeElement.querySelectorAll( ".script" );
-							let i:number = 0, scriptLength = scripts.length;
-							for ( i; i < scriptLength; i ++ ) {
-								eval( scripts[ i ].textContent );
-							}
-						}
-					}
-					this.dcl.loadIntoLocation( CompiledComponent, this.element, 'content' );
+					this.createPostComponent( fileName );
 					this.blogPost = post;
 				}
 			);
@@ -83,5 +60,26 @@ export default class BlogPostView {
 
 	afterViewInit():void {
 		this.$element = $( this.element.nativeElement );
+	}
+
+	private createPostComponent( fileName:string ):Type {
+		@Component( {
+			selector: 'compiled-component',
+			directives: [ CORE_DIRECTIVES, ROUTER_DIRECTIVES, CodeMirrorComponent.Class ],
+			templateUrl: "/assets/blog-posts/" + fileName
+		} )
+		class CompiledComponent {
+			static parameters = [ [ ElementRef ] ];
+			element:ElementRef;
+
+			constructor( element:ElementRef ) {
+				this.element = element;
+			}
+
+			afterViewInit():void {
+
+			}
+		}
+		this.dcl.loadIntoLocation( CompiledComponent, this.element, 'content' );
 	}
 }
