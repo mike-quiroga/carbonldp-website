@@ -11,21 +11,21 @@ import AppComponent from 'app/AppComponent';
 
 import { CONTENT_PROVIDERS } from 'app/content/Content';
 
-const CARBON_PROVIDER = provide( Carbon, {
-	useFactory: () => {
-		var carbon = new Carbon();
-		carbon.setSetting( 'domain', 'dev.carbonldp.com' );
-	}
+const CARBON_PROVIDER = provide(Carbon, {
+    useFactory: () => {
+        var carbon = new Carbon();
+        carbon.setSetting('domain', 'dev.carbonldp.com');
+    }
 });
 
-bootstrap( AppComponent, [
-	FORM_PROVIDERS,
-	ROUTER_PROVIDERS,
-	HTTP_PROVIDERS,
-	provide( APP_BASE_HREF, { useValue: window.location.pathname } ),
+bootstrap(AppComponent, [
+    FORM_PROVIDERS,
+    ROUTER_PROVIDERS,
+    HTTP_PROVIDERS,
+    provide(APP_BASE_HREF, {useValue: "/"}),
 
-	CARBON_PROVIDER,
+    CARBON_PROVIDER,
 
-	
+
     CONTENT_PROVIDERS
 ]);
