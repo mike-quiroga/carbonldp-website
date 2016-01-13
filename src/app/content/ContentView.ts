@@ -177,7 +177,7 @@ export default class ContentView {
 						html += '</div>';
 					} );
 					this.$followMenu = $( '<div />' ).addClass( 'ui vertical following fluid accordion text menu' ).html( html );
-					$sticky = $( '<div />' ).addClass( 'ui fixed sticky segment' ).html( this.$followMenu ).prepend( '<h4 class="ui header">Content</h4>' );
+					$sticky = $( '<div />' ).addClass( 'ui fixed sticky segment' ).html( this.$followMenu ).prepend( '<p class="ui header">Content</p>' );
 					this.sidebar.html( $sticky );
 					this.sidebar.find( ".ui.sticky" ).sticky( {
 						context: '#article',
@@ -227,7 +227,7 @@ export default class ContentView {
 
 			// Escapes a given text to use it safely with selectors
 			getSafeText( text:string ):string {
-				return text.replace( /\s+/g, '-' ).replace( /[^-,'A-Za-z0-9]+/g, '' ).toLowerCase();
+				return text.replace( /[,]/g, '' ).replace( /\s+/g, '-' ).replace( /[^-,'A-Za-z0-9]+/g, '' ).toLowerCase();
 			}
 
 			// Sets the id to the section using the name of the first children header of the section
