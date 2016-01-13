@@ -1,159 +1,203 @@
 <div class="ui grid" id="content-masthead">
-    <div class="row">
-        <div class="column">
-            <img class="featured-image" src="/assets/images/linked-data-concepts.jpg" alt="Linked Data Concepts"/>
-        </div>
-    </div>
+	<div class="row">
+		<div class="column">
+			<img class="featured-image" src="/assets/images/linked-data-concepts.jpg" alt="Linked Data Concepts"/>
+		</div>
+	</div>
 </div>
 
 
 <div class="ui main grid container">
 
-    <div class="row">
+	<div class="row">
 
 
-        <div class="sixteen wide column">
+		<div class="sixteen wide column">
 
-            <div class="ui breadcrumb">
-                <span class="section">Documentation</span>
-                <i class="right chevron icon divider"></i>
-                <span class="section">Essential Concepts</span>
-                <i class="right arrow icon divider"></i>
-                <div class="active section">Linked Data Concepts</div>
-            </div>
+			<div class="ui breadcrumb">
+				<span class="section">Documentation</span>
+				<i class="right chevron icon divider"></i>
+				<span class="section">Essential Concepts</span>
+				<i class="right arrow icon divider"></i>
+				<div class="active section">Linked Data Concepts</div>
+			</div>
 
-            <h1>Linked Data Concepts</h1>
-        </div>
-    </div>
+			<h1>Linked Data Concepts</h1>
+		</div>
+	</div>
 
-    <div class="row">
-        <div class="twelve wide column">
+	<div class="row">
+		<div class="twelve wide column">
 
-            <article class="ui vertical segment" id="article">
-
-
-                <div class="ui message">
-                    <div class="content">
-                        <p class="larger">Carbon LDP applications are inherently Linked Data applications. The term
-                            &quot;Linked Data&quot; refers to an information publishing approach that puts linking at
-                            the heart of the notion of data, and uses the linking technologies provided by the Web to
-                            enable the creation of a global distributed database. By linking data within your
-                            organization or across the Web, you can find other related data. This document
-                            provides a general overview of the basic idea behind Linked Data and why it can make your
-                            applications more powerful.</p>
-                    </div>
-                </div>
-
-                <div class="ui icon yellow message">
-                    <i class="warning sign icon"></i>
-                    <div class="content">
-                        <div class="header">Pre-release Documentation</div>
-                        <p>Although Carbon LDP is not yet released, we're publishing documentation as it is prepared so
-                            that you can preview what's in store.</p>
-                    </div>
-                </div>
+			<article class="ui vertical segment" id="article">
 
 
-                <p>You're familiar with web pages. Web pages are documents written in HTML, which format content for
-                    humans to read. They're also written with CSS, which styles the content and gives it aesthetic
-                    appeal. JavaScript is often combined to give the pages interactive functionality and to make
-                    background requests to web servers.</p>
+				<div class="ui message">
+					<div class="content">
+						<p class="larger">Carbon LDP applications are inherently Linked Data applications. The term
+							&quot;Linked Data&quot; refers to an information publishing approach that puts linking at
+							the heart of the notion of data, and uses the linking technologies provided by the Web to
+							enable the creation of a global distributed database. By linking data within your
+							organization or across the Web, you can find other related data. This document
+							provides a general overview of the basic idea behind Linked Data and why it can make your
+							applications more powerful.</p>
+					</div>
+				</div>
 
-                <p>You're also familiar with databases, which contain tables and columns and rows of structured data.
-                    Computers can read the data in a database, but the structure of that data is usually quite specific
-                    to the applications for which it was designed. The only systems that make good use of the data
-                    are typically only the ones which were specifically engineered to do so. When the structure of
-                    the data has to change (as it so often does), there are often costly downstream side-effects.
-                    Software code has to be rewritten, recompiled, and redeployed. Integrated systems may also have
-                    to be revised.</p>
-
-                <p>Usually, the structured data from a database ends up on a web page so that people can read it and get
-                    value out of it. But by the time the information lands on a web page, it isn't structured anymore.
-                    It may now be easy for people to read and understand, but it isn't easy for computers to process
-                    and understand. Computers can search for keywords in the pages, but they can't really know, like
-                    we humans do, what the pages are about.</p>
-
-                <p>So, what we have as a result is a Web of hyperlinked documents designed for people to read. We also
-                    have a lot of databases and web services, but those are usually exposed through proprietary APIs.
-                    If we want to integrate them, we typically have a lot of custom coding to do. And even when we've
-                    done that custom coding, the result is still an information silo - an exclusive club reserved only
-                    for those who possess the resources to get in - people, time, and money.</p>
-
-                <p>There is a better way. Thanks largely in part to the efforts of the W3C a set of standards and
-                    technologies have emerged, which are turning the current web of documents into a web of data.
-                    This is giving a powerful new dimension to the existing web. You might think of it as
-                    the World Wide Database (a.k.a. the Semantic Web). On the Semantic Web, it's much easier to
-                    integrate applications because they allow you to link data together in much the same way that
-                    we link web pages together. But perhaps more importantly, it allows for a new
-                    breed of applications that are easier for computers to interoperate with.</p>
-
-                <p>This is because the link in linked data is more powerful than a traditional hyperlink. When it
-                    relates one thing to another, it explicitly describes the nature of that relationship. By providing
-                    context to its connection, it creates knowledge. That’s right – the link itself is knowledge. And
-                    because Linked Data can connect URIs that identify real-world things, not just documents and media
-                    files, it can describe far more than the structure of a website. It can help us learn new things
-                    beyond the knowledge we explicitly programmed into our application. It’s connections make
-                    statements. And statements, together, tell stories.</p>
-
-                <p>A link in Linked Data is, in fact, often referred to as a statement. It has the power, in and of
-                    itself, to make an assertion – to state a fact. It does so in very much the same way we humans do
-                    when we make a statement about something. We connect a subject to an object by way of some
-                    predicate.</p>
-
-                <p><img class="ui fluid image" src="/assets/images/rdf-triple-jack-n-jill-1.png" alt="RDF triple with URIs"/></p>
-
-                <p>This is the basic sentence structure we learned in grade school, remember? The subject of a sentence
-                    is the person, place, or thing that is performing the action. The predicate expresses the action
-                    or being. And the object indicates to whom or for whom the action is being done;
-                    it receives the action.</p>
-
-                <p>As simple as this statement is, a hyperlink would not commonly express the same underlying meaning.
-                    A blog post written by Jack might anchor to a blog post written by Jill, but that hyperlink relates
-                    the two documents, not the two people. It doesn’t say that Jill is a friend of Jack or Jack a
-                    friend of Jill.</p>
-
-                <p>A link in Linked Data is an RDF statement, which also has a subject, predicate, and an object.</p>
-
-                <p><img class="ui fluid image" src="/assets/images/rdf-triple-jack-n-jill-2.png" alt="RDF triple with URIs"/></p>
-
-                <p>The subject is a URI, which could resolve to some representation of a resource. What differentiates
-                    this from traditional linking on the Web is that the subject is assumed to represent any kind of
-                    thing, document or real-world. The URI is used more like an identifier than a locator. That’s why
-                    we use the term URI instead of URL. It’s kind of like a primary key for a record in a database,
-                    if you know how that works. Only this time, the database is your entire corporate intranet or the
-                    World Wide Web.</p>
-
-                <p>The predicate, the part that does the actual linking, is a property, which expresses the nature of
-                    the relationship. Though that property is also expressed with a URI, its URI represents some
-                    relational concept such as <em>friend of</em>, <em>has sibling</em>,or <em>has mother</em>. Such
-                    predicates (or properties) are often borrowed from well-established public vocabularies and as
-                    such, they express semantics or meaning that computers can be programmed to understand.</p>
-
-                <p>The object, the part that is linked to, is either some literal value (like a date, integer, string)
-                    or it is another resource with its own URI – some other real-world thing with a representation on
-                    the Web. And here’s the kicker. This object can be the subject of its own statements, with entirely
-                    new properties linking to entirely new objects. And that kind of linking creates a graph that has
-                    the power to grow far beyond what you and your single app can ever know alone. That’s power.</p>
-
-                <p><a href="/assets/images/rdf-graph-illustration.png"><img class="ui fluid image" src="/assets/images/rdf-graph-illustration.png" alt="RDF Graph Illustration"/></a></p>
-
-                <p>You can imagine the possibilities on a global scale, can't you? Think about how far the traditional 
-                    HTML hyperlink has gotten us. They've been the glue for what today we call the World Wide Web.
-                    But if they can do all that, just imagine what the RDF triple, the link in Linked Data, can do.</p>
-
-                <p>Still, your application doesn't have to be publicly available on the World Wide Web. You can take
-                    advantage of the flexible RDF data model within your application alone or within your company.
-                    Maybe you could care less about the broader Semantic Web. Carbon apps aren't just inherently more
-                    powerful. They're easier to build, maintain, evolve, and integrate. That's because we've
-                    encapsulated everything into a set of familiar concepts and features that are easy to use.</p>
-
-            </article>
+				<div class="ui icon yellow message">
+					<i class="warning sign icon"></i>
+					<div class="content">
+						<div class="header">Pre-release Documentation</div>
+						<p>Although Carbon LDP is not yet released, we're publishing documentation as it is prepared so
+							that you can preview what's in store.</p>
+					</div>
+				</div>
 
 
-        </div>
-        <aside class="four wide column">
+				<p>You're familiar with web pages. Web pages are documents written in HTML, which format content for
+					humans to read. They're also written with CSS, which styles the content and gives it aesthetic
+					appeal. JavaScript is often combined to give the pages interactive functionality and to make
+					background requests to web servers.</p>
 
-        </aside>
-    </div>
+				<p><img class="ui fluid rounded image" src="/assets/images/web-design-dev.png"
+						alt="Web Design and Development Illustration"/></p>
+
+				<p>You're also familiar with databases, which contain tables and columns and rows of structured data.
+					Computers can read the data in a database, but the structure of that data is usually quite specific
+					to the applications for which it was designed. The only systems that make good use of the data
+					are typically only the ones which were specifically engineered to do so. When the structure of
+					the data has to change (as it so often does), there are often costly downstream side-effects.
+					Software code has to be rewritten, recompiled, and redeployed. Integrated systems may also have
+					to be revised.</p>
+
+				<p>Usually, the structured data from a database ends up on a web page so that people can read it and get
+					value out of it. But by the time the information lands on a web page, it isn't structured anymore.
+					It may now be easy for people to read and understand, but it isn't easy for computers to process
+					and understand. Computers can search for keywords in the pages, but they can't really know, like
+					we humans do, what the pages are about.</p>
+
+				<p>So, what we have as a result is a Web of hyperlinked documents designed for people to read. We also
+					have a lot of databases and web services, but those are usually exposed through proprietary APIs.
+					If we want to integrate them, we typically have a lot of custom coding to do. And even when we've
+					done that custom coding, the result is still an information silo - an exclusive club reserved only
+					for those who possess the resources to get in: people, time, and money.</p>
+
+				<p>There is a better way. Thanks largely in part to the efforts of the <abbr
+						title="World Wide Web Consortium">W3C</abbr> a set of standards and
+					technologies have emerged, which are turning the current web of documents into a web of data.
+					This is giving a powerful new dimension to the existing web. You might think of it as
+					the World Wide Database (<abbr title="also known as">a.k.a.</abbr> the Semantic Web). On the
+					Semantic Web, it's much easier to integrate applications because they allow you to link data
+					together in much the same way that we link web pages together. But perhaps more importantly, it
+					allows for a new breed of applications that are easier for computers to interoperate with.</p>
+
+				<p>This is because the link in Linked Data is more powerful than a traditional hyperlink. When it
+					relates one thing to another, it explicitly describes the nature of that relationship. By providing
+					context to its connection, it creates knowledge. That’s right – the link itself is knowledge. And
+					because Linked Data can connect URIs that identify real-world things, not just documents and media
+					files, it can describe far more than the structure of a website. It can help us learn new things
+					beyond the knowledge we explicitly programmed into our application. It’s connections make
+					statements. And statements, together, tell stories.</p>
+
+				<p>A link in Linked Data is, in fact, often referred to as a statement. It has the power, in and of
+					itself, to make an assertion – to state a fact. It does so in very much the same way we humans do
+					when we make a statement about something. We connect a subject to an object by way of some
+					predicate.</p>
+
+				<p><img class="ui fluid rounded image" src="/assets/images/rdf-triple-jack-n-jill-1.png"
+						alt="RDF triple with URIs"/></p>
+
+				<p>This is the basic sentence structure we learned in grade school, remember? The subject of a sentence
+					is the person, place, or thing that is performing the action. The predicate expresses the action
+					or being. And the object indicates to whom or for whom the action is being done;
+					it receives the action.</p>
+
+				<p>As simple as this statement is, a hyperlink would not commonly express the same underlying meaning.
+					A blog post written by Jack might anchor to a blog post written by Jill, but that hyperlink relates
+					the two documents, not the two people. It doesn’t say that Jill is a friend of Jack or Jack a
+					friend of Jill.</p>
+
+				<p>A link in Linked Data is an <abbr title="Resource Description Framework">RDF</abbr> statement, which
+					also has a subject, predicate, and an object.</p>
+
+				<p><img class="ui fluid rounded image" src="/assets/images/rdf-triple-jack-n-jill-2.png"
+						alt="RDF triple with URIs"/></p>
+
+				<p>The subject is a URI, which could resolve to some representation of a resource. What differentiates
+					this from traditional linking on the Web is that the subject is assumed to represent any kind of
+					thing, document or real-world. The URI is used more like an identifier than a locator. That’s why
+					we use the term URI instead of URL. It’s kind of like a primary key for a record in a database,
+					if you know how that works. Only this time, the database is your entire corporate intranet or the
+					World Wide Web.</p>
+
+				<p>The predicate, the part that does the actual linking, is a property, which expresses the nature of
+					the relationship. Though that property is also expressed with a URI, its URI represents some
+					relational concept such as <em>friend of</em>, <em>has sibling</em>,or <em>has mother</em>. Such
+					predicates (or properties) are often borrowed from well-established public vocabularies and as
+					such, they express semantics or meaning that computers can be programmed to understand.</p>
+
+				<p>The object, the part that is linked to, is either some literal value (like a date, integer, string)
+					or it is another resource with its own URI – some other real-world thing with a representation on
+					the Web. And here’s the kicker. This object can be the subject of its own statements, with entirely
+					new properties linking to entirely new objects. And that kind of linking creates a graph that has
+					the power to grow far beyond what you and your single app can ever know alone. That’s power.</p>
+
+				<p><a href="/assets/images/rdf-graph-illustration.png">
+					<img class="ui fluid rounded image" src="/assets/images/rdf-graph-illustration.png"
+						 alt="RDF Graph Illustration"/></a></p>
+
+				<p>You can imagine the possibilities on a global scale, can't you? Think about how far the traditional 
+					HTML hyperlink has gotten us. They've been the glue for what today we call the World Wide Web.
+					But if they can do all that, just imagine what the <abbr
+							title="Resource Description Framework">RDF</abbr> triple, the link in Linked Data, can do.
+				</p>
+
+
+				<div class="ui divider"></div>
+
+				<div class="no example">
+					<h3>Want to know more?</h3>
+
+					<p>Now that you understand the basic idea behind Linked Data and why it can make your applications
+						more powerful, you can learn more from the following related resources.</p>
+
+					<div class="three column divided stackable center aligned ui grid">
+						<div class="column">
+							<div class="ui icon header">
+								<i class="rocket circular icon"></i>
+								Learn about the Resource Description Framework from the W3C's <a
+									href="https://www.w3.org/TR/2014/NOTE-rdf11-primer-20140624/">RDF 1.1 Primer</a>.
+							</div>
+						</div>
+						<div class="column">
+							<div class="ui icon header">
+								<i class="theme circular icon"></i>
+								<!--
+								Learn <a [router-link]="[ '/Docs', {id: 'ldp-concepts.html'} ]">Linked Data Platform
+								Concepts</a>; recommended by the W3C &amp; implemented by Carbon LDP.
+								-->
+							</div>
+						</div>
+						<div class="column">
+							<div class="ui icon header">
+								<i class="food circular icon"></i>
+								<!--
+								Learn about unique platform features with <a
+									[router-link]="[ '/Docs', {id: 'carbon-ldp-concepts.html'} ]">Carbon LDP
+								Concepts</a>.
+								-->
+							</div>
+						</div>
+					</div>
+				</div>
+
+			</article>
+
+
+		</div>
+		<aside class="four wide column">
+
+		</aside>
+	</div>
 
 </div>
