@@ -1,0 +1,16 @@
+blog-post-thumbnail {
+	h1 {
+		a {
+			color: orange;
+		}
+		a:hover {
+			color: darkorange;
+		}
+		a:visited {
+			color: orangered;
+		}
+	}
+	a:hover {
+		text-decoration: underline;
+	}
+}
