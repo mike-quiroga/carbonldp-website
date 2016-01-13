@@ -1,81 +1,104 @@
 <div class="ui main grid container">
-    <div class="row">
-        <div class="sixteen wide column">
+	<div class="row">
+		<div class="sixteen wide column">
 
-            <div class="ui breadcrumb">
-                <span class="section">Documentation</span>
-                <i class="right chevron icon divider"></i>
-                <span class="section">Essential Concepts</span>
-                <i class="right arrow icon divider"></i>
-                <div class="active section">Carbon LDP Concepts</div>
-            </div>
+			<div class="ui breadcrumb">
+				<span class="section">Documentation</span>
+				<i class="right chevron icon divider"></i>
+				<span class="section">Essential Concepts</span>
+				<i class="right arrow icon divider"></i>
+				<div class="active section">Carbon LDP Concepts</div>
+			</div>
 
-            <h1>Carbon LDP Concepts</h1>
-        </div>
-    </div>
+			<h1>Carbon LDP Concepts</h1>
+		</div>
+	</div>
 
-    <div class="row">
-        <div class="twelve wide column">
+	<div class="row">
+		<div class="twelve wide column">
 
-            <article class="ui vertical segment" id="article">
+			<article class="ui vertical segment" id="article">
 
-                <div class="ui message">
-                    <div class="content">
-                        <p class="larger">...</p>
-                    </div>
-                </div>
+				<div class="ui message">
+					<div class="content">
+						<p class="larger">Carbon LDP is a cloud-based Linked Data Platform for building, hosting,
+							managing, and running web applications of all types. In addition to standard LDP
+							capabilities, Carbon delivers one-of-a-kind features that can transform the way you work.
+							This document provides an introduction to some of the features and concepts that make Carbon
+							LDP uniquely valuable for building web solutions.</p>
+					</div>
+				</div>
 
-                <div class="ui icon yellow message">
-                    <i class="warning sign icon"></i>
-                    <div class="content">
-                        <div class="header">Pre-release Documentation</div>
-                        <p>Although Carbon LDP is not yet released, we're publishing documentation as it is prepared so that you can
-                            preview what's in store.</p>
-                    </div>
-                </div>
+				<div class="ui icon yellow message">
+					<i class="warning sign icon"></i>
+					<div class="content">
+						<div class="header">Pre-release Documentation</div>
+						<p>Although Carbon LDP is not yet released, we're publishing documentation as it is prepared so
+							that you can
+							preview what's in store.</p>
+					</div>
+				</div>
 
-                <h2>The Carbon Document object</h2>
+				<h2>The Carbon Document object</h2>
 
-                <p>With Carbon, you work with data in documents. Simple enough, right? They're very much like web pages. You can
-                    retrieve them from the server, modify them, and then put them back. You can do this in Carbon using RESTful
-                    requests over HTTP and methods like GET, POST, PUT, and DELETE, but even that is a lower-level API. You'll
-                    probably prefer the JavaScript SDK, which lets you work with documents as JavaScript objects. The JavaScript
-                    SDK handles the HTTP requests responsible for getting and persisting data, so all you have to do is call
-                    simple functions on your <code>Document</code> objects.
-                </p>
+				<p>With Carbon, you work with data in documents. Simple enough, right? They're very much like web pages.
+					You can
+					retrieve them from the server, modify them, and then put them back. You can do this in Carbon using
+					RESTful
+					requests over HTTP and methods like GET, POST, PUT, and DELETE, but even that is a lower-level API.
+					You'll
+					probably prefer the JavaScript SDK, which lets you work with documents as JavaScript objects. The
+					JavaScript
+					SDK handles the HTTP requests responsible for getting and persisting data, so all you have to do is
+					call
+					simple functions on your <code>Document</code> objects.
+				</p>
 
-                <p>Under the hood, an instance of a document represents an RDF graph, which is basically a set of RDF statements called
-                    triples.</p>
+				<p>Under the hood, an instance of a document represents an RDF graph, which is basically a set of RDF
+					statements called
+					triples.</p>
 
-                <p>INSERT GRAPHIC OF DOCUMENT WITH A GRAPH ON IT (something iconographic that we can continue to use to represent
-                    documents)</p>
+				<p>INSERT GRAPHIC OF DOCUMENT WITH A GRAPH ON IT (something iconographic that we can continue to use to
+					represent
+					documents)</p>
 
-                <p>Every document is identified by a URI, which is globally unique. That is to say, the URI is unique, not only within
-                    your application, but also on the World Wide Web. The URI is of a document can also be thought of as a unique
-                    identifier for the resources that it represents, which is typically some real-world thing like a person,
-                    organization, or product. Following, for example, is a URI that identifies a person:</p>
+				<p>Every document is identified by a URI, which is globally unique. That is to say, the URI is unique,
+					not only within
+					your application, but also on the World Wide Web. The URI is of a document can also be thought of as
+					a unique
+					identifier for the resources that it represents, which is typically some real-world thing like a
+					person,
+					organization, or product. Following, for example, is a URI that identifies a person:</p>
 
-                <p><code>http://example.carbonldp.com/apps/ourco/people/john-doe/</code></p>
+				<p><code>http://example.carbonldp.com/apps/ourco/people/john-doe/</code></p>
 
-                <p>We could use such a URI in a request to get the document from the Carbon server. When using Carbon's lower-level REST
-                    API, you can use the HTTP <code>Accept</code> header to tell the server to give you the document in a variety of
-                    representations such as Turtle, JSON-LD, or RDF XML. If you make the request through Carbon's JavaScript SDK,
-                    however, the resource will always be returned as a Document object, automatically parsed and ready to use in your
-                    JavaScript code. The inverse is also true. You can create a Carbon Document entirely in JavaScript code and then
-                    POST or PUT it to the server. Carbon will automatically serialize and save the document as an RDF graph.</p>
+				<p>We could use such a URI in a request to get the document from the Carbon server. When using Carbon's
+					lower-level REST
+					API, you can use the HTTP <code>Accept</code> header to tell the server to give you the document in
+					a variety of
+					representations such as Turtle, JSON-LD, or RDF XML. If you make the request through Carbon's
+					JavaScript SDK,
+					however, the resource will always be returned as a Document object, automatically parsed and ready
+					to use in your
+					JavaScript code. The inverse is also true. You can create a Carbon Document entirely in JavaScript
+					code and then
+					POST or PUT it to the server. Carbon will automatically serialize and save the document as an RDF
+					graph.</p>
 
-                <p>So, in short, you can use the JavaScript SDK to create a document, populate it with data attributes, and then
-                    persist the document to the database. Once saved, you can later retrieve the document to read or modify its
-                    attributes.</p>
+				<p>So, in short, you can use the JavaScript SDK to create a document, populate it with data attributes,
+					and then
+					persist the document to the database. Once saved, you can later retrieve the document to read or
+					modify its
+					attributes.</p>
 
 
-            </article>
+			</article>
 
 
-        </div>
-        <aside class="four wide column">
+		</div>
+		<aside class="four wide column">
 
-        </aside>
-    </div>
+		</aside>
+	</div>
 
 </div>
