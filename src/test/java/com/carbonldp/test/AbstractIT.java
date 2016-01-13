@@ -61,6 +61,7 @@ public abstract class AbstractIT extends AbstractTestNGSpringContextTests {
 	protected PlatformContextActionTemplate platformContextTemplate;
 	@Autowired
 	protected ApplicationContextActionTemplate applicationContextTemplate;
+
 	@Autowired
 	@Qualifier( "platformAgentUsernamePasswordAuthenticationProvider" )
 	protected AuthenticationProvider sesameUsernamePasswordAuthenticationProvider;
