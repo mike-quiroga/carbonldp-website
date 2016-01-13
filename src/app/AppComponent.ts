@@ -28,7 +28,7 @@ import './style.css!';
 	{path: '/Login', as: 'Login', component: LoginView},
 	{path: '/sparql-client', as: 'SPARQLClient', component: SPARQLClientComponent},
 	{path: '/AppDev', as: 'AppDev', component: AppDevComponent},
-	{path: '/Apps', as: 'Apps', component: CarbonAppView}
+	{path: '/CarbonApp/:id', as: 'CarbonApp', component: CarbonAppView}
 ] )
 export default class App {
 
