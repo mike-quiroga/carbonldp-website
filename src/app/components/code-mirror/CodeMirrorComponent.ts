@@ -10,7 +10,7 @@ import 'codemirror/mode/turtle/turtle';
 import 'codemirror/lib/codemirror.css!';
 import 'codemirror/theme/mbo.css!';
 import EventEmitter = webdriver.EventEmitter;
-
+import './style.css!';
 export class Mode {
 	static get JAVASCRIPT():string { return "text/javascript"; }
 

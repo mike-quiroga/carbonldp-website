@@ -7,9 +7,10 @@ compiled-content {
 
 	nav {
 		.sticky {
-			.item.active {
-				a {
-					text-decoration: underline;
+			> .menu > .item.active {
+				> a {
+					color: #F89828;
+					font-size: 1.4em;
 				}
 			}
 		}

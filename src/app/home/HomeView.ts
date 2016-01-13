@@ -87,9 +87,9 @@ export default class HomeView {
 		this.$carbonLogo.visibility( 'destroy' );
 	}
 
-	scrollTo( event:any ):boolean {
+	scrollTo( event:any):boolean {
 		let
-			id:string = $( this ).attr( 'href' ).replace( '#', '' ),
+			id:string = $( event.srcElement).attr( 'href' ).replace( '#', '' ),
 			$element:JQuery = $( '#' + id ),
 			position:number = $element.offset().top - 80
 			;
