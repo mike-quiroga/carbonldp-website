@@ -23,9 +23,10 @@
 
 					<div class="divider"></div>
 					<div class="header">REST API</div>
-					<a class="item" href="#">Getting Started</a>
-					<a class="item" href="#">Hello World</a>
-					<a class="item" href="#">API</a>
+					<a class="item" [router-link]="[ '/Docs', {id: 'getting-started-with-the-rest-api.html'} ]">Getting Started</a>
+					<a class="item" [router-link]="[ '/Docs', {id: 'interaction-models.html'} ]">Interaction Models</a>
+					<a class="item" [router-link]="[ '/Docs', {id: 'agents.html'} ]">Agents</a>
+					<a class="item" [router-link]="[ '/Docs', {id: 'applications.html'} ]">Applications</a>
 				</div>
 			</div>
 
@@ -61,7 +62,7 @@
 		<div class="ui fixed inverted vertical menu">
 			<a class="item" [router-link]="[ '/Home' ]" [ng-class]="{active: isActive('/Home') }">Home</a>
 			<a class="item" [router-link]="[ '/Blog' ]" [ng-class]="{active: isActive('/Blog') }">Blog</a>
-			<!--<a class="item" [router-link]="[ '/SPARQLClient' ]" [ng-class]="{active: isActive('/SPARQLClient') }"><i class="terminal icon"></i> SPARQL Editor</a>-->
+			<a class="item" [router-link]="[ '/SPARQLClient' ]" [ng-class]="{active: isActive('/SPARQLClient') }"><i class="terminal icon"></i> SPARQL Editor</a>
 
 			<div class="ui dropdown link item">
 				<span class="text">Documentation</span>
@@ -80,9 +81,10 @@
 
 					<div class="divider"></div>
 					<div class="header">REST API</div>
-					<a class="item" href="#">Getting Started</a>
-					<a class="item" href="#">Hello World</a>
-					<a class="item" href="#">API</a>
+					<a class="item" [router-link]="[ '/Docs', {id: 'getting-started-with-the-rest-api.html'} ]">Getting Started</a>
+					<a class="item" [router-link]="[ '/Docs', {id: 'interaction-models.html'} ]">Interaction Models</a>
+					<a class="item" [router-link]="[ '/Docs', {id: 'agents.html'} ]">Agents</a>
+					<a class="item" [router-link]="[ '/Docs', {id: 'applications.html'} ]">Applications</a>
 				</div>
 			</div>
 

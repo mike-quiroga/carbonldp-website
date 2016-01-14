@@ -3,19 +3,20 @@ import { ROUTER_DIRECTIVES, ROUTER_PROVIDERS, Router, Instruction } from 'angula
 
 import $ from 'jquery';
 import 'semantic-ui/semantic';
+import * as CodeMirrorComponent from "app/components/code-mirror/CodeMirrorComponent";
 
 import CarbonLogoComponent from 'app/components/logo/CarbonLogoComponent';
 
 import template from './template.html!';
 import './style.css!';
 
-@Component({
+@Component( {
 	selector: 'home',
 	template: template,
-	directives: [ CORE_DIRECTIVES, ROUTER_DIRECTIVES, CarbonLogoComponent ]
-})
+	directives: [ CORE_DIRECTIVES, ROUTER_DIRECTIVES, CarbonLogoComponent, CodeMirrorComponent.Class ]
+} )
 export default class HomeView {
-	static parameters = [[ Router ], [ ElementRef ]];
+	static parameters = [ [ Router ], [ ElementRef ] ];
 
 	router:Router;
 	element:ElementRef;
@@ -23,7 +24,7 @@ export default class HomeView {
 	$mainMenu:JQuery;
 	$carbonLogo:JQuery;
 
-	constructor( router:Router, element: ElementRef ){
+	constructor( router:Router, element:ElementRef ) {
 		this.router = router;
 		this.element = element;
 	}
@@ -50,12 +51,12 @@ export default class HomeView {
 	}
 
 	showMainMenu():void {
-		if( this.$mainMenu.is( ':visible' ) ) return;
+		if ( this.$mainMenu.is( ':visible' ) ) return;
 		this.toggleMainMenu();
 	}
 
 	hideMainMenu():void {
-		if( ! this.$mainMenu.is( ':visible' ) ) return;
+		if ( ! this.$mainMenu.is( ':visible' ) ) return;
 		this.toggleMainMenu();
 	}
 
@@ -64,22 +65,22 @@ export default class HomeView {
 	}
 
 	createDropdownMenus():void {
-		this.$element.find( '.ui.dropdown' ).dropdown({
+		this.$element.find( '.ui.dropdown' ).dropdown( {
 			on: 'hover'
-		});
+		} );
 	}
 
 	addMenuVisibilityHandlers():void {
 		var view:HomeView = this;
-		this.$carbonLogo.visibility({
+		this.$carbonLogo.visibility( {
 			once: false,
-			onBottomPassedReverse: function( calculations ) {
+			onBottomPassedReverse: function ( calculations ) {
 				view.hideMainMenu();
 			},
-			onBottomPassed: function( calculations ) {
+			onBottomPassed: function ( calculations ) {
 				view.showMainMenu();
 			}
-		});
+		} );
 	}
 
 	removeMenuVisibilityHandlers():void {
