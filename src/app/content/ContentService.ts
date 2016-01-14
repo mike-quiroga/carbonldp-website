@@ -3,7 +3,6 @@ import { Http, Response, Request } from 'angular2/http';
 
 import Carbon from 'carbonldp-sdk';
 
-import BlogPost from './../blog/blog-post/BlogPost';
 
 @Injectable()
 export default class ContentService {
@@ -16,7 +15,6 @@ export default class ContentService {
 
 	data:string;
 
-	postsList:BlogPost[];
 
 	constructor( carbon:Carbon, http:Http ) {
 		this.carbon = carbon;
@@ -37,40 +35,6 @@ export default class ContentService {
 					() => resolve( this.data )
 				);
 		} );
-	}
-
-	getPost( id:number ):Promise<BlogPost> {
-
-		return new Promise<BlogPost[]>( ( resolve, reject ) => {
-			this.getPostsList().then(
-				( posts )=> {
-					let post:BlogPost = posts[ id ];
-					post.creationDate = new Date( Date.parse( post.creationDate.toString() ) );
-					resolve( post );
-				},
-				( error )=> {
-					console.log( error );
-				}
-			).catch( console.error );
-		} ).catch( console.error );
-	}
-
-	getPostsList():Promise<BlogPost[]> {
-		return new Promise<BlogPost[]>( ( resolve, reject ) => {
-			this.http.get( "/app/blog/service/bloglist.json" )
-				.map( res => res.json() )
-				.subscribe(
-					( res ) => {
-						this.postsList = res;
-					},
-					( error ) => {
-						console.error( error );
-					},
-					() => {
-						resolve( this.postsList );
-					}
-				);
-		} ).catch( console.error );
 	}
 
 }

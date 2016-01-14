@@ -4,9 +4,9 @@ import { ROUTER_DIRECTIVES, ROUTER_PROVIDERS, Router, Instruction } from "angula
 import $ from "jquery";
 import "semantic-ui/semantic";
 
-import ContentService from "./../content/ContentService";
+import BlogService from "./service/BlogService";
 import BlogPost from "./blog-post/BlogPost";
-import BlogPostThumbnailView from "./blog-post-thumbnail/BlogPostThumbnailView";
+import BlogPostThumbnailComponent from "./blog-post-thumbnail/BlogPostThumbnailComponent";
 import * as CodeMirrorComponent from "app/components/code-mirror/CodeMirrorComponent";
 import template from './template.html!';
 import './style.css!';
@@ -14,32 +14,31 @@ import './style.css!';
 @Component( {
 	selector: 'blog',
 	template: template,
-	directives: [ CORE_DIRECTIVES, ROUTER_DIRECTIVES, BlogPostThumbnailView, CodeMirrorComponent.Class ],
-	providers: [ ContentService ]
+	directives: [ CORE_DIRECTIVES, ROUTER_DIRECTIVES, BlogPostThumbnailComponent, CodeMirrorComponent.Class ],
+	providers: [ BlogService ]
 } )
 export default class BlogView {
-	static parameters = [ [ Router ], [ ElementRef ], [ DynamicComponentLoader ], [ ContentService ] ];
+	static parameters = [ [ Router ], [ ElementRef ], [ DynamicComponentLoader ], [ BlogService ] ];
 
 	router:Router;
 	dcl:DynamicComponentLoader;
 
-	contentService:ContentService;
+	blogService:BlogService;
 
 	element:ElementRef;
 	$element:JQuery;
 
 	blogPosts:BlogPost[];
 
-	constructor( router:Router, element:ElementRef, dcl:DynamicComponentLoader, contentService:ContentService ) {
+	constructor( router:Router, element:ElementRef, dcl:DynamicComponentLoader, blogService:BlogService ) {
 		this.router = router;
 		this.element = element;
 		this.dcl = dcl;
-		this.contentService = contentService;
+		this.blogService = blogService;
 	}
 
 	getPostsList():void {
-		console.log("");
-		this.contentService.getPostsList().then(
+		this.blogService.getPostsList().then(
 			( blogPosts ) => {
 				this.blogPosts = blogPosts;
 			}
@@ -53,29 +52,5 @@ export default class BlogView {
 
 	onActivate():void {
 		this.getPostsList();
-		//this.contentService.getPostsList().then(
-		//		( blogPosts ) => {
-		//			console.log( blogPosts );
-		//			this.blogPosts = blogPosts;
-		//			this.blogPosts.forEach( ( post:BlogPost, index:Number )=> {
-		//				this.contentService.getPost( post.filename ).then(
-		//						( content )=> {
-		//							post.content = content;
-		//							console.log( post );
-		//							this.dcl.loadIntoLocation( BlogPostView, this.element, "post" );
-		//						}
-		//				);
-		//			} );
-		//		}
-		//).catch( console.error );
-
-		//@Component( {
-		//	selector: 'compiled-component',
-		//	directives: [ CORE_DIRECTIVES, ROUTER_DIRECTIVES, CodeMirrorComponent.Class ],
-		//	templateUrl: 'assets/blog-posts/' + turl
-		//} )
-		//class CompiledComponent {
-		//}
-		//this.dcl.loadIntoLocation( BlogPostSummaryView, this.element, 'content' );
 	}
 }
