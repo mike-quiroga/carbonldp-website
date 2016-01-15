@@ -48,7 +48,8 @@ gulp.task( 'serve', [ 'build-semantic', 'compile-styles' ], function() {
 	return liveServer.start({
 		root: 'src',
 		open: true,
-		file: 'index.html'
+		file: 'index.html',
+		ignore: '/docs/getting-started-with-the-rest-api.html'
 	});
 });
 

@@ -1,0 +1,31 @@
+compiled-content {
+
+	section {
+		margin-top: 2em;
+		padding-top: 2em;
+	}
+
+	nav {
+		.sticky {
+			.item.active {
+				a {
+					text-decoration: underline;
+				}
+			}
+		}
+	}
+
+	#content-masthead {
+		margin-top: 65px;
+	}
+
+	.featured-image {
+		display: block;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: auto;
+		margin: auto;
+		box-sizing: border-box;
+	}
+}
