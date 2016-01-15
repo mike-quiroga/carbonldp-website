@@ -1,5 +1,7 @@
 package com.carbonldp;
 
+import com.beust.jcommander.JCommander;
+import com.beust.jcommander.Parameter;
 import com.carbonldp.apps.context.AppContextConfig;
 import com.carbonldp.config.ConfigurationConfig;
 import com.carbonldp.config.RepositoriesConfig;
@@ -12,13 +14,17 @@ import com.carbonldp.repository.security.SecuredNativeStoreFactory;
 import com.carbonldp.repository.txn.TxnConfig;
 import com.carbonldp.security.SecurityConfig;
 import com.carbonldp.web.config.WebConfig;
+import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.server.handler.ContextHandler;
+import org.eclipse.jetty.webapp.Configuration;
+import org.eclipse.jetty.webapp.WebAppContext;
 import org.fusesource.jansi.AnsiConsole;
+import org.openrdf.rio.trig.TriGParserFactory;
 import org.openrdf.sail.config.SailRegistry;
 import org.springframework.beans.factory.config.PropertiesFactoryBean;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.security.web.context.AbstractSecurityWebApplicationInitializer;
-import org.springframework.web.WebApplicationInitializer;
 import org.springframework.web.context.ContextLoaderListener;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
@@ -31,10 +37,18 @@ import java.io.IOException;
 import java.util.EnumSet;
 import java.util.Properties;
 
-public class ApplicationInitializer implements WebApplicationInitializer {
+/**
+ * @author MiguelAraCo
+ * @since 0.23.0-ALPHA
+ */
+public class Application {
+	public static void main( String[] args ) throws Exception {
+		new Application().start( args );
+	}
 
-	@Override
-	public void onStartup( ServletContext container ) throws ServletException {
+	private void start( String[] args ) throws Exception {
+		Arguments arguments = parseArguments( args );
+
 		AnsiConsole.systemInstall();
 
 		Vars.initialize();
@@ -44,20 +58,53 @@ public class ApplicationInitializer implements WebApplicationInitializer {
 
 		SailRegistry.getInstance().add( new SecuredNativeStoreFactory() );
 
+		TriGParserFactory factory = new TriGParserFactory();
+		System.out.println( factory.toString() );
+
 		RepositoriesUpdater repositoriesUpdater = new RepositoriesUpdater();
 		if ( ! repositoriesUpdater.repositoriesAreUpToDate() ) repositoriesUpdater.updateRepositories();
 
-		AnnotationConfigWebApplicationContext rootContext = createRootContext();
-		addContextLifecycleManagerListener( rootContext, container );
+		Server server = new Server( arguments.port );
 
-		addRequestContextFilter( container );
-		addLoggingFilter( container );
-		addSecurityFilterChain( container );
+		WebAppContext contextHandler = new WebAppContext();
+		contextHandler.setErrorHandler( null );
+		contextHandler.setContextPath( "/" );
+		contextHandler.setResourceBase( "." );
+		contextHandler.setConfigurations( new Configuration[]{} );
 
-		AnnotationConfigWebApplicationContext dispatcherContext = createDispatcherContext();
-		ServletRegistration.Dynamic dispatcher = registerDispatcherServlet( dispatcherContext, container );
+		contextHandler.addEventListener( new ServletContextLoaderListener( createRootContext() ) {
+			@Override
+			public void contextInitialized( ServletContextEvent event ) {
+				ContextHandler.Context servletContext = (ContextHandler.Context) event.getServletContext();
 
-		setMultipartConfig( dispatcher );
+				servletContext.setExtendedListenerTypes( true );
+
+				super.contextInitialized( event );
+
+				addLoggingFilter( servletContext );
+				addRequestContextFilter( servletContext );
+				addSecurityFilterChain( servletContext );
+
+				AnnotationConfigWebApplicationContext dispatcherContext = createDispatcherContext();
+				ServletRegistration.Dynamic dynamic = registerDispatcherServlet( dispatcherContext, servletContext );
+				setMultipartConfig( dynamic );
+			}
+
+			@Override
+			public void contextDestroyed( ServletContextEvent event ) {
+
+			}
+		} );
+
+		server.setHandler( contextHandler );
+		server.start();
+		server.join();
+	}
+
+	private Arguments parseArguments( String[] args ) {
+		Arguments arguments = new Arguments();
+		new JCommander( arguments, args );
+		return arguments;
 	}
 
 	private Properties loadErrorCodes() throws ServletException {
@@ -89,10 +136,6 @@ public class ApplicationInitializer implements WebApplicationInitializer {
 			LOGConfig.class
 		);
 		return rootContext;
-	}
-
-	private void addContextLifecycleManagerListener( WebApplicationContext context, ServletContext container ) {
-		container.addListener( new ContextLoaderListener( context ) );
 	}
 
 	private void addRequestContextFilter( ServletContext container ) {
@@ -129,5 +172,17 @@ public class ApplicationInitializer implements WebApplicationInitializer {
 	private void setMultipartConfig( ServletRegistration.Dynamic dispatcher ) {
 		// TODO: When implementing multipart, verify these settings
 		dispatcher.setMultipartConfig( new MultipartConfigElement( "/tmp", 1024 * 1024 * 5, 1024 * 1024 * 5 * 5, 1024 * 1024 ) );
+	}
+
+	// This class makes ContextLoaderListener compatible with Jetty by implementing javax.servlet.ServletContextListener
+	private class ServletContextLoaderListener extends ContextLoaderListener implements ServletContextListener {
+		public ServletContextLoaderListener( WebApplicationContext context ) {
+			super( context );
+		}
+	}
+
+	public class Arguments {
+		@Parameter( names = "-port", description = "Port to listen to" )
+		private Integer port = 8083;
 	}
 }
