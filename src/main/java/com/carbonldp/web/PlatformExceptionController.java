@@ -69,7 +69,7 @@ public class PlatformExceptionController {
 	@ExceptionHandler( InvalidResourceException.class )
 	public ResponseEntity<Object> handleIllegalArgumentException( HttpServletRequest request, HttpServletResponse response, InvalidResourceException exception ) {
 		ErrorResponse error = ErrorResponseFactory.create( exception.getInfractions(), HttpStatus.BAD_REQUEST );
-		addConstrainedByLinkHeader( response, Vars.getInstance().getHost() );
+		addConstrainedByLinkHeader( response,Vars.getInstance().getAPIResourceURL());
 		return new ResponseEntity<>( error.getBaseModel(), HttpStatus.BAD_REQUEST );
 	}
 
