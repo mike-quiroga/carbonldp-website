@@ -40,7 +40,6 @@
     "preinstall": "node scripts/copy-hooks.js",
     "postinstall": "./node_modules/.bin/jspm install",
     "start": "./node_modules/.bin/gulp serve",
-    "build": "./node_modules/.bin/gulp build",
     "test": "./node_modules/.bin/gulp test"
   },
   "jspm": {

@@ -66,7 +66,7 @@ gulp.task( 'compile-styles', function() {
 });
 
 gulp.task( 'build', [ 'build-semantic', 'compile-styles', 'copy-semantic', 'copy-assets' ], function() {
-	return jspm.bundleSFX( 'app/boot.ts', 'dist/main.sfx.js', {
+	return jspm.bundleSFX( 'app/boot.ts', 'dist/site/main.sfx.js', {
 		minify: true,
 		mangle: true,
 		lowResSourceMaps: false,
@@ -85,12 +85,12 @@ gulp.task( 'build-semantic', function() {
 gulp.task( 'copy-semantic', [ 'build-semantic' ], function() {
 	return gulp.src( 'src/semantic/dist/**/*', {
 		base: 'src/semantic/dist'
-	}).pipe( gulp.dest( 'dist/assets/semantic' ) );
+	}).pipe( gulp.dest( 'dist/site/assets/semantic' ) );
 });
 
 // TODO: Minify files
 gulp.task( 'copy-assets', function() {
 	return gulp.src( 'src/assets/**/*', {
 		base: 'src/assets'
-	}).pipe( gulp.dest( 'dist/assets' ) );
+	}).pipe( gulp.dest( 'dist/site/assets' ) );
 });
