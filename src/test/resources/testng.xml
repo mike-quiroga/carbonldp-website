@@ -12,18 +12,15 @@
             </test>
 
             <test name="Integration Tests">
-                <classes>
-                    <class name="com.carbonldp.test.transaction.TransactionManagementIT"/>
-                    <class name="com.carbonldp.test.apps.context.AppContextIT"/>
+                <groups>
+                    <run>
+                        <include name="integration-tests"/>
+                    </run>
+                </groups>
 
-                    <class name="com.carbonldp.test.authentication.UsernameAndPasswordAuthenticationIT"/>
-                    <class name="com.carbonldp.test.authorization.SecurityContextExchangerIT"/>
-                    <class name="com.carbonldp.test.rdf.RDFDocumentRepositoryIT"/>
-
-                    <class name="com.carbonldp.test.transaction.TransactionManagementIT"/>
-                    <class name="com.carbonldp.test.web.cors.CORSAppContextFilterIT"/>
-                    <class name="com.carbonldp.test.web.cors.CORSPlatformContextFilterIT"/>
-                </classes>
+                <packages>
+                    <package name="com.carbonldp.test.*"/>
+                </packages>
             </test>
 
         </listener>
