@@ -22,7 +22,6 @@ public class SesameNonRDFSourceService extends AbstractSesameLDPService implemen
 		UUID uuid = UUID.fromString( uuidString );
 
 		return fileRepository.get( uuid );
-
 	}
 
 	@Override

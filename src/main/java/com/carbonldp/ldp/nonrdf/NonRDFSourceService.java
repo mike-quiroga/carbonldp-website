@@ -7,7 +7,7 @@ import java.io.File;
 
 public interface NonRDFSourceService {
 
-	@PreAuthorize( "hasPermission(#rdfRepresentation, 'READ')" )
+	@PreAuthorize( "hasPermission(#rdfRepresentation, 'DOWNLOAD')" )
 	public File getResource( RDFRepresentation rdfRepresentation );
 
 	public boolean isRDFRepresentation( URI targetURI );
