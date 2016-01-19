@@ -38,7 +38,7 @@
   },
   "scripts": {
     "preinstall": "node scripts/copy-hooks.js",
-    "postinstall": "./node_modules/.bin/jspm install",
+    "postinstall": "./node_modules/.bin/jspm config registries.github.remote https://github.jspm.io && ./node_modules/.bin/jspm config registries.github.auth Q2FyYm9uRGVwbG95ZXI6NGMxZjMzYTMyZTI3OGU0ODBmZmY2MDg1MWEyNTZlMzcxNzJkZTllOA== && ./node_modules/.bin/jspm config registries.github.maxRepoSize 0 && ./node_modules/.bin/jspm config registries.github.handler jspm-github && ./node_modules/.bin/jspm install",
     "start": "./node_modules/.bin/gulp serve",
     "test": "./node_modules/.bin/gulp test"
   },
