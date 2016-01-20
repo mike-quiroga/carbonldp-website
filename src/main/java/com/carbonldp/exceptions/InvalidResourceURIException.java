@@ -3,7 +3,7 @@ package com.carbonldp.exceptions;
 import com.carbonldp.web.exceptions.BadRequestException;
 
 /**
- * @author NstorVenegas
+ * @author NestorVenegas
  * @since _version_
  */
 public class InvalidResourceURIException extends BadRequestException {

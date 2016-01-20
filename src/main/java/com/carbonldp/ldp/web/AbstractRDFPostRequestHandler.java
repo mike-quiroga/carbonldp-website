@@ -145,18 +145,16 @@ public abstract class AbstractRDFPostRequestHandler<E extends BasicContainer> ex
 				throw new BadRequestException( new Infraction( 0x200C, "rdf.type", invalidType.getURI().stringValue() ) );
 		}
 		BasicContainer basicContainer;
-		if ( ( ! hasDefaultInteractionModel( requestDocumentResource ) ) && ( requestDocumentResource.hasType( ContainerDescription.Resource.CLASS ) || requestDocumentResource.hasType( BasicContainerDescription.Resource.CLASS ) ) ) {
-			basicContainer = BasicContainerFactory.getInstance().create( requestDocumentResource );
-		} else {
-			basicContainer = BasicContainerFactory.getInstance().create( requestDocumentResource );
-			if ( basicContainer.getDefaultInteractionModel() == null )
-				basicContainer.setDefaultInteractionModel( InteractionModel.RDF_SOURCE );
+
+		if ( ( ! ( requestDocumentResource.hasType( ContainerDescription.Resource.CLASS ) || requestDocumentResource.hasType( BasicContainerDescription.Resource.CLASS ) ) && ( ! hasInteractionModel( requestDocumentResource ) ) ) ) {
+			requestDocumentResource.add( RDFSourceDescription.Property.DEFAULT_INTERACTION_MODEL.getURI(), InteractionModel.RDF_SOURCE.getURI() );
 		}
+		basicContainer = BasicContainerFactory.getInstance().create( requestDocumentResource );
 
 		return basicContainer;
 	}
 
-	private boolean hasDefaultInteractionModel( RDFResource requestDocumentResource ) {
+	private boolean hasInteractionModel( RDFResource requestDocumentResource ) {
 		return requestDocumentResource.hasProperty( RDFSourceDescription.Property.DEFAULT_INTERACTION_MODEL );
 	}
 
