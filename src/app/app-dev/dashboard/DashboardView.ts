@@ -6,24 +6,25 @@ import 'semantic-ui/semantic';
 
 import template from './template.html!';
 import './style.css!';
+import SidebarService from "../components/sidebar/service/SidebarService";
 
 @Component( {
 	selector: 'home',
-	template: `
-		<h1>This is the Dashboard</h1>
-	`,
+	template: template,
 	directives: [ CORE_DIRECTIVES, ROUTER_DIRECTIVES ]
 } )
 export default class DashboardView {
-	static parameters = [ [ Router ], [ ElementRef ] ];
+	static parameters = [ [ Router ], [ ElementRef ], [ SidebarService ] ];
 
 	router:Router;
 	element:ElementRef;
 	$element:JQuery;
+	sidebarService:SidebarService;
 
-	constructor( router:Router, element:ElementRef ) {
+	constructor( router:Router, element:ElementRef, sidebarService:SidebarService ) {
 		this.router = router;
 		this.element = element;
+		this.sidebarService = sidebarService;
 	}
 
 	afterViewInit():void {

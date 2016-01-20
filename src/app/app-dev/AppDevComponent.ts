@@ -1,25 +1,31 @@
-import { Injectable } from 'angular2/angular2';
-import { Component, CORE_DIRECTIVES, ElementRef } from 'angular2/angular2';
-import { ROUTER_DIRECTIVES, Location, RouteConfig, RouterLink, Router } from 'angular2/router';
+import {Injectable, Component, ElementRef } from 'angular2/angular2';
+import {RouteConfig, RouterOutlet} from 'angular2/router';
 
-import $ from 'jquery';
-import 'semantic-ui/semantic';
+//import $ from 'jquery';
+//import 'semantic-ui/semantic';
+//import SidebarService from 'app/app-dev/components/sidebar/service/SidebarService'
+import SidebarComponent from 'app/app-dev/components/sidebar/SidebarComponent';
+import DashboardView from 'app/app-dev/dashboard/DashboardView';
+import MyAppsView from 'app/app-dev/my-apps/MyAppsView';
 
-import DashboardView from 'app/apps/dashboard/DashboardView';
 import template from './template.html!';
 
 @Component( {
 	selector: 'app-dev',
 	template: template,
-	directives: [ CORE_DIRECTIVES, ROUTER_DIRECTIVES ]
+	directives: [ RouterOutlet, SidebarComponent ]
+	//,
+	//provider: [ SidebarService ]
 } )
-
+@RouteConfig( [
+	{path: '/', name: 'AppDev', component: DashboardView},
+	{path: '/my-apps', as: 'LinkedDataConcepts', component: MyAppsView}
+] )
 @Injectable()
 export default class AppDevComponent {
 	static dependencies = AppDevComponent.parameters;
-	static parameters = [ [ Router ], [ ElementRef ] ];
+	static parameters = [ [ ElementRef ] ];
 
-	router:Router;
 
 	element:ElementRef;
 	$element:JQuery;
@@ -27,8 +33,7 @@ export default class AppDevComponent {
 	sidebar:JQuery;
 
 
-	constructor( router:Router, element:ElementRef ) {
-		this.router = router;
+	constructor( element:ElementRef ) {
 		this.element = element;
 	}
 
@@ -36,13 +41,6 @@ export default class AppDevComponent {
 		this.$element = $( this.element.nativeElement );
 		$( "app > header, app > footer" ).hide();
 		this.sidebar = this.$element.children( ".ui.sidebar" );
-		//this.sidebar.sidebar( {
-		//	scrollLock: false
-		//} );
-		//this.sidebar.sidebar( "show" );
-	}
-
-	onActivate():void {
-
 	}
 }
+

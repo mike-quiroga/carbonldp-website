@@ -13,7 +13,7 @@ import AppDevComponent from 'app/apps/AppDevComponent';
 import { CONTENT_PROVIDERS } from 'app/content/Content';
 import { BLOG_PROVIDERS } from 'app/blog/Blog';
 import { APP_DEV_PROVIDERS } from 'app/app-dev/AppDev';
-
+import { SIDEBAR_PROVIDERS } from 'app/app-dev/components/sidebar/Sidebar';
 const CARBON_PROVIDER = provide( Carbon, {
 	useFactory: () => {
 		var carbon = new Carbon();
@@ -29,5 +29,6 @@ bootstrap( AppComponent, [
 	CARBON_PROVIDER,
 	CONTENT_PROVIDERS,
 	BLOG_PROVIDERS,
-	APP_DEV_PROVIDERS
+	APP_DEV_PROVIDERS,
+	SIDEBAR_PROVIDERS
 ] );

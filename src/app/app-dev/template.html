@@ -1,21 +1,10 @@
-<!--<header></header>-->
-<div class="ui left sidebar overlay visible inverted vertical menu">
-	<div class="item">
-		<input type="text"/>
-	</div>
-	<a class="item">
-		1
-	</a>
-	<a class="item">
-		2
-	</a>
-	<a class="item">
-		3
-	</a>
-</div>
-<div class="page-content pusher">
-	<!-- Site content !-->
-	<div class="ui vertical inverted sticky menu">
+<header></header>
+<div class="page-content">
+	<div class="ui fluid container">
+		<sidebar></sidebar>
+		<div class="pusher">
+			<router-outlet></router-outlet>
+		</div>
 	</div>
 </div>
-<!--<footer></footer>-->
+<footer></footer>
