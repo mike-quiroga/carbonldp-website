@@ -4,7 +4,7 @@ import com.carbonldp.web.exceptions.BadRequestException;
 
 /**
  * @author NestorVenegas
- * @since _version_
+ * @since 0.24.0-ALPHA
  */
 public class InvalidResourceURIException extends BadRequestException {
 	public InvalidResourceURIException() {
