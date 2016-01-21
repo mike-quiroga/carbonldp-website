@@ -69,6 +69,10 @@ public class AbstractDELETERequestHandler extends AbstractLDPRequestHandler {
 		}
 	}
 
+	protected APIPreferences.InteractionModel getDefaultInteractionModel() {
+		return APIPreferences.InteractionModel.RDF_SOURCE;
+	}
+
 	protected ResponseEntity<Object> handleRDFSourceDeletion( URI targetURI ) {
 		delete( targetURI );
 		return createSuccessfulDeleteResponse();

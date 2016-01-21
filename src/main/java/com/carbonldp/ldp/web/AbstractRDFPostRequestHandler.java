@@ -1,10 +1,13 @@
 package com.carbonldp.ldp.web;
 
 import com.carbonldp.HTTPHeaders;
+import com.carbonldp.descriptions.APIPreferences;
 import com.carbonldp.descriptions.APIPreferences.InteractionModel;
 import com.carbonldp.exceptions.InvalidResourceException;
+import com.carbonldp.exceptions.InvalidResourceURIException;
 import com.carbonldp.ldp.containers.*;
 import com.carbonldp.ldp.nonrdf.RDFRepresentationDescription;
+import com.carbonldp.ldp.sources.RDFSourceDescription;
 import com.carbonldp.models.EmptyResponse;
 import com.carbonldp.models.Infraction;
 import com.carbonldp.rdf.RDFDocument;
@@ -85,6 +88,10 @@ public abstract class AbstractRDFPostRequestHandler<E extends BasicContainer> ex
 
 	}
 
+	protected APIPreferences.InteractionModel getDefaultInteractionModel() {
+		return APIPreferences.InteractionModel.CONTAINER;
+	}
+
 	private ResponseEntity<Object> handlePOSTToRDFSource( URI targetURI, RDFResource requestDocumentResource ) {
 		AccessPoint requestAccessPoint = getRequestAccessPoint( requestDocumentResource );
 
@@ -137,10 +144,18 @@ public abstract class AbstractRDFPostRequestHandler<E extends BasicContainer> ex
 			if ( requestDocumentResource.hasType( invalidType ) )
 				throw new BadRequestException( new Infraction( 0x200C, "rdf.type", invalidType.getURI().stringValue() ) );
 		}
-		BasicContainer basicContainer = BasicContainerFactory.getInstance().create( requestDocumentResource );
-		if ( basicContainer.getDefaultInteractionModel() == null )
-			basicContainer.setDefaultInteractionModel( InteractionModel.RDF_SOURCE );
+		BasicContainer basicContainer;
+
+		if ( ( ! ( requestDocumentResource.hasType( ContainerDescription.Resource.CLASS ) || requestDocumentResource.hasType( BasicContainerDescription.Resource.CLASS ) ) && ( ! hasInteractionModel( requestDocumentResource ) ) ) ) {
+			requestDocumentResource.add( RDFSourceDescription.Property.DEFAULT_INTERACTION_MODEL.getURI(), InteractionModel.RDF_SOURCE.getURI() );
+		}
+		basicContainer = BasicContainerFactory.getInstance().create( requestDocumentResource );
+
 		return basicContainer;
+	}
+
+	private boolean hasInteractionModel( RDFResource requestDocumentResource ) {
+		return requestDocumentResource.hasProperty( RDFSourceDescription.Property.DEFAULT_INTERACTION_MODEL );
 	}
 
 	protected abstract E getDocumentResourceView( BasicContainer requestBasicContainer );
@@ -214,7 +229,7 @@ public abstract class AbstractRDFPostRequestHandler<E extends BasicContainer> ex
 		String resourceURI = requestResource.getURI().stringValue();
 		targetURI = targetURI.endsWith( SLASH ) ? targetURI : targetURI.concat( SLASH );
 		if ( ! resourceURI.startsWith( targetURI ) ) {
-			throw new BadRequestException( 0x200B );
+			throw new InvalidResourceURIException();
 		}
 
 		String relativeURI = resourceURI.replace( targetURI, EMPTY_STRING );

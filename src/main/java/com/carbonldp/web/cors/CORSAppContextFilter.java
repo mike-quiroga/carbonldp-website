@@ -3,8 +3,7 @@ package com.carbonldp.web.cors;
 import com.carbonldp.apps.App;
 import com.carbonldp.apps.context.AppContext;
 import com.carbonldp.apps.context.AppContextHolder;
-import com.carbonldp.apps.context.AppContextRepository;
-import com.carbonldp.namespaces.C;
+import com.carbonldp.namespaces.CS;
 import com.carbonldp.utils.LiteralUtil;
 import com.carbonldp.utils.ValueUtil;
 import org.openrdf.model.Literal;
@@ -16,8 +15,6 @@ import java.util.regex.Pattern;
 
 public class CORSAppContextFilter extends CORSContextFilter {
 	public static final String FILTER_APPLIED = "__carbon_cacf_applied";
-
-	private AppContextRepository appContextRepository;
 
 	//TODO use the right parameters
 	public CORSAppContextFilter() {
@@ -38,7 +35,7 @@ public class CORSAppContextFilter extends CORSContextFilter {
 					if ( Pattern.matches( allowedOriginLiteral.stringValue(), origin ) ) return true;
 				}
 			} else if ( ValueUtil.isURI( allowedOrigin ) ) {
-				return allowedOrigin.equals( new URIImpl( C.Classes.ALL_ORIGINS ) );
+				return allowedOrigin.equals( new URIImpl( CS.Classes.ALL_ORIGINS ) );
 			}
 		}
 
