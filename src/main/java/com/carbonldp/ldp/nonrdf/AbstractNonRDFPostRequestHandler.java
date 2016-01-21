@@ -57,6 +57,10 @@ public abstract class AbstractNonRDFPostRequestHandler extends AbstractNonRDFReq
 		}
 	}
 
+	protected APIPreferences.InteractionModel getDefaultInteractionModel() {
+		return APIPreferences.InteractionModel.CONTAINER;
+	}
+
 	private ResponseEntity<Object> handlePOSTToContainer( URI targetURI, File requestEntity, String contentType ) {
 		URI resourceURI = forgeURI( targetURI, request );
 

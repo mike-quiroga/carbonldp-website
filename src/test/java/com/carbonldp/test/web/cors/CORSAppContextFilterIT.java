@@ -5,6 +5,7 @@ import com.carbonldp.apps.AppRepository;
 import com.carbonldp.apps.context.AppContext;
 import com.carbonldp.apps.context.AppContextHolder;
 import com.carbonldp.namespaces.C;
+import com.carbonldp.namespaces.CS;
 import com.carbonldp.namespaces.XSD;
 import com.carbonldp.test.AbstractIT;
 import org.mockito.Mockito;
@@ -123,7 +124,7 @@ public class CORSAppContextFilterIT extends AbstractIT {
 		Mockito.when( request.getHeader( "Access-Control-Request-Method" ) ).thenReturn( "OPTIONS" );
 
 		setUp();
-		app.addDomain( new URIImpl( C.Classes.ALL_ORIGINS ) );
+		app.addDomain( new URIImpl( CS.Classes.ALL_ORIGINS ) );
 		applicationContextTemplate.runInAppContext( app, () -> {
 			try {
 				corsAppContextFilter.doFilter( request, response, chain );

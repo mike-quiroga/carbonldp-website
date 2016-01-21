@@ -55,6 +55,10 @@ public class AbstractNonRDFPutRequestHandler extends AbstractNonRDFRequestHandle
 		}
 	}
 
+	protected APIPreferences.InteractionModel getDefaultInteractionModel() {
+		return APIPreferences.InteractionModel.NON_RDF_SOURCE;
+	}
+
 	private ResponseEntity<Object> handlePUTToContainer( URI targetURI, File requestEntity, String contentType ) {
 		RDFRepresentation rdfRepresentation = new RDFRepresentation( sourceService.get( targetURI ) );
 

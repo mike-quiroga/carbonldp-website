@@ -35,7 +35,7 @@ public class FileRepositoryIT extends AbstractIT {
 	String location;
 	App app;
 
-	@BeforeClass
+	@BeforeClass( dependsOnMethods = "setRepository" )
 	protected void setUp() {
 		app = appRepository.findByRootContainer( new URIImpl( "https://local.carbonldp.com/apps/test-blog/" ) );
 		fileRepository = new LocalFileRepository();
