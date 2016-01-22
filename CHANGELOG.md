@@ -1,3 +1,5 @@
+# 0.24.1 (2016/01/21)
+* fix access point validation
 # 0.24.0 (2016/01/21)
 * carbon is now in check with w3c LDP specifications
 # 0.23.0 (2016/01/07)
