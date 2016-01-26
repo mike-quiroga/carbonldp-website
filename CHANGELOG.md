@@ -1,5 +1,5 @@
 # 0.25.2 (2016/01/26)
-* unsoported content-type now throw the right exception
+* unsupported content-type now throws the right exception
 # 0.25.1 (2016/01/25)
 * fix access point validation
 # 0.25.0 (2016/01/21)
