@@ -55,11 +55,16 @@ public class SesameRDFSourceService extends AbstractSesameLDPService implements 
 		if ( ! exists( parentURI ) ) throw new ResourceDoesntExistException();
 		DateTime creationTime = DateTime.now();
 		accessPoint.setTimestamps( creationTime );
-		AccessPointFactory.getInstance().isValid( accessPoint, parentURI );
+		validate( accessPoint, parentURI );
 		sourceRepository.createAccessPoint( parentURI, accessPoint );
 		sourceRepository.touch( parentURI, creationTime );
 
 		return creationTime;
+	}
+
+	private void validate( AccessPoint accessPoint, URI parentURI ) {
+		List<Infraction> infractions = AccessPointFactory.getInstance().validate( accessPoint, parentURI );
+		if ( ! infractions.isEmpty() ) throw new InvalidResourceException( infractions );
 	}
 
 	@Override
