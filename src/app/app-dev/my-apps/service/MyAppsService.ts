@@ -1,29 +1,28 @@
 import { Injectable } from 'angular2/angular2';
 import { Http, Response, Request } from 'angular2/http';
 
-import BlogPost from './../blog-post/BlogPost';
+import CarbonApp from './../carbon-app/CarbonApp';
 
 @Injectable()
-export default class CarbonAppsService {
+export default class MyAppsService {
 
 	static parameters = [ [ Http ] ];
-	static dependencies = CarbonAppsService.parameters;
+	static dependencies = MyAppsService.parameters;
 
 	http:Http;
 
 	data:string;
 
-	postsList:BlogPost[];
+	postsList:CarbonApp[];
 
 	constructor( http:Http ) {
 		this.http = http;
 	}
 
 
-
-	getAppsList():Promise<BlogPost[]> {
-		return new Promise<BlogPost[]>( ( resolve, reject ) => {
-			this.http.get( "/app/app-dev/my-apps/service/CarbonApp.json" )
+	getApps():Promise<CarbonApp[]> {
+		return new Promise<CarbonApp[]>( ( resolve, reject ) => {
+			this.http.get( "/assets/CarbonApps.json" )
 				.map( res => res.json() )
 				.subscribe(
 					( res ) => {

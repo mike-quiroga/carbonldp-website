@@ -1,10 +1,12 @@
 import { Injectable } from 'angular2/angular2';
-import { CORE_DIRECTIVES, Component, Input, Output, ElementRef, Query, QueryList, SimpleChange, EventEmitter } from 'angular2/angular2';
+import { CORE_DIRECTIVES, Component, Input, Output, ElementRef, SimpleChange, EventEmitter } from 'angular2/angular2';
 
 import $ from 'jquery';
 import 'semantic-ui/semantic';
 
 import SidebarService from './service/SidebarService'
+import CarbonApp from 'app/app-dev/my-apps/carbon-app/CarbonApp'
+import SidebarItem from "./SidebarItem";
 
 import template from './template.html!';
 import './style.css!';
@@ -22,33 +24,50 @@ export default class SidebarComponent {
 	element:ElementRef;
 	$element:JQuery;
 	sidebarService:SidebarService;
-
-	counter:number = 0;
-
-	@Input() value:string = "";
-	//@Output() valueChange:EventEmitter = new EventEmitter();
-
+	appsList:CarbonApp = <CarbonApp>[];
+	itemsList:Array<SidebarItem> = [];
 
 	constructor( element:ElementRef, sidebarService:SidebarService ) {
 		this.element = element;
 		this.sidebarService = sidebarService;
 
+		this.sidebarService.rxAddItemEmitter.subscribe(
+			( item ) => {
+				this.addItem( item );
+			}
+		);
+		this.sidebarService.rxtoggleEmitter.subscribe(
+			( data ) => {
+				this.toggle();
+			}
+		);
 	}
 
 	afterViewInit():void {
 		this.$element = $( this.element.nativeElement );
-		this.$element.addClass( "ui left sidebar visible inverted vertical menu" );
+		//this.$element.addClass( "ui left wide sidebar visible inverted vertical menu" );
 	}
 
 	greet():void {
-		alert( "Hello from Sidebar Component" );
+
 	}
 
-	add():void {
-		this.counter ++;
+	addItem( item:SidebarItem ):void {
+		this.itemsList.push( item );
 	}
 
-	show():void {
-		alert( this.counter );
+	toggle():void {
+		if ( this.$element.hasClass( "visible" ) ) {
+			this.$element.removeClass( "visible" );
+			//this.$element.parent().find( "sidebar ~ .pusher" ).css( "width", "100%" );
+			this.$element.parent().find( "sidebar ~ .pusher" ).addClass( "full" );
+		} else {
+			this.$element.addClass( "visible" );
+			this.$element.parent().find( "sidebar ~ .pusher" ).removeClass( "full" );
+		}
+
+
 	}
+
+
 }

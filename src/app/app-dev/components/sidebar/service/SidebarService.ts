@@ -1,5 +1,7 @@
-import { Injectable, ElementRef } from 'angular2/angular2';
+import { Injectable, EventEmitter } from 'angular2/angular2';
 
+import CarbonApp from 'app/app-dev/my-apps/carbon-app/CarbonApp'
+import SidebarItem from './../SidebarItem'
 
 @Injectable()
 export default class SidebarService {
@@ -8,42 +10,38 @@ export default class SidebarService {
 	static dependencies = SidebarService.parameters;
 
 	data:string;
-	element:ElementRef;
 	$element:JQuery;
 
 	counter:number = 0;
+	addItemEmitter:EventEmitter = new EventEmitter();
+	rxAddItemEmitter:any;
+	toggleEmitter:EventEmitter = new EventEmitter();
+	rxtoggleEmitter:any;
 
 	constructor() {
-		//this.element = elementRef;
-		//this.$element = $( this.element.nativeElement );
+		this.rxAddItemEmitter = this.addItemEmitter.toRx();
+		this.rxtoggleEmitter = this.toggleEmitter.toRx();
 	}
 
-	add():void {
+	addItem( name:string, url?:string, icon?:string ):void {
 		this.counter ++;
+		let item = new SidebarItem();
+		item.name = name;
+		item.url = url ? url : null;
+		item.icon = icon ? icon : null;
+		//let app:CarbonApp = new CarbonApp();
+		//app.creationDate = "21/Dec/2015";
+		//app.name = "My App " + this.counter;
+
+		this.addItemEmitter.next( item );
 	}
 
 	remove():void {
 		this.counter --;
 	}
 
-	show():void {
-		alert( this.counter );
+	toggle():void {
+		this.toggleEmitter.next( null );
 	}
-
-	//getPost( id:number ):Promise<BlogPost> {
-	//
-	//	return new Promise<BlogPost[]>( ( resolve, reject ) => {
-	//		this.getPostsList().then(
-	//			( posts )=> {
-	//				let post:BlogPost = posts[ id ];
-	//				post.creationDate = new Date( Date.parse( post.creationDate.toString() ) );
-	//				resolve( post );
-	//			},
-	//			( error )=> {
-	//				console.log( error );
-	//			}
-	//		).catch( console.error );
-	//	} ).catch( console.error );
-	//}
 
 }

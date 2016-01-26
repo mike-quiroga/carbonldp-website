@@ -1,19 +1,15 @@
-<!--<div class="ui left sidebar overlay visible inverted vertical menu">-->
-<!--</div>-->
-<div class="item">
-	<button class="toggle">Toggle</button>
-	<button (click)="sidebarService.add()" style="color:red;">{{ sidebarService.counter }}</button>
-	<button (click)="sidebarService.show()" style="color:red;">Show</button>
+<div class="ui right aligned item container">
+	<!--<button (click)="sidebarService.add()" style="color:red;">{{ sidebarService.counter }}</button>-->
+	<!--<button (click)="sidebarService.show()" style="color:red;">Show</button>-->
+	<button class="toggle" (click)="toggle()">Toggle</button>
 </div>
 <div class="item">
 	<input type="text"/>
 </div>
 <a class="item">
-	1
+	Item
 </a>
-<a class="item">
-	2
-</a>
-<a class="item">
-	3
+<a>
+	<i class="grid layout icon"></i>
+	{{item.name}}
 </a>

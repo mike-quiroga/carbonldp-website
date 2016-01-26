@@ -1,0 +1,17 @@
+app-dev {
+
+	> sidebar {
+		//border: 6px solid blue !important;
+	}
+	> .pusher {
+		width: calc(100% - 350px);
+	}
+	> .pusher.full {
+		width: 100%;
+	}
+
+	> sidebar ~ .pusher {
+		//border: 6px solid red;
+	}
+
+}
