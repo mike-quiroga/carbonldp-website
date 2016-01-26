@@ -2,6 +2,7 @@ package com.carbonldp;
 
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.Parameter;
+import com.beust.jcommander.converters.CommaParameterSplitter;
 import com.carbonldp.apps.context.AppContextConfig;
 import com.carbonldp.config.ConfigurationConfig;
 import com.carbonldp.config.RepositoriesConfig;
@@ -34,8 +35,11 @@ import org.springframework.web.servlet.DispatcherServlet;
 
 import javax.servlet.*;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.EnumSet;
+import java.util.List;
 import java.util.Properties;
+import java.util.stream.Collectors;
 
 /**
  * @author MiguelAraCo
@@ -48,6 +52,8 @@ public class Application {
 
 	private void start( String[] args ) throws Exception {
 		Arguments arguments = parseArguments( args );
+
+		setSpringActiveProfiles( arguments );
 
 		AnsiConsole.systemInstall();
 
@@ -72,7 +78,9 @@ public class Application {
 		contextHandler.setResourceBase( "." );
 		contextHandler.setConfigurations( new Configuration[]{} );
 
-		contextHandler.addEventListener( new ServletContextLoaderListener( createRootContext() ) {
+		AnnotationConfigWebApplicationContext rootContext = createRootContext();
+
+		contextHandler.addEventListener( new ServletContextLoaderListener( rootContext ) {
 			@Override
 			public void contextInitialized( ServletContextEvent event ) {
 				ContextHandler.Context servletContext = (ContextHandler.Context) event.getServletContext();
@@ -86,6 +94,7 @@ public class Application {
 				addSecurityFilterChain( servletContext );
 
 				AnnotationConfigWebApplicationContext dispatcherContext = createDispatcherContext();
+
 				ServletRegistration.Dynamic dynamic = registerDispatcherServlet( dispatcherContext, servletContext );
 				setMultipartConfig( dynamic );
 			}
@@ -161,6 +170,15 @@ public class Application {
 		return dispatcherContext;
 	}
 
+	private void setSpringActiveProfiles( Arguments arguments ) {
+		String activeProfilesPassed = arguments.activeProfiles.stream().collect( Collectors.joining( Consts.COMMA ) );
+		String defaultProfiles = new Arguments().activeProfiles.stream().collect( Collectors.joining( Consts.COMMA ) );
+
+		if ( ! activeProfilesPassed.equals( defaultProfiles ) || ( System.getProperty( "spring.profiles.active" ) == null && System.getenv( "SPRING_PROFILES_ACTIVE" ) == null ) ) {
+			System.setProperty( "spring.profiles.active", activeProfilesPassed );
+		}
+	}
+
 	private ServletRegistration.Dynamic registerDispatcherServlet( AnnotationConfigWebApplicationContext dispatcherContext, ServletContext container ) {
 		ServletRegistration.Dynamic dispatcher = container.addServlet( "dispatcher", new DispatcherServlet( dispatcherContext ) );
 		dispatcher.setLoadOnStartup( 1 );
@@ -184,5 +202,8 @@ public class Application {
 	public class Arguments {
 		@Parameter( names = "-port", description = "Port to listen to" )
 		private Integer port = 8083;
+
+		@Parameter( names = "-spring.profiles.active", splitter = CommaParameterSplitter.class )
+		private List<String> activeProfiles = Arrays.asList( "local" );
 	}
 }
