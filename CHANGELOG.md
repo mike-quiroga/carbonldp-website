@@ -1,4 +1,4 @@
-# 0.24.1 (2016/01/21)
+# 0.25.1 (2016/01/25)
 * fix access point validation
 # 0.25.0 (2016/01/21)
 * Spring Active Profiles can now be specified as a program argument. Like: "-spring.profiles.active profile1,profile2"
