@@ -17,6 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
@@ -69,8 +70,13 @@ public class PlatformExceptionController {
 	@ExceptionHandler( InvalidResourceException.class )
 	public ResponseEntity<Object> handleIllegalArgumentException( HttpServletRequest request, HttpServletResponse response, InvalidResourceException exception ) {
 		ErrorResponse error = ErrorResponseFactory.create( exception.getInfractions(), HttpStatus.BAD_REQUEST );
-		addConstrainedByLinkHeader( response,Vars.getInstance().getAPIResourceURL());
+		addConstrainedByLinkHeader( response, Vars.getInstance().getAPIResourceURL() );
 		return new ResponseEntity<>( error.getBaseModel(), HttpStatus.BAD_REQUEST );
+	}
+
+	@ExceptionHandler( HttpMediaTypeNotSupportedException.class )
+	public ResponseEntity<Object> handleHttpMediaTypeNotSupportedException( HttpServletRequest request, HttpServletResponse response, HttpMediaTypeNotSupportedException exception ) {
+		return new BadRequestException( 0x6002 ).toResponseEntity();
 	}
 
 	private void addConstrainedByLinkHeader( HttpServletResponse response, String restringedBy ) {
