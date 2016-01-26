@@ -1,13 +1,15 @@
+# 0.25.3 (2016/01/26)
+* App admin get all permissions in the app
 # 0.25.2 (2016/01/26)
-* unsupported content-type now throws the right exception
+* Unsupported content-type now throws the right exception
 # 0.25.1 (2016/01/25)
-* fix access point validation
+* Fix access point validation
 # 0.25.0 (2016/01/21)
 * Spring Active Profiles can now be specified as a program argument. Like: "-spring.profiles.active profile1,profile2"
 # 0.24.0 (2016/01/21)
-* carbon is now in check with w3c LDP specifications
+* Carbon is now in check with w3c LDP specifications
 # 0.23.0 (2016/01/07)
-* carbon-platform has now an embedded Jetty instance; meaning it can now run as a jar application
+* Carbon-platform has now an embedded Jetty instance; meaning it can now run as a jar application
 # 0.22.0 (2016/01/04)
 * App agents can now authenticate
 # 0.21.0 (2015/12/17)
