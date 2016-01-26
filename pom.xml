@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.carbonldp</groupId>
     <artifactId>carbon-platform-SESAME</artifactId>
-    <version>0.24.0-ALPHA</version>
+    <version>0.25.1-ALPHA</version>
     <packaging>jar</packaging>
     <name>Carbon LDP</name>
     <url>http://carbonldp.com/</url>
@@ -384,6 +384,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
+                <version>2.6</version>
                 <configuration>
                     <archive>
                         <manifest>
@@ -394,30 +395,6 @@
                     </archive>
                 </configuration>
             </plugin>
-
-            <!--<plugin>-->
-            <!--<groupId>org.apache.maven.plugins</groupId>-->
-            <!--<artifactId>maven-shade-plugin</artifactId>-->
-            <!--<version>2.4.2</version>-->
-            <!--<configuration>-->
-            <!--<minimizeJar>false</minimizeJar>-->
-            <!--<createDependencyReducedPom>false</createDependencyReducedPom>-->
-            <!--<transformers>-->
-            <!--<transformer-->
-            <!--implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">-->
-            <!--<mainClass>com.carbonldp.Application</mainClass>-->
-            <!--</transformer>-->
-            <!--</transformers>-->
-            <!--</configuration>-->
-            <!--<executions>-->
-            <!--<execution>-->
-            <!--<phase>package</phase>-->
-            <!--<goals>-->
-            <!--<goal>shade</goal>-->
-            <!--</goals>-->
-            <!--</execution>-->
-            <!--</executions>-->
-            <!--</plugin>-->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>

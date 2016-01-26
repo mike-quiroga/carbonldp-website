@@ -1,3 +1,7 @@
+# 0.25.1 (2016/01/25)
+* fix access point validation
+# 0.25.0 (2016/01/21)
+* Spring Active Profiles can now be specified as a program argument. Like: "-spring.profiles.active profile1,profile2"
 # 0.24.0 (2016/01/21)
 * carbon is now in check with w3c LDP specifications
 # 0.23.0 (2016/01/07)
