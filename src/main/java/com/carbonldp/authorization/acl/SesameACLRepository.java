@@ -35,8 +35,7 @@ public class SesameACLRepository extends AbstractSesameLDPRepository implements 
 	}
 
 	@Override
-	public ACL createACL( RDFDocument objectDocument ) {
-		URI objectURI = objectDocument.getDocumentResource().getURI();
+	public ACL createACL( URI objectURI ) {
 		URI aclURI = getACLUri( objectURI );
 		ACL acl = ACLFactory.create( aclURI, objectURI );
 		documentRepository.addDocument( acl.getDocument() );

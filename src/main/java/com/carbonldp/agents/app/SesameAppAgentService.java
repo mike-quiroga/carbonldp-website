@@ -51,7 +51,7 @@ public class SesameAppAgentService extends SesameAgentsService {
 
 		if ( requireValidation ) {
 			AgentValidator validator = createAgentValidator( agent );
-			ACL validatorACL = aclRepository.createACL( validator.getDocument() );
+			ACL validatorACL = aclRepository.createACL( validator.getURI() );
 			addValidatorDefaultPermissions( validatorACL );
 
 			sendValidationEmail( agent, validator );

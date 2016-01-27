@@ -128,7 +128,7 @@ public class SesameAppRoleService extends AbstractSesameLDPService implements Ap
 		RDFResource resource = new RDFResource( agentsContainerURI );
 		DirectContainer container = DirectContainerFactory.getInstance().create( resource, appRole.getURI(), AppRoleDescription.Property.AGENT.getURI() );
 		sourceRepository.createAccessPoint( appRole.getURI(), container );
-		aclRepository.createACL( container.getDocument() );
+		aclRepository.createACL( container.getURI() );
 	}
 
 	private void validateHasParent( URI childURI ) {

@@ -50,12 +50,12 @@ public class SesamePlatformAgentService extends SesameAgentsService {
 		addAgentToDefaultPlatformRole( agent );
 
 		platformAgentRepository.create( agent );
-		ACL agentACL = aclRepository.createACL( agent.getDocument() );
+		ACL agentACL = aclRepository.createACL( agent.getURI() );
 		addAgentDefaultPermissions( agent, agentACL );
 
 		if ( requireValidation ) {
 			AgentValidator validator = createAgentValidator( agent );
-			ACL validatorACL = aclRepository.createACL( validator.getDocument() );
+			ACL validatorACL = aclRepository.createACL( validator.getURI() );
 			addValidatorDefaultPermissions( validatorACL );
 
 			sendValidationEmail( agent, validator );

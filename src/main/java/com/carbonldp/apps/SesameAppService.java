@@ -161,7 +161,7 @@ public class SesameAppService extends AbstractSesameLDPService implements AppSer
 	}
 
 	private ACL createAppACL( App app ) {
-		return aclRepository.createACL( app.getDocument() );
+		return aclRepository.createACL( app.getURI() );
 	}
 
 	private BasicContainer createRootContainer( App app ) {
@@ -171,19 +171,19 @@ public class SesameAppService extends AbstractSesameLDPService implements AppSer
 	}
 
 	private ACL createRootContainerACL( Container rootContainer ) {
-		return aclRepository.createACL( rootContainer.getDocument() );
+		return aclRepository.createACL( rootContainer.getURI() );
 	}
 
 	private ACL createAppRolesContainerACL( Container appRolesContainer ) {
-		return aclRepository.createACL( appRolesContainer.getDocument() );
+		return aclRepository.createACL( appRolesContainer.getURI() );
 	}
 
 	private ACL createAppAgentsACL( Container appAgentsContainer ) {
-		return aclRepository.createACL( appAgentsContainer.getDocument() );
+		return aclRepository.createACL( appAgentsContainer.getURI() );
 	}
 
 	private ACL createAppTokensACL( Container appTokensContainer ) {
-		return aclRepository.createACL( appTokensContainer.getDocument() );
+		return aclRepository.createACL( appTokensContainer.getURI() );
 	}
 
 	private AppRole createAppAdminRole( Container appRolesContainer ) {
@@ -199,7 +199,7 @@ public class SesameAppService extends AbstractSesameLDPService implements AppSer
 	}
 
 	private ACL createAppAdminRoleACL( AppRole appAdminRole ) {
-		return aclRepository.createACL( appAdminRole.getDocument() );
+		return aclRepository.createACL( appAdminRole.getURI() );
 	}
 
 	private void addCurrentAgentToAppAdminRole( AppRole appAdminRole ) {
@@ -211,7 +211,18 @@ public class SesameAppService extends AbstractSesameLDPService implements AppSer
 	}
 
 	private void addDefaultPermissions( AppRole appAdminRole, ACL rootContainerACL ) {
-		aclRepository.grantPermissions( rootContainerACL, Arrays.asList( appAdminRole ), Arrays.asList( ACEDescription.Permission.values() ), true );
+		aclRepository.grantPermissions( rootContainerACL, Arrays.asList( appAdminRole ), Arrays.asList(
+			ACEDescription.Permission.READ,
+			ACEDescription.Permission.UPDATE,
+			ACEDescription.Permission.CREATE_ACCESS_POINT,
+			ACEDescription.Permission.CREATE_CHILD,
+			ACEDescription.Permission.UPLOAD,
+			ACEDescription.Permission.DOWNLOAD,
+			ACEDescription.Permission.EXTEND,
+			ACEDescription.Permission.ADD_MEMBER,
+			ACEDescription.Permission.REMOVE_MEMBER
+		), false );
+		aclRepository.addInheritablePermissions( rootContainerACL, Arrays.asList( appAdminRole ), Arrays.asList( ACEDescription.Permission.values() ), true );
 	}
 
 	private void addAppDefaultPermissions( AppRole adminRole, ACL appACL ) {
