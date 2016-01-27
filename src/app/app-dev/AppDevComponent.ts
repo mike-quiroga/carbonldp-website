@@ -17,8 +17,8 @@ import './style.css!';
 	directives: [ RouterOutlet, SidebarComponent ]
 } )
 @RouteConfig( [
-	{path: '/', name: 'AppDev', component: DashboardView},
-	{path: '/my-apps', as: 'LinkedDataConcepts', component: MyAppsView}
+	{path: '/', as: 'Home', component: DashboardView},
+	{path: '/my-apps', as: 'MyApps', component: MyAppsView}
 ] )
 @Injectable()
 export default class AppDevComponent {

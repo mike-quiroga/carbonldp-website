@@ -1,13 +1,13 @@
 <div class="ui right aligned item container">
-	<!--<button (click)="sidebarService.add()" style="color:red;">{{ sidebarService.counter }}</button>-->
-	<!--<button (click)="sidebarService.show()" style="color:red;">Show</button>-->
-	<button class="toggle" (click)="toggle()">Toggle</button>
+	<button class="ui inverted button" (click)="toggle()"><i class="sidebar icon"></i></button>
 </div>
-<div class="item">
-	<input type="text"/>
-</div>
-<a class="item">
-	Item
+<a class="item" [router-link]="[ './Home']">
+	<i class="home icon"></i>
+	Dashboard
+</a>
+<a class="item" [router-link]="[ '/AppDev/MyApps' ]">
+	<i class="cubes icon"></i>
+	My Apps
 </a>
 <a class="item" *ng-for="#item of itemsList; #i =index">
 	<i class="grid layout icon"></i>
