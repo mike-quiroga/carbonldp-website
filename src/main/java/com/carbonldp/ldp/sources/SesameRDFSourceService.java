@@ -56,7 +56,7 @@ public class SesameRDFSourceService extends AbstractSesameLDPService implements 
 		validate( accessPoint, parentURI );
 		sourceRepository.createAccessPoint( parentURI, accessPoint );
 		sourceRepository.touch( parentURI, creationTime );
-
+		aclRepository.createACL( accessPoint.getURI() );
 		return creationTime;
 	}
 

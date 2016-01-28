@@ -40,7 +40,7 @@ public class SesameContainerService extends AbstractSesameLDPService implements 
 		validate( basicContainer );
 
 		containerRepository.createChild( containerURI, basicContainer );
-		aclRepository.createACL( basicContainer.getDocument() );
+		aclRepository.createACL( basicContainer.getURI() );
 
 		sourceRepository.touch( containerURI, creationTime );
 
@@ -61,6 +61,7 @@ public class SesameContainerService extends AbstractSesameLDPService implements 
 		if ( sourceRepository.exists( resourceURI ) ) throw new ResourceAlreadyExistsException();
 
 		containerRepository.createNonRDFResource( targetURI, resourceURI, resourceFile, mediaType );
+		aclRepository.createACL( resourceURI );
 	}
 
 	@Override
