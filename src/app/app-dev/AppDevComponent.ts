@@ -1,12 +1,15 @@
 import {Injectable, Component, ElementRef } from 'angular2/angular2';
 import {RouteConfig, RouterOutlet} from 'angular2/router';
 
-//import $ from 'jquery';
-//import 'semantic-ui/semantic';
-import SidebarService from 'app/app-dev/components/sidebar/service/SidebarService'
-import SidebarComponent from 'app/app-dev/components/sidebar/SidebarComponent';
-import DashboardView from 'app/app-dev/dashboard/DashboardView';
-import MyAppsView from 'app/app-dev/my-apps/MyAppsView';
+import $ from 'jquery';
+import 'semantic-ui/semantic';
+import SidebarService from './components/sidebar/service/SidebarService'
+
+import SidebarComponent from './components/sidebar/SidebarComponent';
+import HeaderComponent from './header/HeaderComponent ';
+
+import DashboardView from './dashboard/DashboardView';
+import MyAppsView from './my-apps/MyAppsView';
 
 import template from './template.html!';
 import './style.css!';
@@ -14,7 +17,7 @@ import './style.css!';
 @Component( {
 	selector: 'app-dev',
 	template: template,
-	directives: [ RouterOutlet, SidebarComponent ]
+	directives: [ RouterOutlet, SidebarComponent, HeaderComponent ]
 } )
 @RouteConfig( [
 	{path: '/', as: 'Home', component: DashboardView},
@@ -42,6 +45,10 @@ export default class AppDevComponent {
 		this.$element = $( this.element.nativeElement );
 		$( "app > header, app > footer" ).hide();
 		this.sidebar = this.$element.children( ".ui.sidebar" );
+	}
+
+	onDestroy():void {
+		$( "app > header, app > footer" ).show();
 	}
 
 	toggleSidebar():void {
