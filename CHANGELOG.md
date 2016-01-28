@@ -1,5 +1,5 @@
 # 0.25.3 (2016/01/26)
-* App admin get all permissions in the app
+* Fix bug in which the app-admin role wasn't getting all the permissions on the root container
 # 0.25.2 (2016/01/26)
 * Unsupported content-type now throws the right exception
 # 0.25.1 (2016/01/25)
@@ -9,7 +9,7 @@
 # 0.24.0 (2016/01/21)
 * Carbon is now in check with w3c LDP specifications
 # 0.23.0 (2016/01/07)
-* Carbon-platform has now an embedded Jetty instance; meaning it can now run as a jar application
+* carbon-platform has now an embedded Jetty instance; meaning it can now run as a jar application
 # 0.22.0 (2016/01/04)
 * App agents can now authenticate
 # 0.21.0 (2015/12/17)
