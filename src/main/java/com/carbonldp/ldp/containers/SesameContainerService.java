@@ -99,9 +99,9 @@ public class SesameContainerService extends AbstractSesameLDPService implements 
 	}
 
 	@Override
-	public void removeMembers( URI targetURI ) {
+	public void removeMembers( URI containerURI ) {
 		// TODO: Should the resource be touched here?
-		containerRepository.removeMembers( targetURI );
+		containerRepository.removeMembers( containerURI );
 	}
 
 	@Override

@@ -11,13 +11,13 @@ import com.carbonldp.exceptions.StupidityException;
 import com.carbonldp.ldp.AbstractSesameLDPService;
 import com.carbonldp.models.Infraction;
 import com.carbonldp.utils.RDFNodeUtil;
+import com.carbonldp.web.exceptions.ForbiddenException;
 import com.carbonldp.web.exceptions.NotImplementedException;
 import org.openrdf.model.URI;
 import org.openrdf.model.ValueFactory;
 import org.openrdf.model.impl.ValueFactoryImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.PermissionEvaluator;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
@@ -214,7 +214,12 @@ public class SesameACLService extends AbstractSesameLDPService implements ACLSer
 							break;
 						}
 					}
-					if ( ! isParent ) throw new BadCredentialsException( "you don't have permissions to modify this resource" );
+					if ( ! isParent ) {
+						Map<String, String> errorMessage = new HashMap<>();
+						errorMessage.put( "action", "modify permissions" );
+						errorMessage.put( "uri", accessTo.stringValue() );
+						throw new ForbiddenException( new Infraction( 0x7001, errorMessage ) );
+					}
 					break;
 				case PLATFORM_ROLE:
 					throw new NotImplementedException();
@@ -226,7 +231,10 @@ public class SesameACLService extends AbstractSesameLDPService implements ACLSer
 
 		for ( ACEDescription.Permission permission : affectedPermissions ) {
 			if ( ! permissionEvaluator.hasPermission( agentAuthenticationToken, accessTo, permission ) ) {
-				throw new BadCredentialsException( "You don't have permissions to modify this resource" );
+				Map<String, String> errorMessage = new HashMap<>();
+				errorMessage.put( "action", "modify permissions" );
+				errorMessage.put( "uri", accessTo.stringValue() );
+				throw new ForbiddenException( new Infraction( 0x7001, errorMessage ) );
 			}
 		}
 	}
