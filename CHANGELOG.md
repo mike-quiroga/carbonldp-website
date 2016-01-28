@@ -1,3 +1,7 @@
+# 0.25.4 (2016/01/26)
+* Fix bug in which the app reference in the platform is not deleted with the app
+# 0.25.3 (2016/01/26)
+* Fix bug in which the app-admin role wasn't getting all the permissions on the root container
 # 0.25.2 (2016/01/26)
 * unsupported content-type now throws the right exception
 # 0.25.1 (2016/01/25)
