@@ -1,5 +1,5 @@
 # 0.25.4 (2016/01/26)
-* Fix bug in which the app reference in the platform is not deleted with the app\
+* When deleting an app their references will also be deleted
 # 0.25.3 (2016/01/26)
 * Fix bug in which the app-admin role wasn't getting all the permissions on the root container
 # 0.25.2 (2016/01/26)
