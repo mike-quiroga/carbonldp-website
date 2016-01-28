@@ -23,14 +23,16 @@ app {
 }
 
 article.ui.vertical.segment {
-	padding-bottom:56px;
+	padding-bottom: 56px;
 }
 
 p.larger {
 	font-size: 1.3em;
 }
 
-.hidden {display:none}
+.hidden {
+	display: none
+}
 
 code {
 	padding: 0 4px;
@@ -47,25 +49,26 @@ pre, code {
 }
 
 .ui.menu a.logo {
-	padding-left:0;
+	padding-left: 0;
 }
 
 #primary-nav {
 
-	background-color: rgba(255,255,255,.9);
-	background-image: linear-gradient(to bottom,#fff 0,rgba(255,255,255,0) 100%);
+	background-color: rgba(255, 255, 255, .9);
+	background-image: linear-gradient(to bottom, #fff 0, rgba(255, 255, 255, 0) 100%);
 	border: 1px solid #e9e9e9;
-	box-shadow: 0 0 5px 5px rgba(0,0,0,.2);
+	box-shadow: 0 0 5px 5px rgba(0, 0, 0, .2);
 
 }
 
 #primary-nav.ui.menu .item:first-of-type {
-	color:#585a5a;
-	padding-right:44px;
+	color: #585a5a;
+	padding-right: 44px;
 }
+
 img.logo {
-	margin-top:2px;
-	margin-bottom:2px;
+	margin-top: 2px;
+	margin-bottom: 2px;
 }
 
 #splash-bg {
@@ -80,3 +83,184 @@ img.logo {
 
 }
 
+// Big Stone
+.big-stone {
+	background-color: #363F48 !important;
+	color: #ffffff !important;
+}
+
+.big-stone1 {
+	background-color: #6C7680 !important;
+	color: #ffffff !important;
+}
+
+.big-stone2 {
+	background-color: #4F5A64 !important;
+	color: #ffffff !important;
+}
+
+.big-stone3 {
+	background-color: #1E272F !important;
+	color: #ffffff !important;
+}
+
+.big-stone4 {
+	background-color: #13202C !important;
+	color: #ffffff !important;
+}
+
+// French Gray
+.french-gray {
+	background-color: #BABCBE !important;
+	color: #363F48 !important;
+}
+
+.french-gray1 {
+	background-color: #FFFFFF !important;
+	color: #363F48 !important;
+}
+
+.french-gray2 {
+	background-color: #EFEFEF !important;
+	color: #363F48 !important;
+}
+
+.french-gray3 {
+	background-color: #90959A !important;
+	color: #363F48 !important;
+}
+
+.french-gray4 {
+	background-color: #707A83 !important;
+	color: #363F48 !important;
+}
+
+// Vivid Violet
+.vivid-violet {
+	background-color: #7F4098 !important;
+	color: #ffffff !important;
+}
+
+.vivid-violet1 {
+	background-color: #C297D3 !important;
+	color: #ffffff !important;
+}
+
+.vivid-violet2 {
+	background-color: #9C63B2 !important;
+	color: #ffffff !important;
+}
+
+.vivid-violet3 {
+	background-color: #6B2886 !important;
+	color: #ffffff !important;
+}
+
+.vivid-violet4 {
+	background-color: #53156C !important;
+	color: #ffffff !important;
+}
+
+// California
+.california {
+	background-color: #F89728 !important;
+	color: #ffffff !important;
+}
+
+.california1 {
+	background-color: #FFC17A !important;
+	color: #ffffff !important;
+}
+
+.california2 {
+	background-color: #FFAE51 !important;
+	color: #ffffff !important;
+}
+
+.california3 {
+	background-color: #D37507 !important;
+	color: #ffffff !important;
+}
+
+.california4 {
+	background-color: #A65900 !important;
+	color: #ffffff !important;
+}
+
+// Bright Pink
+.bright-pink {
+	background-color: #E20178 !important;
+	color: #ffffff !important;
+}
+
+.bright-pink1 {
+	background-color: #E95AA5 !important;
+	color: #ffffff !important;
+}
+
+.bright-pink2 {
+	background-color: #E52F8F !important;
+	color: #ffffff !important;
+}
+
+.bright-pink3 {
+	background-color: #C8006A !important;
+	color: #ffffff !important;
+}
+
+.bright-pink4 {
+	background-color: #9B0052 !important;
+	color: #ffffff !important;
+}
+
+// Dull lime
+.dull-lime {
+	background-color: #53B948 !important;
+	color: #ffffff !important;
+}
+
+.dull-lime2 {
+	background-color: #A7E6A1 !important;
+	color: #ffffff !important;
+}
+
+.dull-lime2 {
+	background-color: #7AD471 !important;
+	color: #ffffff !important;
+}
+
+.dull-lime3 {
+	background-color: #35A32A !important;
+	color: #ffffff !important;
+}
+
+.dull-lime4 {
+	background-color: #1E8213 !important;
+	color: #ffffff !important;
+}
+
+// Electric Blue
+.electric-blue {
+	background-color: #0091CF !important;
+	color: #ffffff !important;
+}
+
+.electric-blue1 {
+	background-color: #19B7FB !important;
+	color: #ffffff !important;
+}
+
+.electric-blue2 {
+	background-color: #05B3FF !important;
+	color: #ffffff !important;
+}
+
+.electric-blue3 {
+	background-color: #006997 !important;
+	color: #ffffff !important;
+}
+
+.electric-blue4 {
+	background-color: #005376 !important;
+	color: #ffffff !important;
+}
