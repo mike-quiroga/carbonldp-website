@@ -38,7 +38,7 @@ public class SesameACLRepository extends AbstractSesameLDPRepository implements 
 	@Override
 	public ACL createACL( URI objectURI ) {
 		if ( URIUtil.hasFragment( objectURI ) ) {
-			throw new StupidityException( "Fragments can't be protected with an ACL" );
+			throw new IllegalArgumentException( "Fragments can't be protected with an ACL" );
 		}
 		URI aclURI = getACLUri( objectURI );
 		ACL acl = ACLFactory.create( aclURI, objectURI );
