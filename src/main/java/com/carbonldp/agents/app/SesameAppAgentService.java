@@ -48,10 +48,11 @@ public class SesameAppAgentService extends SesameAgentsService {
 		else agent.setEnabled( true );
 
 		appAgentRepository.create( agent );
+		aclRepository.createACL( agent.getURI() );
 
 		if ( requireValidation ) {
 			AgentValidator validator = createAgentValidator( agent );
-			ACL validatorACL = aclRepository.createACL( validator.getDocument() );
+			ACL validatorACL = aclRepository.createACL( validator.getURI() );
 			addValidatorDefaultPermissions( validatorACL );
 
 			sendValidationEmail( agent, validator );

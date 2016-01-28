@@ -1,6 +1,7 @@
 package com.carbonldp.authorization.acl;
 
 import com.carbonldp.Consts;
+import com.carbonldp.exceptions.StupidityException;
 import com.carbonldp.ldp.AbstractSesameLDPRepository;
 import com.carbonldp.rdf.RDFDocument;
 import com.carbonldp.rdf.RDFDocumentRepository;
@@ -35,8 +36,10 @@ public class SesameACLRepository extends AbstractSesameLDPRepository implements 
 	}
 
 	@Override
-	public ACL createACL( RDFDocument objectDocument ) {
-		URI objectURI = objectDocument.getDocumentResource().getURI();
+	public ACL createACL( URI objectURI ) {
+		if ( URIUtil.hasFragment( objectURI ) ) {
+			throw new IllegalArgumentException( "Fragments can't be protected with an ACL" );
+		}
 		URI aclURI = getACLUri( objectURI );
 		ACL acl = ACLFactory.create( aclURI, objectURI );
 		documentRepository.addDocument( acl.getDocument() );
