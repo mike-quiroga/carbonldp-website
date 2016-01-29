@@ -1,6 +1,5 @@
 package com.carbonldp.ldp.containers;
 
-import com.carbonldp.agents.AgentFactory;
 import com.carbonldp.authorization.acl.ACLRepository;
 import com.carbonldp.descriptions.APIPreferences;
 import com.carbonldp.exceptions.InvalidResourceException;
@@ -61,7 +60,7 @@ public class SesameContainerService extends AbstractSesameLDPService implements 
 	}
 
 	protected void validate( RDFResource toValidate ) {
-		List<Infraction> infractions = AgentFactory.getInstance().validate( toValidate );
+		List<Infraction> infractions = BasicContainerFactory.getInstance().validate( toValidate );
 		if ( ! infractions.isEmpty() ) throw new InvalidResourceException( infractions );
 
 	}
