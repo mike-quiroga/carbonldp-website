@@ -112,7 +112,7 @@ public class SesameRDFSourceService extends AbstractSesameLDPService implements 
 		Set<RDFResource> resourceViewsToDelete = RDFResourceUtil.getResourceViews( statementsToDelete );
 		containsImmutableProperties( resourceViewsToDelete );
 
-		substract( originalSource.getURI(), resourceViewsToDelete );
+		subtract( originalSource.getURI(), resourceViewsToDelete );
 		add( originalSource.getURI(), resourceViewsToAdd );
 
 		sourceRepository.touch( source.getURI(), modifiedTime );
@@ -130,7 +130,7 @@ public class SesameRDFSourceService extends AbstractSesameLDPService implements 
 	}
 
 	@Override
-	public void substract( URI sourceURI, Collection<RDFResource> resourceViews ) {
+	public void subtract( URI sourceURI, Collection<RDFResource> resourceViews ) {
 		if ( ! exists( sourceURI ) ) throw new ResourceDoesntExistException();
 
 		validateResourcesBelongToSource( sourceURI, resourceViews );

@@ -10,9 +10,7 @@ import com.carbonldp.ldp.nonrdf.RDFRepresentationDescription;
 import com.carbonldp.ldp.sources.RDFSourceDescription;
 import com.carbonldp.models.EmptyResponse;
 import com.carbonldp.models.Infraction;
-import com.carbonldp.rdf.RDFDocument;
-import com.carbonldp.rdf.RDFNodeEnum;
-import com.carbonldp.rdf.RDFResource;
+import com.carbonldp.rdf.*;
 import com.carbonldp.utils.HTTPUtil;
 import com.carbonldp.utils.ModelUtil;
 import com.carbonldp.web.exceptions.BadRequestException;
@@ -30,8 +28,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.*;
 
-import static com.carbonldp.Consts.EMPTY_STRING;
-import static com.carbonldp.Consts.SLASH;
+import static com.carbonldp.Consts.*;
 
 @Transactional
 public abstract class AbstractRDFPostRequestHandler<E extends BasicContainer> extends AbstractRequestWithBodyHandler<E> {

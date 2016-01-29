@@ -136,7 +136,7 @@ public abstract class AbstractPATCHRequestHandler extends AbstractLDPRequestHand
 	}
 
 	protected void deleteResourceViews( URI sourceURI, Set<RDFResource> resourceViews ) {
-		sourceService.substract( sourceURI, resourceViews );
+		sourceService.subtract( sourceURI, resourceViews );
 	}
 
 	private DeleteActionDescription.Property getDeleteActionSpecialProperty( Statement actionStatement ) {

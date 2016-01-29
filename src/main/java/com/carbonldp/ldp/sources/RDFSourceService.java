@@ -37,7 +37,7 @@ public interface RDFSourceService {
 	public DateTime replace( RDFSource source );
 
 	@PreAuthorize( "hasPermission(#sourceURI, 'UPDATE')" )
-	public void substract( URI sourceURI, Collection<RDFResource> resourceViews );
+	public void subtract( URI sourceURI, Collection<RDFResource> resourceViews );
 
 	@PreAuthorize( "hasPermission(#sourceURI, 'DELETE')" )
 	public void delete( URI sourceURI );
