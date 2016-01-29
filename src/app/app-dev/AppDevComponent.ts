@@ -7,6 +7,7 @@ import SidebarService from './components/sidebar/service/SidebarService'
 
 import SidebarComponent from './components/sidebar/SidebarComponent';
 import HeaderComponent from './header/HeaderComponent ';
+import FooterComponent from './footer/FooterComponent ';
 
 import DashboardView from './dashboard/DashboardView';
 import MyAppsView from './my-apps/MyAppsView';
@@ -17,7 +18,7 @@ import './style.css!';
 @Component( {
 	selector: 'app-dev',
 	template: template,
-	directives: [ RouterOutlet, SidebarComponent, HeaderComponent ]
+	directives: [ RouterOutlet, SidebarComponent, HeaderComponent, FooterComponent ]
 } )
 @RouteConfig( [
 	{path: '/', as: 'Home', component: DashboardView},
