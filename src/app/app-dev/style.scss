@@ -11,6 +11,10 @@ app-dev {
 		height: 100%;
 		width: 100%;
 		flex: 1 1 auto;
+
+		> .pusher {
+			min-height: 1200px;
+		}
 	}
 
 	> footer {
