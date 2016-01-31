@@ -1,7 +1,7 @@
 <div class="ui main container">
 	<h1>My Apps</h1>
-	<div class="my-apps ui grid">
-		<carbon-app-thumbnail *ng-for="#carbonApp of carbonApps; #i=index;" [carbon-app]="carbonApp"></carbon-app-thumbnail>
+	<div class="ui cards">
+		<carbon-app-thumbnail class="card" *ng-for="#carbonApp of carbonApps; #i=index;" [carbon-app]="carbonApp"></carbon-app-thumbnail>
 	</div>
 </div>
 
