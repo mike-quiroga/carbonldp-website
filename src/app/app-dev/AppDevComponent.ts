@@ -8,6 +8,7 @@ import SidebarService from './components/sidebar/service/SidebarService'
 import SidebarComponent from './components/sidebar/SidebarComponent';
 import HeaderComponent from './header/HeaderComponent ';
 import FooterComponent from './footer/FooterComponent ';
+import MenuBarComponent from './components/menubar/MenuBarComponent';
 
 import DashboardView from './dashboard/DashboardView';
 import MyAppsView from './my-apps/MyAppsView';
@@ -18,11 +19,11 @@ import './style.css!';
 @Component( {
 	selector: 'app-dev',
 	template: template,
-	directives: [ RouterOutlet, SidebarComponent, HeaderComponent, FooterComponent ]
+	directives: [ RouterOutlet, SidebarComponent, HeaderComponent, FooterComponent, MenuBarComponent ]
 } )
 @RouteConfig( [
-	{path: '/', as: 'Home', component: DashboardView},
-	{path: '/my-apps', as: 'MyApps', component: MyAppsView}
+	{path: '/', as: 'Home', displayName: 'Home', component: DashboardView, data: {alias: "Home", displayName: "Home"}},
+	{path: '/my-apps', as: 'MyApps', displayName: 'My Apps', component: MyAppsView, data: {alias: "MyApps", displayName: "My Apps"}}
 ] )
 @Injectable()
 export default class AppDevComponent {

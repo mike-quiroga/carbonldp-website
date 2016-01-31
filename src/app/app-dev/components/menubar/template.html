@@ -1,0 +1,18 @@
+<div class="ui attached stackable menu ">
+	<a class="item" (click)="toggleSidebar()">
+		<i class="sidebar icon"></i>
+		Menu
+	</a>
+	<div class="ui borderless menu small breadcrumb steps">
+		<a class="item step" *ng-for="#breadCrumb of breadCrumbs; #i =index" [ng-class]="{active: isActive('/AppDev/'+breadCrumb.alias) }">
+			<div class="content">
+				<div class="title">{{breadCrumb.displayName}}</div>
+				<!--<div class="description">{{breadCrumb.url}}</div>-->
+			</div>
+		</a>
+	</div>
+	<div class="right menu">
+		<a class="item">Sign Up</a>
+		<a class="item">Help</a>
+	</div>
+</div>
