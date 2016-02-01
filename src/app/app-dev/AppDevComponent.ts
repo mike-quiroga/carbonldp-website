@@ -11,7 +11,8 @@ import FooterComponent from './footer/FooterComponent ';
 import MenuBarComponent from './components/menubar/MenuBarComponent';
 
 import DashboardView from './dashboard/DashboardView';
-import MyAppsView from './my-apps/MyAppsView';
+import MyAppsComponent from './my-apps/MyAppsComponent';
+import CarbonAppView from './my-apps/carbon-app/CarbonAppView';
 
 import template from './template.html!';
 import './style.css!';
@@ -22,8 +23,33 @@ import './style.css!';
 	directives: [ RouterOutlet, SidebarComponent, HeaderComponent, FooterComponent, MenuBarComponent ]
 } )
 @RouteConfig( [
-	{path: '/', as: 'Home', displayName: 'Home', component: DashboardView, data: {alias: "Home", displayName: "Home"}},
-	{path: '/my-apps', as: 'MyApps', displayName: 'My Apps', component: MyAppsView, data: {alias: "MyApps", displayName: "My Apps"}}
+	{
+		path: '/',
+		as: 'Home',
+		component: DashboardView,
+		data: {
+			alias: "Home",
+			displayName: "Home"
+		}
+	},
+	{
+		path: '/carbon-app',
+		as: 'CarbonApp',
+		component: CarbonAppView,
+		data: {
+			alias: "CarbonApp",
+			displayName: "Carbon App"
+		}
+	},
+	{
+		path: '/my-apps/...',
+		as: 'MyApps',
+		component: MyAppsComponent,
+		data: {
+			alias: "MyApps",
+			displayName: "My Apps"
+		}
+	}
 ] )
 @Injectable()
 export default class AppDevComponent {

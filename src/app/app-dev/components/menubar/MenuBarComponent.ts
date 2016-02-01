@@ -54,7 +54,7 @@ export default class MenuBarComponentComponent {
 							this.breadCrumbs.push( {
 								url: s,
 								displayName: instruction.component.routeData.get( "displayName" ),
-								alias: instruction.component.routeData.get( "alias" )
+								alias: instruction.child ? instruction.component.routeData.get( "alias" ) + "/" + instruction.child.component.routeData.get( "alias" ) : instruction.component.routeData.get( "alias" )
 							} );
 						}
 					}
@@ -63,7 +63,6 @@ export default class MenuBarComponentComponent {
 					console.error( error );
 				}
 			);
-
 		} );
 
 	}
