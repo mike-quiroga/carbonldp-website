@@ -1,4 +1,5 @@
-import { Component, CORE_DIRECTIVES, Input, DynamicComponentLoader, ElementRef, Type } from 'angular2/angular2';
+import { Component, ElementRef, Input, DynamicComponentLoader, Type } from "angular2/core";
+import { CORE_DIRECTIVES } from "angular2/common";
 import { ROUTER_DIRECTIVES, ROUTER_PROVIDERS, Router, Instruction, RouteParams } from 'angular2/router';
 
 import $ from 'jquery';
@@ -44,7 +45,7 @@ export default class BlogPostView {
 	}
 
 
-	onActivate():void {
+	routerOnActivate():void {
 		if ( typeof this.postid === "undefined" || this.postid === null ) {
 			return;
 		} else {
@@ -58,7 +59,7 @@ export default class BlogPostView {
 		}
 	}
 
-	afterViewInit():void {
+	ngAfterViewInit():void {
 		this.$element = $( this.element.nativeElement );
 	}
 
@@ -76,7 +77,7 @@ export default class BlogPostView {
 				this.element = element;
 			}
 
-			afterViewInit():void {
+			ngAfterViewInit():void {
 
 			}
 		}

@@ -1,19 +1,19 @@
-var gulp = require( 'gulp' );
-var util = require( 'gulp-util' );
-var chug = require( 'gulp-chug' );
-var watch = require( 'gulp-watch' );
+const gulp = require( 'gulp' );
+const util = require( 'gulp-util' );
+const chug = require( 'gulp-chug' );
+const watch = require( 'gulp-watch' );
 
-var jspm = require( 'jspm' );
+const jspm = require( 'jspm' );
 
-var tslint = require( 'gulp-tslint' );
+const tslint = require( 'gulp-tslint' );
 
-var sass = require( 'gulp-sass' );
-var autoprefixer = require( 'gulp-autoprefixer' );
-var sourcemaps = require( 'gulp-sourcemaps' );
+const sass = require( 'gulp-sass' );
+const autoprefixer = require( 'gulp-autoprefixer' );
+const sourcemaps = require( 'gulp-sourcemaps' );
 
-var liveServer = require( 'live-server' );
+const liveServer = require( 'live-server' );
 
-var config = {
+const config = {
 	source: {
 		typescript: 'src/app/**/*.ts',
 		semantic: 'src/semantic/dist/**/*',
@@ -21,24 +21,31 @@ var config = {
 			'src/app/**/*.scss',
 			'src/assets/**/*.scss'
 		]
-	}
+	},
+	nodeDependencies: [
+		'node_modules/es6-shim/es6-shim.js',
+		'node_modules/systemjs/dist/system-polyfills.js',
+		'node_modules/angular2/bundles/angular2-polyfills.js',
+		'node_modules/systemjs/dist/system.js',
+		'node_modules/rxjs/bundles/Rx.js',
+	]
 };
 
-gulp.task( 'ts-lint', function() {
+gulp.task( 'ts-lint', () => {
 	return gulp.src( config.source.typescript )
 		.pipe( tslint() )
 		.pipe( tslint.report( 'prose' ) )
 		;
 });
 
-gulp.task( 'serve', [ 'build-semantic', 'compile-styles' ], function() {
+gulp.task( 'serve', [ 'build-semantic', 'compile-styles' ], () => {
 	gulp.src( 'src/semantic/gulpfile.js', { read: false } )
 		.pipe( chug({
 			tasks: [ 'watch' ]
 		}) )
 	;
 
-	watch( config.source.sass, function( file ) {
+	watch( config.source.sass, ( file ) => {
 		util.log( 'SCSS file changed: ', file.path );
 		gulp.start( 'compile-styles' );
 	}).on( 'error', function( error ) {
@@ -53,7 +60,7 @@ gulp.task( 'serve', [ 'build-semantic', 'compile-styles' ], function() {
 	});
 });
 
-gulp.task( 'compile-styles', function() {
+gulp.task( 'compile-styles', () => {
 	return gulp.src( config.source.sass, { base: './'} )
 		.pipe( sourcemaps.init() )
 		.pipe( sass().on( 'error', sass.logError ) )
@@ -65,7 +72,7 @@ gulp.task( 'compile-styles', function() {
 		;
 });
 
-gulp.task( 'build', [ 'build-semantic', 'compile-styles', 'copy-semantic', 'copy-assets' ], function() {
+gulp.task( 'build', [ 'build-semantic', 'compile-styles', 'copy-semantic', 'copy-assets' ], () => {
 	return jspm.bundleSFX( 'app/boot.ts', 'dist/site/main.sfx.js', {
 		minify: true,
 		mangle: true,
@@ -74,7 +81,7 @@ gulp.task( 'build', [ 'build-semantic', 'compile-styles', 'copy-semantic', 'copy
 	});
 });
 
-gulp.task( 'build-semantic', function() {
+gulp.task( 'build-semantic', () => {
 	return gulp.src( 'src/semantic/gulpfile.js', { read: false } )
 		.pipe( chug({
 			tasks: [ 'build' ]
@@ -82,15 +89,19 @@ gulp.task( 'build-semantic', function() {
 		;
 });
 
-gulp.task( 'copy-semantic', [ 'build-semantic' ], function() {
+gulp.task( 'copy-semantic', [ 'build-semantic' ], () => {
 	return gulp.src( 'src/semantic/dist/**/*', {
 		base: 'src/semantic/dist'
 	}).pipe( gulp.dest( 'dist/site/assets/semantic' ) );
 });
 
 // TODO: Minify files
-gulp.task( 'copy-assets', function() {
+gulp.task( 'copy-assets', () => {
 	return gulp.src( 'src/assets/**/*', {
 		base: 'src/assets'
 	}).pipe( gulp.dest( 'dist/site/assets' ) );
+});
+
+gulp.task( 'copy-node-dependencies', () => {
+	return gulp.src( config.nodeDependencies ).pipe( gulp.dest( 'src/assets/node_modules' ) );
 });

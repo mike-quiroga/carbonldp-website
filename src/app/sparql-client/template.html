@@ -27,11 +27,11 @@
 						</button>
 						<span class="name">{{query.name}}</span>
 						<br/>
-						<span class="operation" [ng-class]="query.operation.toLowerCase()">{{query.operation.toLowerCase()}}</span>
+						<span class="operation" [ngClass]="query.operation.toLowerCase()">{{query.operation.toLowerCase()}}</span>
 					</a>
 				</div>
 				<div class="pusher">
-					<div class="ui basic grid segment" [ng-class]="{loading: isSending}">
+					<div class="ui basic grid segment" [ngClass]="{loading: isSending}">
 						<div class="row">
 							<div class="column">
 								<div class="ui grid form">
@@ -40,7 +40,7 @@
 											<label>Endpoint URI:</label>
 										</div>
 										<div class="thirteen wide column field">
-											<input placeholder="https://example.com/parent/.../resource/" [(ng-model)]="currentQuery.endpoint" type="text">
+											<input placeholder="https://example.com/parent/.../resource/" [(ngModel)]="currentQuery.endpoint" type="text">
 										</div>
 									</div>
 									<div class="fields row">
@@ -48,7 +48,7 @@
 											<label>Type:</label>
 										</div>
 										<div class="three wide column field">
-											<select #queryType class="ui dropdown" [(ng-model)]="currentQuery.type" (change)="onChangeQueryType($event)">
+											<select #queryType class="ui dropdown" [(ngModel)]="currentQuery.type" (change)="onChangeQueryType($event)">
 												<option value="{{SPARQLTypes.query}}">{{SPARQLTypes.query}}</option>
 												<option value="{{SPARQLTypes.update}}">{{SPARQLTypes.update}}</option>
 											</select>
@@ -59,7 +59,7 @@
 											<label>Query:</label>
 										</div>
 										<div class="thirteen wide column field">
-											<code-mirror [mode]="codeMirrorMode.SPARQL" [read-only]="isSending" [(value)]="sparql" [show-line-numbers]="true"></code-mirror>
+											<code-mirror [mode]="codeMirrorMode.SPARQL" [readOnly]="isSending" [(value)]="sparql" [showLineNumbers]="true"></code-mirror>
 										</div>
 									</div>
 									<div class="fields row" *ng-if="currentQuery.type == 'Query'">
@@ -67,7 +67,7 @@
 											<label>Output Format:</label>
 										</div>
 										<div class="three wide column field">
-											<select class="ui dropdown" [(ng-model)]="currentQuery.format" [disabled]="isSending || !currentQuery.operation">
+											<select class="ui dropdown" [(ngModel)]="currentQuery.format" [disabled]="isSending || !currentQuery.operation">
 												<option *ng-for="#format of formatsAvailable" [value]="format.value">{{format.name}}</option>
 											</select>
 										</div>
@@ -77,12 +77,12 @@
 										</div>
 										<div class="six wide column field">
 											<button class="ui button"
-											        [ng-class]="{disabled:!currentQuery.content}">
+											        [ngClass]="{disabled:!currentQuery.content}">
 												<i class="checkmark icon"></i>
 												Validate
 											</button>
 											<button class="ui blue button"
-											        [ng-class]="{disabled: !canExecute()}"
+											        [ngClass]="{disabled: !canExecute()}"
 											        (click)="onExecute()">
 												<i class="play icon"></i>
 												Execute
@@ -104,11 +104,11 @@
 			<div class="ui bottom attached segment">
 				<div class="ui grid form row">
 					<div class="nine wide column">
-						<input placeholder="name of the query" type="text" [(ng-model)]="currentQuery.name">
+						<input placeholder="name of the query" type="text" [(ngModel)]="currentQuery.name">
 					</div>
 					<div class="seven wide column field">
 						<button class="ui button"
-						        [ng-class]="{loading: isSaving, disabled: !canSaveQuery()}"
+						        [ngClass]="{loading: isSaving, disabled: !canSaveQuery()}"
 						        [disabled]="currentQuery.endpoint && !currentQuery.format && !currentQuery.content"
 						        (click)="onClickSaveQuery()"
 						        *ng-if="currentQuery.id==null">
@@ -150,13 +150,13 @@
 			</h3>
 		</div>
 	</div>
-	<!--<sparql-response class="row" *ng-for="#response of responses; #i =index" [response]="response" (on-remove)="onRemove($event)" (on-configure)="onConfigureResponse($event)" (on-re-execute)="onReExecute($event)" [(is-re-executing)]="isReExecuting"></sparql-response>-->
+	<!--<sparql-response class="row" *ng-for="#response of responses; #i =index" [response]="response" (onRemove)="onRemove($event)" (onConfigure)="onConfigureResponse($event)" (onReExecute)="onReExecute($event)" [(isReExecuting)]="isReExecuting"></sparql-response>-->
 	<sparql-response class="row"
 	                 *ng-for="#response of responses; #i =index"
 	                 [response]="response"
-	                 (on-remove)="onRemove($event)"
-	                 (on-configure)="onConfigureResponse($event)"
-	                 (on-re-execute)="onReExecute($event)"></sparql-response>
+	                 (onRemove)="onRemove($event)"
+	                 (onConfigure)="onConfigureResponse($event)"
+	                 (onReExecute)="onReExecute($event)"></sparql-response>
 	<div class="row"></div>
 	<div class="row"></div>
 	<div class="row"></div>

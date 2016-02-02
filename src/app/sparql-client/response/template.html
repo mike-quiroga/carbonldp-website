@@ -1,5 +1,5 @@
-<div [ng-class]="['ui', 'sixteen', 'wide', 'column', 'accordion']">
-	<div [ng-class]="['ui', 'top', 'attached', 'menu', 'title', response.result]">
+<div [ngClass]="['ui', 'sixteen', 'wide', 'column', 'accordion']">
+	<div [ngClass]="['ui', 'top', 'attached', 'menu', 'title', response.result]">
 		<div class="header item">
 			<span>{{response.query.operation}}</span>
 			<span> <i>({{response.duration}} ms)</i></span>
@@ -13,7 +13,7 @@
 			</div>
 		</div>
 	</div>
-	<div class="ui bottom attached segment content {{response.result}}" [ng-class]="{loading:response.isReExecuting}">
+	<div class="ui bottom attached segment content {{response.result}}" [ngClass]="{loading:response.isReExecuting}">
 		<div class="ui pointing secondary tabular menu">
 			<a class="item active" [attr.data-tab]="index+'_first'" data-tab="first">Results</a>
 			<a class="item" [attr.data-tab]="index+'_second'" data-tab="second">Raw Data</a>
@@ -25,7 +25,7 @@
 			<div class="ui active tab" [attr.data-tab]="index+'_first'" data-tab="first">
 				<code-mirror *ng-if="!!outputformat && outputformat != SPARQLFormats.table"
 				             [mode]="outputformat"
-				             [read-only]="'nocursor'"
+				             [readOnly]="'nocursor'"
 				             [(value)]="response.data"></code-mirror>
 				<resultset-table *ng-if="outputformat === SPARQLFormats.table"
 				                 [(resultset)]="response.resultset"></resultset-table>

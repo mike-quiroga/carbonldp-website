@@ -1,8 +1,6 @@
-import {
-	Component, Input, Output, SimpleChange, EventEmitter
-	CORE_DIRECTIVES,
-	ElementRef
-} from 'angular2/angular2';
+import { Component, Input, Output, SimpleChange, EventEmitter, ElementRef } from 'angular2/core';
+import { CORE_DIRECTIVES } from "angular2/common";
+
 import $ from 'jquery';
 import 'semantic-ui/semantic';
 
@@ -32,13 +30,13 @@ export class ResultsetTableComponent {
 		this.element = element;
 	}
 
-	afterViewInit():void {
+	ngAfterViewInit():void {
 		this.$element = $( this.element.nativeElement );
 		if ( this.resultset != null && this.resultset.head != null )
 			this.buildTable();
 	}
 
-	onChanges( changeRecord:any ):void {
+	ngOnChanges( changeRecord:any ):void {
 		if ( "resultset" in changeRecord ) {
 			let change:SimpleChange = changeRecord.resultset;
 			if ( change.currentValue !== change.previousValue ) {

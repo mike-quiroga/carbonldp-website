@@ -1,4 +1,4 @@
-import { Injectable } from 'angular2/angular2';
+import { Injectable } from 'angular2/core';
 import { Http, Response, Request } from 'angular2/http';
 
 import BlogPost from './../blog-post/BlogPost';

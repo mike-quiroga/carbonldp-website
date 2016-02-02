@@ -1,4 +1,5 @@
-import { Component, CORE_DIRECTIVES, DynamicComponentLoader, ElementRef, View} from 'angular2/angular2';
+import { Component, DynamicComponentLoader, ElementRef, View} from 'angular2/core';
+import { CORE_DIRECTIVES } from "angular2/common";
 import { ROUTER_DIRECTIVES, ROUTER_PROVIDERS, Router, Instruction, RouteParams } from 'angular2/router';
 import ContentService from 'app/content/ContentService';
 
@@ -8,7 +9,6 @@ import $ from 'jquery';
 import 'semantic-ui/semantic';
 
 import template from './template.html!';
-import ComponentRef = ng.ComponentRef;
 
 import "./style.css!";
 
@@ -77,7 +77,7 @@ export default class ContentView {
 
 			}
 
-			afterViewInit():void {
+			ngAfterViewInit():void {
 				this.createAccordions();
 				this.evalJavascript();
 
@@ -282,7 +282,7 @@ export default class ContentView {
 		}
 
 
-		dynamicComponentLoader.loadIntoLocation( CompiledComponent, elementRef, 'container' );
+		dynamicComponentLoader.loadNextToLocation( CompiledComponent, elementRef );
 
 		// END: OPTION A ---------------------------------------------------------------------------
 
