@@ -1,5 +1,7 @@
 package com.carbonldp.ldp.containers;
 
+import com.carbonldp.authentication.AgentAuthenticationToken;
+import com.carbonldp.authorization.acl.ACEDescription;
 import com.carbonldp.descriptions.APIPreferences.ContainerRetrievalPreference;
 import com.carbonldp.ldp.AbstractSesameLDPRepository;
 import com.carbonldp.ldp.containers.ContainerDescription.Type;
@@ -19,26 +21,30 @@ import org.joda.time.DateTime;
 import org.openrdf.model.Statement;
 import org.openrdf.model.URI;
 import org.openrdf.model.Value;
+import org.openrdf.model.impl.URIImpl;
 import org.openrdf.spring.SesameConnectionFactory;
+import org.springframework.security.access.PermissionEvaluator;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import java.io.File;
 import java.util.*;
 
-import static com.carbonldp.Consts.NEW_LINE;
-import static com.carbonldp.Consts.TAB;
+import static com.carbonldp.Consts.*;
 
 @Transactional
 public class SesameContainerRepository extends AbstractSesameLDPRepository implements ContainerRepository {
 
 	private final RDFSourceRepository sourceRepository;
 	private final List<TypedContainerRepository> typedContainerRepositories;
-
 	private RDFRepresentationRepository rdfRepresentationRepository;
+	PermissionEvaluator permissionEvaluator;
 
 	public SesameContainerRepository( SesameConnectionFactory connectionFactory, RDFResourceRepository resourceRepository,
-		RDFDocumentRepository documentRepository, RDFSourceRepository sourceRepository, List<TypedContainerRepository> typedContainerRepositories, RDFRepresentationRepository rdfRepresentationRepository ) {
+		RDFDocumentRepository documentRepository, RDFSourceRepository sourceRepository, List<TypedContainerRepository> typedContainerRepositories,
+		RDFRepresentationRepository rdfRepresentationRepository, PermissionEvaluator permissionEvaluator ) {
 		super( connectionFactory, resourceRepository, documentRepository );
 
 		Assert.notNull( sourceRepository );
@@ -50,6 +56,8 @@ public class SesameContainerRepository extends AbstractSesameLDPRepository imple
 
 		Assert.notNull( rdfRepresentationRepository );
 		this.rdfRepresentationRepository = rdfRepresentationRepository;
+
+		this.permissionEvaluator = permissionEvaluator;
 	}
 
 	@Override
@@ -95,10 +103,13 @@ public class SesameContainerRepository extends AbstractSesameLDPRepository imple
 				case CONTAINED_RESOURCES:
 					throw new NotImplementedException();
 				case MEMBERSHIP_TRIPLES:
-					container.getBaseModel().addAll( getMembershipTriples( containerURI ) );
+					container.getBaseModel().addAll( getMembershipTriples( containerURI, true ) );
 					break;
 				case MEMBER_RESOURCES:
 					throw new NotImplementedException();
+				case NON_READABLE_MEMBERSHIP_RESOURCE_TRIPLES:
+					container.getBaseModel().addAll( getMembershipTriples( containerURI, false ) );
+					break;
 				default:
 					throw new IllegalStateException();
 
@@ -158,12 +169,26 @@ public class SesameContainerRepository extends AbstractSesameLDPRepository imple
 		} );
 	}
 
+	private Set<Statement> filterMembershipTriples( Set<Statement> membershipTriples, boolean allow ) {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		if ( ! ( authentication instanceof AgentAuthenticationToken ) ) throw new IllegalArgumentException( "The authentication token isn't supported." );
+		AgentAuthenticationToken agentAuthenticationToken = (AgentAuthenticationToken) authentication;
+		Set<Statement> filteredMembershipTriples = new HashSet<>();
+		for ( Statement triple : membershipTriples ) {
+			if ( (permissionEvaluator.hasPermission( agentAuthenticationToken, new URIImpl( triple.getObject().stringValue() ), ACEDescription.Permission.READ )) == allow ) {
+				filteredMembershipTriples.add( triple );
+			}
+		}
+		return filteredMembershipTriples;
+	}
+
 	@Override
-	public Set<Statement> getMembershipTriples( URI containerURI ) {
+	public Set<Statement> getMembershipTriples( URI containerURI, boolean allow ) {
 		Type containerType = getContainerType( containerURI );
 		if ( containerType == null ) throw new IllegalStateException( "The resource isn't a container." );
-
-		return getMembershipTriples( containerURI, containerType );
+		Set<Statement> nonFilterMembershipTriples = getMembershipTriples( containerURI, containerType );
+		Set<Statement> filteredMembershipTriples = filterMembershipTriples( nonFilterMembershipTriples, allow );
+		return filteredMembershipTriples;
 	}
 
 	@Override
@@ -300,4 +325,5 @@ public class SesameContainerRepository extends AbstractSesameLDPRepository imple
 		}
 		throw new IllegalArgumentException( "The containerType provided isn't supported" );
 	}
+
 }

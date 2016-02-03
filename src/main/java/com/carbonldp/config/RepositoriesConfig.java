@@ -45,6 +45,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
+import org.springframework.security.access.PermissionEvaluator;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -55,6 +56,8 @@ import java.util.Properties;
 public class RepositoriesConfig {
 	@Autowired
 	private SesameConnectionFactory connectionFactory;
+	@Autowired
+	private PermissionEvaluator permissionEvaluator;
 
 	@Bean
 	public PlatformAPIRepository platformAPIRepository() {
@@ -122,7 +125,7 @@ public class RepositoriesConfig {
 		typedServices.add( directContainerRepository() );
 		typedServices.add( indirectContainerRepository() );
 
-		return new SesameContainerRepository( connectionFactory, resourceRepository(), documentRepository(), sourceRepository(), typedServices, rdfRepresentationRepository() );
+		return new SesameContainerRepository( connectionFactory, resourceRepository(), documentRepository(), sourceRepository(), typedServices, rdfRepresentationRepository(), permissionEvaluator );
 	}
 
 	@Bean

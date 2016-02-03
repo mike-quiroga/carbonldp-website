@@ -32,7 +32,7 @@ public interface ContainerRepository {
 
 	public Set<Statement> getContainmentTriples( URI containerURI );
 
-	public Set<Statement> getMembershipTriples( URI containerURI );
+	public Set<Statement> getMembershipTriples( URI containerURI, boolean allow );
 
 	public Set<Statement> getMembershipTriples( URI containerURI, Type containerType );
 
