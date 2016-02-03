@@ -31,6 +31,7 @@ export default class ContentService {
 				.forEach(
 					( response ) => {
 						this.data = response.text();
+						resolve( this.data );
 					}, this
 				);
 		} );
