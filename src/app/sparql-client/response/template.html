@@ -23,11 +23,11 @@
 			<!-- Resultset -->
 			<!--<resultset class="ui active tab" [outputformat]="outputformat" [resultset]="response.resultset" [attr.data-tab]="index+'_first'" data-tab="first"></resultset>-->
 			<div class="ui active tab" [attr.data-tab]="index+'_first'" data-tab="first">
-				<code-mirror *ng-if="!!outputformat && outputformat != SPARQLFormats.table"
+				<code-mirror *ngIf="!!outputformat && outputformat != SPARQLFormats.table"
 				             [mode]="outputformat"
 				             [readOnly]="'nocursor'"
 				             [(value)]="response.data"></code-mirror>
-				<resultset-table *ng-if="outputformat === SPARQLFormats.table"
+				<resultset-table *ngIf="outputformat === SPARQLFormats.table"
 				                 [(resultset)]="response.resultset"></resultset-table>
 			</div>
 			<!-- End: Resultset -->

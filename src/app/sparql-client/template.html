@@ -18,10 +18,10 @@
 			</div>
 			<div class="ui middle attached segment pushable">
 				<div class="ui inverted right vertical very wide dimmed sidebar menu queries-list">
-					<p *ng-if="savedQueries.length == 0">
+					<p *ngIf="savedQueries.length == 0">
 						No saved queries yet.
 					</p>
-					<a class="item" *ng-for="#query of savedQueries; #i =index" (click)="onClickQuery(i)">
+					<a class="item" *ngFor="#query of savedQueries; #i =index" (click)="onClickQuery(i)">
 						<button class="mini ui right floated red button" (click)="onClickRemoveQuery(i)">
 							<i class="icon remove"></i>
 						</button>
@@ -62,13 +62,13 @@
 											<code-mirror [mode]="codeMirrorMode.SPARQL" [readOnly]="isSending" [(value)]="sparql" [showLineNumbers]="true"></code-mirror>
 										</div>
 									</div>
-									<div class="fields row" *ng-if="currentQuery.type == 'Query'">
+									<div class="fields row" *ngIf="currentQuery.type == 'Query'">
 										<div class="three wide right aligned column">
 											<label>Output Format:</label>
 										</div>
 										<div class="three wide column field">
 											<select class="ui dropdown" [(ngModel)]="currentQuery.format" [disabled]="isSending || !currentQuery.operation">
-												<option *ng-for="#format of formatsAvailable" [value]="format.value">{{format.name}}</option>
+												<option *ngFor="#format of formatsAvailable" [value]="format.value">{{format.name}}</option>
 											</select>
 										</div>
 									</div>
@@ -111,7 +111,7 @@
 						        [ngClass]="{loading: isSaving, disabled: !canSaveQuery()}"
 						        [disabled]="currentQuery.endpoint && !currentQuery.format && !currentQuery.content"
 						        (click)="onClickSaveQuery()"
-						        *ng-if="currentQuery.id==null">
+						        *ngIf="currentQuery.id==null">
 							<i class="star icon"></i>
 							<span>Save Query</span>
 						</button>
@@ -145,14 +145,14 @@
 				        [disabled]="responses.length<=0"
 				        (click)="onEmptyStack()">
 					<i class="trash outline icon"></i>
-					Empty Stack <span *ng-if="responses.length>0">({{responses.length}})</span>
+					Empty Stack <span *ngIf="responses.length>0">({{responses.length}})</span>
 				</button>
 			</h3>
 		</div>
 	</div>
-	<!--<sparql-response class="row" *ng-for="#response of responses; #i =index" [response]="response" (onRemove)="onRemove($event)" (onConfigure)="onConfigureResponse($event)" (onReExecute)="onReExecute($event)" [(isReExecuting)]="isReExecuting"></sparql-response>-->
+	<!--<sparql-response class="row" *ngFor="#response of responses; #i =index" [response]="response" (onRemove)="onRemove($event)" (onConfigure)="onConfigureResponse($event)" (onReExecute)="onReExecute($event)" [(isReExecuting)]="isReExecuting"></sparql-response>-->
 	<sparql-response class="row"
-	                 *ng-for="#response of responses; #i =index"
+	                 *ngFor="#response of responses; #i =index"
 	                 [response]="response"
 	                 (onRemove)="onRemove($event)"
 	                 (onConfigure)="onConfigureResponse($event)"
