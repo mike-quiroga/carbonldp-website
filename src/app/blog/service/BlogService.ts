@@ -36,21 +36,16 @@ export default class BlogService {
 	}
 
 	getPostsList():Promise<BlogPost[]> {
-		return new Promise<BlogPost[]>( ( resolve, reject ) => {
-			this.http.get( "/assets/blog-posts/bloglist.json" )
-				.map( res => res.json() )
-				.subscribe(
-					( res ) => {
-						this.postsList = res;
-					},
-					( error ) => {
-						console.error( error );
-					},
-					() => {
-						resolve( this.postsList );
-					}
-				);
-		} ).catch( console.error );
+		return new Promise<BlogPost[]>(
+			( resolve ) => {
+				this.http.get( "/assets/blog-posts/bloglist.json" )
+					.forEach(
+						( response ) => {
+							resolve( response.json() );
+						}, this
+					);
+			}
+		).catch( console.error );
 	}
 
 }

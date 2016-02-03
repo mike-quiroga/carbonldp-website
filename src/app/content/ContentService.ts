@@ -28,11 +28,10 @@ export default class ContentService {
 			let protocolHostAndPort = arr[ 0 ] + "//" + arr[ 2 ];
 
 			this.http.get( protocolHostAndPort + '/assets/documents/' + id )
-				.map( res => res.text() )
-				.subscribe(
-					data => this.data = data,
-					err => console.log( err ),
-					() => resolve( this.data )
+				.forEach(
+					( response ) => {
+						this.data = response.text();
+					}, this
 				);
 		} );
 	}
