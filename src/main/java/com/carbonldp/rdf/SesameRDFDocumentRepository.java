@@ -16,7 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.UUID;
 
 // TODO: LDP-331
 @Transactional
@@ -51,7 +50,7 @@ public class SesameRDFDocumentRepository extends AbstractSesameRepository implem
 	}
 
 	public void addDocument( RDFDocument document ) {
-		setIdentifierToBlankNodes( document );
+		RDFDocumentFactory.getInstance().setIdentifierToBlankNodes( document );
 		connectionTemplate.write( connection -> connection.add( document ) );
 	}
 
@@ -84,14 +83,5 @@ public class SesameRDFDocumentRepository extends AbstractSesameRepository implem
 		Set<Statement> statements = new HashSet<>();
 		Iterations.addAll( statementsIterator, statements );
 		return new LinkedHashModel( statements );
-	}
-
-	private RDFDocument setIdentifierToBlankNodes( RDFDocument document ) {
-		Set<RDFBlankNode> blankNodes = document.getBlankNodes();
-		for ( RDFBlankNode blankNode : blankNodes ) {
-			UUID identifier = UUID.randomUUID();
-			blankNode.setIdentifier( identifier );
-		}
-		return document;
 	}
 }

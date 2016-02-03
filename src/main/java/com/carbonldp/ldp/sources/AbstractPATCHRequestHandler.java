@@ -7,6 +7,7 @@ import com.carbonldp.ldp.web.AbstractLDPRequestHandler;
 import com.carbonldp.models.EmptyResponse;
 import com.carbonldp.models.Infraction;
 import com.carbonldp.namespaces.CP;
+import com.carbonldp.rdf.RDFDocument;
 import com.carbonldp.rdf.RDFNode;
 import com.carbonldp.rdf.RDFResource;
 import com.carbonldp.utils.RDFNodeUtil;
@@ -17,6 +18,7 @@ import org.openrdf.model.Resource;
 import org.openrdf.model.Statement;
 import org.openrdf.model.URI;
 import org.openrdf.model.impl.AbstractModel;
+import org.openrdf.model.impl.LinkedHashModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
@@ -113,30 +115,30 @@ public abstract class AbstractPATCHRequestHandler extends AbstractLDPRequestHand
 
 	private Set<DeleteAction> getDeleteActions( PATCHRequest patchRequest ) {
 		return patchRequest.getDeleteActions()
-						   .stream()
-						   .map( uri -> new RDFNode( patchRequest.getBaseModel(), uri ) )
-						   .map( DeleteAction::new )
-						   .collect( Collectors.toSet() )
+		                   .stream()
+		                   .map( uri -> new RDFNode( patchRequest.getBaseModel(), uri ) )
+		                   .map( DeleteAction::new )
+		                   .collect( Collectors.toSet() )
 			;
 	}
 
+	//TODO: to implement to accept bnodes and fragments
 	private void executeDeleteActions( URI sourceURI, Set<DeleteAction> actions ) {
 		Set<RDFResource> resourcesToDelete = new HashSet<>();
+		RDFDocument document = new RDFDocument( new LinkedHashModel(), sourceURI );
 		for ( DeleteAction action : actions ) {
-			RDFResource resourceToDelete = new RDFResource( action.getSubjectURI() );
 			for ( Statement actionStatement : action ) {
 				DeleteActionDescription.Property actionSpecialProperty = getDeleteActionSpecialProperty( actionStatement );
 				if ( actionSpecialProperty != null ) executeDeleteActionSpecialProperty( sourceURI, action, actionSpecialProperty );
-				else resourceToDelete.add( actionStatement.getPredicate(), actionStatement.getObject() );
+				else document.add( sourceURI, actionStatement.getPredicate(), actionStatement.getObject() );
 			}
-			resourcesToDelete.add( resourceToDelete );
 		}
 
-		deleteResourceViews( sourceURI, resourcesToDelete );
+		deleteResourceViews( sourceURI, document );
 	}
 
-	protected void deleteResourceViews( URI sourceURI, Set<RDFResource> resourceViews ) {
-		sourceService.subtract( sourceURI, resourceViews );
+	protected void deleteResourceViews( URI sourceURI, RDFDocument document ) {
+		sourceService.subtract( sourceURI, document );
 	}
 
 	private DeleteActionDescription.Property getDeleteActionSpecialProperty( Statement actionStatement ) {
@@ -153,31 +155,30 @@ public abstract class AbstractPATCHRequestHandler extends AbstractLDPRequestHand
 
 	private Set<SetAction> getSetActions( PATCHRequest patchRequest ) {
 		return patchRequest.getSetActions()
-						   .stream()
-						   .map( uri -> new RDFNode( patchRequest.getBaseModel(), uri ) )
-						   .map( SetAction::new )
-						   .collect( Collectors.toSet() )
+		                   .stream()
+		                   .map( uri -> new RDFNode( patchRequest.getBaseModel(), uri ) )
+		                   .map( SetAction::new )
+		                   .collect( Collectors.toSet() )
 			;
 	}
 
+	//TODO: to implement to accept bnodes and fragments
 	private void executeSetActions( URI sourceURI, Set<SetAction> actions ) {
-		Set<RDFResource> resourceViews = new HashSet<>();
+		RDFDocument document = new RDFDocument( new LinkedHashModel(), sourceURI );
 
 		for ( SetAction action : actions ) {
-			RDFResource resourceView = new RDFResource( action.getSubjectURI() );
 			for ( Statement actionStatement : action ) {
 				SetActionDescription.Property actionSpecialProperty = getSetActionSpecialProperty( actionStatement );
 				if ( actionSpecialProperty != null ) executeSetActionSpecialProperty( sourceURI, action, actionSpecialProperty );
-				else resourceView.add( actionStatement.getPredicate(), actionStatement.getObject() );
+				else document.add( sourceURI, actionStatement.getPredicate(), actionStatement.getObject() );
 			}
-			if ( ! resourceView.isEmpty() ) resourceViews.add( resourceView );
 		}
 
-		setResourceViews( sourceURI, resourceViews );
+		setResourceViews( sourceURI, document );
 	}
 
-	protected void setResourceViews( URI sourceURI, Set<RDFResource> resourceViews ) {
-		sourceService.set( sourceURI, resourceViews );
+	protected void setResourceViews( URI sourceURI, RDFDocument document ) {
+		sourceService.set( sourceURI, document );
 	}
 
 	private SetActionDescription.Property getSetActionSpecialProperty( Statement actionStatement ) {
@@ -194,30 +195,29 @@ public abstract class AbstractPATCHRequestHandler extends AbstractLDPRequestHand
 
 	private Set<AddAction> getAddActions( PATCHRequest patchRequest ) {
 		return patchRequest.getAddActions()
-						   .stream()
-						   .map( uri -> new RDFNode( patchRequest.getBaseModel(), uri ) )
-						   .map( AddAction::new )
-						   .collect( Collectors.toSet() )
+		                   .stream()
+		                   .map( uri -> new RDFNode( patchRequest.getBaseModel(), uri ) )
+		                   .map( AddAction::new )
+		                   .collect( Collectors.toSet() )
 			;
 	}
 
+	//TODO: to implement to accept bnodes and fragments
 	private void executeAddActions( URI sourceURI, Collection<AddAction> actions ) {
-		Set<RDFResource> resourceViews = new HashSet<>();
+		RDFDocument document = new RDFDocument( new LinkedHashModel(), sourceURI );
 		for ( AddAction action : actions ) {
-			RDFResource resourceView = new RDFResource( action.getSubjectURI() );
 			for ( Statement actionStatement : action ) {
 				AddActionDescription.Property actionSpecialProperty = getAddActionSpecialProperty( actionStatement );
 				if ( actionSpecialProperty != null ) executeAddActionSpecialProperty( sourceURI, action, actionSpecialProperty );
-				else resourceView.add( actionStatement.getPredicate(), actionStatement.getObject() );
+				else document.add( sourceURI, actionStatement.getPredicate(), actionStatement.getObject() );
 			}
-			resourceViews.add( resourceView );
 		}
 
-		addResourceViews( sourceURI, resourceViews );
+		addResourceViews( sourceURI, document );
 	}
 
-	protected void addResourceViews( URI sourceURI, Set<RDFResource> resourceViews ) {
-		sourceService.add( sourceURI, resourceViews );
+	protected void addResourceViews( URI sourceURI, RDFDocument document ) {
+		sourceService.add( sourceURI, document );
 	}
 
 	private AddActionDescription.Property getAddActionSpecialProperty( Statement actionStatement ) {

@@ -61,6 +61,7 @@ public class SesameContainerService extends AbstractSesameLDPService implements 
 
 	protected void validate( RDFResource toValidate ) {
 		List<Infraction> infractions = BasicContainerFactory.getInstance().validate( toValidate );
+
 		if ( ! infractions.isEmpty() ) throw new InvalidResourceException( infractions );
 
 	}

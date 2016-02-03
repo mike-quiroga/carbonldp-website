@@ -19,14 +19,16 @@ import com.carbonldp.ldp.containers.Container;
 import com.carbonldp.ldp.containers.ContainerRepository;
 import com.carbonldp.ldp.sources.RDFSourceRepository;
 import com.carbonldp.models.Infraction;
+import com.carbonldp.rdf.RDFBlankNode;
 import com.carbonldp.rdf.RDFDocument;
+import com.carbonldp.rdf.RDFDocumentFactory;
 import com.carbonldp.rdf.RDFResource;
 import com.carbonldp.spring.TransactionWrapper;
-import com.carbonldp.utils.RDFResourceUtil;
 import com.carbonldp.utils.URIUtil;
 import com.carbonldp.web.exceptions.NotFoundException;
-import org.openrdf.model.Statement;
 import org.openrdf.model.URI;
+import org.openrdf.model.impl.AbstractModel;
+import org.openrdf.model.impl.LinkedHashModel;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.transaction.annotation.Transactional;
@@ -144,19 +146,18 @@ public class SesameAppService extends AbstractSesameLDPService implements AppSer
 		if ( ! exists( appURI ) ) throw new NotFoundException();
 		App originalApp = appRepository.get( appURI );
 		RDFDocument originalDocument = originalApp.getDocument();
+		RDFDocument newDocument = normalizeBNodes( originalDocument, app.getDocument() );
 
-		RDFDocument newDocument = app.getDocument();
+		AbstractModel toAdd = newDocument.stream().filter( statement -> ! originalDocument.contains( statement ) ).collect( Collectors.toCollection( LinkedHashModel::new ) );
+		RDFDocument documentToAdd = new RDFDocument( toAdd, app.getURI() );
+		containsImmutableProperties( documentToAdd );
 
-		Set<Statement> statementsToAdd = newDocument.stream().filter( statement -> ! originalDocument.contains( statement ) ).collect( Collectors.toSet() );
-		Set<RDFResource> resourceViewsToAdd = RDFResourceUtil.getResourceViews( statementsToAdd );
-		validateSystemProperties( resourceViewsToAdd );
+		AbstractModel toDelete = originalDocument.stream().filter( statement -> ! newDocument.contains( statement ) ).collect( Collectors.toCollection( LinkedHashModel::new ) );
+		RDFDocument documentToDelete = new RDFDocument( toDelete, app.getURI() );
+		containsImmutableProperties( documentToDelete );
 
-		Set<Statement> statementsToDelete = originalDocument.stream().filter( statement -> ! newDocument.contains( statement ) ).collect( Collectors.toSet() );
-		Set<RDFResource> resourceViewsToDelete = RDFResourceUtil.getResourceViews( statementsToDelete );
-		validateSystemProperties( resourceViewsToDelete );
-
-		sourceRepository.subtract( appURI, resourceViewsToDelete );
-		sourceRepository.add( appURI, resourceViewsToAdd );
+		sourceRepository.subtract( appURI, documentToDelete );
+		sourceRepository.add( appURI, documentToAdd );
 
 		sourceRepository.touch( appURI );
 	}
@@ -234,11 +235,13 @@ public class SesameAppService extends AbstractSesameLDPService implements AppSer
 		), true );
 	}
 
-	private void validateSystemProperties( Set<RDFResource> resourceViews ) {
+	private void containsImmutableProperties( RDFDocument document ) {
 		List<Infraction> infractions = new ArrayList<>();
-		for ( RDFResource resource : resourceViews ) {
-			infractions.addAll( AppFactory.getInstance().validateSystemManagedProperties( resource ) );
-		}
+
+		infractions.addAll( AppFactory.getInstance().validateImmutableProperties( document.getDocumentResource() ) );
+		infractions.addAll( AppFactory.getInstance().validateSystemManagedProperties( document.getDocumentResource() ) );
+		Set<RDFBlankNode> blankNodes = document.getBlankNodes();
+		infractions.addAll( RDFDocumentFactory.getInstance().validateBlankNodes( document ) );
 		if ( ! infractions.isEmpty() ) throw new InvalidResourceException( infractions );
 	}
 
