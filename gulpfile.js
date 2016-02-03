@@ -75,7 +75,7 @@ gulp.task( 'compile-styles', () => {
 gulp.task( 'build', [ 'build-semantic', 'compile-styles', 'copy-semantic', 'copy-assets' ], () => {
 	return jspm.bundleSFX( 'app/boot.ts', 'dist/site/main.sfx.js', {
 		minify: true,
-		mangle: true,
+		mangle: false,
 		lowResSourceMaps: false,
 		sourceMaps: true
 	});
