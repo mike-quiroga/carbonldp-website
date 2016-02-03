@@ -33,7 +33,7 @@ export default class ContentView {
 
 	constructor( router:Router, contentService:ContentService, routeParams:RouteParams, dynamicComponentLoader:DynamicComponentLoader, elementRef:ElementRef ) {
 
-		console.log( ">> ContentView -> constructed" );
+		//console.log( ">> ContentView -> constructed" );
 
 		this.router = router;
 		this.contentService = contentService;
@@ -49,19 +49,14 @@ export default class ContentView {
 	}
 
 	ngOnInit():void {
-		console.log( '/assets/documents/' + this.id );
-		let template:string = "";
 		this.contentService.getDocumentById( this.id ).then(
 			( templateResponse )=> {
-				template = templateResponse;
-				// START: OPTION A -------------------------------------------------------------------------
-				// USE THIS TO LOAD A TEMPLATE DIRECTLY FROM TEMPLATE URL
 				@Component( {
 					selector: 'child-component',
 					directives: [ CodeMirrorComponent.Class ],
 					//templateUrl: 'http://127.0.0.1:8080/assets/documents/' + id + '.html'
 					//templateUrl: '/assets/documents/' + this.id
-					template: template
+					template: templateResponse
 				} )
 				class CompiledComponent {
 
@@ -289,31 +284,6 @@ export default class ContentView {
 					}
 
 				}
-
-				// END: OPTION A ---------------------------------------------------------------------------
-
-
-				// START: OPTION B: ------------------------------------------------------------------------
-				// USE THIS TO LOAD A TEMPLATE DYNAMICALLY FROM HTTP USING A SERVICE
-
-				/*
-				this.contentService.getDocumentById( id ).then(
-					( content )=> {
-						@Component({
-							selector: 'compiled-component',
-							directives: [CodeMirrorComponent.Class],
-							template: content
-						})
-						class CompiledComponent {
-
-							//testProperty:string = "component in scope";
-
-						};
-
-						dynamicComponentLoader.loadIntoLocation(CompiledComponent, elementRef, 'container');
-					}
-				);
-				*/
 
 				// END: OPTION B --------------------------------------------------------------------------
 				this.dynamicComponentLoader.loadIntoLocation( CompiledComponent, this.elementRef, "child" );
