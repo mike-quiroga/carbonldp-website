@@ -190,16 +190,15 @@ public class SesameRDFSourceService extends AbstractSesameLDPService implements 
 	}
 
 	private void containsImmutableProperties( RDFDocument document ) {
-		List<Infraction> infractions = validateDocumentContainsImmutablProperties( document );
+		List<Infraction> infractions = validateDocumentContainsImmutableProperties( document );
 
 		infractions.addAll( RDFDocumentFactory.getInstance().validateBlankNodes( document ) );
 		if ( ! infractions.isEmpty() ) throw new InvalidResourceException( infractions );
 	}
 
 	private void containsImmutableProperties( RDFDocument originalDocument, RDFDocument document ) {
-		List<Infraction> infractions = validateDocumentContainsImmutablProperties( document );
+		List<Infraction> infractions = validateDocumentContainsImmutableProperties( document );
 
-		Set<Resource> originalSubjects = originalDocument.subjects();
 		Set<Resource> newSubjects = document.subjects();
 
 		for ( Resource subject : newSubjects ) {
@@ -213,7 +212,7 @@ public class SesameRDFSourceService extends AbstractSesameLDPService implements 
 		if ( ! infractions.isEmpty() ) throw new InvalidResourceException( infractions );
 	}
 
-	private List<Infraction> validateDocumentContainsImmutablProperties( RDFDocument document ) {
+	private List<Infraction> validateDocumentContainsImmutableProperties( RDFDocument document ) {
 		List<Infraction> infractions = new ArrayList<>();
 		infractions.addAll( ContainerFactory.getInstance().validateImmutableProperties( document.getDocumentResource() ) );
 		infractions.addAll( ContainerFactory.getInstance().validateSystemManagedProperties( document.getDocumentResource() ) );
