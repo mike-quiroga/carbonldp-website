@@ -28,7 +28,7 @@ System.config({
   },
 
   map: {
-    "angular2": "npm:angular2@2.0.0-beta.2",
+    "angular2": "npm:angular2@2.0.0-beta.3",
     "babel": "npm:babel-core@5.8.33",
     "babel-runtime": "npm:babel-runtime@5.8.29",
     "bootstrap-sass": "github:twbs/bootstrap-sass@3.3.5",
@@ -110,14 +110,14 @@ System.config({
       "path": "github:jspm/nodelibs-path@0.1.0",
       "process": "github:jspm/nodelibs-process@0.1.2"
     },
-    "npm:angular2@2.0.0-beta.2": {
+    "npm:angular2@2.0.0-beta.3": {
       "crypto": "github:jspm/nodelibs-crypto@0.1.0",
       "es6-promise": "npm:es6-promise@3.0.2",
       "es6-shim": "npm:es6-shim@0.33.13",
       "process": "github:jspm/nodelibs-process@0.1.2",
       "reflect-metadata": "npm:reflect-metadata@0.1.2",
       "rxjs": "npm:rxjs@5.0.0-beta.0",
-      "zone.js": "npm:zone.js@0.5.10"
+      "zone.js": "npm:zone.js@0.5.11"
     },
     "npm:asn1.js@4.3.1": {
       "assert": "github:jspm/nodelibs-assert@0.1.0",
@@ -436,7 +436,7 @@ System.config({
     "npm:vm-browserify@0.0.4": {
       "indexof": "npm:indexof@0.0.1"
     },
-    "npm:zone.js@0.5.10": {
+    "npm:zone.js@0.5.11": {
       "es6-promise": "npm:es6-promise@3.0.2",
       "process": "github:jspm/nodelibs-process@0.1.2"
     },

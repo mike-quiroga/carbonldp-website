@@ -154,14 +154,14 @@
 						</table>
 
 						<textarea #example1 class="hidden">
-						@prefix cs:&#60;https://carbonldp.com/ns/v1/security#&#62;.
-						@prefix vcard:&#60;http://www.w3.org/2001/vcard-rdf/3.0#&#62;.
+@prefix cs:&#60;https://carbonldp.com/ns/v1/security#&#62;.
+@prefix vcard:&#60;http://www.w3.org/2001/vcard-rdf/3.0#&#62;.
 
-						<>
-						a cs:Agent;
-						cs:name "Jane Doe";
-						vcard:email "jane.doe@example.org";
-						cs:password "MyStr0ngP@ssw0rd#".
+<>
+	a cs:Agent;
+	cs:name "Jane Doe";
+	vcard:email "jane.doe@example.org";
+	cs:password "MyStr0ngP@ssw0rd#".
 						</textarea>
 
 						<code-mirror class="ui text left aligned basic segment"
@@ -592,8 +592,8 @@
 @prefix cs:&#60;https://carbonldp.com/ns/v1/security#&#62;.
 
 <>
-a cs:Application;
-cs:name "Taxonomy Hub".
+	a cs:Application;
+	cs:name "Taxonomy Hub".
 						</textarea>
 						<!--@formatter:on-->
 
@@ -681,24 +681,15 @@ cs:name "Taxonomy Hub".
 						<!--@formatter:off-->
 						<textarea #example4 class="hidden">
 &#60;https://dev.carbonldp.com/apps/taxonomy-hub/&#62;
-&#60;https://carbonldp.com/ns/v1/platform#modified&#62; "2015-11-13T22:36:00.710Z"^^
-&#60;http://www.w3.org/2001/XMLSchema#dateTime&#62; ;
-a
-&#60;http://www.w3.org/ns/ldp#Container&#62; ;
-
-&#60;https://carbonldp.com/ns/v1/platform#created&#62; "2015-11-13T22:36:00.710Z"^^
-&#60;http://www.w3.org/2001/XMLSchema#dateTime&#62; ;
-a
-&#60;http://www.w3.org/ns/ldp#BasicContainer&#62; ;
-
-&#60;http://www.w3.org/ns/ldp#hasMemberRelation&#62;
-&#60;http://www.w3.org/ns/ldp#member&#62; ;
-a
-&#60;http://www.w3.org/ns/ldp#RDFSource&#62; ;
-
-&#60;http://www.w3.org/ns/ldp#member&#62;
-&#60;https://dev.carbonldp.com/apps/taxonomy-hub/roles/&#62; ,
-&#60;https://dev.carbonldp.com/apps/taxonomy-hub/agents/&#62; .
+	&#60;https://carbonldp.com/ns/v1/platform#modified&#62; "2015-11-13T22:36:00.710Z"^^&#60;http://www.w3.org/2001/XMLSchema#dateTime&#62; ;
+	a &#60;http://www.w3.org/ns/ldp#Container&#62; ;
+	&#60;https://carbonldp.com/ns/v1/platform#created&#62; "2015-11-13T22:36:00.710Z"^^&#60;http://www.w3.org/2001/XMLSchema#dateTime&#62; ;
+	a &#60;http://www.w3.org/ns/ldp#BasicContainer&#62; ;
+	&#60;http://www.w3.org/ns/ldp#hasMemberRelation&#62; &#60;http://www.w3.org/ns/ldp#member&#62; ;
+	a &#60;http://www.w3.org/ns/ldp#RDFSource&#62; ;
+	&#60;http://www.w3.org/ns/ldp#member&#62;
+		&#60;https://dev.carbonldp.com/apps/taxonomy-hub/roles/&#62; ,
+		&#60;https://dev.carbonldp.com/apps/taxonomy-hub/agents/&#62; .
 						</textarea>
 						<!--@formatter:on-->
 
@@ -827,8 +818,9 @@ a
 							be able to define a label for a concept as shown below.</p>
 						<!--@formatter:off-->
 						<textarea #example55 class="hidden">
-&#60;carbon-document-uri&#62; rdf:type skos:Concept;
-skos:prefLabel "animals".
+&#60;carbon-document-uri&#62;
+	a skos:Concept;
+	skos:prefLabel "animals".
 						</textarea>
 						<!--@formatter:on-->
 						<code-mirror class="ui text left aligned basic segment"
@@ -839,9 +831,10 @@ skos:prefLabel "animals".
 						<p>We can also support locale-specific labels.</p>
 						<!--@formatter:off-->
 						<textarea #example56 class="hidden">
-&#60;carbon-document-uri&#62; rdf:type skos:Concept;
-skos:prefLabel "animals"@en;
-skos:prefLabel "animaux"@fr.
+&#60;carbon-document-uri&#62;
+	rdf:type skos:Concept;
+	skos:prefLabel "animals"@en;
+	skos:prefLabel "animaux"@fr.
 						</textarea>
 						<!--@formatter:on-->
 						<code-mirror class="ui text left aligned basic segment"
@@ -870,9 +863,10 @@ skos:prefLabel "animaux"@fr.
 
 						<!--@formatter:off-->
 						<textarea #example57 class="hidden">
-&#60;carbon-document-uri&#62; rdf:type skos:Concept;
-skos:prefLabel "animals"@en;
-skos:narrower ex:mammals.
+&#60;carbon-document-uri&#62;
+	rdf:type skos:Concept;
+	skos:prefLabel "animals"@en;
+	skos:narrower ex:mammals.
 						</textarea>
 						<!--@formatter:on-->
 
@@ -929,16 +923,14 @@ skos:narrower ex:mammals.
 						<p>Here's an example of what an instance of a ConceptScheme with four top concepts might look like:</p>
 						<!--@formatter:off-->
 						<textarea #example58 class="hidden">
-&#60;carbon-document-uri&#62; rdf:type skos:ConceptScheme;
-dct:title "Content Topics";
-skos:hasTopConcept
-&#60;carbon-document-uri&#62;;
-skos:hasTopConcept
-&#60;carbon-document-uri&#62;;
-skos:hasTopConcept
-&#60;carbon-document-uri&#62;;
-skos:hasTopConcept
-&#60;carbon-document-uri&#62;;
+&#60;carbon-document-uri&#62;
+	rdf:type skos:ConceptScheme;
+	dct:title "Content Topics";
+	skos:hasTopConcept
+		&#60;carbon-document-uri&#62;,
+		&#60;carbon-document-uri&#62;,
+		&#60;carbon-document-uri&#62;,
+		&#60;carbon-document-uri&#62;.
 						</textarea>
 						<!--@formatter:on-->
 						<code-mirror class="ui text left aligned basic segment"
@@ -962,8 +954,8 @@ skos:hasTopConcept
 						<p><b>Namespaces used</b></p>
 						<!--@formatter:off-->
 						<textarea #example59 class="hidden">
-@prefix skos:&#60;http://www.w3.org/2004/02/skos/core#&#62; .
-@prefix dct:&#60;http://purl.org/dc/terms/&#62; .
+@prefix skos:&#60;http://www.w3.org/2004/02/skos/core#&#62;.
+@prefix dct:&#60;http://purl.org/dc/terms/&#62;.
 						</textarea>
 						<!--@formatter:on-->
 						<code-mirror class="ui text left aligned basic segment"
@@ -1154,7 +1146,7 @@ skos:hasTopConcept
 @prefix ldp:&#60;http://www.w3.org/ns/ldp#&#62;.
 
 <>
-a ldp:BasicContainer.
+	a ldp:BasicContainer.
 						</textarea>
 						<!--@formatter:on-->
 
@@ -1231,9 +1223,9 @@ a ldp:BasicContainer.
 @prefix skos:&#60;http://www.w3.org/2004/02/skos/core#&#62; .
 @prefix dct:&#60;http://purl.org/dc/terms/&#62; .
 <>
-a ldp:BasicContainer, skos:ConceptScheme;
-ldp:memberOfRelation skos:inScheme;
-dct:title "Topics".
+	a ldp:BasicContainer, skos:ConceptScheme;
+	ldp:memberOfRelation skos:inScheme;
+	dct:title "Topics".
 						</textarea>
 						<!--@formatter:on-->
 						<code-mirror class="ui text left aligned basic segment"
@@ -1330,10 +1322,10 @@ dct:title "Topics".
 @prefix skos:&#60;http://www.w3.org/2004/02/skos/core#&#62; .
 
 <>
-a ldp:DirectContainer;
-ldp:membershipResource
-&#60;https://dev.carbonldp.com/apps/taxonomy-hub/schemes/topics/&#62;;
-ldp:hasMemberRelation skos:hasTopConcept.
+	a ldp:DirectContainer;
+	ldp:membershipResource
+	&#60;https://dev.carbonldp.com/apps/taxonomy-hub/schemes/topics/&#62;;
+	ldp:hasMemberRelation skos:hasTopConcept.
 						</textarea>
 						<!--@formatter:on-->
 						<code-mirror class="ui text left aligned basic segment"
@@ -1447,11 +1439,11 @@ ldp:hasMemberRelation skos:hasTopConcept.
 @prefix skos:&#60;http://www.w3.org/2004/02/skos/core#&#62; .
 
 <>
-a ldp:BasicContainer, skos:Concept;
-ldp:hasMemberRelation skos:narrower;
-ldp:memberOfRelation skos:broader;
-skos:prefLabel "Design"@en;
-skos:prefLabel "Diseño"@es.
+	a ldp:BasicContainer, skos:Concept;
+	ldp:hasMemberRelation skos:narrower;
+	ldp:memberOfRelation skos:broader;
+	skos:prefLabel "Design"@en;
+	skos:prefLabel "Diseño"@es.
 						</textarea>
 						<!--@formatter:off-->
 						<code-mirror class="ui text left aligned basic segment"
@@ -1561,9 +1553,9 @@ skos:prefLabel "Diseño"@es.
 @prefix c:&#60;https://carbonldp.com/ns/v1/platform#&#62; .
 
 _:b0
-a c:AddMemberAction;
-c:member
-&#60;https://local.carbonldp.com/apps/taxonomy-hub/schemes/topics/design/&#62;.
+	a c:AddMemberAction;
+	c:member
+	&#60;https://local.carbonldp.com/apps/taxonomy-hub/schemes/topics/design/&#62;.
 						</textarea>
 						<!--@formatter:on-->
 
@@ -1649,10 +1641,10 @@ c:member
 @prefix skos:&#60;http://www.w3.org/2004/02/skos/core#&#62; .
 
 <>
-a ldp:BasicContainer, skos:Concept;
-ldp:hasMemberRelation skos:narrower;
-ldp:memberOfRelation skos:broader;
-skos:prefLabel "Technology".
+	a ldp:BasicContainer, skos:Concept;
+	ldp:hasMemberRelation skos:narrower;
+	ldp:memberOfRelation skos:broader;
+	skos:prefLabel "Technology".
 						</textarea>
 						<!--@formatter:on-->
 						<code-mirror class="ui text left aligned basic segment"
@@ -1715,9 +1707,8 @@ skos:prefLabel "Technology".
 @prefix c:&#60;https://carbonldp.com/ns/v1/platform#&#62; .
 
 _:b0
-a c:AddMemberAction;
-c:member
-&#60;https://local.carbonldp.com/apps/taxonomy-hub/schemes/topics/technology/&#62;.
+	a c:AddMemberAction;
+	c:member &#60;https://local.carbonldp.com/apps/taxonomy-hub/schemes/topics/technology/&#62;.
 						</textarea>
 						<!--@formatter:on-->
 						<code-mirror class="ui text left aligned basic segment"
@@ -1774,10 +1765,10 @@ c:member
 @prefix skos:&#60;http://www.w3.org/2004/02/skos/core#&#62; .
 
 <>
-a ldp:BasicContainer, skos:Concept;
-ldp:hasMemberRelation skos:narrower;
-ldp:memberOfRelation skos:broader;
-skos:prefLabel "Information Architecture".
+	a ldp:BasicContainer, skos:Concept;
+	ldp:hasMemberRelation skos:narrower;
+	ldp:memberOfRelation skos:broader;
+	skos:prefLabel "Information Architecture".
 						</textarea>
 						<!--@formatter:on-->
 						<code-mirror class="ui text left aligned basic segment"
@@ -1842,9 +1833,8 @@ skos:prefLabel "Information Architecture".
 @prefix c:&#60;https://carbonldp.com/ns/v1/platform#&#62; .
 
 _:b0
-a c:AddMemberAction;
-c:member
-&#60;https://local.carbonldp.com/apps/taxonomy-hub/schemes/topics/information-architecture/&#62;.
+	a c:AddMemberAction;
+	c:member &#60;https://local.carbonldp.com/apps/taxonomy-hub/schemes/topics/information-architecture/&#62;.
 						</textarea>
 						<!--@formatter:on-->
 
@@ -1914,10 +1904,10 @@ c:member
 @prefix skos:&#60;http://www.w3.org/2004/02/skos/core#&#62; .
 
 <>
-a ldp:BasicContainer, skos:Concept;
-ldp:hasMemberRelation skos:narrower;
-ldp:memberOfRelation skos:broader;
-skos:prefLabel "HTML5".
+	a ldp:BasicContainer, skos:Concept;
+	ldp:hasMemberRelation skos:narrower;
+	ldp:memberOfRelation skos:broader;
+	skos:prefLabel "HTML5".
 						</textarea>
 						<!--@formatter:on-->
 						<code-mirror class="ui text left aligned basic segment"
@@ -1972,10 +1962,10 @@ skos:prefLabel "HTML5".
 @prefix skos:&#60;http://www.w3.org/2004/02/skos/core#&#62; .
 
 <>
-a ldp:BasicContainer, skos:Concept;
-ldp:hasMemberRelation skos:narrower;
-ldp:memberOfRelation skos:broader;
-skos:prefLabel "JavaScript".
+	a ldp:BasicContainer, skos:Concept;
+	ldp:hasMemberRelation skos:narrower;
+	ldp:memberOfRelation skos:broader;
+	skos:prefLabel "JavaScript".
 						</textarea>
 						<!--@formatter:on-->
 						<code-mirror class="ui text left aligned basic segment"
@@ -2033,9 +2023,8 @@ skos:prefLabel "JavaScript".
 @prefix c:&#60;https://carbonldp.com/ns/v1/platform#&#62; .
 
 _:b0
-a c:AddMemberAction;
-c:member
-&#60;https://local.carbonldp.com/apps/taxonomy-hub/schemes/topics/html5/&#62;.
+	a c:AddMemberAction;
+	c:member &#60;https://local.carbonldp.com/apps/taxonomy-hub/schemes/topics/html5/&#62;.
 						</textarea>
 						<!--@formatter:on-->
 						<code-mirror class="ui text left aligned basic segment"
@@ -2088,19 +2077,18 @@ c:member
 
 						<p><strong>Body (required)</strong></p>
 						<!--@formatter:off-->
-						<textarea #example1 class="hidden">
+						<textarea #example90 class="hidden">
 @prefix c:&#60;https://carbonldp.com/ns/v1/platform#&#62; .
 
 _:b0
-a c:AddMemberAction;
-c:member
-&#60;https://local.carbonldp.com/apps/taxonomy-hub/schemes/topics/javascript/&#62;.
+	a c:AddMemberAction;
+	c:member &#60;https://local.carbonldp.com/apps/taxonomy-hub/schemes/topics/javascript/&#62;.
 						</textarea>
 						<!--@formatter:on-->
 
 						<code-mirror class="ui text left aligned basic segment"
 						             [mode]="'turtle'"
-						             [read-only]="'nocursor'" [value]="example1.value">
+						             [read-only]="'nocursor'" [value]="example90.value">
 						</code-mirror>
 
 						<p>Congratulations! The example taxonomy is complete. Of course, in the real-world, you would probably
