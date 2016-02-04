@@ -20,8 +20,6 @@ public interface ContainerRepository {
 
 	public boolean hasMembers( URI containerURI, String sparqlSelector, Map<String, Value> bindings, Type containerType );
 
-	public Container get( URI containerURI, Set<ContainerRetrievalPreference> preferences );
-
 	public Type getContainerType( URI containerURI );
 
 	public Set<Statement> getProperties( URI containerURI );
@@ -32,7 +30,7 @@ public interface ContainerRepository {
 
 	public Set<Statement> getContainmentTriples( URI containerURI );
 
-	public Set<Statement> getMembershipTriples( URI containerURI, boolean allow );
+	public Set<Statement> getMembershipTriples( URI containerURI );
 
 	public Set<Statement> getMembershipTriples( URI containerURI, Type containerType );
 

@@ -1,7 +1,5 @@
 package com.carbonldp.ldp.containers;
 
-import com.carbonldp.authentication.AgentAuthenticationToken;
-import com.carbonldp.authorization.acl.ACEDescription;
 import com.carbonldp.descriptions.APIPreferences.ContainerRetrievalPreference;
 import com.carbonldp.ldp.AbstractSesameLDPRepository;
 import com.carbonldp.ldp.containers.ContainerDescription.Type;
@@ -16,16 +14,12 @@ import com.carbonldp.rdf.RDFResourceRepository;
 import com.carbonldp.repository.DocumentGraphQueryResultHandler;
 import com.carbonldp.repository.GraphQueryResultHandler;
 import com.carbonldp.utils.RDFNodeUtil;
-import com.carbonldp.web.exceptions.NotImplementedException;
 import org.joda.time.DateTime;
 import org.openrdf.model.Statement;
 import org.openrdf.model.URI;
 import org.openrdf.model.Value;
-import org.openrdf.model.impl.URIImpl;
 import org.openrdf.spring.SesameConnectionFactory;
 import org.springframework.security.access.PermissionEvaluator;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
@@ -87,38 +81,6 @@ public class SesameContainerRepository extends AbstractSesameLDPRepository imple
 	}
 
 	@Override
-	public Container get( URI containerURI, Set<ContainerRetrievalPreference> preferences ) {
-		Type containerType = getContainerType( containerURI );
-		if ( containerType == null ) throw new IllegalStateException( "The resource isn't a container." );
-
-		Container container = ContainerFactory.getInstance().get( containerURI, containerType );
-		for ( ContainerRetrievalPreference preference : preferences ) {
-			switch ( preference ) {
-				case CONTAINER_PROPERTIES:
-					container.getBaseModel().addAll( getProperties( containerURI ) );
-					break;
-				case CONTAINMENT_TRIPLES:
-					container.getBaseModel().addAll( getContainmentTriples( containerURI ) );
-					break;
-				case CONTAINED_RESOURCES:
-					throw new NotImplementedException();
-				case MEMBERSHIP_TRIPLES:
-					container.getBaseModel().addAll( getMembershipTriples( containerURI, true ) );
-					break;
-				case MEMBER_RESOURCES:
-					throw new NotImplementedException();
-				case NON_READABLE_MEMBERSHIP_RESOURCE_TRIPLES:
-					container.getBaseModel().addAll( getMembershipTriples( containerURI, false ) );
-					break;
-				default:
-					throw new IllegalStateException();
-
-			}
-		}
-		return container;
-	}
-
-	@Override
 	public Type getContainerType( URI containerURI ) {
 		Set<URI> resourceTypes = resourceRepository.getTypes( containerURI );
 		return ContainerFactory.getInstance().getContainerType( resourceTypes );
@@ -169,26 +131,11 @@ public class SesameContainerRepository extends AbstractSesameLDPRepository imple
 		} );
 	}
 
-	private Set<Statement> filterMembershipTriples( Set<Statement> membershipTriples, boolean allow ) {
-		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		if ( ! ( authentication instanceof AgentAuthenticationToken ) ) throw new IllegalArgumentException( "The authentication token isn't supported." );
-		AgentAuthenticationToken agentAuthenticationToken = (AgentAuthenticationToken) authentication;
-		Set<Statement> filteredMembershipTriples = new HashSet<>();
-		for ( Statement triple : membershipTriples ) {
-			if ( (permissionEvaluator.hasPermission( agentAuthenticationToken, new URIImpl( triple.getObject().stringValue() ), ACEDescription.Permission.READ )) == allow ) {
-				filteredMembershipTriples.add( triple );
-			}
-		}
-		return filteredMembershipTriples;
-	}
-
 	@Override
-	public Set<Statement> getMembershipTriples( URI containerURI, boolean allow ) {
+	public Set<Statement> getMembershipTriples( URI containerURI ) {
 		Type containerType = getContainerType( containerURI );
 		if ( containerType == null ) throw new IllegalStateException( "The resource isn't a container." );
-		Set<Statement> nonFilterMembershipTriples = getMembershipTriples( containerURI, containerType );
-		Set<Statement> filteredMembershipTriples = filterMembershipTriples( nonFilterMembershipTriples, allow );
-		return filteredMembershipTriples;
+		return getMembershipTriples( containerURI, containerType );
 	}
 
 	@Override
