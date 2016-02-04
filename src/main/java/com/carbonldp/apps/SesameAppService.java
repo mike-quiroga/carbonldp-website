@@ -56,12 +56,6 @@ public class SesameAppService extends AbstractSesameLDPService implements AppSer
 	}
 
 	@Override
-	public Set<String> getDomains( URI appURI ) {
-		// TODO: Implement
-		throw new RuntimeException( "Not Implemented" );
-	}
-
-	@Override
 	public void create( App app ) {
 		if ( exists( app.getURI() ) ) throw new ResourceAlreadyExistsException();
 		validate( app );
@@ -104,24 +98,6 @@ public class SesameAppService extends AbstractSesameLDPService implements AppSer
 		if ( ! exists( appURI ) ) throw new NotFoundException();
 		appRepository.delete( appURI );
 		sourceRepository.deleteOccurrences( appURI, true );
-	}
-
-	@Override
-	public void addDomain( String domain ) {
-		// TODO: Implement
-		throw new RuntimeException( "Not Implemented" );
-	}
-
-	@Override
-	public void setDomains( Set<String> domains ) {
-		// TODO: Implement
-		throw new RuntimeException( "Not Implemented" );
-	}
-
-	@Override
-	public void removeDomain( String domain ) {
-		// TODO: Implement
-		throw new RuntimeException( "Not Implemented" );
 	}
 
 	@Override

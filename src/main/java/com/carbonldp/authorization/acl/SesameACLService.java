@@ -33,8 +33,7 @@ public class SesameACLService extends AbstractSesameLDPService implements ACLSer
 		this.valueFactory = new ValueFactoryImpl();
 	}
 
-	@Override
-	public ACL get( URI aclURI ) {
+	private ACL get( URI aclURI ) {
 		return new ACL( sourceRepository.get( aclURI ), aclURI );
 	}
 
