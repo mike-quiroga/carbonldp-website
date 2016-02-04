@@ -18,6 +18,7 @@ import com.carbonldp.ldp.containers.BasicContainerFactory;
 import com.carbonldp.ldp.containers.Container;
 import com.carbonldp.ldp.containers.ContainerRepository;
 import com.carbonldp.ldp.sources.RDFSourceRepository;
+import com.carbonldp.ldp.sources.RDFSourceService;
 import com.carbonldp.models.Infraction;
 import com.carbonldp.rdf.RDFBlankNode;
 import com.carbonldp.rdf.RDFDocument;
@@ -27,8 +28,7 @@ import com.carbonldp.spring.TransactionWrapper;
 import com.carbonldp.utils.URIUtil;
 import com.carbonldp.web.exceptions.NotFoundException;
 import org.openrdf.model.URI;
-import org.openrdf.model.impl.AbstractModel;
-import org.openrdf.model.impl.LinkedHashModel;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,7 +38,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Transactional
 public class SesameAppService extends AbstractSesameLDPService implements AppService {
@@ -47,6 +46,7 @@ public class SesameAppService extends AbstractSesameLDPService implements AppSer
 	private final AppAgentRepository appAgentRepository;
 	private final AppTokenRepository appTokensRepository;
 	private final AppRoleService appRoleService;
+	private RDFSourceService sourceService;
 
 	public SesameAppService( TransactionWrapper transactionWrapper, RDFSourceRepository sourceRepository, ContainerRepository containerRepository, ACLRepository aclRepository, AppRepository appRepository, AppRoleRepository appRoleRepository, AppAgentRepository appAgentRepository, AppTokenRepository appTokenRepository, AppRoleService appRoleService ) {
 		super( transactionWrapper, sourceRepository, containerRepository, aclRepository );
@@ -144,22 +144,7 @@ public class SesameAppService extends AbstractSesameLDPService implements AppSer
 		validate( app );
 
 		if ( ! exists( appURI ) ) throw new NotFoundException();
-		App originalApp = appRepository.get( appURI );
-		RDFDocument originalDocument = originalApp.getDocument();
-		RDFDocument newDocument = normalizeBNodes( originalDocument, app.getDocument() );
-
-		AbstractModel toAdd = newDocument.stream().filter( statement -> ! originalDocument.contains( statement ) ).collect( Collectors.toCollection( LinkedHashModel::new ) );
-		RDFDocument documentToAdd = new RDFDocument( toAdd, app.getURI() );
-		containsImmutableProperties( documentToAdd );
-
-		AbstractModel toDelete = originalDocument.stream().filter( statement -> ! newDocument.contains( statement ) ).collect( Collectors.toCollection( LinkedHashModel::new ) );
-		RDFDocument documentToDelete = new RDFDocument( toDelete, app.getURI() );
-		containsImmutableProperties( documentToDelete );
-
-		sourceRepository.subtract( appURI, documentToDelete );
-		sourceRepository.add( appURI, documentToAdd );
-
-		sourceRepository.touch( appURI );
+		sourceService.replace( app );
 	}
 
 	private ACL createAppACL( App app ) {
@@ -248,5 +233,10 @@ public class SesameAppService extends AbstractSesameLDPService implements AppSer
 	private void validate( App app ) {
 		List<Infraction> infractions = AppFactory.getInstance().validate( app );
 		if ( ! infractions.isEmpty() ) throw new InvalidResourceException( infractions );
+	}
+
+	@Autowired
+	public void setSourceService( RDFSourceService sourceService ) {
+		this.sourceService = sourceService;
 	}
 }

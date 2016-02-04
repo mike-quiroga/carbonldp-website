@@ -14,14 +14,12 @@ import org.joda.time.DateTime;
 import org.openrdf.model.BNode;
 import org.openrdf.model.Resource;
 import org.openrdf.model.URI;
+import org.openrdf.model.Value;
 import org.openrdf.model.impl.AbstractModel;
 import org.openrdf.model.impl.LinkedHashModel;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Transactional
@@ -131,7 +129,6 @@ public class SesameRDFSourceService extends AbstractSesameLDPService implements 
 
 		infractions.addAll( ContainerFactory.getInstance().validateImmutableProperties( document.getDocumentResource() ) );
 		infractions.addAll( ContainerFactory.getInstance().validateSystemManagedProperties( document.getDocumentResource() ) );
-		Set<RDFBlankNode> blankNodes = document.getBlankNodes();
 		infractions.addAll( RDFDocumentFactory.getInstance().validateBlankNodes( document ) );
 		if ( ! infractions.isEmpty() ) throw new InvalidResourceException( infractions );
 	}
@@ -142,10 +139,30 @@ public class SesameRDFSourceService extends AbstractSesameLDPService implements 
 
 		validateResourcesBelongToSource( sourceURI, document.getFragmentResources() );
 		containsImmutableProperties( document );
+		document = addIdentifierToRemoveIfBNodeIsEmpty( document );
 
 		sourceRepository.subtract( sourceURI, document );
 
 		sourceRepository.touch( sourceURI );
+	}
+
+	private RDFDocument addIdentifierToRemoveIfBNodeIsEmpty( RDFDocument document ) {
+		RDFSource originalSource = get( document.getDocumentResource().getURI() );
+		RDFDocument originalDocument = originalSource.getDocument();
+		document = normalizeBNodes( originalDocument, document );
+
+		Set<Resource> newSubjects = document.subjects();
+
+		for ( Resource subject : newSubjects ) {
+			if ( ! ValueUtil.isBNode( subject ) ) continue;
+			BNode subjectBNode = ValueUtil.getBNode( subject );
+			RDFBlankNode newBlankNode = new RDFBlankNode( document.getBaseModel(), subjectBNode, originalSource.getURI() );
+			RDFBlankNode originalBlankNode = new RDFBlankNode( originalDocument.getBaseModel(), subjectBNode, originalSource.getURI() );
+			if ( originalBlankNode.size() - newBlankNode.size() != 1 ) continue;
+			newBlankNode.setIdentifier( originalBlankNode.getIdentifier() );
+		}
+
+		return document;
 	}
 
 	@Override
@@ -186,6 +203,31 @@ public class SesameRDFSourceService extends AbstractSesameLDPService implements 
 		}
 
 		return document;
+	}
+
+	protected RDFDocument normalizeBNodes( RDFDocument originalDocument, RDFDocument newDocument ) {
+		URI documentUri = newDocument.getDocumentResource().getURI();
+
+		Set<String> originalDocumentBlankNodesIdentifier = originalDocument.getBlankNodesIdentifier();
+		Set<String> newDocumentBlankNodesIdentifiers = newDocument.getBlankNodesIdentifier();
+		for ( String newDocumentBlankNodeIdentifier : newDocumentBlankNodesIdentifiers ) {
+			if ( ! originalDocumentBlankNodesIdentifier.contains( newDocumentBlankNodeIdentifier ) ) continue;
+			RDFBlankNode newBlankNode = newDocument.getBlankNode( newDocumentBlankNodeIdentifier );
+
+			BNode originalBNode = originalDocument.getBlankNode( newDocumentBlankNodeIdentifier ).getSubject();
+			Map<URI, Set<Value>> propertiesMap = newBlankNode.getPropertiesMap();
+			Set<URI> properties = propertiesMap.keySet();
+
+			for ( URI property : properties ) {
+				Set<Value> objects = propertiesMap.get( property );
+				for ( Value object : objects ) {
+					newDocument.getBaseModel().add( originalBNode, property, object, documentUri );
+				}
+			}
+			newDocument.subjects().remove( newBlankNode.getSubject() );
+
+		}
+		return newDocument;
 	}
 
 }
