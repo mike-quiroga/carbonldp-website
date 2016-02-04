@@ -4,23 +4,23 @@
 		<div class="ui top fixed borderless menu" id="primary-nav">
 			<div class="ui container">
 
-				<a class="item logo" [router-link]="[ '/Home' ]"><img class="ui small image logo" src="/assets/images/carbon-logo-150x48.png"/></a>
+				<a class="item logo" [routerLink]="[ '/Home' ]"><img class="ui small image logo" src="/assets/images/carbon-logo-150x48.png"/></a>
 
-				<a class="item" [router-link]="[ '/Home' ]" [ng-class]="{active: isActive('/Home') }">Home</a>
-				<a class="item" [router-link]="[ '/Blog' ]" [ng-class]="{active: isActive('/Blog') }">Blog</a>
-				<a class="item" [router-link]="[ '/SPARQLClient' ]" [ng-class]="{active: isActive('/SPARQLClient') }"><i class="terminal icon"></i> SPARQL Editor</a>
+				<a class="item" [routerLink]="[ '/Home' ]" [ngClass]="{active: isActive('/Home') }">Home</a>
+				<a class="item" [routerLink]="[ '/Blog' ]" [ngClass]="{active: isActive('/Blog') }">Blog</a>
+				<a class="item" [routerLink]="[ '/SPARQLClient' ]" [ngClass]="{active: isActive('/SPARQLClient') }"><i class="terminal icon"></i> SPARQL Editor</a>
 
 				<div class="ui dropdown link item">
 					<span class="text">Documentation</span>
 					<i class="dropdown icon"></i>
 
 					<div class="menu">
-						<a class="item" [router-link]="[ '/Docs', {id: 'about-carbon-ldp.html'} ]">About Carbon LDP</a>
+						<a class="item" [routerLink]="[ '/Docs', {id: 'about-carbon-ldp.html'} ]">About Carbon LDP</a>
 						<div class="divider"></div>
 						<div class="header">Essential Concepts</div>
-						<a class="item" [router-link]="[ '/Docs', {id: 'linked-data-concepts.html'} ]">Linked Data Concepts</a>
-						<a class="item" [router-link]="[ '/Docs', {id: 'ldp-concepts.html'} ]">Linked Data Platform Concepts</a>
-						<a class="item" [router-link]="[ '/Docs', {id: 'carbon-ldp-concepts.html'} ]">Carbon LDP Concepts</a>
+						<a class="item" [routerLink]="[ '/Docs', {id: 'linked-data-concepts.html'} ]">Linked Data Concepts</a>
+						<a class="item" [routerLink]="[ '/Docs', {id: 'ldp-concepts.html'} ]">Linked Data Platform Concepts</a>
+						<a class="item" [routerLink]="[ '/Docs', {id: 'carbon-ldp-concepts.html'} ]">Carbon LDP Concepts</a>
 
 						<!--
 						<div class="divider"></div>
@@ -33,8 +33,8 @@
 
 						<div class="divider"></div>
 						<div class="header">REST API</div>
-						<a class="item" [router-link]="[ '/Docs', {id: 'getting-started-with-the-rest-api.html'} ]">Getting Started</a>
-						<a class="item" [router-link]="[ '/Docs', {id: 'interaction-models.html'} ]">Interaction Models</a>
+						<a class="item" [routerLink]="[ '/Docs', {id: 'getting-started-with-the-rest-api.html'} ]">Getting Started</a>
+						<a class="item" [routerLink]="[ '/Docs', {id: 'interaction-models.html'} ]">Interaction Models</a>
 					</div>
 				</div>
 
@@ -55,7 +55,7 @@
 
 	<div class="mobile only row">
 		<div class="ui fixed menu">
-			<a class="item logo" [router-link]="[ '/Home' ]"><img class="ui small image logo" src="/assets/images/carbon-logo-150x48.png"/></a>
+			<a class="item logo" [routerLink]="[ '/Home' ]"><img class="ui small image logo" src="/assets/images/carbon-logo-150x48.png"/></a>
 
 			<div class="menu">
 				<div class="item">
@@ -73,21 +73,21 @@
 			</div>
 		</div>
 		<div class="ui fixed vertical menu">
-			<a class="item" [router-link]="[ '/Home' ]" [ng-class]="{active: isActive('/Home') }">Home</a>
-			<a class="item" [router-link]="[ '/Blog' ]" [ng-class]="{active: isActive('/Blog') }">Blog</a>
-			<a class="item" [router-link]="[ '/SPARQLClient' ]" [ng-class]="{active: isActive('/SPARQLClient') }"><i class="terminal icon"></i> SPARQL Editor</a>
+			<a class="item" [routerLink]="[ '/Home' ]" [ngClass]="{active: isActive('/Home') }">Home</a>
+			<a class="item" [routerLink]="[ '/Blog' ]" [ngClass]="{active: isActive('/Blog') }">Blog</a>
+			<a class="item" [routerLink]="[ '/SPARQLClient' ]" [ngClass]="{active: isActive('/SPARQLClient') }"><i class="terminal icon"></i> SPARQL Editor</a>
 
 			<div class="ui dropdown link item">
 				<span class="text">Documentation</span>
 				<i class="dropdown icon"></i>
 
 				<div class="menu">
-					<a class="item" [router-link]="[ '/Docs', {id: 'about-carbon-ldp.html'} ]">About Carbon LDP</a>
-					<a class="item" [router-link]="[ '/Docs', {id: 'essential-concepts.html'} ]">Essential Concepts</a>
+					<a class="item" [routerLink]="[ '/Docs', {id: 'about-carbon-ldp.html'} ]">About Carbon LDP</a>
+					<a class="item" [routerLink]="[ '/Docs', {id: 'essential-concepts.html'} ]">Essential Concepts</a>
 					<div class="header">Essential Concepts</div>
-					<a class="item" [router-link]="[ '/Docs', {id: 'linked-data-concepts.html'} ]">Linked Data Concepts</a>
-					<a class="item" [router-link]="[ '/Docs', {id: 'ldp-concepts.html'} ]">Linked Data Platform Concepts</a>
-					<a class="item" [router-link]="[ '/Docs', {id: 'carbon-ldp-concepts.html'} ]">Carbon LDP Concepts</a>
+					<a class="item" [routerLink]="[ '/Docs', {id: 'linked-data-concepts.html'} ]">Linked Data Concepts</a>
+					<a class="item" [routerLink]="[ '/Docs', {id: 'ldp-concepts.html'} ]">Linked Data Platform Concepts</a>
+					<a class="item" [routerLink]="[ '/Docs', {id: 'carbon-ldp-concepts.html'} ]">Carbon LDP Concepts</a>
 
 					<!--
 					<div class="divider"></div>
@@ -100,8 +100,8 @@
 
 					<div class="divider"></div>
 					<div class="header">REST API</div>
-					<a class="item" [router-link]="[ '/Docs', {id: 'getting-started-with-the-rest-api.html'} ]">Getting Started</a>
-					<a class="item" [router-link]="[ '/Docs', {id: 'interaction-models.html'} ]">Interaction Models</a>
+					<a class="item" [routerLink]="[ '/Docs', {id: 'getting-started-with-the-rest-api.html'} ]">Getting Started</a>
+					<a class="item" [routerLink]="[ '/Docs', {id: 'interaction-models.html'} ]">Interaction Models</a>
 				</div>
 			</div>
 		</div>

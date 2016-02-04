@@ -1,8 +1,6 @@
-import {
-	Component, Input, Output,
-	CORE_DIRECTIVES, FORM_DIRECTIVES,
-	ElementRef, EventEmitter, SimpleChange, NgClass
-} from "angular2/angular2";
+import {Component, Input, Output,ElementRef, EventEmitter, SimpleChange } from "angular2/core";
+import { CORE_DIRECTIVES, FORM_DIRECTIVES, NgClass } from "angular2/common";
+
 import SPARQLClientComponent from "./../SPARQLClientComponent";
 import * as CodeMirrorComponent from "app/components/code-mirror/CodeMirrorComponent";
 import { ResultsetTableComponent } from "./../resultset-table/ResultsetTableComponent";
@@ -45,13 +43,13 @@ export class ResponseComponent {
 
 	@Input() outputformat:string;
 
-	onInit():void {
+	ngOnInit():void {
 		this.outputformat = this.response.query.format;
 		let format:string = this.getCodeMirrorMode( this.response.query.format );
 		this.outputformat = ! ! format ? format : this.outputformat;
 	}
 
-	afterViewInit():void {
+	ngAfterViewInit():void {
 		this.$element = $( this.element.nativeElement );
 		this.accordion = this.$element.find( '.accordion' );
 		this.accordion.accordion( {
