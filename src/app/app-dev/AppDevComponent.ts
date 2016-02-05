@@ -11,7 +11,7 @@ import FooterComponent from './footer/FooterComponent ';
 import MenuBarComponent from './components/menubar/MenuBarComponent';
 
 import DashboardView from './dashboard/DashboardView';
-import MyAppsComponent from './my-apps/MyAppsComponent';
+import MyAppsView from './my-apps/my-apps-view/MyAppsView';
 import CarbonAppView from './my-apps/carbon-app/CarbonAppView';
 
 import template from './template.html!';
@@ -33,21 +33,21 @@ import './style.css!';
 		}
 	},
 	{
-		path: '/carbon-app',
+		path: '/my-apps',
+		as: 'MyApps',
+		component: MyAppsView,
+		data: {
+			alias: "MyApps",
+			displayName: "My Apps"
+		}
+	},
+	{
+		path: '/my-apps/:slug',
 		as: 'CarbonApp',
 		component: CarbonAppView,
 		data: {
 			alias: "CarbonApp",
 			displayName: "Carbon App"
-		}
-	},
-	{
-		path: '/my-apps/...',
-		as: 'MyApps',
-		component: MyAppsComponent,
-		data: {
-			alias: "MyApps",
-			displayName: "My Apps"
 		}
 	}
 ] )

@@ -38,7 +38,7 @@ export default class MenuBarComponentComponent {
 
 	updateBreadcrumbs():void {
 		//let currentUrl:Array<string> = this.router.parent.lastNavigationAttempt.split( "/" );
-		let currentPathname:Array<string> = location.pathname.split( "/" ), exists = false;
+		let currentPathname:string[] = location.pathname.split( "/" ), exists = false;
 		this.breadCrumbs = [];
 		currentPathname.forEach( ( s ) => {
 			this.router.recognize( "/" + s ).then(

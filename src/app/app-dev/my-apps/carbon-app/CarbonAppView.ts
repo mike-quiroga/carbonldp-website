@@ -30,7 +30,6 @@ export default class CarbonAppView {
 
 	afterViewInit():void {
 		this.$element = $( this.element.nativeElement );
-		alert( "" );
 	}
 
 	onActivate():void {

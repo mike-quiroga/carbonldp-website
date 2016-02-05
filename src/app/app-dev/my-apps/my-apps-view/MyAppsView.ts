@@ -1,11 +1,11 @@
-import { Component, CORE_DIRECTIVES, ElementRef } from 'angular2/angular2';
-import { Router } from 'angular2/router';
+import { Component, CORE_DIRECTIVES, ElementRef, Type } from 'angular2/angular2';
+import { Router, RouteDefinition, ROUTER_DIRECTIVES } from 'angular2/router';
 
 import $ from 'jquery';
 import 'semantic-ui/semantic';
 
 import MyAppsService from './../service/MyAppsService';
-import CarbonAppThumbnailComponent from './../carbon-app-thumbnail/CarbonAppThumbnailComponent';
+import CarbonAppTileComponent from './../carbon-app-tile/CarbonAppTileComponent';
 import CarbonApp from "./../carbon-app/CarbonApp";
 import CarbonAppView from "./../carbon-app/CarbonAppView";
 
@@ -14,7 +14,7 @@ import template from './template.html!';
 @Component( {
 	selector: 'my-apps',
 	template: template,
-	directives: [ CORE_DIRECTIVES, CarbonAppThumbnailComponent ],
+	directives: [ CORE_DIRECTIVES, ROUTER_DIRECTIVES, CarbonAppTileComponent ],
 	providers: [ MyAppsService ]
 } )
 export default class MyAppsView {
@@ -26,6 +26,7 @@ export default class MyAppsView {
 
 	myAppsService:MyAppsService;
 	carbonApps:CarbonApp[] = [];
+	routeDefinitions = [];
 
 	constructor( element:ElementRef, myAppsService:MyAppsService, router:Router ) {
 		this.element = element;
@@ -38,21 +39,18 @@ export default class MyAppsView {
 		this.myAppsService.getApps().then(
 			( apps )=> {
 				apps.forEach( app=> {
+					app.data = {
+						alias: app.name.replace( new RegExp( " ", "g" ), "" ),
+						displayName: app.name
+					};
+					this.routeDefinitions.push( {
+						path: '/' + app.slug,
+						component: CarbonAppView,
+						as: app.name.replace( new RegExp( " ", "g" ), "" ),
+						data: app.data
+					} );
 					this.carbonApps.push( app );
-					//console.log( this.router );
-					//this.router.parent.config( [
-					//	{path: '/' + app.slug, component: CarbonAppView, as: app.name.replace( " ", "" ), data: {alias: name.replace( " ", "" ), displayName: app.name}}
-					//] );
-					//setTimeout( _ => {
-					//	let route = {path: '/' + app.slug, component: CarbonAppView, as: app.safeName, data: {alias: app.safeName, displayName: app.name}};
-					//	this.dynamicRouteConfigurator.addRoute( this.constructor, route );
-					//	//this.appRoutes = this.getAppRoutes();
-					//}, 1000 );
 				} );
-			}
-		).then(
-			()=> {
-				console.log( this.carbonApps );
 			}
 		);
 	}
