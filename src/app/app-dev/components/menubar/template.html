@@ -5,9 +5,9 @@
 	</a>
 	<div class="ui borderless menu small breadcrumb steps">
 		<a class="item step"
-		   *ng-for="#breadCrumb of breadCrumbs; #i =index"
-		   [ng-class]="{active: isActive('/AppDev/'+breadCrumb.alias) }"
-		   [router-link]="[ '/AppDev/'+breadCrumb.alias ]">
+		   *ngFor="#breadCrumb of breadCrumbs; #i =index"
+		   [ngClass]="{active: isActive('/AppDev/'+breadCrumb.alias) }"
+		   [routerLink]="[ '/AppDev/'+breadCrumb.alias ]">
 			<div class="content">
 				<div class="title">{{breadCrumb.displayName}}</div>
 				<!--<div class="description">{{breadCrumb.url}}</div>-->

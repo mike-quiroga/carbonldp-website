@@ -1,4 +1,5 @@
-import { Component, CORE_DIRECTIVES, ElementRef, Type } from 'angular2/angular2';
+import { Component, ElementRef, Type } from 'angular2/core';
+import { CORE_DIRECTIVES } from 'angular2/common';
 import { Router, RouteDefinition, ROUTER_DIRECTIVES } from 'angular2/router';
 
 import $ from 'jquery';
@@ -34,7 +35,7 @@ export default class MyAppsView {
 		this.router = router;
 	}
 
-	afterViewInit():void {
+	ngAfterViewInit():void {
 		this.$element = $( this.element.nativeElement );
 		this.myAppsService.getApps().then(
 			( apps )=> {
@@ -55,7 +56,7 @@ export default class MyAppsView {
 		);
 	}
 
-	onActivate():void {
+	routerOnActivate():void {
 
 	}
 }

@@ -1,5 +1,5 @@
-import { Injectable } from 'angular2/angular2';
-import { CORE_DIRECTIVES, Component, Input, Output, ElementRef, SimpleChange, EventEmitter } from 'angular2/angular2';
+import { Component, Input, Output, Injectable, ElementRef, SimpleChange, EventEmitter } from 'angular2/core';
+import { CORE_DIRECTIVES } from 'angular2/common';
 import { ROUTER_DIRECTIVES, ROUTER_PROVIDERS, Router, Instruction } from 'angular2/router';
 
 import $ from 'jquery';
@@ -34,19 +34,19 @@ export default class SidebarComponent {
 		this.element = element;
 		this.sidebarService = sidebarService;
 
-		this.sidebarService.rxAddItemEmitter.subscribe(
+		this.sidebarService.addItemEmitter.subscribe(
 			( item ) => {
 				this.addItem( item );
 			}
 		);
-		this.sidebarService.rxtoggleEmitter.subscribe(
+		this.sidebarService.toggleEmitter.subscribe(
 			() => {
 				this.toggle();
 			}
 		);
 	}
 
-	afterViewInit():void {
+	ngAfterViewInit():void {
 		this.$element = $( this.element.nativeElement );
 		this.$element.sidebar( {
 			context: 'app-dev > div.page-content',

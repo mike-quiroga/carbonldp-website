@@ -1,4 +1,5 @@
-import { Component, Input, CORE_DIRECTIVES, ElementRef } from 'angular2/angular2';
+import { Component, Input, ElementRef } from 'angular2/core';
+import { CORE_DIRECTIVES } from 'angular2/common';
 import { Router, ROUTER_DIRECTIVES } from 'angular2/router';
 
 import $ from 'jquery';
@@ -24,7 +25,7 @@ export default class CarbonAppTileComponent {
 		this.element = element;
 	}
 
-	afterViewInit():void {
+	ngAfterViewInit():void {
 		this.$element = $( this.element.nativeElement );
 		//console.log( "App :%o", this.carbonApp );
 	}

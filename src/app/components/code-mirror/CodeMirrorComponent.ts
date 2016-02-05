@@ -1,5 +1,4 @@
-import { Component, Input, Output, ElementRef, SimpleChange, EventEmitter } from 'angular2/angular2';
-
+import { Component, ElementRef, Input, Output, SimpleChange, EventEmitter } from "angular2/core";
 import CodeMirror from 'codemirror/lib/codemirror';
 
 import 'codemirror/mode/javascript/javascript';
@@ -56,7 +55,7 @@ export class Class {
 		this.element = element;
 	}
 
-	onDestroy() {
+	ngOnDestroy() {
 		this.element.nativeElement.innerHTML = this.codeMirror.getValue();
 	}
 
@@ -77,7 +76,7 @@ export class Class {
 		return "";
 	}
 
-	afterViewInit():void {
+	ngAfterViewInit():void {
 		if ( ! this.value ) {
 			this.value = this.getValue();
 		}
@@ -102,7 +101,7 @@ export class Class {
 		} );
 	}
 
-	onChanges( changeRecord:any ):void {
+	ngOnChanges( changeRecord:any ):void {
 		if ( ! this.codeMirror ) return;
 
 		if ( "readOnly" in changeRecord ) {

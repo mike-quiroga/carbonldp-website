@@ -1,15 +1,15 @@
 <div class="ui right aligned item container">
 	<button class="ui inverted button" (click)="toggle()"><i class="sidebar icon"></i></button>
 </div>
-<a class="item" [router-link]="[ './Home' ]">
+<a class="item" [routerLink]="[ './Home' ]">
 	<i class="home icon"></i>
 	Dashboard
 </a>
-<a class="item" [router-link]="[ './MyApps' ]">
+<a class="item" [routerLink]="[ './MyApps' ]">
 	<i class="cubes icon"></i>
 	My Apps
 </a>
-<a class="item" *ng-for="#item of itemsList; #i =index">
+<a class="item" *ngFor="#item of itemsList">
 	<i class="grid layout icon"></i>
 	{{item.name}}
 </a>

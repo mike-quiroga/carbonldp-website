@@ -1,4 +1,5 @@
-import { Component, CORE_DIRECTIVES, ElementRef } from 'angular2/angular2';
+import { Component, ElementRef } from 'angular2/core';
+import { CORE_DIRECTIVES } from 'angular2/common';
 
 import $ from 'jquery';
 import 'semantic-ui/semantic';
@@ -6,28 +7,28 @@ import 'semantic-ui/semantic';
 import template from './template.html!';
 import './style.css!';
 
-@Component({
+@Component( {
 	selector: 'footer',
 	template: template,
-	directives: [ ]
-})
+	directives: []
+} )
 export default class FooterComponent {
-	static parameters = [[ ElementRef ]];
+	static parameters = [ [ ElementRef ] ];
 
 	element:ElementRef;
 	$element;
 
-	constructor( element: ElementRef ){
+	constructor( element:ElementRef ) {
 		this.element = element;
 	}
 
-	afterViewInit():void {
+	ngAfterViewInit():void {
 		this.$element = $( this.element.nativeElement );
 
 		this.addSocialButtonsAnimations();
 	}
 
-	onDestroy():void {
+	ngOnDestroy():void {
 		this.$element.find( '.social-icons .icon' ).unbind( 'mouseenter', triggerPulseTransition );
 	}
 
@@ -38,5 +39,5 @@ export default class FooterComponent {
 
 function triggerPulseTransition():void {
 	var $element = $( this );
-	$element.transition('pulse');
+	$element.transition( 'pulse' );
 }

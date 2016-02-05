@@ -1,4 +1,4 @@
-import {Injectable, Component, ElementRef } from 'angular2/angular2';
+import {Injectable, Component, ElementRef } from 'angular2/core';
 import {RouteConfig, RouterOutlet} from 'angular2/router';
 
 import $ from 'jquery';
@@ -69,13 +69,13 @@ export default class AppDevComponent {
 		this.sidebarService = sidebarService;
 	}
 
-	afterViewInit():void {
+	ngAfterViewInit():void {
 		this.$element = $( this.element.nativeElement );
 		$( "app > header, app > footer" ).hide();
 		this.sidebar = this.$element.children( ".ui.sidebar" );
 	}
 
-	onDestroy():void {
+	ngOnDestroy():void {
 		$( "app > header, app > footer" ).show();
 	}
 

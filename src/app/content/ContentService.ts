@@ -1,4 +1,4 @@
-import { Injectable } from 'angular2/angular2';
+import { Injectable } from 'angular2/core';
 import { Http, Response, Request } from 'angular2/http';
 
 import Carbon from 'carbonldp-sdk';
@@ -28,11 +28,11 @@ export default class ContentService {
 			let protocolHostAndPort = arr[ 0 ] + "//" + arr[ 2 ];
 
 			this.http.get( protocolHostAndPort + '/assets/documents/' + id )
-				.map( res => res.text() )
-				.subscribe(
-					data => this.data = data,
-					err => console.log( err ),
-					() => resolve( this.data )
+				.forEach(
+					( response ) => {
+						this.data = response.text();
+						resolve( this.data );
+					}, this
 				);
 		} );
 	}

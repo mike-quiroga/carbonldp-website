@@ -1,4 +1,5 @@
-import { Component, CORE_DIRECTIVES } from 'angular2/angular2';
+import { Component } from "angular2/core";
+import { CORE_DIRECTIVES } from "angular2/common";
 import { ROUTER_DIRECTIVES, Location, RouteConfig, RouterLink, Router } from 'angular2/router';
 
 import Carbon from 'carbonldp-sdk';
@@ -23,7 +24,7 @@ import './style.css!';
 	directives: [ CORE_DIRECTIVES, ROUTER_DIRECTIVES, HeaderComponent, FooterComponent ]
 } )
 @RouteConfig( [
-	{path: '/', redirectTo: '/Home'},
+	{path: '/', redirectTo: [ '/Home' ]},
 	{path: '/Home', as: 'Home', component: HomeView},
 	{path: '/Blog', as: 'Blog', component: BlogView},
 	{path: '/blog-post/:id', as: 'BlogPost', component: BlogPostView},

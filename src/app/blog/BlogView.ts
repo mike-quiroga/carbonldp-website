@@ -1,4 +1,5 @@
-import { Component, CORE_DIRECTIVES, DynamicComponentLoader, ElementRef, Type } from "angular2/angular2";
+import { Component, DynamicComponentLoader, ElementRef, Type } from "angular2/core";
+import { CORE_DIRECTIVES } from "angular2/common";
 import { ROUTER_DIRECTIVES, ROUTER_PROVIDERS, Router, Instruction } from "angular2/router";
 
 import $ from "jquery";
@@ -46,11 +47,11 @@ export default class BlogView {
 	}
 
 
-	afterViewInit():void {
+	ngAfterViewInit():void {
 		this.$element = $( this.element.nativeElement );
 	}
 
-	onActivate():void {
+	routerOnActivate():void {
 		this.getPostsList();
 	}
 }

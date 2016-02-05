@@ -1,4 +1,5 @@
-import { Component, CORE_DIRECTIVES, Input, DynamicComponentLoader, ElementRef, ComponentRef } from 'angular2/angular2';
+import { Component, ElementRef, Input, DynamicComponentLoader, Type } from "angular2/core";
+import { CORE_DIRECTIVES } from "angular2/common";
 import { ROUTER_DIRECTIVES, ROUTER_PROVIDERS, Router, Instruction } from 'angular2/router';
 
 import 'semantic-ui/semantic';
@@ -35,7 +36,7 @@ export default class BlogPostThumbnailComponent {
 		this.contentService = contentService;
 	}
 
-	onInit():void {
+	ngOnInit():void {
 		this.isNewPost = false;
 		if ( this.blogPost.creationDate ) {
 			this.blogPost.creationDate = new Date( Date.parse( this.blogPost.creationDate.toString() ) );
@@ -44,7 +45,7 @@ export default class BlogPostThumbnailComponent {
 
 	}
 
-	afterViewInit():void {
+	ngAfterViewInit():void {
 		let excerpt:string = this.blogPost.excerpt;
 		if ( !! this.blogPost.filename ) {
 			@Component( {

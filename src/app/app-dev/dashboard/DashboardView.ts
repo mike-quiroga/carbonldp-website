@@ -1,4 +1,5 @@
-import { Component, CORE_DIRECTIVES, ElementRef } from 'angular2/angular2';
+import { Component, ElementRef } from 'angular2/core';
+import { CORE_DIRECTIVES } from 'angular2/common';
 import { ROUTER_DIRECTIVES, ROUTER_PROVIDERS, Router, Instruction } from 'angular2/router';
 
 import $ from 'jquery';
@@ -27,12 +28,12 @@ export default class DashboardView {
 		this.sidebarService = sidebarService;
 	}
 
-	afterViewInit():void {
+	ngAfterViewInit():void {
 		this.$element = $( this.element.nativeElement );
 
 	}
 
-	onDeactivate():void {
+	routerOnDeactivate():void {
 
 	}
 }

@@ -1,4 +1,4 @@
-import { Injectable, EventEmitter } from 'angular2/angular2';
+import { Injectable, EventEmitter } from 'angular2/core';
 
 import CarbonApp from 'app/app-dev/my-apps/carbon-app/CarbonApp'
 import SidebarItem from './../SidebarItem'
@@ -14,13 +14,13 @@ export default class SidebarService {
 
 	counter:number = 0;
 	addItemEmitter:EventEmitter = new EventEmitter();
-	rxAddItemEmitter:any;
+	//rxAddItemEmitter:any;
 	toggleEmitter:EventEmitter = new EventEmitter();
-	rxtoggleEmitter:any;
+	//rxtoggleEmitter:any;
 
 	constructor() {
-		this.rxAddItemEmitter = this.addItemEmitter.toRx();
-		this.rxtoggleEmitter = this.toggleEmitter.toRx();
+		//this.rxAddItemEmitter = this.addItemEmitter.toRx();
+		//this.rxtoggleEmitter = this.toggleEmitter.toRx();
 	}
 
 	addItem( name:string, url?:string, icon?:string ):void {
