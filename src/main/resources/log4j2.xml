@@ -2,11 +2,11 @@
 <Configuration>
     <Appenders>
         <Console name="STDOUT" target="SYSTEM_OUT">
-            <PatternLayout
-                    pattern="%highlight{%-5p}{STYLE=Logback} [%40c{1.}] -- %highlight{%m}{STYLE=Logback}%n"/>
+            <PatternLayout pattern="%-5p [%40c{1.}] -- %m%n"/>
         </Console>
     </Appenders>
     <Loggers>
+        <Logger name="org.eclipse.jetty" level="WARN"/>
         <Logger name="org.springframework" level="DEBUG"/>
         <Logger name="org.openrdf" level="WARN"/>
         <Logger name="com.carbonldp" level="TRACE"/>

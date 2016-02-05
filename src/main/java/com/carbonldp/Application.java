@@ -54,9 +54,7 @@ public class Application {
 		Arguments arguments = parseArguments( args );
 
 		setSpringActiveProfiles( arguments );
-
-		AnsiConsole.systemInstall();
-
+		
 		Vars.initialize();
 
 		Properties errorCodes = loadErrorCodes();
