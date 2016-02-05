@@ -19,7 +19,6 @@ import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.ContextHandler;
 import org.eclipse.jetty.webapp.Configuration;
 import org.eclipse.jetty.webapp.WebAppContext;
-import org.fusesource.jansi.AnsiConsole;
 import org.openrdf.rio.trig.TriGParserFactory;
 import org.openrdf.sail.config.SailRegistry;
 import org.springframework.beans.factory.config.PropertiesFactoryBean;
@@ -54,8 +53,6 @@ public class Application {
 		Arguments arguments = parseArguments( args );
 
 		setSpringActiveProfiles( arguments );
-
-		AnsiConsole.systemInstall();
 
 		Vars.initialize();
 
