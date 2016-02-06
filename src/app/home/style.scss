@@ -22,15 +22,26 @@ home {
 			margin-bottom: 1em;
 		}
 	}
-}
 
-.ui.stripe.segment {
-	padding: 6em 0;
-
-	h2 {
-		font-size: 2em;
+	.splash-bg {
+		background-image: url("/assets/images/cloud-bg.jpg") !important;
+		background-repeat: no-repeat !important;
+		position: relative !important;
+		background-position: center center !important;
+		width: 100% !important;
+		background-size: cover !important;
+		min-height: 807px !important;
+		max-height: 960px;
 	}
-	p {
-		font-size: 1.3em;
+
+	.ui.stripe.segment {
+		padding: 6em 0;
+
+		h2 {
+			font-size: 2em;
+		}
+		p {
+			font-size: 1.3em;
+		}
 	}
 }
