@@ -1,44 +1,57 @@
-import { Component, CORE_DIRECTIVES, ElementRef } from 'angular2/angular2';
-import { ROUTER_DIRECTIVES, ROUTER_PROVIDERS, Router, Instruction } from 'angular2/router';
+import { Component, DynamicComponentLoader, ElementRef, Type } from "angular2/core";
+import { CORE_DIRECTIVES } from "angular2/common";
+import { ROUTER_DIRECTIVES, ROUTER_PROVIDERS, Router, Instruction } from "angular2/router";
 
-import $ from 'jquery';
-import 'semantic-ui/semantic';
+import $ from "jquery";
+import "semantic-ui/semantic";
 
-import BlogPostService from 'app/blog/posts/BlogPostService';
-import BlogPost from 'app/blog/posts/BlogPost';
-
+import BlogService from "./service/BlogService";
+import BlogPost from "./blog-post/BlogPost";
+import BlogPostThumbnailComponent from "./blog-post-thumbnail/BlogPostThumbnailComponent";
+import * as CodeMirrorComponent from "app/components/code-mirror/CodeMirrorComponent";
 import template from './template.html!';
+import './style.css!';
 
-@Component({
+@Component( {
 	selector: 'blog',
 	template: template,
-	directives: [ CORE_DIRECTIVES, ROUTER_DIRECTIVES ]
-})
+	directives: [ CORE_DIRECTIVES, ROUTER_DIRECTIVES, BlogPostThumbnailComponent, CodeMirrorComponent.Class ],
+	providers: [ BlogService ]
+} )
 export default class BlogView {
-	static parameters = [[ Router ], [ ElementRef ], [ BlogPostService ]];
+	static parameters = [ [ Router ], [ ElementRef ], [ DynamicComponentLoader ], [ BlogService ] ];
 
 	router:Router;
+	dcl:DynamicComponentLoader;
 
-	blogPostService:BlogPostService;
+	blogService:BlogService;
 
 	element:ElementRef;
 	$element:JQuery;
 
 	blogPosts:BlogPost[];
 
-	constructor( router:Router, element: ElementRef, blogPostService:BlogPostService ){
+	constructor( router:Router, element:ElementRef, dcl:DynamicComponentLoader, blogService:BlogService ) {
 		this.router = router;
 		this.element = element;
-		this.blogPostService = blogPostService;
+		this.dcl = dcl;
+		this.blogService = blogService;
 	}
 
-	afterViewInit():void {
+	getPostsList():void {
+		this.blogService.getPostsList().then(
+			( blogPosts ) => {
+				this.blogPosts = blogPosts;
+			}
+		).catch( console.error );
+	}
+
+
+	ngAfterViewInit():void {
 		this.$element = $( this.element.nativeElement );
 	}
 
-	onActivate():void {
-		this.blogPostService.getLatest().then( ( blogPosts ) => {
-			this.blogPosts = blogPosts;
-		}).catch( console.error );
+	routerOnActivate():void {
+		this.getPostsList();
 	}
 }

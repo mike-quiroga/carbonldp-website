@@ -1,0 +1,20 @@
+<div class="ui main grid container">
+	<div class="row">
+		<div class="twelve wide column">
+			<article class="ui basic segment">
+				<div class="ui header">
+					<h1>{{ blogPost?.title }}</h1>
+
+					<small><span *ngIf="blogPost.author">By {{ blogPost?.author }}</span> <span>{{ blogPost?.creationDate | date }}</span></small>
+				</div>
+				<div class="ui clearing divider"></div>
+				<div>
+					<div #content></div>
+				</div>
+			</article>
+		</div>
+		<aside class="four wide column">
+
+		</aside>
+	</div>
+</div>

@@ -1,5 +1,4 @@
-import { Component, Input, Output, ElementRef, SimpleChange, EventEmitter } from 'angular2/angular2';
-
+import { Component, ElementRef, Input, Output, SimpleChange, EventEmitter } from "angular2/core";
 import CodeMirror from 'codemirror/lib/codemirror';
 
 import 'codemirror/mode/javascript/javascript';
@@ -46,6 +45,8 @@ export class Class {
 	@Input() mode:string = Mode.JAVASCRIPT;
 	@Input() readOnly:boolean = false;
 	@Input() noCursor:boolean = false;
+	@Input() showLineNumbers:boolean = true;
+	@Input() scroll:boolean = true;
 
 	@Input() value:string = "";
 	@Output() valueChange:EventEmitter = new EventEmitter();
@@ -54,7 +55,7 @@ export class Class {
 		this.element = element;
 	}
 
-	onDestroy() {
+	ngOnDestroy() {
 		this.element.nativeElement.innerHTML = this.codeMirror.getValue();
 	}
 
@@ -75,13 +76,13 @@ export class Class {
 		return "";
 	}
 
-	afterViewInit():void {
+	ngAfterViewInit():void {
 		if ( ! this.value ) {
 			this.value = this.getValue();
 		}
 		this.element.nativeElement.innerHTML = "";
 		this.codeMirror = CodeMirror( this.element.nativeElement, {
-			lineNumbers: true,
+			lineNumbers: this.showLineNumbers,
 			indentWithTabs: true,
 			smartIndent: false,
 			electricChars: false,
@@ -90,6 +91,9 @@ export class Class {
 			value: this.value,
 			readOnly: this.readOnly
 		} );
+		if ( ! this.scroll ) {
+			this.element.nativeElement.children[ 0 ].style.height = "auto";
+		}
 
 		this.codeMirror.on( "change", ( changeObject ) => {
 			this.value = this.codeMirror.getValue();
@@ -97,7 +101,7 @@ export class Class {
 		} );
 	}
 
-	onChanges( changeRecord:any ):void {
+	ngOnChanges( changeRecord:any ):void {
 		if ( ! this.codeMirror ) return;
 
 		if ( "readOnly" in changeRecord ) {

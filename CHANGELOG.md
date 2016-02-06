@@ -1,4 +1,7 @@
-# 0.2.0 (Decemeber 9, 2015)
+# 0.3.0 (February 3, 2016)
+* Update Angular2 to Beta 3
+* Fix getting started indentation
+# 0.2.0 (December 9, 2015)
 * Added a new **SPARQL Query Editor** using Semantic UI Framework.
 * Fixed SPARQL-Client to work with scss files instead of css.
 * Changed dynamic logo to static image.

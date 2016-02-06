@@ -1,8 +1,5 @@
-import {
-	Component, View,
-	CORE_DIRECTIVES, FORM_DIRECTIVES,
-	ElementRef,NgStyle
-} from 'angular2/angular2';
+import {Component, View, ElementRef} from 'angular2/core';
+import { CORE_DIRECTIVES, FORM_DIRECTIVES, NgStyle} from "angular2/common";
 
 import * as CodeMirrorComponent from "app/components/code-mirror/CodeMirrorComponent";
 
@@ -36,7 +33,7 @@ export default class CarbonUI {
 		this.element = element;
 	}
 
-	afterViewInit():void {
+	ngAfterViewInit():void {
 		this.$element = $( this.element.nativeElement );
 		this.mainMenu = this.$element.find( ".mainhead .menu " );
 		this.mainMenu.find( ".item" ).tab();

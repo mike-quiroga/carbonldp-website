@@ -1,0 +1,16 @@
+<article class="ui segment">
+	<p class="ui red ribbon label">{{blogPost.creationDate | date}}</p>
+
+	<div class="ui left aligned basic segment">
+		<h1><a [routerLink]="[ '/BlogPost', {id: blogPost.id} ]">{{ blogPost.title }}</a></h1>
+
+		<p>by {{ blogPost.author }}</p>
+	</div>
+	<div class="ui basic segment">
+		<div #excerpt>
+		</div>
+	</div>
+	<div class="ui right aligned basic segment">
+		<a [routerLink]="[ '/BlogPost', {id: blogPost.id} ]">Read More...</a>
+	</div>
+</article>

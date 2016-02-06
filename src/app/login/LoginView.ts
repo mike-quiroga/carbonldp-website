@@ -1,13 +1,11 @@
-import { Component, View, CORE_DIRECTIVES, ElementRef} from 'angular2/angular2';
+import { Component, View, ElementRef } from 'angular2/core';
 import { ROUTER_DIRECTIVES, ROUTER_PROVIDERS, Router, Instruction, RouterLink } from 'angular2/router';
-import { FORM_DIRECTIVES, FormBuilder, ControlGroup, AbstractControl, Control, NgIf} from "angular2/angular2";
-import { Validators} from 'angular2/angular2';
+import { CORE_DIRECTIVES, FORM_DIRECTIVES, FormBuilder, ControlGroup, AbstractControl, Control, NgIf, Validators, AbstractControl } from "angular2/common";
 
 import $ from 'jquery';
 import 'semantic-ui/semantic';
 
 import template from './template.html!';
-import {AbstractControl} from "../../jspm_packages/npm/angular2@2.0.0-alpha.45/ts/src/core/forms/model";
 
 @Component( {
 	selector: 'login-page'
@@ -42,7 +40,7 @@ export default class LoginView {
 		this.passWord = this.loginForm.controls[ 'passWord' ];
 	}
 
-	afterViewInit():void {
+	ngAfterViewInit():void {
 		this.$element = $( this.element.nativeElement );
 		this.$form = this.$element.find( '#loginForm' );
 

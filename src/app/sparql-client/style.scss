@@ -1,31 +1,32 @@
+sparql-client {
+	.query-builder {
 
-.query-builder {
-
-	.queries-list {
-		> p {
-			font-size: 2em;
-			color: #ffffff;
-			padding: .5em;
-		}
-		.item {
-			.name {
-				font-size: 1.3em;
+		.queries-list {
+			> p {
+				font-size: 2em;
+				color: #ffffff;
+				padding: .5em;
 			}
-			.operation {
-				font-size: 1em;
-				font-family: monospace;
-			}
-			.operation.select {
-				color: cornflowerblue;
-			}
-			.operation.describe {
-				color: mediumpurple;
-			}
-			.operation.construct {
-				color: mediumvioletred;
-			}
-			.operation.ask {
-				color: orange;
+			.item {
+				.name {
+					font-size: 1.3em;
+				}
+				.operation {
+					font-size: 1em;
+					font-family: monospace;
+				}
+				.operation.select {
+					color: cornflowerblue;
+				}
+				.operation.describe {
+					color: mediumpurple;
+				}
+				.operation.construct {
+					color: mediumvioletred;
+				}
+				.operation.ask {
+					color: orange;
+				}
 			}
 		}
 	}
