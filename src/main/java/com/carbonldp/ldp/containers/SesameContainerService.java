@@ -8,6 +8,7 @@ import com.carbonldp.exceptions.ResourceDoesntExistException;
 import com.carbonldp.ldp.AbstractSesameLDPService;
 import com.carbonldp.ldp.sources.RDFSourceRepository;
 import com.carbonldp.models.Infraction;
+import com.carbonldp.rdf.RDFDocumentFactory;
 import com.carbonldp.rdf.RDFResource;
 import com.carbonldp.spring.TransactionWrapper;
 import org.joda.time.DateTime;
@@ -61,7 +62,7 @@ public class SesameContainerService extends AbstractSesameLDPService implements 
 
 	protected void validate( RDFResource toValidate ) {
 		List<Infraction> infractions = BasicContainerFactory.getInstance().validate( toValidate );
-
+		infractions.addAll( RDFDocumentFactory.getInstance().validateBlankNodes( toValidate.getDocument() ) );
 		if ( ! infractions.isEmpty() ) throw new InvalidResourceException( infractions );
 
 	}

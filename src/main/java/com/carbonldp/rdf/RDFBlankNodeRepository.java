@@ -14,6 +14,8 @@ import java.util.Set;
  */
 public interface RDFBlankNodeRepository {
 
+	public BNode get( String identifier, URI documentURI );
+
 	public boolean hasProperty( BNode blankNode, URI pred, URI documentURI );
 
 	public boolean hasProperty( BNode blankNode, RDFNodeEnum pred, URI documentURI );

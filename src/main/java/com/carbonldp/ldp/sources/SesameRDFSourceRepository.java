@@ -154,32 +154,6 @@ public class SesameRDFSourceRepository extends AbstractSesameLDPRepository imple
 	}
 
 	@Override
-	public void add( URI sourceURI, RDFDocument document ) {
-		Collection<RDFResource> resourceViews = document.getFragmentResources();
-		resourceViews.add( document.getDocumentResource() );
-		Collection<RDFBlankNode> blankNodes = document.getBlankNodes();
-		URI documentURI = document.getDocumentResource().getDocumentURI();
-
-		for ( RDFResource resourceView : resourceViews ) {
-			URI resourceViewURI = resourceView.getURI();
-			Map<URI, Set<Value>> propertiesMap = resourceView.getPropertiesMap();
-			for ( URI predicate : propertiesMap.keySet() ) {
-				Set<Value> values = propertiesMap.get( predicate );
-				resourceRepository.add( resourceViewURI, predicate, values );
-			}
-		}
-
-		for ( RDFBlankNode blankNode : blankNodes ) {
-			BNode blankNodeSubject = blankNode.getSubject();
-			Map<URI, Set<Value>> propertiesMap = blankNode.getPropertiesMap();
-			for ( URI predicate : propertiesMap.keySet() ) {
-				Set<Value> values = propertiesMap.get( predicate );
-				blankNodeRepository.add( blankNodeSubject, predicate, values, documentURI );
-			}
-		}
-	}
-
-	@Override
 	public void createAccessPoint( URI sourceURI, AccessPoint accessPoint ) {
 		documentRepository.addDocument( accessPoint.getDocument() );
 		addAccessPoint( sourceURI, accessPoint );
@@ -202,35 +176,6 @@ public class SesameRDFSourceRepository extends AbstractSesameLDPRepository imple
 		documentRepository.update( source.getDocument() );
 	}
 
-	@Override
-	public void set( URI sourceURI, RDFDocument document ) {
-		Collection<RDFResource> resourceViews = document.getFragmentResources();
-		resourceViews.add( document.getDocumentResource() );
-		Collection<RDFBlankNode> blankNodes = document.getBlankNodes();
-		URI documentURI = document.getDocumentResource().getDocumentURI();
-
-		for ( RDFResource resourceView : resourceViews ) {
-			URI resourceViewURI = resourceView.getURI();
-			Map<URI, Set<Value>> propertiesMap = resourceView.getPropertiesMap();
-			for ( URI predicate : propertiesMap.keySet() ) {
-				Set<Value> values = propertiesMap.get( predicate );
-				resourceRepository.remove( resourceViewURI, predicate );
-				resourceRepository.add( resourceViewURI, predicate, values );
-			}
-		}
-
-		for ( RDFBlankNode blankNode : blankNodes ) {
-			BNode blankNodeSubject = blankNode.getSubject();
-			Map<URI, Set<Value>> propertiesMap = blankNode.getPropertiesMap();
-			for ( URI predicate : propertiesMap.keySet() ) {
-				Set<Value> values = propertiesMap.get( predicate );
-				blankNodeRepository.remove( blankNodeSubject, predicate, documentURI );
-				blankNodeRepository.add( blankNodeSubject, predicate, values, documentURI );
-			}
-		}
-
-	}
-
 	static {
 		isQuery = "ASK { ?resource " + LESS_THAN + RDF.TYPE + MORE_THAN + " ?rdfType." + "${values} }";
 	}
@@ -245,33 +190,6 @@ public class SesameRDFSourceRepository extends AbstractSesameLDPRepository imple
 		StrSubstitutor sub = new StrSubstitutor( values, "${", "}" );
 
 		return sparqlTemplate.executeBooleanQuery( sub.replace( isQuery ), bindings );
-	}
-
-	@Override
-	public void subtract( URI sourceURI, RDFDocument document ) {
-		Collection<RDFResource> resourceViews = document.getFragmentResources();
-		resourceViews.add( document.getDocumentResource() );
-		Collection<RDFBlankNode> blankNodes = document.getBlankNodes();
-		URI documentURI = document.getDocumentResource().getDocumentURI();
-
-		for ( RDFResource resourceView : resourceViews ) {
-			URI resourceViewURI = resourceView.getURI();
-			Map<URI, Set<Value>> propertiesMap = resourceView.getPropertiesMap();
-			for ( URI predicate : propertiesMap.keySet() ) {
-				Set<Value> values = propertiesMap.get( predicate );
-				resourceRepository.remove( resourceViewURI, predicate, values );
-			}
-		}
-
-		for ( RDFBlankNode blankNode : blankNodes ) {
-			BNode blankNodeSubject = blankNode.getSubject();
-			Map<URI, Set<Value>> propertiesMap = blankNode.getPropertiesMap();
-			for ( URI predicate : propertiesMap.keySet() ) {
-				Set<Value> values = propertiesMap.get( predicate );
-				blankNodeRepository.remove( blankNodeSubject, predicate, values, documentURI );
-			}
-		}
-
 	}
 
 	private static final String deleteWithChildrenQuery;

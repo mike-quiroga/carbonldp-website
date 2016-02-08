@@ -24,6 +24,17 @@ import java.util.Set;
 @Transactional
 public class SesameRDFBlankNodeRepository extends AbstractSesameRepository implements RDFBlankNodeRepository {
 
+	public BNode get( String identifier, URI documentURI ) {
+		ValueFactory valueFactory = new ValueFactoryImpl();
+		return (BNode) connectionTemplate.readStatements(
+			connection -> connection.getStatements( null, RDFBlankNodeDescription.Property.BNODE_IDENTIFIER.getURI(), valueFactory.createLiteral( identifier ), false, documentURI ),
+			statements -> {
+				if ( ! statements.hasNext() ) return null;
+				return statements.next().getSubject();
+			}
+		);
+	}
+
 	public SesameRDFBlankNodeRepository( SesameConnectionFactory connectionFactory ) {
 		super( connectionFactory );
 	}

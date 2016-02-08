@@ -82,9 +82,11 @@ public class SesameRDFSourceService extends AbstractSesameLDPService implements 
 
 		validateResourcesBelongToSource( sourceURI, document.getFragmentResources() );
 		containsImmutableProperties( document );
+		validateBNodesUniqueIdentifier( document );
+
 		document = designBlankNodesIdentifiers( document );
 
-		sourceRepository.add( sourceURI, document );
+		documentRepository.add( sourceURI, document );
 
 		sourceRepository.touch( sourceURI );
 	}
@@ -95,7 +97,7 @@ public class SesameRDFSourceService extends AbstractSesameLDPService implements 
 		containsImmutableProperties( document );
 		validateResourcesBelongToSource( sourceURI, document.getFragmentResources() );
 
-		sourceRepository.set( sourceURI, document );
+		documentRepository.set( sourceURI, document );
 
 		sourceRepository.touch( sourceURI );
 	}
@@ -133,7 +135,7 @@ public class SesameRDFSourceService extends AbstractSesameLDPService implements 
 		containsImmutableProperties( originalDocument, document );
 		document = addIdentifierToRemoveIfBNodeIsEmpty( originalDocument, document );
 
-		sourceRepository.subtract( sourceURI, document );
+		documentRepository.subtract( sourceURI, document );
 
 		sourceRepository.touch( sourceURI );
 	}
@@ -183,6 +185,10 @@ public class SesameRDFSourceService extends AbstractSesameLDPService implements 
 			if ( originalSubjects.contains( subject ) ) continue;
 			BNode subjectBNode = ValueUtil.getBNode( subject );
 			RDFBlankNode blankNode = new RDFBlankNode( document.getBaseModel(), subjectBNode, originalSource.getURI() );
+			if ( blankNode.getIdentifier() != null ) {
+				if ( blankNode.size() == 1 ) blankNode.removeIdentifier();
+				continue;
+			}
 			RDFBlankNodeFactory.setIdentifier( blankNode );
 		}
 
@@ -245,6 +251,18 @@ public class SesameRDFSourceService extends AbstractSesameLDPService implements 
 
 		}
 		return newDocument;
+	}
+
+	private void validateBNodesUniqueIdentifier( RDFDocument document ) {
+		Set<RDFBlankNode> blankNodes = document.getBlankNodes();
+		List<Infraction> infractions = new ArrayList<>();
+		URI documentURI = document.getDocumentResource().getDocumentURI();
+		for ( RDFBlankNode blankNode : blankNodes ) {
+			if ( blankNode.getIdentifier() == null ) continue;
+			if ( blankNodeRepository.hasProperty( blankNode.getSubject(), RDFBlankNodeDescription.Property.BNODE_IDENTIFIER, documentURI ) )
+				infractions.add( new Infraction( 0x2004, "property", RDFBlankNodeDescription.Property.BNODE_IDENTIFIER.getURI().stringValue() ) );
+		}
+		if ( ! infractions.isEmpty() ) throw new InvalidResourceException( infractions );
 	}
 
 }
