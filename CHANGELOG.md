@@ -1,3 +1,5 @@
+# 0.27.0 (2016/02/08)
+* Membership triples of basic container can now be filtered by visibility
 # 0.26.0 (2016/01/29)
 * Improve security of platform and apps
 # 0.25.4 (2016/01/26)

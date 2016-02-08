@@ -19,7 +19,6 @@ import org.openrdf.model.Statement;
 import org.openrdf.model.URI;
 import org.openrdf.model.Value;
 import org.openrdf.spring.SesameConnectionFactory;
-import org.springframework.security.access.PermissionEvaluator;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
@@ -34,11 +33,10 @@ public class SesameContainerRepository extends AbstractSesameLDPRepository imple
 	private final RDFSourceRepository sourceRepository;
 	private final List<TypedContainerRepository> typedContainerRepositories;
 	private RDFRepresentationRepository rdfRepresentationRepository;
-	PermissionEvaluator permissionEvaluator;
 
 	public SesameContainerRepository( SesameConnectionFactory connectionFactory, RDFResourceRepository resourceRepository,
 		RDFDocumentRepository documentRepository, RDFSourceRepository sourceRepository, List<TypedContainerRepository> typedContainerRepositories,
-		RDFRepresentationRepository rdfRepresentationRepository, PermissionEvaluator permissionEvaluator ) {
+		RDFRepresentationRepository rdfRepresentationRepository ) {
 		super( connectionFactory, resourceRepository, documentRepository );
 
 		Assert.notNull( sourceRepository );
@@ -50,8 +48,6 @@ public class SesameContainerRepository extends AbstractSesameLDPRepository imple
 
 		Assert.notNull( rdfRepresentationRepository );
 		this.rdfRepresentationRepository = rdfRepresentationRepository;
-
-		this.permissionEvaluator = permissionEvaluator;
 	}
 
 	@Override
@@ -250,18 +246,6 @@ public class SesameContainerRepository extends AbstractSesameLDPRepository imple
 	public void removeMembers( URI containerURI, Type containerType ) {
 		getTypedRepository( containerType ).removeMembers( containerURI );
 	}
-
-	/*
-	@Override
-	public void deleteContainedResources( URI containerURI ) {
-		Set<URI> containedURIs = getContainedURIs( containerURI );
-		// TODO: Optimize this
-		for ( URI containedURI : containedURIs ) {
-			sourceRepository.delete( containedURI );
-			sourceRepository.deleteOccurrences( containedURI, true );
-		}
-	}
-	*/
 
 	private void addContainedResource( URI containerURI, URI resourceURI ) {
 		connectionTemplate.write( ( connection ) -> connection.add( containerURI, ContainerDescription.Property.CONTAINS.getURI(), resourceURI, containerURI ) );
