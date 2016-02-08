@@ -8,7 +8,6 @@ import com.carbonldp.authentication.AgentAuthenticationToken;
 import com.carbonldp.authentication.token.app.AppTokenRepository;
 import com.carbonldp.authorization.acl.ACEDescription;
 import com.carbonldp.authorization.acl.ACL;
-import com.carbonldp.authorization.acl.ACLRepository;
 import com.carbonldp.exceptions.InvalidResourceException;
 import com.carbonldp.exceptions.ResourceAlreadyExistsException;
 import com.carbonldp.exceptions.ResourceDoesntExistException;
@@ -19,45 +18,36 @@ import com.carbonldp.ldp.containers.Container;
 import com.carbonldp.ldp.containers.ContainerRepository;
 import com.carbonldp.ldp.sources.RDFSourceRepository;
 import com.carbonldp.ldp.sources.RDFSourceService;
+import com.carbonldp.ldp.containers.ContainerService;
 import com.carbonldp.models.Infraction;
 import com.carbonldp.rdf.RDFBlankNode;
 import com.carbonldp.rdf.RDFDocument;
 import com.carbonldp.rdf.RDFDocumentFactory;
 import com.carbonldp.rdf.RDFResource;
 import com.carbonldp.spring.TransactionWrapper;
+import com.carbonldp.utils.RDFResourceUtil;
 import com.carbonldp.utils.URIUtil;
 import com.carbonldp.web.exceptions.NotFoundException;
 import org.openrdf.model.URI;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.Assert;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
-@Transactional
 public class SesameAppService extends AbstractSesameLDPService implements AppService {
-	private final AppRepository appRepository;
-	private final AppRoleRepository appRoleRepository;
-	private final AppAgentRepository appAgentRepository;
-	private final AppTokenRepository appTokensRepository;
-	private final AppRoleService appRoleService;
-	private RDFSourceService sourceService;
 
-	public SesameAppService( TransactionWrapper transactionWrapper, RDFSourceRepository sourceRepository, ContainerRepository containerRepository, ACLRepository aclRepository, AppRepository appRepository, AppRoleRepository appRoleRepository, AppAgentRepository appAgentRepository, AppTokenRepository appTokenRepository, AppRoleService appRoleService ) {
-		super( transactionWrapper, sourceRepository, containerRepository, aclRepository );
-		Assert.notNull( appRepository );
-		this.appRepository = appRepository;
-		Assert.notNull( appRoleRepository );
-		this.appRoleRepository = appRoleRepository;
-		this.appAgentRepository = appAgentRepository;
-		this.appTokensRepository = appTokenRepository;
-		this.appRoleService = appRoleService;
-	}
+	protected ContainerService containerService;
+
+	protected AppRepository appRepository;
+	protected AppRoleRepository appRoleRepository;
+	protected AppAgentRepository appAgentRepository;
+	protected AppTokenRepository appTokensRepository;
+	protected AppRoleService appRoleService;
+	protected RDFSourceService sourceService;
 
 	@Override
 	public boolean exists( URI appURI ) {
@@ -71,17 +61,12 @@ public class SesameAppService extends AbstractSesameLDPService implements AppSer
 	}
 
 	@Override
-	public Set<String> getDomains( URI appURI ) {
-		// TODO: Implement
-		throw new RuntimeException( "Not Implemented" );
-	}
-
-	@Override
 	public void create( App app ) {
 		if ( exists( app.getURI() ) ) throw new ResourceAlreadyExistsException();
 		validate( app );
 
-		App createdApp = appRepository.create( app );
+		App createdApp = appRepository.createPlatformAppRepository( app );
+		containerService.createChild( appRepository.getPlatformAppContainerURI(), app );
 		ACL appACL = createAppACL( createdApp );
 
 		AppRole adminRole = transactionWrapper.runWithSystemPermissionsInAppContext( app, () -> {
@@ -118,24 +103,6 @@ public class SesameAppService extends AbstractSesameLDPService implements AppSer
 		if ( ! exists( appURI ) ) throw new NotFoundException();
 		appRepository.delete( appURI );
 		sourceRepository.deleteOccurrences( appURI, true );
-	}
-
-	@Override
-	public void addDomain( String domain ) {
-		// TODO: Implement
-		throw new RuntimeException( "Not Implemented" );
-	}
-
-	@Override
-	public void setDomains( Set<String> domains ) {
-		// TODO: Implement
-		throw new RuntimeException( "Not Implemented" );
-	}
-
-	@Override
-	public void removeDomain( String domain ) {
-		// TODO: Implement
-		throw new RuntimeException( "Not Implemented" );
 	}
 
 	@Override
@@ -239,4 +206,22 @@ public class SesameAppService extends AbstractSesameLDPService implements AppSer
 	public void setSourceService( RDFSourceService sourceService ) {
 		this.sourceService = sourceService;
 	}
+
+	@Autowired
+	public void setContainerService( ContainerService containerService ) { this.containerService = containerService; }
+
+	@Autowired
+	public void setAppRepository( AppRepository appRepository ) { this.appRepository = appRepository; }
+
+	@Autowired
+	public void setAppRoleRepository( AppRoleRepository appRoleRepository ) { this.appRoleRepository = appRoleRepository; }
+
+	@Autowired
+	public void setAppAgentRepository( AppAgentRepository appAgentRepository ) { this.appAgentRepository = appAgentRepository; }
+
+	@Autowired
+	public void setAppTokensRepository( AppTokenRepository appTokensRepository ) { this.appTokensRepository = appTokensRepository; }
+
+	@Autowired
+	public void setAppRoleService( AppRoleService appRoleService ) { this.appRoleService = appRoleService; }
 }

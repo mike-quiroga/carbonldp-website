@@ -1,13 +1,18 @@
 package com.carbonldp.ldp.sources;
 
-import com.carbonldp.authorization.acl.ACLRepository;
 import com.carbonldp.exceptions.InvalidResourceException;
 import com.carbonldp.exceptions.ResourceDoesntExistException;
 import com.carbonldp.ldp.AbstractSesameLDPService;
-import com.carbonldp.ldp.containers.*;
+import com.carbonldp.ldp.containers.AccessPoint;
+import com.carbonldp.ldp.containers.AccessPointFactory;
+import com.carbonldp.ldp.containers.BasicContainerFactory;
+import com.carbonldp.ldp.containers.ContainerFactory;
 import com.carbonldp.models.Infraction;
 import com.carbonldp.rdf.*;
 import com.carbonldp.spring.TransactionWrapper;
+import com.carbonldp.rdf.RDFDocument;
+import com.carbonldp.rdf.RDFResource;
+import com.carbonldp.utils.RDFResourceUtil;
 import com.carbonldp.utils.URIUtil;
 import com.carbonldp.utils.ValueUtil;
 import org.joda.time.DateTime;
@@ -19,15 +24,13 @@ import org.openrdf.model.impl.AbstractModel;
 import org.openrdf.model.impl.LinkedHashModel;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
-@Transactional
 public class SesameRDFSourceService extends AbstractSesameLDPService implements RDFSourceService {
-
-	public SesameRDFSourceService( TransactionWrapper transactionWrapper, RDFSourceRepository sourceRepository, ContainerRepository containerRepository, ACLRepository aclRepository ) {
-		super( transactionWrapper, sourceRepository, containerRepository, aclRepository );
-	}
 
 	@Override
 	public boolean exists( URI sourceURI ) {

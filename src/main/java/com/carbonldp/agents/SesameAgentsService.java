@@ -4,24 +4,18 @@ import com.carbonldp.agents.validators.AgentValidatorRepository;
 import com.carbonldp.authorization.Platform;
 import com.carbonldp.authorization.acl.ACEDescription;
 import com.carbonldp.authorization.acl.ACL;
-import com.carbonldp.authorization.acl.ACLRepository;
 import com.carbonldp.config.ConfigurationRepository;
 import com.carbonldp.exceptions.InvalidResourceException;
 import com.carbonldp.exceptions.StupidityException;
 import com.carbonldp.ldp.AbstractSesameLDPService;
-import com.carbonldp.ldp.containers.ContainerRepository;
-import com.carbonldp.ldp.sources.RDFSourceRepository;
 import com.carbonldp.models.Infraction;
-import com.carbonldp.spring.TransactionWrapper;
 import com.carbonldp.utils.AuthenticationUtil;
 import freemarker.template.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
-import org.springframework.util.Assert;
 
-import javax.annotation.PostConstruct;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import java.io.IOException;
@@ -30,27 +24,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * @author NestorVenegas
- * @since 0.14.0-ALPHA
- */
 public abstract class SesameAgentsService extends AbstractSesameLDPService implements AgentService {
-	protected JavaMailSender mailSender;
+
 	protected ConfigurationRepository configurationRepository;
 	protected AgentValidatorRepository agentValidatorRepository;
 
-	public SesameAgentsService( TransactionWrapper transactionWrapper, RDFSourceRepository sourceRepository, ContainerRepository containerRepository, ACLRepository aclRepository, AgentValidatorRepository agentValidatorRepository ) {
-		super( transactionWrapper, sourceRepository, containerRepository, aclRepository );
-
-		Assert.notNull( agentValidatorRepository );
-		this.agentValidatorRepository = agentValidatorRepository;
-	}
-
-	@PostConstruct
-	public void init() {
-		Assert.notNull( mailSender );
-		Assert.notNull( configurationRepository );
-	}
+	protected JavaMailSender mailSender;
 
 	protected void validate( Agent agent ) {
 		List<Infraction> infractions = AgentFactory.getInstance().validate( agent );
@@ -78,7 +57,7 @@ public abstract class SesameAgentsService extends AbstractSesameLDPService imple
 		try {
 			emailText = prepareEmailText( agent, validator );
 		} catch ( IOException e ) {
-
+			throw new RuntimeException( e );
 		}
 
 		MimeMessage message = mailSender.createMimeMessage();
@@ -113,7 +92,7 @@ public abstract class SesameAgentsService extends AbstractSesameLDPService imple
 
 		Map<String, Object> model = getEmailTemplateModel( agent, validator );
 
-		String emailText = null;
+		String emailText;
 		try {
 			emailText = FreeMarkerTemplateUtils.processTemplateIntoString( template, model );
 		} catch ( TemplateException e ) {
@@ -121,12 +100,6 @@ public abstract class SesameAgentsService extends AbstractSesameLDPService imple
 		}
 
 		return emailText;
-	}
-
-	@Autowired
-	public void setMailSender( JavaMailSender mailSender ) {
-		Assert.notNull( mailSender );
-		this.mailSender = mailSender;
 	}
 
 	// TODO: Store it in an RDFResource
@@ -154,4 +127,12 @@ public abstract class SesameAgentsService extends AbstractSesameLDPService imple
 		return validator;
 	}
 
+	@Autowired
+	public void setConfigurationRepository( ConfigurationRepository configurationRepository ) { this.configurationRepository = configurationRepository; }
+
+	@Autowired
+	public void setAgentValidatorRepository( AgentValidatorRepository agentValidatorRepository ) { this.agentValidatorRepository = agentValidatorRepository; }
+
+	@Autowired
+	public void setMailSender( JavaMailSender mailSender ) { this.mailSender = mailSender; }
 }
