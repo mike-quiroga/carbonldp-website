@@ -11,11 +11,11 @@ import org.springframework.beans.factory.annotation.Autowired;
  * @since 0.20.0-ALPHA
  */
 @RequestHandler
-public class AppRolesDELETEHandler extends AbstractDELETERequestHandler {
+public class AppRoleDELETEHandler extends AbstractDELETERequestHandler {
 	private final AppRoleService appRoleService;
 
 	@Autowired
-	public AppRolesDELETEHandler( AppRoleService appRoleService ) {
+	public AppRoleDELETEHandler( AppRoleService appRoleService ) {
 		this.appRoleService = appRoleService;
 	}
 

@@ -251,6 +251,7 @@ public class SesameContainerRepository extends AbstractSesameLDPRepository imple
 		getTypedRepository( containerType ).removeMembers( containerURI );
 	}
 
+	/*
 	@Override
 	public void deleteContainedResources( URI containerURI ) {
 		Set<URI> containedURIs = getContainedURIs( containerURI );
@@ -260,6 +261,7 @@ public class SesameContainerRepository extends AbstractSesameLDPRepository imple
 			sourceRepository.deleteOccurrences( containedURI, true );
 		}
 	}
+	*/
 
 	private void addContainedResource( URI containerURI, URI resourceURI ) {
 		connectionTemplate.write( ( connection ) -> connection.add( containerURI, ContainerDescription.Property.CONTAINS.getURI(), resourceURI, containerURI ) );

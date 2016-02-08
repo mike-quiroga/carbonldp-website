@@ -15,12 +15,12 @@ public class SortedTriples extends AbstractIT {
 	@Autowired
 	private RDFResourceRepository resourceRepository;
 
-	URI subj = new URIImpl( "http://local.carbonldp.com/apps/test-blog/posts/post-1" );
+	URI subj = new URIImpl( "https://local.carbonldp.com/apps/test-blog/posts/post-1" );
 
 	@Test
 	public void test() {
 		URI pred = new URIImpl( "http://example.org/ns#example" );
-		Value obj = new URIImpl( "http://local.carbonldp.com/apps/test-blog/posts/post-1/sampleURI" );
+		Value obj = new URIImpl( "https://local.carbonldp.com/apps/test-blog/posts/post-1/sampleURI" );
 		resourceRepository.add( subj, pred, obj );
 		assertEquals( resourceRepository.contains( subj, pred, obj ), true );
 

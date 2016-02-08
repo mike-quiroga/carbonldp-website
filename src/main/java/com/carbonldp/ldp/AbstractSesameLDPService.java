@@ -1,27 +1,22 @@
 package com.carbonldp.ldp;
 
-import com.carbonldp.agents.AgentRepository;
 import com.carbonldp.authorization.acl.ACLRepository;
-import com.carbonldp.ldp.containers.BasicContainer;
 import com.carbonldp.ldp.containers.ContainerRepository;
 import com.carbonldp.ldp.sources.RDFSourceRepository;
 import com.carbonldp.repository.AbstractSesameService;
-import com.carbonldp.spring.TransactionWrapper;
-import org.springframework.util.Assert;
+import org.springframework.beans.factory.annotation.Autowired;
 
-public abstract class AbstractSesameLDPService<E extends BasicContainer> extends AbstractSesameService {
-	protected final RDFSourceRepository sourceRepository;
-	protected final ContainerRepository containerRepository;
-	protected final ACLRepository aclRepository;
+public abstract class AbstractSesameLDPService extends AbstractSesameService {
+	protected RDFSourceRepository sourceRepository;
+	protected ContainerRepository containerRepository;
+	protected ACLRepository aclRepository;
 
-	public AbstractSesameLDPService( TransactionWrapper transactionWrapper, RDFSourceRepository sourceRepository, ContainerRepository containerRepository, ACLRepository aclRepository ) {
-		super( transactionWrapper );
-		Assert.notNull( sourceRepository );
-		Assert.notNull( containerRepository );
-		Assert.notNull( aclRepository );
-		this.sourceRepository = sourceRepository;
-		this.containerRepository = containerRepository;
-		this.aclRepository = aclRepository;
-	}
+	@Autowired
+	public void setRDFSourceRepository( RDFSourceRepository sourceRepository ) { this.sourceRepository = sourceRepository; }
 
+	@Autowired
+	public void setContainerRepository( ContainerRepository containerRepository ) { this.containerRepository = containerRepository; }
+
+	@Autowired
+	public void setACLRepository( ACLRepository aclRepository ) { this.aclRepository = aclRepository; }
 }
