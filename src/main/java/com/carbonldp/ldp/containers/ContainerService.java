@@ -2,7 +2,9 @@ package com.carbonldp.ldp.containers;
 
 import com.carbonldp.descriptions.APIPreferences;
 import org.joda.time.DateTime;
+import org.openrdf.model.Statement;
 import org.openrdf.model.URI;
+import org.springframework.security.access.prepost.PostFilter;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.io.File;
@@ -43,4 +45,15 @@ public interface ContainerService {
 
 	@PreAuthorize( "hasPermission(#targetURI, 'UPLOAD')" )
 	public void createNonRDFResource( URI targetURI, URI resourceURI, File resourceFile, String mimeType );
+
+	@PreAuthorize( "hasPermission(#containerURI, 'READ')" )
+	public Set<Statement> getMembershipTriples( URI containerURI );
+
+	@PreAuthorize( "hasPermission(#containerURI, 'READ')" )
+	@PostFilter( "hasPermission(filterObject.getObject(), 'READ')" )
+	public Set<Statement> getReadableMembershipResourcesTriples( URI containerURI );
+
+	@PreAuthorize( "hasPermission(#containerURI, 'READ')" )
+	@PostFilter( "!hasPermission(filterObject.getObject(), 'READ')" )
+	public Set<Statement> getNonReadableMembershipResourcesTriples( URI containerURI );
 }

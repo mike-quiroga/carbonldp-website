@@ -35,6 +35,7 @@ public abstract class AbstractGETRequestHandler extends AbstractLDPRequestHandle
 		DEFAULT_RCP = new HashSet<>();
 		DEFAULT_RCP.add( ContainerRetrievalPreference.CONTAINER_PROPERTIES );
 		DEFAULT_RCP.add( ContainerRetrievalPreference.MEMBERSHIP_TRIPLES );
+		DEFAULT_RCP.add( ContainerRetrievalPreference.NON_READABLE_MEMBERSHIP_RESOURCE_TRIPLES );
 	}
 
 	public AbstractGETRequestHandler() {
