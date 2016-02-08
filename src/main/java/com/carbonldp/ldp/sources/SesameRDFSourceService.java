@@ -5,14 +5,9 @@ import com.carbonldp.exceptions.ResourceDoesntExistException;
 import com.carbonldp.ldp.AbstractSesameLDPService;
 import com.carbonldp.ldp.containers.AccessPoint;
 import com.carbonldp.ldp.containers.AccessPointFactory;
-import com.carbonldp.ldp.containers.BasicContainerFactory;
 import com.carbonldp.ldp.containers.ContainerFactory;
 import com.carbonldp.models.Infraction;
 import com.carbonldp.rdf.*;
-import com.carbonldp.spring.TransactionWrapper;
-import com.carbonldp.rdf.RDFDocument;
-import com.carbonldp.rdf.RDFResource;
-import com.carbonldp.utils.RDFResourceUtil;
 import com.carbonldp.utils.URIUtil;
 import com.carbonldp.utils.ValueUtil;
 import org.joda.time.DateTime;
@@ -22,12 +17,8 @@ import org.openrdf.model.URI;
 import org.openrdf.model.Value;
 import org.openrdf.model.impl.AbstractModel;
 import org.openrdf.model.impl.LinkedHashModel;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class SesameRDFSourceService extends AbstractSesameLDPService implements RDFSourceService {
