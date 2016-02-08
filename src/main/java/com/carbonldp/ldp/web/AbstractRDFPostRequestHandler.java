@@ -30,8 +30,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.*;
 
-import static com.carbonldp.Consts.EMPTY_STRING;
-import static com.carbonldp.Consts.SLASH;
+import static com.carbonldp.Consts.*;
 
 @Transactional
 public abstract class AbstractRDFPostRequestHandler<E extends BasicContainer> extends AbstractRequestWithBodyHandler<E> {

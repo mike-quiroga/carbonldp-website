@@ -12,6 +12,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+/**
+ * @author NestorVenegas
+ * @since 0.18.0-ALPHA
+ */
+
 @Controller
 @RequestMapping( value = "apps/*/roles/" )
 public class AppRolesController extends AbstractLDPController {

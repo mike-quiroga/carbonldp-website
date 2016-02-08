@@ -1,3 +1,5 @@
+# 0.26.0 (2016/01/29)
+* Improve security of platform and apps
 # 0.25.4 (2016/01/26)
 * When deleting an app their references will also be deleted
 # 0.25.3 (2016/01/26)

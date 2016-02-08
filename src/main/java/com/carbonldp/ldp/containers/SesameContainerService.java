@@ -1,26 +1,21 @@
 package com.carbonldp.ldp.containers;
 
-import com.carbonldp.authorization.acl.ACLRepository;
 import com.carbonldp.descriptions.APIPreferences;
 import com.carbonldp.exceptions.ResourceAlreadyExistsException;
 import com.carbonldp.exceptions.ResourceDoesntExistException;
 import com.carbonldp.ldp.AbstractSesameLDPService;
-import com.carbonldp.ldp.sources.RDFSourceRepository;
+import com.carbonldp.ldp.sources.RDFSourceService;
 import com.carbonldp.rdf.RDFResource;
-import com.carbonldp.spring.TransactionWrapper;
 import org.joda.time.DateTime;
 import org.openrdf.model.URI;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.File;
 import java.util.Set;
 
-@Transactional
 public class SesameContainerService extends AbstractSesameLDPService implements ContainerService {
 
-	public SesameContainerService( TransactionWrapper transactionWrapper, RDFSourceRepository sourceRepository, ContainerRepository containerRepository, ACLRepository aclRepository ) {
-		super( transactionWrapper, sourceRepository, containerRepository, aclRepository );
-	}
+	private RDFSourceService sourceService;
 
 	@Override
 	public Container get( URI containerURI, Set<APIPreferences.ContainerRetrievalPreference> containerRetrievalPreferences ) {
@@ -104,18 +99,25 @@ public class SesameContainerService extends AbstractSesameLDPService implements 
 	}
 
 	@Override
-	public void removeMembers( URI targetURI ) {
+	public void removeMembers( URI containerURI ) {
 		// TODO: Should the resource be touched here?
-		containerRepository.removeMembers( targetURI );
+		containerRepository.removeMembers( containerURI );
 	}
 
 	@Override
 	public void deleteContainedResources( URI targetURI ) {
-		containerRepository.deleteContainedResources( targetURI );
+		Set<URI> containedURIs = containerRepository.getContainedURIs( targetURI );
+		for ( URI containedURI : containedURIs ) {
+			sourceService.delete( containedURI );
+			sourceRepository.deleteOccurrences( containedURI, true );
+		}
 	}
 
 	@Override
 	public void delete( URI targetURI ) {
 		sourceRepository.delete( targetURI );
 	}
+
+	@Autowired
+	public void setRDFSourceService( RDFSourceService rdfSourceService ) { this.sourceService = rdfSourceService; }
 }
