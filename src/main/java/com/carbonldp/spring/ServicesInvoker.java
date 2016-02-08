@@ -17,7 +17,7 @@ import java.util.function.Function;
 
 /**
  * @author JorgeEspinosa
- * @since _version_
+ * @since 0.27.0
  */
 @Transactional
 public class ServicesInvoker {

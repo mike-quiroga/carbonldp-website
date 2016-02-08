@@ -50,9 +50,7 @@ public class SesameContainerService extends AbstractSesameLDPService implements 
 				case MEMBER_RESOURCES:
 					throw new NotImplementedException();
 				case NON_READABLE_MEMBERSHIP_RESOURCE_TRIPLES:
-					if ( containerRetrievalPreferences.contains( APIPreferences.ContainerRetrievalPreference.MEMBERSHIP_TRIPLES ) ) {
-						continue;
-					} else {
+					if ( ! containerRetrievalPreferences.contains( APIPreferences.ContainerRetrievalPreference.MEMBERSHIP_TRIPLES ) ) {
 						Set<Statement> membershipTriples = servicesInvoker.proxy( ( proxy ) -> {
 							return proxy.getContainerService().getNonReadableMembershipResourcesTriples( containerURI );
 						} );
