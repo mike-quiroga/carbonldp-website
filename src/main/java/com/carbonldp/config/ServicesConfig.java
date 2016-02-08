@@ -18,6 +18,7 @@ import com.carbonldp.ldp.nonrdf.SesameNonRDFSourceService;
 import com.carbonldp.ldp.sources.RDFSourceService;
 import com.carbonldp.ldp.sources.SesameRDFSourceService;
 import com.carbonldp.platform.api.PlatformAPIService;
+import com.carbonldp.spring.ServicesInvoker;
 import com.carbonldp.spring.TransactionWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -43,6 +44,11 @@ public class ServicesConfig {
 	@Bean
 	protected TransactionWrapper transactionWrapper() {
 		return new TransactionWrapper();
+	}
+
+	@Bean
+	protected ServicesInvoker servicesInvoker() {
+		return new ServicesInvoker();
 	}
 
 	@Bean

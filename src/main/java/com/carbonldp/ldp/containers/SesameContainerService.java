@@ -6,7 +6,10 @@ import com.carbonldp.exceptions.ResourceDoesntExistException;
 import com.carbonldp.ldp.AbstractSesameLDPService;
 import com.carbonldp.ldp.sources.RDFSourceService;
 import com.carbonldp.rdf.RDFResource;
+import com.carbonldp.spring.ServicesInvoker;
+import com.carbonldp.web.exceptions.NotImplementedException;
 import org.joda.time.DateTime;
+import org.openrdf.model.Statement;
 import org.openrdf.model.URI;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -15,11 +18,63 @@ import java.util.Set;
 
 public class SesameContainerService extends AbstractSesameLDPService implements ContainerService {
 
+	private ServicesInvoker servicesInvoker;
 	private RDFSourceService sourceService;
 
 	@Override
 	public Container get( URI containerURI, Set<APIPreferences.ContainerRetrievalPreference> containerRetrievalPreferences ) {
-		return containerRepository.get( containerURI, containerRetrievalPreferences );
+		ContainerDescription.Type containerType = getContainerType( containerURI );
+		if ( containerType == null ) throw new IllegalStateException( "The resource isn't a container." );
+
+		Container container = ContainerFactory.getInstance().get( containerURI, containerType );
+		for ( APIPreferences.ContainerRetrievalPreference preference : containerRetrievalPreferences ) {
+			switch ( preference ) {
+				case CONTAINER_PROPERTIES:
+					container.getBaseModel().addAll( containerRepository.getProperties( containerURI ) );
+					break;
+				case CONTAINMENT_TRIPLES:
+					container.getBaseModel().addAll( containerRepository.getContainmentTriples( containerURI ) );
+					break;
+				case CONTAINED_RESOURCES:
+					throw new NotImplementedException();
+				case MEMBERSHIP_TRIPLES:
+					if ( containerRetrievalPreferences.contains( APIPreferences.ContainerRetrievalPreference.NON_READABLE_MEMBERSHIP_RESOURCE_TRIPLES ) ) {
+						container.getBaseModel().addAll( getMembershipTriples( containerURI ) );
+					} else {
+						Set<Statement> membershipTriples = servicesInvoker.proxy( ( proxy ) -> {
+							return proxy.getContainerService().getReadableMembershipResourcesTriples( containerURI );
+						} );
+						container.getBaseModel().addAll( membershipTriples );
+					}
+					break;
+				case MEMBER_RESOURCES:
+					throw new NotImplementedException();
+				case NON_READABLE_MEMBERSHIP_RESOURCE_TRIPLES:
+					if ( ! containerRetrievalPreferences.contains( APIPreferences.ContainerRetrievalPreference.MEMBERSHIP_TRIPLES ) ) {
+						Set<Statement> membershipTriples = servicesInvoker.proxy( ( proxy ) -> {
+							return proxy.getContainerService().getNonReadableMembershipResourcesTriples( containerURI );
+						} );
+						container.getBaseModel().addAll( membershipTriples );
+					}
+					break;
+				default:
+					throw new IllegalStateException();
+
+			}
+		}
+		return container;
+	}
+
+	public Set<Statement> getMembershipTriples( URI containerURI ) {
+		return containerRepository.getMembershipTriples( containerURI );
+	}
+
+	public Set<Statement> getReadableMembershipResourcesTriples( URI containerURI ) {
+		return containerRepository.getMembershipTriples( containerURI );
+	}
+
+	public Set<Statement> getNonReadableMembershipResourcesTriples( URI containerURI ) {
+		return containerRepository.getMembershipTriples( containerURI );
 	}
 
 	@Override
@@ -120,4 +175,7 @@ public class SesameContainerService extends AbstractSesameLDPService implements 
 
 	@Autowired
 	public void setRDFSourceService( RDFSourceService rdfSourceService ) { this.sourceService = rdfSourceService; }
+
+	@Autowired
+	public void setServicesInvoker( ServicesInvoker servicesInvoker ) { this.servicesInvoker = servicesInvoker; }
 }

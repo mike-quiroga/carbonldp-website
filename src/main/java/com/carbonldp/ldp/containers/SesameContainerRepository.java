@@ -14,7 +14,6 @@ import com.carbonldp.rdf.RDFResourceRepository;
 import com.carbonldp.repository.DocumentGraphQueryResultHandler;
 import com.carbonldp.repository.GraphQueryResultHandler;
 import com.carbonldp.utils.RDFNodeUtil;
-import com.carbonldp.web.exceptions.NotImplementedException;
 import org.joda.time.DateTime;
 import org.openrdf.model.Statement;
 import org.openrdf.model.URI;
@@ -33,11 +32,11 @@ public class SesameContainerRepository extends AbstractSesameLDPRepository imple
 
 	private final RDFSourceRepository sourceRepository;
 	private final List<TypedContainerRepository> typedContainerRepositories;
-
 	private RDFRepresentationRepository rdfRepresentationRepository;
 
 	public SesameContainerRepository( SesameConnectionFactory connectionFactory, RDFResourceRepository resourceRepository,
-		RDFDocumentRepository documentRepository, RDFSourceRepository sourceRepository, List<TypedContainerRepository> typedContainerRepositories, RDFRepresentationRepository rdfRepresentationRepository ) {
+		RDFDocumentRepository documentRepository, RDFSourceRepository sourceRepository, List<TypedContainerRepository> typedContainerRepositories,
+		RDFRepresentationRepository rdfRepresentationRepository ) {
 		super( connectionFactory, resourceRepository, documentRepository );
 
 		Assert.notNull( sourceRepository );
@@ -75,35 +74,6 @@ public class SesameContainerRepository extends AbstractSesameLDPRepository imple
 	@Override
 	public boolean hasMembers( URI containerURI, String sparqlSelector, Map<String, Value> bindings, Type containerType ) {
 		return getTypedRepository( containerType ).hasMembers( containerURI, sparqlSelector, bindings );
-	}
-
-	@Override
-	public Container get( URI containerURI, Set<ContainerRetrievalPreference> preferences ) {
-		Type containerType = getContainerType( containerURI );
-		if ( containerType == null ) throw new IllegalStateException( "The resource isn't a container." );
-
-		Container container = ContainerFactory.getInstance().get( containerURI, containerType );
-		for ( ContainerRetrievalPreference preference : preferences ) {
-			switch ( preference ) {
-				case CONTAINER_PROPERTIES:
-					container.getBaseModel().addAll( getProperties( containerURI ) );
-					break;
-				case CONTAINMENT_TRIPLES:
-					container.getBaseModel().addAll( getContainmentTriples( containerURI ) );
-					break;
-				case CONTAINED_RESOURCES:
-					throw new NotImplementedException();
-				case MEMBERSHIP_TRIPLES:
-					container.getBaseModel().addAll( getMembershipTriples( containerURI ) );
-					break;
-				case MEMBER_RESOURCES:
-					throw new NotImplementedException();
-				default:
-					throw new IllegalStateException();
-
-			}
-		}
-		return container;
 	}
 
 	@Override
@@ -161,7 +131,6 @@ public class SesameContainerRepository extends AbstractSesameLDPRepository imple
 	public Set<Statement> getMembershipTriples( URI containerURI ) {
 		Type containerType = getContainerType( containerURI );
 		if ( containerType == null ) throw new IllegalStateException( "The resource isn't a container." );
-
 		return getMembershipTriples( containerURI, containerType );
 	}
 
@@ -278,18 +247,6 @@ public class SesameContainerRepository extends AbstractSesameLDPRepository imple
 		getTypedRepository( containerType ).removeMembers( containerURI );
 	}
 
-	/*
-	@Override
-	public void deleteContainedResources( URI containerURI ) {
-		Set<URI> containedURIs = getContainedURIs( containerURI );
-		// TODO: Optimize this
-		for ( URI containedURI : containedURIs ) {
-			sourceRepository.delete( containedURI );
-			sourceRepository.deleteOccurrences( containedURI, true );
-		}
-	}
-	*/
-
 	private void addContainedResource( URI containerURI, URI resourceURI ) {
 		connectionTemplate.write( ( connection ) -> connection.add( containerURI, ContainerDescription.Property.CONTAINS.getURI(), resourceURI, containerURI ) );
 	}
@@ -301,4 +258,5 @@ public class SesameContainerRepository extends AbstractSesameLDPRepository imple
 		}
 		throw new IllegalArgumentException( "The containerType provided isn't supported" );
 	}
+
 }
