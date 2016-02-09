@@ -10,8 +10,17 @@ src/assets/**/*.map
 src/app/**/*.css
 src/app/**/*.map
 
-src/jspm_packages/**
-src/semantic/dist/**
+# Typings
+**/typings/browser/
+**/typings/main/
+**/typings/browser.d.ts
+**/typings/main.d.ts
+
+# JSPM
+**/jspm_packages/
+
+# Semantic UI
+**/semantic/dist/
 
 reports/
 
@@ -30,13 +39,11 @@ target/
 */.sass-cache/*
 
 # NPM
-node_modules/**
+**/node_modules/
 npm-debug.log
 
 # Bower
-bower_components/
-/bower_components/*
-*/bower_componentss/*
+**/bower_components/
 
 # ----- Operating Systems
 # OS X

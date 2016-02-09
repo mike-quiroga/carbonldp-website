@@ -1,7 +1,7 @@
 import { Injectable } from 'angular2/core';
 import { Http, Response, Request } from 'angular2/http';
 
-import Carbon from 'carbonldp-sdk';
+import Carbon from 'carbon/Carbon';
 
 
 @Injectable()
