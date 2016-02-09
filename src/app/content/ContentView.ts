@@ -38,6 +38,7 @@ export default class ContentView {
 		this.dynamicComponentLoader = dynamicComponentLoader;
 		this.elementRef = elementRef;
 		this.compiledComponent = CompiledComponent;
+		this.$element = $( this.elementRef.nativeElement );
 
 		let id = this.routeParams.get( 'id' );
 

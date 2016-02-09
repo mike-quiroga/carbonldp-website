@@ -10,17 +10,44 @@
 				<a class="item" [router-link]="[ '/Blog' ]" [ng-class]="{active: isActive('/Blog') }">Blog</a>
 				<a class="item" [router-link]="[ '/SPARQLClient' ]" [ng-class]="{active: isActive('/SPARQLClient') }"><i class="terminal icon"></i> SPARQL Editor</a>
 
+				<!--<div class="ui dropdown link item">-->
+					<!--<span class="text">Documentation</span>-->
+					<!--<i class="dropdown icon"></i>-->
+
+					<!--<div class="menu">-->
+						<!--<a class="item" [router-link]="[ '/Docs', {id: 'about-carbon-ldp.html'} ]">About Carbon LDP</a>-->
+						<!--<div class="divider"></div>-->
+						<!--<div class="header">Essential Concepts</div>-->
+						<!--<a class="item" [router-link]="[ '/Docs', {id: 'linked-data-concepts.html'} ]">Linked Data Concepts</a>-->
+						<!--<a class="item" [router-link]="[ '/Docs', {id: 'ldp-concepts.html'} ]">Linked Data Platform Concepts</a>-->
+						<!--<a class="item" [router-link]="[ '/Docs', {id: 'carbon-ldp-concepts.html'} ]">Carbon LDP Concepts</a>-->
+
+						<!--&lt;!&ndash;-->
+						<!--<div class="divider"></div>-->
+						<!--<div class="header">JavaScript SDK</div>-->
+						<!--<a class="item" href="#">Getting Started</a>-->
+						<!--<a class="item" href="#">Hello World</a>-->
+						<!--<a class="item" href="#">Developer Guide</a>-->
+						<!--<a class="item" href="#">API</a>-->
+						<!--&ndash;&gt;-->
+
+						<!--<div class="divider"></div>-->
+						<!--<div class="header">REST API</div>-->
+						<!--<a class="item" [router-link]="[ '/Docs', {id: 'getting-started-with-the-rest-api.html'} ]">Getting Started</a>-->
+						<!--<a class="item" [router-link]="[ '/Docs', {id: 'interaction-models.html'} ]">Interaction Models</a>-->
+					<!--</div>-->
+				<!--</div>-->
 				<div class="ui dropdown link item">
 					<span class="text">Documentation</span>
 					<i class="dropdown icon"></i>
 
 					<div class="menu">
-						<a class="item" [router-link]="[ '/Docs', {id: 'about-carbon-ldp.html'} ]">About Carbon LDP</a>
+						<a class="item" [router-link]="[ '/Documents/AboutCarbonLDP']">About Carbon LDP</a>
 						<div class="divider"></div>
 						<div class="header">Essential Concepts</div>
-						<a class="item" [router-link]="[ '/Docs', {id: 'linked-data-concepts.html'} ]">Linked Data Concepts</a>
-						<a class="item" [router-link]="[ '/Docs', {id: 'ldp-concepts.html'} ]">Linked Data Platform Concepts</a>
-						<a class="item" [router-link]="[ '/Docs', {id: 'carbon-ldp-concepts.html'} ]">Carbon LDP Concepts</a>
+						<a class="item" [router-link]="[ '/Documents/LinkedDataConcepts']">Linked Data Concepts</a>
+						<a class="item" [router-link]="[ '/Documents/LDPConcepts']">Linked Data Platform Concepts</a>
+						<a class="item" [router-link]="[ '/Documents/CarbonLDPConcepts']">Carbon LDP Concepts</a>
 
 						<!--
 						<div class="divider"></div>
@@ -33,11 +60,10 @@
 
 						<div class="divider"></div>
 						<div class="header">REST API</div>
-						<a class="item" [router-link]="[ '/Docs', {id: 'getting-started-with-the-rest-api.html'} ]">Getting Started</a>
-						<a class="item" [router-link]="[ '/Docs', {id: 'interaction-models.html'} ]">Interaction Models</a>
+						<a class="item" [router-link]="[ '/Documents/GettingStartedWithTheRestApi' ]">Getting Started</a>
+						<a class="item" [router-link]="[ '/Documents/InteractionModels' ]">Interaction Models</a>
 					</div>
 				</div>
-
 				<!--
 				<div class="right menu">
 					<div class="item">
