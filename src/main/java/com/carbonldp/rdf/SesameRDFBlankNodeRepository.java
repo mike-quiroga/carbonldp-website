@@ -18,7 +18,7 @@ import java.util.Set;
 
 /**
  * @author NestorVenegas
- * @since _version_
+ * @since 0.28.0-ALPHA
  */
 
 @Transactional
