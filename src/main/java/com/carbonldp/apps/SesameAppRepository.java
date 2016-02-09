@@ -75,13 +75,13 @@ public class SesameAppRepository extends AbstractSesameRepository implements App
 	}
 
 	@Override
-	public App create( App app ) {
-		createAppRepository( app );
+	public App createPlatformAppRepository( App app ) {
+		String repositoryID = generateAppRepositoryID();
+		appRepositoryService.createRepository( repositoryID );
+		app.setRepositoryID( repositoryID );
 
 		URI rootContainerURI = forgeRootContainerURI( app );
 		app.setRootContainerURI( rootContainerURI );
-
-		containerRepository.createChild( appsContainerURI, app, appsContainerType );
 
 		return app;
 	}
@@ -92,17 +92,16 @@ public class SesameAppRepository extends AbstractSesameRepository implements App
 		deleteAppRepository( app );
 	}
 
-	private void createAppRepository( App app ) {
-		String repositoryID = generateAppRepositoryID( app );
-		appRepositoryService.createRepository( repositoryID );
-		app.setRepositoryID( repositoryID );
+	@Override
+	public URI getPlatformAppContainerURI() {
+		return appsContainerURI;
 	}
 
 	private void deleteAppRepository( App app ) {
 		appRepositoryService.deleteRepository( app.getRepositoryID() );
 	}
 
-	private String generateAppRepositoryID( App app ) {
+	private String generateAppRepositoryID() {
 		return UUID.randomUUID().toString();
 	}
 

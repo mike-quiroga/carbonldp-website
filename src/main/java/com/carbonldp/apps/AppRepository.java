@@ -9,7 +9,9 @@ public interface AppRepository {
 
 	public App findByRootContainer( URI rootContainerURI );
 
-	public App create( App app );
+	public App createPlatformAppRepository( App app );
 
 	public void delete( URI appURI );
+
+	public URI getPlatformAppContainerURI();
 }

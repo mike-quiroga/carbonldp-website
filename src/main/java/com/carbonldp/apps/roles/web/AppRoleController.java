@@ -24,7 +24,7 @@ import javax.servlet.http.HttpServletResponse;
 public class AppRoleController extends AbstractLDPController {
 
 	private AppRolePUTHandler putHandler;
-	private AppRolesDELETEHandler deleteHandler;
+	private AppRoleDELETEHandler deleteHandler;
 
 	@RequestMapping( method = RequestMethod.PUT )
 	@InteractionModel( APIPreferences.InteractionModel.CONTAINER )
@@ -38,7 +38,7 @@ public class AppRoleController extends AbstractLDPController {
 	}
 
 	@Autowired
-	public void setDELETEHandler( AppRolesDELETEHandler deleteHandler ) {
+	public void setDELETEHandler( AppRoleDELETEHandler deleteHandler ) {
 		this.deleteHandler = deleteHandler;
 	}
 

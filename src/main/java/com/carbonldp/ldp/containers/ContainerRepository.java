@@ -20,8 +20,6 @@ public interface ContainerRepository {
 
 	public boolean hasMembers( URI containerURI, String sparqlSelector, Map<String, Value> bindings, Type containerType );
 
-	public Container get( URI containerURI, Set<ContainerRetrievalPreference> preferences );
-
 	public Type getContainerType( URI containerURI );
 
 	public Set<Statement> getProperties( URI containerURI );
@@ -65,8 +63,6 @@ public interface ContainerRepository {
 	public void removeMembers( URI targetURI );
 
 	public void removeMembers( URI targetURI, Type containerType );
-
-	public void deleteContainedResources( URI targetURI );
 
 	public TypedContainerRepository getTypedRepository( Type containerType );
 }
