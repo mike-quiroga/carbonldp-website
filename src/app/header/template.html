@@ -38,16 +38,16 @@
 					</div>
 				</div>
 
-				<!--
+
 				<div class="right menu">
-					<div class="item">
-						<a class="ui button">Log in</a>
-					</div>
-					<div class="item">
-						<a class="ui button">Sign up</a>
+					<a *ngIf="!isActive('/Login')" class="item login">
+						Log in
+					</a>
+					<div *ngIf="!isActive('/Login')" class="ui login popup bottom left transition hidden">
+						<login></login>
 					</div>
 				</div>
-				-->
+
 
 			</div>
 		</div>

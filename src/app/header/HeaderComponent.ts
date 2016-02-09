@@ -6,13 +6,14 @@ import $ from 'jquery';
 import 'semantic-ui/semantic';
 
 import CarbonLogoComponent from 'app/components/logo/CarbonLogoComponent';
+import LoginComponent from "./../login/login/LoginComponent";
 
 import template from './template.html!';
 import "./style.css!";
 @Component( {
 	selector: 'header',
 	template: template,
-	directives: [ CORE_DIRECTIVES, ROUTER_DIRECTIVES, CarbonLogoComponent ]
+	directives: [ CORE_DIRECTIVES, ROUTER_DIRECTIVES, CarbonLogoComponent, LoginComponent ]
 } )
 export default class HeaderComponent {
 	static parameters = [ [ Router ], [ ElementRef ] ];
@@ -30,6 +31,7 @@ export default class HeaderComponent {
 		this.$element = $( this.element.nativeElement );
 		this.createDropdownMenus();
 		this.createCollapsableMenus();
+		this.createLoginPopUp();
 	}
 
 	isActive( route:string ):boolean {
@@ -51,4 +53,23 @@ export default class HeaderComponent {
 		} );
 		verticalMenu.toggle();
 	}
+
+	createLoginPopUp():void {
+		this.$element.find( ".computer.tablet .login.item" ).popup( {
+			//inline: true,
+			popup: this.$element.find( ".login.popup" ),
+			hoverable: false,
+			position: "bottom left",
+			on: "click",
+			preserve: true,
+			transition: "pulse",
+			hideOnScroll: false,
+			closable: false
+		} );
+	}
+
+	ngAfterViewChecked():void {
+		this.createLoginPopUp();
+	}
+
 }

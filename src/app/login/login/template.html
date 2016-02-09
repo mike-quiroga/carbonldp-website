@@ -1,0 +1,27 @@
+<div class="formContainer">
+	<form [ngFormModel]="loginForm" class="ui form attached segment large loginForm" role="form" (submit)="onSubmit(loginForm.value, $event)">
+		<div class="field" [ngClass]="{ error: ((email.touched && !email.valid) || (submitted && !email.valid)) }">
+			<div class="ui left icon input">
+				<i class="user icon"></i>
+				<input type="text" name="email" placeholder="E-mail address" ngControl="email" #emailSpy>
+			</div>
+		</div>
+		<div class="field" [ngClass]="{ error: ((password.touched && !password.valid) || (submitted && !password.valid))}">
+			<div class="ui left icon input">
+				<i class="lock icon"></i>
+				<input type="password" name="password" placeholder="password" ngControl="password" #passwordSpy>
+			</div>
+		</div>
+		<button type="submit" class="ui fluid large california submit button" (click)="onSubmit(loginForm.value, $event)">Login</button>
+	</form>
+	<div class="ui negative bottom attached message" [ngClass]="{ hidden: (submitted && loginForm.valid && !errorMessage) || (loginForm.valid && !errorMessage) || (!loginForm.valid && (!email.touched && !password.touched)) || (email.valid && !password.touched) || (password.valid && !email.touched) }">
+		<ul class="list">
+			<li *ngIf="(submitted || email.touched) && email.hasError('required')">email is required.</li>
+			<li *ngIf="(submitted || email.touched) && !email.hasError('required') && email.hasError('invalidEmailAddress')">Enter a valid email address.</li>
+			<li *ngIf="(submitted || password.touched) && password.hasError('required')">password is required.</li>
+			<li *ngIf="(submitted || password.touched) && !password.hasError('required') && password.hasError('invalidPassword')">password is invalid.</li>
+			<li *ngIf="submitted && !!errorMessage">{{errorMessage}}</li>
+		</ul>
+	</div>
+	<!--{{submitted && !!errorMessage || loginForm.valid || (!loginForm.valid && (!email.touched && !password.touched)) || (email.valid && !password.touched) || (password.valid && !email.touched)}}-->
+</div>
