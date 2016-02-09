@@ -59,7 +59,7 @@ export default class LoginComponent {
 			this.errorMessage = "Service temporary unavailable";
 			//console.log( this.loginForm );
 			//console.log( data );
-			this.router.navigate( [ '/Home' ] );
+			this.router.navigate( [ '/AppDev/Home' ] );
 		} else {
 			this.shakeForm();
 		}
