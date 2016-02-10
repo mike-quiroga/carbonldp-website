@@ -9,12 +9,14 @@ import org.openrdf.model.URI;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.File;
+import java.util.Set;
 import java.util.UUID;
 
 public class SesameNonRDFSourceService extends AbstractSesameLDPService implements NonRDFSourceService {
 
 	protected FileRepository fileRepository;
 	protected RDFResourceRepository resourceRepository;
+	protected NonRDFSourceRepository nonRdfSourceRepository;
 
 	@Override
 	public File getResource( RDFRepresentation rdfRepresentation ) {
@@ -28,6 +30,15 @@ public class SesameNonRDFSourceService extends AbstractSesameLDPService implemen
 	public boolean isRDFRepresentation( URI targetURI ) {
 		RDFSource source = sourceRepository.get( targetURI );
 		return source.getTypes().contains( RDFRepresentationDescription.Resource.CLASS.getURI() );
+	}
+
+	@Override
+	public void deleteResourceIncludingChildren( URI rdfRepresentationURI ) {
+		Set<String> fileIdentifiers = nonRdfSourceRepository.getFileIdentifiers( rdfRepresentationURI );
+		for ( String fileIdentifier : fileIdentifiers ) {
+			UUID uuid = UUID.fromString( fileIdentifier );
+			fileRepository.delete( uuid );
+		}
 	}
 
 	@Override
@@ -65,8 +76,8 @@ public class SesameNonRDFSourceService extends AbstractSesameLDPService implemen
 
 	private void setUuid( RDFRepresentation rdfRepresentation, UUID uuid ) {
 		URI rdfRepresentationUri = rdfRepresentation.getURI();
-		resourceRepository.remove( rdfRepresentationUri, RDFRepresentationDescription.Property.UUID.getURI() );
-		resourceRepository.add( rdfRepresentationUri, RDFRepresentationDescription.Property.UUID.getURI(), uuid.toString() );
+		resourceRepository.remove( rdfRepresentationUri, RDFRepresentationDescription.Property.FILE_IDENTIFIER.getURI() );
+		resourceRepository.add( rdfRepresentationUri, RDFRepresentationDescription.Property.FILE_IDENTIFIER.getURI(), uuid.toString() );
 	}
 
 	@Autowired
@@ -74,4 +85,7 @@ public class SesameNonRDFSourceService extends AbstractSesameLDPService implemen
 
 	@Autowired
 	public void setResourceRepository( RDFResourceRepository resourceRepository ) { this.resourceRepository = resourceRepository; }
+
+	@Autowired
+	public void setNonRdfSourceRepository( NonRDFSourceRepository nonRdfSourceRepository ) {this.nonRdfSourceRepository = nonRdfSourceRepository; }
 }

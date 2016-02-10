@@ -58,6 +58,19 @@ public class LocalFileRepository implements FileRepository {
 		if ( ! deleted ) throw new FileNotDeletedException( 0x1010 );
 	}
 
+	@Override
+	public void deleteDirectory() {
+		File appDirectory = new File( getFilesDirectory() );
+		boolean deleted;
+		try {
+			deleted = appDirectory.delete();
+		} catch ( SecurityException e ) {
+			throw new RuntimeException( "The file couldn't be deleted. Exception:", e );
+		}
+		if ( ! deleted ) throw new FileNotDeletedException( 0x1010 );
+
+	}
+
 	private void copyFile( File file, String filePath ) {
 		File newFile = new File( filePath );
 

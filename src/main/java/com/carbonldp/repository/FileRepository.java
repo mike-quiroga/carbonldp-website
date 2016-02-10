@@ -11,4 +11,6 @@ public interface FileRepository {
 	public UUID save( File file );
 
 	public void delete( UUID uuid );
+
+	public void deleteDirectory();
 }

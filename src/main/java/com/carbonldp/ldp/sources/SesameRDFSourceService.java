@@ -8,7 +8,6 @@ import com.carbonldp.ldp.containers.AccessPointFactory;
 import com.carbonldp.ldp.containers.BasicContainerFactory;
 import com.carbonldp.ldp.containers.ContainerFactory;
 import com.carbonldp.ldp.nonrdf.NonRDFSourceService;
-import com.carbonldp.ldp.nonrdf.RDFRepresentation;
 import com.carbonldp.models.Infraction;
 import com.carbonldp.rdf.RDFDocument;
 import com.carbonldp.rdf.RDFResource;
@@ -147,10 +146,7 @@ public class SesameRDFSourceService extends AbstractSesameLDPService implements 
 	@Override
 	public void delete( URI sourceURI ) {
 		if ( ! exists( sourceURI ) ) throw new ResourceDoesntExistException();
-		if ( nonRdfSourceService.isRDFRepresentation( sourceURI ) ) {
-			RDFRepresentation rdfRepresentation = new RDFRepresentation( get( sourceURI ) );
-			nonRdfSourceService.deleteResource( rdfRepresentation );
-		}
+		nonRdfSourceService.deleteResourceIncludingChildren( sourceURI );
 		sourceRepository.delete( sourceURI );
 		sourceRepository.deleteOccurrences( sourceURI, true );
 	}
