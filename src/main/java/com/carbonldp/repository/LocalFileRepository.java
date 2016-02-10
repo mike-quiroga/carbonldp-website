@@ -2,11 +2,13 @@ package com.carbonldp.repository;
 
 import com.carbonldp.Consts;
 import com.carbonldp.Vars;
+import com.carbonldp.apps.App;
 import com.carbonldp.apps.context.AppContext;
 import com.carbonldp.apps.context.AppContextHolder;
 import com.carbonldp.exceptions.FileNotDeletedException;
 import com.carbonldp.exceptions.NotADirectoryException;
 import com.carbonldp.exceptions.NotCreatedException;
+import org.apache.commons.io.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -59,15 +61,14 @@ public class LocalFileRepository implements FileRepository {
 	}
 
 	@Override
-	public void deleteDirectory() {
-		File appDirectory = new File( getFilesDirectory() );
-		boolean deleted;
+	public void deleteDirectory( App app ) {
+		File appDirectory = new File( getFilesDirectory( app ) );
 		try {
-			deleted = appDirectory.delete();
-		} catch ( SecurityException e ) {
+			FileUtils.deleteDirectory( appDirectory );
+		} catch ( IOException e ) {
 			throw new RuntimeException( "The file couldn't be deleted. Exception:", e );
 		}
-		if ( ! deleted ) throw new FileNotDeletedException( 0x1010 );
+		if ( appDirectory.exists() ) throw new FileNotDeletedException( 0x1010 );
 
 	}
 
@@ -118,6 +119,14 @@ public class LocalFileRepository implements FileRepository {
 			if ( ! directory.endsWith( Consts.SLASH ) ) directory = directory.concat( Consts.SLASH );
 			directory = directory.concat( appContext.getApplication().getRepositoryID() );
 		}
+
+		return directory;
+	}
+
+	private String getFilesDirectory( App app ) {
+		String directory = Vars.getInstance().getAppsFilesDirectory();
+			if ( ! directory.endsWith( Consts.SLASH ) ) directory = directory.concat( Consts.SLASH );
+			directory = directory.concat(app.getRepositoryID() );
 
 		return directory;
 	}

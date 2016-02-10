@@ -1,5 +1,7 @@
 package com.carbonldp.repository;
 
+import com.carbonldp.apps.App;
+
 import java.io.File;
 import java.util.UUID;
 
@@ -12,5 +14,5 @@ public interface FileRepository {
 
 	public void delete( UUID uuid );
 
-	public void deleteDirectory();
+	public void deleteDirectory( App app );
 }

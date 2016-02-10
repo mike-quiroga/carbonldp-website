@@ -93,7 +93,7 @@ public class SesameAppRepository extends AbstractSesameRepository implements App
 		App app = this.get( appURI );
 		sourceRepository.delete( appURI );
 		deleteAppRepository( app );
-		fileRepository.deleteDirectory();
+		deleteAppFileDirectory( app );
 	}
 
 	@Override
@@ -104,6 +104,8 @@ public class SesameAppRepository extends AbstractSesameRepository implements App
 	private void deleteAppRepository( App app ) {
 		appRepositoryService.deleteRepository( app.getRepositoryID() );
 	}
+
+	private void deleteAppFileDirectory( App app ) {fileRepository.deleteDirectory( app );}
 
 	private String generateAppRepositoryID() {
 		return UUID.randomUUID().toString();
