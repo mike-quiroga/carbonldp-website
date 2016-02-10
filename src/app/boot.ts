@@ -7,7 +7,7 @@ import { FORM_PROVIDERS } from "angular2/common";
 import { ROUTER_PROVIDERS, APP_BASE_HREF } from 'angular2/router';
 import { HTTP_PROVIDERS } from 'angular2/http';
 
-import Carbon from 'carbonldp-sdk';
+import Carbon from 'carbon/Carbon';
 
 import AppComponent from 'app/AppComponent';
 import AppDevComponent from 'app/apps/AppDevComponent';
@@ -27,7 +27,8 @@ bootstrap( AppComponent, [
 	FORM_PROVIDERS,
 	ROUTER_PROVIDERS,
 	HTTP_PROVIDERS,
-	provide( APP_BASE_HREF, {useValue: "/"} ),
+	//provide( APP_BASE_HREF, {useValue: "/"} ),
+	provide( APP_BASE_HREF, {useValue: "/carbon-website/src/"} ),
 	CARBON_PROVIDER,
 	CONTENT_PROVIDERS,
 	BLOG_PROVIDERS,

@@ -1,9 +1,9 @@
 System.config({
-  baseURL: "/",
+  baseURL: "/carbon-website/src/",
   defaultJSExtensions: true,
   transpiler: "typescript",
   typescriptOptions: {
-    "module": "commonjs",
+    "module": "system",
     "emitDecoratorData": true,
     "experimentalDecorators": true,
     "noImplicitAny": false
@@ -12,7 +12,8 @@ System.config({
     "npm:*": "jspm_packages/npm/*",
     "github:*": "jspm_packages/github/*",
     "app/*": "app/*",
-    "semantic-ui/*": "semantic/dist/*"
+    "semantic-ui/*": "semantic/dist/*",
+    "carbon/*": "../../CarbonLDP-JS-SDK/dist/js/*"
   },
 
   packages: {

@@ -6,7 +6,7 @@ import $ from 'jquery';
 import 'semantic-ui/semantic';
 
 import template from './template.html!';
-import './style.css!';
+//import './style.css!';
 import SidebarService from "../components/sidebar/service/SidebarService";
 
 @Component( {
