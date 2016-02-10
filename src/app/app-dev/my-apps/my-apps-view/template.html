@@ -1,6 +1,13 @@
 <div class="ui main container">
 	<h1>My Apps</h1>
-	<div class="ui cards">
+	<div class="ui four stackable cards">
+		<div class="card">
+			<div class="content">
+				<a class="header" href="/carbon-website/src/app-dev/my-apps/my-first-app">
+					Create new App
+				</a>
+			</div>
+		</div>
 		<carbon-app-tile class="card" *ngFor="#carbonApp of carbonApps; #i=index;" [carbonApp]="carbonApp"></carbon-app-tile>
 	</div>
 </div>

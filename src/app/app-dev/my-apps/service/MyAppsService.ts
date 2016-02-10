@@ -2,7 +2,7 @@ import { Injectable } from 'angular2/core';
 import { Http, Response, Request } from 'angular2/http';
 
 import CarbonApp from './../carbon-app/CarbonApp';
-import {error} from "util";
+
 
 @Injectable()
 export default class MyAppsService {
@@ -23,20 +23,31 @@ export default class MyAppsService {
 
 	getApps():Promise<CarbonApp[]> {
 		return new Promise<CarbonApp[]>( ( resolve, reject ) => {
-			this.http.get( "/assets/CarbonApps.json" )
+			this.http.get( "assets/CarbonApps.json" )
 				//.map( res => res.json() )
 				.subscribe(
 					( res ) => {
 						this.postsList = res.json();
+						resolve( this.postsList );
 					},
 					( error ) => {
-						console.error( error );
-					},
-					() => {
-						resolve( this.postsList );
+						reject( error );
 					}
 				);
-		} ).catch( console.error );
+		} );
 	}
 
+	getapp( slug:string ):Promise<CarbonApp> {
+		return new Promise<CarbonApp[]>( ( resolve, reject ) => {
+			this.getApps().then(
+				( apps )=> {
+					let carbonApp:CarbonApp = <CarbonApp>apps.find( app => app.slug == slug );
+					resolve( carbonApp );
+				},
+				( error )=> {
+					reject( error );
+				}
+			);
+		} );
+	}
 }

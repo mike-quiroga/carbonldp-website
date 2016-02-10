@@ -14,13 +14,10 @@ export default class SidebarService {
 
 	counter:number = 0;
 	addItemEmitter:EventEmitter = new EventEmitter();
-	//rxAddItemEmitter:any;
 	toggleEmitter:EventEmitter = new EventEmitter();
-	//rxtoggleEmitter:any;
 
 	constructor() {
-		//this.rxAddItemEmitter = this.addItemEmitter.toRx();
-		//this.rxtoggleEmitter = this.toggleEmitter.toRx();
+
 	}
 
 	addItem( name:string, url?:string, icon?:string ):void {
@@ -29,10 +26,6 @@ export default class SidebarService {
 		item.name = name;
 		item.url = url ? url : null;
 		item.icon = icon ? icon : null;
-		//let app:CarbonApp = new CarbonApp();
-		//app.creationDate = "21/Dec/2015";
-		//app.name = "My App " + this.counter;
-
 		this.addItemEmitter.next( item );
 	}
 

@@ -52,6 +52,9 @@ export default class MyAppsView {
 					} );
 					this.carbonApps.push( app );
 				} );
+			},
+			( error )=> {
+				console.error( "An error ocurred: %o", error );
 			}
 		);
 	}
