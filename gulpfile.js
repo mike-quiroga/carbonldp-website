@@ -55,6 +55,7 @@ gulp.task( 'serve', [ 'build-semantic', 'compile-styles' ], () => {
 	return liveServer.start({
 		root: '../',
 		open: true,
+		file: '/carbon-website/src/index.html',
 		ignore: '/docs/getting-started-with-the-rest-api.html'
 	});
 });
