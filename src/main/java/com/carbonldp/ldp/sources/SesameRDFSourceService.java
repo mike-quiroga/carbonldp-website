@@ -78,7 +78,7 @@ public class SesameRDFSourceService extends AbstractSesameLDPService implements 
 		containsImmutableProperties( document );
 		validateBNodesUniqueIdentifier( document );
 
-		document = designBlankNodesIdentifiers( document );
+		document = handleBlankNodesIdentifiers( document );
 
 		documentRepository.add( sourceURI, document );
 
@@ -102,7 +102,7 @@ public class SesameRDFSourceService extends AbstractSesameLDPService implements 
 
 		RDFSource originalSource = get( source.getURI() );
 		RDFDocument originalDocument = originalSource.getDocument();
-		RDFDocument newDocument = normalizeBNodes( originalDocument, source.getDocument() );
+		RDFDocument newDocument = mapBNodeSubjects( originalDocument, source.getDocument() );
 
 		AbstractModel toAdd = newDocument.stream().filter( statement -> ! originalDocument.contains( statement ) ).collect( Collectors.toCollection( LinkedHashModel::new ) );
 		RDFDocument documentToAdd = new RDFDocument( toAdd, source.getURI() );
@@ -123,7 +123,7 @@ public class SesameRDFSourceService extends AbstractSesameLDPService implements 
 		if ( ! exists( sourceURI ) ) throw new ResourceDoesntExistException();
 		RDFSource originalSource = get( document.getDocumentResource().getURI() );
 		RDFDocument originalDocument = originalSource.getDocument();
-		document = normalizeBNodes( originalDocument, document );
+		document = mapBNodeSubjects( originalDocument, document );
 
 		validateResourcesBelongToSource( sourceURI, document.getFragmentResources() );
 		containsImmutableProperties( originalDocument, document );
@@ -166,10 +166,10 @@ public class SesameRDFSourceService extends AbstractSesameLDPService implements 
 		if ( ! URIUtil.belongsToSameDocument( uris ) ) throw new IllegalArgumentException( "The resourceViews don't belong to the source's document." );
 	}
 
-	private RDFDocument designBlankNodesIdentifiers( RDFDocument document ) {
+	private RDFDocument handleBlankNodesIdentifiers( RDFDocument document ) {
 		RDFSource originalSource = get( document.getDocumentResource().getURI() );
 		RDFDocument originalDocument = originalSource.getDocument();
-		document = normalizeBNodes( originalDocument, document );
+		document = mapBNodeSubjects( originalDocument, document );
 
 		Set<Resource> originalSubjects = originalDocument.subjects();
 		Set<Resource> newSubjects = document.subjects();
@@ -180,7 +180,7 @@ public class SesameRDFSourceService extends AbstractSesameLDPService implements 
 			BNode subjectBNode = ValueUtil.getBNode( subject );
 			RDFBlankNode blankNode = new RDFBlankNode( document.getBaseModel(), subjectBNode, originalSource.getURI() );
 			if ( blankNode.getIdentifier() != null ) {
-				if ( blankNode.size() == 1 ) blankNode.removeIdentifier();
+				if ( blankNode.size() == 1 ) document.removeAll( blankNode );
 				continue;
 			}
 			RDFBlankNodeFactory.setIdentifier( blankNode );
@@ -219,7 +219,7 @@ public class SesameRDFSourceService extends AbstractSesameLDPService implements 
 		return infractions;
 	}
 
-	private RDFDocument normalizeBNodes( RDFDocument originalDocument, RDFDocument newDocument ) {
+	private RDFDocument mapBNodeSubjects( RDFDocument originalDocument, RDFDocument newDocument ) {
 		URI documentUri = newDocument.getDocumentResource().getURI();
 
 		Set<String> originalDocumentBlankNodesIdentifier = originalDocument.getBlankNodesIdentifier();

@@ -1,7 +1,6 @@
 package com.carbonldp.authorization.acl;
 
 import com.carbonldp.Consts;
-import com.carbonldp.exceptions.StupidityException;
 import com.carbonldp.ldp.AbstractSesameLDPRepository;
 import com.carbonldp.rdf.RDFDocument;
 import com.carbonldp.rdf.RDFDocumentRepository;
@@ -28,7 +27,6 @@ public class SesameACLRepository extends AbstractSesameLDPRepository implements 
 
 	@Override
 	public ACL getResourceACL( URI resourceURI ) {
-		// TODO: Decide. Should we validate the document?
 		URI aclURI = getACLUri( resourceURI );
 		RDFDocument document = documentRepository.getDocument( aclURI );
 		if ( document == null ) return null;

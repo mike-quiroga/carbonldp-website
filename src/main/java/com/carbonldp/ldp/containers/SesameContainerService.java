@@ -5,7 +5,6 @@ import com.carbonldp.exceptions.InvalidResourceException;
 import com.carbonldp.exceptions.ResourceAlreadyExistsException;
 import com.carbonldp.exceptions.ResourceDoesntExistException;
 import com.carbonldp.ldp.AbstractSesameLDPService;
-import com.carbonldp.ldp.sources.RDFSourceRepository;
 import com.carbonldp.models.Infraction;
 import com.carbonldp.rdf.RDFDocumentFactory;
 import com.carbonldp.ldp.sources.RDFSourceService;
@@ -97,7 +96,7 @@ public class SesameContainerService extends AbstractSesameLDPService implements 
 		DateTime creationTime = DateTime.now();
 		URI membershipResource = containerRepository.getTypedRepository( this.getContainerType( containerURI ) ).getMembershipResource( containerURI );
 		basicContainer.setTimestamps( creationTime );
-		validate( basicContainer );
+		validateBasicContainer( basicContainer );
 
 		containerRepository.createChild( containerURI, basicContainer );
 		aclRepository.createACL( basicContainer.getURI() );
@@ -111,7 +110,7 @@ public class SesameContainerService extends AbstractSesameLDPService implements 
 		return creationTime;
 	}
 
-	protected void validate( RDFResource toValidate ) {
+	protected void validateBasicContainer( RDFResource toValidate ) {
 		List<Infraction> infractions = BasicContainerFactory.getInstance().validate( toValidate );
 		infractions.addAll( RDFDocumentFactory.getInstance().validateBlankNodes( toValidate.getDocument() ) );
 		if ( ! infractions.isEmpty() ) throw new InvalidResourceException( infractions );

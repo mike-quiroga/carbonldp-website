@@ -187,16 +187,6 @@ public class SesameAppService extends AbstractSesameLDPService implements AppSer
 		), true );
 	}
 
-	private void containsImmutableProperties( RDFDocument document ) {
-		List<Infraction> infractions = new ArrayList<>();
-
-		infractions.addAll( AppFactory.getInstance().validateImmutableProperties( document.getDocumentResource() ) );
-		infractions.addAll( AppFactory.getInstance().validateSystemManagedProperties( document.getDocumentResource() ) );
-		Set<RDFBlankNode> blankNodes = document.getBlankNodes();
-		infractions.addAll( RDFDocumentFactory.getInstance().validateBlankNodes( document ) );
-		if ( ! infractions.isEmpty() ) throw new InvalidResourceException( infractions );
-	}
-
 	private void validate( App app ) {
 		List<Infraction> infractions = AppFactory.getInstance().validate( app );
 		if ( ! infractions.isEmpty() ) throw new InvalidResourceException( infractions );

@@ -75,7 +75,7 @@ public abstract class AbstractPATCHRequestHandler extends AbstractLDPRequestHand
 	/*
 	protected void validateDocumentResourceView( PATCHRequest patchRequest ) {
 		if ( patchRequest == null ) throw new BadRequestException( "The request doesn't contain a cp:PATCHRequest object." );
-		List<Infraction> infractions = PATCHRequestFactory.validate( patchRequest );
+		List<Infraction> infractions = PATCHRequestFactory.validateBasicContainer( patchRequest );
 		if ( ! infractions.isEmpty() ) throw new BadRequestException( "The cp:PATCHRequest provided isn't valid." );
 	}
 
