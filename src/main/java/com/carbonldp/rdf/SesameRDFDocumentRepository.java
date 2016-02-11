@@ -99,7 +99,7 @@ public class SesameRDFDocumentRepository extends AbstractSesameRepository implem
 			Map<URI, Set<Value>> propertiesMap = resourceView.getPropertiesMap();
 			for ( URI predicate : propertiesMap.keySet() ) {
 				Set<Value> values = propertiesMap.get( predicate );
-				resourceRepository.add( resourceViewURI, predicate, values );
+				resourceRepository.add( resourceViewURI, predicate, values, documentURI );
 			}
 		}
 
