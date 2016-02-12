@@ -105,7 +105,9 @@ public class SesameAppRepository extends AbstractSesameRepository implements App
 		appRepositoryService.deleteRepository( app.getRepositoryID() );
 	}
 
-	private void deleteAppFileDirectory( App app ) {fileRepository.deleteDirectory( app );}
+	private void deleteAppFileDirectory( App app ) {
+		fileRepository.deleteDirectory( app );
+	}
 
 	private String generateAppRepositoryID() {
 		return UUID.randomUUID().toString();
