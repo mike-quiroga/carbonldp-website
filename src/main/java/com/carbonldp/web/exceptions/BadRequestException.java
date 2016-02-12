@@ -16,6 +16,6 @@ public class BadRequestException extends AbstractWebRuntimeException {
 	}
 
 	public BadRequestException( Infraction infraction ) {
-		super( infraction );
+		super( infraction, defaultStatus );
 	}
 }
