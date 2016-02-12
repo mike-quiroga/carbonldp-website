@@ -1,3 +1,7 @@
+# 0.27.3 (2016/02/12)
+* Require an ACL as container now throws the right exception
+# 0.27.2 (2016/02/12)
+* Add member request no longer require if-match
 # 0.27.1 (2016/02/12)
 * Malformed body in a request now throws the right exception
 # 0.27.0 (2016/02/08)
