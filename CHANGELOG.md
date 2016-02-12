@@ -1,3 +1,5 @@
+# 0.27.2 (2016/02/12)
+* Add member request no longer require if-match
 # 0.27.1 (2016/02/12)
 * Malformed body in a request now throws the right exception
 # 0.27.0 (2016/02/08)
