@@ -22,10 +22,11 @@ public abstract class AbstractWebRuntimeException extends CarbonNoStackTraceRunt
 
 	public AbstractWebRuntimeException( String message, HttpStatus httpStatus ) {
 		super( message );
-		setHttpStatus( httpStatus );
 	}
-	public AbstractWebRuntimeException( Infraction infraction ) {
+
+	public AbstractWebRuntimeException( Infraction infraction, HttpStatus httpStatus ) {
 		super( infraction );
+		setHttpStatus( httpStatus );
 	}
 
 	public HttpStatus getHTTPStatus() {
