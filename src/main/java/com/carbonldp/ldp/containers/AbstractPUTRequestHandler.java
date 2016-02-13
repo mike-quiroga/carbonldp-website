@@ -33,9 +33,6 @@ public abstract class AbstractPUTRequestHandler<E extends RDFResource> extends A
 			throw new NotFoundException();
 		}
 
-		String requestETag = getRequestETag();
-		checkPrecondition( targetURI, requestETag );
-
 		validateRequest( requestDocument );
 		AddMembersAction membersAction = new AddMembersAction( requestDocument.getBaseModel(), requestDocument.subjectResource() );
 		executeAction( targetURI, membersAction );
