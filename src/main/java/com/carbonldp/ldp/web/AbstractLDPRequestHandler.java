@@ -36,11 +36,18 @@ import java.util.Set;
 
 public abstract class AbstractLDPRequestHandler extends AbstractRequestHandler {
 	public static final HTTPHeaderValue interactionModelApplied;
+	public static final HTTPHeaderValue returnRepresentationApplied;
 
 	static {
 		interactionModelApplied = new HTTPHeaderValue();
 		interactionModelApplied.setMainKey( "rel" );
 		interactionModelApplied.setMainValue( "interaction-model" );
+	}
+
+	static {
+		returnRepresentationApplied = new HTTPHeaderValue();
+		returnRepresentationApplied.setMainKey( "return" );
+		returnRepresentationApplied.setMainValue( "representation" );
 	}
 
 	protected ConfigurationRepository configurationRepository;
@@ -49,8 +56,6 @@ public abstract class AbstractLDPRequestHandler extends AbstractRequestHandler {
 	protected ContainerService containerService;
 	protected NonRDFSourceService nonRdfSourceService;
 	protected SPARQLService sparqlService;
-
-
 
 	protected HttpServletRequest request;
 	protected HttpServletResponse response;
@@ -114,6 +119,10 @@ public abstract class AbstractLDPRequestHandler extends AbstractRequestHandler {
 
 		if ( ! getSupportedInteractionModels().contains( sourceDIM ) ) return getDefaultInteractionModel();
 		return sourceDIM;
+	}
+
+	protected void addReturnRepresentationHeader() {
+		appliedPreferences.add( returnRepresentationApplied );
 	}
 
 	protected void setAppliedPreferenceHeaders() {
