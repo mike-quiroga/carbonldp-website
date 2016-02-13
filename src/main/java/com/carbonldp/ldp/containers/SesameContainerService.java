@@ -1,6 +1,7 @@
 package com.carbonldp.ldp.containers;
 
 import com.carbonldp.descriptions.APIPreferences;
+import com.carbonldp.exceptions.InvalidRDFTypeException;
 import com.carbonldp.exceptions.ResourceAlreadyExistsException;
 import com.carbonldp.exceptions.ResourceDoesntExistException;
 import com.carbonldp.ldp.AbstractSesameLDPService;
@@ -24,7 +25,7 @@ public class SesameContainerService extends AbstractSesameLDPService implements 
 	@Override
 	public Container get( URI containerURI, Set<APIPreferences.ContainerRetrievalPreference> containerRetrievalPreferences ) {
 		ContainerDescription.Type containerType = getContainerType( containerURI );
-		if ( containerType == null ) throw new IllegalStateException( "The resource isn't a container." );
+		if ( containerType == null ) throw new InvalidRDFTypeException( ContainerDescription.Resource.CLASS.getURI().stringValue() );
 
 		Container container = ContainerFactory.getInstance().get( containerURI, containerType );
 		for ( APIPreferences.ContainerRetrievalPreference preference : containerRetrievalPreferences ) {
