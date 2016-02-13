@@ -1,3 +1,5 @@
+# 0.27.3 (2016/02/12)
+* Proper validation when adding and removing container members
 # 0.27.2 (2016/02/12)
 * Add member request no longer require if-match
 # 0.27.1 (2016/02/12)
