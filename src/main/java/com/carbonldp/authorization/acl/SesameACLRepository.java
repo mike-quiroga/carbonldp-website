@@ -2,7 +2,6 @@ package com.carbonldp.authorization.acl;
 
 import com.carbonldp.Consts;
 import com.carbonldp.ldp.AbstractSesameLDPRepository;
-import com.carbonldp.ldp.sources.RDFSource;
 import com.carbonldp.ldp.sources.RDFSourceDescription;
 import com.carbonldp.ldp.sources.RDFSourceRepository;
 import com.carbonldp.rdf.RDFDocument;
@@ -46,8 +45,7 @@ public class SesameACLRepository extends AbstractSesameLDPRepository implements 
 		}
 		URI aclURI = getACLUri( objectURI );
 		ACL acl = ACLFactory.create( aclURI, objectURI );
-		RDFSource rdfSource = sourceRepository.get( objectURI );
-		rdfSource.add( RDFSourceDescription.Property.ACCESS_CONTROL_LIST.getURI(), aclURI );
+		resourceRepository.add( objectURI, RDFSourceDescription.Property.ACCESS_CONTROL_LIST.getURI(), aclURI );
 		documentRepository.addDocument( acl.getDocument() );
 		return acl;
 	}
