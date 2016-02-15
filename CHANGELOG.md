@@ -2,7 +2,8 @@
 * Fixed relative paths issue in different environments
 * Added configuration file and support for ejs templates for index.html, boot.ts and any scss
 * Any gulp task can now be executed with a -p or --profile argument to specify environment (local|dev|prod)
-   `gulp build --profile dev`
+   
+   Example: `gulp build --profile dev`
 
 # 0.3.0 (February 3, 2016)
 * Update Angular2 to Beta 3
