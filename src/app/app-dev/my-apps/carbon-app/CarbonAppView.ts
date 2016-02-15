@@ -1,6 +1,6 @@
 import { Component, ElementRef } from 'angular2/core';
 import { CORE_DIRECTIVES } from 'angular2/common';
-import { ROUTER_DIRECTIVES, ROUTER_PROVIDERS, Router, Instruction, RouteParams } from 'angular2/router';
+import { ROUTER_DIRECTIVES, ROUTER_PROVIDERS, RouteConfig, Router, RouterOutlet, Instruction, RouteParams } from 'angular2/router';
 
 import $ from 'jquery';
 import 'semantic-ui/semantic';
@@ -9,15 +9,39 @@ import SideberService from "./../../components/sidebar/service/SidebarService";
 import MyAppsService from "./../service/MyAppsService";
 import CarbonApp from "./CarbonApp";
 
+import DashboardView from './dashboard/DashboardView';
+import SPARQLClientComponent from './../../../sparql-client/SPARQLClientComponent';
+
+
 import template from './template.html!';
 import './style.css!';
 
 @Component( {
 	selector: 'carbon-app',
 	template: template,
-	directives: [ CORE_DIRECTIVES, ROUTER_DIRECTIVES ],
+	directives: [ CORE_DIRECTIVES, ROUTER_DIRECTIVES, RouterOutlet ],
 	providers: [ MyAppsService ]
 } )
+@RouteConfig( [
+	{
+		path: '/',
+		as: 'AppDashboard',
+		component: DashboardView,
+		data: {
+			alias: "AppDashboard",
+			displayName: "App Dashboard"
+		}
+	},
+	{
+		path: '/sparql-editor',
+		as: 'SPARQLEditor',
+		component: SPARQLClientComponent,
+		data: {
+			alias: "SPARQLEditor",
+			displayName: "SPARQL Editor"
+		}
+	}
+] )
 export default class CarbonAppView {
 	static parameters = [ [ Router ], [ ElementRef ], [ RouteParams ], [ SideberService ], [ MyAppsService ] ];
 
@@ -53,8 +77,7 @@ export default class CarbonAppView {
 						}, 1000 );
 					} else {
 						this.carbonApp = carbonApp;
-						this.sideberService.addItem( this.carbonApp.name );
-						console.log( this.carbonApp );
+						this.sideberService.addCarbonApp( this.carbonApp );
 					}
 
 				},

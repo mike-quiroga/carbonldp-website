@@ -9,10 +9,12 @@ import SidebarComponent from './components/sidebar/SidebarComponent';
 import HeaderComponent from './header/HeaderComponent ';
 import FooterComponent from './footer/FooterComponent ';
 import MenuBarComponent from './components/menubar/MenuBarComponent';
+import SPARQLClientComponent from './../sparql-client/SPARQLClientComponent';
 
 import DashboardView from './dashboard/DashboardView';
 import MyAppsView from './my-apps/my-apps-view/MyAppsView';
 import CarbonAppView from './my-apps/carbon-app/CarbonAppView';
+import AppDashboardView from './dashboard/DashboardView';
 
 import template from './template.html!';
 import './style.css!';
@@ -40,9 +42,10 @@ import './style.css!';
 			alias: "MyApps",
 			displayName: "My Apps"
 		}
-	},
+	}
+	,
 	{
-		path: '/my-apps/:slug',
+		path: '/my-apps/:slug/...',
 		as: 'CarbonApp',
 		component: CarbonAppView,
 		data: {

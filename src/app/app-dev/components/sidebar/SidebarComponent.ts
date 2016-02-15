@@ -26,17 +26,16 @@ export default class SidebarComponent {
 	element:ElementRef;
 	$element:JQuery;
 	sidebarService:SidebarService;
-	appsList:CarbonApp = <CarbonApp>[];
-	itemsList:Array<SidebarItem> = [];
+	carbonApps:CarbonApp[] = [];
 
 	constructor( router:Router, element:ElementRef, sidebarService:SidebarService ) {
 		this.router = router;
 		this.element = element;
 		this.sidebarService = sidebarService;
 
-		this.sidebarService.addItemEmitter.subscribe(
+		this.sidebarService.addCarbonAppEmitter.subscribe(
 			( item ) => {
-				this.addItem( item );
+				this.addCarbonApp( item );
 			}
 		);
 		this.sidebarService.toggleEmitter.subscribe(
@@ -55,16 +54,38 @@ export default class SidebarComponent {
 			dimPage: false,
 			scrollLock: true
 		} );
+		this.refreshAccordion();
 	}
 
 
-	addItem( item:SidebarItem ):void {
-		this.itemsList.push( item );
+	addCarbonApp( app:CarbonApp ):void {
+		! this.slugExists( app.slug ) ? this.carbonApps.push( app ) : null;
 	}
 
 	toggle():void {
 		this.$element.sidebar( 'toggle' );
 	}
 
+	refreshAccordion():void {
+		this.$element.accordion( {
+			selector: {
+				trigger: '.item.carbonApp, .item.carbonApp .title',
+				title: '.title',
+			},
+			exclusive: false,
+		} );
+	}
 
+	removeCarbonApp( id:number ):void {
+		this.carbonApps.splice( id, 1 );
+	}
+
+	isActive( slug:string ):boolean {
+		let url:string[] = location.pathname.split( "/" );
+		return url.indexOf( slug ) > - 1;
+	}
+
+	slugExists( slug:string ):boolean {
+		return ! (typeof this.carbonApps.find( _app => _app.slug == slug ) === "undefined");
+	}
 }
