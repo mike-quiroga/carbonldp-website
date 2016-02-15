@@ -33,9 +33,6 @@ public abstract class AbstractPUTRequestHandler<E extends RDFResource> extends A
 			throw new NotFoundException();
 		}
 
-		String requestETag = getRequestETag();
-		checkPrecondition( targetURI, requestETag );
-
 		validateRequest( requestDocument );
 		AddMembersAction membersAction = new AddMembersAction( requestDocument.getBaseModel(), requestDocument.subjectResource() );
 		executeAction( targetURI, membersAction );
@@ -50,9 +47,6 @@ public abstract class AbstractPUTRequestHandler<E extends RDFResource> extends A
 		List<Infraction> infractions = new ArrayList<>();
 		if ( requestDocument.subjects().size() != 1 )
 			infractions.add( new Infraction( 0x2201 ) );
-		else if ( ! ValueUtil.isBNode( requestDocument.subjectResource() ) )
-			infractions.add( new Infraction( 0x2201 ) );
-
 		if ( ! infractions.isEmpty() ) throw new InvalidResourceException( infractions );
 	}
 

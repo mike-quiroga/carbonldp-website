@@ -117,6 +117,7 @@ public abstract class AbstractGETRequestHandler extends AbstractLDPRequestHandle
 
 		addContainerTypeLinkHeader( containerType );
 		addInteractionModelLinkHeader( containerType );
+
 		return new ResponseEntity<>( container, HttpStatus.OK );
 	}
 
@@ -170,6 +171,9 @@ public abstract class AbstractGETRequestHandler extends AbstractLDPRequestHandle
 			// TODO: Add AppliedPreference Header
 			if ( appliedPreferences.contains( containerPreference ) ) throw new BadRequestException( 0x5001 );
 			if ( ! defaultPreferences.contains( containerPreference ) ) defaultPreferences.add( containerPreference );
+		}
+		if ( ( ! includePreferences.isEmpty() ) || ( ! omitPreferences.isEmpty() ) ) {
+			addReturnRepresentationHeader();
 		}
 
 		return defaultPreferences;
