@@ -125,8 +125,8 @@ public class LocalFileRepository implements FileRepository {
 
 	private String getFilesDirectory( App app ) {
 		String directory = Vars.getInstance().getAppsFilesDirectory();
-			if ( ! directory.endsWith( Consts.SLASH ) ) directory = directory.concat( Consts.SLASH );
-			directory = directory.concat(app.getRepositoryID() );
+		if ( ! directory.endsWith( Consts.SLASH ) ) directory = directory.concat( Consts.SLASH );
+		directory = directory.concat( app.getRepositoryID() );
 
 		return directory;
 	}

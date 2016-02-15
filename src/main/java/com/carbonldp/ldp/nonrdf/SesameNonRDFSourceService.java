@@ -45,7 +45,7 @@ public class SesameNonRDFSourceService extends AbstractSesameLDPService implemen
 
 		UUID uuid = fileRepository.save( requestEntity );
 		deleteResource( rdfRepresentation );
-		setUuid( rdfRepresentation, uuid );
+		setFileIdentifier( rdfRepresentation, uuid );
 		setContentType( rdfRepresentation, contentType );
 		setSize( rdfRepresentation, requestEntity );
 
@@ -65,7 +65,7 @@ public class SesameNonRDFSourceService extends AbstractSesameLDPService implemen
 		resourceRepository.add( rdfRepresentationUri, RDFRepresentationDescription.Property.SIZE.getURI(), requestEntity.length() );
 	}
 
-	private void setUuid( RDFRepresentation rdfRepresentation, UUID uuid ) {
+	private void setFileIdentifier( RDFRepresentation rdfRepresentation, UUID uuid ) {
 		URI rdfRepresentationUri = rdfRepresentation.getURI();
 		resourceRepository.remove( rdfRepresentationUri, RDFRepresentationDescription.Property.FILE_IDENTIFIER.getURI() );
 		resourceRepository.add( rdfRepresentationUri, RDFRepresentationDescription.Property.FILE_IDENTIFIER.getURI(), uuid.toString() );
