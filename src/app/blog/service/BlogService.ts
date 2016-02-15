@@ -1,22 +1,25 @@
 import { Injectable } from 'angular2/core';
 import { Http, Response, Request } from 'angular2/http';
+import { Location } from "angular2/router";
 
 import BlogPost from './../blog-post/BlogPost';
 
 @Injectable()
 export default class BlogService {
 
-	static parameters = [ [ Http ] ];
+	static parameters = [ [ Http ], [ Location ] ];
 	static dependencies = BlogService.parameters;
 
 	http:Http;
+	location:Location;
 
 	data:string;
 
 	postsList:BlogPost[];
 
-	constructor( http:Http ) {
+	constructor( http:Http, location:Location ) {
 		this.http = http;
+		this.location = location;
 	}
 
 	getPost( id:number ):Promise<BlogPost> {
@@ -38,7 +41,7 @@ export default class BlogService {
 	getPostsList():Promise<BlogPost[]> {
 		return new Promise<BlogPost[]>(
 			( resolve ) => {
-				this.http.get( "/assets/blog-posts/bloglist.json" )
+				this.http.get( `${ this.location.platformStrategy.getBaseHref() }assets/blog-posts/bloglist.json` )
 					.forEach(
 						( response ) => {
 							resolve( response.json() );

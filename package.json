@@ -1,6 +1,6 @@
 {
   "name": "carbon-website",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "Public Website for carbonldp.com",
   "main": "dist/index.html",
   "author": "Base22 LLC",
@@ -21,9 +21,12 @@
     "url": "https://source.base22.com/scm/ldp/carbon-website.git"
   },
   "devDependencies": {
+    "del": "^2.2.0",
     "gulp": "^3.9.0",
     "gulp-autoprefixer": "^3.1.0",
     "gulp-chug": "^0.4.2",
+    "gulp-ejs": "^2.0.0",
+    "gulp-rename": "^1.2.2",
     "gulp-sass": "^2.1.0",
     "gulp-scss-lint": "^0.3.7",
     "gulp-sourcemaps": "^1.6.0",
@@ -34,7 +37,8 @@
     "live-server": "^0.8.2",
     "semantic-ui": "2.1.5",
     "systemjs-builder": "^0.14.10",
-    "tsd": "^0.6.5"
+    "tsd": "^0.6.5",
+    "yargs": "^3.32.0"
   },
   "scripts": {
     "preinstall": "node scripts/copy-hooks.js",
@@ -44,8 +48,9 @@
   },
   "jspm": {
     "directories": {
-      "baseURL": "src"
+      "packages": "src/jspm_packages"
     },
+    "configFile": "src/system-config.js",
     "dependencies": {
       "angular2": "npm:angular2@^2.0.0-beta.3",
       "bootstrap-sass": "github:twbs/bootstrap-sass@^3.3.5",
