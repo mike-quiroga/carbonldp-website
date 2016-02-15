@@ -21,7 +21,7 @@ public class BasePUTRequestHandler extends AbstractPUTRequestHandler<RDFResource
 		containerService.addMembers( targetUri, members.getMembers() );
 	}
 
-	protected void validate( MembersAction membersAction ) {
+	protected void validate( AddMembersAction membersAction ) {
 		List<Infraction> infractions = AddMembersActionFactory.getInstance().validate( membersAction );
 		if ( ! infractions.isEmpty() ) throw new InvalidResourceException( infractions );
 	}
