@@ -33,15 +33,6 @@ public class SesameNonRDFSourceService extends AbstractSesameLDPService implemen
 	}
 
 	@Override
-	public void deleteResourceIncludingChildren( URI rdfRepresentationURI ) {
-		Set<String> fileIdentifiers = nonRdfSourceRepository.getFileIdentifiers( rdfRepresentationURI );
-		for ( String fileIdentifier : fileIdentifiers ) {
-			UUID uuid = UUID.fromString( fileIdentifier );
-			fileRepository.delete( uuid );
-		}
-	}
-
-	@Override
 	public void deleteResource( RDFRepresentation rdfRepresentation ) {
 		String uuidString = rdfRepresentation.getUUID();
 		UUID uuid = UUID.fromString( uuidString );

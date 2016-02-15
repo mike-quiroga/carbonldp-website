@@ -1,3 +1,5 @@
+# 0.27.5 (2016/02/15)
+* NonRDFSources files are now being deleted properly
 # 0.27.4 (2016/02/12)
 * Proper validation when adding and removing container members
 # 0.27.3 (2016/02/12)

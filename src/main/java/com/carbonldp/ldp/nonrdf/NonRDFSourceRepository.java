@@ -6,9 +6,11 @@ import java.util.Set;
 
 /**
  * @author NestorVenegas
- * @since _version_
+ * @since 0.27.5-ALPHA
  */
 public interface NonRDFSourceRepository {
 
 	public Set<String> getFileIdentifiers( URI rdfRepresentationURI );
+
+	public void deleteResourceIncludingChildren( URI rdfRepresentationURI );
 }
