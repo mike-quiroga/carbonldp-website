@@ -1,3 +1,5 @@
+# 0.27.5 (2016/02/16)
+* Files are properly deleted when deleting an app and a RDFRepresentation as a RDFSource
 # 0.27.4 (2016/02/12)
 * Proper validation when adding and removing container members
 # 0.27.3 (2016/02/12)
