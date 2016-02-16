@@ -2,12 +2,15 @@ package com.carbonldp.ldp.containers;
 
 import com.carbonldp.descriptions.APIPreferences;
 import com.carbonldp.exceptions.InvalidRDFTypeException;
+import com.carbonldp.exceptions.InvalidResourceException;
 import com.carbonldp.exceptions.ResourceAlreadyExistsException;
 import com.carbonldp.exceptions.ResourceDoesntExistException;
 import com.carbonldp.ldp.AbstractSesameLDPService;
 import com.carbonldp.ldp.sources.RDFSourceService;
+import com.carbonldp.models.Infraction;
 import com.carbonldp.rdf.RDFResource;
 import com.carbonldp.spring.ServicesInvoker;
+import com.carbonldp.web.exceptions.BadRequestException;
 import com.carbonldp.web.exceptions.NotImplementedException;
 import org.joda.time.DateTime;
 import org.openrdf.model.Statement;
@@ -15,6 +18,7 @@ import org.openrdf.model.URI;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.File;
+import java.util.List;
 import java.util.Set;
 
 public class SesameContainerService extends AbstractSesameLDPService implements ContainerService {
@@ -108,7 +112,8 @@ public class SesameContainerService extends AbstractSesameLDPService implements 
 	}
 
 	protected void validate( RDFResource toValidate ) {
-		if ( ! BasicContainerFactory.getInstance().isValid( toValidate ) ) throw new IllegalArgumentException( "invalid resource" );
+		List<Infraction> infractions = BasicContainerFactory.getInstance().validate( toValidate );
+		if ( ! infractions.isEmpty() ) throw new InvalidResourceException( infractions );
 	}
 
 	@Override
