@@ -9,14 +9,12 @@ import org.openrdf.model.URI;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.File;
-import java.util.Set;
 import java.util.UUID;
 
 public class SesameNonRDFSourceService extends AbstractSesameLDPService implements NonRDFSourceService {
 
 	protected FileRepository fileRepository;
 	protected RDFResourceRepository resourceRepository;
-	protected NonRDFSourceRepository nonRdfSourceRepository;
 
 	@Override
 	public File getResource( RDFRepresentation rdfRepresentation ) {
@@ -35,10 +33,13 @@ public class SesameNonRDFSourceService extends AbstractSesameLDPService implemen
 	@Override
 	public void replace( RDFRepresentation rdfRepresentation, File requestEntity, String contentType ) {
 		DateTime modifiedTime = DateTime.now();
+		UUID identifierToAdd = fileRepository.save( requestEntity );
 
-		UUID uuid = fileRepository.save( requestEntity );
-		fileRepository.delete( uuid );
-		setFileIdentifier( rdfRepresentation, uuid );
+		String identifierToDelete = rdfRepresentation.getUUID();
+		UUID uuidToDelete = UUID.fromString( identifierToDelete );
+		fileRepository.delete( uuidToDelete );
+
+		setUuid( rdfRepresentation, identifierToAdd );
 		setContentType( rdfRepresentation, contentType );
 		setSize( rdfRepresentation, requestEntity );
 
@@ -58,7 +59,7 @@ public class SesameNonRDFSourceService extends AbstractSesameLDPService implemen
 		resourceRepository.add( rdfRepresentationUri, RDFRepresentationDescription.Property.SIZE.getURI(), requestEntity.length() );
 	}
 
-	private void setFileIdentifier( RDFRepresentation rdfRepresentation, UUID uuid ) {
+	private void setUuid( RDFRepresentation rdfRepresentation, UUID uuid ) {
 		URI rdfRepresentationUri = rdfRepresentation.getURI();
 		resourceRepository.remove( rdfRepresentationUri, RDFRepresentationDescription.Property.FILE_IDENTIFIER.getURI() );
 		resourceRepository.add( rdfRepresentationUri, RDFRepresentationDescription.Property.FILE_IDENTIFIER.getURI(), uuid.toString() );
@@ -69,7 +70,4 @@ public class SesameNonRDFSourceService extends AbstractSesameLDPService implemen
 
 	@Autowired
 	public void setResourceRepository( RDFResourceRepository resourceRepository ) { this.resourceRepository = resourceRepository; }
-
-	@Autowired
-	public void setNonRdfSourceRepository( NonRDFSourceRepository nonRdfSourceRepository ) {this.nonRdfSourceRepository = nonRdfSourceRepository; }
 }
