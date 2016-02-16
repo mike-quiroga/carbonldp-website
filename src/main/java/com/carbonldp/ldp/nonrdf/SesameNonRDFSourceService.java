@@ -18,7 +18,7 @@ public class SesameNonRDFSourceService extends AbstractSesameLDPService implemen
 
 	@Override
 	public File getResource( RDFRepresentation rdfRepresentation ) {
-		String uuidString = rdfRepresentation.getUUID();
+		String uuidString = rdfRepresentation.getIdentifier();
 		UUID uuid = UUID.fromString( uuidString );
 
 		return fileRepository.get( uuid );
@@ -35,7 +35,7 @@ public class SesameNonRDFSourceService extends AbstractSesameLDPService implemen
 		DateTime modifiedTime = DateTime.now();
 		UUID identifierToAdd = fileRepository.save( requestEntity );
 
-		String identifierToDelete = rdfRepresentation.getUUID();
+		String identifierToDelete = rdfRepresentation.getIdentifier();
 		UUID uuidToDelete = UUID.fromString( identifierToDelete );
 		fileRepository.delete( uuidToDelete );
 
