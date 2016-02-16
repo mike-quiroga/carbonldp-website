@@ -33,18 +33,11 @@ public class SesameNonRDFSourceService extends AbstractSesameLDPService implemen
 	}
 
 	@Override
-	public void deleteResource( RDFRepresentation rdfRepresentation ) {
-		String uuidString = rdfRepresentation.getUUID();
-		UUID uuid = UUID.fromString( uuidString );
-		fileRepository.delete( uuid );
-	}
-
-	@Override
 	public void replace( RDFRepresentation rdfRepresentation, File requestEntity, String contentType ) {
 		DateTime modifiedTime = DateTime.now();
 
 		UUID uuid = fileRepository.save( requestEntity );
-		deleteResource( rdfRepresentation );
+		fileRepository.delete( uuid );
 		setFileIdentifier( rdfRepresentation, uuid );
 		setContentType( rdfRepresentation, contentType );
 		setSize( rdfRepresentation, requestEntity );

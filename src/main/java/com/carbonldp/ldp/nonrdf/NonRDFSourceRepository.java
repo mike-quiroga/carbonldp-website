@@ -12,5 +12,5 @@ public interface NonRDFSourceRepository {
 
 	public Set<String> getFileIdentifiers( URI rdfRepresentationURI );
 
-	public void deleteResourceIncludingChildren( URI rdfRepresentationURI );
+	public void delete( URI rdfRepresentationURI );
 }

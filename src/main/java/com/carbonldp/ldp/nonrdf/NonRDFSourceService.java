@@ -12,9 +12,6 @@ public interface NonRDFSourceService {
 
 	public boolean isRDFRepresentation( URI targetURI );
 
-	@PreAuthorize( "hasPermission(#rdfRepresentation, 'DELETE')" )
-	public void deleteResource( RDFRepresentation rdfRepresentation );
-
 	@PreAuthorize( "hasPermission(#rdfRepresentation, 'UPDATE')" )
 	public void replace( RDFRepresentation rdfRepresentation, File requestEntity, String contentType );
 }

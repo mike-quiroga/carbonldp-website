@@ -21,7 +21,7 @@ import static com.carbonldp.Consts.NEW_LINE;
 import static com.carbonldp.Consts.TAB;
 
 /**
- * @author NstorVenegas
+ * @author NestorVenegas
  * @since 0.27.5-ALPHA
  */
 public class SesameNonRDFSourceRepository extends AbstractSesameLDPRepository implements NonRDFSourceRepository {
@@ -62,7 +62,7 @@ public class SesameNonRDFSourceRepository extends AbstractSesameLDPRepository im
 	}
 
 	@Override
-	public void deleteResourceIncludingChildren( URI rdfRepresentationURI ) {
+	public void delete( URI rdfRepresentationURI ) {
 		Set<String> fileIdentifiers = getFileIdentifiers( rdfRepresentationURI );
 		for ( String fileIdentifier : fileIdentifiers ) {
 			UUID uuid = UUID.fromString( fileIdentifier );
