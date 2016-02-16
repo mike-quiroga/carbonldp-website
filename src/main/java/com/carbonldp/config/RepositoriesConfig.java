@@ -20,7 +20,9 @@ import com.carbonldp.authorization.SesamePlatformRoleRepository;
 import com.carbonldp.authorization.acl.ACLRepository;
 import com.carbonldp.authorization.acl.SesameACLRepository;
 import com.carbonldp.ldp.containers.*;
+import com.carbonldp.ldp.nonrdf.NonRDFSourceRepository;
 import com.carbonldp.ldp.nonrdf.RDFRepresentationRepository;
+import com.carbonldp.ldp.nonrdf.SesameNonRDFSourceRepository;
 import com.carbonldp.ldp.nonrdf.SesameRDFRepresentationRepository;
 import com.carbonldp.ldp.sources.RDFSourceRepository;
 import com.carbonldp.ldp.sources.SesameRDFSourceRepository;
@@ -98,6 +100,11 @@ public class RepositoriesConfig {
 	@Bean
 	public RDFSourceRepository sourceRepository() {
 		return new SesameRDFSourceRepository( connectionFactory, resourceRepository(), documentRepository() );
+	}
+
+	@Bean
+	public NonRDFSourceRepository nonRdfSourceRepository() {
+		return new SesameNonRDFSourceRepository( connectionFactory, resourceRepository(), documentRepository() );
 	}
 
 	@Bean

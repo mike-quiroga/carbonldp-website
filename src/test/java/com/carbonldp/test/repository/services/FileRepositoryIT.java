@@ -87,6 +87,16 @@ public class FileRepositoryIT extends AbstractIT {
 
 	}
 
+	@Test( priority = 101 )
+	public void deleteAppDirectoryTest() {
+		String directory = Vars.getInstance().getAppsFilesDirectory();
+		if ( ! directory.endsWith( Consts.SLASH ) ) directory = directory.concat( Consts.SLASH );
+		directory = directory.concat( app.getRepositoryID() );
+		Assert.assertTrue( new File( directory ).exists() );
+		fileRepository.deleteDirectory( app );
+		Assert.assertFalse( new File( directory ).exists() );
+	}
+
 	private String getFileContent( File file ) {
 		try {
 			return new String( Files.readAllBytes( file.toPath() ) );

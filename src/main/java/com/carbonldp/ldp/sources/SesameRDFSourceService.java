@@ -7,6 +7,7 @@ import com.carbonldp.ldp.containers.AccessPoint;
 import com.carbonldp.ldp.containers.AccessPointFactory;
 import com.carbonldp.ldp.containers.BasicContainerFactory;
 import com.carbonldp.ldp.containers.ContainerFactory;
+import com.carbonldp.ldp.nonrdf.NonRDFSourceRepository;
 import com.carbonldp.models.Infraction;
 import com.carbonldp.rdf.RDFDocument;
 import com.carbonldp.rdf.RDFResource;
@@ -15,6 +16,7 @@ import com.carbonldp.utils.URIUtil;
 import org.joda.time.DateTime;
 import org.openrdf.model.Statement;
 import org.openrdf.model.URI;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -23,6 +25,8 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 public class SesameRDFSourceService extends AbstractSesameLDPService implements RDFSourceService {
+
+	private NonRDFSourceRepository nonRDFSourceRepository;
 
 	@Override
 	public boolean exists( URI sourceURI ) {
@@ -142,7 +146,7 @@ public class SesameRDFSourceService extends AbstractSesameLDPService implements 
 	@Override
 	public void delete( URI sourceURI ) {
 		if ( ! exists( sourceURI ) ) throw new ResourceDoesntExistException();
-
+		nonRDFSourceRepository.delete( sourceURI );
 		sourceRepository.delete( sourceURI );
 		sourceRepository.deleteOccurrences( sourceURI, true );
 	}
@@ -159,4 +163,7 @@ public class SesameRDFSourceService extends AbstractSesameLDPService implements 
 		URI[] uris = resourceURIs.toArray( new URI[resourceURIs.size()] );
 		if ( ! URIUtil.belongsToSameDocument( uris ) ) throw new IllegalArgumentException( "The resourceViews don't belong to the source's document." );
 	}
+
+	@Autowired
+	public void setNonRDFSourceService( NonRDFSourceRepository nonRDFSourceRepository ) { this.nonRDFSourceRepository = nonRDFSourceRepository; }
 }
