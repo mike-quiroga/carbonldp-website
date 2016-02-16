@@ -6,6 +6,9 @@ import com.carbonldp.repository.security.SecuredNativeStore;
 import com.carbonldp.repository.txn.RepositoryRuntimeException;
 import com.carbonldp.utils.Action;
 import org.openrdf.model.Resource;
+import org.openrdf.query.MalformedQueryException;
+import org.openrdf.query.QueryLanguage;
+import org.openrdf.query.UpdateExecutionException;
 import org.openrdf.repository.Repository;
 import org.openrdf.repository.RepositoryConnection;
 import org.openrdf.repository.RepositoryException;
@@ -91,6 +94,31 @@ public abstract class AbstractUpdateAction extends AbstractComponent implements 
 			throw new RuntimeException( "The file couldn't be parsed.", e );
 		} catch ( RepositoryException | IOException e ) {
 			throw new RuntimeException( "The resources couldn't be loaded.", e );
+		} finally {
+			try {
+				connection.close();
+			} catch ( RepositoryException e ) {
+				throw new RuntimeException( "The connection couldn't be closed.", e );
+			}
+		}
+	}
+
+	protected void executeSPARQLQuery( Repository repository, String queryString ) {
+		RepositoryConnection connection;
+		try {
+			connection = repository.getConnection();
+		} catch ( RepositoryException e ) {
+			throw new RuntimeException( "A connection couldn't be retrieved.", e );
+		}
+
+		try {
+			connection.prepareUpdate( QueryLanguage.SPARQL, queryString ).execute();
+		} catch ( MalformedQueryException e ) {
+			throw new RuntimeException( "The file couldn't be parsed.", e );
+		} catch ( RepositoryException e ) {
+			throw new RuntimeException( "The resources couldn't be loaded.", e );
+		} catch ( UpdateExecutionException e ) {
+			throw new RuntimeException( "The update couldn't be executed.", e );
 		} finally {
 			try {
 				connection.close();

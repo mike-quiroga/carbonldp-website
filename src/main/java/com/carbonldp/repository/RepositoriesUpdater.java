@@ -6,6 +6,7 @@ import com.carbonldp.Vars;
 import com.carbonldp.repository.updates.UpdateAction1o0o0;
 import com.carbonldp.repository.updates.UpdateAction1o1o0;
 import com.carbonldp.repository.updates.UpdateAction1o2o0;
+import com.carbonldp.repository.updates.UpdateAction1o3o0;
 import com.carbonldp.utils.Action;
 import com.google.common.io.Files;
 
@@ -27,6 +28,7 @@ public class RepositoriesUpdater extends AbstractComponent {
 		put( new RepositoryVersion( "1.0.0" ), new UpdateAction1o0o0() );
 		put( new RepositoryVersion( "1.1.0" ), new UpdateAction1o1o0() );
 		put( new RepositoryVersion( "1.2.0" ), new UpdateAction1o2o0() );
+		put( new RepositoryVersion( "1.3.0" ), new UpdateAction1o3o0() );
 	}};
 
 	public boolean repositoriesAreUpToDate() {
