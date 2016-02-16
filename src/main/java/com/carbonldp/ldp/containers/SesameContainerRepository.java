@@ -196,7 +196,7 @@ public class SesameContainerRepository extends AbstractSesameLDPRepository imple
 	public void createNonRDFResource( URI containerURI, URI resourceURI, File requestEntity, String mediaType ) {
 		DateTime creationTime = DateTime.now();
 
-		RDFRepresentation rdfRepresentation = RDFRepresentationFactory.create( resourceURI );
+		RDFRepresentation rdfRepresentation = RDFRepresentationFactory.getInstance().create( resourceURI );
 
 		rdfRepresentation.add( RDFSourceDescription.Property.DEFAULT_INTERACTION_MODEL.getURI(), RDFSourceDescription.Resource.CLASS.getURI() );
 		rdfRepresentation.setTimestamps( creationTime );
