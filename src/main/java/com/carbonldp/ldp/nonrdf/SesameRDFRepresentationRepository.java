@@ -26,7 +26,7 @@ public class SesameRDFRepresentationRepository extends AbstractSesameLDPReposito
 		UUID fileUUID = fileRepository.save( file );
 		rdfRepresentation.setSize( file.length() );
 		rdfRepresentation.setMediaType( mediaType );
-		rdfRepresentation.setUUID( fileUUID );
+		rdfRepresentation.setIdentifier( fileUUID );
 
 		documentRepository.addDocument( rdfRepresentation.getDocument() );
 	}

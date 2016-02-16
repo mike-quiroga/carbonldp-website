@@ -6,6 +6,7 @@ import com.carbonldp.ldp.sources.RDFSource;
 import com.carbonldp.ldp.sources.RDFSourceRepository;
 import com.carbonldp.rdf.RDFDocumentRepository;
 import com.carbonldp.repository.AbstractSesameRepository;
+import com.carbonldp.repository.FileRepository;
 import com.carbonldp.repository.RepositoryService;
 import com.carbonldp.utils.RDFNodeUtil;
 import com.carbonldp.utils.URIUtil;
@@ -13,6 +14,7 @@ import org.openrdf.model.URI;
 import org.openrdf.model.Value;
 import org.openrdf.model.impl.URIImpl;
 import org.openrdf.spring.SesameConnectionFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
@@ -28,6 +30,7 @@ public class SesameAppRepository extends AbstractSesameRepository implements App
 	private final RepositoryService appRepositoryService;
 	private URI appsContainerURI;
 	private String appsEntryPoint;
+	protected FileRepository fileRepository;
 
 	private final Type appsContainerType = Type.BASIC;
 
@@ -90,6 +93,7 @@ public class SesameAppRepository extends AbstractSesameRepository implements App
 		App app = this.get( appURI );
 		sourceRepository.delete( appURI );
 		deleteAppRepository( app );
+		deleteAppFileDirectory( app );
 	}
 
 	@Override
@@ -99,6 +103,10 @@ public class SesameAppRepository extends AbstractSesameRepository implements App
 
 	private void deleteAppRepository( App app ) {
 		appRepositoryService.deleteRepository( app.getRepositoryID() );
+	}
+
+	private void deleteAppFileDirectory( App app ) {
+		fileRepository.deleteDirectory( app );
 	}
 
 	private String generateAppRepositoryID() {
@@ -117,4 +125,8 @@ public class SesameAppRepository extends AbstractSesameRepository implements App
 	public void setAppsEntryPoint( String appsEntryPoint ) {
 		this.appsEntryPoint = appsEntryPoint;
 	}
+
+	@Autowired
+	public void setFileRepository( FileRepository fileRepository ) {this.fileRepository = fileRepository; }
+
 }
