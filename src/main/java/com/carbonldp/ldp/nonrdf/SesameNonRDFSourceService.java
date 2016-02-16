@@ -18,7 +18,7 @@ public class SesameNonRDFSourceService extends AbstractSesameLDPService implemen
 
 	@Override
 	public File getResource( RDFRepresentation rdfRepresentation ) {
-		String uuidString = rdfRepresentation.getUUID();
+		String uuidString = rdfRepresentation.getIdentifier();
 		UUID uuid = UUID.fromString( uuidString );
 
 		return fileRepository.get( uuid );
@@ -31,19 +31,15 @@ public class SesameNonRDFSourceService extends AbstractSesameLDPService implemen
 	}
 
 	@Override
-	public void deleteResource( RDFRepresentation rdfRepresentation ) {
-		String uuidString = rdfRepresentation.getUUID();
-		UUID uuid = UUID.fromString( uuidString );
-		fileRepository.delete( uuid );
-	}
-
-	@Override
 	public void replace( RDFRepresentation rdfRepresentation, File requestEntity, String contentType ) {
 		DateTime modifiedTime = DateTime.now();
+		UUID identifierToAdd = fileRepository.save( requestEntity );
 
-		UUID uuid = fileRepository.save( requestEntity );
-		deleteResource( rdfRepresentation );
-		setUuid( rdfRepresentation, uuid );
+		String identifierToDelete = rdfRepresentation.getIdentifier();
+		UUID uuidToDelete = UUID.fromString( identifierToDelete );
+		fileRepository.delete( uuidToDelete );
+
+		setFileIdentifier( rdfRepresentation, identifierToAdd );
 		setContentType( rdfRepresentation, contentType );
 		setSize( rdfRepresentation, requestEntity );
 
@@ -63,10 +59,10 @@ public class SesameNonRDFSourceService extends AbstractSesameLDPService implemen
 		resourceRepository.add( rdfRepresentationUri, RDFRepresentationDescription.Property.SIZE.getURI(), requestEntity.length() );
 	}
 
-	private void setUuid( RDFRepresentation rdfRepresentation, UUID uuid ) {
+	private void setFileIdentifier( RDFRepresentation rdfRepresentation, UUID uuid ) {
 		URI rdfRepresentationUri = rdfRepresentation.getURI();
-		resourceRepository.remove( rdfRepresentationUri, RDFRepresentationDescription.Property.UUID.getURI() );
-		resourceRepository.add( rdfRepresentationUri, RDFRepresentationDescription.Property.UUID.getURI(), uuid.toString() );
+		resourceRepository.remove( rdfRepresentationUri, RDFRepresentationDescription.Property.FILE_IDENTIFIER.getURI() );
+		resourceRepository.add( rdfRepresentationUri, RDFRepresentationDescription.Property.FILE_IDENTIFIER.getURI(), uuid.toString() );
 	}
 
 	@Autowired
