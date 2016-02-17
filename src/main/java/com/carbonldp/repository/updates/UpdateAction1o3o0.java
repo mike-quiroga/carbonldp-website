@@ -1,12 +1,20 @@
 package com.carbonldp.repository.updates;
 
 import com.carbonldp.Vars;
+import com.carbonldp.apps.App;
+import com.carbonldp.apps.context.AppContextExchanger;
+import com.carbonldp.apps.context.AppContextHolder;
+import com.carbonldp.authorization.acl.ACLDescription;
+import com.carbonldp.namespaces.CS;
+import com.carbonldp.sparql.SPARQLTemplate;
 import org.openrdf.repository.Repository;
 import org.openrdf.repository.manager.LocalRepositoryManager;
 import org.openrdf.repository.manager.RepositoryManager;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.File;
 import java.util.Collection;
+import java.util.Set;
 
 /**
  * @author JorgeEspinosa
@@ -15,22 +23,21 @@ import java.util.Collection;
 public class UpdateAction1o3o0 extends AbstractUpdateAction {
 
 	final String updateACLTripleQuery =
-		"PREFIX cs:	<https://carbonldp.com/ns/v1/security#> \n" +
-			"INSERT { ?target cs:accessControlList ?acl } \n" +
-			"WHERE { ?acl cs:accessTo ?target }";
+		"INSERT { ?target " + ACLDescription.Resource.CLASS.getURI().stringValue() + " ?acl } \n" +
+			"WHERE { ?acl " + ACLDescription.Property.ACCESS_TO.getURI().stringValue() + " ?target }";
 
 	@Override
 	public void execute() throws Exception {
-		Repository platformRepository = getRepository( Vars.getInstance().getPlatformRepositoryDirectory() );
-		executeSPARQLQuery( platformRepository, updateACLTripleQuery );
-		closeRepository( platformRepository );
+		transactionWrapper.runInPlatformContext( () -> {
+			sparqlTemplate.executeUpdate( updateACLTripleQuery, null );
+		} );
 
-		RepositoryManager repositoryManager = new LocalRepositoryManager( new File( Vars.getInstance().getAppsRepositoryDirectory() ) );
-		repositoryManager.initialize();
-		Collection<Repository> repositories = repositoryManager.getAllRepositories();
-		for ( Repository repository : repositories ) {
-			executeSPARQLQuery( repository, updateACLTripleQuery );
+		Set<App> apps = getAllApps();
+		for ( App app : apps ) {
+			transactionWrapper.runInAppcontext( app, () -> {
+				sparqlTemplate.executeUpdate( updateACLTripleQuery, null );
+			} );
 		}
-		repositoryManager.shutDown();
 	}
 }
+

@@ -1,11 +1,23 @@
 package com.carbonldp.repository.updates;
 
 import com.carbonldp.AbstractComponent;
+import com.carbonldp.Vars;
+import com.carbonldp.apps.App;
+import com.carbonldp.apps.AppRepository;
+import com.carbonldp.ldp.containers.ContainerRepository;
+import com.carbonldp.ldp.containers.SesameContainerRepository;
 import com.carbonldp.repository.ConnectionRWTemplate;
 import com.carbonldp.repository.security.SecuredNativeStore;
+import com.carbonldp.repository.txn.ApplicationContextConnectionFactory;
 import com.carbonldp.repository.txn.RepositoryRuntimeException;
+import com.carbonldp.sparql.SPARQLTemplate;
+import com.carbonldp.spring.TransactionWrapper;
 import com.carbonldp.utils.Action;
+import com.carbonldp.utils.ValueUtil;
 import org.openrdf.model.Resource;
+import org.openrdf.model.Statement;
+import org.openrdf.model.URI;
+import org.openrdf.model.impl.URIImpl;
 import org.openrdf.query.MalformedQueryException;
 import org.openrdf.query.QueryLanguage;
 import org.openrdf.query.UpdateExecutionException;
@@ -17,16 +29,25 @@ import org.openrdf.rio.RDFFormat;
 import org.openrdf.rio.RDFParseException;
 import org.openrdf.spring.RepositoryConnectionFactory;
 import org.openrdf.spring.SesameConnectionFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * @author MiguelAraCo
  * @since 0.9.0-ALPHA
  */
 public abstract class AbstractUpdateAction extends AbstractComponent implements Action {
+	protected ContainerRepository containerRepository;
+	protected AppRepository appRepository;
+	protected TransactionWrapper transactionWrapper;
+	protected SPARQLTemplate sparqlTemplate;
+
 	public void run() {
 		try {
 			this.execute();
@@ -140,4 +161,31 @@ public abstract class AbstractUpdateAction extends AbstractComponent implements 
 		SesameConnectionFactory factory = new RepositoryConnectionFactory( repository );
 		return new ConnectionRWTemplate( factory );
 	}
+
+	protected Set<App> getAllApps() {
+		return transactionWrapper.runInPlatformContext( () -> {
+			Set<App> apps = new HashSet<>();
+			URI platformAppsContainer = new URIImpl( Vars.getInstance().getHost() + Vars.getInstance().getMainContainer() + Vars.getInstance().getAppsContainer() );
+			Set<Statement> membershipStatements = containerRepository.getMembershipTriples( platformAppsContainer );
+
+			for ( Statement membershipStatement : membershipStatements ) {
+				URI appURI = ValueUtil.getURI( membershipStatement.getObject() );
+				App app = appRepository.get( appURI );
+				apps.add( app );
+			}
+			return apps;
+		} );
+
+	}
+
+	@Autowired
+	public void setAppRepository( AppRepository appRepository ) { this.appRepository = appRepository; }
+
+	@Autowired
+	public void setTransactionWrapper( TransactionWrapper transactionWrapper ) {
+		this.transactionWrapper = transactionWrapper;
+	}
+
+	@Autowired
+	public void setSparqlTemplate( SPARQLTemplate sparqlTemplate ) { this.sparqlTemplate = sparqlTemplate; }
 }

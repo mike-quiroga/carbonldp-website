@@ -65,7 +65,12 @@ public class Application {
 		System.out.println( factory.toString() );
 
 		RepositoriesUpdater repositoriesUpdater = new RepositoriesUpdater();
-		if ( ! repositoriesUpdater.repositoriesAreUpToDate() ) repositoriesUpdater.updateRepositories();
+		if ( ! repositoriesUpdater.repositoriesAreUpToDate() ) {
+			Server provisoryServer = createUpdateServer( arguments );
+			repositoriesUpdater.updateRepositories();
+			provisoryServer.stop();
+			provisoryServer.destroy();
+		}
 
 		Server server = new Server( arguments.port );
 
