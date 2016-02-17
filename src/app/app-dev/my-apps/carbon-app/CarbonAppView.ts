@@ -27,6 +27,7 @@ import './style.css!';
 		path: '/',
 		as: 'AppDashboard',
 		component: DashboardView,
+		useAsDefault: true,
 		data: {
 			alias: "AppDashboard",
 			displayName: "App Dashboard"
@@ -71,7 +72,7 @@ export default class CarbonAppView {
 						let countDown = setInterval( ()=> {
 							this.timer --;
 							if ( this.timer == 0 ) {
-								this.router.navigate( [ '/AppDev/MyApps' ] );
+								this.router.navigate( [ '/AppDev/MyApps/List' ] );
 								clearInterval( countDown );
 							}
 						}, 1000 );

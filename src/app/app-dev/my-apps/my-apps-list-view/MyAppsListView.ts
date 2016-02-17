@@ -1,48 +1,24 @@
 import { Component, ElementRef, Type } from 'angular2/core';
 import { CORE_DIRECTIVES } from 'angular2/common';
-import { Router, RouteDefinition, ROUTER_DIRECTIVES, RouteConfig, RouterOutlet } from 'angular2/router';
+import { Router, RouteDefinition, ROUTER_DIRECTIVES} from 'angular2/router';
 
 import $ from 'jquery';
 import 'semantic-ui/semantic';
 
 import MyAppsService from './../service/MyAppsService';
-import CarbonAppView from "./../carbon-app/CarbonAppView";
 import CarbonAppTileComponent from './../carbon-app-tile/CarbonAppTileComponent';
 import CarbonApp from "./../carbon-app/CarbonApp";
-import MyAppsListView from "./../my-apps-list-view/MyAppsListView";
+import CarbonAppView from "./../carbon-app/CarbonAppView";
+
+import template from './template.html!';
 
 @Component( {
-	selector: 'my-apps',
-	template: '<router-outlet></router-outlet>',
-	directives: [ CORE_DIRECTIVES, ROUTER_DIRECTIVES, CarbonAppTileComponent, RouterOutlet ],
+	selector: 'my-apps-list',
+	template: template,
+	directives: [ CORE_DIRECTIVES, ROUTER_DIRECTIVES, CarbonAppTileComponent ],
 	providers: [ MyAppsService ]
 } )
-@RouteConfig( [
-	{
-		path: '/',
-		as: 'List',
-		component: MyAppsListView,
-		useAsDefault: true,
-		data: {
-			alias: "List",
-			displayName: "My Apps"
-		}
-	},
-	{
-		path: '/:slug/...',
-		as: 'CarbonApp',
-		component: CarbonAppView,
-		data: {
-			alias: "CarbonApp",
-			displayName: "Carbon App",
-			params: {
-				name: "slug",
-				redirectTo: "AppDashboard"
-			}
-		}
-	}
-] )
-export default class MyAppsView {
+export default class MyAppsListView {
 	static parameters = [ [ ElementRef ], [ MyAppsService ], [ Router ] ];
 
 	router:Router;

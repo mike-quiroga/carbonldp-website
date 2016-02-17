@@ -33,7 +33,13 @@ import './style.css!';
 	{path: '/docs/:id', as: 'Docs', component: ContentView},
 	{path: '/sparql-client', as: 'SPARQLClient', component: SPARQLClientComponent},
 	{path: '/carbon-ui', as: 'CarbonUI', component: CarbonUI},
-	{path: '/app-dev/...', as: 'AppDev', component: AppDevComponent}
+	{
+		path: '/app-dev/...', as: 'AppDev', component: AppDevComponent,
+		data: {
+			alias: "AppDev",
+			displayName: "Home"
+		}
+	}
 
 ] )
 export default class App {

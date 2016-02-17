@@ -29,28 +29,19 @@ import './style.css!';
 		path: '/',
 		as: 'Home',
 		component: DashboardView,
+		useAsDefault: true,
 		data: {
 			alias: "Home",
 			displayName: "Home"
 		}
 	},
 	{
-		path: '/my-apps',
+		path: '/my-apps/...',
 		as: 'MyApps',
 		component: MyAppsView,
 		data: {
 			alias: "MyApps",
 			displayName: "My Apps"
-		}
-	}
-	,
-	{
-		path: '/my-apps/:slug/...',
-		as: 'CarbonApp',
-		component: CarbonAppView,
-		data: {
-			alias: "CarbonApp",
-			displayName: "Carbon App"
 		}
 	}
 ] )

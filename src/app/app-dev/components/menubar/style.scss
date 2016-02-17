@@ -5,8 +5,11 @@ app-dev {
 			border: 0;
 			border-radius: 0;
 
-			.steps, .active.step {
-				border-radius: 0;
+			.step .title {
+				font-weight: 300;
+			}
+			.step.active .title {
+				font-weight: 500;
 			}
 		}
 	}

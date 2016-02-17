@@ -25,80 +25,90 @@ export default class MenuBarComponentComponent {
 
 	breadCrumbs:Array<any> = [];
 	instructions:Instruction[] = [];
-	currentUrl:string = "";
 
 
 	constructor( router:Router, element:ElementRef, sidebarService:SidebarService ) {
 		this.router = router;
 		this.element = element;
 		this.sidebarService = sidebarService;
+		this.router.parent.subscribe( ( url )=> {
+			this.updateBreadcrumbs( url );
+		} );
 	}
 
 	ngAfterViewInit():void {
 		this.$element = $( this.element.nativeElement );
 	}
 
-	updateBreadcrumbs():void {
-		//let currentUrl:Array<string> = this.router.parent.lastNavigationAttempt.split( "/" );
-		let currentPathname:string[] = location.pathname.split( "/" ), exists = false;
+	updateBreadcrumbs( url:string ):void {
+		this.instructions = [];
 		this.breadCrumbs = [];
-		//currentPathname.forEach( ( s ) => {
-		for ( var i = 0, s = ""; i < currentPathname.length; i ++ ) {
-			s = currentPathname[ i ];
-			this.router.recognize( "/" + s ).then(
-				( instruction ) => {
-					this.instructions.push( instruction );
-					//exists = false;
-					//if ( instruction ) {
-					//	//this.breadCrumbs.forEach( ( breadcrumb )=> {
-					//	//	if ( s == breadcrumb.url ) {
-					//	//		exists = true;
-					//	//	}
-					//	//} );
-					//	//if ( ! exists ) {
-					//	//	this.breadCrumbs.push( {
-					//	//		url: s,
-					//	//		displayName: instruction.component.routeData.get( "displayName" ),
-					//	//		alias: instruction.child ? instruction.component.routeData.get( "alias" ) + "/" + instruction.child.component.routeData.get( "alias" ) : instruction.component.routeData.get( "alias" )
-					//	//	} );
-					//	//}
-					//	if ( instruction.child && instruction.child.component.routeData.get( "displayName" ) ) {
-					//		console.log( "Instruction: %o\nInstruction Child Component:%o", instruction, instruction.child.component.routeData.data );
-					//		this.breadCrumbs.push( {
-					//			url: s,
-					//			displayName: instruction.child.component.routeData.get( "displayName" ),
-					//			alias: instruction.child ? instruction.child.component.routeData.get( "alias" ) + "/" + instruction.child.component.routeData.get( "alias" ) : instruction.component.routeData.get( "alias" )
-					//		} );
-					//	}
-					//}
-				},
-				( error )=> {
-					console.error( error );
+		let workingInstruction:Instruction;
+		this.router.recognize( url ).then(
+			( instruction )=> {
+				if ( instruction ) {
+					workingInstruction = instruction;
+					while ( workingInstruction.child ) {
+						this.addInstruction( workingInstruction );
+						workingInstruction = workingInstruction.child;
+					}
+					if ( ! workingInstruction.child && ! ! workingInstruction.urlPath ) {
+						this.addInstruction( workingInstruction );
+					}
 				}
-			)
-				//.then(
-				//	()=> {
-				//		console.clear();
-				//		console.log( this );
-				//		console.log( currentPathname );
-				//		console.log( this.instructions );
-				//	}
-				//)
-			;
-		}
-
+			}
+		);
 	}
 
-	isActive( route:string ):boolean {
-		let instruction = this.router.generate( [ route ] );
-		return this.router.isRouteActive( instruction );
+	getRouteAlias():any {
+		let alias:any[] = [], params:string = "";
+		this.instructions.forEach(
+			( instruction )=> {
+				if ( instruction ) {
+					alias.push( instruction.component.routeData.data[ "alias" ] );
+					params = instruction.component.routeData.data[ "params" ];
+					if ( ! ! params ) {
+						alias.push( {[params.name]: instruction.urlPath} );
+					}
+				}
+			}
+		);
+		return alias;
 	}
 
-	ngAfterContentChecked():void {
-		if ( this.currentUrl != window.location.href ) {
-			this.updateBreadcrumbs();
-			this.currentUrl = window.location.href;
+	addInstruction( workingInstruction:Instruction ):void {
+		this.instructions.push( workingInstruction );
+		this.breadCrumbs.push( {
+			url: workingInstruction.urlPath,
+			displayName: workingInstruction.component.routeData.data[ "displayName" ],
+			alias: this.getRouteAlias(),
+			friendlyAlias: this.getFriendlyAlias()
+		} );
+	}
+
+	getFriendlyAlias():any {
+		let friendlyURL:string = "";
+		this.instructions.forEach(
+			( instruction )=> {
+				if ( instruction ) {
+					friendlyURL += instruction.component.routeData.data[ "alias" ];
+					friendlyURL += instruction.child ? "/" : "";
+				}
+			}
+		);
+		return friendlyURL;
+	}
+
+	isActive( route:any ):boolean {
+		let instruction = this.router.generate( route );
+		let router = this.router;
+		while ( instruction.child ) {
+			instruction = instruction.child;
+			if ( typeof router._childRouter === "undefined" || router._childRouter === null ) continue;
+			if ( typeof router._childRouter._currentInstruction === "undefined" || router._childRouter._currentInstruction === null ) continue;
+			router = router._childRouter;
 		}
+		return router.isRouteActive( instruction );
 	}
 
 	toggleSidebar():void {
