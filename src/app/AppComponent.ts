@@ -7,7 +7,7 @@ import HomeView from 'app/home/HomeView';
 import BlogView from 'app/blog/BlogView';
 import BlogPostView from 'app/blog/blog-post/BlogPostView';
 import LoginView from 'app/login/LoginView';
-import ContentView from 'app/content/ContentView';
+//import ContentView from 'app/content/ContentView';
 import SPARQLClientComponent from 'app/sparql-client/SPARQLClientComponent';
 import DocumentsComponent from 'app/documents/DocumentsComponent';
 
@@ -27,7 +27,7 @@ import './style.css!';
 	{path: '/Blog', as: 'Blog', component: BlogView},
 	{path: '/blog-post/:id', as: 'BlogPost', component: BlogPostView},
 	{path: '/Login', as: 'Login', component: LoginView},
-	{path: '/docs/:id', as: 'Docs', component: ContentView},
+	//{path: '/docs/:id', as: 'Docs', component: ContentView},
 	{path: '/sparql-client', as: 'SPARQLClient', component: SPARQLClientComponent},
 	{path: '/documents/...', as: 'Documents', component: DocumentsComponent}
 ] )

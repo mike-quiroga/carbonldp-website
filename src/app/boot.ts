@@ -9,7 +9,7 @@ import Carbon from 'carbonldp-sdk';
 
 import AppComponent from 'app/AppComponent';
 
-import { CONTENT_PROVIDERS } from 'app/content/Content';
+//import { CONTENT_PROVIDERS } from 'app/content/Content';
 import { BLOG_PROVIDERS } from 'app/blog/Blog';
 
 const CARBON_PROVIDER = provide( Carbon, {
@@ -27,6 +27,6 @@ bootstrap( AppComponent, [
 	provide( APP_BASE_HREF, {useValue: "/"} ),
 
 	CARBON_PROVIDER,
-	CONTENT_PROVIDERS,
+//	CONTENT_PROVIDERS,
 	BLOG_PROVIDERS
 ] );

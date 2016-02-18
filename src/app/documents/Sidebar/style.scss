@@ -1,0 +1,36 @@
+sidebar-component {
+
+	section {
+		margin-top: 2em;
+		padding-top: 2em;
+	}
+
+	nav {
+		.sticky {
+			> .menu > .item.active {
+				> a {
+					color: #F89828;
+					font-size: 1.4em;
+				}
+			}
+		}
+	}
+
+	nav .ui.sticky{
+		z-index: 0;
+	}
+
+	/*#content-masthead {
+		margin-top: 65px;
+	}
+
+	.featured-image {
+		display: block;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: auto;
+		margin: auto;
+		box-sizing: border-box;
+	}*/
+}
