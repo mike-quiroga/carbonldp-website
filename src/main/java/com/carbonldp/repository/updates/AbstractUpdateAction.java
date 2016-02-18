@@ -139,10 +139,9 @@ public abstract class AbstractUpdateAction extends AbstractComponent implements 
 		return transactionWrapper.runInPlatformContext( () -> {
 			Set<App> apps = new HashSet<>();
 			URI platformAppsContainer = new URIImpl( Vars.getInstance().getHost() + Vars.getInstance().getMainContainer() + Vars.getInstance().getAppsContainer() );
-			Set<Statement> membershipStatements = containerRepository.getMembershipTriples( platformAppsContainer );
+			Set<URI> appURIs = containerRepository.getContainedURIs( platformAppsContainer );
 
-			for ( Statement membershipStatement : membershipStatements ) {
-				URI appURI = ValueUtil.getURI( membershipStatement.getObject() );
+			for ( URI appURI : appURIs ) {
 				App app = appRepository.get( appURI );
 				apps.add( app );
 			}
