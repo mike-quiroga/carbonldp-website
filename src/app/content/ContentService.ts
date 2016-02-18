@@ -1,5 +1,6 @@
-import { Injectable } from 'angular2/core';
+import { Injectable, OpaqueToken } from 'angular2/core';
 import { Http, Response, Request } from 'angular2/http';
+import { Location } from "angular2/router";
 
 import Carbon from 'carbon/Carbon';
 
@@ -7,27 +8,25 @@ import Carbon from 'carbon/Carbon';
 @Injectable()
 export default class ContentService {
 
-	static parameters = [ [ Carbon ], [ Http ] ];
+	static parameters = [ [ Carbon ], [ Http ], [ Location ] ];
 	static dependencies = ContentService.parameters;
 
 	carbon:Carbon;
 	http:Http;
 
+	location:Location;
+
 	data:string;
 
-
-	constructor( carbon:Carbon, http:Http ) {
+	constructor( carbon:Carbon, http:Http, location:Location ) {
 		this.carbon = carbon;
 		this.http = http;
+		this.location = location;
 	}
 
 	getDocumentById( id:string ):Promise<string> {
 		return new Promise<string>( ( resolve, reject ) => {
-			let url = window.location.href;
-			let arr = url.split( "/" );
-			let protocolHostAndPort = arr[ 0 ] + "//" + arr[ 2 ];
-
-			this.http.get( protocolHostAndPort + '/assets/documents/' + id )
+			this.http.get( `${ this.location.platformStrategy.getBaseHref() }assets/documents/${ id }` )
 				.forEach(
 					( response ) => {
 						this.data = response.text();

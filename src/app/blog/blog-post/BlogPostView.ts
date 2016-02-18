@@ -1,6 +1,6 @@
 import { Component, ElementRef, Input, DynamicComponentLoader, Type } from "angular2/core";
 import { CORE_DIRECTIVES } from "angular2/common";
-import { ROUTER_DIRECTIVES, ROUTER_PROVIDERS, Router, Instruction, RouteParams } from 'angular2/router';
+import { ROUTER_DIRECTIVES, ROUTER_PROVIDERS, Router, Instruction, RouteParams, Location } from 'angular2/router';
 
 import $ from 'jquery';
 import 'semantic-ui/semantic';
@@ -15,14 +15,16 @@ import './style.css!';
 	selector: 'blog-post',
 	template: template,
 	directives: [ CORE_DIRECTIVES, ROUTER_DIRECTIVES, CodeMirrorComponent.Class ],
-	providers: [ BlogService ]
+	providers: [ BlogService, Location ]
 } )
 export default class BlogPostView {
-	static parameters = [ [ Router ], [ ElementRef ], [ DynamicComponentLoader ], [ RouteParams ], [ BlogService ] ];
+	static parameters = [ [ Router ], [ ElementRef ], [ DynamicComponentLoader ], [ RouteParams ], [ Location ], [ BlogService ] ];
 
 	router:Router;
 	dcl:DynamicComponentLoader;
 	routeParams:RouteParams;
+	location:Location;
+
 	blogService:BlogService;
 
 	element:ElementRef;
@@ -33,11 +35,13 @@ export default class BlogPostView {
 
 	get codeMirrorMode() { return CodeMirrorComponent.Mode; }
 
-	constructor( router:Router, element:ElementRef, dcl:DynamicComponentLoader, routeParams:RouteParams, blogService:BlogService ) {
+	constructor( router:Router, element:ElementRef, dcl:DynamicComponentLoader, routeParams:RouteParams, location:Location, blogService:BlogService ) {
 		this.router = router;
 		this.element = element;
 		this.dcl = dcl;
 		this.routeParams = routeParams;
+		this.location = location;
+
 		this.blogService = blogService;
 
 		this.postid = <number>this.routeParams.get( 'id' );
@@ -51,9 +55,11 @@ export default class BlogPostView {
 		} else {
 			this.blogService.getPost( this.postid ).then(
 				( post )=> {
-					let fileName:string = post.filename;
-					this.createPostComponent( fileName );
 					this.blogPost = post;
+
+					let fileName:string = post.filename;
+					let postComponent:Type = this.createPostComponent( fileName );
+					this.renderPostComponent( postComponent );
 				}
 			);
 		}
@@ -64,10 +70,11 @@ export default class BlogPostView {
 	}
 
 	private createPostComponent( fileName:string ):Type {
+		let location:Location = this.location;
 		@Component( {
 			selector: 'compiled-component',
 			directives: [ CORE_DIRECTIVES, ROUTER_DIRECTIVES, CodeMirrorComponent.Class ],
-			templateUrl: "/assets/blog-posts/" + fileName
+			templateUrl: `${ location.platformStrategy.getBaseHref() }assets/blog-posts/${ fileName }`
 		} )
 		class CompiledComponent {
 			static parameters = [ [ ElementRef ] ];
@@ -81,6 +88,11 @@ export default class BlogPostView {
 
 			}
 		}
-		this.dcl.loadIntoLocation( CompiledComponent, this.element, 'content' );
+
+		return CompiledComponent;
+	}
+
+	private renderPostComponent( postComponent:Type ):void {
+		this.dcl.loadIntoLocation( postComponent, this.element, 'content' );
 	}
 }

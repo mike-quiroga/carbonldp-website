@@ -1,0 +1,8 @@
+{
+	"url": {
+		"base": "/carbon-website/src/"
+	},
+	"carbon": {
+		"domain": "local.carbonldp.com"
+	}
+}
