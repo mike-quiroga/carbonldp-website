@@ -1,19 +1,10 @@
 package com.carbonldp.repository.updates;
 
-import com.carbonldp.Vars;
 import com.carbonldp.apps.App;
-import com.carbonldp.apps.context.AppContextExchanger;
-import com.carbonldp.apps.context.AppContextHolder;
 import com.carbonldp.authorization.acl.ACLDescription;
-import com.carbonldp.namespaces.CS;
-import com.carbonldp.sparql.SPARQLTemplate;
-import org.openrdf.repository.Repository;
-import org.openrdf.repository.manager.LocalRepositoryManager;
-import org.openrdf.repository.manager.RepositoryManager;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.carbonldp.ldp.sources.RDFSourceDescription;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
-import java.io.File;
-import java.util.Collection;
 import java.util.Set;
 
 /**
@@ -23,21 +14,25 @@ import java.util.Set;
 public class UpdateAction1o3o0 extends AbstractUpdateAction {
 
 	final String updateACLTripleQuery =
-		"INSERT { ?target " + ACLDescription.Resource.CLASS.getURI().stringValue() + " ?acl } \n" +
-			"WHERE { ?acl " + ACLDescription.Property.ACCESS_TO.getURI().stringValue() + " ?target }";
+		"INSERT { " +
+			"GRAPH ?target { " +
+			"?target <" + RDFSourceDescription.Property.ACCESS_CONTROL_LIST.getURI().stringValue() + "> ?acl." +
+			" }. \n" +
+			"} WHERE {" +
+			"GRAPH ?acl { ?acl <" + ACLDescription.Property.ACCESS_TO.getURI().stringValue() + "> ?target. " +
+			"}." +
+			"}";
 
 	@Override
 	public void execute() throws Exception {
-		transactionWrapper.runInPlatformContext( () -> {
-			sparqlTemplate.executeUpdate( updateACLTripleQuery, null );
-		} );
+		AnnotationConfigApplicationContext context = initializeContext();
+		transactionWrapper.runInPlatformContext( () -> sparqlTemplate.executeUpdate( updateACLTripleQuery, null ) );
 
 		Set<App> apps = getAllApps();
 		for ( App app : apps ) {
-			transactionWrapper.runInAppcontext( app, () -> {
-				sparqlTemplate.executeUpdate( updateACLTripleQuery, null );
-			} );
+			transactionWrapper.runInAppcontext( app, () -> sparqlTemplate.executeUpdate( updateACLTripleQuery, null ) );
 		}
+		context.close();
 	}
 }
 

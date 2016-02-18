@@ -195,5 +195,4 @@ public class RepositoriesConfig {
 	SPARQLService sparqlService() {
 		return new SesameSPARQLService( connectionFactory );
 	}
-
 }

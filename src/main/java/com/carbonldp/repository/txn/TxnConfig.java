@@ -4,6 +4,7 @@ import com.carbonldp.Vars;
 import com.carbonldp.repository.LocalRepositoryService;
 import com.carbonldp.repository.RepositoryService;
 import com.carbonldp.repository.security.SecuredNativeStore;
+import com.carbonldp.spring.TransactionWrapper;
 import org.openrdf.repository.Repository;
 import org.openrdf.repository.RepositoryException;
 import org.openrdf.repository.manager.LocalRepositoryManager;
@@ -68,5 +69,10 @@ public class TxnConfig {
 			String repositoryDirectory = Vars.getInstance().getAppsRepositoryDirectory();
 			return new LocalRepositoryManager( new File( repositoryDirectory ) );
 		}
+	}
+
+	@Bean
+	protected TransactionWrapper transactionWrapper() {
+		return new TransactionWrapper();
 	}
 }

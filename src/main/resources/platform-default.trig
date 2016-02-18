@@ -56,8 +56,7 @@
 			<platform/agents/>,
 			<platform/roles/>,
 			<platform/privileges/>,
-			<platform/auth-tokens/>;
-		cs:accessControlList <platform/~acl>.
+			<platform/auth-tokens/>.
 }
 <platform/~acl/> {
 	<platform/~acl/>
@@ -103,7 +102,7 @@
 			<platform/agents/admin/>;
 		ldp:member
 			<platform/agents/admin/>;
-		cs:accessControlList <platform/agents/~acl>.
+		cs:accessControlList <platform/agents/~acl/>.
 }
 <platform/agents/~acl/> {
 	<platform/agents/~acl/>
