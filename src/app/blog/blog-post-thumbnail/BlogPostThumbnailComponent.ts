@@ -3,7 +3,7 @@ import { ROUTER_DIRECTIVES, ROUTER_PROVIDERS, Router, Instruction } from 'angula
 
 import 'semantic-ui/semantic';
 
-import ContentService from "./../../content/ContentService";
+
 import BlogPost from './../blog-post/BlogPost';
 import * as CodeMirrorComponent from "app/components/code-mirror/CodeMirrorComponent";
 import template from './template.html!';
@@ -15,24 +15,23 @@ import './style.css!';
 	directives: [ CORE_DIRECTIVES, ROUTER_DIRECTIVES, CodeMirrorComponent.Class ]
 } )
 export default class BlogPostThumbnailComponent {
-	static parameters = [ [ Router ], [ ElementRef ], [ DynamicComponentLoader ], [ ContentService ] ];
+	static parameters = [ [ Router ], [ ElementRef ], [ DynamicComponentLoader ]];
 
 	router:Router;
 	dcl:DynamicComponentLoader;
 
 	element:ElementRef;
-	contentService:ContentService;
 	isNewPost:boolean;
 
 	@Input() blogPost:BlogPost;
 
 	get codeMirrorMode() { return CodeMirrorComponent.Mode; }
 
-	constructor( router:Router, element:ElementRef, dcl:DynamicComponentLoader, contentService:ContentService ) {
+	constructor( router:Router, element:ElementRef, dcl:DynamicComponentLoader) {
 		this.router = router;
 		this.element = element;
 		this.dcl = dcl;
-		this.contentService = contentService;
+
 	}
 
 	onInit():void {
