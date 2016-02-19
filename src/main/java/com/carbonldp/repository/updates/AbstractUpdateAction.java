@@ -4,6 +4,7 @@ import com.carbonldp.AbstractComponent;
 import com.carbonldp.Vars;
 import com.carbonldp.apps.App;
 import com.carbonldp.apps.AppRepository;
+import com.carbonldp.apps.context.AppContextConfig;
 import com.carbonldp.config.ConfigurationConfig;
 import com.carbonldp.config.RepositoriesConfig;
 import com.carbonldp.ldp.containers.ContainerRepository;
@@ -151,9 +152,11 @@ public abstract class AbstractUpdateAction extends AbstractComponent implements 
 
 	protected AnnotationConfigApplicationContext initializeContext() {
 		AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(
-				TxnConfig.class,
-				ConfigurationConfig.class,
-				RepositoriesConfig.class );
+			TxnConfig.class,
+			ConfigurationConfig.class,
+			RepositoriesConfig.class,
+			AppContextConfig.class
+		);
 		transactionWrapper = context.getBean( TransactionWrapper.class );
 		connectionFactory = context.getBean( SesameConnectionFactory.class );
 		sparqlTemplate = new SPARQLTemplate( connectionFactory );
