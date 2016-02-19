@@ -31,32 +31,6 @@ import java.util.Set;
  * @since _version_
  */
 public class UpdateAction1o1o0 extends AbstractUpdateAction {
-	private final String getAllQuery = "" +
-		"CONSTRUCT{\n" +
-		"   GRAPH ?c \n" +
-		"       {?s ?p ?o}.\n" +
-		"   }WHERE{\n" +
-		"    GRAPH ?c\n" +
-		"        {?s ?p ?o}.\n" +
-		"    }";
-
-	private final String deleteTripleQuery = "" +
-		"DELETE{" +
-		"   GRAPH ?c" +
-		"       {?s ?p ?o}" +
-		"}WHERE{\n" +
-		"    GRAPH ?c\n" +
-		"        {?s ?p ?o}\n" +
-		"    }";
-
-	private final String addTripleQuery = "" +
-		"INSERT{" +
-		"   GRAPH ?c" +
-		"       {?s ?p ?o}" +
-		"}WHERE{\n" +
-		"    GRAPH ?c\n" +
-		"        {?s ?p ?o}\n" +
-		"    }";
 
 	@Override
 	public void execute() throws Exception {
@@ -83,7 +57,7 @@ public class UpdateAction1o1o0 extends AbstractUpdateAction {
 
 	private void changeURIsToHTTPS() throws RepositoryException {
 
-		RepositoryResult<Statement> statements = sparqlTemplate.executeGraphQuery( getAllQuery, null );
+		RepositoryResult<Statement> statements = connectionFactory.getConnection().getStatements( null, null, null, true );
 
 		while ( statements.hasNext() ) {
 			Statement statement = statements.next();
@@ -102,20 +76,8 @@ public class UpdateAction1o1o0 extends AbstractUpdateAction {
 
 				if ( LOG.isDebugEnabled() ) LOG.debug( "changeURIsToHTTPS() -- Changing statement: '{}' to '{}'", statement, newStatement );
 
-				Map<String, Value> addValues = new HashMap<>();
-				addValues.put( "c", newStatement.getContext() );
-				addValues.put( "s", newStatement.getSubject() );
-				addValues.put( "p", newStatement.getPredicate() );
-				addValues.put( "o", newStatement.getObject() );
-
-				Map<String, Value> removeValues = new HashMap<>();
-				removeValues.put( "c", statement.getContext() );
-				removeValues.put( "s", statement.getSubject() );
-				removeValues.put( "p", statement.getPredicate() );
-				removeValues.put( "o", statement.getObject() );
-
-				sparqlTemplate.executeUpdate( deleteTripleQuery, removeValues );
-				sparqlTemplate.executeUpdate( addTripleQuery, addValues );
+				connectionFactory.getConnection().add( newStatement, context );
+				connectionFactory.getConnection().remove( statement, statement.getContext() );
 
 			}
 		}

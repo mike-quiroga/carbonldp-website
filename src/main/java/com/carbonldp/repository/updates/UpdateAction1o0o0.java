@@ -31,17 +31,6 @@ public class UpdateAction1o0o0 extends AbstractUpdateAction {
 
 	private static final String resourcesFile = "platform-default.trig";
 
-	final String emptyRepositoryQuery =
-		"DELETE { " +
-			"GRAPH ?c { " +
-			"?s ?p ?o." +
-			" }. \n" +
-			"} WHERE {" +
-			"GRAPH ?c { " +
-			"?s ?p ?o. " +
-			"}." +
-			"}";
-
 	@Override
 	public void execute() throws Exception {
 		emptyRepository();
@@ -49,6 +38,13 @@ public class UpdateAction1o0o0 extends AbstractUpdateAction {
 	}
 
 	protected void emptyRepository() {
-		transactionWrapper.runInPlatformContext( () -> sparqlTemplate.executeUpdate( emptyRepositoryQuery, null ) );
+		transactionWrapper.runInPlatformContext( () -> {
+			try {
+				connectionFactory.getConnection().remove( (Resource) null, null, null );
+			} catch ( RepositoryException e ) {
+				throw new RuntimeException( e );
+			}
+		} );
+
 	}
 }

@@ -4,40 +4,27 @@ import com.carbonldp.AbstractComponent;
 import com.carbonldp.Vars;
 import com.carbonldp.apps.App;
 import com.carbonldp.apps.AppRepository;
-import com.carbonldp.apps.context.AppContextConfig;
-import com.carbonldp.config.ConfigurationConfig;
-import com.carbonldp.config.RepositoriesConfig;
 import com.carbonldp.ldp.containers.ContainerRepository;
-import com.carbonldp.repository.ConnectionRWTemplate;
-import com.carbonldp.repository.security.SecuredNativeStore;
-import com.carbonldp.repository.txn.RepositoryRuntimeException;
-import com.carbonldp.repository.txn.TxnConfig;
+import com.carbonldp.repository.SpringLocalRepositoryManager;
 import com.carbonldp.sparql.SPARQLTemplate;
 import com.carbonldp.spring.TransactionWrapper;
 import com.carbonldp.utils.Action;
-import com.carbonldp.utils.ValueUtil;
-import org.apache.commons.io.IOUtils;
-import org.openrdf.model.Resource;
-import org.openrdf.model.Statement;
+import com.carbonldp.utils.ActionWithResult;
 import org.openrdf.model.URI;
-import org.openrdf.model.Value;
 import org.openrdf.model.impl.URIImpl;
-import org.openrdf.repository.Repository;
-import org.openrdf.repository.RepositoryConnection;
 import org.openrdf.repository.RepositoryException;
-import org.openrdf.repository.sail.SailRepository;
+import org.openrdf.repository.manager.RemoteRepositoryManager;
 import org.openrdf.rio.RDFFormat;
 import org.openrdf.rio.RDFParseException;
-import org.openrdf.spring.RepositoryConnectionFactory;
 import org.openrdf.spring.SesameConnectionFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.context.annotation.Bean;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
 /**
@@ -61,34 +48,19 @@ public abstract class AbstractUpdateAction extends AbstractComponent implements 
 
 	protected abstract void execute() throws Exception;
 
-	protected Repository getRepository( String repositoryFile ) {
-		File repositoryDir = new File( repositoryFile );
-		Repository repository = new SailRepository( new SecuredNativeStore( repositoryDir ) );
-		try {
-			repository.initialize();
-		} catch ( RepositoryException e ) {
-			throw new RuntimeException( "The repository in the directory: '" + repositoryFile + "', couldn't be initialized.", e );
-		}
-		return repository;
-	}
-
-	protected RepositoryConnection getConnection( Repository repository ) {
-		try {
-			return repository.getConnection();
-		} catch ( RepositoryException e ) {
-			throw new RepositoryRuntimeException( e );
-		}
-	}
-
 	// TODO: Instead of loading a file, build the resources dynamically
 	protected void loadResourcesFile( String resourcesFile, String baseURI ) {
-		Map<String, Value> values = new HashMap<>();
+		InputStream inputStream = getClass().getClassLoader().getResourceAsStream( resourcesFile );
 
-		values.put( "baseURI", new URIImpl( baseURI ) );
-		transactionWrapper.runInPlatformContext( () -> sparqlTemplate.executeUpdate( "LOAD <" +getClass().getClassLoader().getResource( resourcesFile ).toString()+ ">", null ) );
+		transactionWrapper.runInPlatformContext( () -> {
+			try {
+				connectionFactory.getConnection().add( inputStream, baseURI, RDFFormat.TRIG );
+			} catch ( IOException | RDFParseException | RepositoryException e ) {
+				throw new RuntimeException( e );
+			}
+		} );
 
 	}
-
 
 	protected Set<App> getAllApps() {
 		return transactionWrapper.runInPlatformContext( () -> {
