@@ -56,7 +56,8 @@
 			<platform/agents/>,
 			<platform/roles/>,
 			<platform/privileges/>,
-			<platform/auth-tokens/>.
+			<platform/auth-tokens/>;
+		cs:accessControlList <platform/~acl/>.
 }
 <platform/~acl/> {
 	<platform/~acl/>
