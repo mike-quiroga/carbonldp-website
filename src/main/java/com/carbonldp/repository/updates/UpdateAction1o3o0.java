@@ -1,14 +1,8 @@
 package com.carbonldp.repository.updates;
 
-import com.carbonldp.Vars;
 import com.carbonldp.apps.App;
 import com.carbonldp.authorization.acl.ACLDescription;
 import com.carbonldp.ldp.sources.RDFSourceDescription;
-import com.carbonldp.playground.OnMemoryRepository;
-import org.openrdf.model.URI;
-import org.openrdf.model.impl.URIImpl;
-import org.openrdf.sail.memory.MemoryStore;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 import java.util.Set;
 
@@ -30,16 +24,11 @@ public class UpdateAction1o3o0 extends AbstractUpdateAction {
 
 	@Override
 	public void execute() throws Exception {
-		AnnotationConfigApplicationContext context = initializeContext();
 		transactionWrapper.runInPlatformContext( () -> sparqlTemplate.executeUpdate( updateACLTripleQuery, null ) );
 		Set<App> apps = getAllApps();
 		for ( App app : apps ) {
-			transactionWrapper.runInAppcontext( app, () -> {
-
-				sparqlTemplate.executeUpdate( updateACLTripleQuery, null );
-			} );
+			transactionWrapper.runInAppcontext( app, () -> sparqlTemplate.executeUpdate( updateACLTripleQuery, null ) );
 		}
-		context.close();
 	}
 }
 

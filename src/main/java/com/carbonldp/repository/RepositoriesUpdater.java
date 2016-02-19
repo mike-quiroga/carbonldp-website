@@ -3,12 +3,19 @@ package com.carbonldp.repository;
 import com.carbonldp.AbstractComponent;
 import com.carbonldp.Consts;
 import com.carbonldp.Vars;
-import com.carbonldp.repository.updates.UpdateAction1o0o0;
-import com.carbonldp.repository.updates.UpdateAction1o1o0;
-import com.carbonldp.repository.updates.UpdateAction1o2o0;
-import com.carbonldp.repository.updates.UpdateAction1o3o0;
+import com.carbonldp.apps.AppRepository;
+import com.carbonldp.apps.context.AppContextConfig;
+import com.carbonldp.config.ConfigurationConfig;
+import com.carbonldp.config.RepositoriesConfig;
+import com.carbonldp.ldp.containers.ContainerRepository;
+import com.carbonldp.repository.txn.TxnConfig;
+import com.carbonldp.repository.updates.*;
+import com.carbonldp.sparql.SPARQLTemplate;
+import com.carbonldp.spring.TransactionWrapper;
 import com.carbonldp.utils.Action;
 import com.google.common.io.Files;
+import org.openrdf.spring.SesameConnectionFactory;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 import java.io.File;
 import java.io.IOException;
@@ -39,6 +46,7 @@ public class RepositoriesUpdater extends AbstractComponent {
 
 	public void updateRepositories() {
 		RepositoryVersion currentVersion = getCurrentVersion();
+		AnnotationConfigApplicationContext context = initializeContext();
 
 		RepositoriesUpdater.versionsUpdates
 			.keySet()
@@ -47,11 +55,24 @@ public class RepositoriesUpdater extends AbstractComponent {
 			.sorted()
 			.forEach( v -> {
 				LOG.debug( "-- updateRepositories() - Running update of repository version: '{}'...", v );
-				RepositoriesUpdater.versionsUpdates.get( v ).run();
+				Action action = RepositoriesUpdater.versionsUpdates.get( v );
+				( (AbstractUpdateAction) action ).setBeans( context );
+				action.run();
 				LOG.debug( "-- updateRepositories() - Repository update to version: '{}', complete.", v );
 			} );
 
+		context.close();
 		setCurrentVersion( getLatestVersion() );
+	}
+
+	protected AnnotationConfigApplicationContext initializeContext() {
+		AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(
+			TxnConfig.class,
+			ConfigurationConfig.class,
+			RepositoriesConfig.class,
+			AppContextConfig.class
+		);
+		return context;
 	}
 
 	private RepositoryVersion getLatestVersion() {
