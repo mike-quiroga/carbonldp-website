@@ -1,8 +1,8 @@
+import * as App from "carbon/App";
+
 export class CarbonApp {
-	name:string;
-	created:string;
-	modified:string;
 	slug:string;
+	app:App.Resource;
 }
 
 export default CarbonApp;

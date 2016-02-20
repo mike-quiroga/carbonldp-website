@@ -1,18 +1,18 @@
 <div class="formContainer">
 	<form [ngFormModel]="loginForm" class="ui form attached segment large loginForm" role="form" (submit)="onSubmit(loginForm.value, $event)">
-		<div class="field" [ngClass]="{ error: ((email.touched && !email.valid) || (submitted && !email.valid)) }">
+		<div class="field" [ngClass]="{ error: ((email.touched && !email.valid) || (submitted && !email.valid)), disabled: sending }">
 			<div class="ui left icon input">
 				<i class="user icon"></i>
-				<input type="text" name="email" placeholder="E-mail address" ngControl="email" #emailSpy>
+				<input type="email" name="email" placeholder="E-mail address" ngControl="email" required="required" [disabled]="sending">
 			</div>
 		</div>
-		<div class="field" [ngClass]="{ error: ((password.touched && !password.valid) || (submitted && !password.valid))}">
+		<div class="field" [ngClass]="{ error: ((password.touched && !password.valid) || (submitted && !password.valid)), disabled: sending}">
 			<div class="ui left icon input">
 				<i class="lock icon"></i>
-				<input type="password" name="password" placeholder="password" ngControl="password" #passwordSpy>
+				<input type="password" name="password" placeholder="password" ngControl="password" required="required" [disabled]="sending">
 			</div>
 		</div>
-		<button type="submit" class="ui fluid large california submit button" (click)="onSubmit(loginForm.value, $event)">Login</button>
+		<button type="submit" class="ui fluid large california submit button" [ngClass]="{ loading: sending }">Login</button>
 	</form>
 	<div class="ui negative bottom attached message" [ngClass]="{ hidden: (submitted && loginForm.valid && !errorMessage) || (loginForm.valid && !errorMessage) || (!loginForm.valid && (!email.touched && !password.touched)) || (email.valid && !password.touched) || (password.valid && !email.touched) }">
 		<ul class="list">
@@ -23,5 +23,4 @@
 			<li *ngIf="submitted && !!errorMessage">{{errorMessage}}</li>
 		</ul>
 	</div>
-	<!--{{submitted && !!errorMessage || loginForm.valid || (!loginForm.valid && (!email.touched && !password.touched)) || (email.valid && !password.touched) || (password.valid && !email.touched)}}-->
 </div>

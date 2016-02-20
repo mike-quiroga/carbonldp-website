@@ -16,10 +16,12 @@ import { CONTENT_PROVIDERS } from 'app/content/Content';
 import { BLOG_PROVIDERS } from 'app/blog/Blog';
 import { APP_DEV_PROVIDERS } from 'app/app-dev/AppDev';
 import { SIDEBAR_PROVIDERS } from 'app/app-dev/components/sidebar/Sidebar';
+
 const CARBON_PROVIDER = provide( Carbon, {
 	useFactory: () => {
-		var carbon = new Carbon();
+		let carbon = new Carbon();
 		carbon.setSetting( "domain", "local.carbonldp.com" );
+		return carbon;
 	}
 } );
 

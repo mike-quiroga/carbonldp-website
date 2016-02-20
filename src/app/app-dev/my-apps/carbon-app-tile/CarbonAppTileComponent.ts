@@ -27,6 +27,5 @@ export default class CarbonAppTileComponent {
 
 	ngAfterViewInit():void {
 		this.$element = $( this.element.nativeElement );
-		//console.log( "App :%o", this.carbonApp );
 	}
 }

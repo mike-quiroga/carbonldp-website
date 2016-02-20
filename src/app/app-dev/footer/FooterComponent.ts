@@ -16,6 +16,7 @@ export default class FooterComponent {
 	static parameters = [ [ ElementRef ] ];
 
 	element:ElementRef;
+
 	$element;
 
 	constructor( element:ElementRef ) {

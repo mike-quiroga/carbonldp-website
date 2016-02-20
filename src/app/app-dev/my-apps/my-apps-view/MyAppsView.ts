@@ -5,7 +5,6 @@ import { Router, RouteDefinition, ROUTER_DIRECTIVES, RouteConfig, RouterOutlet }
 import $ from 'jquery';
 import 'semantic-ui/semantic';
 
-import MyAppsService from './../service/MyAppsService';
 import CarbonAppView from "./../carbon-app/CarbonAppView";
 import CarbonAppTileComponent from './../carbon-app-tile/CarbonAppTileComponent';
 import CarbonApp from "./../carbon-app/CarbonApp";
@@ -15,7 +14,6 @@ import MyAppsListView from "./../my-apps-list-view/MyAppsListView";
 	selector: 'my-apps',
 	template: '<router-outlet></router-outlet>',
 	directives: [ CORE_DIRECTIVES, ROUTER_DIRECTIVES, CarbonAppTileComponent, RouterOutlet ],
-	providers: [ MyAppsService ]
 } )
 @RouteConfig( [
 	{
@@ -43,47 +41,16 @@ import MyAppsListView from "./../my-apps-list-view/MyAppsListView";
 	}
 ] )
 export default class MyAppsView {
-	static parameters = [ [ ElementRef ], [ MyAppsService ], [ Router ] ];
+	static parameters = [ [ ElementRef ] ];
 
-	router:Router;
 	element:ElementRef;
 	$element:JQuery;
 
-	myAppsService:MyAppsService;
-	carbonApps:CarbonApp[] = [];
-	routeDefinitions = [];
-
-	constructor( element:ElementRef, myAppsService:MyAppsService, router:Router ) {
+	constructor( element:ElementRef ) {
 		this.element = element;
-		this.myAppsService = myAppsService;
-		this.router = router;
 	}
 
 	ngAfterViewInit():void {
 		this.$element = $( this.element.nativeElement );
-		this.myAppsService.getApps().then(
-			( apps )=> {
-				apps.forEach( app=> {
-					app.data = {
-						alias: app.name.replace( new RegExp( " ", "g" ), "" ),
-						displayName: app.name
-					};
-					this.routeDefinitions.push( {
-						path: '/' + app.slug,
-						component: CarbonAppView,
-						as: app.name.replace( new RegExp( " ", "g" ), "" ),
-						data: app.data
-					} );
-					this.carbonApps.push( app );
-				} );
-			},
-			( error )=> {
-				console.error( "An error ocurred: %o", error );
-			}
-		);
-	}
-
-	routerOnActivate():void {
-
 	}
 }
