@@ -3,18 +3,13 @@ package com.carbonldp.repository;
 import com.carbonldp.AbstractComponent;
 import com.carbonldp.Consts;
 import com.carbonldp.Vars;
-import com.carbonldp.apps.AppRepository;
 import com.carbonldp.apps.context.AppContextConfig;
 import com.carbonldp.config.ConfigurationConfig;
 import com.carbonldp.config.RepositoriesConfig;
-import com.carbonldp.ldp.containers.ContainerRepository;
 import com.carbonldp.repository.txn.TxnConfig;
 import com.carbonldp.repository.updates.*;
-import com.carbonldp.sparql.SPARQLTemplate;
-import com.carbonldp.spring.TransactionWrapper;
 import com.carbonldp.utils.Action;
 import com.google.common.io.Files;
-import org.openrdf.spring.SesameConnectionFactory;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 import java.io.File;
@@ -48,19 +43,27 @@ public class RepositoriesUpdater extends AbstractComponent {
 		RepositoryVersion currentVersion = getCurrentVersion();
 		AnnotationConfigApplicationContext context = initializeContext();
 
-		RepositoriesUpdater.versionsUpdates
-			.keySet()
-			.stream()
-			.filter( v -> currentVersion.compareTo( v ) < 0 )
-			.sorted()
-			.forEach( v -> {
-				LOG.debug( "-- updateRepositories() - Running update of repository version: '{}'...", v );
-				Action action = RepositoriesUpdater.versionsUpdates.get( v );
-				( (AbstractUpdateAction) action ).setBeans( context );
-				action.run();
-				LOG.debug( "-- updateRepositories() - Repository update to version: '{}', complete.", v );
-			} );
-
+		if ( isNewRepository( currentVersion ) ) {
+			RepositoryVersion defaultVersion = new RepositoryVersion( "1.0.0" );
+			LOG.debug( "-- updateRepositories() - Running creation of repository version: '{}'...", getLatestVersion() );
+			Action action = RepositoriesUpdater.versionsUpdates.get( defaultVersion );
+			( (AbstractUpdateAction) action ).setBeans( context );
+			action.run();
+			LOG.debug( "-- updateRepositories() - Repository creation version: '{}', complete.", getLatestVersion() );
+		} else {
+			RepositoriesUpdater.versionsUpdates
+				.keySet()
+				.stream()
+				.filter( v -> currentVersion.compareTo( v ) < 0 )
+				.sorted()
+				.forEach( v -> {
+					LOG.debug( "-- updateRepositories() - Running update of repository version: '{}'...", v );
+					Action action = RepositoriesUpdater.versionsUpdates.get( v );
+					( (AbstractUpdateAction) action ).setBeans( context );
+					action.run();
+					LOG.debug( "-- updateRepositories() - Repository update to version: '{}', complete.", v );
+				} );
+		}
 		context.close();
 		setCurrentVersion( getLatestVersion() );
 	}
@@ -122,5 +125,11 @@ public class RepositoriesUpdater extends AbstractComponent {
 	private File getVersionFile() {
 		String versionFileDir = Vars.getInstance().getRepositoriesDirectory() + Consts.SLASH + RepositoriesUpdater.versionFileName;
 		return new File( versionFileDir );
+	}
+
+	private boolean isNewRepository( RepositoryVersion repositoryVersion ) {
+		if ( repositoryVersion.equals( new RepositoryVersion( "0.0.0" ) ) )
+			return true;
+		return false;
 	}
 }
