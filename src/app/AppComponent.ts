@@ -29,7 +29,7 @@ import './style.css!';
 	{path: '/Home', as: 'Home', component: HomeView},
 	{path: '/Blog', as: 'Blog', component: BlogView},
 	{path: '/blog-post/:id', as: 'BlogPost', component: BlogPostView},
-	{path: '/Login', as: 'Login', component: LoginView},
+	{path: '/login', as: 'Login', component: LoginView},
 	{path: '/docs/:id', as: 'Docs', component: ContentView},
 	{path: '/sparql-client', as: 'SPARQLClient', component: SPARQLClientComponent},
 	{path: '/carbon-ui', as: 'CarbonUI', component: CarbonUI},

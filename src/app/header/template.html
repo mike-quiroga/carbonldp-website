@@ -34,7 +34,7 @@
 						Log in
 					</a>
 					<div *ngIf="!isActive('/Login')" class="ui login popup bottom left transition hidden">
-						<login></login>
+						<login [container]="'.login.popup'"></login>
 					</div>
 				</div>
 			</div>

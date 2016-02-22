@@ -1,8 +1,8 @@
-import { Component, ElementRef } from 'angular2/core';
-import { ROUTER_DIRECTIVES, ROUTER_PROVIDERS, Router, Instruction, RouterLink } from 'angular2/router';
-import { CORE_DIRECTIVES, FORM_DIRECTIVES, FormBuilder, ControlGroup, AbstractControl, Control, NgIf, Validators, AbstractControl } from "angular2/common";
+import { Component, ElementRef, Injectable, Input } from 'angular2/core';
+import { ROUTER_DIRECTIVES, ROUTER_PROVIDERS, Router } from 'angular2/router';
+import { CORE_DIRECTIVES, FORM_DIRECTIVES, FormBuilder, ControlGroup, AbstractControl, Validators } from "angular2/common";
 
-import { ValidationService } from "./../../components/validation-service/ValidationService";
+import { ValidationService } from "app/components/validation-service/ValidationService";
 
 import $ from 'jquery';
 import 'semantic-ui/semantic';
@@ -14,6 +14,7 @@ import template from './template.html!';
 	template: template,
 	directives: [ CORE_DIRECTIVES, ROUTER_DIRECTIVES, FORM_DIRECTIVES ]
 } )
+@Injectable()
 export default class LoginComponent {
 	static parameters = [ [ Router ], [ ElementRef ], [ FormBuilder ] ];
 
@@ -22,7 +23,7 @@ export default class LoginComponent {
 	$element:JQuery;
 	$loginForm:JQuery;
 
-	submitted:boolean = false;
+	submitting:boolean = false;
 	errorMessage:string = "";
 
 	loginForm:ControlGroup;
@@ -30,6 +31,7 @@ export default class LoginComponent {
 	email:AbstractControl; // To make available the state of the input in the template
 	password:AbstractControl; // To make available the state of the input in the template
 
+	@Input() container:string|JQuery;
 
 	constructor( public router:Router, element:ElementRef, formBuilder:FormBuilder ) {
 		this.router = router;
@@ -50,25 +52,25 @@ export default class LoginComponent {
 
 	onSubmit( data:any, $event:any ) {
 		$event.preventDefault();
-		this.$loginForm.find( "button.submit" ).addClass( "loading" );
-		this.submitted = true;
+		this.submitting = true;
 		this.email.markAsTouched();
 		this.password.markAsTouched();
 		if ( this.loginForm.valid ) {
 			this.shakeForm();
-			this.errorMessage = "Service temporary unavailable";
-			//console.log( this.loginForm );
-			//console.log( data );
-			this.router.navigate( [ '/AppDev/Home' ] );
+			this.errorMessage = "Service temporary unavailable.";
+			//this.router.navigate( [ '/AppDev/Home' ] );
 		} else {
 			this.shakeForm();
 		}
-		this.$loginForm.find( "button.submit" ).removeClass( "loading" );
+		this.submitting = false;
 	}
 
 	shakeForm():void {
-		let target:JQuery = $( ".login.popup" );
-		target = target.length > 0 ? target : this.$element.find( ".formContainer" );
+		let target:JQuery = this.$element.find( ".formContainer" );
+		if ( this.container ) {
+			target = $( this.container );
+		}
+		//target = target.length > 0 ? target : this.$element.find( ".formContainer" );
 		if ( target ) {
 			target.transition( {
 				animation: "shake"
