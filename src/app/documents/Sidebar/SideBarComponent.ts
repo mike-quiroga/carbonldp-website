@@ -1,4 +1,5 @@
-import { Component, Input, CORE_DIRECTIVES, ElementRef, View} from 'angular2/angular2';
+import { Component, Input, ElementRef, View} from 'angular2/core';
+import { CORE_DIRECTIVES } from 'angular2/common';
 import { ROUTER_DIRECTIVES, ROUTER_PROVIDERS, Router, Instruction, RouteParams } from 'angular2/router';
 
 import $ from 'jquery';
@@ -33,7 +34,7 @@ export default class SideBarComponent {
 		this.$element = $( element.nativeElement );
 	}
 
-	afterViewInit():void {
+	ngAfterViewInit():void {
 		this.$container = $(this.parentelement.nativeElement).find( "article" );
 		this.sections = this.$container.children( "section" );
 		this.subSections = this.sections.children( "section" );

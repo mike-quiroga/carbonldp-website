@@ -1,4 +1,9 @@
-import {Component, CORE_DIRECTIVES, ElementRef, Title, View} from 'angular2/angular2';
+import {Component, ElementRef } from 'angular2/core';
+import { CORE_DIRECTIVES } from 'angular2/common';
+import { Title } from 'angular2/platform/browser';
+
+
+import * as CodeMirrorComponent from "app/components/code-mirror/CodeMirrorComponent";
 
 import $ from 'jquery';
 import 'semantic-ui/semantic';
@@ -11,7 +16,7 @@ import "./style.css!";
 @Component( {
 	selector: 'getting-started-rest-api',
 	template: template,
-	directives: [ CORE_DIRECTIVES,SideBarComponent],
+	directives: [ CORE_DIRECTIVES,SideBarComponent, CodeMirrorComponent.Class],
 	providers: [ Title ]
 } )
 export default class GettingStartedWithTheRestApiView {
@@ -26,11 +31,10 @@ export default class GettingStartedWithTheRestApiView {
 		this.element = element;
 		this.title = title;
 		this.title.setTitle( "Getting started - Rest API" );
-
 	}
 
 
-	afterViewInit():void {
+	ngAfterViewInit():void {
 		this.$element = $( this.element.nativeElement );
 		this.createAccordions();
 	}

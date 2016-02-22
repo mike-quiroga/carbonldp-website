@@ -1,4 +1,6 @@
-import {Component, CORE_DIRECTIVES, ElementRef, Title } from 'angular2/angular2';
+import {Component, ElementRef } from 'angular2/core';
+import { CORE_DIRECTIVES } from 'angular2/common';
+import { Title } from 'angular2/platform/browser';
 
 import $ from 'jquery';
 import 'semantic-ui/semantic';
@@ -27,7 +29,7 @@ export default class AboutCarbonLDPViews {
 	}
 
 
-	afterViewInit():void {
+	ngAfterViewInit():void {
 		this.$element = $( this.element.nativeElement );
 	}
 

@@ -1,4 +1,4 @@
-import {Component } from 'angular2/angular2';
+import { Component } from 'angular2/core';
 import {RouteConfig, RouterOutlet} from 'angular2/router';
 
 import DocumentsHomeView from 'app/documents/documents-home/DocumentsHomeView';

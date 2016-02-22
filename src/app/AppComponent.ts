@@ -8,10 +8,9 @@ import HomeView from 'app/home/HomeView';
 import BlogView from 'app/blog/BlogView';
 import BlogPostView from 'app/blog/blog-post/BlogPostView';
 import LoginView from 'app/login/LoginView';
-//import ContentView from 'app/content/ContentView';
 import SPARQLClientComponent from 'app/sparql-client/SPARQLClientComponent';
-import CarbonUI from 'app/carbon-ui/CarbonUI';
 import DocumentsComponent from 'app/documents/DocumentsComponent';
+import CarbonUI from 'app/carbon-ui/CarbonUI';
 
 import HeaderComponent from 'app/header/HeaderComponent';
 import FooterComponent from 'app/footer/FooterComponent';

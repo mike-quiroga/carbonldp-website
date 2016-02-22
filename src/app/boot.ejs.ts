@@ -11,7 +11,6 @@ import Carbon from "carbon/Carbon";
 
 import AppComponent from "app/AppComponent";
 
-import { CONTENT_PROVIDERS } from "app/content/Content";
 import { BLOG_PROVIDERS } from "app/blog/Blog";
 
 const CARBON_PROVIDER = provide( Carbon, {
@@ -29,6 +28,5 @@ bootstrap( AppComponent, [
 	provide( APP_BASE_HREF, { useValue: "<%- url.base %>" } ),
 
 	CARBON_PROVIDER,
-	CONTENT_PROVIDERS,
 	BLOG_PROVIDERS
 ] );
