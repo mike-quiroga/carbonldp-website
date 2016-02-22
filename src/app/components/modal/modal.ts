@@ -1,4 +1,4 @@
-import { View, Component } from 'angular2/angular2';
+import { View, Component } from 'angular2/core';
 
 import $ from 'jquery';
 import 'semantic-ui/semantic';
@@ -10,7 +10,7 @@ import template from './template.html!';
 	template: template
 })
 export default class ModalComponent {
-	afterViewInit():void {
+	ngAfterViewInit():void {
 		$( '.ui.modal' ).modal( 'show' );
 	}
 }

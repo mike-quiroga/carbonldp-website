@@ -1,4 +1,4 @@
-import { Provider } from 'angular2/angular2';
+import { Provider } from 'angular2/core';
 
 import BlogService from 'app/blog/service/BlogService';
 

@@ -1,4 +1,5 @@
-import { Component, CORE_DIRECTIVES, Input, DynamicComponentLoader, ElementRef, Type } from 'angular2/angular2';
+import { Component, ElementRef, Input, DynamicComponentLoader, Type } from "angular2/core";
+import { CORE_DIRECTIVES } from "angular2/common";
 import { ROUTER_DIRECTIVES, ROUTER_PROVIDERS, Router, Instruction, RouteParams } from 'angular2/router';
 
 import $ from 'jquery';
@@ -17,11 +18,13 @@ import './style.css!';
 	providers: [ BlogService ]
 } )
 export default class BlogPostView {
-	static parameters = [ [ Router ], [ ElementRef ], [ DynamicComponentLoader ], [ RouteParams ], [ BlogService ] ];
+	static parameters = [ [ Router ], [ ElementRef ], [ DynamicComponentLoader ], [ RouteParams ], [ Location ], [ BlogService ] ];
 
 	router:Router;
 	dcl:DynamicComponentLoader;
 	routeParams:RouteParams;
+	location:Location;
+
 	blogService:BlogService;
 
 	element:ElementRef;
@@ -32,11 +35,13 @@ export default class BlogPostView {
 
 	get codeMirrorMode() { return CodeMirrorComponent.Mode; }
 
-	constructor( router:Router, element:ElementRef, dcl:DynamicComponentLoader, routeParams:RouteParams, blogService:BlogService ) {
+	constructor( router:Router, element:ElementRef, dcl:DynamicComponentLoader, routeParams:RouteParams, location:Location, blogService:BlogService ) {
 		this.router = router;
 		this.element = element;
 		this.dcl = dcl;
 		this.routeParams = routeParams;
+		this.location = location;
+
 		this.blogService = blogService;
 
 		this.postid = <number>this.routeParams.get( 'id' );
@@ -44,21 +49,23 @@ export default class BlogPostView {
 	}
 
 
-	onActivate():void {
+	routerOnActivate():void {
 		if ( typeof this.postid === "undefined" || this.postid === null ) {
 			return;
 		} else {
 			this.blogService.getPost( this.postid ).then(
 				( post )=> {
-					let fileName:string = post.filename;
-					this.createPostComponent( fileName );
 					this.blogPost = post;
+
+					let fileName:string = post.filename;
+					let postComponent:Type = this.createPostComponent( fileName );
+					this.renderPostComponent( postComponent );
 				}
 			);
 		}
 	}
 
-	afterViewInit():void {
+	ngAfterViewInit():void {
 		this.$element = $( this.element.nativeElement );
 	}
 
@@ -66,7 +73,7 @@ export default class BlogPostView {
 		@Component( {
 			selector: 'compiled-component',
 			directives: [ CORE_DIRECTIVES, ROUTER_DIRECTIVES, CodeMirrorComponent.Class ],
-			templateUrl: "/assets/blog-posts/" + fileName
+			templateUrl: `${ location.platformStrategy.getBaseHref() }assets/blog-posts/${ fileName }`
 		} )
 		class CompiledComponent {
 			static parameters = [ [ ElementRef ] ];
@@ -76,10 +83,15 @@ export default class BlogPostView {
 				this.element = element;
 			}
 
-			afterViewInit():void {
+			ngAfterViewInit():void {
 
 			}
 		}
-		this.dcl.loadIntoLocation( CompiledComponent, this.element, 'content' );
+
+		return CompiledComponent;
+	}
+
+	private renderPostComponent( postComponent:Type ):void {
+		this.dcl.loadIntoLocation( postComponent, this.element, 'content' );
 	}
 }

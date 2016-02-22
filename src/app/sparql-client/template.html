@@ -18,20 +18,20 @@
 			</div>
 			<div class="ui middle attached segment pushable">
 				<div class="ui inverted right vertical very wide dimmed sidebar menu queries-list">
-					<p *ng-if="savedQueries.length == 0">
+					<p *ngIf="savedQueries.length == 0">
 						No saved queries yet.
 					</p>
-					<a class="item" *ng-for="#query of savedQueries; #i =index" (click)="onClickQuery(i)">
+					<a class="item" *ngFor="#query of savedQueries; #i =index" (click)="onClickQuery(i)">
 						<button class="mini ui right floated red button" (click)="onClickRemoveQuery(i)">
 							<i class="icon remove"></i>
 						</button>
 						<span class="name">{{query.name}}</span>
 						<br/>
-						<span class="operation" [ng-class]="query.operation.toLowerCase()">{{query.operation.toLowerCase()}}</span>
+						<span class="operation" [ngClass]="query.operation.toLowerCase()">{{query.operation.toLowerCase()}}</span>
 					</a>
 				</div>
 				<div class="pusher">
-					<div class="ui basic grid segment" [ng-class]="{loading: isSending}">
+					<div class="ui basic grid segment" [ngClass]="{loading: isSending}">
 						<div class="row">
 							<div class="column">
 								<div class="ui grid form">
@@ -40,7 +40,7 @@
 											<label>Endpoint URI:</label>
 										</div>
 										<div class="thirteen wide column field">
-											<input placeholder="https://example.com/parent/.../resource/" [(ng-model)]="currentQuery.endpoint" type="text">
+											<input placeholder="https://example.com/parent/.../resource/" [(ngModel)]="currentQuery.endpoint" type="text">
 										</div>
 									</div>
 									<div class="fields row">
@@ -48,7 +48,7 @@
 											<label>Type:</label>
 										</div>
 										<div class="three wide column field">
-											<select #queryType class="ui dropdown" [(ng-model)]="currentQuery.type" (change)="onChangeQueryType($event)">
+											<select #queryType class="ui dropdown" [(ngModel)]="currentQuery.type" (change)="onChangeQueryType($event)">
 												<option value="{{SPARQLTypes.query}}">{{SPARQLTypes.query}}</option>
 												<option value="{{SPARQLTypes.update}}">{{SPARQLTypes.update}}</option>
 											</select>
@@ -59,16 +59,16 @@
 											<label>Query:</label>
 										</div>
 										<div class="thirteen wide column field">
-											<code-mirror [mode]="codeMirrorMode.SPARQL" [read-only]="isSending" [(value)]="sparql" [show-line-numbers]="true"></code-mirror>
+											<code-mirror [mode]="codeMirrorMode.SPARQL" [readOnly]="isSending" [(value)]="sparql" [showLineNumbers]="true"></code-mirror>
 										</div>
 									</div>
-									<div class="fields row" *ng-if="currentQuery.type == 'Query'">
+									<div class="fields row" *ngIf="currentQuery.type == 'Query'">
 										<div class="three wide right aligned column">
 											<label>Output Format:</label>
 										</div>
 										<div class="three wide column field">
-											<select class="ui dropdown" [(ng-model)]="currentQuery.format" [disabled]="isSending || !currentQuery.operation">
-												<option *ng-for="#format of formatsAvailable" [value]="format.value">{{format.name}}</option>
+											<select class="ui dropdown" [(ngModel)]="currentQuery.format" [disabled]="isSending || !currentQuery.operation">
+												<option *ngFor="#format of formatsAvailable" [value]="format.value">{{format.name}}</option>
 											</select>
 										</div>
 									</div>
@@ -77,12 +77,12 @@
 										</div>
 										<div class="six wide column field">
 											<button class="ui button"
-											        [ng-class]="{disabled:!currentQuery.content}">
+											        [ngClass]="{disabled:!currentQuery.content}">
 												<i class="checkmark icon"></i>
 												Validate
 											</button>
 											<button class="ui blue button"
-											        [ng-class]="{disabled: !canExecute()}"
+											        [ngClass]="{disabled: !canExecute()}"
 											        (click)="onExecute()">
 												<i class="play icon"></i>
 												Execute
@@ -104,14 +104,14 @@
 			<div class="ui bottom attached segment">
 				<div class="ui grid form row">
 					<div class="nine wide column">
-						<input placeholder="name of the query" type="text" [(ng-model)]="currentQuery.name">
+						<input placeholder="name of the query" type="text" [(ngModel)]="currentQuery.name">
 					</div>
 					<div class="seven wide column field">
 						<button class="ui button"
-						        [ng-class]="{loading: isSaving, disabled: !canSaveQuery()}"
+						        [ngClass]="{loading: isSaving, disabled: !canSaveQuery()}"
 						        [disabled]="currentQuery.endpoint && !currentQuery.format && !currentQuery.content"
 						        (click)="onClickSaveQuery()"
-						        *ng-if="currentQuery.id==null">
+						        *ngIf="currentQuery.id==null">
 							<i class="star icon"></i>
 							<span>Save Query</span>
 						</button>
@@ -145,18 +145,18 @@
 				        [disabled]="responses.length<=0"
 				        (click)="onEmptyStack()">
 					<i class="trash outline icon"></i>
-					Empty Stack <span *ng-if="responses.length>0">({{responses.length}})</span>
+					Empty Stack <span *ngIf="responses.length>0">({{responses.length}})</span>
 				</button>
 			</h3>
 		</div>
 	</div>
-	<!--<sparql-response class="row" *ng-for="#response of responses; #i =index" [response]="response" (on-remove)="onRemove($event)" (on-configure)="onConfigureResponse($event)" (on-re-execute)="onReExecute($event)" [(is-re-executing)]="isReExecuting"></sparql-response>-->
+	<!--<sparql-response class="row" *ngFor="#response of responses; #i =index" [response]="response" (onRemove)="onRemove($event)" (onConfigure)="onConfigureResponse($event)" (onReExecute)="onReExecute($event)" [(isReExecuting)]="isReExecuting"></sparql-response>-->
 	<sparql-response class="row"
-	                 *ng-for="#response of responses; #i =index"
+	                 *ngFor="#response of responses; #i =index"
 	                 [response]="response"
-	                 (on-remove)="onRemove($event)"
-	                 (on-configure)="onConfigureResponse($event)"
-	                 (on-re-execute)="onReExecute($event)"></sparql-response>
+	                 (onRemove)="onRemove($event)"
+	                 (onConfigure)="onConfigureResponse($event)"
+	                 (onReExecute)="onReExecute($event)"></sparql-response>
 	<div class="row"></div>
 	<div class="row"></div>
 	<div class="row"></div>

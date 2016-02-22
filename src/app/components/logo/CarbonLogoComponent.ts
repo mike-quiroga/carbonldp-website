@@ -1,4 +1,4 @@
-import { Component, ElementRef } from 'angular2/angular2';
+import { Component, ElementRef } from 'angular2/core';
 
 import $ from 'jquery';
 
@@ -19,7 +19,7 @@ export default class CarbonLogoComponent {
 		this.element = element;
 	}
 
-	afterViewInit():void {
+	ngAfterViewInit():void {
 		this.$element = $( this.element.nativeElement );
 		this.causeRedraw();
 

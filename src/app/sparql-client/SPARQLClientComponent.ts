@@ -1,8 +1,6 @@
-import {
-	Component, View,
-	CORE_DIRECTIVES, FORM_DIRECTIVES,
-	ElementRef,NgStyle
-} from 'angular2/angular2';
+import { Component, View, ElementRef } from 'angular2/core';
+import { CORE_DIRECTIVES, FORM_DIRECTIVES, NgStyle } from "angular2/common";
+
 import { ResponseComponent, SPARQLResponseType, SPARQLFormats, SPARQLClientResponse, SPARQLQuery } from './response/ResponseComponent';
 import * as CodeMirrorComponent from "app/components/code-mirror/CodeMirrorComponent";
 
@@ -116,7 +114,7 @@ export default class SPARQLClientComponent {
 		this.savedQueries = this.getLocalSavedQueries() || [];
 	}
 
-	afterViewInit():void {
+	ngAfterViewInit():void {
 		this.$element = $( this.element.nativeElement );
 		this.btnSaveQuery = this.$element.find( ".btnSaveQuery " );
 		this.btnsGroupSaveQuery = this.$element.find( ".btnsGroupSaveQuery " );

@@ -1,4 +1,5 @@
-import { Component, CORE_DIRECTIVES, ElementRef } from 'angular2/angular2';
+import { Component, ElementRef } from 'angular2/core';
+import { CORE_DIRECTIVES } from "angular2/common";
 
 import $ from 'jquery';
 import 'semantic-ui/semantic';
@@ -21,13 +22,13 @@ export default class FooterComponent {
 		this.element = element;
 	}
 
-	afterViewInit():void {
+	ngAfterViewInit():void {
 		this.$element = $( this.element.nativeElement );
 
 		this.addSocialButtonsAnimations();
 	}
 
-	onDestroy():void {
+	ngOnDestroy():void {
 		this.$element.find( '.social-icons .icon' ).unbind( 'mouseenter', triggerPulseTransition );
 	}
 
