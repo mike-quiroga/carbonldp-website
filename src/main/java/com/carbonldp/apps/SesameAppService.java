@@ -1,5 +1,6 @@
 package com.carbonldp.apps;
 
+import com.carbonldp.Vars;
 import com.carbonldp.agents.Agent;
 import com.carbonldp.agents.app.AppAgentRepository;
 import com.carbonldp.apps.roles.AppRoleRepository;
@@ -12,10 +13,7 @@ import com.carbonldp.exceptions.InvalidResourceException;
 import com.carbonldp.exceptions.ResourceAlreadyExistsException;
 import com.carbonldp.exceptions.ResourceDoesntExistException;
 import com.carbonldp.ldp.AbstractSesameLDPService;
-import com.carbonldp.ldp.containers.BasicContainer;
-import com.carbonldp.ldp.containers.BasicContainerFactory;
-import com.carbonldp.ldp.containers.Container;
-import com.carbonldp.ldp.containers.ContainerService;
+import com.carbonldp.ldp.containers.*;
 import com.carbonldp.models.Infraction;
 import com.carbonldp.rdf.RDFDocument;
 import com.carbonldp.rdf.RDFResource;
@@ -24,6 +22,8 @@ import com.carbonldp.utils.URIUtil;
 import com.carbonldp.web.exceptions.NotFoundException;
 import org.openrdf.model.Statement;
 import org.openrdf.model.URI;
+import org.openrdf.model.impl.URIImpl;
+import org.openrdf.query.algebra.Str;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -62,6 +62,8 @@ public class SesameAppService extends AbstractSesameLDPService implements AppSer
 
 		App createdApp = appRepository.createPlatformAppRepository( app );
 		containerService.createChild( appRepository.getPlatformAppContainerURI(), app );
+		createBackupContainer( app );
+		createJobsContainer( app );
 		ACL appACL = createAppACL( createdApp );
 
 		AppRole adminRole = transactionWrapper.runWithSystemPermissionsInAppContext( app, () -> {
@@ -209,6 +211,34 @@ public class SesameAppService extends AbstractSesameLDPService implements AppSer
 	private void validate( App app ) {
 		List<Infraction> infractions = AppFactory.getInstance().validate( app );
 		if ( ! infractions.isEmpty() ) throw new InvalidResourceException( infractions );
+	}
+
+	private void createBackupContainer( App app ) {
+		URI containerURI = generateBackupContainerURI( app );
+		RDFResource backupsResource = new RDFResource( containerURI );
+		DirectContainer backupsContainer = DirectContainerFactory.getInstance().create( backupsResource, app.getURI(), AppDescription.Property.BACKUP.getURI() );
+		sourceRepository.createAccessPoint( app.getURI(), backupsContainer );
+		aclRepository.createACL( backupsContainer.getURI() );
+	}
+
+	private URI generateBackupContainerURI( App app ) {
+		String appString = app.getURI().stringValue();
+		String backupsString = Vars.getInstance().getBackupsContainer();
+		return new URIImpl( appString + backupsString );
+	}
+
+	private void createJobsContainer( App app ) {
+		URI containerURI = generateJobsContainerURI( app );
+		RDFResource jobsResource = new RDFResource( containerURI );
+		DirectContainer jobsContainer = DirectContainerFactory.getInstance().create( jobsResource, app.getURI(), AppDescription.Property.JOB.getURI() );
+		sourceRepository.createAccessPoint( app.getURI(), jobsContainer );
+		aclRepository.createACL( jobsContainer.getURI() );
+	}
+
+	private URI generateJobsContainerURI( App app ) {
+		String appString = app.getURI().stringValue();
+		String jobsString = Vars.getInstance().getJobsContainer();
+		return new URIImpl( appString + jobsString );
 	}
 
 	@Autowired
