@@ -1,0 +1,16 @@
+app-dev {
+	footer {
+		@media only screen and (max-width: 791px) {
+
+			.base22-logo.column, .company.column {
+				text-align: center;
+			}
+		}
+		@media only screen and (min-width: 792px) {
+
+			.company.column {
+				text-align: right;
+			}
+		}
+	}
+}
