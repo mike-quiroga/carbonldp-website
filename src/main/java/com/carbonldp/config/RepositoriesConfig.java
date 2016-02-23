@@ -19,6 +19,10 @@ import com.carbonldp.authorization.SesamePlatformPrivilegeRepository;
 import com.carbonldp.authorization.SesamePlatformRoleRepository;
 import com.carbonldp.authorization.acl.ACLRepository;
 import com.carbonldp.authorization.acl.SesameACLRepository;
+import com.carbonldp.jobs.SesameJobTriggerRepository;
+import com.carbonldp.jobs.SesameTriggerRepository;
+import com.carbonldp.jobs.TriggerRepository;
+import com.carbonldp.jobs.TypedTriggerRepository;
 import com.carbonldp.ldp.containers.*;
 import com.carbonldp.ldp.nonrdf.NonRDFSourceRepository;
 import com.carbonldp.ldp.nonrdf.RDFRepresentationRepository;
@@ -130,6 +134,17 @@ public class RepositoriesConfig {
 		typedServices.add( indirectContainerRepository() );
 
 		return new SesameContainerRepository( connectionFactory, resourceRepository(), documentRepository(), sourceRepository(), typedServices, rdfRepresentationRepository() );
+	}
+
+	@Bean
+	public TypedTriggerRepository jobTriggerRepository() {return new SesameJobTriggerRepository( connectionFactory, resourceRepository(), documentRepository() ); }
+
+	@Bean
+	public TriggerRepository triggerRepository() {
+		List<TypedTriggerRepository> typdServices = new ArrayList<>();
+		typdServices.add( jobTriggerRepository() );
+
+		return new SesameTriggerRepository( connectionFactory, resourceRepository(), documentRepository(), typdServices );
 	}
 
 	@Bean
