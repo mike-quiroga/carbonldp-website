@@ -7,6 +7,7 @@ import com.carbonldp.apps.context.AppContextConfig;
 import com.carbonldp.config.ConfigurationConfig;
 import com.carbonldp.config.RepositoriesConfig;
 import com.carbonldp.config.ServicesConfig;
+import com.carbonldp.jobs.JobConfig;
 import com.carbonldp.log.LOGConfig;
 import com.carbonldp.log.RequestLoggerFilter;
 import com.carbonldp.mail.MailConfig;
@@ -139,7 +140,8 @@ public class Application {
 			SecurityConfig.class,
 			ServicesConfig.class,
 			MailConfig.class,
-			LOGConfig.class
+			LOGConfig.class,
+			JobConfig.class
 		);
 		return rootContext;
 	}
