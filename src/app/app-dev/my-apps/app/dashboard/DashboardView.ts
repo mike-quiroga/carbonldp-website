@@ -5,7 +5,7 @@ import { ROUTER_DIRECTIVES, Router, RouteParams } from 'angular2/router';
 import $ from 'jquery';
 import 'semantic-ui/semantic';
 
-import SideberService from "./../../../components/sidebar/service/SidebarService";
+import SidebarService from "./../../../components/sidebar/service/SidebarService";
 import MyAppsService from "./../../service/MyAppsService";
 import App from "./../App";
 
@@ -19,22 +19,22 @@ import './style.css!';
 	providers: [ MyAppsService ]
 } )
 export default class AppDashboardView {
-	static parameters = [ [ Router ], [ ElementRef ], [ RouteParams ], [ SideberService ], [ MyAppsService ] ];
+	static parameters = [ [ Router ], [ ElementRef ], [ RouteParams ], [ SidebarService ], [ MyAppsService ] ];
 
 	router:Router;
 	routeParams:RouteParams;
-	sideberService:SideberService;
+	sidebarService:SidebarService;
 	myAppsService:MyAppsService;
 
 	element:ElementRef;
 	$element:JQuery;
 	app:App;
 
-	constructor( router:Router, element:ElementRef, routeParams:RouteParams, sideberService:SideberService, myAppsService:MyAppsService ) {
+	constructor( router:Router, element:ElementRef, routeParams:RouteParams, sidebarService:SidebarService, myAppsService:MyAppsService ) {
 		this.router = router;
 		this.element = element;
 		this.routeParams = routeParams;
-		this.sideberService = sideberService;
+		this.sidebarService = sidebarService;
 		this.myAppsService = myAppsService;
 	}
 

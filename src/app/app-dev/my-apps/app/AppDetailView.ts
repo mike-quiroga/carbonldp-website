@@ -5,7 +5,7 @@ import { ROUTER_DIRECTIVES, ROUTER_PROVIDERS, RouteConfig, Router, RouterOutlet,
 import $ from 'jquery';
 import 'semantic-ui/semantic';
 
-import SideberService from "./../../components/sidebar/service/SidebarService";
+import SidebarService from "./../../components/sidebar/service/SidebarService";
 import MyAppsService from "./../service/MyAppsService";
 import App from "./App";
 
@@ -44,11 +44,11 @@ import './style.css!';
 	}
 ] )
 export default class AppDetailView {
-	static parameters = [ [ Router ], [ ElementRef ], [ RouteParams ], [ SideberService ], [ MyAppsService ] ];
+	static parameters = [ [ Router ], [ ElementRef ], [ RouteParams ], [ SidebarService ], [ MyAppsService ] ];
 
 	router:Router;
 	routeParams:RouteParams;
-	sideberService:SideberService;
+	sidebarService:SidebarService;
 	myAppsService:MyAppsService;
 
 	element:ElementRef;
@@ -56,11 +56,11 @@ export default class AppDetailView {
 	app:App;
 	timer:number;
 
-	constructor( router:Router, element:ElementRef, routeParams:RouteParams, sideberService:SideberService, myAppsService:MyAppsService ) {
+	constructor( router:Router, element:ElementRef, routeParams:RouteParams, sidebarService:SidebarService, myAppsService:MyAppsService ) {
 		this.router = router;
 		this.element = element;
 		this.routeParams = routeParams;
-		this.sideberService = sideberService;
+		this.sidebarService = sidebarService;
 		this.myAppsService = myAppsService;
 		try {
 			let slug:string = this.routeParams.get( 'slug' );
@@ -78,7 +78,7 @@ export default class AppDetailView {
 						}, 1000 );
 					} else {
 						this.app = app;
-						this.sideberService.addApp( this.app );
+						this.sidebarService.addApp( this.app );
 					}
 
 				},
