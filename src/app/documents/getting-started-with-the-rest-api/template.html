@@ -11,12 +11,9 @@
 
 				<div class="active section">Getting Started</div>
 			</div>
-
-			<!--<h1 class="ui header">Getting Started With the REST API</h1>-->
-
 		</div>
+		<sidebar-component [mobile]=true [parentelement]="element" class="sixteen wide mobile only column"></sidebar-component>
 	</div>
-
 	<div class="row">
 		<div class="twelve wide computer twelve wide tablet sixteen wide mobile column">
 			<main>
@@ -110,7 +107,7 @@
 							learn about 
 							<em>application agents</em>, which represent accounts specifically for users of the applications you
 							build.</p>
-					</section>
+					<!--</section>-->
 
 					<section>
 						<h2 class="ui header">Create the request</h2>
@@ -154,14 +151,14 @@
 						</table>
 
 						<textarea #example1 class="hidden">
-@prefix cs:&#60;https://carbonldp.com/ns/v1/security#&#62;.
-@prefix vcard:&#60;http://www.w3.org/2001/vcard-rdf/3.0#&#62;.
+							@prefix cs:&#60;https://carbonldp.com/ns/v1/security#&#62;.
+							@prefix vcard:&#60;http://www.w3.org/2001/vcard-rdf/3.0#&#62;.
 
-<>
-	a cs:Agent;
-	cs:name "Jane Doe";
-	vcard:email "jane.doe@example.org";
-	cs:password "MyStr0ngP@ssw0rd#".
+							<>
+							a cs:Agent;
+							cs:name "Jane Doe";
+							vcard:email "jane.doe@example.org";
+							cs:password "MyStr0ngP@ssw0rd#".
 						</textarea>
 
 						<code-mirror class="ui text left aligned basic segment"
@@ -537,6 +534,7 @@
 						             [read-only]="'nocursor'" [value]="example2.value">
 						</code-mirror>
 					</section>
+					</section>
 
 					<section>
 						<h2 class="ui header">Create an application</h2>
@@ -592,8 +590,8 @@
 @prefix cs:&#60;https://carbonldp.com/ns/v1/security#&#62;.
 
 <>
-	a cs:Application;
-	cs:name "Taxonomy Hub".
+a cs:Application;
+cs:name "Taxonomy Hub".
 						</textarea>
 						<!--@formatter:on-->
 
@@ -819,8 +817,8 @@
 						<!--@formatter:off-->
 						<textarea #example55 class="hidden">
 &#60;carbon-document-uri&#62;
-	a skos:Concept;
-	skos:prefLabel "animals".
+a skos:Concept;
+skos:prefLabel "animals".
 						</textarea>
 						<!--@formatter:on-->
 						<code-mirror class="ui text left aligned basic segment"
@@ -832,9 +830,9 @@
 						<!--@formatter:off-->
 						<textarea #example56 class="hidden">
 &#60;carbon-document-uri&#62;
-	rdf:type skos:Concept;
-	skos:prefLabel "animals"@en;
-	skos:prefLabel "animaux"@fr.
+rdf:type skos:Concept;
+skos:prefLabel "animals"@en;
+skos:prefLabel "animaux"@fr.
 						</textarea>
 						<!--@formatter:on-->
 						<code-mirror class="ui text left aligned basic segment"
@@ -864,9 +862,9 @@
 						<!--@formatter:off-->
 						<textarea #example57 class="hidden">
 &#60;carbon-document-uri&#62;
-	rdf:type skos:Concept;
-	skos:prefLabel "animals"@en;
-	skos:narrower ex:mammals.
+rdf:type skos:Concept;
+skos:prefLabel "animals"@en;
+skos:narrower ex:mammals.
 						</textarea>
 						<!--@formatter:on-->
 
@@ -924,13 +922,13 @@
 						<!--@formatter:off-->
 						<textarea #example58 class="hidden">
 &#60;carbon-document-uri&#62;
-	rdf:type skos:ConceptScheme;
-	dct:title "Content Topics";
-	skos:hasTopConcept
-		&#60;carbon-document-uri&#62;,
-		&#60;carbon-document-uri&#62;,
-		&#60;carbon-document-uri&#62;,
-		&#60;carbon-document-uri&#62;.
+rdf:type skos:ConceptScheme;
+dct:title "Content Topics";
+skos:hasTopConcept
+	&#60;carbon-document-uri&#62;,
+	&#60;carbon-document-uri&#62;,
+	&#60;carbon-document-uri&#62;,
+	&#60;carbon-document-uri&#62;.
 						</textarea>
 						<!--@formatter:on-->
 						<code-mirror class="ui text left aligned basic segment"
@@ -1146,7 +1144,7 @@
 @prefix ldp:&#60;http://www.w3.org/ns/ldp#&#62;.
 
 <>
-	a ldp:BasicContainer.
+a ldp:BasicContainer.
 						</textarea>
 						<!--@formatter:on-->
 
@@ -1223,9 +1221,9 @@
 @prefix skos:&#60;http://www.w3.org/2004/02/skos/core#&#62; .
 @prefix dct:&#60;http://purl.org/dc/terms/&#62; .
 <>
-	a ldp:BasicContainer, skos:ConceptScheme;
-	ldp:memberOfRelation skos:inScheme;
-	dct:title "Topics".
+a ldp:BasicContainer, skos:ConceptScheme;
+ldp:memberOfRelation skos:inScheme;
+dct:title "Topics".
 						</textarea>
 						<!--@formatter:on-->
 						<code-mirror class="ui text left aligned basic segment"
@@ -1322,10 +1320,10 @@
 @prefix skos:&#60;http://www.w3.org/2004/02/skos/core#&#62; .
 
 <>
-	a ldp:DirectContainer;
-	ldp:membershipResource
-	&#60;https://dev.carbonldp.com/apps/taxonomy-hub/schemes/topics/&#62;;
-	ldp:hasMemberRelation skos:hasTopConcept.
+a ldp:DirectContainer;
+ldp:membershipResource
+&#60;https://dev.carbonldp.com/apps/taxonomy-hub/schemes/topics/&#62;;
+ldp:hasMemberRelation skos:hasTopConcept.
 						</textarea>
 						<!--@formatter:on-->
 						<code-mirror class="ui text left aligned basic segment"
@@ -1439,11 +1437,11 @@
 @prefix skos:&#60;http://www.w3.org/2004/02/skos/core#&#62; .
 
 <>
-	a ldp:BasicContainer, skos:Concept;
-	ldp:hasMemberRelation skos:narrower;
-	ldp:memberOfRelation skos:broader;
-	skos:prefLabel "Design"@en;
-	skos:prefLabel "Diseño"@es.
+a ldp:BasicContainer, skos:Concept;
+ldp:hasMemberRelation skos:narrower;
+ldp:memberOfRelation skos:broader;
+skos:prefLabel "Design"@en;
+skos:prefLabel "Diseño"@es.
 						</textarea>
 						<!--@formatter:off-->
 						<code-mirror class="ui text left aligned basic segment"
@@ -1504,7 +1502,7 @@
 
 						<p>
 
-							<span class="ui blue horizontal label">POST</span>
+							<span class="ui blue horizontal label">PUT</span>
 							<code>https://{{host}}/apps/taxonomy-hub/schemes/topics/top-concepts/</code>
 						</p>
 
@@ -1553,9 +1551,9 @@
 @prefix c:&#60;https://carbonldp.com/ns/v1/platform#&#62; .
 
 _:b0
-	a c:AddMemberAction;
-	c:member
-	&#60;https://local.carbonldp.com/apps/taxonomy-hub/schemes/topics/design/&#62;.
+a c:AddMemberAction;
+c:targetMember
+&#60;https://local.carbonldp.com/apps/taxonomy-hub/schemes/topics/design/&#62;.
 						</textarea>
 						<!--@formatter:on-->
 
@@ -1641,10 +1639,10 @@ _:b0
 @prefix skos:&#60;http://www.w3.org/2004/02/skos/core#&#62; .
 
 <>
-	a ldp:BasicContainer, skos:Concept;
-	ldp:hasMemberRelation skos:narrower;
-	ldp:memberOfRelation skos:broader;
-	skos:prefLabel "Technology".
+a ldp:BasicContainer, skos:Concept;
+ldp:hasMemberRelation skos:narrower;
+ldp:memberOfRelation skos:broader;
+skos:prefLabel "Technology".
 						</textarea>
 						<!--@formatter:on-->
 						<code-mirror class="ui text left aligned basic segment"
@@ -1707,8 +1705,8 @@ _:b0
 @prefix c:&#60;https://carbonldp.com/ns/v1/platform#&#62; .
 
 _:b0
-	a c:AddMemberAction;
-	c:member &#60;https://local.carbonldp.com/apps/taxonomy-hub/schemes/topics/technology/&#62;.
+a c:AddMemberAction;
+c:member &#60;https://local.carbonldp.com/apps/taxonomy-hub/schemes/topics/technology/&#62;.
 						</textarea>
 						<!--@formatter:on-->
 						<code-mirror class="ui text left aligned basic segment"
@@ -1765,10 +1763,10 @@ _:b0
 @prefix skos:&#60;http://www.w3.org/2004/02/skos/core#&#62; .
 
 <>
-	a ldp:BasicContainer, skos:Concept;
-	ldp:hasMemberRelation skos:narrower;
-	ldp:memberOfRelation skos:broader;
-	skos:prefLabel "Information Architecture".
+a ldp:BasicContainer, skos:Concept;
+ldp:hasMemberRelation skos:narrower;
+ldp:memberOfRelation skos:broader;
+skos:prefLabel "Information Architecture".
 						</textarea>
 						<!--@formatter:on-->
 						<code-mirror class="ui text left aligned basic segment"
@@ -1833,8 +1831,8 @@ _:b0
 @prefix c:&#60;https://carbonldp.com/ns/v1/platform#&#62; .
 
 _:b0
-	a c:AddMemberAction;
-	c:member &#60;https://local.carbonldp.com/apps/taxonomy-hub/schemes/topics/information-architecture/&#62;.
+a c:AddMemberAction;
+c:member &#60;https://local.carbonldp.com/apps/taxonomy-hub/schemes/topics/information-architecture/&#62;.
 						</textarea>
 						<!--@formatter:on-->
 
@@ -1904,10 +1902,10 @@ _:b0
 @prefix skos:&#60;http://www.w3.org/2004/02/skos/core#&#62; .
 
 <>
-	a ldp:BasicContainer, skos:Concept;
-	ldp:hasMemberRelation skos:narrower;
-	ldp:memberOfRelation skos:broader;
-	skos:prefLabel "HTML5".
+a ldp:BasicContainer, skos:Concept;
+ldp:hasMemberRelation skos:narrower;
+ldp:memberOfRelation skos:broader;
+skos:prefLabel "HTML5".
 						</textarea>
 						<!--@formatter:on-->
 						<code-mirror class="ui text left aligned basic segment"
@@ -1962,10 +1960,10 @@ _:b0
 @prefix skos:&#60;http://www.w3.org/2004/02/skos/core#&#62; .
 
 <>
-	a ldp:BasicContainer, skos:Concept;
-	ldp:hasMemberRelation skos:narrower;
-	ldp:memberOfRelation skos:broader;
-	skos:prefLabel "JavaScript".
+a ldp:BasicContainer, skos:Concept;
+ldp:hasMemberRelation skos:narrower;
+ldp:memberOfRelation skos:broader;
+skos:prefLabel "JavaScript".
 						</textarea>
 						<!--@formatter:on-->
 						<code-mirror class="ui text left aligned basic segment"
@@ -2023,8 +2021,8 @@ _:b0
 @prefix c:&#60;https://carbonldp.com/ns/v1/platform#&#62; .
 
 _:b0
-	a c:AddMemberAction;
-	c:member &#60;https://local.carbonldp.com/apps/taxonomy-hub/schemes/topics/html5/&#62;.
+a c:AddMemberAction;
+c:member &#60;https://local.carbonldp.com/apps/taxonomy-hub/schemes/topics/html5/&#62;.
 						</textarea>
 						<!--@formatter:on-->
 						<code-mirror class="ui text left aligned basic segment"
@@ -2081,8 +2079,8 @@ _:b0
 @prefix c:&#60;https://carbonldp.com/ns/v1/platform#&#62; .
 
 _:b0
-	a c:AddMemberAction;
-	c:member &#60;https://local.carbonldp.com/apps/taxonomy-hub/schemes/topics/javascript/&#62;.
+a c:AddMemberAction;
+c:member &#60;https://local.carbonldp.com/apps/taxonomy-hub/schemes/topics/javascript/&#62;.
 						</textarea>
 						<!--@formatter:on-->
 
@@ -2131,14 +2129,10 @@ _:b0
 				</article>
 			</main>
 		</div>
-		<sidebar-component [parentelement]=element class='four wide computer four wide tablet column'></sidebar-component>
+		<sidebar-component [mobile]=false [parentelement]=element class='four wide computer only four wide tablet only column'></sidebar-component>
+
+
 	</div>
 
 </div>
 
-
-<div class="script" style="display:none">
-
-	$('.ui.sticky').sticky({context: '#article',offset: 80});
-
-</div>

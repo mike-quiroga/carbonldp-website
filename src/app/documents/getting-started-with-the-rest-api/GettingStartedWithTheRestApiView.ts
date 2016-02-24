@@ -26,7 +26,6 @@ export default class GettingStartedWithTheRestApiView {
 	$element:JQuery;
 	title:Title;
 
-
 	constructor( element:ElementRef, title:Title ) {
 		this.element = element;
 		this.title = title;

@@ -14,23 +14,21 @@ sidebar-component {
 				}
 			}
 		}
-	}
 
-	nav .ui.sticky{
+		.ui.sticky{
 		z-index: 0;
+	    }
+
+
 	}
 
-	/*#content-masthead {
-		margin-top: 65px;
-	}
+	.ui.mobile.accordion{
 
-	.featured-image {
-		display: block;
-		top: 0;
-		left: 0;
-		width: 100%;
-		height: auto;
-		margin: auto;
-		box-sizing: border-box;
-	}*/
+		margin-top: 2em;
+		paddingt-top: 2em;
+
+		.item{
+		font-size: 1.1em;
+		}
+	}
 }

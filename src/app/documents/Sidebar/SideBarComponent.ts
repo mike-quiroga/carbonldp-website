@@ -1,5 +1,5 @@
-import { Component, Input, ElementRef, View} from 'angular2/core';
-import { CORE_DIRECTIVES } from 'angular2/common';
+import { Component, Input, ElementRef } from 'angular2/core';
+import {CORE_DIRECTIVES} from "angular2/common"
 import { ROUTER_DIRECTIVES, ROUTER_PROVIDERS, Router, Instruction, RouteParams } from 'angular2/router';
 
 import $ from 'jquery';
@@ -26,6 +26,7 @@ export default class SideBarComponent {
 	subSections:any;
 
 	@Input() parentelement;
+	@Input() mobile;
 
 	host:string = "dev.carbonldp.com";
 
@@ -49,8 +50,7 @@ export default class SideBarComponent {
 			let html:string = "",
 				$sticky:JQuery,
 				_self = this
-			;
-
+				;
 			// Foreach section in the article
 			$.each( this.sections, function ( index:number, section:HTMLElement ) {
 				let
@@ -60,7 +60,7 @@ export default class SideBarComponent {
 					text = _self.getText( $currentSection ),
 					safeName = _self.getSafeText( text ),
 					id = window.escape( safeName )
-				;
+					;
 
 				_self.setId( $currentSection );
 				html += '<div class="item">';
@@ -81,7 +81,7 @@ export default class SideBarComponent {
 							text:string = _self.getText( $subSection ),
 							safeName:string = _self.getSafeText( text ),
 							id:string = window.escape( safeName )
-						;
+							;
 
 						_self.setId( $subSection );
 						html += '<a class="item" href="#' + id + '">' + text + '</a>';
@@ -91,54 +91,52 @@ export default class SideBarComponent {
 				html += '</div>';
 			});
 
-			this.$followMenu = $( '<div />' ).addClass( 'ui vertical following fluid accordion text menu' ).html( html );
-			$sticky = $( '<div />' ).addClass( 'ui sticky segment' ).html( this.$followMenu ).prepend( '<p class="ui header">Content</p>' );
-			this.sidebar.html( $sticky );
+
+			if(!this.mobile){
+				this.$followMenu = $( '<div />' ).addClass( 'ui vertical following fluid accordion text menu' ).html( html );
+				$sticky = $( '<div />' ).addClass( 'ui sticky segment' ).html( this.$followMenu ).prepend( '<p class="ui header">Content</p>' );
+				this.sidebar.html( $sticky );
+				this.sections.visibility( {
+					observeChanges: true,
+					once: false,
+					offset: 150,
+					onTopPassed: function () {
+						_self.activateSection( this );
+					},
+					onTopPassedReverse: function () {
+						_self.activatePrevious();
+					}
+				});
+				this.subSections.visibility( {
+					observeChanges: true,
+					once: false,
+					offset: 150,
+					onTopPassed: function () {
+						_self.activateSubSection( this );
+					},
+					onTopPassedReverse: function () {
+						_self.activateSubSection( this );
+					}
+				});
+			}
+			else{
+				this.$followMenu = $( '<div />' ).addClass( 'ui fluid vertical following accordion menu mobile' ).html( html );
+				$sticky = $( '<div />' ).addClass( 'ui segment' ).html( this.$followMenu ).prepend( '<p class="ui header">Content</p>' );
+				this.sidebar.html( $sticky );
+			}
 
 
 			this.sidebar.find( ".ui.sticky" ).sticky( {
-				observeChanges: false,
+				observeChanges: true,
 				context: "#article",
 				offset: 100
 			});
 
-			/*this.sidebar.visibility({
-				observeChanges:false,
-				once:false,
-				offset: 3000,
-				context: "#article"
-			});*/
-
-			//this.sidebar.find( ".ui.sticky" );
 			this.$followMenu.accordion({
-					exclusive: false,
-					animateChildren: false,
+				exclusive: false,
+				animateChildren: false,
 			}).find( '.menu a[href], .title[href]' )
-			.on( 'click', this.scrollTo );
-
-			this.sections.visibility( {
-				observeChanges: false,
-				once: false,
-				offset: 200,
-				onTopPassed: function () {
-					_self.activateSection( this );
-				},
-				onTopPassedReverse: function () {
-					_self.activatePrevious();
-				}
-			});
-
-			this.subSections.visibility( {
-				observeChanges: false,
-				once: false,
-				offset: 150,
-				onTopPassed: function () {
-					_self.activateSubSection( this );
-				},
-				onTopPassedReverse: function () {
-					_self.activateSubSection( this );
-				}
-			});
+				.on( 'click', this.scrollTo );
 		}
 	}
 
@@ -149,12 +147,12 @@ export default class SideBarComponent {
 			$followSection = this.$followMenu.children( '.item' ),
 			$activeSection = $followSection.eq( index ),
 			isActive = $activeSection.hasClass( 'active' )
-		;
+			;
 
 		if ( ! isActive ){
 			$followSection.filter( '.active' ).removeClass( 'active' );
 			$activeSection.addClass( 'active' );
-			this.$followMenu.accordion( 'open', index - 1 );
+			this.$followMenu.accordion( 'open', index );
 		}
 	}
 
@@ -165,7 +163,7 @@ export default class SideBarComponent {
 			$menuItems = this.$followMenu.children( '.item' ),
 			$section = $menuItems.filter( '.active' ),
 			index = $menuItems.index( $section )
-		;
+			;
 
 		if ( $section.prev().size() > 0 ) {
 			$section.removeClass( 'active' ).prev( '.item' ).addClass( 'active' );
@@ -183,7 +181,7 @@ export default class SideBarComponent {
 			inClosedTab = ($( this ).closest( '.tab:not(.active)' ).size() > 0),
 			anotherSection = ($( this ).filter( 'section' ).size() > 0),
 			isActive = $activeSection.hasClass( 'active' )
-		;
+			;
 
 		if ( index !== - 1 && ! inClosedTab && ! anotherSection && ! isActive ) {
 			$followSection.filter( '.active' ).removeClass( 'active' );
@@ -196,14 +194,13 @@ export default class SideBarComponent {
 			id:string = $( event.currentTarget ).attr( 'href' ).replace( '#', '' ),
 			$element:JQuery = $( '#' + id ),
 			position:number = $element.offset().top - 100
-		;
+			;
 
 		$element.addClass( 'active' );
 		$( 'html, body' ).animate({
 			scrollTop: position
 		}, 500 );
 		location.hash = '#' + id;
-		$('.ui.sticky').sticky('refresh');
 		event.stopImmediatePropagation();
 		event.preventDefault();
 		return false;
@@ -227,7 +224,7 @@ export default class SideBarComponent {
 			let text = this.getText( $section ),
 				safeName = this.getSafeText( text ),
 				id = window.escape( safeName )
-			;
+				;
 			$section.attr( 'id', id );
 		}
 	}

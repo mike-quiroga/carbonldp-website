@@ -1,58 +1,53 @@
 <div class="ui grid" id="content-masthead">
-    <div class="row">
-        <div class="column">
-            <img class="featured-image" src="assets/images/linked-data-concepts.jpg" />
-        </div>
-    </div>
+	<div class="row">
+		<div class="column">
+			<img class="featured-image" src="assets/images/linked-data-concepts.jpg" alt="Linked Data Concepts"/>
+		</div>
+	</div>
 </div>
-
-
 <div class="ui main grid container">
 
-    <div class="row">
+	<div class="row">
+		<div class="sixteen wide column">
+
+			<div class="ui breadcrumb">
+				<span class="section">Documentation</span>
+				<i class="right chevron icon divider"></i>
+				<span class="section">Essential Concepts</span>
+				<i class="right arrow icon divider"></i>
+				<div class="active section">Linked Data Concepts</div>
+			</div>
+
+			<h1>Linked Data Concepts</h1>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="twelve wide column">
+
+			<article class="ui vertical segment" id="article">
 
 
-        <div class="sixteen wide column">
+				<div class="ui message">
+					<div class="content">
+						<p class="larger">Carbon LDP applications are inherently Linked Data applications. The term
+							&quot;Linked Data&quot; refers to an information publishing approach that puts linking at
+							the heart of the notion of data, and uses the linking technologies provided by the Web to
+							enable the creation of a global distributed database. By linking data within your
+							organization or across the Web, you can find other related data. This document
+							provides a general overview of the basic idea behind Linked Data and why it can make your
+							applications more powerful.</p>
+					</div>
+				</div>
 
-            <div class="ui breadcrumb">
-                <span class="section">Documentation</span>
-                <i class="right chevron icon divider"></i>
-                <span class="section">Essential Concepts</span>
-                <i class="right arrow icon divider"></i>
-                <div class="active section">Linked Data Concepts</div>
-            </div>
-
-            <h1>Linked Data Concepts</h1>
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="twelve wide column">
-
-            <article class="ui vertical segment" id="article">
-
-
-                <div class="ui message">
-                    <div class="content">
-                        <p class="larger">Carbon LDP applications are inherently Linked Data applications. The term
-                            &quot;Linked Data&quot; refers to an information publishing approach that puts linking at
-                            the heart of the notion of data, and uses the linking technologies provided by the Web to
-                            enable the creation of a global distributed database. By linking data within your
-                            organization or across the Web, you can find other related data. This document
-                            provides a general overview of the basic idea behind Linked Data and why it can make your
-                            applications more powerful.</p>
-                    </div>
-                </div>
-
-                <div class="ui icon yellow message">
-                    <i class="warning sign icon"></i>
-                    <div class="content">
-                        <div class="header">Pre-release Documentation</div>
-                        <p>Although Carbon LDP is not yet released, we're publishing documentation as it is prepared so
-                            that you can
-                            preview what's in store.</p>
-                    </div>
-                </div>
+				<div class="ui icon yellow message">
+					<i class="warning sign icon"></i>
+					<div class="content">
+						<div class="header">Pre-release Documentation</div>
+						<p>Although Carbon LDP is not yet released, we're publishing documentation as it is prepared so
+							that you can preview what's in store.</p>
+					</div>
+				</div>
 
 
 				<p>You're familiar with web pages. Web pages are documents written in HTML, which format content for
@@ -60,7 +55,7 @@
 					appeal. JavaScript is often combined to give the pages interactive functionality and to make
 					background requests to web servers.</p>
 
-				<p><img class="ui fluid rounded image" src="/assets/images/web-design-dev.png"
+				<p><img class="ui fluid rounded image" src="assets/images/web-design-dev.png"
 				        alt="Web Design and Development Illustration"/></p>
 
 				<p>You're also familiar with databases, which contain tables and columns and rows of structured data.
@@ -77,7 +72,7 @@
 					and understand. Computers can search for keywords in the pages, but they can't really know, like
 					we humans do, what the pages are about.</p>
 
-				<p><img class="ui fluid rounded image" src="/assets/images/database-stuff.png"
+				<p><img class="ui fluid rounded image" src="assets/images/database-stuff.png"
 				        alt="Relational Database"/></p>
 
 				<p>So, what we have as a result is a Web of hyperlinked documents designed for people to read. We also
@@ -108,7 +103,7 @@
 					when we make a statement about something. We connect a subject to an object by way of some
 					predicate.</p>
 
-				<p><img class="ui fluid rounded image" src="/assets/images/rdf-triple-jack-n-jill-1.png"
+				<p><img class="ui fluid rounded image" src="assets/images/rdf-triple-jack-n-jill-1.png"
 				        alt="RDF triple with URIs"/></p>
 
 				<p>This is the basic sentence structure we learned in grade school, remember? The subject of a sentence
@@ -124,7 +119,7 @@
 				<p>A link in Linked Data is an <abbr title="Resource Description Framework">RDF</abbr> statement, which
 					also has a subject, predicate, and an object.</p>
 
-				<p><img class="ui fluid rounded image" src="/assets/images/rdf-triple-jack-n-jill-2.png"
+				<p><img class="ui fluid rounded image" src="assets/images/rdf-triple-jack-n-jill-2.png"
 				        alt="RDF triple with URIs"/></p>
 
 				<p>The subject is a URI, which could resolve to some representation of a resource. What differentiates
@@ -146,8 +141,8 @@
 					new properties linking to entirely new objects. And that kind of linking creates a graph that has
 					the power to grow far beyond what you and your single app can ever know alone. That’s power.</p>
 
-				<p><a href="/assets/images/rdf-graph-illustration.png">
-					<img class="ui fluid rounded image" src="/assets/images/rdf-graph-illustration.png"
+				<p><a href="assets/images/rdf-graph-illustration.png">
+					<img class="ui fluid rounded image" src="assets/images/rdf-graph-illustration.png"
 					     alt="RDF Graph Illustration"/></a></p>
 
 				<p>You can imagine the possibilities on a global scale, can't you? Think about how far the traditional 
@@ -156,14 +151,6 @@
 						title="Resource Description Framework">RDF</abbr> triple, the link in Linked Data, can do.
 				</p>
 
-	            <p>Still, your application doesn't have to be publicly available on the World Wide Web.
-		            You can take advantage of the flexible RDF data model within your application alone or within your
-		            company. Maybe
-		            you could care less about the broader Semantic Web. Carbon apps aren't just inherently more
-		            powerful. They're
-		            easier to build, maintain, evolve, and integrate. That's because we've encapsulated everything into
-		            a set of
-		            familiar concepts and features that are easy to use.</p>
 
 				<div class="ui section divider"></div>
 
@@ -176,7 +163,7 @@
 					<div class="three column divided stackable center aligned ui grid">
 						<div class="column">
 							<div class="ui icon header">
-								<p><img class="ui tiny centered image" src="/assets/images/ld_icons_rdf_83x83.png"
+								<p><img class="ui tiny centered image" src="assets/images/ld_icons_rdf_83x83.png"
 								        alt="RDF Icon"/></p>
 								Learn about the Resource Description Framework from the W3C's <a
 								href="https://www.w3.org/TR/2014/NOTE-rdf11-primer-20140624/">RDF 1.1 Primer</a>.
@@ -184,7 +171,7 @@
 						</div>
 						<div class="column">
 							<div class="ui icon header">
-								<p><img class="ui tiny centered image" src="/assets/images/ld_icons_platform_83x83.png"
+								<p><img class="ui tiny centered image" src="assets/images/ld_icons_platform_83x83.png"
 								        alt="LDP Icon"/></p>
 								Learn <a href="#">Linked Data Platform
 								Concepts</a>; recommended by the W3C &amp; implemented by Carbon LDP.
@@ -193,7 +180,7 @@
 						<div class="column">
 							<div class="ui icon header">
 								<p><img class="ui tiny centered image"
-								        src="/assets/images/ld_icons_carbon_83x83.png"
+								        src="assets/images/ld_icons_carbon_83x83.png"
 								        alt="Carbon Icon"/></p>
 								Learn about the unique features of the platform with <a href="#">Carbon LDP Concepts</a>.
 							</div>
