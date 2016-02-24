@@ -7,7 +7,7 @@ import 'semantic-ui/semantic';
 
 import SideberService from "./../../../components/sidebar/service/SidebarService";
 import MyAppsService from "./../../service/MyAppsService";
-import CarbonApp from "./../CarbonApp";
+import App from "./../App";
 
 import template from './template.html!';
 import './style.css!';
@@ -28,7 +28,7 @@ export default class AppDashboardView {
 
 	element:ElementRef;
 	$element:JQuery;
-	carbonApp:CarbonApp;
+	app:App;
 
 	constructor( router:Router, element:ElementRef, routeParams:RouteParams, sideberService:SideberService, myAppsService:MyAppsService ) {
 		this.router = router;
@@ -36,42 +36,10 @@ export default class AppDashboardView {
 		this.routeParams = routeParams;
 		this.sideberService = sideberService;
 		this.myAppsService = myAppsService;
-		//try {
-		//	let slug:string = this.routeParams.get( 'slug' );
-		//	this.myAppsService.getapp( slug ).then(
-		//		( carbonApp ) => {
-		//			if ( typeof carbonApp === "undefined" ) {
-		//				console.log( "No Carbon App found" );
-		//				this.timer = 5;
-		//				let countDown = setInterval( ()=> {
-		//					this.timer --;
-		//					if ( this.timer == 0 ) {
-		//						this.router.navigate( [ '/AppDev/MyApps' ] );
-		//						clearInterval( countDown );
-		//					}
-		//				}, 1000 );
-		//			} else {
-		//				this.carbonApp = carbonApp;
-		//				this.sideberService.addItem( this.carbonApp.name );
-		//				console.log( this.carbonApp );
-		//			}
-		//
-		//		},
-		//		( error )=> {
-		//			console.log( error );
-		//		}
-		//	);
-		//
-		//} catch ( error ) {
-		//	console.log( error );
-		//}
 	}
 
 	ngAfterViewInit():void {
 		this.$element = $( this.element.nativeElement );
 	}
 
-	routerOnActivate():void {
-
-	}
 }

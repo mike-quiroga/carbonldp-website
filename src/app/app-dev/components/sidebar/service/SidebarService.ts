@@ -1,6 +1,6 @@
 import { Injectable, EventEmitter } from 'angular2/core';
 
-import CarbonApp from 'app/app-dev/my-apps/carbon-app/CarbonApp'
+import App from 'app/app-dev/my-apps/app/App'
 import SidebarItem from './../SidebarItem'
 
 @Injectable()
@@ -12,7 +12,7 @@ export default class SidebarService {
 	data:string;
 	$element:JQuery;
 
-	addCarbonAppEmitter:EventEmitter = new EventEmitter();
+	addAppEmitter:EventEmitter = new EventEmitter();
 	toggleEmitter:EventEmitter = new EventEmitter();
 
 	constructor() {
@@ -27,8 +27,8 @@ export default class SidebarService {
 		//this.addItemEmitter.next( item );
 	}
 
-	addCarbonApp( app:CarbonApp ) {
-		this.addCarbonAppEmitter.next( app );
+	addApp( app:App ) {
+		this.addAppEmitter.next( app );
 	}
 
 	remove():void {

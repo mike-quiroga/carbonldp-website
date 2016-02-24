@@ -6,7 +6,7 @@ import $ from 'jquery';
 import 'semantic-ui/semantic';
 
 import SidebarService from './service/SidebarService'
-import CarbonApp from 'app/app-dev/my-apps/carbon-app/CarbonApp'
+import App from 'app/app-dev/my-apps/app/App'
 import SidebarItem from "./SidebarItem";
 
 import template from './template.html!';
@@ -26,7 +26,7 @@ export default class SidebarComponent {
 	element:ElementRef;
 	$element:JQuery;
 	sidebarService:SidebarService;
-	carbonApps:CarbonApp[] = [];
+	apps:App[] = [];
 	location:Location;
 
 	constructor( router:Router, element:ElementRef, location:Location, sidebarService:SidebarService ) {
@@ -35,9 +35,9 @@ export default class SidebarComponent {
 		this.sidebarService = sidebarService;
 		this.location = location;
 
-		this.sidebarService.addCarbonAppEmitter.subscribe(
+		this.sidebarService.addAppEmitter.subscribe(
 			( item ) => {
-				this.addCarbonApp( item );
+				this.addApp( item );
 			}
 		);
 		this.sidebarService.toggleEmitter.subscribe(
@@ -60,8 +60,8 @@ export default class SidebarComponent {
 	}
 
 
-	addCarbonApp( app:CarbonApp ):void {
-		! this.slugExists( app.slug ) ? this.carbonApps.push( app ) : null;
+	addApp( app:App ):void {
+		! this.slugExists( app.slug ) ? this.apps.push( app ) : null;
 	}
 
 	toggle():void {
@@ -71,15 +71,15 @@ export default class SidebarComponent {
 	refreshAccordion():void {
 		this.$element.accordion( {
 			selector: {
-				trigger: '.item.carbonApp, .item.carbonApp .title',
+				trigger: '.item.app, .item.app .title',
 				title: '.title',
 			},
 			exclusive: false,
 		} );
 	}
 
-	removeCarbonApp( id:number ):void {
-		this.carbonApps.splice( id, 1 );
+	removeApp( id:number ):void {
+		this.apps.splice( id, 1 );
 	}
 
 	isActive( slug:any, fullRoute?:boolean = false ):boolean {
@@ -110,6 +110,6 @@ export default class SidebarComponent {
 	}
 
 	slugExists( slug:string ):boolean {
-		return ! (typeof this.carbonApps.find( _app => _app.slug == slug ) === "undefined");
+		return ! (typeof this.apps.find( _app => _app.slug == slug ) === "undefined");
 	}
 }

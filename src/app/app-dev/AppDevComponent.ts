@@ -13,8 +13,6 @@ import SPARQLClientComponent from './../sparql-client/SPARQLClientComponent';
 
 import DashboardView from './dashboard/DashboardView';
 import MyAppsView from './my-apps/my-apps-view/MyAppsView';
-import CarbonAppView from './my-apps/carbon-app/CarbonAppView';
-import AppDashboardView from './dashboard/DashboardView';
 
 import template from './template.html!';
 import './style.css!';

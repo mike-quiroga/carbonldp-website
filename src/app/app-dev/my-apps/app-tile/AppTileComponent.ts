@@ -5,21 +5,21 @@ import { Router, ROUTER_DIRECTIVES } from 'angular2/router';
 import $ from 'jquery';
 import 'semantic-ui/semantic';
 
-import CarbonApp from "../carbon-app/CarbonApp";
+import App from "../app/App";
 import template from './template.html!';
 import './style.css!';
 
 @Component( {
-	selector: 'carbon-app-tile',
+	selector: 'app-tile',
 	template: template,
 	directives: [ CORE_DIRECTIVES, ROUTER_DIRECTIVES ]
 } )
-export default class CarbonAppTileComponent {
+export default class AppTileComponent {
 	static parameters = [ [ ElementRef ], [ Router ] ];
 	router:Router;
 	element:ElementRef;
 	$element:JQuery;
-	@Input() carbonApp:CarbonApp;
+	@Input() app:App;
 
 	constructor( element:ElementRef, router:Router ) {
 		this.element = element;

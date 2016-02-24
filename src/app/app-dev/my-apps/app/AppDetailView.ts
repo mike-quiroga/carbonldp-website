@@ -7,7 +7,7 @@ import 'semantic-ui/semantic';
 
 import SideberService from "./../../components/sidebar/service/SidebarService";
 import MyAppsService from "./../service/MyAppsService";
-import CarbonApp from "./CarbonApp";
+import App from "./App";
 
 import DashboardView from './dashboard/DashboardView';
 import SPARQLClientComponent from './../../../sparql-client/SPARQLClientComponent';
@@ -17,7 +17,7 @@ import template from './template.html!';
 import './style.css!';
 
 @Component( {
-	selector: 'carbon-app',
+	selector: 'app-detail',
 	template: template,
 	directives: [ CORE_DIRECTIVES, ROUTER_DIRECTIVES, RouterOutlet ],
 	providers: [ MyAppsService ]
@@ -43,7 +43,7 @@ import './style.css!';
 		}
 	}
 ] )
-export default class CarbonAppView {
+export default class AppDetailView {
 	static parameters = [ [ Router ], [ ElementRef ], [ RouteParams ], [ SideberService ], [ MyAppsService ] ];
 
 	router:Router;
@@ -53,7 +53,7 @@ export default class CarbonAppView {
 
 	element:ElementRef;
 	$element:JQuery;
-	carbonApp:CarbonApp;
+	app:App;
 	timer:number;
 
 	constructor( router:Router, element:ElementRef, routeParams:RouteParams, sideberService:SideberService, myAppsService:MyAppsService ) {
@@ -65,8 +65,8 @@ export default class CarbonAppView {
 		try {
 			let slug:string = this.routeParams.get( 'slug' );
 			this.myAppsService.getapp( slug ).then(
-				( carbonApp ) => {
-					if ( typeof carbonApp === "undefined" ) {
+				( app ) => {
+					if ( typeof app === "undefined" ) {
 						console.log( "No Carbon App found" );
 						this.timer = 5;
 						let countDown = setInterval( ()=> {
@@ -77,8 +77,8 @@ export default class CarbonAppView {
 							}
 						}, 1000 );
 					} else {
-						this.carbonApp = carbonApp;
-						this.sideberService.addCarbonApp( this.carbonApp );
+						this.app = app;
+						this.sideberService.addApp( this.app );
 					}
 
 				},
