@@ -1,5 +1,6 @@
 package com.carbonldp.jobs;
 
+import com.carbonldp.apps.App;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -9,19 +10,8 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Transactional
 public class JobsExecutor {
-
 	@Async
-	public void specialMethod() {
-		try {
-			Thread.sleep( 2000 );
-		} catch ( InterruptedException e ) {
-			e.printStackTrace();
-		}
-		System.out.println( "imprimo 2" );
-	}
-
-	@Async
-	public void specialMethod2() {
-		System.out.println( "imprimo 3" );
+	public void runBackup( App app ) {
+		//TODO: implement
 	}
 }
