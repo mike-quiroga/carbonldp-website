@@ -31,26 +31,29 @@ export default class AppsListView {
 		this.router = router;
 	}
 
-	ngAfterViewInit():void{
-		this.myAppsService.getApps().then(
-			( apps )=> {
-				apps.forEach( app=> {
-					app.data = {
-						alias: app.name.replace( new RegExp( " ", "g" ), "" ),
-						displayName: app.name
-					};
-					this.routeDefinitions.push( {
-						path: '/' + app.slug,
-						component: App,
-						as: app.name.replace( new RegExp( " ", "g" ), "" ),
-						data: app.data
+	routerOnActivate():void {
+		return new Promise((resolve) => {
+			this.myAppsService.getApps().then(
+				( apps )=> {
+					apps.forEach( app=> {
+						app.data = {
+							alias: app.name.replace( new RegExp( " ", "g" ), "" ),
+							displayName: app.name
+						};
+						this.routeDefinitions.push( {
+							path: '/' + app.slug,
+							component: App,
+							as: app.name.replace( new RegExp( " ", "g" ), "" ),
+							data: app.data
+						} );
+						this.apps.push( app );
 					} );
-					this.apps.push( app );
-				} );
-			},
-			( error )=> {
-				console.error( error );
-			}
-		);
+					resolve(true);
+				},
+				( error )=> {
+					console.error( error );
+				}
+			);
+		});
 	}
 }

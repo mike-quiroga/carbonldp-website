@@ -62,7 +62,14 @@ export default class AppDetailView {
 		this.routeParams = routeParams;
 		this.sidebarService = sidebarService;
 		this.myAppsService = myAppsService;
-		try {
+	}
+
+	ngAfterViewInit():void {
+		this.$element = $( this.element.nativeElement );
+	}
+
+	routerOnActivate():void {
+		return new Promise((resolve) => {
 			let slug:string = this.routeParams.get( 'slug' );
 			this.myAppsService.getapp( slug ).then(
 				( app ) => {
@@ -80,23 +87,13 @@ export default class AppDetailView {
 						this.app = app;
 						this.sidebarService.addApp( this.app );
 					}
+					resolve(true);
 
 				},
 				( error )=> {
 					console.log( error );
 				}
 			);
-
-		} catch ( error ) {
-			console.log( error );
-		}
-	}
-
-	ngAfterViewInit():void {
-		this.$element = $( this.element.nativeElement );
-	}
-
-	routerOnActivate():void {
-
+		});
 	}
 }
