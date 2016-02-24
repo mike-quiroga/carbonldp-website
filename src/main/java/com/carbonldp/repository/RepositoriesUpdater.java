@@ -117,11 +117,11 @@ public class RepositoriesUpdater extends AbstractComponent {
 
 	private void createDefaultRepository( AnnotationConfigApplicationContext context ) {
 		RepositoryVersion defaultVersion = new RepositoryVersion( "1.0.0" );
-		LOG.debug( "-- updateRepositories() - Running creation of repository version: '{}'...", getLatestVersion() );
+		LOG.debug( "-- createDefaultRepository(context) - Running creation of repository version: '{}'...", getLatestVersion() );
 		Action action = RepositoriesUpdater.versionsUpdates.get( defaultVersion );
 		( (AbstractUpdateAction) action ).setBeans( context );
 		action.run();
-		LOG.debug( "-- updateRepositories() - Repository creation version: '{}', complete.", getLatestVersion() );
+		LOG.debug( "-- createDefaultRepository(context) - Repository creation version: '{}', complete.", getLatestVersion() );
 	}
 
 	private void updateRepositories( RepositoryVersion currentVersion, AnnotationConfigApplicationContext context ) {
@@ -131,11 +131,11 @@ public class RepositoriesUpdater extends AbstractComponent {
 			.filter( v -> currentVersion.compareTo( v ) < 0 )
 			.sorted()
 			.forEach( v -> {
-				LOG.debug( "-- updateRepositories() - Running update of repository version: '{}'...", v );
+				LOG.debug( "-- updateRepositories(currentVersion, context) - Running update of repository version: '{}'...", v );
 				Action action = RepositoriesUpdater.versionsUpdates.get( v );
 				( (AbstractUpdateAction) action ).setBeans( context );
 				action.run();
-				LOG.debug( "-- updateRepositories() - Repository update to version: '{}', complete.", v );
+				LOG.debug( "-- updateRepositories(currentVersion, context) - Repository update to version: '{}', complete.", v );
 			} );
 	}
 }

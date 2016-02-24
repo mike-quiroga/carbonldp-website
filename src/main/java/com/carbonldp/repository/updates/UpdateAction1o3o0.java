@@ -23,7 +23,7 @@ public class UpdateAction1o3o0 extends AbstractUpdateAction {
 		"} WHERE {" + NEW_LINE +
 		TAB + "GRAPH ?acl {" + NEW_LINE +
 		TAB + TAB + "?acl <" + ACLDescription.Property.ACCESS_TO.getURI().stringValue() + "> ?target." + NEW_LINE +
-		TAB + "}." +
+		TAB + "}." + NEW_LINE +
 		"}";
 
 	@Override
