@@ -1,10 +1,17 @@
 package com.carbonldp.jobs;
 
+import com.carbonldp.Vars;
 import com.carbonldp.apps.App;
+import com.carbonldp.apps.AppRepository;
+import com.carbonldp.ldp.containers.ContainerRepository;
+import com.carbonldp.spring.TransactionWrapper;
+import org.openrdf.model.URI;
+import org.openrdf.model.impl.URIImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -14,32 +21,49 @@ import java.util.Set;
 @Transactional
 public class JobManager {
 
-	public JobsExecutor jobsExecutor;
+	private JobsExecutor jobsExecutor;
+	private TransactionWrapper transactionWrapper;
+	private ContainerRepository containerRepository;
+	private AppRepository appRepository;
 
 	@Scheduled( cron = "${job.trigger.time}" )
-	public void doSomething() {
-		lookUpForBackups();
+	public void runQueuedJobs() {
+		lookUpForJobs();
 	}
 
-	public void lookUpForBackups() {
+	public void lookUpForJobs() {
 		Set<App> apps = getAllApps();
 		for ( App app : apps ) {
-			if ( needBackup( app ) ) {
-				jobsExecutor.runBackup( app );
+			Job job = appRepository.peekJobsQueue( app );
+			if ( job != null && job.getJobStatus().equals( JobDescription.JobStatus.QUEUED ) ) {
+				jobsExecutor.runJob( job );
 			}
 		}
 	}
 
 	private Set<App> getAllApps() {
-		//TODO: implement
-		return null;
-	}
+		return transactionWrapper.runInPlatformContext( () -> {
+			Set<App> apps = new HashSet<>();
+			URI platformAppsContainer = new URIImpl( Vars.getInstance().getHost() + Vars.getInstance().getMainContainer() + Vars.getInstance().getAppsContainer() );
+			Set<URI> appURIs = containerRepository.getContainedURIs( platformAppsContainer );
+			for ( URI appURI : appURIs ) {
+				App app = appRepository.get( appURI );
+				apps.add( app );
+			}
 
-	public boolean needBackup( App app ) {
-		//TODO: implement
-		return false;
+			return apps;
+		} );
 	}
 
 	@Autowired
 	public void setJobsExecutor( JobsExecutor jobsExecutor ) { this.jobsExecutor = jobsExecutor; }
+
+	@Autowired
+	public void setTransactionWrapper( TransactionWrapper transactionWrapper ) {this.transactionWrapper = transactionWrapper; }
+
+	@Autowired
+	public void setContainerRepository( ContainerRepository containerRepository ) { this.containerRepository = containerRepository;}
+
+	@Autowired
+	public void setAppRepository( AppRepository appRepository ) {this.appRepository = appRepository; }
 }

@@ -1,5 +1,6 @@
 package com.carbonldp.apps;
 
+import com.carbonldp.jobs.Job;
 import org.openrdf.model.URI;
 
 public interface AppRepository {
@@ -14,4 +15,6 @@ public interface AppRepository {
 	public void delete( URI appURI );
 
 	public URI getPlatformAppContainerURI();
+
+	public Job peekJobsQueue( App app );
 }

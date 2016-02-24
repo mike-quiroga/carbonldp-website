@@ -1,5 +1,7 @@
 package com.carbonldp.apps;
 
+import com.carbonldp.Vars;
+import com.carbonldp.jobs.Job;
 import com.carbonldp.ldp.containers.ContainerDescription.Type;
 import com.carbonldp.ldp.containers.ContainerRepository;
 import com.carbonldp.ldp.sources.RDFSource;
@@ -10,9 +12,14 @@ import com.carbonldp.repository.FileRepository;
 import com.carbonldp.repository.RepositoryService;
 import com.carbonldp.utils.RDFNodeUtil;
 import com.carbonldp.utils.URIUtil;
+import com.carbonldp.utils.ValueUtil;
+import org.openrdf.model.Statement;
 import org.openrdf.model.URI;
 import org.openrdf.model.Value;
 import org.openrdf.model.impl.URIImpl;
+import org.openrdf.model.vocabulary.RDF;
+import org.openrdf.repository.RepositoryException;
+import org.openrdf.repository.RepositoryResult;
 import org.openrdf.spring.SesameConnectionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
@@ -99,6 +106,29 @@ public class SesameAppRepository extends AbstractSesameRepository implements App
 	@Override
 	public URI getPlatformAppContainerURI() {
 		return appsContainerURI;
+	}
+
+	@Override
+	public Job peekJobsQueue( App app ) {
+		URI appURI = app.getURI();
+		URI appJobsQueue = new URIImpl( appURI.stringValue() + "#" + Vars.getInstance().getJobsQueue() );
+		RepositoryResult<Statement> statements;
+		Statement statement;
+		Value jobValue;
+		URI jobURI;
+
+		try {
+			statements = connectionFactory.getConnection().getStatements( appJobsQueue, RDF.FIRST, null, false, appURI );
+			if ( ! statements.hasNext() ) return null;
+			statement = statements.next();
+		} catch ( RepositoryException e ) {
+			throw new RuntimeException( e );
+		}
+
+		jobValue = statement.getObject();
+		if ( ! ValueUtil.isURI( jobValue ) ) throw new RuntimeException( "malformed queue" );
+		jobURI = ValueUtil.getURI( jobValue );
+		return new Job( sourceRepository.get( jobURI ) );
 	}
 
 	private void deleteAppRepository( App app ) {
