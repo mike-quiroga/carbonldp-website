@@ -12,6 +12,7 @@ import com.carbonldp.authorization.acl.ACL;
 import com.carbonldp.exceptions.InvalidResourceException;
 import com.carbonldp.exceptions.ResourceAlreadyExistsException;
 import com.carbonldp.exceptions.ResourceDoesntExistException;
+import com.carbonldp.jobs.JobDescription;
 import com.carbonldp.ldp.AbstractSesameLDPService;
 import com.carbonldp.ldp.containers.*;
 import com.carbonldp.models.Infraction;
@@ -231,6 +232,7 @@ public class SesameAppService extends AbstractSesameLDPService implements AppSer
 		URI containerURI = generateJobsContainerURI( app );
 		RDFResource jobsResource = new RDFResource( containerURI );
 		DirectContainer jobsContainer = DirectContainerFactory.getInstance().create( jobsResource, app.getURI(), AppDescription.Property.JOB.getURI() );
+		jobsContainer.setMemberOfRelation( JobDescription.Property.APP_RELATED.getURI() );
 		sourceRepository.createAccessPoint( app.getURI(), jobsContainer );
 		aclRepository.createACL( jobsContainer.getURI() );
 	}

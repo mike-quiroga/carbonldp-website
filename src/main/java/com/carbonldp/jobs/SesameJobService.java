@@ -18,9 +18,10 @@ public class SesameJobService extends AbstractSesameLDPService implements JobSer
 
 	public void create( URI targetURI, Job job ) {
 		validate( job );
+		URI jobURI = job.getURI();
 		Trigger trigger = TriggerFactory.getInstance().create( job );
 		containerService.createChild( targetURI, job );
-		containerService.createChild( job.getURI(), trigger );
+		containerService.createChild( jobURI, trigger );
 	}
 
 	private void validate( Job job ) {
