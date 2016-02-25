@@ -53,7 +53,6 @@ public class UpdateAction1o4o0 extends AbstractUpdateAction {
 			if ( connectionFactory.getConnection().hasStatement( bNode, predicate, null, false, context ) ) continue;
 			Literal object = ValueFactoryImpl.getInstance().createLiteral( UUID.randomUUID().toString() );
 			connectionFactory.getConnection().add( bNode, predicate, object, context );
-			connectionFactory.getConnection().commit();
 		}
 	}
 }
