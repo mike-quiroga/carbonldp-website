@@ -1,5 +1,9 @@
-# 0.28.0 (2016/02/08)
-* BlankNodes are now identifiable by https://carbonldp.com/ns/v1/platform#bNodeIdentifier
+# 0.27.7 (2016/02/25)
+* Documents have now a property pointing to it's ACL
+# 0.27.6 (2016/02/16)
+* Files are properly deleted when deleting an app and a RDFRepresentation as a RDFSource
+# 0.27.5 (2016/02/15)
+* NonRDFSources files are now being deleted properly
 # 0.27.4 (2016/02/12)
 * Proper validation when adding and removing container members
 # 0.27.3 (2016/02/12)

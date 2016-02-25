@@ -5,7 +5,6 @@ import com.carbonldp.descriptions.APIPreferences;
 import com.carbonldp.exceptions.InvalidResourceException;
 import com.carbonldp.ldp.containers.RemoveMembersAction;
 import com.carbonldp.ldp.containers.RemoveMembersActionFactory;
-import com.carbonldp.ldp.nonrdf.RDFRepresentation;
 import com.carbonldp.models.EmptyResponse;
 import com.carbonldp.models.HTTPHeader;
 import com.carbonldp.models.HTTPHeaderValue;
@@ -117,10 +116,7 @@ public class AbstractDELETERequestHandler extends AbstractLDPRequestHandler {
 
 	protected ResponseEntity<Object> handleNonRDFDeletion( URI targetURI ) {
 		isRDFRepresentation( targetURI );
-		RDFRepresentation rdfRepresentation = new RDFRepresentation( sourceService.get( targetURI ) );
-		nonRdfSourceService.deleteResource( rdfRepresentation );
 		sourceService.delete( targetURI );
-
 		return createSuccessfulDeleteResponse();
 	}
 

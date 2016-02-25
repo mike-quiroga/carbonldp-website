@@ -6,6 +6,7 @@ import com.carbonldp.ldp.AbstractSesameLDPService;
 import com.carbonldp.ldp.containers.AccessPoint;
 import com.carbonldp.ldp.containers.AccessPointFactory;
 import com.carbonldp.ldp.containers.ContainerFactory;
+import com.carbonldp.ldp.nonrdf.NonRDFSourceRepository;
 import com.carbonldp.models.Infraction;
 import com.carbonldp.rdf.*;
 import com.carbonldp.utils.URIUtil;
@@ -17,11 +18,14 @@ import org.openrdf.model.URI;
 import org.openrdf.model.Value;
 import org.openrdf.model.impl.AbstractModel;
 import org.openrdf.model.impl.LinkedHashModel;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
 public class SesameRDFSourceService extends AbstractSesameLDPService implements RDFSourceService {
+
+	private NonRDFSourceRepository nonRDFSourceRepository;
 
 	@Override
 	public boolean exists( URI sourceURI ) {
@@ -154,7 +158,7 @@ public class SesameRDFSourceService extends AbstractSesameLDPService implements 
 	@Override
 	public void delete( URI sourceURI ) {
 		if ( ! exists( sourceURI ) ) throw new ResourceDoesntExistException();
-
+		nonRDFSourceRepository.delete( sourceURI );
 		sourceRepository.delete( sourceURI );
 		sourceRepository.deleteOccurrences( sourceURI, true );
 	}
@@ -259,4 +263,6 @@ public class SesameRDFSourceService extends AbstractSesameLDPService implements 
 		if ( ! infractions.isEmpty() ) throw new InvalidResourceException( infractions );
 	}
 
+	@Autowired
+	public void setNonRDFSourceService( NonRDFSourceRepository nonRDFSourceRepository ) { this.nonRDFSourceRepository = nonRDFSourceRepository; }
 }

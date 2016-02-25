@@ -1,14 +1,14 @@
 package com.carbonldp.ldp.containers;
 
 import com.carbonldp.descriptions.APIPreferences;
-import com.carbonldp.exceptions.InvalidResourceException;
 import com.carbonldp.exceptions.InvalidRDFTypeException;
+import com.carbonldp.exceptions.InvalidResourceException;
 import com.carbonldp.exceptions.ResourceAlreadyExistsException;
 import com.carbonldp.exceptions.ResourceDoesntExistException;
 import com.carbonldp.ldp.AbstractSesameLDPService;
+import com.carbonldp.ldp.sources.RDFSourceService;
 import com.carbonldp.models.Infraction;
 import com.carbonldp.rdf.RDFDocumentFactory;
-import com.carbonldp.ldp.sources.RDFSourceService;
 import com.carbonldp.rdf.RDFResource;
 import com.carbonldp.spring.ServicesInvoker;
 import com.carbonldp.web.exceptions.NotImplementedException;
@@ -115,7 +115,6 @@ public class SesameContainerService extends AbstractSesameLDPService implements 
 		List<Infraction> infractions = BasicContainerFactory.getInstance().validate( toValidate );
 		infractions.addAll( RDFDocumentFactory.getInstance().validateBlankNodes( toValidate.getDocument() ) );
 		if ( ! infractions.isEmpty() ) throw new InvalidResourceException( infractions );
-
 	}
 
 	@Override
