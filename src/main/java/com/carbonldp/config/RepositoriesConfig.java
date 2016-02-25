@@ -188,12 +188,11 @@ public class RepositoriesConfig {
 
 	@Bean
 	public ACLRepository aclRepository() {
-		return new SesameACLRepository( connectionFactory, resourceRepository(), documentRepository() );
+		return new SesameACLRepository( connectionFactory, resourceRepository(), documentRepository(), sourceRepository() );
 	}
 
 	@Bean
 	SPARQLService sparqlService() {
 		return new SesameSPARQLService( connectionFactory );
 	}
-
 }
