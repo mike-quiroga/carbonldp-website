@@ -3,7 +3,9 @@ package com.carbonldp.repository.txn;
 import com.carbonldp.Vars;
 import com.carbonldp.repository.LocalRepositoryService;
 import com.carbonldp.repository.RepositoryService;
+import com.carbonldp.repository.SpringLocalRepositoryManager;
 import com.carbonldp.repository.security.SecuredNativeStore;
+import com.carbonldp.spring.TransactionWrapper;
 import org.openrdf.repository.Repository;
 import org.openrdf.repository.RepositoryException;
 import org.openrdf.repository.manager.LocalRepositoryManager;
@@ -22,7 +24,6 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import java.io.File;
 
 @Configuration
-@ComponentScan( "org.openrdf.spring" )
 @EnableTransactionManagement
 public class TxnConfig {
 	@Bean
@@ -66,7 +67,12 @@ public class TxnConfig {
 			return new RemoteRepositoryManager( remoteManagerURL );
 		} else {
 			String repositoryDirectory = Vars.getInstance().getAppsRepositoryDirectory();
-			return new LocalRepositoryManager( new File( repositoryDirectory ) );
+			return new SpringLocalRepositoryManager( new File( repositoryDirectory ) );
 		}
+	}
+
+	@Bean
+	protected TransactionWrapper transactionWrapper() {
+		return new TransactionWrapper();
 	}
 }

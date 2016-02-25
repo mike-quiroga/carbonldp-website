@@ -1,3 +1,5 @@
+# 0.27.7 (2016/02/25)
+* Documents have now a property pointing to it's ACL
 # 0.27.6 (2016/02/16)
 * Files are properly deleted when deleting an app and a RDFRepresentation as a RDFSource
 # 0.27.5 (2016/02/15)

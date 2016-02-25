@@ -1,8 +1,9 @@
 package com.carbonldp.authorization.acl;
 
 import com.carbonldp.Consts;
-import com.carbonldp.exceptions.StupidityException;
 import com.carbonldp.ldp.AbstractSesameLDPRepository;
+import com.carbonldp.ldp.sources.RDFSourceDescription;
+import com.carbonldp.ldp.sources.RDFSourceRepository;
 import com.carbonldp.rdf.RDFDocument;
 import com.carbonldp.rdf.RDFDocumentRepository;
 import com.carbonldp.rdf.RDFNodeEnum;
@@ -21,9 +22,11 @@ import java.util.Set;
 
 @Transactional
 public class SesameACLRepository extends AbstractSesameLDPRepository implements ACLRepository {
+	private RDFSourceRepository sourceRepository;
 
-	public SesameACLRepository( SesameConnectionFactory connectionFactory, RDFResourceRepository resourceRepository, RDFDocumentRepository documentRepository ) {
+	public SesameACLRepository( SesameConnectionFactory connectionFactory, RDFResourceRepository resourceRepository, RDFDocumentRepository documentRepository, RDFSourceRepository sourceRepository ) {
 		super( connectionFactory, resourceRepository, documentRepository );
+		this.sourceRepository = sourceRepository;
 	}
 
 	@Override
@@ -42,6 +45,7 @@ public class SesameACLRepository extends AbstractSesameLDPRepository implements 
 		}
 		URI aclURI = getACLUri( objectURI );
 		ACL acl = ACLFactory.create( aclURI, objectURI );
+		resourceRepository.add( objectURI, RDFSourceDescription.Property.ACCESS_CONTROL_LIST.getURI(), aclURI );
 		documentRepository.addDocument( acl.getDocument() );
 		return acl;
 	}

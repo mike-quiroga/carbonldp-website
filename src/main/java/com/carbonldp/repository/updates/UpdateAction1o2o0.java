@@ -13,8 +13,6 @@ public class UpdateAction1o2o0 extends AbstractUpdateAction {
 
 	@Override
 	public void execute() throws Exception {
-		Repository platformRepository = getRepository( Vars.getInstance().getPlatformRepositoryDirectory() );
-		loadResourcesFile( platformRepository, resourcesFile, Vars.getInstance().getHost() );
-		closeRepository( platformRepository );
+		loadResourcesFile( resourcesFile, Vars.getInstance().getHost() );
 	}
 }
