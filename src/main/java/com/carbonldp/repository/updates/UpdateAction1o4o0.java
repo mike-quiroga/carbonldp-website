@@ -42,7 +42,7 @@ public class UpdateAction1o4o0 extends AbstractUpdateAction {
 	private void addBNodeIdentifier() throws RepositoryException {
 
 		RepositoryResult<Statement> statements = connectionFactory.getConnection().getStatements( null, null, null, true );
-
+		statements.enableDuplicateFilter();
 		while ( statements.hasNext() ) {
 			Statement statement = statements.next();
 			Resource subject = statement.getSubject();
@@ -52,7 +52,8 @@ public class UpdateAction1o4o0 extends AbstractUpdateAction {
 			URI predicate = RDFBlankNodeDescription.Property.BNODE_IDENTIFIER.getURI();
 			if ( connectionFactory.getConnection().hasStatement( bNode, predicate, null, false, context ) ) continue;
 			Literal object = ValueFactoryImpl.getInstance().createLiteral( UUID.randomUUID().toString() );
-			connectionFactory.getConnection().add( bNode, predicate , object, context );
+			connectionFactory.getConnection().add( bNode, predicate, object, context );
+			connectionFactory.getConnection().commit();
 		}
 	}
 }
