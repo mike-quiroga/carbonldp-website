@@ -1,33 +1,23 @@
 package com.carbonldp.jobs;
 
 import com.carbonldp.Vars;
-import com.carbonldp.authorization.acl.SesameACLService;
 import com.carbonldp.ldp.AbstractSesameLDPRepository;
-import com.carbonldp.ldp.containers.ContainerDescription;
 import com.carbonldp.rdf.RDFDocumentRepository;
 import com.carbonldp.rdf.RDFResourceRepository;
-import com.carbonldp.repository.DocumentGraphQueryResultHandler;
-import com.carbonldp.repository.GraphQueryResultHandler;
-import com.carbonldp.utils.RDFNodeUtil;
 import com.carbonldp.utils.ValueUtil;
-import com.carbonldp.web.exceptions.NotImplementedException;
 import org.openrdf.model.*;
-import org.openrdf.model.impl.StatementImpl;
 import org.openrdf.model.impl.URIImpl;
 import org.openrdf.model.vocabulary.RDF;
 import org.openrdf.query.BindingSet;
 import org.openrdf.repository.RepositoryException;
 import org.openrdf.repository.RepositoryResult;
 import org.openrdf.spring.SesameConnectionFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import com.carbonldp.jobs.TriggerDescription.Type;
 
-import javax.security.auth.Subject;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.RunnableFuture;
 
 import static com.carbonldp.Consts.NEW_LINE;
 import static com.carbonldp.Consts.TAB;
@@ -43,6 +33,8 @@ public class SesameJobTriggerRepository extends AbstractSesameLDPRepository impl
 		super( connectionFactory, resourceRepository, documentRepository );
 	}
 
+	JobRepository jobRepository;
+
 	@Override
 	public boolean supports( Type triggerType ) {
 		return triggerType == Type.JOB_TRIGGER;
@@ -52,11 +44,11 @@ public class SesameJobTriggerRepository extends AbstractSesameLDPRepository impl
 	public void executeTrigger( URI triggerURI ) {
 		URI jobURI = getJobURI( triggerURI );
 		addJobToQueue( jobURI );
-		changeJobStatus( jobURI );
+		setJobStatusToQueued( jobURI );
 	}
 
 	private void addJobToQueue( URI jobURI ) {
-		URI appURI = getAppURI( jobURI );
+		URI appURI = jobRepository.getAppURI( jobURI );
 		URI appJobsQueue = new URIImpl( appURI.stringValue() + "#" + Vars.getInstance().getJobsQueue() );
 
 		if ( isQueueEmpty( appURI, appJobsQueue ) ) {
@@ -108,14 +100,8 @@ public class SesameJobTriggerRepository extends AbstractSesameLDPRepository impl
 		}
 	}
 
-	private void changeJobStatus( URI jobURI ) {
-		try {
-			connectionFactory.getConnection().remove( jobURI, JobDescription.Property.JOB_STATUS.getURI(), null, jobURI );
-			connectionFactory.getConnection().add( jobURI, JobDescription.Property.JOB_STATUS.getURI(), JobDescription.JobStatus.QUEUED.getURI(), jobURI );
-		} catch ( RepositoryException e ) {
-			throw new RuntimeException( e );
-		}
-
+	private void setJobStatusToQueued( URI jobURI ) {
+		jobRepository.changeJobStatus( jobURI,JobDescription.JobStatus.QUEUED );
 	}
 
 	private static final String getJobRelatedQuery;
@@ -144,29 +130,8 @@ public class SesameJobTriggerRepository extends AbstractSesameLDPRepository impl
 		} );
 	}
 
-	private static final String getAppRelatedQuery;
-
-	static {
-		getAppRelatedQuery = "" +
-			"SELECT ?app WHERE {" + NEW_LINE +
-			TAB + "GRAPH ?jobURI {" + NEW_LINE +
-			TAB + TAB + "?jobURI <" + JobDescription.Property.APP_RELATED.getURI().stringValue() + "> ?app" + NEW_LINE +
-			TAB + "}" + NEW_LINE +
-			"}"
-		;
-	}
-
-	private URI getAppURI( URI jobURI ) {
-		Map<String, Value> bindings = new HashMap<>();
-		bindings.put( "jobURI", jobURI );
-
-		return sparqlTemplate.executeTupleQuery( getAppRelatedQuery, bindings, queryResult -> {
-			if ( queryResult.hasNext() ) {
-				BindingSet bindingSet = queryResult.next();
-				Value member = bindingSet.getValue( "app" );
-				if ( ValueUtil.isURI( member ) ) return ValueUtil.getURI( member );
-			}
-			throw new RuntimeException( "the trigger is not related to any job" );
-		} );
+	@Autowired
+	public void setJobRepository( JobRepository jobRepository ) {
+		this.jobRepository = jobRepository;
 	}
 }

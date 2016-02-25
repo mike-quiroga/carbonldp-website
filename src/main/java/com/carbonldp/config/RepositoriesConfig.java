@@ -19,10 +19,7 @@ import com.carbonldp.authorization.SesamePlatformPrivilegeRepository;
 import com.carbonldp.authorization.SesamePlatformRoleRepository;
 import com.carbonldp.authorization.acl.ACLRepository;
 import com.carbonldp.authorization.acl.SesameACLRepository;
-import com.carbonldp.jobs.SesameJobTriggerRepository;
-import com.carbonldp.jobs.SesameTriggerRepository;
-import com.carbonldp.jobs.TriggerRepository;
-import com.carbonldp.jobs.TypedTriggerRepository;
+import com.carbonldp.jobs.*;
 import com.carbonldp.ldp.containers.*;
 import com.carbonldp.ldp.nonrdf.NonRDFSourceRepository;
 import com.carbonldp.ldp.nonrdf.RDFRepresentationRepository;
@@ -206,9 +203,13 @@ public class RepositoriesConfig {
 		return new SesameACLRepository( connectionFactory, resourceRepository(), documentRepository() );
 	}
 
+	// TODO: why is this not in services config?
 	@Bean
-	SPARQLService sparqlService() {
+	public SPARQLService sparqlService() {
 		return new SesameSPARQLService( connectionFactory );
 	}
+
+	@Bean
+	public JobRepository jobRepository() {return new SesameJobRepository( connectionFactory, resourceRepository(), documentRepository() ); }
 
 }

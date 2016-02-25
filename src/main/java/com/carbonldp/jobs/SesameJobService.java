@@ -7,6 +7,7 @@ import com.carbonldp.ldp.sources.RDFSourceService;
 import com.carbonldp.models.Infraction;
 import org.openrdf.model.URI;
 import org.springframework.beans.factory.annotation.Autowired;
+import com.carbonldp.jobs.JobDescription.JobStatus;
 
 import java.util.List;
 
@@ -17,6 +18,7 @@ import java.util.List;
 public class SesameJobService extends AbstractSesameLDPService implements JobService {
 	private ContainerService containerService;
 	private RDFSourceService sourceService;
+	private JobRepository jobRepository;
 
 	public void create( URI targetURI, Job job ) {
 		validate( job );
@@ -31,8 +33,14 @@ public class SesameJobService extends AbstractSesameLDPService implements JobSer
 		if ( ! infractions.isEmpty() ) throw new InvalidResourceException( infractions );
 	}
 
+	@Override
 	public Job get( URI jobURI ) {
 		return new Job( sourceService.get( jobURI ) );
+	}
+
+	@Override
+	public void changeJobStatus( URI jobURI, JobStatus jobStatus ) {
+		jobRepository.changeJobStatus( jobURI, jobStatus );
 	}
 
 	@Autowired
@@ -41,5 +49,10 @@ public class SesameJobService extends AbstractSesameLDPService implements JobSer
 	@Autowired
 	public void setSourceService( RDFSourceService sourceService ) {
 		this.sourceService = sourceService;
+	}
+
+	@Autowired
+	public void setJobRepository( JobRepository jobRepository ) {
+		this.jobRepository = jobRepository;
 	}
 }

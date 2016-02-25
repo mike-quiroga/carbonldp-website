@@ -16,7 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class JobsExecutor {
 	private AppRepository appRepository;
-	private ContainerService containerService;
+	private JobService jobService;
 
 	@Async
 	public void runJob( Job job ) {
@@ -26,13 +26,14 @@ public class JobsExecutor {
 				runBackupJob( job );
 				break;
 			default:
+				// TODO: where can we put this change so it won't be rolled back?
 				job.setJobStatus( BackupJobDescription.JobStatus.ERROR );
 				throw new RuntimeException( "Invalid job type" );
 		}
 	}
 
 	public void runBackupJob( Job job ) {
-		job.setJobStatus( BackupJobDescription.JobStatus.RUNNING );
+		jobService.changeJobStatus(job.getURI(), BackupJobDescription.JobStatus.RUNNING );
 		URI appURI = job.getAppRelated();
 		App app = appRepository.get( appURI );
 		String appRepositoryID = app.getRepositoryID();
@@ -41,12 +42,14 @@ public class JobsExecutor {
 	}
 
 	public void createBackupContainer( Job job ) {
-		containerService.
+
 	}
 
 	@Autowired
 	public void setAppRepository( AppRepository appRepository ) {this.appRepository = appRepository; }
 
 	@Autowired
-	public void setContainerService( ContainerService containerService ) {this.containerService = containerService; }
+	public void setJobService( JobService jobService ) {
+		this.jobService = jobService;
+	}
 }
