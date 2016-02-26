@@ -3,16 +3,19 @@ package com.carbonldp.repository.updates;
 import com.carbonldp.apps.App;
 import com.carbonldp.rdf.RDFBlankNodeDescription;
 import com.carbonldp.utils.ValueUtil;
-import org.openrdf.model.*;
+import org.openrdf.model.Literal;
+import org.openrdf.model.URI;
+import org.openrdf.model.Value;
 import org.openrdf.model.impl.ValueFactoryImpl;
-import org.openrdf.query.*;
+import org.openrdf.query.BindingSet;
+import org.openrdf.query.QueryEvaluationException;
+import org.openrdf.query.TupleQueryResult;
 import org.openrdf.repository.RepositoryException;
 
 import java.util.Set;
 import java.util.UUID;
 
-import static com.carbonldp.Consts.NEW_LINE;
-import static com.carbonldp.Consts.TAB;
+import static com.carbonldp.Consts.*;
 
 /**
  * @author JorgeEspinosa
@@ -58,16 +61,20 @@ public class UpdateAction1o4o0 extends AbstractUpdateAction {
 	private void addBNodeIdentifier() throws RepositoryException {
 		URI predicate = RDFBlankNodeDescription.Property.BNODE_IDENTIFIER.getURI();
 
-		sparqlTemplate.executeTupleQuery( getBNodesWithoutIDQuery, null, queryResult -> {
-			while ( queryResult.hasNext() ) {
+
+		TupleQueryResult result = sparqlTemplate.executeTupleQuery( getBNodesWithoutIDQuery, null, queryResult -> queryResult );
+
+		try {
+			while ( result.hasNext() ) {
 				Literal object = ValueFactoryImpl.getInstance().createLiteral( UUID.randomUUID().toString() );
-				BindingSet bindingSet = queryResult.next();
+				BindingSet bindingSet = result.next();
 				Value subject = bindingSet.getValue( "s" );
 				Value context = bindingSet.getValue( "c" );
 				connectionFactory.getConnection().add( ValueUtil.getBNode( subject ), predicate, object, ValueUtil.getURI( context ) );
 			}
-			return true;
-		} );
+		} catch ( QueryEvaluationException e ) {
+			throw new RuntimeException( e );
+		}
 
 	}
 }
