@@ -8,8 +8,6 @@ import org.openrdf.model.URI;
 import org.openrdf.model.Value;
 import org.openrdf.model.impl.ValueFactoryImpl;
 import org.openrdf.query.BindingSet;
-import org.openrdf.query.QueryEvaluationException;
-import org.openrdf.query.TupleQueryResult;
 import org.openrdf.repository.RepositoryException;
 
 import java.util.Set;
@@ -62,19 +60,15 @@ public class UpdateAction1o4o0 extends AbstractUpdateAction {
 		URI predicate = RDFBlankNodeDescription.Property.BNODE_IDENTIFIER.getURI();
 
 
-		TupleQueryResult result = sparqlTemplate.executeTupleQuery( getBNodesWithoutIDQuery, null, queryResult -> queryResult );
-
-		try {
-			while ( result.hasNext() ) {
+		sparqlTemplate.executeTupleQuery( getBNodesWithoutIDQuery, null, queryResult -> {
+			while ( queryResult.hasNext() ) {
 				Literal object = ValueFactoryImpl.getInstance().createLiteral( UUID.randomUUID().toString() );
-				BindingSet bindingSet = result.next();
+				BindingSet bindingSet = queryResult.next();
 				Value subject = bindingSet.getValue( "s" );
 				Value context = bindingSet.getValue( "c" );
 				connectionFactory.getConnection().add( ValueUtil.getBNode( subject ), predicate, object, ValueUtil.getURI( context ) );
 			}
-		} catch ( QueryEvaluationException e ) {
-			throw new RuntimeException( e );
-		}
-
+			return true;
+		});
 	}
 }
