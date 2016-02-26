@@ -56,10 +56,9 @@ public class SesameJobRepository extends AbstractSesameLDPRepository implements 
 
 	@Override
 	public void changeJobStatus(  URI jobURI, JobStatus jobStatus  ) {
-		URI appURI = getAppURI( jobURI );
 		try {
-			connectionFactory.getConnection().remove( jobURI, JobDescription.Property.JOB_STATUS.getURI(), null, appURI );
-			connectionFactory.getConnection().add( jobURI, JobDescription.Property.JOB_STATUS.getURI(), jobStatus.getURI(), appURI );
+			connectionFactory.getConnection().remove( jobURI, JobDescription.Property.JOB_STATUS.getURI(), null, jobURI );
+			connectionFactory.getConnection().add( jobURI, JobDescription.Property.JOB_STATUS.getURI(), jobStatus.getURI(), jobURI );
 		} catch ( RepositoryException e ) {
 			throw new RuntimeException( e );
 		}

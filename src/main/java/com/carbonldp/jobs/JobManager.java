@@ -18,7 +18,6 @@ import java.util.Set;
  * @author JorgeEspinosa
  * @since _version_
  */
-@Transactional
 public class JobManager {
 
 	private JobsExecutor jobsExecutor;
@@ -35,14 +34,14 @@ public class JobManager {
 		Set<App> apps = getAllApps();
 		for ( App app : apps ) {
 			Job job = appRepository.peekJobsQueue( app );
-			if ( job != null && job.getJobStatus().equals( JobDescription.JobStatus.QUEUED ) ) {
-				jobsExecutor.runJob( job );
+			if ( job != null && job.getJobStatus().equals( JobDescription.JobStatus.QUEUED.getURI() ) ) {
+				transactionWrapper.runWithSystemPermissionsInPlatformContext( () -> jobsExecutor.runJob( job ) );
 			}
 		}
 	}
 
 	private Set<App> getAllApps() {
-		return transactionWrapper.runInPlatformContext( () -> {
+		return transactionWrapper.runWithSystemPermissionsInPlatformContext( () -> {
 			Set<App> apps = new HashSet<>();
 			URI platformAppsContainer = new URIImpl( Vars.getInstance().getHost() + Vars.getInstance().getMainContainer() + Vars.getInstance().getAppsContainer() );
 			Set<URI> appURIs = containerRepository.getContainedURIs( platformAppsContainer );
