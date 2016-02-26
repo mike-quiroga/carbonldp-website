@@ -19,6 +19,8 @@ import com.carbonldp.ldp.containers.ContainerService;
 import com.carbonldp.ldp.containers.SesameContainerService;
 import com.carbonldp.ldp.nonrdf.NonRDFSourceService;
 import com.carbonldp.ldp.nonrdf.SesameNonRDFSourceService;
+import com.carbonldp.ldp.nonrdf.backup.BackupService;
+import com.carbonldp.ldp.nonrdf.backup.SesameBackupService;
 import com.carbonldp.ldp.sources.RDFSourceService;
 import com.carbonldp.ldp.sources.SesameRDFSourceService;
 import com.carbonldp.platform.api.PlatformAPIService;
@@ -94,4 +96,7 @@ public class ServicesConfig {
 
 	@Bean
 	public TriggerService triggerService() {return new SesameTriggerService(); }
+
+	@Bean
+	public BackupService backupService() {return new SesameBackupService(); }
 }

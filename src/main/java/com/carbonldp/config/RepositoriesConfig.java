@@ -25,6 +25,8 @@ import com.carbonldp.ldp.nonrdf.NonRDFSourceRepository;
 import com.carbonldp.ldp.nonrdf.RDFRepresentationRepository;
 import com.carbonldp.ldp.nonrdf.SesameNonRDFSourceRepository;
 import com.carbonldp.ldp.nonrdf.SesameRDFRepresentationRepository;
+import com.carbonldp.ldp.nonrdf.backup.BackupRepository;
+import com.carbonldp.ldp.nonrdf.backup.SesameBackupRepository;
 import com.carbonldp.ldp.sources.RDFSourceRepository;
 import com.carbonldp.ldp.sources.SesameRDFSourceRepository;
 import com.carbonldp.platform.api.PlatformAPIRepository;
@@ -211,4 +213,7 @@ public class RepositoriesConfig {
 
 	@Bean
 	public JobRepository jobRepository() {return new SesameJobRepository( connectionFactory, resourceRepository(), documentRepository() ); }
+
+	@Bean
+	public BackupRepository backupRepository() {return new SesameBackupRepository( connectionFactory, resourceRepository(), documentRepository() ); }
 }

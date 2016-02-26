@@ -3,6 +3,10 @@ package com.carbonldp.jobs;
 import com.carbonldp.Vars;
 import com.carbonldp.apps.App;
 import com.carbonldp.apps.AppRepository;
+import com.carbonldp.ldp.nonrdf.backup.Backup;
+import com.carbonldp.ldp.nonrdf.backup.BackupFactory;
+import com.carbonldp.ldp.nonrdf.backup.BackupService;
+import org.apache.commons.io.FilenameUtils;
 import org.openrdf.model.URI;
 import org.openrdf.model.impl.URIImpl;
 import org.openrdf.repository.RepositoryException;
@@ -29,6 +33,7 @@ public class BackupJobExecutor implements TypedJobExecutor {
 	private AppRepository appRepository;
 	private JobService jobService;
 	private SesameConnectionFactory connectionFactory;
+	private BackupService backupService;
 
 	public boolean supports( JobDescription.Type jobType ) {
 		return jobType == JobDescription.Type.BACKUP;
@@ -41,31 +46,23 @@ public class BackupJobExecutor implements TypedJobExecutor {
 		String appRepositoryID = app.getRepositoryID();
 		File nonRDFSourceDirectory = new File( Vars.getInstance().getAppsRepositoryDirectory() + appRepositoryID );
 		File rdfRepositoryFile = createTemporaryRDFBackupFile();
-		UUID zipFileIdentifier = createZipFile( nonRDFSourceDirectory, rdfRepositoryFile );
+		File zipFile = createZipFile( nonRDFSourceDirectory, rdfRepositoryFile );
 
-		createBackupContainer( job, zipFileIdentifier );
-
-	}
-
-	private void createBackupContainer( Job job, UUID zipFileIdentifier ) {
-		URI appURI = job.getAppRelated();
-		URI jobsContainerURI = new URIImpl( appURI.stringValue() + Vars.getInstance().getBackupsContainer() );
-		URI backupURI = new URIImpl( jobsContainerURI.stringValue() + createRandomSlug() );
-		Backup backup = BackupFactory.getInstance().create( backupURI );
-		backup.setIdentifier( zipFileIdentifier );
-		backup.setSize();
+		backupService.createAppBackup( appURI, zipFile );
 
 	}
 
-	private UUID createZipFile( File... files ) {
-		UUID zipUUID = UUID.randomUUID();
-		String zipFileIdentifier = zipUUID.toString();
-		String zipFilePath = Vars.getInstance().getPlatformFilesDirectory() + zipFileIdentifier + ".zip";
+	private File createZipFile( File... files ) {
+		File temporaryFile;
 		FileOutputStream fileOutputStream;
 		try {
-			fileOutputStream = new FileOutputStream( zipFilePath );
+			temporaryFile = File.createTempFile( createRandomSlug(), null );
+			temporaryFile.deleteOnExit();
+			fileOutputStream = new FileOutputStream( temporaryFile );
 		} catch ( FileNotFoundException e ) {
 			throw new RuntimeException( "there's no such file", e );
+		} catch ( IOException e ) {
+			throw new RuntimeException( e );
 		}
 		ZipOutputStream zipOutputStream = new ZipOutputStream( fileOutputStream );
 
@@ -107,7 +104,7 @@ public class BackupJobExecutor implements TypedJobExecutor {
 		} catch ( IOException e ) {
 			LOG.warn( "zip stream could no be closed" );
 		}
-		return zipUUID;
+		return temporaryFile;
 	}
 
 	protected File createTemporaryRDFBackupFile() {
@@ -123,9 +120,9 @@ public class BackupJobExecutor implements TypedJobExecutor {
 			try {
 				connectionFactory.getConnection().export( trigWriter );
 			} catch ( RepositoryException e ) {
-				e.printStackTrace();
+				throw new RuntimeException( e );
 			} catch ( RDFHandlerException e ) {
-				e.printStackTrace();
+				throw new RuntimeException( e );
 			} finally {
 				try {
 					outputStream.close();
@@ -165,5 +162,10 @@ public class BackupJobExecutor implements TypedJobExecutor {
 	@Autowired
 	public void setConnectionFactory( SesameConnectionFactory connectionFactory ) {
 		this.connectionFactory = connectionFactory;
+	}
+
+	@Autowired
+	public void setBackupService( BackupService backupService ) {
+		this.backupService = backupService;
 	}
 }
