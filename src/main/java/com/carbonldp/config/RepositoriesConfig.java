@@ -200,7 +200,7 @@ public class RepositoriesConfig {
 
 	@Bean
 	public ACLRepository aclRepository() {
-		return new SesameACLRepository( connectionFactory, resourceRepository(), documentRepository() );
+		return new SesameACLRepository( connectionFactory, resourceRepository(), documentRepository(), sourceRepository() );
 	}
 
 	// TODO: why is this not in services config?
@@ -211,5 +211,4 @@ public class RepositoriesConfig {
 
 	@Bean
 	public JobRepository jobRepository() {return new SesameJobRepository( connectionFactory, resourceRepository(), documentRepository() ); }
-
 }
