@@ -3,12 +3,8 @@ package com.carbonldp.jobs;
 import com.carbonldp.Vars;
 import com.carbonldp.apps.App;
 import com.carbonldp.apps.AppRepository;
-import com.carbonldp.ldp.nonrdf.backup.Backup;
-import com.carbonldp.ldp.nonrdf.backup.BackupFactory;
 import com.carbonldp.ldp.nonrdf.backup.BackupService;
-import org.apache.commons.io.FilenameUtils;
 import org.openrdf.model.URI;
-import org.openrdf.model.impl.URIImpl;
 import org.openrdf.repository.RepositoryException;
 import org.openrdf.rio.RDFHandlerException;
 import org.openrdf.rio.RDFWriter;
@@ -17,10 +13,10 @@ import org.openrdf.spring.SesameConnectionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.*;
 import java.util.Random;
-import java.util.UUID;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -28,6 +24,7 @@ import java.util.zip.ZipOutputStream;
  * @author NestorVenegas
  * @since _version_
  */
+@Transactional
 public class BackupJobExecutor implements TypedJobExecutor {
 	protected final Logger LOG = LoggerFactory.getLogger( this.getClass() );
 	private AppRepository appRepository;
@@ -44,7 +41,8 @@ public class BackupJobExecutor implements TypedJobExecutor {
 		URI appURI = job.getAppRelated();
 		App app = appRepository.get( appURI );
 		String appRepositoryID = app.getRepositoryID();
-		File nonRDFSourceDirectory = new File( Vars.getInstance().getAppsRepositoryDirectory() + appRepositoryID );
+		//TODO: fix the path
+		File nonRDFSourceDirectory = new File( Vars.getInstance().getAppsRepositoryDirectory() + "/repositories/" + appRepositoryID );
 		File rdfRepositoryFile = createTemporaryRDFBackupFile();
 		File zipFile = createZipFile( nonRDFSourceDirectory, rdfRepositoryFile );
 

@@ -46,4 +46,16 @@ public class TransactionWrapper {
 		return action.run();
 	}
 
+	@RunWith( platformRoles = Platform.Role.SYSTEM )
+	@RunInPlatformContext
+	public void runWithSystemPermissionsInPlatformContext( Action action ) {
+		action.run();
+	}
+
+	@RunWith( platformRoles = Platform.Role.SYSTEM )
+	@RunInPlatformContext
+	public <E> E runWithSystemPermissionsInPlatformContext( ActionWithResult<E> action ) {
+		return action.run();
+	}
+
 }

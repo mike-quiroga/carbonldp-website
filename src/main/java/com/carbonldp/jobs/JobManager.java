@@ -9,7 +9,6 @@ import org.openrdf.model.URI;
 import org.openrdf.model.impl.URIImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -18,7 +17,6 @@ import java.util.Set;
  * @author JorgeEspinosa
  * @since _version_
  */
-@Transactional
 public class JobManager {
 
 	private JobsExecutor jobsExecutor;
@@ -35,7 +33,7 @@ public class JobManager {
 		Set<App> apps = getAllApps();
 		for ( App app : apps ) {
 			Job job = appRepository.peekJobsQueue( app );
-			if ( job != null && job.getJobStatus().equals( JobDescription.JobStatus.QUEUED ) ) {
+			if ( job != null && job.getJobStatus().equals( JobDescription.JobStatus.QUEUED.getURI() ) ) {
 				jobsExecutor.runJob( job );
 			}
 		}
