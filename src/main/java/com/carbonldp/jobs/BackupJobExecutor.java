@@ -4,6 +4,7 @@ import com.carbonldp.Vars;
 import com.carbonldp.apps.App;
 import com.carbonldp.apps.AppRepository;
 import com.carbonldp.ldp.nonrdf.backup.BackupService;
+import com.carbonldp.spring.TransactionWrapper;
 import org.openrdf.model.URI;
 import org.openrdf.repository.RepositoryException;
 import org.openrdf.rio.RDFHandlerException;
@@ -13,7 +14,6 @@ import org.openrdf.spring.SesameConnectionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.io.*;
 import java.util.Random;
@@ -24,27 +24,27 @@ import java.util.zip.ZipOutputStream;
  * @author NestorVenegas
  * @since _version_
  */
-@Transactional
 public class BackupJobExecutor implements TypedJobExecutor {
 	protected final Logger LOG = LoggerFactory.getLogger( this.getClass() );
 	private AppRepository appRepository;
 	private JobService jobService;
 	private SesameConnectionFactory connectionFactory;
 	private BackupService backupService;
+	private TransactionWrapper transactionWrapper;
 
 	public boolean supports( JobDescription.Type jobType ) {
 		return jobType == JobDescription.Type.BACKUP;
 	}
 
 	public void run( Job job ) {
-		jobService.changeJobStatus( job.getURI(), BackupJobDescription.JobStatus.RUNNING );
+		//jobService.changeJobStatus( job.getURI(), BackupJobDescription.JobStatus.RUNNING );
 		URI appURI = job.getAppRelated();
 		App app = appRepository.get( appURI );
 		String appRepositoryID = app.getRepositoryID();
 		//TODO: fix the path
-		File nonRDFSourceDirectory = new File( Vars.getInstance().getAppsRepositoryDirectory() + "/repositories/" + appRepositoryID );
-		File rdfRepositoryFile = createTemporaryRDFBackupFile();
-		File zipFile = createZipFile( nonRDFSourceDirectory, rdfRepositoryFile );
+		File nonRDFSourceDirectory = new File( Vars.getInstance().getAppsFilesDirectory() + "/" + appRepositoryID );
+		File rdfRepositoryFile = transactionWrapper.runInAppcontext( app, () -> createTemporaryRDFBackupFile() );
+		File zipFile = transactionWrapper.runWithSystemPermissionsInPlatformContext( () -> createZipFile( nonRDFSourceDirectory, rdfRepositoryFile ) );
 
 		backupService.createAppBackup( appURI, zipFile );
 
@@ -166,4 +166,7 @@ public class BackupJobExecutor implements TypedJobExecutor {
 	public void setBackupService( BackupService backupService ) {
 		this.backupService = backupService;
 	}
+
+	@Autowired
+	public void setTransactionWrapper( TransactionWrapper transactionWrapper ) {this.transactionWrapper = transactionWrapper; }
 }

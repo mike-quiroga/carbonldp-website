@@ -3,7 +3,6 @@ package com.carbonldp.jobs;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Async;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -11,7 +10,6 @@ import java.util.List;
  * @author JorgeEspinosa
  * @since _version_
  */
-@Transactional
 public class JobsExecutor {
 	protected final Logger LOG = LoggerFactory.getLogger( this.getClass() );
 	private final List<TypedJobExecutor> typedJobs;
