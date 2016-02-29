@@ -1,7 +1,5 @@
 package com.carbonldp.jobs;
 
-import com.carbonldp.ldp.containers.ContainerDescription;
-
 /**
  * @author NestorVenegas
  * @since _version_

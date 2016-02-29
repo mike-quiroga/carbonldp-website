@@ -37,7 +37,7 @@ public class BackupJobExecutor implements TypedJobExecutor {
 	}
 
 	public void run( Job job ) {
-		//jobService.changeJobStatus( job.getURI(), BackupJobDescription.JobStatus.RUNNING );
+		transactionWrapper.runWithSystemPermissionsInPlatformContext( () -> jobService.changeJobStatus( job.getURI(), BackupJobDescription.JobStatus.RUNNING ) );
 		URI appURI = job.getAppRelated();
 		App app = appRepository.get( appURI );
 		String appRepositoryID = app.getRepositoryID();
@@ -47,7 +47,6 @@ public class BackupJobExecutor implements TypedJobExecutor {
 		File zipFile = transactionWrapper.runWithSystemPermissionsInPlatformContext( () -> createZipFile( nonRDFSourceDirectory, rdfRepositoryFile ) );
 
 		backupService.createAppBackup( appURI, zipFile );
-
 	}
 
 	private File createZipFile( File... files ) {

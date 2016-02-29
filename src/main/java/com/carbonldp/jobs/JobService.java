@@ -13,9 +13,9 @@ public interface JobService {
 	@PreAuthorize( "hasPermission(#targetURI, 'CREATE_CHILD')" )
 	public void create( URI targetURI, Job job );
 
-	@PreAuthorize( "hasPermission(#targetURI, 'READ')" )
+	@PreAuthorize( "hasPermission(#jobURI, 'READ')" )
 	public Job get( URI jobURI );
 
-	@PreAuthorize( "hasPermission(#targetURI, 'UPDATE')" )
+	@PreAuthorize( "hasPermission(#jobURI, 'UPDATE')" )
 	public void changeJobStatus( URI jobURI, JobStatus jobStatus );
 }
