@@ -78,7 +78,6 @@ public class SesameRDFSourceService extends AbstractSesameLDPService implements 
 	public void add( URI sourceURI, RDFDocument document ) {
 		if ( ! exists( sourceURI ) ) throw new ResourceDoesntExistException();
 
-		validateResourcesBelongToSource( sourceURI, document.getFragmentResources() );
 		containsImmutableProperties( document );
 		validateBNodesUniqueIdentifier( document );
 
@@ -93,7 +92,6 @@ public class SesameRDFSourceService extends AbstractSesameLDPService implements 
 	public void set( URI sourceURI, RDFDocument document ) {
 		if ( ! exists( sourceURI ) ) throw new ResourceDoesntExistException();
 		containsImmutableProperties( document );
-		validateResourcesBelongToSource( sourceURI, document.getFragmentResources() );
 
 		documentRepository.set( sourceURI, document );
 
@@ -129,7 +127,6 @@ public class SesameRDFSourceService extends AbstractSesameLDPService implements 
 		RDFDocument originalDocument = originalSource.getDocument();
 		document = mapBNodeSubjects( originalDocument, document );
 
-		validateResourcesBelongToSource( sourceURI, document.getFragmentResources() );
 		containsImmutableProperties( originalDocument, document );
 		document = addIdentifierToRemoveIfBNodeIsEmpty( originalDocument, document );
 
