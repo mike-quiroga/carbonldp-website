@@ -91,7 +91,7 @@ export default class SideBarComponent {
 				html += '</div>';
 			});
 
-
+			//Sidebar for computer and tablets
 			if(!this.mobile){
 				this.$followMenu = $( '<div />' ).addClass( 'ui vertical following fluid accordion text menu' ).html( html );
 				$sticky = $( '<div />' ).addClass( 'ui sticky segment' ).html( this.$followMenu ).prepend( '<p class="ui header">Content</p>' );
@@ -115,10 +115,10 @@ export default class SideBarComponent {
 						_self.activateSubSection( this );
 					},
 					onTopPassedReverse: function () {
-						_self.activateSubSection( this );
+						_self.activatePreviousSubSection( this );
 					}
 				});
-			}
+			}//menu for mobile
 			else{
 				this.$followMenu = $( '<div />' ).addClass( 'ui fluid vertical following accordion menu mobile' ).html( html );
 				$sticky = $( '<div />' ).addClass( 'ui segment' ).html( this.$followMenu ).prepend( '<p class="ui header">Content</p>' );
@@ -178,13 +178,26 @@ export default class SideBarComponent {
 			index = this.subSections.index( $section ),
 			$followSection = this.$followMenu.find( '.menu > .item' ),
 			$activeSection = $followSection.eq( index ),
-			inClosedTab = ($( this ).closest( '.tab:not(.active)' ).size() > 0),
-			anotherSection = ($( this ).filter( 'section' ).size() > 0),
 			isActive = $activeSection.hasClass( 'active' )
 			;
 
-		if ( index !== - 1 && ! inClosedTab && ! anotherSection && ! isActive ) {
-			$followSection.filter( '.active' ).removeClass( 'active' );
+		if ( index !== - 1 && ! isActive ) {
+			$followSection.removeClass( 'active' );
+			$activeSection.addClass( 'active' );
+		}
+	}
+
+	activatePreviousSubSection( elm:any ):void {
+		let
+			$section = $( elm ),
+			index = this.subSections.index( $section ),
+			$followSection = this.$followMenu.find( '.menu > .item' ),
+			$activeSection = $followSection.eq( index - 1 ),
+			isActive = $activeSection.hasClass( 'active' )
+			;
+
+		if ( index !== - 1 && ! isActive ) {
+			$followSection.removeClass( 'active' );
 			$activeSection.addClass( 'active' );
 		}
 	}
