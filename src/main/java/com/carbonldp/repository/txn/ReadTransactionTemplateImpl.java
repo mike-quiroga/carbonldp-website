@@ -6,7 +6,7 @@ import org.openrdf.repository.RepositoryException;
 
 /**
  * @author MiguelAraCo
- * @since _version_
+ * @since 0.28.0-ALPHA
  */
 public class ReadTransactionTemplateImpl<T> extends AbstractTransactionTemplate implements ReadTransactionTemplate<T> {
 	public ReadTransactionTemplateImpl( RepositoryConnection connection ) {

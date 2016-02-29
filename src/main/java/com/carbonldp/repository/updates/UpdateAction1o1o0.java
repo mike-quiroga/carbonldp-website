@@ -6,8 +6,6 @@ import com.carbonldp.apps.App;
 import com.carbonldp.namespaces.C;
 import com.carbonldp.namespaces.CP;
 import com.carbonldp.namespaces.CS;
-import com.carbonldp.repository.txn.WriteTransactionTemplate;
-import com.carbonldp.repository.txn.WriteTransactionTemplateImpl;
 import com.carbonldp.utils.ValueUtil;
 import org.openrdf.model.Resource;
 import org.openrdf.model.Statement;
@@ -15,20 +13,14 @@ import org.openrdf.model.URI;
 import org.openrdf.model.Value;
 import org.openrdf.model.impl.ContextStatementImpl;
 import org.openrdf.model.impl.URIImpl;
-import org.openrdf.repository.Repository;
 import org.openrdf.repository.RepositoryException;
 import org.openrdf.repository.RepositoryResult;
-import org.openrdf.repository.manager.LocalRepositoryManager;
-import org.openrdf.repository.manager.RepositoryManager;
 
-import java.io.File;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Set;
 
 /**
  * @author MiguelAraCo
- * @since _version_
+ * @since 0.28.0-ALPHA
  */
 public class UpdateAction1o1o0 extends AbstractUpdateAction {
 

@@ -17,7 +17,7 @@ import static com.carbonldp.Consts.*;
 
 /**
  * @author JorgeEspinosa
- * @since version
+ * @since 0.28.0-ALPHA
  */
 public class UpdateAction1o4o0 extends AbstractUpdateAction {
 
@@ -47,18 +47,17 @@ public class UpdateAction1o4o0 extends AbstractUpdateAction {
 
 	static {
 		getBNodesWithoutIDQuery = "" +
-				"SELECT DISTINCT ?s ?c" + NEW_LINE +
-				"WHERE {" + NEW_LINE +
-				TAB + "GRAPH ?c" + NEW_LINE +
-				TAB + TAB + "{?s ?p ?o}" + NEW_LINE +
-				TAB + "FILTER isBlank(?s)." + NEW_LINE +
-				TAB + "FILTER NOT EXISTS {?s <" + RDFBlankNodeDescription.Property.BNODE_IDENTIFIER.getURI().stringValue() + "> ?o}" + NEW_LINE +
-				"}";
+			"SELECT DISTINCT ?s ?c" + NEW_LINE +
+			"WHERE {" + NEW_LINE +
+			TAB + "GRAPH ?c" + NEW_LINE +
+			TAB + TAB + "{?s ?p ?o}" + NEW_LINE +
+			TAB + "FILTER isBlank(?s)." + NEW_LINE +
+			TAB + "FILTER NOT EXISTS {?s <" + RDFBlankNodeDescription.Property.BNODE_IDENTIFIER.getURI().stringValue() + "> ?o}" + NEW_LINE +
+			"}";
 	}
 
 	private void addBNodeIdentifier() throws RepositoryException {
 		URI predicate = RDFBlankNodeDescription.Property.BNODE_IDENTIFIER.getURI();
-
 
 		sparqlTemplate.executeTupleQuery( getBNodesWithoutIDQuery, null, queryResult -> {
 			while ( queryResult.hasNext() ) {
@@ -69,6 +68,6 @@ public class UpdateAction1o4o0 extends AbstractUpdateAction {
 				connectionFactory.getConnection().add( ValueUtil.getBNode( subject ), predicate, object, ValueUtil.getURI( context ) );
 			}
 			return true;
-		});
+		} );
 	}
 }

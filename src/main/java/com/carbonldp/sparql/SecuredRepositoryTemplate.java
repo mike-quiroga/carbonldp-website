@@ -6,7 +6,7 @@ import com.carbonldp.utils.ActionWithResult;
 
 /**
  * @author MiguelAraCo
- * @since _version_
+ * @since 0.28.0-ALPHA
  */
 public final class SecuredRepositoryTemplate {
 	private SecuredRepositoryTemplate() {}
