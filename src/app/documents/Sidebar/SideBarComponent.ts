@@ -25,18 +25,18 @@ export default class SideBarComponent {
 	sections:any;
 	subSections:any;
 
-	@Input() parentelement;
+	@Input() parentElement;
 	@Input() mobile;
 
 	host:string = "dev.carbonldp.com";
 
-	constructor( element:ElementRef  ) {
+	constructor( element:ElementRef ) {
 		this.elementRef = element;
 		this.$element = $( element.nativeElement );
 	}
 
 	ngAfterViewInit():void {
-		this.$container = $(this.parentelement.nativeElement).find( "article" );
+		this.$container = $( this.parentElement.nativeElement ).find( "article" );
 		this.sections = this.$container.children( "section" );
 		this.subSections = this.sections.children( "section" );
 		this.$followMenu = this.$element.find( ".following.menu" );
@@ -75,7 +75,7 @@ export default class SideBarComponent {
 				if ( subSections.size() > 0 ) {
 					html += '<div class="' + activeClass + 'content menu">';
 
-					$.each( subSections, function ( index2:number, subSection:HTMLElement ){
+					$.each( subSections, function ( index2:number, subSection:HTMLElement ) {
 						let
 							$subSection:JQuery = $( subSection ),
 							text:string = _self.getText( $subSection ),
@@ -85,14 +85,14 @@ export default class SideBarComponent {
 
 						_self.setId( $subSection );
 						html += '<a class="item" href="#' + id + '">' + text + '</a>';
-					});
+					} );
 					html += '</div>';
 				}
 				html += '</div>';
-			});
+			} );
 
 			//Sidebar for computer and tablets
-			if(!this.mobile){
+			if ( ! this.mobile ) {
 				this.$followMenu = $( '<div />' ).addClass( 'ui vertical following fluid accordion text menu' ).html( html );
 				$sticky = $( '<div />' ).addClass( 'ui sticky segment' ).html( this.$followMenu ).prepend( '<p class="ui header">Content</p>' );
 				this.sidebar.html( $sticky );
@@ -106,7 +106,7 @@ export default class SideBarComponent {
 					onTopPassedReverse: function () {
 						_self.activatePrevious();
 					}
-				});
+				} );
 				this.subSections.visibility( {
 					observeChanges: true,
 					once: false,
@@ -117,9 +117,9 @@ export default class SideBarComponent {
 					onTopPassedReverse: function () {
 						_self.activatePreviousSubSection( this );
 					}
-				});
+				} );
 			}//menu for mobile
-			else{
+			else {
 				this.$followMenu = $( '<div />' ).addClass( 'ui fluid vertical following accordion menu mobile' ).html( html );
 				$sticky = $( '<div />' ).addClass( 'ui segment' ).html( this.$followMenu ).prepend( '<p class="ui header">Content</p>' );
 				this.sidebar.html( $sticky );
@@ -130,18 +130,18 @@ export default class SideBarComponent {
 				observeChanges: true,
 				context: "#article",
 				offset: 100
-			});
+			} );
 
-			this.$followMenu.accordion({
+			this.$followMenu.accordion( {
 				exclusive: false,
 				animateChildren: false,
-			}).find( '.menu a[href], .title[href]' )
+			} ).find( '.menu a[href], .title[href]' )
 				.on( 'click', this.scrollTo );
 		}
 	}
 
-	activateSection( elm:any):void{
-		var
+	activateSection( elm:any ):void {
+		let
 			$section = $( elm ),
 			index = this.sections.index( $section ),
 			$followSection = this.$followMenu.children( '.item' ),
@@ -149,7 +149,7 @@ export default class SideBarComponent {
 			isActive = $activeSection.hasClass( 'active' )
 			;
 
-		if ( ! isActive ){
+		if ( ! isActive ) {
 			$followSection.filter( '.active' ).removeClass( 'active' );
 			$activeSection.addClass( 'active' );
 			this.$followMenu.accordion( 'open', index );
@@ -159,7 +159,7 @@ export default class SideBarComponent {
 	// Contracts accordion sections as you scroll through the sections elements
 	// inside a section of the page.
 	activatePrevious():void {
-		var
+		let
 			$menuItems = this.$followMenu.children( '.item' ),
 			$section = $menuItems.filter( '.active' ),
 			index = $menuItems.index( $section )
@@ -170,6 +170,7 @@ export default class SideBarComponent {
 			this.$followMenu.accordion( 'open', index - 1 );
 		}
 	}
+
 	// Expands accordion sections as you scroll through the sections elements
 	// inside a section of the page.
 	activateSubSection( elm:any ):void {
@@ -210,7 +211,7 @@ export default class SideBarComponent {
 			;
 
 		$element.addClass( 'active' );
-		$( 'html, body' ).animate({
+		$( 'html, body' ).animate( {
 			scrollTop: position
 		}, 500 );
 		location.hash = '#' + id;
@@ -233,7 +234,7 @@ export default class SideBarComponent {
 
 	// Sets the id to the section using the name of the first children header of the section
 	setId( $section:JQuery ):void {
-		if ( $section.children( ":header" ).eq( 0 ).text() ){
+		if ( $section.children( ":header" ).eq( 0 ).text() ) {
 			let text = this.getText( $section ),
 				safeName = this.getSafeText( text ),
 				id = window.escape( safeName )

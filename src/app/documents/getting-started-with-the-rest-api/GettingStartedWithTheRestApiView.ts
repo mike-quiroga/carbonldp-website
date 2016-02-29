@@ -16,7 +16,7 @@ import "./style.css!";
 @Component( {
 	selector: 'getting-started-rest-api',
 	template: template,
-	directives: [ CORE_DIRECTIVES,SideBarComponent, CodeMirrorComponent.Class],
+	directives: [ CORE_DIRECTIVES, SideBarComponent, CodeMirrorComponent.Class ],
 	providers: [ Title ]
 } )
 export default class GettingStartedWithTheRestApiView {
@@ -41,8 +41,6 @@ export default class GettingStartedWithTheRestApiView {
 	createAccordions():void {
 		this.$element.find( '.ui.accordion' ).accordion();
 	}
-
-
 
 
 }
