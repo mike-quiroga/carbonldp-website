@@ -1,10 +1,10 @@
 System.config({
   baseURL: "/carbon-website/",
   defaultJSExtensions: true,
-  transpiler: "typescript",
+  transpiler: "ts",
   typescriptOptions: {
     "module": "system",
-    "emitDecoratorData": true,
+    "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "noImplicitAny": false
   },
@@ -42,8 +42,12 @@ System.config({
     "jsonld": "npm:jsonld@0.4.2",
     "reflect-metadata": "npm:reflect-metadata@0.1.2",
     "scss": "github:screendriver/plugin-sass@0.0.8",
-    "typescript": "npm:typescript@1.6.2",
+    "ts": "github:frankwallis/plugin-typescript@4.0.1",
+    "typescript": "npm:typescript@1.8.2",
     "zone.js": "npm:zone.js@0.5.13",
+    "github:frankwallis/plugin-typescript@4.0.1": {
+      "typescript": "npm:typescript@1.8.2"
+    },
     "github:jspm/nodelibs-assert@0.1.0": {
       "assert": "npm:assert@1.3.0"
     },

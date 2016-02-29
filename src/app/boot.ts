@@ -17,7 +17,7 @@ import { BLOG_PROVIDERS } from "app/blog/Blog";
 const CARBON_PROVIDER = provide( Carbon, {
 	useFactory: () => {
 		var carbon = new Carbon();
-		carbon.setSetting( "domain", "dev.carbonldp.com" );
+		carbon.setSetting( "domain", "local.carbonldp.com" );
 	}
 } );
 
@@ -26,7 +26,7 @@ bootstrap( AppComponent, [
 	ROUTER_PROVIDERS,
 	HTTP_PROVIDERS,
 
-	provide( APP_BASE_HREF, { useValue: "/" } ),
+	provide( APP_BASE_HREF, { useValue: "/carbon-website/src/" } ),
 
 	CARBON_PROVIDER,
 	CONTENT_PROVIDERS,
