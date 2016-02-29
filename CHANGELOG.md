@@ -1,3 +1,6 @@
+# 0.3.2 (February 29, 2016)
+* Fixed DI. static private parameters property shouldn't be needed anymore.
+
 # 0.3.1 (February 15, 2016)
 * Fixed relative paths issue in different environments
 * Added configuration file and support for ejs templates for index.html, boot.ts and any scss
