@@ -2,7 +2,7 @@ package com.carbonldp.exceptions;
 
 /**
  * @author NestorVenegas
- * @since _version_
+ * @since 0.28.0-ALPHA
  */
 public class NotADirectoryException extends FileException {
 

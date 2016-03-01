@@ -6,7 +6,7 @@ import org.openrdf.repository.RepositoryException;
 
 /**
  * @author MiguelAraCo
- * @since _version_
+ * @since 0.28.0-ALPHA
  */
 public class AbstractTransactionTemplate extends AbstractComponent {
 	protected RepositoryConnection connection;

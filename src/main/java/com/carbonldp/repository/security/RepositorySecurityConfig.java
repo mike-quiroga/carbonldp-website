@@ -7,7 +7,7 @@ import org.springframework.security.access.PermissionEvaluator;
 
 /**
  * @author MiguelAraCo
- * @since _version_
+ * @since 0.28.0-ALPHA
  */
 @Configuration
 public class RepositorySecurityConfig {

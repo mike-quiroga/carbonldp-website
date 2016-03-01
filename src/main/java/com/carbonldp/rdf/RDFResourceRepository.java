@@ -1,13 +1,14 @@
 package com.carbonldp.rdf;
 
 import org.joda.time.DateTime;
+import org.openrdf.model.Resource;
 import org.openrdf.model.URI;
 import org.openrdf.model.Value;
 
 import java.util.Collection;
 import java.util.Set;
 
-public interface RDFResourceRepository {
+public interface RDFResourceRepository extends RDFNodeRepository<URI> {
 	public boolean hasProperty( URI resourceURI, URI pred );
 
 	public boolean hasProperty( URI resourceURI, RDFNodeEnum pred );
@@ -199,5 +200,4 @@ public interface RDFResourceRepository {
 	public void removeType( URI resourceURI, URI type );
 
 	public void setType( URI resourceURI, URI type );
-
 }

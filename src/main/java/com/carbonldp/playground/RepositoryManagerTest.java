@@ -27,7 +27,7 @@ import java.nio.charset.StandardCharsets;
 
 /**
  * @author MiguelAraCo
- * @since _version_
+ * @since 0.28.0-ALPHA
  */
 public class RepositoryManagerTest extends AbstractComponent {
 	public static void main( String[] args ) {

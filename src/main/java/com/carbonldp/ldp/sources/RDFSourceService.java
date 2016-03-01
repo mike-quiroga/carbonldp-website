@@ -1,12 +1,10 @@
 package com.carbonldp.ldp.sources;
 
 import com.carbonldp.ldp.containers.AccessPoint;
-import com.carbonldp.rdf.RDFResource;
+import com.carbonldp.rdf.RDFDocument;
 import org.joda.time.DateTime;
 import org.openrdf.model.URI;
 import org.springframework.security.access.prepost.PreAuthorize;
-
-import java.util.Collection;
 
 public interface RDFSourceService {
 	public boolean exists( URI sourceURI );
@@ -26,16 +24,16 @@ public interface RDFSourceService {
 	public void touch( URI sourceURI, DateTime now );
 
 	@PreAuthorize( "hasPermission(#sourceURI, 'UPDATE')" )
-	public void add( URI sourceURI, Collection<RDFResource> resourceViews );
+	public void add( URI sourceURI, RDFDocument document );
 
 	@PreAuthorize( "hasPermission(#sourceURI, 'UPDATE')" )
-	public void set( URI sourceURI, Collection<RDFResource> resourceViews );
+	public void set( URI sourceURI, RDFDocument document );
 
 	@PreAuthorize( "hasPermission(#source, 'UPDATE')" )
 	public DateTime replace( RDFSource source );
 
 	@PreAuthorize( "hasPermission(#sourceURI, 'UPDATE')" )
-	public void substract( URI sourceURI, Collection<RDFResource> resourceViews );
+	public void subtract( URI sourceURI, RDFDocument document );
 
 	@PreAuthorize( "hasPermission(#sourceURI, 'DELETE')" )
 	public void delete( URI sourceURI );

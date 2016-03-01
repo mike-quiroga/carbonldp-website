@@ -22,4 +22,10 @@ public interface RDFDocumentRepository {
 
 	public void deleteDocuments( Collection<URI> documentURIs );
 
+	public void add( URI sourceURI, RDFDocument document );
+
+	public void subtract( URI sourceURI, RDFDocument document );
+
+	public void set( URI sourceURI, RDFDocument document );
+
 }

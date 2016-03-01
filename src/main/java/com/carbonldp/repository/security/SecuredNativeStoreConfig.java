@@ -4,7 +4,7 @@ import org.openrdf.sail.nativerdf.config.NativeStoreConfig;
 
 /**
  * @author MiguelAraCo
- * @since _version_
+ * @since 0.28.0-ALPHA
  */
 public class SecuredNativeStoreConfig extends NativeStoreConfig {
 	public SecuredNativeStoreConfig() {

@@ -27,10 +27,7 @@ import com.carbonldp.ldp.nonrdf.SesameRDFRepresentationRepository;
 import com.carbonldp.ldp.sources.RDFSourceRepository;
 import com.carbonldp.ldp.sources.SesameRDFSourceRepository;
 import com.carbonldp.platform.api.PlatformAPIRepository;
-import com.carbonldp.rdf.RDFDocumentRepository;
-import com.carbonldp.rdf.RDFResourceRepository;
-import com.carbonldp.rdf.SesameRDFDocumentRepository;
-import com.carbonldp.rdf.SesameRDFResourceRepository;
+import com.carbonldp.rdf.*;
 import com.carbonldp.repository.FileRepository;
 import com.carbonldp.repository.LocalFileRepository;
 import com.carbonldp.repository.RepositoryService;
@@ -90,6 +87,11 @@ public class RepositoriesConfig {
 	@Bean
 	public RDFResourceRepository resourceRepository() {
 		return new SesameRDFResourceRepository( connectionFactory );
+	}
+
+	@Bean
+	public RDFBlankNodeRepository blankNodeRepository() {
+		return new SesameRDFBlankNodeRepository( connectionFactory );
 	}
 
 	@Bean

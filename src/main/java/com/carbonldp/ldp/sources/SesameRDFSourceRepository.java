@@ -2,10 +2,7 @@ package com.carbonldp.ldp.sources;
 
 import com.carbonldp.ldp.AbstractSesameLDPRepository;
 import com.carbonldp.ldp.containers.AccessPoint;
-import com.carbonldp.rdf.RDFDocumentRepository;
-import com.carbonldp.rdf.RDFNodeEnum;
-import com.carbonldp.rdf.RDFResource;
-import com.carbonldp.rdf.RDFResourceRepository;
+import com.carbonldp.rdf.*;
 import com.carbonldp.repository.DocumentGraphQueryResultHandler;
 import com.carbonldp.repository.GraphQueryResultHandler;
 import com.carbonldp.utils.RDFNodeUtil;
@@ -14,6 +11,7 @@ import com.carbonldp.utils.ValueUtil;
 import com.carbonldp.web.exceptions.NotImplementedException;
 import org.apache.commons.lang3.text.StrSubstitutor;
 import org.joda.time.DateTime;
+import org.openrdf.model.BNode;
 import org.openrdf.model.Resource;
 import org.openrdf.model.URI;
 import org.openrdf.model.Value;
@@ -156,18 +154,6 @@ public class SesameRDFSourceRepository extends AbstractSesameLDPRepository imple
 	}
 
 	@Override
-	public void add( URI sourceURI, Collection<RDFResource> resourceViews ) {
-		for ( RDFResource resourceView : resourceViews ) {
-			URI resourceViewURI = resourceView.getURI();
-			Map<URI, Set<Value>> propertiesMap = resourceView.getPropertiesMap();
-			for ( URI predicate : propertiesMap.keySet() ) {
-				Set<Value> values = propertiesMap.get( predicate );
-				resourceRepository.add( resourceViewURI, predicate, values );
-			}
-		}
-	}
-
-	@Override
 	public void createAccessPoint( URI sourceURI, AccessPoint accessPoint ) {
 		documentRepository.addDocument( accessPoint.getDocument() );
 		addAccessPoint( sourceURI, accessPoint );
@@ -190,19 +176,6 @@ public class SesameRDFSourceRepository extends AbstractSesameLDPRepository imple
 		documentRepository.update( source.getDocument() );
 	}
 
-	@Override
-	public void set( URI sourceURI, Collection<RDFResource> resourceViews ) {
-		for ( RDFResource resourceView : resourceViews ) {
-			URI resourceViewURI = resourceView.getURI();
-			Map<URI, Set<Value>> propertiesMap = resourceView.getPropertiesMap();
-			for ( URI predicate : propertiesMap.keySet() ) {
-				Set<Value> values = propertiesMap.get( predicate );
-				resourceRepository.remove( resourceViewURI, predicate );
-				resourceRepository.add( resourceViewURI, predicate, values );
-			}
-		}
-	}
-
 	static {
 		isQuery = "ASK { ?resource " + LESS_THAN + RDF.TYPE + MORE_THAN + " ?rdfType." + "${values} }";
 	}
@@ -217,18 +190,6 @@ public class SesameRDFSourceRepository extends AbstractSesameLDPRepository imple
 		StrSubstitutor sub = new StrSubstitutor( values, "${", "}" );
 
 		return sparqlTemplate.executeBooleanQuery( sub.replace( isQuery ), bindings );
-	}
-
-	@Override
-	public void subtract( URI sourceURI, Collection<RDFResource> resourceViews ) {
-		for ( RDFResource resourceView : resourceViews ) {
-			URI resourceViewURI = resourceView.getURI();
-			Map<URI, Set<Value>> propertiesMap = resourceView.getPropertiesMap();
-			for ( URI predicate : propertiesMap.keySet() ) {
-				Set<Value> values = propertiesMap.get( predicate );
-				resourceRepository.remove( resourceViewURI, predicate, values );
-			}
-		}
 	}
 
 	private static final String deleteWithChildrenQuery;

@@ -3,23 +3,25 @@ package com.carbonldp.rdf;
 import com.carbonldp.repository.AbstractSesameRepository;
 import com.carbonldp.utils.RDFDocumentUtil;
 import info.aduna.iteration.Iterations;
-import org.openrdf.model.Resource;
-import org.openrdf.model.Statement;
-import org.openrdf.model.URI;
+import org.openrdf.model.*;
 import org.openrdf.model.impl.AbstractModel;
 import org.openrdf.model.impl.LinkedHashModel;
 import org.openrdf.repository.RepositoryException;
 import org.openrdf.repository.RepositoryResult;
 import org.openrdf.spring.SesameConnectionFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 // TODO: LDP-331
 @Transactional
 public class SesameRDFDocumentRepository extends AbstractSesameRepository implements RDFDocumentRepository {
+	protected RDFBlankNodeRepository blankNodeRepository;
+	protected RDFResourceRepository resourceRepository;
 
 	public SesameRDFDocumentRepository( SesameConnectionFactory connectionFactory ) {
 		super( connectionFactory );
@@ -50,6 +52,7 @@ public class SesameRDFDocumentRepository extends AbstractSesameRepository implem
 	}
 
 	public void addDocument( RDFDocument document ) {
+		RDFDocumentFactory.getInstance().addMissingIdentifiersToBlankNodes( document );
 		connectionTemplate.write( connection -> connection.add( document ) );
 	}
 
@@ -82,5 +85,97 @@ public class SesameRDFDocumentRepository extends AbstractSesameRepository implem
 		Set<Statement> statements = new HashSet<>();
 		Iterations.addAll( statementsIterator, statements );
 		return new LinkedHashModel( statements );
+	}
+
+	@Override
+	public void add( URI sourceURI, RDFDocument document ) {
+		Collection<RDFResource> resourceViews = document.getFragmentResources();
+		resourceViews.add( document.getDocumentResource() );
+		Collection<RDFBlankNode> blankNodes = document.getBlankNodes();
+		URI documentURI = document.getDocumentResource().getDocumentURI();
+
+		for ( RDFResource resourceView : resourceViews ) {
+			URI resourceViewURI = resourceView.getURI();
+			Map<URI, Set<Value>> propertiesMap = resourceView.getPropertiesMap();
+			for ( URI predicate : propertiesMap.keySet() ) {
+				Set<Value> values = propertiesMap.get( predicate );
+				resourceRepository.add( resourceViewURI, predicate, values, documentURI );
+			}
+		}
+
+		for ( RDFBlankNode blankNode : blankNodes ) {
+			BNode blankNodeSubject = blankNode.getSubject();
+			Map<URI, Set<Value>> propertiesMap = blankNode.getPropertiesMap();
+			for ( URI predicate : propertiesMap.keySet() ) {
+				Set<Value> values = propertiesMap.get( predicate );
+				blankNodeRepository.add( blankNodeSubject, predicate, values, documentURI );
+			}
+		}
+	}
+
+	@Override
+	public void set( URI sourceURI, RDFDocument document ) {
+		Collection<RDFResource> resourceViews = document.getFragmentResources();
+		resourceViews.add( document.getDocumentResource() );
+		Collection<RDFBlankNode> blankNodes = document.getBlankNodes();
+		URI documentURI = document.getDocumentResource().getDocumentURI();
+
+		for ( RDFResource resourceView : resourceViews ) {
+			URI resourceViewURI = resourceView.getURI();
+			Map<URI, Set<Value>> propertiesMap = resourceView.getPropertiesMap();
+			for ( URI predicate : propertiesMap.keySet() ) {
+				Set<Value> values = propertiesMap.get( predicate );
+				resourceRepository.remove( resourceViewURI, predicate );
+				resourceRepository.add( resourceViewURI, predicate, values );
+			}
+		}
+
+		for ( RDFBlankNode blankNode : blankNodes ) {
+			BNode blankNodeSubject = blankNode.getSubject();
+			Map<URI, Set<Value>> propertiesMap = blankNode.getPropertiesMap();
+			for ( URI predicate : propertiesMap.keySet() ) {
+				Set<Value> values = propertiesMap.get( predicate );
+				blankNodeRepository.remove( blankNodeSubject, predicate, documentURI );
+				blankNodeRepository.add( blankNodeSubject, predicate, values, documentURI );
+			}
+		}
+
+	}
+
+	@Override
+	public void subtract( URI sourceURI, RDFDocument document ) {
+		Collection<RDFResource> resourceViews = document.getFragmentResources();
+		resourceViews.add( document.getDocumentResource() );
+		Collection<RDFBlankNode> blankNodes = document.getBlankNodes();
+		URI documentURI = document.getDocumentResource().getDocumentURI();
+
+		for ( RDFResource resourceView : resourceViews ) {
+			URI resourceViewURI = resourceView.getURI();
+			Map<URI, Set<Value>> propertiesMap = resourceView.getPropertiesMap();
+			for ( URI predicate : propertiesMap.keySet() ) {
+				Set<Value> values = propertiesMap.get( predicate );
+				resourceRepository.remove( resourceViewURI, predicate, values );
+			}
+		}
+
+		for ( RDFBlankNode blankNode : blankNodes ) {
+			BNode blankNodeSubject = blankNode.getSubject();
+			Map<URI, Set<Value>> propertiesMap = blankNode.getPropertiesMap();
+			for ( URI predicate : propertiesMap.keySet() ) {
+				Set<Value> values = propertiesMap.get( predicate );
+				blankNodeRepository.remove( blankNodeSubject, predicate, values, documentURI );
+			}
+		}
+
+	}
+
+	@Autowired
+	public void setBlankNodeRepository( RDFBlankNodeRepository blankNodeRepository ) {
+		this.blankNodeRepository = blankNodeRepository;
+	}
+
+	@Autowired
+	public void setResourceRepository( RDFResourceRepository resourceRepository ) {
+		this.resourceRepository = resourceRepository;
 	}
 }
