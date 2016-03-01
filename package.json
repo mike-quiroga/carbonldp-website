@@ -1,6 +1,6 @@
 {
   "name": "carbon-website",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "description": "Public Website for carbonldp.com",
   "main": "dist/index.html",
   "author": "Base22 LLC",
@@ -12,6 +12,10 @@
     {
       "name": "Cody Burleson",
       "email": "cody.burleson@base22.com"
+    },
+    {
+      "name": "Alvaro Contreras",
+      "email": "alvaro.contreras@base22.com"
     }
   ],
   "license": "UNLICENSED",
@@ -63,6 +67,7 @@
       "jsonld": "npm:jsonld@^0.4.2",
       "reflect-metadata": "npm:reflect-metadata@^0.1.2",
       "scss": "github:mobilexag/plugin-sass@^0.0.8",
+      "ts": "github:frankwallis/plugin-typescript@^4.0.1",
       "zone.js": "npm:zone.js@^0.5.13"
     },
     "devDependencies": {
