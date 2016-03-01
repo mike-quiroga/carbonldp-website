@@ -6,7 +6,7 @@ import Carbon from "carbon/Carbon";
 import * as Credentials from "carbon/Auth/Credentials";
 import * as HTTP from "carbon/HTTP";
 
-import { ValidationService } from "app/components/validation-service/ValidationService";
+import { ValidationService } from "./../../components/validation-service/ValidationService";
 
 import $ from 'jquery';
 import 'semantic-ui/semantic';
@@ -67,7 +67,7 @@ export default class LoginComponent {
 		this.email.markAsTouched();
 		this.password.markAsTouched();
 
-		if ( ! this.loginForm.valid ) {
+		if( ! this.loginForm.valid ) {
 			this.shakeForm();
 			this.sending = false;
 			return;
@@ -82,10 +82,10 @@ export default class LoginComponent {
 			// TODO: Add remember me cookie
 
 			this.router.navigate( [ '/AppDev' ] );
-		} ).catch( ( error:Error ) => {
+		}).catch( ( error:Error ) => {
 			this.sending = false;
 
-			switch ( true ) {
+			switch( true ) {
 				case error instanceof HTTP.Errors.UnauthorizedError:
 					this.errorMessage = "Wrong credentials";
 					break;
@@ -93,7 +93,7 @@ export default class LoginComponent {
 					this.errorMessage = "There was a problem processing the request";
 					break;
 			}
-		} );
+		});
 	}
 
 	shakeForm():void {
