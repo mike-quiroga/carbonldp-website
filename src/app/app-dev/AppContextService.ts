@@ -22,7 +22,7 @@ export default class AppContextService {
 
 	get( slug:string ):Promise<App.Context> {
 		return new Promise<App.Context>( ( resolve:( result:any ) => void, reject:( error:Error ) => void ) => {
-			if( this.appContexts.has( slug ) ) {
+			if ( this.appContexts.has( slug ) ) {
 				resolve( this.appContexts.get( slug ) );
 				return;
 			}
@@ -30,11 +30,12 @@ export default class AppContextService {
 			this.carbon.apps.get( slug + "/" ).then( ( appContext:App.Context ) => {
 				this.appContexts.set( slug, appContext );
 				resolve( appContext );
-			});
-		});
+			} );
+		} );
 	}
 
 	getAll():Promise<App.Context[]> {
+		console.log( "App Context Service Authenticated: " + (this.carbon.auth.isAuthenticated() ? "YES" : "NO") );
 		return new Promise<App.Context[]>( ( resolve:( result:any ) => void, reject:( error:Error ) => void ) => {
 			this.carbon.apps.getAll().then( ( appContexts:App.Context[] ) => {
 				appContexts
@@ -42,8 +43,8 @@ export default class AppContextService {
 					.forEach( ( appContext:App.Context ) => this.appContexts.set( this.getSlug( appContext ), appContext ) );
 
 				resolve( Utils.A.from( appContexts.values() ) );
-			});
-		});
+			} );
+		} );
 	}
 
 	getSlug( appContext:App.Context ):string {
@@ -53,7 +54,7 @@ export default class AppContextService {
 	}
 
 	private removeTrailingSlash( slug:string ):string {
-		if( slug.endsWith( "/" ) ) {
+		if ( slug.endsWith( "/" ) ) {
 			return slug.substr( 0, slug.length - 1 );
 		} else {
 			return slug;

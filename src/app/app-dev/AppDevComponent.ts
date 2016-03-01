@@ -1,9 +1,11 @@
-import {Injectable, Component, ElementRef } from 'angular2/core';
-import {RouteConfig, RouterOutlet} from 'angular2/router';
+import {Injectable, Component, ElementRef, Injector } from 'angular2/core';
+import {RouteConfig, RouterOutlet, CanActivate, Router} from 'angular2/router';
 
 import $ from 'jquery';
 import 'semantic-ui/semantic';
 import SidebarService from './components/sidebar/service/SidebarService'
+import Carbon from "carbon/Carbon";
+import { CARBON_PROVIDER, appInjector } from "app/boot";
 
 import SidebarComponent from './components/sidebar/SidebarComponent';
 import HeaderComponent from './header/HeaderComponent ';
@@ -19,6 +21,19 @@ import AppDashboardView from './dashboard/DashboardView';
 import template from './template.html!';
 import './style.css!';
 
+@CanActivate(
+	( prev, next )=> {
+		let injector:Injector = appInjector();
+		let carbon:Carbon = injector.get( Carbon );
+		let router:Router = injector.get( Router );
+
+		if ( ! carbon || (carbon && ! carbon.auth.isAuthenticated()) ) {
+			router.navigate( [ '/Login' ] );
+			return false;
+		}
+		return carbon.auth.isAuthenticated();
+	}
+)
 @Component( {
 	selector: 'app-dev',
 	template: template,
