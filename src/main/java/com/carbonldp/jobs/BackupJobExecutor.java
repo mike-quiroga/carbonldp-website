@@ -1,5 +1,6 @@
 package com.carbonldp.jobs;
 
+import com.carbonldp.Consts;
 import com.carbonldp.Vars;
 import com.carbonldp.apps.App;
 import com.carbonldp.apps.AppRepository;
@@ -37,12 +38,12 @@ public class BackupJobExecutor implements TypedJobExecutor {
 	}
 
 	public void run( Job job ) {
-		transactionWrapper.runWithSystemPermissionsInPlatformContext( () -> jobService.changeJobStatus( job.getURI(), BackupJobDescription.JobStatus.RUNNING ) );
+		//transactionWrapper.runWithSystemPermissionsInPlatformContext( () -> jobService.changeJobStatus( job.getURI(), BackupJobDescription.JobStatus.RUNNING ) );
 		URI appURI = job.getAppRelated();
 		App app = appRepository.get( appURI );
 		String appRepositoryID = app.getRepositoryID();
-		//TODO: fix the path
-		File nonRDFSourceDirectory = new File( Vars.getInstance().getAppsFilesDirectory() + "/" + appRepositoryID );
+		String appRepositoryPath = Vars.getInstance().getAppsFilesDirectory().concat( Consts.SLASH ).concat( appRepositoryID );
+		File nonRDFSourceDirectory = new File( appRepositoryPath );
 		File rdfRepositoryFile = transactionWrapper.runInAppContext( app, () -> createTemporaryRDFBackupFile() );
 		File zipFile = transactionWrapper.runWithSystemPermissionsInPlatformContext( () -> createZipFile( nonRDFSourceDirectory, rdfRepositoryFile ) );
 
@@ -63,7 +64,8 @@ public class BackupJobExecutor implements TypedJobExecutor {
 		}
 		ZipOutputStream zipOutputStream = new ZipOutputStream( fileOutputStream );
 
-		for ( File file : files ) {
+		for ( int i = 0; i < files.length; i++ ) {
+			File file = files[i];
 			FileInputStream fileInputStream;
 			try {
 				fileInputStream = new FileInputStream( file );
