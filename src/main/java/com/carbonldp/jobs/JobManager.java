@@ -9,7 +9,6 @@ import org.openrdf.model.URI;
 import org.openrdf.model.impl.URIImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -35,13 +34,13 @@ public class JobManager {
 		for ( App app : apps ) {
 			Job job = appRepository.peekJobsQueue( app );
 			if ( job != null && job.getJobStatus().equals( JobDescription.JobStatus.QUEUED.getURI() ) ) {
-				transactionWrapper.runWithSystemPermissionsInPlatformContext( () -> jobsExecutor.runJob( job ) );
+				jobsExecutor.runJob( job );
 			}
 		}
 	}
 
 	private Set<App> getAllApps() {
-		return transactionWrapper.runWithSystemPermissionsInPlatformContext( () -> {
+		return transactionWrapper.runInPlatformContext( () -> {
 			Set<App> apps = new HashSet<>();
 			URI platformAppsContainer = new URIImpl( Vars.getInstance().getHost() + Vars.getInstance().getMainContainer() + Vars.getInstance().getAppsContainer() );
 			Set<URI> appURIs = containerRepository.getContainedURIs( platformAppsContainer );

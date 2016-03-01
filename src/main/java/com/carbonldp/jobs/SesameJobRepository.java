@@ -1,5 +1,6 @@
 package com.carbonldp.jobs;
 
+import com.carbonldp.jobs.JobDescription.JobStatus;
 import com.carbonldp.ldp.AbstractSesameLDPRepository;
 import com.carbonldp.rdf.RDFDocumentRepository;
 import com.carbonldp.rdf.RDFResourceRepository;
@@ -7,16 +8,13 @@ import com.carbonldp.utils.ValueUtil;
 import org.openrdf.model.URI;
 import org.openrdf.model.Value;
 import org.openrdf.query.BindingSet;
-import org.openrdf.repository.RepositoryConnection;
 import org.openrdf.repository.RepositoryException;
 import org.openrdf.spring.SesameConnectionFactory;
-import com.carbonldp.jobs.JobDescription.JobStatus;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.carbonldp.Consts.NEW_LINE;
-import static com.carbonldp.Consts.TAB;
+import static com.carbonldp.Consts.*;
 
 /**
  * @author NestorVenegas
