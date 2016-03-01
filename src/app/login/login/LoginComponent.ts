@@ -5,6 +5,8 @@ import { CORE_DIRECTIVES, FORM_DIRECTIVES, FormBuilder, ControlGroup, AbstractCo
 import Carbon from "carbon/Carbon";
 import * as Credentials from "carbon/Auth/Credentials";
 import * as HTTP from "carbon/HTTP";
+import Cookies from "js-cookie";
+import AuthenticationToken from "carbon/Auth";
 
 import { ValidationService } from "app/components/validation-service/ValidationService";
 
@@ -27,6 +29,7 @@ export default class LoginComponent {
 	carbon:Carbon;
 	router:Router;
 	element:ElementRef;
+	private cookiesHandler:Cookies;
 
 	$element:JQuery;
 	$loginForm:JQuery;
@@ -46,6 +49,7 @@ export default class LoginComponent {
 		this.element = element;
 		this.formBuilder = formBuilder;
 		this.carbon = carbon;
+		this.cookiesHandler = Cookies;
 	}
 
 	ngOnInit():void {
@@ -64,6 +68,7 @@ export default class LoginComponent {
 
 		this.submitted = true;
 		this.sending = true;
+		this.errorMessage = "";
 		this.email.markAsTouched();
 		this.password.markAsTouched();
 
@@ -76,24 +81,40 @@ export default class LoginComponent {
 		let username:string = data.email;
 		let password:string = data.password;
 
-		this.carbon.auth.authenticate( username, password ).then( ( credentials:Credentials ) => {
-			this.sending = false;
+		this.carbon.auth.authenticate( username, password ).then(
+			( credentials:Credentials ) => {
+				this.sending = false;
+				// TODO: Change this to store a token when the SDK provides a way of authenticate using tokens.
+				let token:AuthenticationToken = credentials.token;
+				let days:number = this.getDays( (new Date()), token.expirationTime );
+				let emailAndPassword = {
+					email: this.email.value,
+					password: this.password.value
+				};
+				this.cookiesHandler.set( "carbon_jwt", emailAndPassword, days );
+				//this.router.navigate( [ "/AppDev" ] );
+				this.router.navigate( [ '/AppDev' ] );
+			} ).catch( ( error:Error ) => {
+				this.sending = false;
 
-			// TODO: Add remember me cookie
-
-			this.router.navigate( [ '/AppDev' ] );
-		} ).catch( ( error:Error ) => {
-			this.sending = false;
-
-			switch ( true ) {
-				case error instanceof HTTP.Errors.UnauthorizedError:
-					this.errorMessage = "Wrong credentials";
-					break;
-				default:
-					this.errorMessage = "There was a problem processing the request";
-					break;
+				switch ( true ) {
+					case error instanceof HTTP.Errors.UnauthorizedError:
+						this.errorMessage = "Wrong credentials";
+						break;
+					default:
+						this.errorMessage = "There was a problem processing the request";
+						break;
+				}
 			}
-		} );
+		);
+	}
+
+	getDays( firstDate:Date, lastDate:Date ):number {
+		// Discard the time and time-zone information
+		let utc1 = Date.UTC( firstDate.getFullYear(), firstDate.getMonth(), firstDate.getDate() );
+		let utc2 = Date.UTC( lastDate.getFullYear(), lastDate.getMonth(), lastDate.getDate() );
+		let ms_per_day = 1000 * 60 * 60 * 24;
+		return Math.floor( (utc2 - utc1) / ms_per_day );
 	}
 
 	shakeForm():void {

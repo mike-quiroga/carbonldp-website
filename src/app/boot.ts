@@ -2,7 +2,7 @@ import "zone.js";
 import "reflect-metadata";
 
 import { bootstrap } from "angular2/platform/browser";
-import { provide, Injector } from "angular2/core";
+import { provide, Injector, ComponentRef } from "angular2/core";
 import { FORM_PROVIDERS } from "angular2/common";
 import { ROUTER_PROVIDERS, APP_BASE_HREF } from "angular2/router";
 import { HTTP_PROVIDERS } from "angular2/http";
