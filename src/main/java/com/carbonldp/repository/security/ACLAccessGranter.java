@@ -8,7 +8,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 
 /**
  * @author MiguelAraCo
- * @since _version_
+ * @since 0.28.0-ALPHA
  */
 public class ACLAccessGranter implements RepositorySecurityAccessGranter {
 

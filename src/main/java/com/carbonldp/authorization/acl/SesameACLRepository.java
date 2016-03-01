@@ -31,7 +31,6 @@ public class SesameACLRepository extends AbstractSesameLDPRepository implements 
 
 	@Override
 	public ACL getResourceACL( URI resourceURI ) {
-		// TODO: Decide. Should we validate the document?
 		URI aclURI = getACLUri( resourceURI );
 		RDFDocument document = documentRepository.getDocument( aclURI );
 		if ( document == null ) return null;

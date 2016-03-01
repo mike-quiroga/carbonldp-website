@@ -90,7 +90,7 @@ public class AppsRDFPostHandler extends AbstractRDFPostRequestHandler<App> {
 		}
 
 		private void validateRequestResource( RDFResource requestResource ) {
-			List<Infraction> infractions = AppFactory.validate( requestResource, false );
+			List<Infraction> infractions = AppFactory.validateBasicContainer( requestResource, false );
 			if ( ! infractions.isEmpty() ) {
 				throw new BadRequestException( 0 );
 			}

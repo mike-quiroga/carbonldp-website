@@ -9,7 +9,7 @@ import java.util.List;
 
 /**
  * @author MiguelAraCo
- * @since _version_
+ * @since 0.28.0-ALPHA
  */
 public class WriteTransactionTemplateImpl extends AbstractTransactionTemplate implements WriteTransactionTemplate {
 	private List<WriteTransactionCallback> callbacks;

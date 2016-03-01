@@ -4,7 +4,7 @@ import com.carbonldp.models.Infraction;
 
 /**
  * @author NestorVenegas
- * @since _version_
+ * @since 0.28.0-ALPHA
  */
 public class IllegalArgumentException extends CarbonNoStackTraceRuntimeException {
 

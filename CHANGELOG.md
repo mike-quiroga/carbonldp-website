@@ -1,3 +1,5 @@
+# 0.28.0 (2016/02/29)
+* Blank nodes have now an identifier
 # 0.27.7 (2016/02/25)
 * Documents have now a property pointing to it's ACL
 # 0.27.6 (2016/02/16)

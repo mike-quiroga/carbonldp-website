@@ -15,13 +15,22 @@ import com.carbonldp.exceptions.ResourceDoesntExistException;
 import com.carbonldp.jobs.JobDescription;
 import com.carbonldp.ldp.AbstractSesameLDPService;
 import com.carbonldp.ldp.containers.*;
+import com.carbonldp.ldp.containers.BasicContainer;
+import com.carbonldp.ldp.containers.BasicContainerFactory;
+import com.carbonldp.ldp.containers.Container;
+import com.carbonldp.ldp.containers.ContainerRepository;
+import com.carbonldp.ldp.sources.RDFSourceRepository;
+import com.carbonldp.ldp.sources.RDFSourceService;
+import com.carbonldp.ldp.containers.ContainerService;
 import com.carbonldp.models.Infraction;
+import com.carbonldp.rdf.RDFBlankNode;
 import com.carbonldp.rdf.RDFDocument;
+import com.carbonldp.rdf.RDFDocumentFactory;
 import com.carbonldp.rdf.RDFResource;
+import com.carbonldp.spring.TransactionWrapper;
 import com.carbonldp.utils.RDFResourceUtil;
 import com.carbonldp.utils.URIUtil;
 import com.carbonldp.web.exceptions.NotFoundException;
-import org.openrdf.model.Statement;
 import org.openrdf.model.URI;
 import org.openrdf.model.impl.URIImpl;
 import org.openrdf.query.algebra.Str;
@@ -33,7 +42,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 public class SesameAppService extends AbstractSesameLDPService implements AppService {
 
@@ -44,6 +52,7 @@ public class SesameAppService extends AbstractSesameLDPService implements AppSer
 	protected AppAgentRepository appAgentRepository;
 	protected AppTokenRepository appTokensRepository;
 	protected AppRoleService appRoleService;
+	protected RDFSourceService sourceService;
 
 	@Override
 	public boolean exists( URI appURI ) {
@@ -109,23 +118,7 @@ public class SesameAppService extends AbstractSesameLDPService implements AppSer
 		validate( app );
 
 		if ( ! exists( appURI ) ) throw new NotFoundException();
-		App originalApp = appRepository.get( appURI );
-		RDFDocument originalDocument = originalApp.getDocument();
-
-		RDFDocument newDocument = app.getDocument();
-
-		Set<Statement> statementsToAdd = newDocument.stream().filter( statement -> ! originalDocument.contains( statement ) ).collect( Collectors.toSet() );
-		Set<RDFResource> resourceViewsToAdd = RDFResourceUtil.getResourceViews( statementsToAdd );
-		validateSystemProperties( resourceViewsToAdd );
-
-		Set<Statement> statementsToDelete = originalDocument.stream().filter( statement -> ! newDocument.contains( statement ) ).collect( Collectors.toSet() );
-		Set<RDFResource> resourceViewsToDelete = RDFResourceUtil.getResourceViews( statementsToDelete );
-		validateSystemProperties( resourceViewsToDelete );
-
-		sourceRepository.subtract( appURI, resourceViewsToDelete );
-		sourceRepository.add( appURI, resourceViewsToAdd );
-
-		sourceRepository.touch( appURI );
+		sourceService.replace( app );
 	}
 
 	private ACL createAppACL( App app ) {
@@ -201,14 +194,6 @@ public class SesameAppService extends AbstractSesameLDPService implements AppSer
 		), true );
 	}
 
-	private void validateSystemProperties( Set<RDFResource> resourceViews ) {
-		List<Infraction> infractions = new ArrayList<>();
-		for ( RDFResource resource : resourceViews ) {
-			infractions.addAll( AppFactory.getInstance().validateSystemManagedProperties( resource ) );
-		}
-		if ( ! infractions.isEmpty() ) throw new InvalidResourceException( infractions );
-	}
-
 	private void validate( App app ) {
 		List<Infraction> infractions = AppFactory.getInstance().validate( app );
 		if ( ! infractions.isEmpty() ) throw new InvalidResourceException( infractions );
@@ -241,6 +226,11 @@ public class SesameAppService extends AbstractSesameLDPService implements AppSer
 		String appString = app.getURI().stringValue();
 		String jobsString = Vars.getInstance().getJobsContainer();
 		return new URIImpl( appString + jobsString );
+	}
+
+	@Autowired
+	public void setSourceService( RDFSourceService sourceService ) {
+		this.sourceService = sourceService;
 	}
 
 	@Autowired
