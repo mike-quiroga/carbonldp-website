@@ -41,10 +41,11 @@ public class BackupJobExecutor implements TypedJobExecutor {
 		URI appURI = job.getAppRelated();
 		App app = appRepository.get( appURI );
 		String appRepositoryID = app.getRepositoryID();
-		//TODO: fix the path
-		File nonRDFSourceDirectory = new File( Vars.getInstance().getAppsFilesDirectory() + "/" + appRepositoryID );
 		File rdfRepositoryFile = transactionWrapper.runInAppContext( app, () -> createTemporaryRDFBackupFile() );
-		File zipFile = transactionWrapper.runWithSystemPermissionsInPlatformContext( () -> createZipFile( nonRDFSourceDirectory, rdfRepositoryFile ) );
+		File nonRDFSourceDirectory = new File( Vars.getInstance().getAppsFilesDirectory() + "/" + appRepositoryID );
+		File zipFile = nonRDFSourceDirectory.exists() ?
+			transactionWrapper.runWithSystemPermissionsInPlatformContext( () -> createZipFile( nonRDFSourceDirectory, rdfRepositoryFile ) ) :
+			transactionWrapper.runWithSystemPermissionsInPlatformContext( () -> createZipFile( rdfRepositoryFile ) );
 
 		backupService.createAppBackup( appURI, zipFile );
 	}
