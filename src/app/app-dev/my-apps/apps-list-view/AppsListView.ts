@@ -18,8 +18,6 @@ import template from './template.html!';
 	providers: [ MyAppsService ]
 } )
 export default class AppsListView {
-	static parameters = [ [ MyAppsService ], [ Router ] ];
-
 	router:Router;
 
 	myAppsService:MyAppsService;

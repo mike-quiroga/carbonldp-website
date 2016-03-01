@@ -10,7 +10,7 @@ import MyAppsService from "./../service/MyAppsService";
 import App from "./App";
 
 import DashboardView from './dashboard/DashboardView';
-import SPARQLClientComponent from './../../../sparql-client/SPARQLClientComponent';
+import SPARQLClientComponent from 'app/components/sparql-client/SPARQLClientComponent';
 
 
 import template from './template.html!';
@@ -44,8 +44,6 @@ import './style.css!';
 	}
 ] )
 export default class AppDetailView {
-	static parameters = [ [ Router ], [ ElementRef ], [ RouteParams ], [ SidebarService ], [ MyAppsService ] ];
-
 	router:Router;
 	routeParams:RouteParams;
 	sidebarService:SidebarService;

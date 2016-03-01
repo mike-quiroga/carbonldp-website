@@ -37,8 +37,6 @@ export class Mode {
 	template: '<ng-content></ng-content>'
 } )
 export class Class {
-	static parameters = [ [ ElementRef ] ];
-
 	element:ElementRef;
 	codeMirror:CodeMirror;
 

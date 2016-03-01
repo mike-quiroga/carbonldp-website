@@ -1,27 +1,24 @@
-import { Component, Input, Output, Injectable, ElementRef, SimpleChange, EventEmitter } from 'angular2/core';
-import { CORE_DIRECTIVES } from 'angular2/common';
-import { ROUTER_DIRECTIVES, ROUTER_PROVIDERS, Router, Instruction, Location } from 'angular2/router';
+import { Component, Input, Output, Injectable, ElementRef, SimpleChange, EventEmitter } from "angular2/core";
+import { CORE_DIRECTIVES } from "angular2/common";
+import { ROUTER_DIRECTIVES, ROUTER_PROVIDERS, Router, Instruction, Location } from "angular2/router";
 
-import $ from 'jquery';
-import 'semantic-ui/semantic';
+import $ from "jquery";
+import "semantic-ui/semantic";
 
-import SidebarService from './service/SidebarService'
-import App from 'app/app-dev/my-apps/app/App'
+import SidebarService from "./service/SidebarService"
+import App from "app/app-dev/my-apps/app/App"
 import SidebarItem from "./SidebarItem";
 
-import template from './template.html!';
-import './style.css!';
+import template from "./template.html!";
+import "./style.css!";
 
 @Component( {
-	selector: 'sidebar',
+	selector: "sidebar",
 	template: template,
 	directives: [ CORE_DIRECTIVES, ROUTER_DIRECTIVES ]
 } )
 @Injectable()
 export default class SidebarComponent {
-	static parameters = [ [ Router ], [ ElementRef ], [ Location ], [ SidebarService ] ];
-	static dependencies = SidebarComponent.parameters;
-
 	router:Router;
 	element:ElementRef;
 	$element:JQuery;
@@ -49,13 +46,15 @@ export default class SidebarComponent {
 
 	ngAfterViewInit():void {
 		this.$element = $( this.element.nativeElement );
+		/*
 		this.$element.sidebar( {
-			context: 'app-dev > div.page-content',
-			transition: 'push',
+			context: "app-dev > div.page-content",
+			transition: "push",
 			closable: false,
 			dimPage: false,
 			scrollLock: true
 		} );
+		*/
 		this.refreshAccordion();
 	}
 
@@ -65,14 +64,15 @@ export default class SidebarComponent {
 	}
 
 	toggle():void {
-		this.$element.sidebar( 'toggle' );
+		if( this.$element.is( ":visible" ) ) this.$element.hide();
+		else this.$element.show();
 	}
 
 	refreshAccordion():void {
 		this.$element.accordion( {
 			selector: {
-				trigger: '.item.app, .item.app .title',
-				title: '.title',
+				trigger: ".item.app, .item.app .title",
+				title: ".title",
 			},
 			exclusive: false,
 		} );

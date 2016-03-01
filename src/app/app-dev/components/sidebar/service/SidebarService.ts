@@ -1,14 +1,10 @@
-import { Injectable, EventEmitter } from 'angular2/core';
+import { Injectable, EventEmitter } from "angular2/core";
 
-import App from 'app/app-dev/my-apps/app/App'
-import SidebarItem from './../SidebarItem'
+import App from "app/app-dev/my-apps/app/App"
+import SidebarItem from "./../SidebarItem"
 
 @Injectable()
 export default class SidebarService {
-
-	static parameters = [];
-	static dependencies = SidebarService.parameters;
-
 	data:string;
 	$element:JQuery;
 

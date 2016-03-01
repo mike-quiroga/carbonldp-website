@@ -19,8 +19,6 @@ import './style.css!';
 	providers: [ MyAppsService ]
 } )
 export default class AppDashboardView {
-	static parameters = [ [ Router ], [ ElementRef ], [ RouteParams ], [ SidebarService ], [ MyAppsService ] ];
-
 	router:Router;
 	routeParams:RouteParams;
 	sidebarService:SidebarService;

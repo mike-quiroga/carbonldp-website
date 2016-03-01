@@ -14,8 +14,6 @@ import "./style.css!";
 	directives: [ CORE_DIRECTIVES, ROUTER_DIRECTIVES ]
 } )
 export default class HeaderComponent {
-	static parameters = [ [ Router ], [ ElementRef ] ];
-
 	router:Router;
 	element:ElementRef;
 	$element;

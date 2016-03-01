@@ -13,8 +13,6 @@ import './style.css!';
 	directives: []
 } )
 export default class FooterComponent {
-	static parameters = [ [ ElementRef ] ];
-
 	element:ElementRef;
 	$element;
 

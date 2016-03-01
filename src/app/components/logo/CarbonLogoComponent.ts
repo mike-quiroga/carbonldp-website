@@ -1,17 +1,15 @@
-import { Component, ElementRef } from 'angular2/core';
+import { Component, ElementRef } from "angular2/core";
 
-import $ from 'jquery';
+import $ from "jquery";
 
-import template from './template.html!';
-import './style.css!';
+import template from "./template.html!";
+import "./style.css!";
 
 @Component({
-	selector: 'carbon-logo',
+	selector: "carbon-logo",
 	template: template
 })
 export default class CarbonLogoComponent {
-	static parameters = [[ ElementRef ]];
-
 	element:ElementRef;
 	$element;
 
@@ -32,7 +30,7 @@ export default class CarbonLogoComponent {
 
 	setFontSize():void {
 		var width = this.$element.width();
-		this.$element.css('font-size', width);
+		this.$element.css("font-size", width);
 	}
 
 	addWindowResizeEventHandler():void {
@@ -50,17 +48,17 @@ export default class CarbonLogoComponent {
 		var backgroundColor = this.findParentBackgroundColor();
 		if( ! backgroundColor ) return;
 
-		this.$element.find( '.electron' ).css( 'border-color', backgroundColor );
-		this.$element.find( '.c' ).css( 'border-color', backgroundColor );
+		this.$element.find( ".electron" ).css( "border-color", backgroundColor );
+		this.$element.find( ".c" ).css( "border-color", backgroundColor );
 	}
 
 	findParentBackgroundColor():string {
 		var backgroundColor;
 		this.$element.parents().each( function() {
 			var $parent = $( this );
-			backgroundColor = $parent.css( 'background-color' );
+			backgroundColor = $parent.css( "background-color" );
 
-			if( ! ( backgroundColor === 'transparent' || backgroundColor === 'rgba(0, 0, 0, 0)' ) ) return false;
+			if( ! ( backgroundColor === "transparent" || backgroundColor === "rgba(0, 0, 0, 0)" ) ) return false;
 		} );
 		return backgroundColor;
 	}

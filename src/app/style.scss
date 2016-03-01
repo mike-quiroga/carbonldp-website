@@ -4,55 +4,6 @@ app {
 
 	display: flex;
 	flex-direction: column;
-	align-items: center;
-
-	> .page-content {
-		width: 100%;
-		flex: 1 1 auto;
-
-		.main {
-			margin-top: 6em;
-		}
-	}
-
-	> footer {
-		width: 100%;
-		flex: 0 0 auto;
-	}
-	.ui.menu a.logo {
-		padding-left: 0;
-	}
-
-	img.logo {
-		margin-top: 2px;
-		margin-bottom: 2px;
-	}
-
-	article.ui.vertical.segment {
-		padding-bottom: 56px;
-	}
-
-	p.larger {
-		font-size: 1.3em;
-	}
-
-	textarea.hidden {
-		display: none
-	}
-
-	code {
-		padding: 0 4px;
-		background-color: #f2f2f2;
-		border-radius: 3px;
-	}
-
-	pre, code {
-		white-space: pre-wrap;
-		word-wrap: break-word;
-		word-spacing: 0;
-		font-size: 13px;
-		line-height: 16px;
-	}
 
 	// Big Stone
 	.big-stone {

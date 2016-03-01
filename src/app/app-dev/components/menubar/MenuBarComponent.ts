@@ -1,23 +1,21 @@
-import { Component, ElementRef } from 'angular2/core';
-import { CORE_DIRECTIVES } from 'angular2/common';
-import { ROUTER_DIRECTIVES, ROUTER_PROVIDERS, Router, Instruction } from 'angular2/router';
+import { Component, ElementRef } from "angular2/core";
+import { CORE_DIRECTIVES } from "angular2/common";
+import { ROUTER_DIRECTIVES, ROUTER_PROVIDERS, Router, Instruction } from "angular2/router";
 
-import $ from 'jquery';
-import 'semantic-ui/semantic';
+import $ from "jquery";
+import "semantic-ui/semantic";
 
 import SidebarService from "./../sidebar/service/SidebarService";
 
-import template from './template.html!';
+import template from "./template.html!";
 import "./style.css!";
 import resolve = Promise.resolve;
 @Component( {
-	selector: 'menu-bar',
+	selector: "menu-bar",
 	template: template,
 	directives: [ CORE_DIRECTIVES, ROUTER_DIRECTIVES ]
 } )
 export default class MenuBarComponentComponent {
-	static parameters = [ [ Router ], [ ElementRef ], [ SidebarService ] ];
-
 	router:Router;
 	element:ElementRef;
 	$element:JQuery;

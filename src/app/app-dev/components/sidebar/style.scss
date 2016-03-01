@@ -1,13 +1,8 @@
 sidebar {
-
 	.item.app {
 		.title {
 			height: 2em;
 			line-height: 2em;
 		}
 	}
-}
-
-sidebar.visible ~ .pusher {
-	width: calc(100% - 350px);
 }

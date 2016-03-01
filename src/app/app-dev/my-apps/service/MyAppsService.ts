@@ -6,10 +6,6 @@ import App from './../app/App';
 
 @Injectable()
 export default class MyAppsService {
-
-	static parameters = [ [ Http ] ];
-	static dependencies = MyAppsService.parameters;
-
 	http:Http;
 
 	data:string;
