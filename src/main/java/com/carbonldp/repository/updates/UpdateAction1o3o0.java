@@ -31,7 +31,7 @@ public class UpdateAction1o3o0 extends AbstractUpdateAction {
 		transactionWrapper.runInPlatformContext( () -> sparqlTemplate.executeUpdate( updateACLTripleQuery, null ) );
 		Set<App> apps = getAllApps();
 		for ( App app : apps ) {
-			transactionWrapper.runInAppcontext( app, () -> sparqlTemplate.executeUpdate( updateACLTripleQuery, null ) );
+			transactionWrapper.runInAppContext( app, () -> sparqlTemplate.executeUpdate( updateACLTripleQuery, null ) );
 		}
 	}
 }

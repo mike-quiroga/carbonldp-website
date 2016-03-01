@@ -33,7 +33,7 @@ public class UpdateAction1o4o0 extends AbstractUpdateAction {
 		} );
 		Set<App> apps = getAllApps();
 		for ( App app : apps ) {
-			transactionWrapper.runInAppcontext( app, () -> {
+			transactionWrapper.runInAppContext( app, () -> {
 				try {
 					addBNodeIdentifier();
 				} catch ( RepositoryException e ) {
