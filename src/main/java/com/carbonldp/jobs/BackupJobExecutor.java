@@ -45,7 +45,9 @@ public class BackupJobExecutor implements TypedJobExecutor {
 		String appRepositoryPath = Vars.getInstance().getAppsFilesDirectory().concat( Consts.SLASH ).concat( appRepositoryID );
 		File nonRDFSourceDirectory = new File( appRepositoryPath );
 		File rdfRepositoryFile = transactionWrapper.runInAppContext( app, () -> createTemporaryRDFBackupFile() );
-		File zipFile = transactionWrapper.runWithSystemPermissionsInPlatformContext( () -> createZipFile( nonRDFSourceDirectory, rdfRepositoryFile ) );
+		File zipFile = nonRDFSourceDirectory.exists() ?
+			transactionWrapper.runWithSystemPermissionsInPlatformContext( () -> createZipFile( nonRDFSourceDirectory, rdfRepositoryFile ) ) :
+			transactionWrapper.runWithSystemPermissionsInPlatformContext( () -> createZipFile( rdfRepositoryFile ) );
 
 		backupService.createAppBackup( appURI, zipFile );
 	}
