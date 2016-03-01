@@ -13,9 +13,7 @@ import com.carbonldp.repository.RepositoryService;
 import com.carbonldp.utils.RDFNodeUtil;
 import com.carbonldp.utils.URIUtil;
 import com.carbonldp.utils.ValueUtil;
-import org.openrdf.model.Statement;
-import org.openrdf.model.URI;
-import org.openrdf.model.Value;
+import org.openrdf.model.*;
 import org.openrdf.model.impl.URIImpl;
 import org.openrdf.model.vocabulary.RDF;
 import org.openrdf.repository.RepositoryException;
@@ -117,17 +115,33 @@ public class SesameAppRepository extends AbstractSesameRepository implements App
 		Value jobValue;
 		URI jobURI;
 
+		Resource listSubject;
+
 		try {
-			statements = connectionFactory.getConnection().getStatements( appJobsQueue, RDF.FIRST, null, false, appURI );
-			if ( ! statements.hasNext() ) return null;
+			statements = connectionFactory.getConnection().getStatements( appJobsQueue, RDF.REST, null, false, appURI );
+			if ( ! statements.hasNext() ) throw new RuntimeException( "there's a list node without a value " );
 			statement = statements.next();
+			if ( statement.getObject().equals( RDF.NIL ) ) return null;
 		} catch ( RepositoryException e ) {
 			throw new RuntimeException( e );
 		}
 
+		Value listObject = statement.getObject();
+		if ( ! ValueUtil.isResource( listObject ) ) throw new RuntimeException( "there's an invalid object in the queue" );
+		listSubject = ValueUtil.getResource( listObject );
+
+		try {
+			statements = connectionFactory.getConnection().getStatements( listSubject, RDF.FIRST, null, false, appURI );
+			if ( ! statements.hasNext() ) throw new RuntimeException( "there's a list node without a value " );
+			statement = statements.next();
+
+		} catch ( RepositoryException e ) {
+			throw new RuntimeException( e );
+		}
 		jobValue = statement.getObject();
-		if ( ! ValueUtil.isURI( jobValue ) ) throw new RuntimeException( "malformed queue" );
+		if ( ! ValueUtil.isURI( jobValue ) ) throw new RuntimeException( "there's an invalid object in the queue" );
 		jobURI = ValueUtil.getURI( jobValue );
+
 		return new Job( sourceRepository.get( jobURI ) );
 	}
 

@@ -49,19 +49,7 @@ public class SesameJobTriggerRepository extends AbstractSesameLDPRepository impl
 
 	private void addJobToQueue( URI jobURI ) {
 		URI appURI = jobRepository.getAppURI( jobURI );
-		URI appJobsQueue = new URIImpl( appURI.stringValue() + "#" + Vars.getInstance().getJobsQueue() );
-
-		if ( isQueueEmpty( appURI, appJobsQueue ) ) {
-			try {
-				connectionFactory.getConnection().add( appJobsQueue, RDF.FIRST, jobURI, appURI );
-				connectionFactory.getConnection().add( appJobsQueue, RDF.REST, RDF.NIL, appURI );
-			} catch ( RepositoryException e ) {
-				throw new RuntimeException( e );
-			}
-
-		} else {
-			addJobToTheEnd( jobURI, appURI );
-		}
+		addJobToTheEnd( jobURI, appURI );
 
 	}
 
@@ -92,16 +80,8 @@ public class SesameJobTriggerRepository extends AbstractSesameLDPRepository impl
 		}
 	}
 
-	private boolean isQueueEmpty( URI appURI, URI appJobsQueue ) {
-		try {
-			return ( ! connectionFactory.getConnection().hasStatement( appJobsQueue, RDF.FIRST, null, false, appURI ) );
-		} catch ( RepositoryException e ) {
-			throw new RuntimeException( e );
-		}
-	}
-
 	private void setJobStatusToQueued( URI jobURI ) {
-		jobRepository.changeJobStatus( jobURI,JobDescription.JobStatus.QUEUED );
+		jobRepository.changeJobStatus( jobURI, JobDescription.JobStatus.QUEUED );
 	}
 
 	private static final String getJobRelatedQuery;
