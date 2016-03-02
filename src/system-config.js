@@ -44,6 +44,7 @@ System.config({
     "reflect-metadata": "npm:reflect-metadata@0.1.2",
     "scss": "github:screendriver/plugin-sass@0.0.8",
     "ts": "github:frankwallis/plugin-typescript@4.0.1",
+    "ts-runtime": "npm:babel-runtime@5.8.29",
     "typescript": "npm:typescript@1.8.2",
     "zone.js": "npm:zone.js@0.5.13",
     "github:frankwallis/plugin-typescript@4.0.1": {

@@ -46,15 +46,6 @@ export default class SidebarComponent {
 
 	ngAfterViewInit():void {
 		this.$element = $( this.element.nativeElement );
-		/*
-		this.$element.sidebar( {
-			context: "app-dev > div.page-content",
-			transition: "push",
-			closable: false,
-			dimPage: false,
-			scrollLock: true
-		} );
-		*/
 		this.refreshAccordion();
 	}
 
@@ -64,8 +55,14 @@ export default class SidebarComponent {
 	}
 
 	toggle():void {
-		if( this.$element.is( ":visible" ) ) this.$element.hide();
-		else this.$element.show();
+		if ( this.$element.is( ":visible" ) ) {
+			this.$element.animate( {'width': '0'}, 400, () => {
+				this.$element.hide();
+			} );
+		} else {
+			this.$element.show();
+			this.$element.animate( {'width': '300px'}, 400 );
+		}
 	}
 
 	refreshAccordion():void {
@@ -74,7 +71,7 @@ export default class SidebarComponent {
 				trigger: ".item.app, .item.app .title",
 				title: ".title",
 			},
-			exclusive: false,
+			exclusive: false
 		} );
 	}
 
