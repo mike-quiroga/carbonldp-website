@@ -16,6 +16,10 @@ import javax.servlet.http.HttpServletResponse;
 public class BackupGETHandler extends AbstractGETRequestHandler {
 	@Override
 	protected void addNonRDFHeader( URI targetURI, HttpServletResponse response ) {
+		
+		response.addHeader( HTTPHeaders.ALLOW, "GET, PUT, DELETE, OPTIONS" );
+		response.addHeader( HTTPHeaders.ACCEPT_PUT, "*/*" );
+
 		response.addHeader( HTTPHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + Vars.getInstance().getBackUpDownloadFileName() + "\"" );
 		response.addHeader( HTTPHeaders.CONTENT_TYPE, "application/zip" );
 		response.addHeader( HTTPHeaders.CONTENT_DESCRIPTION, "File Transfer" );
