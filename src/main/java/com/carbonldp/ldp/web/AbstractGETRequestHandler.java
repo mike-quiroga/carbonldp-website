@@ -196,7 +196,6 @@ public abstract class AbstractGETRequestHandler extends AbstractLDPRequestHandle
 	protected void addNonRDFHeader( URI targetURI, HttpServletResponse response ) {
 		// TODO: Base this on the security model
 		response.addHeader( HTTPHeaders.ALLOW, "GET, PUT, DELETE, OPTIONS" );
-
 		response.addHeader( HTTPHeaders.ACCEPT_PUT, "*/*" );
 	}
 
