@@ -8,7 +8,7 @@ import org.openrdf.model.Statement;
 
 /**
  * @author MiguelAraCo
- * @since _version_
+ * @since 0.28.0-ALPHA
  */
 public class RequestDomainAccessGranter implements RepositorySecurityAccessGranter {
 

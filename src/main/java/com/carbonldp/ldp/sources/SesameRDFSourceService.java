@@ -5,23 +5,22 @@ import com.carbonldp.exceptions.ResourceDoesntExistException;
 import com.carbonldp.ldp.AbstractSesameLDPService;
 import com.carbonldp.ldp.containers.AccessPoint;
 import com.carbonldp.ldp.containers.AccessPointFactory;
-import com.carbonldp.ldp.containers.BasicContainerFactory;
 import com.carbonldp.ldp.containers.ContainerFactory;
 import com.carbonldp.ldp.nonrdf.NonRDFSourceRepository;
 import com.carbonldp.models.Infraction;
-import com.carbonldp.rdf.RDFDocument;
-import com.carbonldp.rdf.RDFResource;
-import com.carbonldp.utils.RDFResourceUtil;
+import com.carbonldp.rdf.*;
 import com.carbonldp.utils.URIUtil;
+import com.carbonldp.utils.ValueUtil;
 import org.joda.time.DateTime;
-import org.openrdf.model.Statement;
+import org.openrdf.model.BNode;
+import org.openrdf.model.Resource;
 import org.openrdf.model.URI;
+import org.openrdf.model.Value;
+import org.openrdf.model.impl.AbstractModel;
+import org.openrdf.model.impl.LinkedHashModel;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class SesameRDFSourceService extends AbstractSesameLDPService implements RDFSourceService {
@@ -76,24 +75,25 @@ public class SesameRDFSourceService extends AbstractSesameLDPService implements 
 	}
 
 	@Override
-	public void add( URI sourceURI, Collection<RDFResource> resourceViews ) {
+	public void add( URI sourceURI, RDFDocument document ) {
 		if ( ! exists( sourceURI ) ) throw new ResourceDoesntExistException();
 
-		validateResourcesBelongToSource( sourceURI, resourceViews );
-		containsImmutableProperties( resourceViews );
+		containsImmutableProperties( document );
+		validateBNodesUniqueIdentifier( document );
 
-		sourceRepository.add( sourceURI, resourceViews );
+		document = handleBlankNodesIdentifiers( document );
+
+		documentRepository.add( sourceURI, document );
 
 		sourceRepository.touch( sourceURI );
 	}
 
 	@Override
-	public void set( URI sourceURI, Collection<RDFResource> resourceViews ) {
+	public void set( URI sourceURI, RDFDocument document ) {
 		if ( ! exists( sourceURI ) ) throw new ResourceDoesntExistException();
-		containsImmutableProperties( resourceViews );
-		validateResourcesBelongToSource( sourceURI, resourceViews );
+		containsImmutableProperties( document );
 
-		sourceRepository.set( sourceURI, resourceViews );
+		documentRepository.set( sourceURI, document );
 
 		sourceRepository.touch( sourceURI );
 	}
@@ -104,43 +104,52 @@ public class SesameRDFSourceService extends AbstractSesameLDPService implements 
 
 		RDFSource originalSource = get( source.getURI() );
 		RDFDocument originalDocument = originalSource.getDocument();
-		RDFDocument newDocument = source.getDocument();
+		RDFDocument newDocument = mapBNodeSubjects( originalDocument, source.getDocument() );
 
-		Set<Statement> statementsToAdd = newDocument.stream().filter( statement -> ! originalDocument.contains( statement ) ).collect( Collectors.toSet() );
-		Set<RDFResource> resourceViewsToAdd = RDFResourceUtil.getResourceViews( statementsToAdd );
-		containsImmutableProperties( resourceViewsToAdd );
+		AbstractModel toAdd = newDocument.stream().filter( statement -> ! originalDocument.contains( statement ) ).collect( Collectors.toCollection( LinkedHashModel::new ) );
+		RDFDocument documentToAdd = new RDFDocument( toAdd, source.getURI() );
 
-		Set<Statement> statementsToDelete = originalDocument.stream().filter( statement -> ! newDocument.contains( statement ) ).collect( Collectors.toSet() );
-		Set<RDFResource> resourceViewsToDelete = RDFResourceUtil.getResourceViews( statementsToDelete );
-		containsImmutableProperties( resourceViewsToDelete );
+		AbstractModel toDelete = originalDocument.stream().filter( statement -> ! newDocument.contains( statement ) ).collect( Collectors.toCollection( LinkedHashModel::new ) );
+		RDFDocument documentToDelete = new RDFDocument( toDelete, source.getURI() );
 
-		substract( originalSource.getURI(), resourceViewsToDelete );
-		add( originalSource.getURI(), resourceViewsToAdd );
+		subtract( originalSource.getURI(), documentToDelete );
+		add( originalSource.getURI(), documentToAdd );
 
 		sourceRepository.touch( source.getURI(), modifiedTime );
 
 		return modifiedTime;
 	}
 
-	private void containsImmutableProperties( Collection<RDFResource> resources ) {
-		List<Infraction> infractions = new ArrayList<>();
-		for ( RDFResource resource : resources ) {
-			infractions.addAll( ContainerFactory.getInstance().validateImmutableProperties( resource ) );
-			infractions.addAll( ContainerFactory.getInstance().validateSystemManagedProperties( resource ) );
-		}
-		if ( ! infractions.isEmpty() ) throw new InvalidResourceException( infractions );
-	}
-
 	@Override
-	public void substract( URI sourceURI, Collection<RDFResource> resourceViews ) {
+	public void subtract( URI sourceURI, RDFDocument document ) {
 		if ( ! exists( sourceURI ) ) throw new ResourceDoesntExistException();
+		RDFSource originalSource = get( document.getDocumentResource().getURI() );
+		RDFDocument originalDocument = originalSource.getDocument();
+		document = mapBNodeSubjects( originalDocument, document );
 
-		validateResourcesBelongToSource( sourceURI, resourceViews );
-		containsImmutableProperties( resourceViews );
+		containsImmutableProperties( originalDocument, document );
+		document = addIdentifierToRemoveIfBNodeIsEmpty( originalDocument, document );
 
-		sourceRepository.subtract( sourceURI, resourceViews );
+		documentRepository.subtract( sourceURI, document );
 
 		sourceRepository.touch( sourceURI );
+	}
+
+	private RDFDocument addIdentifierToRemoveIfBNodeIsEmpty( RDFDocument originalDocument, RDFDocument document ) {
+		URI resourceURI = originalDocument.getDocumentResource().getURI();
+
+		Set<Resource> newSubjects = document.subjects();
+
+		for ( Resource subject : newSubjects ) {
+			if ( ! ValueUtil.isBNode( subject ) ) continue;
+			BNode subjectBNode = ValueUtil.getBNode( subject );
+			RDFBlankNode newBlankNode = new RDFBlankNode( document.getBaseModel(), subjectBNode, resourceURI );
+			RDFBlankNode originalBlankNode = new RDFBlankNode( originalDocument.getBaseModel(), subjectBNode, resourceURI );
+			if ( originalBlankNode.size() - newBlankNode.size() != 1 ) continue;
+			newBlankNode.setIdentifier( originalBlankNode.getIdentifier() );
+		}
+
+		return document;
 	}
 
 	@Override
@@ -151,17 +160,104 @@ public class SesameRDFSourceService extends AbstractSesameLDPService implements 
 		sourceRepository.deleteOccurrences( sourceURI, true );
 	}
 
-	private void validateSystemManagedProperties( Collection<RDFResource> resourceViews ) {
-		for ( RDFResource resource : resourceViews ) {
-			if ( ! BasicContainerFactory.getInstance().validateSystemManagedProperties( resource ).isEmpty() ) throw new IllegalArgumentException( "System properties can not be changed" );
-		}
-	}
-
 	private void validateResourcesBelongToSource( URI sourceURI, Collection<RDFResource> resourceViews ) {
 		List<URI> resourceURIs = resourceViews.stream().map( RDFResource::getURI ).collect( Collectors.toList() );
 		resourceURIs.add( sourceURI );
 		URI[] uris = resourceURIs.toArray( new URI[resourceURIs.size()] );
 		if ( ! URIUtil.belongsToSameDocument( uris ) ) throw new IllegalArgumentException( "The resourceViews don't belong to the source's document." );
+	}
+
+	private RDFDocument handleBlankNodesIdentifiers( RDFDocument document ) {
+		RDFSource originalSource = get( document.getDocumentResource().getURI() );
+		RDFDocument originalDocument = originalSource.getDocument();
+		document = mapBNodeSubjects( originalDocument, document );
+
+		Set<Resource> originalSubjects = originalDocument.subjects();
+		Set<Resource> newSubjects = document.subjects();
+
+		for ( Resource subject : newSubjects ) {
+			if ( ! ValueUtil.isBNode( subject ) ) continue;
+			if ( originalSubjects.contains( subject ) ) continue;
+			BNode subjectBNode = ValueUtil.getBNode( subject );
+			RDFBlankNode blankNode = new RDFBlankNode( document.getBaseModel(), subjectBNode, originalSource.getURI() );
+			if ( blankNode.getIdentifier() != null ) {
+				if ( blankNode.size() == 1 ) document.removeAll( blankNode );
+				continue;
+			}
+			RDFBlankNodeFactory.setIdentifier( blankNode );
+		}
+
+		return document;
+	}
+
+	private void containsImmutableProperties( RDFDocument document ) {
+		List<Infraction> infractions = validateDocumentContainsImmutableProperties( document );
+
+		infractions.addAll( RDFDocumentFactory.getInstance().validateBlankNodes( document ) );
+		if ( ! infractions.isEmpty() ) throw new InvalidResourceException( infractions );
+	}
+
+	private void containsImmutableProperties( RDFDocument originalDocument, RDFDocument document ) {
+		List<Infraction> infractions = validateDocumentContainsImmutableProperties( document );
+
+		Set<Resource> newSubjects = document.subjects();
+
+		for ( Resource subject : newSubjects ) {
+			if ( ! ValueUtil.isBNode( subject ) ) continue;
+			BNode subjectBNode = ValueUtil.getBNode( subject );
+			RDFBlankNode originalBlankBode = new RDFBlankNode( originalDocument.getBaseModel(), subjectBNode, originalDocument.getDocumentResource().getURI() );
+			RDFBlankNode newBlankNode = new RDFBlankNode( document.getBaseModel(), subjectBNode, document.getDocumentResource().getURI() );
+			if ( originalBlankBode.size() == newBlankNode.size() ) continue;
+			infractions.addAll( RDFDocumentFactory.getInstance().validateBlankNodes( document ) );
+		}
+		if ( ! infractions.isEmpty() ) throw new InvalidResourceException( infractions );
+	}
+
+	private List<Infraction> validateDocumentContainsImmutableProperties( RDFDocument document ) {
+		List<Infraction> infractions = new ArrayList<>();
+		infractions.addAll( ContainerFactory.getInstance().validateImmutableProperties( document.getDocumentResource() ) );
+		infractions.addAll( ContainerFactory.getInstance().validateSystemManagedProperties( document.getDocumentResource() ) );
+		return infractions;
+	}
+
+	private RDFDocument mapBNodeSubjects( RDFDocument originalDocument, RDFDocument newDocument ) {
+		URI documentUri = newDocument.getDocumentResource().getURI();
+
+		Set<String> originalDocumentBlankNodesIdentifier = originalDocument.getBlankNodesIdentifier();
+		Set<String> newDocumentBlankNodesIdentifiers = newDocument.getBlankNodesIdentifier();
+		for ( String newDocumentBlankNodeIdentifier : newDocumentBlankNodesIdentifiers ) {
+			if ( ! originalDocumentBlankNodesIdentifier.contains( newDocumentBlankNodeIdentifier ) ) continue;
+
+			RDFBlankNode newBlankNode = newDocument.getBlankNode( newDocumentBlankNodeIdentifier );
+			BNode originalBNode = originalDocument.getBlankNode( newDocumentBlankNodeIdentifier ).getSubject();
+
+			if ( newBlankNode.getSubject().equals( originalBNode ) ) continue;
+
+			Map<URI, Set<Value>> propertiesMap = newBlankNode.getPropertiesMap();
+			Set<URI> properties = propertiesMap.keySet();
+
+			for ( URI property : properties ) {
+				Set<Value> objects = propertiesMap.get( property );
+				for ( Value object : objects ) {
+					newDocument.getBaseModel().add( originalBNode, property, object, documentUri );
+				}
+			}
+			newDocument.subjects().remove( newBlankNode.getSubject() );
+
+		}
+		return newDocument;
+	}
+
+	private void validateBNodesUniqueIdentifier( RDFDocument document ) {
+		Set<RDFBlankNode> blankNodes = document.getBlankNodes();
+		List<Infraction> infractions = new ArrayList<>();
+		URI documentURI = document.getDocumentResource().getDocumentURI();
+		for ( RDFBlankNode blankNode : blankNodes ) {
+			if ( blankNode.getIdentifier() == null ) continue;
+			if ( blankNodeRepository.hasProperty( blankNode.getSubject(), RDFBlankNodeDescription.Property.BNODE_IDENTIFIER, documentURI ) )
+				infractions.add( new Infraction( 0x2004, "property", RDFBlankNodeDescription.Property.BNODE_IDENTIFIER.getURI().stringValue() ) );
+		}
+		if ( ! infractions.isEmpty() ) throw new InvalidResourceException( infractions );
 	}
 
 	@Autowired

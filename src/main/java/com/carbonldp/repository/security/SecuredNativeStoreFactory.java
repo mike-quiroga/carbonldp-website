@@ -7,7 +7,7 @@ import org.openrdf.sail.nativerdf.config.NativeStoreFactory;
 
 /**
  * @author MiguelAraCo
- * @since _version_
+ * @since 0.28.0-ALPHA
  */
 public class SecuredNativeStoreFactory extends NativeStoreFactory {
 	public static final String SAIL_TYPE = "carbon:Store";

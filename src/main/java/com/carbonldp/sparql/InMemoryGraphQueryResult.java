@@ -9,7 +9,7 @@ import java.util.*;
 
 /**
  * @author MiguelAraCo
- * @since _version_
+ * @since 0.28.0-ALPHA
  */
 public class InMemoryGraphQueryResult implements GraphQueryResult {
 	Set<Statement> statements;

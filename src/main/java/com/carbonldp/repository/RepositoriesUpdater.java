@@ -3,11 +3,14 @@ package com.carbonldp.repository;
 import com.carbonldp.AbstractComponent;
 import com.carbonldp.Consts;
 import com.carbonldp.Vars;
-import com.carbonldp.repository.updates.UpdateAction1o0o0;
-import com.carbonldp.repository.updates.UpdateAction1o1o0;
-import com.carbonldp.repository.updates.UpdateAction1o2o0;
+import com.carbonldp.apps.context.AppContextConfig;
+import com.carbonldp.config.ConfigurationConfig;
+import com.carbonldp.config.RepositoriesConfig;
+import com.carbonldp.repository.txn.TxnConfig;
+import com.carbonldp.repository.updates.*;
 import com.carbonldp.utils.Action;
 import com.google.common.io.Files;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 import java.io.File;
 import java.io.IOException;
@@ -27,6 +30,8 @@ public class RepositoriesUpdater extends AbstractComponent {
 		put( new RepositoryVersion( "1.0.0" ), new UpdateAction1o0o0() );
 		put( new RepositoryVersion( "1.1.0" ), new UpdateAction1o1o0() );
 		put( new RepositoryVersion( "1.2.0" ), new UpdateAction1o2o0() );
+		put( new RepositoryVersion( "1.3.0" ), new UpdateAction1o3o0() );
+		put( new RepositoryVersion( "1.4.0" ), new UpdateAction1o4o0() );
 	}};
 
 	public boolean repositoriesAreUpToDate() {
@@ -37,19 +42,25 @@ public class RepositoriesUpdater extends AbstractComponent {
 
 	public void updateRepositories() {
 		RepositoryVersion currentVersion = getCurrentVersion();
+		AnnotationConfigApplicationContext context = initializeContext();
 
-		RepositoriesUpdater.versionsUpdates
-			.keySet()
-			.stream()
-			.filter( v -> currentVersion.compareTo( v ) < 0 )
-			.sorted()
-			.forEach( v -> {
-				LOG.debug( "-- updateRepositories() - Running update of repository version: '{}'...", v );
-				RepositoriesUpdater.versionsUpdates.get( v ).run();
-				LOG.debug( "-- updateRepositories() - Repository update to version: '{}', complete.", v );
-			} );
-
+		if ( isNewRepository( currentVersion ) ) {
+			createDefaultRepository( context );
+		} else {
+			updateRepositories( currentVersion, context );
+		}
+		context.close();
 		setCurrentVersion( getLatestVersion() );
+	}
+
+	protected AnnotationConfigApplicationContext initializeContext() {
+		AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(
+			TxnConfig.class,
+			ConfigurationConfig.class,
+			RepositoriesConfig.class,
+			AppContextConfig.class
+		);
+		return context;
 	}
 
 	private RepositoryVersion getLatestVersion() {
@@ -99,5 +110,33 @@ public class RepositoriesUpdater extends AbstractComponent {
 	private File getVersionFile() {
 		String versionFileDir = Vars.getInstance().getRepositoriesDirectory() + Consts.SLASH + RepositoriesUpdater.versionFileName;
 		return new File( versionFileDir );
+	}
+
+	private boolean isNewRepository( RepositoryVersion repositoryVersion ) {
+		return repositoryVersion.equals( new RepositoryVersion( "0.0.0" ) );
+	}
+
+	private void createDefaultRepository( AnnotationConfigApplicationContext context ) {
+		RepositoryVersion defaultVersion = new RepositoryVersion( "1.0.0" );
+		LOG.debug( "-- createDefaultRepository(context) - Running creation of repository version: '{}'...", getLatestVersion() );
+		Action action = RepositoriesUpdater.versionsUpdates.get( defaultVersion );
+		( (AbstractUpdateAction) action ).setBeans( context );
+		action.run();
+		LOG.debug( "-- createDefaultRepository(context) - Repository creation version: '{}', complete.", getLatestVersion() );
+	}
+
+	private void updateRepositories( RepositoryVersion currentVersion, AnnotationConfigApplicationContext context ) {
+		RepositoriesUpdater.versionsUpdates
+			.keySet()
+			.stream()
+			.filter( v -> currentVersion.compareTo( v ) < 0 )
+			.sorted()
+			.forEach( v -> {
+				LOG.debug( "-- updateRepositories(currentVersion, context) - Running update of repository version: '{}'...", v );
+				Action action = RepositoriesUpdater.versionsUpdates.get( v );
+				( (AbstractUpdateAction) action ).setBeans( context );
+				action.run();
+				LOG.debug( "-- updateRepositories(currentVersion, context) - Repository update to version: '{}', complete.", v );
+			} );
 	}
 }

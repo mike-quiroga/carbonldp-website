@@ -2,7 +2,7 @@ package com.carbonldp.repository.security;
 
 /**
  * @author MiguelAraCo
- * @since _version_
+ * @since 0.28.0-ALPHA
  */
 public class RepositorySecuritySwitch {
 	private static final ThreadLocal<Boolean> enabled = new ThreadLocal<>();
