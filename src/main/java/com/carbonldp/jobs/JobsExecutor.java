@@ -1,7 +1,11 @@
 package com.carbonldp.jobs;
 
+import com.carbonldp.apps.App;
+import com.carbonldp.apps.AppRepository;
+import org.openrdf.model.URI;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 
 import java.util.List;
@@ -13,6 +17,7 @@ import java.util.List;
 public class JobsExecutor {
 	protected final Logger LOG = LoggerFactory.getLogger( this.getClass() );
 	private final List<TypedJobExecutor> typedJobs;
+	private AppRepository appRepository;
 
 	public JobsExecutor( List<TypedJobExecutor> typedJobs ) {
 		this.typedJobs = typedJobs;
@@ -23,6 +28,8 @@ public class JobsExecutor {
 		JobDescription.Type type = BackupJobFactory.getInstance().getJobType( job );
 
 		getTypedRepository( type ).run( job );
+		dequeueJobsQueue( job.getAppRelated() );
+
 	}
 
 	public TypedJobExecutor getTypedRepository( JobDescription.Type jobType ) {
@@ -31,4 +38,12 @@ public class JobsExecutor {
 		}
 		throw new IllegalArgumentException( "The jobType provided isn't supported" );
 	}
+
+	private void dequeueJobsQueue( URI appURI ) {
+		App app = appRepository.get( appURI );
+		appRepository.dequeueJobsQueue( app );
+	}
+
+	@Autowired
+	public void setAppRepository( AppRepository appRepository ) {this.appRepository = appRepository; }
 }

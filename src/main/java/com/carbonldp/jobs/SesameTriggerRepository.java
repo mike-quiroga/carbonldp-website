@@ -44,7 +44,7 @@ public class SesameTriggerRepository extends AbstractSesameLDPRepository impleme
 
 	private Type getTriggerType( URI triggerURI ) {
 		Set<URI> resourceTypes = resourceRepository.getTypes( triggerURI );
-		return TriggerFactory.getInstance().getTriggerType( resourceTypes );
+		return ManualExecutionFactory.getInstance().getTriggerType( resourceTypes );
 	}
 
 	@Override

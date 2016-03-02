@@ -55,6 +55,8 @@ public class BackupJobExecutor implements TypedJobExecutor {
 
 		deleteTemporaryFile( zipFile );
 		deleteTemporaryFile( rdfRepositoryFile );
+
+		jobService.changeJobStatus( job.getURI(), JobDescription.JobStatus.FINISHED );
 	}
 
 	private File createZipFile( File... files ) {

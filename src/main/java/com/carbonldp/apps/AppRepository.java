@@ -17,4 +17,6 @@ public interface AppRepository {
 	public URI getPlatformAppContainerURI();
 
 	public Job peekJobsQueue( App app );
+
+	public void dequeueJobsQueue( App app );
 }

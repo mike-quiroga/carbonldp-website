@@ -33,7 +33,7 @@ public class JobManager {
 		Set<App> apps = getAllApps();
 		for ( App app : apps ) {
 			Job job = appRepository.peekJobsQueue( app );
-			if ( job != null && job.getJobStatus().equals( JobDescription.JobStatus.QUEUED.getURI() ) ) {
+			if ( job != null && ( ! job.getJobStatus().equals( JobDescription.JobStatus.RUNNING.getURI() ) ) ) {
 				jobsExecutor.runJob( job );
 			}
 		}

@@ -81,7 +81,8 @@ public class SesameJobTriggerRepository extends AbstractSesameLDPRepository impl
 	}
 
 	private void setJobStatusToQueued( URI jobURI ) {
-		jobRepository.changeJobStatus( jobURI, JobDescription.JobStatus.QUEUED );
+		if ( ! jobRepository.getJobStatus( jobURI ).equals( JobDescription.JobStatus.RUNNING ) )
+			jobRepository.changeJobStatus( jobURI, JobDescription.JobStatus.QUEUED );
 	}
 
 	private static final String getJobRelatedQuery;

@@ -9,6 +9,8 @@ import com.carbonldp.jobs.JobDescription.JobStatus;
  */
 public interface JobRepository {
 
+	public JobStatus getJobStatus( URI jobURI );
+
 	public void changeJobStatus( URI jobURI, JobStatus jobStatus );
 
 	public URI getAppURI( URI jobURI );

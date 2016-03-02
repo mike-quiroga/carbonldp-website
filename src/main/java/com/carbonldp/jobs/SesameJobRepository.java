@@ -5,10 +5,12 @@ import com.carbonldp.ldp.AbstractSesameLDPRepository;
 import com.carbonldp.rdf.RDFDocumentRepository;
 import com.carbonldp.rdf.RDFResourceRepository;
 import com.carbonldp.utils.ValueUtil;
+import org.openrdf.model.Statement;
 import org.openrdf.model.URI;
 import org.openrdf.model.Value;
 import org.openrdf.query.BindingSet;
 import org.openrdf.repository.RepositoryException;
+import org.openrdf.repository.RepositoryResult;
 import org.openrdf.spring.SesameConnectionFactory;
 
 import java.util.HashMap;
@@ -53,7 +55,30 @@ public class SesameJobRepository extends AbstractSesameLDPRepository implements 
 	}
 
 	@Override
-	public void changeJobStatus(  URI jobURI, JobStatus jobStatus  ) {
+	public JobStatus getJobStatus( URI jobURI ) {
+		RepositoryResult<Statement> statements;
+		Statement statement;
+
+		try {
+			statements = connectionFactory.getConnection().getStatements( jobURI, JobDescription.Property.JOB_STATUS.getURI(), null, false, jobURI );
+			if ( ! statements.hasNext() ) throw new RuntimeException( "job does not have a status" );
+			statement = statements.next();
+		} catch ( RepositoryException e ) {
+			throw new RuntimeException( e );
+		}
+
+		Value object = statement.getObject();
+		if ( ! ValueUtil.isURI( object ) ) throw new RuntimeException( "job status is an invalid type" );
+		URI jobStatusURI = ValueUtil.getURI( object );
+
+		for ( JobStatus jobStatus : JobStatus.values() ) {
+			if ( jobStatus.getURI().equals( jobStatusURI ) ) return jobStatus;
+		}
+		throw new RuntimeException( "invalid job status" );
+	}
+
+	@Override
+	public void changeJobStatus( URI jobURI, JobStatus jobStatus ) {
 		try {
 			connectionFactory.getConnection().remove( jobURI, JobDescription.Property.JOB_STATUS.getURI(), null, jobURI );
 			connectionFactory.getConnection().add( jobURI, JobDescription.Property.JOB_STATUS.getURI(), jobStatus.getURI(), jobURI );
