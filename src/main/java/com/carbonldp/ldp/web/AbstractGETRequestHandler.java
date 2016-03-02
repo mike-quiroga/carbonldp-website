@@ -188,15 +188,14 @@ public abstract class AbstractGETRequestHandler extends AbstractLDPRequestHandle
 		RDFRepresentation rdfRepresentation = new RDFRepresentation( sourceService.get( targetURI ) );
 		File file = nonRdfSourceService.getResource( rdfRepresentation );
 
-		addNonRDFAllowHeader( targetURI, response );
+		addNonRDFHeader( targetURI, response );
 
 		return new ResponseEntity<>( new RDFRepresentationFileWrapper( rdfRepresentation, file ), HttpStatus.OK );
 	}
 
-	private void addNonRDFAllowHeader( URI targetURI, HttpServletResponse response ) {
+	protected void addNonRDFHeader( URI targetURI, HttpServletResponse response ) {
 		// TODO: Base this on the security model
 		response.addHeader( HTTPHeaders.ALLOW, "GET, PUT, DELETE, OPTIONS" );
-
 		response.addHeader( HTTPHeaders.ACCEPT_PUT, "*/*" );
 	}
 
