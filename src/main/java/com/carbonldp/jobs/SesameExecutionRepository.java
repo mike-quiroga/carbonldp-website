@@ -18,10 +18,10 @@ import java.util.Set;
  */
 
 @Transactional
-public class SesameTriggerRepository extends AbstractSesameLDPRepository implements TriggerRepository {
+public class SesameExecutionRepository extends AbstractSesameLDPRepository implements TriggerRepository {
 	List<TypedTriggerRepository> typedTriggerRepositories;
 
-	public SesameTriggerRepository( SesameConnectionFactory connectionFactory, RDFResourceRepository resourceRepository, RDFDocumentRepository documentRepository, List<TypedTriggerRepository> typedTriggerRepositories ) {
+	public SesameExecutionRepository( SesameConnectionFactory connectionFactory, RDFResourceRepository resourceRepository, RDFDocumentRepository documentRepository, List<TypedTriggerRepository> typedTriggerRepositories ) {
 		super( connectionFactory, resourceRepository, documentRepository );
 
 		Assert.notNull( typedTriggerRepositories );
@@ -39,7 +39,7 @@ public class SesameTriggerRepository extends AbstractSesameLDPRepository impleme
 
 	@Override
 	public void executeTrigger( URI triggerURI, Type triggerType ) {
-		getTypedRepository( triggerType ).executeTrigger( triggerURI );
+		getTypedRepository( triggerType ).execute( triggerURI );
 	}
 
 	private Type getTriggerType( URI triggerURI ) {

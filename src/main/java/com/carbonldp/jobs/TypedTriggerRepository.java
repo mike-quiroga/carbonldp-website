@@ -10,5 +10,5 @@ import org.openrdf.model.URI;
 public interface TypedTriggerRepository {
 	public boolean supports( Type triggerType );
 
-	public void executeTrigger( URI triggerURI );
+	public void execute( URI triggerURI );
 }

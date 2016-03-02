@@ -138,14 +138,14 @@ public class RepositoriesConfig {
 	}
 
 	@Bean
-	public TypedTriggerRepository jobTriggerRepository() {return new SesameJobTriggerRepository( connectionFactory, resourceRepository(), documentRepository() ); }
+	public TypedTriggerRepository jobTriggerRepository() {return new SesameJobExecutionRepository( connectionFactory, resourceRepository(), documentRepository() ); }
 
 	@Bean
 	public TriggerRepository triggerRepository() {
 		List<TypedTriggerRepository> typdServices = new ArrayList<>();
 		typdServices.add( jobTriggerRepository() );
 
-		return new SesameTriggerRepository( connectionFactory, resourceRepository(), documentRepository(), typdServices );
+		return new SesameExecutionRepository( connectionFactory, resourceRepository(), documentRepository(), typdServices );
 	}
 
 	@Bean

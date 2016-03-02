@@ -1,12 +1,10 @@
 package com.carbonldp.jobs;
 
-import com.carbonldp.Vars;
 import com.carbonldp.ldp.AbstractSesameLDPRepository;
 import com.carbonldp.rdf.RDFDocumentRepository;
 import com.carbonldp.rdf.RDFResourceRepository;
 import com.carbonldp.utils.ValueUtil;
 import org.openrdf.model.*;
-import org.openrdf.model.impl.URIImpl;
 import org.openrdf.model.vocabulary.RDF;
 import org.openrdf.query.BindingSet;
 import org.openrdf.repository.RepositoryException;
@@ -28,20 +26,20 @@ import static com.carbonldp.Consts.TAB;
  */
 
 @Transactional
-public class SesameJobTriggerRepository extends AbstractSesameLDPRepository implements TypedTriggerRepository {
-	public SesameJobTriggerRepository( SesameConnectionFactory connectionFactory, RDFResourceRepository resourceRepository, RDFDocumentRepository documentRepository ) {
+public class SesameJobExecutionRepository extends AbstractSesameLDPRepository implements TypedTriggerRepository {
+	public SesameJobExecutionRepository( SesameConnectionFactory connectionFactory, RDFResourceRepository resourceRepository, RDFDocumentRepository documentRepository ) {
 		super( connectionFactory, resourceRepository, documentRepository );
 	}
 
 	JobRepository jobRepository;
 
 	@Override
-	public boolean supports( Type triggerType ) {
-		return triggerType == Type.JOB_TRIGGER;
+	public boolean supports( Type executionType ) {
+		return executionType == Type.JOB_TRIGGER;
 	}
 
 	@Override
-	public void executeTrigger( URI triggerURI ) {
+	public void execute( URI triggerURI ) {
 		URI jobURI = getJobURI( triggerURI );
 		addJobToQueue( jobURI );
 		setJobStatusToQueued( jobURI );
