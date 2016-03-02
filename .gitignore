@@ -13,9 +13,9 @@ test-output/
 *.iws
 
 # Maven
-target/
-target/!carbon-platform.jar
-target/!lib/
+target/*
+!target/carbon-platform.jar
+!target/lib
 
 # SASS
 .sass-cache/
