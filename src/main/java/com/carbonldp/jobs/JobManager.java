@@ -1,17 +1,9 @@
 package com.carbonldp.jobs;
 
-import com.carbonldp.Vars;
-import com.carbonldp.apps.App;
 import com.carbonldp.apps.AppRepository;
 import com.carbonldp.ldp.containers.ContainerRepository;
 import com.carbonldp.spring.TransactionWrapper;
-import org.openrdf.model.URI;
-import org.openrdf.model.impl.URIImpl;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
-
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * @author JorgeEspinosa
@@ -24,6 +16,7 @@ public class JobManager {
 	private ContainerRepository containerRepository;
 	private AppRepository appRepository;
 
+	/*
 	@Scheduled( cron = "${job.trigger.time}" )
 	public void runQueuedJobs() {
 		lookUpForJobs();
@@ -52,6 +45,7 @@ public class JobManager {
 			return apps;
 		} );
 	}
+	*/
 
 	@Autowired
 	public void setJobsExecutor( JobsExecutor jobsExecutor ) { this.jobsExecutor = jobsExecutor; }

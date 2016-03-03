@@ -40,7 +40,7 @@ public class BackupJobExecutor implements TypedJobExecutor {
 	}
 
 	public void run( Job job ) {
-		transactionWrapper.runWithSystemPermissionsInPlatformContext( () -> jobService.changeJobStatus( job.getURI(), JobDescription.JobStatus.RUNNING ) );
+		//transactionWrapper.runWithSystemPermissionsInPlatformContext( () -> jobService.changeJobStatus( job.getURI(), JobDescription.JobStatus.RUNNING ) );
 		URI appURI = job.getAppRelated();
 		App app = appRepository.get( appURI );
 		String appRepositoryID = app.getRepositoryID();
@@ -56,7 +56,7 @@ public class BackupJobExecutor implements TypedJobExecutor {
 		deleteTemporaryFile( zipFile );
 		deleteTemporaryFile( rdfRepositoryFile );
 
-		jobService.changeJobStatus( job.getURI(), JobDescription.JobStatus.FINISHED );
+		//jobService.changeJobStatus( job.getURI(), JobDescription.JobStatus.FINISHED );
 	}
 
 	private File createZipFile( File... files ) {

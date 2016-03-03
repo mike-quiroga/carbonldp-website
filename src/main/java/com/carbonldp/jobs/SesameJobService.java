@@ -1,14 +1,19 @@
 package com.carbonldp.jobs;
 
+import com.carbonldp.Vars;
 import com.carbonldp.exceptions.InvalidResourceException;
 import com.carbonldp.ldp.AbstractSesameLDPService;
 import com.carbonldp.ldp.containers.ContainerService;
+import com.carbonldp.ldp.containers.DirectContainer;
+import com.carbonldp.ldp.containers.DirectContainerFactory;
 import com.carbonldp.ldp.sources.RDFSourceService;
 import com.carbonldp.models.Infraction;
+import com.carbonldp.rdf.RDFResource;
 import org.openrdf.model.URI;
+import org.openrdf.model.impl.URIImpl;
 import org.springframework.beans.factory.annotation.Autowired;
-import com.carbonldp.jobs.JobDescription.JobStatus;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -18,18 +23,34 @@ import java.util.List;
 public class SesameJobService extends AbstractSesameLDPService implements JobService {
 	private ContainerService containerService;
 	private RDFSourceService sourceService;
-	private JobRepository jobRepository;
 
 	public void create( URI targetURI, Job job ) {
 		validate( job );
-		URI jobURI = job.getURI();
-		ManualExecution manualExecution = ManualExecutionFactory.getInstance().create( job );
+
 		containerService.createChild( targetURI, job );
-		containerService.createChild( jobURI, manualExecution );
+
+		createManualExecutionsContainer( job );
+	}
+
+	private void createManualExecutionsContainer( Job job ) {
+		URI manualExecutionsURI = new URIImpl( job.getURI().stringValue().concat( Vars.getInstance().getManualExecutions() ) );
+		RDFResource manualExecutionsResource = new RDFResource( manualExecutionsURI );
+
+		DirectContainer container = DirectContainerFactory.getInstance().create( manualExecutionsResource, job.getURI(), JobDescription.Property.MANUAL_EXECUTION.getURI() );
+
+		sourceService.createAccessPoint( job.getURI(), container );
 	}
 
 	private void validate( Job job ) {
-		List<Infraction> infractions = BackupJobFactory.getInstance().validate( job );
+		List<Infraction> infractions = new ArrayList<>();
+		JobDescription.Type jobType = JobFactory.getInstance().getJobType( job );
+		switch ( jobType ) {
+			case BACKUP:
+				infractions = BackupJobFactory.getInstance().validate( job );
+				break;
+			default:
+				infractions.add( new Infraction( 0x2001, "rdf.type", "job type" ) );
+		}
 		if ( ! infractions.isEmpty() ) throw new InvalidResourceException( infractions );
 	}
 
@@ -38,21 +59,9 @@ public class SesameJobService extends AbstractSesameLDPService implements JobSer
 		return new Job( sourceService.get( jobURI ) );
 	}
 
-	@Override
-	public void changeJobStatus( URI jobURI, JobStatus jobStatus ) {
-		jobRepository.changeJobStatus( jobURI, jobStatus );
-	}
-
 	@Autowired
 	public void setContainerService( ContainerService containerService ) { this.containerService = containerService; }
 
 	@Autowired
-	public void setSourceService( RDFSourceService sourceService ) {
-		this.sourceService = sourceService;
-	}
-
-	@Autowired
-	public void setJobRepository( JobRepository jobRepository ) {
-		this.jobRepository = jobRepository;
-	}
+	public void setSourceService( RDFSourceService sourceService ) { this.sourceService = sourceService; }
 }

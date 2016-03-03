@@ -2,7 +2,6 @@ package com.carbonldp.jobs;
 
 import org.openrdf.model.URI;
 import org.springframework.security.access.prepost.PreAuthorize;
-import com.carbonldp.jobs.JobDescription.JobStatus;
 
 /**
  * @author JorgeEspinosa
@@ -15,7 +14,4 @@ public interface JobService {
 
 	@PreAuthorize( "hasPermission(#jobURI, 'READ')" )
 	public Job get( URI jobURI );
-
-	@PreAuthorize( "hasPermission(#jobURI, 'UPDATE')" )
-	public void changeJobStatus( URI jobURI, JobStatus jobStatus );
 }

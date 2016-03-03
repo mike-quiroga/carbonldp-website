@@ -1,11 +1,13 @@
 package com.carbonldp.jobs.web;
 
 import com.carbonldp.descriptions.APIPreferences;
+import com.carbonldp.rdf.RDFDocument;
 import com.carbonldp.web.AbstractController;
 import com.carbonldp.web.config.InteractionModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -18,16 +20,16 @@ import javax.servlet.http.HttpServletResponse;
  */
 @Controller
 @RequestMapping( value = "/platform/apps/*/jobs/*/manual-executions/" )
-public class ManualExecutionTriggerController extends AbstractController {
-	private ManualExecutionPOSTHandler postRequestHandler;
+public class ManualExecutionsController extends AbstractController {
+	private ManualExecutionsPOSTHandler postRequestHandler;
 
-	@InteractionModel( value = {APIPreferences.InteractionModel.TRIGGER}, handlesDefault = true )
+	@InteractionModel( value = {APIPreferences.InteractionModel.CONTAINER}, handlesDefault = true )
 	@RequestMapping( method = RequestMethod.POST )
-	public ResponseEntity<Object> execute( HttpServletRequest request, HttpServletResponse response ) {
-		return postRequestHandler.handleRequest( request, response );
+	public ResponseEntity<Object> execute( @RequestBody RDFDocument requestDocument, HttpServletRequest request, HttpServletResponse response ) {
+		return postRequestHandler.handleRequest( requestDocument, request, response );
 	}
 
 	@Autowired
-	public void setPutRequestHandler( ManualExecutionPOSTHandler postRequestHandler ) {this.postRequestHandler = postRequestHandler;}
+	public void setPostRequestHandler( ManualExecutionsPOSTHandler postRequestHandler ) {this.postRequestHandler = postRequestHandler;}
 
 }

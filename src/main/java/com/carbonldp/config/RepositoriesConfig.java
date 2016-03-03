@@ -138,14 +138,8 @@ public class RepositoriesConfig {
 	}
 
 	@Bean
-	public TypedTriggerRepository jobTriggerRepository() {return new SesameJobExecutionRepository( connectionFactory, resourceRepository(), documentRepository() ); }
-
-	@Bean
-	public TriggerRepository triggerRepository() {
-		List<TypedTriggerRepository> typdServices = new ArrayList<>();
-		typdServices.add( jobTriggerRepository() );
-
-		return new SesameExecutionRepository( connectionFactory, resourceRepository(), documentRepository(), typdServices );
+	public ExecutionRepository triggerRepository() {
+		return new SesameExecutionRepository( connectionFactory, resourceRepository(), documentRepository() );
 	}
 
 	@Bean
@@ -212,9 +206,6 @@ public class RepositoriesConfig {
 	public SPARQLService sparqlService() {
 		return new SesameSPARQLService( connectionFactory );
 	}
-
-	@Bean
-	public JobRepository jobRepository() {return new SesameJobRepository( connectionFactory, resourceRepository(), documentRepository() ); }
 
 	@Bean
 	public BackupRepository backupRepository() {return new SesameBackupRepository( connectionFactory, resourceRepository(), documentRepository() ); }

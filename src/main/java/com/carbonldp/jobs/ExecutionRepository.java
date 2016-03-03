@@ -1,0 +1,17 @@
+package com.carbonldp.jobs;
+
+import org.openrdf.model.URI;
+
+/**
+ * @author NestorVenegas
+ * @since _version_
+ */
+public interface ExecutionRepository {
+	public ExecutionDescription.Status getExecutionStatus( URI executionURI );
+
+	public void changeExecutionStatus( URI executionURI, ExecutionDescription.Status status );
+
+	public void enqueue( URI executionURI, URI appURI );
+
+	public URI getAppRelatedURI( URI executionsContainerURI );
+}

@@ -1,6 +1,5 @@
 package com.carbonldp.jobs.web;
 
-import com.carbonldp.jobs.BackupJobFactory;
 import com.carbonldp.jobs.Job;
 import com.carbonldp.jobs.JobFactory;
 import com.carbonldp.jobs.JobService;
@@ -20,7 +19,7 @@ public class JobPOSTHandler extends AbstractRDFPostRequestHandler<Job> {
 
 	@Override
 	protected Job getDocumentResourceView( BasicContainer requestBasicContainer ) {
-		return BackupJobFactory.getInstance().create( requestBasicContainer );
+		return JobFactory.getInstance().create( requestBasicContainer );
 	}
 
 	@Override
