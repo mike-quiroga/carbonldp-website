@@ -1,5 +1,5 @@
 <div class="ui menu">
-	<a class="item" (click)="toggleSidebar()">
+	<a class="item toggle" *ngIf="clickable" (click)="toggleSidebar()">
 		<i class="sidebar icon"></i>
 		Menu
 	</a>

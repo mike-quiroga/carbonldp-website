@@ -20,6 +20,7 @@ export default class MenuBarComponentComponent {
 	element:ElementRef;
 	$element:JQuery;
 	sidebarService:SidebarService;
+	clickable:boolean = false;
 
 	breadCrumbs:Array<any> = [];
 	instructions:Instruction[] = [];
@@ -32,10 +33,19 @@ export default class MenuBarComponentComponent {
 		this.router.parent.subscribe( ( url )=> {
 			this.updateBreadcrumbs( url );
 		} );
+		this.sidebarService.toggleMenuButtonEmitter.subscribe(
+			() => {
+				this.toggleMenuButton();
+			}
+		);
 	}
 
 	ngAfterViewInit():void {
 		this.$element = $( this.element.nativeElement );
+	}
+
+	toggleMenuButton():void {
+		this.clickable = ! this.clickable;
 	}
 
 	updateBreadcrumbs( url:string ):void {

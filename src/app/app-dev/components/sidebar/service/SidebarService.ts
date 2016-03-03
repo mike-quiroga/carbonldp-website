@@ -10,6 +10,7 @@ export default class SidebarService {
 
 	addAppEmitter:EventEmitter = new EventEmitter();
 	toggleEmitter:EventEmitter = new EventEmitter();
+	toggleMenuButtonEmitter:EventEmitter = new EventEmitter();
 
 	constructor() {
 
@@ -20,7 +21,6 @@ export default class SidebarService {
 		item.name = name;
 		item.url = url ? url : null;
 		item.icon = icon ? icon : null;
-		//this.addItemEmitter.next( item );
 	}
 
 	addApp( app:App ) {

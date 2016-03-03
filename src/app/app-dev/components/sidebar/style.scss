@@ -6,7 +6,8 @@ sidebar.ui.vertical.menu {
 		}
 	}
 	> div {
-		padding-top: 5px;
+		padding-top: 9px;
+		padding-bottom: 9px;
 	}
 	margin: 0;
 	border-radius: 0;
@@ -15,4 +16,9 @@ sidebar.ui.vertical.menu {
 		min-width: 300px;
 		overflow-x: visible;
 	}
+	> .active.item:last-child {
+		border-radius: 0;
+	}
+	border-top: 1px solid rgba(255, 255, 255, 0.0784314);
+	border-right: 1px solid rgba(255, 255, 255, 0.0784314);
 }
