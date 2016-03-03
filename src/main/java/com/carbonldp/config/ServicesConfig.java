@@ -95,7 +95,7 @@ public class ServicesConfig {
 	public JobService jobService() {return new SesameJobService(); }
 
 	@Bean
-	public ExecutionService triggerService() {return new SesameExecutionService(); }
+	public ExecutionService executionService() {return new SesameExecutionService(); }
 
 	@Bean
 	public BackupService backupService() {return new SesameBackupService(); }

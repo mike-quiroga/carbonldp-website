@@ -138,7 +138,7 @@ public class RepositoriesConfig {
 	}
 
 	@Bean
-	public ExecutionRepository triggerRepository() {
+	public ExecutionRepository executionRepository() {
 		return new SesameExecutionRepository( connectionFactory, resourceRepository(), documentRepository() );
 	}
 
