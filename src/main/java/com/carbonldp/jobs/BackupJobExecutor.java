@@ -40,7 +40,7 @@ public class BackupJobExecutor implements TypedJobExecutor {
 	}
 
 	public void run( Job job ) {
-		transactionWrapper.runWithSystemPermissionsInPlatformContext( () -> jobService.changeJobStatus( job.getURI(), BackupJobDescription.JobStatus.RUNNING ) );
+		transactionWrapper.runWithSystemPermissionsInPlatformContext( () -> jobService.changeJobStatus( job.getURI(), JobDescription.JobStatus.RUNNING ) );
 		URI appURI = job.getAppRelated();
 		App app = appRepository.get( appURI );
 		String appRepositoryID = app.getRepositoryID();

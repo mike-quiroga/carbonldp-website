@@ -1,10 +1,13 @@
 package com.carbonldp.jobs.web;
 
 import com.carbonldp.descriptions.APIPreferences;
+import com.carbonldp.jobs.Job;
 import com.carbonldp.jobs.JobDescription;
+import com.carbonldp.jobs.ManualExecution;
 import com.carbonldp.jobs.TriggerService;
 import com.carbonldp.ldp.containers.AddMembersAction;
 import com.carbonldp.ldp.web.AbstractLDPRequestHandler;
+import com.carbonldp.ldp.web.AbstractRDFPostRequestHandler;
 import com.carbonldp.models.EmptyResponse;
 import com.carbonldp.web.AbstractRequestHandler;
 import com.carbonldp.web.RequestHandler;
@@ -24,7 +27,7 @@ import javax.servlet.http.HttpServletResponse;
  * @since _version_
  */
 @RequestHandler
-public class TriggerPUTHandler extends AbstractLDPRequestHandler {
+public class ManualExecutionPOSTHandler extends AbstractRDFPostRequestHandler<ManualExecution> {
 	TriggerService triggerService;
 
 	public ResponseEntity<Object> handleRequest( HttpServletRequest request, HttpServletResponse response ) {

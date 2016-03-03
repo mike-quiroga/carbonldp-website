@@ -17,17 +17,17 @@ import javax.servlet.http.HttpServletResponse;
  * @since _version_
  */
 @Controller
-@RequestMapping( value = "/platform/apps/*/jobs/*/trigger/" )
-public class TriggerController extends AbstractController {
-	private TriggerPUTHandler putRequestHandler;
+@RequestMapping( value = "/platform/apps/*/jobs/*/manual-executions/" )
+public class ManualExecutionTriggerController extends AbstractController {
+	private ManualExecutionPOSTHandler postRequestHandler;
 
 	@InteractionModel( value = {APIPreferences.InteractionModel.TRIGGER}, handlesDefault = true )
-	@RequestMapping( method = RequestMethod.PUT )
-	public ResponseEntity<Object> createJob( HttpServletRequest request, HttpServletResponse response ) {
-		return putRequestHandler.handleRequest( request, response );
+	@RequestMapping( method = RequestMethod.POST )
+	public ResponseEntity<Object> execute( HttpServletRequest request, HttpServletResponse response ) {
+		return postRequestHandler.handleRequest( request, response );
 	}
 
 	@Autowired
-	public void setPutRequestHandler( TriggerPUTHandler putRequestHandler ) {this.putRequestHandler = putRequestHandler;}
+	public void setPutRequestHandler( ManualExecutionPOSTHandler postRequestHandler ) {this.postRequestHandler = postRequestHandler;}
 
 }
