@@ -1,15 +1,11 @@
-<div class="ui main container">
-
-	<h1>My Apps</h1>
-	<div class="ui four stackable cards">
-		<div class="card">
-			<div class="content">
-				<a class="header">
-					Create new App
-				</a>
-			</div>
+<h1>My Apps</h1>
+<div class="ui stackable cards">
+	<div class="card">
+		<div class="content">
+			<a class="header">
+				Create new App
+			</a>
 		</div>
-		<app-tile class="card" *ngFor="#app of apps; #i=index;" [app]="app"></app-tile>
 	</div>
+	<app-tile class="card" *ngFor="#app of apps; #i=index;" [app]="app"></app-tile>
 </div>
-
