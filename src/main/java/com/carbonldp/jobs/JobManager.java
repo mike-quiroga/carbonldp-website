@@ -41,7 +41,6 @@ public class JobManager {
 				App app = appRepository.get( appURI );
 				apps.add( app );
 			}
-
 			return apps;
 		} );
 	}
