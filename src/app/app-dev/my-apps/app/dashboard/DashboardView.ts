@@ -10,7 +10,6 @@ import MyAppsService from "./../../service/MyAppsService";
 import App from "./../App";
 
 import template from './template.html!';
-import './style.css!';
 
 @Component( {
 	selector: 'dashboard',

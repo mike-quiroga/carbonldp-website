@@ -42,6 +42,9 @@ export default class SidebarComponent {
 				this.toggle();
 			}
 		);
+		//let totalWidth:number = $( document ).width();
+		//let container:JQuery = $( "app-dev > .page-content" );
+		//container.css( 'width', totalWidth );
 	}
 
 	ngAfterViewInit():void {

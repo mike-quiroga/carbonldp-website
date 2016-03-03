@@ -6,10 +6,12 @@
 	<div class="dashboard-content">
 		<menu-bar></menu-bar>
 		<div class="scrollable-content">
-			<router-outlet></router-outlet>
+			<div class="rendered-content">
+				<router-outlet></router-outlet>
+			</div>
+			<footer>
+				<h1>Footer</h1>
+			</footer>
 		</div>
-		<footer>
-			<h1>Footer</h1>
-		</footer>
 	</div>
 </div>

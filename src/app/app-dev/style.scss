@@ -13,6 +13,7 @@ app-dev {
 
 		display: flex;
 		flex-direction: row;
+		width: 100%;
 
 		> sidebar {
 			flex: 0 0 auto;
@@ -22,6 +23,8 @@ app-dev {
 		> .dashboard-content {
 			flex: 1;
 			max-height: 100%;
+			width: 62%;
+			min-width: 400px;
 
 			display: flex;
 			flex-direction: column;
@@ -37,18 +40,16 @@ app-dev {
 				display: flex;
 				flex-direction: column;
 
-				overflow-y: scroll;
+				//overflow-y: scroll;
 				overflow-x: hidden;
-
-				padding: 5%;
 
 				> * {
 					flex: 1;
 				}
 
-				> router-outlet {
-					flex: 0;
-					display: none;
+				> .rendered-content {
+					flex: 1;
+					padding: 5%;
 				}
 
 				> footer {
