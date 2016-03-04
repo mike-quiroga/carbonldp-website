@@ -1,18 +1,19 @@
-import { Component, ElementRef } from 'angular2/core';
-import { CORE_DIRECTIVES } from 'angular2/common';
-import { ROUTER_DIRECTIVES, Router, RouteParams } from 'angular2/router';
+/// <reference path="./../../../../../../typings/typings.d.ts" />
+import { Component, ElementRef } from "angular2/core";
+import { CORE_DIRECTIVES } from "angular2/common";
+import { ROUTER_DIRECTIVES, Router, RouteParams } from "angular2/router";
 
-import $ from 'jquery';
-import 'semantic-ui/semantic';
+import $ from "jquery";
+import "semantic-ui/semantic";
 
 import SidebarService from "./../../../components/sidebar/service/SidebarService";
 import MyAppsService from "./../../service/MyAppsService";
 import App from "./../App";
 
-import template from './template.html!';
+import template from "./template.html!";
 
 @Component( {
-	selector: 'dashboard',
+	selector: "dashboard",
 	template: template,
 	directives: [ CORE_DIRECTIVES, ROUTER_DIRECTIVES ],
 	providers: [ MyAppsService ]

@@ -1,16 +1,17 @@
-import { Component, ElementRef, Injectable, Input } from 'angular2/core';
-import { ROUTER_DIRECTIVES, ROUTER_PROVIDERS, Router } from 'angular2/router';
+/// <reference path="./../../../../typings/typings.d.ts" />
+import { Component, ElementRef, Injectable, Input } from "angular2/core";
+import { ROUTER_DIRECTIVES, ROUTER_PROVIDERS, Router } from "angular2/router";
 import { CORE_DIRECTIVES, FORM_DIRECTIVES, FormBuilder, ControlGroup, AbstractControl, Validators } from "angular2/common";
 
 import { ValidationService } from "app/components/validation-service/ValidationService";
 
-import $ from 'jquery';
-import 'semantic-ui/semantic';
+import $ from "jquery";
+import "semantic-ui/semantic";
 
-import template from './template.html!';
+import template from "./template.html!";
 
 @Component( {
-	selector: 'login',
+	selector: "login",
 	template: template,
 	directives: [ CORE_DIRECTIVES, ROUTER_DIRECTIVES, FORM_DIRECTIVES ]
 } )
@@ -39,7 +40,7 @@ export default class LoginComponent {
 
 	ngOnInit():void {
 		this.$element = $( this.element.nativeElement );
-		this.$loginForm = this.$element.find( 'form.loginForm' );
+		this.$loginForm = this.$element.find( "form.loginForm" );
 		this.loginForm = this.formBuilder.group( {
 			email: [ "", Validators.compose( [ Validators.required, ValidationService.emailValidator ] ) ],
 			password: [ "", Validators.compose( [ Validators.required, ValidationService.passwordValidator ] ) ]
@@ -56,7 +57,7 @@ export default class LoginComponent {
 		if ( this.loginForm.valid ) {
 			this.shakeForm();
 			this.errorMessage = "Service temporary unavailable.";
-			//this.router.navigate( [ '/AppDev/Home' ] );
+			//this.router.navigate( [ "/AppDev/Home" ] );
 		} else {
 			this.shakeForm();
 		}

@@ -1,16 +1,17 @@
-import { Component, Input, ElementRef } from 'angular2/core';
-import { CORE_DIRECTIVES } from 'angular2/common';
-import { Router, ROUTER_DIRECTIVES } from 'angular2/router';
+/// <reference path="./../../../../../typings/typings.d.ts" />
+import { Component, Input, ElementRef } from "angular2/core";
+import { CORE_DIRECTIVES } from "angular2/common";
+import { Router, ROUTER_DIRECTIVES } from "angular2/router";
 
-import $ from 'jquery';
-import 'semantic-ui/semantic';
+import $ from "jquery";
+import "semantic-ui/semantic";
 
 import App from "../app/App";
-import template from './template.html!';
-import './style.css!';
+import template from "./template.html!";
+import "./style.css!";
 
 @Component( {
-	selector: 'app-tile',
+	selector: "app-tile",
 	template: template,
 	directives: [ CORE_DIRECTIVES, ROUTER_DIRECTIVES ]
 } )

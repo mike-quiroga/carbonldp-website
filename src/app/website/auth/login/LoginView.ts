@@ -1,14 +1,15 @@
-import { Component, ElementRef } from 'angular2/core';
+/// <reference path="./../../../../../typings/typings.d.ts" />
+import { Component, ElementRef } from "angular2/core";
 
 import LoginComponent from "app/components/login/LoginComponent";
 
-import $ from 'jquery';
-import 'semantic-ui/semantic';
+import $ from "jquery";
+import "semantic-ui/semantic";
 
-import template from './template.html!';
+import template from "./template.html!";
 
 @Component( {
-	selector: 'login-page',
+	selector: "login-page",
 	template: template,
 	directives: [ LoginComponent ]
 } )
