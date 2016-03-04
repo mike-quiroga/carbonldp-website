@@ -124,6 +124,7 @@ public class SesameAppRepository extends AbstractSesameRepository implements App
 		Resource nextSubject = getNextElementInQueue( app, subject );
 		try {
 			connectionFactory.getConnection().remove( subject, null, null, appURI );
+			connectionFactory.getConnection().remove( appJobsExecutionQueue, RDF.REST, null, appURI );
 			connectionFactory.getConnection().add( appJobsExecutionQueue, RDF.REST, nextSubject, appURI );
 		} catch ( RepositoryException e ) {
 			throw new RuntimeException( e );

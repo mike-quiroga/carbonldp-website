@@ -30,7 +30,6 @@ import java.util.zip.ZipOutputStream;
 public class BackupJobExecutor implements TypedJobExecutor {
 	protected final Logger LOG = LoggerFactory.getLogger( this.getClass() );
 	private AppRepository appRepository;
-	private JobService jobService;
 	private SesameConnectionFactory connectionFactory;
 	private BackupService backupService;
 	private TransactionWrapper transactionWrapper;
@@ -135,7 +134,7 @@ public class BackupJobExecutor implements TypedJobExecutor {
 		FileOutputStream outputStream;
 		final RDFWriter trigWriter;
 		try {
-			temporaryFile = File.createTempFile( createRandomSlug(), null );
+			temporaryFile = File.createTempFile( createRandomSlug(), RDFFormat.TRIG.getDefaultFileExtension() );
 			temporaryFile.deleteOnExit();
 
 			outputStream = new FileOutputStream( temporaryFile );
@@ -176,11 +175,6 @@ public class BackupJobExecutor implements TypedJobExecutor {
 
 	@Autowired
 	public void setAppRepository( AppRepository appRepository ) {this.appRepository = appRepository; }
-
-	@Autowired
-	public void setJobService( JobService jobService ) {
-		this.jobService = jobService;
-	}
 
 	@Autowired
 	public void setConnectionFactory( SesameConnectionFactory connectionFactory ) {
