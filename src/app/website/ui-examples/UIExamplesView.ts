@@ -12,7 +12,7 @@ import "./style.css!";
 
 
 @Component( {
-	selector: 'carbon-ui',
+	selector: "carbon-ui",
 	template: template,
 	directives: [ CORE_DIRECTIVES, CodeMirrorComponent.Class, FORM_DIRECTIVES ]
 } )
@@ -86,23 +86,23 @@ export default class UIExamplesView {
 		// Dimmer
 		demo = this.modulesTabContent.find( ".dimmer.demo" );
 		demo.find( ".show.button" ).on( "click", function () {
-			$( this ).closest( '.demo' ).find( '.segment' ).dimmer( 'show' );
+			$( this ).closest( ".demo" ).find( ".segment" ).dimmer( "show" );
 		} );
 		demo.find( ".hide.button" ).on( "click", function () {
-			$( this ).closest( '.demo' ).find( '.segment' ).dimmer( 'hide' );
+			$( this ).closest( ".demo" ).find( ".segment" ).dimmer( "hide" );
 		} );
 
 
 		// Dropdown
 		demo = this.modulesTabContent.find( ".dropdown.demos" );
 		demo.find( ".ui.dropdown" ).dropdown();
-		demo.find( ".ui.menu .dropdown" ).dropdown( {on: 'hover'} );
+		demo.find( ".ui.menu .dropdown" ).dropdown( {on: "hover"} );
 
 
 		// Modal
-		this.modulesTabContent.find( ".ui.fullscreen.demo.modal" ).modal( 'attach events', '.ui.fullscreen.demo.button' )
-		this.modulesTabContent.find( ".ui.standard.demo.modal" ).modal( 'attach events', '.ui.standard.demo.button' );
-		this.modulesTabContent.find( ".ui.basic.demo.modal" ).modal( 'attach events', '.ui.minimal.demo.button' );
+		this.modulesTabContent.find( ".ui.fullscreen.demo.modal" ).modal( "attach events", ".ui.fullscreen.demo.button" )
+		this.modulesTabContent.find( ".ui.standard.demo.modal" ).modal( "attach events", ".ui.standard.demo.button" );
+		this.modulesTabContent.find( ".ui.basic.demo.modal" ).modal( "attach events", ".ui.minimal.demo.button" );
 
 
 		// Popup

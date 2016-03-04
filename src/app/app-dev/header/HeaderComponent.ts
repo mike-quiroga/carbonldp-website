@@ -1,16 +1,16 @@
 /// <reference path="./../../../../typings/typings.d.ts" />
-import { Component, ElementRef } from 'angular2/core';
-import { CORE_DIRECTIVES } from 'angular2/common';
-import { ROUTER_DIRECTIVES, ROUTER_PROVIDERS, Router, Instruction } from 'angular2/router';
+import { Component, ElementRef } from "angular2/core";
+import { CORE_DIRECTIVES } from "angular2/common";
+import { ROUTER_DIRECTIVES, ROUTER_PROVIDERS, Router, Instruction } from "angular2/router";
 
-import $ from 'jquery';
-import 'semantic-ui/semantic';
+import $ from "jquery";
+import "semantic-ui/semantic";
 
 
-import template from './template.html!';
+import template from "./template.html!";
 import "./style.css!";
 @Component( {
-	selector: 'header',
+	selector: "header",
 	template: template,
 	directives: [ CORE_DIRECTIVES, ROUTER_DIRECTIVES ]
 } )
@@ -36,8 +36,8 @@ export default class HeaderComponent {
 	}
 
 	createDropdownMenus():void {
-		this.$element.find( '.ui.dropdown' ).dropdown( {
-			on: 'hover'
+		this.$element.find( ".ui.dropdown" ).dropdown( {
+			on: "hover"
 		} );
 	}
 

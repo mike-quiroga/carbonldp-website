@@ -58,12 +58,12 @@ export default class SidebarComponent {
 	toggle():void {
 		this.sidebarService.toggleMenuButtonEmitter.emit( null );
 		if ( this.$element.is( ":visible" ) ) {
-			this.$element.animate( {'width': '0'}, 400, () => {
+			this.$element.animate( {"width": "0"}, 400, () => {
 				this.$element.hide();
 			} );
 		} else {
 			this.$element.show();
-			this.$element.animate( {'width': '300px'}, 400 );
+			this.$element.animate( {"width": "300px"}, 400 );
 		}
 	}
 

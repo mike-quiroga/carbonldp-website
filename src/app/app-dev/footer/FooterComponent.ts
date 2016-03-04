@@ -1,15 +1,15 @@
 /// <reference path="./../../../../typings/typings.d.ts" />
-import { Component, ElementRef } from 'angular2/core';
-import { CORE_DIRECTIVES } from 'angular2/common';
+import { Component, ElementRef } from "angular2/core";
+import { CORE_DIRECTIVES } from "angular2/common";
 
-import $ from 'jquery';
-import 'semantic-ui/semantic';
+import $ from "jquery";
+import "semantic-ui/semantic";
 
-import template from './template.html!';
-import './style.css!';
+import template from "./template.html!";
+import "./style.css!";
 
 @Component( {
-	selector: 'footer',
+	selector: "footer",
 	template: template,
 	directives: []
 } )
@@ -28,15 +28,15 @@ export default class FooterComponent {
 	}
 
 	ngOnDestroy():void {
-		this.$element.find( '.social-icons .icon' ).unbind( 'mouseenter', triggerPulseTransition );
+		this.$element.find( ".social-icons .icon" ).unbind( "mouseenter", triggerPulseTransition );
 	}
 
 	addSocialButtonsAnimations():void {
-		this.$element.find( '.social-icons .icon' ).mouseenter( triggerPulseTransition );
+		this.$element.find( ".social-icons .icon" ).mouseenter( triggerPulseTransition );
 	}
 }
 
 function triggerPulseTransition():void {
 	var $element = $( this );
-	$element.transition( 'pulse' );
+	$element.transition( "pulse" );
 }
