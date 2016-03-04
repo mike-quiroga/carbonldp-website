@@ -4,7 +4,6 @@ import com.carbonldp.Consts;
 import com.carbonldp.Vars;
 import com.carbonldp.apps.App;
 import com.carbonldp.apps.AppRepository;
-import com.carbonldp.ldp.nonrdf.backup.BackupRepository;
 import com.carbonldp.ldp.nonrdf.backup.BackupService;
 import com.carbonldp.ldp.sources.RDFSourceRepository;
 import com.carbonldp.spring.TransactionWrapper;
@@ -155,12 +154,13 @@ public class BackupJobExecutor implements TypedJobExecutor {
 		FileOutputStream outputStream;
 		final RDFWriter trigWriter;
 		try {
-			temporaryFile = File.createTempFile( createRandomSlug(), RDFFormat.TRIG.getDefaultFileExtension() );
+			temporaryFile = File.createTempFile( createRandomSlug(), Consts.PERIOD.concat( RDFFormat.TRIG.getDefaultFileExtension() ) );
 			temporaryFile.deleteOnExit();
 
 			outputStream = new FileOutputStream( temporaryFile );
 			trigWriter = new TriGWriter( outputStream );
 			try {
+				trigWriter.handleNamespace( "baseNS", "https://local.carbonldp.com/apps/test-blog/" );
 				connectionFactory.getConnection().export( trigWriter );
 			} catch ( RepositoryException e ) {
 				throw new RuntimeException( e );
