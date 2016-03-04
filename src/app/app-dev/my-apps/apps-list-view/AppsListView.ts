@@ -30,12 +30,12 @@ export default class AppsListView {
 		this.router = router;
 	}
 
-	routerOnActivate():void {
-		return new Promise((resolve) => {
+	routerOnActivate():Promise<boolean> {
+		return new Promise( ( resolve ) => {
 			this.myAppsService.getApps().then(
 				( apps )=> {
-					apps.forEach( app=> {
-						app.data = {
+					apps.forEach( app => {
+						let data:{alias:string, displayName:string} = {
 							alias: app.name.replace( new RegExp( " ", "g" ), "" ),
 							displayName: app.name
 						};
@@ -43,16 +43,18 @@ export default class AppsListView {
 							path: "/" + app.slug,
 							component: App,
 							as: app.name.replace( new RegExp( " ", "g" ), "" ),
-							data: app.data
+							data: data
 						} );
+						app[ "data" ] = data;
 						this.apps.push( app );
 					} );
-					resolve(true);
+					resolve( true );
 				},
 				( error )=> {
 					console.error( error );
+					resolve( false );
 				}
 			);
-		});
+		} );
 	}
 }

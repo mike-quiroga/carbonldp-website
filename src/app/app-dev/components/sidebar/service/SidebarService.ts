@@ -9,13 +9,11 @@ export default class SidebarService {
 	data:string;
 	$element:JQuery;
 
-	addAppEmitter:EventEmitter = new EventEmitter();
-	toggleEmitter:EventEmitter = new EventEmitter();
-	toggleMenuButtonEmitter:EventEmitter = new EventEmitter();
+	addAppEmitter:EventEmitter<any> = new EventEmitter();
+	toggleEmitter:EventEmitter<any> = new EventEmitter();
+	toggleMenuButtonEmitter:EventEmitter<any> = new EventEmitter();
 
-	constructor() {
-
-	}
+	constructor() { }
 
 	addItem( name:string, url?:string, icon?:string ):void {
 		let item = new SidebarItem();
@@ -25,15 +23,11 @@ export default class SidebarService {
 	}
 
 	addApp( app:App ) {
-		this.addAppEmitter.next( app );
-	}
-
-	remove():void {
-
+		this.addAppEmitter.emit( app );
 	}
 
 	toggle():void {
-		this.toggleEmitter.next( null );
+		this.toggleEmitter.emit( null );
 	}
 
 }

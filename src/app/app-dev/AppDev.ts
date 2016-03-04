@@ -5,8 +5,7 @@ import { SIDEBAR_PROVIDERS } from "app/app-dev/components/sidebar/Sidebar";
 
 export const APP_DEV_PROVIDERS = [
 	new Provider( AppDevComponent, {
-		useClass: AppDevComponent,
-		dependencies: AppDevComponent.dependencies
+		useClass: AppDevComponent
 	} ),
 	SIDEBAR_PROVIDERS
 ];

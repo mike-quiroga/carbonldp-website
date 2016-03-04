@@ -21,7 +21,6 @@ export default class MyAppsService {
 	getApps():Promise<App[]> {
 		return new Promise<App[]>( ( resolve, reject ) => {
 			this.http.get( "assets/CarbonApps.json" )
-				//.map( res => res.json() )
 				.subscribe(
 					( res ) => {
 						this.postsList = res.json();
@@ -35,7 +34,7 @@ export default class MyAppsService {
 	}
 
 	getapp( slug:string ):Promise<App> {
-		return new Promise<App[]>( ( resolve, reject ) => {
+		return new Promise<App>( ( resolve, reject ) => {
 			this.getApps().then(
 				( apps )=> {
 					let app:App = <App>apps.find( app => app.slug == slug );

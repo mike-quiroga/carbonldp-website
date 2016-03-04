@@ -7,4 +7,5 @@ interface JQuery {
 	dropdown:( arguments:any ) => JQuery;
 	transition:( arguments:any ) => JQuery;
 	form:( arguments:any ) => JQuery;
+	accordion:( arguments:any ) => JQuery;
 }

@@ -6,7 +6,6 @@ export const SIDEBAR_PROVIDERS = [
 	new Provider( SidebarService, {
 		useFactory: () => {
 			return new SidebarService();
-		},
-		dependencies: SidebarService.dependencies
+		}
 	} )
 ];

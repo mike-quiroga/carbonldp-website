@@ -7,8 +7,8 @@ import "semantic-ui/semantic";
 import SidebarService from "./components/sidebar/service/SidebarService"
 
 import SidebarComponent from "./components/sidebar/SidebarComponent";
-import HeaderComponent from "./header/HeaderComponent ";
-import FooterComponent from "./footer/FooterComponent ";
+import HeaderComponent from "./header/HeaderComponent";
+import FooterComponent from "./footer/FooterComponent";
 import MenuBarComponent from "./components/menubar/MenuBarComponent";
 import SPARQLClientComponent from "app/components/sparql-client/SPARQLClientComponent";
 

@@ -10,7 +10,7 @@ import SidebarService from "./../sidebar/service/SidebarService";
 
 import template from "./template.html!";
 import "./style.css!";
-import resolve = Promise.resolve;
+
 @Component( {
 	selector: "menu-bar",
 	template: template,
@@ -70,7 +70,7 @@ export default class MenuBarComponentComponent {
 	}
 
 	getRouteAlias():any {
-		let alias:any[] = [], params:string = "";
+		let alias:any[] = [], params:{name:string} = {name: ""};
 		this.instructions.forEach(
 			( instruction )=> {
 				if ( instruction ) {
@@ -110,8 +110,9 @@ export default class MenuBarComponentComponent {
 
 	isActive( route:any ):boolean {
 		let instruction = this.router.generate( route );
-		let router = this.router;
+		let router:Router = this.router;
 		while ( instruction.child ) {
+			// TODO: Change this to use a non private variables implementation.
 			instruction = instruction.child;
 			if ( typeof router._childRouter === "undefined" || router._childRouter === null ) continue;
 			if ( typeof router._childRouter._currentInstruction === "undefined" || router._childRouter._currentInstruction === null ) continue;

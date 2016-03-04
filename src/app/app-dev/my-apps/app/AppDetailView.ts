@@ -67,8 +67,8 @@ export default class AppDetailView {
 		this.$element = $( this.element.nativeElement );
 	}
 
-	routerOnActivate():void {
-		return new Promise((resolve) => {
+	routerOnActivate():Promise<boolean> {
+		return new Promise<boolean>( ( resolve ) => {
 			let slug:string = this.routeParams.get( "slug" );
 			this.myAppsService.getapp( slug ).then(
 				( app ) => {
@@ -86,13 +86,13 @@ export default class AppDetailView {
 						this.app = app;
 						this.sidebarService.addApp( this.app );
 					}
-					resolve(true);
+					resolve( true );
 
 				},
 				( error )=> {
 					console.log( error );
 				}
 			);
-		});
+		} );
 	}
 }

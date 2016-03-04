@@ -81,7 +81,7 @@ export default class SidebarComponent {
 		this.apps.splice( id, 1 );
 	}
 
-	isActive( slug:any, fullRoute?:boolean = false ):boolean {
+	isActive( slug:any, fullRoute?:boolean ):boolean {
 		switch ( typeof slug ) {
 			case "string":
 				let url:string[] = this.location.path().split( "/" );
@@ -90,8 +90,8 @@ export default class SidebarComponent {
 				} else {
 					return url[ url.length - 1 ].indexOf( slug ) > - 1;
 				}
-				break;
 			case "object":
+				// TODO: Change this to use a non private variables implementation.
 				let instruction = this.router.generate( slug );
 				let router = this.router;
 				if ( ! fullRoute ) {

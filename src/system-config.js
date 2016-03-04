@@ -40,6 +40,7 @@ System.config({
     "codemirror": "npm:codemirror@5.8.0",
     "core-js": "npm:core-js@1.2.3",
     "crypto": "npm:crypto-js@3.1.6",
+    "crypto-js": "npm:crypto-js@3.1.6",
     "css": "github:systemjs/plugin-css@0.1.19",
     "html": "github:systemjs/plugin-text@0.0.3",
     "jquery": "github:components/jquery@2.1.4",
