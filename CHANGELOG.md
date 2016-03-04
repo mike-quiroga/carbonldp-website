@@ -1,3 +1,7 @@
+# 0.4.0 (March 3, 2016)
+* Switched tsd to typings
+* Added angular2 and carbon definition files (they provide jspm import support while we wait for WEB-18904)
+
 # 0.3.2 (February 29, 2016)
 * Fixed DI. static private parameters property shouldn't be needed anymore.
 

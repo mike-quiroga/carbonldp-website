@@ -1,3 +1,4 @@
+/// <reference path="./../../../../typings/typings.d.ts" />
 export class BlogPost {
 	id:number;
 	title:string;

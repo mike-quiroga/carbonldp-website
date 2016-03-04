@@ -1,3 +1,4 @@
+/// <reference path="./../../../typings/typings.d.ts" />
 import { Component, View, ElementRef } from 'angular2/core';
 import { ROUTER_DIRECTIVES, ROUTER_PROVIDERS, Router, Instruction, RouterLink } from 'angular2/router';
 import { CORE_DIRECTIVES, FORM_DIRECTIVES, FormBuilder, ControlGroup, AbstractControl, Control, NgIf, Validators, AbstractControl } from "angular2/common";
