@@ -1,11 +1,13 @@
-import { Component, Input, ElementRef } from 'angular2/core';
+import { Component, Input, ElementRef, OnChanges, SimpleChange } from "angular2/core";
 import {CORE_DIRECTIVES} from "angular2/common"
-import { ROUTER_DIRECTIVES, ROUTER_PROVIDERS, Router, Instruction, RouteParams } from 'angular2/router';
+import { ROUTER_DIRECTIVES, ROUTER_PROVIDERS, Router, Instruction, RouteParams } from "angular2/router";
+import SidebarService from "./service/SidebarService";
 
-import $ from 'jquery';
-import 'semantic-ui/semantic';
-import './style.css!';
-import template from './template.html!';
+
+import $ from "jquery";
+import "semantic-ui/semantic";
+import "./style.css!";
+import template from "./template.html!";
 
 @Component( {
 	selector: 'sidebar-component',
@@ -15,7 +17,7 @@ import template from './template.html!';
 
 export default class SideBarComponent {
 
-	static parameters = [ [ ElementRef ] ];
+	static parameters = [ [ ElementRef ], [ SidebarService ] ];
 
 	elementRef:ElementRef;
 	$element;
@@ -24,26 +26,32 @@ export default class SideBarComponent {
 	sidebar:any;
 	sections:any;
 	subSections:any;
+	sidebarService:SidebarService;
 
 	@Input() parentelement;
 	@Input() mobile;
 
 	host:string = "dev.carbonldp.com";
 
-	constructor( element:ElementRef  ) {
+	constructor( element:ElementRef, sidebarService:SidebarService ) {
 		this.elementRef = element;
 		this.$element = $( element.nativeElement );
+		this.sidebarService = sidebarService;
+		//console.log("HTML constructor sidebar: "+$( this.parentelement.nativeElement )[0]);
+		this.sidebarService.buildEmitter.subscribe( () => {
+			console.log( "The parent has finished its after view init..." );
+			this.buildSideBar();
+		} );
 	}
+
 
 	ngAfterViewInit():void {
-		this.$container = $(this.parentelement.nativeElement).find( "article" );
-		this.sections = this.$container.children( "section" );
-		this.subSections = this.sections.children( "section" );
-		this.$followMenu = this.$element.find( ".following.menu" );
-		this.sidebar = this.$element.find( "nav" );
-		this.buildSideBar();
+		this.$container = $( this.parentelement.nativeElement ).find( 'article' );
+		this.sections = this.$container.children( 'section' );
+		this.subSections = this.sections.children( 'section' );
+		this.$followMenu = this.$element.find( '.following.menu' );
+		this.sidebar = this.$element.find( 'nav' );
 	}
-
 
 	buildSideBar():void {
 		if ( this.sidebar ) {
@@ -75,7 +83,7 @@ export default class SideBarComponent {
 				if ( subSections.size() > 0 ) {
 					html += '<div class="' + activeClass + 'content menu">';
 
-					$.each( subSections, function ( index2:number, subSection:HTMLElement ){
+					$.each( subSections, function ( index2:number, subSection:HTMLElement ) {
 						let
 							$subSection:JQuery = $( subSection ),
 							text:string = _self.getText( $subSection ),
@@ -85,14 +93,14 @@ export default class SideBarComponent {
 
 						_self.setId( $subSection );
 						html += '<a class="item" href="#' + id + '">' + text + '</a>';
-					});
+					} );
 					html += '</div>';
 				}
 				html += '</div>';
-			});
+			} );
 
 			//Sidebar for computer and tablets
-			if(!this.mobile){
+			if ( ! this.mobile ) {
 				this.$followMenu = $( '<div />' ).addClass( 'ui vertical following fluid accordion text menu' ).html( html );
 				$sticky = $( '<div />' ).addClass( 'ui sticky segment' ).html( this.$followMenu ).prepend( '<p class="ui header">Content</p>' );
 				this.sidebar.html( $sticky );
@@ -106,7 +114,7 @@ export default class SideBarComponent {
 					onTopPassedReverse: function () {
 						_self.activatePrevious();
 					}
-				});
+				} );
 				this.subSections.visibility( {
 					observeChanges: true,
 					once: false,
@@ -117,30 +125,34 @@ export default class SideBarComponent {
 					onTopPassedReverse: function () {
 						_self.activatePreviousSubSection( this );
 					}
-				});
+				} );
+
+				this.sidebar.find( ".ui.sticky" ).sticky( {
+					observeChanges: true,
+					context: '#article',
+					offset: 150
+				} );
+
+				this.sidebar.find( ".ui.sticky" ).visibility( {
+					observeChanges: true
+				} );
 			}//menu for mobile
-			else{
+			else {
 				this.$followMenu = $( '<div />' ).addClass( 'ui fluid vertical following accordion menu mobile' ).html( html );
 				$sticky = $( '<div />' ).addClass( 'ui segment' ).html( this.$followMenu ).prepend( '<p class="ui header">Content</p>' );
 				this.sidebar.html( $sticky );
 			}
 
 
-			this.sidebar.find( ".ui.sticky" ).sticky( {
-				observeChanges: true,
-				context: "#article",
-				offset: 100
-			});
-
-			this.$followMenu.accordion({
+			this.$followMenu.accordion( {
 				exclusive: false,
 				animateChildren: false,
-			}).find( '.menu a[href], .title[href]' )
+			} ).find( '.menu a[href], .title[href]' )
 				.on( 'click', this.scrollTo );
 		}
 	}
 
-	activateSection( elm:any):void{
+	activateSection( elm:any ):void {
 		var
 			$section = $( elm ),
 			index = this.sections.index( $section ),
@@ -149,7 +161,7 @@ export default class SideBarComponent {
 			isActive = $activeSection.hasClass( 'active' )
 			;
 
-		if ( ! isActive ){
+		if ( ! isActive ) {
 			$followSection.filter( '.active' ).removeClass( 'active' );
 			$activeSection.addClass( 'active' );
 			this.$followMenu.accordion( 'open', index );
@@ -170,6 +182,7 @@ export default class SideBarComponent {
 			this.$followMenu.accordion( 'open', index - 1 );
 		}
 	}
+
 	// Expands accordion sections as you scroll through the sections elements
 	// inside a section of the page.
 	activateSubSection( elm:any ):void {
@@ -181,8 +194,8 @@ export default class SideBarComponent {
 			isActive = $activeSection.hasClass( 'active' )
 			;
 
-		if ( index !== - 1 && ! isActive ) {
-			$followSection.removeClass( 'active' );
+		if ( index !== - 1 && /*! inClosedTab && ! anotherSection && */ ! isActive ) {
+			$followSection.filter( '.active' ).removeClass( 'active' );
 			$activeSection.addClass( 'active' );
 		}
 	}
@@ -206,11 +219,11 @@ export default class SideBarComponent {
 		let
 			id:string = $( event.currentTarget ).attr( 'href' ).replace( '#', '' ),
 			$element:JQuery = $( '#' + id ),
-			position:number = $element.offset().top - 100
-			;
+			position:number = $element.offset().top - 100;
+		;
 
 		$element.addClass( 'active' );
-		$( 'html, body' ).animate({
+		$( 'html, body' ).animate( {
 			scrollTop: position
 		}, 500 );
 		location.hash = '#' + id;
@@ -233,7 +246,7 @@ export default class SideBarComponent {
 
 	// Sets the id to the section using the name of the first children header of the section
 	setId( $section:JQuery ):void {
-		if ( $section.children( ":header" ).eq( 0 ).text() ){
+		if ( $section.children( ":header" ).eq( 0 ).text() ) {
 			let text = this.getText( $section ),
 				safeName = this.getSafeText( text ),
 				id = window.escape( safeName )

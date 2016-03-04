@@ -1,18 +1,18 @@
-import { Component, ElementRef } from 'angular2/core';
+import { Component, ElementRef } from "angular2/core";
 import { CORE_DIRECTIVES } from "angular2/common";
-import { ROUTER_DIRECTIVES, ROUTER_PROVIDERS, Router, Instruction } from 'angular2/router';
+import { ROUTER_DIRECTIVES, ROUTER_PROVIDERS, Router, Instruction } from "angular2/router";
 
-import $ from 'jquery';
-import 'semantic-ui/semantic';
+import $ from "jquery";
+import "semantic-ui/semantic";
 import * as CodeMirrorComponent from "app/components/code-mirror/CodeMirrorComponent";
 
-import CarbonLogoComponent from 'app/components/logo/CarbonLogoComponent';
+import CarbonLogoComponent from "app/components/logo/CarbonLogoComponent";
 
-import template from './template.html!';
-import './style.css!';
+import template from "./template.html!";
+import "./style.css!";
 
 @Component( {
-	selector: 'home',
+	selector: "home",
 	template: template,
 	directives: [ CORE_DIRECTIVES, ROUTER_DIRECTIVES, CarbonLogoComponent, CodeMirrorComponent.Class ]
 } )
@@ -32,9 +32,9 @@ export default class HomeView {
 
 	ngAfterViewInit():void {
 		this.$element = $( this.element.nativeElement );
-		this.$mainMenu = $( 'header > .menu' );
-		//this.$carbonLogo = this.$element.find( 'carbon-logo' );
-		this.$carbonLogo = this.$element.find( 'img.carbon-logo' );
+		this.$mainMenu = $( "header > .menu" );
+		//this.$carbonLogo = this.$element.find( "carbon-logo" );
+		this.$carbonLogo = this.$element.find( "img.carbon-logo" );
 
 		this.hideMainMenu();
 		this.createDropdownMenus();
@@ -52,22 +52,22 @@ export default class HomeView {
 	}
 
 	showMainMenu():void {
-		if ( this.$mainMenu.is( ':visible' ) ) return;
+		if ( this.$mainMenu.is( ":visible" ) ) return;
 		this.toggleMainMenu();
 	}
 
 	hideMainMenu():void {
-		if ( ! this.$mainMenu.is( ':visible' ) ) return;
+		if ( ! this.$mainMenu.is( ":visible" ) ) return;
 		this.toggleMainMenu();
 	}
 
 	toggleMainMenu():void {
-		this.$mainMenu.transition( 'fade down' );
+		this.$mainMenu.transition( "fade down" );
 	}
 
 	createDropdownMenus():void {
-		this.$element.find( '.ui.dropdown' ).dropdown( {
-			on: 'hover'
+		this.$element.find( ".ui.dropdown" ).dropdown( {
+			on: "hover"
 		} );
 	}
 
@@ -85,20 +85,20 @@ export default class HomeView {
 	}
 
 	removeMenuVisibilityHandlers():void {
-		this.$carbonLogo.visibility( 'destroy' );
+		this.$carbonLogo.visibility( "destroy" );
 	}
 
 	scrollTo( event:any):boolean {
 		let
-			id:string = $( event.srcElement).attr( 'href' ).replace( '#', '' ),
-			$element:JQuery = $( '#' + id ),
+			id:string = $( event.srcElement).attr( "href" ).replace( "#", "" ),
+			$element:JQuery = $( "#" + id ),
 			position:number = $element.offset().top - 80
 			;
-		$element.addClass( 'active' );
-		$( 'html, body' ).animate( {
+		$element.addClass( "active" );
+		$( "html, body" ).animate( {
 			scrollTop: position
 		}, 500 );
-		location.hash = '#' + id;
+		location.hash = "#" + id;
 		event.stopImmediatePropagation();
 		event.preventDefault();
 		return false;

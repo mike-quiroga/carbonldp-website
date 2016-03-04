@@ -1,16 +1,16 @@
-import {Component, ElementRef } from 'angular2/core';
-import { CORE_DIRECTIVES } from 'angular2/common';
-import { Title } from 'angular2/platform/browser';
+import {Component, ElementRef } from "angular2/core";
+import { CORE_DIRECTIVES } from "angular2/common";
+import { Title } from "angular2/platform/browser";
 
-import $ from 'jquery';
-import 'semantic-ui/semantic';
+import $ from "jquery";
+import "semantic-ui/semantic";
 
-import template from './template.html!';
+import template from "./template.html!";
 import "./style.css!";
 
 
 @Component( {
-	selector: 'linked-data-concepts',
+	selector: "linked-data-concepts",
 	template: template,
 	directives: [ CORE_DIRECTIVES ],
 	providers: [ Title ]
