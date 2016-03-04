@@ -1,21 +1,21 @@
 /// <reference path="./../../../typings/typings.d.ts" />
-import { Component, DynamicComponentLoader, ElementRef, View} from 'angular2/core';
+import { Component, DynamicComponentLoader, ElementRef, View} from "angular2/core";
 import { CORE_DIRECTIVES } from "angular2/common";
-import { ROUTER_DIRECTIVES, ROUTER_PROVIDERS, Router, Instruction, RouteParams } from 'angular2/router';
-import ContentService from 'app/content/ContentService';
+import { ROUTER_DIRECTIVES, ROUTER_PROVIDERS, Router, Instruction, RouteParams } from "angular2/router";
+import ContentService from "app/content/ContentService";
 
 import * as CodeMirrorComponent from "app/components/code-mirror/CodeMirrorComponent";
 
-import $ from 'jquery';
-import 'semantic-ui/semantic';
+import $ from "jquery";
+import "semantic-ui/semantic";
 
-import template from './template.html!';
+import template from "./template.html!";
 
 import "./style.css!";
 
 @Component( {
 	// Selector matches the route alias?
-	selector: 'compiled-content',
+	selector: "compiled-content",
 	template: template,
 	directives: [ CORE_DIRECTIVES, ROUTER_DIRECTIVES, CodeMirrorComponent.Class ]
 } )
@@ -42,7 +42,7 @@ export default class ContentView {
 		this.dynamicComponentLoader = dynamicComponentLoader;
 		this.elementRef = elementRef;
 
-		this.id = this.routeParams.get( 'id' );
+		this.id = this.routeParams.get( "id" );
 
 		// console.log("-- ContentView -> Got id: " + id);
 
@@ -53,10 +53,10 @@ export default class ContentView {
 		this.contentService.getDocumentById( this.id ).then(
 			( templateResponse )=> {
 				@Component( {
-					selector: 'child-component',
+					selector: "child-component",
 					directives: [ CodeMirrorComponent.Class ],
-					//templateUrl: 'http://127.0.0.1:8080/assets/documents/' + id + '.html'
-					//templateUrl: '/assets/documents/' + this.id
+					//templateUrl: "http://127.0.0.1:8080/assets/documents/" + id + ".html"
+					//templateUrl: "/assets/documents/" + this.id
 					template: templateResponse
 				} )
 				class CompiledComponent {
@@ -95,13 +95,13 @@ export default class ContentView {
 					}
 
 					createAccordions():void {
-						this.$element.find( '.ui.accordion' ).accordion();
+						this.$element.find( ".ui.accordion" ).accordion();
 					}
 
 					// Enables the use of inline JavaScript by placing script in hidden DIV elements with class
 					// "script".
 					// <div class="script">...</div>
-					// Yes, we know that Angular frowns upon this. It shouldn't be used for the wrong things.
+					// Yes, we know that Angular frowns upon this. It shouldn"t be used for the wrong things.
 					// But there ARE rare cases where this is handy.
 					evalJavascript():void {
 						let scripts:any[] = this.elementRef.nativeElement.querySelectorAll( ".script" );
@@ -118,14 +118,14 @@ export default class ContentView {
 						var
 							$section = $( elm ),
 							index = this.sections.index( $section ),
-							$followSection = this.$followMenu.children( '.item' ),
+							$followSection = this.$followMenu.children( ".item" ),
 							$activeSection = $followSection.eq( index ),
-							isActive = $activeSection.hasClass( 'active' )
+							isActive = $activeSection.hasClass( "active" )
 							;
 						if ( ! isActive ) {
-							$followSection.filter( '.active' ).removeClass( 'active' );
-							$activeSection.addClass( 'active' );
-							this.$followMenu.accordion( 'open', index );
+							$followSection.filter( ".active" ).removeClass( "active" );
+							$activeSection.addClass( "active" );
+							this.$followMenu.accordion( "open", index );
 						}
 					}
 
@@ -134,13 +134,13 @@ export default class ContentView {
 					activatePrevious():void {
 						//console.log( ">> activatePrevious()" );
 						var
-							$menuItems = this.$followMenu.children( '.item' ),
-							$section = $menuItems.filter( '.active' ),
+							$menuItems = this.$followMenu.children( ".item" ),
+							$section = $menuItems.filter( ".active" ),
 							index = $menuItems.index( $section )
 							;
 						if ( $section.prev().size() > 0 ) {
-							$section.removeClass( 'active' ).prev( '.item' ).addClass( 'active' );
-							this.$followMenu.accordion( 'open', index - 1 );
+							$section.removeClass( "active" ).prev( ".item" ).addClass( "active" );
+							this.$followMenu.accordion( "open", index - 1 );
 						}
 					}
 
@@ -152,15 +152,15 @@ export default class ContentView {
 						let
 							$section = $( elm ),
 							index = this.subSections.index( $section ),
-							$followSection = this.$followMenu.find( '.menu > .item' ),
+							$followSection = this.$followMenu.find( ".menu > .item" ),
 							$activeSection = $followSection.eq( index ),
-							inClosedTab = ($( this ).closest( '.tab:not(.active)' ).size() > 0),
-							anotherSection = ($( this ).filter( 'section' ).size() > 0),
-							isActive = $activeSection.hasClass( 'active' )
+							inClosedTab = ($( this ).closest( ".tab:not(.active)" ).size() > 0),
+							anotherSection = ($( this ).filter( "section" ).size() > 0),
+							isActive = $activeSection.hasClass( "active" )
 							;
 						if ( index !== - 1 && ! inClosedTab && ! anotherSection && ! isActive ) {
-							$followSection.filter( '.active' ).removeClass( 'active' );
-							$activeSection.addClass( 'active' );
+							$followSection.filter( ".active" ).removeClass( "active" );
+							$activeSection.addClass( "active" );
 						}
 					}
 

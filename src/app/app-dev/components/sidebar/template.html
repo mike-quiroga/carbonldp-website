@@ -1,0 +1,51 @@
+<div class="ui right aligned item container">
+	<button class="ui inverted icon collapse button" (click)="toggle()"><i class="sidebar icon"></i></button>
+</div>
+<a class="item"
+   [ngClass]="{active: isActive([ 'AppDev' ])}"
+   [routerLink]="[ 'AppDev' ]">
+	<i class="home icon"></i>
+	Dashboard
+</a>
+<a class="item"
+   [ngClass]="{active: isActive([ 'AppDev', 'MyApps' ])}"
+   [routerLink]="[ 'AppDev', 'MyApps' ]">
+	<i class="cubes icon"></i>
+	My Apps
+</a>
+
+<div *ngIf="apps.length>0" class="ui horizontal inverted divider">
+	<i class="cubes icon"></i>
+	Open Apps
+</div>
+
+<a class="item app" *ngFor="#app of apps; #i=index;" [ngClass]="{active: isActive(app.slug, true)}">
+
+	<button
+		*ngIf="!isActive(app.slug, true)"
+		class="ui right floated circular icon mini inverted button"
+		(click)="removeApp(i)">
+		<i class="icon remove"></i>
+	</button>
+
+	<a class="title" style="line-height: 2em;">
+		<i *ngIf="isActive(app.slug, true)"
+		   class="right aligned dropdown icon"></i>
+		{{app.name}}
+	</a>
+
+	<div class="content">
+		<a class="item"
+		   [ngClass]="{active: isActive(app.slug)}"
+		   [routerLink]="[ 'AppDev', 'MyApps', 'App', {slug: app.slug}, 'AppDashboard']">
+			<i class="bar chart icon"></i>
+			Dashboard
+		</a>
+		<a class="item"
+		   [ngClass]="{active: isActive(app.slug, true) && isActive('sparql-editor')}"
+		   [routerLink]="['AppDev', 'MyApps', 'App', {slug: app.slug}, 'SPARQLEditor']">
+			<i class="terminal icon"></i>
+			SPARQL Editor
+		</a>
+	</div>
+</a>

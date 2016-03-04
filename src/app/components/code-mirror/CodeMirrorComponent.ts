@@ -1,14 +1,14 @@
 /// <reference path="./../../../../typings/typings.d.ts" />
 import { Component, ElementRef, Input, Output, SimpleChange, EventEmitter } from "angular2/core";
-import CodeMirror from 'codemirror/lib/codemirror';
+import CodeMirror from "codemirror/lib/codemirror";
 
-import 'codemirror/mode/javascript/javascript';
-import 'codemirror/mode/sparql/sparql';
-import 'codemirror/mode/xml/xml';
-import 'codemirror/mode/turtle/turtle';
+import "codemirror/mode/javascript/javascript";
+import "codemirror/mode/sparql/sparql";
+import "codemirror/mode/xml/xml";
+import "codemirror/mode/turtle/turtle";
 
-import 'codemirror/lib/codemirror.css!';
-import 'codemirror/theme/mbo.css!';
+import "codemirror/lib/codemirror.css!";
+import "codemirror/theme/mbo.css!";
 import EventEmitter = webdriver.EventEmitter;
 
 export class Mode {
@@ -34,12 +34,10 @@ export class Mode {
 }
 
 @Component( {
-	selector: 'code-mirror',
-	template: '<ng-content></ng-content>'
+	selector: "code-mirror",
+	template: "<ng-content></ng-content>"
 } )
 export class Class {
-	static parameters = [ [ ElementRef ] ];
-
 	element:ElementRef;
 	codeMirror:CodeMirror;
 
@@ -71,7 +69,7 @@ export class Class {
 				return pres.innerHTML;
 			}
 		} else {
-			// no pre's, then use the everything inside code-mirror tag
+			// no pre"s, then use the everything inside code-mirror tag
 			return this.element.nativeElement.innerHTML;
 		}
 		return "";

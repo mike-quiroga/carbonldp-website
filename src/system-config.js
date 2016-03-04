@@ -35,10 +35,12 @@ System.config({
     "babel": "npm:babel-core@5.8.33",
     "babel-runtime": "npm:babel-runtime@5.8.29",
     "bootstrap-sass": "github:twbs/bootstrap-sass@3.3.5",
+    "carbonldp-sdk": "npm:carbonldp-sdk@0.9.1-ALPHA",
     "clean-css": "npm:clean-css@3.4.6",
     "codemirror": "npm:codemirror@5.8.0",
     "core-js": "npm:core-js@1.2.3",
     "crypto": "npm:crypto-js@3.1.6",
+    "crypto-js": "npm:crypto-js@3.1.6",
     "css": "github:systemjs/plugin-css@0.1.19",
     "html": "github:systemjs/plugin-text@0.0.3",
     "jquery": "github:components/jquery@2.1.4",
@@ -200,6 +202,12 @@ System.config({
       "ieee754": "npm:ieee754@1.1.6",
       "isarray": "npm:isarray@1.0.0",
       "process": "github:jspm/nodelibs-process@0.1.2"
+    },
+    "npm:carbonldp-sdk@0.9.1-ALPHA": {
+      "fs": "github:jspm/nodelibs-fs@0.1.2",
+      "jsonld": "npm:jsonld@0.4.2",
+      "process": "github:jspm/nodelibs-process@0.1.2",
+      "systemjs-json": "github:systemjs/plugin-json@0.1.0"
     },
     "npm:cipher-base@1.0.2": {
       "buffer": "github:jspm/nodelibs-buffer@0.1.0",
