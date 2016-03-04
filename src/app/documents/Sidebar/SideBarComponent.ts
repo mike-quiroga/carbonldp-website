@@ -28,7 +28,7 @@ export default class SideBarComponent {
 	subSections:any;
 	sidebarService:SidebarService;
 
-	@Input() parentelement;
+	@Input() parentElement;
 	@Input() mobile;
 
 	host:string = "dev.carbonldp.com";
@@ -37,16 +37,14 @@ export default class SideBarComponent {
 		this.elementRef = element;
 		this.$element = $( element.nativeElement );
 		this.sidebarService = sidebarService;
-		//console.log("HTML constructor sidebar: "+$( this.parentelement.nativeElement )[0]);
 		this.sidebarService.buildEmitter.subscribe( () => {
-			console.log( "The parent has finished its after view init..." );
 			this.buildSideBar();
 		} );
 	}
 
 
 	ngAfterViewInit():void {
-		this.$container = $( this.parentelement.nativeElement ).find( 'article' );
+		this.$container = $( this.parentElement.nativeElement ).find( 'article' );
 		this.sections = this.$container.children( 'section' );
 		this.subSections = this.sections.children( 'section' );
 		this.$followMenu = this.$element.find( '.following.menu' );
@@ -126,16 +124,6 @@ export default class SideBarComponent {
 						_self.activatePreviousSubSection( this );
 					}
 				} );
-
-				this.sidebar.find( ".ui.sticky" ).sticky( {
-					observeChanges: true,
-					context: '#article',
-					offset: 150
-				} );
-
-				this.sidebar.find( ".ui.sticky" ).visibility( {
-					observeChanges: true
-				} );
 			}//menu for mobile
 			else {
 				this.$followMenu = $( '<div />' ).addClass( 'ui fluid vertical following accordion menu mobile' ).html( html );
@@ -143,6 +131,12 @@ export default class SideBarComponent {
 				this.sidebar.html( $sticky );
 			}
 
+
+			this.sidebar.find( ".ui.sticky" ).sticky( {
+				observeChanges: true,
+				context: "#article",
+				offset: 100
+			} );
 
 			this.$followMenu.accordion( {
 				exclusive: false,
@@ -153,7 +147,7 @@ export default class SideBarComponent {
 	}
 
 	activateSection( elm:any ):void {
-		var
+		let
 			$section = $( elm ),
 			index = this.sections.index( $section ),
 			$followSection = this.$followMenu.children( '.item' ),
@@ -171,7 +165,7 @@ export default class SideBarComponent {
 	// Contracts accordion sections as you scroll through the sections elements
 	// inside a section of the page.
 	activatePrevious():void {
-		var
+		let
 			$menuItems = this.$followMenu.children( '.item' ),
 			$section = $menuItems.filter( '.active' ),
 			index = $menuItems.index( $section )
@@ -194,8 +188,8 @@ export default class SideBarComponent {
 			isActive = $activeSection.hasClass( 'active' )
 			;
 
-		if ( index !== - 1 && /*! inClosedTab && ! anotherSection && */ ! isActive ) {
-			$followSection.filter( '.active' ).removeClass( 'active' );
+		if ( index !== - 1 && ! isActive ) {
+			$followSection.removeClass( 'active' );
 			$activeSection.addClass( 'active' );
 		}
 	}
