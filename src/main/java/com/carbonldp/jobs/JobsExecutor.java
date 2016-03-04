@@ -32,6 +32,7 @@ public class JobsExecutor {
 		JobDescription.Type type = JobFactory.getInstance().getJobType( job );
 
 		getTypedRepository( type ).execute( job, execution );
+
 		dequeueJobsExecutionQueue( job.getAppRelated() );
 	}
 
