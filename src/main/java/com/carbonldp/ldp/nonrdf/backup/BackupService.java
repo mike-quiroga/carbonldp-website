@@ -10,5 +10,5 @@ import java.io.File;
  */
 public interface BackupService {
 
-	public void createAppBackup(URI appURI, File zipFile);
+	public void createAppBackup( URI appURI, URI backupURI, File zipFile );
 }

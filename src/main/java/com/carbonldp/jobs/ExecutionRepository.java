@@ -1,6 +1,7 @@
 package com.carbonldp.jobs;
 
 import org.openrdf.model.URI;
+import org.openrdf.model.Value;
 
 /**
  * @author NestorVenegas
@@ -14,4 +15,6 @@ public interface ExecutionRepository {
 	public void enqueue( URI executionURI, URI appURI );
 
 	public URI getAppRelatedURI( URI executionsContainerURI );
+
+	public void addResult(URI executionURI, Value status);
 }

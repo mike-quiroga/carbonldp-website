@@ -4,9 +4,12 @@ import com.carbonldp.Consts;
 import com.carbonldp.Vars;
 import com.carbonldp.apps.App;
 import com.carbonldp.apps.AppRepository;
+import com.carbonldp.ldp.nonrdf.backup.BackupRepository;
 import com.carbonldp.ldp.nonrdf.backup.BackupService;
+import com.carbonldp.ldp.sources.RDFSourceRepository;
 import com.carbonldp.spring.TransactionWrapper;
 import org.openrdf.model.URI;
+import org.openrdf.model.impl.URIImpl;
 import org.openrdf.repository.RepositoryException;
 import org.openrdf.rio.RDFFormat;
 import org.openrdf.rio.RDFHandlerException;
@@ -34,6 +37,7 @@ public class BackupJobExecutor implements TypedJobExecutor {
 	private BackupService backupService;
 	private TransactionWrapper transactionWrapper;
 	private ExecutionRepository executionRepository;
+	protected RDFSourceRepository sourceRepository;
 
 	public boolean supports( JobDescription.Type jobType ) {
 		return jobType == JobDescription.Type.BACKUP;
@@ -51,19 +55,36 @@ public class BackupJobExecutor implements TypedJobExecutor {
 			transactionWrapper.runWithSystemPermissionsInPlatformContext( () -> createZipFile( nonRDFSourceDirectory, rdfRepositoryFile ) ) :
 			transactionWrapper.runWithSystemPermissionsInPlatformContext( () -> createZipFile( rdfRepositoryFile ) );
 
-		backupService.createAppBackup( appURI, zipFile );
+		URI backupURI = createAppBackup( appURI, zipFile );
 
 		deleteTemporaryFile( zipFile );
 		deleteTemporaryFile( rdfRepositoryFile );
 
 		transactionWrapper.runInPlatformContext( () -> executionRepository.changeExecutionStatus( execution.getURI(), ExecutionDescription.Status.FINISHED ) );
+		transactionWrapper.runInPlatformContext( () -> executionRepository.addResult( execution.getURI(), backupURI ) );
+	}
+
+	private URI createAppBackup( URI appURI, File zipFile ) {
+		URI backupURI = createBackupURI( appURI );
+		backupService.createAppBackup( appURI, backupURI, zipFile );
+
+		return backupURI;
+	}
+
+	private URI createBackupURI( URI appURI ) {
+		URI jobsContainerURI = new URIImpl( appURI.stringValue() + Vars.getInstance().getBackupsContainer() );
+		URI backupURI;
+		do {
+			backupURI = new URIImpl( jobsContainerURI.stringValue().concat( createRandomSlug() ).concat( Consts.SLASH ) );
+		} while ( sourceRepository.exists( backupURI ) );
+		return backupURI;
 	}
 
 	private File createZipFile( File... files ) {
 		File temporaryFile;
 		FileOutputStream fileOutputStream;
 		try {
-			temporaryFile = File.createTempFile( createRandomSlug(), RDFFormat.TRIG.getDefaultFileExtension() );
+			temporaryFile = File.createTempFile( createRandomSlug(),Consts.PERIOD + RDFFormat.TRIG.getDefaultFileExtension() );
 			temporaryFile.deleteOnExit();
 			fileOutputStream = new FileOutputStream( temporaryFile );
 		} catch ( FileNotFoundException e ) {
@@ -129,7 +150,7 @@ public class BackupJobExecutor implements TypedJobExecutor {
 		}
 	}
 
-	protected File createTemporaryRDFBackupFile() {
+	private File createTemporaryRDFBackupFile() {
 		File temporaryFile;
 		FileOutputStream outputStream;
 		final RDFWriter trigWriter;
@@ -158,7 +179,7 @@ public class BackupJobExecutor implements TypedJobExecutor {
 		return temporaryFile;
 	}
 
-	protected void deleteTemporaryFile( File file ) {
+	private void deleteTemporaryFile( File file ) {
 		boolean wasDeleted = false;
 		try {
 			wasDeleted = file.delete();
@@ -191,4 +212,8 @@ public class BackupJobExecutor implements TypedJobExecutor {
 
 	@Autowired
 	public void setExecutionRepository( ExecutionRepository executionRepository ) { this.executionRepository = executionRepository; }
+
+	@Autowired
+	public void setRDFSourceRepository( RDFSourceRepository sourceRepository ) { this.sourceRepository = sourceRepository; }
+
 }

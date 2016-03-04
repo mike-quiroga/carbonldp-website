@@ -12,6 +12,7 @@ import org.openrdf.query.BindingSet;
 import org.openrdf.repository.RepositoryException;
 import org.openrdf.repository.RepositoryResult;
 import org.openrdf.spring.SesameConnectionFactory;
+import org.springframework.beans.factory.config.RuntimeBeanNameReference;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
@@ -107,6 +108,15 @@ public class SesameExecutionRepository extends AbstractSesameLDPRepository imple
 			}
 			throw new RuntimeException( "there is not an app related" );
 		} );
+	}
+
+	@Override
+	public void addResult( URI executionURI, Value status ) {
+		try {
+			connectionFactory.getConnection().add( executionURI, ExecutionDescription.Property.RESULT.getURI(), status, executionURI );
+		} catch ( RepositoryException e ) {
+			throw new RuntimeException( e );
+		}
 	}
 
 	private Resource getLastMemberBNode( URI appURI ) {

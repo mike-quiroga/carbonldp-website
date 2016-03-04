@@ -19,25 +19,10 @@ public class SesameBackupService extends AbstractSesameLDPService implements Bac
 	BackupRepository backupRepository;
 
 	@Override
-	public void createAppBackup( URI appURI, File zipFile ) {
+	public void createAppBackup( URI appURI, URI backupURI, File zipFile ) {
 		if ( ! sourceRepository.exists( appURI ) ) throw new ResourceDoesntExistException();
-		URI backupURI = createBackupURI( appURI );
 		backupRepository.createAppBackup( appURI, backupURI, zipFile );
 
-	}
-
-	private URI createBackupURI( URI appURI ) {
-		URI jobsContainerURI = new URIImpl( appURI.stringValue() + Vars.getInstance().getBackupsContainer() );
-		URI backupURI;
-		do {
-			backupURI = new URIImpl( jobsContainerURI.stringValue().concat( createRandomSlug() ).concat( Consts.SLASH ) );
-		} while ( sourceRepository.exists( backupURI ) );
-		return backupURI;
-	}
-
-	private String createRandomSlug() {
-		Random random = new Random();
-		return String.valueOf( Math.abs( random.nextLong() ) );
 	}
 
 	@Autowired
