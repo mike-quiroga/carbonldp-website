@@ -1,6 +1,6 @@
 package com.carbonldp.apps;
 
-import com.carbonldp.jobs.Job;
+import com.carbonldp.jobs.Execution;
 import com.carbonldp.ldp.containers.ContainerDescription.Type;
 import com.carbonldp.ldp.containers.ContainerRepository;
 import com.carbonldp.ldp.sources.RDFSource;
@@ -12,7 +12,10 @@ import com.carbonldp.repository.RepositoryService;
 import com.carbonldp.utils.RDFNodeUtil;
 import com.carbonldp.utils.URIUtil;
 import com.carbonldp.utils.ValueUtil;
-import org.openrdf.model.*;
+import org.openrdf.model.Resource;
+import org.openrdf.model.Statement;
+import org.openrdf.model.URI;
+import org.openrdf.model.Value;
 import org.openrdf.model.impl.URIImpl;
 import org.openrdf.model.vocabulary.RDF;
 import org.openrdf.repository.RepositoryException;
@@ -25,7 +28,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
-import java.util.concurrent.RunnableFuture;
 
 @Transactional
 public class SesameAppRepository extends AbstractSesameRepository implements AppRepository {
@@ -107,26 +109,25 @@ public class SesameAppRepository extends AbstractSesameRepository implements App
 	}
 
 	@Override
-	public Job peekJobsQueue( App app ) {
-		Resource listSubject = getNextElementInQueue( app, app.getJobsQueue() );
+	public Execution peekJobsExecutionQueue( App app ) {
+		Resource listSubject = getNextElementInQueue( app, app.getJobsExecutionQueue() );
 		if ( listSubject.equals( RDF.NIL ) ) return null;
-		URI jobURI = getQueueElementValue( app, listSubject );
+		URI jobExecutionURI = getQueueElementValue( app, listSubject );
 
-		return new Job( sourceRepository.get( jobURI ) );
+		return new Execution( sourceRepository.get( jobExecutionURI ) );
 	}
 
-	public void dequeueJobsQueue( App app ) {
+	public void dequeueJobsExecutionQueue( App app ) {
 		URI appURI = app.getURI();
-		URI appJobsQueue = app.getJobsQueue();
-		Resource subject = getNextElementInQueue( app, appJobsQueue );
+		URI appJobsExecutionQueue = app.getJobsExecutionQueue();
+		Resource subject = getNextElementInQueue( app, appJobsExecutionQueue );
 		Resource nextSubject = getNextElementInQueue( app, subject );
 		try {
 			connectionFactory.getConnection().remove( subject, null, null, appURI );
-			connectionFactory.getConnection().add( appJobsQueue, RDF.REST, nextSubject, appURI );
+			connectionFactory.getConnection().add( appJobsExecutionQueue, RDF.REST, nextSubject, appURI );
 		} catch ( RepositoryException e ) {
 			throw new RuntimeException( e );
 		}
-
 	}
 
 	private URI getQueueElementValue( App app, Resource subject ) {
@@ -150,10 +151,8 @@ public class SesameAppRepository extends AbstractSesameRepository implements App
 	private Resource getNextElementInQueue( App app, Resource subject ) {
 		URI appURI = app.getURI();
 		RepositoryResult<Statement> statements;
-		Resource nextSubject;
 		Statement statement;
 		Value object;
-		URI jobURI;
 
 		try {
 			statements = connectionFactory.getConnection().getStatements( subject, RDF.REST, null, false, appURI );

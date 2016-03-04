@@ -14,7 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  * @since _version_
  */
 @RequestHandler
-public class ManualExecutionsPOSTHandler extends AbstractRDFPostRequestHandler<Execution> {
+public class ExecutionsPOSTHandler extends AbstractRDFPostRequestHandler<Execution> {
 	ExecutionService executionService;
 
 	@Override

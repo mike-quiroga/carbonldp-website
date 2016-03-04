@@ -29,14 +29,14 @@ public class SesameJobService extends AbstractSesameLDPService implements JobSer
 
 		containerService.createChild( targetURI, job );
 
-		createManualExecutionsContainer( job );
+		createExecutionsContainer( job );
 	}
 
-	private void createManualExecutionsContainer( Job job ) {
-		URI manualExecutionsURI = new URIImpl( job.getURI().stringValue().concat( Vars.getInstance().getManualExecutions() ) );
-		RDFResource manualExecutionsResource = new RDFResource( manualExecutionsURI );
+	private void createExecutionsContainer( Job job ) {
+		URI executionsURI = new URIImpl( job.getURI().stringValue().concat( Vars.getInstance().getExecutions() ) );
+		RDFResource executionsResource = new RDFResource( executionsURI );
 
-		DirectContainer container = DirectContainerFactory.getInstance().create( manualExecutionsResource, job.getURI(), JobDescription.Property.MANUAL_EXECUTION.getURI() );
+		DirectContainer container = DirectContainerFactory.getInstance().create( executionsResource, job.getURI(), JobDescription.Property.EXECUTION.getURI() );
 
 		sourceService.createAccessPoint( job.getURI(), container );
 	}
@@ -55,8 +55,8 @@ public class SesameJobService extends AbstractSesameLDPService implements JobSer
 	}
 
 	@Override
-	public Job get( URI jobURI ) {
-		return new Job( sourceService.get( jobURI ) );
+	public Job get( URI targetURI ) {
+		return new Job( sourceService.get( targetURI ) );
 	}
 
 	@Autowired

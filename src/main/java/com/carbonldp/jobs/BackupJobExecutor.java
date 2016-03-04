@@ -34,13 +34,14 @@ public class BackupJobExecutor implements TypedJobExecutor {
 	private SesameConnectionFactory connectionFactory;
 	private BackupService backupService;
 	private TransactionWrapper transactionWrapper;
+	private ExecutionRepository executionRepository;
 
 	public boolean supports( JobDescription.Type jobType ) {
 		return jobType == JobDescription.Type.BACKUP;
 	}
 
-	public void run( Job job ) {
-		//transactionWrapper.runWithSystemPermissionsInPlatformContext( () -> jobService.changeJobStatus( job.getURI(), JobDescription.JobStatus.RUNNING ) );
+	public void execute( Job job, Execution execution ) {
+		transactionWrapper.runInPlatformContext( () -> executionRepository.changeExecutionStatus( execution.getURI(), ExecutionDescription.Status.RUNNING ) );
 		URI appURI = job.getAppRelated();
 		App app = appRepository.get( appURI );
 		String appRepositoryID = app.getRepositoryID();
@@ -56,7 +57,7 @@ public class BackupJobExecutor implements TypedJobExecutor {
 		deleteTemporaryFile( zipFile );
 		deleteTemporaryFile( rdfRepositoryFile );
 
-		//jobService.changeJobStatus( job.getURI(), JobDescription.JobStatus.FINISHED );
+		transactionWrapper.runInPlatformContext( () -> executionRepository.changeExecutionStatus( execution.getURI(), ExecutionDescription.Status.FINISHED ) );
 	}
 
 	private File createZipFile( File... files ) {
@@ -193,4 +194,7 @@ public class BackupJobExecutor implements TypedJobExecutor {
 
 	@Autowired
 	public void setTransactionWrapper( TransactionWrapper transactionWrapper ) {this.transactionWrapper = transactionWrapper; }
+
+	@Autowired
+	public void setExecutionRepository( ExecutionRepository executionRepository ) { this.executionRepository = executionRepository; }
 }

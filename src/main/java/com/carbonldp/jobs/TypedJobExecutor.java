@@ -9,5 +9,5 @@ public interface TypedJobExecutor {
 
 	public boolean supports( JobDescription.Type jobType );
 
-	public void run( Job job );
+	public void execute( Job job, Execution execution );
 }

@@ -19,9 +19,9 @@ import javax.servlet.http.HttpServletResponse;
  * @since _version_
  */
 @Controller
-@RequestMapping( value = "/platform/apps/*/jobs/*/manual-executions/" )
-public class ManualExecutionsController extends AbstractController {
-	private ManualExecutionsPOSTHandler postRequestHandler;
+@RequestMapping( value = "/platform/apps/*/jobs/*/executions/" )
+public class ExecutionsController extends AbstractController {
+	private ExecutionsPOSTHandler postRequestHandler;
 
 	@InteractionModel( value = {APIPreferences.InteractionModel.CONTAINER}, handlesDefault = true )
 	@RequestMapping( method = RequestMethod.POST )
@@ -30,6 +30,6 @@ public class ManualExecutionsController extends AbstractController {
 	}
 
 	@Autowired
-	public void setPostRequestHandler( ManualExecutionsPOSTHandler postRequestHandler ) {this.postRequestHandler = postRequestHandler;}
+	public void setPostRequestHandler( ExecutionsPOSTHandler postRequestHandler ) {this.postRequestHandler = postRequestHandler;}
 
 }

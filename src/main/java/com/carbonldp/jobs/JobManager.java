@@ -1,9 +1,17 @@
 package com.carbonldp.jobs;
 
+import com.carbonldp.Vars;
+import com.carbonldp.apps.App;
 import com.carbonldp.apps.AppRepository;
 import com.carbonldp.ldp.containers.ContainerRepository;
 import com.carbonldp.spring.TransactionWrapper;
+import org.openrdf.model.URI;
+import org.openrdf.model.impl.URIImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
+
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @author JorgeEspinosa
@@ -16,8 +24,7 @@ public class JobManager {
 	private ContainerRepository containerRepository;
 	private AppRepository appRepository;
 
-	/*
-	@Scheduled( cron = "${job.trigger.time}" )
+	@Scheduled( cron = "${job.execution.time}" )
 	public void runQueuedJobs() {
 		lookUpForJobs();
 	}
@@ -25,9 +32,9 @@ public class JobManager {
 	public void lookUpForJobs() {
 		Set<App> apps = getAllApps();
 		for ( App app : apps ) {
-			Job job = appRepository.peekJobsQueue( app );
-			if ( job != null && ( ! job.getJobStatus().equals( JobDescription.JobStatus.RUNNING.getURI() ) ) ) {
-				jobsExecutor.runJob( job );
+			Execution execution = appRepository.peekJobsExecutionQueue( app );
+			if ( execution != null && ( ! execution.getStatus().equals( ExecutionDescription.Status.RUNNING.getURI() ) ) ) {
+				jobsExecutor.execute( execution );
 			}
 		}
 	}
@@ -44,7 +51,6 @@ public class JobManager {
 			return apps;
 		} );
 	}
-	*/
 
 	@Autowired
 	public void setJobsExecutor( JobsExecutor jobsExecutor ) { this.jobsExecutor = jobsExecutor; }
