@@ -20,6 +20,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.*;
 import java.util.Random;
@@ -43,8 +44,9 @@ public class BackupJobExecutor implements TypedJobExecutor {
 		return jobType == JobDescription.Type.BACKUP;
 	}
 
+	@Transactional
 	public void execute( Job job, Execution execution ) {
-		transactionWrapper.runInPlatformContext( () -> executionRepository.changeExecutionStatus( execution.getURI(), ExecutionDescription.Status.RUNNING ) );
+		executionRepository.changeExecutionStatus( execution.getURI(), ExecutionDescription.Status.RUNNING );
 		URI appURI = job.getAppRelated();
 		App app = appRepository.get( appURI );
 		String appRepositoryID = app.getRepositoryID();
@@ -52,8 +54,8 @@ public class BackupJobExecutor implements TypedJobExecutor {
 		File nonRDFSourceDirectory = new File( appRepositoryPath );
 		File rdfRepositoryFile = transactionWrapper.runInAppContext( app, () -> createTemporaryRDFBackupFile() );
 		File zipFile = nonRDFSourceDirectory.exists() ?
-			transactionWrapper.runWithSystemPermissionsInPlatformContext( () -> createZipFile( nonRDFSourceDirectory, rdfRepositoryFile ) ) :
-			transactionWrapper.runWithSystemPermissionsInPlatformContext( () -> createZipFile( rdfRepositoryFile ) );
+			createZipFile( nonRDFSourceDirectory, rdfRepositoryFile ) :
+			createZipFile( rdfRepositoryFile );
 
 		URI backupURI = createAppBackup( appURI, zipFile );
 
@@ -84,7 +86,7 @@ public class BackupJobExecutor implements TypedJobExecutor {
 		File temporaryFile;
 		FileOutputStream fileOutputStream;
 		try {
-			temporaryFile = File.createTempFile( createRandomSlug(),Consts.PERIOD + RDFFormat.TRIG.getDefaultFileExtension() );
+			temporaryFile = File.createTempFile( createRandomSlug(), null );
 			temporaryFile.deleteOnExit();
 			fileOutputStream = new FileOutputStream( temporaryFile );
 		} catch ( FileNotFoundException e ) {
@@ -198,14 +200,10 @@ public class BackupJobExecutor implements TypedJobExecutor {
 	public void setAppRepository( AppRepository appRepository ) {this.appRepository = appRepository; }
 
 	@Autowired
-	public void setConnectionFactory( SesameConnectionFactory connectionFactory ) {
-		this.connectionFactory = connectionFactory;
-	}
+	public void setConnectionFactory( SesameConnectionFactory connectionFactory ) { this.connectionFactory = connectionFactory; }
 
 	@Autowired
-	public void setBackupService( BackupService backupService ) {
-		this.backupService = backupService;
-	}
+	public void setBackupService( BackupService backupService ) { this.backupService = backupService; }
 
 	@Autowired
 	public void setTransactionWrapper( TransactionWrapper transactionWrapper ) {this.transactionWrapper = transactionWrapper; }
