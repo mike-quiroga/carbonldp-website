@@ -18,7 +18,6 @@ import "./style.css!";
 	template: template,
 	directives: [ CORE_DIRECTIVES, ROUTER_DIRECTIVES ]
 } )
-@Injectable()
 export default class SidebarComponent {
 	router:Router;
 	element:ElementRef;

@@ -15,7 +15,6 @@ import template from "./template.html!";
 	template: template,
 	directives: [ CORE_DIRECTIVES, ROUTER_DIRECTIVES, FORM_DIRECTIVES ]
 } )
-@Injectable()
 export default class LoginComponent {
 	router:Router;
 	element:ElementRef;
