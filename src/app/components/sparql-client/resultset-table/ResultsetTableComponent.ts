@@ -1,3 +1,4 @@
+/// <reference path="./../../../../typings/typings.d.ts" />
 import { Component, Input, Output, SimpleChange, EventEmitter, ElementRef } from "angular2/core";
 import { CORE_DIRECTIVES } from "angular2/common";
 

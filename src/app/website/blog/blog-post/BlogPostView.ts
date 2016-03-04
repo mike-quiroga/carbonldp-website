@@ -1,3 +1,5 @@
+/// <reference path="./../../../../typings/typings.d.ts" />
+
 import { Component, ElementRef, Input, DynamicComponentLoader, Type } from "angular2/core";
 import { CORE_DIRECTIVES } from "angular2/common";
 import { ROUTER_DIRECTIVES, ROUTER_PROVIDERS, Router, Instruction, RouteParams, Location } from "angular2/router";
@@ -68,11 +70,12 @@ export default class BlogPostView {
 	}
 
 	private createPostComponent( fileName:string ):Type {
-		let location:Location = this.location;
+		// 'this' doesn't point to where it should inside of decorators
+		let view = this;
 		@Component( {
 			selector: "compiled-component",
 			directives: [ CORE_DIRECTIVES, ROUTER_DIRECTIVES, CodeMirrorComponent.Class ],
-			templateUrl: `${ location.platformStrategy.getBaseHref() }assets/blog-posts/${ fileName }`
+			templateUrl: `${ view.location.platformStrategy.getBaseHref() }assets/blog-posts/${ fileName }`
 		} )
 		class CompiledComponent {
 			element:ElementRef;
