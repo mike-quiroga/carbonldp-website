@@ -1,3 +1,5 @@
+# 0.28.2 (2016/03/02)
+* Access points now show their members when asked as a container
 # 0.28.1 (2016/02/02)
 * Fix compilation problem with missing dependency
 

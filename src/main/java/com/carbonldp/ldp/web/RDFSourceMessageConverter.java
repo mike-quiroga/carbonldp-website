@@ -26,7 +26,7 @@ public class RDFSourceMessageConverter extends ModelMessageConverter<RDFSource> 
 
 	@Override
 	protected Model getModelToWrite( RDFSource model ) {
-		return model.getDocument();
+		return model.getBaseModel();
 	}
 
 	@Override
