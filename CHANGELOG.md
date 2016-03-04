@@ -1,3 +1,14 @@
+# 0.5.0 (March 4, 2016)
+* Updated to Angular to Beta 8.
+* Added a login view.
+* Added a color palette to the UI with 7 new colors.
+* Added an Application Development module with:
+    *  A service to retrieve applications.
+    *  A view to list retrieved applications.
+    *  A navigation bar for breadcrumbs.
+    *  A sidebar to provide navigation throughout the module.
+    *  Integration with the SPARQL Query Editor on an App context.
+
 # 0.4.0 (March 3, 2016)
 * Switched tsd to typings
 * Added angular2 and carbon definition files (they provide jspm import support while we wait for WEB-18904)
