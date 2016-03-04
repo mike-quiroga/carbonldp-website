@@ -36,7 +36,7 @@ public class SesameJobService extends AbstractSesameLDPService implements JobSer
 		URI executionsURI = new URIImpl( job.getURI().stringValue().concat( Vars.getInstance().getExecutions() ) );
 		RDFResource executionsResource = new RDFResource( executionsURI );
 
-		DirectContainer container = DirectContainerFactory.getInstance().create( executionsResource, job.getURI(), JobDescription.Property.EXECUTION.getURI() );
+		DirectContainer container = DirectContainerFactory.getInstance().create( executionsResource, job.getURI(), JobDescription.Property.EXECUTION.getURI(), ExecutionDescription.Property.JOB.getURI() );
 
 		sourceService.createAccessPoint( job.getURI(), container );
 	}
