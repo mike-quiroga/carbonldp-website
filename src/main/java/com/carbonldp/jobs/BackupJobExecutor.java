@@ -46,7 +46,6 @@ public class BackupJobExecutor implements TypedJobExecutor {
 
 	@Transactional
 	public void execute( Job job, Execution execution ) {
-		executionRepository.changeExecutionStatus( execution.getURI(), ExecutionDescription.Status.RUNNING );
 		URI appURI = job.getAppRelated();
 		App app = appRepository.get( appURI );
 		String appRepositoryID = app.getRepositoryID();
@@ -62,8 +61,7 @@ public class BackupJobExecutor implements TypedJobExecutor {
 		deleteTemporaryFile( zipFile );
 		deleteTemporaryFile( rdfRepositoryFile );
 
-		transactionWrapper.runInPlatformContext( () -> executionRepository.changeExecutionStatus( execution.getURI(), ExecutionDescription.Status.FINISHED ) );
-		transactionWrapper.runInPlatformContext( () -> executionRepository.addResult( execution.getURI(), backupURI ) );
+		executionRepository.addResult( execution.getURI(), backupURI );
 	}
 
 	private URI createAppBackup( URI appURI, File zipFile ) {

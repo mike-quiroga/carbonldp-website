@@ -21,6 +21,7 @@ public class JobsExecutor {
 	private AppRepository appRepository;
 	private JobService jobService;
 	private TransactionWrapper transactionWrapper;
+	private ExecutionRepository executionRepository;
 
 	public JobsExecutor( List<TypedJobExecutor> typedJobs ) {
 		this.typedJobs = typedJobs;
@@ -28,11 +29,18 @@ public class JobsExecutor {
 
 	@Async
 	public void execute( Execution execution ) {
+		executionRepository.changeExecutionStatus( execution.getURI(), ExecutionDescription.Status.RUNNING );
 		Job job = transactionWrapper.runWithSystemPermissionsInPlatformContext( () -> jobService.get( execution.getJobURI() ) );
 		JobDescription.Type type = JobFactory.getInstance().getJobType( job );
+		boolean hasErrors = false;
 
-		getTypedRepository( type ).execute( job, execution );
-
+		try {
+			getTypedRepository( type ).execute( job, execution );
+		} catch ( Exception e ) {
+			executionRepository.changeExecutionStatus( execution.getURI(), ExecutionDescription.Status.ERROR );
+			hasErrors = true;
+		}
+		if ( ! hasErrors ) executionRepository.changeExecutionStatus( execution.getURI(), ExecutionDescription.Status.FINISHED );
 		dequeueJobsExecutionQueue( job.getAppRelated() );
 	}
 
@@ -56,4 +64,7 @@ public class JobsExecutor {
 
 	@Autowired
 	public void setTransactionWrapper( TransactionWrapper transactionWrapper ) { this.transactionWrapper = transactionWrapper; }
+
+	@Autowired
+	public void setExecutionRepository( ExecutionRepository executionRepository ) { this.executionRepository = executionRepository; }
 }
