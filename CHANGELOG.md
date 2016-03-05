@@ -1,3 +1,6 @@
+# 0.5.1 (March 4, 2016)
+* Updated Getting started with rest api document
+
 # 0.5.0 (March 4, 2016)
 * Updated to Angular to Beta 8.
 * Added a login view.
