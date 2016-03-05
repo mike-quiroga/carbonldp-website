@@ -4,6 +4,8 @@ import com.carbonldp.Consts;
 import com.carbonldp.Vars;
 import com.carbonldp.apps.App;
 import com.carbonldp.apps.AppRepository;
+import com.carbonldp.apps.context.AppContextHolder;
+import com.carbonldp.ldp.nonrdf.TriGWriter;
 import com.carbonldp.ldp.nonrdf.backup.BackupService;
 import com.carbonldp.ldp.sources.RDFSourceRepository;
 import com.carbonldp.spring.TransactionWrapper;
@@ -13,7 +15,6 @@ import org.openrdf.repository.RepositoryException;
 import org.openrdf.rio.RDFFormat;
 import org.openrdf.rio.RDFHandlerException;
 import org.openrdf.rio.RDFWriter;
-import org.openrdf.rio.trig.TriGWriter;
 import org.openrdf.spring.SesameConnectionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -159,8 +160,8 @@ public class BackupJobExecutor implements TypedJobExecutor {
 
 			outputStream = new FileOutputStream( temporaryFile );
 			trigWriter = new TriGWriter( outputStream );
+			( (TriGWriter) trigWriter ).setBase( AppContextHolder.getContext().getApplication().getRootContainerURI().stringValue() );
 			try {
-				trigWriter.handleNamespace( "baseNS", "https://local.carbonldp.com/apps/test-blog/" );
 				connectionFactory.getConnection().export( trigWriter );
 			} catch ( RepositoryException e ) {
 				throw new RuntimeException( e );
