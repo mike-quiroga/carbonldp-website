@@ -25,7 +25,6 @@ public class TriGWriter extends org.openrdf.rio.trig.TriGWriter {
 		throws IOException {
 		String uriString = uri.toString();
 
-		// Try to find a prefix for the URI's namespace
 		String prefix = null;
 
 		int splitIdx = TurtleUtil.findURISplitIndex( uriString );
@@ -36,12 +35,10 @@ public class TriGWriter extends org.openrdf.rio.trig.TriGWriter {
 		}
 
 		if ( prefix != null ) {
-			// Namespace is mapped to a prefix; write abbreviated URI
 			writer.write( prefix );
 			writer.write( ":" );
 			writer.write( uriString.substring( splitIdx ) );
 		} else {
-			// Write full URI
 			writer.write( "<" );
 			if ( base == null ) {
 				writer.write( TurtleUtil.encodeURIString( uriString ) );
