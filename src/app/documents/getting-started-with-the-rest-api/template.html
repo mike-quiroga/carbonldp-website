@@ -149,18 +149,18 @@
 									</tr>
 								</tbody>
 							</table>
-
-						<textarea #example1 class="hidden">
+							<!--@formatter:off-->
+							<textarea #example1 class="hidden">
 @prefix cs:&#60;https://carbonldp.com/ns/v1/security#&#62;.
 @prefix vcard:&#60;http://www.w3.org/2001/vcard-rdf/3.0#&#62;.
 
 <>
-a cs:Agent;
-cs:name "Jane Doe";
-vcard:email "jane.doe@example.org";
-cs:password "MyStr0ngP@ssw0rd#".
-						</textarea>
-
+	a cs:Agent;
+	cs:name "Jane Doe";
+	vcard:email "jane.doe@example.org";
+	cs:password "MyStr0ngP@ssw0rd#".
+							</textarea>
+							<!--@formatter:on-->
 							<code-mirror class="ui text left aligned basic segment"
 							             [mode]="'turtle'"
 							             [read-only]="'nocursor'" [value]="example1.value">
@@ -590,8 +590,8 @@ cs:password "MyStr0ngP@ssw0rd#".
 @prefix cs:&#60;https://carbonldp.com/ns/v1/security#&#62;.
 
 <>
-a cs:Application;
-cs:name "Taxonomy Hub".
+	a cs:Application;
+	cs:name "Taxonomy Hub".
 						</textarea>
 						<!--@formatter:on-->
 
@@ -1144,7 +1144,7 @@ skos:hasTopConcept
 @prefix ldp:&#60;http://www.w3.org/ns/ldp#&#62;.
 
 <>
-a ldp:BasicContainer.
+	a ldp:BasicContainer.
 						</textarea>
 						<!--@formatter:on-->
 
@@ -1220,10 +1220,11 @@ a ldp:BasicContainer.
 @prefix ldp:&#60;http://www.w3.org/ns/ldp#&#62; .
 @prefix skos:&#60;http://www.w3.org/2004/02/skos/core#&#62; .
 @prefix dct:&#60;http://purl.org/dc/terms/&#62; .
+
 <>
-a ldp:BasicContainer, skos:ConceptScheme;
-ldp:memberOfRelation skos:inScheme;
-dct:title "Topics".
+	a ldp:BasicContainer, skos:ConceptScheme;
+	ldp:memberOfRelation skos:inScheme;
+	dct:title "Topics".
 						</textarea>
 						<!--@formatter:on-->
 						<code-mirror class="ui text left aligned basic segment"
@@ -1320,10 +1321,9 @@ dct:title "Topics".
 @prefix skos:&#60;http://www.w3.org/2004/02/skos/core#&#62; .
 
 <>
-a ldp:DirectContainer;
-ldp:membershipResource
-&#60;https://dev.carbonldp.com/apps/taxonomy-hub/schemes/topics/&#62;;
-ldp:hasMemberRelation skos:hasTopConcept.
+	a ldp:DirectContainer;
+	ldp:membershipResource &#60;https://dev.carbonldp.com/apps/taxonomy-hub/schemes/topics/&#62;;
+	ldp:hasMemberRelation skos:hasTopConcept.
 						</textarea>
 						<!--@formatter:on-->
 						<code-mirror class="ui text left aligned basic segment"
@@ -1437,13 +1437,13 @@ ldp:hasMemberRelation skos:hasTopConcept.
 @prefix skos:&#60;http://www.w3.org/2004/02/skos/core#&#62; .
 
 <>
-a ldp:BasicContainer, skos:Concept;
-ldp:hasMemberRelation skos:narrower;
-ldp:memberOfRelation skos:broader;
-skos:prefLabel "Design"@en;
-skos:prefLabel "Diseño"@es.
+	a ldp:BasicContainer, skos:Concept;
+	ldp:hasMemberRelation skos:narrower;
+	ldp:memberOfRelation skos:broader;
+	skos:prefLabel "Design"@en;
+	skos:prefLabel "Diseño"@es.
 						</textarea>
-						<!--@formatter:off-->
+						<!--@formatter:on-->
 						<code-mirror class="ui text left aligned basic segment"
 						             [mode]="'turtle'"
 						             [read-only]="'nocursor'" [value]="example71.value">
@@ -1533,14 +1533,6 @@ skos:prefLabel "Diseño"@es.
 									</td>
 									<td>Yes</td>
 								</tr>
-								<tr>
-									<td>If-Match</td>
-									<td>
-										<em>Issue a GET request on this container first, then use the value of the ETag header
-											here.</em>
-									</td>
-									<td>Yes</td>
-								</tr>
 							</tbody>
 						</table>
 
@@ -1551,9 +1543,8 @@ skos:prefLabel "Diseño"@es.
 @prefix c:&#60;https://carbonldp.com/ns/v1/platform#&#62; .
 
 _:b0
-a c:AddMemberAction;
-c:targetMember
-&#60;https://local.carbonldp.com/apps/taxonomy-hub/schemes/topics/design/&#62;.
+	a c:AddMemberAction;
+	c:targetMember &#60;https://local.carbonldp.com/apps/taxonomy-hub/schemes/topics/design/&#62;.
 						</textarea>
 						<!--@formatter:on-->
 
@@ -1639,10 +1630,10 @@ c:targetMember
 @prefix skos:&#60;http://www.w3.org/2004/02/skos/core#&#62; .
 
 <>
-a ldp:BasicContainer, skos:Concept;
-ldp:hasMemberRelation skos:narrower;
-ldp:memberOfRelation skos:broader;
-skos:prefLabel "Technology".
+	a ldp:BasicContainer, skos:Concept;
+	ldp:hasMemberRelation skos:narrower;
+	ldp:memberOfRelation skos:broader;
+	skos:prefLabel "Technology".
 						</textarea>
 						<!--@formatter:on-->
 						<code-mirror class="ui text left aligned basic segment"
@@ -1688,14 +1679,6 @@ skos:prefLabel "Technology".
 									</td>
 									<td>Yes</td>
 								</tr>
-								<tr>
-									<td>If-Match</td>
-									<td>
-										<em>Issue a GET request on this container first, then use the value of the ETag header
-											here.</em>
-									</td>
-									<td>Yes</td>
-								</tr>
 							</tbody>
 						</table>
 
@@ -1705,8 +1688,8 @@ skos:prefLabel "Technology".
 @prefix c:&#60;https://carbonldp.com/ns/v1/platform#&#62; .
 
 _:b0
-a c:AddMemberAction;
-c:member &#60;https://local.carbonldp.com/apps/taxonomy-hub/schemes/topics/technology/&#62;.
+	a c:AddMemberAction;
+	c:memeberTarget &#60;https://local.carbonldp.com/apps/taxonomy-hub/schemes/topics/technology/&#62;.
 						</textarea>
 						<!--@formatter:on-->
 						<code-mirror class="ui text left aligned basic segment"
@@ -1763,10 +1746,10 @@ c:member &#60;https://local.carbonldp.com/apps/taxonomy-hub/schemes/topics/techn
 @prefix skos:&#60;http://www.w3.org/2004/02/skos/core#&#62; .
 
 <>
-a ldp:BasicContainer, skos:Concept;
-ldp:hasMemberRelation skos:narrower;
-ldp:memberOfRelation skos:broader;
-skos:prefLabel "Information Architecture".
+	a ldp:BasicContainer, skos:Concept;
+	ldp:hasMemberRelation skos:narrower;
+	ldp:memberOfRelation skos:broader;
+	skos:prefLabel "Information Architecture".
 						</textarea>
 						<!--@formatter:on-->
 						<code-mirror class="ui text left aligned basic segment"
@@ -1813,14 +1796,6 @@ skos:prefLabel "Information Architecture".
 									</td>
 									<td>Yes</td>
 								</tr>
-								<tr>
-									<td>If-Match</td>
-									<td>
-										<em>Issue a GET request on this container first, then use the value of the ETag header
-											here.</em>
-									</td>
-									<td>Yes</td>
-								</tr>
 							</tbody>
 						</table>
 
@@ -1831,8 +1806,8 @@ skos:prefLabel "Information Architecture".
 @prefix c:&#60;https://carbonldp.com/ns/v1/platform#&#62; .
 
 _:b0
-a c:AddMemberAction;
-c:member &#60;https://local.carbonldp.com/apps/taxonomy-hub/schemes/topics/information-architecture/&#62;.
+	a c:AddMemberAction;
+	c:memeberTarget &#60;https://local.carbonldp.com/apps/taxonomy-hub/schemes/topics/information-architecture/&#62;.
 						</textarea>
 						<!--@formatter:on-->
 
@@ -1902,10 +1877,10 @@ c:member &#60;https://local.carbonldp.com/apps/taxonomy-hub/schemes/topics/infor
 @prefix skos:&#60;http://www.w3.org/2004/02/skos/core#&#62; .
 
 <>
-a ldp:BasicContainer, skos:Concept;
-ldp:hasMemberRelation skos:narrower;
-ldp:memberOfRelation skos:broader;
-skos:prefLabel "HTML5".
+	a ldp:BasicContainer, skos:Concept;
+	ldp:hasMemberRelation skos:narrower;
+	ldp:memberOfRelation skos:broader;
+	skos:prefLabel "HTML5".
 						</textarea>
 						<!--@formatter:on-->
 						<code-mirror class="ui text left aligned basic segment"
@@ -1960,10 +1935,10 @@ skos:prefLabel "HTML5".
 @prefix skos:&#60;http://www.w3.org/2004/02/skos/core#&#62; .
 
 <>
-a ldp:BasicContainer, skos:Concept;
-ldp:hasMemberRelation skos:narrower;
-ldp:memberOfRelation skos:broader;
-skos:prefLabel "JavaScript".
+	a ldp:BasicContainer, skos:Concept;
+	ldp:hasMemberRelation skos:narrower;
+	ldp:memberOfRelation skos:broader;
+	skos:prefLabel "JavaScript".
 						</textarea>
 						<!--@formatter:on-->
 						<code-mirror class="ui text left aligned basic segment"
@@ -2004,14 +1979,6 @@ skos:prefLabel "JavaScript".
 									<td>http://www.w3.org/ns/ldp#Container; rel=interaction-model</td>
 									<td>Yes</td>
 								</tr>
-								<tr>
-									<td>If-Match</td>
-									<td>
-										<em>Issue a GET request on this container first, then use the value of the ETag header
-											here.</em>
-									</td>
-									<td>Yes</td>
-								</tr>
 							</tbody>
 						</table>
 
@@ -2021,8 +1988,8 @@ skos:prefLabel "JavaScript".
 @prefix c:&#60;https://carbonldp.com/ns/v1/platform#&#62; .
 
 _:b0
-a c:AddMemberAction;
-c:member &#60;https://local.carbonldp.com/apps/taxonomy-hub/schemes/topics/html5/&#62;.
+	a c:AddMemberAction;
+	c:memeberTarget &#60;https://local.carbonldp.com/apps/taxonomy-hub/schemes/topics/html5/&#62;.
 						</textarea>
 						<!--@formatter:on-->
 						<code-mirror class="ui text left aligned basic segment"
@@ -2062,14 +2029,6 @@ c:member &#60;https://local.carbonldp.com/apps/taxonomy-hub/schemes/topics/html5
 									<td>http://www.w3.org/ns/ldp#Container; rel=interaction-model</td>
 									<td>Yes</td>
 								</tr>
-								<tr>
-									<td>If-Match</td>
-									<td>
-										<em>Issue a GET request on this container first, then use the value of the ETag header
-											here.</em>
-									</td>
-									<td>Yes</td>
-								</tr>
 							</tbody>
 						</table>
 
@@ -2079,8 +2038,8 @@ c:member &#60;https://local.carbonldp.com/apps/taxonomy-hub/schemes/topics/html5
 @prefix c:&#60;https://carbonldp.com/ns/v1/platform#&#62; .
 
 _:b0
-a c:AddMemberAction;
-c:member &#60;https://local.carbonldp.com/apps/taxonomy-hub/schemes/topics/javascript/&#62;.
+	a c:AddMemberAction;
+	c:memeberTarget &#60;https://local.carbonldp.com/apps/taxonomy-hub/schemes/topics/javascript/&#62;.
 						</textarea>
 						<!--@formatter:on-->
 
