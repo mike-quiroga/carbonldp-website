@@ -8,6 +8,7 @@ src/assets/**/*.css
 src/assets/**/*.map
 
 src/app/**/*.css
+src/app/**/*.js
 src/app/**/*.map
 
 # Typings

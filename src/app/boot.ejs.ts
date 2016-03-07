@@ -1,3 +1,4 @@
+/// <reference path="./../../typings/typings.d.ts" />
 import "zone.js";
 import "reflect-metadata";
 
@@ -11,7 +12,8 @@ import Carbon from "carbon/Carbon";
 
 import AppComponent from "app/AppComponent";
 
-import { BLOG_PROVIDERS } from "app/blog/Blog";
+import { BLOG_PROVIDERS } from "app/website/blog/Blog";
+import { APP_DEV_PROVIDERS } from "app/app-dev/AppDev";
 
 const CARBON_PROVIDER = provide( Carbon, {
 	useFactory: () => {
@@ -28,5 +30,6 @@ bootstrap( AppComponent, [
 	provide( APP_BASE_HREF, { useValue: "<%- url.base %>" } ),
 
 	CARBON_PROVIDER,
-	BLOG_PROVIDERS
+	BLOG_PROVIDERS,
+	APP_DEV_PROVIDERS
 ] );

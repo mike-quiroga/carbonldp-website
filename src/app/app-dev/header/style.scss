@@ -1,0 +1,22 @@
+app-dev {
+	header {
+		.navigation.menu {
+			border-radius: 0;
+		}
+
+		.computer.tablet.only.row {
+
+		}
+
+		.mobile.only.row {
+			.navigation.menu {
+				margin: 0;
+			}
+			.vertical.menu {
+				border-radius: 0;
+				margin-top: 0;
+				border-top: 1px solid #A9A9A9;
+			}
+		}
+	}
+}

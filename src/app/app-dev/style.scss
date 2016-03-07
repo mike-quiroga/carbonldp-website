@@ -1,0 +1,62 @@
+app-dev {
+	flex: 1 1 100%;
+
+	display: flex;
+	flex-direction: column;
+
+	> header {
+		flex: 0 0 auto;
+	}
+
+	> .page-content {
+		flex: 1;
+
+		display: flex;
+		flex-direction: row;
+		width: 100%;
+
+		> sidebar {
+			flex: 0 0 auto;
+			width: 250px;
+		}
+
+		> .dashboard-content {
+			flex: 1;
+			max-height: 100%;
+			width: 62%;
+			min-width: 400px;
+
+			display: flex;
+			flex-direction: column;
+
+			> .menu-bar {
+				flex: 0 0 auto;
+				height: 40px;
+			}
+
+			> .scrollable-content {
+				flex: 1;
+
+				display: flex;
+				flex-direction: column;
+
+				//overflow-y: scroll;
+				overflow-x: hidden;
+
+				> * {
+					flex: 1;
+				}
+
+				> .rendered-content {
+					flex: 1;
+					padding: 5%;
+				}
+
+				> footer {
+					flex: 0 0 auto;
+					height: 69px;
+				}
+			}
+		}
+	}
+}

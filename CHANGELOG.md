@@ -1,3 +1,24 @@
+# 0.5.1 (March 4, 2016)
+* Updated Getting started with rest api document
+
+# 0.5.0 (March 4, 2016)
+* Updated to Angular to Beta 8.
+* Added a login view.
+* Added a color palette to the UI with 7 new colors.
+* Added an Application Development module with:
+    *  A service to retrieve applications.
+    *  A view to list retrieved applications.
+    *  A navigation bar for breadcrumbs.
+    *  A sidebar to provide navigation throughout the module.
+    *  Integration with the SPARQL Query Editor on an App context.
+
+# 0.4.0 (March 3, 2016)
+* Switched tsd to typings
+* Added angular2 and carbon definition files (they provide jspm import support while we wait for WEB-18904)
+
+# 0.3.2 (February 29, 2016)
+* Fixed DI. static private parameters property shouldn't be needed anymore.
+
 # 0.3.1 (February 15, 2016)
 * Fixed relative paths issue in different environments
 * Added configuration file and support for ejs templates for index.html, boot.ts and any scss
