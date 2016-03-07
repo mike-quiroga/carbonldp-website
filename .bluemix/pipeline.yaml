@@ -9,50 +9,24 @@ stages:
   jobs:
   - name: Build
     type: builder
-    artifact_dir: target
-    build_type: maven
-    script: |-
-      #!/bin/bash
-
-      mkdir -p $ARCHIVE_DIR
-
-      BUILD_VERSION=`mvn org.apache.maven.plugins:maven-help-plugin:2.1.1:evaluate -Dexpression=project.version|grep -Ev '(^\[|Download\w+:)'`
-      echo "Starting to build carbon-platform version: $BUILD_VERSION"
-      echo "BUILD_VERSION=$BUILD_VERSION" >> $ARCHIVE_DIR/build.properties
-
-      cp Dockerfile $ARCHIVE_DIR
-
-      #mkdir java
-      #cd java
-      #echo -n "Downloading Java 1.8..."
-      #wget -q --no-check-certificate --no-cookies --header "Cookie: oraclelicense=accept-securebackup-cookie" http://download.oracle.com/otn-pub/java/jdk/8u65-b17/jdk-8u65-linux-x64.tar.gz
-      #echo " [OK]"
-      #echo -n "Decompressing Java 1.8..."
-      #tar -xzf jdk-8u65-linux-x64.tar.gz
-      #echo " [OK]"
-      #JAVA_HOME=$(pwd)/jdk1.8.0_65
-      #echo "JAVA_HOME set to $JAVA_HOME"
-      #cd ..
-
-      echo -n "Setting JAVA_HOME to JAVA8_HOME..."
-      JAVA_HOME=$JAVA8_HOME
-      echo " [OK]"
-
-      mkdir dependencies
-      cd dependencies
-      git clone https://CarbonDeployer:N6c7ZluGejBy@github.com/CarbonLDP/carbon-commons
-      cd carbon-commons
-      mvn -B install
-      cd ..
-      git clone https://CarbonDeployer:N6c7ZluGejBy@github.com/CarbonLDP/sesame-spring
-      cd sesame-spring
-      mvn -B install
-      cd ..
-      cd ..
-
-      mvn -B package -Dmaven.test.skip=true
-    enable_tests: true
-    test_file_pattern: '*/TEST-*.xml'
+    artifact_dir: carbon-website/dist
+    build_type: shell
+    script: "#!/bin/bash\nshopt -s extglob\n\nNODE_VERSION=\"v5.4.1\"\n\nfunction\
+      \ update_node_js() {\n\tlocal VERSION=$1\n\tif [[ -z $VERSION ]]; then\n\t\t\
+      echo \"${red}Expected version number to be passed into update_node_js\"\n\t\t\
+      return 1;\n\tfi\n\n\tlocal CURRENT_DIRECTORY=`pwd`\n\tmkdir ~/local\n\tcd ~/local\n\
+      \techo \"Downloading NodeJS $VERSION\"\n\tcurl http://nodejs.org/dist/$VERSION/node-$VERSION-linux-x64.tar.gz\
+      \ | tar xz --strip-components=1\n\n\texport PATH=$HOME/local/bin:$PATH\n\n\t\
+      cd $CURRENT_DIRECTORY\n\t\n\techo \"NodeJS updated to $VERSION\"\n}\n\nmkdir\
+      \ carbon-website\n\necho \"Moving all files into carbon-website folder\"\nmv\
+      \ !(carbon-website) .[^.]* carbon-website\n\nupdate_node_js $NODE_VERSION\n\n\
+      git clone https://CarbonDeployer:N6c7ZluGejBy@github.com/CarbonLDP/CarbonLDP-JS-SDK.git\n\
+      \ncd carbon-website\n\nmkdir -p $ARCHIVE_DIR\n\nBUILD_VERSION=`node -e \"console.log(require('./package.json').version);\"\
+      `\necho \"BUILD_VERSION=$BUILD_VERSION\" >> dist/build.properties\n\nCONTAINER_NAME=\"\
+      website$RANDOM\"\necho \"CONTAINER_NAME=$CONTAINER_NAME\" >> dist/build.properties\n\
+      \ncat dist/build.properties\n\ncp package.json dist\n\necho \"Installing Node\
+      \ dependencies...\"\nnpm install\necho \"Node dependencies installed.\"\n\n\
+      echo \"Building project...\"\nnode_modules/.bin/gulp build --profile dev"
 - name: Containerize
   inputs:
   - type: job
@@ -68,16 +42,16 @@ stages:
       url: https://api.ng.bluemix.net
       organization: admin@carbonldp.com
       space: dev
-    IMAGE_NAME: carbon-platform
+    IMAGE_NAME: carbon-website
     USE_CACHED_LAYERS: 'true'
     COMMAND: |-
       #!/bin/bash
 
+      ls -l
+
       source build.properties
 
-      echo "Creating carbon-platform:$BUILD_VERSION..."
-
-      ice_build_image true registry.ng.bluemix.net/carbonldp/carbon-platform:$BUILD_VERSION .
+      ice_build_image true registry.ng.bluemix.net/carbonldp/carbon-website:$BUILD_VERSION .
 - name: Deploy
   inputs:
   - type: job
@@ -85,13 +59,6 @@ stages:
     job: Build
   triggers:
   - type: stage
-  properties:
-  - name: CONTAINER_NAME
-    value: cp1
-    type: text
-  - name: CONTAINER_IP
-    value: 169.44.6.124
-    type: text
   jobs:
   - name: Deploy
     type: builder
@@ -100,7 +67,7 @@ stages:
       url: https://api.ng.bluemix.net
       organization: admin@carbonldp.com
       space: dev
-    IMAGE_NAME: carbon-platform
+    IMAGE_NAME: carbon-website
     USE_CACHED_LAYERS: 'true'
     COMMAND: "#!/bin/bash\n\nset -a\n. build.properties\n\nNODE_VERSION=\"v5.4.1\"\
       \n\nfunction update_node_js() {\n\tlocal VERSION=$1\n\tif [[ -z $VERSION ]];\
@@ -109,9 +76,9 @@ stages:
       cd ~/local\n\techo \"Downloading NodeJS $VERSION\"\n\tcurl http://nodejs.org/dist/$VERSION/node-$VERSION-linux-x64.tar.gz\
       \ | tar xz --strip-components=1\n\n\texport PATH=$HOME/local/bin:$PATH\n\n\t\
       cd $CURRENT_DIRECTORY\n\t\n\techo \"NodeJS updated to $VERSION\"\n}\n\nupdate_node_js\
-      \ $NODE_VERSION\n\ngit clone https://CarbonDeployer:N6c7ZluGejBy@github.com/CarbonLDP/carbon-dev.git\n\
+      \ $NODE_VERSION\n\nWORKING_DIRECTORY=`pwd`\n\ngit clone https://CarbonDeployer:N6c7ZluGejBy@github.com/CarbonLDP/carbon-dev.git\n\
       \ncd carbon-dev/devOps\n\necho \"Installing carbon-dev/devOps npm packages...\"\
-      \nnpm install\necho \"Dependencies installed\"\n\nnode platform/deploy.js"
+      \nnpm install\necho \"Dependencies installed\"\n\nnode website/deploy.js --dir=$WORKING_DIRECTORY"
 - name: Link HTTP
   inputs:
   - type: job
@@ -127,7 +94,37 @@ stages:
       url: https://api.ng.bluemix.net
       organization: admin@carbonldp.com
       space: dev
-    IMAGE_NAME: http-server
+    USE_CACHED_LAYERS: 'true'
+    COMMAND: "#!/bin/bash\n\nsource build.properties\n\nNODE_VERSION=\"v5.4.1\"\n\n\
+      function update_node_js() {\n\tlocal VERSION=$1\n\tif [[ -z $VERSION ]]; then\n\
+      \t\techo \"${red}Expected version number to be passed into update_node_js\"\n\
+      \t\treturn 1;\n\tfi\n\n\tlocal CURRENT_DIRECTORY=`pwd`\n\tmkdir ~/local\n\t\
+      cd ~/local\n\techo \"Downloading NodeJS $VERSION\"\n\tcurl http://nodejs.org/dist/$VERSION/node-$VERSION-linux-x64.tar.gz\
+      \ | tar xz --strip-components=1\n\n\texport PATH=$HOME/local/bin:$PATH\n\n\t\
+      cd $CURRENT_DIRECTORY\n\t\n\techo \"NodeJS updated to $VERSION\"\n}\n\nupdate_node_js\
+      \ $NODE_VERSION\n\ngit clone https://CarbonDeployer:N6c7ZluGejBy@github.com/CarbonLDP/carbon-dev.git\n\
+      cd carbon-dev/devOps\n\necho \"Installing carbon-dev/devOps npm packages...\"\
+      \nnpm install\necho \"Dependencies installed\"\n\nnode http/link.js --website=$CONTAINER_NAME"
+- name: Clean
+  inputs:
+  - type: job
+    stage: Build
+    job: Build
+  triggers:
+  - type: stage
+  properties:
+  - name: ADDITIONAL_IMAGE_VERSIONS
+    value: '1'
+    type: text
+  jobs:
+  - name: Clean
+    type: builder
+    extension_id: ibm.devops.services.pipeline.container.builder
+    target:
+      url: https://api.ng.bluemix.net
+      organization: admin@carbonldp.com
+      space: dev
+    IMAGE_NAME: carbon-website
     USE_CACHED_LAYERS: 'true'
     COMMAND: "#!/bin/bash\n\nset -a\n. build.properties\n\nNODE_VERSION=\"v5.4.1\"\
       \n\nfunction update_node_js() {\n\tlocal VERSION=$1\n\tif [[ -z $VERSION ]];\
@@ -136,16 +133,14 @@ stages:
       cd ~/local\n\techo \"Downloading NodeJS $VERSION\"\n\tcurl http://nodejs.org/dist/$VERSION/node-$VERSION-linux-x64.tar.gz\
       \ | tar xz --strip-components=1\n\n\texport PATH=$HOME/local/bin:$PATH\n\n\t\
       cd $CURRENT_DIRECTORY\n\t\n\techo \"NodeJS updated to $VERSION\"\n}\n\nupdate_node_js\
-      \ $NODE_VERSION\n\ngit clone https://CarbonDeployer:N6c7ZluGejBy@github.com/CarbonLDP/carbon-dev.git\n\
-      cd carbon-dev/devOps\n\necho \"Installing carbon-dev/devOps npm packages...\"\
-      \nnpm install\necho \"Dependencies installed\"\n\nnode http/link.js"
-- name: Clean
+      \ $NODE_VERSION\n\nWORKING_DIRECTORY=`pwd`\n\ngit clone https://CarbonDeployer:N6c7ZluGejBy@github.com/CarbonLDP/carbon-dev.git\n\
+      \ncd carbon-dev/devOps\n\necho \"Installing carbon-dev/devOps npm packages...\"\
+      \nnpm install\necho \"Dependencies installed\"\n\nnode website/clean.js --dir=$WORKING_DIRECTORY"
+- name: MyStage
   inputs:
   - type: job
     stage: Build
     job: Build
-  triggers:
-  - type: stage
   jobs:
   - name: Build
     type: builder
@@ -154,15 +149,8 @@ stages:
       url: https://api.ng.bluemix.net
       organization: admin@carbonldp.com
       space: dev
-    IMAGE_NAME: carbon-platform
+    IMAGE_NAME: carbon-website
     USE_CACHED_LAYERS: 'true'
-    COMMAND: "#!/bin/bash\n\nset -a\n. build.properties\n\nNODE_VERSION=\"v5.4.1\"\
-      \n\nfunction update_node_js() {\n\tlocal VERSION=$1\n\tif [[ -z $VERSION ]];\
-      \ then\n\t\techo \"${red}Expected version number to be passed into update_node_js\"\
-      \n\t\treturn 1;\n\tfi\n\n\tlocal CURRENT_DIRECTORY=`pwd`\n\tmkdir ~/local\n\t\
-      cd ~/local\n\techo \"Downloading NodeJS $VERSION\"\n\tcurl http://nodejs.org/dist/$VERSION/node-$VERSION-linux-x64.tar.gz\
-      \ | tar xz --strip-components=1\n\n\texport PATH=$HOME/local/bin:$PATH\n\n\t\
-      cd $CURRENT_DIRECTORY\n\t\n\techo \"NodeJS updated to $VERSION\"\n}\n\nupdate_node_js\
-      \ $NODE_VERSION\n\ngit clone https://CarbonDeployer:N6c7ZluGejBy@github.com/CarbonLDP/carbon-dev.git\n\
-      \ncd carbon-dev/devOps\n\necho \"Installing carbon-dev/devOps npm packages...\"\
-      \nnpm install\necho \"Dependencies installed\"\n\nnode platform/clean.js"
+    COMMAND: |-
+      #!/bin/bash
+      printenv
