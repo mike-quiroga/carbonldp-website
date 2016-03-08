@@ -1,5 +1,5 @@
 # 0.28.3 (2016/03/08)
-* App developers can now create apps
+* Fixed a bug that prevented AppDevelopers from creating new applications
 
 # 0.28.2 (2016/03/02)
 * Access points now show their members when asked as a container
