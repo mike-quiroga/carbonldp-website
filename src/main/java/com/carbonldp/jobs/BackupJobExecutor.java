@@ -98,10 +98,10 @@ public class BackupJobExecutor implements TypedJobExecutor {
 			if ( file.isDirectory() ) {
 				File[] listFiles = file.listFiles();
 				for ( File listFile : listFiles ) {
-					addFileTozip( zipOutputStream, listFile, file );
+					addFileToZip( zipOutputStream, listFile, file );
 				}
 			} else {
-				addFileTozip( zipOutputStream, file, null );
+				addFileToZip( zipOutputStream, file, null );
 			}
 		}
 		try {
@@ -113,7 +113,7 @@ public class BackupJobExecutor implements TypedJobExecutor {
 		return temporaryFile;
 	}
 
-	private void addFileTozip( ZipOutputStream zipOutputStream, File file, File directoryFile ) {
+	private void addFileToZip( ZipOutputStream zipOutputStream, File file, File directoryFile ) {
 		FileSystemResource resource = new FileSystemResource( file.getPath() );
 		FileInputStream fileInputStream;
 		try {

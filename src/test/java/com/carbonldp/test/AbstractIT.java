@@ -7,10 +7,12 @@ import com.carbonldp.apps.AppRepository;
 import com.carbonldp.apps.AppService;
 import com.carbonldp.authorization.acl.ACLRepository;
 import com.carbonldp.authorization.acl.ACLService;
+import com.carbonldp.jobs.TypedJobExecutor;
 import com.carbonldp.ldp.containers.BasicContainer;
 import com.carbonldp.ldp.containers.Container;
 import com.carbonldp.ldp.sources.RDFSourceRepository;
 import com.carbonldp.repository.security.SecuredNativeStoreFactory;
+import com.carbonldp.spring.TransactionWrapper;
 import com.carbonldp.utils.PropertiesUtil;
 import org.mockito.Mockito;
 import org.openrdf.model.URI;
@@ -71,6 +73,10 @@ public abstract class AbstractIT extends AbstractTestNGSpringContextTests {
 	protected RDFSourceRepository sourceRepository;
 	@Autowired
 	protected ACLRepository aclRepository;
+	@Autowired
+	protected TypedJobExecutor backupJobExecutor;
+	@Autowired
+	protected TransactionWrapper transactionWrapper;
 
 	protected final String testRepositoryID = "test-blog";
 	protected final String testResourceURI = "https://local.carbonldp.com/apps/test-blog/";
@@ -87,6 +93,7 @@ public abstract class AbstractIT extends AbstractTestNGSpringContextTests {
 	private final String platformDefaultDataLocation = "platform-default.trig";
 
 	protected Properties properties;
+	protected App app;
 
 	public AbstractIT() {
 		SailRegistry.getInstance().add( new SecuredNativeStoreFactory() );
@@ -258,5 +265,6 @@ public abstract class AbstractIT extends AbstractTestNGSpringContextTests {
 		// This if is needed here, lines above this are necessary to run every time before each class.
 		if ( ! appService.exists( new URIImpl( testResourceURI ) ) )
 			appService.create( app );
+		app = appService.get( new URIImpl(  testResourceURI ) );
 	}
 }
