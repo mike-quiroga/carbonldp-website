@@ -93,7 +93,23 @@
 <platform/apps/> {
 	<platform/apps/>
 		a 	ldp:BasicContainer;
-		ldp:hasMemberRelation ldp:member.
+		ldp:hasMemberRelation ldp:member;
+		cs:accessControlList <platform/apps/~acl/>.
+}
+<platform/apps/~acl/> {
+	<platform/apps/~acl/>
+		a cs:AccessControlList;
+		cs:accessTo <platform/apps/>;
+		cs:accessControlEntry
+			<platform/apps/~acl/#ace-235235234235>.
+	<platform/apps/~acl/#ace-235235234235>
+		a cs:AccessControlEntry;
+		cs:subjectClass cs:PlatformRole;
+		cs:subject <platform/roles/app-developer/>;
+		cs:granting "true"^^xsd:boolean;
+		cs:permission
+			cs:Read,
+			cs:CreateChild.
 }
 <platform/agents/> {
 	<platform/agents/>
