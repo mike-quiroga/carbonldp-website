@@ -30,10 +30,13 @@ public class JobsExecutor {
 	@Async
 	public void execute( Execution execution ) {
 		LOG.debug( "Running execution " + Thread.currentThread().getName(), Thread.currentThread().getName() );
+
 		executionRepository.changeExecutionStatus( execution.getURI(), ExecutionDescription.Status.RUNNING );
 		Job job = transactionWrapper.runWithSystemPermissionsInPlatformContext( () -> jobService.get( execution.getJobURI() ) );
 		JobDescription.Type type = JobFactory.getInstance().getJobType( job );
 		boolean hasErrors = false;
+
+		LOG.debug( "Running execution " + Thread.currentThread().getName() + " Job " + job.getSubject(), Thread.currentThread().getName() );
 
 		try {
 			getTypedRepository( type ).execute( job, execution );
@@ -43,6 +46,7 @@ public class JobsExecutor {
 		}
 		if ( ! hasErrors ) executionRepository.changeExecutionStatus( execution.getURI(), ExecutionDescription.Status.FINISHED );
 		dequeueJobsExecutionQueue( job.getAppRelated() );
+
 		LOG.debug( "Ending execution " + Thread.currentThread().getName(), Thread.currentThread().getName() );
 	}
 
