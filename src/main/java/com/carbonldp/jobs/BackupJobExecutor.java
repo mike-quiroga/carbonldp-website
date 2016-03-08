@@ -5,7 +5,7 @@ import com.carbonldp.Vars;
 import com.carbonldp.apps.App;
 import com.carbonldp.apps.AppRepository;
 import com.carbonldp.apps.context.AppContextHolder;
-import com.carbonldp.ldp.nonrdf.TriGWriter;
+import com.carbonldp.utils.TriGWriter;
 import com.carbonldp.ldp.nonrdf.backup.BackupService;
 import com.carbonldp.ldp.sources.RDFSourceRepository;
 import com.carbonldp.spring.TransactionWrapper;
