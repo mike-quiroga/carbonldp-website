@@ -265,6 +265,6 @@ public abstract class AbstractIT extends AbstractTestNGSpringContextTests {
 		// This if is needed here, lines above this are necessary to run every time before each class.
 		if ( ! appService.exists( new URIImpl( testResourceURI ) ) )
 			appService.create( app );
-		app = appService.get( new URIImpl(  testResourceURI ) );
+		this.app = appService.get( new URIImpl( testResourceURI ) );
 	}
 }

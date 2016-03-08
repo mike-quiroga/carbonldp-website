@@ -1,38 +1,63 @@
 package com.carbonldp.repository.updates;
 
+import com.carbonldp.Vars;
 import com.carbonldp.apps.App;
-import com.carbonldp.authorization.acl.ACLDescription;
-import com.carbonldp.ldp.sources.RDFSourceDescription;
+import com.carbonldp.apps.AppDescription;
+import com.carbonldp.authorization.acl.ACLRepository;
+import com.carbonldp.jobs.JobDescription;
+import com.carbonldp.ldp.containers.DirectContainer;
+import com.carbonldp.ldp.containers.DirectContainerFactory;
+import com.carbonldp.ldp.sources.RDFSourceRepository;
+import com.carbonldp.rdf.RDFResource;
+import org.openrdf.model.URI;
+import org.openrdf.model.impl.URIImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Set;
 
-import static com.carbonldp.Consts.NEW_LINE;
-import static com.carbonldp.Consts.TAB;
-
 /**
  * @author JorgeEspinosa
- * @since 0.27.8-ALPHA
+ * @since _version_
  */
 public class UpdateAction1o5o0 extends AbstractUpdateAction {
 
-	final String updateACLTripleQuery = "" +
-		"INSERT {" + NEW_LINE +
-		TAB + "GRAPH ?target {" + NEW_LINE +
-		TAB + TAB + "?target <" + RDFSourceDescription.Property.ACCESS_CONTROL_LIST.getURI().stringValue() + "> ?acl." + NEW_LINE +
-		TAB + "}." + NEW_LINE +
-		"} WHERE {" + NEW_LINE +
-		TAB + "GRAPH ?acl {" + NEW_LINE +
-		TAB + TAB + "?acl <" + ACLDescription.Property.ACCESS_TO.getURI().stringValue() + "> ?target." + NEW_LINE +
-		TAB + "}." + NEW_LINE +
-		"}";
+	protected RDFSourceRepository sourceRepository;
+	protected ACLRepository aclRepository;
 
 	@Override
 	public void execute() throws Exception {
-		transactionWrapper.runInPlatformContext( () -> sparqlTemplate.executeUpdate( updateACLTripleQuery, null ) );
 		Set<App> apps = getAllApps();
 		for ( App app : apps ) {
-			transactionWrapper.runInAppContext( app, () -> sparqlTemplate.executeUpdate( updateACLTripleQuery, null ) );
+			createBackupContainer( app );
+			createJobsContainer( app );
 		}
 	}
+
+	private void createBackupContainer( App app ) {
+		String appString = app.getURI().stringValue();
+		String backupsString = Vars.getInstance().getBackupsContainer();
+		URI containerURI = new URIImpl( appString + backupsString );
+		RDFResource backupsResource = new RDFResource( containerURI );
+		DirectContainer backupsContainer = DirectContainerFactory.getInstance().create( backupsResource, app.getURI(), AppDescription.Property.BACKUP.getURI() );
+		sourceRepository.createAccessPoint( app.getURI(), backupsContainer );
+		aclRepository.createACL( backupsContainer.getURI() );
+	}
+
+	private void createJobsContainer( App app ) {
+		String appString = app.getURI().stringValue();
+		String jobsString = Vars.getInstance().getJobsContainer();
+		URI containerURI = new URIImpl( appString + jobsString );
+		RDFResource jobsResource = new RDFResource( containerURI );
+		DirectContainer jobsContainer = DirectContainerFactory.getInstance().create( jobsResource, app.getURI(), AppDescription.Property.JOB.getURI() );
+		jobsContainer.setMemberOfRelation( JobDescription.Property.APP_RELATED.getURI() );
+		sourceRepository.createAccessPoint( app.getURI(), jobsContainer );
+		aclRepository.createACL( jobsContainer.getURI() );
+	}
+
+	@Autowired
+	public void setSourceRepository( RDFSourceRepository sourceRepository ) { this.sourceRepository = sourceRepository; }
+
+	@Autowired
+	public void setAclRepository( ACLRepository aclRepository ) { this.aclRepository = aclRepository; }
 }
 
