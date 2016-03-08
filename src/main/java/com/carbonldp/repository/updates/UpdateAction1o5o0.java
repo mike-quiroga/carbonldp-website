@@ -24,10 +24,14 @@ public class UpdateAction1o5o0 extends AbstractUpdateAction {
 	public void execute() throws Exception {
 		Set<App> apps = getAllApps();
 		for ( App app : apps ) {
-			createBackupContainer( app );
-			createJobsContainer( app );
-			createJobsQueue( app );
+			transactionWrapper.runInPlatformContext( () -> updateApp( app ) );
 		}
+	}
+
+	private void updateApp( App app ) {
+		createBackupContainer( app );
+		createJobsContainer( app );
+		createJobsQueue( app );
 	}
 
 	private void createBackupContainer( App app ) {
