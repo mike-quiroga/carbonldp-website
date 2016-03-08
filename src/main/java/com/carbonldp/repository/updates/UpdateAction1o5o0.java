@@ -60,6 +60,7 @@ public class UpdateAction1o5o0 extends AbstractUpdateAction {
 		app.setJobsExecutionQueue( appJobsExecutionQueue );
 		app.getBaseModel().add( appJobsExecutionQueue, RDF.FIRST, appJobsExecutionQueue, app.getURI() );
 		app.getBaseModel().add( appJobsExecutionQueue, RDF.REST, RDF.NIL, app.getURI() );
+		documentRepository.set( app.getURI(), app.getDocument() );
 	}
 }
 
