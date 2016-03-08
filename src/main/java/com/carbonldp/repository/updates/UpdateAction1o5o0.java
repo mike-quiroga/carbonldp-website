@@ -1,17 +1,16 @@
 package com.carbonldp.repository.updates;
 
+import com.carbonldp.Consts;
 import com.carbonldp.Vars;
 import com.carbonldp.apps.App;
 import com.carbonldp.apps.AppDescription;
-import com.carbonldp.authorization.acl.ACLRepository;
 import com.carbonldp.jobs.JobDescription;
 import com.carbonldp.ldp.containers.DirectContainer;
 import com.carbonldp.ldp.containers.DirectContainerFactory;
-import com.carbonldp.ldp.sources.RDFSourceRepository;
 import com.carbonldp.rdf.RDFResource;
 import org.openrdf.model.URI;
 import org.openrdf.model.impl.URIImpl;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.openrdf.model.vocabulary.RDF;
 
 import java.util.Set;
 
@@ -21,15 +20,13 @@ import java.util.Set;
  */
 public class UpdateAction1o5o0 extends AbstractUpdateAction {
 
-	protected RDFSourceRepository sourceRepository;
-	protected ACLRepository aclRepository;
-
 	@Override
 	public void execute() throws Exception {
 		Set<App> apps = getAllApps();
 		for ( App app : apps ) {
 			createBackupContainer( app );
 			createJobsContainer( app );
+			createJobsQueue( app );
 		}
 	}
 
@@ -54,10 +51,11 @@ public class UpdateAction1o5o0 extends AbstractUpdateAction {
 		aclRepository.createACL( jobsContainer.getURI() );
 	}
 
-	@Autowired
-	public void setSourceRepository( RDFSourceRepository sourceRepository ) { this.sourceRepository = sourceRepository; }
-
-	@Autowired
-	public void setAclRepository( ACLRepository aclRepository ) { this.aclRepository = aclRepository; }
+	private void createJobsQueue( App app ) {
+		URI appJobsExecutionQueue = new URIImpl( app.getURI().stringValue() + Consts.HASH_SIGN + Vars.getInstance().getJobsExecutionQueue() );
+		app.setJobsExecutionQueue( appJobsExecutionQueue );
+		app.getBaseModel().add( appJobsExecutionQueue, RDF.FIRST, appJobsExecutionQueue, app.getURI() );
+		app.getBaseModel().add( appJobsExecutionQueue, RDF.REST, RDF.NIL, app.getURI() );
+	}
 }
 

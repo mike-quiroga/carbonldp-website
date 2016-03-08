@@ -4,24 +4,20 @@ import com.carbonldp.AbstractComponent;
 import com.carbonldp.Vars;
 import com.carbonldp.apps.App;
 import com.carbonldp.apps.AppRepository;
+import com.carbonldp.authorization.acl.ACLRepository;
 import com.carbonldp.ldp.containers.ContainerRepository;
-import com.carbonldp.repository.SpringLocalRepositoryManager;
+import com.carbonldp.ldp.sources.RDFSourceRepository;
 import com.carbonldp.sparql.SPARQLTemplate;
 import com.carbonldp.spring.TransactionWrapper;
 import com.carbonldp.utils.Action;
-import com.carbonldp.utils.ActionWithResult;
 import org.openrdf.model.URI;
 import org.openrdf.model.impl.URIImpl;
 import org.openrdf.repository.RepositoryException;
-import org.openrdf.repository.manager.RemoteRepositoryManager;
 import org.openrdf.rio.RDFFormat;
 import org.openrdf.rio.RDFParseException;
 import org.openrdf.spring.SesameConnectionFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import org.springframework.context.annotation.Bean;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashSet;
@@ -37,6 +33,8 @@ public abstract class AbstractUpdateAction extends AbstractComponent implements 
 	protected AppRepository appRepository;
 	protected TransactionWrapper transactionWrapper;
 	protected SPARQLTemplate sparqlTemplate;
+	protected RDFSourceRepository sourceRepository;
+	protected ACLRepository aclRepository;
 
 	public void run() {
 		try {
@@ -82,6 +80,7 @@ public abstract class AbstractUpdateAction extends AbstractComponent implements 
 		sparqlTemplate = new SPARQLTemplate( connectionFactory );
 		containerRepository = context.getBean( ContainerRepository.class );
 		appRepository = context.getBean( AppRepository.class );
-
+		sourceRepository = context.getBean( RDFSourceRepository.class );
+		aclRepository = context.getBean( ACLRepository.class );
 	}
 }
