@@ -18,7 +18,7 @@ import java.util.Set;
  * @author JorgeEspinosa
  * @since _version_
  */
-public class UpdateAction1o5o0 extends AbstractUpdateAction {
+public class UpdateAction1o6o0 extends AbstractUpdateAction {
 
 	@Override
 	public void execute() throws Exception {
