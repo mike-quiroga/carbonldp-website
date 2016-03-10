@@ -27,23 +27,32 @@ export default class AppContextService {
 				return;
 			}
 
-			this.carbon.apps.get( slug + "/" ).then( ( appContext:App.Context ) => {
-				this.appContexts.set( slug, appContext );
-				resolve( appContext );
-			} );
+			this.carbon.apps.get( slug + "/" ).then(
+				( appContext:App.Context ) => {
+					this.appContexts.set( slug, appContext );
+					resolve( appContext );
+				}
+			).catch(
+				( error )=> {
+					console.log( error );
+					reject( error );
+				}
+			);
 		} );
 	}
 
 	getAll():Promise<App.Context[]> {
-		console.log( "App Context Service Authenticated: " + (this.carbon.auth.isAuthenticated() ? "YES" : "NO") );
-		return new Promise<App.Context[]>( ( resolve:( result:any ) => void, reject:( error:Error ) => void ) => {
-			this.carbon.apps.getAll().then( ( appContexts:App.Context[] ) => {
-				appContexts
-					.filter( ( appContext:App.Context ) => ! this.appContexts.has( this.getSlug( appContext ) ) )
-					.forEach( ( appContext:App.Context ) => this.appContexts.set( this.getSlug( appContext ), appContext ) );
+		//console.log( "App Context Service Authenticated: " + (this.carbon.auth.isAuthenticated() ? "YES" : "NO") );
+		return this.carbon.apps.getAll().then( ( appContexts:App.Context[] ) => {
+			appContexts
+				.filter( ( appContext:App.Context ) => {
+					return ! this.appContexts.has( this.getSlug( appContext ) );
+				} )
+				.forEach( ( appContext:App.Context ) => {
+					this.appContexts.set( this.getSlug( appContext ), appContext );
+				} );
 
-				resolve( Utils.A.from( appContexts.values() ) );
-			} );
+			return Utils.A.from( this.appContexts.values() );
 		} );
 	}
 

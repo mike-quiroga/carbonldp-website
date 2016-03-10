@@ -31,7 +31,7 @@ import "./style.css!";
 		let router:Router = injector.get( Router );
 
 		if ( ! carbon ) {
-			router.navigate( [ "/Login" ] );
+			router.navigate( [ "/Website/Login" ] );
 			return false;
 		}
 		// TODO: Change this to use a token instead of raw credentials when the SDK provides a way of authenticate using tokens.
@@ -52,13 +52,13 @@ import "./style.css!";
 							console.log( "There was a problem processing the request" );
 							break;
 					}
-					router.navigate( [ "/Login" ] );
+					router.navigate( [ "/Website/Login" ] );
 					return false;
 				}
 			);
 		}
 		if ( ! carbon.auth.isAuthenticated() )
-			router.navigate( [ "/Login" ] );
+			router.navigate( [ "/Website/Login" ] );
 		return carbon.auth.isAuthenticated();
 	}
 )

@@ -15,6 +15,7 @@ import AppComponent from "app/AppComponent";
 import { CONTENT_PROVIDERS } from "app/content/Content";
 import { BLOG_PROVIDERS } from "app/website/blog/Blog";
 import { APP_DEV_PROVIDERS } from "app/app-dev/AppDev";
+import { CONTENT_PROVIDERS } from 'app/content/Content';
 
 
 let appInjectorRef:Injector;
