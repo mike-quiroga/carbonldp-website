@@ -15,17 +15,10 @@ import com.carbonldp.ldp.AbstractSesameLDPService;
 import com.carbonldp.ldp.containers.BasicContainer;
 import com.carbonldp.ldp.containers.BasicContainerFactory;
 import com.carbonldp.ldp.containers.Container;
-import com.carbonldp.ldp.containers.ContainerRepository;
-import com.carbonldp.ldp.sources.RDFSourceRepository;
-import com.carbonldp.ldp.sources.RDFSourceService;
 import com.carbonldp.ldp.containers.ContainerService;
+import com.carbonldp.ldp.sources.RDFSourceService;
 import com.carbonldp.models.Infraction;
-import com.carbonldp.rdf.RDFBlankNode;
-import com.carbonldp.rdf.RDFDocument;
-import com.carbonldp.rdf.RDFDocumentFactory;
 import com.carbonldp.rdf.RDFResource;
-import com.carbonldp.spring.TransactionWrapper;
-import com.carbonldp.utils.RDFResourceUtil;
 import com.carbonldp.utils.URIUtil;
 import com.carbonldp.web.exceptions.NotFoundException;
 import org.openrdf.model.URI;
@@ -33,10 +26,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Set;
 
 public class SesameAppService extends AbstractSesameLDPService implements AppService {
 
@@ -67,7 +58,7 @@ public class SesameAppService extends AbstractSesameLDPService implements AppSer
 
 		App createdApp = appRepository.createPlatformAppRepository( app );
 		containerService.createChild( appRepository.getPlatformAppContainerURI(), app );
-		ACL appACL = createAppACL( createdApp );
+		ACL appACL = aclRepository.getResourceACL( createdApp.getURI() );
 
 		AppRole adminRole = transactionWrapper.runWithSystemPermissionsInAppContext( app, () -> {
 			Container rootContainer = createRootContainer( app );
@@ -112,10 +103,6 @@ public class SesameAppService extends AbstractSesameLDPService implements AppSer
 
 		if ( ! exists( appURI ) ) throw new NotFoundException();
 		sourceService.replace( app );
-	}
-
-	private ACL createAppACL( App app ) {
-		return aclRepository.createACL( app.getURI() );
 	}
 
 	private BasicContainer createRootContainer( App app ) {
