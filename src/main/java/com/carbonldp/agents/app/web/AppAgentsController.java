@@ -24,10 +24,7 @@ public class AppAgentsController extends AbstractLDPController {
 	private AppAgentsPOSTHandler postRequestHandler;
 	private AppAgentsDELETEHandler deleteRequestHandler;
 
-	@RequestMapping( method = RequestMethod.POST, consumes = {
-		"application/ld+json",
-		"text/turtle"
-	} )
+	@RequestMapping( method = RequestMethod.POST, consumes = "!application/sparql-query" )
 	public ResponseEntity<Object> registerAgent( @RequestBody RDFDocument requestDocument, HttpServletRequest request, HttpServletResponse response ) {
 		return postRequestHandler.handleRequest( requestDocument, request, response );
 	}

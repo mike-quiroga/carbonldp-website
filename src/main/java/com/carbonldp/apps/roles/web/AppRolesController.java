@@ -23,7 +23,7 @@ public class AppRolesController extends AbstractLDPController {
 
 	private AppRolesPOSTHandler postHandler;
 
-	@RequestMapping( method = RequestMethod.POST )
+	@RequestMapping( method = RequestMethod.POST, consumes = "!application/sparql-query" )
 	public ResponseEntity<Object> createAppRole( @RequestBody RDFDocument requestDocument, HttpServletRequest request, HttpServletResponse response ) {
 		return postHandler.handleRequest( requestDocument, request, response );
 	}

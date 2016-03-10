@@ -21,7 +21,7 @@ public class PlatformAuthenticationController extends AbstractLDPController {
 
 	AuthenticationRequestHandler authenticationHandler;
 
-	@RequestMapping( method = RequestMethod.POST )
+	@RequestMapping( method = RequestMethod.POST, consumes = "!application/sparql-query" )
 	public ResponseEntity<Object> handleRDFPost( HttpServletRequest request, HttpServletResponse response ) {
 		return authenticationHandler.handleRequest( request, response );
 	}

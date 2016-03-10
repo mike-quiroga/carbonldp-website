@@ -41,15 +41,12 @@ public class DefaultLDPController extends AbstractLDPController {
 		return getHandler.handleRequest( request, response );
 	}
 
-	@RequestMapping( method = RequestMethod.POST, consumes = {
-		"application/ld+json",
-		"text/turtle"
-	} )
+	@RequestMapping( method = RequestMethod.POST, consumes = "!application/sparql-query" )
 	public ResponseEntity<Object> handleRDFPost( @RequestBody RDFDocument requestDocument, HttpServletRequest request, HttpServletResponse response ) {
 		return rdfPOSTHandler.handleRequest( requestDocument, request, response );
 	}
 
-	@RequestMapping( method = RequestMethod.POST )
+	@RequestMapping( method = RequestMethod.POST, consumes = "!application/sparql-query" )
 	public ResponseEntity<Object> handleNonRDFPost( InputStream bodyInputStream, HttpServletRequest request, HttpServletResponse response ) {
 		return nonRDFPostHandler.handleRequest( bodyInputStream, request, response );
 	}
