@@ -1,5 +1,5 @@
 /// <reference path="./../../../../typings/typings.d.ts" />
-import {Component, Input, Output,ElementRef, EventEmitter, SimpleChange } from "angular2/core";
+import {Component, Input, Output, ElementRef, EventEmitter, SimpleChange } from "angular2/core";
 import { CORE_DIRECTIVES, FORM_DIRECTIVES, NgClass } from "angular2/common";
 
 import SPARQLClientComponent from "./../SPARQLClientComponent";
@@ -13,33 +13,31 @@ import "./style.css!";
 @Component( {
 	selector: "sparql-response",
 	directives: [ CORE_DIRECTIVES, NgClass, CodeMirrorComponent.Class, ResultsetTableComponent ],
-	template: template
+	template: template,
 } )
 export class ResponseComponent {
 	element:ElementRef;
 	$element:JQuery;
 
+	@Input() outputformat:string;
 	@Input() response:SPARQLClientResponse;
+	@Input() prefixes:{ [ prefix:string ]:string };
+
 	@Output() onRemove:EventEmitter = new EventEmitter();
 	@Output() onConfigure:EventEmitter = new EventEmitter();
-
 	@Output() onReExecute:EventEmitter = new EventEmitter();
 
 	SPARQLFormats:SPARQLFormats = SPARQLFormats;
-	//value:string = "";
 
-
-	get codeMirrorMode() { return CodeMirrorComponent.Mode; }
-
+	get codeMirrorMode():typeof CodeMirrorComponent.Mode { return CodeMirrorComponent.Mode; }
 
 	accordion:any;
+	accordionOpen:boolean = true;
 	menu:any;
 
 	constructor( element:ElementRef ) {
 		this.element = element;
 	}
-
-	@Input() outputformat:string;
 
 	ngOnInit():void {
 		this.outputformat = this.response.query.format;
@@ -51,15 +49,22 @@ export class ResponseComponent {
 		this.$element = $( this.element.nativeElement );
 		this.accordion = this.$element.find( ".accordion" );
 		this.accordion.accordion( {
-			onOpen: () => {
-				this.onOpen();
-			},
-			selector: {
-				trigger: ".title .btn-toggle"
-			}
+			onOpen: this.onOpen.bind( this ),
 		} );
 		this.menu = this.$element.find( ".content .tabular.menu > .item" );
 		this.menu.tab();
+
+		this.openAccordion();
+	}
+
+	toggleAccordion():void {
+		this.accordion.accordion( "toggle", 0 );
+		this.accordionOpen = ! this.accordionOpen;
+	}
+
+	openAccordion():void {
+		this.accordion.accordion( "open", 0 );
+		this.accordionOpen = true;
 	}
 
 	onRemoveResponse():void {

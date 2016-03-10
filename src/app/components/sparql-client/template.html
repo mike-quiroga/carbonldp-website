@@ -10,10 +10,7 @@
 		<div class="column">
 			<div class="ui top attached menu">
 				<div class="right menu">
-					<a class="show-queries item">
-						<i class="sidebar icon"></i>
-						Saved Queries
-					</a>
+					<a class="show-queries item" (click)="toggleSidebar()"><i class="sidebar icon"></i> Saved Queries</a>
 				</div>
 			</div>
 			<div class="ui middle attached segment pushable">
@@ -21,8 +18,8 @@
 					<p *ngIf="savedQueries.length == 0">
 						No saved queries yet.
 					</p>
-					<a class="item" *ngFor="#query of savedQueries; #i =index" (click)="onClickQuery(i)">
-						<button class="mini ui right floated red button" (click)="onClickRemoveQuery(i)">
+					<a class="item" *ngFor="#query of savedQueries; #i =index" (click)="onClickSavedQuery( query )">
+						<button class="mini ui right floated red button" (click)="onClickRemoveSavedQuery( i )">
 							<i class="icon remove"></i>
 						</button>
 						<span class="name">{{query.name}}</span>
@@ -154,6 +151,7 @@
 	<sparql-response class="row"
 	                 *ngFor="#response of responses; #i =index"
 	                 [response]="response"
+	                 [prefixes]="prefixes"
 	                 (onRemove)="onRemove($event)"
 	                 (onConfigure)="onConfigureResponse($event)"
 	                 (onReExecute)="onReExecute($event)"></sparql-response>

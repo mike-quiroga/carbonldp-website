@@ -1,12 +1,15 @@
-<div [ngClass]="['ui', 'sixteen', 'wide', 'column', 'accordion']">
-	<div [ngClass]="['ui', 'top', 'attached', 'menu', 'title', response.result]">
+<div class="ui sixteen wide column accordion">
+	<div class="ui top attached menu title" [ngClass]="[ response.result ]">
 		<div class="header item">
 			<span>{{response.query.operation}}</span>
 			<span> <i>({{response.duration}} ms)</i></span>
 		</div>
 		<div class="right menu">
 			<div class="ui small basic icon buttons" style="border:none;">
-				<button class="ui button btn-toggle"><i class="dropdown icon"></i></button>
+				<button (click)="toggleAccordion()" class="ui button"><i class="caret icon" [ngClass]="{
+						down: accordionOpen,
+						right: ! accordionOpen
+					}"></i></button>
 				<button (click)="onConfigureResponse()" class="ui button btn-settings"><i class="configure icon"></i></button>
 				<button (click)="onReExecuteResponse()" class="ui button btn-refresh"><i class="refresh icon"></i></button>
 				<button (click)="onRemoveResponse()" class="ui button btn-close"><i class="remove icon"></i></button>
@@ -28,7 +31,9 @@
 				             [readOnly]="'nocursor'"
 				             [(value)]="response.data"></code-mirror>
 				<resultset-table *ngIf="outputformat === SPARQLFormats.table"
-				                 [(resultset)]="response.resultset"></resultset-table>
+				                 [(resultset)]="response.resultset"
+				                 [query]="response.query"
+				                 [prefixes]="prefixes"></resultset-table>
 			</div>
 			<!-- End: Resultset -->
 			<!-- Response data -->
