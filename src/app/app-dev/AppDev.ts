@@ -6,12 +6,10 @@ import { SIDEBAR_PROVIDERS } from "./components/sidebar/Sidebar";
 
 export const APP_DEV_PROVIDERS = [
 	new Provider( AppDevComponent, {
-		useClass: AppDevComponent,
-		dependencies: AppDevComponent.dependencies
+		useClass: AppDevComponent
 	} ),
 	new Provider( AppContextService, {
-		useClass: AppContextService,
-		dependencies: AppContextService.dependencies
+		useClass: AppContextService
 	} ),
 	SIDEBAR_PROVIDERS
 ];

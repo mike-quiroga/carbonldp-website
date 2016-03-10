@@ -8,9 +8,6 @@ import * as Utils from "carbon/Utils";
 @Injectable()
 export default class AppContextService {
 
-	static parameters = [ [ Carbon ] ];
-	static dependencies = AppContextService.parameters;
-
 	carbon:Carbon;
 
 	appContexts:Map<string, App.Context>;
