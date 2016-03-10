@@ -15,6 +15,7 @@ import "./style.css!";
 } )
 export default class FooterComponent {
 	element:ElementRef;
+
 	$element;
 
 	constructor( element:ElementRef ) {

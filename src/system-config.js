@@ -43,6 +43,7 @@ System.config({
     "css": "github:systemjs/plugin-css@0.1.19",
     "html": "github:systemjs/plugin-text@0.0.3",
     "jquery": "github:components/jquery@2.1.4",
+    "js-cookie": "github:js-cookie/js-cookie@2.1.0",
     "jsonld": "npm:jsonld@0.4.2",
     "reflect-metadata": "npm:reflect-metadata@0.1.2",
     "scss": "github:screendriver/plugin-sass@0.0.8",

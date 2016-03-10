@@ -7,7 +7,6 @@ import $ from "jquery";
 import "semantic-ui/semantic";
 
 import SidebarService from "./../../../components/sidebar/service/SidebarService";
-import MyAppsService from "./../../service/MyAppsService";
 import App from "./../App";
 
 import template from "./template.html!";
@@ -15,25 +14,22 @@ import template from "./template.html!";
 @Component( {
 	selector: "dashboard",
 	template: template,
-	directives: [ CORE_DIRECTIVES, ROUTER_DIRECTIVES ],
-	providers: [ MyAppsService ]
+	directives: [ CORE_DIRECTIVES, ROUTER_DIRECTIVES ]
 } )
 export default class AppDashboardView {
 	router:Router;
 	routeParams:RouteParams;
 	sidebarService:SidebarService;
-	myAppsService:MyAppsService;
 
 	element:ElementRef;
 	$element:JQuery;
 	app:App;
 
-	constructor( router:Router, element:ElementRef, routeParams:RouteParams, sidebarService:SidebarService, myAppsService:MyAppsService ) {
+	constructor( router:Router, element:ElementRef, routeParams:RouteParams, sidebarService:SidebarService ) {
 		this.router = router;
 		this.element = element;
 		this.routeParams = routeParams;
 		this.sidebarService = sidebarService;
-		this.myAppsService = myAppsService;
 	}
 
 	ngAfterViewInit():void {

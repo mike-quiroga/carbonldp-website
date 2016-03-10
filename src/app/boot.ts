@@ -3,8 +3,7 @@ import "zone.js";
 import "reflect-metadata";
 
 import { bootstrap } from "angular2/platform/browser";
-import { provide } from "angular2/core";
-import { Provider } from "angular2/src/core/di/provider";
+import { provide, Injector, ComponentRef } from "angular2/core";
 import { FORM_PROVIDERS } from "angular2/common";
 import { ROUTER_PROVIDERS, APP_BASE_HREF } from "angular2/router";
 import { HTTP_PROVIDERS } from "angular2/http";
@@ -16,13 +15,23 @@ import AppComponent from "app/AppComponent";
 import { CONTENT_PROVIDERS } from "app/content/Content";
 import { BLOG_PROVIDERS } from "app/website/blog/Blog";
 import { APP_DEV_PROVIDERS } from "app/app-dev/AppDev";
+import { CONTENT_PROVIDERS } from 'app/content/Content';
 
-const CARBON_PROVIDER:Provider = provide( Carbon, {
-	useFactory:():Carbon => {
-		let carbon:Carbon = new Carbon();
-		carbon.setSetting( "domain", "dev.carbonldp.com" );
+
+let appInjectorRef:Injector;
+export const appInjector = ( injector?:Injector ):Injector => {
+	if ( injector ) {
+		appInjectorRef = injector;
+	}
+	return appInjectorRef;
+};
+
+const CARBON_PROVIDER = provide( Carbon, {
+	useFactory: () => {
+		let carbon = new Carbon();
+		carbon.setSetting( "domain", "local.carbonldp.com" );
 		return carbon;
-	},
+	}
 } );
 
 bootstrap( AppComponent, [
@@ -35,5 +44,9 @@ bootstrap( AppComponent, [
 	CARBON_PROVIDER,
 	CONTENT_PROVIDERS,
 	BLOG_PROVIDERS,
-	APP_DEV_PROVIDERS,
-] );
+	APP_DEV_PROVIDERS
+] ).then(
+	( appRef:ComponentRef ) => {
+		appInjector( appRef.injector );
+	}
+);
