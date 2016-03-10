@@ -1,6 +1,6 @@
-import { Provider } from 'angular2/core';
-
-import AppDevComponent from 'app/app-dev/AppDevComponent';
+/// <reference path="./../../../typings/typings.d.ts" />
+import { Provider } from "angular2/core";
+import AppDevComponent from "app/app-dev/AppDevComponent";
 import AppContextService from "app/app-dev/AppContextService";
 
 export const APP_DEV_PROVIDERS = [

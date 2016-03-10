@@ -1,6 +1,7 @@
-import { Provider } from 'angular2/core';
+/// <reference path="./../../../typings/typings.d.ts" />
+import { Provider } from "angular2/core";
 
-import ContentService from 'app/content/ContentService';
+import ContentService from "app/content/ContentService";
 
 export const CONTENT_PROVIDERS = [
     new Provider( ContentService, {

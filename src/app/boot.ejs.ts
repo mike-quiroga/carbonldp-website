@@ -1,3 +1,4 @@
+/// <reference path="./../../typings/typings.d.ts" />
 import "zone.js";
 import "reflect-metadata";
 
@@ -10,12 +11,11 @@ import { HTTP_PROVIDERS } from "angular2/http";
 import Carbon from "carbon/Carbon";
 
 import AppComponent from "app/AppComponent";
-import AppDevComponent from 'app/app-dev/AppDevComponent';
 
+import { CONTENT_PROVIDERS } from "app/content/Content";
+import { BLOG_PROVIDERS } from "app/website/blog/Blog";
+import { APP_DEV_PROVIDERS } from "app/app-dev/AppDev";
 import { CONTENT_PROVIDERS } from 'app/content/Content';
-import { BLOG_PROVIDERS } from 'app/blog/Blog';
-import { APP_DEV_PROVIDERS } from 'app/app-dev/AppDev';
-import { SIDEBAR_PROVIDERS } from 'app/app-dev/components/sidebar/Sidebar';
 
 
 let appInjectorRef:Injector;
@@ -44,8 +44,7 @@ bootstrap( AppComponent, [
 	CARBON_PROVIDER,
 	CONTENT_PROVIDERS,
 	BLOG_PROVIDERS,
-	APP_DEV_PROVIDERS,
-	SIDEBAR_PROVIDERS
+	APP_DEV_PROVIDERS
 ] ).then(
 	( appRef:ComponentRef ) => {
 		appInjector( appRef.injector );

@@ -1,0 +1,38 @@
+website {
+	header {
+		/* Remove background from logo on hover */
+		.ui.menu a.item.logo:hover {
+			background: rgba(0, 0, 0, 0);
+		}
+
+		.mobile.only.row {
+			.vertical.menu {
+				width: 100%;
+				margin-top: 80px;
+				display: block;
+			}
+			.ui.dropdown.item .menu {
+				position: static;
+				margin-top: 15px;
+			}
+		}
+
+		/* Remove padding from left and right of primary navigation so that elements align exactly with page perimiter. */
+		.ui.grid > * {
+			padding-left: 0;
+			padding-right: 0;
+		}
+
+		.ui.menu {
+			background-color: rgba(255, 255, 255, .9);
+			background-image: linear-gradient(to bottom, #fff 0, rgba(255, 255, 255, 0) 100%);
+			border: 1px solid #e9e9e9;
+			box-shadow: 0 0 5px 5px rgba(0, 0, 0, .2);
+
+			.item:first-of-type {
+				color: #585a5a;
+				padding-right: 44px;
+			}
+		}
+	}
+}

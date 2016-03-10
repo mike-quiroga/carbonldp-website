@@ -1,27 +1,27 @@
-import { Component, ElementRef } from 'angular2/core';
-import { CORE_DIRECTIVES } from 'angular2/common';
-import { ROUTER_DIRECTIVES, ROUTER_PROVIDERS, Router, Instruction } from 'angular2/router';
+/// <reference path="./../../../../../typings/typings.d.ts" />
+import { Component, ElementRef } from "angular2/core";
+import { CORE_DIRECTIVES } from "angular2/common";
+import { ROUTER_DIRECTIVES, ROUTER_PROVIDERS, Router, Instruction } from "angular2/router";
 
-import $ from 'jquery';
-import 'semantic-ui/semantic';
+import $ from "jquery";
+import "semantic-ui/semantic";
 
 import SidebarService from "./../sidebar/service/SidebarService";
 
-import template from './template.html!';
+import template from "./template.html!";
 import "./style.css!";
-import resolve = Promise.resolve;
+
 @Component( {
-	selector: 'menu-bar',
+	selector: "menu-bar",
 	template: template,
 	directives: [ CORE_DIRECTIVES, ROUTER_DIRECTIVES ]
 } )
 export default class MenuBarComponentComponent {
-	static parameters = [ [ Router ], [ ElementRef ], [ SidebarService ] ];
-
 	router:Router;
 	element:ElementRef;
 	$element:JQuery;
 	sidebarService:SidebarService;
+	clickable:boolean = false;
 
 	breadCrumbs:Array<any> = [];
 	instructions:Instruction[] = [];
@@ -34,10 +34,19 @@ export default class MenuBarComponentComponent {
 		this.router.parent.subscribe( ( url )=> {
 			this.updateBreadcrumbs( url );
 		} );
+		this.sidebarService.toggleMenuButtonEmitter.subscribe(
+			() => {
+				this.toggleMenuButton();
+			}
+		);
 	}
 
 	ngAfterViewInit():void {
 		this.$element = $( this.element.nativeElement );
+	}
+
+	toggleMenuButton():void {
+		this.clickable = ! this.clickable;
 	}
 
 	updateBreadcrumbs( url:string ):void {
@@ -61,7 +70,7 @@ export default class MenuBarComponentComponent {
 	}
 
 	getRouteAlias():any {
-		let alias:any[] = [], params:string = "";
+		let alias:any[] = [], params:{name:string} = {name: ""};
 		this.instructions.forEach(
 			( instruction )=> {
 				if ( instruction ) {
@@ -101,8 +110,9 @@ export default class MenuBarComponentComponent {
 
 	isActive( route:any ):boolean {
 		let instruction = this.router.generate( route );
-		let router = this.router;
+		let router:Router = this.router;
 		while ( instruction.child ) {
+			// TODO: Change this to use a non private variables implementation.
 			instruction = instruction.child;
 			if ( typeof router._childRouter === "undefined" || router._childRouter === null ) continue;
 			if ( typeof router._childRouter._currentInstruction === "undefined" || router._childRouter._currentInstruction === null ) continue;

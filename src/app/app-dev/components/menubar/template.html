@@ -1,5 +1,5 @@
-<div class="ui attached stackable menu ">
-	<a class="item" (click)="toggleSidebar()">
+<div class="ui menu">
+	<a class="item toggle" *ngIf="clickable" (click)="toggleSidebar()">
 		<i class="sidebar icon"></i>
 		Menu
 	</a>
@@ -12,9 +12,5 @@
 				<div class="title">{{breadCrumb.displayName}}</div>
 			</div>
 		</a>
-	</div>
-	<div class="right menu">
-		<a class="item">Sign Up</a>
-		<a class="item">Help</a>
 	</div>
 </div>

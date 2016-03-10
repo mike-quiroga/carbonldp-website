@@ -1,25 +1,22 @@
-import { Component, ElementRef, Type } from 'angular2/core';
-import { CORE_DIRECTIVES } from 'angular2/common';
-import { Router, RouteDefinition, ROUTER_DIRECTIVES, RouteConfig, RouterOutlet } from 'angular2/router';
+/// <reference path="./../../../../../typings/typings.d.ts" />
+import { Component, ElementRef, Type } from "angular2/core";
+import { CORE_DIRECTIVES } from "angular2/common";
+import { Router, RouteDefinition, ROUTER_DIRECTIVES, RouteConfig, RouterOutlet } from "angular2/router";
 
-import $ from 'jquery';
-import 'semantic-ui/semantic';
 
-import CarbonAppView from "./../carbon-app/CarbonAppView";
-import CarbonAppTileComponent from './../carbon-app-tile/CarbonAppTileComponent';
-import CarbonApp from "./../carbon-app/CarbonApp";
-import MyAppsListView from "./../my-apps-list-view/MyAppsListView";
+import AppDetailView from "./../app/AppDetailView";
+import AppsListView from "./../apps-list-view/AppsListView";
 
 @Component( {
-	selector: 'my-apps',
-	template: '<router-outlet></router-outlet>',
-	directives: [ CORE_DIRECTIVES, ROUTER_DIRECTIVES, CarbonAppTileComponent, RouterOutlet ],
+	selector: "my-apps",
+	template: "<router-outlet></router-outlet>",
+	directives: [ CORE_DIRECTIVES, ROUTER_DIRECTIVES, RouterOutlet ]
 } )
 @RouteConfig( [
 	{
-		path: '/',
-		as: 'List',
-		component: MyAppsListView,
+		path: "/",
+		as: "List",
+		component: AppsListView,
 		useAsDefault: true,
 		data: {
 			alias: "List",
@@ -27,12 +24,12 @@ import MyAppsListView from "./../my-apps-list-view/MyAppsListView";
 		}
 	},
 	{
-		path: '/:slug/...',
-		as: 'CarbonApp',
-		component: CarbonAppView,
+		path: "/:slug/...",
+		as: "App",
+		component: AppDetailView,
 		data: {
-			alias: "CarbonApp",
-			displayName: "Carbon App",
+			alias: "App",
+			displayName: "App",
 			params: {
 				name: "slug",
 				redirectTo: "AppDashboard"
@@ -40,17 +37,4 @@ import MyAppsListView from "./../my-apps-list-view/MyAppsListView";
 		}
 	}
 ] )
-export default class MyAppsView {
-	static parameters = [ [ ElementRef ] ];
-
-	element:ElementRef;
-	$element:JQuery;
-
-	constructor( element:ElementRef ) {
-		this.element = element;
-	}
-
-	ngAfterViewInit():void {
-		this.$element = $( this.element.nativeElement );
-	}
-}
+export default class MyAppsView { }

@@ -1,8 +1,9 @@
-import { Injectable, OpaqueToken } from 'angular2/core';
-import { Http, Response, Request } from 'angular2/http';
+/// <reference path="./../../../typings/typings.d.ts" />
+import { Injectable, OpaqueToken } from "angular2/core";
+import { Http, Response, Request } from "angular2/http";
 import { Location } from "angular2/router";
 
-import Carbon from 'carbon/Carbon';
+import Carbon from "carbon/Carbon";
 
 
 @Injectable()

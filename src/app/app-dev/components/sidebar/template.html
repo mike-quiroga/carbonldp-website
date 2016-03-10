@@ -1,5 +1,5 @@
 <div class="ui right aligned item container">
-	<button class="ui inverted button" (click)="toggle()"><i class="sidebar icon"></i></button>
+	<button class="ui inverted icon collapse button" (click)="toggle()"><i class="sidebar icon"></i></button>
 </div>
 <a class="item"
    [ngClass]="{active: isActive([ 'AppDev' ])}"
@@ -14,36 +14,36 @@
 	My Apps
 </a>
 
-<div *ngIf="carbonApps.length>0" class="ui horizontal inverted divider">
+<div *ngIf="apps.length>0" class="ui horizontal inverted divider">
 	<i class="cubes icon"></i>
 	Open Apps
 </div>
 
-<a class="item carbonApp" *ngFor="#carbonApp of carbonApps; #i=index;" [ngClass]="{active: isActive(carbonApp.slug, true)}">
+<a class="item app" *ngFor="#app of apps; #i=index;" [ngClass]="{active: isActive(app.slug, true)}">
 
 	<button
-		*ngIf="!isActive(carbonApp.slug, true)"
+		*ngIf="!isActive(app.slug, true)"
 		class="ui right floated circular icon mini inverted button"
-		(click)="removeCarbonApp(i)">
+		(click)="removeApp(i)">
 		<i class="icon remove"></i>
 	</button>
 
 	<a class="title" style="line-height: 2em;">
-		<i *ngIf="isActive(carbonApp.slug, true)"
-		   class="left aligned dropdown icon"></i>
-		{{carbonApp.name}}
+		<i *ngIf="isActive(app.slug, true)"
+		   class="right aligned dropdown icon"></i>
+		{{app.name}}
 	</a>
 
 	<div class="content">
 		<a class="item"
-		   [ngClass]="{active: isActive(carbonApp.slug)}"
-		   [routerLink]="[ 'AppDev', 'MyApps', 'CarbonApp', {slug: carbonApp.slug}, 'AppDashboard']">
+		   [ngClass]="{active: isActive(app.slug)}"
+		   [routerLink]="[ 'AppDev', 'MyApps', 'App', {slug: app.slug}, 'AppDashboard']">
 			<i class="bar chart icon"></i>
 			Dashboard
 		</a>
 		<a class="item"
-		   [ngClass]="{active: isActive(carbonApp.slug, true) && isActive('sparql-editor')}"
-		   [routerLink]="['AppDev', 'MyApps', 'CarbonApp', {slug: carbonApp.slug}, 'SPARQLEditor']">
+		   [ngClass]="{active: isActive(app.slug, true) && isActive('sparql-editor')}"
+		   [routerLink]="['AppDev', 'MyApps', 'App', {slug: app.slug}, 'SPARQLEditor']">
 			<i class="terminal icon"></i>
 			SPARQL Editor
 		</a>

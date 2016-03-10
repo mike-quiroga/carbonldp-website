@@ -1,32 +1,29 @@
-import { Component, Input, Output, Injectable, ElementRef, SimpleChange, EventEmitter } from 'angular2/core';
-import { CORE_DIRECTIVES } from 'angular2/common';
-import { ROUTER_DIRECTIVES, ROUTER_PROVIDERS, Router, Instruction, Location } from 'angular2/router';
+/// <reference path="./../../../../../typings/typings.d.ts" />
+import { Component, Input, Output, Injectable, ElementRef, SimpleChange, EventEmitter } from "angular2/core";
+import { CORE_DIRECTIVES } from "angular2/common";
+import { ROUTER_DIRECTIVES, ROUTER_PROVIDERS, Router, Instruction, Location } from "angular2/router";
 
-import $ from 'jquery';
-import 'semantic-ui/semantic';
+import $ from "jquery";
+import "semantic-ui/semantic";
 
-import SidebarService from './service/SidebarService'
-import CarbonApp from 'app/app-dev/my-apps/carbon-app/CarbonApp'
+import SidebarService from "./service/SidebarService"
+import App from "app/app-dev/my-apps/app/App"
 import SidebarItem from "./SidebarItem";
 
-import template from './template.html!';
-import './style.css!';
+import template from "./template.html!";
+import "./style.css!";
 
 @Component( {
-	selector: 'sidebar',
+	selector: "sidebar",
 	template: template,
 	directives: [ CORE_DIRECTIVES, ROUTER_DIRECTIVES ]
 } )
-@Injectable()
 export default class SidebarComponent {
-	static parameters = [ [ Router ], [ ElementRef ], [ Location ], [ SidebarService ] ];
-	static dependencies = SidebarComponent.parameters;
-
 	router:Router;
 	element:ElementRef;
 	$element:JQuery;
 	sidebarService:SidebarService;
-	carbonApps:CarbonApp[] = [];
+	apps:App[] = [];
 	location:Location;
 
 	constructor( router:Router, element:ElementRef, location:Location, sidebarService:SidebarService ) {
@@ -35,9 +32,9 @@ export default class SidebarComponent {
 		this.sidebarService = sidebarService;
 		this.location = location;
 
-		this.sidebarService.addCarbonAppEmitter.subscribe(
+		this.sidebarService.addAppEmitter.subscribe(
 			( item ) => {
-				this.addCarbonApp( item );
+				this.addApp( item );
 			}
 		);
 		this.sidebarService.toggleEmitter.subscribe(
@@ -49,40 +46,41 @@ export default class SidebarComponent {
 
 	ngAfterViewInit():void {
 		this.$element = $( this.element.nativeElement );
-		this.$element.sidebar( {
-			context: 'app-dev > div.page-content',
-			transition: 'push',
-			closable: false,
-			dimPage: false,
-			scrollLock: true
-		} );
 		this.refreshAccordion();
 	}
 
 
-	addCarbonApp( app:CarbonApp ):void {
-		! this.slugExists( app.slug ) ? this.carbonApps.push( app ) : null;
+	addApp( app:App ):void {
+		! this.slugExists( app.slug ) ? this.apps.push( app ) : null;
 	}
 
 	toggle():void {
-		this.$element.sidebar( 'toggle' );
+		this.sidebarService.toggleMenuButtonEmitter.emit( null );
+		if ( this.$element.is( ":visible" ) ) {
+			this.$element.animate( {"width": "0"}, 400, () => {
+				this.$element.hide();
+			} );
+		} else {
+			this.$element.show();
+			this.$element.animate( {"width": "300px"}, 400 );
+		}
 	}
 
 	refreshAccordion():void {
 		this.$element.accordion( {
 			selector: {
-				trigger: '.item.carbonApp, .item.carbonApp .title',
-				title: '.title',
+				trigger: ".item.app, .item.app .title",
+				title: ".title",
 			},
-			exclusive: false,
+			exclusive: false
 		} );
 	}
 
-	removeCarbonApp( id:number ):void {
-		this.carbonApps.splice( id, 1 );
+	removeApp( id:number ):void {
+		this.apps.splice( id, 1 );
 	}
 
-	isActive( slug:any, fullRoute?:boolean = false ):boolean {
+	isActive( slug:any, fullRoute?:boolean ):boolean {
 		switch ( typeof slug ) {
 			case "string":
 				let url:string[] = this.location.path().split( "/" );
@@ -91,8 +89,8 @@ export default class SidebarComponent {
 				} else {
 					return url[ url.length - 1 ].indexOf( slug ) > - 1;
 				}
-				break;
 			case "object":
+				// TODO: Change this to use a non private variables implementation.
 				let instruction = this.router.generate( slug );
 				let router = this.router;
 				if ( ! fullRoute ) {
@@ -110,6 +108,6 @@ export default class SidebarComponent {
 	}
 
 	slugExists( slug:string ):boolean {
-		return ! (typeof this.carbonApps.find( _app => _app.slug == slug ) === "undefined");
+		return ! (typeof this.apps.find( _app => _app.slug == slug ) === "undefined");
 	}
 }
