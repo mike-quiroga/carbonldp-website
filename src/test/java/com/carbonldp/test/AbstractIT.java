@@ -7,7 +7,6 @@ import com.carbonldp.apps.AppRepository;
 import com.carbonldp.apps.AppService;
 import com.carbonldp.authorization.acl.ACLRepository;
 import com.carbonldp.authorization.acl.ACLService;
-import com.carbonldp.jobs.BackupJobExecutor;
 import com.carbonldp.jobs.TypedJobExecutor;
 import com.carbonldp.ldp.containers.BasicContainer;
 import com.carbonldp.ldp.containers.Container;

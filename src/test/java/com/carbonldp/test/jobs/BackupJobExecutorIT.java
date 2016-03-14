@@ -2,7 +2,6 @@ package com.carbonldp.test.jobs;
 
 import com.carbonldp.jobs.BackupJobExecutor;
 import com.carbonldp.test.AbstractIT;
-import com.sun.deploy.net.proxy.ProxyUtils;
 import org.openrdf.model.Model;
 import org.openrdf.model.impl.AbstractModel;
 import org.openrdf.model.impl.LinkedHashModel;
@@ -20,7 +19,9 @@ import java.io.File;
 import java.io.IOException;
 import java.io.Reader;
 import java.nio.file.Files;
-import java.util.stream.Stream;
+import java.util.zip.ZipFile;
+
+import static org.testng.Assert.*;
 
 /**
  * @author NestorVenegas
@@ -46,6 +47,30 @@ public class BackupJobExecutorIT extends AbstractIT {
 			throw new SkipException( "unable to read file", e );
 		}
 		Model appModel = getBody( appString );
+	}
+
+	@Test
+	public void addFileToZipIT() {
+		BackupJobExecutor backupJobExecutor;
+		try {
+			backupJobExecutor = (BackupJobExecutor) ( (Advised) this.backupJobExecutor ).getTargetSource().getTarget();
+		} catch ( Exception e ) {
+			throw new RuntimeException( e );
+		}
+
+		File rdfRepositoryFile = transactionWrapper.runInAppContext( app, () -> ReflectionTestUtils.invokeMethod( backupJobExecutor, "createTemporaryRDFBackupFile" ) );
+		File[] args = new File[1];
+		args[0] = rdfRepositoryFile;
+		File file = ReflectionTestUtils.invokeMethod( backupJobExecutor, "createZipFile", (Object) args );
+
+		ZipFile zipFile = null;
+		try {
+			zipFile = new ZipFile( file );
+		} catch ( IOException e ) {
+			e.printStackTrace();
+		}
+		assertEquals( zipFile.size(), 1 );
+		assertEquals( zipFile.entries().nextElement().getName(), args[0].getName() );
 	}
 
 	private Model getBody( String appString ) {
