@@ -1,13 +1,14 @@
+/// <reference path="./../../../../typings/typings.d.ts" />
 import { Component } from "angular2/core";
 import {RouteConfig, RouterOutlet} from "angular2/router";
 
-import DocumentsHomeView from "app/documents/documents-home/DocumentsHomeView";
-import LinkedDataConceptsView from "app/documents/linked-data-concepts/LinkedDataConceptsView";
-import AboutCarbonLDPView from "app/documents/about-carbon-ldp/AboutCarbonLDPView";
-import CarbonLDPConceptsView from "app/documents/carbon-ldp-concepts/CarbonLDPConceptsView";
-import GettingStartedWithTheRestApiView from "app/documents/getting-started-with-the-rest-api/GettingStartedWithTheRestApiView";
-import InteractionModelsView from "app/documents/interaction-models/InteractionModelsView";
-import LDPConceptsView from "app/documents/ldp-concepts/LDPConceptsView";
+import DocumentsHomeView from "app/website/documents/documents-home/DocumentsHomeView";
+import LinkedDataConceptsView from "app/website/documents/linked-data-concepts/LinkedDataConceptsView";
+import AboutCarbonLDPView from "app/website/documents/about-carbon-ldp/AboutCarbonLDPView";
+import CarbonLDPConceptsView from "app/website/documents/carbon-ldp-concepts/CarbonLDPConceptsView";
+import GettingStartedWithTheRestApiView from "app/website/documents/getting-started-with-the-rest-api/GettingStartedWithTheRestApiView";
+import InteractionModelsView from "app/website/documents/interaction-models/InteractionModelsView";
+import LDPConceptsView from "app/website/documents/ldp-concepts/LDPConceptsView";
 
 import template from "./template.html!";
 

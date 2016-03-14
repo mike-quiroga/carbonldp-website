@@ -1,6 +1,9 @@
+/// <reference path="./../../../../../typings/typings.d.ts" />
 import {Component, ElementRef } from "angular2/core";
 import { CORE_DIRECTIVES } from "angular2/common";
 import { Title } from "angular2/platform/browser";
+import {RouteConfig, RouterOutlet, RouterLink} from "angular2/router";
+
 
 import $ from "jquery";
 import "semantic-ui/semantic";
@@ -9,12 +12,12 @@ import template from "./template.html!";
 
 
 @Component( {
-	selector: "ldp-concepts",
+	selector: "documents-list",
 	template: template,
-	directives: [ CORE_DIRECTIVES ],
+	directives: [ CORE_DIRECTIVES, RouterLink ],
 	providers: [ Title ]
 } )
-export default class LDPConceptsView {
+export default class DocumentsHomeView {
 	static parameters = [ [ ElementRef ], [ Title ] ];
 
 
@@ -25,7 +28,7 @@ export default class LDPConceptsView {
 	constructor( element:ElementRef, title:Title ) {
 		this.element = element;
 		this.title = title;
-		this.title.setTitle( "LDP Concepts" );
+		this.title.setTitle( "Documents" );
 	}
 
 

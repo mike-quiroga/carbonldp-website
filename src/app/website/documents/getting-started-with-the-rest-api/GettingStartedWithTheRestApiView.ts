@@ -1,14 +1,15 @@
+/// <reference path="./../../../../../typings/typings.d.ts" />
 import {Component, ElementRef } from "angular2/core";
 import { CORE_DIRECTIVES } from "angular2/common";
 import { Title } from "angular2/platform/browser";
-import SidebarService from "./../Sidebar/service/SidebarService";
+import SidebarService from "./../sidebar/service/SidebarService";
 
 
 import * as CodeMirrorComponent from "app/components/code-mirror/CodeMirrorComponent";
 
 import $ from "jquery";
 import "semantic-ui/semantic";
-import SideBarComponent from "app/documents/Sidebar/SideBarComponent";
+import SidebarComponent from "./../sidebar/SidebarComponent";
 
 import template from "./template.html!";
 import "./style.css!";
@@ -17,7 +18,7 @@ import "./style.css!";
 @Component( {
 	selector: "getting-started-rest-api",
 	template: template,
-	directives: [ CORE_DIRECTIVES, CodeMirrorComponent.Class, SideBarComponent ],
+	directives: [ CORE_DIRECTIVES, CodeMirrorComponent.Class, SidebarComponent ],
 	providers: [ Title, SidebarService ]
 } )
 export default class GettingStartedWithTheRestApiView {
