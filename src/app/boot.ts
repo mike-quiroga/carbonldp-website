@@ -1,4 +1,3 @@
-/// <reference path="./../../typings/typings.d.ts" />
 import "zone.js";
 import "reflect-metadata";
 
@@ -18,7 +17,7 @@ import { APP_DEV_PROVIDERS } from "app/app-dev/AppDev";
 const CARBON_PROVIDER = provide( Carbon, {
 	useFactory: () => {
 		var carbon = new Carbon();
-		carbon.setSetting( "domain", "local.carbonldp.com" );
+		carbon.setSetting( "domain", "dev.carbonldp.com" );
 	}
 } );
 

@@ -152,7 +152,7 @@
 								</tr>
 							</tbody>
 						</table>
-
+						<!--@formatter:off-->
 						<textarea #example1 class="hidden">
 @prefix cs:&#60;https://carbonldp.com/ns/v1/security#&#62;.
 @prefix vcard:&#60;http://www.w3.org/2001/vcard-rdf/3.0#&#62;.
@@ -163,7 +163,7 @@
 	vcard:email "jane.doe@example.org";
 	cs:password "MyStr0ngP@ssw0rd#".
 						</textarea>
-
+						<!--@formatter:on-->
 						<code-mirror class="ui text left aligned basic segment"
 						             [mode]="'turtle'"
 						             [read-only]="'nocursor'" [value]="example1.value">
@@ -1323,8 +1323,7 @@
 
 <>
 	a ldp:DirectContainer;
-	ldp:membershipResource
-	&#60;https://dev.carbonldp.com/apps/taxonomy-hub/schemes/topics/&#62;;
+	ldp:membershipResource &#60;https://dev.carbonldp.com/apps/taxonomy-hub/schemes/topics/&#62;;
 	ldp:hasMemberRelation skos:hasTopConcept.
 						</textarea>
 						<!--@formatter:on-->
@@ -1445,7 +1444,7 @@
 	skos:prefLabel "Design"@en;
 	skos:prefLabel "Diseño"@es.
 						</textarea>
-						<!--@formatter:off-->
+						<!--@formatter:on-->
 						<code-mirror class="ui text left aligned basic segment"
 						             [mode]="'turtle'"
 						             [read-only]="'nocursor'" [value]="example71.value">
@@ -1504,7 +1503,7 @@
 
 						<p>
 
-							<span class="ui blue horizontal label">POST</span>
+							<span class="ui blue horizontal label">PUT</span>
 							<code>https://{{host}}/apps/taxonomy-hub/schemes/topics/top-concepts/</code>
 						</p>
 
@@ -1535,14 +1534,6 @@
 									</td>
 									<td>Yes</td>
 								</tr>
-								<tr>
-									<td>If-Match</td>
-									<td>
-										<em>Issue a GET request on this container first, then use the value of the ETag header
-											here.</em>
-									</td>
-									<td>Yes</td>
-								</tr>
 							</tbody>
 						</table>
 
@@ -1554,8 +1545,7 @@
 
 _:b0
 	a c:AddMemberAction;
-	c:member
-	&#60;https://local.carbonldp.com/apps/taxonomy-hub/schemes/topics/design/&#62;.
+	c:targetMember &#60;https://local.carbonldp.com/apps/taxonomy-hub/schemes/topics/design/&#62;.
 						</textarea>
 						<!--@formatter:on-->
 
@@ -1690,14 +1680,6 @@ _:b0
 									</td>
 									<td>Yes</td>
 								</tr>
-								<tr>
-									<td>If-Match</td>
-									<td>
-										<em>Issue a GET request on this container first, then use the value of the ETag header
-											here.</em>
-									</td>
-									<td>Yes</td>
-								</tr>
 							</tbody>
 						</table>
 
@@ -1708,7 +1690,7 @@ _:b0
 
 _:b0
 	a c:AddMemberAction;
-	c:member &#60;https://local.carbonldp.com/apps/taxonomy-hub/schemes/topics/technology/&#62;.
+	c:targetMember &#60;https://local.carbonldp.com/apps/taxonomy-hub/schemes/topics/technology/&#62;.
 						</textarea>
 						<!--@formatter:on-->
 						<code-mirror class="ui text left aligned basic segment"
@@ -1815,14 +1797,6 @@ _:b0
 									</td>
 									<td>Yes</td>
 								</tr>
-								<tr>
-									<td>If-Match</td>
-									<td>
-										<em>Issue a GET request on this container first, then use the value of the ETag header
-											here.</em>
-									</td>
-									<td>Yes</td>
-								</tr>
 							</tbody>
 						</table>
 
@@ -1834,7 +1808,7 @@ _:b0
 
 _:b0
 	a c:AddMemberAction;
-	c:member &#60;https://local.carbonldp.com/apps/taxonomy-hub/schemes/topics/information-architecture/&#62;.
+	c:targetMember &#60;https://local.carbonldp.com/apps/taxonomy-hub/schemes/topics/information-architecture/&#62;.
 						</textarea>
 						<!--@formatter:on-->
 
@@ -2006,14 +1980,6 @@ _:b0
 									<td>http://www.w3.org/ns/ldp#Container; rel=interaction-model</td>
 									<td>Yes</td>
 								</tr>
-								<tr>
-									<td>If-Match</td>
-									<td>
-										<em>Issue a GET request on this container first, then use the value of the ETag header
-											here.</em>
-									</td>
-									<td>Yes</td>
-								</tr>
 							</tbody>
 						</table>
 
@@ -2024,7 +1990,7 @@ _:b0
 
 _:b0
 	a c:AddMemberAction;
-	c:member &#60;https://local.carbonldp.com/apps/taxonomy-hub/schemes/topics/html5/&#62;.
+	c:targetMember &#60;https://local.carbonldp.com/apps/taxonomy-hub/schemes/topics/html5/&#62;.
 						</textarea>
 						<!--@formatter:on-->
 						<code-mirror class="ui text left aligned basic segment"
@@ -2064,14 +2030,6 @@ _:b0
 									<td>http://www.w3.org/ns/ldp#Container; rel=interaction-model</td>
 									<td>Yes</td>
 								</tr>
-								<tr>
-									<td>If-Match</td>
-									<td>
-										<em>Issue a GET request on this container first, then use the value of the ETag header
-											here.</em>
-									</td>
-									<td>Yes</td>
-								</tr>
 							</tbody>
 						</table>
 
@@ -2082,7 +2040,7 @@ _:b0
 
 _:b0
 	a c:AddMemberAction;
-	c:member &#60;https://local.carbonldp.com/apps/taxonomy-hub/schemes/topics/javascript/&#62;.
+	c:targetMember &#60;https://local.carbonldp.com/apps/taxonomy-hub/schemes/topics/javascript/&#62;.
 						</textarea>
 						<!--@formatter:on-->
 

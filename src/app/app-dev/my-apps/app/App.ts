@@ -1,4 +1,3 @@
-/// <reference path="./../../../../../typings/typings.d.ts" />
 export class App {
 	name:string;
 	created:string;
