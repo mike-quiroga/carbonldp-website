@@ -1,4 +1,3 @@
-/// <reference path="./../../../typings/typings.d.ts" />
 import { Provider } from "angular2/core";
 
 import ContentService from "app/content/ContentService";

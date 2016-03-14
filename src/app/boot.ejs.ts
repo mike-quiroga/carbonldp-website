@@ -1,7 +1,3 @@
-/// <reference path="./../../typings/typings.d.ts" />
-import "zone.js";
-import "reflect-metadata";
-
 import { bootstrap } from "angular2/platform/browser";
 import { provide } from "angular2/core";
 import { FORM_PROVIDERS } from "angular2/common";

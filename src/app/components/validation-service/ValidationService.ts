@@ -1,4 +1,3 @@
-/// <reference path="./../../../../typings/typings.d.ts" />
 export class ValidationService {
 	static getValidatorErrorMessage( code:string ) {
 		let config = {
