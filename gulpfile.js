@@ -1,3 +1,5 @@
+"use strict";
+
 const gulp = require( "gulp" );
 const util = require( "gulp-util" );
 const del = require( "del" );
@@ -5,7 +7,7 @@ const rename = require( "gulp-rename" );
 const chug = require( "gulp-chug" );
 const watch = require( "gulp-watch" );
 
-const jspm = require( "jspm" );
+const Builder = require( "jspm" ).Builder;
 
 const tslint = require( "gulp-tslint" );
 
@@ -134,7 +136,8 @@ gulp.task( "clean:dist", () => {
 });
 
 gulp.task( "build:afterCleaning", [ "compile-styles", "compile-boot", "compile-index", "build-semantic", "copy-semantic", "copy-assets" ], () => {
-	return jspm.bundleSFX( "app/boot", "dist/site/main.sfx.js", {
+	let builder = new Builder();
+	return builder.buildStatic( "app/boot", "dist/site/main.sfx.js", {
 		minify: true,
 		mangle: false,
 		lowResSourceMaps: false,

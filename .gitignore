@@ -11,6 +11,8 @@ src/app/**/*.css
 src/app/**/*.js
 src/app/**/*.map
 
+dist/site/
+
 # Typings
 **/typings/browser/
 **/typings/main/
