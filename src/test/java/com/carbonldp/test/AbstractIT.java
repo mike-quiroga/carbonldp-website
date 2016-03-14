@@ -33,6 +33,7 @@ import org.openrdf.rio.Rio;
 import org.openrdf.rio.helpers.StatementCollector;
 import org.openrdf.sail.config.SailRegistry;
 import org.openrdf.sail.nativerdf.NativeStore;
+import org.openrdf.spring.SesameConnectionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,14 +58,12 @@ public abstract class AbstractIT extends AbstractTestNGSpringContextTests {
 
 	@Autowired
 	protected AppService appService;
-
 	@Autowired
 	protected AppRepository appRepository;
 	@Autowired
 	protected PlatformContextActionTemplate platformContextTemplate;
 	@Autowired
 	protected ApplicationContextActionTemplate applicationContextTemplate;
-
 	@Autowired
 	@Qualifier( "platformAgentUsernamePasswordAuthenticationProvider" )
 	protected AuthenticationProvider sesameUsernamePasswordAuthenticationProvider;
@@ -74,12 +73,12 @@ public abstract class AbstractIT extends AbstractTestNGSpringContextTests {
 	protected RDFSourceRepository sourceRepository;
 	@Autowired
 	protected ACLRepository aclRepository;
-
 	@Autowired
 	protected TypedJobExecutor backupJobExecutor;
-
 	@Autowired
 	protected TransactionWrapper transactionWrapper;
+	@Autowired
+	protected SesameConnectionFactory connectionFactory;
 
 	protected final String testRepositoryID = "test-blog";
 	protected final String testResourceURI = "https://local.carbonldp.com/apps/test-blog/";

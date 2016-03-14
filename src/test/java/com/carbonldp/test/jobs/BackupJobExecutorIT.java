@@ -1,17 +1,23 @@
 package com.carbonldp.test.jobs;
 
+import com.carbonldp.authorization.acl.SesameACLService;
 import com.carbonldp.jobs.BackupJobExecutor;
 import com.carbonldp.test.AbstractIT;
+import com.carbonldp.utils.ValueUtil;
 import com.sun.deploy.net.proxy.ProxyUtils;
-import org.openrdf.model.Model;
+import org.openrdf.model.*;
 import org.openrdf.model.impl.AbstractModel;
 import org.openrdf.model.impl.LinkedHashModel;
+import org.openrdf.repository.RepositoryConnection;
+import org.openrdf.repository.RepositoryException;
+import org.openrdf.repository.RepositoryResult;
 import org.openrdf.rio.RDFFormat;
 import org.openrdf.rio.RDFParser;
 import org.openrdf.rio.Rio;
 import org.openrdf.rio.helpers.StatementCollector;
 import org.springframework.aop.framework.Advised;
 import org.springframework.test.util.ReflectionTestUtils;
+import org.testng.Assert;
 import org.testng.SkipException;
 import org.testng.annotations.Test;
 
@@ -46,6 +52,40 @@ public class BackupJobExecutorIT extends AbstractIT {
 			throw new SkipException( "unable to read file", e );
 		}
 		Model appModel = getBody( appString );
+
+		transactionWrapper.runInAppContext( app, () -> {
+			RepositoryConnection connection = connectionFactory.getConnection();
+			RepositoryResult<Statement> repositoryStatments;
+			try {
+				repositoryStatments = connection.getStatements( null, null, null, false );
+			} catch ( RepositoryException e ) {
+				throw new SkipException( "connection exception", e );
+			}
+
+
+			try {
+				while ( repositoryStatments.hasNext() ) {
+					Statement statement = repositoryStatments.next();
+					Resource subject = ValueUtil.isURI( statement.getSubject() ) ? statement.getSubject() : null;
+					Value object = ValueUtil.isURI( statement.getObject() ) ? statement.getObject() : null;
+					Assert.assertTrue( appModel.contains( subject, statement.getPredicate(), object, statement.getContext() ), statement.toString() );
+				}
+			} catch ( RepositoryException e ) {
+				throw new SkipException( "connection exception", e );
+			}
+
+			appModel.forEach( statement -> {
+				try {
+					Resource subject = ValueUtil.isURI( statement.getSubject() ) ? statement.getSubject() : null;
+					Value object = ValueUtil.isURI( statement.getObject() ) ? statement.getObject() : null;
+					Assert.assertTrue( connection.hasStatement( subject, statement.getPredicate(), object, false, statement.getContext() ), statement.toString() );
+				} catch ( RepositoryException e ) {
+					throw new SkipException( "connection exception", e );
+				}
+			} );
+
+		} );
+
 	}
 
 	private Model getBody( String appString ) {
