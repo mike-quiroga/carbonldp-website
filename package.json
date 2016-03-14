@@ -1,6 +1,6 @@
 {
   "name": "app",
-  "version": "0.5.1",
+  "version": "0.5.2",
   "description": "Public Website for carbonldp.com",
   "main": "dist/index.html",
   "author": "Base22 LLC",

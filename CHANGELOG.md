@@ -1,3 +1,7 @@
+# 0.5.2 (March 14, 2016)
+* Updated JSPM to 0.17
+* Added tsconfig.json and restructured files to use it
+
 # 0.5.1 (March 4, 2016)
 * Updated Getting started with rest api document
 
