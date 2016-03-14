@@ -6,6 +6,7 @@ import com.carbonldp.test.AbstractIT;
 import org.openrdf.model.URI;
 import org.openrdf.model.ValueFactory;
 import org.openrdf.model.impl.ValueFactoryImpl;
+import org.springframework.aop.framework.Advised;
 import org.testng.Assert;
 import org.testng.SkipException;
 import org.testng.annotations.BeforeMethod;
@@ -85,8 +86,8 @@ public class SesameACLServiceIT extends AbstractIT {
 		try {
 			Method privateMethod = SesameACLService.class.getDeclaredMethod( "addACEsSubjects", Set.class, SesameACLService.InheritanceType.class, Map.class );
 			privateMethod.setAccessible( true );
-			privateMethod.invoke( aclService, aces, SesameACLService.InheritanceType.DIRECT, aclSubjects );
-			privateMethod.invoke( aclService, inheritableAces, SesameACLService.InheritanceType.INHERITABLE, aclSubjects );
+			privateMethod.invoke( ((Advised)aclService).getTargetSource().getTarget(), aces, SesameACLService.InheritanceType.DIRECT, aclSubjects );
+			privateMethod.invoke( ((Advised)aclService).getTargetSource().getTarget(), inheritableAces, SesameACLService.InheritanceType.INHERITABLE, aclSubjects );
 			Assert.assertFalse( aclSubjects.isEmpty() );
 
 		} catch ( NoSuchMethodException e ) {
@@ -95,6 +96,8 @@ public class SesameACLServiceIT extends AbstractIT {
 			throw new SkipException( "Exception inside the method", e );
 		} catch ( IllegalAccessException e ) {
 			throw new SkipException( "can't access the method", e );
+		} catch ( Exception e ) {
+			e.printStackTrace();
 		}
 		Assert.assertTrue( aclSubjects.get( new SesameACLService.Subject( role2, subjectClass ) ).get( SesameACLService.InheritanceType.DIRECT ).get( SesameACLService.PermissionType.DENYING ).containsAll( permissions2 ) );
 		Assert.assertTrue( aclSubjects.get( new SesameACLService.Subject( role2, subjectClass ) ).get( SesameACLService.InheritanceType.INHERITABLE ).get( SesameACLService.PermissionType.GRANTING ).containsAll( permissions2 ) );
@@ -110,7 +113,7 @@ public class SesameACLServiceIT extends AbstractIT {
 		try {
 			Method privateMethod = SesameACLService.class.getDeclaredMethod( "getACLSubjects", ACL.class );
 			privateMethod.setAccessible( true );
-			Map<SesameACLService.Subject, SesameACLService.SubjectPermissions> aclSubjects = (Map<SesameACLService.Subject, SesameACLService.SubjectPermissions>) privateMethod.invoke( aclService, acl );
+			Map<SesameACLService.Subject, SesameACLService.SubjectPermissions> aclSubjects = (Map<SesameACLService.Subject, SesameACLService.SubjectPermissions>) privateMethod.invoke( ((Advised)aclService).getTargetSource().getTarget(), acl );
 
 			Assert.assertEquals( aclSubjects.size(), 1 );
 			Assert.assertTrue( aclSubjects.get( new SesameACLService.Subject( role2, subjectClass ) ).get( SesameACLService.InheritanceType.DIRECT ).get( SesameACLService.PermissionType.DENYING ).containsAll( permissions2 ) );
@@ -121,6 +124,8 @@ public class SesameACLServiceIT extends AbstractIT {
 			throw new SkipException( "Exception inside the method", e );
 		} catch ( IllegalAccessException e ) {
 			throw new SkipException( "can't access the method", e );
+		} catch ( Exception e ) {
+			e.printStackTrace();
 		}
 
 	}
@@ -146,7 +151,7 @@ public class SesameACLServiceIT extends AbstractIT {
 			Method privateMethod = SesameACLService.class.getDeclaredMethod( "getSubjectPermissionsToModify", Map.class, Map.class );
 			privateMethod.setAccessible( true );
 			Map<SesameACLService.ModifyType, Map<SesameACLService.Subject, SesameACLService.SubjectPermissions>> aclSubjects =
-				(Map<SesameACLService.ModifyType, Map<SesameACLService.Subject, SesameACLService.SubjectPermissions>>) privateMethod.invoke( aclService, oldACLSubjects, newACLSubjects );
+				(Map<SesameACLService.ModifyType, Map<SesameACLService.Subject, SesameACLService.SubjectPermissions>>) privateMethod.invoke( ((Advised)aclService).getTargetSource().getTarget(), oldACLSubjects, newACLSubjects );
 			Assert.assertEquals( aclSubjects.size(), 2 );
 			Assert.assertTrue( aclSubjects.get( SesameACLService.ModifyType.REMOVE ).get( new SesameACLService.Subject( role2, subjectClass ) ).get( SesameACLService.InheritanceType.DIRECT ).get( SesameACLService.PermissionType.DENYING ).contains( ACEDescription.Permission.DELETE ) );
 			Assert.assertTrue( aclSubjects.get( SesameACLService.ModifyType.ADD ).get( new SesameACLService.Subject( role2, subjectClass ) ).get( SesameACLService.InheritanceType.INHERITABLE ).get( SesameACLService.PermissionType.GRANTING ).contains( ACEDescription.Permission.DELETE ) );
@@ -156,6 +161,8 @@ public class SesameACLServiceIT extends AbstractIT {
 			throw new SkipException( "Exception inside the method", e );
 		} catch ( IllegalAccessException e ) {
 			throw new SkipException( "can't access the method", e );
+		} catch ( Exception e ) {
+			e.printStackTrace();
 		}
 	}
 
@@ -179,7 +186,7 @@ public class SesameACLServiceIT extends AbstractIT {
 			Method privateMethod = SesameACLService.class.getDeclaredMethod( "getSubjectPermissionsToModify", Map.class, Map.class );
 			privateMethod.setAccessible( true );
 			Map<SesameACLService.ModifyType, Map<SesameACLService.Subject, SesameACLService.SubjectPermissions>> aclSubjects =
-				(Map<SesameACLService.ModifyType, Map<SesameACLService.Subject, SesameACLService.SubjectPermissions>>) privateMethod.invoke( aclService, oldACLSubjects, newACLSubjects );
+				(Map<SesameACLService.ModifyType, Map<SesameACLService.Subject, SesameACLService.SubjectPermissions>>) privateMethod.invoke( ((Advised)aclService).getTargetSource().getTarget(), oldACLSubjects, newACLSubjects );
 			Assert.assertEquals( aclSubjects.size(), 2 );
 			Assert.assertTrue( aclSubjects.get( SesameACLService.ModifyType.REMOVE ).get( new SesameACLService.Subject( role2, subjectClass ) ).get( SesameACLService.InheritanceType.DIRECT ).get( SesameACLService.PermissionType.DENYING ).containsAll( permissions1 ) );
 			Assert.assertTrue( aclSubjects.get( SesameACLService.ModifyType.REMOVE ).get( new SesameACLService.Subject( role2, subjectClass ) ).get( SesameACLService.InheritanceType.INHERITABLE ).get( SesameACLService.PermissionType.GRANTING ).containsAll( permissions2 ) );
@@ -190,9 +197,12 @@ public class SesameACLServiceIT extends AbstractIT {
 			throw new SkipException( "Exception inside the method", e );
 		} catch ( IllegalAccessException e ) {
 			throw new SkipException( "can't access the method", e );
+		} catch ( Exception e ) {
+			e.printStackTrace();
 		}
 	}
 
+	@Test
 	public void getAffectedSubjectsTest() {
 
 		Map<SesameACLService.ModifyType, Map<SesameACLService.Subject, SesameACLService.SubjectPermissions>> subjectPermissionsToModify = new HashMap<>();
@@ -207,7 +217,7 @@ public class SesameACLServiceIT extends AbstractIT {
 		try {
 			Method privateMethod = SesameACLService.class.getDeclaredMethod( "getAffectedSubjects", Map.class );
 			privateMethod.setAccessible( true );
-			Set<SesameACLService.Subject> aclSubjects = (Set<SesameACLService.Subject>) privateMethod.invoke( aclService, subjectPermissionsToModify );
+			Set<SesameACLService.Subject> aclSubjects = (Set<SesameACLService.Subject>) privateMethod.invoke( ((Advised)aclService).getTargetSource().getTarget(), subjectPermissionsToModify );
 
 			Assert.assertTrue( aclSubjects.contains( new SesameACLService.Subject( role1, subjectClass ) ) );
 			Assert.assertTrue( aclSubjects.contains( new SesameACLService.Subject( role2, subjectClass ) ) );
@@ -217,10 +227,13 @@ public class SesameACLServiceIT extends AbstractIT {
 			throw new SkipException( "Exception inside the method", e );
 		} catch ( IllegalAccessException e ) {
 			throw new SkipException( "can't access the method", e );
+		} catch ( Exception e ) {
+			e.printStackTrace();
 		}
 
 	}
 
+	@Test
 	public void getAffectedPermissionsTest() {
 
 		Map<SesameACLService.ModifyType, Map<SesameACLService.Subject, SesameACLService.SubjectPermissions>> subjectPermissionsToModify = new HashMap<>();
@@ -235,7 +248,7 @@ public class SesameACLServiceIT extends AbstractIT {
 		try {
 			Method privateMethod = SesameACLService.class.getDeclaredMethod( "getAffectedPermissions", Map.class );
 			privateMethod.setAccessible( true );
-			Set<ACEDescription.Permission> aclPermissions = (Set<ACEDescription.Permission>) privateMethod.invoke( aclService, subjectPermissionsToModify );
+			Set<ACEDescription.Permission> aclPermissions = (Set<ACEDescription.Permission>) privateMethod.invoke( ((Advised)aclService).getTargetSource().getTarget(), subjectPermissionsToModify );
 
 			Assert.assertTrue( aclPermissions.contains( ACEDescription.Permission.DELETE ) );
 			Assert.assertTrue( aclPermissions.contains( ACEDescription.Permission.READ ) );
@@ -246,9 +259,12 @@ public class SesameACLServiceIT extends AbstractIT {
 			throw new SkipException( "Exception inside the method", e );
 		} catch ( IllegalAccessException e ) {
 			throw new SkipException( "can't access the method", e );
+		} catch ( Exception e ) {
+			e.printStackTrace();
 		}
 	}
 
+	@Test
 	public void generateACLTest() {
 		Map<SesameACLService.Subject, SesameACLService.SubjectPermissions> subjectPermissionsToModify = new HashMap<>();
 		SesameACLService.SubjectPermissions role1Permissions = new SesameACLService.SubjectPermissions();
@@ -258,7 +274,7 @@ public class SesameACLServiceIT extends AbstractIT {
 		try {
 			Method privateMethod = SesameACLService.class.getDeclaredMethod( "generateACL", URI.class, URI.class, Map.class );
 			privateMethod.setAccessible( true );
-			ACL acl = (ACL) privateMethod.invoke( aclService, aclUri, accessToURI, subjectPermissionsToModify );
+			ACL acl = (ACL) privateMethod.invoke( ((Advised)aclService).getTargetSource().getTarget(), aclUri, accessToURI, subjectPermissionsToModify );
 
 			Assert.assertTrue( acl.getACEntries().size() == 1 );
 			Assert.assertTrue( acl.getInheritableEntries().size() == 0 );
@@ -272,6 +288,8 @@ public class SesameACLServiceIT extends AbstractIT {
 			throw new SkipException( "Exception inside the method", e );
 		} catch ( IllegalAccessException e ) {
 			throw new SkipException( "can't access the method", e );
+		} catch ( Exception e ) {
+			e.printStackTrace();
 		}
 	}
 
