@@ -37,7 +37,7 @@
     "gulp-tslint": "^3.5.0",
     "gulp-util": "^3.0.7",
     "gulp-watch": "^4.3.5",
-    "jspm": "jspm/jspm-cli#0.17",
+    "jspm": "^0.17.0-beta.11",
     "live-server": "^0.8.2",
     "semantic-ui": "2.1.5",
     "systemjs-builder": "^0.14.15",
