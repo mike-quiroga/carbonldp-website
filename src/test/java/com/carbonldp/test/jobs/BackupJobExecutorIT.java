@@ -2,6 +2,7 @@ package com.carbonldp.test.jobs;
 
 import com.carbonldp.jobs.BackupJobExecutor;
 import com.carbonldp.test.AbstractIT;
+import com.sun.deploy.net.proxy.ProxyUtils;
 import org.openrdf.model.Model;
 import org.openrdf.model.impl.AbstractModel;
 import org.openrdf.model.impl.LinkedHashModel;
@@ -9,6 +10,8 @@ import org.openrdf.rio.RDFFormat;
 import org.openrdf.rio.RDFParser;
 import org.openrdf.rio.Rio;
 import org.openrdf.rio.helpers.StatementCollector;
+import org.springframework.aop.framework.Advised;
+import org.springframework.test.util.ReflectionTestUtils;
 import org.testng.SkipException;
 import org.testng.annotations.Test;
 
@@ -16,37 +19,29 @@ import java.io.CharArrayReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.Reader;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.nio.file.Files;
+import java.util.stream.Stream;
 
 /**
  * @author NestorVenegas
  * @since _version_
  */
 public class BackupJobExecutorIT extends AbstractIT {
+	public String appString = "";
 
 	@Test
 	public void createTemporaryRDFBackupFileIT() {
-		File rdfRepositoryFile = transactionWrapper.runInAppContext( app, () -> {
-			try {
-				Method privateMethod = BackupJobExecutor.class.getDeclaredMethod( "createTemporaryRDFBackupFile" );
-				privateMethod.setAccessible( true );
-				return (File) privateMethod.invoke( backupJobExecutor );
+		BackupJobExecutor backupJobExecutor;
+		try {
+			backupJobExecutor = (BackupJobExecutor) ( (Advised) this.backupJobExecutor ).getTargetSource().getTarget();
+		} catch ( Exception e ) {
+			throw new RuntimeException( e );
+		}
 
-			} catch ( NoSuchMethodException e ) {
-				throw new SkipException( "can't find the method", e );
-			} catch ( InvocationTargetException e ) {
-				throw new SkipException( "Exception inside the method", e );
-			} catch ( IllegalAccessException e ) {
-				throw new SkipException( "can't access the method", e );
-			}
-		} );
-
-		String appString = "";
+		File rdfRepositoryFile = transactionWrapper.runInAppContext( app, () -> ReflectionTestUtils.invokeMethod( backupJobExecutor, "createTemporaryRDFBackupFile" ) );
 
 		try {
-			Files.lines( rdfRepositoryFile.toPath() ).forEachOrdered( str -> appString.concat( str ) );
+			Files.lines( rdfRepositoryFile.toPath() ).forEachOrdered( str -> appString += str );
 		} catch ( IOException e ) {
 			throw new SkipException( "unable to read file", e );
 		}
@@ -62,7 +57,7 @@ public class BackupJobExecutorIT extends AbstractIT {
 		AbstractModel model = new LinkedHashModel();
 		rdfParser.setRDFHandler( new StatementCollector( model ) );
 		try {
-			rdfParser.parse( reader, "" );
+			rdfParser.parse( reader, app.getURI().stringValue() );
 		} catch ( Exception e ) {
 			throw new RuntimeException( e );
 		}

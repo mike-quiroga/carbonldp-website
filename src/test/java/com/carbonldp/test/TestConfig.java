@@ -30,9 +30,6 @@ public class TestConfig {
 	@Autowired
 	private SesameConnectionFactory connectionFactory;
 
-	@Autowired
-	private ContainerService containerService;
-
 	@Bean
 	public PlatformContextActionTemplate platformContextTemplate() {
 		return new PlatformContextActionTemplate();

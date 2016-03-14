@@ -7,6 +7,7 @@ import com.carbonldp.apps.AppRepository;
 import com.carbonldp.apps.AppService;
 import com.carbonldp.authorization.acl.ACLRepository;
 import com.carbonldp.authorization.acl.ACLService;
+import com.carbonldp.jobs.BackupJobExecutor;
 import com.carbonldp.jobs.TypedJobExecutor;
 import com.carbonldp.ldp.containers.BasicContainer;
 import com.carbonldp.ldp.containers.Container;
@@ -73,8 +74,10 @@ public abstract class AbstractIT extends AbstractTestNGSpringContextTests {
 	protected RDFSourceRepository sourceRepository;
 	@Autowired
 	protected ACLRepository aclRepository;
+
 	@Autowired
 	protected TypedJobExecutor backupJobExecutor;
+
 	@Autowired
 	protected TransactionWrapper transactionWrapper;
 
@@ -267,4 +270,8 @@ public abstract class AbstractIT extends AbstractTestNGSpringContextTests {
 			appService.create( app );
 		this.app = transactionWrapper.runWithSystemPermissionsInPlatformContext( () -> appService.get( new URIImpl( testResourceURI ) ) );
 	}
+
+//	public void setBackupJobExecutor( TypedJobExecutor backupJobExecutor ) {
+//		this.backupJobExecutor = backupJobExecutor;
+//	}
 }
