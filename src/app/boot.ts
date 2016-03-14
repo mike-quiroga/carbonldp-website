@@ -23,7 +23,7 @@ bootstrap( AppComponent, [
 	ROUTER_PROVIDERS,
 	HTTP_PROVIDERS,
 
-	provide( APP_BASE_HREF, {useValue: "/carbon-website/src/"} ),
+	provide( APP_BASE_HREF, {useValue: "/"} ),
 
 	CARBON_PROVIDER,
 	CONTENT_PROVIDERS,

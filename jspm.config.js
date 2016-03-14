@@ -1,11 +1,7 @@
 SystemJS.config({
   transpiler: "plugin-typescript",
   typescriptOptions: {
-    "module": "system",
-    "emitDecoratorMetadata": true,
-    "experimentalDecorators": true,
-    "noImplicitAny": false,
-    "target": "es5"
+    "tsconfig": true
   },
   paths: {
     "github:*": "jspm_packages/github/*",
