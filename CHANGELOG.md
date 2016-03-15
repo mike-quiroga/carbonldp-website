@@ -1,3 +1,12 @@
+# 0.5.3 (March 14, 3016)
+* Added sidebar component for documents.
+* Added styles for documents and sidebar components.
+* Added documents home index.
+* Change documents pages to angular components.
+* Fix typo in Getting started with rest api document.
+* Removed ContentComponent and ContentService.
+* Removed documents from assets.
+
 # 0.5.2 (March 14, 2016)
 * Updated JSPM to 0.17
 * Added tsconfig.json and restructured files to use it
@@ -6,7 +15,7 @@
 * Updated Getting started with rest api document
 
 # 0.5.0 (March 4, 2016)
-* Updated to Angular to Beta 8.
+* Updated Angular to Beta 8.
 * Added a login view.
 * Added a color palette to the UI with 7 new colors.
 * Added an Application Development module with:

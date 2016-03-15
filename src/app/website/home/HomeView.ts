@@ -83,4 +83,21 @@ export default class HomeView {
 	removeMenuVisibilityHandlers():void {
 		this.$carbonLogo.visibility( "destroy" );
 	}
+
+	scrollTo( event:any):boolean {
+		let
+			id:string = $( event.srcElement).attr( "href" ).replace( "#", "" ),
+			$element:JQuery = $( "#" + id ),
+			position:number = $element.offset().top - 80
+			;
+		$element.addClass( "active" );
+		$( "html, body" ).animate( {
+			scrollTop: position
+		}, 500 );
+		location.hash = "#" + id;
+		event.stopImmediatePropagation();
+		event.preventDefault();
+		return false;
+	}
+
 }
