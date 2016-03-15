@@ -29,7 +29,7 @@ export const appInjector = ( injector?:Injector ):Injector => {
 const CARBON_PROVIDER = provide( Carbon, {
 	useFactory: () => {
 		let carbon = new Carbon();
-		carbon.setSetting( "domain", "local.carbonldp.com" );
+		carbon.setSetting( "domain", "dev.carbonldp.com" );
 		return carbon;
 	}
 } );

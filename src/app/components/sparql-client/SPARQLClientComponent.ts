@@ -1,12 +1,17 @@
 /// <reference path="./../../../../typings/typings.d.ts" />
-import { Component, View, ElementRef } from "angular2/core";
+import { Component, ElementRef, Injector, Input } from "angular2/core";
 import { CORE_DIRECTIVES, FORM_DIRECTIVES, NgStyle } from "angular2/common";
+import {RouteConfig, RouterOutlet, CanActivate, Router} from 'angular2/router';
 
 import { ResponseComponent, SPARQLResponseType, SPARQLFormats, SPARQLClientResponse, SPARQLQuery } from "./response/ResponseComponent";
 import * as CodeMirrorComponent from "app/components/code-mirror/CodeMirrorComponent";
 
 import * as SPARQL from "carbon/SPARQL";
 import * as HTTP from "carbon/HTTP";
+import * as Credentials from "carbon/Auth/Credentials";
+
+import { appInjector } from "app/boot";
+import Cookies from "js-cookie";
 
 import $ from "jquery";
 import "semantic-ui/semantic";
@@ -22,6 +27,44 @@ import Context from "carbon/Context";
 	template: template,
 	directives: [ CORE_DIRECTIVES, FORM_DIRECTIVES, CodeMirrorComponent.Class, ResponseComponent, NgStyle, ResponseComponent ]
 } )
+@CanActivate(
+	( prev, next ):boolean => {
+		let injector:Injector = appInjector();
+		let carbon:Carbon = injector.get( Carbon );
+		let router:Router = injector.get( Router );
+
+		if ( ! carbon ) {
+			router.navigate( [ "/Website/Login" ] );
+			return false;
+		}
+		// TODO: Change this to use a token instead of raw credentials when the SDK provides a way of authenticate using tokens.
+		let cookiesHandler:Cookies = Cookies;
+		let tokenCookie:{email:string, password:String} = cookiesHandler.getJSON( "carbon_jwt" );
+		if ( tokenCookie && ! carbon.auth.isAuthenticated() ) {
+			return carbon.auth.authenticate( tokenCookie.email, tokenCookie.password ).then(
+				( credentials:Credentials ) => {
+					return carbon.auth.isAuthenticated();
+				}
+			).catch(
+				( error:Error ) => {
+					switch ( true ) {
+						case error instanceof HTTP.Errors.UnauthorizedError:
+							console.log( "Wrong credentials" );
+							break;
+						default:
+							console.log( "There was a problem processing the request" );
+							break;
+					}
+					router.navigate( [ "/Website/Login" ] );
+					return false;
+				}
+			);
+		}
+		if ( ! carbon.auth.isAuthenticated() )
+			router.navigate( [ "/Website/Login" ] );
+		return carbon.auth.isAuthenticated();
+	}
+)
 export default class SPARQLClientComponent {
 	get codeMirrorMode():typeof CodeMirrorComponent.Mode { return CodeMirrorComponent.Mode; }
 
@@ -31,6 +74,23 @@ export default class SPARQLClientComponent {
 		this._sparql = value;
 		this.currentQuery.content = value;
 		this.sparqlChanged();
+	}
+
+	get endpoint():string { return this._endpoint; }
+
+	set endpoint( value:string ) {
+		this._endpoint = value;
+		this.endpointChanged();
+	}
+
+	private _endpoint:string = "";
+
+	endpointChanged():void {
+		if ( this.regExpURL.test( this.endpoint ) ) {
+			this.currentQuery.endpoint = this.endpoint;
+		} else {
+			this.currentQuery.endpoint = this.context.base + this.endpoint;
+		}
 	}
 
 	SPARQLTypes:SPARQLTypes = <SPARQLTypes>{
@@ -44,8 +104,8 @@ export default class SPARQLClientComponent {
 				{value: SPARQLFormats.table, name: "Friendly Table"},
 				{value: SPARQLFormats.xml, name: "XML"},
 				{value: SPARQLFormats.csv, name: "CSV"},
-				{value: SPARQLFormats.tsv, name: "TSV"}
-			]
+				{value: SPARQLFormats.tsv, name: "TSV"},
+			],
 		},
 		describe: {
 			name: "DESCRIBE",
@@ -78,6 +138,7 @@ export default class SPARQLClientComponent {
 	isQueryType:boolean = true;
 	isSending:boolean = false;
 	isSaving:boolean = false;
+	isCarbonContext:boolean = false;
 	responses:SPARQLClientResponse[] = [];
 
 
@@ -89,9 +150,18 @@ export default class SPARQLClientComponent {
 		format: null,
 		name: "",
 	};
+	askingQuery:SPARQLQuery = <SPARQLQuery>{
+		endpoint: "",
+		type: this.SPARQLTypes.query,
+		content: "",
+		operation: null,
+		format: null,
+		name: "",
+	};
 	formatsAvailable = [];
 	savedQueries:SPARQLQuery[] = [];
 	sidebar:JQuery;
+	confirmationModal:JQuery;
 
 	// Buttons
 	btnsGroupSaveQuery:JQuery;
@@ -103,84 +173,88 @@ export default class SPARQLClientComponent {
 	regExpConstruct:RegExp = new RegExp( "((.|\n)+)?CONSTRUCT((.|\n)+)?", "i" );
 	regExpAsk:RegExp = new RegExp( "((.|\n)+)?ASK((.|\n)+)?", "i" );
 	regExpDescribe:RegExp = new RegExp( "((.|\n)+)?DESCRIBE((.|\n)+)?", "i" );
+	regExpURL:RegExp = new RegExp( "(https?:\/\/(?:www\.|(?!www))[^\s\.]+\.[^\s]{2,}|www\.[^\s]+\.[^\s]{2,})" );
 
-	private context:Context;
+	@Input() context:Context;
 	private element:ElementRef;
 
 	// TODO: Make them configurable
 	private prefixes:{ [ prefix:string ]:string } = {
-		"acl":		"http://www.w3.org/ns/auth/acl#",
-		"api":		"http://purl.org/linked-data/api/vocab#",
-		"c":			"https://carbonldp.com/ns/v1/platform#",
-		"cs":			"https://carbonldp.com/ns/v1/security#",
-		"cp":			"https://carbonldp.com/ns/v1/patch#",
-		"cc":			"http://creativecommons.org/ns#",
-		"cert":		"http://www.w3.org/ns/auth/cert#",
-		"dbp":		"http://dbpedia.org/property/",
-		"dc":			"http://purl.org/dc/terms/",
-		"dc11":		"http://purl.org/dc/elements/1.1/",
-		"dcterms":	"http://purl.org/dc/terms/",
-		"doap":		"http://usefulinc.com/ns/doap#",
-		"example":	"http://example.org/ns#",
-		"ex":			"http://example.org/ns#",
-		"exif":		"http://www.w3.org/2003/12/exif/ns#",
-		"fn":			"http://www.w3.org/2005/xpath-functions#",
-		"foaf":		"http://xmlns.com/foaf/0.1/",
-		"geo":		"http://www.w3.org/2003/01/geo/wgs84_pos#",
-		"geonames":	"http://www.geonames.org/ontology#",
-		"gr":			"http://purl.org/goodrelations/v1#",
-		"http":		"http://www.w3.org/2006/http#",
-		"ldp":		"http://www.w3.org/ns/ldp#",
-		"log":		"http://www.w3.org/2000/10/swap/log#",
-		"owl":		"http://www.w3.org/2002/07/owl#",
-		"rdf":		"http://www.w3.org/1999/02/22-rdf-syntax-ns#",
-		"rdfs":		"http://www.w3.org/2000/01/rdf-schema#",
-		"rei":		"http://www.w3.org/2004/06/rei#",
-		"rsa":		"http://www.w3.org/ns/auth/rsa#",
-		"rss":		"http://purl.org/rss/1.0/",
-		"sd":			"http://www.w3.org/ns/sparql-service-description#",
-		"sfn":		"http://www.w3.org/ns/sparql#",
-		"sioc":		"http://rdfs.org/sioc/ns#",
-		"skos":		"http://www.w3.org/2004/02/skos/core#",
-		"swrc":		"http://swrc.ontoware.org/ontology#",
-		"types":		"http://rdfs.org/sioc/types#",
-		"vcard":		"http://www.w3.org/2001/vcard-rdf/3.0#",
-		"wot":		"http://xmlns.com/wot/0.1/",
-		"xhtml":		"http://www.w3.org/1999/xhtml#",
-		"xsd":		"http://www.w3.org/2001/XMLSchema#",
+		"acl": "http://www.w3.org/ns/auth/acl#",
+		"api": "http://purl.org/linked-data/api/vocab#",
+		"c": "https://carbonldp.com/ns/v1/platform#",
+		"cs": "https://carbonldp.com/ns/v1/security#",
+		"cp": "https://carbonldp.com/ns/v1/patch#",
+		"cc": "http://creativecommons.org/ns#",
+		"cert": "http://www.w3.org/ns/auth/cert#",
+		"dbp": "http://dbpedia.org/property/",
+		"dc": "http://purl.org/dc/terms/",
+		"dc11": "http://purl.org/dc/elements/1.1/",
+		"dcterms": "http://purl.org/dc/terms/",
+		"doap": "http://usefulinc.com/ns/doap#",
+		"example": "http://example.org/ns#",
+		"ex": "http://example.org/ns#",
+		"exif": "http://www.w3.org/2003/12/exif/ns#",
+		"fn": "http://www.w3.org/2005/xpath-functions#",
+		"foaf": "http://xmlns.com/foaf/0.1/",
+		"geo": "http://www.w3.org/2003/01/geo/wgs84_pos#",
+		"geonames": "http://www.geonames.org/ontology#",
+		"gr": "http://purl.org/goodrelations/v1#",
+		"http": "http://www.w3.org/2006/http#",
+		"ldp": "http://www.w3.org/ns/ldp#",
+		"log": "http://www.w3.org/2000/10/swap/log#",
+		"owl": "http://www.w3.org/2002/07/owl#",
+		"rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+		"rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+		"rei": "http://www.w3.org/2004/06/rei#",
+		"rsa": "http://www.w3.org/ns/auth/rsa#",
+		"rss": "http://purl.org/rss/1.0/",
+		"sd": "http://www.w3.org/ns/sparql-service-description#",
+		"sfn": "http://www.w3.org/ns/sparql#",
+		"sioc": "http://rdfs.org/sioc/ns#",
+		"skos": "http://www.w3.org/2004/02/skos/core#",
+		"swrc": "http://swrc.ontoware.org/ontology#",
+		"types": "http://rdfs.org/sioc/types#",
+		"vcard": "http://www.w3.org/2001/vcard-rdf/3.0#",
+		"wot": "http://xmlns.com/wot/0.1/",
+		"xhtml": "http://www.w3.org/1999/xhtml#",
+		"xsd": "http://www.w3.org/2001/XMLSchema#",
 	};
 
 	private $element:JQuery;
+	private carbon:Carbon;
 	private _sparql:string = "";
 
 	constructor( element:ElementRef, carbon:Carbon ) {
 		this.element = element;
-		this.context = carbon;
-
 		this.isSending = false;
 		this.savedQueries = this.getLocalSavedQueries() || [];
+		this.carbon = carbon;
+	}
+
+	ngOnInit():void {
+		console.log( this.context );
+		if ( ! this.context ) {
+			this.context = this.carbon;
+			this.isCarbonContext = true;
+		} else {
+			this.endpoint = this.context.base;
+		}
 	}
 
 	ngAfterViewInit():void {
 		this.$element = $( this.element.nativeElement );
-
-		if( ! this.context.auth.isAuthenticated() ) {
-			this.context.auth.authenticate( "admin@carbonldp.com", "hello" ).catch( ( error ) => {
-				console.error( "Couldn't authenticate" );
-				console.error( error );
-			});
-		}
-
 		this.btnSaveQuery = this.$element.find( ".btnSaveQuery" );
 		this.btnsGroupSaveQuery = this.$element.find( ".btnsGroupSaveQuery" );
 		this.btnSave = this.btnsGroupSaveQuery.find( ".btnSave" );
 		this.btnSaveAs = this.btnsGroupSaveQuery.find( ".btnSaveAs" );
 		this.sidebar = this.$element.find( ".query-builder .ui.sidebar" );
 		this.btnsGroupSaveQuery.find( ".dropdown" ).dropdown();
+		this.confirmationModal = this.$element.find( ".ui.replace-confirmation.modal" );
 		this.initializeSavedQueriesSidebar();
+		this.initializeModal();
 	}
 
-	//:JQueryEventObject
 	onChangeQueryType( $event:JQueryEventObject ):void {
 		let type:string = $event.target.value;
 		this.isQueryType = type === "Query";
@@ -259,7 +333,7 @@ export default class SPARQLClientComponent {
 	}
 
 	execute( query:SPARQLQuery, activeResponse?:SPARQLClientResponse ):Promise<SPARQLClientResponse> {
-		let type = query.type;
+		let type:string = query.type;
 		if ( activeResponse ) {
 			query = activeResponse.query;
 		}
@@ -298,9 +372,9 @@ export default class SPARQLClientComponent {
 			case this.SPARQLQueryOperations.select.name:
 				return this.executeSELECT( query );
 			case this.SPARQLQueryOperations.describe.name:
-				return this.executeDESCRIBEQuery( query );
+				return this.executeDESCRIBE( query );
 			case this.SPARQLQueryOperations.construct.name:
-				return this.executeCONSTRUCTQuery( query );
+				return this.executeCONSTRUCT( query );
 			case this.SPARQLQueryOperations.ask.name:
 				return this.executeASK( query );
 			default:
@@ -313,66 +387,71 @@ export default class SPARQLClientComponent {
 
 	executeSELECT( query:SPARQLQuery ):Promise<SPARQLClientResponse> {
 		let beforeTimestamp:number = ( new Date() ).valueOf();
-		return this.context.documents.executeRawSELECTQuery( query.endpoint, query.content ).then( ( [ result, response ]:[ SPARQL.RawResults.Class, HTTP.Response.Class ] ):SPARQLClientResponse => {
-			let duration:number = (new Date()).valueOf() - beforeTimestamp;
+		console.log( "App Context Authenticated: " + (this.context.auth.isAuthenticated() ? "YES" : "NO") );
+		return this.context.documents.executeRawSELECTQuery( query.endpoint, query.content ).then(
+			( [ result, response ]:[ SPARQL.RawResults.Class, HTTP.Response.Class ] ):SPARQLClientResponse => {
+				let duration:number = (new Date()).valueOf() - beforeTimestamp;
 
-			let clientResponse:SPARQLClientResponse = new SPARQLClientResponse();
-			clientResponse.duration = duration;
-			clientResponse.resultset = result;
-			clientResponse.setData( result );
-			clientResponse.result = <string> SPARQLResponseType.success;
-			clientResponse.query = query;
+				let clientResponse:SPARQLClientResponse = new SPARQLClientResponse();
+				clientResponse.duration = duration;
+				clientResponse.resultset = result;
+				clientResponse.setData( result );
+				clientResponse.result = <string> SPARQLResponseType.success;
+				clientResponse.query = query;
 
-			return clientResponse;
-		});
+				return clientResponse;
+			} );
 	}
 
-	executeDESCRIBEQuery( query:SPARQLQuery ):Promise<SPARQLClientResponse> {
+	executeDESCRIBE( query:SPARQLQuery ):Promise<SPARQLClientResponse> {
 		let beforeTimestamp:number = ( new Date() ).valueOf();
-		return this.context.documents.executeRawDESCRIBEQuery( query.endpoint, query.content ).then( ( [ result, response ]:[ string, HTTP.Response.Class ] ):SPARQLClientResponse => {
-			let duration:number = (new Date()).valueOf() - beforeTimestamp;
+		return this.context.documents.executeRawDESCRIBEQuery( query.endpoint, query.content ).then(
+			( [ result, response ]:[ string, HTTP.Response.Class ] ):SPARQLClientResponse => {
+				let duration:number = (new Date()).valueOf() - beforeTimestamp;
 
-			let clientResponse:SPARQLClientResponse = new SPARQLClientResponse();
-			clientResponse.duration = duration;
-			clientResponse.resultset = result;
-			clientResponse.setData( result );
-			clientResponse.result = <string> SPARQLResponseType.success;
-			clientResponse.query = query;
+				let clientResponse:SPARQLClientResponse = new SPARQLClientResponse();
+				clientResponse.duration = duration;
+				clientResponse.resultset = result;
+				clientResponse.setData( result );
+				clientResponse.result = <string> SPARQLResponseType.success;
+				clientResponse.query = query;
 
-			return clientResponse;
-		});
+				return clientResponse;
+			} );
 	}
 
-	executeCONSTRUCTQuery( query:SPARQLQuery ):Promise<SPARQLClientResponse> {
+	executeCONSTRUCT( query:SPARQLQuery ):Promise<SPARQLClientResponse> {
 		let beforeTimestamp:number = ( new Date() ).valueOf();
-		return this.context.documents.executeRawCONSTRUCTQuery( query.endpoint, query.content ).then( ( [ result, response ]:[ string, HTTP.Response.Class ] ):SPARQLClientResponse => {
-			let duration:number = (new Date()).valueOf() - beforeTimestamp;
+		return this.context.documents.executeRawCONSTRUCTQuery( query.endpoint, query.content ).then(
+			( [ result, response ]:[ string, HTTP.Response.Class ] ):SPARQLClientResponse => {
+				let duration:number = (new Date()).valueOf() - beforeTimestamp;
 
-			let clientResponse:SPARQLClientResponse = new SPARQLClientResponse();
-			clientResponse.duration = duration;
-			clientResponse.resultset = result;
-			clientResponse.setData( result );
-			clientResponse.result = <string> SPARQLResponseType.success;
-			clientResponse.query = query;
+				let clientResponse:SPARQLClientResponse = new SPARQLClientResponse();
+				clientResponse.duration = duration;
+				clientResponse.resultset = result;
+				clientResponse.setData( result );
+				clientResponse.result = <string> SPARQLResponseType.success;
+				clientResponse.query = query;
 
-			return clientResponse;
-		});
+				return clientResponse;
+			} );
 	}
 
 	executeASK( query:SPARQLQuery ):Promise<SPARQLClientResponse> {
 		let beforeTimestamp:number = ( new Date() ).valueOf();
-		return this.context.documents.executeRawASKQuery( query.endpoint, query.content ).then( ( [ result, response ]:[ SPARQL.RawResults.Class, HTTP.Response.Class ] ):SPARQLClientResponse => {
-			let duration:number = (new Date()).valueOf() - beforeTimestamp;
+		return this.context.documents.executeRawASKQuery( query.endpoint, query.content ).then(
+			( [ result, response ]:[ SPARQL.RawResults.Class, HTTP.Response.Class ] ):SPARQLClientResponse => {
+				let duration:number = (new Date()).valueOf() - beforeTimestamp;
 
-			let clientResponse:SPARQLClientResponse = new SPARQLClientResponse();
-			clientResponse.duration = duration;
-			clientResponse.resultset = result;
-			clientResponse.setData( result );
-			clientResponse.result = <string> SPARQLResponseType.success;
-			clientResponse.query = query;
+				let clientResponse:SPARQLClientResponse = new SPARQLClientResponse();
+				clientResponse.duration = duration;
+				clientResponse.resultset = result;
+				clientResponse.setData( result );
+				clientResponse.result = <string> SPARQLResponseType.success;
+				clientResponse.query = query;
 
-			return clientResponse;
-		});
+				return clientResponse;
+			} );
 	}
 
 	executeUPDATE( query:SPARQLQuery ):Promise {
@@ -458,9 +537,25 @@ export default class SPARQLClientComponent {
 		this.updateLocalSavedQueries();
 	}
 
-	onClickSavedQuery( query:SPARQLQuery ):void {
-		this.loadQuery( query );
-		this.hideSidebar();
+	onClickSavedQuery( selectedQuery:SPARQLQuery ):void {
+		console.log( "Current Query:\n %o", JSON.stringify( this.currentQuery ) );
+		console.log( "Selected Query:\n %o", JSON.stringify( selectedQuery ) );
+		if ( JSON.stringify( this.currentQuery ) !== JSON.stringify( selectedQuery ) ) {
+			//this.askingQuery = Object.assign( {}, selectedQuery );
+			this.askingQuery = <SPARQLQuery>{
+				endpoint: selectedQuery.endpoint,
+				type: selectedQuery.type,
+				content: selectedQuery.content,
+				operation: selectedQuery.operation,
+				format: selectedQuery.format,
+				name: selectedQuery.name,
+				id: selectedQuery.id,
+			};
+			this.toggleConfirmationModal();
+		} else {
+			this.loadQuery( selectedQuery );
+			this.toggleSidebar();
+		}
 	}
 
 	onClickRemoveSavedQuery( index:number ):void {
@@ -472,13 +567,41 @@ export default class SPARQLClientComponent {
 	loadQuery( query:SPARQLQuery ):void {
 		// TODO: Alert when loading over an unsaved query
 		this.currentQuery = query;
+		//this.currentQuery = Object.assign( {}, query );
+		this.askingQuery = <SPARQLQuery>{
+			endpoint: query.endpoint,
+			type: query.type,
+			content: query.content,
+			operation: query.operation,
+			format: query.format,
+			name: query.name,
+			id: query.id,
+		};
+		this.endpoint = query.endpoint;
 		this.sparql = query.content;
 	}
 
 	initializeSavedQueriesSidebar():void {
 		this.sidebar.sidebar( {
-			context: this.$element.find( ".query-builder .middle.segment" ),
+			context: this.$element.find( ".query-builder .pushable" ),
 		} );
+	}
+
+	initializeModal():void {
+		this.confirmationModal.modal( {
+			closable: false,
+			blurring: true,
+		} );
+	}
+
+	toggleConfirmationModal():void {
+		this.confirmationModal.modal( "toggle" );
+	}
+
+	onApproveConfirmationModal( approvedQuery:SPARQLQuery ):void {
+		this.askingQuery = <SPARQLQuery>{};
+		this.loadQuery( approvedQuery );
+		this.toggleSidebar();
 	}
 
 	getLocalSavedQueries():SPARQLQuery[] {
@@ -494,12 +617,6 @@ export default class SPARQLClientComponent {
 	toggleSidebar():void {
 		this.sidebar.sidebar( "toggle" );
 	}
-
-	hideSidebar():void {
-		this.sidebar.sidebar( "hide" );
-	}
-
-
 }
 
 export interface SPARQLQueryOperationFormat {

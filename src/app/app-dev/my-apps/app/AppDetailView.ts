@@ -10,7 +10,7 @@ import AppContextService from "./../../AppContextService";
 import * as SidebarApp from "./App";
 
 import DashboardView from "./dashboard/DashboardView";
-import SPARQLClientComponent from "app/components/sparql-client/SPARQLClientComponent";
+import SPARQLEditorView from "./sparql-editor/SPARQLEditorView";
 
 
 import template from "./template.html!";
@@ -20,7 +20,7 @@ import "./style.css!";
 	selector: "app-detail",
 	template: template,
 	directives: [ CORE_DIRECTIVES, ROUTER_DIRECTIVES, RouterOutlet ],
-	providers: [ AppContextService ]
+	providers: [ AppContextService, ],
 } )
 @RouteConfig( [
 	{
@@ -30,30 +30,30 @@ import "./style.css!";
 		useAsDefault: true,
 		data: {
 			alias: "AppDashboard",
-			displayName: "App Dashboard"
-		}
+			displayName: "App Dashboard",
+		},
 	},
 	{
 		path: "/sparql-editor",
 		as: "SPARQLEditor",
-		component: SPARQLClientComponent,
+		component: SPARQLEditorView,
 		data: {
 			alias: "SPARQLEditor",
-			displayName: "SPARQL Editor"
-		}
-	}
+			displayName: "SPARQL Editor",
+		},
+	},
 ] )
 export default class AppDetailView {
 	router:Router;
 	routeParams:RouteParams;
-	sidebarService:SidebarService;
-	appContextService:AppContextService;
+	//app:App;
+	public appContext:App.Context;
+	private sidebarService:SidebarService;
+	private appContextService:AppContextService;
 
-	element:ElementRef;
-	$element:JQuery;
-	app:App;
-	appContext:App.Context;
-	timer:number;
+	private element:ElementRef;
+	private $element:JQuery;
+	private timer:number;
 
 	constructor( router:Router, element:ElementRef, routeParams:RouteParams, sidebarService:SidebarService, appContextService:AppContextService ) {
 		this.router = router;

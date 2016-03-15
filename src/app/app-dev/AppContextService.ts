@@ -39,7 +39,6 @@ export default class AppContextService {
 	}
 
 	getAll():Promise<App.Context[]> {
-		//console.log( "App Context Service Authenticated: " + (this.carbon.auth.isAuthenticated() ? "YES" : "NO") );
 		return this.carbon.apps.getAll().then( ( appContexts:App.Context[] ) => {
 			appContexts
 				.filter( ( appContext:App.Context ) => {

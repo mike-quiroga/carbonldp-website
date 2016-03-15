@@ -3,6 +3,6 @@
 		"base": "/carbon-website/src/"
 	},
 	"carbon": {
-		"domain": "local.carbonldp.com"
+		"domain": "dev.carbonldp.com"
 	}
 }

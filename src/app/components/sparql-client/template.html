@@ -1,11 +1,4 @@
-<div class="ui main middle aligned grid container">
-	<div class="row">
-		<div class="column">
-			<h3>
-				SPARQL Client
-			</h3>
-		</div>
-	</div>
+<div class="ui grid">
 	<div class="row query-builder">
 		<div class="column">
 			<div class="ui top attached menu">
@@ -19,7 +12,7 @@
 						No saved queries yet.
 					</p>
 					<a class="item" *ngFor="#query of savedQueries; #i =index" (click)="onClickSavedQuery( query )">
-						<button class="mini ui right floated red button" (click)="onClickRemoveSavedQuery( i )">
+						<button class="ui right floated circular icon mini inverted red button" (click)="onClickRemoveSavedQuery( i )">
 							<i class="icon remove"></i>
 						</button>
 						<span class="name">{{query.name}}</span>
@@ -27,72 +20,70 @@
 						<span class="operation" [ngClass]="query.operation.toLowerCase()">{{query.operation.toLowerCase()}}</span>
 					</a>
 				</div>
-				<div class="pusher">
-					<div class="ui basic grid segment" [ngClass]="{loading: isSending}">
-						<div class="row">
-							<div class="column">
-								<div class="ui grid form">
-									<div class="fields row">
-										<div class="three wide middle aligned right aligned column">
-											<label>Endpoint URI:</label>
+				<div class="ui pusher">
+					<div class="ui basic segment">
+						<div class="ui grid">
+							<div class="row">
+								<div class="column">
+									<div class="ui grid form basic segment" [ngClass]="{loading: isSending}">
+										<div class="fields row">
+											<div class="column field">
+												<label>Endpoint URI:</label>
+												<div class="ui info message" *ngIf="!isCarbonContext">
+													<p>
+														URI:
+														<span>{{currentQuery.endpoint}}</span>
+													</p>
+												</div>
+												<input placeholder="https://example.com/parent/.../resource/" [(ngModel)]="endpoint" type="text">
+											</div>
 										</div>
-										<div class="thirteen wide column field">
-											<input placeholder="https://example.com/parent/.../resource/" [(ngModel)]="currentQuery.endpoint" type="text">
+										<div class="fields row">
+											<div class="eight wide column field">
+												<label>Type:</label>
+												<select #queryType class="ui dropdown" [(ngModel)]="currentQuery.type" (change)="onChangeQueryType($event)">
+													<option value="{{SPARQLTypes.query}}">{{SPARQLTypes.query}}</option>
+													<option value="{{SPARQLTypes.update}}">{{SPARQLTypes.update}}</option>
+												</select>
+											</div>
+											<div class="eight wide column field" *ngIf="currentQuery.type == 'Query'">
+												<label>Output Format:</label>
+												<select class="ui dropdown" [(ngModel)]="currentQuery.format" [disabled]="isSending || !currentQuery.operation">
+													<option *ngFor="#format of formatsAvailable" [value]="format.value">{{format.name}}</option>
+												</select>
+											</div>
 										</div>
+										<div class="fields row">
+											<div class=" column field">
+												<label>Query:</label>
+												<code-mirror [mode]="codeMirrorMode.SPARQL" [readOnly]="isSending" [(value)]="sparql" [showLineNumbers]="true"></code-mirror>
+											</div>
+										</div>
+										<div class="fields row">
+											<div class="three wide right aligned column">
+											</div>
+											<div class="six wide column field">
+												<button class="ui button"
+												        [ngClass]="{disabled:!currentQuery.content}">
+													<i class="checkmark icon"></i>
+													Validate
+												</button>
+												<button class="ui blue button"
+												        [ngClass]="{disabled: !canExecute()}"
+												        (click)="onExecute()">
+													<i class="play icon"></i>
+													Execute
+												</button>
+											</div>
+											<!-- /fields row -->
+										</div>
+										<!-- /form -->
 									</div>
-									<div class="fields row">
-										<div class="three wide middle aligned right aligned column">
-											<label>Type:</label>
-										</div>
-										<div class="three wide column field">
-											<select #queryType class="ui dropdown" [(ngModel)]="currentQuery.type" (change)="onChangeQueryType($event)">
-												<option value="{{SPARQLTypes.query}}">{{SPARQLTypes.query}}</option>
-												<option value="{{SPARQLTypes.update}}">{{SPARQLTypes.update}}</option>
-											</select>
-										</div>
-									</div>
-									<div class="fields row">
-										<div class="three wide right aligned column">
-											<label>Query:</label>
-										</div>
-										<div class="thirteen wide column field">
-											<code-mirror [mode]="codeMirrorMode.SPARQL" [readOnly]="isSending" [(value)]="sparql" [showLineNumbers]="true"></code-mirror>
-										</div>
-									</div>
-									<div class="fields row" *ngIf="currentQuery.type == 'Query'">
-										<div class="three wide right aligned column">
-											<label>Output Format:</label>
-										</div>
-										<div class="three wide column field">
-											<select class="ui dropdown" [(ngModel)]="currentQuery.format" [disabled]="isSending || !currentQuery.operation">
-												<option *ngFor="#format of formatsAvailable" [value]="format.value">{{format.name}}</option>
-											</select>
-										</div>
-									</div>
-									<div class="fields row">
-										<div class="three wide right aligned column">
-										</div>
-										<div class="six wide column field">
-											<button class="ui button"
-											        [ngClass]="{disabled:!currentQuery.content}">
-												<i class="checkmark icon"></i>
-												Validate
-											</button>
-											<button class="ui blue button"
-											        [ngClass]="{disabled: !canExecute()}"
-											        (click)="onExecute()">
-												<i class="play icon"></i>
-												Execute
-											</button>
-										</div>
-									</div>
-									<!-- /fields row -->
+									<!-- /row -->
 								</div>
 								<!-- /form -->
 							</div>
-							<!-- /row -->
 						</div>
-						<!-- /form -->
 					</div>
 					<!-- /segment -->
 				</div>
@@ -136,10 +127,9 @@
 	</div>
 	<div class="row">
 		<div class="column">
-			<h3>
-				Response Stack
-				<button class="negative ui button"
-				        [disabled]="responses.length<=0"
+			<h3>Response Stack
+				<button class="ui negative button"
+				        [disabled]="responses.length <= 0"
 				        (click)="onEmptyStack()">
 					<i class="trash outline icon"></i>
 					Empty Stack <span *ngIf="responses.length>0">({{responses.length}})</span>
@@ -147,15 +137,39 @@
 			</h3>
 		</div>
 	</div>
-	<!--<sparql-response class="row" *ngFor="#response of responses; #i =index" [response]="response" (onRemove)="onRemove($event)" (onConfigure)="onConfigureResponse($event)" (onReExecute)="onReExecute($event)" [(isReExecuting)]="isReExecuting"></sparql-response>-->
-	<sparql-response class="row"
-	                 *ngFor="#response of responses; #i =index"
-	                 [response]="response"
-	                 [prefixes]="prefixes"
-	                 (onRemove)="onRemove($event)"
-	                 (onConfigure)="onConfigureResponse($event)"
-	                 (onReExecute)="onReExecute($event)"></sparql-response>
-	<div class="row"></div>
-	<div class="row"></div>
-	<div class="row"></div>
+	<div class="row query-results">
+		<div class="column">
+			<div class="ui list responses-list">
+				<sparql-response class="item"
+				                 *ngFor="#response of responses; #i =index"
+				                 [response]="response"
+				                 [prefixes]="prefixes"
+				                 (onRemove)="onRemove($event)"
+				                 (onConfigure)="onConfigureResponse($event)"
+				                 (onReExecute)="onReExecute($event)"></sparql-response>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="ui replace-confirmation modal">
+	<div class="header">
+		Unsaved Query
+	</div>
+	<div class="image content">
+		<div class="description">
+			<div class="ui header">You haven't saved your query.</div>
+			<p>If you proceed your query will be replaced.</p>
+			<p>Do you want to proceed?</p>
+		</div>
+	</div>
+	<div class="actions">
+		<button class="ui black deny button">
+			No
+		</button>
+		<button class="ui positive right labeled icon button" (click)="onApproveConfirmationModal(askingQuery)">
+			Yes, proceed
+			<i class="checkmark icon"></i>
+		</button>
+	</div>
 </div>
