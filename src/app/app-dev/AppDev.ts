@@ -1,4 +1,3 @@
-/// <reference path="./../../../typings/typings.d.ts" />
 import { Provider } from "angular2/core";
 import AppDevComponent from "app/app-dev/AppDevComponent";
 import { SIDEBAR_PROVIDERS } from "app/app-dev/components/sidebar/Sidebar";

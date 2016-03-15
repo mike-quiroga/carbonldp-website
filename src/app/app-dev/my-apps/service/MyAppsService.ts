@@ -1,4 +1,3 @@
-/// <reference path="./../../../../../typings/typings.d.ts" />
 import { Injectable } from "angular2/core";
 import { Http, Response, Request } from "angular2/http";
 

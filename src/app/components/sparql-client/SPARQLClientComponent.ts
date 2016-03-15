@@ -1,4 +1,3 @@
-/// <reference path="./../../../../typings/typings.d.ts" />
 import { Component, View, ElementRef } from "angular2/core";
 import { CORE_DIRECTIVES, FORM_DIRECTIVES, NgStyle } from "angular2/common";
 

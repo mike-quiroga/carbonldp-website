@@ -1,4 +1,3 @@
-/// <reference path="./../../../../typings/typings.d.ts" />
 import { Component, ElementRef, Input, Output, SimpleChange, EventEmitter } from "angular2/core";
 import CodeMirror from "codemirror/lib/codemirror";
 

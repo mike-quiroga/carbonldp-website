@@ -1,4 +1,4 @@
-# 0.5.2 (March 14, 3016)
+# 0.5.3 (March 14, 3016)
 * Added sidebar component for documents.
 * Added styles for documents and sidebar components.
 * Added documents home index.
@@ -7,8 +7,12 @@
 * Removed ContentComponent and ContentService.
 * Removed documents from assets.
 
+# 0.5.2 (March 14, 2016)
+* Updated JSPM to 0.17
+* Added tsconfig.json and restructured files to use it
+
 # 0.5.1 (March 4, 2016)
-* Updated Getting started with rest api document.
+* Updated Getting started with rest api document
 
 # 0.5.0 (March 4, 2016)
 * Updated Angular to Beta 8.

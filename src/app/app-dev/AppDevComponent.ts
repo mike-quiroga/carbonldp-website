@@ -1,4 +1,3 @@
-/// <reference path="./../../../typings/typings.d.ts" />
 import {Injectable, Component, ElementRef } from "angular2/core";
 import {RouteConfig, RouterOutlet} from "angular2/router";
 
