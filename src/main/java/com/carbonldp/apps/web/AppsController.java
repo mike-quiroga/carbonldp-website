@@ -1,5 +1,6 @@
 package com.carbonldp.apps.web;
 
+import com.carbonldp.Consts;
 import com.carbonldp.descriptions.APIPreferences;
 import com.carbonldp.rdf.RDFDocument;
 import com.carbonldp.web.AbstractController;
@@ -20,7 +21,13 @@ public class AppsController extends AbstractController {
 	private AppsRDFPostHandler postRequestHandler;
 
 	@InteractionModel( value = {APIPreferences.InteractionModel.CONTAINER}, handlesDefault = true )
-	@RequestMapping( method = RequestMethod.POST, consumes = "!application/sparql-query" )
+	@RequestMapping( method = RequestMethod.POST, consumes = {
+		Consts.TURTLE,
+		Consts.JSONLD,
+		Consts.RDFJSON,
+		Consts.RDFXML,
+		Consts.TRIG
+	} )
 	public ResponseEntity<Object> createApplication( @RequestBody RDFDocument requestDocument, HttpServletRequest request, HttpServletResponse response ) {
 		return postRequestHandler.handleRequest( requestDocument, request, response );
 	}

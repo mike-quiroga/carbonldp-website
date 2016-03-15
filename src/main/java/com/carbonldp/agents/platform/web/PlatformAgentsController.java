@@ -1,5 +1,6 @@
 package com.carbonldp.agents.platform.web;
 
+import com.carbonldp.Consts;
 import com.carbonldp.ldp.web.AbstractLDPController;
 import com.carbonldp.rdf.RDFDocument;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +20,13 @@ public class PlatformAgentsController extends AbstractLDPController {
 	private PlatformAgentsPOSTHandler postRequestHandler;
 	private PlatformAgentsDELETEHandler deleteRequestHandler;
 
-	@RequestMapping( method = RequestMethod.POST, consumes = "!application/sparql-query" )
+	@RequestMapping( method = RequestMethod.POST, consumes = {
+		Consts.TURTLE,
+		Consts.JSONLD,
+		Consts.RDFJSON,
+		Consts.RDFXML,
+		Consts.TRIG
+	} )
 	public ResponseEntity<Object> registerAgent( @RequestBody RDFDocument requestDocument, HttpServletRequest request, HttpServletResponse response ) {
 		return postRequestHandler.handleRequest( requestDocument, request, response );
 	}
