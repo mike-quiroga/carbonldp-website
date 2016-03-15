@@ -11,12 +11,9 @@
 
 				<div class="active section">Getting Started</div>
 			</div>
-
-			<!--<h1 class="ui header">Getting Started With the REST API</h1>-->
-
 		</div>
+		<sidebar-component [mobile]="true" [parentElement]="element" class="sixteen wide mobile only column"></sidebar-component>
 	</div>
-
 	<div class="row">
 		<div class="twelve wide computer twelve wide tablet sixteen wide mobile column">
 			<main>
@@ -110,50 +107,50 @@
 							learn about 
 							<em>application agents</em>, which represent accounts specifically for users of the applications you
 							build.</p>
-					</section>
+						<!--</section>-->
 
-					<section>
-						<h2 class="ui header">Create the request</h2>
+						<section>
+							<h2 class="ui header">Create the request</h2>
 
-						<p>Create the following HTTP request to create a platform account.</p>
+							<p>Create the following HTTP request to create a platform account.</p>
 
-						<p>
-							<span class="ui blue horizontal label">POST</span>
-							<code>https://{{host}}/platform/agents/</code>
-						</p>
+							<p>
+								<span class="ui blue horizontal label">POST</span>
+								<code>https://{{host}}/platform/agents/</code>
+							</p>
 
-						<table class="ui celled table">
-							<thead>
-								<tr>
-									<th>
-										<span>HTTP Header</span>
-									</th>
-									<th>Value</th>
-									<th>Required?</th>
-								</tr>
-							</thead>
-							<tbody>
-								<tr>
-									<td>Content-Type</td>
-									<td>text/turtle</td>
-									<td>Yes</td>
-								</tr>
-								<tr>
-									<td>Prefer</td>
-									<td>
-										<span class="nolink">http://www.w3.org/ns/ldp#Container</span>; rel=interaction-model
-									</td>
-									<td>Yes</td>
-								</tr>
-								<tr>
-									<td>Slug</td>
-									<td>jane-doe</td>
-									<td>No</td>
-								</tr>
-							</tbody>
-						</table>
-						<!--@formatter:off-->
-						<textarea #example1 class="hidden">
+							<table class="ui celled table">
+								<thead>
+									<tr>
+										<th>
+											<span>HTTP Header</span>
+										</th>
+										<th>Value</th>
+										<th>Required?</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td>Content-Type</td>
+										<td>text/turtle</td>
+										<td>Yes</td>
+									</tr>
+									<tr>
+										<td>Prefer</td>
+										<td>
+											<span class="nolink">http://www.w3.org/ns/ldp#Container</span>; rel=interaction-model
+										</td>
+										<td>Yes</td>
+									</tr>
+									<tr>
+										<td>Slug</td>
+										<td>jane-doe</td>
+										<td>No</td>
+									</tr>
+								</tbody>
+							</table>
+							<!--@formatter:off-->
+							<textarea #example1 class="hidden">
 @prefix cs:&#60;https://carbonldp.com/ns/v1/security#&#62;.
 @prefix vcard:&#60;http://www.w3.org/2001/vcard-rdf/3.0#&#62;.
 
@@ -162,303 +159,303 @@
 	cs:name "Jane Doe";
 	vcard:email "jane.doe@example.org";
 	cs:password "MyStr0ngP@ssw0rd#".
-						</textarea>
-						<!--@formatter:on-->
-						<code-mirror class="ui text left aligned basic segment"
-						             [mode]="'turtle'"
-						             [read-only]="'nocursor'" [value]="example1.value">
-						</code-mirror>
-					</section>
+							</textarea>
+							<!--@formatter:on-->
+							<code-mirror class="ui text left aligned basic segment"
+							             [mode]="'turtle'"
+							             [read-only]="'nocursor'" [value]="example1.value">
+							</code-mirror>
+						</section>
 
-					<section>
-						<h2 class="ui header">Review the request</h2>
+						<section>
+							<h2 class="ui header">Review the request</h2>
 
-						<p>Before issuing this request, you may want to examine its parts. To get more information about each
-							part in the
-							request, click to expand an item of interest below.</p>
+							<p>Before issuing this request, you may want to examine its parts. To get more information about each
+								part in the
+								request, click to expand an item of interest below.</p>
 
-						<div class="ui styled fluid accordion">
-							<div class="title">
-								<i class="dropdown icon"></i>
-								Content-Type
+							<div class="ui styled fluid accordion">
+								<div class="title">
+									<i class="dropdown icon"></i>
+									Content-Type
+								</div>
+								<div class="content">
+									<p>Since the request method is POST, the Content-Type HTTP header tells the platform what kind
+										of content to
+										expect in the body of the request. We use turtle (Terse RDF Triple Language) in our
+										documentation because
+										it's brief
+										and clean. Once you understand the turtle syntax, you'll find that it's very easy to read
+										and write. In all,
+										Carbon supports the following content types:</p>
+									<ul>
+										<li>Turtle: text/turtle</li>
+										<li>JSON-LD: application/ld+json</li>
+										<li>RDF XML: application/rdf+xml</li>
+									</ul>
+								</div>
+								<div class="title">
+									<i class="dropdown icon"></i>
+									Prefer
+								</div>
+								<div class="content">
+									<p>The <code>Prefer</code> header uses a link relation to specify the <em>interaction model</em> of
+										the target
+										resource, which is the resource we're posting to - the <code>/platform/agents/</code>
+										container. By using
+										this header,
+										we're specifying the desired behavior of the resource. Because we're adding a member
+										resource to the target
+										container, we need it to behave like a container as opposed to an <code>RDFSource</code> or
+										a <code>NonRDFSource</code>.
+										In all,
+										Carbon supports the following interaction model values for the <code>Prefer</code> header:
+									</p>
+									<ul>
+										<li>
+											<code>http://www.w3.org/ns/ldp#Container; rel=interaction-model</code>
+										</li>
+										<li>
+											<code>http://www.w3.org/ns/ldp#RDFSource; rel=interaction-model</code>
+										</li>
+										<li>
+											<code>http://www.w3.org/ns/ldp#NonRDFSource; rel=interaction-model</code>
+										</li>
+									</ul>
+								</div>
+								<div class="title">
+									<i class="dropdown icon"></i>
+									Slug
+								</div>
+								<div class="content">
+									<p>The <code>Slug</code> header is intended to give the server a hint as to how to mint a new
+										URI for the
+										resource being
+										created. If a slug is not provided, Carbon will generate a random number for the URI of the
+										agent. In this
+										case, however, we're specifying a preference to use john-doe. Therefore, if it is available
+										for use, the
+										server will mint the following URI:</p>
+
+									<p>
+										<code>https://{{host}}/platform/agents/jane-doe/</code>
+									</p>
+								</div>
+								<div class="title">
+									<i class="dropdown icon"></i>
+									Body
+								</div>
+								<div class="content">
+
+									<p>The body of the request is an RDF graph of triples written in Turtle, which we told the
+										server we'd be using
+										in the Content-Type header.</p>
+
+									<p>Using Turtle's @prefix directive we declare short prefix names so that we don't have to
+										repeat long URIs in
+										the triples that follow.</p>
+
+									<p>Following is a brief description of each of the required triples that come after the
+										namespace
+										declarations:</p>
+
+									<p> </p>
+									<table class="ui celled table">
+										<thead>
+											<tr>
+												<th>Subject</th>
+												<th>Predicate</th>
+												<th>Object</th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr>
+												<td>
+													<pre>&lt;&gt;</pre>
+												</td>
+												<td>
+													<pre>a</pre>
+												</td>
+												<td>
+													<pre>cs:Agent</pre>
+												</td>
+											</tr>
+											<tr>
+												<td colspan="3">
+													<p>
+														The subject specifies an empty value relative to the base URI. In turtle, URIs
+														are written
+														enclosed in '&lt;' and '&gt;' and may be absolute RDF URI References or relative
+														to the current
+														base URI. <br/>The token 'a' in the predicate position always specifies the RDF
+														type of the
+														resource, which is a short way of writing:
+													</p>
+													<code>http://www.w3.org/1999/02/22-rdf-syntax-ns#type</code>
+
+													<p>In the object position, we specify the RDF type as being an Agent from the Carbon
+														LDP security
+														vocabulary.</p>
+												</td>
+											</tr>
+											<tr>
+												<td>
+													<pre>&lt;&gt;</pre>
+												</td>
+												<td>
+													<pre>cs:name</pre>
+												</td>
+												<td>
+													<pre>"Jane Doe"</pre>
+												</td>
+											</tr>
+											<tr>
+												<td colspan="3">The name is a literal string that should specify a common name for the
+													user; we
+													recommend using the first and last name.
+												</td>
+											</tr>
+											<tr>
+												<td>
+													<pre>&lt;&gt;</pre>
+												</td>
+												<td>
+													<pre>vcard:email</pre>
+												</td>
+												<td>
+													<pre>"jane.doe@example.org"</pre>
+												</td>
+											</tr>
+											<tr>
+												<td colspan="3">The email is a literal string that should be a valid contact email
+													address for the user.
+													This will also serve as the login user ID.
+												</td>
+											</tr>
+											<tr>
+												<td>
+													<pre>&lt;&gt;</pre>
+												</td>
+												<td>
+													<pre>cs:password</pre>
+												</td>
+												<td>
+													<pre>"MyStr0ngP@ssw0rd#"</pre>
+												</td>
+											</tr>
+											<tr>
+												<td colspan="3">The password is a literal string that should be the desired password.
+												</td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
 							</div>
-							<div class="content">
-								<p>Since the request method is POST, the Content-Type HTTP header tells the platform what kind
-									of content to
-									expect in the body of the request. We use turtle (Terse RDF Triple Language) in our
-									documentation because
-									it's brief
-									and clean. Once you understand the turtle syntax, you'll find that it's very easy to read
-									and write. In all,
-									Carbon supports the following content types:</p>
-								<ul>
-									<li>Turtle: text/turtle</li>
-									<li>JSON-LD: application/ld+json</li>
-									<li>RDF XML: application/rdf+xml</li>
-								</ul>
-							</div>
-							<div class="title">
-								<i class="dropdown icon"></i>
-								Prefer
-							</div>
-							<div class="content">
-								<p>The <code>Prefer</code> header uses a link relation to specify the <em>interaction model</em> of
-									the target
-									resource, which is the resource we're posting to - the <code>/platform/agents/</code>
-									container. By using
-									this header,
-									we're specifying the desired behavior of the resource. Because we're adding a member
-									resource to the target
-									container, we need it to behave like a container as opposed to an <code>RDFSource</code> or
-									a <code>NonRDFSource</code>.
-									In all,
-									Carbon supports the following interaction model values for the <code>Prefer</code> header:
-								</p>
-								<ul>
-									<li>
-										<code>http://www.w3.org/ns/ldp#Container; rel=interaction-model</code>
-									</li>
-									<li>
-										<code>http://www.w3.org/ns/ldp#RDFSource; rel=interaction-model</code>
-									</li>
-									<li>
-										<code>http://www.w3.org/ns/ldp#NonRDFSource; rel=interaction-model</code>
-									</li>
-								</ul>
-							</div>
-							<div class="title">
-								<i class="dropdown icon"></i>
-								Slug
-							</div>
-							<div class="content">
-								<p>The <code>Slug</code> header is intended to give the server a hint as to how to mint a new
-									URI for the
-									resource being
-									created. If a slug is not provided, Carbon will generate a random number for the URI of the
-									agent. In this
-									case, however, we're specifying a preference to use john-doe. Therefore, if it is available
-									for use, the
-									server will mint the following URI:</p>
+						</section>
 
-								<p>
-									<code>https://{{host}}/platform/agents/jane-doe/</code>
-								</p>
-							</div>
-							<div class="title">
-								<i class="dropdown icon"></i>
-								Body
-							</div>
-							<div class="content">
+						<section>
+							<h2 class="ui header">Issue the request to create an account</h2>
 
-								<p>The body of the request is an RDF graph of triples written in Turtle, which we told the
-									server we'd be using
-									in the Content-Type header.</p>
+							<p>Issue the POST request.</p>
 
-								<p>Using Turtle's @prefix directive we declare short prefix names so that we don't have to
-									repeat long URIs in
-									the triples that follow.</p>
+							<p>A successful request will result in HTTP status code 201 Created. The ETag header in the response
+								will
+								confirm the time of creation and the Location header will provide the server minted URI for the new
+								Agent resource.
+								For example:</p>
 
-								<p>Following is a brief description of each of the required triples that come after the
-									namespace
-									declarations:</p>
+							<table class="ui celled table">
+								<thead>
+									<tr>
+										<th>HTTP Header</th>
+										<th>Value</th>
+									</tr>
+								</thead>
+								<tbody>
 
-								<p> </p>
-								<table class="ui celled table">
-									<thead>
-										<tr>
-											<th>Subject</th>
-											<th>Predicate</th>
-											<th>Object</th>
-										</tr>
-									</thead>
-									<tbody>
-										<tr>
-											<td>
-												<pre>&lt;&gt;</pre>
-											</td>
-											<td>
-												<pre>a</pre>
-											</td>
-											<td>
-												<pre>cs:Agent</pre>
-											</td>
-										</tr>
-										<tr>
-											<td colspan="3">
-												<p>
-													The subject specifies an empty value relative to the base URI. In turtle, URIs
-													are written
-													enclosed in '&lt;' and '&gt;' and may be absolute RDF URI References or relative
-													to the current
-													base URI. <br/>The token 'a' in the predicate position always specifies the RDF
-													type of the
-													resource, which is a short way of writing:
-												</p>
-												<code>http://www.w3.org/1999/02/22-rdf-syntax-ns#type</code>
+									<tr>
+										<td>ETag</td>
+										<td>
+											<span>W/"2015-11-09T19:18:30.863Z"</span>
+										</td>
+									</tr>
+									<tr>
+										<td>Location</td>
+										<td>
+											<span>https://{{host}}/platform/agents/jane-doe/</span>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</section>
 
-												<p>In the object position, we specify the RDF type as being an Agent from the Carbon
-													LDP security
-													vocabulary.</p>
-											</td>
-										</tr>
-										<tr>
-											<td>
-												<pre>&lt;&gt;</pre>
-											</td>
-											<td>
-												<pre>cs:name</pre>
-											</td>
-											<td>
-												<pre>"Jane Doe"</pre>
-											</td>
-										</tr>
-										<tr>
-											<td colspan="3">The name is a literal string that should specify a common name for the
-												user; we
-												recommend using the first and last name.
-											</td>
-										</tr>
-										<tr>
-											<td>
-												<pre>&lt;&gt;</pre>
-											</td>
-											<td>
-												<pre>vcard:email</pre>
-											</td>
-											<td>
-												<pre>"jane.doe@example.org"</pre>
-											</td>
-										</tr>
-										<tr>
-											<td colspan="3">The email is a literal string that should be a valid contact email
-												address for the user.
-												This will also serve as the login user ID.
-											</td>
-										</tr>
-										<tr>
-											<td>
-												<pre>&lt;&gt;</pre>
-											</td>
-											<td>
-												<pre>cs:password</pre>
-											</td>
-											<td>
-												<pre>"MyStr0ngP@ssw0rd#"</pre>
-											</td>
-										</tr>
-										<tr>
-											<td colspan="3">The password is a literal string that should be the desired password.
-											</td>
-										</tr>
-									</tbody>
-								</table>
-							</div>
-						</div>
-					</section>
+						<section>
+							<h2 class="ui header">Examine the new Agent resource</h2>
 
-					<section>
-						<h2 class="ui header">Issue the request to create an account</h2>
+							<p>Now, let's take a look at the newly created resource by issuing a <code>GET</code> request to the URI
+								that was minted
+								for the
+								resource. </p>
 
-						<p>Issue the POST request.</p>
+							<p>Create the following HTTP request to get the platform Agent.</p>
 
-						<p>A successful request will result in HTTP status code 201 Created. The ETag header in the response
-							will
-							confirm the time of creation and the Location header will provide the server minted URI for the new
-							Agent resource.
-							For example:</p>
+							<p>
+								<span class="ui blue horizontal label">GET</span>
+								<code>https://{{host}}/platform/agents/jane-doe/</code>
+							</p>
 
-						<table class="ui celled table">
-							<thead>
-								<tr>
-									<th>HTTP Header</th>
-									<th>Value</th>
-								</tr>
-							</thead>
-							<tbody>
+							<p>You will need to authorize the request using the username and password of the that was given in the
+								body of the
+								former POST request.</p>
 
-								<tr>
-									<td>ETag</td>
-									<td>
-										<span>W/"2015-11-09T19:18:30.863Z"</span>
-									</td>
-								</tr>
-								<tr>
-									<td>Location</td>
-									<td>
-										<span>https://{{host}}/platform/agents/jane-doe/</span>
-									</td>
-								</tr>
-							</tbody>
-						</table>
-					</section>
+							<table class="ui celled table">
+								<tbody>
+									<tr>
+										<th>
+											<strong>Username</strong>
+										</th>
+										<td>john.doe5@example.org</td>
+									</tr>
+									<tr>
+										<th>Password</th>
+										<td>MyStr0ngP@ssw0rd#</td>
+									</tr>
+								</tbody>
+							</table>
 
-					<section>
-						<h2 class="ui header">Examine the new Agent resource</h2>
-
-						<p>Now, let's take a look at the newly created resource by issuing a <code>GET</code> request to the URI
-							that was minted
-							for the
-							resource. </p>
-
-						<p>Create the following HTTP request to get the platform Agent.</p>
-
-						<p>
-							<span class="ui blue horizontal label">GET</span>
-							<code>https://{{host}}/platform/agents/jane-doe/</code>
-						</p>
-
-						<p>You will need to authorize the request using the username and password of the that was given in the
-							body of the
-							former POST request.</p>
-
-						<table class="ui celled table">
-							<tbody>
-								<tr>
-									<th>
-										<strong>Username</strong>
-									</th>
-									<td>john.doe5@example.org</td>
-								</tr>
-								<tr>
-									<th>Password</th>
-									<td>MyStr0ngP@ssw0rd#</td>
-								</tr>
-							</tbody>
-						</table>
-
-						<p>If you paste the URI in the address bar of your web browser and hit enter, for example, you should be
-							prompted for
-							the username and password. If you issue the request with Postman or another tool, you should add
-							Basic Auth to the
-							request.<br/> <br/>Let's also add an Accept header to change the format of the response to JSON LD.
-						</p>
+							<p>If you paste the URI in the address bar of your web browser and hit enter, for example, you should be
+								prompted for
+								the username and password. If you issue the request with Postman or another tool, you should add
+								Basic Auth to the
+								request.<br/> <br/>Let's also add an Accept header to change the format of the response to JSON LD.
+							</p>
 
 
-						<table class="ui celled table">
-							<thead>
-								<tr>
-									<th>HTTP Header</th>
-									<th>Value</th>
-									<th colspan="1">Required?</th>
-								</tr>
-							</thead>
-							<tbody>
+							<table class="ui celled table">
+								<thead>
+									<tr>
+										<th>HTTP Header</th>
+										<th>Value</th>
+										<th colspan="1">Required?</th>
+									</tr>
+								</thead>
+								<tbody>
 
-								<tr>
-									<td>Authorization</td>
-									<td>Basic ...</td>
-									<td>Yes</td>
-								</tr>
-								<tr>
-									<td>Accept</td>
-									<td>application/ld+json</td>
-									<td>No (default is text/turtle)</td>
-								</tr>
-							</tbody>
-						</table>
+									<tr>
+										<td>Authorization</td>
+										<td>Basic ...</td>
+										<td>Yes</td>
+									</tr>
+									<tr>
+										<td>Accept</td>
+										<td>application/ld+json</td>
+										<td>No (default is text/turtle)</td>
+									</tr>
+								</tbody>
+							</table>
 
-						<p><strong>200 OK</strong></p>
-						<!--@formatter:off-->
+							<p><strong>200 OK</strong></p>
+							<!--@formatter:off-->
 						<textarea #example2 class="hidden">
 [
    {
@@ -532,10 +529,11 @@
 						</textarea>
 						<!--@formatter:on-->
 
-						<code-mirror class="ui text left aligned basic segment"
-						             [mode]="'json'"
-						             [read-only]="'nocursor'" [value]="example2.value">
-						</code-mirror>
+							<code-mirror class="ui text left aligned basic segment"
+							             [mode]="'json'"
+							             [read-only]="'nocursor'" [value]="example2.value">
+							</code-mirror>
+						</section>
 					</section>
 
 					<section>
@@ -819,8 +817,8 @@
 						<!--@formatter:off-->
 						<textarea #example55 class="hidden">
 &#60;carbon-document-uri&#62;
-	a skos:Concept;
-	skos:prefLabel "animals".
+a skos:Concept;
+skos:prefLabel "animals".
 						</textarea>
 						<!--@formatter:on-->
 						<code-mirror class="ui text left aligned basic segment"
@@ -832,9 +830,9 @@
 						<!--@formatter:off-->
 						<textarea #example56 class="hidden">
 &#60;carbon-document-uri&#62;
-	rdf:type skos:Concept;
-	skos:prefLabel "animals"@en;
-	skos:prefLabel "animaux"@fr.
+rdf:type skos:Concept;
+skos:prefLabel "animals"@en;
+skos:prefLabel "animaux"@fr.
 						</textarea>
 						<!--@formatter:on-->
 						<code-mirror class="ui text left aligned basic segment"
@@ -864,9 +862,9 @@
 						<!--@formatter:off-->
 						<textarea #example57 class="hidden">
 &#60;carbon-document-uri&#62;
-	rdf:type skos:Concept;
-	skos:prefLabel "animals"@en;
-	skos:narrower ex:mammals.
+rdf:type skos:Concept;
+skos:prefLabel "animals"@en;
+skos:narrower ex:mammals.
 						</textarea>
 						<!--@formatter:on-->
 
@@ -924,13 +922,13 @@
 						<!--@formatter:off-->
 						<textarea #example58 class="hidden">
 &#60;carbon-document-uri&#62;
-	rdf:type skos:ConceptScheme;
-	dct:title "Content Topics";
-	skos:hasTopConcept
-		&#60;carbon-document-uri&#62;,
-		&#60;carbon-document-uri&#62;,
-		&#60;carbon-document-uri&#62;,
-		&#60;carbon-document-uri&#62;.
+rdf:type skos:ConceptScheme;
+dct:title "Content Topics";
+skos:hasTopConcept
+	&#60;carbon-document-uri&#62;,
+	&#60;carbon-document-uri&#62;,
+	&#60;carbon-document-uri&#62;,
+	&#60;carbon-document-uri&#62;.
 						</textarea>
 						<!--@formatter:on-->
 						<code-mirror class="ui text left aligned basic segment"
@@ -1222,6 +1220,7 @@
 @prefix ldp:&#60;http://www.w3.org/ns/ldp#&#62; .
 @prefix skos:&#60;http://www.w3.org/2004/02/skos/core#&#62; .
 @prefix dct:&#60;http://purl.org/dc/terms/&#62; .
+
 <>
 	a ldp:BasicContainer, skos:ConceptScheme;
 	ldp:memberOfRelation skos:inScheme;
@@ -1690,7 +1689,7 @@ _:b0
 
 _:b0
 	a c:AddMemberAction;
-	c:targetMember &#60;https://local.carbonldp.com/apps/taxonomy-hub/schemes/topics/technology/&#62;.
+	c:memberTarget &#60;https://local.carbonldp.com/apps/taxonomy-hub/schemes/topics/technology/&#62;.
 						</textarea>
 						<!--@formatter:on-->
 						<code-mirror class="ui text left aligned basic segment"
@@ -1808,7 +1807,7 @@ _:b0
 
 _:b0
 	a c:AddMemberAction;
-	c:targetMember &#60;https://local.carbonldp.com/apps/taxonomy-hub/schemes/topics/information-architecture/&#62;.
+	c:memberTarget &#60;https://local.carbonldp.com/apps/taxonomy-hub/schemes/topics/information-architecture/&#62;.
 						</textarea>
 						<!--@formatter:on-->
 
@@ -1990,7 +1989,7 @@ _:b0
 
 _:b0
 	a c:AddMemberAction;
-	c:targetMember &#60;https://local.carbonldp.com/apps/taxonomy-hub/schemes/topics/html5/&#62;.
+	c:memberTarget &#60;https://local.carbonldp.com/apps/taxonomy-hub/schemes/topics/html5/&#62;.
 						</textarea>
 						<!--@formatter:on-->
 						<code-mirror class="ui text left aligned basic segment"
@@ -2040,7 +2039,7 @@ _:b0
 
 _:b0
 	a c:AddMemberAction;
-	c:targetMember &#60;https://local.carbonldp.com/apps/taxonomy-hub/schemes/topics/javascript/&#62;.
+	berTarget &#60;https://local.carbonldp.com/apps/taxonomy-hub/schemes/topics/javascript/&#62;.
 						</textarea>
 						<!--@formatter:on-->
 
@@ -2089,63 +2088,10 @@ _:b0
 				</article>
 			</main>
 		</div>
-		<nav class="four wide computer four wide tablet column">
-			<!--<div class="ui fixed sticky segment">-->
-			<!--&lt;!&ndash;-->
-			<!--<div class="ui vertical text menu">-->
-			<!--<div class="header item">Sort By</div>-->
-			<!--<a class="active item">Closest</a>-->
-			<!--<a class="item">Most Comments</a>-->
-			<!--<a class="item">Most Popular</a>-->
-			<!--<a class="item">Most Popular</a>-->
-			<!--<a class="item">Most Popular</a>-->
-			<!--<a class="item">Most Popular</a>-->
-			<!--<a class="item">Most Popular</a>-->
-			<!--<a class="item">Most Popular</a>-->
-			<!--</div>-->
-			<!--&ndash;&gt;-->
-			<!--<div class="ui vertical following fluid accordion text menu">-->
-			<!--<div class="item active">-->
-			<!--<a class="title active">-->
-			<!--<i class="dropdown icon"></i> <b>Content</b>-->
-			<!--</a>-->
+		<sidebar-component [mobile]="false" [parentElement]="element" class="four wide computer only four wide tablet only column"></sidebar-component>
 
-			<!--<div class="content menu active">-->
-			<!--<a class="item" href="#menu">About the application</a>-->
-			<!--<a class="item" href="#secondary-menu">Create an account on carbonldp.com</a>-->
-			<!--<a class="item" href="#pointing">Create the request</a>-->
-			<!--<a class="item" href="#tabular">Review the request</a>-->
-			<!--<a class="item" href="#text">Issue the request to create an account</a>-->
-			<!--<a class="item" href="#vertical-menu">Examine the new Agent resource</a>-->
-			<!--<a class="item" href="#pagination">Create an application</a>-->
-			<!--<a class="item" href="#pagination">Examine the application root container</a>-->
-			<!--<a class="item" href="#pagination">Model the application (vocabulary, resources, containers)</a>-->
-			<!--<a class="item" href="#pagination">Re-using an established linked data vocabulary called SKOS</a>-->
-			<!--<a class="item" href="#pagination">Mini SKOS Simple Knowledge Organization System primer</a>-->
-			<!--<a class="item" href="#pagination">Consider the role of LDP containers</a>-->
-			<!--<a class="item" href="#pagination">Create application resources</a>-->
-			<!--<a class="item" href="#pagination">Create the schemes/ container</a>-->
-			<!--<a class="item" href="#pagination">Create example Concept Scheme</a>-->
-			<!--<a class="item" href="#pagination">Create the top-concepts/ Direct Container</a>-->
-			<!--<a class="item" href="#pagination">Create a root Concept</a>-->
-			<!--<a class="item" href="#pagination">Add root Concepts as member of the scheme</a>-->
-			<!--<a class="item" href="#pagination">Create application roles</a>-->
-			<!--<a class="item" href="#pagination">Assign permissions on your application structure to the application roles</a>-->
-			<!--<a class="item" href="#pagination">Create one or more application users</a>-->
-			<!--<a class="item" href="#pagination">Assign users to roles</a>-->
-			<!--<a class="item" href="#pagination">Optional: Create a front-end user-interface</a>-->
-			<!--</div>-->
-			<!--</div>-->
-			<!--</div>-->
-			<!--</div>-->
-		</nav>
+
 	</div>
 
 </div>
 
-
-<div class="script" style="display:none">
-
-	$('.ui.sticky').sticky({context: '#article',offset: 80});
-
-</div>
