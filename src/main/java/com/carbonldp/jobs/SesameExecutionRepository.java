@@ -7,12 +7,12 @@ import com.carbonldp.rdf.RDFDocumentRepository;
 import com.carbonldp.rdf.RDFResourceRepository;
 import com.carbonldp.utils.ValueUtil;
 import org.openrdf.model.*;
+import org.openrdf.model.impl.ValueFactoryImpl;
 import org.openrdf.model.vocabulary.RDF;
 import org.openrdf.query.BindingSet;
 import org.openrdf.repository.RepositoryException;
 import org.openrdf.repository.RepositoryResult;
 import org.openrdf.spring.SesameConnectionFactory;
-import org.springframework.beans.factory.config.RuntimeBeanNameReference;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
@@ -114,6 +114,15 @@ public class SesameExecutionRepository extends AbstractSesameLDPRepository imple
 	public void addResult( URI executionURI, Value status ) {
 		try {
 			connectionFactory.getConnection().add( executionURI, ExecutionDescription.Property.RESULT.getURI(), status, executionURI );
+		} catch ( RepositoryException e ) {
+			throw new RuntimeException( e );
+		}
+	}
+
+	@Override
+	public void addErrorDescription( URI executionURI, String error ) {
+		try {
+			connectionFactory.getConnection().add( executionURI, ExecutionDescription.Property.ERROR_DESCRIPTION.getURI(), ValueFactoryImpl.getInstance().createLiteral( error ), executionURI );
 		} catch ( RepositoryException e ) {
 			throw new RuntimeException( e );
 		}

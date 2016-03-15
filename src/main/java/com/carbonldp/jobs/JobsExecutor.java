@@ -2,6 +2,8 @@ package com.carbonldp.jobs;
 
 import com.carbonldp.apps.App;
 import com.carbonldp.apps.AppRepository;
+import com.carbonldp.exceptions.JobException;
+import com.carbonldp.models.Infraction;
 import com.carbonldp.spring.TransactionWrapper;
 import org.openrdf.model.URI;
 import org.slf4j.Logger;
@@ -40,8 +42,17 @@ public class JobsExecutor {
 
 		try {
 			getTypedRepository( type ).execute( job, execution );
-		} catch ( Exception e ) {
+		} catch ( JobException e ) {
 			executionRepository.changeExecutionStatus( execution.getURI(), ExecutionDescription.Status.ERROR );
+
+			List<Infraction> infractions = e.getInfractions();
+			for ( Infraction infraction : infractions ) {
+				executionRepository.addErrorDescription( execution.getURI(), infraction.getErrorMessage() );
+			}
+
+			hasErrors = true;
+		} catch ( Exception e ) {
+			executionRepository.changeExecutionStatus( execution.getURI(), ExecutionDescription.Status.UNKNOWN );
 			hasErrors = true;
 		}
 		if ( ! hasErrors ) executionRepository.changeExecutionStatus( execution.getURI(), ExecutionDescription.Status.FINISHED );

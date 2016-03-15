@@ -268,8 +268,4 @@ public abstract class AbstractIT extends AbstractTestNGSpringContextTests {
 			appService.create( app );
 		this.app = transactionWrapper.runWithSystemPermissionsInPlatformContext( () -> appService.get( new URIImpl( testResourceURI ) ) );
 	}
-
-//	public void setBackupJobExecutor( TypedJobExecutor backupJobExecutor ) {
-//		this.backupJobExecutor = backupJobExecutor;
-//	}
 }

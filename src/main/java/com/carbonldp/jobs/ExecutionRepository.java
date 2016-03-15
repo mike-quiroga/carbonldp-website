@@ -17,4 +17,6 @@ public interface ExecutionRepository {
 	public URI getAppRelatedURI( URI executionsContainerURI );
 
 	public void addResult(URI executionURI, Value status);
+
+	public void addErrorDescription(URI executionURI, String error);
 }

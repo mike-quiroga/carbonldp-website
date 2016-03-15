@@ -1,10 +1,8 @@
 package com.carbonldp.test.jobs;
 
-import com.carbonldp.authorization.acl.SesameACLService;
-import com.carbonldp.jobs.BackupJobExecutor;
+import com.carbonldp.jobs.CreateBackupJobExecutor;
 import com.carbonldp.test.AbstractIT;
 import com.carbonldp.utils.ValueUtil;
-import com.sun.deploy.net.proxy.ProxyUtils;
 import org.openrdf.model.*;
 import org.openrdf.model.Model;
 import org.openrdf.model.impl.AbstractModel;
@@ -40,14 +38,14 @@ public class BackupJobExecutorIT extends AbstractIT {
 
 	@Test
 	public void createTemporaryRDFBackupFileIT() {
-		BackupJobExecutor backupJobExecutor;
+		CreateBackupJobExecutor createBackupJobExecutor;
 		try {
-			backupJobExecutor = (BackupJobExecutor) ( (Advised) this.backupJobExecutor ).getTargetSource().getTarget();
+			createBackupJobExecutor = (CreateBackupJobExecutor) ( (Advised) this.backupJobExecutor ).getTargetSource().getTarget();
 		} catch ( Exception e ) {
 			throw new RuntimeException( e );
 		}
 
-		File rdfRepositoryFile = transactionWrapper.runInAppContext( app, () -> ReflectionTestUtils.invokeMethod( backupJobExecutor, "createTemporaryRDFBackupFile" ) );
+		File rdfRepositoryFile = transactionWrapper.runInAppContext( app, () -> ReflectionTestUtils.invokeMethod( createBackupJobExecutor, "createTemporaryRDFBackupFile" ) );
 
 		try {
 			Files.lines( rdfRepositoryFile.toPath() ).forEachOrdered( str -> appString += str );
@@ -64,7 +62,6 @@ public class BackupJobExecutorIT extends AbstractIT {
 			} catch ( RepositoryException e ) {
 				throw new SkipException( "connection exception", e );
 			}
-
 
 			try {
 				while ( repositoryStatments.hasNext() ) {
@@ -93,23 +90,23 @@ public class BackupJobExecutorIT extends AbstractIT {
 
 	@Test
 	public void addFileToZipIT() {
-		BackupJobExecutor backupJobExecutor;
+		CreateBackupJobExecutor createBackupJobExecutor;
 		try {
-			backupJobExecutor = (BackupJobExecutor) ( (Advised) this.backupJobExecutor ).getTargetSource().getTarget();
+			createBackupJobExecutor = (CreateBackupJobExecutor) ( (Advised) this.backupJobExecutor ).getTargetSource().getTarget();
 		} catch ( Exception e ) {
-			throw new RuntimeException( e );
+			throw new SkipException( e.toString() );
 		}
 
-		File rdfRepositoryFile = transactionWrapper.runInAppContext( app, () -> ReflectionTestUtils.invokeMethod( backupJobExecutor, "createTemporaryRDFBackupFile" ) );
+		File rdfRepositoryFile = transactionWrapper.runInAppContext( app, () -> ReflectionTestUtils.invokeMethod( createBackupJobExecutor, "createTemporaryRDFBackupFile" ) );
 		File[] args = new File[1];
 		args[0] = rdfRepositoryFile;
-		File file = ReflectionTestUtils.invokeMethod( backupJobExecutor, "createZipFile", (Object) args );
+		File file = ReflectionTestUtils.invokeMethod( createBackupJobExecutor, "createZipFile", (Object) args );
 
 		ZipFile zipFile = null;
 		try {
 			zipFile = new ZipFile( file );
 		} catch ( IOException e ) {
-			e.printStackTrace();
+			throw new SkipException( e.toString() );
 		}
 		assertEquals( zipFile.size(), 1 );
 		assertEquals( zipFile.entries().nextElement().getName(), args[0].getName() );

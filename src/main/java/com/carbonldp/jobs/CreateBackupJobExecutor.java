@@ -31,7 +31,7 @@ import java.util.zip.ZipOutputStream;
  * @author NestorVenegas
  * @since _version_
  */
-public class BackupJobExecutor implements TypedJobExecutor {
+public class CreateBackupJobExecutor implements TypedJobExecutor {
 	protected final Logger LOG = LoggerFactory.getLogger( this.getClass() );
 	private AppRepository appRepository;
 	private SesameConnectionFactory connectionFactory;
@@ -40,10 +40,12 @@ public class BackupJobExecutor implements TypedJobExecutor {
 	private ExecutionRepository executionRepository;
 	protected RDFSourceRepository sourceRepository;
 
+	@Override
 	public boolean supports( JobDescription.Type jobType ) {
-		return jobType == JobDescription.Type.BACKUP;
+		return jobType == JobDescription.Type.CREATE_BACKUP;
 	}
 
+	@Override
 	@Transactional
 	public void execute( Job job, Execution execution ) {
 		URI appURI = job.getAppRelated();
