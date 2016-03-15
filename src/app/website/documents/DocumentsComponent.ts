@@ -1,4 +1,3 @@
-/// <reference path="./../../../../typings/typings.d.ts" />
 import { Component } from "angular2/core";
 import {RouteConfig, RouterOutlet} from "angular2/router";
 
@@ -15,7 +14,7 @@ import template from "./template.html!";
 @Component( {
 	selector: "documents",
 	template: template,
-	directives: [ RouterOutlet ]
+	directives: [ RouterOutlet ],
 } )
 @RouteConfig( [
 	{path: "/", name: "Documents", component: DocumentsHomeView},
@@ -26,4 +25,6 @@ import template from "./template.html!";
 	{path: "/interaction-models", as: "InteractionModels", component: InteractionModelsView},
 	{path: "/ldp-concepts", as: "LDPConcepts", component: LDPConceptsView}
 ] )
-export default class DocumentsComponent { }
+export default class DocumentsComponent {
+
+}

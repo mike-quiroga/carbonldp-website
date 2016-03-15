@@ -1,4 +1,3 @@
-/// <reference path="./../../../../../typings/typings.d.ts" />
 import {Component, ElementRef } from "angular2/core";
 import { CORE_DIRECTIVES } from "angular2/common";
 import { Title } from "angular2/platform/browser";
@@ -8,17 +7,13 @@ import "semantic-ui/semantic";
 
 import template from "./template.html!";
 
-
 @Component( {
 	selector: "interaction-models",
 	template: template,
 	directives: [ CORE_DIRECTIVES ],
-	providers: [ Title ]
+	providers: [ Title ],
 } )
 export default class InteractionModelsView {
-	static parameters = [ [ ElementRef ], [ Title ] ];
-
-
 	element:ElementRef;
 	$element:JQuery;
 	title:Title;
@@ -29,9 +24,7 @@ export default class InteractionModelsView {
 		this.title.setTitle( "Interaction models" );
 	}
 
-
 	ngAfterViewInit():void {
 		this.$element = $( this.element.nativeElement );
 	}
-
 }

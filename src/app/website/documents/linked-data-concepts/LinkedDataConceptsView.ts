@@ -1,4 +1,3 @@
-/// <reference path="./../../../../../typings/typings.d.ts" />
 import {Component, ElementRef } from "angular2/core";
 import { CORE_DIRECTIVES } from "angular2/common";
 import { Title } from "angular2/platform/browser";
@@ -9,17 +8,13 @@ import "semantic-ui/semantic";
 import template from "./template.html!";
 import "./style.css!";
 
-
 @Component( {
 	selector: "linked-data-concepts",
 	template: template,
 	directives: [ CORE_DIRECTIVES ],
-	providers: [ Title ]
+	providers: [ Title ],
 } )
 export default class LinkedDataConceptsView {
-	static parameters = [ [ ElementRef ], [ Title ] ];
-
-
 	element:ElementRef;
 	$element:JQuery;
 	title:Title;
@@ -30,9 +25,7 @@ export default class LinkedDataConceptsView {
 		this.title.setTitle( "Linked Data Concepts" );
 	}
 
-
 	ngAfterViewInit():void {
 		this.$element = $( this.element.nativeElement );
 	}
-
 }

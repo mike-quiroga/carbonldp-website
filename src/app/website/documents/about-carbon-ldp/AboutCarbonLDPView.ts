@@ -1,4 +1,3 @@
-/// <reference path="./../../../../../typings/typings.d.ts" />
 import {Component, ElementRef } from "angular2/core";
 import { CORE_DIRECTIVES } from "angular2/common";
 import { Title } from "angular2/platform/browser";
@@ -8,7 +7,6 @@ import "semantic-ui/semantic";
 
 import template from "./template.html!";
 
-
 @Component( {
 	selector: "about-carbon-ldp",
 	template: template,
@@ -16,9 +14,6 @@ import template from "./template.html!";
 	providers: [ Title ]
 } )
 export default class AboutCarbonLDPViews {
-	static parameters = [ [ ElementRef ], [ Title ] ];
-
-
 	element:ElementRef;
 	$element:JQuery;
 	title:Title;
@@ -29,9 +24,7 @@ export default class AboutCarbonLDPViews {
 		this.title.setTitle( "About Carbon LDP" );
 	}
 
-
 	ngAfterViewInit():void {
 		this.$element = $( this.element.nativeElement );
 	}
-
 }

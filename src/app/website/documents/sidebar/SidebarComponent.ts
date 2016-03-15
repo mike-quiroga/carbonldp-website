@@ -1,4 +1,3 @@
-/// <reference path="./../../../../../typings/typings.d.ts" />
 import { Component, Input, ElementRef, OnChanges, SimpleChange } from "angular2/core";
 import {CORE_DIRECTIVES} from "angular2/common"
 import { ROUTER_DIRECTIVES, ROUTER_PROVIDERS, Router, Instruction, RouteParams } from "angular2/router";
@@ -12,7 +11,7 @@ import template from "./template.html!";
 @Component( {
 	selector: "sidebar-component",
 	template: template,
-	directives: [ CORE_DIRECTIVES, ROUTER_DIRECTIVES ]
+	directives: [ CORE_DIRECTIVES, ROUTER_DIRECTIVES ],
 } )
 export default class SidebarComponent {
 	elementRef:ElementRef;
@@ -64,7 +63,7 @@ export default class SidebarComponent {
 			html += _self.createMenuSectionItemHTML( $currentSection, index === 0 );
 		} );
 
-		// assign class for computer and tablets size sidebar
+		// Assign class for computer and tablets size sidebar
 		if ( ! this.mobile ) {
 			this.$followMenu = $( "<div />" ).addClass( "ui vertical following fluid accordion text menu" ).html( html );
 			$sticky = $( "<div />" ).addClass( "ui sticky segment" ).html( this.$followMenu ).prepend( '<p class="ui header">Content</p>' );
@@ -90,7 +89,7 @@ export default class SidebarComponent {
 				}
 			} );
 		} else {
-			//assing classes for mobile size sidebar
+			// Assing classes for mobile size sidebar
 			this.$followMenu = $( "<div />" ).addClass( "ui vertical following fluid accordion menu mobile" ).html( html );
 			$sticky = $( "<div />" ).addClass( "ui segment" ).html( this.$followMenu ).prepend( '<p class="ui header">Content</p>' );
 			this.sidebar.html( $sticky );
@@ -103,21 +102,12 @@ export default class SidebarComponent {
 			offset: 100
 		} );
 
-		//semantic class not in use
-		/*this.$followMenu.accordion( {
-			exclusive: false,
-			animateChildren: true,
-			selector: {
-				trigger: ".item > .dropdown.icon"
-			}
-		} );*/
-
 		this.$followMenu.find( ".menu a[href], .title[href]" ).on( "click", this.scrollTo );
 		this.$followMenu.find( ".item > .dropdown.icon" ).on( "click", this.toggleDropdown );
 
 	}
 
-	//Build template for each section of the article
+	// Build template for each section of the article
 	createMenuSectionItemHTML( $section, active ):string {
 		let subSections:JQuery = $section.children( "section" );
 		let activeClass:string = active ? "active" : "";
@@ -149,7 +139,7 @@ export default class SidebarComponent {
 		return html;
 	}
 
-	//build template for each subsection of the section
+	// Build template for each subsection of the section
 	createMenuSubsectionItemHTML( $subSection:JQuery ):string {
 		let headerText:string = this.getHeaderText( $subSection );
 		let headerID:string = this.getHeaderID( headerText );
@@ -174,14 +164,12 @@ export default class SidebarComponent {
 		}
 
 		if ( hasSubsection ) {
-			//this.$followMenu.accordion( "open", index );
 			$followSection.find( ".menu" ).addClass( "active" );
 		}
 
 	}
 
-	// Expands accordion sections as you scroll through the sections elements
-	// inside a section of the page.
+	// Expands accordion sections as you scroll through the sections elements inside a section of the page.
 	activateSubSection( elm:any ):void {
 		let $section:JQuery = $( elm );
 		let index:number = this.subSections.index( $section );
@@ -202,7 +190,7 @@ export default class SidebarComponent {
 
 	}
 
-	//scroll to selected section or subsection in the article
+	// Scroll to selected section or subsection in the article
 	scrollTo( event:any ):boolean {
 		let id:string = $( event.currentTarget ).attr( "href" ).replace( "#", "" );
 		let $element:JQuery = $( "#" + id );
@@ -219,7 +207,7 @@ export default class SidebarComponent {
 		return false;
 	}
 
-	//toggle selected accordion menu in sidebar
+	// Toggle selected accordion menu in sidebar
 	toggleDropdown( event:any ):boolean {
 		let id:string = $( event.currentTarget );
 		let $accordion:JQuery = id.parent( ".item" ).find( ".content.menu" );
@@ -251,9 +239,4 @@ export default class SidebarComponent {
 	setSectionID( $section:JQuery, headerID:string ):void {
 		$section.attr( "id", headerID );
 	}
-
 }
-
-
-
-

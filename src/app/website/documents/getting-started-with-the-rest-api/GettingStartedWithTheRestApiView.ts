@@ -1,9 +1,7 @@
-/// <reference path="./../../../../../typings/typings.d.ts" />
 import {Component, ElementRef } from "angular2/core";
 import { CORE_DIRECTIVES } from "angular2/common";
 import { Title } from "angular2/platform/browser";
 import SidebarService from "./../sidebar/service/SidebarService";
-
 
 import * as CodeMirrorComponent from "app/components/code-mirror/CodeMirrorComponent";
 
@@ -14,7 +12,6 @@ import SidebarComponent from "./../sidebar/SidebarComponent";
 import template from "./template.html!";
 import "./style.css!";
 
-
 @Component( {
 	selector: "getting-started-rest-api",
 	template: template,
@@ -22,8 +19,6 @@ import "./style.css!";
 	providers: [ Title, SidebarService ]
 } )
 export default class GettingStartedWithTheRestApiView {
-	static parameters = [ [ ElementRef ], [ Title ], [ SidebarService ] ];
-
 	element:ElementRef;
 	$element:JQuery;
 	title:Title;
@@ -36,7 +31,6 @@ export default class GettingStartedWithTheRestApiView {
 		this.sidebarService = sidebarService;
 	}
 
-
 	ngAfterViewInit():void {
 		this.$element = $( this.element.nativeElement );
 		this.createAccordions();
@@ -46,6 +40,4 @@ export default class GettingStartedWithTheRestApiView {
 	createAccordions():void {
 		this.$element.find( ".ui.accordion" ).accordion();
 	}
-
-
 }
