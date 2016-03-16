@@ -1,13 +1,17 @@
 package com.carbonldp.jobs;
 
 import com.carbonldp.Consts;
+import com.carbonldp.Vars;
 import com.carbonldp.apps.App;
 import com.carbonldp.apps.AppRepository;
+import com.carbonldp.apps.context.AppContext;
 import com.carbonldp.apps.context.AppContextHolder;
 import com.carbonldp.exceptions.JobException;
 import com.carbonldp.ldp.nonrdf.NonRDFSourceService;
 import com.carbonldp.ldp.nonrdf.RDFRepresentation;
 import com.carbonldp.ldp.nonrdf.RDFRepresentationDescription;
+import com.carbonldp.ldp.sources.RDFSource;
+import com.carbonldp.ldp.sources.RDFSourceRepository;
 import com.carbonldp.ldp.sources.RDFSourceService;
 import com.carbonldp.models.Infraction;
 import com.carbonldp.spring.TransactionWrapper;
@@ -25,7 +29,6 @@ import java.util.Enumeration;
 import java.util.Random;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
-import java.util.zip.ZipInputStream;
 
 /**
  * @author JorgeEspinosa
@@ -40,11 +43,10 @@ public class ImportBackupJobExecutor implements TypedJobExecutor {
 
 	@Override
 	public boolean supports( JobDescription.Type jobType ) {
-		return jobType == JobDescription.Type.APPLY_BACKUP;
+		return jobType == JobDescription.Type.IMPORT_BACKUP_JOB;
 	}
 
 	@Override
-	@Transactional
 	public void execute( Job job, Execution execution ) {
 		if ( ! job.hasType( ImportBackupJobDescription.Resource.CLASS ) ) throw new JobException( new Infraction( 0x2001, "rdf.type", ImportBackupJobDescription.Resource.CLASS.getURI().stringValue() ) );
 
@@ -53,7 +55,6 @@ public class ImportBackupJobExecutor implements TypedJobExecutor {
 
 		ImportBackupJob importBackupJob = new ImportBackupJob( job );
 		URI backupURI = importBackupJob.getBackup();
-
 		RDFRepresentation backupRDFRepresentation = new RDFRepresentation( sourceService.get( backupURI ) );
 
 		String mediaType = backupRDFRepresentation.getMediaType();
@@ -62,13 +63,79 @@ public class ImportBackupJobExecutor implements TypedJobExecutor {
 
 		File backupFile = nonRDFSourceService.getResource( backupRDFRepresentation );
 
-		transactionWrapper.runInAppContext( app, () -> replaceApp( backupFile ) );
+		transactionWrapper.runInAppContext( app, () -> {
+			replaceApp( backupFile );
+			replaceAppFilesDirectory( backupFile );
+		} );
+
+	}
+
+	private void replaceAppFilesDirectory( File backupFile ) {
+		byte[] buffer = new byte[1024];
+		int length;
+
+		String filesDirectory = getFilesDirectory();
+		File directory = new File( filesDirectory );
+		directory.delete();
+		directory.mkdirs();
+
+		ZipFile zipFile = null;
+		try {
+			zipFile = new ZipFile( backupFile );
+		} catch ( IOException e ) {
+			throw new RuntimeException( e );
+		}
+		Enumeration<? extends ZipEntry> entries = zipFile.entries();
+		ZipEntry directoryZipEntry = null;
+		while ( entries.hasMoreElements() ) {
+			ZipEntry zipEntry = entries.nextElement();
+			if ( zipEntry.isDirectory() ) {
+				directoryZipEntry = zipEntry;
+				break;
+			}
+		}
+		if ( directoryZipEntry == null ) return;
+
+		InputStream directoryInputStream = null;
+		try {
+			directoryInputStream = zipFile.getInputStream( directoryZipEntry );
+		} catch ( IOException e ) {
+			throw new RuntimeException( e );
+		}
+
+		FileOutputStream fileOutputStream;
+		try {
+			fileOutputStream = new FileOutputStream( directory );
+		} catch ( FileNotFoundException e ) {
+			throw new RuntimeException( e );
+		}
+
+		try {
+			while ( ( length = directoryInputStream.read( buffer ) ) >= 0 ) {
+				fileOutputStream.write( buffer, 0, length );
+			}
+			directoryInputStream.close();
+			fileOutputStream.close();
+		} catch ( IOException e ) {
+			throw new RuntimeException( e );
+		}
+
+	}
+
+	private String getFilesDirectory() {
+		String directory;
+		AppContext appContext = AppContextHolder.getContext();
+		directory = Vars.getInstance().getAppsFilesDirectory();
+		if ( ! directory.endsWith( Consts.SLASH ) ) directory = directory.concat( Consts.SLASH );
+		directory = directory.concat( appContext.getApplication().getRepositoryID() );
+
+		return directory;
 	}
 
 	private void replaceApp( File backupFile ) {
 		URI appURI = AppContextHolder.getContext().getApplication().getRootContainerURI();
 
-		File trigFile = unZipTrigFile( backupFile );
+		InputStream trigInputStream = unZipTrigFile( backupFile );
 
 		try {
 			connectionFactory.getConnection().remove( (Resource) null, null, null );
@@ -76,7 +143,8 @@ public class ImportBackupJobExecutor implements TypedJobExecutor {
 			throw new RuntimeException( e );
 		}
 		try {
-			connectionFactory.getConnection().add( trigFile, appURI.stringValue(), RDFFormat.TRIG );
+			connectionFactory.getConnection().add( trigInputStream, appURI.stringValue(), RDFFormat.TRIG );
+
 		} catch ( IOException e ) {
 			throw new RuntimeException( e );
 		} catch ( RDFParseException e ) {
@@ -86,17 +154,7 @@ public class ImportBackupJobExecutor implements TypedJobExecutor {
 		}
 	}
 
-	private File unZipTrigFile( File backupFile ) {
-		byte[] buffer = new byte[1024];
-		int length;
-		File temporaryFile;
-
-		try {
-			temporaryFile = File.createTempFile( createRandomSlug(), null );
-			temporaryFile.deleteOnExit();
-		} catch ( IOException | SecurityException e ) {
-			throw new RuntimeException( "The temporary file couldn't be created. Exception:", e );
-		}
+	private InputStream unZipTrigFile( File backupFile ) {
 
 		ZipFile zipFile = null;
 		try {
@@ -124,25 +182,7 @@ public class ImportBackupJobExecutor implements TypedJobExecutor {
 		} catch ( IOException e ) {
 			throw new RuntimeException( e );
 		}
-
-		FileOutputStream fileOutputStream;
-		try {
-			fileOutputStream = new FileOutputStream( temporaryFile );
-		} catch ( FileNotFoundException e ) {
-			throw new RuntimeException( e );
-		}
-
-		try {
-			while ( ( length = trigInputStream.read( buffer ) ) >= 0 ) {
-				fileOutputStream.write( buffer, 0, length );
-			}
-			trigInputStream.close();
-			fileOutputStream.close();
-		} catch ( IOException e ) {
-			throw new RuntimeException( e );
-		}
-
-		return temporaryFile;
+		return trigInputStream;
 	}
 
 	protected String createRandomSlug() {

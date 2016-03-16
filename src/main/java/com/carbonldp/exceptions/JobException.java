@@ -11,18 +11,7 @@ import java.util.List;
  */
 public class JobException extends CarbonNoStackTraceRuntimeException {
 
-	private List<Infraction> infractions;
-
-	public JobException( List<Infraction> infractions ) {
-		this.infractions = infractions;
-	}
-
 	public JobException( Infraction infraction ) {
-		infractions = new ArrayList<>();
-		infractions.add( infraction );
-	}
-
-	public List<Infraction> getInfractions() {
-		return infractions;
+		super( infraction );
 	}
 }

@@ -2,6 +2,7 @@ package com.carbonldp.jobs;
 
 import com.carbonldp.apps.App;
 import com.carbonldp.apps.AppRepository;
+import com.carbonldp.exceptions.CarbonNoStackTraceRuntimeException;
 import com.carbonldp.exceptions.JobException;
 import com.carbonldp.models.Infraction;
 import com.carbonldp.spring.TransactionWrapper;
@@ -41,15 +42,10 @@ public class JobsExecutor {
 		LOG.debug( "Running execution " + Thread.currentThread().getName() + " Job " + job.getSubject(), Thread.currentThread().getName() );
 
 		try {
-			getTypedRepository( type ).execute( job, execution );
-		} catch ( JobException e ) {
+			transactionWrapper.runWithSystemPermissionsInPlatformContext( () -> getTypedRepository( type ).execute( job, execution ) );
+		} catch ( CarbonNoStackTraceRuntimeException e ) {
 			executionRepository.changeExecutionStatus( execution.getURI(), ExecutionDescription.Status.ERROR );
-
-			List<Infraction> infractions = e.getInfractions();
-			for ( Infraction infraction : infractions ) {
-				executionRepository.addErrorDescription( execution.getURI(), infraction.getErrorMessage() );
-			}
-
+			executionRepository.addErrorDescription( execution.getURI(), e.getMessage() );
 			hasErrors = true;
 		} catch ( Exception e ) {
 			executionRepository.changeExecutionStatus( execution.getURI(), ExecutionDescription.Status.UNKNOWN );

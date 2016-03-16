@@ -42,11 +42,10 @@ public class ExportBackupJobExecutor implements TypedJobExecutor {
 
 	@Override
 	public boolean supports( JobDescription.Type jobType ) {
-		return jobType == JobDescription.Type.CREATE_BACKUP;
+		return jobType == JobDescription.Type.EXPORT_BACKUP_JOB;
 	}
 
 	@Override
-	@Transactional
 	public void execute( Job job, Execution execution ) {
 		URI appURI = job.getAppRelated();
 		App app = appRepository.get( appURI );
