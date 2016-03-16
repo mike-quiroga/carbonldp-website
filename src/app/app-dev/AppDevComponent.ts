@@ -1,4 +1,4 @@
-import {Injectable, Component, ElementRef } from "angular2/core";
+import {Injectable, Component, ElementRef, Injector } from "angular2/core";
 import {RouteConfig, RouterOutlet, CanActivate, Router} from 'angular2/router';
 
 import $ from "jquery";
@@ -33,11 +33,10 @@ import "./style.css!";
 			router.navigate( [ "/Website/Login" ] );
 			return false;
 		}
-		// TODO: Change this to use a token instead of raw credentials when the SDK provides a way of authenticate using tokens.
 		let cookiesHandler:Cookies = Cookies;
-		let tokenCookie:{email:string, password:String} = cookiesHandler.getJSON( "carbon_jwt" );
+		let tokenCookie:Credentials = <Credentials>cookiesHandler.getJSON( "carbon_jwt" );
 		if ( tokenCookie && ! carbon.auth.isAuthenticated() ) {
-			return carbon.auth.authenticate( tokenCookie.email, tokenCookie.password ).then(
+			return carbon.auth.authenticate( tokenCookie ).then(
 				( credentials:Credentials ) => {
 					return carbon.auth.isAuthenticated();
 				}

@@ -79,18 +79,12 @@ export default class LoginComponent {
 		let password:string = data.password;
 
 		this.carbon.auth.authenticate( username, password ).then(
-			( credentials:Credentials ) => {
+			( credential:Credentials ) => {
 				this.sending = false;
 				// TODO: Change this to store a token when the SDK provides a way of authenticate using tokens.
-				let token:AuthenticationToken = credentials.token;
-				let days:number = this.getDays( (new Date()), token.expirationTime );
-				let emailAndPassword = {
-					email: this.email.value,
-					password: this.password.value
-				};
-				this.cookiesHandler.set( "carbon_jwt", emailAndPassword, days );
-				//this.router.navigate( [ "/AppDev" ] );
-				this.router.navigate( [ '/AppDev' ] );
+				let days:number = this.getDays( (new Date()), credential.expirationTime );
+				this.cookiesHandler.set( "carbon_jwt", credential, days );
+				this.router.navigate( [ "/AppDev" ] );
 			} ).catch( ( error:Error ) => {
 				this.sending = false;
 
