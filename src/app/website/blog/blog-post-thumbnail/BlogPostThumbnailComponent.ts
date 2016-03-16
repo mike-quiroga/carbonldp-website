@@ -1,4 +1,3 @@
-/// <reference path="./../../../../../typings/typings.d.ts" />
 import { Component, ElementRef, Input, DynamicComponentLoader, Type } from "angular2/core";
 import { CORE_DIRECTIVES } from "angular2/common";
 import { ROUTER_DIRECTIVES, ROUTER_PROVIDERS, Router, Instruction } from "angular2/router";
@@ -7,6 +6,8 @@ import "semantic-ui/semantic";
 
 import ContentService from "app/content/ContentService";
 import BlogPost from "./../blog-post/BlogPost";
+
+import BlogPost from './../blog-post/BlogPost';
 import * as CodeMirrorComponent from "app/components/code-mirror/CodeMirrorComponent";
 import template from "./template.html!";
 import "./style.css!";
@@ -17,22 +18,23 @@ import "./style.css!";
 	directives: [ CORE_DIRECTIVES, ROUTER_DIRECTIVES, CodeMirrorComponent.Class ]
 } )
 export default class BlogPostThumbnailComponent {
+	static parameters = [ [ Router ], [ ElementRef ], [ DynamicComponentLoader ]];
+
 	router:Router;
 	dcl:DynamicComponentLoader;
 
 	element:ElementRef;
-	contentService:ContentService;
 	isNewPost:boolean;
 
 	@Input() blogPost:BlogPost;
 
 	get codeMirrorMode() { return CodeMirrorComponent.Mode; }
 
-	constructor( router:Router, element:ElementRef, dcl:DynamicComponentLoader, contentService:ContentService ) {
+	constructor( router:Router, element:ElementRef, dcl:DynamicComponentLoader) {
 		this.router = router;
 		this.element = element;
 		this.dcl = dcl;
-		this.contentService = contentService;
+
 	}
 
 	ngOnInit():void {

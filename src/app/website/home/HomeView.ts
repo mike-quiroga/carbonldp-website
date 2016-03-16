@@ -1,4 +1,3 @@
-/// <reference path="./../../../../typings/typings.d.ts" />
 import { Component, ElementRef } from "angular2/core";
 import { CORE_DIRECTIVES } from "angular2/common";
 import { ROUTER_DIRECTIVES, ROUTER_PROVIDERS, Router, Instruction } from "angular2/router";
@@ -84,4 +83,21 @@ export default class HomeView {
 	removeMenuVisibilityHandlers():void {
 		this.$carbonLogo.visibility( "destroy" );
 	}
+
+	scrollTo( event:any):boolean {
+		let
+			id:string = $( event.srcElement).attr( "href" ).replace( "#", "" ),
+			$element:JQuery = $( "#" + id ),
+			position:number = $element.offset().top - 80
+			;
+		$element.addClass( "active" );
+		$( "html, body" ).animate( {
+			scrollTop: position
+		}, 500 );
+		location.hash = "#" + id;
+		event.stopImmediatePropagation();
+		event.preventDefault();
+		return false;
+	}
+
 }
