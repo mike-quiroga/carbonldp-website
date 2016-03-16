@@ -1,5 +1,5 @@
 /// <reference path="./../../../typings/typings.d.ts" />
-import {Injectable, Component, ElementRef } from "angular2/core";
+import {Injectable, Injector, Component, ElementRef } from "angular2/core";
 import {RouteConfig, RouterOutlet, CanActivate, Router} from 'angular2/router';
 
 import $ from "jquery";
@@ -16,7 +16,7 @@ import SidebarComponent from "./components/sidebar/SidebarComponent";
 import HeaderComponent from "./header/HeaderComponent";
 import FooterComponent from "./footer/FooterComponent";
 import MenuBarComponent from "./components/menubar/MenuBarComponent";
-import SPARQLClientComponent from "app/components/sparql-client/SPARQLClientComponent";
+import ErrorsAreaComponent from "./components/errors-area/ErrorsAreaComponent";
 
 import DashboardView from "./dashboard/DashboardView";
 import MyAppsView from "./my-apps/my-apps-view/MyAppsView";
@@ -65,7 +65,7 @@ import "./style.css!";
 @Component( {
 	selector: "app-dev",
 	template: template,
-	directives: [ RouterOutlet, SidebarComponent, HeaderComponent, FooterComponent, MenuBarComponent ]
+	directives: [ RouterOutlet, SidebarComponent, HeaderComponent, FooterComponent, MenuBarComponent, ErrorsAreaComponent, ],
 } )
 @RouteConfig( [
 	{

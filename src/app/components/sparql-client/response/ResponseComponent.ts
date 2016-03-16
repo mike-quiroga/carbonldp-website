@@ -58,7 +58,7 @@ export class ResponseComponent {
 	}
 
 	toggleAccordion():void {
-		this.accordion.accordion( "toggle", 0 );
+		this.accordion.accordion( "toggle" );
 		this.accordionOpen = ! this.accordionOpen;
 	}
 

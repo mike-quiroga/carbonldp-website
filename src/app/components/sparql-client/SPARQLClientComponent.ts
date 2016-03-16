@@ -387,7 +387,6 @@ export default class SPARQLClientComponent {
 
 	executeSELECT( query:SPARQLQuery ):Promise<SPARQLClientResponse> {
 		let beforeTimestamp:number = ( new Date() ).valueOf();
-		console.log( "App Context Authenticated: " + (this.context.auth.isAuthenticated() ? "YES" : "NO") );
 		return this.context.documents.executeRawSELECTQuery( query.endpoint, query.content ).then(
 			( [ result, response ]:[ SPARQL.RawResults.Class, HTTP.Response.Class ] ):SPARQLClientResponse => {
 				let duration:number = (new Date()).valueOf() - beforeTimestamp;
@@ -400,6 +399,9 @@ export default class SPARQLClientComponent {
 				clientResponse.query = query;
 
 				return clientResponse;
+			},
+			( error )=> {
+				console.log( error );
 			} );
 	}
 
@@ -538,10 +540,7 @@ export default class SPARQLClientComponent {
 	}
 
 	onClickSavedQuery( selectedQuery:SPARQLQuery ):void {
-		console.log( "Current Query:\n %o", JSON.stringify( this.currentQuery ) );
-		console.log( "Selected Query:\n %o", JSON.stringify( selectedQuery ) );
 		if ( JSON.stringify( this.currentQuery ) !== JSON.stringify( selectedQuery ) ) {
-			//this.askingQuery = Object.assign( {}, selectedQuery );
 			this.askingQuery = <SPARQLQuery>{
 				endpoint: selectedQuery.endpoint,
 				type: selectedQuery.type,
@@ -565,9 +564,7 @@ export default class SPARQLClientComponent {
 	}
 
 	loadQuery( query:SPARQLQuery ):void {
-		// TODO: Alert when loading over an unsaved query
 		this.currentQuery = query;
-		//this.currentQuery = Object.assign( {}, query );
 		this.askingQuery = <SPARQLQuery>{
 			endpoint: query.endpoint,
 			type: query.type,
