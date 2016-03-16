@@ -2,12 +2,11 @@ import { Component, ElementRef } from "angular2/core";
 import { CORE_DIRECTIVES } from "angular2/common";
 import { ROUTER_DIRECTIVES, ROUTER_PROVIDERS, RouteConfig, Router, RouterOutlet, Instruction, RouteParams } from "angular2/router";
 
-import $ from "jquery";
-import "semantic-ui/semantic";
+import * as App from "carbon/App";
 
 import SidebarService from "./../../components/sidebar/service/SidebarService";
-import MyAppsService from "./../service/MyAppsService";
-import App from "./App";
+import AppContextService from "./../../AppContextService";
+import * as SidebarApp from "./App";
 
 import DashboardView from "./dashboard/DashboardView";
 import SPARQLClientComponent from "app/components/sparql-client/SPARQLClientComponent";
@@ -20,7 +19,7 @@ import "./style.css!";
 	selector: "app-detail",
 	template: template,
 	directives: [ CORE_DIRECTIVES, ROUTER_DIRECTIVES, RouterOutlet ],
-	providers: [ MyAppsService ]
+	providers: [ AppContextService ]
 } )
 @RouteConfig( [
 	{
@@ -47,51 +46,55 @@ export default class AppDetailView {
 	router:Router;
 	routeParams:RouteParams;
 	sidebarService:SidebarService;
-	myAppsService:MyAppsService;
+	appContextService:AppContextService;
 
 	element:ElementRef;
 	$element:JQuery;
 	app:App;
+	appContext:App.Context;
 	timer:number;
 
-	constructor( router:Router, element:ElementRef, routeParams:RouteParams, sidebarService:SidebarService, myAppsService:MyAppsService ) {
+	constructor( router:Router, element:ElementRef, routeParams:RouteParams, sidebarService:SidebarService, appContextService:AppContextService ) {
 		this.router = router;
 		this.element = element;
 		this.routeParams = routeParams;
 		this.sidebarService = sidebarService;
-		this.myAppsService = myAppsService;
+		this.appContextService = appContextService;
 	}
 
 	ngAfterViewInit():void {
 		this.$element = $( this.element.nativeElement );
 	}
 
-	routerOnActivate():Promise<boolean> {
-		return new Promise<boolean>( ( resolve ) => {
-			let slug:string = this.routeParams.get( "slug" );
-			this.myAppsService.getapp( slug ).then(
-				( app ) => {
-					if ( typeof app === "undefined" ) {
-						console.log( "No Carbon App found" );
-						this.timer = 5;
-						let countDown = setInterval( ()=> {
-							this.timer --;
-							if ( this.timer == 0 ) {
-								this.router.navigate( [ "/AppDev/MyApps/List" ] );
-								clearInterval( countDown );
-							}
-						}, 1000 );
-					} else {
-						this.app = app;
-						this.sidebarService.addApp( this.app );
-					}
-					resolve( true );
+	routerOnActivate():void {
+		let slug:string = this.routeParams.get( "slug" );
+		this.appContextService.get( slug )
+			.then(
+				( appContext ) => {
+					this.appContext = appContext;
+					let app:SidebarApp = {
 
-				},
+						name: appContext.app.name,
+						created: appContext.app.created,
+						modified: appContext.app.modified,
+						slug: slug,
+						app: appContext
+					};
+					this.sidebarService.addApp( app );
+				} )
+			.catch(
 				( error )=> {
+					// TODO: Check error type
 					console.log( error );
+					this.timer = 5;
+					let countDown = setInterval( ()=> {
+						this.timer --;
+						if ( this.timer == 0 ) {
+							this.router.navigate( [ '/AppDev/MyApps/List' ] );
+							clearInterval( countDown );
+						}
+					}, 1000 );
 				}
 			);
-		} );
 	}
 }
