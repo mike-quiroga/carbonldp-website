@@ -20,17 +20,18 @@ import org.openrdf.spring.SesameConnectionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.util.Enumeration;
+import java.util.Random;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
+import java.util.zip.ZipInputStream;
 
 /**
  * @author JorgeEspinosa
  * @since _version_
  */
-public class ApplyBackupJobExecutor implements TypedJobExecutor {
+public class ImportBackupJobExecutor implements TypedJobExecutor {
 	private NonRDFSourceService nonRDFSourceService;
 	private RDFSourceService sourceService;
 	private SesameConnectionFactory connectionFactory;
@@ -45,13 +46,13 @@ public class ApplyBackupJobExecutor implements TypedJobExecutor {
 	@Override
 	@Transactional
 	public void execute( Job job, Execution execution ) {
-		if ( ! job.hasType( ApplyBackupJobDescription.Resource.CLASS ) ) throw new JobException( new Infraction( 0x2001, "rdf.type", ApplyBackupJobDescription.Resource.CLASS.getURI().stringValue() ) );
+		if ( ! job.hasType( ImportBackupJobDescription.Resource.CLASS ) ) throw new JobException( new Infraction( 0x2001, "rdf.type", ImportBackupJobDescription.Resource.CLASS.getURI().stringValue() ) );
 
 		URI appURI = job.getAppRelated();
 		App app = appRepository.get( appURI );
 
-		ApplyBackupJob applyBackupJob = new ApplyBackupJob( job );
-		URI backupURI = applyBackupJob.getBackup();
+		ImportBackupJob importBackupJob = new ImportBackupJob( job );
+		URI backupURI = importBackupJob.getBackup();
 
 		RDFRepresentation backupRDFRepresentation = new RDFRepresentation( sourceService.get( backupURI ) );
 
@@ -67,25 +68,7 @@ public class ApplyBackupJobExecutor implements TypedJobExecutor {
 	private void replaceApp( File backupFile ) {
 		URI appURI = AppContextHolder.getContext().getApplication().getRootContainerURI();
 
-		ZipFile zipFile = null;
-		try {
-			zipFile = new ZipFile( backupFile );
-		} catch ( IOException e ) {
-			throw new RuntimeException( e );
-		}
-		Enumeration<? extends ZipEntry> entries = zipFile.entries();
-		File trigFile = null;
-		while ( entries.hasMoreElements() ) {
-			ZipEntry zipEntry = entries.nextElement();
-			String zipEntryName = zipEntry.getName();
-			if ( zipEntryName.endsWith( RDFFormat.TRIG.getDefaultFileExtension() ) ) {
-				trigFile = new File( zipEntryName );
-				break;
-			}
-		}
-		if ( trigFile == null ) {
-			throw new JobException( new Infraction( 0x1012 ) );
-		}
+		File trigFile = unZipTrigFile( backupFile );
 
 		try {
 			connectionFactory.getConnection().remove( (Resource) null, null, null );
@@ -93,7 +76,7 @@ public class ApplyBackupJobExecutor implements TypedJobExecutor {
 			throw new RuntimeException( e );
 		}
 		try {
-			connectionFactory.getConnection().add( backupFile, appURI.stringValue(), RDFFormat.TRIG );
+			connectionFactory.getConnection().add( trigFile, appURI.stringValue(), RDFFormat.TRIG );
 		} catch ( IOException e ) {
 			throw new RuntimeException( e );
 		} catch ( RDFParseException e ) {
@@ -101,6 +84,70 @@ public class ApplyBackupJobExecutor implements TypedJobExecutor {
 		} catch ( RepositoryException e ) {
 			throw new RuntimeException( e );
 		}
+	}
+
+	private File unZipTrigFile( File backupFile ) {
+		byte[] buffer = new byte[1024];
+		int length;
+		File temporaryFile;
+
+		try {
+			temporaryFile = File.createTempFile( createRandomSlug(), null );
+			temporaryFile.deleteOnExit();
+		} catch ( IOException | SecurityException e ) {
+			throw new RuntimeException( "The temporary file couldn't be created. Exception:", e );
+		}
+
+		ZipFile zipFile = null;
+		try {
+			zipFile = new ZipFile( backupFile );
+		} catch ( IOException e ) {
+			throw new RuntimeException( e );
+		}
+		Enumeration<? extends ZipEntry> entries = zipFile.entries();
+		ZipEntry trigZipEntry = null;
+		while ( entries.hasMoreElements() ) {
+			ZipEntry zipEntry = entries.nextElement();
+			String zipEntryName = zipEntry.getName();
+			if ( zipEntryName.endsWith( RDFFormat.TRIG.getDefaultFileExtension() ) ) {
+				trigZipEntry = zipEntry;
+				break;
+			}
+		}
+		if ( trigZipEntry == null ) {
+			throw new JobException( new Infraction( 0x1012 ) );
+		}
+
+		InputStream trigInputStream;
+		try {
+			trigInputStream = zipFile.getInputStream( trigZipEntry );
+		} catch ( IOException e ) {
+			throw new RuntimeException( e );
+		}
+
+		FileOutputStream fileOutputStream;
+		try {
+			fileOutputStream = new FileOutputStream( temporaryFile );
+		} catch ( FileNotFoundException e ) {
+			throw new RuntimeException( e );
+		}
+
+		try {
+			while ( ( length = trigInputStream.read( buffer ) ) >= 0 ) {
+				fileOutputStream.write( buffer, 0, length );
+			}
+			trigInputStream.close();
+			fileOutputStream.close();
+		} catch ( IOException e ) {
+			throw new RuntimeException( e );
+		}
+
+		return temporaryFile;
+	}
+
+	protected String createRandomSlug() {
+		Random random = new Random();
+		return String.valueOf( Math.abs( random.nextLong() ) );
 	}
 
 	@Autowired

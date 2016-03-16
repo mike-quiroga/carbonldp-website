@@ -30,19 +30,19 @@ public class JobConfig implements AsyncConfigurer {
 	@Bean
 	public JobsExecutor jobsExecutor() {
 		List<TypedJobExecutor> typedJobs = new ArrayList<>();
-		typedJobs.add( createBackupJobExecutor() );
-		typedJobs.add( applyBackupJobExecutor() );
+		typedJobs.add( exportBackupJobExecutor() );
+		typedJobs.add( importBackupJobExecutor() );
 		return new JobsExecutor( typedJobs );
 	}
 
 	@Bean
-	public TypedJobExecutor createBackupJobExecutor() {
-		return new CreateBackupJobExecutor();
+	public TypedJobExecutor exportBackupJobExecutor() {
+		return new ExportBackupJobExecutor();
 	}
 
 	@Bean
-	public TypedJobExecutor applyBackupJobExecutor() {
-		return new ApplyBackupJobExecutor();
+	public TypedJobExecutor importBackupJobExecutor() {
+		return new ImportBackupJobExecutor();
 	}
 
 	@Override

@@ -31,7 +31,7 @@ import java.util.zip.ZipOutputStream;
  * @author NestorVenegas
  * @since _version_
  */
-public class CreateBackupJobExecutor implements TypedJobExecutor {
+public class ExportBackupJobExecutor implements TypedJobExecutor {
 	protected final Logger LOG = LoggerFactory.getLogger( this.getClass() );
 	private AppRepository appRepository;
 	private SesameConnectionFactory connectionFactory;
@@ -192,7 +192,7 @@ public class CreateBackupJobExecutor implements TypedJobExecutor {
 		if ( ! wasDeleted ) LOG.warn( "The temporary file: '{}', couldn't be deleted.", file.toString() );
 	}
 
-	protected String createRandomSlug() {
+	private String createRandomSlug() {
 		Random random = new Random();
 		return String.valueOf( Math.abs( random.nextLong() ) );
 	}
