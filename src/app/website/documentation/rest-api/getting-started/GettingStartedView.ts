@@ -1,13 +1,13 @@
 import {Component, ElementRef } from "angular2/core";
 import { CORE_DIRECTIVES } from "angular2/common";
 import { Title } from "angular2/platform/browser";
-import SidebarService from "./../sidebar/service/SidebarService";
+import SidebarService from "./../../sidebar/service/SidebarService";
 
 import * as CodeMirrorComponent from "app/components/code-mirror/CodeMirrorComponent";
 
 import $ from "jquery";
 import "semantic-ui/semantic";
-import SidebarComponent from "./../sidebar/SidebarComponent";
+import SidebarComponent from "./../../sidebar/SidebarComponent";
 
 import template from "./template.html!";
 import "./style.css!";
@@ -18,7 +18,7 @@ import "./style.css!";
 	directives: [ CORE_DIRECTIVES, CodeMirrorComponent.Class, SidebarComponent ],
 	providers: [ Title, SidebarService ]
 } )
-export default class GettingStartedWithTheRestApiView {
+export default class GettingStartedView {
 	element:ElementRef;
 	$element:JQuery;
 	title:Title;
