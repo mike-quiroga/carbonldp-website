@@ -1,4 +1,3 @@
-/// <reference path="./../../../../typings/typings.d.ts" />
 import { Component, ElementRef } from "angular2/core";
 
 import $ from "jquery";

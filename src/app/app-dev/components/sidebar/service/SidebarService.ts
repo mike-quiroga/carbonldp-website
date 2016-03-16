@@ -1,4 +1,3 @@
-/// <reference path="./../../../../../../typings/typings.d.ts" />
 import { Injectable, EventEmitter } from "angular2/core";
 
 import App from "app/app-dev/my-apps/app/App"

@@ -1,7 +1,3 @@
-/// <reference path="./../../typings/typings.d.ts" />
-import "zone.js";
-import "reflect-metadata";
-
 import { bootstrap } from "angular2/platform/browser";
 import { provide, Injector, ComponentRef } from "angular2/core";
 import { FORM_PROVIDERS } from "angular2/common";
@@ -12,11 +8,8 @@ import Carbon from "carbon/Carbon";
 
 import AppComponent from "app/AppComponent";
 
-import { CONTENT_PROVIDERS } from "app/content/Content";
 import { BLOG_PROVIDERS } from "app/website/blog/Blog";
 import { APP_DEV_PROVIDERS } from "app/app-dev/AppDev";
-import { CONTENT_PROVIDERS } from 'app/content/Content';
-
 
 let appInjectorRef:Injector;
 export const appInjector = ( injector?:Injector ):Injector => {
@@ -42,7 +35,6 @@ bootstrap( AppComponent, [
 	provide( APP_BASE_HREF, { useValue: "<%- url.base %>" } ),
 
 	CARBON_PROVIDER,
-	CONTENT_PROVIDERS,
 	BLOG_PROVIDERS,
 	APP_DEV_PROVIDERS
 ] ).then(

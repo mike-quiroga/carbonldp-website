@@ -11,5 +11,5 @@ interface JQuery {
 	dropdown:( arguments?:SemanticDropdownArguments ) => JQuery;
 	transition:( arguments:any ) => JQuery;
 	form:( arguments:any ) => JQuery;
-	accordion:( arguments:any ) => JQuery;
+	accordion:( arguments?:any ) => JQuery;
 }
