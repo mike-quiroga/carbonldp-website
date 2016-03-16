@@ -12,7 +12,7 @@ public interface AppRepository {
 
 	public App createPlatformAppRepository( App app );
 
-	public void deleteAppRepository( URI appURI );
+	public void delete( URI appURI );
 
 	public URI getPlatformAppContainerURI();
 
