@@ -10,8 +10,6 @@ import com.carbonldp.exceptions.JobException;
 import com.carbonldp.ldp.nonrdf.NonRDFSourceService;
 import com.carbonldp.ldp.nonrdf.RDFRepresentation;
 import com.carbonldp.ldp.nonrdf.RDFRepresentationDescription;
-import com.carbonldp.ldp.sources.RDFSource;
-import com.carbonldp.ldp.sources.RDFSourceRepository;
 import com.carbonldp.ldp.sources.RDFSourceService;
 import com.carbonldp.models.Infraction;
 import com.carbonldp.spring.TransactionWrapper;
@@ -22,7 +20,6 @@ import org.openrdf.rio.RDFFormat;
 import org.openrdf.rio.RDFParseException;
 import org.openrdf.spring.SesameConnectionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.io.*;
 import java.util.Enumeration;
@@ -76,7 +73,7 @@ public class ImportBackupJobExecutor implements TypedJobExecutor {
 
 		String filesDirectory = getFilesDirectory();
 		File directory = new File( filesDirectory );
-		directory.delete();
+		deleteAppFiles( directory );
 		directory.mkdirs();
 
 		ZipFile zipFile = null;
@@ -120,6 +117,18 @@ public class ImportBackupJobExecutor implements TypedJobExecutor {
 			throw new RuntimeException( e );
 		}
 
+	}
+
+	private void deleteAppFiles( File file ) {
+		if ( file.isDirectory() ) {
+			String files[] = file.list();
+			for ( String subFile : files ) {
+				File fileDelete = new File( file, subFile );
+
+				deleteAppFiles( fileDelete );
+			}
+		}
+		file.delete();
 	}
 
 	private String getFilesDirectory() {
