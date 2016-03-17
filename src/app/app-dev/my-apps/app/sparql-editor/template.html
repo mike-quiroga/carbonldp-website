@@ -1,1 +1,1 @@
-<sparql-client [context]="appContext"></sparql-client>
+<sparql-client [context]="appContext" [emitErrors]="true" (errorOccurs)="notifyErrorAreaService($event)"></sparql-client>

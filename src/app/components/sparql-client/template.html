@@ -7,7 +7,7 @@
 				</div>
 			</div>
 			<div class="ui middle attached segment pushable">
-				<div class="ui inverted right vertical very wide dimmed sidebar menu queries-list">
+				<div class="ui inverted right vertical wide dimmed sidebar menu queries-list">
 					<p *ngIf="savedQueries.length == 0">
 						No saved queries yet.
 					</p>
@@ -60,14 +60,12 @@
 											</div>
 										</div>
 										<div class="fields row">
-											<div class="three wide right aligned column">
-											</div>
-											<div class="six wide column field">
-												<button class="ui button"
-												        [ngClass]="{disabled:!currentQuery.content}">
-													<i class="checkmark icon"></i>
-													Validate
-												</button>
+											<div class="column field">
+												<!--<button class="ui button"-->
+												<!--[ngClass]="{disabled:!currentQuery.content}">-->
+												<!--<i class="checkmark icon"></i>-->
+												<!--Validate-->
+												<!--</button>-->
 												<button class="ui blue button"
 												        [ngClass]="{disabled: !canExecute()}"
 												        (click)="onExecute()">
@@ -88,6 +86,17 @@
 					<!-- /segment -->
 				</div>
 				<!-- /pusher -->
+			</div>
+			<div class="ui attached error message" *ngFor="#message of messages">
+				<i class="close icon" (click)="closeMessage($event)"></i>
+				<div class="header">
+					{{message.title}}
+				</div>
+				<p>
+					{{message.content}}<br>
+					<span *ngIf="message.statusCode">Status: {{message.statusCode}} - {{message.statusMessage}}</span><br>
+					<span *ngIf="message.endpoint">URI: {{message.endpoint}}</span>
+				</p>
 			</div>
 			<div class="ui bottom attached segment">
 				<div class="ui grid form row">
@@ -127,14 +136,19 @@
 	</div>
 	<div class="row">
 		<div class="column">
-			<h3>Response Stack
-				<button class="ui negative button"
-				        [disabled]="responses.length <= 0"
-				        (click)="onEmptyStack()">
-					<i class="trash outline icon"></i>
-					Empty Stack <span *ngIf="responses.length>0">({{responses.length}})</span>
-				</button>
-			</h3>
+			<div class="ui two column grid">
+				<div class="column">
+					<h3>Response Stack</h3>
+				</div>
+				<div class="column right aligned">
+					<button class="ui inverted white button"
+					        [disabled]="responses.length <= 0"
+					        (click)="onEmptyStack()">
+						<i class="trash outline icon"></i>
+						Empty Stack <span *ngIf="responses.length>0">({{responses.length}})</span>
+					</button>
+				</div>
+			</div>
 		</div>
 	</div>
 	<div class="row query-results">

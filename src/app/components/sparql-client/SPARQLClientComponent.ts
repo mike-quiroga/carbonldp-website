@@ -1,4 +1,4 @@
-import { Component, ElementRef, Injector, Input } from "angular2/core";
+import { Component, ElementRef, Injector, Input, Output, EventEmitter } from "angular2/core";
 import { CORE_DIRECTIVES, FORM_DIRECTIVES, NgStyle } from "angular2/common";
 import {RouteConfig, RouterOutlet, CanActivate, Router} from 'angular2/router';
 
@@ -175,6 +175,9 @@ export default class SPARQLClientComponent {
 	regExpURL:RegExp = new RegExp( "(https?:\/\/(?:www\.|(?!www))[^\s\.]+\.[^\s]{2,}|www\.[^\s]+\.[^\s]{2,})" );
 
 	@Input() context:Context;
+	@Input() emitErrors:boolean = false;
+	@Output() errorOccurs:EventEmitter<any> = new EventEmitter();
+	messages:any[] = [];
 	private element:ElementRef;
 
 	// TODO: Make them configurable
@@ -232,7 +235,6 @@ export default class SPARQLClientComponent {
 	}
 
 	ngOnInit():void {
-		console.log( this.context );
 		if ( ! this.context ) {
 			this.context = this.carbon;
 			this.isCarbonContext = true;
@@ -328,7 +330,21 @@ export default class SPARQLClientComponent {
 				this.addResponse( response );
 				return response;
 			}
-		);
+		).catch(
+			( error )=> {
+				if ( this.emitErrors ) {
+					this.errorOccurs.emit( error );
+				} else {
+					let message:Message = <Message>{
+						title: error.name,
+						content: error.message,
+						statusCode: error.response.status,
+						statusMessage: error.response.request.statusText,
+						endpoint: error.response.request.responseURL
+					};
+					this.messages.push( message );
+				}
+			} );
 	}
 
 	execute( query:SPARQLQuery, activeResponse?:SPARQLClientResponse ):Promise<SPARQLClientResponse> {
@@ -360,7 +376,7 @@ export default class SPARQLClientComponent {
 			( error ) => {
 				// Carbon Response Fail
 				this.isSending = false;
-				return error;
+				return Promise.reject( error );
 			}
 		);
 	}
@@ -398,9 +414,6 @@ export default class SPARQLClientComponent {
 				clientResponse.query = query;
 
 				return clientResponse;
-			},
-			( error )=> {
-				console.log( error );
 			} );
 	}
 
@@ -613,6 +626,10 @@ export default class SPARQLClientComponent {
 	toggleSidebar():void {
 		this.sidebar.sidebar( "toggle" );
 	}
+
+	closeMessage( evt:any ):void {
+		$( evt.srcElement ).closest( ".ui.message" ).transition( "fade" );
+	}
 }
 
 export interface SPARQLQueryOperationFormat {
@@ -632,4 +649,11 @@ export interface SPARQLQueryOperations {
 export interface SPARQLTypes {
 	query:string;
 	update:string;
+}
+export interface Message {
+	title:string;
+	content:string;
+	statusCode:string;
+	statusMessage:string;
+	endpoint:string;
 }
