@@ -50,11 +50,18 @@ public class SesameJobService extends AbstractSesameLDPService implements JobSer
 				break;
 			case IMPORT_BACKUP_JOB:
 				infractions = ImportBackupJobFactory.getInstance().validate( job );
+				checkPermissionsOverTheBackup( job );
 				break;
 			default:
 				infractions.add( new Infraction( 0x2001, "rdf.type", "job type" ) );
 		}
 		if ( ! infractions.isEmpty() ) throw new InvalidResourceException( infractions );
+	}
+
+	private void checkPermissionsOverTheBackup( Job job ) {
+		ImportBackupJob importBackupJob = new ImportBackupJob( job );
+		URI backupURI = importBackupJob.getBackup();
+		sourceService.get( backupURI );
 	}
 
 	@Override
