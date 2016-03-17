@@ -176,7 +176,7 @@ public class ImportBackupJobExecutor implements TypedJobExecutor {
 		while ( entries.hasMoreElements() ) {
 			ZipEntry zipEntry = entries.nextElement();
 			String zipEntryName = zipEntry.getName();
-			if ( zipEntryName.endsWith( RDFFormat.TRIG.getDefaultFileExtension() ) ) {
+			if ( zipEntryName.endsWith( RDFFormat.TRIG.getDefaultFileExtension() ) && ( ! zipEntryName.contains( Consts.SLASH ) && ( ! zipEntryName.contains( Consts.BACK_SLASH ) ) ) ) {
 				trigZipEntry = zipEntry;
 				break;
 			}
