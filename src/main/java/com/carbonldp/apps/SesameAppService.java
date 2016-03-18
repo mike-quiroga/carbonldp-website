@@ -59,6 +59,9 @@ public class SesameAppService extends AbstractSesameLDPService implements AppSer
 		App createdApp = appRepository.createPlatformAppRepository( app );
 		containerService.createChild( appRepository.getPlatformAppContainerURI(), app );
 		ACL appACL = aclRepository.getResourceACL( createdApp.getURI() );
+		if ( appACL == null ) {
+			throw new IllegalStateException( "Resource couldn't be created" );
+		}
 
 		AppRole adminRole = transactionWrapper.runWithSystemPermissionsInAppContext( app, () -> {
 			Container rootContainer = createRootContainer( app );
@@ -66,7 +69,6 @@ public class SesameAppService extends AbstractSesameLDPService implements AppSer
 
 			Container appRolesContainer = appRoleRepository.createAppRolesContainer( rootContainer.getURI() );
 			ACL appRolesContainerACL = createAppRolesContainerACL( appRolesContainer );
-			Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
 			AppRole appAdminRole = createAppAdminRole( appRolesContainer );
 			ACL appAdminRoleACL = createAppAdminRoleACL( appAdminRole );

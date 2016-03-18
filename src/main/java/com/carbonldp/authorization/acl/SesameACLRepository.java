@@ -1,7 +1,6 @@
 package com.carbonldp.authorization.acl;
 
 import com.carbonldp.Consts;
-import com.carbonldp.exceptions.ResourceDoesntExistException;
 import com.carbonldp.ldp.AbstractSesameLDPRepository;
 import com.carbonldp.ldp.sources.RDFSourceDescription;
 import com.carbonldp.ldp.sources.RDFSourceRepository;
@@ -34,8 +33,7 @@ public class SesameACLRepository extends AbstractSesameLDPRepository implements 
 	public ACL getResourceACL( URI resourceURI ) {
 		URI aclURI = getACLUri( resourceURI );
 		RDFDocument document = documentRepository.getDocument( aclURI );
-		if ( document == null ) return null;
-		if ( document.size() == 0 ) return null;
+		if ( document == null || document.isEmpty() ) return null;
 		return new ACL( document.getBaseModel(), aclURI );
 	}
 
@@ -45,7 +43,7 @@ public class SesameACLRepository extends AbstractSesameLDPRepository implements 
 			throw new IllegalArgumentException( "Fragments can't be protected with an ACL" );
 		}
 		if ( ! sourceRepository.exists( objectURI ) ) {
-			throw new ResourceDoesntExistException();
+			throw new RuntimeException( "Unable to find document to protect" );
 		}
 		URI aclURI = getACLUri( objectURI );
 		ACL acl = ACLFactory.create( aclURI, objectURI );
