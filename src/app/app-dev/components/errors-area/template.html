@@ -4,8 +4,8 @@
 		{{message.title}}
 	</div>
 	<p>
-		{{message.content}}<br>
-		<span *ngIf="message.statusCode">Status: {{message.statusCode}} - {{message.statusMessage}}</span><br>
+		<span *ngIf="message.content">{{message.content}}<br></span>
+		<span *ngIf="message.statusCode">Status: {{message.statusCode}} - {{message.statusMessage}}<br></span>
 		<span *ngIf="message.endpoint">URI: {{message.endpoint}}</span>
 	</p>
 </div>

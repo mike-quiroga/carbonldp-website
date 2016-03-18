@@ -49,6 +49,7 @@ export class ResponseComponent {
 		this.accordion = this.$element.find( ".accordion" );
 		this.accordion.accordion( {
 			onOpen: this.onOpen.bind( this ),
+			onClose: this.onClose.bind( this ),
 		} );
 		this.menu = this.$element.find( ".content .tabular.menu > .item" );
 		this.menu.tab();
@@ -58,31 +59,37 @@ export class ResponseComponent {
 
 	toggleAccordion():void {
 		this.accordion.accordion( "toggle" );
-		this.accordionOpen = ! this.accordionOpen;
 	}
 
 	openAccordion():void {
 		this.accordion.accordion( "open", 0 );
-		this.accordionOpen = true;
 	}
 
-	onRemoveResponse():void {
-		this.onRemove.next( this.response );
+	onRemoveResponse( event:any ):void {
+		this.onRemove.emit( this.response );
+		event.stopPropagation();
 	}
 
 	onOpen():void {
+		this.accordionOpen = true;
 		this.$element.find( ".CodeMirror" ).each( function ( i, element ) {
 			element.CodeMirror.refresh();
 		} );
 	}
 
-	onConfigureResponse():void {
-		this.onConfigure.next( this.response );
+	onClose():void {
+		this.accordionOpen = false;
 	}
 
-	onReExecuteResponse():void {
+	onConfigureResponse( event:any ):void {
+		this.onConfigure.emit( this.response );
+		event.stopPropagation();
+	}
+
+	onReExecuteResponse( event:any ):void {
+		this.onReExecute.emit( this.response );
 		this.accordion.accordion( "open", 0 );
-		this.onReExecute.next( this.response );
+		event.stopPropagation();
 	}
 
 	getCodeMirrorMode( format:string ):string {

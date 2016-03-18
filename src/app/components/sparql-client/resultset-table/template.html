@@ -1,5 +1,5 @@
 <div *ngIf="resultset == null || resultset?.head == null || resultset?.results == null" class="ui segment center aligned">Invalid provided resultset.</div>
-<div *ngIf="resultset !== null">
+<div class="table-container" *ngIf="resultset !== null">
 	<table class="ui celled very compact striped selectable sortable table">
 		<thead>
 			<tr>
@@ -7,11 +7,12 @@
 						sorted: sortedColumn === varName,
 						ascending: sortedColumn === varName && ascending,
 						descending: sortedColumn === varName && ! ascending
-					}" (click)="sortColumn( varName )">{{ varName }}</th>
+					}" (click)="sortColumn( varName )">{{ varName }}
+				</th>
 			</tr>
 		</thead>
 		<tbody>
-			<tr *ngFor="#binding of resultset.results.bindings">
+			<tr *ngFor="#binding of bindings">
 				<td *ngFor="#value of binding" [ngClass]="{
 						positive: value.type === 'literal' && value?.datatype !== null,
 						warning: value.type === 'literal' && value?.datatype === null

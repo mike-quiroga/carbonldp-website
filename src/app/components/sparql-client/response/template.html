@@ -6,13 +6,18 @@
 		</div>
 		<div class="right menu">
 			<div class="ui small basic icon buttons" style="border:none;">
-				<button (click)="toggleAccordion()" class="ui button"><i class="caret icon" [ngClass]="{
-						down: accordionOpen,
-						right: ! accordionOpen
-					}"></i></button>
-				<button (click)="onConfigureResponse()" class="ui button btn-settings"><i class="configure icon"></i></button>
-				<button (click)="onReExecuteResponse()" class="ui button btn-refresh"><i class="refresh icon"></i></button>
-				<button (click)="onRemoveResponse()" class="ui button btn-close"><i class="remove icon"></i></button>
+				<button (click)="toggleAccordion()" class="ui button">
+					<i class="caret icon" [ngClass]="{ down: accordionOpen, right: ! accordionOpen }"></i>
+				</button>
+				<button (click)="onConfigureResponse($event)" class="ui button btn-settings">
+					<i class="configure icon"></i>
+				</button>
+				<button (click)="onReExecuteResponse($event)" class="ui button btn-refresh">
+					<i class="refresh icon"></i>
+				</button>
+				<button (click)="onRemoveResponse($event)" class="ui button btn-close">
+					<i class="remove icon"></i>
+				</button>
 			</div>
 		</div>
 	</div>
@@ -23,8 +28,6 @@
 			<a class="item" [attr.data-tab]="index+'_third'" data-tab="third">SPARQL Request</a>
 		</div>
 		<div class="tabs">
-			<!-- Resultset -->
-			<!--<resultset class="ui active tab" [outputformat]="outputformat" [resultset]="response.resultset" [attr.data-tab]="index+'_first'" data-tab="first"></resultset>-->
 			<div class="ui active tab" [attr.data-tab]="index+'_first'" data-tab="first">
 				<code-mirror *ngIf="!!outputformat && outputformat != SPARQLFormats.table"
 				             [mode]="outputformat"
@@ -35,13 +38,8 @@
 				                 [query]="response.query"
 				                 [prefixes]="prefixes"></resultset-table>
 			</div>
-			<!-- End: Resultset -->
-			<!-- Response data -->
 			<pre class="ui tab secondary segment" [attr.data-tab]="index+'_second'" data-tab="second">{{response.data}}</pre>
-			<!-- End: Response data -->
-			<!-- SPARQL Request -->
 			<div class="ui tab segment" [attr.data-tab]="index+'_third'" data-tab="third"></div>
-			<!-- End: SPARQL Request -->
 		</div>
 	</div>
 </div>

@@ -304,11 +304,17 @@ export default class SPARQLClientComponent {
 		originalResponse.isReExecuting = true;
 		this.execute( originalResponse.query, originalResponse ).then(
 			( newResponse:SPARQLClientResponse ) => {
-				originalResponse.isReExecuting = false;
+				originalResponse.query = Object.assign( {}, newResponse.query );
 				originalResponse.duration = newResponse.duration;
-				originalResponse.resultset = newResponse.resultset;
-				originalResponse.query = newResponse.query;
-				originalResponse.data = newResponse.data;
+				originalResponse.resultset = Object.assign( {}, newResponse.resultset );
+				originalResponse.data = Object.assign( {}, newResponse.data );
+				originalResponse.isReExecuting = false;
+			}
+		).catch(
+			( error )=> {
+				console.log( error );
+				originalResponse.isReExecuting = false;
+				throw error;
 			}
 		);
 	}
@@ -332,17 +338,11 @@ export default class SPARQLClientComponent {
 			}
 		).catch(
 			( error )=> {
+				console.log( error );
 				if ( this.emitErrors ) {
-					this.errorOccurs.emit( error );
+					this.errorOccurs.emit( this.getError( error ) );
 				} else {
-					let message:Message = <Message>{
-						title: error.name,
-						content: error.message,
-						statusCode: error.response.status,
-						statusMessage: error.response.request.statusText,
-						endpoint: error.response.request.responseURL
-					};
-					this.messages.push( message );
+					this.messages.push( this.getError( error ) );
 				}
 			} );
 	}
@@ -495,8 +495,13 @@ export default class SPARQLClientComponent {
 	}
 
 	onConfigureResponse( response:SPARQLClientResponse ):void {
-		this.currentQuery = response.query;
-		this.sparql = response.query.content;
+		let configureQuery:SPARQLQuery = this.askingQuery = Object.assign( {}, response.query );
+		if ( JSON.stringify( this.currentQuery ) !== JSON.stringify( configureQuery ) ) {
+			this.toggleConfirmationModal();
+		} else {
+			this.loadQuery( configureQuery );
+			this.toggleSidebar();
+		}
 	}
 
 	addResponse( response:SPARQLClientResponse ):void {
@@ -610,7 +615,7 @@ export default class SPARQLClientComponent {
 	onApproveConfirmationModal( approvedQuery:SPARQLQuery ):void {
 		this.askingQuery = <SPARQLQuery>{};
 		this.loadQuery( approvedQuery );
-		this.toggleSidebar();
+		this.hideSidebar();
 	}
 
 	getLocalSavedQueries():SPARQLQuery[] {
@@ -627,8 +632,39 @@ export default class SPARQLClientComponent {
 		this.sidebar.sidebar( "toggle" );
 	}
 
+	hideSidebar():void {
+		this.sidebar.sidebar( "hide" );
+		if ( this.sidebar.sidebar( "is closed" ) ) {
+		}
+	}
+
 	closeMessage( evt:any ):void {
 		$( evt.srcElement ).closest( ".ui.message" ).transition( "fade" );
+	}
+
+	getError( error:any ):Message {
+		switch ( typeof error ) {
+			case "string":
+				return <Message>{
+					title: error,
+					content: "",
+					statusCode: "",
+					statusMessage: "",
+					endpoint: "",
+				};
+			case "object":
+				return <Message>{
+					title: error.name,
+					content: error.message,
+					statusCode: error.response.status,
+					statusMessage: error.response.request.statusText,
+					endpoint: error.response.request.responseURL,
+				};
+			default:
+				return <Message>{
+					title: error.toString(),
+				};
+		}
 	}
 }
 

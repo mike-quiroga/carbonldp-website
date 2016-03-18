@@ -26,7 +26,7 @@ export default class SPARQLEditorView {
 	$element:JQuery;
 	appContext:App.Context;
 	app:App;
-	private errorsAreaService:ErrorsAreaService
+	private errorsAreaService:ErrorsAreaService;
 
 	constructor( router:Router, element:ElementRef, errorsAreaService:ErrorsAreaService, @Host() @Inject( forwardRef( () => AppDetailView ) )appDetail:AppDetailView ) {
 		this.router = router;
@@ -40,13 +40,12 @@ export default class SPARQLEditorView {
 	}
 
 	notifyErrorAreaService( error:any ):void {
-		console.log( error );
 		this.errorsAreaService.addError(
-			error.name,
-			error.message,
-			error.response.status,
-			error.response.request.statusText,
-			error.response.request.responseURL
+			error.title,
+			error.content,
+			error.statusCode,
+			error.statusMessage,
+			error.endpoint
 		);
 	}
 
