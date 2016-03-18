@@ -74,7 +74,7 @@ public class AuthorizationConfig extends AbstractWebSecurityConfigurerAdapter {
 					.addFilterBefore( appContextPersistenceFilter, SecurityContextPersistenceFilter.class )
 					.addFilterAfter( corsAppContextFilter, AppContextPersistenceFilter.class )
 					.addFilterAfter( appRolePersistenceFilter, JWTAuthenticationFilter.class )
-                .addFilterAfter( appContextClearFilter,AppRolePersistenceFilter.class )
+                			.addFilterAfter( appContextClearFilter,AppRolePersistenceFilter.class )
 					.authorizeRequests()
 						.anyRequest()
 							.permitAll()
