@@ -338,7 +338,6 @@ export default class SPARQLClientComponent {
 			}
 		).catch(
 			( error )=> {
-				console.log( error );
 				if ( this.emitErrors ) {
 					this.errorOccurs.emit( this.getError( error ) );
 				} else {
@@ -522,10 +521,10 @@ export default class SPARQLClientComponent {
 			name: this.currentQuery.name,
 			id: this.savedQueries.length
 		};
+		this.isSaving = true;
 		this.savedQueries = this.getLocalSavedQueries();
 		this.savedQueries.push( query );
 		this.updateLocalSavedQueries();
-		this.isSaving = true;
 		setInterval( () => {
 			this.isSaving = false;
 		}, 500 );
@@ -558,15 +557,7 @@ export default class SPARQLClientComponent {
 
 	onClickSavedQuery( selectedQuery:SPARQLQuery ):void {
 		if ( JSON.stringify( this.currentQuery ) !== JSON.stringify( selectedQuery ) ) {
-			this.askingQuery = <SPARQLQuery>{
-				endpoint: selectedQuery.endpoint,
-				type: selectedQuery.type,
-				content: selectedQuery.content,
-				operation: selectedQuery.operation,
-				format: selectedQuery.format,
-				name: selectedQuery.name,
-				id: selectedQuery.id,
-			};
+			this.askingQuery = Object.assign( {}, selectedQuery );
 			this.toggleConfirmationModal();
 		} else {
 			this.loadQuery( selectedQuery );
@@ -581,16 +572,8 @@ export default class SPARQLClientComponent {
 	}
 
 	loadQuery( query:SPARQLQuery ):void {
-		this.currentQuery = query;
-		this.askingQuery = <SPARQLQuery>{
-			endpoint: query.endpoint,
-			type: query.type,
-			content: query.content,
-			operation: query.operation,
-			format: query.format,
-			name: query.name,
-			id: query.id,
-		};
+		this.currentQuery = Object.assign( {}, query );
+		this.askingQuery = Object.assign( {}, query );
 		this.endpoint = query.endpoint;
 		this.sparql = query.content;
 	}
