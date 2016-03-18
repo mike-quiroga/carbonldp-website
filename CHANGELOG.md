@@ -1,3 +1,6 @@
+# 0.28.4 (2016/03/18)
+* Enable app role authentication in platform documents related to that app
+
 # 0.28.3 (2016/03/08)
 * Fixed a bug that prevented AppDevelopers from creating new applications
 
