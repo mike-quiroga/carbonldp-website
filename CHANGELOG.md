@@ -1,6 +1,3 @@
-# 0.28.6 (2016/03/18)
-* Fix problems with sparql query
-
 # 0.28.4 (2016/03/18)
 * Enable app role authentication in platform documents related to that app
 
