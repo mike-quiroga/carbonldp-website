@@ -3,6 +3,7 @@ package com.carbonldp.authentication;
 import com.carbonldp.agents.AgentRepository;
 import com.carbonldp.apps.roles.AppRolePersistenceFilter;
 import com.carbonldp.apps.roles.AppRoleRepository;
+import com.carbonldp.apps.roles.AppContextClearFilter;
 import com.carbonldp.authentication.token.JWTAuthenticationEntryPoint;
 import com.carbonldp.authentication.token.JWTAuthenticationFilter;
 import com.carbonldp.authentication.token.JWTAuthenticationProvider;
@@ -49,7 +50,7 @@ public class AuthenticationConfig {
 	public void configureGlobal( AuthenticationManagerBuilder auth ) {
 		auth.authenticationProvider( platformAgentUsernamePasswordAuthenticationProvider() );
 		auth.authenticationProvider( tokenAuthenticationProvider() );
-		auth.authenticationProvider( appsAgentUsernamePasswordAuthenticationProvider());
+		auth.authenticationProvider( appsAgentUsernamePasswordAuthenticationProvider() );
 	}
 
 	@Bean
@@ -70,6 +71,11 @@ public class AuthenticationConfig {
 	@Bean
 	public AppRolePersistenceFilter appRolePersistenceFilter() {
 		return new AppRolePersistenceFilter( appRoleRepository );
+	}
+
+	@Bean
+	public AppContextClearFilter platformAppRolePersistanceFilter() {
+		return new AppContextClearFilter();
 	}
 
 	@Bean
