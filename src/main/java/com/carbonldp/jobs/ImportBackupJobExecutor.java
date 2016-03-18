@@ -83,38 +83,42 @@ public class ImportBackupJobExecutor implements TypedJobExecutor {
 			throw new RuntimeException( e );
 		}
 		Enumeration<? extends ZipEntry> entries = zipFile.entries();
-		ZipEntry directoryZipEntry = null;
+
 		while ( entries.hasMoreElements() ) {
 			ZipEntry zipEntry = entries.nextElement();
-			if ( zipEntry.isDirectory() ) {
-				directoryZipEntry = zipEntry;
-				break;
+			if ( zipEntry.isDirectory() ) continue;
+			String fileName = zipEntry.getName();
+			int slashIndex = fileName.indexOf( Consts.SLASH );
+			if ( slashIndex == - 1 ) continue;
+			fileName = fileName.substring( slashIndex );
+
+			InputStream InputStream = null;
+			try {
+				InputStream = zipFile.getInputStream( zipEntry );
+			} catch ( IOException e ) {
+				throw new RuntimeException( e );
 			}
-		}
-		if ( directoryZipEntry == null ) return;
 
-		InputStream directoryInputStream = null;
-		try {
-			directoryInputStream = zipFile.getInputStream( directoryZipEntry );
-		} catch ( IOException e ) {
-			throw new RuntimeException( e );
-		}
+			File newFile = new File( directory + fileName );
+			File parentsFile = newFile.getParentFile();
+			parentsFile.mkdirs();
 
-		FileOutputStream fileOutputStream;
-		try {
-			fileOutputStream = new FileOutputStream( directory );
-		} catch ( FileNotFoundException e ) {
-			throw new RuntimeException( e );
-		}
-
-		try {
-			while ( ( length = directoryInputStream.read( buffer ) ) >= 0 ) {
-				fileOutputStream.write( buffer, 0, length );
+			FileOutputStream fileOutputStream;
+			try {
+				fileOutputStream = new FileOutputStream( directory + fileName );
+			} catch ( FileNotFoundException e ) {
+				throw new RuntimeException( e );
 			}
-			directoryInputStream.close();
-			fileOutputStream.close();
-		} catch ( IOException e ) {
-			throw new RuntimeException( e );
+
+			try {
+				while ( ( length = InputStream.read( buffer ) ) >= 0 ) {
+					fileOutputStream.write( buffer, 0, length );
+				}
+				InputStream.close();
+				fileOutputStream.close();
+			} catch ( IOException e ) {
+				throw new RuntimeException( e );
+			}
 		}
 
 	}
@@ -176,7 +180,7 @@ public class ImportBackupJobExecutor implements TypedJobExecutor {
 		while ( entries.hasMoreElements() ) {
 			ZipEntry zipEntry = entries.nextElement();
 			String zipEntryName = zipEntry.getName();
-			if ( zipEntryName.endsWith( RDFFormat.TRIG.getDefaultFileExtension() ) && ( ! zipEntryName.contains( Consts.SLASH ) && ( ! zipEntryName.contains( Consts.BACK_SLASH ) ) ) ) {
+			if ( zipEntryName.endsWith( RDFFormat.TRIG.getDefaultFileExtension() ) && ( ! zipEntryName.contains( Consts.SLASH ) ) ) {
 				trigZipEntry = zipEntry;
 				break;
 			}
