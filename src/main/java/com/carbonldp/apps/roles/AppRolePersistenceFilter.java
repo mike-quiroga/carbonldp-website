@@ -39,13 +39,12 @@ public class AppRolePersistenceFilter extends AbstractUniqueFilter {
 			return;
 		}
 
-		App app = appContext.getApplication();
 		AppRolesHolder appRolesHolder = (AppRolesHolder) rawAuthentication;
 
 		if ( rawAuthentication instanceof AgentAuthenticationToken ) {
 			Agent agent = ( (AgentAuthenticationToken) rawAuthentication ).getAgent();
 			Set<AppRole> appRoles = appRoleRepository.get( agent );
-			appRolesHolder.setAppRoles( app.getURI(), appRoles );
+			appRolesHolder.setAppRoles( appRoles );
 		} else {
 			if ( LOG.isDebugEnabled() ) {
 				LOG.debug( "The authentication token isn't supported (yet)." );
