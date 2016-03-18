@@ -9,7 +9,6 @@ import com.carbonldp.authentication.token.app.AppTokenRepository;
 import com.carbonldp.authorization.acl.ACEDescription;
 import com.carbonldp.authorization.acl.ACL;
 import com.carbonldp.exceptions.InvalidResourceException;
-import com.carbonldp.exceptions.NotCreatedException;
 import com.carbonldp.exceptions.ResourceAlreadyExistsException;
 import com.carbonldp.exceptions.ResourceDoesntExistException;
 import com.carbonldp.ldp.AbstractSesameLDPService;
@@ -61,7 +60,7 @@ public class SesameAppService extends AbstractSesameLDPService implements AppSer
 		containerService.createChild( appRepository.getPlatformAppContainerURI(), app );
 		ACL appACL = aclRepository.getResourceACL( createdApp.getURI() );
 		if ( appACL == null ) {
-			throw new NotCreatedException( 0x1015 );
+			throw new IllegalStateException( "Resource couldn't be created" );
 		}
 
 		AppRole adminRole = transactionWrapper.runWithSystemPermissionsInAppContext( app, () -> {
