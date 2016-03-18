@@ -2,7 +2,6 @@ package com.carbonldp.jobs;
 
 import com.carbonldp.Vars;
 import com.carbonldp.exceptions.InvalidResourceException;
-import com.carbonldp.exceptions.ResourceDoesntExistException;
 import com.carbonldp.ldp.AbstractSesameLDPService;
 import com.carbonldp.ldp.containers.ContainerService;
 import com.carbonldp.ldp.containers.DirectContainer;
@@ -62,7 +61,6 @@ public class SesameJobService extends AbstractSesameLDPService implements JobSer
 	private void checkPermissionsOverTheBackup( Job job ) {
 		ImportBackupJob importBackupJob = new ImportBackupJob( job );
 		URI backupURI = importBackupJob.getBackup();
-		if ( sourceService.exists( backupURI ) ) throw new ResourceDoesntExistException();
 		sourceService.get( backupURI );
 	}
 
