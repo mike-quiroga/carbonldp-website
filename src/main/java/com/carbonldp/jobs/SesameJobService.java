@@ -2,7 +2,6 @@ package com.carbonldp.jobs;
 
 import com.carbonldp.Vars;
 import com.carbonldp.exceptions.InvalidResourceException;
-import com.carbonldp.exceptions.ResourceDoesntExistException;
 import com.carbonldp.ldp.AbstractSesameLDPService;
 import com.carbonldp.ldp.containers.ContainerService;
 import com.carbonldp.ldp.containers.DirectContainer;
