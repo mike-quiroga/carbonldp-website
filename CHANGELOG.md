@@ -1,3 +1,6 @@
+# 0.28.5 (2016/03/18)
+* Fix a bug that let to create incomplete apps
+
 # 0.28.4 (2016/03/18)
 * Enable app role authentication in platform documents related to that app
 
