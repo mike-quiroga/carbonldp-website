@@ -8,7 +8,7 @@ import javax.servlet.http.HttpServletResponse;
 
 /**
  * @author NestorVenegas
- * @since _version_
+ * @since 0.28.4-ALPHA
  */
 public class AppContextClearFilter extends AbstractUniqueFilter {
 
