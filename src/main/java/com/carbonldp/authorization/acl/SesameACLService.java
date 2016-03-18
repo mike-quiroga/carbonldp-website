@@ -201,7 +201,7 @@ public class SesameACLService extends AbstractSesameLDPService implements ACLSer
 					App app = AppContextHolder.getContext().getApplication();
 					if ( app == null ) throw new IllegalStateException( "Unable to add an app role permission on the platform context" );
 
-					Set<AppRole> appRoles = agentAuthenticationToken.getAppRoles( app.getURI() );
+					Set<AppRole> appRoles = agentAuthenticationToken.getAppRoles( );
 
 					URI appRoleToModify = subject.getURI();
 					Set<URI> parentsRoles = appRoleRepository.getParentsURI( appRoleToModify );
