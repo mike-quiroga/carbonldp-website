@@ -72,7 +72,7 @@ public class AuthorizationConfig extends AbstractWebSecurityConfigurerAdapter {
 			http
 				.antMatcher( "/platform/apps/?*/"  )
 					.addFilterBefore( appContextPersistenceFilter, SecurityContextPersistenceFilter.class )
-					.addFilterAfter( corsAppContextFilter, AppContextPersistenceFilter.class )
+					.addFilterAfter( corsPlatformContextFilter, AppContextPersistenceFilter.class )
 					.addFilterAfter( appRolePersistenceFilter, JWTAuthenticationFilter.class )
                 			.addFilterAfter( appContextClearFilter,AppRolePersistenceFilter.class )
 					.authorizeRequests()
