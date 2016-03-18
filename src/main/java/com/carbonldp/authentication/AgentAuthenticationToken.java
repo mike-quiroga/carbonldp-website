@@ -18,41 +18,25 @@ public class AgentAuthenticationToken extends AbstractAuthenticationToken implem
 
 	private final Agent agent;
 
-	private final Map<URI, Set<AppRole>> appsRoles;
+	private final Set<AppRole> appRoles;
 
 	public AgentAuthenticationToken( Agent agent, Set<Platform.Role> platformRoles, Set<Platform.Privilege> platformPrivileges ) {
 		super( platformRoles, platformPrivileges );
 
 		Assert.notNull( agent );
 		this.agent = agent;
-		this.appsRoles = new HashMap<>();
+		this.appRoles = new HashSet<>();
 	}
 
 	@Override
-	public Map<URI, Set<AppRole>> getAppsRoles() {
-		return Collections.unmodifiableMap( appsRoles );
+	public Set<AppRole> getAppRoles() {
+		return Collections.unmodifiableSet( appRoles );
 	}
 
 	@Override
-	public Set<AppRole> getAppRoles( URI appURI ) {
-		if ( ! appsRoles.containsKey( appURI ) ) return new HashSet<>();
-		return appsRoles.get( appURI );
-	}
-
-	@Override
-	public void setAppRoles( Map<URI, Set<AppRole>> appsRoles ) {
-		for ( URI appURI : appsRoles.keySet() ) {
-			Set<AppRole> appRoles = appsRoles.get( appURI );
-			setAppRoles( appURI, appRoles );
-		}
-	}
-
-	@Override
-	public void setAppRoles( URI appURI, Collection<AppRole> appRoles ) {
-		Set<AppRole> tempAppRoles = appRoles.stream()
-											.filter( appRole -> appRole != null )
-											.collect( Collectors.toSet() );
-		appsRoles.put( appURI, Collections.unmodifiableSet( tempAppRoles ) );
+	public void setAppRoles( Set<AppRole> appRoles ) {
+		this.appRoles.clear();
+		this.appRoles.addAll( appRoles );
 	}
 
 	@Override

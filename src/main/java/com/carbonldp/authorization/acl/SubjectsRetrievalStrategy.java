@@ -85,12 +85,8 @@ public final class SubjectsRetrievalStrategy {
 	}
 
 	private static void addAppRoles( Map<RDFNodeEnum, Set<URI>> subjects, AgentAuthenticationToken authentication ) {
-		if ( AppContextHolder.getContext().isEmpty() ) return;
 
-		URI appURI = AppContextHolder.getContext().getApplication().getURI();
-		if ( ! authentication.getAppsRoles().containsKey( appURI ) ) return;
-
-		Set<URI> appRoleURIs = getURIs( authentication.getAppRoles( appURI ) );
+		Set<URI> appRoleURIs = getURIs( authentication.getAppRoles() );
 		if ( appRoleURIs.isEmpty() ) return;
 		subjects.put( AppRoleDescription.Resource.CLASS, appRoleURIs );
 	}
