@@ -18,7 +18,8 @@ public class AuthorizationConfig extends AbstractWebSecurityConfigurerAdapter {
 
 	private interface EntryPointOrder {
 		int APPS = 1;
-		int PLATFORM = 2;
+		int PLATFORM_APPS = 2;
+		int PLATFORM = 3;
 	}
 
 	@Bean
@@ -61,6 +62,26 @@ public class AuthorizationConfig extends AbstractWebSecurityConfigurerAdapter {
 	}
 
 	@Configuration
+	@Order( EntryPointOrder.PLATFORM_APPS )
+	public static class PlatformAppsEntryPointConfig extends AbstractWebSecurityConfigurerAdapter {
+		@Override
+		protected void configure( HttpSecurity http ) throws Exception {
+			super.configure( http );
+			//@formatter:off
+			http
+				.antMatcher( "/platform/apps/?*/"  )
+					.addFilterBefore( appContextPersistenceFilter, SecurityContextPersistenceFilter.class )
+					.addFilterAfter( corsAppContextFilter, AppContextPersistenceFilter.class )
+					.addFilterAfter( platformAppRolePersistenceFilter, JWTAuthenticationFilter.class )
+					.authorizeRequests()
+						.anyRequest()
+							.permitAll()
+			;
+			//@formatter:on
+		}
+	}
+
+	@Configuration
 	@Order( EntryPointOrder.PLATFORM )
 	public static class PlatformEntryPointConfig extends AbstractWebSecurityConfigurerAdapter {
 		@Override
@@ -72,8 +93,6 @@ public class AuthorizationConfig extends AbstractWebSecurityConfigurerAdapter {
 					.addFilterBefore( corsPlatformContextFilter, SecurityContextPersistenceFilter.class )
 					.authorizeRequests()
 						.antMatchers( "/platform/apps/" )
-							.permitAll()
-						.antMatchers( "/platform/apps/?*/" )
 							.permitAll()
 						.antMatchers( "/platform/roles/" )
 							.permitAll()

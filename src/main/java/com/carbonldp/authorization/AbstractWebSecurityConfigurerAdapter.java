@@ -2,6 +2,7 @@ package com.carbonldp.authorization;
 
 import com.carbonldp.apps.context.AppContextPersistenceFilter;
 import com.carbonldp.apps.roles.AppRolePersistenceFilter;
+import com.carbonldp.apps.roles.PlatformAppRolePersistenceFilter;
 import com.carbonldp.authentication.AnonymousAuthenticationFilter;
 import com.carbonldp.authentication.AnonymousAuthenticationToken;
 import com.carbonldp.authentication.CustomExceptionHandlingConfigurer;
@@ -35,6 +36,9 @@ public abstract class AbstractWebSecurityConfigurerAdapter extends WebSecurityCo
 	@Autowired
 	@Qualifier( "appRolePersistenceFilter" )
 	protected AppRolePersistenceFilter appRolePersistenceFilter;
+
+	@Autowired
+	protected PlatformAppRolePersistenceFilter platformAppRolePersistenceFilter;
 
 	@Autowired
 	protected CORSAppContextFilter corsAppContextFilter;
