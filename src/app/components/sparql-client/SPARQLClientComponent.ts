@@ -556,13 +556,33 @@ export default class SPARQLClientComponent {
 	}
 
 	onClickSavedQuery( selectedQuery:SPARQLQuery ):void {
-		if ( JSON.stringify( this.currentQuery ) !== JSON.stringify( selectedQuery ) ) {
-			this.askingQuery = Object.assign( {}, selectedQuery );
-			this.toggleConfirmationModal();
+		if ( ! ! this.currentQuery.endpoint || ! ! this.currentQuery.content ) {
+			if ( ! ! this.currentQuery.endpoint && ! ! this.currentQuery.content ) {
+				if ( JSON.stringify( this.currentQuery ) !== JSON.stringify( selectedQuery ) ) {
+					this.askConfirmationToReplace( selectedQuery );
+				} else {
+					this.loadQuery( selectedQuery );
+					this.toggleSidebar();
+				}
+			} else {
+				if ( (! ! this.currentQuery.endpoint && this.currentQuery.endpoint === selectedQuery.endpoint) ||
+					(! ! this.currentQuery.content && this.currentQuery.content === selectedQuery.content) ) {
+					this.loadQuery( selectedQuery );
+					this.toggleSidebar();
+				} else {
+					this.askConfirmationToReplace( selectedQuery );
+				}
+			}
+
 		} else {
 			this.loadQuery( selectedQuery );
 			this.toggleSidebar();
 		}
+	}
+
+	askConfirmationToReplace( selectedQuery:SPARQLQuery ):void {
+		this.askingQuery = Object.assign( {}, selectedQuery );
+		this.toggleConfirmationModal();
 	}
 
 	onClickRemoveSavedQuery( index:number ):void {
