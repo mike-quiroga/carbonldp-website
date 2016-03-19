@@ -1,3 +1,6 @@
+# 0.29.0 (2016/03/18)
+* Anonymous agents can now be added as a subject to ACEs
+
 # 0.28.5 (2016/03/18)
 * app cors filter won't trigger when asking an app document in the platform repository
 
