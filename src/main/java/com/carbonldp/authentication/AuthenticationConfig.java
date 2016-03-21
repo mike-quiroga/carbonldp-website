@@ -84,6 +84,11 @@ public class AuthenticationConfig {
 	}
 
 	@Bean
+	public ProgrammaticBasicAuthenticationFilter programmaticBasicAuthenticationFilter() {
+		return new ProgrammaticBasicAuthenticationFilter( authenticationManager, programmaticBasicAuthenticationEntryPoint() );
+	}
+
+	@Bean
 	public JWTAuthenticationFilter tokenAuthenticationFilter() {
 		return new JWTAuthenticationFilter( authenticationManager, jwtAuthenticationEntryPoint() );
 	}
@@ -98,6 +103,11 @@ public class AuthenticationConfig {
 	@Bean
 	public AuthenticationEntryPoint jwtAuthenticationEntryPoint() {
 		return new JWTAuthenticationEntryPoint();
+	}
+
+	@Bean
+	public AuthenticationEntryPoint programmaticBasicAuthenticationEntryPoint() {
+		return new ProgrammaticBasicAuthenticationEntryPoint();
 	}
 
 	@Bean
