@@ -340,6 +340,12 @@ export default class SPARQLClientComponent {
 			} );
 	}
 
+	onErase():void {
+		this.currentQuery.type = this.SPARQLTypes.query;
+		this.sparql = "";
+		this.endpoint = "";
+	}
+
 	execute( query:SPARQLQuery, activeResponse?:SPARQLClientResponse ):Promise<SPARQLClientResponse> {
 		let type:string = query.type;
 		if ( activeResponse ) {
@@ -482,12 +488,14 @@ export default class SPARQLClientComponent {
 
 	canExecute():boolean {
 		return ! ! (this.currentQuery.endpoint && this.currentQuery.type && this.currentQuery.content && this.currentQuery.operation && this.currentQuery.format);
-
 	}
 
 	canSaveQuery():boolean {
 		return ! ! (this.currentQuery.endpoint && this.currentQuery.type && this.currentQuery.content && this.currentQuery.operation && this.currentQuery.format && this.currentQuery.name);
+	}
 
+	canErase():boolean {
+		return ( ! ! this.endpoint || ! ! this.sparql);
 	}
 
 	onEmptyStack():void {

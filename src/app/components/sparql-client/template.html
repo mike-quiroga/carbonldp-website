@@ -72,6 +72,12 @@
 													<i class="play icon"></i>
 													Execute
 												</button>
+												<button class="ui basic button"
+												        [ngClass]="{disabled: !canErase()}"
+												        (click)="onErase()">
+													<i class="erase icon"></i>
+													Clean
+												</button>
 											</div>
 											<!-- /fields row -->
 										</div>
