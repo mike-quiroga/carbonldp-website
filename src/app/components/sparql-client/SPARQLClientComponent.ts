@@ -413,7 +413,8 @@ export default class SPARQLClientComponent {
 
 	executeDESCRIBE( query:SPARQLQuery ):Promise<SPARQLClientResponse> {
 		let beforeTimestamp:number = ( new Date() ).valueOf();
-		return this.context.documents.executeRawDESCRIBEQuery( query.endpoint, query.content ).then(
+		let requestOptions:HTTP.Request.Options = {headers: new Map().set( "Accept", new HTTP.Header.Class( query.format ) )};
+		return this.context.documents.executeRawDESCRIBEQuery( query.endpoint, query.content, requestOptions ).then(
 			( [ result, response ]:[ string, HTTP.Response.Class ] ):SPARQLClientResponse => {
 				let duration:number = (new Date()).valueOf() - beforeTimestamp;
 				return this.buildResponse( duration, result, <string> SPARQLResponseType.success, query );
@@ -433,7 +434,8 @@ export default class SPARQLClientComponent {
 
 	executeCONSTRUCT( query:SPARQLQuery ):Promise<SPARQLClientResponse> {
 		let beforeTimestamp:number = ( new Date() ).valueOf();
-		return this.context.documents.executeRawCONSTRUCTQuery( query.endpoint, query.content ).then(
+		let requestOptions:HTTP.Request.Options = {headers: new Map().set( "Accept", new HTTP.Header.Class( query.format ) )};
+		return this.context.documents.executeRawCONSTRUCTQuery( query.endpoint, query.content, requestOptions ).then(
 			( [ result, response ]:[ string, HTTP.Response.Class ] ):SPARQLClientResponse => {
 				let duration:number = (new Date()).valueOf() - beforeTimestamp;
 				return this.buildResponse( duration, result, <string> SPARQLResponseType.success, query );

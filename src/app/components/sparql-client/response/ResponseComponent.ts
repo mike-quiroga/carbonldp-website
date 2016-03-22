@@ -129,14 +129,14 @@ export class SPARQLResponseType {
 
 export class SPARQLFormats {
 	static table:string = "table";
-	static xml:string = "xml";
-	static csv:string = "csv";
-	static tsv:string = "tsv";
-	static jsonLD:string = "json-ld";
-	static turtle:string = "turtle";
-	static jsonRDF:string = "json-rdf";
-	static rdfXML:string = "rdfxml";
-	static n3:string = "n3";
+	static xml:string = "application/xml";
+	static csv:string = "text/csv";
+	static tsv:string = "text/tsv";
+	static jsonLD:string = "application/ld+json";
+	static turtle:string = "text/turtle";
+	static jsonRDF:string = "application/rdf+json";
+	static rdfXML:string = "application/rdf+xml";
+	static n3:string = "application/n-triples";
 	static boolean:string = "boolean";
 }
 
