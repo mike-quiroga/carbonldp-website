@@ -72,25 +72,17 @@ export default class LoginComponent {
 			this.sending = false;
 			return;
 		}
-		this.errorMessage = "Service temporary unavailable.";
-		//this.router.navigate( [ "/AppDev/Home" ] );
 
 		let username:string = data.email;
 		let password:string = data.password;
 
 		this.carbon.auth.authenticate( username, password ).then(
-			( credentials:Credentials ) => {
+			( credential:Credentials ) => {
 				this.sending = false;
-				// TODO: Change this to store a token when the SDK provides a way of authenticate using tokens.
-				let token:AuthenticationToken = credentials.token;
-				let days:number = this.getDays( (new Date()), token.expirationTime );
-				let emailAndPassword = {
-					email: this.email.value,
-					password: this.password.value
-				};
-				this.cookiesHandler.set( "carbon_jwt", emailAndPassword, days );
-				//this.router.navigate( [ "/AppDev" ] );
-				this.router.navigate( [ '/AppDev' ] );
+				this.submitting = false;
+				let days:number = this.getDays( (new Date()), credential.expirationTime );
+				this.cookiesHandler.set( "carbon_jwt", credential, days );
+				this.router.navigate( [ "/AppDev" ] );
 			} ).catch( ( error:Error ) => {
 				this.sending = false;
 
@@ -105,6 +97,7 @@ export default class LoginComponent {
 			}
 		);
 		this.submitting = false;
+		this.errorMessage = "Service temporary unavailable.";
 	}
 
 	getDays( firstDate:Date, lastDate:Date ):number {
@@ -120,7 +113,6 @@ export default class LoginComponent {
 		if ( this.container ) {
 			target = $( this.container );
 		}
-		//target = target.length > 0 ? target : this.$element.find( ".formContainer" );
 		if ( target ) {
 			target.transition( {
 				animation: "shake"

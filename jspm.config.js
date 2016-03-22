@@ -60,7 +60,7 @@ SystemJS.config({
     "https": "github:jspm/nodelibs-https@0.2.0-alpha",
     "jodid25519": "npm:jodid25519@1.0.2",
     "jquery": "npm:jquery@2.2.1",
-    "js-cookie": "github:js-cookie/js-cookie@2.1.0",
+    "js-cookie": "npm:js-cookie@2.1.0",
     "jsbn": "npm:jsbn@0.1.0",
     "jsonld": "npm:jsonld@0.4.6",
     "module": "github:jspm/nodelibs-module@0.2.0-alpha",

@@ -51,14 +51,6 @@
     "start": "./node_modules/.bin/gulp serve",
     "test": "./node_modules/.bin/gulp test"
   },
-  "dependencies": {
-    "angular2": "^2.0.0-beta.3",
-    "es6-promise": "^3.0.2",
-    "es6-shim": "0.33.3",
-    "reflect-metadata": "0.1.2",
-    "rxjs": "5.0.0-beta.0",
-    "zone.js": "0.5.11"
-  },
   "jspm": {
     "name": "app",
     "directories": {
@@ -69,7 +61,7 @@
       "codemirror": "npm:codemirror@^5.12.0",
       "css": "github:systemjs/plugin-css@^0.1.20",
       "jquery": "npm:jquery@^2.2.1",
-      "js-cookie": "github:js-cookie/js-cookie@^2.1.0",
+      "js-cookie": "npm:js-cookie@^2.1.0",
       "jsonld": "npm:jsonld@^0.4.6",
       "text": "github:systemjs/plugin-text@^0.0.7",
       "zone.js": "npm:zone.js@^0.6.2"

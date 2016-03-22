@@ -1,3 +1,9 @@
+# 0.5.4 (March 16, 3016)
+* Added authentication to access AppDev.
+* Added js-cookie library.
+* Added cookies to store Carbon.Auth.Credential tokens.
+* Added Carbon is authenticated validation while trying to access any component of AppDev.
+
 # 0.5.3 (March 14, 3016)
 * Added sidebar component for documents.
 * Added styles for documents and sidebar components.
