@@ -160,7 +160,8 @@ export default class SPARQLClientComponent {
 	formatsAvailable = [];
 	savedQueries:SPARQLQuery[] = [];
 	sidebar:JQuery;
-	confirmationModal:JQuery;
+	replaceQueryConfirmationModal:JQuery;
+	deleteQueryConfirmationModal:JQuery;
 
 	// Buttons
 	btnsGroupSaveQuery:JQuery;
@@ -251,7 +252,8 @@ export default class SPARQLClientComponent {
 		this.btnSaveAs = this.btnsGroupSaveQuery.find( ".btnSaveAs" );
 		this.sidebar = this.$element.find( ".query-builder .ui.sidebar" );
 		this.btnsGroupSaveQuery.find( ".dropdown" ).dropdown();
-		this.confirmationModal = this.$element.find( ".ui.replace-confirmation.modal" );
+		this.replaceQueryConfirmationModal = this.$element.find( ".ui.replace-query-confirmation.modal" );
+		this.deleteQueryConfirmationModal = this.$element.find( ".ui.delete-query-confirmation.modal" );
 		this.initializeSavedQueriesSidebar();
 		this.initializeModal();
 	}
@@ -511,7 +513,7 @@ export default class SPARQLClientComponent {
 	onConfigureResponse( response:SPARQLClientResponse ):void {
 		let configureQuery:SPARQLQuery = this.askingQuery = Object.assign( {}, response.query );
 		if ( JSON.stringify( this.currentQuery ) !== JSON.stringify( configureQuery ) ) {
-			this.toggleConfirmationModal();
+			this.toggleReplaceQueryConfirmationModal();
 		} else {
 			this.loadQuery( configureQuery );
 		}
@@ -596,11 +598,18 @@ export default class SPARQLClientComponent {
 
 	askConfirmationToReplace( selectedQuery:SPARQLQuery ):void {
 		this.askingQuery = Object.assign( {}, selectedQuery );
-		this.toggleConfirmationModal();
+		this.toggleReplaceQueryConfirmationModal();
 	}
 
 	onClickRemoveSavedQuery( index:number ):void {
 		this.savedQueries = this.getLocalSavedQueries();
+		this.askingQuery = this.savedQueries[ index ];
+		this.toggleDeleteQueryConfirmationModal();
+	}
+
+	removeQuery( query:SPARQLQuery ):void {
+		this.savedQueries = this.getLocalSavedQueries();
+		let index:number = this.savedQueries.indexOf( query );
 		this.savedQueries.splice( index, 1 );
 		this.updateLocalSavedQueries();
 	}
@@ -619,20 +628,29 @@ export default class SPARQLClientComponent {
 	}
 
 	initializeModal():void {
-		this.confirmationModal.modal( {
+		this.replaceQueryConfirmationModal.modal( {
 			closable: false,
 			blurring: true,
 		} );
 	}
 
-	toggleConfirmationModal():void {
-		this.confirmationModal.modal( "toggle" );
+	toggleReplaceQueryConfirmationModal():void {
+		this.replaceQueryConfirmationModal.modal( "toggle" );
 	}
 
-	onApproveConfirmationModal( approvedQuery:SPARQLQuery ):void {
+	toggleDeleteQueryConfirmationModal():void {
+		this.deleteQueryConfirmationModal.modal( "toggle" );
+	}
+
+	onApproveQueryReplacement( approvedQuery:SPARQLQuery ):void {
 		this.askingQuery = <SPARQLQuery>{};
 		this.loadQuery( approvedQuery );
 		this.hideSidebar();
+	}
+
+	onApproveQueryRemoval( approvedQuery:SPARQLQuery ):void {
+		this.removeQuery( approvedQuery );
+		this.askingQuery = <SPARQLQuery>{};
 	}
 
 	getLocalSavedQueries():SPARQLQuery[] {

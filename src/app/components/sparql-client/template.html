@@ -171,8 +171,8 @@
 		</div>
 	</div>
 </div>
-
-<div class="ui replace-confirmation modal">
+<!--Ask for current query replacement-->
+<div class="ui replace-query-confirmation modal">
 	<div class="header">
 		Unsaved Query
 	</div>
@@ -187,7 +187,29 @@
 		<button class="ui black deny button">
 			No
 		</button>
-		<button class="ui positive right labeled icon button" (click)="onApproveConfirmationModal(askingQuery)">
+		<button class="ui positive right labeled icon button" (click)="onApproveQueryReplacement(askingQuery)">
+			Yes, proceed
+			<i class="checkmark icon"></i>
+		</button>
+	</div>
+</div>
+<!--Ask for saved queries deletion-->
+<div class="ui delete-query-confirmation modal">
+	<div class="header">
+		Are you sure?
+	</div>
+	<div class="image content">
+		<div class="description">
+			<div class="ui header">You are about to remove this query.</div>
+			<p>If you proceed your query will be deleted.</p>
+			<p>Do you want to proceed?</p>
+		</div>
+	</div>
+	<div class="actions">
+		<button class="ui black deny button">
+			No
+		</button>
+		<button class="ui positive right labeled icon button" (click)="onApproveQueryRemoval(askingQuery)">
 			Yes, proceed
 			<i class="checkmark icon"></i>
 		</button>
