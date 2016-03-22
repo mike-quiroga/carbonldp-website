@@ -143,7 +143,13 @@ export class SPARQLFormats {
 	static turtle:string = "text/turtle";
 	static jsonRDF:string = "application/rdf+json";
 	static rdfXML:string = "application/rdf+xml";
-	static n3:string = "application/n-triples";
+	static n3:string = "text/n3";
+	static ntriples:string = "text/plain";
+	static trix:string = "application/trix";
+	static trig:string = "application/x-trig";
+	static binary:string = "application/x-binary-rdf.";
+	static nquads:string = "text/x-nquads";
+	static rdfa:string = "application/xhtml+xml";
 	static boolean:string = "boolean";
 }
 
