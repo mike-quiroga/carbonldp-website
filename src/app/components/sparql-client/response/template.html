@@ -23,12 +23,12 @@
 	</div>
 	<div class="ui bottom attached segment content {{response.result}}" [ngClass]="{loading:response.isReExecuting}">
 		<div class="ui pointing secondary tabular menu">
-			<a class="item active" [attr.data-tab]="index+'_first'" data-tab="first">Results</a>
-			<a class="item" [attr.data-tab]="index+'_second'" data-tab="second">Raw Data</a>
-			<a class="item" [attr.data-tab]="index+'_third'" data-tab="third">SPARQL Request</a>
+			<a class="item active" data-tab="first">Results</a>
+			<a *ngIf="response.result == responseType.success" class="item" data-tab="second">Raw Data</a>
+			<a *ngIf="response.result == responseType.success" class="item" data-tab="third">SPARQL Request</a>
 		</div>
 		<div class="tabs">
-			<div class="ui active tab" [attr.data-tab]="index+'_first'" data-tab="first">
+			<div *ngIf="response.result == responseType.success" class="ui active tab" data-tab="first">
 				<code-mirror *ngIf="!!outputformat && outputformat != SPARQLFormats.table"
 				             [mode]="outputformat"
 				             [readOnly]="'nocursor'"
@@ -38,8 +38,20 @@
 				                 [query]="response.query"
 				                 [prefixes]="prefixes"></resultset-table>
 			</div>
-			<pre class="ui tab secondary segment" [attr.data-tab]="index+'_second'" data-tab="second">{{response.data}}</pre>
-			<div class="ui tab segment" [attr.data-tab]="index+'_third'" data-tab="third"></div>
+			<div *ngIf="response.result == responseType.error" class="ui active tab" data-tab="first">
+				<div class="ui error message transition">
+					<div class="header">
+						{{response.resultset?.title}}
+					</div>
+					<p>
+						<span *ngIf="response.resultset?.content">{{response.resultset?.content}}<br></span>
+						<span *ngIf="response.resultset?.statusCode">Status: {{response.resultset?.statusCode}} - {{response.resultset?.statusMessage}}<br></span>
+						<span *ngIf="response.resultset?.endpoint">URI: {{response.resultset?.endpoint}}</span>
+					</p>
+				</div>
+			</div>
+			<pre *ngIf="response.result == responseType.success" class="ui tab secondary segment" data-tab="second">{{response.data}}</pre>
+			<div *ngIf="response.result == responseType.success" class="ui tab segment" data-tab="third"></div>
 		</div>
 	</div>
 </div>

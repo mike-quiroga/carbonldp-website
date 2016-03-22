@@ -34,6 +34,8 @@ export class ResponseComponent {
 	accordionOpen:boolean = true;
 	menu:any;
 
+	get responseType():typeof SPARQLResponseType { return SPARQLResponseType; }
+
 	constructor( element:ElementRef ) {
 		this.element = element;
 	}
@@ -52,8 +54,10 @@ export class ResponseComponent {
 			onClose: this.onClose.bind( this ),
 		} );
 		this.menu = this.$element.find( ".content .tabular.menu > .item" );
-		this.menu.tab();
-
+		this.menu.tab( {
+			context: this.$element.find( ".tabs" ),
+			childrenOnly: true,
+		} );
 		this.openAccordion();
 	}
 
@@ -154,7 +158,10 @@ export class SPARQLClientResponse {
 	isReExecuting:boolean = false;
 	data:string = null;
 
-	setData( data ):void {
-		this.data = JSON.stringify( data, null, 2 );
+	setData( data:any ):void {
+		if ( typeof data !== "string" ) {
+			data = JSON.stringify( data, null, 2 );
+		}
+		this.data = data;
 	}
 }

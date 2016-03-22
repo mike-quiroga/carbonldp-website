@@ -101,9 +101,9 @@ export default class SPARQLClientComponent {
 			name: "SELECT",
 			formats: [
 				{value: SPARQLFormats.table, name: "Friendly Table"},
-				{value: SPARQLFormats.xml, name: "XML"},
-				{value: SPARQLFormats.csv, name: "CSV"},
-				{value: SPARQLFormats.tsv, name: "TSV"},
+				//{value: SPARQLFormats.xml, name: "XML"},
+				//{value: SPARQLFormats.csv, name: "CSV"},
+				//{value: SPARQLFormats.tsv, name: "TSV"},
 			],
 		},
 		describe: {
@@ -269,9 +269,11 @@ export default class SPARQLClientComponent {
 		let operation:string = this.getSPARQLOperation( this.sparql );
 		if ( operation !== null && this.SPARQLQueryOperations[ operation.toLowerCase() ] ) {
 			operation = operation.toLowerCase();
-			this.currentQuery.format = this.currentQuery.format ? this.currentQuery.format : this.SPARQLQueryOperations[ operation ].formats[ 0 ].value;
-			this.currentQuery.operation = operation.toUpperCase();
 			this.formatsAvailable = this.SPARQLQueryOperations[ operation ].formats;
+			if ( this.formatsAvailable.indexOf( this.currentQuery.format ) === - 1 ) {
+				this.currentQuery.format = this.SPARQLQueryOperations[ operation ].formats[ 0 ].value;
+			}
+			this.currentQuery.operation = operation.toUpperCase();
 		} else {
 			this.currentQuery.format = null;
 			this.currentQuery.operation = "update";
@@ -304,10 +306,10 @@ export default class SPARQLClientComponent {
 		originalResponse.isReExecuting = true;
 		this.execute( originalResponse.query, originalResponse ).then(
 			( newResponse:SPARQLClientResponse ) => {
-				originalResponse.query = Object.assign( {}, newResponse.query );
 				originalResponse.duration = newResponse.duration;
 				originalResponse.resultset = Object.assign( {}, newResponse.resultset );
-				originalResponse.data = Object.assign( {}, newResponse.data );
+				originalResponse.setData = Object.assign( {}, newResponse.resultset );
+				originalResponse.query = Object.assign( {}, newResponse.query );
 				originalResponse.isReExecuting = false;
 			}
 		).catch(
@@ -321,15 +323,7 @@ export default class SPARQLClientComponent {
 
 	onExecute():void {
 		this.isSending = true;
-		let query:SPARQLQuery = <SPARQLQuery>{
-			endpoint: this.currentQuery.endpoint,
-			type: this.currentQuery.type,
-			content: this.currentQuery.content,
-			operation: this.currentQuery.operation.toUpperCase(),
-			format: this.currentQuery.format,
-			name: this.currentQuery.name,
-			id: null,
-		};
+		let query:SPARQLQuery = Object.assign( {}, this.currentQuery );
 
 		this.execute( query, null ).then(
 			( response ) => {
@@ -339,9 +333,9 @@ export default class SPARQLClientComponent {
 		).catch(
 			( error )=> {
 				if ( this.emitErrors ) {
-					this.errorOccurs.emit( this.getError( error ) );
+					this.errorOccurs.emit( this.getMessage( error ) );
 				} else {
-					this.messages.push( this.getError( error ) );
+					this.messages.push( this.getMessage( error ) );
 				}
 			} );
 	}
@@ -368,12 +362,12 @@ export default class SPARQLClientComponent {
 
 		return promise.then(
 			( response ) => {
-				// Carbon Response Success
+				// Response Success
 				this.isSending = false;
 				return response;
 			},
 			( error ) => {
-				// Carbon Response Fail
+				// Response Fail
 				this.isSending = false;
 				return Promise.reject( error );
 			}
@@ -393,9 +387,7 @@ export default class SPARQLClientComponent {
 				return this.executeASK( query );
 			default:
 				// Unsupported Operation
-				return new Promise( ( resolve:() => string, reject:( msg:string ) => string ) => {
-					reject( "Unsupported Operation" );
-				} );
+				return Promise.reject( "Unsupported Operation" );
 		}
 	}
 
@@ -404,15 +396,18 @@ export default class SPARQLClientComponent {
 		return this.context.documents.executeRawSELECTQuery( query.endpoint, query.content ).then(
 			( [ result, response ]:[ SPARQL.RawResults.Class, HTTP.Response.Class ] ):SPARQLClientResponse => {
 				let duration:number = (new Date()).valueOf() - beforeTimestamp;
-
-				let clientResponse:SPARQLClientResponse = new SPARQLClientResponse();
-				clientResponse.duration = duration;
-				clientResponse.resultset = result;
-				clientResponse.setData( result );
-				clientResponse.result = <string> SPARQLResponseType.success;
-				clientResponse.query = query;
-
-				return clientResponse;
+				return this.buildResponse( duration, result, <string> SPARQLResponseType.success, query );
+			},
+			( error ):any=> {
+				let duration:number = (new Date()).valueOf() - beforeTimestamp;
+				return this.handleError( error, duration, "", query ).then(
+					( response )=> {
+						return response;
+					},
+					( error )=> {
+						return Promise.reject( error );
+					}
+				);
 			} );
 	}
 
@@ -421,15 +416,18 @@ export default class SPARQLClientComponent {
 		return this.context.documents.executeRawDESCRIBEQuery( query.endpoint, query.content ).then(
 			( [ result, response ]:[ string, HTTP.Response.Class ] ):SPARQLClientResponse => {
 				let duration:number = (new Date()).valueOf() - beforeTimestamp;
-
-				let clientResponse:SPARQLClientResponse = new SPARQLClientResponse();
-				clientResponse.duration = duration;
-				clientResponse.resultset = result;
-				clientResponse.setData( result );
-				clientResponse.result = <string> SPARQLResponseType.success;
-				clientResponse.query = query;
-
-				return clientResponse;
+				return this.buildResponse( duration, result, <string> SPARQLResponseType.success, query );
+			},
+			( error ):any=> {
+				let duration:number = (new Date()).valueOf() - beforeTimestamp;
+				return this.handleError( error, duration, "", query ).then(
+					( response )=> {
+						return response;
+					},
+					( error )=> {
+						return Promise.reject( error );
+					}
+				);
 			} );
 	}
 
@@ -438,15 +436,18 @@ export default class SPARQLClientComponent {
 		return this.context.documents.executeRawCONSTRUCTQuery( query.endpoint, query.content ).then(
 			( [ result, response ]:[ string, HTTP.Response.Class ] ):SPARQLClientResponse => {
 				let duration:number = (new Date()).valueOf() - beforeTimestamp;
-
-				let clientResponse:SPARQLClientResponse = new SPARQLClientResponse();
-				clientResponse.duration = duration;
-				clientResponse.resultset = result;
-				clientResponse.setData( result );
-				clientResponse.result = <string> SPARQLResponseType.success;
-				clientResponse.query = query;
-
-				return clientResponse;
+				return this.buildResponse( duration, result, <string> SPARQLResponseType.success, query );
+			},
+			( error ):any=> {
+				let duration:number = (new Date()).valueOf() - beforeTimestamp;
+				return this.handleError( error, duration, "", query ).then(
+					( response )=> {
+						return response;
+					},
+					( error )=> {
+						return Promise.reject( error );
+					}
+				);
 			} );
 	}
 
@@ -455,19 +456,23 @@ export default class SPARQLClientComponent {
 		return this.context.documents.executeRawASKQuery( query.endpoint, query.content ).then(
 			( [ result, response ]:[ SPARQL.RawResults.Class, HTTP.Response.Class ] ):SPARQLClientResponse => {
 				let duration:number = (new Date()).valueOf() - beforeTimestamp;
-
-				let clientResponse:SPARQLClientResponse = new SPARQLClientResponse();
-				clientResponse.duration = duration;
-				clientResponse.resultset = result;
-				clientResponse.setData( result );
-				clientResponse.result = <string> SPARQLResponseType.success;
-				clientResponse.query = query;
-
-				return clientResponse;
+				return this.buildResponse( duration, result, <string> SPARQLResponseType.success, query );
+			},
+			( error ):any=> {
+				let duration:number = (new Date()).valueOf() - beforeTimestamp;
+				return this.handleError( error, duration, "", query ).then(
+					( response )=> {
+						return response;
+					},
+					( error )=> {
+						return Promise.reject( error );
+					}
+				);
 			} );
 	}
 
 	executeUPDATE( query:SPARQLQuery ):Promise {
+		// TODO: Implement UPDATE when SDK is ready
 		return new Promise( ( resolve:() => string, reject:( msg:string ) => string ) => {
 			reject( "Unsupported Operation" );
 		} );
@@ -499,13 +504,12 @@ export default class SPARQLClientComponent {
 			this.toggleConfirmationModal();
 		} else {
 			this.loadQuery( configureQuery );
-			this.toggleSidebar();
 		}
 	}
 
 	addResponse( response:SPARQLClientResponse ):void {
-		let responsesLengh:number = this.responses.length, i:number;
-		for ( i = responsesLengh; i > 0; i -- ) {
+		let responsesLength:number = this.responses.length, i:number;
+		for ( i = responsesLength; i > 0; i -- ) {
 			this.responses[ i ] = this.responses[ i - 1 ];
 		}
 		this.responses[ 0 ] = response;
@@ -645,7 +649,7 @@ export default class SPARQLClientComponent {
 		$( evt.srcElement ).closest( ".ui.message" ).transition( "fade" );
 	}
 
-	getError( error:any ):Message {
+	getMessage( error:any ):Message {
 		switch ( typeof error ) {
 			case "string":
 				return <Message>{
@@ -668,6 +672,26 @@ export default class SPARQLClientComponent {
 					title: error.toString(),
 				};
 		}
+	}
+
+	buildResponse( duration:number, resultset:SPARQL.RawResults.Class|string|Message, responseType:string, query:SPARQLQuery ):SPARQLClientResponse {
+		let clientResponse:SPARQLClientResponse = new SPARQLClientResponse();
+		clientResponse.duration = duration;
+		clientResponse.resultset = resultset;
+		clientResponse.setData( resultset );
+		clientResponse.query = query;
+		clientResponse.result = responseType;
+		return clientResponse;
+	}
+
+	handleError( error:any, duration:number, result:SPARQL.RawResults.Class|string|Message, query:SPARQLQuery ):Promise<SPARQLClientResponse> {
+		let stackErrors:number[] = [ 400, 403, 404, 413, 414, 429 ];
+		// TODO implement login modal when 401
+		if ( stackErrors.indexOf( error.response.status ) > - 1 ) {
+			let errorMessage:Message = this.getMessage( error );
+			return Promise.resolve( this.buildResponse( duration, errorMessage, <string> SPARQLResponseType.error, query ) );
+		}
+		return Promise.reject( error );
 	}
 }
 
