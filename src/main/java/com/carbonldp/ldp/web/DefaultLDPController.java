@@ -52,8 +52,7 @@ public class DefaultLDPController extends AbstractLDPController {
 		Consts.N3,
 		Consts.TRIX,
 		Consts.BINARY,
-		Consts.NQUADS,
-		Consts.RDFA
+		Consts.NQUADS
 	} )
 	public ResponseEntity<Object> handleRDFPost( @RequestBody RDFDocument requestDocument, HttpServletRequest request, HttpServletResponse response ) {
 		return rdfPOSTHandler.handleRequest( requestDocument, request, response );

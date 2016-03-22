@@ -35,8 +35,7 @@ public class AppAgentsController extends AbstractLDPController {
 		Consts.N3,
 		Consts.TRIX,
 		Consts.BINARY,
-		Consts.NQUADS,
-		Consts.RDFA
+		Consts.NQUADS
 	} )
 	public ResponseEntity<Object> registerAgent( @RequestBody RDFDocument requestDocument, HttpServletRequest request, HttpServletResponse response ) {
 		return postRequestHandler.handleRequest( requestDocument, request, response );

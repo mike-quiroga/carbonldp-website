@@ -31,8 +31,7 @@ public class AppsController extends AbstractController {
 		Consts.N3,
 		Consts.TRIX,
 		Consts.BINARY,
-		Consts.NQUADS,
-		Consts.RDFA
+		Consts.NQUADS
 	} )
 	public ResponseEntity<Object> createApplication( @RequestBody RDFDocument requestDocument, HttpServletRequest request, HttpServletResponse response ) {
 		return postRequestHandler.handleRequest( requestDocument, request, response );
