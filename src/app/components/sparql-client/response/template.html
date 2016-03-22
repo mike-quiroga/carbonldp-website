@@ -1,6 +1,7 @@
 <div class="ui sixteen wide column accordion">
 	<div class="ui top attached menu title" [ngClass]="[ response.result ]">
 		<div class="header item">
+			<span *ngIf="response.query.operation === 'ASK'"> <i [ngClass]="{ checkmark: response.resultset.boolean, remove: !response.resultset.boolean }" class="icon"></i> </span>
 			<span>{{response.query.operation}}</span>
 			<span> <i>({{response.duration}} ms)</i></span>
 		</div>
