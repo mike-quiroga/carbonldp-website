@@ -26,7 +26,7 @@
 		<div class="ui pointing secondary tabular menu">
 			<a class="item active" data-tab="first">Results</a>
 			<a *ngIf="response.result == responseType.success" class="item" data-tab="second">Raw Data</a>
-			<a *ngIf="response.result == responseType.success" class="item" data-tab="third">SPARQL Request</a>
+			<a class="item" data-tab="third">SPARQL Request</a>
 		</div>
 		<div class="tabs">
 			<div *ngIf="response.result == responseType.success" class="ui active tab" data-tab="first">
@@ -52,7 +52,11 @@
 				</div>
 			</div>
 			<pre *ngIf="response.result == responseType.success" class="ui tab secondary segment" data-tab="second">{{response.data}}</pre>
-			<div *ngIf="response.result == responseType.success" class="ui tab segment" data-tab="third"></div>
+			<div class="ui tab" data-tab="third">
+				<code-mirror [mode]="codeMirrorMode.SPARQL"
+				             [readOnly]="'nocursor'"
+				             [(value)]="response.query.content"></code-mirror>
+			</div>
 		</div>
 	</div>
 </div>

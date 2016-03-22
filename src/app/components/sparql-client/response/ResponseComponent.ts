@@ -57,6 +57,7 @@ export class ResponseComponent {
 		this.menu.tab( {
 			context: this.$element.find( ".tabs" ),
 			childrenOnly: true,
+			onLoad: this.onLoadTab.bind( this ),
 		} );
 		this.openAccordion();
 	}
@@ -83,6 +84,12 @@ export class ResponseComponent {
 
 	onClose():void {
 		this.accordionOpen = false;
+	}
+
+	onLoadTab():void {
+		this.$element.find( ".CodeMirror" ).each( function ( i, element ) {
+			element.CodeMirror.refresh();
+		} );
 	}
 
 	onConfigureResponse( event:any ):void {
