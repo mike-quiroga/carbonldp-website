@@ -1,3 +1,6 @@
+# 0.29.1 (2016/03/22)
+* Add new types of response RDF formats
+
 # 0.29.0 (2016/03/18)
 * Anonymous agents can now be added as a subject to ACEs
 
