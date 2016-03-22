@@ -29,7 +29,13 @@ public class AppRolesController extends AbstractLDPController {
 		Consts.JSONLD,
 		Consts.RDFJSON,
 		Consts.RDFXML,
-		Consts.TRIG
+		Consts.TRIG,
+		Consts.NTRIPLES,
+		Consts.N3,
+		Consts.TRIX,
+		Consts.BINARY,
+		Consts.NQUADS,
+		Consts.RDFA
 	} )
 	public ResponseEntity<Object> createAppRole( @RequestBody RDFDocument requestDocument, HttpServletRequest request, HttpServletResponse response ) {
 		return postHandler.handleRequest( requestDocument, request, response );

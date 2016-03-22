@@ -1,6 +1,5 @@
 package com.carbonldp.authentication.web;
 
-import com.carbonldp.Consts;
 import com.carbonldp.ldp.web.AbstractLDPController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -22,13 +21,7 @@ public class AppAuthenticationController extends AbstractLDPController {
 
 	AuthenticationRequestHandler authenticationHandler;
 
-	@RequestMapping( method = RequestMethod.POST, consumes = {
-		Consts.TURTLE,
-		Consts.JSONLD,
-		Consts.RDFJSON,
-		Consts.RDFXML,
-		Consts.TRIG
-	} )
+	@RequestMapping( method = RequestMethod.POST )
 	public ResponseEntity<Object> handleRDFPost( HttpServletRequest request, HttpServletResponse response ) {
 		return authenticationHandler.handleRequest( request, response );
 	}

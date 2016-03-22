@@ -1,5 +1,6 @@
 package com.carbonldp.ldp.web;
 
+import com.carbonldp.Consts;
 import com.carbonldp.ldp.nonrdf.BaseNonRDFPostRequestHandler;
 import com.carbonldp.ldp.sources.InteractionModelController;
 import com.carbonldp.rdf.RDFDocument;
@@ -42,8 +43,17 @@ public class DefaultLDPController extends AbstractLDPController {
 	}
 
 	@RequestMapping( method = RequestMethod.POST, consumes = {
-		"application/ld+json",
-		"text/turtle"
+		Consts.TURTLE,
+		Consts.JSONLD,
+		Consts.RDFJSON,
+		Consts.RDFXML,
+		Consts.TRIG,
+		Consts.NTRIPLES,
+		Consts.N3,
+		Consts.TRIX,
+		Consts.BINARY,
+		Consts.NQUADS,
+		Consts.RDFA
 	} )
 	public ResponseEntity<Object> handleRDFPost( @RequestBody RDFDocument requestDocument, HttpServletRequest request, HttpServletResponse response ) {
 		return rdfPOSTHandler.handleRequest( requestDocument, request, response );
