@@ -20,7 +20,13 @@ public class SPARQLGraphMessageConverter extends SPARQLMessageConverter<SPARQLGr
 				RDFFormat.TURTLE,
 				RDFFormat.JSONLD,
 				RDFFormat.RDFJSON,
-				RDFFormat.RDFXML
+				RDFFormat.RDFXML,
+				RDFFormat.TRIG,
+				RDFFormat.NTRIPLES,
+				RDFFormat.N3,
+				RDFFormat.TRIX,
+				RDFFormat.BINARY,
+				RDFFormat.NQUADS
 			)
 		);
 	}
