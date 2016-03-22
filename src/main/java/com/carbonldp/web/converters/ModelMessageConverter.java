@@ -36,7 +36,12 @@ public abstract class ModelMessageConverter<E extends Model> implements HttpMess
 				RDFFormat.JSONLD,
 				RDFFormat.RDFJSON,
 				RDFFormat.RDFXML,
-				RDFFormat.TRIG
+				RDFFormat.TRIG,
+				RDFFormat.NTRIPLES,
+				RDFFormat.N3,
+				RDFFormat.TRIX,
+				RDFFormat.BINARY,
+				RDFFormat.NQUADS
 			)
 		);
 
