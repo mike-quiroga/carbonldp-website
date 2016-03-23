@@ -22,16 +22,16 @@ public class AppsController extends AbstractController {
 
 	@InteractionModel( value = {APIPreferences.InteractionModel.CONTAINER}, handlesDefault = true )
 	@RequestMapping( method = RequestMethod.POST, consumes = {
-		Consts.TURTLE,
-		Consts.JSONLD,
-		Consts.RDFJSON,
-		Consts.RDFXML,
-		Consts.TRIG,
-		Consts.NTRIPLES,
-		Consts.N3,
-		Consts.TRIX,
-		Consts.BINARY,
-		Consts.NQUADS
+		Consts.RDFMediaTypes.TURTLE,
+		Consts.RDFMediaTypes.JSON_LD,
+		Consts.RDFMediaTypes.JSON_RDF,
+		Consts.RDFMediaTypes.XML_RDF,
+		Consts.RDFMediaTypes.TRIG,
+		Consts.RDFMediaTypes.N_TRIPLES,
+		Consts.RDFMediaTypes.N3,
+		Consts.RDFMediaTypes.TRIX,
+		Consts.RDFMediaTypes.BINARY,
+		Consts.RDFMediaTypes.N_QUADS
 	} )
 	public ResponseEntity<Object> createApplication( @RequestBody RDFDocument requestDocument, HttpServletRequest request, HttpServletResponse response ) {
 		return postRequestHandler.handleRequest( requestDocument, request, response );

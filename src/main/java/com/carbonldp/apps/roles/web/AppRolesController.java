@@ -25,16 +25,16 @@ public class AppRolesController extends AbstractLDPController {
 	private AppRolesPOSTHandler postHandler;
 
 	@RequestMapping( method = RequestMethod.POST, consumes = {
-		Consts.TURTLE,
-		Consts.JSONLD,
-		Consts.RDFJSON,
-		Consts.RDFXML,
-		Consts.TRIG,
-		Consts.NTRIPLES,
-		Consts.N3,
-		Consts.TRIX,
-		Consts.BINARY,
-		Consts.NQUADS
+		Consts.RDFMediaTypes.TURTLE,
+		Consts.RDFMediaTypes.JSON_LD,
+		Consts.RDFMediaTypes.JSON_RDF,
+		Consts.RDFMediaTypes.XML_RDF,
+		Consts.RDFMediaTypes.TRIG,
+		Consts.RDFMediaTypes.N_TRIPLES,
+		Consts.RDFMediaTypes.N3,
+		Consts.RDFMediaTypes.TRIX,
+		Consts.RDFMediaTypes.BINARY,
+		Consts.RDFMediaTypes.N_QUADS
 	} )
 	public ResponseEntity<Object> createAppRole( @RequestBody RDFDocument requestDocument, HttpServletRequest request, HttpServletResponse response ) {
 		return postHandler.handleRequest( requestDocument, request, response );
