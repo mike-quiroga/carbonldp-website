@@ -1,5 +1,6 @@
 package com.carbonldp.ldp.nonrdf.backup;
 
+import com.carbonldp.Consts;
 import com.carbonldp.Vars;
 import com.carbonldp.ldp.AbstractSesameLDPRepository;
 import com.carbonldp.ldp.containers.ContainerDescription;
@@ -43,7 +44,7 @@ public class SesameBackupRepository extends AbstractSesameLDPRepository implemen
 		Backup backup = BackupFactory.getInstance().create( backupURI );
 		backup.add( RDFSourceDescription.Property.DEFAULT_INTERACTION_MODEL.getURI(), RDFSourceDescription.Resource.CLASS.getURI() );
 		backup.setTimestamps( creationTime );
-		rdfRepresentationRepository.create( backup, zipFile, MediaType.APPLICATION_OCTET_STREAM_VALUE );
+		rdfRepresentationRepository.create( backup, zipFile, Consts.ZIP );
 
 		addContainedResource( containerURI, backupURI );
 

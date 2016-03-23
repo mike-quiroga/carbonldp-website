@@ -5,10 +5,10 @@ import com.carbonldp.Vars;
 import com.carbonldp.apps.App;
 import com.carbonldp.apps.AppRepository;
 import com.carbonldp.apps.context.AppContextHolder;
-import com.carbonldp.utils.TriGWriter;
 import com.carbonldp.ldp.nonrdf.backup.BackupService;
 import com.carbonldp.ldp.sources.RDFSourceRepository;
 import com.carbonldp.spring.TransactionWrapper;
+import com.carbonldp.utils.TriGWriter;
 import org.openrdf.model.URI;
 import org.openrdf.model.impl.URIImpl;
 import org.openrdf.repository.RepositoryException;
@@ -20,7 +20,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.io.*;
 import java.util.Random;
@@ -31,7 +30,7 @@ import java.util.zip.ZipOutputStream;
  * @author NestorVenegas
  * @since _version_
  */
-public class BackupJobExecutor implements TypedJobExecutor {
+public class ExportBackupJobExecutor implements TypedJobExecutor {
 	protected final Logger LOG = LoggerFactory.getLogger( this.getClass() );
 	private AppRepository appRepository;
 	private SesameConnectionFactory connectionFactory;
@@ -40,11 +39,12 @@ public class BackupJobExecutor implements TypedJobExecutor {
 	private ExecutionRepository executionRepository;
 	protected RDFSourceRepository sourceRepository;
 
+	@Override
 	public boolean supports( JobDescription.Type jobType ) {
-		return jobType == JobDescription.Type.BACKUP;
+		return jobType == JobDescription.Type.EXPORT_BACKUP_JOB;
 	}
 
-	@Transactional
+	@Override
 	public void execute( Job job, Execution execution ) {
 		URI appURI = job.getAppRelated();
 		App app = appRepository.get( appURI );
@@ -190,7 +190,7 @@ public class BackupJobExecutor implements TypedJobExecutor {
 		if ( ! wasDeleted ) LOG.warn( "The temporary file: '{}', couldn't be deleted.", file.toString() );
 	}
 
-	protected String createRandomSlug() {
+	private String createRandomSlug() {
 		Random random = new Random();
 		return String.valueOf( Math.abs( random.nextLong() ) );
 	}
