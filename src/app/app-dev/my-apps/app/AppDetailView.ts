@@ -2,7 +2,7 @@ import { Component, ElementRef } from "angular2/core";
 import { CORE_DIRECTIVES } from "angular2/common";
 import { ROUTER_DIRECTIVES, ROUTER_PROVIDERS, RouteConfig, Router, RouterOutlet, Instruction, RouteParams } from "angular2/router";
 
-import * as App from "carbon/App";
+import * as App from "carbonldp/App";
 
 import SidebarService from "./../../components/sidebar/service/SidebarService";
 import AppContextService from "./../../AppContextService";

@@ -2,11 +2,11 @@ import { Component, ElementRef, Injectable, Input } from "angular2/core";
 import { ROUTER_DIRECTIVES, ROUTER_PROVIDERS, Router, Instruction, RouterLink } from "angular2/router";
 import { CORE_DIRECTIVES, FORM_DIRECTIVES, FormBuilder, ControlGroup, AbstractControl, Control, NgIf, Validators, AbstractControl } from "angular2/common";
 
-import Carbon from "carbon/Carbon";
-import * as Credentials from "carbon/Auth/Credentials";
-import * as HTTP from "carbon/HTTP";
+import Carbon from "carbonldp/Carbon";
+import * as Credentials from "carbonldp/Auth/Credentials";
+import * as HTTP from "carbonldp/HTTP";
 import Cookies from "js-cookie";
-import AuthenticationToken from "carbon/Auth";
+import AuthenticationToken from "carbonldp/Auth";
 
 import { ValidationService } from "app/components/validation-service/ValidationService";
 

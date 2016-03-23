@@ -1,4 +1,4 @@
-import * as App from "carbon/App";
+import * as App from "carbonldp/App";
 
 export class App {
 	name:string;

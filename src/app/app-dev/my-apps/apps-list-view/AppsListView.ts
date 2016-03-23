@@ -2,8 +2,8 @@ import { Component, ElementRef, Type } from "angular2/core";
 import { CORE_DIRECTIVES } from "angular2/common";
 import { Router, RouteDefinition, ROUTER_DIRECTIVES, CanActivate} from "angular2/router";
 
-import * as App from "carbon/App";
-import * as HTTP from "carbon/HTTP";
+import * as App from "carbonldp/App";
+import * as HTTP from "carbonldp/HTTP";
 
 import $ from 'jquery';
 import 'semantic-ui/semantic';

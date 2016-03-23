@@ -1,4 +1,3 @@
-/// <reference path="./../../../../../../typings/typings.d.ts" />
 import { Component, ElementRef, Host, Inject, forwardRef } from "angular2/core";
 import { CORE_DIRECTIVES } from "angular2/common";
 import { ROUTER_PROVIDERS, Router, Instruction } from "angular2/router";
@@ -6,11 +5,11 @@ import { ROUTER_PROVIDERS, Router, Instruction } from "angular2/router";
 import $ from "jquery";
 import "semantic-ui/semantic";
 
-import * as App from "carbon/App";
+import * as App from "carbonldp/App";
+
 import AppDetailView from "./../AppDetailView";
 import SPARQLClientComponent from "app/components/sparql-client/SPARQLClientComponent";
 import ErrorsAreaService from "app/app-dev/components/errors-area/service/ErrorsAreaService";
-import {Message} from "app/app-dev/components/errors-area/ErrorsAreaComponent";
 
 import template from "./template.html!";
 
@@ -25,7 +24,6 @@ export default class SPARQLEditorView {
 	element:ElementRef;
 	$element:JQuery;
 	appContext:App.Context;
-	app:App;
 	private errorsAreaService:ErrorsAreaService;
 
 	constructor( router:Router, element:ElementRef, errorsAreaService:ErrorsAreaService, @Host() @Inject( forwardRef( () => AppDetailView ) )appDetail:AppDetailView ) {

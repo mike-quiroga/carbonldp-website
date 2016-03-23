@@ -1,4 +1,3 @@
-/// <reference path="./../../../../../typings/typings.d.ts" />
 import { Component, ElementRef } from "angular2/core";
 import { CORE_DIRECTIVES } from "angular2/common";
 
@@ -21,13 +20,10 @@ export default class ErrorsAreaComponent {
 	messages:Message[] = [];
 	errorsAreaService:ErrorsAreaService;
 
-	constructor( element:ElementRef, private errorsAreaService:ErrorsAreaService ) {
+	constructor( element:ElementRef, errorsAreaService:ErrorsAreaService ) {
 		this.element = element;
 		this.$element = $( element );
 		this.errorsAreaService = errorsAreaService;
-	}
-
-	ngOnInit():void {
 	}
 
 	ngAfterViewInit():void {

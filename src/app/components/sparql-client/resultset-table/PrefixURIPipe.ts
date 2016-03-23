@@ -1,7 +1,6 @@
-/// <reference path="./../../../../../typings/typings.d.ts" />
 import { Pipe, PipeTransform } from "angular2/core";
 
-import * as URI from "carbon/RDF/URI";
+import * as URI from "carbonldp/RDF/URI";
 
 @Pipe( { name: "prefix" } )
 export default class PrefixURIPipe implements PipeTransform {

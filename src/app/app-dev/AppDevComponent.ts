@@ -4,11 +4,11 @@ import {RouteConfig, RouterOutlet, CanActivate, Router} from 'angular2/router';
 import $ from "jquery";
 import "semantic-ui/semantic";
 import SidebarService from "./components/sidebar/service/SidebarService"
-import Carbon from "carbon/Carbon";
+import Carbon from "carbonldp/Carbon";
 import { CARBON_PROVIDER, appInjector } from "app/boot";
-import AuthenticationToken from "carbon/Auth";
-import * as Credentials from "carbon/Auth/Credentials";
-import * as HTTP from "carbon/HTTP";
+import AuthenticationToken from "carbonldp/Auth";
+import * as Credentials from "carbonldp/Auth/Credentials";
+import * as HTTP from "carbonldp/HTTP";
 import Cookies from "js-cookie";
 
 import SidebarComponent from "./components/sidebar/SidebarComponent";

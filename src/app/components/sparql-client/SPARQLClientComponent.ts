@@ -1,13 +1,13 @@
 import { Component, ElementRef, Injector, Input, Output, EventEmitter } from "angular2/core";
 import { CORE_DIRECTIVES, FORM_DIRECTIVES, NgStyle } from "angular2/common";
-import {RouteConfig, RouterOutlet, CanActivate, Router} from 'angular2/router';
+import { CanActivate, Router } from "angular2/router";
 
 import { ResponseComponent, SPARQLResponseType, SPARQLFormats, SPARQLClientResponse, SPARQLQuery } from "./response/ResponseComponent";
 import * as CodeMirrorComponent from "app/components/code-mirror/CodeMirrorComponent";
 
-import * as SPARQL from "carbon/SPARQL";
-import * as HTTP from "carbon/HTTP";
-import * as Credentials from "carbon/Auth/Credentials";
+import * as SPARQL from "carbonldp/SPARQL";
+import * as HTTP from "carbonldp/HTTP";
+import Credentials from "carbonldp/Auth/Credentials";
 
 import { appInjector } from "app/boot";
 import Cookies from "js-cookie";
@@ -17,8 +17,8 @@ import "semantic-ui/semantic";
 
 import template from "./template.html!";
 import "./style.css!";
-import Carbon from "carbon/Carbon";
-import Context from "carbon/Context";
+import Carbon from "carbonldp/Carbon";
+import Context from "carbonldp/Context";
 
 
 @Component( {
@@ -27,7 +27,7 @@ import Context from "carbon/Context";
 	directives: [ CORE_DIRECTIVES, FORM_DIRECTIVES, CodeMirrorComponent.Class, ResponseComponent, NgStyle, ResponseComponent ]
 } )
 @CanActivate(
-	( prev, next ):boolean => {
+	( prev, next ):Promise<boolean> | boolean => {
 		let injector:Injector = appInjector();
 		let carbon:Carbon = injector.get( Carbon );
 		let router:Router = injector.get( Router );
@@ -38,7 +38,7 @@ import Context from "carbon/Context";
 		}
 		// TODO: Change this to use a token instead of raw credentials when the SDK provides a way of authenticate using tokens.
 		let cookiesHandler:Cookies = Cookies;
-		let tokenCookie:{email:string, password:String} = cookiesHandler.getJSON( "carbon_jwt" );
+		let tokenCookie:{email:string, password:string} = cookiesHandler.getJSON( "carbon_jwt" );
 		if ( tokenCookie && ! carbon.auth.isAuthenticated() ) {
 			return carbon.auth.authenticate( tokenCookie.email, tokenCookie.password ).then(
 				( credentials:Credentials ) => {
@@ -315,7 +315,7 @@ export default class SPARQLClientComponent {
 				originalResponse.isReExecuting = false;
 			}
 		).catch(
-			( error )=> {
+			( error ) => {
 				console.log( error );
 				originalResponse.isReExecuting = false;
 				throw error;
@@ -333,7 +333,7 @@ export default class SPARQLClientComponent {
 				return response;
 			}
 		).catch(
-			( error )=> {
+			( error ) => {
 				if ( this.emitErrors ) {
 					this.errorOccurs.emit( this.getMessage( error ) );
 				} else {
@@ -353,7 +353,7 @@ export default class SPARQLClientComponent {
 		if ( activeResponse ) {
 			query = activeResponse.query;
 		}
-		let promise:Promise = null;
+		let promise:Promise<SPARQLClientResponse> = null;
 		switch ( type ) {
 			case this.SPARQLTypes.query:
 				promise = this.executeQuery( query );
@@ -395,7 +395,7 @@ export default class SPARQLClientComponent {
 				return this.executeASK( query );
 			default:
 				// Unsupported Operation
-				return Promise.reject( "Unsupported Operation" );
+				return Promise.reject<SPARQLClientResponse>( "Unsupported Operation" );
 		}
 	}
 
@@ -406,13 +406,13 @@ export default class SPARQLClientComponent {
 				let duration:number = (new Date()).valueOf() - beforeTimestamp;
 				return this.buildResponse( duration, result, <string> SPARQLResponseType.success, query );
 			},
-			( error ):any=> {
+			( error ):any => {
 				let duration:number = (new Date()).valueOf() - beforeTimestamp;
 				return this.handleError( error, duration, "", query ).then(
-					( response )=> {
+					( response ) => {
 						return response;
 					},
-					( error )=> {
+					( error ) => {
 						return Promise.reject( error );
 					}
 				);
@@ -427,13 +427,13 @@ export default class SPARQLClientComponent {
 				let duration:number = (new Date()).valueOf() - beforeTimestamp;
 				return this.buildResponse( duration, result, <string> SPARQLResponseType.success, query );
 			},
-			( error ):any=> {
+			( error ):any => {
 				let duration:number = (new Date()).valueOf() - beforeTimestamp;
 				return this.handleError( error, duration, "", query ).then(
-					( response )=> {
+					( response ) => {
 						return response;
 					},
-					( error )=> {
+					( error ) => {
 						return Promise.reject( error );
 					}
 				);
@@ -448,10 +448,10 @@ export default class SPARQLClientComponent {
 				let duration:number = (new Date()).valueOf() - beforeTimestamp;
 				return this.buildResponse( duration, result, <string> SPARQLResponseType.success, query );
 			},
-			( error ):any=> {
+			( error ):any => {
 				let duration:number = (new Date()).valueOf() - beforeTimestamp;
 				return this.handleError( error, duration, "", query ).then(
-					( response )=> {
+					( response ) => {
 						return response;
 					},
 					( error )=> {
@@ -468,20 +468,20 @@ export default class SPARQLClientComponent {
 				let duration:number = (new Date()).valueOf() - beforeTimestamp;
 				return this.buildResponse( duration, result, <string> SPARQLResponseType.success, query );
 			},
-			( error ):any=> {
+			( error ):any => {
 				let duration:number = (new Date()).valueOf() - beforeTimestamp;
 				return this.handleError( error, duration, "", query ).then(
-					( response )=> {
+					( response ) => {
 						return response;
 					},
-					( error )=> {
+					( error ) => {
 						return Promise.reject( error );
 					}
 				);
 			} );
 	}
 
-	executeUPDATE( query:SPARQLQuery ):Promise {
+	executeUPDATE( query:SPARQLQuery ):Promise<SPARQLClientResponse> {
 		// TODO: Implement UPDATE when SDK is ready
 		return new Promise( ( resolve:() => string, reject:( msg:string ) => string ) => {
 			reject( "Unsupported Operation" );
@@ -505,9 +505,8 @@ export default class SPARQLClientComponent {
 	}
 
 	onRemove( response:any ):void {
-		let idx:Number = this.responses.indexOf( response );
-		if ( idx > - 1 )
-			this.responses.splice( idx, 1 );
+		let idx:number = this.responses.indexOf( response );
+		if ( idx > - 1 ) this.responses.splice( idx, 1 );
 	}
 
 	onConfigureResponse( response:SPARQLClientResponse ):void {
@@ -535,7 +534,7 @@ export default class SPARQLClientComponent {
 			operation: this.currentQuery.operation,
 			format: this.currentQuery.format,
 			name: this.currentQuery.name,
-			id: this.savedQueries.length
+			id: this.savedQueries.length,
 		};
 		this.isSaving = true;
 		this.savedQueries = this.getLocalSavedQueries();
@@ -548,21 +547,21 @@ export default class SPARQLClientComponent {
 
 	onClickSaveExistingQuery():void {
 		this.savedQueries = this.getLocalSavedQueries();
-		let queryIdx:Number = - 1;
-		this.savedQueries.forEach( ( iteratingQuery:SPARQLQuery, index:Number )=> {
+		let queryIdx:number = - 1;
+		this.savedQueries.forEach( ( iteratingQuery:SPARQLQuery, index:number ) => {
 			if ( iteratingQuery.id === this.currentQuery.id ) {
 				queryIdx = index;
 			}
 		} );
 		if ( queryIdx > - 1 ) {
-			this.savedQueries[ queryIdx ] = <SPARQLQuery>{
+			this.savedQueries[ queryIdx ] = <SPARQLQuery> {
 				endpoint: this.currentQuery.endpoint,
 				type: this.currentQuery.type,
 				content: this.currentQuery.content,
 				operation: this.currentQuery.operation,
 				format: this.currentQuery.format,
 				name: this.currentQuery.name,
-				id: this.currentQuery.id
+				id: this.currentQuery.id,
 			};
 		} else {
 			this.currentQuery.id = this.savedQueries.length;
@@ -719,7 +718,7 @@ export default class SPARQLClientComponent {
 			let errorMessage:Message = this.getMessage( error );
 			return Promise.resolve( this.buildResponse( duration, errorMessage, <string> SPARQLResponseType.error, query ) );
 		}
-		return Promise.reject( error );
+		return Promise.reject<SPARQLClientResponse>( error );
 	}
 }
 
