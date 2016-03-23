@@ -30,11 +30,11 @@
 		</div>
 		<div class="tabs">
 			<div *ngIf="response.result == responseType.success" class="ui active tab" data-tab="first">
-				<code-mirror *ngIf="!!outputformat && outputformat != SPARQLFormats.table"
+				<code-mirror *ngIf="!!outputformat && outputformat != sparqlFormats.table"
 				             [mode]="outputformat"
 				             [readOnly]="'nocursor'"
 				             [(value)]="response.data"></code-mirror>
-				<resultset-table *ngIf="outputformat === SPARQLFormats.table"
+				<resultset-table *ngIf="outputformat === sparqlFormats.table"
 				                 [(resultset)]="response.resultset"
 				                 [query]="response.query"
 				                 [prefixes]="prefixes"></resultset-table>

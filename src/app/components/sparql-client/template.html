@@ -42,8 +42,8 @@
 											<div class="eight wide column field">
 												<label>Type:</label>
 												<select #queryType class="ui dropdown" [(ngModel)]="currentQuery.type" (change)="onChangeQueryType($event)">
-													<option value="{{SPARQLTypes.query}}">{{SPARQLTypes.query}}</option>
-													<option value="{{SPARQLTypes.update}}">{{SPARQLTypes.update}}</option>
+													<option value="{{sparqlTypes.query}}">{{sparqlTypes.query}}</option>
+													<option value="{{sparqlTypes.update}}">{{sparqlTypes.update}}</option>
 												</select>
 											</div>
 											<div class="eight wide column field" *ngIf="currentQuery.type == 'Query'">

@@ -12,4 +12,6 @@ interface JQuery {
 	transition:( arguments:any ) => JQuery;
 	form:( arguments:any ) => JQuery;
 	accordion:( arguments?:any ) => JQuery;
+	sidebar:( arguments?:any ) => JQuery;
+	modal:( arguments?:any ) => JQuery;
 }

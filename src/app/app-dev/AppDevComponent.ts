@@ -36,7 +36,7 @@ import "./style.css!";
 		let cookiesHandler:Cookies = Cookies;
 		let tokenCookie:Credentials = <Credentials>cookiesHandler.getJSON( "carbon_jwt" );
 		if ( tokenCookie && ! carbon.auth.isAuthenticated() ) {
-			return carbon.auth.authenticate( tokenCookie ).then(
+			return carbon.auth.authenticateUsing( "TOKEN", tokenCookie ).then(
 				( credentials:Credentials ) => {
 					return carbon.auth.isAuthenticated();
 				}

@@ -4,8 +4,10 @@ import { CORE_DIRECTIVES, FORM_DIRECTIVES, NgClass } from "angular2/common";
 import SPARQLClientComponent from "./../SPARQLClientComponent";
 import * as CodeMirrorComponent from "app/components/code-mirror/CodeMirrorComponent";
 import { ResultsetTableComponent } from "./../resultset-table/ResultsetTableComponent";
+
 import $ from "jquery";
 import "semantic-ui/semantic";
+
 import template from "./template.html!";
 import "./style.css!";
 
@@ -26,7 +28,7 @@ export class ResponseComponent {
 	@Output() onConfigure:EventEmitter = new EventEmitter();
 	@Output() onReExecute:EventEmitter = new EventEmitter();
 
-	SPARQLFormats:SPARQLFormats = SPARQLFormats;
+	sparqlFormats:SPARQLFormats = SPARQLFormats;
 
 	get codeMirrorMode():typeof CodeMirrorComponent.Mode { return CodeMirrorComponent.Mode; }
 
@@ -77,9 +79,11 @@ export class ResponseComponent {
 
 	onOpen():void {
 		this.accordionOpen = true;
-		this.$element.find( ".CodeMirror" ).each( function ( i, element ) {
-			element.CodeMirror.refresh();
-		} );
+		this.$element.find( ".CodeMirror" ).each(
+			( i:number, element:JQuery ) => {
+				element.CodeMirror.refresh();
+			}
+		);
 	}
 
 	onClose():void {
@@ -87,9 +91,11 @@ export class ResponseComponent {
 	}
 
 	onLoadTab():void {
-		this.$element.find( ".CodeMirror" ).each( function ( i, element ) {
-			element.CodeMirror.refresh();
-		} );
+		this.$element.find( ".CodeMirror" ).each(
+			( i:number, element:JQuery ) => {
+				element.CodeMirror.refresh();
+			}
+		);
 	}
 
 	onConfigureResponse( event:any ):void {
