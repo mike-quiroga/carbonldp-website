@@ -1,5 +1,14 @@
+# 0.29.2 (2016/03/22)
+* Fixed SPARQL Query support for predefined documents (apps/, agents/, etc.)
+
 # 0.29.1 (2016/03/22)
-* Add new types of response RDF formats
+* Added support for the following Accept media types when executing SPARQL CONSTRUCT/DESCRIBE queries
+    - `application/trig`
+    - `application/n-triples`
+    - `text/n3`
+    - `application/trix`
+    - `application/x-binary-rdf`
+    - `application/n-quads`
 
 # 0.29.0 (2016/03/18)
 * Anonymous agents can now be added as a subject to ACEs

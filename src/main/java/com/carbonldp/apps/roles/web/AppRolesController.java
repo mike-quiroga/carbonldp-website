@@ -1,5 +1,6 @@
 package com.carbonldp.apps.roles.web;
 
+import com.carbonldp.Consts;
 import com.carbonldp.ldp.web.AbstractLDPController;
 import com.carbonldp.rdf.RDFDocument;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +24,18 @@ public class AppRolesController extends AbstractLDPController {
 
 	private AppRolesPOSTHandler postHandler;
 
-	@RequestMapping( method = RequestMethod.POST )
+	@RequestMapping( method = RequestMethod.POST, consumes = {
+		Consts.RDFMediaTypes.TURTLE,
+		Consts.RDFMediaTypes.JSON_LD,
+		Consts.RDFMediaTypes.JSON_RDF,
+		Consts.RDFMediaTypes.XML_RDF,
+		Consts.RDFMediaTypes.TRIG,
+		Consts.RDFMediaTypes.N_TRIPLES,
+		Consts.RDFMediaTypes.N3,
+		Consts.RDFMediaTypes.TRIX,
+		Consts.RDFMediaTypes.BINARY,
+		Consts.RDFMediaTypes.N_QUADS
+	} )
 	public ResponseEntity<Object> createAppRole( @RequestBody RDFDocument requestDocument, HttpServletRequest request, HttpServletResponse response ) {
 		return postHandler.handleRequest( requestDocument, request, response );
 	}
