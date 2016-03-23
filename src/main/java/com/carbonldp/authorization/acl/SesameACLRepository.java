@@ -33,7 +33,7 @@ public class SesameACLRepository extends AbstractSesameLDPRepository implements 
 	public ACL getResourceACL( URI resourceURI ) {
 		URI aclURI = getACLUri( resourceURI );
 		RDFDocument document = documentRepository.getDocument( aclURI );
-		if ( document == null ) return null;
+		if ( document == null || document.isEmpty() ) return null;
 		return new ACL( document.getBaseModel(), aclURI );
 	}
 
@@ -41,6 +41,9 @@ public class SesameACLRepository extends AbstractSesameLDPRepository implements 
 	public ACL createACL( URI objectURI ) {
 		if ( URIUtil.hasFragment( objectURI ) ) {
 			throw new IllegalArgumentException( "Fragments can't be protected with an ACL" );
+		}
+		if ( ! sourceRepository.exists( objectURI ) ) {
+			throw new RuntimeException( "Unable to find document to protect" );
 		}
 		URI aclURI = getACLUri( objectURI );
 		ACL acl = ACLFactory.create( aclURI, objectURI );

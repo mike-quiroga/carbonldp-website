@@ -18,8 +18,8 @@ import com.carbonldp.ldp.containers.*;
 import com.carbonldp.ldp.containers.BasicContainer;
 import com.carbonldp.ldp.containers.BasicContainerFactory;
 import com.carbonldp.ldp.containers.Container;
-import com.carbonldp.ldp.sources.RDFSourceService;
 import com.carbonldp.ldp.containers.ContainerService;
+import com.carbonldp.ldp.sources.RDFSourceService;
 import com.carbonldp.models.Infraction;
 import com.carbonldp.rdf.RDFResource;
 import com.carbonldp.utils.URIUtil;
@@ -62,9 +62,12 @@ public class SesameAppService extends AbstractSesameLDPService implements AppSer
 
 		App createdApp = appRepository.createPlatformAppRepository( app );
 		containerService.createChild( appRepository.getPlatformAppContainerURI(), app );
+		ACL appACL = aclRepository.getResourceACL( createdApp.getURI() );
+		if ( appACL == null ) {
+			throw new IllegalStateException( "Resource couldn't be created" );
+		}
 		createBackupContainer( app );
 		createJobsContainer( app );
-		ACL appACL = createAppACL( createdApp );
 
 		AppRole adminRole = transactionWrapper.runWithSystemPermissionsInAppContext( app, () -> {
 			Container rootContainer = createRootContainer( app );
@@ -72,7 +75,6 @@ public class SesameAppService extends AbstractSesameLDPService implements AppSer
 
 			Container appRolesContainer = appRoleRepository.createAppRolesContainer( rootContainer.getURI() );
 			ACL appRolesContainerACL = createAppRolesContainerACL( appRolesContainer );
-			Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
 			AppRole appAdminRole = createAppAdminRole( appRolesContainer );
 			ACL appAdminRoleACL = createAppAdminRoleACL( appAdminRole );
@@ -109,10 +111,6 @@ public class SesameAppService extends AbstractSesameLDPService implements AppSer
 
 		if ( ! exists( appURI ) ) throw new NotFoundException();
 		sourceService.replace( app );
-	}
-
-	private ACL createAppACL( App app ) {
-		return aclRepository.createACL( app.getURI() );
 	}
 
 	private BasicContainer createRootContainer( App app ) {
