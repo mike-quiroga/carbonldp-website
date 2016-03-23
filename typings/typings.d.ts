@@ -6,5 +6,6 @@
 /// <reference path="./custom/ambient/rxjs/rxjs.d.ts" />
 /// <reference path="./custom/ambient/angular2/angular2.d.ts" />
 /// <reference path="./custom/ambient/semantic-ui/semantic-ui.d.ts" />
+/// <reference path="./custom/ambient/highlight.js/highlight.d.ts" />
 
 /// <reference path="./../../CarbonLDP-JS-SDK/dist/bundles/carbon.d.ts" />

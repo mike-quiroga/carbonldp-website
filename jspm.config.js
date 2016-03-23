@@ -40,6 +40,7 @@ SystemJS.config({
     "npm:*.json"
   ],
   map: {
+    "highlight.js": "npm:highlight.js@9.2.0",
     "clean-css": "npm:clean-css@3.4.10",
     "codemirror": "npm:codemirror@5.12.0",
     "assert": "github:jspm/nodelibs-assert@0.2.0-alpha",

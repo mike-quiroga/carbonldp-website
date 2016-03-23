@@ -34,11 +34,376 @@
 					</div>
 
 					<section>
-						<h2 class="ui header">Installing the SDK</h2>
+						<h2 class="ui header">Assumptions</h2>
+						<p>
+							While we try to make the documentation as friendly as possible, it is
+							about CarbonLDP, so in order to keep the focus on it we need to set a baseline.
+							<br>
+							To be able to understand our documentation, a working knowledge on the following topics
+							is needed:
+						</p>
+						<ul>
+							<li>
+								<strong>HTML, CSS, JavaScript:</strong> After all, we'll be covering Carbon's
+								JAVASCRIPT SDK. You can find documentation on these topics at the <a href="https://developer.mozilla.org/en-US/docs/Web"> Mozilla Developer Network</a>.
+							</li>
+							<li>
+								<strong>Promises:</strong> A standard-based way of handling asynchronous JavaScript logic.
+								Mozilla Developer Network has documentation about them <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise">here</a>.
+							</li>
+						</ul>
+						<p>
+							There are also some topics that are not strictly required, but Carbon leverages them to enhance
+							the coding experience. Knowledge on this topics is highly recommended:
+						</p>
+						<ul>
+							<li>
+								<strong>TypeScript:</strong> Carbon's JavaScript SDK is written in TypeScript, a JavaScript
+								superset language, maintained by Microsoft. You can find documentation <a href="http://www.typescriptlang.org/">here</a>.
+							</li>
+							<li>
+								<strong>Package Managers:</strong> Carbon recommends <a href="http://jspm.io/">JSPM</a>
+							</li>
+							<li>
+								<strong>ES2015 Modules:</strong> Working with Carbon is way smoother when using
+								ES2015 modules. They let you "import" a file from another one so you can modularize
+								your application. There's more information <a href="http://exploringjs.com/es6/ch_modules.html">here</a>.
+							</li>
+						</ul>
 					</section>
+
+					<section>
+						<h2 class="ui header">Installing the SDK</h2>
+						<p>
+							Installing the SDK depends on what package manager you are using:
+						</p>
+						<div class="ui styled fluid accordion">
+							<div class="title">
+								<i class="dropdown icon"></i>
+								Package manager?
+							</div>
+							<div class="content">
+								<p>If you are not using a package manager you can clone the source code with the following command:</p>
+								<pre><code class="highlighted bash">git clone https://github.com/CarbonLDP/CarbonLDP-JS-SDK.git</code></pre>
+								<p>It already includes a pre-compiled version of the source code so you can just jump right in.</p>
+							</div>
+							<div class="active title">
+								<i class="dropdown icon"></i>
+								npm
+							</div>
+							<div class="active content">
+								<pre><code class="highlighted bash">npm install carbonldp --save</code></pre>
+							</div>
+							<div class="title">
+								<i class="dropdown icon"></i>
+								jspm
+							</div>
+							<div class="content">
+								<!--@formatter:off-->
+								<pre><code class="highlighted bash">
+jspm install npm:carbonldp
+# We also need to install one of carbonldp's dependencies
+jspm install npm:jsonld
+								</code></pre>
+								<!--@formatter:on-->
+							</div>
+						</div>
+						<p>After it has been installed the way you'll include it depends on your development environment:</p>
+						<div class="ui styled fluid accordion">
+							<div class="title">
+								<i class="dropdown icon"></i>
+								Browser - Global Window Object
+							</div>
+							<div class="content">
+								<p>The SDK comes with a bundled version that you can import directly into your html:</p>
+								<!--@formatter:off-->
+								<pre><code class="highlighted html">
+&lt;script src="--sdk-directory--/dist/bundles/Carbon.sfx.js"&gt;&lt;/script&gt;
+								</code></pre>
+								<!--@formatter:on-->
+								<p>
+									After that, a variable named <code>Carbon</code> will be accessible in the global scope. This variable will serve as both a class constructor
+									and a namespace. It's usage as a class constructor is the same as when using ES2015 Modules, but its namespace nature is unique to the Global
+									approach.
+								</p>
+								<h3>Carbon variable as a namespace</h3>
+								<p>
+									The <code>Carbon</code> object chains together all the Carbon modules together, so you can access them even if you are using the Global approach.
+									Each time you see in an example something like:
+								</p>
+								<!--@formatter:off-->
+								<pre><code class="highlighted javascript">
+import * as Errors from "carbonldp/HTTP/Errors";
+								</code></pre>
+								<!--@formatter:on-->
+								<p>
+									You can take the portion after the <code>carbonldp/</code>, replace the <code>/</code>s with <code>.</code> and append that to the Carbon namespace
+									to access the same module. For example, accessing that module using the global namespace would be:
+								</p>
+								<!--@formatter:off-->
+								<pre><code class="highlighted javascript">
+Carbon.HTTP.Errors
+								</code></pre>
+								<!--@formatter:on-->
+							</div>
+							<div class="active title">
+								<i class="dropdown icon"></i>
+								Browser - ES2015 Modules
+							</div>
+							<div class="active content">
+								<p>
+									To be able to use ES2015 modules a transpiler like Babel, Traceur or TypeScript needs to be used. This documentation won't cover the details of
+									setting one up, but we recommend using <a href="http://jspm.io/">JSPM</a> as a package manager, configured to use
+									<a href="http://www.typescriptlang.org/">TypeScript</a> as a transpiler. That way you can use ES2015 features and bundle your dependencies together!
+								</p>
+								<p>
+									Each module in Carbon will export at least one named export. Some of the modules will also export a <code>default</code> export containing the "main"
+									export of the module. That export will also be available as the named export <code>Class</code>. For example:
+								</p>
+								<!--@formatter:off-->
+								<pre><code class="highlighted javascript">
+// This:
+import Document from "carbonldp/Document";
+let myDocument:Document = new Document();
+
+// Is the same as this:
+import * as Document from "carbonldp/Document";
+let myDocument:Document.Class = new Document.Class();
+								</code></pre>
+								<!--@formatter:on-->
+								<p>We recommend not using default exports, but we provide them in case you are only using the "main" export of a file.</p>
+								<p>
+									The semantics behind Carbon's modules are based on the usage of the import all statement. They'll likely change in the future, but because modern
+									IDEs lack proper auto-import functionality (WebStorm is getting closer...), importing everything of a module is faster than doing it selectively.
+									Still, you can use selective imports but you'll likely need to rename the import variables like:
+								</p>
+								<!--@formatter:off-->
+								<pre><code class="highlighted javascript">
+import { Factory as DocumentFactory, Class as Document } from "carbonldp/Document";
+								</code></pre>
+								<!--@formatter:on-->
+								<p>
+									For each folder inside the Carbon source, there is a module at the same level with the same name that exports everything contained by the folder.
+									Example:
+								</p>
+								<!--@formatter:off-->
+								<pre><code class="highlighted javascript">
+import * as Errors from "carbonldp/HTTP/Errors";
+import * as Request from "carbonldp/HTTP/Request";
+
+import * as HTTP from "carbonldp/HTTP";
+
+HTTP.Errors === Errors; // true
+HTTP.Request === Request; // true
+								</code></pre>
+								<!--@formatter:on-->
+							</div>
+						</div>
+					</section>
+
+					<section>
+						<h2 class="ui header">Creating a Carbon context</h2>
+						<p>
+							Before you can manipulate Carbon objects, you need to create a Carbon context. This context will provide a reference to the Carbon instance you are
+							working with (more about Carbon context's can be found here):
+						</p>
+						<div class="ui top attached tabular menu">
+							<a class="item active" data-tab="typescript">TypeScript</a>
+							<a class="item" data-tab="javascript">JavaScript</a>
+						</div>
+						<div class="ui bottom attached tab segment active" data-tab="typescript">
+							<!--@formatter:off-->
+							<pre><code class="highlighted typescript">
+import Carbon from "carbonldp/Carbon";
+
+let carbon:Carbon = new Carbon();
+							</code></pre>
+							<!--@formatter:on-->
+						</div>
+						<div class="ui bottom attached tab segment" data-tab="javascript">
+							<!--@formatter:off-->
+							<pre><code class="highlighted javascript">
+import Carbon from "carbonldp/Carbon";
+
+let carbon = new Carbon();
+							</code></pre>
+							<!--@formatter:on-->
+						</div>
+					</section>
+
+					<section>
+						<h2 class="ui header">Creating a Carbon context</h2>
+						<p>
+							Before you can manipulate Carbon Documents, you need to create a Carbon <a [routerLink]="[ 'JavaScriptSDKContexts' ]">Context</a>.
+							This <a [routerLink]="[ 'JavaScriptSDKContexts' ]">Context</a> will provide a reference to the Carbon instance you are working with:
+						</p>
+						<div class="ui top attached tabular menu">
+							<a class="item active" data-tab="typescript">TypeScript</a>
+							<a class="item" data-tab="javascript">JavaScript</a>
+						</div>
+						<div class="ui bottom attached tab segment active" data-tab="typescript">
+							<!--@formatter:off-->
+							<pre><code class="highlighted typescript">
+import Carbon from "carbonldp/Carbon";
+
+let carbon:Carbon = new Carbon();
+							</code></pre>
+							<!--@formatter:on-->
+						</div>
+						<div class="ui bottom attached tab segment" data-tab="javascript">
+							<!--@formatter:off-->
+							<pre><code class="highlighted javascript">
+import Carbon from "carbonldp/Carbon";
+
+let carbon = new Carbon();
+							</code></pre>
+							<!--@formatter:on-->
+						</div>
+					</section>
+
+					<section>
+						<h2 class="ui header">Authenticating an Agent</h2>
+						<p>
+
+						</p>
+					</section>
+
+					<section>
+						<h2 class="ui header">Getting an App Context</h2>
+						<p>
+							We created a Carbon Context, but that context points to a Carbon's platform instance. We need a new
+							<a [routerLink]="[ 'JavaScriptSDKContext' ]">Context</a> that points to one of our Apps so we can
+							work on it (if you haven't created an App, go here to do so).
+						</p>
+						<div class="ui top attached tabular menu">
+							<a class="item active" data-tab="typescript">TypeScript</a>
+							<a class="item" data-tab="javascript">JavaScript</a>
+						</div>
+						<div class="ui bottom attached tab segment active" data-tab="typescript">
+							<!--@formatter:off-->
+							<pre><code class="highlighted typescript">
+								// ...
+								import * as App from "carbonldp/App";
+
+								// ...
+
+								let myAppContext:AppContext;
+								carbon.apps.get( "your-app-slug-here/" ).then( ( appContext:App.Context ) => {
+									myAppContext = appContext;
+								}).catch( console.error );
+							</code></pre>
+							<!--@formatter:on-->
+						</div>
+						<div class="ui bottom attached tab segment" data-tab="javascript">
+							<!--@formatter:off-->
+							<pre><code class="highlighted javascript">
+								// ...
+
+								let myAppContext;
+								carbon.apps.get( "your-app-slug-here/" ).then( ( appContext ) => {
+									myAppContext = appContext;
+								}).catch( console.error );
+							</code></pre>
+							<!--@formatter:on-->
+						</div>
+						<p>
+							The <code>apps.get()</code> method returns a Promise that when resolved, will give us the App
+							<a [routerLink]="[ 'JavaScriptSDKContext' ]">Context</a> we need.
+						</p>
+					</section>
+
+					<section>
+						<h2 class="ui header">Retrieving a Document</h2>
+						<!-- TODO: Link to the explanation of the root Document -->
+						<p>
+							Now with our App <a [routerLink]="[ 'JavaScriptSDKContext' ]">Context</a> we can start working with our App's data.
+							We'll retrieve our root Document which is the root of all of our Document nodes.
+						</p>
+						<div class="ui top attached tabular menu">
+							<a class="item active" data-tab="typescript">TypeScript</a>
+							<a class="item" data-tab="javascript">JavaScript</a>
+						</div>
+						<div class="ui bottom attached tab segment active" data-tab="typescript">
+							<!--@formatter:off-->
+							<pre><code class="highlighted typescript">
+// ...
+import * as Document from "carbonldp/Document";
+import * as Response from "carbonldp/HTTP/Response";
+
+// ...
+
+let rootDocument:Document.Class;
+appContext.documents.get( "/" ).then( ( [ document, response ]:[ Document.Class, Response.Class ] ) => {
+	rootDocument = document;
+});
+							</code></pre>
+							<!--@formatter:on-->
+						</div>
+						<div class="ui bottom attached tab segment" data-tab="javascript">
+							<!--@formatter:off-->
+							<pre><code class="highlighted javascript">
+// ...
+
+let rootDocument;
+appContext.documents.get( "/" ).then( ( [ document, response ] ) => {
+	rootDocument = document;
+});
+							</code></pre>
+							<!--@formatter:on-->
+						</div>
+						<p>
+							The <code>documents.get()</code> method accepts a relative URI. That relative URI is going to be resolved to an absolute
+							URI using the context in which we are working on (in this case <code>appContext</code>). To see to what URI it'll resolve
+							you can execute <code>appContext.resolve( "/" )</code>.
+						</p>
+					</section>
+
+					<section>
+						<h2 class="ui header">Creating a Document</h2>
+						<p>
+							The root Document that we just retrieved can be seen as a the root folder of our whole structure. It is not recommended to
+							modify it. Instead we should create children Documents that will hold our data. To do that, we'll first create an in
+							memory Document.
+						</p>
+						<div class="ui top attached tabular menu">
+							<a class="item active" data-tab="typescript">TypeScript</a>
+							<a class="item" data-tab="javascript">JavaScript</a>
+						</div>
+						<div class="ui bottom attached tab segment active" data-tab="typescript">
+							<!--@formatter:off-->
+							<pre><code class="highlighted typescript">
+import * as Document from "carbonldp/Document";
+
+let inMemoryDocument:Document.Class = Document.Factory.create();
+
+// We can assign any property we want to it
+inMemoryDocument.someProperty = "Property value";
+inMemoryDocument.anotherProperty = 123;
+							</code></pre>
+							<!--@formatter:on-->
+						</div>
+						<div class="ui bottom attached tab segment" data-tab="javascript">
+							<!--@formatter:off-->
+							<pre><code class="highlighted javascript">
+import * as Document from "carbonldp/Document";
+
+let inMemoryDocument = Document.Factory.create();
+
+// We can assign any property we want to it
+inMemoryDocument.someProperty = "Property value";
+inMemoryDocument.anotherProperty = 123;
+							</code></pre>
+							<!--@formatter:on-->
+						</div>
+					</section>
+
+					<section>
+						<h2 class="ui header">Modifying and Saving a Document</h2>
+					</section>
+
 				</article>
 			</main>
 		</div>
+		<sidebar-component [mobile]="false" [parentElement]="element" [contentReady]="contentReady" class="four wide computer only four wide tablet only column"></sidebar-component>
 	</div>
 </div>
-

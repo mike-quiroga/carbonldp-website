@@ -1,6 +1,5 @@
-import { Component, ElementRef, ChangeDetectorRef } from "angular2/core";
+import {Component, ElementRef, ChangeDetectorRef } from "angular2/core";
 import { CORE_DIRECTIVES } from "angular2/common";
-import { ROUTER_DIRECTIVES } from "angular2/router";
 import { Title } from "angular2/platform/browser";
 
 import SidebarComponent from "./../../sidebar/SidebarComponent";
@@ -14,10 +13,10 @@ import "./style.css!";
 @Component( {
 	selector: "getting-started",
 	template: template,
-	directives: [ CORE_DIRECTIVES, ROUTER_DIRECTIVES, SidebarComponent ],
+	directives: [ CORE_DIRECTIVES, SidebarComponent ],
 	providers: [ Title ],
 } )
-export default class GettingStartedView {
+export default class ContextsView {
 	element:ElementRef;
 	$element:JQuery;
 	title:Title;
@@ -30,7 +29,7 @@ export default class GettingStartedView {
 		this.element = element;
 
 		this.title = title;
-		this.title.setTitle( "Getting started - JavaScript SDK" );
+		this.title.setTitle( "Contexts - JavaScript SDK" );
 
 		this.changeDetector = changeDetector;
 	}

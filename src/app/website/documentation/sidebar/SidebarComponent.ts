@@ -1,7 +1,6 @@
 import { Component, Input, ElementRef, OnChanges, SimpleChange } from "angular2/core";
-import {CORE_DIRECTIVES} from "angular2/common"
+import { CORE_DIRECTIVES } from "angular2/common";
 import { ROUTER_DIRECTIVES, ROUTER_PROVIDERS, Router, Instruction, RouteParams } from "angular2/router";
-import SidebarService from "./service/SidebarService";
 
 import $ from "jquery";
 import "semantic-ui/semantic";
@@ -21,20 +20,23 @@ export default class SidebarComponent {
 	sidebar:any;
 	sections:any;
 	subSections:any;
-	sidebarService:SidebarService;
 
 	@Input() parentElement:ElementRef;
 	@Input() mobile:boolean;
+	@Input() contentReady:boolean;
 
 	host:string = "dev.carbonldp.com";
 
-	constructor( element:ElementRef, sidebarService:SidebarService ) {
+	constructor( element:ElementRef ) {
 		this.elementRef = element;
 		this.$element = $( element.nativeElement );
-		this.sidebarService = sidebarService;
-		this.sidebarService.buildEmitter.subscribe( () => {
-			this.buildSidebar();
-		} );
+	}
+
+	ngOnChanges( changeRecord:any ):void {
+		if( "contentReady" in changeRecord ) {
+			let change:SimpleChange = changeRecord.contentReady;
+			if( change.currentValue ) this.buildSidebar();
+		}
 	}
 
 	ngAfterViewInit():void {

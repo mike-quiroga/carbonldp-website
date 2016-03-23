@@ -12,7 +12,9 @@ import CarbonLDPConceptsView from "./carbon-ldp-concepts/CarbonLDPConceptsView";
 import RESTApiGettingStarted from "./rest-api/getting-started/GettingStartedView";
 import InteractionModelsView from "./rest-api/interaction-models/InteractionModelsView";
 
-import JavaScriptSDKGettingStarted from "./javascript-sdk/getting-started/GettingStartedView";
+import JavaScriptSDKGettingStartedView from "./javascript-sdk/getting-started/GettingStartedView";
+import JavaScriptSDKContextsView from "./javascript-sdk/contexts/ContextsView";
+import JavaScriptSDKObjectModelView from "./javascript-sdk/object-model/ObjectModelView";
 
 @Component( {
 	selector: "documents",
@@ -33,7 +35,9 @@ import JavaScriptSDKGettingStarted from "./javascript-sdk/getting-started/Gettin
 	{ path: "/rest-api/interaction-models", as: "RESTApiInteractionModels", component: InteractionModelsView },
 
 	{ path: "/javascript-sdk", as: "JavaScriptSDK", redirectTo: [ "./JavaScriptSDKGettingStarted" ] },
-	{ path: "/javascript-sdk/getting-started", as: "JavaScriptSDKGettingStarted", component: JavaScriptSDKGettingStarted },
+	{ path: "/javascript-sdk/getting-started", as: "JavaScriptSDKGettingStarted", component: JavaScriptSDKGettingStartedView },
+	{ path: "/javascript-sdk/contexts", as: "JavaScriptSDKContexts", component: JavaScriptSDKContextsView },
+	{ path: "/javascript-sdk/object-model", as: "JavaScriptSDKObjectModel", component: JavaScriptSDKObjectModelView },
 ] )
 export default class DocumentationComponent {
 

@@ -18,6 +18,7 @@ const autoprefixer = require( "gulp-autoprefixer" );
 const sourcemaps = require( "gulp-sourcemaps" );
 
 const liveServer = require( "live-server" );
+const webserver = require( "gulp-webserver" );
 
 const argv = require( "yargs" )
 	.usage( "Usage: [-p profile]" )
@@ -124,11 +125,13 @@ gulp.task( "serve:afterCompilation", () => {
 		util.log( util.colors.red( "Error" ), error.message );
 	});
 
-	return liveServer.start({
-		root: "../",
-		open: true,
-		file: "/carbon-website/src/index.html"
-	});
+	return gulp.src( "../" )
+		.pipe( webserver({
+			livereload: false,
+			directoryListing: false,
+			fallback: "/carbon-website/src/index.html",
+			open: true,
+		}) );
 });
 
 gulp.task( "clean:dist", () => {
