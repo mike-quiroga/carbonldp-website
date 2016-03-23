@@ -1,3 +1,6 @@
+# 0.29.3 (2016/03/22)
+* Fixed validation when registering an Agent with an invalid document
+
 # 0.29.2 (2016/03/22)
 * Fixed SPARQL Query support for predefined documents (apps/, agents/, etc.)
 
