@@ -30,4 +30,12 @@ sparql-client {
 			}
 		}
 	}
+	.query-results {
+		margin-bottom: 6%;
+	}
+	.ui.list.responses-list {
+		> .item {
+			padding-bottom: 10px;
+		}
+	}
 }

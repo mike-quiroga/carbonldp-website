@@ -1,3 +1,23 @@
+# 0.5.5 (March 16, 3016)
+* Add confirmation when changing between queries.
+* Change SPARQL Editor UI.
+* Change Carbon context to dev instead of local.
+* Add errors area component to App-Dev template.
+* Add section to SPARQL Editor to display breaking errors.
+* Add option to SPARQL to emit errors.
+* Add service to the ErrorsArea to send errors to errorsArea.
+* Fix SPARQL onReExecute response.
+* Fix SPARQL onConfigure response.
+* Change object clonation method to use ES6 Object.assign on SPARQL Editor.
+* Change SPARQL Editor onClickSavedQuery algorithm.
+* Add method to display errors [ 400, 403, 404, 413, 414, 429 ] in the response stack.
+* Add accept headers when sending DESCRIBE and CONSTRUCT queries.
+* Add clean query button.
+* Add success or failure icon on responses stack when ASK queries return true or false.
+* Add SPARQL query to each response on the response stack.
+* Add confirmation to delete saved queries.
+* Add more formats to output formats (ntriples, trix, trig, binary, nquads, rdfa).
+
 # 0.5.4 (March 16, 3016)
 * Added authentication to access AppDev.
 * Added js-cookie library.

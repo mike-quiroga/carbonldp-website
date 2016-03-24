@@ -1,9 +1,9 @@
 import { Injectable } from 'angular2/core';
 
-import Carbon from "carbon/Carbon";
-import * as App from "carbon/App";
-import * as URI from "carbon/RDF/URI";
-import * as Utils from "carbon/Utils";
+import Carbon from "carbonldp/Carbon";
+import * as App from "carbonldp/App";
+import * as URI from "carbonldp/RDF/URI";
+import * as Utils from "carbonldp/Utils";
 
 @Injectable()
 export default class AppContextService {
@@ -39,7 +39,6 @@ export default class AppContextService {
 	}
 
 	getAll():Promise<App.Context[]> {
-		//console.log( "App Context Service Authenticated: " + (this.carbon.auth.isAuthenticated() ? "YES" : "NO") );
 		return this.carbon.apps.getAll().then( ( appContexts:App.Context[] ) => {
 			appContexts
 				.filter( ( appContext:App.Context ) => {

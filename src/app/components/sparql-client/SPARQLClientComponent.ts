@@ -1,8 +1,17 @@
-import { Component, View, ElementRef } from "angular2/core";
+import { Component, ElementRef, Injector, Input, Output, EventEmitter } from "angular2/core";
 import { CORE_DIRECTIVES, FORM_DIRECTIVES, NgStyle } from "angular2/common";
+import { CanActivate, Router } from "angular2/router";
 
 import { ResponseComponent, SPARQLResponseType, SPARQLFormats, SPARQLClientResponse, SPARQLQuery } from "./response/ResponseComponent";
 import * as CodeMirrorComponent from "app/components/code-mirror/CodeMirrorComponent";
+import { appInjector } from "app/boot";
+
+import Carbon from "carbonldp/Carbon";
+import Context from "carbonldp/Context";
+import * as SPARQL from "carbonldp/SPARQL";
+import * as HTTP from "carbonldp/HTTP";
+import Credentials from "carbonldp/Auth/Credentials";
+import Cookies from "js-cookie";
 
 import $ from "jquery";
 import "semantic-ui/semantic";
@@ -14,36 +23,61 @@ import "./style.css!";
 @Component( {
 	selector: "sparql-client",
 	template: template,
-	directives: [ CORE_DIRECTIVES, FORM_DIRECTIVES, CodeMirrorComponent.Class, ResponseComponent, NgStyle, ResponseComponent ]
+	directives: [ CORE_DIRECTIVES, FORM_DIRECTIVES, CodeMirrorComponent.Class, ResponseComponent, ResponseComponent, ],
 } )
-export default class SPARQLClientComponent {
-	element:ElementRef;
-	$element:JQuery;
+@CanActivate(
+	( prev, next ):Promise<boolean> | boolean => {
+		let injector:Injector = appInjector();
+		let carbon:Carbon = injector.get( Carbon );
+		let router:Router = injector.get( Router );
 
-	get codeMirrorMode() { return CodeMirrorComponent.Mode; }
-
-	private _sparql:string = "";
-	get sparql():string { return this._sparql; }
-
-	set sparql( value:string ) {
-		this._sparql = value;
-		this.currentQuery.content = value;
-		this.sparqlChanged();
+		if ( ! carbon ) {
+			router.navigate( [ "/Website/Login" ] );
+			return false;
+		}
+		// TODO: Change this to use a token instead of raw credentials when the SDK provides a way of authenticate using tokens.
+		let cookiesHandler:Cookies = Cookies;
+		let tokenCookie:Credentials = <Credentials>cookiesHandler.getJSON( "carbon_jwt" );
+		if ( tokenCookie && ! carbon.auth.isAuthenticated() ) {
+			return carbon.auth.authenticateUsing( "TOKEN", tokenCookie ).then(
+				( credentials:Credentials ) => {
+					return carbon.auth.isAuthenticated();
+				}
+			).catch(
+				( error:Error ) => {
+					switch ( true ) {
+						case error instanceof HTTP.Errors.UnauthorizedError:
+							console.log( "Wrong credentials" );
+							break;
+						default:
+							console.log( "There was a problem processing the request" );
+							break;
+					}
+					router.navigate( [ "/Website/Login" ] );
+					return false;
+				}
+			);
+		}
+		if ( ! carbon.auth.isAuthenticated() )
+			router.navigate( [ "/Website/Login" ] );
+		return carbon.auth.isAuthenticated();
 	}
+)
+export default class SPARQLClientComponent {
 
-	SPARQLTypes:SPARQLTypes = <SPARQLTypes>{
+	sparqlTypes:SPARQLTypes = <SPARQLTypes>{
 		query: "Query",
-		update: "Update"
+		update: "Update",
 	};
-	SPARQLQueryOperations:SPARQLQueryOperations = <SPARQLQueryOperations>{
+	sparqlQueryOperations:SPARQLQueryOperations = <SPARQLQueryOperations>{
 		select: {
 			name: "SELECT",
 			formats: [
 				{value: SPARQLFormats.table, name: "Friendly Table"},
-				{value: SPARQLFormats.xml, name: "XML"},
-				{value: SPARQLFormats.csv, name: "CSV"},
-				{value: SPARQLFormats.tsv, name: "TSV"}
-			]
+				// {value: SPARQLFormats.xml, name: "XML"},
+				// {value: SPARQLFormats.csv, name: "CSV"},
+				// {value: SPARQLFormats.tsv, name: "TSV"},
+			],
 		},
 		describe: {
 			name: "DESCRIBE",
@@ -52,8 +86,8 @@ export default class SPARQLClientComponent {
 				{value: SPARQLFormats.turtle, name: "TURTLE"},
 				{value: SPARQLFormats.jsonRDF, name: "RDF/JSON"},
 				{value: SPARQLFormats.rdfXML, name: "RDF/XML"},
-				{value: SPARQLFormats.n3, name: "N3"}
-			]
+				{value: SPARQLFormats.n3, name: "N3"},
+			],
 		},
 		construct: {
 			name: "CONSTRUCT",
@@ -62,71 +96,167 @@ export default class SPARQLClientComponent {
 				{value: SPARQLFormats.turtle, name: "TURTLE"},
 				{value: SPARQLFormats.jsonRDF, name: "RDF/JSON"},
 				{value: SPARQLFormats.rdfXML, name: "RDF/XML"},
-				{value: SPARQLFormats.n3, name: "N3"}
-			]
+				{value: SPARQLFormats.n3, name: "N3"},
+			],
 		},
 		ask: {
 			name: "ASK",
 			formats: [
-				{value: SPARQLFormats.boolean, name: "Boolean"}
-			]
-		}
+				{value: SPARQLFormats.boolean, name: "Boolean"},
+			],
+		},
 	};
 
-	isQueryType:boolean;
 	isQueryType:boolean = true;
 	isSending:boolean = false;
 	isSaving:boolean = false;
+	isCarbonContext:boolean = false;
 	responses:SPARQLClientResponse[] = [];
 
 
 	currentQuery:SPARQLQuery = <SPARQLQuery>{
 		endpoint: "",
-		type: this.SPARQLTypes.query,
+		type: this.sparqlTypes.query,
 		content: "",
 		operation: null,
 		format: null,
-		name: ""
+		name: "",
 	};
-	formatsAvailable = [];
+	askingQuery:SPARQLQuery = <SPARQLQuery>{
+		endpoint: "",
+		type: this.sparqlTypes.query,
+		content: "",
+		operation: null,
+		format: null,
+		name: "",
+	};
+	formatsAvailable:any = [];
 	savedQueries:SPARQLQuery[] = [];
-	sidebar:JQuery;
+	messages:any[] = [];
 
-	//Buttons
+	// Buttons
 	btnsGroupSaveQuery:JQuery;
 	btnSaveQuery:JQuery;
 	btnSave:JQuery;
 	btnSaveAs:JQuery;
+	// Sidebar
+	sidebar:JQuery;
+	// Modals
+	replaceQueryConfirmationModal:JQuery;
+	deleteQueryConfirmationModal:JQuery;
 
+	// Regex
 	regExpSelect:RegExp = new RegExp( "((.|\n)+)?SELECT((.|\n)+)?", "i" );
 	regExpConstruct:RegExp = new RegExp( "((.|\n)+)?CONSTRUCT((.|\n)+)?", "i" );
 	regExpAsk:RegExp = new RegExp( "((.|\n)+)?ASK((.|\n)+)?", "i" );
 	regExpDescribe:RegExp = new RegExp( "((.|\n)+)?DESCRIBE((.|\n)+)?", "i" );
+	regExpURL:RegExp = new RegExp( "(https?:\/\/(?:www\.|(?!www))[^\s\.]+\.[^\s]{2,}|www\.[^\s]+\.[^\s]{2,})" );
 
-	constructor( element:ElementRef ) {
+	// Inputs and Outputs
+	@Input() context:Context;
+	@Input() emitErrors:boolean = false;
+	@Output() errorOccurs:EventEmitter<any> = new EventEmitter();
+
+	private element:ElementRef;
+	// TODO: Make them configurable
+	private prefixes:{ [ prefix:string ]:string } = {
+		"acl": "http://www.w3.org/ns/auth/acl#",
+		"api": "http://purl.org/linked-data/api/vocab#",
+		"c": "https://carbonldp.com/ns/v1/platform#",
+		"cs": "https://carbonldp.com/ns/v1/security#",
+		"cp": "https://carbonldp.com/ns/v1/patch#",
+		"cc": "http://creativecommons.org/ns#",
+		"cert": "http://www.w3.org/ns/auth/cert#",
+		"dbp": "http://dbpedia.org/property/",
+		"dc": "http://purl.org/dc/terms/",
+		"dc11": "http://purl.org/dc/elements/1.1/",
+		"dcterms": "http://purl.org/dc/terms/",
+		"doap": "http://usefulinc.com/ns/doap#",
+		"example": "http://example.org/ns#",
+		"ex": "http://example.org/ns#",
+		"exif": "http://www.w3.org/2003/12/exif/ns#",
+		"fn": "http://www.w3.org/2005/xpath-functions#",
+		"foaf": "http://xmlns.com/foaf/0.1/",
+		"geo": "http://www.w3.org/2003/01/geo/wgs84_pos#",
+		"geonames": "http://www.geonames.org/ontology#",
+		"gr": "http://purl.org/goodrelations/v1#",
+		"http": "http://www.w3.org/2006/http#",
+		"ldp": "http://www.w3.org/ns/ldp#",
+		"log": "http://www.w3.org/2000/10/swap/log#",
+		"owl": "http://www.w3.org/2002/07/owl#",
+		"rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+		"rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+		"rei": "http://www.w3.org/2004/06/rei#",
+		"rsa": "http://www.w3.org/ns/auth/rsa#",
+		"rss": "http://purl.org/rss/1.0/",
+		"sd": "http://www.w3.org/ns/sparql-service-description#",
+		"sfn": "http://www.w3.org/ns/sparql#",
+		"sioc": "http://rdfs.org/sioc/ns#",
+		"skos": "http://www.w3.org/2004/02/skos/core#",
+		"swrc": "http://swrc.ontoware.org/ontology#",
+		"types": "http://rdfs.org/sioc/types#",
+		"vcard": "http://www.w3.org/2001/vcard-rdf/3.0#",
+		"wot": "http://xmlns.com/wot/0.1/",
+		"xhtml": "http://www.w3.org/1999/xhtml#",
+		"xsd": "http://www.w3.org/2001/XMLSchema#",
+	};
+	private $element:JQuery;
+	private carbon:Carbon;
+	private _sparql:string = "";
+	private _endpoint:string = "";
+
+	// Getters and Setters
+	get codeMirrorMode():typeof CodeMirrorComponent.Mode { return CodeMirrorComponent.Mode; }
+
+	get sparql():string { return this._sparql; }
+
+	set sparql( value:string ) {
+		this._sparql = value;
+		this.currentQuery.content = value;
+		this.sparqlChanged();
+	}
+
+	get endpoint():string { return this._endpoint; }
+
+	set endpoint( value:string ) {
+		this._endpoint = value;
+		this.endpointChanged();
+	}
+
+	constructor( element:ElementRef, carbon:Carbon ) {
 		this.element = element;
 		this.isSending = false;
-		this.savedQueries = this.getLocalSavedQueries() || [];
+		this.savedQueries = this.getLocalSavedQueries() || <SPARQLQuery>[];
+		this.carbon = carbon;
+	}
+
+	ngOnInit():void {
+		if ( ! this.context ) {
+			this.context = this.carbon;
+			this.isCarbonContext = true;
+		} else {
+			this.endpoint = this.context.getBaseURI();
+		}
 	}
 
 	ngAfterViewInit():void {
 		this.$element = $( this.element.nativeElement );
-		this.btnSaveQuery = this.$element.find( ".btnSaveQuery " );
-		this.btnsGroupSaveQuery = this.$element.find( ".btnsGroupSaveQuery " );
-		this.btnSave = this.btnsGroupSaveQuery.find( ".btnSave " );
+		this.btnSaveQuery = this.$element.find( ".btnSaveQuery" );
+		this.btnsGroupSaveQuery = this.$element.find( ".btnsGroupSaveQuery" );
+		this.btnSave = this.btnsGroupSaveQuery.find( ".btnSave" );
 		this.btnSaveAs = this.btnsGroupSaveQuery.find( ".btnSaveAs" );
 		this.sidebar = this.$element.find( ".query-builder .ui.sidebar" );
 		this.btnsGroupSaveQuery.find( ".dropdown" ).dropdown();
+		this.replaceQueryConfirmationModal = this.$element.find( ".ui.replace-query-confirmation.modal" );
+		this.deleteQueryConfirmationModal = this.$element.find( ".ui.delete-query-confirmation.modal" );
 		this.initializeSavedQueriesSidebar();
+		this.initializeModal();
 	}
 
-
-	//:JQueryEventObject
-	onChangeQueryType( $event ):void {
-		let type:string = $event.target.value;
-		this.isQueryType = type === "Query";
+	onChangeQueryType( $event:JQueryEventObject ):void {
+		let type:string = (<HTMLInputElement>$event.target).value;
+		this.isQueryType = type === this.sparqlTypes.query;
 	}
-
 
 	/**
 	 * Updates the currentQuery and the available formats depending on the SPARQL Query Operation
@@ -134,15 +264,29 @@ export default class SPARQLClientComponent {
 	 */
 	sparqlChanged():void {
 		let operation:string = this.getSPARQLOperation( this.sparql );
-		if ( operation !== null && this.SPARQLQueryOperations[ operation.toLowerCase() ] ) {
+		if ( operation !== null && this.sparqlQueryOperations[ operation.toLowerCase() ] ) {
 			operation = operation.toLowerCase();
-			this.currentQuery.format = this.currentQuery.format ? this.currentQuery.format : this.SPARQLQueryOperations[ operation ].formats[ 0 ].value;
+			this.formatsAvailable = this.sparqlQueryOperations[ operation ].formats;
+			if ( this.formatsAvailable.indexOf( this.currentQuery.format ) === - 1 ) {
+				this.currentQuery.format = this.sparqlQueryOperations[ operation ].formats[ 0 ].value;
+			}
 			this.currentQuery.operation = operation.toUpperCase();
-			this.formatsAvailable = this.SPARQLQueryOperations[ operation ].formats;
 		} else {
 			this.currentQuery.format = null;
 			this.currentQuery.operation = "update";
-			this.formatsAvailable = [];
+			this.formatsAvailable = <any>[];
+		}
+	}
+
+	/**
+	 * Updates the currentQuery endpoints according to the context in which the editor is working.
+	 * Triggered whenever the user writes the endpoint URI.
+	 */
+	endpointChanged():void {
+		if ( this.regExpURL.test( this.endpoint ) ) {
+			this.currentQuery.endpoint = this.endpoint;
+		} else {
+			this.currentQuery.endpoint = this.context.getBaseURI() + this.endpoint;
 		}
 	}
 
@@ -152,16 +296,15 @@ export default class SPARQLClientComponent {
 	 * @returns      String. The name of the main SPARQL Query Operation.
 	 */
 	getSPARQLOperation( query:string ):string {
-		let regExpModel:string = "((.|\n)+)?";
 		switch ( true ) {
 			case (this.regExpSelect.test( query )):
-				return this.SPARQLQueryOperations.select.name;
+				return this.sparqlQueryOperations.select.name;
 			case (this.regExpConstruct.test( query )):
-				return this.SPARQLQueryOperations.construct.name;
+				return this.sparqlQueryOperations.construct.name;
 			case (this.regExpAsk.test( query )):
-				return this.SPARQLQueryOperations.ask.name;
+				return this.sparqlQueryOperations.ask.name;
 			case (this.regExpDescribe.test( query )):
-				return this.SPARQLQueryOperations.describe.name;
+				return this.sparqlQueryOperations.describe.name;
 			default:
 				return null;
 		}
@@ -171,387 +314,163 @@ export default class SPARQLClientComponent {
 		originalResponse.isReExecuting = true;
 		this.execute( originalResponse.query, originalResponse ).then(
 			( newResponse:SPARQLClientResponse ) => {
-				originalResponse.isReExecuting = false;
 				originalResponse.duration = newResponse.duration;
-				originalResponse.resultset = newResponse.resultset;
-				originalResponse.query = newResponse.query;
-				originalResponse.data = newResponse.data;
+				originalResponse.resultset = Object.assign( {}, newResponse.resultset );
+				originalResponse.setData = Object.assign( {}, newResponse.resultset );
+				originalResponse.query = Object.assign( {}, newResponse.query );
+				originalResponse.isReExecuting = false;
+			}
+		).catch(
+			( error:any ) => {
+				originalResponse.isReExecuting = false;
+				throw error;
 			}
 		);
 	}
 
 	onExecute():void {
 		this.isSending = true;
-		let query:SPARQLQuery = <SPARQLQuery>{
-			endpoint: this.currentQuery.endpoint,
-			type: this.currentQuery.type,
-			content: this.currentQuery.content,
-			operation: this.currentQuery.operation.toUpperCase(),
-			format: this.currentQuery.format,
-			name: this.currentQuery.name,
-			id: null
-		};
+		let query:SPARQLQuery = Object.assign( {}, this.currentQuery );
 
 		this.execute( query, null ).then(
-			( response ) => {
+			( response:SPARQLClientResponse ) => {
 				this.addResponse( response );
 				return response;
 			}
-		);
+		).catch(
+			( error:any ) => {
+				if ( this.emitErrors ) {
+					this.errorOccurs.emit( this.getMessage( error ) );
+				} else {
+					this.messages.push( this.getMessage( error ) );
+				}
+			} );
+	}
+
+	onErase():void {
+		this.currentQuery.type = this.sparqlTypes.query;
+		this.sparql = "";
+		this.endpoint = "";
 	}
 
 	execute( query:SPARQLQuery, activeResponse?:SPARQLClientResponse ):Promise<SPARQLClientResponse> {
-		/*
-			var endpointURL = $scope.app.getURI() + query.endpoint;
-		*/
-
-		let type = query.type;
+		let type:string = query.type;
 		if ( activeResponse ) {
 			query = activeResponse.query;
 		}
-		let promise:Promise = null;
+		let promise:Promise<SPARQLClientResponse> = null;
 		switch ( type ) {
-			case this.SPARQLTypes.query:
+			case this.sparqlTypes.query:
 				promise = this.executeQuery( query );
 				break;
-			case this.SPARQLTypes.update:
-				promise = this.executeUpdate( query );
+			case this.sparqlTypes.update:
+				promise = this.executeUPDATE( query );
 				break;
 			default:
 				// Unsupported Operation
-				promise = new Promise( ( resolve:()=>string, reject:( msg:string )=>string )=> {
+				promise = new Promise( ( resolve:() => string, reject:( msg:string ) => string ) => {
 					reject( "Unsupported Type" );
 				} );
 		}
 
 		return promise.then(
-			( response ) => {
-				// Carbon Response Success
+			( response:SPARQLClientResponse ) => {
+				// Response Success
 				this.isSending = false;
 				return response;
 			},
-			( error ) => {
-				//Carbon Response Fail
+			( error:any ) => {
+				// Response Fail
 				this.isSending = false;
-				return error;
+				return Promise.reject( error );
 			}
 		);
 	}
 
-	executeQuery( query:SPARQLQuery ):Promise {
+	executeQuery( query:SPARQLQuery ):Promise<SPARQLClientResponse> {
 		this.isSending = true;
 		switch ( query.operation ) {
-			case this.SPARQLQueryOperations.select.name:
-				return this.executeSelect( query );
-			case this.SPARQLQueryOperations.describe.name:
-				return this.executeModelQuery( query );
-			case this.SPARQLQueryOperations.construct.name:
-				return this.executeModelQuery( query );
-			case this.SPARQLQueryOperations.ask.name:
-				return this.executeAsk( query );
+			case this.sparqlQueryOperations.select.name:
+				return this.executeSELECT( query );
+			case this.sparqlQueryOperations.describe.name:
+				return this.executeDESCRIBE( query );
+			case this.sparqlQueryOperations.construct.name:
+				return this.executeCONSTRUCT( query );
+			case this.sparqlQueryOperations.ask.name:
+				return this.executeASK( query );
 			default:
 				// Unsupported Operation
-				return new Promise( ( resolve:()=>string, reject:( msg:string )=>string )=> {
-					reject( "Unsupported Operation" );
-				} );
+				return Promise.reject<SPARQLClientResponse>( "Unsupported Operation" );
 		}
 	}
 
-	executeSelect( query:SPARQLQuery ):Promise<SPARQLClientResponse> {
-		return new Promise(
-			( resolve:( response:any )=>SPARQLClientResponse, reject:( str:string )=>string )=> {
-				let beforeTimestamp:Number = (new Date()).valueOf();
-				let resultset = {
-					"head": {
-						"vars": [ "context", "subject", "predicate", "object" ]
-					},
-					"results": {
-						"bindings": [
-							{
-								"context": {"type": "uri", "value": "http://example.org/book/book6"},
-								"subject": {"type": "uri", "value": "http://example.org/book/book6"},
-								"predicate": {"type": "uri", "value": "http://example.org/book/book6"},
-								"object": {"type": "literal", "value": "Harry Potter and the Half-Blood Prince"}
-							},
-							{
-								"context": {"type": "uri", "value": "http://example.org/book/book6"},
-								"subject": {"type": "uri", "value": "http://example.org/book/book6#fragment"},
-								"predicate": {"type": "uri", "value": "http://example.org/book/book6#fragment"},
-								"object": {"type": "uri", "value": "http://example.org/book/book7"}
-							},
-							{
-								"context": {"type": "uri", "value": "http://example.org/book/book7"},
-								"subject": {"type": "uri", "value": "http://example.org/book/book7"},
-								"predicate": {"type": "uri", "value": "http://example.org/book/book7"},
-								"object": {"type": "literal", "value": "Harry Potter and the Deathly Hallows"}
-							},
-							{
-								"context": {"type": "uri", "value": "http://example.org/book/book5"},
-								"subject": {"type": "uri", "value": "http://example.org/book/book5"},
-								"predicate": {"type": "uri", "value": "http://example.org/book/book5"},
-								"object": {"type": "literal", "value": "Harry Potter and the Order of the Phoenix"}
-							},
-							{
-								"context": {"type": "uri", "value": "http://example.org/book/book4"},
-								"subject": {"type": "uri", "value": "http://example.org/book/book4"},
-								"predicate": {"type": "uri", "value": "http://example.org/book/book4"},
-								"object": {"type": "literal", "value": "1000", "datatype": "http://www.w3.org/2001/XMLSchema#integer"}
-							},
-							{
-								"context": {"type": "uri", "value": "http://example.org/book/book2"},
-								"subject": {"type": "uri", "value": "http://example.org/book/book2"},
-								"predicate": {"type": "uri", "value": "http://example.org/book/book2"},
-								"object": {"type": "literal", "value": "Harry Potter and the Chamber of Secrets"}
-							},
-							{
-								"context": {"type": "uri", "value": "http://example.org/book/book3"},
-								"subject": {"type": "uri", "value": "http://example.org/book/book3"},
-								"predicate": {"type": "uri", "value": "http://example.org/book/book3"},
-								"object": {"type": "literal", "value": "Harry Potter and the Prisoner Of Azkaban"}
-							},
-							{
-								"context": {"type": "uri", "value": "http://example.org/book/book1"},
-								"subject": {"type": "uri", "value": "http://example.org/book/book1"},
-								"predicate": {"type": "uri", "value": "http://example.org/book/book1"},
-								"object": {"type": "literal", "value": "Harry Potter and the Philosopher's Stone"}
-							}
-						]
-					}
-				};
-				let afterTimestamp:Number = (new Date()).valueOf();
-				let duration:number = afterTimestamp - beforeTimestamp;
-
-				let random = Math.floor( Math.random() * 10 );
-				if ( random % 2 == 0 ) {
-					resultset = {
-						"head": {
-							"vars": [ "context", "subject", "predicate", "object" ]
-						},
-						"results": {
-							"bindings": [
-								{
-									"context": {"type": "uri", "value": "http://example.org/book/book6"},
-									"subject": {"type": "uri", "value": "http://example.org/book/book6"},
-									"predicate": {"type": "uri", "value": "http://example.org/book/book6"},
-									"object": {"type": "literal", "value": "Harry Potter and the Half-Blood Prince"}
-								},
-							]
-						}
-					};
-				}
-
-				let response:SPARQLClientResponse = new SPARQLClientResponse();
-				response.duration = duration;
-				response.resultset = resultset;
-				response.setData( resultset );
-				response.result = <string>SPARQLResponseType.success;
-				response.query = query;
-
-				resolve( response );
-			}
-		);
+	executeSELECT( query:SPARQLQuery ):Promise<SPARQLClientResponse> {
+		let beforeTimestamp:number = ( new Date() ).valueOf();
+		return this.context.documents.executeRawSELECTQuery( query.endpoint, query.content ).then(
+			( [ result, response ]:[ SPARQL.RawResults.Class, HTTP.Response.Class ] ):SPARQLClientResponse => {
+				let duration:number = (new Date()).valueOf() - beforeTimestamp;
+				return this.buildResponse( duration, result, <string> SPARQLResponseType.success, query );
+			},
+			( error:HTTP.Errors.HTTPError ):Promise<SPARQLClientResponse> => {
+				return this.handleError( error, query, beforeTimestamp );
+			} );
 	}
 
-	executeModelQuery( query:SPARQLQuery ):Promise<SPARQLClientResponse> {
-		return new Promise(
-			( resolve:( response:any )=>SPARQLClientResponse, reject:( str:string )=>string )=> {
-				let beforeTimestamp:Number = (new Date()).valueOf();
-				let resultset = {
-					"head": {
-						"vars": [ "context", "subject", "predicate", "object" ]
-					},
-					"results": {
-						"bindings": [
-							{
-								"context": {"type": "uri", "value": "http://example.org/book/book6"},
-								"subject": {"type": "uri", "value": "http://example.org/book/book6"},
-								"predicate": {"type": "uri", "value": "http://example.org/book/book6"},
-								"object": {"type": "literal", "value": "Harry Potter and the Half-Blood Prince"}
-							},
-							{
-								"context": {"type": "uri", "value": "http://example.org/book/book6"},
-								"subject": {"type": "uri", "value": "http://example.org/book/book6#fragment"},
-								"predicate": {"type": "uri", "value": "http://example.org/book/book6#fragment"},
-								"object": {"type": "uri", "value": "http://example.org/book/book7"}
-							},
-							{
-								"context": {"type": "uri", "value": "http://example.org/book/book7"},
-								"subject": {"type": "uri", "value": "http://example.org/book/book7"},
-								"predicate": {"type": "uri", "value": "http://example.org/book/book7"},
-								"object": {"type": "literal", "value": "Harry Potter and the Deathly Hallows"}
-							},
-							{
-								"context": {"type": "uri", "value": "http://example.org/book/book5"},
-								"subject": {"type": "uri", "value": "http://example.org/book/book5"},
-								"predicate": {"type": "uri", "value": "http://example.org/book/book5"},
-								"object": {"type": "literal", "value": "Harry Potter and the Order of the Phoenix"}
-							},
-							{
-								"context": {"type": "uri", "value": "http://example.org/book/book4"},
-								"subject": {"type": "uri", "value": "http://example.org/book/book4"},
-								"predicate": {"type": "uri", "value": "http://example.org/book/book4"},
-								"object": {"type": "literal", "value": "1000", "datatype": "http://www.w3.org/2001/XMLSchema#integer"}
-							},
-							{
-								"context": {"type": "uri", "value": "http://example.org/book/book2"},
-								"subject": {"type": "uri", "value": "http://example.org/book/book2"},
-								"predicate": {"type": "uri", "value": "http://example.org/book/book2"},
-								"object": {"type": "literal", "value": "Harry Potter and the Chamber of Secrets"}
-							},
-							{
-								"context": {"type": "uri", "value": "http://example.org/book/book3"},
-								"subject": {"type": "uri", "value": "http://example.org/book/book3"},
-								"predicate": {"type": "uri", "value": "http://example.org/book/book3"},
-								"object": {"type": "literal", "value": "Harry Potter and the Prisoner Of Azkaban"}
-							},
-							{
-								"context": {"type": "uri", "value": "http://example.org/book/book1"},
-								"subject": {"type": "uri", "value": "http://example.org/book/book1"},
-								"predicate": {"type": "uri", "value": "http://example.org/book/book1"},
-								"object": {"type": "literal", "value": "Harry Potter and the Philosopher's Stone"}
-							}
-						]
-					}
-				};
-				let afterTimestamp:Number = (new Date()).valueOf();
-				let duration:number = afterTimestamp - beforeTimestamp;
-				let random = Math.floor( Math.random() * 10 );
-				if ( random % 2 == 0 ) {
-					resultset = {
-						"head": {
-							"vars": [ "context", "subject", "predicate", "object" ]
-						},
-						"results": {
-							"bindings": [
-								{
-									"context": {"type": "uri", "value": "http://example.org/book/book6"},
-									"subject": {"type": "uri", "value": "http://example.org/book/book6"},
-									"predicate": {"type": "uri", "value": "http://example.org/book/book6"},
-									"object": {"type": "literal", "value": "Harry Potter and the Half-Blood Prince"}
-								},
-							]
-						}
-					};
-				}
-
-				let response = new SPARQLClientResponse();
-				response.duration = duration;
-				response.resultset = resultset;
-				response.setData( resultset );
-				response.result = <string>SPARQLResponseType.success;
-				response.query = query;
-
-				resolve( response );
-			}
-		);
+	executeDESCRIBE( query:SPARQLQuery ):Promise<SPARQLClientResponse> {
+		let beforeTimestamp:number = ( new Date() ).valueOf();
+		let requestOptions:HTTP.Request.Options = {headers: new Map().set( "Accept", new HTTP.Header.Class( query.format ) )};
+		return this.context.documents.executeRawDESCRIBEQuery( query.endpoint, query.content, requestOptions ).then(
+			( [ result, response ]:[ string, HTTP.Response.Class ] ):SPARQLClientResponse => {
+				let duration:number = (new Date()).valueOf() - beforeTimestamp;
+				return this.buildResponse( duration, result, <string> SPARQLResponseType.success, query );
+			},
+			( error:HTTP.Errors.HTTPError ):Promise<SPARQLClientResponse> => {
+				return this.handleError( error, query, beforeTimestamp );
+			} );
 	}
 
-	executeAsk( query:SPARQLQuery ):Promise<SPARQLClientResponse> {
-		return new Promise(
-			( resolve:( response:any )=>SPARQLClientResponse, reject:( str:string )=>string )=> {
-				let beforeTimestamp:Number = (new Date()).valueOf();
-				let resultset = {
-					"head": {
-						"vars": [ "context", "subject", "predicate", "object" ]
-					},
-					"results": {
-						"bindings": [
-							{
-								"context": {"type": "uri", "value": "http://example.org/book/book6"},
-								"subject": {"type": "uri", "value": "http://example.org/book/book6"},
-								"predicate": {"type": "uri", "value": "http://example.org/book/book6"},
-								"object": {"type": "literal", "value": "Harry Potter and the Half-Blood Prince"}
-							},
-							{
-								"context": {"type": "uri", "value": "http://example.org/book/book6"},
-								"subject": {"type": "uri", "value": "http://example.org/book/book6#fragment"},
-								"predicate": {"type": "uri", "value": "http://example.org/book/book6#fragment"},
-								"object": {"type": "uri", "value": "http://example.org/book/book7"}
-							},
-							{
-								"context": {"type": "uri", "value": "http://example.org/book/book7"},
-								"subject": {"type": "uri", "value": "http://example.org/book/book7"},
-								"predicate": {"type": "uri", "value": "http://example.org/book/book7"},
-								"object": {"type": "literal", "value": "Harry Potter and the Deathly Hallows"}
-							},
-							{
-								"context": {"type": "uri", "value": "http://example.org/book/book5"},
-								"subject": {"type": "uri", "value": "http://example.org/book/book5"},
-								"predicate": {"type": "uri", "value": "http://example.org/book/book5"},
-								"object": {"type": "literal", "value": "Harry Potter and the Order of the Phoenix"}
-							},
-							{
-								"context": {"type": "uri", "value": "http://example.org/book/book4"},
-								"subject": {"type": "uri", "value": "http://example.org/book/book4"},
-								"predicate": {"type": "uri", "value": "http://example.org/book/book4"},
-								"object": {"type": "literal", "value": "1000", "datatype": "http://www.w3.org/2001/XMLSchema#integer"}
-							},
-							{
-								"context": {"type": "uri", "value": "http://example.org/book/book2"},
-								"subject": {"type": "uri", "value": "http://example.org/book/book2"},
-								"predicate": {"type": "uri", "value": "http://example.org/book/book2"},
-								"object": {"type": "literal", "value": "Harry Potter and the Chamber of Secrets"}
-							},
-							{
-								"context": {"type": "uri", "value": "http://example.org/book/book3"},
-								"subject": {"type": "uri", "value": "http://example.org/book/book3"},
-								"predicate": {"type": "uri", "value": "http://example.org/book/book3"},
-								"object": {"type": "literal", "value": "Harry Potter and the Prisoner Of Azkaban"}
-							},
-							{
-								"context": {"type": "uri", "value": "http://example.org/book/book1"},
-								"subject": {"type": "uri", "value": "http://example.org/book/book1"},
-								"predicate": {"type": "uri", "value": "http://example.org/book/book1"},
-								"object": {"type": "literal", "value": "Harry Potter and the Philosopher's Stone"}
-							}
-						]
-					}
-				};
-				let afterTimestamp:Number = (new Date()).valueOf();
-				let duration:number = afterTimestamp - beforeTimestamp;
-				let random = Math.floor( Math.random() * 10 );
-				if ( random % 2 == 0 ) {
-					resultset = {
-						"head": {
-							"vars": [ "context", "subject", "predicate", "object" ]
-						},
-						"results": {
-							"bindings": [
-								{
-									"context": {"type": "uri", "value": "http://example.org/book/book6"},
-									"subject": {"type": "uri", "value": "http://example.org/book/book6"},
-									"predicate": {"type": "uri", "value": "http://example.org/book/book6"},
-									"object": {"type": "literal", "value": "Harry Potter and the Half-Blood Prince"}
-								},
-							]
-						}
-					};
-				}
-
-				let response = new SPARQLClientResponse();
-				response.duration = duration;
-				response.resultset = resultset;
-				response.setData( resultset );
-				response.result = <string>SPARQLResponseType.success;
-				response.query = query;
-
-				resolve( response );
-			}
-		);
+	executeCONSTRUCT( query:SPARQLQuery ):Promise<SPARQLClientResponse> {
+		let beforeTimestamp:number = ( new Date() ).valueOf();
+		let requestOptions:HTTP.Request.Options = {headers: new Map().set( "Accept", new HTTP.Header.Class( query.format ) )};
+		return this.context.documents.executeRawCONSTRUCTQuery( query.endpoint, query.content, requestOptions ).then(
+			( [ result, response ]:[ string, HTTP.Response.Class ] ):SPARQLClientResponse => {
+				let duration:number = (new Date()).valueOf() - beforeTimestamp;
+				return this.buildResponse( duration, result, <string> SPARQLResponseType.success, query );
+			},
+			( error:HTTP.Errors.HTTPError ):Promise<SPARQLClientResponse> => {
+				return this.handleError( error, query, beforeTimestamp );
+			} );
 	}
 
-	executeUpdate( query:SPARQLQuery ):Promise {
-		return new Promise();
+	executeASK( query:SPARQLQuery ):Promise<SPARQLClientResponse> {
+		let beforeTimestamp:number = ( new Date() ).valueOf();
+		return this.context.documents.executeRawASKQuery( query.endpoint, query.content ).then(
+			( [ result, response ]:[ SPARQL.RawResults.Class, HTTP.Response.Class ] ):SPARQLClientResponse => {
+				let duration:number = (new Date()).valueOf() - beforeTimestamp;
+				return this.buildResponse( duration, result, <string> SPARQLResponseType.success, query );
+			},
+			( error:HTTP.Errors.HTTPError ):Promise<SPARQLClientResponse> => {
+				return this.handleError( error, query, beforeTimestamp );
+			} );
+	}
+
+	executeUPDATE( query:SPARQLQuery ):Promise<SPARQLClientResponse> {
+		// TODO: Implement UPDATE when SDK is ready
+		return new Promise( ( resolve:() => string, reject:( msg:string ) => string ) => {
+			reject( "Unsupported Operation" );
+		} );
 	}
 
 	canExecute():boolean {
 		return ! ! (this.currentQuery.endpoint && this.currentQuery.type && this.currentQuery.content && this.currentQuery.operation && this.currentQuery.format);
-
 	}
 
 	canSaveQuery():boolean {
 		return ! ! (this.currentQuery.endpoint && this.currentQuery.type && this.currentQuery.content && this.currentQuery.operation && this.currentQuery.format && this.currentQuery.name);
+	}
 
+	canErase():boolean {
+		return ( ! ! this.endpoint || ! ! this.sparql);
 	}
 
 	onEmptyStack():void {
@@ -559,19 +478,22 @@ export default class SPARQLClientComponent {
 	}
 
 	onRemove( response:any ):void {
-		let idx:Number = this.responses.indexOf( response );
-		if ( idx > - 1 )
-			this.responses.splice( idx, 1 );
+		let idx:number = this.responses.indexOf( response );
+		if ( idx > - 1 ) this.responses.splice( idx, 1 );
 	}
 
 	onConfigureResponse( response:SPARQLClientResponse ):void {
-		this.currentQuery = response.query;
-		this.sparql = response.query.content;
+		let configureQuery:SPARQLQuery = this.askingQuery = Object.assign( {}, response.query );
+		if ( JSON.stringify( this.currentQuery ) !== JSON.stringify( configureQuery ) ) {
+			this.toggleReplaceQueryConfirmationModal();
+		} else {
+			this.loadQuery( configureQuery );
+		}
 	}
 
 	addResponse( response:SPARQLClientResponse ):void {
-		let responsesLengh:number = this.responses.length, i:number;
-		for ( i = responsesLengh; i > 0; i -- ) {
+		let responsesLength:number = this.responses.length, i:number;
+		for ( i = responsesLength; i > 0; i -- ) {
 			this.responses[ i ] = this.responses[ i - 1 ];
 		}
 		this.responses[ 0 ] = response;
@@ -585,12 +507,12 @@ export default class SPARQLClientComponent {
 			operation: this.currentQuery.operation,
 			format: this.currentQuery.format,
 			name: this.currentQuery.name,
-			id: this.savedQueries.length
+			id: this.savedQueries.length,
 		};
+		this.isSaving = true;
 		this.savedQueries = this.getLocalSavedQueries();
 		this.savedQueries.push( query );
 		this.updateLocalSavedQueries();
-		this.isSaving = true;
 		setInterval( () => {
 			this.isSaving = false;
 		}, 500 );
@@ -598,21 +520,21 @@ export default class SPARQLClientComponent {
 
 	onClickSaveExistingQuery():void {
 		this.savedQueries = this.getLocalSavedQueries();
-		let queryIdx:Number = - 1;
-		this.savedQueries.forEach( ( iteratingQuery:SPARQLQuery, index:Number )=> {
+		let queryIdx:number = - 1;
+		this.savedQueries.forEach( ( iteratingQuery:SPARQLQuery, index:number ) => {
 			if ( iteratingQuery.id === this.currentQuery.id ) {
 				queryIdx = index;
 			}
 		} );
 		if ( queryIdx > - 1 ) {
-			this.savedQueries[ queryIdx ] = <SPARQLQuery>{
+			this.savedQueries[ queryIdx ] = <SPARQLQuery> {
 				endpoint: this.currentQuery.endpoint,
 				type: this.currentQuery.type,
 				content: this.currentQuery.content,
 				operation: this.currentQuery.operation,
 				format: this.currentQuery.format,
 				name: this.currentQuery.name,
-				id: this.currentQuery.id
+				id: this.currentQuery.id,
 			};
 		} else {
 			this.currentQuery.id = this.savedQueries.length;
@@ -621,23 +543,90 @@ export default class SPARQLClientComponent {
 		this.updateLocalSavedQueries();
 	}
 
-	onClickQuery( index:number ) {
-		this.currentQuery = this.savedQueries[ index ];
-		this.sparql = this.currentQuery.content;
-		this.initializeSavedQueriesSidebar();
+	onClickSavedQuery( selectedQuery:SPARQLQuery ):void {
+		if ( ! ! this.currentQuery.endpoint || ! ! this.currentQuery.content ) {
+			if ( ! ! this.currentQuery.endpoint && ! ! this.currentQuery.content ) {
+				if ( JSON.stringify( this.currentQuery ) !== JSON.stringify( selectedQuery ) ) {
+					this.askConfirmationToReplace( selectedQuery );
+				} else {
+					this.loadQuery( selectedQuery );
+					this.toggleSidebar();
+				}
+			} else {
+				if ( (! ! this.currentQuery.endpoint && this.currentQuery.endpoint === selectedQuery.endpoint) ||
+					(! ! this.currentQuery.content && this.currentQuery.content === selectedQuery.content) ) {
+					this.loadQuery( selectedQuery );
+					this.toggleSidebar();
+				} else {
+					this.askConfirmationToReplace( selectedQuery );
+				}
+			}
+
+		} else {
+			this.loadQuery( selectedQuery );
+			this.toggleSidebar();
+		}
 	}
 
-	onClickRemoveQuery( index:number ):void {
+	askConfirmationToReplace( selectedQuery:SPARQLQuery ):void {
+		this.askingQuery = Object.assign( {}, selectedQuery );
+		this.toggleReplaceQueryConfirmationModal();
+	}
+
+	onClickRemoveSavedQuery( index:number ):void {
 		this.savedQueries = this.getLocalSavedQueries();
+		this.askingQuery = this.savedQueries[ index ];
+		this.toggleDeleteQueryConfirmationModal();
+	}
+
+	removeQuery( query:SPARQLQuery ):void {
+		this.savedQueries = this.getLocalSavedQueries();
+		let index:number = this.savedQueries.indexOf( query );
 		this.savedQueries.splice( index, 1 );
 		this.updateLocalSavedQueries();
 	}
 
+	loadQuery( query:SPARQLQuery ):void {
+		this.currentQuery = Object.assign( {}, query );
+		this.askingQuery = Object.assign( {}, query );
+		this.endpoint = query.endpoint;
+		this.sparql = query.content;
+	}
+
 	initializeSavedQueriesSidebar():void {
 		this.sidebar.sidebar( {
-				context: this.$element.find( ".query-builder .middle.segment" )
-			} )
-			.sidebar( "attach events", ".query-builder .top.menu .item" );
+			context: this.$element.find( ".query-builder .pushable" ),
+		} );
+	}
+
+	initializeModal():void {
+		this.deleteQueryConfirmationModal.modal( {
+			closable: false,
+			blurring: true,
+		} );
+		this.replaceQueryConfirmationModal.modal( {
+			closable: false,
+			blurring: true,
+		} );
+	}
+
+	toggleReplaceQueryConfirmationModal():void {
+		this.replaceQueryConfirmationModal.modal( "toggle" );
+	}
+
+	toggleDeleteQueryConfirmationModal():void {
+		this.deleteQueryConfirmationModal.modal( "toggle" );
+	}
+
+	onApproveQueryReplacement( approvedQuery:SPARQLQuery ):void {
+		this.askingQuery = <SPARQLQuery>{};
+		this.loadQuery( approvedQuery );
+		this.hideSidebar();
+	}
+
+	onApproveQueryRemoval( approvedQuery:SPARQLQuery ):void {
+		this.removeQuery( approvedQuery );
+		this.askingQuery = <SPARQLQuery>{};
 	}
 
 	getLocalSavedQueries():SPARQLQuery[] {
@@ -650,7 +639,76 @@ export default class SPARQLClientComponent {
 		window.localStorage.setItem( "savedQueries", JSON.stringify( this.savedQueries ) );
 	}
 
+	toggleSidebar():void {
+		this.sidebar.sidebar( "toggle" );
+	}
 
+	hideSidebar():void {
+		this.sidebar.sidebar( "hide" );
+	}
+
+	closeMessage( evt:any ):void {
+		$( evt.srcElement ).closest( ".ui.message" ).transition( "fade" );
+	}
+
+	getMessage( error:any ):Message {
+		switch ( typeof error ) {
+			case "string":
+				return <Message>{
+					title: error,
+					content: "",
+					statusCode: "",
+					statusMessage: "",
+					endpoint: "",
+				};
+			case "object":
+				return <Message>{
+					title: error.name,
+					content: error.message,
+					statusCode: error.response.status,
+					statusMessage: error.response.request.statusText,
+					endpoint: error.response.request.responseURL,
+				};
+			default:
+				return <Message>{
+					title: error.toString(),
+				};
+		}
+	}
+
+	buildResponse( duration:number, resultset:SPARQL.RawResults.Class|string|Message, responseType:string, query:SPARQLQuery ):SPARQLClientResponse {
+		let clientResponse:SPARQLClientResponse = new SPARQLClientResponse();
+		clientResponse.duration = duration;
+		clientResponse.resultset = resultset;
+		clientResponse.setData( resultset );
+		clientResponse.query = query;
+		clientResponse.result = responseType;
+		return clientResponse;
+	}
+
+	handleError( error:HTTP.Errors.HTTPError, query:SPARQLQuery, beforeTimestamp:number ):Promise<SPARQLClientResponse> {
+		let duration:number = (new Date()).valueOf() - beforeTimestamp;
+		return new Promise<SPARQLClientResponse>(
+			( resolve, reject ) => {
+				let stackErrors:number[] = [ 400, 403, 404, 413, 414, 429 ];
+				// TODO implement login modal when 401
+				if ( stackErrors.indexOf( error.response.status ) > - 1 ) {
+					let errorMessage:Message = this.getMessage( error );
+					let errorResponse:SPARQLClientResponse = this.buildResponse( duration, errorMessage, <string> SPARQLResponseType.error, query );
+					resolve( errorResponse );
+				} else {
+					reject( error );
+				}
+			}
+		).then(
+			( response:SPARQLClientResponse ) => {
+				return response;
+			},
+			( _error:HTTP.Errors.HTTPError ) => {
+				return Promise.reject( _error );
+			}
+		);
+	}
 }
 
 export interface SPARQLQueryOperationFormat {
@@ -670,4 +728,11 @@ export interface SPARQLQueryOperations {
 export interface SPARQLTypes {
 	query:string;
 	update:string;
+}
+export interface Message {
+	title:string;
+	content:string;
+	statusCode:string;
+	statusMessage:string;
+	endpoint:string;
 }

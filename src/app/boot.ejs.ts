@@ -4,7 +4,7 @@ import { FORM_PROVIDERS } from "angular2/common";
 import { ROUTER_PROVIDERS, APP_BASE_HREF } from "angular2/router";
 import { HTTP_PROVIDERS } from "angular2/http";
 
-import Carbon from "carbon/Carbon";
+import Carbon from "carbonldp/Carbon";
 
 import AppComponent from "app/AppComponent";
 

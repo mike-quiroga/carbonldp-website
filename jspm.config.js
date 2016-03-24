@@ -6,7 +6,7 @@ SystemJS.config({
   paths: {
     "github:*": "jspm_packages/github/*",
     "npm:*": "jspm_packages/npm/*",
-    "carbon/": "src/../../CarbonLDP-JS-SDK/dist/",
+    "carbonldp/": "src/../../CarbonLDP-JS-SDK/dist/",
     "semantic-ui/": "src/semantic/dist/",
     "app/": "src/app/"
   },
@@ -21,7 +21,7 @@ SystemJS.config({
         }
       }
     },
-    "carbon": {
+    "carbonldp": {
       "defaultExtension": "js"
     },
     "semantic-ui": {

@@ -4,131 +4,69 @@ import { CORE_DIRECTIVES } from "angular2/common";
 import $ from "jquery";
 import "semantic-ui/semantic";
 
+import RelativizeURIPipe from "./RelativizeURIPipe";
+import PrefixURIPipe from "./PrefixURIPipe";
+
 import template from "./template.html!";
 import "./style.css!";
 
 @Component( {
 	selector: "resultset-table",
 	directives: [ CORE_DIRECTIVES ],
-	template: template
+	template: template,
+	pipes: [ RelativizeURIPipe, PrefixURIPipe ],
 } )
 
 export class ResultsetTableComponent {
-	element:ElementRef;
-	$element:JQuery;
-
-	table:HTMLTableElement;
-	tableHead:HTMLTableElement;
-	tableBody:HTMLTableElement;
-
+	@Input() query:any;
 	@Input() resultset:any;
+	@Input() prefixes:{ [ prefix:string ]:string };
 	@Output() resultsetChange:EventEmitter = new EventEmitter();
+
+	sortedColumn:string = null;
+	ascending:boolean = false;
+
+	bindings:any;
+
+	private element:ElementRef;
+	private $element:JQuery;
 
 	constructor( element:ElementRef ) {
 		this.element = element;
 	}
 
-	ngAfterViewInit():void {
+	ngOnInit():void {
 		this.$element = $( this.element.nativeElement );
-		if ( this.resultset != null && this.resultset.head != null )
-			this.buildTable();
 	}
 
 	ngOnChanges( changeRecord:any ):void {
 		if ( "resultset" in changeRecord ) {
 			let change:SimpleChange = changeRecord.resultset;
 			if ( change.currentValue !== change.previousValue ) {
-				this.resultset = change.currentValue;
-				this.buildTable();
+				this.bindings = this.mapBindings( change.currentValue );
 			}
 		}
 	}
 
-	buildTable() {
-		this.table = <HTMLTableElement>document.createElement( "table" );
-		this.tableHead = <HTMLTableElement> this.table.createTHead();
-		this.tableBody = <HTMLTableElement> this.table.createTBody();
+	sortColumn( columnName:string ):void {
+		if ( this.sortedColumn === columnName ) this.ascending = ! this.ascending;
+		this.sortedColumn = columnName;
 
-		this.table.className = "ui celled very compact striped table";
-
-		let columns:string[] = [];
-		let td:HTMLElement = document.createElement( "tr" );
-		// Loop through the heads in the data and add them to the table header
-		this.resultset.head.vars.forEach( ( value:string, index:number ) => {
-			let th:HTMLElement = document.createElement( "th" );
-			th.className = "center aligned";
-			th.innerHTML = value;
-			td.appendChild( th );
-			// Add the variable name to the array for accessing the body object properties
-			columns.push( value );
+		let index:number = this.resultset.head.vars.indexOf( columnName );
+		this.bindings.sort( ( bindingA, bindingB ) => {
+			if ( bindingA[ index ].value > bindingB[ index ].value ) return this.ascending ? - 1 : 1;
+			if ( bindingA[ index ].value < bindingB[ index ].value ) return this.ascending ? 1 : - 1;
+			return 0;
 		} );
-		// Append the table header to the table
-		this.tableHead.appendChild( td );
-		this.table.appendChild( this.tableHead );
+	}
 
-
-		// Variables to help with the class alternating
-		let resourcesNumber:number = 0;
-		let lastResourceURI:string = "";
-
-
-		// Loop through the rows of the result set
-		this.resultset.results.bindings.forEach( ( result:any, index:number ) => {
-			// Create a table row
-			let tr:HTMLElement = document.createElement( "tr" );
-
-			// Loop through the row cells
-			columns.forEach( ( colName:string, colIndex:number ) => {
-				// Create a table cell
-				let td:HTMLElement = document.createElement( "td" );
-
-				var firstURI:boolean = false;
-				// If it is the first URI get the resourceURI
-				if ( colIndex == 0 ) {
-					if ( result[ colName ].value != lastResourceURI ) {
-						lastResourceURI = result[ colName ].value;
-						resourcesNumber ++;
-						firstURI = true;
-					}
-				}
-
-
-				// If the row doesn't have the column make it empty
-				if ( result[ colName ] == null ) {
-					td.innerHTML = "";
-				} else {
-					var type = result[ colName ].type;
-					var value = result[ colName ].value;
-
-					// Check the type of information the cell has and add the content to it
-					if ( type == "uri" ) {
-						if ( firstURI ) firstURI = false;
-						else {
-							if ( value.search( lastResourceURI ) != - 1 ) {
-								value = value.replace( lastResourceURI, "&#60;" ) + "&#62;";
-							}
-						}
-					} else if ( type == "typed-literal" ) {
-						//var datatype = prefixURI( result[ colName ].datatype )?;
-						var datatype = "";
-						value = `"${ value }"^^${ datatype }`;
-						td.className = td.className + " success";
-					} else {
-						value = `"${ value }"`;
-						td.className = td.className + " warning";
-					}
-					//value = prefixURI( value );
-					td.innerHTML = value;
-				}
-
-				// Add the cell to the row
-				tr.appendChild( td );
-			} );
-
-			// Add the cell to the row
-			this.tableBody.appendChild( tr );
+	private mapBindings( resultset:any ):any {
+		return resultset.results.bindings.map( ( bindingObject ) => {
+			let bindingArray:any = [];
+			for ( let varName of resultset.head.vars ) {
+				bindingArray.push( bindingObject[ varName ] );
+			}
+			return bindingArray;
 		} );
-		this.element.nativeElement.innerHTML = "";
-		this.element.nativeElement.appendChild( this.table );
 	}
 }

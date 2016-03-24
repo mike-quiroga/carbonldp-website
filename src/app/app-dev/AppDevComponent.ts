@@ -1,21 +1,21 @@
-import {Injectable, Component, ElementRef, Injector } from "angular2/core";
+import {Injectable, Injector, Component, ElementRef } from "angular2/core";
 import {RouteConfig, RouterOutlet, CanActivate, Router} from 'angular2/router';
 
 import $ from "jquery";
 import "semantic-ui/semantic";
 import SidebarService from "./components/sidebar/service/SidebarService"
-import Carbon from "carbon/Carbon";
+import Carbon from "carbonldp/Carbon";
 import { CARBON_PROVIDER, appInjector } from "app/boot";
-import AuthenticationToken from "carbon/Auth";
-import * as Credentials from "carbon/Auth/Credentials";
-import * as HTTP from "carbon/HTTP";
+import AuthenticationToken from "carbonldp/Auth";
+import * as Credentials from "carbonldp/Auth/Credentials";
+import * as HTTP from "carbonldp/HTTP";
 import Cookies from "js-cookie";
 
 import SidebarComponent from "./components/sidebar/SidebarComponent";
 import HeaderComponent from "./header/HeaderComponent";
 import FooterComponent from "./footer/FooterComponent";
 import MenuBarComponent from "./components/menubar/MenuBarComponent";
-import SPARQLClientComponent from "app/components/sparql-client/SPARQLClientComponent";
+import ErrorsAreaComponent from "./components/errors-area/ErrorsAreaComponent";
 
 import DashboardView from "./dashboard/DashboardView";
 import MyAppsView from "./my-apps/my-apps-view/MyAppsView";
@@ -36,7 +36,7 @@ import "./style.css!";
 		let cookiesHandler:Cookies = Cookies;
 		let tokenCookie:Credentials = <Credentials>cookiesHandler.getJSON( "carbon_jwt" );
 		if ( tokenCookie && ! carbon.auth.isAuthenticated() ) {
-			return carbon.auth.authenticate( tokenCookie ).then(
+			return carbon.auth.authenticateUsing( "TOKEN", tokenCookie ).then(
 				( credentials:Credentials ) => {
 					return carbon.auth.isAuthenticated();
 				}
@@ -63,7 +63,7 @@ import "./style.css!";
 @Component( {
 	selector: "app-dev",
 	template: template,
-	directives: [ RouterOutlet, SidebarComponent, HeaderComponent, FooterComponent, MenuBarComponent ]
+	directives: [ RouterOutlet, SidebarComponent, HeaderComponent, FooterComponent, MenuBarComponent, ErrorsAreaComponent, ],
 } )
 @RouteConfig( [
 	{
