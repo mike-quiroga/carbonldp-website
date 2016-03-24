@@ -5,6 +5,10 @@ import { ROUTER_DIRECTIVES, ROUTER_PROVIDERS, Router, Instruction } from "angula
 import $ from "jquery";
 import "semantic-ui/semantic";
 
+import Carbon from "carbonldp/Carbon";
+import * as Credentials from "carbonldp/Auth/Credentials";
+import * as HTTP from "carbonldp/HTTP";
+import Cookies from "js-cookie";
 
 import template from "./template.html!";
 import "./style.css!";
@@ -16,36 +20,33 @@ import "./style.css!";
 export default class HeaderComponent {
 	router:Router;
 	element:ElementRef;
-	$element;
+	$element:JQuery;
+	private cookiesHandler:Cookies;
 
 	constructor( router:Router, element:ElementRef ) {
 		this.router = router;
 		this.element = element;
+		this.cookiesHandler = Cookies;
 	}
 
 	ngAfterViewInit():void {
 		this.$element = $( this.element.nativeElement );
 		this.createDropdownMenus();
-		this.createCollapsableMenus();
 	}
 
 	isActive( route:string ):boolean {
-		let instruction = this.router.generate( [ route ] );
+		let instruction:Instruction = this.router.generate( [ route ] );
 		return this.router.isRouteActive( instruction );
 	}
 
 	createDropdownMenus():void {
 		this.$element.find( ".ui.dropdown" ).dropdown( {
-			on: "hover"
+			on: "hover",
 		} );
 	}
 
-	createCollapsableMenus():void {
-		let verticalMenu:JQuery = this.$element.find( ".ui.vertical.menu" );
-		this.$element.find( ".menu.item.open" ).on( "click", function ( e ) {
-			e.preventDefault();
-			verticalMenu.toggle();
-		} );
-		verticalMenu.toggle();
+	logOut():void {
+		this.cookiesHandler.remove( "carbon_jwt" );
+		this.router.navigate( [ "Website", "Login" ] );
 	}
 }
