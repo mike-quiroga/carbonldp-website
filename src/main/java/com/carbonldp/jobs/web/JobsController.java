@@ -1,5 +1,6 @@
 package com.carbonldp.jobs.web;
 
+import com.carbonldp.Consts;
 import com.carbonldp.descriptions.APIPreferences;
 import com.carbonldp.rdf.RDFDocument;
 import com.carbonldp.web.AbstractController;
@@ -24,7 +25,18 @@ public class JobsController extends AbstractController {
 	private JobPOSTHandler postRequestHandler;
 
 	@InteractionModel( value = {APIPreferences.InteractionModel.CONTAINER}, handlesDefault = true )
-	@RequestMapping( method = RequestMethod.POST )
+	@RequestMapping( method = RequestMethod.POST, consumes = {
+		Consts.RDFMediaTypes.TURTLE,
+		Consts.RDFMediaTypes.JSON_LD,
+		Consts.RDFMediaTypes.JSON_RDF,
+		Consts.RDFMediaTypes.XML_RDF,
+		Consts.RDFMediaTypes.TRIG,
+		Consts.RDFMediaTypes.N_TRIPLES,
+		Consts.RDFMediaTypes.N3,
+		Consts.RDFMediaTypes.TRIX,
+		Consts.RDFMediaTypes.BINARY,
+		Consts.RDFMediaTypes.N_QUADS
+	} )
 	public ResponseEntity<Object> createJob( @RequestBody RDFDocument requestDocument, HttpServletRequest request, HttpServletResponse response ) {
 		return postRequestHandler.handleRequest( requestDocument, request, response );
 	}

@@ -39,7 +39,7 @@ public class JobsExecutor {
 		LOG.debug( "Running execution " + Thread.currentThread().getName() + " Job " + job.getSubject(), Thread.currentThread().getName() );
 
 		try {
-			getTypedRepository( type ).execute( job, execution );
+			transactionWrapper.runWithSystemPermissionsInPlatformContext( () -> getTypedRepository( type ).execute( job, execution ) );
 		} catch ( Exception e ) {
 			executionRepository.changeExecutionStatus( execution.getURI(), ExecutionDescription.Status.ERROR );
 			hasErrors = true;

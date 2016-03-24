@@ -45,8 +45,8 @@ public class SesameJobService extends AbstractSesameLDPService implements JobSer
 		List<Infraction> infractions = new ArrayList<>();
 		JobDescription.Type jobType = JobFactory.getInstance().getJobType( job );
 		switch ( jobType ) {
-			case BACKUP:
-				infractions = BackupJobFactory.getInstance().validate( job );
+			case EXPORT_BACKUP_JOB:
+				infractions = ExportBackupJobFactory.getInstance().validate( job );
 				break;
 			default:
 				infractions.add( new Infraction( 0x2001, "rdf.type", "job type" ) );
