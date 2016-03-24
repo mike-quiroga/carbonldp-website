@@ -1,5 +1,6 @@
 package com.carbonldp.apps;
 
+import com.carbonldp.Consts;
 import com.carbonldp.Vars;
 import com.carbonldp.agents.Agent;
 import com.carbonldp.agents.app.AppAgentRepository;
@@ -26,6 +27,7 @@ import com.carbonldp.utils.URIUtil;
 import com.carbonldp.web.exceptions.NotFoundException;
 import org.openrdf.model.URI;
 import org.openrdf.model.impl.URIImpl;
+import org.openrdf.model.vocabulary.RDF;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -190,8 +192,8 @@ public class SesameAppService extends AbstractSesameLDPService implements AppSer
 	private void createBackupContainer( App app ) {
 		URI containerURI = generateBackupContainerURI( app );
 		RDFResource backupsResource = new RDFResource( containerURI );
-		DirectContainer backupsContainer = DirectContainerFactory.getInstance().create( backupsResource, app.getURI(), AppDescription.Property.BACKUP.getURI() );
-		sourceRepository.createAccessPoint( app.getURI(), backupsContainer );
+		BasicContainer backupsContainer = BasicContainerFactory.getInstance().create( backupsResource, AppDescription.Property.BACKUP.getURI() );
+		containerService.createChild( app.getURI(), backupsContainer );
 		aclRepository.createACL( backupsContainer.getURI() );
 	}
 
@@ -204,10 +206,15 @@ public class SesameAppService extends AbstractSesameLDPService implements AppSer
 	private void createJobsContainer( App app ) {
 		URI containerURI = generateJobsContainerURI( app );
 		RDFResource jobsResource = new RDFResource( containerURI );
-		DirectContainer jobsContainer = DirectContainerFactory.getInstance().create( jobsResource, app.getURI(), AppDescription.Property.JOB.getURI() );
-		jobsContainer.setMemberOfRelation( JobDescription.Property.APP_RELATED.getURI() );
-		sourceRepository.createAccessPoint( app.getURI(), jobsContainer );
-		aclRepository.createACL( jobsContainer.getURI() );
+		BasicContainer jobsContainer = BasicContainerFactory.getInstance().create( jobsResource, AppDescription.Property.JOB.getURI() );
+		jobsContainer.set( JobDescription.Property.APP_RELATED.getURI(), app.getURI() );
+
+		URI jobsExecutionQueue = new URIImpl( jobsContainer.getURI().stringValue() + Consts.HASH_SIGN + Vars.getInstance().getJobsExecutionQueue() );
+		jobsContainer.set( AppDescription.Property.JOB_EXECUTION_QUEUE.getURI(), jobsExecutionQueue );
+		jobsContainer.getBaseModel().add( jobsExecutionQueue, RDF.FIRST, jobsExecutionQueue, jobsContainer.getURI() );
+		jobsContainer.getBaseModel().add( jobsExecutionQueue, RDF.REST, RDF.NIL, jobsContainer.getURI() );
+
+		containerService.createChild( app.getURI(), jobsContainer );
 	}
 
 	private URI generateJobsContainerURI( App app ) {

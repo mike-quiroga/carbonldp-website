@@ -22,7 +22,7 @@ import javax.servlet.http.HttpServletResponse;
 @Controller
 @RequestMapping( value = "/platform/apps/*/jobs/" )
 public class JobsController extends AbstractController {
-	private JobPOSTHandler postRequestHandler;
+	private JobsPOSTHandler postRequestHandler;
 
 	@InteractionModel( value = {APIPreferences.InteractionModel.CONTAINER}, handlesDefault = true )
 	@RequestMapping( method = RequestMethod.POST, consumes = {
@@ -42,6 +42,6 @@ public class JobsController extends AbstractController {
 	}
 
 	@Autowired
-	public void setPostRequestHandler( JobPOSTHandler postRequestHandler ) {this.postRequestHandler = postRequestHandler;}
+	public void setPostRequestHandler( JobsPOSTHandler postRequestHandler ) {this.postRequestHandler = postRequestHandler;}
 
 }

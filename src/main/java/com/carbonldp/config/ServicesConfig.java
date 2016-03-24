@@ -13,8 +13,6 @@ import com.carbonldp.authorization.acl.ACLService;
 import com.carbonldp.authorization.acl.SesameACLService;
 import com.carbonldp.jobs.JobService;
 import com.carbonldp.jobs.SesameJobService;
-import com.carbonldp.jobs.SesameExecutionService;
-import com.carbonldp.jobs.ExecutionService;
 import com.carbonldp.ldp.containers.ContainerService;
 import com.carbonldp.ldp.containers.SesameContainerService;
 import com.carbonldp.ldp.nonrdf.NonRDFSourceService;
@@ -93,9 +91,6 @@ public class ServicesConfig {
 
 	@Bean
 	public JobService jobService() {return new SesameJobService(); }
-
-	@Bean
-	public ExecutionService executionService() {return new SesameExecutionService(); }
 
 	@Bean
 	public BackupService backupService() {return new SesameBackupService(); }

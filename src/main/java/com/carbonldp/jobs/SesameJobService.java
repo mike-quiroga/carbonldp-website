@@ -23,6 +23,7 @@ import java.util.List;
 public class SesameJobService extends AbstractSesameLDPService implements JobService {
 	private ContainerService containerService;
 	private RDFSourceService sourceService;
+	private ExecutionRepository executionRepository;
 
 	public void create( URI targetURI, Job job ) {
 		validate( job );
@@ -30,6 +31,12 @@ public class SesameJobService extends AbstractSesameLDPService implements JobSer
 		containerService.createChild( targetURI, job );
 
 		createExecutionsContainer( job );
+	}
+
+	public void createExecution( URI jobURI, Execution execution ) {
+		containerService.createChild( jobURI, execution );
+		URI appURI = executionRepository.getAppRelatedURI( jobURI );
+		executionRepository.enqueue( execution.getURI(), appURI );
 	}
 
 	private void createExecutionsContainer( Job job ) {
@@ -64,4 +71,9 @@ public class SesameJobService extends AbstractSesameLDPService implements JobSer
 
 	@Autowired
 	public void setSourceService( RDFSourceService sourceService ) { this.sourceService = sourceService; }
+
+	@Autowired
+	public void setExecutionRepository( ExecutionRepository executionRepository ) {
+		this.executionRepository = executionRepository;
+	}
 }
