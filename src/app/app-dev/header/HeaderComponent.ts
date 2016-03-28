@@ -15,7 +15,7 @@ import "./style.css!";
 @Component( {
 	selector: "header",
 	template: template,
-	directives: [ CORE_DIRECTIVES, ROUTER_DIRECTIVES ]
+	directives: [ CORE_DIRECTIVES, ROUTER_DIRECTIVES, ],
 } )
 export default class HeaderComponent {
 	router:Router;

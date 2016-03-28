@@ -18,7 +18,7 @@ import template from "./template.html!";
 @Component( {
 	selector: "login",
 	template: template,
-	directives: [ CORE_DIRECTIVES, ROUTER_DIRECTIVES, FORM_DIRECTIVES ]
+	directives: [ CORE_DIRECTIVES, ROUTER_DIRECTIVES, FORM_DIRECTIVES, ],
 } )
 export default class LoginComponent {
 	carbon:Carbon;

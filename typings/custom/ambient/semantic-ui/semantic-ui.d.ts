@@ -15,4 +15,5 @@ interface JQuery {
 	sidebar:( arguments?:any ) => JQuery;
 	modal:( arguments?:any ) => JQuery;
 	checkbox:( arguments?:any ) => JQuery;
+	popup:( arguments?:any ) => JQuery;
 }

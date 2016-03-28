@@ -32,7 +32,7 @@ export default class HeaderComponent {
 	}
 
 	isActive( route:string ):boolean {
-		let instruction = this.router.generate( [ route ] );
+		let instruction:Instruction = this.router.generate( [ route ] );
 		return this.router.isRouteActive( instruction );
 	}
 
