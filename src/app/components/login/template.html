@@ -18,6 +18,12 @@
 				       ngControl="password">
 			</div>
 		</div>
+		<div class="field">
+			<div class="ui checkbox" [ngClass]="{checked: remember}">
+				<input type="checkbox" ngControl="rememberMe" [(ngModel)]="remember" checked="">
+				<label>Remember me</label>
+			</div>
+		</div>
 		<button type="submit"
 		        [ngClass]="{ loading: submitting }"
 		        class="ui fluid large california submit button"
