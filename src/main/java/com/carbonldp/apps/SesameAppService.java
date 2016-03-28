@@ -15,7 +15,6 @@ import com.carbonldp.exceptions.ResourceAlreadyExistsException;
 import com.carbonldp.exceptions.ResourceDoesntExistException;
 import com.carbonldp.jobs.JobDescription;
 import com.carbonldp.ldp.AbstractSesameLDPService;
-import com.carbonldp.ldp.containers.*;
 import com.carbonldp.ldp.containers.BasicContainer;
 import com.carbonldp.ldp.containers.BasicContainerFactory;
 import com.carbonldp.ldp.containers.Container;
@@ -209,12 +208,17 @@ public class SesameAppService extends AbstractSesameLDPService implements AppSer
 		BasicContainer jobsContainer = BasicContainerFactory.getInstance().create( jobsResource, AppDescription.Property.JOB.getURI() );
 		jobsContainer.set( JobDescription.Property.APP_RELATED.getURI(), app.getURI() );
 
-		URI jobsExecutionQueue = new URIImpl( jobsContainer.getURI().stringValue() + Consts.HASH_SIGN + Vars.getInstance().getJobsExecutionQueue() );
-		jobsContainer.set( AppDescription.Property.JOB_EXECUTION_QUEUE.getURI(), jobsExecutionQueue );
-		jobsContainer.getBaseModel().add( jobsExecutionQueue, RDF.FIRST, jobsExecutionQueue, jobsContainer.getURI() );
-		jobsContainer.getBaseModel().add( jobsExecutionQueue, RDF.REST, RDF.NIL, jobsContainer.getURI() );
+		jobsContainer = createQueue( jobsContainer );
 
 		containerService.createChild( app.getURI(), jobsContainer );
+	}
+
+	private BasicContainer createQueue( BasicContainer jobsContainer ) {
+		URI jobsExecutionQueue = new URIImpl( jobsContainer.getURI().stringValue() + Consts.HASH_SIGN + Vars.getInstance().getQueue() );
+		jobsContainer.set( JobDescription.List.QUEUE.getURI(), jobsExecutionQueue );
+		jobsContainer.getBaseModel().add( jobsExecutionQueue, RDF.FIRST, jobsExecutionQueue, jobsContainer.getURI() );
+		jobsContainer.getBaseModel().add( jobsExecutionQueue, RDF.REST, RDF.NIL, jobsContainer.getURI() );
+		return jobsContainer;
 	}
 
 	private URI generateJobsContainerURI( App app ) {

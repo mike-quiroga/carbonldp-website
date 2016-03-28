@@ -56,7 +56,7 @@ public class UpdateAction1o6o0 extends AbstractUpdateAction {
 	}
 
 	private void createJobsQueue( App app ) {
-		URI appJobsExecutionQueue = new URIImpl( app.getURI().stringValue() + Consts.HASH_SIGN + Vars.getInstance().getJobsExecutionQueue() );
+		URI appJobsExecutionQueue = new URIImpl( app.getURI().stringValue() + Consts.HASH_SIGN + Vars.getInstance().getQueue() );
 		app.setJobsExecutionQueue( appJobsExecutionQueue );
 		app.getBaseModel().add( appJobsExecutionQueue, RDF.FIRST, appJobsExecutionQueue, app.getURI() );
 		app.getBaseModel().add( appJobsExecutionQueue, RDF.REST, RDF.NIL, app.getURI() );
