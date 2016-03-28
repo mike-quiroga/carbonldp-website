@@ -32,11 +32,21 @@ export default class HeaderComponent {
 	ngAfterViewInit():void {
 		this.$element = $( this.element.nativeElement );
 		this.createDropdownMenus();
+		this.createCollapsableMenus();
 	}
 
 	isActive( route:string ):boolean {
 		let instruction:Instruction = this.router.generate( [ route ] );
 		return this.router.isRouteActive( instruction );
+	}
+
+	createCollapsableMenus():void {
+		let verticalMenu:JQuery = this.$element.find( ".ui.vertical.menu" );
+		this.$element.find( ".item.open" ).on( "click", function ( e ) {
+			e.preventDefault();
+			verticalMenu.toggle();
+		} );
+		verticalMenu.toggle();
 	}
 
 	createDropdownMenus():void {
