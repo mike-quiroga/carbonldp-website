@@ -1,3 +1,13 @@
+# 0.5.6 (March 28, 3016)
+* Add logout option to AppDev.
+* Add rememberMe option to loginComponent.
+* Add login view for AppDev to AppComponent.
+* Add link to AppDevLogin on mobile view.
+* Fix login component error messages layout.
+* Fix login component displaying outside viewport on small screens.
+* Fix minor tslint errors.
+* Fix AppDev header menu misbehaviour on mobile screens.
+
 # 0.5.5 (March 16, 3016)
 * Add confirmation when changing between queries.
 * Change SPARQL Editor UI.
