@@ -24,13 +24,13 @@ import template from "./template.html!";
 import "./style.css!";
 
 @CanActivate(
-	( prev, next )=> {
+	( prev, next ):boolean => {
 		let injector:Injector = appInjector();
 		let carbon:Carbon = injector.get( Carbon );
 		let router:Router = injector.get( Router );
 
 		if ( ! carbon ) {
-			router.navigate( [ "/Website/Login" ] );
+			router.navigate( [ "/AppDevLogin" ] );
 			return false;
 		}
 		let cookiesHandler:Cookies = Cookies;
@@ -50,13 +50,13 @@ import "./style.css!";
 							console.log( "There was a problem processing the request" );
 							break;
 					}
-					router.navigate( [ "/Website/Login" ] );
+					router.navigate( [ "/AppDevLogin" ] );
 					return false;
 				}
 			);
 		}
 		if ( ! carbon.auth.isAuthenticated() )
-			router.navigate( [ "/Website/Login" ] );
+			router.navigate( [ "/AppDevLogin" ] );
 		return carbon.auth.isAuthenticated();
 	}
 )
@@ -73,8 +73,8 @@ import "./style.css!";
 		useAsDefault: true,
 		data: {
 			alias: "Home",
-			displayName: "Home"
-		}
+			displayName: "Home",
+		},
 	},
 	{
 		path: "/my-apps/...",
@@ -82,9 +82,9 @@ import "./style.css!";
 		component: MyAppsView,
 		data: {
 			alias: "MyApps",
-			displayName: "My Apps"
-		}
-	}
+			displayName: "My Apps",
+		},
+	},
 ] )
 export default class AppDevComponent {
 	element:ElementRef;
