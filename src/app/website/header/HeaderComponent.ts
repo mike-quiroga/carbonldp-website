@@ -12,12 +12,12 @@ import "./style.css!";
 @Component( {
 	selector: "header",
 	template: template,
-	directives: [ CORE_DIRECTIVES, ROUTER_DIRECTIVES, LoginComponent ]
+	directives: [ CORE_DIRECTIVES, ROUTER_DIRECTIVES, LoginComponent, ],
 } )
 export default class HeaderComponent {
 	router:Router;
 	element:ElementRef;
-	$element;
+	$element:JQuery;
 
 	constructor( router:Router, element:ElementRef ) {
 		this.router = router;
@@ -38,7 +38,7 @@ export default class HeaderComponent {
 
 	createDropdownMenus():void {
 		this.$element.find( ".ui.dropdown" ).dropdown( {
-			on: "hover"
+			on: "hover",
 		} );
 	}
 
@@ -53,15 +53,14 @@ export default class HeaderComponent {
 
 	createLoginPopUp():void {
 		this.$element.find( ".computer.tablet .login.item" ).popup( {
-			//inline: true,
 			popup: this.$element.find( ".login.popup" ),
 			hoverable: false,
-			position: "bottom left",
+			position: "bottom right",
 			on: "click",
 			preserve: true,
 			transition: "pulse",
 			hideOnScroll: false,
-			closable: false
+			closable: false,
 		} );
 	}
 
