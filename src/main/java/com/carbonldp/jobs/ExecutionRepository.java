@@ -12,9 +12,7 @@ public interface ExecutionRepository {
 
 	public void changeExecutionStatus( URI executionURI, ExecutionDescription.Status status );
 
-	public void enqueue( URI executionURI, URI appURI );
-
-	public URI getAppRelatedURI( URI executionsContainerURI );
+	public void enqueue( URI executionURI, URI executionQueueLocationURI );
 
 	public void addResult(URI executionURI, Value status);
 }

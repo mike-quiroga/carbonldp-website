@@ -1,16 +1,11 @@
 package com.carbonldp.jobs;
 
-import com.carbonldp.Vars;
 import com.carbonldp.exceptions.InvalidResourceException;
 import com.carbonldp.ldp.AbstractSesameLDPService;
 import com.carbonldp.ldp.containers.ContainerService;
-import com.carbonldp.ldp.containers.DirectContainer;
-import com.carbonldp.ldp.containers.DirectContainerFactory;
 import com.carbonldp.ldp.sources.RDFSourceService;
 import com.carbonldp.models.Infraction;
-import com.carbonldp.rdf.RDFResource;
 import org.openrdf.model.URI;
-import org.openrdf.model.impl.URIImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
@@ -24,28 +19,17 @@ public class SesameJobService extends AbstractSesameLDPService implements JobSer
 	private ContainerService containerService;
 	private RDFSourceService sourceService;
 	private ExecutionRepository executionRepository;
+	private JobRepository jobRepository;
 
 	public void create( URI targetURI, Job job ) {
 		validate( job );
-
 		containerService.createChild( targetURI, job );
-
-		createExecutionsContainer( job );
 	}
 
 	public void createExecution( URI jobURI, Execution execution ) {
 		containerService.createChild( jobURI, execution );
-		URI appURI = executionRepository.getAppRelatedURI( jobURI );
-		executionRepository.enqueue( execution.getURI(), appURI );
-	}
-
-	private void createExecutionsContainer( Job job ) {
-		URI executionsURI = new URIImpl( job.getURI().stringValue().concat( Vars.getInstance().getExecutions() ) );
-		RDFResource executionsResource = new RDFResource( executionsURI );
-
-		DirectContainer container = DirectContainerFactory.getInstance().create( executionsResource, job.getURI(), JobDescription.Property.EXECUTION.getURI(), ExecutionDescription.Property.JOB.getURI() );
-
-		sourceService.createAccessPoint( job.getURI(), container );
+		URI executionQueueLocation = jobRepository.getExecutionQueueLocation( jobURI );
+		executionRepository.enqueue( execution.getURI(), executionQueueLocation );
 	}
 
 	private void validate( Job job ) {
@@ -75,5 +59,10 @@ public class SesameJobService extends AbstractSesameLDPService implements JobSer
 	@Autowired
 	public void setExecutionRepository( ExecutionRepository executionRepository ) {
 		this.executionRepository = executionRepository;
+	}
+
+	@Autowired
+	public void setJobRepository( JobRepository jobRepository ) {
+		this.jobRepository = jobRepository;
 	}
 }

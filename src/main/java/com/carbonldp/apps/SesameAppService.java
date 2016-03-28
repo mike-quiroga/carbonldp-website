@@ -13,14 +13,14 @@ import com.carbonldp.authorization.acl.ACL;
 import com.carbonldp.exceptions.InvalidResourceException;
 import com.carbonldp.exceptions.ResourceAlreadyExistsException;
 import com.carbonldp.exceptions.ResourceDoesntExistException;
+import com.carbonldp.jobs.ExecutionDescription;
 import com.carbonldp.jobs.JobDescription;
 import com.carbonldp.ldp.AbstractSesameLDPService;
-import com.carbonldp.ldp.containers.BasicContainer;
-import com.carbonldp.ldp.containers.BasicContainerFactory;
-import com.carbonldp.ldp.containers.Container;
-import com.carbonldp.ldp.containers.ContainerService;
+import com.carbonldp.ldp.containers.*;
 import com.carbonldp.ldp.sources.RDFSourceService;
 import com.carbonldp.models.Infraction;
+import com.carbonldp.namespaces.C;
+import com.carbonldp.namespaces.LDP;
 import com.carbonldp.rdf.RDFResource;
 import com.carbonldp.utils.URIUtil;
 import com.carbonldp.web.exceptions.NotFoundException;
@@ -191,8 +191,8 @@ public class SesameAppService extends AbstractSesameLDPService implements AppSer
 	private void createBackupContainer( App app ) {
 		URI containerURI = generateBackupContainerURI( app );
 		RDFResource backupsResource = new RDFResource( containerURI );
-		BasicContainer backupsContainer = BasicContainerFactory.getInstance().create( backupsResource, AppDescription.Property.BACKUP.getURI() );
-		containerService.createChild( app.getURI(), backupsContainer );
+		BasicContainer backupsContainer = BasicContainerFactory.getInstance().create( backupsResource);
+		containerRepository.createChild( app.getURI(), backupsContainer );
 		aclRepository.createACL( backupsContainer.getURI() );
 	}
 
@@ -205,17 +205,17 @@ public class SesameAppService extends AbstractSesameLDPService implements AppSer
 	private void createJobsContainer( App app ) {
 		URI containerURI = generateJobsContainerURI( app );
 		RDFResource jobsResource = new RDFResource( containerURI );
-		BasicContainer jobsContainer = BasicContainerFactory.getInstance().create( jobsResource, AppDescription.Property.JOB.getURI() );
-		jobsContainer.set( JobDescription.Property.APP_RELATED.getURI(), app.getURI() );
+		BasicContainer jobsContainer = BasicContainerFactory.getInstance().create( jobsResource, new URIImpl( LDP.Properties.MEMBER),JobDescription.Property.EXECUTION_QUEUE_LOCATION.getURI());
 
 		jobsContainer = createQueue( jobsContainer );
 
-		containerService.createChild( app.getURI(), jobsContainer );
+		containerRepository.createChild( app.getURI(), jobsContainer );
+		aclRepository.createACL( jobsContainer.getURI() );
 	}
 
 	private BasicContainer createQueue( BasicContainer jobsContainer ) {
 		URI jobsExecutionQueue = new URIImpl( jobsContainer.getURI().stringValue() + Consts.HASH_SIGN + Vars.getInstance().getQueue() );
-		jobsContainer.set( JobDescription.List.QUEUE.getURI(), jobsExecutionQueue );
+		jobsContainer.set( ExecutionDescription.List.QUEUE.getURI(), jobsExecutionQueue );
 		jobsContainer.getBaseModel().add( jobsExecutionQueue, RDF.FIRST, jobsExecutionQueue, jobsContainer.getURI() );
 		jobsContainer.getBaseModel().add( jobsExecutionQueue, RDF.REST, RDF.NIL, jobsContainer.getURI() );
 		return jobsContainer;

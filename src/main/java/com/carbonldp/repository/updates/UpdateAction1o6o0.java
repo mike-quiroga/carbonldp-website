@@ -4,9 +4,13 @@ import com.carbonldp.Consts;
 import com.carbonldp.Vars;
 import com.carbonldp.apps.App;
 import com.carbonldp.apps.AppDescription;
+import com.carbonldp.jobs.ExecutionDescription;
 import com.carbonldp.jobs.JobDescription;
+import com.carbonldp.ldp.containers.BasicContainer;
+import com.carbonldp.ldp.containers.BasicContainerFactory;
 import com.carbonldp.ldp.containers.DirectContainer;
 import com.carbonldp.ldp.containers.DirectContainerFactory;
+import com.carbonldp.namespaces.LDP;
 import com.carbonldp.rdf.RDFResource;
 import org.openrdf.model.URI;
 import org.openrdf.model.impl.URIImpl;
@@ -31,7 +35,6 @@ public class UpdateAction1o6o0 extends AbstractUpdateAction {
 	private void updateApp( App app ) {
 		createBackupContainer( app );
 		createJobsContainer( app );
-		createJobsQueue( app );
 	}
 
 	private void createBackupContainer( App app ) {
@@ -39,8 +42,8 @@ public class UpdateAction1o6o0 extends AbstractUpdateAction {
 		String backupsString = Vars.getInstance().getBackupsContainer();
 		URI containerURI = new URIImpl( appString + backupsString );
 		RDFResource backupsResource = new RDFResource( containerURI );
-		DirectContainer backupsContainer = DirectContainerFactory.getInstance().create( backupsResource, app.getURI(), AppDescription.Property.BACKUP.getURI() );
-		sourceRepository.createAccessPoint( app.getURI(), backupsContainer );
+		BasicContainer backupsContainer = BasicContainerFactory.getInstance().create( backupsResource );
+		containerRepository.createChild( app.getURI(), backupsContainer );
 		aclRepository.createACL( backupsContainer.getURI() );
 	}
 
@@ -49,18 +52,19 @@ public class UpdateAction1o6o0 extends AbstractUpdateAction {
 		String jobsString = Vars.getInstance().getJobsContainer();
 		URI containerURI = new URIImpl( appString + jobsString );
 		RDFResource jobsResource = new RDFResource( containerURI );
-		DirectContainer jobsContainer = DirectContainerFactory.getInstance().create( jobsResource, app.getURI(), AppDescription.Property.JOB.getURI() );
-		jobsContainer.setMemberOfRelation( JobDescription.Property.APP_RELATED.getURI() );
-		sourceRepository.createAccessPoint( app.getURI(), jobsContainer );
+		BasicContainer jobsContainer = BasicContainerFactory.getInstance().create( jobsResource, new URIImpl( LDP.Properties.MEMBER ), JobDescription.Property.EXECUTION_QUEUE_LOCATION.getURI() );
+		jobsContainer = createQueue( jobsContainer );
+
+		containerRepository.createChild( app.getURI(), jobsContainer );
 		aclRepository.createACL( jobsContainer.getURI() );
 	}
 
-	private void createJobsQueue( App app ) {
-		URI appJobsExecutionQueue = new URIImpl( app.getURI().stringValue() + Consts.HASH_SIGN + Vars.getInstance().getQueue() );
-		app.setJobsExecutionQueue( appJobsExecutionQueue );
-		app.getBaseModel().add( appJobsExecutionQueue, RDF.FIRST, appJobsExecutionQueue, app.getURI() );
-		app.getBaseModel().add( appJobsExecutionQueue, RDF.REST, RDF.NIL, app.getURI() );
-		documentRepository.set( app.getURI(), app.getDocument() );
+	private BasicContainer createQueue( BasicContainer jobsContainer ) {
+		URI jobsExecutionQueue = new URIImpl( jobsContainer.getURI().stringValue() + Consts.HASH_SIGN + Vars.getInstance().getQueue() );
+		jobsContainer.set( ExecutionDescription.List.QUEUE.getURI(), jobsExecutionQueue );
+		jobsContainer.getBaseModel().add( jobsExecutionQueue, RDF.FIRST, jobsExecutionQueue, jobsContainer.getURI() );
+		jobsContainer.getBaseModel().add( jobsExecutionQueue, RDF.REST, RDF.NIL, jobsContainer.getURI() );
+		return jobsContainer;
 	}
 }
 
