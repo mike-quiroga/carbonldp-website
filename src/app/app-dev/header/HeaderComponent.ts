@@ -47,6 +47,6 @@ export default class HeaderComponent {
 
 	logOut():void {
 		this.cookiesHandler.remove( "carbon_jwt" );
-		this.router.navigate( [ "Website", "Login" ] );
+		this.router.navigate( [ "AppDevLogin" ] );
 	}
 }
