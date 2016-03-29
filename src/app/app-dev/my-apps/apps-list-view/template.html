@@ -5,12 +5,12 @@
 			<div class="ui icon buttons">
 				<button class="ui button"
 				        [ngClass]="{active: tileView}"
-				        (click)="toggleView()">
+				        (click)="activateGridView()">
 					<i class="grid layout icon"></i>
 				</button>
 				<button class="ui button"
 				        [ngClass]="{active: !tileView}"
-				        (click)="toggleView()">
+				        (click)="activateListView()">
 					<i class="list layout icon"></i>
 				</button>
 			</div>

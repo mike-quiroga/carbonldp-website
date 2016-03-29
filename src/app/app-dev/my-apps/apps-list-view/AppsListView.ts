@@ -35,8 +35,12 @@ export default class AppsListView {
 		this.router = router;
 	}
 
-	toggleView():void {
-		this.tileView = ! this.tileView;
+	activateGridView():void {
+		this.tileView = true;
+	}
+
+	activateListView():void {
+		this.tileView = false;
 	}
 
 	routerOnActivate():void {
