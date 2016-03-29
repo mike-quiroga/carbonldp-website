@@ -108,7 +108,8 @@ public class SesameExecutionRepository extends AbstractSesameLDPRepository imple
 			"DELETE {" + NEW_LINE +
 			TAB + "GRAPH ?context {" + NEW_LINE +
 			TAB + TAB + " ?queue <" + RDF.REST + "> ?dequeueElement." + NEW_LINE +
-			TAB + TAB + " ?dequeueElement ?p ?o." + NEW_LINE +
+			TAB + TAB + " ?dequeueElement <" + RDF.REST + "> ?nextElement." + NEW_LINE +
+			TAB + TAB + " ?dequeueElement <" + RDF.FIRST + "> ?first." + NEW_LINE +
 			TAB + "}." + NEW_LINE +
 			"}" + NEW_LINE +
 			"INSERT {" + NEW_LINE +
@@ -119,7 +120,8 @@ public class SesameExecutionRepository extends AbstractSesameLDPRepository imple
 			"WHERE {" + NEW_LINE +
 			TAB + "GRAPH ?context {" + NEW_LINE +
 			TAB + TAB + "?queue <" + RDF.REST + "> ?dequeueElement ." + NEW_LINE +
-			TAB + TAB + "?dequeueElement <" + RDF.REST + "> ?nextElement ; " + NEW_LINE +
+			TAB + TAB + "?dequeueElement <" + RDF.REST + "> ?nextElement . " + NEW_LINE +
+			TAB + TAB + "?dequeueElement <" + RDF.FIRST + "> ?first." + NEW_LINE +
 			TAB + "}." + NEW_LINE +
 			"}";
 	}
