@@ -45,9 +45,7 @@ public class ExportBackupJobExecutor implements TypedJobExecutor {
 	}
 
 	@Override
-	public void execute( Job job, Execution execution ) {
-		URI appURI = job.getAppRelated();
-		App app = appRepository.get( appURI );
+	public void execute( App app, Job job, Execution execution ) {
 		String appRepositoryID = app.getRepositoryID();
 		String appRepositoryPath = Vars.getInstance().getAppsFilesDirectory().concat( Consts.SLASH ).concat( appRepositoryID );
 		File nonRDFSourceDirectory = new File( appRepositoryPath );
@@ -56,7 +54,7 @@ public class ExportBackupJobExecutor implements TypedJobExecutor {
 			createZipFile( nonRDFSourceDirectory, rdfRepositoryFile ) :
 			createZipFile( rdfRepositoryFile );
 
-		URI backupURI = createAppBackup( appURI, zipFile );
+		URI backupURI = createAppBackup( app.getURI(), zipFile );
 
 		deleteTemporaryFile( zipFile );
 		deleteTemporaryFile( rdfRepositoryFile );

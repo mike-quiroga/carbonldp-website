@@ -14,5 +14,9 @@ public interface ExecutionRepository {
 
 	public void enqueue( URI executionURI, URI executionQueueLocationURI );
 
-	public void addResult(URI executionURI, Value status);
+	public void dequeue( URI executionQueueLocationURI );
+
+	public Execution peek( URI executionQueueLocationURI );
+
+	public void addResult( URI executionURI, Value status );
 }

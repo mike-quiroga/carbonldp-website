@@ -18,7 +18,6 @@ import java.util.List;
 public class JobsExecutor {
 	protected final Logger LOG = LoggerFactory.getLogger( this.getClass() );
 	private final List<TypedJobExecutor> typedJobs;
-	private AppRepository appRepository;
 	private JobService jobService;
 	private TransactionWrapper transactionWrapper;
 	private ExecutionRepository executionRepository;
@@ -28,26 +27,21 @@ public class JobsExecutor {
 	}
 
 	@Async
-	public void execute( Execution execution ) {
-		LOG.debug( "Running execution " + Thread.currentThread().getName(), Thread.currentThread().getName() );
+	public void execute( App app, Execution execution ) {
 
 		executionRepository.changeExecutionStatus( execution.getURI(), ExecutionDescription.Status.RUNNING );
 		Job job = transactionWrapper.runWithSystemPermissionsInPlatformContext( () -> jobService.get( execution.getJobURI() ) );
 		JobDescription.Type type = JobFactory.getInstance().getJobType( job );
 		boolean hasErrors = false;
 
-		LOG.debug( "Running execution " + Thread.currentThread().getName() + " Job " + job.getSubject(), Thread.currentThread().getName() );
-
 		try {
-			transactionWrapper.runWithSystemPermissionsInPlatformContext( () -> getTypedRepository( type ).execute( job, execution ) );
+			transactionWrapper.runWithSystemPermissionsInPlatformContext( () -> getTypedRepository( type ).execute( app, job, execution ) );
 		} catch ( Exception e ) {
 			executionRepository.changeExecutionStatus( execution.getURI(), ExecutionDescription.Status.ERROR );
 			hasErrors = true;
 		}
 		if ( ! hasErrors ) executionRepository.changeExecutionStatus( execution.getURI(), ExecutionDescription.Status.FINISHED );
-		dequeueJobsExecutionQueue( job.getAppRelated() );
-
-		LOG.debug( "Ending execution " + Thread.currentThread().getName(), Thread.currentThread().getName() );
+		executionRepository.dequeue( job.getURI( JobDescription.Property.EXECUTION_QUEUE_LOCATION.getURI() ) );
 	}
 
 	public TypedJobExecutor getTypedRepository( JobDescription.Type jobType ) {
@@ -56,14 +50,6 @@ public class JobsExecutor {
 		}
 		throw new IllegalArgumentException( "The jobType provided isn't supported" );
 	}
-
-	private void dequeueJobsExecutionQueue( URI appURI ) {
-		App app = appRepository.get( appURI );
-		appRepository.dequeueJobsExecutionQueue( app );
-	}
-
-	@Autowired
-	public void setAppRepository( AppRepository appRepository ) {this.appRepository = appRepository; }
 
 	@Autowired
 	public void setJobService( JobService jobService ) {this.jobService = jobService;}

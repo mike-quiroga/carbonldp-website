@@ -108,66 +108,6 @@ public class SesameAppRepository extends AbstractSesameRepository implements App
 		return appsContainerURI;
 	}
 
-	@Override
-	public Execution peekJobsExecutionQueue( App app ) {
-		Resource listSubject = getNextElementInQueue( app, app.getJobsExecutionQueue() );
-		if ( listSubject.equals( RDF.NIL ) ) return null;
-		URI jobExecutionURI = getQueueElementValue( app, listSubject );
-
-		return new Execution( sourceRepository.get( jobExecutionURI ) );
-	}
-
-	public void dequeueJobsExecutionQueue( App app ) {
-		URI appURI = app.getURI();
-		URI appJobsExecutionQueue = app.getJobsExecutionQueue();
-		Resource subject = getNextElementInQueue( app, appJobsExecutionQueue );
-		Resource nextSubject = getNextElementInQueue( app, subject );
-		try {
-			connectionFactory.getConnection().remove( subject, null, null, appURI );
-			connectionFactory.getConnection().remove( appJobsExecutionQueue, RDF.REST, null, appURI );
-			connectionFactory.getConnection().add( appJobsExecutionQueue, RDF.REST, nextSubject, appURI );
-		} catch ( RepositoryException e ) {
-			throw new RuntimeException( e );
-		}
-	}
-
-	private URI getQueueElementValue( App app, Resource subject ) {
-		RepositoryResult<Statement> statements;
-		Statement statement;
-		URI appURI = app.getURI();
-		Value value;
-
-		try {
-			statements = connectionFactory.getConnection().getStatements( subject, RDF.FIRST, null, false, appURI );
-			if ( ! statements.hasNext() ) throw new RuntimeException( "there's a list node without a value " );
-			statement = statements.next();
-		} catch ( RepositoryException e ) {
-			throw new RuntimeException( e );
-		}
-		value = statement.getObject();
-		if ( ! ValueUtil.isURI( value ) ) throw new RuntimeException( "there's an invalid object in the queue" );
-		return ValueUtil.getURI( value );
-	}
-
-	private Resource getNextElementInQueue( App app, Resource subject ) {
-		URI appURI = app.getURI();
-		RepositoryResult<Statement> statements;
-		Statement statement;
-		Value object;
-
-		try {
-			statements = connectionFactory.getConnection().getStatements( subject, RDF.REST, null, false, appURI );
-			if ( ! statements.hasNext() ) throw new RuntimeException( "there's a list node without a value " );
-			statement = statements.next();
-			object = statement.getObject();
-			if ( ! ValueUtil.isResource( object ) ) throw new RuntimeException( "the queue is malformed" );
-		} catch ( RepositoryException e ) {
-			throw new RuntimeException( e );
-		}
-		return ValueUtil.getResource( object );
-
-	}
-
 	private void deleteAppRepository( App app ) {
 		appRepositoryService.deleteRepository( app.getRepositoryID() );
 	}

@@ -15,8 +15,4 @@ public interface AppRepository {
 	public void delete( URI appURI );
 
 	public URI getPlatformAppContainerURI();
-
-	public Execution peekJobsExecutionQueue( App app );
-
-	public void dequeueJobsExecutionQueue( App app );
 }

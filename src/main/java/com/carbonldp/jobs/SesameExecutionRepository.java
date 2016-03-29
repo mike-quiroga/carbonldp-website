@@ -2,19 +2,14 @@ package com.carbonldp.jobs;
 
 import com.carbonldp.jobs.ExecutionDescription.Status;
 import com.carbonldp.ldp.AbstractSesameLDPRepository;
-import com.carbonldp.ldp.containers.ContainerDescription;
 import com.carbonldp.ldp.sources.RDFSource;
 import com.carbonldp.ldp.sources.RDFSourceRepository;
-import com.carbonldp.rdf.RDFDocument;
 import com.carbonldp.rdf.RDFDocumentRepository;
 import com.carbonldp.rdf.RDFResourceRepository;
 import com.carbonldp.utils.ValueUtil;
-import com.sun.xml.internal.txw2.annotation.XmlAttribute;
 import org.openrdf.model.*;
 import org.openrdf.model.vocabulary.RDF;
 import org.openrdf.query.BindingSet;
-import org.openrdf.repository.RepositoryConnection;
-import org.openrdf.repository.RepositoryException;
 import org.openrdf.repository.RepositoryResult;
 import org.openrdf.spring.SesameConnectionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -104,6 +99,76 @@ public class SesameExecutionRepository extends AbstractSesameLDPRepository imple
 
 		sparqlTemplate.executeUpdate( enqueueQuery, bindings );
 
+	}
+
+	private static final String dequeueQuery;
+
+	static {
+		dequeueQuery = "" +
+			"DELETE {" + NEW_LINE +
+			TAB + "GRAPH ?context {" + NEW_LINE +
+			TAB + TAB + " ?queue <" + RDF.REST + "> ?dequeueElement." + NEW_LINE +
+			TAB + TAB + " ?dequeueElement ?p ?o." + NEW_LINE +
+			TAB + "}." + NEW_LINE +
+			"}" + NEW_LINE +
+			"INSERT {" + NEW_LINE +
+			TAB + "GRAPH ?context {" + NEW_LINE +
+			TAB + TAB + "?queue <" + RDF.REST + "> ?nextElement ." + NEW_LINE +
+			TAB + "}." + NEW_LINE +
+			"}" + NEW_LINE +
+			"WHERE {" + NEW_LINE +
+			TAB + "GRAPH ?context {" + NEW_LINE +
+			TAB + TAB + "?queue <" + RDF.REST + "> ?dequeueElement ." + NEW_LINE +
+			TAB + TAB + "?dequeueElement <" + RDF.REST + "> ?nextElement ; " + NEW_LINE +
+			TAB + "}." + NEW_LINE +
+			"}";
+	}
+
+	@Override
+	public void dequeue( URI executionQueueLocationURI ) {
+		RDFSource executionQueueLocation = sourceRepository.get( executionQueueLocationURI );
+		URI executionQueue = executionQueueLocation.getURI( ExecutionDescription.List.QUEUE.getURI() );
+
+		Map<String, Value> bindings = new HashMap<>();
+		bindings.put( "queue", executionQueue );
+		bindings.put( "context", executionQueueLocationURI );
+
+		sparqlTemplate.executeUpdate( dequeueQuery, bindings );
+
+	}
+
+	private static final String peekQuery;
+
+	static {
+		peekQuery = "" +
+			"SELECT ?item" + NEW_LINE +
+			"WHERE {" + NEW_LINE +
+			TAB + "GRAPH ?context {" + NEW_LINE +
+			TAB + TAB + "?queue <" + RDF.REST + "> ?queueElement ." + NEW_LINE +
+			TAB + TAB + "?queueElement <" + RDF.FIRST + "> ?item ; " + NEW_LINE +
+			TAB + "}." + NEW_LINE +
+			"}";
+	}
+
+	@Override
+	public Execution peek( URI executionQueueLocationURI ) {
+		RDFSource executionQueueLocation = sourceRepository.get( executionQueueLocationURI );
+		URI executionQueue = executionQueueLocation.getURI( ExecutionDescription.List.QUEUE.getURI() );
+
+		Map<String, Value> bindings = new HashMap<>();
+		bindings.put( "queue", executionQueue );
+		bindings.put( "context", executionQueueLocationURI );
+
+		URI executionURI = sparqlTemplate.executeTupleQuery( peekQuery, bindings, queryResult -> {
+			if ( ! queryResult.hasNext() ) return null;
+			BindingSet bindingSet = queryResult.next();
+			Value executionValue = bindingSet.getValue( "item" );
+			if ( ValueUtil.isURI( executionValue ) ) return ValueUtil.getURI( executionValue );
+			throw new IllegalStateException( "malformed query" );
+
+		} );
+		if ( executionURI == null ) return null;
+		return new Execution( sourceRepository.get( executionURI ) );
 	}
 
 	@Override
