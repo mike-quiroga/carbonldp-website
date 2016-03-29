@@ -1,0 +1,29 @@
+<table class="ui selectable celled table">
+	<thead>
+		<tr>
+			<th>Name</th>
+			<th>Creation Date</th>
+			<th>Modification Date</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr *ngFor="#context of apps; #i=index;" (click)="navigateTo([ '/AppDev/MyApps/App', {slug: context.slug}, 'AppDashboard'])">
+			<td>
+				<h3 class="ui image header">
+					<div class="content">
+						{{context.app.name}}
+						<div class="sub header">
+							{{context.slug}}
+						</div>
+					</div>
+				</h3>
+			</td>
+			<td>
+				{{context.app.created | date:"MMMM/dd/yyyy H:mm hrs"}}
+			</td>
+			<td>
+				{{context.app.modified | date:"MMMM/dd/yyyy H:mm hrs"}}
+			</td>
+		</tr>
+	</tbody>
+</table>

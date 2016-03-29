@@ -1,11 +1,36 @@
 <h1>My Apps</h1>
-<div class="ui stackable cards">
-	<div class="card">
-		<div class="content">
-			<a class="header">
-				Create new App
-			</a>
+<div class="ui grid">
+	<div class="row">
+		<div class="eight wide column">
+			<div class="ui icon buttons">
+				<button class="ui button"
+				        [ngClass]="{active: tileView}"
+				        (click)="toggleView()">
+					<i class="grid layout icon"></i>
+				</button>
+				<button class="ui button"
+				        [ngClass]="{active: !tileView}"
+				        (click)="toggleView()">
+					<i class="list layout icon"></i>
+				</button>
+			</div>
 		</div>
 	</div>
-	<app-tile class="card" *ngFor="#app of apps; #i=index;" [app]="app"></app-tile>
+	<div class="row">
+		<div class="column">
+			<div class="ui stackable cards" *ngIf="tileView">
+				<div class="card">
+					<div class="content">
+						<a class="header">
+							Create new App
+						</a>
+					</div>
+				</div>
+				<app-tile class="card" *ngFor="#app of apps; #i=index;" [app]="app"></app-tile>
+			</div>
+			<div *ngIf="!tileView">
+				<apps-list [apps]="apps"></apps-list>
+			</div>
+		</div>
+	</div>
 </div>

@@ -3,6 +3,6 @@
 		{{app.app.name}}
 	</a>
 	<a class="meta" [routerLink]="[ '/AppDev/MyApps/App', {slug: app.slug}, 'AppDashboard']">
-		<span class="date">{{app.app.created}}</span>
+		<span class="date">{{app.app.created | date:"MMMM/dd/yyyy H:mm hrs"}}</span>
 	</a>
 </div>
