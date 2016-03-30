@@ -2,7 +2,7 @@ package com.carbonldp.jobs.web;
 
 import com.carbonldp.jobs.Execution;
 import com.carbonldp.jobs.ExecutionFactory;
-import com.carbonldp.jobs.ExecutionService;
+import com.carbonldp.jobs.JobService;
 import com.carbonldp.ldp.containers.BasicContainer;
 import com.carbonldp.ldp.web.AbstractRDFPostRequestHandler;
 import com.carbonldp.web.RequestHandler;
@@ -15,7 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  */
 @RequestHandler
 public class ExecutionsPOSTHandler extends AbstractRDFPostRequestHandler<Execution> {
-	ExecutionService executionService;
+	JobService jobService;
 
 	@Override
 	protected Execution getDocumentResourceView( BasicContainer requestBasicContainer ) {
@@ -24,9 +24,11 @@ public class ExecutionsPOSTHandler extends AbstractRDFPostRequestHandler<Executi
 
 	@Override
 	protected void createChild( URI targetURI, Execution documentResourceView ) {
-		executionService.createChild( targetURI, documentResourceView );
+		jobService.createExecution( targetURI, documentResourceView );
 	}
 
 	@Autowired
-	public void setExecutionService( ExecutionService executionService ) {this.executionService = executionService; }
+	public void setJobService( JobService jobService ) {
+		this.jobService = jobService;
+	}
 }

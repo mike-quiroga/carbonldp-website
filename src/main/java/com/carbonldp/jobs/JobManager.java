@@ -23,6 +23,7 @@ public class JobManager {
 	private TransactionWrapper transactionWrapper;
 	private ContainerRepository containerRepository;
 	private AppRepository appRepository;
+	private ExecutionService executionService;
 
 	@Scheduled( cron = "${job.execution.time}" )
 	public void runQueuedJobs() {
@@ -32,9 +33,10 @@ public class JobManager {
 	public void lookUpForJobs() {
 		Set<App> apps = getAllApps();
 		for ( App app : apps ) {
-			Execution execution = appRepository.peekJobsExecutionQueue( app );
+			URI jobsContainerURI = new URIImpl( app.getURI().toString().concat( Vars.getInstance().getJobsContainer() ) );
+			Execution execution = transactionWrapper.runWithSystemPermissionsInPlatformContext( () -> executionService.peek( jobsContainerURI ) );
 			if ( execution != null && ( ! execution.getStatus().equals( ExecutionDescription.Status.RUNNING.getURI() ) ) ) {
-				jobsExecutor.execute( execution );
+				jobsExecutor.execute( app, execution ) ;
 			}
 		}
 	}
@@ -63,4 +65,9 @@ public class JobManager {
 
 	@Autowired
 	public void setAppRepository( AppRepository appRepository ) {this.appRepository = appRepository; }
+
+	@Autowired
+	public void setExecutionService( ExecutionService executionService ) {
+		this.executionService = executionService;
+	}
 }

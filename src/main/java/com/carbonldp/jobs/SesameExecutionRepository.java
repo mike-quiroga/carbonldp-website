@@ -1,8 +1,10 @@
 package com.carbonldp.jobs;
 
+import com.carbonldp.exceptions.StupidityException;
 import com.carbonldp.jobs.ExecutionDescription.Status;
 import com.carbonldp.ldp.AbstractSesameLDPRepository;
-import com.carbonldp.ldp.containers.ContainerDescription;
+import com.carbonldp.ldp.sources.RDFSource;
+import com.carbonldp.ldp.sources.RDFSourceRepository;
 import com.carbonldp.rdf.RDFDocumentRepository;
 import com.carbonldp.rdf.RDFResourceRepository;
 import com.carbonldp.utils.ValueUtil;
@@ -10,9 +12,9 @@ import org.openrdf.model.*;
 import org.openrdf.model.impl.ValueFactoryImpl;
 import org.openrdf.model.vocabulary.RDF;
 import org.openrdf.query.BindingSet;
-import org.openrdf.repository.RepositoryException;
 import org.openrdf.repository.RepositoryResult;
 import org.openrdf.spring.SesameConnectionFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
@@ -27,115 +29,165 @@ import static com.carbonldp.Consts.*;
 
 @Transactional
 public class SesameExecutionRepository extends AbstractSesameLDPRepository implements ExecutionRepository {
+
+	private RDFSourceRepository sourceRepository;
+
 	public SesameExecutionRepository( SesameConnectionFactory connectionFactory, RDFResourceRepository resourceRepository, RDFDocumentRepository documentRepository ) {
 		super( connectionFactory, resourceRepository, documentRepository );
 	}
 
 	@Override
 	public Status getExecutionStatus( URI executionURI ) {
-		RepositoryResult<Statement> statements;
-		Statement statement;
-
-		try {
-			statements = connectionFactory.getConnection().getStatements( executionURI, ExecutionDescription.Property.STATUS.getURI(), null, false, executionURI );
-			if ( ! statements.hasNext() ) throw new RuntimeException( "execution does not have a status" );
-			statement = statements.next();
-		} catch ( RepositoryException e ) {
-			throw new RuntimeException( e );
-		}
+		Statement statement = connectionTemplate.read( connection -> {
+			RepositoryResult<Statement> statements = connection.getStatements( executionURI, ExecutionDescription.Property.STATUS.getURI(), null, false, executionURI );
+			if ( ! statements.hasNext() ) throw new IllegalStateException( "execution does not have a status" );
+			return statements.next();
+		} );
 
 		Value object = statement.getObject();
-		if ( ! ValueUtil.isURI( object ) ) throw new RuntimeException( "job status is an invalid type" );
+		if ( ! ValueUtil.isURI( object ) ) throw new IllegalStateException( "job status is an invalid type" );
 		URI statusURI = ValueUtil.getURI( object );
 
 		for ( Status status : Status.values() ) {
 			if ( status.getURI().equals( statusURI ) ) return status;
 		}
-		throw new RuntimeException( "invalid status" );
+		throw new IllegalStateException( "invalid status" );
 	}
 
 	@Override
 	public void changeExecutionStatus( URI executionURI, Status status ) {
-		try {
-			connectionFactory.getConnection().remove( executionURI, ExecutionDescription.Property.STATUS.getURI(), null, executionURI );
-			connectionFactory.getConnection().add( executionURI, ExecutionDescription.Property.STATUS.getURI(), status.getURI(), executionURI );
-		} catch ( RepositoryException e ) {
-			throw new RuntimeException( e );
-		}
+		connectionTemplate.write( connection -> {
+			connection.remove( executionURI, ExecutionDescription.Property.STATUS.getURI(), null, executionURI );
+			connection.add( executionURI, ExecutionDescription.Property.STATUS.getURI(), status.getURI(), executionURI );
+		} );
+	}
+
+	private static final String enqueueQuery;
+
+	static {
+		enqueueQuery = "" +
+			"DELETE {" + NEW_LINE +
+			TAB + "GRAPH ?context {" + NEW_LINE +
+			TAB + TAB + " ?insertionPoint <" + RDF.REST + "> <" + RDF.NIL + ">." + NEW_LINE +
+			TAB + "}." + NEW_LINE +
+			"}" + NEW_LINE +
+			"INSERT {" + NEW_LINE +
+			TAB + "GRAPH ?context {" + NEW_LINE +
+			TAB + TAB + "?insertionPoint <" + RDF.REST + "> ?bnode." + NEW_LINE +
+			TAB + "}." + NEW_LINE +
+			"}" + NEW_LINE +
+			"WHERE {" + NEW_LINE +
+			TAB + "GRAPH ?context {" + NEW_LINE +
+			TAB + TAB + "?queue <" + RDF.REST + ">*/<" + RDF.FIRST + "> ?item ." + NEW_LINE +
+			TAB + TAB + "?insertionPoint <" + RDF.FIRST + "> ?item ; " + NEW_LINE +
+			TAB + TAB + TAB + "<" + RDF.REST + "> ?rest . " + NEW_LINE +
+			TAB + TAB + "FILTER(?rest = <" + RDF.NIL + ">)" + NEW_LINE +
+			TAB + "}." + NEW_LINE +
+			"}";
+
 	}
 
 	@Override
-	public void enqueue( URI executionURI, URI appURI ) {
-		BNode newQueueMemberBNode = connectionFactory.getConnection().getValueFactory().createBNode();
-		Resource lastQueueMemberSubject = getLastMemberBNode( appURI );
+	public void enqueue( BNode bNode, URI executionQueueLocationURI ) {
+		RDFSource executionQueueLocation = sourceRepository.get( executionQueueLocationURI );
+		URI executionQueue = executionQueueLocation.getURI( ExecutionDescription.List.QUEUE.getURI() );
 
-		try {
-			connectionFactory.getConnection().add( newQueueMemberBNode, RDF.FIRST, executionURI, appURI );
-			connectionFactory.getConnection().add( newQueueMemberBNode, RDF.REST, RDF.NIL, appURI );
-			connectionFactory.getConnection().add( lastQueueMemberSubject, RDF.REST, newQueueMemberBNode, appURI );
-			connectionFactory.getConnection().remove( lastQueueMemberSubject, RDF.REST, RDF.NIL, appURI );
+		Map<String, Value> bindings = new HashMap<>();
+		bindings.put( "bnode", bNode );
+		bindings.put( "queue", executionQueue );
+		bindings.put( "context", executionQueueLocationURI );
 
-		} catch ( RepositoryException e ) {
-			throw new RuntimeException( e );
-		}
+		sparqlTemplate.executeUpdate( enqueueQuery, bindings );
+
 	}
 
-	private static final String getAppRelatedQuery;
+	private static final String dequeueQuery;
 
 	static {
-		getAppRelatedQuery = "" +
-			"SELECT ?app" + NEW_LINE +
-			"WHERE {" + NEW_LINE +
-			TAB + "GRAPH ?executionsContainerURI {" + NEW_LINE +
-			TAB + TAB + "?executionsContainerURI <" + ContainerDescription.Property.MEMBERSHIP_RESOURCE.getURI().stringValue() + "> ?job" + NEW_LINE +
+		dequeueQuery = "" +
+			"DELETE {" + NEW_LINE +
+			TAB + "GRAPH ?context {" + NEW_LINE +
+			TAB + TAB + "?queue <" + RDF.REST + "> ?dequeueElement." + NEW_LINE +
+			TAB + TAB + "?dequeueElement ?p ?o." + NEW_LINE +
 			TAB + "}." + NEW_LINE +
-			TAB + "GRAPH ?job {" + NEW_LINE +
-			TAB + TAB + "?job <" + JobDescription.Property.APP_RELATED.getURI().stringValue() + "> ?app" + NEW_LINE +
-			TAB + "}" + NEW_LINE +
+			"}" + NEW_LINE +
+			"INSERT {" + NEW_LINE +
+			TAB + "GRAPH ?context {" + NEW_LINE +
+			TAB + TAB + "?queue <" + RDF.REST + "> ?nextElement ." + NEW_LINE +
+			TAB + "}." + NEW_LINE +
+			"}" + NEW_LINE +
+			"WHERE {" + NEW_LINE +
+			TAB + "GRAPH ?context {" + NEW_LINE +
+			TAB + TAB + "?queue <" + RDF.REST + "> ?dequeueElement ." + NEW_LINE +
+			TAB + TAB + "?dequeueElement <" + RDF.REST + "> ?nextElement . " + NEW_LINE +
+			TAB + TAB + "?dequeueElement ?p ?o." + NEW_LINE +
+			TAB + "}." + NEW_LINE +
 			"}";
 	}
 
 	@Override
-	public URI getAppRelatedURI( URI executionsContainerURI ) {
-		Map<String, Value> bindings = new HashMap<>();
-		bindings.put( "executionsContainerURI", executionsContainerURI );
+	public void dequeue( URI executionQueueLocationURI ) {
+		RDFSource executionQueueLocation = sourceRepository.get( executionQueueLocationURI );
+		URI executionQueue = executionQueueLocation.getURI( ExecutionDescription.List.QUEUE.getURI() );
 
-		return sparqlTemplate.executeTupleQuery( getAppRelatedQuery, bindings, queryResult -> {
-			if ( queryResult.hasNext() ) {
-				BindingSet bindingSet = queryResult.next();
-				Value member = bindingSet.getValue( "app" );
-				if ( ValueUtil.isURI( member ) ) return ValueUtil.getURI( member );
-			}
-			throw new RuntimeException( "there is not an app related" );
+		Map<String, Value> bindings = new HashMap<>();
+		bindings.put( "queue", executionQueue );
+		bindings.put( "context", executionQueueLocationURI );
+
+		sparqlTemplate.executeUpdate( dequeueQuery, bindings );
+
+	}
+
+	private static final String peekQuery;
+
+	static {
+		peekQuery = "" +
+			"SELECT ?item" + NEW_LINE +
+			"WHERE {" + NEW_LINE +
+			TAB + "GRAPH ?context {" + NEW_LINE +
+			TAB + TAB + "?queue <" + RDF.REST + "> ?queueElement ." + NEW_LINE +
+			TAB + TAB + "?queueElement <" + RDF.FIRST + "> ?item ; " + NEW_LINE +
+			TAB + "}." + NEW_LINE +
+			"}";
+	}
+
+	@Override
+	public Execution peek( URI executionQueueLocationURI ) {
+		RDFSource executionQueueLocation = sourceRepository.get( executionQueueLocationURI );
+		URI executionQueue = executionQueueLocation.getURI( ExecutionDescription.List.QUEUE.getURI() );
+
+		Map<String, Value> bindings = new HashMap<>();
+		bindings.put( "queue", executionQueue );
+		bindings.put( "context", executionQueueLocationURI );
+
+		URI executionURI = sparqlTemplate.executeTupleQuery( peekQuery, bindings, queryResult -> {
+			if ( ! queryResult.hasNext() ) return null;
+			BindingSet bindingSet = queryResult.next();
+			Value executionValue = bindingSet.getValue( "item" );
+			if ( ValueUtil.isURI( executionValue ) ) return ValueUtil.getURI( executionValue );
+			throw new IllegalStateException( "malformed query" );
+
 		} );
+		if ( executionURI == null ) return null;
+		return new Execution( sourceRepository.get( executionURI ) );
 	}
 
 	@Override
 	public void addResult( URI executionURI, Value status ) {
-		try {
-			connectionFactory.getConnection().add( executionURI, ExecutionDescription.Property.RESULT.getURI(), status, executionURI );
-		} catch ( RepositoryException e ) {
-			throw new RuntimeException( e );
-		}
+		connectionTemplate.write( connection -> connection.add( executionURI, ExecutionDescription.Property.RESULT.getURI(), status, executionURI ) );
 	}
 
 	@Override
 	public void addErrorDescription( URI executionURI, String error ) {
 		try {
-			connectionFactory.getConnection().add( executionURI, ExecutionDescription.Property.ERROR_DESCRIPTION.getURI(), ValueFactoryImpl.getInstance().createLiteral( error ), executionURI );
+			ckonnectionFactory.getConnection().add( executionURI, ExecutionDescription.Property.ERROR_DESCRIPTION.getURI(), ValueFactoryImpl.getInstance().createLiteral( error ), executionURI );
 		} catch ( RepositoryException e ) {
 			throw new RuntimeException( e );
 		}
 	}
 
-	private Resource getLastMemberBNode( URI appURI ) {
-		RepositoryResult<Statement> statements;
-		try {
-			statements = connectionFactory.getConnection().getStatements( null, RDF.REST, RDF.NIL, false, appURI );
-			if ( ! statements.hasNext() ) throw new RuntimeException( "queue is malformed" );
-			return statements.next().getSubject();
-		} catch ( RepositoryException e ) {
-			throw new RuntimeException( e );
-		}
+	@Autowired
+	public void setSourceRepository( RDFSourceRepository sourceRepository ) {
+		this.sourceRepository = sourceRepository;
 	}
 }

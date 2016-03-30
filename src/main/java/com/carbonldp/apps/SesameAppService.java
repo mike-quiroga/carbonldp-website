@@ -1,5 +1,6 @@
 package com.carbonldp.apps;
 
+import com.carbonldp.Consts;
 import com.carbonldp.Vars;
 import com.carbonldp.agents.Agent;
 import com.carbonldp.agents.app.AppAgentRepository;
@@ -14,21 +15,20 @@ import com.carbonldp.authorization.acl.ACL;
 import com.carbonldp.exceptions.InvalidResourceException;
 import com.carbonldp.exceptions.ResourceAlreadyExistsException;
 import com.carbonldp.exceptions.ResourceDoesntExistException;
+import com.carbonldp.jobs.ExecutionDescription;
 import com.carbonldp.jobs.JobDescription;
 import com.carbonldp.ldp.AbstractSesameLDPService;
 import com.carbonldp.ldp.containers.*;
-import com.carbonldp.ldp.containers.BasicContainer;
-import com.carbonldp.ldp.containers.BasicContainerFactory;
-import com.carbonldp.ldp.containers.Container;
 import com.carbonldp.ldp.sources.RDFSourceService;
-import com.carbonldp.ldp.containers.ContainerService;
 import com.carbonldp.models.Infraction;
+import com.carbonldp.namespaces.C;
+import com.carbonldp.namespaces.LDP;
 import com.carbonldp.rdf.RDFResource;
-import com.carbonldp.spring.ServicesInvoker;
 import com.carbonldp.utils.URIUtil;
 import com.carbonldp.web.exceptions.NotFoundException;
 import org.openrdf.model.URI;
 import org.openrdf.model.impl.URIImpl;
+import org.openrdf.model.vocabulary.RDF;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -46,7 +46,6 @@ public class SesameAppService extends AbstractSesameLDPService implements AppSer
 	protected AppTokenRepository appTokensRepository;
 	protected AppRoleService appRoleService;
 	protected RDFSourceService sourceService;
-	protected ServicesInvoker servicesInvoker;
 
 	@Override
 	public boolean exists( URI appURI ) {
@@ -70,6 +69,8 @@ public class SesameAppService extends AbstractSesameLDPService implements AppSer
 		if ( appACL == null ) {
 			throw new IllegalStateException( "Resource couldn't be created" );
 		}
+		createBackupContainer( app );
+		createJobsContainer( app );
 
 		AppRole adminRole = transactionWrapper.runWithSystemPermissionsInAppContext( app, () -> {
 			Container rootContainer = createRootContainer( app );
@@ -96,11 +97,6 @@ public class SesameAppService extends AbstractSesameLDPService implements AppSer
 
 		addAppDefaultPermissions( adminRole, appACL );
 
-		servicesInvoker.proxy( ( proxy ) -> {
-			( (SesameAppService) proxy.getAppService() ).createJobsContainer( app );
-			( (SesameAppService) proxy.getAppService() ).createBackupContainer( app );
-		} );
-
 		sourceRepository.touch( createdApp.getURI() );
 	}
 
@@ -118,10 +114,6 @@ public class SesameAppService extends AbstractSesameLDPService implements AppSer
 
 		if ( ! exists( appURI ) ) throw new NotFoundException();
 		sourceService.replace( app );
-	}
-
-	private ACL createAppACL( App app ) {
-		return aclRepository.createACL( app.getURI() );
 	}
 
 	private BasicContainer createRootContainer( App app ) {
@@ -198,12 +190,12 @@ public class SesameAppService extends AbstractSesameLDPService implements AppSer
 		if ( ! infractions.isEmpty() ) throw new InvalidResourceException( infractions );
 	}
 
-	@RunWith( platformRoles = Platform.Role.SYSTEM )
-	public void createBackupContainer( App app ) {
+	private void createBackupContainer( App app ) {
 		URI containerURI = generateBackupContainerURI( app );
 		RDFResource backupsResource = new RDFResource( containerURI );
-		DirectContainer backupsContainer = DirectContainerFactory.getInstance().create( backupsResource, app.getURI(), AppDescription.Property.BACKUP.getURI() );
-		sourceService.createAccessPoint( app.getURI(), backupsContainer );
+		BasicContainer backupsContainer = BasicContainerFactory.getInstance().create( backupsResource);
+		containerRepository.createChild( app.getURI(), backupsContainer );
+		aclRepository.createACL( backupsContainer.getURI() );
 	}
 
 	private URI generateBackupContainerURI( App app ) {
@@ -212,13 +204,23 @@ public class SesameAppService extends AbstractSesameLDPService implements AppSer
 		return new URIImpl( appString + backupsString );
 	}
 
-	@RunWith( platformRoles = Platform.Role.SYSTEM )
-	public void createJobsContainer( App app ) {
+	private void createJobsContainer( App app ) {
 		URI containerURI = generateJobsContainerURI( app );
 		RDFResource jobsResource = new RDFResource( containerURI );
-		DirectContainer jobsContainer = DirectContainerFactory.getInstance().create( jobsResource, app.getURI(), AppDescription.Property.JOB.getURI() );
-		jobsContainer.setMemberOfRelation( JobDescription.Property.APP_RELATED.getURI() );
-		sourceService.createAccessPoint( app.getURI(), jobsContainer );
+		BasicContainer jobsContainer = BasicContainerFactory.getInstance().create( jobsResource, new URIImpl( LDP.Properties.MEMBER),JobDescription.Property.EXECUTION_QUEUE_LOCATION.getURI());
+
+		jobsContainer = createQueue( jobsContainer );
+
+		containerRepository.createChild( app.getURI(), jobsContainer );
+		aclRepository.createACL( jobsContainer.getURI() );
+	}
+
+	private BasicContainer createQueue( BasicContainer jobsContainer ) {
+		URI jobsExecutionQueue = new URIImpl( jobsContainer.getURI().stringValue() + Consts.HASH_SIGN + Vars.getInstance().getQueue() );
+		jobsContainer.set( ExecutionDescription.List.QUEUE.getURI(), jobsExecutionQueue );
+		jobsContainer.getBaseModel().add( jobsExecutionQueue, RDF.FIRST, jobsExecutionQueue, jobsContainer.getURI() );
+		jobsContainer.getBaseModel().add( jobsExecutionQueue, RDF.REST, RDF.NIL, jobsContainer.getURI() );
+		return jobsContainer;
 	}
 
 	private URI generateJobsContainerURI( App app ) {
@@ -249,7 +251,4 @@ public class SesameAppService extends AbstractSesameLDPService implements AppSer
 
 	@Autowired
 	public void setAppRoleService( AppRoleService appRoleService ) { this.appRoleService = appRoleService; }
-
-	@Autowired
-	public void setServicesInvoker( ServicesInvoker servicesInvoker ) { this.servicesInvoker = servicesInvoker; }
 }

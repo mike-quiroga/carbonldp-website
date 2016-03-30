@@ -1,6 +1,5 @@
 package com.carbonldp.test.jobs;
 
-import com.carbonldp.jobs.ExportBackupJobExecutor;
 import com.carbonldp.test.AbstractIT;
 import com.carbonldp.utils.ValueUtil;
 import org.openrdf.model.*;
@@ -14,8 +13,6 @@ import org.openrdf.rio.RDFFormat;
 import org.openrdf.rio.RDFParser;
 import org.openrdf.rio.Rio;
 import org.openrdf.rio.helpers.StatementCollector;
-import org.springframework.aop.framework.Advised;
-import org.springframework.test.util.ReflectionTestUtils;
 import org.testng.Assert;
 import org.testng.SkipException;
 import org.testng.annotations.Test;
@@ -33,19 +30,13 @@ import static org.testng.Assert.*;
  * @author NestorVenegas
  * @since _version_
  */
-public class ExportBackupJobExecutorIT extends AbstractIT {
+public class LocalFileRepositoryIT extends AbstractIT {
 	public String appString = "";
 
 	@Test
 	public void createTemporaryRDFBackupFileIT() {
-		ExportBackupJobExecutor exportBackupJobExecutor;
-		try {
-			exportBackupJobExecutor = (ExportBackupJobExecutor) ( (Advised) this.backupJobExecutor ).getTargetSource().getTarget();
-		} catch ( Exception e ) {
-			throw new RuntimeException( e );
-		}
 
-		File rdfRepositoryFile = transactionWrapper.runInAppContext( app, () -> ReflectionTestUtils.invokeMethod( exportBackupJobExecutor, "createTemporaryRDFBackupFile" ) );
+		File rdfRepositoryFile = transactionWrapper.runInAppContext( app, () -> fileRepository.createAppRepositoryRDFFile() );
 
 		try {
 			Files.lines( rdfRepositoryFile.toPath() ).forEachOrdered( str -> appString += str );
@@ -90,17 +81,9 @@ public class ExportBackupJobExecutorIT extends AbstractIT {
 
 	@Test
 	public void addFileToZipIT() {
-		ExportBackupJobExecutor exportBackupJobExecutor;
-		try {
-			exportBackupJobExecutor = (ExportBackupJobExecutor) ( (Advised) this.backupJobExecutor ).getTargetSource().getTarget();
-		} catch ( Exception e ) {
-			throw new SkipException( e.toString() );
-		}
 
-		File rdfRepositoryFile = transactionWrapper.runInAppContext( app, () -> ReflectionTestUtils.invokeMethod( exportBackupJobExecutor, "createTemporaryRDFBackupFile" ) );
-		File[] args = new File[1];
-		args[0] = rdfRepositoryFile;
-		File file = ReflectionTestUtils.invokeMethod( exportBackupJobExecutor, "createZipFile", (Object) args );
+		File rdfRepositoryFile = transactionWrapper.runInAppContext( app, () -> fileRepository.createAppRepositoryRDFFile() );
+		File file = fileRepository.createZipFile( rdfRepositoryFile );
 
 		ZipFile zipFile = null;
 		try {
@@ -109,7 +92,7 @@ public class ExportBackupJobExecutorIT extends AbstractIT {
 			throw new SkipException( e.toString() );
 		}
 		assertEquals( zipFile.size(), 1 );
-		assertEquals( zipFile.entries().nextElement().getName(), args[0].getName() );
+		assertEquals( zipFile.entries().nextElement().getName(), rdfRepositoryFile.getName() );
 	}
 
 	private Model getBody( String appString ) {

@@ -1,5 +1,6 @@
 package com.carbonldp.jobs;
 
+import org.openrdf.model.BNode;
 import org.openrdf.model.URI;
 import org.openrdf.model.Value;
 
@@ -12,9 +13,11 @@ public interface ExecutionRepository {
 
 	public void changeExecutionStatus( URI executionURI, ExecutionDescription.Status status );
 
-	public void enqueue( URI executionURI, URI appURI );
+	public void enqueue( BNode bNode, URI executionQueueLocationURI );
 
-	public URI getAppRelatedURI( URI executionsContainerURI );
+	public void dequeue( URI executionQueueLocationURI );
+
+	public Execution peek( URI executionQueueLocationURI );
 
 	public void addResult(URI executionURI, Value status);
 

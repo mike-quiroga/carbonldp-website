@@ -5,6 +5,8 @@ import com.carbonldp.apps.AppRole;
 import com.carbonldp.apps.context.AppContextHolder;
 import com.carbonldp.apps.roles.AppRoleRepository;
 import com.carbonldp.authentication.AgentAuthenticationToken;
+import com.carbonldp.authorization.Platform;
+import com.carbonldp.authorization.PlatformRole;
 import com.carbonldp.exceptions.InvalidResourceException;
 import com.carbonldp.exceptions.ResourceDoesntExistException;
 import com.carbonldp.exceptions.StupidityException;
@@ -201,7 +203,7 @@ public class SesameACLService extends AbstractSesameLDPService implements ACLSer
 					App app = AppContextHolder.getContext().getApplication();
 					if ( app == null ) throw new IllegalStateException( "Unable to add an app role permission on the platform context" );
 
-					Set<AppRole> appRoles = agentAuthenticationToken.getAppRoles( );
+					Set<AppRole> appRoles = agentAuthenticationToken.getAppRoles();
 
 					URI appRoleToModify = subject.getURI();
 					Set<URI> parentsRoles = appRoleRepository.getParentsURI( appRoleToModify );
@@ -221,7 +223,9 @@ public class SesameACLService extends AbstractSesameLDPService implements ACLSer
 					}
 					break;
 				case PLATFORM_ROLE:
-					throw new NotImplementedException();
+					URI roleToModify = subject.getURI();
+					if ( ! roleToModify.equals( Platform.Role.ANONYMOUS.getURI() ) ) throw new NotImplementedException();
+					break;
 				default:
 					throw new InvalidResourceException( new Infraction( 0x2005, "property", ACEDescription.Property.SUBJECT_CLASS.getURI().stringValue() ) );
 

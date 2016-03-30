@@ -1,16 +1,11 @@
 package com.carbonldp.jobs;
 
-import com.carbonldp.Vars;
 import com.carbonldp.exceptions.InvalidResourceException;
 import com.carbonldp.ldp.AbstractSesameLDPService;
 import com.carbonldp.ldp.containers.ContainerService;
-import com.carbonldp.ldp.containers.DirectContainer;
-import com.carbonldp.ldp.containers.DirectContainerFactory;
 import com.carbonldp.ldp.sources.RDFSourceService;
 import com.carbonldp.models.Infraction;
-import com.carbonldp.rdf.RDFResource;
 import org.openrdf.model.URI;
-import org.openrdf.model.impl.URIImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
@@ -23,22 +18,18 @@ import java.util.List;
 public class SesameJobService extends AbstractSesameLDPService implements JobService {
 	private ContainerService containerService;
 	private RDFSourceService sourceService;
+	private ExecutionService executionService;
+	private JobRepository jobRepository;
 
 	public void create( URI targetURI, Job job ) {
 		validate( job );
-
 		containerService.createChild( targetURI, job );
-
-		createExecutionsContainer( job );
 	}
 
-	private void createExecutionsContainer( Job job ) {
-		URI executionsURI = new URIImpl( job.getURI().stringValue().concat( Vars.getInstance().getExecutions() ) );
-		RDFResource executionsResource = new RDFResource( executionsURI );
-
-		DirectContainer container = DirectContainerFactory.getInstance().create( executionsResource, job.getURI(), JobDescription.Property.EXECUTION.getURI(), ExecutionDescription.Property.JOB.getURI() );
-
-		sourceService.createAccessPoint( job.getURI(), container );
+	public void createExecution( URI jobURI, Execution execution ) {
+		containerService.createChild( jobURI, execution );
+		URI executionQueueLocation = jobRepository.getExecutionQueueLocation( jobURI );
+		executionService.enqueue( execution.getURI(), executionQueueLocation );
 	}
 
 	private void validate( Job job ) {
@@ -74,4 +65,14 @@ public class SesameJobService extends AbstractSesameLDPService implements JobSer
 
 	@Autowired
 	public void setSourceService( RDFSourceService sourceService ) { this.sourceService = sourceService; }
+
+	@Autowired
+	public void setExecutionService( ExecutionService executionService ) {
+		this.executionService = executionService;
+	}
+
+	@Autowired
+	public void setJobRepository( JobRepository jobRepository ) {
+		this.jobRepository = jobRepository;
+	}
 }

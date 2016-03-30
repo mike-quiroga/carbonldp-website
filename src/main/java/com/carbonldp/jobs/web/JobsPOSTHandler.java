@@ -14,7 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  * @since _version_
  */
 @RequestHandler
-public class JobPOSTHandler extends AbstractRDFPostRequestHandler<Job> {
+public class JobsPOSTHandler extends AbstractRDFPostRequestHandler<Job> {
 	protected JobService jobService;
 
 	@Override
