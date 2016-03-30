@@ -1,3 +1,6 @@
+# 0.29.4 (2016/03/22)
+* Added "prod" Spring Profile with base URL set for production (carbonldp.com)
+
 # 0.29.3 (2016/03/22)
 * Fixed validation when registering an Agent with an invalid document
 
