@@ -1,5 +1,6 @@
 package com.carbonldp.jobs;
 
+import com.carbonldp.exceptions.StupidityException;
 import com.carbonldp.jobs.ExecutionDescription.Status;
 import com.carbonldp.ldp.AbstractSesameLDPRepository;
 import com.carbonldp.ldp.sources.RDFSource;
@@ -27,6 +28,7 @@ import static com.carbonldp.Consts.*;
 
 @Transactional
 public class SesameExecutionRepository extends AbstractSesameLDPRepository implements ExecutionRepository {
+
 	private RDFSourceRepository sourceRepository;
 
 	public SesameExecutionRepository( SesameConnectionFactory connectionFactory, RDFResourceRepository resourceRepository, RDFDocumentRepository documentRepository ) {
@@ -37,24 +39,26 @@ public class SesameExecutionRepository extends AbstractSesameLDPRepository imple
 	public Status getExecutionStatus( URI executionURI ) {
 		Statement statement = connectionTemplate.read( connection -> {
 			RepositoryResult<Statement> statements = connection.getStatements( executionURI, ExecutionDescription.Property.STATUS.getURI(), null, false, executionURI );
-			if ( ! statements.hasNext() ) throw new RuntimeException( "execution does not have a status" );
+			if ( ! statements.hasNext() ) throw new IllegalStateException( "execution does not have a status" );
 			return statements.next();
 		} );
 
 		Value object = statement.getObject();
-		if ( ! ValueUtil.isURI( object ) ) throw new RuntimeException( "job status is an invalid type" );
+		if ( ! ValueUtil.isURI( object ) ) throw new IllegalStateException( "job status is an invalid type" );
 		URI statusURI = ValueUtil.getURI( object );
 
 		for ( Status status : Status.values() ) {
 			if ( status.getURI().equals( statusURI ) ) return status;
 		}
-		throw new RuntimeException( "invalid status" );
+		throw new IllegalStateException( "invalid status" );
 	}
 
 	@Override
 	public void changeExecutionStatus( URI executionURI, Status status ) {
-		connectionTemplate.write( connection -> connection.remove( executionURI, ExecutionDescription.Property.STATUS.getURI(), null, executionURI ) );
-		connectionTemplate.write( connection -> connection.add( executionURI, ExecutionDescription.Property.STATUS.getURI(), status.getURI(), executionURI ) );
+		connectionTemplate.write( connection -> {
+			connection.remove( executionURI, ExecutionDescription.Property.STATUS.getURI(), null, executionURI );
+			connection.add( executionURI, ExecutionDescription.Property.STATUS.getURI(), status.getURI(), executionURI );
+		} );
 	}
 
 	private static final String enqueueQuery;
@@ -68,8 +72,6 @@ public class SesameExecutionRepository extends AbstractSesameLDPRepository imple
 			"}" + NEW_LINE +
 			"INSERT {" + NEW_LINE +
 			TAB + "GRAPH ?context {" + NEW_LINE +
-			TAB + TAB + "?bnode <" + RDF.FIRST + "> ?execution ;" + NEW_LINE +
-			TAB + TAB + TAB + "<" + RDF.REST + "> <" + RDF.NIL + ">." + NEW_LINE +
 			TAB + TAB + "?insertionPoint <" + RDF.REST + "> ?bnode." + NEW_LINE +
 			TAB + "}." + NEW_LINE +
 			"}" + NEW_LINE +
@@ -85,15 +87,12 @@ public class SesameExecutionRepository extends AbstractSesameLDPRepository imple
 	}
 
 	@Override
-	public void enqueue( URI executionURI, URI executionQueueLocationURI ) {
-
+	public void enqueue( BNode bNode, URI executionQueueLocationURI ) {
 		RDFSource executionQueueLocation = sourceRepository.get( executionQueueLocationURI );
 		URI executionQueue = executionQueueLocation.getURI( ExecutionDescription.List.QUEUE.getURI() );
-		BNode newQueueMemberBNode = connectionTemplate.read( connection -> connection.getValueFactory().createBNode() );
 
 		Map<String, Value> bindings = new HashMap<>();
-		bindings.put( "bnode", newQueueMemberBNode );
-		bindings.put( "execution", executionURI );
+		bindings.put( "bnode", bNode );
 		bindings.put( "queue", executionQueue );
 		bindings.put( "context", executionQueueLocationURI );
 
@@ -107,9 +106,8 @@ public class SesameExecutionRepository extends AbstractSesameLDPRepository imple
 		dequeueQuery = "" +
 			"DELETE {" + NEW_LINE +
 			TAB + "GRAPH ?context {" + NEW_LINE +
-			TAB + TAB + " ?queue <" + RDF.REST + "> ?dequeueElement." + NEW_LINE +
-			TAB + TAB + " ?dequeueElement <" + RDF.REST + "> ?nextElement." + NEW_LINE +
-			TAB + TAB + " ?dequeueElement <" + RDF.FIRST + "> ?first." + NEW_LINE +
+			TAB + TAB + "?queue <" + RDF.REST + "> ?dequeueElement." + NEW_LINE +
+			TAB + TAB + "?dequeueElement ?p ?o." + NEW_LINE +
 			TAB + "}." + NEW_LINE +
 			"}" + NEW_LINE +
 			"INSERT {" + NEW_LINE +
@@ -121,7 +119,7 @@ public class SesameExecutionRepository extends AbstractSesameLDPRepository imple
 			TAB + "GRAPH ?context {" + NEW_LINE +
 			TAB + TAB + "?queue <" + RDF.REST + "> ?dequeueElement ." + NEW_LINE +
 			TAB + TAB + "?dequeueElement <" + RDF.REST + "> ?nextElement . " + NEW_LINE +
-			TAB + TAB + "?dequeueElement <" + RDF.FIRST + "> ?first." + NEW_LINE +
+			TAB + TAB + "?dequeueElement ?p ?o." + NEW_LINE +
 			TAB + "}." + NEW_LINE +
 			"}";
 	}

@@ -11,7 +11,9 @@ import com.carbonldp.authentication.token.JWTAuthenticationService;
 import com.carbonldp.authentication.token.TokenService;
 import com.carbonldp.authorization.acl.ACLService;
 import com.carbonldp.authorization.acl.SesameACLService;
+import com.carbonldp.jobs.ExecutionService;
 import com.carbonldp.jobs.JobService;
+import com.carbonldp.jobs.SesameExecutionService;
 import com.carbonldp.jobs.SesameJobService;
 import com.carbonldp.ldp.containers.ContainerService;
 import com.carbonldp.ldp.containers.SesameContainerService;
@@ -94,4 +96,7 @@ public class ServicesConfig {
 
 	@Bean
 	public BackupService backupService() {return new SesameBackupService(); }
+
+	@Bean
+	ExecutionService executionService() {return new SesameExecutionService();}
 }

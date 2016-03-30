@@ -15,4 +15,8 @@ public interface FileRepository {
 	public void delete( UUID uuid );
 
 	public void deleteDirectory( App app );
+
+	public File createAppRepositoryRDFFile();
+
+	public File createZipFile( File... files );
 }

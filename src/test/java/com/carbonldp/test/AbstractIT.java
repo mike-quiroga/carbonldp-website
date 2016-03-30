@@ -11,6 +11,7 @@ import com.carbonldp.jobs.TypedJobExecutor;
 import com.carbonldp.ldp.containers.BasicContainer;
 import com.carbonldp.ldp.containers.Container;
 import com.carbonldp.ldp.sources.RDFSourceRepository;
+import com.carbonldp.repository.FileRepository;
 import com.carbonldp.repository.security.SecuredNativeStoreFactory;
 import com.carbonldp.spring.TransactionWrapper;
 import com.carbonldp.utils.PropertiesUtil;
@@ -78,6 +79,8 @@ public abstract class AbstractIT extends AbstractTestNGSpringContextTests {
 	protected TransactionWrapper transactionWrapper;
 	@Autowired
 	protected SesameConnectionFactory connectionFactory;
+	@Autowired
+	protected FileRepository fileRepository;
 
 	protected final String testRepositoryID = "test-blog";
 	protected final String testResourceURI = "https://local.carbonldp.com/apps/test-blog/";

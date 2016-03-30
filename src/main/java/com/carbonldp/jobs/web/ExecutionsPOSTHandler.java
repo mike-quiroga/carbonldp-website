@@ -2,7 +2,6 @@ package com.carbonldp.jobs.web;
 
 import com.carbonldp.jobs.Execution;
 import com.carbonldp.jobs.ExecutionFactory;
-import com.carbonldp.jobs.ExecutionService;
 import com.carbonldp.jobs.JobService;
 import com.carbonldp.ldp.containers.BasicContainer;
 import com.carbonldp.ldp.web.AbstractRDFPostRequestHandler;
