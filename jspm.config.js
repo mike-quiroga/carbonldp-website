@@ -46,7 +46,7 @@ SystemJS.config({
     "dgram": "github:jspm/nodelibs-dgram@0.2.0-alpha",
     "dns": "github:jspm/nodelibs-dns@0.2.0-alpha",
     "ecc-jsbn": "npm:ecc-jsbn@0.1.1",
-    "angular2": "npm:angular2@2.0.0-beta.9",
+    "angular2": "npm:angular2@2.0.0-beta.12",
     "buffer": "github:jspm/nodelibs-buffer@0.2.0-alpha",
     "child_process": "github:jspm/nodelibs-child_process@0.2.0-alpha",
     "constants": "github:jspm/nodelibs-constants@0.2.0-alpha",
@@ -82,7 +82,7 @@ SystemJS.config({
     "util": "github:jspm/nodelibs-util@0.2.0-alpha",
     "vm": "github:jspm/nodelibs-vm@0.2.0-alpha",
     "zlib": "github:jspm/nodelibs-zlib@0.2.0-alpha",
-    "zone.js": "npm:zone.js@0.6.2"
+    "zone.js": "npm:zone.js@0.6.6"
   },
   packages: {
     "github:jspm/nodelibs-os@0.2.0-alpha": {
