@@ -15,6 +15,16 @@
 				</button>
 			</div>
 		</div>
+		<div class="eight wide right aligned column">
+			<div class="ui search">
+				<form>
+					<div class="ui icon input">
+						<input class="prompt search" type="text" placeholder="Search...">
+						<i class="search icon"></i>
+					</div>
+				</form>
+			</div>
+		</div>
 	</div>
 	<div class="row">
 		<div class="column">
@@ -26,10 +36,10 @@
 						</a>
 					</div>
 				</div>
-				<app-tile class="card" *ngFor="#app of apps; #i=index;" [app]="app"></app-tile>
+				<app-tile class="card" *ngFor="#app of results; #i=index;" [app]="app"></app-tile>
 			</div>
 			<div *ngIf="!tileView">
-				<apps-list [apps]="apps"></apps-list>
+				<apps-list [apps]="results"></apps-list>
 			</div>
 		</div>
 	</div>

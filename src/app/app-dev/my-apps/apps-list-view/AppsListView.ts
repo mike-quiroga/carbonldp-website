@@ -1,6 +1,11 @@
 import { Component, ElementRef, Type } from "angular2/core";
-import { CORE_DIRECTIVES } from "angular2/common";
+import { CORE_DIRECTIVES, Control } from "angular2/common";
 import { Router, RouteDefinition, ROUTER_DIRECTIVES, CanActivate} from "angular2/router";
+import { Observable } from "rxjs/Rx";
+import "rxjs/add/operator/map";
+import "rxjs/add/operator/debounceTime";
+import "rxjs/add/operator/distinctUntilChanged";
+import "rxjs/add/operator/switchMap";
 
 import * as App from "carbonldp/App";
 import * as HTTP from "carbonldp/HTTP";
@@ -24,15 +29,37 @@ import template from "./template.html!";
 } )
 export default class AppsListView {
 	router:Router;
+	element:ElementRef;
+	$element:JQuery;
 
 	appContextService:AppContextService;
 	apps:App[] = [];
+	results:App[] = [];
 
 	tileView:boolean = false;
+	searchBox:JQuery;
 
-	constructor( router:Router, appContextService:AppContextService ) {
+	constructor( element:ElementRef, router:Router, appContextService:AppContextService ) {
+		this.element = element;
+		this.$element = $( this.element.nativeElement );
 		this.appContextService = appContextService;
 		this.router = router;
+	}
+
+	ngAfterViewInit():void {
+		this.searchBox = this.$element.find( "input.search" );
+		let terms:any = Observable.fromEvent( this.searchBox, "input" );
+		terms
+			.debounceTime( 200 )
+			.map( ( evt ) => {
+				return evt.target.value;
+			} )
+			.distinctUntilChanged()
+			.subscribe(
+				( args ):void => {
+					this.searchApp( args );
+				}
+			);
 	}
 
 	activateGridView():void {
@@ -41,6 +68,10 @@ export default class AppsListView {
 
 	activateListView():void {
 		this.tileView = false;
+	}
+
+	searchApp( term:string ):void {
+		this.results = this.apps.filter( ctx => ctx.app.name.toLowerCase().search( term.toLowerCase() ) > - 1 || ctx.slug.toLowerCase().search( term.toLowerCase() ) > - 1 );
 	}
 
 	routerOnActivate():void {
@@ -52,6 +83,7 @@ export default class AppsListView {
 						app: appContext.app,
 					} );
 				} );
+				this.results = this.apps;
 			},
 			( error:any ):void => {
 				console.error( error );
