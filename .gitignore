@@ -149,6 +149,7 @@ tmp/**/*
 local.properties
 .loadpath
 /src/main/resources/rebel.xml
+.project
 
 # External tool builders
 .externalToolBuilders/
