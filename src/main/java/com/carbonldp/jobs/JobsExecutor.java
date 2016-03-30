@@ -44,7 +44,7 @@ public class JobsExecutor {
 		boolean hasErrors = false;
 
 		try {
-			getTypedRepository( type ).execute( job, execution );
+			getTypedRepository( type ).execute(app, job, execution );
 		} catch ( CarbonNoStackTraceRuntimeException e ) {
 			executionService.changeExecutionStatus( execution.getURI(), ExecutionDescription.Status.ERROR );
 			executionService.addErrorDescription( execution.getURI(), e.getMessage() );

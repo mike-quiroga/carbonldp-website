@@ -179,11 +179,7 @@ public class SesameExecutionRepository extends AbstractSesameLDPRepository imple
 
 	@Override
 	public void addErrorDescription( URI executionURI, String error ) {
-		try {
-			ckonnectionFactory.getConnection().add( executionURI, ExecutionDescription.Property.ERROR_DESCRIPTION.getURI(), ValueFactoryImpl.getInstance().createLiteral( error ), executionURI );
-		} catch ( RepositoryException e ) {
-			throw new RuntimeException( e );
-		}
+		connectionTemplate.write( connection -> connection.add( executionURI, ExecutionDescription.Property.ERROR_DESCRIPTION.getURI(), ValueFactoryImpl.getInstance().createLiteral( error ), executionURI ) );
 	}
 
 	@Autowired

@@ -3,7 +3,6 @@ package com.carbonldp.jobs;
 import com.carbonldp.Consts;
 import com.carbonldp.Vars;
 import com.carbonldp.apps.App;
-import com.carbonldp.apps.AppRepository;
 import com.carbonldp.apps.context.AppContext;
 import com.carbonldp.apps.context.AppContextHolder;
 import com.carbonldp.exceptions.JobException;
@@ -12,7 +11,9 @@ import com.carbonldp.ldp.nonrdf.RDFRepresentation;
 import com.carbonldp.ldp.nonrdf.RDFRepresentationDescription;
 import com.carbonldp.ldp.sources.RDFSourceService;
 import com.carbonldp.models.Infraction;
+import com.carbonldp.repository.ConnectionRWTemplate;
 import com.carbonldp.spring.TransactionWrapper;
+import org.eclipse.jetty.server.ConnectionFactory;
 import org.openrdf.model.Resource;
 import org.openrdf.model.URI;
 import org.openrdf.repository.RepositoryException;
@@ -34,8 +35,7 @@ import java.util.zip.ZipFile;
 public class ImportBackupJobExecutor implements TypedJobExecutor {
 	private NonRDFSourceService nonRDFSourceService;
 	private RDFSourceService sourceService;
-	private SesameConnectionFactory connectionFactory;
-	private AppRepository appRepository;
+	private ConnectionRWTemplate connectionTemplate;
 	private TransactionWrapper transactionWrapper;
 
 	@Override
@@ -44,11 +44,8 @@ public class ImportBackupJobExecutor implements TypedJobExecutor {
 	}
 
 	@Override
-	public void execute( Job job, Execution execution ) {
+	public void execute( App app, Job job, Execution execution ) {
 		if ( ! job.hasType( ImportBackupJobDescription.Resource.CLASS ) ) throw new JobException( new Infraction( 0x2001, "rdf.type", ImportBackupJobDescription.Resource.CLASS.getURI().stringValue() ) );
-
-		URI appURI = job.getAppRelated();
-		App app = appRepository.get( appURI );
 
 		ImportBackupJob importBackupJob = new ImportBackupJob( job );
 		URI backupURI = importBackupJob.getBackup();
@@ -149,22 +146,8 @@ public class ImportBackupJobExecutor implements TypedJobExecutor {
 		URI appURI = AppContextHolder.getContext().getApplication().getRootContainerURI();
 
 		InputStream trigInputStream = unZipTrigFile( backupFile );
-
-		try {
-			connectionFactory.getConnection().remove( (Resource) null, null, null );
-		} catch ( RepositoryException e ) {
-			throw new RuntimeException( e );
-		}
-		try {
-			connectionFactory.getConnection().add( trigInputStream, appURI.stringValue(), RDFFormat.TRIG );
-
-		} catch ( IOException e ) {
-			throw new RuntimeException( e );
-		} catch ( RDFParseException e ) {
-			throw new JobException( new Infraction( 0x1015 ) );
-		} catch ( RepositoryException e ) {
-			throw new RuntimeException( e );
-		}
+		connectionTemplate.write( connection -> connection.remove( (Resource) null, null, null ) );
+		connectionTemplate.write( connection -> connection.add( trigInputStream, appURI.stringValue(), RDFFormat.TRIG ) );
 	}
 
 	private InputStream unZipTrigFile( File backupFile ) {
@@ -198,11 +181,6 @@ public class ImportBackupJobExecutor implements TypedJobExecutor {
 		return trigInputStream;
 	}
 
-	protected String createRandomSlug() {
-		Random random = new Random();
-		return String.valueOf( Math.abs( random.nextLong() ) );
-	}
-
 	@Autowired
 	public void setNonRDFSourceService( NonRDFSourceService nonRDFSourceService ) { this.nonRDFSourceService = nonRDFSourceService; }
 
@@ -210,10 +188,9 @@ public class ImportBackupJobExecutor implements TypedJobExecutor {
 	public void setSourceService( RDFSourceService sourceService ) { this.sourceService = sourceService; }
 
 	@Autowired
-	public void setConnectionFactory( SesameConnectionFactory connectionFactory ) { this.connectionFactory = connectionFactory; }
-
-	@Autowired
-	public void setAppRepository( AppRepository appRepository ) { this.appRepository = appRepository; }
+	public void setConnectionTemplate( SesameConnectionFactory connectionFactory ) {
+		this.connectionTemplate = new ConnectionRWTemplate( connectionFactory );
+	}
 
 	@Autowired
 	public void setTransactionWrapper( TransactionWrapper transactionWrapper ) { this.transactionWrapper = transactionWrapper; }

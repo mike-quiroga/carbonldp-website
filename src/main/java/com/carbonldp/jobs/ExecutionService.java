@@ -27,4 +27,7 @@ public interface ExecutionService {
 
 	@PreAuthorize( "hasPermission(#executionURI, 'UPDATE')" )
 	public void addResult( URI executionURI, Value status );
+
+	@PreAuthorize( "hasPermission(#executionURI, 'UPDATE')" )
+	public void addErrorDescription( URI executionURI, String error );
 }
