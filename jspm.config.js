@@ -82,7 +82,7 @@ SystemJS.config({
     "util": "github:jspm/nodelibs-util@0.2.0-alpha",
     "vm": "github:jspm/nodelibs-vm@0.2.0-alpha",
     "zlib": "github:jspm/nodelibs-zlib@0.2.0-alpha",
-    "zone.js": "npm:zone.js@0.6.6"
+    "zone.js": "npm:zone.js@0.6.8"
   },
   packages: {
     "github:jspm/nodelibs-os@0.2.0-alpha": {
