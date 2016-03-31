@@ -1,4 +1,12 @@
-# 0.5.5 (March 16, 3016)
+# 0.5.5 (March 30, 2016)
+* Add protocolAndHost field to GettingStarted TypeScript so that documentation can always reflect the server you're on. 
+* Upgrade to Angular beta 12 and zone.js 0.6.6 to resolve ["TypeError:Cannot read property 'zone' of undefined"](https://github.com/angular/angular/issues/7652).
+* Add Eclipse .project file to .gitignore.
+* Change order of dependencies to avoid ["Uncaught (in promise)TypeError: object is not a constructor"](https://github.com/blacksonic/angular2-es6-starter/issues/1).
+* Add cross-platform compatible post install script.
+* Remove documentation of dependency on global packages.
+
+# 0.5.5 (March 16, 2016)
 * Add confirmation when changing between queries.
 * Change SPARQL Editor UI.
 * Change Carbon context to dev instead of local.
@@ -18,13 +26,13 @@
 * Add confirmation to delete saved queries.
 * Add more formats to output formats (ntriples, trix, trig, binary, nquads, rdfa).
 
-# 0.5.4 (March 16, 3016)
+# 0.5.4 (March 16, 2016)
 * Added authentication to access AppDev.
 * Added js-cookie library.
 * Added cookies to store Carbon.Auth.Credential tokens.
 * Added Carbon is authenticated validation while trying to access any component of AppDev.
 
-# 0.5.3 (March 14, 3016)
+# 0.5.3 (March 14, 2016)
 * Added sidebar component for documents.
 * Added styles for documents and sidebar components.
 * Added documents home index.
