@@ -23,12 +23,16 @@ export default class GettingStartedWithTheRestApiView {
 	$element:JQuery;
 	title:Title;
 	sidebarService:SidebarService;
+	protocolAndHost:string;
 
 	constructor( element:ElementRef, title:Title, sidebarService:SidebarService ) {
 		this.element = element;
 		this.title = title;
 		this.title.setTitle( "Getting started - Rest API" );
 		this.sidebarService = sidebarService;
+		
+		var location = this.getLocation(window.location.href);
+		this.protocolAndHost = location.protocol + "//" + location.host;
 	}
 
 	ngAfterViewInit():void {
@@ -40,4 +44,17 @@ export default class GettingStartedWithTheRestApiView {
 	createAccordions():void {
 		this.$element.find( ".ui.accordion" ).accordion();
 	}
+	
+	getLocation(href):ElementRef {
+		var location = document.createElement("a");
+	    location.href = href;
+	    // IE doesn't populate all link properties when setting .href with a relative URL,
+	    // however .href will return an absolute URL which then can be used on itself
+	    // to populate these additional fields.
+	    if (location.host == "") {
+	      location.href = location.href;
+	    }
+	    return location;
+	}
+	
 }
