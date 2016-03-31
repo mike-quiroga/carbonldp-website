@@ -150,6 +150,7 @@ local.properties
 .loadpath
 /src/main/resources/rebel.xml
 .project
+.settings
 
 # External tool builders
 .externalToolBuilders/
