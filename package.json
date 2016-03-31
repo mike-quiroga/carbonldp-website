@@ -1,6 +1,6 @@
 {
   "name": "carbon-website",
-  "version": "0.5.3",
+  "version": "0.5.6",
   "description": "Public Website for carbonldp.com",
   "main": "dist/index.html",
   "author": "Base22 LLC",
