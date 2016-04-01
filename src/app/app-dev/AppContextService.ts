@@ -24,7 +24,7 @@ export default class AppContextService {
 				return;
 			}
 
-			this.carbon.apps.get( slug + "/" ).then(
+			this.carbon.apps.getContext( slug + "/" ).then(
 				( appContext:App.Context ) => {
 					this.appContexts.set( slug, appContext );
 					resolve( appContext );
@@ -39,7 +39,7 @@ export default class AppContextService {
 	}
 
 	getAll():Promise<App.Context[]> {
-		return this.carbon.apps.getAll().then( ( appContexts:App.Context[] ) => {
+		return this.carbon.apps.getAllContexts().then( ( appContexts:App.Context[] ) => {
 			appContexts
 				.filter( ( appContext:App.Context ) => {
 					return ! this.appContexts.has( this.getSlug( appContext ) );
