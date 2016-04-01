@@ -15,14 +15,17 @@ import "./style.css!";
 export default class FooterComponent {
 	element:ElementRef;
 	$element;
+	date = new Date();
+	year = this.date.getFullYear();
+
 
 	constructor( element: ElementRef ){
 		this.element = element;
+
 	}
 
 	ngAfterViewInit():void {
 		this.$element = $( this.element.nativeElement );
-
 		this.addSocialButtonsAnimations();
 	}
 

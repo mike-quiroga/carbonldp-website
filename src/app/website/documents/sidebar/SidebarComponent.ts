@@ -14,7 +14,7 @@ import template from "./template.html!";
 	directives: [ CORE_DIRECTIVES, ROUTER_DIRECTIVES ],
 } )
 export default class SidebarComponent {
-	elementRef:ElementRef;
+	element:ElementRef;
 	$element: JQuery;
 	$container: JQuery;
 	$followMenu: JQuery;
@@ -29,7 +29,7 @@ export default class SidebarComponent {
 	host:string = "dev.carbonldp.com";
 
 	constructor( element:ElementRef, sidebarService:SidebarService ) {
-		this.elementRef = element;
+		this.element = element;
 		this.$element = $( element.nativeElement );
 		this.sidebarService = sidebarService;
 		this.sidebarService.buildEmitter.subscribe( () => {

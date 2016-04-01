@@ -1,4 +1,4 @@
-import { Component, ElementRef } from "angular2/core";
+import { Component, ElementRef, Input } from "angular2/core";
 import { CORE_DIRECTIVES } from "angular2/common";
 import { ROUTER_DIRECTIVES, ROUTER_PROVIDERS, Router, Instruction } from "angular2/router";
 
@@ -18,6 +18,7 @@ export default class HeaderComponent {
 	router:Router;
 	element:ElementRef;
 	$element;
+	@Input() top:boolean;
 
 	constructor( router:Router, element:ElementRef ) {
 		this.router = router;
@@ -26,6 +27,7 @@ export default class HeaderComponent {
 
 	ngAfterViewInit():void {
 		this.$element = $( this.element.nativeElement );
+		//this.headerVisibility();
 		this.createDropdownMenus();
 		this.createCollapsableMenus();
 		this.createLoginPopUp();
@@ -68,5 +70,27 @@ export default class HeaderComponent {
 	ngAfterViewChecked():void {
 		this.createLoginPopUp();
 	}
+
+	/*headerVisibility():void {
+		let carbonLogo=$("#main-carbon-logo");
+
+		carbonLogo.visibility({
+			once: false,
+			onTopPassed: function () {
+				this.activateHeader();
+			},
+			onTopPassedReverse: function () {
+				this.deactivateHeader();
+			}
+		});
+	}
+
+	activateHeader():void {
+		this.top = true;
+	}
+
+	deactivateHeader():void {
+		this.top = false;
+	}*/
 
 }

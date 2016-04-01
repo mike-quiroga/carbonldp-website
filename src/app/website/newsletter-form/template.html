@@ -1,0 +1,30 @@
+<form [ngFormModel]="subscribeForm" (ngSubmit)="onSubmit(subscribeForm.value, subscribeForm.valid, $event)">
+<!--action="https://app.icontact.com/icp/signup.php"-->
+
+	<div class="ui action input">
+		<div class="field" [ngClass]="{ error: (email.touched && !email.valid) }">
+		<input name="fields_email" class="email" type="text" placeholder="your@email.com" [ngFormControl]="subscribeForm.controls[ 'email' ]">
+		</div>
+		<button name="send" type="submit" class="ui inverted secondary button submit">SEND</button>
+	</div>
+
+	<div class="ui negative attached message segment" *ngIf="email.touched && !email.valid">
+		<ul class="list">
+			<li *ngIf="email.hasError('required')">email is required.</li>
+			<li *ngIf="!email.hasError('required') && email.hasError('invalidEmailAddress')">Enter a valid email address.</li>
+		</ul>
+	</div>
+
+	<!--<input type="hidden" name="redirect" value="http://carbonldp.com/signup-thanks.html">
+	<input type="hidden" name="errorredirect" value="http://www.icontact.com/www/signup/error.html">
+	<input type="hidden" name="listid" value="777887" ngControl="listid">
+	<input type="hidden" name="specialid:777887" value="MNSO" ngControl="specialid:777887">
+	<input type="hidden" name="clientid" value="581321" ngControl="clientid">
+	<input type="hidden" name="formid" value="5139" ngControl="formid">
+	<input type="hidden" name="reallistid" value="1" ngControl="reallistid">
+	<input type="hidden" name="doubleopt" value="1" ngControl="doubleopt">-->
+
+
+</form>
+
+

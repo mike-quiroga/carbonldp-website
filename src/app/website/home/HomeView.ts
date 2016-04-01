@@ -1,6 +1,8 @@
 import { Component, ElementRef } from "angular2/core";
-import { CORE_DIRECTIVES } from "angular2/common";
+import { CORE_DIRECTIVES, NgForm } from "angular2/common";
 import { ROUTER_DIRECTIVES, ROUTER_PROVIDERS, Router, Instruction } from "angular2/router";
+import { Title } from "angular2/platform/browser";
+import { NewsletterFormComponent } from "../newsletter-form/NewsletterFormComponent";
 
 import $ from "jquery";
 import "semantic-ui/semantic";
@@ -12,29 +14,36 @@ import "./style.css!";
 @Component( {
 	selector: "home",
 	template: template,
-	directives: [ CORE_DIRECTIVES, ROUTER_DIRECTIVES, CodeMirrorComponent.Class ]
+	directives: [ CORE_DIRECTIVES, ROUTER_DIRECTIVES, CodeMirrorComponent.Class, NewsletterFormComponent ],
+	providers: [ Title ]
 } )
 export default class HomeView {
 	router:Router;
 	element:ElementRef;
 	$element:JQuery;
 	$mainMenu:JQuery;
+	$articles:JQuery;
 	$carbonLogo:JQuery;
+	title:Title;
 
-	constructor( router:Router, element:ElementRef ) {
+	constructor( router:Router, element:ElementRef, title:Title ) {
 		this.router = router;
 		this.element = element;
+		this.title = title;
+		this.title.setTitle("Home");
 	}
 
 	ngAfterViewInit():void {
 		this.$element = $( this.element.nativeElement );
 		this.$mainMenu = $( "header > .menu" );
-		//this.$carbonLogo = this.$element.find( "carbon-logo" );
+		this.$articles = $("#articles").find(".column");
+		 // This.$carbonLogo = this.$element.find( "carbon-logo" );
 		this.$carbonLogo = this.$element.find( "img.carbon-logo" );
 
 		this.hideMainMenu();
 		this.createDropdownMenus();
 		this.addMenuVisibilityHandlers();
+		this.createAccordions();
 	}
 
 	routerOnDeactivate():void {
@@ -43,7 +52,7 @@ export default class HomeView {
 	}
 
 	isActive( route:string ):boolean {
-		let instruction = this.router.generate( [ route ] );
+		let instruction:any = this.router.generate( [ route ] );
 		return this.router.isRouteActive( instruction );
 	}
 
@@ -68,14 +77,20 @@ export default class HomeView {
 	}
 
 	addMenuVisibilityHandlers():void {
-		var view:HomeView = this;
+		let view:HomeView = this;
 		this.$carbonLogo.visibility( {
 			once: false,
-			onBottomPassedReverse: function ( calculations ) {
+			onBottomPassedReverse: function():void {
 				view.hideMainMenu();
 			},
-			onBottomPassed: function ( calculations ) {
+			onBottomPassed: function():void {
 				view.showMainMenu();
+			}
+		} );
+		this.$articles.visibility({
+			once: false,
+			onTopVisible: function():void {
+				view.addTextAnimation();
 			}
 		} );
 	}
@@ -100,4 +115,34 @@ export default class HomeView {
 		return false;
 	}
 
+	addTextAnimation():void {
+		this.$articles.find("p").transition( "scale in" );
+	}
+
+	createAccordions():void {
+		this.$element.find( ".ui.accordion" ).accordion();
+	}
+
+
+/*	newsletterSignUp(){
+		let icpForm5139 = $("#icpsignup5139");
+		let protocol = location.protocol;
+		let test = document.getElementById("icpsingup5139");
+
+		icpForm5139.action = "https://app.icontact.com/icp/signup.php";
+		$('form').submit(function() {
+
+			if (icpForm5139.find("#fields_email").value == "") {
+				//icpForm5139["fields_email"].focus();
+				$('p.spam').text('Please enter a valid e-mail');
+				return false;
+			}
+			return true;
+
+		});
+		console.log("SignUp to newsletter: ");
+		console.log(icpForm5139);
+		console.log(test);
+		console.log(protocol);
+	}*/
 }
