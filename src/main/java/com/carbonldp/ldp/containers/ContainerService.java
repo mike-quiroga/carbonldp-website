@@ -54,6 +54,10 @@ public interface ContainerService {
 	public Set<Statement> getReadableMembershipResourcesTriples( URI containerURI );
 
 	@PreAuthorize( "hasPermission(#containerURI, 'READ')" )
+	@PostFilter( "hasPermission(filterObject.getObject(), 'READ')" )
+	public Set<Statement> getReadableContainedResourcesTriples( URI containerURI );
+
+	@PreAuthorize( "hasPermission(#containerURI, 'READ')" )
 	@PostFilter( "!hasPermission(filterObject.getObject(), 'READ')" )
 	public Set<Statement> getNonReadableMembershipResourcesTriples( URI containerURI );
 }

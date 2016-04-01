@@ -11,10 +11,13 @@ import com.carbonldp.models.Infraction;
 import com.carbonldp.rdf.RDFDocumentFactory;
 import com.carbonldp.rdf.RDFResource;
 import com.carbonldp.spring.ServicesInvoker;
+import com.carbonldp.utils.ValueUtil;
 import com.carbonldp.web.exceptions.NotImplementedException;
+import com.sun.glass.ui.EventLoop;
 import org.joda.time.DateTime;
 import org.openrdf.model.Statement;
 import org.openrdf.model.URI;
+import org.openrdf.model.Value;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.File;
@@ -41,7 +44,16 @@ public class SesameContainerService extends AbstractSesameLDPService implements 
 					container.getBaseModel().addAll( containerRepository.getContainmentTriples( containerURI ) );
 					break;
 				case CONTAINED_RESOURCES:
-					throw new NotImplementedException();
+					Set<Statement> containedResourceStatements = servicesInvoker.proxy( ( proxy ) -> {
+						return proxy.getContainerService().getReadableContainedResourcesTriples( containerURI );
+					} );
+					for ( Statement statement : containedResourceStatements ) {
+						Value containedResourceValue = statement.getObject();
+						if ( ! ValueUtil.isURI( containedResourceValue ) ) throw new IllegalStateException( "contained value is not a URI" );
+						URI containedResourceURI = ValueUtil.getURI( containedResourceValue );
+						container.getBaseModel().addAll( sourceService.get( containedResourceURI ) );
+					}
+					break;
 				case MEMBERSHIP_TRIPLES:
 					if ( containerRetrievalPreferences.contains( APIPreferences.ContainerRetrievalPreference.NON_READABLE_MEMBERSHIP_RESOURCE_TRIPLES ) ) {
 						container.getBaseModel().addAll( getMembershipTriples( containerURI ) );
@@ -53,7 +65,17 @@ public class SesameContainerService extends AbstractSesameLDPService implements 
 					}
 					break;
 				case MEMBER_RESOURCES:
-					throw new NotImplementedException();
+					Set<Statement> memberStatements = servicesInvoker.proxy( ( proxy ) -> {
+						return proxy.getContainerService().getReadableMembershipResourcesTriples( containerURI );
+					} );
+
+					for ( Statement statement : memberStatements ) {
+						Value memberValue = statement.getObject();
+						if ( ! ValueUtil.isURI( memberValue ) ) throw new IllegalStateException( "member value is not a URI" );
+						URI memberURI = ValueUtil.getURI( memberValue );
+						container.getBaseModel().addAll( sourceService.get( memberURI ) );
+					}
+					break;
 				case NON_READABLE_MEMBERSHIP_RESOURCE_TRIPLES:
 					if ( ! containerRetrievalPreferences.contains( APIPreferences.ContainerRetrievalPreference.MEMBERSHIP_TRIPLES ) ) {
 						Set<Statement> membershipTriples = servicesInvoker.proxy( ( proxy ) -> {
@@ -76,6 +98,10 @@ public class SesameContainerService extends AbstractSesameLDPService implements 
 
 	public Set<Statement> getReadableMembershipResourcesTriples( URI containerURI ) {
 		return containerRepository.getMembershipTriples( containerURI );
+	}
+
+	public Set<Statement> getReadableContainedResourcesTriples( URI containerURI ) {
+		return containerRepository.getContainmentTriples( containerURI );
 	}
 
 	public Set<Statement> getNonReadableMembershipResourcesTriples( URI containerURI ) {
