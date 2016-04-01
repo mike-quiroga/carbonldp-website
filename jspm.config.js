@@ -85,6 +85,13 @@ SystemJS.config({
     "zone.js": "npm:zone.js@0.6.2"
   },
   packages: {
+    "npm:angular2@2.0.0-beta.9": {
+      "map": {
+        "reflect-metadata": "npm:reflect-metadata@0.1.3",
+        "rxjs": "npm:rxjs@5.0.0-beta.2",
+        "zone.js": "npm:zone.js@0.5.15"
+      }
+    },
     "github:jspm/nodelibs-os@0.2.0-alpha": {
       "map": {
         "os-browserify": "npm:os-browserify@0.2.0"
