@@ -1,11 +1,11 @@
-import * as App from "carbonldp/App";
+import * as CarbonApp from "carbonldp/App";
 
 export class App {
 	name:string;
 	created:string;
 	modified:string;
 	slug:string;
-	app:App.Resource;
+	app:CarbonApp.Context;
 }
 
 export default App;

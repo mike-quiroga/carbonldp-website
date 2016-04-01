@@ -2,11 +2,11 @@ import { Component, ElementRef } from "angular2/core";
 import { CORE_DIRECTIVES } from "angular2/common";
 import { ROUTER_DIRECTIVES, ROUTER_PROVIDERS, RouteConfig, Router, RouterOutlet, Instruction, RouteParams } from "angular2/router";
 
-import * as App from "carbonldp/App";
+import * as CarbonApp from "carbonldp/App";
 
 import SidebarService from "./../../components/sidebar/service/SidebarService";
 import AppContextService from "./../../AppContextService";
-import * as SidebarApp from "./App";
+import App from "./App";
 
 import DashboardView from "./dashboard/DashboardView";
 import SPARQLEditorView from "./sparql-editor/SPARQLEditorView";
@@ -45,8 +45,8 @@ import "./style.css!";
 export default class AppDetailView {
 	router:Router;
 	routeParams:RouteParams;
-	//app:App;
-	public appContext:App.Context;
+
+	public appContext:CarbonApp.Context;
 	private sidebarService:SidebarService;
 	private appContextService:AppContextService;
 
@@ -68,33 +68,31 @@ export default class AppDetailView {
 
 	routerOnActivate():void {
 		let slug:string = this.routeParams.get( "slug" );
-		this.appContextService.get( slug )
-			.then(
-				( appContext ) => {
-					this.appContext = appContext;
-					let app:SidebarApp = {
-
-						name: appContext.app.name,
-						created: appContext.app.created,
-						modified: appContext.app.modified,
-						slug: slug,
-						app: appContext
-					};
-					this.sidebarService.addApp( app );
-				} )
-			.catch(
-				( error )=> {
-					// TODO: Check error type
-					console.log( error );
-					this.timer = 5;
-					let countDown = setInterval( ()=> {
+		this.appContextService.get( slug ).then(
+			( appContext:CarbonApp.Context ):void => {
+				this.appContext = appContext;
+				let app:App = <App>{
+					name: appContext.app.name,
+					created: appContext.app.created,
+					modified: appContext.app.modified,
+					slug: slug,
+					app: appContext,
+				};
+				this.sidebarService.addApp( app );
+			},
+			( error:any ):void => {
+				// TODO: Check error type
+				console.log( error );
+				this.timer = 5;
+				let countDown:any = setInterval(
+					():void => {
 						this.timer --;
-						if ( this.timer == 0 ) {
-							this.router.navigate( [ '/AppDev/MyApps/List' ] );
+						if ( this.timer === 0 ) {
+							this.router.navigate( [ "/AppDev/MyApps/List" ] );
 							clearInterval( countDown );
 						}
 					}, 1000 );
-				}
-			);
+			}
+		);
 	}
 }
