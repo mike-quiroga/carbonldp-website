@@ -1,6 +1,8 @@
-import { Component, ElementRef } from "angular2/core";
+import { Component, ElementRef, Inject } from "angular2/core";
 import { CORE_DIRECTIVES } from "angular2/common";
-import { ROUTER_DIRECTIVES, ROUTER_PROVIDERS, Router, Instruction } from "angular2/router";
+import { ROUTER_DIRECTIVES, Router, Instruction } from "angular2/router";
+
+import { AuthService } from "angular2-carbonldp/services";
 
 import $ from "jquery";
 import "semantic-ui/semantic";
@@ -18,10 +20,12 @@ export default class HeaderComponent {
 	router:Router;
 	element:ElementRef;
 	$element:JQuery;
+	authService:AuthService.Class;
 
-	constructor( router:Router, element:ElementRef ) {
+	constructor( router:Router, element:ElementRef, @Inject( AuthService.Token ) authService:AuthService.Class ) {
 		this.router = router;
 		this.element = element;
+		this.authService = authService;
 	}
 
 	ngAfterViewInit():void {
@@ -68,4 +72,8 @@ export default class HeaderComponent {
 		this.createLoginPopUp();
 	}
 
+	logOut():void {
+		this.authService.logout();
+		this.router.navigate( [ "/Home" ] );
+	}
 }

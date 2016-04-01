@@ -1,12 +1,11 @@
-import { Component, ElementRef, Injectable, Input } from "angular2/core";
-import { ROUTER_DIRECTIVES, ROUTER_PROVIDERS, Router, Instruction, RouterLink } from "angular2/router";
-import { CORE_DIRECTIVES, FORM_DIRECTIVES, FormBuilder, ControlGroup, AbstractControl, Control, NgIf, Validators } from "angular2/common";
+import { Component, ElementRef, Input, Inject } from "angular2/core";
+import { ROUTER_DIRECTIVES, Router } from "angular2/router";
+import { CORE_DIRECTIVES, FORM_DIRECTIVES, FormBuilder, ControlGroup, AbstractControl, Validators } from "angular2/common";
 
-import Carbon from "carbonldp/Carbon";
-import * as Credentials from "carbonldp/Auth/Credentials";
+import { AuthService } from "angular2-carbonldp/services";
+
+import Credentials from "carbonldp/Auth/Credentials";
 import * as HTTP from "carbonldp/HTTP";
-import Cookies from "js-cookie";
-import AuthenticationToken from "carbonldp/Auth";
 
 import { ValidationService } from "app/components/validation-service/ValidationService";
 
@@ -21,7 +20,6 @@ import template from "./template.html!";
 	directives: [ CORE_DIRECTIVES, ROUTER_DIRECTIVES, FORM_DIRECTIVES, ],
 } )
 export default class LoginComponent {
-	carbon:Carbon;
 	router:Router;
 	element:ElementRef;
 
@@ -40,14 +38,13 @@ export default class LoginComponent {
 	remember:boolean = true;
 
 	@Input() container:string|JQuery;
-	private cookiesHandler:Cookies;
+	private authService:AuthService.Class;
 
-	constructor( router:Router, element:ElementRef, formBuilder:FormBuilder, carbon:Carbon ) {
+	constructor( router:Router, element:ElementRef, formBuilder:FormBuilder, @Inject( AuthService.Token ) authService:AuthService.Class ) {
 		this.router = router;
 		this.element = element;
 		this.formBuilder = formBuilder;
-		this.carbon = carbon;
-		this.cookiesHandler = Cookies;
+		this.authService = authService;
 	}
 
 	ngOnInit():void {
@@ -81,20 +78,14 @@ export default class LoginComponent {
 		let password:string = data.password;
 		let rememberMe:boolean = ! ! data.rememberMe;
 
-		this.carbon.auth.authenticate( username, password ).then(
-			( credential:Credentials ) => {
-				this.sending = false;
-				this.submitting = false;
-				let days:number = this.getDays( (new Date()), credential.expirationTime );
-				if ( rememberMe ) {
-					this.cookiesHandler.set( "carbon_jwt", credential, days );
-				}
-				this.router.navigate( [ "/AppDev" ] );
-			},
-			( error:HTTP.Errors.HTTPError ) => {
-				this.sending = false;
-				this.setErrorMessage( error );
-			} );
+		this.authService.login( username, password, rememberMe ).then( ( credential:Credentials ) => {
+			this.sending = false;
+			this.submitting = false;
+			this.router.navigate( [ "/AppDev" ] );
+		}).catch( ( error:HTTP.Errors.Error ) => {
+			this.sending = false;
+			this.setErrorMessage( error );
+		});
 		this.submitting = false;
 	}
 
@@ -106,7 +97,7 @@ export default class LoginComponent {
 		return Math.floor( (utc2 - utc1) / msPerDay );
 	}
 
-	setErrorMessage( error:HTTP.Errors.HTTPError ):void {
+	setErrorMessage( error:HTTP.Errors.Error ):void {
 		switch ( true ) {
 			case error instanceof HTTP.Errors.ForbiddenError:
 				this.errorMessage = "Denied Access.";

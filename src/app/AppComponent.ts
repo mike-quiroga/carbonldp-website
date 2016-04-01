@@ -1,8 +1,6 @@
 import { Component } from "angular2/core";
 import { CORE_DIRECTIVES } from "angular2/common";
-import { ROUTER_DIRECTIVES, Location, RouteConfig, RouterLink, Router } from "angular2/router";
-
-import Carbon from "carbonldp/Carbon";
+import { ROUTER_DIRECTIVES, RouteConfig } from "angular2/router";
 
 import WebsiteView from "app/website/WebsiteView";
 import AppDevLoginView from "app/auth/app-dev-login/AppDevLoginView";

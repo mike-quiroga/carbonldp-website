@@ -1,15 +1,12 @@
-import {Injectable, Injector, Component, ElementRef } from "angular2/core";
-import {RouteConfig, RouterOutlet, CanActivate, Router} from 'angular2/router';
+import {Component, ElementRef } from "angular2/core";
+import {RouteConfig, RouterOutlet} from "angular2/router";
+
+import { Authenticated } from "angular2-carbonldp/decorators";
 
 import $ from "jquery";
 import "semantic-ui/semantic";
-import SidebarService from "./components/sidebar/service/SidebarService"
-import Carbon from "carbonldp/Carbon";
-import { CARBON_PROVIDER, appInjector } from "app/boot";
-import AuthenticationToken from "carbonldp/Auth";
-import * as Credentials from "carbonldp/Auth/Credentials";
-import * as HTTP from "carbonldp/HTTP";
-import Cookies from "js-cookie";
+
+import SidebarService from "./components/sidebar/service/SidebarService";
 
 import SidebarComponent from "./components/sidebar/SidebarComponent";
 import HeaderComponent from "./header/HeaderComponent";
@@ -23,43 +20,9 @@ import MyAppsView from "./my-apps/my-apps-view/MyAppsView";
 import template from "./template.html!";
 import "./style.css!";
 
-@CanActivate(
-	( prev, next ):boolean => {
-		let injector:Injector = appInjector();
-		let carbon:Carbon = injector.get( Carbon );
-		let router:Router = injector.get( Router );
-
-		if ( ! carbon ) {
-			router.navigate( [ "/AppDevLogin" ] );
-			return false;
-		}
-		let cookiesHandler:Cookies = Cookies;
-		let tokenCookie:Credentials = <Credentials>cookiesHandler.getJSON( "carbon_jwt" );
-		if ( tokenCookie && ! carbon.auth.isAuthenticated() ) {
-			return carbon.auth.authenticateUsing( "TOKEN", tokenCookie ).then(
-				( credentials:Credentials ) => {
-					return carbon.auth.isAuthenticated();
-				}
-			).catch(
-				( error:Error ) => {
-					switch ( true ) {
-						case error instanceof HTTP.Errors.UnauthorizedError:
-							console.log( "Wrong credentials" );
-							break;
-						default:
-							console.log( "There was a problem processing the request" );
-							break;
-					}
-					router.navigate( [ "/AppDevLogin" ] );
-					return false;
-				}
-			);
-		}
-		if ( ! carbon.auth.isAuthenticated() )
-			router.navigate( [ "/AppDevLogin" ] );
-		return carbon.auth.isAuthenticated();
-	}
-)
+@Authenticated( {
+	redirectTo: [ "/AppDevLogin" ],
+} )
 @Component( {
 	selector: "app-dev",
 	template: template,

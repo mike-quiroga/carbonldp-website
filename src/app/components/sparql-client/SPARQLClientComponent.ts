@@ -1,20 +1,18 @@
-import { Component, ElementRef, Injector, Input, Output, EventEmitter } from "angular2/core";
-import { CORE_DIRECTIVES, FORM_DIRECTIVES, NgStyle } from "angular2/common";
-import { CanActivate, Router } from "angular2/router";
+import { Component, ElementRef, Input, Output, EventEmitter } from "angular2/core";
+import { CORE_DIRECTIVES, FORM_DIRECTIVES } from "angular2/common";
 
-import { ResponseComponent, SPARQLResponseType, SPARQLFormats, SPARQLClientResponse, SPARQLQuery } from "./response/ResponseComponent";
-import * as CodeMirrorComponent from "app/components/code-mirror/CodeMirrorComponent";
-import { appInjector } from "app/boot";
+import { Authenticated } from "angular2-carbonldp/decorators";
 
 import Carbon from "carbonldp/Carbon";
 import Context from "carbonldp/Context";
 import * as SPARQL from "carbonldp/SPARQL";
 import * as HTTP from "carbonldp/HTTP";
-import Credentials from "carbonldp/Auth/Credentials";
-import Cookies from "js-cookie";
 
 import $ from "jquery";
 import "semantic-ui/semantic";
+
+import { ResponseComponent, SPARQLResponseType, SPARQLFormats, SPARQLClientResponse, SPARQLQuery } from "./response/ResponseComponent";
+import * as CodeMirrorComponent from "app/components/code-mirror/CodeMirrorComponent";
 
 import template from "./template.html!";
 import "./style.css!";
@@ -25,44 +23,9 @@ import "./style.css!";
 	template: template,
 	directives: [ CORE_DIRECTIVES, FORM_DIRECTIVES, CodeMirrorComponent.Class, ResponseComponent, ResponseComponent, ],
 } )
-@CanActivate(
-	( prev, next ):Promise<boolean> | boolean => {
-		let injector:Injector = appInjector();
-		let carbon:Carbon = injector.get( Carbon );
-		let router:Router = injector.get( Router );
-
-		if ( ! carbon ) {
-			router.navigate( [ "/Website/Login" ] );
-			return false;
-		}
-		// TODO: Change this to use a token instead of raw credentials when the SDK provides a way of authenticate using tokens.
-		let cookiesHandler:Cookies = Cookies;
-		let tokenCookie:Credentials = <Credentials>cookiesHandler.getJSON( "carbon_jwt" );
-		if ( tokenCookie && ! carbon.auth.isAuthenticated() ) {
-			return carbon.auth.authenticateUsing( "TOKEN", tokenCookie ).then(
-				( credentials:Credentials ) => {
-					return carbon.auth.isAuthenticated();
-				}
-			).catch(
-				( error:Error ) => {
-					switch ( true ) {
-						case error instanceof HTTP.Errors.UnauthorizedError:
-							console.log( "Wrong credentials" );
-							break;
-						default:
-							console.log( "There was a problem processing the request" );
-							break;
-					}
-					router.navigate( [ "/Website/Login" ] );
-					return false;
-				}
-			);
-		}
-		if ( ! carbon.auth.isAuthenticated() )
-			router.navigate( [ "/Website/Login" ] );
-		return carbon.auth.isAuthenticated();
-	}
-)
+@Authenticated( {
+	redirectTo: [ "/Website/Login" ],
+} )
 export default class SPARQLClientComponent {
 
 	sparqlTypes:SPARQLTypes = <SPARQLTypes>{

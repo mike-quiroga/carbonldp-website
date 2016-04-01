@@ -1,5 +1,7 @@
 import { Component, ElementRef } from "angular2/core";
 
+import { NotAuthenticated } from "angular2-carbonldp/decorators";
+
 import LoginComponent from "app/components/login/LoginComponent";
 import FooterComponent from "app/app-dev/footer/FooterComponent";
 
@@ -9,6 +11,9 @@ import "semantic-ui/semantic";
 import template from "./template.html!";
 import "./style.css!";
 
+@NotAuthenticated( {
+	redirectTo: [ "/AppDev" ],
+} )
 @Component( {
 	selector: "app-dev-login-page.big-stone1",
 	template: template,

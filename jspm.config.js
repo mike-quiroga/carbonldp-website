@@ -7,6 +7,7 @@ SystemJS.config({
     "github:*": "jspm_packages/github/*",
     "npm:*": "jspm_packages/npm/*",
     "carbonldp/": "src/../../CarbonLDP-JS-SDK/dist/",
+    "angular2-carbonldp/": "src/../../angular2-carbonldp/dist/",
     "semantic-ui/": "src/semantic/dist/",
     "app/": "src/app/"
   },
@@ -22,6 +23,9 @@ SystemJS.config({
       }
     },
     "carbonldp": {
+      "defaultExtension": "js"
+    },
+    "angular2-carbonldp": {
       "defaultExtension": "js"
     },
     "semantic-ui": {
@@ -85,6 +89,19 @@ SystemJS.config({
     "zone.js": "npm:zone.js@0.6.2"
   },
   packages: {
+    "angular2-carbonldp": {
+      "map": {
+        "angular2": "npm:angular2@2.0.0-beta.9",
+        "js-cookie": "npm:js-cookie@2.1.0"
+      }
+    },
+    "npm:angular2@2.0.0-beta.9": {
+      "map": {
+        "reflect-metadata": "npm:reflect-metadata@0.1.3",
+        "rxjs": "npm:rxjs@5.0.0-beta.2",
+        "zone.js": "npm:zone.js@0.5.15"
+      }
+    },
     "github:jspm/nodelibs-os@0.2.0-alpha": {
       "map": {
         "os-browserify": "npm:os-browserify@0.2.0"

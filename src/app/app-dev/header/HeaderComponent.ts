@@ -1,14 +1,11 @@
-import { Component, ElementRef } from "angular2/core";
+import { Component, ElementRef, Inject } from "angular2/core";
 import { CORE_DIRECTIVES } from "angular2/common";
-import { ROUTER_DIRECTIVES, ROUTER_PROVIDERS, Router, Instruction } from "angular2/router";
+import { ROUTER_DIRECTIVES, Router, Instruction } from "angular2/router";
+
+import { AuthService } from "angular2-carbonldp/services";
 
 import $ from "jquery";
 import "semantic-ui/semantic";
-
-import Carbon from "carbonldp/Carbon";
-import * as Credentials from "carbonldp/Auth/Credentials";
-import * as HTTP from "carbonldp/HTTP";
-import Cookies from "js-cookie";
 
 import template from "./template.html!";
 import "./style.css!";
@@ -21,12 +18,13 @@ export default class HeaderComponent {
 	router:Router;
 	element:ElementRef;
 	$element:JQuery;
-	private cookiesHandler:Cookies;
 
-	constructor( router:Router, element:ElementRef ) {
+	private authService:AuthService.Class;
+
+	constructor( router:Router, element:ElementRef, @Inject( AuthService.Token ) authService:AuthService.Class ) {
 		this.router = router;
 		this.element = element;
-		this.cookiesHandler = Cookies;
+		this.authService = authService;
 	}
 
 	ngAfterViewInit():void {
@@ -56,7 +54,7 @@ export default class HeaderComponent {
 	}
 
 	logOut():void {
-		this.cookiesHandler.remove( "carbon_jwt" );
-		this.router.navigate( [ "AppDevLogin" ] );
+		this.authService.logout();
+		this.router.navigate( [ "/AppDevLogin" ] );
 	}
 }

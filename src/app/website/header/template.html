@@ -25,12 +25,24 @@
 						<a class="item" [routerLink]="[ './Documents/InteractionModels' ]">Interaction Models</a>
 					</div>
 				</div>
-				<div class="right menu">
+				<div *ngIf=" ! authService.isAuthenticated() " class="right menu">
 					<a *ngIf="!isActive('./Login')" class="item login">
 						Log in
 					</a>
 					<div *ngIf="!isActive('./Login')" class="ui login popup bottom right transition hidden">
 						<login [container]="'.login.popup'"></login>
+					</div>
+				</div>
+				<div *ngIf=" authService.isAuthenticated() " class="right menu">
+					<a class="item" [routerLink]="[ '/AppDev' ]">Dashboard</a>
+					<div class="ui dropdown item">
+						User Name <i class="dropdown icon"></i>
+						<div class="menu">
+							<a class="item" (click)="logOut()">
+								<i class="sign out icon"></i>
+								Log Out
+							</a>
+						</div>
 					</div>
 				</div>
 			</div>
