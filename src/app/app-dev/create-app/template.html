@@ -30,8 +30,13 @@
 		<li value="*" *ngIf="!description.pristine && description.hasError('required')">
 			The description is required.
 		</li>
-		<li value="*" *ngIf="!!errorMessage">
-			{{errorMessage}}
-		</li>
 	</ol>
+</div>
+<div class="ui bottom attached error message" *ngIf="!!errorMessage">
+	<i class="close icon" (click)="closeMessage($event)"></i>
+	{{errorMessage}}
+</div>
+<div class="ui bottom attached success message" *ngIf="!!displaySuccessMessage">
+	<i class="close icon" (click)="closeMessage($event)"></i>
+	The app "<a [routerLink]="['/AppDev', 'MyApps', 'App', {slug: _slug}]">{{_name}}</a>" was created successfully.
 </div>

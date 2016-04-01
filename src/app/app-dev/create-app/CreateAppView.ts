@@ -5,10 +5,13 @@ import { Observable } from "rxjs";
 
 import Carbon from "carbonldp/Carbon";
 import * as App from "carbonldp/App";
+import * as Apps from "carbonldp/Apps";
 import * as HTTP from "carbonldp/HTTP";
 
 import $ from "jquery";
 import "semantic-ui/semantic";
+
+import Message from "./../components/errors-area/ErrorsAreaComponent";
 
 import template from "./template.html!";
 
@@ -26,7 +29,7 @@ export default class CreateAppView {
 	$createAppForm:JQuery;
 
 	submitting:boolean = false;
-	sending:boolean = false;
+	displaySuccessMessage:boolean = false;
 	errorMessage:string = "";
 
 	_name:string = "";
@@ -73,6 +76,7 @@ export default class CreateAppView {
 	slugLostControl( $evt:FocusEvent ):void {
 		if ( ! $evt.target.value.match( /^[a-z0-9]+(?:-[a-z0-9]*)*(?:\/*)$/ ) ) {
 			(<Control> this.slug).updateValue( this.getSanitizedSlug( $evt.target.value ) );
+			this._slug = this.slug.value;
 		}
 	}
 
@@ -85,12 +89,89 @@ export default class CreateAppView {
 	}
 
 	canDisplayErrors():boolean {
-		return (! this.name.pristine && ! this.name.valid) || (! this.slug.pristine && ! this.slug.valid) || (! this.description.pristine && ! this.description.valid) || ! ! this.errorMessage;
+		return (! this.name.pristine && ! this.name.valid) || (! this.slug.pristine && ! this.slug.valid) || (! this.description.pristine && ! this.description.valid);
 	}
 
 	onSubmit( data:{ name:string, slug:string, description:string }, $event:any ):void {
 		$event.preventDefault();
+
+		this.submitting = true;
+		this.errorMessage = "";
+
+		this.name.markAsDirty( true );
+		this.slug.markAsDirty( true );
+		this.description.markAsDirty( true );
+
+		if ( ! this.createAppForm.valid ) {
+			this.submitting = false;
+			return;
+		}
+
+		let name:string = data.name;
+		let slug:string = data.slug;
+		let description:string = data.description;
+
+		let appFactory:App.Factory = App.Factory;
+		let appDoc:App.Class = appFactory.create( name );
+		this.createApp( appDoc, slug ).then(
+			( success ) => {
+				this.displaySuccessMessage = true;
+				this.submitting = false;
+			},
+			( error:HTTP.Errors.Error ) => {
+				this.setErrorMessage( error );
+				this.submitting = false;
+			}
+		);
+
+
 	}
+
+	createApp( appDoc:App.Class, slug?:string ):Promise<[ Carbon.Pointer.Class, HTTP.Response.Class]> {
+		let promise:Promise<[ Carbon.Pointer.Class, HTTP.Response.Class]>;
+		if ( ! ! slug ) {
+			promise = this.carbon.apps.create( slug, appDoc );
+		} else {
+			promise = this.carbon.apps.create( appDoc );
+		}
+		return promise;
+	}
+
+	setErrorMessage( error:HTTP.Errors.Error ):void {
+		switch ( true ) {
+			case error instanceof HTTP.Errors.BadRequestError:
+				this.errorMessage = "";
+				break;
+			case error instanceof HTTP.Errors.ConflictError:
+				this.errorMessage = "There's already a resource with that slug. Error:" + error.response.status;
+				break;
+			case error instanceof HTTP.Errors.ForbiddenError:
+				this.errorMessage = "Forbidden Action.";
+				break;
+			case error instanceof HTTP.Errors.NotFoundError:
+				this.errorMessage = "Couldn't found the requested URL.";
+				break;
+			case error instanceof HTTP.Errors.RequestEntityTooLargeError:
+				this.errorMessage = "Request entity too large.";
+				break;
+			case error instanceof HTTP.Errors.UnauthorizedError:
+				this.errorMessage = "Unauthorized operation.";
+				break;
+			case error instanceof HTTP.Errors.InternalServerErrorError:
+				this.errorMessage = "An error occurred while trying to create the app. Please try again later. Error: " + error.response.status;
+				break;
+			case error instanceof HTTP.Errors.ServiceUnavailableError:
+				this.errorMessage = "Service currently unavailable.";
+				break;
+			case error instanceof HTTP.Errors.UnknownError:
+				this.errorMessage = "An error occurred while trying to create the app. Please try again later. Error: " + error.response.status;
+				break;
+			default:
+				this.errorMessage = "There was a problem processing the request. Error: " + error.response.status;
+				break;
+		}
+	}
+
 
 	slugValidator( slug:Control ):any {
 		if ( slug.value ) {
@@ -101,5 +182,16 @@ export default class CreateAppView {
 			}
 		}
 		return null;
+	}
+
+	closeMessage( evt:any ):void {
+		let message:JQuery = $( evt.srcElement ).closest( ".ui.message" );
+		message.transition( {
+			onComplete: ():void => {
+				if ( message.hasClass( "success" ) ) {
+					this.displaySuccessMessage = false;
+				}
+			},
+		} ).transition( "fade" );
 	}
 }
