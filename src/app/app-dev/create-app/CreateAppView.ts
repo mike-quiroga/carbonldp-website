@@ -1,6 +1,6 @@
-import { Component, ElementRef, Type, Input, SimpleChange } from "angular2/core";
+import { Component, ElementRef } from "angular2/core";
 import { CORE_DIRECTIVES, FORM_DIRECTIVES, FormBuilder, ControlGroup, AbstractControl, Control, Validators } from "angular2/common";
-import { Router, RouteDefinition, ROUTER_DIRECTIVES, CanActivate} from "angular2/router";
+import { Router, ROUTER_DIRECTIVES } from "angular2/router";
 import { Observable } from "rxjs";
 
 import Carbon from "carbonldp/Carbon";
@@ -11,7 +11,7 @@ import * as HTTP from "carbonldp/HTTP";
 import $ from "jquery";
 import "semantic-ui/semantic";
 
-import Message from "./../components/errors-area/ErrorsAreaComponent";
+import AppContextService from "./../AppContextService";
 
 import template from "./template.html!";
 
@@ -112,11 +112,12 @@ export default class CreateAppView {
 		let description:string = data.description;
 
 		let appFactory:App.Factory = App.Factory;
-		let appDoc:App.Class = appFactory.create( name );
-		this.createApp( appDoc, slug ).then(
-			( success ) => {
-				this.displaySuccessMessage = true;
+		let appDocument:App.Class = appFactory.create( name );
+		appDocument.description = description;
+		this.createApp( appDocument, slug ).then(
+			( [appPointer, appCreationResponse]:[ Carbon.Pointer.Class, HTTP.Response.Class] ) => {
 				this.submitting = false;
+				this.displaySuccessMessage = true;
 			},
 			( error:HTTP.Errors.Error ) => {
 				this.setErrorMessage( error );
@@ -127,12 +128,12 @@ export default class CreateAppView {
 
 	}
 
-	createApp( appDoc:App.Class, slug?:string ):Promise<[ Carbon.Pointer.Class, HTTP.Response.Class]> {
+	createApp( appDocument:App.Class, slug?:string ):Promise<[ Carbon.Pointer.Class, HTTP.Response.Class]> {
 		let promise:Promise<[ Carbon.Pointer.Class, HTTP.Response.Class]>;
 		if ( ! ! slug ) {
-			promise = this.carbon.apps.create( slug, appDoc );
+			promise = this.carbon.apps.create( slug, appDocument );
 		} else {
-			promise = this.carbon.apps.create( appDoc );
+			promise = this.carbon.apps.create( appDocument );
 		}
 		return promise;
 	}
@@ -190,6 +191,8 @@ export default class CreateAppView {
 			onComplete: ():void => {
 				if ( message.hasClass( "success" ) ) {
 					this.displaySuccessMessage = false;
+				} else {
+					this.errorMessage = "";
 				}
 			},
 		} ).transition( "fade" );

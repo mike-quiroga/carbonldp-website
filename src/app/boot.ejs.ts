@@ -24,6 +24,12 @@ const CARBON_PROVIDER = provide( Carbon, {
 	useFactory: () => {
 		let carbon = new Carbon();
 		carbon.setSetting( "domain", "<%- carbon.domain %>" );
+		carbon.extendObjectSchema( Carbon.App.RDF_CLASS, {
+			"description": {
+				"@id": "http://example.com/ns#description",
+				"@type:": Carbon.NS.XSD.DataType.string,
+			},
+		} );
 		return carbon;
 	}
 } );
@@ -33,7 +39,7 @@ bootstrap( AppComponent, [
 	ROUTER_PROVIDERS,
 	HTTP_PROVIDERS,
 
-	provide( APP_BASE_HREF, { useValue: "<%- url.base %>" } ),
+	provide( APP_BASE_HREF, {useValue: "<%- url.base %>"} ),
 
 	CARBON_PROVIDER,
 	BLOG_PROVIDERS,
