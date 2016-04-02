@@ -4,13 +4,20 @@ import com.carbonldp.ldp.containers.AccessPoint;
 import com.carbonldp.rdf.RDFDocument;
 import org.joda.time.DateTime;
 import org.openrdf.model.URI;
+import org.springframework.security.access.prepost.PostFilter;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.access.prepost.PreFilter;
+
+import java.util.Set;
 
 public interface RDFSourceService {
 	public boolean exists( URI sourceURI );
 
 	@PreAuthorize( "hasPermission(#sourceURI, 'READ')" )
 	public RDFSource get( URI sourceURI );
+
+	@PreFilter( "hasPermission(filterObject, 'READ')" )
+	public Set<RDFSource> get(Set<URI> sourceURIs);
 
 	public DateTime getModified( URI sourceURI );
 

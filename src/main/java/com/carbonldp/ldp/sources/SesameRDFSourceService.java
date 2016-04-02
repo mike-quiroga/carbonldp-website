@@ -39,6 +39,12 @@ public class SesameRDFSourceService extends AbstractSesameLDPService implements 
 	}
 
 	@Override
+	public Set<RDFSource> get( Set<URI> sourceURIs ) {
+		for ( URI sourceURI : sourceURIs ) if ( ! exists( sourceURI ) ) throw new ResourceDoesntExistException();
+		return sourceRepository.get( sourceURIs );
+	}
+
+	@Override
 	public DateTime getModified( URI sourceURI ) {
 
 		if ( ! exists( sourceURI ) ) throw new ResourceDoesntExistException();
