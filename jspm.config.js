@@ -26,7 +26,10 @@ SystemJS.config({
       "defaultExtension": "js"
     },
     "angular2-carbonldp": {
-      "defaultExtension": "js"
+      "map": {
+        "angular2": "npm:angular2@2.0.0-beta.9",
+        "js-cookie": "npm:js-cookie@2.1.0"
+      }
     },
     "semantic-ui": {
       "defaultExtension": "js"
@@ -75,7 +78,7 @@ SystemJS.config({
     "process": "github:jspm/nodelibs-process@0.2.0-alpha",
     "punycode": "github:jspm/nodelibs-punycode@0.2.0-alpha",
     "querystring": "github:jspm/nodelibs-querystring@0.2.0-alpha",
-    "reflect-metadata": "npm:reflect-metadata@0.1.2",
+    "reflect-metadata": "npm:reflect-metadata@0.1.3",
     "rxjs": "npm:rxjs@5.0.0-beta.2",
     "stream": "github:jspm/nodelibs-stream@0.2.0-alpha",
     "string_decoder": "github:jspm/nodelibs-string_decoder@0.2.0-alpha",
@@ -89,12 +92,6 @@ SystemJS.config({
     "zone.js": "npm:zone.js@0.6.2"
   },
   packages: {
-    "angular2-carbonldp": {
-      "map": {
-        "angular2": "npm:angular2@2.0.0-beta.9",
-        "js-cookie": "npm:js-cookie@2.1.0"
-      }
-    },
     "npm:angular2@2.0.0-beta.9": {
       "map": {
         "reflect-metadata": "npm:reflect-metadata@0.1.3",
