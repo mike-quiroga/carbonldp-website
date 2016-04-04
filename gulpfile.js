@@ -40,7 +40,6 @@ const config = {
 	nodeDependencies: [
 		"node_modules/es6-shim/es6-shim.js",
 		"node_modules/systemjs/dist/system-polyfills.src.js",
-		"node_modules/angular2/bundles/angular2-polyfills.js",
 		"node_modules/systemjs/dist/system.src.js",
 		"node_modules/rxjs/bundles/Rx.js",
 	]
@@ -83,10 +82,9 @@ gulp.task( "compile-index", () => {
 gulp.task( "bundle", () => {
 	let builder = new Builder();
 	return builder.buildStatic( "app/boot", "dist/site/main.sfx.js", {
-		minify: true,
+		minify: false,
 		mangle: false,
-		lowResSourceMaps: false,
-		sourceMaps: true
+		sourceMaps: false
 	});
 });
 
