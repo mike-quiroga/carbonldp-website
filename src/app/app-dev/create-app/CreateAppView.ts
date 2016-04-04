@@ -4,7 +4,7 @@ import { Router, ROUTER_DIRECTIVES } from "angular2/router";
 import { Observable } from "rxjs";
 
 import Carbon from "carbonldp/Carbon";
-import * as App from "carbonldp/App";
+import * as CarbonApp from "carbonldp/App";
 import * as Apps from "carbonldp/Apps";
 import * as HTTPResponse from "carbonldp/HTTP/Response";
 import * as HTTPErrors from "carbonldp/HTTP/Errors";
@@ -15,6 +15,7 @@ import $ from "jquery";
 import "semantic-ui/semantic";
 
 import AppContextService from "./../AppContextService";
+import App from "./../my-apps/app/App";
 
 import template from "./template.html!";
 
@@ -117,14 +118,14 @@ export default class CreateAppView {
 		let slug:string = data.slug;
 		let description:string = data.description;
 
-		let appDocument:App.Class = App.Factory.create( name );
+		let appDocument:App = <App>(CarbonApp.Factory.create( name ));
 		appDocument.description = description;
-		this.carbon.apps.create( slug, appDocument ).then(
+		this.carbon.apps.create( slug, <CarbonApp.Class>appDocument ).then(
 			( [appPointer, appCreationResponse]:[ Pointer.Class, HTTPResponse.Class] ) => {
 				this.submitting = false;
 				this.resolvedSlug = this._slug;
 				this.carbon.apps.getContext( appPointer ).then(
-					( appContext:App.Context ):void => {
+					( appContext:CarbonApp.Context ):void => {
 						this.resolvedSlug = this.appContextService.getSlug( appContext );
 					}
 				);
@@ -137,16 +138,6 @@ export default class CreateAppView {
 		);
 
 
-	}
-
-	createApp( appDocument:App.Class, slug?:string ):Promise<[ Pointer.Class, HTTPResponse.Class]> {
-		let promise:Promise<[ Pointer.Class, HTTPResponse.Class]>;
-		if ( ! ! slug ) {
-			promise = this.carbon.apps.create( slug, appDocument );
-		} else {
-			promise = this.carbon.apps.create( appDocument );
-		}
-		return promise;
 	}
 
 	setErrorMessage( error:HTTPError.HTTPError ):void {
