@@ -27,7 +27,7 @@ SystemJS.config({
     },
     "angular2-carbonldp": {
       "map": {
-        "angular2": "npm:angular2@2.0.0-beta.9",
+        "angular2": "npm:angular2@2.0.0-beta.13",
         "js-cookie": "npm:js-cookie@2.1.0"
       }
     },
@@ -53,7 +53,7 @@ SystemJS.config({
     "dgram": "github:jspm/nodelibs-dgram@0.2.0-alpha",
     "dns": "github:jspm/nodelibs-dns@0.2.0-alpha",
     "ecc-jsbn": "npm:ecc-jsbn@0.1.1",
-    "angular2": "npm:angular2@2.0.0-beta.9",
+    "angular2": "npm:angular2@2.0.0-beta.13",
     "buffer": "github:jspm/nodelibs-buffer@0.2.0-alpha",
     "child_process": "github:jspm/nodelibs-child_process@0.2.0-alpha",
     "constants": "github:jspm/nodelibs-constants@0.2.0-alpha",
@@ -91,7 +91,7 @@ SystemJS.config({
     "util": "github:jspm/nodelibs-util@0.2.0-alpha",
     "vm": "github:jspm/nodelibs-vm@0.2.0-alpha",
     "zlib": "github:jspm/nodelibs-zlib@0.2.0-alpha",
-    "zone.js": "npm:zone.js@0.6.2"
+    "zone.js": "npm:zone.js@0.6.8"
   },
   packages: {
     "github:jspm/nodelibs-path@0.1.0": {
@@ -109,13 +109,6 @@ SystemJS.config({
         "base64-js": "npm:base64-js@1.1.2",
         "ieee754": "npm:ieee754@1.1.6",
         "isarray": "npm:isarray@1.0.0"
-      }
-    },
-    "npm:angular2@2.0.0-beta.9": {
-      "map": {
-        "reflect-metadata": "npm:reflect-metadata@0.1.3",
-        "rxjs": "npm:rxjs@5.0.0-beta.2",
-        "zone.js": "npm:zone.js@0.5.15"
       }
     },
     "github:jspm/nodelibs-os@0.2.0-alpha": {

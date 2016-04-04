@@ -57,7 +57,7 @@
       "lib": "src/app"
     },
     "dependencies": {
-      "angular2": "npm:angular2@^2.0.0-beta.9",
+      "angular2": "npm:angular2@^2.0.0-beta.13",
       "codemirror": "npm:codemirror@^5.12.0",
       "css": "github:systemjs/plugin-css@^0.1.20",
       "jquery": "npm:jquery@^2.2.1",
@@ -66,7 +66,7 @@
       "plugin-typescript": "github:frankwallis/plugin-typescript@^4.0.5",
       "text": "github:systemjs/plugin-text@^0.0.7",
       "typescript": "npm:typescript@^1.8.9",
-      "zone.js": "npm:zone.js@^0.6.2"
+      "zone.js": "npm:zone.js@^0.6.8"
     },
     "devDependencies": {
       "clean-css": "npm:clean-css@^3.4.10"
@@ -108,7 +108,7 @@
       "zlib": "github:jspm/nodelibs-zlib@^0.2.0-alpha"
     },
     "overrides": {
-      "npm:angular2@2.0.0-beta.9": {
+      "npm:angular2@2.0.0-beta.13": {
         "main": false,
         "dependencies": {
           "reflect-metadata": "npm:reflect-metadata@^0.1.3",
@@ -149,21 +149,6 @@
       "npm:reflect-metadata@0.1.3": {
         "map": {
           "crypto": "@empty"
-        }
-      },
-      "npm:zone.js@0.5.15": {
-        "main": "dist/zone.js",
-        "directories": {},
-        "jspmNodeConversion": false,
-        "dependencies": {},
-        "meta": {
-          "dist/zone.js": {
-            "exports": [
-              "Zone",
-              "zone"
-            ],
-            "format": "global"
-          }
         }
       }
     }
