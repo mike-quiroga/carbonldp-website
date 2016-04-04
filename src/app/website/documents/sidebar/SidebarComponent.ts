@@ -1,5 +1,5 @@
 import { Component, Input, ElementRef, OnChanges, SimpleChange } from "angular2/core";
-import {CORE_DIRECTIVES} from "angular2/common"
+import { CORE_DIRECTIVES } from "angular2/common"
 import { ROUTER_DIRECTIVES, ROUTER_PROVIDERS, Router, Instruction, RouteParams } from "angular2/router";
 import SidebarService from "./service/SidebarService";
 
@@ -15,9 +15,9 @@ import template from "./template.html!";
 } )
 export default class SidebarComponent {
 	elementRef:ElementRef;
-	$element: JQuery;
-	$container: JQuery;
-	$followMenu: JQuery;
+	$element:JQuery;
+	$container:JQuery;
+	$followMenu:JQuery;
 	sidebar:any;
 	sections:any;
 	subSections:any;
@@ -117,7 +117,7 @@ export default class SidebarComponent {
 		this.setSectionID( $section, headerID );
 		let html:string = `<div class="item">`;
 
-		if ( subSections.size() === 0 ) {
+		if ( subSections.length === 0 ) {
 			html += `<a class="${ activeClass } title " href="#${ headerID }">${ headerText }</a></div>`;
 		} else {
 			html += `<a class="${ activeClass } title " href="#${ headerID }">${ headerText }</a><i class="dropdown icon"></i>`;
@@ -125,7 +125,7 @@ export default class SidebarComponent {
 
 		// If subsections exist, then iterate each section
 		let component:SidebarComponent = this;
-		if ( subSections.size() > 0 ) {
+		if ( subSections.length > 0 ) {
 			html += `<div class="content menu">`;
 
 			$.each( subSections, function ( index:number, subSection:HTMLElement ) {
@@ -154,7 +154,7 @@ export default class SidebarComponent {
 		let $followSection:JQuery = this.$followMenu.children( ".item" );
 		let $activeSection:JQuery = $followSection.eq( index );
 		let isActive:boolean = $activeSection.hasClass( "active" );
-		let hasSubsection:boolean = this.sections.eq( index ).children( "section" ).size() > 0;
+		let hasSubsection:boolean = this.sections.eq( index ).children( "section" ).length > 0;
 
 		$followSection.find( ".active" ).removeClass( "active" );
 
@@ -209,8 +209,8 @@ export default class SidebarComponent {
 
 	// Toggle selected accordion menu in sidebar
 	toggleDropdown( event:any ):boolean {
-		let id:string = $( event.currentTarget );
-		let $accordion:JQuery = id.parent( ".item" ).find( ".content.menu" );
+		let $target:JQuery = $( event.currentTarget );
+		let $accordion:JQuery = $target.parent( ".item" ).find( ".content.menu" );
 		if ( $accordion ) {
 			let accordionIsActive:boolean = $accordion.hasClass( "active" );
 
@@ -232,7 +232,7 @@ export default class SidebarComponent {
 	// Escapes a given text to use it safely with selectors
 	getHeaderID( text:string ):string {
 		text = text.replace( /[,]/g, "" ).replace( /\s+/g, "-" ).replace( /[^-,'A-Za-z0-9]+/g, "" ).toLowerCase();
-		return window.escape( text );
+		return encodeURIComponent( text );
 	}
 
 	// Sets the id to the section using the name of the first children header of the section

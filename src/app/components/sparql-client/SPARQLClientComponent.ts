@@ -36,7 +36,7 @@ export default class SPARQLClientComponent {
 		select: {
 			name: "SELECT",
 			formats: [
-				{value: SPARQLFormats.table, name: "Friendly Table"},
+				{ value: SPARQLFormats.table, name: "Friendly Table" },
 				// {value: SPARQLFormats.xml, name: "XML"},
 				// {value: SPARQLFormats.csv, name: "CSV"},
 				// {value: SPARQLFormats.tsv, name: "TSV"},
@@ -45,27 +45,27 @@ export default class SPARQLClientComponent {
 		describe: {
 			name: "DESCRIBE",
 			formats: [
-				{value: SPARQLFormats.jsonLD, name: "JSON-LD"},
-				{value: SPARQLFormats.turtle, name: "TURTLE"},
-				{value: SPARQLFormats.jsonRDF, name: "RDF/JSON"},
-				{value: SPARQLFormats.rdfXML, name: "RDF/XML"},
-				{value: SPARQLFormats.n3, name: "N3"},
+				{ value: SPARQLFormats.jsonLD, name: "JSON-LD" },
+				{ value: SPARQLFormats.turtle, name: "TURTLE" },
+				{ value: SPARQLFormats.jsonRDF, name: "RDF/JSON" },
+				{ value: SPARQLFormats.rdfXML, name: "RDF/XML" },
+				{ value: SPARQLFormats.n3, name: "N3" },
 			],
 		},
 		construct: {
 			name: "CONSTRUCT",
 			formats: [
-				{value: SPARQLFormats.jsonLD, name: "JSON-LD"},
-				{value: SPARQLFormats.turtle, name: "TURTLE"},
-				{value: SPARQLFormats.jsonRDF, name: "RDF/JSON"},
-				{value: SPARQLFormats.rdfXML, name: "RDF/XML"},
-				{value: SPARQLFormats.n3, name: "N3"},
+				{ value: SPARQLFormats.jsonLD, name: "JSON-LD" },
+				{ value: SPARQLFormats.turtle, name: "TURTLE" },
+				{ value: SPARQLFormats.jsonRDF, name: "RDF/JSON" },
+				{ value: SPARQLFormats.rdfXML, name: "RDF/XML" },
+				{ value: SPARQLFormats.n3, name: "N3" },
 			],
 		},
 		ask: {
 			name: "ASK",
 			formats: [
-				{value: SPARQLFormats.boolean, name: "Boolean"},
+				{ value: SPARQLFormats.boolean, name: "Boolean" },
 			],
 		},
 	};
@@ -189,7 +189,7 @@ export default class SPARQLClientComponent {
 	constructor( element:ElementRef, carbon:Carbon ) {
 		this.element = element;
 		this.isSending = false;
-		this.savedQueries = this.getLocalSavedQueries() || <SPARQLQuery>[];
+		this.savedQueries = this.getLocalSavedQueries() || [];
 		this.carbon = carbon;
 	}
 
@@ -374,33 +374,33 @@ export default class SPARQLClientComponent {
 				let duration:number = (new Date()).valueOf() - beforeTimestamp;
 				return this.buildResponse( duration, result, <string> SPARQLResponseType.success, query );
 			},
-			( error:HTTP.Errors.HTTPError ):Promise<SPARQLClientResponse> => {
+			( error:HTTP.Errors.Error ):Promise<SPARQLClientResponse> => {
 				return this.handleError( error, query, beforeTimestamp );
 			} );
 	}
 
 	executeDESCRIBE( query:SPARQLQuery ):Promise<SPARQLClientResponse> {
 		let beforeTimestamp:number = ( new Date() ).valueOf();
-		let requestOptions:HTTP.Request.Options = {headers: new Map().set( "Accept", new HTTP.Header.Class( query.format ) )};
+		let requestOptions:HTTP.Request.Options = { headers: new Map().set( "Accept", new HTTP.Header.Class( query.format ) ) };
 		return this.context.documents.executeRawDESCRIBEQuery( query.endpoint, query.content, requestOptions ).then(
 			( [ result, response ]:[ string, HTTP.Response.Class ] ):SPARQLClientResponse => {
 				let duration:number = (new Date()).valueOf() - beforeTimestamp;
 				return this.buildResponse( duration, result, <string> SPARQLResponseType.success, query );
 			},
-			( error:HTTP.Errors.HTTPError ):Promise<SPARQLClientResponse> => {
+			( error:HTTP.Errors.Error ):Promise<SPARQLClientResponse> => {
 				return this.handleError( error, query, beforeTimestamp );
 			} );
 	}
 
 	executeCONSTRUCT( query:SPARQLQuery ):Promise<SPARQLClientResponse> {
 		let beforeTimestamp:number = ( new Date() ).valueOf();
-		let requestOptions:HTTP.Request.Options = {headers: new Map().set( "Accept", new HTTP.Header.Class( query.format ) )};
+		let requestOptions:HTTP.Request.Options = { headers: new Map().set( "Accept", new HTTP.Header.Class( query.format ) ) };
 		return this.context.documents.executeRawCONSTRUCTQuery( query.endpoint, query.content, requestOptions ).then(
 			( [ result, response ]:[ string, HTTP.Response.Class ] ):SPARQLClientResponse => {
 				let duration:number = (new Date()).valueOf() - beforeTimestamp;
 				return this.buildResponse( duration, result, <string> SPARQLResponseType.success, query );
 			},
-			( error:HTTP.Errors.HTTPError ):Promise<SPARQLClientResponse> => {
+			( error:HTTP.Errors.Error ):Promise<SPARQLClientResponse> => {
 				return this.handleError( error, query, beforeTimestamp );
 			} );
 	}
@@ -412,7 +412,7 @@ export default class SPARQLClientComponent {
 				let duration:number = (new Date()).valueOf() - beforeTimestamp;
 				return this.buildResponse( duration, result, <string> SPARQLResponseType.success, query );
 			},
-			( error:HTTP.Errors.HTTPError ):Promise<SPARQLClientResponse> => {
+			( error:HTTP.Errors.Error ):Promise<SPARQLClientResponse> => {
 				return this.handleError( error, query, beforeTimestamp );
 			} );
 	}
@@ -649,7 +649,7 @@ export default class SPARQLClientComponent {
 		return clientResponse;
 	}
 
-	handleError( error:HTTP.Errors.HTTPError, query:SPARQLQuery, beforeTimestamp:number ):Promise<SPARQLClientResponse> {
+	handleError( error:HTTP.Errors.Error, query:SPARQLQuery, beforeTimestamp:number ):Promise<SPARQLClientResponse> {
 		let duration:number = (new Date()).valueOf() - beforeTimestamp;
 		return new Promise<SPARQLClientResponse>(
 			( resolve, reject ) => {
@@ -667,7 +667,7 @@ export default class SPARQLClientComponent {
 			( response:SPARQLClientResponse ) => {
 				return response;
 			},
-			( _error:HTTP.Errors.HTTPError ) => {
+			( _error:HTTP.Errors.Error ) => {
 				return Promise.reject( _error );
 			}
 		);

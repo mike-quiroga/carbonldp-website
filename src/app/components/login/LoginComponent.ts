@@ -26,7 +26,6 @@ export default class LoginComponent {
 	$element:JQuery;
 	$loginForm:JQuery;
 
-	submitting:boolean = false;
 	sending:boolean = false;
 	errorMessage:string = "";
 
@@ -63,7 +62,6 @@ export default class LoginComponent {
 
 	onSubmit( data:{ email:string, password:string, rememberMe:boolean }, $event:any ):void {
 		$event.preventDefault();
-		this.submitting = true;
 		this.sending = true;
 		this.errorMessage = "";
 		this.email.markAsTouched();
@@ -80,13 +78,11 @@ export default class LoginComponent {
 
 		this.authService.login( username, password, rememberMe ).then( ( credential:Credentials ) => {
 			this.sending = false;
-			this.submitting = false;
 			this.router.navigate( [ "/AppDev" ] );
-		}).catch( ( error:HTTP.Errors.Error ) => {
+		} ).catch( ( error:HTTP.Errors.Error ) => {
 			this.sending = false;
 			this.setErrorMessage( error );
-		});
-		this.submitting = false;
+		} );
 	}
 
 	getDays( firstDate:Date, lastDate:Date ):number {

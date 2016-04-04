@@ -25,9 +25,9 @@
 			</div>
 		</div>
 		<button type="submit"
-		        [ngClass]="{ loading: submitting }"
+		        [ngClass]="{ loading: sending }"
 		        class="ui fluid large california submit button"
-		        [disabled]="!loginForm.valid"
+		        [disabled]="!loginForm.valid || sending"
 		        (click)="onSubmit(loginForm.value, $event)">
 			Login
 		</button>
