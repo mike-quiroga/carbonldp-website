@@ -6,7 +6,10 @@ import { Observable } from "rxjs";
 import Carbon from "carbonldp/Carbon";
 import * as App from "carbonldp/App";
 import * as Apps from "carbonldp/Apps";
-import * as HTTP from "carbonldp/HTTP";
+import * as HTTPResponse from "carbonldp/HTTP/Response";
+import * as HTTPErrors from "carbonldp/HTTP/Errors";
+import * as HTTPError from "carbonldp/HTTP/Errors/HTTPError";
+import * as Pointer from "carbonldp/Pointer";
 
 import $ from "jquery";
 import "semantic-ui/semantic";
@@ -27,6 +30,7 @@ export default class CreateAppView {
 
 	$element:JQuery;
 	$createAppForm:JQuery;
+	appContextService:AppContextService;
 
 	submitting:boolean = false;
 	displaySuccessMessage:boolean = false;
@@ -34,6 +38,7 @@ export default class CreateAppView {
 
 	_name:string = "";
 	_slug:string = "";
+	resolvedSlug:string = "";
 
 	createAppForm:ControlGroup;
 	formBuilder:FormBuilder;
@@ -42,11 +47,12 @@ export default class CreateAppView {
 	description:AbstractControl;
 
 
-	constructor( router:Router, element:ElementRef, formBuilder:FormBuilder, carbon:Carbon ) {
+	constructor( router:Router, element:ElementRef, formBuilder:FormBuilder, carbon:Carbon, appContextService:AppContextService ) {
 		this.router = router;
 		this.element = element;
 		this.formBuilder = formBuilder;
 		this.carbon = carbon;
+		this.appContextService = appContextService;
 	}
 
 	ngOnInit():void {
@@ -73,9 +79,9 @@ export default class CreateAppView {
 		);
 	}
 
-	slugLostControl( $evt:FocusEvent ):void {
-		if ( ! $evt.target.value.match( /^[a-z0-9]+(?:-[a-z0-9]*)*(?:\/*)$/ ) ) {
-			(<Control> this.slug).updateValue( this.getSanitizedSlug( $evt.target.value ) );
+	slugLostControl( evt:any ):void {
+		if ( ! evt.target.value.match( /^[a-z0-9]+(?:-[a-z0-9]*)*(?:\/*)$/ ) ) {
+			(<Control> this.slug).updateValue( this.getSanitizedSlug( evt.target.value ), false, false, false );
 			this._slug = this.slug.value;
 		}
 	}
@@ -111,15 +117,20 @@ export default class CreateAppView {
 		let slug:string = data.slug;
 		let description:string = data.description;
 
-		let appFactory:App.Factory = App.Factory;
-		let appDocument:App.Class = appFactory.create( name );
+		let appDocument:App.Class = App.Factory.create( name );
 		appDocument.description = description;
-		this.createApp( appDocument, slug ).then(
-			( [appPointer, appCreationResponse]:[ Carbon.Pointer.Class, HTTP.Response.Class] ) => {
+		this.carbon.apps.create( slug, appDocument ).then(
+			( [appPointer, appCreationResponse]:[ Pointer.Class, HTTPResponse.Class] ) => {
 				this.submitting = false;
+				this.resolvedSlug = this._slug;
+				this.carbon.apps.getContext( appPointer ).then(
+					( appContext:App.Context ):void => {
+						this.resolvedSlug = this.appContextService.getSlug( appContext );
+					}
+				);
 				this.displaySuccessMessage = true;
 			},
-			( error:HTTP.Errors.Error ) => {
+			( error:HTTPError.HTTPError ) => {
 				this.setErrorMessage( error );
 				this.submitting = false;
 			}
@@ -128,8 +139,8 @@ export default class CreateAppView {
 
 	}
 
-	createApp( appDocument:App.Class, slug?:string ):Promise<[ Carbon.Pointer.Class, HTTP.Response.Class]> {
-		let promise:Promise<[ Carbon.Pointer.Class, HTTP.Response.Class]>;
+	createApp( appDocument:App.Class, slug?:string ):Promise<[ Pointer.Class, HTTPResponse.Class]> {
+		let promise:Promise<[ Pointer.Class, HTTPResponse.Class]>;
 		if ( ! ! slug ) {
 			promise = this.carbon.apps.create( slug, appDocument );
 		} else {
@@ -138,33 +149,33 @@ export default class CreateAppView {
 		return promise;
 	}
 
-	setErrorMessage( error:HTTP.Errors.Error ):void {
+	setErrorMessage( error:HTTPError.HTTPError ):void {
 		switch ( true ) {
-			case error instanceof HTTP.Errors.BadRequestError:
+			case error instanceof HTTPErrors.BadRequestError:
 				this.errorMessage = "";
 				break;
-			case error instanceof HTTP.Errors.ConflictError:
+			case error instanceof HTTPErrors.ConflictError:
 				this.errorMessage = "There's already a resource with that slug. Error:" + error.response.status;
 				break;
-			case error instanceof HTTP.Errors.ForbiddenError:
+			case error instanceof HTTPErrors.ForbiddenError:
 				this.errorMessage = "Forbidden Action.";
 				break;
-			case error instanceof HTTP.Errors.NotFoundError:
+			case error instanceof HTTPErrors.NotFoundError:
 				this.errorMessage = "Couldn't found the requested URL.";
 				break;
-			case error instanceof HTTP.Errors.RequestEntityTooLargeError:
+			case error instanceof HTTPErrors.RequestEntityTooLargeError:
 				this.errorMessage = "Request entity too large.";
 				break;
-			case error instanceof HTTP.Errors.UnauthorizedError:
+			case error instanceof HTTPErrors.UnauthorizedError:
 				this.errorMessage = "Unauthorized operation.";
 				break;
-			case error instanceof HTTP.Errors.InternalServerErrorError:
+			case error instanceof HTTPErrors.InternalServerErrorError:
 				this.errorMessage = "An error occurred while trying to create the app. Please try again later. Error: " + error.response.status;
 				break;
-			case error instanceof HTTP.Errors.ServiceUnavailableError:
+			case error instanceof HTTPErrors.ServiceUnavailableError:
 				this.errorMessage = "Service currently unavailable.";
 				break;
-			case error instanceof HTTP.Errors.UnknownError:
+			case error instanceof HTTPErrors.UnknownError:
 				this.errorMessage = "An error occurred while trying to create the app. Please try again later. Error: " + error.response.status;
 				break;
 			default:
