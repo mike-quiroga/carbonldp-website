@@ -1,20 +1,18 @@
-import { Component, ElementRef, Injector, Input, Output, EventEmitter } from "angular2/core";
-import { CORE_DIRECTIVES, FORM_DIRECTIVES, NgStyle } from "angular2/common";
-import { CanActivate, Router } from "angular2/router";
+import { Component, ElementRef, Input, Output, EventEmitter } from "angular2/core";
+import { CORE_DIRECTIVES, FORM_DIRECTIVES } from "angular2/common";
 
-import { ResponseComponent, SPARQLResponseType, SPARQLFormats, SPARQLClientResponse, SPARQLQuery } from "./response/ResponseComponent";
-import * as CodeMirrorComponent from "app/components/code-mirror/CodeMirrorComponent";
-import { appInjector } from "app/boot";
+import { Authenticated } from "angular2-carbonldp/decorators";
 
 import Carbon from "carbonldp/Carbon";
 import Context from "carbonldp/Context";
 import * as SPARQL from "carbonldp/SPARQL";
 import * as HTTP from "carbonldp/HTTP";
-import Credentials from "carbonldp/Auth/Credentials";
-import Cookies from "js-cookie";
 
 import $ from "jquery";
 import "semantic-ui/semantic";
+
+import { ResponseComponent, SPARQLResponseType, SPARQLFormats, SPARQLClientResponse, SPARQLQuery } from "./response/ResponseComponent";
+import * as CodeMirrorComponent from "app/components/code-mirror/CodeMirrorComponent";
 
 import template from "./template.html!";
 import "./style.css!";
@@ -25,44 +23,9 @@ import "./style.css!";
 	template: template,
 	directives: [ CORE_DIRECTIVES, FORM_DIRECTIVES, CodeMirrorComponent.Class, ResponseComponent, ResponseComponent, ],
 } )
-@CanActivate(
-	( prev, next ):Promise<boolean> | boolean => {
-		let injector:Injector = appInjector();
-		let carbon:Carbon = injector.get( Carbon );
-		let router:Router = injector.get( Router );
-
-		if ( ! carbon ) {
-			router.navigate( [ "/Website/Login" ] );
-			return false;
-		}
-		// TODO: Change this to use a token instead of raw credentials when the SDK provides a way of authenticate using tokens.
-		let cookiesHandler:Cookies = Cookies;
-		let tokenCookie:Credentials = <Credentials>cookiesHandler.getJSON( "carbon_jwt" );
-		if ( tokenCookie && ! carbon.auth.isAuthenticated() ) {
-			return carbon.auth.authenticateUsing( "TOKEN", tokenCookie ).then(
-				( credentials:Credentials ) => {
-					return carbon.auth.isAuthenticated();
-				}
-			).catch(
-				( error:Error ) => {
-					switch ( true ) {
-						case error instanceof HTTP.Errors.UnauthorizedError:
-							console.log( "Wrong credentials" );
-							break;
-						default:
-							console.log( "There was a problem processing the request" );
-							break;
-					}
-					router.navigate( [ "/Website/Login" ] );
-					return false;
-				}
-			);
-		}
-		if ( ! carbon.auth.isAuthenticated() )
-			router.navigate( [ "/Website/Login" ] );
-		return carbon.auth.isAuthenticated();
-	}
-)
+@Authenticated( {
+	redirectTo: [ "/Website/Login" ],
+} )
 export default class SPARQLClientComponent {
 
 	sparqlTypes:SPARQLTypes = <SPARQLTypes>{
@@ -73,7 +36,7 @@ export default class SPARQLClientComponent {
 		select: {
 			name: "SELECT",
 			formats: [
-				{value: SPARQLFormats.table, name: "Friendly Table"},
+				{ value: SPARQLFormats.table, name: "Friendly Table" },
 				// {value: SPARQLFormats.xml, name: "XML"},
 				// {value: SPARQLFormats.csv, name: "CSV"},
 				// {value: SPARQLFormats.tsv, name: "TSV"},
@@ -82,27 +45,27 @@ export default class SPARQLClientComponent {
 		describe: {
 			name: "DESCRIBE",
 			formats: [
-				{value: SPARQLFormats.jsonLD, name: "JSON-LD"},
-				{value: SPARQLFormats.turtle, name: "TURTLE"},
-				{value: SPARQLFormats.jsonRDF, name: "RDF/JSON"},
-				{value: SPARQLFormats.rdfXML, name: "RDF/XML"},
-				{value: SPARQLFormats.n3, name: "N3"},
+				{ value: SPARQLFormats.jsonLD, name: "JSON-LD" },
+				{ value: SPARQLFormats.turtle, name: "TURTLE" },
+				{ value: SPARQLFormats.jsonRDF, name: "RDF/JSON" },
+				{ value: SPARQLFormats.rdfXML, name: "RDF/XML" },
+				{ value: SPARQLFormats.n3, name: "N3" },
 			],
 		},
 		construct: {
 			name: "CONSTRUCT",
 			formats: [
-				{value: SPARQLFormats.jsonLD, name: "JSON-LD"},
-				{value: SPARQLFormats.turtle, name: "TURTLE"},
-				{value: SPARQLFormats.jsonRDF, name: "RDF/JSON"},
-				{value: SPARQLFormats.rdfXML, name: "RDF/XML"},
-				{value: SPARQLFormats.n3, name: "N3"},
+				{ value: SPARQLFormats.jsonLD, name: "JSON-LD" },
+				{ value: SPARQLFormats.turtle, name: "TURTLE" },
+				{ value: SPARQLFormats.jsonRDF, name: "RDF/JSON" },
+				{ value: SPARQLFormats.rdfXML, name: "RDF/XML" },
+				{ value: SPARQLFormats.n3, name: "N3" },
 			],
 		},
 		ask: {
 			name: "ASK",
 			formats: [
-				{value: SPARQLFormats.boolean, name: "Boolean"},
+				{ value: SPARQLFormats.boolean, name: "Boolean" },
 			],
 		},
 	};
@@ -226,7 +189,7 @@ export default class SPARQLClientComponent {
 	constructor( element:ElementRef, carbon:Carbon ) {
 		this.element = element;
 		this.isSending = false;
-		this.savedQueries = this.getLocalSavedQueries() || <SPARQLQuery>[];
+		this.savedQueries = this.getLocalSavedQueries() || [];
 		this.carbon = carbon;
 	}
 
@@ -411,33 +374,33 @@ export default class SPARQLClientComponent {
 				let duration:number = (new Date()).valueOf() - beforeTimestamp;
 				return this.buildResponse( duration, result, <string> SPARQLResponseType.success, query );
 			},
-			( error:HTTP.Errors.HTTPError ):Promise<SPARQLClientResponse> => {
+			( error:HTTP.Errors.Error ):Promise<SPARQLClientResponse> => {
 				return this.handleError( error, query, beforeTimestamp );
 			} );
 	}
 
 	executeDESCRIBE( query:SPARQLQuery ):Promise<SPARQLClientResponse> {
 		let beforeTimestamp:number = ( new Date() ).valueOf();
-		let requestOptions:HTTP.Request.Options = {headers: new Map().set( "Accept", new HTTP.Header.Class( query.format ) )};
+		let requestOptions:HTTP.Request.Options = { headers: new Map().set( "Accept", new HTTP.Header.Class( query.format ) ) };
 		return this.context.documents.executeRawDESCRIBEQuery( query.endpoint, query.content, requestOptions ).then(
 			( [ result, response ]:[ string, HTTP.Response.Class ] ):SPARQLClientResponse => {
 				let duration:number = (new Date()).valueOf() - beforeTimestamp;
 				return this.buildResponse( duration, result, <string> SPARQLResponseType.success, query );
 			},
-			( error:HTTP.Errors.HTTPError ):Promise<SPARQLClientResponse> => {
+			( error:HTTP.Errors.Error ):Promise<SPARQLClientResponse> => {
 				return this.handleError( error, query, beforeTimestamp );
 			} );
 	}
 
 	executeCONSTRUCT( query:SPARQLQuery ):Promise<SPARQLClientResponse> {
 		let beforeTimestamp:number = ( new Date() ).valueOf();
-		let requestOptions:HTTP.Request.Options = {headers: new Map().set( "Accept", new HTTP.Header.Class( query.format ) )};
+		let requestOptions:HTTP.Request.Options = { headers: new Map().set( "Accept", new HTTP.Header.Class( query.format ) ) };
 		return this.context.documents.executeRawCONSTRUCTQuery( query.endpoint, query.content, requestOptions ).then(
 			( [ result, response ]:[ string, HTTP.Response.Class ] ):SPARQLClientResponse => {
 				let duration:number = (new Date()).valueOf() - beforeTimestamp;
 				return this.buildResponse( duration, result, <string> SPARQLResponseType.success, query );
 			},
-			( error:HTTP.Errors.HTTPError ):Promise<SPARQLClientResponse> => {
+			( error:HTTP.Errors.Error ):Promise<SPARQLClientResponse> => {
 				return this.handleError( error, query, beforeTimestamp );
 			} );
 	}
@@ -449,7 +412,7 @@ export default class SPARQLClientComponent {
 				let duration:number = (new Date()).valueOf() - beforeTimestamp;
 				return this.buildResponse( duration, result, <string> SPARQLResponseType.success, query );
 			},
-			( error:HTTP.Errors.HTTPError ):Promise<SPARQLClientResponse> => {
+			( error:HTTP.Errors.Error ):Promise<SPARQLClientResponse> => {
 				return this.handleError( error, query, beforeTimestamp );
 			} );
 	}
@@ -686,7 +649,7 @@ export default class SPARQLClientComponent {
 		return clientResponse;
 	}
 
-	handleError( error:HTTP.Errors.HTTPError, query:SPARQLQuery, beforeTimestamp:number ):Promise<SPARQLClientResponse> {
+	handleError( error:HTTP.Errors.Error, query:SPARQLQuery, beforeTimestamp:number ):Promise<SPARQLClientResponse> {
 		let duration:number = (new Date()).valueOf() - beforeTimestamp;
 		return new Promise<SPARQLClientResponse>(
 			( resolve, reject ) => {
@@ -704,7 +667,7 @@ export default class SPARQLClientComponent {
 			( response:SPARQLClientResponse ) => {
 				return response;
 			},
-			( _error:HTTP.Errors.HTTPError ) => {
+			( _error:HTTP.Errors.Error ) => {
 				return Promise.reject( _error );
 			}
 		);

@@ -1,4 +1,16 @@
-# 0.5.5 (March 16, 3016)
+# 0.5.6 (March 28, 2016)
+* Add logout option to AppDev.
+* Add rememberMe option to loginComponent.
+* Add login view for AppDev to AppComponent.
+* Add link to AppDevLogin on mobile view.
+* Fix login component error messages layout.
+* Fix login component displaying outside viewport on small screens.
+* Fix minor tslint errors.
+* Fix AppDev header menu misbehaviour on mobile screens.
+* Update Angular2 to beta 13
+* Replace live-server with gulp-webserver
+
+# 0.5.5 (March 16, 2016)
 * Add confirmation when changing between queries.
 * Change SPARQL Editor UI.
 * Change Carbon context to dev instead of local.
@@ -18,13 +30,13 @@
 * Add confirmation to delete saved queries.
 * Add more formats to output formats (ntriples, trix, trig, binary, nquads, rdfa).
 
-# 0.5.4 (March 16, 3016)
+# 0.5.4 (March 16, 2016)
 * Added authentication to access AppDev.
 * Added js-cookie library.
 * Added cookies to store Carbon.Auth.Credential tokens.
 * Added Carbon is authenticated validation while trying to access any component of AppDev.
 
-# 0.5.3 (March 14, 3016)
+# 0.5.3 (March 14, 2016)
 * Added sidebar component for documents.
 * Added styles for documents and sidebar components.
 * Added documents home index.

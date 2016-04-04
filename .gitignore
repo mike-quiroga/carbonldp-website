@@ -30,7 +30,7 @@ dist/site/
 reports/
 
 # IntelliJ
-.idea/**
+.idea/workspace.xml
 # *.iml
 # *.iws
 

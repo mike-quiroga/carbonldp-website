@@ -1,4 +1,4 @@
-import { Injectable } from 'angular2/core';
+import { Injectable } from "angular2/core";
 
 import Carbon from "carbonldp/Carbon";
 import * as App from "carbonldp/App";
@@ -24,13 +24,13 @@ export default class AppContextService {
 				return;
 			}
 
-			this.carbon.apps.get( slug + "/" ).then(
+			this.carbon.apps.getContext( slug + "/" ).then(
 				( appContext:App.Context ) => {
 					this.appContexts.set( slug, appContext );
 					resolve( appContext );
 				}
 			).catch(
-				( error )=> {
+				( error ) => {
 					console.log( error );
 					reject( error );
 				}
@@ -39,7 +39,7 @@ export default class AppContextService {
 	}
 
 	getAll():Promise<App.Context[]> {
-		return this.carbon.apps.getAll().then( ( appContexts:App.Context[] ) => {
+		return this.carbon.apps.getAllContexts().then( ( appContexts:App.Context[] ) => {
 			appContexts
 				.filter( ( appContext:App.Context ) => {
 					return ! this.appContexts.has( this.getSlug( appContext ) );
