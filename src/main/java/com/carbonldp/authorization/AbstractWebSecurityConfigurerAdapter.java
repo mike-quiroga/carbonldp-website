@@ -6,7 +6,6 @@ import com.carbonldp.apps.roles.AppContextClearFilter;
 import com.carbonldp.authentication.AnonymousAuthenticationFilter;
 import com.carbonldp.authentication.AnonymousAuthenticationToken;
 import com.carbonldp.authentication.CustomExceptionHandlingConfigurer;
-import com.carbonldp.authentication.ProgrammaticBasicAuthenticationFilter;
 import com.carbonldp.authentication.token.JWTAuthenticationFilter;
 import com.carbonldp.web.cors.CORSAppContextFilter;
 import com.carbonldp.web.cors.CORSPlatformContextFilter;
@@ -33,9 +32,6 @@ public abstract class AbstractWebSecurityConfigurerAdapter extends WebSecurityCo
 
 	@Autowired
 	protected JWTAuthenticationFilter jwtAuthenticationFilter;
-
-	@Autowired
-	protected ProgrammaticBasicAuthenticationFilter programmaticBasicAuthenticationFilter;
 
 	@Autowired
 	@Qualifier( "appRolePersistenceFilter" )
@@ -82,8 +78,7 @@ public abstract class AbstractWebSecurityConfigurerAdapter extends WebSecurityCo
 				.authenticationTrustResolver( authenticationTrustResolver )
 			.and()
 			.addFilter( basicAuthenticationFilter )
-			.addFilterAfter( programmaticBasicAuthenticationFilter, BasicAuthenticationFilter.class )
-			.addFilterAfter( jwtAuthenticationFilter, ProgrammaticBasicAuthenticationFilter.class )
+			.addFilterAfter( jwtAuthenticationFilter, BasicAuthenticationFilter.class )
 			.addFilterAfter( anonymousAuthenticationFilter, org.springframework.security.web.authentication.AnonymousAuthenticationFilter.class )
 		;
 		//@formatter:on
