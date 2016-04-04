@@ -59,6 +59,6 @@ public class RDFSourceMessageConverter extends ModelMessageConverter<RDFSource> 
 	}
 
 	private void setETagHeader( RDFSource model, HttpHeaders headers ) {
-		headers.set( HTTPHeaders.ETAG, model.getETag() );
+		headers.set( HTTPHeaders.ETAG, model.getStrongETag() );
 	}
 }

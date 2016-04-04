@@ -131,8 +131,12 @@ public abstract class AbstractLDPRequestHandler extends AbstractRequestHandler {
 		}
 	}
 
-	protected void setETagHeader( DateTime modifiedTime ) {
+	protected void setWeakETagHeader( DateTime modifiedTime ) {
 		response.setHeader( HTTPHeaders.ETAG, HTTPUtil.formatWeakETag( modifiedTime.toString() ) );
+	}
+
+	protected void setStrongETagHeader( int eTag ) {
+		response.setHeader( HTTPHeaders.ETAG, HTTPUtil.formatStrongEtag( eTag ) );
 	}
 
 	protected void setLocationHeader( URIObject uriObject ) {
@@ -168,16 +172,27 @@ public abstract class AbstractLDPRequestHandler extends AbstractRequestHandler {
 	protected void checkPrecondition( URI targetURI, String requestETag ) {
 		if ( requestETag == null ) throw new PreconditionRequiredException();
 
+		/*
 		DateTime eTagDateTime;
 		try {
 			eTagDateTime = HTTPUtil.getETagDateTime( requestETag );
 		} catch ( IllegalArgumentException e ) {
 			throw new PreconditionFailedException( 0x5005 );
 		}
-
 		DateTime modified = sourceService.getModified( targetURI );
 
 		if ( ! modified.equals( eTagDateTime ) ) throw new PreconditionFailedException( 0x5006 );
+		*/
+		int eTagValue;
+		try {
+			eTagValue = Integer.parseInt( requestETag );
+		} catch ( NumberFormatException e ) {
+			throw new PreconditionFailedException( 0x5005 );
+		}
+		int eTag = sourceService.getETag( targetURI );
+
+		if ( eTag != eTagValue ) throw new PreconditionFailedException( 0x5006 );
+
 	}
 
 	protected void seekForOrphanFragments( AbstractModel requestModel, RDFResource requestDocumentResource ) {

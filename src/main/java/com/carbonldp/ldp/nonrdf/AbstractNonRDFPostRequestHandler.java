@@ -7,7 +7,6 @@ import com.carbonldp.http.Link;
 import com.carbonldp.models.EmptyResponse;
 import com.carbonldp.web.exceptions.BadRequestException;
 import com.carbonldp.web.exceptions.NotFoundException;
-import org.joda.time.DateTime;
 import org.openrdf.model.URI;
 import org.openrdf.model.impl.URIImpl;
 import org.springframework.http.HttpStatus;
@@ -66,13 +65,12 @@ public abstract class AbstractNonRDFPostRequestHandler extends AbstractNonRDFReq
 
 		containerService.createNonRDFResource( targetURI, resourceURI, requestEntity, contentType );
 
-		DateTime modified = sourceService.getModified( resourceURI );
-		return generateCreatedResponse( resourceURI, modified );
+		return generateCreatedResponse( resourceURI );
 	}
 
-	private ResponseEntity<Object> generateCreatedResponse( URI resourceURI, DateTime creationTime ) {
+	private ResponseEntity<Object> generateCreatedResponse( URI resourceURI ) {
 		response.setHeader( HTTPHeaders.LOCATION, resourceURI.stringValue() );
-		if ( creationTime != null ) setETagHeader( creationTime );
+		setStrongETagHeader( sourceService.getETag( resourceURI ) );
 
 		addDescribedByHeader( response, resourceURI );
 		return new ResponseEntity<>( new EmptyResponse(), HttpStatus.CREATED );

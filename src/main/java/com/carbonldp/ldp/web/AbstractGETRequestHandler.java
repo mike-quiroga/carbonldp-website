@@ -11,10 +11,10 @@ import com.carbonldp.ldp.nonrdf.RDFRepresentation;
 import com.carbonldp.ldp.sources.RDFSource;
 import com.carbonldp.models.HTTPHeader;
 import com.carbonldp.models.HTTPHeaderValue;
+import com.carbonldp.utils.ModelUtil;
 import com.carbonldp.utils.RDFNodeUtil;
 import com.carbonldp.web.exceptions.BadRequestException;
 import com.carbonldp.web.exceptions.NotFoundException;
-import org.joda.time.DateTime;
 import org.openrdf.model.URI;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -132,8 +132,8 @@ public abstract class AbstractGETRequestHandler extends AbstractLDPRequestHandle
 
 	private void ensureETagIsPresent( Container container, Set<ContainerRetrievalPreference> containerRetrievalPreferences ) {
 		if ( ! containerRetrievalPreferences.contains( ContainerRetrievalPreference.CONTAINER_PROPERTIES ) ) {
-			DateTime modified = sourceService.getModified( container.getURI() );
-			if ( modified != null ) container.setETag( modified );
+			int eTag = ModelUtil.calculateETag( container.getBaseModel() );
+			if ( eTag != 0 ) container.setStrongETag( eTag );
 		}
 	}
 

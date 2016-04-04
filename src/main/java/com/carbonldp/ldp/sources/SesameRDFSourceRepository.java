@@ -2,16 +2,18 @@ package com.carbonldp.ldp.sources;
 
 import com.carbonldp.ldp.AbstractSesameLDPRepository;
 import com.carbonldp.ldp.containers.AccessPoint;
-import com.carbonldp.rdf.*;
+import com.carbonldp.rdf.RDFDocumentRepository;
+import com.carbonldp.rdf.RDFNodeEnum;
+import com.carbonldp.rdf.RDFResourceRepository;
 import com.carbonldp.repository.DocumentGraphQueryResultHandler;
 import com.carbonldp.repository.GraphQueryResultHandler;
+import com.carbonldp.utils.ModelUtil;
 import com.carbonldp.utils.RDFNodeUtil;
 import com.carbonldp.utils.SPARQLUtil;
 import com.carbonldp.utils.ValueUtil;
 import com.carbonldp.web.exceptions.NotImplementedException;
 import org.apache.commons.lang3.text.StrSubstitutor;
 import org.joda.time.DateTime;
-import org.openrdf.model.BNode;
 import org.openrdf.model.Resource;
 import org.openrdf.model.URI;
 import org.openrdf.model.Value;
@@ -21,7 +23,10 @@ import org.openrdf.model.vocabulary.RDF;
 import org.openrdf.spring.SesameConnectionFactory;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import static com.carbonldp.Consts.*;
@@ -86,6 +91,19 @@ public class SesameRDFSourceRepository extends AbstractSesameLDPRepository imple
 			handler.handle( queryResult );
 
 			return new RDFSource( model, sourceURI );
+		} );
+	}
+
+	@Override
+	public int getEtag( URI sourceURI ) {
+		Map<String, Value> bindings = new HashMap<>();
+		bindings.put( "sourceURI", sourceURI );
+		return sparqlTemplate.executeGraphQuery( get_query, bindings, queryResult -> {
+			AbstractModel model = new LinkedHashModel();
+			GraphQueryResultHandler handler = new DocumentGraphQueryResultHandler( model );
+			handler.handle( queryResult );
+
+			return ModelUtil.calculateETag( model );
 		} );
 	}
 
