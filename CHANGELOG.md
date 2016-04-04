@@ -7,6 +7,8 @@
 * Fix login component displaying outside viewport on small screens.
 * Fix minor tslint errors.
 * Fix AppDev header menu misbehaviour on mobile screens.
+* Update Angular2 to beta 13
+* Replace live-server with gulp-webserver
 
 # 0.5.5 (March 16, 2016)
 * Add confirmation when changing between queries.
