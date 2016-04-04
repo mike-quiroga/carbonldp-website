@@ -171,18 +171,6 @@ public abstract class AbstractLDPRequestHandler extends AbstractRequestHandler {
 
 	protected void checkPrecondition( URI targetURI, String requestETag ) {
 		if ( requestETag == null ) throw new PreconditionRequiredException();
-
-		/*
-		DateTime eTagDateTime;
-		try {
-			eTagDateTime = HTTPUtil.getETagDateTime( requestETag );
-		} catch ( IllegalArgumentException e ) {
-			throw new PreconditionFailedException( 0x5005 );
-		}
-		DateTime modified = sourceService.getModified( targetURI );
-
-		if ( ! modified.equals( eTagDateTime ) ) throw new PreconditionFailedException( 0x5006 );
-		*/
 		int eTagValue;
 		try {
 			eTagValue = Integer.parseInt( requestETag );
