@@ -1,3 +1,6 @@
+# 0.30.0 (2016/05/04)
+* Added support to programmatic authentication
+
 # 0.29.4 (2016/03/22)
 * Added "prod" Spring Profile with base URL set for production (carbonldp.com)
 

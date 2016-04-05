@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.carbonldp</groupId>
     <artifactId>carbon-platform-SESAME</artifactId>
-    <version>0.29.4-ALPHA</version>
+    <version>0.30.0-ALPHA</version>
     <packaging>jar</packaging>
     <name>Carbon LDP</name>
     <url>http://carbonldp.com/</url>
