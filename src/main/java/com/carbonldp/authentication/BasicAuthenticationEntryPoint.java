@@ -21,16 +21,20 @@ public class BasicAuthenticationEntryPoint implements AuthenticationEntryPoint {
 	}
 
 	private boolean isProgrammaticRequest( HttpServletRequest request ) {
+		boolean foundTextHTML = false;
+		boolean foundMatchAll = false;
+
 		Enumeration<String> acceptHeaders = request.getHeaders( "Accept" );
 		while ( acceptHeaders.hasMoreElements() ) {
 			String header = acceptHeaders.nextElement();
 			for ( String acceptHeader : header.split( "," ) ) {
 				String mimeType = acceptHeader.split( ";" )[0];
-				if ( mimeType.toLowerCase().equals( "text/html" ) ) return false;
+				if ( mimeType.toLowerCase().equals( "text/html" ) ) foundTextHTML = true;
+				if ( mimeType.toLowerCase().equals( "*/*" ) ) foundMatchAll = true;
 			}
 		}
 
-		return true;
+		return ! ( foundTextHTML && foundMatchAll );
 	}
 
 	public String getRealmName() {
