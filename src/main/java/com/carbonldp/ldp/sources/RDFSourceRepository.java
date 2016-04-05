@@ -10,7 +10,7 @@ import java.util.Set;
 public interface RDFSourceRepository {
 	public boolean exists( URI sourceURI );
 
-	public int getEtag( URI sourceURI );
+	public int getETag( URI sourceURI );
 
 	public RDFSource get( URI sourceURI );
 
