@@ -1,15 +1,18 @@
-import {Injectable, Component, ElementRef } from "angular2/core";
+import {Component, ElementRef } from "angular2/core";
 import {RouteConfig, RouterOutlet} from "angular2/router";
+
+import { Authenticated } from "angular2-carbonldp/decorators";
 
 import $ from "jquery";
 import "semantic-ui/semantic";
-import SidebarService from "./components/sidebar/service/SidebarService"
+
+import SidebarService from "./components/sidebar/service/SidebarService";
 
 import SidebarComponent from "./components/sidebar/SidebarComponent";
 import HeaderComponent from "./header/HeaderComponent";
 import FooterComponent from "./footer/FooterComponent";
 import MenuBarComponent from "./components/menubar/MenuBarComponent";
-import SPARQLClientComponent from "app/components/sparql-client/SPARQLClientComponent";
+import ErrorsAreaComponent from "./components/errors-area/ErrorsAreaComponent";
 
 import DashboardView from "./dashboard/DashboardView";
 import MyAppsView from "./my-apps/my-apps-view/MyAppsView";
@@ -17,10 +20,13 @@ import MyAppsView from "./my-apps/my-apps-view/MyAppsView";
 import template from "./template.html!";
 import "./style.css!";
 
+@Authenticated( {
+	redirectTo: [ "/AppDevLogin" ],
+} )
 @Component( {
 	selector: "app-dev",
 	template: template,
-	directives: [ RouterOutlet, SidebarComponent, HeaderComponent, FooterComponent, MenuBarComponent ]
+	directives: [ RouterOutlet, SidebarComponent, HeaderComponent, FooterComponent, MenuBarComponent, ErrorsAreaComponent, ],
 } )
 @RouteConfig( [
 	{
@@ -30,8 +36,8 @@ import "./style.css!";
 		useAsDefault: true,
 		data: {
 			alias: "Home",
-			displayName: "Home"
-		}
+			displayName: "Home",
+		},
 	},
 	{
 		path: "/my-apps/...",
@@ -39,9 +45,9 @@ import "./style.css!";
 		component: MyAppsView,
 		data: {
 			alias: "MyApps",
-			displayName: "My Apps"
-		}
-	}
+			displayName: "My Apps",
+		},
+	},
 ] )
 export default class AppDevComponent {
 	element:ElementRef;

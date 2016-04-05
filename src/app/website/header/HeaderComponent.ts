@@ -1,6 +1,8 @@
-import { Component, ElementRef, Input } from "angular2/core";
+import { Component, ElementRef, Input, Inject } from "angular2/core";
 import { CORE_DIRECTIVES } from "angular2/common";
-import { ROUTER_DIRECTIVES, ROUTER_PROVIDERS, Router, Instruction } from "angular2/router";
+import { ROUTER_DIRECTIVES, Router, Instruction } from "angular2/router";
+
+import { AuthService } from "angular2-carbonldp/services";
 
 import $ from "jquery";
 import "semantic-ui/semantic";
@@ -12,35 +14,36 @@ import "./style.css!";
 @Component( {
 	selector: "header",
 	template: template,
-	directives: [ CORE_DIRECTIVES, ROUTER_DIRECTIVES, LoginComponent ]
+	directives: [ CORE_DIRECTIVES, ROUTER_DIRECTIVES, LoginComponent, ],
 } )
 export default class HeaderComponent {
 	router:Router;
 	element:ElementRef;
-	$element;
 	@Input() top:boolean;
+	$element:JQuery;
+	authService:AuthService.Class;
 
-	constructor( router:Router, element:ElementRef ) {
+	constructor( router:Router, element:ElementRef, @Inject( AuthService.Token ) authService:AuthService.Class ) {
 		this.router = router;
 		this.element = element;
+		this.authService = authService;
 	}
 
 	ngAfterViewInit():void {
 		this.$element = $( this.element.nativeElement );
-		//this.headerVisibility();
 		this.createDropdownMenus();
 		this.createCollapsableMenus();
 		this.createLoginPopUp();
 	}
 
 	isActive( route:string ):boolean {
-		let instruction = this.router.generate( [ route ] );
+		let instruction:Instruction = this.router.generate( [ route ] );
 		return this.router.isRouteActive( instruction );
 	}
 
 	createDropdownMenus():void {
 		this.$element.find( ".ui.dropdown" ).dropdown( {
-			on: "hover"
+			on: "hover",
 		} );
 	}
 
@@ -55,15 +58,14 @@ export default class HeaderComponent {
 
 	createLoginPopUp():void {
 		this.$element.find( ".computer.tablet .login.item" ).popup( {
-			//inline: true,
 			popup: this.$element.find( ".login.popup" ),
 			hoverable: false,
-			position: "bottom left",
+			position: "bottom right",
 			on: "click",
 			preserve: true,
 			transition: "pulse",
 			hideOnScroll: false,
-			closable: false
+			closable: false,
 		} );
 	}
 
@@ -71,26 +73,8 @@ export default class HeaderComponent {
 		this.createLoginPopUp();
 	}
 
-	/*headerVisibility():void {
-		let carbonLogo=$("#main-carbon-logo");
-
-		carbonLogo.visibility({
-			once: false,
-			onTopPassed: function () {
-				this.activateHeader();
-			},
-			onTopPassedReverse: function () {
-				this.deactivateHeader();
-			}
-		});
+	logOut():void {
+		this.authService.logout();
+		this.router.navigate( [ "/Home" ] );
 	}
-
-	activateHeader():void {
-		this.top = true;
-	}
-
-	deactivateHeader():void {
-		this.top = false;
-	}*/
-
 }
