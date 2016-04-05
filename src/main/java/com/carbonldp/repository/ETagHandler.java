@@ -52,6 +52,7 @@ public class ETagHandler extends GraphQueryResultHandler {
 			URI subject = ValueUtil.getURI( subjectResource );
 			if ( ! URIUtil.hasFragment( subject ) ) context = subject;
 			else context = new URIImpl( URIUtil.getDocumentURI( subject.stringValue() ) );
+			if ( ! contexts.contains( context ) ) contexts.add( context );
 			documentStatement = valueFactory.createStatement( subject, statement.getPredicate(), statement.getObject(), context );
 			int currentValue = ModelUtil.calculateStatementETag( documentStatement );
 			eTagValue = ( eTagValue == 0 ) ? currentValue : eTagValue ^ currentValue;
