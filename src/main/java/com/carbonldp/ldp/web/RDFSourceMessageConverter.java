@@ -32,7 +32,7 @@ public class RDFSourceMessageConverter extends ModelMessageConverter<RDFSource> 
 	@Override
 	protected void setAdditionalHeaders( RDFSource model, HttpHeaders headers ) {
 		addRDFResourceLinkHeader( headers );
-		setETagHeader( model, headers );
+		setETagHeader( model.getBaseModel(), headers );
 		if ( isRDFRepresentation( model ) ) addDescribedByHeader( model, headers );
 	}
 
@@ -56,9 +56,5 @@ public class RDFSourceMessageConverter extends ModelMessageConverter<RDFSource> 
 		link.addRelationshipType( Consts.TYPE );
 
 		headers.add( HTTPHeaders.LINK, link.toString() );
-	}
-
-	private void setETagHeader( RDFSource model, HttpHeaders headers ) {
-		headers.set( HTTPHeaders.ETAG, model.getStrongETag() );
 	}
 }
