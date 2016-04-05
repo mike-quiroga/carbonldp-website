@@ -18,29 +18,29 @@
 				       ngControl="password">
 			</div>
 		</div>
+		<div class="field">
+			<div class="ui checkbox" [ngClass]="{checked: remember}">
+				<input type="checkbox" ngControl="rememberMe" [(ngModel)]="remember" checked="">
+				<label>Remember me</label>
+			</div>
+		</div>
 		<button type="submit"
-		        [ngClass]="{ loading: submitting }"
+		        [ngClass]="{ loading: sending }"
 		        class="ui fluid large california submit button"
-		        [disabled]="!loginForm.valid"
+		        [disabled]="!loginForm.valid || sending"
 		        (click)="onSubmit(loginForm.value, $event)">
 			Login
 		</button>
 	</form>
-	<div class="ui negative attached message segment" *ngIf="email.touched && !email.valid">
+	<div class="ui bottom attached negative message" *ngIf="(email.touched && !email.valid) || (password.touched && !password.valid) || (!!errorMessage)">
 		<ul class="list">
 			<li *ngIf="email.hasError('required')">email is required.</li>
 			<li *ngIf="!email.hasError('required') && email.hasError('invalidEmailAddress')">Enter a valid email address.</li>
+			<li *ngIf="!!errorMessage">{{errorMessage}}</li>
 		</ul>
-	</div>
-	<div class="ui negative attached message segment" *ngIf="password.touched && !password.valid">
-		<ul class="list">
+		<ul class="list" *ngIf="password.touched && !password.valid">
 			<li *ngIf="password.hasError('required')">password is required.</li>
 			<li *ngIf="!password.hasError('required') && password.hasError('invalidPassword')">password is invalid.</li>
-		</ul>
-	</div>
-	<div class="ui negative bottom attached message segment" *ngIf="!!errorMessage">
-		<ul class="list">
-			<li>{{errorMessage}}</li>
 		</ul>
 	</div>
 </div>

@@ -34,6 +34,11 @@ app-dev {
 				height: 40px;
 			}
 
+			> errors-area {
+				z-index: 2;
+				max-height: 0;
+			}
+
 			> .scrollable-content {
 				flex: 1;
 
@@ -58,5 +63,8 @@ app-dev {
 				}
 			}
 		}
+	}
+	.ui.accordion.menu .item .title > .dropdown.icon {
+		margin: .5em 0 0 1em;
 	}
 }

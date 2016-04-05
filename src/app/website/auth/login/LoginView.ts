@@ -10,7 +10,7 @@ import template from "./template.html!";
 @Component( {
 	selector: "login-page",
 	template: template,
-	directives: [ LoginComponent ]
+	directives: [ LoginComponent, ],
 } )
 export default class LoginView {
 	element:ElementRef;
