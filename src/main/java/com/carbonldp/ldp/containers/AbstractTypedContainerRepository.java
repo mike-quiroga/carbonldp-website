@@ -228,6 +228,7 @@ public abstract class AbstractTypedContainerRepository extends AbstractSesameLDP
 			TAB + TAB + TAB + "<" + ContainerDescription.Property.HAS_MEMBER_RELATION.getURI().stringValue() + "> " + NEW_LINE +
 			TAB + TAB + TAB + "<" + ContainerDescription.Property.MEMBER_OF_RELATION.getURI().stringValue() + "> " + NEW_LINE +
 			TAB + TAB + TAB + "<" + ContainerDescription.Property.INSERTED_CONTENT_RELATION.getURI().stringValue() + "> " + NEW_LINE +
+			TAB + TAB + "}" + NEW_LINE +
 			TAB + "}" + NEW_LINE +
 			"}"
 		;
