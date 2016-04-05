@@ -23,6 +23,12 @@ import { APP_DEV_PROVIDERS } from "app/app-dev/AppDev";
 
 let carbon:Carbon = new Carbon();
 carbon.setSetting( "domain", "<%- carbon.domain %>" );
+carbon.extendObjectSchema( Carbon.App.RDF_CLASS, {
+	"description": {
+		"@id": "http://example.com/ns#description",
+		"@type:": Carbon.NS.XSD.DataType.string,
+	},
+} );
 activeContext.initialize( carbon );
 
 let providers:Provider[] = [];
