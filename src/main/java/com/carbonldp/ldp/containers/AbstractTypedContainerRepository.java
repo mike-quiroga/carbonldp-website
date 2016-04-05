@@ -16,10 +16,7 @@ import org.openrdf.query.BindingSet;
 import org.openrdf.spring.SesameConnectionFactory;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import static com.carbonldp.Consts.NEW_LINE;
 import static com.carbonldp.Consts.TAB;
@@ -217,19 +214,21 @@ public abstract class AbstractTypedContainerRepository extends AbstractSesameLDP
 	protected static final String getPropertiesQuery;
 
 	static {
+		Collection<URI> values = new HashSet<>();
+		values.add( RDFSourceDescription.Property.TYPE.getURI() );
+		values.add( ContainerDescription.Property.HAS_MEMBER_RELATION.getURI() );
+		values.add( ContainerDescription.Property.MEMBER_OF_RELATION.getURI() );
+		values.add( ContainerDescription.Property.MEMBERSHIP_RESOURCE.getURI() );
+		values.add( ContainerDescription.Property.INSERTED_CONTENT_RELATION.getURI() );
+
 		getPropertiesQuery = "" +
 			"CONSTRUCT {" + NEW_LINE +
 			TAB + "?containerURI ?p ?o" + NEW_LINE +
 			"} WHERE {" + NEW_LINE +
 			TAB + "GRAPH ?containerURI {" + NEW_LINE +
 			TAB + TAB + "?containerURI ?p ?o." + NEW_LINE +
-			TAB + TAB + "VALUES ?p {" + NEW_LINE +
-			TAB + TAB + TAB + "<" + RDFSourceDescription.Property.TYPE.getURI().stringValue() + "> " + NEW_LINE +
-			TAB + TAB + TAB + "<" + ContainerDescription.Property.HAS_MEMBER_RELATION.getURI().stringValue() + "> " + NEW_LINE +
-			TAB + TAB + TAB + "<" + ContainerDescription.Property.MEMBER_OF_RELATION.getURI().stringValue() + "> " + NEW_LINE +
-			TAB + TAB + TAB + "<" + ContainerDescription.Property.INSERTED_CONTENT_RELATION.getURI().stringValue() + "> " + NEW_LINE +
-			TAB + TAB + "}" + NEW_LINE +
 			TAB + "}" + NEW_LINE +
+			TAB + SPARQLUtil.assignVar( "?p", values ) +
 			"}"
 		;
 	}
