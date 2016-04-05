@@ -2,7 +2,38 @@
 	<a class="header" [routerLink]="[ '/AppDev/MyApps/App', {slug: app.slug}, 'AppDashboard']">
 		{{app.app.name}}
 	</a>
-	<a class="meta" [routerLink]="[ '/AppDev/MyApps/App', {slug: app.slug}, 'AppDashboard']">
-		<span class="date">{{app.app.created | date:"MMMM/dd/yyyy H:mm hrs"}}</span>
-	</a>
+</div>
+<div class="content">
+	<div class="ui small feed">
+		<div class="event">
+			<div class="content">
+				<h3 class="ui sub header">
+					Last modify:
+				</h3>
+				<div class="summary">
+					<span class="date">{{app.app.modified | date:"MMMM/dd/yyyy H:mm hrs"}}</span>
+				</div>
+			</div>
+		</div>
+		<div class="event">
+			<div class="content">
+				<h3 class="ui sub header">
+					Created on:
+				</h3>
+				<div class="summary">
+					<span class="date">{{app.app.created | date:"MMMM/dd/yyyy H:mm hrs"}}</span>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="extra content">
+	<div class="ui two buttons">
+		<a class="ui black basic button" [routerLink]="[ '/AppDev/MyApps/App', {slug: app.slug}, 'AppDashboard']">
+			Go to App
+		</a>
+		<a class="ui black basic button" [routerLink]="[ '/AppDev/MyApps/App', {slug: app.slug}, 'SPARQLEditor']">
+			SPARQL <i class="terminal icon"></i>
+		</a>
+	</div>
 </div>

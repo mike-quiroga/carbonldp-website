@@ -3,17 +3,20 @@
 	<div class="row">
 		<div class="eight wide column">
 			<div class="ui icon buttons">
-				<button class="ui button"
-				        [ngClass]="{active: tileView}"
-				        (click)="activateGridView()">
-					<i class="grid layout icon"></i>
-				</button>
-				<button class="ui button"
+				<button class="ui inverted white button"
 				        [ngClass]="{active: !tileView}"
 				        (click)="activateListView()">
 					<i class="list layout icon"></i>
 				</button>
+				<button class="ui inverted white button"
+				        [ngClass]="{active: tileView}"
+				        (click)="activateGridView()">
+					<i class="grid layout icon"></i>
+				</button>
 			</div>
+			<button class="ui inverted  right labeled icon button">
+				Create app <i class="plus icon"></i>
+			</button>
 		</div>
 		<div class="eight wide right aligned column">
 			<div class="ui search">
@@ -28,17 +31,18 @@
 	</div>
 	<div class="row">
 		<div class="column">
-			<div class="ui stackable cards" *ngIf="tileView">
-				<div class="card">
+			<div *ngIf="errorMessage">
+				<div class="ui icon warning message">
+					<i class="warning sign icon"></i>
 					<div class="content">
-						<a class="header">
-							Create new App
-						</a>
+						<p>{{errorMessage}}</p>
 					</div>
 				</div>
+			</div>
+			<div class="ui stackable cards" *ngIf="tileView && !errorMessage">
 				<app-tile class="card" *ngFor="#app of results; #i=index;" [app]="app"></app-tile>
 			</div>
-			<div *ngIf="!tileView">
+			<div *ngIf="!tileView && !errorMessage">
 				<apps-list [apps]="results"></apps-list>
 			</div>
 		</div>

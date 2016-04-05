@@ -36,6 +36,7 @@ export default class AppsListView {
 
 	tileView:boolean = false;
 	searchBox:JQuery;
+	errorMessage:string = "";
 
 	constructor( element:ElementRef, router:Router, appContextService:AppContextService ) {
 		this.element = element;
@@ -70,6 +71,10 @@ export default class AppsListView {
 
 	searchApp( term:string ):void {
 		this.results = this.apps.filter( ctx => ctx.app.name.toLowerCase().search( term.toLowerCase() ) > - 1 || ctx.slug.toLowerCase().search( term.toLowerCase() ) > - 1 );
+		this.errorMessage = "";
+		if ( this.results.length === 0 && term.length > 0 ) {
+			this.errorMessage = "No apps found.";
+		}
 	}
 
 	routerOnActivate():void {
@@ -85,6 +90,7 @@ export default class AppsListView {
 			},
 			( error:any ):void => {
 				console.error( error );
+				this.errorMessage = "An error occurred. Please, try again later.";
 			}
 		);
 	}
