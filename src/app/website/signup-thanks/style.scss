@@ -1,4 +1,4 @@
-signup-thanks{
+signup-thanks {
 
 	a {
 		line-height: 70px;
@@ -9,7 +9,12 @@ signup-thanks{
 		margin-left: auto !important;
 		margin-right: auto !important;
 	}
+
 	.ui.segment {
-			font-size: .9em;
+		font-size: .9em;
+	}
+
+	.ui.segment:last-child {
+		margin-bottom: 40px;
 	}
 }

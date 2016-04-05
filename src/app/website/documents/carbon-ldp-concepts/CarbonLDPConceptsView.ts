@@ -26,6 +26,14 @@ export default class CarbonLDPConceptsView {
 
 	ngAfterViewInit():void {
 		this.$element = $( this.element.nativeElement );
+		//ga( "send", "pageview", location.pathname );
+		//dataLayer.push({
+		//	'event':'PageView',
+		//	'page':{
+		//		'title': this.title,
+		//		'url': location.pathname
+		//	}
+		//});
 	}
 
 }

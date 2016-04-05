@@ -19,18 +19,6 @@ home {
 		margin-left: 0.5em;
 	}
 
-	> .ui.segment:last-child {
-		padding: 3em 0;
-
-		h2 {
-			margin-bottom: 2em;
-		}
-
-		.ui.action.input {
-			margin-bottom: 1em;
-		}
-	}
-
 	.splash-bg {
 		background-image: url("<%- url.base %>assets/images/cloud-bg.jpg") !important;
 		background-repeat: no-repeat !important;
@@ -55,44 +43,6 @@ home {
 			padding-bottom: 20px;
 		}
 	}
-
-	.ui.action.input{
-		:not([class*="left action"])>.button:last-child{
-		margin-left: 4px;
-		border-radius: 0;
-		}
-		>.button{
-		background-color: #F89828;
-		}
-	}
-
-	.ui.input input{
-		padding: .4em .6em;
-		border: 1px solid white;
-		border-radius: 0;
-	}
-
-	.ui.secondary{
-		.button:hover{
-
-		background-color: white;
-		color: #f89828;
-		-webkit-transition-duration: .6s;
-		transition-duration: .6s;
-		}
-		.button:active:hover{
-
-		background-color: white;
-		color: #f89828;
-		-webkit-transition-duration: .6s;
-		transition-duration: .6s;
-		}
-		.button:focus:active{
-		background-color: #f89828;
-		color: white;
-		}
-	}
-
 
 
 	.text.container > a:hover{

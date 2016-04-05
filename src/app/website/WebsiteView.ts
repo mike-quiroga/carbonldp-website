@@ -57,15 +57,14 @@ export default class WebsiteView {
 
 	headerAnimation():void {
 		let home = this.$element.find("#main-carbon-logo");
-		home.visibility( {
+		home.visibility({
 			once: false,
 			offset: 80,
-			onTopPassed: function () {
-				this.top=false;
-				console.log(this.top);
+			onTopPassed: function():void {
+				this.top = false;
 			},
-			onTopPassedReverse: function () {
-				this.top=true;
+			onTopPassedReverse: function():void {
+				this.top = true;
 			}
 		} );
 	}

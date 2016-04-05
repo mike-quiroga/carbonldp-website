@@ -28,5 +28,6 @@ export default class SignupThanksView {
 
 	ngAfterViewInit():void {
 		this.$element = $( this.element.nativeElement );
+		//ga( 'send', 'pageview', location.pathname );
 	}
 }

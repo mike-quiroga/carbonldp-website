@@ -30,44 +30,27 @@ export default class HomeView {
 		this.router = router;
 		this.element = element;
 		this.title = title;
-		this.title.setTitle("Home");
+		this.title.setTitle( "Home" );
 	}
 
 	ngAfterViewInit():void {
 		this.$element = $( this.element.nativeElement );
 		this.$mainMenu = $( "header > .menu" );
-		this.$articles = $("#articles").find(".column");
-		 // This.$carbonLogo = this.$element.find( "carbon-logo" );
-		this.$carbonLogo = this.$element.find( "img.carbon-logo" );
+		this.$articles = $( "#articles" ).find( ".column" );
 
-		this.hideMainMenu();
 		this.createDropdownMenus();
 		this.addMenuVisibilityHandlers();
 		this.createAccordions();
+		//ga( "send", "pageview", location.pathname );
 	}
 
 	routerOnDeactivate():void {
 		this.removeMenuVisibilityHandlers();
-		this.showMainMenu();
 	}
 
 	isActive( route:string ):boolean {
 		let instruction:any = this.router.generate( [ route ] );
 		return this.router.isRouteActive( instruction );
-	}
-
-	showMainMenu():void {
-		if ( this.$mainMenu.is( ":visible" ) ) return;
-		this.toggleMainMenu();
-	}
-
-	hideMainMenu():void {
-		if ( ! this.$mainMenu.is( ":visible" ) ) return;
-		this.toggleMainMenu();
-	}
-
-	toggleMainMenu():void {
-		this.$mainMenu.transition( "fade down" );
 	}
 
 	createDropdownMenus():void {
@@ -77,31 +60,21 @@ export default class HomeView {
 	}
 
 	addMenuVisibilityHandlers():void {
-		let view:HomeView = this;
-		this.$carbonLogo.visibility( {
+		this.$articles.visibility( {
 			once: false,
-			onBottomPassedReverse: function():void {
-				view.hideMainMenu();
-			},
-			onBottomPassed: function():void {
-				view.showMainMenu();
-			}
-		} );
-		this.$articles.visibility({
-			once: false,
-			onTopVisible: function():void {
-				view.addTextAnimation();
+			onTopVisible: ():void => {
+				this.addTextAnimation();
 			}
 		} );
 	}
 
 	removeMenuVisibilityHandlers():void {
-		this.$carbonLogo.visibility( "destroy" );
+		this.$articles.visibility( "destroy" );
 	}
 
-	scrollTo( event:any):boolean {
+	scrollTo( event:any ):boolean {
 		let
-			id:string = $( event.srcElement).attr( "href" ).replace( "#", "" ),
+			id:string = $( event.srcElement ).attr( "href" ).replace( "#", "" ),
 			$element:JQuery = $( "#" + id ),
 			position:number = $element.offset().top - 80
 			;
@@ -116,33 +89,12 @@ export default class HomeView {
 	}
 
 	addTextAnimation():void {
-		this.$articles.find("p").transition( "scale in" );
+		let paragraphs:JQuery = this.$articles.find( "p" );
+		paragraphs.transition( "scale in" );
 	}
 
 	createAccordions():void {
 		this.$element.find( ".ui.accordion" ).accordion();
 	}
 
-
-/*	newsletterSignUp(){
-		let icpForm5139 = $("#icpsignup5139");
-		let protocol = location.protocol;
-		let test = document.getElementById("icpsingup5139");
-
-		icpForm5139.action = "https://app.icontact.com/icp/signup.php";
-		$('form').submit(function() {
-
-			if (icpForm5139.find("#fields_email").value == "") {
-				//icpForm5139["fields_email"].focus();
-				$('p.spam').text('Please enter a valid e-mail');
-				return false;
-			}
-			return true;
-
-		});
-		console.log("SignUp to newsletter: ");
-		console.log(icpForm5139);
-		console.log(test);
-		console.log(protocol);
-	}*/
 }

@@ -53,12 +53,19 @@ export class NewsletterFormComponent {
 				.map( ( res:Response ) => res.json() )
 				.subscribe(
 					data => {
-						console.log( data );
+						//console.log( data );
+						/*ga( "send", "event", {
+							eventCategory: "Outbound Link",
+							eventAction: "subscribeNewsletter",
+							eventLabel: icontactUrl
+						});*/
+						this.router.navigate( [ "/Website", "SignupThanks" ] );
 					}
 				);
-			this.router.navigate( [ "/Website", "SignupThanks" ] );
+
 		} else if ( valid ) {
 			this.router.navigate( [ "/Website", "SignupThanks" ] );
+			//ga( "send", "event", "Outbound Link", "subscribeNewsletter", icontactUrl );
 		}
 	}
 }

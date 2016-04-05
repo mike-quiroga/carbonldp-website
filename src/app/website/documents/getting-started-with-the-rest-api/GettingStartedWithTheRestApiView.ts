@@ -35,6 +35,7 @@ export default class GettingStartedWithTheRestApiView {
 		this.$element = $( this.element.nativeElement );
 		this.createAccordions();
 		this.sidebarService.build();
+		//ga( "send", "pageview", location.pathname );
 	}
 
 	createAccordions():void {

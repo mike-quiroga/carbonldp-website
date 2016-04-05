@@ -31,5 +31,4 @@ import "./style.css!";
 	{ path: "site/...", as: "Website", component: WebsiteView },
 ] )
 export default class App {
-
 }
