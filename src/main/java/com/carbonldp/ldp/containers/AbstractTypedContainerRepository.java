@@ -1,6 +1,7 @@
 package com.carbonldp.ldp.containers;
 
 import com.carbonldp.ldp.AbstractSesameLDPRepository;
+import com.carbonldp.ldp.sources.RDFSourceDescription;
 import com.carbonldp.rdf.RDFDocumentRepository;
 import com.carbonldp.rdf.RDFResourceRepository;
 import com.carbonldp.repository.DocumentGraphQueryResultHandler;
@@ -211,6 +212,25 @@ public abstract class AbstractTypedContainerRepository extends AbstractSesameLDP
 			tabs + "BIND( IF( BOUND( ?hmr ), ?hmr, ?defaultHasMemberRelation ) AS " + hasMemberRelationVar + ")"
 		;
 		return sparql;
+	}
+
+	protected static final String getPropertiesQuery;
+
+	static {
+		getPropertiesQuery = "" +
+			"CONSTRUCT {" + NEW_LINE +
+			TAB + "?containerURI ?p ?o" + NEW_LINE +
+			"} WHERE {" + NEW_LINE +
+			TAB + "GRAPH ?containerURI {" + NEW_LINE +
+			TAB + TAB + "?containerURI ?p ?o." + NEW_LINE +
+			TAB + TAB + "VALUES ?p {" + NEW_LINE +
+			TAB + TAB + TAB + "<" + RDFSourceDescription.Property.TYPE.getURI().stringValue() + "> " + NEW_LINE +
+			TAB + TAB + TAB + "<" + ContainerDescription.Property.HAS_MEMBER_RELATION.getURI().stringValue() + "> " + NEW_LINE +
+			TAB + TAB + TAB + "<" + ContainerDescription.Property.MEMBER_OF_RELATION.getURI().stringValue() + "> " + NEW_LINE +
+			TAB + TAB + TAB + "<" + ContainerDescription.Property.INSERTED_CONTENT_RELATION.getURI().stringValue() + "> " + NEW_LINE +
+			TAB + "}" + NEW_LINE +
+			"}"
+		;
 	}
 
 }
