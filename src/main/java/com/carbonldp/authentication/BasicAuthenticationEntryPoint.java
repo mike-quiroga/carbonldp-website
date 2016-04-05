@@ -1,7 +1,6 @@
 package com.carbonldp.authentication;
 
 import org.apache.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 
@@ -28,7 +27,7 @@ public class BasicAuthenticationEntryPoint implements AuthenticationEntryPoint {
 		while ( acceptHeaders.hasMoreElements() ) {
 			String header = acceptHeaders.nextElement();
 			for ( String acceptHeader : header.split( "," ) ) {
-				String mimeType = acceptHeader.split( ";" )[0];
+				String mimeType = acceptHeader.trim().split( ";" )[0];
 				if ( mimeType.toLowerCase().equals( "text/html" ) ) foundTextHTML = true;
 				if ( mimeType.toLowerCase().equals( "*/*" ) ) foundMatchAll = true;
 			}
