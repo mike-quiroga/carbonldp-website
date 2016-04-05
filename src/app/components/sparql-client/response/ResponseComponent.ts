@@ -1,4 +1,4 @@
-import {Component, Input, Output, ElementRef, EventEmitter, SimpleChange } from "angular2/core";
+import { Component, Input, Output, ElementRef, EventEmitter, SimpleChange } from "angular2/core";
 import { CORE_DIRECTIVES, FORM_DIRECTIVES, NgClass } from "angular2/common";
 
 import SPARQLClientComponent from "./../SPARQLClientComponent";
@@ -24,9 +24,9 @@ export class ResponseComponent {
 	@Input() response:SPARQLClientResponse;
 	@Input() prefixes:{ [ prefix:string ]:string };
 
-	@Output() onRemove:EventEmitter = new EventEmitter();
-	@Output() onConfigure:EventEmitter = new EventEmitter();
-	@Output() onReExecute:EventEmitter = new EventEmitter();
+	@Output() onRemove:EventEmitter<SPARQLClientResponse> = new EventEmitter();
+	@Output() onConfigure:EventEmitter<SPARQLClientResponse> = new EventEmitter();
+	@Output() onReExecute:EventEmitter<SPARQLClientResponse> = new EventEmitter();
 
 	sparqlFormats:SPARQLFormats = SPARQLFormats;
 
@@ -79,11 +79,9 @@ export class ResponseComponent {
 
 	onOpen():void {
 		this.accordionOpen = true;
-		this.$element.find( ".CodeMirror" ).each(
-			( i:number, element:JQuery ) => {
-				element.CodeMirror.refresh();
-			}
-		);
+		this.$element.find( ".CodeMirror" ).each( ( i:number, element:Element ):void => {
+			element.CodeMirror.refresh();
+		} );
 	}
 
 	onClose():void {
@@ -91,11 +89,9 @@ export class ResponseComponent {
 	}
 
 	onLoadTab():void {
-		this.$element.find( ".CodeMirror" ).each(
-			( i:number, element:JQuery ) => {
-				element.CodeMirror.refresh();
-			}
-		);
+		this.$element.find( ".CodeMirror" ).each( ( i:number, element:Element ):void => {
+			element.CodeMirror.refresh();
+		} );
 	}
 
 	onConfigureResponse( event:any ):void {

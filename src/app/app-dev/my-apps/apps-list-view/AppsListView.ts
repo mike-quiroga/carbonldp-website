@@ -1,3 +1,6 @@
+import { Component } from "angular2/core";
+import { CORE_DIRECTIVES } from "angular2/common";
+import { Router, ROUTER_DIRECTIVES } from "angular2/router";
 import { Component, ElementRef, Type } from "angular2/core";
 import { CORE_DIRECTIVES, Control } from "angular2/common";
 import { Router, RouteDefinition, ROUTER_DIRECTIVES, CanActivate} from "angular2/router";
@@ -7,18 +10,13 @@ import "rxjs/add/operator/debounceTime";
 import "rxjs/add/operator/distinctUntilChanged";
 import "rxjs/add/operator/switchMap";
 
-import * as App from "carbonldp/App";
-import * as HTTP from "carbonldp/HTTP";
-
-import $ from 'jquery';
-import 'semantic-ui/semantic';
+import "semantic-ui/semantic";
 
 import AppContextService from "./../../AppContextService";
 
 import AppTileComponent from "./../app-tile/AppTileComponent";
 import AppsListComponent from "../apps-list/AppsListComponent";
 import App from "./../app/App";
-import AppDetailView from "./../app/AppDetailView";
 
 import template from "./template.html!";
 
