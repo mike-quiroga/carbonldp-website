@@ -15,7 +15,7 @@ public abstract class AgentsPostHandler extends AbstractRDFPostRequestHandler<Ag
 
 	@Override
 	protected Agent getDocumentResourceView( BasicContainer requestBasicContainer ) {
-		return AgentFactory.getInstance().create( requestBasicContainer );
+		return new Agent( requestBasicContainer );
 	}
 
 	@Override
