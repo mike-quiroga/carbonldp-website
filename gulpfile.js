@@ -17,7 +17,7 @@ const sass = require( "gulp-sass" );
 const autoprefixer = require( "gulp-autoprefixer" );
 const sourcemaps = require( "gulp-sourcemaps" );
 
-const liveServer = require( "live-server" );
+const webserver = require( "gulp-webserver" );
 
 const argv = require( "yargs" )
 	.usage( "Usage: [-p profile]" )
@@ -40,7 +40,6 @@ const config = {
 	nodeDependencies: [
 		"node_modules/es6-shim/es6-shim.js",
 		"node_modules/systemjs/dist/system-polyfills.src.js",
-		"node_modules/angular2/bundles/angular2-polyfills.js",
 		"node_modules/systemjs/dist/system.src.js",
 		"node_modules/rxjs/bundles/Rx.js",
 	]
@@ -78,6 +77,15 @@ gulp.task( "compile-index", () => {
 		.pipe( ejs( profileConfig ) )
 		.pipe( rename( "index.html" ) )
 		.pipe( gulp.dest( "dist/site/" ) );
+});
+
+gulp.task( "bundle", () => {
+	let builder = new Builder();
+	return builder.buildStatic( "app/boot", "dist/site/main.sfx.js", {
+		minify: false,
+		mangle: false,
+		sourceMaps: false
+	});
 });
 
 gulp.task( "build-semantic", () => {
@@ -124,11 +132,13 @@ gulp.task( "serve:afterCompilation", () => {
 		util.log( util.colors.red( "Error" ), error.message );
 	});
 
-	return liveServer.start({
-		root: "../",
-		open: true,
-		file: "/carbon-website/src/index.html"
-	});
+	return gulp.src( "../" )
+		.pipe( webserver({
+			livereload: false,
+			directoryListing: false,
+			fallback: "/carbon-website/src/index.html",
+			open: true,
+		}) );
 });
 
 gulp.task( "clean:dist", () => {
@@ -136,13 +146,7 @@ gulp.task( "clean:dist", () => {
 });
 
 gulp.task( "build:afterCleaning", [ "compile-styles", "compile-boot", "compile-index", "build-semantic", "copy-semantic", "copy-assets" ], () => {
-	let builder = new Builder();
-	return builder.buildStatic( "app/boot", "dist/site/main.sfx.js", {
-		minify: true,
-		mangle: false,
-		lowResSourceMaps: false,
-		sourceMaps: true
-	});
+	return gulp.start( "bundle" );
 });
 
 gulp.task( "build", [ "clean:dist" ], () => {

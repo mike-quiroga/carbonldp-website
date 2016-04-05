@@ -1,4 +1,4 @@
-import { Injectable } from 'angular2/core';
+import { Injectable } from "angular2/core";
 
 import Carbon from "carbonldp/Carbon";
 import * as App from "carbonldp/App";
@@ -31,7 +31,7 @@ export default class AppContextService {
 					resolve( appContext );
 				}
 			).catch(
-				( error )=> {
+				( error ) => {
 					console.log( error );
 					reject( error );
 				}
