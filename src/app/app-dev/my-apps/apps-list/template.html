@@ -1,10 +1,15 @@
-<table class="ui selectable celled table">
+<table class="ui selectable sortable celled compact table">
 	<thead>
 		<tr>
-			<th>Name</th>
-			<th>Creation Date</th>
-			<th>Modification Date</th>
-			<th>Actions</th>
+			<th *ngFor="#header of headers" class="center aligned" [ngClass]="{
+						sorted: sortedColumn === header.value,
+						ascending: sortedColumn === header.value && ascending,
+						descending: sortedColumn === header.value && ! ascending
+					}" (click)="sortColumn( header )">{{ header.name }}
+			</th>
+			<th class="center aligned">
+				Actions
+			</th>
 		</tr>
 	</thead>
 	<tbody>
