@@ -27,13 +27,19 @@
 		</div>
 	</div>
 </div>
-<div class="extra content">
-	<div class="ui two buttons">
-		<a class="ui black basic button" [routerLink]="[ '/AppDev/MyApps/App', {slug: app.slug}, 'AppDashboard']">
-			Go to App
+<div class="extra center aligned content">
+	<div class="ui small basic icon buttons">
+		<a class="ui icon button tooltip" [routerLink]="[ '/AppDev/MyApps/App', {slug: app.slug}, 'AppDashboard']">
+			<i class="dashboard icon"></i>
 		</a>
-		<a class="ui black basic button" [routerLink]="[ '/AppDev/MyApps/App', {slug: app.slug}, 'SPARQLEditor']">
-			SPARQL <i class="terminal icon"></i>
+		<a class="ui icon button tooltip" [routerLink]="[ '/AppDev/MyApps/App', {slug: app.slug}, 'SPARQLEditor']">
+			<i class="terminal icon"></i>
 		</a>
+		<button class="ui icon button tooltip">
+			<i class="write icon"></i>
+		</button>
+		<button class="ui icon button tooltip">
+			<i class="trash outline icon"></i>
+		</button>
 	</div>
 </div>

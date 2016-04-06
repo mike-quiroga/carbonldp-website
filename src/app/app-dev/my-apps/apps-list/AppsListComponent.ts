@@ -26,12 +26,10 @@ export default class AppsListComponent {
 	}
 
 	ngAfterViewInit():void {
-		console.log( this.apps );
 		this.$element = $( this.element.nativeElement );
 	}
 
 	navigateTo( url:any[] ):void {
-		console.log( url );
 		this.router.navigate( url );
 	}
 }
