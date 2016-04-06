@@ -27,7 +27,7 @@ public class BasicAuthenticationEntryPoint implements AuthenticationEntryPoint {
 		while ( acceptHeaders.hasMoreElements() ) {
 			String header = acceptHeaders.nextElement();
 			for ( String acceptHeader : header.split( "," ) ) {
-				String mimeType = acceptHeader.trim().split( ";" )[0];
+				String mimeType = acceptHeader.split( ";" )[0].trim();
 				if ( mimeType.toLowerCase().equals( "text/html" ) ) foundTextHTML = true;
 				if ( mimeType.toLowerCase().equals( "*/*" ) ) foundMatchAll = true;
 			}
