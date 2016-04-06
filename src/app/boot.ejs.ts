@@ -9,6 +9,7 @@ import { provide, Provider, ComponentRef } from "angular2/core";
 import { FORM_PROVIDERS } from "angular2/common";
 import { ROUTER_PROVIDERS, APP_BASE_HREF } from "angular2/router";
 import { HTTP_PROVIDERS } from "angular2/http";
+import { Title } from "angular2/platform/browser" ;
 
 import { appInjector, activeContext, CARBON_PROVIDERS } from "angular2-carbonldp/boot";
 import { CARBON_SERVICES_PROVIDERS } from "angular2-carbonldp/services";
@@ -34,8 +35,9 @@ bootstrap( AppComponent, [
 	FORM_PROVIDERS,
 	ROUTER_PROVIDERS,
 	HTTP_PROVIDERS,
+	Title,
 
-	provide( APP_BASE_HREF, { useValue: "<%- url.base %>" } ),
+	provide( APP_BASE_HREF, {useValue: "<%- url.base %>"} ),
 
 	providers,
 	BLOG_PROVIDERS,

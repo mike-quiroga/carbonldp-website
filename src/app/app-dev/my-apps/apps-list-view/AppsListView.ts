@@ -1,4 +1,5 @@
 import { Component } from "angular2/core";
+import { Title } from "angular2/platform/browser" ;
 import { CORE_DIRECTIVES } from "angular2/common";
 import { Router, ROUTER_DIRECTIVES } from "angular2/router";
 import { Component, ElementRef, Type } from "angular2/core";
@@ -39,11 +40,12 @@ export default class AppsListView {
 	searchBox:JQuery;
 	errorMessage:string = "";
 
-	constructor( element:ElementRef, router:Router, appContextService:AppContextService ) {
+	constructor( element:ElementRef, router:Router, appContextService:AppContextService, title:Title ) {
 		this.element = element;
 		this.$element = $( this.element.nativeElement );
 		this.appContextService = appContextService;
 		this.router = router;
+		title.setTitle( "My Apps" );
 	}
 
 	ngAfterViewInit():void {

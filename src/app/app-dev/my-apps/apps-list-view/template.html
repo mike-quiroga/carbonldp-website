@@ -4,11 +4,13 @@
 		<div class="eight wide column">
 			<div class="ui icon buttons">
 				<button class="ui inverted white button"
+				        title="View as list"
 				        [ngClass]="{active: !tileView}"
 				        (click)="activateListView()">
 					<i class="list layout icon"></i>
 				</button>
 				<button class="ui inverted white button"
+				        title="View as tiles"
 				        [ngClass]="{active: tileView}"
 				        (click)="activateGridView()">
 					<i class="grid layout icon"></i>
