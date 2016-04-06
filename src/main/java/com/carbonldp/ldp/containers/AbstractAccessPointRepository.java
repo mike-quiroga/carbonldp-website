@@ -52,30 +52,9 @@ public abstract class AbstractAccessPointRepository extends AbstractTypedContain
 		} );
 	}
 
-	private static final String getProperties_query;
-
-	static {
-		StringBuilder queryBuilder = new StringBuilder();
-		queryBuilder
-			.append( "CONSTRUCT {" ).append( NEW_LINE )
-			.append( TAB ).append( "?containerURI ?p ?o" ).append( NEW_LINE )
-			.append( "} WHERE {" ).append( NEW_LINE )
-			.append( TAB ).append( "GRAPH ?containerURI {" ).append( NEW_LINE )
-			.append( TAB ).append( TAB ).append( "?containerURI ?p ?o." ).append( NEW_LINE )
-			.append( TAB ).append( TAB ).append( "FILTER(" ).append( NEW_LINE )
-			.append( TAB ).append( TAB ).append( TAB ).append( "(?p NOT " )
-			.append( RDFNodeUtil.generateINOperator( ContainerDescription.Property.CONTAINS ) )
-			.append( ")" ).append( NEW_LINE )
-			.append( TAB ).append( TAB ).append( ")" ).append( NEW_LINE )
-			.append( TAB ).append( "}" ).append( NEW_LINE )
-			.append( "}" )
-		;
-		getProperties_query = queryBuilder.toString();
-	}
-
 	@Override
 	public Set<Statement> getProperties( URI containerURI ) {
-		return getProperties( containerURI, getProperties_query );
+		return getProperties( containerURI, getPropertiesQuery );
 	}
 
 	private static final String getMembershipTriplesQuery;

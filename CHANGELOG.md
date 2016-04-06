@@ -1,3 +1,6 @@
+# 0.30.1 (2016/05/04)
+* Prefer minimal container is now working properly
+
 # 0.30.0 (2016/05/04)
 * BasicAuthentication now identifies if the request was sent from a Browser, if it wasn't it doesn't send the auth challenge (to avoid the login prompt)
 
