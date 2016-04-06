@@ -10,9 +10,12 @@
 					<div class="ui dropdown item">
 						User Name <i class="dropdown icon"></i>
 						<div class="menu">
-							<a class="item">My Profile</a>
-							<a class="item">Lock Screen</a>
-							<a class="item">Log Out</a>
+							<!--<a class="item">My Profile</a>-->
+							<!--<a class="item">Lock Screen</a>-->
+							<a class="item" (click)="logOut()">
+								<i class="sign out icon"></i>
+								Log Out
+							</a>
 						</div>
 					</div>
 				</div>
@@ -27,15 +30,18 @@
 				<div class="right menu">
 					<a class="item" [routerLink]="[ './Home' ]" [ngClass]="{active: isActive('./Home') }">Dashboard</a>
 					<a class="item">Messages</a>
-					<a href="" class="menu item open">
+					<a class="item open">
 						<i class="content icon"></i>
 					</a>
 				</div>
 			</div>
 			<div class="ui big-stone inverted vertical menu">
-				<a class="item">My Profile</a>
-				<a class="item">Lock Screen</a>
-				<a class="item">Log Out</a>
+				<!--<a class="item">My Profile</a>-->
+				<!--<a class="item">Lock Screen</a>-->
+				<a class="item" (click)="logOut()">
+					<i class="sign out icon"></i>
+					Log Out
+				</a>
 			</div>
 		</div>
 

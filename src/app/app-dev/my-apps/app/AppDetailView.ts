@@ -6,7 +6,7 @@ import * as App from "carbonldp/App";
 
 import SidebarService from "./../../components/sidebar/service/SidebarService";
 import AppContextService from "./../../AppContextService";
-import * as SidebarApp from "./App";
+import SidebarApp from "./App";
 
 import DashboardView from "./dashboard/DashboardView";
 import SPARQLEditorView from "./sparql-editor/SPARQLEditorView";

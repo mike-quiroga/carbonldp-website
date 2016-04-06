@@ -1,10 +1,24 @@
-# 0.5.5 (March 30, 2016)
+# 0.5.7 (March 30, 2016)
 * Add protocolAndHost field to GettingStarted TypeScript so that documentation can always reflect the server you're on. 
 * Upgrade to Angular beta 12 and zone.js 0.6.6 to resolve ["TypeError:Cannot read property 'zone' of undefined"](https://github.com/angular/angular/issues/7652).
 * Add Eclipse .project file to .gitignore.
 * Change order of dependencies to avoid ["Uncaught (in promise)TypeError: object is not a constructor"](https://github.com/blacksonic/angular2-es6-starter/issues/1).
 * Add cross-platform compatible post install script.
 * Remove documentation of dependency on global packages.
+* Modify Getting Started with the REST API documentation sufficient to start reviews with Alpha testers.
+
+# 0.5.6 (March 28, 2016)
+* Add logout option to AppDev.
+* Add rememberMe option to loginComponent.
+* Add login view for AppDev to AppComponent.
+* Add link to AppDevLogin on mobile view.
+* Fix login component error messages layout.
+* Fix login component displaying outside viewport on small screens.
+* Fix minor tslint errors.
+* Fix AppDev header menu misbehaviour on mobile screens.
+* Update Angular2 to beta 13
+* Replace live-server with gulp-webserver
+>>>>>>> refs/remotes/origin/develop
 
 # 0.5.5 (March 16, 2016)
 * Add confirmation when changing between queries.

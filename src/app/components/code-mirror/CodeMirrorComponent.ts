@@ -8,7 +8,6 @@ import "codemirror/mode/turtle/turtle";
 
 import "codemirror/lib/codemirror.css!";
 import "codemirror/theme/mbo.css!";
-import EventEmitter = webdriver.EventEmitter;
 
 export class Mode {
 	static get JAVASCRIPT():string { return "text/javascript"; }
@@ -47,7 +46,7 @@ export class Class {
 	@Input() scroll:boolean = true;
 
 	@Input() value:string = "";
-	@Output() valueChange:EventEmitter = new EventEmitter();
+	@Output() valueChange:EventEmitter<string> = new EventEmitter<string>();
 
 	constructor( element:ElementRef ) {
 		this.element = element;
@@ -71,7 +70,6 @@ export class Class {
 			// no pre"s, then use the everything inside code-mirror tag
 			return this.element.nativeElement.innerHTML;
 		}
-		return "";
 	}
 
 	ngAfterViewInit():void {
@@ -95,7 +93,7 @@ export class Class {
 
 		this.codeMirror.on( "change", ( changeObject ) => {
 			this.value = this.codeMirror.getValue();
-			this.valueChange.next( this.value );
+			this.valueChange.emit( this.value );
 		} );
 	}
 

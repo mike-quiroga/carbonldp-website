@@ -4,6 +4,8 @@ Source code for [carbonldp.com](https://carbonldp.com)
 ## Development Setup
 1. Install Dependencies
     - [node.js](https://nodejs.org/en/)
+    - gulp: `npm install gulp -g`
+    - jspm: `npm install jspm -g`
 2. cd into the project's root directory
 3. run `npm install`
 4. To start the application server run `npm start`

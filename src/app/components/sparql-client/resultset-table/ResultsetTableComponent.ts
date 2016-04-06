@@ -21,7 +21,7 @@ export class ResultsetTableComponent {
 	@Input() query:any;
 	@Input() resultset:any;
 	@Input() prefixes:{ [ prefix:string ]:string };
-	@Output() resultsetChange:EventEmitter = new EventEmitter();
+	@Output() resultsetChange:EventEmitter<any> = new EventEmitter();
 
 	sortedColumn:string = null;
 	ascending:boolean = false;

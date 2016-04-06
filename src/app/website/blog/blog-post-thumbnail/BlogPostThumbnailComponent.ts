@@ -1,14 +1,12 @@
-import { Component, ElementRef, Input, DynamicComponentLoader, Type } from "angular2/core";
+import { Component, ElementRef, Input, DynamicComponentLoader } from "angular2/core";
 import { CORE_DIRECTIVES } from "angular2/common";
-import { ROUTER_DIRECTIVES, ROUTER_PROVIDERS, Router, Instruction } from "angular2/router";
+import { ROUTER_DIRECTIVES, Router } from "angular2/router";
+
+import BlogPost from "./../blog-post/BlogPost";
+import * as CodeMirrorComponent from "app/components/code-mirror/CodeMirrorComponent";
 
 import "semantic-ui/semantic";
 
-import ContentService from "app/content/ContentService";
-import BlogPost from "./../blog-post/BlogPost";
-
-import BlogPost from './../blog-post/BlogPost';
-import * as CodeMirrorComponent from "app/components/code-mirror/CodeMirrorComponent";
 import template from "./template.html!";
 import "./style.css!";
 
@@ -18,7 +16,7 @@ import "./style.css!";
 	directives: [ CORE_DIRECTIVES, ROUTER_DIRECTIVES, CodeMirrorComponent.Class ]
 } )
 export default class BlogPostThumbnailComponent {
-	static parameters = [ [ Router ], [ ElementRef ], [ DynamicComponentLoader ]];
+	static parameters = [ [ Router ], [ ElementRef ], [ DynamicComponentLoader ] ];
 
 	router:Router;
 	dcl:DynamicComponentLoader;
@@ -30,7 +28,7 @@ export default class BlogPostThumbnailComponent {
 
 	get codeMirrorMode() { return CodeMirrorComponent.Mode; }
 
-	constructor( router:Router, element:ElementRef, dcl:DynamicComponentLoader) {
+	constructor( router:Router, element:ElementRef, dcl:DynamicComponentLoader ) {
 		this.router = router;
 		this.element = element;
 		this.dcl = dcl;
@@ -48,7 +46,7 @@ export default class BlogPostThumbnailComponent {
 
 	ngAfterViewInit():void {
 		let excerpt:string = this.blogPost.excerpt;
-		if ( !! this.blogPost.filename ) {
+		if ( ! ! this.blogPost.filename ) {
 			@Component( {
 				selector: "compiled-component",
 				directives: [ CORE_DIRECTIVES, ROUTER_DIRECTIVES, CodeMirrorComponent.Class ],
