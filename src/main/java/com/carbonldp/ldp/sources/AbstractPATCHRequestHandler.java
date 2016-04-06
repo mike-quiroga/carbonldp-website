@@ -65,7 +65,7 @@ public abstract class AbstractPATCHRequestHandler extends AbstractLDPRequestHand
 		Set<AddAction> addActions = getAddActions( patchRequest );
 		executeAddActions( targetURI, addActions );
 
-		int eTag = sourceService.getETag( targetURI );
+		String eTag = sourceService.getETag( targetURI );
 		setStrongETagHeader( eTag );
 
 		return new ResponseEntity<>( new EmptyResponse(), HttpStatus.OK );

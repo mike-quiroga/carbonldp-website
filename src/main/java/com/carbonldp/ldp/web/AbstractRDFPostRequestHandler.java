@@ -168,7 +168,7 @@ public abstract class AbstractRDFPostRequestHandler<E extends BasicContainer> ex
 	}
 
 	private ResponseEntity<Object> generateCreatedResponse( RDFResource resourceCreated ) {
-		setStrongETagHeader( ModelUtil.calculateETag( resourceCreated.getBaseModel() ) );
+		setStrongETagHeader( HTTPUtil.formatStrongEtag( ModelUtil.calculateETag( resourceCreated.getBaseModel() ) ) );
 		setLocationHeader( resourceCreated );
 		return new ResponseEntity<>( new EmptyResponse(), HttpStatus.CREATED );
 	}

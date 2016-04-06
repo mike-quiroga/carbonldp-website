@@ -135,8 +135,8 @@ public abstract class AbstractLDPRequestHandler extends AbstractRequestHandler {
 		response.setHeader( HTTPHeaders.ETAG, HTTPUtil.formatWeakETag( modifiedTime.toString() ) );
 	}
 
-	protected void setStrongETagHeader( int eTag ) {
-		response.setHeader( HTTPHeaders.ETAG, HTTPUtil.formatStrongEtag( eTag ) );
+	protected void setStrongETagHeader( String eTag ) {
+		response.setHeader( HTTPHeaders.ETAG, eTag );
 	}
 
 	protected void setLocationHeader( URIObject uriObject ) {
@@ -171,19 +171,18 @@ public abstract class AbstractLDPRequestHandler extends AbstractRequestHandler {
 
 	protected void checkPrecondition( URI targetURI, String requestETag ) {
 		if ( requestETag == null ) throw new PreconditionRequiredException();
-		int eTagValue;
+		requestETag = requestETag.trim();
+		if ( ! requestETag.startsWith( "\"" ) && ! requestETag.endsWith( "\"" ) ) {
+			requestETag = "\"" + requestETag + "\"";
+		}
 		try {
-			requestETag = requestETag.trim();
-			if ( requestETag.startsWith( "\"" ) && requestETag.endsWith( "\"" ) ) {
-				requestETag = requestETag.substring( 1, requestETag.length() - 1 );
-			}
-			eTagValue = Integer.parseInt( requestETag );
+			Integer.parseInt( requestETag.substring( 1, requestETag.length() - 1 ) );
 		} catch ( NumberFormatException e ) {
 			throw new PreconditionFailedException( 0x5005 );
 		}
-		int eTag = sourceService.getETag( targetURI );
+		String eTag = sourceService.getETag( targetURI );
 
-		if ( eTag != eTagValue ) throw new PreconditionFailedException( 0x5006 );
+		if ( ! eTag.equals( requestETag ) ) throw new PreconditionFailedException( 0x5006 );
 
 	}
 

@@ -68,7 +68,7 @@ public class AbstractNonRDFPutRequestHandler extends AbstractNonRDFRequestHandle
 	}
 
 	protected ResponseEntity<Object> createSuccessfulResponse( URI affectedResourceURI ) {
-		int eTag = sourceService.getETag( affectedResourceURI );
+		String eTag = sourceService.getETag( affectedResourceURI );
 
 		setStrongETagHeader( eTag );
 		return new ResponseEntity<>( new EmptyResponse(), HttpStatus.OK );

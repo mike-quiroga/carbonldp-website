@@ -49,7 +49,7 @@ public abstract class AbstractPUTRequestHandler<E extends RDFResource> extends A
 	protected abstract E getDocumentResourceView( RDFResource requestDocumentResource );
 
 	protected ResponseEntity<Object> createSuccessfulResponse( URI affectedResourceURI ) {
-		int eTag = sourceService.getETag( affectedResourceURI );
+		String eTag = sourceService.getETag( affectedResourceURI );
 
 		setStrongETagHeader( eTag );
 		return new ResponseEntity<>( new EmptyResponse(), HttpStatus.OK );

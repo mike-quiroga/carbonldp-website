@@ -8,6 +8,7 @@ import com.carbonldp.rdf.RDFResourceRepository;
 import com.carbonldp.repository.DocumentGraphQueryResultHandler;
 import com.carbonldp.repository.ETagHandler;
 import com.carbonldp.repository.GraphQueryResultHandler;
+import com.carbonldp.utils.HTTPUtil;
 import com.carbonldp.utils.RDFNodeUtil;
 import com.carbonldp.utils.SPARQLUtil;
 import com.carbonldp.utils.ValueUtil;
@@ -95,13 +96,13 @@ public class SesameRDFSourceRepository extends AbstractSesameLDPRepository imple
 	}
 
 	@Override
-	public int getETag( URI sourceURI ) {
+	public String getETag( URI sourceURI ) {
 		Map<String, Value> bindings = new HashMap<>();
 		bindings.put( "sourceURI", sourceURI );
 		return sparqlTemplate.executeGraphQuery( get_query, bindings, queryResult -> {
 			ETagHandler handler = new ETagHandler();
 			handler.handle( queryResult );
-			return handler.getETagValue();
+			return HTTPUtil.formatStrongEtag( handler.getETagValue() );
 		} );
 	}
 
