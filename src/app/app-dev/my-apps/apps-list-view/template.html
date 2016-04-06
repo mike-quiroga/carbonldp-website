@@ -14,7 +14,7 @@
 					<i class="grid layout icon"></i>
 				</button>
 			</div>
-			<button class="ui inverted  right labeled icon button">
+			<button class="ui right labeled icon button">
 				Create app <i class="plus icon"></i>
 			</button>
 		</div>
@@ -39,12 +39,13 @@
 					</div>
 				</div>
 			</div>
-			<div class="ui stackable cards" *ngIf="tileView && !errorMessage">
+			<div class="ui stackable cards" *ngIf="tileView && !errorMessage && !loading">
 				<app-tile class="card" *ngFor="#app of results; #i=index;" [app]="app"></app-tile>
 			</div>
-			<div *ngIf="!tileView && !errorMessage">
+			<div *ngIf="!tileView && !errorMessage && !loading">
 				<apps-list [apps]="results"></apps-list>
 			</div>
+			<div class="ui active centered large inline text inverted loader" *ngIf="loading">Loading</div>
 		</div>
 	</div>
 </div>

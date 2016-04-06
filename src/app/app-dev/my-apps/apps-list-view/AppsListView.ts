@@ -34,6 +34,7 @@ export default class AppsListView {
 	apps:App[] = [];
 	results:App[] = [];
 
+	loading:boolean = false;
 	tileView:boolean = false;
 	searchBox:JQuery;
 	errorMessage:string = "";
@@ -78,6 +79,7 @@ export default class AppsListView {
 	}
 
 	routerOnActivate():void {
+		this.loading = true;
 		this.appContextService.getAll().then(
 			( appContexts:any ):void => {
 				appContexts.forEach( ( appContext ) => {
@@ -91,6 +93,10 @@ export default class AppsListView {
 			( error:any ):void => {
 				console.error( error );
 				this.errorMessage = "An error occurred. Please, try again later.";
+			}
+		).then(
+			():void => {
+				this.loading = false;
 			}
 		);
 	}
