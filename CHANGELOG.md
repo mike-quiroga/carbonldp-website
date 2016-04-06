@@ -1,3 +1,6 @@
+# 0.30.0 (2016/05/04)
+* BasicAuthentication now identifies if the request was sent from a Browser, if it wasn't it doesn't send the auth challenge (to avoid the login prompt)
+
 # 0.29.4 (2016/03/22)
 * Added "prod" Spring Profile with base URL set for production (carbonldp.com)
 
