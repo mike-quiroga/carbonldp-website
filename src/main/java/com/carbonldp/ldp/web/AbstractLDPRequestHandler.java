@@ -173,6 +173,10 @@ public abstract class AbstractLDPRequestHandler extends AbstractRequestHandler {
 		if ( requestETag == null ) throw new PreconditionRequiredException();
 		int eTagValue;
 		try {
+			requestETag = requestETag.trim();
+			if ( requestETag.startsWith( "\"" ) && requestETag.endsWith( "\"" ) ) {
+				requestETag = requestETag.substring( 1, requestETag.length() - 1 );
+			}
 			eTagValue = Integer.parseInt( requestETag );
 		} catch ( NumberFormatException e ) {
 			throw new PreconditionFailedException( 0x5005 );

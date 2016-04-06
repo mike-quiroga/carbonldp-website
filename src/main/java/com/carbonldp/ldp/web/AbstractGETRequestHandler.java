@@ -11,7 +11,6 @@ import com.carbonldp.ldp.nonrdf.RDFRepresentation;
 import com.carbonldp.ldp.sources.RDFSource;
 import com.carbonldp.models.HTTPHeader;
 import com.carbonldp.models.HTTPHeaderValue;
-import com.carbonldp.utils.ModelUtil;
 import com.carbonldp.utils.RDFNodeUtil;
 import com.carbonldp.web.exceptions.BadRequestException;
 import com.carbonldp.web.exceptions.NotFoundException;
@@ -105,8 +104,6 @@ public abstract class AbstractGETRequestHandler extends AbstractLDPRequestHandle
 
 		Container container = containerService.get( targetURI, containerRetrievalPreferences );
 
-		ensureETagIsPresent( container, containerRetrievalPreferences );
-
 		// TODO: Add Container related information to the request (number of contained resources and members)
 
 		addContainerAllowHeaders( targetURI, response );
@@ -128,13 +125,6 @@ public abstract class AbstractGETRequestHandler extends AbstractLDPRequestHandle
 		response.addHeader( HTTPHeaders.ACCEPT_POST, "application/ld+json, text/turtle" );
 		response.addHeader( HTTPHeaders.ACCEPT_PUT, "application/ld+json, text/turtle" );
 		response.addHeader( HTTPHeaders.ACCEPT_PATCH, "application/ld+json, text/turtle" );
-	}
-
-	private void ensureETagIsPresent( Container container, Set<ContainerRetrievalPreference> containerRetrievalPreferences ) {
-		if ( ! containerRetrievalPreferences.contains( ContainerRetrievalPreference.CONTAINER_PROPERTIES ) ) {
-			int eTag = ModelUtil.calculateETag( container.getBaseModel() );
-			if ( eTag != 0 ) container.setStrongETag( eTag );
-		}
 	}
 
 	private Set<ContainerRetrievalPreference> getContainerRetrievalPreferences( URI targetURI ) {
