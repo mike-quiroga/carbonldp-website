@@ -1,3 +1,6 @@
+# 0.30.3 (2016/07/04)
+* Switch from using weak ETags to strong ETags
+
 # 0.30.2 (2016/05/04)
 * SPARQL now sends a 403 HTTP response when you do not have permissions in the target service
 
