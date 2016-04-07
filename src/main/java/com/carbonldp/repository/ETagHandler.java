@@ -63,7 +63,7 @@ public class ETagHandler extends GraphQueryResultHandler {
 
 	private void addContextValue( URI context, List<Integer> noContextValues ) {
 		for ( Integer currentValue : noContextValues ) {
-			currentValue = currentValue + ModelUtil.CONTEXT_FACTOR * context.hashCode();
+			currentValue = currentValue + 23 * context.hashCode();
 			eTagValue = ( eTagValue == 0 ) ? currentValue : eTagValue ^ currentValue;
 		}
 		noContextValues.clear();
