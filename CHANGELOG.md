@@ -1,3 +1,6 @@
+# 0.30.2 (2016/05/04)
+* SPARQL now sends a 403 HTTP response when you do not have permissions in the target service
+
 # 0.30.1 (2016/05/04)
 * Prefer minimal container is now working properly
 
