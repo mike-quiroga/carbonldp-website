@@ -1,10 +1,13 @@
-# 0.30.2 (2016/05/04)
+# 0.31.0 (2016/04/07)
+* Switch from using weak ETags to strong ETags
+
+# 0.30.2 (2016/04/07)
 * SPARQL now sends a 403 HTTP response when you do not have permissions in the target service
 
-# 0.30.1 (2016/05/04)
+# 0.30.1 (2016/04/05)
 * Prefer minimal container is now working properly
 
-# 0.30.0 (2016/05/04)
+# 0.30.0 (2016/04/05)
 * BasicAuthentication now identifies if the request was sent from a Browser, if it wasn't it doesn't send the auth challenge (to avoid the login prompt)
 
 # 0.29.4 (2016/03/22)

@@ -131,8 +131,12 @@ public abstract class AbstractLDPRequestHandler extends AbstractRequestHandler {
 		}
 	}
 
-	protected void setETagHeader( DateTime modifiedTime ) {
+	protected void setWeakETagHeader( DateTime modifiedTime ) {
 		response.setHeader( HTTPHeaders.ETAG, HTTPUtil.formatWeakETag( modifiedTime.toString() ) );
+	}
+
+	protected void setStrongETagHeader( String eTag ) {
+		response.setHeader( HTTPHeaders.ETAG, eTag );
 	}
 
 	protected void setLocationHeader( URIObject uriObject ) {
@@ -167,17 +171,19 @@ public abstract class AbstractLDPRequestHandler extends AbstractRequestHandler {
 
 	protected void checkPrecondition( URI targetURI, String requestETag ) {
 		if ( requestETag == null ) throw new PreconditionRequiredException();
-
-		DateTime eTagDateTime;
+		requestETag = requestETag.trim();
+		if ( ! requestETag.startsWith( "\"" ) && ! requestETag.endsWith( "\"" ) ) {
+			requestETag = "\"" + requestETag + "\"";
+		}
 		try {
-			eTagDateTime = HTTPUtil.getETagDateTime( requestETag );
-		} catch ( IllegalArgumentException e ) {
+			Integer.parseInt( requestETag.substring( 1, requestETag.length() - 1 ) );
+		} catch ( NumberFormatException e ) {
 			throw new PreconditionFailedException( 0x5005 );
 		}
+		String eTag = sourceService.getETag( targetURI );
 
-		DateTime modified = sourceService.getModified( targetURI );
+		if ( ! eTag.equals( requestETag ) ) throw new PreconditionFailedException( 0x5006 );
 
-		if ( ! modified.equals( eTagDateTime ) ) throw new PreconditionFailedException( 0x5006 );
 	}
 
 	protected void seekForOrphanFragments( AbstractModel requestModel, RDFResource requestDocumentResource ) {

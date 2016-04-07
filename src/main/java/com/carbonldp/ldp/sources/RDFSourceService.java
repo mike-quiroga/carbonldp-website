@@ -12,6 +12,8 @@ public interface RDFSourceService {
 	@PreAuthorize( "hasPermission(#sourceURI, 'READ')" )
 	public RDFSource get( URI sourceURI );
 
+	public String getETag( URI sourceURI );
+
 	public DateTime getModified( URI sourceURI );
 
 	@PreAuthorize( "hasPermission(#sourceURI, 'READ')" )

@@ -99,7 +99,7 @@ public abstract class AbstractRDFPostRequestHandler<E extends BasicContainer> ex
 
 		DateTime creationTime = sourceService.createAccessPoint( targetURI, requestAccessPoint );
 
-		return generateCreatedResponse( requestAccessPoint, creationTime );
+		return generateCreatedResponse( requestAccessPoint );
 	}
 
 	private AccessPoint getRequestAccessPoint( RDFResource requestDocumentResource ) {
@@ -128,7 +128,7 @@ public abstract class AbstractRDFPostRequestHandler<E extends BasicContainer> ex
 		createChild( targetURI, documentResourceView );
 
 		DateTime modified = sourceService.getModified( documentResourceView.getURI() );
-		return generateCreatedResponse( documentResourceView, modified );
+		return generateCreatedResponse( documentResourceView );
 	}
 
 	private void validateSystemManagedProperties( RDFResource resource ) {
@@ -159,16 +159,16 @@ public abstract class AbstractRDFPostRequestHandler<E extends BasicContainer> ex
 
 	protected abstract void createChild( URI targetURI, E documentResourceView );
 
-	protected ResponseEntity<Object> generateCreatedResponse( AccessPoint accessPointCreated, DateTime creationTime ) {
-		return generateCreatedResponse( (RDFResource) accessPointCreated, creationTime );
+	protected ResponseEntity<Object> generateCreatedResponse( AccessPoint accessPointCreated ) {
+		return generateCreatedResponse( (RDFResource) accessPointCreated );
 	}
 
-	protected ResponseEntity<Object> generateCreatedResponse( E childCreated, DateTime creationTime ) {
-		return generateCreatedResponse( (RDFResource) childCreated, creationTime );
+	protected ResponseEntity<Object> generateCreatedResponse( E childCreated ) {
+		return generateCreatedResponse( (RDFResource) childCreated );
 	}
 
-	private ResponseEntity<Object> generateCreatedResponse( RDFResource resourceCreated, DateTime creationTime ) {
-		if ( creationTime != null ) setETagHeader( creationTime );
+	private ResponseEntity<Object> generateCreatedResponse( RDFResource resourceCreated ) {
+		setStrongETagHeader( HTTPUtil.formatStrongEtag( ModelUtil.calculateETag( resourceCreated.getBaseModel() ) ) );
 		setLocationHeader( resourceCreated );
 		return new ResponseEntity<>( new EmptyResponse(), HttpStatus.CREATED );
 	}
