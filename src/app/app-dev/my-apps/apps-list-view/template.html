@@ -61,6 +61,10 @@
 			<div class="ui header">You are about to delete this App!</div>
 			<p>If you proceed your App will be deleted.</p>
 			<p>Do you want to proceed?</p>
+			<div class="ui blue progress bar" [ngClass]="{hidden:deleteProgress<0}" [attr.data-percent]="deleteProgress">
+				<div class="bar"></div>
+				<div class="label">{{deleteProgress}}% Deleting app...</div>
+			</div>
 			<div class="ui error message transition" *ngIf="deleteError">
 				<i class="close icon" (click)="closeErrorMessage($event)"></i>
 				<div class="header">
@@ -75,10 +79,10 @@
 		</div>
 	</div>
 	<div class="actions">
-		<button class="ui black deny button">
+		<button class="ui black deny button" [ngClass]="{disabled:deleting}">
 			No
 		</button>
-		<button class="ui positive right labeled icon button" [ngClass]="{loading:deleting}" (click)="onApproveAppDeletion(askingApp)">
+		<button class="ui positive right labeled icon button" [ngClass]="{loading:deleting, disabled:deleting}" (click)="onApproveAppDeletion(askingApp)">
 			Yes, proceed
 			<i class="checkmark icon"></i>
 		</button>

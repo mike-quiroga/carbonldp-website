@@ -19,6 +19,7 @@ import App from "./../app/App";
 import Message from "./../../components/errors-area/ErrorsAreaComponent";
 
 import template from "./template.html!";
+import "./style.css!";
 
 @Component( {
 	selector: "my-apps-list",
@@ -45,6 +46,9 @@ export default class AppsListView {
 	deleting:boolean = false;
 	deleteError:Message;
 	deleteTries:number = 1;
+	deleteMaxTries:number = 23;
+	deleteProgressBar:JQuery;
+	deleteProgress:number = - 1;
 
 	constructor( element:ElementRef, router:Router, appContextService:AppContextService, title:Title, carbon:Carbon ) {
 		this.element = element;
@@ -57,6 +61,7 @@ export default class AppsListView {
 
 	ngOnInit():void {
 		this.deleteAppConfirmationModal = this.$element.find( ".delete-app-confirmation.modal" );
+		this.deleteProgressBar = this.$element.find( ".progress.bar" );
 		this.searchBox = this.$element.find( "input.search" );
 		let terms:any = Observable.fromEvent( this.searchBox, "input" );
 		terms
@@ -97,50 +102,59 @@ export default class AppsListView {
 	toggleDeleteConfirmationModal():void {
 		this.deleteAppConfirmationModal.modal( "toggle" );
 		this.deleteError = null;
+		this.deleteTries = - 1;
+		this.deleteProgress = Math.ceil( ( this.deleteTries / this.deleteMaxTries) * 100 );
 	}
 
-	onApproveAppDeletion( approvedApp:App ):boolean {
-		this.deleting = true;
-		this.deleteError = null;
-		//console.log( "To delete app: %", approvedApp );
-		//console.log( "Apps: %", this.apps );
-		//console.log( "Index of App: %", this.apps.indexOf( approvedApp ) );
-		this.deleteApp( approvedApp ).then(
-			( response:HTTP.Response.Class ):void => {
-				this.toggleDeleteConfirmationModal();
-				this.apps.splice( this.apps.indexOf( approvedApp ), 1 );
-				this.deleting = false;
-			},
-			( error:HTTPError.HTTPError ):void => {
-				let interval:any = setInterval( () => {
-					if ( this.deleteTries >= 23 ) {
-						this.deleteTries = 1;
-						this.apps.splice( this.apps.indexOf( approvedApp ), 1 );
-						this.searchApp( this.searchBox.val() );
-						Promise.resolve();
-						clearInterval( interval );
-					} else {
-						//console.log( "Attempt No." + this.deleteTries );
-						let options:any = {};
-						this.carbon.auth.addAuthentication( options );
-						HTTP.Request.Service.get( this.askingApp.app.id, options ).then(
-							( response:HTTP.Response.Class ) => {
-								//console.log( response );
-								this.deleteTries ++;
-							},
-							( _error:HTTPError.HTTPError ) => {
-								//console.log( "Error while fetching... %o", _error );
-								if ( _error.response.status !== 0 || _error.response.status !== 404 ) {
-									this.deleteError = this.getErrorMessage( error );
-								}
-								this.deleteTries = 23;
-								this.deleting = false;
+	onApproveAppDeletion( approvedApp:App ):void {
+		if ( ! this.deleting ) {
+			this.deleting = true;
+			this.deleteError = null;
+			this.deleteTries = 1;
+			this.deleteProgress = Math.ceil( ( this.deleteTries / this.deleteMaxTries) * 100 );
+			this.deleteProgressBar = this.deleteAppConfirmationModal.find( ".progress.bar" );
+			this.deleteProgressBar.progress( {percent: this.deleteProgress} );
+			this.deleteApp( approvedApp ).then(
+				( response:HTTP.Response.Class ):void => {
+					this.toggleDeleteConfirmationModal();
+					this.apps.splice( this.apps.indexOf( approvedApp ), 1 );
+					this.deleting = false;
+				},
+				( error:HTTPError.HTTPError ):void => {
+					let interval:any = setInterval( () => {
+						if ( this.deleteTries >= this.deleteMaxTries ) {
+							this.deleteTries = 1;
+							this.deleteProgress = 100;
+							this.deleteProgressBar.progress( {percent: this.deleteProgress} );
+							if ( ! this.deleteError ) {
+								this.toggleDeleteConfirmationModal();
 							}
-						);
-					}
-				}, 5000 );
-			} );
-		return false;
+							this.apps.splice( this.apps.indexOf( approvedApp ), 1 );
+							this.searchApp( this.searchBox.val() );
+							Promise.resolve();
+							clearInterval( interval );
+						} else {
+							let options:any = {};
+							this.carbon.auth.addAuthentication( options );
+							HTTP.Request.Service.get( this.askingApp.app.id, options ).then(
+								( response:HTTP.Response.Class ) => {
+									this.deleteTries ++;
+									this.deleteProgress = Math.ceil( ( this.deleteTries / this.deleteMaxTries) * 100 );
+									this.deleteProgressBar.progress( {percent: this.deleteProgress} );
+								},
+								( _error:HTTPError.HTTPError ) => {
+									console.log( "Error while fetching... %o", _error );
+									//if ( _error.response.status !== 0 || _error.response.status !== 404 ) {
+									//	this.deleteError = this.getErrorMessage( error );
+									//}
+									this.deleteTries = this.deleteMaxTries;
+									this.deleting = false;
+								}
+							);
+						}
+					}, 5000 );
+				} );
+		}
 	}
 
 	deleteApp( appContext:any ):Promise<HTTP.Response.Class> {
@@ -172,7 +186,7 @@ export default class AppsListView {
 			content: ! ! error.message ? error.message : content,
 			statusCode: error.response.status,
 			statusMessage: error.response.request.statusText,
-			endpoint: error.response.request.responseURL,
+			endpoint: "",
 		};
 	}
 
@@ -184,7 +198,7 @@ export default class AppsListView {
 		this.deleteAppConfirmationModal.modal( {
 			closable: false,
 			blurring: true,
-			onApprove: ():boolean => { return false },
+			onApprove: ():boolean => { return false; },
 		} );
 	}
 
