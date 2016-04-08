@@ -1,6 +1,7 @@
 package com.carbonldp.ldp.containers;
 
 import com.carbonldp.ldp.containers.ContainerDescription.Type;
+import com.carbonldp.ldp.sources.RDFSourceDescription;
 import com.carbonldp.rdf.RDFDocumentRepository;
 import com.carbonldp.rdf.RDFResourceRepository;
 import com.carbonldp.utils.RDFNodeUtil;
@@ -72,26 +73,6 @@ public class SesameBasicContainerRepository extends AbstractTypedContainerReposi
 	@Override
 	public URI getMembershipResource( URI containerURI ) {
 		return containerURI;
-	}
-
-	private static final String getPropertiesQuery;
-
-	static {
-		getPropertiesQuery = "" +
-			"CONSTRUCT {" + NEW_LINE +
-			TAB + "?containerURI ?p ?o" + NEW_LINE +
-			"} WHERE {" + NEW_LINE +
-			TAB + "GRAPH ?containerURI {" + NEW_LINE +
-			TAB + TAB + getHasMemberRelationSPARQL( "?containerURI", "?hasMemberRelation", 2 ) + NEW_LINE +
-			TAB + TAB + "?containerURI ?p ?o." + NEW_LINE +
-			TAB + TAB + "FILTER(" + NEW_LINE +
-			TAB + TAB + TAB + "(?p != ?hasMemberRelation)" + NEW_LINE +
-			TAB + TAB + TAB + "&&" + NEW_LINE +
-			TAB + TAB + TAB + "(?p NOT " + RDFNodeUtil.generateINOperator( ContainerDescription.Property.CONTAINS ) + ")" + NEW_LINE +
-			TAB + TAB + ")" + NEW_LINE +
-			TAB + "}" + NEW_LINE +
-			"}"
-		;
 	}
 
 	@Override

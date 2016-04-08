@@ -17,7 +17,6 @@ public class PlatformAPIGetRequestHandler extends AbstractRequestHandler {
 
 	public ResponseEntity<Object> handleRequest( HttpServletRequest request, HttpServletResponse response ) {
 		PlatformAPI platformAPI = platformAPIService.get();
-
 		return new ResponseEntity<>( platformAPI, HttpStatus.OK );
 	}
 }
