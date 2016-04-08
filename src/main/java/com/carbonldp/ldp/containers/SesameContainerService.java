@@ -12,6 +12,7 @@ import com.carbonldp.models.Infraction;
 import com.carbonldp.rdf.RDFDocumentFactory;
 import com.carbonldp.rdf.RDFResource;
 import com.carbonldp.spring.ServicesInvoker;
+import com.carbonldp.utils.HTTPUtil;
 import com.carbonldp.utils.ModelUtil;
 import com.carbonldp.utils.ValueUtil;
 import com.carbonldp.web.exceptions.NotImplementedException;
@@ -58,9 +59,10 @@ public class SesameContainerService extends AbstractSesameLDPService implements 
 					RDFSource childSource = containedResources.iterator().next();
 					container.getBaseModel().addAll( childSource.getBaseModel() );
 
-					for(RDFSource source : containedResources){
-						int eTag =ModelUtil.calculateETag( source );
-
+					for ( RDFSource source : containedResources ) {
+						int eTag = ModelUtil.calculateETag( source );
+						String valueEtag = HTTPUtil.formatStrongEtag( eTag );
+						ResponsePropertyFactory.getInstance().create( container, source.getURI(), valueEtag );
 					}
 					break;
 				case MEMBERSHIP_TRIPLES:
@@ -83,6 +85,12 @@ public class SesameContainerService extends AbstractSesameLDPService implements 
 					if ( memberResources == null || memberResources.isEmpty() ) break;
 					RDFSource memberSource = memberResources.iterator().next();
 					container.getBaseModel().addAll( memberSource.getBaseModel() );
+
+					for ( RDFSource source : memberResources ) {
+						int eTag = ModelUtil.calculateETag( source );
+						String valueEtag = HTTPUtil.formatStrongEtag( eTag );
+						ResponsePropertyFactory.getInstance().create( container, source.getURI(), valueEtag );
+					}
 					break;
 				case NON_READABLE_MEMBERSHIP_RESOURCE_TRIPLES:
 					if ( ! containerRetrievalPreferences.contains( APIPreferences.ContainerRetrievalPreference.MEMBERSHIP_TRIPLES ) ) {
