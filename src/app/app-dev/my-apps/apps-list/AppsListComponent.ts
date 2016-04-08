@@ -1,4 +1,4 @@
-import { Component, Input, ElementRef } from "angular2/core";
+import { Component, Input, ElementRef, Output, EventEmitter } from "angular2/core";
 import { CORE_DIRECTIVES } from "angular2/common";
 import { Router, ROUTER_DIRECTIVES } from "angular2/router";
 
@@ -19,6 +19,7 @@ export default class AppsListComponent {
 	element:ElementRef;
 	$element:JQuery;
 	@Input() apps:App[];
+	@Output() deleteApp:EventEmitter<App> = new EventEmitter();
 
 	headers:Header[] = [ {name: "Name", value: "name"}, {name: "Creation", value: "created"}, {name: "Modification Date", value: "modified"} ];
 	sortedColumn:string = null;
@@ -48,6 +49,10 @@ export default class AppsListComponent {
 		} );
 	}
 
+	onDeleteApp( event:any, appContext:App ):void {
+		event.stopPropagation();
+		this.deleteApp.emit( appContext );
+	}
 }
 export interface Header {
 	name:string;
