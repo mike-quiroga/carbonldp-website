@@ -45,8 +45,9 @@ public class SesameContainerService extends AbstractSesameLDPService implements 
 					container.getBaseModel().addAll( containerRepository.getContainmentTriples( containerURI ) );
 					break;
 				case CONTAINED_RESOURCES:
+					if ( containerRetrievalPreferences.contains( APIPreferences.ContainerRetrievalPreference.MEMBER_RESOURCES ) ) break;
 					Set<Statement> containedResourcesStatements = containerRepository.getContainmentTriples( containerURI );
-					Set<URI> children =  containedResourcesStatements
+					Set<URI> children = containedResourcesStatements
 						.stream()
 						.map( statement -> ValueUtil.getURI( statement.getObject() ) )
 						.collect( Collectors.toSet() );
