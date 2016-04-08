@@ -111,9 +111,8 @@ export default class AppsListView {
 			this.deleting = true;
 			this.deleteError = null;
 			this.deleteTries = 1;
-			this.deleteProgress = Math.ceil( ( this.deleteTries / this.deleteMaxTries) * 100 );
 			this.deleteProgressBar = this.deleteAppConfirmationModal.find( ".progress.bar" );
-			this.deleteProgressBar.progress( {percent: this.deleteProgress} );
+			this.updateProgressBar();
 			this.deleteApp( approvedApp ).then(
 				( response:HTTP.Response.Class ):void => {
 					this.toggleDeleteConfirmationModal();
@@ -123,14 +122,16 @@ export default class AppsListView {
 				( error:HTTPError.HTTPError ):void => {
 					let interval:any = setInterval( () => {
 						if ( this.deleteTries >= this.deleteMaxTries ) {
-							this.deleteTries = 1;
-							this.deleteProgress = 100;
-							this.deleteProgressBar.progress( {percent: this.deleteProgress} );
+							this.deleteTries = this.deleteMaxTries;
+							this.updateProgressBar();
+							this.deleting = false;
 							if ( ! this.deleteError ) {
 								this.toggleDeleteConfirmationModal();
+								this.apps.splice( this.apps.indexOf( approvedApp ), 1 );
+								this.searchApp( this.searchBox.val() );
+							} else {
+								// TODO: display error
 							}
-							this.apps.splice( this.apps.indexOf( approvedApp ), 1 );
-							this.searchApp( this.searchBox.val() );
 							Promise.resolve();
 							clearInterval( interval );
 						} else {
@@ -139,22 +140,26 @@ export default class AppsListView {
 							HTTP.Request.Service.get( this.askingApp.app.id, options ).then(
 								( response:HTTP.Response.Class ) => {
 									this.deleteTries ++;
-									this.deleteProgress = Math.ceil( ( this.deleteTries / this.deleteMaxTries) * 100 );
-									this.deleteProgressBar.progress( {percent: this.deleteProgress} );
 								},
 								( _error:HTTPError.HTTPError ) => {
-									console.log( "Error while fetching... %o", _error );
-									//if ( _error.response.status !== 0 || _error.response.status !== 404 ) {
-									//	this.deleteError = this.getErrorMessage( error );
-									//}
+									// console.log( "Error while fetching... %o", _error );
+									// TODO: write correct response when the error type can be identified
 									this.deleteTries = this.deleteMaxTries;
-									this.deleting = false;
+								}
+							).then(
+								():void => {
+									this.updateProgressBar();
 								}
 							);
 						}
 					}, 5000 );
 				} );
 		}
+	}
+
+	updateProgressBar():void {
+		this.deleteProgress = Math.ceil( ( this.deleteTries / this.deleteMaxTries) * 100 );
+		this.deleteProgressBar.progress( {percent: this.deleteProgress} );
 	}
 
 	deleteApp( appContext:any ):Promise<HTTP.Response.Class> {
