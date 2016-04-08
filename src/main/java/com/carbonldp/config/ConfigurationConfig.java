@@ -17,6 +17,9 @@ public class ConfigurationConfig {
 	private static final Resource[] DEV_PROPERTIES = new ClassPathResource[]{
 		new ClassPathResource( "dev-config.properties" ),
 	};
+	private static final Resource[] PROD_PROPERTIES = new ClassPathResource[]{
+			new ClassPathResource( "prod-config.properties" ),
+	};
 
 	@Profile( "local" )
 	public static class LocalConfig {
@@ -34,6 +37,16 @@ public class ConfigurationConfig {
 		public static PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer() {
 			PropertySourcesPlaceholderConfigurer configurer = new PropertySourcesPlaceholderConfigurer();
 			configurer.setLocations( DEV_PROPERTIES );
+			return configurer;
+		}
+	}
+	
+	@Profile( "prod" )
+	public static class ProdConfig {
+		@Bean
+		public static PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer() {
+			PropertySourcesPlaceholderConfigurer configurer = new PropertySourcesPlaceholderConfigurer();
+			configurer.setLocations( PROD_PROPERTIES );
 			return configurer;
 		}
 	}

@@ -12,18 +12,15 @@ import com.carbonldp.models.Infraction;
 import com.carbonldp.rdf.RDFDocumentFactory;
 import com.carbonldp.rdf.RDFResource;
 import com.carbonldp.spring.ServicesInvoker;
+import com.carbonldp.utils.HTTPUtil;
 import com.carbonldp.utils.ModelUtil;
 import com.carbonldp.utils.ValueUtil;
-import com.carbonldp.web.exceptions.NotImplementedException;
-import com.sun.glass.ui.EventLoop;
 import org.joda.time.DateTime;
 import org.openrdf.model.Statement;
 import org.openrdf.model.URI;
-import org.openrdf.model.Value;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.File;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -58,9 +55,10 @@ public class SesameContainerService extends AbstractSesameLDPService implements 
 					RDFSource childSource = containedResources.iterator().next();
 					container.getBaseModel().addAll( childSource.getBaseModel() );
 
-					for(RDFSource source : containedResources){
-						int eTag =ModelUtil.calculateETag( source );
-
+					for ( RDFSource source : containedResources ) {
+						int eTag = ModelUtil.calculateETag( source );
+						String valueETag = HTTPUtil.formatStrongEtag( eTag );
+						ResponsePropertyFactory.getInstance().create( container, source.getURI(), valueETag );
 					}
 					break;
 				case MEMBERSHIP_TRIPLES:
@@ -83,6 +81,11 @@ public class SesameContainerService extends AbstractSesameLDPService implements 
 					if ( memberResources == null || memberResources.isEmpty() ) break;
 					RDFSource memberSource = memberResources.iterator().next();
 					container.getBaseModel().addAll( memberSource.getBaseModel() );
+					for ( RDFSource source : memberResources ) {
+						int eTag = ModelUtil.calculateETag( source );
+						String valueETag = HTTPUtil.formatStrongEtag( eTag );
+						ResponsePropertyFactory.getInstance().create( container, source.getURI(), valueETag );
+					}
 					break;
 				case NON_READABLE_MEMBERSHIP_RESOURCE_TRIPLES:
 					if ( ! containerRetrievalPreferences.contains( APIPreferences.ContainerRetrievalPreference.MEMBERSHIP_TRIPLES ) ) {

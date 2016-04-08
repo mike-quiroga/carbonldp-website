@@ -45,6 +45,12 @@ public class SesameRDFSourceService extends AbstractSesameLDPService implements 
 	}
 
 	@Override
+	public String getETag( URI sourceURI ) {
+		if ( ! exists( sourceURI ) ) throw new ResourceDoesntExistException();
+		return sourceRepository.getETag( sourceURI );
+	}
+
+	@Override
 	public DateTime getModified( URI sourceURI ) {
 
 		if ( ! exists( sourceURI ) ) throw new ResourceDoesntExistException();
