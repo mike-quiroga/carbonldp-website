@@ -12,6 +12,7 @@ import com.carbonldp.models.Infraction;
 import com.carbonldp.rdf.RDFDocumentFactory;
 import com.carbonldp.rdf.RDFResource;
 import com.carbonldp.spring.ServicesInvoker;
+import com.carbonldp.utils.ModelUtil;
 import com.carbonldp.utils.ValueUtil;
 import com.carbonldp.web.exceptions.NotImplementedException;
 import com.sun.glass.ui.EventLoop;
@@ -57,6 +58,10 @@ public class SesameContainerService extends AbstractSesameLDPService implements 
 					RDFSource childSource = containedResources.iterator().next();
 					container.getBaseModel().addAll( childSource.getBaseModel() );
 
+					for(RDFSource source : containedResources){
+						int eTag =ModelUtil.calculateETag( source );
+
+					}
 					break;
 				case MEMBERSHIP_TRIPLES:
 					if ( containerRetrievalPreferences.contains( APIPreferences.ContainerRetrievalPreference.NON_READABLE_MEMBERSHIP_RESOURCE_TRIPLES ) ) {
