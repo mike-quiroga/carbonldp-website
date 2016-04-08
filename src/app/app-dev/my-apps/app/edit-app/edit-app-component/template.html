@@ -1,0 +1,41 @@
+<form [ngFormModel]="editAppForm"
+      [ngClass]="{ loading: submitting }"
+      class="ui large form segment editAppForm">
+	<div class="field" [ngClass]="{ error: (!name.pristine && !name.valid) }">
+		<label>Name:</label>
+		<input placeholder="e.g. My First App" type="text" ngControl="name" [(ngModel)]="_name">
+	</div>
+	<div class="field" [ngClass]="{ error: (!slug.pristine && !slug.valid) }">
+		<label>Slug (optional):</label>
+		<input class="slug" placeholder="e.g. my-first-app (optional)" type="text" ngControl="slug" [(ngModel)]="_slug" (blur)="slugLostControl($event)">
+	</div>
+	<div class="field" [ngClass]="{ error: (!description.pristine && !description.valid) }">
+		<label>Description:</label>
+		<textarea rows="2" placeholder="Description" ngControl="description"></textarea>
+	</div>
+	<button class="ui submit button"
+	        (click)="onSubmit(editAppForm.value, $event)">
+		Submit
+	</button>
+</form>
+<div class="ui bottom attached error message" *ngIf="canDisplayErrors()">
+	<ol class="ui list">
+		<li value="*" *ngIf="!name.pristine && name.hasError('required')">
+			The name is required.
+		</li>
+		<li value="*" *ngIf="!slug.pristine && slug.hasError('invalidSlug')">
+			Invalid slug. Please use only alphanumeric characters and/or dashes (-).
+		</li>
+		<li value="*" *ngIf="!description.pristine && description.hasError('required')">
+			The description is required.
+		</li>
+	</ol>
+</div>
+<div class="ui bottom attached error message" *ngIf="!!errorMessage">
+	<i class="close icon" (click)="closeMessage($event)"></i>
+	{{errorMessage}}
+</div>
+<div class="ui bottom attached success message" *ngIf="!!displaySuccessMessage">
+	<i class="close icon" (click)="closeMessage($event)"></i>
+	The app "<a [routerLink]="['/AppDev', 'MyApps', 'App', {slug: resolvedSlug}]">{{_name}}</a>" was edited successfully.
+</div>
