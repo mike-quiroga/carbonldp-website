@@ -1,30 +1,30 @@
-<form [ngFormModel]="subscribeForm" (ngSubmit)="onSubmit(subscribeForm.value, subscribeForm.valid, $event)">
-<!--action="https://app.icontact.com/icp/signup.php"-->
+<div class="ui orange inverted vertical center aligned segment">
+	<h2>Sign up to receive news and get notified when we launch!</h2>
 
-	<div class="ui action input">
-		<div class="field" [ngClass]="{ error: (email.touched && !email.valid) }">
-		<input name="fields_email" class="email" type="text" placeholder="your@email.com" [ngFormControl]="subscribeForm.controls[ 'email' ]">
+	<form ngNoForm method="post" name="icpsignup" id="icpsignup" accept-charset="UTF-8">
+
+		<div class="ui action input">
+			<input #email id=email name="fields_email" class="email" type="text" placeholder="your@email.com">
+			<button name="send" type="button" class="ui inverted secondary button submit" (click)="onSubmit(email)">SEND</button>
 		</div>
-		<button name="send" type="submit" class="ui inverted secondary button submit">SEND</button>
-	</div>
 
-	<div class="ui negative attached message segment" *ngIf="email.touched && !email.valid">
+		<input type="hidden" name="redirect" value={{redirectPage}}>
+		<input type="hidden" name="errorredirect" value={{errorPage}}>
+		<!--<input type="hidden" name="redirect" value="https://carbonldp.com/signup-thanks.html">-->
+		<!--<input type="hidden" name="errorredirect" value="http://www.icontact.com/www/signup/error.html">-->
+		<input type="hidden" name="listid" value="777887">
+		<input type="hidden" name="specialid:777887" value="MNSO">
+		<input type="hidden" name="clientid" value="581321">
+		<input type="hidden" name="formid" value="5139">
+		<input type="hidden" name="reallistid" value="1">
+		<input type="hidden" name="doubleopt" value="1">
+	</form>
+	<p>Promise, we don't spam :)</p>
+
+	<div class="ui negative attached message segment" *ngIf="show">
 		<ul class="list">
-			<li *ngIf="email.hasError('required')">email is required.</li>
-			<li *ngIf="!email.hasError('required') && email.hasError('invalidEmailAddress')">Enter a valid email address.</li>
+			<li *ngIf="emailRequired">email is required.</li>
+			<li *ngIf="emailInvalid">Enter a valid email address.</li>
 		</ul>
 	</div>
-
-	<!--<input type="hidden" name="redirect" value="http://carbonldp.com/signup-thanks.html">
-	<input type="hidden" name="errorredirect" value="http://www.icontact.com/www/signup/error.html">
-	<input type="hidden" name="listid" value="777887" ngControl="listid">
-	<input type="hidden" name="specialid:777887" value="MNSO" ngControl="specialid:777887">
-	<input type="hidden" name="clientid" value="581321" ngControl="clientid">
-	<input type="hidden" name="formid" value="5139" ngControl="formid">
-	<input type="hidden" name="reallistid" value="1" ngControl="reallistid">
-	<input type="hidden" name="doubleopt" value="1" ngControl="doubleopt">-->
-
-
-</form>
-
-
+</div>

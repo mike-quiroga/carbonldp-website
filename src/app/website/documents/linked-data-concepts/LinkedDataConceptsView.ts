@@ -17,12 +17,10 @@ import "./style.css!";
 export default class LinkedDataConceptsView {
 	element:ElementRef;
 	$element:JQuery;
-	title:Title;
 
 	constructor( element:ElementRef, title:Title ) {
 		this.element = element;
-		this.title = title;
-		this.title.setTitle( "Linked Data Concepts" );
+		title.setTitle( "Linked Data Concepts" );
 	}
 
 	ngAfterViewInit():void {

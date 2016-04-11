@@ -16,12 +16,10 @@ import template from "./template.html!";
 export default class InteractionModelsView {
 	element:ElementRef;
 	$element:JQuery;
-	title:Title;
 
 	constructor( element:ElementRef, title:Title ) {
 		this.element = element;
-		this.title = title;
-		this.title.setTitle( "Interaction models" );
+		title.setTitle( "Interaction models" );
 	}
 
 	ngAfterViewInit():void {

@@ -20,6 +20,7 @@ import AppComponent from "app/AppComponent";
 import { BLOG_PROVIDERS } from "app/website/blog/Blog";
 import { APP_DEV_PROVIDERS } from "app/app-dev/AppDev";
 
+import { Angulartics2 } from "angulartics2";
 
 let carbon:Carbon = new Carbon();
 carbon.setSetting( "domain", "<%- carbon.domain %>" );
@@ -34,8 +35,9 @@ bootstrap( AppComponent, [
 	FORM_PROVIDERS,
 	ROUTER_PROVIDERS,
 	HTTP_PROVIDERS,
+	Angulartics2,
 
-	provide( APP_BASE_HREF, { useValue: "<%- url.base %>" } ),
+	provide( APP_BASE_HREF, {useValue: "<%- url.base %>"} ),
 
 	providers,
 	BLOG_PROVIDERS,

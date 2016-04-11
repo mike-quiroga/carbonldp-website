@@ -21,13 +21,11 @@ import "./style.css!";
 export default class GettingStartedWithTheRestApiView {
 	element:ElementRef;
 	$element:JQuery;
-	title:Title;
 	sidebarService:SidebarService;
 
 	constructor( element:ElementRef, title:Title, sidebarService:SidebarService ) {
 		this.element = element;
-		this.title = title;
-		this.title.setTitle( "Getting started - Rest API" );
+		title.setTitle( "Getting started - Rest API" );
 		this.sidebarService = sidebarService;
 	}
 

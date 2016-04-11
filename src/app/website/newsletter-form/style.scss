@@ -34,4 +34,12 @@ newsletter-form {
 		color: white;
 	}
 
+	.ui.vertical.segment{
+		> h2 {
+			padding: 30px;
+		}
+		> p {
+			padding: 20px;
+		}
+	}
 }

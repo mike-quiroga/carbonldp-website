@@ -17,12 +17,10 @@ import template from "./template.html!";
 export default class LDPConceptsView {
 	element:ElementRef;
 	$element:JQuery;
-	title:Title;
 
 	constructor( element:ElementRef, title:Title ) {
 		this.element = element;
-		this.title = title;
-		this.title.setTitle( "LDP Concepts" );
+		title.setTitle( "LDP Concepts" );
 	}
 
 	ngAfterViewInit():void {
