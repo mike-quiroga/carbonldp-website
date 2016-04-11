@@ -58,6 +58,8 @@ export default class EditAppComponent {
 
 	ngOnInit():void {
 		console.log( this.context );
+		// "https://carbonldp.com/ns/v1/security#AllOrigins"
+		// this.context.app.allowsOrigin
 		this.$element = $( this.element.nativeElement );
 		this.$editAppForm = this.$element.find( "form.editAppForm" );
 		this.editAppForm = this.formBuilder.group( {

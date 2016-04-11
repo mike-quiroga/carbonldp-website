@@ -9,6 +9,32 @@
 		<label>Description:</label>
 		<textarea rows="2" placeholder="Description" ngControl="description"></textarea>
 	</div>
+	<label>Allowed domains:</label>
+	<div class="ui basic segment">
+		<div class="ui two column middle aligned very relaxed stackable grid">
+			<div class="column field">
+				<div class="ui toggle checkbox">
+					<input type="checkbox" name="allowAllOrigins">
+					<label>Allow all origins.</label>
+				</div>
+			</div>
+			<div class="ui vertical divider">
+				Or
+			</div>
+			<div class="column">
+				<div class="field">
+					<div class="ui action input">
+						<input placeholder="URL" type="text">
+						<button class="ui button">
+							<i class="plus icon"></i>
+						</button>
+					</div>
+				</div>
+				<select size="3" name="decision2" multiple>
+				</select>
+			</div>
+		</div>
+	</div>
 	<button class="ui submit button"
 	        (click)="onSubmit(editAppForm.value, $event)">
 		Submit
