@@ -6,7 +6,6 @@ import com.carbonldp.apps.context.AppContextHolder;
 import com.carbonldp.apps.roles.AppRoleRepository;
 import com.carbonldp.authentication.AgentAuthenticationToken;
 import com.carbonldp.authorization.Platform;
-import com.carbonldp.authorization.PlatformRole;
 import com.carbonldp.exceptions.InvalidResourceException;
 import com.carbonldp.exceptions.ResourceDoesntExistException;
 import com.carbonldp.exceptions.StupidityException;
@@ -41,7 +40,7 @@ public class SesameACLService extends AbstractSesameLDPService implements ACLSer
 
 	@Override
 	public void replace( ACL newACL ) {
-		URI aclURI = newACL.getURI();
+		URI aclURI = newACL.getIRI();
 
 		if ( ! sourceRepository.exists( aclURI ) ) throw new ResourceDoesntExistException();
 		validateACL( newACL );
@@ -69,7 +68,7 @@ public class SesameACLService extends AbstractSesameLDPService implements ACLSer
 		for ( Subject subject : subjectPermissionsToModify.keySet() ) {
 			for ( InheritanceType inheritanceType : subjectPermissionsToModify.get( subject ).keySet() ) {
 				for ( PermissionType permissionType : subjectPermissionsToModify.get( subject ).get( inheritanceType ).keySet() ) {
-					ACEDescription.SubjectType subjectType = RDFNodeUtil.findByURI( subject.getSubjectClass(), ACEDescription.SubjectType.class );
+					ACEDescription.SubjectType subjectType = RDFNodeUtil.findByIRI( subject.getSubjectClass(), ACEDescription.SubjectType.class );
 					Set<ACEDescription.Permission> permissions = subjectPermissionsToModify.get( subject ).get( inheritanceType ).get( permissionType );
 					if ( permissions.isEmpty() || permissions.size() == 0 ) continue;
 
@@ -147,10 +146,10 @@ public class SesameACLService extends AbstractSesameLDPService implements ACLSer
 	private Map<Subject, SubjectPermissions> getACLSubjects( ACL acl ) {
 		Map<Subject, SubjectPermissions> aclSubjects = new HashMap<>();
 
-		Set<ACE> aces = ACEFactory.getInstance().get( acl.getBaseModel(), acl.getACEntries(), acl.getURI() );
+		Set<ACE> aces = ACEFactory.getInstance().get( acl.getBaseModel(), acl.getACEntries(), acl.getIRI() );
 		addACEsSubjects( aces, InheritanceType.DIRECT, aclSubjects );
 
-		Set<ACE> inheritableAces = ACEFactory.getInstance().get( acl.getBaseModel(), acl.getInheritableEntries(), acl.getURI() );
+		Set<ACE> inheritableAces = ACEFactory.getInstance().get( acl.getBaseModel(), acl.getInheritableEntries(), acl.getIRI() );
 		addACEsSubjects( inheritableAces, InheritanceType.INHERITABLE, aclSubjects );
 
 		return aclSubjects;
@@ -177,8 +176,8 @@ public class SesameACLService extends AbstractSesameLDPService implements ACLSer
 	private void validateACL( ACL newAcl ) {
 		List<Infraction> infractions = ACLFactory.getInstance().validate( newAcl );
 
-		Set<ACE> aces = ACEFactory.getInstance().get( newAcl.getBaseModel(), newAcl.getACEntries(), newAcl.getURI() );
-		aces.addAll( ACEFactory.getInstance().get( newAcl.getBaseModel(), newAcl.getInheritableEntries(), newAcl.getURI() ) );
+		Set<ACE> aces = ACEFactory.getInstance().get( newAcl.getBaseModel(), newAcl.getACEntries(), newAcl.getIRI() );
+		aces.addAll( ACEFactory.getInstance().get( newAcl.getBaseModel(), newAcl.getInheritableEntries(), newAcl.getIRI() ) );
 		for ( ACE ace : aces ) {
 			infractions.addAll( ACEFactory.getInstance().validate( ace ) );
 		}
@@ -194,7 +193,7 @@ public class SesameACLService extends AbstractSesameLDPService implements ACLSer
 		Set<ACEDescription.Permission> affectedPermissions = getAffectedPermissions( subjectPermissionsToModify );
 
 		for ( Subject subject : affectedSubjects ) {
-			ACEDescription.SubjectType subjectClass = RDFNodeUtil.findByURI( subject.getSubjectClass(), ACEDescription.SubjectType.class );
+			ACEDescription.SubjectType subjectClass = RDFNodeUtil.findByIRI( subject.getSubjectClass(), ACEDescription.SubjectType.class );
 			if ( subjectClass == null ) throw new StupidityException( "There's no subjectClass property in the ACE" );
 			switch ( subjectClass ) {
 				case AGENT:
@@ -224,10 +223,10 @@ public class SesameACLService extends AbstractSesameLDPService implements ACLSer
 					break;
 				case PLATFORM_ROLE:
 					URI roleToModify = subject.getURI();
-					if ( ! roleToModify.equals( Platform.Role.ANONYMOUS.getURI() ) ) throw new NotImplementedException();
+					if ( ! roleToModify.equals( Platform.Role.ANONYMOUS.getIRI() ) ) throw new NotImplementedException();
 					break;
 				default:
-					throw new InvalidResourceException( new Infraction( 0x2005, "property", ACEDescription.Property.SUBJECT_CLASS.getURI().stringValue() ) );
+					throw new InvalidResourceException( new Infraction( 0x2005, "property", ACEDescription.Property.SUBJECT_CLASS.getIRI().stringValue() ) );
 
 			}
 		}

@@ -1,6 +1,6 @@
 package com.carbonldp.rdf;
 
-import com.carbonldp.utils.URIUtil;
+import com.carbonldp.utils.IRIUtil;
 import org.joda.time.DateTime;
 import org.openrdf.model.*;
 import org.openrdf.model.impl.URIImpl;
@@ -581,7 +581,7 @@ public class SesameRDFResourceRepository extends SesameRDFNodeRepository<URI> im
 	@Override
 	public void addType( URI resourceURI, URI type ) {
 		URI documentURI = getDocumentURI( resourceURI );
-		super.add( resourceURI, RDFResourceDescription.Property.TYPE.getURI(), type, documentURI );
+		super.add( resourceURI, RDFResourceDescription.Property.TYPE.getIRI(), type, documentURI );
 	}
 
 	@Override
@@ -597,8 +597,8 @@ public class SesameRDFResourceRepository extends SesameRDFNodeRepository<URI> im
 	}
 
 	private URI getDocumentURI( URI resourceURI ) {
-		if ( ! URIUtil.hasFragment( resourceURI ) ) return resourceURI;
-		return new URIImpl( URIUtil.getDocumentURI( resourceURI.stringValue() ) );
+		if ( ! IRIUtil.hasFragment( resourceURI ) ) return resourceURI;
+		return new URIImpl( IRIUtil.getDocumentIRI( resourceURI.stringValue() ) );
 	}
 
 }

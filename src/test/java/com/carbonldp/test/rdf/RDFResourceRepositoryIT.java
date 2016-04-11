@@ -860,7 +860,7 @@ public class RDFResourceRepositoryIT extends AbstractIT {
 		private final URI[] uris;
 
 		Property( String... uris ) {
-			if ( uris.length <= 0 ) throw new IllegalArgumentException( "At least one uri needs to be specified" );
+			if ( uris.length <= 0 ) throw new IllegalArgumentException( "At least one iri needs to be specified" );
 			this.uris = new URI[uris.length];
 			int i = 0;
 			for ( String uri : uris ) {
@@ -870,12 +870,12 @@ public class RDFResourceRepositoryIT extends AbstractIT {
 		}
 
 		@Override
-		public URI getURI() {
+		public URI getIRI() {
 			return this.uris[0];
 		}
 
 		@Override
-		public URI[] getURIs() {
+		public URI[] getIRIs() {
 			return this.uris;
 		}
 	}

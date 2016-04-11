@@ -92,10 +92,10 @@ public class SesameRDFDocumentRepository extends AbstractSesameRepository implem
 		Collection<RDFResource> resourceViews = document.getFragmentResources();
 		resourceViews.add( document.getDocumentResource() );
 		Collection<RDFBlankNode> blankNodes = document.getBlankNodes();
-		URI documentURI = document.getDocumentResource().getDocumentURI();
+		URI documentURI = document.getDocumentResource().getDocumentIRI();
 
 		for ( RDFResource resourceView : resourceViews ) {
-			URI resourceViewURI = resourceView.getURI();
+			URI resourceViewURI = resourceView.getIRI();
 			Map<URI, Set<Value>> propertiesMap = resourceView.getPropertiesMap();
 			for ( URI predicate : propertiesMap.keySet() ) {
 				Set<Value> values = propertiesMap.get( predicate );
@@ -118,10 +118,10 @@ public class SesameRDFDocumentRepository extends AbstractSesameRepository implem
 		Collection<RDFResource> resourceViews = document.getFragmentResources();
 		resourceViews.add( document.getDocumentResource() );
 		Collection<RDFBlankNode> blankNodes = document.getBlankNodes();
-		URI documentURI = document.getDocumentResource().getDocumentURI();
+		URI documentURI = document.getDocumentResource().getDocumentIRI();
 
 		for ( RDFResource resourceView : resourceViews ) {
-			URI resourceViewURI = resourceView.getURI();
+			URI resourceViewURI = resourceView.getIRI();
 			Map<URI, Set<Value>> propertiesMap = resourceView.getPropertiesMap();
 			for ( URI predicate : propertiesMap.keySet() ) {
 				Set<Value> values = propertiesMap.get( predicate );
@@ -147,10 +147,10 @@ public class SesameRDFDocumentRepository extends AbstractSesameRepository implem
 		Collection<RDFResource> resourceViews = document.getFragmentResources();
 		resourceViews.add( document.getDocumentResource() );
 		Collection<RDFBlankNode> blankNodes = document.getBlankNodes();
-		URI documentURI = document.getDocumentResource().getDocumentURI();
+		URI documentURI = document.getDocumentResource().getDocumentIRI();
 
 		for ( RDFResource resourceView : resourceViews ) {
-			URI resourceViewURI = resourceView.getURI();
+			URI resourceViewURI = resourceView.getIRI();
 			Map<URI, Set<Value>> propertiesMap = resourceView.getPropertiesMap();
 			for ( URI predicate : propertiesMap.keySet() ) {
 				Set<Value> values = propertiesMap.get( predicate );

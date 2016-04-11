@@ -22,7 +22,7 @@ public class InheritanceACLPermissionVoter extends AbstractACLPermissionVoter im
 		permissionsToGrant.addAll( permissions );
 
 		URI topParentURI = getTopParentURI();
-		List<URI> parentURIs = ACLUtil.getParentURIs( objectURI, topParentURI );
+		List<URI> parentURIs = ACLUtil.getParentIRIs( objectURI, topParentURI );
 		for ( URI parentURI : parentURIs ) {
 			ACL parentACL = aclRepository.getResourceACL( parentURI );
 			if ( parentACL == null || parentACL.isEmpty() ) continue;
@@ -56,6 +56,6 @@ public class InheritanceACLPermissionVoter extends AbstractACLPermissionVoter im
 
 	private URI getAppRootContainerURI() {
 		App app = AppContextHolder.getContext().getApplication();
-		return app.getRootContainerURI();
+		return app.getRootContainerIRI();
 	}
 }

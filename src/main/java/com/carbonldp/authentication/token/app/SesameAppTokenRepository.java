@@ -6,7 +6,7 @@ import com.carbonldp.ldp.containers.Container;
 import com.carbonldp.ldp.containers.ContainerRepository;
 import com.carbonldp.rdf.RDFResource;
 import com.carbonldp.repository.AbstractSesameRepository;
-import com.carbonldp.utils.URIUtil;
+import com.carbonldp.utils.IRIUtil;
 import org.openrdf.model.URI;
 import org.openrdf.spring.SesameConnectionFactory;
 import org.springframework.util.Assert;
@@ -34,7 +34,7 @@ public class SesameAppTokenRepository extends AbstractSesameRepository implement
 	}
 
 	private URI getContainerURI( URI rootContainerURI ) {
-		return URIUtil.createChildURI( rootContainerURI, containerSlug );
+		return IRIUtil.createChildURI( rootContainerURI, containerSlug );
 	}
 
 	public void setTokensContainerSlug( String slug ) {

@@ -28,7 +28,7 @@ public class AppContextPersistenceFilter extends AbstractUniqueFilter {
 		URI rootContainerURI = getRootContainerURI( request, response );
 
 		if ( rootContainerURI == null ) {
-			// The URI doesn't match an App's Root Container URI
+			// The IRI doesn't match an App's Root Container IRI
 			// TODO: Add more information
 			request.removeAttribute( FILTER_APPLIED );
 			response.setStatus( HttpStatus.NOT_FOUND.value() );

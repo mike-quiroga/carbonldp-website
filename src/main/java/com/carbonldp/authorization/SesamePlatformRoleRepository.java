@@ -6,8 +6,8 @@ import com.carbonldp.ldp.containers.ContainerRepository;
 import com.carbonldp.ldp.sources.RDFSource;
 import com.carbonldp.ldp.sources.RDFSourceRepository;
 import com.carbonldp.repository.AbstractSesameRepository;
+import com.carbonldp.utils.IRIUtil;
 import com.carbonldp.utils.RDFNodeUtil;
-import com.carbonldp.utils.URIUtil;
 import org.openrdf.model.URI;
 import org.openrdf.spring.SesameConnectionFactory;
 
@@ -41,7 +41,7 @@ public class SesamePlatformRoleRepository extends AbstractSesameRepository imple
 	}
 
 	public Set<Platform.Role> getRepresentations( Set<PlatformRole> platformRoleResources ) {
-		Set<URI> platformRolesURIs = URIUtil.getURIs( platformRoleResources );
-		return RDFNodeUtil.findByURIs( platformRolesURIs, Platform.Role.class );
+		Set<URI> platformRolesURIs = IRIUtil.getIRIs( platformRoleResources );
+		return RDFNodeUtil.findByIRIs( platformRolesURIs, Platform.Role.class );
 	}
 }

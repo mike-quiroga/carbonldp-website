@@ -142,7 +142,7 @@ public class SesameContainerRepository extends AbstractSesameLDPRepository imple
 	@Override
 	public Set<ContainerRetrievalPreference> getRetrievalPreferences( URI containerURI ) {
 		Set<URI> preferenceURIs = resourceRepository.getURIs( containerURI, ContainerDescription.Property.DEFAULT_RETRIEVE_PREFERENCE );
-		return RDFNodeUtil.findByURIs( preferenceURIs, ContainerRetrievalPreference.class );
+		return RDFNodeUtil.findByIRIs( preferenceURIs, ContainerRetrievalPreference.class );
 	}
 
 	@Override
@@ -182,8 +182,8 @@ public class SesameContainerRepository extends AbstractSesameLDPRepository imple
 	@Override
 	public void createChild( URI containerURI, RDFSource child, Type containerType ) {
 		documentRepository.addDocument( child.getDocument() );
-		addContainedResource( containerURI, child.getURI() );
-		getTypedRepository( containerType ).addMember( containerURI, child.getURI() );
+		addContainedResource( containerURI, child.getIRI() );
+		getTypedRepository( containerType ).addMember( containerURI, child.getIRI() );
 
 	}
 
@@ -198,11 +198,11 @@ public class SesameContainerRepository extends AbstractSesameLDPRepository imple
 
 		RDFRepresentation rdfRepresentation = RDFRepresentationFactory.getInstance().create( resourceURI );
 
-		rdfRepresentation.add( RDFSourceDescription.Property.DEFAULT_INTERACTION_MODEL.getURI(), RDFSourceDescription.Resource.CLASS.getURI() );
+		rdfRepresentation.add( RDFSourceDescription.Property.DEFAULT_INTERACTION_MODEL.getIRI(), RDFSourceDescription.Resource.CLASS.getIRI() );
 		rdfRepresentation.setTimestamps( creationTime );
 		rdfRepresentationRepository.create( rdfRepresentation, requestEntity, mediaType );
 
-		addContainedResource( containerURI, rdfRepresentation.getURI() );
+		addContainedResource( containerURI, rdfRepresentation.getIRI() );
 
 		addMember( containerURI, resourceURI );
 		sourceRepository.touch( containerURI, creationTime );
@@ -248,7 +248,7 @@ public class SesameContainerRepository extends AbstractSesameLDPRepository imple
 	}
 
 	private void addContainedResource( URI containerURI, URI resourceURI ) {
-		connectionTemplate.write( ( connection ) -> connection.add( containerURI, ContainerDescription.Property.CONTAINS.getURI(), resourceURI, containerURI ) );
+		connectionTemplate.write( ( connection ) -> connection.add( containerURI, ContainerDescription.Property.CONTAINS.getIRI(), resourceURI, containerURI ) );
 	}
 
 	@Override

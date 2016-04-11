@@ -1,6 +1,6 @@
 package com.carbonldp.repository;
 
-import com.carbonldp.utils.URIUtil;
+import com.carbonldp.utils.IRIUtil;
 import com.carbonldp.utils.ValueUtil;
 import org.openrdf.model.Resource;
 import org.openrdf.model.Statement;
@@ -43,9 +43,9 @@ public class DocumentGraphQueryResultHandler extends GraphQueryResultHandler {
 
 			}
 		} else {
-			URI subject = ValueUtil.getURI( subjectResource );
-			if ( ! URIUtil.hasFragment( subject ) ) context = subject;
-			else context = new URIImpl( URIUtil.getDocumentURI( subject.stringValue() ) );
+			URI subject = ValueUtil.getIRI( subjectResource );
+			if ( ! IRIUtil.hasFragment( subject ) ) context = subject;
+			else context = new URIImpl( IRIUtil.getDocumentIRI( subject.stringValue() ) );
 			documentStatement = valueFactory.createStatement( subject, statement.getPredicate(), statement.getObject(), context );
 			statements.add( documentStatement );
 			if ( ! noContextStatements.isEmpty() ) addContextToStatements( context, noContextStatements );
@@ -66,7 +66,7 @@ public class DocumentGraphQueryResultHandler extends GraphQueryResultHandler {
 		Iterator iterator = statements.iterator();
 		if ( iterator.hasNext() ) {
 			Statement statement = (Statement) iterator.next();
-			return ValueUtil.getURI( statement.getContext() );
+			return ValueUtil.getIRI( statement.getContext() );
 		}
 		return null;
 	}

@@ -32,7 +32,7 @@ public class AppsRDFPostHandler extends AbstractRDFPostRequestHandler<App> {
 		public ResponseEntity<Object> handleRequest( AbstractModel requestModel, HttpServletRequest request, HttpServletResponse response ) {
 			validateRequestModel( requestModel );
 
-			URI requestSubject = getRequestSubject( requestModel );
+			IRI requestSubject = getRequestSubject( requestModel );
 			RDFResource requestResource = new RDFResource( requestModel, requestSubject );
 
 			validateRequestResource( requestResource );
@@ -40,7 +40,7 @@ public class AppsRDFPostHandler extends AbstractRDFPostRequestHandler<App> {
 			String targetURI = getTargetURL( request );
 
 			if ( hasGenericRequestURI( requestResource ) ) {
-				URI forgedURI = forgeUniqueURI( requestResource, targetURI, request );
+				IRI forgedURI = forgeUniqueURI( requestResource, targetURI, request );
 				requestResource = renameResource( requestResource, forgedURI );
 			} else {
 				validateRequestResourceRelativeness( requestResource, targetURI );
@@ -49,10 +49,10 @@ public class AppsRDFPostHandler extends AbstractRDFPostRequestHandler<App> {
 			// TODO: After ensuring uniqueness, move this back into the "else" right above
 			checkRequestResourceAvailability( requestResource );
 
-			URI resourceContext = requestResource.getURI();
+			IRI resourceContext = requestResource.getIRI();
 			requestResource = addMissingContext( requestResource, resourceContext );
 
-			App app = new App( requestResource.getBaseModel(), requestResource.getURI() );
+			App app = new App( requestResource.getBaseModel(), requestResource.getIRI() );
 
 			appService.create( app );
 
@@ -68,23 +68,23 @@ public class AppsRDFPostHandler extends AbstractRDFPostRequestHandler<App> {
 		@Override
 		protected void validateRequestResource( Resource subject ) {
 			super.validateRequestResource( subject );
-			if ( URIUtil.hasFragment( ValueUtil.getURI( subject ) ) ) {
-				throw new BadRequestException( "The request resource cannot have a fragment in its URI." );
+			if ( IRIUtil.hasFragment( ValueUtil.getIRI( subject ) ) ) {
+				throw new BadRequestException( "The request resource cannot have a fragment in its IRI." );
 			}
 		}
 
-		private RDFResource addMissingContext( RDFResource requestResource, URI resourceContext ) {
+		private RDFResource addMissingContext( RDFResource requestResource, IRI resourceContext ) {
 			AbstractModel modifiedModel = ModelUtil.replaceContext( requestResource.getBaseModel(), null, resourceContext );
-			return new RDFResource( modifiedModel, requestResource.getURI() );
+			return new RDFResource( modifiedModel, requestResource.getIRI() );
 		}
 
 		private void checkRequestResourceAvailability( RDFResource requestResource ) {
-			if ( sourceWithURIExists( requestResource.getURI() ) ) {
-				throw new ConflictException( "The URI is already in use." );
+			if ( sourceWithURIExists( requestResource.getIRI() ) ) {
+				throw new ConflictException( "The IRI is already in use." );
 			}
 		}
 
-		private boolean sourceWithURIExists( URI sourceURI ) {
+		private boolean sourceWithURIExists( IRI sourceURI ) {
 			return sourceService.exists( sourceURI );
 		}
 

@@ -110,7 +110,7 @@ public abstract class AbstractGETRequestHandler extends AbstractLDPRequestHandle
 
 		setAppliedPreferenceHeaders();
 		ContainerDescription.Type containerType = ContainerFactory.getInstance().getContainerType( container );
-		if ( containerType == null ) containerType = containerService.getContainerType( container.getURI() );
+		if ( containerType == null ) containerType = containerService.getContainerType( container.getIRI() );
 
 		addContainerTypeLinkHeader( containerType );
 		addInteractionModelLinkHeader( containerType );
@@ -146,7 +146,7 @@ public abstract class AbstractGETRequestHandler extends AbstractLDPRequestHandle
 		Set<APIPreferences.ContainerRetrievalPreference> appliedPreferences = new HashSet<>();
 
 		for ( HTTPHeaderValue omitPreference : omitPreferences ) {
-			ContainerRetrievalPreference containerPreference = RDFNodeUtil.findByURI( omitPreference.getExtendingValue(), ContainerRetrievalPreference.class );
+			ContainerRetrievalPreference containerPreference = RDFNodeUtil.findByIRI( omitPreference.getExtendingValue(), ContainerRetrievalPreference.class );
 			if ( containerPreference == null ) continue;
 
 			// TODO: Add AppliedPreference Header
@@ -155,7 +155,7 @@ public abstract class AbstractGETRequestHandler extends AbstractLDPRequestHandle
 		}
 
 		for ( HTTPHeaderValue includePreference : includePreferences ) {
-			ContainerRetrievalPreference containerPreference = RDFNodeUtil.findByURI( includePreference.getExtendingValue(), ContainerRetrievalPreference.class );
+			ContainerRetrievalPreference containerPreference = RDFNodeUtil.findByIRI( includePreference.getExtendingValue(), ContainerRetrievalPreference.class );
 			if ( containerPreference == null ) continue;
 
 			// TODO: Add AppliedPreference Header

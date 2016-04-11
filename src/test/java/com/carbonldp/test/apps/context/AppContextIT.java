@@ -93,7 +93,7 @@ public class AppContextIT extends AbstractIT {
 		applicationContextTemplate.runInAppContext( app, new ActionCallback() {
 			@Override
 			public void run() {
-				assertEquals( AppContextHolder.getContext().getApplication().getURI().stringValue(), testResourceURI );
+				assertEquals( AppContextHolder.getContext().getApplication().getIRI().stringValue(), testResourceURI );
 
 			}
 
@@ -107,7 +107,7 @@ public class AppContextIT extends AbstractIT {
 		context.setApplication( app );
 		AppContextHolder.setContext( context );
 		app = AppContextHolder.getContext().getApplication();
-		assertEquals( app.getURI().stringValue(), testResourceURI );
+		assertEquals( app.getIRI().stringValue(), testResourceURI );
 
 		platformContextTemplate.runInPlatformContext( new ActionCallback() {
 			@Override
@@ -148,6 +148,6 @@ class ChainMock implements FilterChain {
 	public void doFilter( ServletRequest request, ServletResponse response ) throws IOException, ServletException {
 		// TODO Auto-generated method stub
 		App app = AppContextHolder.getContext().getApplication();
-		assertEquals( app.getURI().stringValue(), testResourceURI );
+		assertEquals( app.getIRI().stringValue(), testResourceURI );
 	}
 }

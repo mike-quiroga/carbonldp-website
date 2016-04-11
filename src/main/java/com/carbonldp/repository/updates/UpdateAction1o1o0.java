@@ -58,10 +58,10 @@ public class UpdateAction1o1o0 extends AbstractUpdateAction {
 			URI predicate = statement.getPredicate();
 			Value object = statement.getObject();
 
-			if ( ValueUtil.isURI( context ) && uriNeedsToBeChanged( ValueUtil.getURI( context ) ) ) context = changeProtocol( ValueUtil.getURI( context ) );
-			if ( ValueUtil.isURI( subject ) && uriNeedsToBeChanged( ValueUtil.getURI( subject ) ) ) subject = changeProtocol( ValueUtil.getURI( subject ) );
+			if ( ValueUtil.isIRI( context ) && uriNeedsToBeChanged( ValueUtil.getIRI( context ) ) ) context = changeProtocol( ValueUtil.getIRI( context ) );
+			if ( ValueUtil.isIRI( subject ) && uriNeedsToBeChanged( ValueUtil.getIRI( subject ) ) ) subject = changeProtocol( ValueUtil.getIRI( subject ) );
 			if ( uriNeedsToBeChanged( predicate ) ) predicate = changeProtocol( predicate );
-			if ( ValueUtil.isURI( object ) && uriNeedsToBeChanged( ValueUtil.getURI( object ) ) ) object = changeProtocol( ValueUtil.getURI( object ) );
+			if ( ValueUtil.isIRI( object ) && uriNeedsToBeChanged( ValueUtil.getIRI( object ) ) ) object = changeProtocol( ValueUtil.getIRI( object ) );
 
 			if ( context != statement.getContext() || subject != statement.getSubject() || predicate != statement.getPredicate() || object != statement.getObject() ) {
 				Statement newStatement = new ContextStatementImpl( subject, predicate, object, context );

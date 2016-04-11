@@ -134,9 +134,9 @@ public class SesameIndirectContainerRepository extends AbstractAccessPointReposi
 				if ( queryResult.hasNext() ) throw new IllegalArgumentException( new Infraction( 0x2004, "property", "The membership object" ) );
 			} else throw new IllegalArgumentException( 0x2105 );
 
-			if ( ! ValueUtil.isURI( membershipObject ) ) throw new IllegalArgumentException( new Infraction( 0x2005, "property", "The primary topic" ) );
+			if ( ! ValueUtil.isIRI( membershipObject ) ) throw new IllegalArgumentException( new Infraction( 0x2005, "property", "The primary topic" ) );
 
-			return ValueUtil.getURI( membershipObject );
+			return ValueUtil.getIRI( membershipObject );
 		} );
 	}
 

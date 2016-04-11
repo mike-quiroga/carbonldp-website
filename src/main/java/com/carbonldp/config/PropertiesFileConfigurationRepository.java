@@ -67,7 +67,7 @@ public class PropertiesFileConfigurationRepository extends AbstractComponent imp
 
 		int index = uri.indexOf( SLASH );
 		if ( index == - 1 ) {
-			// The timestamp is the last piece of the generic request URI
+			// The timestamp is the last piece of the generic request IRI
 			return null;
 		}
 		if ( ( index + 1 ) == uri.length() ) {

@@ -11,7 +11,6 @@ import com.carbonldp.models.HTTPHeaderValue;
 import com.carbonldp.models.Infraction;
 import com.carbonldp.rdf.RDFDocument;
 import com.carbonldp.utils.RDFNodeUtil;
-import com.carbonldp.utils.ValueUtil;
 import com.carbonldp.web.exceptions.BadRequestException;
 import com.carbonldp.web.exceptions.NotFoundException;
 import com.carbonldp.web.exceptions.NotImplementedException;
@@ -158,7 +157,7 @@ public class AbstractDELETERequestHandler extends AbstractLDPRequestHandler {
 			String preference = omitPreference.getMainValue();
 			if ( preference == null || preference.isEmpty() )
 				continue;
-			APIPreferences.ContainerDeletePreference containerPreference = RDFNodeUtil.findByURI( preference, APIPreferences.ContainerDeletePreference.class );
+			APIPreferences.ContainerDeletePreference containerPreference = RDFNodeUtil.findByIRI( preference, APIPreferences.ContainerDeletePreference.class );
 			if ( containerPreference == null ) continue;
 
 			appliedPreferences.add( containerPreference );
@@ -173,7 +172,7 @@ public class AbstractDELETERequestHandler extends AbstractLDPRequestHandler {
 				continue;
 			if ( includePreference.getMain() == null || includePreference.getMain().isEmpty() )
 				continue;
-			APIPreferences.ContainerDeletePreference containerPreference = RDFNodeUtil.findByURI( preference, APIPreferences.ContainerDeletePreference.class );
+			APIPreferences.ContainerDeletePreference containerPreference = RDFNodeUtil.findByIRI( preference, APIPreferences.ContainerDeletePreference.class );
 			if ( containerPreference == null ) continue;
 
 			// TODO: Add AppliedPreference Header

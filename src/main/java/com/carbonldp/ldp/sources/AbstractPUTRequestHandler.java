@@ -42,7 +42,7 @@ public abstract class AbstractPUTRequestHandler<E extends RDFResource> extends A
 	@Override
 	protected void validateDocumentResource( URI targetURI, RDFResource requestDocumentResource ) {
 		super.validateDocumentResource( targetURI, requestDocumentResource );
-		if ( ! targetURI.equals( requestDocumentResource.getURI() ) ) throw new BadRequestException( 0x2203 );
+		if ( ! targetURI.equals( requestDocumentResource.getIRI() ) ) throw new BadRequestException( 0x2203 );
 
 	}
 

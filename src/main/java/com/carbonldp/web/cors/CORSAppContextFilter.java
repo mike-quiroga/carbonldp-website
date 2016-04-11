@@ -34,7 +34,7 @@ public class CORSAppContextFilter extends CORSContextFilter {
 				} else if ( LiteralUtil.isRegularExpression( allowedOriginLiteral ) ) {
 					if ( Pattern.matches( allowedOriginLiteral.stringValue(), origin ) ) return true;
 				}
-			} else if ( ValueUtil.isURI( allowedOrigin ) ) {
+			} else if ( ValueUtil.isIRI( allowedOrigin ) ) {
 				return allowedOrigin.equals( new URIImpl( CS.Classes.ALL_ORIGINS ) );
 			}
 		}

@@ -42,7 +42,7 @@ public class AnonymousAuthenticationProvider extends AbstractComponent {
 	private Set<PlatformRole> getPlatformRoles() {
 		Set<URI> platformRoleURIs = new HashSet<>();
 		for ( Platform.Role platformRoleDescription : this.defaultPlatformRoleRepresentations ) {
-			platformRoleURIs.addAll( Arrays.asList( platformRoleDescription.getURIs() ) );
+			platformRoleURIs.addAll( Arrays.asList( platformRoleDescription.getIRIs() ) );
 		}
 		return platformRoleRepository.get( platformRoleURIs );
 	}

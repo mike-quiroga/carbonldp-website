@@ -139,7 +139,7 @@ public class SesameRDFSourceRepository extends AbstractSesameLDPRepository imple
 			"SELECT ?dim WHERE {" + NEW_LINE +
 			TAB + "GRAPH ?sourceURI {" + NEW_LINE +
 			TAB + TAB + RDFNodeUtil.generatePredicateStatement( "?sourceURI", "?dim", RDFSourceDescription.Property.DEFAULT_INTERACTION_MODEL ) + NEW_LINE +
-			TAB + TAB + "FILTER( isURI(?dim) )." + NEW_LINE +
+			TAB + TAB + "FILTER( isIRI(?dim) )." + NEW_LINE +
 			TAB + "}" + NEW_LINE +
 			"}" + NEW_LINE +
 			"LIMIT 1"
@@ -153,7 +153,7 @@ public class SesameRDFSourceRepository extends AbstractSesameLDPRepository imple
 		bindings.put( "sourceURI", sourceURI );
 		return sparqlTemplate.executeTupleQuery( getDefaultInteractionModelQuery, bindings, queryResult -> {
 			if ( ! queryResult.hasNext() ) return null;
-			else return ValueUtil.getURI( queryResult.next().getBinding( "dim" ).getValue() );
+			else return ValueUtil.getIRI( queryResult.next().getBinding( "dim" ).getValue() );
 		} );
 	}
 
@@ -166,7 +166,7 @@ public class SesameRDFSourceRepository extends AbstractSesameLDPRepository imple
 	@Override
 	public DateTime touch( URI sourceURI, DateTime modified ) {
 		resourceRepository.remove( sourceURI, RDFSourceDescription.Property.MODIFIED );
-		resourceRepository.add( sourceURI, RDFSourceDescription.Property.MODIFIED.getURI(), modified );
+		resourceRepository.add( sourceURI, RDFSourceDescription.Property.MODIFIED.getIRI(), modified );
 		return modified;
 	}
 
@@ -178,7 +178,7 @@ public class SesameRDFSourceRepository extends AbstractSesameLDPRepository imple
 
 	private void addAccessPoint( URI sourceURI, AccessPoint accessPoint ) {
 		connectionTemplate.write(
-			connection -> connection.add( sourceURI, RDFSourceDescription.Property.ACCESS_POINT.getURI(), accessPoint.getURI(), sourceURI )
+			connection -> connection.add( sourceURI, RDFSourceDescription.Property.ACCESS_POINT.getIRI(), accessPoint.getIRI(), sourceURI )
 		);
 	}
 
@@ -257,7 +257,7 @@ public class SesameRDFSourceRepository extends AbstractSesameLDPRepository imple
 			TAB + TAB + "FILTER( " + NEW_LINE +
 			TAB + TAB + TAB + "STRSTARTS( str(?predicate), str(?sourceURI) )" + NEW_LINE +
 			TAB + TAB + TAB + " || " + NEW_LINE +
-			TAB + TAB + TAB + "( isURI(?object) && STRSTARTS( str(?object), str(?sourceURI) ) )" + NEW_LINE +
+			TAB + TAB + TAB + "( isIRI(?object) && STRSTARTS( str(?object), str(?sourceURI) ) )" + NEW_LINE +
 			TAB + TAB + ")" + NEW_LINE +
 			TAB + "}." + NEW_LINE +
 			"}"

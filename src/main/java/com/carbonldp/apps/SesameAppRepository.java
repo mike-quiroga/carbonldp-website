@@ -9,7 +9,7 @@ import com.carbonldp.repository.AbstractSesameRepository;
 import com.carbonldp.repository.FileRepository;
 import com.carbonldp.repository.RepositoryService;
 import com.carbonldp.utils.RDFNodeUtil;
-import com.carbonldp.utils.URIUtil;
+import com.carbonldp.utils.IRIUtil;
 import org.openrdf.model.URI;
 import org.openrdf.model.Value;
 import org.openrdf.model.impl.URIImpl;
@@ -55,7 +55,7 @@ public class SesameAppRepository extends AbstractSesameRepository implements App
 
 		RDFSource appSource = sourceRepository.get( appURI );
 		if ( appSource == null ) return null;
-		return new App( appSource.getBaseModel(), appSource.getURI() );
+		return new App( appSource.getBaseModel(), appSource.getIRI() );
 	}
 
 	private static final String findByRootContainer_selector = "" +
@@ -84,7 +84,7 @@ public class SesameAppRepository extends AbstractSesameRepository implements App
 		app.setRepositoryID( repositoryID );
 
 		URI rootContainerURI = forgeRootContainerURI( app );
-		app.setRootContainerURI( rootContainerURI );
+		app.setRootContainerIRI( rootContainerURI );
 
 		return app;
 	}
@@ -114,7 +114,7 @@ public class SesameAppRepository extends AbstractSesameRepository implements App
 	}
 
 	private URI forgeRootContainerURI( App app ) {
-		String appSlug = URIUtil.getSlug( app.getURI() );
+		String appSlug = IRIUtil.getSlug( app.getIRI() );
 		return new URIImpl( appsEntryPoint + appSlug );
 	}
 

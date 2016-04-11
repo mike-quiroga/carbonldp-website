@@ -34,7 +34,7 @@ public class SesameACLServiceIT extends AbstractIT {
 	private ACEValues aceRA2F;
 	private URI aclUri;
 	private URI accessToURI;
-	private URI subjectClass = AppRoleDescription.Resource.CLASS.getURI();
+	private URI subjectClass = AppRoleDescription.Resource.CLASS.getIRI();
 
 	Set<ACEDescription.Permission> permissions2;
 	Set<ACEDescription.Permission> permissions1;
@@ -77,8 +77,8 @@ public class SesameACLServiceIT extends AbstractIT {
 		ACL acl = ACLFactory.create( aclUri, accessToURI );
 		addACEToACL( acl, aceRA2F, SesameACLService.InheritanceType.DIRECT );
 		addACEToACL( acl, aceRAD2T, SesameACLService.InheritanceType.INHERITABLE );
-		Set<ACE> aces = ACEFactory.getInstance().get( acl.getBaseModel(), acl.getACEntries(), acl.getURI() );
-		Set<ACE> inheritableAces = ACEFactory.getInstance().get( acl.getBaseModel(), acl.getInheritableEntries(), acl.getURI() );
+		Set<ACE> aces = ACEFactory.getInstance().get( acl.getBaseModel(), acl.getACEntries(), acl.getIRI() );
+		Set<ACE> inheritableAces = ACEFactory.getInstance().get( acl.getBaseModel(), acl.getInheritableEntries(), acl.getIRI() );
 
 		Map<SesameACLService.Subject, SesameACLService.SubjectPermissions> aclSubjects = new HashMap<>();
 

@@ -9,7 +9,7 @@ import com.carbonldp.rdf.RDFDocumentRepository;
 import com.carbonldp.rdf.RDFNodeEnum;
 import com.carbonldp.rdf.RDFResourceRepository;
 import com.carbonldp.utils.ACLUtil;
-import com.carbonldp.utils.URIUtil;
+import com.carbonldp.utils.IRIUtil;
 import com.carbonldp.web.exceptions.NotImplementedException;
 import org.openrdf.model.URI;
 import org.openrdf.model.impl.URIImpl;
@@ -39,7 +39,7 @@ public class SesameACLRepository extends AbstractSesameLDPRepository implements 
 
 	@Override
 	public ACL createACL( URI objectURI ) {
-		if ( URIUtil.hasFragment( objectURI ) ) {
+		if ( IRIUtil.hasFragment( objectURI ) ) {
 			throw new IllegalArgumentException( "Fragments can't be protected with an ACL" );
 		}
 		if ( ! sourceRepository.exists( objectURI ) ) {
@@ -47,7 +47,7 @@ public class SesameACLRepository extends AbstractSesameLDPRepository implements 
 		}
 		URI aclURI = getACLUri( objectURI );
 		ACL acl = ACLFactory.create( aclURI, objectURI );
-		resourceRepository.add( objectURI, RDFSourceDescription.Property.ACCESS_CONTROL_LIST.getURI(), aclURI );
+		resourceRepository.add( objectURI, RDFSourceDescription.Property.ACCESS_CONTROL_LIST.getIRI(), aclURI );
 		documentRepository.addDocument( acl.getDocument() );
 		return acl;
 	}
@@ -133,7 +133,7 @@ public class SesameACLRepository extends AbstractSesameLDPRepository implements 
 	}
 
 	private URI getACLUri( URI objectURI ) {
-		String objectURIString = URIUtil.getDocumentURI( objectURI.stringValue() );
+		String objectURIString = IRIUtil.getDocumentIRI( objectURI.stringValue() );
 
 		StringBuilder stringBuilder = new StringBuilder();
 		stringBuilder.append( objectURIString );

@@ -2,9 +2,9 @@ package com.carbonldp.authorization.acl;
 
 import com.carbonldp.authorization.acl.ACEDescription.Permission;
 import com.carbonldp.rdf.RDFNodeEnum;
-import com.carbonldp.rdf.URIObject;
+import com.carbonldp.rdf.IRIObject;
+import com.carbonldp.utils.IRIUtil;
 import com.carbonldp.utils.RDFNodeUtil;
-import com.carbonldp.utils.URIUtil;
 import org.apache.commons.lang3.NotImplementedException;
 import org.openrdf.model.URI;
 import org.openrdf.model.impl.URIImpl;
@@ -43,7 +43,7 @@ public class ACLPermissionEvaluator implements PermissionEvaluator {
 	@Override
 	public boolean hasPermission( Authentication authentication, Serializable targetId, String targetType, Object permission ) {
 		// TODO: Process the targetID and the targetType to compose the representative OURI
-		throw new NotImplementedException( "IDs and types cannot be converted to a URI (yet)." );
+		throw new NotImplementedException( "IDs and types cannot be converted to a IRI (yet)." );
 	}
 
 	private boolean hasPermission( Authentication authentication, URI objectURI, Object permission ) {
@@ -70,9 +70,9 @@ public class ACLPermissionEvaluator implements PermissionEvaluator {
 
 	private URI getObjectURI( Object targetDomainObject ) {
 		if ( targetDomainObject instanceof URI ) return (URI) targetDomainObject;
-		if ( targetDomainObject instanceof URIObject ) return ( (URIObject) targetDomainObject ).getURI();
+		if ( targetDomainObject instanceof IRIObject ) return ( (IRIObject) targetDomainObject ).getIRI();
 
-		// TODO: Support non URIObject objects (create/assign them one?)
+		// TODO: Support non IRIObject objects (create/assign them one?)
 
 		throw new IllegalArgumentException( "Unsupported domain object: " + targetDomainObject );
 
@@ -97,17 +97,17 @@ public class ACLPermissionEvaluator implements PermissionEvaluator {
 		Set<Permission> permissions = new HashSet<>();
 		for ( String permissionString : permissionStrings ) {
 			Permission permission;
-			if ( URIUtil.isHTTPUri( permissionString ) )
-				permission = RDFNodeUtil.findByURI( new URIImpl( permissionString ), Permission.class );
+			if ( IRIUtil.isHTTPIri( permissionString ) )
+				permission = RDFNodeUtil.findByIRI( new URIImpl( permissionString ), Permission.class );
 			else permission = Permission.valueOf( permissionString );
 
-			if ( permission == null ) throw new IllegalArgumentException( "Cannot recognize permission URI." );
+			if ( permission == null ) throw new IllegalArgumentException( "Cannot recognize permission IRI." );
 			permissions.add( permission );
 		}
 		return permissions;
 	}
 
 	private Set<Permission> resolvePermissions( URI[] permissionURIs ) {
-		return RDFNodeUtil.findByURIs( Arrays.asList( permissionURIs ), Permission.class );
+		return RDFNodeUtil.findByIRIs( Arrays.asList( permissionURIs ), Permission.class );
 	}
 }

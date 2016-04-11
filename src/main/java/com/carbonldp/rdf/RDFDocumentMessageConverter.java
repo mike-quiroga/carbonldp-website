@@ -2,7 +2,7 @@ package com.carbonldp.rdf;
 
 import com.carbonldp.config.ConfigurationRepository;
 import com.carbonldp.models.Infraction;
-import com.carbonldp.utils.URIUtil;
+import com.carbonldp.utils.IRIUtil;
 import com.carbonldp.utils.ValueUtil;
 import com.carbonldp.web.converters.ModelMessageConverter;
 import com.carbonldp.web.exceptions.BadRequestException;
@@ -94,7 +94,7 @@ public class RDFDocumentMessageConverter extends ModelMessageConverter<RDFDocume
 			Resource context = statement.getContext();
 			if ( context != null ) {
 				if ( ( explicit != null && ! explicit ) || ( this.context != null && ! this.context.equals( context ) ) ) throw new RDFHandlerException( "Two (or more) different contexts were found." );
-				if ( ! ValueUtil.isURI( context ) ) throw new RDFHandlerException( "BNodes are not valid contexts." );
+				if ( ! ValueUtil.isIRI( context ) ) throw new RDFHandlerException( "BNodes are not valid contexts." );
 				this.context = (URI) context;
 				this.explicit = true;
 			} else {
@@ -102,9 +102,9 @@ public class RDFDocumentMessageConverter extends ModelMessageConverter<RDFDocume
 				this.explicit = false;
 
 				Resource subjectResource = statement.getSubject();
-				if ( ValueUtil.isURI( subjectResource ) ) {
+				if ( ValueUtil.isIRI( subjectResource ) ) {
 					URI subject = (URI) subjectResource;
-					URI documentResource = new URIImpl( URIUtil.getDocumentURI( subject.stringValue() ) );
+					URI documentResource = new URIImpl( IRIUtil.getDocumentIRI( subject.stringValue() ) );
 					if ( this.context != null && ! this.context.equals( documentResource ) ) throw new RDFHandlerException( "Two (or more) different contexts were found." );
 					this.context = documentResource;
 				} else {

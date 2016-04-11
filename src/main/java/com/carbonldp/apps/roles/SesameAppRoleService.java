@@ -49,7 +49,7 @@ public class SesameAppRoleService extends AbstractSesameLDPService implements Ap
 	@Override
 	public void addAgent( URI appRoleAgentContainerURI, URI agent ) {
 		if ( ( ! sourceRepository.exists( appRoleAgentContainerURI ) ) ) throw new ResourceDoesntExistException();
-		if ( ! isAppAgent( agent ) && ! isPlatformAgent( agent ) ) throw new InvalidRDFTypeException( new Infraction( 0x2001, "rdf.type", AgentDescription.Resource.CLASS.getURI().stringValue() ) );
+		if ( ! isAppAgent( agent ) && ! isPlatformAgent( agent ) ) throw new InvalidRDFTypeException( new Infraction( 0x2001, "rdf.type", AgentDescription.Resource.CLASS.getIRI().stringValue() ) );
 
 		containerService.addMember( appRoleAgentContainerURI, agent );
 
@@ -59,7 +59,7 @@ public class SesameAppRoleService extends AbstractSesameLDPService implements Ap
 	}
 
 	public void create( AppRole appRole ) {
-		if ( sourceRepository.exists( appRole.getURI() ) ) throw new ResourceAlreadyExistsException();
+		if ( sourceRepository.exists( appRole.getIRI() ) ) throw new ResourceAlreadyExistsException();
 		validate( appRole );
 
 		containerService.createChild( appRoleRepository.getContainerURI(), appRole );
@@ -76,7 +76,7 @@ public class SesameAppRoleService extends AbstractSesameLDPService implements Ap
 	@Override
 	public void addChild( URI parentRoleURI, URI child ) {
 		if ( ( ! sourceRepository.exists( parentRoleURI ) ) || ( ! sourceRepository.exists( child ) ) ) throw new ResourceDoesntExistException();
-		if ( ! sourceRepository.is( child, AppRoleDescription.Resource.CLASS ) ) throw new InvalidResourceException( new Infraction( 0x2001, "rdf.type", AppRoleDescription.Resource.CLASS.getURI().stringValue() ) );
+		if ( ! sourceRepository.is( child, AppRoleDescription.Resource.CLASS ) ) throw new InvalidResourceException( new Infraction( 0x2001, "rdf.type", AppRoleDescription.Resource.CLASS.getIRI().stringValue() ) );
 
 		validateHasParent( child );
 		containerService.addMember( parentRoleURI, child );
@@ -104,7 +104,7 @@ public class SesameAppRoleService extends AbstractSesameLDPService implements Ap
 	private boolean isAgent( URI agent ) {
 		if ( sourceRepository.exists( agent ) ) {
 			if ( sourceRepository.is( agent, AgentDescription.Resource.CLASS ) ) return true;
-			else throw new InvalidRDFTypeException( new Infraction( 0x2001, "rdf.type", AgentDescription.Resource.CLASS.getURI().stringValue() ) );
+			else throw new InvalidRDFTypeException( new Infraction( 0x2001, "rdf.type", AgentDescription.Resource.CLASS.getIRI().stringValue() ) );
 		}
 		return false;
 	}
@@ -114,11 +114,11 @@ public class SesameAppRoleService extends AbstractSesameLDPService implements Ap
 	}
 
 	private void createAgentsContainer( AppRole appRole ) {
-		URI agentsContainerURI = appRoleRepository.getAgentsContainerURI( appRole.getURI() );
+		URI agentsContainerURI = appRoleRepository.getAgentsContainerURI( appRole.getIRI() );
 		RDFResource resource = new RDFResource( agentsContainerURI );
-		DirectContainer container = DirectContainerFactory.getInstance().create( resource, appRole.getURI(), AppRoleDescription.Property.AGENT.getURI() );
-		sourceRepository.createAccessPoint( appRole.getURI(), container );
-		aclRepository.createACL( container.getURI() );
+		DirectContainer container = DirectContainerFactory.getInstance().create( resource, appRole.getIRI(), AppRoleDescription.Property.AGENT.getIRI() );
+		sourceRepository.createAccessPoint( appRole.getIRI(), container );
+		aclRepository.createACL( container.getIRI() );
 	}
 
 	private void validateHasParent( URI childURI ) {

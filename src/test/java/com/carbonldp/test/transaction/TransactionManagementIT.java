@@ -24,7 +24,7 @@ public class TransactionManagementIT extends AbstractIT {
 	public void rollBackTest() {
 		URI agentsContainerURI = new URIImpl( Vars.getInstance().getAgentsContainerURL() );
 		Resource subject = agentsContainerURI;
-		URI predicate = AgentDescription.Property.EMAIL.getURI();
+		URI predicate = AgentDescription.Property.EMAIL.getIRI();
 		Value object = new LiteralImpl( "nestor@carbon.com" );
 		Resource context = subject;
 
@@ -50,7 +50,7 @@ public class TransactionManagementIT extends AbstractIT {
 	public void commitReadAndRemoveTest() {
 		URI agentsContainerURI = new URIImpl( Vars.getInstance().getAgentsContainerURL() );
 		Resource subject = agentsContainerURI;
-		URI predicate = AgentDescription.Property.EMAIL.getURI();
+		URI predicate = AgentDescription.Property.EMAIL.getIRI();
 		Value object = new LiteralImpl( "nestor@carbon.com" );
 		;
 		Resource context = subject;

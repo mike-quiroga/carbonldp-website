@@ -30,7 +30,7 @@ public abstract class SesameRDFNodeRepository<T extends Resource> extends Abstra
 	}
 
 	public boolean hasProperty( T subject, RDFNodeEnum pred, URI documentURI ) {
-		for ( URI predURI : pred.getURIs() ) {
+		for ( URI predURI : pred.getIRIs() ) {
 			boolean hasProperty = statementExists(
 				connection -> connection.getStatements( subject, predURI, null, false, documentURI )
 			);
@@ -44,7 +44,7 @@ public abstract class SesameRDFNodeRepository<T extends Resource> extends Abstra
 	}
 
 	public boolean contains( T subject, RDFNodeEnum pred, Value obj, URI documentURI ) {
-		for ( URI predURI : pred.getURIs() ) {
+		for ( URI predURI : pred.getIRIs() ) {
 			boolean hasProperty = statementExists(
 				connection -> connection.getStatements( subject, predURI, obj, false, documentURI )
 			);
@@ -54,8 +54,8 @@ public abstract class SesameRDFNodeRepository<T extends Resource> extends Abstra
 	}
 
 	public boolean contains( T subject, RDFNodeEnum pred, RDFNodeEnum obj, URI documentURI ) {
-		for ( URI predURI : pred.getURIs() ) {
-			for ( URI objValue : obj.getURIs() ) {
+		for ( URI predURI : pred.getIRIs() ) {
+			for ( URI objValue : obj.getIRIs() ) {
 				boolean hasProperty = statementExists(
 					connection -> connection.getStatements( subject, predURI, objValue, false, documentURI )
 				);
@@ -83,7 +83,7 @@ public abstract class SesameRDFNodeRepository<T extends Resource> extends Abstra
 	}
 
 	public Value getProperty( T subject, RDFNodeEnum pred, URI documentURI ) {
-		for ( URI predURI : pred.getURIs() ) {
+		for ( URI predURI : pred.getIRIs() ) {
 			Value object = connectionTemplate.readStatements(
 				connection -> connection.getStatements( subject, predURI, null, false, documentURI ),
 				statements -> {
@@ -111,7 +111,7 @@ public abstract class SesameRDFNodeRepository<T extends Resource> extends Abstra
 
 	public Set<Value> getProperties( T subject, RDFNodeEnum pred, URI documentURI ) {
 		Set<Value> properties = new HashSet<>();
-		for ( URI predURI : pred.getURIs() ) {
+		for ( URI predURI : pred.getIRIs() ) {
 			connectionTemplate.readStatements(
 				connection -> connection.getStatements( subject, predURI, null, false, documentURI ),
 				statements -> {
@@ -131,7 +131,7 @@ public abstract class SesameRDFNodeRepository<T extends Resource> extends Abstra
 			statements -> {
 				while ( statements.hasNext() ) {
 					Value value = statements.next().getObject();
-					if ( ValueUtil.isURI( value ) ) return ValueUtil.getURI( value );
+					if ( ValueUtil.isIRI( value ) ) return ValueUtil.getIRI( value );
 				}
 				return null;
 			}
@@ -139,13 +139,13 @@ public abstract class SesameRDFNodeRepository<T extends Resource> extends Abstra
 	}
 
 	public URI getURI( T subject, RDFNodeEnum pred, URI documentURI ) {
-		for ( URI predURI : pred.getURIs() ) {
+		for ( URI predURI : pred.getIRIs() ) {
 			URI object = connectionTemplate.readStatements(
 				connection -> connection.getStatements( subject, predURI, null, false, documentURI ),
 				statements -> {
 					while ( statements.hasNext() ) {
 						Value value = statements.next().getObject();
-						if ( ValueUtil.isURI( value ) ) return ValueUtil.getURI( value );
+						if ( ValueUtil.isIRI( value ) ) return ValueUtil.getIRI( value );
 					}
 					return null;
 				}
@@ -162,7 +162,7 @@ public abstract class SesameRDFNodeRepository<T extends Resource> extends Abstra
 				Set<URI> properties = new HashSet<>();
 				while ( statements.hasNext() ) {
 					Value value = statements.next().getObject();
-					if ( ValueUtil.isURI( value ) ) properties.add( ValueUtil.getURI( value ) );
+					if ( ValueUtil.isIRI( value ) ) properties.add( ValueUtil.getIRI( value ) );
 				}
 				return properties;
 			}
@@ -171,13 +171,13 @@ public abstract class SesameRDFNodeRepository<T extends Resource> extends Abstra
 
 	public Set<URI> getURIs( T subject, RDFNodeEnum pred, URI documentURI ) {
 		Set<URI> properties = new HashSet<>();
-		for ( URI predURI : pred.getURIs() ) {
+		for ( URI predURI : pred.getIRIs() ) {
 			connectionTemplate.readStatements(
 				connection -> connection.getStatements( subject, predURI, null, false, documentURI ),
 				statements -> {
 					while ( statements.hasNext() ) {
 						Value value = statements.next().getObject();
-						if ( ValueUtil.isURI( value ) ) properties.add( ValueUtil.getURI( value ) );
+						if ( ValueUtil.isIRI( value ) ) properties.add( ValueUtil.getIRI( value ) );
 					}
 					return null;
 				}
@@ -200,7 +200,7 @@ public abstract class SesameRDFNodeRepository<T extends Resource> extends Abstra
 	}
 
 	public Boolean getBoolean( T subject, RDFNodeEnum pred, URI documentURI ) {
-		for ( URI predURI : pred.getURIs() ) {
+		for ( URI predURI : pred.getIRIs() ) {
 			Boolean object = connectionTemplate.readStatements(
 				connection -> connection.getStatements( subject, predURI, null, false, documentURI ),
 				statements -> {
@@ -232,7 +232,7 @@ public abstract class SesameRDFNodeRepository<T extends Resource> extends Abstra
 
 	public Set<Boolean> getBooleans( T subject, RDFNodeEnum pred, URI documentURI ) {
 		Set<Boolean> properties = new HashSet<>();
-		for ( URI predURI : pred.getURIs() ) {
+		for ( URI predURI : pred.getIRIs() ) {
 			connectionTemplate.readStatements(
 				connection -> connection.getStatements( subject, predURI, null, false, documentURI ),
 				statements -> {
@@ -261,7 +261,7 @@ public abstract class SesameRDFNodeRepository<T extends Resource> extends Abstra
 	}
 
 	public Byte getByte( T subject, RDFNodeEnum pred, URI documentURI ) {
-		for ( URI predURI : pred.getURIs() ) {
+		for ( URI predURI : pred.getIRIs() ) {
 			Byte object = connectionTemplate.readStatements(
 				connection -> connection.getStatements( subject, predURI, null, false, documentURI ),
 				statements -> {
@@ -293,7 +293,7 @@ public abstract class SesameRDFNodeRepository<T extends Resource> extends Abstra
 
 	public Set<Byte> getBytes( T subject, RDFNodeEnum pred, URI documentURI ) {
 		Set<Byte> properties = new HashSet<>();
-		for ( URI predURI : pred.getURIs() ) {
+		for ( URI predURI : pred.getIRIs() ) {
 			connectionTemplate.readStatements(
 				connection -> connection.getStatements( subject, predURI, null, false, documentURI ),
 				statements -> {
@@ -324,7 +324,7 @@ public abstract class SesameRDFNodeRepository<T extends Resource> extends Abstra
 
 	public DateTime getDate( T subject, RDFNodeEnum pred, URI documentURI ) {
 		DateTimeFormatter parser = ISODateTimeFormat.dateTimeParser();
-		for ( URI predURI : pred.getURIs() ) {
+		for ( URI predURI : pred.getIRIs() ) {
 			DateTime object = connectionTemplate.readStatements(
 				connection -> connection.getStatements( subject, predURI, null, false, documentURI ),
 				statements -> {
@@ -359,7 +359,7 @@ public abstract class SesameRDFNodeRepository<T extends Resource> extends Abstra
 	public Set<DateTime> getDates( T subject, RDFNodeEnum pred, URI documentURI ) {
 		DateTimeFormatter parser = ISODateTimeFormat.dateTimeParser();
 		Set<DateTime> properties = new HashSet<>();
-		for ( URI predURI : pred.getURIs() ) {
+		for ( URI predURI : pred.getIRIs() ) {
 			connectionTemplate.readStatements(
 				connection -> connection.getStatements( subject, predURI, null, false, documentURI ),
 				statements -> {
@@ -388,7 +388,7 @@ public abstract class SesameRDFNodeRepository<T extends Resource> extends Abstra
 	}
 
 	public Double getDouble( T subject, RDFNodeEnum pred, URI documentURI ) {
-		for ( URI predURI : pred.getURIs() ) {
+		for ( URI predURI : pred.getIRIs() ) {
 			Double object = connectionTemplate.readStatements(
 				connection -> connection.getStatements( subject, predURI, null, false, documentURI ),
 				statements -> {
@@ -420,7 +420,7 @@ public abstract class SesameRDFNodeRepository<T extends Resource> extends Abstra
 
 	public Set<Double> getDoubles( T subject, RDFNodeEnum pred, URI documentURI ) {
 		Set<Double> properties = new HashSet<>();
-		for ( URI predURI : pred.getURIs() ) {
+		for ( URI predURI : pred.getIRIs() ) {
 			connectionTemplate.readStatements(
 				connection -> connection.getStatements( subject, predURI, null, false, documentURI ),
 				statements -> {
@@ -449,7 +449,7 @@ public abstract class SesameRDFNodeRepository<T extends Resource> extends Abstra
 	}
 
 	public Float getFloat( T subject, RDFNodeEnum pred, URI documentURI ) {
-		for ( URI predURI : pred.getURIs() ) {
+		for ( URI predURI : pred.getIRIs() ) {
 			Float object = connectionTemplate.readStatements(
 				connection -> connection.getStatements( subject, predURI, null, false, documentURI ),
 				statements -> {
@@ -481,7 +481,7 @@ public abstract class SesameRDFNodeRepository<T extends Resource> extends Abstra
 
 	public Set<Float> getFloats( T subject, RDFNodeEnum pred, URI documentURI ) {
 		Set<Float> properties = new HashSet<>();
-		for ( URI predURI : pred.getURIs() ) {
+		for ( URI predURI : pred.getIRIs() ) {
 			connectionTemplate.readStatements(
 				connection -> connection.getStatements( subject, predURI, null, false, documentURI ),
 				statements -> {
@@ -510,7 +510,7 @@ public abstract class SesameRDFNodeRepository<T extends Resource> extends Abstra
 	}
 
 	public Integer getInteger( T subject, RDFNodeEnum pred, URI documentURI ) {
-		for ( URI predURI : pred.getURIs() ) {
+		for ( URI predURI : pred.getIRIs() ) {
 			Integer object = connectionTemplate.readStatements(
 				connection -> connection.getStatements( subject, predURI, null, false, documentURI ),
 				statements -> {
@@ -542,7 +542,7 @@ public abstract class SesameRDFNodeRepository<T extends Resource> extends Abstra
 
 	public Set<Integer> getIntegers( T subject, RDFNodeEnum pred, URI documentURI ) {
 		Set<Integer> properties = new HashSet<>();
-		for ( URI predURI : pred.getURIs() ) {
+		for ( URI predURI : pred.getIRIs() ) {
 			connectionTemplate.readStatements(
 				connection -> connection.getStatements( subject, predURI, null, false, documentURI ),
 				statements -> {
@@ -571,7 +571,7 @@ public abstract class SesameRDFNodeRepository<T extends Resource> extends Abstra
 	}
 
 	public Long getLong( T subject, RDFNodeEnum pred, URI documentURI ) {
-		for ( URI predURI : pred.getURIs() ) {
+		for ( URI predURI : pred.getIRIs() ) {
 			Long object = connectionTemplate.readStatements(
 				connection -> connection.getStatements( subject, predURI, null, false, documentURI ),
 				statements -> {
@@ -603,7 +603,7 @@ public abstract class SesameRDFNodeRepository<T extends Resource> extends Abstra
 
 	public Set<Long> getLongs( T subject, RDFNodeEnum pred, URI documentURI ) {
 		Set<Long> properties = new HashSet<>();
-		for ( URI predURI : pred.getURIs() ) {
+		for ( URI predURI : pred.getIRIs() ) {
 			connectionTemplate.readStatements(
 				connection -> connection.getStatements( subject, predURI, null, false, documentURI ),
 				statements -> {
@@ -632,7 +632,7 @@ public abstract class SesameRDFNodeRepository<T extends Resource> extends Abstra
 	}
 
 	public Short getShort( T subject, RDFNodeEnum pred, URI documentURI ) {
-		for ( URI predURI : pred.getURIs() ) {
+		for ( URI predURI : pred.getIRIs() ) {
 			Short object = connectionTemplate.readStatements(
 				connection -> connection.getStatements( subject, predURI, null, false, documentURI ),
 				statements -> {
@@ -664,7 +664,7 @@ public abstract class SesameRDFNodeRepository<T extends Resource> extends Abstra
 
 	public Set<Short> getShorts( T subject, RDFNodeEnum pred, URI documentURI ) {
 		Set<Short> properties = new HashSet<>();
-		for ( URI predURI : pred.getURIs() ) {
+		for ( URI predURI : pred.getIRIs() ) {
 			connectionTemplate.readStatements(
 				connection -> connection.getStatements( subject, predURI, null, false, documentURI ),
 				statements -> {
@@ -693,7 +693,7 @@ public abstract class SesameRDFNodeRepository<T extends Resource> extends Abstra
 	}
 
 	public String getString( T subject, RDFNodeEnum pred, URI documentURI ) {
-		for ( URI predURI : pred.getURIs() ) {
+		for ( URI predURI : pred.getIRIs() ) {
 			String object = connectionTemplate.readStatements(
 				connection -> connection.getStatements( subject, predURI, null, false, documentURI ),
 				statements -> {
@@ -725,7 +725,7 @@ public abstract class SesameRDFNodeRepository<T extends Resource> extends Abstra
 
 	public Set<String> getStrings( T subject, RDFNodeEnum pred, URI documentURI ) {
 		Set<String> properties = new HashSet<>();
-		for ( URI predURI : pred.getURIs() ) {
+		for ( URI predURI : pred.getIRIs() ) {
 			connectionTemplate.readStatements(
 				connection -> connection.getStatements( subject, predURI, null, false, documentURI ),
 				statements -> {
@@ -760,7 +760,7 @@ public abstract class SesameRDFNodeRepository<T extends Resource> extends Abstra
 	}
 
 	public String getString( T subject, RDFNodeEnum pred, URI documentURI, Set<String> languages ) {
-		for ( URI predURI : pred.getURIs() ) {
+		for ( URI predURI : pred.getIRIs() ) {
 			String object = connectionTemplate.readStatements(
 				connection -> connection.getStatements( subject, predURI, null, false, documentURI ),
 				statements -> {
@@ -806,7 +806,7 @@ public abstract class SesameRDFNodeRepository<T extends Resource> extends Abstra
 
 	public Set<String> getStrings( T subject, RDFNodeEnum pred, URI documentURI, Set<String> languages ) {
 		Set<String> properties = new HashSet<>();
-		for ( URI predURI : pred.getURIs() ) {
+		for ( URI predURI : pred.getIRIs() ) {
 			connectionTemplate.readStatements(
 				connection -> connection.getStatements( subject, predURI, null, false, documentURI ),
 				statements -> {
@@ -906,7 +906,7 @@ public abstract class SesameRDFNodeRepository<T extends Resource> extends Abstra
 
 	public void remove( T subject, RDFNodeEnum pred, URI documentURI ) {
 		connectionTemplate.write( connection -> {
-			for ( URI predURI : pred.getURIs() ) {
+			for ( URI predURI : pred.getIRIs() ) {
 				connection.remove( subject, predURI, null, documentURI );
 			}
 		} );
@@ -1092,11 +1092,11 @@ public abstract class SesameRDFNodeRepository<T extends Resource> extends Abstra
 	}
 
 	public void addType( T subject, URI type, URI documentURI ) {
-		add( subject, RDFResourceDescription.Property.TYPE.getURI(), type, documentURI );
+		add( subject, RDFResourceDescription.Property.TYPE.getIRI(), type, documentURI );
 	}
 
 	public void removeType( T subject, URI type, URI documentURI ) {
-		for ( URI predURI : RDFResourceDescription.Property.TYPE.getURIs() ) {
+		for ( URI predURI : RDFResourceDescription.Property.TYPE.getIRIs() ) {
 			remove( subject, predURI, type, documentURI );
 		}
 	}

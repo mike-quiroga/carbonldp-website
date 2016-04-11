@@ -52,7 +52,7 @@ public abstract class AbstractTypedContainerRepository extends AbstractSesameLDP
 			.append( "SELECT ?hasMemberRelation WHERE {" ).append( NEW_LINE )
 			.append( TAB ).append( "GRAPH ?containerURI {" ).append( NEW_LINE )
 			.append( TAB ).append( TAB ).append( RDFNodeUtil.generatePredicateStatement( "?containerURI", "?hasMemberRelation", ContainerDescription.Property.HAS_MEMBER_RELATION ) ).append( NEW_LINE )
-			.append( TAB ).append( TAB ).append( "FILTER(isURI(?hasMemberRelation))." ).append( NEW_LINE )
+			.append( TAB ).append( TAB ).append( "FILTER(isIRI(?hasMemberRelation))." ).append( NEW_LINE )
 			.append( TAB ).append( "}" ).append( NEW_LINE )
 			.append( "}" ).append( NEW_LINE )
 			.append( "LIMIT 1" )
@@ -66,8 +66,8 @@ public abstract class AbstractTypedContainerRepository extends AbstractSesameLDP
 		bindings.put( "containerURI", containerURI );
 
 		return sparqlTemplate.executeTupleQuery( getHasMemberRelation_query, bindings, queryResult -> {
-			if ( ! queryResult.hasNext() ) return ContainerDescription.Default.HAS_MEMBER_RELATION.getURI();
-			else return ValueUtil.getURI( queryResult.next().getBinding( "hasMemberRelation" ).getValue() );
+			if ( ! queryResult.hasNext() ) return ContainerDescription.Default.HAS_MEMBER_RELATION.getIRI();
+			else return ValueUtil.getIRI( queryResult.next().getBinding( "hasMemberRelation" ).getValue() );
 		} );
 	}
 
@@ -79,7 +79,7 @@ public abstract class AbstractTypedContainerRepository extends AbstractSesameLDP
 			.append( "SELECT ?memberOfRelation WHERE {" ).append( NEW_LINE )
 			.append( TAB ).append( "GRAPH ?containerURI {" ).append( NEW_LINE )
 			.append( TAB ).append( TAB ).append( RDFNodeUtil.generatePredicateStatement( "?containerURI", "?memberOfRelation", ContainerDescription.Property.MEMBER_OF_RELATION ) ).append( NEW_LINE )
-			.append( TAB ).append( TAB ).append( "FILTER(isURI(?memberOfRelation))." ).append( NEW_LINE )
+			.append( TAB ).append( TAB ).append( "FILTER(isIRI(?memberOfRelation))." ).append( NEW_LINE )
 			.append( TAB ).append( "}" ).append( NEW_LINE )
 			.append( "}" ).append( NEW_LINE )
 			.append( "LIMIT 1" )
@@ -94,7 +94,7 @@ public abstract class AbstractTypedContainerRepository extends AbstractSesameLDP
 
 		return sparqlTemplate.executeTupleQuery( getMemberOfRelation_query, bindings, queryResult -> {
 			if ( ! queryResult.hasNext() ) return null;
-			else return ValueUtil.getURI( queryResult.next().getBinding( "memberOfRelation" ).getValue() );
+			else return ValueUtil.getIRI( queryResult.next().getBinding( "memberOfRelation" ).getValue() );
 		} );
 	}
 
@@ -132,7 +132,7 @@ public abstract class AbstractTypedContainerRepository extends AbstractSesameLDP
 			while ( queryResult.hasNext() ) {
 				BindingSet bindingSet = queryResult.next();
 				Value member = bindingSet.getValue( "members" );
-				if ( ValueUtil.isURI( member ) ) members.add( ValueUtil.getURI( member ) );
+				if ( ValueUtil.isIRI( member ) ) members.add( ValueUtil.getIRI( member ) );
 			}
 			return members;
 		} );
@@ -152,7 +152,7 @@ public abstract class AbstractTypedContainerRepository extends AbstractSesameLDP
 			while ( queryResult.hasNext() ) {
 				BindingSet bindingSet = queryResult.next();
 				Value member = bindingSet.getValue( "members" );
-				if ( ValueUtil.isURI( member ) ) members.add( ValueUtil.getURI( member ) );
+				if ( ValueUtil.isIRI( member ) ) members.add( ValueUtil.getIRI( member ) );
 			}
 
 			return members;
@@ -215,11 +215,11 @@ public abstract class AbstractTypedContainerRepository extends AbstractSesameLDP
 
 	static {
 		Collection<URI> values = new HashSet<>();
-		values.add( RDFSourceDescription.Property.TYPE.getURI() );
-		values.add( ContainerDescription.Property.HAS_MEMBER_RELATION.getURI() );
-		values.add( ContainerDescription.Property.MEMBER_OF_RELATION.getURI() );
-		values.add( ContainerDescription.Property.MEMBERSHIP_RESOURCE.getURI() );
-		values.add( ContainerDescription.Property.INSERTED_CONTENT_RELATION.getURI() );
+		values.add( RDFSourceDescription.Property.TYPE.getIRI() );
+		values.add( ContainerDescription.Property.HAS_MEMBER_RELATION.getIRI() );
+		values.add( ContainerDescription.Property.MEMBER_OF_RELATION.getIRI() );
+		values.add( ContainerDescription.Property.MEMBERSHIP_RESOURCE.getIRI() );
+		values.add( ContainerDescription.Property.INSERTED_CONTENT_RELATION.getIRI() );
 
 		getPropertiesQuery = "" +
 			"CONSTRUCT {" + NEW_LINE +

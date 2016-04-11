@@ -33,12 +33,12 @@ public class SesamePlatformAgentService extends SesameAgentsService {
 		addAgentToDefaultPlatformRole( agent );
 
 		platformAgentRepository.create( agent );
-		ACL agentACL = aclRepository.createACL( agent.getURI() );
+		ACL agentACL = aclRepository.createACL( agent.getIRI() );
 		addAgentDefaultPermissions( agent, agentACL );
 
 		if ( requireValidation ) {
 			AgentValidator validator = createAgentValidator( agent );
-			ACL validatorACL = aclRepository.createACL( validator.getURI() );
+			ACL validatorACL = aclRepository.createACL( validator.getIRI() );
 			addValidatorDefaultPermissions( validatorACL );
 
 			sendValidationEmail( agent, validator );
@@ -58,7 +58,7 @@ public class SesamePlatformAgentService extends SesameAgentsService {
 		URI defaultPlatformRoleURI = getDefaultPlatformRoleURI();
 		URI roleAgentsContainerURI = getRoleAgentsContainerURI( defaultPlatformRoleURI );
 
-		containerRepository.addMember( roleAgentsContainerURI, agent.getURI() );
+		containerRepository.addMember( roleAgentsContainerURI, agent.getIRI() );
 	}
 
 	private URI getRoleAgentsContainerURI( URI defaultPlatformRoleURI ) {
@@ -67,7 +67,7 @@ public class SesamePlatformAgentService extends SesameAgentsService {
 	}
 
 	private URI getDefaultPlatformRoleURI() {
-		return Platform.Role.APP_DEVELOPER.getURI();
+		return Platform.Role.APP_DEVELOPER.getIRI();
 	}
 
 	@Autowired

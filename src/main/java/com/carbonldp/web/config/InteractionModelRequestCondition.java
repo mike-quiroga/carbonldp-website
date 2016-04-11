@@ -73,7 +73,7 @@ public class InteractionModelRequestCondition extends AbstractRequestCondition<I
 		if ( filteredValues.size() == 0 ) return null;
 
 		String interactionModelURI = filteredValues.get( 0 ).getMainValue();
-		return RDFNodeUtil.findByURI( interactionModelURI, APIPreferences.InteractionModel.class );
+		return RDFNodeUtil.findByIRI( interactionModelURI, APIPreferences.InteractionModel.class );
 	}
 
 	@Override

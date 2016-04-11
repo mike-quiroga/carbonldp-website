@@ -2,7 +2,6 @@ package com.carbonldp.authorization.acl;
 
 import com.carbonldp.agents.AgentDescription;
 import com.carbonldp.apps.AppRoleDescription;
-import com.carbonldp.apps.context.AppContextHolder;
 import com.carbonldp.authentication.AbstractAuthenticationToken;
 import com.carbonldp.authentication.AgentAuthenticationToken;
 import com.carbonldp.authorization.PlatformPrivilegeDescription;
@@ -68,18 +67,18 @@ public final class SubjectsRetrievalStrategy {
 
 	private static void addAgent( Map<RDFNodeEnum, Set<URI>> subjects, AgentAuthenticationToken authentication ) {
 		Set<URI> agentURIs = new HashSet<>();
-		agentURIs.add( authentication.getAgent().getURI() );
+		agentURIs.add( authentication.getAgent().getIRI() );
 		subjects.put( AgentDescription.Resource.CLASS, agentURIs );
 	}
 
 	private static void addPlatformRoles( Map<RDFNodeEnum, Set<URI>> subjects, AbstractAuthenticationToken authentication ) {
-		Set<URI> platformRoleURIs = RDFNodeUtil.getAllURIs( authentication.getPlatformRoles() );
+		Set<URI> platformRoleURIs = RDFNodeUtil.getAllIRIs( authentication.getPlatformRoles() );
 		if ( platformRoleURIs.isEmpty() ) return;
 		subjects.put( PlatformRoleDescription.Resource.CLASS, platformRoleURIs );
 	}
 
 	private static void addPlatformPrivileges( Map<RDFNodeEnum, Set<URI>> subjects, AbstractAuthenticationToken authentication ) {
-		Set<URI> platformPrivilegeURIs = RDFNodeUtil.getAllURIs( authentication.getPlatformPrivileges() );
+		Set<URI> platformPrivilegeURIs = RDFNodeUtil.getAllIRIs( authentication.getPlatformPrivileges() );
 		if ( platformPrivilegeURIs.isEmpty() ) return;
 		subjects.put( PlatformPrivilegeDescription.Resource.CLASS, platformPrivilegeURIs );
 	}
@@ -94,7 +93,7 @@ public final class SubjectsRetrievalStrategy {
 	private static Set<URI> getURIs( Collection<? extends RDFResource> resources ) {
 		return resources
 			.stream()
-			.map( RDFResource::getURI )
+			.map( RDFResource::getIRI )
 			.collect( Collectors.toCollection( HashSet::new ) )
 			;
 	}

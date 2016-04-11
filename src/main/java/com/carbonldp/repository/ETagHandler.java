@@ -1,7 +1,7 @@
 package com.carbonldp.repository;
 
+import com.carbonldp.utils.IRIUtil;
 import com.carbonldp.utils.ModelUtil;
-import com.carbonldp.utils.URIUtil;
 import com.carbonldp.utils.ValueUtil;
 import org.openrdf.model.Resource;
 import org.openrdf.model.Statement;
@@ -49,9 +49,9 @@ public class ETagHandler extends GraphQueryResultHandler {
 				eTagValue = ( eTagValue == 0 ) ? currentValue : eTagValue ^ currentValue;
 			}
 		} else {
-			URI subject = ValueUtil.getURI( subjectResource );
-			if ( ! URIUtil.hasFragment( subject ) ) context = subject;
-			else context = new URIImpl( URIUtil.getDocumentURI( subject.stringValue() ) );
+			URI subject = ValueUtil.getIRI( subjectResource );
+			if ( ! IRIUtil.hasFragment( subject ) ) context = subject;
+			else context = new URIImpl( IRIUtil.getDocumentIRI( subject.stringValue() ) );
 			if ( ! contexts.contains( context ) ) contexts.add( context );
 			documentStatement = valueFactory.createStatement( subject, statement.getPredicate(), statement.getObject(), context );
 			int currentValue = ModelUtil.calculateStatementETag( documentStatement );
@@ -72,6 +72,6 @@ public class ETagHandler extends GraphQueryResultHandler {
 	private URI getContextFromPreviousStatements() {
 		if ( contexts.isEmpty() ) return null;
 		Resource context = contexts.get( contexts.size() - 1 );
-		return ValueUtil.getURI( context );
+		return ValueUtil.getIRI( context );
 	}
 }

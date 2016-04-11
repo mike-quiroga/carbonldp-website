@@ -12,9 +12,9 @@ import com.carbonldp.ldp.sources.RDFSourceDescription;
 import com.carbonldp.ldp.sources.RDFSourceService;
 import com.carbonldp.models.HTTPHeader;
 import com.carbonldp.models.HTTPHeaderValue;
+import com.carbonldp.rdf.IRIObject;
 import com.carbonldp.rdf.RDFNodeEnum;
 import com.carbonldp.rdf.RDFResource;
-import com.carbonldp.rdf.URIObject;
 import com.carbonldp.sparql.SPARQLService;
 import com.carbonldp.utils.*;
 import com.carbonldp.web.AbstractRequestHandler;
@@ -99,7 +99,7 @@ public abstract class AbstractLDPRequestHandler extends AbstractRequestHandler {
 		if ( size > 1 ) throw new BadRequestException( 0x5002 );
 
 		String interactionModelURI = filteredValues.get( 0 ).getMainValue();
-		InteractionModel interactionModel = RDFNodeUtil.findByURI( interactionModelURI, InteractionModel.class );
+		InteractionModel interactionModel = RDFNodeUtil.findByIRI( interactionModelURI, InteractionModel.class );
 		if ( interactionModel == null ) throw new BadRequestException( 0x5003 );
 		return interactionModel;
 	}
@@ -114,7 +114,7 @@ public abstract class AbstractLDPRequestHandler extends AbstractRequestHandler {
 		URI dimURI = sourceService.getDefaultInteractionModel( targetURI );
 		if ( dimURI == null ) return getDefaultInteractionModel();
 
-		InteractionModel sourceDIM = RDFNodeUtil.findByURI( dimURI, InteractionModel.class );
+		InteractionModel sourceDIM = RDFNodeUtil.findByIRI( dimURI, InteractionModel.class );
 		if ( sourceDIM == null ) return getDefaultInteractionModel();
 
 		if ( ! getSupportedInteractionModels().contains( sourceDIM ) ) return getDefaultInteractionModel();
@@ -139,19 +139,19 @@ public abstract class AbstractLDPRequestHandler extends AbstractRequestHandler {
 		response.setHeader( HTTPHeaders.ETAG, eTag );
 	}
 
-	protected void setLocationHeader( URIObject uriObject ) {
-		response.setHeader( HTTPHeaders.LOCATION, uriObject.getURI().stringValue() );
+	protected void setLocationHeader( IRIObject IRIObject ) {
+		response.setHeader( HTTPHeaders.LOCATION, IRIObject.getIRI().stringValue() );
 	}
 
 	protected void addTypeLinkHeader( RDFNodeEnum interactionModel ) {
-		Link link = new Link( interactionModel.getURI().stringValue() );
+		Link link = new Link( interactionModel.getIRI().stringValue() );
 		link.addRelationshipType( Consts.TYPE );
 
 		response.addHeader( HTTPHeaders.LINK, link.toString() );
 	}
 
 	protected void addInteractionModelLinkHeader( RDFNodeEnum interactionModel ) {
-		Link link = new Link( interactionModel.getURI().stringValue() );
+		Link link = new Link( interactionModel.getIRI().stringValue() );
 		link.addRelationshipType( Consts.INTERACTION_MODEL );
 
 		response.addHeader( HTTPHeaders.LINK, link.toString() );
@@ -188,11 +188,11 @@ public abstract class AbstractLDPRequestHandler extends AbstractRequestHandler {
 
 	protected void seekForOrphanFragments( AbstractModel requestModel, RDFResource requestDocumentResource ) {
 		for ( Resource subject : requestModel.subjects() ) {
-			if ( ! ValueUtil.isURI( subject ) ) continue;
-			URI subjectURI = ValueUtil.getURI( subject );
-			if ( ! URIUtil.hasFragment( subjectURI ) ) continue;
-			URI documentURI = new URIImpl( URIUtil.getDocumentURI( subjectURI.stringValue() ) );
-			if ( ! requestDocumentResource.getURI().equals( documentURI ) ) {
+			if ( ! ValueUtil.isIRI( subject ) ) continue;
+			URI subjectURI = ValueUtil.getIRI( subject );
+			if ( ! IRIUtil.hasFragment( subjectURI ) ) continue;
+			URI documentURI = new URIImpl( IRIUtil.getDocumentIRI( subjectURI.stringValue() ) );
+			if ( ! requestDocumentResource.getIRI().equals( documentURI ) ) {
 				throw new BadRequestException( "The request contains orphan fragments." );
 			}
 		}

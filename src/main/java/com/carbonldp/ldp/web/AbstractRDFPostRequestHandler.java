@@ -93,7 +93,7 @@ public abstract class AbstractRDFPostRequestHandler<E extends BasicContainer> ex
 		AccessPoint requestAccessPoint = getRequestAccessPoint( requestDocumentResource );
 
 		requestDocumentResource = getDocumentResourceWithFinalURI( requestAccessPoint, targetURI.stringValue() );
-		if ( ! requestDocumentResource.equals( requestAccessPoint.getURI() ) ) {
+		if ( ! requestDocumentResource.equals( requestAccessPoint.getIRI() ) ) {
 			requestAccessPoint = AccessPointFactory.getInstance().getAccessPoint( requestDocumentResource );
 		}
 
@@ -105,7 +105,7 @@ public abstract class AbstractRDFPostRequestHandler<E extends BasicContainer> ex
 	private AccessPoint getRequestAccessPoint( RDFResource requestDocumentResource ) {
 		for ( RDFNodeEnum invalidType : invalidTypesForRDFSources ) {
 			if ( requestDocumentResource.hasType( invalidType ) )
-				throw new BadRequestException( new Infraction( 0x200C, "rdf.type", invalidType.getURI().stringValue() ) );
+				throw new BadRequestException( new Infraction( 0x200C, "rdf.type", invalidType.getIRI().stringValue() ) );
 		}
 		if ( ! AccessPointFactory.getInstance().isAccessPoint( requestDocumentResource ) )
 			throw new BadRequestException( 0x2104 );
@@ -121,13 +121,13 @@ public abstract class AbstractRDFPostRequestHandler<E extends BasicContainer> ex
 		BasicContainer requestBasicContainer = getRequestBasicContainer( requestDocumentResource );
 
 		requestDocumentResource = getDocumentResourceWithFinalURI( requestBasicContainer, targetURI.stringValue() );
-		if ( ! requestDocumentResource.equals( requestBasicContainer.getURI() ) ) requestBasicContainer = new BasicContainer( requestDocumentResource );
+		if ( ! requestDocumentResource.equals( requestBasicContainer.getIRI() ) ) requestBasicContainer = new BasicContainer( requestDocumentResource );
 
 		E documentResourceView = getDocumentResourceView( requestBasicContainer );
 
 		createChild( targetURI, documentResourceView );
 
-		DateTime modified = sourceService.getModified( documentResourceView.getURI() );
+		DateTime modified = sourceService.getModified( documentResourceView.getIRI() );
 		return generateCreatedResponse( documentResourceView );
 	}
 
@@ -139,12 +139,12 @@ public abstract class AbstractRDFPostRequestHandler<E extends BasicContainer> ex
 	private BasicContainer getRequestBasicContainer( RDFResource requestDocumentResource ) {
 		for ( RDFNodeEnum invalidType : invalidTypesForContainers ) {
 			if ( requestDocumentResource.hasType( invalidType ) )
-				throw new BadRequestException( new Infraction( 0x200C, "rdf.type", invalidType.getURI().stringValue() ) );
+				throw new BadRequestException( new Infraction( 0x200C, "rdf.type", invalidType.getIRI().stringValue() ) );
 		}
 		BasicContainer basicContainer;
 
 		if ( ( ! ( requestDocumentResource.hasType( ContainerDescription.Resource.CLASS ) || requestDocumentResource.hasType( BasicContainerDescription.Resource.CLASS ) ) && ( ! hasInteractionModel( requestDocumentResource ) ) ) ) {
-			requestDocumentResource.add( RDFSourceDescription.Property.DEFAULT_INTERACTION_MODEL.getURI(), InteractionModel.RDF_SOURCE.getURI() );
+			requestDocumentResource.add( RDFSourceDescription.Property.DEFAULT_INTERACTION_MODEL.getIRI(), InteractionModel.RDF_SOURCE.getIRI() );
 		}
 		basicContainer = BasicContainerFactory.getInstance().create( requestDocumentResource );
 
@@ -204,7 +204,7 @@ public abstract class AbstractRDFPostRequestHandler<E extends BasicContainer> ex
 	}
 
 	private String forgeSlug( RDFResource documentResource, String parentURI, HttpServletRequest request ) {
-		String uriSlug = configurationRepository.getGenericRequestSlug( documentResource.getURI().stringValue() );
+		String uriSlug = configurationRepository.getGenericRequestSlug( documentResource.getIRI().stringValue() );
 		String slug = uriSlug != null ? uriSlug : request.getHeader( HTTPHeaders.SLUG );
 
 		if ( slug != null ) {
@@ -223,7 +223,7 @@ public abstract class AbstractRDFPostRequestHandler<E extends BasicContainer> ex
 	}
 
 	protected void validateRequestResourceRelativeness( RDFResource requestResource, String targetURI ) {
-		String resourceURI = requestResource.getURI().stringValue();
+		String resourceURI = requestResource.getIRI().stringValue();
 		targetURI = targetURI.endsWith( SLASH ) ? targetURI : targetURI.concat( SLASH );
 		if ( ! resourceURI.startsWith( targetURI ) ) {
 			throw new InvalidResourceURIException();
@@ -245,11 +245,11 @@ public abstract class AbstractRDFPostRequestHandler<E extends BasicContainer> ex
 			throw new BadRequestException( 0x2009 );
 		}
 
-		if ( sourceService.exists( requestResource.getURI() ) ) throw new ConflictException( 0x2008 );
+		if ( sourceService.exists( requestResource.getIRI() ) ) throw new ConflictException( 0x2008 );
 	}
 
 	protected RDFResource renameResource( RDFResource requestResource, URI forgedURI ) {
-		AbstractModel renamedModel = ModelUtil.replaceBase( requestResource.getBaseModel(), requestResource.getURI().stringValue(), forgedURI.stringValue() );
+		AbstractModel renamedModel = ModelUtil.replaceBase( requestResource.getBaseModel(), requestResource.getIRI().stringValue(), forgedURI.stringValue() );
 		return new RDFResource( renamedModel, forgedURI );
 	}
 

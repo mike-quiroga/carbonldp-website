@@ -17,7 +17,7 @@ public class SystemRoleACLPermissionVoter extends AbstractComponent implements A
 	public Vote vote( Map<RDFNodeEnum, Set<URI>> subjects, Set<Permission> permissions, URI objectURI ) {
 		if ( ! subjects.containsKey( PlatformRoleDescription.Resource.CLASS ) ) return Vote.ABSTAIN;
 		Set<URI> platformRoleURIs = subjects.get( PlatformRoleDescription.Resource.CLASS );
-		Set<Platform.Role> platformRoles = RDFNodeUtil.findByURIs( platformRoleURIs, Platform.Role.class );
+		Set<Platform.Role> platformRoles = RDFNodeUtil.findByIRIs( platformRoleURIs, Platform.Role.class );
 		if ( platformRoles.contains( Platform.Role.SYSTEM ) ) return Vote.GRANT;
 		return Vote.ABSTAIN;
 	}

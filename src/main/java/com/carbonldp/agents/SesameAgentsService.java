@@ -115,7 +115,7 @@ public abstract class SesameAgentsService extends AbstractSesameLDPService imple
 	private Map<String, Object> getEmailTemplateModel( Agent agent, AgentValidator validator ) {
 		Map<String, Object> model = new HashMap<>();
 
-		model.put( "validatorURI", validator.getURI() );
+		model.put( "validatorURI", validator.getIRI() );
 		// TODO: Finish
 
 		return model;

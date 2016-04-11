@@ -29,7 +29,7 @@ public class SesameContainerService extends AbstractSesameLDPService implements 
 	@Override
 	public Container get( URI containerURI, Set<APIPreferences.ContainerRetrievalPreference> containerRetrievalPreferences ) {
 		ContainerDescription.Type containerType = getContainerType( containerURI );
-		if ( containerType == null ) throw new InvalidRDFTypeException( ContainerDescription.Resource.CLASS.getURI().stringValue() );
+		if ( containerType == null ) throw new InvalidRDFTypeException( ContainerDescription.Resource.CLASS.getIRI().stringValue() );
 
 		Container container = ContainerFactory.getInstance().get( containerURI, containerType );
 		for ( APIPreferences.ContainerRetrievalPreference preference : containerRetrievalPreferences ) {
@@ -100,7 +100,7 @@ public class SesameContainerService extends AbstractSesameLDPService implements 
 		validateBasicContainer( basicContainer );
 
 		containerRepository.createChild( containerURI, basicContainer );
-		aclRepository.createACL( basicContainer.getURI() );
+		aclRepository.createACL( basicContainer.getIRI() );
 
 		sourceRepository.touch( containerURI, creationTime );
 

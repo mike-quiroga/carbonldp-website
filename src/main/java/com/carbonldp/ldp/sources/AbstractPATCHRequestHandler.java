@@ -78,12 +78,12 @@ public abstract class AbstractPATCHRequestHandler extends AbstractLDPRequestHand
 		if ( ! infractions.isEmpty() ) throw new BadRequestException( "The cp:PATCHRequest provided isn't valid." );
 	}
 
-	private void validateAdditionalResources( AbstractModel requestModel, PATCHRequest patchRequest, URI targetURI ) {
+	private void validateAdditionalResources( AbstractModel requestModel, PATCHRequest patchRequest, IRI targetURI ) {
 		requestModel.subjects()
 					.stream()
-					.filter( ValueUtil::isURI )
-					.map( ValueUtil::getURI )
-					.filter( uri -> ! uri.equals( patchRequest.getURI() ) )
+					.filter( ValueUtil::isIRI )
+					.map( ValueUtil::getIRI )
+					.filter( uri -> ! uri.equals( patchRequest.getIRI() ) )
 					.forEach( uri -> {
 						if ( ! belongsToRequestDomain( targetURI, uri ) ) throw new BadRequestException( "The resource is outside of the request's domain." );
 					} )
@@ -91,8 +91,8 @@ public abstract class AbstractPATCHRequestHandler extends AbstractLDPRequestHand
 	}
 
 
-	private boolean belongsToRequestDomain( URI targetURI, URI uri ) {
-		return URIUtil.isImmediateChild( targetURI.stringValue(), uri.stringValue() );
+	private boolean belongsToRequestDomain( IRI targetURI, IRI uri ) {
+		return IRIUtil.isImmediateChild( targetURI.stringValue(), uri.stringValue() );
 	}
 	*/
 
@@ -142,7 +142,7 @@ public abstract class AbstractPATCHRequestHandler extends AbstractLDPRequestHand
 
 	private DeleteActionDescription.Property getDeleteActionSpecialProperty( Statement actionStatement ) {
 		URI predicate = actionStatement.getPredicate();
-		return RDFNodeUtil.findByURI( predicate, DeleteActionDescription.Property.class );
+		return RDFNodeUtil.findByIRI( predicate, DeleteActionDescription.Property.class );
 	}
 
 	private void executeDeleteActionSpecialProperty( URI sourceURI, DeleteAction action, DeleteActionDescription.Property actionSpecialProperty ) {
@@ -182,7 +182,7 @@ public abstract class AbstractPATCHRequestHandler extends AbstractLDPRequestHand
 
 	private SetActionDescription.Property getSetActionSpecialProperty( Statement actionStatement ) {
 		URI predicate = actionStatement.getPredicate();
-		return RDFNodeUtil.findByURI( predicate, SetActionDescription.Property.class );
+		return RDFNodeUtil.findByIRI( predicate, SetActionDescription.Property.class );
 	}
 
 	private void executeSetActionSpecialProperty( URI sourceURI, SetAction action, SetActionDescription.Property actionSpecialProperty ) {
@@ -221,7 +221,7 @@ public abstract class AbstractPATCHRequestHandler extends AbstractLDPRequestHand
 
 	private AddActionDescription.Property getAddActionSpecialProperty( Statement actionStatement ) {
 		URI predicate = actionStatement.getPredicate();
-		return RDFNodeUtil.findByURI( predicate, AddActionDescription.Property.class );
+		return RDFNodeUtil.findByIRI( predicate, AddActionDescription.Property.class );
 	}
 
 	private void executeAddActionSpecialProperty( URI sourceURI, AddAction action, AddActionDescription.Property actionSpecialProperty ) {

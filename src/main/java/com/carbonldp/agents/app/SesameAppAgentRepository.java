@@ -8,7 +8,7 @@ import com.carbonldp.ldp.containers.Container;
 import com.carbonldp.ldp.containers.ContainerRepository;
 import com.carbonldp.ldp.sources.RDFSourceRepository;
 import com.carbonldp.rdf.RDFResource;
-import com.carbonldp.utils.URIUtil;
+import com.carbonldp.utils.IRIUtil;
 import org.openrdf.model.URI;
 import org.openrdf.spring.SesameConnectionFactory;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,13 +37,13 @@ public class SesameAppAgentRepository extends SesameAgentsRepository implements 
 
 	@Override
 	protected URI getAgentsContainerURI() {
-		URI appURI = AppContextHolder.getContext().getApplication().getRootContainerURI();
+		URI appURI = AppContextHolder.getContext().getApplication().getRootContainerIRI();
 		if ( appURI == null ) throw new RuntimeException( "app agent repository should be running in App context" );
 		return getContainerURI( appURI );
 	}
 
 	private URI getContainerURI( URI rootContainerURI ) {
-		return URIUtil.createChildURI( rootContainerURI, containerSlug );
+		return IRIUtil.createChildURI( rootContainerURI, containerSlug );
 	}
 
 	public void setAgentsContainerSlug( String slug ) {

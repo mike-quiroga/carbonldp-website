@@ -23,7 +23,7 @@ public class PATCHRequestUtil {
 
 	private void executeDeleteActions( URI sourceURI, Set<DeleteAction> actions ) {
 		for ( DeleteAction action : actions ) {
-			RDFResource resourceToDelete = new RDFResource( action.getSubjectURI() );
+			RDFResource resourceToDelete = new RDFResource( action.getSubjectIRI() );
 			for ( Statement actionStatement : action ) {
 				DeleteActionDescription.Property actionSpecialProperty = getDeleteActionSpecialProperty( actionStatement );
 				if ( actionSpecialProperty != null ) executeDeleteActionSpecialProperty( sourceURI, action, actionSpecialProperty );
@@ -37,7 +37,7 @@ public class PATCHRequestUtil {
 
 	private DeleteActionDescription.Property getDeleteActionSpecialProperty( Statement actionStatement ) {
 		URI predicate = actionStatement.getPredicate();
-		return RDFNodeUtil.findByURI( predicate, DeleteActionDescription.Property.class );
+		return RDFNodeUtil.findByIRI( predicate, DeleteActionDescription.Property.class );
 	}
 
 	private void executeDeleteActionSpecialProperty( URI sourceURI, DeleteAction action, DeleteActionDescription.Property actionSpecialProperty ) {
@@ -60,7 +60,7 @@ public class PATCHRequestUtil {
 		Set<RDFResource> resourcesToSet = new HashSet<>();
 
 		for ( SetAction action : actions ) {
-			RDFResource resourceToSet = new RDFResource( action.getSubjectURI() );
+			RDFResource resourceToSet = new RDFResource( action.getSubjectIRI() );
 			for ( Statement actionStatement : action ) {
 				SetActionDescription.Property actionSpecialProperty = getSetActionSpecialProperty( actionStatement );
 				if ( actionSpecialProperty != null ) executeSetActionSpecialProperty( sourceURI, action, actionSpecialProperty );
@@ -76,7 +76,7 @@ public class PATCHRequestUtil {
 
 	private SetActionDescription.Property getSetActionSpecialProperty( Statement actionStatement ) {
 		URI predicate = actionStatement.getPredicate();
-		return RDFNodeUtil.findByURI( predicate, SetActionDescription.Property.class );
+		return RDFNodeUtil.findByIRI( predicate, SetActionDescription.Property.class );
 	}
 
 	private void executeSetActionSpecialProperty( URI sourceURI, SetAction action, SetActionDescription.Property actionSpecialProperty ) {
@@ -98,7 +98,7 @@ public class PATCHRequestUtil {
 	private void executeAddActions( URI sourceURI, Collection<AddAction> actions ) {
 		Set<RDFResource> resourcesToAdd = new HashSet<>();
 		for ( AddAction action : actions ) {
-			RDFResource resourceToAdd = new RDFResource( action.getSubjectURI() );
+			RDFResource resourceToAdd = new RDFResource( action.getSubjectIRI() );
 			for ( Statement actionStatement : action ) {
 				AddActionDescription.Property actionSpecialProperty = getAddActionSpecialProperty( actionStatement );
 				if ( actionSpecialProperty != null ) executeAddActionSpecialProperty( sourceURI, action, actionSpecialProperty );
@@ -113,7 +113,7 @@ public class PATCHRequestUtil {
 
 	private AddActionDescription.Property getAddActionSpecialProperty( Statement actionStatement ) {
 		URI predicate = actionStatement.getPredicate();
-		return RDFNodeUtil.findByURI( predicate, AddActionDescription.Property.class );
+		return RDFNodeUtil.findByIRI( predicate, AddActionDescription.Property.class );
 	}
 
 	private void executeAddActionSpecialProperty( URI sourceURI, AddAction action, AddActionDescription.Property actionSpecialProperty ) {

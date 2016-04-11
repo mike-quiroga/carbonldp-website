@@ -15,8 +15,8 @@ import com.carbonldp.ldp.sources.RDFSourceRepository;
 import com.carbonldp.rdf.RDFDocumentRepository;
 import com.carbonldp.rdf.RDFResource;
 import com.carbonldp.rdf.RDFResourceRepository;
+import com.carbonldp.utils.IRIUtil;
 import com.carbonldp.utils.RDFNodeUtil;
-import com.carbonldp.utils.URIUtil;
 import com.carbonldp.utils.ValueUtil;
 import org.openrdf.model.URI;
 import org.openrdf.model.Value;
@@ -85,10 +85,10 @@ public class SesameAppRoleRepository extends AbstractSesameLDPRepository impleme
 		if ( AppContextHolder.getContext().isEmpty() ) throw new IllegalStateException( "This method needs to be called inside of an appContext." );
 		App app = AppContextHolder.getContext().getApplication();
 
-		URI appRolesContainerURI = getContainerURI( app.getRootContainerURI() );
+		URI appRolesContainerURI = getContainerURI( app.getRootContainerIRI() );
 
 		Map<String, Value> bindings = new HashMap<>();
-		bindings.put( "agent", agent.getURI() );
+		bindings.put( "agent", agent.getIRI() );
 
 		Set<URI> appRoleURIs = containerRepository.findMembers( appRolesContainerURI, getByAgent_query, bindings, appRolesContainerType );
 		Set<RDFSource> appRoleSources = sourceRepository.get( appRoleURIs );
@@ -104,7 +104,7 @@ public class SesameAppRoleRepository extends AbstractSesameLDPRepository impleme
 	@Override
 	public void addAgent( URI appRoleURI, Agent agent ) {
 		URI agentsContainer = getAgentsContainerURI( appRoleURI );
-		containerRepository.addMember( agentsContainer, agent.getURI() );
+		containerRepository.addMember( agentsContainer, agent.getIRI() );
 	}
 
 	@Override
@@ -123,23 +123,23 @@ public class SesameAppRoleRepository extends AbstractSesameLDPRepository impleme
 	public URI getContainerURI() {
 		AppContext appContext = AppContextHolder.getContext();
 		if ( appContext.isEmpty() ) throw new IllegalStateException( "The rootContainerURI cannot be retrieved from the platform context." );
-		URI rootContainerURI = appContext.getApplication().getRootContainerURI();
+		URI rootContainerURI = appContext.getApplication().getRootContainerIRI();
 		if ( rootContainerURI == null ) throw new IllegalStateException( "The app in the AppContext doesn't have a rootContainerURI." );
 		return getContainerURI( rootContainerURI );
 	}
 
 	private URI getContainerURI( URI rootContainerURI ) {
-		return URIUtil.createChildURI( rootContainerURI, containerSlug );
+		return IRIUtil.createChildURI( rootContainerURI, containerSlug );
 	}
 
 	public URI getAgentsContainerURI( URI appRoleURI ) {
-		return URIUtil.createChildURI( appRoleURI, agentsContainerSlug );
+		return IRIUtil.createChildURI( appRoleURI, agentsContainerSlug );
 	}
 
 	static {
 		getParentsQuery = "SELECT ?parentURI\n" +
 			"WHERE {\n" +
-			"  ?childURI <" + AppRoleDescription.Property.PARENT_ROLE.getURI().stringValue() + ">+ ?parentURI\n" +
+			"  ?childURI <" + AppRoleDescription.Property.PARENT_ROLE.getIRI().stringValue() + ">+ ?parentURI\n" +
 			"}";
 	}
 
@@ -153,7 +153,7 @@ public class SesameAppRoleRepository extends AbstractSesameLDPRepository impleme
 			while ( queryResult.hasNext() ) {
 				BindingSet bindingSet = queryResult.next();
 				Value member = bindingSet.getValue( "parentURI" );
-				if ( ValueUtil.isURI( member ) ) parents.add( ValueUtil.getURI( member ) );
+				if ( ValueUtil.isIRI( member ) ) parents.add( ValueUtil.getIRI( member ) );
 			}
 
 			return parents;

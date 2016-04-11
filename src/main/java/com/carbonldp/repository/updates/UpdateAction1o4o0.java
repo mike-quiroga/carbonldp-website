@@ -52,12 +52,12 @@ public class UpdateAction1o4o0 extends AbstractUpdateAction {
 			TAB + "GRAPH ?c" + NEW_LINE +
 			TAB + TAB + "{?s ?p ?o}" + NEW_LINE +
 			TAB + "FILTER isBlank(?s)." + NEW_LINE +
-			TAB + "FILTER NOT EXISTS {?s <" + RDFBlankNodeDescription.Property.BNODE_IDENTIFIER.getURI().stringValue() + "> ?o}" + NEW_LINE +
+			TAB + "FILTER NOT EXISTS {?s <" + RDFBlankNodeDescription.Property.BNODE_IDENTIFIER.getIRI().stringValue() + "> ?o}" + NEW_LINE +
 			"}";
 	}
 
 	private void addBNodeIdentifier() throws RepositoryException {
-		URI predicate = RDFBlankNodeDescription.Property.BNODE_IDENTIFIER.getURI();
+		URI predicate = RDFBlankNodeDescription.Property.BNODE_IDENTIFIER.getIRI();
 
 		sparqlTemplate.executeTupleQuery( getBNodesWithoutIDQuery, null, queryResult -> {
 			while ( queryResult.hasNext() ) {
@@ -65,7 +65,7 @@ public class UpdateAction1o4o0 extends AbstractUpdateAction {
 				BindingSet bindingSet = queryResult.next();
 				Value subject = bindingSet.getValue( "s" );
 				Value context = bindingSet.getValue( "c" );
-				connectionFactory.getConnection().add( ValueUtil.getBNode( subject ), predicate, object, ValueUtil.getURI( context ) );
+				connectionFactory.getConnection().add( ValueUtil.getBNode( subject ), predicate, object, ValueUtil.getIRI( context ) );
 			}
 			return true;
 		} );

@@ -19,7 +19,7 @@ import com.carbonldp.ldp.containers.ContainerService;
 import com.carbonldp.ldp.sources.RDFSourceService;
 import com.carbonldp.models.Infraction;
 import com.carbonldp.rdf.RDFResource;
-import com.carbonldp.utils.URIUtil;
+import com.carbonldp.utils.IRIUtil;
 import com.carbonldp.web.exceptions.NotFoundException;
 import org.openrdf.model.URI;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,12 +53,12 @@ public class SesameAppService extends AbstractSesameLDPService implements AppSer
 
 	@Override
 	public void create( App app ) {
-		if ( exists( app.getURI() ) ) throw new ResourceAlreadyExistsException();
+		if ( exists( app.getIRI() ) ) throw new ResourceAlreadyExistsException();
 		validate( app );
 
 		App createdApp = appRepository.createPlatformAppRepository( app );
 		containerService.createChild( appRepository.getPlatformAppContainerURI(), app );
-		ACL appACL = aclRepository.getResourceACL( createdApp.getURI() );
+		ACL appACL = aclRepository.getResourceACL( createdApp.getIRI() );
 		if ( appACL == null ) {
 			throw new IllegalStateException( "Resource couldn't be created" );
 		}
@@ -67,16 +67,16 @@ public class SesameAppService extends AbstractSesameLDPService implements AppSer
 			Container rootContainer = createRootContainer( app );
 			ACL rootContainerACL = createRootContainerACL( rootContainer );
 
-			Container appRolesContainer = appRoleRepository.createAppRolesContainer( rootContainer.getURI() );
+			Container appRolesContainer = appRoleRepository.createAppRolesContainer( rootContainer.getIRI() );
 			ACL appRolesContainerACL = createAppRolesContainerACL( appRolesContainer );
 
 			AppRole appAdminRole = createAppAdminRole( appRolesContainer );
 			ACL appAdminRoleACL = createAppAdminRoleACL( appAdminRole );
 
-			Container appAgentsContainer = appAgentRepository.createAppAgentsContainer( rootContainer.getURI() );
+			Container appAgentsContainer = appAgentRepository.createAppAgentsContainer( rootContainer.getIRI() );
 			ACL appAgentsContainerACL = createAppAgentsACL( appAgentsContainer );
 
-			Container appTokensContainer = appTokensRepository.createAppTokensContainer( rootContainer.getURI() );
+			Container appTokensContainer = appTokensRepository.createAppTokensContainer( rootContainer.getIRI() );
 			ACL appTokensContainerACL = createAppTokensACL( appTokensContainer );
 
 			addDefaultPermissions( appAdminRole, rootContainerACL );
@@ -88,7 +88,7 @@ public class SesameAppService extends AbstractSesameLDPService implements AppSer
 
 		addAppDefaultPermissions( adminRole, appACL );
 
-		sourceRepository.touch( createdApp.getURI() );
+		sourceRepository.touch( createdApp.getIRI() );
 	}
 
 	@Override
@@ -100,7 +100,7 @@ public class SesameAppService extends AbstractSesameLDPService implements AppSer
 
 	@Override
 	public void replace( App app ) {
-		URI appURI = app.getURI();
+		URI appURI = app.getIRI();
 		validate( app );
 
 		if ( ! exists( appURI ) ) throw new NotFoundException();
@@ -108,25 +108,25 @@ public class SesameAppService extends AbstractSesameLDPService implements AppSer
 	}
 
 	private BasicContainer createRootContainer( App app ) {
-		BasicContainer rootContainer = BasicContainerFactory.getInstance().create( new RDFResource( app.getRootContainerURI() ) );
+		BasicContainer rootContainer = BasicContainerFactory.getInstance().create( new RDFResource( app.getRootContainerIRI() ) );
 		containerRepository.create( rootContainer );
 		return rootContainer;
 	}
 
 	private ACL createRootContainerACL( Container rootContainer ) {
-		return aclRepository.createACL( rootContainer.getURI() );
+		return aclRepository.createACL( rootContainer.getIRI() );
 	}
 
 	private ACL createAppRolesContainerACL( Container appRolesContainer ) {
-		return aclRepository.createACL( appRolesContainer.getURI() );
+		return aclRepository.createACL( appRolesContainer.getIRI() );
 	}
 
 	private ACL createAppAgentsACL( Container appAgentsContainer ) {
-		return aclRepository.createACL( appAgentsContainer.getURI() );
+		return aclRepository.createACL( appAgentsContainer.getIRI() );
 	}
 
 	private ACL createAppTokensACL( Container appTokensContainer ) {
-		return aclRepository.createACL( appTokensContainer.getURI() );
+		return aclRepository.createACL( appTokensContainer.getIRI() );
 	}
 
 	private AppRole createAppAdminRole( Container appRolesContainer ) {
@@ -138,11 +138,11 @@ public class SesameAppService extends AbstractSesameLDPService implements AppSer
 	}
 
 	private URI getAppAdminRoleURI( Container appRolesContainer ) {
-		return URIUtil.createChildURI( appRolesContainer.getURI(), "app-admin/" );
+		return IRIUtil.createChildIRI( appRolesContainer.getIRI(), "app-admin/" );
 	}
 
 	private ACL createAppAdminRoleACL( AppRole appAdminRole ) {
-		return aclRepository.createACL( appAdminRole.getURI() );
+		return aclRepository.createACL( appAdminRole.getIRI() );
 	}
 
 	private void addCurrentAgentToAppAdminRole( AppRole appAdminRole ) {
@@ -150,7 +150,7 @@ public class SesameAppService extends AbstractSesameLDPService implements AppSer
 		if ( rawAuthentication == null ) throw new IllegalStateException( "The security context is empty" );
 		if ( ! ( rawAuthentication instanceof AgentAuthenticationToken ) ) throw new IllegalStateException( "The authentication token isn't supported." );
 		Agent agent = ( (AgentAuthenticationToken) rawAuthentication ).getAgent();
-		appRoleRepository.addAgent( appAdminRole.getURI(), agent );
+		appRoleRepository.addAgent( appAdminRole.getIRI(), agent );
 	}
 
 	private void addDefaultPermissions( AppRole appAdminRole, ACL rootContainerACL ) {

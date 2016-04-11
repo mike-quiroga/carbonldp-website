@@ -33,7 +33,7 @@ public abstract class AbstractAccessPointRepository extends AbstractTypedContain
 			.append( "SELECT ?membershipResource WHERE {" ).append( NEW_LINE )
 			.append( TAB ).append( "GRAPH ?containerURI {" ).append( NEW_LINE )
 			.append( TAB ).append( TAB ).append( RDFNodeUtil.generatePredicateStatement( "?containerURI", "?membershipResource", ContainerDescription.Property.MEMBERSHIP_RESOURCE ) ).append( NEW_LINE )
-			.append( TAB ).append( TAB ).append( "FILTER(isURI(?membershipResource))." ).append( NEW_LINE )
+			.append( TAB ).append( TAB ).append( "FILTER(isIRI(?membershipResource))." ).append( NEW_LINE )
 			.append( TAB ).append( "}" ).append( NEW_LINE )
 			.append( "}" ).append( NEW_LINE )
 			.append( "LIMIT 1" )
@@ -48,7 +48,7 @@ public abstract class AbstractAccessPointRepository extends AbstractTypedContain
 		bindings.put( "containerURI", containerURI );
 		return sparqlTemplate.executeTupleQuery( getMembershipResource_query, bindings, queryResult -> {
 			if ( ! queryResult.hasNext() ) return null;
-			else return ValueUtil.getURI( queryResult.next().getBinding( "membershipResource" ).getValue() );
+			else return ValueUtil.getIRI( queryResult.next().getBinding( "membershipResource" ).getValue() );
 		} );
 	}
 

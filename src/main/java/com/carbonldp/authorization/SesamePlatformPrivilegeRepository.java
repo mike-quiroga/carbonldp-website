@@ -5,8 +5,8 @@ import com.carbonldp.ldp.containers.ContainerRepository;
 import com.carbonldp.ldp.sources.RDFSource;
 import com.carbonldp.ldp.sources.RDFSourceRepository;
 import com.carbonldp.repository.AbstractSesameRepository;
+import com.carbonldp.utils.IRIUtil;
 import com.carbonldp.utils.RDFNodeUtil;
-import com.carbonldp.utils.URIUtil;
 import org.openrdf.model.URI;
 import org.openrdf.spring.SesameConnectionFactory;
 import org.springframework.transaction.annotation.Transactional;
@@ -44,14 +44,14 @@ public class SesamePlatformPrivilegeRepository extends AbstractSesameRepository 
 
 		Set<RDFSource> sources = sourceService.get( privilegeURIs );
 		for ( RDFSource source : sources ) {
-			privileges.add( new PlatformPrivilege( source.getBaseModel(), source.getURI() ) );
+			privileges.add( new PlatformPrivilege( source.getBaseModel(), source.getIRI() ) );
 		}
 
 		return privileges;
 	}
 
 	public Set<Platform.Privilege> getRepresentations( Set<PlatformPrivilege> platformPrivilegeResources ) {
-		Set<URI> privilegeURIs = URIUtil.getURIs( platformPrivilegeResources );
-		return RDFNodeUtil.findByURIs( privilegeURIs, Platform.Privilege.class );
+		Set<URI> privilegeURIs = IRIUtil.getIRIs( platformPrivilegeResources );
+		return RDFNodeUtil.findByIRIs( privilegeURIs, Platform.Privilege.class );
 	}
 }
