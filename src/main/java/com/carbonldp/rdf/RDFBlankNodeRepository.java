@@ -1,12 +1,7 @@
 package com.carbonldp.rdf;
 
-import org.joda.time.DateTime;
 import org.openrdf.model.BNode;
-import org.openrdf.model.URI;
-import org.openrdf.model.Value;
-
-import java.util.Collection;
-import java.util.Set;
+import org.openrdf.model.IRI;
 
 /**
  * @author NestorVenegas
@@ -14,5 +9,5 @@ import java.util.Set;
  */
 public interface RDFBlankNodeRepository extends RDFNodeRepository<BNode> {
 
-	public BNode get( String identifier, URI documentURI );
+	public BNode get( String identifier, IRI documentIRI );
 }

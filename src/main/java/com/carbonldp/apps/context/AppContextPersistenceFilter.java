@@ -3,15 +3,15 @@ package com.carbonldp.apps.context;
 import com.carbonldp.Vars;
 import com.carbonldp.apps.App;
 import com.carbonldp.web.AbstractUniqueFilter;
-import org.openrdf.model.URI;
-import org.openrdf.model.impl.URIImpl;
+import org.openrdf.model.IRI;
+
+import org.openrdf.model.impl.SimpleValueFactory;
 import org.springframework.http.HttpStatus;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import static com.carbonldp.Consts.EMPTY_STRING;
-import static com.carbonldp.Consts.SLASH;
+import static com.carbonldp.Consts.*;
 
 public class AppContextPersistenceFilter extends AbstractUniqueFilter {
 	public static final String FILTER_APPLIED = "__carbon_acpf_applied";
@@ -25,9 +25,9 @@ public class AppContextPersistenceFilter extends AbstractUniqueFilter {
 
 	@Override
 	protected void applyFilter( HttpServletRequest request, HttpServletResponse response ) {
-		URI rootContainerURI = getRootContainerURI( request, response );
+		IRI rootContainerIRI = getRootContainerIRI( request, response );
 
-		if ( rootContainerURI == null ) {
+		if ( rootContainerIRI == null ) {
 			// The IRI doesn't match an App's Root Container IRI
 			// TODO: Add more information
 			request.removeAttribute( FILTER_APPLIED );
@@ -35,7 +35,7 @@ public class AppContextPersistenceFilter extends AbstractUniqueFilter {
 			return;
 		}
 
-		App app = appContextRepository.getApp( rootContainerURI );
+		App app = appContextRepository.getApp( rootContainerIRI );
 
 		if ( app == null ) {
 			// TODO: Add more information
@@ -57,26 +57,26 @@ public class AppContextPersistenceFilter extends AbstractUniqueFilter {
 		if ( LOG.isDebugEnabled() ) LOG.debug( "AppContext now cleared, as request processing completed" );
 	}
 
-	private URI getRootContainerURI( HttpServletRequest httpRequest, HttpServletResponse httpResponse ) {
-		String requestURI = httpRequest.getRequestURI();
-		requestURI = requestURI.startsWith( SLASH ) ? requestURI.substring( 1 ) : requestURI;
+	private IRI getRootContainerIRI( HttpServletRequest httpRequest, HttpServletResponse httpResponse ) {
+		String requestIRI = httpRequest.getRequestURI();
+		requestIRI = requestIRI.startsWith( SLASH ) ? requestIRI.substring( 1 ) : requestIRI;
 
-		requestURI = requestURI.startsWith( Vars.getInstance().getMainContainer() ) ? requestURI.substring( Vars.getInstance().getMainContainer().length() ) : requestURI;
+		requestIRI = requestIRI.startsWith( Vars.getInstance().getMainContainer() ) ? requestIRI.substring( Vars.getInstance().getMainContainer().length() ) : requestIRI;
 
-		if ( ! requestURI.startsWith( Vars.getInstance().getAppsEntryPoint() ) ) return null;
+		if ( ! requestIRI.startsWith( Vars.getInstance().getAppsEntryPoint() ) ) return null;
 
-		requestURI = requestURI.replace( Vars.getInstance().getAppsEntryPoint(), EMPTY_STRING );
+		requestIRI = requestIRI.replace( Vars.getInstance().getAppsEntryPoint(), EMPTY_STRING );
 
-		if ( requestURI.isEmpty() ) return null;
+		if ( requestIRI.isEmpty() ) return null;
 
 		String applicationSlug;
-		int slashIndex = requestURI.indexOf( SLASH );
-		if ( slashIndex == - 1 ) applicationSlug = requestURI;
-		else applicationSlug = requestURI.substring( 0, slashIndex );
+		int slashIndex = requestIRI.indexOf( SLASH );
+		if ( slashIndex == - 1 ) applicationSlug = requestIRI;
+		else applicationSlug = requestIRI.substring( 0, slashIndex );
 
 		StringBuilder uriBuilder = new StringBuilder();
 		uriBuilder.append( Vars.getInstance().getAppsEntryPointURL() ).append( applicationSlug ).append( SLASH );
-		return new URIImpl( uriBuilder.toString() );
+		return SimpleValueFactory.getInstance().createIRI( uriBuilder.toString() );
 	}
 
 }

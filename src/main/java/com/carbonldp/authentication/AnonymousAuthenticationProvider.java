@@ -3,7 +3,7 @@ package com.carbonldp.authentication;
 import com.carbonldp.AbstractComponent;
 import com.carbonldp.apps.context.RunInPlatformContext;
 import com.carbonldp.authorization.*;
-import org.openrdf.model.URI;
+import org.openrdf.model.IRI;
 import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -40,10 +40,10 @@ public class AnonymousAuthenticationProvider extends AbstractComponent {
 	}
 
 	private Set<PlatformRole> getPlatformRoles() {
-		Set<URI> platformRoleURIs = new HashSet<>();
+		Set<IRI> platformRoleIRIs = new HashSet<>();
 		for ( Platform.Role platformRoleDescription : this.defaultPlatformRoleRepresentations ) {
-			platformRoleURIs.addAll( Arrays.asList( platformRoleDescription.getIRIs() ) );
+			platformRoleIRIs.addAll( Arrays.asList( platformRoleDescription.getIRIs() ) );
 		}
-		return platformRoleRepository.get( platformRoleURIs );
+		return platformRoleRepository.get( platformRoleIRIs );
 	}
 }

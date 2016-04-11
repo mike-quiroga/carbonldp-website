@@ -8,7 +8,7 @@ import com.carbonldp.utils.LiteralUtil;
 import com.carbonldp.utils.ValueUtil;
 import org.openrdf.model.Literal;
 import org.openrdf.model.Value;
-import org.openrdf.model.impl.URIImpl;
+import org.openrdf.model.impl.SimpleValueFactory;
 
 import java.util.Set;
 import java.util.regex.Pattern;
@@ -35,7 +35,7 @@ public class CORSAppContextFilter extends CORSContextFilter {
 					if ( Pattern.matches( allowedOriginLiteral.stringValue(), origin ) ) return true;
 				}
 			} else if ( ValueUtil.isIRI( allowedOrigin ) ) {
-				return allowedOrigin.equals( new URIImpl( CS.Classes.ALL_ORIGINS ) );
+				return allowedOrigin.equals( SimpleValueFactory.getInstance().createIRI( CS.Classes.ALL_ORIGINS ) );
 			}
 		}
 

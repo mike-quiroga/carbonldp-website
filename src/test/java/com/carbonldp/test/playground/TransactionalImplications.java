@@ -2,8 +2,7 @@ package com.carbonldp.test.playground;
 
 import org.openrdf.IsolationLevel;
 import org.openrdf.model.*;
-import org.openrdf.model.impl.URIImpl;
-import org.openrdf.model.impl.ValueFactoryImpl;
+import org.openrdf.model.impl.SimpleValueFactory;
 import org.openrdf.query.BooleanQuery;
 import org.openrdf.query.QueryLanguage;
 import org.openrdf.query.TupleQuery;
@@ -15,8 +14,7 @@ import org.openrdf.repository.RepositoryResult;
 import org.openrdf.repository.sail.SailRepository;
 import org.openrdf.sail.memory.MemoryStore;
 
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertTrue;
+import static org.testng.Assert.*;
 
 public class TransactionalImplications {
 	private final TransactionFactory transactionFactory;
@@ -25,29 +23,29 @@ public class TransactionalImplications {
 	public TransactionalImplications() {
 		Repository repository = getRepository();
 		this.transactionFactory = new TransactionFactory( repository );
-		this.valueFactory = ValueFactoryImpl.getInstance();
+		this.valueFactory = SimpleValueFactory.getInstance();
 	}
 
 	//@Test
 	public void readUsingSPARQL() {
 		transactionFactory.enterAndRollback( template -> {
-			URI firstResourceURI = new URIImpl( "http://example.org/resources/1" );
-			URI secondResourceURI = new URIImpl( "http://example.org/resources/2" );
-			URI predicate = new URIImpl( "http://example.org/ns#name" );
+			IRI firstResourceIRI = SimpleValueFactory.getInstance().createIRI( "http://example.org/resources/1" );
+			IRI secondResourceIRI = SimpleValueFactory.getInstance().createIRI( "http://example.org/resources/2" );
+			IRI predicate = SimpleValueFactory.getInstance().createIRI( "http://example.org/ns#name" );
 			Literal object = valueFactory.createLiteral( "A dummy resource" );
 			Value insertedObject;
 
 			// Create the first resource
-			template.write( connection -> connection.add( firstResourceURI, predicate, object ) );
-			assertTrue( existsUsingSPARQL( firstResourceURI, template ) );
+			template.write( connection -> connection.add( firstResourceIRI, predicate, object ) );
+			assertTrue( existsUsingSPARQL( firstResourceIRI, template ) );
 
 			// Read a property (using SPARQL)
-			insertedObject = getPropertyUsingSPARQL( firstResourceURI, predicate, template );
+			insertedObject = getPropertyUsingSPARQL( firstResourceIRI, predicate, template );
 			assertEquals( insertedObject, object );
 
 			// Create the second resource
-			template.write( connection -> connection.add( secondResourceURI, predicate, object ) );
-			assertTrue( existsUsingSPARQL( secondResourceURI, template ) );
+			template.write( connection -> connection.add( secondResourceIRI, predicate, object ) );
+			assertTrue( existsUsingSPARQL( secondResourceIRI, template ) );
 
 		} );
 	}
@@ -57,15 +55,15 @@ public class TransactionalImplications {
 		Repository repository = getRepository();
 		TransactionFactory transactionFactory = new TransactionFactory( repository );
 
-		URI firstResourceURI = new URIImpl( "http://example.org/resources/1" );
-		URI secondResourceURI = new URIImpl( "http://example.org/resources/2" );
-		URI predicate = new URIImpl( "http://example.org/ns#name" );
+		IRI firstResourceIRI = SimpleValueFactory.getInstance().createIRI( "http://example.org/resources/1" );
+		IRI secondResourceIRI = SimpleValueFactory.getInstance().createIRI( "http://example.org/resources/2" );
+		IRI predicate = SimpleValueFactory.getInstance().createIRI( "http://example.org/ns#name" );
 		Literal object = valueFactory.createLiteral( "A dummy resource" );
 
 		transactionFactory.enterAndCommit( template -> {
 			// Create the first resource
-			template.write( connection -> connection.add( firstResourceURI, predicate, object ) );
-			assertTrue( existsUsingSPARQL( firstResourceURI, template ) );
+			template.write( connection -> connection.add( firstResourceIRI, predicate, object ) );
+			assertTrue( existsUsingSPARQL( firstResourceIRI, template ) );
 
 		} );
 
@@ -73,43 +71,43 @@ public class TransactionalImplications {
 			Value insertedObject;
 
 			// Read a property (using SPARQL)
-			insertedObject = getPropertyUsingSPARQL( firstResourceURI, predicate, template );
+			insertedObject = getPropertyUsingSPARQL( firstResourceIRI, predicate, template );
 			assertEquals( insertedObject, object );
 
 			// Create the second resource
-			template.write( connection -> connection.add( secondResourceURI, predicate, object ) );
+			template.write( connection -> connection.add( secondResourceIRI, predicate, object ) );
 
 		} );
 
 		transactionFactory.enterAndRollback( template -> {
-			assertTrue( existsUsingSPARQL( secondResourceURI, template ) );
+			assertTrue( existsUsingSPARQL( secondResourceIRI, template ) );
 		} );
 	}
 
 	//@Test
 	public void readUsingSesame() {
 		transactionFactory.enterAndRollback( template -> {
-			URI firstResourceURI = new URIImpl( "http://example.org/resources/1" );
-			URI secondResourceURI = new URIImpl( "http://example.org/resources/2" );
-			URI predicate = new URIImpl( "http://example.org/ns#name" );
+			IRI firstResourceIRI = SimpleValueFactory.getInstance().createIRI( "http://example.org/resources/1" );
+			IRI secondResourceIRI = SimpleValueFactory.getInstance().createIRI( "http://example.org/resources/2" );
+			IRI predicate = SimpleValueFactory.getInstance().createIRI( "http://example.org/ns#name" );
 			Literal object = valueFactory.createLiteral( "A dummy resource" );
 			Value insertedObject;
 
 			// Create the first resource
-			template.write( connection -> connection.add( firstResourceURI, predicate, object ) );
-			assertTrue( existsUsingSPARQL( firstResourceURI, template ) );
+			template.write( connection -> connection.add( firstResourceIRI, predicate, object ) );
+			assertTrue( existsUsingSPARQL( firstResourceIRI, template ) );
 
 			// Read a property
-			insertedObject = getProperty( firstResourceURI, predicate, template );
+			insertedObject = getProperty( firstResourceIRI, predicate, template );
 			assertEquals( insertedObject, object );
 
 			// Create the second resource
-			template.write( connection -> connection.add( secondResourceURI, predicate, object ) );
-			assertTrue( existsUsingSPARQL( secondResourceURI, template ) );
+			template.write( connection -> connection.add( secondResourceIRI, predicate, object ) );
+			assertTrue( existsUsingSPARQL( secondResourceIRI, template ) );
 		} );
 	}
 
-	private boolean existsUsingSPARQL( URI subject, TransactionTemplate template ) {
+	private boolean existsUsingSPARQL( IRI subject, TransactionTemplate template ) {
 		return template.read( connection -> {
 			String queryString = "" +
 				"ASK {" +
@@ -123,7 +121,7 @@ public class TransactionalImplications {
 		} );
 	}
 
-	private Value getProperty( URI subject, URI predicate, TransactionTemplate template ) {
+	private Value getProperty( IRI subject, IRI predicate, TransactionTemplate template ) {
 		return template.read( connection -> {
 			RepositoryResult<Statement> result = connection.getStatements( subject, predicate, null, false );
 			if ( ! result.hasNext() ) return null;
@@ -131,7 +129,7 @@ public class TransactionalImplications {
 		} );
 	}
 
-	private Value getPropertyUsingSPARQL( URI subject, URI predicate, TransactionTemplate template ) {
+	private Value getPropertyUsingSPARQL( IRI subject, IRI predicate, TransactionTemplate template ) {
 		return template.read( connection -> {
 			String queryString = "" +
 				"SELECT ?object WHERE {" +

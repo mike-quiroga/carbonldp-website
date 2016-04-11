@@ -8,8 +8,7 @@ import org.springframework.util.AntPathMatcher;
 
 import java.util.Random;
 
-import static com.carbonldp.Consts.EMPTY_STRING;
-import static com.carbonldp.Consts.SLASH;
+import static com.carbonldp.Consts.*;
 
 public class PropertiesFileConfigurationRepository extends AbstractComponent implements ConfigurationRepository {
 

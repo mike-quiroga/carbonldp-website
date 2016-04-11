@@ -7,8 +7,9 @@ import com.carbonldp.authorization.Platform;
 import com.carbonldp.authorization.acl.ACEDescription;
 import com.carbonldp.authorization.acl.ACL;
 import com.carbonldp.exceptions.ResourceAlreadyExistsException;
-import org.openrdf.model.URI;
-import org.openrdf.model.impl.URIImpl;
+import org.openrdf.model.IRI;
+
+import org.openrdf.model.impl.SimpleValueFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Arrays;
@@ -55,18 +56,18 @@ public class SesamePlatformAgentService extends SesameAgentsService {
 	}
 
 	private void addAgentToDefaultPlatformRole( Agent agent ) {
-		URI defaultPlatformRoleURI = getDefaultPlatformRoleURI();
-		URI roleAgentsContainerURI = getRoleAgentsContainerURI( defaultPlatformRoleURI );
+		IRI defaultPlatformRoleIRI = getDefaultPlatformRoleIRI();
+		IRI roleAgentsContainerIRI = getRoleAgentsContainerIRI( defaultPlatformRoleIRI );
 
-		containerRepository.addMember( roleAgentsContainerURI, agent.getIRI() );
+		containerRepository.addMember( roleAgentsContainerIRI, agent.getIRI() );
 	}
 
-	private URI getRoleAgentsContainerURI( URI defaultPlatformRoleURI ) {
+	private IRI getRoleAgentsContainerIRI( IRI defaultPlatformRoleIRI ) {
 		// TODO: Use a Vars property
-		return new URIImpl( defaultPlatformRoleURI.stringValue() + "agents/" );
+		return SimpleValueFactory.getInstance().createIRI( defaultPlatformRoleIRI.stringValue() + "agents/" );
 	}
 
-	private URI getDefaultPlatformRoleURI() {
+	private IRI getDefaultPlatformRoleIRI() {
 		return Platform.Role.APP_DEVELOPER.getIRI();
 	}
 

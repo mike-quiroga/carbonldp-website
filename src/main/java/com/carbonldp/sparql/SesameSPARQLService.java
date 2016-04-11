@@ -2,7 +2,7 @@ package com.carbonldp.sparql;
 
 import com.carbonldp.repository.AbstractSesameRepository;
 import com.carbonldp.web.exceptions.BadRequestException;
-import org.openrdf.model.URI;
+import org.openrdf.model.IRI;
 import org.openrdf.query.MalformedQueryException;
 import org.openrdf.query.QueryLanguage;
 import org.openrdf.query.parser.*;
@@ -19,11 +19,11 @@ public class SesameSPARQLService extends AbstractSesameRepository implements SPA
 	}
 
 	@Override
-	public SPARQLResult executeSPARQLQuery( String queryString, URI targetURI ) {
+	public SPARQLResult executeSPARQLQuery( String queryString, IRI targetIRI ) {
 		ParsedQuery query;
 
 		try {
-			query = QueryParserUtil.parseQuery( QueryLanguage.SPARQL, queryString, targetURI.stringValue() );
+			query = QueryParserUtil.parseQuery( QueryLanguage.SPARQL, queryString, targetIRI.stringValue() );
 		} catch ( MalformedQueryException e ) {
 			throw new BadRequestException(0x2401);
 		}

@@ -13,9 +13,9 @@ import com.carbonldp.rdf.RDFResource;
 import com.carbonldp.utils.RDFNodeUtil;
 import com.carbonldp.web.exceptions.BadRequestException;
 import com.carbonldp.web.exceptions.NotFoundException;
+import org.openrdf.model.IRI;
 import org.openrdf.model.Resource;
 import org.openrdf.model.Statement;
-import org.openrdf.model.URI;
 import org.openrdf.model.impl.AbstractModel;
 import org.openrdf.model.impl.LinkedHashModel;
 import org.springframework.http.HttpStatus;
@@ -43,29 +43,29 @@ public abstract class AbstractPATCHRequestHandler extends AbstractLDPRequestHand
 	public ResponseEntity<Object> handleRequest( AbstractModel requestModel, HttpServletRequest request, HttpServletResponse response ) {
 		setUp( request, response );
 
-		URI targetURI = getTargetURI( request );
-		if ( ! targetResourceExists( targetURI ) ) throw new NotFoundException();
+		IRI targetIRI = getTargetIRI( request );
+		if ( ! targetResourceExists( targetIRI ) ) throw new NotFoundException();
 
 		String requestETag = getRequestETag();
-		checkPrecondition( targetURI, requestETag );
+		checkPrecondition( targetIRI, requestETag );
 
 		// TODO: Validate subjects
 
 		PATCHRequest patchRequest = getPATCHRequest( requestModel );
 
 		// validateDocumentResourceView( patchRequest );
-		// validateAdditionalResources( requestModel, patchRequest, targetURI );
+		// validateAdditionalResources( requestModel, patchRequest, targetIRI );
 
 		Set<DeleteAction> deleteActions = getDeleteActions( patchRequest );
-		executeDeleteActions( targetURI, deleteActions );
+		executeDeleteActions( targetIRI, deleteActions );
 
 		Set<SetAction> setActions = getSetActions( patchRequest );
-		executeSetActions( targetURI, setActions );
+		executeSetActions( targetIRI, setActions );
 
 		Set<AddAction> addActions = getAddActions( patchRequest );
-		executeAddActions( targetURI, addActions );
+		executeAddActions( targetIRI, addActions );
 
-		String eTag = sourceService.getETag( targetURI );
+		String eTag = sourceService.getETag( targetIRI );
 		setStrongETagHeader( eTag );
 
 		return new ResponseEntity<>( new EmptyResponse(), HttpStatus.OK );
@@ -78,21 +78,21 @@ public abstract class AbstractPATCHRequestHandler extends AbstractLDPRequestHand
 		if ( ! infractions.isEmpty() ) throw new BadRequestException( "The cp:PATCHRequest provided isn't valid." );
 	}
 
-	private void validateAdditionalResources( AbstractModel requestModel, PATCHRequest patchRequest, IRI targetURI ) {
+	private void validateAdditionalResources( AbstractModel requestModel, PATCHRequest patchRequest, IRI targetIRI ) {
 		requestModel.subjects()
 					.stream()
 					.filter( ValueUtil::isIRI )
 					.map( ValueUtil::getIRI )
 					.filter( uri -> ! uri.equals( patchRequest.getIRI() ) )
 					.forEach( uri -> {
-						if ( ! belongsToRequestDomain( targetURI, uri ) ) throw new BadRequestException( "The resource is outside of the request's domain." );
+						if ( ! belongsToRequestDomain( targetIRI, uri ) ) throw new BadRequestException( "The resource is outside of the request's domain." );
 					} )
 		;
 	}
 
 
-	private boolean belongsToRequestDomain( IRI targetURI, IRI uri ) {
-		return IRIUtil.isImmediateChild( targetURI.stringValue(), uri.stringValue() );
+	private boolean belongsToRequestDomain( IRI targetIRI, IRI uri ) {
+		return IRIUtil.isImmediateChild( targetIRI.stringValue(), uri.stringValue() );
 	}
 	*/
 
@@ -122,30 +122,30 @@ public abstract class AbstractPATCHRequestHandler extends AbstractLDPRequestHand
 	}
 
 	//TODO: to implement to accept bnodes and fragments
-	private void executeDeleteActions( URI sourceURI, Set<DeleteAction> actions ) {
+	private void executeDeleteActions( IRI sourceIRI, Set<DeleteAction> actions ) {
 		Set<RDFResource> resourcesToDelete = new HashSet<>();
-		RDFDocument document = new RDFDocument( new LinkedHashModel(), sourceURI );
+		RDFDocument document = new RDFDocument( new LinkedHashModel(), sourceIRI );
 		for ( DeleteAction action : actions ) {
 			for ( Statement actionStatement : action ) {
 				DeleteActionDescription.Property actionSpecialProperty = getDeleteActionSpecialProperty( actionStatement );
-				if ( actionSpecialProperty != null ) executeDeleteActionSpecialProperty( sourceURI, action, actionSpecialProperty );
-				else document.add( sourceURI, actionStatement.getPredicate(), actionStatement.getObject() );
+				if ( actionSpecialProperty != null ) executeDeleteActionSpecialProperty( sourceIRI, action, actionSpecialProperty );
+				else document.add( sourceIRI, actionStatement.getPredicate(), actionStatement.getObject() );
 			}
 		}
 
-		deleteResourceViews( sourceURI, document );
+		deleteResourceViews( sourceIRI, document );
 	}
 
-	protected void deleteResourceViews( URI sourceURI, RDFDocument document ) {
-		sourceService.subtract( sourceURI, document );
+	protected void deleteResourceViews( IRI sourceIRI, RDFDocument document ) {
+		sourceService.subtract( sourceIRI, document );
 	}
 
 	private DeleteActionDescription.Property getDeleteActionSpecialProperty( Statement actionStatement ) {
-		URI predicate = actionStatement.getPredicate();
+		IRI predicate = actionStatement.getPredicate();
 		return RDFNodeUtil.findByIRI( predicate, DeleteActionDescription.Property.class );
 	}
 
-	private void executeDeleteActionSpecialProperty( URI sourceURI, DeleteAction action, DeleteActionDescription.Property actionSpecialProperty ) {
+	private void executeDeleteActionSpecialProperty( IRI sourceIRI, DeleteAction action, DeleteActionDescription.Property actionSpecialProperty ) {
 		switch ( actionSpecialProperty ) {
 			default:
 				throw new RuntimeException( "Not Implemented" );
@@ -162,30 +162,30 @@ public abstract class AbstractPATCHRequestHandler extends AbstractLDPRequestHand
 	}
 
 	//TODO: to implement to accept bnodes and fragments
-	private void executeSetActions( URI sourceURI, Set<SetAction> actions ) {
-		RDFDocument document = new RDFDocument( new LinkedHashModel(), sourceURI );
+	private void executeSetActions( IRI sourceIRI, Set<SetAction> actions ) {
+		RDFDocument document = new RDFDocument( new LinkedHashModel(), sourceIRI );
 
 		for ( SetAction action : actions ) {
 			for ( Statement actionStatement : action ) {
 				SetActionDescription.Property actionSpecialProperty = getSetActionSpecialProperty( actionStatement );
-				if ( actionSpecialProperty != null ) executeSetActionSpecialProperty( sourceURI, action, actionSpecialProperty );
-				else document.add( sourceURI, actionStatement.getPredicate(), actionStatement.getObject() );
+				if ( actionSpecialProperty != null ) executeSetActionSpecialProperty( sourceIRI, action, actionSpecialProperty );
+				else document.add( sourceIRI, actionStatement.getPredicate(), actionStatement.getObject() );
 			}
 		}
 
-		setResourceViews( sourceURI, document );
+		setResourceViews( sourceIRI, document );
 	}
 
-	protected void setResourceViews( URI sourceURI, RDFDocument document ) {
-		sourceService.set( sourceURI, document );
+	protected void setResourceViews( IRI sourceIRI, RDFDocument document ) {
+		sourceService.set( sourceIRI, document );
 	}
 
 	private SetActionDescription.Property getSetActionSpecialProperty( Statement actionStatement ) {
-		URI predicate = actionStatement.getPredicate();
+		IRI predicate = actionStatement.getPredicate();
 		return RDFNodeUtil.findByIRI( predicate, SetActionDescription.Property.class );
 	}
 
-	private void executeSetActionSpecialProperty( URI sourceURI, SetAction action, SetActionDescription.Property actionSpecialProperty ) {
+	private void executeSetActionSpecialProperty( IRI sourceIRI, SetAction action, SetActionDescription.Property actionSpecialProperty ) {
 		switch ( actionSpecialProperty ) {
 			default:
 				throw new RuntimeException( "Not Implemented" );
@@ -202,29 +202,29 @@ public abstract class AbstractPATCHRequestHandler extends AbstractLDPRequestHand
 	}
 
 	//TODO: to implement to accept bnodes and fragments
-	private void executeAddActions( URI sourceURI, Collection<AddAction> actions ) {
-		RDFDocument document = new RDFDocument( new LinkedHashModel(), sourceURI );
+	private void executeAddActions( IRI sourceIRI, Collection<AddAction> actions ) {
+		RDFDocument document = new RDFDocument( new LinkedHashModel(), sourceIRI );
 		for ( AddAction action : actions ) {
 			for ( Statement actionStatement : action ) {
 				AddActionDescription.Property actionSpecialProperty = getAddActionSpecialProperty( actionStatement );
-				if ( actionSpecialProperty != null ) executeAddActionSpecialProperty( sourceURI, action, actionSpecialProperty );
-				else document.add( sourceURI, actionStatement.getPredicate(), actionStatement.getObject() );
+				if ( actionSpecialProperty != null ) executeAddActionSpecialProperty( sourceIRI, action, actionSpecialProperty );
+				else document.add( sourceIRI, actionStatement.getPredicate(), actionStatement.getObject() );
 			}
 		}
 
-		addResourceViews( sourceURI, document );
+		addResourceViews( sourceIRI, document );
 	}
 
-	protected void addResourceViews( URI sourceURI, RDFDocument document ) {
-		sourceService.add( sourceURI, document );
+	protected void addResourceViews( IRI sourceIRI, RDFDocument document ) {
+		sourceService.add( sourceIRI, document );
 	}
 
 	private AddActionDescription.Property getAddActionSpecialProperty( Statement actionStatement ) {
-		URI predicate = actionStatement.getPredicate();
+		IRI predicate = actionStatement.getPredicate();
 		return RDFNodeUtil.findByIRI( predicate, AddActionDescription.Property.class );
 	}
 
-	private void executeAddActionSpecialProperty( URI sourceURI, AddAction action, AddActionDescription.Property actionSpecialProperty ) {
+	private void executeAddActionSpecialProperty( IRI sourceIRI, AddAction action, AddActionDescription.Property actionSpecialProperty ) {
 		switch ( actionSpecialProperty ) {
 			default:
 				throw new RuntimeException( "Not Implemented" );

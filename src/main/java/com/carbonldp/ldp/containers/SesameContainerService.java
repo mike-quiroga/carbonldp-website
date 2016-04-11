@@ -13,8 +13,8 @@ import com.carbonldp.rdf.RDFResource;
 import com.carbonldp.spring.ServicesInvoker;
 import com.carbonldp.web.exceptions.NotImplementedException;
 import org.joda.time.DateTime;
+import org.openrdf.model.IRI;
 import org.openrdf.model.Statement;
-import org.openrdf.model.URI;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.File;
@@ -27,27 +27,27 @@ public class SesameContainerService extends AbstractSesameLDPService implements 
 	private RDFSourceService sourceService;
 
 	@Override
-	public Container get( URI containerURI, Set<APIPreferences.ContainerRetrievalPreference> containerRetrievalPreferences ) {
-		ContainerDescription.Type containerType = getContainerType( containerURI );
+	public Container get( IRI containerIRI, Set<APIPreferences.ContainerRetrievalPreference> containerRetrievalPreferences ) {
+		ContainerDescription.Type containerType = getContainerType( containerIRI );
 		if ( containerType == null ) throw new InvalidRDFTypeException( ContainerDescription.Resource.CLASS.getIRI().stringValue() );
 
-		Container container = ContainerFactory.getInstance().get( containerURI, containerType );
+		Container container = ContainerFactory.getInstance().get( containerIRI, containerType );
 		for ( APIPreferences.ContainerRetrievalPreference preference : containerRetrievalPreferences ) {
 			switch ( preference ) {
 				case CONTAINER_PROPERTIES:
-					container.getBaseModel().addAll( containerRepository.getProperties( containerURI ) );
+					container.getBaseModel().addAll( containerRepository.getProperties( containerIRI ) );
 					break;
 				case CONTAINMENT_TRIPLES:
-					container.getBaseModel().addAll( containerRepository.getContainmentTriples( containerURI ) );
+					container.getBaseModel().addAll( containerRepository.getContainmentTriples( containerIRI ) );
 					break;
 				case CONTAINED_RESOURCES:
 					throw new NotImplementedException();
 				case MEMBERSHIP_TRIPLES:
 					if ( containerRetrievalPreferences.contains( APIPreferences.ContainerRetrievalPreference.NON_READABLE_MEMBERSHIP_RESOURCE_TRIPLES ) ) {
-						container.getBaseModel().addAll( getMembershipTriples( containerURI ) );
+						container.getBaseModel().addAll( getMembershipTriples( containerIRI ) );
 					} else {
 						Set<Statement> membershipTriples = servicesInvoker.proxy( ( proxy ) -> {
-							return proxy.getContainerService().getReadableMembershipResourcesTriples( containerURI );
+							return proxy.getContainerService().getReadableMembershipResourcesTriples( containerIRI );
 						} );
 						container.getBaseModel().addAll( membershipTriples );
 					}
@@ -57,7 +57,7 @@ public class SesameContainerService extends AbstractSesameLDPService implements 
 				case NON_READABLE_MEMBERSHIP_RESOURCE_TRIPLES:
 					if ( ! containerRetrievalPreferences.contains( APIPreferences.ContainerRetrievalPreference.MEMBERSHIP_TRIPLES ) ) {
 						Set<Statement> membershipTriples = servicesInvoker.proxy( ( proxy ) -> {
-							return proxy.getContainerService().getNonReadableMembershipResourcesTriples( containerURI );
+							return proxy.getContainerService().getNonReadableMembershipResourcesTriples( containerIRI );
 						} );
 						container.getBaseModel().addAll( membershipTriples );
 					}
@@ -70,41 +70,41 @@ public class SesameContainerService extends AbstractSesameLDPService implements 
 		return container;
 	}
 
-	public Set<Statement> getMembershipTriples( URI containerURI ) {
-		return containerRepository.getMembershipTriples( containerURI );
+	public Set<Statement> getMembershipTriples( IRI containerIRI ) {
+		return containerRepository.getMembershipTriples( containerIRI );
 	}
 
-	public Set<Statement> getReadableMembershipResourcesTriples( URI containerURI ) {
-		return containerRepository.getMembershipTriples( containerURI );
+	public Set<Statement> getReadableMembershipResourcesTriples( IRI containerIRI ) {
+		return containerRepository.getMembershipTriples( containerIRI );
 	}
 
-	public Set<Statement> getNonReadableMembershipResourcesTriples( URI containerURI ) {
-		return containerRepository.getMembershipTriples( containerURI );
-	}
-
-	@Override
-	public Set<APIPreferences.ContainerRetrievalPreference> getRetrievalPreferences( URI containerURI ) {
-		return containerRepository.getRetrievalPreferences( containerURI );
+	public Set<Statement> getNonReadableMembershipResourcesTriples( IRI containerIRI ) {
+		return containerRepository.getMembershipTriples( containerIRI );
 	}
 
 	@Override
-	public ContainerDescription.Type getContainerType( URI containerURI ) {
-		return containerRepository.getContainerType( containerURI );
+	public Set<APIPreferences.ContainerRetrievalPreference> getRetrievalPreferences( IRI containerIRI ) {
+		return containerRepository.getRetrievalPreferences( containerIRI );
 	}
 
 	@Override
-	public DateTime createChild( URI containerURI, BasicContainer basicContainer ) {
+	public ContainerDescription.Type getContainerType( IRI containerIRI ) {
+		return containerRepository.getContainerType( containerIRI );
+	}
+
+	@Override
+	public DateTime createChild( IRI containerIRI, BasicContainer basicContainer ) {
 		DateTime creationTime = DateTime.now();
-		URI membershipResource = containerRepository.getTypedRepository( this.getContainerType( containerURI ) ).getMembershipResource( containerURI );
+		IRI membershipResource = containerRepository.getTypedRepository( this.getContainerType( containerIRI ) ).getMembershipResource( containerIRI );
 		basicContainer.setTimestamps( creationTime );
 		validateBasicContainer( basicContainer );
 
-		containerRepository.createChild( containerURI, basicContainer );
+		containerRepository.createChild( containerIRI, basicContainer );
 		aclRepository.createACL( basicContainer.getIRI() );
 
-		sourceRepository.touch( containerURI, creationTime );
+		sourceRepository.touch( containerIRI, creationTime );
 
-		if ( ! membershipResource.equals( containerURI ) ) {
+		if ( ! membershipResource.equals( containerIRI ) ) {
 			sourceRepository.touch( membershipResource, creationTime );
 		}
 
@@ -118,66 +118,66 @@ public class SesameContainerService extends AbstractSesameLDPService implements 
 	}
 
 	@Override
-	public void createNonRDFResource( URI targetURI, URI resourceURI, File resourceFile, String mediaType ) {
-		if ( ! sourceRepository.exists( targetURI ) ) throw new ResourceDoesntExistException();
-		if ( sourceRepository.exists( resourceURI ) ) throw new ResourceAlreadyExistsException();
+	public void createNonRDFResource( IRI targetIRI, IRI resourceIRI, File resourceFile, String mediaType ) {
+		if ( ! sourceRepository.exists( targetIRI ) ) throw new ResourceDoesntExistException();
+		if ( sourceRepository.exists( resourceIRI ) ) throw new ResourceAlreadyExistsException();
 
-		containerRepository.createNonRDFResource( targetURI, resourceURI, resourceFile, mediaType );
-		aclRepository.createACL( resourceURI );
+		containerRepository.createNonRDFResource( targetIRI, resourceIRI, resourceFile, mediaType );
+		aclRepository.createACL( resourceIRI );
 	}
 
 	@Override
-	public void addMembers( URI containerURI, Set<URI> members ) {
+	public void addMembers( IRI containerIRI, Set<IRI> members ) {
 
-		for ( URI member : members ) {
-			addMember( containerURI, member );
+		for ( IRI member : members ) {
+			addMember( containerIRI, member );
 		}
 	}
 
 	@Override
-	public void addMember( URI containerURI, URI member ) {
+	public void addMember( IRI containerIRI, IRI member ) {
 		DateTime modifiedTime = DateTime.now();
-		URI membershipResource = containerRepository.getTypedRepository( this.getContainerType( containerURI ) ).getMembershipResource( containerURI );
+		IRI membershipResource = containerRepository.getTypedRepository( this.getContainerType( containerIRI ) ).getMembershipResource( containerIRI );
 
-		if ( ! sourceRepository.exists( containerURI ) ) throw new ResourceDoesntExistException();
-		containerRepository.addMember( containerURI, member );
+		if ( ! sourceRepository.exists( containerIRI ) ) throw new ResourceDoesntExistException();
+		containerRepository.addMember( containerIRI, member );
 		sourceRepository.touch( membershipResource, modifiedTime );
 	}
 
 	@Override
-	public void removeMembers( URI containerURI, Set<URI> members ) {
+	public void removeMembers( IRI containerIRI, Set<IRI> members ) {
 		DateTime modifiedTime = DateTime.now();
-		URI membershipResource = containerRepository.getTypedRepository( this.getContainerType( containerURI ) ).getMembershipResource( containerURI );
-		for ( URI member : members ) {
-			removeMember( containerURI, member );
+		IRI membershipResource = containerRepository.getTypedRepository( this.getContainerType( containerIRI ) ).getMembershipResource( containerIRI );
+		for ( IRI member : members ) {
+			removeMember( containerIRI, member );
 		}
 		sourceRepository.touch( membershipResource, modifiedTime );
 
 	}
 
 	@Override
-	public void removeMember( URI containerURI, URI member ) {
-		containerRepository.removeMember( containerURI, member );
+	public void removeMember( IRI containerIRI, IRI member ) {
+		containerRepository.removeMember( containerIRI, member );
 	}
 
 	@Override
-	public void removeMembers( URI containerURI ) {
+	public void removeMembers( IRI containerIRI ) {
 		// TODO: Should the resource be touched here?
-		containerRepository.removeMembers( containerURI );
+		containerRepository.removeMembers( containerIRI );
 	}
 
 	@Override
-	public void deleteContainedResources( URI targetURI ) {
-		Set<URI> containedURIs = containerRepository.getContainedURIs( targetURI );
-		for ( URI containedURI : containedURIs ) {
-			sourceService.delete( containedURI );
-			sourceRepository.deleteOccurrences( containedURI, true );
+	public void deleteContainedResources( IRI targetIRI ) {
+		Set<IRI> containedIRIs = containerRepository.getContainedIRIs( targetIRI );
+		for ( IRI containedIRI : containedIRIs ) {
+			sourceService.delete( containedIRI );
+			sourceRepository.deleteOccurrences( containedIRI, true );
 		}
 	}
 
 	@Override
-	public void delete( URI targetURI ) {
-		sourceRepository.delete( targetURI );
+	public void delete( IRI targetIRI ) {
+		sourceRepository.delete( targetIRI );
 	}
 
 	@Autowired

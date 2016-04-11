@@ -142,7 +142,7 @@ public class Install {
 	}
 
 	// TODO: Instead of loading a file, build the resources dynamically
-	private void loadDefaultResourcesfile( Repository repository, String resourcesFile, String baseURI ) {
+	private void loadDefaultResourcesfile( Repository repository, String resourcesFile, String baseIRI ) {
 		InputStream inputStream = getClass().getClassLoader().getResourceAsStream( resourcesFile );
 
 		RepositoryConnection connection;
@@ -153,7 +153,7 @@ public class Install {
 		}
 
 		try {
-			connection.add( inputStream, baseURI, RDFFormat.TRIG );
+			connection.add( inputStream, baseIRI, RDFFormat.TRIG );
 		} catch ( RDFParseException e ) {
 			throw new RuntimeException( "The file couldn't be parsed.", e );
 		} catch ( RepositoryException | IOException e ) {

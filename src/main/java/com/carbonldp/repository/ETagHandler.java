@@ -3,12 +3,11 @@ package com.carbonldp.repository;
 import com.carbonldp.utils.IRIUtil;
 import com.carbonldp.utils.ModelUtil;
 import com.carbonldp.utils.ValueUtil;
+import org.openrdf.model.IRI;
 import org.openrdf.model.Resource;
 import org.openrdf.model.Statement;
-import org.openrdf.model.URI;
 import org.openrdf.model.ValueFactory;
-import org.openrdf.model.impl.URIImpl;
-import org.openrdf.model.impl.ValueFactoryImpl;
+import org.openrdf.model.impl.SimpleValueFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +21,7 @@ public class ETagHandler extends GraphQueryResultHandler {
 	public ETagHandler() {
 		this.contexts = new ArrayList<>();
 		this.noContextValues = new ArrayList<>();
-		this.valueFactory = ValueFactoryImpl.getInstance();
+		this.valueFactory = SimpleValueFactory.getInstance();
 		this.eTagValue = 0;
 	}
 
@@ -34,7 +33,7 @@ public class ETagHandler extends GraphQueryResultHandler {
 	public boolean handleStatement( Statement statement ) {
 		Resource contextResource = statement.getContext();
 		if ( contextResource != null ) throw new IllegalArgumentException( "Named graphs aren't supported." );
-		URI context;
+		IRI context;
 		Statement documentStatement;
 
 		Resource subjectResource = statement.getSubject();
@@ -49,9 +48,9 @@ public class ETagHandler extends GraphQueryResultHandler {
 				eTagValue = ( eTagValue == 0 ) ? currentValue : eTagValue ^ currentValue;
 			}
 		} else {
-			URI subject = ValueUtil.getIRI( subjectResource );
+			IRI subject = ValueUtil.getIRI( subjectResource );
 			if ( ! IRIUtil.hasFragment( subject ) ) context = subject;
-			else context = new URIImpl( IRIUtil.getDocumentIRI( subject.stringValue() ) );
+			else context = SimpleValueFactory.getInstance().createIRI( IRIUtil.getDocumentIRI( subject.stringValue() ) );
 			if ( ! contexts.contains( context ) ) contexts.add( context );
 			documentStatement = valueFactory.createStatement( subject, statement.getPredicate(), statement.getObject(), context );
 			int currentValue = ModelUtil.calculateStatementETag( documentStatement );
@@ -61,7 +60,7 @@ public class ETagHandler extends GraphQueryResultHandler {
 		return true;
 	}
 
-	private void addContextValue( URI context, List<Integer> noContextValues ) {
+	private void addContextValue( IRI context, List<Integer> noContextValues ) {
 		for ( Integer currentValue : noContextValues ) {
 			currentValue = currentValue + 23 * context.hashCode();
 			eTagValue = ( eTagValue == 0 ) ? currentValue : eTagValue ^ currentValue;
@@ -69,7 +68,7 @@ public class ETagHandler extends GraphQueryResultHandler {
 		noContextValues.clear();
 	}
 
-	private URI getContextFromPreviousStatements() {
+	private IRI getContextFromPreviousStatements() {
 		if ( contexts.isEmpty() ) return null;
 		Resource context = contexts.get( contexts.size() - 1 );
 		return ValueUtil.getIRI( context );

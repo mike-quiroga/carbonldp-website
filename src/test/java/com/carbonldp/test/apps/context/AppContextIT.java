@@ -8,7 +8,7 @@ import com.carbonldp.apps.context.AppContextPersistenceFilter;
 import com.carbonldp.test.AbstractIT;
 import com.carbonldp.test.ActionCallback;
 import org.mockito.Mockito;
-import org.openrdf.model.impl.URIImpl;
+import org.openrdf.model.impl.SimpleValueFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.testng.annotations.Test;
 
@@ -20,8 +20,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertTrue;
+import static org.testng.Assert.*;
 
 public class AppContextIT extends AbstractIT {
 
@@ -52,7 +51,7 @@ public class AppContextIT extends AbstractIT {
 	}
 
 	@Test
-	public void wrongRequestURITest() {
+	public void wrongRequestIRITest() {
 		HttpServletRequest request = Mockito.mock( HttpServletRequest.class );
 		HttpServletResponse response = Mockito.mock( HttpServletResponse.class );
 		FilterChain chain = Mockito.mock( FilterChain.class );
@@ -87,13 +86,13 @@ public class AppContextIT extends AbstractIT {
 
 	@Test
 	public void plattformToAppContextExchangerTest() {
-		App app = appRepository.findByRootContainer( new URIImpl( testResourceURI ) );
+		App app = appRepository.findByRootContainer( SimpleValueFactory.getInstance().createIRI( testResourceIRI ) );
 		context.setApplication( null );
 		assertTrue( context.isEmpty() );
 		applicationContextTemplate.runInAppContext( app, new ActionCallback() {
 			@Override
 			public void run() {
-				assertEquals( AppContextHolder.getContext().getApplication().getIRI().stringValue(), testResourceURI );
+				assertEquals( AppContextHolder.getContext().getApplication().getIRI().stringValue(), testResourceIRI );
 
 			}
 
@@ -103,11 +102,11 @@ public class AppContextIT extends AbstractIT {
 
 	@Test
 	public void appToPlatformContextExchangerTest() {
-		App app = appRepository.findByRootContainer( new URIImpl( testResourceURI ) );
+		App app = appRepository.findByRootContainer( SimpleValueFactory.getInstance().createIRI( testResourceIRI ) );
 		context.setApplication( app );
 		AppContextHolder.setContext( context );
 		app = AppContextHolder.getContext().getApplication();
-		assertEquals( app.getIRI().stringValue(), testResourceURI );
+		assertEquals( app.getIRI().stringValue(), testResourceIRI );
 
 		platformContextTemplate.runInPlatformContext( new ActionCallback() {
 			@Override
@@ -119,10 +118,10 @@ public class AppContextIT extends AbstractIT {
 	}
 
 	@Test
-	public void successfullAppContextEnableTest() {
+	public void successfulAppContextEnableTest() {
 		HttpServletRequest request = Mockito.mock( HttpServletRequest.class );
 		HttpServletResponse response = Mockito.mock( HttpServletResponse.class );
-		FilterChain chain = new ChainMock( testResourceURI );
+		FilterChain chain = new ChainMock( testResourceIRI );
 
 		Mockito.when( request.getAttribute( FILTER_APPLIED ) ).thenReturn( null );
 		Mockito.when( request.getRequestURI() ).thenReturn( "apps/test-blog/" );
@@ -138,16 +137,16 @@ public class AppContextIT extends AbstractIT {
 }
 
 class ChainMock implements FilterChain {
-	String testResourceURI;
+	String testResourceIRI;
 
-	public ChainMock( String testResourceURI ) {
-		this.testResourceURI = testResourceURI;
+	public ChainMock( String testResourceIRI ) {
+		this.testResourceIRI = testResourceIRI;
 	}
 
 	@Override
 	public void doFilter( ServletRequest request, ServletResponse response ) throws IOException, ServletException {
 		// TODO Auto-generated method stub
 		App app = AppContextHolder.getContext().getApplication();
-		assertEquals( app.getIRI().stringValue(), testResourceURI );
+		assertEquals( app.getIRI().stringValue(), testResourceIRI );
 	}
 }

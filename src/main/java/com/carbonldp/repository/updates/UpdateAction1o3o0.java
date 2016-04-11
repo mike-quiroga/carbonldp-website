@@ -6,8 +6,7 @@ import com.carbonldp.ldp.sources.RDFSourceDescription;
 
 import java.util.Set;
 
-import static com.carbonldp.Consts.NEW_LINE;
-import static com.carbonldp.Consts.TAB;
+import static com.carbonldp.Consts.*;
 
 /**
  * @author JorgeEspinosa

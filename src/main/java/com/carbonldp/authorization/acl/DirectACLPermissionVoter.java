@@ -4,7 +4,7 @@ import com.carbonldp.authorization.acl.ACEDescription.Permission;
 import com.carbonldp.rdf.RDFNodeEnum;
 import com.carbonldp.utils.ACLUtil;
 import com.carbonldp.web.exceptions.NotImplementedException;
-import org.openrdf.model.URI;
+import org.openrdf.model.IRI;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -13,8 +13,8 @@ import java.util.Set;
 public class DirectACLPermissionVoter extends AbstractACLPermissionVoter implements ACLPermissionVoter {
 
 	@Override
-	public Vote vote( Map<RDFNodeEnum, Set<URI>> subjects, Set<Permission> permissions, URI objectURI ) {
-		ACL acl = aclRepository.getResourceACL( objectURI );
+	public Vote vote( Map<RDFNodeEnum, Set<IRI>> subjects, Set<Permission> permissions, IRI objectIRI ) {
+		ACL acl = aclRepository.getResourceACL( objectIRI );
 		if ( acl == null || acl.isEmpty() ) return Vote.ABSTAIN;
 
 		Map<Permission, ACE> permissionACE = new HashMap<>();

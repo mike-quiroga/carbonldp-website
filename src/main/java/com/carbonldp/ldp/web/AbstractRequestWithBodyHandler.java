@@ -5,17 +5,17 @@ import com.carbonldp.rdf.RDFResource;
 import com.carbonldp.utils.IRIUtil;
 import com.carbonldp.utils.ValueUtil;
 import com.carbonldp.web.exceptions.BadRequestException;
+import org.openrdf.model.IRI;
 import org.openrdf.model.Resource;
-import org.openrdf.model.URI;
 import org.openrdf.model.impl.AbstractModel;
-import org.openrdf.model.impl.URIImpl;
+import org.openrdf.model.impl.SimpleValueFactory;
 
 import java.util.HashSet;
 import java.util.Set;
 
 public abstract class AbstractRequestWithBodyHandler<E extends RDFResource> extends AbstractLDPRequestHandler {
 	// TODO: delete validations that are no longer in use.
-	protected boolean hasGenericRequestURI( RDFResource resource ) {
+	protected boolean hasGenericRequestIRI( RDFResource resource ) {
 		return configurationRepository.isGenericRequest( resource.getIRI().stringValue() );
 	}
 
@@ -36,11 +36,11 @@ public abstract class AbstractRequestWithBodyHandler<E extends RDFResource> exte
 		RDFResource documentResource = null;
 		for ( Resource subject : requestModel.subjects() ) {
 			if ( ! ValueUtil.isIRI( subject ) ) continue;
-			URI subjectURI = ValueUtil.getIRI( subject );
-			if ( IRIUtil.hasFragment( subjectURI ) ) continue;
+			IRI subjectIRI = ValueUtil.getIRI( subject );
+			if ( IRIUtil.hasFragment( subjectIRI ) ) continue;
 			if ( documentResource != null )
 				throw new BadRequestException( "The request contains more than one document resource." );
-			documentResource = new RDFResource( requestModel, subjectURI );
+			documentResource = new RDFResource( requestModel, subjectIRI );
 		}
 		return documentResource;
 	}
@@ -76,7 +76,7 @@ public abstract class AbstractRequestWithBodyHandler<E extends RDFResource> exte
 		return resourceProcessor.processResource( requestDocumentResource );
 	}
 
-	protected void validateDocumentResource( URI targetURI, RDFResource requestDocumentResource ) {
+	protected void validateDocumentResource( IRI targetIRI, RDFResource requestDocumentResource ) {
 		if ( requestDocumentResource == null ) handleRequestWithNoDocumentResource();
 	}
 
@@ -91,10 +91,10 @@ public abstract class AbstractRequestWithBodyHandler<E extends RDFResource> exte
 	protected void seekForOrphanFragments( AbstractModel requestModel, RDFResource requestDocumentResource ) {
 		for ( Resource subject : requestModel.subjects() ) {
 			if ( ! ValueUtil.isIRI( subject ) ) continue;
-			URI subjectURI = ValueUtil.getIRI( subject );
-			if ( ! IRIUtil.hasFragment( subjectURI ) ) continue;
-			URI documentURI = new URIImpl( IRIUtil.getDocumentIRI( subjectURI.stringValue() ) );
-			if ( ! requestDocumentResource.getIRI().equals( documentURI ) ) {
+			IRI subjectIRI = ValueUtil.getIRI( subject );
+			if ( ! IRIUtil.hasFragment( subjectIRI ) ) continue;
+			IRI documentIRI = SimpleValueFactory.getInstance().createIRI( IRIUtil.getDocumentIRI( subjectIRI.stringValue() ) );
+			if ( ! requestDocumentResource.getIRI().equals( documentIRI ) ) {
 				throw new BadRequestException( "The request contains orphan fragments." );
 			}
 		}
@@ -103,10 +103,10 @@ public abstract class AbstractRequestWithBodyHandler<E extends RDFResource> exte
 	protected void seekForOrphanFragments( AbstractModel requestModel, Set<RDFResource> requestDocumentResources ) {
 		for ( Resource subject : requestModel.subjects() ) {
 			if ( ! ValueUtil.isIRI( subject ) ) continue;
-			URI subjectURI = ValueUtil.getIRI( subject );
-			if ( ! IRIUtil.hasFragment( subjectURI ) ) continue;
-			URI documentURI = new URIImpl( IRIUtil.getDocumentIRI( subjectURI.stringValue() ) );
-			RDFResource fragmentResource = new RDFResource( requestModel, documentURI );
+			IRI subjectIRI = ValueUtil.getIRI( subject );
+			if ( ! IRIUtil.hasFragment( subjectIRI ) ) continue;
+			IRI documentIRI = SimpleValueFactory.getInstance().createIRI( IRIUtil.getDocumentIRI( subjectIRI.stringValue() ) );
+			RDFResource fragmentResource = new RDFResource( requestModel, documentIRI );
 			if ( ! requestDocumentResources.contains( fragmentResource ) ) {
 				throw new BadRequestException( "All fragment resources must be accompanied by their document resource" );
 			}

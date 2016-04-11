@@ -25,7 +25,9 @@ public class SecuredNativeStoreFactory extends NativeStoreFactory {
 
 			securedNativeStore.setTripleIndexes( nativeConfig.getTripleIndexes() );
 			securedNativeStore.setForceSync( nativeConfig.getForceSync() );
-			securedNativeStore.setFederatedServiceResolver( getFederatedServiceResolver() );
+
+			// TODO: Check the implications of commenting this line
+			// securedNativeStore.setFederatedServiceResolver( getFederatedServiceResolver() );
 
 			if ( nativeConfig.getValueCacheSize() >= 0 ) {
 				securedNativeStore.setValueCacheSize( nativeConfig.getValueCacheSize() );

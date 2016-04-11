@@ -4,7 +4,7 @@ import com.carbonldp.apps.App;
 import com.carbonldp.apps.AppRepository;
 import com.carbonldp.authorization.Platform;
 import com.carbonldp.authorization.RunWith;
-import org.openrdf.model.URI;
+import org.openrdf.model.IRI;
 
 public class AppContextRepository {
 	private final AppRepository appRepository;
@@ -14,7 +14,7 @@ public class AppContextRepository {
 	}
 
 	@RunWith( platformRoles = Platform.Role.SYSTEM )
-	public App getApp( URI rootContainerURI ) {
-		return appRepository.findByRootContainer( rootContainerURI );
+	public App getApp( IRI rootContainerIRI ) {
+		return appRepository.findByRootContainer( rootContainerIRI );
 	}
 }

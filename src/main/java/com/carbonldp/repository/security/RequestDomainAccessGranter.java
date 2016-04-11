@@ -1,7 +1,7 @@
 package com.carbonldp.repository.security;
 
-import com.carbonldp.utils.RequestUtil;
 import com.carbonldp.utils.IRIUtil;
+import com.carbonldp.utils.RequestUtil;
 import com.carbonldp.utils.ValueUtil;
 import org.openrdf.model.Resource;
 import org.openrdf.model.Statement;
@@ -17,11 +17,11 @@ public class RequestDomainAccessGranter implements RepositorySecurityAccessGrant
 		Resource contextResource = statement.getContext();
 		if ( contextResource == null || ! ValueUtil.isIRI( contextResource ) ) return Vote.ABSTAIN;
 
-		String contextURI = ValueUtil.getIRI( contextResource ).stringValue();
-		String requestURI = RequestUtil.getRequestURL();
-		if ( requestURI == null ) return Vote.ABSTAIN;
+		String contextIRI = ValueUtil.getIRI( contextResource ).stringValue();
+		String requestIRI = RequestUtil.getRequestURL();
+		if ( requestIRI == null ) return Vote.ABSTAIN;
 
-		if ( IRIUtil.hasBase( contextURI, requestURI ) ) return Vote.ABSTAIN;
+		if ( IRIUtil.hasBase( contextIRI, requestIRI ) ) return Vote.ABSTAIN;
 		else return Vote.DENY;
 	}
 }

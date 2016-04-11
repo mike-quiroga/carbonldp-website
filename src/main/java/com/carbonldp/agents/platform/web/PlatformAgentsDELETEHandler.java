@@ -3,7 +3,7 @@ package com.carbonldp.agents.platform.web;
 import com.carbonldp.ldp.web.AbstractDELETERequestHandler;
 import com.carbonldp.web.RequestHandler;
 import com.carbonldp.web.exceptions.NotImplementedException;
-import org.openrdf.model.URI;
+import org.openrdf.model.IRI;
 
 /**
  * @author NestorVenegas
@@ -14,7 +14,7 @@ import org.openrdf.model.URI;
 public class PlatformAgentsDELETEHandler extends AbstractDELETERequestHandler {
 
 	@Override
-	public void delete( URI targetURI ) {
+	public void delete( IRI targetIRI ) {
 		// TODO: delete membership
 		// TODO:delete from agents container
 		// TODO: delete ACL

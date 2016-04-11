@@ -1,7 +1,6 @@
 package com.carbonldp.repository.updates;
 
 import com.carbonldp.Vars;
-import org.openrdf.repository.Repository;
 
 /**
  * @author NestorVenegas

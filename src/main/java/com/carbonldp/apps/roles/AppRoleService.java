@@ -1,7 +1,7 @@
 package com.carbonldp.apps.roles;
 
 import com.carbonldp.apps.AppRole;
-import org.openrdf.model.URI;
+import org.openrdf.model.IRI;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.util.Set;
@@ -13,18 +13,18 @@ import java.util.Set;
  */
 public interface AppRoleService {
 
-	public boolean exists( URI appURI );
+	public boolean exists( IRI appIRI );
 
-	public void addAgents( URI appRoleAgentContainerURI, Set<URI> agents );
+	public void addAgents( IRI appRoleAgentContainerIRI, Set<IRI> agents );
 
 	public void create( AppRole appRole );
 
-	public void addChildren( URI parentRole, Set<URI> childs );
+	public void addChildren( IRI parentRole, Set<IRI> childs );
 
-	public void addAgent( URI appRoleAgentConatinerURI, URI agent );
+	public void addAgent( IRI appRoleAgentConatinerIRI, IRI agent );
 
-	public void addChild( URI parentRole, URI child );
+	public void addChild( IRI parentRole, IRI child );
 
-	@PreAuthorize( "hasPermission(#appRoleURI, 'DELETE')" )
-	public void delete( URI appRoleURI );
+	@PreAuthorize( "hasPermission(#appRoleIRI, 'DELETE')" )
+	public void delete( IRI appRoleIRI );
 }

@@ -8,7 +8,7 @@ import com.carbonldp.ldp.containers.AddMembersActionFactory;
 import com.carbonldp.models.Infraction;
 import com.carbonldp.rdf.RDFResource;
 import com.carbonldp.web.RequestHandler;
-import org.openrdf.model.URI;
+import org.openrdf.model.IRI;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
@@ -23,7 +23,7 @@ public class AppRoleAgentsPUTHandler extends AbstractPUTRequestHandler<RDFResour
 	protected AppRoleService appRoleService;
 
 	@Override
-	protected void executeAction( URI targetUri, AddMembersAction members ) {
+	protected void executeAction( IRI targetUri, AddMembersAction members ) {
 		validate( members );
 		appRoleService.addAgents( targetUri, members.getMembers() );
 	}

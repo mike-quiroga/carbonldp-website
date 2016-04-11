@@ -6,16 +6,15 @@ import com.carbonldp.utils.IRIUtil;
 import com.carbonldp.utils.ValueUtil;
 import com.carbonldp.web.converters.ModelMessageConverter;
 import com.carbonldp.web.exceptions.BadRequestException;
+import org.openrdf.model.IRI;
 import org.openrdf.model.Resource;
 import org.openrdf.model.Statement;
-import org.openrdf.model.URI;
 import org.openrdf.model.ValueFactory;
 import org.openrdf.model.impl.AbstractModel;
 import org.openrdf.model.impl.LinkedHashModel;
-import org.openrdf.model.impl.URIImpl;
-import org.openrdf.model.impl.ValueFactoryImpl;
+import org.openrdf.model.impl.SimpleValueFactory;
 import org.openrdf.rio.*;
-import org.openrdf.rio.helpers.RDFHandlerBase;
+import org.openrdf.rio.helpers.AbstractRDFHandler;
 import org.springframework.http.HttpInputMessage;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -56,14 +55,14 @@ public class RDFDocumentMessageConverter extends ModelMessageConverter<RDFDocume
 
 		RDFParser parser = Rio.createParser( formatToUse );
 
-		String baseURI = configurationRepository.forgeGenericRequestURL();
+		String baseIRI = configurationRepository.forgeGenericRequestURL();
 
 		DocumentRDFHandler documentRDFHandler = new DocumentRDFHandler();
-		documentRDFHandler.setDefaultContext( new URIImpl( baseURI ) );
+		documentRDFHandler.setDefaultContext( SimpleValueFactory.getInstance().createIRI( baseIRI ) );
 		parser.setRDFHandler( documentRDFHandler );
 
 		try {
-			parser.parse( bodyInputStream, baseURI );
+			parser.parse( bodyInputStream, baseIRI );
 		} catch ( RDFParseException | RDFHandlerException | IOException e ) {
 			throw new BadRequestException( new Infraction( 0x6001, "formatToUse", formatToUse.getName() ) );
 		}
@@ -71,7 +70,7 @@ public class RDFDocumentMessageConverter extends ModelMessageConverter<RDFDocume
 		return documentRDFHandler.getDocument();
 	}
 
-	public class DocumentRDFHandler extends RDFHandlerBase {
+	public class DocumentRDFHandler extends AbstractRDFHandler {
 		private RDFDocument document;
 		private final AbstractModel documentModel;
 		private final Set<Statement> contextLessStatements;
@@ -80,13 +79,13 @@ public class RDFDocumentMessageConverter extends ModelMessageConverter<RDFDocume
 
 		private final ValueFactory valueFactory;
 
-		private URI defaultContext;
-		private URI context;
+		private IRI defaultContext;
+		private IRI context;
 
 		public DocumentRDFHandler() {
 			this.documentModel = new LinkedHashModel();
 			this.contextLessStatements = new HashSet<>();
-			this.valueFactory = ValueFactoryImpl.getInstance();
+			this.valueFactory = SimpleValueFactory.getInstance();
 		}
 
 		@Override
@@ -95,7 +94,7 @@ public class RDFDocumentMessageConverter extends ModelMessageConverter<RDFDocume
 			if ( context != null ) {
 				if ( ( explicit != null && ! explicit ) || ( this.context != null && ! this.context.equals( context ) ) ) throw new RDFHandlerException( "Two (or more) different contexts were found." );
 				if ( ! ValueUtil.isIRI( context ) ) throw new RDFHandlerException( "BNodes are not valid contexts." );
-				this.context = (URI) context;
+				this.context = (IRI) context;
 				this.explicit = true;
 			} else {
 				if ( explicit != null && explicit ) throw new RDFHandlerException( "Two (or more) different contexts were found." );
@@ -103,8 +102,8 @@ public class RDFDocumentMessageConverter extends ModelMessageConverter<RDFDocume
 
 				Resource subjectResource = statement.getSubject();
 				if ( ValueUtil.isIRI( subjectResource ) ) {
-					URI subject = (URI) subjectResource;
-					URI documentResource = new URIImpl( IRIUtil.getDocumentIRI( subject.stringValue() ) );
+					IRI subject = (IRI) subjectResource;
+					IRI documentResource = SimpleValueFactory.getInstance().createIRI( IRIUtil.getDocumentIRI( subject.stringValue() ) );
 					if ( this.context != null && ! this.context.equals( documentResource ) ) throw new RDFHandlerException( "Two (or more) different contexts were found." );
 					this.context = documentResource;
 				} else {
@@ -139,7 +138,7 @@ public class RDFDocumentMessageConverter extends ModelMessageConverter<RDFDocume
 			return this.document;
 		}
 
-		public void setDefaultContext( URI context ) {
+		public void setDefaultContext( IRI context ) {
 			this.defaultContext = context;
 		}
 	}

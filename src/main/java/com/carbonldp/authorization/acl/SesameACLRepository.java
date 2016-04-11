@@ -11,8 +11,9 @@ import com.carbonldp.rdf.RDFResourceRepository;
 import com.carbonldp.utils.ACLUtil;
 import com.carbonldp.utils.IRIUtil;
 import com.carbonldp.web.exceptions.NotImplementedException;
-import org.openrdf.model.URI;
-import org.openrdf.model.impl.URIImpl;
+import org.openrdf.model.IRI;
+
+import org.openrdf.model.impl.SimpleValueFactory;
 import org.openrdf.spring.SesameConnectionFactory;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,41 +31,41 @@ public class SesameACLRepository extends AbstractSesameLDPRepository implements 
 	}
 
 	@Override
-	public ACL getResourceACL( URI resourceURI ) {
-		URI aclURI = getACLUri( resourceURI );
-		RDFDocument document = documentRepository.getDocument( aclURI );
+	public ACL getResourceACL( IRI resourceIRI ) {
+		IRI aclIRI = getACLUri( resourceIRI );
+		RDFDocument document = documentRepository.getDocument( aclIRI );
 		if ( document == null || document.isEmpty() ) return null;
-		return new ACL( document.getBaseModel(), aclURI );
+		return new ACL( document.getBaseModel(), aclIRI );
 	}
 
 	@Override
-	public ACL createACL( URI objectURI ) {
-		if ( IRIUtil.hasFragment( objectURI ) ) {
+	public ACL createACL( IRI objectIRI ) {
+		if ( IRIUtil.hasFragment( objectIRI ) ) {
 			throw new IllegalArgumentException( "Fragments can't be protected with an ACL" );
 		}
-		if ( ! sourceRepository.exists( objectURI ) ) {
+		if ( ! sourceRepository.exists( objectIRI ) ) {
 			throw new RuntimeException( "Unable to find document to protect" );
 		}
-		URI aclURI = getACLUri( objectURI );
-		ACL acl = ACLFactory.create( aclURI, objectURI );
-		resourceRepository.add( objectURI, RDFSourceDescription.Property.ACCESS_CONTROL_LIST.getIRI(), aclURI );
+		IRI aclIRI = getACLUri( objectIRI );
+		ACL acl = ACLFactory.create( aclIRI, objectIRI );
+		resourceRepository.add( objectIRI, RDFSourceDescription.Property.ACCESS_CONTROL_LIST.getIRI(), aclIRI );
 		documentRepository.addDocument( acl.getDocument() );
 		return acl;
 	}
 
 	@Override
-	public void grantPermissions( URI resourceURI, Collection<ACLSubject> subjects, Collection<ACEDescription.Permission> permissions, boolean inheritable ) {
-		ACL acl = getResourceACL( resourceURI );
+	public void grantPermissions( IRI resourceIRI, Collection<ACLSubject> subjects, Collection<ACEDescription.Permission> permissions, boolean inheritable ) {
+		ACL acl = getResourceACL( resourceIRI );
 		grantPermissions( acl, subjects, permissions, inheritable );
 	}
 
 	@Override
 	public void grantPermissions( ACL acl, Collection<ACLSubject> subjects, Collection<ACEDescription.Permission> permissions, boolean inheritable ) {
-		Map<RDFNodeEnum, Set<URI>> subjectsMap = ACLUtil.getSubjectsMap( subjects );
+		Map<RDFNodeEnum, Set<IRI>> subjectsMap = ACLUtil.getSubjectsMap( subjects );
 
 		for ( RDFNodeEnum subjectClass : subjectsMap.keySet() ) {
-			Set<URI> subjectURIs = subjectsMap.get( subjectClass );
-			grantPermissions( acl, subjectClass, subjectURIs, permissions, inheritable );
+			Set<IRI> subjectIRIs = subjectsMap.get( subjectClass );
+			grantPermissions( acl, subjectClass, subjectIRIs, permissions, inheritable );
 		}
 
 		if ( inheritable ) addInheritablePermissions( acl, subjects, permissions, true );
@@ -72,10 +73,10 @@ public class SesameACLRepository extends AbstractSesameLDPRepository implements 
 		documentRepository.update( acl.getDocument() );
 	}
 
-	private void grantPermissions( ACL acl, RDFNodeEnum subjectClass, Collection<URI> subjectURIs, Collection<ACEDescription.Permission> permissions, boolean inheritable ) {
-		Set<ACE> aces = ACLUtil.getRelatedACEs( acl, subjectClass, subjectURIs );
+	private void grantPermissions( ACL acl, RDFNodeEnum subjectClass, Collection<IRI> subjectIRIs, Collection<ACEDescription.Permission> permissions, boolean inheritable ) {
+		Set<ACE> aces = ACLUtil.getRelatedACEs( acl, subjectClass, subjectIRIs );
 		if ( aces.isEmpty() ) {
-			ACE ace = ACEFactory.getInstance().create( acl, subjectClass, subjectURIs, permissions, true );
+			ACE ace = ACEFactory.getInstance().create( acl, subjectClass, subjectIRIs, permissions, true );
 			acl.addACEntry( ace.getSubject() );
 		} else {
 			// TODO: Implement
@@ -84,18 +85,18 @@ public class SesameACLRepository extends AbstractSesameLDPRepository implements 
 	}
 
 	@Override
-	public void addInheritablePermissions( URI resourceURI, Collection<ACLSubject> subjects, Collection<ACEDescription.Permission> permissions, boolean granting ) {
-		ACL acl = getResourceACL( resourceURI );
+	public void addInheritablePermissions( IRI resourceIRI, Collection<ACLSubject> subjects, Collection<ACEDescription.Permission> permissions, boolean granting ) {
+		ACL acl = getResourceACL( resourceIRI );
 		addInheritablePermissions( acl, subjects, permissions, granting );
 	}
 
 	@Override
 	public void addInheritablePermissions( ACL acl, Collection<ACLSubject> subjects, Collection<ACEDescription.Permission> permissions, boolean granting ) {
-		Map<RDFNodeEnum, Set<URI>> subjectsMap = ACLUtil.getSubjectsMap( subjects );
+		Map<RDFNodeEnum, Set<IRI>> subjectsMap = ACLUtil.getSubjectsMap( subjects );
 
 		for ( RDFNodeEnum subjectClass : subjectsMap.keySet() ) {
-			Set<URI> subjectURIs = subjectsMap.get( subjectClass );
-			addInheritablePermissions( acl, subjectClass, subjectURIs, permissions, granting );
+			Set<IRI> subjectIRIs = subjectsMap.get( subjectClass );
+			addInheritablePermissions( acl, subjectClass, subjectIRIs, permissions, granting );
 		}
 
 		documentRepository.update( acl.getDocument() );
@@ -106,10 +107,10 @@ public class SesameACLRepository extends AbstractSesameLDPRepository implements 
 		documentRepository.update( acl.getDocument() );
 	}
 
-	private void addInheritablePermissions( ACL acl, RDFNodeEnum subjectClass, Collection<URI> subjectURIs, Collection<ACEDescription.Permission> permissions, boolean granting ) {
-		Set<ACE> aces = ACLUtil.getRelatedInheritableACEs( acl, subjectClass, subjectURIs );
+	private void addInheritablePermissions( ACL acl, RDFNodeEnum subjectClass, Collection<IRI> subjectIRIs, Collection<ACEDescription.Permission> permissions, boolean granting ) {
+		Set<ACE> aces = ACLUtil.getRelatedInheritableACEs( acl, subjectClass, subjectIRIs );
 		if ( aces.isEmpty() ) {
-			ACE ace = ACEFactory.getInstance().create( acl, subjectClass, subjectURIs, permissions, granting );
+			ACE ace = ACEFactory.getInstance().create( acl, subjectClass, subjectIRIs, permissions, granting );
 			acl.addInheritableEntry( ace.getSubject() );
 		} else {
 			// TODO: Implement
@@ -118,8 +119,8 @@ public class SesameACLRepository extends AbstractSesameLDPRepository implements 
 	}
 
 	@Override
-	public void denyPermissions( URI resourceURI, Collection<ACLSubject> subjects, Collection<ACEDescription.Permission> permissions, boolean inheritable ) {
-		ACL acl = getResourceACL( resourceURI );
+	public void denyPermissions( IRI resourceIRI, Collection<ACLSubject> subjects, Collection<ACEDescription.Permission> permissions, boolean inheritable ) {
+		ACL acl = getResourceACL( resourceIRI );
 		denyPermissions( acl, subjects, permissions, inheritable );
 	}
 
@@ -132,14 +133,14 @@ public class SesameACLRepository extends AbstractSesameLDPRepository implements 
 		throw new NotImplementedException();
 	}
 
-	private URI getACLUri( URI objectURI ) {
-		String objectURIString = IRIUtil.getDocumentIRI( objectURI.stringValue() );
+	private IRI getACLUri( IRI objectIRI ) {
+		String objectIRIString = IRIUtil.getDocumentIRI( objectIRI.stringValue() );
 
 		StringBuilder stringBuilder = new StringBuilder();
-		stringBuilder.append( objectURIString );
-		if ( ! objectURIString.endsWith( Consts.SLASH ) ) stringBuilder.append( Consts.SLASH );
+		stringBuilder.append( objectIRIString );
+		if ( ! objectIRIString.endsWith( Consts.SLASH ) ) stringBuilder.append( Consts.SLASH );
 		stringBuilder.append( Consts.ACL_RESOURCE_SUFFIX ).append( Consts.SLASH );
 
-		return new URIImpl( stringBuilder.toString() );
+		return SimpleValueFactory.getInstance().createIRI( stringBuilder.toString() );
 	}
 }

@@ -7,12 +7,11 @@ import com.carbonldp.namespaces.C;
 import com.carbonldp.namespaces.CP;
 import com.carbonldp.namespaces.CS;
 import com.carbonldp.utils.ValueUtil;
+import org.openrdf.model.IRI;
 import org.openrdf.model.Resource;
 import org.openrdf.model.Statement;
-import org.openrdf.model.URI;
 import org.openrdf.model.Value;
-import org.openrdf.model.impl.ContextStatementImpl;
-import org.openrdf.model.impl.URIImpl;
+import org.openrdf.model.impl.SimpleValueFactory;
 import org.openrdf.repository.RepositoryException;
 import org.openrdf.repository.RepositoryResult;
 
@@ -29,7 +28,7 @@ public class UpdateAction1o1o0 extends AbstractUpdateAction {
 
 		transactionWrapper.runInPlatformContext( () -> {
 			try {
-				changeURIsToHTTPS();
+				changeIRIsToHTTPS();
 			} catch ( RepositoryException e ) {
 				throw new RuntimeException( e );
 			}
@@ -38,7 +37,7 @@ public class UpdateAction1o1o0 extends AbstractUpdateAction {
 		for ( App app : apps ) {
 			transactionWrapper.runInAppcontext( app, () -> {
 				try {
-					changeURIsToHTTPS();
+					changeIRIsToHTTPS();
 				} catch ( RepositoryException e ) {
 					throw new RuntimeException( e );
 				}
@@ -47,7 +46,7 @@ public class UpdateAction1o1o0 extends AbstractUpdateAction {
 
 	}
 
-	private void changeURIsToHTTPS() throws RepositoryException {
+	private void changeIRIsToHTTPS() throws RepositoryException {
 
 		RepositoryResult<Statement> statements = connectionFactory.getConnection().getStatements( null, null, null, true );
 
@@ -55,7 +54,7 @@ public class UpdateAction1o1o0 extends AbstractUpdateAction {
 			Statement statement = statements.next();
 			Resource context = statement.getContext();
 			Resource subject = statement.getSubject();
-			URI predicate = statement.getPredicate();
+			IRI predicate = statement.getPredicate();
 			Value object = statement.getObject();
 
 			if ( ValueUtil.isIRI( context ) && uriNeedsToBeChanged( ValueUtil.getIRI( context ) ) ) context = changeProtocol( ValueUtil.getIRI( context ) );
@@ -64,9 +63,9 @@ public class UpdateAction1o1o0 extends AbstractUpdateAction {
 			if ( ValueUtil.isIRI( object ) && uriNeedsToBeChanged( ValueUtil.getIRI( object ) ) ) object = changeProtocol( ValueUtil.getIRI( object ) );
 
 			if ( context != statement.getContext() || subject != statement.getSubject() || predicate != statement.getPredicate() || object != statement.getObject() ) {
-				Statement newStatement = new ContextStatementImpl( subject, predicate, object, context );
+				Statement newStatement = SimpleValueFactory.getInstance().createStatement( subject, predicate, object, context );
 
-				if ( LOG.isDebugEnabled() ) LOG.debug( "changeURIsToHTTPS() -- Changing statement: '{}' to '{}'", statement, newStatement );
+				if ( LOG.isDebugEnabled() ) LOG.debug( "changeIRIsToHTTPS() -- Changing statement: '{}' to '{}'", statement, newStatement );
 
 				connectionFactory.getConnection().add( newStatement, context );
 				connectionFactory.getConnection().remove( statement, statement.getContext() );
@@ -75,7 +74,7 @@ public class UpdateAction1o1o0 extends AbstractUpdateAction {
 		}
 	}
 
-	private boolean uriNeedsToBeChanged( URI uri ) {
+	private boolean uriNeedsToBeChanged( IRI uri ) {
 		String host = Consts.HTTP + Vars.getInstance().getHost().substring( Consts.HTTPS.length() );
 		String c = Consts.HTTP + C.NAMESPACE.substring( Consts.HTTPS.length() );
 		String cp = Consts.HTTP + CP.NAMESPACE.substring( Consts.HTTPS.length() );
@@ -83,7 +82,7 @@ public class UpdateAction1o1o0 extends AbstractUpdateAction {
 		return uri.stringValue().startsWith( host ) || uri.stringValue().startsWith( c ) || uri.stringValue().startsWith( cp ) || uri.stringValue().startsWith( cs );
 	}
 
-	private URI changeProtocol( URI uri ) {
-		return new URIImpl( Consts.HTTPS + uri.stringValue().substring( Consts.HTTP.length() ) );
+	private IRI changeProtocol( IRI uri ) {
+		return SimpleValueFactory.getInstance().createIRI( Consts.HTTPS + uri.stringValue().substring( Consts.HTTP.length() ) );
 	}
 }

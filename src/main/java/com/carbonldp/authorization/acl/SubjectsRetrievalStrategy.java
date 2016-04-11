@@ -9,7 +9,7 @@ import com.carbonldp.authorization.PlatformRoleDescription;
 import com.carbonldp.rdf.RDFNodeEnum;
 import com.carbonldp.rdf.RDFResource;
 import com.carbonldp.utils.RDFNodeUtil;
-import org.openrdf.model.URI;
+import org.openrdf.model.IRI;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 
@@ -21,7 +21,7 @@ public final class SubjectsRetrievalStrategy {
 		// Meaning non-instantiable
 	}
 
-	public static Map<RDFNodeEnum, Set<URI>> getSubjects( Authentication authentication ) {
+	public static Map<RDFNodeEnum, Set<IRI>> getSubjects( Authentication authentication ) {
 
 		if ( authentication instanceof AgentAuthenticationToken )
 			return getSubjects( (AgentAuthenticationToken) authentication );
@@ -33,8 +33,8 @@ public final class SubjectsRetrievalStrategy {
 		throw new IllegalArgumentException( "The authentication token isn't supported." );
 	}
 
-	public static Map<RDFNodeEnum, Set<URI>> getSubjects( AbstractAuthenticationToken authentication ) {
-		Map<RDFNodeEnum, Set<URI>> subjects = new HashMap<>();
+	public static Map<RDFNodeEnum, Set<IRI>> getSubjects( AbstractAuthenticationToken authentication ) {
+		Map<RDFNodeEnum, Set<IRI>> subjects = new HashMap<>();
 
 		addPlatformRoles( subjects, authentication );
 		addPlatformPrivileges( subjects, authentication );
@@ -43,8 +43,8 @@ public final class SubjectsRetrievalStrategy {
 	}
 
 	// TODO: The creation of this resource is somewhat expensive, cache it in some way
-	public static Map<RDFNodeEnum, Set<URI>> getSubjects( AgentAuthenticationToken authentication ) {
-		Map<RDFNodeEnum, Set<URI>> subjects = new HashMap<>();
+	public static Map<RDFNodeEnum, Set<IRI>> getSubjects( AgentAuthenticationToken authentication ) {
+		Map<RDFNodeEnum, Set<IRI>> subjects = new HashMap<>();
 
 		addAgent( subjects, authentication );
 
@@ -57,40 +57,40 @@ public final class SubjectsRetrievalStrategy {
 		return subjects;
 	}
 
-	public static Map<RDFNodeEnum, Set<URI>> getSubjects( AnonymousAuthenticationToken authentication ) {
-		Map<RDFNodeEnum, Set<URI>> subjects = new HashMap<>();
+	public static Map<RDFNodeEnum, Set<IRI>> getSubjects( AnonymousAuthenticationToken authentication ) {
+		Map<RDFNodeEnum, Set<IRI>> subjects = new HashMap<>();
 
 		return subjects;
 
 		// TODO:
 	}
 
-	private static void addAgent( Map<RDFNodeEnum, Set<URI>> subjects, AgentAuthenticationToken authentication ) {
-		Set<URI> agentURIs = new HashSet<>();
-		agentURIs.add( authentication.getAgent().getIRI() );
-		subjects.put( AgentDescription.Resource.CLASS, agentURIs );
+	private static void addAgent( Map<RDFNodeEnum, Set<IRI>> subjects, AgentAuthenticationToken authentication ) {
+		Set<IRI> agentIRIs = new HashSet<>();
+		agentIRIs.add( authentication.getAgent().getIRI() );
+		subjects.put( AgentDescription.Resource.CLASS, agentIRIs );
 	}
 
-	private static void addPlatformRoles( Map<RDFNodeEnum, Set<URI>> subjects, AbstractAuthenticationToken authentication ) {
-		Set<URI> platformRoleURIs = RDFNodeUtil.getAllIRIs( authentication.getPlatformRoles() );
-		if ( platformRoleURIs.isEmpty() ) return;
-		subjects.put( PlatformRoleDescription.Resource.CLASS, platformRoleURIs );
+	private static void addPlatformRoles( Map<RDFNodeEnum, Set<IRI>> subjects, AbstractAuthenticationToken authentication ) {
+		Set<IRI> platformRoleIRIs = RDFNodeUtil.getAllIRIs( authentication.getPlatformRoles() );
+		if ( platformRoleIRIs.isEmpty() ) return;
+		subjects.put( PlatformRoleDescription.Resource.CLASS, platformRoleIRIs );
 	}
 
-	private static void addPlatformPrivileges( Map<RDFNodeEnum, Set<URI>> subjects, AbstractAuthenticationToken authentication ) {
-		Set<URI> platformPrivilegeURIs = RDFNodeUtil.getAllIRIs( authentication.getPlatformPrivileges() );
-		if ( platformPrivilegeURIs.isEmpty() ) return;
-		subjects.put( PlatformPrivilegeDescription.Resource.CLASS, platformPrivilegeURIs );
+	private static void addPlatformPrivileges( Map<RDFNodeEnum, Set<IRI>> subjects, AbstractAuthenticationToken authentication ) {
+		Set<IRI> platformPrivilegeIRIs = RDFNodeUtil.getAllIRIs( authentication.getPlatformPrivileges() );
+		if ( platformPrivilegeIRIs.isEmpty() ) return;
+		subjects.put( PlatformPrivilegeDescription.Resource.CLASS, platformPrivilegeIRIs );
 	}
 
-	private static void addAppRoles( Map<RDFNodeEnum, Set<URI>> subjects, AgentAuthenticationToken authentication ) {
+	private static void addAppRoles( Map<RDFNodeEnum, Set<IRI>> subjects, AgentAuthenticationToken authentication ) {
 
-		Set<URI> appRoleURIs = getURIs( authentication.getAppRoles() );
-		if ( appRoleURIs.isEmpty() ) return;
-		subjects.put( AppRoleDescription.Resource.CLASS, appRoleURIs );
+		Set<IRI> appRoleIRIs = getIRIs( authentication.getAppRoles() );
+		if ( appRoleIRIs.isEmpty() ) return;
+		subjects.put( AppRoleDescription.Resource.CLASS, appRoleIRIs );
 	}
 
-	private static Set<URI> getURIs( Collection<? extends RDFResource> resources ) {
+	private static Set<IRI> getIRIs( Collection<? extends RDFResource> resources ) {
 		return resources
 			.stream()
 			.map( RDFResource::getIRI )

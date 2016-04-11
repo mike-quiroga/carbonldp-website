@@ -3,6 +3,7 @@ package com.carbonldp.ldp.web;
 import com.carbonldp.HTTPHeaders;
 import com.carbonldp.descriptions.APIPreferences;
 import com.carbonldp.exceptions.InvalidResourceException;
+import com.carbonldp.exceptions.StupidityException;
 import com.carbonldp.ldp.containers.RemoveMembersAction;
 import com.carbonldp.ldp.containers.RemoveMembersActionFactory;
 import com.carbonldp.models.EmptyResponse;
@@ -14,7 +15,9 @@ import com.carbonldp.utils.RDFNodeUtil;
 import com.carbonldp.web.exceptions.BadRequestException;
 import com.carbonldp.web.exceptions.NotFoundException;
 import com.carbonldp.web.exceptions.NotImplementedException;
-import org.openrdf.model.URI;
+import org.openrdf.model.IRI;
+import org.openrdf.model.Resource;
+import org.openrdf.model.util.Models;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
@@ -47,20 +50,20 @@ public class AbstractDELETERequestHandler extends AbstractLDPRequestHandler {
 	public ResponseEntity<Object> handleRequest( RDFDocument requestBody, HttpServletRequest request, HttpServletResponse response ) {
 		setUp( request, response );
 
-		URI targetURI = getTargetURI( request );
-		if ( ! sourceService.exists( targetURI ) ) throw new NotFoundException();
+		IRI targetIRI = getTargetIRI( request );
+		if ( ! sourceService.exists( targetIRI ) ) throw new NotFoundException();
 
 		String requestETag = getRequestETag();
-		checkPrecondition( targetURI, requestETag );
+		checkPrecondition( targetIRI, requestETag );
 
-		APIPreferences.InteractionModel interactionModel = getInteractionModel( targetURI );
+		APIPreferences.InteractionModel interactionModel = getInteractionModel( targetIRI );
 		switch ( interactionModel ) {
 			case RDF_SOURCE:
-				return handleRDFSourceDeletion( targetURI );
+				return handleRDFSourceDeletion( targetIRI );
 			case CONTAINER:
-				return handleContainerDeletion( requestBody, targetURI );
+				return handleContainerDeletion( requestBody, targetIRI );
 			case NON_RDF_SOURCE:
-				return handleNonRDFDeletion( targetURI );
+				return handleNonRDFDeletion( targetIRI );
 			case SPARQL_ENDPOINT:
 			default:
 				throw new IllegalStateException();
@@ -71,34 +74,36 @@ public class AbstractDELETERequestHandler extends AbstractLDPRequestHandler {
 		return APIPreferences.InteractionModel.RDF_SOURCE;
 	}
 
-	protected ResponseEntity<Object> handleRDFSourceDeletion( URI targetURI ) {
-		delete( targetURI );
+	protected ResponseEntity<Object> handleRDFSourceDeletion( IRI targetIRI ) {
+		delete( targetIRI );
 		return createSuccessfulDeleteResponse();
 	}
 
-	protected void delete( URI targetURI ) {
-		sourceService.delete( targetURI );
+	protected void delete( IRI targetIRI ) {
+		sourceService.delete( targetIRI );
 	}
 
-	protected ResponseEntity<Object> handleContainerDeletion( RDFDocument requestDocument, URI targetURI ) {
-		Set<APIPreferences.ContainerDeletePreference> deletePreferences = getContainerDeletePreferences( targetURI );
+	protected ResponseEntity<Object> handleContainerDeletion( RDFDocument requestDocument, IRI targetIRI ) {
+		Set<APIPreferences.ContainerDeletePreference> deletePreferences = getContainerDeletePreferences( targetIRI );
 
 		if ( deletePreferences.contains( APIPreferences.ContainerDeletePreference.MEMBERSHIP_RESOURCES ) ) throw new NotImplementedException();
-		if ( deletePreferences.contains( APIPreferences.ContainerDeletePreference.MEMBERSHIP_TRIPLES ) ) containerService.removeMembers( targetURI );
-		if ( deletePreferences.contains( APIPreferences.ContainerDeletePreference.CONTAINED_RESOURCES ) ) containerService.deleteContainedResources( targetURI );
-		if ( deletePreferences.contains( APIPreferences.ContainerDeletePreference.CONTAINER ) ) containerService.delete( targetURI );
-		if ( deletePreferences.contains( APIPreferences.ContainerDeletePreference.SELECTED_MEMBERSHIP_TRIPLES ) ) removeSelectiveMembers( requestDocument, targetURI );
+		if ( deletePreferences.contains( APIPreferences.ContainerDeletePreference.MEMBERSHIP_TRIPLES ) ) containerService.removeMembers( targetIRI );
+		if ( deletePreferences.contains( APIPreferences.ContainerDeletePreference.CONTAINED_RESOURCES ) ) containerService.deleteContainedResources( targetIRI );
+		if ( deletePreferences.contains( APIPreferences.ContainerDeletePreference.CONTAINER ) ) containerService.delete( targetIRI );
+		if ( deletePreferences.contains( APIPreferences.ContainerDeletePreference.SELECTED_MEMBERSHIP_TRIPLES ) ) removeSelectiveMembers( requestDocument, targetIRI );
 
 		return createSuccessfulDeleteResponse();
 	}
 
-	protected void removeSelectiveMembers( RDFDocument requestDocument, URI targetURI ) {
+	protected void removeSelectiveMembers( RDFDocument requestDocument, IRI targetIRI ) {
 		validateRequestDocument( requestDocument );
 
-		RemoveMembersAction members = new RemoveMembersAction( requestDocument.getBaseModel(), requestDocument.subjectResource() );
+		Resource subject = Models.subject( requestDocument ).orElse( null );
+		if ( subject == null ) throw new StupidityException( "The model wasn't validated like it should." );
+		RemoveMembersAction members = new RemoveMembersAction( requestDocument.getBaseModel(), subject );
 		validate( members );
 
-		containerService.removeMembers( targetURI, members.getMembers() );
+		containerService.removeMembers( targetIRI, members.getMembers() );
 	}
 
 	protected void validate( RemoveMembersAction membersAction ) {
@@ -113,14 +118,14 @@ public class AbstractDELETERequestHandler extends AbstractLDPRequestHandler {
 		if ( ! infractions.isEmpty() ) throw new InvalidResourceException( infractions );
 	}
 
-	protected ResponseEntity<Object> handleNonRDFDeletion( URI targetURI ) {
-		isRDFRepresentation( targetURI );
-		sourceService.delete( targetURI );
+	protected ResponseEntity<Object> handleNonRDFDeletion( IRI targetIRI ) {
+		isRDFRepresentation( targetIRI );
+		sourceService.delete( targetIRI );
 		return createSuccessfulDeleteResponse();
 	}
 
-	private void isRDFRepresentation( URI targetURI ) {
-		if ( ! nonRdfSourceService.isRDFRepresentation( targetURI ) ) throw new BadRequestException( 0x4003 );
+	private void isRDFRepresentation( IRI targetIRI ) {
+		if ( ! nonRdfSourceService.isRDFRepresentation( targetIRI ) ) throw new BadRequestException( 0x4003 );
 	}
 
 	protected ResponseEntity<Object> createSuccessfulDeleteResponse() {
@@ -128,13 +133,13 @@ public class AbstractDELETERequestHandler extends AbstractLDPRequestHandler {
 	}
 
 	@Override
-	protected void checkPrecondition( URI targetURI, String requestETag ) {
+	protected void checkPrecondition( IRI targetIRI, String requestETag ) {
 		// TODO: Make this check a class variable (preconditionRequired = true/false)
 		if ( requestETag == null ) return;
-		super.checkPrecondition( targetURI, requestETag );
+		super.checkPrecondition( targetIRI, requestETag );
 	}
 
-	protected Set<APIPreferences.ContainerDeletePreference> getContainerDeletePreferences( URI targetURI ) {
+	protected Set<APIPreferences.ContainerDeletePreference> getContainerDeletePreferences( IRI targetIRI ) {
 		Set<APIPreferences.ContainerDeletePreference> preferences = new HashSet<>();
 		Set<APIPreferences.ContainerDeletePreference> defaultPreferences = getDefaultContainerDeletePreferences();
 

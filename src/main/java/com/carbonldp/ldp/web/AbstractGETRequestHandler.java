@@ -14,7 +14,7 @@ import com.carbonldp.models.HTTPHeaderValue;
 import com.carbonldp.utils.RDFNodeUtil;
 import com.carbonldp.web.exceptions.BadRequestException;
 import com.carbonldp.web.exceptions.NotFoundException;
-import org.openrdf.model.URI;
+import org.openrdf.model.IRI;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
@@ -52,19 +52,19 @@ public abstract class AbstractGETRequestHandler extends AbstractLDPRequestHandle
 	public ResponseEntity<Object> handleRequest( HttpServletRequest request, HttpServletResponse response ) {
 		setUp( request, response );
 
-		URI targetURI = getTargetURI( request );
-		if ( ! sourceService.exists( targetURI ) ) throw new NotFoundException();
+		IRI targetIRI = getTargetIRI( request );
+		if ( ! sourceService.exists( targetIRI ) ) throw new NotFoundException();
 
-		InteractionModel interactionModel = getInteractionModel( targetURI );
+		InteractionModel interactionModel = getInteractionModel( targetIRI );
 		switch ( interactionModel ) {
 			case RDF_SOURCE:
-				return handleRDFSourceRetrieval( targetURI );
+				return handleRDFSourceRetrieval( targetIRI );
 			case CONTAINER:
-				return handleContainerRetrieval( targetURI );
+				return handleContainerRetrieval( targetIRI );
 			case NON_RDF_SOURCE:
-				return handleNonRDFRetrieval( targetURI );
+				return handleNonRDFRetrieval( targetIRI );
 			case SPARQL_ENDPOINT:
-				return handleSPARQLEndpointRetrieval( targetURI );
+				return handleSPARQLEndpointRetrieval( targetIRI );
 			default:
 				throw new IllegalStateException();
 		}
@@ -74,15 +74,15 @@ public abstract class AbstractGETRequestHandler extends AbstractLDPRequestHandle
 		return InteractionModel.RDF_SOURCE;
 	}
 
-	protected ResponseEntity<Object> handleRDFSourceRetrieval( URI targetURI ) {
+	protected ResponseEntity<Object> handleRDFSourceRetrieval( IRI targetIRI ) {
 		// TODO: Take into account preferences (ACL, System Managed Properties, etc.)
 
-		RDFSource source = sourceService.get( targetURI );
+		RDFSource source = sourceService.get( targetIRI );
 
-		addRDFSourceAllowHeaders( targetURI, response );
+		addRDFSourceAllowHeaders( targetIRI, response );
 
 		setAppliedPreferenceHeaders();
-		ContainerDescription.Type containerType = containerService.getContainerType( targetURI );
+		ContainerDescription.Type containerType = containerService.getContainerType( targetIRI );
 
 		if ( containerType != null ) addContainerTypeLinkHeader( containerType );
 		addTypeLinkHeader( InteractionModel.RDF_SOURCE );
@@ -90,7 +90,7 @@ public abstract class AbstractGETRequestHandler extends AbstractLDPRequestHandle
 		return new ResponseEntity<>( source, HttpStatus.OK );
 	}
 
-	private void addRDFSourceAllowHeaders( URI targetURI, HttpServletResponse response ) {
+	private void addRDFSourceAllowHeaders( IRI targetIRI, HttpServletResponse response ) {
 		// TODO: Base this on the security model
 		response.addHeader( HTTPHeaders.ALLOW, "GET, POST, PUT, PATCH, DELETE, OPTIONS" );
 
@@ -99,14 +99,14 @@ public abstract class AbstractGETRequestHandler extends AbstractLDPRequestHandle
 		response.addHeader( HTTPHeaders.ACCEPT_PATCH, "application/ld+json, text/turtle" );
 	}
 
-	protected ResponseEntity<Object> handleContainerRetrieval( URI targetURI ) {
-		Set<ContainerRetrievalPreference> containerRetrievalPreferences = getContainerRetrievalPreferences( targetURI );
+	protected ResponseEntity<Object> handleContainerRetrieval( IRI targetIRI ) {
+		Set<ContainerRetrievalPreference> containerRetrievalPreferences = getContainerRetrievalPreferences( targetIRI );
 
-		Container container = containerService.get( targetURI, containerRetrievalPreferences );
+		Container container = containerService.get( targetIRI, containerRetrievalPreferences );
 
 		// TODO: Add Container related information to the request (number of contained resources and members)
 
-		addContainerAllowHeaders( targetURI, response );
+		addContainerAllowHeaders( targetIRI, response );
 
 		setAppliedPreferenceHeaders();
 		ContainerDescription.Type containerType = ContainerFactory.getInstance().getContainerType( container );
@@ -118,7 +118,7 @@ public abstract class AbstractGETRequestHandler extends AbstractLDPRequestHandle
 		return new ResponseEntity<>( container, HttpStatus.OK );
 	}
 
-	private void addContainerAllowHeaders( URI targetURI, HttpServletResponse response ) {
+	private void addContainerAllowHeaders( IRI targetIRI, HttpServletResponse response ) {
 		// TODO: Base this on the security model
 		response.addHeader( HTTPHeaders.ALLOW, "GET, POST, PUT, PATCH, DELETE, OPTIONS" );
 
@@ -127,10 +127,10 @@ public abstract class AbstractGETRequestHandler extends AbstractLDPRequestHandle
 		response.addHeader( HTTPHeaders.ACCEPT_PATCH, "application/ld+json, text/turtle" );
 	}
 
-	private Set<ContainerRetrievalPreference> getContainerRetrievalPreferences( URI targetURI ) {
+	private Set<ContainerRetrievalPreference> getContainerRetrievalPreferences( IRI targetIRI ) {
 		Set<ContainerRetrievalPreference> preferences = new HashSet<>();
 		Set<ContainerRetrievalPreference> defaultPreferences = getDefaultContainerRetrievalPreferences();
-		Set<ContainerRetrievalPreference> containerDefinedPreferences = containerService.getRetrievalPreferences( targetURI );
+		Set<ContainerRetrievalPreference> containerDefinedPreferences = containerService.getRetrievalPreferences( targetIRI );
 
 		if ( containerDefinedPreferences.isEmpty() ) preferences.addAll( defaultPreferences );
 		else preferences.addAll( containerDefinedPreferences );
@@ -173,28 +173,28 @@ public abstract class AbstractGETRequestHandler extends AbstractLDPRequestHandle
 		return DEFAULT_RCP;
 	}
 
-	protected ResponseEntity<Object> handleNonRDFRetrieval( URI targetURI ) {
-		isRDFRepresentation( targetURI );
-		RDFRepresentation rdfRepresentation = new RDFRepresentation( sourceService.get( targetURI ) );
+	protected ResponseEntity<Object> handleNonRDFRetrieval( IRI targetIRI ) {
+		isRDFRepresentation( targetIRI );
+		RDFRepresentation rdfRepresentation = new RDFRepresentation( sourceService.get( targetIRI ) );
 		File file = nonRdfSourceService.getResource( rdfRepresentation );
 
-		addNonRDFAllowHeader( targetURI, response );
+		addNonRDFAllowHeader( targetIRI, response );
 
 		return new ResponseEntity<>( new RDFRepresentationFileWrapper( rdfRepresentation, file ), HttpStatus.OK );
 	}
 
-	private void addNonRDFAllowHeader( URI targetURI, HttpServletResponse response ) {
+	private void addNonRDFAllowHeader( IRI targetIRI, HttpServletResponse response ) {
 		// TODO: Base this on the security model
 		response.addHeader( HTTPHeaders.ALLOW, "GET, PUT, DELETE, OPTIONS" );
 
 		response.addHeader( HTTPHeaders.ACCEPT_PUT, "*/*" );
 	}
 
-	private void isRDFRepresentation( URI targetURI ) {
-		if ( ! nonRdfSourceService.isRDFRepresentation( targetURI ) ) throw new BadRequestException( 0x4003 );
+	private void isRDFRepresentation( IRI targetIRI ) {
+		if ( ! nonRdfSourceService.isRDFRepresentation( targetIRI ) ) throw new BadRequestException( 0x4003 );
 	}
 
-	protected ResponseEntity<Object> handleSPARQLEndpointRetrieval( URI targetURI ) {
+	protected ResponseEntity<Object> handleSPARQLEndpointRetrieval( IRI targetIRI ) {
 		// TODO: Implement it
 		return new ResponseEntity<>( HttpStatus.NOT_IMPLEMENTED );
 	}

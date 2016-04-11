@@ -21,7 +21,7 @@ import com.carbonldp.models.Infraction;
 import com.carbonldp.rdf.RDFResource;
 import com.carbonldp.utils.IRIUtil;
 import com.carbonldp.web.exceptions.NotFoundException;
-import org.openrdf.model.URI;
+import org.openrdf.model.IRI;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -41,14 +41,14 @@ public class SesameAppService extends AbstractSesameLDPService implements AppSer
 	protected RDFSourceService sourceService;
 
 	@Override
-	public boolean exists( URI appURI ) {
-		return appRepository.exists( appURI );
+	public boolean exists( IRI appIRI ) {
+		return appRepository.exists( appIRI );
 	}
 
 	@Override
-	public App get( URI appURI ) {
-		if ( ! exists( appURI ) ) throw new ResourceDoesntExistException();
-		return appRepository.get( appURI );
+	public App get( IRI appIRI ) {
+		if ( ! exists( appIRI ) ) throw new ResourceDoesntExistException();
+		return appRepository.get( appIRI );
 	}
 
 	@Override
@@ -57,7 +57,7 @@ public class SesameAppService extends AbstractSesameLDPService implements AppSer
 		validate( app );
 
 		App createdApp = appRepository.createPlatformAppRepository( app );
-		containerService.createChild( appRepository.getPlatformAppContainerURI(), app );
+		containerService.createChild( appRepository.getPlatformAppContainerIRI(), app );
 		ACL appACL = aclRepository.getResourceACL( createdApp.getIRI() );
 		if ( appACL == null ) {
 			throw new IllegalStateException( "Resource couldn't be created" );
@@ -92,18 +92,18 @@ public class SesameAppService extends AbstractSesameLDPService implements AppSer
 	}
 
 	@Override
-	public void delete( URI appURI ) {
-		if ( ! exists( appURI ) ) throw new NotFoundException();
-		appRepository.delete( appURI );
-		sourceRepository.deleteOccurrences( appURI, true );
+	public void delete( IRI appIRI ) {
+		if ( ! exists( appIRI ) ) throw new NotFoundException();
+		appRepository.delete( appIRI );
+		sourceRepository.deleteOccurrences( appIRI, true );
 	}
 
 	@Override
 	public void replace( App app ) {
-		URI appURI = app.getIRI();
+		IRI appIRI = app.getIRI();
 		validate( app );
 
-		if ( ! exists( appURI ) ) throw new NotFoundException();
+		if ( ! exists( appIRI ) ) throw new NotFoundException();
 		sourceService.replace( app );
 	}
 
@@ -130,14 +130,14 @@ public class SesameAppService extends AbstractSesameLDPService implements AppSer
 	}
 
 	private AppRole createAppAdminRole( Container appRolesContainer ) {
-		URI appAdminRoleURI = getAppAdminRoleURI( appRolesContainer );
-		AppRole appAdminRole = AppRoleFactory.getInstance().create( new RDFResource( appAdminRoleURI ) );
+		IRI appAdminRoleIRI = getAppAdminRoleIRI( appRolesContainer );
+		AppRole appAdminRole = AppRoleFactory.getInstance().create( new RDFResource( appAdminRoleIRI ) );
 		appAdminRole.setName( "App admin." );
 		appRoleService.create( appAdminRole );
 		return appAdminRole;
 	}
 
-	private URI getAppAdminRoleURI( Container appRolesContainer ) {
+	private IRI getAppAdminRoleIRI( Container appRolesContainer ) {
 		return IRIUtil.createChildIRI( appRolesContainer.getIRI(), "app-admin/" );
 	}
 

@@ -3,10 +3,10 @@ package com.carbonldp.repository.updates;
 import com.carbonldp.apps.App;
 import com.carbonldp.rdf.RDFBlankNodeDescription;
 import com.carbonldp.utils.ValueUtil;
+import org.openrdf.model.IRI;
 import org.openrdf.model.Literal;
-import org.openrdf.model.URI;
 import org.openrdf.model.Value;
-import org.openrdf.model.impl.ValueFactoryImpl;
+import org.openrdf.model.impl.SimpleValueFactory;
 import org.openrdf.query.BindingSet;
 import org.openrdf.repository.RepositoryException;
 
@@ -57,11 +57,11 @@ public class UpdateAction1o4o0 extends AbstractUpdateAction {
 	}
 
 	private void addBNodeIdentifier() throws RepositoryException {
-		URI predicate = RDFBlankNodeDescription.Property.BNODE_IDENTIFIER.getIRI();
+		IRI predicate = RDFBlankNodeDescription.Property.BNODE_IDENTIFIER.getIRI();
 
 		sparqlTemplate.executeTupleQuery( getBNodesWithoutIDQuery, null, queryResult -> {
 			while ( queryResult.hasNext() ) {
-				Literal object = ValueFactoryImpl.getInstance().createLiteral( UUID.randomUUID().toString() );
+				Literal object = SimpleValueFactory.getInstance().createLiteral( UUID.randomUUID().toString() );
 				BindingSet bindingSet = queryResult.next();
 				Value subject = bindingSet.getValue( "s" );
 				Value context = bindingSet.getValue( "c" );

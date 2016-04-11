@@ -22,10 +22,11 @@ import com.carbonldp.web.exceptions.BadRequestException;
 import com.carbonldp.web.exceptions.PreconditionFailedException;
 import com.carbonldp.web.exceptions.PreconditionRequiredException;
 import org.joda.time.DateTime;
+import org.openrdf.model.IRI;
 import org.openrdf.model.Resource;
-import org.openrdf.model.URI;
 import org.openrdf.model.impl.AbstractModel;
-import org.openrdf.model.impl.URIImpl;
+
+import org.openrdf.model.impl.SimpleValueFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.servlet.http.HttpServletRequest;
@@ -70,23 +71,23 @@ public abstract class AbstractLDPRequestHandler extends AbstractRequestHandler {
 		this.appliedPreferences = new ArrayList<>();
 	}
 
-	protected boolean targetResourceExists( URI targetURI ) {
-		return sourceService.exists( targetURI );
+	protected boolean targetResourceExists( IRI targetIRI ) {
+		return sourceService.exists( targetIRI );
 	}
 
-	protected URI getTargetURI( HttpServletRequest request ) {
+	protected IRI getTargetIRI( HttpServletRequest request ) {
 		String url = RequestUtil.getRequestURL( request );
-		return new URIImpl( url );
+		return SimpleValueFactory.getInstance().createIRI( url );
 	}
 
-	protected InteractionModel getInteractionModel( URI targetURI ) {
+	protected InteractionModel getInteractionModel( IRI targetIRI ) {
 		InteractionModel requestInteractionModel = getRequestInteractionModel( request );
 		if ( requestInteractionModel != null ) {
 			checkInteractionModelSupport( requestInteractionModel );
 			appliedPreferences.add( interactionModelApplied );
 			return requestInteractionModel;
 		}
-		return getDefaultInteractionModel( targetURI );
+		return getDefaultInteractionModel( targetIRI );
 	}
 
 	private InteractionModel getRequestInteractionModel( HttpServletRequest request ) {
@@ -98,8 +99,8 @@ public abstract class AbstractLDPRequestHandler extends AbstractRequestHandler {
 		if ( size == 0 ) return null;
 		if ( size > 1 ) throw new BadRequestException( 0x5002 );
 
-		String interactionModelURI = filteredValues.get( 0 ).getMainValue();
-		InteractionModel interactionModel = RDFNodeUtil.findByIRI( interactionModelURI, InteractionModel.class );
+		String interactionModelIRI = filteredValues.get( 0 ).getMainValue();
+		InteractionModel interactionModel = RDFNodeUtil.findByIRI( interactionModelIRI, InteractionModel.class );
 		if ( interactionModel == null ) throw new BadRequestException( 0x5003 );
 		return interactionModel;
 	}
@@ -110,11 +111,11 @@ public abstract class AbstractLDPRequestHandler extends AbstractRequestHandler {
 		}
 	}
 
-	private InteractionModel getDefaultInteractionModel( URI targetURI ) {
-		URI dimURI = sourceService.getDefaultInteractionModel( targetURI );
-		if ( dimURI == null ) return getDefaultInteractionModel();
+	private InteractionModel getDefaultInteractionModel( IRI targetIRI ) {
+		IRI dimIRI = sourceService.getDefaultInteractionModel( targetIRI );
+		if ( dimIRI == null ) return getDefaultInteractionModel();
 
-		InteractionModel sourceDIM = RDFNodeUtil.findByIRI( dimURI, InteractionModel.class );
+		InteractionModel sourceDIM = RDFNodeUtil.findByIRI( dimIRI, InteractionModel.class );
 		if ( sourceDIM == null ) return getDefaultInteractionModel();
 
 		if ( ! getSupportedInteractionModels().contains( sourceDIM ) ) return getDefaultInteractionModel();
@@ -169,7 +170,7 @@ public abstract class AbstractLDPRequestHandler extends AbstractRequestHandler {
 		return request.getHeader( HTTPHeaders.IF_MATCH );
 	}
 
-	protected void checkPrecondition( URI targetURI, String requestETag ) {
+	protected void checkPrecondition( IRI targetIRI, String requestETag ) {
 		if ( requestETag == null ) throw new PreconditionRequiredException();
 		requestETag = requestETag.trim();
 		if ( ! requestETag.startsWith( "\"" ) && ! requestETag.endsWith( "\"" ) ) {
@@ -180,7 +181,7 @@ public abstract class AbstractLDPRequestHandler extends AbstractRequestHandler {
 		} catch ( NumberFormatException e ) {
 			throw new PreconditionFailedException( 0x5005 );
 		}
-		String eTag = sourceService.getETag( targetURI );
+		String eTag = sourceService.getETag( targetIRI );
 
 		if ( ! eTag.equals( requestETag ) ) throw new PreconditionFailedException( 0x5006 );
 
@@ -189,10 +190,10 @@ public abstract class AbstractLDPRequestHandler extends AbstractRequestHandler {
 	protected void seekForOrphanFragments( AbstractModel requestModel, RDFResource requestDocumentResource ) {
 		for ( Resource subject : requestModel.subjects() ) {
 			if ( ! ValueUtil.isIRI( subject ) ) continue;
-			URI subjectURI = ValueUtil.getIRI( subject );
-			if ( ! IRIUtil.hasFragment( subjectURI ) ) continue;
-			URI documentURI = new URIImpl( IRIUtil.getDocumentIRI( subjectURI.stringValue() ) );
-			if ( ! requestDocumentResource.getIRI().equals( documentURI ) ) {
+			IRI subjectIRI = ValueUtil.getIRI( subject );
+			if ( ! IRIUtil.hasFragment( subjectIRI ) ) continue;
+			IRI documentIRI = SimpleValueFactory.getInstance().createIRI( IRIUtil.getDocumentIRI( subjectIRI.stringValue() ) );
+			if ( ! requestDocumentResource.getIRI().equals( documentIRI ) ) {
 				throw new BadRequestException( "The request contains orphan fragments." );
 			}
 		}

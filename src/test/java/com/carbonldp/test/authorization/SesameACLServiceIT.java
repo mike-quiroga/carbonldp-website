@@ -3,9 +3,9 @@ package com.carbonldp.test.authorization;
 import com.carbonldp.apps.AppRoleDescription;
 import com.carbonldp.authorization.acl.*;
 import com.carbonldp.test.AbstractIT;
-import org.openrdf.model.URI;
+import org.openrdf.model.IRI;
 import org.openrdf.model.ValueFactory;
-import org.openrdf.model.impl.ValueFactoryImpl;
+import org.openrdf.model.impl.SimpleValueFactory;
 import org.testng.Assert;
 import org.testng.SkipException;
 import org.testng.annotations.BeforeMethod;
@@ -27,23 +27,23 @@ public class SesameACLServiceIT extends AbstractIT {
 
 	private ValueFactory valueFactory;
 
-	private URI role1;
-	private URI role2;
+	private IRI role1;
+	private IRI role2;
 
 	private ACEValues aceRAD2T;
 	private ACEValues aceRA2F;
-	private URI aclUri;
-	private URI accessToURI;
-	private URI subjectClass = AppRoleDescription.Resource.CLASS.getIRI();
+	private IRI aclUri;
+	private IRI accessToIRI;
+	private IRI subjectClass = AppRoleDescription.Resource.CLASS.getIRI();
 
 	Set<ACEDescription.Permission> permissions2;
 	Set<ACEDescription.Permission> permissions1;
 
 	@BeforeMethod
 	protected void setUp() {
-		valueFactory = new ValueFactoryImpl();
-		role1 = valueFactory.createURI( "https://local.carbonldp.com/apps/test-blog/roles/blog-admin/" );
-		role2 = valueFactory.createURI( "https://local.carbonldp.com/apps/test-blog/roles/app-admin/" );
+		valueFactory = SimpleValueFactory.getInstance();
+		role1 = valueFactory.createIRI( "https://local.carbonldp.com/apps/test-blog/roles/blog-admin/" );
+		role2 = valueFactory.createIRI( "https://local.carbonldp.com/apps/test-blog/roles/app-admin/" );
 
 		permissions1 = new LinkedHashSet<>();
 		permissions1.add( ACEDescription.Permission.READ );
@@ -57,8 +57,8 @@ public class SesameACLServiceIT extends AbstractIT {
 		aceRA2F = new ACEValues( role2, false, permissions2 );
 		aceRAD2T = new ACEValues( role2, true, permissions1 );
 
-		aclUri = valueFactory.createURI( "https://local.carbonldp.com/apps/test-blog/~acl/" );
-		accessToURI = valueFactory.createURI( "https://local.carbonldp.com/apps/test-blog/" );
+		aclUri = valueFactory.createIRI( "https://local.carbonldp.com/apps/test-blog/~acl/" );
+		accessToIRI = valueFactory.createIRI( "https://local.carbonldp.com/apps/test-blog/" );
 
 	}
 
@@ -74,7 +74,7 @@ public class SesameACLServiceIT extends AbstractIT {
 	@Test
 	public void addACESubjectsTest() {
 
-		ACL acl = ACLFactory.create( aclUri, accessToURI );
+		ACL acl = ACLFactory.create( aclUri, accessToIRI );
 		addACEToACL( acl, aceRA2F, SesameACLService.InheritanceType.DIRECT );
 		addACEToACL( acl, aceRAD2T, SesameACLService.InheritanceType.INHERITABLE );
 		Set<ACE> aces = ACEFactory.getInstance().get( acl.getBaseModel(), acl.getACEntries(), acl.getIRI() );
@@ -101,9 +101,10 @@ public class SesameACLServiceIT extends AbstractIT {
 
 	}
 
+	@SuppressWarnings( "unchecked" )
 	@Test
 	public void getACLSubjectsIT() {
-		ACL acl = ACLFactory.create( aclUri, accessToURI );
+		ACL acl = ACLFactory.create( aclUri, accessToIRI );
 		addACEToACL( acl, aceRA2F, SesameACLService.InheritanceType.DIRECT );
 		addACEToACL( acl, aceRAD2T, SesameACLService.InheritanceType.INHERITABLE );
 
@@ -125,6 +126,7 @@ public class SesameACLServiceIT extends AbstractIT {
 
 	}
 
+	@SuppressWarnings( "unchecked" )
 	@Test
 	public void getSubjectPermissionsToModify_sameSubjectTest() {
 
@@ -159,6 +161,7 @@ public class SesameACLServiceIT extends AbstractIT {
 		}
 	}
 
+	@SuppressWarnings( "unchecked" )
 	@Test
 	public void getSubjectPermissionsToModify_differentSubjectTest() {
 
@@ -193,6 +196,7 @@ public class SesameACLServiceIT extends AbstractIT {
 		}
 	}
 
+	@SuppressWarnings( "unchecked" )
 	public void getAffectedSubjectsTest() {
 
 		Map<SesameACLService.ModifyType, Map<SesameACLService.Subject, SesameACLService.SubjectPermissions>> subjectPermissionsToModify = new HashMap<>();
@@ -221,6 +225,7 @@ public class SesameACLServiceIT extends AbstractIT {
 
 	}
 
+	@SuppressWarnings( "unchecked" )
 	public void getAffectedPermissionsTest() {
 
 		Map<SesameACLService.ModifyType, Map<SesameACLService.Subject, SesameACLService.SubjectPermissions>> subjectPermissionsToModify = new HashMap<>();
@@ -249,6 +254,7 @@ public class SesameACLServiceIT extends AbstractIT {
 		}
 	}
 
+	@SuppressWarnings( "unchecked" )
 	public void generateACLTest() {
 		Map<SesameACLService.Subject, SesameACLService.SubjectPermissions> subjectPermissionsToModify = new HashMap<>();
 		SesameACLService.SubjectPermissions role1Permissions = new SesameACLService.SubjectPermissions();
@@ -256,9 +262,9 @@ public class SesameACLServiceIT extends AbstractIT {
 		subjectPermissionsToModify.put( new SesameACLService.Subject( role1, subjectClass ), role1Permissions );
 
 		try {
-			Method privateMethod = SesameACLService.class.getDeclaredMethod( "generateACL", URI.class, URI.class, Map.class );
+			Method privateMethod = SesameACLService.class.getDeclaredMethod( "generateACL", IRI.class, IRI.class, Map.class );
 			privateMethod.setAccessible( true );
-			ACL acl = (ACL) privateMethod.invoke( aclService, aclUri, accessToURI, subjectPermissionsToModify );
+			ACL acl = (ACL) privateMethod.invoke( aclService, aclUri, accessToIRI, subjectPermissionsToModify );
 
 			Assert.assertTrue( acl.getACEntries().size() == 1 );
 			Assert.assertTrue( acl.getInheritableEntries().size() == 0 );
@@ -276,11 +282,11 @@ public class SesameACLServiceIT extends AbstractIT {
 	}
 
 	private class ACEValues {
-		public URI role;
+		public IRI role;
 		public boolean granting;
 		public Set<ACEDescription.Permission> permissions;
 
-		public ACEValues( URI role, boolean granting, Set<ACEDescription.Permission> permissions ) {
+		public ACEValues( IRI role, boolean granting, Set<ACEDescription.Permission> permissions ) {
 			this.role = role;
 			this.granting = granting;
 			this.permissions = permissions;

@@ -2,8 +2,8 @@ package com.carbonldp.ldp.patch;
 
 import com.carbonldp.rdf.RDFResource;
 import com.carbonldp.utils.RDFNodeUtil;
+import org.openrdf.model.IRI;
 import org.openrdf.model.Statement;
-import org.openrdf.model.URI;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -21,12 +21,12 @@ public class PATCHRequestUtil {
 			;
 	}
 
-	private void executeDeleteActions( URI sourceURI, Set<DeleteAction> actions ) {
+	private void executeDeleteActions( IRI sourceIRI, Set<DeleteAction> actions ) {
 		for ( DeleteAction action : actions ) {
 			RDFResource resourceToDelete = new RDFResource( action.getSubjectIRI() );
 			for ( Statement actionStatement : action ) {
 				DeleteActionDescription.Property actionSpecialProperty = getDeleteActionSpecialProperty( actionStatement );
-				if ( actionSpecialProperty != null ) executeDeleteActionSpecialProperty( sourceURI, action, actionSpecialProperty );
+				if ( actionSpecialProperty != null ) executeDeleteActionSpecialProperty( sourceIRI, action, actionSpecialProperty );
 				else resourceToDelete.add( actionStatement.getPredicate(), actionStatement.getObject() );
 			}
 		}
@@ -36,11 +36,11 @@ public class PATCHRequestUtil {
 	}
 
 	private DeleteActionDescription.Property getDeleteActionSpecialProperty( Statement actionStatement ) {
-		URI predicate = actionStatement.getPredicate();
+		IRI predicate = actionStatement.getPredicate();
 		return RDFNodeUtil.findByIRI( predicate, DeleteActionDescription.Property.class );
 	}
 
-	private void executeDeleteActionSpecialProperty( URI sourceURI, DeleteAction action, DeleteActionDescription.Property actionSpecialProperty ) {
+	private void executeDeleteActionSpecialProperty( IRI sourceIRI, DeleteAction action, DeleteActionDescription.Property actionSpecialProperty ) {
 		switch ( actionSpecialProperty ) {
 			default:
 				throw new RuntimeException( "Not Implemented" );
@@ -56,14 +56,14 @@ public class PATCHRequestUtil {
 			;
 	}
 
-	private void executeSetAction( URI sourceURI, Set<SetAction> actions ) {
+	private void executeSetAction( IRI sourceIRI, Set<SetAction> actions ) {
 		Set<RDFResource> resourcesToSet = new HashSet<>();
 
 		for ( SetAction action : actions ) {
 			RDFResource resourceToSet = new RDFResource( action.getSubjectIRI() );
 			for ( Statement actionStatement : action ) {
 				SetActionDescription.Property actionSpecialProperty = getSetActionSpecialProperty( actionStatement );
-				if ( actionSpecialProperty != null ) executeSetActionSpecialProperty( sourceURI, action, actionSpecialProperty );
+				if ( actionSpecialProperty != null ) executeSetActionSpecialProperty( sourceIRI, action, actionSpecialProperty );
 				else resourceToSet.add( actionStatement.getPredicate(), actionStatement.getObject() );
 			}
 		}
@@ -75,11 +75,11 @@ public class PATCHRequestUtil {
 	}
 
 	private SetActionDescription.Property getSetActionSpecialProperty( Statement actionStatement ) {
-		URI predicate = actionStatement.getPredicate();
+		IRI predicate = actionStatement.getPredicate();
 		return RDFNodeUtil.findByIRI( predicate, SetActionDescription.Property.class );
 	}
 
-	private void executeSetActionSpecialProperty( URI sourceURI, SetAction action, SetActionDescription.Property actionSpecialProperty ) {
+	private void executeSetActionSpecialProperty( IRI sourceIRI, SetAction action, SetActionDescription.Property actionSpecialProperty ) {
 		switch ( actionSpecialProperty ) {
 			default:
 				throw new RuntimeException( "Not Implemented" );
@@ -95,13 +95,13 @@ public class PATCHRequestUtil {
 			;
 	}
 
-	private void executeAddActions( URI sourceURI, Collection<AddAction> actions ) {
+	private void executeAddActions( IRI sourceIRI, Collection<AddAction> actions ) {
 		Set<RDFResource> resourcesToAdd = new HashSet<>();
 		for ( AddAction action : actions ) {
 			RDFResource resourceToAdd = new RDFResource( action.getSubjectIRI() );
 			for ( Statement actionStatement : action ) {
 				AddActionDescription.Property actionSpecialProperty = getAddActionSpecialProperty( actionStatement );
-				if ( actionSpecialProperty != null ) executeAddActionSpecialProperty( sourceURI, action, actionSpecialProperty );
+				if ( actionSpecialProperty != null ) executeAddActionSpecialProperty( sourceIRI, action, actionSpecialProperty );
 				else resourceToAdd.add( actionStatement.getPredicate(), actionStatement.getObject() );
 			}
 			resourcesToAdd.add( resourceToAdd );
@@ -112,11 +112,11 @@ public class PATCHRequestUtil {
 	}
 
 	private AddActionDescription.Property getAddActionSpecialProperty( Statement actionStatement ) {
-		URI predicate = actionStatement.getPredicate();
+		IRI predicate = actionStatement.getPredicate();
 		return RDFNodeUtil.findByIRI( predicate, AddActionDescription.Property.class );
 	}
 
-	private void executeAddActionSpecialProperty( URI sourceURI, AddAction action, AddActionDescription.Property actionSpecialProperty ) {
+	private void executeAddActionSpecialProperty( IRI sourceIRI, AddAction action, AddActionDescription.Property actionSpecialProperty ) {
 		switch ( actionSpecialProperty ) {
 			default:
 				throw new RuntimeException( "Not Implemented" );

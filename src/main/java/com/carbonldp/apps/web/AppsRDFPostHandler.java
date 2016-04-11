@@ -5,7 +5,7 @@ import com.carbonldp.apps.AppService;
 import com.carbonldp.ldp.containers.BasicContainer;
 import com.carbonldp.ldp.web.AbstractRDFPostRequestHandler;
 import com.carbonldp.web.RequestHandler;
-import org.openrdf.model.URI;
+import org.openrdf.model.IRI;
 import org.springframework.beans.factory.annotation.Autowired;
 
 @RequestHandler
@@ -24,7 +24,7 @@ public class AppsRDFPostHandler extends AbstractRDFPostRequestHandler<App> {
 	}
 
 	@Override
-	protected void createChild( URI targetURI, App documentResourceView ) {
+	protected void createChild( IRI targetIRI, App documentResourceView ) {
 		appService.create( documentResourceView );
 	}
 
@@ -37,13 +37,13 @@ public class AppsRDFPostHandler extends AbstractRDFPostRequestHandler<App> {
 
 			validateRequestResource( requestResource );
 
-			String targetURI = getTargetURL( request );
+			String targetIRI = getTargetURL( request );
 
-			if ( hasGenericRequestURI( requestResource ) ) {
-				IRI forgedURI = forgeUniqueURI( requestResource, targetURI, request );
-				requestResource = renameResource( requestResource, forgedURI );
+			if ( hasGenericRequestIRI( requestResource ) ) {
+				IRI forgedIRI = forgeUniqueIRI( requestResource, targetIRI, request );
+				requestResource = renameResource( requestResource, forgedIRI );
 			} else {
-				validateRequestResourceRelativeness( requestResource, targetURI );
+				validateRequestResourceRelativeness( requestResource, targetIRI );
 			}
 
 			// TODO: After ensuring uniqueness, move this back into the "else" right above
@@ -79,13 +79,13 @@ public class AppsRDFPostHandler extends AbstractRDFPostRequestHandler<App> {
 		}
 
 		private void checkRequestResourceAvailability( RDFResource requestResource ) {
-			if ( sourceWithURIExists( requestResource.getIRI() ) ) {
+			if ( sourceWithIRIExists( requestResource.getIRI() ) ) {
 				throw new ConflictException( "The IRI is already in use." );
 			}
 		}
 
-		private boolean sourceWithURIExists( IRI sourceURI ) {
-			return sourceService.exists( sourceURI );
+		private boolean sourceWithIRIExists( IRI sourceIRI ) {
+			return sourceService.exists( sourceIRI );
 		}
 
 		private void validateRequestResource( RDFResource requestResource ) {

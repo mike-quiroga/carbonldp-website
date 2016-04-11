@@ -1,8 +1,8 @@
 package com.carbonldp.rdf;
 
 import org.joda.time.DateTime;
+import org.openrdf.model.IRI;
 import org.openrdf.model.Resource;
-import org.openrdf.model.URI;
 import org.openrdf.model.Value;
 
 import java.util.Collection;
@@ -14,196 +14,196 @@ import java.util.Set;
  */
 public interface RDFNodeRepository<T extends Resource> {
 
-	public boolean hasProperty( T subject, URI pred, URI documentURI );
+	public boolean hasProperty( T subject, IRI pred, IRI documentIRI );
 
-	public boolean hasProperty( T subject, RDFNodeEnum pred, URI documentURI );
+	public boolean hasProperty( T subject, RDFNodeEnum pred, IRI documentIRI );
 
-	public boolean contains( T subject, URI pred, Value obj, URI documentURI );
+	public boolean contains( T subject, IRI pred, Value obj, IRI documentIRI );
 
-	public boolean contains( T subject, RDFNodeEnum pred, Value obj, URI documentURI );
+	public boolean contains( T subject, RDFNodeEnum pred, Value obj, IRI documentIRI );
 
-	public boolean contains( T subject, RDFNodeEnum pred, RDFNodeEnum obj, URI documentURI );
+	public boolean contains( T subject, RDFNodeEnum pred, RDFNodeEnum obj, IRI documentIRI );
 
-	public Value getProperty( T subject, URI pred, URI documentURI );
+	public Value getProperty( T subject, IRI pred, IRI documentIRI );
 
-	public Value getProperty( T subject, RDFNodeEnum pred, URI documentURI );
+	public Value getProperty( T subject, RDFNodeEnum pred, IRI documentIRI );
 
-	public Set<Value> getProperties( T subject, URI pred, URI documentURI );
+	public Set<Value> getProperties( T subject, IRI pred, IRI documentIRI );
 
-	public Set<Value> getProperties( T subject, RDFNodeEnum pred, URI documentURI );
+	public Set<Value> getProperties( T subject, RDFNodeEnum pred, IRI documentIRI );
 
-	public URI getURI( T subject, URI pred, URI documentURI );
+	public IRI getIRI( T subject, IRI pred, IRI documentIRI );
 
-	public URI getURI( T subject, RDFNodeEnum pred, URI documentURI );
+	public IRI getIRI( T subject, RDFNodeEnum pred, IRI documentIRI );
 
-	public Set<URI> getURIs( T subject, URI pred, URI documentURI );
+	public Set<IRI> getIRIs( T subject, IRI pred, IRI documentIRI );
 
-	public Set<URI> getURIs( T subject, RDFNodeEnum pred, URI documentURI );
+	public Set<IRI> getIRIs( T subject, RDFNodeEnum pred, IRI documentIRI );
 
-	public Boolean getBoolean( T subject, URI pred, URI documentURI );
+	public Boolean getBoolean( T subject, IRI pred, IRI documentIRI );
 
-	public Boolean getBoolean( T subject, RDFNodeEnum pred, URI documentURI );
+	public Boolean getBoolean( T subject, RDFNodeEnum pred, IRI documentIRI );
 
-	public Set<Boolean> getBooleans( T subject, URI pred, URI documentURI );
+	public Set<Boolean> getBooleans( T subject, IRI pred, IRI documentIRI );
 
-	public Set<Boolean> getBooleans( T subject, RDFNodeEnum pred, URI documentURI );
+	public Set<Boolean> getBooleans( T subject, RDFNodeEnum pred, IRI documentIRI );
 
-	public Byte getByte( T subject, URI pred, URI documentURI );
+	public Byte getByte( T subject, IRI pred, IRI documentIRI );
 
-	public Byte getByte( T subject, RDFNodeEnum pred, URI documentURI );
+	public Byte getByte( T subject, RDFNodeEnum pred, IRI documentIRI );
 
-	public Set<Byte> getBytes( T subject, URI pred, URI documentURI );
+	public Set<Byte> getBytes( T subject, IRI pred, IRI documentIRI );
 
-	public Set<Byte> getBytes( T subject, RDFNodeEnum pred, URI documentURI );
+	public Set<Byte> getBytes( T subject, RDFNodeEnum pred, IRI documentIRI );
 
-	public DateTime getDate( T subject, URI pred, URI documentURI );
+	public DateTime getDate( T subject, IRI pred, IRI documentIRI );
 
-	public DateTime getDate( T subject, RDFNodeEnum pred, URI documentURI );
+	public DateTime getDate( T subject, RDFNodeEnum pred, IRI documentIRI );
 
-	public Set<DateTime> getDates( T subject, URI pred, URI documentURI );
+	public Set<DateTime> getDates( T subject, IRI pred, IRI documentIRI );
 
-	public Set<DateTime> getDates( T subject, RDFNodeEnum pred, URI documentURI );
+	public Set<DateTime> getDates( T subject, RDFNodeEnum pred, IRI documentIRI );
 
-	public Double getDouble( T subject, URI pred, URI documentURI );
+	public Double getDouble( T subject, IRI pred, IRI documentIRI );
 
-	public Double getDouble( T subject, RDFNodeEnum pred, URI documentURI );
+	public Double getDouble( T subject, RDFNodeEnum pred, IRI documentIRI );
 
-	public Set<Double> getDoubles( T subject, URI pred, URI documentURI );
+	public Set<Double> getDoubles( T subject, IRI pred, IRI documentIRI );
 
-	public Set<Double> getDoubles( T subject, RDFNodeEnum pred, URI documentURI );
+	public Set<Double> getDoubles( T subject, RDFNodeEnum pred, IRI documentIRI );
 
-	public Float getFloat( T subject, URI pred, URI documentURI );
+	public Float getFloat( T subject, IRI pred, IRI documentIRI );
 
-	public Float getFloat( T subject, RDFNodeEnum pred, URI documentURI );
+	public Float getFloat( T subject, RDFNodeEnum pred, IRI documentIRI );
 
-	public Set<Float> getFloats( T subject, URI pred, URI documentURI );
+	public Set<Float> getFloats( T subject, IRI pred, IRI documentIRI );
 
-	public Set<Float> getFloats( T subject, RDFNodeEnum pred, URI documentURI );
+	public Set<Float> getFloats( T subject, RDFNodeEnum pred, IRI documentIRI );
 
-	public Integer getInteger( T subject, URI pred, URI documentURI );
+	public Integer getInteger( T subject, IRI pred, IRI documentIRI );
 
-	public Integer getInteger( T subject, RDFNodeEnum pred, URI documentURI );
+	public Integer getInteger( T subject, RDFNodeEnum pred, IRI documentIRI );
 
-	public Set<Integer> getIntegers( T subject, URI pred, URI documentURI );
+	public Set<Integer> getIntegers( T subject, IRI pred, IRI documentIRI );
 
-	public Set<Integer> getIntegers( T subject, RDFNodeEnum pred, URI documentURI );
+	public Set<Integer> getIntegers( T subject, RDFNodeEnum pred, IRI documentIRI );
 
-	public Long getLong( T subject, URI pred, URI documentURI );
+	public Long getLong( T subject, IRI pred, IRI documentIRI );
 
-	public Long getLong( T subject, RDFNodeEnum pred, URI documentURI );
+	public Long getLong( T subject, RDFNodeEnum pred, IRI documentIRI );
 
-	public Set<Long> getLongs( T subject, URI pred, URI documentURI );
+	public Set<Long> getLongs( T subject, IRI pred, IRI documentIRI );
 
-	public Set<Long> getLongs( T subject, RDFNodeEnum pred, URI documentURI );
+	public Set<Long> getLongs( T subject, RDFNodeEnum pred, IRI documentIRI );
 
-	public Short getShort( T subject, URI pred, URI documentURI );
+	public Short getShort( T subject, IRI pred, IRI documentIRI );
 
-	public Short getShort( T subject, RDFNodeEnum pred, URI documentURI );
+	public Short getShort( T subject, RDFNodeEnum pred, IRI documentIRI );
 
-	public Set<Short> getShorts( T subject, URI pred, URI documentURI );
+	public Set<Short> getShorts( T subject, IRI pred, IRI documentIRI );
 
-	public Set<Short> getShorts( T subject, RDFNodeEnum pred, URI documentURI );
+	public Set<Short> getShorts( T subject, RDFNodeEnum pred, IRI documentIRI );
 
-	public String getString( T subject, URI pred, URI documentURI );
+	public String getString( T subject, IRI pred, IRI documentIRI );
 
-	public String getString( T subject, RDFNodeEnum pred, URI documentURI );
+	public String getString( T subject, RDFNodeEnum pred, IRI documentIRI );
 
-	public String getString( T subject, URI pred, URI documentURI, Set<String> languages );
+	public String getString( T subject, IRI pred, IRI documentIRI, Set<String> languages );
 
-	public String getString( T subject, RDFNodeEnum pred, URI documentURI, Set<String> languages );
+	public String getString( T subject, RDFNodeEnum pred, IRI documentIRI, Set<String> languages );
 
-	public Set<String> getStrings( T subject, URI pred, URI documentURI );
+	public Set<String> getStrings( T subject, IRI pred, IRI documentIRI );
 
-	public Set<String> getStrings( T subject, RDFNodeEnum pred, URI documentURI );
+	public Set<String> getStrings( T subject, RDFNodeEnum pred, IRI documentIRI );
 
-	public Set<String> getStrings( T subject, URI pred, URI documentURI, Set<String> languages );
+	public Set<String> getStrings( T subject, IRI pred, IRI documentIRI, Set<String> languages );
 
-	public Set<String> getStrings( T subject, RDFNodeEnum pred, URI documentURI, Set<String> languages );
+	public Set<String> getStrings( T subject, RDFNodeEnum pred, IRI documentIRI, Set<String> languages );
 
-	public void add( T subject, URI pred, Value obj, URI documentURI );
+	public void add( T subject, IRI pred, Value obj, IRI documentIRI );
 
-	public void add( T subject, URI predicate, Collection<Value> values, URI documentURI );
+	public void add( T subject, IRI predicate, Collection<Value> values, IRI documentIRI );
 
-	public void add( T subject, URI pred, boolean obj, URI documentURI );
+	public void add( T subject, IRI pred, boolean obj, IRI documentIRI );
 
-	public void add( T subject, URI pred, byte obj, URI documentURI );
+	public void add( T subject, IRI pred, byte obj, IRI documentIRI );
 
-	public void add( T subject, URI pred, DateTime obj, URI documentURI );
+	public void add( T subject, IRI pred, DateTime obj, IRI documentIRI );
 
-	public void add( T subject, URI pred, double obj, URI documentURI );
+	public void add( T subject, IRI pred, double obj, IRI documentIRI );
 
-	public void add( T subject, URI pred, float obj, URI documentURI );
+	public void add( T subject, IRI pred, float obj, IRI documentIRI );
 
-	public void add( T subject, URI pred, int obj, URI documentURI );
+	public void add( T subject, IRI pred, int obj, IRI documentIRI );
 
-	public void add( T subject, URI pred, long obj, URI documentURI );
+	public void add( T subject, IRI pred, long obj, IRI documentIRI );
 
-	public void add( T subject, URI pred, short obj, URI documentURI );
+	public void add( T subject, IRI pred, short obj, IRI documentIRI );
 
-	public void add( T subject, URI pred, String obj, URI documentURI );
+	public void add( T subject, IRI pred, String obj, IRI documentIRI );
 
-	public void add( T subject, URI pred, String obj, URI documentURI, String language );
+	public void add( T subject, IRI pred, String obj, IRI documentIRI, String language );
 
-	public void remove( T subject, URI pred, URI documentURI );
+	public void remove( T subject, IRI pred, IRI documentIRI );
 
-	public void remove( T subject, RDFNodeEnum pred, URI documentURI );
+	public void remove( T subject, RDFNodeEnum pred, IRI documentIRI );
 
-	public void remove( T subject, URI pred, Value obj, URI documentURI );
+	public void remove( T subject, IRI pred, Value obj, IRI documentIRI );
 
-	public void remove( T subject, URI predicate, Set<Value> values, URI documentURI );
+	public void remove( T subject, IRI predicate, Set<Value> values, IRI documentIRI );
 
-	public void remove( T subject, URI pred, boolean obj, URI documentURI );
+	public void remove( T subject, IRI pred, boolean obj, IRI documentIRI );
 
-	public void remove( T subject, URI pred, byte obj, URI documentURI );
+	public void remove( T subject, IRI pred, byte obj, IRI documentIRI );
 
-	public void remove( T subject, URI pred, DateTime obj, URI documentURI );
+	public void remove( T subject, IRI pred, DateTime obj, IRI documentIRI );
 
-	public void remove( T subject, URI pred, double obj, URI documentURI );
+	public void remove( T subject, IRI pred, double obj, IRI documentIRI );
 
-	public void remove( T subject, URI pred, float obj, URI documentURI );
+	public void remove( T subject, IRI pred, float obj, IRI documentIRI );
 
-	public void remove( T subject, URI pred, int obj, URI documentURI );
+	public void remove( T subject, IRI pred, int obj, IRI documentIRI );
 
-	public void remove( T subject, URI pred, long obj, URI documentURI );
+	public void remove( T subject, IRI pred, long obj, IRI documentIRI );
 
-	public void remove( T subject, URI pred, short obj, URI documentURI );
+	public void remove( T subject, IRI pred, short obj, IRI documentIRI );
 
-	public void remove( T subject, URI pred, String obj, URI documentURI );
+	public void remove( T subject, IRI pred, String obj, IRI documentIRI );
 
-	public void remove( T subject, URI pred, String obj, URI documentURI, String language );
+	public void remove( T subject, IRI pred, String obj, IRI documentIRI, String language );
 
-	public void set( T subject, URI pred, Value obj, URI documentURI );
+	public void set( T subject, IRI pred, Value obj, IRI documentIRI );
 
-	public void set( T subject, URI pred, boolean obj, URI documentURI );
+	public void set( T subject, IRI pred, boolean obj, IRI documentIRI );
 
-	public void set( T subject, URI pred, byte obj, URI documentURI );
+	public void set( T subject, IRI pred, byte obj, IRI documentIRI );
 
-	public void set( T subject, URI pred, DateTime obj, URI documentURI );
+	public void set( T subject, IRI pred, DateTime obj, IRI documentIRI );
 
-	public void set( T subject, URI pred, double obj, URI documentURI );
+	public void set( T subject, IRI pred, double obj, IRI documentIRI );
 
-	public void set( T subject, URI pred, float obj, URI documentURI );
+	public void set( T subject, IRI pred, float obj, IRI documentIRI );
 
-	public void set( T subject, URI pred, int obj, URI documentURI );
+	public void set( T subject, IRI pred, int obj, IRI documentIRI );
 
-	public void set( T subject, URI pred, long obj, URI documentURI );
+	public void set( T subject, IRI pred, long obj, IRI documentIRI );
 
-	public void set( T subject, URI pred, short obj, URI documentURI );
+	public void set( T subject, IRI pred, short obj, IRI documentIRI );
 
-	public void set( T subject, URI pred, String obj, URI documentURI );
+	public void set( T subject, IRI pred, String obj, IRI documentIRI );
 
-	public void set( T subject, URI pred, String obj, URI documentURI, String language );
+	public void set( T subject, IRI pred, String obj, IRI documentIRI, String language );
 
-	public boolean hasType( T subject, URI type, URI documentURI );
+	public boolean hasType( T subject, IRI type, IRI documentIRI );
 
-	public boolean hasType( T subject, RDFNodeEnum type, URI documentURI );
+	public boolean hasType( T subject, RDFNodeEnum type, IRI documentIRI );
 
-	public Set<URI> getTypes( T subject, URI documentURI );
+	public Set<IRI> getTypes( T subject, IRI documentIRI );
 
-	public void addType( T subject, URI type, URI documentURI );
+	public void addType( T subject, IRI type, IRI documentIRI );
 
-	public void removeType( T subject, URI type, URI documentURI );
+	public void removeType( T subject, IRI type, IRI documentIRI );
 
-	public void setType( T subject, URI type, URI documentURI );
+	public void setType( T subject, IRI type, IRI documentIRI );
 
 }

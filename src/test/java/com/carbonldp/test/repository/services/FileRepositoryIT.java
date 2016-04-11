@@ -9,7 +9,7 @@ import com.carbonldp.apps.context.AppContextHolder;
 import com.carbonldp.repository.FileRepository;
 import com.carbonldp.repository.LocalFileRepository;
 import com.carbonldp.test.AbstractIT;
-import org.openrdf.model.impl.URIImpl;
+import org.openrdf.model.impl.SimpleValueFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.testng.Assert;
 import org.testng.SkipException;
@@ -37,7 +37,7 @@ public class FileRepositoryIT extends AbstractIT {
 
 	@BeforeClass( dependsOnMethods = "setRepository" )
 	protected void setUp() {
-		app = appRepository.findByRootContainer( new URIImpl( "https://local.carbonldp.com/apps/test-blog/" ) );
+		app = appRepository.findByRootContainer( SimpleValueFactory.getInstance().createIRI( "https://local.carbonldp.com/apps/test-blog/" ) );
 		fileRepository = new LocalFileRepository();
 		uuid = UUID.randomUUID();
 		applicationContextTemplate.runInAppContext( app, () -> {
