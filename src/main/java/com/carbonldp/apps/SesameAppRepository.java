@@ -91,7 +91,7 @@ public class SesameAppRepository extends AbstractSesameRepository implements App
 
 	public void delete( URI appURI ) {
 		App app = this.get( appURI );
-		sourceRepository.delete( appURI );
+		sourceRepository.delete( appURI, true );
 		deleteAppRepository( app );
 		deleteAppFileDirectory( app );
 	}

@@ -171,13 +171,12 @@ public class SesameContainerService extends AbstractSesameLDPService implements 
 		Set<URI> containedURIs = containerRepository.getContainedURIs( targetURI );
 		for ( URI containedURI : containedURIs ) {
 			sourceService.delete( containedURI );
-			sourceRepository.deleteOccurrences( containedURI, true );
 		}
 	}
 
 	@Override
 	public void delete( URI targetURI ) {
-		sourceRepository.delete( targetURI );
+		sourceRepository.delete( targetURI, true );
 	}
 
 	@Autowired

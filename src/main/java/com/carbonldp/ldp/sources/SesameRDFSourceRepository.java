@@ -12,7 +12,6 @@ import com.carbonldp.utils.HTTPUtil;
 import com.carbonldp.utils.RDFNodeUtil;
 import com.carbonldp.utils.SPARQLUtil;
 import com.carbonldp.utils.ValueUtil;
-import com.carbonldp.web.exceptions.NotImplementedException;
 import org.apache.commons.lang3.text.StrSubstitutor;
 import org.joda.time.DateTime;
 import org.openrdf.model.Resource;
@@ -209,50 +208,7 @@ public class SesameRDFSourceRepository extends AbstractSesameLDPRepository imple
 	}
 
 	@Override
-	public void delete( URI sourceURI ) {
-		Map<String, Value> bindings = new HashMap<>();
-		bindings.put( "sourceURI", sourceURI );
-		RepositoryResult<Resource> contexts = connectionTemplate.read( connection -> connection.getContextIDs() );
-		Set<Resource> filteredContexts = new HashSet<>();
-
-		try {
-			while ( contexts.hasNext() ) {
-				Resource context = contexts.next();
-				if ( context.stringValue().startsWith( sourceURI.stringValue() ) ) filteredContexts.add( context );
-			}
-		} catch ( RepositoryException e ) {
-			throw new RuntimeException( e );
-		}
-
-		for ( Resource context : filteredContexts ) {
-			connectionTemplate.write( connection -> connection.remove( (Resource) null, null, null, context ) );
-		}
-	}
-
-	private static final String deleteOcurrencesIncludingChildrenQuery;
-
-	static {
-		deleteOcurrencesIncludingChildrenQuery = "" +
-			"DELETE {" + NEW_LINE +
-			TAB + "GRAPH ?graph {" + NEW_LINE +
-			TAB + TAB + "?subject ?predicate ?object" + NEW_LINE +
-			TAB + "}." + NEW_LINE +
-			"} WHERE {" + NEW_LINE +
-			TAB + "GRAPH ?graph {" + NEW_LINE +
-			TAB + TAB + "?subject ?predicate ?object" + NEW_LINE +
-			TAB + TAB + "FILTER( " + NEW_LINE +
-			TAB + TAB + TAB + "STRSTARTS( str(?predicate), str(?sourceURI) )" + NEW_LINE +
-			TAB + TAB + TAB + " || " + NEW_LINE +
-			TAB + TAB + TAB + "( isURI(?object) && STRSTARTS( str(?object), str(?sourceURI) ) )" + NEW_LINE +
-			TAB + TAB + ")" + NEW_LINE +
-			TAB + "}." + NEW_LINE +
-			"}"
-		;
-	}
-
-	@Override
-	public void deleteOccurrences( URI sourceURI, boolean includeChildrens ) {
-		if ( ! includeChildrens ) throw new NotImplementedException();
+	public void delete( URI sourceURI, boolean deleteOccurrences ) {
 		Map<String, Value> bindings = new HashMap<>();
 		bindings.put( "sourceURI", sourceURI );
 		RepositoryResult<Resource> contexts = connectionTemplate.read( connection -> connection.getContextIDs() );
@@ -271,10 +227,13 @@ public class SesameRDFSourceRepository extends AbstractSesameLDPRepository imple
 			throw new RuntimeException( e );
 		}
 
-		for ( URI context : filteredContexts ) {
-			connectionTemplate.write( connection -> connection.remove( (Resource) null, null, context ) );
-			connectionTemplate.write( connection -> connection.remove( (Resource) null, context, null ) );
+		for ( Resource context : filteredContexts ) connectionTemplate.write( connection -> connection.remove( (Resource) null, null, null, context ) );
+
+		if ( deleteOccurrences ) {
+			for ( URI context : filteredContexts ) {
+				connectionTemplate.write( connection -> connection.remove( (Resource) null, null, context ) );
+				connectionTemplate.write( connection -> connection.remove( (Resource) null, context, null ) );
+			}
 		}
 	}
-
 }
