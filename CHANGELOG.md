@@ -1,3 +1,6 @@
+# 0.31.1 (2016/04/11)
+* Added Jetty response/requestHeaderSize to Vars to make request/response size limit configurable
+
 # 0.31.0 (2016/04/07)
 * Switch from using weak ETags to strong ETags
 
