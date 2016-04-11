@@ -61,9 +61,6 @@ public class Application {
 
 		SailRegistry.getInstance().add( new SecuredNativeStoreFactory() );
 
-		TriGParserFactory factory = new TriGParserFactory();
-		System.out.println( factory.toString() );
-
 		RepositoriesUpdater repositoriesUpdater = new RepositoriesUpdater();
 		if ( ! repositoriesUpdater.repositoriesAreUpToDate() ) {
 			repositoriesUpdater.updateRepositories();
@@ -104,6 +101,8 @@ public class Application {
 			}
 		} );
 
+		server.setAttribute( "requestHeaderSize", Vars.getInstance().getRequestHeaderSize() );
+		server.setAttribute( "responseHeaderSize", Vars.getInstance().getResponseHeaderSize() );
 		server.setHandler( contextHandler );
 		server.start();
 		server.join();
