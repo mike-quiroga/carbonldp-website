@@ -104,9 +104,9 @@ export default class EditAppComponent {
 		if ( name ) this.context.app.name = name;
 		if ( description ) this.context.app.description = description;
 
-		this.context.app.save(
+		this.context.app.save().then(
 			():void => {
-				console.log( arguments );
+				this.displaySuccessMessage = true;
 			},
 			( error:HTTPError.HTTPError ):void => {
 				this.setErrorMessage( error );
@@ -116,27 +116,6 @@ export default class EditAppComponent {
 				this.submitting = false;
 			}
 		);
-
-		//let appDocument:App = <App>(CarbonApp.Factory.create( name ));
-		//appDocument.description = description;
-		//this.carbon.apps.create( slug, <CarbonApp.Class>appDocument ).then(
-		//	( [appPointer, appCreationResponse]:[ Pointer.Class, HTTPResponse.Class] ) => {
-		//		this.submitting = false;
-		//		this.resolvedSlug = this._slug;
-		//		this.carbon.apps.getContext( appPointer ).then(
-		//			( appContext:CarbonApp.Context ):void => {
-		//				this.resolvedSlug = this.appContextService.getSlug( appContext );
-		//			}
-		//		);
-		//		this.displaySuccessMessage = true;
-		//	},
-		//	( error:HTTPError.HTTPError ) => {
-		//		this.setErrorMessage( error );
-		//		this.submitting = false;
-		//	}
-		//);
-
-
 	}
 
 	setErrorMessage( error:HTTPError.HTTPError ):void {
