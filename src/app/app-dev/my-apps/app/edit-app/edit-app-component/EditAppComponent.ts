@@ -1,7 +1,7 @@
-import { Component, ElementRef, Input } from "angular2/core";
-import { CORE_DIRECTIVES, FORM_DIRECTIVES, FormBuilder, ControlGroup, AbstractControl, Control, Validators } from "angular2/common";
-import { Router, ROUTER_DIRECTIVES } from "angular2/router";
-import { Observable } from "rxjs";
+import {Component, ElementRef, Input} from "angular2/core";
+import {CORE_DIRECTIVES, FORM_DIRECTIVES, FormBuilder, ControlGroup, AbstractControl, Control, Validators} from "angular2/common";
+import {Router, ROUTER_DIRECTIVES} from "angular2/router";
+import {Observable} from "rxjs";
 
 import Carbon from "carbonldp/Carbon";
 import * as Context from "carbonldp/Context";
@@ -38,14 +38,9 @@ export default class EditAppComponent {
 	displaySuccessMessage:boolean = false;
 	errorMessage:string = "";
 
-	_name:string = "";
-	_slug:string = "";
-	resolvedSlug:string = "";
-
 	editAppForm:ControlGroup;
 	formBuilder:FormBuilder;
 	name:AbstractControl;
-	slug:AbstractControl;
 	description:AbstractControl;
 
 
@@ -66,31 +61,15 @@ export default class EditAppComponent {
 		this.$element = $( this.element.nativeElement );
 		this.$editAppForm = this.$element.find( "form.editAppForm" );
 		this.editAppForm = this.formBuilder.group( {
-			name: [ "", Validators.compose( [ Validators.required ] ) ],
-			slug: [ "", Validators.compose( [ this.slugValidator ] ) ],
-			description: [ "", Validators.compose( [ Validators.required ] ) ],
+			name: [ this.context.app.name, Validators.compose( [ Validators.required ] ) ],
+			description: [ this.context.app.description, Validators.compose( [ Validators.required ] ) ],
 		} );
 		this.name = this.editAppForm.controls[ "name" ];
-		this.slug = this.editAppForm.controls[ "slug" ];
 		this.description = this.editAppForm.controls[ "description" ];
 	}
 
 	ngAfterContentInit():void {
-		this.name.valueChanges.subscribe(
-			( value ):void => {
-				if ( value ) {
-					this._slug = this.getSanitizedSlug( value );
-					this.slug.updateValueAndValidity( true, true );
-				}
-			}
-		);
-	}
 
-	slugLostControl( evt:any ):void {
-		if ( ! evt.target.value.match( /^[a-z0-9]+(?:-[a-z0-9]*)*(?:\/*)$/ ) ) {
-			(<Control> this.slug).updateValue( this.getSanitizedSlug( evt.target.value ), false, false, false );
-			this._slug = this.slug.value;
-		}
 	}
 
 	getSanitizedSlug( slug:string ):string {
@@ -102,17 +81,16 @@ export default class EditAppComponent {
 	}
 
 	canDisplayErrors():boolean {
-		return (! this.name.pristine && ! this.name.valid) || (! this.slug.pristine && ! this.slug.valid) || (! this.description.pristine && ! this.description.valid);
+		return (! this.name.pristine && ! this.name.valid) || (! this.description.pristine && ! this.description.valid);
 	}
 
-	onSubmit( data:{ name:string, slug:string, description:string }, $event:any ):void {
+	onSubmit( data:{ name:string, description:string }, $event:any ):void {
 		$event.preventDefault();
 
 		this.submitting = true;
 		this.errorMessage = "";
 
 		this.name.markAsDirty( true );
-		this.slug.markAsDirty( true );
 		this.description.markAsDirty( true );
 
 		if ( ! this.editAppForm.valid ) {
@@ -121,8 +99,23 @@ export default class EditAppComponent {
 		}
 
 		let name:string = data.name;
-		let slug:string = data.slug;
 		let description:string = data.description;
+
+		if ( name ) this.context.app.name = name;
+		if ( description ) this.context.app.description = description;
+
+		this.context.app.save(
+			():void => {
+				console.log( arguments );
+			},
+			( error:HTTPError.HTTPError ):void => {
+				this.setErrorMessage( error );
+			}
+		).then(
+			():void => {
+				this.submitting = false;
+			}
+		);
 
 		//let appDocument:App = <App>(CarbonApp.Factory.create( name ));
 		//appDocument.description = description;
