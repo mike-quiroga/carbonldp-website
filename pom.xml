@@ -218,11 +218,6 @@
             <artifactId>jackson-core</artifactId>
             <version>${jackson-2-version}</version>
         </dependency>
-        <dependency>
-            <groupId>com.github.jsonld-java</groupId>
-            <artifactId>jsonld-java-sesame</artifactId>
-            <version>0.5.1</version>
-        </dependency>
         <!-- === End: Core === -->
         <!-- ====== End: Sesame ====== -->
 

@@ -1,6 +1,5 @@
 package com.carbonldp.repository.security;
 
-import org.openrdf.IsolationLevels;
 import org.openrdf.sail.nativerdf.NativeStore;
 
 import java.io.File;
@@ -13,7 +12,6 @@ public class SecuredNativeStore extends NativeStore {
 
 	public SecuredNativeStore() {
 		super();
-		addSupportedIsolationLevel( IsolationLevels.READ_COMMITTED );
 	}
 
 	public SecuredNativeStore( File dataDir ) {
