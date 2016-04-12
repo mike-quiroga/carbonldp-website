@@ -11,8 +11,10 @@ import com.carbonldp.rdf.RDFDocumentRepository;
 import com.carbonldp.sparql.SPARQLTemplate;
 import com.carbonldp.spring.TransactionWrapper;
 import com.carbonldp.utils.Action;
-import org.openrdf.model.URI;
-import org.openrdf.model.impl.URIImpl;
+import org.openrdf.model.IRI;
+
+import org.openrdf.model.ValueFactory;
+import org.openrdf.model.impl.SimpleValueFactory;
 import org.openrdf.repository.RepositoryException;
 import org.openrdf.rio.RDFFormat;
 import org.openrdf.rio.RDFParseException;
@@ -37,6 +39,7 @@ public abstract class AbstractUpdateAction extends AbstractComponent implements 
 	protected RDFSourceRepository sourceRepository;
 	protected ACLRepository aclRepository;
 	protected RDFDocumentRepository documentRepository;
+	protected static ValueFactory valueFactory = SimpleValueFactory.getInstance();
 
 	public void run() {
 		try {
@@ -49,12 +52,12 @@ public abstract class AbstractUpdateAction extends AbstractComponent implements 
 	protected abstract void execute() throws Exception;
 
 	// TODO: Instead of loading a file, build the resources dynamically
-	protected void loadResourcesFile( String resourcesFile, String baseURI ) {
+	protected void loadResourcesFile( String resourcesFile, String baseIRI ) {
 		InputStream inputStream = getClass().getClassLoader().getResourceAsStream( resourcesFile );
 
 		transactionWrapper.runInPlatformContext( () -> {
 			try {
-				connectionFactory.getConnection().add( inputStream, baseURI, RDFFormat.TRIG );
+				connectionFactory.getConnection().add( inputStream, baseIRI, RDFFormat.TRIG );
 			} catch ( IOException | RDFParseException | RepositoryException e ) {
 				throw new RuntimeException( e );
 			}
@@ -65,11 +68,11 @@ public abstract class AbstractUpdateAction extends AbstractComponent implements 
 	protected Set<App> getAllApps() {
 		return transactionWrapper.runInPlatformContext( () -> {
 			Set<App> apps = new HashSet<>();
-			URI platformAppsContainer = new URIImpl( Vars.getInstance().getHost() + Vars.getInstance().getMainContainer() + Vars.getInstance().getAppsContainer() );
-			Set<URI> appURIs = containerRepository.getContainedURIs( platformAppsContainer );
+			IRI platformAppsContainer = SimpleValueFactory.getInstance().createIRI( Vars.getInstance().getHost() + Vars.getInstance().getMainContainer() + Vars.getInstance().getAppsContainer() );
+			Set<IRI> appIRIs = containerRepository.getContainedIRIs( platformAppsContainer );
 
-			for ( URI appURI : appURIs ) {
-				App app = appRepository.get( appURI );
+			for ( IRI appIRI : appIRIs ) {
+				App app = appRepository.get( appIRI );
 				apps.add( app );
 			}
 			return apps;

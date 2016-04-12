@@ -4,8 +4,8 @@ import com.carbonldp.rdf.RDFDocumentRepository;
 import com.carbonldp.rdf.RDFResourceRepository;
 import com.carbonldp.utils.RDFNodeUtil;
 import com.carbonldp.utils.ValueUtil;
+import org.openrdf.model.IRI;
 import org.openrdf.model.Statement;
-import org.openrdf.model.URI;
 import org.openrdf.model.Value;
 import org.openrdf.spring.SesameConnectionFactory;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,8 +14,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import static com.carbonldp.Consts.NEW_LINE;
-import static com.carbonldp.Consts.TAB;
+import static com.carbonldp.Consts.*;
 
 @Transactional
 public abstract class AbstractAccessPointRepository extends AbstractTypedContainerRepository {
@@ -31,9 +30,9 @@ public abstract class AbstractAccessPointRepository extends AbstractTypedContain
 		StringBuilder queryBuilder = new StringBuilder();
 		queryBuilder
 			.append( "SELECT ?membershipResource WHERE {" ).append( NEW_LINE )
-			.append( TAB ).append( "GRAPH ?containerURI {" ).append( NEW_LINE )
-			.append( TAB ).append( TAB ).append( RDFNodeUtil.generatePredicateStatement( "?containerURI", "?membershipResource", ContainerDescription.Property.MEMBERSHIP_RESOURCE ) ).append( NEW_LINE )
-			.append( TAB ).append( TAB ).append( "FILTER(isURI(?membershipResource))." ).append( NEW_LINE )
+			.append( TAB ).append( "GRAPH ?containerIRI {" ).append( NEW_LINE )
+			.append( TAB ).append( TAB ).append( RDFNodeUtil.generatePredicateStatement( "?containerIRI", "?membershipResource", ContainerDescription.Property.MEMBERSHIP_RESOURCE ) ).append( NEW_LINE )
+			.append( TAB ).append( TAB ).append( "FILTER(isIRI(?membershipResource))." ).append( NEW_LINE )
 			.append( TAB ).append( "}" ).append( NEW_LINE )
 			.append( "}" ).append( NEW_LINE )
 			.append( "LIMIT 1" )
@@ -43,39 +42,18 @@ public abstract class AbstractAccessPointRepository extends AbstractTypedContain
 
 	// TODO: Create a more generic method instead of this specific one
 	@Override
-	public URI getMembershipResource( URI containerURI ) {
+	public IRI getMembershipResource( IRI containerIRI ) {
 		Map<String, Value> bindings = new HashMap<>();
-		bindings.put( "containerURI", containerURI );
+		bindings.put( "containerIRI", containerIRI );
 		return sparqlTemplate.executeTupleQuery( getMembershipResource_query, bindings, queryResult -> {
 			if ( ! queryResult.hasNext() ) return null;
-			else return ValueUtil.getURI( queryResult.next().getBinding( "membershipResource" ).getValue() );
+			else return ValueUtil.getIRI( queryResult.next().getBinding( "membershipResource" ).getValue() );
 		} );
 	}
 
-	private static final String getProperties_query;
-
-	static {
-		StringBuilder queryBuilder = new StringBuilder();
-		queryBuilder
-			.append( "CONSTRUCT {" ).append( NEW_LINE )
-			.append( TAB ).append( "?containerURI ?p ?o" ).append( NEW_LINE )
-			.append( "} WHERE {" ).append( NEW_LINE )
-			.append( TAB ).append( "GRAPH ?containerURI {" ).append( NEW_LINE )
-			.append( TAB ).append( TAB ).append( "?containerURI ?p ?o." ).append( NEW_LINE )
-			.append( TAB ).append( TAB ).append( "FILTER(" ).append( NEW_LINE )
-			.append( TAB ).append( TAB ).append( TAB ).append( "(?p NOT " )
-			.append( RDFNodeUtil.generateINOperator( ContainerDescription.Property.CONTAINS ) )
-			.append( ")" ).append( NEW_LINE )
-			.append( TAB ).append( TAB ).append( ")" ).append( NEW_LINE )
-			.append( TAB ).append( "}" ).append( NEW_LINE )
-			.append( "}" )
-		;
-		getProperties_query = queryBuilder.toString();
-	}
-
 	@Override
-	public Set<Statement> getProperties( URI containerURI ) {
-		return getProperties( containerURI, getProperties_query );
+	public Set<Statement> getProperties( IRI containerIRI ) {
+		return getProperties( containerIRI, getPropertiesQuery );
 	}
 
 	private static final String getMembershipTriplesQuery;
@@ -85,9 +63,9 @@ public abstract class AbstractAccessPointRepository extends AbstractTypedContain
 			"CONSTRUCT {" + NEW_LINE +
 			TAB + "?membershipResource ?hasMemberRelation ?members" + NEW_LINE +
 			"} WHERE {" + NEW_LINE +
-			TAB + "GRAPH ?containerURI {" + NEW_LINE +
-			TAB + TAB + getHasMemberRelationSPARQL( "?containerURI", "?hasMemberRelation", 2 ) + NEW_LINE +
-			TAB + TAB + RDFNodeUtil.generatePredicateStatement( "?containerURI", "?membershipResource", ContainerDescription.Property.MEMBERSHIP_RESOURCE ) + NEW_LINE +
+			TAB + "GRAPH ?containerIRI {" + NEW_LINE +
+			TAB + TAB + getHasMemberRelationSPARQL( "?containerIRI", "?hasMemberRelation", 2 ) + NEW_LINE +
+			TAB + TAB + RDFNodeUtil.generatePredicateStatement( "?containerIRI", "?membershipResource", ContainerDescription.Property.MEMBERSHIP_RESOURCE ) + NEW_LINE +
 			TAB + "}" + NEW_LINE +
 			TAB + "GRAPH ?membershipResource {" + NEW_LINE +
 			TAB + TAB + "?membershipResource ?hasMemberRelation ?members" + NEW_LINE +
@@ -97,8 +75,8 @@ public abstract class AbstractAccessPointRepository extends AbstractTypedContain
 	}
 
 	@Override
-	public Set<Statement> getMembershipTriples( URI containerURI ) {
-		return getMembershipTriples( containerURI, getMembershipTriplesQuery );
+	public Set<Statement> getMembershipTriples( IRI containerIRI ) {
+		return getMembershipTriples( containerIRI, getMembershipTriplesQuery );
 	}
 
 	private static final String removeMembersQuery;
@@ -114,7 +92,7 @@ public abstract class AbstractAccessPointRepository extends AbstractTypedContain
 			TAB + "}" + NEW_LINE +
 			"} WHERE {" + NEW_LINE +
 			TAB + "GRAPH ?container {" + NEW_LINE +
-			TAB + TAB + getHasMemberRelationSPARQL( "?containerURI", "?hasMemberRelation", 2 ) + NEW_LINE +
+			TAB + TAB + getHasMemberRelationSPARQL( "?containerIRI", "?hasMemberRelation", 2 ) + NEW_LINE +
 			TAB + TAB + RDFNodeUtil.generatePredicateStatement( "?container", "?membershipResource", ContainerDescription.Property.MEMBERSHIP_RESOURCE ) + NEW_LINE +
 			TAB + "}" + NEW_LINE +
 			TAB + "GRAPH ?membershipResource {" + NEW_LINE +
@@ -133,9 +111,9 @@ public abstract class AbstractAccessPointRepository extends AbstractTypedContain
 	}
 
 	@Override
-	public void removeMembers( URI containerURI ) {
+	public void removeMembers( IRI containerIRI ) {
 		Map<String, Value> bindings = new HashMap<>();
-		bindings.put( "container", containerURI );
+		bindings.put( "container", containerIRI );
 		sparqlTemplate.executeUpdate( removeMembersQuery, bindings );
 	}
 }

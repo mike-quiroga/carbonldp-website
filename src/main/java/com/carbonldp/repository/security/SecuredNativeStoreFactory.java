@@ -3,6 +3,7 @@ package com.carbonldp.repository.security;
 import org.openrdf.sail.Sail;
 import org.openrdf.sail.config.SailConfigException;
 import org.openrdf.sail.config.SailImplConfig;
+import org.openrdf.sail.nativerdf.SecuredNativeStore;
 import org.openrdf.sail.nativerdf.config.NativeStoreFactory;
 
 /**
@@ -25,7 +26,9 @@ public class SecuredNativeStoreFactory extends NativeStoreFactory {
 
 			securedNativeStore.setTripleIndexes( nativeConfig.getTripleIndexes() );
 			securedNativeStore.setForceSync( nativeConfig.getForceSync() );
-			securedNativeStore.setFederatedServiceResolver( getFederatedServiceResolver() );
+
+			// TODO: Check the implications of commenting this line
+			// securedNativeStore.setFederatedServiceResolver( getFederatedServiceResolver() );
 
 			if ( nativeConfig.getValueCacheSize() >= 0 ) {
 				securedNativeStore.setValueCacheSize( nativeConfig.getValueCacheSize() );

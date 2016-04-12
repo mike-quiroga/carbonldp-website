@@ -55,9 +55,9 @@ public class NonRDFSourceMessageConverter implements HttpMessageConverter<Abstra
 	}
 
 	private void addDescribedByHeader( HttpHeaders headers, RDFRepresentation rdfRepresentation ) {
-		Link link = new Link( rdfRepresentation.getURI().stringValue() );
+		Link link = new Link( rdfRepresentation.getIRI().stringValue() );
 		link.addRelationshipType( Consts.DESCRIBED_BY );
-		link.setAnchor( rdfRepresentation.getURI().stringValue() );
+		link.setAnchor( rdfRepresentation.getIRI().stringValue() );
 
 		headers.add( HTTPHeaders.LINK, link.toString() );
 	}
@@ -73,18 +73,18 @@ public class NonRDFSourceMessageConverter implements HttpMessageConverter<Abstra
 	}
 
 	private void addLocationHeader( HttpHeaders headers, RDFRepresentation rdfRepresentation ) {
-		headers.add( HTTPHeaders.LOCATION, rdfRepresentation.getURI().stringValue() );
+		headers.add( HTTPHeaders.LOCATION, rdfRepresentation.getIRI().stringValue() );
 	}
 
 	protected String addTypeLinkHeader( RDFNodeEnum interactionModel ) {
-		Link link = new Link( interactionModel.getURI().stringValue() );
+		Link link = new Link( interactionModel.getIRI().stringValue() );
 		link.addRelationshipType( Consts.TYPE );
 
 		return link.toString();
 	}
 
 	protected String addInteractionModelLinkHeader( RDFNodeEnum interactionModel ) {
-		Link link = new Link( interactionModel.getURI().stringValue() );
+		Link link = new Link( interactionModel.getIRI().stringValue() );
 		link.addRelationshipType( Consts.INTERACTION_MODEL );
 
 		return link.toString();

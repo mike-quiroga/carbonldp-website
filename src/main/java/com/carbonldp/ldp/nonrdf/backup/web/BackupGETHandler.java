@@ -5,7 +5,7 @@ import com.carbonldp.HTTPHeaders;
 import com.carbonldp.Vars;
 import com.carbonldp.ldp.web.AbstractGETRequestHandler;
 import com.carbonldp.web.RequestHandler;
-import org.openrdf.model.URI;
+import org.openrdf.model.IRI;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -15,8 +15,9 @@ import javax.servlet.http.HttpServletResponse;
  */
 @RequestHandler
 public class BackupGETHandler extends AbstractGETRequestHandler {
+
 	@Override
-	protected void addNonRDFHeader( URI targetURI, HttpServletResponse response ) {
+	protected void addNonRDFAllowHeader( IRI targetIRI, HttpServletResponse response ) {
 
 		response.addHeader( HTTPHeaders.ALLOW, "GET, PUT, DELETE, OPTIONS" );
 		response.addHeader( HTTPHeaders.ACCEPT_PUT, "*/*" );

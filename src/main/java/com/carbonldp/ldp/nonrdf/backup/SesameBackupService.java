@@ -1,15 +1,11 @@
 package com.carbonldp.ldp.nonrdf.backup;
 
-import com.carbonldp.Consts;
-import com.carbonldp.Vars;
 import com.carbonldp.exceptions.ResourceDoesntExistException;
 import com.carbonldp.ldp.AbstractSesameLDPService;
-import org.openrdf.model.URI;
-import org.openrdf.model.impl.URIImpl;
+import org.openrdf.model.IRI;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.File;
-import java.util.Random;
 
 /**
  * @author JorgeEspinosa
@@ -19,9 +15,9 @@ public class SesameBackupService extends AbstractSesameLDPService implements Bac
 	BackupRepository backupRepository;
 
 	@Override
-	public void createAppBackup( URI appURI, URI backupURI, File zipFile ) {
-		if ( ! sourceRepository.exists( appURI ) ) throw new ResourceDoesntExistException();
-		backupRepository.createAppBackup( appURI, backupURI, zipFile );
+	public void createAppBackup( IRI appIRI, IRI backupIRI, File zipFile ) {
+		if ( ! sourceRepository.exists( appIRI ) ) throw new ResourceDoesntExistException();
+		backupRepository.createAppBackup( appIRI, backupIRI, zipFile );
 
 	}
 

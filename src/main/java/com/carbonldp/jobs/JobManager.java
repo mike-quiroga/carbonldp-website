@@ -5,8 +5,10 @@ import com.carbonldp.apps.App;
 import com.carbonldp.apps.AppRepository;
 import com.carbonldp.ldp.containers.ContainerRepository;
 import com.carbonldp.spring.TransactionWrapper;
-import org.openrdf.model.URI;
-import org.openrdf.model.impl.URIImpl;
+import org.openrdf.model.IRI;
+import org.openrdf.model.Value;
+import org.openrdf.model.ValueFactory;
+import org.openrdf.model.impl.SimpleValueFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 
@@ -24,6 +26,7 @@ public class JobManager {
 	private ContainerRepository containerRepository;
 	private AppRepository appRepository;
 	private ExecutionService executionService;
+	ValueFactory valueFactory = SimpleValueFactory.getInstance();
 
 	@Scheduled( cron = "${job.execution.time}" )
 	public void runQueuedJobs() {
@@ -33,10 +36,10 @@ public class JobManager {
 	public void lookUpForJobs() {
 		Set<App> apps = getAllApps();
 		for ( App app : apps ) {
-			URI jobsContainerURI = new URIImpl( app.getURI().toString().concat( Vars.getInstance().getJobsContainer() ) );
-			Execution execution = transactionWrapper.runWithSystemPermissionsInPlatformContext( () -> executionService.peek( jobsContainerURI ) );
-			if ( execution != null && ( ! execution.getStatus().equals( ExecutionDescription.Status.RUNNING.getURI() ) ) ) {
-				jobsExecutor.execute( app, execution ) ;
+			IRI jobsContainerIRI = valueFactory.createIRI( app.getIRI().toString().concat( Vars.getInstance().getJobsContainer() ) );
+			Execution execution = transactionWrapper.runWithSystemPermissionsInPlatformContext( () -> executionService.peek( jobsContainerIRI ) );
+			if ( execution != null && ( ! execution.getStatus().equals( ExecutionDescription.Status.RUNNING.getIRI() ) ) ) {
+				jobsExecutor.execute( app, execution );
 			}
 		}
 	}
@@ -44,10 +47,10 @@ public class JobManager {
 	private Set<App> getAllApps() {
 		return transactionWrapper.runInPlatformContext( () -> {
 			Set<App> apps = new HashSet<>();
-			URI platformAppsContainer = new URIImpl( Vars.getInstance().getHost() + Vars.getInstance().getMainContainer() + Vars.getInstance().getAppsContainer() );
-			Set<URI> appURIs = containerRepository.getContainedURIs( platformAppsContainer );
-			for ( URI appURI : appURIs ) {
-				App app = appRepository.get( appURI );
+			IRI platformAppsContainer = valueFactory.createIRI( Vars.getInstance().getHost() + Vars.getInstance().getMainContainer() + Vars.getInstance().getAppsContainer() );
+			Set<IRI> appIRIs = containerRepository.getContainedIRIs( platformAppsContainer );
+			for ( IRI appIRI : appIRIs ) {
+				App app = appRepository.get( appIRI );
 				apps.add( app );
 			}
 			return apps;

@@ -1,6 +1,6 @@
 package com.carbonldp.jobs;
 
-import org.openrdf.model.URI;
+import org.openrdf.model.IRI;
 
 /**
  * @author NestorVenegas
@@ -8,5 +8,5 @@ import org.openrdf.model.URI;
  */
 public interface JobRepository {
 
-	public URI getExecutionQueueLocation(URI job);
+	public IRI getExecutionQueueLocation(IRI job);
 }

@@ -16,12 +16,9 @@ import com.carbonldp.repository.security.SecuredNativeStoreFactory;
 import com.carbonldp.spring.TransactionWrapper;
 import com.carbonldp.utils.PropertiesUtil;
 import org.mockito.Mockito;
-import org.openrdf.model.URI;
+import org.openrdf.model.IRI;
 import org.openrdf.model.ValueFactory;
-import org.openrdf.model.impl.AbstractModel;
-import org.openrdf.model.impl.LinkedHashModel;
-import org.openrdf.model.impl.URIImpl;
-import org.openrdf.model.impl.ValueFactoryImpl;
+import org.openrdf.model.impl.*;
 import org.openrdf.repository.Repository;
 import org.openrdf.repository.RepositoryConnection;
 import org.openrdf.repository.RepositoryException;
@@ -81,9 +78,10 @@ public abstract class AbstractIT extends AbstractTestNGSpringContextTests {
 	protected FileRepository fileRepository;
 
 	protected final String testRepositoryID = "test-blog";
-	protected final String testResourceURI = "https://local.carbonldp.com/apps/test-blog/";
+	protected final String testResourceIRI = "https://local.carbonldp.com/apps/test-blog/";
 
 	protected final Logger LOG = LoggerFactory.getLogger( this.getClass() );
+	protected static ValueFactory valueFactory = SimpleValueFactory.getInstance();
 
 	private final String propertiesFile = "config.properties";
 	private final String platformRepositoryLocationProperty = "repositories.platform.sesame.directory";
@@ -210,7 +208,7 @@ public abstract class AbstractIT extends AbstractTestNGSpringContextTests {
 		}
 	}
 
-	private void loadDefaultResourcesfile( Repository repository, String resourcesFile, String baseURI ) {
+	private void loadDefaultResourcesfile( Repository repository, String resourcesFile, String baseIRI ) {
 		InputStream inputStream = getClass().getClassLoader().getResourceAsStream( resourcesFile );
 
 		RepositoryConnection connection;
@@ -221,7 +219,7 @@ public abstract class AbstractIT extends AbstractTestNGSpringContextTests {
 		}
 
 		try {
-			connection.add( inputStream, baseURI, RDFFormat.TRIG );
+			connection.add( inputStream, baseIRI, RDFFormat.TRIG );
 		} catch ( RDFParseException e ) {
 			throw new RuntimeException( "The file couldn't be parsed.", e );
 		} catch ( RepositoryException | IOException e ) {
@@ -238,20 +236,19 @@ public abstract class AbstractIT extends AbstractTestNGSpringContextTests {
 	@BeforeClass( alwaysRun = true, dependsOnMethods = "springTestContextPrepareTestInstance" )
 	public void setRepository() {
 
-		InputStream inputStream = null;
-		ValueFactory factory = ValueFactoryImpl.getInstance();
+		ValueFactory factory = SimpleValueFactory.getInstance();
 		RDFParser rdfParser = Rio.createParser( RDFFormat.TRIG );
 		AbstractModel model = new LinkedHashModel();
 		rdfParser.setRDFHandler( new StatementCollector( model ) );
-		inputStream = getClass().getClassLoader().getResourceAsStream( testDataLocation );
+		InputStream inputStream = getClass().getClassLoader().getResourceAsStream( testDataLocation );
 		try {
 			rdfParser.parse( inputStream, testDataLocation );
 		} catch ( Exception e ) {
 			throw new RuntimeException( e );
 		}
-		URI appURI = factory.createURI( testResourceURI );
-		Container container = new BasicContainer( model, appURI );
-		App app = AppFactory.getInstance().create( container, appURI.stringValue(), testRepositoryID );
+		IRI appIRI = factory.createIRI( testResourceIRI );
+		Container container = new BasicContainer( model, appIRI );
+		App app = AppFactory.getInstance().create( container, appIRI.stringValue(), testRepositoryID );
 		Authentication authentication = Mockito.mock( Authentication.class );
 
 		Mockito.when( authentication.getPrincipal() ).thenReturn( "admin@carbonldp.com" );
@@ -265,8 +262,8 @@ public abstract class AbstractIT extends AbstractTestNGSpringContextTests {
 		SecurityContextHolder.getContext().setAuthentication( authToken );
 
 		// This if is needed here, lines above this are necessary to run every time before each class.
-		if ( ! appService.exists( new URIImpl( testResourceURI ) ) )
+		if ( ! appService.exists( SimpleValueFactory.getInstance().createIRI( testResourceIRI ) ) )
 			appService.create( app );
-		this.app = transactionWrapper.runWithSystemPermissionsInPlatformContext( () -> appService.get( new URIImpl( testResourceURI ) ) );
+		this.app = transactionWrapper.runWithSystemPermissionsInPlatformContext( () -> appService.get( valueFactory.createIRI( testResourceIRI ) ) );
 	}
 }

@@ -8,10 +8,9 @@ import com.carbonldp.rdf.RDFResource;
 import com.carbonldp.repository.ConnectionRWTemplate;
 import org.eclipse.jetty.server.ConnectionFactory;
 import org.openrdf.model.BNode;
-import org.openrdf.model.URI;
+import org.openrdf.model.IRI;
 import org.openrdf.model.Value;
 import org.openrdf.model.impl.LinkedHashModel;
-import org.openrdf.model.impl.URIImpl;
 import org.openrdf.model.vocabulary.RDF;
 import org.openrdf.spring.SesameConnectionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,44 +25,44 @@ public class SesameExecutionService extends AbstractSesameLDPService implements 
 	private ConnectionRWTemplate connectionTemplate;
 
 	@Override
-	public ExecutionDescription.Status getExecutionStatus( URI executionURI ) {
-		return executionRepository.getExecutionStatus( executionURI );
+	public ExecutionDescription.Status getExecutionStatus( IRI executionIRI ) {
+		return executionRepository.getExecutionStatus( executionIRI );
 	}
 
 	@Override
-	public void changeExecutionStatus( URI executionURI, ExecutionDescription.Status status ) {
-		executionRepository.changeExecutionStatus( executionURI, status );
-		sourceRepository.touch( executionURI );
+	public void changeExecutionStatus( IRI executionIRI, ExecutionDescription.Status status ) {
+		executionRepository.changeExecutionStatus( executionIRI, status );
+		sourceRepository.touch( executionIRI );
 	}
 
 	@Override
-	public void enqueue( URI executionURI, URI executionQueueLocationURI ) {
-		RDFDocument document = new RDFDocument( new LinkedHashModel(), executionQueueLocationURI );
+	public void enqueue( IRI executionIRI, IRI executionQueueLocationIRI ) {
+		RDFDocument document = new RDFDocument( new LinkedHashModel(), executionQueueLocationIRI );
 		BNode bNode = connectionTemplate.read( connection -> connection.getValueFactory().createBNode() );
-		RDFBlankNode blankNode = new RDFBlankNode( document, bNode, executionQueueLocationURI );
-		blankNode.add( RDF.FIRST, executionURI );
+		RDFBlankNode blankNode = new RDFBlankNode( document, bNode, executionQueueLocationIRI );
+		blankNode.add( RDF.FIRST, executionIRI );
 		blankNode.add( RDF.REST, RDF.NIL );
 
-		sourceService.add( executionQueueLocationURI, document );
-		executionRepository.enqueue( bNode, executionQueueLocationURI );
-		sourceRepository.touch( executionQueueLocationURI );
+		sourceService.add( executionQueueLocationIRI, document );
+		executionRepository.enqueue( bNode, executionQueueLocationIRI );
+		sourceRepository.touch( executionQueueLocationIRI );
 	}
 
 	@Override
-	public void dequeue( URI executionQueueLocationURI ) {
-		executionRepository.dequeue( executionQueueLocationURI );
-		sourceRepository.touch( executionQueueLocationURI );
+	public void dequeue( IRI executionQueueLocationIRI ) {
+		executionRepository.dequeue( executionQueueLocationIRI );
+		sourceRepository.touch( executionQueueLocationIRI );
 	}
 
 	@Override
-	public Execution peek( URI executionQueueLocationURI ) {
-		return executionRepository.peek( executionQueueLocationURI );
+	public Execution peek( IRI executionQueueLocationIRI ) {
+		return executionRepository.peek( executionQueueLocationIRI );
 	}
 
 	@Override
-	public void addResult( URI executionURI, Value status ) {
-		executionRepository.addResult( executionURI, status );
-		sourceRepository.touch( executionURI );
+	public void addResult( IRI executionIRI, Value status ) {
+		executionRepository.addResult( executionIRI, status );
+		sourceRepository.touch( executionIRI );
 	}
 
 	@Override

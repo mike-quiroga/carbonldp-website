@@ -6,7 +6,6 @@ import com.carbonldp.apps.context.AppContextHolder;
 import com.carbonldp.apps.roles.AppRoleRepository;
 import com.carbonldp.authentication.AgentAuthenticationToken;
 import com.carbonldp.authorization.Platform;
-import com.carbonldp.authorization.PlatformRole;
 import com.carbonldp.exceptions.InvalidResourceException;
 import com.carbonldp.exceptions.ResourceDoesntExistException;
 import com.carbonldp.exceptions.StupidityException;
@@ -15,9 +14,9 @@ import com.carbonldp.models.Infraction;
 import com.carbonldp.utils.RDFNodeUtil;
 import com.carbonldp.web.exceptions.ForbiddenException;
 import com.carbonldp.web.exceptions.NotImplementedException;
-import org.openrdf.model.URI;
+import org.openrdf.model.IRI;
 import org.openrdf.model.ValueFactory;
-import org.openrdf.model.impl.ValueFactoryImpl;
+import org.openrdf.model.impl.SimpleValueFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.PermissionEvaluator;
 import org.springframework.security.core.Authentication;
@@ -32,21 +31,21 @@ public class SesameACLService extends AbstractSesameLDPService implements ACLSer
 
 	public SesameACLService( PermissionEvaluator permissionEvaluator ) {
 		this.permissionEvaluator = permissionEvaluator;
-		this.valueFactory = new ValueFactoryImpl();
+		this.valueFactory = SimpleValueFactory.getInstance();
 	}
 
-	private ACL get( URI aclURI ) {
-		return new ACL( sourceRepository.get( aclURI ), aclURI );
+	private ACL get( IRI aclIRI ) {
+		return new ACL( sourceRepository.get( aclIRI ), aclIRI );
 	}
 
 	@Override
 	public void replace( ACL newACL ) {
-		URI aclURI = newACL.getURI();
+		IRI aclIRI = newACL.getIRI();
 
-		if ( ! sourceRepository.exists( aclURI ) ) throw new ResourceDoesntExistException();
+		if ( ! sourceRepository.exists( aclIRI ) ) throw new ResourceDoesntExistException();
 		validateACL( newACL );
 
-		ACL oldACL = get( aclURI );
+		ACL oldACL = get( aclIRI );
 
 		Map<Subject, SubjectPermissions> oldACLSubjects = getACLSubjects( oldACL );
 		Map<Subject, SubjectPermissions> newACLSubjects = getACLSubjects( newACL );
@@ -55,27 +54,27 @@ public class SesameACLService extends AbstractSesameLDPService implements ACLSer
 
 		validateModifications( subjectPermissionsToModify, newACL.getAccessTo() );
 
-		ACL aclToPersist = generateACL( aclURI, newACL.getAccessTo(), newACLSubjects );
+		ACL aclToPersist = generateACL( aclIRI, newACL.getAccessTo(), newACLSubjects );
 
 		aclRepository.replace( aclToPersist );
 
-		sourceRepository.touch( aclURI );
+		sourceRepository.touch( aclIRI );
 	}
 
 	// TODO: compact the resulting ACL
-	private ACL generateACL( URI aclURI, URI accessTo, Map<Subject, SubjectPermissions> subjectPermissionsToModify ) {
-		ACL acl = ACLFactory.create( aclURI, accessTo );
+	private ACL generateACL( IRI aclIRI, IRI accessTo, Map<Subject, SubjectPermissions> subjectPermissionsToModify ) {
+		ACL acl = ACLFactory.create( aclIRI, accessTo );
 
 		for ( Subject subject : subjectPermissionsToModify.keySet() ) {
 			for ( InheritanceType inheritanceType : subjectPermissionsToModify.get( subject ).keySet() ) {
 				for ( PermissionType permissionType : subjectPermissionsToModify.get( subject ).get( inheritanceType ).keySet() ) {
-					ACEDescription.SubjectType subjectType = RDFNodeUtil.findByURI( subject.getSubjectClass(), ACEDescription.SubjectType.class );
+					ACEDescription.SubjectType subjectType = RDFNodeUtil.findByIRI( subject.getSubjectClass(), ACEDescription.SubjectType.class );
 					Set<ACEDescription.Permission> permissions = subjectPermissionsToModify.get( subject ).get( inheritanceType ).get( permissionType );
 					if ( permissions.isEmpty() || permissions.size() == 0 ) continue;
 
 					boolean granting = permissionType == PermissionType.GRANTING;
 
-					ACE ace = ACEFactory.getInstance().create( acl, subjectType, subject.getURI(), permissions, granting );
+					ACE ace = ACEFactory.getInstance().create( acl, subjectType, subject.getIRI(), permissions, granting );
 
 					if ( inheritanceType == InheritanceType.DIRECT ) {
 						acl.addACEntry( ace.getSubject() );
@@ -147,10 +146,10 @@ public class SesameACLService extends AbstractSesameLDPService implements ACLSer
 	private Map<Subject, SubjectPermissions> getACLSubjects( ACL acl ) {
 		Map<Subject, SubjectPermissions> aclSubjects = new HashMap<>();
 
-		Set<ACE> aces = ACEFactory.getInstance().get( acl.getBaseModel(), acl.getACEntries(), acl.getURI() );
+		Set<ACE> aces = ACEFactory.getInstance().get( acl.getBaseModel(), acl.getACEntries(), acl.getIRI() );
 		addACEsSubjects( aces, InheritanceType.DIRECT, aclSubjects );
 
-		Set<ACE> inheritableAces = ACEFactory.getInstance().get( acl.getBaseModel(), acl.getInheritableEntries(), acl.getURI() );
+		Set<ACE> inheritableAces = ACEFactory.getInstance().get( acl.getBaseModel(), acl.getInheritableEntries(), acl.getIRI() );
 		addACEsSubjects( inheritableAces, InheritanceType.INHERITABLE, aclSubjects );
 
 		return aclSubjects;
@@ -158,7 +157,7 @@ public class SesameACLService extends AbstractSesameLDPService implements ACLSer
 
 	private void addACEsSubjects( Set<ACE> aces, InheritanceType inheritanceType, Map<Subject, SubjectPermissions> aclSubjects ) {
 		for ( ACE ace : aces ) {
-			for ( URI aceSubject : ace.getSubjects() ) {
+			for ( IRI aceSubject : ace.getSubjects() ) {
 				Subject subject = new Subject( aceSubject, ace.getSubjectClass() );
 				SubjectPermissions subjectPermissions;
 				if ( ! aclSubjects.containsKey( subject ) ) {
@@ -177,15 +176,15 @@ public class SesameACLService extends AbstractSesameLDPService implements ACLSer
 	private void validateACL( ACL newAcl ) {
 		List<Infraction> infractions = ACLFactory.getInstance().validate( newAcl );
 
-		Set<ACE> aces = ACEFactory.getInstance().get( newAcl.getBaseModel(), newAcl.getACEntries(), newAcl.getURI() );
-		aces.addAll( ACEFactory.getInstance().get( newAcl.getBaseModel(), newAcl.getInheritableEntries(), newAcl.getURI() ) );
+		Set<ACE> aces = ACEFactory.getInstance().get( newAcl.getBaseModel(), newAcl.getACEntries(), newAcl.getIRI() );
+		aces.addAll( ACEFactory.getInstance().get( newAcl.getBaseModel(), newAcl.getInheritableEntries(), newAcl.getIRI() ) );
 		for ( ACE ace : aces ) {
 			infractions.addAll( ACEFactory.getInstance().validate( ace ) );
 		}
 		if ( ! infractions.isEmpty() ) throw new InvalidResourceException( infractions );
 	}
 
-	private void validateModifications( Map<ModifyType, Map<Subject, SubjectPermissions>> subjectPermissionsToModify, URI accessTo ) {
+	private void validateModifications( Map<ModifyType, Map<Subject, SubjectPermissions>> subjectPermissionsToModify, IRI accessTo ) {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		if ( ! ( authentication instanceof AgentAuthenticationToken ) ) throw new IllegalArgumentException( "The authentication token isn't supported." );
 		AgentAuthenticationToken agentAuthenticationToken = (AgentAuthenticationToken) authentication;
@@ -194,7 +193,7 @@ public class SesameACLService extends AbstractSesameLDPService implements ACLSer
 		Set<ACEDescription.Permission> affectedPermissions = getAffectedPermissions( subjectPermissionsToModify );
 
 		for ( Subject subject : affectedSubjects ) {
-			ACEDescription.SubjectType subjectClass = RDFNodeUtil.findByURI( subject.getSubjectClass(), ACEDescription.SubjectType.class );
+			ACEDescription.SubjectType subjectClass = RDFNodeUtil.findByIRI( subject.getSubjectClass(), ACEDescription.SubjectType.class );
 			if ( subjectClass == null ) throw new StupidityException( "There's no subjectClass property in the ACE" );
 			switch ( subjectClass ) {
 				case AGENT:
@@ -205,8 +204,8 @@ public class SesameACLService extends AbstractSesameLDPService implements ACLSer
 
 					Set<AppRole> appRoles = agentAuthenticationToken.getAppRoles();
 
-					URI appRoleToModify = subject.getURI();
-					Set<URI> parentsRoles = appRoleRepository.getParentsURI( appRoleToModify );
+					IRI appRoleToModify = subject.getIRI();
+					Set<IRI> parentsRoles = appRoleRepository.getParentsIRI( appRoleToModify );
 
 					boolean isParent = false;
 					for ( AppRole appRole : appRoles ) {
@@ -223,11 +222,11 @@ public class SesameACLService extends AbstractSesameLDPService implements ACLSer
 					}
 					break;
 				case PLATFORM_ROLE:
-					URI roleToModify = subject.getURI();
-					if ( ! roleToModify.equals( Platform.Role.ANONYMOUS.getURI() ) ) throw new NotImplementedException();
+					IRI roleToModify = subject.getIRI();
+					if ( ! roleToModify.equals( Platform.Role.ANONYMOUS.getIRI() ) ) throw new NotImplementedException();
 					break;
 				default:
-					throw new InvalidResourceException( new Infraction( 0x2005, "property", ACEDescription.Property.SUBJECT_CLASS.getURI().stringValue() ) );
+					throw new InvalidResourceException( new Infraction( 0x2005, "property", ACEDescription.Property.SUBJECT_CLASS.getIRI().stringValue() ) );
 
 			}
 		}
@@ -297,19 +296,19 @@ public class SesameACLService extends AbstractSesameLDPService implements ACLSer
 	}
 
 	public static class Subject {
-		private URI uri;
-		private URI subjectClass;
+		private IRI uri;
+		private IRI subjectClass;
 
-		public Subject( URI uri, URI subjectClass ) {
+		public Subject( IRI uri, IRI subjectClass ) {
 			this.uri = uri;
 			this.subjectClass = subjectClass;
 		}
 
-		public URI getURI() {
+		public IRI getIRI() {
 			return uri;
 		}
 
-		public URI getSubjectClass() {
+		public IRI getSubjectClass() {
 			return subjectClass;
 		}
 

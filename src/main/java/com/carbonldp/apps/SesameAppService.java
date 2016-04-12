@@ -24,10 +24,11 @@ import com.carbonldp.models.Infraction;
 import com.carbonldp.namespaces.C;
 import com.carbonldp.namespaces.LDP;
 import com.carbonldp.rdf.RDFResource;
-import com.carbonldp.utils.URIUtil;
+import com.carbonldp.utils.IRIUtil;
 import com.carbonldp.web.exceptions.NotFoundException;
-import org.openrdf.model.URI;
-import org.openrdf.model.impl.URIImpl;
+import org.openrdf.model.IRI;
+import org.openrdf.model.ValueFactory;
+import org.openrdf.model.impl.SimpleValueFactory;
 import org.openrdf.model.vocabulary.RDF;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -38,8 +39,9 @@ import java.util.List;
 
 public class SesameAppService extends AbstractSesameLDPService implements AppService {
 
-	protected ContainerService containerService;
+	private static ValueFactory valueFactory = SimpleValueFactory.getInstance();
 
+	protected ContainerService containerService;
 	protected AppRepository appRepository;
 	protected AppRoleRepository appRoleRepository;
 	protected AppAgentRepository appAgentRepository;
@@ -48,24 +50,24 @@ public class SesameAppService extends AbstractSesameLDPService implements AppSer
 	protected RDFSourceService sourceService;
 
 	@Override
-	public boolean exists( URI appURI ) {
-		return appRepository.exists( appURI );
+	public boolean exists( IRI appIRI ) {
+		return appRepository.exists( appIRI );
 	}
 
 	@Override
-	public App get( URI appURI ) {
-		if ( ! exists( appURI ) ) throw new ResourceDoesntExistException();
-		return appRepository.get( appURI );
+	public App get( IRI appIRI ) {
+		if ( ! exists( appIRI ) ) throw new ResourceDoesntExistException();
+		return appRepository.get( appIRI );
 	}
 
 	@Override
 	public void create( App app ) {
-		if ( exists( app.getURI() ) ) throw new ResourceAlreadyExistsException();
+		if ( exists( app.getIRI() ) ) throw new ResourceAlreadyExistsException();
 		validate( app );
 
 		App createdApp = appRepository.createPlatformAppRepository( app );
-		containerService.createChild( appRepository.getPlatformAppContainerURI(), app );
-		ACL appACL = aclRepository.getResourceACL( createdApp.getURI() );
+		containerService.createChild( appRepository.getPlatformAppContainerIRI(), app );
+		ACL appACL = aclRepository.getResourceACL( createdApp.getIRI() );
 		if ( appACL == null ) {
 			throw new IllegalStateException( "Resource couldn't be created" );
 		}
@@ -76,16 +78,16 @@ public class SesameAppService extends AbstractSesameLDPService implements AppSer
 			Container rootContainer = createRootContainer( app );
 			ACL rootContainerACL = createRootContainerACL( rootContainer );
 
-			Container appRolesContainer = appRoleRepository.createAppRolesContainer( rootContainer.getURI() );
+			Container appRolesContainer = appRoleRepository.createAppRolesContainer( rootContainer.getIRI() );
 			ACL appRolesContainerACL = createAppRolesContainerACL( appRolesContainer );
 
 			AppRole appAdminRole = createAppAdminRole( appRolesContainer );
 			ACL appAdminRoleACL = createAppAdminRoleACL( appAdminRole );
 
-			Container appAgentsContainer = appAgentRepository.createAppAgentsContainer( rootContainer.getURI() );
+			Container appAgentsContainer = appAgentRepository.createAppAgentsContainer( rootContainer.getIRI() );
 			ACL appAgentsContainerACL = createAppAgentsACL( appAgentsContainer );
 
-			Container appTokensContainer = appTokensRepository.createAppTokensContainer( rootContainer.getURI() );
+			Container appTokensContainer = appTokensRepository.createAppTokensContainer( rootContainer.getIRI() );
 			ACL appTokensContainerACL = createAppTokensACL( appTokensContainer );
 
 			addDefaultPermissions( appAdminRole, rootContainerACL );
@@ -97,61 +99,60 @@ public class SesameAppService extends AbstractSesameLDPService implements AppSer
 
 		addAppDefaultPermissions( adminRole, appACL );
 
-		sourceRepository.touch( createdApp.getURI() );
+		sourceRepository.touch( createdApp.getIRI() );
 	}
 
 	@Override
-	public void delete( URI appURI ) {
-		if ( ! exists( appURI ) ) throw new NotFoundException();
-		appRepository.delete( appURI );
-		sourceRepository.deleteOccurrences( appURI, true );
+	public void delete( IRI appIRI ) {
+		if ( ! exists( appIRI ) ) throw new NotFoundException();
+		appRepository.delete( appIRI );
 	}
 
 	@Override
 	public void replace( App app ) {
-		URI appURI = app.getURI();
+		IRI appIRI = app.getIRI();
 		validate( app );
 
-		if ( ! exists( appURI ) ) throw new NotFoundException();
+		if ( ! exists( appIRI ) ) throw new NotFoundException();
 		sourceService.replace( app );
 	}
 
 	private BasicContainer createRootContainer( App app ) {
-		BasicContainer rootContainer = BasicContainerFactory.getInstance().create( new RDFResource( app.getRootContainerURI() ) );
+		BasicContainer rootContainer = BasicContainerFactory.getInstance().create( new RDFResource( app.getRootContainerIRI() ) );
 		containerRepository.create( rootContainer );
 		return rootContainer;
 	}
 
 	private ACL createRootContainerACL( Container rootContainer ) {
-		return aclRepository.createACL( rootContainer.getURI() );
+		return aclRepository.createACL( rootContainer.getIRI() );
 	}
 
 	private ACL createAppRolesContainerACL( Container appRolesContainer ) {
-		return aclRepository.createACL( appRolesContainer.getURI() );
+		return aclRepository.createACL( appRolesContainer.getIRI() );
 	}
 
 	private ACL createAppAgentsACL( Container appAgentsContainer ) {
-		return aclRepository.createACL( appAgentsContainer.getURI() );
+		return aclRepository.createACL( appAgentsContainer.getIRI() );
 	}
 
 	private ACL createAppTokensACL( Container appTokensContainer ) {
-		return aclRepository.createACL( appTokensContainer.getURI() );
+		return aclRepository.createACL( appTokensContainer.getIRI() );
 	}
 
 	private AppRole createAppAdminRole( Container appRolesContainer ) {
-		URI appAdminRoleURI = getAppAdminRoleURI( appRolesContainer );
-		AppRole appAdminRole = AppRoleFactory.getInstance().create( new RDFResource( appAdminRoleURI ) );
+		IRI appAdminRoleIRI = getAppAdminRoleIRI( appRolesContainer );
+		AppRole appAdminRole = AppRoleFactory.getInstance().create( new RDFResource( appAdminRoleIRI ) );
 		appAdminRole.setName( "App admin." );
 		appRoleService.create( appAdminRole );
 		return appAdminRole;
 	}
 
-	private URI getAppAdminRoleURI( Container appRolesContainer ) {
-		return URIUtil.createChildURI( appRolesContainer.getURI(), "app-admin/" );
+	private IRI getAppAdminRoleIRI( Container appRolesContainer ) {
+		return IRIUtil.createChildIRI( appRolesContainer.getIRI(), "app-admin/" );
 	}
 
 	private ACL createAppAdminRoleACL( AppRole appAdminRole ) {
-		return aclRepository.createACL( appAdminRole.getURI() );
+		return aclRepository.createACL( appAdminRole.getIRI() );
 	}
 
 	private void addCurrentAgentToAppAdminRole( AppRole appAdminRole ) {
@@ -159,7 +160,7 @@ public class SesameAppService extends AbstractSesameLDPService implements AppSer
 		if ( rawAuthentication == null ) throw new IllegalStateException( "The security context is empty" );
 		if ( ! ( rawAuthentication instanceof AgentAuthenticationToken ) ) throw new IllegalStateException( "The authentication token isn't supported." );
 		Agent agent = ( (AgentAuthenticationToken) rawAuthentication ).getAgent();
-		appRoleRepository.addAgent( appAdminRole.getURI(), agent );
+		appRoleRepository.addAgent( appAdminRole.getIRI(), agent );
 	}
 
 	private void addDefaultPermissions( AppRole appAdminRole, ACL rootContainerACL ) {
@@ -191,42 +192,42 @@ public class SesameAppService extends AbstractSesameLDPService implements AppSer
 	}
 
 	private void createBackupContainer( App app ) {
-		URI containerURI = generateBackupContainerURI( app );
-		RDFResource backupsResource = new RDFResource( containerURI );
-		BasicContainer backupsContainer = BasicContainerFactory.getInstance().create( backupsResource);
-		containerRepository.createChild( app.getURI(), backupsContainer );
-		aclRepository.createACL( backupsContainer.getURI() );
+		IRI containerIRI = generateBackupContainerIRI( app );
+		RDFResource backupsResource = new RDFResource( containerIRI );
+		BasicContainer backupsContainer = BasicContainerFactory.getInstance().create( backupsResource );
+		containerRepository.createChild( app.getIRI(), backupsContainer );
+		aclRepository.createACL( backupsContainer.getIRI() );
 	}
 
-	private URI generateBackupContainerURI( App app ) {
-		String appString = app.getURI().stringValue();
+	private IRI generateBackupContainerIRI( App app ) {
+		String appString = app.getIRI().stringValue();
 		String backupsString = Vars.getInstance().getBackupsContainer();
-		return new URIImpl( appString + backupsString );
+		return valueFactory.createIRI( appString + backupsString );
 	}
 
 	private void createJobsContainer( App app ) {
-		URI containerURI = generateJobsContainerURI( app );
-		RDFResource jobsResource = new RDFResource( containerURI );
-		BasicContainer jobsContainer = BasicContainerFactory.getInstance().create( jobsResource, new URIImpl( LDP.Properties.MEMBER),JobDescription.Property.EXECUTION_QUEUE_LOCATION.getURI());
+		IRI containerIRI = generateJobsContainerIRI( app );
+		RDFResource jobsResource = new RDFResource( containerIRI );
+		BasicContainer jobsContainer = BasicContainerFactory.getInstance().create( jobsResource, valueFactory.createIRI( LDP.Properties.MEMBER ), JobDescription.Property.EXECUTION_QUEUE_LOCATION.getIRI() );
 
 		jobsContainer = createQueue( jobsContainer );
 
-		containerRepository.createChild( app.getURI(), jobsContainer );
-		aclRepository.createACL( jobsContainer.getURI() );
+		containerRepository.createChild( app.getIRI(), jobsContainer );
+		aclRepository.createACL( jobsContainer.getIRI() );
 	}
 
 	private BasicContainer createQueue( BasicContainer jobsContainer ) {
-		URI jobsExecutionQueue = new URIImpl( jobsContainer.getURI().stringValue() + Consts.HASH_SIGN + Vars.getInstance().getQueue() );
-		jobsContainer.set( ExecutionDescription.List.QUEUE.getURI(), jobsExecutionQueue );
-		jobsContainer.getBaseModel().add( jobsExecutionQueue, RDF.FIRST, jobsExecutionQueue, jobsContainer.getURI() );
-		jobsContainer.getBaseModel().add( jobsExecutionQueue, RDF.REST, RDF.NIL, jobsContainer.getURI() );
+		IRI jobsExecutionQueue = valueFactory.createIRI( jobsContainer.getIRI().stringValue() + Consts.HASH_SIGN + Vars.getInstance().getQueue() );
+		jobsContainer.set( ExecutionDescription.List.QUEUE.getIRI(), jobsExecutionQueue );
+		jobsContainer.getBaseModel().add( jobsExecutionQueue, RDF.FIRST, jobsExecutionQueue, jobsContainer.getIRI() );
+		jobsContainer.getBaseModel().add( jobsExecutionQueue, RDF.REST, RDF.NIL, jobsContainer.getIRI() );
 		return jobsContainer;
 	}
 
-	private URI generateJobsContainerURI( App app ) {
-		String appString = app.getURI().stringValue();
+	private IRI generateJobsContainerIRI( App app ) {
+		String appString = app.getIRI().stringValue();
 		String jobsString = Vars.getInstance().getJobsContainer();
-		return new URIImpl( appString + jobsString );
+		return valueFactory.createIRI( appString + jobsString );
 	}
 
 	@Autowired

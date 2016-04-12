@@ -9,17 +9,12 @@ import com.carbonldp.rdf.RDFDocumentRepository;
 import com.carbonldp.repository.AbstractSesameRepository;
 import com.carbonldp.repository.FileRepository;
 import com.carbonldp.repository.RepositoryService;
+import com.carbonldp.utils.IRIUtil;
 import com.carbonldp.utils.RDFNodeUtil;
-import com.carbonldp.utils.URIUtil;
-import com.carbonldp.utils.ValueUtil;
-import org.openrdf.model.Resource;
-import org.openrdf.model.Statement;
-import org.openrdf.model.URI;
+import org.openrdf.model.IRI;
 import org.openrdf.model.Value;
-import org.openrdf.model.impl.URIImpl;
-import org.openrdf.model.vocabulary.RDF;
-import org.openrdf.repository.RepositoryException;
-import org.openrdf.repository.RepositoryResult;
+
+import org.openrdf.model.impl.SimpleValueFactory;
 import org.openrdf.spring.SesameConnectionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,7 +30,7 @@ public class SesameAppRepository extends AbstractSesameRepository implements App
 	private final RDFSourceRepository sourceRepository;
 	private final ContainerRepository containerRepository;
 	private final RepositoryService appRepositoryService;
-	private URI appsContainerURI;
+	private IRI appsContainerIRI;
 	private String appsEntryPoint;
 	protected FileRepository fileRepository;
 
@@ -51,37 +46,37 @@ public class SesameAppRepository extends AbstractSesameRepository implements App
 	}
 
 	@Override
-	public boolean exists( URI appURI ) {
+	public boolean exists( IRI appIRI ) {
 		// TODO: This method should ask specifically for an Application Source
-		return sourceRepository.exists( appURI );
+		return sourceRepository.exists( appIRI );
 	}
 
 	@Override
-	public App get( URI appURI ) {
-		if ( ! containerRepository.hasMember( appsContainerURI, appURI, appsContainerType ) ) return null;
+	public App get( IRI appIRI ) {
+		if ( ! containerRepository.hasMember( appsContainerIRI, appIRI, appsContainerType ) ) return null;
 
-		RDFSource appSource = sourceRepository.get( appURI );
+		RDFSource appSource = sourceRepository.get( appIRI );
 		if ( appSource == null ) return null;
-		return new App( appSource.getBaseModel(), appSource.getURI() );
+		return new App( appSource.getBaseModel(), appSource.getIRI() );
 	}
 
 	private static final String findByRootContainer_selector = "" +
 		RDFNodeUtil.generatePredicateStatement( "?members", "?rootContainer", AppDescription.Property.ROOT_CONTAINER );
 
 	@Override
-	public App findByRootContainer( URI rootContainerURI ) {
+	public App findByRootContainer( IRI rootContainerIRI ) {
 		Map<String, Value> bindings = new HashMap<>();
-		bindings.put( "rootContainer", rootContainerURI );
+		bindings.put( "rootContainer", rootContainerIRI );
 
-		Set<URI> memberURIs = containerRepository.findMembers( appsContainerURI, findByRootContainer_selector, bindings, appsContainerType );
-		if ( memberURIs.isEmpty() ) return null;
-		if ( memberURIs.size() > 1 ) {
+		Set<IRI> memberIRIs = containerRepository.findMembers( appsContainerIRI, findByRootContainer_selector, bindings, appsContainerType );
+		if ( memberIRIs.isEmpty() ) return null;
+		if ( memberIRIs.size() > 1 ) {
 			// TODO: Add error number
 			throw new IllegalStateException( "Two apps with the same root container were found." );
 		}
 
-		URI appURI = memberURIs.iterator().next();
-		return get( appURI );
+		IRI appIRI = memberIRIs.iterator().next();
+		return get( appIRI );
 	}
 
 	@Override
@@ -90,22 +85,22 @@ public class SesameAppRepository extends AbstractSesameRepository implements App
 		appRepositoryService.createRepository( repositoryID );
 		app.setRepositoryID( repositoryID );
 
-		URI rootContainerURI = forgeRootContainerURI( app );
-		app.setRootContainerURI( rootContainerURI );
+		IRI rootContainerIRI = forgeRootContainerIRI( app );
+		app.setRootContainerIRI( rootContainerIRI );
 
 		return app;
 	}
 
-	public void delete( URI appURI ) {
-		App app = this.get( appURI );
-		sourceRepository.delete( appURI );
+	public void delete( IRI appIRI ) {
+		App app = this.get( appIRI );
+		sourceRepository.delete( appIRI, true );
 		deleteAppRepository( app );
 		deleteAppFileDirectory( app );
 	}
 
 	@Override
-	public URI getPlatformAppContainerURI() {
-		return appsContainerURI;
+	public IRI getPlatformAppContainerIRI() {
+		return appsContainerIRI;
 	}
 
 	private void deleteAppRepository( App app ) {
@@ -120,13 +115,13 @@ public class SesameAppRepository extends AbstractSesameRepository implements App
 		return UUID.randomUUID().toString();
 	}
 
-	private URI forgeRootContainerURI( App app ) {
-		String appSlug = URIUtil.getSlug( app.getURI() );
-		return new URIImpl( appsEntryPoint + appSlug );
+	private IRI forgeRootContainerIRI( App app ) {
+		String appSlug = IRIUtil.getSlug( app.getIRI() );
+		return SimpleValueFactory.getInstance().createIRI( appsEntryPoint + appSlug );
 	}
 
-	public void setAppsContainerURI( URI appsContainerURI ) {
-		this.appsContainerURI = appsContainerURI;
+	public void setAppsContainerIRI( IRI appsContainerIRI ) {
+		this.appsContainerIRI = appsContainerIRI;
 	}
 
 	public void setAppsEntryPoint( String appsEntryPoint ) {

@@ -1,6 +1,6 @@
 package com.carbonldp.jobs;
 
-import org.openrdf.model.URI;
+import org.openrdf.model.IRI;
 import org.openrdf.model.Value;
 import org.springframework.security.access.prepost.PreAuthorize;
 
@@ -10,23 +10,23 @@ import org.springframework.security.access.prepost.PreAuthorize;
  */
 public interface ExecutionService {
 
-	@PreAuthorize( "hasPermission(#executionURI, 'READ')" )
-	public ExecutionDescription.Status getExecutionStatus( URI executionURI );
+	@PreAuthorize( "hasPermission(#executionIRI, 'READ')" )
+	public ExecutionDescription.Status getExecutionStatus( IRI executionIRI );
 
-	@PreAuthorize( "hasPermission(#executionURI, 'UPDATE')" )
-	public void changeExecutionStatus( URI executionURI, ExecutionDescription.Status status );
+	@PreAuthorize( "hasPermission(#executionIRI, 'UPDATE')" )
+	public void changeExecutionStatus( IRI executionIRI, ExecutionDescription.Status status );
 
-	@PreAuthorize( "hasPermission(#executionQueueLocationURI, 'UPDATE')" )
-	public void enqueue( URI executionURI, URI executionQueueLocationURI );
+	@PreAuthorize( "hasPermission(#executionQueueLocationIRI, 'UPDATE')" )
+	public void enqueue( IRI executionIRI, IRI executionQueueLocationIRI );
 
-	@PreAuthorize( "hasPermission(#executionQueueLocationURI, 'UPDATE')" )
-	public void dequeue( URI executionQueueLocationURI );
+	@PreAuthorize( "hasPermission(#executionQueueLocationIRI, 'UPDATE')" )
+	public void dequeue( IRI executionQueueLocationIRI );
 
-	@PreAuthorize( "hasPermission(#executionQueueLocationURI, 'READ')" )
-	public Execution peek( URI executionQueueLocationURI );
+	@PreAuthorize( "hasPermission(#executionQueueLocationIRI, 'READ')" )
+	public Execution peek( IRI executionQueueLocationIRI );
 
-	@PreAuthorize( "hasPermission(#executionURI, 'UPDATE')" )
-	public void addResult( URI executionURI, Value status );
+	@PreAuthorize( "hasPermission(#executionIRI, 'UPDATE')" )
+	public void addResult( IRI executionIRI, Value status );
 
 	@PreAuthorize( "hasPermission(#executionURI, 'UPDATE')" )
 	public void addErrorDescription( URI executionURI, String error );

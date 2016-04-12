@@ -6,7 +6,7 @@ import com.carbonldp.jobs.JobService;
 import com.carbonldp.ldp.containers.BasicContainer;
 import com.carbonldp.ldp.web.AbstractRDFPostRequestHandler;
 import com.carbonldp.web.RequestHandler;
-import org.openrdf.model.URI;
+import org.openrdf.model.IRI;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
@@ -23,8 +23,8 @@ public class ExecutionsPOSTHandler extends AbstractRDFPostRequestHandler<Executi
 	}
 
 	@Override
-	protected void createChild( URI targetURI, Execution documentResourceView ) {
-		jobService.createExecution( targetURI, documentResourceView );
+	protected void createChild( IRI targetIRI, Execution documentResourceView ) {
+		jobService.createExecution( targetIRI, documentResourceView );
 	}
 
 	@Autowired

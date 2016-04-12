@@ -1,6 +1,6 @@
 package com.carbonldp.ldp.nonrdf.backup;
 
-import org.openrdf.model.URI;
+import org.openrdf.model.IRI;
 
 import java.io.File;
 
@@ -10,5 +10,5 @@ import java.io.File;
  */
 public interface BackupService {
 
-	public void createAppBackup( URI appURI, URI backupURI, File zipFile );
+	public void createAppBackup( IRI appIRI, IRI backupIRI, File zipFile );
 }

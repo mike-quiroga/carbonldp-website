@@ -72,8 +72,8 @@ public class InteractionModelRequestCondition extends AbstractRequestCondition<I
 		List<HTTPHeaderValue> filteredValues = HTTPHeader.filterHeaderValues( preferHeader, null, null, "rel", "interaction-model" );
 		if ( filteredValues.size() == 0 ) return null;
 
-		String interactionModelURI = filteredValues.get( 0 ).getMainValue();
-		return RDFNodeUtil.findByURI( interactionModelURI, APIPreferences.InteractionModel.class );
+		String interactionModelIRI = filteredValues.get( 0 ).getMainValue();
+		return RDFNodeUtil.findByIRI( interactionModelIRI, APIPreferences.InteractionModel.class );
 	}
 
 	@Override

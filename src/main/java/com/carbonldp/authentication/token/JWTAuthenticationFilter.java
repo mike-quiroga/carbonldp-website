@@ -4,8 +4,9 @@ import com.carbonldp.Consts;
 import com.carbonldp.Vars;
 import com.carbonldp.exceptions.StupidityException;
 import io.jsonwebtoken.*;
-import org.openrdf.model.URI;
-import org.openrdf.model.impl.URIImpl;
+import org.openrdf.model.IRI;
+
+import org.openrdf.model.impl.SimpleValueFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.Marker;
@@ -72,11 +73,11 @@ public class JWTAuthenticationFilter extends GenericFilterBean implements Filter
 
 	private Authentication authenticate( String header ) {
 		String agentString = extractAndDecodeHeader( header.substring( 6 ) );
-		URI agentURI = new URIImpl( agentString );
+		IRI agentIRI = SimpleValueFactory.getInstance().createIRI( agentString );
 
 		if ( LOG.isDebugEnabled() ) LOG.debug( "JWT Authentication Authorization header found for user '" + agentString + "'" );
 
-		JWTAuthenticationToken authRequest = new JWTAuthenticationToken( agentURI );
+		JWTAuthenticationToken authRequest = new JWTAuthenticationToken( agentIRI );
 
 		return authenticationManager.authenticate( authRequest );
 	}

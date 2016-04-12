@@ -5,7 +5,7 @@ import info.aduna.iteration.CloseableIteration;
 import org.openrdf.model.*;
 import org.openrdf.model.impl.AbstractModel;
 import org.openrdf.model.impl.LinkedHashModel;
-import org.openrdf.model.impl.URIImpl;
+import org.openrdf.model.impl.SimpleValueFactory;
 import org.openrdf.query.Binding;
 import org.openrdf.query.BindingSet;
 import org.openrdf.query.QueryEvaluationException;
@@ -13,7 +13,7 @@ import org.openrdf.query.QueryLanguage;
 import org.openrdf.query.algebra.evaluation.EvaluationStrategy;
 import org.openrdf.query.algebra.evaluation.TripleSource;
 import org.openrdf.query.algebra.evaluation.federation.FederatedServiceResolverImpl;
-import org.openrdf.query.algebra.evaluation.impl.EvaluationStrategyImpl;
+import org.openrdf.query.algebra.evaluation.impl.SimpleEvaluationStrategy;
 import org.openrdf.query.impl.EmptyBindingSet;
 import org.openrdf.query.parser.ParsedTupleQuery;
 import org.openrdf.query.parser.QueryParserUtil;
@@ -71,11 +71,11 @@ public class OnMemoryRepository extends AbstractComponent {
 		connection.add( model );
 
 		TripleSource tripleSource = new TripleSourceImpl( connection, statement -> {
-			return ! statement.getSubject().equals( new URIImpl( "http://example.org/resource-2" ) );
+			return ! statement.getSubject().equals( SimpleValueFactory.getInstance().createIRI( "http://example.org/resource-2" ) );
 		} );
 
 		ParsedTupleQuery parsedTupleQuery = QueryParserUtil.parseTupleQuery( QueryLanguage.SPARQL, query, null );
-		EvaluationStrategy evaluationStrategy = new EvaluationStrategyImpl( tripleSource, new FederatedServiceResolverImpl() );
+		EvaluationStrategy evaluationStrategy = new SimpleEvaluationStrategy( tripleSource, new FederatedServiceResolverImpl() );
 		CloseableIteration<BindingSet, QueryEvaluationException> bindingSetIterator = evaluationStrategy.evaluate( parsedTupleQuery.getTupleExpr(), new EmptyBindingSet() );
 
 		while ( bindingSetIterator.hasNext() ) {
@@ -110,7 +110,7 @@ public class OnMemoryRepository extends AbstractComponent {
 		}
 
 		@Override
-		public CloseableIteration<? extends Statement, QueryEvaluationException> getStatements( Resource subj, URI pred, Value obj, Resource... contexts ) throws QueryEvaluationException {
+		public CloseableIteration<? extends Statement, QueryEvaluationException> getStatements( Resource subj, IRI pred, Value obj, Resource... contexts ) throws QueryEvaluationException {
 			// We could filter contexts from here, so they wouldnt get pulled from the repository
 			try {
 				return new SecuredRepositoryResult( this.connection.getStatements( subj, pred, obj, false, contexts ), this.securityFilter );

@@ -5,10 +5,9 @@ import com.carbonldp.exceptions.InvalidResourceException;
 import com.carbonldp.ldp.containers.AbstractPUTRequestHandler;
 import com.carbonldp.ldp.containers.AddMembersAction;
 import com.carbonldp.ldp.containers.AddMembersActionFactory;
-import com.carbonldp.ldp.containers.MembersAction;
 import com.carbonldp.models.Infraction;
 import com.carbonldp.web.RequestHandler;
-import org.openrdf.model.URI;
+import org.openrdf.model.IRI;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
@@ -24,7 +23,7 @@ public class AppRolePUTAgentsHandler extends AbstractPUTRequestHandler {
 	protected AppRoleService appRoleService;
 
 	@Override
-	protected void executeAction( URI targetUri, AddMembersAction members ) {
+	protected void executeAction( IRI targetUri, AddMembersAction members ) {
 		validate( members );
 		appRoleService.addAgents( targetUri, members.getMembers() );
 	}

@@ -1,18 +1,17 @@
 package com.carbonldp.apps;
 
-import com.carbonldp.jobs.Execution;
-import org.openrdf.model.URI;
+import org.openrdf.model.IRI;
 
 public interface AppRepository {
-	public boolean exists( URI appURI );
+	public boolean exists( IRI appIRI );
 
-	public App get( URI appURI );
+	public App get( IRI appIRI );
 
-	public App findByRootContainer( URI rootContainerURI );
+	public App findByRootContainer( IRI rootContainerIRI );
 
 	public App createPlatformAppRepository( App app );
 
-	public void delete( URI appURI );
+	public void delete( IRI appIRI );
 
-	public URI getPlatformAppContainerURI();
+	public IRI getPlatformAppContainerIRI();
 }

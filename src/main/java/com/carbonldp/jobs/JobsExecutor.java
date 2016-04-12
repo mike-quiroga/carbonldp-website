@@ -38,8 +38,8 @@ public class JobsExecutor {
 
 	private void manageExecution( App app, Execution execution ) {
 
-		executionService.changeExecutionStatus( execution.getURI(), ExecutionDescription.Status.RUNNING );
-		Job job = jobService.get( execution.getJobURI() );
+		executionService.changeExecutionStatus( execution.getIRI(), ExecutionDescription.Status.RUNNING );
+		Job job = jobService.get( execution.getJobIRI() );
 		JobDescription.Type type = JobFactory.getInstance().getJobType( job );
 		boolean hasErrors = false;
 
@@ -53,8 +53,8 @@ public class JobsExecutor {
 			executionService.changeExecutionStatus( execution.getURI(), ExecutionDescription.Status.UNKNOWN );
 			hasErrors = true;
 		}
-		if ( ! hasErrors ) executionService.changeExecutionStatus( execution.getURI(), ExecutionDescription.Status.FINISHED );
-		executionService.dequeue( job.getURI( JobDescription.Property.EXECUTION_QUEUE_LOCATION.getURI() ) );
+		if ( ! hasErrors ) executionService.changeExecutionStatus( execution.getIRI(), ExecutionDescription.Status.FINISHED );
+		executionService.dequeue( job.getIRI( JobDescription.Property.EXECUTION_QUEUE_LOCATION.getIRI() ) );
 	}
 
 	private TypedJobExecutor getTypedRepository( JobDescription.Type jobType ) {

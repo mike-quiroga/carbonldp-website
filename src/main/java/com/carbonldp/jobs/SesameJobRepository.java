@@ -4,7 +4,7 @@ import com.carbonldp.ldp.AbstractSesameLDPRepository;
 import com.carbonldp.rdf.RDFDocumentRepository;
 import com.carbonldp.rdf.RDFResourceRepository;
 import com.carbonldp.utils.ValueUtil;
-import org.openrdf.model.URI;
+import org.openrdf.model.IRI;
 import org.openrdf.model.Value;
 import org.openrdf.query.BindingSet;
 import org.openrdf.spring.SesameConnectionFactory;
@@ -32,24 +32,24 @@ public class SesameJobRepository extends AbstractSesameLDPRepository implements 
 
 	static {
 		getExecutionQueueLocationQuery = "" +
-			"SELECT ?executionQueueLocationURI" + NEW_LINE +
+			"SELECT ?executionQueueLocationIRI" + NEW_LINE +
 			"WHERE {" + NEW_LINE +
-			TAB + "GRAPH ?jobURI {" + NEW_LINE +
-			TAB + TAB + "?jobURI <" + JobDescription.Property.EXECUTION_QUEUE_LOCATION.getURI().stringValue() + "> ?executionQueueLocationURI" + NEW_LINE +
+			TAB + "GRAPH ?jobIRI {" + NEW_LINE +
+			TAB + TAB + "?jobIRI <" + JobDescription.Property.EXECUTION_QUEUE_LOCATION.getIRI().stringValue() + "> ?executionQueueLocationIRI" + NEW_LINE +
 			TAB + "}." + NEW_LINE +
 			"}";
 	}
 
 	@Override
-	public URI getExecutionQueueLocation( URI jobURI ) {
+	public IRI getExecutionQueueLocation( IRI jobIRI ) {
 		Map<String, Value> bindings = new HashMap<>();
-		bindings.put( "jobURI", jobURI );
+		bindings.put( "jobIRI", jobIRI );
 
 		return sparqlTemplate.executeTupleQuery( getExecutionQueueLocationQuery, bindings, queryResult -> {
 			if ( queryResult.hasNext() ) {
 				BindingSet bindingSet = queryResult.next();
-				Value member = bindingSet.getValue( "executionQueueLocationURI" );
-				if ( ValueUtil.isURI( member ) ) return ValueUtil.getURI( member );
+				Value member = bindingSet.getValue( "executionQueueLocationIRI" );
+				if ( ValueUtil.isIRI( member ) ) return ValueUtil.getIRI( member );
 			}
 			throw new RuntimeException( "there is not an app related" );
 		} );

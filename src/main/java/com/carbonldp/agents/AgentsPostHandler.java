@@ -3,7 +3,7 @@ package com.carbonldp.agents;
 import com.carbonldp.authentication.AnonymousAuthenticationToken;
 import com.carbonldp.ldp.containers.BasicContainer;
 import com.carbonldp.ldp.web.AbstractRDFPostRequestHandler;
-import org.openrdf.model.URI;
+import org.openrdf.model.IRI;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
@@ -19,7 +19,7 @@ public abstract class AgentsPostHandler extends AbstractRDFPostRequestHandler<Ag
 	}
 
 	@Override
-	protected void createChild( URI targetURI, Agent documentResourceView ) {
+	protected void createChild( IRI targetIRI, Agent documentResourceView ) {
 		if ( isAnonymousRequest() ) registerAgent( documentResourceView );
 		else createAgent( documentResourceView );
 	}

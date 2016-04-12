@@ -3,8 +3,8 @@ package com.carbonldp.ldp.containers;
 import com.carbonldp.descriptions.APIPreferences.ContainerRetrievalPreference;
 import com.carbonldp.ldp.containers.ContainerDescription.Type;
 import com.carbonldp.ldp.sources.RDFSource;
+import org.openrdf.model.IRI;
 import org.openrdf.model.Statement;
-import org.openrdf.model.URI;
 import org.openrdf.model.Value;
 
 import java.io.File;
@@ -12,57 +12,57 @@ import java.util.Map;
 import java.util.Set;
 
 public interface ContainerRepository {
-	public boolean hasMember( URI containerURI, URI possibleMemberURI );
+	public boolean hasMember( IRI containerIRI, IRI possibleMemberIRI );
 
-	public boolean hasMember( URI containerURI, URI possibleMemberURI, Type containerType );
+	public boolean hasMember( IRI containerIRI, IRI possibleMemberIRI, Type containerType );
 
-	public boolean hasMembers( URI containerURI, String sparqlSelector, Map<String, Value> bindings );
+	public boolean hasMembers( IRI containerIRI, String sparqlSelector, Map<String, Value> bindings );
 
-	public boolean hasMembers( URI containerURI, String sparqlSelector, Map<String, Value> bindings, Type containerType );
+	public boolean hasMembers( IRI containerIRI, String sparqlSelector, Map<String, Value> bindings, Type containerType );
 
-	public Type getContainerType( URI containerURI );
+	public Type getContainerType( IRI containerIRI );
 
-	public Set<Statement> getProperties( URI containerURI );
+	public Set<Statement> getProperties( IRI containerIRI );
 
-	public Set<Statement> getProperties( URI containerURI, Type containerType );
+	public Set<Statement> getProperties( IRI containerIRI, Type containerType );
 
-	public Set<URI> getContainedURIs( URI containerURI );
+	public Set<IRI> getContainedIRIs( IRI containerIRI );
 
-	public Set<Statement> getContainmentTriples( URI containerURI );
+	public Set<Statement> getContainmentTriples( IRI containerIRI );
 
-	public Set<Statement> getMembershipTriples( URI containerURI );
+	public Set<Statement> getMembershipTriples( IRI containerIRI );
 
-	public Set<Statement> getMembershipTriples( URI containerURI, Type containerType );
+	public Set<Statement> getMembershipTriples( IRI containerIRI, Type containerType );
 
-	public Set<ContainerRetrievalPreference> getRetrievalPreferences( URI containerURI );
+	public Set<ContainerRetrievalPreference> getRetrievalPreferences( IRI containerIRI );
 
-	public Set<URI> findMembers( URI containerURI, String sparqlSelector, Map<String, Value> bindings );
+	public Set<IRI> findMembers( IRI containerIRI, String sparqlSelector, Map<String, Value> bindings );
 
-	public Set<URI> findMembers( URI containerURI, String sparqlSelector, Map<String, Value> bindings, Type containerType );
+	public Set<IRI> findMembers( IRI containerIRI, String sparqlSelector, Map<String, Value> bindings, Type containerType );
 
-	public Set<URI> filterMembers( URI containerURI, Set<URI> possibleMemberURIs );
+	public Set<IRI> filterMembers( IRI containerIRI, Set<IRI> possibleMemberIRIs );
 
-	public Set<URI> filterMembers( URI containerURI, Set<URI> possibleMemberURIs, Type containerType );
+	public Set<IRI> filterMembers( IRI containerIRI, Set<IRI> possibleMemberIRIs, Type containerType );
 
 	public void create( Container rootContainer );
 
-	public void createNonRDFResource( URI targetURI, URI resourceURI, File requestEntity, String contentType );
+	public void createNonRDFResource( IRI targetIRI, IRI resourceIRI, File requestEntity, String contentType );
 
-	public void createChild( URI containerURI, RDFSource child );
+	public void createChild( IRI containerIRI, RDFSource child );
 
-	public void createChild( URI containerURI, RDFSource child, Type containerType );
+	public void createChild( IRI containerIRI, RDFSource child, Type containerType );
 
-	public void addMember( URI containerURI, URI member );
+	public void addMember( IRI containerIRI, IRI member );
 
-	public void removeMember( URI containerURI, URI member );
+	public void removeMember( IRI containerIRI, IRI member );
 
-	public void removeMember( URI containerURI, URI member, Type containerType );
+	public void removeMember( IRI containerIRI, IRI member, Type containerType );
 
-	public void addMember( URI containerURI, URI member, Type containerType );
+	public void addMember( IRI containerIRI, IRI member, Type containerType );
 
-	public void removeMembers( URI targetURI );
+	public void removeMembers( IRI targetIRI );
 
-	public void removeMembers( URI targetURI, Type containerType );
+	public void removeMembers( IRI targetIRI, Type containerType );
 
 	public TypedContainerRepository getTypedRepository( Type containerType );
 }

@@ -1,8 +1,8 @@
 package com.carbonldp.ldp.containers;
 
 import com.carbonldp.ldp.containers.ContainerDescription.Type;
+import org.openrdf.model.IRI;
 import org.openrdf.model.Statement;
-import org.openrdf.model.URI;
 import org.openrdf.model.Value;
 
 import java.util.Map;
@@ -11,23 +11,23 @@ import java.util.Set;
 public interface TypedContainerRepository {
 	public boolean supports( Type containerType );
 
-	public boolean hasMember( URI containerURI, URI possibleMemberURI );
+	public boolean hasMember( IRI containerIRI, IRI possibleMemberIRI );
 
-	public boolean hasMembers( URI containerURI, String sparqlSelector, Map<String, Value> bindings );
+	public boolean hasMembers( IRI containerIRI, String sparqlSelector, Map<String, Value> bindings );
 
-	public Set<Statement> getMembershipTriples( URI containerURI );
+	public Set<Statement> getMembershipTriples( IRI containerIRI );
 
-	public Set<Statement> getProperties( URI containerURI );
+	public Set<Statement> getProperties( IRI containerIRI );
 
-	public Set<URI> findMembers( URI containerURI, String sparqlSelector, Map<String, Value> bindings );
+	public Set<IRI> findMembers( IRI containerIRI, String sparqlSelector, Map<String, Value> bindings );
 
-	public Set<URI> filterMembers( URI containerURI, Set<URI> possibleMemberURIs );
+	public Set<IRI> filterMembers( IRI containerIRI, Set<IRI> possibleMemberIRIs );
 
-	public void addMember( URI containerURI, URI member );
+	public void addMember( IRI containerIRI, IRI member );
 
-	public void removeMember( URI containerURI, URI member );
+	public void removeMember( IRI containerIRI, IRI member );
 
-	public void removeMembers( URI containerURI );
+	public void removeMembers( IRI containerIRI );
 
-	public URI getMembershipResource( URI containerURI );
+	public IRI getMembershipResource( IRI containerIRI );
 }
