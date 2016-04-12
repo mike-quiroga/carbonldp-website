@@ -1,6 +1,5 @@
 package com.carbonldp.jobs;
 
-import com.carbonldp.exceptions.StupidityException;
 import com.carbonldp.jobs.ExecutionDescription.Status;
 import com.carbonldp.ldp.AbstractSesameLDPRepository;
 import com.carbonldp.ldp.sources.RDFSource;
@@ -36,28 +35,28 @@ public class SesameExecutionRepository extends AbstractSesameLDPRepository imple
 	}
 
 	@Override
-	public Status getExecutionStatus( URI executionURI ) {
+	public Status getExecutionStatus( IRI executionIRI ) {
 		Statement statement = connectionTemplate.read( connection -> {
-			RepositoryResult<Statement> statements = connection.getStatements( executionURI, ExecutionDescription.Property.STATUS.getURI(), null, false, executionURI );
+			RepositoryResult<Statement> statements = connection.getStatements( executionIRI, ExecutionDescription.Property.STATUS.getIRI(), null, false, executionIRI );
 			if ( ! statements.hasNext() ) throw new IllegalStateException( "execution does not have a status" );
 			return statements.next();
 		} );
 
 		Value object = statement.getObject();
-		if ( ! ValueUtil.isURI( object ) ) throw new IllegalStateException( "job status is an invalid type" );
-		URI statusURI = ValueUtil.getURI( object );
+		if ( ! ValueUtil.isIRI( object ) ) throw new IllegalStateException( "job status is an invalid type" );
+		IRI statusIRI = ValueUtil.getIRI( object );
 
 		for ( Status status : Status.values() ) {
-			if ( status.getURI().equals( statusURI ) ) return status;
+			if ( status.getIRI().equals( statusIRI ) ) return status;
 		}
 		throw new IllegalStateException( "invalid status" );
 	}
 
 	@Override
-	public void changeExecutionStatus( URI executionURI, Status status ) {
+	public void changeExecutionStatus( IRI executionIRI, Status status ) {
 		connectionTemplate.write( connection -> {
-			connection.remove( executionURI, ExecutionDescription.Property.STATUS.getURI(), null, executionURI );
-			connection.add( executionURI, ExecutionDescription.Property.STATUS.getURI(), status.getURI(), executionURI );
+			connection.remove( executionIRI, ExecutionDescription.Property.STATUS.getIRI(), null, executionIRI );
+			connection.add( executionIRI, ExecutionDescription.Property.STATUS.getIRI(), status.getIRI(), executionIRI );
 		} );
 	}
 
@@ -87,14 +86,14 @@ public class SesameExecutionRepository extends AbstractSesameLDPRepository imple
 	}
 
 	@Override
-	public void enqueue( BNode bNode, URI executionQueueLocationURI ) {
-		RDFSource executionQueueLocation = sourceRepository.get( executionQueueLocationURI );
-		URI executionQueue = executionQueueLocation.getURI( ExecutionDescription.List.QUEUE.getURI() );
+	public void enqueue( BNode bNode, IRI executionQueueLocationIRI ) {
+		RDFSource executionQueueLocation = sourceRepository.get( executionQueueLocationIRI );
+		IRI executionQueue = executionQueueLocation.getIRI( ExecutionDescription.List.QUEUE.getIRI() );
 
 		Map<String, Value> bindings = new HashMap<>();
 		bindings.put( "bnode", bNode );
 		bindings.put( "queue", executionQueue );
-		bindings.put( "context", executionQueueLocationURI );
+		bindings.put( "context", executionQueueLocationIRI );
 
 		sparqlTemplate.executeUpdate( enqueueQuery, bindings );
 
@@ -125,13 +124,13 @@ public class SesameExecutionRepository extends AbstractSesameLDPRepository imple
 	}
 
 	@Override
-	public void dequeue( URI executionQueueLocationURI ) {
-		RDFSource executionQueueLocation = sourceRepository.get( executionQueueLocationURI );
-		URI executionQueue = executionQueueLocation.getURI( ExecutionDescription.List.QUEUE.getURI() );
+	public void dequeue( IRI executionQueueLocationIRI ) {
+		RDFSource executionQueueLocation = sourceRepository.get( executionQueueLocationIRI );
+		IRI executionQueue = executionQueueLocation.getIRI( ExecutionDescription.List.QUEUE.getIRI() );
 
 		Map<String, Value> bindings = new HashMap<>();
 		bindings.put( "queue", executionQueue );
-		bindings.put( "context", executionQueueLocationURI );
+		bindings.put( "context", executionQueueLocationIRI );
 
 		sparqlTemplate.executeUpdate( dequeueQuery, bindings );
 
@@ -151,29 +150,29 @@ public class SesameExecutionRepository extends AbstractSesameLDPRepository imple
 	}
 
 	@Override
-	public Execution peek( URI executionQueueLocationURI ) {
-		RDFSource executionQueueLocation = sourceRepository.get( executionQueueLocationURI );
-		URI executionQueue = executionQueueLocation.getURI( ExecutionDescription.List.QUEUE.getURI() );
+	public Execution peek( IRI executionQueueLocationIRI ) {
+		RDFSource executionQueueLocation = sourceRepository.get( executionQueueLocationIRI );
+		IRI executionQueue = executionQueueLocation.getIRI( ExecutionDescription.List.QUEUE.getIRI() );
 
 		Map<String, Value> bindings = new HashMap<>();
 		bindings.put( "queue", executionQueue );
-		bindings.put( "context", executionQueueLocationURI );
+		bindings.put( "context", executionQueueLocationIRI );
 
-		URI executionURI = sparqlTemplate.executeTupleQuery( peekQuery, bindings, queryResult -> {
+		IRI executionIRI = sparqlTemplate.executeTupleQuery( peekQuery, bindings, queryResult -> {
 			if ( ! queryResult.hasNext() ) return null;
 			BindingSet bindingSet = queryResult.next();
 			Value executionValue = bindingSet.getValue( "item" );
-			if ( ValueUtil.isURI( executionValue ) ) return ValueUtil.getURI( executionValue );
+			if ( ValueUtil.isIRI( executionValue ) ) return ValueUtil.getIRI( executionValue );
 			throw new IllegalStateException( "malformed query" );
 
 		} );
-		if ( executionURI == null ) return null;
-		return new Execution( sourceRepository.get( executionURI ) );
+		if ( executionIRI == null ) return null;
+		return new Execution( sourceRepository.get( executionIRI ) );
 	}
 
 	@Override
-	public void addResult( URI executionURI, Value status ) {
-		connectionTemplate.write( connection -> connection.add( executionURI, ExecutionDescription.Property.RESULT.getURI(), status, executionURI ) );
+	public void addResult( IRI executionIRI, Value status ) {
+		connectionTemplate.write( connection -> connection.add( executionIRI, ExecutionDescription.Property.RESULT.getIRI(), status, executionIRI ) );
 	}
 
 	@Autowired

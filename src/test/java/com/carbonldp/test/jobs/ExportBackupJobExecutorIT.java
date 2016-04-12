@@ -60,8 +60,8 @@ public class ExportBackupJobExecutorIT extends AbstractIT {
 			try {
 				while ( repositoryStatments.hasNext() ) {
 					Statement statement = repositoryStatments.next();
-					Resource subject = ValueUtil.isURI( statement.getSubject() ) ? statement.getSubject() : null;
-					Value object = ValueUtil.isURI( statement.getObject() ) ? statement.getObject() : null;
+					Resource subject = ValueUtil.isIRI( statement.getSubject() ) ? statement.getSubject() : null;
+					Value object = ValueUtil.isIRI( statement.getObject() ) ? statement.getObject() : null;
 					Assert.assertTrue( appModel.contains( subject, statement.getPredicate(), object, statement.getContext() ), statement.toString() );
 				}
 			} catch ( RepositoryException e ) {
@@ -70,8 +70,8 @@ public class ExportBackupJobExecutorIT extends AbstractIT {
 
 			appModel.forEach( statement -> {
 				try {
-					Resource subject = ValueUtil.isURI( statement.getSubject() ) ? statement.getSubject() : null;
-					Value object = ValueUtil.isURI( statement.getObject() ) ? statement.getObject() : null;
+					Resource subject = ValueUtil.isIRI( statement.getSubject() ) ? statement.getSubject() : null;
+					Value object = ValueUtil.isIRI( statement.getObject() ) ? statement.getObject() : null;
 					Assert.assertTrue( connection.hasStatement( subject, statement.getPredicate(), object, false, statement.getContext() ), statement.toString() );
 				} catch ( RepositoryException e ) {
 					throw new SkipException( "connection exception", e );
@@ -107,7 +107,7 @@ public class ExportBackupJobExecutorIT extends AbstractIT {
 		AbstractModel model = new LinkedHashModel();
 		rdfParser.setRDFHandler( new StatementCollector( model ) );
 		try {
-			rdfParser.parse( reader, app.getURI().stringValue() );
+			rdfParser.parse( reader, app.getIRI().stringValue() );
 		} catch ( Exception e ) {
 			throw new RuntimeException( e );
 		}

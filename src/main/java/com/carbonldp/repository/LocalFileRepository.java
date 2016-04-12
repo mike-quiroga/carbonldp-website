@@ -98,7 +98,7 @@ public class LocalFileRepository implements FileRepository {
 
 			outputStream = new FileOutputStream( temporaryFile );
 			trigWriter = new TriGWriter( outputStream );
-			( (TriGWriter) trigWriter ).setBase( AppContextHolder.getContext().getApplication().getRootContainerURI().stringValue() );
+			( (TriGWriter) trigWriter ).setBase( AppContextHolder.getContext().getApplication().getRootContainerIRI().stringValue() );
 			connectionTemplate.write( connection -> connection.export( trigWriter ) );
 
 		} catch ( IOException | SecurityException e ) {

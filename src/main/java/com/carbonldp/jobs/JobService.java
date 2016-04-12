@@ -1,6 +1,6 @@
 package com.carbonldp.jobs;
 
-import org.openrdf.model.URI;
+import org.openrdf.model.IRI;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 /**
@@ -9,12 +9,12 @@ import org.springframework.security.access.prepost.PreAuthorize;
  */
 public interface JobService {
 
-	@PreAuthorize( "hasPermission(#targetURI, 'CREATE_CHILD')" )
-	public void create( URI targetURI, Job job );
+	@PreAuthorize( "hasPermission(#targetIRI, 'CREATE_CHILD')" )
+	public void create( IRI targetIRI, Job job );
 
-	@PreAuthorize( "hasPermission(#targetURI, 'READ')" )
-	public Job get( URI targetURI );
+	@PreAuthorize( "hasPermission(#targetIRI, 'READ')" )
+	public Job get( IRI targetIRI );
 
-	@PreAuthorize( "hasPermission(#jobURI, 'CREATE_CHILD')" )
-	public void createExecution( URI jobURI, Execution execution );
+	@PreAuthorize( "hasPermission(#jobIRI, 'CREATE_CHILD')" )
+	public void createExecution( IRI jobIRI, Execution execution );
 }

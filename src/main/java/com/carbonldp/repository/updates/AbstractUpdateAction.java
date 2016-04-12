@@ -13,6 +13,7 @@ import com.carbonldp.spring.TransactionWrapper;
 import com.carbonldp.utils.Action;
 import org.openrdf.model.IRI;
 
+import org.openrdf.model.ValueFactory;
 import org.openrdf.model.impl.SimpleValueFactory;
 import org.openrdf.repository.RepositoryException;
 import org.openrdf.rio.RDFFormat;
@@ -38,6 +39,7 @@ public abstract class AbstractUpdateAction extends AbstractComponent implements 
 	protected RDFSourceRepository sourceRepository;
 	protected ACLRepository aclRepository;
 	protected RDFDocumentRepository documentRepository;
+	protected static ValueFactory valueFactory = SimpleValueFactory.getInstance();
 
 	public void run() {
 		try {

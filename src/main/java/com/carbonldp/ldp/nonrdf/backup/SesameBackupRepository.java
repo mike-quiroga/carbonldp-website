@@ -10,17 +10,14 @@ import com.carbonldp.ldp.sources.RDFSourceDescription;
 import com.carbonldp.ldp.sources.RDFSourceRepository;
 import com.carbonldp.rdf.RDFDocumentRepository;
 import com.carbonldp.rdf.RDFResourceRepository;
-import com.carbonldp.utils.MediaTypeUtil;
-import org.apache.commons.io.FilenameUtils;
 import org.joda.time.DateTime;
-import org.openrdf.model.URI;
-import org.openrdf.model.impl.URIImpl;
+import org.openrdf.model.IRI;
+import org.openrdf.model.ValueFactory;
+import org.openrdf.model.impl.SimpleValueFactory;
 import org.openrdf.spring.SesameConnectionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 
 import java.io.File;
-import java.util.UUID;
 
 /**
  * @author NestorVenegas
@@ -31,29 +28,30 @@ public class SesameBackupRepository extends AbstractSesameLDPRepository implemen
 	private RDFRepresentationRepository rdfRepresentationRepository;
 	private ContainerRepository containerRepository;
 	private RDFSourceRepository sourceRepository;
+	private static ValueFactory valueFactory = SimpleValueFactory.getInstance();
 
 	public SesameBackupRepository( SesameConnectionFactory connectionFactory, RDFResourceRepository resourceRepository, RDFDocumentRepository documentRepository ) {
 		super( connectionFactory, resourceRepository, documentRepository );
 	}
 
 	@Override
-	public void createAppBackup( URI appURI, URI backupURI, File zipFile ) {
+	public void createAppBackup( IRI appIRI, IRI backupIRI, File zipFile ) {
 		DateTime creationTime = DateTime.now();
-		URI containerURI = new URIImpl( appURI.stringValue() + Vars.getInstance().getBackupsContainer() );
+		IRI containerIRI = valueFactory.createIRI( appIRI.stringValue() + Vars.getInstance().getBackupsContainer() );
 
-		Backup backup = BackupFactory.getInstance().create( backupURI );
-		backup.add( RDFSourceDescription.Property.DEFAULT_INTERACTION_MODEL.getURI(), RDFSourceDescription.Resource.CLASS.getURI() );
+		Backup backup = BackupFactory.getInstance().create( backupIRI );
+		backup.add( RDFSourceDescription.Property.DEFAULT_INTERACTION_MODEL.getIRI(), RDFSourceDescription.Resource.CLASS.getIRI() );
 		backup.setTimestamps( creationTime );
 		rdfRepresentationRepository.create( backup, zipFile, Consts.ZIP );
 
-		addContainedResource( containerURI, backupURI );
+		addContainedResource( containerIRI, backupIRI );
 
-		containerRepository.addMember( containerURI, backupURI );
-		sourceRepository.touch( containerURI, creationTime );
+		containerRepository.addMember( containerIRI, backupIRI );
+		sourceRepository.touch( containerIRI, creationTime );
 	}
 
-	private void addContainedResource( URI containerURI, URI resourceURI ) {
-		connectionTemplate.write( ( connection ) -> connection.add( containerURI, ContainerDescription.Property.CONTAINS.getURI(), resourceURI, containerURI ) );
+	private void addContainedResource( IRI containerIRI, IRI resourceIRI ) {
+		connectionTemplate.write( ( connection ) -> connection.add( containerIRI, ContainerDescription.Property.CONTAINS.getIRI(), resourceIRI, containerIRI ) );
 	}
 
 	@Autowired

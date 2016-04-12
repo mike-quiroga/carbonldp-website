@@ -83,6 +83,7 @@ public abstract class AbstractIT extends AbstractTestNGSpringContextTests {
 	protected final String testResourceIRI = "https://local.carbonldp.com/apps/test-blog/";
 
 	protected final Logger LOG = LoggerFactory.getLogger( this.getClass() );
+	protected static ValueFactory valueFactory = SimpleValueFactory.getInstance();
 
 	private final String propertiesFile = "config.properties";
 	private final String platformRepositoryLocationProperty = "repositories.platform.sesame.directory";
@@ -265,6 +266,6 @@ public abstract class AbstractIT extends AbstractTestNGSpringContextTests {
 		// This if is needed here, lines above this are necessary to run every time before each class.
 		if ( ! appService.exists( SimpleValueFactory.getInstance().createIRI( testResourceIRI ) ) )
 			appService.create( app );
-		this.app = transactionWrapper.runWithSystemPermissionsInPlatformContext( () -> appService.get( new URIImpl( testResourceURI ) ) );
+		this.app = transactionWrapper.runWithSystemPermissionsInPlatformContext( () -> appService.get( valueFactory.createIRI( testResourceIRI ) ) );
 	}
 }

@@ -24,10 +24,10 @@ import com.carbonldp.namespaces.LDP;
 import com.carbonldp.rdf.RDFResource;
 import com.carbonldp.utils.IRIUtil;
 import com.carbonldp.web.exceptions.NotFoundException;
-import org.openrdf.model.URI;
-import org.openrdf.model.impl.URIImpl;
-import org.openrdf.model.vocabulary.RDF;
 import org.openrdf.model.IRI;
+import org.openrdf.model.ValueFactory;
+import org.openrdf.model.impl.SimpleValueFactory;
+import org.openrdf.model.vocabulary.RDF;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -37,8 +37,9 @@ import java.util.List;
 
 public class SesameAppService extends AbstractSesameLDPService implements AppService {
 
-	protected ContainerService containerService;
+	private static ValueFactory valueFactory = SimpleValueFactory.getInstance();
 
+	protected ContainerService containerService;
 	protected AppRepository appRepository;
 	protected AppRoleRepository appRoleRepository;
 	protected AppAgentRepository appAgentRepository;
@@ -189,42 +190,42 @@ public class SesameAppService extends AbstractSesameLDPService implements AppSer
 	}
 
 	private void createBackupContainer( App app ) {
-		URI containerURI = generateBackupContainerURI( app );
-		RDFResource backupsResource = new RDFResource( containerURI );
-		BasicContainer backupsContainer = BasicContainerFactory.getInstance().create( backupsResource);
-		containerRepository.createChild( app.getURI(), backupsContainer );
-		aclRepository.createACL( backupsContainer.getURI() );
+		IRI containerIRI = generateBackupContainerIRI( app );
+		RDFResource backupsResource = new RDFResource( containerIRI );
+		BasicContainer backupsContainer = BasicContainerFactory.getInstance().create( backupsResource );
+		containerRepository.createChild( app.getIRI(), backupsContainer );
+		aclRepository.createACL( backupsContainer.getIRI() );
 	}
 
-	private URI generateBackupContainerURI( App app ) {
-		String appString = app.getURI().stringValue();
+	private IRI generateBackupContainerIRI( App app ) {
+		String appString = app.getIRI().stringValue();
 		String backupsString = Vars.getInstance().getBackupsContainer();
-		return new URIImpl( appString + backupsString );
+		return valueFactory.createIRI( appString + backupsString );
 	}
 
 	private void createJobsContainer( App app ) {
-		URI containerURI = generateJobsContainerURI( app );
-		RDFResource jobsResource = new RDFResource( containerURI );
-		BasicContainer jobsContainer = BasicContainerFactory.getInstance().create( jobsResource, new URIImpl( LDP.Properties.MEMBER),JobDescription.Property.EXECUTION_QUEUE_LOCATION.getURI());
+		IRI containerIRI = generateJobsContainerIRI( app );
+		RDFResource jobsResource = new RDFResource( containerIRI );
+		BasicContainer jobsContainer = BasicContainerFactory.getInstance().create( jobsResource, valueFactory.createIRI( LDP.Properties.MEMBER ), JobDescription.Property.EXECUTION_QUEUE_LOCATION.getIRI() );
 
 		jobsContainer = createQueue( jobsContainer );
 
-		containerRepository.createChild( app.getURI(), jobsContainer );
-		aclRepository.createACL( jobsContainer.getURI() );
+		containerRepository.createChild( app.getIRI(), jobsContainer );
+		aclRepository.createACL( jobsContainer.getIRI() );
 	}
 
 	private BasicContainer createQueue( BasicContainer jobsContainer ) {
-		URI jobsExecutionQueue = new URIImpl( jobsContainer.getURI().stringValue() + Consts.HASH_SIGN + Vars.getInstance().getQueue() );
-		jobsContainer.set( ExecutionDescription.List.QUEUE.getURI(), jobsExecutionQueue );
-		jobsContainer.getBaseModel().add( jobsExecutionQueue, RDF.FIRST, jobsExecutionQueue, jobsContainer.getURI() );
-		jobsContainer.getBaseModel().add( jobsExecutionQueue, RDF.REST, RDF.NIL, jobsContainer.getURI() );
+		IRI jobsExecutionQueue = valueFactory.createIRI( jobsContainer.getIRI().stringValue() + Consts.HASH_SIGN + Vars.getInstance().getQueue() );
+		jobsContainer.set( ExecutionDescription.List.QUEUE.getIRI(), jobsExecutionQueue );
+		jobsContainer.getBaseModel().add( jobsExecutionQueue, RDF.FIRST, jobsExecutionQueue, jobsContainer.getIRI() );
+		jobsContainer.getBaseModel().add( jobsExecutionQueue, RDF.REST, RDF.NIL, jobsContainer.getIRI() );
 		return jobsContainer;
 	}
 
-	private URI generateJobsContainerURI( App app ) {
-		String appString = app.getURI().stringValue();
+	private IRI generateJobsContainerIRI( App app ) {
+		String appString = app.getIRI().stringValue();
 		String jobsString = Vars.getInstance().getJobsContainer();
-		return new URIImpl( appString + jobsString );
+		return valueFactory.createIRI( appString + jobsString );
 	}
 
 	@Autowired

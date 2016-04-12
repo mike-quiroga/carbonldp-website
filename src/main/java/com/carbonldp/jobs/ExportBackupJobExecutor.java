@@ -7,8 +7,9 @@ import com.carbonldp.ldp.nonrdf.backup.BackupService;
 import com.carbonldp.ldp.sources.RDFSourceRepository;
 import com.carbonldp.repository.FileRepository;
 import com.carbonldp.spring.TransactionWrapper;
-import org.openrdf.model.URI;
-import org.openrdf.model.impl.URIImpl;
+import org.openrdf.model.IRI;
+import org.openrdf.model.ValueFactory;
+import org.openrdf.model.impl.SimpleValueFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +31,7 @@ public class ExportBackupJobExecutor implements TypedJobExecutor {
 	private TransactionWrapper transactionWrapper;
 	private ExecutionService executionService;
 	protected RDFSourceRepository sourceRepository;
+	private static ValueFactory valueFactory = SimpleValueFactory.getInstance();
 
 	@Override
 	public boolean supports( JobDescription.Type jobType ) {
@@ -46,28 +48,28 @@ public class ExportBackupJobExecutor implements TypedJobExecutor {
 			fileRepository.createZipFile( nonRDFSourceDirectory, rdfRepositoryFile ) :
 			fileRepository.createZipFile( rdfRepositoryFile );
 
-		URI backupURI = createAppBackup( app.getURI(), zipFile );
+		IRI backupIRI = createAppBackup( app.getIRI(), zipFile );
 
 		deleteTemporaryFile( zipFile );
 		deleteTemporaryFile( rdfRepositoryFile );
 
-		executionService.addResult( execution.getURI(), backupURI );
+		executionService.addResult( execution.getIRI(), backupIRI );
 	}
 
-	private URI createAppBackup( URI appURI, File zipFile ) {
-		URI backupURI = createBackupURI( appURI );
-		backupService.createAppBackup( appURI, backupURI, zipFile );
+	private IRI createAppBackup( IRI appIRI, File zipFile ) {
+		IRI backupIRI = createBackupIRI( appIRI );
+		backupService.createAppBackup( appIRI, backupIRI, zipFile );
 
-		return backupURI;
+		return backupIRI;
 	}
 
-	private URI createBackupURI( URI appURI ) {
-		URI jobsContainerURI = new URIImpl( appURI.stringValue() + Vars.getInstance().getBackupsContainer() );
-		URI backupURI;
+	private IRI createBackupIRI( IRI appIRI ) {
+		IRI jobsContainerIRI = valueFactory.createIRI( appIRI.stringValue() + Vars.getInstance().getBackupsContainer() );
+		IRI backupIRI;
 		do {
-			backupURI = new URIImpl( jobsContainerURI.stringValue().concat( createRandomSlug() ).concat( Consts.SLASH ) );
-		} while ( sourceRepository.exists( backupURI ) );
-		return backupURI;
+			backupIRI = valueFactory.createIRI( jobsContainerIRI.stringValue().concat( createRandomSlug() ).concat( Consts.SLASH ) );
+		} while ( sourceRepository.exists( backupIRI ) );
+		return backupIRI;
 	}
 
 	private void deleteTemporaryFile( File file ) {

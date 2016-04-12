@@ -5,7 +5,7 @@ import com.carbonldp.ldp.AbstractSesameLDPService;
 import com.carbonldp.ldp.containers.ContainerService;
 import com.carbonldp.ldp.sources.RDFSourceService;
 import com.carbonldp.models.Infraction;
-import org.openrdf.model.URI;
+import org.openrdf.model.IRI;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
@@ -21,15 +21,15 @@ public class SesameJobService extends AbstractSesameLDPService implements JobSer
 	private ExecutionService executionService;
 	private JobRepository jobRepository;
 
-	public void create( URI targetURI, Job job ) {
+	public void create( IRI targetIRI, Job job ) {
 		validate( job );
-		containerService.createChild( targetURI, job );
+		containerService.createChild( targetIRI, job );
 	}
 
-	public void createExecution( URI jobURI, Execution execution ) {
-		containerService.createChild( jobURI, execution );
-		URI executionQueueLocation = jobRepository.getExecutionQueueLocation( jobURI );
-		executionService.enqueue( execution.getURI(), executionQueueLocation );
+	public void createExecution( IRI jobIRI, Execution execution ) {
+		containerService.createChild( jobIRI, execution );
+		IRI executionQueueLocation = jobRepository.getExecutionQueueLocation( jobIRI );
+		executionService.enqueue( execution.getIRI(), executionQueueLocation );
 	}
 
 	private void validate( Job job ) {
@@ -46,8 +46,8 @@ public class SesameJobService extends AbstractSesameLDPService implements JobSer
 	}
 
 	@Override
-	public Job get( URI targetURI ) {
-		return new Job( sourceService.get( targetURI ) );
+	public Job get( IRI targetIRI ) {
+		return new Job( sourceService.get( targetIRI ) );
 	}
 
 	@Autowired
