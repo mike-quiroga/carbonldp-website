@@ -162,7 +162,7 @@ public class SesameRDFSourceService extends AbstractSesameLDPService implements 
 	public void delete( IRI sourceIRI ) {
 		if ( ! exists( sourceIRI ) ) throw new ResourceDoesntExistException();
 		nonRDFSourceRepository.delete( sourceIRI );
-		sourceRepository.delete( sourceIRI );
+		sourceRepository.delete( sourceIRI, true );
 	}
 
 	private void validateResourcesBelongToSource( IRI sourceIRI, Collection<RDFResource> resourceViews ) {

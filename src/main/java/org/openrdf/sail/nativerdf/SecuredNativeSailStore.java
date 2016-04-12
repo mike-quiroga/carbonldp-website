@@ -6,7 +6,6 @@ import com.carbonldp.repository.security.RepositorySecuritySwitch;
 import info.aduna.iteration.CloseableIteration;
 import org.openrdf.model.Resource;
 import org.openrdf.model.Statement;
-import org.openrdf.model.URI;
 import org.openrdf.model.Value;
 import org.openrdf.sail.SailException;
 
@@ -28,7 +27,7 @@ public class SecuredNativeSailStore extends NativeSailStore {
 	}
 
 	@Override
-	CloseableIteration<? extends Statement, SailException> createStatementIterator( Resource subj, URI pred, Value obj, boolean explicit, Resource... contexts ) throws IOException {
+	CloseableIteration<? extends Statement, SailException> createStatementIterator( Resource subj, org.openrdf.model.URI pred, Value obj, boolean explicit, Resource... contexts ) throws IOException {
 		CloseableIteration<? extends Statement, SailException> originalIteration = super.createStatementIterator( subj, pred, obj, explicit, contexts );
 
 		return new SecuredRepositoryResult( originalIteration );
