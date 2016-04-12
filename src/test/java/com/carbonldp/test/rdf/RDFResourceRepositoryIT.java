@@ -20,6 +20,7 @@ import java.util.Set;
 
 import static org.testng.Assert.*;
 
+@Test( enabled = false )
 public class RDFResourceRepositoryIT extends AbstractIT {
 	private DateTimeFormatter formatter = DateTimeFormat.forPattern( "yyyy-MM-dd HH:mm:ss" );
 

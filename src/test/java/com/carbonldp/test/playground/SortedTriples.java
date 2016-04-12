@@ -10,6 +10,7 @@ import org.testng.annotations.Test;
 
 import static org.testng.Assert.*;
 
+@Test( enabled = false )
 public class SortedTriples extends AbstractIT {
 
 	@Autowired
