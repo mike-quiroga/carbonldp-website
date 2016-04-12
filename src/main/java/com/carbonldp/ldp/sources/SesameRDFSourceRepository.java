@@ -12,7 +12,6 @@ import com.carbonldp.utils.HTTPUtil;
 import com.carbonldp.utils.RDFNodeUtil;
 import com.carbonldp.utils.SPARQLUtil;
 import com.carbonldp.utils.ValueUtil;
-import com.carbonldp.web.exceptions.NotImplementedException;
 import org.apache.commons.lang3.text.StrSubstitutor;
 import org.joda.time.DateTime;
 import org.openrdf.model.Resource;
@@ -21,13 +20,12 @@ import org.openrdf.model.Value;
 import org.openrdf.model.impl.AbstractModel;
 import org.openrdf.model.impl.LinkedHashModel;
 import org.openrdf.model.vocabulary.RDF;
+import org.openrdf.repository.RepositoryException;
+import org.openrdf.repository.RepositoryResult;
 import org.openrdf.spring.SesameConnectionFactory;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.carbonldp.Consts.*;
@@ -209,67 +207,30 @@ public class SesameRDFSourceRepository extends AbstractSesameLDPRepository imple
 		return sparqlTemplate.executeBooleanQuery( sub.replace( isQuery ), bindings );
 	}
 
-	private static final String deleteWithChildrenQuery;
-
-	static {
-		deleteWithChildrenQuery = "" +
-			"DELETE {" + NEW_LINE +
-			TAB + "GRAPH ?sourceURI {" + NEW_LINE +
-			TAB + TAB + "?sourceSubject ?sourcePredicate ?sourceObject" + NEW_LINE +
-			TAB + "}" + NEW_LINE +
-			TAB + "GRAPH ?childGraph {" + NEW_LINE +
-			TAB + TAB + "?childSubject ?childPredicate ?childObject" + NEW_LINE +
-			TAB + "}" + NEW_LINE +
-			"} WHERE {" + NEW_LINE +
-			// DELETE Source's document
-			TAB + "GRAPH ?sourceURI {" + NEW_LINE +
-			TAB + TAB + "?sourceSubject ?sourcePredicate ?sourceObject" + NEW_LINE +
-			TAB + "}" + NEW_LINE +
-			TAB + "OPTIONAL {" + NEW_LINE +
-			// DELETE Children Graphs
-			TAB + TAB + "GRAPH ?childGraph {" + NEW_LINE +
-			TAB + TAB + TAB + "?childSubject ?childPredicate ?childObject" + NEW_LINE +
-			TAB + TAB + "}" + NEW_LINE +
-			TAB + TAB + "FILTER( STRSTARTS( STR(?childGraph), STR(?sourceURI) ) )" + NEW_LINE +
-			TAB + "}" + NEW_LINE +
-			"}"
-		;
-	}
-
 	@Override
-	public void delete( URI sourceURI ) {
+	public void delete( URI sourceURI, boolean deleteOccurrences ) {
 		Map<String, Value> bindings = new HashMap<>();
 		bindings.put( "sourceURI", sourceURI );
-		sparqlTemplate.executeUpdate( deleteWithChildrenQuery, bindings );
+
+		connectionTemplate.write( connection -> {
+			RepositoryResult<Resource> contexts = connection.getContextIDs();
+			Set<URI> filteredContexts = new HashSet<>();
+			while ( contexts.hasNext() ) {
+				Resource context = contexts.next();
+				if ( context.stringValue().startsWith( sourceURI.stringValue() ) ) {
+					if ( ! ValueUtil.isURI( context ) ) throw new IllegalStateException();
+					URI contextURI = ValueUtil.getURI( context );
+					filteredContexts.add( contextURI );
+				}
+			}
+
+			for ( Resource context : filteredContexts ) connection.remove( (Resource) null, null, null, context );
+			if ( deleteOccurrences ) {
+				for ( URI context : filteredContexts ) {
+					connection.remove( (Resource) null, null, context );
+					connection.remove( (Resource) null, context, null );
+				}
+			}
+		} );
 	}
-
-	private static final String deleteOcurrencesIncludingChildrenQuery;
-
-	static {
-		deleteOcurrencesIncludingChildrenQuery = "" +
-			"DELETE {" + NEW_LINE +
-			TAB + "GRAPH ?graph {" + NEW_LINE +
-			TAB + TAB + "?subject ?predicate ?object" + NEW_LINE +
-			TAB + "}." + NEW_LINE +
-			"} WHERE {" + NEW_LINE +
-			TAB + "GRAPH ?graph {" + NEW_LINE +
-			TAB + TAB + "?subject ?predicate ?object" + NEW_LINE +
-			TAB + TAB + "FILTER( " + NEW_LINE +
-			TAB + TAB + TAB + "STRSTARTS( str(?predicate), str(?sourceURI) )" + NEW_LINE +
-			TAB + TAB + TAB + " || " + NEW_LINE +
-			TAB + TAB + TAB + "( isURI(?object) && STRSTARTS( str(?object), str(?sourceURI) ) )" + NEW_LINE +
-			TAB + TAB + ")" + NEW_LINE +
-			TAB + "}." + NEW_LINE +
-			"}"
-		;
-	}
-
-	@Override
-	public void deleteOccurrences( URI sourceURI, boolean includeChildrens ) {
-		Map<String, Value> bindings = new HashMap<>();
-		bindings.put( "sourceURI", sourceURI );
-		if ( includeChildrens ) sparqlTemplate.executeUpdate( deleteOcurrencesIncludingChildrenQuery, bindings );
-		else throw new NotImplementedException();
-	}
-
 }
