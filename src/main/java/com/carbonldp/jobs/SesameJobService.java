@@ -53,8 +53,8 @@ public class SesameJobService extends AbstractSesameLDPService implements JobSer
 
 	private void checkPermissionsOverTheBackup( Job job ) {
 		ImportBackupJob importBackupJob = new ImportBackupJob( job );
-		URI backupURI = importBackupJob.getBackup();
-		sourceService.get( backupURI );
+		IRI backupIRI = importBackupJob.getBackup();
+		sourceService.get( backupIRI );
 	}
 
 	@Override

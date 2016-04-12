@@ -221,12 +221,12 @@ public class SesameRDFSourceService extends AbstractSesameLDPService implements 
 
 	private List<Infraction> validateDocumentContainsImmutableProperties( RDFDocument document ) {
 		List<Infraction> infractions = new ArrayList<>();
-		RDFSource originalSource = get( document.getDocumentResource().getURI() );
-		Set<URI> types = originalSource.getTypes();
+		RDFSource originalSource = get( document.getDocumentResource().getIRI() );
+		Set<IRI> types = originalSource.getTypes();
 
 		infractions.addAll( ContainerFactory.getInstance().validateSystemManagedProperties( document.getDocumentResource() ) );
 
-		if ( types.contains( ImportBackupJobDescription.Resource.CLASS.getURI() ) ) infractions.addAll( ImportBackupJobFactory.getInstance().validateImmutableProperties( document.getDocumentResource() ) );
+		if ( types.contains( ImportBackupJobDescription.Resource.CLASS.getIRI() ) ) infractions.addAll( ImportBackupJobFactory.getInstance().validateImmutableProperties( document.getDocumentResource() ) );
 		else infractions.addAll( ContainerFactory.getInstance().validateImmutableProperties( document.getDocumentResource() ) );
 
 		return infractions;

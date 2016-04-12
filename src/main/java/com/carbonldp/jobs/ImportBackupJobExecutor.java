@@ -15,16 +15,13 @@ import com.carbonldp.repository.ConnectionRWTemplate;
 import com.carbonldp.spring.TransactionWrapper;
 import org.eclipse.jetty.server.ConnectionFactory;
 import org.openrdf.model.Resource;
-import org.openrdf.model.URI;
-import org.openrdf.repository.RepositoryException;
+import org.openrdf.model.IRI;
 import org.openrdf.rio.RDFFormat;
-import org.openrdf.rio.RDFParseException;
 import org.openrdf.spring.SesameConnectionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.*;
 import java.util.Enumeration;
-import java.util.Random;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
@@ -45,15 +42,15 @@ public class ImportBackupJobExecutor implements TypedJobExecutor {
 
 	@Override
 	public void execute( App app, Job job, Execution execution ) {
-		if ( ! job.hasType( ImportBackupJobDescription.Resource.CLASS ) ) throw new JobException( new Infraction( 0x2001, "rdf.type", ImportBackupJobDescription.Resource.CLASS.getURI().stringValue() ) );
+		if ( ! job.hasType( ImportBackupJobDescription.Resource.CLASS ) ) throw new JobException( new Infraction( 0x2001, "rdf.type", ImportBackupJobDescription.Resource.CLASS.getIRI().stringValue() ) );
 
 		ImportBackupJob importBackupJob = new ImportBackupJob( job );
-		URI backupURI = importBackupJob.getBackup();
-		RDFRepresentation backupRDFRepresentation = new RDFRepresentation( sourceService.get( backupURI ) );
+		IRI backupIRI = importBackupJob.getBackup();
+		RDFRepresentation backupRDFRepresentation = new RDFRepresentation( sourceService.get( backupIRI ) );
 
 		String mediaType = backupRDFRepresentation.getMediaType();
 
-		if ( ! mediaType.equals( Consts.ZIP ) ) throw new JobException( new Infraction( 0x2005, "property", RDFRepresentationDescription.Property.MEDIA_TYPE.getURI().stringValue() ) );
+		if ( ! mediaType.equals( Consts.ZIP ) ) throw new JobException( new Infraction( 0x2005, "property", RDFRepresentationDescription.Property.MEDIA_TYPE.getIRI().stringValue() ) );
 
 		File backupFile = nonRDFSourceService.getResource( backupRDFRepresentation );
 
@@ -143,11 +140,11 @@ public class ImportBackupJobExecutor implements TypedJobExecutor {
 	}
 
 	private void replaceApp( File backupFile ) {
-		URI appURI = AppContextHolder.getContext().getApplication().getRootContainerURI();
+		IRI appIRI = AppContextHolder.getContext().getApplication().getRootContainerIRI();
 
 		InputStream trigInputStream = unZipTrigFile( backupFile );
 		connectionTemplate.write( connection -> connection.remove( (Resource) null, null, null ) );
-		connectionTemplate.write( connection -> connection.add( trigInputStream, appURI.stringValue(), RDFFormat.TRIG ) );
+		connectionTemplate.write( connection -> connection.add( trigInputStream, appIRI.stringValue(), RDFFormat.TRIG ) );
 	}
 
 	private InputStream unZipTrigFile( File backupFile ) {

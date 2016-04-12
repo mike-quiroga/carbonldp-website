@@ -46,11 +46,11 @@ public class JobsExecutor {
 		try {
 			getTypedRepository( type ).execute(app, job, execution );
 		} catch ( CarbonNoStackTraceRuntimeException e ) {
-			executionService.changeExecutionStatus( execution.getURI(), ExecutionDescription.Status.ERROR );
-			executionService.addErrorDescription( execution.getURI(), e.getMessage() );
+			executionService.changeExecutionStatus( execution.getIRI(), ExecutionDescription.Status.ERROR );
+			executionService.addErrorDescription( execution.getIRI(), e.getMessage() );
 			hasErrors = true;
 		} catch ( Exception e ) {
-			executionService.changeExecutionStatus( execution.getURI(), ExecutionDescription.Status.UNKNOWN );
+			executionService.changeExecutionStatus( execution.getIRI(), ExecutionDescription.Status.UNKNOWN );
 			hasErrors = true;
 		}
 		if ( ! hasErrors ) executionService.changeExecutionStatus( execution.getIRI(), ExecutionDescription.Status.FINISHED );
