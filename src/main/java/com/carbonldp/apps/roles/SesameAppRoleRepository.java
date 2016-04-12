@@ -162,7 +162,7 @@ public class SesameAppRoleRepository extends AbstractSesameLDPRepository impleme
 
 	@Override
 	public void delete( IRI appRoleIRI ) {
-		sourceRepository.delete( appRoleIRI );
+		sourceRepository.delete( appRoleIRI, true );
 	}
 
 }

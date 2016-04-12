@@ -171,13 +171,12 @@ public class SesameContainerService extends AbstractSesameLDPService implements 
 		Set<IRI> containedIRIs = containerRepository.getContainedIRIs( targetIRI );
 		for ( IRI containedIRI : containedIRIs ) {
 			sourceService.delete( containedIRI );
-			sourceRepository.deleteOccurrences( containedIRI, true );
 		}
 	}
 
 	@Override
 	public void delete( IRI targetIRI ) {
-		sourceRepository.delete( targetIRI );
+		sourceRepository.delete( targetIRI, true );
 	}
 
 	@Autowired

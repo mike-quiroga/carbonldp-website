@@ -95,7 +95,6 @@ public class SesameAppService extends AbstractSesameLDPService implements AppSer
 	public void delete( IRI appIRI ) {
 		if ( ! exists( appIRI ) ) throw new NotFoundException();
 		appRepository.delete( appIRI );
-		sourceRepository.deleteOccurrences( appIRI, true );
 	}
 
 	@Override
