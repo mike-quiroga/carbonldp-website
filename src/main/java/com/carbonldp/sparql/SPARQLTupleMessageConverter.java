@@ -16,7 +16,11 @@ import java.util.List;
 public class SPARQLTupleMessageConverter extends SPARQLMessageConverter<SPARQLTupleResult, TupleQueryResultFormat> {
 	public SPARQLTupleMessageConverter() {
 		List<TupleQueryResultFormat> list = new ArrayList<>();
-		list.addAll( TupleQueryResultFormat.values() );
+		list.add( TupleQueryResultFormat.JSON );
+		list.add( TupleQueryResultFormat.BINARY );
+		list.add( TupleQueryResultFormat.CSV );
+		list.add( TupleQueryResultFormat.SPARQL );
+		list.add( TupleQueryResultFormat.TSV );
 		setSupportedFormats( list );
 	}
 
@@ -30,7 +34,7 @@ public class SPARQLTupleMessageConverter extends SPARQLMessageConverter<SPARQLTu
 		OutputStream outputStream;
 		try {
 			outputStream = outputMessage.getBody();
-			QueryResultIO.write( result, mediaTypeFormats.get( contentType ), outputStream );
+			QueryResultIO.writeTuple( result, mediaTypeFormats.get( contentType ), outputStream );
 			outputStream.flush();
 		} catch ( IOException e ) {
 			throw new RuntimeException( "unable to write response body, nested Exception: ", e );

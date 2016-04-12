@@ -61,7 +61,7 @@ public class RequestDocumentTypeRequestCondition extends AbstractRequestConditio
 		List<HTTPHeaderValue> filteredValues = HTTPHeader.filterHeaderValues( preferHeader, null, null, "rel", "type" );
 
 		for ( HTTPHeaderValue filteredValue : filteredValues ) {
-			APIPreferences.RequestDocumentType documentType = RDFNodeUtil.findByURI( filteredValue.getMainValue(), APIPreferences.RequestDocumentType.class );
+			APIPreferences.RequestDocumentType documentType = RDFNodeUtil.findByIRI( filteredValue.getMainValue(), APIPreferences.RequestDocumentType.class );
 			if ( documentType != null ) documentTypes.add( documentType );
 		}
 

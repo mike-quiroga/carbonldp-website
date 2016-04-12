@@ -3,41 +3,41 @@ package com.carbonldp.ldp.sources;
 import com.carbonldp.ldp.containers.AccessPoint;
 import com.carbonldp.rdf.RDFDocument;
 import org.joda.time.DateTime;
-import org.openrdf.model.URI;
+import org.openrdf.model.IRI;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 public interface RDFSourceService {
-	public boolean exists( URI sourceURI );
+	public boolean exists( IRI sourceIRI );
 
-	@PreAuthorize( "hasPermission(#sourceURI, 'READ')" )
-	public RDFSource get( URI sourceURI );
+	@PreAuthorize( "hasPermission(#sourceIRI, 'READ')" )
+	public RDFSource get( IRI sourceIRI );
 
-	public String getETag( URI sourceURI );
+	public String getETag( IRI sourceIRI );
 
-	public DateTime getModified( URI sourceURI );
+	public DateTime getModified( IRI sourceIRI );
 
-	@PreAuthorize( "hasPermission(#sourceURI, 'READ')" )
-	public URI getDefaultInteractionModel( URI sourceURI );
+	@PreAuthorize( "hasPermission(#sourceIRI, 'READ')" )
+	public IRI getDefaultInteractionModel( IRI sourceIRI );
 
-	@PreAuthorize( "hasPermission(#parentURI, 'CREATE_ACCESS_POINT')" )
-	public DateTime createAccessPoint( URI parentURI, AccessPoint accessPoint );
+	@PreAuthorize( "hasPermission(#parentIRI, 'CREATE_ACCESS_POINT')" )
+	public DateTime createAccessPoint( IRI parentIRI, AccessPoint accessPoint );
 
-	@PreAuthorize( "hasPermission(#sourceURI, 'UPDATE')" )
-	public void touch( URI sourceURI, DateTime now );
+	@PreAuthorize( "hasPermission(#sourceIRI, 'UPDATE')" )
+	public void touch( IRI sourceIRI, DateTime now );
 
-	@PreAuthorize( "hasPermission(#sourceURI, 'UPDATE')" )
-	public void add( URI sourceURI, RDFDocument document );
+	@PreAuthorize( "hasPermission(#sourceIRI, 'UPDATE')" )
+	public void add( IRI sourceIRI, RDFDocument document );
 
-	@PreAuthorize( "hasPermission(#sourceURI, 'UPDATE')" )
-	public void set( URI sourceURI, RDFDocument document );
+	@PreAuthorize( "hasPermission(#sourceIRI, 'UPDATE')" )
+	public void set( IRI sourceIRI, RDFDocument document );
 
 	@PreAuthorize( "hasPermission(#source, 'UPDATE')" )
 	public DateTime replace( RDFSource source );
 
-	@PreAuthorize( "hasPermission(#sourceURI, 'UPDATE')" )
-	public void subtract( URI sourceURI, RDFDocument document );
+	@PreAuthorize( "hasPermission(#sourceIRI, 'UPDATE')" )
+	public void subtract( IRI sourceIRI, RDFDocument document );
 
-	@PreAuthorize( "hasPermission(#sourceURI, 'DELETE')" )
-	public void delete( URI sourceURI );
+	@PreAuthorize( "hasPermission(#sourceIRI, 'DELETE')" )
+	public void delete( IRI sourceIRI );
 
 }

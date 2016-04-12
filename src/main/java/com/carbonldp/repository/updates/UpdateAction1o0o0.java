@@ -1,27 +1,8 @@
 package com.carbonldp.repository.updates;
 
 import com.carbonldp.Vars;
-import com.carbonldp.authorization.acl.ACLDescription;
-import com.carbonldp.ldp.sources.RDFSourceDescription;
-import com.carbonldp.repository.ConnectionRWTemplate;
-import com.carbonldp.utils.ValueUtil;
-import org.apache.commons.io.IOUtils;
 import org.openrdf.model.Resource;
-import org.openrdf.model.Value;
-import org.openrdf.model.impl.URIImpl;
-import org.openrdf.query.algebra.Str;
-import org.openrdf.repository.Repository;
-import org.openrdf.repository.RepositoryConnection;
 import org.openrdf.repository.RepositoryException;
-import org.openrdf.rio.RDFFormat;
-import org.openrdf.rio.RDFParseException;
-import org.openrdf.spring.RepositoryConnectionFactory;
-import org.openrdf.spring.SesameConnectionFactory;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * @author MiguelAraCo

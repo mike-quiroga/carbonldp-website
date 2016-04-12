@@ -4,22 +4,25 @@ import com.carbonldp.HTTPHeaders;
 import com.carbonldp.descriptions.APIPreferences;
 import com.carbonldp.descriptions.APIPreferences.InteractionModel;
 import com.carbonldp.exceptions.InvalidResourceException;
-import com.carbonldp.exceptions.InvalidResourceURIException;
+import com.carbonldp.exceptions.InvalidResourceIRIException;
 import com.carbonldp.ldp.containers.*;
 import com.carbonldp.ldp.nonrdf.RDFRepresentationDescription;
 import com.carbonldp.ldp.sources.RDFSourceDescription;
 import com.carbonldp.models.EmptyResponse;
 import com.carbonldp.models.Infraction;
-import com.carbonldp.rdf.*;
+import com.carbonldp.rdf.RDFDocument;
+import com.carbonldp.rdf.RDFNodeEnum;
+import com.carbonldp.rdf.RDFResource;
 import com.carbonldp.utils.HTTPUtil;
 import com.carbonldp.utils.ModelUtil;
 import com.carbonldp.web.exceptions.BadRequestException;
 import com.carbonldp.web.exceptions.ConflictException;
 import com.carbonldp.web.exceptions.NotFoundException;
 import org.joda.time.DateTime;
-import org.openrdf.model.URI;
+import org.openrdf.model.IRI;
 import org.openrdf.model.impl.AbstractModel;
-import org.openrdf.model.impl.URIImpl;
+
+import org.openrdf.model.impl.SimpleValueFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
@@ -67,18 +70,18 @@ public abstract class AbstractRDFPostRequestHandler<E extends BasicContainer> ex
 	public ResponseEntity<Object> handleRequest( RDFDocument document, HttpServletRequest request, HttpServletResponse response ) {
 		setUp( request, response );
 
-		URI targetURI = getTargetURI( request );
-		if ( ! targetResourceExists( targetURI ) ) throw new NotFoundException();
+		IRI targetIRI = getTargetIRI( request );
+		if ( ! targetResourceExists( targetIRI ) ) throw new NotFoundException();
 
 		RDFResource requestDocumentResource = document.getDocumentResource();
 
-		InteractionModel interactionModel = getInteractionModel( targetURI );
+		InteractionModel interactionModel = getInteractionModel( targetIRI );
 
 		switch ( interactionModel ) {
 			case RDF_SOURCE:
-				return handlePOSTToRDFSource( targetURI, requestDocumentResource );
+				return handlePOSTToRDFSource( targetIRI, requestDocumentResource );
 			case CONTAINER:
-				return handlePOSTToContainer( targetURI, requestDocumentResource );
+				return handlePOSTToContainer( targetIRI, requestDocumentResource );
 			default:
 				throw new IllegalStateException();
 		}
@@ -89,15 +92,15 @@ public abstract class AbstractRDFPostRequestHandler<E extends BasicContainer> ex
 		return APIPreferences.InteractionModel.CONTAINER;
 	}
 
-	private ResponseEntity<Object> handlePOSTToRDFSource( URI targetURI, RDFResource requestDocumentResource ) {
+	private ResponseEntity<Object> handlePOSTToRDFSource( IRI targetIRI, RDFResource requestDocumentResource ) {
 		AccessPoint requestAccessPoint = getRequestAccessPoint( requestDocumentResource );
 
-		requestDocumentResource = getDocumentResourceWithFinalURI( requestAccessPoint, targetURI.stringValue() );
-		if ( ! requestDocumentResource.equals( requestAccessPoint.getURI() ) ) {
+		requestDocumentResource = getDocumentResourceWithFinalIRI( requestAccessPoint, targetIRI.stringValue() );
+		if ( ! requestDocumentResource.equals( requestAccessPoint.getIRI() ) ) {
 			requestAccessPoint = AccessPointFactory.getInstance().getAccessPoint( requestDocumentResource );
 		}
 
-		DateTime creationTime = sourceService.createAccessPoint( targetURI, requestAccessPoint );
+		DateTime creationTime = sourceService.createAccessPoint( targetIRI, requestAccessPoint );
 
 		return generateCreatedResponse( requestAccessPoint );
 	}
@@ -105,7 +108,7 @@ public abstract class AbstractRDFPostRequestHandler<E extends BasicContainer> ex
 	private AccessPoint getRequestAccessPoint( RDFResource requestDocumentResource ) {
 		for ( RDFNodeEnum invalidType : invalidTypesForRDFSources ) {
 			if ( requestDocumentResource.hasType( invalidType ) )
-				throw new BadRequestException( new Infraction( 0x200C, "rdf.type", invalidType.getURI().stringValue() ) );
+				throw new BadRequestException( new Infraction( 0x200C, "rdf.type", invalidType.getIRI().stringValue() ) );
 		}
 		if ( ! AccessPointFactory.getInstance().isAccessPoint( requestDocumentResource ) )
 			throw new BadRequestException( 0x2104 );
@@ -113,21 +116,21 @@ public abstract class AbstractRDFPostRequestHandler<E extends BasicContainer> ex
 		return AccessPointFactory.getInstance().getAccessPoint( requestDocumentResource );
 	}
 
-	private ResponseEntity<Object> handlePOSTToContainer( URI targetURI, RDFResource requestDocumentResource ) {
+	private ResponseEntity<Object> handlePOSTToContainer( IRI targetIRI, RDFResource requestDocumentResource ) {
 
-		validateDocumentResource( targetURI, requestDocumentResource );
+		validateDocumentResource( targetIRI, requestDocumentResource );
 
 		validateSystemManagedProperties( requestDocumentResource );
 		BasicContainer requestBasicContainer = getRequestBasicContainer( requestDocumentResource );
 
-		requestDocumentResource = getDocumentResourceWithFinalURI( requestBasicContainer, targetURI.stringValue() );
-		if ( ! requestDocumentResource.equals( requestBasicContainer.getURI() ) ) requestBasicContainer = new BasicContainer( requestDocumentResource );
+		requestDocumentResource = getDocumentResourceWithFinalIRI( requestBasicContainer, targetIRI.stringValue() );
+		if ( ! requestDocumentResource.equals( requestBasicContainer.getIRI() ) ) requestBasicContainer = new BasicContainer( requestDocumentResource );
 
 		E documentResourceView = getDocumentResourceView( requestBasicContainer );
 
-		createChild( targetURI, documentResourceView );
+		createChild( targetIRI, documentResourceView );
 
-		DateTime modified = sourceService.getModified( documentResourceView.getURI() );
+		DateTime modified = sourceService.getModified( documentResourceView.getIRI() );
 		return generateCreatedResponse( documentResourceView );
 	}
 
@@ -139,12 +142,12 @@ public abstract class AbstractRDFPostRequestHandler<E extends BasicContainer> ex
 	private BasicContainer getRequestBasicContainer( RDFResource requestDocumentResource ) {
 		for ( RDFNodeEnum invalidType : invalidTypesForContainers ) {
 			if ( requestDocumentResource.hasType( invalidType ) )
-				throw new BadRequestException( new Infraction( 0x200C, "rdf.type", invalidType.getURI().stringValue() ) );
+				throw new BadRequestException( new Infraction( 0x200C, "rdf.type", invalidType.getIRI().stringValue() ) );
 		}
 		BasicContainer basicContainer;
 
 		if ( ( ! ( requestDocumentResource.hasType( ContainerDescription.Resource.CLASS ) || requestDocumentResource.hasType( BasicContainerDescription.Resource.CLASS ) ) && ( ! hasInteractionModel( requestDocumentResource ) ) ) ) {
-			requestDocumentResource.add( RDFSourceDescription.Property.DEFAULT_INTERACTION_MODEL.getURI(), InteractionModel.RDF_SOURCE.getURI() );
+			requestDocumentResource.add( RDFSourceDescription.Property.DEFAULT_INTERACTION_MODEL.getIRI(), InteractionModel.RDF_SOURCE.getIRI() );
 		}
 		basicContainer = BasicContainerFactory.getInstance().create( requestDocumentResource );
 
@@ -157,7 +160,7 @@ public abstract class AbstractRDFPostRequestHandler<E extends BasicContainer> ex
 
 	protected abstract E getDocumentResourceView( BasicContainer requestBasicContainer );
 
-	protected abstract void createChild( URI targetURI, E documentResourceView );
+	protected abstract void createChild( IRI targetIRI, E documentResourceView );
 
 	protected ResponseEntity<Object> generateCreatedResponse( AccessPoint accessPointCreated ) {
 		return generateCreatedResponse( (RDFResource) accessPointCreated );
@@ -173,38 +176,38 @@ public abstract class AbstractRDFPostRequestHandler<E extends BasicContainer> ex
 		return new ResponseEntity<>( new EmptyResponse(), HttpStatus.CREATED );
 	}
 
-	protected RDFResource getDocumentResourceWithFinalURI( RDFResource documentResource, String parentURI ) {
-		if ( hasGenericRequestURI( documentResource ) ) {
-			URI forgedURI = forgeUniqueURI( documentResource, parentURI, request );
-			documentResource = renameResource( documentResource, forgedURI );
+	protected RDFResource getDocumentResourceWithFinalIRI( RDFResource documentResource, String parentIRI ) {
+		if ( hasGenericRequestIRI( documentResource ) ) {
+			IRI forgedIRI = forgeUniqueIRI( documentResource, parentIRI, request );
+			documentResource = renameResource( documentResource, forgedIRI );
 		} else {
-			validateRequestResourceRelativeness( documentResource, parentURI );
+			validateRequestResourceRelativeness( documentResource, parentIRI );
 		}
 		return documentResource;
 	}
 
-	protected URI forgeUniqueURI( RDFResource requestResource, String parentURI, HttpServletRequest request ) {
-		URI uniqueURI = forgeDocumentResourceURI( requestResource, parentURI, request );
+	protected IRI forgeUniqueIRI( RDFResource requestResource, String parentIRI, HttpServletRequest request ) {
+		IRI uniqueIRI = forgeDocumentResourceIRI( requestResource, parentIRI, request );
 
-		// TODO: Check that the resourceURI is unique and if not forge another one
-		if ( sourceService.exists( uniqueURI ) ) throw new ConflictException( 0x2008 );
+		// TODO: Check that the resourceIRI is unique and if not forge another one
+		if ( sourceService.exists( uniqueIRI ) ) throw new ConflictException( 0x2008 );
 
-		return uniqueURI;
+		return uniqueIRI;
 	}
 
-	protected URI forgeDocumentResourceURI( RDFResource documentResource, String parentURI, HttpServletRequest request ) {
+	protected IRI forgeDocumentResourceIRI( RDFResource documentResource, String parentIRI, HttpServletRequest request ) {
 		StringBuilder uriBuilder = new StringBuilder();
-		uriBuilder.append( parentURI );
+		uriBuilder.append( parentIRI );
 
-		if ( ! parentURI.endsWith( SLASH ) ) uriBuilder.append( SLASH );
+		if ( ! parentIRI.endsWith( SLASH ) ) uriBuilder.append( SLASH );
 
-		uriBuilder.append( forgeSlug( documentResource, parentURI, request ) );
+		uriBuilder.append( forgeSlug( documentResource, parentIRI, request ) );
 
-		return new URIImpl( uriBuilder.toString() );
+		return SimpleValueFactory.getInstance().createIRI( uriBuilder.toString() );
 	}
 
-	private String forgeSlug( RDFResource documentResource, String parentURI, HttpServletRequest request ) {
-		String uriSlug = configurationRepository.getGenericRequestSlug( documentResource.getURI().stringValue() );
+	private String forgeSlug( RDFResource documentResource, String parentIRI, HttpServletRequest request ) {
+		String uriSlug = configurationRepository.getGenericRequestSlug( documentResource.getIRI().stringValue() );
 		String slug = uriSlug != null ? uriSlug : request.getHeader( HTTPHeaders.SLUG );
 
 		if ( slug != null ) {
@@ -222,35 +225,35 @@ public abstract class AbstractRDFPostRequestHandler<E extends BasicContainer> ex
 		return slug;
 	}
 
-	protected void validateRequestResourceRelativeness( RDFResource requestResource, String targetURI ) {
-		String resourceURI = requestResource.getURI().stringValue();
-		targetURI = targetURI.endsWith( SLASH ) ? targetURI : targetURI.concat( SLASH );
-		if ( ! resourceURI.startsWith( targetURI ) ) {
-			throw new InvalidResourceURIException();
+	protected void validateRequestResourceRelativeness( RDFResource requestResource, String targetIRI ) {
+		String resourceIRI = requestResource.getIRI().stringValue();
+		targetIRI = targetIRI.endsWith( SLASH ) ? targetIRI : targetIRI.concat( SLASH );
+		if ( ! resourceIRI.startsWith( targetIRI ) ) {
+			throw new InvalidResourceIRIException();
 		}
 
-		String relativeURI = resourceURI.replace( targetURI, EMPTY_STRING );
-		if ( relativeURI.length() == 0 ) {
+		String relativeIRI = resourceIRI.replace( targetIRI, EMPTY_STRING );
+		if ( relativeIRI.length() == 0 ) {
 			throw new BadRequestException( 0x2203 );
 		}
 
-		int slashIndex = relativeURI.indexOf( SLASH );
+		int slashIndex = relativeIRI.indexOf( SLASH );
 		if ( slashIndex == - 1 ) {
 			if ( configurationRepository.enforceEndingSlash() ) {
 				throw new BadRequestException( 0x200A );
 			}
 		}
 
-		if ( ( slashIndex + 1 ) < relativeURI.length() ) {
+		if ( ( slashIndex + 1 ) < relativeIRI.length() ) {
 			throw new BadRequestException( 0x2009 );
 		}
 
-		if ( sourceService.exists( requestResource.getURI() ) ) throw new ConflictException( 0x2008 );
+		if ( sourceService.exists( requestResource.getIRI() ) ) throw new ConflictException( 0x2008 );
 	}
 
-	protected RDFResource renameResource( RDFResource requestResource, URI forgedURI ) {
-		AbstractModel renamedModel = ModelUtil.replaceBase( requestResource.getBaseModel(), requestResource.getURI().stringValue(), forgedURI.stringValue() );
-		return new RDFResource( renamedModel, forgedURI );
+	protected RDFResource renameResource( RDFResource requestResource, IRI forgedIRI ) {
+		AbstractModel renamedModel = ModelUtil.replaceBase( requestResource.getBaseModel(), requestResource.getIRI().stringValue(), forgedIRI.stringValue() );
+		return new RDFResource( renamedModel, forgedIRI );
 	}
 
 }

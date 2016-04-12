@@ -15,10 +15,10 @@ import com.carbonldp.ldp.sources.RDFSourceRepository;
 import com.carbonldp.rdf.RDFDocumentRepository;
 import com.carbonldp.rdf.RDFResource;
 import com.carbonldp.rdf.RDFResourceRepository;
+import com.carbonldp.utils.IRIUtil;
 import com.carbonldp.utils.RDFNodeUtil;
-import com.carbonldp.utils.URIUtil;
 import com.carbonldp.utils.ValueUtil;
-import org.openrdf.model.URI;
+import org.openrdf.model.IRI;
 import org.openrdf.model.Value;
 import org.openrdf.query.BindingSet;
 import org.openrdf.spring.SesameConnectionFactory;
@@ -70,10 +70,10 @@ public class SesameAppRoleRepository extends AbstractSesameLDPRepository impleme
 	}
 
 	@Override
-	public AppRole get( URI appRoleURI ) {
-		Assert.notNull( appRoleURI );
+	public AppRole get( IRI appRoleIRI ) {
+		Assert.notNull( appRoleIRI );
 
-		RDFSource roleSource = sourceRepository.get( appRoleURI );
+		RDFSource roleSource = sourceRepository.get( appRoleIRI );
 		if ( roleSource == null ) return null;
 		return new AppRole( roleSource );
 	}
@@ -85,13 +85,13 @@ public class SesameAppRoleRepository extends AbstractSesameLDPRepository impleme
 		if ( AppContextHolder.getContext().isEmpty() ) throw new IllegalStateException( "This method needs to be called inside of an appContext." );
 		App app = AppContextHolder.getContext().getApplication();
 
-		URI appRolesContainerURI = getContainerURI( app.getRootContainerURI() );
+		IRI appRolesContainerIRI = getContainerIRI( app.getRootContainerIRI() );
 
 		Map<String, Value> bindings = new HashMap<>();
-		bindings.put( "agent", agent.getURI() );
+		bindings.put( "agent", agent.getIRI() );
 
-		Set<URI> appRoleURIs = containerRepository.findMembers( appRolesContainerURI, getByAgent_query, bindings, appRolesContainerType );
-		Set<RDFSource> appRoleSources = sourceRepository.get( appRoleURIs );
+		Set<IRI> appRoleIRIs = containerRepository.findMembers( appRolesContainerIRI, getByAgent_query, bindings, appRolesContainerType );
+		Set<RDFSource> appRoleSources = sourceRepository.get( appRoleIRIs );
 		return AppRoleFactory.getInstance().get( appRoleSources );
 	}
 
@@ -102,58 +102,58 @@ public class SesameAppRoleRepository extends AbstractSesameLDPRepository impleme
 	}
 
 	@Override
-	public void addAgent( URI appRoleURI, Agent agent ) {
-		URI agentsContainer = getAgentsContainerURI( appRoleURI );
-		containerRepository.addMember( agentsContainer, agent.getURI() );
+	public void addAgent( IRI appRoleIRI, Agent agent ) {
+		IRI agentsContainer = getAgentsContainerIRI( appRoleIRI );
+		containerRepository.addMember( agentsContainer, agent.getIRI() );
 	}
 
 	@Override
-	public Container createAppRolesContainer( URI rootContainerURI ) {
-		URI appRolesContainerURI = getContainerURI( rootContainerURI );
-		BasicContainer appRolesContainer = BasicContainerFactory.getInstance().create( new RDFResource( appRolesContainerURI ) );
-		containerRepository.createChild( rootContainerURI, appRolesContainer );
+	public Container createAppRolesContainer( IRI rootContainerIRI ) {
+		IRI appRolesContainerIRI = getContainerIRI( rootContainerIRI );
+		BasicContainer appRolesContainer = BasicContainerFactory.getInstance().create( new RDFResource( appRolesContainerIRI ) );
+		containerRepository.createChild( rootContainerIRI, appRolesContainer );
 		return appRolesContainer;
 	}
 
 	@Override
-	public boolean exists( URI appRoleURI ) {
-		return sourceRepository.exists( appRoleURI );
+	public boolean exists( IRI appRoleIRI ) {
+		return sourceRepository.exists( appRoleIRI );
 	}
 
-	public URI getContainerURI() {
+	public IRI getContainerIRI() {
 		AppContext appContext = AppContextHolder.getContext();
-		if ( appContext.isEmpty() ) throw new IllegalStateException( "The rootContainerURI cannot be retrieved from the platform context." );
-		URI rootContainerURI = appContext.getApplication().getRootContainerURI();
-		if ( rootContainerURI == null ) throw new IllegalStateException( "The app in the AppContext doesn't have a rootContainerURI." );
-		return getContainerURI( rootContainerURI );
+		if ( appContext.isEmpty() ) throw new IllegalStateException( "The rootContainerIRI cannot be retrieved from the platform context." );
+		IRI rootContainerIRI = appContext.getApplication().getRootContainerIRI();
+		if ( rootContainerIRI == null ) throw new IllegalStateException( "The app in the AppContext doesn't have a rootContainerIRI." );
+		return getContainerIRI( rootContainerIRI );
 	}
 
-	private URI getContainerURI( URI rootContainerURI ) {
-		return URIUtil.createChildURI( rootContainerURI, containerSlug );
+	private IRI getContainerIRI( IRI rootContainerIRI ) {
+		return IRIUtil.createChildIRI( rootContainerIRI, containerSlug );
 	}
 
-	public URI getAgentsContainerURI( URI appRoleURI ) {
-		return URIUtil.createChildURI( appRoleURI, agentsContainerSlug );
+	public IRI getAgentsContainerIRI( IRI appRoleIRI ) {
+		return IRIUtil.createChildIRI( appRoleIRI, agentsContainerSlug );
 	}
 
 	static {
-		getParentsQuery = "SELECT ?parentURI\n" +
+		getParentsQuery = "SELECT ?parentIRI\n" +
 			"WHERE {\n" +
-			"  ?childURI <" + AppRoleDescription.Property.PARENT_ROLE.getURI().stringValue() + ">+ ?parentURI\n" +
+			"  ?childIRI <" + AppRoleDescription.Property.PARENT_ROLE.getIRI().stringValue() + ">+ ?parentIRI\n" +
 			"}";
 	}
 
 	@Override
-	public Set<URI> getParentsURI( URI appRoleURI ) {
+	public Set<IRI> getParentsIRI( IRI appRoleIRI ) {
 		Map<String, Value> bindings = new LinkedHashMap<>();
 
-		bindings.put( "childURI", appRoleURI );
+		bindings.put( "childIRI", appRoleIRI );
 		return sparqlTemplate.executeTupleQuery( getParentsQuery, bindings, queryResult -> {
-			Set<URI> parents = new HashSet<>();
+			Set<IRI> parents = new HashSet<>();
 			while ( queryResult.hasNext() ) {
 				BindingSet bindingSet = queryResult.next();
-				Value member = bindingSet.getValue( "parentURI" );
-				if ( ValueUtil.isURI( member ) ) parents.add( ValueUtil.getURI( member ) );
+				Value member = bindingSet.getValue( "parentIRI" );
+				if ( ValueUtil.isIRI( member ) ) parents.add( ValueUtil.getIRI( member ) );
 			}
 
 			return parents;
@@ -161,8 +161,8 @@ public class SesameAppRoleRepository extends AbstractSesameLDPRepository impleme
 	}
 
 	@Override
-	public void delete( URI appRoleURI ) {
-		sourceRepository.delete( appRoleURI, true );
+	public void delete( IRI appRoleIRI ) {
+		sourceRepository.delete( appRoleIRI, true );
 	}
 
 }

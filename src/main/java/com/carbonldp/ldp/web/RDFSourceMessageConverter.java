@@ -37,22 +37,22 @@ public class RDFSourceMessageConverter extends ModelMessageConverter<RDFSource> 
 	}
 
 	private boolean isRDFRepresentation( RDFSource model ) {
-		Model types = model.filter( null, RDFResourceDescription.Property.TYPE.getURI(), null );
+		Model types = model.filter( null, RDFResourceDescription.Property.TYPE.getIRI(), null );
 		Set<Value> setTypes = types.objects();
-		Value rdfRepresentationType = RDFRepresentationDescription.Resource.CLASS.getURI();
+		Value rdfRepresentationType = RDFRepresentationDescription.Resource.CLASS.getIRI();
 		return setTypes.contains( rdfRepresentationType );
 	}
 
 	private void addDescribedByHeader( RDFSource model, HttpHeaders headers ) {
-		Link link = new Link( model.getURI().stringValue() );
+		Link link = new Link( model.getIRI().stringValue() );
 		link.addRelationshipType( Consts.DESCRIBED_BY );
-		link.setAnchor( model.getURI().stringValue() );
+		link.setAnchor( model.getIRI().stringValue() );
 
 		headers.add( HTTPHeaders.LINK, link.toString() );
 	}
 
 	private void addRDFResourceLinkHeader( HttpHeaders headers ) {
-		Link link = new Link( RDFResourceDescription.Resource.CLASS.getURI().stringValue() );
+		Link link = new Link( RDFResourceDescription.Resource.CLASS.getIRI().stringValue() );
 		link.addRelationshipType( Consts.TYPE );
 
 		headers.add( HTTPHeaders.LINK, link.toString() );

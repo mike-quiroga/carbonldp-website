@@ -8,7 +8,7 @@ import com.carbonldp.ldp.sources.AbstractPUTRequestHandler;
 import com.carbonldp.models.Infraction;
 import com.carbonldp.rdf.RDFResource;
 import com.carbonldp.web.RequestHandler;
-import org.openrdf.model.URI;
+import org.openrdf.model.IRI;
 import org.springframework.beans.factory.annotation.Autowired;
 
 @RequestHandler
@@ -17,8 +17,8 @@ public class AppRDFPutToRDFSourceHandler extends AbstractPUTRequestHandler<App> 
 	private AppService appService;
 
 	@Override
-	protected void validateDocumentResource( URI targetURI, RDFResource requestDocumentResource ) {
-		super.validateDocumentResource( targetURI, requestDocumentResource );
+	protected void validateDocumentResource( IRI targetIRI, RDFResource requestDocumentResource ) {
+		super.validateDocumentResource( targetIRI, requestDocumentResource );
 		if ( ! AppFactory.getInstance().is( requestDocumentResource ) ) throw new InvalidResourceException( new Infraction( 0x2007 ) );
 	}
 
@@ -28,7 +28,7 @@ public class AppRDFPutToRDFSourceHandler extends AbstractPUTRequestHandler<App> 
 	}
 
 	@Override
-	protected void replaceResource( URI targetURI, App documentResourceView ) {
+	protected void replaceResource( IRI targetIRI, App documentResourceView ) {
 
 		appService.replace( documentResourceView );
 	}

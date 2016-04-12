@@ -14,7 +14,7 @@ import com.carbonldp.ldp.sources.RDFSourceService;
 import com.carbonldp.models.Infraction;
 import com.carbonldp.rdf.RDFResource;
 import org.joda.time.DateTime;
-import org.openrdf.model.URI;
+import org.openrdf.model.IRI;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
@@ -35,61 +35,61 @@ public class SesameAppRoleService extends AbstractSesameLDPService implements Ap
 	protected AppRoleRepository appRoleRepository;
 
 	@Override
-	public boolean exists( URI appRoleURI ) {
-		return appRoleRepository.exists( appRoleURI );
+	public boolean exists( IRI appRoleIRI ) {
+		return appRoleRepository.exists( appRoleIRI );
 	}
 
 	@Override
-	public void addAgents( URI appRoleAgentContainerURI, Set<URI> agents ) {
-		for ( URI agent : agents ) {
-			addAgent( appRoleAgentContainerURI, agent );
+	public void addAgents( IRI appRoleAgentContainerIRI, Set<IRI> agents ) {
+		for ( IRI agent : agents ) {
+			addAgent( appRoleAgentContainerIRI, agent );
 		}
 	}
 
 	@Override
-	public void addAgent( URI appRoleAgentContainerURI, URI agent ) {
-		if ( ( ! sourceRepository.exists( appRoleAgentContainerURI ) ) ) throw new ResourceDoesntExistException();
-		if ( ! isAppAgent( agent ) && ! isPlatformAgent( agent ) ) throw new InvalidRDFTypeException( new Infraction( 0x2001, "rdf.type", AgentDescription.Resource.CLASS.getURI().stringValue() ) );
+	public void addAgent( IRI appRoleAgentContainerIRI, IRI agent ) {
+		if ( ( ! sourceRepository.exists( appRoleAgentContainerIRI ) ) ) throw new ResourceDoesntExistException();
+		if ( ! isAppAgent( agent ) && ! isPlatformAgent( agent ) ) throw new InvalidRDFTypeException( new Infraction( 0x2001, "rdf.type", AgentDescription.Resource.CLASS.getIRI().stringValue() ) );
 
-		containerService.addMember( appRoleAgentContainerURI, agent );
+		containerService.addMember( appRoleAgentContainerIRI, agent );
 
 		DateTime modifiedTime = DateTime.now();
-		URI membershipResource = containerRepository.getTypedRepository( containerService.getContainerType( appRoleAgentContainerURI ) ).getMembershipResource( appRoleAgentContainerURI );
+		IRI membershipResource = containerRepository.getTypedRepository( containerService.getContainerType( appRoleAgentContainerIRI ) ).getMembershipResource( appRoleAgentContainerIRI );
 		sourceRepository.touch( membershipResource, modifiedTime );
 	}
 
 	public void create( AppRole appRole ) {
-		if ( sourceRepository.exists( appRole.getURI() ) ) throw new ResourceAlreadyExistsException();
+		if ( sourceRepository.exists( appRole.getIRI() ) ) throw new ResourceAlreadyExistsException();
 		validate( appRole );
 
-		containerService.createChild( appRoleRepository.getContainerURI(), appRole );
+		containerService.createChild( appRoleRepository.getContainerIRI(), appRole );
 		createAgentsContainer( appRole );
 	}
 
 	@Override
-	public void addChildren( URI parentRole, Set<URI> childs ) {
-		for ( URI member : childs ) {
+	public void addChildren( IRI parentRole, Set<IRI> childs ) {
+		for ( IRI member : childs ) {
 			addChild( parentRole, member );
 		}
 	}
 
 	@Override
-	public void addChild( URI parentRoleURI, URI child ) {
-		if ( ( ! sourceRepository.exists( parentRoleURI ) ) || ( ! sourceRepository.exists( child ) ) ) throw new ResourceDoesntExistException();
-		if ( ! sourceRepository.is( child, AppRoleDescription.Resource.CLASS ) ) throw new InvalidResourceException( new Infraction( 0x2001, "rdf.type", AppRoleDescription.Resource.CLASS.getURI().stringValue() ) );
+	public void addChild( IRI parentRoleIRI, IRI child ) {
+		if ( ( ! sourceRepository.exists( parentRoleIRI ) ) || ( ! sourceRepository.exists( child ) ) ) throw new ResourceDoesntExistException();
+		if ( ! sourceRepository.is( child, AppRoleDescription.Resource.CLASS ) ) throw new InvalidResourceException( new Infraction( 0x2001, "rdf.type", AppRoleDescription.Resource.CLASS.getIRI().stringValue() ) );
 
 		validateHasParent( child );
-		containerService.addMember( parentRoleURI, child );
+		containerService.addMember( parentRoleIRI, child );
 
 		DateTime modifiedTime = DateTime.now();
-		sourceRepository.touch( parentRoleURI, modifiedTime );
+		sourceRepository.touch( parentRoleIRI, modifiedTime );
 
 	}
 
 	@Override
-	public void delete( URI appRoleURI ) {
-		if ( ! exists( appRoleURI ) ) throw new ResourceDoesntExistException();
-		appRoleRepository.delete( appRoleURI );
+	public void delete( IRI appRoleIRI ) {
+		if ( ! exists( appRoleIRI ) ) throw new ResourceDoesntExistException();
+		appRoleRepository.delete( appRoleIRI );
 	}
 
 	private void validate( AppRole appRole ) {
@@ -97,33 +97,33 @@ public class SesameAppRoleService extends AbstractSesameLDPService implements Ap
 		if ( ! infractions.isEmpty() ) throw new InvalidResourceException( infractions );
 	}
 
-	private boolean isAppAgent( URI agent ) {
+	private boolean isAppAgent( IRI agent ) {
 		return isAgent( agent );
 	}
 
-	private boolean isAgent( URI agent ) {
+	private boolean isAgent( IRI agent ) {
 		if ( sourceRepository.exists( agent ) ) {
 			if ( sourceRepository.is( agent, AgentDescription.Resource.CLASS ) ) return true;
-			else throw new InvalidRDFTypeException( new Infraction( 0x2001, "rdf.type", AgentDescription.Resource.CLASS.getURI().stringValue() ) );
+			else throw new InvalidRDFTypeException( new Infraction( 0x2001, "rdf.type", AgentDescription.Resource.CLASS.getIRI().stringValue() ) );
 		}
 		return false;
 	}
 
-	private boolean isPlatformAgent( URI agent ) {
+	private boolean isPlatformAgent( IRI agent ) {
 		return platformAgentRepository.exists( agent );
 	}
 
 	private void createAgentsContainer( AppRole appRole ) {
-		URI agentsContainerURI = appRoleRepository.getAgentsContainerURI( appRole.getURI() );
-		RDFResource resource = new RDFResource( agentsContainerURI );
-		DirectContainer container = DirectContainerFactory.getInstance().create( resource, appRole.getURI(), AppRoleDescription.Property.AGENT.getURI() );
-		sourceRepository.createAccessPoint( appRole.getURI(), container );
-		aclRepository.createACL( container.getURI() );
+		IRI agentsContainerIRI = appRoleRepository.getAgentsContainerIRI( appRole.getIRI() );
+		RDFResource resource = new RDFResource( agentsContainerIRI );
+		DirectContainer container = DirectContainerFactory.getInstance().create( resource, appRole.getIRI(), AppRoleDescription.Property.AGENT.getIRI() );
+		sourceRepository.createAccessPoint( appRole.getIRI(), container );
+		aclRepository.createACL( container.getIRI() );
 	}
 
-	private void validateHasParent( URI childURI ) {
-		if ( ! sourceRepository.exists( childURI ) ) throw new ResourceDoesntExistException();
-		Set<URI> parentsRoles = appRoleRepository.getParentsURI( childURI );
+	private void validateHasParent( IRI childIRI ) {
+		if ( ! sourceRepository.exists( childIRI ) ) throw new ResourceDoesntExistException();
+		Set<IRI> parentsRoles = appRoleRepository.getParentsIRI( childIRI );
 		if ( ! parentsRoles.isEmpty() ) throw new AlreadyHasAParentException();
 	}
 

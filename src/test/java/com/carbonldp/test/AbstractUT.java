@@ -1,10 +1,9 @@
 package com.carbonldp.test;
 
 import org.openrdf.model.Model;
-import org.openrdf.model.URI;
+import org.openrdf.model.IRI;
 import org.openrdf.model.ValueFactory;
-import org.openrdf.model.impl.URIImpl;
-import org.openrdf.model.impl.ValueFactoryImpl;
+import org.openrdf.model.impl.SimpleValueFactory;
 import org.openrdf.rio.RDFFormat;
 import org.openrdf.rio.RDFParseException;
 import org.openrdf.rio.Rio;
@@ -26,15 +25,15 @@ public abstract class AbstractUT {
 	protected final String EXAMPLE_NS = "http://example.org/ns#";
 	protected Model testModel;
 
-	protected final String testAppURI = "http://carbonldp.com/apps/test-blog";
-	protected final URI rootContainerURI = new URIImpl( testAppURI + "/" );
-	protected final URI postsContainerURI = new URIImpl( testAppURI + "/posts/" );
+	protected final String testAppIRI = "http://carbonldp.com/apps/test-blog";
+	protected final IRI rootContainerIRI = SimpleValueFactory.getInstance().createIRI( testAppIRI + "/" );
+	protected final IRI postsContainerIRI = SimpleValueFactory.getInstance().createIRI( testAppIRI + "/posts/" );
 	protected final String appFileDirectory = "/opt/carbon-test";
 	protected final String platformFileDirectory = "/opt/carbon-test/platform/repository";
 
 	@BeforeClass
 	protected void init() {
-		valueFactory = ValueFactoryImpl.getInstance();
+		valueFactory = SimpleValueFactory.getInstance();
 		//testModel = new LinkedHashModel();
 		testModel = readTestModel();
 		setUp();

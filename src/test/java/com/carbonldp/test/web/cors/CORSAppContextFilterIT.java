@@ -10,8 +10,7 @@ import com.carbonldp.namespaces.XSD;
 import com.carbonldp.test.AbstractIT;
 import org.mockito.Mockito;
 import org.openrdf.model.ValueFactory;
-import org.openrdf.model.impl.URIImpl;
-import org.openrdf.model.impl.ValueFactoryImpl;
+import org.openrdf.model.impl.SimpleValueFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.testng.annotations.Test;
@@ -26,7 +25,7 @@ public class CORSAppContextFilterIT extends AbstractIT {
 	@Qualifier( "corsAppContextFilter" )
 	private Filter corsAppContextFilter;
 
-	ValueFactory valueFactory = new ValueFactoryImpl();
+	ValueFactory valueFactory = SimpleValueFactory.getInstance();
 
 	@Autowired
 	private AppRepository appRepository;
@@ -39,11 +38,11 @@ public class CORSAppContextFilterIT extends AbstractIT {
 	}
 
 	private void setUp() {
-		if ( ! appService.exists( new URIImpl( testResourceURI ) ) )
+		if ( ! appService.exists( SimpleValueFactory.getInstance().createIRI( testResourceIRI ) ) )
 			throw new RuntimeException( "App not found" );
-		app = appRepository.findByRootContainer( new URIImpl( testResourceURI ) );
-		app.addDomain( valueFactory.createLiteral( "http://www.test.com/", new URIImpl( XSD.Properties.STRING ) ) );
-		app.addDomain( valueFactory.createLiteral( "(http://|https://)www\\.regex\\d\\.com/[\\s\\S]*", new URIImpl( C.Classes.REGULAR_EXPRESSION ) ) );
+		app = appRepository.findByRootContainer( SimpleValueFactory.getInstance().createIRI( testResourceIRI ) );
+		app.addDomain( valueFactory.createLiteral( "http://www.test.com/", SimpleValueFactory.getInstance().createIRI( XSD.Properties.STRING ) ) );
+		app.addDomain( valueFactory.createLiteral( "(http://|https://)www\\.regex\\d\\.com/[\\s\\S]*", SimpleValueFactory.getInstance().createIRI( C.Classes.REGULAR_EXPRESSION ) ) );
 		context.setApplication( null );
 	}
 
@@ -124,7 +123,7 @@ public class CORSAppContextFilterIT extends AbstractIT {
 		Mockito.when( request.getHeader( "Access-Control-Request-Method" ) ).thenReturn( "OPTIONS" );
 
 		setUp();
-		app.addDomain( new URIImpl( CS.Classes.ALL_ORIGINS ) );
+		app.addDomain( SimpleValueFactory.getInstance().createIRI( CS.Classes.ALL_ORIGINS ) );
 		applicationContextTemplate.runInAppContext( app, () -> {
 			try {
 				corsAppContextFilter.doFilter( request, response, chain );

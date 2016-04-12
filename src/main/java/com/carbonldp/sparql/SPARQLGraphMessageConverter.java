@@ -41,7 +41,7 @@ public class SPARQLGraphMessageConverter extends SPARQLMessageConverter<SPARQLGr
 		OutputStream outputStream;
 		try {
 			outputStream = outputMessage.getBody();
-			QueryResultIO.write( result, mediaTypeFormats.get( contentType ), outputStream );
+			QueryResultIO.writeGraph( result, mediaTypeFormats.get( contentType ), outputStream );
 			outputStream.flush();
 		} catch ( IOException e ) {
 			throw new RuntimeException( "unable to write response body, nested Exception: ", e );

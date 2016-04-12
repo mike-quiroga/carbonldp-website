@@ -3,34 +3,34 @@ package com.carbonldp.ldp.sources;
 import com.carbonldp.ldp.containers.AccessPoint;
 import com.carbonldp.rdf.RDFNodeEnum;
 import org.joda.time.DateTime;
-import org.openrdf.model.URI;
+import org.openrdf.model.IRI;
 
 import java.util.Set;
 
 public interface RDFSourceRepository {
-	public boolean exists( URI sourceURI );
+	public boolean exists( IRI sourceIRI );
 
-	public String getETag( URI sourceURI );
+	public String getETag( IRI sourceIRI );
 
-	public RDFSource get( URI sourceURI );
+	public RDFSource get( IRI sourceIRI );
 
-	public Set<RDFSource> get( Set<URI> sourceURIs );
+	public Set<RDFSource> get( Set<IRI> sourceIRIs );
 
-	public URI getDefaultInteractionModel( URI targetURI );
+	public IRI getDefaultInteractionModel( IRI targetIRI );
 
-	public DateTime getModified( URI sourceURI );
+	public DateTime getModified( IRI sourceIRI );
 
-	public DateTime touch( URI sourceURI );
+	public DateTime touch( IRI sourceIRI );
 
-	public DateTime touch( URI sourceURI, DateTime modified );
+	public DateTime touch( IRI sourceIRI, DateTime modified );
 
-	public void createAccessPoint( URI sourceURI, AccessPoint accessPoint );
+	public void createAccessPoint( IRI sourceIRI, AccessPoint accessPoint );
 
 	public void update( RDFSource source );
 
-	public void delete( URI sourceURI, boolean deleteOcurrences );
+	public void delete( IRI sourceIRI, boolean deleteOcurrences );
 
 	public void replace( RDFSource source );
 
-	boolean is( URI resourceURI, RDFNodeEnum type );
+	boolean is( IRI resourceIRI, RDFNodeEnum type );
 }

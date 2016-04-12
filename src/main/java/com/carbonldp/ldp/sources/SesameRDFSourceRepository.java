@@ -14,8 +14,8 @@ import com.carbonldp.utils.SPARQLUtil;
 import com.carbonldp.utils.ValueUtil;
 import org.apache.commons.lang3.text.StrSubstitutor;
 import org.joda.time.DateTime;
+import org.openrdf.model.IRI;
 import org.openrdf.model.Resource;
-import org.openrdf.model.URI;
 import org.openrdf.model.Value;
 import org.openrdf.model.impl.AbstractModel;
 import org.openrdf.model.impl.LinkedHashModel;
@@ -46,8 +46,8 @@ public class SesameRDFSourceRepository extends AbstractSesameLDPRepository imple
 		//@formatter:off
 		queryBuilder
 				.append( "ASK {" ).append( NEW_LINE )
-				.append( TAB ).append( "GRAPH ?sourceURI {" ).append( NEW_LINE )
-				.append( TAB ).append( TAB ).append( "?sourceURI ?p ?o" ).append( NEW_LINE )
+				.append( TAB ).append( "GRAPH ?sourceIRI {" ).append( NEW_LINE )
+				.append( TAB ).append( TAB ).append( "?sourceIRI ?p ?o" ).append( NEW_LINE )
 				.append( TAB ).append( "}" ).append( NEW_LINE )
 				.append( "}" )
 		;
@@ -56,9 +56,9 @@ public class SesameRDFSourceRepository extends AbstractSesameLDPRepository imple
 	}
 
 	@Override
-	public boolean exists( URI sourceURI ) {
+	public boolean exists( IRI sourceIRI ) {
 		Map<String, Value> bindings = new HashMap<>();
-		bindings.put( "sourceURI", sourceURI );
+		bindings.put( "sourceIRI", sourceIRI );
 		return sparqlTemplate.executeBooleanQuery( exists_query, bindings );
 	}
 
@@ -71,7 +71,7 @@ public class SesameRDFSourceRepository extends AbstractSesameLDPRepository imple
 				.append( "CONSTRUCT {" ).append( NEW_LINE )
 				.append( TAB ).append( "?s ?p ?o" ).append( NEW_LINE )
 				.append( "} WHERE {" ).append( NEW_LINE )
-				.append( TAB ).append( "GRAPH ?sourceURI {" ).append( NEW_LINE )
+				.append( TAB ).append( "GRAPH ?sourceIRI {" ).append( NEW_LINE )
 				.append( TAB ).append( TAB ).append( "?s ?p ?o" ).append( NEW_LINE )
 				.append( TAB ).append( "}" ).append( NEW_LINE )
 				.append( "}" )
@@ -81,22 +81,22 @@ public class SesameRDFSourceRepository extends AbstractSesameLDPRepository imple
 	}
 
 	@Override
-	public RDFSource get( URI sourceURI ) {
+	public RDFSource get( IRI sourceIRI ) {
 		Map<String, Value> bindings = new HashMap<>();
-		bindings.put( "sourceURI", sourceURI );
+		bindings.put( "sourceIRI", sourceIRI );
 		return sparqlTemplate.executeGraphQuery( get_query, bindings, queryResult -> {
 			AbstractModel model = new LinkedHashModel();
 			GraphQueryResultHandler handler = new DocumentGraphQueryResultHandler( model );
 			handler.handle( queryResult );
 
-			return new RDFSource( model, sourceURI );
+			return new RDFSource( model, sourceIRI );
 		} );
 	}
 
 	@Override
-	public String getETag( URI sourceURI ) {
+	public String getETag( IRI sourceIRI ) {
 		Map<String, Value> bindings = new HashMap<>();
-		bindings.put( "sourceURI", sourceURI );
+		bindings.put( "sourceIRI", sourceIRI );
 		return sparqlTemplate.executeGraphQuery( get_query, bindings, queryResult -> {
 			ETagHandler handler = new ETagHandler();
 			handler.handle( queryResult );
@@ -106,8 +106,8 @@ public class SesameRDFSourceRepository extends AbstractSesameLDPRepository imple
 
 	// TODO: Decide. Should it return empty objects?
 	@Override
-	public Set<RDFSource> get( Set<URI> sourceURIs ) {
-		Resource[] contexts = sourceURIs.toArray( new Resource[sourceURIs.size()] );
+	public Set<RDFSource> get( Set<IRI> sourceIRIs ) {
+		Resource[] contexts = sourceIRIs.toArray( new Resource[sourceIRIs.size()] );
 		AbstractModel sourcesModel = connectionTemplate.readStatements(
 			connection -> connection.getStatements( null, null, null, false, contexts ),
 			repositoryResult -> {
@@ -119,15 +119,15 @@ public class SesameRDFSourceRepository extends AbstractSesameLDPRepository imple
 			}
 		);
 
-		return sourceURIs
+		return sourceIRIs
 			.stream()
-			.map( sourceURI -> new RDFSource( sourcesModel, sourceURI ) )
+			.map( sourceIRI -> new RDFSource( sourcesModel, sourceIRI ) )
 			.collect( Collectors.toSet() );
 	}
 
 	@Override
-	public DateTime getModified( URI sourceURI ) {
-		return resourceRepository.getDate( sourceURI, RDFSourceDescription.Property.MODIFIED );
+	public DateTime getModified( IRI sourceIRI ) {
+		return resourceRepository.getDate( sourceIRI, RDFSourceDescription.Property.MODIFIED );
 	}
 
 	private static final String getDefaultInteractionModelQuery;
@@ -135,9 +135,9 @@ public class SesameRDFSourceRepository extends AbstractSesameLDPRepository imple
 	static {
 		getDefaultInteractionModelQuery = "" +
 			"SELECT ?dim WHERE {" + NEW_LINE +
-			TAB + "GRAPH ?sourceURI {" + NEW_LINE +
-			TAB + TAB + RDFNodeUtil.generatePredicateStatement( "?sourceURI", "?dim", RDFSourceDescription.Property.DEFAULT_INTERACTION_MODEL ) + NEW_LINE +
-			TAB + TAB + "FILTER( isURI(?dim) )." + NEW_LINE +
+			TAB + "GRAPH ?sourceIRI {" + NEW_LINE +
+			TAB + TAB + RDFNodeUtil.generatePredicateStatement( "?sourceIRI", "?dim", RDFSourceDescription.Property.DEFAULT_INTERACTION_MODEL ) + NEW_LINE +
+			TAB + TAB + "FILTER( isIRI(?dim) )." + NEW_LINE +
 			TAB + "}" + NEW_LINE +
 			"}" + NEW_LINE +
 			"LIMIT 1"
@@ -146,37 +146,37 @@ public class SesameRDFSourceRepository extends AbstractSesameLDPRepository imple
 
 	// TODO: Create a more generic method instead of this specific one
 	@Override
-	public URI getDefaultInteractionModel( URI sourceURI ) {
+	public IRI getDefaultInteractionModel( IRI sourceIRI ) {
 		Map<String, Value> bindings = new HashMap<>();
-		bindings.put( "sourceURI", sourceURI );
+		bindings.put( "sourceIRI", sourceIRI );
 		return sparqlTemplate.executeTupleQuery( getDefaultInteractionModelQuery, bindings, queryResult -> {
 			if ( ! queryResult.hasNext() ) return null;
-			else return ValueUtil.getURI( queryResult.next().getBinding( "dim" ).getValue() );
+			else return ValueUtil.getIRI( queryResult.next().getBinding( "dim" ).getValue() );
 		} );
 	}
 
 	@Override
-	public DateTime touch( URI sourceURI ) {
+	public DateTime touch( IRI sourceIRI ) {
 		DateTime now = DateTime.now();
-		return touch( sourceURI, now );
+		return touch( sourceIRI, now );
 	}
 
 	@Override
-	public DateTime touch( URI sourceURI, DateTime modified ) {
-		resourceRepository.remove( sourceURI, RDFSourceDescription.Property.MODIFIED );
-		resourceRepository.add( sourceURI, RDFSourceDescription.Property.MODIFIED.getURI(), modified );
+	public DateTime touch( IRI sourceIRI, DateTime modified ) {
+		resourceRepository.remove( sourceIRI, RDFSourceDescription.Property.MODIFIED );
+		resourceRepository.add( sourceIRI, RDFSourceDescription.Property.MODIFIED.getIRI(), modified );
 		return modified;
 	}
 
 	@Override
-	public void createAccessPoint( URI sourceURI, AccessPoint accessPoint ) {
+	public void createAccessPoint( IRI sourceIRI, AccessPoint accessPoint ) {
 		documentRepository.addDocument( accessPoint.getDocument() );
-		addAccessPoint( sourceURI, accessPoint );
+		addAccessPoint( sourceIRI, accessPoint );
 	}
 
-	private void addAccessPoint( URI sourceURI, AccessPoint accessPoint ) {
+	private void addAccessPoint( IRI sourceIRI, AccessPoint accessPoint ) {
 		connectionTemplate.write(
-			connection -> connection.add( sourceURI, RDFSourceDescription.Property.ACCESS_POINT.getURI(), accessPoint.getURI(), sourceURI )
+			connection -> connection.add( sourceIRI, RDFSourceDescription.Property.ACCESS_POINT.getIRI(), accessPoint.getIRI(), sourceIRI )
 		);
 	}
 
@@ -196,9 +196,9 @@ public class SesameRDFSourceRepository extends AbstractSesameLDPRepository imple
 	}
 
 	@Override
-	public boolean is( URI resourceURI, RDFNodeEnum type ) {
+	public boolean is( IRI resourceIRI, RDFNodeEnum type ) {
 		Map<String, Value> bindings = new LinkedHashMap<>();
-		bindings.put( "resource", resourceURI );
+		bindings.put( "resource", resourceIRI );
 
 		Map<String, String> values = new HashMap<>();
 		values.put( "values", SPARQLUtil.assignVar( "rdfType", type ) );
@@ -208,25 +208,25 @@ public class SesameRDFSourceRepository extends AbstractSesameLDPRepository imple
 	}
 
 	@Override
-	public void delete( URI sourceURI, boolean deleteOccurrences ) {
+	public void delete( IRI sourceIRI, boolean deleteOccurrences ) {
 		Map<String, Value> bindings = new HashMap<>();
-		bindings.put( "sourceURI", sourceURI );
+		bindings.put( "sourceURI", sourceIRI );
 
 		connectionTemplate.write( connection -> {
 			RepositoryResult<Resource> contexts = connection.getContextIDs();
-			Set<URI> filteredContexts = new HashSet<>();
+			Set<IRI> filteredContexts = new HashSet<>();
 			while ( contexts.hasNext() ) {
 				Resource context = contexts.next();
-				if ( context.stringValue().startsWith( sourceURI.stringValue() ) ) {
-					if ( ! ValueUtil.isURI( context ) ) throw new IllegalStateException();
-					URI contextURI = ValueUtil.getURI( context );
-					filteredContexts.add( contextURI );
+				if ( context.stringValue().startsWith( sourceIRI.stringValue() ) ) {
+					if ( ! ValueUtil.isIRI( context ) ) throw new IllegalStateException();
+					IRI contextIRI = ValueUtil.getIRI( context );
+					filteredContexts.add( contextIRI );
 				}
 			}
 
 			for ( Resource context : filteredContexts ) connection.remove( (Resource) null, null, null, context );
 			if ( deleteOccurrences ) {
-				for ( URI context : filteredContexts ) {
+				for ( IRI context : filteredContexts ) {
 					connection.remove( (Resource) null, null, context );
 					connection.remove( (Resource) null, context, null );
 				}

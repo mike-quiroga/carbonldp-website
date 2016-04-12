@@ -1,6 +1,6 @@
 package com.carbonldp.ldp.nonrdf;
 
-import org.openrdf.model.URI;
+import org.openrdf.model.IRI;
 
 import java.util.Set;
 
@@ -10,7 +10,7 @@ import java.util.Set;
  */
 public interface NonRDFSourceRepository {
 
-	public Set<String> getFileIdentifiers( URI rdfRepresentationURI );
+	public Set<String> getFileIdentifiers( IRI rdfRepresentationIRI );
 
-	public void delete( URI rdfRepresentationURI );
+	public void delete( IRI rdfRepresentationIRI );
 }

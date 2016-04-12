@@ -2,13 +2,16 @@ package com.carbonldp.ldp.containers;
 
 import com.carbonldp.descriptions.APIPreferences;
 import com.carbonldp.exceptions.InvalidResourceException;
+import com.carbonldp.exceptions.StupidityException;
 import com.carbonldp.ldp.web.AbstractRequestWithBodyHandler;
 import com.carbonldp.models.EmptyResponse;
 import com.carbonldp.models.Infraction;
 import com.carbonldp.rdf.RDFDocument;
 import com.carbonldp.rdf.RDFResource;
 import com.carbonldp.web.exceptions.NotFoundException;
-import org.openrdf.model.URI;
+import org.openrdf.model.IRI;
+import org.openrdf.model.Resource;
+import org.openrdf.model.util.Models;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -26,20 +29,22 @@ public abstract class AbstractPUTRequestHandler<E extends RDFResource> extends A
 	public ResponseEntity<Object> handleRequest( RDFDocument requestDocument, HttpServletRequest request, HttpServletResponse response ) {
 		setUp( request, response );
 
-		URI targetURI = getTargetURI( request );
-		if ( ! targetResourceExists( targetURI ) ) {
+		IRI targetIRI = getTargetIRI( request );
+		if ( ! targetResourceExists( targetIRI ) ) {
 			throw new NotFoundException();
 		}
 
 		validateRequest( requestDocument );
-		AddMembersAction membersAction = new AddMembersAction( requestDocument.getBaseModel(), requestDocument.subjectResource() );
-		executeAction( targetURI, membersAction );
+		Resource subject = Models.subject( requestDocument ).orElse( null );
+		if ( subject == null ) throw new StupidityException( "The model wasn't validated like it should" );
+		AddMembersAction membersAction = new AddMembersAction( requestDocument.getBaseModel(), subject );
+		executeAction( targetIRI, membersAction );
 
 		addTypeLinkHeader( APIPreferences.InteractionModel.RDF_SOURCE );
-		return createSuccessfulResponse( targetURI );
+		return createSuccessfulResponse( targetIRI );
 	}
 
-	protected abstract void executeAction( URI targetUri, AddMembersAction members );
+	protected abstract void executeAction( IRI targetUri, AddMembersAction members );
 
 	protected void validateRequest( RDFDocument requestDocument ) {
 		List<Infraction> infractions = new ArrayList<>();
@@ -48,8 +53,8 @@ public abstract class AbstractPUTRequestHandler<E extends RDFResource> extends A
 		if ( ! infractions.isEmpty() ) throw new InvalidResourceException( infractions );
 	}
 
-	protected ResponseEntity<Object> createSuccessfulResponse( URI affectedResourceURI ) {
-		String eTag = sourceService.getETag( affectedResourceURI );
+	protected ResponseEntity<Object> createSuccessfulResponse( IRI affectedResourceIRI ) {
+		String eTag = sourceService.getETag( affectedResourceIRI );
 
 		setStrongETagHeader( eTag );
 		return new ResponseEntity<>( new EmptyResponse(), HttpStatus.OK );

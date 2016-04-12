@@ -3,10 +3,11 @@ package com.carbonldp.authentication;
 import com.carbonldp.apps.AppRole;
 import com.carbonldp.apps.roles.AppRolesHolder;
 import com.carbonldp.authorization.Platform;
-import org.openrdf.model.URI;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 public final class AnonymousAuthenticationToken extends AbstractAuthenticationToken implements AppRolesHolder {
 

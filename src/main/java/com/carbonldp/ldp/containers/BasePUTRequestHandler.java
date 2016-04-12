@@ -4,7 +4,7 @@ import com.carbonldp.exceptions.InvalidResourceException;
 import com.carbonldp.models.Infraction;
 import com.carbonldp.rdf.RDFResource;
 import com.carbonldp.web.RequestHandler;
-import org.openrdf.model.URI;
+import org.openrdf.model.IRI;
 
 import java.util.List;
 
@@ -16,7 +16,7 @@ import java.util.List;
 public class BasePUTRequestHandler extends AbstractPUTRequestHandler<RDFResource> {
 
 	@Override
-	protected void executeAction( URI targetUri, AddMembersAction members ) {
+	protected void executeAction( IRI targetUri, AddMembersAction members ) {
 		validate( members );
 		containerService.addMembers( targetUri, members.getMembers() );
 	}
