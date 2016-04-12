@@ -1,7 +1,9 @@
 package com.carbonldp.web.converters;
 
 import com.carbonldp.HTTPHeaders;
+import com.carbonldp.utils.HTTPUtil;
 import com.carbonldp.utils.MediaTypeUtil;
+import com.carbonldp.utils.ModelUtil;
 import org.openrdf.model.Model;
 import org.openrdf.model.Statement;
 import org.openrdf.rio.RDFFormat;
@@ -175,4 +177,9 @@ public abstract class ModelMessageConverter<E extends Model> implements HttpMess
 		this.supportedFormats = supportedFormats;
 	}
 
+	protected void setETagHeader( Model model, HttpHeaders headers ) {
+		int eTag = ModelUtil.calculateETag( model );
+		String headerETag = HTTPUtil.formatStrongEtag( eTag );
+		headers.set( HTTPHeaders.ETAG, headerETag );
+	}
 }

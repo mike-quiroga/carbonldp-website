@@ -6,7 +6,7 @@ import com.carbonldp.apps.roles.AppRoleService;
 import com.carbonldp.ldp.containers.BasicContainer;
 import com.carbonldp.ldp.web.AbstractRDFPostRequestHandler;
 import com.carbonldp.web.RequestHandler;
-import org.openrdf.model.URI;
+import org.openrdf.model.IRI;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
@@ -24,7 +24,7 @@ public class AppRolesPOSTHandler extends AbstractRDFPostRequestHandler<AppRole> 
 	}
 
 	@Override
-	protected void createChild( URI targetURI, AppRole documentResourceView ) {
+	protected void createChild( IRI targetIRI, AppRole documentResourceView ) {
 		appRoleService.create( documentResourceView );
 	}
 

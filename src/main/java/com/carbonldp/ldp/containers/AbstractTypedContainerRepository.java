@@ -1,6 +1,7 @@
 package com.carbonldp.ldp.containers;
 
 import com.carbonldp.ldp.AbstractSesameLDPRepository;
+import com.carbonldp.ldp.sources.RDFSourceDescription;
 import com.carbonldp.rdf.RDFDocumentRepository;
 import com.carbonldp.rdf.RDFResourceRepository;
 import com.carbonldp.repository.DocumentGraphQueryResultHandler;
@@ -8,20 +9,16 @@ import com.carbonldp.repository.GraphQueryResultHandler;
 import com.carbonldp.utils.RDFNodeUtil;
 import com.carbonldp.utils.SPARQLUtil;
 import com.carbonldp.utils.ValueUtil;
+import org.openrdf.model.IRI;
 import org.openrdf.model.Statement;
-import org.openrdf.model.URI;
 import org.openrdf.model.Value;
 import org.openrdf.query.BindingSet;
 import org.openrdf.spring.SesameConnectionFactory;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
-import static com.carbonldp.Consts.NEW_LINE;
-import static com.carbonldp.Consts.TAB;
+import static com.carbonldp.Consts.*;
 
 @Transactional
 public abstract class AbstractTypedContainerRepository extends AbstractSesameLDPRepository implements TypedContainerRepository {
@@ -31,17 +28,17 @@ public abstract class AbstractTypedContainerRepository extends AbstractSesameLDP
 		super( connectionFactory, resourceRepository, documentRepository );
 	}
 
-	protected boolean isMember( URI containerURI, URI possibleMemberURI, String isMember_query ) {
+	protected boolean isMember( IRI containerIRI, IRI possibleMemberIRI, String isMember_query ) {
 		Map<String, Value> bindings = new HashMap<>();
-		bindings.put( "containerURI", containerURI );
-		bindings.put( "member", possibleMemberURI );
+		bindings.put( "containerIRI", containerIRI );
+		bindings.put( "member", possibleMemberIRI );
 		return sparqlTemplate.executeBooleanQuery( isMember_query, bindings );
 	}
 
-	protected boolean hasMembers( URI containerURI, String sparqlSelector, Map<String, Value> bindings, String hasMembersQuery ) {
+	protected boolean hasMembers( IRI containerIRI, String sparqlSelector, Map<String, Value> bindings, String hasMembersQuery ) {
 		String queryString = String.format( hasMembersQuery, sparqlSelector );
 
-		bindings.put( "containerURI", containerURI );
+		bindings.put( "containerIRI", containerIRI );
 
 		return sparqlTemplate.executeBooleanQuery( queryString, bindings );
 	}
@@ -52,9 +49,9 @@ public abstract class AbstractTypedContainerRepository extends AbstractSesameLDP
 		StringBuilder queryBuilder = new StringBuilder();
 		queryBuilder
 			.append( "SELECT ?hasMemberRelation WHERE {" ).append( NEW_LINE )
-			.append( TAB ).append( "GRAPH ?containerURI {" ).append( NEW_LINE )
-			.append( TAB ).append( TAB ).append( RDFNodeUtil.generatePredicateStatement( "?containerURI", "?hasMemberRelation", ContainerDescription.Property.HAS_MEMBER_RELATION ) ).append( NEW_LINE )
-			.append( TAB ).append( TAB ).append( "FILTER(isURI(?hasMemberRelation))." ).append( NEW_LINE )
+			.append( TAB ).append( "GRAPH ?containerIRI {" ).append( NEW_LINE )
+			.append( TAB ).append( TAB ).append( RDFNodeUtil.generatePredicateStatement( "?containerIRI", "?hasMemberRelation", ContainerDescription.Property.HAS_MEMBER_RELATION ) ).append( NEW_LINE )
+			.append( TAB ).append( TAB ).append( "FILTER(isIRI(?hasMemberRelation))." ).append( NEW_LINE )
 			.append( TAB ).append( "}" ).append( NEW_LINE )
 			.append( "}" ).append( NEW_LINE )
 			.append( "LIMIT 1" )
@@ -63,13 +60,13 @@ public abstract class AbstractTypedContainerRepository extends AbstractSesameLDP
 	}
 
 	// TODO: Create a more generic method instead of this specific one
-	protected URI getHasMemberRelation( URI containerURI ) {
+	protected IRI getHasMemberRelation( IRI containerIRI ) {
 		Map<String, Value> bindings = new HashMap<>();
-		bindings.put( "containerURI", containerURI );
+		bindings.put( "containerIRI", containerIRI );
 
 		return sparqlTemplate.executeTupleQuery( getHasMemberRelation_query, bindings, queryResult -> {
-			if ( ! queryResult.hasNext() ) return ContainerDescription.Default.HAS_MEMBER_RELATION.getURI();
-			else return ValueUtil.getURI( queryResult.next().getBinding( "hasMemberRelation" ).getValue() );
+			if ( ! queryResult.hasNext() ) return ContainerDescription.Default.HAS_MEMBER_RELATION.getIRI();
+			else return ValueUtil.getIRI( queryResult.next().getBinding( "hasMemberRelation" ).getValue() );
 		} );
 	}
 
@@ -79,9 +76,9 @@ public abstract class AbstractTypedContainerRepository extends AbstractSesameLDP
 		StringBuilder queryBuilder = new StringBuilder();
 		queryBuilder
 			.append( "SELECT ?memberOfRelation WHERE {" ).append( NEW_LINE )
-			.append( TAB ).append( "GRAPH ?containerURI {" ).append( NEW_LINE )
-			.append( TAB ).append( TAB ).append( RDFNodeUtil.generatePredicateStatement( "?containerURI", "?memberOfRelation", ContainerDescription.Property.MEMBER_OF_RELATION ) ).append( NEW_LINE )
-			.append( TAB ).append( TAB ).append( "FILTER(isURI(?memberOfRelation))." ).append( NEW_LINE )
+			.append( TAB ).append( "GRAPH ?containerIRI {" ).append( NEW_LINE )
+			.append( TAB ).append( TAB ).append( RDFNodeUtil.generatePredicateStatement( "?containerIRI", "?memberOfRelation", ContainerDescription.Property.MEMBER_OF_RELATION ) ).append( NEW_LINE )
+			.append( TAB ).append( TAB ).append( "FILTER(isIRI(?memberOfRelation))." ).append( NEW_LINE )
 			.append( TAB ).append( "}" ).append( NEW_LINE )
 			.append( "}" ).append( NEW_LINE )
 			.append( "LIMIT 1" )
@@ -90,19 +87,19 @@ public abstract class AbstractTypedContainerRepository extends AbstractSesameLDP
 	}
 
 	// TODO: Create a more generic method instead of this specific one
-	protected URI getMemberOfRelation( URI containerURI ) {
+	protected IRI getMemberOfRelation( IRI containerIRI ) {
 		Map<String, Value> bindings = new HashMap<>();
-		bindings.put( "containerURI", containerURI );
+		bindings.put( "containerIRI", containerIRI );
 
 		return sparqlTemplate.executeTupleQuery( getMemberOfRelation_query, bindings, queryResult -> {
 			if ( ! queryResult.hasNext() ) return null;
-			else return ValueUtil.getURI( queryResult.next().getBinding( "memberOfRelation" ).getValue() );
+			else return ValueUtil.getIRI( queryResult.next().getBinding( "memberOfRelation" ).getValue() );
 		} );
 	}
 
-	protected Set<Statement> getProperties( URI containerURI, String getProperties_query ) {
+	protected Set<Statement> getProperties( IRI containerIRI, String getProperties_query ) {
 		Map<String, Value> bindings = new HashMap<>();
-		bindings.put( "containerURI", containerURI );
+		bindings.put( "containerIRI", containerIRI );
 
 		return sparqlTemplate.executeGraphQuery( getProperties_query, bindings, queryResult -> {
 			Set<Statement> statements = new HashSet<>();
@@ -112,9 +109,9 @@ public abstract class AbstractTypedContainerRepository extends AbstractSesameLDP
 		} );
 	}
 
-	protected Set<Statement> getMembershipTriples( URI containerURI, String getMembershipTriples_query ) {
+	protected Set<Statement> getMembershipTriples( IRI containerIRI, String getMembershipTriples_query ) {
 		Map<String, Value> bindings = new HashMap<>();
-		bindings.put( "containerURI", containerURI );
+		bindings.put( "containerIRI", containerIRI );
 
 		return sparqlTemplate.executeGraphQuery( getMembershipTriples_query, bindings, queryResult -> {
 			Set<Statement> statements = new HashSet<>();
@@ -124,78 +121,78 @@ public abstract class AbstractTypedContainerRepository extends AbstractSesameLDP
 		} );
 	}
 
-	protected Set<URI> findMembers( URI containerURI, String sparqlSelector, Map<String, Value> bindings, String findMembers_query ) {
+	protected Set<IRI> findMembers( IRI containerIRI, String sparqlSelector, Map<String, Value> bindings, String findMembers_query ) {
 		String queryString = String.format( findMembers_query, sparqlSelector );
 
-		bindings.put( "containerURI", containerURI );
+		bindings.put( "containerIRI", containerIRI );
 
 		return sparqlTemplate.executeTupleQuery( queryString, bindings, queryResult -> {
-			Set<URI> members = new HashSet<>();
+			Set<IRI> members = new HashSet<>();
 			while ( queryResult.hasNext() ) {
 				BindingSet bindingSet = queryResult.next();
 				Value member = bindingSet.getValue( "members" );
-				if ( ValueUtil.isURI( member ) ) members.add( ValueUtil.getURI( member ) );
+				if ( ValueUtil.isIRI( member ) ) members.add( ValueUtil.getIRI( member ) );
 			}
 			return members;
 		} );
 	}
 
-	protected Set<URI> filterMembers( URI containerURI, Set<URI> possibleMemberURIs, String filterMembers_query ) {
-		if ( possibleMemberURIs.isEmpty() ) return new HashSet<>();
+	protected Set<IRI> filterMembers( IRI containerIRI, Set<IRI> possibleMemberIRIs, String filterMembers_query ) {
+		if ( possibleMemberIRIs.isEmpty() ) return new HashSet<>();
 
-		String queryString = String.format( filterMembers_query, SPARQLUtil.generateFilterInPlaceHolder( "?members", possibleMemberURIs.size() ) );
+		String queryString = String.format( filterMembers_query, SPARQLUtil.generateFilterInPlaceHolder( "?members", possibleMemberIRIs.size() ) );
 
 		Map<String, Value> bindings = new HashMap<>();
-		bindings.put( "containerURI", containerURI );
-		SPARQLUtil.addSequentialBindings( bindings, possibleMemberURIs );
+		bindings.put( "containerIRI", containerIRI );
+		SPARQLUtil.addSequentialBindings( bindings, possibleMemberIRIs );
 
 		return sparqlTemplate.executeTupleQuery( queryString, bindings, queryResult -> {
-			Set<URI> members = new HashSet<>();
+			Set<IRI> members = new HashSet<>();
 			while ( queryResult.hasNext() ) {
 				BindingSet bindingSet = queryResult.next();
 				Value member = bindingSet.getValue( "members" );
-				if ( ValueUtil.isURI( member ) ) members.add( ValueUtil.getURI( member ) );
+				if ( ValueUtil.isIRI( member ) ) members.add( ValueUtil.getIRI( member ) );
 			}
 
 			return members;
 		} );
 	}
 
-	protected void addHasMemberRelation( URI containerURI, URI memberURI ) {
-		URI hasMemberRelation = getHasMemberRelation( containerURI );
-		URI membershipResource = getMembershipResource( containerURI );
+	protected void addHasMemberRelation( IRI containerIRI, IRI memberIRI ) {
+		IRI hasMemberRelation = getHasMemberRelation( containerIRI );
+		IRI membershipResource = getMembershipResource( containerIRI );
 
-		this.addHasMemberRelation( membershipResource, hasMemberRelation, memberURI );
+		this.addHasMemberRelation( membershipResource, hasMemberRelation, memberIRI );
 	}
 
-	protected void addHasMemberRelation( URI membershipResource, URI hasMemberRelation, URI memberURI ) {
-		connectionTemplate.write( connection -> connection.add( membershipResource, hasMemberRelation, memberURI, membershipResource ) );
+	protected void addHasMemberRelation( IRI membershipResource, IRI hasMemberRelation, IRI memberIRI ) {
+		connectionTemplate.write( connection -> connection.add( membershipResource, hasMemberRelation, memberIRI, membershipResource ) );
 	}
 
-	protected void addMemberOfRelation( URI containerURI, URI member ) {
-		URI memberOfRelation = getMemberOfRelation( containerURI );
-		URI membershipResource = getMembershipResource( containerURI );
+	protected void addMemberOfRelation( IRI containerIRI, IRI member ) {
+		IRI memberOfRelation = getMemberOfRelation( containerIRI );
+		IRI membershipResource = getMembershipResource( containerIRI );
 		if ( memberOfRelation != null ) connectionTemplate.write( connection -> connection.add( member, memberOfRelation, membershipResource, member ) );
 	}
 
 	@Override
-	public void addMember( URI containerURI, URI member ) {
-		addHasMemberRelation( containerURI, member );
+	public void addMember( IRI containerIRI, IRI member ) {
+		addHasMemberRelation( containerIRI, member );
 		// TODO: check for permissions, pending design
-		addMemberOfRelation( containerURI, member );
+		addMemberOfRelation( containerIRI, member );
 	}
 
 	@Override
-	public void removeMember( URI containerURI, URI memberURI ) {
-		URI hasMemberRelation = getHasMemberRelation( containerURI );
-		URI membershipResource = getMembershipResource( containerURI );
+	public void removeMember( IRI containerIRI, IRI memberIRI ) {
+		IRI hasMemberRelation = getHasMemberRelation( containerIRI );
+		IRI membershipResource = getMembershipResource( containerIRI );
 
-		this.deleteMembershipTriple( membershipResource, hasMemberRelation, memberURI );
+		this.deleteMembershipTriple( membershipResource, hasMemberRelation, memberIRI );
 
 	}
 
-	protected void deleteMembershipTriple( URI membershipResource, URI hasMemberRelation, URI memberURI ) {
-		connectionTemplate.write( connection -> connection.remove( membershipResource, hasMemberRelation, memberURI, membershipResource ) );
+	protected void deleteMembershipTriple( IRI membershipResource, IRI hasMemberRelation, IRI memberIRI ) {
+		connectionTemplate.write( connection -> connection.remove( membershipResource, hasMemberRelation, memberIRI, membershipResource ) );
 	}
 
 	protected static String getHasMemberRelationSPARQL( String containerVar, String hasMemberRelationVar, int numberOfTabs ) {
@@ -211,6 +208,28 @@ public abstract class AbstractTypedContainerRepository extends AbstractSesameLDP
 			tabs + "BIND( IF( BOUND( ?hmr ), ?hmr, ?defaultHasMemberRelation ) AS " + hasMemberRelationVar + ")"
 		;
 		return sparql;
+	}
+
+	protected static final String getPropertiesQuery;
+
+	static {
+		Collection<IRI> values = new HashSet<>();
+		values.add( RDFSourceDescription.Property.TYPE.getIRI() );
+		values.add( ContainerDescription.Property.HAS_MEMBER_RELATION.getIRI() );
+		values.add( ContainerDescription.Property.MEMBER_OF_RELATION.getIRI() );
+		values.add( ContainerDescription.Property.MEMBERSHIP_RESOURCE.getIRI() );
+		values.add( ContainerDescription.Property.INSERTED_CONTENT_RELATION.getIRI() );
+
+		getPropertiesQuery = "" +
+			"CONSTRUCT {" + NEW_LINE +
+			TAB + "?containerIRI ?p ?o" + NEW_LINE +
+			"} WHERE {" + NEW_LINE +
+			TAB + "GRAPH ?containerIRI {" + NEW_LINE +
+			TAB + TAB + "?containerIRI ?p ?o." + NEW_LINE +
+			TAB + "}" + NEW_LINE +
+			TAB + SPARQLUtil.assignVar( "?p", values ) +
+			"}"
+		;
 	}
 
 }

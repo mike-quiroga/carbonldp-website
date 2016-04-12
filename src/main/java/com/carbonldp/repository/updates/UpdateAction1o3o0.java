@@ -6,8 +6,7 @@ import com.carbonldp.ldp.sources.RDFSourceDescription;
 
 import java.util.Set;
 
-import static com.carbonldp.Consts.NEW_LINE;
-import static com.carbonldp.Consts.TAB;
+import static com.carbonldp.Consts.*;
 
 /**
  * @author JorgeEspinosa
@@ -18,11 +17,11 @@ public class UpdateAction1o3o0 extends AbstractUpdateAction {
 	final String updateACLTripleQuery = "" +
 		"INSERT {" + NEW_LINE +
 		TAB + "GRAPH ?target {" + NEW_LINE +
-		TAB + TAB + "?target <" + RDFSourceDescription.Property.ACCESS_CONTROL_LIST.getURI().stringValue() + "> ?acl." + NEW_LINE +
+		TAB + TAB + "?target <" + RDFSourceDescription.Property.ACCESS_CONTROL_LIST.getIRI().stringValue() + "> ?acl." + NEW_LINE +
 		TAB + "}." + NEW_LINE +
 		"} WHERE {" + NEW_LINE +
 		TAB + "GRAPH ?acl {" + NEW_LINE +
-		TAB + TAB + "?acl <" + ACLDescription.Property.ACCESS_TO.getURI().stringValue() + "> ?target." + NEW_LINE +
+		TAB + TAB + "?acl <" + ACLDescription.Property.ACCESS_TO.getIRI().stringValue() + "> ?target." + NEW_LINE +
 		TAB + "}." + NEW_LINE +
 		"}";
 

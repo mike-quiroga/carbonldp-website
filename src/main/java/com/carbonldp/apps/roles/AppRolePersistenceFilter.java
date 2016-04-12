@@ -1,7 +1,6 @@
 package com.carbonldp.apps.roles;
 
 import com.carbonldp.agents.Agent;
-import com.carbonldp.apps.App;
 import com.carbonldp.apps.AppRole;
 import com.carbonldp.apps.context.AppContext;
 import com.carbonldp.apps.context.AppContextHolder;

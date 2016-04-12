@@ -2,7 +2,7 @@ package com.carbonldp.ldp.web;
 
 import com.carbonldp.ldp.containers.BasicContainer;
 import com.carbonldp.web.RequestHandler;
-import org.openrdf.model.URI;
+import org.openrdf.model.IRI;
 
 @RequestHandler
 public class BaseRDFPostRequestHandler extends AbstractRDFPostRequestHandler<BasicContainer> {
@@ -12,7 +12,7 @@ public class BaseRDFPostRequestHandler extends AbstractRDFPostRequestHandler<Bas
 	}
 
 	@Override
-	protected void createChild( URI targetURI, BasicContainer documentResourceView ) {
-		containerService.createChild( targetURI, documentResourceView );
+	protected void createChild( IRI targetIRI, BasicContainer documentResourceView ) {
+		containerService.createChild( targetIRI, documentResourceView );
 	}
 }

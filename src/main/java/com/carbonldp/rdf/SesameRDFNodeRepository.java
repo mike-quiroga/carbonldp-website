@@ -8,7 +8,7 @@ import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.ISODateTimeFormat;
 import org.openrdf.model.*;
-import org.openrdf.model.impl.ValueFactoryImpl;
+import org.openrdf.model.impl.SimpleValueFactory;
 import org.openrdf.spring.SesameConnectionFactory;
 
 import java.util.Collection;
@@ -25,39 +25,39 @@ public abstract class SesameRDFNodeRepository<T extends Resource> extends Abstra
 		super( connectionFactory );
 	}
 
-	public boolean hasProperty( T subject, URI pred, URI documentURI ) {
-		return statementExists( connection -> connection.getStatements( subject, pred, null, false, documentURI ) );
+	public boolean hasProperty( T subject, IRI pred, IRI documentIRI ) {
+		return statementExists( connection -> connection.getStatements( subject, pred, null, false, documentIRI ) );
 	}
 
-	public boolean hasProperty( T subject, RDFNodeEnum pred, URI documentURI ) {
-		for ( URI predURI : pred.getURIs() ) {
+	public boolean hasProperty( T subject, RDFNodeEnum pred, IRI documentIRI ) {
+		for ( IRI predIRI : pred.getIRIs() ) {
 			boolean hasProperty = statementExists(
-				connection -> connection.getStatements( subject, predURI, null, false, documentURI )
+				connection -> connection.getStatements( subject, predIRI, null, false, documentIRI )
 			);
 			if ( hasProperty ) return true;
 		}
 		return false;
 	}
 
-	public boolean contains( T subject, URI pred, Value obj, URI documentURI ) {
-		return statementExists( connection -> connection.getStatements( subject, pred, obj, false, documentURI ) );
+	public boolean contains( T subject, IRI pred, Value obj, IRI documentIRI ) {
+		return statementExists( connection -> connection.getStatements( subject, pred, obj, false, documentIRI ) );
 	}
 
-	public boolean contains( T subject, RDFNodeEnum pred, Value obj, URI documentURI ) {
-		for ( URI predURI : pred.getURIs() ) {
+	public boolean contains( T subject, RDFNodeEnum pred, Value obj, IRI documentIRI ) {
+		for ( IRI predIRI : pred.getIRIs() ) {
 			boolean hasProperty = statementExists(
-				connection -> connection.getStatements( subject, predURI, obj, false, documentURI )
+				connection -> connection.getStatements( subject, predIRI, obj, false, documentIRI )
 			);
 			if ( hasProperty ) return true;
 		}
 		return false;
 	}
 
-	public boolean contains( T subject, RDFNodeEnum pred, RDFNodeEnum obj, URI documentURI ) {
-		for ( URI predURI : pred.getURIs() ) {
-			for ( URI objValue : obj.getURIs() ) {
+	public boolean contains( T subject, RDFNodeEnum pred, RDFNodeEnum obj, IRI documentIRI ) {
+		for ( IRI predIRI : pred.getIRIs() ) {
+			for ( IRI objValue : obj.getIRIs() ) {
 				boolean hasProperty = statementExists(
-					connection -> connection.getStatements( subject, predURI, objValue, false, documentURI )
+					connection -> connection.getStatements( subject, predIRI, objValue, false, documentIRI )
 				);
 				if ( hasProperty ) return true;
 			}
@@ -72,9 +72,9 @@ public abstract class SesameRDFNodeRepository<T extends Resource> extends Abstra
 		);
 	}
 
-	public Value getProperty( T subject, URI pred, URI documentURI ) {
+	public Value getProperty( T subject, IRI pred, IRI documentIRI ) {
 		return connectionTemplate.readStatements(
-			connection -> connection.getStatements( subject, pred, null, false, documentURI ),
+			connection -> connection.getStatements( subject, pred, null, false, documentIRI ),
 			statements -> {
 				if ( ! statements.hasNext() ) return null;
 				return statements.next().getObject();
@@ -82,10 +82,10 @@ public abstract class SesameRDFNodeRepository<T extends Resource> extends Abstra
 		);
 	}
 
-	public Value getProperty( T subject, RDFNodeEnum pred, URI documentURI ) {
-		for ( URI predURI : pred.getURIs() ) {
+	public Value getProperty( T subject, RDFNodeEnum pred, IRI documentIRI ) {
+		for ( IRI predIRI : pred.getIRIs() ) {
 			Value object = connectionTemplate.readStatements(
-				connection -> connection.getStatements( subject, predURI, null, false, documentURI ),
+				connection -> connection.getStatements( subject, predIRI, null, false, documentIRI ),
 				statements -> {
 					if ( ! statements.hasNext() ) return null;
 					return statements.next().getObject();
@@ -96,9 +96,9 @@ public abstract class SesameRDFNodeRepository<T extends Resource> extends Abstra
 		return null;
 	}
 
-	public Set<Value> getProperties( T subject, URI pred, URI documentURI ) {
+	public Set<Value> getProperties( T subject, IRI pred, IRI documentIRI ) {
 		return connectionTemplate.readStatements(
-			connection -> connection.getStatements( subject, pred, null, false, documentURI ),
+			connection -> connection.getStatements( subject, pred, null, false, documentIRI ),
 			statements -> {
 				Set<Value> properties = new HashSet<>();
 				while ( statements.hasNext() ) {
@@ -109,11 +109,11 @@ public abstract class SesameRDFNodeRepository<T extends Resource> extends Abstra
 		);
 	}
 
-	public Set<Value> getProperties( T subject, RDFNodeEnum pred, URI documentURI ) {
+	public Set<Value> getProperties( T subject, RDFNodeEnum pred, IRI documentIRI ) {
 		Set<Value> properties = new HashSet<>();
-		for ( URI predURI : pred.getURIs() ) {
+		for ( IRI predIRI : pred.getIRIs() ) {
 			connectionTemplate.readStatements(
-				connection -> connection.getStatements( subject, predURI, null, false, documentURI ),
+				connection -> connection.getStatements( subject, predIRI, null, false, documentIRI ),
 				statements -> {
 					while ( statements.hasNext() ) {
 						properties.add( statements.next().getObject() );
@@ -125,27 +125,27 @@ public abstract class SesameRDFNodeRepository<T extends Resource> extends Abstra
 		return properties;
 	}
 
-	public URI getURI( T subject, URI pred, URI documentURI ) {
+	public IRI getIRI( T subject, IRI pred, IRI documentIRI ) {
 		return connectionTemplate.readStatements(
-			connection -> connection.getStatements( subject, pred, null, false, documentURI ),
+			connection -> connection.getStatements( subject, pred, null, false, documentIRI ),
 			statements -> {
 				while ( statements.hasNext() ) {
 					Value value = statements.next().getObject();
-					if ( ValueUtil.isURI( value ) ) return ValueUtil.getURI( value );
+					if ( ValueUtil.isIRI( value ) ) return ValueUtil.getIRI( value );
 				}
 				return null;
 			}
 		);
 	}
 
-	public URI getURI( T subject, RDFNodeEnum pred, URI documentURI ) {
-		for ( URI predURI : pred.getURIs() ) {
-			URI object = connectionTemplate.readStatements(
-				connection -> connection.getStatements( subject, predURI, null, false, documentURI ),
+	public IRI getIRI( T subject, RDFNodeEnum pred, IRI documentIRI ) {
+		for ( IRI predIRI : pred.getIRIs() ) {
+			IRI object = connectionTemplate.readStatements(
+				connection -> connection.getStatements( subject, predIRI, null, false, documentIRI ),
 				statements -> {
 					while ( statements.hasNext() ) {
 						Value value = statements.next().getObject();
-						if ( ValueUtil.isURI( value ) ) return ValueUtil.getURI( value );
+						if ( ValueUtil.isIRI( value ) ) return ValueUtil.getIRI( value );
 					}
 					return null;
 				}
@@ -155,29 +155,29 @@ public abstract class SesameRDFNodeRepository<T extends Resource> extends Abstra
 		return null;
 	}
 
-	public Set<URI> getURIs( T subject, URI pred, URI documentURI ) {
+	public Set<IRI> getIRIs( T subject, IRI pred, IRI documentIRI ) {
 		return connectionTemplate.readStatements(
-			connection -> connection.getStatements( subject, pred, null, false, documentURI ),
+			connection -> connection.getStatements( subject, pred, null, false, documentIRI ),
 			statements -> {
-				Set<URI> properties = new HashSet<>();
+				Set<IRI> properties = new HashSet<>();
 				while ( statements.hasNext() ) {
 					Value value = statements.next().getObject();
-					if ( ValueUtil.isURI( value ) ) properties.add( ValueUtil.getURI( value ) );
+					if ( ValueUtil.isIRI( value ) ) properties.add( ValueUtil.getIRI( value ) );
 				}
 				return properties;
 			}
 		);
 	}
 
-	public Set<URI> getURIs( T subject, RDFNodeEnum pred, URI documentURI ) {
-		Set<URI> properties = new HashSet<>();
-		for ( URI predURI : pred.getURIs() ) {
+	public Set<IRI> getIRIs( T subject, RDFNodeEnum pred, IRI documentIRI ) {
+		Set<IRI> properties = new HashSet<>();
+		for ( IRI predIRI : pred.getIRIs() ) {
 			connectionTemplate.readStatements(
-				connection -> connection.getStatements( subject, predURI, null, false, documentURI ),
+				connection -> connection.getStatements( subject, predIRI, null, false, documentIRI ),
 				statements -> {
 					while ( statements.hasNext() ) {
 						Value value = statements.next().getObject();
-						if ( ValueUtil.isURI( value ) ) properties.add( ValueUtil.getURI( value ) );
+						if ( ValueUtil.isIRI( value ) ) properties.add( ValueUtil.getIRI( value ) );
 					}
 					return null;
 				}
@@ -186,9 +186,9 @@ public abstract class SesameRDFNodeRepository<T extends Resource> extends Abstra
 		return properties;
 	}
 
-	public Boolean getBoolean( T subject, URI pred, URI documentURI ) {
+	public Boolean getBoolean( T subject, IRI pred, IRI documentIRI ) {
 		return connectionTemplate.readStatements(
-			connection -> connection.getStatements( subject, pred, null, false, documentURI ),
+			connection -> connection.getStatements( subject, pred, null, false, documentIRI ),
 			statements -> {
 				while ( statements.hasNext() ) {
 					Value value = statements.next().getObject();
@@ -199,10 +199,10 @@ public abstract class SesameRDFNodeRepository<T extends Resource> extends Abstra
 		);
 	}
 
-	public Boolean getBoolean( T subject, RDFNodeEnum pred, URI documentURI ) {
-		for ( URI predURI : pred.getURIs() ) {
+	public Boolean getBoolean( T subject, RDFNodeEnum pred, IRI documentIRI ) {
+		for ( IRI predIRI : pred.getIRIs() ) {
 			Boolean object = connectionTemplate.readStatements(
-				connection -> connection.getStatements( subject, predURI, null, false, documentURI ),
+				connection -> connection.getStatements( subject, predIRI, null, false, documentIRI ),
 				statements -> {
 					while ( statements.hasNext() ) {
 						Value value = statements.next().getObject();
@@ -216,9 +216,9 @@ public abstract class SesameRDFNodeRepository<T extends Resource> extends Abstra
 		return null;
 	}
 
-	public Set<Boolean> getBooleans( T subject, URI pred, URI documentURI ) {
+	public Set<Boolean> getBooleans( T subject, IRI pred, IRI documentIRI ) {
 		return connectionTemplate.readStatements(
-			connection -> connection.getStatements( subject, pred, null, false, documentURI ),
+			connection -> connection.getStatements( subject, pred, null, false, documentIRI ),
 			statements -> {
 				Set<Boolean> properties = new HashSet<>();
 				while ( statements.hasNext() ) {
@@ -230,11 +230,11 @@ public abstract class SesameRDFNodeRepository<T extends Resource> extends Abstra
 		);
 	}
 
-	public Set<Boolean> getBooleans( T subject, RDFNodeEnum pred, URI documentURI ) {
+	public Set<Boolean> getBooleans( T subject, RDFNodeEnum pred, IRI documentIRI ) {
 		Set<Boolean> properties = new HashSet<>();
-		for ( URI predURI : pred.getURIs() ) {
+		for ( IRI predIRI : pred.getIRIs() ) {
 			connectionTemplate.readStatements(
-				connection -> connection.getStatements( subject, predURI, null, false, documentURI ),
+				connection -> connection.getStatements( subject, predIRI, null, false, documentIRI ),
 				statements -> {
 					while ( statements.hasNext() ) {
 						Value value = statements.next().getObject();
@@ -247,9 +247,9 @@ public abstract class SesameRDFNodeRepository<T extends Resource> extends Abstra
 		return properties;
 	}
 
-	public Byte getByte( T subject, URI pred, URI documentURI ) {
+	public Byte getByte( T subject, IRI pred, IRI documentIRI ) {
 		return connectionTemplate.readStatements(
-			connection -> connection.getStatements( subject, pred, null, false, documentURI ),
+			connection -> connection.getStatements( subject, pred, null, false, documentIRI ),
 			statements -> {
 				while ( statements.hasNext() ) {
 					Value value = statements.next().getObject();
@@ -260,10 +260,10 @@ public abstract class SesameRDFNodeRepository<T extends Resource> extends Abstra
 		);
 	}
 
-	public Byte getByte( T subject, RDFNodeEnum pred, URI documentURI ) {
-		for ( URI predURI : pred.getURIs() ) {
+	public Byte getByte( T subject, RDFNodeEnum pred, IRI documentIRI ) {
+		for ( IRI predIRI : pred.getIRIs() ) {
 			Byte object = connectionTemplate.readStatements(
-				connection -> connection.getStatements( subject, predURI, null, false, documentURI ),
+				connection -> connection.getStatements( subject, predIRI, null, false, documentIRI ),
 				statements -> {
 					while ( statements.hasNext() ) {
 						Value value = statements.next().getObject();
@@ -277,9 +277,9 @@ public abstract class SesameRDFNodeRepository<T extends Resource> extends Abstra
 		return null;
 	}
 
-	public Set<Byte> getBytes( T subject, URI pred, URI documentURI ) {
+	public Set<Byte> getBytes( T subject, IRI pred, IRI documentIRI ) {
 		return connectionTemplate.readStatements(
-			connection -> connection.getStatements( subject, pred, null, false, documentURI ),
+			connection -> connection.getStatements( subject, pred, null, false, documentIRI ),
 			statements -> {
 				Set<Byte> properties = new HashSet<>();
 				while ( statements.hasNext() ) {
@@ -291,11 +291,11 @@ public abstract class SesameRDFNodeRepository<T extends Resource> extends Abstra
 		);
 	}
 
-	public Set<Byte> getBytes( T subject, RDFNodeEnum pred, URI documentURI ) {
+	public Set<Byte> getBytes( T subject, RDFNodeEnum pred, IRI documentIRI ) {
 		Set<Byte> properties = new HashSet<>();
-		for ( URI predURI : pred.getURIs() ) {
+		for ( IRI predIRI : pred.getIRIs() ) {
 			connectionTemplate.readStatements(
-				connection -> connection.getStatements( subject, predURI, null, false, documentURI ),
+				connection -> connection.getStatements( subject, predIRI, null, false, documentIRI ),
 				statements -> {
 					while ( statements.hasNext() ) {
 						Value value = statements.next().getObject();
@@ -308,10 +308,10 @@ public abstract class SesameRDFNodeRepository<T extends Resource> extends Abstra
 		return properties;
 	}
 
-	public DateTime getDate( T subject, URI pred, URI documentURI ) {
+	public DateTime getDate( T subject, IRI pred, IRI documentIRI ) {
 		DateTimeFormatter parser = ISODateTimeFormat.dateTimeParser();
 		return connectionTemplate.readStatements(
-			connection -> connection.getStatements( subject, pred, null, false, documentURI ),
+			connection -> connection.getStatements( subject, pred, null, false, documentIRI ),
 			statements -> {
 				while ( statements.hasNext() ) {
 					Value value = statements.next().getObject();
@@ -322,11 +322,11 @@ public abstract class SesameRDFNodeRepository<T extends Resource> extends Abstra
 		);
 	}
 
-	public DateTime getDate( T subject, RDFNodeEnum pred, URI documentURI ) {
+	public DateTime getDate( T subject, RDFNodeEnum pred, IRI documentIRI ) {
 		DateTimeFormatter parser = ISODateTimeFormat.dateTimeParser();
-		for ( URI predURI : pred.getURIs() ) {
+		for ( IRI predIRI : pred.getIRIs() ) {
 			DateTime object = connectionTemplate.readStatements(
-				connection -> connection.getStatements( subject, predURI, null, false, documentURI ),
+				connection -> connection.getStatements( subject, predIRI, null, false, documentIRI ),
 				statements -> {
 					while ( statements.hasNext() ) {
 						Value value = statements.next().getObject();
@@ -340,10 +340,10 @@ public abstract class SesameRDFNodeRepository<T extends Resource> extends Abstra
 		return null;
 	}
 
-	public Set<DateTime> getDates( T subject, URI pred, URI documentURI ) {
+	public Set<DateTime> getDates( T subject, IRI pred, IRI documentIRI ) {
 		DateTimeFormatter parser = ISODateTimeFormat.dateTimeParser();
 		return connectionTemplate.readStatements(
-			connection -> connection.getStatements( subject, pred, null, false, documentURI ),
+			connection -> connection.getStatements( subject, pred, null, false, documentIRI ),
 			statements -> {
 				Set<DateTime> properties = new HashSet<>();
 				while ( statements.hasNext() ) {
@@ -356,12 +356,12 @@ public abstract class SesameRDFNodeRepository<T extends Resource> extends Abstra
 		);
 	}
 
-	public Set<DateTime> getDates( T subject, RDFNodeEnum pred, URI documentURI ) {
+	public Set<DateTime> getDates( T subject, RDFNodeEnum pred, IRI documentIRI ) {
 		DateTimeFormatter parser = ISODateTimeFormat.dateTimeParser();
 		Set<DateTime> properties = new HashSet<>();
-		for ( URI predURI : pred.getURIs() ) {
+		for ( IRI predIRI : pred.getIRIs() ) {
 			connectionTemplate.readStatements(
-				connection -> connection.getStatements( subject, predURI, null, false, documentURI ),
+				connection -> connection.getStatements( subject, predIRI, null, false, documentIRI ),
 				statements -> {
 					while ( statements.hasNext() ) {
 						Value value = statements.next().getObject();
@@ -374,9 +374,9 @@ public abstract class SesameRDFNodeRepository<T extends Resource> extends Abstra
 		return properties;
 	}
 
-	public Double getDouble( T subject, URI pred, URI documentURI ) {
+	public Double getDouble( T subject, IRI pred, IRI documentIRI ) {
 		return connectionTemplate.readStatements(
-			connection -> connection.getStatements( subject, pred, null, false, documentURI ),
+			connection -> connection.getStatements( subject, pred, null, false, documentIRI ),
 			statements -> {
 				while ( statements.hasNext() ) {
 					Value value = statements.next().getObject();
@@ -387,10 +387,10 @@ public abstract class SesameRDFNodeRepository<T extends Resource> extends Abstra
 		);
 	}
 
-	public Double getDouble( T subject, RDFNodeEnum pred, URI documentURI ) {
-		for ( URI predURI : pred.getURIs() ) {
+	public Double getDouble( T subject, RDFNodeEnum pred, IRI documentIRI ) {
+		for ( IRI predIRI : pred.getIRIs() ) {
 			Double object = connectionTemplate.readStatements(
-				connection -> connection.getStatements( subject, predURI, null, false, documentURI ),
+				connection -> connection.getStatements( subject, predIRI, null, false, documentIRI ),
 				statements -> {
 					while ( statements.hasNext() ) {
 						Value value = statements.next().getObject();
@@ -404,9 +404,9 @@ public abstract class SesameRDFNodeRepository<T extends Resource> extends Abstra
 		return null;
 	}
 
-	public Set<Double> getDoubles( T subject, URI pred, URI documentURI ) {
+	public Set<Double> getDoubles( T subject, IRI pred, IRI documentIRI ) {
 		return connectionTemplate.readStatements(
-			connection -> connection.getStatements( subject, pred, null, false, documentURI ),
+			connection -> connection.getStatements( subject, pred, null, false, documentIRI ),
 			statements -> {
 				Set<Double> properties = new HashSet<>();
 				while ( statements.hasNext() ) {
@@ -418,11 +418,11 @@ public abstract class SesameRDFNodeRepository<T extends Resource> extends Abstra
 		);
 	}
 
-	public Set<Double> getDoubles( T subject, RDFNodeEnum pred, URI documentURI ) {
+	public Set<Double> getDoubles( T subject, RDFNodeEnum pred, IRI documentIRI ) {
 		Set<Double> properties = new HashSet<>();
-		for ( URI predURI : pred.getURIs() ) {
+		for ( IRI predIRI : pred.getIRIs() ) {
 			connectionTemplate.readStatements(
-				connection -> connection.getStatements( subject, predURI, null, false, documentURI ),
+				connection -> connection.getStatements( subject, predIRI, null, false, documentIRI ),
 				statements -> {
 					while ( statements.hasNext() ) {
 						Value value = statements.next().getObject();
@@ -435,9 +435,9 @@ public abstract class SesameRDFNodeRepository<T extends Resource> extends Abstra
 		return properties;
 	}
 
-	public Float getFloat( T subject, URI pred, URI documentURI ) {
+	public Float getFloat( T subject, IRI pred, IRI documentIRI ) {
 		return connectionTemplate.readStatements(
-			connection -> connection.getStatements( subject, pred, null, false, documentURI ),
+			connection -> connection.getStatements( subject, pred, null, false, documentIRI ),
 			statements -> {
 				while ( statements.hasNext() ) {
 					Value value = statements.next().getObject();
@@ -448,10 +448,10 @@ public abstract class SesameRDFNodeRepository<T extends Resource> extends Abstra
 		);
 	}
 
-	public Float getFloat( T subject, RDFNodeEnum pred, URI documentURI ) {
-		for ( URI predURI : pred.getURIs() ) {
+	public Float getFloat( T subject, RDFNodeEnum pred, IRI documentIRI ) {
+		for ( IRI predIRI : pred.getIRIs() ) {
 			Float object = connectionTemplate.readStatements(
-				connection -> connection.getStatements( subject, predURI, null, false, documentURI ),
+				connection -> connection.getStatements( subject, predIRI, null, false, documentIRI ),
 				statements -> {
 					while ( statements.hasNext() ) {
 						Value value = statements.next().getObject();
@@ -465,9 +465,9 @@ public abstract class SesameRDFNodeRepository<T extends Resource> extends Abstra
 		return null;
 	}
 
-	public Set<Float> getFloats( T subject, URI pred, URI documentURI ) {
+	public Set<Float> getFloats( T subject, IRI pred, IRI documentIRI ) {
 		return connectionTemplate.readStatements(
-			connection -> connection.getStatements( subject, pred, null, false, documentURI ),
+			connection -> connection.getStatements( subject, pred, null, false, documentIRI ),
 			statements -> {
 				Set<Float> properties = new HashSet<>();
 				while ( statements.hasNext() ) {
@@ -479,11 +479,11 @@ public abstract class SesameRDFNodeRepository<T extends Resource> extends Abstra
 		);
 	}
 
-	public Set<Float> getFloats( T subject, RDFNodeEnum pred, URI documentURI ) {
+	public Set<Float> getFloats( T subject, RDFNodeEnum pred, IRI documentIRI ) {
 		Set<Float> properties = new HashSet<>();
-		for ( URI predURI : pred.getURIs() ) {
+		for ( IRI predIRI : pred.getIRIs() ) {
 			connectionTemplate.readStatements(
-				connection -> connection.getStatements( subject, predURI, null, false, documentURI ),
+				connection -> connection.getStatements( subject, predIRI, null, false, documentIRI ),
 				statements -> {
 					while ( statements.hasNext() ) {
 						Value value = statements.next().getObject();
@@ -496,9 +496,9 @@ public abstract class SesameRDFNodeRepository<T extends Resource> extends Abstra
 		return properties;
 	}
 
-	public Integer getInteger( T subject, URI pred, URI documentURI ) {
+	public Integer getInteger( T subject, IRI pred, IRI documentIRI ) {
 		return connectionTemplate.readStatements(
-			connection -> connection.getStatements( subject, pred, null, false, documentURI ),
+			connection -> connection.getStatements( subject, pred, null, false, documentIRI ),
 			statements -> {
 				while ( statements.hasNext() ) {
 					Value value = statements.next().getObject();
@@ -509,10 +509,10 @@ public abstract class SesameRDFNodeRepository<T extends Resource> extends Abstra
 		);
 	}
 
-	public Integer getInteger( T subject, RDFNodeEnum pred, URI documentURI ) {
-		for ( URI predURI : pred.getURIs() ) {
+	public Integer getInteger( T subject, RDFNodeEnum pred, IRI documentIRI ) {
+		for ( IRI predIRI : pred.getIRIs() ) {
 			Integer object = connectionTemplate.readStatements(
-				connection -> connection.getStatements( subject, predURI, null, false, documentURI ),
+				connection -> connection.getStatements( subject, predIRI, null, false, documentIRI ),
 				statements -> {
 					while ( statements.hasNext() ) {
 						Value value = statements.next().getObject();
@@ -526,9 +526,9 @@ public abstract class SesameRDFNodeRepository<T extends Resource> extends Abstra
 		return null;
 	}
 
-	public Set<Integer> getIntegers( T subject, URI pred, URI documentURI ) {
+	public Set<Integer> getIntegers( T subject, IRI pred, IRI documentIRI ) {
 		return connectionTemplate.readStatements(
-			connection -> connection.getStatements( subject, pred, null, false, documentURI ),
+			connection -> connection.getStatements( subject, pred, null, false, documentIRI ),
 			statements -> {
 				Set<Integer> properties = new HashSet<>();
 				while ( statements.hasNext() ) {
@@ -540,11 +540,11 @@ public abstract class SesameRDFNodeRepository<T extends Resource> extends Abstra
 		);
 	}
 
-	public Set<Integer> getIntegers( T subject, RDFNodeEnum pred, URI documentURI ) {
+	public Set<Integer> getIntegers( T subject, RDFNodeEnum pred, IRI documentIRI ) {
 		Set<Integer> properties = new HashSet<>();
-		for ( URI predURI : pred.getURIs() ) {
+		for ( IRI predIRI : pred.getIRIs() ) {
 			connectionTemplate.readStatements(
-				connection -> connection.getStatements( subject, predURI, null, false, documentURI ),
+				connection -> connection.getStatements( subject, predIRI, null, false, documentIRI ),
 				statements -> {
 					while ( statements.hasNext() ) {
 						Value value = statements.next().getObject();
@@ -557,9 +557,9 @@ public abstract class SesameRDFNodeRepository<T extends Resource> extends Abstra
 		return properties;
 	}
 
-	public Long getLong( T subject, URI pred, URI documentURI ) {
+	public Long getLong( T subject, IRI pred, IRI documentIRI ) {
 		return connectionTemplate.readStatements(
-			connection -> connection.getStatements( subject, pred, null, false, documentURI ),
+			connection -> connection.getStatements( subject, pred, null, false, documentIRI ),
 			statements -> {
 				while ( statements.hasNext() ) {
 					Value value = statements.next().getObject();
@@ -570,10 +570,10 @@ public abstract class SesameRDFNodeRepository<T extends Resource> extends Abstra
 		);
 	}
 
-	public Long getLong( T subject, RDFNodeEnum pred, URI documentURI ) {
-		for ( URI predURI : pred.getURIs() ) {
+	public Long getLong( T subject, RDFNodeEnum pred, IRI documentIRI ) {
+		for ( IRI predIRI : pred.getIRIs() ) {
 			Long object = connectionTemplate.readStatements(
-				connection -> connection.getStatements( subject, predURI, null, false, documentURI ),
+				connection -> connection.getStatements( subject, predIRI, null, false, documentIRI ),
 				statements -> {
 					while ( statements.hasNext() ) {
 						Value value = statements.next().getObject();
@@ -587,9 +587,9 @@ public abstract class SesameRDFNodeRepository<T extends Resource> extends Abstra
 		return null;
 	}
 
-	public Set<Long> getLongs( T subject, URI pred, URI documentURI ) {
+	public Set<Long> getLongs( T subject, IRI pred, IRI documentIRI ) {
 		return connectionTemplate.readStatements(
-			connection -> connection.getStatements( subject, pred, null, false, documentURI ),
+			connection -> connection.getStatements( subject, pred, null, false, documentIRI ),
 			statements -> {
 				Set<Long> properties = new HashSet<>();
 				while ( statements.hasNext() ) {
@@ -601,11 +601,11 @@ public abstract class SesameRDFNodeRepository<T extends Resource> extends Abstra
 		);
 	}
 
-	public Set<Long> getLongs( T subject, RDFNodeEnum pred, URI documentURI ) {
+	public Set<Long> getLongs( T subject, RDFNodeEnum pred, IRI documentIRI ) {
 		Set<Long> properties = new HashSet<>();
-		for ( URI predURI : pred.getURIs() ) {
+		for ( IRI predIRI : pred.getIRIs() ) {
 			connectionTemplate.readStatements(
-				connection -> connection.getStatements( subject, predURI, null, false, documentURI ),
+				connection -> connection.getStatements( subject, predIRI, null, false, documentIRI ),
 				statements -> {
 					while ( statements.hasNext() ) {
 						Value value = statements.next().getObject();
@@ -618,9 +618,9 @@ public abstract class SesameRDFNodeRepository<T extends Resource> extends Abstra
 		return properties;
 	}
 
-	public Short getShort( T subject, URI pred, URI documentURI ) {
+	public Short getShort( T subject, IRI pred, IRI documentIRI ) {
 		return connectionTemplate.readStatements(
-			connection -> connection.getStatements( subject, pred, null, false, documentURI ),
+			connection -> connection.getStatements( subject, pred, null, false, documentIRI ),
 			statements -> {
 				while ( statements.hasNext() ) {
 					Value value = statements.next().getObject();
@@ -631,10 +631,10 @@ public abstract class SesameRDFNodeRepository<T extends Resource> extends Abstra
 		);
 	}
 
-	public Short getShort( T subject, RDFNodeEnum pred, URI documentURI ) {
-		for ( URI predURI : pred.getURIs() ) {
+	public Short getShort( T subject, RDFNodeEnum pred, IRI documentIRI ) {
+		for ( IRI predIRI : pred.getIRIs() ) {
 			Short object = connectionTemplate.readStatements(
-				connection -> connection.getStatements( subject, predURI, null, false, documentURI ),
+				connection -> connection.getStatements( subject, predIRI, null, false, documentIRI ),
 				statements -> {
 					while ( statements.hasNext() ) {
 						Value value = statements.next().getObject();
@@ -648,9 +648,9 @@ public abstract class SesameRDFNodeRepository<T extends Resource> extends Abstra
 		return null;
 	}
 
-	public Set<Short> getShorts( T subject, URI pred, URI documentURI ) {
+	public Set<Short> getShorts( T subject, IRI pred, IRI documentIRI ) {
 		return connectionTemplate.readStatements(
-			connection -> connection.getStatements( subject, pred, null, false, documentURI ),
+			connection -> connection.getStatements( subject, pred, null, false, documentIRI ),
 			statements -> {
 				Set<Short> properties = new HashSet<>();
 				while ( statements.hasNext() ) {
@@ -662,11 +662,11 @@ public abstract class SesameRDFNodeRepository<T extends Resource> extends Abstra
 		);
 	}
 
-	public Set<Short> getShorts( T subject, RDFNodeEnum pred, URI documentURI ) {
+	public Set<Short> getShorts( T subject, RDFNodeEnum pred, IRI documentIRI ) {
 		Set<Short> properties = new HashSet<>();
-		for ( URI predURI : pred.getURIs() ) {
+		for ( IRI predIRI : pred.getIRIs() ) {
 			connectionTemplate.readStatements(
-				connection -> connection.getStatements( subject, predURI, null, false, documentURI ),
+				connection -> connection.getStatements( subject, predIRI, null, false, documentIRI ),
 				statements -> {
 					while ( statements.hasNext() ) {
 						Value value = statements.next().getObject();
@@ -679,9 +679,9 @@ public abstract class SesameRDFNodeRepository<T extends Resource> extends Abstra
 		return properties;
 	}
 
-	public String getString( T subject, URI pred, URI documentURI ) {
+	public String getString( T subject, IRI pred, IRI documentIRI ) {
 		return connectionTemplate.readStatements(
-			connection -> connection.getStatements( subject, pred, null, false, documentURI ),
+			connection -> connection.getStatements( subject, pred, null, false, documentIRI ),
 			statements -> {
 				while ( statements.hasNext() ) {
 					Value value = statements.next().getObject();
@@ -692,10 +692,10 @@ public abstract class SesameRDFNodeRepository<T extends Resource> extends Abstra
 		);
 	}
 
-	public String getString( T subject, RDFNodeEnum pred, URI documentURI ) {
-		for ( URI predURI : pred.getURIs() ) {
+	public String getString( T subject, RDFNodeEnum pred, IRI documentIRI ) {
+		for ( IRI predIRI : pred.getIRIs() ) {
 			String object = connectionTemplate.readStatements(
-				connection -> connection.getStatements( subject, predURI, null, false, documentURI ),
+				connection -> connection.getStatements( subject, predIRI, null, false, documentIRI ),
 				statements -> {
 					while ( statements.hasNext() ) {
 						Value value = statements.next().getObject();
@@ -709,9 +709,9 @@ public abstract class SesameRDFNodeRepository<T extends Resource> extends Abstra
 		return null;
 	}
 
-	public Set<String> getStrings( T subject, URI pred, URI documentURI ) {
+	public Set<String> getStrings( T subject, IRI pred, IRI documentIRI ) {
 		return connectionTemplate.readStatements(
-			connection -> connection.getStatements( subject, pred, null, false, documentURI ),
+			connection -> connection.getStatements( subject, pred, null, false, documentIRI ),
 			statements -> {
 				Set<String> properties = new HashSet<>();
 				while ( statements.hasNext() ) {
@@ -723,11 +723,11 @@ public abstract class SesameRDFNodeRepository<T extends Resource> extends Abstra
 		);
 	}
 
-	public Set<String> getStrings( T subject, RDFNodeEnum pred, URI documentURI ) {
+	public Set<String> getStrings( T subject, RDFNodeEnum pred, IRI documentIRI ) {
 		Set<String> properties = new HashSet<>();
-		for ( URI predURI : pred.getURIs() ) {
+		for ( IRI predIRI : pred.getIRIs() ) {
 			connectionTemplate.readStatements(
-				connection -> connection.getStatements( subject, predURI, null, false, documentURI ),
+				connection -> connection.getStatements( subject, predIRI, null, false, documentIRI ),
 				statements -> {
 					while ( statements.hasNext() ) {
 						Value value = statements.next().getObject();
@@ -740,15 +740,15 @@ public abstract class SesameRDFNodeRepository<T extends Resource> extends Abstra
 		return properties;
 	}
 
-	public String getString( T subject, URI pred, URI documentURI, Set<String> languages ) {
+	public String getString( T subject, IRI pred, IRI documentIRI, Set<String> languages ) {
 		return connectionTemplate.readStatements(
-			connection -> connection.getStatements( subject, pred, null, false, documentURI ),
+			connection -> connection.getStatements( subject, pred, null, false, documentIRI ),
 			statements -> {
 				while ( statements.hasNext() ) {
 					Value value = statements.next().getObject();
 					if ( ValueUtil.isLiteral( value ) && LiteralUtil.isString( (Literal) value ) ) {
 						Literal literal = (Literal) value;
-						String language = literal.getLanguage();
+						String language = literal.getLanguage().orElse( null );
 						if ( languages == null || languages.isEmpty() ) {
 							if ( language == null ) return literal.stringValue();
 						} else if ( languages.contains( language ) ) return ( value.stringValue() );
@@ -759,16 +759,16 @@ public abstract class SesameRDFNodeRepository<T extends Resource> extends Abstra
 		);
 	}
 
-	public String getString( T subject, RDFNodeEnum pred, URI documentURI, Set<String> languages ) {
-		for ( URI predURI : pred.getURIs() ) {
+	public String getString( T subject, RDFNodeEnum pred, IRI documentIRI, Set<String> languages ) {
+		for ( IRI predIRI : pred.getIRIs() ) {
 			String object = connectionTemplate.readStatements(
-				connection -> connection.getStatements( subject, predURI, null, false, documentURI ),
+				connection -> connection.getStatements( subject, predIRI, null, false, documentIRI ),
 				statements -> {
 					while ( statements.hasNext() ) {
 						Value value = statements.next().getObject();
 						if ( ValueUtil.isLiteral( value ) && LiteralUtil.isString( (Literal) value ) ) {
 							Literal literal = (Literal) value;
-							String language = literal.getLanguage();
+							String language = literal.getLanguage().orElse( null );
 							if ( languages == null || languages.isEmpty() ) {
 								if ( language == null ) return literal.stringValue();
 							}
@@ -783,16 +783,16 @@ public abstract class SesameRDFNodeRepository<T extends Resource> extends Abstra
 		return null;
 	}
 
-	public Set<String> getStrings( T subject, URI pred, URI documentURI, Set<String> languages ) {
+	public Set<String> getStrings( T subject, IRI pred, IRI documentIRI, Set<String> languages ) {
 		return connectionTemplate.readStatements(
-			connection -> connection.getStatements( subject, pred, null, false, documentURI ),
+			connection -> connection.getStatements( subject, pred, null, false, documentIRI ),
 			statements -> {
 				Set<String> properties = new HashSet<>();
 				while ( statements.hasNext() ) {
 					Value value = statements.next().getObject();
 					if ( ValueUtil.isLiteral( value ) && LiteralUtil.isString( (Literal) value ) ) {
 						Literal literal = (Literal) value;
-						String language = literal.getLanguage();
+						String language = literal.getLanguage().orElse( null );
 						if ( languages == null || languages.isEmpty() ) {
 							if ( language == null ) properties.add( literal.stringValue() );
 						}
@@ -804,17 +804,17 @@ public abstract class SesameRDFNodeRepository<T extends Resource> extends Abstra
 		);
 	}
 
-	public Set<String> getStrings( T subject, RDFNodeEnum pred, URI documentURI, Set<String> languages ) {
+	public Set<String> getStrings( T subject, RDFNodeEnum pred, IRI documentIRI, Set<String> languages ) {
 		Set<String> properties = new HashSet<>();
-		for ( URI predURI : pred.getURIs() ) {
+		for ( IRI predIRI : pred.getIRIs() ) {
 			connectionTemplate.readStatements(
-				connection -> connection.getStatements( subject, predURI, null, false, documentURI ),
+				connection -> connection.getStatements( subject, predIRI, null, false, documentIRI ),
 				statements -> {
 					while ( statements.hasNext() ) {
 						Value value = statements.next().getObject();
 						if ( ValueUtil.isLiteral( value ) && LiteralUtil.isString( (Literal) value ) ) {
 							Literal literal = (Literal) value;
-							String language = literal.getLanguage();
+							String language = literal.getLanguage().orElse( null );
 							if ( languages == null || languages.isEmpty() ) {
 								if ( language == null ) properties.add( value.stringValue() );
 							} else if ( languages.contains( language ) ) {
@@ -829,281 +829,281 @@ public abstract class SesameRDFNodeRepository<T extends Resource> extends Abstra
 		return properties;
 	}
 
-	public void add( T subject, URI pred, Value obj, URI documentURI ) {
-		connectionTemplate.write( connection -> connection.add( subject, pred, obj, documentURI ) );
+	public void add( T subject, IRI pred, Value obj, IRI documentIRI ) {
+		connectionTemplate.write( connection -> connection.add( subject, pred, obj, documentIRI ) );
 	}
 
-	public void add( T subject, URI predicate, Collection<Value> values, URI documentURI ) {
+	public void add( T subject, IRI predicate, Collection<Value> values, IRI documentIRI ) {
 		connectionTemplate.write( connection -> {
 			for ( Value value : values ) {
-				connection.add( subject, predicate, value, documentURI );
+				connection.add( subject, predicate, value, documentIRI );
 			}
 		} );
 	}
 
-	public void add( T subject, URI pred, boolean obj, URI documentURI ) {
-		ValueFactory factory = ValueFactoryImpl.getInstance();
+	public void add( T subject, IRI pred, boolean obj, IRI documentIRI ) {
+		ValueFactory factory = SimpleValueFactory.getInstance();
 		Value literal = factory.createLiteral( obj );
-		connectionTemplate.write( connection -> connection.add( subject, pred, literal, documentURI ) );
+		connectionTemplate.write( connection -> connection.add( subject, pred, literal, documentIRI ) );
 	}
 
-	public void add( T subject, URI pred, byte obj, URI documentURI ) {
-		ValueFactory factory = ValueFactoryImpl.getInstance();
+	public void add( T subject, IRI pred, byte obj, IRI documentIRI ) {
+		ValueFactory factory = SimpleValueFactory.getInstance();
 		Value literal = factory.createLiteral( obj );
-		connectionTemplate.write( connection -> connection.add( subject, pred, literal, documentURI ) );
+		connectionTemplate.write( connection -> connection.add( subject, pred, literal, documentIRI ) );
 	}
 
-	public void add( T subject, URI pred, DateTime obj, URI documentURI ) {
+	public void add( T subject, IRI pred, DateTime obj, IRI documentIRI ) {
 		Value literal = LiteralUtil.get( obj );
-		connectionTemplate.write( connection -> connection.add( subject, pred, literal, documentURI ) );
+		connectionTemplate.write( connection -> connection.add( subject, pred, literal, documentIRI ) );
 	}
 
-	public void add( T subject, URI pred, double obj, URI documentURI ) {
-		ValueFactory factory = ValueFactoryImpl.getInstance();
+	public void add( T subject, IRI pred, double obj, IRI documentIRI ) {
+		ValueFactory factory = SimpleValueFactory.getInstance();
 		Value literal = factory.createLiteral( obj );
-		connectionTemplate.write( connection -> connection.add( subject, pred, literal, documentURI ) );
+		connectionTemplate.write( connection -> connection.add( subject, pred, literal, documentIRI ) );
 	}
 
-	public void add( T subject, URI pred, float obj, URI documentURI ) {
-		ValueFactory factory = ValueFactoryImpl.getInstance();
+	public void add( T subject, IRI pred, float obj, IRI documentIRI ) {
+		ValueFactory factory = SimpleValueFactory.getInstance();
 		Value literal = factory.createLiteral( obj );
-		connectionTemplate.write( connection -> connection.add( subject, pred, literal, documentURI ) );
+		connectionTemplate.write( connection -> connection.add( subject, pred, literal, documentIRI ) );
 	}
 
-	public void add( T subject, URI pred, int obj, URI documentURI ) {
-		ValueFactory factory = ValueFactoryImpl.getInstance();
+	public void add( T subject, IRI pred, int obj, IRI documentIRI ) {
+		ValueFactory factory = SimpleValueFactory.getInstance();
 		Value literal = factory.createLiteral( obj );
-		connectionTemplate.write( connection -> connection.add( subject, pred, literal, documentURI ) );
+		connectionTemplate.write( connection -> connection.add( subject, pred, literal, documentIRI ) );
 	}
 
-	public void add( T subject, URI pred, long obj, URI documentURI ) {
-		ValueFactory factory = ValueFactoryImpl.getInstance();
+	public void add( T subject, IRI pred, long obj, IRI documentIRI ) {
+		ValueFactory factory = SimpleValueFactory.getInstance();
 		Value literal = factory.createLiteral( obj );
-		connectionTemplate.write( connection -> connection.add( subject, pred, literal, documentURI ) );
+		connectionTemplate.write( connection -> connection.add( subject, pred, literal, documentIRI ) );
 	}
 
-	public void add( T subject, URI pred, short obj, URI documentURI ) {
-		ValueFactory factory = ValueFactoryImpl.getInstance();
+	public void add( T subject, IRI pred, short obj, IRI documentIRI ) {
+		ValueFactory factory = SimpleValueFactory.getInstance();
 		Value literal = factory.createLiteral( obj );
-		connectionTemplate.write( connection -> connection.add( subject, pred, literal, documentURI ) );
+		connectionTemplate.write( connection -> connection.add( subject, pred, literal, documentIRI ) );
 	}
 
-	public void add( T subject, URI pred, String obj, URI documentURI ) {
-		ValueFactory factory = ValueFactoryImpl.getInstance();
+	public void add( T subject, IRI pred, String obj, IRI documentIRI ) {
+		ValueFactory factory = SimpleValueFactory.getInstance();
 		Value literal = factory.createLiteral( obj );
-		connectionTemplate.write( connection -> connection.add( subject, pred, literal, documentURI ) );
+		connectionTemplate.write( connection -> connection.add( subject, pred, literal, documentIRI ) );
 	}
 
-	public void add( T subject, URI pred, String obj, URI documentURI, String language ) {
-		ValueFactory factory = ValueFactoryImpl.getInstance();
+	public void add( T subject, IRI pred, String obj, IRI documentIRI, String language ) {
+		ValueFactory factory = SimpleValueFactory.getInstance();
 		Value literal = factory.createLiteral( obj, language );
-		connectionTemplate.write( connection -> connection.add( subject, pred, literal, documentURI ) );
+		connectionTemplate.write( connection -> connection.add( subject, pred, literal, documentIRI ) );
 	}
 
-	public void remove( T subject, URI pred, URI documentURI ) {
-		connectionTemplate.write( connection -> connection.remove( subject, pred, null, documentURI ) );
+	public void remove( T subject, IRI pred, IRI documentIRI ) {
+		connectionTemplate.write( connection -> connection.remove( subject, pred, null, documentIRI ) );
 	}
 
-	public void remove( T subject, RDFNodeEnum pred, URI documentURI ) {
+	public void remove( T subject, RDFNodeEnum pred, IRI documentIRI ) {
 		connectionTemplate.write( connection -> {
-			for ( URI predURI : pred.getURIs() ) {
-				connection.remove( subject, predURI, null, documentURI );
+			for ( IRI predIRI : pred.getIRIs() ) {
+				connection.remove( subject, predIRI, null, documentIRI );
 			}
 		} );
 	}
 
-	public void remove( T subject, URI pred, Value obj, URI documentURI ) {
-		connectionTemplate.write( connection -> connection.remove( subject, pred, obj, documentURI ) );
+	public void remove( T subject, IRI pred, Value obj, IRI documentIRI ) {
+		connectionTemplate.write( connection -> connection.remove( subject, pred, obj, documentIRI ) );
 	}
 
-	public void remove( T subject, URI predicate, Set<Value> values, URI documentURI ) {
+	public void remove( T subject, IRI predicate, Set<Value> values, IRI documentIRI ) {
 		connectionTemplate.write( connection -> {
 			for ( Value value : values ) {
-				connection.remove( subject, predicate, value, documentURI );
+				connection.remove( subject, predicate, value, documentIRI );
 			}
 		} );
 	}
 
-	public void remove( T subject, URI pred, boolean obj, URI documentURI ) {
-		ValueFactory factory = ValueFactoryImpl.getInstance();
+	public void remove( T subject, IRI pred, boolean obj, IRI documentIRI ) {
+		ValueFactory factory = SimpleValueFactory.getInstance();
 		Value literal = factory.createLiteral( obj );
-		connectionTemplate.write( connection -> connection.remove( subject, pred, literal, documentURI ) );
+		connectionTemplate.write( connection -> connection.remove( subject, pred, literal, documentIRI ) );
 	}
 
-	public void remove( T subject, URI pred, byte obj, URI documentURI ) {
-		ValueFactory factory = ValueFactoryImpl.getInstance();
+	public void remove( T subject, IRI pred, byte obj, IRI documentIRI ) {
+		ValueFactory factory = SimpleValueFactory.getInstance();
 		Value literal = factory.createLiteral( obj );
-		connectionTemplate.write( connection -> connection.remove( subject, pred, literal, documentURI ) );
+		connectionTemplate.write( connection -> connection.remove( subject, pred, literal, documentIRI ) );
 	}
 
-	public void remove( T subject, URI pred, DateTime obj, URI documentURI ) {
+	public void remove( T subject, IRI pred, DateTime obj, IRI documentIRI ) {
 		Value literal = LiteralUtil.get( obj );
-		connectionTemplate.write( connection -> connection.remove( subject, pred, literal, documentURI ) );
+		connectionTemplate.write( connection -> connection.remove( subject, pred, literal, documentIRI ) );
 	}
 
-	public void remove( T subject, URI pred, double obj, URI documentURI ) {
-		ValueFactory factory = ValueFactoryImpl.getInstance();
+	public void remove( T subject, IRI pred, double obj, IRI documentIRI ) {
+		ValueFactory factory = SimpleValueFactory.getInstance();
 		Value literal = factory.createLiteral( obj );
-		connectionTemplate.write( connection -> connection.remove( subject, pred, literal, documentURI ) );
+		connectionTemplate.write( connection -> connection.remove( subject, pred, literal, documentIRI ) );
 	}
 
-	public void remove( T subject, URI pred, float obj, URI documentURI ) {
-		ValueFactory factory = ValueFactoryImpl.getInstance();
+	public void remove( T subject, IRI pred, float obj, IRI documentIRI ) {
+		ValueFactory factory = SimpleValueFactory.getInstance();
 		Value literal = factory.createLiteral( obj );
-		connectionTemplate.write( connection -> connection.remove( subject, pred, literal, documentURI ) );
+		connectionTemplate.write( connection -> connection.remove( subject, pred, literal, documentIRI ) );
 	}
 
-	public void remove( T subject, URI pred, int obj, URI documentURI ) {
-		ValueFactory factory = ValueFactoryImpl.getInstance();
+	public void remove( T subject, IRI pred, int obj, IRI documentIRI ) {
+		ValueFactory factory = SimpleValueFactory.getInstance();
 		Value literal = factory.createLiteral( obj );
-		connectionTemplate.write( connection -> connection.remove( subject, pred, literal, documentURI ) );
+		connectionTemplate.write( connection -> connection.remove( subject, pred, literal, documentIRI ) );
 	}
 
-	public void remove( T subject, URI pred, long obj, URI documentURI ) {
-		ValueFactory factory = ValueFactoryImpl.getInstance();
+	public void remove( T subject, IRI pred, long obj, IRI documentIRI ) {
+		ValueFactory factory = SimpleValueFactory.getInstance();
 		Value literal = factory.createLiteral( obj );
-		connectionTemplate.write( connection -> connection.remove( subject, pred, literal, documentURI ) );
+		connectionTemplate.write( connection -> connection.remove( subject, pred, literal, documentIRI ) );
 	}
 
-	public void remove( T subject, URI pred, short obj, URI documentURI ) {
-		ValueFactory factory = ValueFactoryImpl.getInstance();
+	public void remove( T subject, IRI pred, short obj, IRI documentIRI ) {
+		ValueFactory factory = SimpleValueFactory.getInstance();
 		Value literal = factory.createLiteral( obj );
-		connectionTemplate.write( connection -> connection.remove( subject, pred, literal, documentURI ) );
+		connectionTemplate.write( connection -> connection.remove( subject, pred, literal, documentIRI ) );
 	}
 
-	public void remove( T subject, URI pred, String obj, URI documentURI ) {
-		ValueFactory factory = ValueFactoryImpl.getInstance();
+	public void remove( T subject, IRI pred, String obj, IRI documentIRI ) {
+		ValueFactory factory = SimpleValueFactory.getInstance();
 		Value literal = factory.createLiteral( obj );
-		connectionTemplate.write( connection -> connection.remove( subject, pred, literal, documentURI ) );
+		connectionTemplate.write( connection -> connection.remove( subject, pred, literal, documentIRI ) );
 	}
 
-	public void remove( T subject, URI pred, String obj, URI documentURI, String language ) {
-		ValueFactory factory = ValueFactoryImpl.getInstance();
+	public void remove( T subject, IRI pred, String obj, IRI documentIRI, String language ) {
+		ValueFactory factory = SimpleValueFactory.getInstance();
 		Value literal = factory.createLiteral( obj, language );
-		connectionTemplate.write( connection -> connection.remove( subject, pred, literal, documentURI ) );
+		connectionTemplate.write( connection -> connection.remove( subject, pred, literal, documentIRI ) );
 	}
 
-	public void set( T subject, URI pred, Value obj, URI documentURI ) {
+	public void set( T subject, IRI pred, Value obj, IRI documentIRI ) {
 		connectionTemplate.write( connection -> {
-			connection.remove( subject, pred, null, documentURI );
-			connection.add( subject, pred, obj, documentURI );
+			connection.remove( subject, pred, null, documentIRI );
+			connection.add( subject, pred, obj, documentIRI );
 		} );
 	}
 
-	public void set( T subject, URI pred, boolean obj, URI documentURI ) {
-		ValueFactory factory = ValueFactoryImpl.getInstance();
+	public void set( T subject, IRI pred, boolean obj, IRI documentIRI ) {
+		ValueFactory factory = SimpleValueFactory.getInstance();
 		Value literal = factory.createLiteral( obj );
 		connectionTemplate.write( connection -> {
-			connection.remove( subject, pred, null, documentURI );
-			connection.add( subject, pred, literal, documentURI );
+			connection.remove( subject, pred, null, documentIRI );
+			connection.add( subject, pred, literal, documentIRI );
 		} );
 	}
 
-	public void set( T subject, URI pred, byte obj, URI documentURI ) {
-		ValueFactory factory = ValueFactoryImpl.getInstance();
+	public void set( T subject, IRI pred, byte obj, IRI documentIRI ) {
+		ValueFactory factory = SimpleValueFactory.getInstance();
 		Value literal = factory.createLiteral( obj );
 		connectionTemplate.write( connection -> {
-			connection.remove( subject, pred, null, documentURI );
-			connection.add( subject, pred, literal, documentURI );
+			connection.remove( subject, pred, null, documentIRI );
+			connection.add( subject, pred, literal, documentIRI );
 		} );
 	}
 
-	public void set( T subject, URI pred, DateTime obj, URI documentURI ) {
+	public void set( T subject, IRI pred, DateTime obj, IRI documentIRI ) {
 		Value literal = LiteralUtil.get( obj );
 		connectionTemplate.write( connection -> {
-			connection.remove( subject, pred, null, documentURI );
-			connection.add( subject, pred, literal, documentURI );
+			connection.remove( subject, pred, null, documentIRI );
+			connection.add( subject, pred, literal, documentIRI );
 		} );
 	}
 
-	public void set( T subject, URI pred, double obj, URI documentURI ) {
-		ValueFactory factory = ValueFactoryImpl.getInstance();
+	public void set( T subject, IRI pred, double obj, IRI documentIRI ) {
+		ValueFactory factory = SimpleValueFactory.getInstance();
 		Value literal = factory.createLiteral( obj );
 		connectionTemplate.write( connection -> {
-			connection.remove( subject, pred, null, documentURI );
-			connection.add( subject, pred, literal, documentURI );
+			connection.remove( subject, pred, null, documentIRI );
+			connection.add( subject, pred, literal, documentIRI );
 		} );
 	}
 
-	public void set( T subject, URI pred, float obj, URI documentURI ) {
-		ValueFactory factory = ValueFactoryImpl.getInstance();
+	public void set( T subject, IRI pred, float obj, IRI documentIRI ) {
+		ValueFactory factory = SimpleValueFactory.getInstance();
 		Value literal = factory.createLiteral( obj );
 		connectionTemplate.write( connection -> {
-			connection.remove( subject, pred, null, documentURI );
-			connection.add( subject, pred, literal, documentURI );
+			connection.remove( subject, pred, null, documentIRI );
+			connection.add( subject, pred, literal, documentIRI );
 		} );
 	}
 
-	public void set( T subject, URI pred, int obj, URI documentURI ) {
-		ValueFactory factory = ValueFactoryImpl.getInstance();
+	public void set( T subject, IRI pred, int obj, IRI documentIRI ) {
+		ValueFactory factory = SimpleValueFactory.getInstance();
 		Value literal = factory.createLiteral( obj );
 		connectionTemplate.write( connection -> {
-			connection.remove( subject, pred, null, documentURI );
-			connection.add( subject, pred, literal, documentURI );
+			connection.remove( subject, pred, null, documentIRI );
+			connection.add( subject, pred, literal, documentIRI );
 		} );
 	}
 
-	public void set( T subject, URI pred, long obj, URI documentURI ) {
-		ValueFactory factory = ValueFactoryImpl.getInstance();
+	public void set( T subject, IRI pred, long obj, IRI documentIRI ) {
+		ValueFactory factory = SimpleValueFactory.getInstance();
 		Value literal = factory.createLiteral( obj );
 		connectionTemplate.write( connection -> {
-			connection.remove( subject, pred, null, documentURI );
-			connection.add( subject, pred, literal, documentURI );
+			connection.remove( subject, pred, null, documentIRI );
+			connection.add( subject, pred, literal, documentIRI );
 		} );
 	}
 
-	public void set( T subject, URI pred, short obj, URI documentURI ) {
-		ValueFactory factory = ValueFactoryImpl.getInstance();
+	public void set( T subject, IRI pred, short obj, IRI documentIRI ) {
+		ValueFactory factory = SimpleValueFactory.getInstance();
 		Value literal = factory.createLiteral( obj );
 		connectionTemplate.write( connection -> {
-			connection.remove( subject, pred, null, documentURI );
-			connection.add( subject, pred, literal, documentURI );
+			connection.remove( subject, pred, null, documentIRI );
+			connection.add( subject, pred, literal, documentIRI );
 		} );
 	}
 
-	public void set( T subject, URI pred, String obj, URI documentURI ) {
-		ValueFactory factory = ValueFactoryImpl.getInstance();
+	public void set( T subject, IRI pred, String obj, IRI documentIRI ) {
+		ValueFactory factory = SimpleValueFactory.getInstance();
 		Value literal = factory.createLiteral( obj );
 		connectionTemplate.write( connection -> {
-			connection.remove( subject, pred, null, documentURI );
-			connection.add( subject, pred, literal, documentURI );
+			connection.remove( subject, pred, null, documentIRI );
+			connection.add( subject, pred, literal, documentIRI );
 		} );
 	}
 
-	public void set( T subject, URI pred, String obj, URI documentURI, String language ) {
-		ValueFactory factory = ValueFactoryImpl.getInstance();
+	public void set( T subject, IRI pred, String obj, IRI documentIRI, String language ) {
+		ValueFactory factory = SimpleValueFactory.getInstance();
 		Value literal = factory.createLiteral( obj, language );
 		connectionTemplate.write( connection -> {
-			connection.remove( subject, pred, null, documentURI );
-			connection.add( subject, pred, literal, documentURI );
+			connection.remove( subject, pred, null, documentIRI );
+			connection.add( subject, pred, literal, documentIRI );
 		} );
 	}
 
-	public boolean hasType( T subject, URI type, URI documentURI ) {
-		return contains( subject, RDFResourceDescription.Property.TYPE, type, documentURI );
+	public boolean hasType( T subject, IRI type, IRI documentIRI ) {
+		return contains( subject, RDFResourceDescription.Property.TYPE, type, documentIRI );
 	}
 
-	public boolean hasType( T subject, RDFNodeEnum type, URI documentURI ) {
-		return contains( subject, RDFResourceDescription.Property.TYPE, type, documentURI );
+	public boolean hasType( T subject, RDFNodeEnum type, IRI documentIRI ) {
+		return contains( subject, RDFResourceDescription.Property.TYPE, type, documentIRI );
 	}
 
-	public Set<URI> getTypes( T subject, URI documentURI ) {
-		return getURIs( subject, RDFResourceDescription.Property.TYPE, documentURI );
+	public Set<IRI> getTypes( T subject, IRI documentIRI ) {
+		return getIRIs( subject, RDFResourceDescription.Property.TYPE, documentIRI );
 	}
 
-	public void addType( T subject, URI type, URI documentURI ) {
-		add( subject, RDFResourceDescription.Property.TYPE.getURI(), type, documentURI );
+	public void addType( T subject, IRI type, IRI documentIRI ) {
+		add( subject, RDFResourceDescription.Property.TYPE.getIRI(), type, documentIRI );
 	}
 
-	public void removeType( T subject, URI type, URI documentURI ) {
-		for ( URI predURI : RDFResourceDescription.Property.TYPE.getURIs() ) {
-			remove( subject, predURI, type, documentURI );
+	public void removeType( T subject, IRI type, IRI documentIRI ) {
+		for ( IRI predIRI : RDFResourceDescription.Property.TYPE.getIRIs() ) {
+			remove( subject, predIRI, type, documentIRI );
 		}
 	}
 
-	public void setType( T subject, URI type, URI documentURI ) {
-		remove( subject, RDFResourceDescription.Property.TYPE, documentURI );
-		addType( subject, type, documentURI );
+	public void setType( T subject, IRI type, IRI documentIRI ) {
+		remove( subject, RDFResourceDescription.Property.TYPE, documentIRI );
+		addType( subject, type, documentIRI );
 	}
 
 }

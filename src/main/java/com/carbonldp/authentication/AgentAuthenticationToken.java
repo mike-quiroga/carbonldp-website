@@ -4,13 +4,13 @@ import com.carbonldp.agents.Agent;
 import com.carbonldp.apps.AppRole;
 import com.carbonldp.apps.roles.AppRolesHolder;
 import com.carbonldp.authorization.Platform;
-import org.openrdf.model.URI;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.CredentialsContainer;
 import org.springframework.util.Assert;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 public class AgentAuthenticationToken extends AbstractAuthenticationToken implements AppRolesHolder, Authentication, CredentialsContainer {
 

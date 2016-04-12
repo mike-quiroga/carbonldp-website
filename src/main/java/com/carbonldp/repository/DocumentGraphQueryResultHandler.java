@@ -1,14 +1,13 @@
 package com.carbonldp.repository;
 
-import com.carbonldp.utils.URIUtil;
+import com.carbonldp.utils.IRIUtil;
 import com.carbonldp.utils.ValueUtil;
+import org.openrdf.model.IRI;
 import org.openrdf.model.Resource;
 import org.openrdf.model.Statement;
-import org.openrdf.model.URI;
 import org.openrdf.model.ValueFactory;
 import org.openrdf.model.impl.LinkedHashModel;
-import org.openrdf.model.impl.URIImpl;
-import org.openrdf.model.impl.ValueFactoryImpl;
+import org.openrdf.model.impl.SimpleValueFactory;
 
 import java.util.Collection;
 import java.util.Iterator;
@@ -20,7 +19,7 @@ public class DocumentGraphQueryResultHandler extends GraphQueryResultHandler {
 
 	public DocumentGraphQueryResultHandler( Collection<Statement> statements ) {
 		this.statements = statements;
-		this.valueFactory = ValueFactoryImpl.getInstance();
+		this.valueFactory = SimpleValueFactory.getInstance();
 		noContextStatements = new LinkedHashModel();
 	}
 
@@ -28,7 +27,7 @@ public class DocumentGraphQueryResultHandler extends GraphQueryResultHandler {
 	public boolean handleStatement( Statement statement ) {
 		Resource contextResource = statement.getContext();
 		if ( contextResource != null ) throw new IllegalArgumentException( "Named graphs aren't supported." );
-		URI context;
+		IRI context;
 		Statement documentStatement;
 
 		Resource subjectResource = statement.getSubject();
@@ -43,9 +42,9 @@ public class DocumentGraphQueryResultHandler extends GraphQueryResultHandler {
 
 			}
 		} else {
-			URI subject = ValueUtil.getURI( subjectResource );
-			if ( ! URIUtil.hasFragment( subject ) ) context = subject;
-			else context = new URIImpl( URIUtil.getDocumentURI( subject.stringValue() ) );
+			IRI subject = ValueUtil.getIRI( subjectResource );
+			if ( ! IRIUtil.hasFragment( subject ) ) context = subject;
+			else context = SimpleValueFactory.getInstance().createIRI( IRIUtil.getDocumentIRI( subject.stringValue() ) );
 			documentStatement = valueFactory.createStatement( subject, statement.getPredicate(), statement.getObject(), context );
 			statements.add( documentStatement );
 			if ( ! noContextStatements.isEmpty() ) addContextToStatements( context, noContextStatements );
@@ -54,7 +53,7 @@ public class DocumentGraphQueryResultHandler extends GraphQueryResultHandler {
 		return true;
 	}
 
-	private void addContextToStatements( URI context, Collection<Statement> noContextStatements ) {
+	private void addContextToStatements( IRI context, Collection<Statement> noContextStatements ) {
 		for ( Statement statement : noContextStatements ) {
 			Statement documentStatement = valueFactory.createStatement( statement.getSubject(), statement.getPredicate(), statement.getObject(), context );
 			statements.add( documentStatement );
@@ -62,11 +61,11 @@ public class DocumentGraphQueryResultHandler extends GraphQueryResultHandler {
 		noContextStatements.clear();
 	}
 
-	private URI getContextFromPreviousStatements() {
+	private IRI getContextFromPreviousStatements() {
 		Iterator iterator = statements.iterator();
 		if ( iterator.hasNext() ) {
 			Statement statement = (Statement) iterator.next();
-			return ValueUtil.getURI( statement.getContext() );
+			return ValueUtil.getIRI( statement.getContext() );
 		}
 		return null;
 	}

@@ -29,7 +29,7 @@ public class RDFResourceMessageConverter extends ModelMessageConverter<RDFResour
 	}
 
 	private void addRDFResourceLinkHeader( HttpHeaders headers ) {
-		Link link = new Link( RDFResourceDescription.Resource.CLASS.getURI().stringValue() );
+		Link link = new Link( RDFResourceDescription.Resource.CLASS.getIRI().stringValue() );
 		link.addRelationshipType( Consts.TYPE );
 		headers.add( HTTPHeaders.LINK, link.toString() );
 	}

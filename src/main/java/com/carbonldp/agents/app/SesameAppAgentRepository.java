@@ -8,8 +8,8 @@ import com.carbonldp.ldp.containers.Container;
 import com.carbonldp.ldp.containers.ContainerRepository;
 import com.carbonldp.ldp.sources.RDFSourceRepository;
 import com.carbonldp.rdf.RDFResource;
-import com.carbonldp.utils.URIUtil;
-import org.openrdf.model.URI;
+import com.carbonldp.utils.IRIUtil;
+import org.openrdf.model.IRI;
 import org.openrdf.spring.SesameConnectionFactory;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
@@ -28,22 +28,22 @@ public class SesameAppAgentRepository extends SesameAgentsRepository implements 
 		super( connectionFactory, sourceRepository, containerRepository );
 	}
 
-	public Container createAppAgentsContainer( URI rootContainerURI ) {
-		URI appAgentsContainerURI = getContainerURI( rootContainerURI );
-		BasicContainer appAgentsContainer = BasicContainerFactory.getInstance().create( new RDFResource( appAgentsContainerURI ) );
-		containerRepository.createChild( rootContainerURI, appAgentsContainer );
+	public Container createAppAgentsContainer( IRI rootContainerIRI ) {
+		IRI appAgentsContainerIRI = getContainerIRI( rootContainerIRI );
+		BasicContainer appAgentsContainer = BasicContainerFactory.getInstance().create( new RDFResource( appAgentsContainerIRI ) );
+		containerRepository.createChild( rootContainerIRI, appAgentsContainer );
 		return appAgentsContainer;
 	}
 
 	@Override
-	protected URI getAgentsContainerURI() {
-		URI appURI = AppContextHolder.getContext().getApplication().getRootContainerURI();
-		if ( appURI == null ) throw new RuntimeException( "app agent repository should be running in App context" );
-		return getContainerURI( appURI );
+	protected IRI getAgentsContainerIRI() {
+		IRI appIRI = AppContextHolder.getContext().getApplication().getRootContainerIRI();
+		if ( appIRI == null ) throw new RuntimeException( "app agent repository should be running in App context" );
+		return getContainerIRI( appIRI );
 	}
 
-	private URI getContainerURI( URI rootContainerURI ) {
-		return URIUtil.createChildURI( rootContainerURI, containerSlug );
+	private IRI getContainerIRI( IRI rootContainerIRI ) {
+		return IRIUtil.createChildIRI( rootContainerIRI, containerSlug );
 	}
 
 	public void setAgentsContainerSlug( String slug ) {

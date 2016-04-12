@@ -37,8 +37,9 @@ import com.carbonldp.repository.RepositoryService;
 import com.carbonldp.sparql.SPARQLService;
 import com.carbonldp.sparql.SesameSPARQLService;
 import com.carbonldp.utils.PropertiesUtil;
-import org.openrdf.model.URI;
-import org.openrdf.model.impl.URIImpl;
+import org.openrdf.model.IRI;
+
+import org.openrdf.model.impl.SimpleValueFactory;
 import org.openrdf.spring.SesameConnectionFactory;
 import org.springframework.beans.factory.BeanInitializationException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -149,8 +150,8 @@ public class RepositoriesConfig {
 
 	@Bean
 	public PlatformAgentRepository platformAgentRepository() {
-		URI agentsContainerURI = new URIImpl( Vars.getInstance().getAgentsContainerURL() );
-		return new SesamePlatformAgentRepository( connectionFactory, sourceRepository(), containerRepository(), agentsContainerURI );
+		IRI agentsContainerIRI = SimpleValueFactory.getInstance().createIRI( Vars.getInstance().getAgentsContainerURL() );
+		return new SesamePlatformAgentRepository( connectionFactory, sourceRepository(), containerRepository(), agentsContainerIRI );
 	}
 
 	@Bean
@@ -160,21 +161,21 @@ public class RepositoriesConfig {
 
 	@Bean
 	public PlatformRoleRepository platformRoleRepository() {
-		URI platformRolesContainerURI = new URIImpl( Vars.getInstance().getRolesContainerURL() );
-		return new SesamePlatformRoleRepository( connectionFactory, sourceRepository(), containerRepository(), platformRolesContainerURI );
+		IRI platformRolesContainerIRI = SimpleValueFactory.getInstance().createIRI( Vars.getInstance().getRolesContainerURL() );
+		return new SesamePlatformRoleRepository( connectionFactory, sourceRepository(), containerRepository(), platformRolesContainerIRI );
 	}
 
 	@Bean
 	public PlatformPrivilegeRepository platformPrivilegeRepository() {
-		URI platformPrivilegesContainerURI = new URIImpl( Vars.getInstance().getPrivilegesContainerURL() );
-		return new SesamePlatformPrivilegeRepository( connectionFactory, sourceRepository(), containerRepository(), platformPrivilegesContainerURI );
+		IRI platformPrivilegesContainerIRI = SimpleValueFactory.getInstance().createIRI( Vars.getInstance().getPrivilegesContainerURL() );
+		return new SesamePlatformPrivilegeRepository( connectionFactory, sourceRepository(), containerRepository(), platformPrivilegesContainerIRI );
 	}
 
 	@Bean
 	public AppRepository appRepository( RepositoryService appRepositoryService ) {
-		URI appsContainerURI = new URIImpl( Vars.getInstance().getAppsContainerURL() );
+		IRI appsContainerIRI = SimpleValueFactory.getInstance().createIRI( Vars.getInstance().getAppsContainerURL() );
 		SesameAppRepository service = new SesameAppRepository( connectionFactory, documentRepository(), sourceRepository(), containerRepository(), appRepositoryService );
-		service.setAppsContainerURI( appsContainerURI );
+		service.setAppsContainerIRI( appsContainerIRI );
 		service.setAppsEntryPoint( Vars.getInstance().getAppsEntryPointURL() );
 		return service;
 	}

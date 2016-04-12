@@ -1,14 +1,12 @@
 package com.carbonldp.ldp.nonrdf;
 
 import com.carbonldp.ldp.AbstractSesameLDPRepository;
-import com.carbonldp.ldp.AbstractSesameLDPService;
 import com.carbonldp.namespaces.C;
 import com.carbonldp.rdf.RDFDocumentRepository;
 import com.carbonldp.rdf.RDFResourceRepository;
 import com.carbonldp.repository.FileRepository;
 import com.carbonldp.utils.ValueUtil;
-import com.carbonldp.web.exceptions.NotImplementedException;
-import org.openrdf.model.URI;
+import org.openrdf.model.IRI;
 import org.openrdf.model.Value;
 import org.openrdf.model.vocabulary.RDF;
 import org.openrdf.query.BindingSet;
@@ -17,8 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.*;
 
-import static com.carbonldp.Consts.NEW_LINE;
-import static com.carbonldp.Consts.TAB;
+import static com.carbonldp.Consts.*;
 
 /**
  * @author NestorVenegas
@@ -40,15 +37,15 @@ public class SesameNonRDFSourceRepository extends AbstractSesameLDPRepository im
 			"WHERE {" + NEW_LINE +
 			TAB + "?subject <" + RDF.TYPE + "> <" + C.Classes.RDF_REPRESENTATION + ">;" + NEW_LINE +
 			TAB + TAB + "<" + C.Properties.FILE_IDENTIFIER + "> ?identifier." + NEW_LINE +
-			"FILTER( STRSTARTS( STR(?subject), STR(?sourceURI) ))" + NEW_LINE +
+			"FILTER( STRSTARTS( STR(?subject), STR(?sourceIRI) ))" + NEW_LINE +
 			"}"
 		;
 	}
 
 	@Override
-	public Set<String> getFileIdentifiers( URI rdfRepresentationURI ) {
+	public Set<String> getFileIdentifiers( IRI rdfRepresentationIRI ) {
 		Map<String, Value> bindings = new HashMap<>();
-		bindings.put( "sourceURI", rdfRepresentationURI );
+		bindings.put( "sourceIRI", rdfRepresentationIRI );
 		return sparqlTemplate.executeTupleQuery( gtFileIdentifiersIncludingChildrenQuery, bindings, queryResult -> {
 			Set<String> references = new HashSet<>();
 			while ( queryResult.hasNext() ) {
@@ -62,8 +59,8 @@ public class SesameNonRDFSourceRepository extends AbstractSesameLDPRepository im
 	}
 
 	@Override
-	public void delete( URI rdfRepresentationURI ) {
-		Set<String> fileIdentifiers = getFileIdentifiers( rdfRepresentationURI );
+	public void delete( IRI rdfRepresentationIRI ) {
+		Set<String> fileIdentifiers = getFileIdentifiers( rdfRepresentationIRI );
 		for ( String fileIdentifier : fileIdentifiers ) {
 			UUID uuid = UUID.fromString( fileIdentifier );
 			fileRepository.delete( uuid );

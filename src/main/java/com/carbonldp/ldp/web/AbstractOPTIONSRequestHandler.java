@@ -3,7 +3,7 @@ package com.carbonldp.ldp.web;
 import com.carbonldp.Consts;
 import com.carbonldp.HTTPHeaders;
 import com.carbonldp.http.Link;
-import org.openrdf.model.URI;
+import org.openrdf.model.IRI;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -16,21 +16,21 @@ public class AbstractOPTIONSRequestHandler extends AbstractLDPRequestHandler {
 		response.addHeader( HTTPHeaders.ACCEPT_POST, "application/ld+json, text/turtle" );
 		response.addHeader( HTTPHeaders.ACCEPT_PUT, "application/ld+json, text/turtle" );
 		response.addHeader( HTTPHeaders.ACCEPT_PATCH, "application/ld+json, text/turtle" );
-		URI resourceURI = getTargetURI( request );
-		if ( isRDFRepresentation( resourceURI ) ) addDescribedByHeader( response, resourceURI );
+		IRI resourceIRI = getTargetIRI( request );
+		if ( isRDFRepresentation( resourceIRI ) ) addDescribedByHeader( response, resourceIRI );
 
 		return new ResponseEntity<>( HttpStatus.OK );
 	}
 
-	private boolean isRDFRepresentation( URI resourceURI ) {
-		return nonRdfSourceService.isRDFRepresentation( resourceURI );
+	private boolean isRDFRepresentation( IRI resourceIRI ) {
+		return nonRdfSourceService.isRDFRepresentation( resourceIRI );
 	}
 
-	private void addDescribedByHeader( HttpServletResponse response, URI resourceURI ) {
+	private void addDescribedByHeader( HttpServletResponse response, IRI resourceIRI ) {
 
-		Link link = new Link( resourceURI.stringValue() );
+		Link link = new Link( resourceIRI.stringValue() );
 		link.addRelationshipType( Consts.DESCRIBED_BY );
-		link.setAnchor( resourceURI.stringValue() );
+		link.setAnchor( resourceIRI.stringValue() );
 		response.addHeader( HTTPHeaders.LINK, link.toString() );
 	}
 }

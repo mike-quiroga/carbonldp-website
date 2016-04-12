@@ -5,10 +5,10 @@ import com.carbonldp.rdf.RDFDocument;
 import com.carbonldp.rdf.RDFDocumentMessageConverter;
 import com.carbonldp.web.exceptions.BadRequestException;
 import org.mockito.Mockito;
+import org.openrdf.model.IRI;
 import org.openrdf.model.Resource;
 import org.openrdf.model.Statement;
-import org.openrdf.model.URI;
-import org.openrdf.model.impl.URIImpl;
+import org.openrdf.model.impl.SimpleValueFactory;
 import org.openrdf.rio.RDFFormat;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpInputMessage;
@@ -31,13 +31,13 @@ import static org.testng.Assert.*;
  * @since 0.10.0-ALPHA
  */
 public class RDFDocumentMessageConverterUT {
-	protected String genericRequestURIString = "http://example.org/";
+	protected String genericRequestIRIString = "http://example.org/";
 	protected ConfigurationRepository configurationRepository;
 
 	@BeforeClass
 	public void setUp() {
 		this.configurationRepository = Mockito.mock( ConfigurationRepository.class );
-		Mockito.when( this.configurationRepository.forgeGenericRequestURL() ).thenReturn( genericRequestURIString );
+		Mockito.when( this.configurationRepository.forgeGenericRequestURL() ).thenReturn( genericRequestIRIString );
 	}
 
 	@Test
@@ -53,7 +53,7 @@ public class RDFDocumentMessageConverterUT {
 	}
 
 	@Test
-	public void read__AbsoluteURIs_NoNamedGraphs_URIsBelongToASingleDocument__InferContextFromDocumentResource() throws Exception {
+	public void read__AbsoluteIRIs_NoNamedGraphs_IRIsBelongToASingleDocument__InferContextFromDocumentResource() throws Exception {
 		RDFDocumentMessageConverter messageConverter = new RDFDocumentMessageConverter( this.configurationRepository );
 
 		String body = "" +
@@ -70,17 +70,17 @@ public class RDFDocumentMessageConverterUT {
 
 		RDFDocument document = messageConverter.read( RDFDocument.class, inputMessage );
 
-		URI expectedDocumentURI = new URIImpl( "http://example.org/some-resource/" );
+		IRI expectedDocumentIRI = SimpleValueFactory.getInstance().createIRI( "http://example.org/some-resource/" );
 		assertNotNull( document );
 		assertEquals( document.getResources().size(), 3 );
 
 		List<Resource> contexts = document.stream().map( Statement::getContext ).distinct().collect( Collectors.toList() );
 		assertEquals( contexts.size(), 1 );
-		assertEquals( contexts.get( 0 ), expectedDocumentURI );
+		assertEquals( contexts.get( 0 ), expectedDocumentIRI );
 	}
 
 	@Test( expectedExceptions = {BadRequestException.class} )
-	public void read__AbsoluteURIs_NoNamedGraphs_URIsBelongToMultipleDocuments__ThrowException() throws Exception {
+	public void read__AbsoluteIRIs_NoNamedGraphs_IRIsBelongToMultipleDocuments__ThrowException() throws Exception {
 		RDFDocumentMessageConverter messageConverter = new RDFDocumentMessageConverter( this.configurationRepository );
 
 		String body = "" +
@@ -107,7 +107,7 @@ public class RDFDocumentMessageConverterUT {
 	}
 
 	@Test
-	public void read__AbsoluteURIs_SingleNamedGraph_URIsBelongToMultipleDocuments__ReturnRDFDocumentWithNamedGraphURI() throws Exception {
+	public void read__AbsoluteIRIs_SingleNamedGraph_IRIsBelongToMultipleDocuments__ReturnRDFDocumentWithNamedGraphIRI() throws Exception {
 		RDFDocumentMessageConverter messageConverter = new RDFDocumentMessageConverter( this.configurationRepository );
 
 		String body = "" +
@@ -134,18 +134,18 @@ public class RDFDocumentMessageConverterUT {
 
 		RDFDocument document = messageConverter.read( RDFDocument.class, inputMessage );
 
-		URI expectedDocumentURI = new URIImpl( "http://example.org/some-resource/" );
+		IRI expectedDocumentIRI = SimpleValueFactory.getInstance().createIRI( "http://example.org/some-resource/" );
 		assertNotNull( document );
 		assertEquals( document.getResources().size(), 4, "Only resources that belong to the RDFDocument should be visible." );
 		assertEquals( document.getBaseModel().subjects().size(), 6, "Resources outside of the document should be preserved, but hidden." );
 
 		List<Resource> contexts = document.stream().map( Statement::getContext ).distinct().collect( Collectors.toList() );
 		assertEquals( contexts.size(), 1 );
-		assertEquals( contexts.get( 0 ), expectedDocumentURI );
+		assertEquals( contexts.get( 0 ), expectedDocumentIRI );
 	}
 
 	@Test( expectedExceptions = {BadRequestException.class} )
-	public void read__AbsoluteURIs_MultipleNamedGraphs_URIsBelongToASingleDocument__ThrowException() throws Exception {
+	public void read__AbsoluteIRIs_MultipleNamedGraphs_IRIsBelongToASingleDocument__ThrowException() throws Exception {
 		RDFDocumentMessageConverter messageConverter = new RDFDocumentMessageConverter( this.configurationRepository );
 
 		String body = "" +
@@ -176,7 +176,7 @@ public class RDFDocumentMessageConverterUT {
 	}
 
 	@Test( expectedExceptions = {BadRequestException.class} )
-	public void read__AbsoluteURIs_SingleNamedGraph_GeneralGraph__ThrowException() throws Exception {
+	public void read__AbsoluteIRIs_SingleNamedGraph_GeneralGraph__ThrowException() throws Exception {
 		RDFDocumentMessageConverter messageConverter = new RDFDocumentMessageConverter( this.configurationRepository );
 
 		String body = "" +
@@ -199,7 +199,7 @@ public class RDFDocumentMessageConverterUT {
 	}
 
 	@Test
-	public void read__NullURI_NoNamedGraphs_URIsBelongToASingleDocument__ResolveURIsUsingGenericRequestURI() throws Exception {
+	public void read__NullIRI_NoNamedGraphs_IRIsBelongToASingleDocument__ResolveIRIsUsingGenericRequestIRI() throws Exception {
 		RDFDocumentMessageConverter messageConverter = new RDFDocumentMessageConverter( this.configurationRepository );
 
 		String body = "" +
@@ -216,18 +216,18 @@ public class RDFDocumentMessageConverterUT {
 
 		RDFDocument document = messageConverter.read( RDFDocument.class, inputMessage );
 
-		URI expectedDocumentURI = new URIImpl( this.configurationRepository.forgeGenericRequestURL() );
+		IRI expectedDocumentIRI = SimpleValueFactory.getInstance().createIRI( this.configurationRepository.forgeGenericRequestURL() );
 		assertNotNull( document );
 		assertEquals( document.getResources().size(), 3 );
 		assertEquals( document.getFragmentResources().size(), 1 );
 
 		List<Resource> contexts = document.stream().map( Statement::getContext ).distinct().collect( Collectors.toList() );
 		assertEquals( contexts.size(), 1 );
-		assertEquals( contexts.get( 0 ), expectedDocumentURI );
+		assertEquals( contexts.get( 0 ), expectedDocumentIRI );
 	}
 
 	@Test
-	public void read__NullURI_SingleNamedGraph_URIsBelongToASingleDocument__ResolveURIsUsingGenericRequestURI() throws Exception {
+	public void read__NullIRI_SingleNamedGraph_IRIsBelongToASingleDocument__ResolveIRIsUsingGenericRequestIRI() throws Exception {
 		RDFDocumentMessageConverter messageConverter = new RDFDocumentMessageConverter( this.configurationRepository );
 
 		String body = "" +
@@ -246,18 +246,18 @@ public class RDFDocumentMessageConverterUT {
 
 		RDFDocument document = messageConverter.read( RDFDocument.class, inputMessage );
 
-		URI expectedDocumentURI = new URIImpl( this.configurationRepository.forgeGenericRequestURL() );
+		IRI expectedDocumentIRI = SimpleValueFactory.getInstance().createIRI( this.configurationRepository.forgeGenericRequestURL() );
 		assertNotNull( document );
 		assertEquals( document.getResources().size(), 3 );
 		assertEquals( document.getFragmentResources().size(), 1 );
 
 		List<Resource> contexts = document.stream().map( Statement::getContext ).distinct().collect( Collectors.toList() );
 		assertEquals( contexts.size(), 1 );
-		assertEquals( contexts.get( 0 ), expectedDocumentURI );
+		assertEquals( contexts.get( 0 ), expectedDocumentIRI );
 	}
 
 	@Test
-	public void read__OnlyBlankNodes_NoNamedGraphs__CreateDocumentUsingGenericURI() throws Exception {
+	public void read__OnlyBlankNodes_NoNamedGraphs__CreateDocumentUsingGenericIRI() throws Exception {
 		RDFDocumentMessageConverter messageConverter = new RDFDocumentMessageConverter( this.configurationRepository );
 
 		String body = "" +
@@ -269,17 +269,17 @@ public class RDFDocumentMessageConverterUT {
 
 		RDFDocument document = messageConverter.read( RDFDocument.class, inputMessage );
 
-		URI expectedDocumentURI = new URIImpl( this.configurationRepository.forgeGenericRequestURL() );
+		IRI expectedDocumentIRI = SimpleValueFactory.getInstance().createIRI( this.configurationRepository.forgeGenericRequestURL() );
 		assertNotNull( document );
 		assertEquals( document.getResources().size(), 1 );
 
 		List<Resource> contexts = document.stream().map( Statement::getContext ).distinct().collect( Collectors.toList() );
 		assertEquals( contexts.size(), 1 );
-		assertEquals( contexts.get( 0 ), expectedDocumentURI );
+		assertEquals( contexts.get( 0 ), expectedDocumentIRI );
 	}
 
 	@Test
-	public void read__OnlyBlankNodes_InNamedGraph__ReturnRDFDocumentWithNamedGraphURI() throws Exception {
+	public void read__OnlyBlankNodes_InNamedGraph__ReturnRDFDocumentWithNamedGraphIRI() throws Exception {
 		RDFDocumentMessageConverter messageConverter = new RDFDocumentMessageConverter( this.configurationRepository );
 
 		String body = "" +
@@ -293,13 +293,13 @@ public class RDFDocumentMessageConverterUT {
 
 		RDFDocument document = messageConverter.read( RDFDocument.class, inputMessage );
 
-		URI expectedDocumentURI = new URIImpl( "http://example.org/some-resource/" );
+		IRI expectedDocumentIRI = SimpleValueFactory.getInstance().createIRI( "http://example.org/some-resource/" );
 		assertNotNull( document );
 		assertEquals( document.getResources().size(), 1 );
 
 		List<Resource> contexts = document.stream().map( Statement::getContext ).distinct().collect( Collectors.toList() );
 		assertEquals( contexts.size(), 1 );
-		assertEquals( contexts.get( 0 ), expectedDocumentURI );
+		assertEquals( contexts.get( 0 ), expectedDocumentIRI );
 	}
 
 	private HttpInputMessage prepareHTTPInputMessage( String body, RDFFormat rdfFormat ) throws IOException {

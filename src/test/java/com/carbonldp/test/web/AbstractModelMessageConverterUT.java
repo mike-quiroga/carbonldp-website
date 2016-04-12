@@ -5,11 +5,11 @@ import com.carbonldp.mail.MailSettings;
 import com.carbonldp.test.AbstractUT;
 import com.carbonldp.utils.ModelUtil;
 import com.carbonldp.web.converters.AbstractModelMessageConverter;
-import org.openrdf.model.URI;
+import org.openrdf.model.IRI;
 import org.openrdf.model.ValueFactory;
 import org.openrdf.model.impl.AbstractModel;
 import org.openrdf.model.impl.LinkedHashModel;
-import org.openrdf.model.impl.ValueFactoryImpl;
+import org.openrdf.model.impl.SimpleValueFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpInputMessage;
 import org.springframework.http.HttpOutputMessage;
@@ -40,10 +40,10 @@ public class AbstractModelMessageConverterUT extends AbstractUT {
 	HttpOutputMessage outputMessage;
 	InputStream inputStream;
 	MockOutputStreamImpl outputStream;
-	ValueFactory factory = ValueFactoryImpl.getInstance();
-	URI subj;
-	URI pred;
-	URI obj;
+	ValueFactory factory = SimpleValueFactory.getInstance();
+	IRI subj;
+	IRI pred;
+	IRI obj;
 
 	@Override
 	protected void setUp() {
@@ -54,13 +54,13 @@ public class AbstractModelMessageConverterUT extends AbstractUT {
 		messageConverter = new AbstractModelMessageConverter( configurationRepository );
 
 		model = new LinkedHashModel();
-		subj = factory.createURI( "http://example.org/rob" );
-		pred = factory.createURI( "http://example.org/is-a" );
-		obj = factory.createURI( "http://example.org/stark" );
+		subj = factory.createIRI( "http://example.org/rob" );
+		pred = factory.createIRI( "http://example.org/is-a" );
+		obj = factory.createIRI( "http://example.org/stark" );
 		model.add( subj, pred, obj );
-		subj = factory.createURI( "http://example.org/rob" );
-		pred = factory.createURI( "http://example.org/lives-in" );
-		obj = factory.createURI( "http://example.org/winterfell" );
+		subj = factory.createIRI( "http://example.org/rob" );
+		pred = factory.createIRI( "http://example.org/lives-in" );
+		obj = factory.createIRI( "http://example.org/winterfell" );
 		model.add( subj, pred, obj );
 	}
 
@@ -100,13 +100,13 @@ public class AbstractModelMessageConverterUT extends AbstractUT {
 	@Test
 	public void writeTest() {
 		model.clear();
-		subj = factory.createURI( "http://example.org/rob" );
-		pred = factory.createURI( "http://example.org/is-a" );
-		obj = factory.createURI( "http://example.org/stark" );
+		subj = factory.createIRI( "http://example.org/rob" );
+		pred = factory.createIRI( "http://example.org/is-a" );
+		obj = factory.createIRI( "http://example.org/stark" );
 		model.add( subj, pred, obj );
-		subj = factory.createURI( "http://example.org/rob" );
-		pred = factory.createURI( "http://example.org/lives-in" );
-		obj = factory.createURI( "http://example.org/winterfell" );
+		subj = factory.createIRI( "http://example.org/rob" );
+		pred = factory.createIRI( "http://example.org/lives-in" );
+		obj = factory.createIRI( "http://example.org/winterfell" );
 		model.add( subj, pred, obj );
 
 		outputStream = new MockOutputStreamImpl();
@@ -255,7 +255,7 @@ class ConfigurationRepositoryImpl implements ConfigurationRepository {
 
 		int index = uri.indexOf( SLASH );
 		if ( index == - 1 ) {
-			// The timestamp is the last piece of the generic request URI
+			// The timestamp is the last piece of the generic request IRI
 			return null;
 		}
 		if ( ( index + 1 ) == uri.length() ) {

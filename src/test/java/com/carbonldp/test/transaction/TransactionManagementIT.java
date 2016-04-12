@@ -4,16 +4,14 @@ import com.carbonldp.Vars;
 import com.carbonldp.agents.AgentDescription;
 import com.carbonldp.test.AbstractIT;
 import com.carbonldp.test.TransactionActionTemplate;
+import org.openrdf.model.IRI;
 import org.openrdf.model.Resource;
-import org.openrdf.model.URI;
 import org.openrdf.model.Value;
-import org.openrdf.model.impl.LiteralImpl;
-import org.openrdf.model.impl.URIImpl;
+import org.openrdf.model.impl.SimpleValueFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.testng.annotations.Test;
 
-import static org.testng.Assert.assertFalse;
-import static org.testng.Assert.assertTrue;
+import static org.testng.Assert.*;
 
 public class TransactionManagementIT extends AbstractIT {
 
@@ -22,10 +20,10 @@ public class TransactionManagementIT extends AbstractIT {
 
 	@Test
 	public void rollBackTest() {
-		URI agentsContainerURI = new URIImpl( Vars.getInstance().getAgentsContainerURL() );
-		Resource subject = agentsContainerURI;
-		URI predicate = AgentDescription.Property.EMAIL.getURI();
-		Value object = new LiteralImpl( "nestor@carbon.com" );
+		IRI agentsContainerIRI = SimpleValueFactory.getInstance().createIRI( Vars.getInstance().getAgentsContainerURL() );
+		Resource subject = agentsContainerIRI;
+		IRI predicate = AgentDescription.Property.EMAIL.getIRI();
+		Value object = SimpleValueFactory.getInstance().createLiteral( "nestor@carbon.com" );
 		Resource context = subject;
 
 		try {
@@ -48,10 +46,10 @@ public class TransactionManagementIT extends AbstractIT {
 
 	@Test
 	public void commitReadAndRemoveTest() {
-		URI agentsContainerURI = new URIImpl( Vars.getInstance().getAgentsContainerURL() );
-		Resource subject = agentsContainerURI;
-		URI predicate = AgentDescription.Property.EMAIL.getURI();
-		Value object = new LiteralImpl( "nestor@carbon.com" );
+		IRI agentsContainerIRI = SimpleValueFactory.getInstance().createIRI( Vars.getInstance().getAgentsContainerURL() );
+		Resource subject = agentsContainerIRI;
+		IRI predicate = AgentDescription.Property.EMAIL.getIRI();
+		Value object = SimpleValueFactory.getInstance().createLiteral( "nestor@carbon.com" );
 		;
 		Resource context = subject;
 

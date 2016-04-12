@@ -1,9 +1,7 @@
 package com.carbonldp.authentication.token;
 
-import org.openrdf.model.URI;
+import org.openrdf.model.IRI;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
-
-import java.util.Collection;
 
 /**
  * This class holds the identifier of the identified Agent that gave it's credentials via Token
@@ -14,11 +12,11 @@ import java.util.Collection;
  */
 
 public class JWTAuthenticationToken extends AbstractAuthenticationToken {
-	private URI agentURI;
+	private IRI agentIRI;
 
-	public JWTAuthenticationToken( URI agentURI ) {
-		super( (Collection) null );
-		this.agentURI = agentURI;
+	public JWTAuthenticationToken( IRI agentIRI ) {
+		super( null );
+		this.agentIRI = agentIRI;
 	}
 
 	@Override
@@ -28,10 +26,10 @@ public class JWTAuthenticationToken extends AbstractAuthenticationToken {
 
 	@Override
 	public Object getPrincipal() {
-		return agentURI;
+		return agentIRI;
 	}
 
-	public URI getAgentURI() {
-		return agentURI;
+	public IRI getAgentIRI() {
+		return agentIRI;
 	}
 }
