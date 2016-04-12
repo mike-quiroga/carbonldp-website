@@ -28,10 +28,10 @@ public abstract class SPARQLMessageConverter<E extends SPARQLResult, F extends F
 
 	@Override
 	public boolean canWrite( Class<?> clazz, MediaType mediaType ) {
-		boolean sup = supports ( clazz );
-		boolean can = canWrite( mediaType);
+		boolean sup = supports( clazz );
+		boolean can = canWrite( mediaType );
 
-		return sup&&can;
+		return sup && can;
 	}
 
 	@Override

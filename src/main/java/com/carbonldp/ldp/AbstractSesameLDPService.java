@@ -6,9 +6,6 @@ import com.carbonldp.ldp.sources.RDFSourceRepository;
 import com.carbonldp.rdf.RDFBlankNodeRepository;
 import com.carbonldp.rdf.RDFDocumentRepository;
 import com.carbonldp.repository.AbstractSesameService;
-import com.carbonldp.spring.TransactionWrapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.Assert;
 import org.springframework.beans.factory.annotation.Autowired;
 
 public abstract class AbstractSesameLDPService extends AbstractSesameService {

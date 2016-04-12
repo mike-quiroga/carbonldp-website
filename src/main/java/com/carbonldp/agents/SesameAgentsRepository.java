@@ -6,9 +6,9 @@ import com.carbonldp.ldp.sources.RDFSource;
 import com.carbonldp.ldp.sources.RDFSourceRepository;
 import com.carbonldp.repository.AbstractSesameRepository;
 import com.carbonldp.utils.RDFNodeUtil;
-import org.openrdf.model.URI;
+import org.openrdf.model.IRI;
 import org.openrdf.model.Value;
-import org.openrdf.model.impl.ValueFactoryImpl;
+import org.openrdf.model.impl.SimpleValueFactory;
 import org.openrdf.spring.SesameConnectionFactory;
 
 import java.util.HashMap;
@@ -38,46 +38,46 @@ public abstract class SesameAgentsRepository extends AbstractSesameRepository im
 	}
 
 	@Override
-	public boolean exists( URI agentURI ) {
-		return containerRepository.hasMember( getAgentsContainerURI(), agentURI, agentsContainerType );
+	public boolean exists( IRI agentIRI ) {
+		return containerRepository.hasMember( getAgentsContainerIRI(), agentIRI, agentsContainerType );
 	}
 
 	@Override
 	public boolean existsWithEmail( String email ) {
 		Map<String, Value> bindings = new HashMap<>();
-		bindings.put( "email", ValueFactoryImpl.getInstance().createLiteral( email ) );
-		return containerRepository.hasMembers( getAgentsContainerURI(), emailSelector, bindings );
+		bindings.put( "email", SimpleValueFactory.getInstance().createLiteral( email ) );
+		return containerRepository.hasMembers( getAgentsContainerIRI(), emailSelector, bindings );
 	}
 
 	@Override
-	public Agent get( URI uri ) {
+	public Agent get( IRI uri ) {
 		return new Agent( sourceRepository.get( uri ) );
 	}
 
 	@Override
 	public Agent findByEmail( String email ) {
 		Map<String, Value> bindings = new HashMap<>();
-		bindings.put( "email", ValueFactoryImpl.getInstance().createLiteral( email ) );
+		bindings.put( "email", SimpleValueFactory.getInstance().createLiteral( email ) );
 
-		Set<URI> memberURIs = containerRepository.findMembers( getAgentsContainerURI(), emailSelector, bindings, agentsContainerType );
-		if ( memberURIs.isEmpty() ) return null;
-		if ( memberURIs.size() > 1 ) {
+		Set<IRI> memberIRIs = containerRepository.findMembers( getAgentsContainerIRI(), emailSelector, bindings, agentsContainerType );
+		if ( memberIRIs.isEmpty() ) return null;
+		if ( memberIRIs.size() > 1 ) {
 			// TODO: Add error number
 			throw new IllegalStateException( "Two agents with the same email were found." );
 		}
 
-		URI agentURI = memberURIs.iterator().next();
+		IRI agentIRI = memberIRIs.iterator().next();
 
-		RDFSource agentSource = sourceRepository.get( agentURI );
+		RDFSource agentSource = sourceRepository.get( agentIRI );
 		if ( agentSource == null ) return null;
 
-		return new Agent( agentSource.getBaseModel(), agentURI );
+		return new Agent( agentSource.getBaseModel(), agentIRI );
 	}
 
 	@Override
 	public void create( Agent agent ) {
-		containerRepository.createChild( getAgentsContainerURI(), agent, agentsContainerType );
+		containerRepository.createChild( getAgentsContainerIRI(), agent, agentsContainerType );
 	}
 
-	protected abstract URI getAgentsContainerURI();
+	protected abstract IRI getAgentsContainerIRI();
 }

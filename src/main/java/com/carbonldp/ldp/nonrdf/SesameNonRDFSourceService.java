@@ -5,7 +5,7 @@ import com.carbonldp.ldp.sources.RDFSource;
 import com.carbonldp.rdf.RDFResourceRepository;
 import com.carbonldp.repository.FileRepository;
 import org.joda.time.DateTime;
-import org.openrdf.model.URI;
+import org.openrdf.model.IRI;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.File;
@@ -25,9 +25,9 @@ public class SesameNonRDFSourceService extends AbstractSesameLDPService implemen
 	}
 
 	@Override
-	public boolean isRDFRepresentation( URI targetURI ) {
-		RDFSource source = sourceRepository.get( targetURI );
-		return source.getTypes().contains( RDFRepresentationDescription.Resource.CLASS.getURI() );
+	public boolean isRDFRepresentation( IRI targetIRI ) {
+		RDFSource source = sourceRepository.get( targetIRI );
+		return source.getTypes().contains( RDFRepresentationDescription.Resource.CLASS.getIRI() );
 	}
 
 	@Override
@@ -43,26 +43,26 @@ public class SesameNonRDFSourceService extends AbstractSesameLDPService implemen
 		setContentType( rdfRepresentation, contentType );
 		setSize( rdfRepresentation, requestEntity );
 
-		sourceRepository.touch( rdfRepresentation.getURI(), modifiedTime );
+		sourceRepository.touch( rdfRepresentation.getIRI(), modifiedTime );
 
 	}
 
 	private void setContentType( RDFRepresentation rdfRepresentation, String contentType ) {
-		URI rdfRepresentationUri = rdfRepresentation.getURI();
-		resourceRepository.remove( rdfRepresentationUri, RDFRepresentationDescription.Property.MEDIA_TYPE.getURI() );
-		resourceRepository.add( rdfRepresentationUri, RDFRepresentationDescription.Property.MEDIA_TYPE.getURI(), contentType );
+		IRI rdfRepresentationUri = rdfRepresentation.getIRI();
+		resourceRepository.remove( rdfRepresentationUri, RDFRepresentationDescription.Property.MEDIA_TYPE.getIRI() );
+		resourceRepository.add( rdfRepresentationUri, RDFRepresentationDescription.Property.MEDIA_TYPE.getIRI(), contentType );
 	}
 
 	private void setSize( RDFRepresentation rdfRepresentation, File requestEntity ) {
-		URI rdfRepresentationUri = rdfRepresentation.getURI();
-		resourceRepository.remove( rdfRepresentationUri, RDFRepresentationDescription.Property.SIZE.getURI() );
-		resourceRepository.add( rdfRepresentationUri, RDFRepresentationDescription.Property.SIZE.getURI(), requestEntity.length() );
+		IRI rdfRepresentationUri = rdfRepresentation.getIRI();
+		resourceRepository.remove( rdfRepresentationUri, RDFRepresentationDescription.Property.SIZE.getIRI() );
+		resourceRepository.add( rdfRepresentationUri, RDFRepresentationDescription.Property.SIZE.getIRI(), requestEntity.length() );
 	}
 
 	private void setFileIdentifier( RDFRepresentation rdfRepresentation, UUID uuid ) {
-		URI rdfRepresentationUri = rdfRepresentation.getURI();
-		resourceRepository.remove( rdfRepresentationUri, RDFRepresentationDescription.Property.FILE_IDENTIFIER.getURI() );
-		resourceRepository.add( rdfRepresentationUri, RDFRepresentationDescription.Property.FILE_IDENTIFIER.getURI(), uuid.toString() );
+		IRI rdfRepresentationUri = rdfRepresentation.getIRI();
+		resourceRepository.remove( rdfRepresentationUri, RDFRepresentationDescription.Property.FILE_IDENTIFIER.getIRI() );
+		resourceRepository.add( rdfRepresentationUri, RDFRepresentationDescription.Property.FILE_IDENTIFIER.getIRI(), uuid.toString() );
 	}
 
 	@Autowired

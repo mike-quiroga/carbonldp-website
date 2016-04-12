@@ -4,28 +4,28 @@ import com.carbonldp.agents.SesameAgentsRepository;
 import com.carbonldp.apps.context.RunInPlatformContext;
 import com.carbonldp.ldp.containers.ContainerRepository;
 import com.carbonldp.ldp.sources.RDFSourceRepository;
-import org.openrdf.model.URI;
+import org.openrdf.model.IRI;
 import org.openrdf.spring.SesameConnectionFactory;
 import org.springframework.transaction.annotation.Transactional;
 
 @Transactional
 public class SesamePlatformAgentRepository extends SesameAgentsRepository implements PlatformAgentRepository {
-	private final URI agentsContainerURI;
+	private final IRI agentsContainerIRI;
 
 	public SesamePlatformAgentRepository( SesameConnectionFactory connectionFactory, RDFSourceRepository sourceRepository, ContainerRepository containerRepository,
-		URI agentsContainerURI ) {
+		IRI agentsContainerIRI ) {
 		super( connectionFactory, sourceRepository, containerRepository );
-		this.agentsContainerURI = agentsContainerURI;
+		this.agentsContainerIRI = agentsContainerIRI;
 	}
 
 	@Override
-	protected URI getAgentsContainerURI() {
-		return agentsContainerURI;
+	protected IRI getAgentsContainerIRI() {
+		return agentsContainerIRI;
 	}
 
 	@RunInPlatformContext
 	@Override
-	public boolean exists( URI agentURI ) {
-		return containerRepository.hasMember( getAgentsContainerURI(), agentURI, agentsContainerType );
+	public boolean exists( IRI agentIRI ) {
+		return containerRepository.hasMember( getAgentsContainerIRI(), agentIRI, agentsContainerType );
 	}
 }

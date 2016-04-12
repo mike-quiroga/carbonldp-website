@@ -19,8 +19,8 @@ public class PlatformAPIRepository extends AbstractComponent {
 	}
 
 	public PlatformAPI get() {
-		PlatformAPI api = PlatformAPIFactory.create( new RDFResource( Platform.API_URI ) );
-		api.addType( RDFResourceDescription.Resource.VOLATILE.getURI() );
+		PlatformAPI api = PlatformAPIFactory.create( new RDFResource( Platform.API_IRI ) );
+		api.addType( RDFResourceDescription.Resource.VOLATILE.getIRI() );
 		api.setVersion( this.version );
 		api.setBuildDate( this.buildDate );
 		return api;

@@ -7,8 +7,9 @@ import com.carbonldp.authorization.Platform;
 import com.carbonldp.authorization.acl.ACEDescription;
 import com.carbonldp.authorization.acl.ACL;
 import com.carbonldp.exceptions.ResourceAlreadyExistsException;
-import org.openrdf.model.URI;
-import org.openrdf.model.impl.URIImpl;
+import org.openrdf.model.IRI;
+
+import org.openrdf.model.impl.SimpleValueFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Arrays;
@@ -33,12 +34,12 @@ public class SesamePlatformAgentService extends SesameAgentsService {
 		addAgentToDefaultPlatformRole( agent );
 
 		platformAgentRepository.create( agent );
-		ACL agentACL = aclRepository.createACL( agent.getURI() );
+		ACL agentACL = aclRepository.createACL( agent.getIRI() );
 		addAgentDefaultPermissions( agent, agentACL );
 
 		if ( requireValidation ) {
 			AgentValidator validator = createAgentValidator( agent );
-			ACL validatorACL = aclRepository.createACL( validator.getURI() );
+			ACL validatorACL = aclRepository.createACL( validator.getIRI() );
 			addValidatorDefaultPermissions( validatorACL );
 
 			sendValidationEmail( agent, validator );
@@ -55,19 +56,19 @@ public class SesamePlatformAgentService extends SesameAgentsService {
 	}
 
 	private void addAgentToDefaultPlatformRole( Agent agent ) {
-		URI defaultPlatformRoleURI = getDefaultPlatformRoleURI();
-		URI roleAgentsContainerURI = getRoleAgentsContainerURI( defaultPlatformRoleURI );
+		IRI defaultPlatformRoleIRI = getDefaultPlatformRoleIRI();
+		IRI roleAgentsContainerIRI = getRoleAgentsContainerIRI( defaultPlatformRoleIRI );
 
-		containerRepository.addMember( roleAgentsContainerURI, agent.getURI() );
+		containerRepository.addMember( roleAgentsContainerIRI, agent.getIRI() );
 	}
 
-	private URI getRoleAgentsContainerURI( URI defaultPlatformRoleURI ) {
+	private IRI getRoleAgentsContainerIRI( IRI defaultPlatformRoleIRI ) {
 		// TODO: Use a Vars property
-		return new URIImpl( defaultPlatformRoleURI.stringValue() + "agents/" );
+		return SimpleValueFactory.getInstance().createIRI( defaultPlatformRoleIRI.stringValue() + "agents/" );
 	}
 
-	private URI getDefaultPlatformRoleURI() {
-		return Platform.Role.APP_DEVELOPER.getURI();
+	private IRI getDefaultPlatformRoleIRI() {
+		return Platform.Role.APP_DEVELOPER.getIRI();
 	}
 
 	@Autowired

@@ -4,28 +4,28 @@ import com.carbonldp.agents.Agent;
 import com.carbonldp.apps.App;
 import com.carbonldp.apps.AppRole;
 import com.carbonldp.ldp.containers.Container;
-import org.openrdf.model.URI;
+import org.openrdf.model.IRI;
 
 import java.util.Set;
 
 public interface AppRoleRepository {
-	public boolean exists( URI appRoleURI );
+	public boolean exists( IRI appRoleIRI );
 
-	public AppRole get( URI appRoleURI );
+	public AppRole get( IRI appRoleIRI );
 
 	public Set<AppRole> get( Agent agent );
 
 	public Set<AppRole> get( App app, Agent agent );
 
-	public void addAgent( URI appRole, Agent agent );
+	public void addAgent( IRI appRole, Agent agent );
 
-	public Container createAppRolesContainer( URI rootContainerURI );
+	public Container createAppRolesContainer( IRI rootContainerIRI );
 
-	public Set<URI> getParentsURI( URI appRoleURI );
+	public Set<IRI> getParentsIRI( IRI appRoleIRI );
 
-	public URI getContainerURI();
+	public IRI getContainerIRI();
 
-	public URI getAgentsContainerURI( URI appRoleURI );
+	public IRI getAgentsContainerIRI( IRI appRoleIRI );
 
-	public void delete( URI appRoleURI );
+	public void delete( IRI appRoleIRI );
 }

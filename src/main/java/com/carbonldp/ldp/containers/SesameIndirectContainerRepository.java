@@ -8,7 +8,7 @@ import com.carbonldp.rdf.RDFResourceRepository;
 import com.carbonldp.utils.RDFNodeUtil;
 import com.carbonldp.utils.ValueUtil;
 import org.apache.commons.lang3.NotImplementedException;
-import org.openrdf.model.URI;
+import org.openrdf.model.IRI;
 import org.openrdf.model.Value;
 import org.openrdf.query.BindingSet;
 import org.openrdf.spring.SesameConnectionFactory;
@@ -18,8 +18,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import static com.carbonldp.Consts.NEW_LINE;
-import static com.carbonldp.Consts.TAB;
+import static com.carbonldp.Consts.*;
 
 @Transactional
 public class SesameIndirectContainerRepository extends AbstractAccessPointRepository {
@@ -35,13 +34,13 @@ public class SesameIndirectContainerRepository extends AbstractAccessPointReposi
 	}
 
 	@Override
-	public boolean hasMember( URI containerURI, URI possibleMemberURI ) {
+	public boolean hasMember( IRI containerIRI, IRI possibleMemberIRI ) {
 		// TODO: Implement
 		throw new NotImplementedException( "Not implemented." );
 	}
 
 	@Override
-	public boolean hasMembers( URI containerURI, String sparqlSelector, Map<String, Value> bindings ) {
+	public boolean hasMembers( IRI containerIRI, String sparqlSelector, Map<String, Value> bindings ) {
 		// TODO: Implement
 		throw new RuntimeException( "Not Implemented" );
 	}
@@ -51,9 +50,9 @@ public class SesameIndirectContainerRepository extends AbstractAccessPointReposi
 	static {
 		findMembersQuery = "" +
 			"SELECT ?members WHERE {" + NEW_LINE +
-			TAB + "GRAPH ?containerURI {" + NEW_LINE +
-			TAB + TAB + RDFNodeUtil.generatePredicateStatement( "?containerURI", "?hasMemberRelation", ContainerDescription.Property.HAS_MEMBER_RELATION ) + NEW_LINE +
-			TAB + TAB + RDFNodeUtil.generatePredicateStatement( "?containerURI", "?membershipResource", ContainerDescription.Property.MEMBERSHIP_RESOURCE ) + NEW_LINE +
+			TAB + "GRAPH ?containerIRI {" + NEW_LINE +
+			TAB + TAB + RDFNodeUtil.generatePredicateStatement( "?containerIRI", "?hasMemberRelation", ContainerDescription.Property.HAS_MEMBER_RELATION ) + NEW_LINE +
+			TAB + TAB + RDFNodeUtil.generatePredicateStatement( "?containerIRI", "?membershipResource", ContainerDescription.Property.MEMBERSHIP_RESOURCE ) + NEW_LINE +
 			TAB + "}" + NEW_LINE +
 			TAB + "GRAPH ?membershipResource {" + NEW_LINE +
 			TAB + TAB + "membershipResource ?hasMemberRelation ?members" + NEW_LINE +
@@ -66,8 +65,8 @@ public class SesameIndirectContainerRepository extends AbstractAccessPointReposi
 	}
 
 	@Override
-	public Set<URI> findMembers( URI containerURI, String sparqlSelector, Map<String, Value> bindings ) {
-		return findMembers( containerURI, sparqlSelector, bindings, findMembersQuery );
+	public Set<IRI> findMembers( IRI containerIRI, String sparqlSelector, Map<String, Value> bindings ) {
+		return findMembers( containerIRI, sparqlSelector, bindings, findMembersQuery );
 	}
 
 	private static final String filterMembersQuery;
@@ -75,9 +74,9 @@ public class SesameIndirectContainerRepository extends AbstractAccessPointReposi
 	static {
 		filterMembersQuery = "" +
 			"SELECT ?members WHERE {" + NEW_LINE +
-			TAB + "GRAPH ?containerURI {" + NEW_LINE +
-			TAB + TAB + RDFNodeUtil.generatePredicateStatement( "?containerURI", "?hasMemberRelation", ContainerDescription.Property.HAS_MEMBER_RELATION ) + NEW_LINE +
-			TAB + TAB + RDFNodeUtil.generatePredicateStatement( "?containerURI", "?membershipResource", ContainerDescription.Property.MEMBERSHIP_RESOURCE ) + NEW_LINE +
+			TAB + "GRAPH ?containerIRI {" + NEW_LINE +
+			TAB + TAB + RDFNodeUtil.generatePredicateStatement( "?containerIRI", "?hasMemberRelation", ContainerDescription.Property.HAS_MEMBER_RELATION ) + NEW_LINE +
+			TAB + TAB + RDFNodeUtil.generatePredicateStatement( "?containerIRI", "?membershipResource", ContainerDescription.Property.MEMBERSHIP_RESOURCE ) + NEW_LINE +
 			TAB + "}" + NEW_LINE +
 			TAB + "GRAPH ?membershipResource {" + NEW_LINE +
 			TAB + TAB + "membershipResource ?hasMemberRelation ?members." + NEW_LINE +
@@ -92,39 +91,39 @@ public class SesameIndirectContainerRepository extends AbstractAccessPointReposi
 	static {
 		getMembershipObjectQuery = "" +
 			"SELECT ?membershipObject WHERE{" + NEW_LINE +
-			TAB + "GRAPH ?containerURI{" + NEW_LINE +
-			TAB + TAB + RDFNodeUtil.generatePredicateStatement( "?containerURI", "?insertedContentRelation", ContainerDescription.Property.INSERTED_CONTENT_RELATION ) + NEW_LINE +
+			TAB + "GRAPH ?containerIRI{" + NEW_LINE +
+			TAB + TAB + RDFNodeUtil.generatePredicateStatement( "?containerIRI", "?insertedContentRelation", ContainerDescription.Property.INSERTED_CONTENT_RELATION ) + NEW_LINE +
 			TAB + "}" + NEW_LINE +
-			TAB + "GRAPH ?memberURI{" + NEW_LINE +
-			TAB + TAB + "?memberURI ?insertedContentRelation ?membershipObject" + NEW_LINE +
+			TAB + "GRAPH ?memberIRI{" + NEW_LINE +
+			TAB + TAB + "?memberIRI ?insertedContentRelation ?membershipObject" + NEW_LINE +
 			TAB + "}" + NEW_LINE +
 			"}";
 	}
 
 	@Override
-	public Set<URI> filterMembers( URI containerURI, Set<URI> possibleMemberURIs ) {
-		return filterMembers( containerURI, possibleMemberURIs, filterMembersQuery );
+	public Set<IRI> filterMembers( IRI containerIRI, Set<IRI> possibleMemberIRIs ) {
+		return filterMembers( containerIRI, possibleMemberIRIs, filterMembersQuery );
 	}
 
 	@Override
-	public void addMember( URI containerURI, URI member ) {
-		URI membershipObject = getMembershipObject( containerURI, member );
-		addHasMemberRelation( containerURI, membershipObject );
+	public void addMember( IRI containerIRI, IRI member ) {
+		IRI membershipObject = getMembershipObject( containerIRI, member );
+		addHasMemberRelation( containerIRI, membershipObject );
 		// TODO: check for permissions, pending design
-		addMemberOfRelation( containerURI, member );
+		addMemberOfRelation( containerIRI, member );
 	}
 
 	@Override
-	public void removeMember( URI containerURI, URI memberURI ) {
+	public void removeMember( IRI containerIRI, IRI memberIRI ) {
 		throw new NotImplementedException( "Remove indirect container members is not implemented yet" );
 	}
 
-	private URI getMembershipObject( URI containerURI, URI member ) {
+	private IRI getMembershipObject( IRI containerIRI, IRI member ) {
 		String queryString = getMembershipObjectQuery;
 
 		Map<String, Value> bindings = new HashMap<>();
-		bindings.put( "containerURI", containerURI );
-		bindings.put( "memberURI", member );
+		bindings.put( "containerIRI", containerIRI );
+		bindings.put( "memberIRI", member );
 
 		return sparqlTemplate.executeTupleQuery( queryString, bindings, queryResult -> {
 			Value membershipObject;
@@ -134,9 +133,9 @@ public class SesameIndirectContainerRepository extends AbstractAccessPointReposi
 				if ( queryResult.hasNext() ) throw new IllegalArgumentException( new Infraction( 0x2004, "property", "The membership object" ) );
 			} else throw new IllegalArgumentException( 0x2105 );
 
-			if ( ! ValueUtil.isURI( membershipObject ) ) throw new IllegalArgumentException( new Infraction( 0x2005, "property", "The primary topic" ) );
+			if ( ! ValueUtil.isIRI( membershipObject ) ) throw new IllegalArgumentException( new Infraction( 0x2005, "property", "The primary topic" ) );
 
-			return ValueUtil.getURI( membershipObject );
+			return ValueUtil.getIRI( membershipObject );
 		} );
 	}
 

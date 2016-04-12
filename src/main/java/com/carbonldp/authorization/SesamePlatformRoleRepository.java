@@ -6,9 +6,9 @@ import com.carbonldp.ldp.containers.ContainerRepository;
 import com.carbonldp.ldp.sources.RDFSource;
 import com.carbonldp.ldp.sources.RDFSourceRepository;
 import com.carbonldp.repository.AbstractSesameRepository;
+import com.carbonldp.utils.IRIUtil;
 import com.carbonldp.utils.RDFNodeUtil;
-import com.carbonldp.utils.URIUtil;
-import org.openrdf.model.URI;
+import org.openrdf.model.IRI;
 import org.openrdf.spring.SesameConnectionFactory;
 
 import java.util.Set;
@@ -17,21 +17,21 @@ import java.util.stream.Collectors;
 public class SesamePlatformRoleRepository extends AbstractSesameRepository implements PlatformRoleRepository {
 	private final RDFSourceRepository sourceService;
 	private final ContainerRepository containerRepository;
-	private final URI platformRolesContainerURI;
+	private final IRI platformRolesContainerIRI;
 
 	private final Type platformRolesContainerType = Type.BASIC;
 
 	public SesamePlatformRoleRepository( SesameConnectionFactory connectionFactory, RDFSourceRepository sourceService, ContainerRepository containerRepository,
-		URI platformRolesContainerURI ) {
+		IRI platformRolesContainerIRI ) {
 		super( connectionFactory );
 		this.sourceService = sourceService;
 		this.containerRepository = containerRepository;
-		this.platformRolesContainerURI = platformRolesContainerURI;
+		this.platformRolesContainerIRI = platformRolesContainerIRI;
 	}
 
-	public Set<PlatformRole> get( Set<URI> platformRoleURIs ) {
-		Set<URI> platformRolesURIs = containerRepository.filterMembers( platformRolesContainerURI, platformRoleURIs, platformRolesContainerType );
-		Set<RDFSource> sources = sourceService.get( platformRolesURIs );
+	public Set<PlatformRole> get( Set<IRI> platformRoleIRIs ) {
+		Set<IRI> platformRolesIRIs = containerRepository.filterMembers( platformRolesContainerIRI, platformRoleIRIs, platformRolesContainerType );
+		Set<RDFSource> sources = sourceService.get( platformRolesIRIs );
 
 		return sources.stream().map( PlatformRole::new ).collect( Collectors.toSet() );
 	}
@@ -41,7 +41,7 @@ public class SesamePlatformRoleRepository extends AbstractSesameRepository imple
 	}
 
 	public Set<Platform.Role> getRepresentations( Set<PlatformRole> platformRoleResources ) {
-		Set<URI> platformRolesURIs = URIUtil.getURIs( platformRoleResources );
-		return RDFNodeUtil.findByURIs( platformRolesURIs, Platform.Role.class );
+		Set<IRI> platformRolesIRIs = IRIUtil.getIRIs( platformRoleResources );
+		return RDFNodeUtil.findByIRIs( platformRolesIRIs, Platform.Role.class );
 	}
 }

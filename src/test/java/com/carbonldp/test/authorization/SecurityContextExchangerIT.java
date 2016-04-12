@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.testng.annotations.Test;
 
-import static org.testng.Assert.assertNull;
+import static org.testng.Assert.*;
 
 public class SecurityContextExchangerIT extends AbstractIT {
 

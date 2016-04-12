@@ -108,14 +108,14 @@ public abstract class SesameAgentsService extends AbstractSesameLDPService imple
 
 	static {
 		emailTemplate = "" +
-			"Validate your email by clicking this link: <a link=\"${validatorURI}\">${validatorURI}</a>"
+			"Validate your email by clicking this link: <a link=\"${validatorIRI}\">${validatorIRI}</a>"
 		;
 	}
 
 	private Map<String, Object> getEmailTemplateModel( Agent agent, AgentValidator validator ) {
 		Map<String, Object> model = new HashMap<>();
 
-		model.put( "validatorURI", validator.getURI() );
+		model.put( "validatorIRI", validator.getIRI() );
 		// TODO: Finish
 
 		return model;
