@@ -31,17 +31,6 @@ export class NewsletterFormComponent {
 		this.email = this.subscribeForm.controls[ "email" ];
 	}
 
-/*	ngAfterViewInit() {
-		this.createPopUp();
-	}
-
-	createPopUp() {
-		$("#send").popup({
-			popup: ".ui.message",
-			on    : "click"
-		});
-	}*/
-
 	onSubmit( $event:any ):void {
 
 		this.email.markAsTouched();
