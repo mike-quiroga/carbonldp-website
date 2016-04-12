@@ -211,10 +211,10 @@ public class SesameRDFSourceRepository extends AbstractSesameLDPRepository imple
 	public void delete( URI sourceURI, boolean deleteOccurrences ) {
 		Map<String, Value> bindings = new HashMap<>();
 		bindings.put( "sourceURI", sourceURI );
-		RepositoryResult<Resource> contexts = connectionTemplate.read( connection -> connection.getContextIDs() );
-		Set<URI> filteredContexts = new HashSet<>();
 
-		try {
+		connectionTemplate.write( connection -> {
+			RepositoryResult<Resource> contexts = connection.getContextIDs();
+			Set<URI> filteredContexts = new HashSet<>();
 			while ( contexts.hasNext() ) {
 				Resource context = contexts.next();
 				if ( context.stringValue().startsWith( sourceURI.stringValue() ) ) {
@@ -223,17 +223,14 @@ public class SesameRDFSourceRepository extends AbstractSesameLDPRepository imple
 					filteredContexts.add( contextURI );
 				}
 			}
-		} catch ( RepositoryException e ) {
-			throw new RuntimeException( e );
-		}
 
-		for ( Resource context : filteredContexts ) connectionTemplate.write( connection -> connection.remove( (Resource) null, null, null, context ) );
-
-		if ( deleteOccurrences ) {
-			for ( URI context : filteredContexts ) {
-				connectionTemplate.write( connection -> connection.remove( (Resource) null, null, context ) );
-				connectionTemplate.write( connection -> connection.remove( (Resource) null, context, null ) );
+			for ( Resource context : filteredContexts ) connection.remove( (Resource) null, null, null, context );
+			if ( deleteOccurrences ) {
+				for ( URI context : filteredContexts ) {
+					connection.remove( (Resource) null, null, context );
+					connection.remove( (Resource) null, context, null );
+				}
 			}
-		}
+		} );
 	}
 }
