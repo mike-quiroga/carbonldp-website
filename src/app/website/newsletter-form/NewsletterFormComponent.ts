@@ -1,10 +1,8 @@
-import { Component, Inject } from "angular2/core";
-import {Http, Headers, RequestOptions, Response} from "angular2/http";
-import { CORE_DIRECTIVES, FORM_DIRECTIVES } from "angular2/common";
-import { ROUTER_DIRECTIVES, ROUTER_PROVIDERS, Router} from "angular2/router";
+import { Component } from "angular2/core";
+import { CORE_DIRECTIVES, FORM_DIRECTIVES, FormBuilder, ControlGroup, AbstractControl, Validators } from "angular2/common";
+import { ROUTER_DIRECTIVES, ROUTER_PROVIDERS, Router, Location} from "angular2/router";
 
 import { ValidationService } from "app/components/validation-service/ValidationService";
-
 
 import $ from "jquery";
 import "semantic-ui/semantic";
@@ -19,40 +17,39 @@ import "./style.css!";
 } )
 
 export class NewsletterFormComponent {
-	http:Http;
 	router:Router;
-	show:boolean = false;
-	emailRequired:boolean = false;
-	emailInvalid: boolean = false;
-	redirectPage = document.location.href + "/signup-thanks/"   ;
-	//redirectPage = "https://local.carbonldp.com/carbon-website/src/";
+	subscribeForm:ControlGroup;
+	email:AbstractControl;
+	redirectPage = document.location.href + "/signup-thanks/";
 	errorPage = document.location.href;
-	//errorPage = "https://local.carbonldp.com/carbon-website/src/";
-	constructor( http:Http, router:Router ) {
-		this.http = http;
+
+	constructor( router:Router, formBuilder:FormBuilder ) {
 		this.router = router;
+		this.subscribeForm = formBuilder.group( {
+			"email": [ "", Validators.compose( [ Validators.required, ValidationService.emailValidator ] ) ]
+		} );
+		this.email = this.subscribeForm.controls[ "email" ];
 	}
 
+/*	ngAfterViewInit() {
+		this.createPopUp();
+	}
 
-	onSubmit( email:HTMLElement ):void {
+	createPopUp() {
+		$("#send").popup({
+			popup: ".ui.message",
+			on    : "click"
+		});
+	}*/
+
+	onSubmit( $event:any ):void {
+
+		this.email.markAsTouched();
 		let icpForm:HTMLElement = document.getElementById( 'icpsignup' );
-		let valid:any = ValidationService.emailValidator(email);
-		this.emailInvalid = false;
-		this.emailRequired = false;
-		if ( valid === null ) {
-			this.show = false;
-			//if ( document.location.protocol === "https:" ) {
-				icpForm.action = "https://app.icontact.com/icp/signup.php";
-				icpForm.submit();
-			//}
-		} else {
-			this.show = true;
-			if( email.value != "" ){
-				this.emailInvalid = true;
- 			} else {
-				this.emailRequired = true;
-			}
-		}
 
+		if ( this.subscribeForm.valid ) {
+			icpForm.action = "https://app.icontact.com/icp/signup.php";
+			icpForm.submit();
+		}
 	}
 }
