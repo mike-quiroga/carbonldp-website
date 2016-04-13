@@ -5,7 +5,7 @@ import "zone.js";
 import "reflect-metadata";
 
 import { bootstrap } from "angular2/platform/browser";
-import { provide, Provider, ComponentRef } from "angular2/core";
+import { provide, enableProdMode, Provider, ComponentRef } from "angular2/core";
 import { FORM_PROVIDERS } from "angular2/common";
 import { ROUTER_PROVIDERS, APP_BASE_HREF } from "angular2/router";
 import { HTTP_PROVIDERS } from "angular2/http";
@@ -35,6 +35,8 @@ let providers:Provider[] = [];
 providers = providers
 	.concat( CARBON_PROVIDERS )
 	.concat( CARBON_SERVICES_PROVIDERS );
+
+if( "<%- debug %>" === "false" ) enableProdMode();
 
 bootstrap( AppComponent, [
 	FORM_PROVIDERS,
