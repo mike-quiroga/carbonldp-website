@@ -20,9 +20,9 @@
 		<input type="hidden" name="reallistid" value="1">
 		<input type="hidden" name="doubleopt" value="1">
 
-		<div class="ui negative message segment" *ngIf="email.touched && !email.valid">
-				<span *ngIf="email.hasError('required')"><i class="warning sign icon"></i>Email is required.</span>
-				<span *ngIf="!email.hasError('required') && email.hasError('invalidEmailAddress')"><i class="warning sign icon"></i>Enter a valid email address.</span>
+		<div class="ui error message" *ngIf="email.touched && !email.valid">
+			<span *ngIf="email.hasError('required')"><i class="warning sign icon"></i>Email is required.</span>
+			<span *ngIf="!email.hasError('required') && email.hasError('invalidEmailAddress')"><i class="warning sign icon"></i>Enter a valid email address.</span>
 		</div>
 
 	</form>

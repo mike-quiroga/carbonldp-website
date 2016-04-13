@@ -1,6 +1,6 @@
 import { Component } from "angular2/core";
 import { CORE_DIRECTIVES, FORM_DIRECTIVES, FormBuilder, ControlGroup, AbstractControl, Validators } from "angular2/common";
-import { ROUTER_DIRECTIVES, ROUTER_PROVIDERS, Router, Location} from "angular2/router";
+import { ROUTER_DIRECTIVES, ROUTER_PROVIDERS, Router, LocationStrategy } from "angular2/router";
 
 import { ValidationService } from "app/components/validation-service/ValidationService";
 
@@ -20,8 +20,9 @@ export class NewsletterFormComponent {
 	router:Router;
 	subscribeForm:ControlGroup;
 	email:AbstractControl;
-	redirectPage = document.location.href + "/signup-thanks/";
-	errorPage = document.location.href;
+	redirectPage;
+	errorPage;
+	location;
 
 	constructor( router:Router, formBuilder:FormBuilder ) {
 		this.router = router;
@@ -29,10 +30,15 @@ export class NewsletterFormComponent {
 			"email": [ "", Validators.compose( [ Validators.required, ValidationService.emailValidator ] ) ]
 		} );
 		this.email = this.subscribeForm.controls[ "email" ];
+		this.location = location;
+	}
+
+	ngOnInit(){
+		this.redirectPage = document.location.href + "/signup-thanks/";
+		this.errorPage = document.location.href;
 	}
 
 	onSubmit( $event:any ):void {
-
 		this.email.markAsTouched();
 		let icpForm:HTMLElement = document.getElementById( 'icpsignup' );
 

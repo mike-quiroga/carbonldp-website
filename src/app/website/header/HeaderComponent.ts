@@ -19,7 +19,6 @@ import "./style.css!";
 export default class HeaderComponent {
 	router:Router;
 	element:ElementRef;
-	@Input() top:boolean;
 	$element:JQuery;
 	authService:AuthService.Class;
 

@@ -41,10 +41,10 @@ import "./style.css!";
 	{path: "ui-examples", as: "UIExamples", component: UIExamplesView},
 	{path: "signup-thanks", as: "SignupThanks", component: SignupThanksView},
 ] )
+
 export default class WebsiteView {
 	element:ElementRef;
 	$element:JQuery;
-	top:boolean = true;
 
 	constructor( router:Router, element:ElementRef ) {
 		this.element = element;
@@ -52,21 +52,7 @@ export default class WebsiteView {
 
 	ngAfterViewInit():void {
 		this.$element = $( this.element.nativeElement );
-		this.headerAnimation();
 	}
 
-	headerAnimation():void {
-		let home = this.$element.find("#main-carbon-logo");
-		home.visibility({
-			once: false,
-			offset: 80,
-			onTopPassed: function():void {
-				this.top = false;
-			},
-			onTopPassedReverse: function():void {
-				this.top = true;
-			}
-		} );
-	}
 
 }

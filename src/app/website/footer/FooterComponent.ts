@@ -1,5 +1,8 @@
 import { Component, ElementRef } from "angular2/core";
 import { CORE_DIRECTIVES } from "angular2/common";
+import { Angulartics2On} from "angulartics2/src/core/angulartics2On";
+import { Angulartics2 } from "angulartics2";
+
 
 import $ from "jquery";
 import "semantic-ui/semantic";
@@ -10,7 +13,7 @@ import "./style.css!";
 @Component({
 	selector: "footer",
 	template: template,
-	directives: [ ]
+	directives: [ Angulartics2On ]
 })
 export default class FooterComponent {
 	element:ElementRef;
@@ -36,6 +39,7 @@ export default class FooterComponent {
 	addSocialButtonsAnimations():void {
 		this.$element.find( ".social-icons .icon" ).mouseenter( triggerPulseTransition );
 	}
+
 }
 
 function triggerPulseTransition():void {

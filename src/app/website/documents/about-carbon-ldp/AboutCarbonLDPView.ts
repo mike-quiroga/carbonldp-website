@@ -24,7 +24,5 @@ export default class AboutCarbonLDPViews {
 
 	ngAfterViewInit():void {
 		this.$element = $( this.element.nativeElement );
-		//ga( "send", "pageview", location.pathname );
-
 	}
 }

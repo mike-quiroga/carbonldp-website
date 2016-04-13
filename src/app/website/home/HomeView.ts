@@ -39,7 +39,6 @@ export default class HomeView {
 		this.createDropdownMenus();
 		this.addMenuVisibilityHandlers();
 		this.createAccordions();
-		//ga( "send", "pageview", location.pathname );
 	}
 
 	routerOnDeactivate():void {
