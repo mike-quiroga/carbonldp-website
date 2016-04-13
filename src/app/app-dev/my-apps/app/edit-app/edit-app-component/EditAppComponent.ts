@@ -1,7 +1,6 @@
 import {Component, ElementRef, Input} from "angular2/core";
 import {CORE_DIRECTIVES, FORM_DIRECTIVES, FormBuilder, ControlGroup, AbstractControl, Control, Validators} from "angular2/common";
 import {Router, ROUTER_DIRECTIVES} from "angular2/router";
-import {Observable} from "rxjs";
 
 import Carbon from "carbonldp/Carbon";
 import * as Context from "carbonldp/Context";
@@ -125,7 +124,7 @@ export default class EditAppComponent {
 	}
 
 	canDisplayErrors():boolean {
-		return (! this.name.pristine && ! this.name.valid) || (! this.description.pristine && ! this.description.valid);
+		return (! this.name.pristine && ! this.name.valid) || (! this.description.pristine && ! this.description.valid) || (! this.corsGroup.pristine && ! this.corsGroup.valid);
 	}
 
 	onSubmit( data:{ name:string, description:string }, $event:any ):void {

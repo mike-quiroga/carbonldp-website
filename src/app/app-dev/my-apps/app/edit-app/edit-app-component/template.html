@@ -52,7 +52,7 @@
 			</div>
 			<div class="ui error message" *ngIf="corsGroup.hasError('invalidURLAddress')">
 				<i class="warning icon"></i>
-				Invalid address. Enter a valid address. E.g.: http://192.168.1.1 or http://www.domain.com
+				Invalid address. Enter a valid address. E.g: http://192.168.1.1 or http://www.domain.com
 			</div>
 			<div class="ui error message" *ngIf="corsGroup.hasError('emptyAllowedAddresses')">
 				<i class="warning icon"></i>
@@ -73,6 +73,17 @@
 		</li>
 		<li value="*" *ngIf="!description.pristine && description.hasError('required')">
 			The description is required.
+		</li>
+		<li value="*" *ngIf="!corsGroup.pristine && !corsGroup.valid">
+			Allowed domains errors:
+			<ol>
+				<li value="-" *ngIf="corsGroup.hasError('invalidURLAddress')">
+					Invalid address. Enter a valid address. E.g: http://192.168.1.1 or http://www.domain.com
+				</li>
+				<li value="-" *ngIf="corsGroup.hasError('emptyAllowedAddresses')">
+					You have not entered an address, please add at least one or allow all origins.
+				</li>
+			</ol>
 		</li>
 	</ol>
 </div>
