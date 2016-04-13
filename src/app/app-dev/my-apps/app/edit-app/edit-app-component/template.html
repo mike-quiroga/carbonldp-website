@@ -1,7 +1,6 @@
 <form [ngFormModel]="editAppForm"
       [ngClass]="{ loading: submitting, error: (!editAppForm.pristine && !editAppForm.valid) }"
       class="ui large form segment editAppForm">
-
 	<div class="field" [ngClass]="{ error: (!name.pristine && !name.valid) }">
 		<label>Name:</label>
 		<input placeholder="e.g. My First App" type="text" ngControl="name">
@@ -28,14 +27,14 @@
 			<div class="field" [ngClass]="{disabled: allDomains.value}">
 				<div class="ui action input">
 					<input placeholder="Enter an address e.g.: http://192.168.1.1 or http://www.domain.com" type="text" [(ngModel)]="domainStr" ngControl="domain">
-					<button class="ui button" [ngClass]="{disabled:(!domain.valid)}" (click)="addDomain(domainStr)">
+					<button class="ui button" [ngClass]="{disabled:corsGroup.hasError('invalidURLAddress')}" (click)="addDomain(domainStr)">
 						<i class="plus icon"></i>
 					</button>
 				</div>
 			</div>
 			<div class="field ui segment" [ngClass]="{disabled: allDomains.value}">
-				<ui class="ui middle aligned divided list allowedOrigins">
-					<li class="item" *ngFor="#opt of allowedOrigins; #i=index;">
+				<ui class="ui middle aligned divided list allowedDomains">
+					<li class="item" *ngFor="#opt of allowedDomains; #i=index;">
 						<div class="right floated content">
 							<button class="ui mini circular icon basic black button"
 							        (click)="removeDomain(opt)">
@@ -47,17 +46,22 @@
 						</div>
 					</li>
 				</ui>
-				<div *ngIf="allowedOrigins.length===0">
+				<div *ngIf="allowedDomains.length===0">
 					<p class="noAllowedOrigins">No allowed origins to show.</p>
 				</div>
 			</div>
-			<div class="ui error message" *ngIf="!domain.pristine && !!domain.value && domain.hasError('invalidURLAddress')">
+			<div class="ui error message" *ngIf="corsGroup.hasError('invalidURLAddress')">
 				<i class="warning icon"></i>
 				Invalid address. Enter a valid address. E.g.: http://192.168.1.1 or http://www.domain.com
+			</div>
+			<div class="ui error message" *ngIf="corsGroup.hasError('emptyAllowedAddresses')">
+				<i class="warning icon"></i>
+				You have not entered an address, please add at least one or allow all origins.
 			</div>
 		</div>
 	</div>
 	<button class="ui submit button"
+	        [ngClass]="{disabled: !editAppForm.valid}"
 	        (click)="onSubmit(editAppForm.value, $event)">
 		Submit
 	</button>

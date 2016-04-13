@@ -5,12 +5,8 @@ import {Observable} from "rxjs";
 
 import Carbon from "carbonldp/Carbon";
 import * as Context from "carbonldp/Context";
-import * as CarbonApp from "carbonldp/App";
-import * as Apps from "carbonldp/Apps";
-import * as HTTPResponse from "carbonldp/HTTP/Response";
 import * as HTTPErrors from "carbonldp/HTTP/Errors";
 import * as HTTPError from "carbonldp/HTTP/Errors/HTTPError";
-import * as Pointer from "carbonldp/Pointer";
 
 import $ from "jquery";
 import "semantic-ui/semantic";
@@ -39,6 +35,7 @@ export default class EditAppComponent {
 	errorMessage:string = "";
 
 	editAppForm:ControlGroup;
+	corsGroup:ControlGroup;
 	formBuilder:FormBuilder;
 	name:AbstractControl;
 	description:AbstractControl;
@@ -46,7 +43,7 @@ export default class EditAppComponent {
 	allDomains:AbstractControl;
 	domain:AbstractControl;
 
-	allowedOrigins:string[] = [ "localhost:8080", "http://www.apple.com", "http://www.google.com", ];
+	allowedDomains:string[] = [];
 	domainStr:string = "";
 	ALL_ORIGINS:string = "https://carbonldp.com/ns/v1/security#AllOrigins";
 
@@ -65,7 +62,6 @@ export default class EditAppComponent {
 
 	ngOnInit():void {
 		console.log( this.context );
-		// this.context.app.allowsOrigin
 		let allowAllOrigins:boolean = false;
 		if ( this.context.app.allowsOrigin )
 			allowAllOrigins = this.context.app.allowsOrigin.id === this.ALL_ORIGINS;
@@ -76,44 +72,48 @@ export default class EditAppComponent {
 			name: [ this.context.app.name, Validators.compose( [ Validators.required ] ) ],
 			description: [ this.context.app.description, Validators.compose( [ Validators.required ] ) ],
 			cors: this.formBuilder.group( {
-				allDomains: [ allowAllOrigins, Validators.compose( [] ) ],
-				domain: [ this.domainStr, Validators.compose( [] ) ],
-			}, {validator: this.domainValidator( "allDomains", "domain" )} ),
+				allDomains: [ allowAllOrigins ],
+				domain: [ this.domainStr ],
+				allowedDomains: [ this.allowedDomains ],
+			}, {validator: Validators.compose( [ this.domainValidator, this.allowedDomainsValidator ] )} ),
 		} );
 		this.name = this.editAppForm.controls[ "name" ];
 		this.description = this.editAppForm.controls[ "description" ];
-		this.allDomains = (<ControlGroup>this.editAppForm.controls[ "cors" ]).controls[ "allDomains" ];
-		this.domain = (<ControlGroup>this.editAppForm.controls[ "cors" ]).controls[ "domain" ];
+		this.corsGroup = <ControlGroup>this.editAppForm.controls[ "cors" ];
+		this.allDomains = this.corsGroup.controls[ "allDomains" ];
+		this.domain = this.corsGroup.controls[ "domain" ];
 		console.log( this.editAppForm );
 	}
 
-	ngAfterContentInit():void {
-
+	domainValidator( corsGroup:ControlGroup ):any {
+		let allDomains:AbstractControl = corsGroup.controls[ "allDomains" ];
+		let domain:AbstractControl = corsGroup.controls[ "domain" ];
+		if ( allDomains.value || (! allDomains.value && ! ! domain.value && ! ! domain.value.match( /^http(s?):\/\/((\w+\.)?\w+\.\w+|((2[0-5]{2}|1[0-9]{2}|[0-9]{1,2})\.){3}(2[0-5]{2}|1[0-9]{2}|[0-9]{1,2}))(\/)?$/gm ) ) ) {
+			return null;
+		}
+		if ( ! ! domain.value ) {
+			return {"invalidURLAddress": true};
+		}
 	}
 
-	domainValidator( allDomainsStr:string, domainStr:string ):any {
-		// if ( ! allDomains.value && ! domain.value.match( /^http(s?):\/\/((\w+\.)?\w+\.\w+|((2[0-5]{2}|1[0-9]{2}|[0-9]{1,2})\.){3}(2[0-5]{2}|1[0-9]{2}|[0-9]{1,2}))(\/)?$/gm ) ) {
-		// 	return {"invalidURLAddress": true};
-		// }
-		// return null;
-		return ( group:ControlGroup ):{[key:string]:any} => {
-			let allDomains:AbstractControl = group.controls[ allDomainsStr ];
-			let domain:AbstractControl = group.controls[ domainStr ];
-			if ( ! allDomains.value && ! domain.value.match( /^http(s?):\/\/((\w+\.)?\w+\.\w+|((2[0-5]{2}|1[0-9]{2}|[0-9]{1,2})\.){3}(2[0-5]{2}|1[0-9]{2}|[0-9]{1,2}))(\/)?$/gm ) ) {
-				return {"invalidURLAddress": true};
-			}
-			return null;
-		};
+	allowedDomainsValidator( corsGroup:ControlGroup ):any {
+		if ( ! corsGroup.value[ "allDomains" ] && (<string[]>corsGroup.value[ "allowedDomains" ]).length <= 0 ) {
+			return {"emptyAllowedAddresses": true};
+		}
+		return null;
 	}
 
 	addDomain( domain:any ):void {
-		if ( this.domain.valid && ! ! domain ) this.allowedOrigins.push( domain );
+		if ( this.domain.valid && ! ! domain ) this.allowedDomains.push( domain );
+		this.corsGroup.updateValueAndValidity();
 	}
 
 	removeDomain( option:string ):void {
-		let idx:number = this.allowedOrigins.indexOf( option );
-		if ( idx >= 0 )
-			this.allowedOrigins.splice( idx, 1 );
+		let idx:number = this.allowedDomains.indexOf( option );
+		if ( idx >= 0 ) {
+			this.allowedDomains.splice( idx, 1 );
+			this.corsGroup.updateValueAndValidity();
+		}
 	}
 
 	getSanitizedSlug( slug:string ):string {
