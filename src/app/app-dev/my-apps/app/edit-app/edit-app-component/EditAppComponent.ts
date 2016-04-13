@@ -16,9 +16,9 @@ import $ from "jquery";
 import "semantic-ui/semantic";
 
 import AppContextService from "./../../../../AppContextService";
-import App from "./../App";
 
 import template from "./template.html!";
+import "./style.css!";
 
 @Component( {
 	selector: "edit-app",
@@ -42,6 +42,13 @@ export default class EditAppComponent {
 	formBuilder:FormBuilder;
 	name:AbstractControl;
 	description:AbstractControl;
+	description:AbstractControl;
+	allDomains:AbstractControl;
+	domain:AbstractControl;
+
+	allowedOrigins:string[] = [ "localhost:8080", "http://www.apple.com", "http://www.google.com", ];
+	domainStr:string = "";
+	ALL_ORIGINS:string = "https://carbonldp.com/ns/v1/security#AllOrigins";
 
 
 	// Inputs and Outputs
@@ -58,20 +65,55 @@ export default class EditAppComponent {
 
 	ngOnInit():void {
 		console.log( this.context );
-		// "https://carbonldp.com/ns/v1/security#AllOrigins"
 		// this.context.app.allowsOrigin
+		let allowAllOrigins:boolean = false;
+		if ( this.context.app.allowsOrigin )
+			allowAllOrigins = this.context.app.allowsOrigin.id === this.ALL_ORIGINS;
 		this.$element = $( this.element.nativeElement );
+
 		this.$editAppForm = this.$element.find( "form.editAppForm" );
 		this.editAppForm = this.formBuilder.group( {
 			name: [ this.context.app.name, Validators.compose( [ Validators.required ] ) ],
 			description: [ this.context.app.description, Validators.compose( [ Validators.required ] ) ],
+			cors: this.formBuilder.group( {
+				allDomains: [ allowAllOrigins, Validators.compose( [] ) ],
+				domain: [ this.domainStr, Validators.compose( [] ) ],
+			}, {validator: this.domainValidator( "allDomains", "domain" )} ),
 		} );
 		this.name = this.editAppForm.controls[ "name" ];
 		this.description = this.editAppForm.controls[ "description" ];
+		this.allDomains = (<ControlGroup>this.editAppForm.controls[ "cors" ]).controls[ "allDomains" ];
+		this.domain = (<ControlGroup>this.editAppForm.controls[ "cors" ]).controls[ "domain" ];
+		console.log( this.editAppForm );
 	}
 
 	ngAfterContentInit():void {
 
+	}
+
+	domainValidator( allDomainsStr:string, domainStr:string ):any {
+		// if ( ! allDomains.value && ! domain.value.match( /^http(s?):\/\/((\w+\.)?\w+\.\w+|((2[0-5]{2}|1[0-9]{2}|[0-9]{1,2})\.){3}(2[0-5]{2}|1[0-9]{2}|[0-9]{1,2}))(\/)?$/gm ) ) {
+		// 	return {"invalidURLAddress": true};
+		// }
+		// return null;
+		return ( group:ControlGroup ):{[key:string]:any} => {
+			let allDomains:AbstractControl = group.controls[ allDomainsStr ];
+			let domain:AbstractControl = group.controls[ domainStr ];
+			if ( ! allDomains.value && ! domain.value.match( /^http(s?):\/\/((\w+\.)?\w+\.\w+|((2[0-5]{2}|1[0-9]{2}|[0-9]{1,2})\.){3}(2[0-5]{2}|1[0-9]{2}|[0-9]{1,2}))(\/)?$/gm ) ) {
+				return {"invalidURLAddress": true};
+			}
+			return null;
+		};
+	}
+
+	addDomain( domain:any ):void {
+		if ( this.domain.valid && ! ! domain ) this.allowedOrigins.push( domain );
+	}
+
+	removeDomain( option:string ):void {
+		let idx:number = this.allowedOrigins.indexOf( option );
+		if ( idx >= 0 )
+			this.allowedOrigins.splice( idx, 1 );
 	}
 
 	getSanitizedSlug( slug:string ):string {
