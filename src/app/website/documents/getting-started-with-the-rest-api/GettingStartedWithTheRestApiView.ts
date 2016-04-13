@@ -1,13 +1,16 @@
-import {Component, ElementRef } from "angular2/core";
+import { Component, ElementRef } from "angular2/core";
 import { CORE_DIRECTIVES } from "angular2/common";
 import { Title } from "angular2/platform/browser";
-import SidebarService from "./../sidebar/service/SidebarService";
 
-import * as CodeMirrorComponent from "app/components/code-mirror/CodeMirrorComponent";
+import Carbon from "carbonldp/Carbon";
+
+import HighlightDirective from "app/directives/HighlightDirective";
+
+import SidebarService from "./../sidebar/service/SidebarService";
+import SidebarComponent from "./../sidebar/SidebarComponent";
 
 import $ from "jquery";
 import "semantic-ui/semantic";
-import SidebarComponent from "./../sidebar/SidebarComponent";
 
 import template from "./template.html!";
 import "./style.css!";
@@ -15,18 +18,27 @@ import "./style.css!";
 @Component( {
 	selector: "getting-started-rest-api",
 	template: template,
-	directives: [ CORE_DIRECTIVES, CodeMirrorComponent.Class, SidebarComponent ],
+	directives: [ CORE_DIRECTIVES, HighlightDirective, SidebarComponent ],
 	providers: [ Title, SidebarService ]
 } )
 export default class GettingStartedWithTheRestApiView {
 	element:ElementRef;
 	$element:JQuery;
 	sidebarService:SidebarService;
+	protocolAndHost:string;
 
-	constructor( element:ElementRef, title:Title, sidebarService:SidebarService ) {
+	private carbon:Carbon;
+
+	constructor( element:ElementRef, title:Title, carbon:Carbon, sidebarService:SidebarService ) {
 		this.element = element;
 		title.setTitle( "Getting started - Rest API" );
 		this.sidebarService = sidebarService;
+		this.carbon = carbon;
+		this.sidebarService = sidebarService;
+
+		title.setTitle( "Getting started - Rest API" );
+
+		this.protocolAndHost = `${ this.carbon.getSetting( "http.ssl" ) ? "https" : "http" }://${ this.carbon.getSetting( "domain" ) }`;
 	}
 
 	ngAfterViewInit():void {
@@ -38,4 +50,5 @@ export default class GettingStartedWithTheRestApiView {
 	createAccordions():void {
 		this.$element.find( ".ui.accordion" ).accordion();
 	}
+
 }

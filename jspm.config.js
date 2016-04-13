@@ -28,7 +28,7 @@ SystemJS.config({
     },
     "angular2-carbonldp": {
       "map": {
-        "angular2": "npm:angular2@2.0.0-beta.13",
+        "angular2": "npm:angular2@2.0.0-beta.14",
         "js-cookie": "npm:js-cookie@2.1.0"
       }
     },
@@ -52,13 +52,14 @@ SystemJS.config({
   ],
   map: {
     "angulartics2": "npm:angulartics2@1.0.1",
+    "highlight.js": "npm:highlight.js@9.3.0",
     "clean-css": "npm:clean-css@3.4.10",
     "codemirror": "npm:codemirror@5.12.0",
     "assert": "github:jspm/nodelibs-assert@0.2.0-alpha",
     "dgram": "github:jspm/nodelibs-dgram@0.2.0-alpha",
     "dns": "github:jspm/nodelibs-dns@0.2.0-alpha",
     "ecc-jsbn": "npm:ecc-jsbn@0.1.1",
-    "angular2": "npm:angular2@2.0.0-beta.13",
+    "angular2": "npm:angular2@2.0.0-beta.14",
     "buffer": "github:jspm/nodelibs-buffer@0.2.0-alpha",
     "child_process": "github:jspm/nodelibs-child_process@0.2.0-alpha",
     "constants": "github:jspm/nodelibs-constants@0.2.0-alpha",
