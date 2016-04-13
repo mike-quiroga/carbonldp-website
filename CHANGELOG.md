@@ -1,96 +1,108 @@
+# 0.5.7 (April 13, 2016)
+- Add protocolAndHost field to GettingStarted TypeScript so that documentation can always reflect the server you're on.
+- Upgrade to Angular beta 14
+- Add Eclipse .project file to .gitignore.
+- Change order of dependencies to avoid ["Uncaught (in promise)TypeError: object is not a constructor"](https://github.com/blacksonic/angular2-es6-starter/issues/1).
+- Remove documentation of dependency on global packages.
+- Modify Getting Started with the REST API documentation sufficient to start reviews with Alpha testers.
+- Add debug config option to enableProdMode in Angular
+- Replace code-mirror read only instances with highlight.js, it's much faster and highly optimized for read only syntax highlighting
+- Make npm scripts cross platform compatible (by removing relative directories)
+- Update code-mirror so it works with ng-content and fixes extra tabs
+
 # 0.5.6 (March 28, 2016)
-* Add logout option to AppDev.
-* Add rememberMe option to loginComponent.
-* Add login view for AppDev to AppComponent.
-* Add link to AppDevLogin on mobile view.
-* Fix login component error messages layout.
-* Fix login component displaying outside viewport on small screens.
-* Fix minor tslint errors.
-* Fix AppDev header menu misbehaviour on mobile screens.
-* Update Angular2 to beta 13
-* Replace live-server with gulp-webserver
+- Add logout option to AppDev.
+- Add rememberMe option to loginComponent.
+- Add login view for AppDev to AppComponent.
+- Add link to AppDevLogin on mobile view.
+- Fix login component error messages layout.
+- Fix login component displaying outside viewport on small screens.
+- Fix minor tslint errors.
+- Fix AppDev header menu misbehaviour on mobile screens.
+- Update Angular2 to beta 13
+- Replace live-server with gulp-webserver
 
 # 0.5.5 (March 16, 2016)
-* Add confirmation when changing between queries.
-* Change SPARQL Editor UI.
-* Change Carbon context to dev instead of local.
-* Add errors area component to App-Dev template.
-* Add section to SPARQL Editor to display breaking errors.
-* Add option to SPARQL to emit errors.
-* Add service to the ErrorsArea to send errors to errorsArea.
-* Fix SPARQL onReExecute response.
-* Fix SPARQL onConfigure response.
-* Change object clonation method to use ES6 Object.assign on SPARQL Editor.
-* Change SPARQL Editor onClickSavedQuery algorithm.
-* Add method to display errors [ 400, 403, 404, 413, 414, 429 ] in the response stack.
-* Add accept headers when sending DESCRIBE and CONSTRUCT queries.
-* Add clean query button.
-* Add success or failure icon on responses stack when ASK queries return true or false.
-* Add SPARQL query to each response on the response stack.
-* Add confirmation to delete saved queries.
-* Add more formats to output formats (ntriples, trix, trig, binary, nquads, rdfa).
+- Add confirmation when changing between queries.
+- Change SPARQL Editor UI.
+- Change Carbon context to dev instead of local.
+- Add errors area component to App-Dev template.
+- Add section to SPARQL Editor to display breaking errors.
+- Add option to SPARQL to emit errors.
+- Add service to the ErrorsArea to send errors to errorsArea.
+- Fix SPARQL onReExecute response.
+- Fix SPARQL onConfigure response.
+- Change object clonation method to use ES6 Object.assign on SPARQL Editor.
+- Change SPARQL Editor onClickSavedQuery algorithm.
+- Add method to display errors [ 400, 403, 404, 413, 414, 429 ] in the response stack.
+- Add accept headers when sending DESCRIBE and CONSTRUCT queries.
+- Add clean query button.
+- Add success or failure icon on responses stack when ASK queries return true or false.
+- Add SPARQL query to each response on the response stack.
+- Add confirmation to delete saved queries.
+- Add more formats to output formats (ntriples, trix, trig, binary, nquads, rdfa).
 
 # 0.5.4 (March 16, 2016)
-* Added authentication to access AppDev.
-* Added js-cookie library.
-* Added cookies to store Carbon.Auth.Credential tokens.
-* Added Carbon is authenticated validation while trying to access any component of AppDev.
+- Added authentication to access AppDev.
+- Added js-cookie library.
+- Added cookies to store Carbon.Auth.Credential tokens.
+- Added Carbon is authenticated validation while trying to access any component of AppDev.
 
 # 0.5.3 (March 14, 2016)
-* Added sidebar component for documents.
-* Added styles for documents and sidebar components.
-* Added documents home index.
-* Change documents pages to angular components.
-* Fix typo in Getting started with rest api document.
-* Removed ContentComponent and ContentService.
-* Removed documents from assets.
+- Added sidebar component for documents.
+- Added styles for documents and sidebar components.
+- Added documents home index.
+- Change documents pages to angular components.
+- Fix typo in Getting started with rest api document.
+- Removed ContentComponent and ContentService.
+- Removed documents from assets.
 
 # 0.5.2 (March 14, 2016)
-* Updated JSPM to 0.17
-* Added tsconfig.json and restructured files to use it
+- Updated JSPM to 0.17
+- Added tsconfig.json and restructured files to use it
 
 # 0.5.1 (March 4, 2016)
-* Updated Getting started with rest api document
+- Updated Getting started with rest api document
 
 # 0.5.0 (March 4, 2016)
-* Updated Angular to Beta 8.
-* Added a login view.
-* Added a color palette to the UI with 7 new colors.
-* Added an Application Development module with:
-    *  A service to retrieve applications.
-    *  A view to list retrieved applications.
-    *  A navigation bar for breadcrumbs.
-    *  A sidebar to provide navigation throughout the module.
-    *  Integration with the SPARQL Query Editor on an App context.
+- Updated Angular to Beta 8.
+- Added a login view.
+- Added a color palette to the UI with 7 new colors.
+- Added an Application Development module with:
+    - A service to retrieve applications.
+    - A view to list retrieved applications.
+    - A navigation bar for breadcrumbs.
+    - A sidebar to provide navigation throughout the module.
+    - Integration with the SPARQL Query Editor on an App context.
 
 # 0.4.0 (March 3, 2016)
-* Switched tsd to typings
-* Added angular2 and carbon definition files (they provide jspm import support while we wait for WEB-18904)
+- Switched tsd to typings
+- Added angular2 and carbon definition files (they provide jspm import support while we wait for WEB-18904)
 
 # 0.3.2 (February 29, 2016)
-* Fixed DI. static private parameters property shouldn't be needed anymore.
+- Fixed DI. static private parameters property shouldn't be needed anymore.
 
 # 0.3.1 (February 15, 2016)
-* Fixed relative paths issue in different environments
-* Added configuration file and support for ejs templates for index.html, boot.ts and any scss
-* Any gulp task can now be executed with a -p or --profile argument to specify environment (local|dev|prod)
+- Fixed relative paths issue in different environments
+- Added configuration file and support for ejs templates for index.html, boot.ts and any scss
+- Any gulp task can now be executed with a -p or --profile argument to specify environment (local|dev|prod)
    
    Example: `gulp build --profile dev`
 
 # 0.3.0 (February 3, 2016)
-* Update Angular2 to Beta 3
-* Fix getting started indentation
+- Update Angular2 to Beta 3
+- Fix getting started indentation
 
 # 0.2.0 (December 9, 2015)
-* Added a new **SPARQL Query Editor** using Semantic UI Framework.
-* Fixed SPARQL-Client to work with scss files instead of css.
-* Changed dynamic logo to static image.
-* Added CodeMirror to **SPARQL Query Editor** responses.
-* Fixed Semantic UI version.
-* Fixed build gulp task and fix dist/ starting path	
-* Added on configure query, add re execute query functionality.
-* Refactored SPARQLClientComponent classes.
-* Removed ResultsetComponent.
+- Added a new **SPARQL Query Editor** using Semantic UI Framework.
+- Fixed SPARQL-Client to work with scss files instead of css.
+- Changed dynamic logo to static image.
+- Added CodeMirror to **SPARQL Query Editor** responses.
+- Fixed Semantic UI version.
+- Fixed build gulp task and fix dist/ starting path
+- Added on configure query, add re execute query functionality.
+- Refactored SPARQLClientComponent classes.
+- Removed ResultsetComponent.
 
 # 0.1.0 (November 6, 2015)
-* Initial release
+- Initial release

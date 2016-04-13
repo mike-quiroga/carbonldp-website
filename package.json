@@ -1,6 +1,6 @@
 {
   "name": "carbon-website",
-  "version": "0.5.6",
+  "version": "0.5.7",
   "description": "Public Website for carbonldp.com",
   "main": "dist/index.html",
   "author": "Base22 LLC",
@@ -25,7 +25,9 @@
     "url": "https://source.base22.com/scm/ldp/carbon-website.git"
   },
   "devDependencies": {
+    "angular2": "^2.0.0-beta.14",
     "del": "^2.2.0",
+    "es6-shim": "^0.35.0",
     "gulp": "^3.9.0",
     "gulp-autoprefixer": "^3.1.0",
     "gulp-chug": "^0.5.1",
@@ -39,17 +41,21 @@
     "gulp-watch": "^4.3.5",
     "gulp-webserver": "^0.9.1",
     "jspm": "^0.17.0-beta.12",
+    "reflect-metadata": "^0.1.2",
+    "rxjs": "^5.0.0-beta.2",
     "semantic-ui": "^2.1.8",
+    "systemjs": "^0.19.26",
     "systemjs-builder": "^0.15.14",
     "tslint": "^3.6.0",
     "typescript": "^1.8.7",
     "typings": "^0.7.11",
-    "yargs": "^4.3.2"
+    "yargs": "^4.3.2",
+    "zone.js": "^0.6.10"
   },
   "scripts": {
-    "postinstall": "./node_modules/.bin/jspm config registries.github.remote https://github.jspm.io && ./node_modules/.bin/jspm config registries.github.auth Q2FyYm9uRGVwbG95ZXI6NGMxZjMzYTMyZTI3OGU0ODBmZmY2MDg1MWEyNTZlMzcxNzJkZTllOA== && ./node_modules/.bin/jspm config registries.github.maxRepoSize 0 && ./node_modules/.bin/jspm config registries.github.handler jspm-github && ./node_modules/.bin/jspm install && ./node_modules/.bin/gulp copy-node-dependencies",
-    "start": "./node_modules/.bin/gulp serve",
-    "test": "./node_modules/.bin/gulp test"
+    "postinstall": "jspm config registries.github.remote https://github.jspm.io && jspm config registries.github.remote https://github.jspm.io && jspm config registries.github.auth Q2FyYm9uRGVwbG95ZXI6NGMxZjMzYTMyZTI3OGU0ODBmZmY2MDg1MWEyNTZlMzcxNzJkZTllOA== && jspm config registries.github.maxRepoSize 0 && jspm config registries.github.handler jspm-github && jspm install && gulp copy-node-dependencies",
+    "start": "gulp serve",
+    "test": "gulp test"
   },
   "jspm": {
     "name": "app",
@@ -57,9 +63,10 @@
       "lib": "src/app"
     },
     "dependencies": {
-      "angular2": "npm:angular2@^2.0.0-beta.13",
+      "angular2": "npm:angular2@^2.0.0-beta.14",
       "codemirror": "npm:codemirror@^5.12.0",
       "css": "github:systemjs/plugin-css@^0.1.20",
+      "highlight.js": "npm:highlight.js@^9.3.0",
       "jquery": "npm:jquery@^2.2.1",
       "js-cookie": "npm:js-cookie@^2.1.0",
       "jsonld": "npm:jsonld@^0.4.6",
@@ -108,7 +115,7 @@
       "zlib": "github:jspm/nodelibs-zlib@^0.2.0-alpha"
     },
     "overrides": {
-      "npm:angular2@2.0.0-beta.13": {
+      "npm:angular2@2.0.0-beta.14": {
         "main": false,
         "dependencies": {
           "reflect-metadata": "npm:reflect-metadata@^0.1.3",
@@ -128,6 +135,25 @@
             ]
           }
         }
+      },
+      "npm:browserify-des@1.0.0": {
+        "format": "cjs",
+        "meta": {
+          "*.json": {
+            "format": "json"
+          },
+          "index.js": {
+            "globals": {
+              "Buffer": "buffer/global"
+            }
+          },
+          "test.js": {
+            "globals": {
+              "Buffer": "buffer/global"
+            }
+          }
+        },
+        "map": {}
       },
       "npm:browserify-zlib@0.1.4": {
         "dependencies": {
@@ -149,6 +175,17 @@
       "npm:reflect-metadata@0.1.3": {
         "map": {
           "crypto": "@empty"
+        }
+      },
+      "npm:typescript@1.8.9": {
+        "browser": {},
+        "map": {
+          "buffer": "@empty",
+          "child_process": "@empty",
+          "fs": "@empty",
+          "path": "@empty",
+          "process": "@empty",
+          "readline": "@empty"
         }
       }
     }
