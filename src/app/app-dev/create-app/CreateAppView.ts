@@ -1,7 +1,7 @@
-import { Component, ElementRef } from "angular2/core";
-import { CORE_DIRECTIVES, FORM_DIRECTIVES, FormBuilder, ControlGroup, AbstractControl, Control, Validators } from "angular2/common";
-import { Router, ROUTER_DIRECTIVES } from "angular2/router";
-import { Observable } from "rxjs";
+import {Component, ElementRef} from "angular2/core";
+import {CORE_DIRECTIVES, FORM_DIRECTIVES, FormBuilder, ControlGroup, AbstractControl, Control, Validators} from "angular2/common";
+import {Router, ROUTER_DIRECTIVES} from "angular2/router";
+import {Observable} from "rxjs";
 
 import Carbon from "carbonldp/Carbon";
 import * as CarbonApp from "carbonldp/App";
@@ -39,7 +39,8 @@ export default class CreateAppView {
 
 	_name:string = "";
 	_slug:string = "";
-	resolvedSlug:string = "";
+	persistedSlug:string = "";
+	persistedName:string = "";
 
 	createAppForm:ControlGroup;
 	formBuilder:FormBuilder;
@@ -123,10 +124,12 @@ export default class CreateAppView {
 		this.carbon.apps.create( slug, <CarbonApp.Class>appDocument ).then(
 			( [appPointer, appCreationResponse]:[ Pointer.Class, HTTPResponse.Class] ) => {
 				this.submitting = false;
-				this.resolvedSlug = this._slug;
+				this.persistedSlug = this._slug;
+				this.persistedName = this._name;
 				this.carbon.apps.getContext( appPointer ).then(
 					( appContext:CarbonApp.Context ):void => {
-						this.resolvedSlug = this.appContextService.getSlug( appContext );
+						this.persistedSlug = this.appContextService.getSlug( appContext );
+						this.persistedName = appContext.app.name;
 					}
 				);
 				this.displaySuccessMessage = true;
