@@ -29,5 +29,5 @@ import template from "./template.html!";
 	{path: "/ldp-concepts", as: "LDPConcepts", component: LDPConceptsView}
 ] )
 export default class DocumentsComponent {
-	
+
 }
