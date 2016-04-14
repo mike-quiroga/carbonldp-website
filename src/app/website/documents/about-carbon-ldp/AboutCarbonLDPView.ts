@@ -6,7 +6,6 @@ import $ from "jquery";
 import "semantic-ui/semantic";
 
 import template from "./template.html!";
-import {OnActivate} from "angular2/src/router/interfaces";
 
 @Component( {
 	selector: "about-carbon-ldp",

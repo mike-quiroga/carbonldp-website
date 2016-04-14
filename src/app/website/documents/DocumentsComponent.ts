@@ -11,8 +11,8 @@ import InteractionModelsView from "app/website/documents/interaction-models/Inte
 import LDPConceptsView from "app/website/documents/ldp-concepts/LDPConceptsView";
 
 import template from "./template.html!";
-import {OnActivate} from "angular2/src/router/interfaces";
 
+//noinspection TypeScriptValidateTypes
 @Component( {
 	selector: "documents",
 	template: template,
@@ -29,4 +29,5 @@ import {OnActivate} from "angular2/src/router/interfaces";
 	{path: "/ldp-concepts", as: "LDPConcepts", component: LDPConceptsView}
 ] )
 export default class DocumentsComponent {
+	
 }
