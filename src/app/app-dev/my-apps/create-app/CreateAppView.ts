@@ -1,11 +1,9 @@
 import {Component, ElementRef} from "angular2/core";
-import {CORE_DIRECTIVES, FORM_DIRECTIVES, FormBuilder, ControlGroup, AbstractControl, Control, Validators} from "angular2/common";
+import {CORE_DIRECTIVES, FormBuilder, ControlGroup, AbstractControl, Control, Validators} from "angular2/common";
 import {Router, ROUTER_DIRECTIVES} from "angular2/router";
-import {Observable} from "rxjs";
 
 import Carbon from "carbonldp/Carbon";
 import * as CarbonApp from "carbonldp/App";
-import * as Apps from "carbonldp/Apps";
 import * as HTTPResponse from "carbonldp/HTTP/Response";
 import * as HTTPErrors from "carbonldp/HTTP/Errors";
 import * as HTTPError from "carbonldp/HTTP/Errors/HTTPError";
@@ -14,8 +12,8 @@ import * as Pointer from "carbonldp/Pointer";
 import $ from "jquery";
 import "semantic-ui/semantic";
 
-import AppContextService from "./../AppContextService";
-import App from "./../my-apps/app/App";
+import AppContextService from "./../../AppContextService";
+import App from "./../app/App";
 
 import template from "./template.html!";
 
@@ -75,7 +73,7 @@ export default class CreateAppView {
 			( value ):void => {
 				if ( value ) {
 					this._slug = this.getSanitizedSlug( value );
-					this.slug.updateValueAndValidity( true, true );
+					this.slug.updateValueAndValidity();
 				}
 			}
 		);
@@ -83,7 +81,7 @@ export default class CreateAppView {
 
 	slugLostControl( evt:any ):void {
 		if ( ! evt.target.value.match( /^[a-z0-9]+(?:-[a-z0-9]*)*(?:\/*)$/ ) ) {
-			(<Control> this.slug).updateValue( this.getSanitizedSlug( evt.target.value ), false, false, false );
+			(<Control> this.slug).updateValue( this.getSanitizedSlug( evt.target.value ) );
 			this._slug = this.slug.value;
 		}
 	}
@@ -190,7 +188,7 @@ export default class CreateAppView {
 		return null;
 	}
 
-	closeMessage( evt:any ):void {
+	closeMessage( evt:Event ):void {
 		let message:JQuery = $( evt.srcElement ).closest( ".ui.message" );
 		message.transition( {
 			onComplete: ():void => {
