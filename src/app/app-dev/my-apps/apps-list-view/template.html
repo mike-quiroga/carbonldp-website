@@ -42,7 +42,10 @@
 				</div>
 			</div>
 			<div class="ui stackable cards" *ngIf="tileView && !errorMessage && !loading">
-				<app-tile class="card" *ngFor="#app of results; #i=index;" [app]="app"></app-tile>
+				<app-tile class="card"
+				          *ngFor="#app of results; #i=index;" [app]="app"
+				          (deleteApp)="askConfirmationToDeleteApp(app)">
+				</app-tile>
 			</div>
 			<div *ngIf="!tileView && !errorMessage && !loading">
 				<apps-list (deleteApp)="askConfirmationToDeleteApp($event)" [apps]="results"></apps-list>
@@ -61,10 +64,6 @@
 			<div class="ui header">You are about to delete this App!</div>
 			<p>If you proceed your App will be deleted.</p>
 			<p>Do you want to proceed?</p>
-			<div class="ui blue progress bar" [ngClass]="{hidden:deleteProgress<0}" >
-				<div class="bar"></div>
-				<div class="label">{{deleteProgress}}% Deleting app...</div>
-			</div>
 			<div class="ui error message transition" *ngIf="deleteError">
 				<i class="close icon" (click)="closeErrorMessage($event)"></i>
 				<div class="header">

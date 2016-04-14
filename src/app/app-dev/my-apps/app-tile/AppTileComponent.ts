@@ -1,8 +1,7 @@
-import { Component, Input, ElementRef } from "angular2/core";
-import { CORE_DIRECTIVES } from "angular2/common";
-import { Router, ROUTER_DIRECTIVES } from "angular2/router";
+import {Component, Input, Output, EventEmitter} from "angular2/core";
+import {CORE_DIRECTIVES} from "angular2/common";
+import {ROUTER_DIRECTIVES} from "angular2/router";
 
-import $ from "jquery";
 import "semantic-ui/semantic";
 
 import App from "../app/App";
@@ -15,16 +14,10 @@ import "./style.css!";
 	directives: [ CORE_DIRECTIVES, ROUTER_DIRECTIVES ]
 } )
 export default class AppTileComponent {
-	router:Router;
-	element:ElementRef;
-	$element:JQuery;
 	@Input() app:App;
+	@Output() deleteApp:EventEmitter<App> = new EventEmitter();
 
-	constructor( element:ElementRef, router:Router ) {
-		this.element = element;
-	}
-
-	ngAfterViewInit():void {
-		this.$element = $( this.element.nativeElement );
+	onDeleteApp( appContext:App ):void {
+		this.deleteApp.emit( appContext );
 	}
 }

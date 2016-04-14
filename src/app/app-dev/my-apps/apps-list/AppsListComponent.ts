@@ -1,8 +1,7 @@
-import { Component, Input, ElementRef, Output, EventEmitter } from "angular2/core";
-import { CORE_DIRECTIVES } from "angular2/common";
-import { Router, ROUTER_DIRECTIVES } from "angular2/router";
+import {Component, Input, Output, EventEmitter} from "angular2/core";
+import {CORE_DIRECTIVES} from "angular2/common";
+import {Router, ROUTER_DIRECTIVES} from "angular2/router";
 
-import $ from "jquery";
 import "semantic-ui/semantic";
 
 import App from "./../app/App";
@@ -16,8 +15,6 @@ import "./style.css!";
 } )
 export default class AppsListComponent {
 	router:Router;
-	element:ElementRef;
-	$element:JQuery;
 	@Input() apps:App[];
 	@Output() deleteApp:EventEmitter<App> = new EventEmitter();
 
@@ -25,13 +22,8 @@ export default class AppsListComponent {
 	sortedColumn:string = null;
 	ascending:boolean = false;
 
-	constructor( element:ElementRef, router:Router ) {
-		this.element = element;
+	constructor( router:Router ) {
 		this.router = router;
-	}
-
-	ngAfterViewInit():void {
-		this.$element = $( this.element.nativeElement );
 	}
 
 	navigateTo( url:any[] ):void {

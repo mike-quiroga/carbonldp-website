@@ -1,8 +1,8 @@
-import { Component, ElementRef, Type, Input, EventEmitter } from "angular2/core";
-import { Title } from "angular2/platform/browser";
-import { CORE_DIRECTIVES, Control } from "angular2/common";
-import { Router, RouteDefinition, ROUTER_DIRECTIVES, CanActivate} from "angular2/router";
-import { Observable } from "rxjs/Rx";
+import {Component, ElementRef} from "angular2/core";
+import {Title} from "angular2/platform/browser";
+import {CORE_DIRECTIVES} from "angular2/common";
+import {Router, ROUTER_DIRECTIVES} from "angular2/router";
+import {Observable} from "rxjs/Rx";
 
 import "semantic-ui/semantic";
 
@@ -45,10 +45,6 @@ export default class AppsListView {
 	deleteAppConfirmationModal:JQuery;
 	deleting:boolean = false;
 	deleteError:Message;
-	deleteTries:number = 1;
-	deleteMaxTries:number = 23;
-	deleteProgressBar:JQuery;
-	deleteProgress:number = - 1;
 
 	constructor( element:ElementRef, router:Router, appContextService:AppContextService, title:Title, carbon:Carbon ) {
 		this.element = element;
@@ -61,7 +57,6 @@ export default class AppsListView {
 
 	ngOnInit():void {
 		this.deleteAppConfirmationModal = this.$element.find( ".delete-app-confirmation.modal" );
-		this.deleteProgressBar = this.$element.find( ".progress.bar" );
 		this.searchBox = this.$element.find( "input.search" );
 		let terms:any = Observable.fromEvent( this.searchBox, "input" );
 		terms
@@ -102,64 +97,27 @@ export default class AppsListView {
 	toggleDeleteConfirmationModal():void {
 		this.deleteAppConfirmationModal.modal( "toggle" );
 		this.deleteError = null;
-		this.deleteTries = - 1;
-		this.deleteProgress = Math.ceil( ( this.deleteTries / this.deleteMaxTries) * 100 );
 	}
 
 	onApproveAppDeletion( approvedApp:App ):void {
 		if ( ! this.deleting ) {
 			this.deleting = true;
 			this.deleteError = null;
-			this.deleteTries = 1;
-			this.deleteProgressBar = this.deleteAppConfirmationModal.find( ".progress.bar" );
-			this.updateProgressBar();
 			this.deleteApp( approvedApp ).then(
 				( response:HTTP.Response.Class ):void => {
 					this.toggleDeleteConfirmationModal();
 					this.apps.splice( this.apps.indexOf( approvedApp ), 1 );
-					this.deleting = false;
 				},
 				( error:HTTPError.HTTPError ):void => {
-					let interval:any = setInterval( () => {
-						if ( this.deleteTries >= this.deleteMaxTries ) {
-							this.deleteTries = this.deleteMaxTries;
-							this.updateProgressBar();
-							this.deleting = false;
-							if ( ! this.deleteError ) {
-								this.toggleDeleteConfirmationModal();
-								this.apps.splice( this.apps.indexOf( approvedApp ), 1 );
-								this.searchApp( this.searchBox.val() );
-							} else {
-								// TODO: display error
-							}
-							Promise.resolve();
-							clearInterval( interval );
-						} else {
-							let options:any = {};
-							this.carbon.auth.addAuthentication( options );
-							HTTP.Request.Service.get( this.askingApp.app.id, options ).then(
-								( response:HTTP.Response.Class ) => {
-									this.deleteTries ++;
-								},
-								( _error:HTTPError.HTTPError ) => {
-									// console.log( "Error while fetching... %o", _error );
-									// TODO: write correct response when the error type can be identified
-									this.deleteTries = this.deleteMaxTries;
-								}
-							).then(
-								():void => {
-									this.updateProgressBar();
-								}
-							);
-						}
-					}, 5000 );
-				} );
+					this.deleteError = this.getErrorMessage( error );
+				}
+			).then(
+				():void => {
+					this.deleting = false;
+					this.searchApp( this.searchBox.val() );
+				}
+			);
 		}
-	}
-
-	updateProgressBar():void {
-		this.deleteProgress = Math.ceil( ( this.deleteTries / this.deleteMaxTries) * 100 );
-		this.deleteProgressBar.progress( {percent: this.deleteProgress} );
 	}
 
 	deleteApp( appContext:any ):Promise<HTTP.Response.Class> {
@@ -197,6 +155,7 @@ export default class AppsListView {
 
 	closeErrorMessage( evt:any ):void {
 		$( evt.srcElement ).closest( ".ui.message" ).transition( "fade" );
+		this.deleteError = null;
 	}
 
 	initializeModal():void {
