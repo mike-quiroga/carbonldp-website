@@ -4,6 +4,7 @@ import com.carbonldp.HTTPHeaders;
 import com.carbonldp.descriptions.APIPreferences;
 import com.carbonldp.descriptions.APIPreferences.ContainerRetrievalPreference;
 import com.carbonldp.descriptions.APIPreferences.InteractionModel;
+import com.carbonldp.http.OrderByRetrievalPreferences;
 import com.carbonldp.ldp.containers.Container;
 import com.carbonldp.ldp.containers.ContainerDescription;
 import com.carbonldp.ldp.containers.ContainerFactory;
@@ -12,6 +13,7 @@ import com.carbonldp.ldp.sources.RDFSource;
 import com.carbonldp.models.HTTPHeader;
 import com.carbonldp.models.HTTPHeaderValue;
 import com.carbonldp.utils.RDFNodeUtil;
+import com.carbonldp.utils.RequestUtil;
 import com.carbonldp.web.exceptions.BadRequestException;
 import com.carbonldp.web.exceptions.NotFoundException;
 import org.openrdf.model.IRI;
@@ -24,6 +26,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 public abstract class AbstractGETRequestHandler extends AbstractLDPRequestHandler {
@@ -101,8 +104,9 @@ public abstract class AbstractGETRequestHandler extends AbstractLDPRequestHandle
 
 	protected ResponseEntity<Object> handleContainerRetrieval( IRI targetIRI ) {
 		Set<ContainerRetrievalPreference> containerRetrievalPreferences = getContainerRetrievalPreferences( targetIRI );
+		OrderByRetrievalPreferences orderByRetrievalPreferences = RequestUtil.getRequestParameters( request );
 
-		Container container = containerService.get( targetIRI, containerRetrievalPreferences );
+		Container container = containerService.get( targetIRI, containerRetrievalPreferences, orderByRetrievalPreferences );
 
 		// TODO: Add Container related information to the request (number of contained resources and members)
 

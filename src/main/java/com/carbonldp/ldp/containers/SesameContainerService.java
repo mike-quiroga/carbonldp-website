@@ -78,8 +78,10 @@ public class SesameContainerService extends AbstractSesameLDPService implements 
 						.stream()
 						.map( statement -> ValueUtil.getIRI( statement.getObject() ) )
 						.collect( Collectors.toSet() );
+
 					Set<RDFSource> memberResources = sourceService.get( members );
 					if ( memberResources == null || memberResources.isEmpty() ) break;
+
 					RDFSource memberSource = memberResources.iterator().next();
 					container.getBaseModel().addAll( memberSource.getBaseModel() );
 					for ( RDFSource source : memberResources ) {
