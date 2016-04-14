@@ -1,3 +1,10 @@
+# 0.5.8 (April 14, 2016)
+- Add google analytics feature with angulartics2 plug in, and customized event tracking
+- Add newsletter component
+- Create signup-thanks PageView
+- Fix styles in footer, header, home Components.
+- Hide routes not ready for Prod. in Header Component.
+
 # 0.5.7 (April 13, 2016)
 - Add protocolAndHost field to GettingStarted TypeScript so that documentation can always reflect the server you're on.
 - Upgrade to Angular beta 14
