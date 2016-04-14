@@ -37,12 +37,12 @@ import CreateAppView from "./../create-app/CreateAppView";
 		},
 	},
 	{
-		path: "/create-app",
-		as: "CreateApp",
+		path: "/create",
+		as: "Create",
 		component: CreateAppView,
 		data: {
-			alias: "CreateApp",
-			displayName: "Create App",
+			alias: "Create",
+			displayName: "Create",
 		},
 	},
 ] )
