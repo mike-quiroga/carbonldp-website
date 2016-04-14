@@ -3,7 +3,7 @@ import {CORE_DIRECTIVES, FORM_DIRECTIVES, FormBuilder, ControlGroup, AbstractCon
 import {Router, ROUTER_DIRECTIVES} from "angular2/router";
 
 import Carbon from "carbonldp/Carbon";
-import * as Context from "carbonldp/Context";
+import * as Context from "carbonldp/App/Context";
 import * as HTTPErrors from "carbonldp/HTTP/Errors";
 import * as HTTPError from "carbonldp/HTTP/Errors/HTTPError";
 
@@ -44,11 +44,11 @@ export default class EditAppComponent {
 
 	allowedDomains:string[] = [];
 	domainStr:string = "";
-	ALL_ORIGINS:string = "https://carbonldp.com/ns/v1/security#AllOrigins";
+	// ALL_ORIGINS:string = "https://carbonldp.com/ns/v1/security#AllOrigins";
 
 
 	// Inputs and Outputs
-	@Input() context:Context;
+	@Input() context:Context.Class;
 
 
 	constructor( router:Router, element:ElementRef, formBuilder:FormBuilder, carbon:Carbon, appContextService:AppContextService ) {
@@ -62,8 +62,8 @@ export default class EditAppComponent {
 	ngOnInit():void {
 		console.log( this.context );
 		let allowAllOrigins:boolean = false;
-		if ( this.context.app.allowsOrigin )
-			allowAllOrigins = this.context.app.allowsOrigin.id === this.ALL_ORIGINS;
+		if ( this.context.app.allowsOrigins )
+			allowAllOrigins = this.context.app.allowsOrigins.id === Carbon.NS.CS.Predicate.allowsOrigin;
 		this.$element = $( this.element.nativeElement );
 
 		this.$editAppForm = this.$element.find( "form.editAppForm" );
@@ -127,7 +127,7 @@ export default class EditAppComponent {
 		return (! this.name.pristine && ! this.name.valid) || (! this.description.pristine && ! this.description.valid) || (! this.corsGroup.pristine && ! this.corsGroup.valid);
 	}
 
-	onSubmit( data:{ name:string, description:string }, $event:any ):void {
+	onSubmit( data:{ name:string, description:string, cors:{allDomains:boolean, domain:string, allowedDomains:string[], } }, $event:Event ):void {
 		$event.preventDefault();
 
 		this.submitting = true;
@@ -143,9 +143,16 @@ export default class EditAppComponent {
 
 		let name:string = data.name;
 		let description:string = data.description;
+		let allowsAllOrigin:any = data.cors.allDomains;
+		let allowedDomains:string[] = data.cors.allowedDomains;
 
 		if ( name ) this.context.app.name = name;
 		if ( description ) this.context.app.description = description;
+		if ( allowsAllOrigin ) {
+			this.context.app.allowsOrigins = [ Carbon.Pointer.Factory.create( Carbon.NS.CS.Predicate.allowsOrigin ) ];
+		} else {
+			this.context.app.allowsOrigins = allowedDomains.length > 0 ? allowedDomains : this.context.app.allowsOrigins;
+		}
 
 		this.context.app.save().then(
 			():void => {
@@ -208,7 +215,7 @@ export default class EditAppComponent {
 		return null;
 	}
 
-	closeMessage( evt:any ):void {
+	closeMessage( evt:Event ):void {
 		let message:JQuery = $( evt.srcElement ).closest( ".ui.message" );
 		message.transition( {
 			onComplete: ():void => {
