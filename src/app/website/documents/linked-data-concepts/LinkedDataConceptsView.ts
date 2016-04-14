@@ -17,14 +17,18 @@ import "./style.css!";
 export default class LinkedDataConceptsView {
 	element:ElementRef;
 	$element:JQuery;
+	title:Title;
 
 	constructor( element:ElementRef, title:Title ) {
 		this.element = element;
-		title.setTitle( "Linked Data Concepts" );
+		this.title = title;
 	}
 
 	ngAfterViewInit():void {
 		this.$element = $( this.element.nativeElement );
-		//ga( "send", "pageview", location.pathname );
+	}
+
+	routerOnActivate():void {
+		this.title.setTitle( "Linked Data Concepts" );
 	}
 }

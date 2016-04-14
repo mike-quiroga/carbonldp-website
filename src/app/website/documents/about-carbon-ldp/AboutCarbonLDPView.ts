@@ -6,6 +6,7 @@ import $ from "jquery";
 import "semantic-ui/semantic";
 
 import template from "./template.html!";
+import {OnActivate} from "angular2/src/router/interfaces";
 
 @Component( {
 	selector: "about-carbon-ldp",
@@ -16,13 +17,18 @@ import template from "./template.html!";
 export default class AboutCarbonLDPViews {
 	element:ElementRef;
 	$element:JQuery;
+	title:Title;
 
 	constructor( element:ElementRef, title:Title ) {
 		this.element = element;
-		title.setTitle( "About Carbon LDP" );
+		this.title = title;
 	}
 
 	ngAfterViewInit():void {
 		this.$element = $( this.element.nativeElement );
+	}
+
+	routerOnActivate():void {
+		this.title.setTitle( "About Carbon LDP" );
 	}
 }

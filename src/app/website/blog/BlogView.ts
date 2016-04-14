@@ -22,7 +22,7 @@ import "./style.css!";
 export default class BlogView {
 	router:Router;
 	dcl:DynamicComponentLoader;
-	title: Title;
+	title:Title;
 
 	blogService:BlogService;
 
@@ -37,7 +37,6 @@ export default class BlogView {
 		this.dcl = dcl;
 		this.blogService = blogService;
 		this.title = title;
-		this.title.setTitle( "Blog" );
 	}
 
 	getPostsList():void {
@@ -55,5 +54,6 @@ export default class BlogView {
 
 	routerOnActivate():void {
 		this.getPostsList();
+		this.title.setTitle( "Blog" );
 	}
 }

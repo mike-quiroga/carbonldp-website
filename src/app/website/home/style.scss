@@ -7,11 +7,11 @@ home {
 		}
 	}
 
-	a{
+	a {
 		line-height: 70px;
 	}
 
-	.ui.centered.image{
+	.ui.centered.image {
 		margin-top: 30px;
 	}
 
@@ -44,13 +44,12 @@ home {
 		}
 	}
 
-
-	.text.container > a:hover{
-			font-weight: bold;
-			text-shadow: white;
+	.text.container > a:hover {
+		font-weight: bold;
+		text-shadow: white;
 	}
 
-	#standards{
+	#standards {
 		padding-top: 40px;
 		h2 {
 			font-size: 1.1em;
@@ -63,15 +62,15 @@ home {
 		}
 	}
 
-	#articles{
+	#articles {
 		padding-bottom: 20px;
-		> .ui > .row > .column{
+		> .ui > .row > .column {
 			padding-left: 50px;
 			padding-right: 50px;
 		}
 	}
 
-	.ui.accordion img{
+	.ui.accordion img {
 		height: 30px;
 		width: 150px;
 		display: inline-block;
@@ -79,7 +78,7 @@ home {
 		vertical-align: middle;
 	}
 
-	.ui.accordion .title:not(.ui){
+	.ui.accordion .title:not(.ui) {
 		font-size: .9em;
 	}
 

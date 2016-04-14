@@ -33,7 +33,7 @@ export class NewsletterFormComponent {
 		this.location = location;
 	}
 
-	ngOnInit(){
+	ngOnInit() {
 		this.redirectPage = document.location.href + "/signup-thanks/";
 		this.errorPage = document.location.href;
 	}

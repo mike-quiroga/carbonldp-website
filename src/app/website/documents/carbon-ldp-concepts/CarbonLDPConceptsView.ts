@@ -16,22 +16,18 @@ import template from "./template.html!";
 export default class CarbonLDPConceptsView {
 	element:ElementRef;
 	$element:JQuery;
+	title;
 
 	constructor( element:ElementRef, title:Title ) {
 		this.element = element;
-		title.setTitle( "Carbon LDP Concepts" );
+		this.title = title;
 	}
 
 	ngAfterViewInit():void {
 		this.$element = $( this.element.nativeElement );
-		//ga( "send", "pageview", location.pathname );
-		//dataLayer.push({
-		//	'event':'PageView',
-		//	'page':{
-		//		'title': this.title,
-		//		'url': location.pathname
-		//	}
-		//});
 	}
 
+	routerOnActivate():void {
+		this.title.setTitle( "Carbon LDP Concepts" );
+	}
 }

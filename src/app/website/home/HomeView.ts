@@ -23,12 +23,13 @@ export default class HomeView {
 	$element:JQuery;
 	$mainMenu:JQuery;
 	$articles:JQuery;
+	title:Title;
 	$carbonLogo:JQuery;
 
 	constructor( router:Router, element:ElementRef, title:Title ) {
 		this.router = router;
 		this.element = element;
-		title.setTitle( "Home" );
+		this.title = title;
 	}
 
 	ngAfterViewInit():void {
@@ -39,6 +40,10 @@ export default class HomeView {
 		this.createDropdownMenus();
 		this.addMenuVisibilityHandlers();
 		this.createAccordions();
+	}
+
+	routerOnActivate():void {
+		this.title.setTitle( "Home" );
 	}
 
 	routerOnDeactivate():void {

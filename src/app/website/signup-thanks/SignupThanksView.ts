@@ -18,14 +18,19 @@ import "./style.css!";
 export default class SignupThanksView {
 	element:ElementRef;
 	$element:JQuery;
+	title:Title;
 
 	constructor( element:ElementRef, title:Title ) {
 		this.element = element;
-		title.setTitle( "Thank you!" );
+		this.title = title;
 	}
 
 	ngAfterViewInit():void {
 		this.$element = $( this.element.nativeElement );
-		ga("send", "event", "Newsletter", "Subscription");
+		ga( "send", "event", "Newsletter", "Subscription" );
+	}
+
+	routerOnActivate():void {
+		this.title.setTitle( "Thank you!" );
 	}
 }

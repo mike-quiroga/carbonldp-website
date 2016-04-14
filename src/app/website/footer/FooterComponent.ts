@@ -10,11 +10,11 @@ import "semantic-ui/semantic";
 import template from "./template.html!";
 import "./style.css!";
 
-@Component({
+@Component( {
 	selector: "footer",
 	template: template,
 	directives: [ Angulartics2On ]
-})
+} )
 export default class FooterComponent {
 	element:ElementRef;
 	$element;
@@ -22,7 +22,7 @@ export default class FooterComponent {
 	year = this.date.getFullYear();
 
 
-	constructor( element: ElementRef ){
+	constructor( element:ElementRef ) {
 		this.element = element;
 
 	}
@@ -44,5 +44,5 @@ export default class FooterComponent {
 
 function triggerPulseTransition():void {
 	var $element = $( this );
-	$element.transition("pulse");
+	$element.transition( "pulse" );
 }

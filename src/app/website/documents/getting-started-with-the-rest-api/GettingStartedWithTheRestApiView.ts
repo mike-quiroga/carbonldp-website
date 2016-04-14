@@ -26,17 +26,17 @@ export default class GettingStartedWithTheRestApiView {
 	$element:JQuery;
 	sidebarService:SidebarService;
 	protocolAndHost:string;
+	title:Title;
 
 	private carbon:Carbon;
 
 	constructor( element:ElementRef, title:Title, carbon:Carbon, sidebarService:SidebarService ) {
 		this.element = element;
-		title.setTitle( "Getting started - Rest API" );
+
 		this.sidebarService = sidebarService;
 		this.carbon = carbon;
 		this.sidebarService = sidebarService;
-
-		title.setTitle( "Getting started - Rest API" );
+		this.title = title;
 
 		this.protocolAndHost = `${ this.carbon.getSetting( "http.ssl" ) ? "https" : "http" }://${ this.carbon.getSetting( "domain" ) }`;
 	}
@@ -45,6 +45,10 @@ export default class GettingStartedWithTheRestApiView {
 		this.$element = $( this.element.nativeElement );
 		this.createAccordions();
 		this.sidebarService.build();
+	}
+
+	routerOnActivate():void {
+		this.title.setTitle( "Getting started - Rest API" );
 	}
 
 	createAccordions():void {

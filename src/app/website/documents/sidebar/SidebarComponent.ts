@@ -156,7 +156,7 @@ export default class SidebarComponent {
 		let hasSubsection:boolean = this.sections.eq( index ).children( "section" ).length > 0;
 
 		$followSection.removeClass( "active" );
-		$followSection.find( ".active" ).not(".toggled").removeClass( "active" );
+		$followSection.find( ".active" ).not( ".toggled" ).removeClass( "active" );
 
 		if ( ! isActive ) {
 

@@ -13,8 +13,8 @@ sidebar-component {
 
 		.ui.sticky {
 			z-index: 0;
-			> .text.menu{
-				>.item{
+			> .text.menu {
+				> .item {
 					border-left: 2px solid transparent;
 					padding-left: 15px;
 				}
@@ -22,24 +22,23 @@ sidebar-component {
 					border-left: 2px solid black;
 					padding-left: 15px;
 					> a {
-					color: black;
+						color: black;
 					}
 				}
 			}
 		}
 
-		i.icon.dropdown:before{
+		i.icon.dropdown:before {
 			cursor: pointer;
 		}
 
-		i.icon.dropdown:hover{
+		i.icon.dropdown:hover {
 			color: black;
 		}
 
-		i.icon.triangle.down:before{
+		i.icon.triangle.down:before {
 			cursor: pointer;
 		}
-
 
 		.ui.accordion .title:not(.ui) {
 			color: #7f7f7f;
@@ -49,7 +48,7 @@ sidebar-component {
 		}
 
 		.ui.vertical.text.menu {
-			.item:not(.dropdown)>.menu>.item {
+			.item:not(.dropdown) > .menu > .item {
 				padding: .5em 1.33333333em;
 			}
 			.item > i.icon {
@@ -58,10 +57,10 @@ sidebar-component {
 		}
 
 		.ui.vertical.menu .item a.title:hover {
-			color: rgba(0,0,0,.85);
+			color: rgba(0, 0, 0, .85);
 		}
 
-		.ui.vertical.menu>.active.item:first-child {
+		.ui.vertical.menu > .active.item:first-child {
 			border-radius: 0;
 		}
 
@@ -77,13 +76,12 @@ sidebar-component {
 			padding-bottom: 1em;
 		}
 
-
-		.ui.mobile.accordion{
+		.ui.mobile.accordion {
 			margin-top: 1.8em;
 			paddingt-top: 1.8em;
 
-			.item{
-			font-size: 1.1em;
+			.item {
+				font-size: 1.1em;
 			}
 		}
 

@@ -1,5 +1,6 @@
 import { Component } from "angular2/core";
-import {RouteConfig, RouterOutlet} from "angular2/router";
+import { Title } from "angular2/platform/browser";
+import { RouteConfig, RouterOutlet } from "angular2/router";
 
 import DocumentsHomeView from "app/website/documents/documents-home/DocumentsHomeView";
 import LinkedDataConceptsView from "app/website/documents/linked-data-concepts/LinkedDataConceptsView";
@@ -10,11 +11,13 @@ import InteractionModelsView from "app/website/documents/interaction-models/Inte
 import LDPConceptsView from "app/website/documents/ldp-concepts/LDPConceptsView";
 
 import template from "./template.html!";
+import {OnActivate} from "angular2/src/router/interfaces";
 
 @Component( {
 	selector: "documents",
 	template: template,
 	directives: [ RouterOutlet ],
+	providers: [ Title ]
 } )
 @RouteConfig( [
 	{path: "/", name: "Documents", component: DocumentsHomeView},
@@ -26,5 +29,4 @@ import template from "./template.html!";
 	{path: "/ldp-concepts", as: "LDPConcepts", component: LDPConceptsView}
 ] )
 export default class DocumentsComponent {
-
 }

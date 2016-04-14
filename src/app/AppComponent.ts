@@ -35,5 +35,6 @@ import "./style.css!";
 	{path: "site/...", as: "Website", component: WebsiteView},
 ] )
 export default class App {
+	//importing angulartics2, angulartics2GoogleAnalytics as per documentation of angulartics2 plug in
 	constructor( angulartics2:Angulartics2, angulartics2GoogleAnalytics:Angulartics2GoogleAnalytics ) {}
 }
