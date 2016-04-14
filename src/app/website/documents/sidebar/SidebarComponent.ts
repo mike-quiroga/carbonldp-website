@@ -95,7 +95,6 @@ export default class SidebarComponent {
 			this.sidebar.html( $sticky );
 		}
 
-
 		this.sidebar.find( ".ui.sticky" ).sticky( {
 			observeChanges: true,
 			context: "#article",
@@ -152,20 +151,22 @@ export default class SidebarComponent {
 		let $section:JQuery = $( elm );
 		let index:number = this.sections.index( $section );
 		let $followSection:JQuery = this.$followMenu.children( ".item" );
-		let $activeSection:JQuery = $followSection.eq( index );
-		let isActive:boolean = $activeSection.hasClass( "active" );
+		let $currentSection:JQuery = $followSection.eq( index );
+		let isActive:boolean = $currentSection.hasClass( "active" );
 		let hasSubsection:boolean = this.sections.eq( index ).children( "section" ).length > 0;
 
-		$followSection.find( ".active" ).removeClass( "active" );
+		$followSection.removeClass( "active" );
+		$followSection.find( ".active" ).not(".toggled").removeClass( "active" );
 
 		if ( ! isActive ) {
-			$followSection.filter( ".active" ).removeClass( "active" );
-			$activeSection.addClass( "active" );
+
+			$currentSection.addClass( "active" );
 		}
 
 		if ( hasSubsection ) {
-			$followSection.find( ".menu" ).addClass( "active" );
+			$currentSection.find( ".menu" ).addClass( "active" );
 		}
+		$( ".ui.sticky" ).sticky( "refresh" );
 
 	}
 
@@ -197,6 +198,7 @@ export default class SidebarComponent {
 		let position:number = $element.offset().top - 100;
 
 		$element.addClass( "active" );
+
 		$( "html, body" ).animate( {
 			scrollTop: position
 		}, 500 );
@@ -216,10 +218,13 @@ export default class SidebarComponent {
 
 			if ( accordionIsActive ) {
 				$accordion.removeClass( "active" );
+				$accordion.removeClass( "toggled" );
 			} else {
 				$accordion.addClass( "active" );
+				$accordion.addClass( "toggled" );
 			}
 		}
+		$( ".ui.sticky" ).sticky( "refresh" );
 
 		return false;
 	}

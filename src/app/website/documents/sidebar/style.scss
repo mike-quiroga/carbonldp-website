@@ -6,6 +6,11 @@ sidebar-component {
 	}
 
 	nav {
+		/*.ui.sticky.segment{
+			overflow-y: scroll;
+			height: 100%!important;
+		}*/
+
 		.ui.sticky {
 			z-index: 0;
 			> .text.menu{
