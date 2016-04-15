@@ -17,7 +17,7 @@
 			<td>
 				<h3 class="ui image header">
 					<div class="content">
-						{{context.app.name}}
+						{{context.appContext.name}}
 						<div class="sub header">
 							{{context.slug}}
 						</div>
@@ -25,10 +25,10 @@
 				</h3>
 			</td>
 			<td>
-				{{context.app.created | date:"MMMM/dd/yyyy H:mm hrs"}}
+				{{context.appContext.created | date:"MMMM/dd/yyyy H:mm hrs"}}
 			</td>
 			<td>
-				{{context.app.modified | date:"MMMM/dd/yyyy H:mm hrs"}}
+				{{context.appContext.modified | date:"MMMM/dd/yyyy H:mm hrs"}}
 			</td>
 			<td class="center aligned">
 				<div class="ui small basic icon buttons">

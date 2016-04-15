@@ -7,6 +7,7 @@ import {Observable} from "rxjs/Rx";
 import "semantic-ui/semantic";
 
 import Carbon from "carbonldp/Carbon";
+import * as CarbonApp from "carbonldp/App";
 import * as PersistedDocument from "carbonldp/PersistedDocument";
 import * as HTTP from "carbonldp/HTTP";
 import * as HTTPErrors from "carbonldp/HTTP/Errors";
@@ -82,7 +83,9 @@ export default class AppsListView {
 	}
 
 	searchApp( term:string ):void {
-		this.results = this.apps.filter( ctx => ctx.app.name.toLowerCase().search( term.toLowerCase() ) > - 1 || ctx.slug.toLowerCase().search( term.toLowerCase() ) > - 1 );
+		this.results = this.apps.filter( ( app ) => {
+			return (<CarbonApp.Class>app.appContext).name.toLowerCase().search( term.toLowerCase() ) > - 1 || app.slug.toLowerCase().search( term.toLowerCase() ) > - 1
+		} );
 		this.errorMessage = "";
 		if ( this.results.length === 0 && term.length > 0 ) {
 			this.errorMessage = "No apps found.";
@@ -173,7 +176,7 @@ export default class AppsListView {
 				appContexts.forEach( ( appContext ) => {
 					this.apps.push( <App>{
 						slug: this.appContextService.getSlug( appContext ),
-						app: appContext.app,
+						appContext: appContext.app,
 					} );
 				} );
 				this.results = this.apps;

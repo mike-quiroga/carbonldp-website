@@ -1,11 +1,6 @@
-import * as App from "carbonldp/App";
+import * as CarbonApp from "carbonldp/App";
 
-export class Class {
-	name:string;
-	created:string;
-	modified:string;
+export default class App {
 	slug:string;
-	app:App.Context;
+	appContext:CarbonApp.Class;
 }
-
-export default Class;

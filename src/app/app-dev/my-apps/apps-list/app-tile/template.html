@@ -1,6 +1,6 @@
 <div class="content">
 	<a class="header" [routerLink]="[ '/AppDev/MyApps/App', {slug: app.slug}, 'AppDashboard']">
-		{{app.app.name}}
+		{{app.appContext.name}}
 	</a>
 </div>
 <div class="content">
@@ -11,7 +11,7 @@
 					Last modify:
 				</h3>
 				<div class="summary">
-					<span class="date">{{app.app.modified | date:"MMMM/dd/yyyy H:mm hrs"}}</span>
+					<span class="date">{{app.appContext.modified | date:"MMMM/dd/yyyy H:mm hrs"}}</span>
 				</div>
 			</div>
 		</div>
@@ -21,7 +21,7 @@
 					Created on:
 				</h3>
 				<div class="summary">
-					<span class="date">{{app.app.created | date:"MMMM/dd/yyyy H:mm hrs"}}</span>
+					<span class="date">{{app.appContext.created | date:"MMMM/dd/yyyy H:mm hrs"}}</span>
 				</div>
 			</div>
 		</div>
