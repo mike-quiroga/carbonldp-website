@@ -7,6 +7,7 @@ import com.carbonldp.ldp.nonrdf.backup.BackupService;
 import com.carbonldp.ldp.sources.RDFSourceRepository;
 import com.carbonldp.repository.FileRepository;
 import com.carbonldp.spring.TransactionWrapper;
+import com.carbonldp.utils.IRIUtil;
 import org.openrdf.model.IRI;
 import org.openrdf.model.ValueFactory;
 import org.openrdf.model.impl.SimpleValueFactory;
@@ -67,7 +68,7 @@ public class ExportBackupJobExecutor implements TypedJobExecutor {
 		IRI jobsContainerIRI = valueFactory.createIRI( appIRI.stringValue() + Vars.getInstance().getBackupsContainer() );
 		IRI backupIRI;
 		do {
-			backupIRI = valueFactory.createIRI( jobsContainerIRI.stringValue().concat( createRandomSlug() ).concat( Consts.SLASH ) );
+			backupIRI = valueFactory.createIRI( jobsContainerIRI.stringValue().concat(  IRIUtil.createRandomSlug() ).concat( Consts.SLASH ) );
 		} while ( sourceRepository.exists( backupIRI ) );
 		return backupIRI;
 	}
@@ -80,11 +81,6 @@ public class ExportBackupJobExecutor implements TypedJobExecutor {
 			LOG.warn( "A temporary file couldn't be deleted. Exception:", e );
 		}
 		if ( ! wasDeleted ) LOG.warn( "The temporary file: '{}', couldn't be deleted.", file.toString() );
-	}
-
-	private String createRandomSlug() {
-		Random random = new Random();
-		return String.valueOf( Math.abs( random.nextLong() ) );
 	}
 
 	@Autowired

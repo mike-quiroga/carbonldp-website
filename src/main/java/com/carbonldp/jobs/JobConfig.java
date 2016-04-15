@@ -58,7 +58,7 @@ public class JobConfig implements AsyncConfigurer {
 
 		@Override
 		public void handleUncaughtException( Throwable throwable, Method method, Object... obj ) {
-			throw new RuntimeException( "There is a problem running the job" );
+			throw new RuntimeException( "There is a problem running the job", throwable );
 		}
 
 	}

@@ -144,11 +144,6 @@ public class RepositoriesConfig {
 	}
 
 	@Bean
-	public JobRepository jobRepository() {
-		return new SesameJobRepository( connectionFactory, resourceRepository(), documentRepository() );
-	}
-
-	@Bean
 	public PlatformAgentRepository platformAgentRepository() {
 		IRI agentsContainerIRI = SimpleValueFactory.getInstance().createIRI( Vars.getInstance().getAgentsContainerURL() );
 		return new SesamePlatformAgentRepository( connectionFactory, sourceRepository(), containerRepository(), agentsContainerIRI );

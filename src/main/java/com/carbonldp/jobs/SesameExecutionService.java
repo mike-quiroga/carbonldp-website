@@ -25,11 +25,6 @@ public class SesameExecutionService extends AbstractSesameLDPService implements 
 	private ConnectionRWTemplate connectionTemplate;
 
 	@Override
-	public ExecutionDescription.Status getExecutionStatus( IRI executionIRI ) {
-		return executionRepository.getExecutionStatus( executionIRI );
-	}
-
-	@Override
 	public void changeExecutionStatus( IRI executionIRI, ExecutionDescription.Status status ) {
 		executionRepository.changeExecutionStatus( executionIRI, status );
 		sourceRepository.touch( executionIRI );

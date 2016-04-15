@@ -8,6 +8,7 @@ import com.carbonldp.apps.context.AppContextHolder;
 import com.carbonldp.exceptions.FileNotDeletedException;
 import com.carbonldp.exceptions.NotADirectoryException;
 import com.carbonldp.exceptions.NotCreatedException;
+import com.carbonldp.utils.IRIUtil;
 import com.carbonldp.utils.TriGWriter;
 import org.apache.commons.io.FileUtils;
 import org.eclipse.jetty.server.ConnectionFactory;
@@ -93,7 +94,7 @@ public class LocalFileRepository implements FileRepository {
 		FileOutputStream outputStream = null;
 		final RDFWriter trigWriter;
 		try {
-			temporaryFile = File.createTempFile( createRandomSlug(), Consts.PERIOD.concat( RDFFormat.TRIG.getDefaultFileExtension() ) );
+			temporaryFile = File.createTempFile(  IRIUtil.createRandomSlug(), Consts.PERIOD.concat( RDFFormat.TRIG.getDefaultFileExtension() ) );
 			temporaryFile.deleteOnExit();
 
 			outputStream = new FileOutputStream( temporaryFile );
@@ -120,7 +121,7 @@ public class LocalFileRepository implements FileRepository {
 		try {
 			File temporaryFile;
 			try {
-				temporaryFile = File.createTempFile( createRandomSlug(), null );
+				temporaryFile = File.createTempFile(  IRIUtil.createRandomSlug(), null );
 				temporaryFile.deleteOnExit();
 				fileOutputStream = new FileOutputStream( temporaryFile );
 			} catch ( FileNotFoundException e ) {
@@ -245,11 +246,6 @@ public class LocalFileRepository implements FileRepository {
 		directory = directory.concat( app.getRepositoryID() );
 
 		return directory;
-	}
-
-	private String createRandomSlug() {
-		Random random = new Random();
-		return String.valueOf( Math.abs( random.nextLong() ) );
 	}
 
 	@Autowired

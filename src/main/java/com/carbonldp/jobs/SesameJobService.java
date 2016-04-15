@@ -5,6 +5,7 @@ import com.carbonldp.ldp.AbstractSesameLDPService;
 import com.carbonldp.ldp.containers.ContainerService;
 import com.carbonldp.ldp.sources.RDFSourceService;
 import com.carbonldp.models.Infraction;
+import com.carbonldp.rdf.RDFResourceRepository;
 import org.openrdf.model.IRI;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -19,7 +20,7 @@ public class SesameJobService extends AbstractSesameLDPService implements JobSer
 	private ContainerService containerService;
 	private RDFSourceService sourceService;
 	private ExecutionService executionService;
-	private JobRepository jobRepository;
+	private RDFResourceRepository resourceRepository;
 
 	public void create( IRI targetIRI, Job job ) {
 		validate( job );
@@ -28,7 +29,7 @@ public class SesameJobService extends AbstractSesameLDPService implements JobSer
 
 	public void createExecution( IRI jobIRI, Execution execution ) {
 		containerService.createChild( jobIRI, execution );
-		IRI executionQueueLocation = jobRepository.getExecutionQueueLocation( jobIRI );
+		IRI executionQueueLocation = resourceRepository.getIRI( jobIRI, JobDescription.Property.EXECUTION_QUEUE_LOCATION );
 		executionService.enqueue( execution.getIRI(), executionQueueLocation );
 	}
 
@@ -62,7 +63,7 @@ public class SesameJobService extends AbstractSesameLDPService implements JobSer
 	}
 
 	@Autowired
-	public void setJobRepository( JobRepository jobRepository ) {
-		this.jobRepository = jobRepository;
+	public void setResourceRepository( RDFResourceRepository resourceRepository ) {
+		this.resourceRepository = resourceRepository;
 	}
 }
