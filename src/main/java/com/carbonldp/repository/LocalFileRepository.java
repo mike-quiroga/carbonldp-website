@@ -159,7 +159,7 @@ public class LocalFileRepository implements FileRepository {
 		IRI jobsContainerIRI = valueFactory.createIRI( appIRI.stringValue() + Vars.getInstance().getBackupsContainer() );
 		IRI backupIRI;
 		do {
-			backupIRI = valueFactory.createIRI( jobsContainerIRI.stringValue().concat( createRandomSlug() ).concat( Consts.SLASH ) );
+			backupIRI = valueFactory.createIRI( jobsContainerIRI.stringValue().concat( IRIUtil.createRandomSlug() ).concat( Consts.SLASH ) );
 		} while ( sourceRepository.exists( backupIRI ) );
 		return backupIRI;
 	}
