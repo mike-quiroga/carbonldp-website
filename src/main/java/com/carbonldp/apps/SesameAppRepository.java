@@ -1,6 +1,5 @@
 package com.carbonldp.apps;
 
-import com.carbonldp.jobs.Execution;
 import com.carbonldp.ldp.containers.ContainerDescription.Type;
 import com.carbonldp.ldp.containers.ContainerRepository;
 import com.carbonldp.ldp.sources.RDFSource;
@@ -13,16 +12,12 @@ import com.carbonldp.utils.IRIUtil;
 import com.carbonldp.utils.RDFNodeUtil;
 import org.openrdf.model.IRI;
 import org.openrdf.model.Value;
-
 import org.openrdf.model.impl.SimpleValueFactory;
 import org.openrdf.spring.SesameConnectionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 @Transactional
 public class SesameAppRepository extends AbstractSesameRepository implements AppRepository {
@@ -58,6 +53,17 @@ public class SesameAppRepository extends AbstractSesameRepository implements App
 		RDFSource appSource = sourceRepository.get( appIRI );
 		if ( appSource == null ) return null;
 		return new App( appSource.getBaseModel(), appSource.getIRI() );
+	}
+
+	@Override
+	public Set<App> get( Set<IRI> appIRIs ) {
+		Set<RDFSource> appSet = sourceRepository.get( appIRIs );
+		Set<App> apps = new HashSet<>();
+		for ( RDFSource currentApp : appSet ) {
+			App app = new App( currentApp );
+			apps.add( app );
+		}
+		return apps;
 	}
 
 	private static final String findByRootContainer_selector = "" +

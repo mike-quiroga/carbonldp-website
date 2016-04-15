@@ -6,13 +6,11 @@ import com.carbonldp.apps.AppRepository;
 import com.carbonldp.ldp.containers.ContainerRepository;
 import com.carbonldp.spring.TransactionWrapper;
 import org.openrdf.model.IRI;
-import org.openrdf.model.Value;
 import org.openrdf.model.ValueFactory;
 import org.openrdf.model.impl.SimpleValueFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 
-import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -46,13 +44,9 @@ public class JobManager {
 
 	private Set<App> getAllApps() {
 		return transactionWrapper.runInPlatformContext( () -> {
-			Set<App> apps = new HashSet<>();
 			IRI platformAppsContainer = valueFactory.createIRI( Vars.getInstance().getHost() + Vars.getInstance().getMainContainer() + Vars.getInstance().getAppsContainer() );
 			Set<IRI> appIRIs = containerRepository.getContainedIRIs( platformAppsContainer );
-			for ( IRI appIRI : appIRIs ) {
-				App app = appRepository.get( appIRI );
-				apps.add( app );
-			}
+			Set<App> apps = appRepository.get( appIRIs );
 			return apps;
 		} );
 	}

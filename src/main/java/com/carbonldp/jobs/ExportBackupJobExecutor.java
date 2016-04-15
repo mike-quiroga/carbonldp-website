@@ -9,20 +9,16 @@ import com.carbonldp.repository.FileRepository;
 import com.carbonldp.spring.TransactionWrapper;
 import com.carbonldp.utils.IRIUtil;
 import org.openrdf.model.IRI;
-import org.openrdf.model.ValueFactory;
-import org.openrdf.model.impl.SimpleValueFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.FileSystemResource;
 
-import java.io.*;
+import java.io.File;
 import java.util.Random;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipOutputStream;
 
 /**
  * @author NestorVenegas
+ * @author JorgeEspinosa
  * @since _version_
  */
 public class ExportBackupJobExecutor implements TypedJobExecutor {
@@ -32,7 +28,6 @@ public class ExportBackupJobExecutor implements TypedJobExecutor {
 	private TransactionWrapper transactionWrapper;
 	private ExecutionService executionService;
 	protected RDFSourceRepository sourceRepository;
-	private static ValueFactory valueFactory = SimpleValueFactory.getInstance();
 
 	@Override
 	public boolean supports( JobDescription.Type jobType ) {
@@ -58,18 +53,9 @@ public class ExportBackupJobExecutor implements TypedJobExecutor {
 	}
 
 	private IRI createAppBackup( IRI appIRI, File zipFile ) {
-		IRI backupIRI = createBackupIRI( appIRI );
+		IRI backupIRI = fileRepository.createBackupIRI( appIRI );
 		backupService.createAppBackup( appIRI, backupIRI, zipFile );
 
-		return backupIRI;
-	}
-
-	private IRI createBackupIRI( IRI appIRI ) {
-		IRI jobsContainerIRI = valueFactory.createIRI( appIRI.stringValue() + Vars.getInstance().getBackupsContainer() );
-		IRI backupIRI;
-		do {
-			backupIRI = valueFactory.createIRI( jobsContainerIRI.stringValue().concat(  IRIUtil.createRandomSlug() ).concat( Consts.SLASH ) );
-		} while ( sourceRepository.exists( backupIRI ) );
 		return backupIRI;
 	}
 

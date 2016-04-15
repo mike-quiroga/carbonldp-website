@@ -1,6 +1,7 @@
 package com.carbonldp.repository;
 
 import com.carbonldp.apps.App;
+import org.openrdf.model.IRI;
 
 import java.io.File;
 import java.util.UUID;
@@ -19,4 +20,6 @@ public interface FileRepository {
 	public File createAppRepositoryRDFFile();
 
 	public File createZipFile( File... files );
+
+	public IRI createBackupIRI( IRI appIRI );
 }
