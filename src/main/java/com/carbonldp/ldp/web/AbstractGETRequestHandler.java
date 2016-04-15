@@ -4,6 +4,7 @@ import com.carbonldp.HTTPHeaders;
 import com.carbonldp.descriptions.APIPreferences;
 import com.carbonldp.descriptions.APIPreferences.ContainerRetrievalPreference;
 import com.carbonldp.descriptions.APIPreferences.InteractionModel;
+import com.carbonldp.exceptions.InvalidResourceException;
 import com.carbonldp.http.OrderByRetrievalPreferences;
 import com.carbonldp.ldp.containers.Container;
 import com.carbonldp.ldp.containers.ContainerDescription;
@@ -12,6 +13,7 @@ import com.carbonldp.ldp.nonrdf.RDFRepresentation;
 import com.carbonldp.ldp.sources.RDFSource;
 import com.carbonldp.models.HTTPHeader;
 import com.carbonldp.models.HTTPHeaderValue;
+import com.carbonldp.models.Infraction;
 import com.carbonldp.utils.RDFNodeUtil;
 import com.carbonldp.utils.RequestUtil;
 import com.carbonldp.web.exceptions.BadRequestException;
@@ -104,7 +106,7 @@ public abstract class AbstractGETRequestHandler extends AbstractLDPRequestHandle
 
 	protected ResponseEntity<Object> handleContainerRetrieval( IRI targetIRI ) {
 		Set<ContainerRetrievalPreference> containerRetrievalPreferences = getContainerRetrievalPreferences( targetIRI );
-		OrderByRetrievalPreferences orderByRetrievalPreferences = RequestUtil.getRequestParameters( request );
+		OrderByRetrievalPreferences orderByRetrievalPreferences = getOrderByRetrievalPreferences();
 
 		Container container = containerService.get( targetIRI, containerRetrievalPreferences, orderByRetrievalPreferences );
 
@@ -196,6 +198,13 @@ public abstract class AbstractGETRequestHandler extends AbstractLDPRequestHandle
 
 	private void isRDFRepresentation( IRI targetIRI ) {
 		if ( ! nonRdfSourceService.isRDFRepresentation( targetIRI ) ) throw new BadRequestException( 0x4003 );
+	}
+
+	private OrderByRetrievalPreferences getOrderByRetrievalPreferences() {
+
+		OrderByRetrievalPreferences orderByRetrievalPreferences = RequestUtil.getRequestParameters( request );
+		List<Infraction> infractions = RequestUtil.validateOrderParameters( orderByRetrievalPreferences );
+		if ( ! infractions.isEmpty() ) throw new InvalidResourceException( infractions );
 	}
 
 	protected ResponseEntity<Object> handleSPARQLEndpointRetrieval( IRI targetIRI ) {
