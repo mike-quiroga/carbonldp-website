@@ -1,5 +1,5 @@
 import {Component, ElementRef, Input} from "angular2/core";
-import {CORE_DIRECTIVES, FORM_DIRECTIVES, FormBuilder, ControlGroup, AbstractControl, Control, Validators} from "angular2/common";
+import {CORE_DIRECTIVES, FormBuilder, ControlGroup, AbstractControl, Control, Validators} from "angular2/common";
 import {Router, ROUTER_DIRECTIVES} from "angular2/router";
 
 import Carbon from "carbonldp/Carbon";
@@ -44,8 +44,6 @@ export default class EditAppComponent {
 
 	allowedDomains:string[] = [];
 	domainStr:string = "";
-	// ALL_ORIGINS:string = "https://carbonldp.com/ns/v1/security#AllOrigins";
-
 
 	// Inputs and Outputs
 	@Input() context:Context.Class;
@@ -60,10 +58,11 @@ export default class EditAppComponent {
 	}
 
 	ngOnInit():void {
-		console.log( this.context );
 		let allowAllOrigins:boolean = false;
-		if ( this.context.app.allowsOrigins )
-			allowAllOrigins = this.context.app.allowsOrigins.id === Carbon.NS.CS.Predicate.allowsOrigin;
+		if ( ! ! this.context.app.allowsOrigins && this.context.app.allowsOrigins.length > 0 ) {
+			allowAllOrigins = this.context.app.allowsOrigins[ 0 ][ "id" ] === Carbon.NS.CS.Class.AllOrigins;
+			if ( ! allowAllOrigins )this.allowedDomains = <string[]>this.context.app.allowsOrigins;
+		}
 		this.$element = $( this.element.nativeElement );
 
 		this.$editAppForm = this.$element.find( "form.editAppForm" );
@@ -81,7 +80,6 @@ export default class EditAppComponent {
 		this.corsGroup = <ControlGroup>this.editAppForm.controls[ "cors" ];
 		this.allDomains = this.corsGroup.controls[ "allDomains" ];
 		this.domain = this.corsGroup.controls[ "domain" ];
-		console.log( this.editAppForm );
 	}
 
 	domainValidator( corsGroup:ControlGroup ):any {
@@ -102,7 +100,7 @@ export default class EditAppComponent {
 		return null;
 	}
 
-	addDomain( domain:any ):void {
+	addDomain( domain:string ):void {
 		if ( this.domain.valid && ! ! domain ) this.allowedDomains.push( domain );
 		this.corsGroup.updateValueAndValidity();
 	}
@@ -115,16 +113,8 @@ export default class EditAppComponent {
 		}
 	}
 
-	getSanitizedSlug( slug:string ):string {
-		if ( slug ) {
-			slug = slug.toLowerCase().replace( /[^\w ]+/g, "" ).replace( / +/g, "-" );
-			if ( slug.charAt( slug.length - 1 ) !== "/" ) slug += "/";
-		}
-		return slug;
-	}
-
 	canDisplayErrors():boolean {
-		return (! this.name.pristine && ! this.name.valid) || (! this.description.pristine && ! this.description.valid) || (! this.corsGroup.pristine && ! this.corsGroup.valid);
+		return (! this.name.pristine && ! this.name.valid) || (! this.description.pristine && ! this.description.valid);
 	}
 
 	onSubmit( data:{ name:string, description:string, cors:{allDomains:boolean, domain:string, allowedDomains:string[], } }, $event:Event ):void {
@@ -149,7 +139,7 @@ export default class EditAppComponent {
 		if ( name ) this.context.app.name = name;
 		if ( description ) this.context.app.description = description;
 		if ( allowsAllOrigin ) {
-			this.context.app.allowsOrigins = [ Carbon.Pointer.Factory.create( Carbon.NS.CS.Predicate.allowsOrigin ) ];
+			this.context.app.allowsOrigins = [ Carbon.Pointer.Factory.create( Carbon.NS.CS.Class.AllOrigins ) ];
 		} else {
 			this.context.app.allowsOrigins = allowedDomains.length > 0 ? allowedDomains : this.context.app.allowsOrigins;
 		}
