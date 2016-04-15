@@ -4,7 +4,7 @@ import {Router, ROUTER_DIRECTIVES} from "angular2/router";
 
 import "semantic-ui/semantic";
 
-import App from "./../app/App";
+import App from "./../../app/App";
 import template from "./template.html!";
 import "./style.css!";
 

@@ -13,8 +13,8 @@ import * as HTTPErrors from "carbonldp/HTTP/Errors";
 import * as HTTPError from "carbonldp/HTTP/Errors/HTTPError";
 
 import AppContextService from "./../../AppContextService";
-import AppTileComponent from "./../app-tile/AppTileComponent";
-import AppsListComponent from "../apps-list/AppsListComponent";
+import AppTileComponent from "./app-tile/AppTileComponent";
+import AppsListComponent from "./apps-list/AppsListComponent";
 import App from "./../app/App";
 import Message from "./../../components/errors-area/ErrorsAreaComponent";
 
