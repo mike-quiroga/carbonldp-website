@@ -61,7 +61,7 @@
 	</div>
 	<div class="image content">
 		<div class="description">
-			<div class="ui header">You are about to delete this App!</div>
+			<div class="ui header">You are about to delete the app "{{askingApp?.appContext?.name}}"!</div>
 			<p>If you proceed your App will be deleted.</p>
 			<p>Do you want to proceed?</p>
 			<div class="ui error message transition" *ngIf="deleteError">
@@ -78,10 +78,10 @@
 		</div>
 	</div>
 	<div class="actions">
-		<button class="ui black deny button" [ngClass]="{disabled:deleting}">
+		<button class="ui black deny button" [disabled]="deleting">
 			No
 		</button>
-		<button class="ui positive right labeled icon button" [ngClass]="{loading:deleting, disabled:deleting}" (click)="onApproveAppDeletion(askingApp)">
+		<button class="ui positive right labeled icon button" [disabled]="deleting" [ngClass]="{loading:deleting, disabled:deleting}" (click)="onApproveAppDeletion(askingApp)">
 			Yes, proceed
 			<i class="checkmark icon"></i>
 		</button>

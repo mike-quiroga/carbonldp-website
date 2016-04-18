@@ -5,13 +5,15 @@ import {ROUTER_DIRECTIVES} from "angular2/router";
 import "semantic-ui/semantic";
 
 import App from "../../app/App";
+import AppActionButtons from "./../app-action-buttons/AppActionButtons";
+
 import template from "./template.html!";
 import "./style.css!";
 
 @Component( {
 	selector: "app-tile",
 	template: template,
-	directives: [ CORE_DIRECTIVES, ROUTER_DIRECTIVES ]
+	directives: [ CORE_DIRECTIVES, ROUTER_DIRECTIVES, AppActionButtons ],
 } )
 export default class AppTileComponent {
 	@Input() app:App;

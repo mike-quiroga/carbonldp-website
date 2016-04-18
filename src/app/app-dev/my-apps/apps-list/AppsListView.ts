@@ -84,7 +84,7 @@ export default class AppsListView {
 
 	searchApp( term:string ):void {
 		this.results = this.apps.filter( ( app ) => {
-			return (<CarbonApp.Class>app.appContext).name.toLowerCase().search( term.toLowerCase() ) > - 1 || app.slug.toLowerCase().search( term.toLowerCase() ) > - 1
+			return app.appContext.name.toLowerCase().search( term.toLowerCase() ) > - 1 || app.slug.toLowerCase().search( term.toLowerCase() ) > - 1
 		} );
 		this.errorMessage = "";
 		if ( this.results.length === 0 && term.length > 0 ) {
@@ -123,8 +123,8 @@ export default class AppsListView {
 		}
 	}
 
-	deleteApp( appContext:any ):Promise<HTTP.Response.Class> {
-		return (<PersistedDocument.Class>appContext.app).destroy();
+	deleteApp( app:App ):Promise<HTTP.Response.Class> {
+		return (<PersistedDocument.Class>app.appContext).destroy();
 	}
 
 	getErrorMessage( error:HTTPError.HTTPError ):Message {

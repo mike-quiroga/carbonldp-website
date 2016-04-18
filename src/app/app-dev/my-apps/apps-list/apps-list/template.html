@@ -1,4 +1,4 @@
-<table class="ui selectable sortable celled compact table">
+<table class="ui selectable sortable celled small compact table">
 	<thead>
 		<tr>
 			<th *ngFor="#header of headers" class="center aligned" [ngClass]="{
@@ -13,46 +13,25 @@
 		</tr>
 	</thead>
 	<tbody>
-		<tr *ngFor="#context of apps; #i=index;" (click)="navigateTo([ '/AppDev/MyApps/App', {slug: context.slug}, 'AppDashboard'])">
+		<tr *ngFor="#app of apps; #i=index;" (click)="navigateTo([ '/AppDev/MyApps/App', {slug: app.slug}, 'AppDashboard'])">
 			<td>
 				<h3 class="ui image header">
 					<div class="content">
-						{{context.appContext.name}}
+						{{app.appContext.name}}
 						<div class="sub header">
-							{{context.slug}}
+							{{app.slug}}
 						</div>
 					</div>
 				</h3>
 			</td>
 			<td>
-				{{context.appContext.created | date:"MMMM/dd/yyyy H:mm hrs"}}
+				{{app.appContext.created | date:"MMMM/dd/yyyy H:mm hrs"}}
 			</td>
 			<td>
-				{{context.appContext.modified | date:"MMMM/dd/yyyy H:mm hrs"}}
+				{{app.appContext.modified | date:"MMMM/dd/yyyy H:mm hrs"}}
 			</td>
 			<td class="center aligned">
-				<div class="ui small basic icon buttons">
-					<a class="ui icon button"
-					   title="App's Dashboard"
-					   (click)="navigateTo([ '/AppDev/MyApps/App', {slug: context.slug}, 'AppDashboard'])">
-						<i class="dashboard icon"></i>
-					</a>
-					<a class="ui icon button"
-					   title="SPARQL Editor"
-					   (click)="navigateTo([ '/AppDev/MyApps/App', {slug: context.slug}, 'SPARQLEditor'])">
-						<i class="terminal icon"></i>
-					</a>
-					<button class="ui icon button"
-					        title="Edit App"
-					        disabled="">
-						<i class="write icon"></i>
-					</button>
-					<button class="ui icon button"
-					        title="Delete App"
-					        (click)="onDeleteApp($event, context)">
-						<i class="trash outline icon"></i>
-					</button>
-				</div>
+				<app-action-buttons [app]="app" (deleteApp)="onDeleteApp(app)"></app-action-buttons>
 			</td>
 		</tr>
 	</tbody>
