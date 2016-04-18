@@ -1,6 +1,6 @@
-import { Component, ElementRef } from "angular2/core";
-import { CORE_DIRECTIVES } from "angular2/common";
-import { ROUTER_DIRECTIVES, ROUTER_PROVIDERS, RouteConfig, Router, RouterOutlet, Instruction, RouteParams } from "angular2/router";
+import {Component, ElementRef} from "angular2/core";
+import {CORE_DIRECTIVES} from "angular2/common";
+import {ROUTER_DIRECTIVES, ROUTER_PROVIDERS, RouteConfig, Router, RouterOutlet, Instruction, RouteParams} from "angular2/router";
 
 import * as App from "carbonldp/App";
 
@@ -10,6 +10,7 @@ import SidebarApp from "./App";
 
 import DashboardView from "./dashboard/DashboardView";
 import SPARQLEditorView from "./sparql-editor/SPARQLEditorView";
+import ExplorerView from "./explorer/ExplorerView";
 
 
 import template from "./template.html!";
@@ -39,6 +40,15 @@ import "./style.css!";
 		data: {
 			alias: "SPARQLEditor",
 			displayName: "SPARQL Editor",
+		},
+	},
+	{
+		path: "/explore",
+		as: "Explorer",
+		component: ExplorerView,
+		data: {
+			alias: "Explorer",
+			displayName: "Explorer",
 		},
 	},
 ] )
