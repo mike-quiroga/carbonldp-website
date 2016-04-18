@@ -47,12 +47,8 @@ public class SesameContainerService extends AbstractSesameLDPService implements 
 					break;
 				case CONTAINED_RESOURCES:
 					if ( containerRetrievalPreferences.contains( APIPreferences.ContainerRetrievalPreference.MEMBER_RESOURCES ) ) break;
-					Set<Statement> containedResourcesStatements = containerRepository.getContainmentTriples( containerIRI );
-					Set<IRI> children = containedResourcesStatements
-						.stream()
-						.map( statement -> ValueUtil.getIRI( statement.getObject() ) )
-						.collect( Collectors.toSet() );
-					Set<RDFSource> containedResources = sourceService.get( children );
+					Set<IRI> getContainmentIRIs = containerRepository.getContainmentIRIs( containerIRI, orderByRetrievalPreferences );
+					Set<RDFSource> containedResources = sourceService.get( getContainmentIRIs );
 					if ( containedResources == null || containedResources.isEmpty() ) break;
 					RDFSource childSource = containedResources.iterator().next();
 					container.getBaseModel().addAll( childSource.getBaseModel() );

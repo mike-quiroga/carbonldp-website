@@ -16,6 +16,8 @@ import com.carbonldp.rdf.RDFResourceRepository;
 import com.carbonldp.repository.DocumentGraphQueryResultHandler;
 import com.carbonldp.repository.GraphQueryResultHandler;
 import com.carbonldp.utils.RDFNodeUtil;
+import com.carbonldp.utils.SPARQLUtil;
+import com.carbonldp.utils.ValueUtil;
 import com.sun.org.apache.bcel.internal.generic.NEW;
 import org.joda.time.DateTime;
 import org.openrdf.model.IRI;
@@ -254,58 +256,26 @@ public class SesameContainerRepository extends AbstractSesameLDPRepository imple
 		connectionTemplate.write( ( connection ) -> connection.add( containerIRI, ContainerDescription.Property.CONTAINS.getIRI(), resourceIRI, containerIRI ) );
 	}
 
-	//TODO: change to stringBuffer
-	public Set<IRI> createGetSubjectsWithPreferencesQuery( IRI targetIRI, IRI predicateIRI, OrderByRetrievalPreferences orderByRetrievalPreferences ) {
-		String query = "" + NEW_LINE +
-			"PREFIX xsd:  <http://www.w3.org/2001/XMLSchema#>" + NEW_LINE +
-			"SELECT ?subject" + NEW_LINE +
-			"WHERE {" + NEW_LINE +
-			TAB + "?targetIRI ?predicateIRI ?subject" + NEW_LINE;
-		String filter = TAB + "FILTER ( " + NEW_LINE;
-		String orderByString = "ORDER BY";
-		boolean hasFilter = false;
-		List<OrderBy> orderByList = orderByRetrievalPreferences.getOrderByList();
-		if ( orderByList != null ) {
-			int i = 1;
-			for ( OrderBy orderBy : orderByList ) {
-				String property = orderBy.getProperty();
-				query += TAB + "?subject " + property + " ?value" + i + NEW_LINE;
-				String literalType = orderBy.getLiteralType();
-				if ( literalType != null ) {
-					if ( hasFilter ) filter += "&&" + NEW_LINE;
-					filter += TAB + TAB + "(datatype(?value" + i + ") = " + literalType + ")" + NEW_LINE;
-					hasFilter = true;
-				}
-				String lang = orderBy.getLanguage();
-				if ( lang != null ) {
-					filter += "&&" + NEW_LINE +
-						TAB + TAB + "(langMatches( lang( ?value" + i + ") , \"" + lang + "\") )" + NEW_LINE;
-				}
-				if ( ! orderBy.isAscending() ) {
-					orderByString += " DESC( ?value" + i + ")";
-				} else {
-					orderByString += " ?value" + i;
-				}
-			}
-		} else {
-			orderByString += " ?subject";
-		}
-		if ( hasFilter ) {
-			filter += TAB + ")" + NEW_LINE;
-			query += filter;
-		}
-		query += "}" + NEW_LINE;
-		query += orderByString + NEW_LINE;
-		String limitString = orderByRetrievalPreferences.getLimit();
-		//TODO: validate limit
-	}
-
 	@Override
 	public TypedContainerRepository getTypedRepository( Type containerType ) {
 		for ( TypedContainerRepository service : typedContainerRepositories ) {
 			if ( service.supports( containerType ) ) return service;
 		}
 		throw new IllegalArgumentException( "The containerType provided isn't supported" );
+	}
+
+	public Set<IRI> getContainmentIRIs( IRI targetIRI, OrderByRetrievalPreferences orderByRetrievalPreferences ) {
+		String queryString = SPARQLUtil.createGetSubjectsWithPreferencesQuery( targetIRI, ContainerDescription.Property.CONTAINS, orderByRetrievalPreferences );
+
+		return sparqlTemplate.executeTupleQuery( queryString, result -> {
+			Set<IRI> childrenIRIs = new HashSet<>();
+			while ( result.hasNext() ) {
+				Value childValue = result.next().getBinding( "subject" ).getValue();
+				if ( ! ValueUtil.isIRI( childValue ) ) throw new IllegalStateException( "child is not a IRI" );
+				childrenIRIs.add( ValueUtil.getIRI( childValue ) );
+			}
+			return childrenIRIs;
+		} );
 	}
 
 }
