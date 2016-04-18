@@ -37,8 +37,8 @@ export default class AppsListComponent {
 		this.sortedColumn = header.value;
 
 		this.apps.sort( ( contextA, contextB ) => {
-			if ( contextA.app[ this.sortedColumn ] > contextB.app[ this.sortedColumn ] ) return this.ascending ? - 1 : 1;
-			if ( contextA.app[ this.sortedColumn ] < contextB.app[ this.sortedColumn ] ) return this.ascending ? 1 : - 1;
+			if ( contextA.appContext[ this.sortedColumn ] > contextB.appContext[ this.sortedColumn ] ) return this.ascending ? - 1 : 1;
+			if ( contextA.appContext[ this.sortedColumn ] < contextB.appContext[ this.sortedColumn ] ) return this.ascending ? 1 : - 1;
 			return 0;
 		} );
 	}
