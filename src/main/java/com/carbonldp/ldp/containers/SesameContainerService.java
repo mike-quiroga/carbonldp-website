@@ -5,6 +5,7 @@ import com.carbonldp.exceptions.InvalidRDFTypeException;
 import com.carbonldp.exceptions.InvalidResourceException;
 import com.carbonldp.exceptions.ResourceAlreadyExistsException;
 import com.carbonldp.exceptions.ResourceDoesntExistException;
+import com.carbonldp.http.OrderByRetrievalPreferences;
 import com.carbonldp.ldp.AbstractSesameLDPService;
 import com.carbonldp.ldp.sources.RDFSource;
 import com.carbonldp.ldp.sources.RDFSourceService;
@@ -31,7 +32,7 @@ public class SesameContainerService extends AbstractSesameLDPService implements 
 	private RDFSourceService sourceService;
 
 	@Override
-	public Container get( IRI containerIRI, Set<APIPreferences.ContainerRetrievalPreference> containerRetrievalPreferences ) {
+	public Container get( IRI containerIRI, Set<APIPreferences.ContainerRetrievalPreference> containerRetrievalPreferences, OrderByRetrievalPreferences orderByRetrievalPreferences ) {
 		ContainerDescription.Type containerType = getContainerType( containerIRI );
 		if ( containerType == null ) throw new InvalidRDFTypeException( ContainerDescription.Resource.CLASS.getIRI().stringValue() );
 

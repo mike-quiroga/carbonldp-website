@@ -28,7 +28,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 public abstract class AbstractGETRequestHandler extends AbstractLDPRequestHandler {
@@ -201,10 +200,10 @@ public abstract class AbstractGETRequestHandler extends AbstractLDPRequestHandle
 	}
 
 	private OrderByRetrievalPreferences getOrderByRetrievalPreferences() {
-
 		OrderByRetrievalPreferences orderByRetrievalPreferences = RequestUtil.getRequestParameters( request );
 		List<Infraction> infractions = RequestUtil.validateOrderParameters( orderByRetrievalPreferences );
 		if ( ! infractions.isEmpty() ) throw new InvalidResourceException( infractions );
+		return orderByRetrievalPreferences;
 	}
 
 	protected ResponseEntity<Object> handleSPARQLEndpointRetrieval( IRI targetIRI ) {
