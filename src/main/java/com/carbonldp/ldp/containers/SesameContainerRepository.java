@@ -266,7 +266,20 @@ public class SesameContainerRepository extends AbstractSesameLDPRepository imple
 
 	public Set<IRI> getContainmentIRIs( IRI targetIRI, OrderByRetrievalPreferences orderByRetrievalPreferences ) {
 		String queryString = SPARQLUtil.createGetSubjectsWithPreferencesQuery( targetIRI, ContainerDescription.Property.CONTAINS, orderByRetrievalPreferences );
+		return executeGetSubjectsWithPreferencesQuery( queryString );
+	}
 
+	public Set<IRI> getMemberIRIs( IRI targetIRI, OrderByRetrievalPreferences orderByRetrievalPreferences ) {
+		TypedContainerRepository repositoryType = getTypedRepository( getContainerType( targetIRI ) );
+		IRI membershipResource = repositoryType.getMembershipResource( targetIRI );
+		IRI hasMemberRelation = repositoryType.getHasMemberRelation( targetIRI );
+
+		String queryString = SPARQLUtil.createGetSubjectsWithPreferencesQuery( membershipResource, hasMemberRelation, orderByRetrievalPreferences );
+		return executeGetSubjectsWithPreferencesQuery( queryString );
+
+	}
+
+	private Set<IRI> executeGetSubjectsWithPreferencesQuery( String queryString ) {
 		return sparqlTemplate.executeTupleQuery( queryString, result -> {
 			Set<IRI> childrenIRIs = new HashSet<>();
 			while ( result.hasNext() ) {

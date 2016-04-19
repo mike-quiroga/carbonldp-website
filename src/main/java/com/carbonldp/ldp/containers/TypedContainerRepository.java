@@ -30,4 +30,6 @@ public interface TypedContainerRepository {
 	public void removeMembers( IRI containerIRI );
 
 	public IRI getMembershipResource( IRI containerIRI );
+
+	public IRI getHasMemberRelation( IRI containerIRI );
 }

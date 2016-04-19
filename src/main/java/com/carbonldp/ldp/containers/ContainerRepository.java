@@ -68,4 +68,6 @@ public interface ContainerRepository {
 	public TypedContainerRepository getTypedRepository( Type containerType );
 
 	public Set<IRI>getContainmentIRIs(IRI targetIRI, OrderByRetrievalPreferences orderByRetrievalPreferences);
+
+	public Set<IRI>getMemberIRIs(IRI targetIRI, OrderByRetrievalPreferences orderByRetrievalPreferences);
 }
