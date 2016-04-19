@@ -70,11 +70,7 @@ public class SesameContainerService extends AbstractSesameLDPService implements 
 					}
 					break;
 				case MEMBER_RESOURCES:
-					Set<Statement> memberStatements = getMembershipTriples( containerIRI );
-					Set<IRI> members = memberStatements
-						.stream()
-						.map( statement -> ValueUtil.getIRI( statement.getObject() ) )
-						.collect( Collectors.toSet() );
+					Set<IRI> members = containerRepository.getMemberIRIs( containerIRI, orderByRetrievalPreferences );
 
 					Set<RDFSource> memberResources = sourceService.get( members );
 					if ( memberResources == null || memberResources.isEmpty() ) break;
