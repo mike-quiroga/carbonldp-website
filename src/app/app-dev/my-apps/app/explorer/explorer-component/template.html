@@ -1,1 +1,191 @@
-<p>My explorer!!!!</p>
+<div class="ui divided grid segment">
+	<div class="stretched row">
+		<div class="five wide column">
+			<div class="ui vertical menu accordion treeview">
+				<div class="item">
+					{{appContext.app.name}}
+				</div>
+				<div class="item" *ngFor="#member of members; #i=index;">
+					<div class="title">
+						<i class="dropdown icon"></i>
+						{{member}}
+					</div>
+					<div class="content">
+						Welcome to level 1
+						<div class="ui vertical menu accordion transition hidden">
+							<div class="item">
+								<div class="title">
+									<i class="dropdown icon"></i>
+									Level 1A
+								</div>
+								<div class="content">
+									<p class="transition hidden">Level 1A Contents</p>
+									<div class="accordion transition hidden">
+										<div class="title">
+											<i class="dropdown icon"></i>
+											Level 1A-A
+										</div>
+										<div class="content">
+											Level 1A-A Contents
+										</div>
+										<div class="title">
+											<i class="dropdown icon"></i>
+											Level 1A-B
+										</div>
+										<div class="content">
+											Level 1A-B Contents
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="item">
+								<div class="title">
+									<i class="dropdown icon"></i>
+									Level 1B
+								</div>
+								<div class="content">
+									Level 1B Contents
+								</div>
+							</div>
+							<div class="item">
+								<div class="title">
+									<i class="dropdown icon"></i>
+									Level 1C
+								</div>
+								<div class="content">
+									Level 1C Contents
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="ui vertical accordion treeview">
+				<div class="item">
+					{{appContext.app.name}}
+				</div>
+				<div class="item" *ngFor="#member of members; #i=index;">
+					<div class="title">
+						<i class="dropdown icon"></i>
+						{{member}}
+					</div>
+					<div class="content">
+						Welcome to level 1
+						<div class="ui vertical accordion transition hidden">
+							<div class="item">
+								<div class="title">
+									<i class="dropdown icon"></i>
+									Level 1A
+								</div>
+								<div class="content">
+									<p class="transition hidden">Level 1A Contents</p>
+									<div class="accordion transition hidden">
+										<div class="title">
+											<i class="dropdown icon"></i>
+											Level 1A-A
+										</div>
+										<div class="content">
+											Level 1A-A Contents
+										</div>
+										<div class="title">
+											<i class="dropdown icon"></i>
+											Level 1A-B
+										</div>
+										<div class="content">
+											Level 1A-B Contents
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="item">
+								<div class="title">
+									<i class="dropdown icon"></i>
+									Level 1B
+								</div>
+								<div class="content">
+									Level 1B Contents
+								</div>
+							</div>
+							<div class="item">
+								<div class="title">
+									<i class="dropdown icon"></i>
+									Level 1C
+								</div>
+								<div class="content">
+									Level 1C Contents
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="ui celled list">
+				<div class="item">
+					<i class="folder icon"></i>
+					<div class="content">
+						<div class="description">Source files for project</div>
+						<div class="celled list">
+							<div class="item">
+								<i class="folder icon"></i>
+								<div class="content">
+									<div class="description">Your site's theme</div>
+								</div>
+							</div>
+							<div class="item">
+								<i class="folder icon"></i>
+								<div class="content">
+									<div class="description">Packaged theme files</div>
+									<div class="list">
+										<div class="item">
+											<i class="folder icon"></i>
+											<div class="content">
+												<div class="description">Defadivt packaged theme</div>
+											</div>
+										</div>
+										<div class="item">
+											<i class="folder icon"></i>
+											<div class="content">
+												<div class="description">Packaged themes are also available in this folder</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="item">
+								<i class="file icon"></i>
+								<div class="content">
+									<div class="description">Config file for setting packaged themes</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="item">
+					<i class="folder icon"></i>
+					<div class="content">
+						<div class="description">Compiled CSS and JS files</div>
+						<div class="celled list">
+							<div class="item">
+								<i class="folder icon"></i>
+								<div class="content">
+									<div class="description">Individual component CSS and JS</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="item">
+					<i class="file icon"></i>
+					<div class="content">
+						<div class="description">Contains build settings for gulp</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="eleven wide column">
+			<div class="ui segment">
+				1
+			</div>
+		</div>
+	</div>
+</div>
