@@ -183,7 +183,7 @@ public abstract class AbstractGETRequestHandler extends AbstractLDPRequestHandle
 		return new ResponseEntity<>( new RDFRepresentationFileWrapper( rdfRepresentation, file ), HttpStatus.OK );
 	}
 
-	private void addNonRDFAllowHeader( IRI targetIRI, HttpServletResponse response ) {
+	protected void addNonRDFAllowHeader( IRI targetIRI, HttpServletResponse response ) {
 		// TODO: Base this on the security model
 		response.addHeader( HTTPHeaders.ALLOW, "GET, PUT, DELETE, OPTIONS" );
 
