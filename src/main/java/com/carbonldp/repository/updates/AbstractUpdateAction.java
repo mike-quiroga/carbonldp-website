@@ -66,17 +66,7 @@ public abstract class AbstractUpdateAction extends AbstractComponent implements 
 	}
 
 	protected Set<App> getAllApps() {
-		return transactionWrapper.runInPlatformContext( () -> {
-			Set<App> apps = new HashSet<>();
-			IRI platformAppsContainer = SimpleValueFactory.getInstance().createIRI( Vars.getInstance().getHost() + Vars.getInstance().getMainContainer() + Vars.getInstance().getAppsContainer() );
-			Set<IRI> appIRIs = containerRepository.getContainedIRIs( platformAppsContainer );
-
-			for ( IRI appIRI : appIRIs ) {
-				App app = appRepository.get( appIRI );
-				apps.add( app );
-			}
-			return apps;
-		} );
+		return transactionWrapper.runInPlatformContext( () -> appRepository.getAll() );
 	}
 
 	public void setBeans( AnnotationConfigApplicationContext context ) {
