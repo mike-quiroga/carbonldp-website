@@ -119,7 +119,11 @@ export default class CreateAppView {
 
 		let appDocument:App = <App>(CarbonApp.Factory.create( name ));
 		appDocument.description = description;
-		this.carbon.apps.create( slug, <CarbonApp.Class>appDocument ).then(
+		this.createApp( slug, <CarbonApp.Class>appDocument );
+	}
+
+	createApp( slug:string, appDocument:CarbonApp.Class ):Promise<[ Pointer.Class, HTTPResponse.Class]> {
+		return this.carbon.apps.create( slug, appDocument ).then(
 			( [appPointer, appCreationResponse]:[ Pointer.Class, HTTPResponse.Class] ) => {
 				this.submitting = false;
 				this.persistedSlug = this._slug;
@@ -137,8 +141,6 @@ export default class CreateAppView {
 				this.submitting = false;
 			}
 		);
-
-
 	}
 
 	setErrorMessage( error:HTTPError.HTTPError ):void {
@@ -178,14 +180,11 @@ export default class CreateAppView {
 
 
 	slugValidator( slug:Control ):any {
-		if ( slug.value ) {
-			if ( slug.value.match( /^[a-z0-9]+(?:-[a-z0-9]*)*(?:\/*)$/ ) ) {
-				return null;
-			} else {
-				return {"invalidSlug": true};
-			}
+		if ( ! slug.value ) return null;
+		if ( slug.value.match( /^[a-z0-9]+(?:-[a-z0-9]*)*(?:\/*)$/ ) ) {
+			return null;
 		}
-		return null;
+		return {"invalidSlug": true};
 	}
 
 	closeMessage( evt:Event ):void {
