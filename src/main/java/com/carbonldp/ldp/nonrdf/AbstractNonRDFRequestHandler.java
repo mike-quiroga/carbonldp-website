@@ -1,6 +1,7 @@
 package com.carbonldp.ldp.nonrdf;
 
 import com.carbonldp.ldp.web.AbstractLDPRequestHandler;
+import com.carbonldp.utils.IRIUtil;
 import org.apache.commons.io.IOUtils;
 
 import java.io.File;
@@ -15,7 +16,7 @@ public class AbstractNonRDFRequestHandler extends AbstractLDPRequestHandler {
 		File temporaryFile;
 		FileOutputStream outputStream;
 		try {
-			temporaryFile = File.createTempFile( createRandomSlug(), null );
+			temporaryFile = File.createTempFile( IRIUtil.createRandomSlug(), null );
 			temporaryFile.deleteOnExit(); // TODO: See if this makes the VM log warnings/errors
 
 			outputStream = new FileOutputStream( temporaryFile );
@@ -48,10 +49,5 @@ public class AbstractNonRDFRequestHandler extends AbstractLDPRequestHandler {
 			LOG.warn( "A temporary file couldn't be deleted. Exception:", e );
 		}
 		if ( ! wasDeleted ) LOG.warn( "The temporary file: '{}', couldn't be deleted.", file.toString() );
-	}
-
-	protected String createRandomSlug() {
-		Random random = new Random();
-		return String.valueOf( Math.abs( random.nextLong() ) );
 	}
 }

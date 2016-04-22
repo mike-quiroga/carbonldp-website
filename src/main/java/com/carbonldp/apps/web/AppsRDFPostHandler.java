@@ -1,6 +1,7 @@
 package com.carbonldp.apps.web;
 
 import com.carbonldp.apps.App;
+import com.carbonldp.apps.AppFactory;
 import com.carbonldp.apps.AppService;
 import com.carbonldp.ldp.containers.BasicContainer;
 import com.carbonldp.ldp.web.AbstractRDFPostRequestHandler;
@@ -20,7 +21,7 @@ public class AppsRDFPostHandler extends AbstractRDFPostRequestHandler<App> {
 
 	@Override
 	protected App getDocumentResourceView( BasicContainer requestBasicContainer ) {
-		return new App( requestBasicContainer );
+		return AppFactory.getInstance().create( requestBasicContainer );
 	}
 
 	@Override
