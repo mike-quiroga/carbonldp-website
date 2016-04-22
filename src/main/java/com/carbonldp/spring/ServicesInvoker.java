@@ -5,6 +5,7 @@ import com.carbonldp.apps.AppService;
 import com.carbonldp.apps.roles.AppRoleService;
 import com.carbonldp.authentication.token.TokenService;
 import com.carbonldp.authorization.acl.ACLService;
+import com.carbonldp.jobs.JobService;
 import com.carbonldp.ldp.containers.ContainerService;
 import com.carbonldp.ldp.nonrdf.NonRDFSourceService;
 import com.carbonldp.ldp.sources.RDFSourceService;
@@ -31,6 +32,7 @@ public class ServicesInvoker {
 	private ACLService aclService;
 	private PlatformAPIService platformAPIService;
 	private TokenService tokenService;
+	private JobService jobService;
 
 	public void proxy( Consumer<ServicesInvoker> consumer ) {
 		consumer.accept( this );
@@ -80,6 +82,10 @@ public class ServicesInvoker {
 		return tokenService;
 	}
 
+	public JobService getJobService() {
+		return jobService;
+	}
+
 	@Autowired
 	public void setNonRDFResourceService( NonRDFSourceService nonRDFResourceService ) {this.nonRDFResourceService = nonRDFResourceService; }
 
@@ -109,4 +115,7 @@ public class ServicesInvoker {
 
 	@Autowired
 	public void setTokenService( TokenService tokenService ) { this.tokenService = tokenService; }
+
+	@Autowired
+	public void setJobService( JobService jobService ) { this.jobService = jobService; }
 }

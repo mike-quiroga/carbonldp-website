@@ -31,18 +31,30 @@ public class TransactionWrapper {
 	}
 
 	@RunInAppContext
-	public void runInAppcontext( App app, Action action ) {
+	public void runInAppContext( App app, Action action ) {
 		action.run();
 	}
 
 	@RunInAppContext
-	public <E> E runInAppcontext( App app, ActionWithResult<E> action ) {
+	public <E> E runInAppContext( App app, ActionWithResult<E> action ) {
 		return action.run();
 	}
 
 	@RunWith( platformRoles = Platform.Role.SYSTEM )
 	@RunInAppContext
 	public <E> E runWithSystemPermissionsInAppContext( App app, ActionWithResult<E> action ) {
+		return action.run();
+	}
+
+	@RunWith( platformRoles = Platform.Role.SYSTEM )
+	@RunInPlatformContext
+	public void runWithSystemPermissionsInPlatformContext( Action action ) {
+		action.run();
+	}
+
+	@RunWith( platformRoles = Platform.Role.SYSTEM )
+	@RunInPlatformContext
+	public <E> E runWithSystemPermissionsInPlatformContext( ActionWithResult<E> action ) {
 		return action.run();
 	}
 

@@ -2,6 +2,7 @@ package com.carbonldp.ldp.sources;
 
 import com.carbonldp.exceptions.InvalidResourceException;
 import com.carbonldp.exceptions.ResourceDoesntExistException;
+import com.carbonldp.jobs.*;
 import com.carbonldp.ldp.AbstractSesameLDPService;
 import com.carbonldp.ldp.containers.AccessPoint;
 import com.carbonldp.ldp.containers.AccessPointFactory;
@@ -18,6 +19,7 @@ import org.openrdf.model.*;
 import org.openrdf.model.impl.AbstractModel;
 import org.openrdf.model.impl.LinkedHashModel;
 import org.openrdf.query.algebra.Datatype;
+import org.openrdf.model.vocabulary.RDF;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.xml.datatype.XMLGregorianCalendar;
@@ -190,6 +192,8 @@ public class SesameRDFSourceService extends AbstractSesameLDPService implements 
 				if ( blankNode.size() == 1 ) document.removeAll( blankNode );
 				continue;
 			}
+			Set<IRI> predicates = blankNode.getProperties();
+			if ( predicates.size() == 2 && predicates.contains( RDF.FIRST ) && predicates.contains( RDF.REST ) ) continue;
 			RDFBlankNodeFactory.setIdentifier( blankNode );
 		}
 
@@ -221,8 +225,14 @@ public class SesameRDFSourceService extends AbstractSesameLDPService implements 
 
 	private List<Infraction> validateDocumentContainsImmutableProperties( RDFDocument document ) {
 		List<Infraction> infractions = new ArrayList<>();
-		infractions.addAll( ContainerFactory.getInstance().validateImmutableProperties( document.getDocumentResource() ) );
+		RDFSource originalSource = get( document.getDocumentResource().getIRI() );
+		Set<IRI> types = originalSource.getTypes();
+
 		infractions.addAll( ContainerFactory.getInstance().validateSystemManagedProperties( document.getDocumentResource() ) );
+
+		if ( types.contains( ImportBackupJobDescription.Resource.CLASS.getIRI() ) ) infractions.addAll( ImportBackupJobFactory.getInstance().validateImmutableProperties( document.getDocumentResource() ) );
+		else infractions.addAll( ContainerFactory.getInstance().validateImmutableProperties( document.getDocumentResource() ) );
+
 		return infractions;
 	}
 
