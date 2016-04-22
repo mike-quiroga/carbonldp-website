@@ -170,9 +170,9 @@ public class LocalFileRepository implements FileRepository {
 		try {
 			wasDeleted = file.delete();
 		} catch ( SecurityException e ) {
-			LOG.warn( "A temporary file couldn't be deleted. Exception:", e );
+			LOG.warn( "The file couldn't be deleted. Exception:", e );
 		}
-		if ( ! wasDeleted ) LOG.warn( "The temporary file: '{}', couldn't be deleted.", file.toString() );
+		if ( ! wasDeleted ) LOG.warn( "The file: '{}', couldn't be deleted.", file.toString() );
 	}
 
 	private void addFileToZip( ZipOutputStream zipOutputStream, File file, File directoryFile ) {
