@@ -118,7 +118,6 @@ export default class DocumentExplorerComponent {
 		this.appTree.jstree();
 		this.appTree.on( "create_node.jstree", ( e:Event, data:any ):void => {} );
 		this.appTree.on( "before_open.jstree", ( e:Event, data:any ):void => {
-			console.log( data );
 			let parentId:any = data.node.id;
 			let parentNode:any = data.node;
 			let position:string = "last";
@@ -143,7 +142,6 @@ export default class DocumentExplorerComponent {
 		$appTree.set_icon( parentNode, $appTree.settings.types.loading.icon );
 		this.getNodeChildren( parentNode.data.pointer.id ).then(
 			( children:any[] ):void => {
-				// console.log( "children: %o", children );
 				this.emptyNode( parentId );
 				if ( children.length > 0 ) {
 					children.forEach( ( childNode:any ) => this.addChild( parentId, childNode, position ) );
@@ -155,7 +153,6 @@ export default class DocumentExplorerComponent {
 	}
 
 	addChild( parentId:string, node:any, position:string ):void {
-		// console.log( "Add Child ( parentId: %o, newNode: %o, position: %o )", "#" + parentId, node, position );
 		this.appTree.jstree( true ).create_node( parentId, node, position );
 	}
 
