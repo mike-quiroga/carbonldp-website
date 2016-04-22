@@ -1,11 +1,12 @@
-import * as App from "carbonldp/App";
+import * as CarbonApp from "carbonldp/App";
 
-export class Class {
+export interface App extends CarbonApp {
 	name:string;
 	created:string;
 	modified:string;
 	slug:string;
-	app:App.Context;
+	description:string;
+	app:CarbonApp.Context;
 }
 
-export default Class;
+export default App;
