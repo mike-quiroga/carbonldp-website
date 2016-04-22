@@ -1,11 +1,9 @@
-import { Component, ElementRef } from "angular2/core";
-import { CORE_DIRECTIVES, FORM_DIRECTIVES, FormBuilder, ControlGroup, AbstractControl, Control, Validators } from "angular2/common";
-import { Router, ROUTER_DIRECTIVES } from "angular2/router";
-import { Observable } from "rxjs";
+import {Component, ElementRef} from "angular2/core";
+import {CORE_DIRECTIVES, FormBuilder, ControlGroup, AbstractControl, Control, Validators} from "angular2/common";
+import {Router, ROUTER_DIRECTIVES} from "angular2/router";
 
 import Carbon from "carbonldp/Carbon";
 import * as CarbonApp from "carbonldp/App";
-import * as Apps from "carbonldp/Apps";
 import * as HTTPResponse from "carbonldp/HTTP/Response";
 import * as HTTPErrors from "carbonldp/HTTP/Errors";
 import * as HTTPError from "carbonldp/HTTP/Errors/HTTPError";
@@ -14,8 +12,8 @@ import * as Pointer from "carbonldp/Pointer";
 import $ from "jquery";
 import "semantic-ui/semantic";
 
-import AppContextService from "./../AppContextService";
-import App from "./../my-apps/app/App";
+import AppContextService from "./../../AppContextService";
+import App from "./../app/App";
 
 import template from "./template.html!";
 
@@ -39,7 +37,8 @@ export default class CreateAppView {
 
 	_name:string = "";
 	_slug:string = "";
-	resolvedSlug:string = "";
+	persistedSlug:string = "";
+	persistedName:string = "";
 
 	createAppForm:ControlGroup;
 	formBuilder:FormBuilder;
@@ -74,7 +73,7 @@ export default class CreateAppView {
 			( value ):void => {
 				if ( value ) {
 					this._slug = this.getSanitizedSlug( value );
-					this.slug.updateValueAndValidity( true, true );
+					this.slug.updateValueAndValidity();
 				}
 			}
 		);
@@ -82,7 +81,7 @@ export default class CreateAppView {
 
 	slugLostControl( evt:any ):void {
 		if ( ! evt.target.value.match( /^[a-z0-9]+(?:-[a-z0-9]*)*(?:\/*)$/ ) ) {
-			(<Control> this.slug).updateValue( this.getSanitizedSlug( evt.target.value ), false, false, false );
+			(<Control> this.slug).updateValue( this.getSanitizedSlug( evt.target.value ) );
 			this._slug = this.slug.value;
 		}
 	}
@@ -120,13 +119,19 @@ export default class CreateAppView {
 
 		let appDocument:App = <App>(CarbonApp.Factory.create( name ));
 		appDocument.description = description;
-		this.carbon.apps.create( slug, <CarbonApp.Class>appDocument ).then(
+		this.createApp( slug, <CarbonApp.Class>appDocument );
+	}
+
+	createApp( slug:string, appDocument:CarbonApp.Class ):Promise<[ Pointer.Class, HTTPResponse.Class]> {
+		return this.carbon.apps.create( slug, appDocument ).then(
 			( [appPointer, appCreationResponse]:[ Pointer.Class, HTTPResponse.Class] ) => {
 				this.submitting = false;
-				this.resolvedSlug = this._slug;
+				this.persistedSlug = this._slug;
+				this.persistedName = this._name;
 				this.carbon.apps.getContext( appPointer ).then(
 					( appContext:CarbonApp.Context ):void => {
-						this.resolvedSlug = this.appContextService.getSlug( appContext );
+						this.persistedSlug = this.appContextService.getSlug( appContext );
+						this.persistedName = appContext.app.name;
 					}
 				);
 				this.displaySuccessMessage = true;
@@ -136,8 +141,6 @@ export default class CreateAppView {
 				this.submitting = false;
 			}
 		);
-
-
 	}
 
 	setErrorMessage( error:HTTPError.HTTPError ):void {
@@ -177,17 +180,14 @@ export default class CreateAppView {
 
 
 	slugValidator( slug:Control ):any {
-		if ( slug.value ) {
-			if ( slug.value.match( /^[a-z0-9]+(?:-[a-z0-9]*)*(?:\/*)$/ ) ) {
-				return null;
-			} else {
-				return {"invalidSlug": true};
-			}
+		if ( ! slug.value ) return null;
+		if ( slug.value.match( /^[a-z0-9]+(?:-[a-z0-9]*)*(?:\/*)$/ ) ) {
+			return null;
 		}
-		return null;
+		return {"invalidSlug": true};
 	}
 
-	closeMessage( evt:any ):void {
+	closeMessage( evt:Event ):void {
 		let message:JQuery = $( evt.srcElement ).closest( ".ui.message" );
 		message.transition( {
 			onComplete: ():void => {

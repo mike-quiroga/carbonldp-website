@@ -38,5 +38,5 @@
 </div>
 <div class="ui bottom attached success message" *ngIf="!!displaySuccessMessage">
 	<i class="close icon" (click)="closeMessage($event)"></i>
-	The app "<a [routerLink]="['/AppDev', 'MyApps', 'App', {slug: resolvedSlug}]">{{_name}}</a>" was created successfully.
+	The app "<a [routerLink]="['/AppDev', 'MyApps', 'App', {slug: persistedSlug}]">{{persistedName}}</a>" was created successfully.
 </div>

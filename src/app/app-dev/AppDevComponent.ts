@@ -16,7 +16,6 @@ import ErrorsAreaComponent from "./components/errors-area/ErrorsAreaComponent";
 
 import DashboardView from "./dashboard/DashboardView";
 import MyAppsView from "./my-apps/my-apps-view/MyAppsView";
-import CreateAppView from "./create-app/CreateAppView";
 
 import template from "./template.html!";
 import "./style.css!";
@@ -47,15 +46,6 @@ import "./style.css!";
 		data: {
 			alias: "MyApps",
 			displayName: "My Apps",
-		},
-	},
-	{
-		path: "/create-app",
-		as: "CreateApp",
-		component: CreateAppView,
-		data: {
-			alias: "CreateApp",
-			displayName: "Create App",
 		},
 	},
 ] )
