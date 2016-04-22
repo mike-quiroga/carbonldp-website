@@ -24,4 +24,7 @@ public interface ExecutionService {
 
 	@PreAuthorize( "hasPermission(#executionIRI, 'UPDATE')" )
 	public void addResult( IRI executionIRI, Value status );
+
+	@PreAuthorize( "hasPermission(#executionIRI, 'UPDATE')" )
+	public void addErrorDescription( IRI executionIRI, String error );
 }

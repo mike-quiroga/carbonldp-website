@@ -71,8 +71,6 @@ public abstract class AbstractIT extends AbstractTestNGSpringContextTests {
 	@Autowired
 	protected ACLRepository aclRepository;
 	@Autowired
-	protected TypedJobExecutor backupJobExecutor;
-	@Autowired
 	protected TransactionWrapper transactionWrapper;
 	@Autowired
 	protected SesameConnectionFactory connectionFactory;

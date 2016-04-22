@@ -2,6 +2,7 @@ package com.carbonldp.ldp.sources;
 
 import com.carbonldp.exceptions.InvalidResourceException;
 import com.carbonldp.exceptions.ResourceDoesntExistException;
+import com.carbonldp.jobs.*;
 import com.carbonldp.ldp.AbstractSesameLDPService;
 import com.carbonldp.ldp.containers.AccessPoint;
 import com.carbonldp.ldp.containers.AccessPointFactory;
@@ -220,8 +221,14 @@ public class SesameRDFSourceService extends AbstractSesameLDPService implements 
 
 	private List<Infraction> validateDocumentContainsImmutableProperties( RDFDocument document ) {
 		List<Infraction> infractions = new ArrayList<>();
-		infractions.addAll( ContainerFactory.getInstance().validateImmutableProperties( document.getDocumentResource() ) );
+		RDFSource originalSource = get( document.getDocumentResource().getIRI() );
+		Set<IRI> types = originalSource.getTypes();
+
 		infractions.addAll( ContainerFactory.getInstance().validateSystemManagedProperties( document.getDocumentResource() ) );
+
+		if ( types.contains( ImportBackupJobDescription.Resource.CLASS.getIRI() ) ) infractions.addAll( ImportBackupJobFactory.getInstance().validateImmutableProperties( document.getDocumentResource() ) );
+		else infractions.addAll( ContainerFactory.getInstance().validateImmutableProperties( document.getDocumentResource() ) );
+
 		return infractions;
 	}
 

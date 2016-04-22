@@ -60,6 +60,12 @@ public class SesameExecutionService extends AbstractSesameLDPService implements 
 		sourceRepository.touch( executionIRI );
 	}
 
+	@Override
+	public void addErrorDescription( IRI executionIRI, String error ){
+		executionRepository.addErrorDescription( executionIRI, error );
+		sourceRepository.touch( executionIRI );
+	}
+
 	@Autowired
 	public void setExecutionRepository( ExecutionRepository executionRepository ) {
 		this.executionRepository = executionRepository;

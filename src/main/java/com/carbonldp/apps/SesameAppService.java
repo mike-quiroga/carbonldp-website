@@ -8,6 +8,8 @@ import com.carbonldp.apps.roles.AppRoleRepository;
 import com.carbonldp.apps.roles.AppRoleService;
 import com.carbonldp.authentication.AgentAuthenticationToken;
 import com.carbonldp.authentication.token.app.AppTokenRepository;
+import com.carbonldp.authorization.Platform;
+import com.carbonldp.authorization.RunWith;
 import com.carbonldp.authorization.acl.ACEDescription;
 import com.carbonldp.authorization.acl.ACL;
 import com.carbonldp.exceptions.InvalidResourceException;

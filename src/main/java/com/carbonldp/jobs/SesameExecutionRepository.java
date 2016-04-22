@@ -8,6 +8,7 @@ import com.carbonldp.rdf.RDFDocumentRepository;
 import com.carbonldp.rdf.RDFResourceRepository;
 import com.carbonldp.utils.ValueUtil;
 import org.openrdf.model.*;
+import org.openrdf.model.impl.SimpleValueFactory;
 import org.openrdf.model.vocabulary.RDF;
 import org.openrdf.query.BindingSet;
 import org.openrdf.repository.RepositoryResult;
@@ -155,6 +156,11 @@ public class SesameExecutionRepository extends AbstractSesameLDPRepository imple
 	@Override
 	public void addResult( IRI executionIRI, Value status ) {
 		connectionTemplate.write( connection -> connection.add( executionIRI, ExecutionDescription.Property.RESULT.getIRI(), status, executionIRI ) );
+	}
+
+	@Override
+	public void addErrorDescription( IRI executionIRI, String error ) {
+		connectionTemplate.write( connection -> connection.add( executionIRI, ExecutionDescription.Property.ERROR_DESCRIPTION.getIRI(), SimpleValueFactory.getInstance().createLiteral( error ), executionIRI ) );
 	}
 
 	@Autowired

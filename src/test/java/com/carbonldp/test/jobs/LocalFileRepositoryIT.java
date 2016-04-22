@@ -1,6 +1,7 @@
 package com.carbonldp.test.jobs;
 
-import com.carbonldp.jobs.ExportBackupJobExecutor;
+import com.carbonldp.Consts;
+import com.carbonldp.Vars;
 import com.carbonldp.test.AbstractIT;
 import com.carbonldp.utils.ValueUtil;
 import org.openrdf.model.*;
@@ -14,8 +15,6 @@ import org.openrdf.rio.RDFFormat;
 import org.openrdf.rio.RDFParser;
 import org.openrdf.rio.Rio;
 import org.openrdf.rio.helpers.StatementCollector;
-import org.springframework.aop.framework.Advised;
-import org.springframework.test.util.ReflectionTestUtils;
 import org.testng.Assert;
 import org.testng.SkipException;
 import org.testng.annotations.Test;
@@ -25,6 +24,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.Reader;
 import java.nio.file.Files;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.zip.ZipFile;
 
 import static org.testng.Assert.*;
@@ -33,7 +34,7 @@ import static org.testng.Assert.*;
  * @author NestorVenegas
  * @since _version_
  */
-public class ExportBackupJobExecutorIT extends AbstractIT {
+public class LocalFileRepositoryIT extends AbstractIT {
 	public String appString = "";
 
 	@Test
@@ -86,7 +87,9 @@ public class ExportBackupJobExecutorIT extends AbstractIT {
 	public void addFileToZipIT() {
 
 		File rdfRepositoryFile = transactionWrapper.runInAppContext( app, () -> fileRepository.createAppRepositoryRDFFile() );
-		File file = fileRepository.createZipFile( rdfRepositoryFile );
+		Map<File, String> entries = new HashMap<>();
+		entries.put( rdfRepositoryFile, Vars.getInstance().getAppDataFileName() );
+		File file = fileRepository.createZipFile( entries );
 
 		ZipFile zipFile = null;
 		try {
@@ -95,7 +98,7 @@ public class ExportBackupJobExecutorIT extends AbstractIT {
 			throw new SkipException( e.toString() );
 		}
 		assertEquals( zipFile.size(), 1 );
-		assertEquals( zipFile.entries().nextElement().getName(), rdfRepositoryFile.getName() );
+		assertEquals( zipFile.entries().nextElement().getName(), Vars.getInstance().getAppDataFileName() + Consts.PERIOD + RDFFormat.TRIG.getDefaultFileExtension() );
 	}
 
 	private Model getBody( String appString ) {

@@ -22,11 +22,13 @@ public class SesameJobService extends AbstractSesameLDPService implements JobSer
 	private ExecutionService executionService;
 	private RDFResourceRepository resourceRepository;
 
+	@Override
 	public void create( IRI targetIRI, Job job ) {
 		validate( job );
 		containerService.createChild( targetIRI, job );
 	}
 
+	@Override
 	public void createExecution( IRI jobIRI, Execution execution ) {
 		containerService.createChild( jobIRI, execution );
 		IRI executionQueueLocation = resourceRepository.getIRI( jobIRI, JobDescription.Property.EXECUTION_QUEUE_LOCATION );
@@ -40,10 +42,20 @@ public class SesameJobService extends AbstractSesameLDPService implements JobSer
 			case EXPORT_BACKUP_JOB:
 				infractions = ExportBackupJobFactory.getInstance().validate( job );
 				break;
+			case IMPORT_BACKUP_JOB:
+				infractions = ImportBackupJobFactory.getInstance().validate( job );
+				checkPermissionsOverTheBackup( job );
+				break;
 			default:
 				infractions.add( new Infraction( 0x2001, "rdf.type", "job type" ) );
 		}
 		if ( ! infractions.isEmpty() ) throw new InvalidResourceException( infractions );
+	}
+
+	private void checkPermissionsOverTheBackup( Job job ) {
+		ImportBackupJob importBackupJob = new ImportBackupJob( job );
+		IRI backupIRI = importBackupJob.getBackup();
+		sourceService.get( backupIRI );
 	}
 
 	@Override

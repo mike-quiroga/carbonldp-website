@@ -11,7 +11,6 @@ import com.carbonldp.exceptions.NotCreatedException;
 import com.carbonldp.utils.IRIUtil;
 import com.carbonldp.ldp.sources.RDFSourceRepository;
 import com.carbonldp.utils.TriGWriter;
-import org.apache.commons.io.FileUtils;
 import org.openrdf.model.IRI;
 import org.openrdf.model.ValueFactory;
 import org.openrdf.model.impl.SimpleValueFactory;
@@ -24,7 +23,8 @@ import org.springframework.core.io.FileSystemResource;
 
 import java.io.*;
 import java.nio.file.Files;
-import java.util.Random;
+import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
@@ -80,13 +80,16 @@ public class LocalFileRepository implements FileRepository {
 	@Override
 	public void deleteDirectory( App app ) {
 		File appDirectory = new File( getFilesDirectory( app ) );
-		try {
-			FileUtils.deleteDirectory( appDirectory );
-		} catch ( IOException e ) {
-			throw new RuntimeException( "The file couldn't be deleted. Exception:", e );
-		}
+		deleteDirectory( appDirectory );
 		if ( appDirectory.exists() ) throw new FileNotDeletedException( 0x1010 );
+	}
 
+	@Override
+	public void emptyDirectory( App app ) {
+		File appDirectory = new File( getFilesDirectory( app ) );
+		deleteDirectory( appDirectory );
+		if ( appDirectory.exists() ) throw new FileNotDeletedException( 0x1010 );
+		appDirectory.mkdir();
 	}
 
 	@Override
@@ -95,7 +98,7 @@ public class LocalFileRepository implements FileRepository {
 		FileOutputStream outputStream = null;
 		final TriGWriter trigWriter;
 		try {
-			temporaryFile = File.createTempFile( IRIUtil.createRandomSlug(), Consts.PERIOD.concat( RDFFormat.TRIG.getDefaultFileExtension() ) );
+			temporaryFile = File.createTempFile( Vars.getInstance().getAppDataFileName(), Consts.PERIOD.concat( RDFFormat.TRIG.getDefaultFileExtension() ) );
 			temporaryFile.deleteOnExit();
 
 			outputStream = new FileOutputStream( temporaryFile );
@@ -116,7 +119,7 @@ public class LocalFileRepository implements FileRepository {
 	}
 
 	@Override
-	public File createZipFile( File... files ) {
+	public File createZipFile( Map<File, String> fileToNameMap ) {
 		ZipOutputStream zipOutputStream = null;
 		FileOutputStream fileOutputStream = null;
 		try {
@@ -132,14 +135,15 @@ public class LocalFileRepository implements FileRepository {
 			}
 			zipOutputStream = new ZipOutputStream( fileOutputStream );
 
+			Set<File> files = fileToNameMap.keySet();
 			for ( File file : files ) {
 				if ( file.isDirectory() ) {
 					File[] listFiles = file.listFiles();
 					for ( File listFile : listFiles ) {
-						addFileToZip( zipOutputStream, listFile, file );
+						addFileToZip( zipOutputStream, listFile, file, fileToNameMap.get( file ) );
 					}
 				} else {
-					addFileToZip( zipOutputStream, file, null );
+					addFileToZip( zipOutputStream, file, null, fileToNameMap.get( file ) );
 				}
 			}
 			return temporaryFile;
@@ -175,7 +179,20 @@ public class LocalFileRepository implements FileRepository {
 		if ( ! wasDeleted ) LOG.warn( "The file: '{}', couldn't be deleted.", file.toString() );
 	}
 
-	private void addFileToZip( ZipOutputStream zipOutputStream, File file, File directoryFile ) {
+	@Override
+	public void deleteDirectory( File file ) {
+		if ( file.isDirectory() ) {
+			String files[] = file.list();
+			for ( String subFile : files ) {
+				File fileDelete = new File( file, subFile );
+
+				deleteDirectory( fileDelete );
+			}
+		}
+		file.delete();
+	}
+
+	private void addFileToZip( ZipOutputStream zipOutputStream, File file, File directoryFile, String fileNameInsideZip ) {
 		FileSystemResource resource = new FileSystemResource( file.getPath() );
 		FileInputStream fileInputStream;
 		try {
@@ -185,9 +202,11 @@ public class LocalFileRepository implements FileRepository {
 		}
 		ZipEntry zipEntry;
 		if ( directoryFile != null ) {
-			zipEntry = new ZipEntry( directoryFile.getName().concat( Consts.SLASH ).concat( file.getName() ) );
+			if ( fileNameInsideZip == null ) fileNameInsideZip = directoryFile.getName();
+			zipEntry = new ZipEntry( fileNameInsideZip.concat( Consts.SLASH ).concat( file.getName() ) );
 		} else {
-			zipEntry = new ZipEntry( file.getName() );
+			if ( fileNameInsideZip == null ) fileNameInsideZip = file.getName();
+			zipEntry = new ZipEntry( fileNameInsideZip );
 		}
 		try {
 			zipOutputStream.putNextEntry( zipEntry );
@@ -263,7 +282,8 @@ public class LocalFileRepository implements FileRepository {
 		return directory;
 	}
 
-	private String getFilesDirectory( App app ) {
+	@Override
+	public String getFilesDirectory( App app ) {
 		String directory = Vars.getInstance().getAppsFilesDirectory();
 		if ( ! directory.endsWith( Consts.SLASH ) ) directory = directory.concat( Consts.SLASH );
 		directory = directory.concat( app.getRepositoryID() );

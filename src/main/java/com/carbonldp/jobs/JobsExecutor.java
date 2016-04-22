@@ -1,6 +1,10 @@
 package com.carbonldp.jobs;
 
 import com.carbonldp.apps.App;
+import com.carbonldp.apps.AppRepository;
+import com.carbonldp.exceptions.CarbonNoStackTraceRuntimeException;
+import com.carbonldp.exceptions.JobException;
+import com.carbonldp.models.Infraction;
 import com.carbonldp.apps.context.RunInPlatformContext;
 import com.carbonldp.authorization.Platform;
 import com.carbonldp.authorization.RunWith;
@@ -40,9 +44,13 @@ public class JobsExecutor {
 		boolean hasErrors = false;
 
 		try {
-			getTypedRepository( type ).execute( app, job, execution );
-		} catch ( Exception e ) {
+			getTypedRepository( type ).execute(app, job, execution );
+		} catch ( CarbonNoStackTraceRuntimeException e ) {
 			executionService.changeExecutionStatus( execution.getIRI(), ExecutionDescription.Status.ERROR );
+			executionService.addErrorDescription( execution.getIRI(), e.getMessage() );
+			hasErrors = true;
+		} catch ( Exception e ) {
+			executionService.changeExecutionStatus( execution.getIRI(), ExecutionDescription.Status.UNKNOWN );
 			hasErrors = true;
 		}
 		if ( ! hasErrors ) executionService.changeExecutionStatus( execution.getIRI(), ExecutionDescription.Status.FINISHED );

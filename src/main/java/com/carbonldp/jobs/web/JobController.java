@@ -43,5 +43,4 @@ public class JobController extends AbstractController {
 
 	@Autowired
 	public void setPostRequestHandler( ExecutionsPOSTHandler postRequestHandler ) {this.postRequestHandler = postRequestHandler;}
-
 }
