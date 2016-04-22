@@ -10,16 +10,16 @@ import com.carbonldp.ldp.nonrdf.NonRDFSourceRepository;
 import com.carbonldp.models.Infraction;
 import com.carbonldp.rdf.*;
 import com.carbonldp.utils.IRIUtil;
+import com.carbonldp.utils.LiteralUtil;
 import com.carbonldp.utils.ValueUtil;
 import org.joda.time.DateTime;
-import org.openrdf.model.BNode;
-import org.openrdf.model.IRI;
-import org.openrdf.model.Resource;
-import org.openrdf.model.Value;
+import org.openrdf.model.*;
 import org.openrdf.model.impl.AbstractModel;
 import org.openrdf.model.impl.LinkedHashModel;
+import org.openrdf.query.algebra.Datatype;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import javax.xml.datatype.XMLGregorianCalendar;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -112,10 +112,10 @@ public class SesameRDFSourceService extends AbstractSesameLDPService implements 
 		RDFDocument originalDocument = originalSource.getDocument();
 		RDFDocument newDocument = mapBNodeSubjects( originalDocument, source.getDocument() );
 
-		AbstractModel toAdd = newDocument.stream().filter( statement -> ! originalDocument.contains( statement ) ).collect( Collectors.toCollection( LinkedHashModel::new ) );
+		AbstractModel toAdd = newDocument.stream().filter( statement -> ! isStatementInModel( statement, originalDocument ) ).collect( Collectors.toCollection( LinkedHashModel::new ) );
 		RDFDocument documentToAdd = new RDFDocument( toAdd, source.getIRI() );
 
-		AbstractModel toDelete = originalDocument.stream().filter( statement -> ! newDocument.contains( statement ) ).collect( Collectors.toCollection( LinkedHashModel::new ) );
+		AbstractModel toDelete = originalDocument.stream().filter( statement -> ! isStatementInModel( statement, newDocument ) ).collect( Collectors.toCollection( LinkedHashModel::new ) );
 		RDFDocument documentToDelete = new RDFDocument( toDelete, source.getIRI() );
 
 		subtract( originalSource.getIRI(), documentToDelete );
@@ -163,6 +163,36 @@ public class SesameRDFSourceService extends AbstractSesameLDPService implements 
 		if ( ! exists( sourceIRI ) ) throw new ResourceDoesntExistException();
 		nonRDFSourceRepository.delete( sourceIRI );
 		sourceRepository.delete( sourceIRI, true );
+	}
+
+	private boolean isStatementInModel( Statement statement, Model model ) {
+		if ( ValueUtil.isResource( statement.getObject() ) ) return model.contains( statement );
+		Literal objectLiteral = ValueUtil.getLiteral( statement.getObject() );
+		if ( LiteralUtil.isString( objectLiteral ) || LiteralUtil.isBoolean( objectLiteral ) ) return model.contains( statement );
+
+		Model filteredModel = model.filter( statement.getSubject(), statement.getPredicate(), null );
+		if ( filteredModel.isEmpty() ) return false;
+
+		boolean isDate = LiteralUtil.isDate( objectLiteral );
+		Set<Value> objects = filteredModel.objects();
+		for ( Value modelObject : objects ) {
+			if ( ! ValueUtil.isLiteral( modelObject ) ) continue;
+			Literal modelLiteral = ValueUtil.getLiteral( modelObject );
+			if ( isDate ) {
+				if ( ! LiteralUtil.isDate( modelLiteral ) ) continue;
+				XMLGregorianCalendar modelDate = modelLiteral.calendarValue().normalize();
+				XMLGregorianCalendar statementDate = objectLiteral.calendarValue().normalize();
+				if ( modelDate.equals( statementDate ) ) return true;
+
+			} else {
+				if ( ! LiteralUtil.isDecimal( modelLiteral ) ) continue;
+				if ( ! modelLiteral.getDatatype().equals( objectLiteral.getDatatype() ) ) continue;
+				double modelDecimal = modelLiteral.doubleValue();
+				double statementDecimal = objectLiteral.doubleValue();
+				if ( modelDecimal == statementDecimal ) return true;
+			}
+		}
+		return false;
 	}
 
 	private void validateResourcesBelongToSource( IRI sourceIRI, Collection<RDFResource> resourceViews ) {
