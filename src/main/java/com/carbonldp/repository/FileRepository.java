@@ -22,7 +22,7 @@ public interface FileRepository {
 
 	public File createAppRepositoryRDFFile();
 
-	public File createZipFile( Map<File, String> entries );
+	public File createZipFile( Map<File, String> fileToNameMap );
 
 	public IRI createBackupIRI( IRI appIRI );
 

@@ -11,7 +11,6 @@ import com.carbonldp.exceptions.NotCreatedException;
 import com.carbonldp.utils.IRIUtil;
 import com.carbonldp.ldp.sources.RDFSourceRepository;
 import com.carbonldp.utils.TriGWriter;
-import org.apache.commons.io.FileUtils;
 import org.openrdf.model.IRI;
 import org.openrdf.model.ValueFactory;
 import org.openrdf.model.impl.SimpleValueFactory;
@@ -25,7 +24,6 @@ import org.springframework.core.io.FileSystemResource;
 import java.io.*;
 import java.nio.file.Files;
 import java.util.Map;
-import java.util.Random;
 import java.util.Set;
 import java.util.UUID;
 import java.util.zip.ZipEntry;
@@ -121,7 +119,7 @@ public class LocalFileRepository implements FileRepository {
 	}
 
 	@Override
-	public File createZipFile( Map<File, String> entries ) {
+	public File createZipFile( Map<File, String> fileToNameMap ) {
 		ZipOutputStream zipOutputStream = null;
 		FileOutputStream fileOutputStream = null;
 		try {
@@ -137,15 +135,15 @@ public class LocalFileRepository implements FileRepository {
 			}
 			zipOutputStream = new ZipOutputStream( fileOutputStream );
 
-			Set<File> files = entries.keySet();
+			Set<File> files = fileToNameMap.keySet();
 			for ( File file : files ) {
 				if ( file.isDirectory() ) {
 					File[] listFiles = file.listFiles();
 					for ( File listFile : listFiles ) {
-						addFileToZip( zipOutputStream, listFile, file, entries.get( file ) );
+						addFileToZip( zipOutputStream, listFile, file, fileToNameMap.get( file ) );
 					}
 				} else {
-					addFileToZip( zipOutputStream, file, null, entries.get( file ) );
+					addFileToZip( zipOutputStream, file, null, fileToNameMap.get( file ) );
 				}
 			}
 			return temporaryFile;
@@ -204,8 +202,10 @@ public class LocalFileRepository implements FileRepository {
 		}
 		ZipEntry zipEntry;
 		if ( directoryFile != null ) {
+			if ( fileNameInsideZip == null ) fileNameInsideZip = directoryFile.getName();
 			zipEntry = new ZipEntry( fileNameInsideZip.concat( Consts.SLASH ).concat( file.getName() ) );
 		} else {
+			if ( fileNameInsideZip == null ) fileNameInsideZip = file.getName();
 			zipEntry = new ZipEntry( fileNameInsideZip );
 		}
 		try {
