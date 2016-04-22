@@ -1,15 +1,16 @@
-import { Component, ElementRef } from "angular2/core";
-import { CORE_DIRECTIVES } from "angular2/common";
-import { Router, RouteDefinition, ROUTER_DIRECTIVES, RouteConfig, RouterOutlet } from "angular2/router";
+import {Component} from "angular2/core";
+import {CORE_DIRECTIVES} from "angular2/common";
+import {ROUTER_DIRECTIVES, RouteConfig, RouterOutlet} from "angular2/router";
 
 
 import AppDetailView from "./../app/AppDetailView";
 import AppsListView from "./../apps-list-view/AppsListView";
+import CreateAppView from "./../create-app/CreateAppView";
 
 @Component( {
 	selector: "my-apps",
 	template: "<router-outlet></router-outlet>",
-	directives: [ CORE_DIRECTIVES, ROUTER_DIRECTIVES, RouterOutlet ]
+	directives: [ CORE_DIRECTIVES, ROUTER_DIRECTIVES, RouterOutlet ],
 } )
 @RouteConfig( [
 	{
@@ -19,8 +20,8 @@ import AppsListView from "./../apps-list-view/AppsListView";
 		useAsDefault: true,
 		data: {
 			alias: "List",
-			displayName: "My Apps"
-		}
+			displayName: "My Apps",
+		},
 	},
 	{
 		path: "/:slug/...",
@@ -31,9 +32,18 @@ import AppsListView from "./../apps-list-view/AppsListView";
 			displayName: "App",
 			params: {
 				name: "slug",
-				redirectTo: "AppDashboard"
-			}
-		}
-	}
+				redirectTo: "AppDashboard",
+			},
+		},
+	},
+	{
+		path: "/create",
+		as: "Create",
+		component: CreateAppView,
+		data: {
+			alias: "Create",
+			displayName: "Create",
+		},
+	},
 ] )
 export default class MyAppsView { }

@@ -1,3 +1,8 @@
+# 0.5.8 (April 14, 2016)
+- Add form to create a new App.
+- Change AppContextService functions get and getAll to use the new getContext and getAllContexts functions from the Carbon Javascript SDK.
+- Add link to create app page in My Apps.
+
 # 0.5.7 (April 13, 2016)
 - Add protocolAndHost field to GettingStarted TypeScript so that documentation can always reflect the server you're on.
 - Upgrade to Angular beta 14
