@@ -18,6 +18,7 @@ import org.openrdf.model.Resource;
 import org.openrdf.model.Value;
 import org.openrdf.model.impl.AbstractModel;
 import org.openrdf.model.impl.LinkedHashModel;
+import org.openrdf.model.vocabulary.RDF;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.*;
@@ -189,6 +190,8 @@ public class SesameRDFSourceService extends AbstractSesameLDPService implements 
 				if ( blankNode.size() == 1 ) document.removeAll( blankNode );
 				continue;
 			}
+			Set<IRI> predicates = blankNode.getProperties();
+			if ( predicates.size() == 2 && predicates.contains( RDF.FIRST ) && predicates.contains( RDF.REST ) ) continue;
 			RDFBlankNodeFactory.setIdentifier( blankNode );
 		}
 
