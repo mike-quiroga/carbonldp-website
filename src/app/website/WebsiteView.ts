@@ -28,18 +28,18 @@ import "./style.css!";
 	directives: [ CORE_DIRECTIVES, ROUTER_DIRECTIVES, HeaderComponent, FooterComponent ]
 } )
 @RouteConfig( [
-	{path: "", as: "Home", component: HomeView, useAsDefault: true},
+	{ path: "", as: "Home", component: HomeView, useAsDefault: true },
 
-	{path: "login", as: "Login", component: LoginView},
+	{ path: "login", as: "Login", component: LoginView },
 
-	{path: "blog", as: "Blog", component: BlogView},
-	{path: "blog/posts/:id", as: "BlogPost", component: BlogPostView},
+	{ path: "blog", as: "Blog", component: BlogView },
+	{ path: "blog/posts/:id", as: "BlogPost", component: BlogPostView },
 
-	{path: "documents/...", as: "Documents", component: DocumentsComponent},
+	{ path: "documents/...", as: "Documents", component: DocumentsComponent },
 
-	{path: "sparql-client", as: "SPARQLClient", component: SPARQLClientComponent},
-	{path: "ui-examples", as: "UIExamples", component: UIExamplesView},
-	{path: "signup-thanks", as: "SignupThanks", component: SignupThanksView},
+	{ path: "sparql-client", as: "SPARQLClient", component: SPARQLClientComponent },
+	{ path: "ui-examples", as: "UIExamples", component: UIExamplesView },
+	{ path: "signup-thanks", as: "SignupThanks", component: SignupThanksView },
 ] )
 
 export default class WebsiteView {

@@ -1,6 +1,6 @@
 {
   "name": "carbon-website",
-  "version": "0.5.8",
+  "version": "0.5.9",
   "description": "Public Website for carbonldp.com",
   "main": "dist/index.html",
   "author": "Base22 LLC",
@@ -16,6 +16,10 @@
     {
       "name": "Alvaro Contreras",
       "email": "alvaro.contreras@base22.com"
+    },
+    {
+      "name": "Jimena Gúzman",
+      "email": "jimena.guzman@base22.com"
     }
   ],
   "license": "UNLICENSED",
@@ -42,6 +46,7 @@
     "gulp-webserver": "^0.9.1",
     "jspm": "^0.17.0-beta.12",
     "reflect-metadata": "^0.1.2",
+    "run-sequence": "^1.1.5",
     "rxjs": "^5.0.0-beta.2",
     "semantic-ui": "^2.1.8",
     "systemjs": "^0.19.26",

@@ -20,13 +20,13 @@ import template from "./template.html!";
 	providers: [ Title ]
 } )
 @RouteConfig( [
-	{path: "/", name: "Documents", component: DocumentsHomeView},
-	{path: "/linked-data-concepts", as: "LinkedDataConcepts", component: LinkedDataConceptsView},
-	{path: "/about-carbon-ldp", as: "AboutCarbonLDP", component: AboutCarbonLDPView},
-	{path: "/carbon-ldp-concepts", as: "CarbonLDPConcepts", component: CarbonLDPConceptsView},
-	{path: "/getting-started-rest-api", as: "GettingStartedWithTheRestApi", component: GettingStartedWithTheRestApiView},
-	{path: "/interaction-models", as: "InteractionModels", component: InteractionModelsView},
-	{path: "/ldp-concepts", as: "LDPConcepts", component: LDPConceptsView}
+	{ path: "/", name: "Documents", component: DocumentsHomeView },
+	{ path: "/linked-data-concepts", as: "LinkedDataConcepts", component: LinkedDataConceptsView },
+	{ path: "/about-carbon-ldp", as: "AboutCarbonLDP", component: AboutCarbonLDPView },
+	{ path: "/carbon-ldp-concepts", as: "CarbonLDPConcepts", component: CarbonLDPConceptsView },
+	{ path: "/getting-started-rest-api", as: "GettingStartedWithTheRestApi", component: GettingStartedWithTheRestApiView },
+	{ path: "/interaction-models", as: "InteractionModels", component: InteractionModelsView },
+	{ path: "/ldp-concepts", as: "LDPConcepts", component: LDPConceptsView }
 ] )
 export default class DocumentsComponent {
 

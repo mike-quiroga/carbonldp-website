@@ -1,6 +1,6 @@
-import {Component, ElementRef} from "angular2/core";
-import {CORE_DIRECTIVES} from "angular2/common";
-import {ROUTER_DIRECTIVES, RouteConfig, Router, RouterOutlet, RouteParams} from "angular2/router";
+import { Component, ElementRef } from "angular2/core";
+import { CORE_DIRECTIVES } from "angular2/common";
+import { ROUTER_DIRECTIVES, RouteConfig, Router, RouterOutlet, RouteParams } from "angular2/router";
 
 import * as CarbonApp from "carbonldp/App";
 

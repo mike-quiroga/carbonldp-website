@@ -1,6 +1,6 @@
 import { Component, ElementRef } from "angular2/core";
 import { CORE_DIRECTIVES } from "angular2/common";
-import { Angulartics2On} from "angulartics2/src/core/angulartics2On";
+import { Angulartics2On } from "angulartics2/src/core/angulartics2On";
 import { Angulartics2 } from "angulartics2";
 
 

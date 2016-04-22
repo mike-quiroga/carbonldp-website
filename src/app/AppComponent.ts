@@ -28,13 +28,13 @@ import "./style.css!";
 		},
 	},
 
-	{path: "", redirectTo: [ "./Website" ]},
+	{ path: "", redirectTo: [ "./Website" ] },
 
-	{path: "login", as: "AppDevLogin", component: AppDevLoginView},
+	{ path: "login", as: "AppDevLogin", component: AppDevLoginView },
 	// TODO: Remove 'site' portion from the URL. Right now Angular doesn't behave like it should with blank child URLs
-	{path: "site/...", as: "Website", component: WebsiteView},
+	{ path: "site/...", as: "Website", component: WebsiteView },
 ] )
 export default class App {
-	//importing angulartics2, angulartics2GoogleAnalytics as per documentation of angulartics2 plug in
+	// Importing angulartics2, angulartics2GoogleAnalytics as per documentation of angulartics2 plug-in
 	constructor( angulartics2:Angulartics2, angulartics2GoogleAnalytics:Angulartics2GoogleAnalytics ) {}
 }

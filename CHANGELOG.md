@@ -5,7 +5,7 @@
 - Create signup-thanks PageView
 - Fix styles in footer, header, home Components.
 - Hide routes not ready for Prod. in Header Component.
-
+- Add angulartics2 typings
 
 # 0.5.8 (April 14, 2016)
 - Add form to create a new App.

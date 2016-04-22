@@ -1,7 +1,7 @@
-import {Component, ElementRef } from "angular2/core";
+import { Component, ElementRef } from "angular2/core";
 import { CORE_DIRECTIVES } from "angular2/common";
 import { Title } from "angular2/platform/browser";
-import {RouteConfig, RouterOutlet, RouterLink} from "angular2/router";
+import { RouteConfig, RouterOutlet, RouterLink } from "angular2/router";
 
 import $ from "jquery";
 import "semantic-ui/semantic";
