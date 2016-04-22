@@ -1,5 +1,7 @@
 package com.carbonldp.test.jobs;
 
+import com.carbonldp.Consts;
+import com.carbonldp.Vars;
 import com.carbonldp.test.AbstractIT;
 import com.carbonldp.utils.ValueUtil;
 import org.openrdf.model.*;
@@ -22,6 +24,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.Reader;
 import java.nio.file.Files;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.zip.ZipFile;
 
 import static org.testng.Assert.*;
@@ -83,7 +87,9 @@ public class LocalFileRepositoryIT extends AbstractIT {
 	public void addFileToZipIT() {
 
 		File rdfRepositoryFile = transactionWrapper.runInAppContext( app, () -> fileRepository.createAppRepositoryRDFFile() );
-		File file = fileRepository.createZipFile( rdfRepositoryFile );
+		Map<File, String> entries = new HashMap<>();
+		entries.put( rdfRepositoryFile, Vars.getInstance().getAppDataFileName() );
+		File file = fileRepository.createZipFile( entries );
 
 		ZipFile zipFile = null;
 		try {
@@ -92,7 +98,7 @@ public class LocalFileRepositoryIT extends AbstractIT {
 			throw new SkipException( e.toString() );
 		}
 		assertEquals( zipFile.size(), 1 );
-		assertEquals( zipFile.entries().nextElement().getName(), rdfRepositoryFile.getName() );
+		assertEquals( zipFile.entries().nextElement().getName(), Vars.getInstance().getAppDataFileName() + Consts.PERIOD + RDFFormat.TRIG.getDefaultFileExtension() );
 	}
 
 	private Model getBody( String appString ) {

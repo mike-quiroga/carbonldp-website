@@ -7,14 +7,15 @@ import com.carbonldp.ldp.nonrdf.backup.BackupService;
 import com.carbonldp.ldp.sources.RDFSourceRepository;
 import com.carbonldp.repository.FileRepository;
 import com.carbonldp.spring.TransactionWrapper;
-import com.carbonldp.utils.IRIUtil;
 import org.openrdf.model.IRI;
+import org.openrdf.rio.RDFFormat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.File;
-import java.util.Random;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author NestorVenegas
@@ -40,9 +41,10 @@ public class ExportBackupJobExecutor implements TypedJobExecutor {
 		String appRepositoryPath = Vars.getInstance().getAppsFilesDirectory().concat( Consts.SLASH ).concat( appRepositoryID );
 		File nonRDFSourceDirectory = new File( appRepositoryPath );
 		File rdfRepositoryFile = transactionWrapper.runInAppContext( app, () -> fileRepository.createAppRepositoryRDFFile() );
-		File zipFile = nonRDFSourceDirectory.exists() ?
-			fileRepository.createZipFile( nonRDFSourceDirectory, rdfRepositoryFile ) :
-			fileRepository.createZipFile( rdfRepositoryFile );
+		Map<File, String> entries = new HashMap<>();
+		entries.put( rdfRepositoryFile, Vars.getInstance().getAppDataFileName() + Consts.PERIOD + RDFFormat.TRIG.getDefaultFileExtension() );
+		if ( nonRDFSourceDirectory.exists() ) entries.put( nonRDFSourceDirectory, Vars.getInstance().getAppDataDirectoryName() );
+		File zipFile = fileRepository.createZipFile( entries );
 
 		IRI backupIRI = createAppBackup( app.getIRI(), zipFile );
 

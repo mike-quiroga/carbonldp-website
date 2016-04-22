@@ -85,8 +85,8 @@ public class ImportBackupJobExecutor implements TypedJobExecutor {
 			ZipEntry zipEntry = entries.nextElement();
 			if ( zipEntry.isDirectory() ) continue;
 			String fileName = zipEntry.getName();
+			if ( ! fileName.startsWith( Vars.getInstance().getAppDataDirectoryName() + Consts.SLASH ) ) continue;
 			int slashIndex = fileName.indexOf( Consts.SLASH );
-			if ( slashIndex == - 1 ) continue;
 			fileName = fileName.substring( slashIndex );
 
 			InputStream InputStream = null;
@@ -133,7 +133,7 @@ public class ImportBackupJobExecutor implements TypedJobExecutor {
 	private void replaceApp( File backupFile ) {
 		IRI appIRI = AppContextHolder.getContext().getApplication().getRootContainerIRI();
 
-		InputStream trigInputStream = ZipUtil.unZipFile( backupFile, Vars.getInstance().getAppDataFileName().concat( RDFFormat.TRIG.getDefaultFileExtension() ) );
+		InputStream trigInputStream = ZipUtil.unZipFile( backupFile, Vars.getInstance().getAppDataFileName() + Consts.PERIOD + RDFFormat.TRIG.getDefaultFileExtension() );
 		if ( trigInputStream == null ) throw new JobException( new Infraction( 0x1012 ) );
 		connectionTemplate.write( connection -> connection.remove( (Resource) null, null, null ) );
 		connectionTemplate.write( connection -> connection.add( trigInputStream, appIRI.stringValue(), RDFFormat.TRIG ) );

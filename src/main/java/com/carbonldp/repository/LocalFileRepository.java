@@ -24,7 +24,9 @@ import org.springframework.core.io.FileSystemResource;
 
 import java.io.*;
 import java.nio.file.Files;
+import java.util.Map;
 import java.util.Random;
+import java.util.Set;
 import java.util.UUID;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
@@ -116,7 +118,7 @@ public class LocalFileRepository implements FileRepository {
 	}
 
 	@Override
-	public File createZipFile( File... files ) {
+	public File createZipFile( Map<File, String> entries ) {
 		ZipOutputStream zipOutputStream = null;
 		FileOutputStream fileOutputStream = null;
 		try {
@@ -132,14 +134,15 @@ public class LocalFileRepository implements FileRepository {
 			}
 			zipOutputStream = new ZipOutputStream( fileOutputStream );
 
+			Set<File> files = entries.keySet();
 			for ( File file : files ) {
 				if ( file.isDirectory() ) {
 					File[] listFiles = file.listFiles();
 					for ( File listFile : listFiles ) {
-						addFileToZip( zipOutputStream, listFile, file );
+						addFileToZip( zipOutputStream, listFile, file, entries.get( file ) );
 					}
 				} else {
-					addFileToZip( zipOutputStream, file, null );
+					addFileToZip( zipOutputStream, file, null, entries.get( file ) );
 				}
 			}
 			return temporaryFile;
@@ -188,7 +191,7 @@ public class LocalFileRepository implements FileRepository {
 		file.delete();
 	}
 
-	private void addFileToZip( ZipOutputStream zipOutputStream, File file, File directoryFile ) {
+	private void addFileToZip( ZipOutputStream zipOutputStream, File file, File directoryFile, String fileNameInsideZip ) {
 		FileSystemResource resource = new FileSystemResource( file.getPath() );
 		FileInputStream fileInputStream;
 		try {
@@ -198,9 +201,9 @@ public class LocalFileRepository implements FileRepository {
 		}
 		ZipEntry zipEntry;
 		if ( directoryFile != null ) {
-			zipEntry = new ZipEntry( directoryFile.getName().concat( Consts.SLASH ).concat( file.getName() ) );
+			zipEntry = new ZipEntry( fileNameInsideZip.concat( Consts.SLASH ).concat( file.getName() ) );
 		} else {
-			zipEntry = new ZipEntry( file.getName() );
+			zipEntry = new ZipEntry( fileNameInsideZip );
 		}
 		try {
 			zipOutputStream.putNextEntry( zipEntry );

@@ -4,6 +4,7 @@ import com.carbonldp.apps.App;
 import org.openrdf.model.IRI;
 
 import java.io.File;
+import java.util.Map;
 import java.util.UUID;
 
 public interface FileRepository {
@@ -19,7 +20,7 @@ public interface FileRepository {
 
 	public File createAppRepositoryRDFFile();
 
-	public File createZipFile( File... files );
+	public File createZipFile( Map<File, String> entries );
 
 	public IRI createBackupIRI( IRI appIRI );
 
