@@ -69,14 +69,14 @@ export default class MenuBarComponentComponent {
 	}
 
 	getRouteAlias():any {
-		let alias:any[] = [], params:{name:string} = {name: ""};
+		let alias:any[] = [], params:{name:string} = { name: "" };
 		this.instructions.forEach(
 			( instruction )=> {
 				if ( instruction ) {
 					alias.push( instruction.component.routeData.data[ "alias" ] );
 					params = instruction.component.routeData.data[ "params" ];
 					if ( ! ! params ) {
-						alias.push( {[params.name]: instruction.urlPath} );
+						alias.push( { [params.name]: instruction.urlPath } );
 					}
 				}
 			}

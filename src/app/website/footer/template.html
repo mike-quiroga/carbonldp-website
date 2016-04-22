@@ -1,15 +1,27 @@
 <div class="ui vertical inverted footer segment">
-	<div class="ui middle aligned stackable grid container">
+	<div class="ui middle aligned grid container computer only">
 		<div class="base22-logo four wide left floated left aligned column">
-			<a href="http://base22.com/"><img src="assets/images/base22-logo-white.png"></a>
+			<a href="http://base22.com/"><img src="assets/images/base22-logo-white.png"/></a>
 		</div>
 		<div class="eight wide center aligned stretched column">
-			© 2015 Base22 Technology Group, LLC. All Rights Reserved.
+			©{{year}} Base22 Technology Group, LLC. All Rights Reserved.
 		</div>
-		<div class="social-icons four wide right floated right aligned column">
-			<a href="https://plus.google.com/112247836322591347334"><i class="circular inverted orange google plus icon"></i></a>
-			<a href="https://www.facebook.com/carbonldp"><i class="circular inverted orange facebook icon"></i></a>
-			<a href="https://twitter.com/CarbonLDP"><i class="circular inverted orange twitter icon"></i></a>
+		<div class="social-icons four wide right aligned column">
+			<a angulartics2On="click" angularticsEvent="OutboundClick" angularticsCategory="Facebook" href="https://www.facebook.com/carbonldp"><i class="circular facebook icon"></i></a>
+			<a angulartics2On="click" angularticsEvent="OutboundClick" angularticsCategory="Twitter" href="https://twitter.com/CarbonLDP"><i class="circular twitter icon"></i></a>
+		</div>
+	</div>
+	<div class="ui grid mobile tablet only">
+		<div class="base22-logo centered aligned six wide column">
+			<a href="http://base22.com/"><img src="assets/images/base22-logo-white.png"/></a>
+		</div>
+		<div class="social-icons six wide column">
+			<a angulartics2On="click" angularticsEvent="OutboundClick" angularticsCategory="Facebook" href="https://www.facebook.com/carbonldp"><i class="circular facebook icon"></i></a>
+			<a angulartics2On="click" angularticsEvent="OutboundClick" angularticsCategory="Twitter" href="https://twitter.com/CarbonLDP"><i class="circular twitter icon"></i></a>
+		</div>
+		<div class="centered aligned twelve wide column">
+			<p>©{{year}} Base22 Technology Group, LLC. All Rights Reserved.</p>
 		</div>
 	</div>
 </div>
+

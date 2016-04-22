@@ -4563,7 +4563,9 @@
 						</div>
 					</div>
 
-					<div class="ui button" data-html="<div class='header'>User Rating</div><div class='content'><div class='ui star rating'><i class='active icon'></i><i class='active icon'></i><i class='active icon'></i><i class='icon'></i><i class='icon'></i></div></div>">HTML Content</div>
+					<div class="ui button" data-html="<div class='header'>User Rating</div><div class='content'><div class='ui star rating'><i class='active icon'></i><i class='active icon'></i><i class='active icon'></i><i class='icon'></i><i class='icon'></i></div></div>">
+						HTML Content
+					</div>
 					<div class="ui button">Basic Popup</div>
 					<div class="ui basic popup">
 						Basic pop-up
@@ -4679,10 +4681,10 @@
 						$( '.popup.demos .avatar' ).popup();
 						$( '.popup.demos .button' ).popup();
 						$( '.popup.demos .menu .browse' ).popup( {
-							inline   : true,
+							inline: true,
 							hoverable: true,
-							position : 'bottom left',
-							delay    : {
+							position: 'bottom left',
+							delay: {
 								show: 300,
 								hide: 800
 							}
@@ -4741,8 +4743,8 @@
 								.progress( {
 									label: false,
 									value: Math.floor( Math.random() * 5 ) + 1,
-									text : {
-										active : '{percent}% Complete',
+									text: {
+										active: '{percent}% Complete',
 										success: 'Done!'
 									}
 								} )
@@ -4752,8 +4754,8 @@
 									label: true,
 									total: 10,
 									value: Math.floor( Math.random() * 5 ) + 1,
-									text : {
-										active : '{percent}% Done',
+									text: {
+										active: '{percent}% Done',
 										success: 'Completed!'
 									}
 								} )
@@ -4761,8 +4763,8 @@
 							$( '.file.progress.demo' )
 								.progress( {
 									label: false,
-									text : {
-										active : 'Uploading {value} of {total}',
+									text: {
+										active: 'Uploading {value} of {total}',
 										success: '{total} Files Uploaded!'
 									}
 								} )
@@ -4793,7 +4795,8 @@
 					<div class="ui relaxed divided items">
 						<div class="item">
 							<div class="content">
-								<div class="ui large star rating" data-rating="2" data-max-rating="4"><i class="icon active"></i><i class="icon active"></i><i class="icon"></i><i class="icon"></i></div>
+								<div class="ui large star rating" data-rating="2" data-max-rating="4"><i class="icon active"></i><i class="icon active"></i><i class="icon"></i><i class="icon"></i>
+								</div>
 								<div class="header">
 									<img src="assets/images/carbon-ui/square-image.png" class="ui avatar image">
 									Choice #1
@@ -4802,7 +4805,8 @@
 						</div>
 						<div class="item">
 							<div class="content">
-								<div class="ui large star rating" data-rating="3" data-max-rating="4"><i class="icon active"></i><i class="icon active"></i><i class="icon active"></i><i class="icon"></i></div>
+								<div class="ui large star rating" data-rating="3" data-max-rating="4">
+									<i class="icon active"></i><i class="icon active"></i><i class="icon active"></i><i class="icon"></i></div>
 								<div class="header">
 									<img src="assets/images/carbon-ui/square-image.png" class="ui avatar image">
 									Choice #2
@@ -4811,7 +4815,8 @@
 						</div>
 						<div class="item">
 							<div class="content">
-								<div class="ui large star rating" data-rating="4" data-max-rating="4"><i class="icon active"></i><i class="icon active"></i><i class="icon active"></i><i class="icon active"></i></div>
+								<div class="ui large star rating" data-rating="4" data-max-rating="4">
+									<i class="icon active"></i><i class="icon active"></i><i class="icon active"></i><i class="icon active"></i></div>
 								<div class="header">
 									<img src="assets/images/carbon-ui/square-image.png" class="ui avatar image">
 									Choice #3
@@ -5592,7 +5597,7 @@
 										$( '.' + direction + '.demo.sidebar' )
 											.not( '.styled' )
 											.sidebar( 'setting', {
-												dimPage         : dimPage,
+												dimPage: dimPage,
 												transition: transition,
 												mobileTransition: transition
 											} )
@@ -5721,7 +5726,7 @@
 								}
 								$( '.transition.demo .image' ).transition( {
 									animation: animation,
-									interval : 200
+									interval: 200
 								} );
 							} );
 						} );

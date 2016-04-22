@@ -1,0 +1,32 @@
+<div class="ui orange inverted vertical center aligned segment">
+	<h2>Sign up to receive news and get notified when we launch!</h2>
+
+	<form [ngFormModel]="subscribeForm" (ngSubmit)="onSubmit($event)" method="post" name="icpsignup" id="icpsignup">
+		<!--action="https://app.icontact.com/icp/signup.php"-->
+
+		<div class="ui action input">
+			<div class="field" [ngClass]="{ error: (email.touched && !email.valid) }">
+				<input name="fields_email" class="email" type="text" placeholder="your@email.com" [ngFormControl]="subscribeForm.controls[ 'email' ]">
+			</div>
+			<button id="send" type="submit" class="ui inverted secondary button submit">SEND</button>
+		</div>
+
+		<input type="hidden" name="redirect" value={{redirectPage}}>
+		<input type="hidden" name="errorredirect" value={{errorPage}}>
+		<input type="hidden" name="listid" value="777887">
+		<input type="hidden" name="specialid:777887" value="MNSO">
+		<input type="hidden" name="clientid" value="581321">
+		<input type="hidden" name="formid" value="5139">
+		<input type="hidden" name="reallistid" value="1">
+		<input type="hidden" name="doubleopt" value="1">
+
+		<div class="ui error message" *ngIf="email.touched && !email.valid">
+			<span *ngIf="email.hasError('required')"><i class="warning sign icon"></i>Email is required.</span>
+			<span *ngIf="!email.hasError('required') && email.hasError('invalidEmailAddress')"><i class="warning sign icon"></i>Enter a valid email address.</span>
+		</div>
+
+	</form>
+
+	<p>Promise, we don't spam :)</p>
+
+</div>
