@@ -21,7 +21,6 @@ public class JobManager {
 
 	private JobsExecutor jobsExecutor;
 	private TransactionWrapper transactionWrapper;
-	private ContainerRepository containerRepository;
 	private AppRepository appRepository;
 	private ExecutionService executionService;
 	ValueFactory valueFactory = SimpleValueFactory.getInstance();
@@ -32,7 +31,7 @@ public class JobManager {
 	}
 
 	public void lookUpForJobs() {
-		Set<App> apps = getAllApps();
+		Set<App> apps = appRepository.getAll();
 		for ( App app : apps ) {
 			IRI jobsContainerIRI = valueFactory.createIRI( app.getIRI().toString().concat( Vars.getInstance().getJobsContainer() ) );
 			Execution execution = transactionWrapper.runWithSystemPermissionsInPlatformContext( () -> executionService.peek( jobsContainerIRI ) );
@@ -42,23 +41,11 @@ public class JobManager {
 		}
 	}
 
-	private Set<App> getAllApps() {
-		return transactionWrapper.runInPlatformContext( () -> {
-			IRI platformAppsContainer = valueFactory.createIRI( Vars.getInstance().getHost() + Vars.getInstance().getMainContainer() + Vars.getInstance().getAppsContainer() );
-			Set<IRI> appIRIs = containerRepository.getContainedIRIs( platformAppsContainer );
-			Set<App> apps = appRepository.get( appIRIs );
-			return apps;
-		} );
-	}
-
 	@Autowired
 	public void setJobsExecutor( JobsExecutor jobsExecutor ) { this.jobsExecutor = jobsExecutor; }
 
 	@Autowired
 	public void setTransactionWrapper( TransactionWrapper transactionWrapper ) {this.transactionWrapper = transactionWrapper; }
-
-	@Autowired
-	public void setContainerRepository( ContainerRepository containerRepository ) { this.containerRepository = containerRepository;}
 
 	@Autowired
 	public void setAppRepository( AppRepository appRepository ) {this.appRepository = appRepository; }

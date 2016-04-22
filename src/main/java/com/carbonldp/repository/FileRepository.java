@@ -22,4 +22,6 @@ public interface FileRepository {
 	public File createZipFile( File... files );
 
 	public IRI createBackupIRI( IRI appIRI );
+
+	public void deleteFile( File file );
 }

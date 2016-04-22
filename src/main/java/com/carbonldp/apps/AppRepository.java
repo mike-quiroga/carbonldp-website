@@ -11,6 +11,8 @@ public interface AppRepository {
 
 	public Set<App> get( Set<IRI> appIRIs );
 
+	public Set<App> getAll();
+
 	public App findByRootContainer( IRI rootContainerIRI );
 
 	public App createPlatformAppRepository( App app );

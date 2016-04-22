@@ -46,8 +46,8 @@ public class ExportBackupJobExecutor implements TypedJobExecutor {
 
 		IRI backupIRI = createAppBackup( app.getIRI(), zipFile );
 
-		deleteTemporaryFile( zipFile );
-		deleteTemporaryFile( rdfRepositoryFile );
+		fileRepository.deleteFile( zipFile );
+		fileRepository.deleteFile( rdfRepositoryFile );
 
 		executionService.addResult( execution.getIRI(), backupIRI );
 	}
@@ -57,16 +57,6 @@ public class ExportBackupJobExecutor implements TypedJobExecutor {
 		backupService.createAppBackup( appIRI, backupIRI, zipFile );
 
 		return backupIRI;
-	}
-
-	private void deleteTemporaryFile( File file ) {
-		boolean wasDeleted = false;
-		try {
-			wasDeleted = file.delete();
-		} catch ( SecurityException e ) {
-			LOG.warn( "A temporary file couldn't be deleted. Exception:", e );
-		}
-		if ( ! wasDeleted ) LOG.warn( "The temporary file: '{}', couldn't be deleted.", file.toString() );
 	}
 
 	@Autowired

@@ -95,7 +95,7 @@ public class LocalFileRepository implements FileRepository {
 		FileOutputStream outputStream = null;
 		final TriGWriter trigWriter;
 		try {
-			temporaryFile = File.createTempFile(  IRIUtil.createRandomSlug(), Consts.PERIOD.concat( RDFFormat.TRIG.getDefaultFileExtension() ) );
+			temporaryFile = File.createTempFile( IRIUtil.createRandomSlug(), Consts.PERIOD.concat( RDFFormat.TRIG.getDefaultFileExtension() ) );
 			temporaryFile.deleteOnExit();
 
 			outputStream = new FileOutputStream( temporaryFile );
@@ -122,7 +122,7 @@ public class LocalFileRepository implements FileRepository {
 		try {
 			File temporaryFile;
 			try {
-				temporaryFile = File.createTempFile(  IRIUtil.createRandomSlug(), null );
+				temporaryFile = File.createTempFile( IRIUtil.createRandomSlug(), null );
 				temporaryFile.deleteOnExit();
 				fileOutputStream = new FileOutputStream( temporaryFile );
 			} catch ( FileNotFoundException e ) {
@@ -162,6 +162,17 @@ public class LocalFileRepository implements FileRepository {
 			backupIRI = valueFactory.createIRI( jobsContainerIRI.stringValue().concat( IRIUtil.createRandomSlug() ).concat( Consts.SLASH ) );
 		} while ( sourceRepository.exists( backupIRI ) );
 		return backupIRI;
+	}
+
+	@Override
+	public void deleteFile( File file ) {
+		boolean wasDeleted = false;
+		try {
+			wasDeleted = file.delete();
+		} catch ( SecurityException e ) {
+			LOG.warn( "A temporary file couldn't be deleted. Exception:", e );
+		}
+		if ( ! wasDeleted ) LOG.warn( "The temporary file: '{}', couldn't be deleted.", file.toString() );
 	}
 
 	private void addFileToZip( ZipOutputStream zipOutputStream, File file, File directoryFile ) {
