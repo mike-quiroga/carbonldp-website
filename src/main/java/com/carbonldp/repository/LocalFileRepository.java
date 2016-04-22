@@ -82,13 +82,16 @@ public class LocalFileRepository implements FileRepository {
 	@Override
 	public void deleteDirectory( App app ) {
 		File appDirectory = new File( getFilesDirectory( app ) );
-		try {
-			FileUtils.deleteDirectory( appDirectory );
-		} catch ( IOException e ) {
-			throw new RuntimeException( "The file couldn't be deleted. Exception:", e );
-		}
+		deleteDirectory( appDirectory );
 		if ( appDirectory.exists() ) throw new FileNotDeletedException( 0x1010 );
+	}
 
+	@Override
+	public void emptyDirectory( App app ) {
+		File appDirectory = new File( getFilesDirectory( app ) );
+		deleteDirectory( appDirectory );
+		if ( appDirectory.exists() ) throw new FileNotDeletedException( 0x1010 );
+		appDirectory.mkdir();
 	}
 
 	@Override
@@ -279,7 +282,8 @@ public class LocalFileRepository implements FileRepository {
 		return directory;
 	}
 
-	private String getFilesDirectory( App app ) {
+	@Override
+	public String getFilesDirectory( App app ) {
 		String directory = Vars.getInstance().getAppsFilesDirectory();
 		if ( ! directory.endsWith( Consts.SLASH ) ) directory = directory.concat( Consts.SLASH );
 		directory = directory.concat( app.getRepositoryID() );

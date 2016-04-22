@@ -18,6 +18,8 @@ public interface FileRepository {
 
 	public void deleteDirectory( App app );
 
+	public void emptyDirectory( App app );
+
 	public File createAppRepositoryRDFFile();
 
 	public File createZipFile( Map<File, String> entries );
@@ -27,4 +29,6 @@ public interface FileRepository {
 	public void deleteFile( File file );
 
 	public void deleteDirectory( File file );
+
+	public String getFilesDirectory( App app );
 }

@@ -57,77 +57,10 @@ public class ImportBackupJobExecutor implements TypedJobExecutor {
 
 		File backupFile = nonRDFSourceService.getResource( backupRDFRepresentation );
 
-		transactionWrapper.runInAppContext( app, () -> {
-			replaceApp( backupFile );
-			replaceAppFilesDirectory( backupFile );
-		} );
+		fileRepository.emptyDirectory( app );
+		transactionWrapper.runInAppContext( app, () -> replaceApp( backupFile ) );
+		ZipUtil.unZipDirectory( backupFile, Vars.getInstance().getAppDataDirectoryName() + Consts.SLASH, new File( fileRepository.getFilesDirectory( app ) ) );
 
-	}
-
-	private void replaceAppFilesDirectory( File backupFile ) {
-		byte[] buffer = new byte[1024];
-		int length;
-
-		String filesDirectory = getFilesDirectory();
-		File directory = new File( filesDirectory );
-		fileRepository.deleteDirectory( directory );
-		directory.mkdirs();
-
-		ZipFile zipFile = null;
-		try {
-			zipFile = new ZipFile( backupFile );
-		} catch ( IOException e ) {
-			throw new RuntimeException( e );
-		}
-		Enumeration<? extends ZipEntry> entries = zipFile.entries();
-
-		while ( entries.hasMoreElements() ) {
-			ZipEntry zipEntry = entries.nextElement();
-			if ( zipEntry.isDirectory() ) continue;
-			String fileName = zipEntry.getName();
-			if ( ! fileName.startsWith( Vars.getInstance().getAppDataDirectoryName() + Consts.SLASH ) ) continue;
-			int slashIndex = fileName.indexOf( Consts.SLASH );
-			fileName = fileName.substring( slashIndex );
-
-			InputStream InputStream = null;
-			try {
-				InputStream = zipFile.getInputStream( zipEntry );
-			} catch ( IOException e ) {
-				throw new RuntimeException( e );
-			}
-
-			File newFile = new File( directory + fileName );
-			File parentsFile = newFile.getParentFile();
-			parentsFile.mkdirs();
-
-			FileOutputStream fileOutputStream;
-			try {
-				fileOutputStream = new FileOutputStream( directory + fileName );
-			} catch ( FileNotFoundException e ) {
-				throw new RuntimeException( e );
-			}
-
-			try {
-				while ( ( length = InputStream.read( buffer ) ) >= 0 ) {
-					fileOutputStream.write( buffer, 0, length );
-				}
-				InputStream.close();
-				fileOutputStream.close();
-			} catch ( IOException e ) {
-				throw new RuntimeException( e );
-			}
-		}
-
-	}
-
-	private String getFilesDirectory() {
-		String directory;
-		AppContext appContext = AppContextHolder.getContext();
-		directory = Vars.getInstance().getAppsFilesDirectory();
-		if ( ! directory.endsWith( Consts.SLASH ) ) directory = directory.concat( Consts.SLASH );
-		directory = directory.concat( appContext.getApplication().getRepositoryID() );
-
-		return directory;
 	}
 
 	private void replaceApp( File backupFile ) {
