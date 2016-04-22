@@ -10,14 +10,14 @@ import * as App from "carbonldp/App";
 import AppDetailView from "./../AppDetailView";
 import SPARQLClientComponent from "app/components/sparql-client/SPARQLClientComponent";
 import ErrorsAreaService from "app/app-dev/components/errors-area/service/ErrorsAreaService";
-import ExplorerComponent from "./explorer-component/ExplorerComponent";
+import DocumentExplorerComponent from "./document-explorer/DocumentExplorerComponent";
 
 import template from "./template.html!";
 
 @Component( {
 	selector: "dashboard",
 	template: template,
-	directives: [ CORE_DIRECTIVES, SPARQLClientComponent, ExplorerComponent, ],
+	directives: [ CORE_DIRECTIVES, SPARQLClientComponent, DocumentExplorerComponent, ],
 } )
 
 export default class ExplorerView {

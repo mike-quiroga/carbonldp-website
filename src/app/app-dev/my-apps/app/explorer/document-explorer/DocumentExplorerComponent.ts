@@ -14,7 +14,7 @@ import * as Pointer from "carbonldp/Pointer";
 import * as PersistedDocument from "carbonldp/PersistedDocument";
 import * as HTTP from "carbonldp/HTTP";
 import * as URI from "carbonldp/RDF/URI";
-import * as Context from "carbonldp/Context";
+import * as SDKContext from "carbonldp/SDKContext";
 
 import AppContextService from "./../../../../AppContextService";
 
@@ -22,16 +22,16 @@ import template from "./template.html!";
 import "./style.css!";
 
 @Component( {
-	selector: "explorer-component",
+	selector: "document-explorer",
 	template: template,
 	directives: [ CORE_DIRECTIVES, ],
 } )
 
-export default class ExplorerComponent {
+export default class DocumentExplorerComponent {
 	router:Router;
 	element:ElementRef;
 	$element:JQuery;
-	@Input() appContext:App.Context;
+	@Input() documentContext:SDKContext.Class;
 	appContextService:AppContextService;
 
 	appTree:JQuery;
@@ -48,21 +48,17 @@ export default class ExplorerComponent {
 		this.appContextService = appContextService;
 	}
 
-	ngOnInit():void {
+	ngAfterViewInit():void {
+		console.log( "Explorer: %o", this.documentContext );
+		this.$element = $( this.element.nativeElement );
+		this.appTree = this.$element.find( ".app.treeview" );
 		this.createTree();
 	}
 
-
-	ngAfterViewInit():void {
-		console.log( "Explorer: %o", this.appContext );
-		this.$element = $( this.element.nativeElement );
-		this.appTree = this.$element.find( ".app.treeview" );
-
-	}
-
 	createTree():void {
-		// TODO: use this.appContext.app.rootContainer.resolve() when 401 error is fixed on SDK
-		this.appContext.documents.get( "" ).then(
+		// TODO: use this.documentContext.app.rootContainer.resolve() when 401 error is fixed on SDK
+		let rootNodes:Promise = this.documentContext.documents.get( "" );
+		rootNodes.then(
 			( [resolvedRoot, response]:[PersistedDocument.Class, HTTP.Response.Class] ) => {
 				console.log( "documents.get('') -->  %o", resolvedRoot );
 				resolvedRoot.contains.forEach(
@@ -74,7 +70,8 @@ export default class ExplorerComponent {
 			( error ) => {
 				console.log( "Error:%o", error );
 			}
-		).then(
+		);
+		rootNodes.then(
 			():void => {
 				this.loadingTree = false;
 				this.renderTree();
@@ -88,7 +85,7 @@ export default class ExplorerComponent {
 			"state": {"opened": false},
 			"children": [
 				{
-					"text": "No children...",
+					"text": "Loading...",
 				},
 			],
 			"data": {
@@ -112,54 +109,59 @@ export default class ExplorerComponent {
 				"default": {
 					"icon": "file outline icon",
 				},
+				"loading": {
+					"icon": "spinner loading icon",
+				},
 			},
 			"plugins": [ "types", "wholerow" ],
 		} );
 		this.appTree.jstree();
-		this.appTree.on( "create_node.jstree", ( e:Event, data:any ):void => {
-			console.log( "saved" );
-		} );
+		this.appTree.on( "create_node.jstree", ( e:Event, data:any ):void => {} );
 		this.appTree.on( "before_open.jstree", ( e:Event, data:any ):void => {
-			console.log( data )
-			let position:string = "last";
+			console.log( data );
 			let parentId:any = data.node.id;
 			let parentNode:any = data.node;
-			console.log( parentId );
-			this.getNodeChildren( parentNode.data.pointer.id ).then(
-				( children:any[] ):void => {
-					console.log( "children: %o", children );
-					let firstChild:any = this.appTree.jstree( true ).get_node( this.appTree.jstree( true ).get_children_dom( parentId )[ 0 ] );
-					this.appTree.jstree( true ).delete_node( firstChild );
-					if ( children.length > 0 ) {
-						children.forEach( ( childNode:any ) => this.addChild( parentId, childNode, position ) );
-					}
-				}
-			);
+			let position:string = "last";
+			this.onBeforeOpenNode( parentId, parentNode, position );
 		} );
-		this.appTree.on( "changed.jstree", ( e:Event, data:any ):void => {
-
-		} );
+		this.appTree.on( "changed.jstree", ( e:Event, data:any ):void => {} );
 	}
 
 	emptyNode( nodeId:string ):void {
 		let children:JQuery[] = this.appTree.jstree( true ).get_children_dom( nodeId );
 		while ( children.length > 0 ) {
-			this.appTree.jstree( true ).delete_node( children );
+			this.appTree.jstree( true ).delete_node( children[ 0 ] );
+			children.splice( 0, 1 );
 		}
 	}
 
-	removeChild( parentId:string, node:any ):void {
+	onBeforeOpenNode( parentId:string, parentNode:any, position:string ):void {
+		let oldIcon:string = parentNode.icon;
+		let rootNode:any = this.appTree.jstree( true ).get_node( this.appTree.jstree( true ).element );
+		let $appTree:JSTree = this.appTree.jstree( true );
 
+		$appTree.set_icon( parentNode, $appTree.settings.types.loading.icon );
+		this.getNodeChildren( parentNode.data.pointer.id ).then(
+			( children:any[] ):void => {
+				// console.log( "children: %o", children );
+				this.emptyNode( parentId );
+				if ( children.length > 0 ) {
+					children.forEach( ( childNode:any ) => this.addChild( parentId, childNode, position ) );
+				}
+			}
+		).then( () => {
+			$appTree.set_icon( parentNode, oldIcon );
+		} );
 	}
 
 	addChild( parentId:string, node:any, position:string ):void {
-		console.log( "Add Child ( parentId: %o, newNode: %o, position: %o )", "#" + parentId, node, position );
+		// console.log( "Add Child ( parentId: %o, newNode: %o, position: %o )", "#" + parentId, node, position );
 		this.appTree.jstree( true ).create_node( parentId, node, position );
 	}
 
 	getNodeChildren( uri:string ):Promise<any[]> {
 		let children:any[] = [];
-		return this.appContext.documents.get( uri ).then(
+		return this.documentContext.documents.get( uri ).then(
 			( [resolvedRoot, response]:[PersistedDocument.Class, HTTP.Response.Class] ) => {
 				console.log( "documents.get('" + uri + "') -->  %o", resolvedRoot );
 				if ( resolvedRoot.contains )
