@@ -24,4 +24,6 @@ public interface FileRepository {
 	public IRI createBackupIRI( IRI appIRI );
 
 	public void deleteFile( File file );
+
+	public void deleteDirectory( File file );
 }

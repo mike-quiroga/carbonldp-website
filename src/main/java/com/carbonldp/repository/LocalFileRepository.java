@@ -95,7 +95,7 @@ public class LocalFileRepository implements FileRepository {
 		FileOutputStream outputStream = null;
 		final TriGWriter trigWriter;
 		try {
-			temporaryFile = File.createTempFile( IRIUtil.createRandomSlug(), Consts.PERIOD.concat( RDFFormat.TRIG.getDefaultFileExtension() ) );
+			temporaryFile = File.createTempFile( Vars.getInstance().getAppDataFileName(), Consts.PERIOD.concat( RDFFormat.TRIG.getDefaultFileExtension() ) );
 			temporaryFile.deleteOnExit();
 
 			outputStream = new FileOutputStream( temporaryFile );
@@ -173,6 +173,19 @@ public class LocalFileRepository implements FileRepository {
 			LOG.warn( "The file couldn't be deleted. Exception:", e );
 		}
 		if ( ! wasDeleted ) LOG.warn( "The file: '{}', couldn't be deleted.", file.toString() );
+	}
+
+	@Override
+	public void deleteDirectory( File file ) {
+		if ( file.isDirectory() ) {
+			String files[] = file.list();
+			for ( String subFile : files ) {
+				File fileDelete = new File( file, subFile );
+
+				deleteDirectory( fileDelete );
+			}
+		}
+		file.delete();
 	}
 
 	private void addFileToZip( ZipOutputStream zipOutputStream, File file, File directoryFile ) {

@@ -12,8 +12,9 @@ import com.carbonldp.ldp.nonrdf.RDFRepresentationDescription;
 import com.carbonldp.ldp.sources.RDFSourceService;
 import com.carbonldp.models.Infraction;
 import com.carbonldp.repository.ConnectionRWTemplate;
+import com.carbonldp.repository.FileRepository;
 import com.carbonldp.spring.TransactionWrapper;
-import org.eclipse.jetty.server.ConnectionFactory;
+import com.carbonldp.utils.ZipUtil;
 import org.openrdf.model.Resource;
 import org.openrdf.model.IRI;
 import org.openrdf.rio.RDFFormat;
@@ -27,6 +28,7 @@ import java.util.zip.ZipFile;
 
 /**
  * @author JorgeEspinosa
+ * @author NestorVenegas
  * @since _version_
  */
 public class ImportBackupJobExecutor implements TypedJobExecutor {
@@ -34,6 +36,7 @@ public class ImportBackupJobExecutor implements TypedJobExecutor {
 	private RDFSourceService sourceService;
 	private ConnectionRWTemplate connectionTemplate;
 	private TransactionWrapper transactionWrapper;
+	private FileRepository fileRepository;
 
 	@Override
 	public boolean supports( JobDescription.Type jobType ) {
@@ -67,7 +70,7 @@ public class ImportBackupJobExecutor implements TypedJobExecutor {
 
 		String filesDirectory = getFilesDirectory();
 		File directory = new File( filesDirectory );
-		deleteAppFiles( directory );
+		fileRepository.deleteDirectory( directory );
 		directory.mkdirs();
 
 		ZipFile zipFile = null;
@@ -117,18 +120,6 @@ public class ImportBackupJobExecutor implements TypedJobExecutor {
 
 	}
 
-	private void deleteAppFiles( File file ) {
-		if ( file.isDirectory() ) {
-			String files[] = file.list();
-			for ( String subFile : files ) {
-				File fileDelete = new File( file, subFile );
-
-				deleteAppFiles( fileDelete );
-			}
-		}
-		file.delete();
-	}
-
 	private String getFilesDirectory() {
 		String directory;
 		AppContext appContext = AppContextHolder.getContext();
@@ -142,40 +133,10 @@ public class ImportBackupJobExecutor implements TypedJobExecutor {
 	private void replaceApp( File backupFile ) {
 		IRI appIRI = AppContextHolder.getContext().getApplication().getRootContainerIRI();
 
-		InputStream trigInputStream = unZipTrigFile( backupFile );
+		InputStream trigInputStream = ZipUtil.unZipFile( backupFile, Vars.getInstance().getAppDataFileName().concat( RDFFormat.TRIG.getDefaultFileExtension() ) );
+		if ( trigInputStream == null ) throw new JobException( new Infraction( 0x1012 ) );
 		connectionTemplate.write( connection -> connection.remove( (Resource) null, null, null ) );
 		connectionTemplate.write( connection -> connection.add( trigInputStream, appIRI.stringValue(), RDFFormat.TRIG ) );
-	}
-
-	private InputStream unZipTrigFile( File backupFile ) {
-
-		ZipFile zipFile = null;
-		try {
-			zipFile = new ZipFile( backupFile );
-		} catch ( IOException e ) {
-			throw new RuntimeException( e );
-		}
-		Enumeration<? extends ZipEntry> entries = zipFile.entries();
-		ZipEntry trigZipEntry = null;
-		while ( entries.hasMoreElements() ) {
-			ZipEntry zipEntry = entries.nextElement();
-			String zipEntryName = zipEntry.getName();
-			if ( zipEntryName.endsWith( RDFFormat.TRIG.getDefaultFileExtension() ) && ( ! zipEntryName.contains( Consts.SLASH ) ) ) {
-				trigZipEntry = zipEntry;
-				break;
-			}
-		}
-		if ( trigZipEntry == null ) {
-			throw new JobException( new Infraction( 0x1012 ) );
-		}
-
-		InputStream trigInputStream;
-		try {
-			trigInputStream = zipFile.getInputStream( trigZipEntry );
-		} catch ( IOException e ) {
-			throw new RuntimeException( e );
-		}
-		return trigInputStream;
 	}
 
 	@Autowired
@@ -191,4 +152,9 @@ public class ImportBackupJobExecutor implements TypedJobExecutor {
 
 	@Autowired
 	public void setTransactionWrapper( TransactionWrapper transactionWrapper ) { this.transactionWrapper = transactionWrapper; }
+
+	@Autowired
+	public void setFileRepository( FileRepository fileRepository ) {
+		this.fileRepository = fileRepository;
+	}
 }

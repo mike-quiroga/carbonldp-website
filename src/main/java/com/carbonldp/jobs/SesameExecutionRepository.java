@@ -9,7 +9,6 @@ import com.carbonldp.rdf.RDFResourceRepository;
 import com.carbonldp.utils.ValueUtil;
 import org.openrdf.model.*;
 import org.openrdf.model.impl.SimpleValueFactory;
-import org.openrdf.model.impl.ValueFactoryImpl;
 import org.openrdf.model.vocabulary.RDF;
 import org.openrdf.query.BindingSet;
 import org.openrdf.repository.RepositoryResult;
