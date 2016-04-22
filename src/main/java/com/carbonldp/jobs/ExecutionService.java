@@ -10,9 +10,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
  */
 public interface ExecutionService {
 
-	@PreAuthorize( "hasPermission(#executionIRI, 'READ')" )
-	public ExecutionDescription.Status getExecutionStatus( IRI executionIRI );
-
 	@PreAuthorize( "hasPermission(#executionIRI, 'UPDATE')" )
 	public void changeExecutionStatus( IRI executionIRI, ExecutionDescription.Status status );
 

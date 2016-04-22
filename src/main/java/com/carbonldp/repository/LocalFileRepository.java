@@ -8,13 +8,14 @@ import com.carbonldp.apps.context.AppContextHolder;
 import com.carbonldp.exceptions.FileNotDeletedException;
 import com.carbonldp.exceptions.NotADirectoryException;
 import com.carbonldp.exceptions.NotCreatedException;
+import com.carbonldp.utils.IRIUtil;
+import com.carbonldp.ldp.sources.RDFSourceRepository;
 import com.carbonldp.utils.TriGWriter;
 import org.apache.commons.io.FileUtils;
-import org.eclipse.jetty.server.ConnectionFactory;
-import org.openrdf.repository.RepositoryException;
+import org.openrdf.model.IRI;
+import org.openrdf.model.ValueFactory;
+import org.openrdf.model.impl.SimpleValueFactory;
 import org.openrdf.rio.RDFFormat;
-import org.openrdf.rio.RDFHandlerException;
-import org.openrdf.rio.RDFWriter;
 import org.openrdf.spring.SesameConnectionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,6 +32,7 @@ import java.util.zip.ZipOutputStream;
 public class LocalFileRepository implements FileRepository {
 	protected final Logger LOG = LoggerFactory.getLogger( this.getClass() );
 	private ConnectionRWTemplate connectionTemplate;
+	private RDFSourceRepository sourceRepository;
 
 	@Override
 	public boolean exists( UUID fileUUID ) {
@@ -91,14 +93,14 @@ public class LocalFileRepository implements FileRepository {
 	public File createAppRepositoryRDFFile() {
 		File temporaryFile;
 		FileOutputStream outputStream = null;
-		final RDFWriter trigWriter;
+		final TriGWriter trigWriter;
 		try {
-			temporaryFile = File.createTempFile( createRandomSlug(), Consts.PERIOD.concat( RDFFormat.TRIG.getDefaultFileExtension() ) );
+			temporaryFile = File.createTempFile( IRIUtil.createRandomSlug(), Consts.PERIOD.concat( RDFFormat.TRIG.getDefaultFileExtension() ) );
 			temporaryFile.deleteOnExit();
 
 			outputStream = new FileOutputStream( temporaryFile );
 			trigWriter = new TriGWriter( outputStream );
-			( (TriGWriter) trigWriter ).setBase( AppContextHolder.getContext().getApplication().getRootContainerIRI().stringValue() );
+			trigWriter.setBase( AppContextHolder.getContext().getApplication().getRootContainerIRI().stringValue() );
 			connectionTemplate.write( connection -> connection.export( trigWriter ) );
 
 		} catch ( IOException | SecurityException e ) {
@@ -120,7 +122,7 @@ public class LocalFileRepository implements FileRepository {
 		try {
 			File temporaryFile;
 			try {
-				temporaryFile = File.createTempFile( createRandomSlug(), null );
+				temporaryFile = File.createTempFile( IRIUtil.createRandomSlug(), null );
 				temporaryFile.deleteOnExit();
 				fileOutputStream = new FileOutputStream( temporaryFile );
 			} catch ( FileNotFoundException e ) {
@@ -149,6 +151,28 @@ public class LocalFileRepository implements FileRepository {
 				LOG.warn( "zip stream could no be closed" );
 			}
 		}
+	}
+
+	@Override
+	public IRI createBackupIRI( IRI appIRI ) {
+		ValueFactory valueFactory = SimpleValueFactory.getInstance();
+		IRI jobsContainerIRI = valueFactory.createIRI( appIRI.stringValue() + Vars.getInstance().getBackupsContainer() );
+		IRI backupIRI;
+		do {
+			backupIRI = valueFactory.createIRI( jobsContainerIRI.stringValue().concat( IRIUtil.createRandomSlug() ).concat( Consts.SLASH ) );
+		} while ( sourceRepository.exists( backupIRI ) );
+		return backupIRI;
+	}
+
+	@Override
+	public void deleteFile( File file ) {
+		boolean wasDeleted = false;
+		try {
+			wasDeleted = file.delete();
+		} catch ( SecurityException e ) {
+			LOG.warn( "The file couldn't be deleted. Exception:", e );
+		}
+		if ( ! wasDeleted ) LOG.warn( "The file: '{}', couldn't be deleted.", file.toString() );
 	}
 
 	private void addFileToZip( ZipOutputStream zipOutputStream, File file, File directoryFile ) {
@@ -247,13 +271,13 @@ public class LocalFileRepository implements FileRepository {
 		return directory;
 	}
 
-	private String createRandomSlug() {
-		Random random = new Random();
-		return String.valueOf( Math.abs( random.nextLong() ) );
-	}
-
 	@Autowired
 	public void setConnectionTemplate( SesameConnectionFactory connectionFactory ) {
 		this.connectionTemplate = new ConnectionRWTemplate( connectionFactory );
+	}
+
+	@Autowired
+	public void setSourceRepository( RDFSourceRepository sourceRepository ) {
+		this.sourceRepository = sourceRepository;
 	}
 }

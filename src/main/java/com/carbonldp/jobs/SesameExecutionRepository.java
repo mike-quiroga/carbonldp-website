@@ -37,24 +37,6 @@ public class SesameExecutionRepository extends AbstractSesameLDPRepository imple
 	}
 
 	@Override
-	public Status getExecutionStatus( IRI executionIRI ) {
-		Statement statement = connectionTemplate.read( connection -> {
-			RepositoryResult<Statement> statements = connection.getStatements( executionIRI, ExecutionDescription.Property.STATUS.getIRI(), null, false, executionIRI );
-			if ( ! statements.hasNext() ) throw new IllegalStateException( "execution does not have a status" );
-			return statements.next();
-		} );
-
-		Value object = statement.getObject();
-		if ( ! ValueUtil.isIRI( object ) ) throw new IllegalStateException( "job status is an invalid type" );
-		IRI statusIRI = ValueUtil.getIRI( object );
-
-		for ( Status status : Status.values() ) {
-			if ( status.getIRI().equals( statusIRI ) ) return status;
-		}
-		throw new IllegalStateException( "invalid status" );
-	}
-
-	@Override
 	public void changeExecutionStatus( IRI executionIRI, Status status ) {
 		connectionTemplate.write( connection -> {
 			connection.remove( executionIRI, ExecutionDescription.Property.STATUS.getIRI(), null, executionIRI );

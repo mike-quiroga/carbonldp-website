@@ -9,7 +9,6 @@ import org.openrdf.model.Value;
  * @since _version_
  */
 public interface ExecutionRepository {
-	public ExecutionDescription.Status getExecutionStatus( IRI executionIRI );
 
 	public void changeExecutionStatus( IRI executionIRI, ExecutionDescription.Status status );
 

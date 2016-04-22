@@ -11,6 +11,7 @@ import com.carbonldp.ldp.containers.BasicContainerFactory;
 import com.carbonldp.ldp.containers.DirectContainer;
 import com.carbonldp.ldp.containers.DirectContainerFactory;
 import com.carbonldp.namespaces.LDP;
+import com.carbonldp.rdf.RDFListFactory;
 import com.carbonldp.rdf.RDFResource;
 import org.openrdf.model.IRI;
 import org.openrdf.model.vocabulary.RDF;
@@ -52,18 +53,10 @@ public class UpdateAction1o6o0 extends AbstractUpdateAction {
 		IRI containerIRI = valueFactory.createIRI( appString + jobsString );
 		RDFResource jobsResource = new RDFResource( containerIRI );
 		BasicContainer jobsContainer = BasicContainerFactory.getInstance().create( jobsResource, valueFactory.createIRI( LDP.Properties.MEMBER ), JobDescription.Property.EXECUTION_QUEUE_LOCATION.getIRI() );
-		jobsContainer = createQueue( jobsContainer );
+		RDFListFactory.getInstance().createQueue( jobsContainer );
 
 		containerRepository.createChild( app.getIRI(), jobsContainer );
 		aclRepository.createACL( jobsContainer.getIRI() );
-	}
-
-	private BasicContainer createQueue( BasicContainer jobsContainer ) {
-		IRI jobsExecutionQueue = valueFactory.createIRI( jobsContainer.getIRI().stringValue() + Consts.HASH_SIGN + Vars.getInstance().getQueue() );
-		jobsContainer.set( ExecutionDescription.List.QUEUE.getIRI(), jobsExecutionQueue );
-		jobsContainer.getBaseModel().add( jobsExecutionQueue, RDF.FIRST, jobsExecutionQueue, jobsContainer.getIRI() );
-		jobsContainer.getBaseModel().add( jobsExecutionQueue, RDF.REST, RDF.NIL, jobsContainer.getIRI() );
-		return jobsContainer;
 	}
 }
 

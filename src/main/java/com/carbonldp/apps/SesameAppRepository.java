@@ -1,6 +1,7 @@
 package com.carbonldp.apps;
 
-import com.carbonldp.jobs.Execution;
+import com.carbonldp.Vars;
+import com.carbonldp.apps.context.AppContextHolder;
 import com.carbonldp.ldp.containers.ContainerDescription.Type;
 import com.carbonldp.ldp.containers.ContainerRepository;
 import com.carbonldp.ldp.sources.RDFSource;
@@ -13,17 +14,16 @@ import com.carbonldp.utils.IRIUtil;
 import com.carbonldp.utils.RDFNodeUtil;
 import org.openrdf.model.IRI;
 import org.openrdf.model.Value;
-
+import org.openrdf.model.ValueFactory;
 import org.openrdf.model.impl.SimpleValueFactory;
 import org.openrdf.spring.SesameConnectionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
+import java.util.concurrent.RunnableFuture;
 
+// TODO: make sure that get app methods are running in platform context
 @Transactional
 public class SesameAppRepository extends AbstractSesameRepository implements AppRepository {
 	private final RDFDocumentRepository documentRepository;
@@ -58,6 +58,25 @@ public class SesameAppRepository extends AbstractSesameRepository implements App
 		RDFSource appSource = sourceRepository.get( appIRI );
 		if ( appSource == null ) return null;
 		return new App( appSource.getBaseModel(), appSource.getIRI() );
+	}
+
+	@Override
+	public Set<App> get( Set<IRI> appIRIs ) {
+		Set<RDFSource> appSet = sourceRepository.get( appIRIs );
+		Set<App> apps = new HashSet<>();
+		for ( RDFSource currentApp : appSet ) {
+			App app = new App( currentApp );
+			apps.add( app );
+		}
+		return apps;
+	}
+
+	@Override
+	public Set<App> getAll() {
+		ValueFactory valueFactory = SimpleValueFactory.getInstance();
+		IRI platformAppsContainer = valueFactory.createIRI( Vars.getInstance().getHost() + Vars.getInstance().getMainContainer() + Vars.getInstance().getAppsContainer() );
+		Set<IRI> appIRIs = containerRepository.getContainedIRIs( platformAppsContainer );
+		return get( appIRIs );
 	}
 
 	private static final String findByRootContainer_selector = "" +

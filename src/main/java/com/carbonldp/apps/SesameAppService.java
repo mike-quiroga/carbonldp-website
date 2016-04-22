@@ -23,6 +23,7 @@ import com.carbonldp.ldp.sources.RDFSourceService;
 import com.carbonldp.models.Infraction;
 import com.carbonldp.namespaces.C;
 import com.carbonldp.namespaces.LDP;
+import com.carbonldp.rdf.RDFListFactory;
 import com.carbonldp.rdf.RDFResource;
 import com.carbonldp.utils.IRIUtil;
 import com.carbonldp.web.exceptions.NotFoundException;
@@ -210,18 +211,10 @@ public class SesameAppService extends AbstractSesameLDPService implements AppSer
 		RDFResource jobsResource = new RDFResource( containerIRI );
 		BasicContainer jobsContainer = BasicContainerFactory.getInstance().create( jobsResource, valueFactory.createIRI( LDP.Properties.MEMBER ), JobDescription.Property.EXECUTION_QUEUE_LOCATION.getIRI() );
 
-		jobsContainer = createQueue( jobsContainer );
+		RDFListFactory.getInstance().createQueue( jobsContainer );
 
 		containerRepository.createChild( app.getIRI(), jobsContainer );
 		aclRepository.createACL( jobsContainer.getIRI() );
-	}
-
-	private BasicContainer createQueue( BasicContainer jobsContainer ) {
-		IRI jobsExecutionQueue = valueFactory.createIRI( jobsContainer.getIRI().stringValue() + Consts.HASH_SIGN + Vars.getInstance().getQueue() );
-		jobsContainer.set( ExecutionDescription.List.QUEUE.getIRI(), jobsExecutionQueue );
-		jobsContainer.getBaseModel().add( jobsExecutionQueue, RDF.FIRST, jobsExecutionQueue, jobsContainer.getIRI() );
-		jobsContainer.getBaseModel().add( jobsExecutionQueue, RDF.REST, RDF.NIL, jobsContainer.getIRI() );
-		return jobsContainer;
 	}
 
 	private IRI generateJobsContainerIRI( App app ) {
