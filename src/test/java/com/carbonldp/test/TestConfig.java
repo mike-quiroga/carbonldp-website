@@ -3,6 +3,7 @@ package com.carbonldp.test;
 import com.carbonldp.apps.context.AppContextConfig;
 import com.carbonldp.config.RepositoriesConfig;
 import com.carbonldp.config.ServicesConfig;
+import com.carbonldp.jobs.JobConfig;
 import com.carbonldp.ldp.containers.ContainerService;
 import com.carbonldp.mail.MailConfig;
 import com.carbonldp.repository.txn.TxnConfig;
@@ -22,14 +23,12 @@ import org.springframework.context.annotation.Import;
 	AppContextConfig.class,
 	SecurityConfig.class,
 	ServicesConfig.class,
-	MailConfig.class
+	MailConfig.class,
+	JobConfig.class
 } )
 public class TestConfig {
 	@Autowired
 	private SesameConnectionFactory connectionFactory;
-
-	@Autowired
-	private ContainerService containerService;
 
 	@Bean
 	public PlatformContextActionTemplate platformContextTemplate() {
