@@ -5,7 +5,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 
 /**
  * @author JorgeEspinosa
- * @since _version_
+ * @since 0.33.0
  */
 public interface JobService {
 

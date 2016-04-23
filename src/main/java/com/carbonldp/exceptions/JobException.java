@@ -2,12 +2,9 @@ package com.carbonldp.exceptions;
 
 import com.carbonldp.models.Infraction;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * @author JorgeEspinosa
- * @since _version_
+ * @since 0.33.0
  */
 public class JobException extends CarbonNoStackTraceRuntimeException {
 

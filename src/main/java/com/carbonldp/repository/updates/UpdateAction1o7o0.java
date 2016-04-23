@@ -10,7 +10,7 @@ import static com.carbonldp.Consts.*;
 
 /**
  * @author NestorVenegas
- * @since _version_
+ * @since 0.33.0
  */
 public class UpdateAction1o7o0 extends AbstractUpdateAction {
 	final String updateBNodeListQuery = "" +

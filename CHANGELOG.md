@@ -1,9 +1,17 @@
+# 0.33.0 (2016/04/22)
+- Add backup export support
+- Add backup import support
+- Add job system (used by the backup export/import features)
+- Fix [LDP-622](https://jira.base22.com/browse/LDP-622) - Literals where being compared as strings and therefore RDFSource replacements where failing
+- Fix [LDP-618](https://jira.base22.com/browse/LDP-618) - platform/api/ was not being returned with an ETag header
+- Fix [LDP-623](https://jira.base22.com/browse/LDP-623) - RDF lists were not being returned correctly in JSON-LD
+
 # 0.32.0 (2016/04/12)
-- Updated Sesame to version 4.1.1
-- Removed ALPHA from the version tag to follow semantic version naming convention
+- Updat Sesame to version 4.1.1
+- Remov ALPHA from the version tag to follow semantic version naming convention
 
 # 0.31.1 (2016/04/11)
-- Added Jetty response/requestHeaderSize to Vars to make request/response size limit configurable
+- Add Jetty response/requestHeaderSize to Vars to make request/response size limit configurable
 
 # 0.31.0 (2016/04/07)
 - Switch from using weak ETags to strong ETags
@@ -18,16 +26,16 @@
 - BasicAuthentication now identifies if the request was sent from a Browser, if it wasn't it doesn't send the auth challenge (to avoid the login prompt)
 
 # 0.29.4 (2016/03/22)
-- Added "prod" Spring Profile with base URL set for production (carbonldp.com)
+- Add "prod" Spring Profile with base URL set for production (carbonldp.com)
 
 # 0.29.3 (2016/03/22)
-- Fixed validation when registering an Agent with an invalid document
+- Fix validation when registering an Agent with an invalid document
 
 # 0.29.2 (2016/03/22)
-- Fixed SPARQL Query support for predefined documents (apps/, agents/, etc.)
+- Fix SPARQL Query support for predefined documents (apps/, agents/, etc.)
 
 # 0.29.1 (2016/03/22)
-- Added support for the following Accept media types when executing SPARQL CONSTRUCT/DESCRIBE queries
+- Add support for the following Accept media types when executing SPARQL CONSTRUCT/DESCRIBE queries
     - `application/trig`
     - `application/n-triples`
     - `text/n3`
@@ -45,7 +53,7 @@
 - Enable app role authentication in platform documents related to that app
 
 # 0.28.3 (2016/03/08)
-- Fixed a bug that prevented AppDevelopers from creating new applications
+- Fix a bug that prevented AppDevelopers from creating new applications
 
 # 0.28.2 (2016/03/02)
 - Access points now show their members when asked as a container
