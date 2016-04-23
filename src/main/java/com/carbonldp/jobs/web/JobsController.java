@@ -17,7 +17,7 @@ import javax.servlet.http.HttpServletResponse;
 
 /**
  * @author JorgeEspinosa
- * @since _version_
+ * @since 0.33.0
  */
 @Controller
 @RequestMapping( value = "/platform/apps/*/jobs/" )

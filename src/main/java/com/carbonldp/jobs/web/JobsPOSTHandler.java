@@ -11,7 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * @author JorgeEspinosa
- * @since _version_
+ * @since 0.33.0
  */
 @RequestHandler
 public class JobsPOSTHandler extends AbstractRDFPostRequestHandler<Job> {

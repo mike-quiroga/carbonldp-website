@@ -17,7 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * @author NestorVenegas
- * @since _version_
+ * @since 0.33.0
  */
 public class SesameExecutionService extends AbstractSesameLDPService implements ExecutionService {
 	private ExecutionRepository executionRepository;
