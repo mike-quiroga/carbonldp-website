@@ -7,8 +7,8 @@
 - Fix [LDP-623](https://jira.base22.com/browse/LDP-623) - RDF lists were not being returned correctly in JSON-LD
 
 # 0.32.0 (2016/04/12)
-- Updat Sesame to version 4.1.1
-- Remov ALPHA from the version tag to follow semantic version naming convention
+- Update Sesame to version 4.1.1
+- Remove ALPHA from the version tag to follow semantic version naming convention
 
 # 0.31.1 (2016/04/11)
 - Add Jetty response/requestHeaderSize to Vars to make request/response size limit configurable
