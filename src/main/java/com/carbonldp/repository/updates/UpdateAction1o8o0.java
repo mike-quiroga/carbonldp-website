@@ -21,7 +21,7 @@ public class UpdateAction1o8o0 extends AbstractUpdateAction {
 		TAB + "?s <" + LDP.Properties.IS_MEMBER_OF_RELATION + "> ?o " + NEW_LINE +
 		"}" + NEW_LINE +
 		"WHERE { " + NEW_LINE +
-		TAB + "?s ldp:memberOfRelation ?o" + NEW_LINE +
+		TAB + "?s <http://www.w3.org/ns/ldp#memberOfRelation> ?o" + NEW_LINE +
 		"}";
 
 	@Override
