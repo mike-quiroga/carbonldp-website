@@ -11,10 +11,16 @@ import com.carbonldp.authentication.token.JWTAuthenticationService;
 import com.carbonldp.authentication.token.TokenService;
 import com.carbonldp.authorization.acl.ACLService;
 import com.carbonldp.authorization.acl.SesameACLService;
+import com.carbonldp.jobs.ExecutionService;
+import com.carbonldp.jobs.JobService;
+import com.carbonldp.jobs.SesameExecutionService;
+import com.carbonldp.jobs.SesameJobService;
 import com.carbonldp.ldp.containers.ContainerService;
 import com.carbonldp.ldp.containers.SesameContainerService;
 import com.carbonldp.ldp.nonrdf.NonRDFSourceService;
 import com.carbonldp.ldp.nonrdf.SesameNonRDFSourceService;
+import com.carbonldp.ldp.nonrdf.backup.BackupService;
+import com.carbonldp.ldp.nonrdf.backup.SesameBackupService;
 import com.carbonldp.ldp.sources.RDFSourceService;
 import com.carbonldp.ldp.sources.SesameRDFSourceService;
 import com.carbonldp.platform.api.PlatformAPIService;
@@ -83,5 +89,20 @@ public class ServicesConfig {
 	@Bean
 	public NonRDFSourceService nonRDFResourceService() {
 		return new SesameNonRDFSourceService();
+	}
+
+	@Bean
+	public JobService jobService() {
+		return new SesameJobService();
+	}
+
+	@Bean
+	public BackupService backupService() {
+		return new SesameBackupService();
+	}
+
+	@Bean
+	public ExecutionService executionService() {
+		return new SesameExecutionService();
 	}
 }
