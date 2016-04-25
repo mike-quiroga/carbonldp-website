@@ -10,6 +10,7 @@ import com.carbonldp.ldp.sources.RDFSourceService;
 import com.carbonldp.models.Infraction;
 import com.carbonldp.rdf.RDFDocumentFactory;
 import com.carbonldp.rdf.RDFResource;
+import com.carbonldp.rdf.RDFResourceRepository;
 import com.carbonldp.spring.ServicesInvoker;
 import com.carbonldp.web.exceptions.NotImplementedException;
 import org.joda.time.DateTime;
@@ -25,6 +26,7 @@ public class SesameContainerService extends AbstractSesameLDPService implements 
 
 	private ServicesInvoker servicesInvoker;
 	private RDFSourceService sourceService;
+	private RDFResourceRepository resourceRepository;
 
 	@Override
 	public Container get( IRI containerIRI, Set<APIPreferences.ContainerRetrievalPreference> containerRetrievalPreferences ) {
@@ -157,7 +159,10 @@ public class SesameContainerService extends AbstractSesameLDPService implements 
 
 	@Override
 	public void removeMember( IRI containerIRI, IRI member ) {
+		IRI isMemberOfRelation = resourceRepository.getIRI( containerIRI, ContainerDescription.Property.MEMBER_OF_RELATION );
 		containerRepository.removeMember( containerIRI, member );
+		if ( isMemberOfRelation == null ) return;
+		resourceRepository.remove( member, isMemberOfRelation );
 	}
 
 	@Override
@@ -184,4 +189,7 @@ public class SesameContainerService extends AbstractSesameLDPService implements 
 
 	@Autowired
 	public void setServicesInvoker( ServicesInvoker servicesInvoker ) { this.servicesInvoker = servicesInvoker; }
+
+	@Autowired
+	public void setResourceRepository( RDFResourceRepository resourceRepository ) { this.resourceRepository = resourceRepository; }
 }

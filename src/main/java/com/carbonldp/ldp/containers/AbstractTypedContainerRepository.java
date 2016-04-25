@@ -188,7 +188,6 @@ public abstract class AbstractTypedContainerRepository extends AbstractSesameLDP
 		IRI membershipResource = getMembershipResource( containerIRI );
 
 		this.deleteMembershipTriple( membershipResource, hasMemberRelation, memberIRI );
-
 	}
 
 	protected void deleteMembershipTriple( IRI membershipResource, IRI hasMemberRelation, IRI memberIRI ) {
