@@ -1,3 +1,8 @@
+# 0.33.1 (2016/04/25)
+- Change log4j2 configuration to a programmatic based one that uses `LOGConfigurationFactory`
+- Add `requestID` and `shortRequestID` to log4j2's context map
+- Configure log4j2 to log to the syslog service logger:601
+
 # 0.33.0 (2016/04/22)
 - Add backup export support
 - Add backup import support
