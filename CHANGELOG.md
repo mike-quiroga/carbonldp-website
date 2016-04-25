@@ -1,3 +1,8 @@
+# 0.32.1 (2016/04/25)
+- Changed log4j2 configuration to a programmatic based one that uses `LOGConfigurationFactory`
+- Added `requestID` and `shortRequestID` to log4j2's context map
+- Configured log4j2 to log to the syslog service logger:601
+
 # 0.32.0 (2016/04/12)
 - Updated Sesame to version 4.1.1
 - Removed ALPHA from the version tag to follow semantic version naming convention
