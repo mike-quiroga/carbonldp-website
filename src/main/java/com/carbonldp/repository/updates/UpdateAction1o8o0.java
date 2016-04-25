@@ -15,13 +15,19 @@ import static com.carbonldp.Consts.TAB;
 public class UpdateAction1o8o0 extends AbstractUpdateAction {
 	final String updateIsMemberOfRelationQuery = "" +
 		"DELETE { " + NEW_LINE +
-		TAB + "?s <http://www.w3.org/ns/ldp#memberOfRelation> ?o " + NEW_LINE +
+		TAB + "GRAPH ?g {" + NEW_LINE +
+		TAB + TAB + "?s <http://www.w3.org/ns/ldp#memberOfRelation> ?o " + NEW_LINE +
+		TAB + "}" + NEW_LINE +
 		"}" + NEW_LINE +
 		"INSERT { " + NEW_LINE +
-		TAB + "?s <" + LDP.Properties.IS_MEMBER_OF_RELATION + "> ?o " + NEW_LINE +
+		TAB + "GRAPH ?g {" + NEW_LINE +
+		TAB + TAB + "?s <" + LDP.Properties.IS_MEMBER_OF_RELATION + "> ?o " + NEW_LINE +
+		TAB + "}" + NEW_LINE +
 		"}" + NEW_LINE +
 		"WHERE { " + NEW_LINE +
-		TAB + "?s <http://www.w3.org/ns/ldp#memberOfRelation> ?o" + NEW_LINE +
+		TAB + "GRAPH ?g {" + NEW_LINE +
+		TAB + TAB + "?s <http://www.w3.org/ns/ldp#memberOfRelation> ?o" + NEW_LINE +
+		TAB + "}" + NEW_LINE +
 		"}";
 
 	@Override
