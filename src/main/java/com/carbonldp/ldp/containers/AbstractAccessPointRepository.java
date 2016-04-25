@@ -88,7 +88,7 @@ public abstract class AbstractAccessPointRepository extends AbstractTypedContain
 			TAB + TAB + "?membershipResource ?hasMemberRelation ?member" + NEW_LINE +
 			TAB + "}" + NEW_LINE +
 			TAB + "GRAPH ?member {" + NEW_LINE +
-			TAB + TAB + "?member ?memberOfRelation ?container" + NEW_LINE +
+			TAB + TAB + "?member ?isMemberOfRelation ?container" + NEW_LINE +
 			TAB + "}" + NEW_LINE +
 			"} WHERE {" + NEW_LINE +
 			TAB + "GRAPH ?container {" + NEW_LINE +
@@ -100,10 +100,10 @@ public abstract class AbstractAccessPointRepository extends AbstractTypedContain
 			TAB + "}" + NEW_LINE +
 			TAB + "OPTIONAL {" + NEW_LINE +
 			TAB + TAB + "GRAPH ?container {" + NEW_LINE +
-			TAB + TAB + TAB + RDFNodeUtil.generatePredicateStatement( "?container", "?memberOfRelation", ContainerDescription.Property.MEMBER_OF_RELATION ) + NEW_LINE +
+			TAB + TAB + TAB + RDFNodeUtil.generatePredicateStatement( "?container", "?isMemberOfRelation", ContainerDescription.Property.IS_MEMBER_OF_RELATION ) + NEW_LINE +
 			TAB + TAB + "}" + NEW_LINE +
 			TAB + TAB + "GRAPH ?member {" + NEW_LINE +
-			TAB + TAB + TAB + "?member ?memberOfRelation ?container" + NEW_LINE +
+			TAB + TAB + TAB + "?member ?isMemberOfRelation ?container" + NEW_LINE +
 			TAB + TAB + "}" + NEW_LINE +
 			TAB + "}" + NEW_LINE +
 			"}"

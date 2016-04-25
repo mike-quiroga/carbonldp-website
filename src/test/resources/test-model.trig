@@ -91,7 +91,7 @@
 		a 						ldp:DirectContainer;
 		ldp:membershipResource 	<posts/post-1>;
 		ldp:hasMemberRelation 	ex:comment;
-		ldp:memberOfRelation	ex:post;
+		ldp:isMemberOfRelation	ex:post;
 		ldp:contains
 			<posts/post-1/comments/aca5645b-da59-4752-9229-17d3a7d6514a>,
 			<posts/post-1/comments/6e7ad6d4-51a0-4689-8b3a-dfedb4f34497>,
@@ -137,7 +137,7 @@
 		a 						ldp:DirectContainer;
 		ldp:membershipResource 	<posts/post-2>;
 		ldp:hasMemberRelation 	ex:comment;
-		ldp:memberOfRelation	ex:post.
+		ldp:isMemberOfRelation	ex:post.
 }
 <posts/post-3> {
 	<posts/post-3>
@@ -152,5 +152,5 @@
 		a 						ldp:DirectContainer;
 		ldp:membershipResource 	<posts/post-3>;
 		ldp:hasMemberRelation 	ex:comment;
-		ldp:memberOfRelation	ex:post.
+		ldp:isMemberOfRelation	ex:post.
 }
