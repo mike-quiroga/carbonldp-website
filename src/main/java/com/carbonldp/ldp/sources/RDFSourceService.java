@@ -5,12 +5,18 @@ import com.carbonldp.rdf.RDFDocument;
 import org.joda.time.DateTime;
 import org.openrdf.model.IRI;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.access.prepost.PreFilter;
+
+import java.util.Set;
 
 public interface RDFSourceService {
 	public boolean exists( IRI sourceIRI );
 
 	@PreAuthorize( "hasPermission(#sourceIRI, 'READ')" )
 	public RDFSource get( IRI sourceIRI );
+
+	@PreFilter( "hasPermission(filterObject, 'READ')" )
+	public Set<RDFSource> get( Set<IRI> sourceURIs );
 
 	public String getETag( IRI sourceIRI );
 

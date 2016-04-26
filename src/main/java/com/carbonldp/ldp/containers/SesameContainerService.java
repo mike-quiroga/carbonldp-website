@@ -6,12 +6,15 @@ import com.carbonldp.exceptions.InvalidResourceException;
 import com.carbonldp.exceptions.ResourceAlreadyExistsException;
 import com.carbonldp.exceptions.ResourceDoesntExistException;
 import com.carbonldp.ldp.AbstractSesameLDPService;
+import com.carbonldp.ldp.sources.RDFSource;
 import com.carbonldp.ldp.sources.RDFSourceService;
 import com.carbonldp.models.Infraction;
 import com.carbonldp.rdf.RDFDocumentFactory;
 import com.carbonldp.rdf.RDFResource;
 import com.carbonldp.spring.ServicesInvoker;
-import com.carbonldp.web.exceptions.NotImplementedException;
+import com.carbonldp.utils.HTTPUtil;
+import com.carbonldp.utils.ModelUtil;
+import com.carbonldp.utils.ValueUtil;
 import org.joda.time.DateTime;
 import org.openrdf.model.IRI;
 import org.openrdf.model.Statement;
@@ -20,6 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.io.File;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class SesameContainerService extends AbstractSesameLDPService implements ContainerService {
 
@@ -41,7 +45,13 @@ public class SesameContainerService extends AbstractSesameLDPService implements 
 					container.getBaseModel().addAll( containerRepository.getContainmentTriples( containerIRI ) );
 					break;
 				case CONTAINED_RESOURCES:
-					throw new NotImplementedException();
+					Set<IRI> children = getObjectIRIs( containerRepository.getContainmentTriples( containerIRI ) );
+					if ( containerRetrievalPreferences.contains( APIPreferences.ContainerRetrievalPreference.MEMBER_RESOURCES ) ) {
+						Set<IRI> members = getObjectIRIs( getMembershipTriples( containerIRI ) );
+						children.addAll( members );
+					}
+					container = getResources( children, container );
+					break;
 				case MEMBERSHIP_TRIPLES:
 					if ( containerRetrievalPreferences.contains( APIPreferences.ContainerRetrievalPreference.NON_READABLE_MEMBERSHIP_RESOURCE_TRIPLES ) ) {
 						container.getBaseModel().addAll( getMembershipTriples( containerIRI ) );
@@ -53,7 +63,10 @@ public class SesameContainerService extends AbstractSesameLDPService implements 
 					}
 					break;
 				case MEMBER_RESOURCES:
-					throw new NotImplementedException();
+					if ( containerRetrievalPreferences.contains( APIPreferences.ContainerRetrievalPreference.CONTAINED_RESOURCES ) ) break;
+					Set<IRI> members = getObjectIRIs( getMembershipTriples( containerIRI ) );
+					container = getResources( members, container );
+					break;
 				case NON_READABLE_MEMBERSHIP_RESOURCE_TRIPLES:
 					if ( ! containerRetrievalPreferences.contains( APIPreferences.ContainerRetrievalPreference.MEMBERSHIP_TRIPLES ) ) {
 						Set<Statement> membershipTriples = servicesInvoker.proxy( ( proxy ) -> {
@@ -76,6 +89,10 @@ public class SesameContainerService extends AbstractSesameLDPService implements 
 
 	public Set<Statement> getReadableMembershipResourcesTriples( IRI containerIRI ) {
 		return containerRepository.getMembershipTriples( containerIRI );
+	}
+
+	public Set<Statement> getReadableContainedResourcesTriples( IRI containerIRI ) {
+		return containerRepository.getContainmentTriples( containerIRI );
 	}
 
 	public Set<Statement> getNonReadableMembershipResourcesTriples( IRI containerIRI ) {
@@ -172,6 +189,29 @@ public class SesameContainerService extends AbstractSesameLDPService implements 
 		for ( IRI containedIRI : containedIRIs ) {
 			sourceService.delete( containedIRI );
 		}
+	}
+
+	private Container getResources( Set<IRI> sourcesIRIs, Container container ) {
+		Set<RDFSource> sources = sourceService.get( sourcesIRIs );
+		if ( sources == null || sources.isEmpty() ) return container;
+		RDFSource memberSource = sources.iterator().next();
+		container.getBaseModel().addAll( memberSource.getBaseModel() );
+
+		for ( RDFSource source : sources ) {
+			int eTag = ModelUtil.calculateETag( source );
+			String valueETag = HTTPUtil.formatStrongEtag( eTag );
+			ResponsePropertyFactory.getInstance().create( container, source.getIRI(), valueETag );
+		}
+		return container;
+	}
+
+	private Set<IRI> getObjectIRIs( Set<Statement> statements ) {
+		Set<IRI> iris = statements
+			.stream()
+			.map( statement -> ValueUtil.getIRI( statement.getObject() ) )
+			.collect( Collectors.toSet() );
+
+		return iris;
 	}
 
 	@Override
