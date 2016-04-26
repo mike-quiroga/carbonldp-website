@@ -5,6 +5,7 @@ import com.carbonldp.HTTPHeaders;
 import com.carbonldp.descriptions.APIPreferences;
 import com.carbonldp.http.Link;
 import com.carbonldp.models.EmptyResponse;
+import com.carbonldp.utils.IRIUtil;
 import com.carbonldp.web.exceptions.BadRequestException;
 import com.carbonldp.web.exceptions.NotFoundException;
 import org.openrdf.model.IRI;
@@ -88,7 +89,7 @@ public abstract class AbstractNonRDFPostRequestHandler extends AbstractNonRDFReq
 	private IRI forgeIRI( IRI parentIRI, HttpServletRequest request ) {
 		String parentIRIString = parentIRI.stringValue();
 		String slug = request.getHeader( HTTPHeaders.SLUG );
-		if ( slug == null || slug.isEmpty() ) slug = createRandomSlug();
+		if ( slug == null || slug.isEmpty() ) slug = IRIUtil.createRandomSlug();
 		if ( parentIRIString.endsWith( Consts.SLASH ) ) slug = parentIRIString.concat( slug );
 		else slug = parentIRIString.concat( Consts.SLASH + slug );
 		if ( ! slug.endsWith( Consts.SLASH ) ) slug += Consts.SLASH;

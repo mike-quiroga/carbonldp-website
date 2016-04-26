@@ -1,5 +1,8 @@
 package com.carbonldp.platform.api;
 
+import com.carbonldp.HTTPHeaders;
+import com.carbonldp.utils.HTTPUtil;
+import com.carbonldp.utils.ModelUtil;
 import com.carbonldp.web.AbstractRequestHandler;
 import com.carbonldp.web.RequestHandler;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +20,7 @@ public class PlatformAPIGetRequestHandler extends AbstractRequestHandler {
 
 	public ResponseEntity<Object> handleRequest( HttpServletRequest request, HttpServletResponse response ) {
 		PlatformAPI platformAPI = platformAPIService.get();
+		response.setHeader( HTTPHeaders.ETAG, HTTPUtil.formatStrongEtag( ModelUtil.calculateETag( platformAPI.getBaseModel() ) ) );
 		return new ResponseEntity<>( platformAPI, HttpStatus.OK );
 	}
 }
