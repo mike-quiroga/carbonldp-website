@@ -13,10 +13,15 @@ import * as Documents from "carbonldp/Documents";
 import * as Pointer from "carbonldp/Pointer";
 import * as PersistedDocument from "carbonldp/PersistedDocument";
 import * as HTTP from "carbonldp/HTTP";
+import * as Request from "carbonldp/HTTP/Request";
 import * as URI from "carbonldp/RDF/URI";
 import * as SDKContext from "carbonldp/SDKContext";
+import * as NS from "carbonldp/NS";
+import * as RDFDocument from "carbonldp/RDF/Document";
 
 import AppContextService from "./../../../../AppContextService";
+
+import JsonldViewer from "./document-viewer/JsonldViewer";
 
 import template from "./template.html!";
 import "./style.css!";
@@ -24,7 +29,7 @@ import "./style.css!";
 @Component( {
 	selector: "document-explorer",
 	template: template,
-	directives: [ CORE_DIRECTIVES, ],
+	directives: [ CORE_DIRECTIVES, JsonldViewer ],
 } )
 
 export default class DocumentExplorerComponent {
@@ -40,7 +45,7 @@ export default class DocumentExplorerComponent {
 	contains:Pointer[] = [];
 	loadingTree:boolean = false;
 
-	documents:Documents;
+	inspectingDocument:RDFDocument;
 
 	constructor( router:Router, element:ElementRef, appContextService:AppContextService ) {
 		this.router = router;
@@ -123,7 +128,12 @@ export default class DocumentExplorerComponent {
 			let position:string = "last";
 			this.onBeforeOpenNode( parentId, parentNode, position );
 		} );
-		this.appTree.on( "changed.jstree", ( e:Event, data:any ):void => {} );
+		this.appTree.on( "changed.jstree", ( e:Event, data:any ):void => {
+			let parentId:any = data.node.id;
+			let parentNode:any = data.node;
+			let position:string = "last";
+			this.onClickNode( parentId, parentNode, position );
+		} );
 	}
 
 	emptyNode( nodeId:string ):void {
@@ -150,6 +160,29 @@ export default class DocumentExplorerComponent {
 		).then( () => {
 			$appTree.set_icon( parentNode, oldIcon );
 		} );
+	}
+
+	onClickNode( parentId:string, node:any, position:string ):void {
+		console.log( arguments );
+		let requestOptions:Request.Options = {
+			sendCredentialsOnCORS: true,
+		};
+		if ( this.documentContext && this.documentContext.auth.isAuthenticated() ) this.documentContext.auth.addAuthentication( requestOptions );
+		let parser:RDFDocument.Parser = new RDFDocument.Parser();
+		HTTP.Request.Util.setAcceptHeader( "application/ld+json", requestOptions );
+		HTTP.Request.Util.setPreferredInteractionModel( NS.LDP.Class.RDFSource, requestOptions );
+		HTTP.Request.Service.get( node.data.pointer.id, requestOptions ).then(
+			( response:HTTP.Response.Class ) => {
+				console.log( "Returned node: %o", response );
+				parser.parse( response.data ).then(
+					( parsedDocument:RDFDocument ) => {
+						console.log( "Parsed node: %o", parsedDocument );
+						if ( parsedDocument[ 0 ] )
+							this.inspectingDocument = (<RDFDocument>parsedDocument[ 0 ]);
+					}
+				);
+			}
+		);
 	}
 
 	addChild( parentId:string, node:any, position:string ):void {

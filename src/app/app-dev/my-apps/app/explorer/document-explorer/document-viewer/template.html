@@ -1,0 +1,47 @@
+<h1>JsonLD Viewer</h1>
+<div class="ui stackable grid">
+	<div class="row">
+		<div class="column">
+			<div class="ui divided items">
+				<div class="item" *ngFor="#propertyName of getPropertyNames(rootNode); #i=index;">
+					<div class="content">
+						<p class="header">
+							{{getHeader(propertyName)}}
+						</p>
+						<div class="meta">
+							<a *ngIf="isUrl(propertyName)" [attr.href]="propertyName" target="_blank">{{propertyName}}</a>
+							<div *ngIf="!isUrl(propertyName)">
+								<p>{{propertyName}}<span *ngIf="getTypeOf(rootNode[propertyName][0]) === 'string'">: {{rootNode[propertyName] | json}}</span></p>
+							</div>
+						</div>
+						<div class="description" *ngIf="propertyName !== '@id' && propertyName !== '@type'">
+
+							<div class="ui top attached tabular menu">
+								<div class="active item">Table</div>
+								<div class="item">Raw Data</div>
+							</div>
+							<div class="ui bottom attached active tab segment">
+								<table class="ui very compact striped small celled table" *ngIf="isArray(rootNode[propertyName]) && (propertyName!=='@id' && propertyName!=='@type')">
+									<tr class="center aligned">
+										<th *ngFor="#header of getPropertyNames(rootNode[propertyName][0])">
+											{{header}}
+										</th>
+									</tr>
+									<tr *ngFor="#leaf of rootNode[propertyName]; #j=index;">
+										<!--<td>{{j}}</td>-->
+										<td *ngFor="#header of getPropertyNames(rootNode[propertyName][j])">
+											{{rootNode[propertyName][j][header]}}
+										</td>
+									</tr>
+								</table>
+							</div>
+							<div class="ui bottom attached tab segment">
+								<pre>{{rootNode[propertyName]| json}}</pre>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
