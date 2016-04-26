@@ -54,6 +54,7 @@ export default class JsonldViewerComponent {
 	ngAfterViewInit():void {
 		console.log( "Viewer: %o", this.document );
 		this.$element = $( this.element.nativeElement );
+		this.initializeTabs();
 	}
 
 	ngOnChanges( changes:{[propName:string]:SimpleChange} ):void {
@@ -62,6 +63,7 @@ export default class JsonldViewerComponent {
 			let documents:RDFNode.Class[] = RDFDocument.Util.getDocumentResources( this.document );
 			this.rootNode = documents[ 0 ];
 			console.log( this.rootNode );
+			this.initializeTabs();
 		}
 	}
 
@@ -103,5 +105,9 @@ export default class JsonldViewerComponent {
 	isUrl( uri:string ):boolean {
 		let regexp:RegExp = /(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)? (\/|\/([\w#!:.?+=&%@!\-\/]))?/;
 		return regexp.test( uri );
+	}
+
+	initializeTabs():void {
+		if ( this.$element ) this.$element.find( ".tabular.menu .item" ).tab();
 	}
 }

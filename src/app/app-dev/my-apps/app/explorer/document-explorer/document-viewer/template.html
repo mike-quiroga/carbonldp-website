@@ -17,10 +17,10 @@
 						<div class="description" *ngIf="propertyName !== '@id' && propertyName !== '@type'">
 
 							<div class="ui top attached tabular menu">
-								<div class="active item">Table</div>
-								<div class="item">Raw Data</div>
+								<a class="item active" [attr.data-tab]="i+'_tableview'">Table</a>
+								<a class="item" [attr.data-tab]="i+'_codeview'">Raw Data</a>
 							</div>
-							<div class="ui bottom attached active tab segment">
+							<div class="ui bottom attached tab segment active" [attr.data-tab]="i+'_tableview'">
 								<table class="ui very compact striped small celled table" *ngIf="isArray(rootNode[propertyName]) && (propertyName!=='@id' && propertyName!=='@type')">
 									<tr class="center aligned">
 										<th *ngFor="#header of getPropertyNames(rootNode[propertyName][0])">
@@ -35,7 +35,7 @@
 									</tr>
 								</table>
 							</div>
-							<div class="ui bottom attached tab segment">
+							<div class="ui bottom attached tab segment" [attr.data-tab]="i+'_codeview'">
 								<pre>{{rootNode[propertyName]| json}}</pre>
 							</div>
 						</div>
