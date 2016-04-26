@@ -45,9 +45,9 @@ public class SesameContainerService extends AbstractSesameLDPService implements 
 					container.getBaseModel().addAll( containerRepository.getContainmentTriples( containerIRI ) );
 					break;
 				case CONTAINED_RESOURCES:
-					Set<IRI> children = getIRIs( containerRepository.getContainmentTriples( containerIRI ) );
+					Set<IRI> children = getObjectIRIs( containerRepository.getContainmentTriples( containerIRI ) );
 					if ( containerRetrievalPreferences.contains( APIPreferences.ContainerRetrievalPreference.MEMBER_RESOURCES ) ) {
-						Set<IRI> members = getIRIs( getMembershipTriples( containerIRI ) );
+						Set<IRI> members = getObjectIRIs( getMembershipTriples( containerIRI ) );
 						children.addAll( members );
 					}
 					container = getResources( children, container );
@@ -64,7 +64,7 @@ public class SesameContainerService extends AbstractSesameLDPService implements 
 					break;
 				case MEMBER_RESOURCES:
 					if ( containerRetrievalPreferences.contains( APIPreferences.ContainerRetrievalPreference.CONTAINED_RESOURCES ) ) break;
-					Set<IRI> members = getIRIs( getMembershipTriples( containerIRI ) );
+					Set<IRI> members = getObjectIRIs( getMembershipTriples( containerIRI ) );
 					container = getResources( members, container );
 					break;
 				case NON_READABLE_MEMBERSHIP_RESOURCE_TRIPLES:
@@ -205,7 +205,7 @@ public class SesameContainerService extends AbstractSesameLDPService implements 
 		return container;
 	}
 
-	private Set<IRI> getIRIs( Set<Statement> statements ) {
+	private Set<IRI> getObjectIRIs( Set<Statement> statements ) {
 		Set<IRI> iris = statements
 			.stream()
 			.map( statement -> ValueUtil.getIRI( statement.getObject() ) )
