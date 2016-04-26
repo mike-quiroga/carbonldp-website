@@ -15,7 +15,6 @@ import com.carbonldp.rdf.RDFResource;
 import com.carbonldp.spring.ServicesInvoker;
 import com.carbonldp.utils.HTTPUtil;
 import com.carbonldp.utils.ModelUtil;
-import com.carbonldp.utils.ValueUtil;
 import org.joda.time.DateTime;
 import org.openrdf.model.IRI;
 import org.openrdf.model.Statement;
@@ -24,7 +23,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.io.File;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 public class SesameContainerService extends AbstractSesameLDPService implements ContainerService {
 
@@ -204,15 +202,6 @@ public class SesameContainerService extends AbstractSesameLDPService implements 
 			ResponsePropertyFactory.getInstance().create( container, source.getIRI(), valueETag );
 		}
 		return container;
-	}
-
-	private Set<IRI> getObjectIRIs( Set<Statement> statements ) {
-		Set<IRI> iris = statements
-			.stream()
-			.map( statement -> ValueUtil.getIRI( statement.getObject() ) )
-			.collect( Collectors.toSet() );
-
-		return iris;
 	}
 
 	@Override
