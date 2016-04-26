@@ -3,8 +3,6 @@ package com.carbonldp.ldp.sources;
 import com.carbonldp.ldp.containers.AccessPoint;
 import com.carbonldp.rdf.RDFDocument;
 import org.joda.time.DateTime;
-import org.openrdf.model.URI;
-import org.springframework.security.access.prepost.PostFilter;
 import org.openrdf.model.IRI;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.access.prepost.PreFilter;
