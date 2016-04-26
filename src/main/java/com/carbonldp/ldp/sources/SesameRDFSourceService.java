@@ -10,6 +10,7 @@ import com.carbonldp.ldp.nonrdf.NonRDFSourceRepository;
 import com.carbonldp.models.Infraction;
 import com.carbonldp.rdf.*;
 import com.carbonldp.utils.IRIUtil;
+import com.carbonldp.utils.ModelUtil;
 import com.carbonldp.utils.ValueUtil;
 import org.joda.time.DateTime;
 import org.openrdf.model.BNode;
@@ -118,10 +119,10 @@ public class SesameRDFSourceService extends AbstractSesameLDPService implements 
 		RDFDocument originalDocument = originalSource.getDocument();
 		RDFDocument newDocument = mapBNodeSubjects( originalDocument, source.getDocument() );
 
-		AbstractModel toAdd = newDocument.stream().filter( statement -> ! originalDocument.contains( statement ) ).collect( Collectors.toCollection( LinkedHashModel::new ) );
+		AbstractModel toAdd = newDocument.stream().filter( statement -> ! ModelUtil.containsStatement( originalDocument, statement ) ).collect( Collectors.toCollection( LinkedHashModel::new ) );
 		RDFDocument documentToAdd = new RDFDocument( toAdd, source.getIRI() );
 
-		AbstractModel toDelete = originalDocument.stream().filter( statement -> ! newDocument.contains( statement ) ).collect( Collectors.toCollection( LinkedHashModel::new ) );
+		AbstractModel toDelete = originalDocument.stream().filter( statement -> ! ModelUtil.containsStatement( newDocument, statement ) ).collect( Collectors.toCollection( LinkedHashModel::new ) );
 		RDFDocument documentToDelete = new RDFDocument( toDelete, source.getIRI() );
 
 		subtract( originalSource.getIRI(), documentToDelete );
