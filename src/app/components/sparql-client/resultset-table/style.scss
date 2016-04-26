@@ -6,4 +6,8 @@ resultset-table {
 	.success {
 		background-color: #90ee90;
 	}
+
+	> .table-container {
+		overflow-x: scroll;
+	}
 }

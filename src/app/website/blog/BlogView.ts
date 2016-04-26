@@ -1,6 +1,7 @@
 import { Component, DynamicComponentLoader, ElementRef, Type } from "angular2/core";
 import { CORE_DIRECTIVES } from "angular2/common";
 import { ROUTER_DIRECTIVES, ROUTER_PROVIDERS, Router, Instruction } from "angular2/router";
+import { Title } from "angular2/platform/browser";
 
 import $ from "jquery";
 import "semantic-ui/semantic";
@@ -16,11 +17,12 @@ import "./style.css!";
 	selector: "blog",
 	template: template,
 	directives: [ CORE_DIRECTIVES, ROUTER_DIRECTIVES, BlogPostThumbnailComponent, CodeMirrorComponent.Class ],
-	providers: [ BlogService ]
+	providers: [ BlogService, Title ]
 } )
 export default class BlogView {
 	router:Router;
 	dcl:DynamicComponentLoader;
+	title:Title;
 
 	blogService:BlogService;
 
@@ -29,11 +31,12 @@ export default class BlogView {
 
 	blogPosts:BlogPost[];
 
-	constructor( router:Router, element:ElementRef, dcl:DynamicComponentLoader, blogService:BlogService ) {
+	constructor( router:Router, element:ElementRef, dcl:DynamicComponentLoader, blogService:BlogService, title:Title ) {
 		this.router = router;
 		this.element = element;
 		this.dcl = dcl;
 		this.blogService = blogService;
+		this.title = title;
 	}
 
 	getPostsList():void {
@@ -51,5 +54,6 @@ export default class BlogView {
 
 	routerOnActivate():void {
 		this.getPostsList();
+		this.title.setTitle( "Blog" );
 	}
 }

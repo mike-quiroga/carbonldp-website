@@ -1,4 +1,3 @@
-
 import { Component, ElementRef, Input, DynamicComponentLoader, Type } from "angular2/core";
 import { CORE_DIRECTIVES } from "angular2/common";
 import { ROUTER_DIRECTIVES, ROUTER_PROVIDERS, Router, Instruction, RouteParams, Location } from "angular2/router";
@@ -30,7 +29,7 @@ export default class BlogPostView {
 	$element:JQuery;
 
 	blogPost:BlogPost = new BlogPost();
-	postid:number;
+	postID:number;
 
 	get codeMirrorMode() { return CodeMirrorComponent.Mode; }
 
@@ -43,16 +42,16 @@ export default class BlogPostView {
 
 		this.blogService = blogService;
 
-		this.postid = <number>this.routeParams.get( "id" );
-
+		// TODO: What if the postID is an invalid string?
+		this.postID = parseInt( this.routeParams.get( "id" ) );
 	}
 
 
 	routerOnActivate():void {
-		if ( typeof this.postid === "undefined" || this.postid === null ) {
+		if ( typeof this.postID === "undefined" || this.postID === null ) {
 			return;
 		} else {
-			this.blogService.getPost( this.postid ).then(
+			this.blogService.getPost( this.postID ).then(
 				( post )=> {
 					this.blogPost = post;
 

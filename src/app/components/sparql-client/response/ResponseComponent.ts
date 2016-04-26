@@ -1,44 +1,46 @@
-import {Component, Input, Output,ElementRef, EventEmitter, SimpleChange } from "angular2/core";
+import { Component, Input, Output, ElementRef, EventEmitter, SimpleChange } from "angular2/core";
 import { CORE_DIRECTIVES, FORM_DIRECTIVES, NgClass } from "angular2/common";
 
 import SPARQLClientComponent from "./../SPARQLClientComponent";
 import * as CodeMirrorComponent from "app/components/code-mirror/CodeMirrorComponent";
 import { ResultsetTableComponent } from "./../resultset-table/ResultsetTableComponent";
+
 import $ from "jquery";
 import "semantic-ui/semantic";
+
 import template from "./template.html!";
 import "./style.css!";
 
 @Component( {
 	selector: "sparql-response",
 	directives: [ CORE_DIRECTIVES, NgClass, CodeMirrorComponent.Class, ResultsetTableComponent ],
-	template: template
+	template: template,
 } )
 export class ResponseComponent {
 	element:ElementRef;
 	$element:JQuery;
 
+	@Input() outputformat:string;
 	@Input() response:SPARQLClientResponse;
-	@Output() onRemove:EventEmitter = new EventEmitter();
-	@Output() onConfigure:EventEmitter = new EventEmitter();
+	@Input() prefixes:{ [ prefix:string ]:string };
 
-	@Output() onReExecute:EventEmitter = new EventEmitter();
+	@Output() onRemove:EventEmitter<SPARQLClientResponse> = new EventEmitter();
+	@Output() onConfigure:EventEmitter<SPARQLClientResponse> = new EventEmitter();
+	@Output() onReExecute:EventEmitter<SPARQLClientResponse> = new EventEmitter();
 
-	SPARQLFormats:SPARQLFormats = SPARQLFormats;
-	//value:string = "";
+	sparqlFormats:SPARQLFormats = SPARQLFormats;
 
-
-	get codeMirrorMode() { return CodeMirrorComponent.Mode; }
-
+	get codeMirrorMode():typeof CodeMirrorComponent.Mode { return CodeMirrorComponent.Mode; }
 
 	accordion:any;
+	accordionOpen:boolean = true;
 	menu:any;
+
+	get responseType():typeof SPARQLResponseType { return SPARQLResponseType; }
 
 	constructor( element:ElementRef ) {
 		this.element = element;
 	}
-
-	@Input() outputformat:string;
 
 	ngOnInit():void {
 		this.outputformat = this.response.query.format;
@@ -50,34 +52,57 @@ export class ResponseComponent {
 		this.$element = $( this.element.nativeElement );
 		this.accordion = this.$element.find( ".accordion" );
 		this.accordion.accordion( {
-			onOpen: () => {
-				this.onOpen();
-			},
-			selector: {
-				trigger: ".title .btn-toggle"
-			}
+			onOpen: this.onOpen.bind( this ),
+			onClose: this.onClose.bind( this ),
 		} );
 		this.menu = this.$element.find( ".content .tabular.menu > .item" );
-		this.menu.tab();
+		this.menu.tab( {
+			context: this.$element.find( ".tabs" ),
+			childrenOnly: true,
+			onLoad: this.onLoadTab.bind( this ),
+		} );
+		this.openAccordion();
 	}
 
-	onRemoveResponse():void {
-		this.onRemove.next( this.response );
+	toggleAccordion():void {
+		this.accordion.accordion( "toggle" );
+	}
+
+	openAccordion():void {
+		this.accordion.accordion( "open", 0 );
+	}
+
+	onRemoveResponse( event:any ):void {
+		this.onRemove.emit( this.response );
+		event.stopPropagation();
 	}
 
 	onOpen():void {
-		this.$element.find( ".CodeMirror" ).each( function ( i, element ) {
+		this.accordionOpen = true;
+		this.$element.find( ".CodeMirror" ).each( ( i:number, element:Element ):void => {
 			element.CodeMirror.refresh();
 		} );
 	}
 
-	onConfigureResponse():void {
-		this.onConfigure.next( this.response );
+	onClose():void {
+		this.accordionOpen = false;
 	}
 
-	onReExecuteResponse():void {
+	onLoadTab():void {
+		this.$element.find( ".CodeMirror" ).each( ( i:number, element:Element ):void => {
+			element.CodeMirror.refresh();
+		} );
+	}
+
+	onConfigureResponse( event:any ):void {
+		this.onConfigure.emit( this.response );
+		event.stopPropagation();
+	}
+
+	onReExecuteResponse( event:any ):void {
+		this.onReExecute.emit( this.response );
 		this.accordion.accordion( "open", 0 );
-		this.onReExecute.next( this.response );
+		event.stopPropagation();
 	}
 
 	getCodeMirrorMode( format:string ):string {
@@ -113,14 +138,20 @@ export class SPARQLResponseType {
 
 export class SPARQLFormats {
 	static table:string = "table";
-	static xml:string = "xml";
-	static csv:string = "csv";
-	static tsv:string = "tsv";
-	static jsonLD:string = "json-ld";
-	static turtle:string = "turtle";
-	static jsonRDF:string = "json-rdf";
-	static rdfXML:string = "rdfxml";
-	static n3:string = "n3";
+	static xml:string = "application/xml";
+	static csv:string = "text/csv";
+	static tsv:string = "text/tsv";
+	static jsonLD:string = "application/ld+json";
+	static turtle:string = "text/turtle";
+	static jsonRDF:string = "application/rdf+json";
+	static rdfXML:string = "application/rdf+xml";
+	static n3:string = "text/n3";
+	static ntriples:string = "text/plain";
+	static trix:string = "application/trix";
+	static trig:string = "application/x-trig";
+	static binary:string = "application/x-binary-rdf.";
+	static nquads:string = "text/x-nquads";
+	static rdfa:string = "application/xhtml+xml";
 	static boolean:string = "boolean";
 }
 
@@ -142,7 +173,10 @@ export class SPARQLClientResponse {
 	isReExecuting:boolean = false;
 	data:string = null;
 
-	setData( data ):void {
-		this.data = JSON.stringify( data, null, 2 );
+	setData( data:any ):void {
+		if ( typeof data !== "string" ) {
+			data = JSON.stringify( data, null, 2 );
+		}
+		this.data = data;
 	}
 }

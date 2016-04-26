@@ -2,6 +2,7 @@
 
 const gulp = require( "gulp" );
 const util = require( "gulp-util" );
+const runSequence = require( "run-sequence" );
 const del = require( "del" );
 const rename = require( "gulp-rename" );
 const chug = require( "gulp-chug" );
@@ -17,7 +18,6 @@ const sass = require( "gulp-sass" );
 const autoprefixer = require( "gulp-autoprefixer" );
 const sourcemaps = require( "gulp-sourcemaps" );
 
-const liveServer = require( "live-server" );
 const webserver = require( "gulp-webserver" );
 
 const argv = require( "yargs" )
@@ -41,7 +41,6 @@ const config = {
 	nodeDependencies: [
 		"node_modules/es6-shim/es6-shim.js",
 		"node_modules/systemjs/dist/system-polyfills.src.js",
-		"node_modules/angular2/bundles/angular2-polyfills.js",
 		"node_modules/systemjs/dist/system.src.js",
 		"node_modules/rxjs/bundles/Rx.js",
 	]
@@ -52,102 +51,110 @@ gulp.task( "ts-lint", () => {
 		.pipe( tslint() )
 		.pipe( tslint.report( "prose" ) )
 		;
-});
+} );
 
 gulp.task( "compile-styles", () => {
 	return gulp.src( config.source.sass, { base: "./" } )
 		.pipe( ejs( profileConfig ) )
 		.pipe( sourcemaps.init() )
 		.pipe( sass().on( "error", sass.logError ) )
-		.pipe( autoprefixer({
+		.pipe( autoprefixer( {
 			browsers: [ "last 2 versions" ]
-		}) )
+		} ) )
 		.pipe( sourcemaps.write( "." ) )
 		.pipe( gulp.dest( "." ) )
 		;
-});
+} );
 
 gulp.task( "compile-boot", () => {
 	return gulp.src( "src/app/boot.ejs.ts" )
 		.pipe( ejs( profileConfig ) )
 		.pipe( rename( "boot.ts" ) )
 		.pipe( gulp.dest( "src/app/" ) )
-});
+} );
 
 gulp.task( "compile-index", () => {
 	return gulp.src( "dist/index.ejs.html" )
 		.pipe( ejs( profileConfig ) )
 		.pipe( rename( "index.html" ) )
 		.pipe( gulp.dest( "dist/site/" ) );
-});
+} );
+
+gulp.task( "bundle", () => {
+	let builder = new Builder();
+	return builder.buildStatic( "app/boot", "dist/site/main.sfx.js", {
+		minify: false,
+		mangle: false,
+		sourceMaps: false
+	} );
+} );
 
 gulp.task( "build-semantic", () => {
 	return gulp.src( "src/semantic/gulpfile.js", { read: false } )
-		.pipe( chug({
+		.pipe( chug( {
 			tasks: [ "build" ]
-		}) )
+		} ) )
 		;
-});
+} );
 
 gulp.task( "copy-semantic", [ "build-semantic" ], () => {
 	return gulp.src( "src/semantic/dist/**/*", {
 		base: "src/semantic/dist"
-	}).pipe( gulp.dest( "dist/site/assets/semantic" ) );
-});
+	} ).pipe( gulp.dest( "dist/site/assets/semantic" ) );
+} );
 
 // TODO: Minify files
 gulp.task( "copy-assets", () => {
 	return gulp.src( "src/assets/**/*", {
 		base: "src/assets"
-	}).pipe( gulp.dest( "dist/site/assets" ) );
-});
+	} ).pipe( gulp.dest( "dist/site/assets" ) );
+} );
 
 gulp.task( "copy-node-dependencies", () => {
 	return gulp.src( config.nodeDependencies ).pipe( gulp.dest( "src/assets/node_modules" ) );
-});
+} );
 
-gulp.task( "serve", [ "build-semantic", "compile-styles", "compile-boot" ], () => {
-	return gulp.start( "serve:afterCompilation" );
-});
+gulp.task( "serve", ( done ) => {
+	runSequence(
+		[ "build-semantic", "compile-styles", "compile-boot" ],
+		"serve:afterCompilation",
+		done
+	);
+} );
 
 
 gulp.task( "serve:afterCompilation", () => {
 	gulp.src( "src/semantic/gulpfile.js", { read: false } )
-		.pipe( chug({
+		.pipe( chug( {
 			tasks: [ "watch" ]
-		}) )
+		} ) )
 	;
 
 	watch( config.source.sass, ( file ) => {
 		util.log( "SCSS file changed: ", file.path );
 		gulp.start( "compile-styles" );
-	}).on( "error", function( error ) {
+	} ).on( "error", function( error ) {
 		util.log( util.colors.red( "Error" ), error.message );
-	});
+	} );
 
 	return gulp.src( "../" )
-		.pipe( webserver({
+		.pipe( webserver( {
 			livereload: false,
 			directoryListing: false,
 			fallback: "/carbon-website/src/index.html",
 			open: true,
-		}) );
-});
+		} ) );
+} );
 
 gulp.task( "clean:dist", () => {
-	return del([ "dist/site/**" ]);
-});
+	return del( [ "dist/site/**" ] );
+} );
 
-gulp.task( "build:afterCleaning", [ "compile-styles", "compile-boot", "compile-index", "build-semantic", "copy-semantic", "copy-assets" ], () => {
-	let builder = new Builder();
-	return builder.buildStatic( "app/boot", "dist/site/main.sfx.js", {
-		minify: true,
-		mangle: false,
-		lowResSourceMaps: false,
-		sourceMaps: true
-	});
-});
-
-gulp.task( "build", [ "clean:dist" ], () => {
-	return gulp.start( "build:afterCleaning" );
-});
+gulp.task( "build", [ "clean:dist" ], ( done ) => {
+	runSequence(
+		"clean:dist",
+		[ "compile-styles", "compile-boot", "compile-index", "copy-semantic", "copy-assets" ],
+		"bundle",
+		done
+	);
+} );

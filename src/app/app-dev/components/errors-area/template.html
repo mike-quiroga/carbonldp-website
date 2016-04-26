@@ -1,0 +1,11 @@
+<div class="ui error message transition" *ngFor="#message of messages">
+	<i class="close icon" (click)="closeMessage($event)"></i>
+	<div class="header">
+		{{message.title}}
+	</div>
+	<p>
+		<span *ngIf="message.content">{{message.content}}<br></span>
+		<span *ngIf="message.statusCode">Status: {{message.statusCode}} - {{message.statusMessage}}<br></span>
+		<span *ngIf="message.endpoint">URI: {{message.endpoint}}</span>
+	</p>
+</div>

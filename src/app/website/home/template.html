@@ -1,12 +1,12 @@
 <div class="ui inverted vertical center aligned segment splash-bg">
 	<div class="text container">
 
-		<div class="ui grid container">
+		<div class="ui grid container ">
 			<div class="computer tablet only row">
 				<div class="three wide column"></div>
 				<div class="ten wide column">
-					<img class="ui image big centered carbon-logo" src="assets/images/carbon-ldp-logo-lg.png"/>
-					<br/><br/><br/><br/><br/>
+					<img id="main-carbon-logo" class="ui image big centered carbon-logo" src="assets/images/carbon-ldp-logo-lg.png"/>
+					<br/><br/>
 
 					<h2 style="color:#e1dfdf">Carbon LDP is a cloud-based Linked Data Platform for building, hosting,
 						managing, and running web applications of all types - Web Services, Mobile, Big Data,
@@ -35,7 +35,7 @@
 
 		<!-- button class="ui inverted orange massive button">Get Started</button -->
 
-		<a href="#signup" (click)="scrollTo($event)">Sign up to receive news and get notified when welaunch!</a>
+		<a href="#signup" (click)="scrollTo($event)"><span>Sign up</span> to receive news and get notified when we launch!</a>
 
 		<!--
 		<div class="ui action input">
@@ -48,10 +48,10 @@
 	</div>
 </div>
 <div class="ui container">
-	<div class="ui vertical stripe segment">
-		<div class="ui middle aligned stackable grid container">
-			<div class="row">
-				<div class="ten wide column">
+	<div id="articles" class="ui vertical stripe segment">
+		<div class="ui equal width top aligned stackable centered grid container">
+			<div class="row ">
+				<div class="column">
 					<h2>Innovation for the Next Web</h2>
 
 					<p>In his 2009 TED talk, Tim Berners-Lee (a.k.a. The Father of the Web) urged us onward toward the
@@ -60,34 +60,8 @@
 						platform that can transform your enterprise and give you new advantages from advanced
 						technology.</p>
 				</div>
-				<div class="five wide right floated right aligned column">
-					<img src="assets/images/berners-lee.png"/>
-				</div>
-			</div>
-		</div>
-	</div>
-	<div class="ui vertical stripe segment">
-		<div class="ui middle aligned stackable grid container">
-			<div class="row">
-				<div class="five wide left floated left aligned column">
-					<img src="assets/images/w3c-semantic-web.png"/>
-				</div>
-				<div class="ten wide column">
-					<h2>Standards Based</h2>
-
-					<p>Carbon LDP is based on Semantic Web standards developed by the World Wide Web Consortium (W3C)
-						with contributions from industry leaders such as IBM, Microsoft, and Oracle. Base22 is a member
-						of the W3C and participated in the development of the specification for the Linked Data
-						Platform (LDP). Carbon LDP is a fully compliant LDP server that will integrate and interoperate
-						with industry tools from leading vendors.</p>
-				</div>
-			</div>
-		</div>
-	</div>
-	<div class="ui vertical stripe segment">
-		<div class="ui middle aligned stackable grid container">
-			<div class="row">
-				<div class="ten wide column">
+				<div class="ui vertical divider"></div>
+				<div class="column">
 					<h2>What Developers Really Want</h2>
 
 					<p>As enterprise-class web engineers, our work takes us behind the scenes at world-leading
@@ -97,20 +71,24 @@
 						Carbon is the platform we've always wanted, so we're building it. We think you're going to
 						love it too.</p>
 				</div>
-				<div class="five wide right floated right aligned column">
-					<img src="assets/images/web-developers.png"/>
+			</div>
+			<div class="row">
+				<div id="standards" class="ten center wide column">
+					<div class="ui fluid accordion">
+						<div class="title">
+							<i class="dropdown icon"></i>Standards Compliant<img src="assets/images/w3c-semantic-web2.png"/>
+						</div>
+						<div class="content">
+							<p>Carbon LDP is based on Semantic Web standards developed by the World Wide Web Consortium (W3C)
+								with contributions from industry leaders such as IBM, Microsoft, and Oracle. Base22 is a member
+								of the W3C and participated in the development of the specification for the Linked Data
+								Platform (LDP). Carbon LDP is a fully compliant LDP server that will integrate and interoperate
+								with industry tools from leading vendors.</p>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>
 	</div>
 </div>
-
-<div class="ui orange inverted vertical center aligned segment" id="signup">
-	<h2>Sign up to receive news and get notified when we launch!</h2>
-
-	<div class="ui action input">
-		<input type="text" placeholder="your@email.com">
-		<button class="ui secondary button">Sign up</button>
-	</div>
-	<p>Promise, we don't spam :)</p>
-</div>
+<newsletter-form id="signup"></newsletter-form>

@@ -1,12 +1,15 @@
-import {Component, ElementRef } from "angular2/core";
+import { Component, ElementRef } from "angular2/core";
 import { CORE_DIRECTIVES } from "angular2/common";
 import { Title } from "angular2/platform/browser";
 
-import * as CodeMirrorComponent from "app/components/code-mirror/CodeMirrorComponent";
+import Carbon from "carbonldp/Carbon";
+
+import HighlightDirective from "app/directives/HighlightDirective";
+
+import SidebarComponent from "./../sidebar/SidebarComponent";
 
 import $ from "jquery";
 import "semantic-ui/semantic";
-import SidebarComponent from "./../../sidebar/SidebarComponent";
 
 import template from "./template.html!";
 import "./style.css!";
@@ -14,20 +17,26 @@ import "./style.css!";
 @Component( {
 	selector: "getting-started-rest-api",
 	template: template,
-	directives: [ CORE_DIRECTIVES, CodeMirrorComponent.Class, SidebarComponent ],
-	providers: [ Title ],
+	directives: [ CORE_DIRECTIVES, HighlightDirective, SidebarComponent ],
+	providers: [ Title ]
 } )
 export default class GettingStartedView {
 	element:ElementRef;
 	$element:JQuery;
 	title:Title;
+	protocolAndHost:string;
+	title:Title;
 
-	contentReady:boolean = false;
+	private carbon:Carbon;
+	private contentReady:boolean = false;
 
-	constructor( element:ElementRef, title:Title ) {
+	constructor( element:ElementRef, title:Title, carbon:Carbon ) {
 		this.element = element;
+
+		this.carbon = carbon;
 		this.title = title;
-		this.title.setTitle( "Getting started - Rest API" );
+
+		this.protocolAndHost = `${ this.carbon.getSetting( "http.ssl" ) ? "https" : "http" }://${ this.carbon.getSetting( "domain" ) }`;
 	}
 
 	ngAfterViewInit():void {
@@ -35,6 +44,10 @@ export default class GettingStartedView {
 		this.createAccordions();
 
 		window.setTimeout( () => this.contentReady = true, 0 );
+	}
+
+	routerOnActivate():void {
+		this.title.setTitle( "Getting started - Rest API" );
 	}
 
 	createAccordions():void {
