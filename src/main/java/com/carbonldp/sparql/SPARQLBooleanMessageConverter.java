@@ -15,7 +15,9 @@ public class SPARQLBooleanMessageConverter extends SPARQLMessageConverter<SPARQL
 
 	public SPARQLBooleanMessageConverter() {
 		List<BooleanQueryResultFormat> list = new ArrayList<>();
-		list.addAll( BooleanQueryResultFormat.values() );
+		list.add( BooleanQueryResultFormat.SPARQL );
+		list.add( BooleanQueryResultFormat.JSON );
+		list.add( BooleanQueryResultFormat.TEXT );
 		setSupportedFormats( list );
 	}
 

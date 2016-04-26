@@ -1,10 +1,10 @@
 package com.carbonldp.sparql;
 
-import org.openrdf.model.URI;
+import org.openrdf.model.IRI;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 public interface SPARQLService {
 
-	@PreAuthorize( "hasPermission(#targetURI, 'READ')" )
-	public SPARQLResult executeSPARQLQuery( String queryString, URI targetURI );
+	@PreAuthorize( "hasPermission(#targetIRI, 'READ')" )
+	public SPARQLResult executeSPARQLQuery( String queryString, IRI targetIRI );
 }

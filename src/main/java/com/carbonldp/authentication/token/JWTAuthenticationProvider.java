@@ -8,7 +8,7 @@ import com.carbonldp.authorization.Platform;
 import com.carbonldp.authorization.PlatformPrivilegeRepository;
 import com.carbonldp.authorization.PlatformRoleRepository;
 import com.carbonldp.authorization.RunWith;
-import org.openrdf.model.URI;
+import org.openrdf.model.IRI;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -27,10 +27,10 @@ public class JWTAuthenticationProvider extends AbstractSesameAuthenticationProvi
 	@RunWith( platformRoles = {Platform.Role.SYSTEM} )
 	@RunInPlatformContext
 	public Authentication authenticate( Authentication authentication ) throws AuthenticationException {
-		URI agentURI = getAgentURI( authentication );
-		validateCredentials( agentURI );
+		IRI agentIRI = getAgentIRI( authentication );
+		validateCredentials( agentIRI );
 
-		Agent agent = agentRepository.get( agentURI );
+		Agent agent = agentRepository.get( agentIRI );
 		if ( agent == null || agent.getBaseModel().size() == 0 ) throw new BadCredentialsException( "Wrong credentials" );
 
 		return createAgentAuthenticationToken( agent );
@@ -42,14 +42,14 @@ public class JWTAuthenticationProvider extends AbstractSesameAuthenticationProvi
 		return JWTAuthenticationToken.class.isAssignableFrom( authentication );
 	}
 
-	protected URI getAgentURI( Authentication authentication ) {
+	protected IRI getAgentIRI( Authentication authentication ) {
 		if ( ! ( authentication instanceof JWTAuthenticationToken ) ) throw new IllegalArgumentException( "Authentication is not instance of JWTAuthentication token" );
 		JWTAuthenticationToken authenticationToken = (JWTAuthenticationToken) authentication;
 
-		return authenticationToken.getAgentURI();
+		return authenticationToken.getAgentIRI();
 	}
 
-	protected void validateCredentials( URI agentURI ) {
-		if ( agentURI.stringValue().trim().length() == 0 ) throw new BadCredentialsException( "Wrong credentials" );
+	protected void validateCredentials( IRI agentIRI ) {
+		if ( agentIRI.stringValue().trim().length() == 0 ) throw new BadCredentialsException( "Wrong credentials" );
 	}
 }

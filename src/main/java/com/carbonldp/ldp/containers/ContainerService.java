@@ -2,8 +2,8 @@ package com.carbonldp.ldp.containers;
 
 import com.carbonldp.descriptions.APIPreferences;
 import org.joda.time.DateTime;
+import org.openrdf.model.IRI;
 import org.openrdf.model.Statement;
-import org.openrdf.model.URI;
 import org.springframework.security.access.prepost.PostFilter;
 import org.springframework.security.access.prepost.PreAuthorize;
 
@@ -11,53 +11,53 @@ import java.io.File;
 import java.util.Set;
 
 public interface ContainerService {
-	@PreAuthorize( "hasPermission(#containerURI, 'READ')" )
-	public Container get( URI containerURI, Set<APIPreferences.ContainerRetrievalPreference> containerRetrievalPreferences );
+	@PreAuthorize( "hasPermission(#containerIRI, 'READ')" )
+	public Container get( IRI containerIRI, Set<APIPreferences.ContainerRetrievalPreference> containerRetrievalPreferences );
 
-	@PreAuthorize( "hasPermission(#containerURI, 'READ')" )
-	public Set<APIPreferences.ContainerRetrievalPreference> getRetrievalPreferences( URI containerURI );
+	@PreAuthorize( "hasPermission(#containerIRI, 'READ')" )
+	public Set<APIPreferences.ContainerRetrievalPreference> getRetrievalPreferences( IRI containerIRI );
 
-	@PreAuthorize( "hasPermission(#containerURI, 'READ')" )
-	public ContainerDescription.Type getContainerType( URI containerURI );
+	@PreAuthorize( "hasPermission(#containerIRI, 'READ')" )
+	public ContainerDescription.Type getContainerType( IRI containerIRI );
 
-	@PreAuthorize( "hasPermission(#containerURI, 'CREATE_CHILD')" )
-	public DateTime createChild( URI containerURI, BasicContainer basicContainer );
+	@PreAuthorize( "hasPermission(#containerIRI, 'CREATE_CHILD')" )
+	public DateTime createChild( IRI containerIRI, BasicContainer basicContainer );
 
-	@PreAuthorize( "hasPermission(#containerURI, 'ADD_MEMBER')" )
-	public void addMembers( URI containerURI, Set<URI> members );
+	@PreAuthorize( "hasPermission(#containerIRI, 'ADD_MEMBER')" )
+	public void addMembers( IRI containerIRI, Set<IRI> members );
 
-	@PreAuthorize( "hasPermission(#containerURI, 'ADD_MEMBER')" )
-	public void addMember( URI containerURI, URI member );
+	@PreAuthorize( "hasPermission(#containerIRI, 'ADD_MEMBER')" )
+	public void addMember( IRI containerIRI, IRI member );
 
-	@PreAuthorize( "hasPermission(#containerURI, 'REMOVE_MEMBER')" )
-	public void removeMembers( URI containerURI );
+	@PreAuthorize( "hasPermission(#containerIRI, 'REMOVE_MEMBER')" )
+	public void removeMembers( IRI containerIRI );
 
-	@PreAuthorize( "hasPermission(#containerURI, 'REMOVE_MEMBER')" )
-	public void removeMembers( URI containerURI, Set<URI> members );
+	@PreAuthorize( "hasPermission(#containerIRI, 'REMOVE_MEMBER')" )
+	public void removeMembers( IRI containerIRI, Set<IRI> members );
 
-	@PreAuthorize( "hasPermission(#containerURI, 'REMOVE_MEMBER')" )
-	public void removeMember( URI containerURI, URI member );
+	@PreAuthorize( "hasPermission(#containerIRI, 'REMOVE_MEMBER')" )
+	public void removeMember( IRI containerIRI, IRI member );
 
-	public void deleteContainedResources( URI targetURI );
+	public void deleteContainedResources( IRI targetIRI );
 
-	@PreAuthorize( "hasPermission(#targetURI, 'DELETE')" )
-	public void delete( URI targetURI );
+	@PreAuthorize( "hasPermission(#targetIRI, 'DELETE')" )
+	public void delete( IRI targetIRI );
 
-	@PreAuthorize( "hasPermission(#targetURI, 'UPLOAD')" )
-	public void createNonRDFResource( URI targetURI, URI resourceURI, File resourceFile, String mimeType );
+	@PreAuthorize( "hasPermission(#targetIRI, 'UPLOAD')" )
+	public void createNonRDFResource( IRI targetIRI, IRI resourceIRI, File resourceFile, String mimeType );
 
-	@PreAuthorize( "hasPermission(#containerURI, 'READ')" )
-	public Set<Statement> getMembershipTriples( URI containerURI );
+	@PreAuthorize( "hasPermission(#containerIRI, 'READ')" )
+	public Set<Statement> getMembershipTriples( IRI containerIRI );
 
-	@PreAuthorize( "hasPermission(#containerURI, 'READ')" )
+	@PreAuthorize( "hasPermission(#containerIRI, 'READ')" )
 	@PostFilter( "hasPermission(filterObject.getObject(), 'READ')" )
-	public Set<Statement> getReadableMembershipResourcesTriples( URI containerURI );
+	public Set<Statement> getReadableMembershipResourcesTriples( IRI containerIRI );
 
-	@PreAuthorize( "hasPermission(#containerURI, 'READ')" )
+	@PreAuthorize( "hasPermission(#containerIRI, 'READ')" )
 	@PostFilter( "hasPermission(filterObject.getObject(), 'READ')" )
-	public Set<Statement> getReadableContainedResourcesTriples( URI containerURI );
+	public Set<Statement> getReadableContainedResourcesTriples( IRI containerIRI );
 
-	@PreAuthorize( "hasPermission(#containerURI, 'READ')" )
+	@PreAuthorize( "hasPermission(#containerIRI, 'READ')" )
 	@PostFilter( "!hasPermission(filterObject.getObject(), 'READ')" )
-	public Set<Statement> getNonReadableMembershipResourcesTriples( URI containerURI );
+	public Set<Statement> getNonReadableMembershipResourcesTriples( IRI containerIRI );
 }

@@ -1,16 +1,16 @@
 package com.carbonldp.rdf;
 
-import org.openrdf.model.URI;
+import org.openrdf.model.IRI;
 
 import java.util.Collection;
 import java.util.Set;
 
 public interface RDFDocumentRepository {
-	public boolean documentExists( URI documentURI );
+	public boolean documentExists( IRI documentIRI );
 
-	public RDFDocument getDocument( URI documentURI );
+	public RDFDocument getDocument( IRI documentIRI );
 
-	public Set<RDFDocument> getDocuments( Collection<? extends URI> documentURIs );
+	public Set<RDFDocument> getDocuments( Collection<? extends IRI> documentIRIs );
 
 	public void addDocument( RDFDocument document );
 
@@ -18,14 +18,14 @@ public interface RDFDocumentRepository {
 
 	public void update( RDFDocument document );
 
-	public void deleteDocument( URI documentURI );
+	public void deleteDocument( IRI documentIRI );
 
-	public void deleteDocuments( Collection<URI> documentURIs );
+	public void deleteDocuments( Collection<IRI> documentIRIs );
 
-	public void add( URI sourceURI, RDFDocument document );
+	public void add( IRI sourceIRI, RDFDocument document );
 
-	public void subtract( URI sourceURI, RDFDocument document );
+	public void subtract( IRI sourceIRI, RDFDocument document );
 
-	public void set( URI sourceURI, RDFDocument document );
+	public void set( IRI sourceIRI, RDFDocument document );
 
 }

@@ -39,11 +39,11 @@ public class AbstractModelMessageConverter extends ModelMessageConverter<Abstrac
 
 		RDFParser parser = Rio.createParser( formatToUse );
 		AbstractModel model = new LinkedHashModel();
-		String baseURI = configurationRepository.forgeGenericRequestURL();
+		String baseIRI = configurationRepository.forgeGenericRequestURL();
 
 		parser.setRDFHandler( new StatementCollector( model ) );
 		try {
-			parser.parse( bodyInputStream, baseURI );
+			parser.parse( bodyInputStream, baseIRI );
 		} catch ( RDFParseException | RDFHandlerException e ) {
 			throw new HttpMessageNotReadableException( "The message couldn't be parsed into an RDF Model.", e );
 		}

@@ -3,7 +3,7 @@ package com.carbonldp.ldp.web;
 import com.carbonldp.sparql.SPARQLResult;
 import com.carbonldp.web.RequestHandler;
 import com.carbonldp.web.exceptions.NotFoundException;
-import org.openrdf.model.URI;
+import org.openrdf.model.IRI;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -16,12 +16,12 @@ public class AbstractSPARQLQueryPOSTRequestHandler extends AbstractLDPRequestHan
 		setUp( request, response );
 		if ( request.getHeader( "default-graph-uri" ) != null || request.getHeader( "default-graph-uri" ) != null )
 			return new ResponseEntity<>( HttpStatus.BAD_REQUEST );
-		URI targetURI = getTargetURI( request );
-		if ( ! targetResourceExists( targetURI ) ) {
+		IRI targetIRI = getTargetIRI( request );
+		if ( ! targetResourceExists( targetIRI ) ) {
 			throw new NotFoundException();
 		}
 
-		SPARQLResult result = sparqlService.executeSPARQLQuery( queryString, targetURI );
+		SPARQLResult result = sparqlService.executeSPARQLQuery( queryString, targetIRI );
 
 		return new ResponseEntity<>( result, HttpStatus.OK );
 	}

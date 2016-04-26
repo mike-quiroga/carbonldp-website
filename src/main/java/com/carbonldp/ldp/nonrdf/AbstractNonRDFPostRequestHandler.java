@@ -7,8 +7,9 @@ import com.carbonldp.http.Link;
 import com.carbonldp.models.EmptyResponse;
 import com.carbonldp.web.exceptions.BadRequestException;
 import com.carbonldp.web.exceptions.NotFoundException;
-import org.openrdf.model.URI;
-import org.openrdf.model.impl.URIImpl;
+import org.openrdf.model.IRI;
+
+import org.openrdf.model.impl.SimpleValueFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -31,26 +32,26 @@ public abstract class AbstractNonRDFPostRequestHandler extends AbstractNonRDFReq
 
 	public ResponseEntity<Object> handleRequest( InputStream bodyInputStream, HttpServletRequest request, HttpServletResponse response ) {
 		setUp( request, response );
-		URI targetURI = getTargetURI( request );
-		if ( ! targetResourceExists( targetURI ) ) throw new NotFoundException();
+		IRI targetIRI = getTargetIRI( request );
+		if ( ! targetResourceExists( targetIRI ) ) throw new NotFoundException();
 
 		File file = createTemporaryFile( bodyInputStream );
 		try {
-			return handleRequest( file, targetURI );
+			return handleRequest( file, targetIRI );
 		} finally {
 			deleteTemporaryFile( file );
 		}
 	}
 
-	private ResponseEntity<Object> handleRequest( File file, URI targetURI ) {
+	private ResponseEntity<Object> handleRequest( File file, IRI targetIRI ) {
 		String contentType = request.getContentType();
 		if ( contentType == null ) throw new BadRequestException( 0x4004 );
 
-		APIPreferences.InteractionModel interactionModel = getInteractionModel( targetURI );
+		APIPreferences.InteractionModel interactionModel = getInteractionModel( targetIRI );
 
 		switch ( interactionModel ) {
 			case CONTAINER:
-				return handlePOSTToContainer( targetURI, file, contentType );
+				return handlePOSTToContainer( targetIRI, file, contentType );
 			default:
 				throw new BadRequestException( 0x4002 );
 		}
@@ -60,39 +61,39 @@ public abstract class AbstractNonRDFPostRequestHandler extends AbstractNonRDFReq
 		return APIPreferences.InteractionModel.CONTAINER;
 	}
 
-	private ResponseEntity<Object> handlePOSTToContainer( URI targetURI, File requestEntity, String contentType ) {
-		URI resourceURI = forgeURI( targetURI, request );
+	private ResponseEntity<Object> handlePOSTToContainer( IRI targetIRI, File requestEntity, String contentType ) {
+		IRI resourceIRI = forgeIRI( targetIRI, request );
 
-		containerService.createNonRDFResource( targetURI, resourceURI, requestEntity, contentType );
+		containerService.createNonRDFResource( targetIRI, resourceIRI, requestEntity, contentType );
 
-		return generateCreatedResponse( resourceURI );
+		return generateCreatedResponse( resourceIRI );
 	}
 
-	private ResponseEntity<Object> generateCreatedResponse( URI resourceURI ) {
-		response.setHeader( HTTPHeaders.LOCATION, resourceURI.stringValue() );
-		setStrongETagHeader( sourceService.getETag( resourceURI ) );
+	private ResponseEntity<Object> generateCreatedResponse( IRI resourceIRI ) {
+		response.setHeader( HTTPHeaders.LOCATION, resourceIRI.stringValue() );
+		setStrongETagHeader( sourceService.getETag( resourceIRI ) );
 
-		addDescribedByHeader( response, resourceURI );
+		addDescribedByHeader( response, resourceIRI );
 		return new ResponseEntity<>( new EmptyResponse(), HttpStatus.CREATED );
 	}
 
-	private void addDescribedByHeader( HttpServletResponse response, URI resourceURI ) {
-		Link link = new Link( resourceURI.stringValue() );
+	private void addDescribedByHeader( HttpServletResponse response, IRI resourceIRI ) {
+		Link link = new Link( resourceIRI.stringValue() );
 		link.addRelationshipType( Consts.DESCRIBED_BY );
-		link.setAnchor( resourceURI.stringValue() );
+		link.setAnchor( resourceIRI.stringValue() );
 
 		response.addHeader( HTTPHeaders.LINK, link.toString() );
 	}
 
-	private URI forgeURI( URI parentURI, HttpServletRequest request ) {
-		String parentURIString = parentURI.stringValue();
+	private IRI forgeIRI( IRI parentIRI, HttpServletRequest request ) {
+		String parentIRIString = parentIRI.stringValue();
 		String slug = request.getHeader( HTTPHeaders.SLUG );
 		if ( slug == null || slug.isEmpty() ) slug = createRandomSlug();
-		if ( parentURIString.endsWith( Consts.SLASH ) ) slug = parentURIString.concat( slug );
-		else slug = parentURIString.concat( Consts.SLASH + slug );
+		if ( parentIRIString.endsWith( Consts.SLASH ) ) slug = parentIRIString.concat( slug );
+		else slug = parentIRIString.concat( Consts.SLASH + slug );
 		if ( ! slug.endsWith( Consts.SLASH ) ) slug += Consts.SLASH;
 
-		return new URIImpl( slug );
+		return SimpleValueFactory.getInstance().createIRI( slug );
 	}
 
 }

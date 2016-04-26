@@ -27,28 +27,28 @@ public class SesameRDFDocumentRepository extends AbstractSesameRepository implem
 		super( connectionFactory );
 	}
 
-	public boolean documentExists( URI documentURI ) {
+	public boolean documentExists( IRI documentIRI ) {
 		return connectionTemplate.readStatements(
-			connection -> connection.getStatements( null, null, null, false, documentURI ),
+			connection -> connection.getStatements( null, null, null, false, documentIRI ),
 			repositoryResult -> repositoryResult.hasNext()
 		);
 	}
 
-	public RDFDocument getDocument( URI documentURI ) {
+	public RDFDocument getDocument( IRI documentIRI ) {
 		AbstractModel model = connectionTemplate.readStatements(
-			connection -> connection.getStatements( null, null, null, false, documentURI ),
+			connection -> connection.getStatements( null, null, null, false, documentIRI ),
 			repositoryResult -> retrieveModel( repositoryResult )
 		);
-		return new RDFDocument( model, documentURI );
+		return new RDFDocument( model, documentIRI );
 	}
 
-	public Set<RDFDocument> getDocuments( Collection<? extends URI> documentURIs ) {
-		URI[] contexts = documentURIs.toArray( new URI[documentURIs.size()] );
+	public Set<RDFDocument> getDocuments( Collection<? extends IRI> documentIRIs ) {
+		IRI[] contexts = documentIRIs.toArray( new IRI[documentIRIs.size()] );
 		AbstractModel model = connectionTemplate.readStatements(
 			connection -> connection.getStatements( null, null, null, false, contexts ),
 			repositoryResult -> retrieveModel( repositoryResult )
 		);
-		return RDFDocumentUtil.getDocuments( model, documentURIs );
+		return RDFDocumentUtil.getDocuments( model, documentIRIs );
 	}
 
 	public void addDocument( RDFDocument document ) {
@@ -68,14 +68,14 @@ public class SesameRDFDocumentRepository extends AbstractSesameRepository implem
 		} );
 	}
 
-	public void deleteDocument( URI documentURI ) {
+	public void deleteDocument( IRI documentIRI ) {
 		// Remove ambiguity
 		Resource subject = null;
-		connectionTemplate.write( connection -> connection.remove( subject, null, null, documentURI ) );
+		connectionTemplate.write( connection -> connection.remove( subject, null, null, documentIRI ) );
 	}
 
-	public void deleteDocuments( Collection<URI> documentURIs ) {
-		URI[] contexts = documentURIs.toArray( new URI[documentURIs.size()] );
+	public void deleteDocuments( Collection<IRI> documentIRIs ) {
+		IRI[] contexts = documentIRIs.toArray( new IRI[documentIRIs.size()] );
 		// Remove ambiguity
 		Resource subject = null;
 		connectionTemplate.write( connection -> connection.remove( subject, null, null, contexts ) );
@@ -88,82 +88,82 @@ public class SesameRDFDocumentRepository extends AbstractSesameRepository implem
 	}
 
 	@Override
-	public void add( URI sourceURI, RDFDocument document ) {
+	public void add( IRI sourceIRI, RDFDocument document ) {
 		Collection<RDFResource> resourceViews = document.getFragmentResources();
 		resourceViews.add( document.getDocumentResource() );
 		Collection<RDFBlankNode> blankNodes = document.getBlankNodes();
-		URI documentURI = document.getDocumentResource().getDocumentURI();
+		IRI documentIRI = document.getDocumentResource().getDocumentIRI();
 
 		for ( RDFResource resourceView : resourceViews ) {
-			URI resourceViewURI = resourceView.getURI();
-			Map<URI, Set<Value>> propertiesMap = resourceView.getPropertiesMap();
-			for ( URI predicate : propertiesMap.keySet() ) {
+			IRI resourceViewIRI = resourceView.getIRI();
+			Map<IRI, Set<Value>> propertiesMap = resourceView.getPropertiesMap();
+			for ( IRI predicate : propertiesMap.keySet() ) {
 				Set<Value> values = propertiesMap.get( predicate );
-				resourceRepository.add( resourceViewURI, predicate, values, documentURI );
+				resourceRepository.add( resourceViewIRI, predicate, values, documentIRI );
 			}
 		}
 
 		for ( RDFBlankNode blankNode : blankNodes ) {
 			BNode blankNodeSubject = blankNode.getSubject();
-			Map<URI, Set<Value>> propertiesMap = blankNode.getPropertiesMap();
-			for ( URI predicate : propertiesMap.keySet() ) {
+			Map<IRI, Set<Value>> propertiesMap = blankNode.getPropertiesMap();
+			for ( IRI predicate : propertiesMap.keySet() ) {
 				Set<Value> values = propertiesMap.get( predicate );
-				blankNodeRepository.add( blankNodeSubject, predicate, values, documentURI );
+				blankNodeRepository.add( blankNodeSubject, predicate, values, documentIRI );
 			}
 		}
 	}
 
 	@Override
-	public void set( URI sourceURI, RDFDocument document ) {
+	public void set( IRI sourceIRI, RDFDocument document ) {
 		Collection<RDFResource> resourceViews = document.getFragmentResources();
 		resourceViews.add( document.getDocumentResource() );
 		Collection<RDFBlankNode> blankNodes = document.getBlankNodes();
-		URI documentURI = document.getDocumentResource().getDocumentURI();
+		IRI documentIRI = document.getDocumentResource().getDocumentIRI();
 
 		for ( RDFResource resourceView : resourceViews ) {
-			URI resourceViewURI = resourceView.getURI();
-			Map<URI, Set<Value>> propertiesMap = resourceView.getPropertiesMap();
-			for ( URI predicate : propertiesMap.keySet() ) {
+			IRI resourceViewIRI = resourceView.getIRI();
+			Map<IRI, Set<Value>> propertiesMap = resourceView.getPropertiesMap();
+			for ( IRI predicate : propertiesMap.keySet() ) {
 				Set<Value> values = propertiesMap.get( predicate );
-				resourceRepository.remove( resourceViewURI, predicate );
-				resourceRepository.add( resourceViewURI, predicate, values );
+				resourceRepository.remove( resourceViewIRI, predicate );
+				resourceRepository.add( resourceViewIRI, predicate, values );
 			}
 		}
 
 		for ( RDFBlankNode blankNode : blankNodes ) {
 			BNode blankNodeSubject = blankNode.getSubject();
-			Map<URI, Set<Value>> propertiesMap = blankNode.getPropertiesMap();
-			for ( URI predicate : propertiesMap.keySet() ) {
+			Map<IRI, Set<Value>> propertiesMap = blankNode.getPropertiesMap();
+			for ( IRI predicate : propertiesMap.keySet() ) {
 				Set<Value> values = propertiesMap.get( predicate );
-				blankNodeRepository.remove( blankNodeSubject, predicate, documentURI );
-				blankNodeRepository.add( blankNodeSubject, predicate, values, documentURI );
+				blankNodeRepository.remove( blankNodeSubject, predicate, documentIRI );
+				blankNodeRepository.add( blankNodeSubject, predicate, values, documentIRI );
 			}
 		}
 
 	}
 
 	@Override
-	public void subtract( URI sourceURI, RDFDocument document ) {
+	public void subtract( IRI sourceIRI, RDFDocument document ) {
 		Collection<RDFResource> resourceViews = document.getFragmentResources();
 		resourceViews.add( document.getDocumentResource() );
 		Collection<RDFBlankNode> blankNodes = document.getBlankNodes();
-		URI documentURI = document.getDocumentResource().getDocumentURI();
+		IRI documentIRI = document.getDocumentResource().getDocumentIRI();
 
 		for ( RDFResource resourceView : resourceViews ) {
-			URI resourceViewURI = resourceView.getURI();
-			Map<URI, Set<Value>> propertiesMap = resourceView.getPropertiesMap();
-			for ( URI predicate : propertiesMap.keySet() ) {
+			IRI resourceViewIRI = resourceView.getIRI();
+			Map<IRI, Set<Value>> propertiesMap = resourceView.getPropertiesMap();
+			for ( IRI predicate : propertiesMap.keySet() ) {
 				Set<Value> values = propertiesMap.get( predicate );
-				resourceRepository.remove( resourceViewURI, predicate, values );
+				resourceRepository.remove( resourceViewIRI, predicate, values );
 			}
 		}
 
 		for ( RDFBlankNode blankNode : blankNodes ) {
 			BNode blankNodeSubject = blankNode.getSubject();
-			Map<URI, Set<Value>> propertiesMap = blankNode.getPropertiesMap();
-			for ( URI predicate : propertiesMap.keySet() ) {
+			Map<IRI, Set<Value>> propertiesMap = blankNode.getPropertiesMap();
+			for ( IRI predicate : propertiesMap.keySet() ) {
 				Set<Value> values = propertiesMap.get( predicate );
-				blankNodeRepository.remove( blankNodeSubject, predicate, values, documentURI );
+				blankNodeRepository.remove( blankNodeSubject, predicate, values, documentIRI );
 			}
 		}
 

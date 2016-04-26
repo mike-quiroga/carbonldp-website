@@ -1,6 +1,5 @@
 package com.carbonldp.cmd;
 
-import com.carbonldp.repository.security.SecuredNativeStore;
 import com.carbonldp.utils.PropertiesUtil;
 import org.openrdf.model.Resource;
 import org.openrdf.repository.Repository;
@@ -9,6 +8,7 @@ import org.openrdf.repository.RepositoryException;
 import org.openrdf.repository.sail.SailRepository;
 import org.openrdf.rio.RDFFormat;
 import org.openrdf.rio.RDFParseException;
+import org.openrdf.sail.nativerdf.SecuredNativeStore;
 
 import java.io.File;
 import java.io.IOException;
@@ -18,8 +18,9 @@ import java.util.Map;
 import java.util.Properties;
 
 public class Install {
-	public static String propertiesFile = "-config.properties";
-	public static String defaultResourcesFile = "platform-default.trig";
+	private final static String propertiesFile = "-config.properties";
+	private final static String defaultResourcesFile = "platform-default.trig";
+
 	private static Map<String, String> defaultArguments = new HashMap<String, String>() {{
 		put( "env", "local" );
 	}};
@@ -85,7 +86,7 @@ public class Install {
 	private void execute() {
 		Repository platformRepository = getRepository( this.properties.getProperty( "repositories.platform.sesame.directory" ) );
 		emptyRepository( platformRepository );
-		loadDefaultResourcesfile( platformRepository, defaultResourcesFile, this.properties.getProperty( "platform.url" ) );
+		loadDefaultResourcesFile( platformRepository, defaultResourcesFile, this.properties.getProperty( "platform.url" ) );
 	}
 
 	private Properties readPropertiesFile( String propertiesFile ) {
@@ -142,7 +143,7 @@ public class Install {
 	}
 
 	// TODO: Instead of loading a file, build the resources dynamically
-	private void loadDefaultResourcesfile( Repository repository, String resourcesFile, String baseURI ) {
+	private void loadDefaultResourcesFile( Repository repository, String resourcesFile, String baseIRI ) {
 		InputStream inputStream = getClass().getClassLoader().getResourceAsStream( resourcesFile );
 
 		RepositoryConnection connection;
@@ -153,7 +154,7 @@ public class Install {
 		}
 
 		try {
-			connection.add( inputStream, baseURI, RDFFormat.TRIG );
+			connection.add( inputStream, baseIRI, RDFFormat.TRIG );
 		} catch ( RDFParseException e ) {
 			throw new RuntimeException( "The file couldn't be parsed.", e );
 		} catch ( RepositoryException | IOException e ) {

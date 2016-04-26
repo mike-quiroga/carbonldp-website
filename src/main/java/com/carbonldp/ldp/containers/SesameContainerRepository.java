@@ -15,8 +15,8 @@ import com.carbonldp.repository.DocumentGraphQueryResultHandler;
 import com.carbonldp.repository.GraphQueryResultHandler;
 import com.carbonldp.utils.RDFNodeUtil;
 import org.joda.time.DateTime;
+import org.openrdf.model.IRI;
 import org.openrdf.model.Statement;
-import org.openrdf.model.URI;
 import org.openrdf.model.Value;
 import org.openrdf.spring.SesameConnectionFactory;
 import org.springframework.transaction.annotation.Transactional;
@@ -51,53 +51,53 @@ public class SesameContainerRepository extends AbstractSesameLDPRepository imple
 	}
 
 	@Override
-	public boolean hasMember( URI containerURI, URI possibleMemberURI ) {
-		Type containerType = getContainerType( containerURI );
+	public boolean hasMember( IRI containerIRI, IRI possibleMemberIRI ) {
+		Type containerType = getContainerType( containerIRI );
 		if ( containerType == null ) throw new IllegalStateException( "The resource isn't a container." );
 
-		return hasMember( containerURI, possibleMemberURI, containerType );
+		return hasMember( containerIRI, possibleMemberIRI, containerType );
 	}
 
 	@Override
-	public boolean hasMember( URI containerURI, URI possibleMemberURI, Type containerType ) {
-		return getTypedRepository( containerType ).hasMember( containerURI, possibleMemberURI );
+	public boolean hasMember( IRI containerIRI, IRI possibleMemberIRI, Type containerType ) {
+		return getTypedRepository( containerType ).hasMember( containerIRI, possibleMemberIRI );
 	}
 
 	@Override
-	public boolean hasMembers( URI containerURI, String sparqlSelector, Map<String, Value> bindings ) {
-		Type containerType = getContainerType( containerURI );
+	public boolean hasMembers( IRI containerIRI, String sparqlSelector, Map<String, Value> bindings ) {
+		Type containerType = getContainerType( containerIRI );
 		if ( containerType == null ) throw new IllegalStateException( "The resource isn't a container." );
 
-		return hasMembers( containerURI, sparqlSelector, bindings, containerType );
+		return hasMembers( containerIRI, sparqlSelector, bindings, containerType );
 	}
 
 	@Override
-	public boolean hasMembers( URI containerURI, String sparqlSelector, Map<String, Value> bindings, Type containerType ) {
-		return getTypedRepository( containerType ).hasMembers( containerURI, sparqlSelector, bindings );
+	public boolean hasMembers( IRI containerIRI, String sparqlSelector, Map<String, Value> bindings, Type containerType ) {
+		return getTypedRepository( containerType ).hasMembers( containerIRI, sparqlSelector, bindings );
 	}
 
 	@Override
-	public Type getContainerType( URI containerURI ) {
-		Set<URI> resourceTypes = resourceRepository.getTypes( containerURI );
+	public Type getContainerType( IRI containerIRI ) {
+		Set<IRI> resourceTypes = resourceRepository.getTypes( containerIRI );
 		return ContainerFactory.getInstance().getContainerType( resourceTypes );
 	}
 
 	@Override
-	public Set<Statement> getProperties( URI containerURI ) {
-		Type containerType = getContainerType( containerURI );
+	public Set<Statement> getProperties( IRI containerIRI ) {
+		Type containerType = getContainerType( containerIRI );
 		if ( containerType == null ) throw new IllegalStateException( "The resource isn't a container." );
 
-		return getProperties( containerURI, containerType );
+		return getProperties( containerIRI, containerType );
 	}
 
 	@Override
-	public Set<Statement> getProperties( URI containerURI, Type containerType ) {
-		return getTypedRepository( containerType ).getProperties( containerURI );
+	public Set<Statement> getProperties( IRI containerIRI, Type containerType ) {
+		return getTypedRepository( containerType ).getProperties( containerIRI );
 	}
 
 	@Override
-	public Set<URI> getContainedURIs( URI containerURI ) {
-		return resourceRepository.getURIs( containerURI, ContainerDescription.Property.CONTAINS );
+	public Set<IRI> getContainedIRIs( IRI containerIRI ) {
+		return resourceRepository.getIRIs( containerIRI, ContainerDescription.Property.CONTAINS );
 	}
 
 	private static final String getContainmentTriples_query;
@@ -105,19 +105,19 @@ public class SesameContainerRepository extends AbstractSesameLDPRepository imple
 	static {
 		getContainmentTriples_query = "" +
 			"CONSTRUCT {" + NEW_LINE +
-			TAB + "?containerURI ?p ?o" + NEW_LINE +
+			TAB + "?containerIRI ?p ?o" + NEW_LINE +
 			"} WHERE {" + NEW_LINE +
-			TAB + "GRAPH ?containerURI {" + NEW_LINE +
-			TAB + TAB + RDFNodeUtil.generatePredicateStatement( "?containerURI", "?p", "?o", ContainerDescription.Property.CONTAINS ) + NEW_LINE +
+			TAB + "GRAPH ?containerIRI {" + NEW_LINE +
+			TAB + TAB + RDFNodeUtil.generatePredicateStatement( "?containerIRI", "?p", "?o", ContainerDescription.Property.CONTAINS ) + NEW_LINE +
 			TAB + "}" + NEW_LINE +
 			"}"
 		;
 	}
 
 	@Override
-	public Set<Statement> getContainmentTriples( URI containerURI ) {
+	public Set<Statement> getContainmentTriples( IRI containerIRI ) {
 		Map<String, Value> bindings = new HashMap<>();
-		bindings.put( "containerURI", containerURI );
+		bindings.put( "containerIRI", containerIRI );
 		return sparqlTemplate.executeGraphQuery( getContainmentTriples_query, bindings, queryResult -> {
 			Set<Statement> statements = new HashSet<>();
 			GraphQueryResultHandler handler = new DocumentGraphQueryResultHandler( statements );
@@ -128,62 +128,62 @@ public class SesameContainerRepository extends AbstractSesameLDPRepository imple
 	}
 
 	@Override
-	public Set<Statement> getMembershipTriples( URI containerURI ) {
-		Type containerType = getContainerType( containerURI );
+	public Set<Statement> getMembershipTriples( IRI containerIRI ) {
+		Type containerType = getContainerType( containerIRI );
 		if ( containerType == null ) throw new IllegalStateException( "The resource isn't a container." );
-		return getMembershipTriples( containerURI, containerType );
+		return getMembershipTriples( containerIRI, containerType );
 	}
 
 	@Override
-	public Set<Statement> getMembershipTriples( URI containerURI, Type containerType ) {
-		return getTypedRepository( containerType ).getMembershipTriples( containerURI );
+	public Set<Statement> getMembershipTriples( IRI containerIRI, Type containerType ) {
+		return getTypedRepository( containerType ).getMembershipTriples( containerIRI );
 	}
 
 	@Override
-	public Set<ContainerRetrievalPreference> getRetrievalPreferences( URI containerURI ) {
-		Set<URI> preferenceURIs = resourceRepository.getURIs( containerURI, ContainerDescription.Property.DEFAULT_RETRIEVE_PREFERENCE );
-		return RDFNodeUtil.findByURIs( preferenceURIs, ContainerRetrievalPreference.class );
+	public Set<ContainerRetrievalPreference> getRetrievalPreferences( IRI containerIRI ) {
+		Set<IRI> preferenceIRIs = resourceRepository.getIRIs( containerIRI, ContainerDescription.Property.DEFAULT_RETRIEVE_PREFERENCE );
+		return RDFNodeUtil.findByIRIs( preferenceIRIs, ContainerRetrievalPreference.class );
 	}
 
 	@Override
-	public Set<URI> findMembers( URI containerURI, String sparqlSelector, Map<String, Value> bindings ) {
-		Type containerType = getContainerType( containerURI );
-		if ( containerType == null ) throw new IllegalStateException( "The resource isn't a container." );
-
-		return findMembers( containerURI, sparqlSelector, bindings, containerType );
-	}
-
-	@Override
-	public Set<URI> findMembers( URI containerURI, String sparqlSelector, Map<String, Value> bindings, Type containerType ) {
-		return getTypedRepository( containerType ).findMembers( containerURI, sparqlSelector, bindings );
-	}
-
-	@Override
-	public Set<URI> filterMembers( URI containerURI, Set<URI> possibleMemberURIs ) {
-		Type containerType = getContainerType( containerURI );
+	public Set<IRI> findMembers( IRI containerIRI, String sparqlSelector, Map<String, Value> bindings ) {
+		Type containerType = getContainerType( containerIRI );
 		if ( containerType == null ) throw new IllegalStateException( "The resource isn't a container." );
 
-		return filterMembers( containerURI, possibleMemberURIs, containerType );
+		return findMembers( containerIRI, sparqlSelector, bindings, containerType );
 	}
 
 	@Override
-	public Set<URI> filterMembers( URI containerURI, Set<URI> possibleMemberURIs, Type containerType ) {
-		return getTypedRepository( containerType ).filterMembers( containerURI, possibleMemberURIs );
+	public Set<IRI> findMembers( IRI containerIRI, String sparqlSelector, Map<String, Value> bindings, Type containerType ) {
+		return getTypedRepository( containerType ).findMembers( containerIRI, sparqlSelector, bindings );
 	}
 
 	@Override
-	public void createChild( URI containerURI, RDFSource child ) {
-		Type containerType = getContainerType( containerURI );
+	public Set<IRI> filterMembers( IRI containerIRI, Set<IRI> possibleMemberIRIs ) {
+		Type containerType = getContainerType( containerIRI );
 		if ( containerType == null ) throw new IllegalStateException( "The resource isn't a container." );
 
-		createChild( containerURI, child, containerType );
+		return filterMembers( containerIRI, possibleMemberIRIs, containerType );
 	}
 
 	@Override
-	public void createChild( URI containerURI, RDFSource child, Type containerType ) {
+	public Set<IRI> filterMembers( IRI containerIRI, Set<IRI> possibleMemberIRIs, Type containerType ) {
+		return getTypedRepository( containerType ).filterMembers( containerIRI, possibleMemberIRIs );
+	}
+
+	@Override
+	public void createChild( IRI containerIRI, RDFSource child ) {
+		Type containerType = getContainerType( containerIRI );
+		if ( containerType == null ) throw new IllegalStateException( "The resource isn't a container." );
+
+		createChild( containerIRI, child, containerType );
+	}
+
+	@Override
+	public void createChild( IRI containerIRI, RDFSource child, Type containerType ) {
 		documentRepository.addDocument( child.getDocument() );
-		addContainedResource( containerURI, child.getURI() );
-		getTypedRepository( containerType ).addMember( containerURI, child.getURI() );
+		addContainedResource( containerIRI, child.getIRI() );
+		getTypedRepository( containerType ).addMember( containerIRI, child.getIRI() );
 
 	}
 
@@ -193,62 +193,62 @@ public class SesameContainerRepository extends AbstractSesameLDPRepository imple
 	}
 
 	@Override
-	public void createNonRDFResource( URI containerURI, URI resourceURI, File requestEntity, String mediaType ) {
+	public void createNonRDFResource( IRI containerIRI, IRI resourceIRI, File requestEntity, String mediaType ) {
 		DateTime creationTime = DateTime.now();
 
-		RDFRepresentation rdfRepresentation = RDFRepresentationFactory.getInstance().create( resourceURI );
+		RDFRepresentation rdfRepresentation = RDFRepresentationFactory.getInstance().create( resourceIRI );
 
-		rdfRepresentation.add( RDFSourceDescription.Property.DEFAULT_INTERACTION_MODEL.getURI(), RDFSourceDescription.Resource.CLASS.getURI() );
+		rdfRepresentation.add( RDFSourceDescription.Property.DEFAULT_INTERACTION_MODEL.getIRI(), RDFSourceDescription.Resource.CLASS.getIRI() );
 		rdfRepresentation.setTimestamps( creationTime );
 		rdfRepresentationRepository.create( rdfRepresentation, requestEntity, mediaType );
 
-		addContainedResource( containerURI, rdfRepresentation.getURI() );
+		addContainedResource( containerIRI, rdfRepresentation.getIRI() );
 
-		addMember( containerURI, resourceURI );
-		sourceRepository.touch( containerURI, creationTime );
+		addMember( containerIRI, resourceIRI );
+		sourceRepository.touch( containerIRI, creationTime );
 	}
 
 	@Override
-	public void addMember( URI containerURI, URI member ) {
-		Type containerType = getContainerType( containerURI );
+	public void addMember( IRI containerIRI, IRI member ) {
+		Type containerType = getContainerType( containerIRI );
 		if ( containerType == null ) throw new IllegalStateException( "The resource isn't a container." );
 
-		addMember( containerURI, member, containerType );
+		addMember( containerIRI, member, containerType );
 	}
 
 	@Override
-	public void addMember( URI containerURI, URI member, Type containerType ) {
-		getTypedRepository( containerType ).addMember( containerURI, member );
+	public void addMember( IRI containerIRI, IRI member, Type containerType ) {
+		getTypedRepository( containerType ).addMember( containerIRI, member );
 	}
 
 	@Override
-	public void removeMember( URI containerURI, URI member ) {
-		Type containerType = getContainerType( containerURI );
+	public void removeMember( IRI containerIRI, IRI member ) {
+		Type containerType = getContainerType( containerIRI );
 		if ( containerType == null ) throw new IllegalStateException( "The resource isn't a container." );
 
-		removeMember( containerURI, member, containerType );
+		removeMember( containerIRI, member, containerType );
 	}
 
 	@Override
-	public void removeMember( URI containerURI, URI member, Type containerType ) {
-		getTypedRepository( containerType ).removeMember( containerURI, member );
+	public void removeMember( IRI containerIRI, IRI member, Type containerType ) {
+		getTypedRepository( containerType ).removeMember( containerIRI, member );
 	}
 
 	@Override
-	public void removeMembers( URI containerURI ) {
-		Type containerType = getContainerType( containerURI );
+	public void removeMembers( IRI containerIRI ) {
+		Type containerType = getContainerType( containerIRI );
 		if ( containerType == null ) throw new IllegalStateException( "The resource isn't a container." );
 
-		removeMembers( containerURI, containerType );
+		removeMembers( containerIRI, containerType );
 	}
 
 	@Override
-	public void removeMembers( URI containerURI, Type containerType ) {
-		getTypedRepository( containerType ).removeMembers( containerURI );
+	public void removeMembers( IRI containerIRI, Type containerType ) {
+		getTypedRepository( containerType ).removeMembers( containerIRI );
 	}
 
-	private void addContainedResource( URI containerURI, URI resourceURI ) {
-		connectionTemplate.write( ( connection ) -> connection.add( containerURI, ContainerDescription.Property.CONTAINS.getURI(), resourceURI, containerURI ) );
+	private void addContainedResource( IRI containerIRI, IRI resourceIRI ) {
+		connectionTemplate.write( ( connection ) -> connection.add( containerIRI, ContainerDescription.Property.CONTAINS.getIRI(), resourceIRI, containerIRI ) );
 	}
 
 	@Override
