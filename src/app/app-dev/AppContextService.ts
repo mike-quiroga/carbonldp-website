@@ -18,6 +18,7 @@ export default class AppContextService {
 	}
 
 	get( slug:string ):Promise<App.Context> {
+		slug = this.removeTrailingSlash( slug );
 		return new Promise<App.Context>( ( resolve:( result:any ) => void, reject:( error:Error ) => void ) => {
 			if ( this.appContexts.has( slug ) ) {
 				resolve( this.appContexts.get( slug ) );
