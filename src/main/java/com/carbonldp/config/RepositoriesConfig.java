@@ -19,11 +19,14 @@ import com.carbonldp.authorization.SesamePlatformPrivilegeRepository;
 import com.carbonldp.authorization.SesamePlatformRoleRepository;
 import com.carbonldp.authorization.acl.ACLRepository;
 import com.carbonldp.authorization.acl.SesameACLRepository;
+import com.carbonldp.jobs.*;
 import com.carbonldp.ldp.containers.*;
 import com.carbonldp.ldp.nonrdf.NonRDFSourceRepository;
 import com.carbonldp.ldp.nonrdf.RDFRepresentationRepository;
 import com.carbonldp.ldp.nonrdf.SesameNonRDFSourceRepository;
 import com.carbonldp.ldp.nonrdf.SesameRDFRepresentationRepository;
+import com.carbonldp.ldp.nonrdf.backup.BackupRepository;
+import com.carbonldp.ldp.nonrdf.backup.SesameBackupRepository;
 import com.carbonldp.ldp.sources.RDFSourceRepository;
 import com.carbonldp.ldp.sources.SesameRDFSourceRepository;
 import com.carbonldp.platform.api.PlatformAPIRepository;
@@ -136,6 +139,11 @@ public class RepositoriesConfig {
 	}
 
 	@Bean
+	public ExecutionRepository executionRepository() {
+		return new SesameExecutionRepository( connectionFactory, resourceRepository(), documentRepository() );
+	}
+
+	@Bean
 	public PlatformAgentRepository platformAgentRepository() {
 		IRI agentsContainerIRI = SimpleValueFactory.getInstance().createIRI( Vars.getInstance().getAgentsContainerURL() );
 		return new SesamePlatformAgentRepository( connectionFactory, sourceRepository(), containerRepository(), agentsContainerIRI );
@@ -194,8 +202,12 @@ public class RepositoriesConfig {
 		return new SesameACLRepository( connectionFactory, resourceRepository(), documentRepository(), sourceRepository() );
 	}
 
+	// TODO: why is this not in services config?
 	@Bean
-	SPARQLService sparqlService() {
+	public SPARQLService sparqlService() {
 		return new SesameSPARQLService( connectionFactory );
 	}
+
+	@Bean
+	public BackupRepository backupRepository() {return new SesameBackupRepository( connectionFactory, resourceRepository(), documentRepository() ); }
 }

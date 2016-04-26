@@ -35,7 +35,7 @@ public class UpdateAction1o1o0 extends AbstractUpdateAction {
 		} );
 		Set<App> apps = getAllApps();
 		for ( App app : apps ) {
-			transactionWrapper.runInAppcontext( app, () -> {
+			transactionWrapper.runInAppContext( app, () -> {
 				try {
 					changeIRIsToHTTPS();
 				} catch ( RepositoryException e ) {
