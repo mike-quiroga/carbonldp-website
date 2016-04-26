@@ -30,7 +30,8 @@ dist/site/
 reports/
 
 # IntelliJ
-.idea/**
+.idea/workspace.xml
+.idea/dictionaries/
 # *.iml
 # *.iws
 
@@ -149,6 +150,8 @@ tmp/**/*
 local.properties
 .loadpath
 /src/main/resources/rebel.xml
+.project
+.settings
 
 # External tool builders
 .externalToolBuilders/
