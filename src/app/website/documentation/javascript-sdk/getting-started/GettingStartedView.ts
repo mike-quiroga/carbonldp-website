@@ -33,6 +33,7 @@ export default class GettingStartedView {
 		this.title.setTitle( "Getting started - JavaScript SDK" );
 
 		this.changeDetector = changeDetector;
+
 	}
 
 	ngAfterViewInit():void {

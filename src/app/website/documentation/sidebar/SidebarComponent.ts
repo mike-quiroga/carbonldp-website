@@ -10,13 +10,13 @@ import template from "./template.html!";
 @Component( {
 	selector: "sidebar-component",
 	template: template,
-	directives: [ CORE_DIRECTIVES, ROUTER_DIRECTIVES ],
+	directives: [ CORE_DIRECTIVES, ROUTER_DIRECTIVES ]
 } )
 export default class SidebarComponent {
 	elementRef:ElementRef;
-	$element: JQuery;
-	$container: JQuery;
-	$followMenu: JQuery;
+	$element:JQuery;
+	$container:JQuery;
+	$followMenu:JQuery;
 	sidebar:any;
 	sections:any;
 	subSections:any;

@@ -6,7 +6,7 @@ import Carbon from "carbonldp/Carbon";
 
 import HighlightDirective from "app/directives/HighlightDirective";
 
-import SidebarComponent from "./../sidebar/SidebarComponent";
+import SidebarComponent from "./../../sidebar/SidebarComponent";
 
 import $ from "jquery";
 import "semantic-ui/semantic";

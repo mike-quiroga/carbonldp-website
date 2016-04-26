@@ -36,5 +36,6 @@ import "./style.css!";
 ] )
 export default class App {
 	// Importing angulartics2, angulartics2GoogleAnalytics as per documentation of angulartics2 plug-in
-	constructor( angulartics2:Angulartics2, angulartics2GoogleAnalytics:Angulartics2GoogleAnalytics ) {}
+	constructor( angulartics2:Angulartics2, angulartics2GoogleAnalytics:Angulartics2GoogleAnalytics ) {
+	}
 }
