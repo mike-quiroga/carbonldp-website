@@ -46,18 +46,12 @@ public class SesameContainerService extends AbstractSesameLDPService implements 
 					container.getBaseModel().addAll( containerRepository.getContainmentTriples( containerIRI ) );
 					break;
 				case CONTAINED_RESOURCES:
-					if ( containerRetrievalPreferences.contains( APIPreferences.ContainerRetrievalPreference.MEMBER_RESOURCES ) ) break;
-					Set<IRI> getContainmentIRIs = containerRepository.getContainmentIRIs( containerIRI, orderByRetrievalPreferences );
-					Set<RDFSource> containedResources = sourceService.get( getContainmentIRIs );
-					if ( containedResources == null || containedResources.isEmpty() ) break;
-					RDFSource childSource = containedResources.iterator().next();
-					container.getBaseModel().addAll( childSource.getBaseModel() );
-
-					for ( RDFSource source : containedResources ) {
-						int eTag = ModelUtil.calculateETag( source );
-						String valueETag = HTTPUtil.formatStrongEtag( eTag );
-						ResponsePropertyFactory.getInstance().create( container, source.getIRI(), valueETag );
+					Set<IRI> children = containerRepository.getContainmentIRIs( containerIRI, orderByRetrievalPreferences );
+					if ( containerRetrievalPreferences.contains( APIPreferences.ContainerRetrievalPreference.MEMBER_RESOURCES ) ) {
+						Set<IRI> members = containerRepository.getMemberIRIs( containerIRI, orderByRetrievalPreferences );
+						children.addAll( members );
 					}
+					container = getResources( children, container );
 					break;
 				case MEMBERSHIP_TRIPLES:
 					if ( containerRetrievalPreferences.contains( APIPreferences.ContainerRetrievalPreference.NON_READABLE_MEMBERSHIP_RESOURCE_TRIPLES ) ) {
@@ -70,18 +64,9 @@ public class SesameContainerService extends AbstractSesameLDPService implements 
 					}
 					break;
 				case MEMBER_RESOURCES:
+					if ( containerRetrievalPreferences.contains( APIPreferences.ContainerRetrievalPreference.CONTAINED_RESOURCES ) ) break;
 					Set<IRI> members = containerRepository.getMemberIRIs( containerIRI, orderByRetrievalPreferences );
-
-					Set<RDFSource> memberResources = sourceService.get( members );
-					if ( memberResources == null || memberResources.isEmpty() ) break;
-
-					RDFSource memberSource = memberResources.iterator().next();
-					container.getBaseModel().addAll( memberSource.getBaseModel() );
-					for ( RDFSource source : memberResources ) {
-						int eTag = ModelUtil.calculateETag( source );
-						String valueETag = HTTPUtil.formatStrongEtag( eTag );
-						ResponsePropertyFactory.getInstance().create( container, source.getIRI(), valueETag );
-					}
+					container = getResources( members, container );
 					break;
 				case NON_READABLE_MEMBERSHIP_RESOURCE_TRIPLES:
 					if ( ! containerRetrievalPreferences.contains( APIPreferences.ContainerRetrievalPreference.MEMBERSHIP_TRIPLES ) ) {
@@ -205,6 +190,29 @@ public class SesameContainerService extends AbstractSesameLDPService implements 
 		for ( IRI containedIRI : containedIRIs ) {
 			sourceService.delete( containedIRI );
 		}
+	}
+
+	private Container getResources( Set<IRI> sourcesIRIs, Container container ) {
+		Set<RDFSource> sources = sourceService.get( sourcesIRIs );
+		if ( sources == null || sources.isEmpty() ) return container;
+		RDFSource memberSource = sources.iterator().next();
+		container.getBaseModel().addAll( memberSource.getBaseModel() );
+
+		for ( RDFSource source : sources ) {
+			int eTag = ModelUtil.calculateETag( source );
+			String valueETag = HTTPUtil.formatStrongEtag( eTag );
+			ResponsePropertyFactory.getInstance().create( container, source.getIRI(), valueETag );
+		}
+		return container;
+	}
+
+	private Set<IRI> getObjectIRIs( Set<Statement> statements ) {
+		Set<IRI> iris = statements
+			.stream()
+			.map( statement -> ValueUtil.getIRI( statement.getObject() ) )
+			.collect( Collectors.toSet() );
+
+		return iris;
 	}
 
 	@Override
