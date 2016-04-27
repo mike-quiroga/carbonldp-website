@@ -2,61 +2,13 @@ document-explorer {
 	.ui.segment {
 		color: #000000;
 	}
-	.ui.vertical.menu.treeview {
-		width: 100%;
+	> .ui.divided.grid.segment {
+		max-height: 800px;
 
-		.item .title {
-			> .dropdown.icon {
-				margin: .1em 0 0 1em;
+		> .stretched.row {
+			> .column {
+				overflow-y: scroll;
 			}
-		}
-		.vertical.menu.accordion {
-			width: 100%;
-		}
-	}
-	.ui.list {
-
-		position: relative;
-
-		.list {
-			padding-top: 0;
-
-			.item:first-child {
-				padding-top: 10px;
-			}
-			.item:first-child:before {
-				top: 1em;
-			}
-			.item {
-				position: relative;
-				padding-top: .75em;
-				.content {
-					width: 100%;
-				}
-			}
-			.item:before, .item:after {
-				content: "";
-				position: absolute;
-				margin-left: -23px;
-			}
-			.item:before {
-				border-top: 1px dashed grey;
-				width: 1em;
-				height: 0;
-				top: .75em;
-			}
-			.item:after {
-				border-left: 1px dashed grey;
-				height: 100%;
-				width: 0;
-				top: 2px;
-			}
-			.item:last-child::after {
-				height: 8px;
-			}
-		}
-		.item.content {
-			width: 100%;
 		}
 	}
 }

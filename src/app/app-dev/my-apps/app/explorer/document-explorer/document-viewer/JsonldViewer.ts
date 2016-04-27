@@ -26,14 +26,15 @@ import * as URI from "carbonldp/RDF/URI";
 import * as Utils from "carbonldp/Utils";
 
 import AppContextService from "./../../../../../AppContextService";
+import HighlightDirective from "./../../../../../../directives/HighlightDirective";
 
 import template from "./template.html!";
-// import "./style.css!";
+import "./style.css!";
 
 @Component( {
 	selector: "jsonld-viewer",
 	template: template,
-	directives: [ CORE_DIRECTIVES, NgSwitchDefault ],
+	directives: [ CORE_DIRECTIVES, NgSwitchDefault, HighlightDirective ],
 } )
 
 export default class JsonldViewerComponent {

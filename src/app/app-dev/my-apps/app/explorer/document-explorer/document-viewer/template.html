@@ -1,9 +1,8 @@
-<h1>JsonLD Viewer</h1>
 <div class="ui stackable grid">
 	<div class="row">
 		<div class="column">
 			<div class="ui divided items">
-				<div class="item" *ngFor="#propertyName of getPropertyNames(rootNode); #i=index;">
+				<div class="property item" *ngFor="#propertyName of getPropertyNames(rootNode); #i=index;">
 					<div class="content">
 						<p class="header">
 							{{getHeader(propertyName)}}
@@ -36,7 +35,7 @@
 								</table>
 							</div>
 							<div class="ui bottom attached tab segment" [attr.data-tab]="i+'_codeview'">
-								<pre>{{rootNode[propertyName]| json}}</pre>
+								<pre highlight class="json">{{rootNode[propertyName]| json}}</pre>
 							</div>
 						</div>
 					</div>
