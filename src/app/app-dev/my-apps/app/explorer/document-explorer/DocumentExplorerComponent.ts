@@ -44,6 +44,7 @@ export default class DocumentExplorerComponent {
 	members:any[] = [];
 	contains:Pointer[] = [];
 	loadingTree:boolean = false;
+	loadingDocument:boolean = false;
 
 	inspectingDocument:RDFDocument;
 
@@ -164,6 +165,7 @@ export default class DocumentExplorerComponent {
 
 	onClickNode( parentId:string, node:any, position:string ):void {
 		console.log( arguments );
+		this.loadingDocument = true;
 		let requestOptions:Request.Options = {
 			sendCredentialsOnCORS: true,
 		};
@@ -181,6 +183,10 @@ export default class DocumentExplorerComponent {
 							this.inspectingDocument = (<RDFDocument>parsedDocument[ 0 ]);
 					}
 				);
+			}
+		).then(
+			()=> {
+				this.loadingDocument = false;
 			}
 		);
 	}
