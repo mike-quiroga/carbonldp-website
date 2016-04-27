@@ -15,14 +15,21 @@ import com.carbonldp.rdf.RDFDocumentRepository;
 import com.carbonldp.rdf.RDFResourceRepository;
 import com.carbonldp.repository.DocumentGraphQueryResultHandler;
 import com.carbonldp.repository.GraphQueryResultHandler;
+import com.carbonldp.sparql.InMemoryTupleQueryResult;
+import com.carbonldp.sparql.SPARQLResult;
+import com.carbonldp.sparql.SPARQLTupleResult;
+import com.carbonldp.sparql.SecuredRepositoryTemplate;
 import com.carbonldp.utils.RDFNodeUtil;
 import com.carbonldp.utils.SPARQLUtil;
 import com.carbonldp.utils.ValueUtil;
 import com.sun.org.apache.bcel.internal.generic.NEW;
 import org.joda.time.DateTime;
 import org.openrdf.model.IRI;
+import org.openrdf.model.Model;
 import org.openrdf.model.Statement;
 import org.openrdf.model.Value;
+import org.openrdf.query.TupleQueryResult;
+import org.openrdf.repository.RepositoryResult;
 import org.openrdf.spring.SesameConnectionFactory;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
@@ -264,11 +271,25 @@ public class SesameContainerRepository extends AbstractSesameLDPRepository imple
 		throw new IllegalArgumentException( "The containerType provided isn't supported" );
 	}
 
+	@Override
 	public Set<IRI> getContainmentIRIs( IRI targetIRI, OrderByRetrievalPreferences orderByRetrievalPreferences ) {
 		String queryString = SPARQLUtil.createGetSubjectsWithPreferencesQuery( targetIRI, ContainerDescription.Property.CONTAINS, orderByRetrievalPreferences );
 		return executeGetSubjectsWithPreferencesQuery( queryString );
 	}
 
+	@Override
+	public Set<IRI> getContainmentIRIs( IRI targetIRI ) {
+		return connectionTemplate.read( connection -> {
+			Set<IRI> childrenIRIs = new HashSet<>();
+			IRI[] containsIRIs = ContainerDescription.Property.CONTAINS.getIRIs();
+			for ( IRI containsIRI : containsIRIs ) {
+				childrenIRIs.addAll( getPropertySet( targetIRI, containsIRI ) );
+			}
+			return childrenIRIs;
+		} );
+	}
+
+	@Override
 	public Set<IRI> getMemberIRIs( IRI targetIRI, OrderByRetrievalPreferences orderByRetrievalPreferences ) {
 		TypedContainerRepository repositoryType = getTypedRepository( getContainerType( targetIRI ) );
 		IRI membershipResource = repositoryType.getMembershipResource( targetIRI );
@@ -277,6 +298,29 @@ public class SesameContainerRepository extends AbstractSesameLDPRepository imple
 		String queryString = SPARQLUtil.createGetSubjectsWithPreferencesQuery( membershipResource, hasMemberRelation, orderByRetrievalPreferences );
 		return executeGetSubjectsWithPreferencesQuery( queryString );
 
+	}
+
+	@Override
+	public Set<IRI> getMemberIRIs( IRI targetIRI ) {
+		TypedContainerRepository repositoryType = getTypedRepository( getContainerType( targetIRI ) );
+		IRI membershipResource = repositoryType.getMembershipResource( targetIRI );
+		IRI hasMemberRelation = repositoryType.getHasMemberRelation( targetIRI );
+
+		return getPropertySet( membershipResource, hasMemberRelation );
+	}
+
+	private Set<IRI> getPropertySet( IRI targetIRI, IRI property ) {
+		return connectionTemplate.read( connection -> {
+			Set<IRI> childrenIRIs = new HashSet<>();
+			RepositoryResult<Statement> containmentStatements = connection.getStatements( targetIRI, property, null, targetIRI );
+			while ( containmentStatements.hasNext() ) {
+				Statement statement = containmentStatements.next();
+				Value objectValue = statement.getObject();
+				if ( ! ValueUtil.isIRI( objectValue ) ) throw new IllegalStateException( "The Property contains a non IRI member" );
+				childrenIRIs.add( ValueUtil.getIRI( objectValue ) );
+			}
+			return childrenIRIs;
+		} );
 	}
 
 	private Set<IRI> executeGetSubjectsWithPreferencesQuery( String queryString ) {
