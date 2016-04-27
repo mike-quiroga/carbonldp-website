@@ -283,7 +283,7 @@ public class SesameContainerRepository extends AbstractSesameLDPRepository imple
 			Set<IRI> childrenIRIs = new HashSet<>();
 			IRI[] containsIRIs = ContainerDescription.Property.CONTAINS.getIRIs();
 			for ( IRI containsIRI : containsIRIs ) {
-				childrenIRIs.addAll( getPropertySet( targetIRI, containsIRI ) );
+				childrenIRIs.addAll( resourceRepository.getIRIs( targetIRI, containsIRI ) );
 			}
 			return childrenIRIs;
 		} );
@@ -306,21 +306,7 @@ public class SesameContainerRepository extends AbstractSesameLDPRepository imple
 		IRI membershipResource = repositoryType.getMembershipResource( targetIRI );
 		IRI hasMemberRelation = repositoryType.getHasMemberRelation( targetIRI );
 
-		return getPropertySet( membershipResource, hasMemberRelation );
-	}
-
-	private Set<IRI> getPropertySet( IRI targetIRI, IRI property ) {
-		return connectionTemplate.read( connection -> {
-			Set<IRI> childrenIRIs = new HashSet<>();
-			RepositoryResult<Statement> containmentStatements = connection.getStatements( targetIRI, property, null, targetIRI );
-			while ( containmentStatements.hasNext() ) {
-				Statement statement = containmentStatements.next();
-				Value objectValue = statement.getObject();
-				if ( ! ValueUtil.isIRI( objectValue ) ) throw new IllegalStateException( "The Property contains a non IRI member" );
-				childrenIRIs.add( ValueUtil.getIRI( objectValue ) );
-			}
-			return childrenIRIs;
-		} );
+		return resourceRepository.getIRIs( membershipResource, hasMemberRelation );
 	}
 
 	private Set<IRI> executeGetSubjectsWithPreferencesQuery( String queryString ) {
