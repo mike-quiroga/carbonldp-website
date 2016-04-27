@@ -8,16 +8,22 @@ import com.carbonldp.exceptions.ResourceDoesntExistException;
 import com.carbonldp.http.OrderByRetrievalPreferences;
 import com.carbonldp.ldp.AbstractSesameLDPService;
 import com.carbonldp.ldp.sources.RDFSource;
+import com.carbonldp.ldp.sources.RDFSourceDescription;
 import com.carbonldp.ldp.sources.RDFSourceService;
 import com.carbonldp.models.Infraction;
+import com.carbonldp.rdf.RDFBlankNode;
 import com.carbonldp.rdf.RDFDocumentFactory;
 import com.carbonldp.rdf.RDFResource;
+import com.carbonldp.rdf.RDFResourceDescription;
 import com.carbonldp.spring.ServicesInvoker;
 import com.carbonldp.utils.HTTPUtil;
 import com.carbonldp.utils.ModelUtil;
 import org.joda.time.DateTime;
+import org.openrdf.model.BNode;
 import org.openrdf.model.IRI;
 import org.openrdf.model.Statement;
+import org.openrdf.model.ValueFactory;
+import org.openrdf.model.impl.SimpleValueFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.File;
@@ -196,10 +202,17 @@ public class SesameContainerService extends AbstractSesameLDPService implements 
 		RDFSource memberSource = sources.iterator().next();
 		container.getBaseModel().addAll( memberSource.getBaseModel() );
 
+		ValueFactory valueFactory = SimpleValueFactory.getInstance();
+
+		BNode bNode = valueFactory.createBNode();
+		RDFBlankNode retrieveDescription = new RDFBlankNode( container.getDocument(), bNode, null );
+		retrieveDescription.add( RDFSourceDescription.Property.TYPE.getIRI(), ResponseDescriptionDescription.Resource.CLASS.getIRI() );
+		retrieveDescription.add( RDFSourceDescription.Property.TYPE.getIRI(), RDFResourceDescription.Resource.VOLATILE.getIRI() );
+
 		for ( RDFSource source : sources ) {
 			int eTag = ModelUtil.calculateETag( source );
 			String valueETag = HTTPUtil.formatStrongEtag( eTag );
-			ResponsePropertyFactory.getInstance().create( container, source.getIRI(), valueETag );
+			ResponsePropertyFactory.getInstance().create( container, retrieveDescription, source.getIRI(), valueETag );
 		}
 		return container;
 	}
