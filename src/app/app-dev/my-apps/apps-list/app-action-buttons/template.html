@@ -5,9 +5,9 @@
 	<a class="ui icon button tooltip" [routerLink]="[ '/AppDev/MyApps/App', {slug: app.slug}, 'SPARQLEditor']">
 		<i class="terminal icon"></i>
 	</a>
-	<button class="ui icon button tooltip" [disabled]="true">
+	<a class="ui icon button tooltip" [routerLink]="[ '/AppDev/MyApps/App', {slug: app.slug}, 'Edit']">
 		<i class="write icon"></i>
-	</button>
+	</a>
 	<button class="ui icon button tooltip" (click)="onDeleteApp($event)">
 		<i class="trash outline icon"></i>
 	</button>

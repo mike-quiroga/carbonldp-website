@@ -1,10 +1,11 @@
-import {Component} from "angular2/core";
-import {CORE_DIRECTIVES} from "angular2/common";
-import {ROUTER_DIRECTIVES, RouteConfig, RouterOutlet} from "angular2/router";
+import { Component } from "angular2/core";
+import { CORE_DIRECTIVES } from "angular2/common";
+import { ROUTER_DIRECTIVES, RouteConfig, RouterOutlet } from "angular2/router";
 
 
 import AppDetailView from "./app/AppDetailView";
 import AppsListView from "./apps-list/AppsListView";
+import CreateAppView from "./create-app/CreateAppView";
 
 @Component( {
 	selector: "my-apps",
@@ -33,6 +34,15 @@ import AppsListView from "./apps-list/AppsListView";
 				name: "slug",
 				redirectTo: "AppDashboard",
 			},
+		},
+	},
+	{
+		path: "/create",
+		as: "Create",
+		component: CreateAppView,
+		data: {
+			alias: "Create",
+			displayName: "Create App",
 		},
 	},
 ] )
