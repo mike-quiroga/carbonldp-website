@@ -1,3 +1,7 @@
+# 0.34.0 (2016/04/28)
+- Add prefer contained and membership resources to container preferences
+- URL now accepts orderBy retrieval preferences for contained and membership resources retrieval
+
 # 0.33.1 (2016/04/25)
 - Change log4j2 configuration to a programmatic based one that uses `LOGConfigurationFactory`
 - Add `requestID` and `shortRequestID` to log4j2's context map
