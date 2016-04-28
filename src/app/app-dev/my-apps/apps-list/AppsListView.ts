@@ -1,8 +1,8 @@
-import {Component, ElementRef} from "angular2/core";
-import {Title} from "angular2/platform/browser";
-import {CORE_DIRECTIVES} from "angular2/common";
-import {Router, ROUTER_DIRECTIVES} from "angular2/router";
-import {Observable} from "rxjs/Rx";
+import { Component, ElementRef } from "angular2/core";
+import { Title } from "angular2/platform/browser";
+import { CORE_DIRECTIVES } from "angular2/common";
+import { Router, ROUTER_DIRECTIVES } from "angular2/router";
+import { Observable } from "rxjs/Rx";
 
 import "semantic-ui/semantic";
 
@@ -103,24 +103,25 @@ export default class AppsListView {
 	}
 
 	onApproveAppDeletion( approvedApp:App ):void {
-		if ( ! this.deleting ) {
-			this.deleting = true;
-			this.deleteError = null;
-			this.deleteApp( approvedApp ).then(
-				( response:HTTP.Response.Class ):void => {
-					this.toggleDeleteConfirmationModal();
-					this.apps.splice( this.apps.indexOf( approvedApp ), 1 );
-				},
-				( error:HTTPError.HTTPError ):void => {
-					this.deleteError = this.getErrorMessage( error );
-				}
-			).then(
-				():void => {
-					this.deleting = false;
-					this.searchApp( this.searchBox.val() );
-				}
-			);
+		if ( this.deleting ) {
+			return;
 		}
+		this.deleting = true;
+		this.deleteError = null;
+		this.deleteApp( approvedApp ).then(
+			( response:HTTP.Response.Class ):void => {
+				this.toggleDeleteConfirmationModal();
+				this.apps.splice( this.apps.indexOf( approvedApp ), 1 );
+			},
+			( error:HTTPError.HTTPError ):void => {
+				this.deleteError = this.getErrorMessage( error );
+			}
+		).then(
+			():void => {
+				this.deleting = false;
+				this.searchApp( this.searchBox.val() );
+			}
+		);
 	}
 
 	deleteApp( app:App ):Promise<HTTP.Response.Class> {
