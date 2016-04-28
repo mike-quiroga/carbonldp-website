@@ -1,3 +1,15 @@
+# 0.5.11 (April 28, 2016)
+- Add a list view to MyApps.
+- Add search to MyApps view
+- Add new App tile design.
+- Add action buttons to Apps tiles and Apps list.
+- Add loading indicator to AppsListView.
+- Add sorting to AppsList on table view.
+- Reorganize my apps child views and components structure.
+- Change AppDev App class to use only a slug and an App.Context
+- Add app action buttons component.
+- Add CreateApp and EditApp routes to my apps
+
 # 0.5.10 (April 28, 2016)
 - Add EditApp view and EditApp form component to AppDev.
 
