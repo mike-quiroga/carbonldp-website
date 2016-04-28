@@ -1,3 +1,6 @@
+# 0.5.10 (April 28, 2016)
+- Add EditApp view and EditApp form component to AppDev.
+
 # 0.5.9 (April 14, 2016)
 - Add google analytics feature with angulartics2 plug in, and customized event tracking
 - Add newsletter component
