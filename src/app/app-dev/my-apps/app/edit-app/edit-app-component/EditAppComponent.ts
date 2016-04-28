@@ -147,8 +147,8 @@ export default class EditAppComponent {
 		}
 
 		this.context.app.save().then(
-			( [updatedApp,response]:[PersistedApp, HTTP.Response.Class] ):void => {
-				this.context.app.refresh().catch( ( error:HTTPError.HTTPError )=> this.setErrorMessage( error ) );
+			( [updatedApp, response]:[PersistedApp, HTTP.Response.Class] ):void => {
+				this.context.app.refresh().catch( ( error:HTTPError.HTTPError ):void => this.setErrorMessage( error ) );
 				this.displaySuccessMessage = true;
 			},
 			( error:HTTPError.HTTPError ):void => {
