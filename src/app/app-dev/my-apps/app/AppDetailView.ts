@@ -10,7 +10,7 @@ import App from "./App";
 
 import DashboardView from "./dashboard/DashboardView";
 import SPARQLEditorView from "./sparql-editor/SPARQLEditorView";
-
+import EditAppView from "./edit-app/EditAppView";
 
 import template from "./template.html!";
 import "./style.css!";
@@ -39,6 +39,15 @@ import "./style.css!";
 		data: {
 			alias: "SPARQLEditor",
 			displayName: "SPARQL Editor",
+		},
+	},
+	{
+		path: "/edit",
+		as: "Edit",
+		component: EditAppView,
+		data: {
+			alias: "Edit",
+			displayName: "Edit",
 		},
 	},
 ] )
