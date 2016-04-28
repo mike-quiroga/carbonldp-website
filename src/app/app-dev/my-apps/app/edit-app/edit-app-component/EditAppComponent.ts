@@ -1,6 +1,6 @@
-import {Component, ElementRef, Input} from "angular2/core";
-import {CORE_DIRECTIVES, FormBuilder, ControlGroup, AbstractControl, Control, Validators} from "angular2/common";
-import {Router, ROUTER_DIRECTIVES} from "angular2/router";
+import { Component, ElementRef, Input } from "angular2/core";
+import { CORE_DIRECTIVES, FormBuilder, ControlGroup, AbstractControl, Control, Validators } from "angular2/common";
+import { Router, ROUTER_DIRECTIVES } from "angular2/router";
 
 import Carbon from "carbonldp/Carbon";
 import * as Context from "carbonldp/App/Context";
@@ -75,7 +75,7 @@ export default class EditAppComponent {
 				allDomains: [ allowAllOrigins ],
 				domain: [ this.domainStr ],
 				allowedDomains: [ this.allowedDomains ],
-			}, {validator: Validators.compose( [ this.domainValidator, this.allowedDomainsValidator ] )} ),
+			}, { validator: Validators.compose( [ this.domainValidator, this.allowedDomainsValidator ] ) } ),
 		} );
 		this.name = this.editAppForm.controls[ "name" ];
 		this.description = this.editAppForm.controls[ "description" ];
@@ -91,13 +91,13 @@ export default class EditAppComponent {
 			return null;
 		}
 		if ( ! ! domain.value ) {
-			return {"invalidURLAddress": true};
+			return { "invalidURLAddress": true };
 		}
 	}
 
 	allowedDomainsValidator( corsGroup:ControlGroup ):any {
 		if ( ! corsGroup.value[ "allDomains" ] && (<string[]>corsGroup.value[ "allowedDomains" ]).length <= 0 ) {
-			return {"emptyAllowedAddresses": true};
+			return { "emptyAllowedAddresses": true };
 		}
 		return null;
 	}
@@ -194,18 +194,6 @@ export default class EditAppComponent {
 				this.errorMessage = "There was a problem processing the request. Error: " + error.response.status;
 				break;
 		}
-	}
-
-
-	slugValidator( slug:Control ):any {
-		if ( slug.value ) {
-			if ( slug.value.match( /^[a-z0-9]+(?:-[a-z0-9]*)*(?:\/*)$/ ) ) {
-				return null;
-			} else {
-				return {"invalidSlug": true};
-			}
-		}
-		return null;
 	}
 
 	closeMessage( evt:Event ):void {
