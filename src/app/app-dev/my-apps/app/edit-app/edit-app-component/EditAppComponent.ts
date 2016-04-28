@@ -4,6 +4,8 @@ import {Router, ROUTER_DIRECTIVES} from "angular2/router";
 
 import Carbon from "carbonldp/Carbon";
 import * as Context from "carbonldp/App/Context";
+import * as HTTP from "carbonldp/HTTP";
+import * as PersistedApp from "carbonldp/PersistedApp";
 import * as HTTPErrors from "carbonldp/HTTP/Errors";
 import * as HTTPError from "carbonldp/HTTP/Errors/HTTPError";
 
@@ -145,7 +147,8 @@ export default class EditAppComponent {
 		}
 
 		this.context.app.save().then(
-			():void => {
+			( [updatedApp,response]:[PersistedApp, HTTP.Response.Class] ):void => {
+				this.context.app.refresh().catch( ( error:HTTPError.HTTPError )=> this.setErrorMessage( error ) );
 				this.displaySuccessMessage = true;
 			},
 			( error:HTTPError.HTTPError ):void => {
@@ -179,7 +182,7 @@ export default class EditAppComponent {
 				this.errorMessage = "Unauthorized operation.";
 				break;
 			case error instanceof HTTPErrors.InternalServerErrorError:
-				this.errorMessage = "An error occurred while trying to update the app. Please try again later. Error: " + error.response.status;
+				this.errorMessage = "An internal error occurred while trying to update the app. Please try again later. Error: " + error.response.status;
 				break;
 			case error instanceof HTTPErrors.ServiceUnavailableError:
 				this.errorMessage = "Service currently unavailable.";
