@@ -72,8 +72,8 @@ export class Class {
 	}
 
 	ngAfterContentInit():void {
-		if( ! this.value ) this.value = this.element.nativeElement.innerHTML;
-		if( !! this.value ) this.value = this.normalizeTabs( this.value );
+		if ( ! this.value ) this.value = this.element.nativeElement.innerHTML;
+		if ( ! ! this.value ) this.value = this.normalizeTabs( this.value );
 		else this.value = "";
 
 		this.element.nativeElement.innerHTML = "";
@@ -94,13 +94,13 @@ export class Class {
 		}
 
 		this.codeMirror.on( "change", ( changeObject ) => {
-			if( this.internallyChanged ) {
+			if ( this.internallyChanged ) {
 				this.internallyChanged = false;
 				return;
 			}
 
 			let lastUpdate:string = this.codeMirror.getValue();
-			if( lastUpdate === this.value ) return;
+			if ( lastUpdate === this.value ) return;
 
 			this.value = lastUpdate;
 			this.lastUpdates.push( lastUpdate );
@@ -122,7 +122,7 @@ export class Class {
 		}
 
 		if ( "value" in changeRecord ) {
-			if( this.lastUpdates.length > 0 && this.lastUpdates[ 0 ] === changeRecord.value.currentValue ) {
+			if ( this.lastUpdates.length > 0 && this.lastUpdates[ 0 ] === changeRecord.value.currentValue ) {
 				this.lastUpdates.shift();
 			} else {
 				this.internallyChanged = true;
@@ -136,19 +136,19 @@ export class Class {
 	private normalizeTabs( value:string ):string {
 		let lines:string[] = value.split( /\n/gm );
 
-		if( ! lines[ 0 ].trim() ) lines.shift();
-		if( ! lines[ lines.length - 1 ].trim() ) lines.pop();
+		if ( ! lines[ 0 ].trim() ) lines.shift();
+		if ( ! lines[ lines.length - 1 ].trim() ) lines.pop();
 
-		let containsSomething:boolean = lines.reduce( ( previous, line ) => previous || !! line.trim(), false );
-		if( ! containsSomething ) return "";
+		let containsSomething:boolean = lines.reduce( ( previous, line ) => previous || ! ! line.trim(), false );
+		if ( ! containsSomething ) return "";
 
 		let tabs:boolean = null;
 		let extraIndentation:number = null;
-		for( let line of lines ) {
-			if( ! line.trim() ) continue;
-			if( tabs === null ) tabs = line.startsWith( "\t" );
+		for ( let line of lines ) {
+			if ( ! line.trim() ) continue;
+			if ( tabs === null ) tabs = line.startsWith( "\t" );
 			let indentation:number = this.getIndentation( line, tabs );
-			if( extraIndentation === null || extraIndentation > indentation ) extraIndentation = indentation;
+			if ( extraIndentation === null || extraIndentation > indentation ) extraIndentation = indentation;
 		}
 
 		this.removeIndentation( lines, extraIndentation, tabs );
@@ -158,16 +158,16 @@ export class Class {
 
 	private getIndentation( line:string, tabs:boolean = true ):number {
 		let indentationChar:string = tabs ? "\t" : " ";
-		for( var i:number = 0, length = line.length; i < length; i++ ) {
-			if( line.charAt( i ) !== indentationChar ) break;
+		for ( var i:number = 0, length = line.length; i < length; i ++ ) {
+			if ( line.charAt( i ) !== indentationChar ) break;
 		}
 		return i;
 	}
 
 	private removeIndentation( lines:string[], indentation:number, tabs:boolean = true ):string[] {
-		for( let i:number = 0, length = lines.length; i < length; i++ ) {
+		for ( let i:number = 0, length = lines.length; i < length; i ++ ) {
 			let line:string = lines[ i ];
-			if( ! line.trim() ) continue;
+			if ( ! line.trim() ) continue;
 			lines[ i ] = line.substring( indentation );
 		}
 		return lines;

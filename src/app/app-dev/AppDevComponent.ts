@@ -1,5 +1,5 @@
-import {Component, ElementRef } from "angular2/core";
-import {RouteConfig, RouterOutlet} from "angular2/router";
+import { Component, ElementRef } from "angular2/core";
+import { RouteConfig, RouterOutlet } from "angular2/router";
 
 import { Authenticated } from "angular2-carbonldp/decorators";
 

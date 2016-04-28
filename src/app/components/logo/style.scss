@@ -25,8 +25,12 @@ $cHoleRadius: 0.3em;
 @mixin rotateElectrons( $number, $radius, $speed, $direction: "normal" ) {
 	@for $i from 1 through $number {
 		@keyframes rotate#{$i}of#{$number} {
-			0% { transform: rotateZ((360deg/$number) * ($i - 1)) translateX($radius); }
-			100% { transform: rotateZ(360deg + (360deg/$number) * ($i - 1)) translateX($radius); }
+			0% {
+				transform: rotateZ((360deg/$number) * ($i - 1)) translateX($radius);
+			}
+			100% {
+				transform: rotateZ(360deg + (360deg/$number) * ($i - 1)) translateX($radius);
+			}
 		}
 
 		&:nth-child(#{$i}) {
@@ -56,18 +60,18 @@ carbon-logo {
 	.outer {
 		position: relative;
 
-		@include circle( $outerOrbitRadius );
+		@include circle($outerOrbitRadius);
 		border-color: $outerOrbitColor;
 
 		> .electron {
 			top: $outerOrbitRadius - $orbitWidth - $electronRadius - $electronBorderWidth;
 			left: $outerOrbitRadius - $orbitWidth - $electronRadius - $electronBorderWidth;
-			@include rotateElectrons( 4, $outerOrbitRadius - $electronRadius, 4s, "reverse" );
+			@include rotateElectrons(4, $outerOrbitRadius - $electronRadius, 4s, "reverse");
 		}
 	}
 
 	.inner {
-		@include circle( $innerOrbitRadius );
+		@include circle($innerOrbitRadius);
 
 		position: absolute;
 		top: $outerOrbitRadius - $orbitWidth - $innerOrbitRadius;
@@ -78,12 +82,12 @@ carbon-logo {
 		> .electron {
 			top: $innerOrbitRadius - $electronRadius - $orbitWidth - $electronBorderWidth;
 			left: $innerOrbitRadius - $electronRadius - $orbitWidth - $electronBorderWidth;
-			@include rotateElectrons( 2, $innerOrbitRadius - $electronRadius, 4s );
+			@include rotateElectrons(2, $innerOrbitRadius - $electronRadius, 4s);
 		}
 	}
 
 	.electron {
-		@include circle( $electronRadius );
+		@include circle($electronRadius);
 		position: absolute;
 		background: $electronColor;
 		border: $electronBorderWidth $backgroundColor solid;
@@ -94,7 +98,7 @@ carbon-logo {
 		top: $outerOrbitRadius - $cHoleRadius - $electronRadius;
 		left: ($outerOrbitRadius*2) - $cHoleRadius - ($electronRadius*2) + 0.0045em;
 
-		@include circle( $electronRadius );
+		@include circle($electronRadius);
 		border: $cHoleRadius $backgroundColor solid;
 	}
 	.arbon {
@@ -107,7 +111,7 @@ carbon-logo {
 
 		color: #fff;
 
-		font-family: Century Gothic,CenturyGothic,AppleGothic,sans-serif;
+		font-family: Century Gothic, CenturyGothic, AppleGothic, sans-serif;
 		font-weight: bold;
 	}
 }

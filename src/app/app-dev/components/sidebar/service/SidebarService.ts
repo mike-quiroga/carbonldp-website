@@ -1,7 +1,7 @@
 import { Injectable, EventEmitter } from "angular2/core";
 
-import App from "app/app-dev/my-apps/app/App"
-import SidebarItem from "./../SidebarItem"
+import App from "app/app-dev/my-apps/app/App";
+import SidebarItem from "./../SidebarItem";
 
 @Injectable()
 export default class SidebarService {
@@ -15,13 +15,13 @@ export default class SidebarService {
 	constructor() { }
 
 	addItem( name:string, url?:string, icon?:string ):void {
-		let item = new SidebarItem();
+		let item:SidebarItem = new SidebarItem();
 		item.name = name;
 		item.url = url ? url : null;
 		item.icon = icon ? icon : null;
 	}
 
-	addApp( app:App ) {
+	addApp( app:App ):void {
 		this.addAppEmitter.emit( app );
 	}
 

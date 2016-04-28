@@ -21,6 +21,7 @@ import AppComponent from "app/AppComponent";
 import { BLOG_PROVIDERS } from "app/website/blog/Blog";
 import { APP_DEV_PROVIDERS } from "app/app-dev/AppDev";
 
+import { Angulartics2 } from "angulartics2";
 
 let carbon:Carbon = new Carbon();
 carbon.setSetting( "domain", "<%- carbon.domain %>" );
@@ -31,13 +32,14 @@ providers = providers
 	.concat( CARBON_PROVIDERS )
 	.concat( CARBON_SERVICES_PROVIDERS );
 
-if( "<%- debug %>" === "false" ) enableProdMode();
+if ( "<%- angular.debug %>" === "false" ) enableProdMode();
 
 bootstrap( AppComponent, [
 	FORM_PROVIDERS,
 	ROUTER_PROVIDERS,
 	HTTP_PROVIDERS,
 	Title,
+	Angulartics2,
 
 	provide( APP_BASE_HREF, {useValue: "<%- url.base %>"} ),
 

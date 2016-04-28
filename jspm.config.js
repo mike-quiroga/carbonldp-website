@@ -9,7 +9,8 @@ SystemJS.config({
     "carbonldp/": "src/../../CarbonLDP-JS-SDK/dist/",
     "angular2-carbonldp/": "src/../../angular2-carbonldp/dist/",
     "semantic-ui/": "src/semantic/dist/",
-    "app/": "src/app/"
+    "app/": "src/app/",
+    "angulartics2": "angulartics2"
   },
   packages: {
     "app": {
@@ -33,6 +34,9 @@ SystemJS.config({
     },
     "semantic-ui": {
       "defaultExtension": "js"
+    },
+    "angulartics2": {
+      "defaultExtension": "js"
     }
   },
   map: {
@@ -47,6 +51,7 @@ SystemJS.config({
     "npm:*.json"
   ],
   map: {
+    "angulartics2": "npm:angulartics2@1.0.1",
     "highlight.js": "npm:highlight.js@9.3.0",
     "clean-css": "npm:clean-css@3.4.10",
     "codemirror": "npm:codemirror@5.12.0",
