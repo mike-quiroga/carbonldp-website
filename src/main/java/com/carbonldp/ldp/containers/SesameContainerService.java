@@ -202,19 +202,22 @@ public class SesameContainerService extends AbstractSesameLDPService implements 
 		RDFSource memberSource = sources.iterator().next();
 		container.getBaseModel().addAll( memberSource.getBaseModel() );
 
+		RDFBlankNode responseDescription = getResponseDescription( container );
+
+		for ( RDFSource source : sources ) {
+			ResponseMetaDataFactory.getInstance().create( container, responseDescription, source );
+		}
+		return container;
+	}
+
+	private RDFBlankNode getResponseDescription( Container container ) {
 		ValueFactory valueFactory = SimpleValueFactory.getInstance();
 
 		BNode bNode = valueFactory.createBNode();
-		RDFBlankNode retrieveDescription = new RDFBlankNode( container.getDocument(), bNode, null );
-		retrieveDescription.add( RDFSourceDescription.Property.TYPE.getIRI(), ResponseDescriptionDescription.Resource.CLASS.getIRI() );
-		retrieveDescription.add( RDFSourceDescription.Property.TYPE.getIRI(), RDFResourceDescription.Resource.VOLATILE.getIRI() );
-
-		for ( RDFSource source : sources ) {
-			int eTag = ModelUtil.calculateETag( source );
-			String valueETag = HTTPUtil.formatStrongEtag( eTag );
-			ResponsePropertyFactory.getInstance().create( container, retrieveDescription, source.getIRI(), valueETag );
-		}
-		return container;
+		RDFBlankNode responseDescription = new RDFBlankNode( container.getDocument(), bNode, null );
+		responseDescription.add( RDFSourceDescription.Property.TYPE.getIRI(), ResponseDescriptionDescription.Resource.CLASS.getIRI() );
+		responseDescription.add( RDFSourceDescription.Property.TYPE.getIRI(), RDFResourceDescription.Resource.VOLATILE.getIRI() );
+		return responseDescription;
 	}
 
 	@Override

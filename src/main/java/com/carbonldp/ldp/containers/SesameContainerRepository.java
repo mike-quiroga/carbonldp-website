@@ -24,15 +24,14 @@ import com.carbonldp.sparql.SecuredRepositoryTemplate;
 import com.carbonldp.utils.RDFNodeUtil;
 import com.carbonldp.utils.SPARQLUtil;
 import com.carbonldp.utils.ValueUtil;
-import com.sun.org.apache.bcel.internal.generic.NEW;
 import org.joda.time.DateTime;
 import org.openrdf.model.*;
 import org.openrdf.model.impl.SimpleValueFactory;
-import org.openrdf.query.TupleQueryResult;
-import org.openrdf.repository.RepositoryResult;
 import org.openrdf.spring.SesameConnectionFactory;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
+
+import static com.carbonldp.namespaces.XSD.Properties.STRING;
 
 import java.io.File;
 import java.util.*;
@@ -315,7 +314,6 @@ public class SesameContainerRepository extends AbstractSesameLDPRepository imple
 		StringBuilder orderByString = new StringBuilder();
 		StringBuilder numericValues = new StringBuilder();
 		query.append( NEW_LINE )
-		     .append( "PREFIX xsd:  <http://www.w3.org/2001/XMLSchema#>" ).append( NEW_LINE )
 		     .append( "SELECT DISTINCT ?subject" ).append( NEW_LINE )
 		     .append( "WHERE {" ).append( NEW_LINE )
 		     .append( TAB ).append( SPARQLUtil.assignVar( "predicate", predicateEnum ) ).append( NEW_LINE )
@@ -341,7 +339,7 @@ public class SesameContainerRepository extends AbstractSesameLDPRepository imple
 						filter.append( TAB ).append( TAB ).append( "(datatype(?value" ).append( i ).append( ") = ?numeric)" ).append( NEW_LINE );
 						hasFilter = true;
 					} else {
-						if ( ! literalType.equals( "xsd:string" ) || lang == null ) {
+						if ( ! literalType.equals( "<" + STRING + ">" ) || lang == null ) {
 							filter.append( TAB ).append( TAB ).append( "(datatype(?value" ).append( i ).append( ") = " ).append( literalType ).append( ")" ).append( NEW_LINE );
 							hasFilter = true;
 						}
