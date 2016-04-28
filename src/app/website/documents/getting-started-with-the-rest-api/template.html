@@ -891,10 +891,6 @@
 
 						<h2 class="ui header">Create application resources</h2>
 
-						<p>
-							<em>TO DO: DOCUMENT INTRO TO THIS SECTION</em>
-						</p>
-
 						<section>
 							<h3 class="ui header">Create the schemes/ container</h3>
 
@@ -2105,21 +2101,20 @@
 								</tbody>
 							</table>
 
-							<pre highlight class="turtle"><code>
+							<pre highlight class="turtle">
 								@prefix c:&#60;https://carbonldp.com/ns/v1/platform#&#62;.
 
 								_:b0
 									a c:AddMemberAction;
 									c:targetMember &#60;/apps/taxonomy-hub/roles/editor/&#62;.
-							</code></pre>
+							</pre>
 
 							<p>A successful PUT should result in HTTP status 200 OK.</p>
 
-							<p>If you inspect, the app-admin/ container, you should the child role specified as follows:</p>
+							<p>If you inspect, the app-admin/ container, you should see the child role specified as follows:</p>
 
-							<p><code>&lt;https://local.carbonldp.com/apps/taxonomy-hub/roles/app-admin/&gt; &lt;https://carbonldp.com/ns/v1/security#childRole&gt; &lt;https://local.carbonldp.com/apps/taxonomy-hub/roles/editor/&gt;
-								;
-							</code></p>
+							<p><code>&lt;https://local.carbonldp.com/apps/taxonomy-hub/roles/app-admin/&gt; &lt;https://carbonldp.com/ns/v1/security#childRole&gt; &lt;https://local.carbonldp.com/apps/taxonomy-hub/roles/editor/&gt;</code>
+							</p>
 
 							<h4>Put the user role into the role hierarchy</h4>
 

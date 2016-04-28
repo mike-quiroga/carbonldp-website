@@ -1,6 +1,6 @@
-import {Component} from "angular2/core";
-import {CORE_DIRECTIVES} from "angular2/common";
-import {ROUTER_DIRECTIVES, RouteConfig, RouterOutlet} from "angular2/router";
+import { Component } from "angular2/core";
+import { CORE_DIRECTIVES } from "angular2/common";
+import { ROUTER_DIRECTIVES, RouteConfig, RouterOutlet } from "angular2/router";
 
 
 import AppDetailView from "./../app/AppDetailView";

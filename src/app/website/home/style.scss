@@ -7,20 +7,16 @@ home {
 		}
 	}
 
-	.ui.menu > .right.item > .button {
-		margin-left: 0.5em;
+	a {
+		line-height: 70px;
 	}
 
-	> .ui.segment:last-child {
-		padding: 3em 0;
+	.ui.centered.image {
+		margin-top: 30px;
+	}
 
-		h2 {
-			margin-bottom: 2em;
-		}
-
-		.ui.action.input {
-			margin-bottom: 1em;
-		}
+	.ui.menu > .right.item > .button {
+		margin-left: 0.5em;
 	}
 
 	.splash-bg {
@@ -38,10 +34,52 @@ home {
 		padding: 6em 0;
 
 		h2 {
-			font-size: 2em;
-		}
-		p {
 			font-size: 1.3em;
 		}
+		p {
+			font-size: .95em;
+			text-align: justify;
+			padding-top: 20px;
+			padding-bottom: 20px;
+		}
 	}
+
+	.text.container > a:hover {
+		font-weight: bold;
+		text-shadow: white;
+	}
+
+	#standards {
+		padding-top: 40px;
+		h2 {
+			font-size: 1.1em;
+			padding: 0;
+		}
+		p {
+			font-size: .85em;
+			text-align: justify;
+			padding: 10px;
+		}
+	}
+
+	#articles {
+		padding-bottom: 20px;
+		> .ui > .row > .column {
+			padding-left: 50px;
+			padding-right: 50px;
+		}
+	}
+
+	.ui.accordion img {
+		height: 30px;
+		width: 150px;
+		display: inline-block;
+		float: right;
+		vertical-align: middle;
+	}
+
+	.ui.accordion .title:not(.ui) {
+		font-size: .9em;
+	}
+
 }

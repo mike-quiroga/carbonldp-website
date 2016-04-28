@@ -1,7 +1,6 @@
 import { Injectable, EventEmitter } from "angular2/core";
 
-import App from "app/app-dev/my-apps/app/App";
-import {Message} from "./../ErrorsAreaComponent";
+import { Message } from "./../ErrorsAreaComponent";
 
 @Injectable()
 export default class ErrorsAreaService {

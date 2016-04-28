@@ -1,6 +1,6 @@
-import {Component, ElementRef} from "angular2/core";
-import {CORE_DIRECTIVES, FormBuilder, ControlGroup, AbstractControl, Control, Validators} from "angular2/common";
-import {Router, ROUTER_DIRECTIVES} from "angular2/router";
+import { Component, ElementRef } from "angular2/core";
+import { CORE_DIRECTIVES, FormBuilder, ControlGroup, AbstractControl, Control, Validators } from "angular2/common";
+import { Router, ROUTER_DIRECTIVES } from "angular2/router";
 
 import Carbon from "carbonldp/Carbon";
 import * as CarbonApp from "carbonldp/App";
@@ -184,7 +184,7 @@ export default class CreateAppView {
 		if ( slug.value.match( /^[a-z0-9]+(?:-[a-z0-9]*)*(?:\/*)$/ ) ) {
 			return null;
 		}
-		return {"invalidSlug": true};
+		return { "invalidSlug": true };
 	}
 
 	closeMessage( evt:Event ):void {

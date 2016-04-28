@@ -1,4 +1,4 @@
-import { Component } from "angular2/core";
+import { Component, ElementRef } from "angular2/core";
 import { CORE_DIRECTIVES } from "angular2/common";
 import { ROUTER_DIRECTIVES, Location, RouteConfig, RouterLink, Router } from "angular2/router";
 
@@ -10,7 +10,7 @@ import LoginView from "app/website/auth/login/LoginView";
 
 import BlogView from "app/website/blog/BlogView";
 import BlogPostView from "app/website/blog/blog-post/BlogPostView";
-
+import SignupThanksView from "./signup-thanks/SignupThanksView";
 
 import SPARQLClientComponent from "app/components/sparql-client/SPARQLClientComponent";
 import UIExamplesView from "app/website/ui-examples/UIExamplesView";
@@ -28,18 +28,31 @@ import "./style.css!";
 	directives: [ CORE_DIRECTIVES, ROUTER_DIRECTIVES, HeaderComponent, FooterComponent ]
 } )
 @RouteConfig( [
-	{path: "", as: "Home", component: HomeView, useAsDefault: true},
+	{ path: "", as: "Home", component: HomeView, useAsDefault: true },
 
-	{path: "login", as: "Login", component: LoginView},
+	{ path: "login", as: "Login", component: LoginView },
 
-	{path: "blog", as: "Blog", component: BlogView},
-	{path: "blog/posts/:id", as: "BlogPost", component: BlogPostView},
+	{ path: "blog", as: "Blog", component: BlogView },
+	{ path: "blog/posts/:id", as: "BlogPost", component: BlogPostView },
 
-	{path: "documents/...", as: "Documents", component: DocumentsComponent},
+	{ path: "documents/...", as: "Documents", component: DocumentsComponent },
 
-	{path: "sparql-client", as: "SPARQLClient", component: SPARQLClientComponent},
-	{path: "ui-examples", as: "UIExamples", component: UIExamplesView},
+	{ path: "sparql-client", as: "SPARQLClient", component: SPARQLClientComponent },
+	{ path: "ui-examples", as: "UIExamples", component: UIExamplesView },
+	{ path: "signup-thanks", as: "SignupThanks", component: SignupThanksView },
 ] )
+
 export default class WebsiteView {
+	element:ElementRef;
+	$element:JQuery;
+
+	constructor( router:Router, element:ElementRef ) {
+		this.element = element;
+	}
+
+	ngAfterViewInit():void {
+		this.$element = $( this.element.nativeElement );
+	}
+
 
 }
