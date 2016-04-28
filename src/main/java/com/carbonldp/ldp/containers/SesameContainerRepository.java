@@ -1,6 +1,8 @@
 package com.carbonldp.ldp.containers;
 
 import com.carbonldp.descriptions.APIPreferences.ContainerRetrievalPreference;
+import com.carbonldp.http.OrderBy;
+import com.carbonldp.http.OrderByRetrievalPreferences;
 import com.carbonldp.ldp.AbstractSesameLDPRepository;
 import com.carbonldp.ldp.containers.ContainerDescription.Type;
 import com.carbonldp.ldp.nonrdf.RDFRepresentation;
@@ -9,18 +11,27 @@ import com.carbonldp.ldp.nonrdf.RDFRepresentationRepository;
 import com.carbonldp.ldp.sources.RDFSource;
 import com.carbonldp.ldp.sources.RDFSourceDescription;
 import com.carbonldp.ldp.sources.RDFSourceRepository;
+import com.carbonldp.namespaces.XSD;
 import com.carbonldp.rdf.RDFDocumentRepository;
+import com.carbonldp.rdf.RDFNodeEnum;
 import com.carbonldp.rdf.RDFResourceRepository;
 import com.carbonldp.repository.DocumentGraphQueryResultHandler;
 import com.carbonldp.repository.GraphQueryResultHandler;
+import com.carbonldp.sparql.InMemoryTupleQueryResult;
+import com.carbonldp.sparql.SPARQLResult;
+import com.carbonldp.sparql.SPARQLTupleResult;
+import com.carbonldp.sparql.SecuredRepositoryTemplate;
 import com.carbonldp.utils.RDFNodeUtil;
+import com.carbonldp.utils.SPARQLUtil;
+import com.carbonldp.utils.ValueUtil;
 import org.joda.time.DateTime;
-import org.openrdf.model.IRI;
-import org.openrdf.model.Statement;
-import org.openrdf.model.Value;
+import org.openrdf.model.*;
+import org.openrdf.model.impl.SimpleValueFactory;
 import org.openrdf.spring.SesameConnectionFactory;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
+
+import static com.carbonldp.namespaces.XSD.Properties.STRING;
 
 import java.io.File;
 import java.util.*;
@@ -257,6 +268,158 @@ public class SesameContainerRepository extends AbstractSesameLDPRepository imple
 			if ( service.supports( containerType ) ) return service;
 		}
 		throw new IllegalArgumentException( "The containerType provided isn't supported" );
+	}
+
+	@Override
+	public Set<IRI> getContainmentIRIs( IRI targetIRI, OrderByRetrievalPreferences orderByRetrievalPreferences ) {
+		String queryString = createGetSubjectsWithPreferencesQuery( targetIRI, ContainerDescription.Property.CONTAINS, orderByRetrievalPreferences );
+		return executeGetSubjectsWithPreferencesQuery( queryString );
+	}
+
+	@Override
+	public Set<IRI> getContainmentIRIs( IRI targetIRI ) {
+		return connectionTemplate.read( connection -> {
+			Set<IRI> childrenIRIs = new HashSet<>();
+			IRI[] containsIRIs = ContainerDescription.Property.CONTAINS.getIRIs();
+			for ( IRI containsIRI : containsIRIs ) {
+				childrenIRIs.addAll( resourceRepository.getIRIs( targetIRI, containsIRI ) );
+			}
+			return childrenIRIs;
+		} );
+	}
+
+	@Override
+	public Set<IRI> getMemberIRIs( IRI targetIRI, OrderByRetrievalPreferences orderByRetrievalPreferences ) {
+		TypedContainerRepository repositoryType = getTypedRepository( getContainerType( targetIRI ) );
+		IRI membershipResource = repositoryType.getMembershipResource( targetIRI );
+		IRI hasMemberRelation = repositoryType.getHasMemberRelation( targetIRI );
+
+		String queryString = createGetSubjectsWithPreferencesQuery( membershipResource, hasMemberRelation, orderByRetrievalPreferences );
+		return executeGetSubjectsWithPreferencesQuery( queryString );
+
+	}
+
+	@Override
+	public Set<IRI> getMemberIRIs( IRI targetIRI ) {
+		TypedContainerRepository repositoryType = getTypedRepository( getContainerType( targetIRI ) );
+		IRI membershipResource = repositoryType.getMembershipResource( targetIRI );
+		IRI hasMemberRelation = repositoryType.getHasMemberRelation( targetIRI );
+
+		return resourceRepository.getIRIs( membershipResource, hasMemberRelation );
+	}
+
+	public String createGetSubjectsWithPreferencesQuery( IRI targetIRI, Collection<IRI> predicateEnum, OrderByRetrievalPreferences orderByRetrievalPreferences ) {
+		StringBuilder query = new StringBuilder();
+		StringBuilder filter = new StringBuilder();
+		StringBuilder orderByString = new StringBuilder();
+		StringBuilder numericValues = new StringBuilder();
+		query.append( NEW_LINE )
+		     .append( "SELECT DISTINCT ?subject" ).append( NEW_LINE )
+		     .append( "WHERE {" ).append( NEW_LINE )
+		     .append( TAB ).append( SPARQLUtil.assignVar( "predicate", predicateEnum ) ).append( NEW_LINE )
+		     .append( TAB ).append( "<" ).append( targetIRI.stringValue() ).append( "> ?predicate ?subject ." ).append( NEW_LINE )
+		     .append( TAB ).append( SPARQLUtil.assignVar( "a", RDFSourceDescription.Property.TYPE ) ).append( NEW_LINE )
+		     .append( TAB ).append( "?subject ?a ?object ." ).append( NEW_LINE );
+		filter.append( TAB ).append( "FILTER ( " ).append( NEW_LINE );
+		orderByString.append( "ORDER BY" );
+		boolean hasFilter = false;
+		List<OrderBy> orderByList = orderByRetrievalPreferences.getOrderByList();
+		if ( orderByList != null && ( ! orderByList.isEmpty() ) ) {
+			int i = 1;
+			for ( OrderBy orderBy : orderByList ) {
+				String property = orderBy.getProperty();
+				query.append( TAB ).append( "?subject " ).append( property ).append( " ?value" ).append( i ).append( "." ).append( NEW_LINE );
+				String literalType = orderBy.getLiteralType();
+				String lang = orderBy.getLanguage();
+				if ( literalType != null ) {
+					if ( hasFilter ) filter.append( "&&" ).append( NEW_LINE );
+
+					if ( literalType.equals( "numeric" ) ) {
+						if ( numericValues.length() == 0 ) numericValues.append( SPARQLUtil.assignVar( "numeric", getNumericValues() ) ).append( NEW_LINE );
+						filter.append( TAB ).append( TAB ).append( "(datatype(?value" ).append( i ).append( ") = ?numeric)" ).append( NEW_LINE );
+						hasFilter = true;
+					} else {
+						if ( ! literalType.equals( "<" + STRING + ">" ) || lang == null ) {
+							filter.append( TAB ).append( TAB ).append( "(datatype(?value" ).append( i ).append( ") = " ).append( literalType ).append( ")" ).append( NEW_LINE );
+							hasFilter = true;
+						}
+					}
+				}
+				if ( lang != null ) {
+					if ( hasFilter ) filter.append( "&&" ).append( NEW_LINE );
+					filter.append( TAB ).append( TAB ).append( "(langMatches( lang( ?value" ).append( i ).append( ") , \"" ).append( lang ).append( "\") )" ).append( NEW_LINE );
+					hasFilter = true;
+				}
+				if ( ! orderBy.isAscending() ) {
+					orderByString.append( " DESC( ?value" ).append( i ).append( ")" );
+				} else {
+					orderByString.append( " ?value" ).append( i );
+				}
+				i++;
+			}
+		} else {
+			orderByString.append( " ?subject" );
+		}
+		if ( hasFilter ) {
+			filter.append( TAB ).append( ")" ).append( NEW_LINE );
+			query.append( numericValues );
+			query.append( filter );
+		}
+		query.append( "}" ).append( NEW_LINE );
+		query.append( orderByString ).append( NEW_LINE );
+		String limitString = orderByRetrievalPreferences.getLimit();
+		if ( limitString != null )
+			query.append( "LIMIT " ).append( limitString ).append( NEW_LINE );
+
+		String offsetString = orderByRetrievalPreferences.getOffset();
+		if ( offsetString != null )
+			query.append( "OFFSET " ).append( offsetString ).append( NEW_LINE );
+
+		return query.toString();
+	}
+
+	private String createGetSubjectsWithPreferencesQuery( IRI targetIRI, RDFNodeEnum predicateEnum, OrderByRetrievalPreferences orderByRetrievalPreferences ) {
+		return createGetSubjectsWithPreferencesQuery( targetIRI, Arrays.asList( predicateEnum.getIRIs() ), orderByRetrievalPreferences );
+	}
+
+	private String createGetSubjectsWithPreferencesQuery( IRI targetIRI, IRI predicateIRI, OrderByRetrievalPreferences orderByRetrievalPreferences ) {
+		return createGetSubjectsWithPreferencesQuery( targetIRI, Arrays.asList( predicateIRI ), orderByRetrievalPreferences );
+	}
+
+	private Set<IRI> getNumericValues() {
+		ValueFactory valueFactory = SimpleValueFactory.getInstance();
+		Set<IRI> numericValues = new HashSet<>();
+
+		numericValues.add( valueFactory.createIRI( XSD.Properties.BYTE ) );
+		numericValues.add( valueFactory.createIRI( XSD.Properties.DECIMAL ) );
+		numericValues.add( valueFactory.createIRI( XSD.Properties.INT ) );
+		numericValues.add( valueFactory.createIRI( XSD.Properties.INTEGER ) );
+		numericValues.add( valueFactory.createIRI( XSD.Properties.LONG ) );
+		numericValues.add( valueFactory.createIRI( XSD.Properties.NEGATIVEINTEGER ) );
+		numericValues.add( valueFactory.createIRI( XSD.Properties.NONNEGATIVEINTEGER ) );
+		numericValues.add( valueFactory.createIRI( XSD.Properties.NONPOSITIVEINTEGER ) );
+		numericValues.add( valueFactory.createIRI( XSD.Properties.POSITIVEINTEGER ) );
+		numericValues.add( valueFactory.createIRI( XSD.Properties.SHORT ) );
+		numericValues.add( valueFactory.createIRI( XSD.Properties.UNSIGNEDLONG ) );
+		numericValues.add( valueFactory.createIRI( XSD.Properties.UNSIGNEDINT ) );
+		numericValues.add( valueFactory.createIRI( XSD.Properties.UNSIGNEDSHORT ) );
+		numericValues.add( valueFactory.createIRI( XSD.Properties.UNSIGNEDBYTE ) );
+		numericValues.add( valueFactory.createIRI( XSD.Properties.DOUBLE ) );
+		numericValues.add( valueFactory.createIRI( XSD.Properties.FLOAT ) );
+
+		return numericValues;
+	}
+
+	private Set<IRI> executeGetSubjectsWithPreferencesQuery( String queryString ) {
+		return sparqlTemplate.executeTupleQuery( queryString, result -> {
+			Set<IRI> childrenIRIs = new HashSet<>();
+			while ( result.hasNext() ) {
+				Value childValue = result.next().getBinding( "subject" ).getValue();
+				if ( ! ValueUtil.isIRI( childValue ) ) throw new IllegalStateException( "child is not a IRI" );
+				childrenIRIs.add( ValueUtil.getIRI( childValue ) );
+			}
+			return childrenIRIs;
+		} );
 	}
 
 }

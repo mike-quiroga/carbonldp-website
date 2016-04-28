@@ -5,25 +5,30 @@ import com.carbonldp.exceptions.InvalidRDFTypeException;
 import com.carbonldp.exceptions.InvalidResourceException;
 import com.carbonldp.exceptions.ResourceAlreadyExistsException;
 import com.carbonldp.exceptions.ResourceDoesntExistException;
+import com.carbonldp.http.OrderByRetrievalPreferences;
 import com.carbonldp.ldp.AbstractSesameLDPService;
 import com.carbonldp.ldp.sources.RDFSource;
+import com.carbonldp.ldp.sources.RDFSourceDescription;
 import com.carbonldp.ldp.sources.RDFSourceService;
 import com.carbonldp.models.Infraction;
+import com.carbonldp.rdf.RDFBlankNode;
 import com.carbonldp.rdf.RDFDocumentFactory;
 import com.carbonldp.rdf.RDFResource;
+import com.carbonldp.rdf.RDFResourceDescription;
 import com.carbonldp.spring.ServicesInvoker;
 import com.carbonldp.utils.HTTPUtil;
 import com.carbonldp.utils.ModelUtil;
-import com.carbonldp.utils.ValueUtil;
 import org.joda.time.DateTime;
+import org.openrdf.model.BNode;
 import org.openrdf.model.IRI;
 import org.openrdf.model.Statement;
+import org.openrdf.model.ValueFactory;
+import org.openrdf.model.impl.SimpleValueFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.File;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 public class SesameContainerService extends AbstractSesameLDPService implements ContainerService {
 
@@ -31,7 +36,7 @@ public class SesameContainerService extends AbstractSesameLDPService implements 
 	private RDFSourceService sourceService;
 
 	@Override
-	public Container get( IRI containerIRI, Set<APIPreferences.ContainerRetrievalPreference> containerRetrievalPreferences ) {
+	public Container get( IRI containerIRI, Set<APIPreferences.ContainerRetrievalPreference> containerRetrievalPreferences, OrderByRetrievalPreferences orderByRetrievalPreferences ) {
 		ContainerDescription.Type containerType = getContainerType( containerIRI );
 		if ( containerType == null ) throw new InvalidRDFTypeException( ContainerDescription.Resource.CLASS.getIRI().stringValue() );
 
@@ -45,9 +50,9 @@ public class SesameContainerService extends AbstractSesameLDPService implements 
 					container.getBaseModel().addAll( containerRepository.getContainmentTriples( containerIRI ) );
 					break;
 				case CONTAINED_RESOURCES:
-					Set<IRI> children = getObjectIRIs( containerRepository.getContainmentTriples( containerIRI ) );
+					Set<IRI> children = containerRepository.getContainmentIRIs( containerIRI, orderByRetrievalPreferences );
 					if ( containerRetrievalPreferences.contains( APIPreferences.ContainerRetrievalPreference.MEMBER_RESOURCES ) ) {
-						Set<IRI> members = getObjectIRIs( getMembershipTriples( containerIRI ) );
+						Set<IRI> members = containerRepository.getMemberIRIs( containerIRI, orderByRetrievalPreferences );
 						children.addAll( members );
 					}
 					container = getResources( children, container );
@@ -64,7 +69,7 @@ public class SesameContainerService extends AbstractSesameLDPService implements 
 					break;
 				case MEMBER_RESOURCES:
 					if ( containerRetrievalPreferences.contains( APIPreferences.ContainerRetrievalPreference.CONTAINED_RESOURCES ) ) break;
-					Set<IRI> members = getObjectIRIs( getMembershipTriples( containerIRI ) );
+					Set<IRI> members = containerRepository.getMemberIRIs( containerIRI, orderByRetrievalPreferences );
 					container = getResources( members, container );
 					break;
 				case NON_READABLE_MEMBERSHIP_RESOURCE_TRIPLES:
@@ -197,21 +202,22 @@ public class SesameContainerService extends AbstractSesameLDPService implements 
 		RDFSource memberSource = sources.iterator().next();
 		container.getBaseModel().addAll( memberSource.getBaseModel() );
 
+		RDFBlankNode responseDescription = getResponseDescription( container );
+
 		for ( RDFSource source : sources ) {
-			int eTag = ModelUtil.calculateETag( source );
-			String valueETag = HTTPUtil.formatStrongEtag( eTag );
-			ResponsePropertyFactory.getInstance().create( container, source.getIRI(), valueETag );
+			ResponseMetaDataFactory.getInstance().create( container, responseDescription, source );
 		}
 		return container;
 	}
 
-	private Set<IRI> getObjectIRIs( Set<Statement> statements ) {
-		Set<IRI> iris = statements
-			.stream()
-			.map( statement -> ValueUtil.getIRI( statement.getObject() ) )
-			.collect( Collectors.toSet() );
+	private RDFBlankNode getResponseDescription( Container container ) {
+		ValueFactory valueFactory = SimpleValueFactory.getInstance();
 
-		return iris;
+		BNode bNode = valueFactory.createBNode();
+		RDFBlankNode responseDescription = new RDFBlankNode( container.getDocument(), bNode, null );
+		responseDescription.add( RDFSourceDescription.Property.TYPE.getIRI(), ResponseDescriptionDescription.Resource.CLASS.getIRI() );
+		responseDescription.add( RDFSourceDescription.Property.TYPE.getIRI(), RDFResourceDescription.Resource.VOLATILE.getIRI() );
+		return responseDescription;
 	}
 
 	@Override
