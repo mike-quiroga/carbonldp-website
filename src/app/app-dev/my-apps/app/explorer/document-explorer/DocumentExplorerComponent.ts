@@ -57,7 +57,7 @@ export default class DocumentExplorerComponent {
 	ngAfterViewInit():void {
 		console.log( "Explorer: %o", this.documentContext );
 		this.$element = $( this.element.nativeElement );
-		this.appTree = this.$element.find( ".app.treeview" );
+		this.appTree = this.$element.find( ".document.treeview" );
 		this.createTree();
 	}
 

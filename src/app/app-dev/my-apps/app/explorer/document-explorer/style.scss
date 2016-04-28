@@ -6,8 +6,15 @@ document-explorer {
 		max-height: 800px;
 
 		> .stretched.row {
+			border: 1px solid lightgray;
+			margin: 1%;
+			padding: 0;
+
 			> .column {
 				overflow-y: scroll;
+			}
+			> .treeview-container {
+				padding: 0;
 			}
 		}
 	}
