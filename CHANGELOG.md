@@ -1,3 +1,15 @@
+# 0.5.10 (April 28, 2016)
+- Add EditApp view and EditApp form component to AppDev.
+
+# 0.5.9 (April 14, 2016)
+- Add google analytics feature with angulartics2 plug in, and customized event tracking
+- Add newsletter component
+- Add routerOnActivate on all methods to set Title.
+- Create signup-thanks PageView
+- Fix styles in footer, header, home Components.
+- Hide routes not ready for Prod. in Header Component.
+- Add angulartics2 typings
+
 # 0.5.8 (April 14, 2016)
 - Add form to create a new App.
 - Change AppContextService functions get and getAll to use the new getContext and getAllContexts functions from the Carbon Javascript SDK.
