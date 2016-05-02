@@ -5,7 +5,7 @@
 				<div class="property item" *ngFor="#propertyName of getPropertyNames(rootNode); #i=index;">
 					<div class="content">
 						<p class="header">
-							{{getHeader(propertyName)}}
+							{{getDisplayName(propertyName)}}
 						</p>
 						<div class="meta">
 							<a *ngIf="isUrl(propertyName)" [attr.href]="propertyName" target="_blank">{{propertyName}}</a>

@@ -68,8 +68,12 @@ export default class JsonldViewerComponent {
 		}
 	}
 
-	getHeader( property:string ):string {
-		return (property === "@id" || property === "@type" ? property : this.getFragment( property ));
+	getDisplayName( uri:string ):string {
+		if ( uri === "@id" || uri === "@type" )
+			return uri;
+		if ( URI.Util.hasFragment( uri ) )
+			return this.getFragment( uri );
+		return URI.Util.getSlug( uri );
 	}
 
 	getProperties( document:RDFNode.Class ):Value[] {
