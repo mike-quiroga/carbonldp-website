@@ -1,6 +1,6 @@
-import {Component, ElementRef, Input, SimpleChange} from "angular2/core";
-import {CORE_DIRECTIVES, NgSwitch, NgSwitchWhen, NgSwitchDefault} from "angular2/common";
-import {Router} from "angular2/router";
+import { Component, ElementRef, Input, SimpleChange } from "angular2/core";
+import { CORE_DIRECTIVES, NgSwitch, NgSwitchWhen, NgSwitchDefault } from "angular2/common";
+import { Router } from "angular2/router";
 
 import $ from "jquery";
 import "semantic-ui/semantic";
@@ -19,7 +19,7 @@ import * as SDKContext from "carbonldp/SDKContext";
 import * as NS from "carbonldp/NS";
 import * as RDFDocument from "carbonldp/RDF/Document";
 import * as RDFNode from "carbonldp/RDF/RDFNode";
-import * as Value from "carbonldp/RDF/Value";
+import * as RDFValue from "carbonldp/RDF/Value";
 import * as Literal from "carbonldp/RDF/Literal";
 import * as List from "carbonldp/RDF/List";
 import * as URI from "carbonldp/RDF/URI";
@@ -27,14 +27,16 @@ import * as Utils from "carbonldp/Utils";
 
 import AppContextService from "./../../../../../AppContextService";
 import HighlightDirective from "./../../../../../../directives/HighlightDirective";
+import TableListComponent from "./../table-list/TableListComponent";
 
 import template from "./template.html!";
 import "./style.css!";
+import { ajaxGetJSON } from "rxjs/observable/dom/AjaxObservable";
 
 @Component( {
 	selector: "jsonld-viewer",
 	template: template,
-	directives: [ CORE_DIRECTIVES, NgSwitchDefault, HighlightDirective ],
+	directives: [ CORE_DIRECTIVES, NgSwitchDefault, HighlightDirective, TableListComponent ],
 } )
 
 export default class JsonldViewerComponent {
@@ -68,6 +70,17 @@ export default class JsonldViewerComponent {
 		}
 	}
 
+	generatebNodesMap():void {
+		let nodes:RDFNode.Class[] = this.document[ "@graph" ];
+		let bNodesDictionary:Map<string,RDFNode.Class> = new Map<string,RDFNode.Class>();
+		nodes.forEach(
+			( node:RDFNode.Class ) => {
+				bNodesDictionary.set( node[ "@id" ], node );
+			}
+		);
+		return bNodesDictionary;
+	}
+
 	getDisplayName( uri:string ):string {
 		if ( uri === "@id" || uri === "@type" )
 			return uri;
@@ -76,8 +89,8 @@ export default class JsonldViewerComponent {
 		return URI.Util.getSlug( uri );
 	}
 
-	getProperties( document:RDFNode.Class ):Value[] {
-		let properties:Value[] = [];
+	getProperties( document:RDFNode.Class ):RDFValue.Class[] {
+		let properties:RDFValue.Class[] = [];
 		for ( let property in document ) {
 			if ( ! document.hasOwnProperty( property ) ) continue;
 			let prop:Object = {};
@@ -108,11 +121,30 @@ export default class JsonldViewerComponent {
 	}
 
 	isUrl( uri:string ):boolean {
-		let regexp:RegExp = /(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)? (\/|\/([\w#!:.?+=&%@!\-\/]))?/;
-		return regexp.test( uri );
+		let r = /^(ftp|http|https):\/\/[^ "]+$/;
+		return r.test( 'http://hri.base22.com/ns#data' );
+	}
+
+	getTypeIcon( type:string ):string {
+		switch ( this.getDisplayName( type ) ) {
+			case "RDFSource":
+				return "file outline";
+			case "Container":
+				return "cubes";
+			case "BasicContainer":
+				return "cube";
+			default:
+				return "file excel outline";
+		}
+	}
+
+	getJson( obj:any ):string {
+		return JSON.stringify( obj, null, 2 );
 	}
 
 	initializeTabs():void {
-		if ( this.$element ) this.$element.find( ".tabular.menu .item" ).tab();
+		if ( ! this.$element )
+			this.$element = $( this.element.nativeElement );
+		this.$element.find( ".tabular.menu .item" ).tab();
 	}
 }
