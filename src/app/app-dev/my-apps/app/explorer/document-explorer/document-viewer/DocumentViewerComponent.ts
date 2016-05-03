@@ -34,12 +34,12 @@ import "./style.css!";
 import { ajaxGetJSON } from "rxjs/observable/dom/AjaxObservable";
 
 @Component( {
-	selector: "jsonld-viewer",
+	selector: "document-viewer",
 	template: template,
 	directives: [ CORE_DIRECTIVES, NgSwitchDefault, HighlightDirective, TableListComponent ],
 } )
 
-export default class JsonldViewerComponent {
+export default class DocumentViewerComponent {
 	router:Router;
 	element:ElementRef;
 	$element:JQuery;

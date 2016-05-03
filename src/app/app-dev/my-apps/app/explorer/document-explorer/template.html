@@ -1,15 +1,12 @@
 <div class="ui divided grid segment" [ngClass]="{loading:loadingDocument}">
 	<div class="stretched row">
 		<div class="five wide column treeview-container">
-			<div class="document treeview">
-				<ul>
-				</ul>
-			</div>
+			<document-treeview [documentContext]="documentContext"
+			                   (onLoadingDocument)="onLoadingDocument($event)"
+			                   (onSelectingNode)="onSelectingDocument($event)"></document-treeview>
 		</div>
 		<div class="eleven wide column">
-			<div class="ui basic segment">
-				<jsonld-viewer [document]="inspectingDocument" *ngIf="!!inspectingDocument"></jsonld-viewer>
-			</div>
+			<document-viewer [document]="inspectingDocument" *ngIf="!!inspectingDocument"></document-viewer>
 		</div>
 	</div>
 </div>

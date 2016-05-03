@@ -1,75 +1,77 @@
-<div class="ui stackable grid">
-	<div class="row">
-		<div class="column">
-			<div class="ui divided items">
-				<div class="property item" *ngFor="#propertyName of getPropertyNames(rootNode); #i=index;" [ngSwitch]="propertyName">
+<div class="ui basic segment">
+	<div class="ui stackable grid">
+		<div class="row">
+			<div class="column">
+				<div class="ui divided items">
+					<div class="property item" *ngFor="#propertyName of getPropertyNames(rootNode); #i=index;" [ngSwitch]="propertyName">
 
-					<div class="content" *ngSwitchWhen="'@id'">
-						<div class="header">
-							{{propertyName}}
+						<div class="content" *ngSwitchWhen="'@id'">
+							<div class="header">
+								{{propertyName}}
+							</div>
+							<div class="meta">
+								<p>{{rootNode[propertyName]}}</p>
+							</div>
 						</div>
-						<div class="meta">
-							<p>{{rootNode[propertyName]}}</p>
-						</div>
-					</div>
 
-					<div class="content" *ngSwitchWhen="'@type'">
-						<p class="header">
-							{{propertyName}}
-						</p>
-						<div class="description" *ngIf="isArray(rootNode[propertyName])">
-							<div class="ui horizontal list">
-								<div class="item" *ngFor="#type of rootNode[propertyName]; #j=index;">
-									<div class="ui label">
-										<i [ngClass]="getTypeIcon(type)" class="icon"></i>
-										{{getDisplayName(type)}}
+						<div class="content" *ngSwitchWhen="'@type'">
+							<p class="header">
+								{{propertyName}}
+							</p>
+							<div class="description" *ngIf="isArray(rootNode[propertyName])">
+								<div class="ui horizontal list">
+									<div class="item" *ngFor="#type of rootNode[propertyName]; #j=index;">
+										<div class="ui label">
+											<i [ngClass]="getTypeIcon(type)" class="icon"></i>
+											{{getDisplayName(type)}}
+										</div>
 									</div>
 								</div>
-							</div>
-							<table class="ui very compact striped small celled table">
-								<tr class="center aligned">
-									<th>{{propertyName}}</th>
-								</tr>
-								<tr *ngFor="#type of rootNode[propertyName]; #j=index;">
-									<td>{{type}}</td>
-								</tr>
-							</table>
-						</div>
-					</div>
-
-					<div class="content" *ngSwitchDefault>
-						<p class="header">
-							{{getDisplayName(propertyName)}}
-						</p>
-						<div class="meta">
-							<a *ngIf="isUrl(propertyName)" [attr.href]="propertyName" target="_blank">{{propertyName}}</a>
-							<div *ngIf="!isUrl(propertyName)">
-								<p>{{propertyName}}<span *ngIf="getTypeOf(rootNode[propertyName][0]) === 'string'">: {{rootNode[propertyName] | json}}</span></p>
-							</div>
-						</div>
-						<div class="description">
-							<div class="ui top attached tabular menu">
-								<a class="item active" [attr.data-tab]="i+getDisplayName(propertyName)+'_tableview'">Table</a>
-								<a class="item" [attr.data-tab]="i+getDisplayName(propertyName)+'_codeview'">Raw Data</a>
-							</div>
-							<div class="ui bottom attached tab segment active" [attr.data-tab]="i+getDisplayName(propertyName)+'_tableview'">
-								<table-list *ngIf="!!rootNode[propertyName][0]['@list']" [bNodesDictionary]="generatebNodesMap()" [itemsToPrint]="rootNode[propertyName][0]['@list']"></table-list>
-
-								<table class="ui very compact striped small celled table" *ngIf="isArray(rootNode[propertyName]) || !rootNode[propertyName][0]['@list']">
+								<table class="ui very compact striped small celled table">
 									<tr class="center aligned">
-										<th *ngFor="#header of getPropertyNames(rootNode[propertyName][0])">
-											{{header}}
-										</th>
+										<th>{{propertyName}}</th>
 									</tr>
-									<tr *ngFor="#leaf of rootNode[propertyName]; #j=index;">
-										<td *ngFor="#header of getPropertyNames(rootNode[propertyName][j])">
-											{{rootNode[propertyName][j][header]}}
-										</td>
+									<tr *ngFor="#type of rootNode[propertyName]; #j=index;">
+										<td>{{type}}</td>
 									</tr>
 								</table>
 							</div>
-							<div class="ui bottom attached tab segment" [attr.data-tab]="i+getDisplayName(propertyName)+'_codeview'">
-								<pre highlight class="json">{{getJson(rootNode[propertyName])}}</pre>
+						</div>
+
+						<div class="content" *ngSwitchDefault>
+							<p class="header">
+								{{getDisplayName(propertyName)}}
+							</p>
+							<div class="meta">
+								<a *ngIf="isUrl(propertyName)" [attr.href]="propertyName" target="_blank">{{propertyName}}</a>
+								<div *ngIf="!isUrl(propertyName)">
+									<p>{{propertyName}}<span *ngIf="getTypeOf(rootNode[propertyName][0]) === 'string'">: {{rootNode[propertyName] | json}}</span></p>
+								</div>
+							</div>
+							<div class="description">
+								<div class="ui top attached tabular menu">
+									<a class="item active" [attr.data-tab]="i+getDisplayName(propertyName)+'_tableview'">Table</a>
+									<a class="item" [attr.data-tab]="i+getDisplayName(propertyName)+'_codeview'">Raw Data</a>
+								</div>
+								<div class="ui bottom attached tab segment active" [attr.data-tab]="i+getDisplayName(propertyName)+'_tableview'">
+									<table-list *ngIf="!!rootNode[propertyName][0]['@list']" [bNodesDictionary]="generatebNodesMap()" [itemsToPrint]="rootNode[propertyName][0]['@list']"></table-list>
+
+									<table class="ui very compact striped small celled table" *ngIf="isArray(rootNode[propertyName]) || !rootNode[propertyName][0]['@list']">
+										<tr class="center aligned">
+											<th *ngFor="#header of getPropertyNames(rootNode[propertyName][0])">
+												{{header}}
+											</th>
+										</tr>
+										<tr *ngFor="#leaf of rootNode[propertyName]; #j=index;">
+											<td *ngFor="#header of getPropertyNames(rootNode[propertyName][j])">
+												{{rootNode[propertyName][j][header]}}
+											</td>
+										</tr>
+									</table>
+								</div>
+								<div class="ui bottom attached tab segment" [attr.data-tab]="i+getDisplayName(propertyName)+'_codeview'">
+									<pre highlight class="json">{{getJson(rootNode[propertyName])}}</pre>
+								</div>
 							</div>
 						</div>
 					</div>
