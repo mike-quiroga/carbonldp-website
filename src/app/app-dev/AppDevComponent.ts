@@ -15,7 +15,7 @@ import MenuBarComponent from "./components/menubar/MenuBarComponent";
 import ErrorsAreaComponent from "./components/errors-area/ErrorsAreaComponent";
 
 import DashboardView from "./dashboard/DashboardView";
-import MyAppsView from "./my-apps/my-apps-view/MyAppsView";
+import MyAppsView from "./my-apps/MyAppsView";
 
 import template from "./template.html!";
 import "./style.css!";

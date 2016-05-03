@@ -1,12 +1,6 @@
 import * as CarbonApp from "carbonldp/App";
 
-export interface App extends CarbonApp {
-	name:string;
-	created:string;
-	modified:string;
+export default class App {
 	slug:string;
-	description:string;
-	app:CarbonApp.Context;
+	appContext:CarbonApp.Class;
 }
-
-export default App;

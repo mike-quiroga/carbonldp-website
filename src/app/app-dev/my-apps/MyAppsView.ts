@@ -3,9 +3,9 @@ import { CORE_DIRECTIVES } from "angular2/common";
 import { ROUTER_DIRECTIVES, RouteConfig, RouterOutlet } from "angular2/router";
 
 
-import AppDetailView from "./../app/AppDetailView";
-import AppsListView from "./../apps-list-view/AppsListView";
-import CreateAppView from "./../create-app/CreateAppView";
+import AppDetailView from "./app/AppDetailView";
+import AppsListView from "./apps-list/AppsListView";
+import CreateAppView from "./create-app/CreateAppView";
 
 @Component( {
 	selector: "my-apps",
@@ -42,7 +42,7 @@ import CreateAppView from "./../create-app/CreateAppView";
 		component: CreateAppView,
 		data: {
 			alias: "Create",
-			displayName: "Create",
+			displayName: "Create App",
 		},
 	},
 ] )

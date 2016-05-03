@@ -1,0 +1,32 @@
+<div class="content">
+	<a class="header" [routerLink]="[ '/AppDev/MyApps/App', {slug: app.slug}, 'AppDashboard']">
+		{{app.appContext.name}}
+	</a>
+</div>
+<div class="content">
+	<div class="ui small feed">
+		<div class="event">
+			<div class="content">
+				<h3 class="ui sub header">
+					Last modify:
+				</h3>
+				<div class="summary">
+					<span class="date">{{app.appContext.modified | date:"MMMM/dd/yyyy H:mm hrs"}}</span>
+				</div>
+			</div>
+		</div>
+		<div class="event">
+			<div class="content">
+				<h3 class="ui sub header">
+					Created on:
+				</h3>
+				<div class="summary">
+					<span class="date">{{app.appContext.created | date:"MMMM/dd/yyyy H:mm hrs"}}</span>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="extra center aligned content">
+	<app-action-buttons [app]="app" (deleteApp)="onDeleteApp(context)"></app-action-buttons>
+</div>
