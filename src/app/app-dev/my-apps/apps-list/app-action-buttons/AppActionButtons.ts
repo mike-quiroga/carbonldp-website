@@ -7,7 +7,6 @@ import "semantic-ui/semantic";
 import App from "./../../app/App";
 
 import template from "./template.html!";
-import "./style.css!";
 
 @Component( {
 	selector: "app-action-buttons",
