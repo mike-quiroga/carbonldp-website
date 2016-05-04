@@ -1,3 +1,6 @@
+# 0.34.1 (2016/05/04)
+- Fix [LDP-641](https://jira.base22.com/browse/LDP-641) - Missing properties in `prod-config.properties` file
+
 # 0.34.0 (2016/04/28)
 - Add prefer contained and membership resources to container preferences
 - URL now accepts orderBy retrieval preferences for contained and membership resources retrieval
