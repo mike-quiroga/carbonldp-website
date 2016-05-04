@@ -1,3 +1,6 @@
+# 0.34.1 (2016/05/04)
+- Add properties in prod-properties file
+
 # 0.34.0 (2016/04/28)
 - Add prefer contained and membership resources to container preferences
 - URL now accepts orderBy retrieval preferences for contained and membership resources retrieval
