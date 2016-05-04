@@ -104,11 +104,6 @@
 								</thead>
 								<tbody>
 									<tr>
-										<td>Authorization</td>
-										<td>Basic ...</td>
-										<td>Yes</td>
-									</tr>
-									<tr>
 										<td>Content-Type</td>
 										<td>text/turtle</td>
 										<td>Yes</td>
@@ -126,8 +121,8 @@
 								</tbody>
 							</table>
 							<pre highlight class="turtle">
-								@prefix cs:&#60;https://carbonldp.com/ns/v1/security&#62;.
-								@prefix vcard:&#60;http://www.w3.org/2001/vcard-rdf/3.0&#62;.
+								@prefix cs:&#60;https://carbonldp.com/ns/v1/security#&#62;.
+								@prefix vcard:&#60;http://www.w3.org/2001/vcard-rdf/3.0#&#62;.
 
 								<>
 									a cs:Agent;
@@ -457,7 +452,7 @@
 							body of the request.</p>
 
 						<p>
-							<span class="ui blue horizontal label">GET</span> <code>{{protocolAndHost}}/platform/apps/</code>
+							<span class="ui blue horizontal label">POST</span> <code>{{protocolAndHost}}/platform/apps/</code>
 						</p>
 
 						<table class="ui celled table">
@@ -497,7 +492,7 @@
 						</p>
 
 						<pre highlight class="turtle">
-							@prefix cs:&#60;https://carbonldp.com/ns/v1/security&#62;.
+							@prefix cs:&#60;https://carbonldp.com/ns/v1/security#&#62;.
 
 							<>
 								a cs:Application;
@@ -726,7 +721,8 @@
 							</p>
 
 							<p>
-								The <code>skos:inScheme</code> property is another we'll in concept documents. This property will allow us to associate a concept to one or more taxonomies. In our app,
+								The <code>skos:inScheme</code> property is another we'll use in concept documents. This property will allow us to associate a concept to one or more taxonomies. In our
+								app,
 								taxonomies can be
 								represented by the <code>skos:ConceptScheme</code> , which is described next.
 							</p>
@@ -799,7 +795,8 @@
 						<section>
 							<h3 class="ui header">Consider the role of LDP containers</h3>
 
-							<p>It may seem intuitive to model the container behavior for our application in such that each concept is a container to its narrower concepts. Or, in other words, so that
+							<p>It may seem intuitive to model the container behavior for our application in such wayS that each concept is a container to its narrower concepts. Or, in other words, so
+								that
 								narrower concepts
 								are represented as membership triples on their broader concepts.</p>
 
@@ -2066,7 +2063,8 @@
 							<p>We'll need to give permissions to our roles on resources. But we cannot assign permissions for the roles yet because the roles have not been positioned in the role
 								hierarchy.
 								Carbon has a role hierarchy so that permissions can be inherited from the parent in any place within the hierarchy. The hierarchy always starts at
-								<code>/apps/&lt;app-name&gt;/roles/app-admin/</code>. So, in order to be able to apply permissions (ACLs) on any resource, the roles that will part of an ACL will need
+								<code>/apps/&lt;app-name&gt;/roles/app-admin/</code>. So, in order to be able to apply permissions (ACLs - Access Control List) on any resource, the roles that will
+								be part of an ACL will need
 								to exist
 								within the role hierarchy.</p>
 
@@ -2173,9 +2171,32 @@
 							<p>Next, we need to assign permissions to the application roles we've created. In Carbon, resources can have an AccessControlList (ACL),
 								which defines what permissions roles have on the given resource. Let's take a look.</p>
 
-							<p>Issue the following request to get the ACL for the application's root container.</p>
+							<p>Issue the following request to get the ACL for the application's root container, take notice that the interaction model used in this
+								request is RDFSource, as shown in the Prefer header.</p>
 
-							<p><span class="ui blue horizontal label">PUT</span> <code>{{protocolAndHost}}/apps/taxonomy-hub/~acl/</code></p>
+							<p><span class="ui blue horizontal label">GET</span> <code>{{protocolAndHost}}/apps/taxonomy-hub/~acl/</code></p>
+
+							<table class="ui celled table">
+								<thead>
+									<tr>
+										<th><span>HTTP Header</span></th>
+										<th>Value</th>
+										<th>Required?</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td>Authorization</td>
+										<td>Basic ...</td>
+										<td>Yes</td>
+									</tr>
+									<tr>
+										<td>Prefer</td>
+										<td><span class="nolink">http://www.w3.org/ns/ldp#RDFSource</span>; rel=interaction-model</td>
+										<td>Yes</td>
+									</tr>
+								</tbody>
+							</table>
 
 							<p>The resulting ACL is shown below.</p>
 
@@ -2238,7 +2259,6 @@
 
 							<ul>
 								<li>Copy an existing AccessControlEntry stanza and paste it at the bottom.
-								<li>
 								<li>Remove the <code>bNodeIdentifier</code> triple from the pasted stanza (Carbon will automatically generate a new one when we update the ACL).</li>
 								<li>Change the name of the blank node so that it is unique in the file.</li>
 								<li>Change the <code>security#subject</code> literal value to be the URI of the role that you are giving the permissions.</li>

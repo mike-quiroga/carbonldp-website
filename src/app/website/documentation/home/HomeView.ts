@@ -7,6 +7,7 @@ import $ from "jquery";
 import "semantic-ui/semantic";
 
 import template from "./template.html!";
+import "./style.css!";
 
 @Component( {
 	selector: "documents-list",
