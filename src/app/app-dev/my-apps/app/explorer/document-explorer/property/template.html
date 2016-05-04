@@ -1,0 +1,67 @@
+<div class="content" *ngIf="propertyName === '@id'">
+	<div class="header">
+		{{propertyName}}
+	</div>
+	<div class="meta">
+		<p>{{property}}</p>
+	</div>
+</div>
+
+<div class="content" *ngIf="propertyName === '@type'">
+	<p class="header">
+		{{propertyName}}
+	</p>
+	<div class="description" *ngIf="isArray(property)">
+		<div class="ui horizontal list">
+			<div class="item" *ngFor="#type of property; #j=index;">
+				<div class="ui label">
+					<i [ngClass]="getTypeIcon(type)" class="icon"></i>
+					{{getDisplayName(type)}}
+				</div>
+			</div>
+		</div>
+		<table class="ui very compact striped small celled table">
+			<tr class="center aligned">
+				<th>{{propertyName}}</th>
+			</tr>
+			<tr *ngFor="#type of property; #j=index;">
+				<td>{{type}}</td>
+			</tr>
+		</table>
+	</div>
+</div>
+
+<div class="content" *ngIf="propertyName !== '@id' && propertyName !== '@type'">
+	<p class="header">
+		{{getDisplayName(propertyName)}}
+	</p>
+	<div class="meta">
+		<a *ngIf="isUrl(propertyName)" [attr.href]="propertyName" target="_blank">{{propertyName}}</a>
+		<p *ngIf="!isUrl(propertyName)">{{propertyName}}<span *ngIf="getTypeOf(property[0]) === 'string'">: {{property | json}}</span></p>
+	</div>
+	<div class="description">
+		<div class="ui top attached tabular menu">
+			<a class="item active" [attr.data-tab]="i+getDisplayName(propertyName)+'_tableview'">Table</a>
+			<a class="item" [attr.data-tab]="i+getDisplayName(propertyName)+'_codeview'">Raw Data</a>
+		</div>
+		<div class="ui bottom attached tab segment active" [attr.data-tab]="i+getDisplayName(propertyName)+'_tableview'">
+			<!--<table-list *ngIf="!!property[0]['@list']" [bNodesDictionary]="generatebNodesMap()" [itemsToPrint]="property[0]['@list']"></table-list>-->
+
+			<table class="ui very compact striped small celled table" *ngIf="isArray(property) || !property[0]['@list']">
+				<tr class="center aligned">
+					<th *ngFor="#header of getPropertiesName(property[0])">
+						{{header}}
+					</th>
+				</tr>
+				<tr *ngFor="#leaf of property; #j=index;">
+					<td *ngFor="#header of getPropertiesName(property[j])">
+						{{property[j][header]}}
+					</td>
+				</tr>
+			</table>
+		</div>
+		<div class="ui bottom attached tab segment" [attr.data-tab]="i+getDisplayName(propertyName)+'_codeview'">
+			<pre>{{getJson(property[0])}}</pre>
+		</div>
+	</div>
+</div>
