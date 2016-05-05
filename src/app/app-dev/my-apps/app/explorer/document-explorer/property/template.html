@@ -32,9 +32,14 @@
 </div>
 
 <div class="content" *ngIf="propertyName !== '@id' && propertyName !== '@type'">
-	<p class="header">
-		{{getDisplayName(propertyName)}}
-	</p>
+	<div class="header">
+		<p>
+			{{getDisplayName(propertyName)}}
+			<span class="ui blue left poingint label" *ngIf="isBNode(property[0]['@id'])">
+				bNode
+			</span>
+		</p>
+	</div>
 	<div class="meta">
 		<a *ngIf="isUrl(propertyName)" [attr.href]="propertyName" target="_blank">{{propertyName}}</a>
 		<p *ngIf="!isUrl(propertyName)">{{propertyName}}<span *ngIf="getTypeOf(property[0]) === 'string'">: {{property | json}}</span></p>
@@ -47,21 +52,27 @@
 		<div class="ui bottom attached tab segment active" [attr.data-tab]="i+getDisplayName(propertyName)+'_tableview'">
 			<!--<table-list *ngIf="!!property[0]['@list']" [bNodesDictionary]="generatebNodesMap()" [itemsToPrint]="property[0]['@list']"></table-list>-->
 
-			<table class="ui very compact striped small celled table" *ngIf="isArray(property) || !property[0]['@list']">
+			<table class="ui very compact striped small celled table" *ngIf="isArray(property) && !property[0]['@list']">
 				<tr class="center aligned">
 					<th *ngFor="#header of getPropertiesName(property[0])">
 						{{header}}
 					</th>
 				</tr>
 				<tr *ngFor="#leaf of property; #j=index;">
-					<td *ngFor="#header of getPropertiesName(property[j])">
-						{{property[j][header]}}
+					<td *ngFor="#header of getPropertiesName(leaf)" [ngClass]="{selectable: isBNode(leaf[header])}">
+						<p *ngIf="!isBNode(leaf[header])">
+							{{leaf[header]}}
+						</p>
+						<a *ngIf="isBNode(leaf[header])"
+						   (click)="goToBNode(leaf[header])">
+							{{leaf[header]}}
+						</a>
 					</td>
 				</tr>
 			</table>
 		</div>
 		<div class="ui bottom attached tab segment" [attr.data-tab]="i+getDisplayName(propertyName)+'_codeview'">
-			<pre>{{getJson(property[0])}}</pre>
+			<pre>{{getJson(property)}}</pre>
 		</div>
 	</div>
 </div>

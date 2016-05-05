@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input, SimpleChange } from "angular2/core";
+import { Component, ElementRef, Input, Output, EventEmitter, SimpleChange } from "angular2/core";
 import { CORE_DIRECTIVES } from "angular2/common";
 
 import $ from "jquery";
@@ -31,6 +31,7 @@ export default class PropertyComponent {
 	$element:JQuery;
 	@Input() property:RDFNode.Class;
 	@Input() propertyName:string;
+	@Output() onGoToBNode:EventEmitter<string> = new EventEmitter<string>();
 
 
 	loadingDocument:boolean = false;
@@ -98,6 +99,14 @@ export default class PropertyComponent {
 	isUrl( uri:string ):boolean {
 		let r = /^(ftp|http|https):\/\/[^ "]+$/;
 		return r.test( 'http://hri.base22.com/ns#data' );
+	}
+
+	isBNode( uri:string ):boolean {
+		return ! ! uri ? URI.Util.isBNodeID( uri ) : false;
+	}
+
+	goToBNode( id:string ):void {
+		this.onGoToBNode.emit( id );
 	}
 
 	getTypeIcon( type:string ):string {
