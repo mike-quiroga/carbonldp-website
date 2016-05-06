@@ -1,4 +1,4 @@
-package com.carbonldp.authentication.token.app;
+package com.carbonldp.authentication.LDAP.app;
 
 import com.carbonldp.ldp.containers.BasicContainer;
 import com.carbonldp.ldp.containers.BasicContainerFactory;
@@ -8,32 +8,34 @@ import com.carbonldp.rdf.RDFResource;
 import com.carbonldp.repository.AbstractSesameRepository;
 import org.openrdf.model.IRI;
 import org.openrdf.spring.SesameConnectionFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.Assert;
 
 /**
+ * @author JorgeEspinosa
  * @author NestorVenegas
- * @since 0.15.0_ALPHA
+ * @since _version_
  */
-public class SesameAppTokenRepository extends AbstractSesameRepository implements AppTokenRepository {
+public class SesameAppLDAPServerRepository extends AbstractSesameRepository implements AppLDAPServerRepository {
 
-	private String containerSlug;
 	private ContainerRepository containerRepository;
 
-	public SesameAppTokenRepository( SesameConnectionFactory connectionFactory, ContainerRepository containerRepository ) {
+	public SesameAppLDAPServerRepository( SesameConnectionFactory connectionFactory ) {
 		super( connectionFactory );
-		this.containerRepository = containerRepository;
 	}
 
-	@Override
-	public Container createAppTokensContainer( IRI rootContainerIRI ) {
+	public Container createAppLDAPServersContainer( IRI rootContainerIRI ) {
 		IRI appTokensContainerIRI = getContainerIRI( rootContainerIRI );
 		BasicContainer appTokensContainer = BasicContainerFactory.getInstance().create( new RDFResource( appTokensContainerIRI ) );
 		containerRepository.createChild( rootContainerIRI, appTokensContainer );
 		return appTokensContainer;
 	}
 
-	public void setTokensContainerSlug( String slug ) {
+	public void setLDAPServerContainerSlug( String slug ) {
 		Assert.notNull( slug );
 		this.containerSlug = slug;
 	}
+
+	@Autowired
+	public void setContainerRepository( ContainerRepository containerRepository ) { this.containerRepository = containerRepository; }
 }

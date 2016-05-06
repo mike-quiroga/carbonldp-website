@@ -128,10 +128,6 @@ public class SesameAppRoleRepository extends AbstractSesameLDPRepository impleme
 		return getContainerIRI( rootContainerIRI );
 	}
 
-	private IRI getContainerIRI( IRI rootContainerIRI ) {
-		return IRIUtil.createChildIRI( rootContainerIRI, containerSlug );
-	}
-
 	public IRI getAgentsContainerIRI( IRI appRoleIRI ) {
 		return IRIUtil.createChildIRI( appRoleIRI, agentsContainerSlug );
 	}

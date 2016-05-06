@@ -7,6 +7,8 @@ import com.carbonldp.apps.AppService;
 import com.carbonldp.apps.SesameAppService;
 import com.carbonldp.apps.roles.AppRoleService;
 import com.carbonldp.apps.roles.SesameAppRoleService;
+import com.carbonldp.authentication.LDAP.app.LDAPServerService;
+import com.carbonldp.authentication.LDAP.app.SesameLDAPServerService;
 import com.carbonldp.authentication.token.JWTAuthenticationService;
 import com.carbonldp.authentication.token.TokenService;
 import com.carbonldp.authorization.acl.ACLService;
@@ -84,6 +86,11 @@ public class ServicesConfig {
 	@Bean
 	public AgentService appAgentService() {
 		return new SesameAppAgentService();
+	}
+
+	@Bean
+	public LDAPServerService ldapServerService() {
+		return new SesameLDAPServerService();
 	}
 
 	@Bean

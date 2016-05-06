@@ -8,7 +8,6 @@ import com.carbonldp.ldp.containers.Container;
 import com.carbonldp.ldp.containers.ContainerRepository;
 import com.carbonldp.ldp.sources.RDFSourceRepository;
 import com.carbonldp.rdf.RDFResource;
-import com.carbonldp.utils.IRIUtil;
 import org.openrdf.model.IRI;
 import org.openrdf.spring.SesameConnectionFactory;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,8 +20,6 @@ import org.springframework.util.Assert;
 
 @Transactional
 public class SesameAppAgentRepository extends SesameAgentsRepository implements AppAgentRepository {
-
-	private String containerSlug;
 
 	public SesameAppAgentRepository( SesameConnectionFactory connectionFactory, RDFSourceRepository sourceRepository, ContainerRepository containerRepository ) {
 		super( connectionFactory, sourceRepository, containerRepository );
@@ -40,10 +37,6 @@ public class SesameAppAgentRepository extends SesameAgentsRepository implements 
 		IRI appIRI = AppContextHolder.getContext().getApplication().getRootContainerIRI();
 		if ( appIRI == null ) throw new RuntimeException( "app agent repository should be running in App context" );
 		return getContainerIRI( appIRI );
-	}
-
-	private IRI getContainerIRI( IRI rootContainerIRI ) {
-		return IRIUtil.createChildIRI( rootContainerIRI, containerSlug );
 	}
 
 	public void setAgentsContainerSlug( String slug ) {

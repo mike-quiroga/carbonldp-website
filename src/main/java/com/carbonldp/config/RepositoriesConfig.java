@@ -11,6 +11,8 @@ import com.carbonldp.apps.AppRepository;
 import com.carbonldp.apps.SesameAppRepository;
 import com.carbonldp.apps.roles.AppRoleRepository;
 import com.carbonldp.apps.roles.SesameAppRoleRepository;
+import com.carbonldp.authentication.LDAP.app.AppLDAPServerRepository;
+import com.carbonldp.authentication.LDAP.app.SesameAppLDAPServerRepository;
 import com.carbonldp.authentication.token.app.AppTokenRepository;
 import com.carbonldp.authentication.token.app.SesameAppTokenRepository;
 import com.carbonldp.authorization.PlatformPrivilegeRepository;
@@ -194,6 +196,13 @@ public class RepositoriesConfig {
 	public AppTokenRepository appTokenRepository() {
 		SesameAppTokenRepository repository = new SesameAppTokenRepository( connectionFactory, containerRepository() );
 		repository.setTokensContainerSlug( Vars.getInstance().getAppTokensContainer() );
+		return repository;
+	}
+
+	@Bean
+	public AppLDAPServerRepository appLDAPServerRepository() {
+		SesameAppLDAPServerRepository repository = new SesameAppLDAPServerRepository( connectionFactory );
+		repository.setLDAPServerContainerSlug( Vars.getInstance().getAppLDAPServerContainer() );
 		return repository;
 	}
 

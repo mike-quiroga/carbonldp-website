@@ -4,6 +4,7 @@ import com.carbonldp.agents.AgentRepository;
 import com.carbonldp.apps.roles.AppContextClearFilter;
 import com.carbonldp.apps.roles.AppRolePersistenceFilter;
 import com.carbonldp.apps.roles.AppRoleRepository;
+import com.carbonldp.authentication.LDAP.LDAPAuthenticationFilter;
 import com.carbonldp.authentication.token.JWTAuthenticationEntryPoint;
 import com.carbonldp.authentication.token.JWTAuthenticationFilter;
 import com.carbonldp.authentication.token.JWTAuthenticationProvider;
@@ -113,6 +114,11 @@ public class AuthenticationConfig {
 	@Bean
 	public CORSPlatformContextFilter corsPlatformContextFilter() {
 		return new CORSPlatformContextFilter();
+	}
+
+	@Bean
+	public LDAPAuthenticationFilter ldapAuthenticationFilter() {
+		return new LDAPAuthenticationFilter( authenticationManager );
 	}
 
 	@Bean

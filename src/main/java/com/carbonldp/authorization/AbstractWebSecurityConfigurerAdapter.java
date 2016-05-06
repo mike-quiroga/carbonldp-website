@@ -6,6 +6,7 @@ import com.carbonldp.apps.roles.AppRolePersistenceFilter;
 import com.carbonldp.authentication.AnonymousAuthenticationFilter;
 import com.carbonldp.authentication.AnonymousAuthenticationToken;
 import com.carbonldp.authentication.CustomExceptionHandlingConfigurer;
+import com.carbonldp.authentication.LDAP.LDAPAuthenticationFilter;
 import com.carbonldp.authentication.token.JWTAuthenticationFilter;
 import com.carbonldp.web.cors.CORSAppContextFilter;
 import com.carbonldp.web.cors.CORSPlatformContextFilter;
@@ -45,6 +46,9 @@ public abstract class AbstractWebSecurityConfigurerAdapter extends WebSecurityCo
 
 	@Autowired
 	protected CORSPlatformContextFilter corsPlatformContextFilter;
+
+	@Autowired
+	protected LDAPAuthenticationFilter ldapAuthenticationFilter;
 
 	@Autowired
 	protected AppContextPersistenceFilter appContextPersistenceFilter;
