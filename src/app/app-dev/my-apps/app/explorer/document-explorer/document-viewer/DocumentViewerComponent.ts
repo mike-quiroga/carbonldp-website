@@ -1,5 +1,5 @@
 import { Component, ElementRef, Input, SimpleChange } from "angular2/core";
-import { CORE_DIRECTIVES, NgSwitch, NgSwitchWhen, NgSwitchDefault } from "angular2/common";
+import { CORE_DIRECTIVES } from "angular2/common";
 import { Router } from "angular2/router";
 
 import $ from "jquery";
@@ -11,6 +11,7 @@ import * as RDFDocument from "carbonldp/RDF/Document";
 import * as RDFNode from "carbonldp/RDF/RDFNode";
 import * as URI from "carbonldp/RDF/URI";
 
+import BNodesViewerComponent from "./../bnodes-viewer/BNodesViewerComponent";
 import TableListComponent from "./../table-list/TableListComponent";
 import PropertyComponent from "./../property/PropertyComponent";
 
@@ -20,7 +21,7 @@ import "./style.css!";
 @Component( {
 	selector: "document-viewer",
 	template: template,
-	directives: [ CORE_DIRECTIVES, NgSwitchDefault, PropertyComponent, TableListComponent ],
+	directives: [ CORE_DIRECTIVES, BNodesViewerComponent, PropertyComponent, TableListComponent ],
 } )
 
 export default class DocumentViewerComponent {
@@ -28,17 +29,15 @@ export default class DocumentViewerComponent {
 	element:ElementRef;
 	$element:JQuery;
 
-	bNodesSection:JQuery;
-	nodesTab:JQuery;
-
 	@Input() document:RDFDocument.Class;
 
 	rootNode:RDFNode.Class;
+
 	bNodesArray:RDFNode.Class[] = [];
 	namedFragmentsArray:RDFNode.Class[] = [];
+
 	bNodesDictionary:Map<string,RDFNode.Class> = new Map<string,RDFNode.Class>();
 	namedFragmentsDictionary:Map<string,RDFNode.Class> = new Map<string,RDFNode.Class>();
-	openedbNodes:RDFNode.Class[] = [];
 
 	constructor( router:Router, element:ElementRef ) {
 		this.router = router;
@@ -48,8 +47,6 @@ export default class DocumentViewerComponent {
 	ngAfterViewInit():void {
 		console.log( "Viewer: %o", this.document );
 		this.$element = $( this.element.nativeElement );
-		this.bNodesSection = this.$element.find( "#bNodes" );
-		this.nodesTab = this.bNodesSection.find( ".tabular.bnodes.menu" ).tab();
 	}
 
 	ngOnChanges( changes:{[propName:string]:SimpleChange} ):void {
@@ -63,7 +60,6 @@ export default class DocumentViewerComponent {
 			this.generateMaps();
 			console.log( "bNodes: %o - NamedFragments: %o", this.bNodesDictionary, this.namedFragmentsDictionary );
 			console.log( "bNodes: %o - NamedFragments: %o", this.bNodesDictionary.size, this.namedFragmentsDictionary.size );
-			console.log( this.bNodesDictionary.keys() );
 		}
 	}
 
@@ -91,38 +87,11 @@ export default class DocumentViewerComponent {
 		return Object.keys( property );
 	}
 
-	openbNode( nodeOrId:RDFNode.Class|string ):void {
-		let idx:number;
-		let node:RDFNode.Class;
-		if ( typeof nodeOrId === "string" ) {
-			node = this.bNodesDictionary.get( nodeOrId );
-		} else {
-			node = nodeOrId;
+	scrollTo( id:string ):void {
+		if ( id === "bNodes" ) {
+			let divPosition:JQueryCoordinates = this.$element.find( ".row.bNodes" ).position();
+			this.$element.animate( { scrollTop: divPosition.top }, "fast" );
+			// this.$element.parent().animate( { scrollTop: 0 }, "fast" );
 		}
-		idx = this.openedbNodes.indexOf( node );
-		if ( idx === - 1 )this.openedbNodes.push( node );
-		setTimeout( () => {
-			this.refreshTabs();
-			this.goToBNode( "bnode" + node[ "@id" ] );
-		}, 50 );
-	}
-
-	goToBNode( id:string ) {
-		this.nodesTab.find( "> [data-tab='" + id + "']" ).click();
-		this.$element.parent().animate( { scrollTop: 0 }, "fast" );
-	}
-
-	closeBNode( node:RDFNode.Class ):void {
-		let idx:number = this.openedbNodes.indexOf( node );
-		this.openedbNodes.splice( idx, 1 );
-		this.goToBNode( "first" );
-	}
-
-	refreshTabs():void {
-		this.nodesTab.find( ">.item" ).tab();
-	}
-
-	getFriendlyId( id:string ):string {
-		return id.replace( /\W/g, "" );
 	}
 }

@@ -31,7 +31,7 @@ export default class PropertyComponent {
 	$element:JQuery;
 	@Input() property:RDFNode.Class;
 	@Input() propertyName:string;
-	@Output() onGoToBNode:EventEmitter<string> = new EventEmitter<string>();
+	@Output() onGoTobNode:EventEmitter<string> = new EventEmitter<string>();
 
 
 	loadingDocument:boolean = false;
@@ -76,8 +76,18 @@ export default class PropertyComponent {
 		return properties;
 	}
 
-	getPropertiesName( property:any ):string[] {
-		return Object.keys( property );
+	getHeaders( property:any[] ):string[] {
+		let temp:string[] = [];
+		property.forEach(
+			( prop )=> {
+				temp = temp.concat( Object.keys( prop ) );
+			}
+		);
+		let headers:string[] = temp.filter(
+			( item, pos ) => {
+				return temp.indexOf( item ) == pos
+			} );
+		return headers;
 	}
 
 	getFragment( uri:string ):string {
@@ -98,15 +108,15 @@ export default class PropertyComponent {
 
 	isUrl( uri:string ):boolean {
 		let r = /^(ftp|http|https):\/\/[^ "]+$/;
-		return r.test( 'http://hri.base22.com/ns#data' );
+		return r.test( uri );
 	}
 
-	isBNode( uri:string ):boolean {
+	isbNode( uri:string ):boolean {
 		return ! ! uri ? URI.Util.isBNodeID( uri ) : false;
 	}
 
-	goToBNode( id:string ):void {
-		this.onGoToBNode.emit( id );
+	goTobNode( id:string ):void {
+		this.onGoTobNode.emit( id );
 	}
 
 	getTypeIcon( type:string ):string {

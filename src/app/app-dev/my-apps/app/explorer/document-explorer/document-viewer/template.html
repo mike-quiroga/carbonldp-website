@@ -1,74 +1,27 @@
 <div class="ui basic segment">
 	<div class="ui stackable grid">
-		<div id="bNodes" class="row" *ngIf="!!bNodesDictionary.size > 0">
+		<div class="row documentResource">
 			<div class="column">
-				<h3 class="ui header">Blank Nodes</h3>
-				<div class="ui section divider"></div>
-				<div class="ui top attached tabular bnodes menu">
-					<a class="item active" data-tab="first">All Nodes</a>
-					<a class="item"
-					   *ngFor="#bNode of openedbNodes; #i=index;"
-					   [attr.data-tab]="'bnode'+bNode['@id']">
-						<p>
-							{{bNode["@id"]}}
-							<button class="circular ui icon basic mini button" (click)="closeBNode(bNode)">
-								<i class="icon close"></i>
-							</button>
-						</p>
-					</a>
-				</div>
-				<div class="ui bottom attached tab segment active" data-tab="first">
-					<table class="ui small very compact striped celled table">
-						<thead>
-							<tr>
-								<th>@id</th>
-								<th>https://carbonldp.com/ns/v1/platform#bNodeIdentifier</th>
-								<th></th>
-							</tr>
-						</thead>
-						<tbody>
-							<tr *ngFor="#bNode of bNodesArray; #i=index;">
-								<td>
-									{{bNode["@id"]}}
-								</td>
-								<td>
-									{{bNode['https://carbonldp.com/ns/v1/platform#bNodeIdentifier'][0]["@value"]}}
-								</td>
-								<td>
-									<a class="ui button" (click)="openbNode(bNode)"></a>
-								</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-				<div class="ui bottom attached tab segment"
-				     *ngFor="#bNode of openedbNodes; #i=index;" [attr.data-tab]="'bnode'+bNode['@id']">
-					<!--<pre>{{bNode | json}}</pre>-->
-					<div class="ui divided items">
-						<document-property class="property item"
-						                   *ngFor="#propertyName of getPropertiesName(bNode); #j=index;"
-						                   (onGoToBNode)="openbNode($event)"
-						                   [propertyName]="propertyName"
-						                   [property]="bNode[propertyName]">
-						</document-property>
-					</div>
-				</div>
-				<div class="ui section divider"></div>
-			</div>
-		</div>
-		<div id="documentResource" class="row">
-			<div class="column">
-				<h3 class="ui header">Document Resource</h3>
+				<h2 class="ui header">
+					<i class="file outline icon"></i>
+					Document Resource
+				</h2>
 				<div class="ui section divider"></div>
 				<div class="ui divided items">
 					<document-property class="property item"
 					                   *ngFor="#propertyName of getPropertiesName(rootNode); #i=index;"
-					                   (onGoToBNode)="openbNode($event)"
 					                   [propertyName]="propertyName"
 					                   [property]="rootNode[propertyName]">
 					</document-property>
 				</div>
 			</div>
+		</div>
+		<div class="row bNodes" *ngIf="!!bNodesDictionary.size > 0">
+			<document-bnodes #documentbNodes
+			                 class="column"
+			                 (onOpenbNode)="scrollTo($event)"
+			                 [bNodesArray]="bNodesArray"
+			                 [bNodesDictionary]="bNodesDictionary"></document-bnodes>
 		</div>
 	</div>
 </div>

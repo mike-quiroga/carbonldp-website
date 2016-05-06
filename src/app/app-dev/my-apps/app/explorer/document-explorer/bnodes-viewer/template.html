@@ -1,0 +1,54 @@
+<h2 class="ui header">
+	<i class="icons">
+		<i class="thin circle blue icon"></i>
+		<i class="corner thin circle icon"></i>
+	</i>
+	Blank Nodes
+</h2>
+<div class="ui section divider"></div>
+<div class="ui top attached tabular bnodes menu">
+	<a class="item active" data-tab="first">All Nodes</a>
+	<a class="item"
+	   *ngFor="#bNode of openedbNodes; #i=index;"
+	   [attr.data-tab]="'bnode'+bNode['@id']">
+		<p>
+			{{bNode["@id"]}}
+			<button class="circular ui icon basic mini button" (click)="closebNode(bNode)">
+				<i class="icon close"></i>
+			</button>
+		</p>
+	</a>
+</div>
+<div class="ui bottom attached tab segment active" data-tab="first">
+	<table class="ui small very compact striped selectable celled table">
+		<thead>
+			<tr>
+				<th>@id</th>
+				<th>https://carbonldp.com/ns/v1/platform#bNodeIdentifier</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr *ngFor="#bNode of bNodesArray; #i=index;"
+			    (click)="openbNode(bNode)">
+				<td>
+					{{bNode["@id"]}}
+				</td>
+				<td>
+					{{bNode['https://carbonldp.com/ns/v1/platform#bNodeIdentifier'][0]["@value"]}}
+				</td>
+			</tr>
+		</tbody>
+	</table>
+</div>
+<div class="ui bottom attached tab segment"
+     *ngFor="#bNode of openedbNodes; #i=index;" [attr.data-tab]="'bnode'+bNode['@id']">
+	<div class="ui divided items">
+		<document-property class="property item"
+		                   *ngFor="#propertyName of getPropertiesName(bNode); #j=index;"
+		                   (onGoTobNode)="openbNode($event)"
+		                   [propertyName]="propertyName"
+		                   [property]="bNode[propertyName]">
+		</document-property>
+	</div>
+</div>
+<div class="ui section divider"></div>

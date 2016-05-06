@@ -1,12 +1,11 @@
 <div class="ui divided grid segment" [ngClass]="{loading:loadingDocument}">
 	<div class="stretched row">
-		<div class="five wide column treeview-container">
-			<document-treeview [documentContext]="documentContext"
-			                   (onLoadingDocument)="onLoadingDocument($event)"
-			                   (onSelectingNode)="onSelectingDocument($event)"></document-treeview>
-		</div>
-		<div class="eleven wide column">
-			<document-viewer [document]="inspectingDocument" *ngIf="!!inspectingDocument"></document-viewer>
-		</div>
+		<document-treeview class="five wide column treeview-container"
+		                   [documentContext]="documentContext"
+		                   (onLoadingDocument)="onLoadingDocument($event)"
+		                   (onSelectingNode)="onSelectingDocument($event)"></document-treeview>
+		<document-viewer class="eleven wide column"
+		                 [document]="inspectingDocument"
+		                 *ngIf="!!inspectingDocument"></document-viewer>
 	</div>
 </div>

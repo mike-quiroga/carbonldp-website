@@ -3,7 +3,8 @@
 		{{propertyName}}
 	</div>
 	<div class="meta">
-		<p>{{property}}</p>
+		<p *ngIf="!isUrl(property)">{{property}}</p>
+		<a *ngIf="isUrl(property)" [attr.href]="property" target="_blank">{{property}}</a>
 	</div>
 </div>
 
@@ -35,14 +36,11 @@
 	<div class="header">
 		<p>
 			{{getDisplayName(propertyName)}}
-			<span class="ui blue left poingint label" *ngIf="isBNode(property[0]['@id'])">
-				bNode
-			</span>
 		</p>
 	</div>
 	<div class="meta">
 		<a *ngIf="isUrl(propertyName)" [attr.href]="propertyName" target="_blank">{{propertyName}}</a>
-		<p *ngIf="!isUrl(propertyName)">{{propertyName}}<span *ngIf="getTypeOf(property[0]) === 'string'">: {{property | json}}</span></p>
+		<p *ngIf="!isUrl(propertyName)">{{propertyName}}</p>
 	</div>
 	<div class="description">
 		<div class="ui top attached tabular menu">
@@ -52,20 +50,28 @@
 		<div class="ui bottom attached tab segment active" [attr.data-tab]="i+getDisplayName(propertyName)+'_tableview'">
 			<!--<table-list *ngIf="!!property[0]['@list']" [bNodesDictionary]="generatebNodesMap()" [itemsToPrint]="property[0]['@list']"></table-list>-->
 
-			<table class="ui very compact striped small celled table" *ngIf="isArray(property) && !property[0]['@list']">
+			<table class="ui very compact striped small celled table" *ngIf="isArray(property)">
 				<tr class="center aligned">
-					<th *ngFor="#header of getPropertiesName(property[0])">
+					<th *ngFor="#header of getHeaders(property)">
 						{{header}}
 					</th>
 				</tr>
-				<tr *ngFor="#leaf of property; #j=index;">
-					<td *ngFor="#header of getPropertiesName(leaf)" [ngClass]="{selectable: isBNode(leaf[header])}">
-						<p *ngIf="!isBNode(leaf[header])">
-							{{leaf[header]}}
+				<tr *ngFor="#prop of property; #j=index;">
+					<td *ngFor="#header of getHeaders(property)" [ngClass]="{selectable: isbNode(prop[header])}">
+						<p *ngIf="!prop[header]">-</p>
+						<p *ngIf="!isbNode(prop[header])">
+							{{prop[header]}}
 						</p>
-						<a *ngIf="isBNode(leaf[header])"
-						   (click)="goToBNode(leaf[header])">
-							{{leaf[header]}}
+						<a *ngIf="isbNode(prop[header])"
+						   (click)="goTobNode(prop[header])">
+							{{prop[header]}}
+							<span class="ui blue left pointing basic label">
+								Go to node
+								<i class="icons">
+									<i class="thin circle blue icon"></i>
+									<i class="corner thin circle icon"></i>
+								</i>
+							</span>
 						</a>
 					</td>
 				</tr>
