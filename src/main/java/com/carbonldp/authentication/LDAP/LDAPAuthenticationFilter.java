@@ -1,17 +1,16 @@
 package com.carbonldp.authentication.LDAP;
 
 import com.carbonldp.Consts;
-import com.carbonldp.authentication.token.JWTAuthenticationToken;
-import org.apache.commons.codec.binary.Base64;
-import org.openrdf.model.IRI;
-import org.openrdf.model.impl.SimpleValueFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.Marker;
 import org.slf4j.MarkerFactory;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.web.filter.GenericFilterBean;
 
 import javax.servlet.*;
@@ -29,9 +28,11 @@ public class LDAPAuthenticationFilter extends GenericFilterBean implements Filte
 	protected final Marker FATAL = MarkerFactory.getMarker( Consts.FATAL );
 
 	private AuthenticationManager authenticationManager;
+	private AuthenticationEntryPoint authenticationEntryPoint;
 
-	public LDAPAuthenticationFilter( AuthenticationManager authenticationManager ) {
+	public LDAPAuthenticationFilter( AuthenticationManager authenticationManager, AuthenticationEntryPoint authenticationEntryPoint ) {
 		this.authenticationManager = authenticationManager;
+		this.authenticationEntryPoint = authenticationEntryPoint;
 	}
 
 	@Override
@@ -45,19 +46,36 @@ public class LDAPAuthenticationFilter extends GenericFilterBean implements Filte
 			return;
 		}
 
-		authenticate( header );
+		Authentication authResult = null;
+		try {
+			authResult = authenticate( header );
+		} catch ( AuthenticationException e ) {
+			SecurityContextHolder.clearContext();
+
+			if ( LOG.isDebugEnabled() ) LOG.debug( "Authentication request for failed: " + e );
+
+			authenticationEntryPoint.commence( httpRequest, httpResponse, e );
+			return;
+		}
+
+		if ( LOG.isDebugEnabled() ) LOG.debug( "Authentication successful: " + authResult );
+
+		SecurityContextHolder.getContext().setAuthentication( authResult );
 
 		chain.doFilter( request, response );
 	}
 
 	private Authentication authenticate( String header ) {
-		String agentString = Base64.decodeBase64( header.substring( 6 ) ).toString();
-		IRI agentIRI = SimpleValueFactory.getInstance().createIRI( agentString );
+		String token = header.substring( 6 );
+		byte[] decoded = java.util.Base64.getDecoder().decode( token);
+		String credentials = new String(decoded);
 
-		if ( LOG.isDebugEnabled() ) LOG.debug( "JWT Authentication Authorization header found for user '" + agentString + "'" );
+		int delim = credentials.indexOf(":");
 
-		JWTAuthenticationToken authRequest = new JWTAuthenticationToken( agentIRI );
-
-		return authenticationManager.authenticate( authRequest );
+		if (delim == -1) {
+			throw new BadCredentialsException("Invalid basic authentication token");
+		}
+		String[] userPass =  new String[] { credentials.substring(0, delim), credentials.substring(delim + 1) };
+		return null;
 	}
 }

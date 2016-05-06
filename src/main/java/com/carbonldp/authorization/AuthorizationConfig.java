@@ -2,7 +2,6 @@ package com.carbonldp.authorization;
 
 import com.carbonldp.apps.context.AppContextPersistenceFilter;
 import com.carbonldp.apps.roles.AppRolePersistenceFilter;
-import com.carbonldp.authentication.LDAP.LDAPAuthenticationFilter;
 import com.carbonldp.authentication.token.JWTAuthenticationFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -53,8 +52,7 @@ public class AuthorizationConfig extends AbstractWebSecurityConfigurerAdapter {
 			http
 				.antMatcher( "/apps/?*/**" )
 					.addFilterBefore( appContextPersistenceFilter, SecurityContextPersistenceFilter.class )
-					.addFilterAfter( ldapAuthenticationFilter, AppContextPersistenceFilter.class )
-					.addFilterAfter( corsAppContextFilter, LDAPAuthenticationFilter.class )
+					.addFilterAfter( corsAppContextFilter, AppContextPersistenceFilter.class )
 					.addFilterAfter( appRolePersistenceFilter, JWTAuthenticationFilter.class )
 					.authorizeRequests()
 						.anyRequest()
@@ -74,8 +72,7 @@ public class AuthorizationConfig extends AbstractWebSecurityConfigurerAdapter {
 			http
 				.antMatcher( "/platform/apps/?*/**"  )
 					.addFilterBefore( appContextPersistenceFilter, SecurityContextPersistenceFilter.class )
-					.addFilterAfter( ldapAuthenticationFilter, AppContextPersistenceFilter.class )
-					.addFilterAfter( corsPlatformContextFilter, LDAPAuthenticationFilter.class )
+					.addFilterAfter( corsPlatformContextFilter, AppContextPersistenceFilter.class )
 					.addFilterAfter( appRolePersistenceFilter, JWTAuthenticationFilter.class )
                 			.addFilterAfter( appContextClearFilter,AppRolePersistenceFilter.class )
 					.authorizeRequests()

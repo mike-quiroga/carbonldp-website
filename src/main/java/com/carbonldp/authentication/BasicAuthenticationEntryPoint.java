@@ -15,6 +15,7 @@ public class BasicAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
 	@Override
 	public void commence( HttpServletRequest request, HttpServletResponse response, AuthenticationException authException ) throws IOException, ServletException {
+
 		if ( ! isProgrammaticRequest( request ) ) response.addHeader( "WWW-Authenticate", "Basic realm=\"" + realmName + "\"" );
 		response.setStatus( HttpStatus.SC_UNAUTHORIZED );
 	}

@@ -8,6 +8,7 @@ import com.carbonldp.authentication.AnonymousAuthenticationToken;
 import com.carbonldp.authentication.CustomExceptionHandlingConfigurer;
 import com.carbonldp.authentication.LDAP.LDAPAuthenticationFilter;
 import com.carbonldp.authentication.token.JWTAuthenticationFilter;
+import com.carbonldp.playground.LDAPAuthentication;
 import com.carbonldp.web.cors.CORSAppContextFilter;
 import com.carbonldp.web.cors.CORSPlatformContextFilter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -82,7 +83,8 @@ public abstract class AbstractWebSecurityConfigurerAdapter extends WebSecurityCo
 				.authenticationTrustResolver( authenticationTrustResolver )
 			.and()
 			.addFilter( basicAuthenticationFilter )
-			.addFilterAfter( jwtAuthenticationFilter, BasicAuthenticationFilter.class )
+			.addFilterAfter( ldapAuthenticationFilter, BasicAuthenticationFilter.class )
+			.addFilterAfter( jwtAuthenticationFilter, LDAPAuthenticationFilter.class )
 			.addFilterAfter( anonymousAuthenticationFilter, org.springframework.security.web.authentication.AnonymousAuthenticationFilter.class )
 		;
 		//@formatter:on

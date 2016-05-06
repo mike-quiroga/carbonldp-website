@@ -81,7 +81,7 @@ public class AuthenticationConfig {
 
 	@Bean
 	public BasicAuthenticationFilter basicAuthenticationFilter() {
-		return new BasicAuthenticationFilter( authenticationManager, basicAuthenticationEntryPoint() );
+		return new BasicAuthenticationFilter( authenticationManager );
 	}
 
 	@Bean
@@ -118,7 +118,7 @@ public class AuthenticationConfig {
 
 	@Bean
 	public LDAPAuthenticationFilter ldapAuthenticationFilter() {
-		return new LDAPAuthenticationFilter( authenticationManager );
+		return new LDAPAuthenticationFilter( authenticationManager, basicAuthenticationEntryPoint() );
 	}
 
 	@Bean
