@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input, Output, EventEmitter, SimpleChange } from "angular2/core";
+import { Component, ElementRef, Input, Output, EventEmitter } from "angular2/core";
 import { CORE_DIRECTIVES } from "angular2/common";
 
 import $ from "jquery";
@@ -6,10 +6,7 @@ import "semantic-ui/semantic";
 import "jstree";
 import "jstree/dist/themes/default/style.min.css!";
 
-import * as SDKContext from "carbonldp/SDKContext";
-import * as RDFDocument from "carbonldp/RDF/Document";
 import * as RDFNode from "carbonldp/RDF/RDFNode";
-import * as RDFValue from "carbonldp/RDF/Value";
 import * as Literal from "carbonldp/RDF/Literal";
 import * as URI from "carbonldp/RDF/URI";
 import * as Utils from "carbonldp/Utils";
@@ -17,7 +14,6 @@ import * as Utils from "carbonldp/Utils";
 import HighlightDirective from "./../../../../../../directives/HighlightDirective";
 
 import template from "./template.html!";
-// import "./style.css!";
 
 @Component( {
 	selector: "document-property",
@@ -35,26 +31,14 @@ export default class PropertyComponent {
 
 
 	loadingDocument:boolean = false;
-	inspectingDocument:RDFDocument.Class;
 
 	constructor( element:ElementRef ) {
 		this.element = element;
 	}
 
 	ngAfterViewInit():void {
-		console.log( "Property: %o", this.property );
 		this.$element = $( this.element.nativeElement );
 		this.initializeTabs();
-	}
-
-	ngOnChanges( changes:{[propName:string]:SimpleChange} ):void {
-		if ( changes[ "property" ].currentValue !== changes[ "property" ].previousValue ) {
-			// console.log( this.property );
-			// let documents:RDFNode.Class[] = RDFDocument.Util.getDocumentResources( this.property );
-			// this.rootNode = documents[ 0 ];
-			// console.log( this.rootNode );
-			this.initializeTabs();
-		}
 	}
 
 	getDisplayName( uri:string ):string {
@@ -65,16 +49,6 @@ export default class PropertyComponent {
 		return URI.Util.getSlug( uri );
 	}
 
-	getProperties( document:RDFNode.Class ):RDFValue.Class[] {
-		let properties:RDFValue.Class[] = [];
-		for ( let property in document ) {
-			if ( ! document.hasOwnProperty( property ) ) continue;
-			let prop:Object = {};
-			prop[ property ] = document[ property ];
-			properties.push( prop );
-		}
-		return properties;
-	}
 
 	getHeaders( property:any[] ):string[] {
 		let temp:string[] = [];

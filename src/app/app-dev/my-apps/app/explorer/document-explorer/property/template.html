@@ -78,7 +78,7 @@
 			</table>
 		</div>
 		<div class="ui bottom attached tab segment" [attr.data-tab]="i+getDisplayName(propertyName)+'_codeview'">
-			<pre>{{getJson(property)}}</pre>
+			<pre>{{property | json}}</pre>
 		</div>
 	</div>
 </div>

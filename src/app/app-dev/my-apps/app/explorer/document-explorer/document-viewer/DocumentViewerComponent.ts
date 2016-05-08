@@ -11,6 +11,7 @@ import * as RDFDocument from "carbonldp/RDF/Document";
 import * as RDFNode from "carbonldp/RDF/RDFNode";
 import * as URI from "carbonldp/RDF/URI";
 
+import DocumentResourceViewerComponent from "./../document-resource-viewer/DocumentResourceViewer";
 import BNodesViewerComponent from "./../bnodes-viewer/BNodesViewerComponent";
 import TableListComponent from "./../table-list/TableListComponent";
 import PropertyComponent from "./../property/PropertyComponent";
@@ -21,7 +22,7 @@ import "./style.css!";
 @Component( {
 	selector: "document-viewer",
 	template: template,
-	directives: [ CORE_DIRECTIVES, BNodesViewerComponent, PropertyComponent, TableListComponent ],
+	directives: [ CORE_DIRECTIVES, DocumentResourceViewerComponent, BNodesViewerComponent, PropertyComponent, TableListComponent ],
 } )
 
 export default class DocumentViewerComponent {
@@ -59,7 +60,6 @@ export default class DocumentViewerComponent {
 			console.log( this.rootNode );
 			this.generateMaps();
 			console.log( "bNodes: %o - NamedFragments: %o", this.bNodesDictionary, this.namedFragmentsDictionary );
-			console.log( "bNodes: %o - NamedFragments: %o", this.bNodesDictionary.size, this.namedFragmentsDictionary.size );
 		}
 	}
 
@@ -83,9 +83,7 @@ export default class DocumentViewerComponent {
 		);
 	}
 
-	getPropertiesName( property:any ):string[] {
-		return Object.keys( property );
-	}
+	
 
 	scrollTo( id:string ):void {
 		if ( id === "bNodes" ) {
