@@ -16,7 +16,6 @@ import org.springframework.util.Assert;
  */
 public class SesameAppTokenRepository extends AbstractSesameRepository implements AppTokenRepository {
 
-	private String containerSlug;
 	private ContainerRepository containerRepository;
 
 	public SesameAppTokenRepository( SesameConnectionFactory connectionFactory, ContainerRepository containerRepository ) {

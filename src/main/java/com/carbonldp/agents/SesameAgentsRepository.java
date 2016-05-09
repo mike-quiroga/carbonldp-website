@@ -12,6 +12,7 @@ import org.openrdf.model.impl.SimpleValueFactory;
 import org.openrdf.spring.SesameConnectionFactory;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -35,6 +36,12 @@ public abstract class SesameAgentsRepository extends AbstractSesameRepository im
 
 	static {
 		emailSelector = RDFNodeUtil.generatePredicateStatement( "?members", "?email", AgentDescription.Property.EMAIL );
+	}
+
+	private static final String userSelector;
+
+	static {
+		userSelector = RDFNodeUtil.generatePredicateStatement( "?members", "?user", LDAPAgentDescription.Property.USER_NAME );
 	}
 
 	@Override
@@ -72,6 +79,24 @@ public abstract class SesameAgentsRepository extends AbstractSesameRepository im
 		if ( agentSource == null ) return null;
 
 		return new Agent( agentSource.getBaseModel(), agentIRI );
+	}
+
+	@Override
+	public Set<LDAPAgent> findByUID( String user ) {
+		Map<String, Value> bindings = new HashMap<>();
+		bindings.put( "user", SimpleValueFactory.getInstance().createLiteral( user ) );
+
+		Set<IRI> memberIRIs = containerRepository.findMembers( getAgentsContainerIRI(), userSelector, bindings, agentsContainerType );
+		if ( memberIRIs.isEmpty() ) return null;
+
+		Set<LDAPAgent> agents = new HashSet<>();
+		for ( IRI agentIRI : memberIRIs ) {
+			RDFSource agentSource = sourceRepository.get( agentIRI );
+			if ( agentSource == null ) continue;
+			agents.add( new LDAPAgent( agentSource.getBaseModel(), agentIRI ) );
+		}
+
+		return agents;
 	}
 
 	@Override

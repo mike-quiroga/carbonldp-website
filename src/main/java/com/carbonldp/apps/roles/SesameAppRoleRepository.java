@@ -33,7 +33,6 @@ public class SesameAppRoleRepository extends AbstractSesameLDPRepository impleme
 	private final RDFSourceRepository sourceRepository;
 	private final ContainerRepository containerRepository;
 
-	private String containerSlug;
 	private String agentsContainerSlug;
 
 	private static String getParentsQuery;

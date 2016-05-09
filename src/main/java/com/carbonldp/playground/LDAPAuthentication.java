@@ -27,7 +27,8 @@ public class LDAPAuthentication {
 			LdapTemplate ldapTemplate = new LdapTemplate( ldapContextSource );
 
 			AndFilter filter = new AndFilter();
-			filter.and( new EqualsFilter( "objectclass", "Person" ) );
+			filter.and( new EqualsFilter( "uid", "newton" ) );
+			boolean exists = ldapTemplate.authenticate( "", filter.toString(), "password" );
 			List<String> list = ldapTemplate.search( "", filter.encode(), new ContactAttributeMapperJSON() );
 			System.out.print( list.toString() );
 		} catch ( Exception e ) {
