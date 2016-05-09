@@ -3,8 +3,6 @@ import { CORE_DIRECTIVES } from "angular2/common";
 
 import $ from "jquery";
 import "semantic-ui/semantic";
-import "jstree";
-import "jstree/dist/themes/default/style.min.css!";
 
 import * as RDFNode from "carbonldp/RDF/RDFNode";
 import * as Literal from "carbonldp/RDF/Literal";
@@ -12,13 +10,15 @@ import * as URI from "carbonldp/RDF/URI";
 import * as Utils from "carbonldp/Utils";
 
 import HighlightDirective from "./../../../../../../directives/HighlightDirective";
+import ListViewerComponent from "./../list-viewer/ListViewerComponent"
 
 import template from "./template.html!";
+import "./style.css!";
 
 @Component( {
 	selector: "document-property",
 	template: template,
-	directives: [ CORE_DIRECTIVES, HighlightDirective ],
+	directives: [ CORE_DIRECTIVES, ListViewerComponent, HighlightDirective ],
 } )
 
 export default class PropertyComponent {
@@ -28,7 +28,7 @@ export default class PropertyComponent {
 	@Input() property:RDFNode.Class;
 	@Input() propertyName:string;
 	@Output() onGoTobNode:EventEmitter<string> = new EventEmitter<string>();
-
+	commonHeaders:string[] = [ "@id", "@type", "@value" ];
 
 	loadingDocument:boolean = false;
 
@@ -39,16 +39,26 @@ export default class PropertyComponent {
 	ngAfterViewInit():void {
 		this.$element = $( this.element.nativeElement );
 		this.initializeTabs();
+		this.initializeAccordions();
 	}
 
 	getDisplayName( uri:string ):string {
-		if ( uri === "@id" || uri === "@type" )
+		if ( this.commonHeaders.indexOf( uri ) > - 1 )
 			return uri;
 		if ( URI.Util.hasFragment( uri ) )
 			return this.getFragment( uri );
 		return URI.Util.getSlug( uri );
 	}
 
+	hasHeader( header:string, property?:any ):boolean {
+		let headers:string[] = this.getHeaders( ! ! property ? property : this.property );
+		return headers.indexOf( header ) > - 1 ? true : false;
+	}
+
+	hasCommonHeaders( property?:any ):boolean {
+		let headers:string[] = this.getHeaders( ! ! property ? property : this.property );
+		return headers.indexOf( "@id" ) > - 1 ? true : headers.indexOf( "@type" ) > - 1 ? true : headers.indexOf( "@value" ) > - 1 ? true : false;
+	}
 
 	getHeaders( property:any[] ):string[] {
 		let temp:string[] = [];
@@ -114,5 +124,11 @@ export default class PropertyComponent {
 		if ( ! this.$element )
 			this.$element = $( this.element.nativeElement );
 		this.$element.find( ".tabular.menu .item" ).tab();
+	}
+
+	initializeAccordions():void {
+		if ( ! this.$element )
+			this.$element = $( this.element.nativeElement );
+		this.$element.find( ".ui.accordion" ).accordion();
 	}
 }

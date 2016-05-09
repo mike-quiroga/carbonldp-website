@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input, SimpleChange } from "angular2/core";
+import { Component, ElementRef, Input, SimpleChange, ViewChild } from "angular2/core";
 import { CORE_DIRECTIVES } from "angular2/common";
 import { Router } from "angular2/router";
 
@@ -13,7 +13,6 @@ import * as URI from "carbonldp/RDF/URI";
 
 import DocumentResourceViewerComponent from "./../document-resource-viewer/DocumentResourceViewer";
 import BNodesViewerComponent from "./../bnodes-viewer/BNodesViewerComponent";
-import TableListComponent from "./../table-list/TableListComponent";
 import PropertyComponent from "./../property/PropertyComponent";
 
 import template from "./template.html!";
@@ -22,7 +21,7 @@ import "./style.css!";
 @Component( {
 	selector: "document-viewer",
 	template: template,
-	directives: [ CORE_DIRECTIVES, DocumentResourceViewerComponent, BNodesViewerComponent, PropertyComponent, TableListComponent ],
+	directives: [ CORE_DIRECTIVES, DocumentResourceViewerComponent, BNodesViewerComponent, PropertyComponent ],
 } )
 
 export default class DocumentViewerComponent {
@@ -31,6 +30,7 @@ export default class DocumentViewerComponent {
 	$element:JQuery;
 
 	@Input() document:RDFDocument.Class;
+	@ViewChild( BNodesViewerComponent ) documentbNodes:BNodesViewerComponent;
 
 	rootNode:RDFNode.Class;
 
@@ -53,7 +53,7 @@ export default class DocumentViewerComponent {
 	ngOnChanges( changes:{[propName:string]:SimpleChange} ):void {
 		if ( changes[ "document" ].currentValue !== changes[ "document" ].previousValue ) {
 			console.log( this.document );
-			this.rootNode = <RDFNode.Class>{}
+			this.rootNode = <RDFNode.Class>{};
 			let documents:RDFNode.Class[] = RDFDocument.Util.getDocumentResources( this.document );
 			console.log( documents );
 			this.rootNode = documents[ 0 ];
@@ -83,13 +83,15 @@ export default class DocumentViewerComponent {
 		);
 	}
 
-	
+	openbNode( id:string ):void {
+		this.documentbNodes.openbNode( id );
+		this.scrollTo( "bNodes" );
+	}
 
 	scrollTo( id:string ):void {
 		if ( id === "bNodes" ) {
 			let divPosition:JQueryCoordinates = this.$element.find( ".row.bNodes" ).position();
 			this.$element.animate( { scrollTop: divPosition.top }, "fast" );
-			// this.$element.parent().animate( { scrollTop: 0 }, "fast" );
 		}
 	}
 }

@@ -1,7 +1,9 @@
 <div class="ui basic segment">
 	<div class="ui stackable grid">
 		<div class="row documentResource">
-			<document-resource class="column" [rootNode]="rootNode">
+			<document-resource class="column"
+			                   (onOpenbNode)="openbNode($event)"
+			                   [rootNode]="rootNode">
 			</document-resource>
 		</div>
 		<div class="row bNodes" *ngIf="!!bNodesDictionary.size > 0">

@@ -1,7 +1,6 @@
-import { Component, ElementRef, Input, } from "angular2/core";
+import { Component, Input, Output, EventEmitter } from "angular2/core";
 import { CORE_DIRECTIVES } from "angular2/common";
 
-import $ from "jquery";
 import "semantic-ui/semantic";
 
 import * as RDFNode from "carbonldp/RDF/RDFNode";
@@ -9,7 +8,6 @@ import * as RDFNode from "carbonldp/RDF/RDFNode";
 import PropertyComponent from "./../property/PropertyComponent";
 
 import template from "./template.html!";
-// import "./style.css!";
 
 @Component( {
 	selector: "document-resource",
@@ -19,21 +17,17 @@ import template from "./template.html!";
 
 export default class DocumentResourceComponent {
 
-	element:ElementRef;
-	$element:JQuery;
-
 	@Input() rootNode:RDFNode.Class;
+	@Output() onOpenbNode:EventEmitter<string> = new EventEmitter<string>();
 
-	constructor( element:ElementRef ) {
-		this.element = element;
-	}
-
-	ngAfterViewInit():void {
-		this.$element = $( this.element.nativeElement );
-	}
+	constructor() {}
 
 	getPropertiesName( property:any ):string[] {
 		return Object.keys( property );
+	}
+
+	openbNode( id:string ):void {
+		this.onOpenbNode.emit( id );
 	}
 
 }

@@ -6,6 +6,7 @@
 <div class="ui divided items">
 	<document-property class="property item"
 	                   *ngFor="#propertyName of getPropertiesName(rootNode); #i=index;"
+	                   (onGoTobNode)="openbNode($event)"
 	                   [propertyName]="propertyName"
 	                   [property]="rootNode[propertyName]">
 	</document-property>
