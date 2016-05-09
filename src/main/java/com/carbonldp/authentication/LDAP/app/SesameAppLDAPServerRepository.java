@@ -25,10 +25,10 @@ public class SesameAppLDAPServerRepository extends AbstractSesameRepository impl
 	}
 
 	public Container createAppLDAPServersContainer( IRI rootContainerIRI ) {
-		IRI appTokensContainerIRI = getContainerIRI( rootContainerIRI );
-		BasicContainer appTokensContainer = BasicContainerFactory.getInstance().create( new RDFResource( appTokensContainerIRI ) );
-		containerRepository.createChild( rootContainerIRI, appTokensContainer );
-		return appTokensContainer;
+		IRI appLDAPServerContainerIRI = getContainerIRI( rootContainerIRI );
+		BasicContainer appLDAPServersContainer = BasicContainerFactory.getInstance().create( new RDFResource( appLDAPServerContainerIRI ) );
+		containerRepository.createChild( rootContainerIRI, appLDAPServersContainer );
+		return appLDAPServersContainer;
 	}
 
 	public void setLDAPServerContainerSlug( String slug ) {

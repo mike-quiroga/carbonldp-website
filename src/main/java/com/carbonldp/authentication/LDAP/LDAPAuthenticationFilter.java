@@ -7,7 +7,6 @@ import org.slf4j.Marker;
 import org.slf4j.MarkerFactory;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.AuthenticationEntryPoint;
@@ -46,9 +45,10 @@ public class LDAPAuthenticationFilter extends GenericFilterBean implements Filte
 			return;
 		}
 
-		Authentication authResult = null;
+		String[] credentials;
 		try {
-			authResult = authenticate( header );
+			credentials = getCredentials( header );
+			assert credentials.length == 2;
 		} catch ( AuthenticationException e ) {
 			SecurityContextHolder.clearContext();
 
@@ -58,24 +58,26 @@ public class LDAPAuthenticationFilter extends GenericFilterBean implements Filte
 			return;
 		}
 
-		if ( LOG.isDebugEnabled() ) LOG.debug( "Authentication successful: " + authResult );
 
-		SecurityContextHolder.getContext().setAuthentication( authResult );
+
+
+		if ( LOG.isDebugEnabled() ) LOG.debug( "Authentication successful: " + credentials[0] );
+
+		SecurityContextHolder.getContext().setAuthentication( null );
 
 		chain.doFilter( request, response );
 	}
 
-	private Authentication authenticate( String header ) {
+	private String[] getCredentials( String header ) {
 		String token = header.substring( 6 );
-		byte[] decoded = java.util.Base64.getDecoder().decode( token);
-		String credentials = new String(decoded);
+		byte[] decoded = java.util.Base64.getDecoder().decode( token );
+		String credentials = new String( decoded );
 
-		int delim = credentials.indexOf(":");
+		int delim = credentials.indexOf( ":" );
 
-		if (delim == -1) {
-			throw new BadCredentialsException("Invalid basic authentication token");
+		if ( delim == - 1 ) {
+			throw new BadCredentialsException( "Invalid basic authentication token" );
 		}
-		String[] userPass =  new String[] { credentials.substring(0, delim), credentials.substring(delim + 1) };
-		return null;
+		return new String[]{credentials.substring( 0, delim ), credentials.substring( delim + 1 )};
 	}
 }

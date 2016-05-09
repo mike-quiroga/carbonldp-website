@@ -73,6 +73,7 @@ public class SesameAppService extends AbstractSesameLDPService implements AppSer
 		}
 		createBackupContainer( app );
 		createJobsContainer( app );
+		createLDAPServersContainer( app );
 
 		AppRole adminRole = transactionWrapper.runWithSystemPermissionsInAppContext( app, () -> {
 			Container rootContainer = createRootContainer( app );
@@ -89,9 +90,6 @@ public class SesameAppService extends AbstractSesameLDPService implements AppSer
 
 			Container appTokensContainer = appTokensRepository.createAppTokensContainer( rootContainer.getIRI() );
 			aclRepository.createACL( appTokensContainer.getIRI() );
-
-			Container appLDAPServersContainer = appLDAPServerRepository.createAppLDAPServersContainer( rootContainer.getIRI() );
-			aclRepository.createACL( appLDAPServersContainer.getIRI() );
 
 			addDefaultPermissions( appAdminRole, rootContainerACL );
 
@@ -205,6 +203,20 @@ public class SesameAppService extends AbstractSesameLDPService implements AppSer
 		return valueFactory.createIRI( appString + jobsString );
 	}
 
+	private void createLDAPServersContainer( App app ) {
+		IRI containerIRI = generateLDAPServersContainerIRI( app );
+		RDFResource ldapServersResource = new RDFResource( containerIRI );
+		BasicContainer ldapServersContainer = BasicContainerFactory.getInstance().create( ldapServersResource );
+		containerRepository.createChild( app.getIRI(), ldapServersContainer );
+		aclRepository.createACL( ldapServersContainer.getIRI() );
+	}
+
+	private IRI generateLDAPServersContainerIRI( App app ) {
+		String appString = app.getIRI().stringValue();
+		String ldapServersString = Vars.getInstance().getAppLDAPServerContainer();
+		return valueFactory.createIRI( appString + ldapServersString );
+	}
+
 	@Autowired
 	public void setSourceService( RDFSourceService sourceService ) {
 		this.sourceService = sourceService;
@@ -224,6 +236,9 @@ public class SesameAppService extends AbstractSesameLDPService implements AppSer
 
 	@Autowired
 	public void setAppTokensRepository( AppTokenRepository appTokensRepository ) { this.appTokensRepository = appTokensRepository; }
+
+	@Autowired
+	public void setAppLDAPServerRepository( AppLDAPServerRepository appLDAPServerRepository ) { this.appLDAPServerRepository = appLDAPServerRepository; }
 
 	@Autowired
 	public void setAppRoleService( AppRoleService appRoleService ) { this.appRoleService = appRoleService; }
