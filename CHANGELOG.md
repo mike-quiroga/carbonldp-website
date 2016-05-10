@@ -1,3 +1,18 @@
+# 0.34.2 (2016/05/10)
+- Fix [LDP-625](https://jira.base22.com/browse/LDP-625) - Delete inverted relation
+
+# 0.34.1 (2016/05/04)
+- Fix [LDP-641](https://jira.base22.com/browse/LDP-641) - Missing properties in `prod-config.properties` file
+
+# 0.34.0 (2016/04/28)
+- Add prefer contained and membership resources to container preferences
+- URL now accepts orderBy retrieval preferences for contained and membership resources retrieval
+
+# 0.33.1 (2016/04/25)
+- Change log4j2 configuration to a programmatic based one that uses `LOGConfigurationFactory`
+- Add `requestID` and `shortRequestID` to log4j2's context map
+- Configure log4j2 to log to the syslog service logger:601
+
 # 0.33.0 (2016/04/22)
 - Add backup export support
 - Add backup import support

@@ -60,7 +60,7 @@ public abstract class AbstractTypedContainerRepository extends AbstractSesameLDP
 	}
 
 	// TODO: Create a more generic method instead of this specific one
-	protected IRI getHasMemberRelation( IRI containerIRI ) {
+	public IRI getHasMemberRelation( IRI containerIRI ) {
 		Map<String, Value> bindings = new HashMap<>();
 		bindings.put( "containerIRI", containerIRI );
 

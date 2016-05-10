@@ -2,6 +2,7 @@ package com.carbonldp.log;
 
 import com.carbonldp.Consts;
 import com.carbonldp.utils.HTTPUtil;
+import org.apache.logging.log4j.ThreadContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.Marker;
@@ -15,6 +16,7 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.UUID;
 
 public class RequestLoggerFilter extends GenericFilterBean {
 
@@ -40,6 +42,8 @@ public class RequestLoggerFilter extends GenericFilterBean {
 		HttpServletRequest request = (HttpServletRequest) rawRequest;
 		HttpServletResponse response = (HttpServletResponse) rawResponse;
 
+		setRequestUniqueID();
+
 		try {
 			LOG.debug( HTTPUtil.printRequestInfo( request ) );
 		} finally {
@@ -49,7 +53,25 @@ public class RequestLoggerFilter extends GenericFilterBean {
 				LOG.error( FATAL, "An exception reached the top of the chain. Exception: {}", e );
 			} finally {
 				LOG.debug( HTTPUtil.printResponseInfo( response ) );
+
+				removeRequestUniqueID();
 			}
 		}
+	}
+
+	private void setRequestUniqueID() {
+		String requestID = UUID.randomUUID().toString();
+		String shortRequestID = requestID.split( "-" )[0];
+
+		ThreadContext.put( "requestID", requestID );
+		ThreadContext.put( "shortRequestID", shortRequestID );
+
+		// TODO: Add it to a requestContextHolder
+	}
+
+	private void removeRequestUniqueID() {
+		ThreadContext.remove( "requestID" );
+		ThreadContext.remove( "shortRequestID" );
+		if ( ThreadContext.isEmpty() ) ThreadContext.clearMap();
 	}
 }
