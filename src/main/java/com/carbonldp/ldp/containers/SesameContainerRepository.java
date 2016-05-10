@@ -17,26 +17,24 @@ import com.carbonldp.rdf.RDFNodeEnum;
 import com.carbonldp.rdf.RDFResourceRepository;
 import com.carbonldp.repository.DocumentGraphQueryResultHandler;
 import com.carbonldp.repository.GraphQueryResultHandler;
-import com.carbonldp.sparql.InMemoryTupleQueryResult;
-import com.carbonldp.sparql.SPARQLResult;
-import com.carbonldp.sparql.SPARQLTupleResult;
-import com.carbonldp.sparql.SecuredRepositoryTemplate;
 import com.carbonldp.utils.RDFNodeUtil;
 import com.carbonldp.utils.SPARQLUtil;
 import com.carbonldp.utils.ValueUtil;
 import org.joda.time.DateTime;
-import org.openrdf.model.*;
+import org.openrdf.model.IRI;
+import org.openrdf.model.Statement;
+import org.openrdf.model.Value;
+import org.openrdf.model.ValueFactory;
 import org.openrdf.model.impl.SimpleValueFactory;
 import org.openrdf.spring.SesameConnectionFactory;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
-import static com.carbonldp.namespaces.XSD.Properties.STRING;
-
 import java.io.File;
 import java.util.*;
 
 import static com.carbonldp.Consts.*;
+import static com.carbonldp.namespaces.XSD.Properties.STRING;
 
 @Transactional
 public class SesameContainerRepository extends AbstractSesameLDPRepository implements ContainerRepository {

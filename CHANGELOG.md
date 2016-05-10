@@ -1,3 +1,7 @@
+# 0.34.2 (2016/05/10)
+- Fix [LDP-625](https://jira.base22.com/browse/LDP-625) - Delete inverse membership relation
+- Add [Datadog](https://www.datadoghq.com/) agent installation to the Dockerfile
+
 # 0.34.1 (2016/05/04)
 - Fix [LDP-641](https://jira.base22.com/browse/LDP-641) - Missing properties in `prod-config.properties` file
 

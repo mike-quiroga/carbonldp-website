@@ -14,10 +14,9 @@ import com.carbonldp.models.Infraction;
 import com.carbonldp.rdf.RDFBlankNode;
 import com.carbonldp.rdf.RDFDocumentFactory;
 import com.carbonldp.rdf.RDFResource;
+import com.carbonldp.rdf.RDFResourceRepository;
 import com.carbonldp.rdf.RDFResourceDescription;
 import com.carbonldp.spring.ServicesInvoker;
-import com.carbonldp.utils.HTTPUtil;
-import com.carbonldp.utils.ModelUtil;
 import org.joda.time.DateTime;
 import org.openrdf.model.BNode;
 import org.openrdf.model.IRI;
@@ -34,6 +33,7 @@ public class SesameContainerService extends AbstractSesameLDPService implements 
 
 	private ServicesInvoker servicesInvoker;
 	private RDFSourceService sourceService;
+	private RDFResourceRepository resourceRepository;
 
 	@Override
 	public Container get( IRI containerIRI, Set<APIPreferences.ContainerRetrievalPreference> containerRetrievalPreferences, OrderByRetrievalPreferences orderByRetrievalPreferences ) {
@@ -168,24 +168,25 @@ public class SesameContainerService extends AbstractSesameLDPService implements 
 
 	@Override
 	public void removeMembers( IRI containerIRI, Set<IRI> members ) {
-		DateTime modifiedTime = DateTime.now();
-		IRI membershipResource = containerRepository.getTypedRepository( this.getContainerType( containerIRI ) ).getMembershipResource( containerIRI );
 		for ( IRI member : members ) {
 			removeMember( containerIRI, member );
 		}
-		sourceRepository.touch( membershipResource, modifiedTime );
-
 	}
 
 	@Override
 	public void removeMember( IRI containerIRI, IRI member ) {
+		deleteInverseMembershipRelation( containerIRI, member );
+
 		containerRepository.removeMember( containerIRI, member );
+
+		IRI membershipResource = containerRepository.getTypedRepository( this.getContainerType( containerIRI ) ).getMembershipResource( containerIRI );
+		sourceRepository.touch( membershipResource );
 	}
 
 	@Override
 	public void removeMembers( IRI containerIRI ) {
-		// TODO: Should the resource be touched here?
-		containerRepository.removeMembers( containerIRI );
+		Set<IRI> members = containerRepository.getMemberIRIs( containerIRI );
+		removeMembers( containerIRI, members );
 	}
 
 	@Override
@@ -225,9 +226,20 @@ public class SesameContainerService extends AbstractSesameLDPService implements 
 		sourceRepository.delete( targetIRI, true );
 	}
 
+	private void deleteInverseMembershipRelation( IRI containerIRI, IRI memberIRI ) {
+		IRI isMemberOfRelation = resourceRepository.getIRI( containerIRI, ContainerDescription.Property.MEMBER_OF_RELATION );
+		if ( isMemberOfRelation == null ) return;
+		IRI membershipResource = containerRepository.getTypedRepository( getContainerType( containerIRI ) ).getMembershipResource( containerIRI );
+		resourceRepository.remove( memberIRI, isMemberOfRelation, membershipResource, memberIRI );
+		sourceRepository.touch( memberIRI );
+	}
+
 	@Autowired
 	public void setRDFSourceService( RDFSourceService rdfSourceService ) { this.sourceService = rdfSourceService; }
 
 	@Autowired
 	public void setServicesInvoker( ServicesInvoker servicesInvoker ) { this.servicesInvoker = servicesInvoker; }
+
+	@Autowired
+	public void setResourceRepository( RDFResourceRepository resourceRepository ) { this.resourceRepository = resourceRepository; }
 }
