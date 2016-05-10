@@ -171,13 +171,14 @@ public class SesameContainerService extends AbstractSesameLDPService implements 
 		for ( IRI member : members ) {
 			removeMember( containerIRI, member );
 		}
-
 	}
 
 	@Override
 	public void removeMember( IRI containerIRI, IRI member ) {
-		deleteInvertedRelation( containerIRI, member );
+		deleteInverseMembershipRelation( containerIRI, member );
+
 		containerRepository.removeMember( containerIRI, member );
+
 		IRI membershipResource = containerRepository.getTypedRepository( this.getContainerType( containerIRI ) ).getMembershipResource( containerIRI );
 		sourceRepository.touch( membershipResource );
 	}
@@ -225,7 +226,7 @@ public class SesameContainerService extends AbstractSesameLDPService implements 
 		sourceRepository.delete( targetIRI, true );
 	}
 
-	private void deleteInvertedRelation( IRI containerIRI, IRI memberIRI ) {
+	private void deleteInverseMembershipRelation( IRI containerIRI, IRI memberIRI ) {
 		IRI isMemberOfRelation = resourceRepository.getIRI( containerIRI, ContainerDescription.Property.MEMBER_OF_RELATION );
 		if ( isMemberOfRelation == null ) return;
 		IRI membershipResource = containerRepository.getTypedRepository( getContainerType( containerIRI ) ).getMembershipResource( containerIRI );
