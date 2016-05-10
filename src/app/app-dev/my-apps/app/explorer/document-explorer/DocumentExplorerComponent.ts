@@ -3,8 +3,6 @@ import { CORE_DIRECTIVES } from "angular2/common";
 
 import $ from "jquery";
 import "semantic-ui/semantic";
-import "jstree";
-import "jstree/dist/themes/default/style.min.css!";
 
 import * as SDKContext from "carbonldp/SDKContext";
 import * as RDFDocument from "carbonldp/RDF/Document";
@@ -26,10 +24,12 @@ export default class DocumentExplorerComponent {
 
 	element:ElementRef;
 	$element:JQuery;
-	@Input() documentContext:SDKContext.Class;
 
 	loadingDocument:boolean = false;
 	inspectingDocument:RDFDocument.Class;
+	inspectingUri:string;
+
+	@Input() documentContext:SDKContext.Class;
 
 	constructor( element:ElementRef ) {
 		this.element = element;
@@ -46,5 +46,9 @@ export default class DocumentExplorerComponent {
 
 	onSelectingDocument( document:RDFDocument.Class ):void {
 		this.inspectingDocument = document;
+	}
+
+	receiveUri( uri:string ):void {
+		this.inspectingUri = uri;
 	}
 }

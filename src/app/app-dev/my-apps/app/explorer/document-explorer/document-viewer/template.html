@@ -1,6 +1,6 @@
 <div class="ui basic segment">
 	<div class="ui stackable grid">
-		<div class="row documentResource">
+		<div class="row documentResource" *ngIf="!!rootNode">
 			<document-resource class="column"
 			                   (onOpenbNode)="openbNode($event)"
 			                   [rootNode]="rootNode">

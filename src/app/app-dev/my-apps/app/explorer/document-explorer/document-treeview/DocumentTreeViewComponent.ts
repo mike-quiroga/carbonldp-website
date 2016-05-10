@@ -1,6 +1,5 @@
 import { Component, ElementRef, Input, Output, EventEmitter } from "angular2/core";
 import { CORE_DIRECTIVES } from "angular2/common";
-import { Router } from "angular2/router";
 
 import $ from "jquery";
 import "semantic-ui/semantic";
@@ -10,10 +9,8 @@ import "jstree/dist/themes/default/style.min.css!";
 import * as Pointer from "carbonldp/Pointer";
 import * as PersistedDocument from "carbonldp/PersistedDocument";
 import * as HTTP from "carbonldp/HTTP";
-import * as Request from "carbonldp/HTTP/Request";
 import * as URI from "carbonldp/RDF/URI";
 import * as SDKContext from "carbonldp/SDKContext";
-import * as NS from "carbonldp/NS";
 import * as RDFDocument from "carbonldp/RDF/Document";
 
 import template from "./template.html!";
@@ -32,12 +29,7 @@ export default class DocumentTreeViewComponent {
 
 	documentTree:JQuery;
 	nodeChildren:any[] = [];
-	members:any[] = [];
-	contains:Pointer.Class[] = [];
-	loadingTree:boolean = false;
-	loadingDocument:boolean = false;
-	@Output() onLoadingDocument:EventEmitter<boolean> = new EventEmitter();
-	@Output() onSelectingNode:EventEmitter<RDFDocument.Class> = new EventEmitter();
+	@Output() onResolveUri:EventEmitter<RDFDocument.Class> = new EventEmitter();
 
 	constructor( element:ElementRef ) {
 		this.element = element;
@@ -68,7 +60,6 @@ export default class DocumentTreeViewComponent {
 		);
 		rootNodes.then(
 			():void => {
-				this.loadingTree = false;
 				this.renderTree();
 			}
 		);
@@ -98,9 +89,6 @@ export default class DocumentTreeViewComponent {
 				"check_callback": true,
 			},
 			"types": {
-				"default": {
-					"icon": "folder outline icon",
-				},
 				"default": {
 					"icon": "file outline icon",
 				},
@@ -152,39 +140,7 @@ export default class DocumentTreeViewComponent {
 	}
 
 	onClickNode( parentId:string, node:any, position:string ):void {
-		console.log( arguments );
-		this.loadingDocument = true;
-		this.onLoadingDocument.emit( this.loadingDocument );
-		let requestOptions:Request.Options = {
-			sendCredentialsOnCORS: true,
-		};
-		if ( this.documentContext && this.documentContext.auth.isAuthenticated() ) this.documentContext.auth.addAuthentication( requestOptions );
-		let parser:RDFDocument.Parser = new RDFDocument.Parser();
-		let resolveNode:Promise<HTTP.Response.Class> = this.resolveNode( node.data.pointer.id, requestOptions );
-		resolveNode.then(
-			( response:HTTP.Response.Class ) => {
-				console.log( "Returned node: %o", response );
-				parser.parse( response.data ).then(
-					( parsedDocument:RDFDocument.Class ) => {
-						console.log( "Parsed node: %o", parsedDocument );
-						if ( parsedDocument[ 0 ] )
-							this.onSelectingNode.emit( <RDFDocument.Class>parsedDocument[ 0 ] );
-					}
-				);
-			}
-		);
-		resolveNode.then(
-			()=> {
-				this.loadingDocument = false;
-				this.onLoadingDocument.emit( this.loadingDocument );
-			}
-		);
-	}
-
-	resolveNode( uri:string, requestOptions:Request.Options ):Promise<HTTP.Response.Class> {
-		HTTP.Request.Util.setAcceptHeader( "application/ld+json", requestOptions );
-		HTTP.Request.Util.setPreferredInteractionModel( NS.LDP.Class.RDFSource, requestOptions );
-		return HTTP.Request.Service.get( uri, requestOptions );
+		this.onResolveUri.emit( node.data.pointer.id );
 	}
 
 	addChild( parentId:string, node:any, position:string ):void {
@@ -192,10 +148,10 @@ export default class DocumentTreeViewComponent {
 	}
 
 	getNodeChildren( uri:string ):Promise<any[]> {
-		let children:any[] = [];
 		return this.documentContext.documents.get( uri ).then(
 			( [resolvedRoot, response]:[PersistedDocument.Class, HTTP.Response.Class] ) => {
 				console.log( "documents.get('" + uri + "') -->  %o", resolvedRoot );
+				let children:any[] = [];
 				if ( resolvedRoot.contains )
 					resolvedRoot.contains.forEach(
 						( pointer:Pointer.Class ):void => {

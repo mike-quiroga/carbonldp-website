@@ -2,10 +2,12 @@
 	<div class="stretched row">
 		<document-treeview class="five wide column treeview-container"
 		                   [documentContext]="documentContext"
-		                   (onLoadingDocument)="onLoadingDocument($event)"
-		                   (onSelectingNode)="onSelectingDocument($event)"></document-treeview>
+		                   (onResolveUri)="receiveUri($event)"></document-treeview>
 		<document-viewer class="eleven wide column"
 		                 [document]="inspectingDocument"
-		                 *ngIf="!!inspectingDocument"></document-viewer>
+		                 [documentContext]="documentContext"
+		                 (onLoadingDocument)="onLoadingDocument($event)"
+		                 [uri]="inspectingUri"
+		                 *ngIf="!!inspectingDocument || !!inspectingUri"></document-viewer>
 	</div>
 </div>
