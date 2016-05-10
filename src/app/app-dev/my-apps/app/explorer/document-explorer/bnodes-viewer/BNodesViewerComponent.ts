@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input, Output, EventEmitter } from "angular2/core";
+import { Component, ElementRef, Input, Output, EventEmitter, SimpleChange } from "angular2/core";
 import { CORE_DIRECTIVES } from "angular2/common";
 
 import $ from "jquery";
@@ -39,6 +39,14 @@ export default class BNodesViewerComponent {
 		this.nodesTab = this.$element.find( ".tabular.bnodes.menu" ).tab();
 	}
 
+	ngOnChanges( changes:{[propName:string]:SimpleChange} ):void {
+		if ( ( changes[ "bNodesArray" ].currentValue !== changes[ "bNodesArray" ].previousValue ) ||
+			( changes[ "bNodesDictionary" ].currentValue !== changes[ "bNodesDictionary" ].previousValue ) ) {
+			this.openedbNodes = [];
+			this.goTobNode( "all" );
+		}
+	}
+
 	getPropertiesName( property:any ):string[] {
 		return Object.keys( property );
 	}
@@ -60,6 +68,8 @@ export default class BNodesViewerComponent {
 	}
 
 	goTobNode( id:string ) {
+		if ( ! this.nodesTab )
+			return;
 		this.nodesTab.find( "> [data-tab='" + id + "']" ).click();
 		this.onOpenbNode.emit( "bNodes" );
 	}
@@ -67,7 +77,7 @@ export default class BNodesViewerComponent {
 	closebNode( node:RDFNode.Class ):void {
 		let idx:number = this.openedbNodes.indexOf( node );
 		this.openedbNodes.splice( idx, 1 );
-		this.goTobNode( "first" );
+		this.goTobNode( "all" );
 	}
 
 	refreshTabs():void {

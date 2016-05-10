@@ -106,8 +106,8 @@ export default class DocumentViewerComponent {
 	generateMaps():void {
 		this.bNodesArray = [];
 		this.namedFragmentsArray = [];
-		this.bNodesDictionary = new Map<string,RDFNode.Class>();
-		this.namedFragmentsDictionary = new Map<string,RDFNode.Class>();
+		this.bNodesDictionary.clear();
+		this.namedFragmentsDictionary.clear();
 		let nodes:RDFNode.Class[] = this.document[ "@graph" ];
 		nodes.forEach(
 			( node:RDFNode.Class ) => {
