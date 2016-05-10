@@ -7,7 +7,7 @@ import "semantic-ui/semantic";
 import * as SDKContext from "carbonldp/SDKContext";
 import * as RDFDocument from "carbonldp/RDF/Document";
 
-
+import DocumentsResolverService from "./../document-explorer/DocumentsResolverService"
 import DocumentViewerComponent from "./document-viewer/DocumentViewerComponent";
 import DocumentTreeViewComponent from "./document-treeview/DocumentTreeViewComponent";
 
@@ -28,11 +28,13 @@ export default class DocumentExplorerComponent {
 	loadingDocument:boolean = false;
 	inspectingDocument:RDFDocument.Class;
 	inspectingUri:string;
+	documentsResolverService:DocumentsResolverService;
 
 	@Input() documentContext:SDKContext.Class;
 
-	constructor( element:ElementRef ) {
+	constructor( element:ElementRef, documentsResolverService:DocumentsResolverService ) {
 		this.element = element;
+		this.documentsResolverService = documentsResolverService;
 	}
 
 	ngAfterViewInit():void {
@@ -44,11 +46,19 @@ export default class DocumentExplorerComponent {
 		this.loadingDocument = loadingDocument;
 	}
 
-	onSelectingDocument( document:RDFDocument.Class ):void {
-		this.inspectingDocument = document;
-	}
-
-	receiveUri( uri:string ):void {
-		this.inspectingUri = uri;
+	resolveDocument( uri:string ):void {
+		this.loadingDocument = true;
+		let getDocument:Promise<RDFDocument.Class> = this.documentsResolverService.get( uri, this.documentContext );
+		getDocument.then(
+			( document:RDFDocument.Class )=> {
+				// console.log( "Returned document: %o", document );
+				this.inspectingDocument = document;
+			}
+		);
+		getDocument.then(
+			()=> {
+				this.loadingDocument = false;
+			}
+		);
 	}
 }

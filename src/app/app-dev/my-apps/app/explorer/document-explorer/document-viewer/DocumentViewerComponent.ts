@@ -1,21 +1,15 @@
 import { Component, ElementRef, Input, Output, EventEmitter, SimpleChange, ViewChild } from "angular2/core";
 import { CORE_DIRECTIVES } from "angular2/common";
-import { Router } from "angular2/router";
 
 import $ from "jquery";
 import "semantic-ui/semantic";
 
-import * as RDFDocument from "carbonldp/RDF/Document";
 import * as RDFNode from "carbonldp/RDF/RDFNode";
 import * as URI from "carbonldp/RDF/URI";
-import * as Pointer from "carbonldp/Pointer";
-import * as PersistedDocument from "carbonldp/PersistedDocument";
-import * as HTTP from "carbonldp/HTTP";
-import * as Request from "carbonldp/HTTP/Request";
-import * as URI from "carbonldp/RDF/URI";
 import * as SDKContext from "carbonldp/SDKContext";
-import * as NS from "carbonldp/NS";
 import * as RDFDocument from "carbonldp/RDF/Document";
+
+import DocumentsResolverService from "./../DocumentsResolverService";
 
 import DocumentResourceViewerComponent from "./../document-resource-viewer/DocumentResourceViewer";
 import BNodesViewerComponent from "./../bnodes-viewer/BNodesViewerComponent";
@@ -31,7 +25,6 @@ import "./style.css!";
 } )
 
 export default class DocumentViewerComponent {
-	router:Router;
 	element:ElementRef;
 	$element:JQuery;
 
@@ -43,23 +36,26 @@ export default class DocumentViewerComponent {
 	bNodesDictionary:Map<string,RDFNode.Class> = new Map<string,RDFNode.Class>();
 	namedFragmentsDictionary:Map<string,RDFNode.Class> = new Map<string,RDFNode.Class>();
 
-	loadingDocument:boolean = false;
 	@Input() uri:string;
 	@Input() document:RDFDocument.Class;
 	@Input() documentContext:SDKContext.Class;
 	@ViewChild( BNodesViewerComponent ) documentbNodes:BNodesViewerComponent;
 	@Output() onLoadingDocument:EventEmitter<boolean> = new EventEmitter();
 
-	constructor( router:Router, element:ElementRef ) {
-		this.router = router;
-		this.element = element;
+	set loadingDocument( value:boolean ) {
+		this._loadingDocument = value;
+		this.onLoadingDocument.emit( value );
 	}
 
-	ngOnInit():void {
-		if ( this.document ) {
-			this.setRoot();
-			this.generateMaps();
-		}
+	get loadingDocument():boolean { return this._loadingDocument; }
+
+	private _loadingDocument:boolean = false;
+
+	documentsResolverService:DocumentsResolverService;
+
+	constructor( element:ElementRef, documentsResolverService:DocumentsResolverService ) {
+		this.element = element;
+		this.documentsResolverService = documentsResolverService;
 	}
 
 	ngAfterViewInit():void {
@@ -68,54 +64,43 @@ export default class DocumentViewerComponent {
 	}
 
 	ngOnChanges( changes:{[propName:string]:SimpleChange} ):void {
-		if ( changes[ "uri" ] && changes[ "uri" ].currentValue !== changes[ "uri" ].previousValue ) {
-			if ( ! changes[ "uri" ].currentValue )
-				return;
+		if ( changes[ "uri" ] && ! ! changes[ "uri" ].currentValue && changes[ "uri" ].currentValue !== changes[ "uri" ].previousValue ) {
 			this.loadingDocument = true;
-			this.onLoadingDocument.emit( this.loadingDocument );
-			let requestOptions:Request.Options = {
-				sendCredentialsOnCORS: true,
-			};
-			if ( this.documentContext && this.documentContext.auth.isAuthenticated() ) this.documentContext.auth.addAuthentication( requestOptions );
-			let parser:RDFDocument.Parser = new RDFDocument.Parser();
-			let resolveNode:Promise<HTTP.Response.Class> = this.resolveUri( this.uri, requestOptions );
-			resolveNode.then(
-				( response:HTTP.Response.Class ) => {
-					console.log( "Returned uri: %o", response );
-					parser.parse( response.data ).then(
-						( parsedDocument:RDFDocument.Class ) => {
-							console.log( "Parsed uri: %o", parsedDocument );
-							if ( ! parsedDocument[ 0 ] )
-								return;
-							this.document = <RDFDocument.Class>parsedDocument[ 0 ];
-							this.setRoot();
-							this.generateMaps();
-						}
-					);
+			this.getDocument( this.uri, this.documentContext ).then(
+				( document:RDFDocument.Class ) => {
+					this.document = document;
+					this.receiveDocument();
 				}
-			);
-			resolveNode.then(
+			).then(
 				()=> {
 					this.loadingDocument = false;
-					this.onLoadingDocument.emit( this.loadingDocument );
 				}
 			);
 		}
-		if ( changes[ "document" ] && changes[ "document" ].currentValue !== changes[ "document" ].previousValue ) {
-			if ( ! changes[ "document" ].currentValue )
-				return;
-			this.setRoot();
-			this.generateMaps();
+		if ( changes[ "document" ] && ! ! changes[ "document" ].currentValue && changes[ "document" ].currentValue !== changes[ "document" ].previousValue ) {
+			this.loadingDocument = true;
+			this.receiveDocument();
+			this.loadingDocument = false;
 		}
 	}
 
+	receiveDocument():void {
+		this.document = this.document[ 0 ];
+		this.setRoot();
+		this.generateMaps();
+	}
+
 	setRoot():void {
-		console.log( this.document );
+		//console.log( this.document );
 		this.rootNode = <RDFNode.Class>{};
 		let documents:RDFNode.Class[] = RDFDocument.Util.getDocumentResources( this.document );
-		console.log( documents );
+		//console.log( documents );
 		this.rootNode = documents[ 0 ];
-		console.log( this.rootNode );
+		//console.log( this.rootNode );
+	}
+
+	getDocument( uri:string, documentContext:SDKContext.Class ):Promise<RDFDocument.Class> {
+		return this.documentsResolverService.get( uri, documentContext );
 	}
 
 	generateMaps():void {
@@ -136,7 +121,7 @@ export default class DocumentViewerComponent {
 				}
 			}
 		);
-		console.log( "bNodes: %o - NamedFragments: %o", this.bNodesDictionary, this.namedFragmentsDictionary );
+		// console.log( "bNodes: %o - NamedFragments: %o", this.bNodesDictionary, this.namedFragmentsDictionary );
 	}
 
 	openbNode( id:string ):void {
@@ -149,11 +134,5 @@ export default class DocumentViewerComponent {
 			let divPosition:JQueryCoordinates = this.$element.find( ".row.bNodes" ).position();
 			this.$element.animate( { scrollTop: divPosition.top }, "fast" );
 		}
-	}
-
-	resolveUri( uri:string, requestOptions:Request.Options ):Promise<HTTP.Response.Class> {
-		HTTP.Request.Util.setAcceptHeader( "application/ld+json", requestOptions );
-		HTTP.Request.Util.setPreferredInteractionModel( NS.LDP.Class.RDFSource, requestOptions );
-		return HTTP.Request.Service.get( uri, requestOptions );
 	}
 }
