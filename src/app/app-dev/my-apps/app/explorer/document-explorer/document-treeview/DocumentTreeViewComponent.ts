@@ -25,11 +25,14 @@ import template from "./template.html!";
 export default class DocumentTreeViewComponent {
 	element:ElementRef;
 	$element:JQuery;
-	@Input() documentContext:SDKContext.Class;
 
 	documentTree:JQuery;
 	nodeChildren:any[] = [];
+
+	@Input() documentContext:SDKContext.Class;
 	@Output() onResolveUri:EventEmitter<RDFDocument.Class> = new EventEmitter();
+	@Output() onError:EventEmitter<HTTP.Errors.HTTPError> = new EventEmitter();
+	@Output() onLoadingDocument:EventEmitter<boolean> = new EventEmitter();
 
 	constructor( element:ElementRef ) {
 		this.element = element;
@@ -39,13 +42,18 @@ export default class DocumentTreeViewComponent {
 		console.log( "TreeView: %o", this.documentContext );
 		this.$element = $( this.element.nativeElement );
 		this.documentTree = this.$element.find( ".document.treeview" );
-		this.createTree();
+		this.onLoadingDocument.emit( true );
+		this.getDocumentTree().then(
+			()=> {
+				this.renderTree();
+				this.onLoadingDocument.emit( false );
+			}
+		);
 	}
 
-	createTree():void {
+	getDocumentTree():Promise<PersistedDocument.Class> {
 		// TODO: use this.documentContext.app.rootContainer.resolve() when 401 error is fixed on SDK
-		let rootNodes:Promise<[PersistedDocument.Class, HTTP.Response.Class]> = this.documentContext.documents.get( "" );
-		rootNodes.then(
+		return this.documentContext.documents.get( "" ).then(
 			( [resolvedRoot, response]:[PersistedDocument.Class, HTTP.Response.Class] ) => {
 				console.log( "documents.get('') -->  %o", resolvedRoot );
 				resolvedRoot.contains.forEach(
@@ -53,14 +61,11 @@ export default class DocumentTreeViewComponent {
 						this.nodeChildren.push( this.buildNode( pointer.id ) );
 					}
 				);
+				return resolvedRoot;
 			},
-			( error ) => {
+			( error:HTTP.Errors.HTTPError ) => {
 				console.log( "Error:%o", error );
-			}
-		);
-		rootNodes.then(
-			():void => {
-				this.renderTree();
+				this.onError.emit( error );
 			}
 		);
 	}

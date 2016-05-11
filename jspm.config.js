@@ -24,7 +24,13 @@ SystemJS.config({
       }
     },
     "carbonldp": {
-      "defaultExtension": "js"
+      "defaultExtension": "js",
+      "map": {
+        "file-type": "@empty",
+        "url": "@empty",
+        "http": "@empty",
+        "https": "@empty"
+      }
     },
     "angular2-carbonldp": {
       "map": {
