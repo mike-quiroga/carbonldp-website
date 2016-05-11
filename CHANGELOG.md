@@ -1,3 +1,16 @@
+# 0.5.12 (May 11, 2016)
+- Add app explorer view.
+- Add new DocumentExplorerComponent with the following components:
+	- DocumentTreeView: to list all the children of a document/app.
+	- DocumentViewer: to display the content/properties of a document.
+	- PropertyComponent: to display a property of a Document.
+	- bNodeViewerComponent: to display bNodes of a document.
+	- DocumentsResolverService: to fetch documents context.
+	- ListViewerComponent: to display lists when embeded in properties.
+- Add link to App Explorer in sidebar.
+- Fix general AppDev layout padding and margins to display footer correctly.
+- Fix jspm carbonldp file-type issue with a mapping.
+
 # 0.5.11 (April 28, 2016)
 - Add a list view to MyApps.
 - Add search to MyApps view
