@@ -33,6 +33,110 @@
 						</div>
 					</div>
 
+					<section>
+						<h2 class="ui header"> What is a context?</h2>
+
+						<p>A Context is a container that references the place where all the you platform's settings and
+							your applications' data are stored. Through the contexts you can comunicate
+							with your Carbon server to access the settings, authentication services and
+							object Schema of your platform and/or applications.
+							You can have different contexts with different settings for each application, or you can use the
+							platform context for some global settings. Having contexts helps you simplify the programming process,
+							the contexts help you resolve all the relative <span>URIs</span> that you use in your applications.</p>
+						<section>
+							<h3 class="ui header">Types of contexts</h3>
+
+							<p>In the server side carbon handles two spaces, where your data is stored. The SDK mirrors these spaces using contexts.
+							<ul>
+								<li>/platform/</li>
+								<li>/apps/</li>
+							</ul>
+
+							<p>In the platform space you will find all the general settings for your applications, agents, roles among others.
+								In the apps space you will find everything specific to your application.</p>
+						</section>
+					</section>
+					<section>
+						<h2 class="ui header">Platform context</h2>
+
+						<p>In the platform context you can set your domain, meaning that you can set the URL where your platform is at, this way your application is more or less independent to the
+							location of carbon, e.g. if your platform changes locations you just need to set the new domain in your Platform context to access you applications.</p>
+						<section>
+							<h3 class="ui header">Declare the platform context </h3>
+
+							To declare a platform context you need to import Carbon from the carbonldp/Carbon library you can instance
+							a new Carbon object, this is you platform context. If you just declare it, you can see the default values the context has.
+							e.g. the default domain is https://carbonldp.com/
+
+							<!--@formatter:off-->
+								<pre><code class="highlighted javascript">
+import Carbon from "carbonldp/Carbon";
+
+let carbonContext:Carbon = new Carbon();
+
+
+carbonContext.resolve( "" ); // https://carbonldp.com/platform/
+// Change a setting
+carbonContext.setSetting( "domain", "dev.carbonldp.com" );
+
+carbonContext.resolve( "" ); // https://dev.carbonldp.com/platform/
+
+let anotherContext:Carbon = new Carbon();
+anotherContext.resolve( "" ); // https://carbonldp.com/platform/
+
+								</code></pre>
+								<!--@formatter:on-->
+						</section>
+						<section>
+							<h3 class="ui header">Access/Modify your platform context</h3>
+							<p>In the last section we saw how to declare a platform context, now we will see how to costumize it.</p>
+							<p>You can set your domain</p>
+
+							<!--@formatter:off-->
+								<pre><code class="highlighted javascript">
+import Carbon from "carbonldp/Carbon";
+
+let carbonContext:Carbon = new Carbon();
+
+carbonContext.setSetting( "domain", "dev.carbonldp.com" );
+
+carbonContext.resolve( "" ); // https://dev.carbonldp.com/platform/
+
+								</code></pre>
+						    <!--@formatter:on-->
+						</section>
+
+					</section>
+					<section>
+						<h2 class="ui header">Application context</h2>
+						<p> Once you have your platform context declared, you can get your application context. The application context is created along side your application, you can not
+							reference a
+							application context of an application that is not yet created. If you haven't created a application, please do so!
+
+							method example...
+						</p>
+						<!--@formatter:off-->
+								<pre><code class="highlighted javascript">
+import Carbon from "carbonldp/Carbon";
+
+let carbonContext:Carbon = new Carbon();
+
+carbonContext.apps.getAppContext( "test-app/" ).then(
+	( appContext:App.Context ) => {
+		appContext.resolve( "" ); // https://carbonldp.com/apps/test-app/
+	}
+);
+
+								</code></pre>
+								<!--@formatter:on-->
+					</section>
+					<section>
+
+						<h2 class="ui header">Inheritance</h2>
+						<p>All the settings of platform contexts are by default inherited by the application contexts, you can over write them in you application context. This allows you to manage
+							different objects schema in your applications, or manage different authentication credentials.
+						</p>
+					</section>
 				</article>
 			</main>
 		</div>

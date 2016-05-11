@@ -33,6 +33,51 @@
 						</div>
 					</div>
 
+					<section>
+						<h2 class="ui header">Carbon unit of information</h2>
+
+						<p>Now that you have your brand new app (If you don't have your app yet, please create it! (link) ). Let's start with some basic things you can do, like creating documents,
+							creating parent-children and other types of links, saving documents etc.
+
+							First we have to mention that when we create an application in Carbon, we create a root Document too.
+							The root Document contains relevant information about our application and all the information you create in it.
+
+
+							But, what is a Document?
+
+							In simplest terms a Document is the basic unit of information in Carbon.</p>
+
+						<p>Document</p>
+						<ul>
+							<li>Properties</li>
+							<li>Fragments</li>
+							<li>NamedFragments</li>
+						</ul>
+
+						<p>A Carbon Document is created from a javascript object. This object can have any number of properties and nested objects.
+
+						The nested objects in a Carbon Document, are known as fragments.
+
+						There are two types of fragments in Carbon: fragments and named fragments.
+
+						Fragments have ids that are used to reference them locally, this ids are provided automatically by Carbon. This means that this fragment can be referenced only from within the
+						Document.
+
+						Named Fragments have an id that is not local but global, it uses the same URI as de Document to which it belongs, but it ends with URI#fragment-id. ///If you need to reference
+						the fragments of a Document externally, you could use Named Fragments.///
+
+
+						Why call it Document?
+						It's an analogy. Between webpage content and our data structure. We all know what a Document on a web page is. In webpage content a Document has a URL, sections and links. It
+						has a main section with information relevant to the Document, and it may have secondary sections that may be relevant to the main section (named fragment) or may not be
+						revelant (fragments). And finally documents have links to other Documents.
+
+
+						Carbon Document structure can be viewed as a tree, in the sense that every Document you create is the child of a previous existing Document, beginning with the root Doucment
+						created with the app. You can't create a Document that doesn't have a parent Document.</p>
+					</section>
+
+
 				</article>
 			</main>
 		</div>
