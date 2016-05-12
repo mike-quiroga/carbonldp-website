@@ -14,12 +14,10 @@ import * as SDKContext from "carbonldp/SDKContext";
 import * as RDFDocument from "carbonldp/RDF/Document";
 
 import template from "./template.html!";
-// import "./style.css!";
 
 @Component( {
 	selector: "document-treeview",
 	template: template,
-	directives: [ CORE_DIRECTIVES ],
 } )
 
 export default class DocumentTreeViewComponent {
@@ -31,7 +29,7 @@ export default class DocumentTreeViewComponent {
 
 	@Input() documentContext:SDKContext.Class;
 	@Output() onResolveUri:EventEmitter<RDFDocument.Class> = new EventEmitter();
-	@Output() onError:EventEmitter<HTTP.Errors.HTTPError> = new EventEmitter();
+	@Output() onError:EventEmitter<HTTP.Errors.Error> = new EventEmitter();
 	@Output() onLoadingDocument:EventEmitter<boolean> = new EventEmitter();
 
 	constructor( element:ElementRef ) {
@@ -39,7 +37,6 @@ export default class DocumentTreeViewComponent {
 	}
 
 	ngAfterViewInit():void {
-		console.log( "TreeView: %o", this.documentContext );
 		this.$element = $( this.element.nativeElement );
 		this.documentTree = this.$element.find( ".document.treeview" );
 		this.onLoadingDocument.emit( true );
@@ -52,22 +49,19 @@ export default class DocumentTreeViewComponent {
 	}
 
 	getDocumentTree():Promise<PersistedDocument.Class> {
-		// TODO: use this.documentContext.app.rootContainer.resolve() when 401 error is fixed on SDK
 		return this.documentContext.documents.get( "" ).then(
-			( [resolvedRoot, response]:[PersistedDocument.Class, HTTP.Response.Class] ) => {
-				console.log( "documents.get('') -->  %o", resolvedRoot );
+			( [ resolvedRoot, response ]:[ PersistedDocument.Class, HTTP.Response.Class ] ) => {
 				resolvedRoot.contains.forEach(
 					( pointer:Pointer.Class ) => {
 						this.nodeChildren.push( this.buildNode( pointer.id ) );
 					}
 				);
 				return resolvedRoot;
-			},
-			( error:HTTP.Errors.HTTPError ) => {
-				console.log( "Error:%o", error );
-				this.onError.emit( error );
 			}
-		);
+		).catch( ( error:HTTP.Errors.Error ) => {
+			console.error( "Error:%o", error );
+			this.onError.emit( error );
+		} );
 	}
 
 	buildNode( uri:string ):any {
@@ -155,26 +149,21 @@ export default class DocumentTreeViewComponent {
 	getNodeChildren( uri:string ):Promise<any[]> {
 		return this.documentContext.documents.get( uri ).then(
 			( [resolvedRoot, response]:[PersistedDocument.Class, HTTP.Response.Class] ) => {
-				console.log( "documents.get('" + uri + "') -->  %o", resolvedRoot );
-				let children:any[] = [];
-				if ( resolvedRoot.contains )
-					resolvedRoot.contains.forEach(
-						( pointer:Pointer.Class ):void => {
-							children.push( this.buildNode( pointer.id ) );
-						}
-					);
-				return children;
-			},
-			( error ) => {
-				console.log( "Error:%o", error );
+				if ( ! resolvedRoot.contains ) return [];
+
+				return resolvedRoot.contains.map( ( pointer:Pointer.Class ):void => {
+					return this.buildNode( pointer.id );
+				} );
 			}
-		);
+		).catch( ( error ) => {
+			console.log( "Error: %o", error );
+		} );
 	}
 
 
-	getSlug( pointer:Pointer.Class|string ):string {
-		if ( typeof pointer !== "string" )
-			return (<Pointer.Class>pointer).id;
+	getSlug( pointer:Pointer.Class | string ):string {
+		if ( typeof pointer !== "string" ) return ( <Pointer.Class>pointer ).id;
+
 		return URI.Util.getSlug( <string>pointer );
 	}
 

@@ -5,9 +5,9 @@
 <div class="ui section divider"></div>
 <div class="ui divided items">
 	<document-property class="property item"
-	                   *ngFor="#propertyName of getPropertiesName(rootNode); #i=index;"
-	                   (onGoTobNode)="openbNode($event)"
+	                   *ngFor="#propertyName of getPropertiesName( rootNode ); #i=index;"
+	                   (onGoToBNode)="openBNode( $event )"
 	                   [propertyName]="propertyName"
-	                   [property]="rootNode[propertyName]">
+	                   [property]="rootNode[ propertyName ]">
 	</document-property>
 </div>

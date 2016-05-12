@@ -54,13 +54,13 @@
 					<th *ngIf="hasHeader('@type')">@type</th>
 					<th *ngIf="hasHeader('@value')">@value</th>
 				</tr>
-				<tr *ngFor="#prop of property; #j=index;" [ngClass]="{selectable: isbNode(prop['@id'])}">
+				<tr *ngFor="#prop of property; #j=index;" [ngClass]="{selectable: isBNode(prop['@id'])}">
 					<td *ngIf="!!prop['@id']">
-						<p *ngIf="!isbNode(prop['@id'])">
+						<p *ngIf="!isBNode(prop['@id'])">
 							{{prop['@id']}}
 						</p>
-						<a *ngIf="isbNode(prop['@id'])"
-						   (click)="goTobNode(prop['@id'])">
+						<a *ngIf="isBNode(prop['@id'])"
+						   (click)="goToBNode(prop['@id'])">
 							{{prop['@id']}}
 							<span class="ui blue left pointing basic label">
 								Go to node
@@ -86,7 +86,7 @@
 				</div>
 				<div class="content" *ngFor="#item of property; #i=index;">
 					<property-list [list]="item['@list']"
-					               (onGoTobNode)="goTobNode($event)"></property-list>
+					               (onGoToBNode)="goToBNode($event)"></property-list>
 				</div>
 			</div>
 		</div>
