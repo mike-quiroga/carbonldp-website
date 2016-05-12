@@ -1,5 +1,4 @@
 import { Component, ElementRef, Input, Output, EventEmitter } from "angular2/core";
-import { CORE_DIRECTIVES } from "angular2/common";
 
 import $ from "jquery";
 import "semantic-ui/semantic";
@@ -40,12 +39,10 @@ export default class DocumentTreeViewComponent {
 		this.$element = $( this.element.nativeElement );
 		this.documentTree = this.$element.find( ".document.treeview" );
 		this.onLoadingDocument.emit( true );
-		this.getDocumentTree().then(
-			()=> {
-				this.renderTree();
-				this.onLoadingDocument.emit( false );
-			}
-		);
+		this.getDocumentTree().then( ()=> {
+			this.renderTree();
+			this.onLoadingDocument.emit( false );
+		} );
 	}
 
 	getDocumentTree():Promise<PersistedDocument.Class> {

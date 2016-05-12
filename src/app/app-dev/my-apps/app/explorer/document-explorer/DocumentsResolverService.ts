@@ -43,46 +43,6 @@ export default class DocumentsResolverService {
 			console.error( error );
 			return Promise.reject( error );
 		} );
-
-		// return new Promise<RDFDocument.Class>(
-		// 	( resolve:( result:any ) => void, reject:( error:Error ) => void ) => {
-		// 		if ( this.documents.has( uri ) ) {
-		// 			resolve( this.documents.get( uri ) );
-		// 			return;
-		// 		}
-		// 		if ( ! uri || ! documentContext ) {
-		// 			reject( new Error( "Provide the required parameters" ) );
-		// 			return;
-		// 		}
-		// 		let requestOptions:HTTP.Request.Options = {
-		// 			sendCredentialsOnCORS: true,
-		// 		};
-		// 		if ( documentContext && documentContext.auth.isAuthenticated() ) documentContext.auth.addAuthentication( requestOptions );
-		// 		HTTP.Request.Util.setAcceptHeader( "application/ld+json", requestOptions );
-		// 		HTTP.Request.Util.setPreferredInteractionModel( NS.LDP.Class.RDFSource, requestOptions );
-		// 		let resolveDocument:Promise<HTTP.Response.Class> = HTTP.Request.Service.get( uri, requestOptions );
-		// 		resolveDocument.then(
-		// 			( response:HTTP.Response.Class ) => {
-		// 				this.parser.parse( response.data ).then(
-		// 					( parsedDocument:RDFDocument.Class ) => {
-		// 						if ( ! parsedDocument[ 0 ] )
-		// 							return;
-		// 						this.documents.set( uri, parsedDocument );
-		// 						resolve( parsedDocument );
-		// 					},
-		// 					( error:HTTP.Errors.Error ) => {
-		// 						return error;
-		// 					}
-		// 				);
-		// 			}
-		// 		).catch(
-		// 			( error ) => {
-		// 				console.log( error );
-		// 				reject( error );
-		// 			}
-		// 		);
-		// 	}
-		// );
 	}
 
 	getAll():Promise<RDFDocument.Class[]> {
