@@ -206,7 +206,7 @@ public class SesameContainerService extends AbstractSesameLDPService implements 
 		RDFBlankNode responseDescription = getResponseMetadata( container );
 
 		for ( RDFSource source : sources ) {
-			ResourceMetadataFactory.getInstance().create( container, responseDescription, source );
+			ResourceMetadataFactory1.getInstance().create( container, responseDescription, source );
 		}
 		return container;
 	}

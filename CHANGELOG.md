@@ -1,4 +1,8 @@
 # 0.34.2 (2016/05/10)
+- Fix [LDP-625](https://jira.base22.com/browse/LDP-625) - sended Etag in metadata is now correct
+
+
+# 0.34.2 (2016/05/10)
 - Fix [LDP-625](https://jira.base22.com/browse/LDP-625) - Delete inverse membership relation
 - Add [Datadog](https://www.datadoghq.com/) agent installation to the Dockerfile
 
