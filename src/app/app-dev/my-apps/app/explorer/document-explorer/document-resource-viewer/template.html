@@ -7,6 +7,8 @@
 	<document-property class="property item"
 	                   *ngFor="#propertyName of getPropertiesName( rootNode ); #i=index;"
 	                   (onGoToBNode)="openBNode( $event )"
+	                   (onGoToNamedFragment)="openNamedFragment($event)"
+	                   [documentURI]="rootNode['@id']"
 	                   [propertyName]="propertyName"
 	                   [property]="rootNode[ propertyName ]">
 	</document-property>

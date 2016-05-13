@@ -130,5 +130,9 @@ export default class DocumentViewerComponent {
 			let divPosition:JQueryCoordinates = this.$element.find( ".row.bNodes" ).position();
 			this.$element.animate( { scrollTop: divPosition.top }, "fast" );
 		}
+		if ( id === "namedFragments" ) {
+			let divPosition:JQueryCoordinates = this.$element.find( ".row.namedFragments" ).position();
+			this.$element.animate( { scrollTop: divPosition.top }, "fast" );
+		}
 	}
 }

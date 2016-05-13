@@ -98,13 +98,13 @@ export default class PropertyComponent {
 	isNamedFragment( uri:string ):boolean {
 		return ! ! uri ? URI.Util.isFragmentOf( uri, this.documentURI ) : false;
 	}
-	
+
 	goToBNode( id:string ):void {
 		this.onGoToBNode.emit( id );
 	}
 
 	goToNamedFragment( id:string ):void {
-		this.onGoToNamedFragment.emit( this.getNormalizedUri( id ) );
+		this.onGoToNamedFragment.emit( id );
 	}
 
 	getTypeIcon( type:string ):string {
@@ -122,10 +122,6 @@ export default class PropertyComponent {
 
 	getJSON( obj:any ):string {
 		return JSON.stringify( obj, null, 2 );
-	}
-
-	getNormalizedUri( uri:string ):string {
-		return uri.replace( /[^\w\s]/gi, "" );
 	}
 
 	initializeTabs():void {

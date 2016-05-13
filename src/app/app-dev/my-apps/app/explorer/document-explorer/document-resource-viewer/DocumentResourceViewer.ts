@@ -19,6 +19,7 @@ export default class DocumentResourceComponent {
 
 	@Input() rootNode:RDFNode.Class;
 	@Output() onOpenBNode:EventEmitter<string> = new EventEmitter<string>();
+	@Output() onOpenNamedFragment:EventEmitter<string> = new EventEmitter<string>();
 
 	constructor() {}
 
@@ -28,6 +29,10 @@ export default class DocumentResourceComponent {
 
 	openBNode( id:string ):void {
 		this.onOpenBNode.emit( id );
+	}
+
+	openNamedFragment( id:string ):void {
+		this.onOpenNamedFragment.emit( id );
 	}
 
 }

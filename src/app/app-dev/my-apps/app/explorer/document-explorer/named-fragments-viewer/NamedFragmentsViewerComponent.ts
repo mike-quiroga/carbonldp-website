@@ -28,7 +28,7 @@ export default class NamedFragmentsViewerComponent {
 	@Input() namedFragmentsArray:RDFNode.Class[] = [];
 	@Input() namedFragmentsDictionary:Map<string,RDFNode.Class> = new Map<string,RDFNode.Class>();
 	@Output() onOpenNamedFragment:EventEmitter<string> = new EventEmitter<string>();
-	@Output() onOpenbNode:EventEmitter<string> = new EventEmitter<string>();
+	@Output() onOpenBNode:EventEmitter<string> = new EventEmitter<string>();
 
 	constructor( element:ElementRef ) {
 		this.element = element;
@@ -80,8 +80,8 @@ export default class NamedFragmentsViewerComponent {
 		return uri.replace( /[^\w\s]/gi, "" );
 	}
 
-	goTobNode( id:string ):void {
-		this.onOpenbNode.emit( id );
+	goToBNode( id:string ):void {
+		this.onOpenBNode.emit( id );
 	}
 
 }

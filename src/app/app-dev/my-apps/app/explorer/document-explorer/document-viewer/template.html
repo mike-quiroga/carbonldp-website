@@ -15,6 +15,7 @@
 			<div class="row documentResource" *ngIf="!!rootNode">
 				<document-resource class="column"
 				                   (onOpenBNode)="openBNode($event)"
+				                   (onOpenNamedFragment)="openNamedFragment($event)"
 				                   [rootNode]="rootNode">
 				</document-resource>
 			</div>
@@ -27,7 +28,7 @@
 			</div>
 			<div class="row namedFragments" *ngIf="!!namedFragmentsDictionary.size > 0">
 				<document-named-fragments class="column"
-				                          (onOpenbNode)="openbNode($event)"
+				                          (onOpenBNode)="openBNode($event)"
 				                          (onOpenNamedFragment)="scrollTo($event)"
 				                          [documentURI]="rootNode['@id']"
 				                          [namedFragmentsArray]="namedFragmentsArray"

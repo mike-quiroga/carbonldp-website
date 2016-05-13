@@ -41,7 +41,7 @@
 	<div class="ui divided items">
 		<document-property class="property item"
 		                   *ngFor="#propertyName of getPropertiesName(namedFragment); #j=index;"
-		                   (onGoTobNode)="goTobNode($event)"
+		                   (onGoToBNode)="goToBNode($event)"
 		                   (onGoToNamedFragment)="openNamedFragment($event)"
 		                   [documentURI]="documentURI"
 		                   [propertyName]="propertyName"
