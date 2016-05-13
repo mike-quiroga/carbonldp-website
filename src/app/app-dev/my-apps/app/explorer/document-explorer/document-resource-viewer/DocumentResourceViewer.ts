@@ -4,6 +4,7 @@ import { CORE_DIRECTIVES } from "angular2/common";
 import "semantic-ui/semantic";
 
 import * as RDFNode from "carbonldp/RDF/RDFNode";
+import * as URI from "carbonldp/RDF/URI";
 
 import PropertyComponent from "./../property/PropertyComponent";
 
@@ -35,4 +36,8 @@ export default class DocumentResourceComponent {
 		this.onOpenNamedFragment.emit( id );
 	}
 
+	getDisplayName( uri:string ):string {
+		if ( URI.Util.hasFragment( uri ) )return URI.Util.getFragment( uri )( uri );
+		return URI.Util.getSlug( uri );
+	}
 }
