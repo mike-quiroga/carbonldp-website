@@ -1,12 +1,11 @@
 <div class="content" *ngIf="propertyName === '@id'">
 	<div class="header">
-		<p *ngIf="!isUrl(property)">{{propertyName}}: {{property}}</p>
+		<p *ngIf="!isUrl(property)">
+			<i class="file outline icon"></i> {{property}}</p>
 		<p *ngIf="isUrl(property)">
-			{{propertyName}}: <a [attr.href]="property" target="_blank">{{property}}</a>
+			<i class="file outline icon"></i> <a class="id" [attr.href]="property"
+			                                     target="_blank"><span class="parentURI">{{getParentURI(property)}}</span><span class="slug">{{getSlug(property)}}</span></a>
 		</p>
-	</div>
-	<div class="meta">
-		{{getDisplayName(property)}}
 	</div>
 </div>
 

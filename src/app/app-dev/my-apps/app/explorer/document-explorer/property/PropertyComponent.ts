@@ -49,6 +49,16 @@ export default class PropertyComponent {
 		return URI.Util.getSlug( uri );
 	}
 
+	getParentURI( uri:string ):string {
+		let slug:string = this.getSlug( uri );
+		let parent:string = uri.substr( 0, uri.indexOf( slug ) );
+		return parent;
+	}
+
+	getSlug( uri:string ) {
+		return URI.Util.getSlug( uri );
+	}
+
 	hasHeader( header:string, property?:any ):boolean {
 		let headers:string[] = this.getHeaders( ! ! property ? property : this.property );
 		return headers.indexOf( header ) > - 1 ? true : false;
