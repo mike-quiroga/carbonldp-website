@@ -19,11 +19,19 @@
 				</document-resource>
 			</div>
 			<div class="row bNodes" *ngIf="!!bNodesDictionary.size > 0">
-				<document-bnodes #documentbNodes
-				                 class="column"
+				<document-bnodes class="column"
 				                 (onOpenbNode)="scrollTo($event)"
+				                 (onOpenNamedFragment)="openNamedFragment($event)"
 				                 [bNodesArray]="bNodesArray"
 				                 [bNodesDictionary]="bNodesDictionary"></document-bnodes>
+			</div>
+			<div class="row namedFragments" *ngIf="!!namedFragmentsDictionary.size > 0">
+				<document-named-fragments class="column"
+				                          (onOpenbNode)="openbNode($event)"
+				                          (onOpenNamedFragment)="scrollTo($event)"
+				                          [documentURI]="rootNode['@id']"
+				                          [namedFragmentsArray]="namedFragmentsArray"
+				                          [namedFragmentsDictionary]="namedFragmentsDictionary"></document-named-fragments>
 			</div>
 		</div>
 	</div>

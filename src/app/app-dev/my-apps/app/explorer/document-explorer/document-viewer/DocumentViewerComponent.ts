@@ -13,6 +13,7 @@ import DocumentsResolverService from "./../DocumentsResolverService";
 
 import DocumentResourceViewerComponent from "./../document-resource-viewer/DocumentResourceViewer";
 import BNodesViewerComponent from "./../bnodes-viewer/BNodesViewerComponent";
+import NamedFragmentsViewerComponent from "./../named-fragments-viewer/NamedFragmentsViewerComponent";
 import PropertyComponent from "./../property/PropertyComponent";
 
 import template from "./template.html!";
@@ -21,7 +22,7 @@ import "./style.css!";
 @Component( {
 	selector: "document-viewer",
 	template: template,
-	directives: [ CORE_DIRECTIVES, DocumentResourceViewerComponent, BNodesViewerComponent, PropertyComponent ],
+	directives: [ CORE_DIRECTIVES, DocumentResourceViewerComponent, BNodesViewerComponent, NamedFragmentsViewerComponent, PropertyComponent ],
 } )
 
 export default class DocumentViewerComponent {
@@ -40,6 +41,7 @@ export default class DocumentViewerComponent {
 	@Input() document:RDFDocument.Class;
 	@Input() documentContext:SDKContext.Class;
 	@ViewChild( BNodesViewerComponent ) documentbNodes:BNodesViewerComponent;
+	@ViewChild( NamedFragmentsViewerComponent ) namedFragments:NamedFragmentsViewerComponent;
 	@Output() onLoadingDocument:EventEmitter<boolean> = new EventEmitter();
 
 	set loadingDocument( value:boolean ) {
@@ -94,9 +96,9 @@ export default class DocumentViewerComponent {
 		//console.log( this.document );
 		this.rootNode = <RDFNode.Class>{};
 		let documents:RDFNode.Class[] = RDFDocument.Util.getDocumentResources( this.document );
-		//console.log( documents );
+		console.log( documents );
 		this.rootNode = documents[ 0 ];
-		//console.log( this.rootNode );
+		console.log( this.rootNode );
 	}
 
 	getDocument( uri:string, documentContext:SDKContext.Class ):Promise<RDFDocument.Class> {
@@ -121,12 +123,19 @@ export default class DocumentViewerComponent {
 				}
 			}
 		);
-		// console.log( "bNodes: %o - NamedFragments: %o", this.bNodesDictionary, this.namedFragmentsDictionary );
+		console.log( "Named Fragments: %o", RDFDocument.Util.getFragmentResources( this.document ) )
+		console.log( "Blank Nodes: %o", RDFDocument.Util.getBNodeResources( this.document ) )
+		console.log( "bNodes: %o - NamedFragments: %o", this.bNodesDictionary, this.namedFragmentsDictionary );
 	}
 
 	openbNode( id:string ):void {
 		this.documentbNodes.openbNode( id );
 		this.scrollTo( "bNodes" );
+	}
+
+	openNamedFragment( id:string ):void {
+		this.namedFragments.openNamedFragment( id );
+		this.scrollTo( "namedFragments" );
 	}
 
 	scrollTo( id:string ):void {

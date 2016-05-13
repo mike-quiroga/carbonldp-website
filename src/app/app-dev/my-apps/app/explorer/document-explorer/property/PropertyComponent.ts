@@ -25,9 +25,11 @@ export default class PropertyComponent {
 
 	element:ElementRef;
 	$element:JQuery;
+	@Input() documentURI:string;
 	@Input() property:RDFNode.Class;
 	@Input() propertyName:string;
 	@Output() onGoTobNode:EventEmitter<string> = new EventEmitter<string>();
+	@Output() onGoToNamedFragment:EventEmitter<string> = new EventEmitter<string>();
 	commonHeaders:string[] = [ "@id", "@type", "@value" ];
 
 	loadingDocument:boolean = false;
@@ -99,8 +101,16 @@ export default class PropertyComponent {
 		return ! ! uri ? URI.Util.isBNodeID( uri ) : false;
 	}
 
+	isNamedFragment( uri:string ):boolean {
+		return ! ! uri ? URI.Util.isFragmentOf( uri, this.documentURI ) : false;
+	}
+
 	goTobNode( id:string ):void {
 		this.onGoTobNode.emit( id );
+	}
+
+	goToNamedFragment( id:string ):void {
+		this.onGoToNamedFragment.emit( this.getNormalizedUri( id ) );
 	}
 
 	getTypeIcon( type:string ):string {
@@ -120,15 +130,15 @@ export default class PropertyComponent {
 		return JSON.stringify( obj, null, 2 );
 	}
 
+	getNormalizedUri( uri:string ):string {
+		return uri.replace( /[^\w\s]/gi, "" );
+	}
+
 	initializeTabs():void {
-		if ( ! this.$element )
-			this.$element = $( this.element.nativeElement );
 		this.$element.find( ".tabular.menu .item" ).tab();
 	}
 
 	initializeAccordions():void {
-		if ( ! this.$element )
-			this.$element = $( this.element.nativeElement );
 		this.$element.find( ".ui.accordion" ).accordion();
 	}
 }

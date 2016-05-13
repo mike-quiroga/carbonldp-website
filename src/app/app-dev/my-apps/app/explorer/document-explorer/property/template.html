@@ -56,7 +56,7 @@
 				</tr>
 				<tr *ngFor="#prop of property; #j=index;" [ngClass]="{selectable: isbNode(prop['@id'])}">
 					<td *ngIf="!!prop['@id']">
-						<p *ngIf="!isbNode(prop['@id'])">
+						<p *ngIf="!isbNode(prop['@id']) && !isNamedFragment(prop['@id'])">
 							{{prop['@id']}}
 						</p>
 						<a *ngIf="isbNode(prop['@id'])"
@@ -67,6 +67,17 @@
 								<i class="icons">
 									<i class="thin circle blue icon"></i>
 									<i class="corner thin circle icon"></i>
+								</i>
+							</span>
+						</a>
+						<a *ngIf="isNamedFragment(prop['@id'])"
+						   (click)="goToNamedFragment(prop['@id'])">
+							{{prop['@id']}}
+							<span class="ui blue left pointing basic label">
+								Go to named fragment
+								<i class="icons">
+									<i class="puzzle green icon"></i>
+									<i class="corner puzzle icon"></i>
 								</i>
 							</span>
 						</a>
