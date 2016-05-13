@@ -9,7 +9,6 @@ import * as Literal from "carbonldp/RDF/Literal";
 import * as URI from "carbonldp/RDF/URI";
 import * as Utils from "carbonldp/Utils";
 
-import HighlightDirective from "./../../../../../../directives/HighlightDirective";
 import ListViewerComponent from "./../list-viewer/ListViewerComponent"
 
 import template from "./template.html!";
@@ -18,7 +17,7 @@ import "./style.css!";
 @Component( {
 	selector: "document-property",
 	template: template,
-	directives: [ CORE_DIRECTIVES, ListViewerComponent, HighlightDirective ],
+	directives: [ CORE_DIRECTIVES, ListViewerComponent ],
 } )
 
 export default class PropertyComponent {

@@ -93,7 +93,6 @@ export default class DocumentViewerComponent {
 	}
 
 	setRoot():void {
-		//console.log( this.document );
 		this.rootNode = <RDFNode.Class>{};
 		let documents:RDFNode.Class[] = RDFDocument.Util.getDocumentResources( this.document );
 		console.log( documents );

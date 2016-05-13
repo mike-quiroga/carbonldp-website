@@ -3,8 +3,6 @@ import { CORE_DIRECTIVES } from "angular2/common";
 
 import $ from "jquery";
 import "semantic-ui/semantic";
-import "jstree";
-import "jstree/dist/themes/default/style.min.css!";
 
 import * as RDFNode from "carbonldp/RDF/RDFNode";
 
