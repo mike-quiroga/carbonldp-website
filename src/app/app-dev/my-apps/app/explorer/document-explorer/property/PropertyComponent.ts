@@ -39,7 +39,6 @@ export default class PropertyComponent {
 
 	ngAfterViewInit():void {
 		this.$element = $( this.element.nativeElement );
-		this.initializeTabs();
 		this.initializeAccordions();
 	}
 
@@ -122,10 +121,6 @@ export default class PropertyComponent {
 
 	getJSON( obj:any ):string {
 		return JSON.stringify( obj, null, 2 );
-	}
-
-	initializeTabs():void {
-		this.$element.find( ".tabular.menu .item" ).tab();
 	}
 
 	initializeAccordions():void {
