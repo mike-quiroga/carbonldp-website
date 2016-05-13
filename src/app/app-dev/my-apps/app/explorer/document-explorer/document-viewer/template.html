@@ -1,0 +1,30 @@
+<div class="ui basic segment">
+	<div *ngIf="!document">
+		<div class="ui icon message">
+			<i class="warning icon"></i>
+			<div class="content">
+				<div class="header">
+					No document selected.
+				</div>
+				<p>Please, provide a document by selecting one from the three or providing a document to the component.</p>
+			</div>
+		</div>
+	</div>
+	<div *ngIf="document">
+		<div class="ui stackable grid">
+			<div class="row documentResource" *ngIf="!!rootNode">
+				<document-resource class="column"
+				                   (onOpenBNode)="openBNode($event)"
+				                   [rootNode]="rootNode">
+				</document-resource>
+			</div>
+			<div class="row bNodes" *ngIf="!!bNodesDictionary.size > 0">
+				<document-bnodes #documentbNodes
+				                 class="column"
+				                 (onOpenBNode)="scrollTo($event)"
+				                 [bNodesArray]="bNodesArray"
+				                 [bNodesDictionary]="bNodesDictionary"></document-bnodes>
+			</div>
+		</div>
+	</div>
+</div>

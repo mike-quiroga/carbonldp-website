@@ -1,0 +1,97 @@
+<div class="content" *ngIf="propertyName === '@id'">
+	<div class="header">
+		{{propertyName}}
+	</div>
+	<div class="meta">
+		<p *ngIf="!isUrl(property)">{{property}}</p>
+		<a *ngIf="isUrl(property)" [attr.href]="property" target="_blank">{{property}}</a>
+	</div>
+</div>
+
+<div class="content" *ngIf="propertyName === '@type'">
+	<p class="header">
+		{{propertyName}}
+	</p>
+	<div class="description" *ngIf="isArray(property)">
+		<div class="ui horizontal list">
+			<div class="item" *ngFor="#type of property; #j=index;">
+				<div class="ui label">
+					<i [ngClass]="getTypeIcon(type)" class="icon"></i>
+					{{getDisplayName(type)}}
+				</div>
+			</div>
+		</div>
+		<table class="ui very compact striped small celled table">
+			<tr class="center aligned">
+				<th>{{propertyName}}</th>
+			</tr>
+			<tr *ngFor="#type of property; #j=index;">
+				<td>{{type}}</td>
+			</tr>
+		</table>
+	</div>
+</div>
+
+<div class="content" *ngIf="propertyName !== '@id' && propertyName !== '@type'">
+	<div class="header">
+		<p>
+			{{getDisplayName(propertyName)}}
+		</p>
+	</div>
+	<div class="meta">
+		<a *ngIf="isUrl(propertyName)" [attr.href]="propertyName" target="_blank">{{propertyName}}</a>
+		<p *ngIf="!isUrl(propertyName)">{{propertyName}}</p>
+	</div>
+	<div class="description">
+		<div class="ui top attached tabular menu">
+			<a class="item active" [attr.data-tab]="i+getDisplayName(propertyName)+'_tableview'">Table</a>
+			<a class="item" [attr.data-tab]="i+getDisplayName(propertyName)+'_codeview'">Raw Data</a>
+		</div>
+		<div class="ui bottom attached tab segment active" [attr.data-tab]="i+getDisplayName(propertyName)+'_tableview'">
+			<table class="ui very compact striped small celled table" *ngIf="hasCommonHeaders()">
+				<tr class="center aligned">
+					<th *ngIf="hasHeader('@id')">@id</th>
+					<th *ngIf="hasHeader('@type')">@type</th>
+					<th *ngIf="hasHeader('@value')">@value</th>
+				</tr>
+				<tr *ngFor="#prop of property; #j=index;" [ngClass]="{selectable: isBNode(prop['@id'])}">
+					<td *ngIf="!!prop['@id']">
+						<p *ngIf="!isBNode(prop['@id'])">
+							{{prop['@id']}}
+						</p>
+						<a *ngIf="isBNode(prop['@id'])"
+						   (click)="goToBNode(prop['@id'])">
+							{{prop['@id']}}
+							<span class="ui blue left pointing basic label">
+								Go to node
+								<i class="icons">
+									<i class="thin circle blue icon"></i>
+									<i class="corner thin circle icon"></i>
+								</i>
+							</span>
+						</a>
+					</td>
+					<td *ngIf="!!prop['@type']">
+						<p>{{prop['@type']}}</p>
+					</td>
+					<td *ngIf="!!prop['@value']">
+						<p>{{prop['@value']}}</p>
+					</td>
+				</tr>
+			</table>
+			<div class="ui styled accordion" *ngIf="hasHeader('@list')">
+				<div class="title" *ngFor="#item of property; #i=index;">
+					<i class="dropdown icon"></i>
+					@list
+				</div>
+				<div class="content" *ngFor="#item of property; #i=index;">
+					<property-list [list]="item['@list']"
+					               (onGoToBNode)="goToBNode($event)"></property-list>
+				</div>
+			</div>
+		</div>
+		<div class="ui bottom attached tab segment" [attr.data-tab]="i+getDisplayName(propertyName)+'_codeview'">
+			<pre>{{property | json}}</pre>
+		</div>
+	</div>
+</div>

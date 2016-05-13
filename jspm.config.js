@@ -24,7 +24,13 @@ SystemJS.config({
       }
     },
     "carbonldp": {
-      "defaultExtension": "js"
+      "defaultExtension": "js",
+      "map": {
+        "file-type": "@empty",
+        "url": "@empty",
+        "http": "@empty",
+        "https": "@empty"
+      }
     },
     "angular2-carbonldp": {
       "map": {
@@ -72,14 +78,15 @@ SystemJS.config({
     "http": "github:jspm/nodelibs-http@0.2.0-alpha",
     "https": "github:jspm/nodelibs-https@0.2.0-alpha",
     "jodid25519": "npm:jodid25519@1.0.2",
-    "jquery": "npm:jquery@2.2.1",
+    "jquery": "npm:jquery@2.2.3",
     "js-cookie": "npm:js-cookie@2.1.0",
     "jsbn": "npm:jsbn@0.1.0",
     "jsonld": "npm:jsonld@0.4.6",
+    "jstree": "npm:jstree@3.3.0",
     "module": "github:jspm/nodelibs-module@0.2.0-alpha",
     "net": "github:jspm/nodelibs-net@0.2.0-alpha",
     "os": "github:jspm/nodelibs-os@0.2.0-alpha",
-    "path": "github:jspm/nodelibs-path@0.1.0",
+    "path": "github:jspm/nodelibs-path@0.2.0-alpha",
     "plugin-typescript": "github:frankwallis/plugin-typescript@4.0.5",
     "process": "github:jspm/nodelibs-process@0.2.0-alpha",
     "punycode": "github:jspm/nodelibs-punycode@0.2.0-alpha",
@@ -100,9 +107,9 @@ SystemJS.config({
     "zone.js": "npm:zone.js@0.6.8"
   },
   packages: {
-    "github:jspm/nodelibs-path@0.1.0": {
+    "npm:jstree@3.3.0": {
       "map": {
-        "path-browserify": "npm:path-browserify@0.0.0"
+        "jquery": "npm:jquery@2.2.3"
       }
     },
     "github:frankwallis/plugin-typescript@4.0.5": {

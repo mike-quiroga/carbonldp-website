@@ -1,0 +1,13 @@
+<h2 class="ui header">
+	<i class="file outline icon"></i>
+	Document Resource
+</h2>
+<div class="ui section divider"></div>
+<div class="ui divided items">
+	<document-property class="property item"
+	                   *ngFor="#propertyName of getPropertiesName( rootNode ); #i=index;"
+	                   (onGoToBNode)="openBNode( $event )"
+	                   [propertyName]="propertyName"
+	                   [property]="rootNode[ propertyName ]">
+	</document-property>
+</div>

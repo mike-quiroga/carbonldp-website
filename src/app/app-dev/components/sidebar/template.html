@@ -53,5 +53,11 @@
 			<i class="write icon"></i>
 			Edit App
 		</a>
+		<a class="item"
+		   [ngClass]="{active: isActive(app.slug, true) && isActive('Explorer')}"
+		   [routerLink]="['AppDev', 'MyApps', 'App', {slug: app.slug}, 'Explorer']">
+			<i class="list layout icon"></i>
+			Explore
+		</a>
 	</div>
 </a>
