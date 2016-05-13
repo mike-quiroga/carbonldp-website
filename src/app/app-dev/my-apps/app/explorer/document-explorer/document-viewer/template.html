@@ -14,13 +14,13 @@
 		<div class="ui stackable grid">
 			<div class="row documentResource" *ngIf="!!rootNode">
 				<document-resource class="column"
-				                   (onOpenbNode)="openbNode($event)"
+				                   (onOpenBNode)="openBNode($event)"
 				                   [rootNode]="rootNode">
 				</document-resource>
 			</div>
 			<div class="row bNodes" *ngIf="!!bNodesDictionary.size > 0">
 				<document-bnodes class="column"
-				                 (onOpenbNode)="scrollTo($event)"
+				                 (onOpenBNode)="scrollTo($event)"
 				                 (onOpenNamedFragment)="openNamedFragment($event)"
 				                 [bNodesArray]="bNodesArray"
 				                 [bNodesDictionary]="bNodesDictionary"></document-bnodes>

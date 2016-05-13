@@ -6,12 +6,12 @@
 	</tr>
 	<tr *ngFor="#item of list; #i=index;">
 		<td *ngIf="!!item['@id']"
-		    [ngClass]="{selectable: isbNode(item['@id'])}">
-			<p *ngIf="!isbNode(item['@id'])">
+		    [ngClass]="{selectable: isBNode(item['@id'])}">
+			<p *ngIf="!isBNode(item['@id'])">
 				{{item['@id']}}
 			</p>
-			<a *ngIf="isbNode(item['@id'])"
-			   (click)="goTobNode(item['@id'])">
+			<a *ngIf="isBNode(item['@id'])"
+			   (click)="goToBNode(item['@id'])">
 				{{item['@id']}}
 			</a>
 		</td>

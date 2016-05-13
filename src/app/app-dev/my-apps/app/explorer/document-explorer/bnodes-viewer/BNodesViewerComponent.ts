@@ -25,10 +25,10 @@ export default class BNodesViewerComponent {
 	$element:JQuery;
 
 	nodesTab:JQuery;
-	openedbNodes:RDFNode.Class[] = [];
+	openedBNodes:RDFNode.Class[] = [];
 	@Input() bNodesArray:RDFNode.Class[] = [];
-	@Input() bNodesDictionary:Map<string,RDFNode.Class> = new Map<string,RDFNode.Class>();
-	@Output() onOpenbNode:EventEmitter<string> = new EventEmitter<string>();
+	@Input() bNodesDictionary:Map<string, RDFNode.Class> = new Map<string, RDFNode.Class>();
+	@Output() onOpenBNode:EventEmitter<string> = new EventEmitter<string>();
 
 	constructor( element:ElementRef ) {
 		this.element = element;
@@ -42,8 +42,8 @@ export default class BNodesViewerComponent {
 	ngOnChanges( changes:{[propName:string]:SimpleChange} ):void {
 		if ( ( changes[ "bNodesArray" ].currentValue !== changes[ "bNodesArray" ].previousValue ) ||
 			( changes[ "bNodesDictionary" ].currentValue !== changes[ "bNodesDictionary" ].previousValue ) ) {
-			this.openedbNodes = [];
-			this.goTobNode( "all" );
+			this.openedBNodes = [];
+			this.goToBNode( "all" );
 		}
 	}
 
@@ -51,7 +51,7 @@ export default class BNodesViewerComponent {
 		return Object.keys( property );
 	}
 
-	openbNode( nodeOrId:RDFNode.Class|string ):void {
+	openBNode( nodeOrId:RDFNode.Class|string ):void {
 		let idx:number;
 		let node:RDFNode.Class;
 		if ( typeof nodeOrId === "string" ) {
@@ -59,25 +59,25 @@ export default class BNodesViewerComponent {
 		} else {
 			node = nodeOrId;
 		}
-		idx = this.openedbNodes.indexOf( node );
-		if ( idx === - 1 )this.openedbNodes.push( node );
+		idx = this.openedBNodes.indexOf( node );
+		if ( idx === - 1 ) this.openedBNodes.push( node );
 		setTimeout( () => {
 			this.refreshTabs();
-			this.goTobNode( "bnode" + node[ "@id" ] );
+			this.goToBNode( "bnode" + node[ "@id" ] );
 		}, 50 );
 	}
 
-	goTobNode( id:string ) {
-		if ( ! this.nodesTab )
-			return;
+	goToBNode( id:string ) {
+		if ( ! this.nodesTab ) return;
+
 		this.nodesTab.find( "> [data-tab='" + id + "']" ).click();
-		this.onOpenbNode.emit( "bNodes" );
+		this.onOpenBNode.emit( "bNodes" );
 	}
 
-	closebNode( node:RDFNode.Class ):void {
-		let idx:number = this.openedbNodes.indexOf( node );
-		this.openedbNodes.splice( idx, 1 );
-		this.goTobNode( "all" );
+	closeBNode( node:RDFNode.Class ):void {
+		let idx:number = this.openedBNodes.indexOf( node );
+		this.openedBNodes.splice( idx, 1 );
+		this.goToBNode( "all" );
 	}
 
 	refreshTabs():void {

@@ -18,7 +18,7 @@ export default class ListViewerComponent {
 
 	element:ElementRef;
 	@Input() list:RDFNode.Class[];
-	@Output() onGoTobNode:EventEmitter<string> = new EventEmitter<string>();
+	@Output() onGoToBNode:EventEmitter<string> = new EventEmitter<string>();
 
 	headers:string[] = [];
 
@@ -42,23 +42,21 @@ export default class ListViewerComponent {
 
 	getHeaders():string[] {
 		let temp:string[] = [];
-		this.list.forEach(
-			( item )=> {
-				temp = temp.concat( Object.keys( item ) );
-			}
-		);
-		return temp.filter(
-			( item, pos ) => {
-				return temp.indexOf( item ) == pos
-			}
-		);
+
+		this.list.forEach( ( item )=> {
+			temp = temp.concat( Object.keys( item ) );
+		} );
+
+		return temp.filter( ( item, pos ) => {
+			return temp.indexOf( item ) === pos
+		} );
 	}
 
-	goTobNode( id:string ):void {
-		this.onGoTobNode.emit( id );
+	goToBNode( id:string ):void {
+		this.onGoToBNode.emit( id );
 	}
 
-	isbNode( uri:string ):boolean {
+	isBNode( uri:string ):boolean {
 		return ! ! uri ? URI.Util.isBNodeID( uri ) : false;
 	}
 

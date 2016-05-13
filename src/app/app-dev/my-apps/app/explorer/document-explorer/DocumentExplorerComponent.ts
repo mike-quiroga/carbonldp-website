@@ -7,7 +7,6 @@ import "semantic-ui/semantic";
 import * as SDKContext from "carbonldp/SDKContext";
 import * as RDFDocument from "carbonldp/RDF/Document";
 import * as HTTP from "carbonldp/HTTP";
-import * as HTTPErrors from "carbonldp/HTTP/Errors";
 
 import DocumentsResolverService from "./../document-explorer/DocumentsResolverService"
 import DocumentViewerComponent from "./document-viewer/DocumentViewerComponent";
@@ -42,7 +41,6 @@ export default class DocumentExplorerComponent {
 	}
 
 	ngAfterViewInit():void {
-		console.log( "Explorer: %o", this.documentContext );
 		this.$element = $( this.element.nativeElement );
 	}
 
@@ -52,25 +50,17 @@ export default class DocumentExplorerComponent {
 
 	resolveDocument( uri:string ):void {
 		this.loadingDocument = true;
-		let getDocument:Promise<RDFDocument.Class> = this.documentsResolverService.get( uri, this.documentContext );
-		getDocument.then(
-			( document:RDFDocument.Class )=> {
-				// console.log( "Returned document: %o", document );
-				this.inspectingDocument = document;
-			}
-		);
-		getDocument.then(
-			()=> {
-				this.loadingDocument = false;
-			}
-		);
+		this.documentsResolverService.get( uri, this.documentContext ).then( ( document:RDFDocument.Class )=> {
+			this.inspectingDocument = document;
+			this.loadingDocument = false;
+		} );
 	}
 
-	handleError( error:HTTP.Errors.HTTPError ):void {
+	handleError( error:HTTP.Errors.Error ):void {
 		let message:Message = {
 			title: error.name,
 			content: (<XMLHttpRequest>error.response.request).statusText,
-			statusCode: error.response.status,
+			statusCode: "" + error.response.status,
 			statusMessage: (<XMLHttpRequest>error.response.request).statusText,
 			endpoint: (<any>error.response.request).responseURL,
 		};

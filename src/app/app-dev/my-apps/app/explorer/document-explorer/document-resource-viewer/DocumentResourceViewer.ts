@@ -18,7 +18,7 @@ import template from "./template.html!";
 export default class DocumentResourceComponent {
 
 	@Input() rootNode:RDFNode.Class;
-	@Output() onOpenbNode:EventEmitter<string> = new EventEmitter<string>();
+	@Output() onOpenBNode:EventEmitter<string> = new EventEmitter<string>();
 
 	constructor() {}
 
@@ -26,8 +26,8 @@ export default class DocumentResourceComponent {
 		return Object.keys( property );
 	}
 
-	openbNode( id:string ):void {
-		this.onOpenbNode.emit( id );
+	openBNode( id:string ):void {
+		this.onOpenBNode.emit( id );
 	}
 
 }

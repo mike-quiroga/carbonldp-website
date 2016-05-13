@@ -27,7 +27,7 @@ export default class PropertyComponent {
 	@Input() documentURI:string;
 	@Input() property:RDFNode.Class;
 	@Input() propertyName:string;
-	@Output() onGoTobNode:EventEmitter<string> = new EventEmitter<string>();
+	@Output() onGoToBNode:EventEmitter<string> = new EventEmitter<string>();
 	@Output() onGoToNamedFragment:EventEmitter<string> = new EventEmitter<string>();
 	commonHeaders:string[] = [ "@id", "@type", "@value" ];
 
@@ -44,10 +44,9 @@ export default class PropertyComponent {
 	}
 
 	getDisplayName( uri:string ):string {
-		if ( this.commonHeaders.indexOf( uri ) > - 1 )
-			return uri;
-		if ( URI.Util.hasFragment( uri ) )
-			return this.getFragment( uri );
+		if ( this.commonHeaders.indexOf( uri ) > - 1 )return uri;
+		if ( URI.Util.hasFragment( uri ) )return this.getFragment( uri );
+
 		return URI.Util.getSlug( uri );
 	}
 
@@ -63,16 +62,12 @@ export default class PropertyComponent {
 
 	getHeaders( property:any[] ):string[] {
 		let temp:string[] = [];
-		property.forEach(
-			( prop )=> {
-				temp = temp.concat( Object.keys( prop ) );
-			}
-		);
-		let headers:string[] = temp.filter(
-			( item, pos ) => {
-				return temp.indexOf( item ) == pos
-			} );
-		return headers;
+		property.forEach( ( prop )=> {
+			temp = temp.concat( Object.keys( prop ) );
+		} );
+		return temp.filter( ( item, pos ) => {
+			return temp.indexOf( item ) == pos
+		} );
 	}
 
 	getFragment( uri:string ):string {
@@ -96,16 +91,16 @@ export default class PropertyComponent {
 		return r.test( uri );
 	}
 
-	isbNode( uri:string ):boolean {
+	isBNode( uri:string ):boolean {
 		return ! ! uri ? URI.Util.isBNodeID( uri ) : false;
 	}
 
 	isNamedFragment( uri:string ):boolean {
 		return ! ! uri ? URI.Util.isFragmentOf( uri, this.documentURI ) : false;
 	}
-
-	goTobNode( id:string ):void {
-		this.onGoTobNode.emit( id );
+	
+	goToBNode( id:string ):void {
+		this.onGoToBNode.emit( id );
 	}
 
 	goToNamedFragment( id:string ):void {
@@ -125,7 +120,7 @@ export default class PropertyComponent {
 		}
 	}
 
-	getJson( obj:any ):string {
+	getJSON( obj:any ):string {
 		return JSON.stringify( obj, null, 2 );
 	}
 

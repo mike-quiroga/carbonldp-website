@@ -40,7 +40,7 @@ export default class DocumentViewerComponent {
 	@Input() uri:string;
 	@Input() document:RDFDocument.Class;
 	@Input() documentContext:SDKContext.Class;
-	@ViewChild( BNodesViewerComponent ) documentbNodes:BNodesViewerComponent;
+	@ViewChild( BNodesViewerComponent ) documentBNodes:BNodesViewerComponent;
 	@ViewChild( NamedFragmentsViewerComponent ) namedFragments:NamedFragmentsViewerComponent;
 	@Output() onLoadingDocument:EventEmitter<boolean> = new EventEmitter();
 
@@ -61,7 +61,6 @@ export default class DocumentViewerComponent {
 	}
 
 	ngAfterViewInit():void {
-		console.log( "Viewer: %o", this.document );
 		this.$element = $( this.element.nativeElement );
 	}
 
@@ -72,9 +71,7 @@ export default class DocumentViewerComponent {
 				( document:RDFDocument.Class ) => {
 					this.document = document;
 					this.receiveDocument();
-				}
-			).then(
-				()=> {
+
 					this.loadingDocument = false;
 				}
 			);
@@ -93,11 +90,7 @@ export default class DocumentViewerComponent {
 	}
 
 	setRoot():void {
-		this.rootNode = <RDFNode.Class>{};
-		let documents:RDFNode.Class[] = RDFDocument.Util.getDocumentResources( this.document );
-		console.log( documents );
-		this.rootNode = documents[ 0 ];
-		console.log( this.rootNode );
+		this.rootNode = RDFDocument.Util.getDocumentResources( this.document )[ 0 ];
 	}
 
 	getDocument( uri:string, documentContext:SDKContext.Class ):Promise<RDFDocument.Class> {
@@ -110,25 +103,20 @@ export default class DocumentViewerComponent {
 		this.bNodesDictionary.clear();
 		this.namedFragmentsDictionary.clear();
 		let nodes:RDFNode.Class[] = this.document[ "@graph" ];
-		nodes.forEach(
-			( node:RDFNode.Class ) => {
-				if ( URI.Util.isBNodeID( node[ "@id" ] ) ) {
-					this.bNodesDictionary.set( node[ "@id" ], node );
-					this.bNodesArray.push( node );
-				}
-				if ( URI.Util.hasFragment( node[ "@id" ] ) ) {
-					this.namedFragmentsDictionary.set( node[ "@id" ], node );
-					this.namedFragmentsArray.push( node );
-				}
+		nodes.forEach( ( node:RDFNode.Class ) => {
+			if ( URI.Util.isBNodeID( node[ "@id" ] ) ) {
+				this.bNodesDictionary.set( node[ "@id" ], node );
+				this.bNodesArray.push( node );
 			}
-		);
-		console.log( "Named Fragments: %o", RDFDocument.Util.getFragmentResources( this.document ) )
-		console.log( "Blank Nodes: %o", RDFDocument.Util.getBNodeResources( this.document ) )
-		console.log( "bNodes: %o - NamedFragments: %o", this.bNodesDictionary, this.namedFragmentsDictionary );
+			if ( URI.Util.hasFragment( node[ "@id" ] ) ) {
+				this.namedFragmentsDictionary.set( node[ "@id" ], node );
+				this.namedFragmentsArray.push( node );
+			}
+		} );
 	}
 
-	openbNode( id:string ):void {
-		this.documentbNodes.openbNode( id );
+	openBNode( id:string ):void {
+		this.documentBNodes.openBNode( id );
 		this.scrollTo( "bNodes" );
 	}
 
