@@ -1,5 +1,7 @@
 package com.carbonldp.jobs;
 
+import com.carbonldp.authentication.ImportLDAPAgentsJob;
+import com.carbonldp.authentication.ImportLDAPAgentsJobFactory;
 import com.carbonldp.exceptions.InvalidResourceException;
 import com.carbonldp.ldp.AbstractSesameLDPService;
 import com.carbonldp.ldp.containers.ContainerService;
@@ -46,6 +48,10 @@ public class SesameJobService extends AbstractSesameLDPService implements JobSer
 				infractions = ImportBackupJobFactory.getInstance().validate( job );
 				checkPermissionsOverTheBackup( job );
 				break;
+			case IMPORT_LDAP_AGENTS_JOB:
+				infractions = ImportLDAPAgentsJobFactory.getInstance().validate( job );
+				checkPermissionsOverTheLDAP( job );
+				break;
 			default:
 				infractions.add( new Infraction( 0x2001, "rdf.type", "job type" ) );
 		}
@@ -56,6 +62,12 @@ public class SesameJobService extends AbstractSesameLDPService implements JobSer
 		ImportBackupJob importBackupJob = new ImportBackupJob( job );
 		IRI backupIRI = importBackupJob.getBackup();
 		sourceService.get( backupIRI );
+	}
+
+	private void checkPermissionsOverTheLDAP( Job job ) {
+		ImportLDAPAgentsJob importLDAPAgentsJob = new ImportLDAPAgentsJob( job );
+		IRI ldapIRI = importLDAPAgentsJob.getLDAPServerIRI();
+		sourceService.get( ldapIRI );
 	}
 
 	@Override

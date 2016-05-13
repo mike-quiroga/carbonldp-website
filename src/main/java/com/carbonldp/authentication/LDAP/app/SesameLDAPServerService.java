@@ -7,10 +7,15 @@ import com.carbonldp.exceptions.InvalidResourceException;
 import com.carbonldp.ldp.AbstractSesameLDPService;
 import com.carbonldp.ldp.containers.ContainerService;
 import com.carbonldp.models.Infraction;
+import com.carbonldp.utils.LDAPUtil;
+import com.carbonldp.utils.SPARQLUtil;
 import org.openrdf.model.IRI;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.ldap.core.LdapTemplate;
+import org.springframework.ldap.core.support.LdapContextSource;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author JorgeEspinosa
@@ -27,8 +32,16 @@ public class SesameLDAPServerService extends AbstractSesameLDPService implements
 		containerService.createChild( targetIRI, ldapServer );
 	}
 
+	@Override
 	public LDAPServer get( IRI targetIRI ) {
 		return new LDAPServer( sourceRepository.get( targetIRI ) );
+	}
+
+	@Override
+	public void registerLDAPAgents( LDAPServer ldapServer, Set<String> usernameFields ) {
+		LdapTemplate ldapTemplate = LDAPUtil.getLDAPTemplate( ldapServer );
+
+
 	}
 
 	private void validate( LDAPServer ldapServer ) {

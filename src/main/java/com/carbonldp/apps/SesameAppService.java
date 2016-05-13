@@ -6,7 +6,6 @@ import com.carbonldp.agents.app.AppAgentRepository;
 import com.carbonldp.apps.roles.AppRoleRepository;
 import com.carbonldp.apps.roles.AppRoleService;
 import com.carbonldp.authentication.AgentAuthenticationToken;
-import com.carbonldp.authentication.LDAP.app.AppLDAPServerRepository;
 import com.carbonldp.authentication.token.app.AppTokenRepository;
 import com.carbonldp.authorization.acl.ACEDescription;
 import com.carbonldp.authorization.acl.ACL;
@@ -45,7 +44,6 @@ public class SesameAppService extends AbstractSesameLDPService implements AppSer
 	protected AppRoleRepository appRoleRepository;
 	protected AppAgentRepository appAgentRepository;
 	protected AppTokenRepository appTokensRepository;
-	protected AppLDAPServerRepository appLDAPServerRepository;
 	protected AppRoleService appRoleService;
 	protected RDFSourceService sourceService;
 
@@ -236,9 +234,6 @@ public class SesameAppService extends AbstractSesameLDPService implements AppSer
 
 	@Autowired
 	public void setAppTokensRepository( AppTokenRepository appTokensRepository ) { this.appTokensRepository = appTokensRepository; }
-
-	@Autowired
-	public void setAppLDAPServerRepository( AppLDAPServerRepository appLDAPServerRepository ) { this.appLDAPServerRepository = appLDAPServerRepository; }
 
 	@Autowired
 	public void setAppRoleService( AppRoleService appRoleService ) { this.appRoleService = appRoleService; }

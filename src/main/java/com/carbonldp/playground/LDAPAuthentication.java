@@ -4,6 +4,7 @@ import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.core.support.LdapContextSource;
 import org.springframework.ldap.filter.AndFilter;
 import org.springframework.ldap.filter.EqualsFilter;
+import org.springframework.ldap.filter.WhitespaceWildcardsFilter;
 
 import java.util.List;
 
@@ -27,8 +28,9 @@ public class LDAPAuthentication {
 			LdapTemplate ldapTemplate = new LdapTemplate( ldapContextSource );
 
 			AndFilter filter = new AndFilter();
-			filter.and( new EqualsFilter( "uid", "newton" ) );
-			boolean exists = ldapTemplate.authenticate( "", filter.toString(), "password" );
+//			filter.and( new EqualsFilter( "uid", "newton" ) );
+			filter.and( new WhitespaceWildcardsFilter( " ", " " ) );
+//			boolean exists = ldapTemplate.authenticate( "", filter.toString(), "password" );
 			List<String> list = ldapTemplate.search( "", filter.encode(), new ContactAttributeMapperJSON() );
 			System.out.print( list.toString() );
 		} catch ( Exception e ) {
