@@ -1,6 +1,7 @@
 package com.carbonldp.authentication.LDAP.app;
 
 import com.carbonldp.authentication.LDAPServer;
+import com.carbonldp.authentication.LDAPServerDescription;
 import com.carbonldp.authentication.LDAPServerFactory;
 import com.carbonldp.exceptions.InvalidResourceException;
 import com.carbonldp.ldp.AbstractSesameLDPService;
@@ -20,9 +21,14 @@ public class SesameLDAPServerService extends AbstractSesameLDPService implements
 
 	private ContainerService containerService;
 
+	@Override
 	public void create( IRI targetIRI, LDAPServer ldapServer ) {
 		validate( ldapServer );
 		containerService.createChild( targetIRI, ldapServer );
+	}
+
+	public LDAPServer get( IRI targetIRI ) {
+		return new LDAPServer( sourceRepository.get( targetIRI ) );
 	}
 
 	private void validate( LDAPServer ldapServer ) {

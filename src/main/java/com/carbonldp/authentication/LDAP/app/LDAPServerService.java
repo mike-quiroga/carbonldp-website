@@ -12,5 +12,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 public interface LDAPServerService {
 
 	@PreAuthorize( "hasPermission(#targetIRI, 'CREATE_CHILD')" )
-	public void create(IRI targetIRI, LDAPServer ldapServer );
+	public void create( IRI targetIRI, LDAPServer ldapServer );
+
+	@PreAuthorize( "hasPermission(#targetIRI, 'CREATE_CHILD')" )
+	public LDAPServer get( IRI targetIRI );
 }

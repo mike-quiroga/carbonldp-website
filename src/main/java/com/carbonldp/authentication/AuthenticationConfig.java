@@ -4,7 +4,7 @@ import com.carbonldp.agents.AgentRepository;
 import com.carbonldp.apps.roles.AppContextClearFilter;
 import com.carbonldp.apps.roles.AppRolePersistenceFilter;
 import com.carbonldp.apps.roles.AppRoleRepository;
-import com.carbonldp.authentication.LDAP.LDAPAuthenticationFilter;
+import com.carbonldp.authentication.LDAP.LDAPAuthenticationProvider;
 import com.carbonldp.authentication.token.JWTAuthenticationEntryPoint;
 import com.carbonldp.authentication.token.JWTAuthenticationFilter;
 import com.carbonldp.authentication.token.JWTAuthenticationProvider;
@@ -52,6 +52,7 @@ public class AuthenticationConfig {
 		auth.authenticationProvider( platformAgentUsernamePasswordAuthenticationProvider() );
 		auth.authenticationProvider( tokenAuthenticationProvider() );
 		auth.authenticationProvider( appsAgentUsernamePasswordAuthenticationProvider() );
+		auth.authenticationProvider( ldapAuthenticationProvider() );
 	}
 
 	@Bean
@@ -60,9 +61,10 @@ public class AuthenticationConfig {
 	}
 
 	@Bean
-	public AuthenticationProvider appsAgentUsernamePasswordAuthenticationProvider() {
-		return new AppAgentUsernamePasswordAuthenticationProvider( appAgentRepository, platformRoleRepository, platformPrivilegeRepository );
-	}
+	public AuthenticationProvider appsAgentUsernamePasswordAuthenticationProvider() {return new AppAgentUsernamePasswordAuthenticationProvider( appAgentRepository, platformRoleRepository, platformPrivilegeRepository );}
+
+	@Bean
+	public AuthenticationProvider ldapAuthenticationProvider() {return new LDAPAuthenticationProvider( appAgentRepository, platformRoleRepository, platformPrivilegeRepository );}
 
 	@Bean
 	public AuthenticationProvider tokenAuthenticationProvider() {
@@ -114,11 +116,6 @@ public class AuthenticationConfig {
 	@Bean
 	public CORSPlatformContextFilter corsPlatformContextFilter() {
 		return new CORSPlatformContextFilter();
-	}
-
-	@Bean
-	public LDAPAuthenticationFilter ldapAuthenticationFilter() {
-		return new LDAPAuthenticationFilter( authenticationManager, basicAuthenticationEntryPoint() );
 	}
 
 	@Bean

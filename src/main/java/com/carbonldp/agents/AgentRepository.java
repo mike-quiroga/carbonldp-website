@@ -15,5 +15,5 @@ public interface AgentRepository {
 
 	public void create( Agent agent );
 
-	public Set<LDAPAgent> findByUID( String user );
+	public Set<Agent> findByUID( String user );
 }
