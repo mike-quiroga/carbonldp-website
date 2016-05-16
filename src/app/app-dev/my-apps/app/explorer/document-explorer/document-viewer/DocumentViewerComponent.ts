@@ -102,21 +102,12 @@ export default class DocumentViewerComponent {
 	}
 
 	generateMaps():void {
-		this.bNodesArray = [];
-		this.namedFragmentsArray = [];
+		this.bNodesArray = RDFDocument.Util.getBNodeResources( this.document );
+		this.namedFragmentsArray = RDFDocument.Util.getFragmentResources( this.document );
 		this.bNodesDictionary.clear();
 		this.namedFragmentsDictionary.clear();
-		let nodes:RDFNode.Class[] = this.document[ "@graph" ];
-		nodes.forEach( ( node:RDFNode.Class ) => {
-			if ( URI.Util.isBNodeID( node[ "@id" ] ) ) {
-				this.bNodesDictionary.set( node[ "@id" ], node );
-				this.bNodesArray.push( node );
-			}
-			if ( URI.Util.hasFragment( node[ "@id" ] ) ) {
-				this.namedFragmentsDictionary.set( node[ "@id" ], node );
-				this.namedFragmentsArray.push( node );
-			}
-		} );
+		this.bNodesArray.forEach( ( node:RDFNode.Class ) => this.bNodesDictionary.set( node[ "@id" ], node ) );
+		this.namedFragmentsArray.forEach( ( node:RDFNode.Class ) => this.namedFragmentsDictionary.set( node[ "@id" ], node ) );
 	}
 
 	openBNode( id:string ):void {
