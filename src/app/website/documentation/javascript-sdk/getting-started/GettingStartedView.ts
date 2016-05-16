@@ -1,6 +1,6 @@
 import { Component, ElementRef, ChangeDetectorRef } from "angular2/core";
 import { CORE_DIRECTIVES } from "angular2/common";
-import { ROUTER_DIRECTIVES } from "angular2/router";
+import { ROUTER_DIRECTIVES, Router } from "angular2/router";
 import { Title } from "angular2/platform/browser";
 
 import SidebarComponent from "./../../sidebar/SidebarComponent";
@@ -18,6 +18,7 @@ import "./style.css!";
 	providers: [ Title ],
 } )
 export default class GettingStartedView {
+	router:Router;
 	element:ElementRef;
 	$element:JQuery;
 	title:Title;
@@ -26,11 +27,10 @@ export default class GettingStartedView {
 
 	private changeDetector:ChangeDetectorRef;
 
-	constructor( element:ElementRef, title:Title, changeDetector:ChangeDetectorRef ) {
+	constructor( router:Router, element:ElementRef, title:Title, changeDetector:ChangeDetectorRef ) {
 		this.element = element;
-
+		this.router = router;
 		this.title = title;
-		this.title.setTitle( "Getting started - JavaScript SDK" );
 
 		this.changeDetector = changeDetector;
 
@@ -44,6 +44,10 @@ export default class GettingStartedView {
 		this.initializeSidebar();
 	}
 
+	routerOnActivate():void {
+		this.title.setTitle( "Getting started - JavaScript SDK" );
+	}
+
 	initializeAccordions():void {
 		this.$element.find( ".ui.accordion" ).accordion();
 	}
@@ -53,7 +57,7 @@ export default class GettingStartedView {
 	}
 
 	highlightCode():void {
-		this.$element.find( "pre code.highlighted" ).each( function( index:number ):void {
+		this.$element.find( "pre code.highlighted" ).each( function ( index:number ):void {
 			highlight.highlightBlock( this );
 		} );
 	}

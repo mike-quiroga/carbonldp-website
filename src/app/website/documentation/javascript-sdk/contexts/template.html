@@ -27,73 +27,101 @@
 
 						<div class="content">
 							<div class="header">Pre-release Documentation</div>
-							<p>
-								Although Carbon LDP is not yet released, we're publishing documentation as it is prepared so that you can preview what's in store.
-							</p>
+							<p>Although Carbon LDP is not yet released, we're publishing documentation as it is prepared so that you can preview what's in store.</p>
 						</div>
 					</div>
 
 					<section>
 						<h2 class="ui header"> What is a context?</h2>
 
-						<p>A Context is a container that references the place where all the you platform's settings and
-							your applications' data are stored. Through the contexts you can comunicate
-							with your Carbon server to access the settings, authentication services and
-							object Schema of your platform and/or applications.
-							You can have different contexts with different settings for each application, or you can use the
-							platform context for some global settings. Having contexts helps you simplify the programming process,
-							the contexts help you resolve all the relative <span>URIs</span> that you use in your applications.</p>
+						<p>A Context is a container that references the places where all the platform's settings or where
+							your applications' data is stored. Through the contexts you can comunicate
+							with your Carbon server to access the settings, information, authentication services and
+							object Schema of your platform and/or applications.</p>
+
 						<section>
 							<h3 class="ui header">Types of contexts</h3>
 
-							<p>In the server side carbon handles two spaces, where your data is stored. The SDK mirrors these spaces using contexts.
+							<p>On the server side carbon handles two spaces, where your data is stored.</p>
 							<ul>
-								<li>/platform/</li>
-								<li>/apps/</li>
+								<li>Platform space /platform/</li>
+								<li>Apps space /apps/your-app/</li>
 							</ul>
 
-							<p>In the platform space you will find all the general settings for your applications, agents, roles among others.
-								In the apps space you will find everything specific to your application.</p>
+							<p>The SDK allows you to define two types of contexts by mirroring the server side spaces</p>
+							<ul>
+								<li>Platform context</li>
+								<li>Application context</li>
+							</ul>
+							<p> Having contexts helps you simplify the programming process. When you create an application
+								it is created in both spaces, each space contains specific information that will be discussed in the next sections.
+							</p>
+
+
+
 						</section>
 					</section>
 					<section>
 						<h2 class="ui header">Platform context</h2>
 
-						<p>In the platform context you can set your domain, meaning that you can set the URL where your platform is at, this way your application is more or less independent to the
-							location of carbon, e.g. if your platform changes locations you just need to set the new domain in your Platform context to access you applications.</p>
+						<p>The platform context references, as we said before, the /platform/ space, this helps you access some general settings
+							of your platform, e.g. you can specify your platform domain by setting the URL where your platform is at, this way your application is more or less independent to the
+							location of carbon server.
+
+							The platform context also allows you to access /platform/apps/ where you can find a list of all your applications, and in /platform/apps/your-app-name/ you will find
+							some application specific information.	For	now	we will	just focus on how to declare your platform
+							context and how to set it.
+
 						<section>
 							<h3 class="ui header">Declare the platform context </h3>
 
-							To declare a platform context you need to import Carbon from the carbonldp/Carbon library you can instance
-							a new Carbon object, this is you platform context. If you just declare it, you can see the default values the context has.
-							e.g. the default domain is https://carbonldp.com/
+							<p>To declare a platform context you need to import Carbon from the carbonldp/Carbon library and instance
+								a new Carbon object, this will be your platform context. You can get the default value the context has by resolving it.
+								e.g. the default domain is https://carbonldp.com/</p>
 
-							<!--@formatter:off-->
-								<pre><code class="highlighted javascript">
+							<div class="ui top attached tabular menu">
+								<a class="item active" data-tab="typescript">TypeScript</a>
+								<a class="item" data-tab="javascript">JavaScript</a>
+							</div>
+							<div class="ui bottom attached tab segment active" data-tab="typescript">
+
+								<!--@formatter:off-->
+								<pre><code class="highlighted typescript">
 import Carbon from "carbonldp/Carbon";
 
 let carbonContext:Carbon = new Carbon();
 
-
 carbonContext.resolve( "" ); // https://carbonldp.com/platform/
-// Change a setting
-carbonContext.setSetting( "domain", "dev.carbonldp.com" );
 
-carbonContext.resolve( "" ); // https://dev.carbonldp.com/platform/
-
-let anotherContext:Carbon = new Carbon();
-anotherContext.resolve( "" ); // https://carbonldp.com/platform/
 
 								</code></pre>
 								<!--@formatter:on-->
+							</div>
+							<div class="ui bottom attached tab segment" data-tab="javascript">
+								<!--@formatter:off-->
+									<pre><code class="highlighted javascript">
+import Carbon from "carbonldp/Carbon";
+
+let carbonContext = new Carbon();
+
+carbonContext.resolve( "" ); //https://carbonldp.com/platform/
+
+							</code></pre>
+							<!--@formatter:on-->
+							</div>
 						</section>
 						<section>
 							<h3 class="ui header">Access/Modify your platform context</h3>
-							<p>In the last section we saw how to declare a platform context, now we will see how to costumize it.</p>
-							<p>You can set your domain</p>
+							<p>In the last section we saw how to declare a platform context, now we will see how to set a different domain in it.</p>
 
-							<!--@formatter:off-->
-								<pre><code class="highlighted javascript">
+							<div class="ui top attached tabular menu">
+								<a class="item active" data-tab="typescript">TypeScript</a>
+								<a class="item" data-tab="javascript">JavaScript</a>
+							</div>
+							<div class="ui bottom attached tab segment active" data-tab="typescript">
+
+								<!--@formatter:off-->
+								<pre><code class="highlighted typescript">
 import Carbon from "carbonldp/Carbon";
 
 let carbonContext:Carbon = new Carbon();
@@ -103,20 +131,41 @@ carbonContext.setSetting( "domain", "dev.carbonldp.com" );
 carbonContext.resolve( "" ); // https://dev.carbonldp.com/platform/
 
 								</code></pre>
-						    <!--@formatter:on-->
-						</section>
+								<!--@formatter:on-->
+							</div>
+							<div class="ui bottom attached tab segment" data-tab="javascript">
+								<!--@formatter:off-->
+								<pre><code class="highlighted javascript">
+import Carbon from "carbonldp/Carbon";
 
+let carbonContext = new Carbon();
+
+carbonContext.setSetting( "domain", "dev.carbonldp.com" );
+
+carbonContext.resolve( "" ); //https://dev.carbonldp.com/platform;
+
+								</code></pre>
+							<!--@formatter:on-->
+							</div>
+						</section>
 					</section>
 					<section>
 						<h2 class="ui header">Application context</h2>
+						<p>An application context allows you to access particular settings for the application it references. You can configure the roles and agents specific to the application,
+							and you can see what information it contains.</p>
+						<section>
+						<h3 class="ui header">Getting the App Context</h3>
 						<p> Once you have your platform context declared, you can get your application context. The application context is created along side your application, you can not
-							reference a
-							application context of an application that is not yet created. If you haven't created a application, please do so!
-
-							method example...
+							reference an application context if an application is not yet created. If you haven't created a application, please do so!
 						</p>
-						<!--@formatter:off-->
-								<pre><code class="highlighted javascript">
+						<div class="ui top attached tabular menu">
+							<a class="item active" data-tab="typescript">TypeScript</a>
+							<a class="item" data-tab="javascript">JavaScript</a>
+						</div>
+						<div class="ui bottom attached tab segment active" data-tab="typescript">
+
+							<!--@formatter:off-->
+								<pre><code class="highlighted typescript">
 import Carbon from "carbonldp/Carbon";
 
 let carbonContext:Carbon = new Carbon();
@@ -129,12 +178,31 @@ carbonContext.apps.getAppContext( "test-app/" ).then(
 
 								</code></pre>
 								<!--@formatter:on-->
+						</div>
+						<div class="ui bottom attached tab segment" data-tab="javascript">
+							<!--@formatter:off-->
+									<pre><code class="highlighted javascript">
+import Carbon from "carbonldp/Carbon";
+
+let carbonContext = new Carbon();
+
+carbonContext.apps.getAppContext( "test-app/" ).then(
+	(appContext) =>{
+		appContext.resolve( "" ); //https://carbonldp.com/apss/test-app/
+	}
+);
+
+							</code></pre>
+							<!--@formatter:on-->
+						</div>
+						</section>
 					</section>
 					<section>
 
 						<h2 class="ui header">Inheritance</h2>
-						<p>All the settings of platform contexts are by default inherited by the application contexts, you can over write them in you application context. This allows you to manage
-							different objects schema in your applications, or manage different authentication credentials.
+						<p>All the settings of platform contexts are, by default, inherited by the application contexts, as long as they are not overwritten. This allows you to manage
+							different settings and/or objects schema in your applications, or manage different authentication credentials. This is important to remember as you delve deeper
+							in Carbon, for now it is enough to keep in mind this property of the contexts.
 						</p>
 					</section>
 				</article>
