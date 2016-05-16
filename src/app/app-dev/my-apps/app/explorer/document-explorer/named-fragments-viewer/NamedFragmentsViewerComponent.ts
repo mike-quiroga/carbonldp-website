@@ -5,6 +5,7 @@ import $ from "jquery";
 import "semantic-ui/semantic";
 
 import * as RDFNode from "carbonldp/RDF/RDFNode";
+import * as URI from "carbonldp/RDF/URI";
 
 import PropertyComponent from "./../property/PropertyComponent";
 
@@ -82,6 +83,10 @@ export default class NamedFragmentsViewerComponent {
 
 	goToBNode( id:string ):void {
 		this.onOpenBNode.emit( id );
+	}
+
+	getSlug( uri:string ) {
+		return URI.Util.getSlug( uri );
 	}
 
 }

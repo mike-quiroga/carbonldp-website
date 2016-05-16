@@ -12,7 +12,7 @@
 	   *ngFor="#namedFragment of openedNamedFragments; #i=index;"
 	   [attr.data-tab]="'namedfragment_'+getNormalizedUri(namedFragment['@id'])">
 		<p>
-			{{namedFragment["@id"]}}
+			{{getSlug(namedFragment["@id"])}}
 			<button class="circular ui icon basic mini button" (click)="closeNamedFragment(namedFragment)">
 				<i class="icon close"></i>
 			</button>
