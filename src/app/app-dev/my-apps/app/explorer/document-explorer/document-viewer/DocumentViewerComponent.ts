@@ -72,7 +72,10 @@ export default class DocumentViewerComponent {
 					this.document = document;
 					this.receiveDocument();
 					setTimeout(
-						()=> {this.scrollToSection( "documentResource" )}, 250
+						()=> {
+							this.goToSection( "documentResource" );
+							this.initializeTabs();
+						}, 250
 					);
 				}
 			);
@@ -80,7 +83,10 @@ export default class DocumentViewerComponent {
 		if ( changes[ "document" ] && ! ! changes[ "document" ].currentValue && changes[ "document" ].currentValue !== changes[ "document" ].previousValue ) {
 			this.receiveDocument();
 			setTimeout(
-				()=> {this.scrollToSection( "documentResource" )}, 250
+				()=> {
+					this.goToSection( "documentResource" );
+					this.initializeTabs();
+				}, 250
 			);
 		}
 	}
@@ -121,28 +127,22 @@ export default class DocumentViewerComponent {
 
 	openBNode( id:string ):void {
 		this.documentBNodes.openBNode( id );
-		this.scrollToSection( "bNodes" );
+		this.goToSection( "bNodes" );
 	}
 
 	openNamedFragment( id:string ):void {
 		this.namedFragments.openNamedFragment( id );
-		this.scrollToSection( "namedFragments" );
+		this.goToSection( "namedFragments" );
 	}
 
-	scrollToSection( section:string ):void {
-		switch ( section ) {
-			case "documentResource":
-				this.scrollTo( ".row.documentResource" );
-				break;
-			case "bNodes":
-				this.scrollTo( ".row.bNodes" );
-				break;
-			case "namedFragments":
-				this.scrollTo( ".row.namedFragments" );
-				break;
-			default:
-				break;
-		}
+	initializeTabs() {
+		this.$element.find( ".secondary.menu.document.tabs .item" ).tab();
+	}
+
+	goToSection( section:string ):void {
+		if ( this.sections.indexOf( section ) === - 1 ) return;
+		this.scrollTo( ">div:first-child" );
+		this.$element.find( ".secondary.menu.document.tabs .item" ).tab( "changeTab", section );
 	}
 
 	private scrollTo( selector:string ):void {

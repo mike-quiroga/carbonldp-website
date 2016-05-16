@@ -18,15 +18,14 @@ import template from "./template.html!";
 
 export default class DocumentResourceComponent {
 
+	@Input() displayOnly:string[] = [];
+	@Input() hiddenProperties:string[] = [];
 	@Input() rootNode:RDFNode.Class;
 	@Output() onOpenBNode:EventEmitter<string> = new EventEmitter<string>();
 	@Output() onOpenNamedFragment:EventEmitter<string> = new EventEmitter<string>();
 
 	constructor() {}
 
-	getPropertiesName( property:any ):string[] {
-		return Object.keys( property );
-	}
 
 	openBNode( id:string ):void {
 		this.onOpenBNode.emit( id );
@@ -36,8 +35,19 @@ export default class DocumentResourceComponent {
 		this.onOpenNamedFragment.emit( id );
 	}
 
+	getPropertiesName( property:any ):string[] {
+		return Object.keys( property );
+	}
+
 	getDisplayName( uri:string ):string {
-		if ( URI.Util.hasFragment( uri ) )return URI.Util.getFragment( uri )( uri );
+		if ( URI.Util.hasFragment( uri ) )return URI.Util.getFragment( uri );
 		return URI.Util.getSlug( uri );
+	}
+
+	canDisplay( propertyName:string ):boolean {
+		if ( typeof propertyName === "undefined" ) return false;
+		if ( this.displayOnly.length === 0 && this.hiddenProperties.length === 0 ) return true;
+		if ( this.displayOnly.length > 0 ) return this.displayOnly.indexOf( propertyName ) !== - 1 ? true : false;
+		return this.hiddenProperties.indexOf( propertyName ) !== - 1 ? false : true;
 	}
 }

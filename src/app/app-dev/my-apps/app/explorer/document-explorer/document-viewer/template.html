@@ -11,28 +11,50 @@
 		</div>
 	</div>
 	<div *ngIf="document">
-		<div class="ui stackable grid">
-			<div class="row documentResource" *ngIf="!!rootNode">
-				<document-resource class="column"
-				                   (onOpenBNode)="openBNode($event)"
-				                   (onOpenNamedFragment)="openNamedFragment($event)"
-				                   [rootNode]="rootNode">
-				</document-resource>
-			</div>
-			<div class="row bNodes" *ngIf="!!bNodesDictionary.size > 0">
-				<document-bnodes class="column"
-				                 (onOpenBNode)="scrollToSection($event)"
-				                 (onOpenNamedFragment)="openNamedFragment($event)"
-				                 [bNodesArray]="bNodesArray"
-				                 [bNodesDictionary]="bNodesDictionary"></document-bnodes>
-			</div>
-			<div class="row namedFragments" *ngIf="!!namedFragmentsDictionary.size > 0">
-				<document-named-fragments class="column"
-				                          (onOpenBNode)="openBNode($event)"
-				                          (onOpenNamedFragment)="scrollToSection($event)"
-				                          [documentURI]="rootNode['@id']"
-				                          [namedFragmentsArray]="namedFragmentsArray"
-				                          [namedFragmentsDictionary]="namedFragmentsDictionary"></document-named-fragments>
+		<div class="ui divided items">
+			<document-property class="property item"
+			                   [documentURI]="rootNode['@id']"
+			                   [propertyName]="'@id'"
+			                   [property]="rootNode[ '@id' ]">
+			</document-property>
+			<div class="item">
+				<div class="content">
+					<div class="description">
+						<div class="ui secondary menu document tabs">
+							<a class="item active" data-tab="documentResource">Document</a>
+							<a class="item" data-tab="bNodes" *ngIf="!!bNodesDictionary.size > 0">Blank Nodes</a>
+							<a class="item" data-tab="namedFragments" *ngIf="!!namedFragmentsDictionary.size > 0">Named Fragments</a>
+						</div>
+						<div class="ui active tab segment"
+						     data-tab="documentResource">
+							<document-resource class="column"
+							                   (onOpenBNode)="openBNode($event)"
+							                   (onOpenNamedFragment)="openNamedFragment($event)"
+							                   [rootNode]="rootNode"
+							                   [hiddenProperties]="['@id']">
+							</document-resource>
+						</div>
+						<div class="ui tab segment"
+						     data-tab="bNodes"
+						     *ngIf="!!bNodesDictionary.size > 0">
+							<document-bnodes class="column"
+							                 (onOpenBNode)="goToSection($event)"
+							                 (onOpenNamedFragment)="openNamedFragment($event)"
+							                 [bNodesArray]="bNodesArray"
+							                 [bNodesDictionary]="bNodesDictionary"></document-bnodes>
+						</div>
+						<div class="ui tab segment"
+						     data-tab="namedFragments"
+						     *ngIf="!!namedFragmentsDictionary.size > 0">
+							<document-named-fragments class="column"
+							                          (onOpenBNode)="openBNode($event)"
+							                          (onOpenNamedFragment)="goToSection($event)"
+							                          [documentURI]="rootNode['@id']"
+							                          [namedFragmentsArray]="namedFragmentsArray"
+							                          [namedFragmentsDictionary]="namedFragmentsDictionary"></document-named-fragments>
+						</div>
+					</div>
+				</div>
 			</div>
 		</div>
 	</div>

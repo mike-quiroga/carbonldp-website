@@ -1,10 +1,13 @@
 <div class="ui divided items">
-	<document-property class="property item"
-	                   *ngFor="#propertyName of getPropertiesName( rootNode ); #i=index;"
-	                   (onGoToBNode)="openBNode( $event )"
-	                   (onGoToNamedFragment)="openNamedFragment($event)"
-	                   [documentURI]="rootNode['@id']"
-	                   [propertyName]="propertyName"
-	                   [property]="rootNode[ propertyName ]">
-	</document-property>
+	<template ngFor #propertyName [ngForOf]="getPropertiesName( rootNode )" #i="index">
+		<document-property class="property item"
+		                   (onGoToBNode)="openBNode( $event )"
+		                   (onGoToNamedFragment)="openNamedFragment($event)"
+		                   [documentURI]="rootNode['@id']"
+		                   [propertyName]="propertyName"
+		                   [property]="rootNode[ propertyName ]"
+		                   [attr.data-tar]="propertyName"
+		                   *ngIf="canDisplay(propertyName)">
+		</document-property>
+	</template>
 </div>
