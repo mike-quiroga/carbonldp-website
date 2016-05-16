@@ -71,23 +71,11 @@ export default class DocumentViewerComponent {
 				( document:RDFDocument.Class ) => {
 					this.document = document;
 					this.receiveDocument();
-					setTimeout(
-						()=> {
-							this.goToSection( "documentResource" );
-							this.initializeTabs();
-						}, 250
-					);
 				}
 			);
 		}
 		if ( changes[ "document" ] && ! ! changes[ "document" ].currentValue && changes[ "document" ].currentValue !== changes[ "document" ].previousValue ) {
 			this.receiveDocument();
-			setTimeout(
-				()=> {
-					this.goToSection( "documentResource" );
-					this.initializeTabs();
-				}, 250
-			);
 		}
 	}
 
@@ -97,6 +85,12 @@ export default class DocumentViewerComponent {
 		this.setRoot();
 		this.generateMaps();
 		this.loadingDocument = false;
+		setTimeout(
+			()=> {
+				this.goToSection( "documentResource" );
+				this.initializeTabs();
+			}, 250
+		);
 	}
 
 	setRoot():void {

@@ -1,11 +1,5 @@
-jsonld-viewer {
-	.ui.stackable.grid {
-		.ui.divided.items {
-			.property.item {
-				.content {
-					max-width: 100%;
-				}
-			}
-		}
+document-viewer {
+	.ui.menu:not(.vertical) .item.hidden {
+		display: none;
 	}
 }
