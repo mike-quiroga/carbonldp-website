@@ -8,7 +8,7 @@ Source code for [carbonldp.com](https://carbonldp.com)
     - jspm: `npm install jspm -g`
 2. cd into the project's root directory
 3. run `npm install`
-4. To start the application server run `npm start`
+4. To start the application server run `npm start` or `gulp serve`
 
 ## Gulp Tasks
 
