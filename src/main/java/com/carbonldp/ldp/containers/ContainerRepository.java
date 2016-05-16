@@ -29,6 +29,8 @@ public interface ContainerRepository {
 
 	public Set<IRI> getContainedIRIs( IRI containerIRI );
 
+	public Set<IRI> getContainedIRIs( IRI targetIRI, OrderByRetrievalPreferences orderByRetrievalPreferences );
+
 	public Set<Statement> getContainmentTriples( IRI containerIRI );
 
 	public Set<Statement> getMembershipTriples( IRI containerIRI );
@@ -66,10 +68,6 @@ public interface ContainerRepository {
 	public void removeMembers( IRI targetIRI, Type containerType );
 
 	public TypedContainerRepository getTypedRepository( Type containerType );
-
-	public Set<IRI> getContainmentIRIs( IRI targetIRI, OrderByRetrievalPreferences orderByRetrievalPreferences );
-
-	public Set<IRI> getContainmentIRIs( IRI targetIRI );
 
 	public Set<IRI> getMemberIRIs( IRI targetIRI, OrderByRetrievalPreferences orderByRetrievalPreferences );
 
