@@ -21,7 +21,7 @@
 			</div>
 			<div class="row bNodes" *ngIf="!!bNodesDictionary.size > 0">
 				<document-bnodes class="column"
-				                 (onOpenBNode)="scrollTo($event)"
+				                 (onOpenBNode)="scrollToSection($event)"
 				                 (onOpenNamedFragment)="openNamedFragment($event)"
 				                 [bNodesArray]="bNodesArray"
 				                 [bNodesDictionary]="bNodesDictionary"></document-bnodes>
@@ -29,7 +29,7 @@
 			<div class="row namedFragments" *ngIf="!!namedFragmentsDictionary.size > 0">
 				<document-named-fragments class="column"
 				                          (onOpenBNode)="openBNode($event)"
-				                          (onOpenNamedFragment)="scrollTo($event)"
+				                          (onOpenNamedFragment)="scrollToSection($event)"
 				                          [documentURI]="rootNode['@id']"
 				                          [namedFragmentsArray]="namedFragmentsArray"
 				                          [namedFragmentsDictionary]="namedFragmentsDictionary"></document-named-fragments>

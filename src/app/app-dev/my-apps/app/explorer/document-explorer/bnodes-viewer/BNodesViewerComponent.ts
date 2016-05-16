@@ -69,7 +69,6 @@ export default class BNodesViewerComponent {
 
 	goToBNode( id:string ) {
 		if ( ! this.nodesTab ) return;
-
 		this.nodesTab.find( "> [data-tab='" + id + "']" ).click();
 		this.onOpenBNode.emit( "bNodes" );
 	}

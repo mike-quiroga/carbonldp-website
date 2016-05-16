@@ -28,15 +28,16 @@ import "./style.css!";
 export default class DocumentViewerComponent {
 	element:ElementRef;
 	$element:JQuery;
+	sections:string[] = [ "bNodes", "namedFragments", "documentResource" ];
 
 	rootNode:RDFNode.Class;
 
 	bNodesArray:RDFNode.Class[] = [];
 	namedFragmentsArray:RDFNode.Class[] = [];
-
 	bNodesDictionary:Map<string,RDFNode.Class> = new Map<string,RDFNode.Class>();
 	namedFragmentsDictionary:Map<string,RDFNode.Class> = new Map<string,RDFNode.Class>();
 
+	documentsResolverService:DocumentsResolverService;
 	@Input() uri:string;
 	@Input() document:RDFDocument.Class;
 	@Input() documentContext:SDKContext.Class;
@@ -53,7 +54,6 @@ export default class DocumentViewerComponent {
 
 	private _loadingDocument:boolean = false;
 
-	documentsResolverService:DocumentsResolverService;
 
 	constructor( element:ElementRef, documentsResolverService:DocumentsResolverService ) {
 		this.element = element;
@@ -71,22 +71,26 @@ export default class DocumentViewerComponent {
 				( document:RDFDocument.Class ) => {
 					this.document = document;
 					this.receiveDocument();
-
-					this.loadingDocument = false;
+					setTimeout(
+						()=> {this.scrollToSection( "documentResource" )}, 250
+					);
 				}
 			);
 		}
 		if ( changes[ "document" ] && ! ! changes[ "document" ].currentValue && changes[ "document" ].currentValue !== changes[ "document" ].previousValue ) {
-			this.loadingDocument = true;
 			this.receiveDocument();
-			this.loadingDocument = false;
+			setTimeout(
+				()=> {this.scrollToSection( "documentResource" )}, 250
+			);
 		}
 	}
 
 	receiveDocument():void {
+		this.loadingDocument = true;
 		this.document = this.document[ 0 ];
 		this.setRoot();
 		this.generateMaps();
+		this.loadingDocument = false;
 	}
 
 	setRoot():void {
@@ -117,22 +121,34 @@ export default class DocumentViewerComponent {
 
 	openBNode( id:string ):void {
 		this.documentBNodes.openBNode( id );
-		this.scrollTo( "bNodes" );
+		this.scrollToSection( "bNodes" );
 	}
 
 	openNamedFragment( id:string ):void {
 		this.namedFragments.openNamedFragment( id );
-		this.scrollTo( "namedFragments" );
+		this.scrollToSection( "namedFragments" );
 	}
 
-	scrollTo( id:string ):void {
-		if ( id === "bNodes" ) {
-			let divPosition:JQueryCoordinates = this.$element.find( ".row.bNodes" ).position();
-			this.$element.animate( { scrollTop: divPosition.top }, "fast" );
+	scrollToSection( section:string ):void {
+		switch ( section ) {
+			case "documentResource":
+				this.scrollTo( ".row.documentResource" );
+				break;
+			case "bNodes":
+				this.scrollTo( ".row.bNodes" );
+				break;
+			case "namedFragments":
+				this.scrollTo( ".row.namedFragments" );
+				break;
+			default:
+				break;
 		}
-		if ( id === "namedFragments" ) {
-			let divPosition:JQueryCoordinates = this.$element.find( ".row.namedFragments" ).position();
-			this.$element.animate( { scrollTop: divPosition.top }, "fast" );
-		}
+	}
+
+	private scrollTo( selector:string ):void {
+		if ( ! this.$element ) return;
+		let divPosition:JQueryCoordinates = this.$element.find( selector ).position();
+		if ( ! divPosition ) return;
+		this.$element.animate( { scrollTop: divPosition.top }, "fast" );
 	}
 }
