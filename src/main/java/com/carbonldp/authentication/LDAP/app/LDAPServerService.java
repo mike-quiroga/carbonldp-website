@@ -1,5 +1,6 @@
 package com.carbonldp.authentication.LDAP.app;
 
+import com.carbonldp.apps.App;
 import com.carbonldp.authentication.LDAPServer;
 import org.openrdf.model.IRI;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -19,5 +20,5 @@ public interface LDAPServerService {
 	@PreAuthorize( "hasPermission(#targetIRI, 'CREATE_CHILD')" )
 	public LDAPServer get( IRI targetIRI );
 
-	public void registerLDAPAgents( LDAPServer ldapServer, Set<String> usernameFields );
+	public void registerLDAPAgents( LDAPServer ldapServer, Set<String> usernameFields,App app );
 }

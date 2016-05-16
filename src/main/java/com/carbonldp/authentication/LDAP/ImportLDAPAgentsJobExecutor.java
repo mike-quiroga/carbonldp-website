@@ -8,6 +8,7 @@ import com.carbonldp.exceptions.JobException;
 import com.carbonldp.jobs.*;
 import com.carbonldp.ldp.sources.RDFSourceService;
 import com.carbonldp.models.Infraction;
+import com.carbonldp.spring.TransactionWrapper;
 import org.openrdf.model.IRI;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -21,6 +22,7 @@ import java.util.Set;
 public class ImportLDAPAgentsJobExecutor implements TypedJobExecutor {
 	RDFSourceService sourceService;
 	LDAPServerService ldapServerService;
+	private TransactionWrapper transactionWrapper;
 
 	@Override
 	public boolean supports( JobDescription.Type jobType ) {return jobType == JobDescription.Type.IMPORT_LDAP_AGENTS_JOB;}
@@ -31,8 +33,8 @@ public class ImportLDAPAgentsJobExecutor implements TypedJobExecutor {
 		ImportLDAPAgentsJob importLDAPAgentsJob = new ImportLDAPAgentsJob( job );
 		IRI ldapServerIRI = importLDAPAgentsJob.getLDAPServerIRI();
 		LDAPServer ldapServer = new LDAPServer( sourceService.get( ldapServerIRI ) );
-		ldapServerService.registerLDAPAgents( ldapServer, importLDAPAgentsJob.getLDAPUsernameFields() );
 
+		transactionWrapper.runWithSystemPermissionsInAppContext( app, () -> ldapServerService.registerLDAPAgents( ldapServer, importLDAPAgentsJob.getLDAPUsernameFields(), app ) );
 	}
 
 	@Autowired
@@ -43,5 +45,10 @@ public class ImportLDAPAgentsJobExecutor implements TypedJobExecutor {
 	@Autowired
 	public void setLdapServerService( LDAPServerService ldapServerService ) {
 		this.ldapServerService = ldapServerService;
+	}
+
+	@Autowired
+	public void setTransactionWrapper( TransactionWrapper transactionWrapper ) {
+		this.transactionWrapper = transactionWrapper;
 	}
 }

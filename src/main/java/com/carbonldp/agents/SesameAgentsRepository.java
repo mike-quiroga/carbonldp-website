@@ -118,7 +118,7 @@ public abstract class SesameAgentsRepository extends AbstractSesameRepository im
 				IRI agentIRI;
 				BindingSet bindingSet = queryResult.next();
 				Value member = bindingSet.getValue( "agentIRI" );
-				if (! ValueUtil.isIRI( member ) ) continue;
+				if ( ! ValueUtil.isIRI( member ) ) continue;
 
 				agentIRI = ValueUtil.getIRI( member );
 				RDFSource agentSource = sourceRepository.get( agentIRI );
@@ -134,6 +134,4 @@ public abstract class SesameAgentsRepository extends AbstractSesameRepository im
 	public void create( Agent agent ) {
 		containerRepository.createChild( getAgentsContainerIRI(), agent, agentsContainerType );
 	}
-
-	protected abstract IRI getAgentsContainerIRI();
 }

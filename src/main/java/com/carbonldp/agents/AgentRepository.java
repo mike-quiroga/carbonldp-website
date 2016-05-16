@@ -16,4 +16,6 @@ public interface AgentRepository {
 	public void create( Agent agent );
 
 	public Set<Agent> findByUID( String user );
+
+	public abstract IRI getAgentsContainerIRI();
 }

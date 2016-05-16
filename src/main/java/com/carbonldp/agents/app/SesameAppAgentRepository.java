@@ -33,7 +33,7 @@ public class SesameAppAgentRepository extends SesameAgentsRepository implements 
 	}
 
 	@Override
-	protected IRI getAgentsContainerIRI() {
+	public IRI getAgentsContainerIRI() {
 		IRI appIRI = AppContextHolder.getContext().getApplication().getRootContainerIRI();
 		if ( appIRI == null ) throw new RuntimeException( "app agent repository should be running in App context" );
 		return getContainerIRI( appIRI );
