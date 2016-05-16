@@ -37,7 +37,7 @@
 						<p>A Context is a container that references the places where all the platform's settings or where
 							your applications' data is stored. Through the contexts you can comunicate
 							with your Carbon server to access the settings, information, authentication services and
-							object Schema of your platform and/or applications.</p>
+							object Schema (add modal with brief definition/or link to object schema page) of your platform and/or applications.</p>
 
 						<section>
 							<h3 class="ui header">Types of contexts</h3>
@@ -58,7 +58,6 @@
 							</p>
 
 
-
 						</section>
 					</section>
 					<section>
@@ -69,23 +68,23 @@
 							location of carbon server.
 
 							The platform context also allows you to access /platform/apps/ where you can find a list of all your applications, and in /platform/apps/your-app-name/ you will find
-							some application specific information.	For	now	we will	just focus on how to declare your platform
+							some application specific information. For now we will just focus on how to declare your platform
 							context and how to set it.
 
-						<section>
-							<h3 class="ui header">Declare the platform context </h3>
+							<section>
+								<h3 class="ui header">Declare the platform context </h3>
 
-							<p>To declare a platform context you need to import Carbon from the carbonldp/Carbon library and instance
-								a new Carbon object, this will be your platform context. You can get the default value the context has by resolving it.
-								e.g. the default domain is https://carbonldp.com/</p>
+						<p>To declare a platform context you need to import Carbon from the carbonldp/Carbon library and instance
+							a new Carbon object, this will be your platform context. You can get the default value the context has by resolving it.
+							e.g. the default domain is https://carbonldp.com/</p>
 
-							<div class="ui top attached tabular menu">
-								<a class="item active" data-tab="typescript">TypeScript</a>
-								<a class="item" data-tab="javascript">JavaScript</a>
-							</div>
-							<div class="ui bottom attached tab segment active" data-tab="typescript">
+						<div class="ui top attached tabular menu">
+							<a class="item active" data-tab="typescript">TypeScript</a>
+							<a class="item" data-tab="javascript">JavaScript</a>
+						</div>
+						<div class="ui bottom attached tab segment active" data-tab="typescript">
 
-								<!--@formatter:off-->
+							<!--@formatter:off-->
 								<pre><code class="highlighted typescript">
 import Carbon from "carbonldp/Carbon";
 
@@ -96,9 +95,9 @@ carbonContext.resolve( "" ); // https://carbonldp.com/platform/
 
 								</code></pre>
 								<!--@formatter:on-->
-							</div>
-							<div class="ui bottom attached tab segment" data-tab="javascript">
-								<!--@formatter:off-->
+						</div>
+						<div class="ui bottom attached tab segment" data-tab="javascript">
+							<!--@formatter:off-->
 									<pre><code class="highlighted javascript">
 import Carbon from "carbonldp/Carbon";
 
@@ -108,19 +107,19 @@ carbonContext.resolve( "" ); //https://carbonldp.com/platform/
 
 							</code></pre>
 							<!--@formatter:on-->
-							</div>
-						</section>
-						<section>
-							<h3 class="ui header">Access/Modify your platform context</h3>
-							<p>In the last section we saw how to declare a platform context, now we will see how to set a different domain in it.</p>
+						</div>
+					</section>
+					<section>
+						<h3 class="ui header">Access/Modify your platform context</h3>
+						<p>In the last section we saw how to declare a platform context, now we will see how to set a different domain in it.</p>
 
-							<div class="ui top attached tabular menu">
-								<a class="item active" data-tab="typescript">TypeScript</a>
-								<a class="item" data-tab="javascript">JavaScript</a>
-							</div>
-							<div class="ui bottom attached tab segment active" data-tab="typescript">
+						<div class="ui top attached tabular menu">
+							<a class="item active" data-tab="typescript">TypeScript</a>
+							<a class="item" data-tab="javascript">JavaScript</a>
+						</div>
+						<div class="ui bottom attached tab segment active" data-tab="typescript">
 
-								<!--@formatter:off-->
+							<!--@formatter:off-->
 								<pre><code class="highlighted typescript">
 import Carbon from "carbonldp/Carbon";
 
@@ -132,9 +131,9 @@ carbonContext.resolve( "" ); // https://dev.carbonldp.com/platform/
 
 								</code></pre>
 								<!--@formatter:on-->
-							</div>
-							<div class="ui bottom attached tab segment" data-tab="javascript">
-								<!--@formatter:off-->
+						</div>
+						<div class="ui bottom attached tab segment" data-tab="javascript">
+							<!--@formatter:off-->
 								<pre><code class="highlighted javascript">
 import Carbon from "carbonldp/Carbon";
 
@@ -146,25 +145,25 @@ carbonContext.resolve( "" ); //https://dev.carbonldp.com/platform;
 
 								</code></pre>
 							<!--@formatter:on-->
-							</div>
-						</section>
+						</div>
+					</section>
 					</section>
 					<section>
 						<h2 class="ui header">Application context</h2>
 						<p>An application context allows you to access particular settings for the application it references. You can configure the roles and agents specific to the application,
 							and you can see what information it contains.</p>
 						<section>
-						<h3 class="ui header">Getting the App Context</h3>
-						<p> Once you have your platform context declared, you can get your application context. The application context is created along side your application, you can not
-							reference an application context if an application is not yet created. If you haven't created a application, please do so!
-						</p>
-						<div class="ui top attached tabular menu">
-							<a class="item active" data-tab="typescript">TypeScript</a>
-							<a class="item" data-tab="javascript">JavaScript</a>
-						</div>
-						<div class="ui bottom attached tab segment active" data-tab="typescript">
+							<h3 class="ui header">Getting the App Context</h3>
+							<p> Once you have your platform context declared, you can get your application context. The application context is created along side your application, you can not
+								reference an application context if an application is not yet created. If you haven't created a application, please do so!
+							</p>
+							<div class="ui top attached tabular menu">
+								<a class="item active" data-tab="typescript">TypeScript</a>
+								<a class="item" data-tab="javascript">JavaScript</a>
+							</div>
+							<div class="ui bottom attached tab segment active" data-tab="typescript">
 
-							<!--@formatter:off-->
+								<!--@formatter:off-->
 								<pre><code class="highlighted typescript">
 import Carbon from "carbonldp/Carbon";
 
@@ -178,9 +177,9 @@ carbonContext.apps.getAppContext( "test-app/" ).then(
 
 								</code></pre>
 								<!--@formatter:on-->
-						</div>
-						<div class="ui bottom attached tab segment" data-tab="javascript">
-							<!--@formatter:off-->
+							</div>
+							<div class="ui bottom attached tab segment" data-tab="javascript">
+								<!--@formatter:off-->
 									<pre><code class="highlighted javascript">
 import Carbon from "carbonldp/Carbon";
 
@@ -194,7 +193,7 @@ carbonContext.apps.getAppContext( "test-app/" ).then(
 
 							</code></pre>
 							<!--@formatter:on-->
-						</div>
+							</div>
 						</section>
 					</section>
 					<section>
