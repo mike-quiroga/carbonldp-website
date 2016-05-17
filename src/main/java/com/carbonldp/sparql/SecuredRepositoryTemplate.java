@@ -36,6 +36,7 @@ public final class SecuredRepositoryTemplate {
 	}
 
 	public static void execute( Action action ) {
+		RepositorySecuritySwitch.enable();
 		try {
 			action.run();
 		} finally {
@@ -60,7 +61,7 @@ public final class SecuredRepositoryTemplate {
 	}
 
 	private static void clear() {
-		RepositorySecuritySwitch.enable();
+		RepositorySecuritySwitch.disable();
 		RepositorySecurityAccessGrantersHolder.clear();
 	}
 }
