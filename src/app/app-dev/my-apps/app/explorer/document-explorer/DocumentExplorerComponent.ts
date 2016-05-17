@@ -29,7 +29,6 @@ export default class DocumentExplorerComponent {
 
 	loadingDocument:boolean = false;
 	inspectingDocument:RDFDocument.Class;
-	inspectingUri:string;
 	documentsResolverService:DocumentsResolverService;
 	messages:Message[] = [];
 
