@@ -52,20 +52,20 @@ public abstract class SesameAgentsRepository extends AbstractSesameRepository im
 		findByUIDQuery = "" +
 			"SELECT ?agentIRI" + NEW_LINE +
 			"WHERE {" + NEW_LINE +
-			TAB + "GRAPH ?agentContainer{" + NEW_LINE +
+			TAB + "GRAPH ?agentContainer {" + NEW_LINE +
 			TAB + TAB + SPARQLUtil.assignVar( "?hasMemberRelation", ContainerDescription.Property.HAS_MEMBER_RELATION ) + NEW_LINE +
-			TAB + TAB + "?agentContainer ?hasMemberRelation ?member" + NEW_LINE +
-			TAB + TAB + "?agentContainer ?member ?agentIRI" + NEW_LINE +
-			TAB + "}" + NEW_LINE +
+			TAB + TAB + "?agentContainer ?hasMemberRelation ?member." + NEW_LINE +
+			TAB + TAB + "?agentContainer ?member ?agentIRI." + NEW_LINE +
+			TAB + "}." + NEW_LINE +
 			TAB + "GRAPH ?agentIRI{" + NEW_LINE +
 			TAB + TAB + SPARQLUtil.assignVar( "?type", RDFSourceDescription.Property.TYPE ) + NEW_LINE +
 			TAB + TAB + SPARQLUtil.assignVar( "?ldapAgentType", LDAPAgentDescription.Resource.CLASS ) + NEW_LINE +
-			TAB + TAB + "?agentIRI ?type ?ldapAgentType" + NEW_LINE +
+			TAB + TAB + "?agentIRI ?type ?ldapAgentType." + NEW_LINE +
 			TAB + TAB + SPARQLUtil.assignVar( "?userCredentials", LDAPAgentDescription.Property.USER_CREDENTIALS ) + NEW_LINE +
-			TAB + TAB + "?agentIRI ?userCredentials ?bNode" + NEW_LINE +
+			TAB + TAB + "?agentIRI ?userCredentials ?bNode." + NEW_LINE +
 			TAB + TAB + SPARQLUtil.assignVar( "?ldapAgentUserName", LDAPAgentDescription.UserCredentials.USER_NAME ) + NEW_LINE +
-			TAB + TAB + "?bNode ?ldapAgentUserName ?user" + NEW_LINE +
-			TAB + "}" + NEW_LINE +
+			TAB + TAB + "?bNode ?ldapAgentUserName ?user." + NEW_LINE +
+			TAB + "}." + NEW_LINE +
 			"}";
 
 	}

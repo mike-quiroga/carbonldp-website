@@ -5,12 +5,17 @@ import com.carbonldp.agents.AgentRepository;
 import com.carbonldp.agents.LDAPAgent;
 import com.carbonldp.agents.LDAPAgentDescription;
 import com.carbonldp.apps.context.AppContextHolder;
+import com.carbonldp.apps.context.RunInAppContext;
 import com.carbonldp.authentication.LDAPServer;
 import com.carbonldp.authentication.SesameUsernamePasswordAuthenticationProvider;
+import com.carbonldp.authorization.Platform;
 import com.carbonldp.authorization.PlatformPrivilegeRepository;
 import com.carbonldp.authorization.PlatformRoleRepository;
+import com.carbonldp.authorization.RunWith;
+import com.carbonldp.ldp.sources.RDFSource;
 import com.carbonldp.ldp.sources.RDFSourceRepository;
 import com.carbonldp.rdf.RDFBlankNode;
+import com.carbonldp.spring.TransactionWrapper;
 import com.carbonldp.utils.LDAPUtil;
 import org.openrdf.model.ValueFactory;
 import org.openrdf.model.impl.SimpleValueFactory;
@@ -23,6 +28,7 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Set;
 
@@ -34,12 +40,15 @@ import java.util.Set;
 public class LDAPAuthenticationProvider extends SesameUsernamePasswordAuthenticationProvider {
 
 	protected RDFSourceRepository sourceRepository;
+	protected TransactionWrapper transactionWrapper;
 
 	public LDAPAuthenticationProvider( AgentRepository agentRepository, PlatformRoleRepository platformRoleRepository, PlatformPrivilegeRepository platformPrivilegeRepository ) {
 		super( agentRepository, platformRoleRepository, platformPrivilegeRepository );
 	}
 
-	@Override
+	@Transactional
+	@RunWith( platformRoles = {Platform.Role.SYSTEM} )
+	@RunInAppContext
 	public Authentication authenticate( Authentication authentication ) throws AuthenticationException {
 		if ( AppContextHolder.getContext().isEmpty() ) return null;
 		String username = getUsername( authentication );
@@ -54,17 +63,16 @@ public class LDAPAuthenticationProvider extends SesameUsernamePasswordAuthentica
 	}
 
 	public boolean authenticate( Agent agent, String username, String password ) {
-		ValueFactory valueFactory = SimpleValueFactory.getInstance();
 		if ( ! ( agent instanceof LDAPAgent ) ) return false;
 		LDAPAgent ldapAgent = (LDAPAgent) agent;
-
-		LDAPServer ldapServer = new LDAPServer( sourceRepository.get( ldapAgent.getLDAPServer() ) );
+		RDFSource sourceServer = transactionWrapper.runInPlatformContext( () -> sourceRepository.get( ldapAgent.getLDAPServer() ) );
+		LDAPServer ldapServer = new LDAPServer( sourceServer );
 		LdapTemplate ldapTemplate = LDAPUtil.getLDAPTemplate( ldapServer );
 
 		Set<RDFBlankNode> blankNodes = ldapAgent.getUserCredentials();
 		for ( RDFBlankNode blankNode : blankNodes ) {
 			String bNodeUsername = blankNode.getString( LDAPAgentDescription.UserCredentials.USER_NAME.getIRI() );
-			if ( ! bNodeUsername.equals( valueFactory.createLiteral( username ) ) ) continue;
+			if ( ! bNodeUsername.equals( username ) ) continue;
 			AndFilter filter = new AndFilter();
 			String field = blankNode.getString( LDAPAgentDescription.UserCredentials.USER_NAME_FIELD.getIRI() );
 			filter.and( new EqualsFilter( field, bNodeUsername ) );
@@ -83,4 +91,8 @@ public class LDAPAuthenticationProvider extends SesameUsernamePasswordAuthentica
 	public void setSourceRepository( RDFSourceRepository sourceRepository ) {
 		this.sourceRepository = sourceRepository;
 	}
+
+	@Autowired
+	public void setTransactionWrapper( TransactionWrapper transactionWrapper ) {this.transactionWrapper = transactionWrapper; }
+
 }

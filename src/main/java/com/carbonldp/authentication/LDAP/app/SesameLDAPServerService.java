@@ -69,9 +69,9 @@ public class SesameLDAPServerService extends AbstractSesameLDPService implements
 		attributeMapper.setUsernameFields( usernameFields );
 
 		List<LDAPAgent> agents = ldapTemplate.search( "", orFilter.encode(), attributeMapper );
-		String ldapServerURL = ldapServer.getLDAPServerURL();
+		IRI ldapServerIRI = ldapServer.getIRI();
 		for ( LDAPAgent agent : agents ) {
-			agent.setLDAPServer( ldapServerURL );
+			agent.setLDAPServer( ldapServerIRI );
 			containerService.createChild( agentsContainerIRI, agent );
 		}
 
