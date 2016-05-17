@@ -6,14 +6,14 @@ import "semantic-ui/semantic";
 import * as App from "carbonldp/App";
 
 import AppDetailView from "./../AppDetailView";
-// import DocumentExplorerComponent from "./document-explorer/DocumentExplorerComponent";
+import AppConfigurationComponent from "app/app-dev/components/app-configuration/AppConfigurationComponent";
 
 import template from "./template.html!";
 
 @Component( {
 	selector: "dashboard",
 	template: template,
-	directives: [ CORE_DIRECTIVES, ],
+	directives: [ CORE_DIRECTIVES, AppConfigurationComponent ],
 } )
 
 export default class ConfigurationView {
