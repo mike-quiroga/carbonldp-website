@@ -17,6 +17,7 @@ import org.joda.time.DateTime;
 import org.openrdf.model.IRI;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
@@ -40,7 +41,7 @@ public class SesameAppRoleService extends AbstractSesameLDPService implements Ap
 	}
 
 	@Override
-	public void addAgents( IRI appRoleAgentContainerIRI, Set<IRI> agents ) {
+	public void addAgents( IRI appRoleAgentContainerIRI, Collection<IRI> agents ) {
 		for ( IRI agent : agents ) {
 			addAgent( appRoleAgentContainerIRI, agent );
 		}
@@ -90,6 +91,11 @@ public class SesameAppRoleService extends AbstractSesameLDPService implements Ap
 	public void delete( IRI appRoleIRI ) {
 		if ( ! exists( appRoleIRI ) ) throw new ResourceDoesntExistException();
 		appRoleRepository.delete( appRoleIRI );
+	}
+
+	@Override
+	public IRI getAgentsContainerIRI( IRI appRoleIRI ) {
+		return appRoleRepository.getAgentsContainerIRI( appRoleIRI );
 	}
 
 	private void validate( AppRole appRole ) {

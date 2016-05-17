@@ -61,7 +61,7 @@ public class PlatformExceptionController {
 		return new ResponseEntity<>( error.getBaseModel(), HttpStatus.INTERNAL_SERVER_ERROR );
 	}
 
-	@ExceptionHandler( AuthorizationException.class )
+	@ExceptionHandler( {AuthorizationException.class, AccessDeniedException.class} )
 	public ResponseEntity<Object> handleAuthorizationException( HttpServletRequest request, HttpServletResponse response, AuthorizationException exception ) {
 		ErrorResponse error = ErrorResponseFactory.create( exception.getErrorCode(), exception.getMessage(), HttpStatus.FORBIDDEN );
 		return new ResponseEntity<>( error.getBaseModel(), HttpStatus.FORBIDDEN );

@@ -59,7 +59,7 @@ public class SesameLDAPServerService extends AbstractSesameLDPService implements
 	}
 
 	@Override
-	public void registerLDAPAgents( LDAPServer ldapServer, Set<String> usernameFields, App app ) {
+	public List<LDAPAgent> registerLDAPAgents( LDAPServer ldapServer, Set<String> usernameFields, App app ) {
 		IRI agentsContainerIRI = agentRepository.getAgentsContainerIRI();
 		LdapTemplate ldapTemplate = LDAPUtil.getLDAPTemplate( ldapServer );
 		OrFilter orFilter = new OrFilter();
@@ -74,7 +74,7 @@ public class SesameLDAPServerService extends AbstractSesameLDPService implements
 			agent.setLDAPServer( ldapServerIRI );
 			containerService.createChild( agentsContainerIRI, agent );
 		}
-
+		return agents;
 	}
 
 	private void validate( LDAPServer ldapServer ) {

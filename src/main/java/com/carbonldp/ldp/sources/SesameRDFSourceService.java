@@ -1,5 +1,7 @@
 package com.carbonldp.ldp.sources;
 
+import com.carbonldp.authentication.ImportLDAPAgentsJobDescription;
+import com.carbonldp.authentication.ImportLDAPAgentsJobFactory;
 import com.carbonldp.exceptions.InvalidResourceException;
 import com.carbonldp.exceptions.ResourceDoesntExistException;
 import com.carbonldp.jobs.*;
@@ -235,6 +237,7 @@ public class SesameRDFSourceService extends AbstractSesameLDPService implements 
 		Set<IRI> types = originalSource.getTypes();
 
 		infractions.addAll( ContainerFactory.getInstance().validateSystemManagedProperties( document.getDocumentResource() ) );
+		if ( types.contains( ImportLDAPAgentsJobDescription.Resource.CLASS.getIRI() ) ) infractions.addAll( ImportLDAPAgentsJobFactory.getInstance().validateImmutableProperties( document.getDocumentResource() ) );
 
 		if ( types.contains( ImportBackupJobDescription.Resource.CLASS.getIRI() ) ) infractions.addAll( ImportBackupJobFactory.getInstance().validateImmutableProperties( document.getDocumentResource() ) );
 		else infractions.addAll( ContainerFactory.getInstance().validateImmutableProperties( document.getDocumentResource() ) );
