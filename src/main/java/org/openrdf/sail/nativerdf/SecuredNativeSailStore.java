@@ -85,7 +85,7 @@ public class SecuredNativeSailStore extends NativeSailStore {
 			boolean allowed = true;
 
 			dance:
-			for ( RepositorySecurityAccessGranter accessGranter : RepositorySecurityAccessGrantersHolder.getInstance().getAccessGranters() ) {
+			for ( RepositorySecurityAccessGranter accessGranter : RepositorySecurityAccessGrantersHolder.get() ) {
 				switch ( accessGranter.canAccess( statement ) ) {
 					case GRANT:
 						allowed = true;

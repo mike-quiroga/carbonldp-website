@@ -17,7 +17,6 @@ public class RepositorySecurityConfig {
 	@Bean
 	public RepositorySecurityAccessGrantersHolder repositorySecurityAccessGrantersHolder() {
 		return new RepositorySecurityAccessGrantersHolder(
-			new RequestDomainAccessGranter(),
 			aclAccessGranter()
 		);
 	}

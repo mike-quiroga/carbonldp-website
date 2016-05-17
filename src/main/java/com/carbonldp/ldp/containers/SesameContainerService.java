@@ -16,6 +16,7 @@ import com.carbonldp.rdf.RDFDocumentFactory;
 import com.carbonldp.rdf.RDFResource;
 import com.carbonldp.rdf.RDFResourceRepository;
 import com.carbonldp.rdf.RDFResourceDescription;
+import com.carbonldp.sparql.SecuredRepositoryTemplate;
 import com.carbonldp.spring.ServicesInvoker;
 import org.joda.time.DateTime;
 import org.openrdf.model.BNode;
@@ -50,9 +51,9 @@ public class SesameContainerService extends AbstractSesameLDPService implements 
 					container.getBaseModel().addAll( containerRepository.getContainmentTriples( containerIRI ) );
 					break;
 				case CONTAINED_RESOURCES:
-					Set<IRI> children = containerRepository.getContainmentIRIs( containerIRI, orderByRetrievalPreferences );
+					Set<IRI> children = SecuredRepositoryTemplate.execute( () -> containerRepository.getContainedIRIs( containerIRI, orderByRetrievalPreferences ) );
 					if ( containerRetrievalPreferences.contains( APIPreferences.ContainerRetrievalPreference.MEMBER_RESOURCES ) ) {
-						Set<IRI> members = containerRepository.getMemberIRIs( containerIRI, orderByRetrievalPreferences );
+						Set<IRI> members = SecuredRepositoryTemplate.execute( () -> containerRepository.getMemberIRIs( containerIRI, orderByRetrievalPreferences ) );
 						children.addAll( members );
 					}
 					container = getResources( children, container );
@@ -69,7 +70,7 @@ public class SesameContainerService extends AbstractSesameLDPService implements 
 					break;
 				case MEMBER_RESOURCES:
 					if ( containerRetrievalPreferences.contains( APIPreferences.ContainerRetrievalPreference.CONTAINED_RESOURCES ) ) break;
-					Set<IRI> members = containerRepository.getMemberIRIs( containerIRI, orderByRetrievalPreferences );
+					Set<IRI> members = SecuredRepositoryTemplate.execute( () -> containerRepository.getMemberIRIs( containerIRI, orderByRetrievalPreferences ) );
 					container = getResources( members, container );
 					break;
 				case NON_READABLE_MEMBERSHIP_RESOURCE_TRIPLES:
