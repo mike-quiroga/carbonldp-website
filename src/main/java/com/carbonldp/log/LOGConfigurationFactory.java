@@ -77,7 +77,10 @@ public class LOGConfigurationFactory extends ConfigurationFactory {
 
 	private static void configurePackageSpecificLevels( ConfigurationBuilder<BuiltConfiguration> configurationBuilder ) {
 		configurationBuilder.add( configurationBuilder.newLogger( "org.eclipse.jetty", Level.WARN ) );
-		configurationBuilder.add( configurationBuilder.newLogger( "org.springframework", Level.DEBUG ) );
+		configurationBuilder.add( configurationBuilder.newLogger( "jndi", Level.WARN ) );
+		// TODO: Find out what class is logging using "/" as a name
+		configurationBuilder.add( configurationBuilder.newLogger( "/", Level.WARN ) );
+		configurationBuilder.add( configurationBuilder.newLogger( "org.springframework", Level.WARN ) );
 		configurationBuilder.add( configurationBuilder.newLogger( "org.openrdf", Level.WARN ) );
 		configurationBuilder.add( configurationBuilder.newLogger( "com.carbonldp", Level.TRACE ) );
 	}

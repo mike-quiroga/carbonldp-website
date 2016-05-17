@@ -109,6 +109,12 @@ public class SesameContainerRepository extends AbstractSesameLDPRepository imple
 		return resourceRepository.getIRIs( containerIRI, ContainerDescription.Property.CONTAINS );
 	}
 
+	@Override
+	public Set<IRI> getContainedIRIs( IRI targetIRI, OrderByRetrievalPreferences orderByRetrievalPreferences ) {
+		String queryString = createGetSubjectsWithPreferencesQuery( targetIRI, ContainerDescription.Property.CONTAINS, orderByRetrievalPreferences );
+		return executeGetSubjectsWithPreferencesQuery( queryString );
+	}
+
 	private static final String getContainmentTriples_query;
 
 	static {
@@ -266,24 +272,6 @@ public class SesameContainerRepository extends AbstractSesameLDPRepository imple
 			if ( service.supports( containerType ) ) return service;
 		}
 		throw new IllegalArgumentException( "The containerType provided isn't supported" );
-	}
-
-	@Override
-	public Set<IRI> getContainmentIRIs( IRI targetIRI, OrderByRetrievalPreferences orderByRetrievalPreferences ) {
-		String queryString = createGetSubjectsWithPreferencesQuery( targetIRI, ContainerDescription.Property.CONTAINS, orderByRetrievalPreferences );
-		return executeGetSubjectsWithPreferencesQuery( queryString );
-	}
-
-	@Override
-	public Set<IRI> getContainmentIRIs( IRI targetIRI ) {
-		return connectionTemplate.read( connection -> {
-			Set<IRI> childrenIRIs = new HashSet<>();
-			IRI[] containsIRIs = ContainerDescription.Property.CONTAINS.getIRIs();
-			for ( IRI containsIRI : containsIRIs ) {
-				childrenIRIs.addAll( resourceRepository.getIRIs( targetIRI, containsIRI ) );
-			}
-			return childrenIRIs;
-		} );
 	}
 
 	@Override
