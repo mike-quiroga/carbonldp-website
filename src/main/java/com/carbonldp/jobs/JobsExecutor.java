@@ -1,18 +1,10 @@
 package com.carbonldp.jobs;
 
 import com.carbonldp.apps.App;
-import com.carbonldp.apps.AppRepository;
 import com.carbonldp.exceptions.CarbonNoStackTraceRuntimeException;
-import com.carbonldp.exceptions.JobException;
-import com.carbonldp.models.Infraction;
-import com.carbonldp.apps.context.RunInPlatformContext;
-import com.carbonldp.authorization.Platform;
-import com.carbonldp.authorization.RunWith;
 import com.carbonldp.rdf.RDFResourceRepository;
 import com.carbonldp.spring.TransactionWrapper;
 import org.joda.time.DateTime;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 
@@ -40,7 +32,7 @@ public class JobsExecutor {
 	}
 
 	private void manageExecution( App app, Execution execution ) {
-		resourceRepository.set( execution.getIRI(), ExecutionDescription.Property.BEGIN_TIME.getIRI(), DateTime.now() );
+		resourceRepository.set( execution.getIRI(), ExecutionDescription.Property.STARTING_TIME.getIRI(), DateTime.now() );
 
 		executionService.changeExecutionStatus( execution.getIRI(), ExecutionDescription.Status.RUNNING );
 		Job job = jobService.get( execution.getJobIRI() );
@@ -57,7 +49,7 @@ public class JobsExecutor {
 			executionService.changeExecutionStatus( execution.getIRI(), ExecutionDescription.Status.UNKNOWN );
 			hasErrors = true;
 		} finally {
-			resourceRepository.set( execution.getIRI(), ExecutionDescription.Property.END_TIME.getIRI(), DateTime.now() );
+			resourceRepository.set( execution.getIRI(), ExecutionDescription.Property.ENDING_TIME.getIRI(), DateTime.now() );
 		}
 		if ( ! hasErrors ) executionService.changeExecutionStatus( execution.getIRI(), ExecutionDescription.Status.FINISHED );
 		executionService.dequeue( job.getIRI( JobDescription.Property.EXECUTION_QUEUE_LOCATION.getIRI() ) );
