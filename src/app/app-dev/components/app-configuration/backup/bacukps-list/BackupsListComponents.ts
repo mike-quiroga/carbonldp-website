@@ -7,12 +7,12 @@ import "semantic-ui/semantic";
 import template from "./template.html!";
 
 @Component( {
-	selector: "export-backup",
+	selector: "backups-list",
 	template: template,
 	directives: [ CORE_DIRECTIVES, ],
 } )
 
-export default class ExportBackupComponent {
+export default class BackupsListComponent {
 
 	element:ElementRef;
 	$element:JQuery;

@@ -7,7 +7,7 @@ import "semantic-ui/semantic";
 import * as App from "carbonldp/App";
 
 import template from "./template.html!";
-import "./style.css!";
+// import "./style.css!";
 
 @Component( {
 	selector: "import-backup",
@@ -51,7 +51,7 @@ export default class ImportBackupComponent {
 		this.uri = this.importForm.controls[ "uri" ];
 		this.backup = this.importForm.controls[ "backup" ];
 		this.fileBackup = this.importForm.controls[ "fileBackup" ];
-		console.log( this.importForm );
+		// console.log( this.importForm );
 	}
 
 	uriGroupValidator( corsGroup:ControlGroup ):any {

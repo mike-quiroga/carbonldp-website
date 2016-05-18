@@ -8,6 +8,7 @@ import * as App from "carbonldp/App";
 
 import ImportBackupComponent from "./import-backup/ImportBackupComponent"
 import ExportBackupComponent from "./export-backup/ExportBackupComponent"
+import BackupsListComponent from "./bacukps-list/BackupsListComponents"
 
 import template from "./template.html!";
 import "./style.css!";
@@ -15,7 +16,7 @@ import "./style.css!";
 @Component( {
 	selector: "backup",
 	template: template,
-	directives: [ CORE_DIRECTIVES, ExportBackupComponent, ImportBackupComponent ],
+	directives: [ CORE_DIRECTIVES, ExportBackupComponent, ImportBackupComponent, BackupsListComponent ],
 } )
 
 export default class BackupComponent {
