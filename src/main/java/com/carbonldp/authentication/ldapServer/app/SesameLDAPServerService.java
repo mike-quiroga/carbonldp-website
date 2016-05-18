@@ -7,6 +7,7 @@ import com.carbonldp.apps.App;
 import com.carbonldp.authentication.LDAPServer;
 import com.carbonldp.authentication.LDAPServerFactory;
 import com.carbonldp.exceptions.InvalidResourceException;
+import com.carbonldp.exceptions.LDAPException;
 import com.carbonldp.ldp.AbstractSesameLDPService;
 import com.carbonldp.ldp.containers.ContainerService;
 import com.carbonldp.models.Infraction;
@@ -65,15 +66,15 @@ public class SesameLDAPServerService extends AbstractSesameLDPService implements
 		try {
 			agents = ldapTemplate.search( "", orFilter.encode(), attributeMapper );
 		} catch ( AuthenticationException e ) {
-			throw new InvalidResourceException( new Infraction( 0x2601 ) );
-		}catch ( CommunicationException e ) {
-			throw new InvalidResourceException( new Infraction( 0x2602 ) );
-		}catch ( UncategorizedLdapException e ) {
-			throw new InvalidResourceException( new Infraction( 0x2603 ) );
-		}catch ( ServiceUnavailableException e ) {
-			throw new InvalidResourceException( new Infraction( 0x2604 ) );
-		}catch ( NameNotFoundException e ) {
-			throw new InvalidResourceException( new Infraction( 0x2605 ) );
+			throw new LDAPException( new Infraction( 0x2601 ) );
+		} catch ( CommunicationException e ) {
+			throw new LDAPException( new Infraction( 0x2602 ) );
+		} catch ( UncategorizedLdapException e ) {
+			throw new LDAPException( new Infraction( 0x2603 ) );
+		} catch ( ServiceUnavailableException e ) {
+			throw new LDAPException( new Infraction( 0x2604 ) );
+		} catch ( NameNotFoundException e ) {
+			throw new LDAPException( new Infraction( 0x2605 ) );
 		}
 		IRI ldapServerIRI = ldapServer.getIRI();
 		for ( LDAPAgent agent : agents ) {

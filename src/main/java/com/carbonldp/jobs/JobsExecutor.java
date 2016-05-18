@@ -2,6 +2,7 @@ package com.carbonldp.jobs;
 
 import com.carbonldp.apps.App;
 import com.carbonldp.exceptions.CarbonNoStackTraceRuntimeException;
+import com.carbonldp.exceptions.InvalidResourceException;
 import com.carbonldp.rdf.RDFResourceRepository;
 import com.carbonldp.spring.TransactionWrapper;
 import org.joda.time.DateTime;
