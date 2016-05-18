@@ -1,6 +1,6 @@
-package com.carbonldp.authentication.LDAP.web;
+package com.carbonldp.authentication.ldapServer.web;
 
-import com.carbonldp.authentication.LDAP.app.LDAPServerService;
+import com.carbonldp.authentication.ldapServer.app.LDAPServerService;
 import com.carbonldp.authentication.LDAPServer;
 import com.carbonldp.authentication.LDAPServerFactory;
 import com.carbonldp.ldp.containers.BasicContainer;

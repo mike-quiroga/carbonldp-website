@@ -12,6 +12,7 @@ import com.carbonldp.ldp.containers.ContainerService;
 import com.carbonldp.ldp.sources.RDFSourceService;
 import com.carbonldp.models.Infraction;
 import com.carbonldp.rdf.RDFResourceRepository;
+import com.carbonldp.web.exceptions.BadRequestException;
 import com.carbonldp.web.exceptions.ForbiddenException;
 import org.openrdf.model.IRI;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -88,7 +89,7 @@ public class SesameJobService extends AbstractSesameLDPService implements JobSer
 	private void checkPermissionsOverTheAppRole( Job job, AgentAuthenticationToken agentAuthenticationToken ) {
 		ImportLDAPAgentsJob importLDAPAgentsJob = new ImportLDAPAgentsJob( job );
 		IRI defaultAppRole = importLDAPAgentsJob.getDefaultAppRoleIRI();
-		if(defaultAppRole==null)return;
+		if ( defaultAppRole == null ) return;
 		Set<AppRole> appRoles = agentAuthenticationToken.getAppRoles();
 
 		Set<IRI> parentsRoles = appRoleRepository.getParentsIRI( defaultAppRole );
@@ -111,6 +112,10 @@ public class SesameJobService extends AbstractSesameLDPService implements JobSer
 	}
 
 	private void validateReadDocument( AgentAuthenticationToken agentAuthenticationToken, IRI resourceIRI ) {
+		if ( resourceIRI == null ) return;
+		if ( ! sourceService.exists( resourceIRI ) ) {
+			throw new BadRequestException( new Infraction( 0x2011, "iri", resourceIRI.stringValue() ) );
+		}
 		if ( ! permissionEvaluator.hasPermission( agentAuthenticationToken, resourceIRI, ACEDescription.Permission.READ ) ) {
 			Map<String, String> errorMessage = new HashMap<>();
 			errorMessage.put( "action", "read" );

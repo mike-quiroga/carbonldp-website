@@ -1,11 +1,10 @@
-package com.carbonldp.authentication.LDAP.app;
+package com.carbonldp.authentication.ldapServer.app;
 
 import com.carbonldp.agents.AgentRepository;
 import com.carbonldp.agents.LDAPAgent;
 import com.carbonldp.agents.LDAPAgentFactory;
 import com.carbonldp.apps.App;
 import com.carbonldp.authentication.LDAPServer;
-import com.carbonldp.authentication.LDAPServerDescription;
 import com.carbonldp.authentication.LDAPServerFactory;
 import com.carbonldp.exceptions.InvalidResourceException;
 import com.carbonldp.ldp.AbstractSesameLDPService;
@@ -14,20 +13,13 @@ import com.carbonldp.models.Infraction;
 import com.carbonldp.rdf.RDFResource;
 import com.carbonldp.utils.IRIUtil;
 import com.carbonldp.utils.LDAPUtil;
-import com.carbonldp.utils.SPARQLUtil;
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.openrdf.model.IRI;
 import org.openrdf.model.ValueFactory;
-import org.openrdf.model.impl.LinkedHashModel;
 import org.openrdf.model.impl.SimpleValueFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.ldap.core.AttributesMapper;
-import org.springframework.ldap.core.ContextMapper;
 import org.springframework.ldap.core.LdapTemplate;
-import org.springframework.ldap.core.NameClassPairCallbackHandler;
-import org.springframework.ldap.core.support.LdapContextSource;
 import org.springframework.ldap.filter.OrFilter;
 import org.springframework.ldap.filter.PresentFilter;
 

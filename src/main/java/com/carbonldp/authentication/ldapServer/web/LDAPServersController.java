@@ -1,11 +1,11 @@
-package com.carbonldp.authentication.LDAP.web;
+package com.carbonldp.authentication.ldapServer.web;
 
 import com.carbonldp.Consts;
-import com.carbonldp.apps.web.AppsRDFPostHandler;
 import com.carbonldp.descriptions.APIPreferences;
 import com.carbonldp.rdf.RDFDocument;
 import com.carbonldp.web.AbstractController;
 import com.carbonldp.web.config.InteractionModel;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -22,7 +22,7 @@ import javax.servlet.http.HttpServletResponse;
  */
 
 @Controller
-@RequestMapping( value = "/platform/apps/ldap-servers/" )
+@RequestMapping( value = "/platform/apps/*/ldap-servers/" )
 public class LDAPServersController  extends AbstractController {
 	private LDAPServersPostHandler postRequestHandler;
 
@@ -41,5 +41,10 @@ public class LDAPServersController  extends AbstractController {
 	} )
 	public ResponseEntity<Object> createLDAPServer( @RequestBody RDFDocument requestDocument, HttpServletRequest request, HttpServletResponse response ) {
 		return postRequestHandler.handleRequest( requestDocument, request, response );
+	}
+
+	@Autowired
+	public void setPostRequestHandler( LDAPServersPostHandler postRequestHandler ) {
+		this.postRequestHandler = postRequestHandler;
 	}
 }
