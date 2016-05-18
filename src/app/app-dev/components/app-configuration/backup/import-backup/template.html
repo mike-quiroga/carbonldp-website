@@ -1,0 +1,50 @@
+<form class="ui segment" [ngFormModel]="importForm">
+	<div class="ui two column middle aligned very relaxed stackable grid form">
+		<div class="column" ngControlGroup="uriGroup">
+			<div class="field">
+				<label>Enter the URI of the backup:</label>
+				<div class="ui left icon input">
+					<input type="text" placeholder="Backup URI" ngControl="uri">
+					<i class="world icon"></i>
+				</div>
+			</div>
+			<div class="field">
+				<label>Or select a backup from below:</label>
+				<div class="ui left icon input">
+					<select multiple ngControl="backup">
+						<option value="" disabled="disabled" selected="selected">Please select a backup</option>
+						<option value="1">One</option>
+						<option value="2">Two</option>
+					</select>
+				</div>
+			</div>
+		</div>
+		<div class="ui vertical divider">
+			Or
+		</div>
+		<div class="column" ngControlGroup="fileGroup">
+			<div class="field">
+				<label>Upload a backup:</label>
+				<input type="file" ngControl="fileBackup"/><br/>
+			</div>
+		</div>
+	</div>
+	<!--<div class="ui big green labeled icon button">-->
+	<!--<i class="signup icon"></i>-->
+	<!--Sign Up-->
+	<!--</div>-->
+</form>
+<div class="ui segment">
+	<pre>Form: {
+	dirty:{{importForm.dirty | json}}
+	errors:{{importForm.errors | json}}
+	pending:{{importForm.pending | json}}
+	pristine:{{importForm.pristine | json}}
+	status:{{importForm.status | json}}
+	touched:{{importForm.touched | json}}
+	untouched:{{importForm.untouched | json}}
+	valid:{{importForm.valid | json}}
+	value:{{importForm.value | json}}
+}
+	</pre>
+</div>

@@ -6,18 +6,18 @@ import "semantic-ui/semantic";
 
 import * as App from "carbonldp/App";
 
-import BackupComponent from "./backup/BackupComponent"
+import ImportBackupComponent from "./import-backup/ImportBackupComponent"
 
 import template from "./template.html!";
 import "./style.css!";
 
 @Component( {
-	selector: "app-configuration",
+	selector: "backup",
 	template: template,
-	directives: [ CORE_DIRECTIVES, BackupComponent ],
+	directives: [ CORE_DIRECTIVES, ImportBackupComponent ],
 } )
 
-export default class AppConfigurationComponent {
+export default class BackupComponent {
 
 	element:ElementRef;
 	$element:JQuery;
@@ -29,7 +29,7 @@ export default class AppConfigurationComponent {
 
 	ngAfterViewInit():void {
 		this.$element = $( this.element.nativeElement );
-		this.$element.find( ".config.options.menu .item" ).tab();
+		console.log( this.appContext );
 	}
 
 }
