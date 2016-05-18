@@ -18,6 +18,7 @@ import org.openrdf.model.ValueFactory;
 import org.openrdf.model.impl.SimpleValueFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.ldap.*;
 import org.springframework.ldap.core.AttributesMapper;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.filter.OrFilter;
@@ -26,6 +27,7 @@ import org.springframework.ldap.filter.PresentFilter;
 import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
 import javax.naming.directory.Attributes;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -59,8 +61,20 @@ public class SesameLDAPServerService extends AbstractSesameLDPService implements
 		ContactAttributeMapperLDAPAgent attributeMapper = new ContactAttributeMapperLDAPAgent();
 		attributeMapper.setAgentsContainerIRI( agentsContainerIRI );
 		attributeMapper.setUsernameFields( usernameFields );
-
-		List<LDAPAgent> agents = ldapTemplate.search( "", orFilter.encode(), attributeMapper );
+		List<LDAPAgent> agents = new ArrayList<>();
+		try {
+			agents = ldapTemplate.search( "", orFilter.encode(), attributeMapper );
+		} catch ( AuthenticationException e ) {
+			throw new InvalidResourceException( new Infraction( 0x2601 ) );
+		}catch ( CommunicationException e ) {
+			throw new InvalidResourceException( new Infraction( 0x2602 ) );
+		}catch ( UncategorizedLdapException e ) {
+			throw new InvalidResourceException( new Infraction( 0x2603 ) );
+		}catch ( ServiceUnavailableException e ) {
+			throw new InvalidResourceException( new Infraction( 0x2604 ) );
+		}catch ( NameNotFoundException e ) {
+			throw new InvalidResourceException( new Infraction( 0x2605 ) );
+		}
 		IRI ldapServerIRI = ldapServer.getIRI();
 		for ( LDAPAgent agent : agents ) {
 			agent.setLDAPServer( ldapServerIRI );

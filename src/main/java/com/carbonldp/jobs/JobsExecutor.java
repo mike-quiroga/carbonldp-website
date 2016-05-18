@@ -6,6 +6,7 @@ import com.carbonldp.rdf.RDFResourceRepository;
 import com.carbonldp.spring.TransactionWrapper;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.ldap.ServiceUnavailableException;
 import org.springframework.scheduling.annotation.Async;
 
 import java.util.List;
@@ -38,7 +39,6 @@ public class JobsExecutor {
 		Job job = jobService.get( execution.getJobIRI() );
 		JobDescription.Type type = JobFactory.getInstance().getJobType( job );
 		boolean hasErrors = false;
-
 		try {
 			getTypedRepository( type ).execute( app, job, execution );
 		} catch ( CarbonNoStackTraceRuntimeException e ) {
