@@ -1,12 +1,11 @@
-package com.carbonldp.authentication.LDAP;
+package com.carbonldp.authentication.ldapServer;
 
 import com.carbonldp.agents.LDAPAgent;
 import com.carbonldp.apps.App;
-import com.carbonldp.apps.AppService;
 import com.carbonldp.apps.roles.AppRoleService;
 import com.carbonldp.authentication.ImportLDAPAgentsJob;
 import com.carbonldp.authentication.ImportLDAPAgentsJobDescription;
-import com.carbonldp.authentication.LDAP.app.LDAPServerService;
+import com.carbonldp.authentication.ldapServer.app.LDAPServerService;
 import com.carbonldp.authentication.LDAPServer;
 import com.carbonldp.exceptions.JobException;
 import com.carbonldp.jobs.*;
@@ -17,7 +16,6 @@ import org.openrdf.model.IRI;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;

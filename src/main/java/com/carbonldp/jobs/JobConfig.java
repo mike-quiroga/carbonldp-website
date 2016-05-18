@@ -1,6 +1,6 @@
 package com.carbonldp.jobs;
 
-import com.carbonldp.authentication.LDAP.ImportLDAPAgentsJobExecutor;
+import com.carbonldp.authentication.ldapServer.ImportLDAPAgentsJobExecutor;
 import org.springframework.aop.interceptor.AsyncUncaughtExceptionHandler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

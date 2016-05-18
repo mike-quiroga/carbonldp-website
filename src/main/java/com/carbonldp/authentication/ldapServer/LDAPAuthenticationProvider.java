@@ -1,4 +1,4 @@
-package com.carbonldp.authentication.LDAP;
+package com.carbonldp.authentication.ldapServer;
 
 import com.carbonldp.agents.Agent;
 import com.carbonldp.agents.AgentRepository;
@@ -17,11 +17,8 @@ import com.carbonldp.ldp.sources.RDFSourceRepository;
 import com.carbonldp.rdf.RDFBlankNode;
 import com.carbonldp.spring.TransactionWrapper;
 import com.carbonldp.utils.LDAPUtil;
-import org.openrdf.model.ValueFactory;
-import org.openrdf.model.impl.SimpleValueFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ldap.core.LdapTemplate;
-import org.springframework.ldap.core.support.LdapContextSource;
 import org.springframework.ldap.filter.AndFilter;
 import org.springframework.ldap.filter.EqualsFilter;
 import org.springframework.security.authentication.BadCredentialsException;

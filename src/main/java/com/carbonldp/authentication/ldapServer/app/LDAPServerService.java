@@ -1,4 +1,4 @@
-package com.carbonldp.authentication.LDAP.app;
+package com.carbonldp.authentication.ldapServer.app;
 
 import com.carbonldp.agents.LDAPAgent;
 import com.carbonldp.apps.App;

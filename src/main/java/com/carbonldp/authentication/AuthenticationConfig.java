@@ -4,7 +4,7 @@ import com.carbonldp.agents.AgentRepository;
 import com.carbonldp.apps.roles.AppContextClearFilter;
 import com.carbonldp.apps.roles.AppRolePersistenceFilter;
 import com.carbonldp.apps.roles.AppRoleRepository;
-import com.carbonldp.authentication.LDAP.LDAPAuthenticationProvider;
+import com.carbonldp.authentication.ldapServer.LDAPAuthenticationProvider;
 import com.carbonldp.authentication.token.JWTAuthenticationEntryPoint;
 import com.carbonldp.authentication.token.JWTAuthenticationFilter;
 import com.carbonldp.authentication.token.JWTAuthenticationProvider;
