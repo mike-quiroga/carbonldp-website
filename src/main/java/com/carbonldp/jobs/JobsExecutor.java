@@ -8,7 +8,9 @@ import com.carbonldp.models.Infraction;
 import com.carbonldp.apps.context.RunInPlatformContext;
 import com.carbonldp.authorization.Platform;
 import com.carbonldp.authorization.RunWith;
+import com.carbonldp.rdf.RDFResourceRepository;
 import com.carbonldp.spring.TransactionWrapper;
+import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +28,7 @@ public class JobsExecutor {
 	private JobService jobService;
 	private ExecutionService executionService;
 	private TransactionWrapper transactionWrapper;
+	private RDFResourceRepository resourceRepository;
 
 	public JobsExecutor( List<TypedJobExecutor> typedJobs ) {
 		this.typedJobs = typedJobs;
@@ -37,6 +40,7 @@ public class JobsExecutor {
 	}
 
 	private void manageExecution( App app, Execution execution ) {
+		resourceRepository.set( execution.getIRI(), ExecutionDescription.Property.BEGIN_TIME.getIRI(), DateTime.now() );
 
 		executionService.changeExecutionStatus( execution.getIRI(), ExecutionDescription.Status.RUNNING );
 		Job job = jobService.get( execution.getJobIRI() );
@@ -44,7 +48,7 @@ public class JobsExecutor {
 		boolean hasErrors = false;
 
 		try {
-			getTypedRepository( type ).execute(app, job, execution );
+			getTypedRepository( type ).execute( app, job, execution );
 		} catch ( CarbonNoStackTraceRuntimeException e ) {
 			executionService.changeExecutionStatus( execution.getIRI(), ExecutionDescription.Status.ERROR );
 			executionService.addErrorDescription( execution.getIRI(), e.getMessage() );
@@ -52,6 +56,8 @@ public class JobsExecutor {
 		} catch ( Exception e ) {
 			executionService.changeExecutionStatus( execution.getIRI(), ExecutionDescription.Status.UNKNOWN );
 			hasErrors = true;
+		} finally {
+			resourceRepository.set( execution.getIRI(), ExecutionDescription.Property.END_TIME.getIRI(), DateTime.now() );
 		}
 		if ( ! hasErrors ) executionService.changeExecutionStatus( execution.getIRI(), ExecutionDescription.Status.FINISHED );
 		executionService.dequeue( job.getIRI( JobDescription.Property.EXECUTION_QUEUE_LOCATION.getIRI() ) );
@@ -73,5 +79,10 @@ public class JobsExecutor {
 	@Autowired
 	public void setTransactionWrapper( TransactionWrapper transactionWrapper ) {
 		this.transactionWrapper = transactionWrapper;
+	}
+
+	@Autowired
+	public void setResourceRepository( RDFResourceRepository resourceRepository ) {
+		this.resourceRepository = resourceRepository;
 	}
 }
