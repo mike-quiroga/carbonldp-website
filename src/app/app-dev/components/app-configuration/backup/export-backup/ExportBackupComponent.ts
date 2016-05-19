@@ -10,7 +10,6 @@ import * as HTTP from "carbonldp/HTTP";
 import * as Response from "carbonldp/HTTP/Response";
 import * as NS from "carbonldp/NS";
 import * as SDKContext from "carbonldp/SDKContext";
-import * as RDFDocument from "carbonldp/RDF/Document";
 import * as PersistedDocument from "carbonldp/PersistedDocument";
 
 import template from "./template.html!";
@@ -30,7 +29,6 @@ export default class ExportBackupComponent {
 	executingBackup:boolean = false;
 
 	@Input() appContext:App.Context;
-	private parser:RDFDocument.Parser = new RDFDocument.Parser();
 	private backupJob:PersistedDocument.Class;
 
 	constructor( carbon:Carbon, element:ElementRef ) {
