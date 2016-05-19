@@ -2,8 +2,10 @@
 	<p>Here you can generate a backup of your application.</p>
 	<p>Once you request a backup, a Job will be added to the Jobs queue and then you can be able to download the generated backup.</p>
 </div>
-<div class="ui right aligned basic segment">
-	<button class="ui basic button" (click)="createBackup()">
-		Generate Backup:
+<div class="right aligned">
+	<button class="ui button"
+	        [ngClass]="{loading:executingBackup}"
+	        (click)="createBackup()">
+		Generate Backup
 	</button>
 </div>

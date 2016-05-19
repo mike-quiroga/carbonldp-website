@@ -14,6 +14,7 @@ import * as RDFDocument from "carbonldp/RDF/Document";
 import * as PersistedDocument from "carbonldp/PersistedDocument";
 
 import template from "./template.html!";
+import "./style.css!";
 
 @Component( {
 	selector: "export-backup",
@@ -25,6 +26,8 @@ export default class ExportBackupComponent {
 	carbon:Carbon;
 	element:ElementRef;
 	$element:JQuery;
+
+	executingBackup:boolean = false;
 
 	@Input() appContext:App.Context;
 	private parser:RDFDocument.Parser = new RDFDocument.Parser();
@@ -59,7 +62,12 @@ export default class ExportBackupComponent {
 	}
 
 	createBackup():void {
-		// this.createBackupJob( this.appContext.app.id + "jobs/", this.appContext );
+		this.executingBackup = true;
+		this.requestBackup( this.backupJob.id, this.appContext ).then(
+			()=> {
+				this.executingBackup = false;
+			}
+		);
 	}
 
 	// TODO: implement job service in a service component
@@ -87,9 +95,7 @@ export default class ExportBackupComponent {
 	private createFirstBackupJob():Promise<PersistedDocument.Class> {
 		return this.createBackupJob( this.appContext.app.id + "jobs/", this.appContext ).then(
 			( response:HTTP.Response.Class ) => {
-				if ( response.status !== HTTP.StatusCode.CREATED ) {
-					return null;
-				}
+				if ( response.status !== HTTP.StatusCode.CREATED ) return null;
 				return this.findJob( "https://carbonldp.com/ns/v1/platform#ExportBackupJob" ).then(
 					( createdJob:PersistedDocument.Class )=> {
 						return createdJob;
@@ -111,11 +117,11 @@ export default class ExportBackupComponent {
 		HTTP.Request.Util.setPreferredInteractionModel( NS.LDP.Class.Container, requestOptions );
 		HTTP.Request.Util.setContentTypeHeader( "text/turtle", requestOptions );
 		let body:string =
-			"@prefix c:  <https://carbonldp.com/ns/v1/platform#>." +
-			"<>" +
-			"a c:ExportBackupJob.";
+			`@prefix c:  <https://carbonldp.com/ns/v1/platform#>.
+			<>
+			a c:ExportBackupJob.`;
 
-		return HTTP.Request.Service.post( uri, body, requestOptions ).then( ( response:HTTP.Response.Class ) => {
+		return HTTP.Request.Service.post( uri, body, requestOptions ).then( ( response:Response.Class ) => {
 			return response;
 		} ).catch( ( error ) => {
 			console.error( error );
@@ -123,28 +129,21 @@ export default class ExportBackupComponent {
 		} );
 	}
 
-	private requestBackup( uri:string, documentContext:SDKContext.Class ):Promise<Response.Class> {
-
-		let requestOptions:HTTP.Request.Options = {
-			sendCredentialsOnCORS: true,
-		};
-
-		if ( documentContext && documentContext.auth.isAuthenticated() ) documentContext.auth.addAuthentication( requestOptions );
-
+	private requestBackup( uri:string, appContext:SDKContext.Class ):Promise<Response.Class> {
+		let requestOptions:HTTP.Request.Options = { sendCredentialsOnCORS: true, };
+		if ( appContext && appContext.auth.isAuthenticated() ) appContext.auth.addAuthentication( requestOptions );
 		HTTP.Request.Util.setAcceptHeader( "application/ld+json", requestOptions );
-		HTTP.Request.Util.setPreferredInteractionModel( NS.LDP.Class.RDFSource, requestOptions );
+		HTTP.Request.Util.setPreferredInteractionModel( NS.LDP.Class.Container, requestOptions );
+		HTTP.Request.Util.setContentTypeHeader( "text/turtle", requestOptions );
 		let body:string =
-			"@prefix c:  <https://carbonldp.com/ns/v1/platform#>." +
-			"<>" +
-			"a c:Execution.";
+			`@prefix c:  <https://carbonldp.com/ns/v1/platform#>.
+			<>
+			a c:Execution.`;
 
-		return HTTP.Request.Service.post( uri, body, requestOptions ).then( ( response:HTTP.Response.Class ) => {
-			return this.parser.parse( response.data );
-		} ).then( ( parsedDocument:RDFDocument.Class ) => {
-			console.log( parsedDocument );
-			if ( ! parsedDocument[ 0 ] ) return null;
-			this.documents.set( uri, parsedDocument );
-			return parsedDocument;
+		return HTTP.Request.Service.post( uri, body, requestOptions ).then( ( response:Response.Class ) => {
+			console.log( response );
+			if ( response.status !== HTTP.StatusCode.OK ) return null;
+			return response;
 		} ).catch( ( error ) => {
 			console.error( error );
 			return Promise.reject( error );
