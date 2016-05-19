@@ -13,7 +13,11 @@ import com.carbonldp.ldp.containers.ContainerService;
 import com.carbonldp.models.Infraction;
 import com.carbonldp.rdf.RDFResource;
 import com.carbonldp.utils.IRIUtil;
+import com.carbonldp.utils.JWTUtil;
 import com.carbonldp.utils.LDAPUtil;
+import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.SignatureException;
+import io.jsonwebtoken.UnsupportedJwtException;
 import org.openrdf.model.IRI;
 import org.openrdf.model.ValueFactory;
 import org.openrdf.model.impl.SimpleValueFactory;
@@ -45,6 +49,8 @@ public class SesameLDAPServerService extends AbstractSesameLDPService implements
 	@Override
 	public void create( IRI targetIRI, LDAPServer ldapServer ) {
 		validate( ldapServer );
+		String passwordEncoded = JWTUtil.encode( ldapServer.getLDAPServerPassword() );
+		ldapServer.setLDAPServerPassword( passwordEncoded );
 		containerService.createChild( targetIRI, ldapServer );
 	}
 
@@ -56,7 +62,12 @@ public class SesameLDAPServerService extends AbstractSesameLDPService implements
 	@Override
 	public List<LDAPAgent> registerLDAPAgents( LDAPServer ldapServer, Set<String> usernameFields, App app ) {
 		IRI agentsContainerIRI = agentRepository.getAgentsContainerIRI();
-		LdapTemplate ldapTemplate = LDAPUtil.getLDAPTemplate( ldapServer );
+		LdapTemplate ldapTemplate;
+		try {
+			ldapTemplate = LDAPUtil.getLDAPTemplate( ldapServer );
+		} catch ( UnsupportedJwtException | MalformedJwtException | SignatureException | IllegalArgumentException e ) {
+			throw new LDAPException( new Infraction( 0x2601 ) );
+		}
 		OrFilter orFilter = new OrFilter();
 		for ( String field : usernameFields ) { orFilter.or( new PresentFilter( field ) ); }
 		ContactAttributeMapperLDAPAgent attributeMapper = new ContactAttributeMapperLDAPAgent();

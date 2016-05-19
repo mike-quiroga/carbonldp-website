@@ -1,11 +1,12 @@
 package com.carbonldp.authentication.token;
 
 import com.carbonldp.Consts;
-import com.carbonldp.Vars;
-import com.carbonldp.exceptions.StupidityException;
-import io.jsonwebtoken.*;
+import com.carbonldp.utils.JWTUtil;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.SignatureException;
+import io.jsonwebtoken.UnsupportedJwtException;
 import org.openrdf.model.IRI;
-
 import org.openrdf.model.impl.SimpleValueFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,7 +23,6 @@ import org.springframework.web.filter.GenericFilterBean;
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.xml.bind.DatatypeConverter;
 import java.io.IOException;
 
 /**
@@ -83,19 +83,8 @@ public class JWTAuthenticationFilter extends GenericFilterBean implements Filter
 	}
 
 	private String extractAndDecodeHeader( String jwt ) {
-		byte[] signingKey;
 		try {
-			signingKey = DatatypeConverter.parseBase64Binary( Vars.getInstance().getTokenKey() );
-		} catch ( IllegalArgumentException e ) {
-			throw new StupidityException( e );
-		}
-
-		try {
-			return Jwts.parser()
-					   .setSigningKey( signingKey )
-					   .parseClaimsJws( jwt )
-					   .getBody()
-					   .getSubject();
+			return JWTUtil.decode( jwt );
 		} catch ( UnsupportedJwtException | MalformedJwtException | SignatureException | ExpiredJwtException | IllegalArgumentException e ) {
 			throw new BadCredentialsException( "The JSON Web Token isn't valid, nested exception: ", e );
 		}

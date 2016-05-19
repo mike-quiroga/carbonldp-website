@@ -17,6 +17,9 @@ import com.carbonldp.ldp.sources.RDFSourceRepository;
 import com.carbonldp.rdf.RDFBlankNode;
 import com.carbonldp.spring.TransactionWrapper;
 import com.carbonldp.utils.LDAPUtil;
+import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.SignatureException;
+import io.jsonwebtoken.UnsupportedJwtException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.filter.AndFilter;
@@ -64,7 +67,12 @@ public class LDAPAuthenticationProvider extends SesameUsernamePasswordAuthentica
 		LDAPAgent ldapAgent = (LDAPAgent) agent;
 		RDFSource sourceServer = transactionWrapper.runInPlatformContext( () -> sourceRepository.get( ldapAgent.getLDAPServer() ) );
 		LDAPServer ldapServer = new LDAPServer( sourceServer );
-		LdapTemplate ldapTemplate = LDAPUtil.getLDAPTemplate( ldapServer );
+		LdapTemplate ldapTemplate;
+		try {
+			ldapTemplate = LDAPUtil.getLDAPTemplate( ldapServer );
+		} catch ( UnsupportedJwtException | MalformedJwtException | SignatureException | IllegalArgumentException e ) {
+			throw new BadCredentialsException( "LDAP exception, wrong credentials", e );
+		}
 
 		Set<RDFBlankNode> blankNodes = ldapAgent.getUserCredentials();
 		for ( RDFBlankNode blankNode : blankNodes ) {
