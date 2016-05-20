@@ -85,5 +85,9 @@ sidebar-component {
 			}
 		}
 
+		.ui.vertical.menu > .active.item:last-child {
+			border-radius: 0;
+		}
+
 	}
 }

@@ -199,54 +199,25 @@ HTTP.Request === Request; // true
 								<!--@formatter:on-->
 							</div>
 						</div>
+
+						<p>Now that you have installed Carbon successfully you can create your very first app
+							using the UI App. Click <a>here</a> to find out how.</p>
 					</section>
 
 					<section>
-						<h2 class="ui header">Creating a Carbon context</h2>
-						<p>Now that you have your brand new app (If you don't have your app yet, please create it! (link) ). Let's start with some basic things you can do, like creating documents,
-							creating parent-children and other types of links, saving documents etc.</p>
+						<h2 class="ui header">Creating contexts</h2>
+						<p>Now that you have your brand new app (If you don't have your app yet, please <a>create it</a>! (link) ). Let's start with some basic things you can do, like creating
+							documents, creating parent-children and other types of links, saving documents etc.</p>
 
-						<p> Before you can manipulate Carbon objects, you need to create a Carbon context. This context will provide a reference to the Carbon instance you are
-							working with (more about Carbon context's can be found <a [routerLink]="['../JavaScriptSDKContexts']">here</a>):
+						<p> Before you can manipulate Carbon objects, you need to create a Carbon platform context. This context will provide a reference to the Carbon platform instance you are
+							working with. (more about Carbon context's can be found <a [routerLink]="['../JavaScriptSDKContexts']">
+								here</a>)
 						</p>
-						<div class="ui top attached tabular menu">
-							<a class="item active" data-tab="typescript">TypeScript</a>
-							<a class="item" data-tab="javascript">JavaScript</a>
-						</div>
-						<div class="ui bottom attached tab segment active" data-tab="typescript">
-							<!--@formatter:off-->
-							<pre><code class="highlighted typescript">
-import Carbon from "carbonldp/Carbon";
 
-let carbon:Carbon = new Carbon();
-							</code></pre>
-							<!--@formatter:on-->
-						</div>
-						<div class="ui bottom attached tab segment" data-tab="javascript">
-							<!--@formatter:off-->
-							<pre><code class="highlighted javascript">
-import Carbon from "carbonldp/Carbon";
+						<p>We created a Carbon platform context, but that context points to a Carbon's platform instance. We need a new
+						<a [routerLink]="[ '../JavaScriptSDKContexts' ]">Context</a> that points to one of our Apps so we can
+						work on it. The app context is retrieve from our previously created application</p>
 
-let carbon = new Carbon();
-							</code></pre>
-							<!--@formatter:on-->
-						</div>
-					</section>
-
-					<section>
-						<h2 class="ui header">Authenticating an Agent</h2>
-						<p>
-
-						</p>
-					</section>
-
-					<section>
-						<h2 class="ui header">Getting an App Context</h2>
-						<p>
-							We created a Carbon Context, but that context points to a Carbon's platform instance. We need a new
-							<a><!-- [routerLink]="[ './../../JavaScriptSDKContext' ]"-->Context</a> that points to one of our Apps so we can
-							work on it (if you haven't created an App, go here to do so).
-						</p>
 						<div class="ui top attached tabular menu">
 							<a class="item active" data-tab="typescript">TypeScript</a>
 							<a class="item" data-tab="javascript">JavaScript</a>
@@ -256,39 +227,44 @@ let carbon = new Carbon();
 							<pre><code class="highlighted typescript">
 // ...
 import * as App from "carbonldp/App";
+import Carbon from "carbonldp/Carbon";
 
-// ...
+let carbon:Carbon = new Carbon(); //platform context
 
 let myAppContext:AppContext;
 carbon.apps.get( "your-app-slug-here/" ).then( ( appContext:App.Context ) => {
 	myAppContext = appContext;
-}).catch( console.error );
+}).catch( console.error );     //retrieving you app context
 							</code></pre>
 							<!--@formatter:on-->
 						</div>
 						<div class="ui bottom attached tab segment" data-tab="javascript">
 							<!--@formatter:off-->
 							<pre><code class="highlighted javascript">
-// ...
+import Carbon from "carbonldp/Carbon";
 
+let carbon = new Carbon(); //platform context
 let myAppContext;
+
 carbon.apps.get( "your-app-slug-here/" ).then( ( appContext ) => {
 	myAppContext = appContext;
-}).catch( console.error );
+}).catch( console.error );     //retrieving you app context
 							</code></pre>
 							<!--@formatter:on-->
 						</div>
+
 						<p>
 							The <code>apps.get()</code> method returns a Promise that when resolved, will give us the App
-							<a><!-- [routerLink]="[ './JavaScriptSDKContext' ]"-->Context</a> we need
+							<a [routerLink]="[ '../JavaScriptSDKContexts' ]">Context</a> we need
 						</p>
+
 					</section>
 
 					<section>
 						<h2 class="ui header">Retrieving a Document</h2>
 						<!-- TODO: Link to the explanation of the root Document -->
 						<p>
-							Now with our App <a><!-- [routerLink]="[ './JavaScriptSDKContext' ]"-->Context</a> we can start working with our App's data.
+							Now with our App <a [routerLink]="[ '../JavaScriptSDKContexts' ]">Context</a> we can start working with our App's data.
 							We'll retrieve our root Document which is the root of all of our Document nodes.
 						</p>
 						<div class="ui top attached tabular menu">

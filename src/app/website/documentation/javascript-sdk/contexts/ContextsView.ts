@@ -27,19 +27,20 @@ export default class ContextsView {
 
 	constructor( element:ElementRef, title:Title, changeDetector:ChangeDetectorRef ) {
 		this.element = element;
-
 		this.title = title;
-		this.title.setTitle( "Contexts - JavaScript SDK" );
-
 		this.changeDetector = changeDetector;
 	}
 
+	routerOnActivate():void{
+		this.title.setTitle( "Contexts - JavaScript SDK" );
+	}
 	ngAfterViewInit():void {
 		this.$element = $( this.element.nativeElement );
 		this.initializeAccordions();
 		this.initializeTabs();
 		this.highlightCode();
 		this.initializeSidebar();
+		this.initializePopUp();
 	}
 
 	initializeAccordions():void {
@@ -60,5 +61,12 @@ export default class ContextsView {
 		window.setTimeout( () => {
 			this.contentReady = true;
 		}, 0 );
+	}
+
+	initializePopUp():void {
+		$(".ui.definition")
+			.popup({
+				on: "hover"
+			});
 	}
 }
