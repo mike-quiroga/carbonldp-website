@@ -39,15 +39,12 @@ export default class JobsService {
 		let job:PersistedDocument.Class = jobsArray.find( ( job:PersistedDocument.Class ) => job.types.indexOf( type ) !== - 1 );
 		if ( ! ! job ) return Promise.resolve( job );
 
-		return new Promise<PersistedDocument.Class>(
-			( resolve:( result:any ) => void, reject:( error:Error ) => void ) => {
-				return this.getAll( appContext ).then(
-					()=> {
-						let jobsArray:PersistedDocument.Class[] = Utils.A.from( this.jobs.values() );
-						return jobsArray.find( ( job:PersistedDocument.Class ) => job.types.indexOf( type ) !== - 1 );
-					}
-				);
-			} );
+		return this.getAll( appContext ).then(
+			( jobs:PersistedDocument.Class[] )=> {
+				let jobsArray:PersistedDocument.Class[] = Utils.A.from( this.jobs.values() );
+				return jobsArray.find( ( job:PersistedDocument.Class ) => job.types.indexOf( type ) !== - 1 );
+			}
+		);
 	}
 
 	getAll( appContext:SDKContext.Class ):Promise<PersistedDocument.Class[]> {

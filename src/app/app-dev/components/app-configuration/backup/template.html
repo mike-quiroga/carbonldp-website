@@ -9,7 +9,7 @@
 				Schedule a Backup:
 			</h3>
 			<div class="ui divider"></div>
-			<export-backup [appContext]="appContext"></export-backup>
+			<export-backup [appContext]="appContext" [backupJob]="backupJob"></export-backup>
 		</div>
 		<div class="sixteen wide mobile eight wide computer column">
 			<h3 class="ui header">
@@ -17,7 +17,7 @@
 				List of Backups:
 			</h3>
 			<div class="ui divider"></div>
-			<backups-list></backups-list>
+			<backups-list [backupJob]="backupJob"></backups-list>
 		</div>
 	</div>
 	<div class="row">
