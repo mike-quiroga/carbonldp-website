@@ -1,19 +1,12 @@
 package com.carbonldp.playground;
 
-import com.carbonldp.agents.LDAPAgent;
-import com.carbonldp.rdf.RDFResource;
-import com.carbonldp.utils.IRIUtil;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.openrdf.model.IRI;
-import org.openrdf.model.ValueFactory;
-import org.openrdf.model.impl.SimpleValueFactory;
 import org.springframework.ldap.core.AttributesMapper;
 
 import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
 import javax.naming.directory.Attributes;
-import java.util.Set;
 
 /**
  * @author JorgeEspinosa
