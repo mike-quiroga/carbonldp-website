@@ -22,16 +22,6 @@ export default class JobsService {
 		this.jobs = new Map<string, PersistedDocument.Class>();
 	}
 
-	get( uri:string ):Promise<PersistedDocument.Class> {
-		return new Promise<PersistedDocument.Class>(
-			( resolve:( result:any ) => void, reject:( error:Error ) => void ) => {
-				if ( this.jobs.has( uri ) ) {
-					resolve( this.jobs.get( uri ) );
-					return;
-				}
-			} );
-	}
-
 	getJobOfType( type:string, appContext:SDKContext.Class ):Promise<PersistedDocument.Class> {
 		if ( ! type ) return <any> Promise.reject( new Error( "Provide a job type." ) );
 		if ( ! appContext ) return <any> Promise.reject( new Error( "Provide an appContext." ) );

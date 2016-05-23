@@ -1,21 +1,14 @@
 <div class="ui segment">
-	<div class="ui celled list">
-		<div class="item">
-			<div class="content">
-				<div class="header">Snickerdoodle</div>
-				An excellent companion
+	<div class="ui middle aligned divided list">
+		<div class="item" *ngFor="#backup of backups; #i=index">
+			<div class="right floated content">
+				<div class="ui mini basic blue button" title="Download">
+					<i class="arrow down icon"></i>
+				</div>
 			</div>
-		</div>
-		<div class="item">
-			<div class="content">
-				<div class="header">Poodle</div>
-				A poodle, its pretty basic
-			</div>
-		</div>
-		<div class="item">
-			<div class="content">
-				<div class="header">Paulo</div>
-				He's also a dog
+			<div class="content" (click)="downloadBackup(backup.id)">
+				<div class="header">{{backup.modified | date:"MM dd, yyy - HH:mm"}}</div>
+				{{backup.fileIdentifier}}
 			</div>
 		</div>
 	</div>
