@@ -38,7 +38,8 @@ export default class ExportBackupComponent {
 
 	ngAfterViewInit():void {
 		this.$element = $( this.element.nativeElement );
-		console.log( this.appContext );
+		// console.log( this.appContext );
+		// TODO: Add backup scheduler with datetime when Platform supports it.
 	}
 
 	createBackup():void {
