@@ -15,7 +15,7 @@
 	</p>
 	<div class="description" *ngIf="isArray(property)">
 		<div class="ui horizontal list">
-			<div class="item" *ngFor="#type of property; #j=index;">
+			<div class="item" *ngFor="let type of property; let j = index;">
 				<div class="ui label">
 					<i [ngClass]="getTypeIcon(type)" class="icon"></i>
 					{{getDisplayName(type)}}
@@ -26,7 +26,7 @@
 			<tr class="center aligned">
 				<th>{{propertyName}}</th>
 			</tr>
-			<tr *ngFor="#type of property; #j=index;">
+			<tr *ngFor="let type of property; let j = index;">
 				<td>{{type}}</td>
 			</tr>
 		</table>
@@ -50,7 +50,7 @@
 				<th *ngIf="hasHeader('@value')">@value</th>
 				<th *ngIf="hasHeader('@type')">@type</th>
 			</tr>
-			<tr *ngFor="#prop of property; #j=index;" [ngClass]="{selectable: isBNode(prop['@id'])}">
+			<tr *ngFor="let prop of property; let j = index;" [ngClass]="{selectable: isBNode(prop['@id'])}">
 				<td *ngIf="!!prop['@id']">
 					<p *ngIf="!isBNode(prop['@id']) && !isNamedFragment(prop['@id'])">
 						{{prop['@id']}}
@@ -87,11 +87,11 @@
 			</tr>
 		</table>
 		<div class="ui styled accordion" *ngIf="hasHeader('@list')">
-			<div class="title" *ngFor="#item of property; #i=index;">
+			<div class="title" *ngFor="let item of property; let i = index;">
 				<i class="dropdown icon"></i>
 				@list
 			</div>
-			<div class="content" *ngFor="#item of property; #i=index;">
+			<div class="content" *ngFor="let item of property; let i = index;">
 				<property-list [list]="item['@list']"
 				               (onGoToBNode)="goToBNode($event)"></property-list>
 			</div>

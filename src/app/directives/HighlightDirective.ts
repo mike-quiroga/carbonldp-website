@@ -1,4 +1,4 @@
-import { Directive, ElementRef } from "angular2/core";
+import { Directive, ElementRef } from "@angular/core";
 
 import Highlight from "highlight.js";
 import "highlight.js/styles/tomorrow-night.css!";
@@ -9,8 +9,9 @@ import "highlight.js/styles/tomorrow-night.css!";
 export default class HighlightDirective {
 	constructor( private element:ElementRef ) {}
 
-	ngAfterContentInit():void {
-		this.element.nativeElement.innerHTML = this.normalizeTabs( this.element.nativeElement.innerHTML );
+	ngAfterViewInit():void {
+		let html:string = this.element.nativeElement.innerHTML ? this.element.nativeElement.innerHTML : "";
+		this.element.nativeElement.innerHTML = this.normalizeTabs( html );
 
 		Highlight.configure( {
 			tabReplace: "    ",
@@ -22,7 +23,7 @@ export default class HighlightDirective {
 		let lines:string[] = value.split( /\n/gm );
 
 		if ( ! lines[ 0 ].trim() ) lines.shift();
-		if ( ! lines[ lines.length - 1 ].trim() ) lines.pop();
+		if ( lines.length > 0 && ! lines[ lines.length - 1 ].trim() ) lines.pop();
 
 		let containsSomething:boolean = lines.reduce( ( previous, line ) => previous || ! ! line.trim(), false );
 		if ( ! containsSomething ) return "";

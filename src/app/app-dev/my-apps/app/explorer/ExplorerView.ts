@@ -1,4 +1,4 @@
-import { Component, Host, Inject, forwardRef } from "angular2/core";
+import { Component, Host, Inject, forwardRef } from "@angular/core";
 
 import "semantic-ui/semantic";
 

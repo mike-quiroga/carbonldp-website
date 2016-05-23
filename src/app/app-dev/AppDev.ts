@@ -1,4 +1,4 @@
-import { Provider } from "angular2/core";
+import { Provider } from "@angular/core";
 import AppDevComponent from "app/app-dev/AppDevComponent";
 import AppContextService from "app/app-dev/AppContextService";
 import ErrorsAreaService from "app/app-dev/components/errors-area/service/ErrorsAreaService";

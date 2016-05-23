@@ -1,6 +1,6 @@
-import { Injectable } from "angular2/core";
-import { Http } from "angular2/http";
-import { Location } from "angular2/router";
+import { Injectable } from "@angular/core";
+import { Http } from "@angular/http";
+import { Location } from "@angular/common";
 
 import BlogPost from "./../blog-post/BlogPost";
 

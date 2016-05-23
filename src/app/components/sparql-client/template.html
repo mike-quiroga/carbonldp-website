@@ -11,7 +11,7 @@
 					<p *ngIf="savedQueries.length == 0">
 						No saved queries yet.
 					</p>
-					<a class="item" *ngFor="#query of savedQueries; #i =index" (click)="onClickSavedQuery( query )">
+					<a class="item" *ngFor="let query of savedQueries; let i = index" (click)="onClickSavedQuery( query )">
 						<button class="ui right floated circular icon mini inverted red button" (click)="onClickRemoveSavedQuery( i )">
 							<i class="icon remove"></i>
 						</button>
@@ -49,7 +49,7 @@
 											<div class="eight wide column field" *ngIf="currentQuery.type == 'Query'">
 												<label>Output Format:</label>
 												<select class="ui dropdown" [(ngModel)]="currentQuery.format" [disabled]="isSending || !currentQuery.operation">
-													<option *ngFor="#format of formatsAvailable" [value]="format.value">{{format.name}}</option>
+													<option *ngFor="let format of formatsAvailable" [value]="format.value">{{format.name}}</option>
 												</select>
 											</div>
 										</div>
@@ -93,7 +93,7 @@
 				</div>
 				<!-- /pusher -->
 			</div>
-			<div class="ui attached error message" *ngFor="#message of messages">
+			<div class="ui attached error message" *ngFor="let message of messages">
 				<i class="close icon" (click)="closeMessage($event)"></i>
 				<div class="header">
 					{{message.title}}
@@ -161,7 +161,7 @@
 		<div class="column">
 			<div class="ui list responses-list">
 				<sparql-response class="item"
-				                 *ngFor="#response of responses; #i =index"
+				                 *ngFor="let response of responses; let i = index"
 				                 [response]="response"
 				                 [prefixes]="prefixes"
 				                 (onRemove)="onRemove($event)"

@@ -1,6 +1,6 @@
-import { Component, Input, ElementRef, OnChanges, SimpleChange } from "angular2/core";
-import { CORE_DIRECTIVES } from "angular2/common"
-import { ROUTER_DIRECTIVES, ROUTER_PROVIDERS, Router, Instruction, RouteParams } from "angular2/router";
+import { Component, Input, ElementRef, OnChanges, SimpleChange } from "@angular/core";
+import { CORE_DIRECTIVES } from "@angular/common"
+import { ROUTER_DIRECTIVES, ROUTER_PROVIDERS, Router, Instruction, RouteParams } from "@angular/router-deprecated";
 import SidebarService from "./service/SidebarService";
 
 import $ from "jquery";

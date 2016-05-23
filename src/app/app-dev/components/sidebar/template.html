@@ -19,7 +19,7 @@
 	Open Apps
 </div>
 
-<a class="item app" *ngFor="#app of apps; #i=index;" [ngClass]="{active: isActive(app.slug, true)}">
+<a class="item app" *ngFor="let app of apps; let i=index;" [ngClass]="{active: isActive(app.slug, true)}">
 
 	<button
 		*ngIf="!isActive(app.slug, true)"
