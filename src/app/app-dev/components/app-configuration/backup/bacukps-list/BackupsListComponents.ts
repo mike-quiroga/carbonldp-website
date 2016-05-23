@@ -9,7 +9,7 @@ import * as App from "carbonldp/App";
 import * as Response from "carbonldp/HTTP/Response";
 import * as PersistedDocument from "carbonldp/PersistedDocument";
 
-import JobsService from "./../../job/JobsService";
+import BackupsService from "./../BackupsService";
 
 import template from "./template.html!";
 import "./style.css!";
@@ -25,7 +25,7 @@ export default class BackupsListComponent {
 	element:ElementRef;
 	$element:JQuery;
 
-	jobsService:JobsService;
+	backupsService:BackupsService;
 	carbon:Carbon;
 	backups:PersistedDocument.Class[];
 	loadingBackups:boolean = false;
@@ -33,10 +33,10 @@ export default class BackupsListComponent {
 	@Input() backupJob:PersistedDocument.Class;
 	@Input() appContext:App.Context;
 
-	constructor( carbon:Carbon, element:ElementRef, jobsService:JobsService ) {
+	constructor( carbon:Carbon, element:ElementRef, backupsService:BackupsService ) {
 		this.carbon = carbon;
 		this.element = element;
-		this.jobsService = jobsService;
+		this.backupsService = backupsService;
 	}
 
 	ngAfterViewInit():void {
@@ -52,7 +52,7 @@ export default class BackupsListComponent {
 	getBackups():Promise<PersistedDocument.Class[]> {
 		return new Promise<PersistedDocument.Class[]>( ( resolve:( result:any ) => void, reject:( error:Error ) => void ) => {
 			this.loadingBackups = true;
-			this.carbon.documents.getChildren( this.appContext.app.id + "backups/" ).then(
+			this.backupsService.getAll( this.appContext ).then(
 				( [backups, response]:[PersistedDocument.Class[],Response.Class] ) => {
 					backups = backups.map(
 						( backup:any )=> {
