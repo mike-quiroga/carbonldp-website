@@ -88,7 +88,7 @@ export default class ImportBackupComponent {
 	uriGroupValidator( corsGroup:ControlGroup ):any {
 		let uri:AbstractControl = corsGroup.controls[ "uri" ];
 		let backup:AbstractControl = corsGroup.controls[ "backup" ];
-		if ( ! ! uri.value && ! ! uri.value.match( /^http(s?):\/\/((\w+\.)?\w+\.\w+|((2[0-5]{2}|1[0-9]{2}|[0-9]{1,2})\.){3}(2[0-5]{2}|1[0-9]{2}|[0-9]{1,2}))(\/)?$/gm ) ) {
+		if ( ! ! uri.value && ! ! uri.value.match( /(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/ ) ) {
 			return null;
 		}
 		if ( ! ! uri.value ) {
