@@ -90,6 +90,8 @@
       "@angular/compiler": "npm:@angular/compiler@2.0.0-rc.1",
       "@angular/core": "npm:@angular/core@2.0.0-rc.1",
       "@angular/platform-browser": "npm:@angular/platform-browser@2.0.0-rc.1",
+      "@angular/platform-browser-dynamic": "npm:@angular/platform-browser-dynamic@2.0.0-rc.1",
+      "@angular/router-deprecated": "npm:@angular/router-deprecated@2.0.0-rc.1",
       "assert": "github:jspm/nodelibs-assert@^0.2.0-alpha",
       "buffer": "github:jspm/nodelibs-buffer@^0.2.0-alpha",
       "child_process": "github:jspm/nodelibs-child_process@^0.2.0-alpha",
@@ -203,7 +205,7 @@
             }
           }
         },
-        "map": {}
+        "map": { }
       },
       "npm:browserify-zlib@0.1.4": {
         "dependencies": {
@@ -228,7 +230,7 @@
         }
       },
       "npm:typescript@1.8.9": {
-        "browser": {},
+        "browser": { },
         "map": {
           "buffer": "@empty",
           "child_process": "@empty",

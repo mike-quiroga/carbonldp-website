@@ -61,6 +61,7 @@ SystemJS.config({
     "npm:*.json"
   ],
   map: {
+    "": "npm:@angular/http@2.0.0-rc.1",
     "@angular/common": "npm:@angular/common@2.0.0-rc.1",
     "@angular/compiler": "npm:@angular/compiler@2.0.0-rc.1",
     "@angular/core": "npm:@angular/core@2.0.0-rc.1",
