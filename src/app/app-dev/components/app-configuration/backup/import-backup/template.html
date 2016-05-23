@@ -11,10 +11,11 @@
 			<div class="field">
 				<label>Or select a backup from below:</label>
 				<div class="ui left icon input">
-					<select multiple ngControl="backup">
+					<select ngControl="backup" class="ui fluid selection dropdown backups list">
 						<option value="" disabled="disabled" selected="selected">Please select a backup</option>
-						<option value="1">One</option>
-						<option value="2">Two</option>
+						<option *ngFor="#backup of backups; #i=index" [attr.value]="backup.id">
+							{{backup.modified | date:"MMM dd, yyy - HH:mm"}}
+						</option>
 					</select>
 				</div>
 			</div>
@@ -45,6 +46,5 @@
 	untouched:{{importForm.untouched | json}}
 	valid:{{importForm.valid | json}}
 	value:{{importForm.value | json}}
-}
-	</pre>
+}</pre>
 </div>
