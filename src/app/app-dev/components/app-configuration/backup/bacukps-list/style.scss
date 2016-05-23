@@ -1,0 +1,13 @@
+backups-list {
+	> div {
+		min-height: 240px;
+	}
+	div.divided.list {
+		max-height: 200px;
+		overflow-y: scroll;
+
+		.item {
+			padding-right: .7em;
+		}
+	}
+}

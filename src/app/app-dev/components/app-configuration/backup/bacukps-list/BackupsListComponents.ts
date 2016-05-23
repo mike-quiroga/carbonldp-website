@@ -6,17 +6,13 @@ import "semantic-ui/semantic";
 
 import Carbon from "carbonldp/Carbon";
 import * as App from "carbonldp/App";
-import * as HTTP from "carbonldp/HTTP";
-import * as Request from "carbonldp/HTTP/Request";
-import * as Header from "carbonldp/HTTP/Header";
 import * as Response from "carbonldp/HTTP/Response";
-import * as NS from "carbonldp/NS";
-import * as SDKContext from "carbonldp/SDKContext";
 import * as PersistedDocument from "carbonldp/PersistedDocument";
 
 import JobsService from "./../../job/JobsService";
 
 import template from "./template.html!";
+import "./style.css!";
 
 @Component( {
 	selector: "backups-list",
@@ -32,6 +28,7 @@ export default class BackupsListComponent {
 	jobsService:JobsService;
 	carbon:Carbon;
 	backups:PersistedDocument.Class[];
+	loadingBackups:boolean = false;
 
 	@Input() backupJob:PersistedDocument.Class;
 	@Input() appContext:App.Context;
@@ -48,9 +45,16 @@ export default class BackupsListComponent {
 
 	ngOnChanges( changes:{[propName:string]:SimpleChange} ):void {
 		if ( changes[ "backupJob" ] && ! ! changes[ "backupJob" ].currentValue && changes[ "backupJob" ].currentValue !== changes[ "backupJob" ].previousValue ) {
-			this.getBackups().then(
+			this.getBackups().then( ( backups:PersistedDocument.Class[] ) => this.backups = backups );
+		}
+	}
+
+	getBackups():Promise<PersistedDocument.Class[]> {
+		return new Promise<PersistedDocument.Class[]>( ( resolve:( result:any ) => void, reject:( error:Error ) => void ) => {
+			this.loadingBackups = true;
+			this.carbon.documents.getChildren( this.appContext.app.id + "backups/" ).then(
 				( [backups, response]:[PersistedDocument.Class[],Response.Class] ) => {
-					this.backups = backups.map(
+					backups = backups.map(
 						( backup:any )=> {
 							backup[ "fileIdentifier" ] = backup[ "https://carbonldp.com/ns/v1/platform#fileIdentifier" ];
 							backup[ "result" ] = backup[ "https://carbonldp.com/ns/v1/platform#result" ];
@@ -59,16 +63,21 @@ export default class BackupsListComponent {
 							return backup;
 						}
 					).sort( ( a:any, b:any ) => a.modified < b.modified ? - 1 : a.modified > b.modified ? 1 : 0 );
+					this.loadingBackups = false;
+					resolve( backups );
+				}
+			).catch(
+				( error ) => {
+					console.error( error );
+					reject( error );
 				}
 			);
-		}
-	}
-
-	getBackups():Promise<[PersistedDocument.Class[],Response.Class]> {
-		return this.carbon.documents.getChildren( this.appContext.app.id + "backups/" );
+		} );
 	}
 
 	downloadBackup( uri:string ):void {
+		console.log( "You clicked: %o", uri );
+		// TODO: implement download when Platform supports NonRDFSource to download when getting url/id.
 		// let requestOptions:HTTP.Request.Options = { sendCredentialsOnCORS: true, };
 		// if ( this.appContext && this.appContext.auth.isAuthenticated() ) this.appContext.auth.addAuthentication( requestOptions );
 		// HTTP.Request.Util.setPreferredInteractionModel( NS.LDP.Class.NonRDFSource, requestOptions );
