@@ -102,11 +102,6 @@
 								</thead>
 								<tbody>
 									<tr>
-										<td>Authorization</td>
-										<td>Basic ...</td>
-										<td>Yes</td>
-									</tr>
-									<tr>
 										<td>Content-Type</td>
 										<td>text/turtle</td>
 										<td>Yes</td>
@@ -124,8 +119,8 @@
 								</tbody>
 							</table>
 							<pre highlight class="turtle">
-								@prefix cs:&#60;https://carbonldp.com/ns/v1/security&#62;.
-								@prefix vcard:&#60;http://www.w3.org/2001/vcard-rdf/3.0&#62;.
+								@prefix cs:&#60;https://carbonldp.com/ns/v1/security#&#62;.
+								@prefix vcard:&#60;http://www.w3.org/2001/vcard-rdf/3.0#&#62;.
 
 								<>
 									a cs:Agent;
@@ -495,7 +490,7 @@
 						</p>
 
 						<pre highlight class="turtle">
-							@prefix cs:&#60;https://carbonldp.com/ns/v1/security&#62;.
+							@prefix cs:&#60;https://carbonldp.com/ns/v1/security#&#62;.
 
 							<>
 								a cs:Application;
@@ -940,7 +935,7 @@
 							</p>
 
 							<pre highlight class="turtle">
-								@prefix ldp:&#60;http://www.w3.org/ns/ldp&#62;.
+								@prefix ldp:&#60;http://www.w3.org/ns/ldp#&#62;.
 
 								&#60;&#62;
 									a ldp:BasicContainer.
