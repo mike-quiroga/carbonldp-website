@@ -1,3 +1,14 @@
+# 0.34.4 (2016/05/17)
+- Fix [LDP-628](https://jira.base22.com/browse/LDP-628) - Inline membership/contained resources were not being filtered by security so limit parameters were returning incorrect results
+- Lower the information that is being logged
+
+# 0.34.3 (2016/05/11)
+- Fix [LDP-648](https://jira.base22.com/browse/LDP-648) - Wrong ETags inside ResponseMetadata
+
+# 0.34.2 (2016/05/10)
+- Fix [LDP-625](https://jira.base22.com/browse/LDP-625) - Delete inverse membership relation
+- Add [Datadog](https://www.datadoghq.com/) agent installation to the Dockerfile
+
 # 0.34.1 (2016/05/04)
 - Fix [LDP-641](https://jira.base22.com/browse/LDP-641) - Missing properties in `prod-config.properties` file
 
@@ -14,7 +25,7 @@
 - Add backup export support
 - Add backup import support
 - Add job system (used by the backup export/import features)
-- Fix [LDP-622](https://jira.base22.com/browse/LDP-622) - Literals where being compared as strings and therefore RDFSource replacements where failing
+- Fix [LDP-622](https://jira.base22.com/browse/LDP-622) - Literals were being compared as strings and therefore RDFSource replacements where failing
 - Fix [LDP-618](https://jira.base22.com/browse/LDP-618) - platform/api/ was not being returned with an ETag header
 - Fix [LDP-623](https://jira.base22.com/browse/LDP-623) - RDF lists were not being returned correctly in JSON-LD
 

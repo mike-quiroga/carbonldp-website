@@ -61,7 +61,7 @@ public class ApplicationContextConnectionFactory extends AbstractComponent imple
 
 		if ( LOG.isDebugEnabled() ) {
 			if ( connectionFactory == platformConnectionFactory ) LOG.debug( "getConnection << PLATFORM context" );
-			else LOG.debug( "createTransaction << AppContext: {}", AppContextHolder.getContext().getApplication() );
+			else LOG.debug( "createTransaction << AppContext: {}", AppContextHolder.getContext().getApplication().toString() );
 		}
 
 		return getRepositoryConnectionFactory().createTransaction();
@@ -74,10 +74,10 @@ public class ApplicationContextConnectionFactory extends AbstractComponent imple
 		if ( LOG.isDebugEnabled() ) {
 			if ( rollback ) {
 				if ( connectionFactory == platformConnectionFactory ) LOG.debug( "endTransaction << ROLLBACK - PLATFORM context" );
-				else LOG.debug( "endTransaction << ROLLBACK - AppContext: {}", AppContextHolder.getContext().getApplication() );
+				else LOG.debug( "endTransaction << ROLLBACK - AppContext: {}", AppContextHolder.getContext().getApplication().toString() );
 			} else {
 				if ( connectionFactory == platformConnectionFactory ) LOG.debug( "endTransaction << COMMIT - PLATFORM context" );
-				else LOG.debug( "endTransaction << COMMIT - AppContext: {}", AppContextHolder.getContext().getApplication() );
+				else LOG.debug( "endTransaction << COMMIT - AppContext: {}", AppContextHolder.getContext().getApplication().toString() );
 
 			}
 		}

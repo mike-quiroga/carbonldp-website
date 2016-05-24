@@ -14,10 +14,10 @@ import com.carbonldp.models.Infraction;
 import com.carbonldp.rdf.RDFBlankNode;
 import com.carbonldp.rdf.RDFDocumentFactory;
 import com.carbonldp.rdf.RDFResource;
+import com.carbonldp.rdf.RDFResourceRepository;
 import com.carbonldp.rdf.RDFResourceDescription;
+import com.carbonldp.sparql.SecuredRepositoryTemplate;
 import com.carbonldp.spring.ServicesInvoker;
-import com.carbonldp.utils.HTTPUtil;
-import com.carbonldp.utils.ModelUtil;
 import org.joda.time.DateTime;
 import org.openrdf.model.BNode;
 import org.openrdf.model.IRI;
@@ -34,6 +34,7 @@ public class SesameContainerService extends AbstractSesameLDPService implements 
 
 	private ServicesInvoker servicesInvoker;
 	private RDFSourceService sourceService;
+	private RDFResourceRepository resourceRepository;
 
 	@Override
 	public Container get( IRI containerIRI, Set<APIPreferences.ContainerRetrievalPreference> containerRetrievalPreferences, OrderByRetrievalPreferences orderByRetrievalPreferences ) {
@@ -50,9 +51,9 @@ public class SesameContainerService extends AbstractSesameLDPService implements 
 					container.getBaseModel().addAll( containerRepository.getContainmentTriples( containerIRI ) );
 					break;
 				case CONTAINED_RESOURCES:
-					Set<IRI> children = containerRepository.getContainmentIRIs( containerIRI, orderByRetrievalPreferences );
+					Set<IRI> children = SecuredRepositoryTemplate.execute( () -> containerRepository.getContainedIRIs( containerIRI, orderByRetrievalPreferences ) );
 					if ( containerRetrievalPreferences.contains( APIPreferences.ContainerRetrievalPreference.MEMBER_RESOURCES ) ) {
-						Set<IRI> members = containerRepository.getMemberIRIs( containerIRI, orderByRetrievalPreferences );
+						Set<IRI> members = SecuredRepositoryTemplate.execute( () -> containerRepository.getMemberIRIs( containerIRI, orderByRetrievalPreferences ) );
 						children.addAll( members );
 					}
 					container = getResources( children, container );
@@ -69,7 +70,7 @@ public class SesameContainerService extends AbstractSesameLDPService implements 
 					break;
 				case MEMBER_RESOURCES:
 					if ( containerRetrievalPreferences.contains( APIPreferences.ContainerRetrievalPreference.CONTAINED_RESOURCES ) ) break;
-					Set<IRI> members = containerRepository.getMemberIRIs( containerIRI, orderByRetrievalPreferences );
+					Set<IRI> members = SecuredRepositoryTemplate.execute( () -> containerRepository.getMemberIRIs( containerIRI, orderByRetrievalPreferences ) );
 					container = getResources( members, container );
 					break;
 				case NON_READABLE_MEMBERSHIP_RESOURCE_TRIPLES:
@@ -168,24 +169,25 @@ public class SesameContainerService extends AbstractSesameLDPService implements 
 
 	@Override
 	public void removeMembers( IRI containerIRI, Set<IRI> members ) {
-		DateTime modifiedTime = DateTime.now();
-		IRI membershipResource = containerRepository.getTypedRepository( this.getContainerType( containerIRI ) ).getMembershipResource( containerIRI );
 		for ( IRI member : members ) {
 			removeMember( containerIRI, member );
 		}
-		sourceRepository.touch( membershipResource, modifiedTime );
-
 	}
 
 	@Override
 	public void removeMember( IRI containerIRI, IRI member ) {
+		deleteInverseMembershipRelation( containerIRI, member );
+
 		containerRepository.removeMember( containerIRI, member );
+
+		IRI membershipResource = containerRepository.getTypedRepository( this.getContainerType( containerIRI ) ).getMembershipResource( containerIRI );
+		sourceRepository.touch( membershipResource );
 	}
 
 	@Override
 	public void removeMembers( IRI containerIRI ) {
-		// TODO: Should the resource be touched here?
-		containerRepository.removeMembers( containerIRI );
+		Set<IRI> members = containerRepository.getMemberIRIs( containerIRI );
+		removeMembers( containerIRI, members );
 	}
 
 	@Override
@@ -202,22 +204,22 @@ public class SesameContainerService extends AbstractSesameLDPService implements 
 		RDFSource memberSource = sources.iterator().next();
 		container.getBaseModel().addAll( memberSource.getBaseModel() );
 
-		RDFBlankNode responseDescription = getResponseDescription( container );
+		RDFBlankNode responseDescription = getResponseMetadata( container );
 
 		for ( RDFSource source : sources ) {
-			ResponseMetaDataFactory.getInstance().create( container, responseDescription, source );
+			ResourceMetadataFactory.getInstance().create( container, responseDescription, source );
 		}
 		return container;
 	}
 
-	private RDFBlankNode getResponseDescription( Container container ) {
+	private RDFBlankNode getResponseMetadata( Container container ) {
 		ValueFactory valueFactory = SimpleValueFactory.getInstance();
 
 		BNode bNode = valueFactory.createBNode();
-		RDFBlankNode responseDescription = new RDFBlankNode( container.getDocument(), bNode, null );
-		responseDescription.add( RDFSourceDescription.Property.TYPE.getIRI(), ResponseDescriptionDescription.Resource.CLASS.getIRI() );
-		responseDescription.add( RDFSourceDescription.Property.TYPE.getIRI(), RDFResourceDescription.Resource.VOLATILE.getIRI() );
-		return responseDescription;
+		RDFBlankNode responseMetadata = new RDFBlankNode( container.getDocument(), bNode, null );
+		responseMetadata.add( RDFSourceDescription.Property.TYPE.getIRI(), ResponseMetadataDescription.Resource.CLASS.getIRI() );
+		responseMetadata.add( RDFSourceDescription.Property.TYPE.getIRI(), RDFResourceDescription.Resource.VOLATILE.getIRI() );
+		return responseMetadata;
 	}
 
 	@Override
@@ -225,9 +227,20 @@ public class SesameContainerService extends AbstractSesameLDPService implements 
 		sourceRepository.delete( targetIRI, true );
 	}
 
+	private void deleteInverseMembershipRelation( IRI containerIRI, IRI memberIRI ) {
+		IRI isMemberOfRelation = resourceRepository.getIRI( containerIRI, ContainerDescription.Property.MEMBER_OF_RELATION );
+		if ( isMemberOfRelation == null ) return;
+		IRI membershipResource = containerRepository.getTypedRepository( getContainerType( containerIRI ) ).getMembershipResource( containerIRI );
+		resourceRepository.remove( memberIRI, isMemberOfRelation, membershipResource, memberIRI );
+		sourceRepository.touch( memberIRI );
+	}
+
 	@Autowired
 	public void setRDFSourceService( RDFSourceService rdfSourceService ) { this.sourceService = rdfSourceService; }
 
 	@Autowired
 	public void setServicesInvoker( ServicesInvoker servicesInvoker ) { this.servicesInvoker = servicesInvoker; }
+
+	@Autowired
+	public void setResourceRepository( RDFResourceRepository resourceRepository ) { this.resourceRepository = resourceRepository; }
 }
