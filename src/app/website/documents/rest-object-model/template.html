@@ -1,0 +1,211 @@
+<div class="ui main grid container">
+	<div class="row">
+		<div class="sixteen wide column">
+
+			<div class="ui breadcrumb">
+				<span class="section">Documentation</span> <i class="right chevron icon divider"></i> <span class="section">REST API</span> <i class="right arrow icon divider"></i>
+			</div>
+
+			<h1>REST API Object Model</h1>
+
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="twelve wide column">
+
+			<article class="ui vertical segment" id="article">
+
+
+				<div class="ui icon yellow message">
+					<i class="warning sign icon"></i>
+					<div class="content">
+						<div class="header">Pre-release Documentation</div>
+						<p>Although Carbon LDP is not yet released, we're publishing documentation as it is prepared so that you can
+							preview what's in store.</p>
+					</div>
+				</div>
+
+				<div class="ui message">
+					<div class="content">
+						<p class="larger">
+							The REST API object model provides a summary of the various types of resources you can manage and interact with using REST.
+						</p>
+					</div>
+				</div>
+
+				<section>
+					<h2>Object Model</h2>
+
+					<p>The following diagram depicts the all of the objects you can manage and interact with using REST. All objects are RDF resources. You can think of them as RDF <em>documents
+					</em> which, once created, are identified by a URI. You can create, update, read, and delete these objects by issuing HTTP requests to the URI of the resource or its
+						parent container (e.g. POST, PUT, GET, DELETE). There are also other types of RESTful operations that each object might expose depending on the type of the object. The
+						object hierarchy depicts how certain objects extend others and thus would have the same RESTful operations or behavior as the parent type.
+					</p>
+
+					<img class="ui fluid image" src="assets/images/rest-api-object-model.svg" alt="Carbon LDP - REST API Object Model">
+
+				</section>
+
+				<section>
+
+					<h2>Object Descriptions</h2>
+
+					<p>Following is a brief description for each of the objects, listed in alphabetical order.</p>
+
+					<div class="ui vertical segment">
+						<h4>AccessPoint</h4>
+						<p>An AccessPoint is a class of container that can manage member resources stored in another
+							container other than itself. Both DirectContainer and IndirectContainer are of this class. However, since the IndirectContainer is not yet implemented in Carbon, the
+							AccessPoint can be regarded as equivalent to DirectContainer.</p>
+
+						<p>An AccessPoint is useful when you want to manage more than one list of members for more than one given property on a resource. To understand how this is useful, consider
+							the BasicContainer in contrast.</p>
+
+						<p>A BasicContainer stores its members in itself, but is limited to managing only one list of members by one single property (e.g. <code>ex:hasChildren</code>).
+							If you need multiple membership properties on a container, each managing a kind of membership to the resource (and where the members may not exist within the container
+							itself), the AccessPoint can help. Imagine a BlogPost resource, for example. With an AccessPoint, you could define properties like <code>ex:comment</code>,
+							<code>ex:tag</code>, <code>ex:like</code> all on the same BlogPost resource with each property managing one or more members. The comments or tag resources may
+							be stored in child comments and tags containers, but they are managed and enumerated by the parent BlogPost container.</p>
+					</div>
+					<div class="ui vertical segment">
+						<h4>AccessControlList</h4>
+						<p>A configuration resource that defines the security access control for a given resource. An AccessControlList controls access
+							to a resource by defining what permissions one or more given roles have on the resource.</p>
+						<p>The ACL defines an <code>accessControlEntry</code> and an <code>inheritableEntry</code> - each linking to an
+							<code>AccessControlEntry</code> by way of a blank nodes. The entry linked by <code>accessControlEntry</code>
+							defines access to the resource itself. The entry linked by <code>inheritableEntry</code> defines permissions that can be
+							inherited by child resources when the child resources do not override them.</p>
+					</div>
+					<div class="ui vertical segment">
+						<h4>Agent</h4>
+						<p>An RDFSource document that represents a user or system account that can authenticate with the Carbon platform or a
+							Carbon application.</p>
+					</div>
+					<div class="ui vertical segment">
+						<h4>Application</h4>
+						<p>An RDSource document that represents an application in the Carbon platform. In order to create a new Carbon application, you
+							must post an Application RDFSource document. Doing so creates the root container for your new application, under which you
+							can begin posting application-specific resources.</p>
+					</div>
+					<div class="ui vertical segment">
+						<h4>AppRole</h4>
+						<p>An RDFSource document that is used to control access to application resources. An AppRole defines what kind of access a group of agents have on one or more resources.</p>
+						<p>An AppRole is defined by the <code>rdf:type</code> of <code>https://carbonldp.com/ns/v1/security#AppRole</code> (or <code>cs:AppRole</code>, for short).</p>
+					</div>
+					<div class="ui vertical segment">
+						<h4>Backup</h4>
+						<p>An RDFRepresentation that describes the zip archive created by an ExportBackup job; it contains information such as the archive's format, size, and cretaion time, for
+							example.</p>
+					</div>
+					<div class="ui vertical segment">
+						<h4>BasicContainer</h4>
+						<p>An LDP Container whose members are stored within itself.</p>
+						<p>In a BasicContainer, the property <code>ldp:contains</code> defines a set of triples, maintained by the container, which are documents created by the container.
+							In LDP terminology, these are called &quot;containment triples&quot; and they always bear the triple form of:</p>
+
+						<p><code>&lt;Container URI&gt; &lt;ldp:contains&gt; &lt;Document URI&gt;</code></p>
+
+						<p>Basic Containers provide the most straight-forward way to have generic storage in Carbon and for creating a containment hierarchy of arbitrary resources.</p>
+					</div>
+					<div class="ui vertical segment">
+						<h4>Container</h4>
+						<p>As the name implies, LDP Containers <em>contains</em> things. They don’t actually literally contain resources, but rather – they contain links pointing to other
+							resources. Basically, they represent collections. A container responds to client requests for creation, modification, and/or enumeration of its linked members.
+							In other words, the URI that identifies a given container acts as an HTTP interaction point through which members and membership can be managed.</p>
+						<p>A container is also an RDFSource, so while it has a special function as a membership controller, it may also represent additional data that is valuable to the clients that
+							access it. In other words, you can interact with a Container as both a membership controller and as an RDFSource document. The behavior depends upon the interaction
+							model defined as part of your request.</p>
+						<p>There are three different types of LDP containers, each with variant uses and capabilities, and described by one of the three container types with <code>rdf:type</code> of
+							<code>ldp:BasicContainer</code>, <code>ldp:DirectContainer</code>, or <code>ldp:IndirectContainer</code>.</p>
+						<p>See also: <a href="https://www.w3.org/TR/ldp/#ldpc">Linked Data Platform Containers</a> [LDP]</p>
+					</div>
+					<div class="ui vertical segment">
+						<h4>DirectContainer</h4>
+						<p>See AccessPoint</p>
+					</div>
+					<div class="ui vertical segment">
+						<h4>Execution</h4>
+						<p>A resource that represents the execution of a Job and contains information about the job's execution such as the start time, end time, state of the job's execution, and,
+							for certain types of jobs, where the results of the job execution are stored.</p>
+					</div>
+					<div class="ui vertical segment">
+						<h4>ExportBackup</h4>
+						<p>A type of Job that, when executed, will export the data of a Carbon application for backup purposes or for importing into another server. When an ExportBackup job is
+							executed, it creates a zip archive file inside of which can be found a <code>*.trig</code> file that has all the application data (e.g. triples), and a folder containing
+							all
+							of the application's NonRDFSource resources such as images and files. The archive produced by an ExportBackup can be subsequently imported with an ImportBackup job.</p>
+					</div>
+					<div class="ui vertical segment">
+						<h4>ImportBackup</h4>
+						<p>A type of Job that, when executed, will replace a Carbon application's resources with the resources created by an ExportBackup job.</p>
+					</div>
+					<div class="ui vertical segment">
+						<h4>ImportLDAPAgents</h4>
+						<p>A type of Job that, when executed, creates LDAPAgents that contain properties that can be used as credentials for authentication. This Job can be configured so only
+							certain user properties are copied from the LDAP server when the representative LDAPAgent is created.</p>
+					</div>
+					<div class="ui vertical segment">
+						<h4>IndirectContainer</h4>
+						<p>Though defined in the W3C Linked Data Platform 1.0 specification [LDP], IndirectContainers are not yet supported by Carbon.</p>
+					</div>
+					<div class="ui vertical segment">
+						<h4>Job</h4>
+						<p>
+							A Job is a resource that defines one or more specialized tasks to be executed on the server. A Job may be scheduled or configured to run on demand. Each time the job runs,
+							an Execution document is created with information about the job's execution.
+						</p>
+					</div>
+					<div class="ui vertical segment">
+						<h4>LDAPAgent</h4>
+						<p>A special type of Agent that is created based on the information retrieved from an LDAP server when an ImportLDAPAgentsJob is executed.</p>
+					</div>
+					<div class="ui vertical segment">
+						<h4>LDAPServer</h4>
+						<p>An LDP RDFSource that contains the required configuration information to connect to an LDAP server.</p>
+					</div>
+					<div class="ui vertical segment">
+						<h4>RDFRepresentation</h4>
+						<p>An RDFRepresentation is an RDFSource that contains meta-data (properties) about a Non-RDFSource (a file or binary). When a file is uploaded into a Carbon app or
+							otherwise created by Carbon, the RDFRepresentation is also created to describe and store various information about the file.</p>
+					</div>
+					<div class="ui vertical segment">
+						<h4>RDFSource</h4>
+						<p>
+							A resource (basically, a <em>document</em> in Carbon) whose state is fully represented in RDF. An RDFSource is identified by a URI, which can be used
+							with HTTP requests (GET, PUT, POST, DELETE). The content of an RDFSource document is an RDF graph - a set of RDF triples. The triples are the data properties of the
+							resource, which can be either literal properties (string, date, number, etc.) or object properties (links to other resource URIs). All resources you create within a
+							Carbon application, with the exception of ACLs, are RDFSource documents. That is to say, they are described by the <code>rdf:type</code> of
+							<code>http://www.w3.org/ns/ldp#RDFSource</code>, even if also described by additional types such as those that define the object classes of your application.
+						</p>
+						<p>See also:</p>
+						<ul>
+							<li><a href="https://www.w3.org/TR/ldp/#ldpr">Linked Data Platform Resources</a> [LDP]</li>
+							<li><a href="https://www.w3.org/TR/ldp/#ldprs">RDF Source</a> [LDP]</li>
+						</ul>
+					</div>
+
+
+				</section>
+
+				<section>
+					<h2>References</h2>
+
+					<p>
+						<strong>[LDP]</strong><br/>
+						Steve Speicher; John Arwe; Ashok Malhotra. W3C. <a href="http://www.w3.org/TR/ldp/">Linked Data Platform 1.0</a>. 26 February 2015. W3C Recommendation. URL:
+						<a href="http://www.w3.org/TR/ldp/">http://www.w3.org/TR/ldp/</a>
+					</p>
+				</section>
+
+
+			</article>
+
+
+		</div>
+		<aside class="four wide column">
+
+		</aside>
+	</div>
+
+</div>
