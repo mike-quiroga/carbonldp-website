@@ -11,7 +11,7 @@
 			<div class="field">
 				<label>Or select a backup from below:</label>
 				<div class="ui left icon input">
-					<select ngControl="backup" class="ui fluid selection dropdown backups list">
+					<select ngControl="backup" class="ui fluid selection scrolling dropdown backups list">
 						<option value="" disabled="disabled" selected="selected">Please select a backup</option>
 						<option *ngFor="#backup of backups; #i=index" [attr.value]="backup.id">
 							{{backup.modified | date:"MMM dd, yyy - HH:mm"}}
@@ -30,10 +30,9 @@
 			</div>
 		</div>
 	</div>
-	<!--<div class="ui big green labeled icon button">-->
-	<!--<i class="signup icon"></i>-->
-	<!--Sign Up-->
-	<!--</div>-->
+	<div class="ui basic right aligned segment">
+		<button class="ui button" (click)="onImportBackup()">Import</button>
+	</div>
 </form>
 <div class="ui segment">
 	<pre>Form: {

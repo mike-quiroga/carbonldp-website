@@ -81,8 +81,12 @@ export default class ImportBackupComponent {
 
 	getBackups():void {
 		this.backupsService.getAll( this.appContext ).then( ( [backups, response]:[PersistedDocument.Class[], Response.Class] )=> {
-			this.backups = backups;
+			this.backups = backups.sort( ( a:any, b:any ) => a.modified < b.modified ? - 1 : a.modified > b.modified ? 1 : 0 );
 		} )
+	}
+
+	onImportBackup():void {
+		
 	}
 
 	uriGroupValidator( corsGroup:ControlGroup ):any {

@@ -45,4 +45,24 @@ export default class JobsService {
 			return Utils.A.from( this.jobs.values() );
 		} );
 	}
+
+	createJob( type:string, appContext:SDKContext.Class ):Promise<Response.Class> {
+		let uri:string = (<App.Context>appContext).app.id + "jobs/";
+		let requestOptions:HTTP.Request.Options = { sendCredentialsOnCORS: true, };
+		if ( appContext && appContext.auth.isAuthenticated() ) appContext.auth.addAuthentication( requestOptions );
+		HTTP.Request.Util.setAcceptHeader( "application/ld+json", requestOptions );
+		HTTP.Request.Util.setPreferredInteractionModel( NS.LDP.Class.Container, requestOptions );
+		HTTP.Request.Util.setContentTypeHeader( "text/turtle", requestOptions );
+		let body:string =
+			`@prefix c:  <https://carbonldp.com/ns/v1/platform#>.
+			<>
+			a c:ImportBackupJob.`;
+
+		return HTTP.Request.Service.post( uri, body, requestOptions ).then( ( response:Response.Class ) => {
+			return response;
+		} ).catch( ( error ) => {
+			console.error( error );
+			return Promise.reject( error );
+		} );
+	}
 }
