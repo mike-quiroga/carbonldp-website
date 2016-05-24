@@ -130,18 +130,17 @@
 							for certain types of jobs, where the results of the job execution are stored.</p>
 					</div>
 					<div class="ui vertical segment">
-						<h4>ExportBackup</h4>
+						<h4>ExportBackupJob</h4>
 						<p>A type of Job that, when executed, will export the data of a Carbon application for backup purposes or for importing into another server. When an ExportBackup job is
 							executed, it creates a zip archive file inside of which can be found a <code>*.trig</code> file that has all the application data (e.g. triples), and a folder containing
-							all
-							of the application's NonRDFSource resources such as images and files. The archive produced by an ExportBackup can be subsequently imported with an ImportBackup job.</p>
+							all of the application's NonRDFSource resources such as images and files. The archive produced by an ExportBackup can be subsequently imported with an ImportBackup job.</p>
 					</div>
 					<div class="ui vertical segment">
-						<h4>ImportBackup</h4>
+						<h4>ImportBackupJob</h4>
 						<p>A type of Job that, when executed, will replace a Carbon application's resources with the resources created by an ExportBackup job.</p>
 					</div>
 					<div class="ui vertical segment">
-						<h4>ImportLDAPAgents</h4>
+						<h4>ImportLDAPAgentsJob</h4>
 						<p>A type of Job that, when executed, creates LDAPAgents that contain properties that can be used as credentials for authentication. This Job can be configured so only
 							certain user properties are copied from the LDAP server when the representative LDAPAgent is created.</p>
 					</div>

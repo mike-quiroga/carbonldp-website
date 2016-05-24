@@ -76,8 +76,8 @@
         <mask id="mask-35" maskContentUnits="userSpaceOnUse" maskUnits="objectBoundingBox" x="0" y="0" width="166" height="43" fill="white">
             <use xlink:href="#path-34"></use>
         </mask>
-        <rect id="path-36" x="1072" y="575" width="166" height="43" rx="8"></rect>
-        <mask id="mask-37" maskContentUnits="userSpaceOnUse" maskUnits="objectBoundingBox" x="0" y="0" width="166" height="43" fill="white">
+        <rect id="path-36" x="1072" y="575" width="182" height="43" rx="8"></rect>
+        <mask id="mask-37" maskContentUnits="userSpaceOnUse" maskUnits="objectBoundingBox" x="0" y="0" width="182" height="43" fill="white">
             <use xlink:href="#path-36"></use>
         </mask>
         <rect id="path-38" x="186" y="265" width="166" height="43" rx="8"></rect>
@@ -175,14 +175,14 @@
         <text id="LDAPAgent" font-family="Helvetica" font-size="16" font-weight="normal" fill="#000000">
             <tspan x="227.285156" y="292">LDAPAgent</tspan>
         </text>
-        <text id="ImportBackup" font-family="Helvetica" font-size="16" font-weight="normal" fill="#000000">
-            <tspan x="733.144531" y="602">ImportBackup</tspan>
+        <text id="ImportBackupJob" font-family="Helvetica" font-size="16" font-weight="normal" fill="#000000">
+            <tspan x="720.246094" y="602">ImportBackupJob</tspan>
         </text>
-        <text id="ExportBackup" font-family="Helvetica" font-size="16" font-weight="normal" fill="#000000">
-            <tspan x="914.195312" y="602">ExportBackup</tspan>
+        <text id="ExportBackupJob" font-family="Helvetica" font-size="16" font-weight="normal" fill="#000000">
+            <tspan x="901.296875" y="602">ExportBackupJob</tspan>
         </text>
-        <text id="ImportLDAPAgents" font-family="Helvetica" font-size="16" font-weight="normal" fill="#000000">
-            <tspan x="1087.11328" y="602">ImportLDAPAgents</tspan>
+        <text id="ImportLDAPAgentsJob" font-family="Helvetica" font-size="16" font-weight="normal" fill="#000000">
+            <tspan x="1082.21484" y="601">ImportLDAPAgentsJob</tspan>
         </text>
     </g>
 </svg>
