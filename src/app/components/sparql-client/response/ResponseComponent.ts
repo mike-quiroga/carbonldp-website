@@ -1,5 +1,5 @@
-import { Component, Input, Output, ElementRef, EventEmitter, SimpleChange } from "angular2/core";
-import { CORE_DIRECTIVES, FORM_DIRECTIVES, NgClass } from "angular2/common";
+import { Component, Input, Output, ElementRef, EventEmitter, SimpleChange } from "@angular/core";
+import { CORE_DIRECTIVES, FORM_DIRECTIVES, NgClass } from "@angular/common";
 
 import SPARQLClientComponent from "./../SPARQLClientComponent";
 import * as CodeMirrorComponent from "app/components/code-mirror/CodeMirrorComponent";

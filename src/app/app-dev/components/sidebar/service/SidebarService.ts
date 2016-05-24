@@ -1,4 +1,4 @@
-import { Injectable, EventEmitter } from "angular2/core";
+import { Injectable, EventEmitter } from "@angular/core";
 
 import App from "app/app-dev/my-apps/app/App";
 import SidebarItem from "./../SidebarItem";

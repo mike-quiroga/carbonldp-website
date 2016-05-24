@@ -3,7 +3,7 @@
 
 	<div class="row" *ngIf="messages.length > 0">
 		<div class="sixteen wide column">
-			<div class="ui error message transition" *ngFor="#message of messages">
+			<div class="ui error message transition" *ngFor="let message of messages">
 				<div class="header">
 					{{message.title}}
 				</div>

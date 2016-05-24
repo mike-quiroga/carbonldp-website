@@ -1,6 +1,6 @@
-import { Component, ElementRef, Input, DynamicComponentLoader } from "angular2/core";
-import { CORE_DIRECTIVES } from "angular2/common";
-import { ROUTER_DIRECTIVES, Router } from "angular2/router";
+import { Component, ElementRef, Input, DynamicComponentLoader } from "@angular/core";
+import { CORE_DIRECTIVES } from "@angular/common";
+import { ROUTER_DIRECTIVES, Router } from "@angular/router-deprecated";
 
 import BlogPost from "./../blog-post/BlogPost";
 import * as CodeMirrorComponent from "app/components/code-mirror/CodeMirrorComponent";

@@ -1,4 +1,4 @@
-import { Provider } from "angular2/core";
+import { Provider } from "@angular/core";
 
 import BlogService from "./service/BlogService";
 

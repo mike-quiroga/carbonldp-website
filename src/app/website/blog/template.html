@@ -1,7 +1,7 @@
 <div class="ui main grid container">
 	<div class="row">
 		<div class="twelve wide column">
-			<blog-post-thumbnail class="ui basic segment" *ngFor="#post of blogPosts; #i=index;" [blogPost]="post"></blog-post-thumbnail>
+			<blog-post-thumbnail class="ui basic segment" *ngFor="let post of blogPosts; let i = index;" [blogPost]="post"></blog-post-thumbnail>
 		</div>
 		<aside class="four wide column">
 

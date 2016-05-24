@@ -1,6 +1,6 @@
-import { Component, ElementRef, Input, Inject } from "angular2/core";
-import { ROUTER_DIRECTIVES, Router } from "angular2/router";
-import { CORE_DIRECTIVES, FORM_DIRECTIVES, FormBuilder, ControlGroup, AbstractControl, Validators } from "angular2/common";
+import { Component, ElementRef, Input, Inject } from "@angular/core";
+import { ROUTER_DIRECTIVES, Router } from "@angular/router-deprecated";
+import { CORE_DIRECTIVES, FORM_DIRECTIVES, FormBuilder, ControlGroup, AbstractControl, Validators } from "@angular/common";
 
 import { AuthService } from "angular2-carbonldp/services";
 

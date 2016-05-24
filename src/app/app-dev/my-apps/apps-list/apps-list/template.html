@@ -1,7 +1,7 @@
 <table class="ui selectable sortable celled small compact table">
 	<thead>
 		<tr>
-			<th *ngFor="#header of headers" class="center aligned" [ngClass]="{
+			<th *ngFor="let header of headers" class="center aligned" [ngClass]="{
 						sorted: sortedColumn === header.value,
 						ascending: sortedColumn === header.value && ascending,
 						descending: sortedColumn === header.value && ! ascending
@@ -13,7 +13,7 @@
 		</tr>
 	</thead>
 	<tbody>
-		<tr *ngFor="#app of apps; #i=index;" (click)="navigateTo([ '/AppDev/MyApps/App', {slug: app.slug}, 'AppDashboard'])">
+		<tr *ngFor="let app of apps; let i = index;" (click)="navigateTo([ '/AppDev/MyApps/App', {slug: app.slug}, 'AppDashboard'])">
 			<td>
 				<h3 class="ui image header">
 					<div class="content">

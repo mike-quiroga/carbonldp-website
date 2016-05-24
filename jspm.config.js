@@ -34,7 +34,8 @@ SystemJS.config({
     },
     "angular2-carbonldp": {
       "map": {
-        "angular2": "npm:angular2@2.0.0-beta.14",
+        "@angular2/core": "npm:@angular/core@2.0.0-rc.1",
+        "@angular2/router-deprecated": "npm:@angular/router-deprecated@2.0.0-rc.1",
         "js-cookie": "npm:js-cookie@2.1.0"
       }
     },
@@ -46,7 +47,10 @@ SystemJS.config({
     }
   },
   map: {
-    "html": "github:systemjs/plugin-text@0.0.7"
+    "html": "github:systemjs/plugin-text@0.0.7",
+    "@angular/http": "npm:@angular/http@2.0.0-rc.1",
+    "@angular/platform-browser-dynamic": "npm:@angular/platform-browser-dynamic@2.0.0-rc.1",
+    "@angular/router-deprecated": "npm:@angular/router-deprecated@2.0.0-rc.1"
   }
 });
 
@@ -57,7 +61,12 @@ SystemJS.config({
     "npm:*.json"
   ],
   map: {
-    "angulartics2": "npm:angulartics2@1.0.1",
+    "": "npm:@angular/http@2.0.0-rc.1",
+    "@angular/common": "npm:@angular/common@2.0.0-rc.1",
+    "@angular/compiler": "npm:@angular/compiler@2.0.0-rc.1",
+    "@angular/core": "npm:@angular/core@2.0.0-rc.1",
+    "@angular/platform-browser": "npm:@angular/platform-browser@2.0.0-rc.1",
+    "angulartics2": "npm:angulartics2@1.0.11",
     "highlight.js": "npm:highlight.js@9.3.0",
     "clean-css": "npm:clean-css@3.4.10",
     "codemirror": "npm:codemirror@5.12.0",
@@ -65,7 +74,6 @@ SystemJS.config({
     "dgram": "github:jspm/nodelibs-dgram@0.2.0-alpha",
     "dns": "github:jspm/nodelibs-dns@0.2.0-alpha",
     "ecc-jsbn": "npm:ecc-jsbn@0.1.1",
-    "angular2": "npm:angular2@2.0.0-beta.14",
     "buffer": "github:jspm/nodelibs-buffer@0.2.0-alpha",
     "child_process": "github:jspm/nodelibs-child_process@0.2.0-alpha",
     "constants": "github:jspm/nodelibs-constants@0.2.0-alpha",
@@ -93,7 +101,7 @@ SystemJS.config({
     "querystring": "github:jspm/nodelibs-querystring@0.2.0-alpha",
     "readline": "github:jspm/nodelibs-readline@0.2.0-alpha",
     "reflect-metadata": "npm:reflect-metadata@0.1.3",
-    "rxjs": "npm:rxjs@5.0.0-beta.2",
+    "rxjs": "npm:rxjs@5.0.0-beta.6",
     "stream": "github:jspm/nodelibs-stream@0.2.0-alpha",
     "string_decoder": "github:jspm/nodelibs-string_decoder@0.2.0-alpha",
     "text": "github:systemjs/plugin-text@0.0.7",

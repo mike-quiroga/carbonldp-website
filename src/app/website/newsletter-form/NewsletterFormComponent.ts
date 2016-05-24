@@ -1,6 +1,6 @@
-import { Component } from "angular2/core";
-import { CORE_DIRECTIVES, FORM_DIRECTIVES, FormBuilder, ControlGroup, AbstractControl, Validators } from "angular2/common";
-import { ROUTER_DIRECTIVES, ROUTER_PROVIDERS, Router, LocationStrategy } from "angular2/router";
+import { Component } from "@angular/core";
+import { CORE_DIRECTIVES, FORM_DIRECTIVES, FormBuilder, ControlGroup, AbstractControl, Validators, LocationStrategy } from "@angular/common";
+import { ROUTER_DIRECTIVES, ROUTER_PROVIDERS, Router } from "@angular/router-deprecated";
 
 import { ValidationService } from "app/components/validation-service/ValidationService";
 

@@ -1,7 +1,7 @@
-import { Component, ElementRef } from "angular2/core";
-import { CORE_DIRECTIVES, NgForm } from "angular2/common";
-import { ROUTER_DIRECTIVES, ROUTER_PROVIDERS, Router, Instruction } from "angular2/router";
-import { Title } from "angular2/platform/browser";
+import { Component, ElementRef } from "@angular/core";
+import { CORE_DIRECTIVES, NgForm } from "@angular/common";
+import { ROUTER_DIRECTIVES, ROUTER_PROVIDERS, Router, Instruction } from "@angular/router-deprecated";
+import { Title } from "@angular/platform-browser";
 import { NewsletterFormComponent } from "../newsletter-form/NewsletterFormComponent";
 
 import $ from "jquery";
