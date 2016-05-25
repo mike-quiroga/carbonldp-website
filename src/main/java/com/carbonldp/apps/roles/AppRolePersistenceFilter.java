@@ -5,6 +5,8 @@ import com.carbonldp.apps.AppRole;
 import com.carbonldp.apps.context.AppContext;
 import com.carbonldp.apps.context.AppContextHolder;
 import com.carbonldp.authentication.AgentAuthenticationToken;
+import com.carbonldp.exceptions.AppNotFoundException;
+import com.carbonldp.exceptions.CarbonNoStackTraceRuntimeException;
 import com.carbonldp.web.AbstractUniqueFilter;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -26,7 +28,7 @@ public class AppRolePersistenceFilter extends AbstractUniqueFilter {
 	@Override
 	protected void applyFilter( HttpServletRequest request, HttpServletResponse response ) {
 		AppContext appContext = AppContextHolder.getContext();
-		if ( appContext.isEmpty() ) throw new IllegalStateException( "The filter needs to execute inside of an appContext." );
+		if ( appContext.isEmpty() ) throw new AppNotFoundException();
 
 		Authentication rawAuthentication = SecurityContextHolder.getContext().getAuthentication();
 		if ( rawAuthentication == null ) return;
