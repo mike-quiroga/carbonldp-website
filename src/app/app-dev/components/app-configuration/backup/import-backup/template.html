@@ -11,8 +11,9 @@
 			<div class="field">
 				<label>Or select a backup from below:</label>
 				<div class="ui left icon input">
-					<select ngControl="backup" class="ui fluid selection scrolling dropdown backups list">
-						<option value="" disabled="disabled" selected="selected">Please select a backup</option>
+					<select ngControl="backup" [disabled]="backups.length===0" class="ui fluid selection scrolling dropdown backups list">
+						<option value="" *ngIf="backups.length===0" disabled="disabled" selected="selected">No backups yet.</option>
+						<option value="" *ngIf="backups.length!==0" disabled="disabled" selected="selected">Please select a backup</option>
 						<option *ngFor="#backup of backups; #i=index" [attr.value]="backup.id">
 							{{backup.modified | date:"MMM dd, yyy - HH:mm"}}
 						</option>
@@ -31,19 +32,22 @@
 		</div>
 	</div>
 	<div class="ui basic right aligned segment">
-		<button class="ui button" (click)="onImportBackup()">Import</button>
+		<button class="ui button"
+		        [disabled]="!importForm.valid"
+		        (click)="onImportBackup(uri.value)">Import
+		</button>
 	</div>
 </form>
-<div class="ui segment">
-	<pre>Form: {
-	dirty:{{importForm.dirty | json}}
-	errors:{{importForm.errors | json}}
-	pending:{{importForm.pending | json}}
-	pristine:{{importForm.pristine | json}}
-	status:{{importForm.status | json}}
-	touched:{{importForm.touched | json}}
-	untouched:{{importForm.untouched | json}}
-	valid:{{importForm.valid | json}}
-	value:{{importForm.value | json}}
-}</pre>
-</div>
+<!--<div class="ui segment">-->
+<!--<pre>Form: {-->
+<!--dirty:{{importForm.dirty | json}}-->
+<!--errors:{{importForm.errors | json}}-->
+<!--pending:{{importForm.pending | json}}-->
+<!--pristine:{{importForm.pristine | json}}-->
+<!--status:{{importForm.status | json}}-->
+<!--touched:{{importForm.touched | json}}-->
+<!--untouched:{{importForm.untouched | json}}-->
+<!--valid:{{importForm.valid | json}}-->
+<!--value:{{importForm.value | json}}-->
+<!--}</pre>-->
+<!--</div>-->

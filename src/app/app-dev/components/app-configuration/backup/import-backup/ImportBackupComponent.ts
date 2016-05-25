@@ -10,6 +10,8 @@ import * as Response from "carbonldp/HTTP/Response";
 import * as PersistedDocument from "carbonldp/PersistedDocument";
 
 import BackupsService from "./../BackupsService";
+import JobsService from "./../../job/JobsService";
+import * as Job from "./../../job/Job"
 
 import template from "./template.html!";
 // import "./style.css!";
@@ -25,7 +27,7 @@ export default class ImportBackupComponent {
 	element:ElementRef;
 	$element:JQuery;
 	$importForm:JQuery;
-	$backups:Jquery;
+	$backups:JQuery;
 
 	formBuilder:FormBuilder;
 	importForm:ControlGroup;
@@ -35,14 +37,18 @@ export default class ImportBackupComponent {
 	backup:AbstractControl;
 	fileBackup:AbstractControl;
 
-	backups:PersistedDocument.Class[];
+	backups:PersistedDocument.Class[] = [];
 	backupsService:BackupsService;
+	jobsService:JobsService;
 	@Input() appContext:App.Context;
 
-	constructor( element:ElementRef, formBuilder:FormBuilder, backupsService:BackupsService ) {
+	runningImport:boolean = false;
+
+	constructor( element:ElementRef, formBuilder:FormBuilder, backupsService:BackupsService, jobsService:JobsService ) {
 		this.element = element;
 		this.formBuilder = formBuilder;
 		this.backupsService = backupsService;
+		this.jobsService = jobsService;
 	}
 
 	ngOnInit():void {
@@ -65,6 +71,9 @@ export default class ImportBackupComponent {
 		this.fileBackup = this.importForm.controls[ "fileBackup" ];
 		// console.log( this.importForm );
 		this.getBackups();
+	}
+
+	ngAfterViewInit():void {
 		this.initializeDropdowns();
 	}
 
@@ -81,12 +90,41 @@ export default class ImportBackupComponent {
 
 	getBackups():void {
 		this.backupsService.getAll( this.appContext ).then( ( [backups, response]:[PersistedDocument.Class[], Response.Class] )=> {
-			this.backups = backups.sort( ( a:any, b:any ) => a.modified < b.modified ? - 1 : a.modified > b.modified ? 1 : 0 );
+			this.backups = backups.sort( ( a:any, b:any ) => b.modified < a.modified ? - 1 : b.modified > a.modified ? 1 : 0 );
 		} )
 	}
 
-	onImportBackup():void {
-		
+	onImportBackup( backupURI:string ):void {
+		this.runningImport = true;
+		this.jobsService.createImportBackup( backupURI, this.appContext ).then(
+			( importJob:PersistedDocument.Class )=> {
+				this.runningImport = false;
+				console.log( "ImportBackupComponent -> onImportBackup(arguments): %o", importJob );
+				this.executeImport( importJob ).then(
+					( importJobExecution:PersistedDocument.Class )=> {
+						this.runningImport = false;
+						// TODO: Check monitor when resolved issue with app block from platform and apps context when importing a backup
+						setInterval(
+							this.monitorExecution( importJobExecution )
+							, 3000
+						);
+					}
+				);
+			}
+		).catch( error=>console.error( error ) );
+	}
+
+	executeImport( importJob:PersistedDocument.Class ):Promise<PersistedDocument.Class> {
+		this.runningImport = true;
+		return this.jobsService.runJob( importJob );
+	}
+
+	monitorExecution( importJobExecution:PersistedDocument.Class ):void {
+		this.jobsService.checkJobExecution( importJobExecution ).then(
+			( execution:PersistedDocument.Class )=> {
+				console.log( "Monitoring Execution: %o", execution );
+				this.runningImport = false;
+			} );
 	}
 
 	uriGroupValidator( corsGroup:ControlGroup ):any {
