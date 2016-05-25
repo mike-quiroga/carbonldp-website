@@ -1,5 +1,5 @@
-import { Component, ElementRef, Input } from "angular2/core";
-import { CORE_DIRECTIVES, FormBuilder, ControlGroup, AbstractControl, Control, Validators } from "angular2/common";
+import { Component, ElementRef, Input } from "@angular/core";
+import { CORE_DIRECTIVES, FormBuilder, ControlGroup, AbstractControl, Control, Validators } from "@angular/common";
 
 import $ from "jquery";
 import "semantic-ui/semantic";

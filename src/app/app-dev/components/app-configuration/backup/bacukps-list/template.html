@@ -1,6 +1,6 @@
 <div class="ui segment" [ngClass]="{loading:loadingBackups}">
 	<div class="ui middle aligned divided list">
-		<div class="item" *ngFor="#backup of backups; #i=index">
+		<div class="item" *ngFor="let backup of backups; let i=index">
 			<div class="right floated content">
 				<div class="ui mini basic icon buttons" title="Download">
 					<button class="ui blue basic button" title="Download"

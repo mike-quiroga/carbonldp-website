@@ -14,7 +14,7 @@
 					<select ngControl="backup" [disabled]="backups.length===0" class="ui fluid selection scrolling dropdown backups list">
 						<option value="" *ngIf="backups.length===0" disabled="disabled" selected="selected">No backups yet.</option>
 						<option value="" *ngIf="backups.length!==0" disabled="disabled" selected="selected">Please select a backup</option>
-						<option *ngFor="#backup of backups; #i=index" [attr.value]="backup.id">
+						<option *ngFor="let backup of backups; let i=index" [attr.value]="backup.id">
 							{{backup.modified | date:"MMM dd, yyy - HH:mm"}}
 						</option>
 					</select>
