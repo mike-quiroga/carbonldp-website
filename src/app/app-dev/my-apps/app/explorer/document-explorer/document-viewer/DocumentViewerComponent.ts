@@ -1,5 +1,5 @@
-import { Component, ElementRef, Input, Output, EventEmitter, SimpleChange, ViewChild } from "angular2/core";
-import { CORE_DIRECTIVES } from "angular2/common";
+import { Component, ElementRef, Input, Output, EventEmitter, SimpleChange, ViewChild } from "@angular/core";
+import { CORE_DIRECTIVES } from "@angular/common";
 
 import $ from "jquery";
 import "semantic-ui/semantic";
@@ -13,6 +13,7 @@ import DocumentsResolverService from "./../DocumentsResolverService";
 
 import DocumentResourceViewerComponent from "./../document-resource-viewer/DocumentResourceViewer";
 import BNodesViewerComponent from "./../bnodes-viewer/BNodesViewerComponent";
+import NamedFragmentsViewerComponent from "./../named-fragments-viewer/NamedFragmentsViewerComponent";
 import PropertyComponent from "./../property/PropertyComponent";
 
 import template from "./template.html!";
@@ -21,25 +22,27 @@ import "./style.css!";
 @Component( {
 	selector: "document-viewer",
 	template: template,
-	directives: [ CORE_DIRECTIVES, DocumentResourceViewerComponent, BNodesViewerComponent, PropertyComponent ],
+	directives: [ CORE_DIRECTIVES, DocumentResourceViewerComponent, BNodesViewerComponent, NamedFragmentsViewerComponent, PropertyComponent ],
 } )
 
 export default class DocumentViewerComponent {
 	element:ElementRef;
 	$element:JQuery;
+	sections:string[] = [ "bNodes", "namedFragments", "documentResource" ];
 
 	rootNode:RDFNode.Class;
 
 	bNodesArray:RDFNode.Class[] = [];
 	namedFragmentsArray:RDFNode.Class[] = [];
-
 	bNodesDictionary:Map<string,RDFNode.Class> = new Map<string,RDFNode.Class>();
 	namedFragmentsDictionary:Map<string,RDFNode.Class> = new Map<string,RDFNode.Class>();
 
+	documentsResolverService:DocumentsResolverService;
 	@Input() uri:string;
 	@Input() document:RDFDocument.Class;
 	@Input() documentContext:SDKContext.Class;
 	@ViewChild( BNodesViewerComponent ) documentBNodes:BNodesViewerComponent;
+	@ViewChild( NamedFragmentsViewerComponent ) namedFragments:NamedFragmentsViewerComponent;
 	@Output() onLoadingDocument:EventEmitter<boolean> = new EventEmitter();
 
 	set loadingDocument( value:boolean ) {
@@ -51,7 +54,6 @@ export default class DocumentViewerComponent {
 
 	private _loadingDocument:boolean = false;
 
-	documentsResolverService:DocumentsResolverService;
 
 	constructor( element:ElementRef, documentsResolverService:DocumentsResolverService ) {
 		this.element = element;
@@ -69,22 +71,26 @@ export default class DocumentViewerComponent {
 				( document:RDFDocument.Class ) => {
 					this.document = document;
 					this.receiveDocument();
-
-					this.loadingDocument = false;
 				}
 			);
 		}
 		if ( changes[ "document" ] && ! ! changes[ "document" ].currentValue && changes[ "document" ].currentValue !== changes[ "document" ].previousValue ) {
-			this.loadingDocument = true;
 			this.receiveDocument();
-			this.loadingDocument = false;
 		}
 	}
 
 	receiveDocument():void {
+		this.loadingDocument = true;
 		this.document = this.document[ 0 ];
 		this.setRoot();
 		this.generateMaps();
+		this.loadingDocument = false;
+		setTimeout(
+			()=> {
+				this.goToSection( "documentResource" );
+				this.initializeTabs();
+			}, 250
+		);
 	}
 
 	setRoot():void {
@@ -96,32 +102,38 @@ export default class DocumentViewerComponent {
 	}
 
 	generateMaps():void {
-		this.bNodesArray = [];
-		this.namedFragmentsArray = [];
+		this.bNodesArray = RDFDocument.Util.getBNodeResources( this.document );
+		this.namedFragmentsArray = RDFDocument.Util.getFragmentResources( this.document );
 		this.bNodesDictionary.clear();
 		this.namedFragmentsDictionary.clear();
-		let nodes:RDFNode.Class[] = this.document[ "@graph" ];
-		nodes.forEach( ( node:RDFNode.Class ) => {
-			if ( URI.Util.isBNodeID( node[ "@id" ] ) ) {
-				this.bNodesDictionary.set( node[ "@id" ], node );
-				this.bNodesArray.push( node );
-			}
-			if ( URI.Util.hasFragment( node[ "@id" ] ) ) {
-				this.namedFragmentsDictionary.set( node[ "@id" ], node );
-				this.namedFragmentsArray.push( node );
-			}
-		} );
+		this.bNodesArray.forEach( ( node:RDFNode.Class ) => this.bNodesDictionary.set( node[ "@id" ], node ) );
+		this.namedFragmentsArray.forEach( ( node:RDFNode.Class ) => this.namedFragmentsDictionary.set( node[ "@id" ], node ) );
 	}
 
 	openBNode( id:string ):void {
 		this.documentBNodes.openBNode( id );
-		this.scrollTo( "bNodes" );
+		this.goToSection( "bNodes" );
 	}
 
-	scrollTo( id:string ):void {
-		if ( id === "bNodes" ) {
-			let divPosition:JQueryCoordinates = this.$element.find( ".row.bNodes" ).position();
-			this.$element.animate( { scrollTop: divPosition.top }, "fast" );
-		}
+	openNamedFragment( id:string ):void {
+		this.namedFragments.openNamedFragment( id );
+		this.goToSection( "namedFragments" );
+	}
+
+	initializeTabs() {
+		this.$element.find( ".secondary.menu.document.tabs .item" ).tab();
+	}
+
+	goToSection( section:string ):void {
+		if ( this.sections.indexOf( section ) === - 1 ) return;
+		this.scrollTo( ">div:first-child" );
+		this.$element.find( ".secondary.menu.document.tabs .item" ).tab( "changeTab", section );
+	}
+
+	private scrollTo( selector:string ):void {
+		if ( ! this.$element ) return;
+		let divPosition:JQueryCoordinates = this.$element.find( selector ).position();
+		if ( ! divPosition ) return;
+		this.$element.animate( { scrollTop: divPosition.top }, "fast" );
 	}
 }

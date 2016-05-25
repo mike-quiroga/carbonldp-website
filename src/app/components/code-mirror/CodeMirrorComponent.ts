@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input, Output, SimpleChange, EventEmitter, ViewEncapsulation } from "angular2/core";
+import { Component, ElementRef, Input, Output, SimpleChange, EventEmitter, ViewEncapsulation } from "@angular/core";
 
 import CodeMirror from "codemirror/lib/codemirror";
 

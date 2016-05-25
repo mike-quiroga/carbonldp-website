@@ -1,6 +1,6 @@
-import { Component, ElementRef } from "angular2/core";
-import { CORE_DIRECTIVES } from "angular2/common";
-import { Title } from "angular2/platform/browser";
+import { Component, ElementRef } from "@angular/core";
+import { CORE_DIRECTIVES } from "@angular/common";
+import { Title } from "@angular/platform-browser";
 
 import $ from "jquery";
 import "semantic-ui/semantic";

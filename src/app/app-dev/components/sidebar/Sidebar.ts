@@ -1,4 +1,4 @@
-import { Provider } from "angular2/core";
+import { Provider } from "@angular/core";
 import SidebarService from "app/app-dev/components/sidebar/service/SidebarService";
 
 export const SIDEBAR_PROVIDERS = [

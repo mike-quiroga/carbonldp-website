@@ -9,7 +9,7 @@
 <div class="ui top attached tabular bnodes menu">
 	<a class="item active" data-tab="all">All Nodes</a>
 	<a class="item"
-	   *ngFor="#bNode of openedBNodes; #i=index;"
+	   *ngFor="let bNode of openedBNodes; let i = index;"
 	   [attr.data-tab]="'bnode'+bNode['@id']">
 		<p>
 			{{ bNode["@id"] }}
@@ -28,7 +28,7 @@
 			</tr>
 		</thead>
 		<tbody>
-			<tr *ngFor="#bNode of bNodesArray; #i=index;"
+			<tr *ngFor="let bNode of bNodesArray; let i = index;"
 			    (click)="openBNode(bNode)">
 				<td>
 					{{ bNode["@id"] }}
@@ -41,10 +41,10 @@
 	</table>
 </div>
 <div class="ui bottom attached tab segment"
-     *ngFor="#bNode of openedBNodes; #i=index;" [attr.data-tab]="'bnode'+bNode['@id']">
+     *ngFor="let bNode of openedBNodes; let i = index;" [attr.data-tab]="'bnode'+bNode['@id']">
 	<div class="ui divided items">
 		<document-property class="property item"
-		                   *ngFor="#propertyName of getPropertiesName(bNode); #j=index;"
+		                   *ngFor="let propertyName of getPropertiesName(bNode); let j = index;"
 		                   (onGoToBNode)="openBNode($event)"
 		                   [propertyName]="propertyName"
 		                   [property]="bNode[propertyName]">

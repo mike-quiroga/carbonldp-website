@@ -1,5 +1,5 @@
-import { Component, View, ElementRef } from "angular2/core";
-import { CORE_DIRECTIVES, FORM_DIRECTIVES, NgStyle } from "angular2/common";
+import { Component, View, ElementRef } from "@angular/core";
+import { CORE_DIRECTIVES, FORM_DIRECTIVES, NgStyle } from "@angular/common";
 
 import * as CodeMirrorComponent from "app/components/code-mirror/CodeMirrorComponent";
 

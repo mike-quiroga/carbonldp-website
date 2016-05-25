@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input, Output, EventEmitter } from "angular2/core";
+import { Component, ElementRef, Input, Output, EventEmitter } from "@angular/core";
 
 import $ from "jquery";
 import "semantic-ui/semantic";

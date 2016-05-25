@@ -1,6 +1,6 @@
-import { Component } from "angular2/core";
-import { Title } from "angular2/platform/browser";
-import { RouteConfig, RouterOutlet } from "angular2/router";
+import { Component } from "@angular/core";
+import { Title } from "@angular/platform-browser";
+import { RouteConfig, RouterOutlet } from "@angular/router-deprecated";
 
 import DocumentsHomeView from "app/website/documents/documents-home/DocumentsHomeView";
 import LinkedDataConceptsView from "app/website/documents/linked-data-concepts/LinkedDataConceptsView";

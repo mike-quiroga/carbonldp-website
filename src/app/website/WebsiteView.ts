@@ -1,6 +1,6 @@
-import { Component, ElementRef } from "angular2/core";
-import { CORE_DIRECTIVES } from "angular2/common";
-import { ROUTER_DIRECTIVES, Location, RouteConfig, RouterLink, Router } from "angular2/router";
+import { Component, ElementRef } from "@angular/core";
+import { CORE_DIRECTIVES, Location } from "@angular/common";
+import { ROUTER_DIRECTIVES, RouteConfig, RouterLink, Router } from "@angular/router-deprecated";
 
 import Carbon from "carbonldp/Carbon";
 
