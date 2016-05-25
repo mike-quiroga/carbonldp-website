@@ -3,7 +3,7 @@
 	<table class="ui celled very compact striped selectable sortable table">
 		<thead>
 			<tr>
-				<th *ngFor="#varName of resultset.head.vars" class="center aligned" [ngClass]="{
+				<th *ngFor="let varName of resultset.head.vars" class="center aligned" [ngClass]="{
 						sorted: sortedColumn === varName,
 						ascending: sortedColumn === varName && ascending,
 						descending: sortedColumn === varName && ! ascending
@@ -12,8 +12,8 @@
 			</tr>
 		</thead>
 		<tbody>
-			<tr *ngFor="#binding of bindings">
-				<td *ngFor="#value of binding" [ngClass]="{
+			<tr *ngFor="let binding of bindings">
+				<td *ngFor="let value of binding" [ngClass]="{
 						positive: value.type === 'literal' && value?.datatype !== null,
 						warning: value.type === 'literal' && value?.datatype === null
 					}">

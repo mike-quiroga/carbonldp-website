@@ -1,7 +1,7 @@
-import { Component, ElementRef } from "angular2/core";
-import { Title } from "angular2/platform/browser";
-import { CORE_DIRECTIVES } from "angular2/common";
-import { Router, ROUTER_DIRECTIVES } from "angular2/router";
+import { Component, ElementRef } from "@angular/core";
+import { Title } from "@angular/platform-browser";
+import { CORE_DIRECTIVES } from "@angular/common";
+import { Router, ROUTER_DIRECTIVES } from "@angular/router-deprecated";
 import { Observable } from "rxjs/Rx";
 
 import "semantic-ui/semantic";

@@ -43,7 +43,7 @@
 			</div>
 			<div class="ui stackable cards" *ngIf="tileView && !errorMessage && !loading">
 				<app-tile class="card"
-				          *ngFor="#app of results; #i=index;" [app]="app"
+				          *ngFor="let app of results; let i = index;" [app]="app"
 				          (deleteApp)="askConfirmationToDeleteApp(app)">
 				</app-tile>
 			</div>

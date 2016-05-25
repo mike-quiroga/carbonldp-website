@@ -1,3 +1,12 @@
+# 0.5.13 (May 17, 2016)
+- Add named fragments component to the DocumentViewer of DocumentExplorer.
+- Remove tabs that showed raw data on each property of a document.
+- Emphasize the slug of the @id property.
+- Make document viewer to scroll when changing documents.
+- Change document viewer sections to tabs.
+- Change generateMaps of bNodes and namedFragments to use RDFDocument Util class methods
+- Remove Edit option from opened App sidebar options.
+
 # 0.5.12 (May 11, 2016)
 - Add app explorer view.
 - Add new DocumentExplorerComponent with the following components:

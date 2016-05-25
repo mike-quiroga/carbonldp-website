@@ -5,7 +5,7 @@
 	</a>
 	<div class="ui borderless menu small breadcrumb steps">
 		<a class="item step"
-		   *ngFor="#breadCrumb of breadCrumbs; #i =index"
+		   *ngFor="let breadCrumb of breadCrumbs; let i = index"
 		   [ngClass]="{active: isActive(breadCrumb.alias) }"
 		   [routerLink]="breadCrumb.alias">
 			<div class="content">

@@ -40,7 +40,7 @@
 			</div>
 			<div class="field ui segment" [ngClass]="{disabled: allDomains.value}">
 				<ui class="ui middle aligned divided list allowedDomains">
-					<li class="item" *ngFor="#opt of allowedDomains; #i=index;">
+					<li class="item" *ngFor="let opt of allowedDomains; let i = index;">
 						<div class="right floated content">
 							<button class="ui mini circular icon basic black button"
 							        (click)="removeDomain(opt)">

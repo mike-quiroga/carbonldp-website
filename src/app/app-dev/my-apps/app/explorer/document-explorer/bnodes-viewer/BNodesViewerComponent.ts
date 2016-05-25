@@ -1,5 +1,5 @@
-import { Component, ElementRef, Input, Output, EventEmitter, SimpleChange } from "angular2/core";
-import { CORE_DIRECTIVES } from "angular2/common";
+import { Component, ElementRef, Input, Output, EventEmitter, SimpleChange } from "@angular/core";
+import { CORE_DIRECTIVES } from "@angular/common";
 
 import $ from "jquery";
 import "semantic-ui/semantic";
@@ -69,7 +69,6 @@ export default class BNodesViewerComponent {
 
 	goToBNode( id:string ) {
 		if ( ! this.nodesTab ) return;
-
 		this.nodesTab.find( "> [data-tab='" + id + "']" ).click();
 		this.onOpenBNode.emit( "bNodes" );
 	}

@@ -1,6 +1,6 @@
-import { Component, ElementRef, Input } from "angular2/core";
-import { CORE_DIRECTIVES, FormBuilder, ControlGroup, AbstractControl, Control, Validators } from "angular2/common";
-import { Router, ROUTER_DIRECTIVES } from "angular2/router";
+import { Component, ElementRef, Input } from "@angular/core";
+import { CORE_DIRECTIVES, FormBuilder, ControlGroup, AbstractControl, Control, Validators } from "@angular/common";
+import { Router, ROUTER_DIRECTIVES } from "@angular/router-deprecated";
 
 import Carbon from "carbonldp/Carbon";
 import * as Context from "carbonldp/App/Context";

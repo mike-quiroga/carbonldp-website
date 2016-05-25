@@ -1,5 +1,5 @@
-import { Component, ElementRef, Input, Output, EventEmitter } from "angular2/core";
-import { CORE_DIRECTIVES } from "angular2/common";
+import { Component, ElementRef, Input, Output, EventEmitter } from "@angular/core";
+import { CORE_DIRECTIVES } from "@angular/common";
 
 import $ from "jquery";
 import "semantic-ui/semantic";
@@ -9,7 +9,6 @@ import * as Literal from "carbonldp/RDF/Literal";
 import * as URI from "carbonldp/RDF/URI";
 import * as Utils from "carbonldp/Utils";
 
-import HighlightDirective from "app/directives/HighlightDirective";
 import ListViewerComponent from "./../list-viewer/ListViewerComponent"
 
 import template from "./template.html!";
@@ -18,16 +17,18 @@ import "./style.css!";
 @Component( {
 	selector: "document-property",
 	template: template,
-	directives: [ CORE_DIRECTIVES, ListViewerComponent, HighlightDirective ],
+	directives: [ CORE_DIRECTIVES, ListViewerComponent ],
 } )
 
 export default class PropertyComponent {
 
 	element:ElementRef;
 	$element:JQuery;
+	@Input() documentURI:string;
 	@Input() property:RDFNode.Class;
 	@Input() propertyName:string;
 	@Output() onGoToBNode:EventEmitter<string> = new EventEmitter<string>();
+	@Output() onGoToNamedFragment:EventEmitter<string> = new EventEmitter<string>();
 	commonHeaders:string[] = [ "@id", "@type", "@value" ];
 
 	loadingDocument:boolean = false;
@@ -38,7 +39,6 @@ export default class PropertyComponent {
 
 	ngAfterViewInit():void {
 		this.$element = $( this.element.nativeElement );
-		this.initializeTabs();
 		this.initializeAccordions();
 	}
 
@@ -46,6 +46,16 @@ export default class PropertyComponent {
 		if ( this.commonHeaders.indexOf( uri ) > - 1 )return uri;
 		if ( URI.Util.hasFragment( uri ) )return this.getFragment( uri );
 
+		return URI.Util.getSlug( uri );
+	}
+
+	getParentURI( uri:string ):string {
+		let slug:string = this.getSlug( uri );
+		let parent:string = uri.substr( 0, uri.indexOf( slug ) );
+		return parent;
+	}
+
+	getSlug( uri:string ) {
 		return URI.Util.getSlug( uri );
 	}
 
@@ -94,8 +104,16 @@ export default class PropertyComponent {
 		return ! ! uri ? URI.Util.isBNodeID( uri ) : false;
 	}
 
+	isNamedFragment( uri:string ):boolean {
+		return ! ! uri ? URI.Util.isFragmentOf( uri, this.documentURI ) : false;
+	}
+
 	goToBNode( id:string ):void {
 		this.onGoToBNode.emit( id );
+	}
+
+	goToNamedFragment( id:string ):void {
+		this.onGoToNamedFragment.emit( id );
 	}
 
 	getTypeIcon( type:string ):string {
@@ -113,10 +131,6 @@ export default class PropertyComponent {
 
 	getJSON( obj:any ):string {
 		return JSON.stringify( obj, null, 2 );
-	}
-
-	initializeTabs():void {
-		this.$element.find( ".tabular.menu .item" ).tab();
 	}
 
 	initializeAccordions():void {

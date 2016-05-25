@@ -1,5 +1,5 @@
-import { Component, ElementRef, Input } from "angular2/core";
-import { CORE_DIRECTIVES } from "angular2/common";
+import { Component, ElementRef, Input } from "@angular/core";
+import { CORE_DIRECTIVES } from "@angular/common";
 
 import $ from "jquery";
 import "semantic-ui/semantic";
@@ -29,7 +29,6 @@ export default class DocumentExplorerComponent {
 
 	loadingDocument:boolean = false;
 	inspectingDocument:RDFDocument.Class;
-	inspectingUri:string;
 	documentsResolverService:DocumentsResolverService;
 	messages:Message[] = [];
 

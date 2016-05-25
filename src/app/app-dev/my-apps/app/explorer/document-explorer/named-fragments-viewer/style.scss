@@ -1,0 +1,9 @@
+document-named-fragments {
+	.segment[data-tab="allNamedFragments"] {
+		table {
+			tr, td {
+				cursor: pointer;
+			}
+		}
+	}
+}
