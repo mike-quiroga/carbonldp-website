@@ -19,8 +19,9 @@ public class AuthorizationConfig extends AbstractWebSecurityConfigurerAdapter {
 
 	private interface EntryPointOrder {
 		int APPS = 1;
-		int PLATFORM_APPS = 2;
-		int PLATFORM = 3;
+		int PLATFORM_APPS_ACL = 2;
+		int PLATFORM_APPS = 3;
+		int PLATFORM = 4;
 	}
 
 	@Bean
@@ -54,6 +55,24 @@ public class AuthorizationConfig extends AbstractWebSecurityConfigurerAdapter {
 					.addFilterBefore( appContextPersistenceFilter, SecurityContextPersistenceFilter.class )
 					.addFilterAfter( corsAppContextFilter, AppContextPersistenceFilter.class )
 					.addFilterAfter( appRolePersistenceFilter, JWTAuthenticationFilter.class )
+					.authorizeRequests()
+						.anyRequest()
+							.permitAll()
+			;
+			//@formatter:on
+		}
+	}
+
+	@Configuration
+	@Order( EntryPointOrder.PLATFORM_APPS_ACL )
+	public static class PlatformAppsACLEntryPointConfig extends AbstractWebSecurityConfigurerAdapter {
+		@Override
+		protected void configure( HttpSecurity http ) throws Exception {
+			super.configure( http );
+			//@formatter:off
+			http
+				.antMatcher( "/platform/apps/~acl/" )
+					.addFilterBefore( corsPlatformContextFilter, SecurityContextPersistenceFilter.class )
 					.authorizeRequests()
 						.anyRequest()
 							.permitAll()
