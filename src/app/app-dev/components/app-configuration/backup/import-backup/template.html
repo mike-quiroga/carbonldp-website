@@ -1,53 +1,54 @@
 <form class="ui segment" [ngFormModel]="importForm">
 	<div class="ui two column middle aligned very relaxed stackable grid form">
-		<div class="column" ngControlGroup="uriGroup">
+		<div class="column">
 			<div class="field">
 				<label>Enter the URI of the backup:</label>
 				<div class="ui left icon input">
-					<input type="text" placeholder="Backup URI" ngControl="uri">
+					<input type="text" placeholder="Backup URI" ngControl="uri" (blur)="onInputLostFocus($event)">
 					<i class="world icon"></i>
 				</div>
 			</div>
 			<div class="field">
 				<label>Or select a backup from below:</label>
-				<div class="ui left icon input">
-					<select ngControl="backup" [disabled]="backups.length===0" class="ui fluid selection scrolling dropdown backups list">
-						<option value="" *ngIf="backups.length===0" disabled="disabled" selected="selected">No backups yet.</option>
-						<option value="" *ngIf="backups.length!==0" disabled="disabled" selected="selected">Please select a backup</option>
-						<option *ngFor="let backup of backups; let i=index" [attr.value]="backup.id">
-							{{backup.modified | date:"MMM dd, yyy - HH:mm"}}
-						</option>
-					</select>
-				</div>
+				<select class="ui scrolling dropdown backups"
+				        ngControl="backup"
+				        (blur)="onInputLostFocus($event)"
+				        [disabled]="backups.length===0">
+					<option value="" *ngIf="backups.length>0" selected="selected">Please select a backup.</option>
+					<option value="" *ngIf="backups.length===0" disabled="disabled" selected="selected">No available backups.</option>
+					<option *ngFor="let backup of backups; let i=index" [attr.value]="backup.id">
+						{{backup.modified | date:"MMM dd, yyy - HH:mm"}}
+					</option>
+				</select>
 			</div>
 		</div>
 		<div class="ui vertical divider">
 			Or
 		</div>
-		<div class="column" ngControlGroup="fileGroup">
+		<div class="column">
 			<div class="field">
 				<label>Upload a backup:</label>
-				<input type="file" ngControl="fileBackup"/><br/>
+				<input type="file" ngControl="backupFile" (blur)="onInputLostFocus($event)" (change)="onFileChange($event)"/><br/>
 			</div>
 		</div>
 	</div>
-	<div class="ui basic right aligned segment">
+	<div class="button container right aligned">
 		<button class="ui button"
-		        [disabled]="!importForm.valid"
+		        [disabled]="importForm.hasError('invalidImportForm')"
 		        (click)="onImportBackup(uri.value)">Import
 		</button>
 	</div>
 </form>
-<!--<div class="ui segment">-->
-<!--<pre>Form: {-->
-<!--dirty:{{importForm.dirty | json}}-->
-<!--errors:{{importForm.errors | json}}-->
-<!--pending:{{importForm.pending | json}}-->
-<!--pristine:{{importForm.pristine | json}}-->
-<!--status:{{importForm.status | json}}-->
-<!--touched:{{importForm.touched | json}}-->
-<!--untouched:{{importForm.untouched | json}}-->
-<!--valid:{{importForm.valid | json}}-->
-<!--value:{{importForm.value | json}}-->
-<!--}</pre>-->
-<!--</div>-->
+<div class="ui segment">
+<pre>Form: {
+dirty:{{importForm.dirty | json}}
+errors:{{importForm.errors | json}}
+pending:{{importForm.pending | json}}
+pristine:{{importForm.pristine | json}}
+status:{{importForm.status | json}}
+touched:{{importForm.touched | json}}
+untouched:{{importForm.untouched | json}}
+valid:{{importForm.valid | json}}
+value:{{importForm.value | json}}
+}</pre>
+</div>
