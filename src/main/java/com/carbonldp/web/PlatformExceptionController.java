@@ -1,19 +1,11 @@
 package com.carbonldp.web;
 
-import com.carbonldp.HTTPHeaders;
-import com.carbonldp.Vars;
-import com.carbonldp.errors.ErrorResponse;
-import com.carbonldp.errors.ErrorResponseFactory;
 import com.carbonldp.exceptions.AuthorizationException;
 import com.carbonldp.exceptions.CarbonNoStackTraceRuntimeException;
-import com.carbonldp.exceptions.InvalidResourceException;
-import com.carbonldp.http.Link;
 import com.carbonldp.exceptions.ExceptionUtil;
-import com.carbonldp.web.exceptions.AbstractWebRuntimeException;
-import com.carbonldp.web.exceptions.BadRequestException;
+import com.carbonldp.exceptions.InvalidResourceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
@@ -30,7 +22,6 @@ public class PlatformExceptionController {
 	@ExceptionHandler( CarbonNoStackTraceRuntimeException.class )
 	public ResponseEntity<Object> handleNoStackTRaceRuntimeException( HttpServletRequest request, HttpServletResponse response, CarbonNoStackTraceRuntimeException rawException ) {
 		return ExceptionUtil.handleNoStackTRaceRuntimeException( rawException );
-
 	}
 
 	@ExceptionHandler( HttpMessageNotReadableException.class )
