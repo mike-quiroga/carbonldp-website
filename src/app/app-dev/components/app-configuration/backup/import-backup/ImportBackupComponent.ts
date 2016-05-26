@@ -8,6 +8,7 @@ import Carbon from "carbonldp/Carbon";
 import * as App from "carbonldp/App";
 import * as Response from "carbonldp/HTTP/Response";
 import * as PersistedDocument from "carbonldp/PersistedDocument";
+import * as Pointer from "carbonldp/Pointer";
 
 import BackupsService from "./../BackupsService";
 import JobsService from "./../../job/JobsService";
@@ -41,9 +42,11 @@ export default class ImportBackupComponent {
 	jobsService:JobsService;
 	@Input() appContext:App.Context;
 
-	runningImport:boolean = false;
 	backupURI:string;
-	backupFileURI:string;
+	runningImport:boolean = false;
+	uploadingFile:boolean = false;
+	creatingImport:boolean = false;
+	executingImport:boolean = false;
 
 	constructor( element:ElementRef, formBuilder:FormBuilder, backupsService:BackupsService, jobsService:JobsService ) {
 		this.element = element;
@@ -82,24 +85,11 @@ export default class ImportBackupComponent {
 		} )
 	}
 
-	onImportBackup( backupURI:string ):void {
+	onImportBackup():void {
 		this.runningImport = true;
-		this.jobsService.createImportBackup( backupURI, this.appContext ).then(
-			( importJob:PersistedDocument.Class )=> {
-				this.runningImport = false;
-				console.log( "ImportBackupComponent -> onImportBackup(arguments): %o", importJob );
-				this.executeImport( importJob ).then(
-					( importJobExecution:PersistedDocument.Class )=> {
-						this.runningImport = false;
-						// TODO: Check monitor when resolved issue with app block from platform and apps context when importing a backup
-						setInterval(
-							this.monitorExecution( importJobExecution )
-							, 3000
-						);
-					}
-				);
-			}
-		).catch( error=>console.error( error ) );
+		if ( this.uri.valid )this.createBackupImport( this.uri.value );
+		if ( this.backup.valid )this.createBackupImport( this.backup.value );
+		if ( this.backupFile.valid )this.uploadBackup( this.backupFileBlob );
 	}
 
 	executeImport( importJob:PersistedDocument.Class ):Promise<PersistedDocument.Class> {
@@ -112,6 +102,7 @@ export default class ImportBackupComponent {
 			( execution:PersistedDocument.Class )=> {
 				console.log( "Monitoring Execution: %o", execution );
 				this.runningImport = false;
+				this.executingImport = false;
 			} );
 	}
 
@@ -186,4 +177,38 @@ export default class ImportBackupComponent {
 		return { "invalidImportForm": true };
 	}
 
+	canDisplayLoading():boolean {
+		return this.runningImport ? true : this.uploadingFile ? true : this.creatingImport ? true : this.executingImport ? true : false;
+	}
+
+	uploadBackup( file:Blob ):void {
+		this.uploadingFile = true;
+		this.backupsService.upload( file, this.appContext ).then(
+			( [pointer, response]:[ Pointer.Class, Response.Class ] )=> {
+				this.uploadingFile = false;
+				this.createBackupImport( pointer.id );
+			}
+		);
+	}
+
+	createBackupImport( backupURI:string ):void {
+		this.creatingImport = true;
+		this.jobsService.createImportBackup( backupURI, this.appContext ).then(
+			( importJob:PersistedDocument.Class )=> {
+				this.creatingImport = false;
+				console.log( "ImportBackupComponent -> onImportBackup(arguments): %o", importJob );
+				this.runningImport = true;
+				this.executeImport( importJob ).then(
+					( importJobExecution:PersistedDocument.Class )=> {
+						this.runningImport = false;
+						this.executingImport = true;
+						// TODO: Check monitor when resolved issue with app block from platform and apps context when importing a backup
+						while ( this.executingImport ) {
+							this.monitorExecution( importJobExecution )
+						}
+					}
+				);
+			}
+		).catch( error=>console.error( error ) );
+	}
 }

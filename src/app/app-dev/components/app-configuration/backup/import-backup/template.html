@@ -1,5 +1,5 @@
 <form class="ui segment" [ngFormModel]="importForm">
-	<div class="ui two column middle aligned very relaxed stackable grid form">
+	<div class="ui two column middle aligned grid form">
 		<div class="column">
 			<div class="field">
 				<label>Enter the URI of the backup:</label>
@@ -39,16 +39,3 @@
 		</button>
 	</div>
 </form>
-<div class="ui segment">
-<pre>Form: {
-dirty:{{importForm.dirty | json}}
-errors:{{importForm.errors | json}}
-pending:{{importForm.pending | json}}
-pristine:{{importForm.pristine | json}}
-status:{{importForm.status | json}}
-touched:{{importForm.touched | json}}
-untouched:{{importForm.untouched | json}}
-valid:{{importForm.valid | json}}
-value:{{importForm.value | json}}
-}</pre>
-</div>
