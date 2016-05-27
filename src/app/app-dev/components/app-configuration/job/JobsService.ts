@@ -74,7 +74,10 @@ export default class Class {
 				tempJob[ Job.namespace + "backup" ] = appContext.documents.getPointer( backupURI );
 				appContext.documents.createChild( uri, tempJob ).then(
 					( [pointer, response]:[Pointer.Class, Response.Class] )=> {
-						pointer.resolve().then( ( [importJob, response]:[PersistedDocument.Class, HTTP.Response.Class] )=> resolve( importJob ) );
+						pointer.resolve().then( ( [importJob, response]:[PersistedDocument.Class, HTTP.Response.Class] )=> {
+							resolve( importJob );
+							this.addJob( importJob );
+						} );
 					} ).catch( ( error )=> reject( error ) );
 			}
 		);
@@ -89,7 +92,6 @@ export default class Class {
 					( [pointer, response]:[Pointer.Class, Response.Class] )=> {
 						pointer.resolve().then(
 							( [importJob, response]:[PersistedDocument.Class, HTTP.Response.Class] )=> {
-								console.log( importJob );
 								resolve( importJob );
 							}
 						)
@@ -101,11 +103,15 @@ export default class Class {
 	checkJobExecution( jobExecution:PersistedDocument.Class ):Promise<PersistedDocument.Class> {
 		return new Promise<PersistedDocument.Class>(
 			( resolve:( result:any ) => void, reject:( error:Error ) => void ) => {
-				this.carbon.documents.get( jobExecution[ Job.namespace + "status" ].id ).then(
+				this.carbon.documents.get( jobExecution.id ).then(
 					( [resolvedJobExecution, response]:[PersistedDocument.Class, HTTP.Response.Class] )=> {
 						resolve( resolvedJobExecution );
 					} ).catch( ( error )=> reject( error ) );
 			}
 		);
+	}
+
+	private addJob( job:PersistedDocument.Class ):void {
+		this.jobs.set( job.id, job );
 	}
 }

@@ -42,11 +42,10 @@ export default class ImportBackupComponent {
 	jobsService:JobsService;
 	@Input() appContext:App.Context;
 
-	backupURI:string;
-	runningImport:boolean = false;
-	uploadingFile:boolean = false;
-	creatingImport:boolean = false;
-	executingImport:boolean = false;
+	running:ImportStatus = new ImportStatus();
+	uploading:ImportStatus = new ImportStatus();
+	creating:ImportStatus = new ImportStatus();
+	executing:ImportStatus = new ImportStatus();
 
 	constructor( element:ElementRef, formBuilder:FormBuilder, backupsService:BackupsService, jobsService:JobsService ) {
 		this.element = element;
@@ -67,7 +66,6 @@ export default class ImportBackupComponent {
 		this.uri = this.importForm.controls[ "uri" ];
 		this.backup = this.importForm.controls[ "backup" ];
 		this.backupFile = this.importForm.controls[ "backupFile" ];
-		// console.log( this.importForm );
 		this.getBackups();
 	}
 
@@ -86,24 +84,28 @@ export default class ImportBackupComponent {
 	}
 
 	onImportBackup():void {
-		this.runningImport = true;
+		this.running.start();
 		if ( this.uri.valid )this.createBackupImport( this.uri.value );
 		if ( this.backup.valid )this.createBackupImport( this.backup.value );
 		if ( this.backupFile.valid )this.uploadBackup( this.backupFileBlob );
 	}
 
 	executeImport( importJob:PersistedDocument.Class ):Promise<PersistedDocument.Class> {
-		this.runningImport = true;
 		return this.jobsService.runJob( importJob );
 	}
 
 	monitorExecution( importJobExecution:PersistedDocument.Class ):void {
-		this.jobsService.checkJobExecution( importJobExecution ).then(
-			( execution:PersistedDocument.Class )=> {
-				console.log( "Monitoring Execution: %o", execution );
-				this.runningImport = false;
-				this.executingImport = false;
-			} );
+		let interval:any = setInterval(
+			()=> {
+				this.jobsService.checkJobExecution( importJobExecution ).then(
+					( execution )=> {
+						if ( execution[ Job.Execution.STATUS ] !== Job.ExecutionStatus.RUNNING && execution[ Job.Execution.STATUS ] !== Job.ExecutionStatus.QUEUED ) {
+							this.executing.finish();
+						}
+						if ( this.executing.done ) clearInterval( interval );
+					}
+				);
+			}, 3000 );
 	}
 
 	onFileChange( event ):void {
@@ -152,7 +154,6 @@ export default class ImportBackupComponent {
 	}
 
 	existingBackupValidator( existingBackup:AbstractControl ):any {
-		this.backupURI = existingBackup.value;
 		if ( ! ! existingBackup.value ) {
 			return null;
 		}
@@ -177,38 +178,66 @@ export default class ImportBackupComponent {
 		return { "invalidImportForm": true };
 	}
 
-	canDisplayLoading():boolean {
-		return this.runningImport ? true : this.uploadingFile ? true : this.creatingImport ? true : this.executingImport ? true : false;
+	canDisplayImportButtonLoading():boolean {
+		return this.uploading.active ? true : this.creating.active ? true : this.executing.active ? true : false;
 	}
 
 	uploadBackup( file:Blob ):void {
-		this.uploadingFile = true;
+		this.uploading.start();
 		this.backupsService.upload( file, this.appContext ).then(
 			( [pointer, response]:[ Pointer.Class, Response.Class ] )=> {
-				this.uploadingFile = false;
+				this.uploading.finish();
 				this.createBackupImport( pointer.id );
 			}
 		);
 	}
 
 	createBackupImport( backupURI:string ):void {
-		this.creatingImport = true;
+		this.creating.start();
 		this.jobsService.createImportBackup( backupURI, this.appContext ).then(
 			( importJob:PersistedDocument.Class )=> {
-				this.creatingImport = false;
-				console.log( "ImportBackupComponent -> onImportBackup(arguments): %o", importJob );
-				this.runningImport = true;
+				this.creating.finish();
+				this.executing.start();
 				this.executeImport( importJob ).then(
 					( importJobExecution:PersistedDocument.Class )=> {
-						this.runningImport = false;
-						this.executingImport = true;
-						// TODO: Check monitor when resolved issue with app block from platform and apps context when importing a backup
-						while ( this.executingImport ) {
-							this.monitorExecution( importJobExecution )
-						}
+						this.monitorExecution( importJobExecution );
 					}
 				);
 			}
 		).catch( error=>console.error( error ) );
+	}
+
+	finishImport():void {
+		this.uploading = new ImportStatus();
+		this.creating = new ImportStatus();
+		this.executing = new ImportStatus();
+		this.running = new ImportStatus();
+	}
+}
+
+class ImportStatus {
+	private _active:boolean;
+	private _done:boolean;
+
+	get active():boolean { return this._active; }
+
+	get done():boolean { return this._done; }
+
+	set active( value:boolean ) {
+		this._active = value;
+		this._done = ! value;
+	}
+
+	set done( value:boolean ) {
+		this._done = value;
+		this._active = ! value;
+	}
+
+	start():void {
+		this.active = true;
+	}
+
+	finish():void {
+		this.done = true;
 	}
 }

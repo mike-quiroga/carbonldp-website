@@ -32,10 +32,59 @@
 			</div>
 		</div>
 	</div>
-	<div class="button container right aligned">
-		<button class="ui button"
-		        [disabled]="importForm.hasError('invalidImportForm')"
-		        (click)="onImportBackup(uri.value)">Import
-		</button>
+	<div class="ui grid">
+		<div class="row">
+			<div class="column">
+				<button class="ui button"
+				        [ngClass]="{loading: canDisplayImportButtonLoading()}"
+				        [disabled]="running.active"
+				        [disabled]="importForm.hasError('invalidImportForm')"
+				        (click)="onImportBackup()">
+					<span *ngIf="uploading.active">Uploading File...</span>
+					<span *ngIf="creating.active">Creating Job...</span>
+					<span *ngIf="executing.active">Executing Job...</span>
+					<span *ngIf="!uploading.active && !creating.active && !executing.active">Import</span>
+				</button>
+			</div>
+		</div>
+		<div class="row" *ngIf="running.active">
+			<div class="column">
+				<div class="ui stackable fluid steps">
+					<div class="step" *ngIf="!!backupFileBlob" [ngClass]="{active:uploading.active, completed:uploading.done}">
+						<i class="upload icon" [ngClass]="{'loading spinner':uploading.active}"></i>
+						<div class="content">
+							<div class="title">Uploading...</div>
+							<div class="description">Uploading your backup.</div>
+						</div>
+					</div>
+					<div class="step" [ngClass]="{active:creating.active, completed:creating.done}">
+						<i class="asterisk icon" [ngClass]="{'loading spinner':creating.active}"></i>
+						<div class="content">
+							<div class="title">Creating import...</div>
+							<div class="description">Creating a backup import job.</div>
+						</div>
+					</div>
+					<div class="step" [ngClass]="{active:executing.active, completed:executing.done}">
+						<i class="checkmark grey icon" [ngClass]="{'loading spinner':executing.active}"></i>
+						<div class="content">
+							<div class="title">Executing...</div>
+							<div class="description">
+								<p>Executing your import job.</p>
+								<p>Please, wait...</p>
+							</div>
+						</div>
+					</div>
+					<div class="step" [ngClass]="{active:executing.done, completed:executing.done}" *ngIf="executing.done">
+						<i class="checkered flag icon"></i>
+						<div class="content">
+							<div class="title">Finished</div>
+							<div class="description"><p>Import completed.</p>
+								<button class="ui mini button" *ngIf="executing.done" (click)="finishImport()">Ok</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
 	</div>
 </form>
