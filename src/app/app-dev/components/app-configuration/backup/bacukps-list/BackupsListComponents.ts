@@ -45,13 +45,23 @@ export default class BackupsListComponent {
 
 	ngOnChanges( changes:{[propName:string]:SimpleChange} ):void {
 		if ( changes[ "backupJob" ] && ! ! changes[ "backupJob" ].currentValue && changes[ "backupJob" ].currentValue !== changes[ "backupJob" ].previousValue ) {
-			this.getBackups().then( ( backups:PersistedDocument.Class[] ) => this.backups = backups );
+			this.loadingBackups = true;
+			this.getBackups().then( ( backups:PersistedDocument.Class[] ) => {
+				this.backups = backups;
+				this.loadingBackups = false;
+			} ).catch( ()=>this.loadingBackups = false );
+			this.monitorBackups();
 		}
+	}
+
+	monitorBackups():void {
+		setInterval( ()=> {
+			this.getBackups().then( ( backups:PersistedDocument.Class[] ) => this.backups = backups );
+		}, 5000 );
 	}
 
 	getBackups():Promise<PersistedDocument.Class[]> {
 		return new Promise<PersistedDocument.Class[]>( ( resolve:( result:any ) => void, reject:( error:Error ) => void ) => {
-			this.loadingBackups = true;
 			this.backupsService.getAll( this.appContext ).then(
 				( [backups, response]:[PersistedDocument.Class[],Response.Class] ) => {
 					backups = backups.map(
@@ -63,7 +73,6 @@ export default class BackupsListComponent {
 							return backup;
 						}
 					).sort( ( a:any, b:any ) => a.modified < b.modified ? - 1 : a.modified > b.modified ? 1 : 0 );
-					this.loadingBackups = false;
 					resolve( backups );
 				}
 			).catch(

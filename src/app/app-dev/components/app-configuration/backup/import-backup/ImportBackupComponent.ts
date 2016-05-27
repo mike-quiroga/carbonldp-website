@@ -212,6 +212,7 @@ export default class ImportBackupComponent {
 		this.creating = new ImportStatus();
 		this.executing = new ImportStatus();
 		this.running = new ImportStatus();
+		this.getBackups();
 	}
 }
 
