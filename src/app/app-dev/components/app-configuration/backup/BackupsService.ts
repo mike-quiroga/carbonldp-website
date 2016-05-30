@@ -5,7 +5,6 @@ import * as App from "carbonldp/App";
 import * as HTTP from "carbonldp/HTTP";
 import * as SDKContext from "carbonldp/SDKContext";
 import * as PersistedDocument from "carbonldp/PersistedDocument";
-import * as Utils from "carbonldp/Utils";
 import * as Pointer from "carbonldp/Pointer";
 
 @Injectable()
@@ -16,6 +15,7 @@ export default class BackupsService {
 
 	constructor( carbon:Carbon ) {
 		this.carbon = carbon;
+		this.extendSchemasForBackups();
 	}
 
 	upload( file:Blob, appContext:SDKContext.Class ):Promise<[ Pointer.Class, HTTP.Response.Class ]> {
@@ -32,5 +32,15 @@ export default class BackupsService {
 
 	delete( uri:string, appContext:SDKContext.Class ):Promise<HTTP.Response.Class> {
 		return appContext.documents.delete( uri );
+	}
+
+	private extendSchemasForBackups():void {
+		this.carbon.extendObjectSchema( {
+			"xsd": "http://www.w3.org/2001/XMLSchema#",
+			"fileIdentifier": {
+				"@id": "https://carbonldp.com/ns/v1/platform#fileIdentifier",
+				"@type": "xsd:string"
+			},
+		} );
 	}
 }

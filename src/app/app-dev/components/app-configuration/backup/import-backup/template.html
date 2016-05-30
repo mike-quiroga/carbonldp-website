@@ -12,6 +12,7 @@
 				<label>Or select a backup from below:</label>
 				<select class="ui scrolling dropdown backups"
 				        ngControl="backup"
+				        (click)="getBackups()"
 				        (blur)="onInputLostFocus($event)"
 				        [disabled]="backups.length===0">
 					<option value="" *ngIf="backups.length>0" selected="selected">Please select a backup.</option>

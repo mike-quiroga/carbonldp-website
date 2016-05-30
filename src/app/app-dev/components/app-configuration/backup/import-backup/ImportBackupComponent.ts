@@ -69,14 +69,6 @@ export default class ImportBackupComponent {
 		this.getBackups();
 	}
 
-	ngAfterViewInit():void {
-		// this.initializeDropdowns();
-	}
-
-	initializeDropdowns():void {
-		this.$backups.dropdown();
-	}
-
 	getBackups():void {
 		this.backupsService.getAll( this.appContext ).then( ( [backups, response]:[PersistedDocument.Class[], Response.Class] )=> {
 			this.backups = backups.sort( ( a:any, b:any ) => b.modified < a.modified ? - 1 : b.modified > a.modified ? 1 : 0 );
@@ -97,8 +89,7 @@ export default class ImportBackupComponent {
 	monitorExecution( importJobExecution:PersistedDocument.Class ):void {
 		let interval:any = setInterval(
 			()=> {
-				this.jobsService.checkJobExecution( importJobExecution ).then(
-					( execution )=> {
+				this.jobsService.checkJobExecution( importJobExecution ).then( ( execution )=> {
 						if ( execution[ Job.Execution.STATUS ] !== Job.ExecutionStatus.RUNNING && execution[ Job.Execution.STATUS ] !== Job.ExecutionStatus.QUEUED ) {
 							this.executing.finish();
 						}

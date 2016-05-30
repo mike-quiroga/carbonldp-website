@@ -75,19 +75,10 @@ export default class BackupsListComponent {
 	}
 
 	getBackups():Promise<PersistedDocument.Class[]> {
-		console.log( "getting backups" );
 		return new Promise<PersistedDocument.Class[]>( ( resolve:( result:any ) => void, reject:( error:Error ) => void ) => {
 			this.backupsService.getAll( this.appContext ).then(
 				( [backups, response]:[PersistedDocument.Class[],Response.Class] ) => {
-					backups = backups.map(
-						( backup:any )=> {
-							backup[ "fileIdentifier" ] = backup[ "https://carbonldp.com/ns/v1/platform#fileIdentifier" ];
-							backup[ "result" ] = backup[ "https://carbonldp.com/ns/v1/platform#result" ];
-							backup[ "job" ] = backup[ "https://carbonldp.com/ns/v1/platform#job" ];
-							backup[ "status" ] = backup[ "https://carbonldp.com/ns/v1/platform#status" ];
-							return backup;
-						}
-					).sort( ( a:any, b:any ) => a.modified < b.modified ? - 1 : a.modified > b.modified ? 1 : 0 );
+					backups = backups.sort( ( a:any, b:any ) => a.modified < b.modified ? - 1 : a.modified > b.modified ? 1 : 0 );
 					this.backups = backups;
 					resolve( backups );
 				}
@@ -112,7 +103,6 @@ export default class BackupsListComponent {
 	}
 
 	deleteBackup( backup:PersistedDocument.Class ):void {
-		console.log( "Delete backup: %o", backup.id );
 		this.deletingBackup = true;
 		this.backupsService.delete( backup.id, this.appContext ).then( ( response:Response.Class )=> {
 			console.log( response );
