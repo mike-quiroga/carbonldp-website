@@ -71,7 +71,7 @@ export default class BackupsListComponent {
 	monitorBackups():void {
 		setInterval( ()=> {
 			this.getBackups();
-		}, 5000 );
+		}, 15000 );
 	}
 
 	getBackups():Promise<PersistedDocument.Class[]> {
