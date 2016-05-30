@@ -135,7 +135,7 @@ export default class ImportBackupComponent {
 	}
 
 	uriValidator( uri:AbstractControl ):any {
-		if ( uri.value.match( /(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/ ) ) {
+		if ( uri.value.match( /^(ftp|https?):\/\/(\w+:{0,1}\w*@)?((?![^\/]+\/(?:ftp|https?):)\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?$/ ) ) {
 			return null;
 		}
 		if ( uri.touched && ! ! uri.value ) {

@@ -1,12 +1,16 @@
 <form class="ui segment" [ngFormModel]="importForm">
-	<div class="ui two column middle aligned grid form">
+	<div class="ui two column middle aligned grid error form">
 		<div class="column">
-			<div class="field">
+			<div class="field" [ngClass]="{error: (uri.touched && !uri.pristine && uri.hasError('invalidURIAddress'))}">
 				<label>Enter the URI of the backup:</label>
 				<div class="ui left icon input">
 					<input type="text" placeholder="Backup URI" ngControl="uri" (blur)="onInputLostFocus($event)">
 					<i class="world icon"></i>
 				</div>
+			</div>
+			<div class="ui error message" *ngIf="uri.hasError('invalidURIAddress')">
+				<div class="header">Invalid Address</div>
+				<p>Enter a valid URI address.</p>
 			</div>
 			<div class="field">
 				<label>Or select a backup from below:</label>
