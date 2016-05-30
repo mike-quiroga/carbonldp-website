@@ -3,16 +3,44 @@
 		<div class="item" *ngFor="let backup of backups; let i=index">
 			<div class="right floated content">
 				<div class="ui mini basic icon buttons" title="Download">
-					<button class="ui blue basic button" title="Download"
+					<button class="ui green basic button" title="Download"
 					        (click)="downloadBackup(backup.id)">
 						<i class="arrow down icon"></i>
+					</button>
+					<button class="ui red basic button" title="Delete"
+					        (click)="askToDeleteBackup(backup)">
+						<i class="remove icon"></i>
 					</button>
 				</div>
 			</div>
 			<div class="content">
-				<div class="header">{{backup.modified | date:"MM dd, yyy - HH:mm"}}</div>
+				<div class="header">{{backup.created | date:"MMM dd, yyy - HH:mm"}}</div>
 				{{backup.fileIdentifier}}
 			</div>
 		</div>
+	</div>
+</div>
+<div class="ui delete backup modal">
+	<div class="header">
+		Confirm Deletion
+	</div>
+	<div class="content">
+		<div class="description">
+			<div class="ui header">Are you sure?</div>
+			<p>You are about to delete the backup "<span class="emphasize">{{askingBackupToRemove?.fileIdentifier}}</span>" created on <span class="emphasize">{{askingBackupToRemove?.created |
+				date:"MMM dd, yyy - HH:mm"}} hrs.</span>.</p>
+			<p>Are you sure you want to delete it?</p>
+		</div>
+	</div>
+	<div class="actions">
+		<button class="ui black deny button" (click)="closeDeleteModal()">
+			No
+		</button>
+		<button class="ui positive right labeled icon button"
+		        [ngClass]="{loading:deletingBackup}"
+		        (click)="deleteBackup(askingBackupToRemove)">
+			Yes
+			<i class="checkmark icon"></i>
+		</button>
 	</div>
 </div>

@@ -8,6 +8,8 @@ import Carbon from "carbonldp/Carbon";
 import * as App from "carbonldp/App";
 import * as Response from "carbonldp/HTTP/Response";
 import * as PersistedDocument from "carbonldp/PersistedDocument";
+import * as HTTP from "carbonldp/HTTP";
+import * as NS from "carbonldp/NS";
 
 import BackupsService from "./../BackupsService";
 
@@ -24,11 +26,14 @@ export default class BackupsListComponent {
 
 	element:ElementRef;
 	$element:JQuery;
+	$deleteBackupConfirmationModal:JQuery;
 
 	backupsService:BackupsService;
 	carbon:Carbon;
 	backups:PersistedDocument.Class[];
+	askingBackupToRemove:PersistedDocument.Class;
 	loadingBackups:boolean = false;
+	deletingBackup:boolean = false;
 
 	@Input() backupJob:PersistedDocument.Class;
 	@Input() appContext:App.Context;
@@ -41,13 +46,22 @@ export default class BackupsListComponent {
 
 	ngAfterViewInit():void {
 		this.$element = $( this.element.nativeElement );
+		this.$deleteBackupConfirmationModal = this.$element.find( ".delete.backup.modal" );
+		this.initializeModals();
+	}
+
+	initializeModals():void {
+		this.$deleteBackupConfirmationModal.modal( {
+			closable: false,
+			blurring: true,
+			onApprove: ()=>false
+		} );
 	}
 
 	ngOnChanges( changes:{[propName:string]:SimpleChange} ):void {
 		if ( changes[ "backupJob" ] && ! ! changes[ "backupJob" ].currentValue && changes[ "backupJob" ].currentValue !== changes[ "backupJob" ].previousValue ) {
 			this.loadingBackups = true;
 			this.getBackups().then( ( backups:PersistedDocument.Class[] ) => {
-				this.backups = backups;
 				this.loadingBackups = false;
 			} ).catch( ()=>this.loadingBackups = false );
 			this.monitorBackups();
@@ -56,11 +70,12 @@ export default class BackupsListComponent {
 
 	monitorBackups():void {
 		setInterval( ()=> {
-			this.getBackups().then( ( backups:PersistedDocument.Class[] ) => this.backups = backups );
+			this.getBackups();
 		}, 5000 );
 	}
 
 	getBackups():Promise<PersistedDocument.Class[]> {
+		console.log( "getting backups" );
 		return new Promise<PersistedDocument.Class[]>( ( resolve:( result:any ) => void, reject:( error:Error ) => void ) => {
 			this.backupsService.getAll( this.appContext ).then(
 				( [backups, response]:[PersistedDocument.Class[],Response.Class] ) => {
@@ -73,6 +88,7 @@ export default class BackupsListComponent {
 							return backup;
 						}
 					).sort( ( a:any, b:any ) => a.modified < b.modified ? - 1 : a.modified > b.modified ? 1 : 0 );
+					this.backups = backups;
 					resolve( backups );
 				}
 			).catch(
@@ -85,29 +101,30 @@ export default class BackupsListComponent {
 	}
 
 	downloadBackup( uri:string ):void {
-		console.log( "You clicked: %o", uri );
+		window.open( uri );
 		// TODO: implement download when Platform supports NonRDFSource to download when getting url/id.
-		// let requestOptions:HTTP.Request.Options = { sendCredentialsOnCORS: true, };
-		// if ( this.appContext && this.appContext.auth.isAuthenticated() ) this.appContext.auth.addAuthentication( requestOptions );
-		// HTTP.Request.Util.setPreferredInteractionModel( NS.LDP.Class.NonRDFSource, requestOptions );
-		// // HTTP.Request.Util.setContentTypeHeader( "application/octet-stream", requestOptions );
-		// requestOptions.headers.set( "Content-Description", new Header.Class( "File Transfer" ) );
-		// requestOptions.headers.set( "Content-Disposition", new Header.Class( 'attachment; filename="MyFile.zip"' ) );
-		// requestOptions.headers.set( "Content-Transfer", new Header.Class( "encoding: binary" ) );
-		// requestOptions.headers.set( "Content-Type", new Header.Class( "binary/octet-stream" ) );
-		// // requestOptions.headers.set( "Content-Disposition", new Header.Class( 'attachment; filename="MyFile.zip"' ) );
-		//
-		// HTTP.Request.Service.get( uri, requestOptions ).then(
-		// 	( response:Response.Class ) => {
-		// 		console.log( response );
-		// 		let file:Blob = new Blob( [ response.data ], { type: "application/octet-stream" } );
-		// 		console.log( file );
-		// 		let uri:string = window.URL.createObjectURL( file );
-		// 		window.open( uri );
-		// 		return response;
-		// 	} ).catch( ( error ) => {
-		// 	console.error( error );
-		// 	return Promise.reject( error );
-		// } );
+		// TODO: implement a way to download without prompt when Platform supports it.
+	}
+
+	askToDeleteBackup( askingBackupToRemove:PersistedDocument.Class ):void {
+		this.askingBackupToRemove = askingBackupToRemove;
+		this.$deleteBackupConfirmationModal.modal( "show" );
+	}
+
+	deleteBackup( backup:PersistedDocument.Class ):void {
+		console.log( "Delete backup: %o", backup.id );
+		this.deletingBackup = true;
+		this.backupsService.delete( backup.id, this.appContext ).then( ( response:Response.Class )=> {
+			console.log( response );
+			if ( response.status === 200 ) {
+				this.closeDeleteModal();
+				this.getBackups();
+				this.deletingBackup = false;
+			}
+		} );
+	}
+
+	closeDeleteModal():void {
+		this.$deleteBackupConfirmationModal.modal( "hide" );
 	}
 }
