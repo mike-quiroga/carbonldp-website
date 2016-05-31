@@ -1,3 +1,9 @@
+# 0.35.0 (2016/05/26)
+- [LDP-660](https://jira.base22.com/browse/LDP-660) - Add requestID to ErrorResponse objects
+- Fix [LDP-666](https://jira.base22.com/browse/LDP-666) - InternalServerError when creating a job without a type
+- Fix [LDP-663](https://jira.base22.com/browse/LDP-663) - A Backup gets created with a defaultInteractionModel of ldp:RDFSource
+- Fix [LDP-656](https://jira.base22.com/browse/LDP-656) - InternalServerError when modifying an RDFRepresentation
+
 # 0.34.4 (2016/05/17)
 - Fix [LDP-628](https://jira.base22.com/browse/LDP-628) - Inline membership/contained resources were not being filtered by security so limit parameters were returning incorrect results
 - Lower the information that is being logged

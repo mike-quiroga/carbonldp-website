@@ -5,6 +5,7 @@ import com.carbonldp.Vars;
 import com.carbonldp.ldp.AbstractSesameLDPRepository;
 import com.carbonldp.ldp.containers.ContainerDescription;
 import com.carbonldp.ldp.containers.ContainerRepository;
+import com.carbonldp.ldp.nonrdf.RDFRepresentationDescription;
 import com.carbonldp.ldp.nonrdf.RDFRepresentationRepository;
 import com.carbonldp.ldp.sources.RDFSourceDescription;
 import com.carbonldp.ldp.sources.RDFSourceRepository;
@@ -40,7 +41,7 @@ public class SesameBackupRepository extends AbstractSesameLDPRepository implemen
 		IRI containerIRI = valueFactory.createIRI( appIRI.stringValue() + Vars.getInstance().getBackupsContainer() );
 
 		Backup backup = BackupFactory.getInstance().create( backupIRI );
-		backup.add( RDFSourceDescription.Property.DEFAULT_INTERACTION_MODEL.getIRI(), RDFSourceDescription.Resource.CLASS.getIRI() );
+		backup.add( RDFSourceDescription.Property.DEFAULT_INTERACTION_MODEL.getIRI(), RDFRepresentationDescription.Resource.NON_RDF_SOURCE.getIRI() );
 		backup.setTimestamps( creationTime );
 		rdfRepresentationRepository.create( backup, zipFile, Consts.ZIP );
 
