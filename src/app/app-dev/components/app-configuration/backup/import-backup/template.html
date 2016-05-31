@@ -33,7 +33,11 @@
 		<div class="column">
 			<div class="field">
 				<label>Upload a backup:</label>
-				<input type="file" ngControl="backupFile" (blur)="onInputLostFocus($event)" (change)="onFileChange($event)"/><br/>
+				<input type="file" accept="application/zip" ngControl="backupFile" (blur)="onInputLostFocus($event)" (change)="onFileChange($event)"/><br/>
+			</div>
+			<div class="ui error message" *ngIf="backupFile.hasError('invalidBackupFileFormat')">
+				<div class="header">Invalid File</div>
+				<p>Please select only zip files.</p>
 			</div>
 		</div>
 	</div>

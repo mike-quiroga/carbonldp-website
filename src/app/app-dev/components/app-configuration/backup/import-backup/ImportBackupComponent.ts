@@ -159,17 +159,14 @@ export default class ImportBackupComponent {
 	}
 
 	existingBackupValidator( existingBackup:AbstractControl ):any {
-		if ( ! ! existingBackup.value ) {
-			return null;
-		}
+		if ( ! ! existingBackup.value ) return null;
 		return { "invalidExistingBackupAddress": true };
 	}
 
 	backupFileValidator( backupFile:AbstractControl ):any {
-		if ( ! ! this.backupFileBlob ) {
-			return null;
-		}
-		return { "invalidBackupFile": true };
+		if ( ! ! this.backupFileBlob && this.backupFileBlob.type === "application/zip" ) return null;
+		if ( ! this.backupFileBlob ) return { "emptyBackupFile": true };
+		return { "invalidBackupFileFormat": true };
 	}
 
 	importFormValidator( importForm:ControlGroup ):any {
