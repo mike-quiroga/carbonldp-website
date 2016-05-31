@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input } from "@angular/core";
+import { Component, ElementRef, Input, Output, SimpleChange, EventEmitter } from "@angular/core";
 
 import $ from "jquery";
 import "semantic-ui/semantic";
@@ -24,13 +24,16 @@ export default class ErrorMessageComponent {
 	@Input() endpoint:string;
 	@Input() message:Message;
 	@Input() closable:boolean = false;
+	@Output() onClose:EventEmitter<void> = new EventEmitter();
 
 	constructor( elementRef:ElementRef ) {
 		this.element = elementRef;
 	}
 
-	ngOnInit():void {
-		if ( this.message ) this.decomposeMessage();
+	ngOnChanges( changes:{[propName:string]:SimpleChange} ):void {
+		if ( ! ! changes[ "message" ].currentValue && changes[ "message" ].currentValue !== changes[ "message" ].previousValue ) {
+			this.decomposeMessage();
+		}
 	}
 
 	ngAfterViewInit():void {
@@ -46,6 +49,7 @@ export default class ErrorMessageComponent {
 	}
 
 	close( event:Event ):void {
-		$( event.srcElement ).closest( "message" );
+		$( event.srcElement ).closest( ".message" ).transition( "fade" );
+		this.onClose.emit();
 	}
 }

@@ -4,15 +4,17 @@ import { CORE_DIRECTIVES, FormBuilder, ControlGroup, AbstractControl, Control, V
 import $ from "jquery";
 import "semantic-ui/semantic";
 
-import Carbon from "carbonldp/Carbon";
 import * as App from "carbonldp/App";
 import * as Response from "carbonldp/HTTP/Response";
 import * as PersistedDocument from "carbonldp/PersistedDocument";
 import * as Pointer from "carbonldp/Pointer";
+import { Error as HTTPError } from "carbonldp/HTTP/Errors";
 
 import BackupsService from "./../BackupsService";
 import JobsService from "./../../job/JobsService";
-import * as Job from "./../../job/Job"
+import * as Job from "./../../job/Job";
+import ErrorMessageComponent from "app/app-dev/components/errors-area/error-message/ErrorMessageComponent";
+import { Message } from "app/app-dev/components/errors-area/ErrorsAreaComponent";
 
 import template from "./template.html!";
 import "./style.css!";
@@ -20,7 +22,7 @@ import "./style.css!";
 @Component( {
 	selector: "import-backup",
 	template: template,
-	directives: [ CORE_DIRECTIVES, ],
+	directives: [ CORE_DIRECTIVES, ErrorMessageComponent ],
 } )
 
 export default class ImportBackupComponent {
@@ -46,6 +48,8 @@ export default class ImportBackupComponent {
 	uploading:ImportStatus = new ImportStatus();
 	creating:ImportStatus = new ImportStatus();
 	executing:ImportStatus = new ImportStatus();
+	errorMessages:Message[] = [];
+	errorMessage:Message;
 
 	constructor( element:ElementRef, formBuilder:FormBuilder, backupsService:BackupsService, jobsService:JobsService ) {
 		this.element = element;
@@ -91,11 +95,21 @@ export default class ImportBackupComponent {
 			()=> {
 				this.jobsService.checkJobExecution( importJobExecution ).then( ( execution )=> {
 						if ( execution[ Job.Execution.STATUS ] !== Job.ExecutionStatus.RUNNING && execution[ Job.Execution.STATUS ] !== Job.ExecutionStatus.QUEUED ) {
-							this.executing.finish();
+							this.executing.success();
 						}
-						if ( this.executing.done ) clearInterval( interval );
 					}
-				);
+				).catch( ( error:HTTPError )=> {
+					this.executing.fail();
+					console.error( error );
+					let errorMessage:Message = <Message>{
+						title: error.name,
+						content: "Couldn't monitor the import execution.",
+						endpoint: (<any>error.response.request).responseURL,
+						statusCode: "" + (<XMLHttpRequest>error.response.request).status,
+						statusMessage: (<XMLHttpRequest>error.response.request).statusText
+					};
+					this.errorMessages.push( errorMessage );
+				} ).then( ()=> {if ( this.executing.done ) clearInterval( interval )} );
 			}, 3000 );
 	}
 
@@ -177,25 +191,58 @@ export default class ImportBackupComponent {
 		this.uploading.start();
 		this.backupsService.upload( file, this.appContext ).then(
 			( [pointer, response]:[ Pointer.Class, Response.Class ] )=> {
-				this.uploading.finish();
+				this.uploading.success();
 				this.createBackupImport( pointer.id );
 			}
-		);
+		).catch( ( error:HTTPError )=> {
+			this.uploading.fail();
+			console.error( error );
+			let errorMessage:Message = <Message>{
+				title: error.name,
+				content: "Couldn't upload the file.",
+				endpoint: (<any>error.response.request).responseURL,
+				statusCode: "" + (<XMLHttpRequest>error.response.request).status,
+				statusMessage: (<XMLHttpRequest>error.response.request).statusText
+			};
+			this.errorMessages.push( errorMessage );
+		} );
 	}
 
 	createBackupImport( backupURI:string ):void {
 		this.creating.start();
 		this.jobsService.createImportBackup( backupURI, this.appContext ).then(
 			( importJob:PersistedDocument.Class )=> {
-				this.creating.finish();
+				this.creating.success();
 				this.executing.start();
 				this.executeImport( importJob ).then(
 					( importJobExecution:PersistedDocument.Class )=> {
 						this.monitorExecution( importJobExecution );
 					}
-				);
+				).catch( ( error:HTTPError )=> {
+					this.executing.fail();
+					console.error( error );
+					let errorMessage:Message = <Message>{
+						title: error.name,
+						content: "Couldn't monitor the import execution.",
+						endpoint: (<any>error.response.request).responseURL,
+						statusCode: "" + (<XMLHttpRequest>error.response.request).status,
+						statusMessage: (<XMLHttpRequest>error.response.request).statusText
+					};
+					this.errorMessages.push( errorMessage );
+				} );
 			}
-		).catch( error=>console.error( error ) );
+		).catch( ( error:HTTPError )=> {
+			this.creating.fail();
+			console.error( error );
+			let errorMessage:Message = <Message>{
+				title: error.name,
+				content: "The importing job couldn't be created.",
+				endpoint: (<any>error.response.request).responseURL,
+				statusCode: "" + (<XMLHttpRequest>error.response.request).status,
+				statusMessage: (<XMLHttpRequest>error.response.request).statusText
+			};
+			this.errorMessages.push( errorMessage );
+		} );
 	}
 
 	finishImport():void {
@@ -204,16 +251,31 @@ export default class ImportBackupComponent {
 		this.executing = new ImportStatus();
 		this.running = new ImportStatus();
 		this.getBackups();
+		this.errorMessages = [];
+	}
+
+	checkForFailedTasks():boolean {
+		return this.uploading.failed ? true : this.creating.failed ? true : this.executing.failed ? true : false;
+	}
+
+	removeMessage( index:number ):void {
+		this.errorMessages.splice( index, 1 );
 	}
 }
 
 class ImportStatus {
 	private _active:boolean;
 	private _done:boolean;
+	private _failed:boolean;
+	private _succeed:boolean;
 
 	get active():boolean { return this._active; }
 
 	get done():boolean { return this._done; }
+
+	get failed():boolean { return this._failed; }
+
+	get succeed():boolean { return this._succeed; }
 
 	set active( value:boolean ) {
 		this._active = value;
@@ -225,11 +287,31 @@ class ImportStatus {
 		this._active = ! value;
 	}
 
+	set failed( value:boolean ) {
+		this.done = true;
+		this._failed = value;
+		this._succeed = ! value;
+	}
+
+	set succeed( value:boolean ) {
+		this.done = true;
+		this._failed = ! value;
+		this._succeed = value;
+	}
+
 	start():void {
 		this.active = true;
 	}
 
 	finish():void {
 		this.done = true;
+	}
+
+	fail():void {
+		this.failed = true;
+	}
+
+	success():void {
+		this.succeed = true;
 	}
 }
