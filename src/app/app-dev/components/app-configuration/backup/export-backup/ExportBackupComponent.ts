@@ -6,11 +6,13 @@ import "semantic-ui/semantic";
 
 import Carbon from "carbonldp/Carbon";
 import * as App from "carbonldp/App";
-import * as HTTP from "carbonldp/HTTP";
-import * as Response from "carbonldp/HTTP/Response";
-import * as NS from "carbonldp/NS";
-import * as SDKContext from "carbonldp/SDKContext";
 import * as PersistedDocument from "carbonldp/PersistedDocument";
+import { Error as HTTPError } from "carbonldp/HTTP/Errors";
+
+import { Message } from "app/app-dev/components/errors-area/ErrorsAreaComponent";
+import ErrorMessageComponent from "app/app-dev/components/errors-area/error-message/ErrorMessageComponent";
+import JobsService from "./../../job/JobsService";
+import * as Job from "./../../job/Job";
 
 import template from "./template.html!";
 import "./style.css!";
@@ -18,7 +20,7 @@ import "./style.css!";
 @Component( {
 	selector: "export-backup",
 	template: template,
-	directives: [ CORE_DIRECTIVES, ],
+	directives: [ CORE_DIRECTIVES, ErrorMessageComponent ],
 } )
 
 export default class ExportBackupComponent {
@@ -30,10 +32,13 @@ export default class ExportBackupComponent {
 
 	@Input() appContext:App.Context;
 	@Input() backupJob:PersistedDocument.Class;
+	errorMessages:Message[] = [];
+	jobsService:JobsService;
 
-	constructor( carbon:Carbon, element:ElementRef ) {
+	constructor( carbon:Carbon, element:ElementRef, jobsService:JobsService ) {
 		this.carbon = carbon;
 		this.element = element;
+		this.jobsService = jobsService;
 	}
 
 	ngAfterViewInit():void {
@@ -42,33 +47,49 @@ export default class ExportBackupComponent {
 		// TODO: Add backup scheduler with datetime when Platform supports it.
 	}
 
-	createBackup():void {
+	onGenerateBackup():void {
 		this.executingBackup = true;
-		this.requestBackup( this.backupJob.id, this.appContext ).then(
-			()=> {
-				this.executingBackup = false;
-			}
-		);
+		this.jobsService.runJob( this.backupJob ).then( ( execution:PersistedDocument.Class )=> {
+			this.monitorExecution( execution ).catch( ( error:HTTPError )=> {
+				console.error( error );
+				let errorMessage:Message = <Message>{
+					title: error.name,
+					content: "Couldn't execute backup.",
+					endpoint: (<any>error.response.request).responseURL,
+					statusCode: "" + (<XMLHttpRequest>error.response.request).status,
+					statusMessage: (<XMLHttpRequest>error.response.request).statusText
+				};
+				this.errorMessages.push( errorMessage );
+			} ).then( ()=> {this.executingBackup = false;} );
+		} ).catch( ( error:HTTPError )=> {
+			console.error( error );
+			this.executingBackup = false;
+			let errorMessage:Message = <Message>{
+				title: error.name,
+				content: "Couldn't execute backup.",
+				endpoint: (<any>error.response.request).responseURL,
+				statusCode: "" + (<XMLHttpRequest>error.response.request).status,
+				statusMessage: (<XMLHttpRequest>error.response.request).statusText
+			};
+			this.errorMessages.push( errorMessage );
+		} );
 	}
 
-	private requestBackup( uri:string, appContext:SDKContext.Class ):Promise<Response.Class> {
-		let requestOptions:HTTP.Request.Options = { sendCredentialsOnCORS: true, };
-		if ( appContext && appContext.auth.isAuthenticated() ) appContext.auth.addAuthentication( requestOptions );
-		HTTP.Request.Util.setAcceptHeader( "application/ld+json", requestOptions );
-		HTTP.Request.Util.setPreferredInteractionModel( NS.LDP.Class.Container, requestOptions );
-		HTTP.Request.Util.setContentTypeHeader( "text/turtle", requestOptions );
-		let body:string =
-			`@prefix c:  <https://carbonldp.com/ns/v1/platform#>.
-			<>
-			a c:Execution.`;
-
-		return HTTP.Request.Service.post( uri, body, requestOptions ).then( ( response:Response.Class ) => {
-			console.log( response );
-			if ( response.status !== HTTP.StatusCode.OK ) return null;
-			return response;
-		} ).catch( ( error ) => {
-			console.error( error );
-			return Promise.reject( error );
+	monitorExecution( execution:PersistedDocument.Class ):Promise<PersistedDocument.Class> {
+		return new Promise<PersistedDocument.Class>( ( resolve:( result:any ) => void, reject:( error:Error|PersistedDocument.Class ) => void ) => {
+			let interval:number = setInterval( ()=> {
+				execution.refresh().then( ()=> {
+					if ( execution[ Job.Execution.STATUS ] !== Job.ExecutionStatus.FINISHED ) {
+						clearInterval( interval );
+						resolve( execution );
+					}
+					if ( execution[ Job.Execution.STATUS ] !== Job.ExecutionStatus.ERROR ) reject( execution );
+				} );
+			}, 3000 );
 		} );
+	}
+
+	removeMessage( index:number ):void {
+		this.errorMessages.splice( index, 1 );
 	}
 }

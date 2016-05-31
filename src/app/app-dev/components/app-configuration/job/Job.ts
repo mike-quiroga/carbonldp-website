@@ -17,4 +17,5 @@ export class ExecutionStatus {
 }
 export class Execution {
 	static STATUS:string = namespace + "status";
+	static ERROR_DESCRIPTION:string = namespace + "errorDescription";
 }

@@ -5,7 +5,14 @@
 <div class="right aligned">
 	<button class="ui button"
 	        [ngClass]="{loading:executingBackup}"
-	        (click)="createBackup()">
+	        (click)="onGenerateBackup()">
 		Generate Backup Now
 	</button>
+</div>
+<div class="ui basic segment" *ngIf="errorMessages.length > 0">
+	<error-message *ngFor="let errorMessage of errorMessages; let i=index"
+	               [message]="errorMessage"
+	               [closable]="true"
+	               (onClose)="removeMessage(i)">
+	</error-message>
 </div>

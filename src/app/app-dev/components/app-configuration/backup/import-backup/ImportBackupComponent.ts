@@ -91,26 +91,35 @@ export default class ImportBackupComponent {
 	}
 
 	monitorExecution( importJobExecution:PersistedDocument.Class ):void {
-		let interval:any = setInterval(
-			()=> {
-				this.jobsService.checkJobExecution( importJobExecution ).then( ( execution )=> {
-						if ( execution[ Job.Execution.STATUS ] !== Job.ExecutionStatus.RUNNING && execution[ Job.Execution.STATUS ] !== Job.ExecutionStatus.QUEUED ) {
-							this.executing.success();
-						}
-					}
-				).catch( ( error:HTTPError )=> {
+		let interval:any = setInterval( ()=> {
+			this.jobsService.checkJobExecution( importJobExecution ).then( ( execution )=> {
+				if ( ! execution[ Job.Execution.STATUS ] )Promise.reject( execution );
+				if ( execution[ Job.Execution.STATUS ].id === Job.ExecutionStatus.FINISHED ) this.executing.success();
+				if ( execution[ Job.Execution.STATUS ].id === Job.ExecutionStatus.ERROR ) {
 					this.executing.fail();
-					console.error( error );
+					console.error( "Error from job:", execution );
 					let errorMessage:Message = <Message>{
-						title: error.name,
-						content: "Couldn't monitor the import execution.",
-						endpoint: (<any>error.response.request).responseURL,
-						statusCode: "" + (<XMLHttpRequest>error.response.request).status,
-						statusMessage: (<XMLHttpRequest>error.response.request).statusText
+						title: "Error while xecuting import",
+						content: "An error occurred while executing your import backup job. Please, fix your job configuration.",
+						statusMessage: execution[ Job.Execution.ERROR_DESCRIPTION ]
 					};
 					this.errorMessages.push( errorMessage );
-				} ).then( ()=> {if ( this.executing.done ) clearInterval( interval )} );
-			}, 3000 );
+				}
+			} ).catch( ( error:HTTPError )=> {
+				this.executing.fail();
+				console.error( error );
+				let errorMessage:Message = <Message>{
+					title: error.name,
+					content: "Couldn't monitor the import execution.",
+					endpoint: (<any>error.response.request).responseURL,
+					statusCode: "" + (<XMLHttpRequest>error.response.request).status,
+					statusMessage: (<XMLHttpRequest>error.response.request).statusText
+				};
+				this.errorMessages.push( errorMessage );
+			} ).then( ()=> {
+				if ( this.executing.done ) clearInterval( interval )
+			} );
+		}, 3000 );
 	}
 
 	onFileChange( event ):void {
