@@ -16,7 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  */
 
 @RequestHandler
-public class LDAPServersPostHandler extends AbstractRDFPostRequestHandler<LDAPServer> {
+public class LDAPServerPOSTHandler extends AbstractRDFPostRequestHandler<LDAPServer> {
 	protected LDAPServerService ldapServerService;
 
 	@Override

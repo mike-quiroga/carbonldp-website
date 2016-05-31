@@ -10,6 +10,7 @@ import com.carbonldp.exceptions.InvalidResourceException;
 import com.carbonldp.exceptions.LDAPException;
 import com.carbonldp.ldp.AbstractSesameLDPService;
 import com.carbonldp.ldp.containers.ContainerService;
+import com.carbonldp.ldp.sources.RDFSourceService;
 import com.carbonldp.models.Infraction;
 import com.carbonldp.rdf.RDFResource;
 import com.carbonldp.utils.IRIUtil;
@@ -43,8 +44,9 @@ import java.util.Set;
  */
 public class SesameLDAPServerService extends AbstractSesameLDPService implements LDAPServerService {
 
-	private ContainerService containerService;
-	AgentRepository agentRepository;
+	protected ContainerService containerService;
+	protected AgentRepository agentRepository;
+	protected RDFSourceService sourceService;
 
 	@Override
 	public void create( IRI targetIRI, LDAPServer ldapServer ) {
@@ -56,7 +58,7 @@ public class SesameLDAPServerService extends AbstractSesameLDPService implements
 
 	@Override
 	public LDAPServer get( IRI targetIRI ) {
-		return new LDAPServer( sourceRepository.get( targetIRI ) );
+		return new LDAPServer( sourceService.get( targetIRI ) );
 	}
 
 	@Override
@@ -106,6 +108,11 @@ public class SesameLDAPServerService extends AbstractSesameLDPService implements
 	@Autowired
 	@Qualifier( "appAgentRepository" )
 	public void setAgentRepository( AgentRepository agentRepository ) { this.agentRepository = agentRepository;}
+
+	@Autowired
+	public void setSourceService( RDFSourceService sourceService ) {
+		this.sourceService = sourceService;
+	}
 }
 
 class ContactAttributeMapperLDAPAgent implements AttributesMapper<LDAPAgent> {

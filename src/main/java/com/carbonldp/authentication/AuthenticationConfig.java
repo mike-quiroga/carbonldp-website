@@ -83,7 +83,7 @@ public class AuthenticationConfig {
 
 	@Bean
 	public BasicAuthenticationFilter basicAuthenticationFilter() {
-		return new BasicAuthenticationFilter( authenticationManager );
+		return new BasicAuthenticationFilter( authenticationManager, basicAuthenticationEntryPoint() );
 	}
 
 	@Bean

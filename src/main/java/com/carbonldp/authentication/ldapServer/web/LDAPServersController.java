@@ -24,7 +24,7 @@ import javax.servlet.http.HttpServletResponse;
 @Controller
 @RequestMapping( value = "/platform/apps/*/ldap-servers/" )
 public class LDAPServersController  extends AbstractController {
-	private LDAPServersPostHandler postRequestHandler;
+	private LDAPServerPOSTHandler postRequestHandler;
 
 	@InteractionModel( value = {APIPreferences.InteractionModel.CONTAINER}, handlesDefault = true )
 	@RequestMapping( method = RequestMethod.POST, consumes = {
@@ -44,7 +44,7 @@ public class LDAPServersController  extends AbstractController {
 	}
 
 	@Autowired
-	public void setPostRequestHandler( LDAPServersPostHandler postRequestHandler ) {
+	public void setPostRequestHandler( LDAPServerPOSTHandler postRequestHandler ) {
 		this.postRequestHandler = postRequestHandler;
 	}
 }
