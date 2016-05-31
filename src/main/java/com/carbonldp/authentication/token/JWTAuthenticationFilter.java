@@ -1,7 +1,6 @@
 package com.carbonldp.authentication.token;
 
 import com.carbonldp.Consts;
-import com.carbonldp.utils.JWTUtil;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureException;

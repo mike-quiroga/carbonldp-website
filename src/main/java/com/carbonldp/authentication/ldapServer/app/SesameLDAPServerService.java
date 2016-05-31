@@ -14,7 +14,7 @@ import com.carbonldp.ldp.sources.RDFSourceService;
 import com.carbonldp.models.Infraction;
 import com.carbonldp.rdf.RDFResource;
 import com.carbonldp.utils.IRIUtil;
-import com.carbonldp.utils.JWTUtil;
+import com.carbonldp.authentication.token.JWTUtil;
 import com.carbonldp.utils.LDAPUtil;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureException;
@@ -65,6 +65,8 @@ public class SesameLDAPServerService extends AbstractSesameLDPService implements
 	public List<LDAPAgent> registerLDAPAgents( LDAPServer ldapServer, Set<String> usernameFields, App app ) {
 		IRI agentsContainerIRI = agentRepository.getAgentsContainerIRI();
 		LdapTemplate ldapTemplate;
+		String encodedPassword = ldapServer.getLDAPServerPassword();
+		ldapServer.setLDAPServerPassword( JWTUtil.decode( encodedPassword ) );
 		try {
 			ldapTemplate = LDAPUtil.getLDAPTemplate( ldapServer );
 		} catch ( UnsupportedJwtException | MalformedJwtException | SignatureException | IllegalArgumentException e ) {
