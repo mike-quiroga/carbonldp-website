@@ -1,3 +1,17 @@
+# 0.5.14 (Jun 1, 2016)
+- Add app configuration page.
+- Add App Configuration component.
+- Add BackupsComponent to handle fetch, exports and imports of backups.
+- Add ExportBackupComponent to generate a backup.
+- Add ImportBackupComponent to import backups from URL's, existing backups or uploading a backup file.
+- Add ListBackupsComponent to list, download and remove backups.
+- Add BackupsService to get, getAll, create and delete a backup.
+- Add JobsService to get, getAll, create, run job and check a job execution.
+- Add Jobs model class.
+- Add ErrorMessageComponent to ErrorsAreaComponent to display messages in a single <error-message> tag.
+- Remove Edit option from opened App sidebar options.
+- Add app configuration option to App sidebar options.
+
 # 0.5.13 (May 17, 2016)
 - Add named fragments component to the DocumentViewer of DocumentExplorer.
 - Remove tabs that showed raw data on each property of a document.
