@@ -142,8 +142,8 @@
 				</section>
 
 				<section>
-					<h2>Read</h2>
-					<p>To read an RDFSource, issue a GET request to the document's URI.</p>
+					<h2>Retrieve</h2>
+					<p>To retrieve an RDFSource, issue a GET request to the document's URI.</p>
 
 					<p>
 						<span class="ui blue horizontal label">GET</span> <code>/apps/{app-name}/{container}/{rdfsource}/</code>
@@ -186,29 +186,27 @@
 
 					<p>A successful request will result with HTTP status code 200 OK.</p>
 
-					<p><strong>Example response from reading an RDFSource :</strong></p>
+					<p><strong>Example response from retrieving an RDFSource :</strong></p>
 
-					<p>Following is the response from reading a newly created RDFSource (from the &quot;Create&quot; example above).</p>
+					<p>Following is the response from retrieving a newly created RDFSource (from the &quot;Create&quot; example above).</p>
 
 					<pre highlight>
-						&lt;https://dev.carbonldp.com/apps/rest-examples/persons/john-doe/&gt;
-							a &lt;http://www.w3.org/ns/ldp#BasicContainer&gt; ,
-							  &lt;http://www.w3.org/ns/ldp#Container&gt; ,
-							  &lt;http://www.w3.org/ns/ldp#RDFSource&gt; ,
-							  &lt;http://www.base22.com/2016/05/ex#Person&gt; ;
-						&lt;http://www.w3.org/ns/ldp#hasMemberRelation&gt; &lt;http://www.w3.org/ns/ldp#member&gt; ;
-						&lt;https://carbonldp.com/ns/v1/platform#created&gt; &quot;2016-05-31T23:29:18.624Z&quot;^^&lt;http://www.w3.org/2001/XMLSchema#dateTime&gt; ;
-						&lt;https://carbonldp.com/ns/v1/platform#modified&gt; &quot;2016-05-31T23:29:18.624Z&quot;^^&lt;http://www.w3.org/2001/XMLSchema#dateTime&gt; ;
-						&lt;https://carbonldp.com/ns/v1/security#accessControlList&gt; &lt;https://dev.carbonldp.com/apps/rest-examples/persons/john-doe/~acl/&gt; ;
-						&lt;http://www.base22.com/2016/05/ex#firstName&gt; &quot;John&quot; ;
-						&lt;http://www.base22.com/2016/05/ex#lastName&gt; &quot;Doe&quot; ;
-						&lt;http://www.base22.com/2016/05/ex#phoneNumber&gt; &quot;(555) 555-5555&quot; ;
-						&lt;https://carbonldp.com/ns/v1/platform#defaultInteractionModel&gt; &lt;http://www.w3.org/ns/ldp#RDFSource&gt; .
+					&lt;https://carbonldp.com/apps/rest-examples/persons/john-doe/&gt; {
+						&lt;https://carbonldp.com/apps/rest-examples/persons/john-doe/&gt; a &lt;http://www.w3.org/ns/ldp#BasicContainer&gt; , &lt;http://www.w3.org/ns/ldp#Container&gt; , &lt;http://www.w3.org/ns/ldp#RDFSource&gt; , &lt;http://www.base22.com/2016/05/ex#Person&gt; ;
+							&lt;http://www.w3.org/ns/ldp#hasMemberRelation&gt; &lt;http://www.w3.org/ns/ldp#member&gt; ;
+							&lt;https://carbonldp.com/ns/v1/platform#created&gt; &quot;2016-05-31T23:29:18.624Z&quot;^^&lt;http://www.w3.org/2001/XMLSchema#dateTime&gt; ;
+							&lt;https://carbonldp.com/ns/v1/platform#modified&gt; &quot;2016-06-01T17:05:18.949Z&quot;^^&lt;http://www.w3.org/2001/XMLSchema#dateTime&gt; ;
+							&lt;https://carbonldp.com/ns/v1/security#accessControlList&gt; &lt;https://dev.carbonldp.com/apps/rest-examples/persons/john-doe/~acl/&gt; ;
+							&lt;http://www.base22.com/2016/05/ex#firstName&gt; &quot;John&quot; ;
+							&lt;http://www.base22.com/2016/05/ex#lastName&gt; &quot;Doe&quot; ;
+							&lt;http://www.base22.com/2016/05/ex#phoneNumber&gt; &quot;(555) 555-5555&quot; ;
+							&lt;https://carbonldp.com/ns/v1/platform#defaultInteractionModel&gt; &lt;http://www.w3.org/ns/ldp#RDFSource&gt; .
+					}
 					</pre>
 
 					<p>
-						You may notice that additional properties (triples) are added to an RDFSource when it is created (e.g. created, modified, accessControlList). These are called server managed
-						properties, which Carbon adds automatically when you post new RDFSource documents.</p>
+						You may notice that additional properties are added to an RDFSource when it is created such as created, modified, and accessControlList. These are called <em>system managed
+						properties</em>, which Carbon adds automatically when you post new RDFSource documents.</p>
 
 					<p>You may also notice that, in addition to the type RDFSource, the resource is now also a BasicContainer. This is a convenient feature of Carbon LDP. When an RDFSource is
 						created, it is automatically treated also as container. Therefore, you can read an RDFSource as an RDFSource document and a container depending on the interaction model you
@@ -217,15 +215,13 @@
 						when you issue the GET request.
 					</p>
 
-
-
-
 				</section>
 
 				<section>
 					<h2>Update</h2>
 
-					<p>To update an existing RDFSource, issue a PUT request to the URI of the document to replace it with the document being submitted.</p>
+					<p>To update an existing RDFSource, issue a PUT request to the URI of the document to replace it with the document being submitted. A PUT request is a complete replacement of
+						the existing document; patching individual properties to change a document is not supported at this time.</p>
 
 					<p>
 						<span class="ui blue horizontal label">PUT</span> <code>/apps/{app-name}/{container}/{rdfsource}/</code>
@@ -263,14 +259,102 @@
 								<td><span class="nolink">http://www.w3.org/ns/ldp#RDFSource</span>; rel=interaction-model</td>
 								<td>Yes</td>
 							</tr>
+							<tr>
+								<td>If-Match</td>
+								<td>{ETag value}</td>
+								<td>Yes</td>
+							</tr>
 						</tbody>
 					</table>
 
+					<p><strong>Body (required)</strong></p>
+
+					<pre highlight class="turtle">
+					&lt;https://dev.carbonldp.com/apps/rest-examples/persons/john-doe/&gt; {
+						&lt;https://dev.carbonldp.com/apps/rest-examples/persons/john-doe/&gt; a &lt;http://www.w3.org/ns/ldp#BasicContainer&gt; , &lt;http://www.w3.org/ns/ldp#Container&gt; , &lt;http://www.w3.org/ns/ldp#RDFSource&gt; , &lt;http://www.base22.com/2016/05/ex#Person&gt; ;
+							&lt;http://www.w3.org/ns/ldp#hasMemberRelation&gt; &lt;http://www.w3.org/ns/ldp#member&gt; ;
+							&lt;https://carbonldp.com/ns/v1/platform#created&gt; &quot;2016-05-31T23:29:18.624Z&quot;^^&lt;http://www.w3.org/2001/XMLSchema#dateTime&gt; ;
+							&lt;https://carbonldp.com/ns/v1/platform#modified&gt; &quot;2016-06-01T17:05:18.949Z&quot;^^&lt;http://www.w3.org/2001/XMLSchema#dateTime&gt; ;
+							&lt;https://carbonldp.com/ns/v1/security#accessControlList&gt; &lt;https://dev.carbonldp.com/apps/rest-examples/persons/john-doe/~acl/&gt; ;
+							&lt;http://www.base22.com/2016/05/ex#firstName&gt; &quot;John&quot; ;
+							&lt;http://www.base22.com/2016/05/ex#lastName&gt; &quot;Doe&quot; ;
+							&lt;http://www.base22.com/2016/05/ex#phoneNumber&gt; &quot;(555) 555-5555&quot; ;
+							&lt;https://carbonldp.com/ns/v1/platform#defaultInteractionModel&gt; &lt;http://www.w3.org/ns/ldp#RDFSource&gt; ;
+							&lt;http://www.base22.com/2016/05/ex#email&gt; &quot;john.doe@example.org&quot; .
+					}
+					</pre>
+
+					<p>A successful update request will result in HTTP status code 200 OK.</p>
+					<p>
+						The best way to update an existing RDFSource document is to first retrieve it with a GET request and then modify what the server returned. This ensures that you will retain
+						any system managed properties that may have been added. Though system managed properties can not be changed by you, they must still exist in the document or the PUT request
+						will fail.
+					</p>
+					<p>Also required for a successful update is the If-Match header. It's value must match the ETag value obtained from a previous GET or HEAD request. This mechanism helps to
+						ensure that the document you're attempting to update has not been changed since you last retrieved it.</p>
+
+
+					<p><strong>Example request to update RDFSource :</strong></p>
+
+					<pre highlight>
+						PUT /apps/rest-examples/persons/john-doe/ HTTP/1.1
+						Authorization: Basic YWRtaW5AY2FyYm9ubGRwLmNvbTpoZWxsbw==
+						Prefer: http://www.w3.org/ns/ldp#RDFSource; rel=interaction-model
+						Content-Type: application/trig
+						If-Match: "429274222"
+
+						&lt;https://dev.carbonldp.com/apps/rest-examples/persons/john-doe/&gt; {
+							&lt;https://dev.carbonldp.com/apps/rest-examples/persons/john-doe/&gt; a &lt;http://www.w3.org/ns/ldp#BasicContainer&gt; , &lt;http://www.w3.org/ns/ldp#Container&gt; , &lt;http://www.w3.org/ns/ldp#RDFSource&gt; , &lt;http://www.base22.com/2016/05/ex#Person&gt; ;
+								&lt;http://www.w3.org/ns/ldp#hasMemberRelation&gt; &lt;http://www.w3.org/ns/ldp#member&gt; ;
+								&lt;https://carbonldp.com/ns/v1/platform#created&gt; "2016-05-31T23:29:18.624Z"^^&lt;http://www.w3.org/2001/XMLSchema#dateTime&gt; ;
+								&lt;https://carbonldp.com/ns/v1/platform#modified&gt; "2016-06-01T17:05:18.949Z"^^&lt;http://www.w3.org/2001/XMLSchema#dateTime&gt; ;
+								&lt;https://carbonldp.com/ns/v1/security#accessControlList&gt; &lt;https://dev.carbonldp.com/apps/rest-examples/persons/john-doe/~acl/&gt; ;
+								&lt;http://www.base22.com/2016/05/ex#firstName&gt; "John" ;
+								&lt;http://www.base22.com/2016/05/ex#lastName&gt; "Doe" ;
+								&lt;http://www.base22.com/2016/05/ex#phoneNumber&gt; "(555) 555-5555" ;
+								&lt;https://carbonldp.com/ns/v1/platform#defaultInteractionModel&gt; &lt;http://www.w3.org/ns/ldp#RDFSource&gt; ;
+								&lt;http://www.base22.com/2016/05/ex#email&gt; "john.doe@example.org" .
+						}
+
+					</pre>
 
 				</section>
 
 				<section>
 					<h2>Delete</h2>
+
+					<p>To delete an RDFSource document, issue a DELETE request with an empty body to the URI of the document to be deleted.</p>
+
+					<p>
+						<span class="ui blue horizontal label">DELETE</span> <code>/apps/{app-name}/{container}/{rdfsource}/</code>
+					</p>
+
+					<table class="ui celled table">
+						<thead>
+							<tr>
+								<th>HTTP Header</th>
+								<th>Value</th>
+								<th colspan="1">Required?</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>Authorization</td>
+								<td>Basic ...</td>
+								<td>Yes</td>
+							</tr>
+						</tbody>
+					</table>
+
+					<p>A successful request will result with HTTP status code 200 OK.</p>
+
+					<p><strong>Example request to delete RDFSource :</strong></p>
+
+					<pre highlight>
+						DELETE /apps/rest-examples/persons/john-doe/ HTTP/1.1
+						Authorization: Basic
+					</pre>
+
 				</section>
 
 			</article>
@@ -278,7 +362,7 @@
 
 
 		</div>
-		
+
 		<sidebar-component [mobile]="false" [parentElement]="element" class="four wide computer only four wide tablet only column"></sidebar-component>
 
 	</div>
