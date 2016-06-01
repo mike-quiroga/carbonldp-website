@@ -53,7 +53,10 @@ export default class GettingStartedView {
 	}
 
 	initializeTabs():void {
-		this.$element.find( ".tabular.menu .item" ).tab();
+		this.$element.find( ".tabular.menu .item" ).tab( {
+			history: false
+		} );
+
 	}
 
 	highlightCode():void {

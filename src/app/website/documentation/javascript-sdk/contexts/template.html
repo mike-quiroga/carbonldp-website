@@ -34,10 +34,12 @@
 					<section>
 						<h2 class="ui header"> What is a context?</h2>
 
-						<p>A Context is a reference to the place where you will be working on the server. By declaring a context you are pointing to where your information should go, so that when you
-							are using Carbon modules and methods they know to look for your defined context to channel the information correctly. Without a context, every time you wish to write
-							something in your application you would have to specify the whole address where your
-							information will go, as well as a bunch of information you need to access your information in the server.</p>
+						<p>A Context is a reference to the place where you will be working on the server, by declaring a context you are pointing to where your information should go. When you
+							use Carbon modules and methods, they use the definitions in your context to channel the information correctly. Without a context, every time you
+							wish
+							to write
+							something in your application you would have to specify the whole address of your target, as well as a bunch of information you need to make requests to the
+							server.</p>
 						<p>When using a context you can define settings, authentication services and the <a class="ui definition"
 						                                                                                    data-title="Object Schema"
 						                                                                                    data-content="Object Schema short Definition. Add link "
@@ -53,23 +55,23 @@
 							                                                                                                                                              angularticsCategory="W3C-URI definition"
 							                                                                                                                                              href="https://www.w3.org/TR/ld-glossary/#uniform-resource-identifier">
 								URIs</a> through out your code, the relative URIs will be resolved against your contexts, making your code more or less independent from the location of your
-							platform</p>
+							platform.</p>
 						<p>There are two types of contexts that you can work with:</p>
 						<ul>
 							<li>Platform context</li>
 							<li>App Context</li>
 						</ul>
-						<p>Both of types contexts belong to classes, that extend the <a class="ui definition"
-						                                                                angulartics2On="click"
-						                                                                angularticsEvent="OutboundClick"
-						                                                                angularticsCategory="SDK AbstractContext Specification"
-						                                                                href="https://github.com/CarbonLDP/CarbonLDP-JS-SDK/tree/develop/doc#Carbon-AbstractContext">
-							AbstractContext</a> Class and the <a class="ui definition"
+						<p>Both types of contexts belong to different classes that extend <a class="ui definition"
+						                                                               angulartics2On="click"
+						                                                               angularticsEvent="OutboundClick"
+						                                                               angularticsCategory="SDK AbstractContext Specification"
+						                                                               href="https://github.com/CarbonLDP/CarbonLDP-JS-SDK/tree/develop/doc#Carbon-AbstractContext">
+							AbstractContext</a> Class, which in turn extends <a class="ui definition"
 						                                         angulartics2On="click"
 						                                         angularticsEvent="OutboundClick"
 						                                         angularticsCategory="SDK SDKContext Specification"
 						                                         href="https://github.com/CarbonLDP/CarbonLDP-JS-SDK/tree/develop/doc#Carbon-SDKContext-Class">
-							SDKContext Class</a>, that will be discussed in the next sections.</p>
+							SDKContext</a> Class, that will be discussed in the next sections.</p>
 
 					</section>
 
@@ -77,38 +79,19 @@
 						<h2 class="ui header">Platform context</h2>
 
 						<p> All contexts reference, as we said before, the destination in our server where our information will go.
-							The platform context references your entire Carbon platform, it contains the domain
-							of where your platform is, and gives you access to the modules that allows you to define/modify
-							authentication services and object schemas, that will be available globally
-							to all the applications contained in the same platform context.</p>
+							The platform context references your entire Carbon platform. It contains the domain
+							of where your platform is, and it gives you access to define/modify settings,
+							authentication services and object schemas, that will be available globally for the Carbon SDK Modules
+							to use. The platform context belongs to <a>Carbon </a> Class</p>
 
-						<p>Through your platform context you can use methods such as:</p>
-						<ul>
-							<li>getBaseURI</li>
-							<li>resolve</li>
-							<li>hasSetting</li>
-							<li>getSetting</li>
-							<li>setSetting</li>
-							<li>deleteSetting</li>
-							<li>hasObjectSchema</li>
-							<li>getObjectSchema</li>
-							<li>clearObjectSchema</li>
-							<li>extendObjectSchema</li>
-
-						</ul>
-						<p>And access these properties:</p>
-						<ul>
-							<li>auth:Carbon.Auth.Class</li>
-							<li>documents:Carbon.Documents</li>
-							<li>parentContext:Carbon.Context</li>
-						</ul>
 
 						<section>
 							<h3 class="ui header">Declare the platform context </h3>
 
-							<p>To declare a platform context you need to import Carbon from the carbonldp/Carbon library and instance
-								a new Carbon object, this will be your platform context. You can get the default domain value of the context by resolving it.
-								e.g. the default domain is https://carbonldp.com/platform/</p>
+							<p>To declare a platform context you need to import Carbon from the <a>carbonldp/Carbon</a> library and instance
+								a new Carbon object, this will be your platform context. You can get the default base uri value against which relative URIs will be resolved
+								in the platform context by resolving the relative uri.
+								e.g. the default platform context base URI is https://carbonldp.com/platform/</p>
 
 							<div class="ui top attached tabular menu">
 								<a class="item active" data-tab="typescript">TypeScript</a>
@@ -140,13 +123,17 @@ carbonContext.resolve( "" ); //https://carbonldp.com/platform/
 							</code></pre>
 							<!--@formatter:on-->
 							</div>
+							<p>
+								The <code>context.resolve()</code> method resolve the relative URI provided( "" ) to an absolute URI (https://dev.carbonldp.com/platform/)
+								using the context in which you are working on (in this case carbonContext).
 
 						</section>
 						<section>
 							<h3 class="ui header">Access/Modify your platform context</h3>
 							<p>Now that you have declared a platform context, you can work with it.</p>
 
-							<p>In the next code sample, you can see a platform context that has been set with a different domain than the default value.
+							<p>In the next code sample, you can see a platform context that has been set with a different domain than the default value which is
+								https://carbonldp.com/ .
 								This means that all the relative URIs used in your applications will be resolved against this new domain.</p>
 							<p>Following this pattern you will be able to use all the methods and access all the properties of your carbon context,
 								to see the Carbon class specification click <a class="ui definition"
@@ -155,6 +142,7 @@ carbonContext.resolve( "" ); //https://carbonldp.com/platform/
 								                                               angularticsCategory="Platform Context Specification"
 								                                               href="https://github.com/CarbonLDP/CarbonLDP-JS-SDK/tree/develop/doc#Carbon">
 									here</a></p>
+
 
 							<div class="ui top attached tabular menu">
 								<a class="item active" data-tab="typescript">TypeScript</a>
@@ -189,7 +177,7 @@ carbonContext.resolve( "" ); //https://dev.carbonldp.com/platform;
 								</code></pre>
 							<!--@formatter:on-->
 							</div>
-
+							<p></p>
 							<p>A platform context default settings are:</p>
 
 							<ul>
@@ -201,7 +189,7 @@ carbonContext.resolve( "" ); //https://dev.carbonldp.com/platform;
 								<li>platform.agents.container: "agents/"</li>
 								<li>vocabulary: "vocabulary/#"</li>
 							</ul>
-							<p>You can add as many pesronalized settings as you like.</p>
+							<p>You can add as many personalized settings as you like.</p>
 						</section>
 
 
@@ -215,35 +203,20 @@ carbonContext.resolve( "" ); //https://dev.carbonldp.com/platform;
 							angularticsCategory="Carbon Application Context Specification"
 							href="https://github.com/CarbonLDP/CarbonLDP-JS-SDK/tree/develop/doc#Carbon-App-Context">
 							Carbon.App.Context Class</a>.</p>
-						<p> The application context allows you access to settings specific to the application it references, as well as access to methods
-							that will be resolved directly against your application. You can configure the <a class="ui definition" data-title="Roles"
-							                                                                                  data-content="Definition of Roles... discuss"
-							                                                                                  angulartics2On="click"
-							                                                                                  angularticsEvent="OutboundClick"
-							                                                                                  angularticsCategory="Roles Definition"
+						<p> The application context allows you to set specific settings and information that will be shared and used by all the Carbon modules
+							and methods. You can configure the <a class="ui definition"
+							                                      data-title="Roles"
+							                                      data-content="Definition of Roles... discuss"
+							                                      angulartics2On="click"
+							                                      angularticsEvent="OutboundClick"
+							                                      angularticsCategory="Roles Definition"
 							>roles</a> and <a class="ui definition" data-title="Agents"
 							                  data-content="Definition of Agents... discuss"
 							                  angulartics2On="click"
 							                  angularticsEvent="OutboundClick"
 							                  angularticsCategory="Roles Definition"
-							>agents</a> specific to the application, and you can see what information it contains.</p>
-						<p>To have an application context, you need to have had created the application first, if you do not have an application yet, please <a>create it</a></p>
-
-
-						<p>You can find the methods and properties of App Context Class below: </p>
-
-						<p>Properties</p>
-						<ul>
-							<li>agents:Carbon.Agents.Class</li>
-							<li>app:Carbon.App.Class</li>
-						</ul>
-
-						<p>Methods</p>
-						<ul>
-							<li>resolve</li>
-						</ul>
-
-						<p>Through the application context you can access the same settings, authentication services or object schemas as from your
+							>agents</a> specific to the application, and you can see the information contained in it. Through the application context you can access the same settings,
+							authentication services or object schemas as from your
 							platform context. To see more in depth information about the App Context Class go to the <a
 								class="ui definition"
 								angulartics2On="click"
@@ -253,11 +226,14 @@ carbonContext.resolve( "" ); //https://dev.carbonldp.com/platform;
 								Carbon.App.Context technical specifications</a></p>
 
 						<section>
+
 							<h3 class="ui header">Getting the App Context</h3>
-							<p> Once you have your platform context declared, you can get the application context that will reference it, and you can retrieve the <a>Documents</a> that live
-								inside
-								your application. In the code below you can see how to retrieve the context of your application named "test-app".
-							</p>
+							<p> Once you have your platform context declared, you can get the application context that will reference it. With this
+								context you can use all the modules and methods available to the application, for example: to retrieve the <a>Documents</a> that live
+								inside your application, or to create new information.</p>
+							<p> In the code below you can see how to retrieve a context of your application named "test-app". To have an application context, you need to have had created the
+								application first, if you do not have an application yet, please <a>create it</a></p>
+
 							<div class="ui top attached tabular menu">
 								<a class="item active" data-tab="typescript">TypeScript</a>
 								<a class="item" data-tab="javascript">JavaScript</a>
@@ -295,24 +271,31 @@ carbonContext.apps.getAppContext( "test-app/" ).then(
 							</code></pre>
 							<!--@formatter:on-->
 							</div>
+							<p>
+								The <code>apps.get()</code> method returns a Promise that when resolved, gives you the App
+								Context you need.
+							</p>
+
 						</section>
 					</section>
 					<section>
 
 						<h2 class="ui header">Inheritance</h2>
-						<p>Carbon contexts have an inheritance property. Application contexts inherits the settings, authentication services and object schema from the platform context
-							in which they live. In this section we will discuss the inheritance of settings and authentication services, the object schema inheritance will be discussed in the
+						<p>In this section we will discuss the inheritance of settings and authentication services, the object schema inheritance will be discussed in the
 							<a>Object Schema Documentation</a>, as is a more complex subject.</p>
 
-						<p>When you create an application, its context has access to all the settings, services and object schema contained in the platform context in
-							which it was created, unless you specifically overwrite them. The application context settings are not defined when the application is created, but
-							they are obtained from the platform context. This means that when a setting is accessed from an application context, the setting is expected to be found in the application
-							context first, and if not found there, then it is expected to be in the platform context. If it is not found in either context, then this means the setting has not been
-							set, therefore it doesn't exist. This is known as <a>prototypal inheritance</a>. Bellow you will find an example of settings inheritance.</p>
+						<p>The application context has access to all the settings,
+							services and object schema contained in the platform context in which it lives, unless those settings are explicitly overwritten
+							since they are not defined by default. This
+							means that when there is an attempt to access an application context's setting, it is first searched for in
+							the application context, and if not defined there, then it is searched for in the platform context.
+							If it is not found in either context, then this means the setting has not been defined at all.
+							This type of inheritance is similar to
+							the <a>prototypal inheritance</a>. Bellow you will find an example of settings' inheritance.</p>
 
-						<p>For this next example you will assume you have two applications: test-app and your-app, from which you wish to set and get the setting "name" in both your platform and
-							application context.
-							This applications live in carbonldp.com, and to retrieve them you need to instance your platform context, and applications context for both your applications. </p>
+						<p>For this next example assume you have two applications: test-app and your-app, from which you wish to set and get the setting "name" in both, your platform and
+							application context. These applications live in carbonldp.com, and remember that to get and set the settings you need to instance a platform context, and the
+							application contexts for both apps.</p>
 
 						<div class="ui top attached tabular menu">
 							<a class="item active" data-tab="typescript">TypeScript</a>
@@ -323,59 +306,52 @@ carbonContext.apps.getAppContext( "test-app/" ).then(
 							<!--@formatter:off-->
 								<pre><code class="highlighted typescript">
 import Carbon from "carbonldp/Carbon";
+import * as App from "carbonldp/App";
 
 let carbonContext:Carbon = new Carbon();
+let testAppContext:App.Context;
+let yourAppContext:App.Context;
+
+//Get your application contexts
+carbonContext.apps.getAppContext( "test-app/" ).then(
+	( appContext:App.Context ) => {
+		testAppContext = appContext;
+	}
+);
+carbonContext.apps.getAppContext( "your-app/" ).then(
+	( appContext:App.Context ) => {
+		yourAppContext = appContext;
+	}
+);
 
 //Default Value of name Setting =  null,
 //since the name setting has not been set and it is not predefined in the Platform Context settings
-carbonContext.getSetting( "name" ); //null
-carbonContext.apps.getAppContext( "test-app/" ).then(
-	( appContext:App.Context ) => {
-		appContext.getSetting( "name" ); //null
-	}
-);
-carbonContext.apps.getAppContext( "your-app/" ).then(
-	( appContext:App.Context ) => {
-		appContext.getSetting( "name" ); //null
-	}
-);
+carbonContext.getSetting( "name" );  //null
+testAppContext.getSetting( "name" ); //null
+yourAppContext.getSetting( "name" ); //null
+
 
 //Set name setting in test-app app context
-carbonContext.apps.getAppContext( "test-app/" ).then(
-	( appContext:App.Context ) => {
-		appContext.setSetting( "name", "TestApp" );
-	}
-);
+testAppContext.setSetting( "name", "TestApp" );
 
-carbonContext.getSetting( "name" ); //null
-carbonContext.apps.getAppContext( "test-app/" ).then(
-	( appContext:App.Context ) => {
-		appContext.getSetting( "name" ); //TestApp
-	}
-);
-carbonContext.apps.getAppContext( "your-app/" ).then(
-	( appContext:App.Context ) => {
-		appContext.getSetting( "name" ); //null
-	}
-);
+carbonContext.getSetting( "name" );  //null
+testAppContext.getSetting( "name" ); //TestApp
+yourAppContext.getSetting( "name" ); //null
+
 
 //Set name setting in the platform context
 carbonContext.setSetting( "name", "CarbonPlatform" );
 
-carbonContext.getSetting( "name" ); //CarbonPlatform
-carbonContext.apps.getAppContext( "test-app/" ).then(
-	( appContext:App.Context ) => {
-		appContext.getSetting( "name" ); //TestApp
-	}
-);
-carbonContext.apps.getAppContext( "your-app/" ).then(
-	( appContext:App.Context ) => {
-		appContext.getSetting( "name" ); //CarbonPlatform
-	}
-);
+carbonContext.getSetting( "name" );  //CarbonPlatform
+testAppContext.getSetting( "name" ); //TestApp
+yourAppContext.getSetting( "name" ); //CarbonPlatform
 
+//Deleting an app setting
+testAppContext.deleteSetting( "name" );
 
-
+carbonContext.getSetting( "name" );  //CarbonPlatform
+testAppContext.getSetting( "name" ); //CarbonPlatform
+yourAppContext.getSetting( "name" ); //CarbonPlatform
 
 								</code></pre>
 								<!--@formatter:on-->
