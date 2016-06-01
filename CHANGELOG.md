@@ -1,3 +1,8 @@
+# 0.5.13 (June 1, 2016)
+- Implement new design for Home page.
+- Content improvements/corrections to Getting Started with the REST API.
+- Complete initial draft of REST API doc for RDFSource.
+
 # 0.5.13 (May 17, 2016)
 - Add named fragments component to the DocumentViewer of DocumentExplorer.
 - Remove tabs that showed raw data on each property of a document.
