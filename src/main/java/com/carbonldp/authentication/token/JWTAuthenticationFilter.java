@@ -3,6 +3,7 @@ package com.carbonldp.authentication.token;
 import com.carbonldp.Consts;
 import com.carbonldp.Vars;
 import com.carbonldp.exceptions.StupidityException;
+import com.carbonldp.utils.RequestUtil;
 import io.jsonwebtoken.*;
 import org.openrdf.model.IRI;
 
@@ -11,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.Marker;
 import org.slf4j.MarkerFactory;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
@@ -24,6 +26,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.xml.bind.DatatypeConverter;
 import java.io.IOException;
+import java.util.Map;
+
+import static com.carbonldp.Consts.ORDER_BY;
+import static com.carbonldp.Consts.TICKET;
 
 /**
  * @author NestorVenegas
@@ -46,15 +52,25 @@ public class JWTAuthenticationFilter extends GenericFilterBean implements Filter
 		HttpServletRequest httpRequest = (HttpServletRequest) request;
 		HttpServletResponse httpResponse = (HttpServletResponse) response;
 		String header = httpRequest.getHeader( "Authorization" );
+		String jwt = null;
+		if ( header != null && header.startsWith( "Token " ) ) {
+			jwt = header.substring( 6 );
+		} else {
+			Map<String, String[]> urlParameters = request.getParameterMap();
+			String[] ticketArray = urlParameters.get( TICKET );
+			if ( ticketArray != null ) {
+				jwt = ticketArray[0];
+			}
+		}
 
-		if ( header == null || ! header.startsWith( "Token " ) ) {
+		if ( jwt == null ) {
 			chain.doFilter( request, response );
 			return;
 		}
 
 		Authentication authResult = null;
 		try {
-			authResult = authenticate( header );
+			authResult = authenticate( jwt, httpRequest );
 		} catch ( AuthenticationException e ) {
 			SecurityContextHolder.clearContext();
 
@@ -71,8 +87,8 @@ public class JWTAuthenticationFilter extends GenericFilterBean implements Filter
 		chain.doFilter( request, response );
 	}
 
-	private Authentication authenticate( String header ) {
-		String agentString = extractAndDecodeHeader( header.substring( 6 ) );
+	private Authentication authenticate( String jwt, HttpServletRequest httpRequest ) {
+		String agentString = extractAndDecodeHeader( jwt, httpRequest );
 		IRI agentIRI = SimpleValueFactory.getInstance().createIRI( agentString );
 
 		if ( LOG.isDebugEnabled() ) LOG.debug( "JWT Authentication Authorization header found for user '" + agentString + "'" );
@@ -82,7 +98,8 @@ public class JWTAuthenticationFilter extends GenericFilterBean implements Filter
 		return authenticationManager.authenticate( authRequest );
 	}
 
-	private String extractAndDecodeHeader( String jwt ) {
+	private String extractAndDecodeHeader( String jwt, HttpServletRequest httpRequest ) {
+		IRI targetIRI = getTargetIRI( httpRequest );
 		byte[] signingKey;
 		try {
 			signingKey = DatatypeConverter.parseBase64Binary( Vars.getInstance().getTokenKey() );
@@ -91,13 +108,28 @@ public class JWTAuthenticationFilter extends GenericFilterBean implements Filter
 		}
 
 		try {
-			return Jwts.parser()
-					   .setSigningKey( signingKey )
-					   .parseClaimsJws( jwt )
-					   .getBody()
-					   .getSubject();
+			Claims claims = Jwts
+				.parser()
+				.setSigningKey( signingKey )
+				.parseClaimsJws( jwt )
+				.getBody();
+			validateTargetIRI( claims, targetIRI );
+			return claims.getSubject();
 		} catch ( UnsupportedJwtException | MalformedJwtException | SignatureException | ExpiredJwtException | IllegalArgumentException e ) {
 			throw new BadCredentialsException( "The JSON Web Token isn't valid, nested exception: ", e );
 		}
 	}
+
+	private void validateTargetIRI( Claims claims, IRI targetIRI ) {
+		Map targetIRIClaims = (Map) claims.get( "targetIRI" );
+		if ( targetIRIClaims == null ) return;
+		String tokenTargetIRI = (String) targetIRIClaims.get( "namespace" );
+		if ( ! tokenTargetIRI.equals( targetIRI.stringValue() ) ) throw new AccessDeniedException( "invalid target IRI" );
+	}
+
+	private IRI getTargetIRI( HttpServletRequest request ) {
+		String url = RequestUtil.getRequestURL( request );
+		return SimpleValueFactory.getInstance().createIRI( url );
+	}
+
 }

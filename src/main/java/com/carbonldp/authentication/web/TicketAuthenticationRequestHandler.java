@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -45,6 +46,9 @@ public class TicketAuthenticationRequestHandler extends AbstractLDPRequestHandle
 		Set<RDFBlankNode> blankNodes = document.getBlankNodes();
 		if ( blankNodes.size() != 1 ) throw new InvalidResourceException( new Infraction( 0x2012 ) );
 		RDFBlankNode blankNode = blankNodes.iterator().next();
-		if ( ! TicketFactory.getInstance().is( blankNode ) ) throw new infractions.add( new Infraction( 0x2001, "rdf.type", AgentDescription.Resource.CLASS.getIRI().stringValue() ) );;
+		Ticket ticket = new Ticket( blankNode, blankNode.getSubject() );
+		List<Infraction> infractions = TicketFactory.getInstance().validate( ticket );
+		if ( ! infractions.isEmpty() ) throw new InvalidResourceException( infractions );
+		return ticket.getForIRI();
 	}
 }
