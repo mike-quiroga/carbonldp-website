@@ -34,6 +34,7 @@ export default class ExportBackupComponent {
 	@Input() backupJob:PersistedDocument.Class;
 	errorMessages:Message[] = [];
 	jobsService:JobsService;
+	exportSuccess:boolean;
 
 	constructor( carbon:Carbon, element:ElementRef, jobsService:JobsService ) {
 		this.carbon = carbon;
@@ -43,26 +44,24 @@ export default class ExportBackupComponent {
 
 	ngAfterViewInit():void {
 		this.$element = $( this.element.nativeElement );
-		// console.log( this.appContext );
 		// TODO: Add backup scheduler with datetime when Platform supports it.
 	}
 
 	onGenerateBackup():void {
 		this.executingBackup = true;
 		this.jobsService.runJob( this.backupJob ).then( ( execution:PersistedDocument.Class )=> {
-			this.monitorExecution( execution ).catch( ( error:HTTPError )=> {
-				console.error( error );
-				let errorMessage:Message = <Message>{
-					title: error.name,
-					content: "Couldn't execute backup.",
-					endpoint: (<any>error.response.request).responseURL,
-					statusCode: "" + (<XMLHttpRequest>error.response.request).status,
-					statusMessage: (<XMLHttpRequest>error.response.request).statusText
-				};
-				this.errorMessages.push( errorMessage );
-			} ).then( ()=> {this.executingBackup = false;} );
+			this.monitorExecution( execution ).then( ()=> this.exportSuccess = true )
+				.catch( ( error:HTTPError )=> {
+					let errorMessage:Message = <Message>{
+						title: error.name,
+						content: "Couldn't execute backup.",
+						endpoint: (<any>error.response.request).responseURL,
+						statusCode: "" + (<XMLHttpRequest>error.response.request).status,
+						statusMessage: (<XMLHttpRequest>error.response.request).statusText
+					};
+					this.errorMessages.push( errorMessage );
+				} ).then( ()=> {this.executingBackup = false;} );
 		} ).catch( ( error:HTTPError )=> {
-			console.error( error );
 			this.executingBackup = false;
 			let errorMessage:Message = <Message>{
 				title: error.name,
@@ -91,5 +90,9 @@ export default class ExportBackupComponent {
 
 	removeMessage( index:number ):void {
 		this.errorMessages.splice( index, 1 );
+	}
+
+	onCloseSuccess():void {
+		this.exportSuccess = false;
 	}
 }

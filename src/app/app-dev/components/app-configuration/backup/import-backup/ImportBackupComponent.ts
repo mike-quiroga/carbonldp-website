@@ -97,7 +97,6 @@ export default class ImportBackupComponent {
 				if ( execution[ Job.Execution.STATUS ].id === Job.ExecutionStatus.FINISHED ) this.executing.success();
 				if ( execution[ Job.Execution.STATUS ].id === Job.ExecutionStatus.ERROR ) {
 					this.executing.fail();
-					console.error( "Error from job:", execution );
 					let errorMessage:Message = <Message>{
 						title: "Error while xecuting import",
 						content: "An error occurred while executing your import backup job. Please, fix your job configuration.",
@@ -107,7 +106,6 @@ export default class ImportBackupComponent {
 				}
 			} ).catch( ( error:HTTPError )=> {
 				this.executing.fail();
-				console.error( error );
 				let errorMessage:Message = <Message>{
 					title: error.name,
 					content: "Couldn't monitor the import execution.",
@@ -202,7 +200,6 @@ export default class ImportBackupComponent {
 			}
 		).catch( ( error:HTTPError )=> {
 			this.uploading.fail();
-			console.error( error );
 			let errorMessage:Message = <Message>{
 				title: error.name,
 				content: "Couldn't upload the file.",
@@ -226,7 +223,6 @@ export default class ImportBackupComponent {
 					}
 				).catch( ( error:HTTPError )=> {
 					this.executing.fail();
-					console.error( error );
 					let errorMessage:Message = <Message>{
 						title: error.name,
 						content: "Couldn't monitor the import execution.",
@@ -239,7 +235,6 @@ export default class ImportBackupComponent {
 			}
 		).catch( ( error:HTTPError )=> {
 			this.creating.fail();
-			console.error( error );
 			let errorMessage:Message = <Message>{
 				title: error.name,
 				content: "The importing job couldn't be created.",

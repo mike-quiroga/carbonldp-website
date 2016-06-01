@@ -1,5 +1,4 @@
 import { Component, ElementRef, Input } from "@angular/core";
-import { CORE_DIRECTIVES } from "@angular/common";
 
 import $ from "jquery";
 import "semantic-ui/semantic";
@@ -20,39 +19,26 @@ import "./style.css!";
 @Component( {
 	selector: "backup",
 	template: template,
-	directives: [ CORE_DIRECTIVES, ExportBackupComponent, ImportBackupComponent, BackupsListComponent ],
+	directives: [ ExportBackupComponent, ImportBackupComponent, BackupsListComponent ],
 } )
 
 export default class BackupComponent {
 
-	element:ElementRef;
-	$element:JQuery;
 	backupJob:PersistedDocument.Class;
 	jobsService:JobsService;
 	@Input() appContext:App.Context;
 
-	constructor( element:ElementRef, jobsService:JobsService ) {
-		this.element = element;
+	constructor( jobsService:JobsService ) {
 		this.jobsService = jobsService;
 	}
 
 	ngOnInit():void {
 		this.jobsService.getJobOfType( Job.Type.EXPORT_BACKUP, this.appContext ).then( ( job:PersistedDocument.Class )=> {
-			if ( ! job ) {
-				this.jobsService.createExportBackup( this.appContext ).then( ( exportBackupJob:PersistedDocument.Class ) => {
-					console.log( "The created Jobs is: %o", exportBackupJob );
-					this.backupJob = exportBackupJob;
-				} );
-			} else {
-				this.backupJob = job;
-				console.log( "Job found: %o", job );
-			}
+			if ( ! ! job ) this.backupJob = job;
+			else this.jobsService.createExportBackup( this.appContext ).then( ( exportBackupJob:PersistedDocument.Class ) => {
+				this.backupJob = exportBackupJob;
+			} );
 		} );
-	}
-
-
-	ngAfterViewInit():void {
-		this.$element = $( this.element.nativeElement );
 	}
 
 }

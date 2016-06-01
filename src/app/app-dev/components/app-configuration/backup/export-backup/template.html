@@ -16,3 +16,14 @@
 	               (onClose)="removeMessage(i)">
 	</error-message>
 </div>
+<div class="ui basic segment" *ngIf="exportSuccess">
+	<div class="ui success message transition">
+		<i class="close icon" (click)="onCloseSuccess()"></i>
+		<div class="content">
+			<div class="header">Successful export</div>
+			<p>
+				The backup has been successfully exported.
+			</p>
+		</div>
+	</div>
+</div>
