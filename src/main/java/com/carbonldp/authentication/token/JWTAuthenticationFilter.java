@@ -38,6 +38,7 @@ import static com.carbonldp.Consts.TICKET;
 public class JWTAuthenticationFilter extends GenericFilterBean implements Filter {
 	protected final Logger LOG = LoggerFactory.getLogger( this.getClass() );
 	protected final Marker FATAL = MarkerFactory.getMarker( Consts.FATAL );
+	boolean isTicket;
 
 	private AuthenticationManager authenticationManager;
 	private AuthenticationEntryPoint authenticationEntryPoint;
@@ -53,6 +54,7 @@ public class JWTAuthenticationFilter extends GenericFilterBean implements Filter
 		HttpServletResponse httpResponse = (HttpServletResponse) response;
 		String header = httpRequest.getHeader( "Authorization" );
 		String jwt = null;
+		isTicket = false;
 		if ( header != null && header.startsWith( "Token " ) ) {
 			jwt = header.substring( 6 );
 		} else {
@@ -60,6 +62,7 @@ public class JWTAuthenticationFilter extends GenericFilterBean implements Filter
 			String[] ticketArray = urlParameters.get( TICKET );
 			if ( ticketArray != null ) {
 				jwt = ticketArray[0];
+				isTicket = true;
 			}
 		}
 
@@ -122,7 +125,10 @@ public class JWTAuthenticationFilter extends GenericFilterBean implements Filter
 
 	private void validateTargetIRI( Claims claims, IRI targetIRI ) {
 		Map targetIRIClaims = (Map) claims.get( "targetIRI" );
-		if ( targetIRIClaims == null ) return;
+		if ( targetIRIClaims == null ) {
+			if ( isTicket ) throw new AccessDeniedException( "invalid target IRI" );
+			return;
+		}
 		String tokenTargetIRI = (String) targetIRIClaims.get( "namespace" );
 		if ( ! tokenTargetIRI.equals( targetIRI.stringValue() ) ) throw new AccessDeniedException( "invalid target IRI" );
 	}
