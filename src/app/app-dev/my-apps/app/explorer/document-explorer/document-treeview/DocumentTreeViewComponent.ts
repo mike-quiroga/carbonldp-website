@@ -3,7 +3,7 @@ import { Component, ElementRef, Input, Output, EventEmitter } from "@angular/cor
 import $ from "jquery";
 import "semantic-ui/semantic";
 import "jstree";
-import "jstree/dist/themes/default/style.min.css!";
+import "src/assets/node_modules/jstree/dist/themes/default/style.min.css!";
 
 import * as Pointer from "carbonldp/Pointer";
 import * as PersistedDocument from "carbonldp/PersistedDocument";
