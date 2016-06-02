@@ -11,6 +11,8 @@
 - Add ErrorMessageComponent to ErrorsAreaComponent to display messages in a single <error-message> tag.
 - Remove Edit option from opened App sidebar options.
 - Add app configuration option to App sidebar options.
+- Add copy_node_modules:files and copy_node_modules:packages tasks to gulpfile to copy files and packages from node_modules.
+- Fix JStree CSS import problem to point to npm_modules from src/assets. instead of jspm/node_modules.
 
 # 0.5.13 (May 17, 2016)
 - Add named fragments component to the DocumentViewer of DocumentExplorer.
