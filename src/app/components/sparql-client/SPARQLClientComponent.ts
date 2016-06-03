@@ -1,5 +1,5 @@
 import { Component, ElementRef, Input, Output, EventEmitter } from "@angular/core";
-import { CORE_DIRECTIVES, FORM_DIRECTIVES } from "@angular/common";
+import { FORM_DIRECTIVES } from "@angular/common";
 
 import { Authenticated } from "angular2-carbonldp/decorators";
 
@@ -21,7 +21,7 @@ import "./style.css!";
 @Component( {
 	selector: "sparql-client",
 	template: template,
-	directives: [ CORE_DIRECTIVES, FORM_DIRECTIVES, CodeMirrorComponent.Class, ResponseComponent, ResponseComponent, ],
+	directives: [ FORM_DIRECTIVES, CodeMirrorComponent.Class, ResponseComponent, ResponseComponent, ],
 } )
 @Authenticated( {
 	redirectTo: [ "/Website/Login" ],

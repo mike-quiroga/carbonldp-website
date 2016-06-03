@@ -1,7 +1,5 @@
-import { Component, Input, Output, SimpleChange, EventEmitter, ElementRef } from "@angular/core";
-import { CORE_DIRECTIVES } from "@angular/common";
+import { Component, Input, Output, SimpleChange, EventEmitter } from "@angular/core";
 
-import $ from "jquery";
 import "semantic-ui/semantic";
 
 import RelativizeURIPipe from "./RelativizeURIPipe";
@@ -12,7 +10,6 @@ import "./style.css!";
 
 @Component( {
 	selector: "resultset-table",
-	directives: [ CORE_DIRECTIVES ],
 	template: template,
 	pipes: [ RelativizeURIPipe, PrefixURIPipe ],
 } )
@@ -28,16 +25,7 @@ export class ResultsetTableComponent {
 
 	bindings:any;
 
-	private element:ElementRef;
-	private $element:JQuery;
-
-	constructor( element:ElementRef ) {
-		this.element = element;
-	}
-
-	ngOnInit():void {
-		this.$element = $( this.element.nativeElement );
-	}
+	constructor() {}
 
 	ngOnChanges( changeRecord:any ):void {
 		if ( "resultset" in changeRecord ) {

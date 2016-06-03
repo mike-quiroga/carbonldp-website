@@ -1,8 +1,5 @@
-import { Component, ElementRef, Host, Inject, forwardRef } from "@angular/core";
-import { CORE_DIRECTIVES } from "@angular/common";
-import { ROUTER_PROVIDERS, Router, Instruction } from "@angular/router-deprecated";
+import { Component, Host, Inject, forwardRef } from "@angular/core";
 
-import $ from "jquery";
 import "semantic-ui/semantic";
 
 import * as App from "carbonldp/App";
@@ -16,25 +13,17 @@ import template from "./template.html!";
 @Component( {
 	selector: "dashboard",
 	template: template,
-	directives: [ CORE_DIRECTIVES, SPARQLClientComponent, ],
+	directives: [ SPARQLClientComponent, ],
 } )
 
 export default class SPARQLEditorView {
-	router:Router;
-	element:ElementRef;
 	$element:JQuery;
 	appContext:App.Context;
 	private errorsAreaService:ErrorsAreaService;
 
-	constructor( router:Router, element:ElementRef, errorsAreaService:ErrorsAreaService, @Host() @Inject( forwardRef( () => AppDetailView ) )appDetail:AppDetailView ) {
-		this.router = router;
-		this.element = element;
+	constructor( errorsAreaService:ErrorsAreaService, @Host() @Inject( forwardRef( () => AppDetailView ) )appDetail:AppDetailView ) {
 		this.appContext = appDetail.appContext;
 		this.errorsAreaService = errorsAreaService;
-	}
-
-	ngAfterViewInit():void {
-		this.$element = $( this.element.nativeElement );
 	}
 
 	notifyErrorAreaService( error:any ):void {
