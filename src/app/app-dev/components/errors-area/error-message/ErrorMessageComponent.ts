@@ -24,7 +24,7 @@ export default class ErrorMessageComponent {
 	@Input() endpoint:string;
 	@Input() message:Message;
 	@Input() closable:boolean = false;
-	@Output() onClose:EventEmitter<void> = new EventEmitter();
+	@Output() onClose:EventEmitter<any> = new EventEmitter();
 
 	constructor( elementRef:ElementRef ) {
 		this.element = elementRef;
@@ -50,6 +50,6 @@ export default class ErrorMessageComponent {
 
 	close( event:Event ):void {
 		$( event.srcElement ).closest( ".message" ).transition( "fade" );
-		this.onClose.emit();
+		this.onClose.emit( true );
 	}
 }

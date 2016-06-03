@@ -1,5 +1,5 @@
 import { Component, ElementRef, Input } from "@angular/core";
-import { CORE_DIRECTIVES, FormBuilder, ControlGroup, AbstractControl, Control, Validators } from "@angular/common";
+import { FormBuilder, ControlGroup, AbstractControl, Control, Validators } from "@angular/common";
 
 import $ from "jquery";
 import "semantic-ui/semantic";
@@ -22,7 +22,7 @@ import "./style.css!";
 @Component( {
 	selector: "import-backup",
 	template: template,
-	directives: [ CORE_DIRECTIVES, ErrorMessageComponent ],
+	directives: [ ErrorMessageComponent ],
 } )
 
 export default class ImportBackupComponent {
@@ -90,34 +90,43 @@ export default class ImportBackupComponent {
 		return this.jobsService.runJob( importJob );
 	}
 
-	monitorExecution( importJobExecution:PersistedDocument.Class ):void {
-		let interval:any = setInterval( ()=> {
-			this.jobsService.checkJobExecution( importJobExecution ).then( ( execution )=> {
-				if ( ! execution[ Job.Execution.STATUS ] )Promise.reject( execution );
-				if ( execution[ Job.Execution.STATUS ].id === Job.ExecutionStatus.FINISHED ) this.executing.success();
-				if ( execution[ Job.Execution.STATUS ].id === Job.ExecutionStatus.ERROR ) {
-					this.executing.fail();
-					let errorMessage:Message = <Message>{
-						title: "Error while xecuting import",
-						content: "An error occurred while executing your import backup job. Please, fix your job configuration.",
-						statusMessage: execution[ Job.Execution.ERROR_DESCRIPTION ]
-					};
-					this.errorMessages.push( errorMessage );
-				}
-			} ).catch( ( error:HTTPError )=> {
+	monitorExecution( importJobExecution:PersistedDocument.Class ):Promise<PersistedDocument.Class> {
+		return new Promise<PersistedDocument.Class>( ( resolve:( result:any ) => void, reject:( error:HTTPError|PersistedDocument.Class ) => void ) => {
+			let interval:any = setInterval( ()=> {
+				this.checkImportJobExecution( importJobExecution ).then( ()=> {
+					if ( this.executing.done ) {
+						clearInterval( interval );
+						resolve( importJobExecution );
+					}
+				} );
+			}, 3000 );
+		} );
+	}
+
+	private checkImportJobExecution( importJobExecution:PersistedDocument.Class ):Promise<any> {
+		return this.jobsService.checkJobExecution( importJobExecution ).then( ( execution )=> {
+			if ( ! execution[ Job.Execution.STATUS ] ) return Promise.reject( execution );
+			if ( execution[ Job.Execution.STATUS ].id === Job.ExecutionStatus.FINISHED ) this.executing.success();
+			if ( execution[ Job.Execution.STATUS ].id === Job.ExecutionStatus.ERROR ) {
 				this.executing.fail();
 				let errorMessage:Message = <Message>{
-					title: error.name,
-					content: "Couldn't monitor the import execution.",
-					endpoint: (<any>error.response.request).responseURL,
-					statusCode: "" + (<XMLHttpRequest>error.response.request).status,
-					statusMessage: (<XMLHttpRequest>error.response.request).statusText
+					title: "Error while executing import",
+					content: "An error occurred while executing your import backup job. Please, fix your job configuration.",
+					statusMessage: execution[ Job.Execution.ERROR_DESCRIPTION ]
 				};
 				this.errorMessages.push( errorMessage );
-			} ).then( ()=> {
-				if ( this.executing.done ) clearInterval( interval )
-			} );
-		}, 3000 );
+			}
+		} ).catch( ( error:HTTPError )=> {
+			this.executing.fail();
+			let errorMessage:Message = <Message>{
+				title: error.name,
+				content: "Couldn't monitor the import execution.",
+				endpoint: (<any>error.response.request).responseURL,
+				statusCode: "" + (<XMLHttpRequest>error.response.request).status,
+				statusMessage: (<XMLHttpRequest>error.response.request).statusText
+			};
+			this.errorMessages.push( errorMessage );
+		} )
 	}
 
 	onFileChange( event ):void {
@@ -211,29 +220,24 @@ export default class ImportBackupComponent {
 		} );
 	}
 
-	createBackupImport( backupURI:string ):void {
+	createBackupImport( backupURI:string ):Promise<any> {
 		this.creating.start();
-		this.jobsService.createImportBackup( backupURI, this.appContext ).then(
-			( importJob:PersistedDocument.Class )=> {
-				this.creating.success();
-				this.executing.start();
-				this.executeImport( importJob ).then(
-					( importJobExecution:PersistedDocument.Class )=> {
-						this.monitorExecution( importJobExecution );
-					}
-				).catch( ( error:HTTPError )=> {
-					this.executing.fail();
-					let errorMessage:Message = <Message>{
-						title: error.name,
-						content: "Couldn't monitor the import execution.",
-						endpoint: (<any>error.response.request).responseURL,
-						statusCode: "" + (<XMLHttpRequest>error.response.request).status,
-						statusMessage: (<XMLHttpRequest>error.response.request).statusText
-					};
-					this.errorMessages.push( errorMessage );
-				} );
-			}
-		).catch( ( error:HTTPError )=> {
+		return this.jobsService.createImportBackup( backupURI, this.appContext ).then( ( importJob:PersistedDocument.Class )=> {
+			this.creating.success();
+			this.executing.start();
+			return this.executeImport( importJob ).then( ( importJobExecution:PersistedDocument.Class )=> {this.monitorExecution( importJobExecution );}
+			).catch( ( error:HTTPError )=> {
+				this.executing.fail();
+				let errorMessage:Message = <Message>{
+					title: error.name,
+					content: "Couldn't monitor the import execution.",
+					endpoint: (<any>error.response.request).responseURL,
+					statusCode: "" + (<XMLHttpRequest>error.response.request).status,
+					statusMessage: (<XMLHttpRequest>error.response.request).statusText
+				};
+				this.errorMessages.push( errorMessage );
+			} );
+		} ).catch( ( error:HTTPError )=> {
 			this.creating.fail();
 			let errorMessage:Message = <Message>{
 				title: error.name,

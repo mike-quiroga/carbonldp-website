@@ -1,5 +1,4 @@
 import { Component, ElementRef, Input } from "@angular/core";
-import { CORE_DIRECTIVES, } from "@angular/common";
 
 import $ from "jquery";
 import "semantic-ui/semantic";
@@ -20,7 +19,7 @@ import "./style.css!";
 @Component( {
 	selector: "export-backup",
 	template: template,
-	directives: [ CORE_DIRECTIVES, ErrorMessageComponent ],
+	directives: [ ErrorMessageComponent ],
 } )
 
 export default class ExportBackupComponent {
@@ -52,13 +51,17 @@ export default class ExportBackupComponent {
 
 		this.jobsService.runJob( this.backupJob ).then( ( execution:PersistedDocument.Class )=> {
 			return this.monitorExecution( execution ).catch( ( executionOrError:HTTPError|PersistedDocument.Class ) => {
-				// TODO: If its an HTTPError, return Promise.reject( executionOrError );
-
-			});
+				if ( executionOrError.hasOwnProperty( "response" ) ) return Promise.reject( executionOrError );
+				let errorMessage:Message = <Message>{
+					title: "Couldn't execute backup.",
+					content: "An error occurred while executing your export backup job. This may be caused due to a bad configuration during the creation of your job.",
+					statusMessage: execution[ Job.Execution.ERROR_DESCRIPTION ]
+				};
+				this.errorMessages.push( errorMessage );
+			} );
 		} ).then( ()=> {
 			this.exportSuccess = true;
 		} ).catch( ( error:HTTPError )=> {
-			// TODO: This catch block is catching errors that are thrown by monitorExecution. This means execution objects can also come instead of an HTTPError
 			let errorMessage:Message = <Message>{
 				title: error.name,
 				content: "Couldn't execute backup.",
@@ -76,15 +79,27 @@ export default class ExportBackupComponent {
 		return new Promise<PersistedDocument.Class>( ( resolve:( result:any ) => void, reject:( error:HTTPError|PersistedDocument.Class ) => void ) => {
 			let interval:number = setInterval( ()=> {
 				execution.refresh().then( ()=> {
-					if ( execution[ Job.Execution.STATUS ] !== Job.ExecutionStatus.FINISHED ) {
-						clearInterval( interval );
-						resolve( execution );
-					} else if ( execution[ Job.Execution.STATUS ] !== Job.ExecutionStatus.ERROR ) {
-						clearInterval( interval );
-						reject( execution );
+					switch ( execution[ Job.Execution.STATUS ].id ) {
+						case Job.ExecutionStatus.FINISHED:
+							clearInterval( interval );
+							resolve( execution );
+							break;
+						case Job.ExecutionStatus.ERROR:
+							clearInterval( interval );
+							reject( execution );
+							break;
 					}
-				} ).catch( () => {
-					// TODO: What happens if the refresh method fails?
+				} ).catch( ( error:HTTPError ) => {
+					let errorMessage:Message = <Message>{
+						title: error.name,
+						content: "Couldn't monitor the exporting backup status.",
+						endpoint: (<any>error.response.request).responseURL,
+						statusCode: "" + (<XMLHttpRequest>error.response.request).status,
+						statusMessage: (<XMLHttpRequest>error.response.request).statusText
+					};
+					this.errorMessages = [ errorMessage ];
+					clearInterval( interval );
+					this.executingBackup = false;
 				} );
 			}, 3000 );
 		} );

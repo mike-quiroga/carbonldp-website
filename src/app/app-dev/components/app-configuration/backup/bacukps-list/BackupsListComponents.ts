@@ -8,6 +8,7 @@ import Carbon from "carbonldp/Carbon";
 import * as App from "carbonldp/App";
 import * as Response from "carbonldp/HTTP/Response";
 import * as PersistedDocument from "carbonldp/PersistedDocument";
+import { StatusCode as HTTPStatusCode } from "carbonldp/HTTP";
 import { Error as HTTPError } from "carbonldp/HTTP/Errors";
 
 import BackupsService from "./../BackupsService";
@@ -38,7 +39,6 @@ export default class BackupsListComponent {
 	deletingBackup:boolean = false;
 	errorMessages:Message[] = [];
 	refreshPeriod:number = 15000;
-	deleteMessage:Message;
 	deleteMessages:Message[] = [];
 
 	@Input() backupJob:PersistedDocument.Class;
@@ -75,33 +75,27 @@ export default class BackupsListComponent {
 	}
 
 	monitorBackups():void {
-		setInterval( ()=> {
-			this.getBackups();
-		}, this.refreshPeriod );
+		setInterval( ()=> this.getBackups(), this.refreshPeriod );
 	}
 
 	getBackups():Promise<PersistedDocument.Class[]> {
-		return new Promise<PersistedDocument.Class[]>( ( resolve:( result:any ) => void, reject:( error:Error ) => void ) => {
-			this.errorMessages = [];
-			this.backupsService.getAll( this.appContext ).then(
-				( [backups, response]:[PersistedDocument.Class[],Response.Class] ) => {
-					backups = backups.sort( ( a:any, b:any ) => a.modified < b.modified ? - 1 : a.modified > b.modified ? 1 : 0 );
-					this.backups = backups;
-					resolve( backups );
-				}
-			).catch(
-				( error ) => {
-					reject( error );
-					let errorMessage:Message = <Message>{
-						title: error.name,
-						content: `Couldn't fetch backups. I'll try again in ${(this.refreshPeriod / 1000)} seconds.`,
-						endpoint: (<any>error.response.request).responseURL,
-						statusCode: "" + (<XMLHttpRequest>error.response.request).status,
-						statusMessage: (<XMLHttpRequest>error.response.request).statusText
-					};
-					this.errorMessages.push( errorMessage );
-				}
-			);
+		this.errorMessages = [];
+		return this.backupsService.getAll( this.appContext ).then(
+			( [backups, response]:[PersistedDocument.Class[],Response.Class] ) => {
+				backups = backups.sort( ( a:any, b:any ) => a.modified < b.modified ? - 1 : a.modified > b.modified ? 1 : 0 );
+				this.backups = backups;
+				return backups;
+			}
+		).catch( ( error:HTTPError ) => {
+			let errorMessage:Message = <Message>{
+				title: error.name,
+				content: `Couldn't fetch backups. I'll try again in ${(this.refreshPeriod / 1000)} seconds.`,
+				endpoint: (<any>error.response.request).responseURL,
+				statusCode: "" + (<XMLHttpRequest>error.response.request).status,
+				statusMessage: (<XMLHttpRequest>error.response.request).statusText
+			};
+			this.errorMessages.push( errorMessage );
+			return error;
 		} );
 	}
 
@@ -115,25 +109,36 @@ export default class BackupsListComponent {
 		this.$deleteBackupConfirmationModal.modal( "show" );
 	}
 
-	deleteBackup( backup:PersistedDocument.Class ):void {
+	deleteBackup( backup:PersistedDocument.Class ):Promise<Response.Class> {
 		this.deletingBackup = true;
-		this.backupsService.delete( backup.id, this.appContext ).then( ( response:Response.Class )=> {
-			if ( response.status === 200 ) {
-				this.closeDeleteModal();
-				this.getBackups();
-				this.deletingBackup = false;
+		return this.backupsService.delete( backup.id, this.appContext ).then( ( response:Response.Class ):Response.Class => {
+			if ( response.status !== HTTPStatusCode.OK ) return Promise.reject( response );
+			this.getBackups();
+			this.closeDeleteModal();
+			return response;
+		} ).catch( ( errorOrResponse:HTTPError|Response.Class )=> {
+			let deleteMessage:Message;
+			if ( errorOrResponse.hasOwnProperty( "response" ) ) {
+				deleteMessage = <Message>{
+					title: (<HTTPError>errorOrResponse).name,
+					content: "Couldn't delete the backup.",
+					endpoint: (<any>(<HTTPError>errorOrResponse).response.request).responseURL,
+					statusCode: "" + (<XMLHttpRequest>(<HTTPError>errorOrResponse).response.request).status,
+					statusMessage: (<XMLHttpRequest>(<HTTPError>errorOrResponse).response.request).statusText
+				};
+			} else {
+				deleteMessage = <Message>{
+					title: (<XMLHttpRequest>(<Response.Class>errorOrResponse).request).statusText,
+					content: "Couldn't delete the backup.",
+					endpoint: (<any>(<Response.Class>errorOrResponse).request).responseURL,
+					statusCode: "" + (<Response.Class>errorOrResponse).status,
+					statusMessage: (<XMLHttpRequest>(<Response.Class>errorOrResponse).request).statusText
+				};
 			}
-		} ).catch( ( error:HTTPError )=> {
-			console.error( error );
-			this.deletingBackup = false;
-			let deleteMessage:Message = <Message>{
-				title: error.name,
-				content: "Couldn't delete the backup.",
-				endpoint: (<any>error.response.request).responseURL,
-				statusCode: "" + (<XMLHttpRequest>error.response.request).status,
-				statusMessage: (<XMLHttpRequest>error.response.request).statusText
-			};
 			this.deleteMessages.push( deleteMessage );
+		} ).then( ( response:Response.Class )=> {
+			this.deletingBackup = false;
+			return response;
 		} );
 	}
 

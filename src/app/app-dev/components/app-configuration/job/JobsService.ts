@@ -94,14 +94,17 @@ export default class Class {
 	}
 
 	checkJobExecution( jobExecution:PersistedDocument.Class ):Promise<PersistedDocument.Class> {
-		return new Promise<PersistedDocument.Class>(
-			( resolve:( result:any ) => void, reject:( error:Error ) => void ) => {
-				this.carbon.documents.get( jobExecution.id ).then(
-					( [resolvedJobExecution, response]:[PersistedDocument.Class, HTTP.Response.Class] )=> {
-						resolve( resolvedJobExecution );
-					} ).catch( ( error )=> reject( error ) );
-			}
-		);
+		if ( jobExecution.isResolved() ) {
+			return jobExecution.refresh().then(
+				( [resolvedJobExecution, response]:[PersistedDocument.Class, HTTP.Response.Class] )=> {
+					return resolvedJobExecution;
+				} ).catch( ( error )=> { return Promise.reject( error ) } );
+		} else {
+			return this.carbon.documents.get( jobExecution.id ).then(
+				( [resolvedJobExecution, response]:[PersistedDocument.Class, HTTP.Response.Class] )=> {
+					return resolvedJobExecution;
+				} ).catch( ( error )=> { return Promise.reject( error ) } );
+		}
 	}
 
 	private addJob( job:PersistedDocument.Class ):void {
