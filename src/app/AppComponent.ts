@@ -1,6 +1,6 @@
-import { Component } from "angular2/core";
-import { CORE_DIRECTIVES } from "angular2/common";
-import { ROUTER_DIRECTIVES, RouteConfig } from "angular2/router";
+import { Component } from "@angular/core";
+import { CORE_DIRECTIVES } from "@angular/common";
+import { ROUTER_DIRECTIVES, RouteConfig } from "@angular/router-deprecated";
 
 import { Angulartics2GoogleAnalytics } from "angulartics2/src/providers/angulartics2-google-analytics";
 import { Angulartics2 } from "angulartics2";

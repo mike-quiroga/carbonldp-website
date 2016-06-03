@@ -4,11 +4,12 @@
 import "zone.js";
 import "reflect-metadata";
 
-import { bootstrap } from "angular2/platform/browser";
-import { provide, enableProdMode, Provider, ComponentRef } from "angular2/core";
-import { FORM_PROVIDERS } from "angular2/common";
-import { ROUTER_PROVIDERS, APP_BASE_HREF } from "angular2/router";
-import { HTTP_PROVIDERS } from "angular2/http";
+import { bootstrap } from "@angular/platform-browser-dynamic";
+import { Title } from "@angular/platform-browser";
+import { provide, enableProdMode, Provider, ComponentRef } from "@angular/core";
+import { FORM_PROVIDERS, APP_BASE_HREF } from "@angular/common";
+import { ROUTER_PROVIDERS } from "@angular/router-deprecated";
+import { HTTP_PROVIDERS } from "@angular/http";
 
 import { appInjector, activeContext, CARBON_PROVIDERS } from "angular2-carbonldp/boot";
 import { CARBON_SERVICES_PROVIDERS } from "angular2-carbonldp/services";
@@ -37,9 +38,10 @@ bootstrap( AppComponent, [
 	FORM_PROVIDERS,
 	ROUTER_PROVIDERS,
 	HTTP_PROVIDERS,
+	Title,
 	Angulartics2,
 
-	provide( APP_BASE_HREF, { useValue: "<%- url.base %>" } ),
+	provide( APP_BASE_HREF, {useValue: "<%- url.base %>"} ),
 
 	providers,
 	BLOG_PROVIDERS,

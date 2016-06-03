@@ -1,4 +1,4 @@
-<div class="ui error message transition" *ngFor="#message of messages">
+<div class="ui error message transition" *ngFor="let message of messages">
 	<i class="close icon" (click)="closeMessage($event)"></i>
 	<div class="header">
 		{{message.title}}

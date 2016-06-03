@@ -1,6 +1,6 @@
 {
   "name": "carbon-website",
-  "version": "0.5.9",
+  "version": "0.5.13",
   "description": "Public Website for carbonldp.com",
   "main": "dist/index.html",
   "author": "Base22 LLC",
@@ -37,24 +37,24 @@
     "gulp-chug": "^0.5.1",
     "gulp-ejs": "^2.0.0",
     "gulp-rename": "^1.2.2",
-    "gulp-sass": "^2.1.0",
+    "gulp-sass": "^2.3.1",
     "gulp-scss-lint": "^0.3.7",
     "gulp-sourcemaps": "^1.6.0",
-    "gulp-tslint": "^4.3.4",
+    "gulp-tslint": "^5.0.0",
     "gulp-util": "^3.0.7",
     "gulp-watch": "^4.3.5",
     "gulp-webserver": "^0.9.1",
     "jspm": "^0.17.0-beta.12",
     "reflect-metadata": "^0.1.2",
-    "run-sequence": "^1.1.5",
+    "run-sequence": "^1.2.0",
     "rxjs": "^5.0.0-beta.2",
     "semantic-ui": "^2.1.8",
     "systemjs": "^0.19.26",
     "systemjs-builder": "^0.15.14",
-    "tslint": "^3.6.0",
-    "typescript": "^1.8.7",
+    "tslint": "^3.10.2",
+    "typescript": "^1.8.10",
     "typings": "^0.7.11",
-    "yargs": "^4.3.2",
+    "yargs": "^4.7.1",
     "zone.js": "^0.6.10"
   },
   "scripts": {
@@ -68,14 +68,15 @@
       "lib": "src/app"
     },
     "dependencies": {
-      "angular2": "npm:angular2@^2.0.0-beta.14",
-      "angulartics2": "npm:angulartics2@^1.0.1",
+      "": "npm:@angular/http@^2.0.0-rc.1",
+      "angulartics2": "npm:angulartics2@^1.0.11",
       "codemirror": "npm:codemirror@^5.12.0",
       "css": "github:systemjs/plugin-css@^0.1.20",
       "highlight.js": "npm:highlight.js@^9.3.0",
       "jquery": "npm:jquery@^2.2.1",
       "js-cookie": "npm:js-cookie@^2.1.0",
       "jsonld": "npm:jsonld@^0.4.6",
+      "jstree": "npm:jstree@^3.3.0",
       "plugin-typescript": "github:frankwallis/plugin-typescript@^4.0.5",
       "text": "github:systemjs/plugin-text@^0.0.7",
       "typescript": "npm:typescript@^1.8.9",
@@ -85,6 +86,12 @@
       "clean-css": "npm:clean-css@^3.4.10"
     },
     "peerDependencies": {
+      "@angular/common": "npm:@angular/common@2.0.0-rc.1",
+      "@angular/compiler": "npm:@angular/compiler@2.0.0-rc.1",
+      "@angular/core": "npm:@angular/core@2.0.0-rc.1",
+      "@angular/platform-browser": "npm:@angular/platform-browser@2.0.0-rc.1",
+      "@angular/platform-browser-dynamic": "npm:@angular/platform-browser-dynamic@2.0.0-rc.1",
+      "@angular/router-deprecated": "npm:@angular/router-deprecated@2.0.0-rc.1",
       "assert": "github:jspm/nodelibs-assert@^0.2.0-alpha",
       "buffer": "github:jspm/nodelibs-buffer@^0.2.0-alpha",
       "child_process": "github:jspm/nodelibs-child_process@^0.2.0-alpha",
@@ -104,13 +111,13 @@
       "module": "github:jspm/nodelibs-module@^0.2.0-alpha",
       "net": "github:jspm/nodelibs-net@^0.2.0-alpha",
       "os": "github:jspm/nodelibs-os@^0.2.0-alpha",
-      "path": "github:jspm/nodelibs-path@^0.1.0",
+      "path": "github:jspm/nodelibs-path@^0.2.0-alpha",
       "process": "github:jspm/nodelibs-process@^0.2.0-alpha",
       "punycode": "github:jspm/nodelibs-punycode@^0.2.0-alpha",
       "querystring": "github:jspm/nodelibs-querystring@^0.2.0-alpha",
       "readline": "github:jspm/nodelibs-readline@^0.2.0-alpha",
       "reflect-metadata": "npm:reflect-metadata@0.1.3",
-      "rxjs": "npm:rxjs@5.0.0-beta.2",
+      "rxjs": "npm:rxjs@5.0.0-beta.6",
       "stream": "github:jspm/nodelibs-stream@^0.2.0-alpha",
       "string_decoder": "github:jspm/nodelibs-string_decoder@^0.2.0-alpha",
       "tls": "github:jspm/nodelibs-tls@^0.2.0-alpha",
@@ -121,23 +128,62 @@
       "zlib": "github:jspm/nodelibs-zlib@^0.2.0-alpha"
     },
     "overrides": {
-      "npm:angular2@2.0.0-beta.14": {
-        "main": false,
-        "dependencies": {
-          "reflect-metadata": "npm:reflect-metadata@^0.1.3",
-          "rxjs": "npm:rxjs@^5.0.0-beta.2",
-          "zone.js": "npm:zone.js@^0.6.8"
-        },
-        "peerDependencies": {
-          "reflect-metadata": "npm:reflect-metadata@^0.1.3",
-          "rxjs": "npm:rxjs@^5.0.0-beta.2",
-          "zone.js": "npm:zone.js@^0.6.8"
-        },
-        "jspmNodeConversion": false,
+      "npm:@angular/common@2.0.0-rc.1": {
         "meta": {
-          "src/core/util/decorators.js": {
+          "src/*.js": {
             "deps": [
-              "reflect-metadata"
+              "reflect-metadata",
+              "zone.js"
+            ]
+          }
+        }
+      },
+      "npm:@angular/compiler@2.0.0-rc.1": {
+        "meta": {
+          "src/*.js": {
+            "deps": [
+              "reflect-metadata",
+              "zone.js"
+            ]
+          }
+        }
+      },
+      "npm:@angular/core@2.0.0-rc.1": {
+        "meta": {
+          "src/*.js": {
+            "deps": [
+              "reflect-metadata",
+              "zone.js"
+            ]
+          }
+        }
+      },
+      "npm:@angular/http@2.0.0-rc.1": {
+        "meta": {
+          "src/*.js": {
+            "deps": [
+              "reflect-metadata",
+              "zone.js"
+            ]
+          }
+        }
+      },
+      "npm:@angular/platform-browser-dynamic@2.0.0-rc.1": {
+        "meta": {
+          "src/*.js": {
+            "deps": [
+              "reflect-metadata",
+              "zone.js"
+            ]
+          }
+        }
+      },
+      "npm:@angular/platform-browser@2.0.0-rc.1": {
+        "meta": {
+          "src/*.js": {
+            "deps": [
+              "reflect-metadata",
+              "zone.js"
             ]
           }
         }
@@ -159,7 +205,7 @@
             }
           }
         },
-        "map": {}
+        "map": { }
       },
       "npm:browserify-zlib@0.1.4": {
         "dependencies": {
@@ -175,7 +221,7 @@
           "test.js"
         ]
       },
-      "npm:jquery@2.2.1": {
+      "npm:jquery@2.2.3": {
         "format": "amd"
       },
       "npm:reflect-metadata@0.1.3": {
@@ -184,7 +230,7 @@
         }
       },
       "npm:typescript@1.8.9": {
-        "browser": {},
+        "browser": { },
         "map": {
           "buffer": "@empty",
           "child_process": "@empty",

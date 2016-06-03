@@ -1,0 +1,25 @@
+<table class="ui very compact striped small celled table">
+	<tr class="center aligned" *ngIf="hasCommonHeaders()">
+		<th *ngIf="hasHeader('@id')">@id</th>
+		<th *ngIf="hasHeader('@type')">@type</th>
+		<th *ngIf="hasHeader('@value')">@value</th>
+	</tr>
+	<tr *ngFor="let item of list; let i = index;">
+		<td *ngIf="!!item['@id']"
+		    [ngClass]="{selectable: isBNode(item['@id'])}">
+			<p *ngIf="!isBNode(item['@id'])">
+				{{item['@id']}}
+			</p>
+			<a *ngIf="isBNode(item['@id'])"
+			   (click)="goToBNode(item['@id'])">
+				{{item['@id']}}
+			</a>
+		</td>
+		<td *ngIf="!!item['@type']">
+			<p>{{item['@type']}}</p>
+		</td>
+		<td *ngIf="!!item['@value']">
+			<p>{{item['@value']}}</p>
+		</td>
+	</tr>
+</table>

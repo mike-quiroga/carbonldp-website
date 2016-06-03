@@ -1,6 +1,6 @@
-import { Component, ElementRef, Input, DynamicComponentLoader, Type } from "angular2/core";
-import { CORE_DIRECTIVES } from "angular2/common";
-import { ROUTER_DIRECTIVES, ROUTER_PROVIDERS, Router, Instruction, RouteParams, Location } from "angular2/router";
+import { Component, ElementRef, Input, DynamicComponentLoader, Type } from "@angular/core";
+import { CORE_DIRECTIVES, Location } from "@angular/common";
+import { ROUTER_DIRECTIVES, ROUTER_PROVIDERS, Router, Instruction, RouteParams } from "@angular/router-deprecated";
 
 import $ from "jquery";
 import "semantic-ui/semantic";

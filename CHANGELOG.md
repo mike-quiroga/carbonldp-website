@@ -1,3 +1,40 @@
+# 0.5.13 (May 17, 2016)
+- Add named fragments component to the DocumentViewer of DocumentExplorer.
+- Remove tabs that showed raw data on each property of a document.
+- Emphasize the slug of the @id property.
+- Make document viewer to scroll when changing documents.
+- Change document viewer sections to tabs.
+- Change generateMaps of bNodes and namedFragments to use RDFDocument Util class methods
+- Remove Edit option from opened App sidebar options.
+
+# 0.5.12 (May 11, 2016)
+- Add app explorer view.
+- Add new DocumentExplorerComponent with the following components:
+	- DocumentTreeView: to list all the children of a document/app.
+	- DocumentViewer: to display the content/properties of a document.
+	- PropertyComponent: to display a property of a Document.
+	- bNodeViewerComponent: to display bNodes of a document.
+	- DocumentsResolverService: to fetch documents context.
+	- ListViewerComponent: to display lists when embeded in properties.
+- Add link to App Explorer in sidebar.
+- Fix general AppDev layout padding and margins to display footer correctly.
+- Fix jspm carbonldp file-type issue with a mapping.
+
+# 0.5.11 (April 28, 2016)
+- Add a list view to MyApps.
+- Add search to MyApps view
+- Add new App tile design.
+- Add action buttons to Apps tiles and Apps list.
+- Add loading indicator to AppsListView.
+- Add sorting to AppsList on table view.
+- Reorganize my apps child views and components structure.
+- Change AppDev App class to use only a slug and an App.Context
+- Add app action buttons component.
+- Add CreateApp and EditApp routes to my apps
+
+# 0.5.10 (April 28, 2016)
+- Add EditApp view and EditApp form component to AppDev.
+
 # 0.5.9 (April 14, 2016)
 - Add google analytics feature with angulartics2 plug in, and customized event tracking
 - Add newsletter component

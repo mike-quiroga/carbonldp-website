@@ -19,7 +19,7 @@
 	Open Apps
 </div>
 
-<a class="item app" *ngFor="#app of apps; #i=index;" [ngClass]="{active: isActive(app.slug, true)}">
+<a class="item app" *ngFor="let app of apps; let i=index;" [ngClass]="{active: isActive(app.slug, true)}">
 
 	<button
 		*ngIf="!isActive(app.slug, true)"
@@ -46,6 +46,12 @@
 		   [routerLink]="['AppDev', 'MyApps', 'App', {slug: app.slug}, 'SPARQLEditor']">
 			<i class="terminal icon"></i>
 			SPARQL Editor
+		</a>
+		<a class="item"
+		   [ngClass]="{active: isActive(app.slug, true) && isActive('explore')}"
+		   [routerLink]="['AppDev', 'MyApps', 'App', {slug: app.slug}, 'Explorer']">
+			<i class="list layout icon"></i>
+			Explore
 		</a>
 	</div>
 </a>

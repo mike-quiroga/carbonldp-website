@@ -1,6 +1,6 @@
-import { Component, ElementRef } from "angular2/core";
-import { CORE_DIRECTIVES } from "angular2/common";
-import { ROUTER_DIRECTIVES, RouteConfig, Router, RouterOutlet, RouteParams } from "angular2/router";
+import { Component, ElementRef } from "@angular/core";
+import { CORE_DIRECTIVES } from "@angular/common";
+import { ROUTER_DIRECTIVES, RouteConfig, Router, RouterOutlet, RouteParams } from "@angular/router-deprecated";
 
 import * as CarbonApp from "carbonldp/App";
 
@@ -10,6 +10,8 @@ import App from "./App";
 
 import DashboardView from "./dashboard/DashboardView";
 import SPARQLEditorView from "./sparql-editor/SPARQLEditorView";
+import EditAppView from "./edit-app/EditAppView";
+import ExplorerView from "./explorer/ExplorerView";
 
 
 import template from "./template.html!";
@@ -39,6 +41,24 @@ import "./style.css!";
 		data: {
 			alias: "SPARQLEditor",
 			displayName: "SPARQL Editor",
+		},
+	},
+	{
+		path: "/edit",
+		as: "Edit",
+		component: EditAppView,
+		data: {
+			alias: "Edit",
+			displayName: "Edit",
+		},
+	},
+	{
+		path: "/explore",
+		as: "Explorer",
+		component: ExplorerView,
+		data: {
+			alias: "Explorer",
+			displayName: "Explorer",
 		},
 	},
 ] )

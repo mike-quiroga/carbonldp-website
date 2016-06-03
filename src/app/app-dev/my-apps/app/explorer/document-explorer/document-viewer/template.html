@@ -1,0 +1,66 @@
+<div class="ui basic segment">
+	<div *ngIf="!document">
+		<div class="ui icon message">
+			<i class="warning icon"></i>
+			<div class="content">
+				<div class="header">
+					No document selected.
+				</div>
+				<p>Please, provide a document by selecting one from the three or providing a document to the component.</p>
+			</div>
+		</div>
+	</div>
+	<div *ngIf="document">
+		<div class="ui divided items">
+			<document-property class="property item"
+			                   [documentURI]="rootNode['@id']"
+			                   [propertyName]="'@id'"
+			                   [property]="rootNode[ '@id' ]">
+			</document-property>
+			<div class="item">
+				<div class="content">
+					<div class="description">
+						<div class="ui secondary menu document tabs">
+							<a class="item active"
+							   data-tab="documentResource">Document</a>
+							<a class="item"
+							   [ngClass]="{hidden:bNodesDictionary.size === 0}"
+							   data-tab="bNodes">Blank Nodes ({{bNodesDictionary.size}})</a>
+							<a class="item"
+							   [ngClass]="{hidden:namedFragmentsDictionary.size === 0}"
+							   data-tab="namedFragments">Named Fragments ({{namedFragmentsDictionary.size }})</a>
+						</div>
+						<div class="ui active tab segment"
+						     data-tab="documentResource">
+							<document-resource class="column"
+							                   (onOpenBNode)="openBNode($event)"
+							                   (onOpenNamedFragment)="openNamedFragment($event)"
+							                   [rootNode]="rootNode"
+							                   [hiddenProperties]="['@id']">
+							</document-resource>
+						</div>
+						<div class="ui tab segment"
+						     data-tab="bNodes"
+						     *ngIf="!!bNodesDictionary.size > 0">
+							<document-bnodes class="column"
+							                 (onOpenBNode)="goToSection($event)"
+							                 (onOpenNamedFragment)="openNamedFragment($event)"
+							                 [bNodesArray]="bNodesArray"
+							                 [bNodesDictionary]="bNodesDictionary"></document-bnodes>
+						</div>
+						<div class="ui tab segment"
+						     data-tab="namedFragments"
+						     *ngIf="!!namedFragmentsDictionary.size > 0">
+							<document-named-fragments class="column"
+							                          (onOpenBNode)="openBNode($event)"
+							                          (onOpenNamedFragment)="goToSection($event)"
+							                          [documentURI]="rootNode['@id']"
+							                          [namedFragmentsArray]="namedFragmentsArray"
+							                          [namedFragmentsDictionary]="namedFragmentsDictionary"></document-named-fragments>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

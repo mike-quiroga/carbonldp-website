@@ -1,4 +1,4 @@
-import { View, Component } from "angular2/core";
+import { View, Component } from "@angular/core";
 
 import $ from "jquery";
 import "semantic-ui/semantic";
