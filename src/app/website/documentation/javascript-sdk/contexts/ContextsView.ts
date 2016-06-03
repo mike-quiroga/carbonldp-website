@@ -8,7 +8,7 @@ import highlight from "highlight.js";
 import "highlight.js/styles/tomorrow-night.css!";
 
 import template from "./template.html!";
-import "./style.css!";
+
 
 @Component( {
 	selector: "getting-started",
