@@ -1,7 +1,5 @@
-import { Component, Input, Output, ElementRef, EventEmitter, SimpleChange } from "@angular/core";
-import { CORE_DIRECTIVES, FORM_DIRECTIVES, NgClass } from "@angular/common";
+import { Component, Input, Output, ElementRef, EventEmitter } from "@angular/core";
 
-import SPARQLClientComponent from "./../SPARQLClientComponent";
 import * as CodeMirrorComponent from "app/components/code-mirror/CodeMirrorComponent";
 import { ResultsetTableComponent } from "./../resultset-table/ResultsetTableComponent";
 
@@ -13,7 +11,7 @@ import "./style.css!";
 
 @Component( {
 	selector: "sparql-response",
-	directives: [ CORE_DIRECTIVES, NgClass, CodeMirrorComponent.Class, ResultsetTableComponent ],
+	directives: [ CodeMirrorComponent.Class, ResultsetTableComponent ],
 	template: template,
 } )
 export class ResponseComponent {
