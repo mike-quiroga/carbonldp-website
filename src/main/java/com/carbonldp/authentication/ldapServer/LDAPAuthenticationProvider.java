@@ -68,8 +68,8 @@ public class LDAPAuthenticationProvider extends SesameUsernamePasswordAuthentica
 		LDAPAgent ldapAgent = (LDAPAgent) agent;
 		RDFSource sourceServer = transactionWrapper.runInPlatformContext( () -> sourceRepository.get( ldapAgent.getLDAPServer() ) );
 		LDAPServer ldapServer = new LDAPServer( sourceServer );
-		String encodedPassword = ldapServer.getLDAPServerPassword();
-		ldapServer.setLDAPServerPassword( JWTUtil.decode( encodedPassword ) );
+		String encodedPassword = ldapServer.getPassword();
+		ldapServer.setPassword( JWTUtil.decode( encodedPassword ) );
 		LdapTemplate ldapTemplate;
 		try {
 			ldapTemplate = LDAPUtil.getLDAPTemplate( ldapServer );

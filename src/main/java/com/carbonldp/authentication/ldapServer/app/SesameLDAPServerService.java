@@ -51,8 +51,8 @@ public class SesameLDAPServerService extends AbstractSesameLDPService implements
 	@Override
 	public void create( IRI targetIRI, LDAPServer ldapServer ) {
 		validate( ldapServer );
-		String passwordEncoded = JWTUtil.encode( ldapServer.getLDAPServerPassword() );
-		ldapServer.setLDAPServerPassword( passwordEncoded );
+		String passwordEncoded = JWTUtil.encode( ldapServer.getPassword() );
+		ldapServer.setPassword( passwordEncoded );
 		containerService.createChild( targetIRI, ldapServer );
 	}
 
@@ -65,8 +65,8 @@ public class SesameLDAPServerService extends AbstractSesameLDPService implements
 	public List<LDAPAgent> registerLDAPAgents( LDAPServer ldapServer, Set<String> usernameFields, App app ) {
 		IRI agentsContainerIRI = agentRepository.getAgentsContainerIRI();
 		LdapTemplate ldapTemplate;
-		String encodedPassword = ldapServer.getLDAPServerPassword();
-		ldapServer.setLDAPServerPassword( JWTUtil.decode( encodedPassword ) );
+		String encodedPassword = ldapServer.getPassword();
+		ldapServer.setPassword( JWTUtil.decode( encodedPassword ) );
 		try {
 			ldapTemplate = LDAPUtil.getLDAPTemplate( ldapServer );
 		} catch ( UnsupportedJwtException | MalformedJwtException | SignatureException | IllegalArgumentException e ) {
