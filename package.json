@@ -31,31 +31,31 @@
   "devDependencies": {
     "angular2": "^2.0.0-beta.14",
     "del": "^2.2.0",
-    "es6-shim": "^0.35.0",
+    "es6-shim": "^0.35.1",
     "gulp": "^3.9.0",
     "gulp-autoprefixer": "^3.1.0",
     "gulp-chug": "^0.5.1",
     "gulp-ejs": "^2.0.0",
     "gulp-rename": "^1.2.2",
     "gulp-sass": "^2.3.1",
-    "gulp-scss-lint": "^0.3.7",
+    "gulp-scss-lint": "^0.4.0",
     "gulp-sourcemaps": "^1.6.0",
     "gulp-tslint": "^5.0.0",
     "gulp-util": "^3.0.7",
-    "gulp-watch": "^4.3.5",
+    "gulp-watch": "^4.3.6",
     "gulp-webserver": "^0.9.1",
     "jspm": "^0.17.0-beta.12",
-    "reflect-metadata": "^0.1.2",
-    "run-sequence": "^1.2.0",
+    "reflect-metadata": "^0.1.3",
+    "run-sequence": "^1.2.1",
     "rxjs": "^5.0.0-beta.2",
     "semantic-ui": "^2.1.8",
-    "systemjs": "^0.19.26",
-    "systemjs-builder": "^0.15.14",
+    "systemjs": "^0.19.29",
+    "systemjs-builder": "^0.15.19",
     "tslint": "^3.10.2",
     "typescript": "^1.8.10",
-    "typings": "^0.7.11",
+    "typings": "^1.0.4",
     "yargs": "^4.7.1",
-    "zone.js": "^0.6.10"
+    "zone.js": "^0.6.12"
   },
   "scripts": {
     "postinstall": "jspm config registries.github.remote https://github.jspm.io && jspm config registries.github.remote https://github.jspm.io && jspm config registries.github.auth Q2FyYm9uRGVwbG95ZXI6NGMxZjMzYTMyZTI3OGU0ODBmZmY2MDg1MWEyNTZlMzcxNzJkZTllOA== && jspm config registries.github.maxRepoSize 0 && jspm config registries.github.handler jspm-github && jspm install && gulp copy-node-dependencies",
@@ -205,7 +205,7 @@
             }
           }
         },
-        "map": { }
+        "map": {}
       },
       "npm:browserify-zlib@0.1.4": {
         "dependencies": {
@@ -230,7 +230,7 @@
         }
       },
       "npm:typescript@1.8.9": {
-        "browser": { },
+        "browser": {},
         "map": {
           "buffer": "@empty",
           "child_process": "@empty",

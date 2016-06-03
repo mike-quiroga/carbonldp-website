@@ -15,11 +15,12 @@ import { Message } from "app/app-dev/components/errors-area/ErrorsAreaComponent"
 import ErrorMessageComponent from "app/app-dev/components/errors-area/error-message/ErrorMessageComponent";
 
 import template from "./template.html!";
-import "./style.css!";
+import style from "./style.css!text";
 
 @Component( {
 	selector: "backups-list",
 	template: template,
+	styles: [ style ],
 	directives: [ ErrorMessageComponent ],
 } )
 

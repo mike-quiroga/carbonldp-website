@@ -84,20 +84,13 @@ export default class Class {
 	}
 
 	runJob( job:PersistedDocument.Class ):Promise<PersistedDocument.Class> {
-		return new Promise<PersistedDocument.Class>(
-			( resolve:( result:any ) => void, reject:( error:Error ) => void ) => {
-				let tempJob:any = {};
-				tempJob[ "types" ] = [ Job.namespace + "Execution" ];
-				this.carbon.documents.createChild( job.id, tempJob ).then(
-					( [pointer, response]:[Pointer.Class, Response.Class] )=> {
-						pointer.resolve().then(
-							( [importJob, response]:[PersistedDocument.Class, HTTP.Response.Class] )=> {
-								resolve( importJob );
-							}
-						)
-					} ).catch( ( error )=> reject( error ) );
-			}
-		);
+		let tempJob:any = {};
+		tempJob[ "types" ] = [ Job.namespace + "Execution" ];
+		return this.carbon.documents.createChild( job.id, tempJob ).then( ( [pointer, response]:[Pointer.Class, Response.Class] )=> {
+			return pointer.resolve();
+		} ).then( ( [importJob, response]:[PersistedDocument.Class, HTTP.Response.Class] )=> {
+			return importJob;
+		} );
 	}
 
 	checkJobExecution( jobExecution:PersistedDocument.Class ):Promise<PersistedDocument.Class> {

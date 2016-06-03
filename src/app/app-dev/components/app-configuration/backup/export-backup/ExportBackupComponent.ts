@@ -49,20 +49,16 @@ export default class ExportBackupComponent {
 
 	onGenerateBackup():void {
 		this.executingBackup = true;
+
 		this.jobsService.runJob( this.backupJob ).then( ( execution:PersistedDocument.Class )=> {
-			this.monitorExecution( execution ).then( ()=> this.exportSuccess = true )
-				.catch( ( error:HTTPError )=> {
-					let errorMessage:Message = <Message>{
-						title: error.name,
-						content: "Couldn't execute backup.",
-						endpoint: (<any>error.response.request).responseURL,
-						statusCode: "" + (<XMLHttpRequest>error.response.request).status,
-						statusMessage: (<XMLHttpRequest>error.response.request).statusText
-					};
-					this.errorMessages.push( errorMessage );
-				} ).then( ()=> {this.executingBackup = false;} );
+			return this.monitorExecution( execution ).catch( ( executionOrError:HTTPError|PersistedDocument.Class ) => {
+				// TODO: If its an HTTPError, return Promise.reject( executionOrError );
+
+			});
+		} ).then( ()=> {
+			this.exportSuccess = true;
 		} ).catch( ( error:HTTPError )=> {
-			this.executingBackup = false;
+			// TODO: This catch block is catching errors that are thrown by monitorExecution. This means execution objects can also come instead of an HTTPError
 			let errorMessage:Message = <Message>{
 				title: error.name,
 				content: "Couldn't execute backup.",
@@ -71,18 +67,24 @@ export default class ExportBackupComponent {
 				statusMessage: (<XMLHttpRequest>error.response.request).statusText
 			};
 			this.errorMessages.push( errorMessage );
+		} ).then( ()=> {
+			this.executingBackup = false;
 		} );
 	}
 
 	monitorExecution( execution:PersistedDocument.Class ):Promise<PersistedDocument.Class> {
-		return new Promise<PersistedDocument.Class>( ( resolve:( result:any ) => void, reject:( error:Error|PersistedDocument.Class ) => void ) => {
+		return new Promise<PersistedDocument.Class>( ( resolve:( result:any ) => void, reject:( error:HTTPError|PersistedDocument.Class ) => void ) => {
 			let interval:number = setInterval( ()=> {
 				execution.refresh().then( ()=> {
 					if ( execution[ Job.Execution.STATUS ] !== Job.ExecutionStatus.FINISHED ) {
 						clearInterval( interval );
 						resolve( execution );
+					} else if ( execution[ Job.Execution.STATUS ] !== Job.ExecutionStatus.ERROR ) {
+						clearInterval( interval );
+						reject( execution );
 					}
-					if ( execution[ Job.Execution.STATUS ] !== Job.ExecutionStatus.ERROR ) reject( execution );
+				} ).catch( () => {
+					// TODO: What happens if the refresh method fails?
 				} );
 			}, 3000 );
 		} );

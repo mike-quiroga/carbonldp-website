@@ -153,7 +153,10 @@ interface SemanticDimmerArguments extends SemanticDebugSettings {
 }
 
 interface SemanticModalArguments extends SemanticDebugSettings {
-
+	closable?:boolean;
+	blurring?:boolean;
+	// TODO: Check onApprove real signature
+	onApprove?:() => any;
 }
 
 interface SemanticProgressArguments extends SemanticDebugSettings {
