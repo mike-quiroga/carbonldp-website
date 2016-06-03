@@ -13,6 +13,8 @@
 - Add app configuration option to App sidebar options.
 - Add copy_node_modules:files and copy_node_modules:packages tasks to gulpfile to copy files and packages from node_modules.
 - Fix DocumentTreeViewComponent to import JStree CSS from assets/node_modules and inject it into the document head on the ngOnInit phase of the component.
+- Fix bug with SPARQL Editor that hides the initial h from http when displaying results. Also remove unused imports from SPARQLEditorComponent.
+
 
 # 0.5.13 (May 17, 2016)
 - Add named fragments component to the DocumentViewer of DocumentExplorer.
