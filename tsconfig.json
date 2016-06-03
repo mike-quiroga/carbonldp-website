@@ -12,6 +12,7 @@
 		"node_modules",
 		"dist",
 		"typings/globals",
+		"typings/custom",
 		"typings/index.d.ts"
 	]
 }
