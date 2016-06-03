@@ -1,6 +1,5 @@
-import { Component, ElementRef, Input } from "@angular/core";
+import { Component, Input } from "@angular/core";
 
-import $ from "jquery";
 import "semantic-ui/semantic";
 
 import * as App from "carbonldp/App";

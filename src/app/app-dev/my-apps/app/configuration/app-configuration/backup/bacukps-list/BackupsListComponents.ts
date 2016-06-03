@@ -82,7 +82,7 @@ export default class BackupsListComponent {
 		this.errorMessages = [];
 		return this.backupsService.getAll( this.appContext ).then(
 			( [backups, response]:[PersistedDocument.Class[],Response.Class] ) => {
-				backups = backups.sort( ( a:any, b:any ) => a.modified < b.modified ? - 1 : a.modified > b.modified ? 1 : 0 );
+				backups = backups.sort( ( a:any, b:any ) => b.modified < a.modified ? - 1 : b.modified > a.modified ? 1 : 0 );
 				this.backups = backups;
 				return backups;
 			}
