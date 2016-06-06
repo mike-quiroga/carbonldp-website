@@ -54,6 +54,7 @@
     "gulp-watch": "^4.3.6",
     "gulp-webserver": "^0.9.1",
     "jspm": "^0.17.0-beta.12",
+    "jstree": "^3.3.1",
     "reflect-metadata": "^0.1.3",
     "run-sequence": "^1.2.1",
     "rxjs": "^5.0.0-beta.6",
@@ -67,7 +68,7 @@
     "zone.js": "^0.6.12"
   },
   "scripts": {
-    "postinstall": "jspm config registries.github.remote https://github.jspm.io && jspm config registries.github.remote https://github.jspm.io && jspm config registries.github.auth Q2FyYm9uRGVwbG95ZXI6NGMxZjMzYTMyZTI3OGU0ODBmZmY2MDg1MWEyNTZlMzcxNzJkZTllOA== && jspm config registries.github.maxRepoSize 0 && jspm config registries.github.handler jspm-github && jspm install && gulp copy-node-dependencies",
+    "postinstall": "jspm config registries.github.remote https://github.jspm.io && jspm config registries.github.remote https://github.jspm.io && jspm config registries.github.auth Q2FyYm9uRGVwbG95ZXI6NGMxZjMzYTMyZTI3OGU0ODBmZmY2MDg1MWEyNTZlMzcxNzJkZTllOA== && jspm config registries.github.maxRepoSize 0 && jspm config registries.github.handler jspm-github && jspm install",
     "start": "gulp serve",
     "test": "gulp test"
   },
