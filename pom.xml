@@ -385,7 +385,7 @@
                         <manifest>
                             <addClasspath>true</addClasspath>
                             <classpathPrefix>lib/</classpathPrefix>
-                            <mainClass>com.carbonldp.Application</mainClass>
+                            <mainClass>com.carbonldp.Platform</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
