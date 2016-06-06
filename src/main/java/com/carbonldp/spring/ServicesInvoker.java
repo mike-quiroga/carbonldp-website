@@ -3,6 +3,8 @@ package com.carbonldp.spring;
 import com.carbonldp.agents.AgentService;
 import com.carbonldp.apps.AppService;
 import com.carbonldp.apps.roles.AppRoleService;
+import com.carbonldp.authentication.Ticket;
+import com.carbonldp.authentication.ticket.TicketService;
 import com.carbonldp.authentication.token.TokenService;
 import com.carbonldp.authorization.acl.ACLService;
 import com.carbonldp.jobs.JobService;
@@ -32,6 +34,7 @@ public class ServicesInvoker {
 	private ACLService aclService;
 	private PlatformAPIService platformAPIService;
 	private TokenService tokenService;
+	private TicketService ticketService;
 	private JobService jobService;
 
 	public void proxy( Consumer<ServicesInvoker> consumer ) {
@@ -82,6 +85,8 @@ public class ServicesInvoker {
 		return tokenService;
 	}
 
+	public TicketService getTicketService() {return ticketService;}
+
 	public JobService getJobService() {
 		return jobService;
 	}
@@ -115,6 +120,9 @@ public class ServicesInvoker {
 
 	@Autowired
 	public void setTokenService( TokenService tokenService ) { this.tokenService = tokenService; }
+
+	@Autowired
+	public void setTicketService( TicketService ticketService ) { this.ticketService = ticketService; }
 
 	@Autowired
 	public void setJobService( JobService jobService ) { this.jobService = jobService; }

@@ -1,18 +1,17 @@
-package com.carbonldp.authentication.token;
+package com.carbonldp.authentication.ticket;
 
 import com.carbonldp.Consts;
 import com.carbonldp.Vars;
+import com.carbonldp.authentication.IRIAuthenticationToken;
 import com.carbonldp.exceptions.StupidityException;
 import com.carbonldp.utils.RequestUtil;
 import io.jsonwebtoken.*;
 import org.openrdf.model.IRI;
-
 import org.openrdf.model.impl.SimpleValueFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.Marker;
 import org.slf4j.MarkerFactory;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
@@ -28,22 +27,20 @@ import javax.xml.bind.DatatypeConverter;
 import java.io.IOException;
 import java.util.Map;
 
-import static com.carbonldp.Consts.ORDER_BY;
 import static com.carbonldp.Consts.TICKET;
 
 /**
  * @author NestorVenegas
- * @since 0.15.0-ALPHA
+ * @since _version_
  */
-public class JWTAuthenticationFilter extends GenericFilterBean implements Filter {
+public class JWTicketAuthenticationFilter extends GenericFilterBean implements Filter {
 	protected final Logger LOG = LoggerFactory.getLogger( this.getClass() );
 	protected final Marker FATAL = MarkerFactory.getMarker( Consts.FATAL );
-	boolean isTicket;
 
 	private AuthenticationManager authenticationManager;
 	private AuthenticationEntryPoint authenticationEntryPoint;
 
-	public JWTAuthenticationFilter( AuthenticationManager authenticationManager, AuthenticationEntryPoint authenticationEntryPoint ) {
+	public JWTicketAuthenticationFilter( AuthenticationManager authenticationManager, AuthenticationEntryPoint authenticationEntryPoint ) {
 		this.authenticationManager = authenticationManager;
 		this.authenticationEntryPoint = authenticationEntryPoint;
 	}
@@ -52,19 +49,10 @@ public class JWTAuthenticationFilter extends GenericFilterBean implements Filter
 	public void doFilter( ServletRequest request, ServletResponse response, FilterChain chain ) throws IOException, ServletException {
 		HttpServletRequest httpRequest = (HttpServletRequest) request;
 		HttpServletResponse httpResponse = (HttpServletResponse) response;
-		String header = httpRequest.getHeader( "Authorization" );
 		String jwt = null;
-		isTicket = false;
-		if ( header != null && header.startsWith( "Token " ) ) {
-			jwt = header.substring( 6 );
-		} else {
-			Map<String, String[]> urlParameters = request.getParameterMap();
-			String[] ticketArray = urlParameters.get( TICKET );
-			if ( ticketArray != null ) {
-				jwt = ticketArray[0];
-				isTicket = true;
-			}
-		}
+		Map<String, String[]> urlParameters = request.getParameterMap();
+		String[] ticketArray = urlParameters.get( TICKET );
+		if ( ticketArray != null ) jwt = ticketArray[0];
 
 		if ( jwt == null ) {
 			chain.doFilter( request, response );
@@ -94,9 +82,9 @@ public class JWTAuthenticationFilter extends GenericFilterBean implements Filter
 		String agentString = extractAndDecodeHeader( jwt, httpRequest );
 		IRI agentIRI = SimpleValueFactory.getInstance().createIRI( agentString );
 
-		if ( LOG.isDebugEnabled() ) LOG.debug( "JWT Authentication Authorization header found for user '" + agentString + "'" );
+		if ( LOG.isDebugEnabled() ) LOG.debug( "JWTicket Authentication Authorization header found for user '" + agentString + "'" );
 
-		JWTAuthenticationToken authRequest = new JWTAuthenticationToken( agentIRI );
+		IRIAuthenticationToken authRequest = new IRIAuthenticationToken( agentIRI );
 
 		return authenticationManager.authenticate( authRequest );
 	}
@@ -125,12 +113,10 @@ public class JWTAuthenticationFilter extends GenericFilterBean implements Filter
 
 	private void validateTargetIRI( Claims claims, IRI targetIRI ) {
 		Map targetIRIClaims = (Map) claims.get( "targetIRI" );
-		if ( targetIRIClaims == null ) {
-			if ( isTicket ) throw new AccessDeniedException( "invalid target IRI" );
-			return;
-		}
+		if ( targetIRIClaims == null ) throw new BadCredentialsException( "invalid target IRI" );
+
 		String tokenTargetIRI = (String) targetIRIClaims.get( "namespace" );
-		if ( ! tokenTargetIRI.equals( targetIRI.stringValue() ) ) throw new AccessDeniedException( "invalid target IRI" );
+		if ( ! tokenTargetIRI.equals( targetIRI.stringValue() ) ) throw new BadCredentialsException( "invalid target IRI" );
 	}
 
 	private IRI getTargetIRI( HttpServletRequest request ) {

@@ -1,9 +1,8 @@
 package com.carbonldp.authentication.web;
 
-import com.carbonldp.agents.AgentDescription;
 import com.carbonldp.authentication.Ticket;
 import com.carbonldp.authentication.TicketFactory;
-import com.carbonldp.authentication.token.TokenService;
+import com.carbonldp.authentication.ticket.TicketService;
 import com.carbonldp.exceptions.InvalidResourceException;
 import com.carbonldp.ldp.web.AbstractLDPRequestHandler;
 import com.carbonldp.models.Infraction;
@@ -30,13 +29,13 @@ import java.util.Set;
 public class TicketAuthenticationRequestHandler extends AbstractLDPRequestHandler {
 
 	@Autowired
-	TokenService tokenService;
+	TicketService ticketService;
 
 	@Transactional
 	public ResponseEntity<Object> handleRequest( RDFDocument document, HttpServletRequest request, HttpServletResponse response ) {
 		setUp( request, response );
 		IRI forIRI = getForIRI( document );
-		Ticket token = tokenService.createTicket( forIRI );
+		Ticket token = ticketService.createTicket( forIRI );
 
 		return new ResponseEntity<>( token, HttpStatus.OK );
 
