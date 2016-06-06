@@ -109,7 +109,7 @@ gulp.task( "copy-semantic", [ "build-semantic" ], () => {
 } );
 
 // TODO: Minify files
-gulp.task( "copy-assets", () => {
+gulp.task( "copy-assets", [ "copy-node-dependencies" ], () => {
 	return gulp.src( "src/assets/**/*", {
 		base: "src/assets"
 	} ).pipe( gulp.dest( "dist/site/assets" ) );
@@ -129,7 +129,7 @@ gulp.task( "copy-node-dependencies:packages", () => {
 
 gulp.task( "serve", ( done ) => {
 	runSequence(
-		[ "build-semantic", "compile-styles", "compile-boot" ],
+		[ "build-semantic", "compile-styles", "compile-boot", "copy-node-dependencies" ],
 		"serve:afterCompilation",
 		done
 	);
