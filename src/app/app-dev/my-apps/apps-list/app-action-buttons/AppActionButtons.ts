@@ -1,6 +1,5 @@
-import {Component, Input, Output, EventEmitter} from "@angular/core";
-import {CORE_DIRECTIVES} from "@angular/common";
-import {Router, ROUTER_DIRECTIVES} from "@angular/router-deprecated";
+import { Component, Input, Output, EventEmitter } from "@angular/core";
+import { Router, ROUTER_DIRECTIVES } from "@angular/router-deprecated";
 
 import "semantic-ui/semantic";
 
@@ -11,7 +10,7 @@ import template from "./template.html!";
 @Component( {
 	selector: "app-action-buttons",
 	template: template,
-	directives: [ CORE_DIRECTIVES, ROUTER_DIRECTIVES, ],
+	directives: [ ROUTER_DIRECTIVES, ],
 } )
 export default class AppActionButtons {
 	router:Router;
@@ -25,5 +24,9 @@ export default class AppActionButtons {
 	onDeleteApp( event:Event ):void {
 		event.stopPropagation();
 		this.deleteApp.emit( this.app );
+	}
+
+	avoidRowClick( event:Event ):void {
+		event.stopPropagation();
 	}
 }
