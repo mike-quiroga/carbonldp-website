@@ -1,3 +1,7 @@
+# 0.36.0 (2016/06/08)
+- [LDP-647](https://jira.base22.com/browse/LDP-647) - Use a custom configuration properties file
+- [LDP-671](https://jira.base22.com/browse/LDP-671) - Create an auth ticket to authenticate single requests through a URL parameter
+
 # 0.35.0 (2016/05/26)
 - [LDP-660](https://jira.base22.com/browse/LDP-660) - Add requestID to ErrorResponse objects
 - Fix [LDP-666](https://jira.base22.com/browse/LDP-666) - InternalServerError when creating a job without a type

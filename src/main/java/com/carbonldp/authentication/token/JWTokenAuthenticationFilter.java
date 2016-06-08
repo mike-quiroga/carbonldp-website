@@ -1,6 +1,7 @@
 package com.carbonldp.authentication.token;
 
 import com.carbonldp.Consts;
+import com.carbonldp.authentication.IRIAuthenticationToken;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureException;
@@ -28,14 +29,14 @@ import java.io.IOException;
  * @author NestorVenegas
  * @since 0.15.0-ALPHA
  */
-public class JWTAuthenticationFilter extends GenericFilterBean implements Filter {
+public class JWTokenAuthenticationFilter extends GenericFilterBean implements Filter {
 	protected final Logger LOG = LoggerFactory.getLogger( this.getClass() );
 	protected final Marker FATAL = MarkerFactory.getMarker( Consts.FATAL );
 
 	private AuthenticationManager authenticationManager;
 	private AuthenticationEntryPoint authenticationEntryPoint;
 
-	public JWTAuthenticationFilter( AuthenticationManager authenticationManager, AuthenticationEntryPoint authenticationEntryPoint ) {
+	public JWTokenAuthenticationFilter( AuthenticationManager authenticationManager, AuthenticationEntryPoint authenticationEntryPoint ) {
 		this.authenticationManager = authenticationManager;
 		this.authenticationEntryPoint = authenticationEntryPoint;
 	}
@@ -45,15 +46,19 @@ public class JWTAuthenticationFilter extends GenericFilterBean implements Filter
 		HttpServletRequest httpRequest = (HttpServletRequest) request;
 		HttpServletResponse httpResponse = (HttpServletResponse) response;
 		String header = httpRequest.getHeader( "Authorization" );
+		String jwt = null;
+		if ( header != null && header.startsWith( "Token " ) ) {
+			jwt = header.substring( 6 );
+		}
 
-		if ( header == null || ! header.startsWith( "Token " ) ) {
+		if ( jwt == null ) {
 			chain.doFilter( request, response );
 			return;
 		}
 
 		Authentication authResult = null;
 		try {
-			authResult = authenticate( header );
+			authResult = authenticate( jwt );
 		} catch ( AuthenticationException e ) {
 			SecurityContextHolder.clearContext();
 
@@ -70,13 +75,13 @@ public class JWTAuthenticationFilter extends GenericFilterBean implements Filter
 		chain.doFilter( request, response );
 	}
 
-	private Authentication authenticate( String header ) {
-		String agentString = extractAndDecodeHeader( header.substring( 6 ) );
+	private Authentication authenticate( String jwt ) {
+		String agentString = extractAndDecodeHeader( jwt );
 		IRI agentIRI = SimpleValueFactory.getInstance().createIRI( agentString );
 
-		if ( LOG.isDebugEnabled() ) LOG.debug( "JWT Authentication Authorization header found for user '" + agentString + "'" );
+		if ( LOG.isDebugEnabled() ) LOG.debug( "JWToken Authentication Authorization header found for user '" + agentString + "'" );
 
-		JWTAuthenticationToken authRequest = new JWTAuthenticationToken( agentIRI );
+		IRIAuthenticationToken authRequest = new IRIAuthenticationToken( agentIRI );
 
 		return authenticationManager.authenticate( authRequest );
 	}

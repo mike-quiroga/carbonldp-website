@@ -1,9 +1,8 @@
-package com.carbonldp.authentication.token;
+package com.carbonldp.authentication;
 
 import com.carbonldp.agents.Agent;
 import com.carbonldp.agents.AgentRepository;
 import com.carbonldp.apps.context.RunInPlatformContext;
-import com.carbonldp.authentication.AbstractSesameAuthenticationProvider;
 import com.carbonldp.authorization.Platform;
 import com.carbonldp.authorization.PlatformPrivilegeRepository;
 import com.carbonldp.authorization.PlatformRoleRepository;
@@ -18,8 +17,8 @@ import org.springframework.transaction.annotation.Transactional;
  * @author NestorVenegas
  * @since 0.15.0-ALPHA
  */
-public class JWTAuthenticationProvider extends AbstractSesameAuthenticationProvider {
-	public JWTAuthenticationProvider( AgentRepository agentRepository, PlatformRoleRepository platformRoleRepository, PlatformPrivilegeRepository platformPrivilegeRepository ) {
+public class IRIAuthenticationProvider extends AbstractSesameAuthenticationProvider {
+	public IRIAuthenticationProvider( AgentRepository agentRepository, PlatformRoleRepository platformRoleRepository, PlatformPrivilegeRepository platformPrivilegeRepository ) {
 		super( agentRepository, platformRoleRepository, platformPrivilegeRepository );
 	}
 
@@ -39,12 +38,12 @@ public class JWTAuthenticationProvider extends AbstractSesameAuthenticationProvi
 
 	@Override
 	public boolean supports( Class<?> authentication ) {
-		return JWTAuthenticationToken.class.isAssignableFrom( authentication );
+		return IRIAuthenticationToken.class.isAssignableFrom( authentication );
 	}
 
 	protected IRI getAgentIRI( Authentication authentication ) {
-		if ( ! ( authentication instanceof JWTAuthenticationToken ) ) throw new IllegalArgumentException( "Authentication is not instance of JWTAuthentication token" );
-		JWTAuthenticationToken authenticationToken = (JWTAuthenticationToken) authentication;
+		if ( ! ( authentication instanceof IRIAuthenticationToken ) ) throw new IllegalArgumentException( "Authentication is not instance of JWTAuthentication token" );
+		IRIAuthenticationToken authenticationToken = (IRIAuthenticationToken) authentication;
 
 		return authenticationToken.getAgentIRI();
 	}

@@ -89,6 +89,9 @@ public class SesameAppService extends AbstractSesameLDPService implements AppSer
 			Container appTokensContainer = appTokensRepository.createAppTokensContainer( rootContainer.getIRI() );
 			aclRepository.createACL( appTokensContainer.getIRI() );
 
+			Container appTicketsContainer = appTokensRepository.createTicketsContainer( rootContainer.getIRI() );
+			aclRepository.createACL( appTicketsContainer.getIRI() );
+
 			addDefaultPermissions( appAdminRole, rootContainerACL );
 
 			return appAdminRole;

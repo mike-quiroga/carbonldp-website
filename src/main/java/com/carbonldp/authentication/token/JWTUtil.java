@@ -2,11 +2,14 @@ package com.carbonldp.authentication.token;
 
 import com.carbonldp.Vars;
 import io.jsonwebtoken.*;
+import org.openrdf.model.IRI;
+import org.springframework.security.authentication.BadCredentialsException;
 
 import javax.crypto.spec.SecretKeySpec;
 import javax.xml.bind.DatatypeConverter;
 import java.security.Key;
 import java.util.Date;
+import java.util.Map;
 
 /**
  * @author JorgeEspinosa
@@ -37,15 +40,31 @@ public final class JWTUtil {
 	}
 
 	public static String decode( String password ) throws UnsupportedJwtException, MalformedJwtException, SignatureException, ExpiredJwtException, IllegalArgumentException {
+		return decode( password, null );
+	}
+
+	public static String decode( String password, IRI targetIRI ) throws UnsupportedJwtException, MalformedJwtException, SignatureException, ExpiredJwtException, IllegalArgumentException {
 		byte[] signingKey;
 
 		signingKey = DatatypeConverter.parseBase64Binary( Vars.getInstance().getTokenKey() );
 
-		return Jwts.parser()
-				   .setSigningKey( signingKey )
-				   .parseClaimsJws( password )
-				   .getBody()
-				   .getSubject();
+		Claims claims = Jwts
+			.parser()
+			.setSigningKey( signingKey )
+			.parseClaimsJws( password )
+			.getBody();
+		validateTargetIRI( claims, targetIRI );
+		return claims.getSubject();
 	}
 
+	private static void validateTargetIRI( Claims claims, IRI targetIRI ) {
+		Map targetIRIClaims = (Map) claims.get( "targetIRI" );
+		if ( targetIRIClaims != null && targetIRI == null ) throw new BadCredentialsException( "invalid target IRI" );
+
+		if ( targetIRI != null ) {
+			if ( targetIRIClaims == null ) throw new BadCredentialsException( "invalid target IRI" );
+			String tokenTargetIRI = (String) targetIRIClaims.get( "namespace" );
+			if ( ! tokenTargetIRI.equals( targetIRI.stringValue() ) ) throw new BadCredentialsException( "invalid target IRI" );
+		}
+	}
 }
