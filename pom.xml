@@ -2,7 +2,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.carbonldp</groupId>
-    <artifactId>carbon-platform-SESAME</artifactId>
+    <artifactId>carbon-platform</artifactId>
     <version>0.35.0</version>
     <packaging>jar</packaging>
     <name>Carbon LDP</name>
@@ -385,7 +385,7 @@
                         <manifest>
                             <addClasspath>true</addClasspath>
                             <classpathPrefix>lib/</classpathPrefix>
-                            <mainClass>com.carbonldp.Application</mainClass>
+                            <mainClass>com.carbonldp.Platform</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
