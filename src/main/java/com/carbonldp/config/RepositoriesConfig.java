@@ -194,6 +194,7 @@ public class RepositoriesConfig {
 	public AppTokenRepository appTokenRepository() {
 		SesameAppTokenRepository repository = new SesameAppTokenRepository( connectionFactory, containerRepository() );
 		repository.setTokensContainerSlug( Vars.getInstance().getAppTokensContainer() );
+		repository.setTicketsContainerSlug( Vars.getInstance().getAppTicketsContainer() );
 		return repository;
 	}
 

@@ -13,7 +13,7 @@ import java.io.IOException;
  * @author NestorVenegas
  * @since 0.15.0-ALPHA
  */
-public class JWTAuthenticationEntryPoint implements AuthenticationEntryPoint {
+public class JWTokenAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
 	@Override
 	public void commence( HttpServletRequest request, HttpServletResponse response, AuthenticationException authException ) throws IOException, ServletException {
