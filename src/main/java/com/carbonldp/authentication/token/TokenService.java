@@ -1,6 +1,8 @@
 package com.carbonldp.authentication.token;
 
+import com.carbonldp.authentication.Ticket;
 import com.carbonldp.authentication.Token;
+import org.openrdf.model.IRI;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 /**

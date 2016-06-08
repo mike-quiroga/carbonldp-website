@@ -1,6 +1,7 @@
 package com.carbonldp.ldp.containers;
 
 import com.carbonldp.descriptions.APIPreferences;
+import com.carbonldp.http.OrderByRetrievalPreferences;
 import org.joda.time.DateTime;
 import org.openrdf.model.IRI;
 import org.openrdf.model.Statement;
@@ -12,7 +13,7 @@ import java.util.Set;
 
 public interface ContainerService {
 	@PreAuthorize( "hasPermission(#containerIRI, 'READ')" )
-	public Container get( IRI containerIRI, Set<APIPreferences.ContainerRetrievalPreference> containerRetrievalPreferences );
+	public Container get( IRI containerIRI, Set<APIPreferences.ContainerRetrievalPreference> containerRetrievalPreferences, OrderByRetrievalPreferences orderByRetrievalPreferences );
 
 	@PreAuthorize( "hasPermission(#containerIRI, 'READ')" )
 	public Set<APIPreferences.ContainerRetrievalPreference> getRetrievalPreferences( IRI containerIRI );
@@ -52,6 +53,10 @@ public interface ContainerService {
 	@PreAuthorize( "hasPermission(#containerIRI, 'READ')" )
 	@PostFilter( "hasPermission(filterObject.getObject(), 'READ')" )
 	public Set<Statement> getReadableMembershipResourcesTriples( IRI containerIRI );
+
+	@PreAuthorize( "hasPermission(#containerIRI, 'READ')" )
+	@PostFilter( "hasPermission(filterObject.getObject(), 'READ')" )
+	public Set<Statement> getReadableContainedResourcesTriples( IRI containerIRI );
 
 	@PreAuthorize( "hasPermission(#containerIRI, 'READ')" )
 	@PostFilter( "!hasPermission(filterObject.getObject(), 'READ')" )

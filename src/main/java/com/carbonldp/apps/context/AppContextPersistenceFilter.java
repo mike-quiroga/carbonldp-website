@@ -47,7 +47,7 @@ public class AppContextPersistenceFilter extends AbstractUniqueFilter {
 		AppContext context = AppContextHolder.createEmptyContext();
 		context.setApplication( app );
 		if ( LOG.isDebugEnabled() ) {
-			LOG.debug( "AppContext set to: '{}'", app );
+			LOG.debug( "AppContext set to: '{}'", app.toString() );
 		}
 	}
 

@@ -1,6 +1,7 @@
 package com.carbonldp.ldp.containers;
 
 import com.carbonldp.descriptions.APIPreferences.ContainerRetrievalPreference;
+import com.carbonldp.http.OrderByRetrievalPreferences;
 import com.carbonldp.ldp.containers.ContainerDescription.Type;
 import com.carbonldp.ldp.sources.RDFSource;
 import org.openrdf.model.IRI;
@@ -27,6 +28,8 @@ public interface ContainerRepository {
 	public Set<Statement> getProperties( IRI containerIRI, Type containerType );
 
 	public Set<IRI> getContainedIRIs( IRI containerIRI );
+
+	public Set<IRI> getContainedIRIs( IRI targetIRI, OrderByRetrievalPreferences orderByRetrievalPreferences );
 
 	public Set<Statement> getContainmentTriples( IRI containerIRI );
 
@@ -65,4 +68,8 @@ public interface ContainerRepository {
 	public void removeMembers( IRI targetIRI, Type containerType );
 
 	public TypedContainerRepository getTypedRepository( Type containerType );
+
+	public Set<IRI> getMemberIRIs( IRI targetIRI, OrderByRetrievalPreferences orderByRetrievalPreferences );
+
+	public Set<IRI> getMemberIRIs( IRI targetIRI );
 }

@@ -60,7 +60,7 @@ public abstract class AbstractTypedContainerRepository extends AbstractSesameLDP
 	}
 
 	// TODO: Create a more generic method instead of this specific one
-	protected IRI getHasMemberRelation( IRI containerIRI ) {
+	public IRI getHasMemberRelation( IRI containerIRI ) {
 		Map<String, Value> bindings = new HashMap<>();
 		bindings.put( "containerIRI", containerIRI );
 
@@ -188,7 +188,6 @@ public abstract class AbstractTypedContainerRepository extends AbstractSesameLDP
 		IRI membershipResource = getMembershipResource( containerIRI );
 
 		this.deleteMembershipTriple( membershipResource, hasMemberRelation, memberIRI );
-
 	}
 
 	protected void deleteMembershipTriple( IRI membershipResource, IRI hasMemberRelation, IRI memberIRI ) {

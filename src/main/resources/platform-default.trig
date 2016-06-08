@@ -49,6 +49,7 @@
 			<platform/agents/>,
 			<platform/roles/>,
 			<platform/privileges/>,
+			<platform/auth-tickets/>,
 			<platform/auth-tokens/>;
 		ldp:member
 			<platform/api/>,
@@ -56,6 +57,7 @@
 			<platform/agents/>,
 			<platform/roles/>,
 			<platform/privileges/>,
+			<platform/auth-tickets/>,
 			<platform/auth-tokens/>;
 		cs:accessControlList <platform/~acl/>.
 }
@@ -269,6 +271,11 @@
 }
 <platform/auth-tokens/> {
 	<platform/auth-tokens/>
+		a 	ldp:BasicContainer;
+		c:defaultInteractionModel	ldp:Container.
+}
+<platform/auth-tickets/> {
+	<platform/auth-tickets/>
 		a 	ldp:BasicContainer;
 		c:defaultInteractionModel	ldp:Container.
 }

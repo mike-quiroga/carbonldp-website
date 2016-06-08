@@ -1,3 +1,31 @@
+# 0.36.0 (2016/06/08)
+- [LDP-647](https://jira.base22.com/browse/LDP-647) - Use a custom configuration properties file
+- [LDP-671](https://jira.base22.com/browse/LDP-671) - Create an auth ticket to authenticate single requests through a URL parameter
+
+# 0.35.0 (2016/05/26)
+- [LDP-660](https://jira.base22.com/browse/LDP-660) - Add requestID to ErrorResponse objects
+- Fix [LDP-666](https://jira.base22.com/browse/LDP-666) - InternalServerError when creating a job without a type
+- Fix [LDP-663](https://jira.base22.com/browse/LDP-663) - A Backup gets created with a defaultInteractionModel of ldp:RDFSource
+- Fix [LDP-656](https://jira.base22.com/browse/LDP-656) - InternalServerError when modifying an RDFRepresentation
+
+# 0.34.4 (2016/05/17)
+- Fix [LDP-628](https://jira.base22.com/browse/LDP-628) - Inline membership/contained resources were not being filtered by security so limit parameters were returning incorrect results
+- Lower the information that is being logged
+
+# 0.34.3 (2016/05/11)
+- Fix [LDP-648](https://jira.base22.com/browse/LDP-648) - Wrong ETags inside ResponseMetadata
+
+# 0.34.2 (2016/05/10)
+- Fix [LDP-625](https://jira.base22.com/browse/LDP-625) - Delete inverse membership relation
+- Add [Datadog](https://www.datadoghq.com/) agent installation to the Dockerfile
+
+# 0.34.1 (2016/05/04)
+- Fix [LDP-641](https://jira.base22.com/browse/LDP-641) - Missing properties in `prod-config.properties` file
+
+# 0.34.0 (2016/04/28)
+- Add prefer contained and membership resources to container preferences
+- URL now accepts orderBy retrieval preferences for contained and membership resources retrieval
+
 # 0.33.1 (2016/04/25)
 - Change log4j2 configuration to a programmatic based one that uses `LOGConfigurationFactory`
 - Add `requestID` and `shortRequestID` to log4j2's context map
@@ -7,7 +35,7 @@
 - Add backup export support
 - Add backup import support
 - Add job system (used by the backup export/import features)
-- Fix [LDP-622](https://jira.base22.com/browse/LDP-622) - Literals where being compared as strings and therefore RDFSource replacements where failing
+- Fix [LDP-622](https://jira.base22.com/browse/LDP-622) - Literals were being compared as strings and therefore RDFSource replacements where failing
 - Fix [LDP-618](https://jira.base22.com/browse/LDP-618) - platform/api/ was not being returned with an ETag header
 - Fix [LDP-623](https://jira.base22.com/browse/LDP-623) - RDF lists were not being returned correctly in JSON-LD
 

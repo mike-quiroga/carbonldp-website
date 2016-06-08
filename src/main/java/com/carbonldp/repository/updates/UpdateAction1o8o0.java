@@ -1,41 +1,18 @@
 package com.carbonldp.repository.updates;
 
-import com.carbonldp.apps.App;
-import com.carbonldp.namespaces.LDP;
-
-import java.util.Set;
-
-import static com.carbonldp.Consts.NEW_LINE;
-import static com.carbonldp.Consts.TAB;
+import com.carbonldp.Vars;
 
 /**
+ * @author NestorVenegas
  * @author JorgeEspinosa
- * @since _version_
+ * @since 0.36.0
  */
 public class UpdateAction1o8o0 extends AbstractUpdateAction {
-	final String updateIsMemberOfRelationQuery = "" +
-		"DELETE { " + NEW_LINE +
-		TAB + "GRAPH ?g {" + NEW_LINE +
-		TAB + TAB + "?s <http://www.w3.org/ns/ldp#memberOfRelation> ?o " + NEW_LINE +
-		TAB + "}" + NEW_LINE +
-		"}" + NEW_LINE +
-		"INSERT { " + NEW_LINE +
-		TAB + "GRAPH ?g {" + NEW_LINE +
-		TAB + TAB + "?s <" + LDP.Properties.IS_MEMBER_OF_RELATION + "> ?o " + NEW_LINE +
-		TAB + "}" + NEW_LINE +
-		"}" + NEW_LINE +
-		"WHERE { " + NEW_LINE +
-		TAB + "GRAPH ?g {" + NEW_LINE +
-		TAB + TAB + "?s <http://www.w3.org/ns/ldp#memberOfRelation> ?o" + NEW_LINE +
-		TAB + "}" + NEW_LINE +
-		"}";
+
+	private static final String resourcesFile = "update-1o8o0.trig";
 
 	@Override
-	protected void execute() throws Exception {
-		transactionWrapper.runInPlatformContext( () -> sparqlTemplate.executeUpdate( updateIsMemberOfRelationQuery, null ) );
-		Set<App> apps = getAllApps();
-		for ( App app : apps ) {
-			transactionWrapper.runInAppContext( app, () -> sparqlTemplate.executeUpdate( updateIsMemberOfRelationQuery, null ) );
-		}
+	public void execute() throws Exception {
+		loadResourcesFile( resourcesFile, Vars.getInstance().getHost() );
 	}
 }

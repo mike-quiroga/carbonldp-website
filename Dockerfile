@@ -1,8 +1,8 @@
 FROM java:8
 
-ADD carbon-platform.jar /carbon/carbon-platform.jar
-ADD lib /carbon/lib
+COPY target/carbon-platform.jar /opt/carbon/carbon-platform.jar
+COPY target/lib /opt/carbon/lib
 
 EXPOSE 8083
 
-ENTRYPOINT java -jar /carbon/carbon-platform.jar
+ENTRYPOINT java -jar /opt/carbon/carbon-platform.jar

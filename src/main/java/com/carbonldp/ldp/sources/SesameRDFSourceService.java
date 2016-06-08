@@ -2,27 +2,30 @@ package com.carbonldp.ldp.sources;
 
 import com.carbonldp.exceptions.InvalidResourceException;
 import com.carbonldp.exceptions.ResourceDoesntExistException;
-import com.carbonldp.jobs.*;
+import com.carbonldp.jobs.ImportBackupJobDescription;
+import com.carbonldp.jobs.ImportBackupJobFactory;
 import com.carbonldp.ldp.AbstractSesameLDPService;
 import com.carbonldp.ldp.containers.AccessPoint;
 import com.carbonldp.ldp.containers.AccessPointFactory;
 import com.carbonldp.ldp.containers.ContainerFactory;
 import com.carbonldp.ldp.nonrdf.NonRDFSourceRepository;
+import com.carbonldp.ldp.nonrdf.RDFRepresentationDescription;
+import com.carbonldp.ldp.nonrdf.RDFRepresentationFactory;
 import com.carbonldp.models.Infraction;
 import com.carbonldp.rdf.*;
 import com.carbonldp.utils.IRIUtil;
-import com.carbonldp.utils.LiteralUtil;
 import com.carbonldp.utils.ModelUtil;
 import com.carbonldp.utils.ValueUtil;
 import org.joda.time.DateTime;
-import org.openrdf.model.*;
+import org.openrdf.model.BNode;
+import org.openrdf.model.IRI;
+import org.openrdf.model.Resource;
+import org.openrdf.model.Value;
 import org.openrdf.model.impl.AbstractModel;
 import org.openrdf.model.impl.LinkedHashModel;
-import org.openrdf.query.algebra.Datatype;
 import org.openrdf.model.vocabulary.RDF;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import javax.xml.datatype.XMLGregorianCalendar;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -39,6 +42,12 @@ public class SesameRDFSourceService extends AbstractSesameLDPService implements 
 	public RDFSource get( IRI sourceIRI ) {
 		if ( ! exists( sourceIRI ) ) throw new ResourceDoesntExistException();
 		return sourceRepository.get( sourceIRI );
+	}
+
+	@Override
+	public Set<RDFSource> get( Set<IRI> sourceURIs ) {
+		for ( IRI sourceURI : sourceURIs ) if ( ! exists( sourceURI ) ) throw new ResourceDoesntExistException();
+		return sourceRepository.get( sourceURIs );
 	}
 
 	@Override
@@ -229,6 +238,7 @@ public class SesameRDFSourceService extends AbstractSesameLDPService implements 
 		Set<IRI> types = originalSource.getTypes();
 
 		infractions.addAll( ContainerFactory.getInstance().validateSystemManagedProperties( document.getDocumentResource() ) );
+		if ( types.contains( RDFRepresentationDescription.Resource.CLASS.getIRI() ) ) infractions.addAll( RDFRepresentationFactory.getInstance().validateSystemManagedProperties( document.getDocumentResource() ) );
 
 		if ( types.contains( ImportBackupJobDescription.Resource.CLASS.getIRI() ) ) infractions.addAll( ImportBackupJobFactory.getInstance().validateImmutableProperties( document.getDocumentResource() ) );
 		else infractions.addAll( ContainerFactory.getInstance().validateImmutableProperties( document.getDocumentResource() ) );
