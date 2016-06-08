@@ -31,7 +31,7 @@ import static com.carbonldp.Consts.TICKET;
 
 /**
  * @author NestorVenegas
- * @since _version_
+ * @since 0.36.0
  */
 public class JWTicketAuthenticationFilter extends GenericFilterBean implements Filter {
 	protected final Logger LOG = LoggerFactory.getLogger( this.getClass() );

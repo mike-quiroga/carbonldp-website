@@ -15,7 +15,7 @@ import java.util.Date;
 
 /**
  * @author NestorVenegas
- * @since _version_
+ * @since 0.36.0
  */
 public class JWTicketAuthenticationService extends AbstractComponent implements TicketService {
 

@@ -11,7 +11,7 @@ import java.io.IOException;
 
 /**
  * @author NestorVenegas
- * @since _version_
+ * @since 0.36.0
  */
 public class JWTicketAuthenticationEntryPoint implements AuthenticationEntryPoint {
 

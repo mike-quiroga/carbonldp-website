@@ -5,7 +5,7 @@ import com.carbonldp.Vars;
 /**
  * @author NestorVenegas
  * @author JorgeEspinosa
- * @since _version_
+ * @since 0.36.0
  */
 public class UpdateAction1o8o0 extends AbstractUpdateAction {
 

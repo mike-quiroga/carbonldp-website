@@ -32,7 +32,7 @@ import static org.testng.Assert.*;
 
 /**
  * @author NestorVenegas
- * @since _version_
+ * @since 0.36.0
  */
 public class LocalFileRepositoryIT extends AbstractIT {
 	public String appString = "";

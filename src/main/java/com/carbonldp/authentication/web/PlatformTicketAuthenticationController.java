@@ -14,7 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 
 /**
  * @author NestorVenegas
- * @since _version_
+ * @since 0.36.0
  */
 @Controller
 @RequestMapping( "/platform/auth-tickets/" )
