@@ -8,6 +8,7 @@ import * as RDFNode from "carbonldp/RDF/RDFNode";
 import * as URI from "carbonldp/RDF/URI";
 import * as SDKContext from "carbonldp/SDKContext";
 import * as RDFDocument from "carbonldp/RDF/Document";
+import * as NS from "carbonldp/NS";
 
 import DocumentsResolverService from "./../DocumentsResolverService";
 
@@ -15,6 +16,7 @@ import DocumentResourceViewerComponent from "./../document-resource-viewer/Docum
 import BNodesViewerComponent from "./../bnodes-viewer/BNodesViewerComponent";
 import NamedFragmentsViewerComponent from "./../named-fragments-viewer/NamedFragmentsViewerComponent";
 import PropertyComponent from "./../property/PropertyComponent";
+import PropertySingleValueComponent from "./../property-single-value/PropertySingleValueComponent";
 
 import template from "./template.html!";
 import "./style.css!";
@@ -22,7 +24,7 @@ import "./style.css!";
 @Component( {
 	selector: "document-viewer",
 	template: template,
-	directives: [ CORE_DIRECTIVES, DocumentResourceViewerComponent, BNodesViewerComponent, NamedFragmentsViewerComponent, PropertyComponent ],
+	directives: [ CORE_DIRECTIVES, DocumentResourceViewerComponent, BNodesViewerComponent, NamedFragmentsViewerComponent, PropertyComponent, PropertySingleValueComponent ],
 } )
 
 export default class DocumentViewerComponent {
@@ -44,6 +46,9 @@ export default class DocumentViewerComponent {
 	@ViewChild( BNodesViewerComponent ) documentBNodes:BNodesViewerComponent;
 	@ViewChild( NamedFragmentsViewerComponent ) namedFragments:NamedFragmentsViewerComponent;
 	@Output() onLoadingDocument:EventEmitter<boolean> = new EventEmitter();
+
+	propertyKind:{ SINGLE:string, MULTI:string, OBJECT:string} = { SINGLE: "single", MULTI: "multi", OBJECT: "object" };
+	selectedPropertyKind:string;
 
 	set loadingDocument( value:boolean ) {
 		this._loadingDocument = value;
@@ -123,6 +128,20 @@ export default class DocumentViewerComponent {
 	initializeTabs() {
 		this.$element.find( ".secondary.menu.document.tabs .item" ).tab();
 	}
+
+	onDisplayAddNewPropertyModal():void {
+		this.selectedPropertyKind = this.propertyKind.SINGLE;
+		this.$element.find( ".ui.radio.checkbox" ).checkbox();
+	}
+
+	onSubmitSingleProperty():void {
+
+	}
+
+	changePropertyKind( kind:string ):void {
+		this.selectedPropertyKind = kind;
+	}
+
 
 	goToSection( section:string ):void {
 		if ( this.sections.indexOf( section ) === - 1 ) return;

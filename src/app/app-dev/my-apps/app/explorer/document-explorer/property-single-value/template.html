@@ -1,0 +1,21 @@
+<div class="field" [ngClass]="{wide: !evenlyDivided, four: displaySubmitButton, eight: !displaySubmitButton, error:(nameInput.touched && !nameInput.valid)}">
+	<input type="text" placeholder="Name"
+	       [ngFormControl]="nameInput">
+	<div class="ui error message wide" *ngIf="nameInput.touched && !nameInput.valid">
+		<p *ngIf="nameInput.hasError('emptyError')">Name is required.</p>
+	</div>
+</div>
+<property-types class="field"
+                [ngClass]="{wide: !evenlyDivided, five: displaySubmitButton, eight: !displaySubmitButton}"
+                (onTypeSelected)="onTypeSelected($event)"></property-types>
+<property-value class="field"
+                [defaultValue]="Value"
+                [ngClass]="{wide: !evenlyDivided, four: displaySubmitButton, eight: !displaySubmitButton}"
+                [type]="type"
+                (onValueChange)="onValueChange($event)"></property-value>
+<div class="field" [ngClass]="{wide: !evenlyDivided, two: displaySubmitButton}" *ngIf="displaySubmitButton">
+	<button class="ui submit button" (click)="submit()" [disabled]="false" *ngIf="displaySubmitButton">
+		{{!!submitButtonText? submitButtonText : 'Submit'}}
+		<br>
+	</button>
+</div>

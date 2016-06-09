@@ -1,0 +1,7 @@
+<input [attr.placeholder]="!!placeholder? placeholder: 'Value'"
+       [ngFormControl]="input"
+       type="text">
+<div class="ui error message wide" [ngClass]="{seven: displaySubmitButton, eight: !displaySubmitButton}" *ngIf="input.touched && !input.valid">
+	<p *ngIf="input.hasError('invalidTypeError')">Invalid type error, please enter a valid type.</p>
+	<p *ngIf="input.hasError('emptyError')">A value is required.</p>
+</div>
