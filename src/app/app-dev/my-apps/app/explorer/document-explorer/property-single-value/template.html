@@ -9,9 +9,11 @@
                 [ngClass]="{wide: !evenlyDivided, five: displaySubmitButton, eight: !displaySubmitButton}"
                 (onTypeSelected)="onTypeSelected($event)"></property-types>
 <property-value class="field"
-                [defaultValue]="Value"
                 [ngClass]="{wide: !evenlyDivided, four: displaySubmitButton, eight: !displaySubmitButton}"
+                [defaultValue]="Value"
                 [type]="type"
+                [bNodesDictionary]="bNodesDictionary"
+                [namedFragmentsDictionary]="namedFragmentsDictionary"
                 (onValueChange)="onValueChange($event)"></property-value>
 <div class="field" [ngClass]="{wide: !evenlyDivided, two: displaySubmitButton}" *ngIf="displaySubmitButton">
 	<button class="ui submit button" (click)="submit()" [disabled]="false" *ngIf="displaySubmitButton">

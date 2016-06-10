@@ -31,6 +31,8 @@ export default class PropertySingleValueComponent {
 	@Input() submitButtonText:string;
 	@Input() displaySubmitButton:boolean = true;
 	@Input() evenlyDivided:boolean = true;
+	@Input() bNodesDictionary:Map<string,RDFNode.Class> = new Map<string,RDFNode.Class>();
+	@Input() namedFragmentsDictionary:Map<string,RDFNode.Class> = new Map<string,RDFNode.Class>();
 	@Output() onSubmit:EventEmitter<boolean> = new EventEmitter<boolean>();
 	@ViewChild( PropertyTypesComponent ) propertyTypes:PropertyTypesComponent;
 	@ViewChild( PropertyValuecomponent ) propertyValue:PropertyValuecomponent;
@@ -87,7 +89,7 @@ export default class PropertySingleValueComponent {
 	}
 
 	private validateName( control:AbstractControl ):any {
-		if ( ! control.value ) return { "emptyError": true };
+		if ( (! ! control.value && control.value.trim().length === 0) || ! control.value ) return { "emptyError": true };
 		return null;
 	}
 

@@ -54,17 +54,27 @@ export default class PropertyTypesComponent {
 	}
 
 	getDataTypes():any {
+		let dataTypes:any[] = [];
+		let xsdDataTypes:any[] = this.getXSDDataTypes();
+		dataTypes = dataTypes.concat( xsdDataTypes );
+		dataTypes.push( { title: "@id", description: "Link to external resource or internal fragment.", value: "@id" } );
+		return dataTypes;
+	}
+
+	getXSDDataTypes():any[] {
 		let xsdDataTypes:any[] = [];
 		Utils.forEachOwnProperty( NS.XSD.DataType, ( key:string, value:any ):void => {
 			if ( URI.Util.isAbsolute( key ) ) {
 				xsdDataTypes.push( {
 					title: value,
-					description: NS.XSD.DataType[ value ]
+					description: NS.XSD.DataType[ value ],
+					value: NS.XSD.DataType[ value ],
 				} );
 			}
 		} );
 		return xsdDataTypes;
 	}
+
 
 	validateSelectionInput( control:AbstractControl ):any {
 		if ( ! control.value ) return { "emptySelectionError": true };
