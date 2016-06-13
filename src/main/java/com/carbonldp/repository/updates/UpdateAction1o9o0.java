@@ -20,6 +20,7 @@ public class UpdateAction1o9o0 extends AbstractUpdateAction {
 		for ( App app : apps ) {
 			transactionWrapper.runWithSystemPermissionsInAppContext( app, () -> {
 				IRI authTokenContainerIRI = ticketService.getTicketsContainerIRI();
+				if ( sourceRepository.exists( authTokenContainerIRI ) ) return;
 				RDFResource rdfResource = new RDFResource( authTokenContainerIRI );
 				BasicContainer ticketContainer = BasicContainerFactory.getInstance().create( rdfResource );
 				containerRepository.createChild( app.getRootContainerIRI(), ticketContainer );
