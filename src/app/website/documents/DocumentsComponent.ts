@@ -8,7 +8,7 @@ import AboutCarbonLDPView from "app/website/documents/about-carbon-ldp/AboutCarb
 import CarbonLDPConceptsView from "app/website/documents/carbon-ldp-concepts/CarbonLDPConceptsView";
 import GettingStartedWithTheRestApiView from "app/website/documents/getting-started-with-the-rest-api/GettingStartedWithTheRestApiView";
 import RESTObjectModelView from "app/website/documents/rest-object-model/RESTObjectModelView";
-import RESTDFSourceView from "app/website/documents/rest-rdfsource/RESTDFSourceView";
+import RESTdfSourceView from "app/website/documents/rest-rdfsource/RESTdfSourceView";
 import RESTContainersView from "app/website/documents/rest-containers/RESTContainersView";
 import InteractionModelsView from "app/website/documents/interaction-models/InteractionModelsView";
 import LDPConceptsView from "app/website/documents/ldp-concepts/LDPConceptsView";
@@ -29,7 +29,7 @@ import template from "./template.html!";
 	{path: "/carbon-ldp-concepts", as: "CarbonLDPConcepts", component: CarbonLDPConceptsView},
 	{path: "/getting-started-rest-api", as: "GettingStartedWithTheRestApi", component: GettingStartedWithTheRestApiView},
 	{path: "/rest-object-model", as: "RestObjectModel", component: RESTObjectModelView},
-	{path: "/rest-rdfsource", as: "RestRDFSource", component: RESTDFSourceView},
+	{path: "/rest-rdfsource", as: "RestRDFSource", component: RESTdfSourceView},
 	{path: "/rest-containers", as: "RestContainers", component: RESTContainersView},
 	{path: "/interaction-models", as: "InteractionModels", component: InteractionModelsView},
 	{path: "/ldp-concepts", as: "LDPConcepts", component: LDPConceptsView}
