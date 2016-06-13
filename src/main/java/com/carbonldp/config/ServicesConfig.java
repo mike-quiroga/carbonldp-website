@@ -1,5 +1,6 @@
 package com.carbonldp.config;
 
+import com.carbonldp.Vars;
 import com.carbonldp.agents.AgentService;
 import com.carbonldp.agents.app.SesameAppAgentService;
 import com.carbonldp.agents.platform.SesamePlatformAgentService;
@@ -45,7 +46,9 @@ public class ServicesConfig {
 
 	@Bean
 	public TicketService ticketService() {
-		return new JWTicketAuthenticationService();
+		JWTicketAuthenticationService ticketAuthenticationService = new JWTicketAuthenticationService();
+		ticketAuthenticationService.setAgentsContainerSlug( Vars.getInstance().getAppTicketsContainer() );
+		return ticketAuthenticationService;
 	}
 
 	@Bean
