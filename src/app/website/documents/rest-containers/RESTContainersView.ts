@@ -18,7 +18,7 @@ import template from "./template.html!";
 	directives: [ CORE_DIRECTIVES, HighlightDirective, SidebarComponent ],
 	providers: [ Title, SidebarService ],
 } )
-export default class RestContainersView {
+export default class RESTContainersView {
 	element:ElementRef;
 	$element:JQuery;
 	sidebarService:SidebarService;

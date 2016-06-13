@@ -1,6 +1,6 @@
-import { Component, ElementRef } from "@angular/core";
-import { CORE_DIRECTIVES } from "@angular/common";
-import { Title } from "@angular/platform-browser";
+import {Component, ElementRef} from "@angular/core";
+import {CORE_DIRECTIVES} from "@angular/common";
+import {Title} from "@angular/platform-browser";
 
 import $ from "jquery";
 import "semantic-ui/semantic";
@@ -13,7 +13,7 @@ import template from "./template.html!";
 	directives: [ CORE_DIRECTIVES ],
 	providers: [ Title ],
 } )
-export default class RestObjectModelView {
+export default class RESTObjectModelView {
 	element:ElementRef;
 	$element:JQuery;
 	title:Title;

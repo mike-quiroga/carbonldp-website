@@ -1,6 +1,6 @@
-import { Component, ElementRef } from "@angular/core";
-import { CORE_DIRECTIVES } from "@angular/common";
-import { Title } from "@angular/platform-browser";
+import {Component, ElementRef} from "@angular/core";
+import {CORE_DIRECTIVES} from "@angular/common";
+import {Title} from "@angular/platform-browser";
 
 import HighlightDirective from "app/directives/HighlightDirective";
 
@@ -18,7 +18,7 @@ import template from "./template.html!";
 	directives: [ CORE_DIRECTIVES, HighlightDirective, SidebarComponent ],
 	providers: [ Title, SidebarService ],
 } )
-export default class RestRDFSourceView {
+export default class RESTDFSourceView {
 	element:ElementRef;
 	$element:JQuery;
 	sidebarService:SidebarService;
@@ -29,7 +29,7 @@ export default class RestRDFSourceView {
 		this.element = element;
 		this.sidebarService = sidebarService;
 		this.title = title;
-		
+
 	}
 
 	ngAfterViewInit():void {
@@ -41,7 +41,7 @@ export default class RestRDFSourceView {
 		this.createAccordions();
 		this.sidebarService.build();
 	}
-	
+
 	routerOnActivate():void {
 		this.title.setTitle( "RDFSource" );
 	}
