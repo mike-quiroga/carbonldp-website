@@ -6,10 +6,9 @@ import * as URI from "carbonldp/RDF/URI";
 export default class RelativizeURIPipe implements PipeTransform {
 	transform( value:string, args:any[] ):string {
 		if ( args.length === 0 ) throw new Error( "The relative pipe requires an argument" );
-		let baseURI:string = args[ 0 ];
-
+		let baseURI:string = "";
+		if ( typeof args !== "string" ) baseURI = args[ 0 ];
 		if ( ! value.startsWith( baseURI ) ) return value;
-
 		return URI.Util.getRelativeURI( value, baseURI );
 	}
 }

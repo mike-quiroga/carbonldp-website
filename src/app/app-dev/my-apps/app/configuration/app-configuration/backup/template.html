@@ -1,0 +1,33 @@
+<div class="ui grid">
+	<div class="row">
+		<div class="sixteen wide mobile eight wide computer column">
+			<h3 class="ui header">
+				<i class="icons">
+					<i class=" wait icon"></i>
+					<i class="corner blue sign out icon"></i>
+				</i>
+				Schedule a Backup:
+			</h3>
+			<div class="ui divider"></div>
+			<export-backup [appContext]="appContext" [backupJob]="backupJob"></export-backup>
+		</div>
+		<div class="sixteen wide mobile eight wide computer column">
+			<h3 class="ui header">
+				<i class="unordered list icon"></i>
+				List of Backups:
+			</h3>
+			<div class="ui divider"></div>
+			<backups-list [appContext]="appContext" [backupJob]="backupJob"></backups-list>
+		</div>
+	</div>
+	<div class="row">
+		<div class="column">
+			<h3 class="ui header">
+				<i class="upload icon"></i>
+				Import a Backup:
+			</h3>
+			<div class="ui divider"></div>
+			<import-backup [appContext]="appContext"></import-backup>
+		</div>
+	</div>
+</div>

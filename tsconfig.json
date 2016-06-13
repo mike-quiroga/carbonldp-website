@@ -4,13 +4,15 @@
 		"emitDecoratorMetadata": true,
 		"experimentalDecorators": true,
 		"noImplicitAny": false,
-		"target": "es5"
+		"target": "es5",
+		"moduleResolution": "node"
 	},
 	"exclude": [
 		"jspm_packages",
 		"node_modules",
 		"dist",
-		"typings/main",
-		"typings/main.d.ts"
+		"typings/globals",
+		"typings/custom",
+		"typings/index.d.ts"
 	]
 }
