@@ -7,4 +7,7 @@ public interface SPARQLService {
 
 	@PreAuthorize( "hasPermission(#targetIRI, 'READ')" )
 	public SPARQLResult executeSPARQLQuery( String queryString, IRI targetIRI );
+
+	@PreAuthorize( "hasPermission(#targetIRI, 'UPDATE')" )
+	public void executeSPARQLUpdate( String sparqlUpdate, IRI targetIRI );
 }

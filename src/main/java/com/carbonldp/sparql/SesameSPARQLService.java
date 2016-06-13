@@ -3,6 +3,7 @@ package com.carbonldp.sparql;
 import com.carbonldp.repository.AbstractSesameRepository;
 import com.carbonldp.repository.security.RequestDomainAccessGranter;
 import com.carbonldp.web.exceptions.BadRequestException;
+import com.carbonldp.web.exceptions.NotImplementedException;
 import org.openrdf.model.IRI;
 import org.openrdf.query.MalformedQueryException;
 import org.openrdf.query.QueryLanguage;
@@ -12,8 +13,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Transactional
 public class SesameSPARQLService extends AbstractSesameRepository implements SPARQLService {
-	// TODO: check about RDF dataset with the URL
-	private SPARQLResult sparqlResult;
 
 	public SesameSPARQLService( SesameConnectionFactory connectionFactory ) {
 		super( connectionFactory );
@@ -23,6 +22,7 @@ public class SesameSPARQLService extends AbstractSesameRepository implements SPA
 	public SPARQLResult executeSPARQLQuery( String queryString, IRI targetIRI ) {
 		ParsedQuery query;
 
+		SPARQLResult sparqlResult;
 		try {
 			query = QueryParserUtil.parseQuery( QueryLanguage.SPARQL, queryString, targetIRI.stringValue() );
 		} catch ( MalformedQueryException e ) {
@@ -39,6 +39,11 @@ public class SesameSPARQLService extends AbstractSesameRepository implements SPA
 		}
 
 		return sparqlResult;
+	}
+
+	@Override
+	public void executeSPARQLUpdate( String sparqlUpdate, IRI targetIRI ) {
+		throw new NotImplementedException();
 	}
 
 	private SPARQLResult executeSPARQLBooleanQuery( String queryString ) {
