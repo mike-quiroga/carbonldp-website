@@ -1,4 +1,5 @@
 home {
+
 	> .ui.segment:nth-child(1) {
 		min-height: 95vh;
 
@@ -7,12 +8,31 @@ home {
 		}
 	}
 
-	a {
-		line-height: 70px;
+	.feature-image {
+
+		h1 {
+			color: #e1dfdf;
+		}
+		.computer.tablet.only {
+			h1 {
+				font-size: 3rem
+			}
+			.title {
+				margin-top: 7vh;
+			}
+		}
+		.mobile.only {
+			.title {
+				margin-top: 10vh;
+			}
+		}
 	}
 
-	.ui.centered.image {
-		margin-top: 30px;
+	#carbon-logo-computer {
+		margin-top: 50px;
+	}
+	#carbon-logo-mobile {
+		margin-top: 40px;
 	}
 
 	.ui.menu > .right.item > .button {
@@ -20,18 +40,18 @@ home {
 	}
 
 	.splash-bg {
-		background-image: url("<%- url.base %>assets/images/cloud-bg.jpg") !important;
+		background-image: url("<%- url.base %>assets/images/night-sky.jpg") !important;
 		background-repeat: no-repeat !important;
 		position: relative !important;
 		background-position: center center !important;
 		width: 100% !important;
 		background-size: cover !important;
-		min-height: 807px !important;
-		max-height: 960px;
+		height: 807px;
 	}
 
 	.ui.stripe.segment {
-		padding: 6em 0;
+		padding-top: 3em;
+		padding-bottom: 3em;
 
 		h2 {
 			font-size: 1.3em;
@@ -40,33 +60,82 @@ home {
 			font-size: .95em;
 			text-align: justify;
 			padding-top: 20px;
-			padding-bottom: 20px;
+			/* padding-bottom: 20px; */
 		}
 	}
 
-	.text.container > a:hover {
-		font-weight: bold;
-		text-shadow: white;
-	}
-
-	#standards {
-		padding-top: 40px;
-		h2 {
-			font-size: 1.1em;
-			padding: 0;
+	#brief {
+		.computer.only > .column {
+			padding-top: 7vh;
+			max-width: 600px;
+			letter-spacing: 0.3px;
 		}
-		p {
-			font-size: .85em;
-			text-align: justify;
-			padding: 10px;
+		.tablet.only > .column {
+			padding-top: 6vh;
+			max-width: 500px;
+			letter-spacing: 0.3px;
+		}
+		.mobile.only > .column {
+			padding-top: 4vh;
+			max-width: 380px;
+			letter-spacing: 0.3px;
 		}
 	}
 
 	#articles {
 		padding-bottom: 20px;
+
 		> .ui > .row > .column {
 			padding-left: 50px;
 			padding-right: 50px;
+		}
+
+		.computer.mobile.only {
+			padding-bottom: 45px;
+		}
+
+		.tablet.only {
+			p.left {
+				padding-top: 0;
+			}
+			p.bottom {
+				padding-top: 0;
+				padding-bottom: 20px;
+			}
+		}
+
+	}
+
+	#features {
+		padding-top: 55px;
+		padding-bottom: 75px;
+
+		.main-title {
+			font-size: 2.2rem;
+			letter-spacing: 0.7px;
+			/*font-size:2.4rem;*/
+			margin-top: 50px;
+			margin-bottom: 50px;
+		}
+
+		.feature {
+			.title {
+				margin-top: 40px;
+				font-size: 1.5rem;
+				margin-bottom: 30px;
+			}
+		}
+
+		p {
+			font-size: .85em;
+			/* text-align: justify; */
+			padding-left: 16px;
+			padding-right: 16px;
+		}
+
+		.ui.circular.image {
+			margin-bottom: 20px;
+			margin-top: 10px;
 		}
 	}
 
@@ -80,6 +149,90 @@ home {
 
 	.ui.accordion .title:not(.ui) {
 		font-size: .9em;
+	}
+
+	.ui.grid > .orange.column, .ui.grid > .orange.row, .ui.grid > .row > .orange.column {
+		background-color: #f89828 !important;
+		color: #FFF;
+	}
+
+	.ui.grid > .blue.column, .ui.grid > .blue.row, .ui.grid > .row > .blue.column {
+		background-color: #0192cf !important;
+		color: #FFF;
+		min-height: 340px;
+	}
+
+	#signup {
+		.sign-up.row {
+			min-height: 240px;
+		}
+		.sign-up.computer.only {
+			.left.column {
+				.sign-up-teaser {
+					float: right;
+					max-width: 525px !important;
+					p {
+						margin-top: 7vh;
+						padding-left: 70px;
+						padding-right: 100px;
+						font-size: 1.3em;
+					}
+				}
+
+			}
+			.right.column {
+				.signup-form.container{
+					float:left;max-width:525px!important;
+				}
+			}
+		}
+		.sign-up.tablet.only {
+			.left.column {
+				.sign-up-teaser {
+					float: right;
+					max-width: 350px !important;
+					p {
+						margin-top: 2vh;
+						padding-left: 40px;
+						padding-right: 20px;
+						font-size: 1.4em;
+					}
+				}
+
+			}
+			.right.column {
+				.signup-form.container{
+					float:left;max-width:350px!important;
+				}
+			}
+		}
+		.sign-up.mobile.only {
+			.left.column {
+				.sign-up-teaser {
+					p {
+						margin-top: 1vh;
+						padding-left: 40px;
+						padding-right: 40px;
+						font-size: 1.5em;
+					}
+				}
+
+			}
+			.right.column {
+				.signup-form.container{
+
+				}
+			}
+		}
+
+	}
+
+	.ui.white.button, .ui.white.buttons .button {
+		background-color: #fff;
+		color: #0192cf;
+		text-shadow: none;
+		background-image: none;
+		margin-top: 35px;
 	}
 
 }

@@ -1,3 +1,8 @@
+# 0.5.15 (June 1, 2016)
+- Implement new design for Home page.
+- Content improvements/corrections to Getting Started with the REST API.
+- Complete initial draft of REST API doc for RDFSource.
+
 # 0.5.14 (Jun 1, 2016)
 - Add app configuration page.
 - Add App Configuration component.

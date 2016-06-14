@@ -1,94 +1,246 @@
-<div class="ui inverted vertical center aligned segment splash-bg">
+<div class="ui inverted vertical center aligned segment splash-bg feature-image">
 	<div class="text container">
-
 		<div class="ui grid container ">
+
+			<!-- COMPUTER AND TABLET ONLY -->
 			<div class="computer tablet only row">
-				<div class="three wide column"></div>
-				<div class="ten wide column">
-					<img id="main-carbon-logo" class="ui image big centered carbon-logo" src="assets/images/carbon-ldp-logo-lg.png"/>
-					<br/><br/>
-
-					<h2 style="color:#e1dfdf">Carbon LDP is a cloud-based Linked Data Platform for building, hosting,
-						managing, and running web applications of all types - Web Services, Mobile, Big Data,
-						Analytics, IoT, Cognitive, etc.</h2>
-					<br/>
-				</div>
-				<div class="three wide column"></div>
-			</div>
-			<div class="mobile only row">
-				<div class="three wide column"></div>
-				<div class="ten wide column">
-					<img class="ui image medium centered carbon-logo" src="assets/images/carbon-ldp-logo-lg.png" style="margin-top:40px"/>
-					<h4 style="color:#e1dfdf">Carbon LDP is a cloud-based Linked Data Platform for building, hosting,
-						managing, and running web applications of all types - Web Services, Mobile, Big Data,
-						Analytics, IoT, Cognitive, etc.</h4>
-					<br/>
-				</div>
-				<div class="three wide column"></div>
-			</div>
-		</div>
-		<!--
-		<h2 style="color:#ccc">Carbon LDP is a cloud-based Linked Data Platform for building,<br/>
-			hosting, managing, and running web applications of all types -<br/>
-			Web Services, Mobile, Big Data, Analytics, IoT, Cognitive, etc.<br/><br/></h2>
-		-->
-
-		<!-- button class="ui inverted orange massive button">Get Started</button -->
-
-		<a href="#signup" (click)="scrollTo($event)"><span>Sign up</span> to receive news and get notified when we launch!</a>
-
-		<!--
-		<div class="ui action input">
-			<input type="text" placeholder="your@email.com">
-			<button class="ui primary button">Sign up</button>
-		</div>
-		<p>Promise, we don't spam :)</p>
-		-->
-
-	</div>
-</div>
-<div class="ui container">
-	<div id="articles" class="ui vertical stripe segment">
-		<div class="ui equal width top aligned stackable centered grid container">
-			<div class="row ">
 				<div class="column">
-					<h2>Innovation for the Next Web</h2>
-
-					<p>In his 2009 TED talk, Tim Berners-Lee (a.k.a. The Father of the Web) urged us onward toward the
-						complete vision for the World Wide Web. "It's called Linked Data," he said. "I want you to make
-						it. I want you to demand it." We're working to achieve that vision by creating an innovation
-						platform that can transform your enterprise and give you new advantages from advanced
-						technology.</p>
-				</div>
-				<div class="ui vertical divider"></div>
-				<div class="column">
-					<h2>What Developers Really Want</h2>
-
-					<p>As enterprise-class web engineers, our work takes us behind the scenes at world-leading
-						organizations. We know how industry titans use information technology and where many of their
-						pain-points exist. But we're not just filling gaps - we're creating an entirely new paradigm
-						that can transform the way you work. They say that "necessity is the mother of invention."
-						Carbon is the platform we've always wanted, so we're building it. We think you're going to
-						love it too.</p>
-				</div>
-			</div>
-			<div class="row">
-				<div id="standards" class="ten center wide column">
-					<div class="ui fluid accordion">
-						<div class="title">
-							<i class="dropdown icon"></i>Standards Compliant<img src="assets/images/w3c-semantic-web2.png"/>
-						</div>
-						<div class="content">
-							<p>Carbon LDP is based on Semantic Web standards developed by the World Wide Web Consortium (W3C)
-								with contributions from industry leaders such as IBM, Microsoft, and Oracle. Base22 is a member
-								of the W3C and participated in the development of the specification for the Linked Data
-								Platform (LDP). Carbon LDP is a fully compliant LDP server that will integrate and interoperate
-								with industry tools from leading vendors.</p>
-						</div>
+					<div class="ui center aligned basic segment title">
+						<h1>Innovation for the Next Web</h1>
 					</div>
 				</div>
 			</div>
+			<div class="computer tablet only row">
+				<div class="column">
+					<img id="carbon-logo-computer" class="ui image big centered carbon-logo" src="assets/images/carbon-ldp-logo-lg.png"/>
+				</div>
+			</div>
+			<!-- MOBILE ONLY (REPEAT) -->
+			<div class="mobile only row">
+				<div class="column">
+					<div class="ui center aligned basic segment title">
+						<h1>Innovation for the Next Web</h1>
+					</div>
+				</div>
+			</div>
+			<div class="mobile only row">
+				<div class="column">
+					<img id="carbon-logo-mobile" class="ui image medium centered carbon-logo" src="assets/images/carbon-ldp-logo-lg.png"/>
+				</div>
+			</div>
 		</div>
 	</div>
 </div>
-<newsletter-form id="signup"></newsletter-form>
+
+<div id="brief" class="ui center aligned padded grid description">
+
+	<!-- COMPUTER ONLY -->
+	<div class="blue computer only row">
+		<div class="column">
+			<h1>Carbon LDP is a Linked Data Platform for building web apps that manage and link data within your enterprise and across the World Wide Web.</h1>
+			<p><a class="ui white button" href="#signup" (click)="scrollTo($event)">Get notified when we launch!</a></p>
+		</div>
+	</div>
+	<!-- TABLET ONLY (REPEAT) -->
+	<div class="blue tablet only row">
+		<div class="column">
+			<h1>Carbon LDP is a Linked Data Platform for building web apps that manage and link data within your enterprise and across the World Wide Web.</h1>
+			<p><a class="ui white button" href="#signup" (click)="scrollTo($event)">Get notified when we launch!</a></p>
+		</div>
+	</div>
+	<!-- MOBILE ONLY (REPEAT) -->
+	<div class="blue mobile only row">
+		<div class="column">
+			<h2>Carbon LDP is a Linked Data Platform for building web apps that manage and link data within your enterprise and across the World Wide Web.</h2>
+			<p><a class="ui white button" href="#signup" (click)="scrollTo($event)">Get notified when we launch!</a></p>
+		</div>
+	</div>
+
+</div>
+
+
+<div class="ui container">
+	<div id="articles" class="ui vertical stripe segment">
+		<div class="ui equal width top aligned stackable centered grid">
+
+			<!-- COMPUTER AND MOBILE ONLY -->
+			<div class="computer mobile only row">
+				<div class="eight wide column">
+					<h2>Link Documents AND DATA</h2>
+
+					<p>In his 2009 TED talk, Tim Berners-Lee (a.k.a. The Father of the Web) urged us onward toward the
+						complete vision for the World Wide Web. "It's called Linked Data," he said. "I want you to make
+						it. I want you to demand it." </p>
+
+					<p>We're working to achieve that vision by creating an innovation
+						platform that can transform how you work with data and give you new advantages from advanced
+						technology.</p>
+				</div>
+				<div class="eight wide column">
+					<img class="ui fluid image" src="assets/images/tim-berners-lee-2.jpg"/>
+				</div>
+			</div>
+			<!-- TABLET ONLY (REPEAT) -->
+			<div class="tablet only row">
+				<div class="eight wide column">
+					<h2>Link Documents AND DATA</h2>
+					<p class="left">In his 2009 TED talk, Tim Berners-Lee (a.k.a. The Father of the Web) urged us onward toward the
+						complete vision for the World Wide Web. "It's called Linked Data," he said. "I want you to make
+						it. I want you to demand it." </p>
+				</div>
+				<div class="eight wide column">
+					<img class="ui fluid image" src="assets/images/tim-berners-lee-2.jpg"/>
+				</div>
+			</div>
+			<!-- MOBILE ONLY (REPEAT) -->
+			<div class="tablet only row">
+				<div class="column">
+					<p class="bottom">We're working to achieve that vision by creating an innovation
+						platform that can transform how you work with data and give you new advantages from advanced
+						technology.</p>
+				</div>
+			</div>
+
+		</div>
+	</div>
+</div>
+
+
+<div id="features" class="ui inverted vertical center aligned segment big-stone">
+	<div class="ui container">
+		<div class="ui equal width top aligned stackable centered grid">
+
+			<div class="row">
+				<div class="fifteen wide center aligned column">
+					<h2 class="main-title">Carbon LDP Features</h2>
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="five wide center aligned column feature">
+					<h3 class="title">REST API</h3>
+					<img class="ui centered small circular image" src="assets/images/ico-rest-150x150.gif">
+					<p>Access and manage applications and data by URIs using RESTful requests over HTTP (GET, POST, PUT, DELETE). Work with documents in Turtle, RDF XML, or JSON-LD.
+						Configure apps, schedule server-side jobs, execute queries - <em>everything</em> in Carbon is RESTful.</p>
+				</div>
+				<div class="five wide center aligned column feature">
+					<h3 class="title">JavaScript / TypeScript SDK</h3>
+					<img class="ui centered small circular image" src="assets/images/ico-javascript-150x150.gif">
+					<p>The JavaScript Software Developer's Kit, available from the npm package manager, allows you to manage RDF data using familar JavaScript and
+						TypeScript programming techniques and tools. Build for execution within a web browser or Node.js.</p>
+				</div>
+				<div class="five wide center aligned column feature">
+					<h3 class="title">Security</h3>
+					<img class="ui centered small circular image" src="assets/images/ico-security-150x150.gif">
+					<p>Secure your application through authentication and role-based access control. You can apply inheritable access control on your application, on parent containers, and all the
+						way down to the document level.</p>
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="five wide center aligned column feature">
+					<h3 class="title">Visual Tools</h3>
+					<img class="ui centered small circular image" src="assets/images/ico-visual-150x150.gif">
+					<p>Use time-saving tools in the Application Developer's Console, a GUI that helps you visualize and manage applications and data outside of code. Visualize your container
+						hierarchy and click resources to inspect data.
+					</p>
+				</div>
+				<div class="five wide center aligned column feature">
+					<h3 class="title">RDF Native, NoSQL Graph DB</h3>
+					<img class="ui centered small circular image" src="assets/images/ico-rdf-150x150.gif">
+					<p>Data is represented and managed as documents, but stored natively as RDF triples in a NoSQL graph database. Break the shackles of rigid data schemas; add new entities
+						and attributes on the fly. Link data with existing resources within your apps and across the web.</p>
+				</div>
+				<div class="five wide center aligned column feature">
+					<h3 class="title">Query Data</h3>
+					<img class="ui centered small circular image" src="assets/images/ico-query-150x150.gif">
+					<p>Query for data across multiple documents using the SPARQL query language. Query-down for a broad view from any segment of an application or against individual documents.
+						Query with the REST API, the JavaScript SDK, or the built-in visual SPARQL query editor.</p>
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="five wide center aligned column feature">
+					<h3 class="title">Docker Containers</h3>
+					<img class="ui centered small circular image" src="assets/images/ico-docker-150x150.gif">
+					<p>The Carbon platform is fully containerized for rapid on-prem or cloud deployment, easy management, and the most lightweight, efficient, and secure use of your hosting
+						infrastructure.</p>
+				</div>
+				<div class="five wide center aligned column feature">
+					<h3 class="title">LDAP Support</h3>
+					<img class="ui centered small circular image" src="assets/images/ico-ldap-150x150.gif">
+					<p>Add users directly to your Carbon applications or selectively import them from your corporate LDAP user repository. Enhance user profiles with new attributes outside of the
+						LDAP schema.</p>
+				</div>
+				<div class="five wide center aligned column feature">
+					<h3 class="title">Standards Based</h3>
+					<img class="ui centered small circular image" src="assets/images/ico-w3c-150x150.gif">
+					<p>Integrate and interoperate with industry tools from leading vendors. Carbon LDP is compliant with Semantic Web, Linked Data, HTTP, and other standards from the World
+						Wide Web Consortium (W3C).</p>
+				</div>
+			</div>
+
+		</div>
+	</div>
+</div>
+
+
+<div id="signup" class="ui equal width center aligned stackable padded grid">
+
+	<!-- COMPUTER ONLY -->
+	<div class="sign-up computer only row">
+		<div class="white left column">
+			<div class="ui vertical center aligned segment">
+				<div class="ui text container sign-up-teaser">
+					<p><strong>Carbon is the platform we've always wanted</strong>, so we're
+						building it. We think
+						you're going to love it too.</p>
+				</div>
+			</div>
+		</div>
+		<div class="orange right column">
+			<div class="ui vertical center aligned segment">
+				<div class="ui text signup-form container">
+					<newsletter-form id="signup"></newsletter-form>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- TABLET ONLY (REPEAT) -->
+	<div class="sign-up tablet only row">
+		<div class="white left column">
+			<div class="ui vertical center aligned segment">
+				<div class="ui text container sign-up-teaser">
+					<p><strong>Carbon is the platform we've always wanted</strong>, so we're
+						building it. We think
+						you're going to love it too.</p>
+				</div>
+			</div>
+		</div>
+		<div class="orange right column">
+			<div class="ui vertical center aligned segment">
+				<div class="ui text signup-form container">
+					<newsletter-form id="signup"></newsletter-form>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- MOBILE ONLY (REPEAT) -->
+	<div class="sign-up mobile only row">
+		<div class="white left column">
+			<div class="ui vertical center aligned segment sign-up-teaser">
+				<p><strong>Carbon is the platform we've always wanted</strong>, so we're
+					building it. We think
+					you're going to love it too.</p>
+			</div>
+		</div>
+		<div class="orange right column">
+			<div class="ui vertical center aligned segment">
+				<newsletter-form id="signup"></newsletter-form>
+			</div>
+		</div>
+	</div>
+
+</div>
+
+
