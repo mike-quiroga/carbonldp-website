@@ -12,6 +12,4 @@ public interface TicketService {
 
 	@PreAuthorize( "isAuthenticated() and !( hasRole('ROLE_ANONYMOUS') )" )
 	public Ticket createTicket( IRI targetIRI );
-
-	public IRI getTicketsContainerIRI();
 }

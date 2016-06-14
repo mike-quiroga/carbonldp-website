@@ -22,8 +22,6 @@ import java.util.Date;
  */
 public class JWTicketAuthenticationService extends AbstractComponent implements TicketService {
 
-	private String containerSlug;
-
 	@Override
 	public Ticket createTicket( IRI targetIRI ) {
 		Date expTime = new Date( System.currentTimeMillis() + Vars.getInstance().getTicketExpirationTime() );
@@ -34,21 +32,5 @@ public class JWTicketAuthenticationService extends AbstractComponent implements 
 		String agentTokenString = agentToken.getAgent().getSubject().stringValue();
 
 		return TicketFactory.getInstance().create( agentTokenString, expTime, signatureAlgorithm, targetIRI );
-	}
-
-	@Override
-	public IRI getTicketsContainerIRI() {
-		IRI appIRI = AppContextHolder.getContext().getApplication().getRootContainerIRI();
-		if ( appIRI == null ) throw new RuntimeException( "app agent repository should be running in App context" );
-		return getContainerIRI( appIRI );
-	}
-
-	private IRI getContainerIRI( IRI rootContainerIRI ) {
-		return IRIUtil.createChildIRI( rootContainerIRI, containerSlug );
-	}
-
-	public void setAgentsContainerSlug( String slug ) {
-		Assert.notNull( slug );
-		this.containerSlug = slug;
 	}
 }

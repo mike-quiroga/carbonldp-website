@@ -5,6 +5,7 @@ import com.carbonldp.Vars;
 import com.carbonldp.apps.App;
 import com.carbonldp.apps.AppRepository;
 import com.carbonldp.authentication.ticket.TicketService;
+import com.carbonldp.authentication.token.app.AppTokenRepository;
 import com.carbonldp.authorization.acl.ACLRepository;
 import com.carbonldp.ldp.containers.ContainerRepository;
 import com.carbonldp.ldp.sources.RDFSourceRepository;
@@ -33,7 +34,7 @@ import java.util.Set;
  */
 public abstract class AbstractUpdateAction extends AbstractComponent implements Action {
 	protected ContainerRepository containerRepository;
-	protected TicketService ticketService;
+	protected AppTokenRepository appTokensRepository;
 	protected SesameConnectionFactory connectionFactory;
 	protected AppRepository appRepository;
 	protected TransactionWrapper transactionWrapper;
@@ -80,6 +81,6 @@ public abstract class AbstractUpdateAction extends AbstractComponent implements 
 		sourceRepository = context.getBean( RDFSourceRepository.class );
 		aclRepository = context.getBean( ACLRepository.class );
 		documentRepository = context.getBean( RDFDocumentRepository.class );
-		ticketService = context.getBean( TicketService.class );
+		appTokensRepository = context.getBean( AppTokenRepository.class );
 	}
 }

@@ -1,10 +1,13 @@
 package com.carbonldp.repository.updates;
 
+import com.carbonldp.Vars;
 import com.carbonldp.apps.App;
 import com.carbonldp.ldp.containers.BasicContainer;
 import com.carbonldp.ldp.containers.BasicContainerFactory;
 import com.carbonldp.rdf.RDFResource;
+import com.carbonldp.utils.IRIUtil;
 import org.openrdf.model.IRI;
+import org.openrdf.model.util.URIUtil;
 
 import java.util.Set;
 
@@ -19,11 +22,8 @@ public class UpdateAction1o9o0 extends AbstractUpdateAction {
 		Set<App> apps = getAllApps();
 		for ( App app : apps ) {
 			transactionWrapper.runWithSystemPermissionsInAppContext( app, () -> {
-				IRI authTokenContainerIRI = ticketService.getTicketsContainerIRI();
-				if ( sourceRepository.exists( authTokenContainerIRI ) ) return;
-				RDFResource rdfResource = new RDFResource( authTokenContainerIRI );
-				BasicContainer ticketContainer = BasicContainerFactory.getInstance().create( rdfResource );
-				containerRepository.createChild( app.getRootContainerIRI(), ticketContainer );
+				if ( sourceRepository.exists( IRIUtil.createChildIRI( app.getRootContainerIRI(), Vars.getInstance().getAppTicketsContainer() ) ) ) return;
+				appTokensRepository.createTicketsContainer( app.getRootContainerIRI() );
 			} );
 		}
 	}

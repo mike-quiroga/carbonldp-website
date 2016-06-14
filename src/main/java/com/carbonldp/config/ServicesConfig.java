@@ -46,9 +46,7 @@ public class ServicesConfig {
 
 	@Bean
 	public TicketService ticketService() {
-		JWTicketAuthenticationService ticketAuthenticationService = new JWTicketAuthenticationService();
-		ticketAuthenticationService.setAgentsContainerSlug( Vars.getInstance().getAppTicketsContainer() );
-		return ticketAuthenticationService;
+		return new JWTicketAuthenticationService();
 	}
 
 	@Bean
