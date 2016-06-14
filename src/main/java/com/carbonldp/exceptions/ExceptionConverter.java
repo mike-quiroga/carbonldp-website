@@ -43,8 +43,11 @@ public final class ExceptionConverter {
 			return handleIllegalArgumentException( response, (InvalidResourceException) exception );
 		} else if ( exception instanceof HttpMediaTypeNotSupportedException ) {
 			return ExceptionConverter.handleHttpMediaTypeNotSupportedException();
-		} else {
+		} else if ( exception instanceof Exception ) {
 			LOG.error( "An exception reached the top of the chain. Exception: {}", exception );
+			return ExceptionConverter.handleUnexpectedException( exception );
+		} else {
+			LOG.error( "An error reached the top of the chain. Exception: {}", exception );
 			return handleUnexpectedException();
 		}
 	}
