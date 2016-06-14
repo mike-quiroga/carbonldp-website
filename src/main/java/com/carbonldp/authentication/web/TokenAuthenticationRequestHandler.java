@@ -17,7 +17,7 @@ import javax.servlet.http.HttpServletResponse;
  * @since 0.15.0-ALPHA
  */
 @RequestHandler
-public class AuthenticationRequestHandler extends AbstractLDPRequestHandler {
+public class TokenAuthenticationRequestHandler extends AbstractLDPRequestHandler {
 
 	@Autowired
 	TokenService tokenService;

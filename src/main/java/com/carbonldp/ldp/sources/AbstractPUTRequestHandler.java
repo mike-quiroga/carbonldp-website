@@ -43,7 +43,6 @@ public abstract class AbstractPUTRequestHandler<E extends RDFResource> extends A
 	protected void validateDocumentResource( IRI targetIRI, RDFResource requestDocumentResource ) {
 		super.validateDocumentResource( targetIRI, requestDocumentResource );
 		if ( ! targetIRI.equals( requestDocumentResource.getIRI() ) ) throw new BadRequestException( 0x2203 );
-
 	}
 
 	protected abstract E getDocumentResourceView( RDFResource requestDocumentResource );

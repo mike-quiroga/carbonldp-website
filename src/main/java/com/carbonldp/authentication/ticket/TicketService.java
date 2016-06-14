@@ -1,15 +1,15 @@
-package com.carbonldp.authentication.token;
+package com.carbonldp.authentication.ticket;
 
 import com.carbonldp.authentication.Ticket;
-import com.carbonldp.authentication.Token;
 import org.openrdf.model.IRI;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 /**
  * @author NestorVenegas
- * @since 0.15.0-ALPHA
+ * @since 0.36.0
  */
-public interface TokenService {
+public interface TicketService {
+
 	@PreAuthorize( "isAuthenticated() and !( hasRole('ROLE_ANONYMOUS') )" )
-	public Token createToken();
+	public Ticket createTicket(IRI targetIRI);
 }

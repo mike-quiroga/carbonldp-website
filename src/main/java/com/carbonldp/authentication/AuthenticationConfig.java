@@ -4,9 +4,10 @@ import com.carbonldp.agents.AgentRepository;
 import com.carbonldp.apps.roles.AppContextClearFilter;
 import com.carbonldp.apps.roles.AppRolePersistenceFilter;
 import com.carbonldp.apps.roles.AppRoleRepository;
-import com.carbonldp.authentication.token.JWTAuthenticationEntryPoint;
-import com.carbonldp.authentication.token.JWTAuthenticationFilter;
-import com.carbonldp.authentication.token.JWTAuthenticationProvider;
+import com.carbonldp.authentication.ticket.JWTicketAuthenticationEntryPoint;
+import com.carbonldp.authentication.ticket.JWTicketAuthenticationFilter;
+import com.carbonldp.authentication.token.JWTokenAuthenticationEntryPoint;
+import com.carbonldp.authentication.token.JWTokenAuthenticationFilter;
 import com.carbonldp.authorization.PlatformPrivilegeRepository;
 import com.carbonldp.authorization.PlatformRoleRepository;
 import com.carbonldp.authorization.SecurityContextExchanger;
@@ -65,7 +66,7 @@ public class AuthenticationConfig {
 
 	@Bean
 	public AuthenticationProvider tokenAuthenticationProvider() {
-		return new JWTAuthenticationProvider( platformAgentRepository, platformRoleRepository, platformPrivilegeRepository );
+		return new IRIAuthenticationProvider( platformAgentRepository, platformRoleRepository, platformPrivilegeRepository );
 	}
 
 	@Bean
@@ -84,8 +85,13 @@ public class AuthenticationConfig {
 	}
 
 	@Bean
-	public JWTAuthenticationFilter tokenAuthenticationFilter() {
-		return new JWTAuthenticationFilter( authenticationManager, jwtAuthenticationEntryPoint() );
+	public JWTokenAuthenticationFilter tokenAuthenticationFilter() {
+		return new JWTokenAuthenticationFilter( authenticationManager, jwTokenAuthenticationEntryPoint() );
+	}
+
+	@Bean
+	public JWTicketAuthenticationFilter ticketAuthenticationFilter() {
+		return new JWTicketAuthenticationFilter( authenticationManager, jwTicketAuthenticationEntryPoint() );
 	}
 
 	@Bean
@@ -96,8 +102,13 @@ public class AuthenticationConfig {
 	}
 
 	@Bean
-	public AuthenticationEntryPoint jwtAuthenticationEntryPoint() {
-		return new JWTAuthenticationEntryPoint();
+	public AuthenticationEntryPoint jwTokenAuthenticationEntryPoint() {
+		return new JWTokenAuthenticationEntryPoint();
+	}
+
+	@Bean
+	public AuthenticationEntryPoint jwTicketAuthenticationEntryPoint() {
+		return new JWTicketAuthenticationEntryPoint();
 	}
 
 	@Bean

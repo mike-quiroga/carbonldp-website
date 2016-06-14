@@ -10,6 +10,7 @@ import com.carbonldp.ldp.web.AbstractGETRequestHandler;
 import com.carbonldp.rdf.RDFNodeEnum;
 import com.carbonldp.rdf.RDFResourceDescription;
 import com.carbonldp.utils.HTTPUtil;
+import com.carbonldp.utils.ModelUtil;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpInputMessage;
 import org.springframework.http.HttpOutputMessage;
@@ -64,7 +65,7 @@ public class NonRDFSourceMessageConverter implements HttpMessageConverter<Abstra
 
 	private void addETagHeader( HttpHeaders headers, RDFRepresentation rdfRepresentation ) {
 		if ( rdfRepresentation.getModified() != null ) {
-			headers.add( HTTPHeaders.ETAG, HTTPUtil.formatWeakETag( rdfRepresentation.getModified().toString() ) );
+			headers.add( HTTPHeaders.ETAG, HTTPUtil.formatStrongEtag( ModelUtil.calculateETag( rdfRepresentation.getBaseModel() ) ) );
 		}
 	}
 
@@ -97,7 +98,7 @@ public class NonRDFSourceMessageConverter implements HttpMessageConverter<Abstra
 		headers.add( HTTPHeaders.LINK, addTypeLinkHeader( ContainerDescription.Resource.CLASS ) );
 		headers.add( HTTPHeaders.LINK, addTypeLinkHeader( BasicContainerDescription.Resource.CLASS ) );
 
-		headers.add( HTTPHeaders.LINK, addInteractionModelLinkHeader( RDFRepresentationDescription.Resource.NON_RDF_SOURCE ));
+		headers.add( HTTPHeaders.LINK, addInteractionModelLinkHeader( RDFRepresentationDescription.Resource.NON_RDF_SOURCE ) );
 	}
 
 	private void writeFile( File file, HttpOutputMessage httpOutputMessage ) {
