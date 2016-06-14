@@ -34,16 +34,16 @@ export default class SidebarComponent {
 	}
 
 	ngOnChanges( changeRecord:any ):void {
-		if( "contentReady" in changeRecord ) {
+		if ( "contentReady" in changeRecord ) {
 			let change:SimpleChange = changeRecord.contentReady;
-			if( change.currentValue ) this.buildSidebar();
+			if ( change.currentValue ) this.buildSidebar();
 		}
 	}
 
 	ngAfterViewInit():void {
-		this.$container = $( this.parentElement.nativeElement ).find( "article" );
-		this.sections = this.$container.children( "section" );
-		this.subSections = this.sections.children( "section" );
+	this.$container = $( this.parentElement.nativeElement ).find( "article" );
+	this.sections = this.$container.children( "section" );
+	this.subSections = this.sections.children( "section" );
 		this.$followMenu = this.$element.find( ".following.menu" );
 		this.sidebar = this.$element.find( "nav" );
 		this.createAccordions();
@@ -79,7 +79,7 @@ export default class SidebarComponent {
 				},
 				onBottomPassedReverse: function () {
 					_self.activateSection( this );
-				}
+				},
 			} );
 			this.subSections.visibility( {
 				once: false,
@@ -151,6 +151,8 @@ export default class SidebarComponent {
 	}
 
 	activateSection( elm:any ):void {
+		$(".section").visibility( "refresh" );
+
 		let $section:JQuery = $( elm );
 		let index:number = this.sections.index( $section );
 		let $followSection:JQuery = this.$followMenu.children( ".item" );
@@ -175,6 +177,7 @@ export default class SidebarComponent {
 
 	// Expands accordion sections as you scroll through the sections elements inside a section of the page.
 	activateSubSection( elm:any ):void {
+
 		let $section:JQuery = $( elm );
 		let index:number = this.subSections.index( $section );
 		let $followSection:JQuery = this.$followMenu.find( ".menu > .item" );

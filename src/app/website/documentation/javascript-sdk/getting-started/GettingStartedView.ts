@@ -1,7 +1,7 @@
-import { Component, ElementRef, ChangeDetectorRef } from "angular2/core";
-import { CORE_DIRECTIVES } from "angular2/common";
-import { ROUTER_DIRECTIVES, Router } from "angular2/router";
-import { Title } from "angular2/platform/browser";
+import { Component, ElementRef, ChangeDetectorRef } from "@angular/core";
+import { CORE_DIRECTIVES } from "@angular/common";
+import { ROUTER_DIRECTIVES, Router } from "@angular/router-deprecated";
+import { Title } from "@angular/platform-browser";
 
 import SidebarComponent from "./../../sidebar/SidebarComponent";
 
@@ -41,6 +41,7 @@ export default class GettingStartedView {
 		this.initializeAccordions();
 		this.initializeTabs();
 		this.highlightCode();
+
 		this.initializeSidebar();
 	}
 
@@ -70,4 +71,5 @@ export default class GettingStartedView {
 			this.contentReady = true;
 		}, 0 );
 	}
+
 }

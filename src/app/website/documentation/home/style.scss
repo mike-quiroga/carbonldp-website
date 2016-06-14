@@ -25,17 +25,27 @@ documents-list {
 	.ui.main.container > h1 {
 		color: #363F48;
 	}
-
-	.ui.column.vertical.menu {
+	.ui.grid{
+		padding-top: 50px;
+		padding-left: 50px;
+		padding-right: 50px;
+	}
+	.ui.vertical.menu {
 		/*max-width: 296px;*/
 		padding: 0px;
 		margin-left: 14px;
 		margin-right: 14px;
 		> .header.item {
-			background-color: rgba(33, 133, 208, 0.3);
-			color: #054264;
+			background-color: #607080;
+			//background-color: rgba(33, 133, 208, 0.3);
+			//color: #054264;
+			color: white;
 			font-size: 18px;
 			padding-top: 25px;
+		}
+		> a.item{
+
+			min-height: 40px;
 		}
 	}
 

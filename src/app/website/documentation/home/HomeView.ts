@@ -30,6 +30,6 @@ export default class HomeView {
 	}
 
 	routerOnActivate():void {
-		this.title.setTitle( "Documents" );
+		this.title.setTitle( "Documentation" );
 	}
 }

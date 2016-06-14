@@ -1,14 +1,11 @@
 <div class="ui main grid container">
-
 	<div class="row">
 		<div class="sixteen wide column">
-
 			<div class="ui breadcrumb">
 				<span class="section">Documentation</span>
 				<i class="right chevron icon divider"></i>
 				<span class="section">JavaScript SDK</span>
 				<i class="right arrow icon divider"></i>
-
 				<div class="active section">Object Model</div>
 			</div>
 		</div>
@@ -17,27 +14,31 @@
 		<div class="twelve wide computer twelve wide tablet sixteen wide mobile column">
 			<main>
 				<article class="ui vertical segment" id="article">
-
 					<header>
 						<h1 class="ui header">Object Model</h1>
 					</header>
 
 					<div class="ui icon yellow message">
 						<i class="warning sign icon"></i>
-
 						<div class="content">
 							<div class="header">Pre-release Documentation</div>
-							<p>
-								Although Carbon LDP is not yet released, we're publishing documentation as it is prepared so that you can preview what's in store.
-							</p>
+							<p>Although Carbon LDP is not yet released, we're publishing documentation as it is prepared so that you can preview what's in store.</p>
+						</div>
+					</div>
+
+					<div class="ui message">
+						<div class="content">
+							<p class="larger">This document presents an in depth description of the Carbon Object Model</p>
 						</div>
 					</div>
 
 					<section>
-						<h2 class="ui header">Document</h2>
+						<h2 class="ui header">Carbon Document definition</h2>
 
-						<p>In simplest terms a Document is the basic unit of information in Carbon. Any Carbon platform
-							will be composed of a group of applications that in turn will consist of a group of Documents.</p>
+						<p>In simplest terms a Document is the basic unit of information in Carbon. Any Carbon platform will be composed of
+							a group of applications that in turn will consist of a group of Documents.</p>
+
+						<h2 class="ui header">Carbon Document composition</h2>
 
 						<p>A Carbon Document is composed of:</p>
 						<ul>
@@ -46,9 +47,10 @@
 							<li>NamedFragments</li>
 						</ul>
 
-						<p>A Carbon Document is a javascript object identified by an URI, that can have any number of properties and nested objects.
-							All the properties in a javascript object are maintained as properties of a Carbon Document, while the nested objects correspond to
-							the fragments or named fragments, depending on whether or not the nested objects have an id defined or not.</p>
+						<p>A Carbon Document is a javascript object identified by a URI, that can have any number of properties and nested
+							objects. All the properties in a javascript object are maintained as properties of a Carbon Document, while the
+							nested objects correspond to the fragments or named fragments, depending on whether or not the nested objects have
+							an id defined or not.</p>
 
 						<div class="centered">
 							<img src="assets/images/object_model.png" height="435" width="840">
@@ -61,57 +63,150 @@
 
 
 						<h3 class="ui header">Fragments</h3>
-						<p> A fragment is a javascript object nested inside a Document. Fragments can only be referenced from within the
+						<p>A fragment is a javascript object nested inside a Document. Fragments can only be referenced from within the
 							Document to which they belong, through their ids. These ids can be automatically assigned by the Carbon SDK or
-							defined by you and they must always start with an underscore followed by
-							a colon, for example:
-							<code>_:123</code></p>
+							defined by you and they must always start with an underscore followed by a colon, for example: <code>_:123</code>.</p>
 
 						<h3 class="ui header">Named Fragments</h3>
-						<p> A Named Fragment is, like a Fragment, a javascript object nested inside a Document.
-							However, Named Fragments have ids that are referable from outside of the Document to which they belong.
-							These ids must always start with a #, for example:
-							<code>#namedFragment</code></p>
-						<p>To reference a Named Fragment from  the inside you can use either the id or the complete URI,
-							however from outside you can only reference it through the complete URI.
-							The complete URI is composed of the Document's URI and the id of the Named Fragment, for example:
-							<code>https://carbonldp.com/apps/test-app/myDocument#namedFragment</code>.
-						</p>
 
+						<p> A Named Fragment is, like a Fragment, a javascript object nested inside a Document. However, Named Fragments
+							have ids that are referable from outside of the Document to which they belong. These ids must always start with a
+							#, for example: <code>#namedFragment</code></p>
+
+						<p>To reference a Named Fragment from the inside you can use either the id or the complete URI, however from
+							outside you can only reference it through the complete URI. The complete URI is composed of the Document's URI and
+							the id of the Named Fragment, for example: <code>https://carbonldp.com/apps/test-app/myDocument #namedFragment</code>.</p>
 					</section>
+
 					<section>
-						<h2 class="ui header">Links</h2>
-						<p>Types of relationships</p>
-						<p>As we said before all the Carbon Documents must have a parent, this means that when a document is created there is also link formed between the parent Document
-							and the new created child. This is a natural link that exists in Carbon, however there are a other types of linkes that can exist.
-						</p>
+						<h2 class="ui header">Lists of Documents</h2>
+
+						<p>A list of Documents is maintain through the links to other Documents that exist in them. A link connects
+							two Carbon Documents denoting a relationship between them. This is done by adding a property
+							in one Document that points to another Document. The type of relation between the Documents can be
+							specified depending of the method used to link them. There are some types of relationships that are
+							maintained and supported by Carbon: parent-child relation and membership relation. But there can be other
+							types of personalized relations.</p>
+
+						<section>
+							<h3 class="ui header">Parent-child relation</h3>
+
+							<p>The parent-child relation exist in every document that has children Documents. Ii is a list automatically
+								maintained by Carbon that contains pointers to all the children of a given Document. Through the method
+								<code>.listChildren()</code> you can obtain such list.</p>
+
+							<p>This type of relation is special, since is what we would call a hard link. This link maintains a structural
+								relation of the Documents, and the deletion of a parent will directly affect all of its children causing their
+								deletion too.</p>
+						</section>
+
+						<section>
+							<h3 class="ui header">Linking properties</h3>
+
+							<p>Linking Documents can be as easy as manually adding a property to Document A linking it to Document B, for
+								example:</p>
+
+							<!--@formatter:off-->
+							<pre><code class="highlighted typescript">
+let myDocumentA:PersistedDocument.Class;
+let myDocumentB:PersistedDocument.Class;
+
+myDocumentA.linkingProperty = myDocumentB;
+							</code></pre>
+						<!--@formatter:on-->
+
+							<p>You can add as many properties linking different Documents to myDocumentA as you want. However, for this type of
+								linking, there are no modules or methods that can help you maintain a list of the Documents linked or the relation
+								they have between each other. You would have to retrieve all the documents properties to access the links you have
+								defined.</p>
+						</section>
+
+						<section>
+							<h3 class="ui header">Member relation</h3>
+
+							<p>The members relation is defined by the property hasMemberRelation that exists in every Carbon Document, and it
+								is predefined with the value "member". At the creation of a Document this property can be configure to give a more
+								meaningful description of the relation between a Document and its members, you can also define the special property
+								memberOfRelation that allows you to create a reverse link in the Documents you add as members. With these two
+								properties your document is linked in a two way relationship</p>
+
+							<!--@formatter:off-->
+							<pre><code class="highlighted typescript">
+
+let Peter:Document.Class;
+let John:Document.Class = Document.Factory.createFrom( {
+hasMemberRelation: "nephews";
+memberOfRelation: "uncles";
+
+});
+John.addMember( Peter );
+							</code></pre>
+							<!--@formatter:on-->
+
+							<p>This type of links allows you to maintain a list of Documents inside a Document, that share a special relation with it.</p>
+
+							<p>In a Document you can only support one member relation list. If you need to support more than one list you can use
+								<a>Access Points</a></p>
+
+							<p>Access Points, as discussed in the section Types of Documents: <a>Access Points</a>, allow you to create relations between its parent Document
+								and any other Document. A Document can have as many Access Points as you may wish, allowing you to manage many membership relations and
+								Documents lists. Access Points behave in a similar way to the membership relation inside a Document.</p>
+
+							<!--@formatter:off-->
+							<pre><code class="highlighted typescript">
+john.createAccessPoint( "nephews/", {
+hasMemberRelation: "nephews";
+memberOfRelation: "uncles";
+} );
+
+john.createAccessPoint( "nieces/", {
+has MemberRelation: "nieces";
+memberOfRelation: "uncles";
+});
+							</code></pre>
+
+						</section>
 					</section>
+
 					<section>
 						<h2 class="ui header">Types of Documents</h2>
+
 						<section>
 							<h3 class="ui header">Root Document</h3>
-							<p>When you create an application in Carbon, automatically a root Document is created.
-								The root Document contains all the relevant information about your application and is the root parent for all the information and Documents created in it.
-								...What is inside a Root Document...
 
-								Carbon Document structure can be viewed as a tree, in the sense that every Document you create is the child of a previous existing Document, beginning with the root
-								Document. You can't create a Document that doesn't have a parent Document.</p>
+							<p>When you create an application in Carbon, automatically a root Document is created. The root Document contains
+								all the relevant information about your application and is the root parent for all the Documents created in it. The
+								default Documents contained in a root Document are: agents, roles and authToken.</p>
+							<ul>
+								<li>agents Document: contains all the entities and users that have access.</li>
+								<li>roles Document: contains the roles that can be assigned to the any agents.</li>
+								<li>auth-tokens Document: is a resource that provides you with the necessary credentials for the authentication
+									on the application.
+								</li>
+							</ul>
+
+							<p>Carbon Document structure can be viewed as a tree, in the sense that every Document you create is the child of a
+								previous existing Document, beginning with the root Document. You can't create a Document that doesn't have a
+								parent Document.</p>
 						</section>
+
 						<section>
 							<h3 class="ui header">Access Control List</h3>
-							<p>Access Control List (ACL) is a Carbon Document that exists as a child of every Document created in the platform.
-							The ACL is a list of permissions attached to the Document. The ACL can defined which permission will be inheritable
-							to any child Document</p>
 
-							<h4>Access Control Entry</h4>
-							<p>The Access Control Entry (ACE) is a fragment inside an ACL document, that holds the relations between a specific
-							users, permissions and the Carbon Document</p>
+							<p>Access Control List (ACL) is a Carbon Document that is created by default as a child for every Document in the
+								platform. The ACL holds the lists of permissions attached to the Document or inherited to its children
+								through fragments containing <a>Access Control Entries (ACE)</a>. The ACEs have the relations between a
+								specific users, permissions and the Carbon Document</p>
 						</section>
+
 						<section>
 							<h3 class="ui header">Access Point</h3>
-							<p>An Access Point is a carbon Document that is in charge of creating membership realations between its parent Document
-								and any other Document. The Access Point has a membership relation configured, this relation will be added in the Document you wish to relate
-								to the Parent Document of the Access Point.</p>
+
+							<p>An Access Point is a carbon Document that is in charge of creating membership relations between its parent
+								Document and any other Document allowing you to maintain a list of Documents.
+								The Access Point has a membership relation property <code>.hasMemberRelation</code> that is configured on
+								its creation and will be added in its parent. In the Access Point you can also configure a reverse relation,
+								that will be added to the document you wish to relate to the parent Document of the Access Point.</p>
 						</section>
 					</section>
 				</article>

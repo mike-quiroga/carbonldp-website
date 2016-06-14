@@ -32,42 +32,41 @@
 							</p>
 						</div>
 					</div>
-
+					<div class="ui message">
+						<div class="content">
+							<p class="larger">This guide introduces you to the use of the Carbon Javascript SDK. In it you will findo your
+							installing guide, and the basic methods needed to start using our platform</p>
+						</div>
+					</div>
 					<section>
-						<h2 class="ui header">Assumptions</h2>
+						<h2 class="ui header">Prerequisite Knowledge</h2>
 						<p>
-							While we try to make the documentation as friendly as possible, it is
-							about CarbonLDP, so in order to keep the focus on it we need to set a baseline.
-							<br>
-							To be able to understand our documentation, a working knowledge on the following topics
-							is needed:
+							To better understand this guide and its code examples, a working knowledge of the following prerequisite topics is required.
 						</p>
 						<ul>
 							<li>
-								<strong>HTML, CSS, JavaScript:</strong> After all, we'll be covering Carbon's
-								JAVASCRIPT SDK. You can find documentation on these topics at the <a href="https://developer.mozilla.org/en-US/docs/Web"> Mozilla Developer Network</a>.
+								<strong>HTML, CSS, JavaScript:</strong> See: <a href="https://developer.mozilla.org/en-US/docs/Web">Mozilla Developer
+								Network</a>.
 							</li>
 							<li>
 								<strong>Promises:</strong> A standard-based way of handling asynchronous JavaScript logic.
-								Mozilla Developer Network has documentation about them <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise">here</a>.
+								See: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise">Promise object</a> (Mozilla Developer Network).
 							</li>
 						</ul>
 						<p>
-							There are also some topics that are not strictly required, but Carbon leverages them to enhance
-							the coding experience. Knowledge on this topics is highly recommended:
+							Knowledge on the following prerequisite topics is highly recommended:
 						</p>
 						<ul>
 							<li>
 								<strong>TypeScript:</strong> Carbon's JavaScript SDK is written in TypeScript, a JavaScript
-								superset language, maintained by Microsoft. You can find documentation <a href="http://www.typescriptlang.org/">here</a>.
+								superset language, maintained by Microsoft. See: <a href="http://www.typescriptlang.org/">TypeScript</a>.
 							</li>
 							<li>
 								<strong>Package Managers:</strong> Carbon recommends <a href="http://jspm.io/">JSPM</a>
 							</li>
 							<li>
-								<strong>ES2015 Modules:</strong> Working with Carbon is way smoother when using
-								ES2015 modules. They let you "import" a file from another one so you can modularize
-								your application. There's more information <a href="http://exploringjs.com/es6/ch_modules.html">here</a>.
+								<strong>ES2015 Modules:</strong> ES2015 modules let you "import" a file from another one so you can modularize
+								your application. See: <a href="http://exploringjs.com/es6/ch_modules.html">Modules</a> (Exploring ES6, by Dr. Axel Rauschmayer)
 							</li>
 						</ul>
 					</section>
@@ -616,17 +615,14 @@ myAppContext.documents.createChild( "/", {
 							<!--@formatter:on-->
 							</div>
 						</div>
-						<p>The <code>documents.createChild()</code> method return an unresolved Document Pointer
-							to the child Document you just created. When the pointer is resolved you can have access
-							to the Document's content.</p>
-
-						<p>You can provide an id to the Document you are creating.
-							The id is known as the child-id and it accepts any string. Carbon takes the string as a suggestion
-							for the id of the child Document you are creating, the string will be ultimately converted into an
-							acceptable id that can be retrieve by using a document Pointer, this will be discussed in the
-							section <a>Document Pointers</a>. The next sample code shows
-							the method createChild used with the child-id parameter.
-						</p>
+						<p>The <code>documents.createChild()</code> method return an unresolved Document Pointer, that when resolved allows you access
+							to the new Document's content. You can provide an id to the Document you are creating as a second parameter of the method.
+							The id is known as the child-id/ and it can be any string that will be taken as a suggestion
+							and will ultimately be converted into a valid id for the Document you are creating.
+							With this id the new Document can be retrieve, through the method <code>get()</code> or,
+							as mentioned before, through the resolution of the Document Pointer. This will be discussed in the
+							section <a>Resolving a DocumentPointer</a>. </p>
+						<p>The next sample code shows the method createChild used with the child-id parameter.</p>
 
 						<div>
 							<div class="ui top attached tabular menu">
@@ -839,7 +835,7 @@ platformContext.apps.getContext( "your-app-slug-here/" ).then( ( appContext:App.
 						<p>All the Documents in Carbon can be modified. However all the changes done to a Document, are done in memory.
 							Which means that after modifying a Document, the changes need to be saved, for them to be persisted.</p>
 						<p>You retrieve a Document with it's id as describe in the section <a>Retrieving a Document</a> with the method
-							<code>appContext.documents.get()</code>. If it is a newly created Doucment you can obtained it by resolving
+							<code>appContext.documents.get()</code>. If it is a newly created Document you can obtained it by resolving
 							the Pointer obtained after it's creation <code>documentPointer.resolve()</code> as seen in the <a>Resolving a Document Pointer</a>
 							. After, obtaining it, you can add, modify or delete as many properties as you wish. Finally, you can
 						save the changes in the Document  with the method <code>document.save()</code></p>
@@ -921,6 +917,8 @@ platformContext.apps.getAppContext( "your-app-slug/" ).then( ( appContext:App.Co
 					</section>
 					<section>
 						<h2 class="ui header">Linking Documents</h2>
+						<p>Any document can be linked to another through independent properties, e.g. myDocument.property=anotherDocument.
+						However, this way of linking documents does not have methods prepared to manipulate the links </p>
 					</section>
 
 					<section>
@@ -934,6 +932,6 @@ platformContext.apps.getAppContext( "your-app-slug/" ).then( ( appContext:App.Co
 				</article>
 			</main>
 		</div>
-		<sidebar-component [mobile]="false" [parentElement]="element" [contentReady]="contentReady" class="four wide computer only four wide tablet only column"></sidebar-component>
+		<sidebar-component [mobile]="false" [parentElement]=element [contentReady]="contentReady" class="four wide computer only four wide tablet only column"></sidebar-component>
 	</div>
 </div>

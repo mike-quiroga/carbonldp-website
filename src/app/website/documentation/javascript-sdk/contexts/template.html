@@ -31,10 +31,17 @@
 						</div>
 					</div>
 
+					<div class="ui message">
+						<div class="content">
+							<p class="larger">This document presents a more in depth information about Contexts
+								in the Carbon SDK, and its applications.</p>
+						</div>
+					</div>
+
 					<section>
 						<h2 class="ui header"> What is a context?</h2>
 
-						<p>A Context is a reference to the place where you will be working on the server, by declaring a context you are pointing to where your information should go. When you
+						<p>A Context is a reference to the place where you will be working on the server. By declaring a context you are pointing to where your information should go. When you
 							use Carbon modules and methods, they use the definitions in your context to channel the information correctly. Without a context, every time you
 							wish
 							to write
@@ -46,31 +53,31 @@
 						                                                                                    angulartics2On="click"
 						                                                                                    angularticsEvent="OutboundClick"
 						                                                                                    angularticsCategory="Carbon Object Schema Doc">
-							object schema</a>, once at the beginning of your application, allowing you to set your domain, your authentication information, etc. By configuring this information
-							in your context, you will be able to simplify the programming process e.g. setting your domain in your context allows you to use relatives <a class="ui definition"
-							                                                                                                                                              data-title="URI - Uniform Resource Identifier"
-							                                                                                                                                              data-content="URIs play a key role in enabling Linked Data and can be used to uniquely identify virtually any concept physical or abstract. A URI may or may not be resolvable on the Web."
-							                                                                                                                                              angulartics2On="click"
-							                                                                                                                                              angularticsEvent="OutboundClick"
-							                                                                                                                                              angularticsCategory="W3C-URI definition"
-							                                                                                                                                              href="https://www.w3.org/TR/ld-glossary/#uniform-resource-identifier">
-								URIs</a> through out your code, the relative URIs will be resolved against your contexts, making your code more or less independent from the location of your
-							platform.</p>
+							object schema</a> once at the beginning of your application. By configuring this information
+							in your context, you will be able to simplify the programming process e.g. setting a domain in the context allows you to use relatives <a class="ui definition"
+							                                                                                                                                          data-title="URI - Uniform Resource Identifier"
+							                                                                                                                                          data-content="URIs play a key role in enabling Linked Data and can be used to uniquely identify virtually any concept physical or abstract. A URI may or may not be resolvable on the Web."
+							                                                                                                                                          angulartics2On="click"
+							                                                                                                                                          angularticsEvent="OutboundClick"
+							                                                                                                                                          angularticsCategory="W3C-URI definition"
+							                                                                                                                                          href="https://www.w3.org/TR/ld-glossary/#uniform-resource-identifier">
+								URIs</a> through out your code, the relative URIs will be resolved against your contexts, making your code more or less independent from the location of the platform.
+							.</p>
 						<p>There are two types of contexts that you can work with:</p>
 						<ul>
 							<li>Platform context</li>
 							<li>App Context</li>
 						</ul>
-						<p>Both types of contexts belong to different classes that extend <a class="ui definition"
-						                                                               angulartics2On="click"
-						                                                               angularticsEvent="OutboundClick"
-						                                                               angularticsCategory="SDK AbstractContext Specification"
-						                                                               href="https://github.com/CarbonLDP/CarbonLDP-JS-SDK/tree/develop/doc#Carbon-AbstractContext">
+						<p>Both types of contexts belong to classes that extend <a class="ui definition"
+						                                                           angulartics2On="click"
+						                                                           angularticsEvent="OutboundClick"
+						                                                           angularticsCategory="SDK AbstractContext Specification"
+						                                                           href="https://github.com/CarbonLDP/CarbonLDP-JS-SDK/tree/develop/doc#Carbon-AbstractContext">
 							AbstractContext</a> Class, which in turn extends <a class="ui definition"
-						                                         angulartics2On="click"
-						                                         angularticsEvent="OutboundClick"
-						                                         angularticsCategory="SDK SDKContext Specification"
-						                                         href="https://github.com/CarbonLDP/CarbonLDP-JS-SDK/tree/develop/doc#Carbon-SDKContext-Class">
+						                                                        angulartics2On="click"
+						                                                        angularticsEvent="OutboundClick"
+						                                                        angularticsCategory="SDK SDKContext Specification"
+						                                                        href="https://github.com/CarbonLDP/CarbonLDP-JS-SDK/tree/develop/doc#Carbon-SDKContext-Class">
 							SDKContext</a> Class, that will be discussed in the next sections.</p>
 
 					</section>
@@ -89,7 +96,7 @@
 							<h3 class="ui header">Declare the platform context </h3>
 
 							<p>To declare a platform context you need to import Carbon from the <a>carbonldp/Carbon</a> library and instance
-								a new Carbon object, this will be your platform context. You can get the default base uri value against which relative URIs will be resolved
+								a new Carbon object. You can get the default base uri value against which relative URIs will be resolved
 								in the platform context by resolving the relative uri.
 								e.g. the default platform context base URI is https://carbonldp.com/platform/</p>
 
@@ -124,74 +131,10 @@ carbonContext.resolve( "" ); //https://carbonldp.com/platform/
 							<!--@formatter:on-->
 							</div>
 							<p>
-								The <code>context.resolve()</code> method resolve the relative URI provided( "" ) to an absolute URI (https://dev.carbonldp.com/platform/)
+								The <code>resolve()</code> method resolve the relative URI provided( "" ) to an absolute URI (https://dev.carbonldp.com/platform/)
 								using the context in which you are working on (in this case carbonContext).
 
 						</section>
-						<section>
-							<h3 class="ui header">Access/Modify your platform context</h3>
-							<p>Now that you have declared a platform context, you can work with it.</p>
-
-							<p>In the next code sample, you can see a platform context that has been set with a different domain than the default value which is
-								https://carbonldp.com/ .
-								This means that all the relative URIs used in your applications will be resolved against this new domain.</p>
-							<p>Following this pattern you will be able to use all the methods and access all the properties of your carbon context,
-								to see the Carbon class specification click <a class="ui definition"
-								                                               angulartics2On="click"
-								                                               angularticsEvent="OutboundClick"
-								                                               angularticsCategory="Platform Context Specification"
-								                                               href="https://github.com/CarbonLDP/CarbonLDP-JS-SDK/tree/develop/doc#Carbon">
-									here</a></p>
-
-
-							<div class="ui top attached tabular menu">
-								<a class="item active" data-tab="typescript">TypeScript</a>
-								<a class="item" data-tab="javascript">JavaScript</a>
-							</div>
-							<div class="ui bottom attached tab segment active" data-tab="typescript">
-
-								<!--@formatter:off-->
-								<pre><code class="highlighted typescript">
-import Carbon from "carbonldp/Carbon";
-
-let carbonContext:Carbon = new Carbon();
-
-carbonContext.setSetting( "domain", "dev.carbonldp.com" );
-
-carbonContext.resolve( "" ); // https://dev.carbonldp.com/platform/
-
-								</code></pre>
-								<!--@formatter:on-->
-							</div>
-							<div class="ui bottom attached tab segment" data-tab="javascript">
-								<!--@formatter:off-->
-								<pre><code class="highlighted javascript">
-import Carbon from "carbonldp/Carbon";
-
-let carbonContext = new Carbon();
-
-carbonContext.setSetting( "domain", "dev.carbonldp.com" );
-
-carbonContext.resolve( "" ); //https://dev.carbonldp.com/platform;
-
-								</code></pre>
-							<!--@formatter:on-->
-							</div>
-							<p></p>
-							<p>A platform context default settings are:</p>
-
-							<ul>
-								<li>domain: "carbonldp.com"</li>
-								<li>http.ssl: true</li>
-								<li>auth.method: Carbon.Auth.Method.TOKEN</li>
-								<li>platform.container: "platform/"</li>
-								<li>platform.apps.container: "apps/"</li>
-								<li>platform.agents.container: "agents/"</li>
-								<li>vocabulary: "vocabulary/#"</li>
-							</ul>
-							<p>You can add as many personalized settings as you like.</p>
-						</section>
-
 
 					</section>
 					<section>
@@ -243,6 +186,7 @@ carbonContext.resolve( "" ); //https://dev.carbonldp.com/platform;
 								<!--@formatter:off-->
 								<pre><code class="highlighted typescript">
 import Carbon from "carbonldp/Carbon";
+import * as App from "carbonldp/App";
 
 let carbonContext:Carbon = new Carbon();
 
@@ -258,15 +202,13 @@ carbonContext.apps.getAppContext( "test-app/" ).then(
 							<div class="ui bottom attached tab segment" data-tab="javascript">
 								<!--@formatter:off-->
 									<pre><code class="highlighted javascript">
-import Carbon from "carbonldp/Carbon";
+//Javascript code, not yet documented
 
-let carbonContext = new Carbon();
 
-carbonContext.apps.getAppContext( "test-app/" ).then(
-	(appContext) =>{
-		appContext.resolve( "" ); //https://carbonldp.com/apps/test-app/
-	}
-);
+
+
+
+
 
 							</code></pre>
 							<!--@formatter:on-->
@@ -279,19 +221,99 @@ carbonContext.apps.getAppContext( "test-app/" ).then(
 						</section>
 					</section>
 					<section>
+						<h2 class="ui header">Access/Modify your contexts</h2>
+						<p>Now that you have declare a platform context and a application context, you can work with them. A platform context has by default some pre defined settings, whereas an
+							application context does not have any settings pre defined. After declaring the contexts you can set new settings or modify/delete the pre existing ones.</p>
+
+						<p>The pre defined settings of a Carbon platform context are:</p>
+						<ul>
+							<li>domain: "carbonldp.com"</li>
+							<li>http.ssl: true</li>
+							<li>auth.method: Carbon.Auth.Method.TOKEN</li>
+							<li>platform.container: "platform/"</li>
+							<li>platform.apps.container: "apps/"</li>
+							<li>platform.agents.container: "agents/"</li>
+							<li>vocabulary: "vocabulary/#"</li>
+						</ul>
+						<p>You can add as many personalized settings as you like. Remember that there are no predefined settings for the application contexts.</p>
+						<p>In the next code sample, you can see a platform context that has been set with a different domain than the default value which is
+							https://carbonldp.com/ .
+							This means that all the relative URIs used in your applications will be resolved against this new domain.</p>
+
+
+						<div class="ui top attached tabular menu">
+							<a class="item active" data-tab="typescript">TypeScript</a>
+							<a class="item" data-tab="javascript">JavaScript</a>
+						</div>
+						<div class="ui bottom attached tab segment active" data-tab="typescript">
+
+							<!--@formatter:off-->
+								<pre><code class="highlighted typescript">
+import Carbon from "carbonldp/Carbon";
+import * as App from "carbonldp/Carbon";
+
+let carbonContext:Carbon = new Carbon();
+let appContext:App.Context;
+
+//Carbon platform context modify pre defined setting
+carbonContext.setSetting( "domain", "dev.carbonldp.com" );
+carbonContext.resolve( "" ); // https://dev.carbonldp.com/platform/
+
+//Carbon application context set new setting
+carbonContext.apps.getAppContext( "test-app/" ).then(
+	( appContext:App.Context ) => {
+		appContext.setSetting( "name", "Awesome-programmer");
+	}
+);
+
+								</code></pre>
+								<!--@formatter:on-->
+						</div>
+						<div class="ui bottom attached tab segment" data-tab="javascript">
+							<!--@formatter:off-->
+								<pre><code class="highlighted javascript">
+import Carbon from "carbonldp/Carbon";
+
+let carbonContext = new Carbon();
+
+carbonContext.setSetting( "domain", "dev.carbonldp.com" );
+
+carbonContext.resolve( "" ); //https://dev.carbonldp.com/platform;
+
+								</code></pre>
+							<!--@formatter:on-->
+						</div>
+						<p>The <code>setSetting()</code> method allows to define new settings or modify pre existing one. It receives two parameters: a string with name of the setting, and the
+							value it will have of any type. The setting will be set in the context from which the method was called, if is called from a platform context the it
+							will be a platform setting, likewise if it is called from an application context then it will be an application setting</p>
+
+						<p>Following the pattern in the example will allow you to use all the methods, and access all the properties of your carbon platform context,
+							see: <a class="ui definition"
+							        angulartics2On="click"
+							        angularticsEvent="OutboundClick"
+							        angularticsCategory="Platform Context Specification"
+							        href="https://github.com/CarbonLDP/CarbonLDP-JS-SDK/tree/develop/doc#Carbon">
+							Carbon Class</a> and of your application context, see: <a class="ui definition"
+							                                                              angulartics2On="click"
+							                                                              angularticsEvent="OutboundClick"
+							                                                              angularticsCategory="Platform Context Specification"
+							                                                              href="https://github.com/CarbonLDP/CarbonLDP-JS-SDK/tree/develop/doc#Carbon-App-Context">
+
+							Carbon.App.Context Class</a></p>
+					</section>
+					<section>
 
 						<h2 class="ui header">Inheritance</h2>
 						<p>In this section we will discuss the inheritance of settings and authentication services, the object schema inheritance will be discussed in the
 							<a>Object Schema Documentation</a>, as is a more complex subject.</p>
 
 						<p>The application context has access to all the settings,
-							services and object schema contained in the platform context in which it lives, unless those settings are explicitly overwritten
-							since they are not defined by default. This
-							means that when there is an attempt to access an application context's setting, it is first searched for in
+							services and object schema contained in the platform context in which it lives, unless those settings are explicitly overwritten.
+							This means that when there is an attempt to access an application context's setting, it is first searched for in
 							the application context, and if not defined there, then it is searched for in the platform context.
-							If it is not found in either context, then this means the setting has not been defined at all.
+							If it is not found in either context, this means the setting has not been defined at all.
 							This type of inheritance is similar to
-							the <a>prototypal inheritance</a>. Bellow you will find an example of settings' inheritance.</p>
+							the <a>prototypal inheritance (link)</a>. Bellow you will find an example of settings' inheritance.</p>
 
 						<p>For this next example assume you have two applications: test-app and your-app, from which you wish to set and get the setting "name" in both, your platform and
 							application context. These applications live in carbonldp.com, and remember that to get and set the settings you need to instance a platform context, and the
@@ -313,62 +335,60 @@ let testAppContext:App.Context;
 let yourAppContext:App.Context;
 
 //Get your application contexts
-carbonContext.apps.getAppContext( "test-app/" ).then(
-	( appContext:App.Context ) => {
+carbonContext.apps.getAppContext( "test-app/" )
+.then(( appContext:App.Context ) => {
 		testAppContext = appContext;
-	}
-);
-carbonContext.apps.getAppContext( "your-app/" ).then(
-	( appContext:App.Context ) => {
+		return carbonContext.apps.getAppContext( "your-app/" );
+	})
+.then(( appContext:App.Context ) => {
 		yourAppContext = appContext;
-	}
-);
 
-//Default Value of name Setting =  null,
-//since the name setting has not been set and it is not predefined in the Platform Context settings
-carbonContext.getSetting( "name" );  //null
-testAppContext.getSetting( "name" ); //null
-yourAppContext.getSetting( "name" ); //null
+		//Default Value of name Setting =  null,
+		//since the name setting has not been set and it is not predefined in the Platform Context settings
+		carbonContext.getSetting( "name" );  //null
+		testAppContext.getSetting( "name" ); //null
+		yourAppContext.getSetting( "name" ); //null
 
 
-//Set name setting in test-app app context
-testAppContext.setSetting( "name", "TestApp" );
+		//Set name setting in test-app app context
+		testAppContext.setSetting( "name", "TestApp" );
 
-carbonContext.getSetting( "name" );  //null
-testAppContext.getSetting( "name" ); //TestApp
-yourAppContext.getSetting( "name" ); //null
+		carbonContext.getSetting( "name" );  //null
+		testAppContext.getSetting( "name" ); //TestApp
+		yourAppContext.getSetting( "name" ); //null
 
 
-//Set name setting in the platform context
-carbonContext.setSetting( "name", "CarbonPlatform" );
+		//Set name setting in the platform context
+		carbonContext.setSetting( "name", "CarbonPlatform" );
 
-carbonContext.getSetting( "name" );  //CarbonPlatform
-testAppContext.getSetting( "name" ); //TestApp
-yourAppContext.getSetting( "name" ); //CarbonPlatform
+		carbonContext.getSetting( "name" );  //CarbonPlatform
+		testAppContext.getSetting( "name" ); //TestApp
+		yourAppContext.getSetting( "name" ); //CarbonPlatform
 
-//Deleting an app setting
-testAppContext.deleteSetting( "name" );
+		//Deleting an app setting
+		testAppContext.deleteSetting( "name" );
 
-carbonContext.getSetting( "name" );  //CarbonPlatform
-testAppContext.getSetting( "name" ); //CarbonPlatform
-yourAppContext.getSetting( "name" ); //CarbonPlatform
-
+		carbonContext.getSetting( "name" );  //CarbonPlatform
+		testAppContext.getSetting( "name" ); //CarbonPlatform
+		yourAppContext.getSetting( "name" ); //CarbonPlatform
+});
 								</code></pre>
 								<!--@formatter:on-->
 						</div>
 						<div class="ui bottom attached tab segment" data-tab="javascript">
 							<!--@formatter:off-->
 									<pre><code class="highlighted javascript">
-import Carbon from "carbonldp/Carbon";
+//Javascript Code, not yet documented
 
-let carbonContext = new Carbon();
-carbonContext.resolve( "" ); //hrrps://carbonldp.com/platform/
 
-carbonContext.apps.getAppContext( "test-app/" ).then(
-	(appContext) =>{
-		appContext.resolve( "" ); //https://carbonldp.com/apps/test-app/
-	}
-);
+
+
+
+
+
+
+
+
 					</code></pre>
 							<!--@formatter:on-->
 						</div>
