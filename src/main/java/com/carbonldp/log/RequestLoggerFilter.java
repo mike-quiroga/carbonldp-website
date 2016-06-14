@@ -4,12 +4,10 @@ import com.carbonldp.Consts;
 import com.carbonldp.config.PropertiesFileConfigurationRepository;
 import com.carbonldp.exceptions.AuthorizationException;
 import com.carbonldp.exceptions.CarbonNoStackTraceRuntimeException;
-import com.carbonldp.exceptions.ExceptionUtil;
+import com.carbonldp.exceptions.ExceptionConverter;
 import com.carbonldp.exceptions.InvalidResourceException;
 import com.carbonldp.utils.HTTPUtil;
 import com.carbonldp.web.converters.AbstractModelMessageConverter;
-import com.carbonldp.web.exceptions.AbstractWebRuntimeException;
-import org.apache.http.HttpStatus;
 import org.apache.logging.log4j.ThreadContext;
 import org.openrdf.model.impl.AbstractModel;
 import org.slf4j.Logger;
@@ -38,20 +36,6 @@ import java.util.*;
 public class RequestLoggerFilter extends GenericFilterBean {
 
 	public static final String DEFAULT_FILTER_NAME = "REQUEST_LOGGER_FILTER";
-	private static final String[] allowedAcceptedTypesValues = new String[]{
-
-		Consts.RDFMediaTypes.TURTLE,
-		Consts.RDFMediaTypes.JSON_LD,
-		Consts.RDFMediaTypes.JSON_RDF,
-		Consts.RDFMediaTypes.XML_RDF,
-		Consts.RDFMediaTypes.TRIG,
-		Consts.RDFMediaTypes.N_TRIPLES,
-		Consts.RDFMediaTypes.N3,
-		Consts.RDFMediaTypes.TRIX,
-		Consts.RDFMediaTypes.BINARY,
-		Consts.RDFMediaTypes.N_QUADS
-	};
-	public static Set<String> allowedAcceptTypes = new HashSet<>( Arrays.asList( allowedAcceptedTypesValues ) );
 
 	protected final Logger LOG = LoggerFactory.getLogger( this.getClass() );
 	protected final Marker FATAL = MarkerFactory.getMarker( Consts.FATAL );
@@ -79,35 +63,11 @@ public class RequestLoggerFilter extends GenericFilterBean {
 		} finally {
 			try {
 				chain.doFilter( request, response );
-			} catch ( AuthorizationException e ) {
-				ResponseEntity<Object> responseEntity = ExceptionUtil.handleAuthorizationException( e );
-				exceptionMessageWriter( request, response, responseEntity );
-				LOG.error( "An exception reached the top of the chain. Exception: {}", e );
-			} catch ( HttpMessageNotReadableException e ) {
-				ResponseEntity<Object> responseEntity = ExceptionUtil.handleHttpMessageNotReadableException();
-				exceptionMessageWriter( request, response, responseEntity );
-				LOG.error( "An exception reached the top of the chain. Exception: {}", e );
-			} catch ( CarbonNoStackTraceRuntimeException e ) {
-				ResponseEntity<Object> responseEntity = ExceptionUtil.handleNoStackTRaceRuntimeException( e );
-				exceptionMessageWriter( request, response, responseEntity );
-				LOG.error( "An exception reached the top of the chain. Exception: {}", e );
-			} catch ( InvalidResourceException e ) {
-				ResponseEntity<Object> responseEntity = ExceptionUtil.handleIllegalArgumentException( response, e );
-				exceptionMessageWriter( request, response, responseEntity );
-				LOG.error( "An exception reached the top of the chain. Exception: {}", e );
-			} catch ( HttpMediaTypeNotSupportedException e ) {
-				ResponseEntity<Object> responseEntity = ExceptionUtil.handleHttpMediaTypeNotSupportedException();
-				exceptionMessageWriter( request, response, responseEntity );
-				LOG.error( "An exception reached the top of the chain. Exception: {}", e );
 			} catch ( Exception e ) {
-				ResponseEntity<Object> responseEntity = ExceptionUtil.handleUnexpectedException( e );
+				ResponseEntity<Object> responseEntity = ExceptionConverter.handleException( response, e );
 				exceptionMessageWriter( request, response, responseEntity );
 				LOG.error( "An exception reached the top of the chain. Exception: {}", e );
-			} catch ( Throwable e ) {
-				LOG.error( FATAL, "An exception reached the top of the chain. Exception: {}", e );
 			} finally {
-				//	LOG.debug( HTTPUtil.printResponseInfo( response ) );
-
 				removeRequestUniqueID();
 			}
 		}
