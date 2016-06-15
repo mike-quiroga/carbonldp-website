@@ -134,16 +134,19 @@ public class ApplicationContextConnectionFactory extends AbstractComponent imple
 			throw new SesameTransactionException( e );
 		}
 
-		if ( repository == null ) {
-			Vars vars = Vars.getInstance();
-			File file = new File( vars.getAppRespositoriesFolder() + "/" + appRepositoryID );
-			if ( ! file.exists() ) throw new SesameTransactionException( "No such repository: " + appRepositoryID );
-			repositoryService.createRepository( appRepositoryID );
-			repository = appsRepositoryManager.getRepository( appRepositoryID );
-		}
+		if ( repository == null ) repository = registerRepository( appRepositoryID );
+		if ( repository == null ) throw new SesameTransactionException( "No such repository: " + appRepositoryID );
 
 		RepositoryConnectionFactory connectionFactory = new RepositoryConnectionFactory( repository );
 		appsRepositoryConnectionFactoryMap.put( appRepositoryID, connectionFactory );
+	}
+
+	private Repository registerRepository( String appRepositoryID ) {
+		Vars vars = Vars.getInstance();
+		File file = new File( vars.getAppRespositoriesFolder() + "/" + appRepositoryID );
+		if ( ! file.exists() ) throw new SesameTransactionException( "No such repository: " + appRepositoryID );
+		repositoryService.createRepository( appRepositoryID );
+		return appsRepositoryManager.getRepository( appRepositoryID );
 	}
 
 	@Autowired
