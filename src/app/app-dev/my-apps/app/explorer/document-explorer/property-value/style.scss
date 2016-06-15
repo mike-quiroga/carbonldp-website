@@ -24,4 +24,35 @@ property-value {
 			}
 		}
 	}
+
+	.options {
+		display: none;
+		float: right;
+		position: relative;
+		top: -2px;
+		max-height: 23px;
+		z-index: 1;
+	}
+	.options.still {
+		display: block;
+	}
+
+	//property-value.field {
+	//	clear: none;
+	//}
+	.hidden {
+		display: none;
+	}
+
+	.edit-mode {
+		padding-right: 62px;
+	}
+}
+
+property-value.segment {
+	padding: 0;
+}
+
+property-value:hover .options {
+	display: block;
 }

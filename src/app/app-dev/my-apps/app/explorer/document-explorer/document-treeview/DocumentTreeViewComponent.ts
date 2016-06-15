@@ -12,6 +12,7 @@ import * as SDKContext from "carbonldp/SDKContext";
 import * as RDFDocument from "carbonldp/RDF/Document";
 
 import template from "./template.html!";
+import "./style.css!";
 
 @Component( {
 	selector: "document-treeview",

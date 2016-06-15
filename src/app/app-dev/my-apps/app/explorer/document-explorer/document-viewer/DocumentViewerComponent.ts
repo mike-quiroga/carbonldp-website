@@ -23,6 +23,7 @@ import "./style.css!";
 
 @Component( {
 	selector: "document-viewer",
+	host: { "[class.ui]": "true", "[class.basic]": "true", "[class.segment]": "true", },
 	template: template,
 	directives: [ CORE_DIRECTIVES, DocumentResourceViewerComponent, BNodesViewerComponent, NamedFragmentsViewerComponent, PropertyComponent, PropertySingleValueComponent ],
 } )
@@ -45,10 +46,11 @@ export default class DocumentViewerComponent {
 	@Input() documentContext:SDKContext.Class;
 	@ViewChild( BNodesViewerComponent ) documentBNodes:BNodesViewerComponent;
 	@ViewChild( NamedFragmentsViewerComponent ) namedFragments:NamedFragmentsViewerComponent;
-	@Output() onLoadingDocument:EventEmitter<boolean> = new EventEmitter();
+	@Output() onLoadingDocument:EventEmitter<boolean> = new EventEmitter<boolean>();
 
 	propertyKind:{ SINGLE:string, MULTI:string, OBJECT:string} = { SINGLE: "single", MULTI: "multi", OBJECT: "object" };
 	selectedPropertyKind:string;
+	documentContentChanged:boolean = false;
 
 	set loadingDocument( value:boolean ) {
 		this._loadingDocument = value;
@@ -79,7 +81,9 @@ export default class DocumentViewerComponent {
 				}
 			);
 		}
-		if ( changes[ "document" ] && ! ! changes[ "document" ].currentValue && changes[ "document" ].currentValue !== changes[ "document" ].previousValue ) {
+		if ( ! ! changes[ "document" ].currentValue && changes[ "document" ].currentValue !== changes[ "document" ].previousValue ) {
+			if ( ! ! changes[ "document" ].previousValue && changes[ "document" ].currentValue[ 0 ][ "@id" ] === changes[ "document" ].previousValue[ "@id" ] )
+				this.documentContentChanged = true;
 			this.receiveDocument();
 		}
 	}
@@ -147,6 +151,13 @@ export default class DocumentViewerComponent {
 		if ( this.sections.indexOf( section ) === - 1 ) return;
 		this.scrollTo( ">div:first-child" );
 		this.$element.find( ".secondary.menu.document.tabs .item" ).tab( "changeTab", section );
+	}
+
+	propertyChanged( result:boolean ) {
+		// console.log( this.rootNode );
+		// let body:string = JSON.stringify( this.document );
+		// console.log( body );
+		// this.documentsResolverService.update( this.document[ "@id" ], body, this.documentContext );
 	}
 
 	private scrollTo( selector:string ):void {

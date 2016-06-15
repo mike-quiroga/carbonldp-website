@@ -1,6 +1,7 @@
 <div class="ui divided items">
 	<template ngFor let-propertyName="$implicit" [ngForOf]="getPropertiesName( rootNode )" let-i="index">
 		<document-property class="property item"
+		                   (onChangeProperty)="changeProperty($event)"
 		                   (onGoToBNode)="openBNode( $event )"
 		                   (onGoToNamedFragment)="openNamedFragment($event)"
 		                   [documentURI]="rootNode['@id']"

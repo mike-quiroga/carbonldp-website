@@ -1,11 +1,11 @@
-import { Component, Input, Output, EventEmitter } from "@angular/core";
-import { CORE_DIRECTIVES } from "@angular/common";
+import { Component, Input, Output, EventEmitter, SimpleChange } from "@angular/core";
 
 import "semantic-ui/semantic";
 
 import * as RDFNode from "carbonldp/RDF/RDFNode";
 import * as URI from "carbonldp/RDF/URI";
 
+import { Property } from "./../property/PropertyComponent";
 import PropertyComponent from "./../property/PropertyComponent";
 
 import template from "./template.html!";
@@ -13,7 +13,7 @@ import template from "./template.html!";
 @Component( {
 	selector: "document-resource",
 	template: template,
-	directives: [ CORE_DIRECTIVES, PropertyComponent ],
+	directives: [ PropertyComponent ],
 } )
 
 export default class DocumentResourceComponent {
@@ -23,6 +23,7 @@ export default class DocumentResourceComponent {
 	@Input() rootNode:RDFNode.Class;
 	@Output() onOpenBNode:EventEmitter<string> = new EventEmitter<string>();
 	@Output() onOpenNamedFragment:EventEmitter<string> = new EventEmitter<string>();
+	@Output() onChangeProperty:EventEmitter<boolean> = new EventEmitter<boolean>();
 
 	constructor() {}
 
@@ -49,5 +50,10 @@ export default class DocumentResourceComponent {
 		if ( this.displayOnly.length === 0 && this.hiddenProperties.length === 0 ) return true;
 		if ( this.displayOnly.length > 0 ) return this.displayOnly.indexOf( propertyName ) !== - 1 ? true : false;
 		return this.hiddenProperties.indexOf( propertyName ) !== - 1 ? false : true;
+	}
+
+	changeProperty( property:Property ):void {
+		this.rootNode[ property.name ] = property.value;
+		this.onChangeProperty.emit( true );
 	}
 }

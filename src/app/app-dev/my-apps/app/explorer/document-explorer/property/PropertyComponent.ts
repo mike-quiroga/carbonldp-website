@@ -9,7 +9,8 @@ import * as Literal from "carbonldp/RDF/Literal";
 import * as URI from "carbonldp/RDF/URI";
 import * as Utils from "carbonldp/Utils";
 
-import ListViewerComponent from "./../list-viewer/ListViewerComponent"
+import ListViewerComponent from "./../list-viewer/ListViewerComponent";
+import PropertyValuecomponent from "./../property-value/PropertyValuecomponent";
 
 import template from "./template.html!";
 import "./style.css!";
@@ -17,7 +18,7 @@ import "./style.css!";
 @Component( {
 	selector: "document-property",
 	template: template,
-	directives: [ CORE_DIRECTIVES, ListViewerComponent ],
+	directives: [ ListViewerComponent, PropertyValuecomponent ],
 } )
 
 export default class PropertyComponent {
@@ -25,13 +26,14 @@ export default class PropertyComponent {
 	element:ElementRef;
 	$element:JQuery;
 	@Input() documentURI:string;
-	@Input() property:RDFNode.Class;
+	@Input() property:RDFNode.Class|RDFNode.Class[];
 	@Input() propertyName:string;
 	@Output() onGoToBNode:EventEmitter<string> = new EventEmitter<string>();
 	@Output() onGoToNamedFragment:EventEmitter<string> = new EventEmitter<string>();
+	@Output() onChangeProperty:EventEmitter<Property> = new EventEmitter<Property>();
 	commonHeaders:string[] = [ "@id", "@type", "@value" ];
 
-	loadingDocument:boolean = false;
+	savingProperty:boolean = false;
 
 	constructor( element:ElementRef ) {
 		this.element = element;
@@ -51,8 +53,7 @@ export default class PropertyComponent {
 
 	getParentURI( uri:string ):string {
 		let slug:string = this.getSlug( uri );
-		let parent:string = uri.substr( 0, uri.indexOf( slug ) );
-		return parent;
+		return uri.substr( 0, uri.indexOf( slug ) );
 	}
 
 	getSlug( uri:string ) {
@@ -136,4 +137,21 @@ export default class PropertyComponent {
 	initializeAccordions():void {
 		this.$element.find( ".ui.accordion" ).accordion();
 	}
+
+	changePropertyValue( value:string, propIndex:number ) {
+		this.savingProperty = true;
+		if ( this.property.length > 0 ) {
+			this.property[ propIndex ][ "@value" ] = value;
+		} else {
+			this.property[ 0 ] = value;
+		}
+		let prop:Property = <Property>{};
+		prop.name = this.propertyName;
+		prop.value = this.property;
+		this.onChangeProperty.emit( prop );
+	}
+}
+export interface Property {
+	name:string;
+	value:any;
 }

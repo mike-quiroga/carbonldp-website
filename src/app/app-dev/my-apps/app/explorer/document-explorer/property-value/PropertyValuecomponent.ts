@@ -27,8 +27,9 @@ export default class PropertyValueComponent {
 	$element:JQuery;
 	element:ElementRef;
 	$fragmentsDropdown:JQuery;
+	modes:Modes = Modes;
 
-
+	@Input() mode:string = Modes.READ;
 	@Input() type:string = NS.XSD.DataType.string;
 	@Input() defaultValue:string = "";
 	@Input() placeholder:string;
@@ -38,6 +39,7 @@ export default class PropertyValueComponent {
 
 	@Output() onValueChange:EventEmitter<string> = new EventEmitter<string>();
 	@Output() onError:EventEmitter<string> = new EventEmitter<string>();
+	@Output() onChangeProperty:EventEmitter<string> = new EventEmitter<string>();
 
 	input:AbstractControl = new Control( this.defaultValue, Validators.compose( [ Validators.required, this.validateInput.bind( this ) ] ) );
 
@@ -62,11 +64,23 @@ export default class PropertyValueComponent {
 		if ( ! ! this.$fragmentsDropdown ) {
 			this.$fragmentsDropdown.dropdown( {
 				allowAdditions: true,
-				// debug: true,
-				// verbose: true,
 				onChange: this.onChangeValue.bind( this )
 			} );
 		}
+	}
+
+	displayEditor( event:Event ):void {
+		this.mode = Modes.EDIT;
+	}
+
+	cancelEdit():void {
+		(<Control>this.input).updateValue( this.defaultValue );
+		this.mode = Modes.READ;
+	}
+
+	save():void {
+		this.mode = Modes.READ;
+		this.onChangeProperty.emit( this.input.value );
 	}
 
 	onChangeValue( value:string, text:string, choice:JQuery ):void {
@@ -79,7 +93,7 @@ export default class PropertyValueComponent {
 	}
 
 	ngOnChanges( changes:{[propName:string]:SimpleChange} ):void {
-		if ( changes[ "type" ].currentValue !== changes[ "type" ].previousValue ) {
+		if ( ! ! changes[ "type" ] && changes[ "type" ].currentValue !== changes[ "type" ].previousValue ) {
 			this.input.updateValueAndValidity();
 		}
 	}
@@ -126,4 +140,9 @@ export default class PropertyValueComponent {
 		return URI.Util.getSlug( uri );
 	}
 
+}
+
+export class Modes {
+	static EDIT:string = "EDIT";
+	static READ:string = "READ";
 }

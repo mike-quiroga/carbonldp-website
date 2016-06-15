@@ -1,37 +1,66 @@
-<input [attr.placeholder]="!!placeholder? placeholder: 'Value'"
-       [ngFormControl]="input"
-       [hidden]="type==='@id'"
-       type="text">
-<div [hidden]="type!=='@id'">
-	<select class="ui fluid search dropdown fragments">
-		<option value="">
-			Search a fragment/bNode
-		</option>
-		<option class="item" value="bNodes-category" disabled="disabled">
-			bNodes
-		</option>
-		<optgroup label="bNodes">
-			<option class="item" *ngFor="let bNode of (bNodesDictionary | iterablemap); let i=index" value="{{bNode.key}}" (hover)="onFragmentHover($event, bNode)">
-				<span>
-					<span class="title">bNode {{i}}</span>
-					<span class="description">{{bNode.key}}</span>
-				</span>
-			</option>
-		</optgroup>
-		<option class="item" value="named-fragments-category" disabled="disabled">
-			Named Fragments
-		</option>
-		<optgroup label="Named Fragments">
-			<option class="item" *ngFor="let fragment of (namedFragmentsDictionary | iterablemap); let i=index" value="{{fragment.key}}" (hover)="onFragmentHover($event, fragment)">
-				<span>
-					<span class="title">{{getFriendlyName(fragment.key)}}</span>
-					<span class="description">{{fragment.key}}</span>
-				</span>
-			</option>
-		</optgroup>
-	</select>
+<div class="options" [ngClass]="{still:mode===modes.EDIT}">
+	<div class="ui mini icon inverted edit value buttons">
+		<button #editButton
+		        class="ui basic edit button"
+		        *ngIf="mode!==modes.EDIT"
+		        [ngClass]="{hidden:editButton.classList.contains('active')}"
+		        (click)="displayEditor($event, prop, j)">
+			<i class="pencil icon"></i>
+		</button>
+	</div>
+	<div class="ui mini icon inverted confirm buttons" *ngIf="mode===modes.EDIT">
+		<button #cancelButton
+		        class="ui basic button" title="Cancel"
+		        (click)="cancelEdit()">
+			<i class="remove red icon"></i>
+		</button>
+		<button #confirmButton
+		        class="ui basic button" title="Save"
+		        [disabled]="!input.valid"
+		        (click)="save()">
+			<i class="checkmark green icon"></i>
+		</button>
+	</div>
 </div>
-<div class="ui error message wide" [ngClass]="{seven: displaySubmitButton, eight: !displaySubmitButton}" *ngIf="input.touched && !input.valid">
-	<p *ngIf="input.hasError('invalidTypeError')">Invalid type error, please enter a valid type.</p>
-	<p *ngIf="input.hasError('emptyError')">A value is required.</p>
+<div class="read-mode" *ngIf="mode===modes.READ">
+	<p class="value" (dblclick)="displayEditor($event)">{{defaultValue}}</p>
+</div>
+<div class="edit-mode" *ngIf="mode===modes.EDIT">
+	<input [attr.placeholder]="!!placeholder? placeholder: 'Value'"
+	       [ngFormControl]="input"
+	       [hidden]="type==='@id'"
+	       type="text">
+	<div [hidden]="type!=='@id'">
+		<select class="ui fluid search dropdown fragments">
+			<option value="">
+				Search a fragment/bNode
+			</option>
+			<option class="item" value="bNodes-category" disabled="disabled">
+				bNodes
+			</option>
+			<optgroup label="bNodes">
+				<option class="item" *ngFor="let bNode of (bNodesDictionary | iterablemap); let i=index" value="{{bNode.key}}" (hover)="onFragmentHover($event, bNode)">
+					<span>
+						<span class="title">bNode {{i}}</span>
+						<span class="description">{{bNode.key}}</span>
+					</span>
+				</option>
+			</optgroup>
+			<option class="item" value="named-fragments-category" disabled="disabled">
+				Named Fragments
+			</option>
+			<optgroup label="Named Fragments">
+				<option class="item" *ngFor="let fragment of (namedFragmentsDictionary | iterablemap); let i=index" value="{{fragment.key}}" (hover)="onFragmentHover($event, fragment)">
+					<span>
+						<span class="title">{{getFriendlyName(fragment.key)}}</span>
+						<span class="description">{{fragment.key}}</span>
+					</span>
+				</option>
+			</optgroup>
+		</select>
+	</div>
+	<div class="ui error message wide" [ngClass]="{seven: displaySubmitButton, eight: !displaySubmitButton}" *ngIf="input.touched && !input.valid">
+		<p *ngIf="input.hasError('invalidTypeError')">Invalid type error, please enter a valid type.</p>
+		<p *ngIf="input.hasError('emptyError')">A value is required.</p>
+	</div>
 </div>

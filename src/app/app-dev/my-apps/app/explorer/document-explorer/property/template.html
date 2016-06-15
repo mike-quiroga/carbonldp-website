@@ -79,7 +79,11 @@
 					</a>
 				</td>
 				<td *ngIf="!!prop['@value']">
-					<p>{{prop['@value']}}</p>
+					<div class="ui error edit form basic segment" [ngClass]="{loading:false}">
+						<property-value class="field"
+						                (onChangeProperty)="changePropertyValue($event, j)"
+						                [defaultValue]="prop['@value']"></property-value>
+					</div>
 				</td>
 				<td *ngIf="!!prop['@type']">
 					<p>{{prop['@type']}}</p>

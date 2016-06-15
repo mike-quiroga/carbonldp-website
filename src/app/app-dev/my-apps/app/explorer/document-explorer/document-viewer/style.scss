@@ -2,4 +2,18 @@ document-viewer {
 	.ui.menu:not(.vertical) .item.hidden {
 		display: none;
 	}
+	.saving-message {
+		//position: absolute;
+		//z-index: 1;
+		//width: 97%;
+		//padding: 0 1em 1em;
+	}
+	.document-content {
+		overflow-y: scroll;
+		overflow-x: hidden;
+	}
+}
+
+.ui.grid > .row > document-viewer.ui.segment.column {
+	padding: 0;
 }
