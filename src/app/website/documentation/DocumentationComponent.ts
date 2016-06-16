@@ -21,6 +21,8 @@ import RESTObjectModelView from "./rest-api/rest-object-model/RESTObjectModelVie
 import RESTRdfSourceView from "./rest-api/rest-rdfsource/RESTRdfSourceView";
 import RESTContainersView from "./rest-api/rest-containers/RESTContainersView";
 
+import "./style.css!";
+
 @Component( {
 	selector: "documents",
 	template: "<router-outlet></router-outlet>",
