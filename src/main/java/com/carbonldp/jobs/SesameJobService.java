@@ -66,6 +66,8 @@ public class SesameJobService extends AbstractSesameLDPService implements JobSer
 		ImportBackupJob importBackupJob = new ImportBackupJob( job );
 		IRI backupIRI = importBackupJob.getBackup();
 		if ( ! sourceService.exists( backupIRI ) ) throw new InvalidResourceException( new Infraction( 0x2011, "iri", backupIRI.stringValue() ) );
+		
+		// TODO: Check READ permissions without executing an unnecessary read
 		sourceService.get( backupIRI );
 	}
 
