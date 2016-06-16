@@ -1,3 +1,11 @@
+# 0.5.16 (June 16, 2016)
+- Add partial draft JavaScript SDK Object Model.
+- Add global styles for documentation.
+- Complete draft JavaScript SDK Contexts.
+- Content improvements/corrections to Getting Started with the REST API.
+- Fix WebsiteView to scroll to Top on route change.
+- Combine documents into documentation.
+
 # 0.5.15 (June 1, 2016)
 - Implement new design for Home page.
 - Content improvements/corrections to Getting Started with the REST API.
