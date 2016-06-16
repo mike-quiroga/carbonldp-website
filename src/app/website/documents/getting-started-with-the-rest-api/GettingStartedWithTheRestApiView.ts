@@ -48,7 +48,7 @@ export default class GettingStartedWithTheRestApiView {
 	}
 
 	routerOnActivate():void {
-		this.title.setTitle( "Getting started - Rest API" );
+		this.title.setTitle( "Getting Started with the REST API" );
 	}
 
 	createAccordions():void {
