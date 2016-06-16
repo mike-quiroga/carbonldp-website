@@ -22,14 +22,11 @@ export default class RESTContainersView {
 	element:ElementRef;
 	$element:JQuery;
 	sidebarService:SidebarService;
-	title:Title;
-
 
 	constructor( element:ElementRef, title:Title, sidebarService:SidebarService ) {
 		this.element = element;
 		this.sidebarService = sidebarService;
-		this.title = title;
-
+		title.setTitle( "Containers" );
 	}
 
 	ngAfterViewInit():void {
@@ -40,10 +37,6 @@ export default class RESTContainersView {
 		this.$element = $( this.element.nativeElement );
 		this.createAccordions();
 		this.sidebarService.build();
-	}
-
-	routerOnActivate():void {
-		this.title.setTitle( "Containers" );
 	}
 
 	createAccordions():void {

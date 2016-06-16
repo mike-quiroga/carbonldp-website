@@ -22,13 +22,11 @@ export default class RESTDFSourceView {
 	element:ElementRef;
 	$element:JQuery;
 	sidebarService:SidebarService;
-	title:Title;
-
 
 	constructor( element:ElementRef, title:Title, sidebarService:SidebarService ) {
 		this.element = element;
 		this.sidebarService = sidebarService;
-		this.title = title;
+		title.setTitle( "RDFSource" );
 
 	}
 
@@ -41,11 +39,7 @@ export default class RESTDFSourceView {
 		this.createAccordions();
 		this.sidebarService.build();
 	}
-
-	routerOnActivate():void {
-		this.title.setTitle( "RDFSource" );
-	}
-
+	
 	createAccordions():void {
 		this.$element.find( ".ui.accordion" ).accordion();
 	}

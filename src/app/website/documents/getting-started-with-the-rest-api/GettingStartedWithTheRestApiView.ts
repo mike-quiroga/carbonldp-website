@@ -26,7 +26,6 @@ export default class GettingStartedWithTheRestApiView {
 	$element:JQuery;
 	sidebarService:SidebarService;
 	protocolAndHost:string;
-	title:Title;
 
 	private carbon:Carbon;
 
@@ -36,19 +35,16 @@ export default class GettingStartedWithTheRestApiView {
 		this.sidebarService = sidebarService;
 		this.carbon = carbon;
 		this.sidebarService = sidebarService;
-		this.title = title;
 
 		this.protocolAndHost = `${ this.carbon.getSetting( "http.ssl" ) ? "https" : "http" }://${ this.carbon.getSetting( "domain" ) }`;
+
+		title.setTitle( "Getting Started with the REST API");
 	}
 
 	ngAfterViewInit():void {
 		this.$element = $( this.element.nativeElement );
 		this.createAccordions();
 		this.sidebarService.build();
-	}
-
-	routerOnActivate():void {
-		this.title.setTitle( "Getting Started with the REST API" );
 	}
 
 	createAccordions():void {

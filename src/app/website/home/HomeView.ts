@@ -28,7 +28,6 @@ export default class HomeView {
 	constructor( router:Router, element:ElementRef, title:Title ) {
 		this.router = router;
 		this.element = element;
-
 		title.setTitle("Home");
 	}
 

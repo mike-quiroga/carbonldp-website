@@ -16,19 +16,15 @@ import template from "./template.html!";
 export default class RESTObjectModelView {
 	element:ElementRef;
 	$element:JQuery;
-	title:Title;
 
 	constructor( element:ElementRef, title:Title ) {
 		this.element = element;
-		this.title = title;
+		title.setTitle( "REST API Object Model" );
 	}
 
 	ngAfterViewInit():void {
 		this.$element = $( this.element.nativeElement );
 	}
-
-	routerOnActivate():void {
-		this.title.setTitle( "REST API Object Model" );
-	}
+	
 }
 
