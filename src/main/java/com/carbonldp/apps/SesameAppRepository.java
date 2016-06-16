@@ -47,7 +47,7 @@ public class SesameAppRepository extends AbstractSesameRepository implements App
 
 	@Override
 	public boolean exists( IRI appIRI ) {
-		// TODO: This method should ask specifically for an Application Source
+		// TODO: This method should ask specifically for an Platform Source
 		return sourceRepository.exists( appIRI );
 	}
 

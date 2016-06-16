@@ -11,6 +11,7 @@ import com.carbonldp.http.Link;
 import com.carbonldp.models.Infraction;
 import com.carbonldp.web.exceptions.AbstractWebRuntimeException;
 import com.carbonldp.web.exceptions.BadRequestException;
+import org.apache.logging.log4j.ThreadContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -33,10 +34,10 @@ public class PlatformExceptionController {
 		if ( rawException instanceof AbstractWebRuntimeException ) return handleAbstractWebRuntimeException( (AbstractWebRuntimeException) rawException );
 		int errorCode = rawException.getErrorCode();
 		if ( errorCode == 0x4001 ) {
-			ErrorResponse error = ErrorResponseFactory.create( 0x4001, rawException.getMessage(), HttpStatus.NOT_FOUND );
+			ErrorResponse error = ErrorResponseFactory.create( 0x4001, rawException.getMessage(), HttpStatus.NOT_FOUND, ThreadContext.get( "requestID" ) );
 			return new ResponseEntity<>( error.getBaseModel(), HttpStatus.NOT_FOUND );
 		}
-		ErrorResponse error = ErrorResponseFactory.create( errorCode, rawException.getMessage(), HttpStatus.BAD_REQUEST );
+		ErrorResponse error = ErrorResponseFactory.create( errorCode, rawException.getMessage(), HttpStatus.BAD_REQUEST, ThreadContext.get( "requestID" ) );
 		return new ResponseEntity<>( error.getBaseModel(), HttpStatus.BAD_REQUEST );
 
 	}
@@ -56,20 +57,20 @@ public class PlatformExceptionController {
 		// AccessDeniedException is handled in the ExceptionTranslationFilter
 		if ( rawException instanceof AccessDeniedException ) throw (AccessDeniedException) rawException;
 		if ( LOG.isErrorEnabled() ) LOG.debug( "<< handleUnexpectedException() > Exception Stacktrace: ", rawException );
-		ErrorResponse error = ErrorResponseFactory.create( new Infraction( 0xFFFF ), HttpStatus.INTERNAL_SERVER_ERROR );
+		ErrorResponse error = ErrorResponseFactory.create( new Infraction( 0xFFFF ), HttpStatus.INTERNAL_SERVER_ERROR, ThreadContext.get( "requestID" ) );
 
 		return new ResponseEntity<>( error.getBaseModel(), HttpStatus.INTERNAL_SERVER_ERROR );
 	}
 
 	@ExceptionHandler( {AuthorizationException.class, AccessDeniedException.class} )
 	public ResponseEntity<Object> handleAuthorizationException( HttpServletRequest request, HttpServletResponse response, AuthorizationException exception ) {
-		ErrorResponse error = ErrorResponseFactory.create( exception.getErrorCode(), exception.getMessage(), HttpStatus.FORBIDDEN );
+		ErrorResponse error = ErrorResponseFactory.create( exception.getErrorCode(), exception.getMessage(), HttpStatus.FORBIDDEN, ThreadContext.get( "requestID" ) );
 		return new ResponseEntity<>( error.getBaseModel(), HttpStatus.FORBIDDEN );
 	}
 
 	@ExceptionHandler( InvalidResourceException.class )
 	public ResponseEntity<Object> handleIllegalArgumentException( HttpServletRequest request, HttpServletResponse response, InvalidResourceException exception ) {
-		ErrorResponse error = ErrorResponseFactory.create( exception.getInfractions(), HttpStatus.BAD_REQUEST );
+		ErrorResponse error = ErrorResponseFactory.create( exception.getInfractions(), HttpStatus.BAD_REQUEST, ThreadContext.get( "requestID" ) );
 		addConstrainedByLinkHeader( response, Vars.getInstance().getAPIResourceURL() );
 		return new ResponseEntity<>( error.getBaseModel(), HttpStatus.BAD_REQUEST );
 	}

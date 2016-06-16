@@ -6,20 +6,29 @@ import com.carbonldp.authentication.AgentAuthenticationToken;
 import com.carbonldp.authentication.ImportLDAPAgentsJob;
 import com.carbonldp.authentication.ImportLDAPAgentsJobFactory;
 import com.carbonldp.authorization.acl.ACEDescription;
+import com.carbonldp.authorization.acl.ACEDescription;
 import com.carbonldp.exceptions.InvalidResourceException;
+import com.carbonldp.exceptions.ResourceDoesntExistException;
 import com.carbonldp.ldp.AbstractSesameLDPService;
 import com.carbonldp.ldp.containers.ContainerService;
 import com.carbonldp.ldp.sources.RDFSourceService;
 import com.carbonldp.models.Infraction;
 import com.carbonldp.rdf.RDFResourceRepository;
+import com.carbonldp.web.exceptions.ForbiddenException;
 import com.carbonldp.web.exceptions.BadRequestException;
 import com.carbonldp.web.exceptions.ForbiddenException;
 import org.openrdf.model.IRI;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.PermissionEvaluator;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.access.PermissionEvaluator;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.*;
 
 /**
@@ -33,6 +42,7 @@ public class SesameJobService extends AbstractSesameLDPService implements JobSer
 	private RDFResourceRepository resourceRepository;
 	private AppRoleRepository appRoleRepository;
 	private PermissionEvaluator permissionEvaluator;
+	protected PermissionEvaluator permissionEvaluator;
 
 	@Override
 	public void create( IRI targetIRI, Job job ) {
@@ -54,6 +64,8 @@ public class SesameJobService extends AbstractSesameLDPService implements JobSer
 
 		List<Infraction> infractions = new ArrayList<>();
 		JobDescription.Type jobType = JobFactory.getInstance().getJobType( job );
+		if ( jobType == null )
+			throw new InvalidResourceException( new Infraction( 0x2001, "rdf.type", "job type" ) );
 		switch ( jobType ) {
 			case EXPORT_BACKUP_JOB:
 				infractions = ExportBackupJobFactory.getInstance().validate( job );
@@ -76,6 +88,7 @@ public class SesameJobService extends AbstractSesameLDPService implements JobSer
 	private void checkPermissionsOverTheBackup( Job job, AgentAuthenticationToken agentAuthenticationToken ) {
 		ImportBackupJob importBackupJob = new ImportBackupJob( job );
 		IRI backupIRI = importBackupJob.getBackup();
+		if ( ! sourceService.exists( backupIRI ) ) throw new InvalidResourceException( new Infraction( 0x2011, "iri", backupIRI.stringValue() ) );
 		validateReadDocument( agentAuthenticationToken, backupIRI );
 
 	}
@@ -143,6 +156,11 @@ public class SesameJobService extends AbstractSesameLDPService implements JobSer
 	@Autowired
 	public void setResourceRepository( RDFResourceRepository resourceRepository ) {
 		this.resourceRepository = resourceRepository;
+	}
+
+	@Autowired
+	public void setPermissionEvaluator( PermissionEvaluator permissionEvaluator ) {
+		this.permissionEvaluator = permissionEvaluator;
 	}
 
 	@Autowired

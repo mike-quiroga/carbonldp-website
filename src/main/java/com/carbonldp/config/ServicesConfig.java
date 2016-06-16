@@ -1,5 +1,6 @@
 package com.carbonldp.config;
 
+import com.carbonldp.Vars;
 import com.carbonldp.agents.AgentService;
 import com.carbonldp.agents.app.SesameAppAgentService;
 import com.carbonldp.agents.platform.SesamePlatformAgentService;
@@ -10,6 +11,9 @@ import com.carbonldp.apps.roles.SesameAppRoleService;
 import com.carbonldp.authentication.ldapServer.app.LDAPServerService;
 import com.carbonldp.authentication.ldapServer.app.SesameLDAPServerService;
 import com.carbonldp.authentication.token.JWTAuthenticationService;
+import com.carbonldp.authentication.ticket.JWTicketAuthenticationService;
+import com.carbonldp.authentication.ticket.TicketService;
+import com.carbonldp.authentication.token.JWTokenAuthenticationService;
 import com.carbonldp.authentication.token.TokenService;
 import com.carbonldp.authorization.acl.ACLService;
 import com.carbonldp.authorization.acl.SesameACLService;
@@ -40,7 +44,12 @@ public class ServicesConfig {
 
 	@Bean
 	public TokenService tokenService() {
-		return new JWTAuthenticationService();
+		return new JWTokenAuthenticationService();
+	}
+
+	@Bean
+	public TicketService ticketService() {
+		return new JWTicketAuthenticationService();
 	}
 
 	@Bean

@@ -89,6 +89,9 @@ public class SesameAppService extends AbstractSesameLDPService implements AppSer
 			Container appTokensContainer = appTokensRepository.createAppTokensContainer( rootContainer.getIRI() );
 			aclRepository.createACL( appTokensContainer.getIRI() );
 
+			Container appTicketsContainer = appTokensRepository.createTicketsContainer( rootContainer.getIRI() );
+			aclRepository.createACL( appTicketsContainer.getIRI() );
+
 			addDefaultPermissions( appAdminRole, rootContainerACL );
 
 			return appAdminRole;
@@ -132,6 +135,10 @@ public class SesameAppService extends AbstractSesameLDPService implements AppSer
 
 	private IRI getAppAdminRoleIRI( Container appRolesContainer ) {
 		return IRIUtil.createChildIRI( appRolesContainer.getIRI(), "app-admin/" );
+	}
+
+	private ACL createAppAdminRoleACL( AppRole appAdminRole ) {
+		return aclRepository.createACL( appAdminRole.getIRI() );
 	}
 
 	private void addCurrentAgentToAppAdminRole( AppRole appAdminRole ) {

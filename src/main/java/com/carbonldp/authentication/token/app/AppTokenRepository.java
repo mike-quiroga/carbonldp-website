@@ -9,4 +9,6 @@ import org.openrdf.model.IRI;
  */
 public interface AppTokenRepository {
 	public Container createAppTokensContainer( IRI rootContainerIRI );
+
+	public Container createTicketsContainer( IRI rootContainerIRI );
 }

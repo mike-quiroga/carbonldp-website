@@ -1,4 +1,4 @@
-package com.carbonldp.authentication.token;
+package com.carbonldp.authentication;
 
 import org.openrdf.model.IRI;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
@@ -11,10 +11,10 @@ import org.springframework.security.authentication.AbstractAuthenticationToken;
  * @since 0.15.0-ALPHA
  */
 
-public class JWTAuthenticationToken extends AbstractAuthenticationToken {
+public class IRIAuthenticationToken extends AbstractAuthenticationToken {
 	private IRI agentIRI;
 
-	public JWTAuthenticationToken( IRI agentIRI ) {
+	public IRIAuthenticationToken( IRI agentIRI ) {
 		super( null );
 		this.agentIRI = agentIRI;
 	}

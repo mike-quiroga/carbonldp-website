@@ -16,6 +16,8 @@ import org.springframework.util.Assert;
  */
 public class SesameAppTokenRepository extends AbstractSesameRepository implements AppTokenRepository {
 
+	private String tokensContainerSlug;
+	private String ticketsContainerSlug;
 	private ContainerRepository containerRepository;
 
 	public SesameAppTokenRepository( SesameConnectionFactory connectionFactory, ContainerRepository containerRepository ) {
@@ -25,14 +27,35 @@ public class SesameAppTokenRepository extends AbstractSesameRepository implement
 
 	@Override
 	public Container createAppTokensContainer( IRI rootContainerIRI ) {
-		IRI appTokensContainerIRI = getContainerIRI( rootContainerIRI );
+		IRI appTokensContainerIRI = getTokensContainerIRI( rootContainerIRI );
 		BasicContainer appTokensContainer = BasicContainerFactory.getInstance().create( new RDFResource( appTokensContainerIRI ) );
 		containerRepository.createChild( rootContainerIRI, appTokensContainer );
 		return appTokensContainer;
 	}
 
+	@Override
+	public Container createTicketsContainer( IRI rootContainerIRI ) {
+		IRI appTicketsContainerIRI = getTicketsContainerIRI( rootContainerIRI );
+		BasicContainer appTicketsContainer = BasicContainerFactory.getInstance().create( new RDFResource( appTicketsContainerIRI ) );
+		containerRepository.createChild( rootContainerIRI, appTicketsContainer );
+		return appTicketsContainer;
+	}
+
+	private IRI getTokensContainerIRI( IRI rootContainerIRI ) {
+		return IRIUtil.createChildIRI( rootContainerIRI, tokensContainerSlug );
+	}
+
+	private IRI getTicketsContainerIRI( IRI rootContainerIRI ) {
+		return IRIUtil.createChildIRI( rootContainerIRI, ticketsContainerSlug );
+	}
+
 	public void setTokensContainerSlug( String slug ) {
 		Assert.notNull( slug );
-		this.containerSlug = slug;
+		this.tokensContainerSlug = slug;
+	}
+
+	public void setTicketsContainerSlug( String slug ) {
+		Assert.notNull( slug );
+		this.ticketsContainerSlug = slug;
 	}
 }

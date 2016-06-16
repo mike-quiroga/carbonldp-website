@@ -17,9 +17,9 @@ import javax.servlet.http.HttpServletResponse;
 
 @Controller
 @RequestMapping( "/platform/auth-tokens/" )
-public class PlatformAuthenticationController extends AbstractLDPController {
+public class PlatformTokenAuthenticationController extends AbstractLDPController {
 
-	AuthenticationRequestHandler authenticationHandler;
+	TokenAuthenticationRequestHandler authenticationHandler;
 
 	@RequestMapping( method = RequestMethod.POST )
 	public ResponseEntity<Object> handleRDFPost( HttpServletRequest request, HttpServletResponse response ) {
@@ -27,7 +27,7 @@ public class PlatformAuthenticationController extends AbstractLDPController {
 	}
 
 	@Autowired
-	public void setAuthenticationHandler( AuthenticationRequestHandler authenticationHandler ) {
+	public void setAuthenticationHandler( TokenAuthenticationRequestHandler authenticationHandler ) {
 		this.authenticationHandler = authenticationHandler;
 	}
 }

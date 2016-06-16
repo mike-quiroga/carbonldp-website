@@ -4,6 +4,7 @@ import com.carbonldp.errors.ErrorResponse;
 import com.carbonldp.errors.ErrorResponseFactory;
 import com.carbonldp.exceptions.CarbonNoStackTraceRuntimeException;
 import com.carbonldp.models.Infraction;
+import org.apache.logging.log4j.ThreadContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -44,8 +45,8 @@ public abstract class AbstractWebRuntimeException extends CarbonNoStackTraceRunt
 		if ( errorCode == 0 ) errorCode = defaultCarbonCode;
 		String message = getMessage();
 		if ( message == null ) message = "an unexpected error has occurred";
-
-		ErrorResponse error = ErrorResponseFactory.create( errorCode, message, httpStatus );
+		String requestID = ThreadContext.get( "requestID" );
+		ErrorResponse error = ErrorResponseFactory.create( errorCode, message, httpStatus, requestID );
 
 		return new ResponseEntity<>( error.getBaseModel(), httpStatus );
 	}
