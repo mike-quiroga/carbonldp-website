@@ -15,7 +15,7 @@ public class PlatformExceptionController {
 	protected final Logger LOG = LoggerFactory.getLogger( this.getClass() );
 
 	@ExceptionHandler( Exception.class )
-	public ResponseEntity<Object> handleUnexpectedException( HttpServletRequest request, HttpServletResponse response, Exception exception ) {
+	public ResponseEntity<Object> handleException( HttpServletRequest request, HttpServletResponse response, Exception exception ) {
 		return ExceptionConverter.convertException( response, exception );
 	}
 }
