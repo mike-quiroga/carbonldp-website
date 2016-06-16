@@ -36,7 +36,7 @@ public class JWTicketAuthenticationService extends AbstractComponent implements 
 
 	@Override
 	public Ticket createTicket( IRI targetIRI ) {
-		checkPermissionsOverTheTargetIRI( targetIRI );
+		if ( ! sourceService.exists( targetIRI ) ) throw new InvalidResourceException( new Infraction( 0x2011, "iri", targetIRI.stringValue() ) );
 		Date expTime = new Date( System.currentTimeMillis() + Vars.getInstance().getTicketExpirationTime() );
 		SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -45,16 +45,6 @@ public class JWTicketAuthenticationService extends AbstractComponent implements 
 		String agentTokenString = agentToken.getAgent().getSubject().stringValue();
 
 		return TicketFactory.getInstance().create( agentTokenString, expTime, signatureAlgorithm, targetIRI );
-	}
-
-	private void checkPermissionsOverTheTargetIRI( IRI targetIRI ) {
-		if ( ! sourceService.exists( targetIRI ) ) throw new InvalidResourceException( new Infraction( 0x2011, "iri", targetIRI.stringValue() ) );
-		if ( ! permissionEvaluator.hasPermission( SecurityContextHolder.getContext().getAuthentication(), targetIRI, ACEDescription.Permission.READ ) ) {
-			Map<String, String> errorMessage = new HashMap<>();
-			errorMessage.put( "action", "create ticket" );
-			errorMessage.put( "uri", targetIRI.stringValue() );
-			throw new ForbiddenException( new Infraction( 0x7001, errorMessage ) );
-		}
 	}
 
 	@Autowired

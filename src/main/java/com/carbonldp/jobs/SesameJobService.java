@@ -65,13 +65,8 @@ public class SesameJobService extends AbstractSesameLDPService implements JobSer
 	private void checkPermissionsOverTheBackup( Job job ) {
 		ImportBackupJob importBackupJob = new ImportBackupJob( job );
 		IRI backupIRI = importBackupJob.getBackup();
-		if ( ! sourceService.exists( backupIRI ) ) throw new InvalidResourceException(new Infraction( 0x2011,"iri",backupIRI.stringValue() ));
-		if ( ! permissionEvaluator.hasPermission( SecurityContextHolder.getContext().getAuthentication(), backupIRI, ACEDescription.Permission.READ ) ) {
-			Map<String, String> errorMessage = new HashMap<>();
-			errorMessage.put( "action", "use the backup located" );
-			errorMessage.put( "uri", backupIRI.stringValue() );
-			throw new ForbiddenException( new Infraction( 0x7001, errorMessage ) );
-		}
+		if ( ! sourceService.exists( backupIRI ) ) throw new InvalidResourceException( new Infraction( 0x2011, "iri", backupIRI.stringValue() ) );
+		sourceService.get( backupIRI );
 	}
 
 	@Override
