@@ -65,18 +65,19 @@ home {
 	}
 
 	#brief {
+
 		.computer.only > .column {
-			padding-top: 7vh;
+			padding-top: 3rem;
 			max-width: 600px;
 			letter-spacing: 0.3px;
 		}
 		.tablet.only > .column {
-			padding-top: 6vh;
+			padding-top: 3rem;
 			max-width: 500px;
 			letter-spacing: 0.3px;
 		}
 		.mobile.only > .column {
-			padding-top: 4vh;
+			padding-top: 3rem;
 			max-width: 380px;
 			letter-spacing: 0.3px;
 		}
@@ -172,7 +173,7 @@ home {
 					float: right;
 					max-width: 525px !important;
 					p {
-						margin-top: 7vh;
+						margin-top: 2.5rem;
 						padding-left: 70px;
 						padding-right: 100px;
 						font-size: 1.3em;
@@ -192,7 +193,7 @@ home {
 					float: right;
 					max-width: 350px !important;
 					p {
-						margin-top: 2vh;
+						margin-top: 1.5rem;
 						padding-left: 40px;
 						padding-right: 20px;
 						font-size: 1.4em;
@@ -210,7 +211,6 @@ home {
 			.left.column {
 				.sign-up-teaser {
 					p {
-						margin-top: 1vh;
 						padding-left: 40px;
 						padding-right: 40px;
 						font-size: 1.5em;
