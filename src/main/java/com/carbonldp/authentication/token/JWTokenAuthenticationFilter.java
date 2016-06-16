@@ -2,6 +2,7 @@ package com.carbonldp.authentication.token;
 
 import com.carbonldp.Consts;
 import com.carbonldp.utils.JWTUtil;
+import com.carbonldp.authentication.IRIAuthenticationToken;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureException;
@@ -16,7 +17,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.Marker;
 import org.slf4j.MarkerFactory;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
@@ -30,7 +30,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.xml.bind.DatatypeConverter;
 import java.io.IOException;
-import java.util.Map;
 
 /**
  * @author NestorVenegas
@@ -113,10 +112,4 @@ public class JWTokenAuthenticationFilter extends GenericFilterBean implements Fi
 			throw new BadCredentialsException( "The JSON Web Token isn't valid, nested exception: ", e );
 		}
 	}
-
-	private void validateTargetIRI( Claims claims ) {
-		Map targetIRIClaims = (Map) claims.get( "targetIRI" );
-		if ( targetIRIClaims != null ) throw new AccessDeniedException( "invalid target IRI" );
-	}
-
 }

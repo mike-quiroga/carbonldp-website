@@ -26,31 +26,4 @@ public class ContactAttributeMapperJSON implements AttributesMapper {
 		}
 		return jsonObject.toString();
 	}
-
-//	ValueFactory valueFactory = SimpleValueFactory.getInstance();
-//	IRI agentsContainerIRI;
-//	Set<String> usernameFields;
-//
-//	@Override
-//	public LDAPAgent mapFromAttributes( Attributes attributes ) throws NamingException {
-//		IRI agentIRI = valueFactory.createIRI( agentsContainerIRI.stringValue() + IRIUtil.createRandomSlug() + "/" );
-//		NamingEnumeration<String> ids = attributes.getIDs();
-//		RDFResource resource = new RDFResource( agentIRI );
-//		LDAPAgent ldapAgent = new LDAPAgent( resource );
-//
-//		while ( ids.hasMoreElements() ) {
-//			String id = ids.next();
-//			if(!usernameFields.contains( id ))continue;
-//			ldapAgent.addUserCredentials( id, attributes.get( id ).get().toString() );
-//		}
-//		return ldapAgent;
-//	}
-//
-//	public void setAgentsContainerIRI( IRI agentsContainerIRI ) {
-//		this.agentsContainerIRI = agentsContainerIRI;
-//	}
-//
-//	public void setUsernameFields( Set<String> usernameFields ) {
-//		this.usernameFields = usernameFields;
-//	}
 }

@@ -8,6 +8,7 @@ import com.carbonldp.apps.context.AppContextHolder;
 import com.carbonldp.apps.context.RunInAppContext;
 import com.carbonldp.authentication.LDAPServer;
 import com.carbonldp.authentication.SesameUsernamePasswordAuthenticationProvider;
+import com.carbonldp.authentication.token.JWTUtil;
 import com.carbonldp.authorization.Platform;
 import com.carbonldp.authorization.PlatformPrivilegeRepository;
 import com.carbonldp.authorization.PlatformRoleRepository;
@@ -67,6 +68,8 @@ public class LDAPAuthenticationProvider extends SesameUsernamePasswordAuthentica
 		LDAPAgent ldapAgent = (LDAPAgent) agent;
 		RDFSource sourceServer = transactionWrapper.runInPlatformContext( () -> sourceRepository.get( ldapAgent.getLDAPServer() ) );
 		LDAPServer ldapServer = new LDAPServer( sourceServer );
+		String encodedPassword = ldapServer.getPassword();
+		ldapServer.setPassword( JWTUtil.decode( encodedPassword ) );
 		LdapTemplate ldapTemplate;
 		try {
 			ldapTemplate = LDAPUtil.getLDAPTemplate( ldapServer );

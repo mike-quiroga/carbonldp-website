@@ -243,7 +243,8 @@ public class SesameRDFSourceService extends AbstractSesameLDPService implements 
 		if ( types.contains( ImportLDAPAgentsJobDescription.Resource.CLASS.getIRI() ) ) infractions.addAll( ImportLDAPAgentsJobFactory.getInstance().validateImmutableProperties( document.getDocumentResource() ) );
 		if ( types.contains( RDFRepresentationDescription.Resource.CLASS.getIRI() ) ) infractions.addAll( RDFRepresentationFactory.getInstance().validateSystemManagedProperties( document.getDocumentResource() ) );
 
-		if ( types.contains( ImportBackupJobDescription.Resource.CLASS.getIRI() ) ) infractions.addAll( ImportBackupJobFactory.getInstance().validateImmutableProperties( document.getDocumentResource() ) );
+		if ( types.contains( ImportLDAPAgentsJobDescription.Resource.CLASS.getIRI() ) ) infractions.addAll( ImportLDAPAgentsJobFactory.getInstance().validateImmutableProperties( document.getDocumentResource() ) );
+		else if ( types.contains( ImportBackupJobDescription.Resource.CLASS.getIRI() ) ) infractions.addAll( ImportBackupJobFactory.getInstance().validateImmutableProperties( document.getDocumentResource() ) );
 		else infractions.addAll( ContainerFactory.getInstance().validateImmutableProperties( document.getDocumentResource() ) );
 
 		return infractions;

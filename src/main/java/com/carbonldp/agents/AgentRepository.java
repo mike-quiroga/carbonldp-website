@@ -11,9 +11,9 @@ public interface AgentRepository {
 
 	public Agent get( IRI uri );
 
-	public Agent findByEmail( String email );
-
 	public void create( Agent agent );
+
+	public Agent findByEmail( String email );
 
 	public Set<Agent> findByUID( String user );
 

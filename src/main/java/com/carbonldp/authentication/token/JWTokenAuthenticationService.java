@@ -25,7 +25,9 @@ public class JWTokenAuthenticationService extends AbstractComponent implements T
 		AgentAuthenticationToken agentToken = (AgentAuthenticationToken) authentication;
 		String agentTokenString = agentToken.getAgent().getSubject().stringValue();
 
-		return TokenFactory.getInstance().create( agentTokenString, expTime, signatureAlgorithm );
+		String encodedToken = JWTUtil.encode( agentTokenString, expTime );
+
+		return TokenFactory.getInstance().getRDFToken( encodedToken, expTime );
 
 	}
 

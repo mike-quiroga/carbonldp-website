@@ -10,10 +10,11 @@ import com.carbonldp.exceptions.InvalidResourceException;
 import com.carbonldp.exceptions.LDAPException;
 import com.carbonldp.ldp.AbstractSesameLDPService;
 import com.carbonldp.ldp.containers.ContainerService;
+import com.carbonldp.ldp.sources.RDFSourceService;
 import com.carbonldp.models.Infraction;
 import com.carbonldp.rdf.RDFResource;
 import com.carbonldp.utils.IRIUtil;
-import com.carbonldp.utils.JWTUtil;
+import com.carbonldp.authentication.token.JWTUtil;
 import com.carbonldp.utils.LDAPUtil;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureException;
@@ -43,26 +44,29 @@ import java.util.Set;
  */
 public class SesameLDAPServerService extends AbstractSesameLDPService implements LDAPServerService {
 
-	private ContainerService containerService;
-	AgentRepository agentRepository;
+	protected ContainerService containerService;
+	protected AgentRepository agentRepository;
+	protected RDFSourceService sourceService;
 
 	@Override
 	public void create( IRI targetIRI, LDAPServer ldapServer ) {
 		validate( ldapServer );
-		String passwordEncoded = JWTUtil.encode( ldapServer.getLDAPServerPassword() );
-		ldapServer.setLDAPServerPassword( passwordEncoded );
+		String passwordEncoded = JWTUtil.encode( ldapServer.getPassword() );
+		ldapServer.setPassword( passwordEncoded );
 		containerService.createChild( targetIRI, ldapServer );
 	}
 
 	@Override
 	public LDAPServer get( IRI targetIRI ) {
-		return new LDAPServer( sourceRepository.get( targetIRI ) );
+		return new LDAPServer( sourceService.get( targetIRI ) );
 	}
 
 	@Override
 	public List<LDAPAgent> registerLDAPAgents( LDAPServer ldapServer, Set<String> usernameFields, App app ) {
 		IRI agentsContainerIRI = agentRepository.getAgentsContainerIRI();
 		LdapTemplate ldapTemplate;
+		String encodedPassword = ldapServer.getPassword();
+		ldapServer.setPassword( JWTUtil.decode( encodedPassword ) );
 		try {
 			ldapTemplate = LDAPUtil.getLDAPTemplate( ldapServer );
 		} catch ( UnsupportedJwtException | MalformedJwtException | SignatureException | IllegalArgumentException e ) {
@@ -106,6 +110,11 @@ public class SesameLDAPServerService extends AbstractSesameLDPService implements
 	@Autowired
 	@Qualifier( "appAgentRepository" )
 	public void setAgentRepository( AgentRepository agentRepository ) { this.agentRepository = agentRepository;}
+
+	@Autowired
+	public void setSourceService( RDFSourceService sourceService ) {
+		this.sourceService = sourceService;
+	}
 }
 
 class ContactAttributeMapperLDAPAgent implements AttributesMapper<LDAPAgent> {
