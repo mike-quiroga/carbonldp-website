@@ -2,10 +2,7 @@ package com.carbonldp.log;
 
 import com.carbonldp.Consts;
 import com.carbonldp.config.PropertiesFileConfigurationRepository;
-import com.carbonldp.exceptions.AuthorizationException;
-import com.carbonldp.exceptions.CarbonNoStackTraceRuntimeException;
 import com.carbonldp.exceptions.ExceptionConverter;
-import com.carbonldp.exceptions.InvalidResourceException;
 import com.carbonldp.utils.HTTPUtil;
 import com.carbonldp.web.converters.AbstractModelMessageConverter;
 import org.apache.logging.log4j.ThreadContext;
@@ -18,10 +15,8 @@ import org.springframework.http.HttpInputMessage;
 import org.springframework.http.HttpOutputMessage;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.http.server.ServletServerHttpRequest;
 import org.springframework.http.server.ServletServerHttpResponse;
-import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.filter.GenericFilterBean;
 
 import javax.servlet.FilterChain;
@@ -64,7 +59,7 @@ public class RequestLoggerFilter extends GenericFilterBean {
 			try {
 				chain.doFilter( request, response );
 			} catch ( Exception e ) {
-				ResponseEntity<Object> responseEntity = ExceptionConverter.handleException( response, e );
+				ResponseEntity<Object> responseEntity = ExceptionConverter.convertException( response, e );
 				exceptionMessageWriter( request, response, responseEntity );
 				LOG.error( "An exception reached the top of the chain. Exception: {}", e );
 			} finally {
