@@ -8,10 +8,11 @@ import highlight from "highlight.js";
 import "highlight.js/styles/tomorrow-night.css!";
 
 import template from "./template.html!";
+import "./style.css!";
 
 
 @Component( {
-	selector: "getting-started",
+	selector: "object-model",
 	template: template,
 	directives: [ CORE_DIRECTIVES, SidebarComponent ],
 	providers: [ Title ],

@@ -15,6 +15,7 @@ import InteractionModelsView from "./rest-api/interaction-models/InteractionMode
 import JavaScriptSDKGettingStartedView from "./javascript-sdk/getting-started/GettingStartedView";
 import JavaScriptSDKContextsView from "./javascript-sdk/contexts/ContextsView";
 import JavaScriptSDKObjectModelView from "./javascript-sdk/object-model/ObjectModelView";
+import CarbonAppCreateAppView from "./carbon-app/CreateAppView";
 
 @Component( {
 	selector: "documents",
@@ -37,7 +38,7 @@ import JavaScriptSDKObjectModelView from "./javascript-sdk/object-model/ObjectMo
 	{ path: "/javascript-sdk", as: "JavaScriptSDK", redirectTo: [ "./JavaScriptSDKGettingStarted" ] },
 	{ path: "/javascript-sdk/getting-started", as: "JavaScriptSDKGettingStarted", component: JavaScriptSDKGettingStartedView },
 	{ path: "/javascript-sdk/contexts", as: "JavaScriptSDKContexts", component: JavaScriptSDKContextsView },
-	{ path: "/javascript-sdk/object-model", as: "JavaScriptSDKObjectModel", component: JavaScriptSDKObjectModelView },
+	{ path: "/javascript-sdk/object-model", as: "JavaScriptSDKObjectModel", component: JavaScriptSDKObjectModelView }
 ] )
 export default class DocumentationComponent {
 

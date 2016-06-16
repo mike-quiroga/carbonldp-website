@@ -151,8 +151,6 @@ export default class SidebarComponent {
 	}
 
 	activateSection( elm:any ):void {
-		$(".section").visibility( "refresh" );
-
 		let $section:JQuery = $( elm );
 		let index:number = this.sections.index( $section );
 		let $followSection:JQuery = this.$followMenu.children( ".item" );
@@ -171,13 +169,13 @@ export default class SidebarComponent {
 		if ( hasSubsection ) {
 			$currentSection.find( ".menu" ).addClass( "active" );
 		}
+
 		$( ".ui.sticky" ).sticky( "refresh" );
 
 	}
 
 	// Expands accordion sections as you scroll through the sections elements inside a section of the page.
 	activateSubSection( elm:any ):void {
-
 		let $section:JQuery = $( elm );
 		let index:number = this.subSections.index( $section );
 		let $followSection:JQuery = this.$followMenu.find( ".menu > .item" );

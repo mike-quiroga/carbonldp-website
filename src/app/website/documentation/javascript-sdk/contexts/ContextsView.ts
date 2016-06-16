@@ -11,7 +11,7 @@ import template from "./template.html!";
 
 
 @Component( {
-	selector: "getting-started",
+	selector: "contexts",
 	template: template,
 	directives: [ CORE_DIRECTIVES, SidebarComponent ],
 	providers: [ Title ],
