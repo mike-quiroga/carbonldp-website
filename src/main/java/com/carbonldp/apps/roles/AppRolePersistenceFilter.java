@@ -5,6 +5,8 @@ import com.carbonldp.apps.AppRole;
 import com.carbonldp.apps.context.AppContext;
 import com.carbonldp.apps.context.AppContextHolder;
 import com.carbonldp.authentication.AgentAuthenticationToken;
+import com.carbonldp.exceptions.AppNotFoundException;
+import com.carbonldp.exceptions.CarbonNoStackTraceRuntimeException;
 import com.carbonldp.web.AbstractUniqueFilter;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;

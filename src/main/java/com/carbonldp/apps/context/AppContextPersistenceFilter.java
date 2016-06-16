@@ -4,7 +4,6 @@ import com.carbonldp.Vars;
 import com.carbonldp.apps.App;
 import com.carbonldp.web.AbstractUniqueFilter;
 import org.openrdf.model.IRI;
-
 import org.openrdf.model.impl.SimpleValueFactory;
 import org.springframework.http.HttpStatus;
 
