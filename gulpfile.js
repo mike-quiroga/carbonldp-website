@@ -38,12 +38,17 @@ const config = {
 			"src/assets/**/*.scss"
 		]
 	},
-	nodeDependencies: [
-		"node_modules/es6-shim/es6-shim.js",
-		"node_modules/systemjs/dist/system-polyfills.src.js",
-		"node_modules/systemjs/dist/system.src.js",
-		"node_modules/rxjs/bundles/Rx.js",
-	]
+	nodeDependencies: {
+		files: [
+			"node_modules/es6-shim/es6-shim.js",
+			"node_modules/systemjs/dist/system-polyfills.src.js",
+			"node_modules/systemjs/dist/system.src.js",
+			"node_modules/rxjs/bundles/Rx.js"
+		],
+		packages: [
+			"node_modules/jstree/**/*"
+		]
+	}
 };
 
 gulp.task( "ts-lint", () => {
@@ -104,19 +109,27 @@ gulp.task( "copy-semantic", [ "build-semantic" ], () => {
 } );
 
 // TODO: Minify files
-gulp.task( "copy-assets", () => {
+gulp.task( "copy-assets", [ "copy-node-dependencies" ], () => {
 	return gulp.src( "src/assets/**/*", {
 		base: "src/assets"
 	} ).pipe( gulp.dest( "dist/site/assets" ) );
 } );
 
 gulp.task( "copy-node-dependencies", () => {
-	return gulp.src( config.nodeDependencies ).pipe( gulp.dest( "src/assets/node_modules" ) );
+	gulp.start( 'copy-node-dependencies:files', 'copy-node-dependencies:packages' );
+} );
+
+gulp.task( "copy-node-dependencies:files", () => {
+	return gulp.src( config.nodeDependencies.files ).pipe( gulp.dest( "src/assets/node_modules" ) );
+} );
+
+gulp.task( "copy-node-dependencies:packages", () => {
+	return gulp.src( config.nodeDependencies.packages, { base: "node_modules" } ).pipe( gulp.dest( "src/assets/node_modules" ) );
 } );
 
 gulp.task( "serve", ( done ) => {
 	runSequence(
-		[ "build-semantic", "compile-styles", "compile-boot" ],
+		[ "build-semantic", "compile-styles", "compile-boot", "copy-node-dependencies" ],
 		"serve:afterCompilation",
 		done
 	);

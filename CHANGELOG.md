@@ -1,3 +1,26 @@
+# 0.5.15 (June 1, 2016)
+- Implement new design for Home page.
+- Content improvements/corrections to Getting Started with the REST API.
+- Complete initial draft of REST API doc for RDFSource.
+
+# 0.5.14 (Jun 1, 2016)
+- Add app configuration page.
+- Add App Configuration component.
+- Add BackupsComponent to handle fetch, exports and imports of backups.
+- Add ExportBackupComponent to generate a backup.
+- Add ImportBackupComponent to import backups from URL's, existing backups or uploading a backup file.
+- Add ListBackupsComponent to list, download and remove backups.
+- Add BackupsService to get, getAll, create and delete a backup.
+- Add JobsService to get, getAll, create, run job and check a job execution.
+- Add Jobs model class.
+- Add ErrorMessageComponent to ErrorsAreaComponent to display messages in a single <error-message> tag.
+- Remove Edit option from opened App sidebar options.
+- Add app configuration option to App sidebar options.
+- Add copy_node_modules:files and copy_node_modules:packages tasks to gulpfile to copy files and packages from node_modules.
+- Fix DocumentTreeViewComponent to import JStree CSS from assets/node_modules and inject it into the document head on the ngOnInit phase of the component.
+- Fix bug with SPARQL Editor that hides the initial h from http when displaying results. Also remove unused imports from SPARQLEditorComponent.
+- Fix my-apps action buttons to redirect to proper route.
+
 # 0.5.13 (May 17, 2016)
 - Add named fragments component to the DocumentViewer of DocumentExplorer.
 - Remove tabs that showed raw data on each property of a document.

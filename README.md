@@ -6,9 +6,10 @@ Source code for [carbonldp.com](https://carbonldp.com)
     - [node.js](https://nodejs.org/en/)
     - gulp: `npm install gulp -g`
     - jspm: `npm install jspm -g`
+    - typings (currently v 0.8.1 only): `npm install -g typings@0.8.1`
 2. cd into the project's root directory
-3. run `npm install`
-4. To start the application server run `npm start`
+3. run `npm install`, `jspm install`, `typings install`
+4. To start the application server run `npm start` or `gulp serve`
 
 ## Gulp Tasks
 

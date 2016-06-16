@@ -1,10 +1,10 @@
 {
   "name": "carbon-website",
   "dependencies": {},
-  "devDependencies": {},
-  "ambientDependencies": {
-    "jasmine": "github:DefinitelyTyped/DefinitelyTyped/jasmine/jasmine.d.ts#3379a636096ee2f8a825308881877f91e75ed0cc",
-    "jquery": "github:DefinitelyTyped/DefinitelyTyped/jquery/jquery.d.ts#470954c4f427e0805a2d633636a7c6aa7170def8",
-    "jstree": "registry:dt/jstree#0.0.0+20160316155526"
+  "globalDependencies": {
+    "jasmine": "registry:dt/jasmine#2.2.0+20160505161446",
+    "jquery": "registry:dt/jquery#1.10.0+20160417213236",
+    "jstree": "registry:dt/jstree#0.0.0+20160602160216",
+    "node": "registry:dt/node#6.0.0+20160602155235"
   }
 }

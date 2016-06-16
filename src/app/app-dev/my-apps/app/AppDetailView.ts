@@ -12,6 +12,7 @@ import DashboardView from "./dashboard/DashboardView";
 import SPARQLEditorView from "./sparql-editor/SPARQLEditorView";
 import EditAppView from "./edit-app/EditAppView";
 import ExplorerView from "./explorer/ExplorerView";
+import ConfigurationView from "./configuration/ConfigurationView";
 
 
 import template from "./template.html!";
@@ -59,6 +60,15 @@ import "./style.css!";
 		data: {
 			alias: "Explorer",
 			displayName: "Explorer",
+		},
+	},
+	{
+		path: "/configure",
+		as: "Configuration",
+		component: ConfigurationView,
+		data: {
+			alias: "Configuration",
+			displayName: "Configuration",
 		},
 	},
 ] )

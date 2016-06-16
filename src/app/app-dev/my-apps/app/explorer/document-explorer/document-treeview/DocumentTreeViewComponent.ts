@@ -3,7 +3,6 @@ import { Component, ElementRef, Input, Output, EventEmitter } from "@angular/cor
 import $ from "jquery";
 import "semantic-ui/semantic";
 import "jstree";
-import "jstree/dist/themes/default/style.min.css!";
 
 import * as Pointer from "carbonldp/Pointer";
 import * as PersistedDocument from "carbonldp/PersistedDocument";
@@ -33,6 +32,14 @@ export default class DocumentTreeViewComponent {
 
 	constructor( element:ElementRef ) {
 		this.element = element;
+	}
+
+	ngOnInit():void {
+		let head:Element = document.querySelector( "head" );
+		let link:HTMLLinkElement = document.createElement( "link" );
+		link.rel = "stylesheet";
+		link.href = "assets/node_modules/jstree/dist/themes/default/style.min.css";
+		head.appendChild( link );
 	}
 
 	ngAfterViewInit():void {

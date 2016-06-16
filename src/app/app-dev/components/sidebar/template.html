@@ -53,5 +53,11 @@
 			<i class="list layout icon"></i>
 			Explore
 		</a>
+		<a class="item"
+		   [ngClass]="{active: isActive(app.slug, true) && isActive('configure')}"
+		   [routerLink]="['AppDev', 'MyApps', 'App', {slug: app.slug}, 'Configuration']">
+			<i class="settings icon"></i>
+			Configuration
+		</a>
 	</div>
 </a>
