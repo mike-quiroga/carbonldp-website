@@ -6,6 +6,7 @@ import com.carbonldp.ldp.containers.Container;
 import com.carbonldp.ldp.containers.ContainerRepository;
 import com.carbonldp.rdf.RDFResource;
 import com.carbonldp.repository.AbstractSesameRepository;
+import com.carbonldp.utils.IRIUtil;
 import org.openrdf.model.IRI;
 import org.openrdf.spring.SesameConnectionFactory;
 import org.springframework.util.Assert;

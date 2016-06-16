@@ -41,7 +41,6 @@ public class SesameJobService extends AbstractSesameLDPService implements JobSer
 	private ExecutionService executionService;
 	private RDFResourceRepository resourceRepository;
 	private AppRoleRepository appRoleRepository;
-	private PermissionEvaluator permissionEvaluator;
 	protected PermissionEvaluator permissionEvaluator;
 
 	@Override
@@ -166,10 +165,5 @@ public class SesameJobService extends AbstractSesameLDPService implements JobSer
 	@Autowired
 	public void setAppRoleRepository( AppRoleRepository appRoleRepository ) {
 		this.appRoleRepository = appRoleRepository;
-	}
-
-	@Autowired
-	public void setPermissionEvaluator( PermissionEvaluator permissionEvaluator ) {
-		this.permissionEvaluator = permissionEvaluator;
 	}
 }

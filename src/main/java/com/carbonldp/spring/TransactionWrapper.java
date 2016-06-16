@@ -53,12 +53,6 @@ public class TransactionWrapper {
 	}
 
 	@RunWith( platformRoles = Platform.Role.SYSTEM )
-	@RunInAppContext
-	public void runWithSystemPermissionsInAppContext( App app, Action action ) {
-		action.run();
-	}
-
-	@RunWith( platformRoles = Platform.Role.SYSTEM )
 	@RunInPlatformContext
 	public void runWithSystemPermissionsInPlatformContext( Action action ) {
 		action.run();
