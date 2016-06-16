@@ -134,6 +134,7 @@ public class ApplicationContextConnectionFactory extends AbstractComponent imple
 			throw new SesameTransactionException( e );
 		}
 
+		// TODO: Find the real cause and fix it instead of patching it (https://jira.base22.com/browse/LDP-692)
 		if ( repository == null ) repository = registerRepository( appRepositoryID );
 		if ( repository == null ) throw new SesameTransactionException( "No such repository: " + appRepositoryID );
 
