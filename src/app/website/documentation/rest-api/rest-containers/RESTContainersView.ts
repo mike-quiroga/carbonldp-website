@@ -4,8 +4,7 @@ import { Title } from "@angular/platform-browser";
 
 import HighlightDirective from "app/directives/HighlightDirective";
 
-import SidebarService from "./../sidebar/service/SidebarService";
-import SidebarComponent from "./../sidebar/SidebarComponent";
+import SidebarComponent from "./../../sidebar/SidebarComponent";
 
 import $ from "jquery";
 import "semantic-ui/semantic";
@@ -16,18 +15,16 @@ import template from "./template.html!";
 	selector: "rest-containers",
 	template: template,
 	directives: [ CORE_DIRECTIVES, HighlightDirective, SidebarComponent ],
-	providers: [ Title, SidebarService ],
+	providers: [ Title ],
 } )
 export default class RESTContainersView {
 	element:ElementRef;
 	$element:JQuery;
-	sidebarService:SidebarService;
 	title:Title;
+	private contentReady:boolean = false;
 
-
-	constructor( element:ElementRef, title:Title, sidebarService:SidebarService ) {
+	constructor( element:ElementRef, title:Title ) {
 		this.element = element;
-		this.sidebarService = sidebarService;
 		this.title = title;
 
 	}
@@ -39,7 +36,7 @@ export default class RESTContainersView {
 	ngAfterViewInit():void {
 		this.$element = $( this.element.nativeElement );
 		this.createAccordions();
-		this.sidebarService.build();
+		this.initializeSidebar();
 	}
 
 	routerOnActivate():void {
@@ -48,6 +45,12 @@ export default class RESTContainersView {
 
 	createAccordions():void {
 		this.$element.find( ".ui.accordion" ).accordion();
+	}
+
+	initializeSidebar():void {
+		window.setTimeout( () => {
+			this.contentReady = true;
+		}, 0 );
 	}
 }
 

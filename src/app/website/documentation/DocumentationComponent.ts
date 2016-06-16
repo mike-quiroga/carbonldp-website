@@ -17,6 +17,10 @@ import JavaScriptSDKContextsView from "./javascript-sdk/contexts/ContextsView";
 import JavaScriptSDKObjectModelView from "./javascript-sdk/object-model/ObjectModelView";
 import CarbonAppCreateAppView from "./carbon-app/CreateAppView";
 
+import RESTObjectModelView from "./rest-api/rest-object-model/RESTObjectModelView";
+import RESTRdfSourceView from "./rest-api/rest-rdfsource/RESTRdfSourceView";
+import RESTContainersView from "./rest-api/rest-containers/RESTContainersView";
+
 @Component( {
 	selector: "documents",
 	template: "<router-outlet></router-outlet>",
@@ -38,7 +42,11 @@ import CarbonAppCreateAppView from "./carbon-app/CreateAppView";
 	{ path: "/javascript-sdk", as: "JavaScriptSDK", redirectTo: [ "./JavaScriptSDKGettingStarted" ] },
 	{ path: "/javascript-sdk/getting-started", as: "JavaScriptSDKGettingStarted", component: JavaScriptSDKGettingStartedView },
 	{ path: "/javascript-sdk/contexts", as: "JavaScriptSDKContexts", component: JavaScriptSDKContextsView },
-	{ path: "/javascript-sdk/object-model", as: "JavaScriptSDKObjectModel", component: JavaScriptSDKObjectModelView }
+	{ path: "/javascript-sdk/object-model", as: "JavaScriptSDKObjectModel", component: JavaScriptSDKObjectModelView },
+
+	{path: "/rest-api/rest-object-model", as: "RESTApiObjectModel", component: RESTObjectModelView},
+	{path: "/rest-api/rest-rdfsource", as: "RESTApiRdfSource", component: RESTRdfSourceView},
+	{path: "/rest-api/rest-containers", as: "RESTApiContainers", component: RESTContainersView},
 ] )
 export default class DocumentationComponent {
 
