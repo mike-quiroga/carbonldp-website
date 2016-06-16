@@ -10,6 +10,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
  */
 public interface TicketService {
 
-	@PreAuthorize( "isAuthenticated() and !( hasRole('ROLE_ANONYMOUS') )" )
-	public Ticket createTicket( IRI targetIRI );
+	@PreAuthorize( "hasPermission(#targetIRI, 'READ')" )
+	public Ticket createTicket(IRI targetIRI);
 }
