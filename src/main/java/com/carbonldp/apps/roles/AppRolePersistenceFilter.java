@@ -29,7 +29,7 @@ public class AppRolePersistenceFilter extends AbstractUniqueFilter {
 	@Override
 	protected void applyFilter( HttpServletRequest request, HttpServletResponse response ) {
 		AppContext appContext = AppContextHolder.getContext();
-		if ( appContext.isEmpty() ) throw new ResourceDoesntExistException();
+		if ( appContext.isEmpty() ) throw new IllegalStateException( "app context is empty" );
 
 		Authentication rawAuthentication = SecurityContextHolder.getContext().getAuthentication();
 		if ( rawAuthentication == null ) return;
