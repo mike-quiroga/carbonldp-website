@@ -9,9 +9,11 @@
 		</div>
 	</div>
 </div>
-<div class="saving-message" *ngIf="document && documentContentChanged">
-	<div class="ui red segment">Notification</div>
-</div>
+<a class="ui blue top right attached label saving-message"
+   *ngIf="documentContentHasChanged"
+   (click)="saveDocument()">
+	<i class="save icon"></i>Save changes
+</a>
 <div class="ui basic segment document-content" *ngIf="document">
 	<div class="ui divided items">
 		<document-property class="property item"
@@ -74,7 +76,7 @@
 						<document-resource class="column"
 						                   (onOpenBNode)="openBNode($event)"
 						                   (onOpenNamedFragment)="openNamedFragment($event)"
-						                   (onChangeProperty)="propertyChanged($event)"
+						                   (onChangeProperty)="changeProperty($event)"
 						                   [rootNode]="rootNode"
 						                   [hiddenProperties]="['@id']">
 						</document-resource>

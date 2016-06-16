@@ -19,7 +19,7 @@ export default class DocumentsResolverService {
 	}
 
 	get( uri:string, documentContext:SDKContext.Class ):Promise<RDFDocument.Class> {
-		if ( this.documents.has( uri ) ) return Promise.resolve( this.documents.get( uri ).document );
+		// if ( this.documents.has( uri ) ) return Promise.resolve( this.documents.get( uri ).document );
 		if ( ! uri || ! documentContext ) return <any> Promise.reject( new Error( "Provide the required parameters" ) );
 		let requestOptions:HTTP.Request.Options = { sendCredentialsOnCORS: true, };
 		if ( documentContext && documentContext.auth.isAuthenticated() ) documentContext.auth.addAuthentication( requestOptions );
@@ -52,10 +52,8 @@ export default class DocumentsResolverService {
 	update( uri:string, body:string, documentContext:SDKContext.Class ):Promise<RDFDocument.Class> {
 		if ( ! uri || ! body ) return <any> Promise.reject( new Error( "Provide the required parameters" ) );
 		//Refresh document ETag
-		return this.get( uri, documentContext ).then( ( persistedDocument:RDFDocument.Class )=> {
-			let eTag:string = this.documents.get( uri ).ETag;
-			return this.callUpdate( uri, body, eTag, documentContext );
-		} );
+		let eTag:string = this.documents.get( uri ).ETag;
+		return this.callUpdate( uri, body, eTag, documentContext );
 	}
 
 	private callUpdate( uri:string, body:string, eTag:string, documentContext:SDKContext.Class ):Promise<RDFDocument.Class> {
@@ -66,11 +64,9 @@ export default class DocumentsResolverService {
 		HTTP.Request.Util.setIfMatchHeader( eTag, requestOptions );
 		HTTP.Request.Util.setPreferredInteractionModel( NS.LDP.Class.RDFSource, requestOptions );
 		return HTTP.Request.Service.put( uri, body, requestOptions ).then( ( response:HTTP.Response.Class ) => {
-			return this.parser.parse( response.data );
+			return this.get( uri, documentContext );
 		} ).then( ( parsedDocument:RDFDocument.Class ) => {
 			if ( ! parsedDocument[ 0 ] ) return null;
-
-			this.documents.set( uri, parsedDocument );
 			return parsedDocument;
 		} ).catch( ( error ) => {
 			console.error( error );

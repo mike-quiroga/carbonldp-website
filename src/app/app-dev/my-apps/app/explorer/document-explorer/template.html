@@ -1,5 +1,5 @@
 <div class="ui divided grid segment"
-     [ngClass]="{loading:loadingDocument}">
+     [ngClass]="{loading:loadingDocument || savingDocument}">
 
 	<div class="row" *ngIf="messages.length > 0">
 		<div class="sixteen wide column">
@@ -23,8 +23,8 @@
 		                   (onResolveUri)="resolveDocument($event)"></document-treeview>
 		<document-viewer class="eleven wide column"
 		                 [document]="inspectingDocument"
-		                 [uri]="inspectingUri"
 		                 [documentContext]="documentContext"
+		                 (onSavingDocument)="showLoading($event)"
 		                 (onLoadingDocument)="onLoadingDocument($event)"></document-viewer>
 
 	</div>

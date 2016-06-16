@@ -18,7 +18,7 @@
 		        class="ui basic button" title="Save"
 		        [disabled]="!input.valid"
 		        (click)="save()">
-			<i class="checkmark green icon"></i>
+			<i class="checkmark icon" [ngClass]="{green:input.valid, grey:!input.valid}"></i>
 		</button>
 	</div>
 </div>

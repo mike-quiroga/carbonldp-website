@@ -28,6 +28,7 @@ export default class DocumentExplorerComponent {
 	$element:JQuery;
 
 	loadingDocument:boolean = false;
+	savingDocument:boolean = false;
 	inspectingDocument:RDFDocument.Class;
 	documentsResolverService:DocumentsResolverService;
 	messages:Message[] = [];
@@ -47,10 +48,14 @@ export default class DocumentExplorerComponent {
 		this.loadingDocument = loadingDocument;
 	}
 
+	showLoading( savingDocument:boolean ):void {
+		this.savingDocument = savingDocument;
+	}
+
 	resolveDocument( uri:string ):void {
 		this.loadingDocument = true;
 		this.documentsResolverService.get( uri, this.documentContext ).then( ( document:RDFDocument.Class )=> {
-			this.inspectingDocument = document;
+			this.inspectingDocument = document[ 0 ];
 			this.loadingDocument = false;
 		} );
 	}

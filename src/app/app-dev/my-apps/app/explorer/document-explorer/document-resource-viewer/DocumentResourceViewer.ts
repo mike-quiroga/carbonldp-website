@@ -23,7 +23,7 @@ export default class DocumentResourceComponent {
 	@Input() rootNode:RDFNode.Class;
 	@Output() onOpenBNode:EventEmitter<string> = new EventEmitter<string>();
 	@Output() onOpenNamedFragment:EventEmitter<string> = new EventEmitter<string>();
-	@Output() onChangeProperty:EventEmitter<boolean> = new EventEmitter<boolean>();
+	@Output() onChangeProperty:EventEmitter<Property> = new EventEmitter<Property>();
 
 	constructor() {}
 
@@ -54,6 +54,6 @@ export default class DocumentResourceComponent {
 
 	changeProperty( property:Property ):void {
 		this.rootNode[ property.name ] = property.value;
-		this.onChangeProperty.emit( true );
+		this.onChangeProperty.emit( property );
 	}
 }

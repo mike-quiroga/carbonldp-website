@@ -4,7 +4,7 @@ document-viewer {
 	}
 	.saving-message {
 		//position: absolute;
-		//z-index: 1;
+		z-index: 1;
 		//width: 97%;
 		//padding: 0 1em 1em;
 	}
@@ -12,6 +12,10 @@ document-viewer {
 		overflow-y: scroll;
 		overflow-x: hidden;
 	}
+}
+
+.ui.basic.segment.document-content {
+	margin-top: 0;
 }
 
 .ui.grid > .row > document-viewer.ui.segment.column {

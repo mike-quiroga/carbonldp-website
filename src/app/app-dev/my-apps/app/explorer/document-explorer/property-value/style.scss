@@ -47,6 +47,18 @@ property-value {
 	.edit-mode {
 		padding-right: 62px;
 	}
+
+	.read-mode {
+		font-size: .9em;
+		.value {
+			min-height: 28px;
+			line-height: 28px;
+		}
+	}
+}
+
+.ui.form .read-mode {
+	font-size: initial;
 }
 
 property-value.segment {
