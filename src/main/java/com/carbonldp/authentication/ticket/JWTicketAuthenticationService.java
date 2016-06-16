@@ -2,14 +2,17 @@ package com.carbonldp.authentication.ticket;
 
 import com.carbonldp.AbstractComponent;
 import com.carbonldp.Vars;
+import com.carbonldp.apps.context.AppContextHolder;
 import com.carbonldp.authentication.AgentAuthenticationToken;
 import com.carbonldp.authentication.Ticket;
 import com.carbonldp.authentication.TicketFactory;
 import com.carbonldp.exceptions.StupidityException;
+import com.carbonldp.utils.IRIUtil;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.openrdf.model.IRI;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.util.Assert;
 
 import java.util.Date;
 

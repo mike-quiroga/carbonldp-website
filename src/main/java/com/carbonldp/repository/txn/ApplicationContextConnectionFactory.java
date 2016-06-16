@@ -1,9 +1,11 @@
 package com.carbonldp.repository.txn;
 
 import com.carbonldp.AbstractComponent;
+import com.carbonldp.Vars;
 import com.carbonldp.apps.context.AppContext;
 import com.carbonldp.apps.context.AppContextHolder;
 import com.carbonldp.apps.context.AppContextImpl;
+import com.carbonldp.repository.RepositoryService;
 import org.openrdf.repository.Repository;
 import org.openrdf.repository.RepositoryConnection;
 import org.openrdf.repository.RepositoryException;
@@ -14,7 +16,9 @@ import org.openrdf.spring.SesameConnectionFactory;
 import org.openrdf.spring.SesameTransactionException;
 import org.openrdf.spring.SesameTransactionObject;
 import org.springframework.beans.factory.DisposableBean;
+import org.springframework.beans.factory.annotation.Autowired;
 
+import java.io.File;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -35,6 +39,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class ApplicationContextConnectionFactory extends AbstractComponent implements SesameConnectionFactory, DisposableBean {
 
 	private final RepositoryConnectionFactory platformConnectionFactory;
+	RepositoryService repositoryService;
 
 	private final RepositoryManager appsRepositoryManager;
 	private final Map<String, RepositoryConnectionFactory> appsRepositoryConnectionFactoryMap;
@@ -129,12 +134,24 @@ public class ApplicationContextConnectionFactory extends AbstractComponent imple
 			throw new SesameTransactionException( e );
 		}
 
-		if ( repository == null ) {
-			// TODO: Add error code
-			throw new SesameTransactionException( "No such repository: " + appRepositoryID );
-		}
+		// TODO: Find the real cause and fix it instead of patching it (https://jira.base22.com/browse/LDP-692)
+		if ( repository == null ) repository = registerRepository( appRepositoryID );
+		if ( repository == null ) throw new SesameTransactionException( "No such repository: " + appRepositoryID );
 
 		RepositoryConnectionFactory connectionFactory = new RepositoryConnectionFactory( repository );
 		appsRepositoryConnectionFactoryMap.put( appRepositoryID, connectionFactory );
+	}
+
+	private Repository registerRepository( String appRepositoryID ) {
+		Vars vars = Vars.getInstance();
+		File file = new File( vars.getAppRespositoriesFolder() + "/" + appRepositoryID );
+		if ( ! file.exists() ) throw new SesameTransactionException( "No such repository: " + appRepositoryID );
+		repositoryService.createRepository( appRepositoryID );
+		return appsRepositoryManager.getRepository( appRepositoryID );
+	}
+
+	@Autowired
+	public void setRepositoryService( RepositoryService repositoryService ) {
+		this.repositoryService = repositoryService;
 	}
 }

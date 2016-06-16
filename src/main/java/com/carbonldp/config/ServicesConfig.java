@@ -1,5 +1,6 @@
 package com.carbonldp.config;
 
+import com.carbonldp.Vars;
 import com.carbonldp.agents.AgentService;
 import com.carbonldp.agents.app.SesameAppAgentService;
 import com.carbonldp.agents.platform.SesamePlatformAgentService;
