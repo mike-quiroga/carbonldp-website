@@ -1,5 +1,6 @@
 package com.carbonldp.jobs;
 
+import com.carbonldp.authentication.ldapServer.ImportLDAPAgentsJobExecutor;
 import org.springframework.aop.interceptor.AsyncUncaughtExceptionHandler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -32,6 +33,7 @@ public class JobConfig implements AsyncConfigurer {
 		List<TypedJobExecutor> typedJobs = new ArrayList<>();
 		typedJobs.add( exportBackupJobExecutor() );
 		typedJobs.add( importBackupJobExecutor() );
+		typedJobs.add( importLDAPAgentsJobExecutor() );
 		return new JobsExecutor( typedJobs );
 	}
 
@@ -44,6 +46,9 @@ public class JobConfig implements AsyncConfigurer {
 	public TypedJobExecutor importBackupJobExecutor() {
 		return new ImportBackupJobExecutor();
 	}
+
+	@Bean
+	public TypedJobExecutor importLDAPAgentsJobExecutor() {return new ImportLDAPAgentsJobExecutor();}
 
 	@Override
 	public Executor getAsyncExecutor() {

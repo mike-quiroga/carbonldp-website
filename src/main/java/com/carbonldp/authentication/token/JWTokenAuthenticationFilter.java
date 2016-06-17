@@ -1,12 +1,15 @@
 package com.carbonldp.authentication.token;
 
 import com.carbonldp.Consts;
-import com.carbonldp.Vars;
 import com.carbonldp.authentication.IRIAuthenticationToken;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.SignatureException;
+import io.jsonwebtoken.UnsupportedJwtException;
+import com.carbonldp.Vars;
 import com.carbonldp.exceptions.StupidityException;
 import io.jsonwebtoken.*;
 import org.openrdf.model.IRI;
-
 import org.openrdf.model.impl.SimpleValueFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

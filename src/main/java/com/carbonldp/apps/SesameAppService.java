@@ -1,6 +1,5 @@
 package com.carbonldp.apps;
 
-import com.carbonldp.Consts;
 import com.carbonldp.Vars;
 import com.carbonldp.agents.Agent;
 import com.carbonldp.agents.app.AppAgentRepository;
@@ -8,20 +7,19 @@ import com.carbonldp.apps.roles.AppRoleRepository;
 import com.carbonldp.apps.roles.AppRoleService;
 import com.carbonldp.authentication.AgentAuthenticationToken;
 import com.carbonldp.authentication.token.app.AppTokenRepository;
-import com.carbonldp.authorization.Platform;
-import com.carbonldp.authorization.RunWith;
 import com.carbonldp.authorization.acl.ACEDescription;
 import com.carbonldp.authorization.acl.ACL;
 import com.carbonldp.exceptions.InvalidResourceException;
 import com.carbonldp.exceptions.ResourceAlreadyExistsException;
 import com.carbonldp.exceptions.ResourceDoesntExistException;
-import com.carbonldp.jobs.ExecutionDescription;
 import com.carbonldp.jobs.JobDescription;
 import com.carbonldp.ldp.AbstractSesameLDPService;
-import com.carbonldp.ldp.containers.*;
+import com.carbonldp.ldp.containers.BasicContainer;
+import com.carbonldp.ldp.containers.BasicContainerFactory;
+import com.carbonldp.ldp.containers.Container;
+import com.carbonldp.ldp.containers.ContainerService;
 import com.carbonldp.ldp.sources.RDFSourceService;
 import com.carbonldp.models.Infraction;
-import com.carbonldp.namespaces.C;
 import com.carbonldp.namespaces.LDP;
 import com.carbonldp.rdf.RDFListFactory;
 import com.carbonldp.rdf.RDFResource;
@@ -30,7 +28,6 @@ import com.carbonldp.web.exceptions.NotFoundException;
 import org.openrdf.model.IRI;
 import org.openrdf.model.ValueFactory;
 import org.openrdf.model.impl.SimpleValueFactory;
-import org.openrdf.model.vocabulary.RDF;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -74,25 +71,26 @@ public class SesameAppService extends AbstractSesameLDPService implements AppSer
 		}
 		createBackupContainer( app );
 		createJobsContainer( app );
+		createLDAPServersContainer( app );
 
 		AppRole adminRole = transactionWrapper.runWithSystemPermissionsInAppContext( app, () -> {
 			Container rootContainer = createRootContainer( app );
-			ACL rootContainerACL = createRootContainerACL( rootContainer );
+			ACL rootContainerACL = aclRepository.createACL( rootContainer.getIRI() );
 
 			Container appRolesContainer = appRoleRepository.createAppRolesContainer( rootContainer.getIRI() );
-			ACL appRolesContainerACL = createAppRolesContainerACL( appRolesContainer );
+			aclRepository.createACL( appRolesContainer.getIRI() );
 
 			AppRole appAdminRole = createAppAdminRole( appRolesContainer );
-			ACL appAdminRoleACL = createAppAdminRoleACL( appAdminRole );
+			aclRepository.createACL( appAdminRole.getIRI() );
 
 			Container appAgentsContainer = appAgentRepository.createAppAgentsContainer( rootContainer.getIRI() );
-			ACL appAgentsContainerACL = createAppAgentsACL( appAgentsContainer );
+			aclRepository.createACL( appAgentsContainer.getIRI() );
 
 			Container appTokensContainer = appTokensRepository.createAppTokensContainer( rootContainer.getIRI() );
-			ACL appTokensContainerACL = createAppTokensACL( appTokensContainer );
+			aclRepository.createACL( appTokensContainer.getIRI() );
 
 			Container appTicketsContainer = appTokensRepository.createTicketsContainer( rootContainer.getIRI() );
-			ACL appTicketsACL = createAppTicketsACL( appTicketsContainer );
+			aclRepository.createACL( appTicketsContainer.getIRI() );
 
 			addDefaultPermissions( appAdminRole, rootContainerACL );
 
@@ -125,26 +123,6 @@ public class SesameAppService extends AbstractSesameLDPService implements AppSer
 		BasicContainer rootContainer = BasicContainerFactory.getInstance().create( new RDFResource( app.getRootContainerIRI() ) );
 		containerRepository.create( rootContainer );
 		return rootContainer;
-	}
-
-	private ACL createRootContainerACL( Container rootContainer ) {
-		return aclRepository.createACL( rootContainer.getIRI() );
-	}
-
-	private ACL createAppRolesContainerACL( Container appRolesContainer ) {
-		return aclRepository.createACL( appRolesContainer.getIRI() );
-	}
-
-	private ACL createAppAgentsACL( Container appAgentsContainer ) {
-		return aclRepository.createACL( appAgentsContainer.getIRI() );
-	}
-
-	private ACL createAppTokensACL( Container appTokensContainer ) {
-		return aclRepository.createACL( appTokensContainer.getIRI() );
-	}
-
-	private ACL createAppTicketsACL( Container appTicketsContainer ) {
-		return aclRepository.createACL( appTicketsContainer.getIRI() );
 	}
 
 	private AppRole createAppAdminRole( Container appRolesContainer ) {
@@ -228,6 +206,20 @@ public class SesameAppService extends AbstractSesameLDPService implements AppSer
 		String appString = app.getIRI().stringValue();
 		String jobsString = Vars.getInstance().getJobsContainer();
 		return valueFactory.createIRI( appString + jobsString );
+	}
+
+	private void createLDAPServersContainer( App app ) {
+		IRI containerIRI = generateLDAPServersContainerIRI( app );
+		RDFResource ldapServersResource = new RDFResource( containerIRI );
+		BasicContainer ldapServersContainer = BasicContainerFactory.getInstance().create( ldapServersResource );
+		containerRepository.createChild( app.getIRI(), ldapServersContainer );
+		aclRepository.createACL( ldapServersContainer.getIRI() );
+	}
+
+	private IRI generateLDAPServersContainerIRI( App app ) {
+		String appString = app.getIRI().stringValue();
+		String ldapServersString = Vars.getInstance().getAppLDAPServerContainer();
+		return valueFactory.createIRI( appString + ldapServersString );
 	}
 
 	@Autowired

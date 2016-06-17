@@ -4,6 +4,7 @@ import com.carbonldp.agents.AgentRepository;
 import com.carbonldp.apps.roles.AppContextClearFilter;
 import com.carbonldp.apps.roles.AppRolePersistenceFilter;
 import com.carbonldp.apps.roles.AppRoleRepository;
+import com.carbonldp.authentication.ldapServer.LDAPAuthenticationProvider;
 import com.carbonldp.authentication.ticket.JWTicketAuthenticationEntryPoint;
 import com.carbonldp.authentication.ticket.JWTicketAuthenticationFilter;
 import com.carbonldp.authentication.token.JWTokenAuthenticationEntryPoint;
@@ -52,6 +53,7 @@ public class AuthenticationConfig {
 		auth.authenticationProvider( platformAgentUsernamePasswordAuthenticationProvider() );
 		auth.authenticationProvider( tokenAuthenticationProvider() );
 		auth.authenticationProvider( appsAgentUsernamePasswordAuthenticationProvider() );
+		auth.authenticationProvider( ldapAuthenticationProvider() );
 	}
 
 	@Bean
@@ -60,9 +62,10 @@ public class AuthenticationConfig {
 	}
 
 	@Bean
-	public AuthenticationProvider appsAgentUsernamePasswordAuthenticationProvider() {
-		return new AppAgentUsernamePasswordAuthenticationProvider( appAgentRepository, platformRoleRepository, platformPrivilegeRepository );
-	}
+	public AuthenticationProvider appsAgentUsernamePasswordAuthenticationProvider() {return new AppAgentUsernamePasswordAuthenticationProvider( appAgentRepository, platformRoleRepository, platformPrivilegeRepository );}
+
+	@Bean
+	public AuthenticationProvider ldapAuthenticationProvider() {return new LDAPAuthenticationProvider( appAgentRepository, platformRoleRepository, platformPrivilegeRepository );}
 
 	@Bean
 	public AuthenticationProvider tokenAuthenticationProvider() {
