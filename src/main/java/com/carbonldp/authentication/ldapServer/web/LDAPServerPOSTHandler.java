@@ -12,7 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 /**
  * @author JorgeEspinosa
  * @author NestorVenegas
- * @since _version_
+ * @since 0.37.0
  */
 
 @RequestHandler

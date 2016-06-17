@@ -5,7 +5,7 @@ import com.carbonldp.models.Infraction;
 /**
  * @author NestorVenegas
  * @author JorgeEspinosa
- * @since _version_
+ * @since 0.37.0
  */
 public class LDAPException extends CarbonNoStackTraceRuntimeException {
 

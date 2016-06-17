@@ -10,7 +10,7 @@ import java.util.List;
 
 /**
  * @author JorgeEspinosa
- * @since _version_
+ * @since 0.37.0
  */
 public class LDAPAuthentication {
 	public static void main( String[] args ) {

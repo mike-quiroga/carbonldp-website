@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 /**
  * @author NestorVenegas
  * @author JorgeEspinosa
- * @since _version_
+ * @since 0.37.0
  */
 public class ImportLDAPAgentsJobExecutor implements TypedJobExecutor {
 	private RDFSourceService sourceService;

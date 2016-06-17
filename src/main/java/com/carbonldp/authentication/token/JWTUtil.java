@@ -13,7 +13,7 @@ import java.util.Map;
 
 /**
  * @author JorgeEspinosa
- * @since _version_
+ * @since 0.37.0
  */
 public final class JWTUtil {
 

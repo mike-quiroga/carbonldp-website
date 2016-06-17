@@ -10,7 +10,7 @@ import javax.naming.directory.Attributes;
 
 /**
  * @author JorgeEspinosa
- * @since _version_
+ * @since 0.37.0
  */
 public class ContactAttributeMapperJSON implements AttributesMapper {
 	public Object mapFromAttributes( Attributes attributes ) throws NamingException {

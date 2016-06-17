@@ -36,7 +36,7 @@ import java.util.Set;
 /**
  * @author NestorVenegas
  * @author JorgeEspinosa
- * @since _version_
+ * @since 0.37.0
  */
 public class LDAPAuthenticationProvider extends SesameUsernamePasswordAuthenticationProvider {
 

@@ -40,7 +40,7 @@ import java.util.Set;
 /**
  * @author JorgeEspinosa
  * @author NestorVenegas
- * @since _version_
+ * @since 0.37.0
  */
 public class SesameLDAPServerService extends AbstractSesameLDPService implements LDAPServerService {
 
