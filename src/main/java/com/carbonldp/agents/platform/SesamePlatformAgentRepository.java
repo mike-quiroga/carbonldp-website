@@ -19,7 +19,7 @@ public class SesamePlatformAgentRepository extends SesameAgentsRepository implem
 	}
 
 	@Override
-	protected IRI getAgentsContainerIRI() {
+	public IRI getAgentsContainerIRI() {
 		return agentsContainerIRI;
 	}
 
