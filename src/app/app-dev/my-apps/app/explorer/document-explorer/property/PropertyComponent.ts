@@ -26,23 +26,24 @@ export default class PropertyComponent {
 	element:ElementRef;
 	$element:JQuery;
 	@Input() documentURI:string;
-	// @Input() property:RDFNode.Class|RDFNode.Class[];
-	@Input() propertyName:string;
 	@Output() onGoToBNode:EventEmitter<string> = new EventEmitter<string>();
 	@Output() onGoToNamedFragment:EventEmitter<string> = new EventEmitter<string>();
 	@Output() onChangeProperty:EventEmitter<Property> = new EventEmitter<Property>();
 	commonHeaders:string[] = [ "@id", "@type", "@value" ];
-	private originalProperty:string;
-	@Input() _property:RDFNode.Class|RDFNode.Class[];
-	@Input() set property( value:RDFNode.Class|RDFNode.Class[] ) {
+	_property:Property;
+	@Input() set property( value:Property ) {
 		this._property = value;
-		// this.propertyHasChanged = (! ! this.originalProperty && ! ! value && this.originalProperty !== JSON.stringify( this.property ));
-		this.originalProperty = JSON.stringify( value );
 	}
 
-	propertyHasChanged:boolean = false;
+	get property():Property { return this._property; }
 
-	get property():RDFNode.Class|RDFNode.Class[] { return this._property; }
+	_propertyHasChanged:boolean;
+	@Input() set propertyHasChanged( value:boolean ) {
+		console.log( "this property has changed: %o", value );
+		this._propertyHasChanged = value;
+	}
+
+	get propertyHasChanged():boolean { return this._propertyHasChanged; }
 
 	constructor( element:ElementRef ) {
 		this.element = element;
@@ -70,12 +71,12 @@ export default class PropertyComponent {
 	}
 
 	hasHeader( header:string, property?:any ):boolean {
-		let headers:string[] = this.getHeaders( ! ! property ? property : this.property );
+		let headers:string[] = this.getHeaders( ! ! property ? property : this.property.value );
 		return headers.indexOf( header ) > - 1 ? true : false;
 	}
 
 	hasCommonHeaders( property?:any ):boolean {
-		let headers:string[] = this.getHeaders( ! ! property ? property : this.property );
+		let headers:string[] = this.getHeaders( ! ! property ? property.value : this.property.value );
 		return headers.indexOf( "@id" ) > - 1 ? true : headers.indexOf( "@type" ) > - 1 ? true : headers.indexOf( "@value" ) > - 1 ? true : false;
 	}
 
@@ -139,28 +140,25 @@ export default class PropertyComponent {
 		}
 	}
 
-	getJSON( obj:any ):string {
-		return JSON.stringify( obj, null, 2 );
-	}
-
 	initializeAccordions():void {
 		this.$element.find( ".ui.accordion" ).accordion();
 	}
 
 	changePropertyValue( value:string, propIndex:number ) {
-		if ( this.property.length > 0 ) {
-			this.property[ propIndex ][ "@value" ] = value;
+		if ( this.property.value.length > 0 ) {
+			this.property.value[ propIndex ][ "@value" ] = value;
 		} else {
-			this.property[ 0 ] = value;
+			this.property.value[ 0 ] = value;
 		}
-		this.propertyHasChanged = this.originalProperty !== JSON.stringify( this.property );
-		let prop:Property = <Property>{};
-		prop.name = this.propertyName;
-		prop.value = this.property;
-		this.onChangeProperty.emit( prop );
+		// let prop:Property = <Property>{};
+		// prop.name = this.property.name;
+		// prop.value = this.property.value;
+		// this.onChangeProperty.emit( prop );
+		this.onChangeProperty.emit( this.property );
 	}
 }
 export interface Property {
+	id:string;
 	name:string;
 	value:any;
 }

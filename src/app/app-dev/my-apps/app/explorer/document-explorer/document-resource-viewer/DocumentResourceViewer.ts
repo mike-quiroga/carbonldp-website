@@ -20,10 +20,21 @@ export default class DocumentResourceComponent {
 
 	@Input() displayOnly:string[] = [];
 	@Input() hiddenProperties:string[] = [];
-	@Input() rootNode:RDFNode.Class;
+	@Input() documentChanges:Map<string,Property>;
 	@Output() onOpenBNode:EventEmitter<string> = new EventEmitter<string>();
 	@Output() onOpenNamedFragment:EventEmitter<string> = new EventEmitter<string>();
 	@Output() onChangeProperty:EventEmitter<Property> = new EventEmitter<Property>();
+	properties:Property[] = [];
+
+	_rootNode:RDFNode.Class;
+	@Input() set rootNode( value:RDFNode.Class ) {
+		this._rootNode = value;
+		this.getProperties();
+	}
+
+	get rootNode() {
+		return this._rootNode;
+	}
 
 	constructor() {}
 
@@ -40,11 +51,6 @@ export default class DocumentResourceComponent {
 		return Object.keys( property );
 	}
 
-	getDisplayName( uri:string ):string {
-		if ( URI.Util.hasFragment( uri ) )return URI.Util.getFragment( uri );
-		return URI.Util.getSlug( uri );
-	}
-
 	canDisplay( propertyName:string ):boolean {
 		if ( typeof propertyName === "undefined" ) return false;
 		if ( this.displayOnly.length === 0 && this.hiddenProperties.length === 0 ) return true;
@@ -53,7 +59,22 @@ export default class DocumentResourceComponent {
 	}
 
 	changeProperty( property:Property ):void {
-		this.rootNode[ property.name ] = property.value;
+		// this.rootNode[ property.name ] = property.value;
 		this.onChangeProperty.emit( property );
+	}
+
+	propertyHasChanged( propertyId:string ):boolean {
+		return this.documentChanges.has( propertyId );
+	}
+
+	getProperties():void {
+		this.properties = [];
+		Object.keys( this.rootNode ).forEach( ( propName:string )=> {
+			this.properties.push( <Property>{
+				id: propName,
+				name: propName,
+				value: JSON.parse( JSON.stringify( this.rootNode[ propName ] ) )
+			} );
+		} );
 	}
 }

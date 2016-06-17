@@ -82,6 +82,7 @@ export default class DocumentViewerComponent {
 
 	get loadingDocument():boolean { return this._loadingDocument; }
 
+	records:DocumentRecords = new DocumentRecords();
 
 	constructor( element:ElementRef, documentsResolverService:DocumentsResolverService ) {
 		this.element = element;
@@ -169,9 +170,24 @@ export default class DocumentViewerComponent {
 	}
 
 	changeProperty( property:Property ) {
-		this.rootNode[ property.name ] = property.value;
+		if ( this.records.changes.has( property.id ) ) {
+			let prop:Property = this.records.changes.get( property.id );
+			if ( prop.name === property.name && JSON.stringify( property.value ) === JSON.stringify( prop.value ) ) {
+				this.records.changes.delete( property.id );
+			} else {
+				this.records.changes.set( property.id, prop );
+			}
+		} else {
+			let originalProperty:Property = <Property>{
+				id: property.id,
+				name: property.name,
+				value: this.rootNode[ property.id ]
+			};
+			this.records.changes.set( property.id, originalProperty );
+		}
+		this.rootNode[ property.id ] = property.value;
 		this.document[ "@graph" ] = [ this.rootNode ];
-		this.documentContentHasChanged = JSON.stringify( this.document, null, "\t" ) !== this.originalDocument;
+		this.documentContentHasChanged = this.records.changes.size > 0 || this.records.additions.size > 0 || this.records.deletions.size > 0;
 	}
 
 	saveDocument():void {
@@ -181,11 +197,14 @@ export default class DocumentViewerComponent {
 			( updatedDocument:RDFDocument.Class )=> {
 				this.document = updatedDocument[ 0 ];
 				this.originalDocument = JSON.stringify( this.document, null, "\t" );
+				this.records.changes.clear();
+				this.records.additions.clear();
+				this.records.deletions.clear();
 			},
 			( error:HTTPError )=> {console.error( error )}
 		).then( ()=> {
 			this.savingDocument = false;
-			this.documentContentHasChanged = JSON.stringify( this.document, null, "\t" ) !== this.originalDocument;
+			this.documentContentHasChanged = this.records.changes.size > 0 || this.records.additions.size > 0 || this.records.deletions.size > 0;
 		} );
 	}
 
@@ -195,4 +214,10 @@ export default class DocumentViewerComponent {
 		if ( ! divPosition ) return;
 		this.$element.animate( { scrollTop: divPosition.top }, "fast" );
 	}
+}
+
+class DocumentRecords {
+	changes:Map<string,Property> = new Map<string, Property>();
+	deletions:Map<string,Property> = new Map<string, Property>();
+	additions:Map<string,Property> = new Map<string, Property>();
 }
