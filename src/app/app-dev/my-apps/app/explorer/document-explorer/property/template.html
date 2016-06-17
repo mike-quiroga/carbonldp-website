@@ -34,6 +34,7 @@
 </div>
 
 <div class="content" *ngIf="propertyName !== '@id' && propertyName !== '@type'">
+	<p class="ui yellow label indicator" *ngIf="propertyHasChanged">Changed</p>
 	<div class="header">
 		<p>
 			{{getDisplayName(propertyName)}}

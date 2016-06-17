@@ -1,5 +1,4 @@
 import { Component, ElementRef, Input, Output, EventEmitter } from "@angular/core";
-import { CORE_DIRECTIVES } from "@angular/common";
 
 import $ from "jquery";
 import "semantic-ui/semantic";
@@ -19,6 +18,7 @@ import "./style.css!";
 	selector: "document-property",
 	template: template,
 	directives: [ ListViewerComponent, PropertyValuecomponent ],
+	host: { "[class.has-changed]": "propertyHasChanged" },
 } )
 
 export default class PropertyComponent {
@@ -26,14 +26,23 @@ export default class PropertyComponent {
 	element:ElementRef;
 	$element:JQuery;
 	@Input() documentURI:string;
-	@Input() property:RDFNode.Class|RDFNode.Class[];
+	// @Input() property:RDFNode.Class|RDFNode.Class[];
 	@Input() propertyName:string;
 	@Output() onGoToBNode:EventEmitter<string> = new EventEmitter<string>();
 	@Output() onGoToNamedFragment:EventEmitter<string> = new EventEmitter<string>();
 	@Output() onChangeProperty:EventEmitter<Property> = new EventEmitter<Property>();
 	commonHeaders:string[] = [ "@id", "@type", "@value" ];
+	private originalProperty:string;
+	@Input() _property:RDFNode.Class|RDFNode.Class[];
+	@Input() set property( value:RDFNode.Class|RDFNode.Class[] ) {
+		this._property = value;
+		// this.propertyHasChanged = (! ! this.originalProperty && ! ! value && this.originalProperty !== JSON.stringify( this.property ));
+		this.originalProperty = JSON.stringify( value );
+	}
 
-	savingProperty:boolean = false;
+	propertyHasChanged:boolean = false;
+
+	get property():RDFNode.Class|RDFNode.Class[] { return this._property; }
 
 	constructor( element:ElementRef ) {
 		this.element = element;
@@ -139,12 +148,12 @@ export default class PropertyComponent {
 	}
 
 	changePropertyValue( value:string, propIndex:number ) {
-		this.savingProperty = true;
 		if ( this.property.length > 0 ) {
 			this.property[ propIndex ][ "@value" ] = value;
 		} else {
 			this.property[ 0 ] = value;
 		}
+		this.propertyHasChanged = this.originalProperty !== JSON.stringify( this.property );
 		let prop:Property = <Property>{};
 		prop.name = this.propertyName;
 		prop.value = this.property;

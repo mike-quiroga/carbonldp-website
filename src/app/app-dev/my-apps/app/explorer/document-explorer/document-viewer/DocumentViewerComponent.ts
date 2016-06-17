@@ -157,10 +157,6 @@ export default class DocumentViewerComponent {
 		this.$element.find( ".ui.radio.checkbox" ).checkbox();
 	}
 
-	onSubmitSingleProperty():void {
-
-	}
-
 	changePropertyKind( kind:string ):void {
 		this.selectedPropertyKind = kind;
 	}
@@ -189,7 +185,6 @@ export default class DocumentViewerComponent {
 			( error:HTTPError )=> {console.error( error )}
 		).then( ()=> {
 			this.savingDocument = false;
-			console.log( "%o \t\t%o", JSON.stringify( this.document, null, "\t" ), this.originalDocument )
 			this.documentContentHasChanged = JSON.stringify( this.document, null, "\t" ) !== this.originalDocument;
 		} );
 	}

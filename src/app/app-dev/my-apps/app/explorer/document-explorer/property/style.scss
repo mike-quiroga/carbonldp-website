@@ -17,6 +17,16 @@ document-property {
 	}
 }
 
+document-property.has-changed > .content > .indicator {
+	float: right;
+}
+
+.ui.items > .item.has-changed.has-changed {
+	background-color: #FFFFE0;
+	padding-left: 15px;
+	padding-right: 15px;
+}
+
 .ui.divided.items > .item .content {
 	margin-top: 2%;
 }
