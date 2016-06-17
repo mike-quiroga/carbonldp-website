@@ -1,3 +1,8 @@
+# 0.36.1 (2016/06/16)
+- Fix [LDP-691](https://jira.base22.com/browse/LDP-691) - 404 when requesting an auth ticket on an application scope
+- Fix [LDP-693](https://jira.base22.com/browse/LDP-693) - Asking for a cs:Ticket the server returns a cs:Token
+- Fix [LDP-665](https://jira.base22.com/browse/LDP-665) - The server returns a 200 OK response instead of a 500 ISE
+
 # 0.36.0 (2016/06/08)
 - [LDP-647](https://jira.base22.com/browse/LDP-647) - Use a custom configuration properties file
 - [LDP-671](https://jira.base22.com/browse/LDP-671) - Create an auth ticket to authenticate single requests through a URL parameter
