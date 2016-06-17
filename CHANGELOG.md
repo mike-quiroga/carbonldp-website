@@ -1,3 +1,6 @@
+# 0.37.0 (2016/06/17)
+- [LDP-691](https://jira.base22.com/browse/LDP-691) - Federate application authentication to an LDAP instance
+
 # 0.36.1 (2016/06/16)
 - Fix [LDP-691](https://jira.base22.com/browse/LDP-691) - 404 when requesting an auth ticket on an application scope
 - Fix [LDP-693](https://jira.base22.com/browse/LDP-693) - Asking for a cs:Ticket the server returns a cs:Token
