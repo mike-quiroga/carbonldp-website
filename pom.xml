@@ -14,7 +14,7 @@
         <project.build.timestamp>${maven.build.timestamp}</project.build.timestamp>
 
         <jetty.version>9.3.6.v20151106</jetty.version>
-        <spring.version>4.1.6.RELEASE</spring.version>
+        <spring.version>4.3.0.RELEASE</spring.version>
         <spring-security.version>4.0.0.RELEASE</spring-security.version>
         <sesame.version>4.1.1</sesame.version>
         <jackson-2-version>2.6.3</jackson-2-version>
@@ -181,15 +181,13 @@
         <!-- === End: Security === -->
         <!-- ====== End: Spring Framework ====== -->
 
-        <!-- ====== EHCache ====== -->
-        <!-- Used in Spring ACLs -->
+        <!-- ====== Caffeine ====== -->
         <dependency>
-            <groupId>net.sf.ehcache</groupId>
-            <artifactId>ehcache-core</artifactId>
-            <version>2.6.9</version>
+            <groupId>com.github.ben-manes.caffeine</groupId>
+            <artifactId>caffeine</artifactId>
+            <version>2.3.0</version>
         </dependency>
-        <!-- ====== End: EHCache ====== -->
-
+        <!-- ====== End: Caffeine ====== -->
 
         <!-- ====== Sesame ====== -->
         <!-- === Core === -->

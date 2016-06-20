@@ -19,7 +19,8 @@ import com.carbonldp.authorization.SesamePlatformPrivilegeRepository;
 import com.carbonldp.authorization.SesamePlatformRoleRepository;
 import com.carbonldp.authorization.acl.ACLRepository;
 import com.carbonldp.authorization.acl.SesameACLRepository;
-import com.carbonldp.jobs.*;
+import com.carbonldp.jobs.ExecutionRepository;
+import com.carbonldp.jobs.SesameExecutionRepository;
 import com.carbonldp.ldp.containers.*;
 import com.carbonldp.ldp.nonrdf.NonRDFSourceRepository;
 import com.carbonldp.ldp.nonrdf.RDFRepresentationRepository;
@@ -38,7 +39,6 @@ import com.carbonldp.sparql.SPARQLService;
 import com.carbonldp.sparql.SesameSPARQLService;
 import com.carbonldp.utils.PropertiesUtil;
 import org.openrdf.model.IRI;
-
 import org.openrdf.model.impl.SimpleValueFactory;
 import org.openrdf.spring.SesameConnectionFactory;
 import org.springframework.beans.factory.BeanInitializationException;
@@ -56,6 +56,7 @@ import java.util.Properties;
 
 @Configuration
 public class RepositoriesConfig {
+
 	@Autowired
 	private SesameConnectionFactory connectionFactory;
 
