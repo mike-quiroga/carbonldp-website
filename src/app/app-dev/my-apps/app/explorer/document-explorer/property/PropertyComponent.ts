@@ -39,7 +39,6 @@ export default class PropertyComponent {
 
 	_propertyHasChanged:boolean;
 	@Input() set propertyHasChanged( value:boolean ) {
-		console.log( "this property has changed: %o", value );
 		this._propertyHasChanged = value;
 	}
 
@@ -145,16 +144,14 @@ export default class PropertyComponent {
 	}
 
 	changePropertyValue( value:string, propIndex:number ) {
-		if ( this.property.value.length > 0 ) {
-			this.property.value[ propIndex ][ "@value" ] = value;
+		let property:Property = <Property>JSON.parse( JSON.stringify( this.property ) );
+		if ( property.value.length > 0 ) {
+			property.value[ propIndex ][ "@value" ] = value;
 		} else {
-			this.property.value[ 0 ] = value;
+			property.value[ 0 ] = value;
 		}
-		// let prop:Property = <Property>{};
-		// prop.name = this.property.name;
-		// prop.value = this.property.value;
-		// this.onChangeProperty.emit( prop );
-		this.onChangeProperty.emit( this.property );
+		this.onChangeProperty.emit( property );
+		this.property = property;
 	}
 }
 export interface Property {

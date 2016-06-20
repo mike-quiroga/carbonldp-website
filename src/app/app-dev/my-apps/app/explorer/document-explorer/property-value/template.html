@@ -29,6 +29,8 @@
 	<input [attr.placeholder]="!!placeholder? placeholder: 'Value'"
 	       [ngFormControl]="input"
 	       [hidden]="type==='@id'"
+	       (keyup.escape)="cancelEdit()"
+	       (keyup.enter)="save()"
 	       type="text">
 	<div [hidden]="type!=='@id'">
 		<select class="ui fluid search dropdown fragments">

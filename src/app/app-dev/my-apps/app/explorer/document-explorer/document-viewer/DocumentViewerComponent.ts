@@ -101,11 +101,6 @@ export default class DocumentViewerComponent {
 				this.receiveDocument();
 			} );
 		}
-		if ( ! ! changes[ "document" ].currentValue && changes[ "document" ].currentValue !== changes[ "document" ].previousValue ) {
-			// if ( ! ! changes[ "document" ].previousValue && changes[ "document" ].currentValue[ 0 ][ "@id" ] === changes[ "document" ].previousValue[ "@id" ] )
-			// 	this.documentContentChanged = true;
-			// this.receiveDocument();
-		}
 	}
 
 	receiveDocument():void {
@@ -172,22 +167,28 @@ export default class DocumentViewerComponent {
 	changeProperty( property:Property ) {
 		if ( this.records.changes.has( property.id ) ) {
 			let prop:Property = this.records.changes.get( property.id );
-			if ( prop.name === property.name && JSON.stringify( property.value ) === JSON.stringify( prop.value ) ) {
+			if ( prop.name === property.name && this.areEquals( property.value, prop.value ) ) {
 				this.records.changes.delete( property.id );
 			} else {
 				this.records.changes.set( property.id, prop );
 			}
 		} else {
-			let originalProperty:Property = <Property>{
-				id: property.id,
-				name: property.name,
-				value: this.rootNode[ property.id ]
-			};
-			this.records.changes.set( property.id, originalProperty );
+			if ( ! ! this.rootNode[ property.id ] && ! this.areEquals( property.value, this.rootNode[ property.id ] ) ) {
+				let originalProperty:Property = <Property>{
+					id: property.id,
+					name: property.name,
+					value: this.rootNode[ property.id ]
+				};
+				this.records.changes.set( property.id, originalProperty );
+			}
 		}
 		this.rootNode[ property.id ] = property.value;
 		this.document[ "@graph" ] = [ this.rootNode ];
 		this.documentContentHasChanged = this.records.changes.size > 0 || this.records.additions.size > 0 || this.records.deletions.size > 0;
+	}
+
+	private areEquals( object1:any, object2:any ):boolean {
+		return JSON.stringify( object1 ) === JSON.stringify( object2 );
 	}
 
 	saveDocument():void {

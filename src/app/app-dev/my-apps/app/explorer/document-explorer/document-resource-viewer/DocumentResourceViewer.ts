@@ -59,7 +59,6 @@ export default class DocumentResourceComponent {
 	}
 
 	changeProperty( property:Property ):void {
-		// this.rootNode[ property.name ] = property.value;
 		this.onChangeProperty.emit( property );
 	}
 
