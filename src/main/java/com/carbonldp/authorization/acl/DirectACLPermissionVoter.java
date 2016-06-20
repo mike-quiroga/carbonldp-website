@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-public class DirectACLPermissionVoter extends AbstractACLPermissionVoter implements ACLPermissionVoter {
+public class DirectACLPermissionVoter extends AbstractACLPermissionVoter {
 
 	@Override
 	public Vote vote( Map<RDFNodeEnum, Set<IRI>> subjects, Set<Permission> permissions, IRI objectIRI ) {

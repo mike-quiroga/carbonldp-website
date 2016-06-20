@@ -12,15 +12,17 @@ import com.carbonldp.utils.ACLUtil;
 import com.carbonldp.utils.IRIUtil;
 import com.carbonldp.web.exceptions.NotImplementedException;
 import org.openrdf.model.IRI;
-
 import org.openrdf.model.impl.SimpleValueFactory;
 import org.openrdf.spring.SesameConnectionFactory;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 
+@CacheConfig( cacheNames = "acl" )
 @Transactional
 public class SesameACLRepository extends AbstractSesameLDPRepository implements ACLRepository {
 	private RDFSourceRepository sourceRepository;
@@ -38,6 +40,7 @@ public class SesameACLRepository extends AbstractSesameLDPRepository implements 
 		return new ACL( document.getBaseModel(), aclIRI );
 	}
 
+	@CacheEvict
 	@Override
 	public ACL createACL( IRI objectIRI ) {
 		if ( IRIUtil.hasFragment( objectIRI ) ) {
@@ -53,12 +56,14 @@ public class SesameACLRepository extends AbstractSesameLDPRepository implements 
 		return acl;
 	}
 
+	@CacheEvict
 	@Override
 	public void grantPermissions( IRI resourceIRI, Collection<ACLSubject> subjects, Collection<ACEDescription.Permission> permissions, boolean inheritable ) {
 		ACL acl = getResourceACL( resourceIRI );
 		grantPermissions( acl, subjects, permissions, inheritable );
 	}
 
+	@CacheEvict
 	@Override
 	public void grantPermissions( ACL acl, Collection<ACLSubject> subjects, Collection<ACEDescription.Permission> permissions, boolean inheritable ) {
 		Map<RDFNodeEnum, Set<IRI>> subjectsMap = ACLUtil.getSubjectsMap( subjects );
@@ -84,12 +89,14 @@ public class SesameACLRepository extends AbstractSesameLDPRepository implements 
 		}
 	}
 
+	@CacheEvict
 	@Override
 	public void addInheritablePermissions( IRI resourceIRI, Collection<ACLSubject> subjects, Collection<ACEDescription.Permission> permissions, boolean granting ) {
 		ACL acl = getResourceACL( resourceIRI );
 		addInheritablePermissions( acl, subjects, permissions, granting );
 	}
 
+	@CacheEvict
 	@Override
 	public void addInheritablePermissions( ACL acl, Collection<ACLSubject> subjects, Collection<ACEDescription.Permission> permissions, boolean granting ) {
 		Map<RDFNodeEnum, Set<IRI>> subjectsMap = ACLUtil.getSubjectsMap( subjects );
@@ -102,6 +109,7 @@ public class SesameACLRepository extends AbstractSesameLDPRepository implements 
 		documentRepository.update( acl.getDocument() );
 	}
 
+	@CacheEvict
 	@Override
 	public void replace( ACL acl ) {
 		documentRepository.update( acl.getDocument() );
@@ -118,12 +126,14 @@ public class SesameACLRepository extends AbstractSesameLDPRepository implements 
 		}
 	}
 
+	@CacheEvict
 	@Override
 	public void denyPermissions( IRI resourceIRI, Collection<ACLSubject> subjects, Collection<ACEDescription.Permission> permissions, boolean inheritable ) {
 		ACL acl = getResourceACL( resourceIRI );
 		denyPermissions( acl, subjects, permissions, inheritable );
 	}
 
+	@CacheEvict
 	@Override
 	public void denyPermissions( ACL acl, Collection<ACLSubject> subjects, Collection<ACEDescription.Permission> permissions, boolean inheritable ) {
 
