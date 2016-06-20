@@ -28,9 +28,11 @@ export default class PropertyLiteralComponent {
 	modes:Modes = Modes;
 	tokens:string[] = [ "@value", "@type", "@language" ];
 	saveAll:EventEmitter<boolean> = new EventEmitter<boolean>();
+	isValidValue:boolean = false;
+	isValidType:boolean = false;
 
 	@Input() literal:Literal;
-	private tempLiteral:Literal = <Literal>{};
+	private tempLiteral:any = {};
 
 	constructor() {}
 
@@ -44,18 +46,24 @@ export default class PropertyLiteralComponent {
 	}
 
 	save():void {
-		console.log( "saving" );
-		tempLiteral.value = type.value;
+
 	}
 
 	changeValue( value:string|number|boolean ):void {
-		this.tempLiteral.value = value;
+		this.tempLiteral[ '@value' ] = value;
 	}
 
 	changeType( type:{name:string, value:string} ):void {
-		this.tempLiteral.type = type.value;
+		this.tempLiteral[ '@type' ] = type.value;
 	}
 
+	onIsValidValue( isValid:boolean ):void {
+		this.isValidValue = isValid;
+	}
+
+	onIsValidType( isValid:boolean ):void {
+		this.isValidType = isValid;
+	}
 }
 class Modes {
 	static EDIT:string = "EDIT";

@@ -29,7 +29,7 @@ export default class PropertyValueComponent {
 
 	@Input() mode:string = Modes.READ;
 	@Input() type:string = NS.XSD.DataType.string;
-	@Input() value:string = "";
+	@Input() value:string|number|boolean = "";
 	@Input() shouldSave:EventEmitter<boolean> = new EventEmitter<boolean>();
 
 
@@ -58,7 +58,7 @@ export default class PropertyValueComponent {
 		if ( typeof valueOrControl !== "string" ) {
 			value = (<AbstractControl>valueOrControl).value;
 			if ( valueOrControl.touched && ! value ) {
-				this.onIsValid.emit( false );
+				if ( ! ! this.onIsValid ) this.onIsValid.emit( false );
 				return { "emptyError": true };
 			}
 		}
@@ -87,10 +87,10 @@ export default class PropertyValueComponent {
 				break;
 		}
 		if ( ! valid ) {
-			this.onIsValid.emit( false );
+			if ( ! ! this.onIsValid ) this.onIsValid.emit( false );
 			return { "invalidTypeError": true };
 		}
-		this.onIsValid.emit( true );
+		if ( ! ! this.onIsValid ) this.onIsValid.emit( true );
 		return null;
 	}
 

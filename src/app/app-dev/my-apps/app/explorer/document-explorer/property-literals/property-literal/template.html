@@ -1,14 +1,14 @@
 <td>
 	<property-value [mode]="mode"
-	                [type]="literal.type"
-	                [value]="literal.value"
+	                [type]="literal['@type']"
+	                [value]="literal['@value']"
 	                [shouldSave]="saveAll"
+	                (onIsValid)="onIsValidValue($event)"
 	                (onSave)="changeValue($event)"></property-value>
 </td>
 <td>
 	<property-type [mode]="mode"
-	               [type]="literal.type"
-	               (onTypeSelected)="changeLiteralType($event)"></property-type>
+	               [type]="literal.type"></property-type>
 </td>
 <td>
 	<p><span *ngIf="literal.language">{{literal.language}}</span></p>
@@ -31,7 +31,7 @@
 		</button>
 		<button #confirmButton
 		        class="ui basic button" title="Save"
-
+		        [disabled]="!isValidValue || !isValidType"
 		        (click)="save()">
 			<i class="checkmark icon"></i>
 		</button>

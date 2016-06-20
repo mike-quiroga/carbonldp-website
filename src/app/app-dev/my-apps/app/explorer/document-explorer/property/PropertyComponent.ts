@@ -53,12 +53,6 @@ export default class PropertyComponent {
 
 	}
 
-	getLiterals():RDFNode.Class[]{
-		this.property.value.forEach((literal)=>{
-			this.literals.push(Literal{})
-		});
-	}
-
 	ngAfterViewInit():void {
 		this.$element = $( this.element.nativeElement );
 		this.initializeAccordions();
