@@ -10,6 +10,7 @@ import * as Utils from "carbonldp/Utils";
 
 import ListViewerComponent from "./../list-viewer/ListViewerComponent";
 import PropertyValuecomponent from "./../property-value/PropertyValuecomponent";
+import PropertyLiteralsComponent from "./../property-literals/PropertyLiteralsComponent";
 
 import template from "./template.html!";
 import "./style.css!";
@@ -17,7 +18,7 @@ import "./style.css!";
 @Component( {
 	selector: "document-property",
 	template: template,
-	directives: [ ListViewerComponent, PropertyValuecomponent ],
+	directives: [ ListViewerComponent, PropertyValuecomponent, PropertyLiteralsComponent ],
 	host: { "[class.has-changed]": "propertyHasChanged" },
 } )
 

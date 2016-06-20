@@ -1,0 +1,43 @@
+<table class="ui very compact striped small celled table">
+	<tr class="center aligned">
+		<th>@value</th>
+		<th>@type</th>
+		<th>@language</th>
+		<th>Actions</th>
+	</tr>
+	<tr *ngFor="let literal of literals; let i = index;">
+		<td>
+			<p><span *ngIf="literal['@value']">{{literal['@value']}}</span></p>
+		</td>
+		<td>
+			<p><span *ngIf="literal['@type']">{{literal['@type']}}</span></p>
+		</td>
+		<td>
+			<p><span *ngIf="literal['@language']">{{literal['@language']}}</span></p>
+		</td>
+		<td>
+			<div class="ui mini icon inverted edit value buttons">
+				<button #editButton
+				        class="ui basic edit button"
+				        *ngIf="mode===modes.READ"
+				        [ngClass]="{hidden:editButton.classList.contains('active')}"
+				        (click)="displayEditor($event, prop, j)">
+					<i class="pencil icon"></i>
+				</button>
+			</div>
+			<div class="ui mini icon inverted confirm buttons" *ngIf="mode===modes.EDIT">
+				<button #cancelButton
+				        class="ui basic button" title="Cancel"
+				        (click)="cancelEdit()">
+					<i class="remove red icon"></i>
+				</button>
+				<button #confirmButton
+				        class="ui basic button" title="Save"
+
+				        (click)="save()">
+					<i class="checkmark icon"></i>
+				</button>
+			</div>
+		</td>
+	</tr>
+</table>
