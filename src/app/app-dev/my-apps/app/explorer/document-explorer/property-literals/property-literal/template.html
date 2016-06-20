@@ -1,0 +1,39 @@
+<td>
+	<property-value [mode]="mode"
+	                [type]="literal.type"
+	                [value]="literal.value"
+	                [shouldSave]="saveAll"
+	                (onSave)="changeValue($event)"></property-value>
+</td>
+<td>
+	<property-type [mode]="mode"
+	               [type]="literal.type"
+	               (onTypeSelected)="changeLiteralType($event)"></property-type>
+</td>
+<td>
+	<p><span *ngIf="literal.language">{{literal.language}}</span></p>
+</td>
+<td>
+	<div class="ui mini icon inverted edit value buttons" *ngIf="mode===modes.READ">
+		<button #editButton
+		        class="ui basic edit button"
+		        *ngIf="mode===modes.READ"
+		        [ngClass]="{hidden:editButton.classList.contains('active')}"
+		        (click)="displayEditor($event, prop, j)">
+			<i class="pencil icon"></i>
+		</button>
+	</div>
+	<div class="ui mini icon inverted confirm buttons" *ngIf="mode===modes.EDIT">
+		<button #cancelButton
+		        class="ui basic button" title="Cancel"
+		        (click)="cancelEdit()">
+			<i class="remove red icon"></i>
+		</button>
+		<button #confirmButton
+		        class="ui basic button" title="Save"
+
+		        (click)="save()">
+			<i class="checkmark icon"></i>
+		</button>
+	</div>
+</td>

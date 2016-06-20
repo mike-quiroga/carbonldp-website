@@ -45,8 +45,18 @@ export default class PropertyComponent {
 
 	get propertyHasChanged():boolean { return this._propertyHasChanged; }
 
+	literals:RDFNode.Class[] = [];
+
+
 	constructor( element:ElementRef ) {
 		this.element = element;
+
+	}
+
+	getLiterals():RDFNode.Class[]{
+		this.property.value.forEach((literal)=>{
+			this.literals.push(Literal{})
+		});
 	}
 
 	ngAfterViewInit():void {

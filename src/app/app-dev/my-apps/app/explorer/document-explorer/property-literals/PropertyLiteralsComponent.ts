@@ -9,6 +9,7 @@ import * as Utils from "carbonldp/Utils";
 import * as RDFNode from "carbonldp/RDF/RDFNode";
 import * as URI from "carbonldp/RDF/URI";
 
+import PropertyLiteralComponent from "./property-literal/PropertyLiteralComponent";
 import PropertyValuecomponent from "./../property-value/PropertyValuecomponent";
 import PropertyTypesComponent from "./../property-types/PropertyTypesComponent";
 
@@ -19,37 +20,15 @@ import "./style.css!";
 	selector: "property-literals",
 	template: template,
 	encapsulation: ViewEncapsulation.Emulated,
-	directives: [ PropertyValuecomponent, PropertyTypesComponent ],
+	directives: [ PropertyValuecomponent, PropertyTypesComponent, PropertyLiteralComponent ],
 } )
 
 export default class PropertyLiteralsComponent {
 
-	mode:string = Modes.READ;
-	modes:Modes = Modes;
 	tokens:string[] = [ "@value", "@type", "@language" ];
 	@Input() literals:RDFNode.Class[] = [];
 
 	constructor() {}
 
 
-	hasToken( token:string ):boolean {
-		return this.literals.filter( ( literal )=> {return ! ! literal[ token ]} ).length > 0;
-	}
-
-	displayEditor( event:Event ):void {
-		this.mode = Modes.EDIT;
-	}
-
-	cancelEdit():void {
-		this.mode = Modes.READ;
-	}
-
-	save():void {
-		console.log( "saving" );
-	}
-
-}
-class Modes {
-	static EDIT:string = "EDIT";
-	static READ:string = "READ";
 }

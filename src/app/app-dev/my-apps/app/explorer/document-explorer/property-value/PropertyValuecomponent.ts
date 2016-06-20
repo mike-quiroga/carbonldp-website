@@ -24,64 +24,26 @@ import "./style.css!";
 
 export default class PropertyValueComponent {
 
-	$element:JQuery;
-	element:ElementRef;
-	$fragmentsDropdown:JQuery;
 	modes:Modes = Modes;
+	input:AbstractControl = new Control( this.value, Validators.compose( [ Validators.required, this.validateInput.bind( this ) ] ) );
 
 	@Input() mode:string = Modes.READ;
 	@Input() type:string = NS.XSD.DataType.string;
-	@Input() defaultValue:string = "";
-	@Input() placeholder:string;
-
-	@Input() bNodesDictionary:Map<string,RDFNode.Class> = new Map<string,RDFNode.Class>();
-	@Input() namedFragmentsDictionary:Map<string,RDFNode.Class> = new Map<string,RDFNode.Class>();
-
-	@Output() onValueChange:EventEmitter<string> = new EventEmitter<string>();
-	@Output() onError:EventEmitter<string> = new EventEmitter<string>();
-	@Output() onChangeProperty:EventEmitter<string> = new EventEmitter<string>();
-
-	input:AbstractControl = new Control( this.defaultValue, Validators.compose( [ Validators.required, this.validateInput.bind( this ) ] ) );
+	@Input() value:string = "";
+	@Input() shouldSave:EventEmitter<boolean> = new EventEmitter<boolean>();
 
 
-	constructor( element:ElementRef ) {
-		this.element = element;
-	}
+	@Output() onIsValid:EventEmitter<boolean> = new EventEmitter<boolean>();
+	@Output() onSave:EventEmitter<any> = new EventEmitter<any>();
+
+
+	constructor() {}
 
 	ngOnInit():void {
-		this.input = new Control( this.defaultValue, Validators.compose( [ Validators.required, this.validateInput.bind( this ) ] ) );
-		this.input.valueChanges
-			.debounceTime( 400 )
-			.distinctUntilChanged()
-			.subscribe( ( value:string )=> {
-				this.onValueChange.emit( value );
-			} );
-	}
-
-	ngAfterViewInit():void {
-		this.$element = $( this.element.nativeElement );
-	}
-
-	displayEditor( event:Event ):void {
-		this.mode = Modes.EDIT;
-		setTimeout( ()=> {
-			this.$fragmentsDropdown = this.$element.find( ".fragments.dropdown.search" );
-			if ( ! ! this.$fragmentsDropdown ) {
-				this.$fragmentsDropdown.dropdown( {
-					allowAdditions: true,
-					onChange: this.onChangeValue.bind( this )
-				} );
-			}
-		}, 200 );
-	}
-
-	onChangeValue( value:string, text:string, choice:JQuery ):void {
-		console.log( "value: %o, text:%o, choice:%o", value, text, choice );
-		(<Control>this.input).updateValue( value );
-	}
-
-	onFragmentHover( $event:Event, fragment ):void {
-		console.log( "Event: %o, fragment:%o", $event, fragment );
+		this.input = new Control( this.value, Validators.compose( [ Validators.required, this.validateInput.bind( this ) ] ) );
+		this.shouldSave.subscribe( ( shouldSave:boolean )=> {
+			if ( shouldSave ) this.onSave.emit( this.input.value );
+		} );
 	}
 
 	ngOnChanges( changes:{[propName:string]:SimpleChange} ):void {
@@ -96,6 +58,7 @@ export default class PropertyValueComponent {
 		if ( typeof valueOrControl !== "string" ) {
 			value = (<AbstractControl>valueOrControl).value;
 			if ( valueOrControl.touched && ! value ) {
+				this.onIsValid.emit( false );
 				return { "emptyError": true };
 			}
 		}
@@ -123,13 +86,12 @@ export default class PropertyValueComponent {
 				valid = Utils.isString( value );
 				break;
 		}
-		if ( ! valid ) return { "invalidTypeError": true };
+		if ( ! valid ) {
+			this.onIsValid.emit( false );
+			return { "invalidTypeError": true };
+		}
+		this.onIsValid.emit( true );
 		return null;
-	}
-
-	getFriendlyName( uri:string ):string {
-		if ( URI.Util.hasFragment( uri ) )return URI.Util.getFragment( uri );
-		return URI.Util.getSlug( uri );
 	}
 
 }
