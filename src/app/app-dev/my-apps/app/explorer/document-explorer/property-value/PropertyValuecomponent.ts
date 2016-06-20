@@ -60,17 +60,22 @@ export default class PropertyValueComponent {
 
 	ngAfterViewInit():void {
 		this.$element = $( this.element.nativeElement );
-		this.$fragmentsDropdown = this.$element.find( ".fragments.dropdown.search" );
-		if ( ! ! this.$fragmentsDropdown ) {
-			this.$fragmentsDropdown.dropdown( {
-				allowAdditions: true,
-				onChange: this.onChangeValue.bind( this )
-			} );
-		}
 	}
 
 	displayEditor( event:Event ):void {
 		this.mode = Modes.EDIT;
+		setTimeout(
+			()=> {
+				this.$fragmentsDropdown = this.$element.find( ".fragments.dropdown.search" );
+				if ( ! ! this.$fragmentsDropdown ) {
+					this.$fragmentsDropdown.dropdown( {
+						allowAdditions: true,
+						onChange: this.onChangeValue.bind( this )
+					} );
+				}
+			}, 200
+		)
+
 	}
 
 	cancelEdit():void {
