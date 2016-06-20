@@ -50,10 +50,8 @@ export default class DocumentViewerComponent {
 	get document():RDFDocument.Class {return this._document;}
 
 	@Input() set document( value:RDFDocument.Class ) {
-		if ( ! ! this.document && (! this.originalDocument || this.originalDocument.length === 0) ) this.originalDocument = JSON.stringify( this.document, null, "\t" );
 		this._document = value;
-		if ( ! ! value && (! this.originalDocument || this.document[ "@id" ] !== value[ "@id" ] ) ) this.originalDocument = JSON.stringify( this.document, null, "\t" );
-		this.setRoot();
+		this.receiveDocument( value );
 	}
 
 
@@ -65,7 +63,6 @@ export default class DocumentViewerComponent {
 	propertyKind:{ SINGLE:string, MULTI:string, OBJECT:string} = { SINGLE: "single", MULTI: "multi", OBJECT: "object" };
 	selectedPropertyKind:string;
 	documentContentHasChanged:boolean = false;
-	originalDocument:string;
 	private _savingDocument:boolean = false;
 	set savingDocument( value:boolean ) {
 		this._savingDocument = value;
@@ -97,24 +94,28 @@ export default class DocumentViewerComponent {
 		if ( changes[ "uri" ] && ! ! changes[ "uri" ].currentValue && changes[ "uri" ].currentValue !== changes[ "uri" ].previousValue ) {
 			this.loadingDocument = true;
 			this.getDocument( this.uri, this.documentContext ).then( ( document:RDFDocument.Class ) => {
-				this.document = document;
-				this.receiveDocument();
+				this.document = document[ 0 ];
 			} );
 		}
 	}
 
-	receiveDocument():void {
-		this.loadingDocument = true;
-		this.document = this.document[ 0 ];
-		this.setRoot();
-		this.generateMaps();
-		this.loadingDocument = false;
-		setTimeout(
-			()=> {
-				this.goToSection( "documentResource" );
-				this.initializeTabs();
-			}, 250
-		);
+	receiveDocument( document:RDFDocument.Class ):void {
+		if ( ! ! document ) {
+			console.log( "whole document has changed! %o: ", document );
+			this.loadingDocument = true;
+			this.records.additions.clear();
+			this.records.changes.clear();
+			this.records.deletions.clear();
+			this.setRoot();
+			this.generateMaps();
+			this.loadingDocument = false;
+			setTimeout(
+				()=> {
+					this.goToSection( "documentResource" );
+					this.initializeTabs();
+				}, 250
+			);
+		}
 	}
 
 	setRoot():void {
@@ -197,7 +198,6 @@ export default class DocumentViewerComponent {
 		this.documentsResolverService.update( this.document[ "@id" ], body, this.documentContext ).then(
 			( updatedDocument:RDFDocument.Class )=> {
 				this.document = updatedDocument[ 0 ];
-				this.originalDocument = JSON.stringify( this.document, null, "\t" );
 				this.records.changes.clear();
 				this.records.additions.clear();
 				this.records.deletions.clear();
