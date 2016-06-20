@@ -1,15 +1,20 @@
-<input type="text" [ngFormControl]="input" [hidden]="true">
-<select class="ui fluid search dropdown data-types">
-	<option value="empty">
-		Search a type
-	</option>
-	<option class="item" *ngFor="let type of dataTypes;" value="{{type.value}}">
-		<span>
-			<span class="title">{{type.title}}</span>
-			<span class="description">{{type.description}}</span>
-		</span>
-	</option>
-</select>
-<div class="ui error message wide" [ngClass]="{seven: displaySubmitButton, eight: !displaySubmitButton}" *ngIf="!input.valid">
-	<p *ngIf="input.hasError('emptySelectionError')">Select a type or enter your own type.</p>
+<div class="read-mode" *ngIf="mode===modes.READ">
+	<p class="value">{{type}}</p>
+</div>
+<div class="edit-mode ui error form" [hidden]="mode===modes.READ">
+	<input type="text" [ngFormControl]="input" [hidden]="true">
+	<select class="ui fluid search dropdown data-types">
+		<option value="empty">
+			Search a type
+		</option>
+		<option class="item" *ngFor="let type of dataTypes;" value="{{type.value}}">
+			<span>
+				<span class="title">{{type.title}}</span>
+				<span class="description">{{type.description}}</span>
+			</span>
+		</option>
+	</select>
+	<div class="ui error message wide" [ngClass]="{seven: displaySubmitButton, eight: !displaySubmitButton}" *ngIf="!input.valid">
+		<p *ngIf="input.hasError('emptySelectionError')">Select a type or enter your own type.</p>
+	</div>
 </div>

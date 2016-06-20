@@ -1,31 +1,7 @@
-<div class="options" [ngClass]="{still:mode===modes.EDIT}">
-	<div class="ui mini icon inverted edit value buttons">
-		<button #editButton
-		        class="ui basic edit button"
-		        *ngIf="mode!==modes.EDIT"
-		        [ngClass]="{hidden:editButton.classList.contains('active')}"
-		        (click)="displayEditor($event, prop, j)">
-			<i class="pencil icon"></i>
-		</button>
-	</div>
-	<div class="ui mini icon inverted confirm buttons" *ngIf="mode===modes.EDIT">
-		<button #cancelButton
-		        class="ui basic button" title="Cancel"
-		        (click)="cancelEdit()">
-			<i class="remove red icon"></i>
-		</button>
-		<button #confirmButton
-		        class="ui basic button" title="Save"
-		        [disabled]="!input.valid"
-		        (click)="save()">
-			<i class="checkmark icon" [ngClass]="{green:input.valid, grey:!input.valid}"></i>
-		</button>
-	</div>
-</div>
 <div class="read-mode" *ngIf="mode===modes.READ">
 	<p class="value" (dblclick)="displayEditor($event)">{{defaultValue}}</p>
 </div>
-<div class="edit-mode" *ngIf="mode===modes.EDIT">
+<div class="edit-mode ui error form" *ngIf="mode===modes.EDIT">
 	<input [attr.placeholder]="!!placeholder? placeholder: 'Value'"
 	       [ngFormControl]="input"
 	       [hidden]="type==='@id'"

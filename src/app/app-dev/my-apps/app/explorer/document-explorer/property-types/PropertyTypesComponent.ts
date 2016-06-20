@@ -12,7 +12,7 @@ import template from "./template.html!";
 import "./style.css!";
 
 @Component( {
-	selector: "property-types",
+	selector: "property-type",
 	template: template,
 	host: { "[class.error]": "!!input && !input.valid" },
 	encapsulation: ViewEncapsulation.Emulated
@@ -26,7 +26,27 @@ export default class PropertyTypesComponent {
 	dataTypes:any = this.getDataTypes();
 	input:AbstractControl;
 
-	@Input() initialValue:string = NS.XSD.DataType.string;
+	modes:Modes = Modes;
+	private _mode = NS.XSD.DataType.string;
+	@Input() set mode( value:string ) {
+		this._mode = value;
+		this.initializeDropdown();
+	}
+
+	get mode() {
+		return this._mode;
+	}
+
+	private _type = NS.XSD.DataType.string;
+	@Input() set type( value:string ) {
+		if ( ! value || value.length === 0 ) value = NS.XSD.DataType.string;
+		this._type = value;
+	}
+
+	get type() {
+		return this._type;
+	}
+
 	@Output() onTypeSelected:EventEmitter<PropertyType> = new EventEmitter<PropertyType>();
 
 
@@ -35,17 +55,20 @@ export default class PropertyTypesComponent {
 	}
 
 	ngOnInit():void {
-		this.input = new Control( this.initialValue, Validators.compose( [ Validators.required, this.validateSelectionInput.bind( this ) ] ) );
+		this.input = new Control( this.type, Validators.compose( [ Validators.required, this.validateSelectionInput.bind( this ) ] ) );
 	}
 
 	ngAfterViewInit():void {
 		this.$element = $( this.element.nativeElement );
-		this.$dataTypesSearch = this.$element.find( ".search.dropdown.data-types" );
+	}
+
+	initializeDropdown():void {
+		this.$dataTypesSearch = $( this.element.nativeElement.querySelector( ".search.dropdown.data-types" ) );
 		this.$dataTypesSearch.dropdown( {
 			allowAdditions: true,
 			onChange: this.onChangeType.bind( this )
 		} );
-		this.$dataTypesSearch.dropdown( "set selected", this.initialValue );
+		this.$dataTypesSearch.dropdown( "set selected", this.type );
 	}
 
 	onChangeType( value:string, text:string, choice:JQuery ):void {
@@ -57,7 +80,7 @@ export default class PropertyTypesComponent {
 		let dataTypes:any[] = [];
 		let xsdDataTypes:any[] = this.getXSDDataTypes();
 		dataTypes = dataTypes.concat( xsdDataTypes );
-		dataTypes.push( { title: "@id", description: "Link to external resource or internal fragment.", value: "@id" } );
+		// dataTypes.push( { title: "@id", description: "Link to external resource or internal fragment.", value: "@id" } );
 		return dataTypes;
 	}
 
@@ -81,7 +104,11 @@ export default class PropertyTypesComponent {
 		return null;
 	}
 }
-export interface PropertyType {
+interface PropertyType {
 	name:string,
 	value:string
+}
+class Modes {
+	static EDIT:string = "EDIT";
+	static READ:string = "READ";
 }

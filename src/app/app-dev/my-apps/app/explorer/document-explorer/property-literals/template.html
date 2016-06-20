@@ -7,16 +7,20 @@
 	</tr>
 	<tr *ngFor="let literal of literals; let i = index;">
 		<td>
-			<p><span *ngIf="literal['@value']">{{literal['@value']}}</span></p>
+			<property-value [mode]="mode"
+			                [defaultValue]="literal['@value']"
+			                [type]="literal['@type']"></property-value>
 		</td>
 		<td>
-			<p><span *ngIf="literal['@type']">{{literal['@type']}}</span></p>
+			<property-type [mode]="mode"
+			               [type]="literal['@type']"
+			               (onTypeSelected)="changePropertyValue($event, j)"></property-type>
 		</td>
 		<td>
 			<p><span *ngIf="literal['@language']">{{literal['@language']}}</span></p>
 		</td>
 		<td>
-			<div class="ui mini icon inverted edit value buttons">
+			<div class="ui mini icon inverted edit value buttons" *ngIf="mode===modes.READ">
 				<button #editButton
 				        class="ui basic edit button"
 				        *ngIf="mode===modes.READ"

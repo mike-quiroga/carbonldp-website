@@ -64,28 +64,15 @@ export default class PropertyValueComponent {
 
 	displayEditor( event:Event ):void {
 		this.mode = Modes.EDIT;
-		setTimeout(
-			()=> {
-				this.$fragmentsDropdown = this.$element.find( ".fragments.dropdown.search" );
-				if ( ! ! this.$fragmentsDropdown ) {
-					this.$fragmentsDropdown.dropdown( {
-						allowAdditions: true,
-						onChange: this.onChangeValue.bind( this )
-					} );
-				}
-			}, 200
-		)
-
-	}
-
-	cancelEdit():void {
-		(<Control>this.input).updateValue( this.defaultValue );
-		this.mode = Modes.READ;
-	}
-
-	save():void {
-		this.mode = Modes.READ;
-		this.onChangeProperty.emit( this.input.value );
+		setTimeout( ()=> {
+			this.$fragmentsDropdown = this.$element.find( ".fragments.dropdown.search" );
+			if ( ! ! this.$fragmentsDropdown ) {
+				this.$fragmentsDropdown.dropdown( {
+					allowAdditions: true,
+					onChange: this.onChangeValue.bind( this )
+				} );
+			}
+		}, 200 );
 	}
 
 	onChangeValue( value:string, text:string, choice:JQuery ):void {
