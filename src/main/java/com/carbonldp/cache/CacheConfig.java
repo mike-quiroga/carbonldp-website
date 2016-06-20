@@ -22,7 +22,7 @@ import javax.annotation.PostConstruct;
  * @see org.springframework.cache.annotation.CacheConfig
  * @see CachingConfigurer
  * @see <a href="http://docs.spring.io/spring/docs/current/spring-framework-reference/html/cache.html">Cache Abstraction</a>
- * @since _version_
+ * @since 0.37.1
  */
 @Configuration
 @EnableAspectJAutoProxy

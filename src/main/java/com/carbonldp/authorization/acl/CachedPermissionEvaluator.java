@@ -10,7 +10,7 @@ import org.springframework.security.core.Authentication;
  *
  * @author MiguelAraCo
  * @see <a href="https://jira.base22.com/browse/LDP-705">LDP-705</a>
- * @since _version_
+ * @since 0.37.1
  */
 public class CachedPermissionEvaluator {
 
