@@ -14,7 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 public class AbstractSPARQLQueryPOSTRequestHandler extends AbstractLDPRequestHandler {
 	public ResponseEntity<Object> handleRequest( String queryString, HttpServletRequest request, HttpServletResponse response ) {
 		setUp( request, response );
-		//TODO: check if this is well handled by w3c specs
+		//TODO: Check if this is compliant with the W3C specs
 		if ( request.getHeader( "default-graph-uri" ) != null || request.getHeader( "default-graph-uri" ) != null )
 			return new ResponseEntity<>( HttpStatus.BAD_REQUEST );
 		IRI targetIRI = getTargetIRI( request );
