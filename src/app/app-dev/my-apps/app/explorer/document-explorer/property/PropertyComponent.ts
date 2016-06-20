@@ -9,8 +9,8 @@ import * as URI from "carbonldp/RDF/URI";
 import * as Utils from "carbonldp/Utils";
 
 import ListViewerComponent from "./../list-viewer/ListViewerComponent";
-import PropertyValuecomponent from "./../property-value/PropertyValuecomponent";
-import PropertyLiteralsComponent from "./../property-literals/PropertyLiteralsComponent";
+import PropertyValuecomponent from "property-literals/property-literal/property-value/PropertyValuecomponent";
+import PropertyLiteralsComponent from "property-literals/PropertyLiteralsComponent";
 
 import template from "./template.html!";
 import "./style.css!";

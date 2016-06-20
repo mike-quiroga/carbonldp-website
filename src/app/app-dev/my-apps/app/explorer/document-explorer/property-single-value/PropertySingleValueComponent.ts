@@ -6,9 +6,9 @@ import "semantic-ui/semantic";
 
 import * as NS from "carbonldp/NS";
 
-import PropertyTypesComponent from "./../property-types/PropertyTypesComponent";
-import { PropertyType } from "./../property-types/PropertyTypesComponent";
-import PropertyValuecomponent from "./../property-value/PropertyValuecomponent";
+import PropertyTypesComponent from "../property/property-literals/property-literal/property-types/PropertyTypesComponent";
+import { PropertyType } from "../property/property-literals/property-literal/property-types/PropertyTypesComponent";
+import PropertyValuecomponent from "../property/property-literals/property-literal/property-value/PropertyValuecomponent";
 
 import template from "./template.html!";
 import "./style.css!";
