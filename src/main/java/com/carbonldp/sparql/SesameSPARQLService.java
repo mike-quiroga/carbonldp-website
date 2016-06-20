@@ -5,11 +5,14 @@ import com.carbonldp.repository.security.RequestDomainAccessGranter;
 import com.carbonldp.web.exceptions.BadRequestException;
 import com.carbonldp.web.exceptions.NotImplementedException;
 import org.openrdf.model.IRI;
+import org.openrdf.model.Value;
 import org.openrdf.query.MalformedQueryException;
 import org.openrdf.query.QueryLanguage;
 import org.openrdf.query.parser.*;
 import org.openrdf.spring.SesameConnectionFactory;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.HashMap;
 
 @Transactional
 public class SesameSPARQLService extends AbstractSesameRepository implements SPARQLService {
@@ -43,7 +46,7 @@ public class SesameSPARQLService extends AbstractSesameRepository implements SPA
 
 	@Override
 	public void executeSPARQLUpdate( String sparqlUpdate, IRI targetIRI ) {
-		throw new NotImplementedException();
+		sparqlTemplate.executeUpdate( sparqlUpdate, new HashMap<>() );
 	}
 
 	private SPARQLResult executeSPARQLBooleanQuery( String queryString ) {
