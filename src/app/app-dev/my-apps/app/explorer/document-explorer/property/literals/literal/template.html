@@ -13,7 +13,12 @@
 	              (onTypeSelected)="changeType($event)"></literal-type>
 </td>
 <td>
-	<p><span>{{literal['@language']}}</span></p>
+	<literal-language *ngIf="isStringType"
+	                  [mode]="mode"
+	                  [language]="literal['@language']"
+	                  (onIsValid)="onIsValidLanguage($event)"
+	                  (onLanguageSelected)="changeLanguage($event)"></literal-language>
+	<p *ngIf="!isStringType"> - </p>
 </td>
 <td>
 	<div class="ui mini icon inverted edit value buttons" *ngIf="mode===modes.READ">

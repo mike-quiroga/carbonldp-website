@@ -12,6 +12,7 @@ import * as NS from "carbonldp/NS";
 
 import LiteralValueComponent from "./literal-value/LiteralValueComponent";
 import LiteralTypeComponent from "./literal-type/LiteralTypeComponent";
+import LiteralLanguageComponent from "./literal-language/LiteralLanguageComponent";
 
 import template from "./template.html!";
 import "./style.css!";
@@ -19,7 +20,7 @@ import "./style.css!";
 @Component( {
 	selector: "tr.literal",
 	template: template,
-	directives: [ LiteralValueComponent, LiteralTypeComponent ],
+	directives: [ LiteralValueComponent, LiteralTypeComponent, LiteralLanguageComponent ],
 } )
 
 export default class LiteralComponent {
@@ -30,12 +31,17 @@ export default class LiteralComponent {
 	saveAll:EventEmitter<boolean> = new EventEmitter<boolean>();
 	isValidValue:boolean = false;
 	isValidType:boolean = false;
+	isValidLanguage:boolean = false;
+	isStringType:boolean = false;
 
 	@Input() literal:Literal;
 	private tempLiteral:any = {};
 
 	constructor() {}
 
+	ngOnInit():void {
+		this.isStringType = (! this.literal[ "@type" ] || this.literal[ "@type" ] === NS.XSD.DataType.string);
+	}
 
 	displayEditor( event:Event ):void {
 		this.mode = Modes.EDIT;
@@ -55,7 +61,15 @@ export default class LiteralComponent {
 
 	changeType( type:{name:string, value:string} ):void {
 		this.tempLiteral[ "@type" ] = type.value;
-		// if(type===NS.XSD.DataType.string)
+		this.isStringType = type.value === NS.XSD.DataType.string;
+		if ( type.value === NS.XSD.DataType.string ) {
+			delete this.tempLiteral[ "@language" ];
+		}
+	}
+
+	changeLanguage( value:string ):void {
+		delete this.tempLiteral[ "@language" ];
+		if ( ! ! value ) this.tempLiteral[ "@language" ] = value;
 	}
 
 	onIsValidValue( isValid:boolean ):void {
@@ -65,6 +79,11 @@ export default class LiteralComponent {
 	onIsValidType( isValid:boolean ):void {
 		this.isValidType = isValid;
 	}
+
+	onIsValidLanguage( isValid:boolean ):void {
+		this.isValidLanguage = isValid;
+	}
+
 }
 class Modes {
 	static EDIT:string = "EDIT";

@@ -27,7 +27,7 @@ export default class LiteralTypeComponent {
 	input:AbstractControl;
 
 	modes:Modes = Modes;
-	private _mode = NS.XSD.DataType.string;
+	private _mode = Modes.READ;
 	@Input() set mode( value:string ) {
 		this._mode = value;
 		if ( this.mode === Modes.EDIT )this.initializeDropdown();

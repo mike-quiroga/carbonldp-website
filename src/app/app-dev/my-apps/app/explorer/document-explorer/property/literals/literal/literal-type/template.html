@@ -14,7 +14,7 @@
 			</span>
 		</option>
 	</select>
-	<div class="ui error message wide" [ngClass]="{seven: displaySubmitButton, eight: !displaySubmitButton}" *ngIf="!input.valid">
+	<div class="ui error message wide" *ngIf="!input.valid">
 		<p *ngIf="input.hasError('emptySelectionError')">Select a type or enter your own type.</p>
 	</div>
 </div>
