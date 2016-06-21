@@ -1,19 +1,25 @@
 package com.carbonldp.sparql;
 
+import com.carbonldp.ldp.sources.RDFSourceService;
 import com.carbonldp.repository.AbstractSesameRepository;
 import com.carbonldp.repository.security.RequestDomainAccessGranter;
 import com.carbonldp.web.exceptions.BadRequestException;
+import com.carbonldp.web.exceptions.NotFoundException;
+import com.carbonldp.web.exceptions.NotImplementedException;
 import org.openrdf.model.IRI;
+import org.openrdf.model.Value;
 import org.openrdf.query.MalformedQueryException;
 import org.openrdf.query.QueryLanguage;
 import org.openrdf.query.parser.*;
 import org.openrdf.spring.SesameConnectionFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.HashMap;
 
 @Transactional
 public class SesameSPARQLService extends AbstractSesameRepository implements SPARQLService {
-	// TODO: check about RDF dataset with the URL
-	private SPARQLResult sparqlResult;
+	protected RDFSourceService sourceService;
 
 	public SesameSPARQLService( SesameConnectionFactory connectionFactory ) {
 		super( connectionFactory );
@@ -21,8 +27,10 @@ public class SesameSPARQLService extends AbstractSesameRepository implements SPA
 
 	@Override
 	public SPARQLResult executeSPARQLQuery( String queryString, IRI targetIRI ) {
+		if ( ! sourceService.exists( targetIRI ) ) throw new NotFoundException();
 		ParsedQuery query;
 
+		SPARQLResult sparqlResult;
 		try {
 			query = QueryParserUtil.parseQuery( QueryLanguage.SPARQL, queryString, targetIRI.stringValue() );
 		} catch ( MalformedQueryException e ) {
@@ -39,6 +47,12 @@ public class SesameSPARQLService extends AbstractSesameRepository implements SPA
 		}
 
 		return sparqlResult;
+	}
+
+	@Override
+	public void executeSPARQLUpdate( String sparqlUpdate, IRI targetIRI ) {
+		if ( ! sourceService.exists( targetIRI ) ) throw new NotFoundException();
+		sparqlTemplate.executeUpdate( sparqlUpdate, new HashMap<>() );
 	}
 
 	private SPARQLResult executeSPARQLBooleanQuery( String queryString ) {
@@ -60,5 +74,10 @@ public class SesameSPARQLService extends AbstractSesameRepository implements SPA
 			template.setFirstAccessGranters( new RequestDomainAccessGranter() );
 			return new SPARQLGraphResult( sparqlTemplate.executeGraphQuery( queryString, InMemoryGraphQueryResult::from ) );
 		} );
+	}
+
+	@Autowired
+	public void setSourceService( RDFSourceService sourceService ) {
+		this.sourceService = sourceService;
 	}
 }
