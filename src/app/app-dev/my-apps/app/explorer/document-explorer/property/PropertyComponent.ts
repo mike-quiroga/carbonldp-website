@@ -9,8 +9,8 @@ import * as URI from "carbonldp/RDF/URI";
 import * as Utils from "carbonldp/Utils";
 
 import ListViewerComponent from "./../list-viewer/ListViewerComponent";
-import PropertyValuecomponent from "property-literals/property-literal/property-value/PropertyValuecomponent";
-import PropertyLiteralsComponent from "property-literals/PropertyLiteralsComponent";
+// import LiteralValueComponent from "./literals/literal/literal-value/LiteralValueComponent";
+import LiteralsComponent from "./literals/LiteralsComponent";
 
 import template from "./template.html!";
 import "./style.css!";
@@ -18,7 +18,7 @@ import "./style.css!";
 @Component( {
 	selector: "document-property",
 	template: template,
-	directives: [ ListViewerComponent, PropertyValuecomponent, PropertyLiteralsComponent ],
+	directives: [ ListViewerComponent, LiteralsComponent ],
 	host: { "[class.has-changed]": "propertyHasChanged" },
 } )
 

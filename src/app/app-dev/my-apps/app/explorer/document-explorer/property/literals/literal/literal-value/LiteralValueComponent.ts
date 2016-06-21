@@ -9,20 +9,20 @@ import * as Utils from "carbonldp/Utils";
 import * as RDFNode from "carbonldp/RDF/RDFNode";
 import * as URI from "carbonldp/RDF/URI";
 
-import { IterableMapPipe } from "./../iterable-map/IterableMapPipe"
+import { IterableMapPipe } from "./../../../../iterable-map/IterableMapPipe"
 
 import template from "./template.html!";
 import "./style.css!";
 
 @Component( {
-	selector: "property-value",
+	selector: "literal-value",
 	template: template,
 	host: { "[class.error]": "!!input && (input.touched || input.dirty) && !input.valid" },
 	encapsulation: ViewEncapsulation.Emulated,
 	pipes: [ IterableMapPipe ]
 } )
 
-export default class PropertyValueComponent {
+export default class LiteralValueComponent {
 
 	modes:Modes = Modes;
 	input:AbstractControl = new Control( this.value, Validators.compose( [ Validators.required, this.validateInput.bind( this ) ] ) );

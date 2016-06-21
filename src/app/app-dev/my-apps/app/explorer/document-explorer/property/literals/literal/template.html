@@ -1,14 +1,14 @@
 <td>
-	<property-value [mode]="mode"
+	<literal-value [mode]="mode"
 	                [type]="literal['@type']"
 	                [value]="literal['@value']"
 	                [shouldSave]="saveAll"
 	                (onIsValid)="onIsValidValue($event)"
-	                (onSave)="changeValue($event)"></property-value>
+	                (onSave)="changeValue($event)"></literal-value>
 </td>
 <td>
-	<property-type [mode]="mode"
-	               [type]="literal.type"></property-type>
+	<literal-type [mode]="mode"
+	               [type]="literal.type"></literal-type>
 </td>
 <td>
 	<p><span *ngIf="literal.language">{{literal.language}}</span></p>

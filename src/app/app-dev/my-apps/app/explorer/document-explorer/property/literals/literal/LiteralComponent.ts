@@ -10,19 +10,19 @@ import * as Utils from "carbonldp/Utils";
 import * as NS from "carbonldp/NS";
 
 
-import PropertyValuecomponent from "./../../property-value/PropertyValuecomponent";
-import PropertyTypesComponent from "./../../property-types/PropertyTypesComponent";
+import LiteralValueComponent from "./literal-value/LiteralValueComponent";
+import LiteralTypeComponent from "./literal-type/LiteralTypeComponent";
 
 import template from "./template.html!";
 import "./style.css!";
 
 @Component( {
-	selector: "tr.property-literal",
+	selector: "tr.literal",
 	template: template,
-	directives: [ PropertyValuecomponent, PropertyTypesComponent ],
+	directives: [ LiteralValueComponent, LiteralTypeComponent ],
 } )
 
-export default class PropertyLiteralComponent {
+export default class LiteralComponent {
 
 	mode:string = Modes.READ;
 	modes:Modes = Modes;

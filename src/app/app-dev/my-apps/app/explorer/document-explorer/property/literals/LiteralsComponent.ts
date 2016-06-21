@@ -9,21 +9,19 @@ import * as Utils from "carbonldp/Utils";
 import * as RDFNode from "carbonldp/RDF/RDFNode";
 import * as URI from "carbonldp/RDF/URI";
 
-import PropertyLiteralComponent from "./property-literal/PropertyLiteralComponent";
-import PropertyValuecomponent from "./../property-value/PropertyValuecomponent";
-import PropertyTypesComponent from "./../property-types/PropertyTypesComponent";
+import LiteralComponent from "./literal/LiteralComponent";
 
 import template from "./template.html!";
 import "./style.css!";
 
 @Component( {
-	selector: "property-literals",
+	selector: "literals",
 	template: template,
 	encapsulation: ViewEncapsulation.Emulated,
-	directives: [ PropertyValuecomponent, PropertyTypesComponent, PropertyLiteralComponent ],
+	directives: [ LiteralComponent ],
 } )
 
-export default class PropertyLiteralsComponent {
+export default class LiteralsComponent {
 
 	tokens:string[] = [ "@value", "@type", "@language" ];
 	@Input() literals:RDFNode.Class[] = [];

@@ -17,7 +17,7 @@ import DocumentResourceViewerComponent from "./../document-resource-viewer/Docum
 import BNodesViewerComponent from "./../bnodes-viewer/BNodesViewerComponent";
 import NamedFragmentsViewerComponent from "./../named-fragments-viewer/NamedFragmentsViewerComponent";
 import PropertyComponent from "./../property/PropertyComponent";
-import PropertySingleValueComponent from "./../property-single-value/PropertySingleValueComponent";
+// import PropertySingleValueComponent from "./../property-single-value/PropertySingleValueComponent";
 import { Property } from "./../property/PropertyComponent";
 
 import template from "./template.html!";
@@ -27,7 +27,7 @@ import "./style.css!";
 	selector: "document-viewer",
 	host: { "[class.ui]": "true", "[class.basic]": "true", "[class.segment]": "true", },
 	template: template,
-	directives: [ CORE_DIRECTIVES, DocumentResourceViewerComponent, BNodesViewerComponent, NamedFragmentsViewerComponent, PropertyComponent, PropertySingleValueComponent ],
+	directives: [ CORE_DIRECTIVES, DocumentResourceViewerComponent, BNodesViewerComponent, NamedFragmentsViewerComponent, PropertyComponent ],
 } )
 
 export default class DocumentViewerComponent {

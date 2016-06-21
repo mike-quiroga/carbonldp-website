@@ -12,13 +12,13 @@ import template from "./template.html!";
 import "./style.css!";
 
 @Component( {
-	selector: "property-type",
+	selector: "literal-type",
 	template: template,
 	host: { "[class.error]": "!!input && !input.valid" },
 	encapsulation: ViewEncapsulation.Emulated
 } )
 
-export default class PropertyTypesComponent {
+export default class LiteralTypeComponent {
 
 	element:ElementRef;
 	$element:JQuery;

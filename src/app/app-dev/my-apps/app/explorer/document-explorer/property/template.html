@@ -48,7 +48,7 @@
 		<p *ngIf="!isUrl(property.name)">{{property.name}}</p>
 	</div>
 	<div class="description">
-		<property-literals [literals]="property.value"></property-literals>
+		<literals [literals]="property.value"></literals>
 		<!--<table class="ui very compact striped small celled table" *ngIf="hasCommonHeaders()">-->
 		<!--<tr class="center aligned">-->
 		<!--<th *ngIf="hasHeader('@id')">@id</th>-->
