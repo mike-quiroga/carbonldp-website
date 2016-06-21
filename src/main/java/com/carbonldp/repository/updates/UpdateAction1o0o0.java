@@ -28,6 +28,9 @@ public class UpdateAction1o0o0 extends AbstractUpdateAction {
 	public void execute() throws Exception {
 		emptyRepository();
 		loadResourcesFile( resourcesFile, Vars.getInstance().getHost() );
+		if ( Vars.getInstance().getSystemUser() == null || Vars.getInstance().getSystemPass() == null ) {
+			throw new RuntimeException( "Configure the system user into the config.properties file" );
+		}
 		createSystemUser( Vars.getInstance().getSystemUser(), Vars.getInstance().getSystemPass() );
 	}
 
