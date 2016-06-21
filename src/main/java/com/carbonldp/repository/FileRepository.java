@@ -4,6 +4,7 @@ import com.carbonldp.apps.App;
 import org.openrdf.model.IRI;
 
 import java.io.File;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -31,4 +32,6 @@ public interface FileRepository {
 	public void deleteDirectory( File file );
 
 	public String getFilesDirectory( App app );
+
+	public void removeLineFromFileStartingWith( String file, List<String> linesToRemove );
 }

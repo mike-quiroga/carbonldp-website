@@ -78,7 +78,7 @@ public class Platform {
 
 		SailRegistry.getInstance().add( new SecuredNativeStoreFactory() );
 
-		RepositoriesUpdater repositoriesUpdater = new RepositoriesUpdater();
+		RepositoriesUpdater repositoriesUpdater = new RepositoriesUpdater( arguments.configurationFile.getAbsolutePath() );
 		if ( ! repositoriesUpdater.repositoriesAreUpToDate() ) {
 			repositoriesUpdater.updateRepositories();
 		}

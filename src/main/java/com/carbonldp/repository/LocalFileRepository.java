@@ -23,6 +23,7 @@ import org.springframework.core.io.FileSystemResource;
 
 import java.io.*;
 import java.nio.file.Files;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
@@ -289,6 +290,38 @@ public class LocalFileRepository implements FileRepository {
 		directory = directory.concat( app.getRepositoryID() );
 
 		return directory;
+	}
+
+	@Override
+	public void removeLineFromFileStartingWith( String file, List<String> linesToRemove ) {
+		try {
+			File inFile = new File( file );
+			File tempFile = new File( inFile.getAbsolutePath() + ".tmp" );
+			BufferedReader br = new BufferedReader( new FileReader( file ) );
+			PrintWriter pw = new PrintWriter( new FileWriter( tempFile ) );
+			String line = null;
+			while ( ( line = br.readLine() ) != null ) {
+				boolean printValue = true;
+				for(String lineToRemove : linesToRemove ) {
+					if ( line.trim().startsWith( lineToRemove ) ) {
+						printValue = false;
+						break;
+					}
+				}
+				if(printValue) {
+					pw.println( line );
+					pw.flush();
+				}
+			}
+			pw.close();
+			br.close();
+			inFile.delete();
+			tempFile.renameTo( inFile );
+		} catch ( FileNotFoundException e ) {
+			throw new RuntimeException( "The file was not found. Exception:", e );
+		} catch ( IOException e ) {
+			throw new RuntimeException( "There was problems with the input/output. Exception:", e );
+		}
 	}
 
 	@Autowired
