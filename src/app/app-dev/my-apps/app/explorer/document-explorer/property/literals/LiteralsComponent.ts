@@ -45,4 +45,8 @@ export default class LiteralsComponent {
 	editModeChanged( value:boolean ):void {
 		this.isEditingLiteral = value;
 	}
+
+	saveLiteral( literal:any ) {
+		console.log( literal );
+	}
 }

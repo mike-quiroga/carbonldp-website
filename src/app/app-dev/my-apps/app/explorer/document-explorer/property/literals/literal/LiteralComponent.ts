@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input, Output, EventEmitter } from "@angular/core";
+import { Component, ViewChild, Input, Output, EventEmitter } from "@angular/core";
 
 import $ from "jquery";
 import "semantic-ui/semantic";
@@ -37,15 +37,19 @@ export default class LiteralComponent {
 
 	modes:Modes = Modes;
 	tokens:string[] = [ "@value", "@type", "@language" ];
-	saveAll:EventEmitter<boolean> = new EventEmitter<boolean>();
 	isValidValue:boolean = false;
 	isValidType:boolean = false;
 	isValidLanguage:boolean = false;
 	isStringType:boolean = false;
 
 	@Input() literal:Literal;
-	@Input() canDisplayLanguage:boolean=false;
+	@Input() canDisplayLanguage:boolean = false;
 	@Output() onEditMode:EventEmitter<boolean> = new EventEmitter<boolean>();
+	@Output() onSave:EventEmitter<any> = new EventEmitter<any>();
+	@ViewChild( LiteralValueComponent ) literalValue:LiteralValueComponent;
+	@ViewChild( LiteralTypeComponent ) literalType:LiteralTypeComponent;
+	@ViewChild( LiteralLanguageComponent ) literalLanguage:LiteralLanguageComponent;
+
 	private tempLiteral:any = {};
 
 	constructor() {}
@@ -63,17 +67,21 @@ export default class LiteralComponent {
 	}
 
 	save():void {
-
+		if ( ! ! this.literalValue ) this.changeValue( this.literalValue.input.value );
+		if ( ! ! this.literalType ) this.changeType( this.literalType.input.value );
+		if ( ! ! this.literalLanguage ) this.changeLanguage( this.literalLanguage.input.value );
+		this.onSave.emit( this.tempLiteral );
 	}
 
 	changeValue( value:string|number|boolean ):void {
 		this.tempLiteral[ "@value" ] = value;
 	}
 
-	changeType( type:{name:string, value:string} ):void {
-		this.tempLiteral[ "@type" ] = type.value;
-		this.isStringType = type.value === NS.XSD.DataType.string;
-		if ( type.value === NS.XSD.DataType.string ) {
+	changeType( type:string ):void {
+		type = type === NS.XSD.DataType.string ? null : type;
+		this.isStringType = ! type;
+		if ( ! ! type ) {
+			this.tempLiteral[ "@type" ] = type;
 			delete this.tempLiteral[ "@language" ];
 		}
 	}

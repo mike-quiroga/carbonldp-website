@@ -2,9 +2,7 @@
 	<literal-value [mode]="mode"
 	               [type]="!!tempLiteral[ '@type' ]? tempLiteral[ '@type' ]: literal['@type']"
 	               [value]="literal['@value']"
-	               [shouldSave]="saveAll"
-	               (onIsValid)="onIsValidValue($event)"
-	               (onSave)="changeValue($event)"></literal-value>
+	               (onIsValid)="onIsValidValue($event)"></literal-value>
 </td>
 <td>
 	<literal-type [mode]="mode"

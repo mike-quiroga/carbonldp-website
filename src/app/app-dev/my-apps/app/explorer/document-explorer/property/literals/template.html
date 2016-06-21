@@ -5,5 +5,9 @@
 		<th *ngIf="isLanguagePresent || isEditingLiteral">@language</th>
 		<th>Actions</th>
 	</tr>
-	<tr class="literal top aligned" *ngFor="let literal of literals; let i = index;" [literal]="literal" [canDisplayLanguage]="isLanguagePresent || isEditingLiteral" (onEditMode)="editModeChanged($event)"></tr>
+	<tr class="literal top aligned" *ngFor="let literal of literals; let i = index;"
+	    [literal]="literal"
+	    [canDisplayLanguage]="isLanguagePresent || isEditingLiteral"
+	    (onSave)="saveLiteral($event)"
+	    (onEditMode)="editModeChanged($event)"></tr>
 </table>

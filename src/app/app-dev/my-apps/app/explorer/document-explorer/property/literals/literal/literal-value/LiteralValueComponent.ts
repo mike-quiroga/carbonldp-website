@@ -39,20 +39,13 @@ export default class LiteralValueComponent {
 
 	@Input() type:string = NS.XSD.DataType.string;
 	@Input() value:string|number|boolean = "";
-	@Input() shouldSave:EventEmitter<boolean> = new EventEmitter<boolean>();
-
-
 	@Output() onIsValid:EventEmitter<boolean> = new EventEmitter<boolean>();
-	@Output() onSave:EventEmitter<any> = new EventEmitter<any>();
 
 
 	constructor() {}
 
 	ngOnInit():void {
 		this.input = new Control( this.value, Validators.compose( [ Validators.required, this.validateInput.bind( this ) ] ) );
-		this.shouldSave.subscribe( ( shouldSave:boolean )=> {
-			if ( shouldSave ) this.onSave.emit( this.input.value );
-		} );
 	}
 
 	ngOnChanges( changes:{[propName:string]:SimpleChange} ):void {

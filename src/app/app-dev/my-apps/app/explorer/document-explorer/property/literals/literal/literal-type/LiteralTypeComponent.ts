@@ -51,7 +51,7 @@ export default class LiteralTypeComponent {
 
 
 	@Output() onIsValid:EventEmitter<boolean> = new EventEmitter<boolean>();
-	@Output() onTypeSelected:EventEmitter<PropertyType> = new EventEmitter<PropertyType>();
+	@Output() onTypeSelected:EventEmitter<string> = new EventEmitter<string>();
 
 
 	constructor( element:ElementRef ) {
@@ -77,7 +77,7 @@ export default class LiteralTypeComponent {
 
 	onChangeType( value:string, text:string, choice:JQuery ):void {
 		(<Control>this.input).updateValue( value === "empty" ? "" : value );
-		this.onTypeSelected.emit( { name: text, value: value } );
+		this.onTypeSelected.emit( value );
 	}
 
 	getDataTypes():any {
@@ -110,10 +110,6 @@ export default class LiteralTypeComponent {
 		this.onIsValid.emit( true );
 		return null;
 	}
-}
-interface PropertyType {
-	name:string,
-	value:string
 }
 class Modes {
 	static EDIT:string = "EDIT";
