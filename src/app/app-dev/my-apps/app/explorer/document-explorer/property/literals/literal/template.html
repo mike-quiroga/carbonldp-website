@@ -12,7 +12,7 @@
 	              (onIsValid)="onIsValidType($event)"
 	              (onTypeSelected)="changeType($event)"></literal-type>
 </td>
-<td>
+<td *ngIf="canDisplayLanguage">
 	<literal-language *ngIf="isStringType"
 	                  [mode]="mode"
 	                  [language]="literal['@language']"

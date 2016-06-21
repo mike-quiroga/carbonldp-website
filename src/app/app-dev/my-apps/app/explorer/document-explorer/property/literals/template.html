@@ -2,8 +2,8 @@
 	<tr class="center aligned">
 		<th>@value</th>
 		<th>@type</th>
-		<th>@language</th>
+		<th *ngIf="isLanguagePresent || isEditingLiteral">@language</th>
 		<th>Actions</th>
 	</tr>
-	<tr class="literal top aligned" *ngFor="let literal of literals; let i = index;" [literal]="literal"></tr>
+	<tr class="literal top aligned" *ngFor="let literal of literals; let i = index;" [literal]="literal" [canDisplayLanguage]="isLanguagePresent || isEditingLiteral" (onEditMode)="editModeChanged($event)"></tr>
 </table>

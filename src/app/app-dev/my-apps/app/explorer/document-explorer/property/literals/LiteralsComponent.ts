@@ -24,12 +24,25 @@ import "./style.css!";
 export default class LiteralsComponent {
 
 	tokens:string[] = [ "@value", "@type", "@language" ];
+	isLanguagePresent:boolean = false;
+	isEditingLiteral:boolean = false;
 	@Input() literals:RDFNode.Class[] = [];
 
 	constructor() {}
 
-	existsToken():boolean {
-		return false;
+	ngOnInit():void {
+		this.isLanguagePresent = this.existsToken( "@language" );
 	}
 
+	existsToken( token:string ):boolean {
+		let flag:boolean = false;
+		this.literals.forEach( ( literal:any )=> {
+			if ( ! ! literal[ token ] ) flag = true;
+		} );
+		return flag;
+	}
+
+	editModeChanged( value:boolean ):void {
+		this.isEditingLiteral = value;
+	}
 }

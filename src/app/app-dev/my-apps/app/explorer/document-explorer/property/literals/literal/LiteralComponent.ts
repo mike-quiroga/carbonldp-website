@@ -25,7 +25,16 @@ import "./style.css!";
 
 export default class LiteralComponent {
 
-	mode:string = Modes.READ;
+	private _mode = Modes.READ;
+	set mode( value:string ) {
+		this._mode = value;
+		this.onEditMode.emit( this.mode === Modes.EDIT );
+	}
+
+	get mode() {
+		return this._mode;
+	}
+
 	modes:Modes = Modes;
 	tokens:string[] = [ "@value", "@type", "@language" ];
 	saveAll:EventEmitter<boolean> = new EventEmitter<boolean>();
@@ -35,6 +44,8 @@ export default class LiteralComponent {
 	isStringType:boolean = false;
 
 	@Input() literal:Literal;
+	@Input() canDisplayLanguage:boolean=false;
+	@Output() onEditMode:EventEmitter<boolean> = new EventEmitter<boolean>();
 	private tempLiteral:any = {};
 
 	constructor() {}
