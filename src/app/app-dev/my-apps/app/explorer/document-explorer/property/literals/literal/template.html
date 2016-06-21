@@ -1,17 +1,19 @@
 <td>
 	<literal-value [mode]="mode"
-	                [type]="literal['@type']"
-	                [value]="literal['@value']"
-	                [shouldSave]="saveAll"
-	                (onIsValid)="onIsValidValue($event)"
-	                (onSave)="changeValue($event)"></literal-value>
+	               [type]="!!tempLiteral[ '@type' ]? tempLiteral[ '@type' ]: literal['@type']"
+	               [value]="literal['@value']"
+	               [shouldSave]="saveAll"
+	               (onIsValid)="onIsValidValue($event)"
+	               (onSave)="changeValue($event)"></literal-value>
 </td>
 <td>
 	<literal-type [mode]="mode"
-	               [type]="literal.type"></literal-type>
+	              [type]="literal['@type']"
+	              (onIsValid)="onIsValidType($event)"
+	              (onTypeSelected)="changeType($event)"></literal-type>
 </td>
 <td>
-	<p><span *ngIf="literal.language">{{literal.language}}</span></p>
+	<p><span>{{literal['@language']}}</span></p>
 </td>
 <td>
 	<div class="ui mini icon inverted edit value buttons" *ngIf="mode===modes.READ">

@@ -50,11 +50,12 @@ export default class LiteralComponent {
 	}
 
 	changeValue( value:string|number|boolean ):void {
-		this.tempLiteral[ '@value' ] = value;
+		this.tempLiteral[ "@value" ] = value;
 	}
 
 	changeType( type:{name:string, value:string} ):void {
-		this.tempLiteral[ '@type' ] = type.value;
+		this.tempLiteral[ "@type" ] = type.value;
+		// if(type===NS.XSD.DataType.string)
 	}
 
 	onIsValidValue( isValid:boolean ):void {

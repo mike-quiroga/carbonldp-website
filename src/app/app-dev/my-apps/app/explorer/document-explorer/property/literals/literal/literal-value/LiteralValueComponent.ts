@@ -27,7 +27,16 @@ export default class LiteralValueComponent {
 	modes:Modes = Modes;
 	input:AbstractControl = new Control( this.value, Validators.compose( [ Validators.required, this.validateInput.bind( this ) ] ) );
 
-	@Input() mode:string = Modes.READ;
+	private _mode = NS.XSD.DataType.string;
+	@Input() set mode( value:string ) {
+		this._mode = value;
+		if ( this.mode === Modes.READ )(<Control>this.input).updateValue( this.value );
+	}
+
+	get mode() {
+		return this._mode;
+	}
+
 	@Input() type:string = NS.XSD.DataType.string;
 	@Input() value:string|number|boolean = "";
 	@Input() shouldSave:EventEmitter<boolean> = new EventEmitter<boolean>();
@@ -71,6 +80,9 @@ export default class LiteralValueComponent {
 				valid = Utils.isString( value );
 				break;
 			case NS.XSD.DataType.int:
+				valid = Utils.isInteger( value );
+				break;
+			case NS.XSD.DataType.integer:
 				valid = Utils.isInteger( value );
 				break;
 			case NS.XSD.DataType.double:

@@ -30,7 +30,7 @@ export default class LiteralTypeComponent {
 	private _mode = NS.XSD.DataType.string;
 	@Input() set mode( value:string ) {
 		this._mode = value;
-		this.initializeDropdown();
+		if ( this.mode === Modes.EDIT )this.initializeDropdown();
 	}
 
 	get mode() {
@@ -47,6 +47,10 @@ export default class LiteralTypeComponent {
 		return this._type;
 	}
 
+	@Input() shouldSave:EventEmitter<boolean> = new EventEmitter<boolean>();
+
+
+	@Output() onIsValid:EventEmitter<boolean> = new EventEmitter<boolean>();
 	@Output() onTypeSelected:EventEmitter<PropertyType> = new EventEmitter<PropertyType>();
 
 
@@ -80,7 +84,6 @@ export default class LiteralTypeComponent {
 		let dataTypes:any[] = [];
 		let xsdDataTypes:any[] = this.getXSDDataTypes();
 		dataTypes = dataTypes.concat( xsdDataTypes );
-		// dataTypes.push( { title: "@id", description: "Link to external resource or internal fragment.", value: "@id" } );
 		return dataTypes;
 	}
 
@@ -100,7 +103,11 @@ export default class LiteralTypeComponent {
 
 
 	validateSelectionInput( control:AbstractControl ):any {
-		if ( ! control.value ) return { "emptySelectionError": true };
+		if ( ! control.value ) {
+			this.onIsValid.emit( false );
+			return { "emptySelectionError": true };
+		}
+		this.onIsValid.emit( true );
 		return null;
 	}
 }

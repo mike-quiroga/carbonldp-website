@@ -28,5 +28,8 @@ export default class LiteralsComponent {
 
 	constructor() {}
 
+	existsToken():boolean {
+		return false;
+	}
 
 }
