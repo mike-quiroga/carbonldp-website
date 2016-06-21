@@ -1,6 +1,5 @@
 package com.carbonldp.config;
 
-import com.carbonldp.Vars;
 import com.carbonldp.agents.AgentService;
 import com.carbonldp.agents.app.SesameAppAgentService;
 import com.carbonldp.agents.platform.SesamePlatformAgentService;
@@ -14,6 +13,7 @@ import com.carbonldp.authentication.ticket.JWTicketAuthenticationService;
 import com.carbonldp.authentication.ticket.TicketService;
 import com.carbonldp.authentication.token.JWTokenAuthenticationService;
 import com.carbonldp.authentication.token.TokenService;
+import com.carbonldp.authorization.acl.ACLPermissionEvaluator;
 import com.carbonldp.authorization.acl.ACLService;
 import com.carbonldp.authorization.acl.SesameACLService;
 import com.carbonldp.jobs.ExecutionService;
@@ -33,13 +33,12 @@ import com.carbonldp.spring.ServicesInvoker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.access.PermissionEvaluator;
 
 @Configuration
 public class ServicesConfig {
 
 	@Autowired
-	private PermissionEvaluator permissionEvaluator;
+	private ACLPermissionEvaluator permissionEvaluator;
 
 	@Bean
 	public TokenService tokenService() {
