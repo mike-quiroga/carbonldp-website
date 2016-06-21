@@ -1,3 +1,7 @@
+# 0.38.0 (2016/06/21)
+- [LDP-478](https://jira.base22.com/browse/LDP-478) - Execute SPARQL Update requests as a system agent
+- Fix [LDP-708](https://jira.base22.com/browse/LDP-708) - CORS requests fail with a 403 Forbidden status code
+
 # 0.37.0 (2016/06/17)
 - [LDP-691](https://jira.base22.com/browse/LDP-691) - Federate application authentication to an LDAP instance
 
