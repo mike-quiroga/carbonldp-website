@@ -1,12 +1,7 @@
 import { Component, ViewChild, Input, Output, EventEmitter } from "@angular/core";
 
-import $ from "jquery";
 import "semantic-ui/semantic";
 
-import * as RDFNode from "carbonldp/RDF/RDFNode";
-import * as Literal from "carbonldp/RDF/Literal";
-import * as URI from "carbonldp/RDF/URI";
-import * as Utils from "carbonldp/Utils";
 import * as NS from "carbonldp/NS";
 
 
@@ -15,7 +10,6 @@ import LiteralTypeComponent from "./literal-type/LiteralTypeComponent";
 import LiteralLanguageComponent from "./literal-language/LiteralLanguageComponent";
 
 import template from "./template.html!";
-import "./style.css!";
 
 @Component( {
 	selector: "tr.literal",
@@ -36,19 +30,32 @@ export default class LiteralComponent {
 	}
 
 	modes:Modes = Modes;
-	tokens:string[] = [ "@value", "@type", "@language" ];
 	isValidValue:boolean = false;
 	isValidType:boolean = false;
 	isValidLanguage:boolean = false;
 	isStringType:boolean = false;
+	value:string|boolean|number = "";
+	type:string = "";
+	language:string = "";
 
-	@Input() literal:Literal;
+	private _literal = <Literal>{};
+	@Input() set literal( value:Literal ) {
+		this._literal = value;
+		this.value = this.literal[ "@value" ];
+		this.type = this.literal[ "@type" ];
+		this.language = this.literal[ "@language" ];
+	}
+
+	get literal() {
+		return this._literal;
+	}
+
 	@Input() canDisplayLanguage:boolean = false;
 	@Output() onEditMode:EventEmitter<boolean> = new EventEmitter<boolean>();
 	@Output() onSave:EventEmitter<any> = new EventEmitter<any>();
-	@ViewChild( LiteralValueComponent ) literalValue:LiteralValueComponent;
-	@ViewChild( LiteralTypeComponent ) literalType:LiteralTypeComponent;
-	@ViewChild( LiteralLanguageComponent ) literalLanguage:LiteralLanguageComponent;
+	@ViewChild( LiteralValueComponent ) literalValueComponent:LiteralValueComponent;
+	@ViewChild( LiteralTypeComponent ) literalTypeComponent:LiteralTypeComponent;
+	@ViewChild( LiteralLanguageComponent ) literalLanguageComponent:LiteralLanguageComponent;
 
 	private tempLiteral:any = {};
 
@@ -60,35 +67,47 @@ export default class LiteralComponent {
 
 	displayEditor( event:Event ):void {
 		this.mode = Modes.EDIT;
+		this.value = this.literal[ "@value" ];
+		this.type = this.literal[ "@type" ];
+		this.language = this.literal[ "@language" ];
+		this.isStringType = (! this.literal[ "@type" ] || this.literal[ "@type" ] === NS.XSD.DataType.string);
 	}
 
 	cancelEdit():void {
 		this.mode = Modes.READ;
+		this.value = this.literal[ "@value" ];
+		this.type = this.literal[ "@type" ];
+		this.language = this.literal[ "@language" ];
+		this.isStringType = (! this.literal[ "@type" ] || this.literal[ "@type" ] === NS.XSD.DataType.string);
 	}
 
 	save():void {
-		if ( ! ! this.literalValue ) this.changeValue( this.literalValue.input.value );
-		if ( ! ! this.literalType ) this.changeType( this.literalType.input.value );
-		if ( ! ! this.literalLanguage ) this.changeLanguage( this.literalLanguage.input.value );
+		if ( ! ! this.literalValueComponent ) this.changeValue( this.literalValueComponent.input.value );
+		if ( ! ! this.literalTypeComponent ) this.changeType( this.literalTypeComponent.input.value );
+		if ( ! ! this.literalLanguageComponent ) this.changeLanguage( this.literalLanguageComponent.input.value );
+		delete this.tempLiteral[ "@value" ];
+		delete this.tempLiteral[ "@type" ];
+		delete this.tempLiteral[ "@language" ];
+		if ( ! ! this.value ) this.tempLiteral[ "@value" ] = this.value;
+		if ( ! ! this.type && this.type !== NS.XSD.DataType.string ) this.tempLiteral[ "@type" ] = this.type;
+		if ( ! ! this.language && (! this.type || this.type === NS.XSD.DataType.string ) ) this.tempLiteral[ "@language" ] = this.language;
 		this.onSave.emit( this.tempLiteral );
 	}
 
 	changeValue( value:string|number|boolean ):void {
-		this.tempLiteral[ "@value" ] = value;
+		this.value = this.literalValueComponent.getParsedValue();
 	}
 
 	changeType( type:string ):void {
-		type = type === NS.XSD.DataType.string ? null : type;
-		this.isStringType = ! type;
-		if ( ! ! type ) {
-			this.tempLiteral[ "@type" ] = type;
-			delete this.tempLiteral[ "@language" ];
-		}
+		if ( type === "empty" || type === NS.XSD.DataType.string ) type = null;
+		this.isStringType = (type === NS.XSD.DataType.string || ! type);
+		if ( ! this.isStringType ) this.language = null;
+		this.type = type;
 	}
 
 	changeLanguage( value:string ):void {
-		delete this.tempLiteral[ "@language" ];
-		if ( ! ! value ) this.tempLiteral[ "@language" ] = value;
+		if ( value === "empty" ) value = null;
+		this.language = value;
 	}
 
 	onIsValidValue( isValid:boolean ):void {
@@ -109,7 +128,7 @@ class Modes {
 	static READ:string = "READ";
 }
 export interface Literal {
-	value:string|number|boolean;
-	type:string;
-	language:string;
+	"@value":string|number|boolean;
+	"@type":string;
+	"@language":string;
 }

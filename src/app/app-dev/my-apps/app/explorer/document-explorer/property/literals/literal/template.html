@@ -1,19 +1,19 @@
 <td>
 	<literal-value [mode]="mode"
-	               [type]="!!tempLiteral[ '@type' ]? tempLiteral[ '@type' ]: literal['@type']"
-	               [value]="literal['@value']"
+	               [type]="type"
+	               [value]="value"
 	               (onIsValid)="onIsValidValue($event)"></literal-value>
 </td>
 <td>
 	<literal-type [mode]="mode"
-	              [type]="literal['@type']"
+	              [type]="type"
 	              (onIsValid)="onIsValidType($event)"
 	              (onTypeSelected)="changeType($event)"></literal-type>
 </td>
 <td *ngIf="canDisplayLanguage">
 	<literal-language *ngIf="isStringType"
 	                  [mode]="mode"
-	                  [language]="literal['@language']"
+	                  [language]="language"
 	                  (onIsValid)="onIsValidLanguage($event)"
 	                  (onLanguageSelected)="changeLanguage($event)"></literal-language>
 	<p *ngIf="!isStringType"> - </p>

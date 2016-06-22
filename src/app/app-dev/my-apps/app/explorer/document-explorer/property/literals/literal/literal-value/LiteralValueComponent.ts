@@ -1,13 +1,11 @@
-import { Component, ElementRef, ViewEncapsulation, Input, Output, EventEmitter, SimpleChange } from "@angular/core";
+import { Component, ViewEncapsulation, Input, Output, EventEmitter } from "@angular/core";
 import { Control, AbstractControl, Validators } from '@angular/common';
 
-import $ from "jquery";
 import "semantic-ui/semantic";
 
 import * as NS from "carbonldp/NS";
 import * as Utils from "carbonldp/Utils";
-import * as RDFNode from "carbonldp/RDF/RDFNode";
-import * as URI from "carbonldp/RDF/URI";
+import * as Literal from "carbonldp/RDF/Literal";
 
 import { IterableMapPipe } from "./../../../../iterable-map/IterableMapPipe"
 
@@ -37,7 +35,17 @@ export default class LiteralValueComponent {
 		return this._mode;
 	}
 
-	@Input() type:string = NS.XSD.DataType.string;
+	private _type:string = NS.XSD.DataType.string;
+	@Input() set type( value:string ) {
+		if ( ! value ) value = NS.XSD.DataType.string;
+		this._type = value;
+		this.input.updateValueAndValidity();
+	}
+
+	get type() {
+		return this._type;
+	}
+
 	@Input() value:string|number|boolean = "";
 	@Output() onIsValid:EventEmitter<boolean> = new EventEmitter<boolean>();
 
@@ -48,10 +56,23 @@ export default class LiteralValueComponent {
 		this.input = new Control( this.value, Validators.compose( [ Validators.required, this.validateInput.bind( this ) ] ) );
 	}
 
-	ngOnChanges( changes:{[propName:string]:SimpleChange} ):void {
-		if ( ! ! changes[ "type" ] && changes[ "type" ].currentValue !== changes[ "type" ].previousValue ) {
-			this.input.updateValueAndValidity();
+
+	getParsedValue():string|boolean|number {
+		let value:string|boolean|number = this.input.value.toLowerCase().trim();
+		switch ( this.type ) {
+			case NS.XSD.DataType.boolean:
+				value = Utils.parseBoolean( value );
+				break;
+			case NS.XSD.DataType.int:
+			case NS.XSD.DataType.integer:
+			case NS.XSD.DataType.double:
+			case NS.XSD.DataType.decimal:
+				value = Number( value );
+				break;
+			default:
+				break;
 		}
+		return value;
 	}
 
 	private validateInput( valueOrControl:string|AbstractControl ):any {
@@ -64,29 +85,46 @@ export default class LiteralValueComponent {
 				return { "emptyError": true };
 			}
 		}
-		if ( ! isNaN( value ) ) value = Number( value );
 		switch ( this.type ) {
+			// Boolean
 			case NS.XSD.DataType.boolean:
-				valid = Utils.isBoolean( value );
+				valid = Utils.isBoolean( Literal.Factory.parse( value, this.type ) );
 				break;
-			case NS.XSD.DataType.string:
-				valid = Utils.isString( value );
+
+			// Numbers
+			case NS.XSD.DataType.int :
+			case NS.XSD.DataType.integer :
+				valid = ! isNaN( value ) && ! isNaN( Literal.Factory.parse( value, this.type ) ) && Utils.isInteger( Literal.Factory.parse( value, this.type ) );
 				break;
-			case NS.XSD.DataType.int:
-				valid = Utils.isInteger( value );
+
+			case NS.XSD.DataType.byte :
+			case NS.XSD.DataType.decimal :
+			case NS.XSD.DataType.long :
+			case NS.XSD.DataType.negativeInteger :
+			case NS.XSD.DataType.nonNegativeInteger :
+			case NS.XSD.DataType.nonPositiveInteger :
+			case NS.XSD.DataType.positiveInteger :
+			case NS.XSD.DataType.short :
+			case NS.XSD.DataType.unsignedLong :
+			case NS.XSD.DataType.unsignedInt :
+			case NS.XSD.DataType.unsignedShort :
+			case NS.XSD.DataType.unsignedByte :
+			case NS.XSD.DataType.double :
+			case NS.XSD.DataType.float :
+				valid = ! isNaN( value ) && ! isNaN( Literal.Factory.parse( value, this.type ) ) && Utils.isNumber( Literal.Factory.parse( value, this.type ) );
 				break;
-			case NS.XSD.DataType.integer:
-				valid = Utils.isInteger( value );
-				break;
-			case NS.XSD.DataType.double:
-				valid = Utils.isDouble( value );
-				break;
-			case NS.XSD.DataType.decimal:
-				valid = Utils.isNumber( value );
-				break;
+
+			// Dates
 			case NS.XSD.DataType.date:
-				valid = Utils.isDate( value );
+			case NS.XSD.DataType.dateTime:
+			case NS.XSD.DataType.time:
+				valid = Utils.isDate( Literal.Factory.parse( value, this.type ) );
 				break;
+
+			case NS.XSD.DataType.string:
+				valid = Utils.isString( Literal.Factory.parse( value, this.type ) );
+				break;
+
 			default:
 				valid = Utils.isString( value );
 				break;
