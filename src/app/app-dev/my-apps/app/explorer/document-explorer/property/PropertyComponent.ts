@@ -9,8 +9,8 @@ import * as URI from "carbonldp/RDF/URI";
 import * as Utils from "carbonldp/Utils";
 
 import ListViewerComponent from "./../list-viewer/ListViewerComponent";
-// import LiteralValueComponent from "./literals/literal/literal-value/LiteralValueComponent";
 import LiteralsComponent from "./literals/LiteralsComponent";
+import { Literal as LocalLiteral } from "./literals/literal/LiteralComponent";
 
 import template from "./template.html!";
 import "./style.css!";
@@ -26,6 +26,8 @@ export default class PropertyComponent {
 
 	element:ElementRef;
 	$element:JQuery;
+	literals:Literal.Class[];
+	pointers:RDFNode.Class[];
 	@Input() documentURI:string;
 	@Output() onGoToBNode:EventEmitter<string> = new EventEmitter<string>();
 	@Output() onGoToNamedFragment:EventEmitter<string> = new EventEmitter<string>();
@@ -45,12 +47,13 @@ export default class PropertyComponent {
 
 	get propertyHasChanged():boolean { return this._propertyHasChanged; }
 
-	literals:RDFNode.Class[] = [];
-
 
 	constructor( element:ElementRef ) {
 		this.element = element;
+	}
 
+	ngOnInit():void {
+		if ( Utils.isArray( this.property.value ) ) this.fillLiteralsAndRDFNodes();
 	}
 
 	ngAfterViewInit():void {
@@ -148,19 +151,29 @@ export default class PropertyComponent {
 		this.$element.find( ".ui.accordion" ).accordion();
 	}
 
-	changePropertyValue( value:string, propIndex:number ) {
-		let property:Property = <Property>JSON.parse( JSON.stringify( this.property ) );
-		if ( property.value.length > 0 ) {
-			property.value[ propIndex ][ "@value" ] = value;
-		} else {
-			property.value[ 0 ] = value;
-		}
-		this.onChangeProperty.emit( property );
-		this.property = property;
+	fillLiteralsAndRDFNodes():void {
+		this.literals = [];
+		this.pointers = [];
+		this.property.value.forEach( ( literalOrRDFNode )=> {
+			if ( Literal.Factory.is( literalOrRDFNode ) ) { this.literals.push( literalOrRDFNode ); }
+			if ( RDFNode.Factory.is( literalOrRDFNode ) ) { this.pointers.push( literalOrRDFNode ); }
+		} );
 	}
+
+
+	// changePropertyValue( value:string, propIndex:number ) {
+	// 	let property:Property = <Property>JSON.parse( JSON.stringify( this.property ) );
+	// 	if ( property.value.length > 0 ) {
+	// 		property.value[ propIndex ][ "@value" ] = value;
+	// 	} else {
+	// 		property.value[ 0 ] = value;
+	// 	}
+	// 	this.onChangeProperty.emit( property );
+	// 	this.property = property;
+	// }
 }
 export interface Property {
 	id:string;
 	name:string;
-	value:any;
+	value:any[];
 }

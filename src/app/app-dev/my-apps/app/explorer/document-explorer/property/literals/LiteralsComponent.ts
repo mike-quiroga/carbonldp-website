@@ -32,6 +32,7 @@ export default class LiteralsComponent {
 
 	ngOnInit():void {
 		this.isLanguagePresent = this.existsToken( "@language" );
+		console.log( this.literals );
 	}
 
 	existsToken( token:string ):boolean {

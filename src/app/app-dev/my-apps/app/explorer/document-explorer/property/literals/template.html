@@ -1,4 +1,4 @@
-<table class="ui very compact striped small celled table">
+<table class="ui very compact striped small celled table" *ngIf="literals.length>0">
 	<thead>
 		<tr class="center aligned">
 			<th class="wide" [ngClass]="{six: canDisplayLanguage(), eight: !canDisplayLanguage()}">@value</th>
@@ -15,3 +15,6 @@
 		    (onEditMode)="editModeChanged($event)"></tr>
 	</tbody>
 </table>
+<div class="ui small message" *ngIf="literals.length===0">
+	<p>This property doesn't contains literals.</p>
+</div>
