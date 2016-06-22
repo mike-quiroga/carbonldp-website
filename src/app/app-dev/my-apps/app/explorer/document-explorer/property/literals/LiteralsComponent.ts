@@ -49,4 +49,8 @@ export default class LiteralsComponent {
 	saveLiteral( literal:any ) {
 		console.log( literal );
 	}
+
+	canDisplayLanguage():boolean {
+		return this.isLanguagePresent || this.isEditingLiteral;
+	}
 }

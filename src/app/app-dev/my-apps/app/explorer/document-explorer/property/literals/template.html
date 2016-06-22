@@ -1,13 +1,17 @@
 <table class="ui very compact striped small celled table">
-	<tr class="center aligned">
-		<th>@value</th>
-		<th>@type</th>
-		<th *ngIf="isLanguagePresent || isEditingLiteral">@language</th>
-		<th>Actions</th>
-	</tr>
-	<tr class="literal top aligned" *ngFor="let literal of literals; let i = index;"
-	    [literal]="literal"
-	    [canDisplayLanguage]="isLanguagePresent || isEditingLiteral"
-	    (onSave)="saveLiteral($event)"
-	    (onEditMode)="editModeChanged($event)"></tr>
+	<thead>
+		<tr class="center aligned">
+			<th class="wide" [ngClass]="{six: canDisplayLanguage(), eight: !canDisplayLanguage()}">@value</th>
+			<th class="wide" [ngClass]="{four: canDisplayLanguage(), six: !canDisplayLanguage()}">@type</th>
+			<th class="four wide" *ngIf="canDisplayLanguage()">@language</th>
+			<th class="two wide">Actions</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr class="literal top aligned" *ngFor="let literal of literals; let i = index;"
+		    [literal]="literal"
+		    [canDisplayLanguage]="isLanguagePresent || isEditingLiteral"
+		    (onSave)="saveLiteral($event)"
+		    (onEditMode)="editModeChanged($event)"></tr>
+	</tbody>
 </table>
