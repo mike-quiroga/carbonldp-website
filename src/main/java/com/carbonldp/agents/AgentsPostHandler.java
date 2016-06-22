@@ -21,7 +21,7 @@ public abstract class AgentsPostHandler extends AbstractRDFPostRequestHandler<Ag
 	@Override
 	protected void createChild( IRI targetIRI, Agent documentResourceView ) {
 		if ( isAnonymousRequest() ) registerAgent( documentResourceView );
-		else createAgent( documentResourceView );
+		else createAgent(targetIRI, documentResourceView );
 	}
 
 	protected boolean isAnonymousRequest() {
@@ -30,7 +30,7 @@ public abstract class AgentsPostHandler extends AbstractRDFPostRequestHandler<Ag
 		return authentication == null || authentication instanceof AnonymousAuthenticationToken;
 	}
 
-	protected abstract void createAgent( Agent documentResourceView );
+	protected abstract void createAgent(IRI targetIRI, Agent documentResourceView );
 
 	protected abstract void registerAgent( Agent documentResourceView );
 

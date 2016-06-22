@@ -8,6 +8,7 @@ import com.carbonldp.config.ConfigurationRepository;
 import com.carbonldp.exceptions.InvalidResourceException;
 import com.carbonldp.exceptions.StupidityException;
 import com.carbonldp.ldp.AbstractSesameLDPService;
+import com.carbonldp.ldp.containers.ContainerService;
 import com.carbonldp.models.Infraction;
 import com.carbonldp.utils.AuthenticationUtil;
 import freemarker.template.*;
@@ -28,6 +29,7 @@ public abstract class SesameAgentsService extends AbstractSesameLDPService imple
 
 	protected ConfigurationRepository configurationRepository;
 	protected AgentValidatorRepository agentValidatorRepository;
+	protected ContainerService containerService;
 
 	protected JavaMailSender mailSender;
 
@@ -135,4 +137,9 @@ public abstract class SesameAgentsService extends AbstractSesameLDPService imple
 
 	@Autowired
 	public void setMailSender( JavaMailSender mailSender ) { this.mailSender = mailSender; }
+
+	@Autowired
+	public void setContainerService( ContainerService containerService ) {
+		this.containerService = containerService;
+	}
 }

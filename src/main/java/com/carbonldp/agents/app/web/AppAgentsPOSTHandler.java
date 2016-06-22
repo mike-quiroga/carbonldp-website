@@ -6,6 +6,7 @@ import com.carbonldp.agents.AgentsPostHandler;
 import com.carbonldp.exceptions.ResourceAlreadyExistsException;
 import com.carbonldp.web.RequestHandler;
 import com.carbonldp.web.exceptions.ConflictException;
+import org.openrdf.model.IRI;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
@@ -19,9 +20,13 @@ public class AppAgentsPOSTHandler extends AgentsPostHandler {
 
 	private AgentService appAgentService;
 
-	protected void createAgent( Agent documentResourceView ) {
-		// TODO: Implement
-		throw new RuntimeException( "Not Implemented" );
+	protected void createAgent(IRI agentContainerIRI, Agent documentResourceView ) {
+		try {
+			appAgentService.create( agentContainerIRI, documentResourceView );
+		} catch ( ResourceAlreadyExistsException e ) {
+			throw new ConflictException( 0x2210 );
+		}
+
 	}
 
 	protected void registerAgent( Agent documentResourceView ) {
