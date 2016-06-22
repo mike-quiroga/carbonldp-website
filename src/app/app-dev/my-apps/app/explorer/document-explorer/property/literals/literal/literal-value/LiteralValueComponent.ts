@@ -28,7 +28,7 @@ export default class LiteralValueComponent {
 	private _mode = NS.XSD.DataType.string;
 	@Input() set mode( value:string ) {
 		this._mode = value;
-		if ( this.mode === Modes.READ )(<Control>this.input).updateValue( this.value );
+		// if ( this.mode === Modes.READ )(<Control>this.input).updateValue( this.value );
 	}
 
 	get mode() {
@@ -46,7 +46,17 @@ export default class LiteralValueComponent {
 		return this._type;
 	}
 
-	@Input() value:string|number|boolean = "";
+	// @Input() value:string|number|boolean = "";
+	private _value:string|number|boolean = "";
+	@Input() set value( value:string ) {
+		this._value = value;
+		(<Control>this.input).updateValue( this.value );
+	}
+
+	get value() {
+		return this._value;
+	}
+
 	@Output() onIsValid:EventEmitter<boolean> = new EventEmitter<boolean>();
 
 
@@ -57,18 +67,54 @@ export default class LiteralValueComponent {
 	}
 
 
-	getParsedValue():string|boolean|number {
-		let value:string|boolean|number = this.input.value.toLowerCase().trim();
+	getParsedValue( value:string|boolean|number ):string|boolean|number {
+		if ( typeof value === "undefined" && ! ! this.input ) value = this.input.value.toLowerCase().trim();
 		switch ( this.type ) {
+			// case NS.XSD.DataType.boolean:
+			// 	value = Utils.parseBoolean( value );
+			// 	break;
+			// case NS.XSD.DataType.int:
+			// case NS.XSD.DataType.integer:
+			// case NS.XSD.DataType.double:
+			// case NS.XSD.DataType.decimal:
+			// 	value = Number( value );
+			// 	break;
+
+			// Boolean
 			case NS.XSD.DataType.boolean:
-				value = Utils.parseBoolean( value );
+				value = Utils.isBoolean( Literal.Factory.parse( value, this.type ) ) ? Literal.Factory.parse( value, this.type ) : value;
 				break;
-			case NS.XSD.DataType.int:
-			case NS.XSD.DataType.integer:
-			case NS.XSD.DataType.double:
-			case NS.XSD.DataType.decimal:
-				value = Number( value );
+
+			// Numbers
+			case NS.XSD.DataType.int :
+			case NS.XSD.DataType.integer :
+				value = ! isNaN( value ) && ! isNaN( Literal.Factory.parse( value, this.type ) ) && Utils.isInteger( Literal.Factory.parse( value, this.type ) ) ? Literal.Factory.parse( value, this.type ) : value;
 				break;
+
+			case NS.XSD.DataType.byte :
+			case NS.XSD.DataType.decimal :
+			case NS.XSD.DataType.long :
+			case NS.XSD.DataType.negativeInteger :
+			case NS.XSD.DataType.nonNegativeInteger :
+			case NS.XSD.DataType.nonPositiveInteger :
+			case NS.XSD.DataType.positiveInteger :
+			case NS.XSD.DataType.short :
+			case NS.XSD.DataType.unsignedLong :
+			case NS.XSD.DataType.unsignedInt :
+			case NS.XSD.DataType.unsignedShort :
+			case NS.XSD.DataType.unsignedByte :
+			case NS.XSD.DataType.double :
+			case NS.XSD.DataType.float :
+				value = ! isNaN( value ) && ! isNaN( Literal.Factory.parse( value, this.type ) ) && Utils.isNumber( Literal.Factory.parse( value, this.type ) ) ? Literal.Factory.parse( value, this.type ) : value;
+				break;
+
+			// Dates
+			case NS.XSD.DataType.date:
+			case NS.XSD.DataType.dateTime:
+			case NS.XSD.DataType.time:
+				value = Utils.isDate( Literal.Factory.parse( value, this.type ) ) ? Literal.Factory.parse( value, this.type ) : value;
+				break;
+
 			default:
 				break;
 		}

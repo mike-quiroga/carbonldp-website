@@ -2,7 +2,8 @@
 	<p class="value">{{value}}</p>
 </div>
 <div class="edit-mode ui error form" *ngIf="mode===modes.EDIT">
-	<input type="text" [ngFormControl]="input">
+	<input type="text" [ngFormControl]="input" (ngModelChange)="value=$event">
+	<p class="value">{{value}}</p>
 	<div class="ui error message wide" *ngIf="input.touched && !input.valid || (input.hasError('invalidTypeError') || input.hasError('emptyError'))">
 		<p *ngIf="input.hasError('invalidTypeError')">Invalid value type, please enter a valid {{type}}.</p>
 		<p *ngIf="input.hasError('emptyError')">A value is required.</p>

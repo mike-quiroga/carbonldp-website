@@ -1,7 +1,7 @@
 <td>
 	<literal-value [mode]="mode"
 	               [type]="type"
-	               [value]="value"
+	               [(value)]="value"
 	               (onIsValid)="onIsValidValue($event)"></literal-value>
 </td>
 <td>
@@ -10,7 +10,7 @@
 	              (onIsValid)="onIsValidType($event)"
 	              (onTypeSelected)="changeType($event)"></literal-type>
 </td>
-<td *ngIf="canDisplayLanguage">
+<td *ngIf="canDisplayLanguage || !!language">
 	<literal-language *ngIf="isStringType"
 	                  [mode]="mode"
 	                  [language]="language"
