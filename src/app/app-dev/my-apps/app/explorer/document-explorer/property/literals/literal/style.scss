@@ -1,24 +1,19 @@
 tr.literal {
-	td.type {
-
-		display: block;
-
-		.dropdown.types {
-			.text {
-				.description {
-					display: none;
-				}
+	.dropdown {
+		.text {
+			.description {
+				display: none;
 			}
-			.item {
-				.title {
-					line-height: 1em;
-					font-size: 1.2em;
-					display: block;
-				}
-				.description {
-					color: gray;
-					font-size: .8em;
-				}
+		}
+		.item {
+			.title {
+				line-height: 1em;
+				font-size: 1.2em;
+				display: block;
+			}
+			.description {
+				color: gray;
+				font-size: .8em;
 			}
 		}
 	}
