@@ -22,6 +22,9 @@ export default class LiteralComponent {
 
 	element:ElementRef;
 	private _mode = Modes.READ;
+	searchDropdown:JQuery;
+	languageDropdown:JQuery;
+
 	set mode( value:string ) {
 		this._mode = value;
 		this.onEditMode.emit( this.mode === Modes.EDIT );
@@ -796,7 +799,8 @@ export default class LiteralComponent {
 	get type() {return this._type;}
 
 	set type( type:string ) {
-		if ( ! type || type.length === 0 ) type = NS.XSD.DataType.string;
+		if ( type === "empty" ) {type = null;}
+		else if ( ! type || type.length === 0 ) type = NS.XSD.DataType.string;
 		this._type = type;
 		if ( ! ! this.typeInput && this.typeInput.value !== this.type )(<Control>this.typeInput).updateValue( this.type );
 		this.valueInput.updateValueAndValidity();
@@ -808,10 +812,12 @@ export default class LiteralComponent {
 
 	set language( language:string ) {
 		this._language = language;
+		if ( ! ! this.languageDropdown && ! this.language ) this.languageDropdown.dropdown( "set selected", "empty" );
 		if ( ! ! this.languageInput && this.languageInput.value !== this.language )(<Control>this.languageInput).updateValue( this.language );
 		this.languageInput.updateValueAndValidity();
 	}
 
+	// Inputs and Outputs
 	private _literal = <Literal>{};
 	get literal() { return this._literal; }
 
@@ -829,59 +835,82 @@ export default class LiteralComponent {
 	private tempLiteral:any = {};
 	valueInput:AbstractControl = new Control( this.value, Validators.compose( [ Validators.required, this.valueValidator.bind( this ) ] ) );
 	typeInput:AbstractControl = new Control( this.type, Validators.compose( [ Validators.required ] ) );
-	languageInput:AbstractControl = new Control( this.language, Validators.compose( [ Validators.required ] ) );
+	languageInput:AbstractControl = new Control( this.language, Validators.compose( [] ) );
+
 
 	constructor( element:ElementRef ) {
 		this.element = element;
 	}
 
-	displayEditor( event:Event ):void {
+	onEdit( event:Event ):void {
 		this.mode = Modes.EDIT;
 	}
 
 	cancelEdit():void {
 		this.mode = Modes.READ;
-		this.tempLiteral = <Literal>{};
+		this.value = ! ! this.tempLiteral[ "@value" ] ? this.tempLiteral[ "@value" ] : this.literal[ "@value" ];
+		this.type = ! ! this.tempLiteral[ "@type" ] ? this.tempLiteral[ "@type" ] : this.literal[ "@type" ];
+		this.language = ! ! this.tempLiteral[ "@language" ] ? this.tempLiteral[ "@language" ] : this.literal[ "@language" ];
+		if ( this.value === this.literal[ "@value" ] ) delete this.tempLiteral[ "@value" ];
+		if ( this.type === this.literal[ "@type" ] ) delete this.tempLiteral[ "@type" ];
+		if ( this.language === this.literal[ "@language" ] ) delete this.tempLiteral[ "@language" ];
 	}
 
 	save():void {
+		if ( ! ! this.value &&
+			(this.value !== this.literal[ "@value" ] || this.value !== this.tempLiteral[ "@value" ] ) ) this.tempLiteral[ "@value" ] = this.value;
+		if ( ! ! this.type && this.type !== NS.XSD.DataType.string &&
+			(this.type !== this.literal[ "@type" ] || this.type !== this.tempLiteral[ "@type" ] ) ) this.tempLiteral[ "@type" ] = this.type;
+		if ( ! ! this.language &&
+			( this.language !== this.literal[ "@language" ] || this.language !== this.tempLiteral[ "@language" ] ) ) this.tempLiteral[ "@language" ] = this.language;
+
+		if ( ! ! this.tempLiteral[ "@type" ] && this.tempLiteral[ "@type" ] !== NS.XSD.DataType.string ) delete this.tempLiteral[ "@language" ];
+		if ( this.tempLiteral[ "@type" ] === NS.XSD.DataType.string || this.type === NS.XSD.DataType.string ) delete this.tempLiteral[ "@type" ];
+
+		if ( this.value === null || typeof this.value === "undefined" ) delete this.tempLiteral[ "@value" ];
+		if ( this.type === null || typeof this.type === "undefined" ) delete this.tempLiteral[ "@type" ];
+		if ( this.language === null || typeof this.language === "undefined" ) delete this.tempLiteral[ "@language" ];
+
+		if ( (this.tempLiteral[ "@value" ] === this.literal[ "@value" ] ) &&
+			(this.tempLiteral[ "@type" ] === this.literal[ "@type" ] ) &&
+			(this.tempLiteral[ "@language" ] === this.literal[ "@language" ] ) ) {
+			delete this.tempLiteral[ "@value" ];
+			delete this.tempLiteral[ "@type" ];
+			delete this.tempLiteral[ "@language" ];
+		}
 
 		this.mode = Modes.READ;
 	}
 
-	changeValue( value:string|number|boolean ):void {
-		// this.value = this.literalValueComponent.getParsedValue( value );
-	}
-
 	changeType( type:string, text?:string, choice?:JQuery ):void {
 		this.isStringType = type === NS.XSD.DataType.string;
-		if ( type === "empty" || type === NS.XSD.DataType.string ) {type = null;}
-		if ( ! this.isStringType )this.language = null;
+		if ( type === NS.XSD.DataType.string ) { type = null; }
+		if ( ! this.isStringType ) { this.language = null; }
 		this.type = type;
 	}
 
-	changeLanguage( value:string, text?:string, choice?:JQuery ):void {
-		if ( value === "empty" ) value = null;
-		this.language = value;
-		(<Control>this.input).updateValue( value === "empty" ? "" : value );
+	changeLanguage( language:string, text?:string, choice?:JQuery ):void {
+		if ( language === "empty" ) language = null;
+		(<Control>this.languageInput).updateValue( language === "empty" ? "" : language );
+		this.language = language;
 	}
 
 	private initializeLanguageDropdown():void {
-		let languageDropdown:JQuery = $( this.element.nativeElement.querySelector( "select.languages" ) );
-		languageDropdown.dropdown( {
+		this.languageDropdown = $( this.element.nativeElement.querySelector( ".dropdown.languages" ) );
+		this.languageDropdown.dropdown( {
 			allowAdditions: false,
 			onChange: this.changeLanguage.bind( this )
 		} );
-		languageDropdown.dropdown( "set selected", this.language );
+		this.languageDropdown.dropdown( "set selected", this.language );
 	}
 
 	private initializeTypesDropdown():void {
-		let searchDropdown:JQuery = $( this.element.nativeElement.querySelector( "select.types" ) );
-		searchDropdown.dropdown( {
+		this.searchDropdown = $( this.element.nativeElement.querySelector( ".dropdown.types" ) );
+		this.searchDropdown.dropdown( {
 			allowAdditions: true,
 			onChange: this.changeType.bind( this )
 		} );
-		searchDropdown.dropdown( "set selected", this.type );
+		this.searchDropdown.dropdown( "set selected", this.type );
 	}
 
 	private getDataTypes():any {
