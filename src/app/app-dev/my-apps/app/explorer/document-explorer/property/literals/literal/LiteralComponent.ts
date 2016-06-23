@@ -1,20 +1,18 @@
 import { Component, ViewChild, Input, Output, EventEmitter } from "@angular/core";
+import { Control, AbstractControl, Validators } from '@angular/common';
 
 import "semantic-ui/semantic";
 
 import * as NS from "carbonldp/NS";
+import * as Utils from "carbonldp/Utils";
+import * as Literal from "carbonldp/RDF/Literal";
 
-
-import LiteralValueComponent from "./literal-value/LiteralValueComponent";
-import LiteralTypeComponent from "./literal-type/LiteralTypeComponent";
-import LiteralLanguageComponent from "./literal-language/LiteralLanguageComponent";
 
 import template from "./template.html!";
 
 @Component( {
 	selector: "tr.literal",
 	template: template,
-	directives: [ LiteralValueComponent, LiteralTypeComponent, LiteralLanguageComponent ],
 } )
 
 export default class LiteralComponent {
@@ -30,15 +28,23 @@ export default class LiteralComponent {
 	}
 
 	modes:Modes = Modes;
-	isValidValue:boolean = false;
-	isValidType:boolean = false;
-	isValidLanguage:boolean = false;
-	value:string|boolean|number = "";
+	// value:string|boolean|number = "";
 	type:string = "";
 	language:string = "";
 	isStringType:boolean = (! this.type || this.type === NS.XSD.DataType.string);
 
+
+	private _value:string|boolean|number = "";
+	get value() {return this._value;}
+
+	@Input() set value( value:Literal ) {
+		this._value = value;
+		if ( ! ! this.valueInput && this.valueInput.value !== this.value )(<Control>this.valueInput).updateValue( this.value );
+	}
+
 	private _literal = <Literal>{};
+	get literal() { return this._literal; }
+
 	@Input() set literal( value:Literal ) {
 		this._literal = value;
 		this.value = ! ! this.tempLiteral[ "@value" ] ? this.tempLiteral[ "@value" ] : this.literal[ "@value" ];
@@ -46,58 +52,31 @@ export default class LiteralComponent {
 		this.language = ! ! this.tempLiteral[ "@language" ] ? this.tempLiteral[ "@language" ] : this.literal[ "@language" ];
 	}
 
-	get literal() {
-		return this._literal;
-	}
-
 	@Input() canDisplayLanguage:boolean = false;
 	@Output() onEditMode:EventEmitter<boolean> = new EventEmitter<boolean>();
 	@Output() onSave:EventEmitter<any> = new EventEmitter<any>();
-	@ViewChild( LiteralValueComponent ) literalValueComponent:LiteralValueComponent;
-	@ViewChild( LiteralTypeComponent ) literalTypeComponent:LiteralTypeComponent;
-	@ViewChild( LiteralLanguageComponent ) literalLanguageComponent:LiteralLanguageComponent;
 
 	private tempLiteral:any = {};
+	valueInput:AbstractControl = new Control( this.value, Validators.compose( [ Validators.required, this.valueValidator.bind( this ) ] ) );
 
 	constructor() {}
 
 	displayEditor( event:Event ):void {
 		this.mode = Modes.EDIT;
-
 	}
 
 	cancelEdit():void {
 		this.mode = Modes.READ;
-		this.value = ! ! this.tempLiteral[ "@value" ] ? this.tempLiteral[ "@value" ] : this.literal[ "@value" ];
-		this.type = ! ! this.tempLiteral[ "@type" ] ? this.tempLiteral[ "@type" ] : this.literal[ "@type" ];
-		this.language = ! ! this.tempLiteral[ "@language" ] ? this.tempLiteral[ "@language" ] : this.literal[ "@language" ];
 		this.tempLiteral = <Literal>{};
 	}
 
 	save():void {
-		this.clearTempLiteral();
-		// if ( ! ! this.literalValueComponent ) this.changeValue( this.literalValueComponent.input.value );
-		if ( ! ! this.literalTypeComponent ) this.changeType( this.literalTypeComponent.input.value );
-		if ( ! ! this.literalLanguageComponent ) this.changeLanguage( this.literalLanguageComponent.input.value );
 
-		if ( ! ! this.value ) this.tempLiteral[ "@value" ] = this.value;
-		if ( ! ! this.type && this.type !== NS.XSD.DataType.string ) this.tempLiteral[ "@type" ] = this.type;
-		if ( ! ! this.language && (! this.type || this.type === NS.XSD.DataType.string ) ) this.tempLiteral[ "@language" ] = this.language;
-		// this.value = this.tempLiteral[ "@value" ];
-		// this.type = this.tempLiteral[ "@type" ];
-		// this.language = this.tempLiteral[ "@language" ];
-		this.onSave.emit( this.tempLiteral );
 		this.mode = Modes.READ;
 	}
 
-	clearTempLiteral():void {
-		delete this.tempLiteral[ "@value" ];
-		delete this.tempLiteral[ "@type" ];
-		delete this.tempLiteral[ "@language" ];
-	}
-
 	changeValue( value:string|number|boolean ):void {
-		this.value = this.literalValueComponent.getParsedValue( value );
+		// this.value = this.literalValueComponent.getParsedValue( value );
 	}
 
 	changeType( type:string ):void {
@@ -112,16 +91,122 @@ export default class LiteralComponent {
 		this.language = value;
 	}
 
-	onIsValidValue( isValid:boolean ):void {
-		this.isValidValue = isValid;
+
+	private getParsedValue( value:string|boolean|number ):string|boolean|number {
+		if ( typeof value === "undefined" && ! ! this.input ) value = this.input.value.toLowerCase().trim();
+		switch ( this.type ) {
+			// case NS.XSD.DataType.boolean:
+			// 	value = Utils.parseBoolean( value );
+			// 	break;
+			// case NS.XSD.DataType.int:
+			// case NS.XSD.DataType.integer:
+			// case NS.XSD.DataType.double:
+			// case NS.XSD.DataType.decimal:
+			// 	value = Number( value );
+			// 	break;
+
+			// Boolean
+			case NS.XSD.DataType.boolean:
+				value = Utils.isBoolean( Literal.Factory.parse( value, this.type ) ) ? Literal.Factory.parse( value, this.type ) : value;
+				break;
+
+			// Numbers
+			case NS.XSD.DataType.int :
+			case NS.XSD.DataType.integer :
+				value = ! isNaN( value ) && ! isNaN( Literal.Factory.parse( value, this.type ) ) && Utils.isInteger( Literal.Factory.parse( value, this.type ) ) ? Literal.Factory.parse( value, this.type ) : value;
+				break;
+
+			case NS.XSD.DataType.byte :
+			case NS.XSD.DataType.decimal :
+			case NS.XSD.DataType.long :
+			case NS.XSD.DataType.negativeInteger :
+			case NS.XSD.DataType.nonNegativeInteger :
+			case NS.XSD.DataType.nonPositiveInteger :
+			case NS.XSD.DataType.positiveInteger :
+			case NS.XSD.DataType.short :
+			case NS.XSD.DataType.unsignedLong :
+			case NS.XSD.DataType.unsignedInt :
+			case NS.XSD.DataType.unsignedShort :
+			case NS.XSD.DataType.unsignedByte :
+			case NS.XSD.DataType.double :
+			case NS.XSD.DataType.float :
+				value = ! isNaN( value ) && ! isNaN( Literal.Factory.parse( value, this.type ) ) && Utils.isNumber( Literal.Factory.parse( value, this.type ) ) ? Literal.Factory.parse( value, this.type ) : value;
+				break;
+
+			// Dates
+			case NS.XSD.DataType.date:
+			case NS.XSD.DataType.dateTime:
+			case NS.XSD.DataType.time:
+				value = Utils.isDate( Literal.Factory.parse( value, this.type ) ) ? Literal.Factory.parse( value, this.type ) : value;
+				break;
+
+			default:
+				break;
+		}
+		return value;
 	}
 
-	onIsValidType( isValid:boolean ):void {
-		this.isValidType = isValid;
-	}
+	private valueValidator( control:AbstractControl ):any {
+		let valid:boolean;
+		switch ( this.type ) {
+			// Boolean
+			case NS.XSD.DataType.boolean:
+				switch ( control.value ) {
+					case "true":
+					case "yes":
+					case "y":
+					case "1":
+					case "false":
+					case "no":
+					case "n":
+					case "0":
+						valid = true;
+				}
+				// valid = Utils.isBoolean( Literal.Factory.parse( control.value, this.type ) );
+				break;
 
-	onIsValidLanguage( isValid:boolean ):void {
-		this.isValidLanguage = isValid;
+			// Numbers
+			case NS.XSD.DataType.int :
+			case NS.XSD.DataType.integer :
+				valid = ! isNaN( control.value ) && ! isNaN( Literal.Factory.parse( control.value, this.type ) ) && Utils.isInteger( Literal.Factory.parse( control.value, this.type ) );
+				break;
+
+			case NS.XSD.DataType.byte :
+			case NS.XSD.DataType.decimal :
+			case NS.XSD.DataType.long :
+			case NS.XSD.DataType.negativeInteger :
+			case NS.XSD.DataType.nonNegativeInteger :
+			case NS.XSD.DataType.nonPositiveInteger :
+			case NS.XSD.DataType.positiveInteger :
+			case NS.XSD.DataType.short :
+			case NS.XSD.DataType.unsignedLong :
+			case NS.XSD.DataType.unsignedInt :
+			case NS.XSD.DataType.unsignedShort :
+			case NS.XSD.DataType.unsignedByte :
+			case NS.XSD.DataType.double :
+			case NS.XSD.DataType.float :
+				valid = ! isNaN( control.value ) && ! isNaN( Literal.Factory.parse( control.value, this.type ) ) && Utils.isNumber( Literal.Factory.parse( control.value, this.type ) );
+				break;
+
+			// Dates
+			case NS.XSD.DataType.date:
+			case NS.XSD.DataType.dateTime:
+			case NS.XSD.DataType.time:
+				valid = Utils.isDate( Literal.Factory.parse( control.value, this.type ) );
+				break;
+
+			case NS.XSD.DataType.string:
+				valid = Utils.isString( Literal.Factory.parse( control.value, this.type ) );
+				break;
+
+			default:
+				valid = Utils.isString( control.value );
+				break;
+		}
+		if ( ! valid ) {
+			return { "invalidTypeError": true };
+		}
+		return null;
 	}
 
 }
