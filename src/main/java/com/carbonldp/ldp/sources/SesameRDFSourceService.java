@@ -17,6 +17,7 @@ import com.carbonldp.models.Infraction;
 import com.carbonldp.rdf.*;
 import com.carbonldp.utils.IRIUtil;
 import com.carbonldp.utils.ModelUtil;
+import com.carbonldp.utils.RDFDocumentUtil;
 import com.carbonldp.utils.ValueUtil;
 import org.joda.time.DateTime;
 import org.openrdf.model.BNode;
@@ -119,12 +120,11 @@ public class SesameRDFSourceService extends AbstractSesameLDPService implements 
 	}
 
 	@Override
-	public DateTime replace( RDFSource source ) {
-		DateTime modifiedTime = DateTime.now();
+	public void replace( RDFSource source ) {
 
 		RDFSource originalSource = get( source.getIRI() );
 		RDFDocument originalDocument = originalSource.getDocument();
-		RDFDocument newDocument = mapBNodeSubjects( originalDocument, source.getDocument() );
+		RDFDocument newDocument = RDFDocumentUtil.mapBNodeSubjects( originalDocument, source.getDocument() );
 
 		AbstractModel toAdd = newDocument.stream().filter( statement -> ! ModelUtil.containsStatement( originalDocument, statement ) ).collect( Collectors.toCollection( LinkedHashModel::new ) );
 		RDFDocument documentToAdd = new RDFDocument( toAdd, source.getIRI() );
@@ -132,12 +132,16 @@ public class SesameRDFSourceService extends AbstractSesameLDPService implements 
 		AbstractModel toDelete = originalDocument.stream().filter( statement -> ! ModelUtil.containsStatement( newDocument, statement ) ).collect( Collectors.toCollection( LinkedHashModel::new ) );
 		RDFDocument documentToDelete = new RDFDocument( toDelete, source.getIRI() );
 
-		subtract( originalSource.getIRI(), documentToDelete );
-		add( originalSource.getIRI(), documentToAdd );
+		replace( originalSource.getIRI(), documentToAdd, documentToDelete );
+	}
 
-		sourceRepository.touch( source.getIRI(), modifiedTime );
+	@Override
+	public void replace( IRI targetIRI, RDFDocument documentToAdd, RDFDocument documentToDelete ) {
+		DateTime modifiedTime = DateTime.now();
+		subtract( targetIRI, documentToDelete );
+		add( targetIRI, documentToAdd );
 
-		return modifiedTime;
+		sourceRepository.touch( targetIRI, modifiedTime );
 	}
 
 	@Override
@@ -145,7 +149,7 @@ public class SesameRDFSourceService extends AbstractSesameLDPService implements 
 		if ( ! exists( sourceIRI ) ) throw new ResourceDoesntExistException();
 		RDFSource originalSource = get( document.getDocumentResource().getIRI() );
 		RDFDocument originalDocument = originalSource.getDocument();
-		document = mapBNodeSubjects( originalDocument, document );
+		document = RDFDocumentUtil.mapBNodeSubjects( originalDocument, document );
 
 		containsImmutableProperties( originalDocument, document );
 		document = addIdentifierToRemoveIfBNodeIsEmpty( originalDocument, document );
@@ -189,7 +193,7 @@ public class SesameRDFSourceService extends AbstractSesameLDPService implements 
 	private RDFDocument handleBlankNodesIdentifiers( RDFDocument document ) {
 		RDFSource originalSource = get( document.getDocumentResource().getIRI() );
 		RDFDocument originalDocument = originalSource.getDocument();
-		document = mapBNodeSubjects( originalDocument, document );
+		document = RDFDocumentUtil.mapBNodeSubjects( originalDocument, document );
 
 		Set<Resource> originalSubjects = originalDocument.subjects();
 		Set<Resource> newSubjects = document.subjects();
@@ -248,34 +252,6 @@ public class SesameRDFSourceService extends AbstractSesameLDPService implements 
 		else infractions.addAll( ContainerFactory.getInstance().validateImmutableProperties( document.getDocumentResource() ) );
 
 		return infractions;
-	}
-
-	private RDFDocument mapBNodeSubjects( RDFDocument originalDocument, RDFDocument newDocument ) {
-		IRI documentUri = newDocument.getDocumentResource().getIRI();
-
-		Set<String> originalDocumentBlankNodesIdentifier = originalDocument.getBlankNodesIdentifier();
-		Set<String> newDocumentBlankNodesIdentifiers = newDocument.getBlankNodesIdentifier();
-		for ( String newDocumentBlankNodeIdentifier : newDocumentBlankNodesIdentifiers ) {
-			if ( ! originalDocumentBlankNodesIdentifier.contains( newDocumentBlankNodeIdentifier ) ) continue;
-
-			RDFBlankNode newBlankNode = newDocument.getBlankNode( newDocumentBlankNodeIdentifier );
-			BNode originalBNode = originalDocument.getBlankNode( newDocumentBlankNodeIdentifier ).getSubject();
-
-			if ( newBlankNode.getSubject().equals( originalBNode ) ) continue;
-
-			Map<IRI, Set<Value>> propertiesMap = newBlankNode.getPropertiesMap();
-			Set<IRI> properties = propertiesMap.keySet();
-
-			for ( IRI property : properties ) {
-				Set<Value> objects = propertiesMap.get( property );
-				for ( Value object : objects ) {
-					newDocument.getBaseModel().add( originalBNode, property, object, documentUri );
-				}
-			}
-			newDocument.subjects().remove( newBlankNode.getSubject() );
-
-		}
-		return newDocument;
 	}
 
 	private void validateBNodesUniqueIdentifier( RDFDocument document ) {
