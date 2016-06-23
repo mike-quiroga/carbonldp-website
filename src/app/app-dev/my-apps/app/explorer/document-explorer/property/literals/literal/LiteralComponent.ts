@@ -1,14 +1,17 @@
-import { Component, ViewChild, Input, Output, EventEmitter } from "@angular/core";
+import { Component, ElementRef, Input, Output, EventEmitter } from "@angular/core";
 import { Control, AbstractControl, Validators } from '@angular/common';
 
+import $ from "jquery";
 import "semantic-ui/semantic";
 
 import * as NS from "carbonldp/NS";
 import * as Utils from "carbonldp/Utils";
 import * as Literal from "carbonldp/RDF/Literal";
+import * as URI from "carbonldp/RDF/URI";
 
 
 import template from "./template.html!";
+import "./style.css!";
 
 @Component( {
 	selector: "tr.literal",
@@ -17,10 +20,12 @@ import template from "./template.html!";
 
 export default class LiteralComponent {
 
+	element:ElementRef;
 	private _mode = Modes.READ;
 	set mode( value:string ) {
 		this._mode = value;
 		this.onEditMode.emit( this.mode === Modes.EDIT );
+		if ( this.mode === Modes.EDIT )this.initializeTypesDropdown();
 	}
 
 	get mode() {
@@ -28,18 +33,30 @@ export default class LiteralComponent {
 	}
 
 	modes:Modes = Modes;
-	// value:string|boolean|number = "";
-	type:string = "";
+	// type:string = "";
 	language:string = "";
+	dataTypes:any = this.getDataTypes();
 	isStringType:boolean = (! this.type || this.type === NS.XSD.DataType.string);
 
 
+	// Literal Value;
 	private _value:string|boolean|number = "";
 	get value() {return this._value;}
 
-	@Input() set value( value:Literal ) {
+	set value( value:string|boolean|number ) {
 		this._value = value;
 		if ( ! ! this.valueInput && this.valueInput.value !== this.value )(<Control>this.valueInput).updateValue( this.value );
+	}
+
+	// Literal Type;
+	private _type:string = NS.XSD.DataType.string;
+	get type() {return this._type;}
+
+	set type( type:string ) {
+		if ( ! type || type.length === 0 ) type = NS.XSD.DataType.string;
+		this._type = type;
+		if ( ! ! this.typeInput && this.typeInput.value !== this.type )(<Control>this.typeInput).updateValue( this.type );
+		this.valueInput.updateValueAndValidity();
 	}
 
 	private _literal = <Literal>{};
@@ -58,8 +75,12 @@ export default class LiteralComponent {
 
 	private tempLiteral:any = {};
 	valueInput:AbstractControl = new Control( this.value, Validators.compose( [ Validators.required, this.valueValidator.bind( this ) ] ) );
+	typeInput:AbstractControl = new Control( this.type, Validators.compose( [ Validators.required ] ) );
 
-	constructor() {}
+
+	constructor( element:ElementRef ) {
+		this.element = element;
+	}
 
 	displayEditor( event:Event ):void {
 		this.mode = Modes.EDIT;
@@ -79,9 +100,9 @@ export default class LiteralComponent {
 		// this.value = this.literalValueComponent.getParsedValue( value );
 	}
 
-	changeType( type:string ):void {
+	changeType( type:string, text?:string, choice?:JQuery ):void {
 		if ( type === "empty" || type === NS.XSD.DataType.string ) type = null;
-		this.isStringType = (type === NS.XSD.DataType.string || ! type);
+		this.isStringType = ! type;
 		if ( ! this.isStringType ) this.language = null;
 		this.type = type;
 	}
@@ -91,6 +112,35 @@ export default class LiteralComponent {
 		this.language = value;
 	}
 
+	private initializeTypesDropdown():void {
+		let searchDropdown:JQuery = $( this.element.nativeElement.querySelector( ".search.dropdown.types" ) );
+		searchDropdown.dropdown( {
+			allowAdditions: true,
+			onChange: this.changeType.bind( this )
+		} );
+		searchDropdown.dropdown( "set selected", this.type );
+	}
+
+	private getDataTypes():any {
+		let dataTypes:any[] = [];
+		let xsdDataTypes:any[] = this.getXSDDataTypes();
+		dataTypes = dataTypes.concat( xsdDataTypes );
+		return dataTypes;
+	}
+
+	private getXSDDataTypes():any[] {
+		let xsdDataTypes:any[] = [];
+		Utils.forEachOwnProperty( NS.XSD.DataType, ( key:string, value:any ):void => {
+			if ( URI.Util.isAbsolute( key ) ) {
+				xsdDataTypes.push( {
+					title: value,
+					description: NS.XSD.DataType[ value ],
+					value: NS.XSD.DataType[ value ],
+				} );
+			}
+		} );
+		return xsdDataTypes;
+	}
 
 	private getParsedValue( value:string|boolean|number ):string|boolean|number {
 		if ( typeof value === "undefined" && ! ! this.input ) value = this.input.value.toLowerCase().trim();

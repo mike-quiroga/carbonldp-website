@@ -12,12 +12,27 @@
 		</div>
 	</div>
 </td>
-<td>
-	{{type}}
-	<!--<literal-type [mode]="mode"-->
-	<!--[type]="type"-->
-	<!--(onIsValid)="onIsValidType($event)"-->
-	<!--(onTypeSelected)="changeType($event)"></literal-type>-->
+<td class="type">
+	<div class="read-mode" *ngIf="mode===modes.READ">
+		<p class="value">{{type}}</p>
+	</div>
+	<div class="edit-mode ui error form" [hidden]="mode===modes.READ">
+		<input type="text" [ngFormControl]="typeInput" [hidden]="true">
+		<select class="ui fluid search dropdown types">
+			<option value="empty">
+				Search a type
+			</option>
+			<option class="item" *ngFor="let type of dataTypes;" value="{{type.value}}">
+				<span>
+					<span class="title">{{type.title}}</span>
+					<span class="description">{{type.description}}</span>
+				</span>
+			</option>
+		</select>
+		<div class="ui error message wide" *ngIf="!typeInput.valid">
+			<p *ngIf="typeInput.hasError('required')">Select a type or enter your own type.</p>
+		</div>
+	</div>
 </td>
 <td *ngIf="canDisplayLanguage || !!language">
 	{{language}}
