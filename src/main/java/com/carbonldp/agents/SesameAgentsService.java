@@ -8,9 +8,19 @@ import com.carbonldp.config.ConfigurationRepository;
 import com.carbonldp.exceptions.InvalidResourceException;
 import com.carbonldp.exceptions.StupidityException;
 import com.carbonldp.ldp.AbstractSesameLDPService;
+import com.carbonldp.ldp.sources.RDFSource;
+import com.carbonldp.ldp.sources.RDFSourceService;
 import com.carbonldp.models.Infraction;
+import com.carbonldp.rdf.RDFDocument;
 import com.carbonldp.utils.AuthenticationUtil;
+import com.carbonldp.utils.ModelUtil;
+import com.carbonldp.utils.RDFDocumentUtil;
 import freemarker.template.*;
+import org.openrdf.model.IRI;
+import org.openrdf.model.Model;
+import org.openrdf.model.impl.AbstractModel;
+import org.openrdf.model.impl.LinkedHashModel;
+import org.openrdf.model.impl.SimpleValueFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -23,13 +33,36 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public abstract class SesameAgentsService extends AbstractSesameLDPService implements AgentService {
 
 	protected ConfigurationRepository configurationRepository;
 	protected AgentValidatorRepository agentValidatorRepository;
-
+	protected RDFSourceService sourceService;
 	protected JavaMailSender mailSender;
+
+	@Override
+	public void replace( IRI source, Agent agent ) {
+		RDFSource originalSource = sourceService.get( agent.getIRI() );
+		RDFDocument originalDocument = originalSource.getDocument();
+
+		RDFDocument newDocument = RDFDocumentUtil.mapBNodeSubjects( originalDocument, agent.getDocument() );
+
+		AbstractModel toAdd = newDocument.stream().filter( statement -> ! ModelUtil.containsStatement( originalDocument, statement ) ).collect( Collectors.toCollection( LinkedHashModel::new ) );
+		RDFDocument documentToAdd = new RDFDocument( toAdd, source );
+
+		Model passwordModel = documentToAdd.filter( null, AgentDescription.Property.PASSWORD.getIRI(), null, null );
+		if ( ! passwordModel.isEmpty() ) {
+			documentToAdd.remove( null, AgentDescription.Property.PASSWORD.getIRI(), null, null );
+			setAgentPasswordFields( agent );
+			documentToAdd.add( agent.getSubject(), AgentDescription.Property.PASSWORD.getIRI(), SimpleValueFactory.getInstance().createLiteral( agent.getPassword() ), agent.getSubject() );
+		}
+		AbstractModel toDelete = originalDocument.stream().filter( statement -> ! ModelUtil.containsStatement( newDocument, statement ) ).collect( Collectors.toCollection( LinkedHashModel::new ) );
+		RDFDocument documentToDelete = new RDFDocument( toDelete, source );
+
+		sourceService.replace( originalSource.getIRI(), documentToAdd, documentToDelete );
+	}
 
 	protected void validate( Agent agent ) {
 		List<Infraction> infractions = AgentFactory.getInstance().validate( agent );
@@ -135,4 +168,7 @@ public abstract class SesameAgentsService extends AbstractSesameLDPService imple
 
 	@Autowired
 	public void setMailSender( JavaMailSender mailSender ) { this.mailSender = mailSender; }
+
+	@Autowired
+	public void setSourceService( RDFSourceService sourceService ) { this.sourceService = sourceService; }
 }
