@@ -1,8 +1,10 @@
 package com.carbonldp.rdf;
 
+import com.carbonldp.authorization.acl.SesameACLService;
 import com.carbonldp.config.ConfigurationRepository;
 import com.carbonldp.models.Infraction;
 import com.carbonldp.utils.IRIUtil;
+import com.carbonldp.utils.ModelUtil;
 import com.carbonldp.utils.ValueUtil;
 import com.carbonldp.web.converters.ModelMessageConverter;
 import com.carbonldp.web.exceptions.BadRequestException;
@@ -22,8 +24,7 @@ import org.springframework.util.Assert;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @author MiguelAraCo
@@ -66,8 +67,21 @@ public class RDFDocumentMessageConverter extends ModelMessageConverter<RDFDocume
 		} catch ( RDFParseException | RDFHandlerException | IOException e ) {
 			throw new BadRequestException( new Infraction( 0x6001, "formatToUse", formatToUse.getName() ) );
 		}
+		return setGenericBNodes( documentRDFHandler.getDocument() );
+	}
 
-		return documentRDFHandler.getDocument();
+	private RDFDocument setGenericBNodes( RDFDocument document ) {
+		ValueFactory valueFactory = SimpleValueFactory.getInstance();
+		Set<Resource> subjects = document.subjects();
+		Map<Resource, Resource> toChange = new HashMap<>();
+		for ( Resource subject : subjects ) {
+			if ( ! ValueUtil.isBNode( subject ) ) continue;
+			String randomUUID = UUID.randomUUID().toString();
+			toChange.put( subject, valueFactory.createBNode( randomUUID ) );
+		}
+		ModelUtil.replaceSubjects( document.getBaseModel(), toChange );
+
+		return document;
 	}
 
 	public class DocumentRDFHandler extends AbstractRDFHandler {
