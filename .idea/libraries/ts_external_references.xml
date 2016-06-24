@@ -4,11 +4,13 @@
       <sourceFilesUrls>
         <item url="file://$PROJECT_DIR$/../angular2-carbonldp/node_modules/typescript/lib/lib.es6.d.ts" />
         <item url="file://$PROJECT_DIR$/node_modules/typescript/lib/lib.es6.d.ts" />
+        <item url="file://$PROJECT_DIR$/node_modules/typescript/lib/lib.es2015.symbol.d.ts" />
       </sourceFilesUrls>
     </properties>
     <CLASSES>
       <root url="file://$PROJECT_DIR$/../angular2-carbonldp/node_modules/typescript/lib/lib.es6.d.ts" />
       <root url="file://$PROJECT_DIR$/node_modules/typescript/lib/lib.es6.d.ts" />
+      <root url="file://$PROJECT_DIR$/node_modules/typescript/lib/lib.es2015.symbol.d.ts" />
     </CLASSES>
     <SOURCES />
   </library>
