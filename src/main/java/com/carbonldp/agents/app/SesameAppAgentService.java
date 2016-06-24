@@ -11,7 +11,6 @@ import com.carbonldp.ldp.sources.RDFSourceService;
 import com.carbonldp.rdf.RDFDocument;
 import com.carbonldp.utils.ModelUtil;
 import com.carbonldp.utils.RDFDocumentUtil;
-import com.carbonldp.web.exceptions.NotImplementedException;
 import org.openrdf.model.IRI;
 import org.openrdf.model.impl.AbstractModel;
 import org.openrdf.model.impl.LinkedHashModel;
@@ -56,18 +55,23 @@ public class SesameAppAgentService extends SesameAgentsService {
 
 	}
 
-	public void replace( IRI AgentIRI, Agent agent ) {
+	public void replace( IRI source, Agent agent ) {
 		RDFSource originalSource = sourceService.get( agent.getIRI() );
 		RDFDocument originalDocument = originalSource.getDocument();
+
+		if ( agent.getPassword().length() != 64 ) {
+			setAgentPasswordFields( agent );
+		}
+
 		RDFDocument newDocument = RDFDocumentUtil.mapBNodeSubjects( originalDocument, agent.getDocument() );
 
 		AbstractModel toAdd = newDocument.stream().filter( statement -> ! ModelUtil.containsStatement( originalDocument, statement ) ).collect( Collectors.toCollection( LinkedHashModel::new ) );
-		RDFDocument documentToAdd = new RDFDocument( toAdd, AgentIRI );
+		RDFDocument documentToAdd = new RDFDocument( toAdd, source );
 
 		AbstractModel toDelete = originalDocument.stream().filter( statement -> ! ModelUtil.containsStatement( newDocument, statement ) ).collect( Collectors.toCollection( LinkedHashModel::new ) );
-		RDFDocument documentToDelete = new RDFDocument( toDelete, AgentIRI );
-		throw new NotImplementedException( "in progress" );
+		RDFDocument documentToDelete = new RDFDocument( toDelete, source );
 
+		sourceService.replace( originalSource.getIRI(), documentToAdd, documentToDelete );
 	}
 
 	@Autowired

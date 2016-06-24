@@ -7,15 +7,23 @@ import com.carbonldp.authorization.Platform;
 import com.carbonldp.authorization.acl.ACEDescription;
 import com.carbonldp.authorization.acl.ACL;
 import com.carbonldp.exceptions.ResourceAlreadyExistsException;
+import com.carbonldp.ldp.sources.RDFSource;
+import com.carbonldp.ldp.sources.RDFSourceService;
+import com.carbonldp.rdf.RDFDocument;
+import com.carbonldp.utils.ModelUtil;
+import com.carbonldp.utils.RDFDocumentUtil;
 import org.openrdf.model.IRI;
-
+import org.openrdf.model.impl.AbstractModel;
+import org.openrdf.model.impl.LinkedHashModel;
 import org.openrdf.model.impl.SimpleValueFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Arrays;
+import java.util.stream.Collectors;
 
 public class SesamePlatformAgentService extends SesameAgentsService {
 	protected PlatformAgentRepository platformAgentRepository;
+	protected RDFSourceService sourceService;
 
 	@Override
 	public void register( Agent agent ) {
@@ -47,6 +55,27 @@ public class SesamePlatformAgentService extends SesameAgentsService {
 		}
 	}
 
+	@Override
+	public void replace( IRI source, Agent agent ) {
+		RDFSource originalSource = sourceService.get( agent.getIRI() );
+		RDFDocument originalDocument = originalSource.getDocument();
+
+		if ( agent.getPassword().length() != 64 ) {
+			setAgentPasswordFields( agent );
+		}
+
+		RDFDocument newDocument = RDFDocumentUtil.mapBNodeSubjects( originalDocument, agent.getDocument() );
+
+		AbstractModel toAdd = newDocument.stream().filter( statement -> ! ModelUtil.containsStatement( originalDocument, statement ) ).collect( Collectors.toCollection( LinkedHashModel::new ) );
+		RDFDocument documentToAdd = new RDFDocument( toAdd, source );
+
+		AbstractModel toDelete = originalDocument.stream().filter( statement -> ! ModelUtil.containsStatement( newDocument, statement ) ).collect( Collectors.toCollection( LinkedHashModel::new ) );
+		RDFDocument documentToDelete = new RDFDocument( toDelete, source );
+
+		sourceService.replace( originalSource.getIRI(), documentToAdd, documentToDelete );
+
+	}
+
 	private void addAgentDefaultPermissions( Agent agent, ACL agentACL ) {
 		aclRepository.grantPermissions( agentACL, Arrays.asList( agent ), Arrays.asList(
 			ACEDescription.Permission.READ,
@@ -73,4 +102,9 @@ public class SesamePlatformAgentService extends SesameAgentsService {
 
 	@Autowired
 	public void setPlatformAgentRepository( PlatformAgentRepository platformAgentRepository ) { this.platformAgentRepository = platformAgentRepository; }
+
+	@Autowired
+	public void setSourceService( RDFSourceService sourceService ) {
+		this.sourceService = sourceService;
+	}
 }
