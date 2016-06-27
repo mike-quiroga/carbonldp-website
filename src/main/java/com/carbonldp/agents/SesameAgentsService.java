@@ -64,7 +64,7 @@ public abstract class SesameAgentsService extends AbstractSesameLDPService imple
 		sourceService.replace( originalSource.getIRI(), documentToAdd, documentToDelete );
 	}
 
-	public void validateNumberOfPasswordAndEmails( Agent agent ) {
+	private void validateNumberOfPasswordAndEmails( Agent agent ) {
 		Set<Value> passwords = agent.getProperties( AgentDescription.Property.PASSWORD );
 		if ( passwords.size() != 1 ) throw new InvalidResourceException( new Infraction( 0x2004, "property", AgentDescription.Property.PASSWORD.getIRI().stringValue() ) );
 
