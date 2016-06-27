@@ -10,7 +10,7 @@ import * as Utils from "carbonldp/Utils";
 
 import ListViewerComponent from "./../list-viewer/ListViewerComponent";
 import LiteralsComponent from "./literals/LiteralsComponent";
-import { LiteralRow } from "./literals/literal/LiteralComponent";
+import { Literal, LiteralRow } from "./literals/literal/LiteralComponent";
 
 import template from "./template.html!";
 import "./style.css!";
@@ -28,20 +28,32 @@ export default class PropertyComponent {
 	$element:JQuery;
 	literals:LiteralRow[];
 	pointers:SDKRDFNode.Class[];
+	tempProperty:Property = <Property>{};
+	id:string;
+	name:string;
+	value:any;
 	@Input() documentURI:string;
 	@Output() onGoToBNode:EventEmitter<string> = new EventEmitter<string>();
 	@Output() onGoToNamedFragment:EventEmitter<string> = new EventEmitter<string>();
 	@Output() onChangeProperty:EventEmitter<Property> = new EventEmitter<Property>();
 	commonHeaders:string[] = [ "@id", "@type", "@value" ];
-	_property:Property;
-	@Input() set property( value:Property ) {
-		this._property = value;
+	_property:PropertyRow;
+	@Input() set property( prop:PropertyRow ) {
+		this._property = prop;
+		this.id = prop.copy.id;
+		this.name = prop.copy.name;
+		if ( Utils.isArray( prop.copy.value ) ) {
+			this.value = [];
+			prop.copy.value.forEach( ( literalOrRDFNode )=> { this.value.push( Object.assign( literalOrRDFNode ) ) } )
+		} else {
+			this.value = prop.copy.value;
+		}
 	}
 
-	get property():Property { return this._property; }
+	get property():PropertyRow { return this._property; }
 
 	_propertyHasChanged:boolean;
-	@Input() set propertyHasChanged( value:boolean ) {
+	set propertyHasChanged( value:boolean ) {
 		this._propertyHasChanged = value;
 	}
 
@@ -53,7 +65,7 @@ export default class PropertyComponent {
 	}
 
 	ngOnInit():void {
-		if ( Utils.isArray( this.property.value ) ) this.fillLiteralsAndRDFNodes();
+		if ( Utils.isArray( this.value ) ) this.fillLiteralsAndRDFNodes();
 	}
 
 	ngAfterViewInit():void {
@@ -78,12 +90,12 @@ export default class PropertyComponent {
 	}
 
 	hasHeader( header:string, property?:any ):boolean {
-		let headers:string[] = this.getHeaders( ! ! property ? property : this.property.value );
+		let headers:string[] = this.getHeaders( ! ! property ? property : this.value );
 		return headers.indexOf( header ) > - 1 ? true : false;
 	}
 
 	hasCommonHeaders( property?:any ):boolean {
-		let headers:string[] = this.getHeaders( ! ! property ? property.value : this.property.value );
+		let headers:string[] = this.getHeaders( ! ! property ? property.value : this.value );
 		return headers.indexOf( "@id" ) > - 1 ? true : headers.indexOf( "@type" ) > - 1 ? true : headers.indexOf( "@value" ) > - 1 ? true : false;
 	}
 
@@ -154,15 +166,33 @@ export default class PropertyComponent {
 	fillLiteralsAndRDFNodes():void {
 		this.literals = [];
 		this.pointers = [];
-		this.property.value.forEach( ( literalOrRDFNode )=> {
+		this.property.copy.value.forEach( ( literalOrRDFNode )=> {
 			if ( SDKLiteral.Factory.is( literalOrRDFNode ) ) this.literals.push( <LiteralRow>{ copy: literalOrRDFNode } );
 			if ( SDKRDFNode.Factory.is( literalOrRDFNode ) ) this.pointers.push( literalOrRDFNode );
 		} );
+		console.log( this.literals );
 	}
 
 	checkForChangesOnLiterals( literals:LiteralRow[] ):void {
+		this.changePropertyValues( literals );
 		this.propertyHasChanged = literals.filter( ( literalRow )=> {return ! ! literalRow.modified} ).length > 0;
-		console.log( literals );
+		if ( ! this.propertyHasChanged ) delete this.property.modified;
+	}
+
+	changePropertyValues( literals:LiteralRow[] ):void {
+		this.tempProperty.id = this.id;
+		this.tempProperty.name = this.name;
+		if ( Utils.isArray( this.value ) ) {
+			this.tempProperty.value = [];
+			literals.forEach( ( literalRow )=> {
+				this.tempProperty.value.push( ! ! literalRow.modified ? literalRow.modified : literalRow.copy );
+			} );
+		} else {
+			this.tempProperty.value = this.value;
+		}
+		this.property.modified = this.tempProperty;
+		console.log( this.tempProperty );
+		this.onChangeProperty.emit( this.tempProperty );
 	}
 
 
@@ -177,6 +207,12 @@ export default class PropertyComponent {
 	// 	this.property = property;
 	// }
 }
+
+export interface PropertyRow {
+	copy:any;
+	modified?:any;
+}
+
 export interface Property {
 	id:string;
 	name:string;

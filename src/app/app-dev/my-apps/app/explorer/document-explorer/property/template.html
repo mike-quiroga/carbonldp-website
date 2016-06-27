@@ -1,24 +1,24 @@
-<div class="content" *ngIf="property.name === '@id'">
+<div class="content" *ngIf="name === '@id'">
 	<div class="header">
-		<p *ngIf="!isUrl(property.value)">
-			<i class="file outline icon"></i> {{property.value}}</p>
-		<p *ngIf="isUrl(property.value)">
+		<p *ngIf="!isUrl(value)">
+			<i class="file outline icon"></i> {{value}}</p>
+		<p *ngIf="isUrl(value)">
 			<i class="file outline icon"></i>
-			<a class="name" [attr.href]="property.value"
+			<a class="name" [attr.href]="value"
 			   target="_blank"><span class="parentURI">
-				{{getParentURI(property.value)}}</span><span class="slug">{{getSlug(property.value)}}</span>
+				{{getParentURI(value)}}</span><span class="slug">{{getSlug(value)}}</span>
 			</a>
 		</p>
 	</div>
 </div>
 
-<div class="content" *ngIf="property.name === '@type'">
+<div class="content" *ngIf="name === '@type'">
 	<p class="header">
-		{{property.name}}
+		{{name}}
 	</p>
-	<div class="description" *ngIf="isArray(property.value)">
+	<div class="description" *ngIf="isArray(value)">
 		<div class="ui horizontal list">
-			<div class="item" *ngFor="let type of property.value; let j = index;">
+			<div class="item" *ngFor="let type of value; let j = index;">
 				<div class="ui label">
 					<i [ngClass]="getTypeIcon(type)" class="icon"></i>
 					{{getDisplayName(type)}}
@@ -27,33 +27,33 @@
 		</div>
 		<table class="ui very compact striped small celled table">
 			<tr class="center aligned">
-				<th>{{property.name}}</th>
+				<th>{{name}}</th>
 			</tr>
-			<tr *ngFor="let type of property.value; let j = index;">
+			<tr *ngFor="let type of value; let j = index;">
 				<td>{{type}}</td>
 			</tr>
 		</table>
 	</div>
 </div>
 
-<div class="content" *ngIf="property.name !== '@id' && property.name !== '@type'">
+<div class="content" *ngIf="name !== '@id' && name !== '@type'">
 	<p class="ui yellow label indicator" *ngIf="propertyHasChanged">Changed</p>
 	<div class="header">
-		<p>{{getDisplayName(property.name)}}</p>
+		<p>{{getDisplayName(name)}}</p>
 	</div>
 	<div class="meta">
-		<a *ngIf="isUrl(property.name)" [attr.href]="property.name" target="_blank">{{property.name}}</a>
-		<p *ngIf="!isUrl(property.name)">{{property.name}}</p>
+		<a *ngIf="isUrl(name)" [attr.href]="name" target="_blank">{{name}}</a>
+		<p *ngIf="!isUrl(name)">{{name}}</p>
 	</div>
 	<div class="description">
 		<literals [(literals)]="literals"
 		          (onLiteralsChanges)="checkForChangesOnLiterals($event)"></literals>
 		<div class="ui styled accordion" *ngIf="hasHeader('@list')">
-			<div class="title" *ngFor="let item of property.value; let i = index;">
+			<div class="title" *ngFor="let item of value; let i = index;">
 				<i class="dropdown icon"></i>
 				@list
 			</div>
-			<div class="content" *ngFor="let item of property.value; let i = index;">
+			<div class="content" *ngFor="let item of value; let i = index;">
 				<property-list [list]="item['@list']"
 				               (onGoToBNode)="goToBNode($event)"></property-list>
 			</div>

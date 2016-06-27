@@ -9,6 +9,7 @@ import * as URI from "carbonldp/RDF/URI";
 import * as SDKContext from "carbonldp/SDKContext";
 import * as RDFDocument from "carbonldp/RDF/Document";
 import * as NS from "carbonldp/NS";
+import * as Utils from "carbonldp/Utils";
 import { Error as HTTPError } from "carbonldp/HTTP/Errors";
 
 import DocumentsResolverService from "./../DocumentsResolverService";
@@ -18,7 +19,7 @@ import BNodesViewerComponent from "./../bnodes-viewer/BNodesViewerComponent";
 import NamedFragmentsViewerComponent from "./../named-fragments-viewer/NamedFragmentsViewerComponent";
 import PropertyComponent from "./../property/PropertyComponent";
 // import PropertySingleValueComponent from "./../property-single-value/PropertySingleValueComponent";
-import { Property } from "./../property/PropertyComponent";
+import { Property, PropertyRow } from "./../property/PropertyComponent";
 
 import template from "./template.html!";
 import "./style.css!";
@@ -103,9 +104,10 @@ export default class DocumentViewerComponent {
 		if ( ! ! document ) {
 			console.log( "whole document has changed! %o: ", document );
 			this.loadingDocument = true;
-			this.records.additions.clear();
 			this.records.changes.clear();
+			this.records.additions.clear();
 			this.records.deletions.clear();
+			this.documentContentHasChanged = this.records.changes.size > 0 || this.records.additions.size > 0 || this.records.deletions.size > 0;
 			this.setRoot();
 			this.generateMaps();
 			this.loadingDocument = false;
@@ -165,31 +167,16 @@ export default class DocumentViewerComponent {
 		this.$element.find( ".secondary.menu.document.tabs .item" ).tab( "changeTab", section );
 	}
 
-	changeProperty( property:Property ) {
-		if ( this.records.changes.has( property.id ) ) {
-			let prop:Property = this.records.changes.get( property.id );
-			if ( prop.name === property.name && this.areEquals( property.value, prop.value ) ) {
-				this.records.changes.delete( property.id );
-			} else {
-				this.records.changes.set( property.id, prop );
-			}
+	changeProperty( property:PropertyRow ) {
+		if ( typeof property.modified !== "undefined" ) {
+			this.records.changes.set( property.modified.id, property );
+			this.rootNode[ property.modified.id ] = property.modified.value;
 		} else {
-			if ( ! ! this.rootNode[ property.id ] && ! this.areEquals( property.value, this.rootNode[ property.id ] ) ) {
-				let originalProperty:Property = <Property>{
-					id: property.id,
-					name: property.name,
-					value: this.rootNode[ property.id ]
-				};
-				this.records.changes.set( property.id, originalProperty );
-			}
+			this.records.changes.delete( property.copy.id );
+			this.rootNode[ property.copy.id ] = property.copy.value;
 		}
-		this.rootNode[ property.id ] = property.value;
 		this.document[ "@graph" ] = [ this.rootNode ];
 		this.documentContentHasChanged = this.records.changes.size > 0 || this.records.additions.size > 0 || this.records.deletions.size > 0;
-	}
-
-	private areEquals( object1:any, object2:any ):boolean {
-		return JSON.stringify( object1 ) === JSON.stringify( object2 );
 	}
 
 	saveDocument():void {
@@ -218,7 +205,7 @@ export default class DocumentViewerComponent {
 }
 
 class DocumentRecords {
-	changes:Map<string,Property> = new Map<string, Property>();
-	deletions:Map<string,Property> = new Map<string, Property>();
-	additions:Map<string,Property> = new Map<string, Property>();
+	changes:Map<string,PropertyRow> = new Map<string, PropertyRow>();
+	deletions:Map<string,PropertyRow> = new Map<string, PropertyRow>();
+	additions:Map<string,PropertyRow> = new Map<string, PropertyRow>();
 }

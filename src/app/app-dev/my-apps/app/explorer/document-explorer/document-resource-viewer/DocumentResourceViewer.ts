@@ -5,7 +5,7 @@ import "semantic-ui/semantic";
 import * as RDFNode from "carbonldp/RDF/RDFNode";
 import * as URI from "carbonldp/RDF/URI";
 
-import { Property } from "./../property/PropertyComponent";
+import { Property, PropertyRow } from "./../property/PropertyComponent";
 import PropertyComponent from "./../property/PropertyComponent";
 
 import template from "./template.html!";
@@ -20,16 +20,17 @@ export default class DocumentResourceComponent {
 
 	@Input() displayOnly:string[] = [];
 	@Input() hiddenProperties:string[] = [];
-	@Input() documentChanges:Map<string,Property>;
+	// @Input() documentChanges:Map<string,Property>;
 	@Output() onOpenBNode:EventEmitter<string> = new EventEmitter<string>();
 	@Output() onOpenNamedFragment:EventEmitter<string> = new EventEmitter<string>();
-	@Output() onChangeProperty:EventEmitter<Property> = new EventEmitter<Property>();
-	properties:Property[] = [];
+	@Output() onChangeProperty:EventEmitter<PropertyRow> = new EventEmitter<PropertyRow>();
+	properties:PropertyRow[] = [];
 
 	_rootNode:RDFNode.Class;
 	@Input() set rootNode( value:RDFNode.Class ) {
 		this._rootNode = value;
 		this.getProperties();
+		console.log( this.properties );
 	}
 
 	get rootNode() {
@@ -47,32 +48,26 @@ export default class DocumentResourceComponent {
 		this.onOpenNamedFragment.emit( id );
 	}
 
-	getPropertiesName( property:any ):string[] {
-		return Object.keys( property );
-	}
-
-	canDisplay( propertyName:string ):boolean {
+	canDisplay( propertyName:any ):boolean {
 		if ( typeof propertyName === "undefined" ) return false;
 		if ( this.displayOnly.length === 0 && this.hiddenProperties.length === 0 ) return true;
 		if ( this.displayOnly.length > 0 ) return this.displayOnly.indexOf( propertyName ) !== - 1 ? true : false;
 		return this.hiddenProperties.indexOf( propertyName ) !== - 1 ? false : true;
 	}
 
-	changeProperty( property:Property ):void {
-		this.onChangeProperty.emit( property );
-	}
-
-	propertyHasChanged( propertyId:string ):boolean {
-		return this.documentChanges.has( propertyId );
+	changeProperty( property:Property, propertyRow:PropertyRow ):void {
+		this.onChangeProperty.emit( propertyRow );
 	}
 
 	getProperties():void {
 		this.properties = [];
 		Object.keys( this.rootNode ).forEach( ( propName:string )=> {
-			this.properties.push( <Property>{
-				id: propName,
-				name: propName,
-				value: JSON.parse( JSON.stringify( this.rootNode[ propName ] ) )
+			this.properties.push( <PropertyRow>{
+				copy: <Property>{
+					id: propName,
+					name: propName,
+					value: this.rootNode[ propName ]
+				}
 			} );
 		} );
 	}

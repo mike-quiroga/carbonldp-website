@@ -1,12 +1,11 @@
 <div class="ui divided items">
-	<template ngFor let-property="$implicit" [ngForOf]="properties" let-i="index">
+	<template ngFor let-propertyrow="$implicit" [ngForOf]="properties" let-i="index">
 		<document-property class="property item"
-		                   *ngIf="canDisplay(property.name)"
+		                   *ngIf="canDisplay(propertyrow.copy.name)"
 		                   [documentURI]="rootNode['@id']"
-		                   [property]="property"
-		                   [attr.data-tar]="property.name"
-		                   [propertyHasChanged]="propertyHasChanged(property.id)"
-		                   (onChangeProperty)="changeProperty($event)"
+		                   [property]="propertyrow"
+		                   [attr.data-tar]="propertyrow.copy.name"
+		                   (onChangeProperty)="changeProperty($event, propertyrow)"
 		                   (onGoToBNode)="openBNode( $event )"
 		                   (onGoToNamedFragment)="openNamedFragment($event)">
 		</document-property>
