@@ -79,7 +79,8 @@ public class RDFDocumentMessageConverter extends ModelMessageConverter<RDFDocume
 			String randomUUID = UUID.randomUUID().toString();
 			toChange.put( subject, valueFactory.createBNode( randomUUID ) );
 		}
-		ModelUtil.replaceSubjects( document.getBaseModel(), toChange );
+		ModelUtil.replace(document.getBaseModel(),toChange);
+
 
 		return document;
 	}
