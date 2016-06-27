@@ -35,8 +35,6 @@ import com.carbonldp.rdf.*;
 import com.carbonldp.repository.FileRepository;
 import com.carbonldp.repository.LocalFileRepository;
 import com.carbonldp.repository.RepositoryService;
-import com.carbonldp.sparql.SPARQLService;
-import com.carbonldp.sparql.SesameSPARQLService;
 import com.carbonldp.utils.PropertiesUtil;
 import org.openrdf.model.IRI;
 import org.openrdf.model.impl.SimpleValueFactory;
@@ -204,11 +202,6 @@ public class RepositoriesConfig {
 		return new SesameACLRepository( connectionFactory, resourceRepository(), documentRepository(), sourceRepository() );
 	}
 
-	// TODO: why is this not in services config?
-	@Bean
-	public SPARQLService sparqlService() {
-		return new SesameSPARQLService( connectionFactory );
-	}
 
 	@Bean
 	public BackupRepository backupRepository() {return new SesameBackupRepository( connectionFactory, resourceRepository(), documentRepository() ); }
