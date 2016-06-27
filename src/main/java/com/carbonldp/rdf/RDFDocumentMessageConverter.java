@@ -67,6 +67,8 @@ public class RDFDocumentMessageConverter extends ModelMessageConverter<RDFDocume
 		} catch ( RDFParseException | RDFHandlerException | IOException e ) {
 			throw new BadRequestException( new Infraction( 0x6001, "formatToUse", formatToUse.getName() ) );
 		}
+		
+		// TODO: Fix the root cause instead of monkey patching it
 		return setGenericBNodes( documentRDFHandler.getDocument() );
 	}
 
