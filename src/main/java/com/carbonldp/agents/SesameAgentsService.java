@@ -18,6 +18,7 @@ import com.carbonldp.utils.RDFDocumentUtil;
 import freemarker.template.*;
 import org.openrdf.model.IRI;
 import org.openrdf.model.Model;
+import org.openrdf.model.Value;
 import org.openrdf.model.impl.AbstractModel;
 import org.openrdf.model.impl.LinkedHashModel;
 import org.openrdf.model.impl.SimpleValueFactory;
@@ -29,10 +30,7 @@ import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public abstract class SesameAgentsService extends AbstractSesameLDPService implements AgentService {
@@ -44,6 +42,7 @@ public abstract class SesameAgentsService extends AbstractSesameLDPService imple
 
 	@Override
 	public void replace( IRI source, Agent agent ) {
+		validateNumberOfPasswordAndEmails( agent );
 		RDFSource originalSource = sourceService.get( agent.getIRI() );
 		RDFDocument originalDocument = originalSource.getDocument();
 
@@ -51,17 +50,26 @@ public abstract class SesameAgentsService extends AbstractSesameLDPService imple
 
 		AbstractModel toAdd = newDocument.stream().filter( statement -> ! ModelUtil.containsStatement( originalDocument, statement ) ).collect( Collectors.toCollection( LinkedHashModel::new ) );
 		RDFDocument documentToAdd = new RDFDocument( toAdd, source );
-
-		Model passwordModel = documentToAdd.filter( null, AgentDescription.Property.PASSWORD.getIRI(), null, null );
-		if ( ! passwordModel.isEmpty() ) {
-			documentToAdd.remove( null, AgentDescription.Property.PASSWORD.getIRI(), null, null );
-			setAgentPasswordFields( agent );
-			documentToAdd.add( agent.getSubject(), AgentDescription.Property.PASSWORD.getIRI(), SimpleValueFactory.getInstance().createLiteral( agent.getPassword() ), agent.getSubject() );
-		}
 		AbstractModel toDelete = originalDocument.stream().filter( statement -> ! ModelUtil.containsStatement( newDocument, statement ) ).collect( Collectors.toCollection( LinkedHashModel::new ) );
 		RDFDocument documentToDelete = new RDFDocument( toDelete, source );
 
+		if ( ! documentToAdd.filter( null, AgentDescription.Property.PASSWORD.getIRI(), null, null ).isEmpty() ) {
+			documentToAdd.remove( null, AgentDescription.Property.PASSWORD.getIRI(), null, null );
+			documentToAdd.remove( null, AgentDescription.Property.SALT.getIRI(), null, null );
+			setAgentPasswordFields( agent );
+			documentToAdd.add( agent.getSubject(), AgentDescription.Property.PASSWORD.getIRI(), SimpleValueFactory.getInstance().createLiteral( agent.getPassword() ), agent.getSubject() );
+			documentToAdd.add( agent.getSubject(), AgentDescription.Property.PASSWORD.getIRI(), SimpleValueFactory.getInstance().createLiteral( agent.getSalt() ), agent.getSubject() );
+		}
+
 		sourceService.replace( originalSource.getIRI(), documentToAdd, documentToDelete );
+	}
+
+	public void validateNumberOfPasswordAndEmails( Agent agent ) {
+		Set<Value> passwords = agent.getProperties( AgentDescription.Property.PASSWORD );
+		if ( passwords.size() != 1 ) throw new InvalidResourceException( new Infraction( 0x2004, "property", AgentDescription.Property.PASSWORD.getIRI().stringValue() ) );
+
+		Set<Value> emails = agent.getProperties( AgentDescription.Property.EMAIL );
+		if ( emails.size() < 1 ) throw new InvalidResourceException( new Infraction( 0x2004, "property", AgentDescription.Property.PASSWORD.getIRI().stringValue() ) );
 	}
 
 	protected void validate( Agent agent ) {
