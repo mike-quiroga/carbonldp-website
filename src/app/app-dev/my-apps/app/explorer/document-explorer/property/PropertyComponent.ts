@@ -3,14 +3,14 @@ import { Component, ElementRef, Input, Output, EventEmitter } from "@angular/cor
 import $ from "jquery";
 import "semantic-ui/semantic";
 
-import * as RDFNode from "carbonldp/RDF/RDFNode";
-import * as Literal from "carbonldp/RDF/Literal";
+import * as SDKRDFNode from "carbonldp/RDF/RDFNode";
+import * as SDKLiteral from "carbonldp/RDF/Literal";
 import * as URI from "carbonldp/RDF/URI";
 import * as Utils from "carbonldp/Utils";
 
 import ListViewerComponent from "./../list-viewer/ListViewerComponent";
 import LiteralsComponent from "./literals/LiteralsComponent";
-import { Literal as LocalLiteral } from "./literals/literal/LiteralComponent";
+import { LiteralRow } from "./literals/literal/LiteralComponent";
 
 import template from "./template.html!";
 import "./style.css!";
@@ -26,8 +26,8 @@ export default class PropertyComponent {
 
 	element:ElementRef;
 	$element:JQuery;
-	literals:Literal.Class[];
-	pointers:RDFNode.Class[];
+	literals:LiteralRow[];
+	pointers:SDKRDFNode.Class[];
 	@Input() documentURI:string;
 	@Output() onGoToBNode:EventEmitter<string> = new EventEmitter<string>();
 	@Output() onGoToNamedFragment:EventEmitter<string> = new EventEmitter<string>();
@@ -106,7 +106,7 @@ export default class PropertyComponent {
 	}
 
 	isLiteral( property:any ):boolean {
-		return Literal.Factory.is( property );
+		return SDKLiteral.Factory.is( property );
 	}
 
 	isArray( property:any ):boolean {
@@ -155,9 +155,14 @@ export default class PropertyComponent {
 		this.literals = [];
 		this.pointers = [];
 		this.property.value.forEach( ( literalOrRDFNode )=> {
-			if ( Literal.Factory.is( literalOrRDFNode ) ) { this.literals.push( literalOrRDFNode ); }
-			if ( RDFNode.Factory.is( literalOrRDFNode ) ) { this.pointers.push( literalOrRDFNode ); }
+			if ( SDKLiteral.Factory.is( literalOrRDFNode ) ) this.literals.push( <LiteralRow>{ copy: literalOrRDFNode } );
+			if ( SDKRDFNode.Factory.is( literalOrRDFNode ) ) this.pointers.push( literalOrRDFNode );
 		} );
+	}
+
+	checkForChangesOnLiterals( literals:LiteralRow[] ):void {
+		this.propertyHasChanged = literals.filter( ( literalRow )=> {return ! ! literalRow.modified} ).length > 0;
+		console.log( literals );
 	}
 
 

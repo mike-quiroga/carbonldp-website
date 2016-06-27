@@ -46,7 +46,8 @@
 		<p *ngIf="!isUrl(property.name)">{{property.name}}</p>
 	</div>
 	<div class="description">
-		<literals [literals]="literals"></literals>
+		<literals [(literals)]="literals"
+		          (onLiteralsChanges)="checkForChangesOnLiterals($event)"></literals>
 		<div class="ui styled accordion" *ngIf="hasHeader('@list')">
 			<div class="title" *ngFor="let item of property.value; let i = index;">
 				<i class="dropdown icon"></i>

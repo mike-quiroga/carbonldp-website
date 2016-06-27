@@ -6,7 +6,7 @@ import "semantic-ui/semantic";
 
 import * as NS from "carbonldp/NS";
 import * as Utils from "carbonldp/Utils";
-import * as Literal from "carbonldp/RDF/Literal";
+import * as SDKLiteral from "carbonldp/RDF/Literal";
 import * as URI from "carbonldp/RDF/URI";
 
 
@@ -22,6 +22,7 @@ export default class LiteralComponent {
 
 	element:ElementRef;
 	private _mode = Modes.READ;
+	private tempLiteral:any = {};
 	searchDropdown:JQuery;
 	languageDropdown:JQuery;
 
@@ -802,6 +803,7 @@ export default class LiteralComponent {
 		if ( type === "empty" ) {type = null;}
 		else if ( ! type || type.length === 0 ) type = NS.XSD.DataType.string;
 		this._type = type;
+		this.isStringType = type === NS.XSD.DataType.string;
 		if ( ! ! this.typeInput && this.typeInput.value !== this.type )(<Control>this.typeInput).updateValue( this.type );
 		this.valueInput.updateValueAndValidity();
 	}
@@ -823,16 +825,15 @@ export default class LiteralComponent {
 
 	@Input() set literal( value:Literal ) {
 		this._literal = value;
-		this.value = ! ! this.tempLiteral[ "@value" ] ? this.tempLiteral[ "@value" ] : this.literal[ "@value" ];
-		this.type = ! ! this.tempLiteral[ "@type" ] ? this.tempLiteral[ "@type" ] : this.literal[ "@type" ];
-		this.language = ! ! this.tempLiteral[ "@language" ] ? this.tempLiteral[ "@language" ] : this.literal[ "@language" ];
+		this.value = ! ! this.tempLiteral[ "@value" ] ? this.tempLiteral[ "@value" ] : this.literal.copy[ "@value" ];
+		this.type = ! ! this.tempLiteral[ "@type" ] ? this.tempLiteral[ "@type" ] : this.literal.copy[ "@type" ];
+		this.language = ! ! this.tempLiteral[ "@language" ] ? this.tempLiteral[ "@language" ] : this.literal.copy[ "@language" ];
 	}
 
 	@Input() canDisplayLanguage:boolean = false;
 	@Output() onEditMode:EventEmitter<boolean> = new EventEmitter<boolean>();
 	@Output() onSave:EventEmitter<any> = new EventEmitter<any>();
 
-	private tempLiteral:any = {};
 	valueInput:AbstractControl = new Control( this.value, Validators.compose( [ Validators.required, this.valueValidator.bind( this ) ] ) );
 	typeInput:AbstractControl = new Control( this.type, Validators.compose( [ Validators.required ] ) );
 	languageInput:AbstractControl = new Control( this.language, Validators.compose( [] ) );
@@ -848,37 +849,61 @@ export default class LiteralComponent {
 
 	cancelEdit():void {
 		this.mode = Modes.READ;
-		this.value = ! ! this.tempLiteral[ "@value" ] ? this.tempLiteral[ "@value" ] : this.literal[ "@value" ];
-		this.type = ! ! this.tempLiteral[ "@type" ] ? this.tempLiteral[ "@type" ] : this.literal[ "@type" ];
-		this.language = ! ! this.tempLiteral[ "@language" ] ? this.tempLiteral[ "@language" ] : this.literal[ "@language" ];
-		if ( this.value === this.literal[ "@value" ] ) delete this.tempLiteral[ "@value" ];
-		if ( this.type === this.literal[ "@type" ] ) delete this.tempLiteral[ "@type" ];
-		if ( this.language === this.literal[ "@language" ] ) delete this.tempLiteral[ "@language" ];
+
+		if ( typeof this.tempLiteral[ "@value" ] === "undefined" ) {
+			this.value = this.literal.copy[ "@value" ];
+			delete this.tempLiteral[ "@value" ];
+		} else this.value = this.tempLiteral[ "@value" ];
+
+		if ( typeof this.tempLiteral[ "@type" ] === "undefined" ) {
+			this.type = this.literal.copy[ "@type" ];
+			delete this.tempLiteral[ "@type" ];
+		} else this.type = this.tempLiteral[ "@type" ];
+
+		if ( typeof this.tempLiteral[ "@language" ] === "undefined" ) {
+			this.language = this.literal.copy[ "@language" ];
+			delete this.tempLiteral[ "@language" ];
+		} else this.language = this.tempLiteral[ "@language" ];
 	}
 
 	save():void {
-		if ( ! ! this.value &&
-			(this.value !== this.literal[ "@value" ] || this.value !== this.tempLiteral[ "@value" ] ) ) this.tempLiteral[ "@value" ] = this.value;
-		if ( ! ! this.type && this.type !== NS.XSD.DataType.string &&
-			(this.type !== this.literal[ "@type" ] || this.type !== this.tempLiteral[ "@type" ] ) ) this.tempLiteral[ "@type" ] = this.type;
-		if ( ! ! this.language &&
-			( this.language !== this.literal[ "@language" ] || this.language !== this.tempLiteral[ "@language" ] ) ) this.tempLiteral[ "@language" ] = this.language;
+		if ( typeof this.value !== "undefined" && (this.value !== this.literal.copy[ "@value" ] || this.value !== this.tempLiteral[ "@value" ] ) ) {
+			this.tempLiteral[ "@value" ] = this.value;
+		}
+		if ( typeof this.type !== "undefined" && (this.type !== this.literal.copy[ "@type" ] || this.type !== this.tempLiteral[ "@type" ] ) ) {
+			this.tempLiteral[ "@type" ] = this.type;
+		}
+		if ( typeof this.language !== "undefined" && ( this.language !== this.literal.copy[ "@language" ] || this.language !== this.tempLiteral[ "@language" ] ) ) {
+			this.tempLiteral[ "@language" ] = this.language;
+		}
 
 		if ( ! ! this.tempLiteral[ "@type" ] && this.tempLiteral[ "@type" ] !== NS.XSD.DataType.string ) delete this.tempLiteral[ "@language" ];
 		if ( this.tempLiteral[ "@type" ] === NS.XSD.DataType.string || this.type === NS.XSD.DataType.string ) delete this.tempLiteral[ "@type" ];
 
-		if ( this.value === null || typeof this.value === "undefined" ) delete this.tempLiteral[ "@value" ];
-		if ( this.type === null || typeof this.type === "undefined" ) delete this.tempLiteral[ "@type" ];
-		if ( this.language === null || typeof this.language === "undefined" ) delete this.tempLiteral[ "@language" ];
-
-		if ( (this.tempLiteral[ "@value" ] === this.literal[ "@value" ] ) &&
-			(this.tempLiteral[ "@type" ] === this.literal[ "@type" ] ) &&
-			(this.tempLiteral[ "@language" ] === this.literal[ "@language" ] ) ) {
+		// Check for tempLiteral to contain valid json+ld for literals
+		// 1. @value always present, if not clean whole object.
+		// 2. If @type empty or NS.XSD.DataType.string, then delete @type from tempLiteral.
+		// 3. If @language empty or when @type different than NS.XSD.DataType.string, then delete @language from tempLiteral.
+		if ( this.tempLiteral[ "@type" ] === null || typeof this.tempLiteral[ "@type" ] === "undefined" || this.tempLiteral[ "@type" ] === NS.XSD.DataType.string ) delete this.tempLiteral[ "@type" ];
+		if ( this.language === null || typeof this.language === "undefined" || (typeof this.tempLiteral[ "@type" ] !== "undefined" && this.tempLiteral[ "@type" ] !== NS.XSD.DataType.string) ) {
+			delete this.tempLiteral[ "@language" ];
+		}
+		if ( this.tempLiteral[ "@value" ] === null || typeof this.tempLiteral[ "@value" ] === "undefined" ) {
 			delete this.tempLiteral[ "@value" ];
 			delete this.tempLiteral[ "@type" ];
 			delete this.tempLiteral[ "@language" ];
 		}
 
+		if ( (this.tempLiteral[ "@value" ] === this.literal.copy[ "@value" ] ) &&
+			(this.tempLiteral[ "@type" ] === this.literal.copy[ "@type" ] ) &&
+			(this.tempLiteral[ "@language" ] === this.literal.copy[ "@language" ] ) ) {
+			delete this.tempLiteral[ "@value" ];
+			delete this.tempLiteral[ "@type" ];
+			delete this.tempLiteral[ "@language" ];
+			delete this.literal.modified;
+		}
+
+		this.onSave.emit( this.tempLiteral );
 		this.mode = Modes.READ;
 	}
 
@@ -949,13 +974,13 @@ export default class LiteralComponent {
 
 			// Boolean
 			case NS.XSD.DataType.boolean:
-				value = Utils.isBoolean( Literal.Factory.parse( value, this.type ) ) ? Literal.Factory.parse( value, this.type ) : value;
+				value = Utils.isBoolean( SDKLiteral.Factory.parse( value, this.type ) ) ? SDKLiteral.Factory.parse( value, this.type ) : value;
 				break;
 
 			// Numbers
 			case NS.XSD.DataType.int :
 			case NS.XSD.DataType.integer :
-				value = ! isNaN( value ) && ! isNaN( Literal.Factory.parse( value, this.type ) ) && Utils.isInteger( Literal.Factory.parse( value, this.type ) ) ? Literal.Factory.parse( value, this.type ) : value;
+				value = ! isNaN( value ) && ! isNaN( SDKLiteral.Factory.parse( value, this.type ) ) && Utils.isInteger( SDKLiteral.Factory.parse( value, this.type ) ) ? SDKLiteral.Factory.parse( value, this.type ) : value;
 				break;
 
 			case NS.XSD.DataType.byte :
@@ -972,14 +997,14 @@ export default class LiteralComponent {
 			case NS.XSD.DataType.unsignedByte :
 			case NS.XSD.DataType.double :
 			case NS.XSD.DataType.float :
-				value = ! isNaN( value ) && ! isNaN( Literal.Factory.parse( value, this.type ) ) && Utils.isNumber( Literal.Factory.parse( value, this.type ) ) ? Literal.Factory.parse( value, this.type ) : value;
+				value = ! isNaN( value ) && ! isNaN( SDKLiteral.Factory.parse( value, this.type ) ) && Utils.isNumber( SDKLiteral.Factory.parse( value, this.type ) ) ? SDKLiteral.Factory.parse( value, this.type ) : value;
 				break;
 
 			// Dates
 			case NS.XSD.DataType.date:
 			case NS.XSD.DataType.dateTime:
 			case NS.XSD.DataType.time:
-				value = Utils.isDate( Literal.Factory.parse( value, this.type ) ) ? Literal.Factory.parse( value, this.type ) : value;
+				value = Utils.isDate( SDKLiteral.Factory.parse( value, this.type ) ) ? SDKLiteral.Factory.parse( value, this.type ) : value;
 				break;
 
 			default:
@@ -1010,7 +1035,7 @@ export default class LiteralComponent {
 			// Numbers
 			case NS.XSD.DataType.int :
 			case NS.XSD.DataType.integer :
-				valid = ! isNaN( control.value ) && ! isNaN( Literal.Factory.parse( control.value, this.type ) ) && Utils.isInteger( Literal.Factory.parse( control.value, this.type ) );
+				valid = ! isNaN( control.value ) && ! isNaN( SDKLiteral.Factory.parse( control.value, this.type ) ) && Utils.isInteger( SDKLiteral.Factory.parse( control.value, this.type ) );
 				break;
 
 			case NS.XSD.DataType.byte :
@@ -1027,18 +1052,18 @@ export default class LiteralComponent {
 			case NS.XSD.DataType.unsignedByte :
 			case NS.XSD.DataType.double :
 			case NS.XSD.DataType.float :
-				valid = ! isNaN( control.value ) && ! isNaN( Literal.Factory.parse( control.value, this.type ) ) && Utils.isNumber( Literal.Factory.parse( control.value, this.type ) );
+				valid = ! isNaN( control.value ) && ! isNaN( SDKLiteral.Factory.parse( control.value, this.type ) ) && Utils.isNumber( SDKLiteral.Factory.parse( control.value, this.type ) );
 				break;
 
 			// Dates
 			case NS.XSD.DataType.date:
 			case NS.XSD.DataType.dateTime:
 			case NS.XSD.DataType.time:
-				valid = Utils.isDate( Literal.Factory.parse( control.value, this.type ) );
+				valid = Utils.isDate( SDKLiteral.Factory.parse( control.value, this.type ) );
 				break;
 
 			case NS.XSD.DataType.string:
-				valid = Utils.isString( Literal.Factory.parse( control.value, this.type ) );
+				valid = Utils.isString( SDKLiteral.Factory.parse( control.value, this.type ) );
 				break;
 
 			default:
@@ -1056,8 +1081,12 @@ class Modes {
 	static EDIT:string = "EDIT";
 	static READ:string = "READ";
 }
+export interface LiteralRow {
+	copy:Literal;
+	modified?:Literal;
+}
 export interface Literal {
 	"@value":string|number|boolean;
-	"@type":string;
-	"@language":string;
+	"@type"?:string;
+	"@language"?:string;
 }

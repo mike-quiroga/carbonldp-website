@@ -11,7 +11,7 @@
 		<tr class="literal top aligned" *ngFor="let literal of literals; let i = index;"
 		    [literal]="literal"
 		    [canDisplayLanguage]="isLanguagePresent || isEditingLiteral"
-		    (onSave)="saveLiteral($event)"
+		    (onSave)="saveLiteral($event, literal, i)"
 		    (onEditMode)="editModeChanged($event)"></tr>
 	</tbody>
 </table>
