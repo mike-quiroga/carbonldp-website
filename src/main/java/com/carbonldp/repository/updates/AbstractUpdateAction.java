@@ -1,10 +1,9 @@
 package com.carbonldp.repository.updates;
 
 import com.carbonldp.AbstractComponent;
-import com.carbonldp.Vars;
 import com.carbonldp.apps.App;
 import com.carbonldp.apps.AppRepository;
-import com.carbonldp.authentication.ticket.TicketService;
+import com.carbonldp.apps.roles.AppRoleRepository;
 import com.carbonldp.authentication.token.app.AppTokenRepository;
 import com.carbonldp.authorization.acl.ACLRepository;
 import com.carbonldp.ldp.containers.ContainerRepository;
@@ -13,8 +12,6 @@ import com.carbonldp.rdf.RDFDocumentRepository;
 import com.carbonldp.sparql.SPARQLTemplate;
 import com.carbonldp.spring.TransactionWrapper;
 import com.carbonldp.utils.Action;
-import org.openrdf.model.IRI;
-
 import org.openrdf.model.ValueFactory;
 import org.openrdf.model.impl.SimpleValueFactory;
 import org.openrdf.repository.RepositoryException;
@@ -25,7 +22,6 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -42,6 +38,7 @@ public abstract class AbstractUpdateAction extends AbstractComponent implements 
 	protected RDFSourceRepository sourceRepository;
 	protected ACLRepository aclRepository;
 	protected RDFDocumentRepository documentRepository;
+	protected AppRoleRepository appRoleRepository;
 	protected static ValueFactory valueFactory = SimpleValueFactory.getInstance();
 
 	public void run() {
@@ -82,5 +79,6 @@ public abstract class AbstractUpdateAction extends AbstractComponent implements 
 		aclRepository = context.getBean( ACLRepository.class );
 		documentRepository = context.getBean( RDFDocumentRepository.class );
 		appTokensRepository = context.getBean( AppTokenRepository.class );
+		appRoleRepository = context.getBean( AppRoleRepository.class );
 	}
 }

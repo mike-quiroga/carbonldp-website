@@ -37,6 +37,7 @@ public class RepositoriesUpdater extends AbstractComponent {
 		put( new RepositoryVersion( "1.7.0" ), new UpdateAction1o7o0() );
 		put( new RepositoryVersion( "1.8.0" ), new UpdateAction1o8o0() );
 		put( new RepositoryVersion( "1.9.0" ), new UpdateAction1o9o0() );
+		put( new RepositoryVersion( "1.10.0" ), new UpdateAction1o10o0() );
 	}};
 
 	public boolean repositoriesAreUpToDate() {

@@ -202,7 +202,6 @@ public class RepositoriesConfig {
 		return new SesameACLRepository( connectionFactory, resourceRepository(), documentRepository(), sourceRepository() );
 	}
 
-
 	@Bean
 	public BackupRepository backupRepository() {return new SesameBackupRepository( connectionFactory, resourceRepository(), documentRepository() ); }
 }
