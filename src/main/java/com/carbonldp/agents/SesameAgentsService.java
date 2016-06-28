@@ -17,7 +17,6 @@ import com.carbonldp.utils.ModelUtil;
 import com.carbonldp.utils.RDFDocumentUtil;
 import freemarker.template.*;
 import org.openrdf.model.IRI;
-import org.openrdf.model.Model;
 import org.openrdf.model.Value;
 import org.openrdf.model.impl.AbstractModel;
 import org.openrdf.model.impl.LinkedHashModel;
@@ -62,14 +61,6 @@ public abstract class SesameAgentsService extends AbstractSesameLDPService imple
 		}
 
 		sourceService.replace( originalSource.getIRI(), documentToAdd, documentToDelete );
-	}
-
-	private void validateNumberOfPasswordAndEmails( Agent agent ) {
-		Set<Value> passwords = agent.getProperties( AgentDescription.Property.PASSWORD );
-		if ( passwords.size() != 1 ) throw new InvalidResourceException( new Infraction( 0x2004, "property", AgentDescription.Property.PASSWORD.getIRI().stringValue() ) );
-
-		Set<Value> emails = agent.getProperties( AgentDescription.Property.EMAIL );
-		if ( emails.size() < 1 ) throw new InvalidResourceException( new Infraction( 0x2004, "property", AgentDescription.Property.PASSWORD.getIRI().stringValue() ) );
 	}
 
 	protected void validate( Agent agent ) {
@@ -118,6 +109,14 @@ public abstract class SesameAgentsService extends AbstractSesameLDPService imple
 		}
 
 		mailSender.send( message );
+	}
+
+	private void validateNumberOfPasswordAndEmails( Agent agent ) {
+		Set<Value> passwords = agent.getProperties( AgentDescription.Property.PASSWORD );
+		if ( passwords.size() != 1 ) throw new InvalidResourceException( new Infraction( 0x2004, "property", AgentDescription.Property.PASSWORD.getIRI().stringValue() ) );
+
+		Set<Value> emails = agent.getProperties( AgentDescription.Property.EMAIL );
+		if ( emails.size() < 1 ) throw new InvalidResourceException( new Infraction( 0x2004, "property", AgentDescription.Property.PASSWORD.getIRI().stringValue() ) );
 	}
 
 	private String prepareEmailText( Agent agent, AgentValidator validator ) throws IOException {
