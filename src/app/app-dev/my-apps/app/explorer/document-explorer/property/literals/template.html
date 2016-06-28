@@ -1,3 +1,7 @@
+<button class="ui right labeled icon basic mini button" (click)="addNewLiteral()">
+	<i class="plus icon"></i>
+	Add Literal
+</button>
 <table class="ui very compact striped small celled table" *ngIf="literals.length>0">
 	<thead>
 		<tr class="center aligned">
@@ -8,11 +12,21 @@
 		</tr>
 	</thead>
 	<tbody>
-		<tr class="literal top aligned" *ngFor="let literal of literals; let i = index;"
-		    [literal]="literal"
-		    [canDisplayLanguage]="isLanguagePresent || isEditingLiteral"
-		    (onSave)="saveLiteral($event, literal, i)"
-		    (onEditMode)="editModeChanged($event)"></tr>
+		<template ngFor let-literal="$implicit" [ngForOf]="literals" let-i="index">
+			<tr class="literal top aligned" *ngIf="!!literal.copy"
+			    [literal]="literal"
+			    [canDisplayLanguage]="isLanguagePresent || isEditingLiteral"
+			    (onSave)="saveLiteral($event, literal, i)"
+			    (onEditMode)="editModeChanged($event)"></tr>
+		</template>
+		<template ngFor let-literal="$implicit" [ngForOf]="literals" let-i="index">
+			<tr class="literal top aligned added-literal" *ngIf="!!literal.added"
+			    [mode]="modes.EDIT"
+			    [literal]="literal"
+			    [canDisplayLanguage]="isLanguagePresent || isEditingLiteral"
+			    (onSave)="saveNewLiteral($event, literal, i)"
+			    (onEditMode)="editModeChanged($event)"></tr>
+		</template>
 	</tbody>
 </table>
 <div class="ui small message" *ngIf="literals.length===0">

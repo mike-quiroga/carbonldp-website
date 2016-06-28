@@ -11,7 +11,7 @@ import * as URI from "carbonldp/RDF/URI";
 
 import { IterableMapPipe } from "./../../iterable-map/IterableMapPipe";
 import LiteralComponent from "./literal/LiteralComponent";
-import { Literal, LiteralRow } from "./literal/LiteralComponent";
+import { Literal, LiteralRow, Modes } from "./literal/LiteralComponent";
 
 import template from "./template.html!";
 import "./style.css!";
@@ -26,10 +26,11 @@ import "./style.css!";
 
 export default class LiteralsComponent {
 
+	modes:Modes = Modes;
 	tokens:string[] = [ "@value", "@type", "@language" ];
 	tempLiterals:Literal[] = [];
 	modifiedLiterals:{id:number, literal:Literal}[] = [];
-	addedLiterals:Literal[] = [];
+	addedLiterals:LiteralRow[] = [];
 	deletedLiterals:Literal[] = [];
 	isLanguagePresent:boolean = false;
 	isEditingLiteral:boolean = false;
@@ -43,7 +44,11 @@ export default class LiteralsComponent {
 	}
 
 	existsToken( token:string ):boolean {
-		return ! ! this.literals.find( ( literal:any )=> {return ! ! literal.copy[ token ] || (! ! literal.modified && ! ! literal.modified[ token ]) } );
+		return ! ! this.literals.find( ( literal:any )=> {
+			return (! ! literal.added && typeof literal.added[ token ] !== "undefined")
+				|| (! ! literal.modified && typeof literal.modified[ token ] !== "undefined")
+				|| (! ! literal.copy && typeof literal.copy[ token ] !== "undefined")
+		} );
 	}
 
 	editModeChanged( value:boolean ):void {
@@ -56,6 +61,29 @@ export default class LiteralsComponent {
 		}
 		this.isLanguagePresent = this.existsToken( "@language" );
 		this.onLiteralsChanges.emit( this.literals );
+	}
+
+	saveNewLiteral( newLiteral:Literal, originalLiteral:Literal, index:number ) {
+		if ( newLiteral.hasOwnProperty( "@value" ) ) {
+			this.literals[ index ].added = newLiteral;
+		}
+		this.isLanguagePresent = this.existsToken( "@language" );
+		this.onLiteralsChanges.emit( this.literals );
+	}
+
+	addNewLiteral():void {
+		let newLiteralRow:LiteralRow = <LiteralRow>{};
+		newLiteralRow.added = <Literal>{};
+		newLiteralRow.added[ "@value" ] = "";
+		this.literals.push( newLiteralRow );
+	}
+
+	getLiterals():LiteralRow[] {
+		return this.literals.filter( ( literal:LiteralRow ) => typeof literal.copy !== "undefined" );
+	}
+
+	getAddedLiterals():LiteralRow[] {
+		return this.literals.filter( ( literal:LiteralRow ) => typeof literal.added !== "undefined" );
 	}
 
 	// getLiterals():void {

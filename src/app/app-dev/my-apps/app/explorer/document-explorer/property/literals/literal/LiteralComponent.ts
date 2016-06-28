@@ -26,7 +26,7 @@ export default class LiteralComponent {
 	searchDropdown:JQuery;
 	languageDropdown:JQuery;
 
-	set mode( value:string ) {
+	@Input() set mode( value:string ) {
 		this._mode = value;
 		this.onEditMode.emit( this.mode === Modes.EDIT );
 		if ( this.mode === Modes.EDIT ) {
@@ -820,14 +820,27 @@ export default class LiteralComponent {
 	}
 
 	// Inputs and Outputs
-	private _literal = <Literal>{};
+	private _literal = <LiteralRow>{};
 	get literal() { return this._literal; }
 
-	@Input() set literal( value:Literal ) {
+	@Input() set literal( value:LiteralRow ) {
 		this._literal = value;
-		this.value = ! ! this.tempLiteral[ "@value" ] ? this.tempLiteral[ "@value" ] : this.literal.copy[ "@value" ];
-		this.type = ! ! this.tempLiteral[ "@type" ] ? this.tempLiteral[ "@type" ] : this.literal.copy[ "@type" ];
-		this.language = ! ! this.tempLiteral[ "@language" ] ? this.tempLiteral[ "@language" ] : this.literal.copy[ "@language" ];
+
+		if ( typeof this.literal.copy !== "undefined" ) {
+			this.value = ! ! this.tempLiteral[ "@value" ] ? this.tempLiteral[ "@value" ] : this.literal.copy[ "@value" ];
+			this.type = ! ! this.tempLiteral[ "@type" ] ? this.tempLiteral[ "@type" ] : this.literal.copy[ "@type" ];
+			this.language = ! ! this.tempLiteral[ "@language" ] ? this.tempLiteral[ "@language" ] : this.literal.copy[ "@language" ];
+		} else if ( typeof this.literal.added !== "undefined" ) {
+			this.value = ! ! this.tempLiteral[ "@value" ] ? this.tempLiteral[ "@value" ] : this.literal.added[ "@value" ];
+			this.type = ! ! this.tempLiteral[ "@type" ] ? this.tempLiteral[ "@type" ] : this.literal.added[ "@type" ];
+			this.language = ! ! this.tempLiteral[ "@language" ] ? this.tempLiteral[ "@language" ] : this.literal.added[ "@language" ];
+		}
+
+		// this.value = typeof this.tempLiteral[ "@value" ] !== "undefined" ? this.tempLiteral[ "@value" ] : typeof this.literal.copy[ "@value" ] !== "undefined" ? this.literal.copy[ "@value" ] : this.literal.added[ "@value" ];
+		// this.type = ! ! this.tempLiteral[ "@type" ] ? this.tempLiteral[ "@type" ] : typeof this.literal.copy[ "@type" ] !== "undefined" ? this.literal.copy[ "@type" ] : this.literal.added[ "@type" ];
+		// this.language = ! ! this.tempLiteral[ "@language" ] ? this.tempLiteral[ "@language" ] : typeof this.literal.copy[ "@language" ] !== "undefined" ? this.literal.copy[ "@language" ] : this.literal.added[ "@language" ];
+
+
 	}
 
 	@Input() canDisplayLanguage:boolean = false;
@@ -848,32 +861,35 @@ export default class LiteralComponent {
 	}
 
 	cancelEdit():void {
+		let copyOrAdded:string = typeof this.literal.copy !== "undefined" ? "copy" : "added";
 		this.mode = Modes.READ;
 
 		if ( typeof this.tempLiteral[ "@value" ] === "undefined" ) {
-			this.value = this.literal.copy[ "@value" ];
+			this.value = this.literal[ copyOrAdded ][ "@value" ];
 			delete this.tempLiteral[ "@value" ];
 		} else this.value = this.tempLiteral[ "@value" ];
 
 		if ( typeof this.tempLiteral[ "@type" ] === "undefined" ) {
-			this.type = this.literal.copy[ "@type" ];
+			this.type = this.literal[ copyOrAdded ][ "@type" ];
 			delete this.tempLiteral[ "@type" ];
 		} else this.type = this.tempLiteral[ "@type" ];
 
 		if ( typeof this.tempLiteral[ "@language" ] === "undefined" ) {
-			this.language = this.literal.copy[ "@language" ];
+			this.language = this.literal[ copyOrAdded ][ "@language" ];
 			delete this.tempLiteral[ "@language" ];
 		} else this.language = this.tempLiteral[ "@language" ];
 	}
 
 	save():void {
-		if ( typeof this.value !== "undefined" && (this.value !== this.literal.copy[ "@value" ] || this.value !== this.tempLiteral[ "@value" ] ) ) {
+		let copyOrAdded:string = typeof this.literal.copy !== "undefined" ? "copy" : "added";
+
+		if ( typeof this.value !== "undefined" && (this.value !== this.literal[ copyOrAdded ][ "@value" ] || this.value !== this.tempLiteral[ "@value" ] ) ) {
 			this.tempLiteral[ "@value" ] = this.value;
 		}
-		if ( typeof this.type !== "undefined" && (this.type !== this.literal.copy[ "@type" ] || this.type !== this.tempLiteral[ "@type" ] ) ) {
+		if ( typeof this.type !== "undefined" && (this.type !== this.literal[ copyOrAdded ][ "@type" ] || this.type !== this.tempLiteral[ "@type" ] ) ) {
 			this.tempLiteral[ "@type" ] = this.type;
 		}
-		if ( typeof this.language !== "undefined" && ( this.language !== this.literal.copy[ "@language" ] || this.language !== this.tempLiteral[ "@language" ] ) ) {
+		if ( typeof this.language !== "undefined" && ( this.language !== this.literal[ copyOrAdded ][ "@language" ] || this.language !== this.tempLiteral[ "@language" ] ) ) {
 			this.tempLiteral[ "@language" ] = this.language;
 		}
 
@@ -894,13 +910,13 @@ export default class LiteralComponent {
 			delete this.tempLiteral[ "@language" ];
 		}
 
-		if ( (this.tempLiteral[ "@value" ] === this.literal.copy[ "@value" ] ) &&
-			(this.tempLiteral[ "@type" ] === this.literal.copy[ "@type" ] ) &&
-			(this.tempLiteral[ "@language" ] === this.literal.copy[ "@language" ] ) ) {
+		if ( (this.tempLiteral[ "@value" ] === this.literal[ copyOrAdded ][ "@value" ] ) &&
+			(this.tempLiteral[ "@type" ] === this.literal[ copyOrAdded ][ "@type" ] ) &&
+			(this.tempLiteral[ "@language" ] === this.literal[ copyOrAdded ][ "@language" ] ) ) {
 			delete this.tempLiteral[ "@value" ];
 			delete this.tempLiteral[ "@type" ];
 			delete this.tempLiteral[ "@language" ];
-			delete this.literal.modified;
+			delete this.literal[ copyOrAdded ];
 		}
 
 		this.onSave.emit( this.tempLiteral );
@@ -1077,13 +1093,14 @@ export default class LiteralComponent {
 	}
 
 }
-class Modes {
+export class Modes {
 	static EDIT:string = "EDIT";
 	static READ:string = "READ";
 }
 export interface LiteralRow {
 	copy:Literal;
 	modified?:Literal;
+	added?:Literal;
 }
 export interface Literal {
 	"@value":string|number|boolean;

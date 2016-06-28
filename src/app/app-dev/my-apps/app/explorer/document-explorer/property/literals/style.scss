@@ -1,5 +1,10 @@
 literals {
 	display: block;
+
+}
+
+.ui.striped.table tbody tr.added-literal {
+	background-color: #D9EEFF;
 }
 
 .ui[class*="very compact"].table th {
