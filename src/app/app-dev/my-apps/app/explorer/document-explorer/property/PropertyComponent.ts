@@ -175,7 +175,7 @@ export default class PropertyComponent {
 
 	checkForChangesOnLiterals( literals:LiteralRow[] ):void {
 		this.changePropertyValues( literals );
-		this.propertyHasChanged = ! ! literals.find( ( literalRow )=> {return ! ! literalRow.modified || ! ! literalRow.added } );
+		this.propertyHasChanged = ! ! literals.find( ( literalRow )=> {return ! ! literalRow.modified || ! ! literalRow.added || ! ! literalRow.deleted } );
 		if ( ! this.propertyHasChanged ) delete this.property.modified;
 	}
 
@@ -185,7 +185,7 @@ export default class PropertyComponent {
 		if ( Utils.isArray( this.value ) ) {
 			this.tempProperty.value = [];
 			literals.forEach( ( literalRow )=> {
-				this.tempProperty.value.push( ! ! literalRow.added ? literalRow.added : ! ! literalRow.modified ? literalRow.modified : literalRow.copy );
+				if ( ! literalRow.deleted )this.tempProperty.value.push( ! ! literalRow.added ? literalRow.added : ! ! literalRow.modified ? literalRow.modified : literalRow.copy );
 			} );
 		} else {
 			this.tempProperty.value = this.value;

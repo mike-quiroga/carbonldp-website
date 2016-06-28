@@ -82,12 +82,32 @@ export default class LiteralsComponent {
 		this.onLiteralsChanges.emit( this.literals );
 	}
 
+	deleteLiteral( deletingLiteral:LiteralRow, index:number ):void {
+		this.onLiteralsChanges.emit( this.literals );
+	}
+
+	canDisplayLiterals():boolean {
+		return this.getUntouchedLiterals().length > 0;
+	}
+
 	getLiterals():LiteralRow[] {
 		return this.literals.filter( ( literal:LiteralRow ) => typeof literal.copy !== "undefined" );
 	}
 
 	getAddedLiterals():LiteralRow[] {
 		return this.literals.filter( ( literal:LiteralRow ) => typeof literal.added !== "undefined" );
+	}
+
+	getModifiedLiterals():LiteralRow[] {
+		return this.literals.filter( ( literal:LiteralRow ) => typeof literal.modified !== "undefined" );
+	}
+
+	getDeletedLiterals():LiteralRow[] {
+		return this.literals.filter( ( literal:LiteralRow ) => typeof literal.deleted !== "undefined" );
+	}
+
+	getUntouchedLiterals():LiteralRow[] {
+		return this.literals.filter( ( literal:LiteralRow ) => typeof literal.modified === "undefined" && typeof literal.deleted === "undefined" );
 	}
 
 	// getLiterals():void {

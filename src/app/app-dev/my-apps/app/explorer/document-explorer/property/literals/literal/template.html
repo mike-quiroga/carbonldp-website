@@ -65,11 +65,16 @@
 <td>
 	<div class="ui mini icon inverted edit value buttons" *ngIf="mode===modes.READ">
 		<button #editButton
-		        class="ui basic edit button"
+		        class="ui basic edit button" title="Edit literal"
 		        *ngIf="mode===modes.READ"
 		        [ngClass]="{hidden:editButton.classList.contains('active')}"
 		        (click)="onEdit($event)">
 			<i class="pencil icon"></i>
+		</button>
+		<button #deleteButton
+		        class="ui basic button" title="Delete"
+		        (click)="deleteLiteral()">
+			<i class="remove red icon"></i>
 		</button>
 	</div>
 	<div class="ui mini icon inverted confirm buttons" *ngIf="mode===modes.EDIT">

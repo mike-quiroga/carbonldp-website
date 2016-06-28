@@ -847,6 +847,7 @@ export default class LiteralComponent {
 	@Output() onEditMode:EventEmitter<boolean> = new EventEmitter<boolean>();
 	@Output() onSave:EventEmitter<any> = new EventEmitter<any>();
 	@Output() onDeleteNewLiteral:EventEmitter<LiteralRow> = new EventEmitter<LiteralRow>();
+	@Output() onDeleteLiteral:EventEmitter<LiteralRow> = new EventEmitter<LiteralRow>();
 
 	valueInput:AbstractControl = new Control( this.value, Validators.compose( [ Validators.required, this.valueValidator.bind( this ) ] ) );
 	typeInput:AbstractControl = new Control( this.type, Validators.compose( [ Validators.required ] ) );
@@ -859,6 +860,15 @@ export default class LiteralComponent {
 
 	onEdit( event:Event ):void {
 		this.mode = Modes.EDIT;
+	}
+
+	deleteLiteral():void {
+		if ( typeof this.literal.added !== "undefined" ) {
+			this.onDeleteNewLiteral.emit( this.literal );
+		} else {
+			this.literal.deleted = this.literal.copy;
+			this.onDeleteLiteral.emit( this.literal );
+		}
 	}
 
 	cancelEdit():void {
@@ -1107,6 +1117,7 @@ export interface LiteralRow {
 	copy:Literal;
 	modified?:Literal;
 	added?:Literal;
+	deleted?:Literal;
 }
 export interface Literal {
 	"@value":string|number|boolean;
