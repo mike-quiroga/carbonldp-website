@@ -846,6 +846,7 @@ export default class LiteralComponent {
 	@Input() canDisplayLanguage:boolean = false;
 	@Output() onEditMode:EventEmitter<boolean> = new EventEmitter<boolean>();
 	@Output() onSave:EventEmitter<any> = new EventEmitter<any>();
+	@Output() onDeleteNewLiteral:EventEmitter<LiteralRow> = new EventEmitter<LiteralRow>();
 
 	valueInput:AbstractControl = new Control( this.value, Validators.compose( [ Validators.required, this.valueValidator.bind( this ) ] ) );
 	typeInput:AbstractControl = new Control( this.type, Validators.compose( [ Validators.required ] ) );
@@ -861,8 +862,8 @@ export default class LiteralComponent {
 	}
 
 	cancelEdit():void {
-		let copyOrAdded:string = typeof this.literal.copy !== "undefined" ? "copy" : "added";
 		this.mode = Modes.READ;
+		let copyOrAdded:string = typeof this.literal.copy !== "undefined" ? "copy" : "added";
 
 		if ( typeof this.tempLiteral[ "@value" ] === "undefined" ) {
 			this.value = this.literal[ copyOrAdded ][ "@value" ];
@@ -878,6 +879,10 @@ export default class LiteralComponent {
 			this.language = this.literal[ copyOrAdded ][ "@language" ];
 			delete this.tempLiteral[ "@language" ];
 		} else this.language = this.tempLiteral[ "@language" ];
+
+		if ( typeof this.literal.added !== "undefined" && typeof this.value === "undefined" ) {
+			this.onDeleteNewLiteral.emit( this.literal );
+		}
 	}
 
 	save():void {
@@ -910,13 +915,14 @@ export default class LiteralComponent {
 			delete this.tempLiteral[ "@language" ];
 		}
 
-		if ( (this.tempLiteral[ "@value" ] === this.literal[ copyOrAdded ][ "@value" ] ) &&
-			(this.tempLiteral[ "@type" ] === this.literal[ copyOrAdded ][ "@type" ] ) &&
-			(this.tempLiteral[ "@language" ] === this.literal[ copyOrAdded ][ "@language" ] ) ) {
+		if ( (! ! this.literal.copy) &&
+			(this.tempLiteral[ "@value" ] === this.literal.copy[ "@value" ] ) &&
+			(this.tempLiteral[ "@type" ] === this.literal.copy[ "@type" ] ) &&
+			(this.tempLiteral[ "@language" ] === this.literal.copy[ "@language" ] ) ) {
 			delete this.tempLiteral[ "@value" ];
 			delete this.tempLiteral[ "@type" ];
 			delete this.tempLiteral[ "@language" ];
-			delete this.literal[ copyOrAdded ];
+			delete this.literal.modified;
 		}
 
 		this.onSave.emit( this.tempLiteral );

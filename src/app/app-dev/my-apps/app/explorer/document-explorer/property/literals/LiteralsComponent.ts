@@ -74,8 +74,12 @@ export default class LiteralsComponent {
 	addNewLiteral():void {
 		let newLiteralRow:LiteralRow = <LiteralRow>{};
 		newLiteralRow.added = <Literal>{};
-		newLiteralRow.added[ "@value" ] = "";
 		this.literals.push( newLiteralRow );
+	}
+
+	deleteNewLiteral( deletingLiteral:LiteralRow, index:number ):void {
+		this.literals.splice( index, 1 );
+		this.onLiteralsChanges.emit( this.literals );
 	}
 
 	getLiterals():LiteralRow[] {
