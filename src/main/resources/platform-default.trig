@@ -181,9 +181,13 @@
 <platform/roles/system/agents/> {
 	<platform/roles/system/agents/>
 		a 	ldp:DirectContainer;
+		c:appRoleMap _:40a99bda-651f-424e-b58c-a48b536f9dea;
 		ldp:membershipResource	<platform/roles/system/>;
 		ldp:hasMemberRelation	cs:agent;
 		ldp:memberOfRelation	cs:platformRole.
+
+	_:40a99bda-651f-424e-b58c-a48b536f9dea a <https://carbonldp.com/ns/v1/platform#Map> ;
+        	<https://carbonldp.com/ns/v1/platform#bNodeIdentifier> "40a99bda-651f-424e-b58c-a48b536f9dea" .
 }
 <platform/roles/system/privileges/> {
 	<platform/roles/system/privileges/>

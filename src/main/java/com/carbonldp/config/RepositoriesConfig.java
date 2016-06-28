@@ -204,12 +204,6 @@ public class RepositoriesConfig {
 		return new SesameACLRepository( connectionFactory, resourceRepository(), documentRepository(), sourceRepository() );
 	}
 
-	// TODO: why is this not in services config?
-	@Bean
-	public SPARQLService sparqlService() {
-		return new SesameSPARQLService( connectionFactory );
-	}
-
 	@Bean
 	public BackupRepository backupRepository() {return new SesameBackupRepository( connectionFactory, resourceRepository(), documentRepository() ); }
 }
