@@ -30,31 +30,52 @@ public class UpdateAction1o10o0 extends AbstractUpdateAction {
 				String backupsString = Vars.getInstance().getBackupsContainer();
 				IRI backupsIRI = valueFactory.createIRI( appString + backupsString );
 				ACL backupsACL = aclRepository.getResourceACL( backupsIRI );
-				addPermissionsToAppPlatformRepositories( adminRole, backupsACL );
+				addDefaultPermissionsToBackupsContainer( adminRole, backupsACL );
 				String jobsString = Vars.getInstance().getJobsContainer();
 				IRI jobsIRI = valueFactory.createIRI( appString + jobsString );
 				ACL jobsACL = aclRepository.getResourceACL( jobsIRI );
-				addPermissionsToAppPlatformRepositories( adminRole, jobsACL );
+				addDefaultPermissionsToJobsContainer( adminRole, jobsACL );
 				String ldapServersString = Vars.getInstance().getAppLDAPServerContainer();
 				IRI ldapServersIRI = valueFactory.createIRI( appString + ldapServersString );
 				ACL ldapServersACL = aclRepository.getResourceACL( ldapServersIRI );
-				addPermissionsToAppPlatformRepositories( adminRole, ldapServersACL );
+				addDefaultPermissionsToLDAPContainer( adminRole, ldapServersACL );
 			} );
 		}
 	}
+	private void addDefaultPermissionsToBackupsContainer( AppRole appAdminRole, ACL backupContainerACL ) {
+		aclRepository.grantPermissions( backupContainerACL, Arrays.asList( appAdminRole ), Arrays.asList(
+			ACEDescription.Permission.READ,
+			ACEDescription.Permission.UPLOAD
+		), false );
+		aclRepository.addInheritablePermissions( backupContainerACL, Arrays.asList( appAdminRole ), Arrays.asList(
+			ACEDescription.Permission.READ,
+			ACEDescription.Permission.DELETE,
+			ACEDescription.Permission.DOWNLOAD
+		), true );
+	}
 
-	private void addPermissionsToAppPlatformRepositories( AppRole appAdminRole, ACL rootContainerACL ) {
-		aclRepository.grantPermissions( rootContainerACL, Arrays.asList( appAdminRole ), Arrays.asList(
+	private void addDefaultPermissionsToJobsContainer( AppRole appAdminRole, ACL jobsContainerACL ) {
+		aclRepository.grantPermissions( jobsContainerACL, Arrays.asList( appAdminRole ), Arrays.asList(
+			ACEDescription.Permission.READ,
+			ACEDescription.Permission.CREATE_CHILD
+		), false );
+		aclRepository.addInheritablePermissions( jobsContainerACL, Arrays.asList( appAdminRole ), Arrays.asList(
 			ACEDescription.Permission.READ,
 			ACEDescription.Permission.UPDATE,
-			ACEDescription.Permission.CREATE_ACCESS_POINT,
-			ACEDescription.Permission.CREATE_CHILD,
-			ACEDescription.Permission.UPLOAD,
-			ACEDescription.Permission.DOWNLOAD,
-			ACEDescription.Permission.EXTEND,
-			ACEDescription.Permission.ADD_MEMBER,
-			ACEDescription.Permission.REMOVE_MEMBER
-		), false );
-		aclRepository.addInheritablePermissions( rootContainerACL, Arrays.asList( appAdminRole ), Arrays.asList( ACEDescription.Permission.values() ), true );
+			ACEDescription.Permission.DELETE
+		), true );
 	}
+
+	private void addDefaultPermissionsToLDAPContainer( AppRole appAdminRole, ACL jobsContainerACL ) {
+		aclRepository.grantPermissions( jobsContainerACL, Arrays.asList( appAdminRole ), Arrays.asList(
+			ACEDescription.Permission.READ,
+			ACEDescription.Permission.CREATE_CHILD
+		), false );
+		aclRepository.addInheritablePermissions( jobsContainerACL, Arrays.asList( appAdminRole ), Arrays.asList(
+			ACEDescription.Permission.READ,
+			ACEDescription.Permission.UPDATE,
+			ACEDescription.Permission.DELETE
+		), true );
+	}
+
 }

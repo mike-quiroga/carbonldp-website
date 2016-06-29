@@ -96,9 +96,9 @@ public class SesameAppService extends AbstractSesameLDPService implements AppSer
 
 			return appAdminRole;
 		} );
-		addDefaultPermissions( adminRole, aclBackupContainer );
-		addDefaultPermissions( adminRole, aclJobsContainer );
-		addDefaultPermissions( adminRole, aclLDAPContainer );
+		addDefaultPermissionsToBackupsContainer( adminRole, aclBackupContainer );
+		addDefaultPermissionsToJobsContainer( adminRole, aclJobsContainer );
+		addDefaultPermissionsToLDAPContainer( adminRole, aclLDAPContainer );
 
 		transactionWrapper.runInAppContext( app, () -> addCurrentAgentToAppAdminRole( adminRole ) );
 
@@ -165,6 +165,42 @@ public class SesameAppService extends AbstractSesameLDPService implements AppSer
 			ACEDescription.Permission.REMOVE_MEMBER
 		), false );
 		aclRepository.addInheritablePermissions( rootContainerACL, Arrays.asList( appAdminRole ), Arrays.asList( ACEDescription.Permission.values() ), true );
+	}
+
+	private void addDefaultPermissionsToBackupsContainer( AppRole appAdminRole, ACL backupContainerACL ) {
+		aclRepository.grantPermissions( backupContainerACL, Arrays.asList( appAdminRole ), Arrays.asList(
+			ACEDescription.Permission.READ,
+			ACEDescription.Permission.UPLOAD
+		), false );
+		aclRepository.addInheritablePermissions( backupContainerACL, Arrays.asList( appAdminRole ), Arrays.asList(
+			ACEDescription.Permission.READ,
+			ACEDescription.Permission.DELETE,
+			ACEDescription.Permission.DOWNLOAD
+		), true );
+	}
+
+	private void addDefaultPermissionsToJobsContainer( AppRole appAdminRole, ACL jobsContainerACL ) {
+		aclRepository.grantPermissions( jobsContainerACL, Arrays.asList( appAdminRole ), Arrays.asList(
+			ACEDescription.Permission.READ,
+			ACEDescription.Permission.CREATE_CHILD
+		), false );
+		aclRepository.addInheritablePermissions( jobsContainerACL, Arrays.asList( appAdminRole ), Arrays.asList(
+			ACEDescription.Permission.READ,
+			ACEDescription.Permission.UPDATE,
+			ACEDescription.Permission.DELETE
+		), true );
+	}
+
+	private void addDefaultPermissionsToLDAPContainer( AppRole appAdminRole, ACL jobsContainerACL ) {
+		aclRepository.grantPermissions( jobsContainerACL, Arrays.asList( appAdminRole ), Arrays.asList(
+			ACEDescription.Permission.READ,
+			ACEDescription.Permission.CREATE_CHILD
+		), false );
+		aclRepository.addInheritablePermissions( jobsContainerACL, Arrays.asList( appAdminRole ), Arrays.asList(
+			ACEDescription.Permission.READ,
+			ACEDescription.Permission.UPDATE,
+			ACEDescription.Permission.DELETE
+		), true );
 	}
 
 	private void addAppDefaultPermissions( AppRole adminRole, ACL appACL ) {
