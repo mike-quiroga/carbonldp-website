@@ -51,14 +51,8 @@ public abstract class SesameAgentsService extends AbstractSesameLDPService imple
 		RDFDocument documentToAdd = new RDFDocument( toAdd, source );
 		AbstractModel toDelete = originalDocument.stream().filter( statement -> ! ModelUtil.containsStatement( newDocument, statement ) ).collect( Collectors.toCollection( LinkedHashModel::new ) );
 		RDFDocument documentToDelete = new RDFDocument( toDelete, source );
-
-		if ( ! documentToAdd.filter( null, AgentDescription.Property.PASSWORD.getIRI(), null, null ).isEmpty() ) {
-			documentToAdd.remove( null, AgentDescription.Property.PASSWORD.getIRI(), null, null );
-			documentToAdd.remove( null, AgentDescription.Property.SALT.getIRI(), null, null );
-			setAgentPasswordFields( agent );
-			documentToAdd.add( agent.getSubject(), AgentDescription.Property.PASSWORD.getIRI(), SimpleValueFactory.getInstance().createLiteral( agent.getPassword() ), agent.getSubject() );
-			documentToAdd.add( agent.getSubject(), AgentDescription.Property.PASSWORD.getIRI(), SimpleValueFactory.getInstance().createLiteral( agent.getSalt() ), agent.getSubject() );
-		}
+		Agent agentToAdd = new Agent( documentToAdd, agent.getIRI() );
+		if ( agentToAdd.getPassword() != null ) setAgentPasswordFields( agentToAdd );
 
 		sourceService.replace( originalSource.getIRI(), documentToAdd, documentToDelete );
 	}
@@ -113,7 +107,7 @@ public abstract class SesameAgentsService extends AbstractSesameLDPService imple
 
 	private void validateNumberOfPasswordAndEmails( Agent agent ) {
 		Set<Value> passwords = agent.getProperties( AgentDescription.Property.PASSWORD );
-		if ( passwords.size() != 1 ) throw new InvalidResourceException( new Infraction( 0x2004, "property", AgentDescription.Property.PASSWORD.getIRI().stringValue() ) );
+		if ( passwords.size() > 1 ) throw new InvalidResourceException( new Infraction( 0x2004, "property", AgentDescription.Property.PASSWORD.getIRI().stringValue() ) );
 
 		Set<Value> emails = agent.getProperties( AgentDescription.Property.EMAIL );
 		if ( emails.size() < 1 ) throw new InvalidResourceException( new Infraction( 0x2004, "property", AgentDescription.Property.PASSWORD.getIRI().stringValue() ) );

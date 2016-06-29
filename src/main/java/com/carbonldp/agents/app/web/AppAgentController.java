@@ -26,7 +26,7 @@ public class AppAgentController extends AbstractLDPController {
 
 	@RequestMapping( method = RequestMethod.PUT )
 	@InteractionModel( APIPreferences.InteractionModel.RDF_SOURCE )
-	public ResponseEntity<Object> defineParentChildRelation( @RequestBody RDFDocument requestDocument, HttpServletRequest request, HttpServletResponse response ) {
+	public ResponseEntity<Object> editAgent( @RequestBody RDFDocument requestDocument, HttpServletRequest request, HttpServletResponse response ) {
 		return putHandler.handleRequest( requestDocument, request, response );
 	}
 
