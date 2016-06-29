@@ -41,7 +41,6 @@ export default class GettingStartedView {
 		this.initializeAccordions();
 		this.initializeTabs();
 		this.highlightCode();
-
 		this.initializeSidebar();
 	}
 
@@ -55,7 +54,7 @@ export default class GettingStartedView {
 
 	initializeTabs():void {
 		this.$element.find( ".tabular.menu .item" ).tab( {
-			history: false
+			history: false,
 		} );
 
 	}
