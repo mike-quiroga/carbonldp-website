@@ -1,6 +1,8 @@
 package com.carbonldp.apps.roles;
 
+import com.carbonldp.agents.Agent;
 import com.carbonldp.agents.AgentDescription;
+import com.carbonldp.agents.PlatformAgentDescription;
 import com.carbonldp.agents.platform.PlatformAgentRepository;
 import com.carbonldp.apps.AppRole;
 import com.carbonldp.apps.AppRoleDescription;
@@ -15,6 +17,7 @@ import com.carbonldp.models.Infraction;
 import com.carbonldp.rdf.RDFResource;
 import org.joda.time.DateTime;
 import org.openrdf.model.IRI;
+import org.openrdf.model.Resource;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Collection;
@@ -54,11 +57,22 @@ public class SesameAppRoleService extends AbstractSesameLDPService implements Ap
 
 		containerService.addMember( appRoleAgentContainerIRI, agent );
 
+		if ( isPlatformAgent( agent ) ) {
+			transactionWrapper.runInPlatformContext( () -> {
+				Agent agentResource = platformAgentRepository.get( agent );
+				Resource rdfMap = agentResource.getResource( PlatformAgentDescription.Property.APP_ROLE_MAP );
+				//rdfMap.add( AppContextHolder.getContext().getApplication().getIRI(), appRoleRepository.getParentsIRI( appRoleAgentContainerIRI ).iterator().next() );
+
+				//TODO: fix this
+			} );
+		}
+
 		DateTime modifiedTime = DateTime.now();
 		IRI membershipResource = containerRepository.getTypedRepository( containerService.getContainerType( appRoleAgentContainerIRI ) ).getMembershipResource( appRoleAgentContainerIRI );
 		sourceRepository.touch( membershipResource, modifiedTime );
 	}
 
+	@Override
 	public void create( AppRole appRole ) {
 		if ( sourceRepository.exists( appRole.getIRI() ) ) throw new ResourceAlreadyExistsException();
 		validate( appRole );
@@ -77,7 +91,8 @@ public class SesameAppRoleService extends AbstractSesameLDPService implements Ap
 	@Override
 	public void addChild( IRI parentRoleIRI, IRI child ) {
 		if ( ( ! sourceRepository.exists( parentRoleIRI ) ) || ( ! sourceRepository.exists( child ) ) ) throw new ResourceDoesntExistException();
-		if ( ! sourceRepository.is( child, AppRoleDescription.Resource.CLASS ) ) throw new InvalidResourceException( new Infraction( 0x2001, "rdf.type", AppRoleDescription.Resource.CLASS.getIRI().stringValue() ) );
+		if ( ! sourceRepository.is( child, AppRoleDescription.Resource.CLASS ) )
+			throw new InvalidResourceException( new Infraction( 0x2001, "rdf.type", AppRoleDescription.Resource.CLASS.getIRI().stringValue() ) );
 
 		validateHasParent( child );
 		containerService.addMember( parentRoleIRI, child );

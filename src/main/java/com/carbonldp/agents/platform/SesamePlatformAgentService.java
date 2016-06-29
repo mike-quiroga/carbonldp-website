@@ -8,12 +8,10 @@ import com.carbonldp.authorization.Platform;
 import com.carbonldp.authorization.acl.ACEDescription;
 import com.carbonldp.authorization.acl.ACL;
 import com.carbonldp.exceptions.ResourceAlreadyExistsException;
-import com.carbonldp.rdf.*;
-import info.aduna.xml.DocumentUtil;
+import com.carbonldp.rdf.RDFMap;
+import com.carbonldp.rdf.RDFMapDescription;
 import org.openrdf.model.BNode;
 import org.openrdf.model.IRI;
-
-import org.openrdf.model.ValueFactory;
 import org.openrdf.model.impl.SimpleValueFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -58,7 +56,6 @@ public class SesamePlatformAgentService extends SesameAgentsService {
 		RDFMap map = new RDFMap( agent.getBaseModel(), mapBNode, agent.getIRI() );
 		map.addType( RDFMapDescription.Resource.CLASS.getIRI() );
 		agent.add( PlatformAgentDescription.Property.APP_ROLE_MAP.getIRI(), mapBNode );
-
 	}
 
 	private void addAgentDefaultPermissions( Agent agent, ACL agentACL ) {
