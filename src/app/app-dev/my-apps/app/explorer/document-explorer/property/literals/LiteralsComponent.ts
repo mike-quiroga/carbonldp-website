@@ -87,7 +87,7 @@ export default class LiteralsComponent {
 	}
 
 	canDisplayLiterals():boolean {
-		return this.getUntouchedLiterals().length > 0;
+		return this.getUntouchedLiterals().length > 0 || this.getAddedLiterals().length > 0 || this.getModifiedLiterals().length > 0;
 	}
 
 	getLiterals():LiteralRow[] {

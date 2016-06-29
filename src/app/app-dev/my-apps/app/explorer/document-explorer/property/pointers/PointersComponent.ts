@@ -14,7 +14,7 @@ import PointerComponent from "./pointer/PointerComponent";
 import { Pointer, PointerRow, Modes } from "./pointer/PointerComponent";
 
 import template from "./template.html!";
-// import "./style.css!";
+import "./style.css!";
 
 @Component( {
 	selector: "pointers",
@@ -50,6 +50,13 @@ export default class PointersComponent {
 		this.onPointersChanges.emit( this.pointers );
 	}
 
+	saveNewPointer( newPointer:Pointer, originalPointer:Pointer, index:number ) {
+		if ( newPointer.hasOwnProperty( "@id" ) ) {
+			this.pointers[ index ].added = newPointer;
+		}
+		this.onPointersChanges.emit( this.pointers );
+	}
+
 	deletePointer( deletingPointer:PointerRow, index:number ):void {
 		this.onPointersChanges.emit( this.pointers );
 	}
@@ -60,7 +67,7 @@ export default class PointersComponent {
 	}
 
 	canDisplayPointers():boolean {
-		return this.getUntouchedPointers().length > 0;
+		return this.getUntouchedPointers().length > 0 || this.getAddedPointers().length > 0 || this.getModifiedPointers().length > 0;
 	}
 
 	getPointers():PointerRow[] {

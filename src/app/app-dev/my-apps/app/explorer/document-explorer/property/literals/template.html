@@ -13,14 +13,12 @@
 	</thead>
 	<tbody>
 		<template ngFor let-literal="$implicit" [ngForOf]="literals" let-i="index">
-			<tr class="literal top aligned" *ngIf="!!literal.copy && !literal.deleted"
+			<tr class="literal top aligned" [ngClass]="{'modified-literal':!!literal.modified}" *ngIf="!!literal.copy && !literal.deleted"
 			    [literal]="literal"
 			    [canDisplayLanguage]="isLanguagePresent || isEditingLiteral"
 			    (onSave)="saveLiteral($event, literal, i)"
 			    (onDeleteLiteral)="deleteLiteral($event, i)"
 			    (onEditMode)="editModeChanged($event)"></tr>
-		</template>
-		<template ngFor let-literal="$implicit" [ngForOf]="literals" let-i="index">
 			<tr class="literal top aligned added-literal" *ngIf="!!literal.added && !literal.deleted"
 			    [mode]="modes.EDIT"
 			    [literal]="literal"

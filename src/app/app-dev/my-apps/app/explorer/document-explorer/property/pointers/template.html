@@ -11,17 +11,18 @@
 	</thead>
 	<tbody>
 		<template ngFor let-pointer="$implicit" [ngForOf]="pointers" let-i="index">
-			<tr class="pointer top aligned" *ngIf="!!pointer.copy && !pointer.deleted"
+			<tr class="pointer top aligned" [ngClass]="{'modified-pointer':!!pointer.modified}" *ngIf="!!pointer.copy && !pointer.deleted"
 			    [pointer]="pointer"
 			    [bNodes]="bNodes"
 			    [namedFragments]="namedFragments"
 			    (onSave)="savePointer($event, pointer, i)"
 			    (onDeletePointer)="deletePointer($event, i)"></tr>
-			<tr class="pointer top aligned" *ngIf="!!pointer.added && !pointer.deleted"
+			<tr class="pointer top aligned added-pointer" *ngIf="!!pointer.added && !pointer.deleted"
+			    [mode]="modes.EDIT"
 			    [pointer]="pointer"
 			    [bNodes]="bNodes"
 			    [namedFragments]="namedFragments"
-			    (onSave)="saveLiteral($event, literal, i)"
+			    (onSave)="saveNewPointer($event, literal, i)"
 			    (onDeleteNewPointer)="deleteNewPointer($event, i)"></tr>
 		</template>
 	</tbody>

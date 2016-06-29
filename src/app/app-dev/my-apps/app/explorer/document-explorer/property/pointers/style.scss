@@ -1,13 +1,12 @@
-literals {
+pointers {
 	display: block;
-
 }
 
-.ui.striped.table tbody tr.modified-literal {
+.ui.striped.table tbody tr.modified-pointer {
 	background-color: #FFFBB4;
 }
 
-.ui.striped.table tbody tr.added-literal {
+.ui.striped.table tbody tr.added-pointer {
 	background-color: #D9EEFF;
 }
 

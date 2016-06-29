@@ -106,7 +106,7 @@ export default class PointerComponent {
 
 
 		if ( typeof this.pointer.added !== "undefined" && typeof this.id === "undefined" ) {
-			// this.onDeleteNewPointer.emit( this.pointer );
+			this.onDeleteNewPointer.emit( this.pointer );
 		}
 	}
 
