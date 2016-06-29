@@ -33,7 +33,7 @@ export default class PointersComponent {
 	@Input() pointers:PointerRow[] = [];
 	@Input() bNodes:Map<string,RDFNode.Class> = new Map<string,RDFNode.Class>();
 	@Input() namedFragments:Map<string,RDFNode.Class> = new Map<string,RDFNode.Class>();
-	@Output() onPointersChanges:EventEmitter<Pointer[]> = new EventEmitter<Pointer[]>();
+	@Output() onPointersChanges:EventEmitter<PointerRow[]> = new EventEmitter<PointerRow[]>();
 
 	constructor() { }
 
@@ -41,5 +41,12 @@ export default class PointersComponent {
 		let newPointerRow:PointerRow = <PointerRow>{};
 		newPointerRow.added = <Pointer>{};
 		this.pointers.push( newPointerRow );
+	}
+
+	savePointer( modifiedPointer:Pointer, originalPointer:Pointer, index:number ) {
+		if ( modifiedPointer.hasOwnProperty( "@id" ) ) {
+			this.pointers[ index ].modified = modifiedPointer;
+		}
+		this.onPointersChanges.emit( this.pointers );
 	}
 }

@@ -97,69 +97,32 @@ export default class PointerComponent {
 
 	cancelEdit():void {
 		this.mode = Modes.READ;
-		// let copyOrAdded:string = typeof this.literal.copy !== "undefined" ? "copy" : "added";
-		//
-		// if ( typeof this.tempLiteral[ "@value" ] === "undefined" ) {
-		// 	this.value = this.literal[ copyOrAdded ][ "@value" ];
-		// 	delete this.tempLiteral[ "@value" ];
-		// } else this.value = this.tempLiteral[ "@value" ];
-		//
-		// if ( typeof this.tempLiteral[ "@type" ] === "undefined" ) {
-		// 	this.type = this.literal[ copyOrAdded ][ "@type" ];
-		// 	delete this.tempLiteral[ "@type" ];
-		// } else this.type = this.tempLiteral[ "@type" ];
-		//
-		// if ( typeof this.tempLiteral[ "@language" ] === "undefined" ) {
-		// 	this.language = this.literal[ copyOrAdded ][ "@language" ];
-		// 	delete this.tempLiteral[ "@language" ];
-		// } else this.language = this.tempLiteral[ "@language" ];
-		//
-		// if ( typeof this.literal.added !== "undefined" && typeof this.value === "undefined" ) {
-		// 	this.onDeleteNewLiteral.emit( this.literal );
-		// }
+		let copyOrAdded:string = typeof this.pointer.copy !== "undefined" ? "copy" : "added";
+
+		if ( typeof this.tempPointer[ "@id" ] === "undefined" ) {
+			this.id = this.pointer[ copyOrAdded ][ "@id" ];
+			delete this.tempPointer[ "@id" ];
+		} else this.id = this.tempPointer[ "@id" ];
+
+
+		if ( typeof this.pointer.added !== "undefined" && typeof this.id === "undefined" ) {
+			// this.onDeleteNewPointer.emit( this.pointer );
+		}
 	}
 
 	save():void {
-		// let copyOrAdded:string = typeof this.literal.copy !== "undefined" ? "copy" : "added";
-		//
-		// if ( typeof this.value !== "undefined" && (this.value !== this.literal[ copyOrAdded ][ "@value" ] || this.value !== this.tempLiteral[ "@value" ] ) ) {
-		// 	this.tempLiteral[ "@value" ] = this.value;
-		// }
-		// if ( typeof this.type !== "undefined" && (this.type !== this.literal[ copyOrAdded ][ "@type" ] || this.type !== this.tempLiteral[ "@type" ] ) ) {
-		// 	this.tempLiteral[ "@type" ] = this.type;
-		// }
-		// if ( typeof this.language !== "undefined" && ( this.language !== this.literal[ copyOrAdded ][ "@language" ] || this.language !== this.tempLiteral[ "@language" ] ) ) {
-		// 	this.tempLiteral[ "@language" ] = this.language;
-		// }
-		//
-		// if ( ! ! this.tempLiteral[ "@type" ] && this.tempLiteral[ "@type" ] !== NS.XSD.DataType.string ) delete this.tempLiteral[ "@language" ];
-		// if ( this.tempLiteral[ "@type" ] === NS.XSD.DataType.string || this.type === NS.XSD.DataType.string ) delete this.tempLiteral[ "@type" ];
-		//
-		// // Check for tempLiteral to contain valid json+ld for literals
-		// // 1. @value always present, if not clean whole object.
-		// // 2. If @type empty or NS.XSD.DataType.string, then delete @type from tempLiteral.
-		// // 3. If @language empty or when @type different than NS.XSD.DataType.string, then delete @language from tempLiteral.
-		// if ( this.tempLiteral[ "@type" ] === null || typeof this.tempLiteral[ "@type" ] === "undefined" || this.tempLiteral[ "@type" ] === NS.XSD.DataType.string ) delete this.tempLiteral[ "@type" ];
-		// if ( this.language === null || typeof this.language === "undefined" || (typeof this.tempLiteral[ "@type" ] !== "undefined" && this.tempLiteral[ "@type" ] !== NS.XSD.DataType.string) ) {
-		// 	delete this.tempLiteral[ "@language" ];
-		// }
-		// if ( this.tempLiteral[ "@value" ] === null || typeof this.tempLiteral[ "@value" ] === "undefined" ) {
-		// 	delete this.tempLiteral[ "@value" ];
-		// 	delete this.tempLiteral[ "@type" ];
-		// 	delete this.tempLiteral[ "@language" ];
-		// }
-		//
-		// if ( (! ! this.literal.copy) &&
-		// 	(this.tempLiteral[ "@value" ] === this.literal.copy[ "@value" ] ) &&
-		// 	(this.tempLiteral[ "@type" ] === this.literal.copy[ "@type" ] ) &&
-		// 	(this.tempLiteral[ "@language" ] === this.literal.copy[ "@language" ] ) ) {
-		// 	delete this.tempLiteral[ "@value" ];
-		// 	delete this.tempLiteral[ "@type" ];
-		// 	delete this.tempLiteral[ "@language" ];
-		// 	delete this.literal.modified;
-		// }
-		//
-		// this.onSave.emit( this.tempLiteral );
+		let copyOrAdded:string = typeof this.pointer.copy !== "undefined" ? "copy" : "added";
+
+		if ( typeof this.id !== "undefined" && (this.id !== this.pointer[ copyOrAdded ][ "@id" ] || this.id !== this.tempPointer[ "@id" ] ) ) {
+			this.tempPointer[ "@id" ] = this.id;
+		}
+
+		if ( (! ! this.pointer.copy) && (this.tempPointer[ "@id" ] === this.pointer.copy[ "@id" ] ) ) {
+			delete this.tempPointer[ "@id" ];
+			delete this.pointer.modified;
+		}
+
+		this.onSave.emit( this.tempPointer );
 		this.mode = Modes.READ;
 	}
 

@@ -14,7 +14,8 @@
 			<tr class="pointer top aligned" *ngIf="!!pointer.copy && !pointer.deleted"
 			    [pointer]="pointer"
 			    [bNodes]="bNodes"
-			    [namedFragments]="namedFragments"></tr>
+			    [namedFragments]="namedFragments"
+			    (onSave)="savePointer($event, pointer, i)"></tr>
 			<!--<tr class="pointer top aligned" *ngIf="!!pointer.copy && !pointer.deleted"-->
 			<!--[pointer]="pointer"-->
 			<!--(onSave)="saveLiteral($event, literal, i)"-->

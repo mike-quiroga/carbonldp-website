@@ -30,7 +30,9 @@ export default class PropertyComponent {
 	element:ElementRef;
 	$element:JQuery;
 	literals:LiteralRow[];
-	pointers:SDKRDFNode.Class[];
+	pointers:PointerRow[];
+	tempLiterals:LiteralRow[];
+	tempPointers:PointerRow[];
 	tempProperty:Property = <Property>{};
 	id:string;
 	name:string;
@@ -170,32 +172,42 @@ export default class PropertyComponent {
 
 	fillLiteralsAndRDFNodes():void {
 		this.literals = [];
+		this.tempLiterals = [];
 		this.pointers = [];
+		this.tempPointers = [];
 		this.property.copy.value.forEach( ( literalOrRDFNode )=> {
-			if ( SDKLiteral.Factory.is( literalOrRDFNode ) ) this.literals.push( <LiteralRow>{ copy: literalOrRDFNode } );
-			if ( SDKRDFNode.Factory.is( literalOrRDFNode ) ) this.pointers.push( <PointerRow>{ copy: literalOrRDFNode } );
+			if ( SDKLiteral.Factory.is( literalOrRDFNode ) ) {
+				this.literals.push( <LiteralRow>{ copy: literalOrRDFNode } );
+				this.tempLiterals.push( <LiteralRow>{ copy: literalOrRDFNode } );
+			}
+			if ( SDKRDFNode.Factory.is( literalOrRDFNode ) ) {
+				this.pointers.push( <PointerRow>{ copy: literalOrRDFNode } );
+				this.tempPointers.push( <PointerRow>{ copy: literalOrRDFNode } );
+			}
 		} );
 	}
 
 	checkForChangesOnLiterals( literals:LiteralRow[] ):void {
-		this.changePropertyValues( literals );
+		this.tempLiterals = literals;
+		this.changePropertyValues( this.tempPointers.concat( this.tempLiterals ) );
 		this.propertyHasChanged = ! ! literals.find( ( literalRow )=> {return ! ! literalRow.modified || ! ! literalRow.added || ! ! literalRow.deleted } );
 		if ( ! this.propertyHasChanged ) delete this.property.modified;
 	}
 
 	checkForChangesOnPointers( pointers:PointerRow[] ):void {
-		// this.changePropertyValues( literals );
-		// this.propertyHasChanged = ! ! literals.find( ( literalRow )=> {return ! ! literalRow.modified || ! ! literalRow.added || ! ! literalRow.deleted } );
-		// if ( ! this.propertyHasChanged ) delete this.property.modified;
+		this.tempPointers = pointers;
+		this.changePropertyValues( this.tempPointers.concat( this.tempLiterals ) );
+		this.propertyHasChanged = ! ! pointers.find( ( pointerRow )=> {return ! ! pointerRow.modified || ! ! pointerRow.added || ! ! pointerRow.deleted } );
+		if ( ! this.propertyHasChanged ) delete this.property.modified;
 	}
 
-	changePropertyValues( literals:LiteralRow[] ):void {
+	changePropertyValues( literalsOrPointers:LiteralRow[]|PointerRow[] ):void {
 		this.tempProperty.id = this.id;
 		this.tempProperty.name = this.name;
 		if ( Utils.isArray( this.value ) ) {
 			this.tempProperty.value = [];
-			literals.forEach( ( literalRow )=> {
-				if ( ! literalRow.deleted )this.tempProperty.value.push( ! ! literalRow.added ? literalRow.added : ! ! literalRow.modified ? literalRow.modified : literalRow.copy );
+			literalsOrPointers.forEach( ( literalOrPointerRow )=> {
+				if ( ! literalOrPointerRow.deleted )this.tempProperty.value.push( ! ! literalOrPointerRow.added ? literalOrPointerRow.added : ! ! literalOrPointerRow.modified ? literalOrPointerRow.modified : literalOrPointerRow.copy );
 			} );
 		} else {
 			this.tempProperty.value = this.value;
