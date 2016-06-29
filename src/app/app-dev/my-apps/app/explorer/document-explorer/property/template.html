@@ -46,9 +46,19 @@
 		<p *ngIf="!isUrl(name)">{{name}}</p>
 	</div>
 	<div class="description">
+		<button class="ui right labeled icon basic mini button" (click)="addPointer()">
+			<i class="plus icon"></i>
+			Add Pointer
+		</button>
+		<button class="ui right labeled icon basic mini button" (click)="addLiteral()">
+			<i class="plus icon"></i>
+			Add Literal
+		</button>
 		<literals [(literals)]="literals"
+		          [onAddNewLiteral]="addNewLiteral"
 		          (onLiteralsChanges)="checkForChangesOnLiterals($event)"></literals>
 		<pointers [(pointers)]="pointers"
+		          [onAddNewPointer]="addNewPointer"
 		          [bNodes]="bNodes"
 		          [namedFragments]="namedFragments"
 		          (onPointersChanges)="checkForChangesOnPointers($event)"></pointers>

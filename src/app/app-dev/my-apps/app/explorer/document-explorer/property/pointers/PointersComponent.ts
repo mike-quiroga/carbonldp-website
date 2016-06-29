@@ -31,11 +31,18 @@ export default class PointersComponent {
 	tempPointers:Pointer[] = [];
 	isEditingPointer:boolean = false;
 	@Input() pointers:PointerRow[] = [];
+	@Input() onAddNewPointer:EventEmitter<boolean> = new EventEmitter<boolean>();
 	@Input() bNodes:Map<string,RDFNode.Class> = new Map<string,RDFNode.Class>();
 	@Input() namedFragments:Map<string,RDFNode.Class> = new Map<string,RDFNode.Class>();
 	@Output() onPointersChanges:EventEmitter<PointerRow[]> = new EventEmitter<PointerRow[]>();
 
 	constructor() { }
+
+	ngOnInit():void {
+		this.onAddNewPointer.subscribe( ()=> {
+			this.addNewPointer();
+		} );
+	}
 
 	addNewPointer():void {
 		let newPointerRow:PointerRow = <PointerRow>{};

@@ -35,12 +35,16 @@ export default class LiteralsComponent {
 	isLanguagePresent:boolean = false;
 	isEditingLiteral:boolean = false;
 	@Input() literals:LiteralRow[] = [];
+	@Input() onAddNewLiteral:EventEmitter<boolean> = new EventEmitter<boolean>();
 	@Output() onLiteralsChanges:EventEmitter<Literal[]> = new EventEmitter<Literal[]>();
 
 	constructor() {}
 
 	ngOnInit():void {
 		this.isLanguagePresent = this.existsToken( "@language" );
+		this.onAddNewLiteral.subscribe( ()=> {
+			this.addNewLiteral();
+		} );
 	}
 
 	existsToken( token:string ):boolean {

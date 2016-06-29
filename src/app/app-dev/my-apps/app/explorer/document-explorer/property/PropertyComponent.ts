@@ -37,6 +37,8 @@ export default class PropertyComponent {
 	id:string;
 	name:string;
 	value:any;
+	addNewLiteral:EventEmitter<boolean> = new EventEmitter<boolean>();
+	addNewPointer:EventEmitter<boolean> = new EventEmitter<boolean>();
 	@Input() documentURI:string;
 	@Input() bNodes:Map<string,RDFNode.Class> = new Map<string,RDFNode.Class>();
 	@Input() namedFragments:Map<string,RDFNode.Class> = new Map<string,RDFNode.Class>();
@@ -185,6 +187,14 @@ export default class PropertyComponent {
 				this.tempPointers.push( <PointerRow>{ copy: literalOrRDFNode } );
 			}
 		} );
+	}
+
+	addLiteral():void {
+		this.addNewLiteral.emit( true );
+	}
+
+	addPointer():void {
+		this.addNewPointer.emit( true );
 	}
 
 	checkForChangesOnLiterals( literals:LiteralRow[] ):void {
