@@ -41,9 +41,9 @@ export default class SidebarComponent {
 	}
 
 	ngAfterViewInit():void {
-	this.$container = $( this.parentElement.nativeElement ).find( "article" );
-	this.sections = this.$container.children( "section" );
-	this.subSections = this.sections.children( "section" );
+		this.$container = $( this.parentElement.nativeElement ).find( "article" );
+		this.sections = this.$container.children( "section" );
+		this.subSections = this.sections.children( "section" );
 		this.$followMenu = this.$element.find( ".following.menu" );
 		this.sidebar = this.$element.find( "nav" );
 		this.createAccordions();

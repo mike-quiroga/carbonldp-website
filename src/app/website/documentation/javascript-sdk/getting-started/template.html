@@ -506,10 +506,6 @@ platformContext.apps.getContext( "your-app-slug-here/" ).then( ( appContext:App.
 							<div class="ui bottom attached tab segment" data-tab="javascript">
 								<!--@formatter:off-->
 							<pre><code class="highlighted javascript">
-
-
-
-
 //.. Declare required contexts, create in memory Document
 
 platformContext.apps.getContext( "your-app-slug-here/" ).then( function( appContext ) => {
@@ -602,10 +598,6 @@ platformContext.apps.getContext( "your-app-slug-here/" ).then( ( appContext:App.
 							<div class="ui bottom attached tab segment" data-tab="javascript">
 								<!--@formatter:off-->
 							<pre><code class="highlighted javascript">
-
-
-
-
 //...
 
 platformContext.apps.getContext( "your-app-slug-here/" ).then( function( appContext:App.Context ){
@@ -1138,7 +1130,7 @@ myPersistedDocument.createAccessPoint( myAccessPointObject );
 							<div class="ui bottom attached tab segment" data-tab="javascript">
 								<!--@formatter:off-->
 							<pre><code class="highlighted javascript">
-//imports
+
 
 let myPersistedDocument;
 let myParent;
@@ -1160,9 +1152,9 @@ myPersistedDocument.createAccessPoint( myAccessPointObject );
 					<section>
 						<h2 class="ui header">Conclusion</h2>
 
-						<p></p>
+						<p>Not yet documented</p>
 
-						<div>
+<!--						<div>
 							<div class="ui top attached tabular menu">
 								<a class="item active" data-tab="typescript">TypeScript</a>
 								<a class="item" data-tab="javascript">JavaScript</a>
@@ -1170,7 +1162,7 @@ myPersistedDocument.createAccessPoint( myAccessPointObject );
 
 							<div class="ui bottom attached tab segment active" data-tab="typescript">
 								<!--@formatter:off-->
-							<pre><code class="highlighted typescript">
+						<!--	<pre><code class="highlighted typescript">
 import * as Document from "carbonldp/PersistedDocument";
 import * as Pointer from "carbonldp/Pointer";
 import * as Response from "carbonldp/HTTP/Response";
@@ -1213,22 +1205,22 @@ platformContext.apps.getContext( "contacts/" ).then( ( appContext:App.Context ) 
 });
 							</code></pre>
 							<!--@formatter:on-->
-							</div>
+							<!--</div>
 
 							<div class="ui bottom attached tab segment" data-tab="javascript">
 								<!--@formatter:off-->
-							<pre><code class="highlighted javascript">
+							<!--<pre><code class="highlighted javascript">
 
 
 							</code></pre>
 							<!--@formatter:on-->
-							</div>
-						</div>
+							<!--</div>
+						</div>-->
 					</section>
 
 				</article>
 			</main>
 		</div>
-		<sidebar-component [mobile]="false" [parentElement]=element [contentReady]="contentReady" class="four wide computer only four wide tablet only column"></sidebar-component>
+		<sidebar-component [mobile]="false" [parentElement]="element" [contentReady]="contentReady" class="four wide computer only four wide tablet only column"></sidebar-component>
 	</div>
 </div>

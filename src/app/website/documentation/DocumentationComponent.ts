@@ -15,6 +15,8 @@ import InteractionModelsView from "./rest-api/interaction-models/InteractionMode
 import JavaScriptSDKGettingStartedView from "./javascript-sdk/getting-started/GettingStartedView";
 import JavaScriptSDKContextsView from "./javascript-sdk/contexts/ContextsView";
 import JavaScriptSDKObjectModelView from "./javascript-sdk/object-model/ObjectModelView";
+import JavaScriptSDKObjectSchemaView from "./javascript-sdk/object-schema/ObjectSchemaView";
+
 import CarbonAppCreateAppView from "./carbon-app/CreateAppView";
 
 import RESTObjectModelView from "./rest-api/rest-object-model/RESTObjectModelView";
@@ -45,6 +47,7 @@ import "./style.css!";
 	{ path: "/javascript-sdk/getting-started", as: "JavaScriptSDKGettingStarted", component: JavaScriptSDKGettingStartedView },
 	{ path: "/javascript-sdk/contexts", as: "JavaScriptSDKContexts", component: JavaScriptSDKContextsView },
 	{ path: "/javascript-sdk/object-model", as: "JavaScriptSDKObjectModel", component: JavaScriptSDKObjectModelView },
+	{ path: "/javascript-sdk/object-schema", as: "JavaScriptSDKObjectSchema", component: JavaScriptSDKObjectSchemaView },
 
 	{path: "/rest-api/rest-object-model", as: "RESTApiObjectModel", component: RESTObjectModelView},
 	{path: "/rest-api/rest-rdfsource", as: "RESTApiRdfSource", component: RESTRdfSourceView},
