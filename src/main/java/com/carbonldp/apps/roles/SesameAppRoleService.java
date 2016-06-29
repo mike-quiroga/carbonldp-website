@@ -13,10 +13,11 @@ import com.carbonldp.ldp.AbstractSesameLDPService;
 import com.carbonldp.ldp.containers.*;
 import com.carbonldp.ldp.sources.RDFSourceService;
 import com.carbonldp.models.Infraction;
+import com.carbonldp.rdf.RDFMap;
 import com.carbonldp.rdf.RDFResource;
 import org.joda.time.DateTime;
+import org.openrdf.model.BNode;
 import org.openrdf.model.IRI;
-import org.openrdf.model.Resource;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Collection;
@@ -52,20 +53,56 @@ public class SesameAppRoleService extends AbstractSesameLDPService implements Ap
 	@Override
 	public void addAgent( IRI appRoleAgentContainerIRI, IRI agent ) {
 		if ( ( ! sourceRepository.exists( appRoleAgentContainerIRI ) ) ) throw new ResourceDoesntExistException();
-		if ( ! isAppAgent( agent ) && ! isPlatformAgent( agent ) ) throw new InvalidRDFTypeException( new Infraction( 0x2001, "rdf.type", AgentDescription.Resource.CLASS.getIRI().stringValue() ) );
+		boolean isPlatformAgent = isPlatformAgent( agent );
+		if ( ! isAppAgent( agent ) && ! isPlatformAgent ) throw new InvalidRDFTypeException( new Infraction( 0x2001, "rdf.type", AgentDescription.Resource.CLASS.getIRI().stringValue() ) );
 
 		containerService.addMember( appRoleAgentContainerIRI, agent );
 
-		if ( isPlatformAgent( agent ) ) {
+		if ( isPlatformAgent ) {
 			Container accessPoint = AccessPointFactory.getInstance().getAccessPoint( sourceService.get( appRoleAgentContainerIRI ) );
 			IRI roleIRI = accessPoint.getMembershipResource();
 			IRI appIRI = AppContextHolder.getContext().getApplication().getIRI();
 			transactionWrapper.runInPlatformContext( () -> {
 				Agent agentResource = platformAgentRepository.get( agent );
-				Resource rdfMapBNode = agentResource.getResource( PlatformAgentDescription.Property.APP_ROLE_MAP );
-				//rdfMap.add( appIRI, roleIRI );
+				BNode rdfMapBNode = agentResource.getBNode( PlatformAgentDescription.Property.APP_ROLE_MAP );
+				RDFMap map = new RDFMap( agentResource.getBaseModel(), rdfMapBNode, agent );
+				map.add( appIRI, roleIRI );
+				agentResource.set( PlatformAgentDescription.Property.APP_ROLE_MAP.getIRI(), rdfMapBNode );
+				sourceService.replace( agentResource );
+			} );
+		}
 
-				//TODO: fix this
+		DateTime modifiedTime = DateTime.now();
+		IRI membershipResource = containerRepository.getTypedRepository( containerService.getContainerType( appRoleAgentContainerIRI ) ).getMembershipResource( appRoleAgentContainerIRI );
+		sourceRepository.touch( membershipResource, modifiedTime );
+	}
+
+	@Override
+	public void removeAgents( IRI appRoleAgentContainerIRI, Collection<IRI> agents ) {
+		for ( IRI agent : agents ) {
+			removeAgent( appRoleAgentContainerIRI, agent );
+		}
+	}
+
+	@Override
+	public void removeAgent( IRI appRoleAgentContainerIRI, IRI agent ) {
+		if ( ( ! sourceRepository.exists( appRoleAgentContainerIRI ) ) ) throw new ResourceDoesntExistException();
+		boolean isPlatformAgent = isPlatformAgent( agent );
+		if ( ! isAppAgent( agent ) && ! isPlatformAgent ) throw new InvalidRDFTypeException( new Infraction( 0x2001, "rdf.type", AgentDescription.Resource.CLASS.getIRI().stringValue() ) );
+
+		containerService.removeMember( appRoleAgentContainerIRI, agent );
+
+		if ( isPlatformAgent ) {
+			Container accessPoint = AccessPointFactory.getInstance().getAccessPoint( sourceService.get( appRoleAgentContainerIRI ) );
+			IRI roleIRI = accessPoint.getMembershipResource();
+			IRI appIRI = AppContextHolder.getContext().getApplication().getIRI();
+			transactionWrapper.runInPlatformContext( () -> {
+				Agent agentResource = platformAgentRepository.get( agent );
+				BNode rdfMapBNode = agentResource.getBNode( PlatformAgentDescription.Property.APP_ROLE_MAP );
+				RDFMap map = new RDFMap( agentResource.getBaseModel(), rdfMapBNode, agent );
+				map.remove( appIRI, roleIRI );
+				agentResource.set( PlatformAgentDescription.Property.APP_ROLE_MAP.getIRI(), rdfMapBNode );
+				sourceService.replace( agentResource );
 			} );
 		}
 
@@ -84,8 +121,8 @@ public class SesameAppRoleService extends AbstractSesameLDPService implements Ap
 	}
 
 	@Override
-	public void addChildren( IRI parentRole, Set<IRI> childs ) {
-		for ( IRI member : childs ) {
+	public void addChildren( IRI parentRole, Set<IRI> children ) {
+		for ( IRI member : children ) {
 			addChild( parentRole, member );
 		}
 	}

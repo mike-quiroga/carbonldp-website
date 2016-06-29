@@ -94,7 +94,7 @@ public class AbstractDELETERequestHandler extends AbstractLDPRequestHandler {
 
 		return createSuccessfulDeleteResponse();
 	}
-
+	
 	protected void removeSelectiveMembers( RDFDocument requestDocument, IRI targetIRI ) {
 		validateRequestDocument( requestDocument );
 
@@ -102,7 +102,10 @@ public class AbstractDELETERequestHandler extends AbstractLDPRequestHandler {
 		if ( subject == null ) throw new StupidityException( "The model wasn't validated like it should." );
 		RemoveMembersAction members = new RemoveMembersAction( requestDocument.getBaseModel(), subject );
 		validate( members );
+		executeAction( targetIRI, members );
+	}
 
+	protected void executeAction( IRI targetIRI, RemoveMembersAction members ) {
 		containerService.removeMembers( targetIRI, members.getMembers() );
 	}
 

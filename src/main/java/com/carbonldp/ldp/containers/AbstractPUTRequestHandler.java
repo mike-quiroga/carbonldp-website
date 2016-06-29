@@ -44,7 +44,7 @@ public abstract class AbstractPUTRequestHandler<E extends RDFResource> extends A
 		return createSuccessfulResponse( targetIRI );
 	}
 
-	protected abstract void executeAction( IRI targetUri, AddMembersAction members );
+	protected abstract void executeAction( IRI targetIRI, AddMembersAction members );
 
 	protected void validateRequest( RDFDocument requestDocument ) {
 		List<Infraction> infractions = new ArrayList<>();
