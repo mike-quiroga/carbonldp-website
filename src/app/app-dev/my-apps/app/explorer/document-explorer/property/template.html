@@ -48,6 +48,10 @@
 	<div class="description">
 		<literals [(literals)]="literals"
 		          (onLiteralsChanges)="checkForChangesOnLiterals($event)"></literals>
+		<pointers [(pointers)]="pointers"
+		          [bNodes]="bNodes"
+		          [namedFragments]="namedFragments"
+		          (onPointersChanges)="checkForChangesOnPointers($event)"></pointers>
 		<div class="ui styled accordion" *ngIf="hasHeader('@list')">
 			<div class="title" *ngFor="let item of value; let i = index;">
 				<i class="dropdown icon"></i>

@@ -1,0 +1,29 @@
+<button class="ui right labeled icon basic mini button" (click)="addNewPointer()">
+	<i class="plus icon"></i>
+	Add Pointer
+</button>
+<table class="ui very compact striped small celled table" *ngIf="pointers.length>0">
+	<thead>
+		<tr class="center aligned">
+			<th class="fifteen wide">@id</th>
+			<th class="one wide">Actions</th>
+		</tr>
+	</thead>
+	<tbody>
+		<template ngFor let-pointer="$implicit" [ngForOf]="pointers" let-i="index">
+			<tr class="pointer top aligned" *ngIf="!!pointer.copy && !pointer.deleted"
+			    [pointer]="pointer"
+			    [bNodes]="bNodes"
+			    [namedFragments]="namedFragments"></tr>
+			<!--<tr class="pointer top aligned" *ngIf="!!pointer.copy && !pointer.deleted"-->
+			<!--[pointer]="pointer"-->
+			<!--(onSave)="saveLiteral($event, literal, i)"-->
+			<!--(onDeleteLiteral)="deleteLiteral($event, i)"-->
+			<!--(onEditMode)="editModeChanged($event)"-->
+			<!--&gt;</tr>-->
+		</template>
+	</tbody>
+</table>
+<div class="ui small message" *ngIf="pointers.length===0">
+	<p>This property doesn't contains pointers.</p>
+</div>

@@ -6,11 +6,14 @@ import "semantic-ui/semantic";
 import * as SDKRDFNode from "carbonldp/RDF/RDFNode";
 import * as SDKLiteral from "carbonldp/RDF/Literal";
 import * as URI from "carbonldp/RDF/URI";
+import * as RDFNode from "carbonldp/RDF/RDFNode";
 import * as Utils from "carbonldp/Utils";
 
 import ListViewerComponent from "./../list-viewer/ListViewerComponent";
 import LiteralsComponent from "./literals/LiteralsComponent";
-import { Literal, LiteralRow } from "./literals/literal/LiteralComponent";
+import { LiteralRow } from "./literals/literal/LiteralComponent";
+import PointersComponent from "./pointers/PointersComponent";
+import { PointerRow } from "./pointers/pointer/PointerComponent";
 
 import template from "./template.html!";
 import "./style.css!";
@@ -18,7 +21,7 @@ import "./style.css!";
 @Component( {
 	selector: "document-property",
 	template: template,
-	directives: [ ListViewerComponent, LiteralsComponent ],
+	directives: [ ListViewerComponent, LiteralsComponent, PointersComponent ],
 	host: { "[class.has-changed]": "propertyHasChanged" },
 } )
 
@@ -33,6 +36,8 @@ export default class PropertyComponent {
 	name:string;
 	value:any;
 	@Input() documentURI:string;
+	@Input() bNodes:Map<string,RDFNode.Class> = new Map<string,RDFNode.Class>();
+	@Input() namedFragments:Map<string,RDFNode.Class> = new Map<string,RDFNode.Class>();
 	@Output() onGoToBNode:EventEmitter<string> = new EventEmitter<string>();
 	@Output() onGoToNamedFragment:EventEmitter<string> = new EventEmitter<string>();
 	@Output() onChangeProperty:EventEmitter<Property> = new EventEmitter<Property>();
@@ -168,15 +173,20 @@ export default class PropertyComponent {
 		this.pointers = [];
 		this.property.copy.value.forEach( ( literalOrRDFNode )=> {
 			if ( SDKLiteral.Factory.is( literalOrRDFNode ) ) this.literals.push( <LiteralRow>{ copy: literalOrRDFNode } );
-			if ( SDKRDFNode.Factory.is( literalOrRDFNode ) ) this.pointers.push( literalOrRDFNode );
+			if ( SDKRDFNode.Factory.is( literalOrRDFNode ) ) this.pointers.push( <PointerRow>{ copy: literalOrRDFNode } );
 		} );
-		console.log( this.literals );
 	}
 
 	checkForChangesOnLiterals( literals:LiteralRow[] ):void {
 		this.changePropertyValues( literals );
 		this.propertyHasChanged = ! ! literals.find( ( literalRow )=> {return ! ! literalRow.modified || ! ! literalRow.added || ! ! literalRow.deleted } );
 		if ( ! this.propertyHasChanged ) delete this.property.modified;
+	}
+
+	checkForChangesOnPointers( pointers:PointerRow[] ):void {
+		// this.changePropertyValues( literals );
+		// this.propertyHasChanged = ! ! literals.find( ( literalRow )=> {return ! ! literalRow.modified || ! ! literalRow.added || ! ! literalRow.deleted } );
+		// if ( ! this.propertyHasChanged ) delete this.property.modified;
 	}
 
 	changePropertyValues( literals:LiteralRow[] ):void {
@@ -194,18 +204,6 @@ export default class PropertyComponent {
 		console.log( this.tempProperty );
 		this.onChangeProperty.emit( this.tempProperty );
 	}
-
-
-	// changePropertyValue( value:string, propIndex:number ) {
-	// 	let property:Property = <Property>JSON.parse( JSON.stringify( this.property ) );
-	// 	if ( property.value.length > 0 ) {
-	// 		property.value[ propIndex ][ "@value" ] = value;
-	// 	} else {
-	// 		property.value[ 0 ] = value;
-	// 	}
-	// 	this.onChangeProperty.emit( property );
-	// 	this.property = property;
-	// }
 }
 
 export interface PropertyRow {

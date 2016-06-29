@@ -79,7 +79,9 @@
 						                   (onChangeProperty)="changeProperty($event)"
 						                   [rootNode]="rootNode"
 						                   [documentChanges]="records.changes"
-						                   [hiddenProperties]="['@id']">
+						                   [hiddenProperties]="['@id']"
+						                   [bNodes]="bNodesDictionary"
+						                   [namedFragments]="namedFragmentsDictionary">
 						</document-resource>
 					</div>
 					<div class="ui tab segment"

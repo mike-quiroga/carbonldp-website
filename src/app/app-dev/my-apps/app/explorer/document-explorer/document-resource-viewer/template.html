@@ -5,6 +5,8 @@
 		                   [documentURI]="rootNode['@id']"
 		                   [property]="propertyrow"
 		                   [attr.data-tar]="propertyrow.copy.name"
+		                   [bNodes]="bNodes"
+		                   [namedFragments]="namedFragments"
 		                   (onChangeProperty)="changeProperty($event, propertyrow)"
 		                   (onGoToBNode)="openBNode( $event )"
 		                   (onGoToNamedFragment)="openNamedFragment($event)">
