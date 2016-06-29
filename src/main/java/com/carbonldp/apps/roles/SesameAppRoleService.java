@@ -7,6 +7,7 @@ import com.carbonldp.agents.platform.PlatformAgentRepository;
 import com.carbonldp.apps.AppRole;
 import com.carbonldp.apps.AppRoleDescription;
 import com.carbonldp.apps.AppRoleFactory;
+import com.carbonldp.apps.context.AppContextHolder;
 import com.carbonldp.exceptions.*;
 import com.carbonldp.ldp.AbstractSesameLDPService;
 import com.carbonldp.ldp.containers.*;
@@ -58,10 +59,11 @@ public class SesameAppRoleService extends AbstractSesameLDPService implements Ap
 		if ( isPlatformAgent( agent ) ) {
 			Container accessPoint = AccessPointFactory.getInstance().getAccessPoint( sourceService.get( appRoleAgentContainerIRI ) );
 			IRI roleIRI = accessPoint.getMembershipResource();
+			IRI appIRI = AppContextHolder.getContext().getApplication().getIRI();
 			transactionWrapper.runInPlatformContext( () -> {
 				Agent agentResource = platformAgentRepository.get( agent );
 				Resource rdfMapBNode = agentResource.getResource( PlatformAgentDescription.Property.APP_ROLE_MAP );
-				//rdfMap.add( AppContextHolder.getContext().getApplication().getIRI(), roleIRI );
+				//rdfMap.add( appIRI, roleIRI );
 
 				//TODO: fix this
 			} );
