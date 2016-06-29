@@ -1,3 +1,7 @@
+# 0.38.2 (2016/06/29)
+- Fix blank node replacement
+- Fix spring beans dependency problem
+
 # 0.38.1 (2016/06/27)
 - Fix [LDP-710](https://jira.base22.com/browse/LDP-710) - New BlankNodes are being merged with old ones
 

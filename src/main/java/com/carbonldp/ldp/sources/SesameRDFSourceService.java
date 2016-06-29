@@ -22,13 +22,15 @@ import org.joda.time.DateTime;
 import org.openrdf.model.BNode;
 import org.openrdf.model.IRI;
 import org.openrdf.model.Resource;
-import org.openrdf.model.Value;
 import org.openrdf.model.impl.AbstractModel;
 import org.openrdf.model.impl.LinkedHashModel;
 import org.openrdf.model.vocabulary.RDF;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class SesameRDFSourceService extends AbstractSesameLDPService implements RDFSourceService {
@@ -251,28 +253,17 @@ public class SesameRDFSourceService extends AbstractSesameLDPService implements 
 	}
 
 	private RDFDocument mapBNodeSubjects( RDFDocument originalDocument, RDFDocument newDocument ) {
-		IRI documentUri = newDocument.getDocumentResource().getIRI();
-
 		Set<String> originalDocumentBlankNodesIdentifier = originalDocument.getBlankNodesIdentifier();
 		Set<String> newDocumentBlankNodesIdentifiers = newDocument.getBlankNodesIdentifier();
 		for ( String newDocumentBlankNodeIdentifier : newDocumentBlankNodesIdentifiers ) {
 			if ( ! originalDocumentBlankNodesIdentifier.contains( newDocumentBlankNodeIdentifier ) ) continue;
 
-			RDFBlankNode newBlankNode = newDocument.getBlankNode( newDocumentBlankNodeIdentifier );
+			BNode newBNode = newDocument.getBlankNode( newDocumentBlankNodeIdentifier ).getSubject();
 			BNode originalBNode = originalDocument.getBlankNode( newDocumentBlankNodeIdentifier ).getSubject();
 
-			if ( newBlankNode.getSubject().equals( originalBNode ) ) continue;
+			if ( newBNode.equals( originalBNode ) ) continue;
 
-			Map<IRI, Set<Value>> propertiesMap = newBlankNode.getPropertiesMap();
-			Set<IRI> properties = propertiesMap.keySet();
-
-			for ( IRI property : properties ) {
-				Set<Value> objects = propertiesMap.get( property );
-				for ( Value object : objects ) {
-					newDocument.getBaseModel().add( originalBNode, property, object, documentUri );
-				}
-			}
-			newDocument.subjects().remove( newBlankNode.getSubject() );
+			ModelUtil.replace( newDocument, newBNode, originalBNode );
 
 		}
 		return newDocument;

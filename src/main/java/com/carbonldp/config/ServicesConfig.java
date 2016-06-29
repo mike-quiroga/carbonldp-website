@@ -29,13 +29,19 @@ import com.carbonldp.ldp.nonrdf.backup.SesameBackupService;
 import com.carbonldp.ldp.sources.RDFSourceService;
 import com.carbonldp.ldp.sources.SesameRDFSourceService;
 import com.carbonldp.platform.api.PlatformAPIService;
+import com.carbonldp.sparql.SPARQLService;
+import com.carbonldp.sparql.SesameSPARQLService;
 import com.carbonldp.spring.ServicesInvoker;
+import org.openrdf.spring.SesameConnectionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class ServicesConfig {
+
+	@Autowired
+	private SesameConnectionFactory connectionFactory;
 
 	@Autowired
 	private ACLPermissionEvaluator permissionEvaluator;
@@ -63,6 +69,11 @@ public class ServicesConfig {
 	@Bean
 	public ACLService aclService() {
 		return new SesameACLService( permissionEvaluator );
+	}
+
+	@Bean
+	public SPARQLService sparqlService() {
+		return new SesameSPARQLService( connectionFactory );
 	}
 
 	@Bean

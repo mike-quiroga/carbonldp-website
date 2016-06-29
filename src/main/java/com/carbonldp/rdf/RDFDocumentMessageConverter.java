@@ -1,6 +1,5 @@
 package com.carbonldp.rdf;
 
-import com.carbonldp.authorization.acl.SesameACLService;
 import com.carbonldp.config.ConfigurationRepository;
 import com.carbonldp.models.Infraction;
 import com.carbonldp.utils.IRIUtil;
@@ -82,7 +81,6 @@ public class RDFDocumentMessageConverter extends ModelMessageConverter<RDFDocume
 			toChange.put( subject, valueFactory.createBNode( randomUUID ) );
 		}
 		ModelUtil.replace(document.getBaseModel(),toChange);
-
 
 		return document;
 	}
