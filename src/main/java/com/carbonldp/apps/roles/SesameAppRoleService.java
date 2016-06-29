@@ -9,9 +9,7 @@ import com.carbonldp.apps.AppRoleDescription;
 import com.carbonldp.apps.AppRoleFactory;
 import com.carbonldp.exceptions.*;
 import com.carbonldp.ldp.AbstractSesameLDPService;
-import com.carbonldp.ldp.containers.ContainerService;
-import com.carbonldp.ldp.containers.DirectContainer;
-import com.carbonldp.ldp.containers.DirectContainerFactory;
+import com.carbonldp.ldp.containers.*;
 import com.carbonldp.ldp.sources.RDFSourceService;
 import com.carbonldp.models.Infraction;
 import com.carbonldp.rdf.RDFResource;
@@ -58,10 +56,12 @@ public class SesameAppRoleService extends AbstractSesameLDPService implements Ap
 		containerService.addMember( appRoleAgentContainerIRI, agent );
 
 		if ( isPlatformAgent( agent ) ) {
+			Container accessPoint = AccessPointFactory.getInstance().getAccessPoint( sourceService.get( appRoleAgentContainerIRI ) );
+			IRI roleIRI = accessPoint.getMembershipResource();
 			transactionWrapper.runInPlatformContext( () -> {
 				Agent agentResource = platformAgentRepository.get( agent );
-				Resource rdfMap = agentResource.getResource( PlatformAgentDescription.Property.APP_ROLE_MAP );
-				//rdfMap.add( AppContextHolder.getContext().getApplication().getIRI(), appRoleRepository.getParentsIRI( appRoleAgentContainerIRI ).iterator().next() );
+				Resource rdfMapBNode = agentResource.getResource( PlatformAgentDescription.Property.APP_ROLE_MAP );
+				//rdfMap.add( AppContextHolder.getContext().getApplication().getIRI(), roleIRI );
 
 				//TODO: fix this
 			} );
