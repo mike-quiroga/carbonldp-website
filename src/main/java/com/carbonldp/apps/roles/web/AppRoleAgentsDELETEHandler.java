@@ -20,6 +20,10 @@ public class AppRoleAgentsDELETEHandler extends AbstractDELETERequestHandler {
 		appRoleService.removeAgents( targetIRI, members.getMembers() );
 	}
 
+	protected void removeMembers( IRI targetIRI ) {
+		appRoleService.removeAgents( targetIRI );
+	}
+
 	@Autowired
 	public void setAppRoleService( AppRoleService appRoleService ) {
 		this.appRoleService = appRoleService;

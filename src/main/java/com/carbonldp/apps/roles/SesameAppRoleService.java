@@ -78,6 +78,14 @@ public class SesameAppRoleService extends AbstractSesameLDPService implements Ap
 	}
 
 	@Override
+	public void removeAgents( IRI appRoleAgentContainerIRI ) {
+		Set<IRI> agents = containerRepository.getMemberIRIs( appRoleAgentContainerIRI );
+		for ( IRI agent : agents ) {
+			removeAgent( appRoleAgentContainerIRI, agent );
+		}
+	}
+
+	@Override
 	public void removeAgents( IRI appRoleAgentContainerIRI, Collection<IRI> agents ) {
 		for ( IRI agent : agents ) {
 			removeAgent( appRoleAgentContainerIRI, agent );
@@ -99,6 +107,7 @@ public class SesameAppRoleService extends AbstractSesameLDPService implements Ap
 			transactionWrapper.runInPlatformContext( () -> {
 				Agent agentResource = platformAgentRepository.get( agent );
 				BNode rdfMapBNode = agentResource.getBNode( PlatformAgentDescription.Property.APP_ROLE_MAP );
+				if( rdfMapBNode == null ) return;
 				RDFMap map = new RDFMap( agentResource.getBaseModel(), rdfMapBNode, agent );
 				map.remove( appIRI, roleIRI );
 				agentResource.set( PlatformAgentDescription.Property.APP_ROLE_MAP.getIRI(), rdfMapBNode );

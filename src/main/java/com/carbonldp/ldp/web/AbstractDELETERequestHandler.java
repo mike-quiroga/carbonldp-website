@@ -87,14 +87,18 @@ public class AbstractDELETERequestHandler extends AbstractLDPRequestHandler {
 		Set<APIPreferences.ContainerDeletePreference> deletePreferences = getContainerDeletePreferences( targetIRI );
 
 		if ( deletePreferences.contains( APIPreferences.ContainerDeletePreference.MEMBERSHIP_RESOURCES ) ) throw new NotImplementedException();
-		if ( deletePreferences.contains( APIPreferences.ContainerDeletePreference.MEMBERSHIP_TRIPLES ) ) containerService.removeMembers( targetIRI );
+		if ( deletePreferences.contains( APIPreferences.ContainerDeletePreference.MEMBERSHIP_TRIPLES ) ) removeMembers( targetIRI );
 		if ( deletePreferences.contains( APIPreferences.ContainerDeletePreference.CONTAINED_RESOURCES ) ) containerService.deleteContainedResources( targetIRI );
 		if ( deletePreferences.contains( APIPreferences.ContainerDeletePreference.CONTAINER ) ) containerService.delete( targetIRI );
 		if ( deletePreferences.contains( APIPreferences.ContainerDeletePreference.SELECTED_MEMBERSHIP_TRIPLES ) ) removeSelectiveMembers( requestDocument, targetIRI );
 
 		return createSuccessfulDeleteResponse();
 	}
-	
+
+	protected void removeMembers( IRI targetIRI ) {
+		containerService.removeMembers( targetIRI );
+	}
+
 	protected void removeSelectiveMembers( RDFDocument requestDocument, IRI targetIRI ) {
 		validateRequestDocument( requestDocument );
 
