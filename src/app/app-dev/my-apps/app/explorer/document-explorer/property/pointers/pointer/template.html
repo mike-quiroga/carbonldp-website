@@ -51,11 +51,11 @@
 		        (click)="onEdit($event)">
 			<i class="pencil icon"></i>
 		</button>
-		<!--<button #deleteButton-->
-		<!--class="ui basic button" title="Delete"-->
-		<!--(click)="deletePointer()">-->
-		<!--<i class="remove red icon"></i>-->
-		<!--</button>-->
+		<button #deleteButton
+		        class="ui basic button" title="Delete Pointer"
+		        (click)="deletePointer()">
+			<i class="remove red icon"></i>
+		</button>
 	</div>
 	<div class="ui mini icon inverted confirm buttons" *ngIf="mode===modes.EDIT">
 		<button #cancelButton

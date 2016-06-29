@@ -2,7 +2,7 @@
 	<i class="plus icon"></i>
 	Add Pointer
 </button>
-<table class="ui very compact striped small celled table" *ngIf="pointers.length>0">
+<table class="ui very compact striped small celled table" *ngIf="canDisplayPointers()">
 	<thead>
 		<tr class="center aligned">
 			<th class="fifteen wide">@id</th>
@@ -15,16 +15,17 @@
 			    [pointer]="pointer"
 			    [bNodes]="bNodes"
 			    [namedFragments]="namedFragments"
-			    (onSave)="savePointer($event, pointer, i)"></tr>
-			<!--<tr class="pointer top aligned" *ngIf="!!pointer.copy && !pointer.deleted"-->
-			<!--[pointer]="pointer"-->
-			<!--(onSave)="saveLiteral($event, literal, i)"-->
-			<!--(onDeleteLiteral)="deleteLiteral($event, i)"-->
-			<!--(onEditMode)="editModeChanged($event)"-->
-			<!--&gt;</tr>-->
+			    (onSave)="savePointer($event, pointer, i)"
+			    (onDeletePointer)="deletePointer($event, i)"></tr>
+			<tr class="pointer top aligned" *ngIf="!!pointer.added && !pointer.deleted"
+			    [pointer]="pointer"
+			    [bNodes]="bNodes"
+			    [namedFragments]="namedFragments"
+			    (onSave)="saveLiteral($event, literal, i)"
+			    (onDeleteNewPointer)="deleteNewPointer($event, i)"></tr>
 		</template>
 	</tbody>
 </table>
-<div class="ui small message" *ngIf="pointers.length===0">
+<div class="ui small message" *ngIf="!canDisplayPointers()">
 	<p>This property doesn't contains pointers.</p>
 </div>

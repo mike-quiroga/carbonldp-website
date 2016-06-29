@@ -49,4 +49,37 @@ export default class PointersComponent {
 		}
 		this.onPointersChanges.emit( this.pointers );
 	}
+
+	deletePointer( deletingPointer:PointerRow, index:number ):void {
+		this.onPointersChanges.emit( this.pointers );
+	}
+
+	deleteNewPointer( deletingPointer:PointerRow, index:number ):void {
+		this.pointers.splice( index, 1 );
+		this.onPointersChanges.emit( this.pointers );
+	}
+
+	canDisplayPointers():boolean {
+		return this.getUntouchedPointers().length > 0;
+	}
+
+	getPointers():PointerRow[] {
+		return this.pointers.filter( ( pointer:PointerRow ) => typeof pointer.copy !== "undefined" );
+	}
+
+	getAddedPointers():PointerRow[] {
+		return this.pointers.filter( ( pointer:PointerRow ) => typeof pointer.added !== "undefined" );
+	}
+
+	getModifiedPointers():PointerRow[] {
+		return this.pointers.filter( ( pointer:PointerRow ) => typeof pointer.modified !== "undefined" );
+	}
+
+	getDeletedPointers():PointerRow[] {
+		return this.pointers.filter( ( pointer:PointerRow ) => typeof pointer.deleted !== "undefined" );
+	}
+
+	getUntouchedPointers():PointerRow[] {
+		return this.pointers.filter( ( pointer:PointerRow ) => typeof pointer.modified === "undefined" && typeof pointer.deleted === "undefined" );
+	}
 }
