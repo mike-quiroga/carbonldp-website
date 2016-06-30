@@ -135,9 +135,9 @@ public class SesameAppService extends AbstractSesameLDPService implements AppSer
 		IRI agentIRI = ( (AgentAuthenticationToken) rawAuthentication ).getAgent().getIRI();
 		Agent agentResource = platformAgentRepository.get( agentIRI );
 		BNode rdfMapBNode = agentResource.getBNode( PlatformAgentDescription.Property.APP_ROLE_MAP );
+		if ( rdfMapBNode == null ) return;
 		RDFMap map = new RDFMap( agentResource.getBaseModel(), rdfMapBNode, agentIRI );
 		map.add( (Value) app.getIRI(), (Value) role.getIRI() );
-		agentResource.set( PlatformAgentDescription.Property.APP_ROLE_MAP.getIRI(), rdfMapBNode );
 		sourceService.replace( agentResource );
 	}
 

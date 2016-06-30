@@ -68,7 +68,6 @@ public class SesameAppRoleService extends AbstractSesameLDPService implements Ap
 				BNode rdfMapBNode = agentResource.getBNode( PlatformAgentDescription.Property.APP_ROLE_MAP );
 				RDFMap map = new RDFMap( agentResource.getBaseModel(), rdfMapBNode, agent );
 				map.add( (Value) appIRI, (Value) roleIRI );
-				agentResource.set( PlatformAgentDescription.Property.APP_ROLE_MAP.getIRI(), rdfMapBNode );
 				sourceService.replace( agentResource );
 			} );
 		}
@@ -111,7 +110,6 @@ public class SesameAppRoleService extends AbstractSesameLDPService implements Ap
 				if ( rdfMapBNode == null ) return;
 				RDFMap map = new RDFMap( agentResource.getBaseModel(), rdfMapBNode, agent );
 				map.remove( (Value) appIRI, (Value) roleIRI );
-				agentResource.set( PlatformAgentDescription.Property.APP_ROLE_MAP.getIRI(), rdfMapBNode );
 				sourceService.replace( agentResource );
 			} );
 		}
