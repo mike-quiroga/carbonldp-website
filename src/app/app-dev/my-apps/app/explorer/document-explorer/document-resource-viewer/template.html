@@ -1,13 +1,14 @@
 <div class="ui divided items">
 	<template ngFor let-propertyrow="$implicit" [ngForOf]="properties" let-i="index">
 		<document-property class="property item"
-		                   *ngIf="canDisplay(propertyrow.copy.name)"
+		                   *ngIf="canDisplay(propertyrow.copy.name) && !propertyrow.deleted"
 		                   [documentURI]="rootNode['@id']"
 		                   [property]="propertyrow"
 		                   [attr.data-tar]="propertyrow.copy.name"
 		                   [bNodes]="bNodes"
 		                   [namedFragments]="namedFragments"
 		                   (onChangeProperty)="changeProperty($event, propertyrow)"
+		                   (onDeleteProperty)="deleteProperty($event, propertyrow)"
 		                   (onGoToBNode)="openBNode( $event )"
 		                   (onGoToNamedFragment)="openNamedFragment($event)">
 		</document-property>

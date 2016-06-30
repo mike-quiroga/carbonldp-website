@@ -26,6 +26,7 @@ export default class DocumentResourceComponent {
 	@Output() onOpenBNode:EventEmitter<string> = new EventEmitter<string>();
 	@Output() onOpenNamedFragment:EventEmitter<string> = new EventEmitter<string>();
 	@Output() onChangeProperty:EventEmitter<PropertyRow> = new EventEmitter<PropertyRow>();
+	@Output() onDeleteProperty:EventEmitter<PropertyRow> = new EventEmitter<PropertyRow>();
 	properties:PropertyRow[] = [];
 
 	_rootNode:RDFNode.Class;
@@ -59,6 +60,10 @@ export default class DocumentResourceComponent {
 
 	changeProperty( property:Property, propertyRow:PropertyRow ):void {
 		this.onChangeProperty.emit( propertyRow );
+	}
+
+	deleteProperty( property:Property, propertyRow:PropertyRow ):void {
+		this.onDeleteProperty.emit( propertyRow );
 	}
 
 	getProperties():void {

@@ -170,7 +170,6 @@ export default class DocumentViewerComponent {
 	changeProperty( property:PropertyRow ) {
 		if ( typeof property.modified !== "undefined" ) {
 			if ( property.modified.id !== property.modified.name ) {
-
 				this.rootNode[ property.modified.name ] = property.modified.value;
 				this.rootNode[ property.modified.id ] = this.rootNode[ property.modified.name ];
 				delete this.rootNode[ property.modified.id ];
@@ -183,6 +182,15 @@ export default class DocumentViewerComponent {
 			this.records.changes.delete( property.copy.id );
 			this.rootNode[ property.copy.id ] = property.copy.value;
 		}
+		this.document[ "@graph" ] = [ this.rootNode ];
+		this.documentContentHasChanged = this.records.changes.size > 0 || this.records.additions.size > 0 || this.records.deletions.size > 0;
+	}
+
+	deleteProperty( property:PropertyRow ) {
+		if ( typeof property.deleted !== "undefined" ) {
+			this.records.deletions.set( property.deleted.id, property );
+		}
+		delete this.rootNode[ property.copy.id ];
 		this.document[ "@graph" ] = [ this.rootNode ];
 		this.documentContentHasChanged = this.records.changes.size > 0 || this.records.additions.size > 0 || this.records.deletions.size > 0;
 	}

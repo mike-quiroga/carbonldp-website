@@ -12,7 +12,7 @@
 	</div>
 </div>
 
-<div class="content" *ngIf="name === '@type'">
+<div class="content" *ngIf="!property.deleted && name === '@type'">
 	<p class="header">
 		{{name}}
 	</p>
@@ -36,7 +36,17 @@
 	</div>
 </div>
 
-<div class="content" *ngIf="name !== '@id' && name !== '@type'">
+<div class="content" *ngIf="!property.deleted && name !== '@id' && name !== '@type'">
+	<div class="ui confirm-deletion inverted dimmer">
+		<div class="content">
+			<div class="center">
+				<h2 class="ui header"><i class="trash outline red icon"></i> Are you sure?</h2>
+				<p class="ui description">Confirm to delete the property: '{{name}}'</p>
+				<div class="ui red button" title="Confirm deletion" (click)="deleteProperty()">Confirm</div>
+				<div class="ui button" title="Cancel deletion" (click)="cancelDeletion()">Cancel</div>
+			</div>
+		</div>
+	</div>
 	<p class="ui yellow label indicator" *ngIf="propertyHasChanged">Changed</p>
 	<div class="header">
 		<p>{{getDisplayName(name)}}</p>
@@ -51,7 +61,9 @@
 					<div class="item" title="Edit Property's name" (click)="onEditName()">
 						<i class="edit icon"></i> Edit Name
 					</div>
-					<div class="item" title="Options"><i class="delete icon"></i> Delete Property</div>
+					<div class="item" title="Options" (click)="askToConfirmDeletion()">
+						<i class="trash outline red icon"></i> Delete Property
+					</div>
 				</div>
 			</div>
 		</div>

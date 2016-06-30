@@ -23,7 +23,7 @@ import "./style.css!";
 	selector: "document-property",
 	template: template,
 	directives: [ ListViewerComponent, LiteralsComponent, PointersComponent ],
-	host: { "[class.has-changed]": "propertyHasChanged" },
+	host: { "[class.has-changed]": "propertyHasChanged", "[class.deleted-property]": "property.deleted" },
 } )
 
 export default class PropertyComponent {
@@ -50,6 +50,7 @@ export default class PropertyComponent {
 	@Output() onGoToBNode:EventEmitter<string> = new EventEmitter<string>();
 	@Output() onGoToNamedFragment:EventEmitter<string> = new EventEmitter<string>();
 	@Output() onChangeProperty:EventEmitter<Property> = new EventEmitter<Property>();
+	@Output() onDeleteProperty:EventEmitter<PropertyRow> = new EventEmitter<PropertyRow>();
 	private _property:PropertyRow;
 	@Input() set property( prop:PropertyRow ) {
 		this._property = prop;
@@ -91,6 +92,7 @@ export default class PropertyComponent {
 		this.$element = $( this.element.nativeElement );
 		this.initializeAccordions();
 		this.initializePropertyButtons();
+		this.initializeDeletionDimmer();
 	}
 
 	getDisplayName( uri:string ):string {
@@ -189,8 +191,29 @@ export default class PropertyComponent {
 		} );
 	}
 
+	initializeDeletionDimmer():void {
+		this.$element.find( ".confirm-deletion.dimmer" ).dimmer( { closable: false } );
+	}
+
 	onEditName():void {
 		this.mode = Modes.EDIT;
+	}
+
+	cancelDeletion():void {
+		this.$element.find( ".confirm-deletion.dimmer" ).dimmer( "hide" );
+	}
+
+	askToConfirmDeletion():void {
+		this.$element.find( ".confirm-deletion.dimmer" ).dimmer( "show" );
+	}
+
+	deleteProperty():void {
+		if ( typeof this.property.added !== "undefined" ) {
+			// this.onDeleteNewLiteral.emit( this.property );
+		} else {
+			this.property.deleted = this.property.copy;
+			this.onDeleteProperty.emit( this.property );
+		}
 	}
 
 	cancel():void {
@@ -288,7 +311,9 @@ export default class PropertyComponent {
 
 export interface PropertyRow {
 	copy:any;
+	added?:any;
 	modified?:any;
+	deleted?:any;
 }
 
 export interface Property {
