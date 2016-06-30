@@ -6,6 +6,7 @@ import com.carbonldp.agents.SesameAgentsService;
 import com.carbonldp.apps.roles.AppRoleRepository;
 import com.carbonldp.authorization.acl.ACL;
 import com.carbonldp.exceptions.ResourceAlreadyExistsException;
+import org.openrdf.model.IRI;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
@@ -42,6 +43,10 @@ public class SesameAppAgentService extends SesameAgentsService {
 			// TODO: Create "resend validation" resource
 		}
 
+	}
+
+	public void delete( IRI agentIRI ) {
+		sourceRepository.delete( agentIRI, true );
 	}
 
 	@Autowired

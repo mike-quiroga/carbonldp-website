@@ -18,6 +18,7 @@ import com.carbonldp.rdf.RDFResource;
 import org.joda.time.DateTime;
 import org.openrdf.model.BNode;
 import org.openrdf.model.IRI;
+import org.openrdf.model.Value;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Collection;
@@ -66,7 +67,7 @@ public class SesameAppRoleService extends AbstractSesameLDPService implements Ap
 				Agent agentResource = platformAgentRepository.get( agent );
 				BNode rdfMapBNode = agentResource.getBNode( PlatformAgentDescription.Property.APP_ROLE_MAP );
 				RDFMap map = new RDFMap( agentResource.getBaseModel(), rdfMapBNode, agent );
-				map.add( appIRI, roleIRI );
+				map.add( (Value) appIRI, (Value) roleIRI );
 				agentResource.set( PlatformAgentDescription.Property.APP_ROLE_MAP.getIRI(), rdfMapBNode );
 				sourceService.replace( agentResource );
 			} );
@@ -107,9 +108,9 @@ public class SesameAppRoleService extends AbstractSesameLDPService implements Ap
 			transactionWrapper.runInPlatformContext( () -> {
 				Agent agentResource = platformAgentRepository.get( agent );
 				BNode rdfMapBNode = agentResource.getBNode( PlatformAgentDescription.Property.APP_ROLE_MAP );
-				if( rdfMapBNode == null ) return;
+				if ( rdfMapBNode == null ) return;
 				RDFMap map = new RDFMap( agentResource.getBaseModel(), rdfMapBNode, agent );
-				map.remove( appIRI, roleIRI );
+				map.remove( (Value) appIRI, (Value) roleIRI );
 				agentResource.set( PlatformAgentDescription.Property.APP_ROLE_MAP.getIRI(), rdfMapBNode );
 				sourceService.replace( agentResource );
 			} );

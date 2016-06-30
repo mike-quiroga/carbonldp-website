@@ -1,24 +1,34 @@
 package com.carbonldp.agents.platform;
 
+import com.carbonldp.Vars;
 import com.carbonldp.agents.Agent;
 import com.carbonldp.agents.AgentValidator;
 import com.carbonldp.agents.PlatformAgentDescription;
 import com.carbonldp.agents.SesameAgentsService;
+import com.carbonldp.apps.App;
+import com.carbonldp.apps.AppService;
+import com.carbonldp.apps.roles.AppRoleRepository;
 import com.carbonldp.authorization.Platform;
 import com.carbonldp.authorization.acl.ACEDescription;
 import com.carbonldp.authorization.acl.ACL;
 import com.carbonldp.exceptions.ResourceAlreadyExistsException;
+import com.carbonldp.models.Infraction;
 import com.carbonldp.rdf.RDFMap;
 import com.carbonldp.rdf.RDFMapDescription;
+import com.carbonldp.web.exceptions.BadRequestException;
 import org.openrdf.model.BNode;
 import org.openrdf.model.IRI;
+import org.openrdf.model.Value;
 import org.openrdf.model.impl.SimpleValueFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Arrays;
+import java.util.Set;
 
 public class SesamePlatformAgentService extends SesameAgentsService {
 	protected PlatformAgentRepository platformAgentRepository;
+	protected AppService appService;
+	protected AppRoleRepository appRoleRepository;
 
 	@Override
 	public void register( Agent agent ) {
@@ -49,6 +59,31 @@ public class SesamePlatformAgentService extends SesameAgentsService {
 			sendValidationEmail( agent, validator );
 			// TODO: Create "resend validation" resource
 		}
+	}
+
+	@Override
+	public void delete( IRI agentIRI ) {
+		if ( sourceRepository.exists( agentIRI ) ) {
+			Agent agentResource = platformAgentRepository.get( agentIRI );
+			BNode rdfMapBNode = agentResource.getBNode( PlatformAgentDescription.Property.APP_ROLE_MAP );
+			if ( rdfMapBNode == null ) return;
+			RDFMap map = new RDFMap( agentResource.getBaseModel(), rdfMapBNode, agentIRI );
+			Set<Value> apps = map.getKeys();
+			for ( Value app : apps ) {
+				IRI appIRI = SimpleValueFactory.getInstance().createIRI( app.stringValue() );
+				App appResource = appService.get( appIRI );
+				String adminRoleString = transactionWrapper.runInAppContext( appResource, () -> {
+					return appRoleRepository.getContainerIRI() + Vars.getInstance().getAppAdminRole();
+				} );
+				Set<Value> roles = map.getValues( app );
+				for ( Value role : roles ) {
+					if ( role.stringValue().equals( adminRoleString ) ) {
+						throw new BadRequestException( new Infraction( 0x2013, "app", appIRI.stringValue() ) );
+					}
+				}
+			}
+		}
+		sourceRepository.delete( agentIRI, true );
 	}
 
 	public void createAppRoleMap( Agent agent ) {
@@ -84,4 +119,10 @@ public class SesamePlatformAgentService extends SesameAgentsService {
 
 	@Autowired
 	public void setPlatformAgentRepository( PlatformAgentRepository platformAgentRepository ) { this.platformAgentRepository = platformAgentRepository; }
+
+	@Autowired
+	public void setAppService( AppService appService ) { this.appService = appService; }
+
+	@Autowired
+	public void setAppRoleRepository( AppRoleRepository appRoleRepository ) { this.appRoleRepository = appRoleRepository; }
 }

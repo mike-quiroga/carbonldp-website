@@ -1,9 +1,11 @@
 package com.carbonldp.agents.platform.web;
 
+import com.carbonldp.agents.AgentService;
 import com.carbonldp.ldp.web.AbstractDELETERequestHandler;
 import com.carbonldp.web.RequestHandler;
-import com.carbonldp.web.exceptions.NotImplementedException;
 import org.openrdf.model.IRI;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 
 /**
  * @author NestorVenegas
@@ -13,12 +15,16 @@ import org.openrdf.model.IRI;
 @RequestHandler
 public class PlatformAgentsDELETEHandler extends AbstractDELETERequestHandler {
 
+	private AgentService platformAgentService;
+
 	@Override
 	public void delete( IRI targetIRI ) {
-		// TODO: delete membership
-		// TODO:delete from agents container
-		// TODO: delete ACL
-		throw new NotImplementedException();
+		platformAgentService.delete( targetIRI );
 	}
 
+	@Autowired
+	@Qualifier( "platformAgentService" )
+	public void setPlatformAgentService( AgentService platformAgentService ) {
+		this.platformAgentService = platformAgentService;
+	}
 }
