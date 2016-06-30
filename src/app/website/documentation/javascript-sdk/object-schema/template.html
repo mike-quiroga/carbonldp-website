@@ -34,16 +34,166 @@
 					</div>
 					<div class="ui message">
 						<div class="content">
-							<p class="larger">On this document you can find an in depth decription of what
-							is the object schema in Carbon an how to use it.</p>
+							<p class="larger">On this document you can find an in depth description of what
+								is the object schema in Carbon an how to use it.</p>
 						</div>
 					</div>
-		<section>
+					<section>
+						<h2 class="ui header">Object Schema</h2>
+						<p>The object schema is used to map prefixes to URIs and to map properties to URIs, forming a vocabulary for their
+							applications. Prefixes are short words or abbreviations that expand to a URI.</p>
 
-		</section>
+						<p>Prefixes may be defined as any JSON string different from the JSON-LD keywords.</p>
 
-</article>
-				</main>
+						<p>The object schema describes the properties used in your Documents through the direct use of URIs or through aliases or
+							prefixes that expand to URIs.
+							Allowing properties to be represented by an unambiguous identifier. This helps prevent developers
+							from stepping in each other's vocabularies, and makes data useful in the outside.
+							The URIs used to describe the properties may contain its definitions.</p>
+
+						<p>This concept is based on <a href="https://www.w3.org/TR/2012/WD-json-ld-syntax-20120712/#the-context">The Context</a>
+							definition of JSON-LD.</p>
+
+						<p>Carbon's object schema is made of:</p>
+						<ul>
+							<li>Prefixes: simple string that expands to a URI.</li>
+							<li>Properties: JSON object describing a property.</li>
+						</ul>
+
+
+						<section>
+							<h3 class="ui header">Prefixes</h3>
+
+							<p>Prefixes may be seen as abbreviations, whose value is a simple string that expands to a URI</p>
+
+							<div>
+								<!--@formatter:off-->
+							<pre><code class="highlighted typescript">
+	{
+	    "skos": "http://www.w3.org/2004/02/skos/core#"
+	}
+							</code></pre>
+								<!--@formatter:on-->
+							</div>
+						</section>
+
+						<section>
+							<h3 class="ui header">Properties</h3>
+							<p>The value of a property is mapped by a JSON object that may contain an @id, @type, @language, or @container keyword.</p>
+
+							<div>
+								<!--@formatter:off-->
+							<pre><code class="highlighted typescript">
+	{
+	    "title": {
+	        "@id": "ex:title",
+	        "@type": "xsd:string"
+	    }
+	}
+							</code></pre>
+								<!--@formatter:on-->
+							</div>
+						</section>
+					</section>
+					<section>
+						<h2 class="ui header">Types of Object Schemas</h2>
+						<p>There are two types of object schemas:</p>
+						<ul>
+							<li>General</li>
+							<li>By type</li>
+						</ul>
+						<p>Both types of object schemas can be defined using the methos <code>extendsObjectSchema()</code>
+							from the <a>Carbon.SDKContext.Class</a> class.</p>
+
+						<section>
+							<h3 class="ui header">General object schema</h3>
+							<p>This object schema, when defined, can be used by every Carbon Document in your application.
+								As long as the Documents do not have a specific object schema defined.</p>
+
+							<p>The next example shows how to define a general object schema</p>
+
+							<div>
+								<!--@formatter:off-->
+						<pre><code class="highlighted typescript">
+carbon.extendObjectSchema( {
+	"acl": "http://www.w3.org/ns/auth/acl#",
+	"api": "http://purl.org/linked-data/api/vocab#",
+	"c": "http://carbonldp.com/ns/v1/platform#",
+	"cs": "http://carbonldp.com/ns/v1/security#",
+	"cp": "http://carbonldp.com/ns/v1/patch#",
+	"ex": "http://example.org/ns#",
+	"foaf": "http://xmlns.com/foaf/0.1/",
+	"geonames": "http://www.geonames.org/ontology#",
+	"gr": "http://purl.org/goodrelations/v1#",
+	"http": "http://www.w3.org/2006/http#",
+	"ldp": "http://www.w3.org/ns/ldp#",
+	"rss": "http://purl.org/rss/1.0/",
+	"sd": "http://www.w3.org/ns/sparql-service-description#",
+	"skos": "http://www.w3.org/2004/02/skos/core#",
+	"types": "http://rdfs.org/sioc/types#",
+	"vcard": "http://www.w3.org/2001/vcard-rdf/3.0#",
+	"xsd": "http://www.w3.org/2001/XMLSchema#",
+	"title": {
+		"@id": "ex:title",
+		"@type": "xsd:string"
+	},
+	"name": {
+		"@id": "foaf:name",
+		"@type": "xsd:string"
+	}
+} );
+</code></pre>
+							<!--@formatter:on-->
+							</div>
+						</section>
+
+						<section>
+							<h3 class="ui header">Object schema by type</h3>
+							<p>Object schemas can be defined by types. A Document can be decribes by any number of types. For
+								example, a Document is a Container......</p>
+
+							<div>
+								<!--@formatter:off-->
+						<pre><code class="highlighted typescript">
+carbon.extendObjectSchema( "http://example.org/ns#BlogPost" , {
+	"acl": "http://www.w3.org/ns/auth/acl#",
+	"api": "http://purl.org/linked-data/api/vocab#",
+	"c": "http://carbonldp.com/ns/v1/platform#",
+	"cs": "http://carbonldp.com/ns/v1/security#",
+	"cp": "http://carbonldp.com/ns/v1/patch#",
+	"ex": "http://example.org/ns#",
+	"foaf": "http://xmlns.com/foaf/0.1/",
+	"geo": "http://www.w3.org/2003/01/geo/wgs84_pos#",
+	"http": "http://www.w3.org/2006/http#",
+	"ldp": "http://www.w3.org/ns/ldp#",
+	"owl": "http://www.w3.org/2002/07/owl#",
+	"rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+	"sfn": "http://www.w3.org/ns/sparql#",
+	"skos": "http://www.w3.org/2004/02/skos/core#",
+	"types": "http://rdfs.org/sioc/types#",
+	"xsd": "http://www.w3.org/2001/XMLSchema#",
+	"title": {
+		"@id": "ex:title",
+		"@type": "xsd:string"
+	},
+	"tags": {
+		"@id": "ex:tag",
+		"@type": "@id",
+		"@container": "@set"
+	}
+} );
+
+</code></pre>
+							<!--@formatter:on-->
+							</div>
+						</section>
+					</section>
+
+					<section>
+
+					</section>
+				</article>
+			</main>
 		</div>
 		<sidebar-component [mobile]="false" [parentElement]="element" [contentReady]="contentReady" class="four wide computer only four wide tablet only column"></sidebar-component>
 	</div>
