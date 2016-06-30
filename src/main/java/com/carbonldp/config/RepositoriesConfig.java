@@ -35,8 +35,6 @@ import com.carbonldp.rdf.*;
 import com.carbonldp.repository.FileRepository;
 import com.carbonldp.repository.LocalFileRepository;
 import com.carbonldp.repository.RepositoryService;
-import com.carbonldp.sparql.SPARQLService;
-import com.carbonldp.sparql.SesameSPARQLService;
 import com.carbonldp.utils.PropertiesUtil;
 import org.openrdf.model.IRI;
 import org.openrdf.model.impl.SimpleValueFactory;
