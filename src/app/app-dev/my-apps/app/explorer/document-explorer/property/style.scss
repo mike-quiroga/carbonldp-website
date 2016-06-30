@@ -21,6 +21,10 @@ document-property.has-changed > .content > .indicator {
 	float: right;
 }
 
+.ui.items > .item .meta input {
+	margin-right: 0;
+}
+
 .ui.items > .item.has-changed.has-changed {
 	background-color: #FFFFE0;
 	padding-left: 15px;

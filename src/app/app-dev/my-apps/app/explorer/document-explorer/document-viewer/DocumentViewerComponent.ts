@@ -169,8 +169,16 @@ export default class DocumentViewerComponent {
 
 	changeProperty( property:PropertyRow ) {
 		if ( typeof property.modified !== "undefined" ) {
-			this.records.changes.set( property.modified.id, property );
-			this.rootNode[ property.modified.id ] = property.modified.value;
+			if ( property.modified.id !== property.modified.name ) {
+
+				this.rootNode[ property.modified.name ] = property.modified.value;
+				this.rootNode[ property.modified.id ] = this.rootNode[ property.modified.name ];
+				delete this.rootNode[ property.modified.id ];
+				this.records.changes.set( property.modified.id, property );
+			} else {
+				this.records.changes.set( property.modified.id, property );
+				this.rootNode[ property.modified.id ] = property.modified.value;
+			}
 		} else {
 			this.records.changes.delete( property.copy.id );
 			this.rootNode[ property.copy.id ] = property.copy.value;

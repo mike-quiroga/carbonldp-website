@@ -42,17 +42,45 @@
 		<p>{{getDisplayName(name)}}</p>
 	</div>
 	<div class="meta">
-		<a *ngIf="isUrl(name)" [attr.href]="name" target="_blank">{{name}}</a>
-		<p *ngIf="!isUrl(name)">{{name}}</p>
+		<div [hidden]="mode === modes.EDIT">
+			<a *ngIf="isUrl(name)" [attr.href]="name" target="_blank">{{name}}</a>
+			<p *ngIf="!isUrl(name)">{{name}}</p>
+			<div class="ui icon bottom left pointing dropdown basic mini button options" title="Options">
+				<i class="ellipsis horizontal icon"></i>
+				<div class="menu">
+					<div class="item" title="Edit Property's name" (click)="onEditName()">
+						<i class="edit icon"></i> Edit Name
+					</div>
+					<div class="item" title="Options"><i class="delete icon"></i> Delete Property</div>
+				</div>
+			</div>
+		</div>
+		<div [hidden]="mode === modes.READ">
+			<div class="ui error form">
+				<div class="ui fluid action input">
+					<input type="text" [ngFormControl]="nameInput" (keyup.escape)="cancel()" (keyup.enter)="save()">
+					<button class="ui button"
+					        [disabled]="!nameInput.valid"
+					        (click)="save(nameInput.value)">Save
+					</button>
+				</div>
+				<div class="ui error message wide" *ngIf="!nameInput.valid">
+					<p *ngIf="nameInput.hasError('required')">Enter a name for the property.</p>
+					<p *ngIf="nameInput.hasError('invalidName')">Enter a valid URL. Only alphanumeric values (a-z, A-Z, 0..9)</p>
+					<p *ngIf="nameInput.hasError('missingFragment')">The name slug must be placed after a hashtag (#) symbol.</p>
+					<p *ngIf="nameInput.hasError('duplicatedHashtag')">Use only one hashtag (#) symbol.</p>
+				</div>
+			</div>
+		</div>
 	</div>
 	<div class="description">
-		<button class="ui right labeled icon basic mini button" (click)="addPointer()">
-			<i class="plus icon"></i>
-			Add Pointer
-		</button>
 		<button class="ui right labeled icon basic mini button" (click)="addLiteral()">
 			<i class="plus icon"></i>
 			Add Literal
+		</button>
+		<button class="ui right labeled icon basic mini button" (click)="addPointer()">
+			<i class="plus icon"></i>
+			Add Pointer
 		</button>
 		<literals [(literals)]="literals"
 		          [onAddNewLiteral]="addNewLiteral"

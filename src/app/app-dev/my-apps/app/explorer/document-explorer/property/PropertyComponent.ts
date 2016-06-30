@@ -1,4 +1,5 @@
 import { Component, ElementRef, Input, Output, EventEmitter } from "@angular/core";
+import { Control, AbstractControl, Validators } from '@angular/common';
 
 import $ from "jquery";
 import "semantic-ui/semantic";
@@ -36,21 +37,26 @@ export default class PropertyComponent {
 	tempProperty:Property = <Property>{};
 	id:string;
 	name:string;
-	value:any;
+	value:any[] = [];
 	addNewLiteral:EventEmitter<boolean> = new EventEmitter<boolean>();
 	addNewPointer:EventEmitter<boolean> = new EventEmitter<boolean>();
+	commonHeaders:string[] = [ "@id", "@type", "@value" ];
+	mode:string = Modes.READ;
+	modes:Modes = Modes;
+	nameInput:AbstractControl = new Control( this.name, Validators.compose( [ Validators.required, this.nameValidator.bind( this ) ] ) );
 	@Input() documentURI:string;
 	@Input() bNodes:Map<string,RDFNode.Class> = new Map<string,RDFNode.Class>();
 	@Input() namedFragments:Map<string,RDFNode.Class> = new Map<string,RDFNode.Class>();
 	@Output() onGoToBNode:EventEmitter<string> = new EventEmitter<string>();
 	@Output() onGoToNamedFragment:EventEmitter<string> = new EventEmitter<string>();
 	@Output() onChangeProperty:EventEmitter<Property> = new EventEmitter<Property>();
-	commonHeaders:string[] = [ "@id", "@type", "@value" ];
-	_property:PropertyRow;
+	private _property:PropertyRow;
 	@Input() set property( prop:PropertyRow ) {
 		this._property = prop;
 		this.id = prop.copy.id;
+		this.tempProperty.id = prop.copy.id;
 		this.name = prop.copy.name;
+		(<Control>this.nameInput).updateValue( this.name );
 		if ( Utils.isArray( prop.copy.value ) ) {
 			this.value = [];
 			prop.copy.value.forEach( ( literalOrRDFNode )=> { this.value.push( Object.assign( literalOrRDFNode ) ) } )
@@ -61,13 +67,17 @@ export default class PropertyComponent {
 
 	get property():PropertyRow { return this._property; }
 
+	nameHasChanged:boolean = false;
+	literalsHaveChanged:boolean = false;
+	pointersHaveChanged:boolean = false;
+
 	_propertyHasChanged:boolean;
-	set propertyHasChanged( value:boolean ) {
-		this._propertyHasChanged = value;
-	}
+	// set propertyHasChanged( value:boolean ) {
+	// 	this._propertyHasChanged = value;
+	// }
 
-	get propertyHasChanged():boolean { return this._propertyHasChanged; }
-
+	// get propertyHasChanged():boolean { return this._propertyHasChanged; }
+	get propertyHasChanged():boolean { return this.nameHasChanged || this.literalsHaveChanged || this.pointersHaveChanged; }
 
 	constructor( element:ElementRef ) {
 		this.element = element;
@@ -80,6 +90,7 @@ export default class PropertyComponent {
 	ngAfterViewInit():void {
 		this.$element = $( this.element.nativeElement );
 		this.initializeAccordions();
+		this.initializePropertyButtons();
 	}
 
 	getDisplayName( uri:string ):string {
@@ -172,6 +183,42 @@ export default class PropertyComponent {
 		this.$element.find( ".ui.accordion" ).accordion();
 	}
 
+	initializePropertyButtons():void {
+		this.$element.find( ".ui.options.dropdown.button" ).dropdown( {
+			transition: "swing up"
+		} );
+	}
+
+	onEditName():void {
+		this.mode = Modes.EDIT;
+	}
+
+	cancel():void {
+		this.mode = Modes.READ;
+		(<Control>this.nameInput).updateValue( this.name );
+	}
+
+	save():void {
+		let copyOrAdded:string = typeof this.property.copy !== "undefined" ? "copy" : "added";
+		this.name = this.nameInput.value;
+
+		if ( typeof this.name !== "undefined" && (this.name !== this.property[ copyOrAdded ].name || this.name !== this.tempProperty.name ) ) {
+			this.tempProperty.name = this.name;
+			this.changePropertyValues( this.tempPointers.concat( this.tempLiterals ) );
+		}
+
+		if ( (! ! this.property.copy) && (this.tempProperty.name !== this.property.copy.name ) ) {
+			this.property.modified = this.tempProperty;
+			this.nameHasChanged = true;
+		} else {
+			this.nameHasChanged = false;
+		}
+		if ( ! this.propertyHasChanged ) delete this.property.modified;
+
+		this.onChangeProperty.emit( this.tempProperty );
+		this.mode = Modes.READ;
+	}
+
 	fillLiteralsAndRDFNodes():void {
 		this.literals = [];
 		this.tempLiterals = [];
@@ -200,14 +247,14 @@ export default class PropertyComponent {
 	checkForChangesOnLiterals( literals:LiteralRow[] ):void {
 		this.tempLiterals = literals;
 		this.changePropertyValues( this.tempPointers.concat( this.tempLiterals ) );
-		this.propertyHasChanged = ! ! literals.find( ( literalRow )=> {return ! ! literalRow.modified || ! ! literalRow.added || ! ! literalRow.deleted } );
+		this.literalsHaveChanged = ! ! literals.find( ( literalRow )=> {return ! ! literalRow.modified || ! ! literalRow.added || ! ! literalRow.deleted } );
 		if ( ! this.propertyHasChanged ) delete this.property.modified;
 	}
 
 	checkForChangesOnPointers( pointers:PointerRow[] ):void {
 		this.tempPointers = pointers;
 		this.changePropertyValues( this.tempPointers.concat( this.tempLiterals ) );
-		this.propertyHasChanged = ! ! pointers.find( ( pointerRow )=> {return ! ! pointerRow.modified || ! ! pointerRow.added || ! ! pointerRow.deleted } );
+		this.pointersHaveChanged = ! ! pointers.find( ( pointerRow )=> {return ! ! pointerRow.modified || ! ! pointerRow.added || ! ! pointerRow.deleted } );
 		if ( ! this.propertyHasChanged ) delete this.property.modified;
 	}
 
@@ -226,6 +273,17 @@ export default class PropertyComponent {
 		console.log( this.tempProperty );
 		this.onChangeProperty.emit( this.tempProperty );
 	}
+
+	private nameValidator( control:AbstractControl ):any {
+		if ( ! ! control ) {
+			if ( typeof control.value === "undefined" || control.value === null || ! control.value ) return null;
+			if ( ! /^(?:(?:(?:https?|ftp):)?\/\/)(?:\S+(?::\S*)?@)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,})).?)(?::\d{2,5})?(?:[/?#]\S*)?$/i.test( control.value ) )
+				return { "invalidName": true };
+			if ( control.value.split( "#" ).length > 2 ) return { "duplicatedHashtag": true };
+			if ( ! URI.Util.hasFragment( control.value ) ) return { "missingFragment": true };
+		}
+		return null;
+	}
 }
 
 export interface PropertyRow {
@@ -237,4 +295,9 @@ export interface Property {
 	id:string;
 	name:string;
 	value:any[];
+}
+
+export class Modes {
+	static EDIT:string = "EDIT";
+	static READ:string = "READ";
 }
