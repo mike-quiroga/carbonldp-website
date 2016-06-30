@@ -66,7 +66,9 @@ public class SesameAppRoleService extends AbstractSesameLDPService implements Ap
 			transactionWrapper.runInPlatformContext( () -> {
 				Agent agentResource = platformAgentRepository.get( agent );
 				BNode rdfMapBNode = agentResource.getBNode( PlatformAgentDescription.Property.APP_ROLE_MAP );
+				if(rdfMapBNode == null ) return;
 				RDFMap map = new RDFMap( agentResource.getBaseModel(), rdfMapBNode, agent );
+				map.clean();
 				map.add( (Value) appIRI, (Value) roleIRI );
 				sourceService.replace( agentResource );
 			} );
@@ -109,6 +111,7 @@ public class SesameAppRoleService extends AbstractSesameLDPService implements Ap
 				BNode rdfMapBNode = agentResource.getBNode( PlatformAgentDescription.Property.APP_ROLE_MAP );
 				if ( rdfMapBNode == null ) return;
 				RDFMap map = new RDFMap( agentResource.getBaseModel(), rdfMapBNode, agent );
+				map.clean();
 				map.remove( (Value) appIRI, (Value) roleIRI );
 				sourceService.replace( agentResource );
 			} );

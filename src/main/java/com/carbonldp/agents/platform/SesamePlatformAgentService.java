@@ -66,8 +66,9 @@ public class SesamePlatformAgentService extends SesameAgentsService {
 		if ( sourceRepository.exists( agentIRI ) ) {
 			Agent agentResource = platformAgentRepository.get( agentIRI );
 			BNode rdfMapBNode = agentResource.getBNode( PlatformAgentDescription.Property.APP_ROLE_MAP );
-			if ( rdfMapBNode == null ) return;
+			if ( rdfMapBNode == null ) throw new BadRequestException( 0x2014 );
 			RDFMap map = new RDFMap( agentResource.getBaseModel(), rdfMapBNode, agentIRI );
+			map.clean();
 			Set<Value> apps = map.getKeys();
 			for ( Value app : apps ) {
 				IRI appIRI = SimpleValueFactory.getInstance().createIRI( app.stringValue() );
