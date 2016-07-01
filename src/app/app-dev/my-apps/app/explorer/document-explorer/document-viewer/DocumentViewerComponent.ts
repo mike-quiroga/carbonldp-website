@@ -157,32 +157,20 @@ export default class DocumentViewerComponent {
 
 	changeProperty( property:PropertyRow ):void {
 		if ( typeof property.modified !== "undefined" ) {
-			if ( property.modified.id !== property.modified.name ) {
-				this.rootNode[ property.modified.name ] = property.modified.value;
-				this.rootNode[ property.modified.id ] = this.rootNode[ property.modified.name ];
-				delete this.rootNode[ property.modified.id ];
-				this.records.changes.set( property.modified.id, property );
-			} else {
-				this.records.changes.set( property.modified.id, property );
-				this.rootNode[ property.modified.id ] = property.modified.value;
-			}
+			if ( property.modified.id !== property.modified.name )this.records.changes.set( property.modified.id, property );
+			else this.records.changes.set( property.modified.id, property );
 		} else {
 			this.records.changes.delete( property.copy.id );
-			this.rootNode[ property.copy.id ] = property.copy.value;
 		}
-		this.document[ "@graph" ] = [ this.rootNode ];
 		this.documentContentHasChanged = this.records.changes.size > 0 || this.records.additions.size > 0 || this.records.deletions.size > 0;
 	}
 
 	deleteProperty( property:PropertyRow ):void {
 		if ( typeof property.added !== "undefined" ) {
 			this.records.additions.delete( property.added.id );
-			delete this.rootNode[ property.added.id ];
 		} else if ( typeof property.deleted !== "undefined" ) {
 			this.records.deletions.set( property.deleted.id, property );
-			delete this.rootNode[ property.copy.id ];
 		}
-		this.document[ "@graph" ] = [ this.rootNode ];
 		this.documentContentHasChanged = this.records.changes.size > 0 || this.records.additions.size > 0 || this.records.deletions.size > 0;
 	}
 
@@ -190,20 +178,40 @@ export default class DocumentViewerComponent {
 		if ( typeof property.added !== "undefined" ) {
 			if ( property.added.id === property.added.name ) {
 				this.records.additions.set( property.added.id, property );
-				this.rootNode[ property.added.id ] = property.added.value;
 			} else {
 				this.records.additions.delete( property.added.id );
-				delete this.rootNode[ property.added.id ];
 				this.records.additions.set( property.added.name, property );
-				this.rootNode[ property.added.name ] = property.added.value;
 			}
 		}
-		this.document[ "@graph" ] = [ this.rootNode ];
 		this.documentContentHasChanged = this.records.changes.size > 0 || this.records.additions.size > 0 || this.records.deletions.size > 0;
+	}
+
+	modifyRootNodeWithChanges():void {
+		if ( this.records.deletions.size > 0 ) {
+			this.records.deletions.forEach( ( property, key )=> {
+				delete this.rootNode[ key ];
+			} );
+		}
+		if ( this.records.additions.size > 0 ) {
+			this.records.additions.forEach( ( property, key )=> {
+				this.rootNode[ key ] = property.added.value;
+			} );
+		}
+		if ( this.records.changes.size > 0 ) {
+			this.records.changes.forEach( ( property, key )=> {
+				if ( property.modified.id !== property.modified.name ) {
+					delete this.rootNode[ key ];
+					this.rootNode[ property.modified.name ] = property.modified.value;
+				} else {
+					this.rootNode[ key ] = property.modified.value;
+				}
+			} );
+		}
 	}
 
 	saveDocument():void {
 		this.savingDocument = true;
+		this.modifyRootNodeWithChanges();
 		let body:string = JSON.stringify( this.document, null, "\t" );
 		this.documentsResolverService.update( this.document[ "@id" ], body, this.documentContext ).then(
 			( updatedDocument:RDFDocument.Class )=> {

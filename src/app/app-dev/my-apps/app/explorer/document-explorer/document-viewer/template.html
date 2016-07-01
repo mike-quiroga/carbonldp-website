@@ -48,8 +48,7 @@
 						</document-resource>
 					</div>
 					<div class="ui tab segment"
-					     data-tab="bNodes"
-					     *ngIf="!!bNodesDictionary.size > 0">
+					     data-tab="bNodes">
 						<document-bnodes class="column"
 						                 (onOpenBNode)="goToSection($event)"
 						                 (onOpenNamedFragment)="openNamedFragment($event)"
@@ -57,8 +56,7 @@
 						                 [bNodesDictionary]="bNodesDictionary"></document-bnodes>
 					</div>
 					<div class="ui tab segment"
-					     data-tab="namedFragments"
-					     *ngIf="!!namedFragmentsDictionary.size > 0">
+					     data-tab="namedFragments">
 						<document-named-fragments class="column"
 						                          (onOpenBNode)="openBNode($event)"
 						                          (onOpenNamedFragment)="goToSection($event)"
