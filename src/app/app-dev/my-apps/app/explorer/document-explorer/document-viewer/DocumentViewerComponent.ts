@@ -176,8 +176,8 @@ export default class DocumentViewerComponent {
 
 	deleteProperty( property:PropertyRow ):void {
 		if ( typeof property.added !== "undefined" ) {
-			// this.records.deletions.delete(property.added.id);
-			// delete this.rootNode[ property.added.id ];
+			this.records.additions.delete( property.added.id );
+			delete this.rootNode[ property.added.id ];
 		} else if ( typeof property.deleted !== "undefined" ) {
 			this.records.deletions.set( property.deleted.id, property );
 			delete this.rootNode[ property.copy.id ];

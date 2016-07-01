@@ -60,7 +60,7 @@
 		<div [hidden]="mode === modes.READ">
 			<div class="ui error form">
 				<div class="ui fluid action input">
-					<input type="text" [ngFormControl]="nameInput" (keyup.escape)="cancel()" (keyup.enter)="save()">
+					<input type="text" [ngFormControl]="nameInput" (keyup.escape)="cancel()" (keyup.enter)="nameInput.valid? save() : null">
 					<button class="ui button"
 					        [disabled]="!nameInput.valid"
 					        (click)="save(nameInput.value)">Save

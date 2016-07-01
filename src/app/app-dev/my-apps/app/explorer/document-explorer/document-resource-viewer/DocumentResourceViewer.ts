@@ -79,7 +79,7 @@ export default class DocumentResourceComponent {
 
 	deleteNewProperty( property:Property, propertyRow:PropertyRow, index:number ):void {
 		this.properties.splice( index, 1 );
-		// this.onDeleteProperty.emit( propertyRow );
+		this.onDeleteProperty.emit( propertyRow );
 	}
 
 	saveNewProperty( property:Property, propertyRow:PropertyRow ):void {
