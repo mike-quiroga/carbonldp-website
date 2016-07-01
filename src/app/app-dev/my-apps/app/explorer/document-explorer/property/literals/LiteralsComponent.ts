@@ -114,15 +114,6 @@ export default class LiteralsComponent {
 		return this.literals.filter( ( literal:LiteralRow ) => typeof literal.modified === "undefined" && typeof literal.deleted === "undefined" );
 	}
 
-	// getLiterals():void {
-	// 	this.literals.forEach( ( literal:Literal, index:number )=> {
-	// 		this.tempLiterals.set( index, Object.assign( {}, literal ) );
-	// 	} );
-	// 	this.modifiedLiterals.forEach( ( modifiedLiteral:{key:number, value:Literal}, index:number )=> {
-	// 		this.tempLiterals.set( index, literal );
-	// 	} );
-	// }
-
 	canDisplayLanguage():boolean {
 		return this.isLanguagePresent || this.isEditingLiteral;
 	}

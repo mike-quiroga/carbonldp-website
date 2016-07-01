@@ -95,14 +95,21 @@
 				</div>
 			</div>
 		</div>
-		<literals [(literals)]="literals"
-		          [onAddNewLiteral]="addNewLiteral"
-		          (onLiteralsChanges)="checkForChangesOnLiterals($event)"></literals>
-		<pointers [(pointers)]="pointers"
-		          [onAddNewPointer]="addNewPointer"
-		          [bNodes]="bNodes"
-		          [namedFragments]="namedFragments"
-		          (onPointersChanges)="checkForChangesOnPointers($event)"></pointers>
+		<div class="ui mini error message" [hidden]="literalsContainer.canDisplayLiterals() || pointersContainer.canDisplayPointers()">
+			<p>The property needs at least one literal or one pointer in order to be saved, otherwise the property won't be added to the document. Add a literal or pointer.</p>
+		</div>
+		<div [hidden]="!literalsContainer.canDisplayLiterals() && !pointersContainer.canDisplayPointers()">
+			<literals #literalsContainer
+			          [(literals)]="literals"
+			          [onAddNewLiteral]="addNewLiteral"
+			          (onLiteralsChanges)="checkForChangesOnLiterals($event)"></literals>
+			<pointers #pointersContainer
+			          [(pointers)]="pointers"
+			          [onAddNewPointer]="addNewPointer"
+			          [bNodes]="bNodes"
+			          [namedFragments]="namedFragments"
+			          (onPointersChanges)="checkForChangesOnPointers($event)"></pointers>
+		</div>
 		<div class="ui styled accordion" *ngIf="hasHeader('@list')">
 			<div class="title" *ngFor="let item of value; let i = index;">
 				<i class="dropdown icon"></i>
