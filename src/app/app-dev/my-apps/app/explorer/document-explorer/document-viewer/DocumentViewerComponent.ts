@@ -61,8 +61,6 @@ export default class DocumentViewerComponent {
 	@Output() onLoadingDocument:EventEmitter<boolean> = new EventEmitter<boolean>();
 	@Output() onSavingDocument:EventEmitter<boolean> = new EventEmitter<boolean>();
 
-	propertyKind:{ SINGLE:string, MULTI:string, OBJECT:string} = { SINGLE: "single", MULTI: "multi", OBJECT: "object" };
-	selectedPropertyKind:string;
 	documentContentHasChanged:boolean = false;
 	private _savingDocument:boolean = false;
 	set savingDocument( value:boolean ) {
@@ -151,23 +149,13 @@ export default class DocumentViewerComponent {
 		this.$element.find( ".secondary.menu.document.tabs .item" ).tab();
 	}
 
-	onDisplayAddNewPropertyModal():void {
-		this.selectedPropertyKind = this.propertyKind.SINGLE;
-		this.$element.find( ".ui.radio.checkbox" ).checkbox();
-	}
-
-	changePropertyKind( kind:string ):void {
-		this.selectedPropertyKind = kind;
-	}
-
-
 	goToSection( section:string ):void {
 		if ( this.sections.indexOf( section ) === - 1 ) return;
 		this.scrollTo( ">div:first-child" );
 		this.$element.find( ".secondary.menu.document.tabs .item" ).tab( "changeTab", section );
 	}
 
-	changeProperty( property:PropertyRow ) {
+	changeProperty( property:PropertyRow ):void {
 		if ( typeof property.modified !== "undefined" ) {
 			if ( property.modified.id !== property.modified.name ) {
 				this.rootNode[ property.modified.name ] = property.modified.value;
@@ -186,11 +174,30 @@ export default class DocumentViewerComponent {
 		this.documentContentHasChanged = this.records.changes.size > 0 || this.records.additions.size > 0 || this.records.deletions.size > 0;
 	}
 
-	deleteProperty( property:PropertyRow ) {
-		if ( typeof property.deleted !== "undefined" ) {
+	deleteProperty( property:PropertyRow ):void {
+		if ( typeof property.added !== "undefined" ) {
+			// this.records.deletions.delete(property.added.id);
+			// delete this.rootNode[ property.added.id ];
+		} else if ( typeof property.deleted !== "undefined" ) {
 			this.records.deletions.set( property.deleted.id, property );
+			delete this.rootNode[ property.copy.id ];
 		}
-		delete this.rootNode[ property.copy.id ];
+		this.document[ "@graph" ] = [ this.rootNode ];
+		this.documentContentHasChanged = this.records.changes.size > 0 || this.records.additions.size > 0 || this.records.deletions.size > 0;
+	}
+
+	addProperty( property:PropertyRow ):void {
+		if ( typeof property.added !== "undefined" ) {
+			if ( property.added.id === property.added.name ) {
+				this.records.additions.set( property.added.id, property );
+				this.rootNode[ property.added.id ] = property.added.value;
+			} else {
+				this.records.additions.delete( property.added.id );
+				delete this.rootNode[ property.added.id ];
+				this.records.additions.set( property.added.name, property );
+				this.rootNode[ property.added.name ] = property.added.value;
+			}
+		}
 		this.document[ "@graph" ] = [ this.rootNode ];
 		this.documentContentHasChanged = this.records.changes.size > 0 || this.records.additions.size > 0 || this.records.deletions.size > 0;
 	}

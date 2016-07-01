@@ -47,7 +47,8 @@
 			</div>
 		</div>
 	</div>
-	<p class="ui yellow label indicator" *ngIf="propertyHasChanged">Changed</p>
+	<p class="ui blue label status indicator" *ngIf="!!property.added">Added</p>
+	<p class="ui yellow label status indicator" *ngIf="!!property.modified">Changed</p>
 	<div class="header">
 		<p>{{getDisplayName(name)}}</p>
 	</div>
@@ -55,17 +56,6 @@
 		<div [hidden]="mode === modes.EDIT">
 			<a *ngIf="isUrl(name)" [attr.href]="name" target="_blank">{{name}}</a>
 			<p *ngIf="!isUrl(name)">{{name}}</p>
-			<div class="ui icon bottom left pointing dropdown basic mini button options" title="Options">
-				<i class="ellipsis horizontal icon"></i>
-				<div class="menu">
-					<div class="item" title="Edit Property's name" (click)="onEditName()">
-						<i class="edit icon"></i> Edit Name
-					</div>
-					<div class="item" title="Options" (click)="askToConfirmDeletion()">
-						<i class="trash outline red icon"></i> Delete Property
-					</div>
-				</div>
-			</div>
 		</div>
 		<div [hidden]="mode === modes.READ">
 			<div class="ui error form">
@@ -85,7 +75,7 @@
 			</div>
 		</div>
 	</div>
-	<div class="description">
+	<div class="description" [hidden]="!id">
 		<button class="ui right labeled icon basic mini button" (click)="addLiteral()">
 			<i class="plus icon"></i>
 			Add Literal
@@ -94,6 +84,17 @@
 			<i class="plus icon"></i>
 			Add Pointer
 		</button>
+		<div class="ui icon bottom left pointing dropdown basic mini button options" title="Options">
+			<i class="ellipsis horizontal icon"></i>
+			<div class="menu">
+				<div class="item" title="Edit Property's name" (click)="onEditName()">
+					<i class="edit icon"></i> Edit Name
+				</div>
+				<div class="item" title="Options" (click)="askToConfirmDeletion()">
+					<i class="trash outline red icon"></i> Delete Property
+				</div>
+			</div>
+		</div>
 		<literals [(literals)]="literals"
 		          [onAddNewLiteral]="addNewLiteral"
 		          (onLiteralsChanges)="checkForChangesOnLiterals($event)"></literals>

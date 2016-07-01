@@ -23,7 +23,7 @@ document-property {
 	}
 }
 
-document-property.has-changed > .content > .indicator {
+document-property > .content > .status.indicator {
 	float: right;
 }
 
@@ -31,7 +31,13 @@ document-property.has-changed > .content > .indicator {
 	margin-right: 0;
 }
 
-.ui.items > .item.has-changed.has-changed {
+.ui.items > .item.added-property {
+	background-color: #E9F3FF;
+	padding-left: 15px;
+	padding-right: 15px;
+}
+
+.ui.items > .item.has-changed {
 	background-color: #FFFFE0;
 	padding-left: 15px;
 	padding-right: 15px;

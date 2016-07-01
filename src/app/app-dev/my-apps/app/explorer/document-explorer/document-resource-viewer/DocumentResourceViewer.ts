@@ -1,11 +1,12 @@
-import { Component, Input, Output, EventEmitter, SimpleChange } from "@angular/core";
+import { Component, ElementRef, Input, Output, EventEmitter, SimpleChange } from "@angular/core";
 
+import $ from "jquery";
 import "semantic-ui/semantic";
 
 import * as RDFNode from "carbonldp/RDF/RDFNode";
 import * as URI from "carbonldp/RDF/URI";
 
-import { Property, PropertyRow } from "./../property/PropertyComponent";
+import { Property, PropertyRow, Modes } from "./../property/PropertyComponent";
 import PropertyComponent from "./../property/PropertyComponent";
 
 import template from "./template.html!";
@@ -18,15 +19,20 @@ import template from "./template.html!";
 
 export default class DocumentResourceComponent {
 
+	element:ElementRef;
+	$element:JQuery;
+	modes:Modes = Modes;
 	@Input() displayOnly:string[] = [];
 	@Input() hiddenProperties:string[] = [];
 	@Input() bNodes:Map<string,RDFNode.Class> = new Map<string,RDFNode.Class>();
 	@Input() namedFragments:Map<string,RDFNode.Class> = new Map<string,RDFNode.Class>();
-	// @Input() documentChanges:Map<string,Property>;
+
 	@Output() onOpenBNode:EventEmitter<string> = new EventEmitter<string>();
 	@Output() onOpenNamedFragment:EventEmitter<string> = new EventEmitter<string>();
 	@Output() onChangeProperty:EventEmitter<PropertyRow> = new EventEmitter<PropertyRow>();
 	@Output() onDeleteProperty:EventEmitter<PropertyRow> = new EventEmitter<PropertyRow>();
+	@Output() onAddProperty:EventEmitter<PropertyRow> = new EventEmitter<PropertyRow>();
+	@Output() onSaveNewProperty:EventEmitter<PropertyRow> = new EventEmitter<PropertyRow>();
 	properties:PropertyRow[] = [];
 
 	_rootNode:RDFNode.Class;
@@ -40,8 +46,13 @@ export default class DocumentResourceComponent {
 		return this._rootNode;
 	}
 
-	constructor() {}
+	constructor( element:ElementRef ) {
+		this.element = element;
+	}
 
+	ngAfterViewInit():void {
+		this.$element = $( this.element.nativeElement );
+	}
 
 	openBNode( id:string ):void {
 		this.onOpenBNode.emit( id );
@@ -64,6 +75,27 @@ export default class DocumentResourceComponent {
 
 	deleteProperty( property:Property, propertyRow:PropertyRow ):void {
 		this.onDeleteProperty.emit( propertyRow );
+	}
+
+	deleteNewProperty( property:Property, propertyRow:PropertyRow, index:number ):void {
+		this.properties.splice( index, 1 );
+		// this.onDeleteProperty.emit( propertyRow );
+	}
+
+	saveNewProperty( property:Property, propertyRow:PropertyRow ):void {
+		this.onSaveNewProperty.emit( propertyRow );
+	}
+
+	addProperty( property:Property, propertyRow:PropertyRow ):void {
+		let newProperty:PropertyRow = <PropertyRow>{
+			added: <Property>{
+				id: "",
+				name: "New Property",
+				value: []
+			}
+		};
+		this.properties.splice( 2, 0, newProperty );
+		if ( ! ! this.$element ) setTimeout( ()=>this.$element.find( "document-property.added-property" ).first().transition( "drop" ) );
 	}
 
 	getProperties():void {

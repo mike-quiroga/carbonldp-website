@@ -23,7 +23,7 @@ import "./style.css!";
 	selector: "document-property",
 	template: template,
 	directives: [ ListViewerComponent, LiteralsComponent, PointersComponent ],
-	host: { "[class.has-changed]": "propertyHasChanged", "[class.deleted-property]": "property.deleted" },
+	host: { "[class.has-changed]": "property.modified", "[class.deleted-property]": "property.deleted", "[class.added-property]": "property.added" },
 } )
 
 export default class PropertyComponent {
@@ -35,15 +35,16 @@ export default class PropertyComponent {
 	tempLiterals:LiteralRow[];
 	tempPointers:PointerRow[];
 	tempProperty:Property = <Property>{};
+	copyOrAdded:string;
 	id:string;
 	name:string;
 	value:any[] = [];
 	addNewLiteral:EventEmitter<boolean> = new EventEmitter<boolean>();
 	addNewPointer:EventEmitter<boolean> = new EventEmitter<boolean>();
 	commonHeaders:string[] = [ "@id", "@type", "@value" ];
-	mode:string = Modes.READ;
 	modes:Modes = Modes;
 	nameInput:AbstractControl = new Control( this.name, Validators.compose( [ Validators.required, this.nameValidator.bind( this ) ] ) );
+	@Input() mode:string = Modes.READ;
 	@Input() documentURI:string;
 	@Input() bNodes:Map<string,RDFNode.Class> = new Map<string,RDFNode.Class>();
 	@Input() namedFragments:Map<string,RDFNode.Class> = new Map<string,RDFNode.Class>();
@@ -51,18 +52,21 @@ export default class PropertyComponent {
 	@Output() onGoToNamedFragment:EventEmitter<string> = new EventEmitter<string>();
 	@Output() onChangeProperty:EventEmitter<Property> = new EventEmitter<Property>();
 	@Output() onDeleteProperty:EventEmitter<PropertyRow> = new EventEmitter<PropertyRow>();
+	@Output() onDeleteNewProperty:EventEmitter<PropertyRow> = new EventEmitter<PropertyRow>();
+	@Output() onSaveNewProperty:EventEmitter<PropertyRow> = new EventEmitter<PropertyRow>();
 	private _property:PropertyRow;
 	@Input() set property( prop:PropertyRow ) {
+		this.copyOrAdded = typeof prop.copy !== "undefined" ? "copy" : "added";
 		this._property = prop;
-		this.id = prop.copy.id;
-		this.tempProperty.id = prop.copy.id;
-		this.name = prop.copy.name;
+		this.id = prop[ this.copyOrAdded ].id;
+		this.tempProperty.id = prop[ this.copyOrAdded ].id;
+		this.name = prop[ this.copyOrAdded ].name;
 		(<Control>this.nameInput).updateValue( this.name );
-		if ( Utils.isArray( prop.copy.value ) ) {
+		if ( Utils.isArray( prop[ this.copyOrAdded ].value ) ) {
 			this.value = [];
-			prop.copy.value.forEach( ( literalOrRDFNode )=> { this.value.push( Object.assign( literalOrRDFNode ) ) } )
+			prop[ this.copyOrAdded ].value.forEach( ( literalOrRDFNode )=> { this.value.push( Object.assign( literalOrRDFNode ) ) } )
 		} else {
-			this.value = prop.copy.value;
+			this.value = prop[ this.copyOrAdded ].value;
 		}
 	}
 
@@ -72,12 +76,6 @@ export default class PropertyComponent {
 	literalsHaveChanged:boolean = false;
 	pointersHaveChanged:boolean = false;
 
-	_propertyHasChanged:boolean;
-	// set propertyHasChanged( value:boolean ) {
-	// 	this._propertyHasChanged = value;
-	// }
-
-	// get propertyHasChanged():boolean { return this._propertyHasChanged; }
 	get propertyHasChanged():boolean { return this.nameHasChanged || this.literalsHaveChanged || this.pointersHaveChanged; }
 
 	constructor( element:ElementRef ) {
@@ -85,7 +83,7 @@ export default class PropertyComponent {
 	}
 
 	ngOnInit():void {
-		if ( Utils.isArray( this.value ) ) this.fillLiteralsAndRDFNodes();
+		if ( Utils.isArray( this.value ) ) this.fillLiteralsAndPointers();
 	}
 
 	ngAfterViewInit():void {
@@ -209,7 +207,7 @@ export default class PropertyComponent {
 
 	deleteProperty():void {
 		if ( typeof this.property.added !== "undefined" ) {
-			// this.onDeleteNewLiteral.emit( this.property );
+			this.onDeleteNewProperty.emit( this.property );
 		} else {
 			this.property.deleted = this.property.copy;
 			this.onDeleteProperty.emit( this.property );
@@ -217,37 +215,36 @@ export default class PropertyComponent {
 	}
 
 	cancel():void {
-		this.mode = Modes.READ;
-		(<Control>this.nameInput).updateValue( this.name );
+		if ( this.nameInput.valid ) {
+			this.mode = Modes.READ;
+			(<Control>this.nameInput).updateValue( this.name );
+		}
 	}
 
 	save():void {
-		let copyOrAdded:string = typeof this.property.copy !== "undefined" ? "copy" : "added";
 		this.name = this.nameInput.value;
 
-		if ( typeof this.name !== "undefined" && (this.name !== this.property[ copyOrAdded ].name || this.name !== this.tempProperty.name ) ) {
+		if ( typeof this.name !== "undefined" && (this.name !== this.property[ this.copyOrAdded ].name || this.name !== this.tempProperty.name ) ) {
 			this.tempProperty.name = this.name;
 			this.changePropertyValues( this.tempPointers.concat( this.tempLiterals ) );
 		}
 
-		if ( (! ! this.property.copy) && (this.tempProperty.name !== this.property.copy.name ) ) {
-			this.property.modified = this.tempProperty;
-			this.nameHasChanged = true;
-		} else {
-			this.nameHasChanged = false;
-		}
-		if ( ! this.propertyHasChanged ) delete this.property.modified;
-
-		this.onChangeProperty.emit( this.tempProperty );
+		// if ( ! this.propertyHasChanged ) delete this.property.modified;
+		//
+		// if ( ! ! this.property.added ) {
+		// 	this.onSaveNewProperty.emit( this.tempProperty );
+		// } else {
+		// 	this.onChangeProperty.emit( this.tempProperty );
+		// }
 		this.mode = Modes.READ;
 	}
 
-	fillLiteralsAndRDFNodes():void {
+	fillLiteralsAndPointers():void {
 		this.literals = [];
 		this.tempLiterals = [];
 		this.pointers = [];
 		this.tempPointers = [];
-		this.property.copy.value.forEach( ( literalOrRDFNode )=> {
+		this.property[ this.copyOrAdded ].value.forEach( ( literalOrRDFNode )=> {
 			if ( SDKLiteral.Factory.is( literalOrRDFNode ) ) {
 				this.literals.push( <LiteralRow>{ copy: literalOrRDFNode } );
 				this.tempLiterals.push( <LiteralRow>{ copy: literalOrRDFNode } );
@@ -260,10 +257,12 @@ export default class PropertyComponent {
 	}
 
 	addLiteral():void {
+		// Notify LiteralsComponent to add literal
 		this.addNewLiteral.emit( true );
 	}
 
 	addPointer():void {
+		// Notify PointersComponent to add pointer
 		this.addNewPointer.emit( true );
 	}
 
@@ -284,6 +283,15 @@ export default class PropertyComponent {
 	changePropertyValues( literalsOrPointers:LiteralRow[]|PointerRow[] ):void {
 		this.tempProperty.id = this.id;
 		this.tempProperty.name = this.name;
+		// Change name
+		if ( (! ! this.property.copy) ) {
+			if ( (this.tempProperty.name !== this.property.copy.name ) ) {
+				this.property.modified = this.tempProperty;
+				this.nameHasChanged = true;
+			} else { this.nameHasChanged = false; }
+		}
+
+		// Change literals and pointers
 		if ( Utils.isArray( this.value ) ) {
 			this.tempProperty.value = [];
 			literalsOrPointers.forEach( ( literalOrPointerRow )=> {
@@ -292,9 +300,17 @@ export default class PropertyComponent {
 		} else {
 			this.tempProperty.value = this.value;
 		}
-		this.property.modified = this.tempProperty;
-		console.log( this.tempProperty );
-		this.onChangeProperty.emit( this.tempProperty );
+		if ( ! ! this.property.copy ) {
+			this.property.modified = this.tempProperty;
+			this.onChangeProperty.emit( this.tempProperty );
+		} else if ( ! ! this.property.added ) {
+			if ( (this.tempProperty.name !== this.property.added.name ) ) {
+				this.id = this.name;
+				this.tempProperty.id = this.id;
+			}
+			this.property.added = this.tempProperty;
+			this.onSaveNewProperty.emit( this.tempProperty );
+		}
 	}
 
 	private nameValidator( control:AbstractControl ):any {

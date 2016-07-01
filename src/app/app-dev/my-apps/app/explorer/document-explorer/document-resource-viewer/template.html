@@ -1,7 +1,12 @@
+<button class="ui right labeled icon button" (click)="addProperty()">
+	<i class="add icon"></i>
+	Add new property
+</button>
+<div class="ui divider"></div>
 <div class="ui divided items">
 	<template ngFor let-propertyrow="$implicit" [ngForOf]="properties" let-i="index">
 		<document-property class="property item"
-		                   *ngIf="canDisplay(propertyrow.copy.name) && !propertyrow.deleted"
+		                   *ngIf="!propertyrow.deleted && !propertyrow.added && canDisplay(propertyrow.copy.name)"
 		                   [documentURI]="rootNode['@id']"
 		                   [property]="propertyrow"
 		                   [attr.data-tar]="propertyrow.copy.name"
@@ -9,6 +14,19 @@
 		                   [namedFragments]="namedFragments"
 		                   (onChangeProperty)="changeProperty($event, propertyrow)"
 		                   (onDeleteProperty)="deleteProperty($event, propertyrow)"
+		                   (onGoToBNode)="openBNode( $event )"
+		                   (onGoToNamedFragment)="openNamedFragment($event)">
+		</document-property>
+		<document-property class="property added-property item transition hidden"
+		                   *ngIf="!!propertyrow.added && canDisplay(propertyrow.added.name)"
+		                   [documentURI]="rootNode['@id']"
+		                   [property]="propertyrow"
+		                   [attr.data-tar]="propertyrow.added.name"
+		                   [bNodes]="bNodes"
+		                   [namedFragments]="namedFragments"
+		                   [mode]="modes.EDIT"
+		                   (onSaveNewProperty)="saveNewProperty($event, propertyrow, i)"
+		                   (onDeleteNewProperty)="deleteNewProperty($event, propertyrow, i)"
 		                   (onGoToBNode)="openBNode( $event )"
 		                   (onGoToNamedFragment)="openNamedFragment($event)">
 		</document-property>
