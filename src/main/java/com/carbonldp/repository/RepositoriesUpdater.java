@@ -6,8 +6,11 @@ import com.carbonldp.Vars;
 import com.carbonldp.apps.context.AppContextConfig;
 import com.carbonldp.config.ConfigurationConfig;
 import com.carbonldp.config.RepositoriesConfig;
+import com.carbonldp.config.ServicesConfig;
+import com.carbonldp.mail.MailConfig;
 import com.carbonldp.repository.txn.TxnConfig;
 import com.carbonldp.repository.updates.*;
+import com.carbonldp.security.SecurityConfig;
 import com.carbonldp.utils.Action;
 import com.google.common.io.Files;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
@@ -37,6 +40,7 @@ public class RepositoriesUpdater extends AbstractComponent {
 		put( new RepositoryVersion( "1.7.0" ), new UpdateAction1o7o0() );
 		put( new RepositoryVersion( "1.8.0" ), new UpdateAction1o8o0() );
 		put( new RepositoryVersion( "1.9.0" ), new UpdateAction1o9o0() );
+		put( new RepositoryVersion( "1.10.0" ), new UpdateAction1o10o0() );
 	}};
 
 	public boolean repositoriesAreUpToDate() {
@@ -63,7 +67,10 @@ public class RepositoriesUpdater extends AbstractComponent {
 			TxnConfig.class,
 			ConfigurationConfig.class,
 			RepositoriesConfig.class,
-			AppContextConfig.class
+			AppContextConfig.class,
+			SecurityConfig.class,
+			ServicesConfig.class,
+			MailConfig.class
 		);
 		return context;
 	}
