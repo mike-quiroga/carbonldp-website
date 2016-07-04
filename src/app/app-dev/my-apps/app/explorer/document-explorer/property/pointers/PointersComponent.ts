@@ -32,7 +32,8 @@ export default class PointersComponent {
 	isEditingPointer:boolean = false;
 	@Input() pointers:PointerRow[] = [];
 	@Input() onAddNewPointer:EventEmitter<boolean> = new EventEmitter<boolean>();
-	@Input() bNodes:Map<string,RDFNode.Class> = new Map<string,RDFNode.Class>();
+	// @Input() bNodes:Map<string,RDFNode.Class> = new Map<string,RDFNode.Class>();
+	@Input() bNodes:RDFNode.Class[] = [];
 	@Input() namedFragments:Map<string,RDFNode.Class> = new Map<string,RDFNode.Class>();
 	@Output() onPointersChanges:EventEmitter<PointerRow[]> = new EventEmitter<PointerRow[]>();
 

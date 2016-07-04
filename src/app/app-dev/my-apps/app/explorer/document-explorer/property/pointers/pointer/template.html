@@ -16,10 +16,10 @@
 					bNodes
 				</option>
 				<optgroup label="bNodes">
-					<option class="item" *ngFor="let bNode of (bNodes | iterablemap); let i=index" value="{{bNode.key}}">
+					<option class="item" *ngFor="let bNode of bNodes; let i=index" value="{{bNode['@id']}}">
 						<span>
 							<span class="title">bNode {{i}}</span>
-							<span class="description">{{bNode.key}}</span>
+							<span class="description">{{bNode["@id"]}}</span>
 						</span>
 					</option>
 				</optgroup>

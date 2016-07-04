@@ -67,7 +67,8 @@ export default class PointerComponent {
 		}
 	}
 
-	@Input() bNodes:Map<string,RDFNode.Class> = new Map<string,RDFNode.Class>();
+	// @Input() bNodes:Map<string,RDFNode.Class> = new Map<string,RDFNode.Class>();
+	@Input() bNodes:RDFNode.Class[] = [];
 	@Input() namedFragments:Map<string,RDFNode.Class> = new Map<string,RDFNode.Class>();
 
 	@Output() onEditMode:EventEmitter<boolean> = new EventEmitter<boolean>();

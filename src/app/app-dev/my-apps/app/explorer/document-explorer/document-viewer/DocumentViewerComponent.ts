@@ -35,10 +35,8 @@ export default class DocumentViewerComponent {
 	element:ElementRef;
 	$element:JQuery;
 	sections:string[] = [ "bNodes", "namedFragments", "documentResource" ];
-
 	rootNode:RDFNode.Class;
-
-	bNodesArray:RDFNode.Class[] = [];
+	bNodes:RDFNode.Class[] = [];
 	namedFragmentsArray:RDFNode.Class[] = [];
 	bNodesDictionary:Map<string,RDFNode.Class> = new Map<string,RDFNode.Class>();
 	namedFragmentsDictionary:Map<string,RDFNode.Class> = new Map<string,RDFNode.Class>();
@@ -127,12 +125,12 @@ export default class DocumentViewerComponent {
 	}
 
 	generateMaps():void {
-		this.bNodesArray = RDFDocument.Util.getBNodeResources( this.document );
+		this.bNodes = RDFDocument.Util.getBNodeResources( this.document );
 		this.namedFragmentsArray = RDFDocument.Util.getFragmentResources( this.document );
-		this.bNodesDictionary.clear();
-		this.namedFragmentsDictionary.clear();
-		this.bNodesArray.forEach( ( node:RDFNode.Class ) => this.bNodesDictionary.set( node[ "@id" ], node ) );
-		this.namedFragmentsArray.forEach( ( node:RDFNode.Class ) => this.namedFragmentsDictionary.set( node[ "@id" ], node ) );
+		// this.bNodesDictionary.clear();
+		// this.namedFragmentsDictionary.clear();
+		// this.bNodesArray.forEach( ( node:RDFNode.Class ) => this.bNodesDictionary.set( node[ "@id" ], node ) );
+		// this.namedFragmentsArray.forEach( ( node:RDFNode.Class ) => this.namedFragmentsDictionary.set( node[ "@id" ], node ) );
 	}
 
 	openBNode( id:string ):void {

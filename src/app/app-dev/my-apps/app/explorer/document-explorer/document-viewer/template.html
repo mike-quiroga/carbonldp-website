@@ -28,7 +28,7 @@
 						<a class="item active"
 						   data-tab="documentResource">Document</a>
 						<a class="item"
-						   data-tab="bNodes">Blank Nodes ({{bNodesDictionary.size}})</a>
+						   data-tab="bNodes">Blank Nodes ({{bNodes.length}})</a>
 						<a class="item"
 						   data-tab="namedFragments">Named Fragments ({{namedFragmentsDictionary.size }})</a>
 					</div>
@@ -43,7 +43,7 @@
 						                   [rootNode]="rootNode"
 						                   [onAddNewProperty]="onAddNewProperty"
 						                   [hiddenProperties]="['@id']"
-						                   [bNodes]="bNodesDictionary"
+						                   [bNodes]="bNodes"
 						                   [namedFragments]="namedFragmentsDictionary">
 						</document-resource>
 					</div>
@@ -52,7 +52,7 @@
 						<document-bnodes class="column"
 						                 (onOpenBNode)="goToSection($event)"
 						                 (onOpenNamedFragment)="openNamedFragment($event)"
-						                 [bNodesArray]="bNodesArray"
+						                 [bNodes]="bNodes"
 						                 [bNodesDictionary]="bNodesDictionary"></document-bnodes>
 					</div>
 					<div class="ui tab segment"

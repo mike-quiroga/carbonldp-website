@@ -7,6 +7,7 @@ import "semantic-ui/semantic";
 import * as RDFNode from "carbonldp/RDF/RDFNode";
 
 import PropertyComponent from "./../property/PropertyComponent";
+import DocumentResourceViewer from "./../document-resource-viewer/DocumentResourceViewer"
 
 import template from "./template.html!";
 import "./style.css!";
@@ -14,7 +15,7 @@ import "./style.css!";
 @Component( {
 	selector: "document-bnodes",
 	template: template,
-	directives: [ CORE_DIRECTIVES, PropertyComponent ],
+	directives: [ CORE_DIRECTIVES, PropertyComponent, DocumentResourceViewer ],
 } )
 
 export default class BNodesViewerComponent {
@@ -24,7 +25,8 @@ export default class BNodesViewerComponent {
 
 	nodesTab:JQuery;
 	openedBNodes:RDFNode.Class[] = [];
-	@Input() bNodesArray:RDFNode.Class[] = [];
+	// @Input() bNodesArray:RDFNode.Class[] = [];
+	@Input() bNodes:RDFNode.Class[] = [];
 	@Input() bNodesDictionary:Map<string, RDFNode.Class> = new Map<string, RDFNode.Class>();
 	@Output() onOpenBNode:EventEmitter<string> = new EventEmitter<string>();
 
@@ -38,10 +40,12 @@ export default class BNodesViewerComponent {
 	}
 
 	ngOnChanges( changes:{[propName:string]:SimpleChange} ):void {
-		if ( ( changes[ "bNodesArray" ].currentValue !== changes[ "bNodesArray" ].previousValue ) ||
+		if ( ( changes[ "bNodes" ].currentValue !== changes[ "bNodes" ].previousValue ) ||
 			( changes[ "bNodesDictionary" ].currentValue !== changes[ "bNodesDictionary" ].previousValue ) ) {
 			this.openedBNodes = [];
 			this.goToBNode( "all" );
+			// this.bNodes = this.bNodes.map( ( bNode )=> { return { copy: bNode } } );
+			// console.log( this.bNodes );
 		}
 	}
 
@@ -53,7 +57,7 @@ export default class BNodesViewerComponent {
 		let idx:number;
 		let node:RDFNode.Class;
 		if ( typeof nodeOrId === "string" ) {
-			node = this.bNodesDictionary.get( nodeOrId );
+			node = this.bNodes.find( ( node )=> { return node[ "@id" ] === nodeOrId} );
 		} else {
 			node = nodeOrId;
 		}

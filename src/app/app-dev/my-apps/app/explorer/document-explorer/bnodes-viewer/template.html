@@ -28,7 +28,7 @@
 			</tr>
 		</thead>
 		<tbody>
-			<tr *ngFor="let bNode of bNodesArray; let i = index;"
+			<tr *ngFor="let bNode of bNodes; let i = index;"
 			    (click)="openBNode(bNode)">
 				<td>
 					{{ bNode["@id"] }}
@@ -42,12 +42,8 @@
 </div>
 <div class="ui bottom attached tab segment"
      *ngFor="let bNode of openedBNodes; let i = index;" [attr.data-tab]="'bnode'+bNode['@id']">
-	<div class="ui divided items">
-		<document-property class="property item"
-		                   *ngFor="let propertyName of getPropertiesName(bNode); let j = index;"
-		                   (onGoToBNode)="openBNode($event)"
-		                   [propertyName]="propertyName"
-		                   [property]="bNode[propertyName]">
-		</document-property>
-	</div>
+	<document-resource class="column"
+	                   (onOpenBNode)="openBNode($event)"
+	                   [rootNode]="bNode">
+	</document-resource>
 </div>
