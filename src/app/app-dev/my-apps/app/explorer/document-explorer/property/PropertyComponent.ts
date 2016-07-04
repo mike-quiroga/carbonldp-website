@@ -46,9 +46,10 @@ export default class PropertyComponent {
 	nameInput:AbstractControl = new Control( this.name, Validators.compose( [ Validators.required, this.nameValidator.bind( this ) ] ) );
 	@Input() mode:string = Modes.READ;
 	@Input() documentURI:string;
-	// @Input() bNodes:Map<string,RDFNode.Class> = new Map<string,RDFNode.Class>();
 	@Input() bNodes:RDFNode.Class[] = [];
 	@Input() namedFragments:Map<string,RDFNode.Class> = new Map<string,RDFNode.Class>();
+	@Input() canEdit:boolean = true;
+	
 	@Output() onGoToBNode:EventEmitter<string> = new EventEmitter<string>();
 	@Output() onGoToNamedFragment:EventEmitter<string> = new EventEmitter<string>();
 	@Output() onChangeProperty:EventEmitter<Property> = new EventEmitter<Property>();

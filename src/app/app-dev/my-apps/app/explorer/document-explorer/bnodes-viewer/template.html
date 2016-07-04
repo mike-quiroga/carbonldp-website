@@ -44,6 +44,7 @@
      *ngFor="let bNode of openedBNodes; let i = index;" [attr.data-tab]="'bnode'+bNode['@id']">
 	<document-resource class="column"
 	                   (onOpenBNode)="openBNode($event)"
-	                   [rootNode]="bNode">
+	                   [rootNode]="bNode"
+	                   [canEdit]="false">
 	</document-resource>
 </div>

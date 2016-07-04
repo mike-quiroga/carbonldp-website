@@ -1,8 +1,8 @@
-<button class="ui right labeled icon button" (click)="addProperty()">
+<button class="ui right labeled icon button" (click)="addProperty()" *ngIf="canEdit">
 	<i class="add icon"></i>
 	Add new property
 </button>
-<div class="ui divider"></div>
+<div class="ui divider" *ngIf="canEdit"></div>
 <div class="ui divided items">
 	<template ngFor let-propertyrow="$implicit" [ngForOf]="properties" let-i="index">
 		<document-property class="property item"
@@ -12,6 +12,7 @@
 		                   [attr.data-tar]="propertyrow.copy.name"
 		                   [bNodes]="bNodes"
 		                   [namedFragments]="namedFragments"
+		                   [canEdit]="canEdit"
 		                   (onChangeProperty)="changeProperty($event, propertyrow)"
 		                   (onDeleteProperty)="deleteProperty($event, propertyrow)"
 		                   (onGoToBNode)="openBNode( $event )"
@@ -25,6 +26,7 @@
 		                   [bNodes]="bNodes"
 		                   [namedFragments]="namedFragments"
 		                   [mode]="modes.EDIT"
+		                   [canEdit]="canEdit"
 		                   (onSaveNewProperty)="saveNewProperty($event, propertyrow, i)"
 		                   (onDeleteNewProperty)="deleteNewProperty($event, propertyrow, i)"
 		                   (onGoToBNode)="openBNode( $event )"

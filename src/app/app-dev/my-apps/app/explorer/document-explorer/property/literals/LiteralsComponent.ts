@@ -36,6 +36,7 @@ export default class LiteralsComponent {
 	isEditingLiteral:boolean = false;
 	@Input() literals:LiteralRow[] = [];
 	@Input() onAddNewLiteral:EventEmitter<boolean> = new EventEmitter<boolean>();
+	@Input() canEdit:boolean = true;
 	@Output() onLiteralsChanges:EventEmitter<Literal[]> = new EventEmitter<Literal[]>();
 
 	constructor() {}

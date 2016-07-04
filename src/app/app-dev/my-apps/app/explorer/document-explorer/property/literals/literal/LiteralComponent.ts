@@ -785,7 +785,6 @@ export default class LiteralComponent {
 		}
 	];
 
-
 	// Literal Value;
 	private _value:string|boolean|number = "";
 	get value() {return this._value;}
@@ -836,13 +835,9 @@ export default class LiteralComponent {
 			this.language = ! ! this.tempLiteral[ "@language" ] ? this.tempLiteral[ "@language" ] : this.literal.added[ "@language" ];
 		}
 
-		// this.value = typeof this.tempLiteral[ "@value" ] !== "undefined" ? this.tempLiteral[ "@value" ] : typeof this.literal.copy[ "@value" ] !== "undefined" ? this.literal.copy[ "@value" ] : this.literal.added[ "@value" ];
-		// this.type = ! ! this.tempLiteral[ "@type" ] ? this.tempLiteral[ "@type" ] : typeof this.literal.copy[ "@type" ] !== "undefined" ? this.literal.copy[ "@type" ] : this.literal.added[ "@type" ];
-		// this.language = ! ! this.tempLiteral[ "@language" ] ? this.tempLiteral[ "@language" ] : typeof this.literal.copy[ "@language" ] !== "undefined" ? this.literal.copy[ "@language" ] : this.literal.added[ "@language" ];
-
-
 	}
 
+	@Input() canEdit:boolean = true;
 	@Input() canDisplayLanguage:boolean = false;
 	@Output() onEditMode:EventEmitter<boolean> = new EventEmitter<boolean>();
 	@Output() onSave:EventEmitter<any> = new EventEmitter<any>();
@@ -994,16 +989,6 @@ export default class LiteralComponent {
 	private getParsedValue( value:string|boolean|number ):string|boolean|number {
 		if ( typeof value === "undefined" && ! ! this.input ) value = this.input.value.toLowerCase().trim();
 		switch ( this.type ) {
-			// case NS.XSD.DataType.boolean:
-			// 	value = Utils.parseBoolean( value );
-			// 	break;
-			// case NS.XSD.DataType.int:
-			// case NS.XSD.DataType.integer:
-			// case NS.XSD.DataType.double:
-			// case NS.XSD.DataType.decimal:
-			// 	value = Number( value );
-			// 	break;
-
 			// Boolean
 			case NS.XSD.DataType.boolean:
 				value = Utils.isBoolean( SDKLiteral.Factory.parse( value, this.type ) ) ? SDKLiteral.Factory.parse( value, this.type ) : value;
@@ -1061,7 +1046,6 @@ export default class LiteralComponent {
 					case "0":
 						valid = true;
 				}
-				// valid = Utils.isBoolean( Literal.Factory.parse( control.value, this.type ) );
 				break;
 
 			// Numbers

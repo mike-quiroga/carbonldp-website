@@ -59,7 +59,7 @@
 		</div>
 	</div>
 </td>
-<td>
+<td *ngIf="canEdit">
 	<div class="ui mini icon inverted edit value buttons" *ngIf="mode===modes.READ">
 		<button #editButton
 		        class="ui basic edit button" title="Edit literal"
