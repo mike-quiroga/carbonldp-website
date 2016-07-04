@@ -27,6 +27,7 @@ export default class DocumentResourceComponent {
 	@Input() bNodes:RDFNode.Class[] = [];
 	@Input() namedFragments:RDFNode.Class[] = [];
 	@Input() canEdit:boolean = true;
+	@Input() documentURI:string = "";
 
 	@Output() onOpenBNode:EventEmitter<string> = new EventEmitter<string>();
 	@Output() onOpenNamedFragment:EventEmitter<string> = new EventEmitter<string>();
@@ -40,7 +41,6 @@ export default class DocumentResourceComponent {
 	@Input() set rootNode( value:RDFNode.Class ) {
 		this._rootNode = value;
 		this.getProperties();
-		console.log( this.properties );
 	}
 
 	get rootNode() {

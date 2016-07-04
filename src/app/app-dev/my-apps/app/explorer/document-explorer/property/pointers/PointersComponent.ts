@@ -30,6 +30,7 @@ export default class PointersComponent {
 	tokens:string[] = [ "@id", "@type" ];
 	tempPointers:Pointer[] = [];
 	isEditingPointer:boolean = false;
+	@Input() documentURI:string = "";
 	@Input() pointers:PointerRow[] = [];
 	@Input() onAddNewPointer:EventEmitter<boolean> = new EventEmitter<boolean>();
 	@Input() bNodes:RDFNode.Class[] = [];
@@ -37,6 +38,8 @@ export default class PointersComponent {
 	@Input() canEdit:boolean = true;
 
 	@Output() onPointersChanges:EventEmitter<PointerRow[]> = new EventEmitter<PointerRow[]>();
+	@Output() onGoToBNode:EventEmitter<string> = new EventEmitter<string>();
+	@Output() onGoToNamedFragment:EventEmitter<string> = new EventEmitter<string>();
 
 	constructor() { }
 
@@ -97,5 +100,13 @@ export default class PointersComponent {
 
 	getUntouchedPointers():PointerRow[] {
 		return this.pointers.filter( ( pointer:PointerRow ) => typeof pointer.modified === "undefined" && typeof pointer.deleted === "undefined" );
+	}
+
+	goToBNode( id:string ):void {
+		this.onGoToBNode.emit( id );
+	}
+
+	goToNamedFragment( id:string ):void {
+		this.onGoToNamedFragment.emit( id );
 	}
 }

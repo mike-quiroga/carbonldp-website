@@ -9,17 +9,23 @@
 		<template ngFor let-pointer="$implicit" [ngForOf]="pointers" let-i="index">
 			<tr class="pointer top aligned" [ngClass]="{'modified-pointer':!!pointer.modified}" *ngIf="!!pointer.copy && !pointer.deleted"
 			    [pointer]="pointer"
+			    [documentURI]="documentURI"
 			    [bNodes]="bNodes"
 			    [namedFragments]="namedFragments"
 			    [canEdit]="canEdit"
+			    (onGoToNamedFragment)="goToNamedFragment($event)"
+			    (onGoToBNode)="goToBNode($event)"
 			    (onSave)="savePointer($event, pointer, i)"
 			    (onDeletePointer)="deletePointer($event, i)"></tr>
 			<tr class="pointer top aligned added-pointer" *ngIf="!!pointer.added && !pointer.deleted"
 			    [mode]="modes.EDIT"
 			    [pointer]="pointer"
+			    [documentURI]="documentURI"
 			    [bNodes]="bNodes"
 			    [namedFragments]="namedFragments"
 			    [canEdit]="canEdit"
+			    (onGoToNamedFragment)="goToNamedFragment($event)"
+			    (onGoToBNode)="goToBNode($event)"
 			    (onSave)="saveNewPointer($event, literal, i)"
 			    (onDeleteNewPointer)="deleteNewPointer($event, i)"></tr>
 		</template>

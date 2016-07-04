@@ -48,7 +48,7 @@ export default class NamedFragmentsViewerComponent {
 		let idx:number;
 		let node:RDFNode.Class;
 		if ( typeof nodeOrId === "string" ) {
-			node = this.namedFragments.find( ( nodeOrId )=> {return nodeOrId[ "@id" ]} );
+			node = this.namedFragments.find( ( node )=> { return node[ "@id" ] === nodeOrId} );
 		} else {
 			node = nodeOrId;
 		}
@@ -58,6 +58,10 @@ export default class NamedFragmentsViewerComponent {
 			this.refreshTabs();
 			this.goToNamedFragment( "namedfragment_" + this.getNormalizedUri( node[ "@id" ] ) );
 		}, 50 );
+	}
+
+	openBNode( id:string ):void {
+		this.onOpenBNode.emit( id );
 	}
 
 	goToNamedFragment( id:string ) {
@@ -79,10 +83,6 @@ export default class NamedFragmentsViewerComponent {
 
 	getNormalizedUri( uri:string ):string {
 		return uri.replace( /[^\w\s]/gi, "" );
-	}
-
-	goToBNode( id:string ):void {
-		this.onOpenBNode.emit( id );
 	}
 
 	getSlug( uri:string ) {

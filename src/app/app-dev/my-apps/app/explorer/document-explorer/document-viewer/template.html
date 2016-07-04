@@ -40,6 +40,7 @@
 						                   [onAddNewProperty]="onAddNewProperty"
 						                   [hiddenProperties]="['@id']"
 						                   [bNodes]="bNodes"
+						                   [documentURI]="rootNode['@id']"
 						                   [namedFragments]="namedFragments">
 						</document-resource>
 					</div>
@@ -47,8 +48,8 @@
 						<document-bnodes class="column"
 						                 (onOpenBNode)="goToSection($event)"
 						                 (onOpenNamedFragment)="openNamedFragment($event)"
-						                 [bNodes]="bNodes"
-						                 [bNodesDictionary]="bNodesDictionary"></document-bnodes>
+						                 [documentURI]="document['@id']"
+						                 [bNodes]="bNodes"></document-bnodes>
 					</div>
 					<div class="ui tab segment" data-tab="namedFragments">
 						<document-named-fragments class="column"

@@ -40,7 +40,9 @@
      *ngFor="let namedFragment of openedNamedFragments; let i = index;" [attr.data-tab]="'namedfragment_'+getNormalizedUri(namedFragment['@id'])">
 	<div class="ui divided items">
 		<document-resource class="column"
-		                   (onOpenBNode)="openNamedFragment($event)"
+		                   (onOpenBNode)="openBNode( $event )"
+		                   (onOpenNamedFragment)="openNamedFragment($event)"
+		                   [documentURI]="documentURI"
 		                   [rootNode]="namedFragment"
 		                   [canEdit]="false">
 		</document-resource>

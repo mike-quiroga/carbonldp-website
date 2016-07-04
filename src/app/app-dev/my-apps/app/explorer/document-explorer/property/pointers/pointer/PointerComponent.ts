@@ -66,6 +66,8 @@ export default class PointerComponent {
 			this.id = ! ! this.tempPointer[ "@id" ] ? this.tempPointer[ "@id" ] : this.pointer.added[ "@id" ];
 		}
 	}
+
+	@Input() documentURI:string = "";
 	@Input() bNodes:RDFNode.Class[] = [];
 	@Input() namedFragments:RDFNode.Class[] = [];
 	@Input() canEdit:boolean = true;
@@ -74,6 +76,8 @@ export default class PointerComponent {
 	@Output() onSave:EventEmitter<any> = new EventEmitter<any>();
 	@Output() onDeleteNewPointer:EventEmitter<PointerRow> = new EventEmitter<PointerRow>();
 	@Output() onDeletePointer:EventEmitter<PointerRow> = new EventEmitter<PointerRow>();
+	@Output() onGoToBNode:EventEmitter<string> = new EventEmitter<string>();
+	@Output() onGoToNamedFragment:EventEmitter<string> = new EventEmitter<string>();
 
 	idInput:AbstractControl = new Control( this.id, Validators.compose( [ Validators.required, this.idValidator.bind( this ) ] ) );
 
@@ -160,6 +164,22 @@ export default class PointerComponent {
 	getFriendlyName( uri:string ):string {
 		if ( URI.Util.hasFragment( uri ) )return URI.Util.getFragment( uri );
 		return URI.Util.getSlug( uri );
+	}
+
+	goToBNode( id:string ):void {
+		this.onGoToBNode.emit( id );
+	}
+
+	goToNamedFragment( id:string ):void {
+		this.onGoToNamedFragment.emit( id );
+	}
+
+	isBNode( uri:string ):boolean {
+		return ! ! uri ? URI.Util.isBNodeID( uri ) : false;
+	}
+
+	isNamedFragment( uri:string ):boolean {
+		return ! ! uri ? URI.Util.isFragmentOf( uri, this.documentURI ) : false;
 	}
 }
 export class Modes {

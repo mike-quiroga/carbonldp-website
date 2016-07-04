@@ -25,10 +25,10 @@ export default class BNodesViewerComponent {
 
 	nodesTab:JQuery;
 	openedBNodes:RDFNode.Class[] = [];
-	// @Input() bNodesArray:RDFNode.Class[] = [];
 	@Input() bNodes:RDFNode.Class[] = [];
-	@Input() bNodesDictionary:Map<string, RDFNode.Class> = new Map<string, RDFNode.Class>();
+	@Input() documentURI:string = "";
 	@Output() onOpenBNode:EventEmitter<string> = new EventEmitter<string>();
+	@Output() onOpenNamedFragment:EventEmitter<string> = new EventEmitter<string>();
 
 	constructor( element:ElementRef ) {
 		this.element = element;
@@ -40,12 +40,9 @@ export default class BNodesViewerComponent {
 	}
 
 	ngOnChanges( changes:{[propName:string]:SimpleChange} ):void {
-		if ( ( changes[ "bNodes" ].currentValue !== changes[ "bNodes" ].previousValue ) ||
-			( changes[ "bNodesDictionary" ].currentValue !== changes[ "bNodesDictionary" ].previousValue ) ) {
+		if ( ( changes[ "bNodes" ].currentValue !== changes[ "bNodes" ].previousValue ) ) {
 			this.openedBNodes = [];
 			this.goToBNode( "all" );
-			// this.bNodes = this.bNodes.map( ( bNode )=> { return { copy: bNode } } );
-			// console.log( this.bNodes );
 		}
 	}
 
@@ -67,6 +64,10 @@ export default class BNodesViewerComponent {
 			this.refreshTabs();
 			this.goToBNode( "bnode" + node[ "@id" ] );
 		}, 50 );
+	}
+
+	openNamedFragment( id:string ):void {
+		this.onOpenNamedFragment.emit( id );
 	}
 
 	goToBNode( id:string ) {

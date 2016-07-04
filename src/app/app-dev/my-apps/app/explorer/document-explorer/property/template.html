@@ -111,6 +111,9 @@
 			          [onAddNewPointer]="addNewPointer"
 			          [bNodes]="bNodes"
 			          [namedFragments]="namedFragments"
+			          [documentURI]="documentURI"
+			          (onGoToBNode)="goToBNode($event)"
+			          (onGoToNamedFragment)="goToNamedFragment($event)"
 			          (onPointersChanges)="checkForChangesOnPointers($event)"></pointers>
 		</div>
 		<div class="ui styled accordion" *ngIf="hasHeader('@list')">
