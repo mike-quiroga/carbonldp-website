@@ -10,8 +10,7 @@
 	</div>
 </div>
 <a class="ui blue top right attached label saving-message"
-   *ngIf="documentContentHasChanged"
-   (click)="saveDocument()">
+   *ngIf="documentContentHasChanged" (click)="saveDocument()">
 	<i class="save icon"></i>Save changes
 </a>
 <div class="ui basic segment document-content" *ngIf="document">
@@ -63,5 +62,19 @@
 				</div>
 			</div>
 		</div>
+	</div>
+</div>
+<div *ngIf="!!savingError">
+	<div class="ui error message">
+		<i class="close icon" (click)="clearSavingError()"></i>
+		<div class="header">
+			{{savingError.response?.status}} - {{savingError.name}}
+		</div>
+		<ol class="ui list" *ngIf="!!savingError.errors">
+			<li value="*" *ngFor="let error of savingError.errors; let i = index;">
+				<span *ngIf="!!error['https://carbonldp.com/ns/v1/platform#carbonCode']">Carbon code: {{error["https://carbonldp.com/ns/v1/platform#carbonCode"][0]["@value"]}} -
+				</span>{{error["https://carbonldp.com/ns/v1/platform#message"][0]["@value"]}}
+			</li>
+		</ol>
 	</div>
 </div>

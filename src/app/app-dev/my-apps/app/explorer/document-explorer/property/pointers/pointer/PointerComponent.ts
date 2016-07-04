@@ -110,7 +110,6 @@ export default class PointerComponent {
 	checkForChangesOnPointers():void {
 		if ( typeof this.id === "undefined" ) return;
 		let idx:number = this.bNodes.concat( this.namedFragments ).findIndex( ( nfOrBN )=> {return nfOrBN[ "@id" ] === this.id;} );
-		console.log( "Exists:%o, Id:%o", idx !== - 1, this.id );
 		this.isBNode = URI.Util.isBNodeID( this.id );
 		this.isNamedFragment = URI.Util.isFragmentOf( this.id, this.documentURI );
 		this.existsOnPointers = idx !== - 1;

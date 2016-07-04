@@ -4,7 +4,7 @@
 			<th class="wide" [ngClass]="{six: canDisplayLanguage(), eight: !canDisplayLanguage()}">@value</th>
 			<th class="wide" [ngClass]="{four: canDisplayLanguage(), six: !canDisplayLanguage()}">@type</th>
 			<th class="four wide" *ngIf="canDisplayLanguage()">@language</th>
-			<th class="two wide" *ngIf="canEdit">Actions</th>
+			<th class="one wide" *ngIf="canEdit">Actions</th>
 		</tr>
 	</thead>
 	<tbody>

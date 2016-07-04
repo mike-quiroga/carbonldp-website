@@ -10,6 +10,7 @@ import * as SDKContext from "carbonldp/SDKContext";
 import * as RDFDocument from "carbonldp/RDF/Document";
 import * as NS from "carbonldp/NS";
 import * as Utils from "carbonldp/Utils";
+import { JSONLDParser as JSONLDParser } from "carbonldp/HTTP";
 import { Error as HTTPError } from "carbonldp/HTTP/Errors";
 
 import DocumentsResolverService from "./../DocumentsResolverService";
@@ -18,7 +19,6 @@ import DocumentResourceViewerComponent from "./../document-resource-viewer/Docum
 import BNodesViewerComponent from "./../bnodes-viewer/BNodesViewerComponent";
 import NamedFragmentsViewerComponent from "./../named-fragments-viewer/NamedFragmentsViewerComponent";
 import PropertyComponent from "./../property/PropertyComponent";
-// import PropertySingleValueComponent from "./../property-single-value/PropertySingleValueComponent";
 import { Property, PropertyRow } from "./../property/PropertyComponent";
 
 import template from "./template.html!";
@@ -38,6 +38,7 @@ export default class DocumentViewerComponent {
 	rootNode:RDFNode.Class;
 	bNodes:RDFNode.Class[] = [];
 	namedFragments:RDFNode.Class[] = [];
+	savingError:HTTPError;
 
 	documentsResolverService:DocumentsResolverService;
 	@Input() uri:string;
@@ -105,6 +106,7 @@ export default class DocumentViewerComponent {
 			this.setRoot();
 			this.generateMaps();
 			this.loadingDocument = false;
+			this.savingError = null;
 			setTimeout(
 				()=> {
 					this.goToSection( "documentResource" );
@@ -212,11 +214,35 @@ export default class DocumentViewerComponent {
 				this.records.additions.clear();
 				this.records.deletions.clear();
 			},
-			( error:HTTPError )=> {console.error( error )}
+			( error:HTTPError )=> {
+				console.error( error );
+				this.getErrors( error ).then( ( errors )=> {
+					error[ "errors" ] = errors;
+					this.savingError = error;
+				} );
+			}
 		).then( ()=> {
 			this.savingDocument = false;
 			this.documentContentHasChanged = this.records.changes.size > 0 || this.records.additions.size > 0 || this.records.deletions.size > 0;
 		} );
+	}
+
+	getErrors( error:HTTPError ):Promise<any[]> {
+		let parser:JSONLDParser.Class = new JSONLDParser.Class();
+		let mainError = {};
+		let errors:any[] = [];
+		return parser.parse( error.response.data ).then( ( mainErrors )=> {
+			console.log( mainErrors );
+			mainError = mainErrors.find( ( error )=> { return error[ "@type" ].indexOf( "https://carbonldp.com/ns/v1/platform#ErrorResponse" ) !== - 1} );
+			errors = mainErrors.filter( ( error )=> { return error[ "@type" ].indexOf( "https://carbonldp.com/ns/v1/platform#Error" ) !== - 1} );
+			console.log( "MainError:%o", mainError );
+			console.log( "Errors:%o", errors );
+			return errors;
+		} );
+	}
+
+	clearSavingError():void {
+		this.savingError = null;
 	}
 
 	private scrollTo( selector:string ):void {
