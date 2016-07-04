@@ -1,12 +1,9 @@
-import { Component, ElementRef, Input, Output, EventEmitter } from "@angular/core";
+import { Component, ElementRef, Input, Output, SimpleChange, EventEmitter } from "@angular/core";
 import { Control, AbstractControl, Validators } from '@angular/common';
 
 import $ from "jquery";
 import "semantic-ui/semantic";
 
-import * as NS from "carbonldp/NS";
-import * as Utils from "carbonldp/Utils";
-import * as SDKLiteral from "carbonldp/RDF/Literal";
 import * as RDFNode from "carbonldp/RDF/RDFNode";
 import * as URI from "carbonldp/RDF/URI";
 
@@ -25,10 +22,13 @@ export default class PointerComponent {
 
 	$element:JQuery;
 	element:ElementRef;
-	private _mode = Modes.READ;
 	private tempPointer:any = {};
 	pointersDropdown:JQuery;
+	isBNode:boolean = false;
+	isNamedFragment:boolean = false;
+	existsOnPointers:boolean = false;
 
+	private _mode = Modes.READ;
 	@Input() set mode( value:string ) {
 		this._mode = value;
 		this.onEditMode.emit( this.mode === Modes.EDIT );
@@ -43,15 +43,6 @@ export default class PointerComponent {
 
 	modes:Modes = Modes;
 
-
-	// Literal Value;
-	private _id:string|boolean|number = "";
-	get id() {return this._id;}
-
-	set id( id:string|boolean|number ) {
-		this._id = id;
-		if ( ! ! this.idInput && this.idInput.value !== this.id )(<Control>this.idInput).updateValue( this.id );
-	}
 
 	// Inputs and Outputs
 	private _pointer = <PointerRow>{};
@@ -79,6 +70,16 @@ export default class PointerComponent {
 	@Output() onGoToBNode:EventEmitter<string> = new EventEmitter<string>();
 	@Output() onGoToNamedFragment:EventEmitter<string> = new EventEmitter<string>();
 
+	// Literal Value;
+	private _id:string|boolean|number = "";
+	get id() {return this._id;}
+
+	set id( id:string|boolean|number ) {
+		this._id = id;
+		if ( ! ! this.idInput && this.idInput.value !== this.id )(<Control>this.idInput).updateValue( this.id );
+		this.checkForChangesOnPointers();
+	}
+
 	idInput:AbstractControl = new Control( this.id, Validators.compose( [ Validators.required, this.idValidator.bind( this ) ] ) );
 
 
@@ -97,6 +98,22 @@ export default class PointerComponent {
 			this.pointer.deleted = this.pointer.copy;
 			this.onDeletePointer.emit( this.pointer );
 		}
+	}
+
+	ngOnChanges( changes:{[propName:string]:SimpleChange} ):void {
+		if ( ( changes[ "bNodes" ].currentValue !== changes[ "bNodes" ].previousValue ) ||
+			( changes[ "namedFragments" ].currentValue !== changes[ "namedFragments" ].previousValue ) ) {
+			this.checkForChangesOnPointers();
+		}
+	}
+
+	checkForChangesOnPointers():void {
+		if ( typeof this.id === "undefined" ) return;
+		let idx:number = this.bNodes.concat( this.namedFragments ).findIndex( ( nfOrBN )=> {return nfOrBN[ "@id" ] === this.id;} );
+		console.log( "Exists:%o, Id:%o", idx !== - 1, this.id );
+		this.isBNode = URI.Util.isBNodeID( this.id );
+		this.isNamedFragment = URI.Util.isFragmentOf( this.id, this.documentURI );
+		this.existsOnPointers = idx !== - 1;
 	}
 
 	cancelEdit():void {
@@ -154,7 +171,6 @@ export default class PointerComponent {
 		this.pointersDropdown.dropdown( "set selected", this.id );
 	}
 
-
 	changeId( id:string, text?:string, choice?:JQuery ):void {
 		if ( id === "empty" ) id = null;
 		(<Control>this.idInput).updateValue( id === "empty" ? "" : id );
@@ -174,13 +190,6 @@ export default class PointerComponent {
 		this.onGoToNamedFragment.emit( id );
 	}
 
-	isBNode( uri:string ):boolean {
-		return ! ! uri ? URI.Util.isBNodeID( uri ) : false;
-	}
-
-	isNamedFragment( uri:string ):boolean {
-		return ! ! uri ? URI.Util.isFragmentOf( uri, this.documentURI ) : false;
-	}
 }
 export class Modes {
 	static EDIT:string = "EDIT";

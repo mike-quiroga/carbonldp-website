@@ -27,6 +27,7 @@ export default class NamedFragmentsViewerComponent {
 	nodesTab:JQuery;
 	openedNamedFragments:RDFNode.Class[] = [];
 	@Input() documentURI:string;
+	@Input() bNodes:RDFNode.Class[] = [];
 	@Input() namedFragments:RDFNode.Class[] = [];
 	@Output() onOpenNamedFragment:EventEmitter<string> = new EventEmitter<string>();
 	@Output() onOpenBNode:EventEmitter<string> = new EventEmitter<string>();

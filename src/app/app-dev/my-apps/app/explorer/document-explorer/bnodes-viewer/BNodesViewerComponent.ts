@@ -26,6 +26,7 @@ export default class BNodesViewerComponent {
 	nodesTab:JQuery;
 	openedBNodes:RDFNode.Class[] = [];
 	@Input() bNodes:RDFNode.Class[] = [];
+	@Input() namedFragments:RDFNode.Class[] = [];
 	@Input() documentURI:string = "";
 	@Output() onOpenBNode:EventEmitter<string> = new EventEmitter<string>();
 	@Output() onOpenNamedFragment:EventEmitter<string> = new EventEmitter<string>();

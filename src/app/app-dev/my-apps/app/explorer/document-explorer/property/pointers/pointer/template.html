@@ -1,17 +1,17 @@
 <td class="id">
 	<div class="read-mode" *ngIf="mode===modes.READ">
-		<p *ngIf="!isBNode(id) && !isNamedFragment(id)">
+		<p *ngIf="!isBNode && !isNamedFragment || !existsOnPointers">
 			<span *ngIf="!!id">{{id}}</span>
 			<span *ngIf="!id">-</span>
 		</p>
-		<a *ngIf="isBNode(id)" (click)="goToBNode(id)">
+		<a *ngIf="isBNode && existsOnPointers" (click)="goToBNode(id)">
 			<i class="icons">
 				<i class="thin circle blue icon"></i>
 				<i class="corner thin circle icon"></i>
 			</i>
 			{{id}}
 		</a>
-		<a *ngIf="isNamedFragment(id)" (click)="goToNamedFragment(id)">
+		<a *ngIf="isNamedFragment && existsOnPointers" (click)="goToNamedFragment(id)">
 			<i class="icons">
 				<i class="puzzle green icon"></i>
 				<i class="corner puzzle icon"></i>
