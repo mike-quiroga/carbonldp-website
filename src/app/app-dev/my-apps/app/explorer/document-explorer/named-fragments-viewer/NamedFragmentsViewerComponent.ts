@@ -8,6 +8,7 @@ import * as RDFNode from "carbonldp/RDF/RDFNode";
 import * as URI from "carbonldp/RDF/URI";
 
 import PropertyComponent from "./../property/PropertyComponent";
+import DocumentResourceViewer from "./../document-resource-viewer/DocumentResourceViewer"
 
 import template from "./template.html!";
 import "./style.css!";
@@ -15,7 +16,7 @@ import "./style.css!";
 @Component( {
 	selector: "document-named-fragments",
 	template: template,
-	directives: [ CORE_DIRECTIVES, PropertyComponent ],
+	directives: [ CORE_DIRECTIVES, PropertyComponent, DocumentResourceViewer ],
 } )
 
 export default class NamedFragmentsViewerComponent {
@@ -26,8 +27,7 @@ export default class NamedFragmentsViewerComponent {
 	nodesTab:JQuery;
 	openedNamedFragments:RDFNode.Class[] = [];
 	@Input() documentURI:string;
-	@Input() namedFragmentsArray:RDFNode.Class[] = [];
-	@Input() namedFragmentsDictionary:Map<string,RDFNode.Class> = new Map<string,RDFNode.Class>();
+	@Input() namedFragments:RDFNode.Class[] = [];
 	@Output() onOpenNamedFragment:EventEmitter<string> = new EventEmitter<string>();
 	@Output() onOpenBNode:EventEmitter<string> = new EventEmitter<string>();
 
@@ -48,7 +48,7 @@ export default class NamedFragmentsViewerComponent {
 		let idx:number;
 		let node:RDFNode.Class;
 		if ( typeof nodeOrId === "string" ) {
-			node = this.namedFragmentsDictionary.get( nodeOrId );
+			node = this.namedFragments.find( ( nodeOrId )=> {return nodeOrId[ "@id" ]} );
 		} else {
 			node = nodeOrId;
 		}

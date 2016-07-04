@@ -11,6 +11,7 @@
 			    [pointer]="pointer"
 			    [bNodes]="bNodes"
 			    [namedFragments]="namedFragments"
+			    [canEdit]="canEdit"
 			    (onSave)="savePointer($event, pointer, i)"
 			    (onDeletePointer)="deletePointer($event, i)"></tr>
 			<tr class="pointer top aligned added-pointer" *ngIf="!!pointer.added && !pointer.deleted"
@@ -18,6 +19,7 @@
 			    [pointer]="pointer"
 			    [bNodes]="bNodes"
 			    [namedFragments]="namedFragments"
+			    [canEdit]="canEdit"
 			    (onSave)="saveNewPointer($event, literal, i)"
 			    (onDeleteNewPointer)="deleteNewPointer($event, i)"></tr>
 		</template>

@@ -25,7 +25,7 @@ export default class DocumentResourceComponent {
 	@Input() displayOnly:string[] = [];
 	@Input() hiddenProperties:string[] = [];
 	@Input() bNodes:RDFNode.Class[] = [];
-	@Input() namedFragments:Map<string,RDFNode.Class> = new Map<string,RDFNode.Class>();
+	@Input() namedFragments:RDFNode.Class[] = [];
 	@Input() canEdit:boolean = true;
 
 	@Output() onOpenBNode:EventEmitter<string> = new EventEmitter<string>();

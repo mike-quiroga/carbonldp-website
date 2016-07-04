@@ -66,10 +66,9 @@ export default class PointerComponent {
 			this.id = ! ! this.tempPointer[ "@id" ] ? this.tempPointer[ "@id" ] : this.pointer.added[ "@id" ];
 		}
 	}
-
-	// @Input() bNodes:Map<string,RDFNode.Class> = new Map<string,RDFNode.Class>();
 	@Input() bNodes:RDFNode.Class[] = [];
-	@Input() namedFragments:Map<string,RDFNode.Class> = new Map<string,RDFNode.Class>();
+	@Input() namedFragments:RDFNode.Class[] = [];
+	@Input() canEdit:boolean = true;
 
 	@Output() onEditMode:EventEmitter<boolean> = new EventEmitter<boolean>();
 	@Output() onSave:EventEmitter<any> = new EventEmitter<any>();

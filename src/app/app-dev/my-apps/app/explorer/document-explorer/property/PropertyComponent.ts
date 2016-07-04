@@ -47,7 +47,7 @@ export default class PropertyComponent {
 	@Input() mode:string = Modes.READ;
 	@Input() documentURI:string;
 	@Input() bNodes:RDFNode.Class[] = [];
-	@Input() namedFragments:Map<string,RDFNode.Class> = new Map<string,RDFNode.Class>();
+	@Input() namedFragments:RDFNode.Class[] = [];
 	@Input() canEdit:boolean = true;
 	
 	@Output() onGoToBNode:EventEmitter<string> = new EventEmitter<string>();
@@ -230,14 +230,6 @@ export default class PropertyComponent {
 			this.tempProperty.name = this.name;
 			this.changePropertyValues( this.tempPointers.concat( this.tempLiterals ) );
 		}
-
-		// if ( ! this.propertyHasChanged ) delete this.property.modified;
-		//
-		// if ( ! ! this.property.added ) {
-		// 	this.onSaveNewProperty.emit( this.tempProperty );
-		// } else {
-		// 	this.onChangeProperty.emit( this.tempProperty );
-		// }
 		this.mode = Modes.READ;
 	}
 

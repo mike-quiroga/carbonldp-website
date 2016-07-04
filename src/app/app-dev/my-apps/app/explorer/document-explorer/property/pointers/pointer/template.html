@@ -27,10 +27,10 @@
 					Named Fragments
 				</option>
 				<optgroup label="Named Fragments">
-					<option class="item" *ngFor="let fragment of (namedFragments | iterablemap); let i=index" value="{{fragment.key}}">
+					<option class="item" *ngFor="let fragment of namedFragments; let i=index" value="{{fragment['@id']}}">
 						<span>
-							<span class="title">{{getFriendlyName(fragment.key)}}</span>
-							<span class="description">{{fragment.key}}</span>
+							<span class="title">{{getFriendlyName(fragment["@id"])}}</span>
+							<span class="description">{{fragment["@id"]}}</span>
 						</span>
 					</option>
 				</optgroup>

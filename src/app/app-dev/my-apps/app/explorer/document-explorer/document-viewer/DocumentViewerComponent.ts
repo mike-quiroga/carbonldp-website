@@ -37,9 +37,7 @@ export default class DocumentViewerComponent {
 	sections:string[] = [ "bNodes", "namedFragments", "documentResource" ];
 	rootNode:RDFNode.Class;
 	bNodes:RDFNode.Class[] = [];
-	namedFragmentsArray:RDFNode.Class[] = [];
-	bNodesDictionary:Map<string,RDFNode.Class> = new Map<string,RDFNode.Class>();
-	namedFragmentsDictionary:Map<string,RDFNode.Class> = new Map<string,RDFNode.Class>();
+	namedFragments:RDFNode.Class[] = [];
 
 	documentsResolverService:DocumentsResolverService;
 	@Input() uri:string;
@@ -55,7 +53,7 @@ export default class DocumentViewerComponent {
 
 
 	@ViewChild( BNodesViewerComponent ) documentBNodes:BNodesViewerComponent;
-	@ViewChild( NamedFragmentsViewerComponent ) namedFragments:NamedFragmentsViewerComponent;
+	@ViewChild( NamedFragmentsViewerComponent ) documentNamedFragments:NamedFragmentsViewerComponent;
 	@Output() onLoadingDocument:EventEmitter<boolean> = new EventEmitter<boolean>();
 	@Output() onSavingDocument:EventEmitter<boolean> = new EventEmitter<boolean>();
 
@@ -126,11 +124,7 @@ export default class DocumentViewerComponent {
 
 	generateMaps():void {
 		this.bNodes = RDFDocument.Util.getBNodeResources( this.document );
-		this.namedFragmentsArray = RDFDocument.Util.getFragmentResources( this.document );
-		// this.bNodesDictionary.clear();
-		// this.namedFragmentsDictionary.clear();
-		// this.bNodesArray.forEach( ( node:RDFNode.Class ) => this.bNodesDictionary.set( node[ "@id" ], node ) );
-		// this.namedFragmentsArray.forEach( ( node:RDFNode.Class ) => this.namedFragmentsDictionary.set( node[ "@id" ], node ) );
+		this.namedFragments = RDFDocument.Util.getFragmentResources( this.document );
 	}
 
 	openBNode( id:string ):void {
@@ -139,7 +133,7 @@ export default class DocumentViewerComponent {
 	}
 
 	openNamedFragment( id:string ):void {
-		this.namedFragments.openNamedFragment( id );
+		this.documentNamedFragments.openNamedFragment( id );
 		this.goToSection( "namedFragments" );
 	}
 

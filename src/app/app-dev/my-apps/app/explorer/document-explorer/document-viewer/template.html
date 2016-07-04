@@ -25,15 +25,11 @@
 			<div class="content">
 				<div class="description">
 					<div class="ui secondary menu document tabs">
-						<a class="item active"
-						   data-tab="documentResource">Document</a>
-						<a class="item"
-						   data-tab="bNodes">Blank Nodes ({{bNodes.length}})</a>
-						<a class="item"
-						   data-tab="namedFragments">Named Fragments ({{namedFragmentsDictionary.size }})</a>
+						<a class="item active" data-tab="documentResource">Document</a>
+						<a class="item" data-tab="bNodes">Blank Nodes ({{bNodes.length}})</a>
+						<a class="item" data-tab="namedFragments">Named Fragments ({{namedFragments.length}})</a>
 					</div>
-					<div class="ui active tab segment"
-					     data-tab="documentResource">
+					<div class="ui active tab segment" data-tab="documentResource">
 						<document-resource class="column"
 						                   (onOpenBNode)="openBNode($event)"
 						                   (onOpenNamedFragment)="openNamedFragment($event)"
@@ -44,25 +40,22 @@
 						                   [onAddNewProperty]="onAddNewProperty"
 						                   [hiddenProperties]="['@id']"
 						                   [bNodes]="bNodes"
-						                   [namedFragments]="namedFragmentsDictionary">
+						                   [namedFragments]="namedFragments">
 						</document-resource>
 					</div>
-					<div class="ui tab segment"
-					     data-tab="bNodes">
+					<div class="ui tab segment" data-tab="bNodes">
 						<document-bnodes class="column"
 						                 (onOpenBNode)="goToSection($event)"
 						                 (onOpenNamedFragment)="openNamedFragment($event)"
 						                 [bNodes]="bNodes"
 						                 [bNodesDictionary]="bNodesDictionary"></document-bnodes>
 					</div>
-					<div class="ui tab segment"
-					     data-tab="namedFragments">
+					<div class="ui tab segment" data-tab="namedFragments">
 						<document-named-fragments class="column"
 						                          (onOpenBNode)="openBNode($event)"
 						                          (onOpenNamedFragment)="goToSection($event)"
 						                          [documentURI]="rootNode['@id']"
-						                          [namedFragmentsArray]="namedFragmentsArray"
-						                          [namedFragmentsDictionary]="namedFragmentsDictionary"></document-named-fragments>
+						                          [namedFragments]="namedFragments"></document-named-fragments>
 					</div>
 				</div>
 			</div>
