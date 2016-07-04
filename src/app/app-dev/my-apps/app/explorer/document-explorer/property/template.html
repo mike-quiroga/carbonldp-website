@@ -107,6 +107,7 @@
 			          [onAddNewLiteral]="addNewLiteral"
 			          (onLiteralsChanges)="checkForChangesOnLiterals($event)"></literals>
 			<pointers #pointersContainer
+			          [canEdit]="canEdit"
 			          [(pointers)]="pointers"
 			          [onAddNewPointer]="addNewPointer"
 			          [bNodes]="bNodes"
