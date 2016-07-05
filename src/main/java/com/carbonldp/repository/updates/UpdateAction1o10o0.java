@@ -1,11 +1,15 @@
 package com.carbonldp.repository.updates;
 
-import com.carbonldp.Vars;
 import com.carbonldp.agents.Agent;
 import com.carbonldp.agents.PlatformAgentDescription;
 import com.carbonldp.agents.platform.SesamePlatformAgentService;
 import com.carbonldp.apps.App;
+import com.carbonldp.rdf.RDFMap;
+import com.carbonldp.utils.ValueUtil;
+import org.openrdf.model.BNode;
 import org.openrdf.model.IRI;
+import org.openrdf.model.Statement;
+import org.openrdf.model.Value;
 import org.springframework.aop.framework.Advised;
 
 import java.util.Set;
@@ -22,9 +26,7 @@ public class UpdateAction1o10o0 extends AbstractUpdateAction {
 		Set<App> apps = getAllApps();
 		for ( App app : apps ) {
 			transactionWrapper.runWithSystemPermissionsInAppContext( app, () -> {
-				IRI appRoleContainerIRI = appRoleRepository.getContainerIRI();
-				IRI appRoleAgentContainerIRI = valueFactory.createIRI( appRoleContainerIRI.stringValue() + Vars.getInstance().getAppRoleAgentsContainer() );
-				IRI membershipResource = containerRepository.getTypedRepository( containerService.getContainerType( appRoleAgentContainerIRI ) ).getMembershipResource( appRoleAgentContainerIRI );
+				addRolesToAgentMaps( app );
 			} );
 		}
 	}
@@ -41,5 +43,32 @@ public class UpdateAction1o10o0 extends AbstractUpdateAction {
 				}
 			}
 		} );
+	}
+
+	private void addRolesToAgentMaps( App app ) {
+		IRI appRoleContainerIRI = appRoleRepository.getContainerIRI();
+		Set<Statement> members = containerService.getMembershipTriples( appRoleContainerIRI );
+		for ( Statement member : members ) {
+			IRI roleIRI = ValueUtil.getIRI( member.getObject() );
+			Set<Statement> roleMembers = containerService.getMembershipTriples( valueFactory.createIRI( roleIRI.stringValue() + "agents/" ) );
+			for ( Statement roleMember : roleMembers ) {
+				IRI roleMemberIRI = ValueUtil.getIRI( roleMember.getObject() );
+				if ( platformAgentRepository.exists( roleMemberIRI ) ) {
+					transactionWrapper.runWithSystemPermissionsInPlatformContext( () -> {
+						addRoleToAgentMap( roleMemberIRI, app, roleIRI );
+					} );
+				}
+			}
+		}
+	}
+
+	private void addRoleToAgentMap( IRI roleMemberIRI, App app, IRI roleIRI ) {
+		Agent agent = platformAgentRepository.get( roleMemberIRI );
+		BNode rdfMapBNode = agent.getBNode( PlatformAgentDescription.Property.APP_ROLE_MAP );
+		if ( rdfMapBNode == null ) return;
+		RDFMap map = new RDFMap( agent.getBaseModel(), rdfMapBNode, agent.getIRI() );
+		map.clean();
+		map.add( (Value) app.getIRI(), (Value) roleIRI );
+		sourceService.replace( agent );
 	}
 }
