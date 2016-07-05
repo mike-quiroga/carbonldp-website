@@ -1,14 +1,17 @@
 package com.carbonldp.repository.updates;
 
 import com.carbonldp.AbstractComponent;
-import com.carbonldp.agents.platform.PlatformAgentRepository;
-import com.carbonldp.agents.platform.SesamePlatformAgentService;
+import com.carbonldp.agents.AgentRepository;
+import com.carbonldp.agents.AgentService;
 import com.carbonldp.apps.App;
 import com.carbonldp.apps.AppRepository;
+import com.carbonldp.apps.roles.AppRoleRepository;
 import com.carbonldp.authentication.token.app.AppTokenRepository;
 import com.carbonldp.authorization.acl.ACLRepository;
 import com.carbonldp.ldp.containers.ContainerRepository;
+import com.carbonldp.ldp.containers.ContainerService;
 import com.carbonldp.ldp.sources.RDFSourceRepository;
+import com.carbonldp.ldp.sources.RDFSourceService;
 import com.carbonldp.rdf.RDFDocumentRepository;
 import com.carbonldp.sparql.SPARQLTemplate;
 import com.carbonldp.spring.TransactionWrapper;
@@ -39,8 +42,11 @@ public abstract class AbstractUpdateAction extends AbstractComponent implements 
 	protected RDFSourceRepository sourceRepository;
 	protected ACLRepository aclRepository;
 	protected RDFDocumentRepository documentRepository;
-	protected PlatformAgentRepository platformAgentRepository;
-	protected SesamePlatformAgentService platformAgentService;
+	protected AgentRepository platformAgentRepository;
+	protected AgentService platformAgentService;
+	protected RDFSourceService sourceService;
+	protected AppRoleRepository appRoleRepository;
+	protected ContainerService containerService;
 	protected static ValueFactory valueFactory = SimpleValueFactory.getInstance();
 
 	public void run() {
@@ -81,7 +87,10 @@ public abstract class AbstractUpdateAction extends AbstractComponent implements 
 		aclRepository = context.getBean( ACLRepository.class );
 		documentRepository = context.getBean( RDFDocumentRepository.class );
 		appTokensRepository = context.getBean( AppTokenRepository.class );
-		platformAgentRepository = context.getBean( PlatformAgentRepository.class );
-		platformAgentService = context.getBean( SesamePlatformAgentService.class );
+		platformAgentRepository = context.getBean( "platformAgentRepository", AgentRepository.class );
+		platformAgentService = context.getBean( "platformAgentService", AgentService.class );
+		sourceService = context.getBean( RDFSourceService.class );
+		appRoleRepository = context.getBean( AppRoleRepository.class );
+		containerService = context.getBean( ContainerService.class );
 	}
 }
