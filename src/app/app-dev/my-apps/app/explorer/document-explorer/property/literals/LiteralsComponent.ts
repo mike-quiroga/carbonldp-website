@@ -29,15 +29,12 @@ export default class LiteralsComponent {
 	modes:Modes = Modes;
 	tokens:string[] = [ "@value", "@type", "@language" ];
 	tempLiterals:Literal[] = [];
-	modifiedLiterals:{id:number, literal:Literal}[] = [];
-	addedLiterals:LiteralRow[] = [];
-	deletedLiterals:Literal[] = [];
 	isLanguagePresent:boolean = false;
 	isEditingLiteral:boolean = false;
 	@Input() literals:LiteralRow[] = [];
 	@Input() onAddNewLiteral:EventEmitter<boolean> = new EventEmitter<boolean>();
 	@Input() canEdit:boolean = true;
-	@Output() onLiteralsChanges:EventEmitter<Literal[]> = new EventEmitter<Literal[]>();
+	@Output() onLiteralsChanges:EventEmitter<LiteralRow[]> = new EventEmitter<LiteralRow[]>();
 
 	constructor() {}
 
@@ -61,17 +58,11 @@ export default class LiteralsComponent {
 	}
 
 	saveLiteral( modifiedLiteral:Literal, originalLiteral:Literal, index:number ) {
-		if ( modifiedLiteral.hasOwnProperty( "@value" ) ) {
-			this.literals[ index ].modified = modifiedLiteral;
-		}
 		this.isLanguagePresent = this.existsToken( "@language" );
 		this.onLiteralsChanges.emit( this.literals );
 	}
 
 	saveNewLiteral( newLiteral:Literal, originalLiteral:Literal, index:number ) {
-		if ( newLiteral.hasOwnProperty( "@value" ) ) {
-			this.literals[ index ].added = newLiteral;
-		}
 		this.isLanguagePresent = this.existsToken( "@language" );
 		this.onLiteralsChanges.emit( this.literals );
 	}

@@ -903,15 +903,15 @@ export default class LiteralComponent {
 			this.tempLiteral[ "@language" ] = this.language;
 		}
 
-		if ( ! ! this.tempLiteral[ "@type" ] && this.tempLiteral[ "@type" ] !== NS.XSD.DataType.string ) delete this.tempLiteral[ "@language" ];
+		if ( this.tempLiteral[ "@type" ] !== NS.XSD.DataType.string ) delete this.tempLiteral[ "@language" ];
 		if ( this.tempLiteral[ "@type" ] === NS.XSD.DataType.string || this.type === NS.XSD.DataType.string ) delete this.tempLiteral[ "@type" ];
 
 		// Check for tempLiteral to contain valid json+ld for literals
 		// 1. @value always present, if not clean whole object.
 		// 2. If @type empty or NS.XSD.DataType.string, then delete @type from tempLiteral.
 		// 3. If @language empty or when @type different than NS.XSD.DataType.string, then delete @language from tempLiteral.
-		if ( this.tempLiteral[ "@type" ] === null || typeof this.tempLiteral[ "@type" ] === "undefined" || this.tempLiteral[ "@type" ] === NS.XSD.DataType.string ) delete this.tempLiteral[ "@type" ];
-		if ( this.language === null || typeof this.language === "undefined" || (typeof this.tempLiteral[ "@type" ] !== "undefined" && this.tempLiteral[ "@type" ] !== NS.XSD.DataType.string) ) {
+		if ( this.tempLiteral[ "@type" ] === null || typeof this.tempLiteral[ "@type" ] === "undefined" ) delete this.tempLiteral[ "@type" ];
+		if ( this.tempLiteral[ "@language" ] === null || typeof this.tempLiteral[ "@language" ] === "undefined" || (typeof this.tempLiteral[ "@type" ] !== "undefined" && this.tempLiteral[ "@type" ] !== NS.XSD.DataType.string) ) {
 			delete this.tempLiteral[ "@language" ];
 		}
 		if ( this.tempLiteral[ "@value" ] === null || typeof this.tempLiteral[ "@value" ] === "undefined" ) {
@@ -920,17 +920,22 @@ export default class LiteralComponent {
 			delete this.tempLiteral[ "@language" ];
 		}
 
-		if ( (! ! this.literal.copy) &&
-			(this.tempLiteral[ "@value" ] === this.literal.copy[ "@value" ] ) &&
-			(this.tempLiteral[ "@type" ] === this.literal.copy[ "@type" ] ) &&
-			(this.tempLiteral[ "@language" ] === this.literal.copy[ "@language" ] ) ) {
-			delete this.tempLiteral[ "@value" ];
-			delete this.tempLiteral[ "@type" ];
-			delete this.tempLiteral[ "@language" ];
-			delete this.literal.modified;
+		if ( ! ! this.literal.copy ) {
+			if ( (this.tempLiteral[ "@value" ] === this.literal.copy[ "@value" ] ) &&
+				(this.tempLiteral[ "@type" ] === this.literal.copy[ "@type" ] ) &&
+				(this.tempLiteral[ "@language" ] === this.literal.copy[ "@language" ] ) ) {
+				delete this.tempLiteral[ "@value" ];
+				delete this.tempLiteral[ "@type" ];
+				delete this.tempLiteral[ "@language" ];
+				delete this.literal.modified;
+			} else {
+				this.literal.modified = this.tempLiteral;
+			}
+		} else if ( ! ! this.literal.added ) {
+			this.literal.added = this.tempLiteral;
 		}
 
-		this.onSave.emit( this.tempLiteral );
+		this.onSave.emit( this.literal );
 		this.mode = Modes.READ;
 	}
 
