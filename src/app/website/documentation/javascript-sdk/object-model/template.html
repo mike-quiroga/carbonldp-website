@@ -31,15 +31,15 @@
 							<p class="larger">This document presents an in depth description of the Carbon Object Model</p>
 						</div>
 					</div>
-						<p>Carbon is a Linked Data Plartform, its objective is to create a web of
+						<p>Carbon is a Linked Data Platform, its objective is to create a web of
 							Documents linked to each other through relations that can be searched for
 							by humans or machines.</p>
 
-						<p>Documents are javascript objects identified by a URI
-							that hold any sort of data and can be grouped in Applications. An
+						<p>Documents are javascript objects identified by a URI,
+							they hold any sort of data and can be grouped in Applications. An
 							Application is represented in Carbon through a Document in the platform. This
 							Application Document holds descriptive information about the application and
-							points to the application. Documents can relate to other Documents through links
+							points to it. Documents can relate to other Documents through links
 							creating the desired Data Web. Any two Documents can be linked in Carbon, the nature
 							of the relation between them is given through the Document properties of which we
 							will talk later on.</p>
@@ -47,15 +47,10 @@
 					<section>
 						<h2 class="ui header">Carbon Document definition</h2>
 
-						<p>A Carbon Document is a javascript object identified by a URI, that can have
-							any number of properties and nested objects. It is important to mention
+						<p>A Carbon Document is a javascript object identified by a <a>URI</a>, that can have
+							any number of properties and nested objects. Documents
+							are the simplest unit of information in Carbon. It is important to mention
 							that all the Documents’ URIs in Carbon end with “/”.</p>
-
-						<p>A Carbon Document is composed of different parts created from the properties
-							of the javascript object defined. All the properties that hold values in a
-							javascript object are maintained as properties of a Carbon Document, while
-							the nested objects correspond to what we call fragments or named fragments,
-							depending on whether or not the nested objects have an id defined or not.</p>
 
 						<p>A Carbon Document is composed of:</p>
 						<ul>
@@ -64,11 +59,26 @@
 							<li>NamedFragments</li>
 						</ul>
 
+						<p>A Carbon Document is composed of different parts created from the properties
+							of the javascript object defined. All the properties that hold values in a
+							javascript object are maintained as properties of a Carbon Document, while
+							the nested objects correspond to other carbon resources called fragments or named fragments,
+							depending on whether or not the nested objects have an id defined or not.
+							These resources are linked to the Document of which they are part of by properties
+							that point to them.</p>
 
 						<div class="centered">
 							<img src="assets/images/object_model.png" width="840">
 						</div>
 						<br/>
+
+						<p>Types is a special property present in Documents, fragments and named fragments.
+							All resources in Carbon are multi typed and the property types holds the array of types
+							that a resource has.
+							Each type is describe by a URI and serves as a sort of tag, that will allow you to implement
+							personalized definitions, validations and uses for your tagged resources. This tag will also
+							help you to defined and used <a>object schemas by type</a>, a subject that is discussed in
+							<a>Object Schema.</a> documentation.</p>
 
 						<section>
 							<h3 class="ui header">Properties</h3>
@@ -76,8 +86,7 @@
 								added, changed or deleted. There can exist any number of properties of any
 								nature. Carbon handles certain relevant properties to relate Documents,
 								for example: “contains” or “members” are properties in all carbon Documents
-								that provide you with information about related Documents. These properties
-								will be further discussed in future sections.</p>
+								that provide you with information about related Documents.</p>
 						</section>
 						<section>
 							<h3 class="ui header">Fragments</h3>
