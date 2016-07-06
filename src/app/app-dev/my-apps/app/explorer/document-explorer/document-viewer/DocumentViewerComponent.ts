@@ -22,6 +22,7 @@ import NamedFragmentsViewerComponent from "./../named-fragments-viewer/NamedFrag
 import PropertyComponent from "./../property/PropertyComponent";
 import { Property, PropertyRow } from "./../property/PropertyComponent";
 import { BNodeRecords } from "./../bnodes-viewer/bnode/BNodeComponent";
+import { NamedFragmentRecords } from "./../named-fragments-viewer/named-fragment/NamedFragmentComponent";
 
 import template from "./template.html!";
 import "./style.css!";
@@ -46,9 +47,11 @@ export default class DocumentViewerComponent {
 	rootNodeRecords:RootRecords;
 	bNodesHaveChanged:boolean = false;
 	bNodesChanges:Map<string, BNodeRecords>;
+	namedFragmentsHaveChanged:boolean = false;
+	namedFragmentsChanges:Map<string, NamedFragmentRecords>;
 
 	get documentContentHasChanged() {
-		return this.rootNodeHasChanged || this.bNodesHaveChanged;
+		return this.rootNodeHasChanged || this.bNodesHaveChanged || this.namedFragmentsHaveChanged;
 	}
 
 
@@ -86,8 +89,6 @@ export default class DocumentViewerComponent {
 
 	get loadingDocument():boolean { return this._loadingDocument; }
 
-	records:DocumentRecords = new DocumentRecords();
-
 
 	constructor( element:ElementRef, documentsResolverService:DocumentsResolverService ) {
 		this.element = element;
@@ -111,11 +112,9 @@ export default class DocumentViewerComponent {
 		if ( ! ! document ) {
 			console.log( "whole document has changed! %o: ", document );
 			this.loadingDocument = true;
-			this.records.changes.clear();
-			this.records.additions.clear();
-			this.records.deletions.clear();
+			this.clearDocumentChanges();
 			this.setRoot();
-			this.generateMaps();
+			this.generateFragments();
 			this.loadingDocument = false;
 			this.savingError = null;
 			setTimeout(
@@ -135,7 +134,7 @@ export default class DocumentViewerComponent {
 		return this.documentsResolverService.get( uri, documentContext );
 	}
 
-	generateMaps():void {
+	generateFragments():void {
 		this.bNodes = RDFDocument.Util.getBNodeResources( this.document );
 		this.namedFragments = RDFDocument.Util.getFragmentResources( this.document );
 	}
@@ -168,6 +167,11 @@ export default class DocumentViewerComponent {
 	notifyBNode( bNodeChanges:Map<string, BNodeRecords> ):void {
 		this.bNodesChanges = bNodeChanges;
 		this.bNodesHaveChanged = bNodeChanges.size > 0;
+	}
+
+	notifyNamedFragments( namedFragmentsChanges:Map<string, NamedFragmentRecords> ):void {
+		this.namedFragmentsChanges = namedFragmentsChanges;
+		this.namedFragmentsHaveChanged = namedFragmentsChanges.size > 0;
 	}
 
 	modifyRootNodeWithChanges():void {
@@ -222,18 +226,54 @@ export default class DocumentViewerComponent {
 		} );
 	}
 
+	modifyNamedFragmentsWithChanges():void {
+		let tempNamedFragment;
+		this.namedFragmentsChanges.forEach( ( namedFragmentRecords:NamedFragmentRecords, namedFragmentId:string )=> {
+			tempNamedFragment = this.namedFragments.find( (namedFragment => {return namedFragment[ "@id" ] === namedFragmentId}) );
+			if ( namedFragmentRecords.deletions.size > 0 ) {
+				namedFragmentRecords.deletions.forEach( ( property, key )=> {
+					delete tempNamedFragment[ key ];
+				} );
+			}
+			if ( namedFragmentRecords.additions.size > 0 ) {
+				namedFragmentRecords.additions.forEach( ( property, key )=> {
+					tempNamedFragment[ key ] = property.added.value;
+				} );
+			}
+			if ( namedFragmentRecords.changes.size > 0 ) {
+				namedFragmentRecords.changes.forEach( ( property, key )=> {
+					if ( property.modified.id !== property.modified.name ) {
+						delete tempNamedFragment[ key ];
+						tempNamedFragment[ property.modified.name ] = property.modified.value;
+					} else {
+						tempNamedFragment[ key ] = property.modified.value;
+					}
+				} );
+			}
+		} );
+	}
+
+	clearDocumentChanges():void {
+		this.rootNodeRecords = new RootRecords();
+		this.bNodesChanges = new Map<string, BNodeRecords>();
+		this.namedFragmentsChanges = new Map<string, NamedFragmentRecords>();
+		this.rootNodeHasChanged = false;
+		this.bNodesHaveChanged = false;
+		this.namedFragmentsHaveChanged = false;
+	}
+
 	saveDocument():void {
 		this.savingDocument = true;
 		console.log( JSON.stringify( this.document, null, "\t" ) );
 		this.modifyRootNodeWithChanges();
 		this.modifyBNodesWithChanges();
+		this.modifyNamedFragmentsWithChanges();
 		console.log( JSON.stringify( this.document, null, "\t" ) );
 		let body:string = JSON.stringify( this.document, null, "\t" );
 		this.documentsResolverService.update( this.document[ "@id" ], body, this.documentContext ).then(
 			( updatedDocument:RDFDocument.Class )=> {
 				this.document = updatedDocument[ 0 ];
-				this.rootNodeRecords = new RootRecords();
-				this.bNodesChanges = new Map<string, BNodeRecords>();
+				this.clearDocumentChanges();
 			},
 			( error:HTTPError )=> {
 				console.error( error );
@@ -244,8 +284,9 @@ export default class DocumentViewerComponent {
 			}
 		).then( ()=> {
 			this.savingDocument = false;
-			this.rootNodeHasChanged = this.records.changes.size > 0 || this.records.additions.size > 0 || this.records.deletions.size > 0;
+			this.rootNodeHasChanged = this.rootNodeRecords.changes.size > 0 || this.rootNodeRecords.additions.size > 0 || this.rootNodeRecords.deletions.size > 0;
 			this.bNodesHaveChanged = this.bNodesChanges.size > 0;
+			this.namedFragmentsHaveChanged = this.namedFragmentsChanges.size > 0;
 		} );
 	}
 

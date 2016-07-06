@@ -1,5 +1,4 @@
-import { Component, ElementRef, Input, Output, EventEmitter } from "@angular/core";
-import { CORE_DIRECTIVES } from "@angular/common";
+import { Component, ElementRef, Input, Output, EventEmitter, SimpleChange } from "@angular/core";
 
 import $ from "jquery";
 import "semantic-ui/semantic";
@@ -7,8 +6,9 @@ import "semantic-ui/semantic";
 import * as RDFNode from "carbonldp/RDF/RDFNode";
 import * as URI from "carbonldp/RDF/URI";
 
+import NamedFragmentComponent from "./named-fragment/NamedFragmentComponent"
+import { NamedFragment, NamedFragmentRecords } from "./named-fragment/NamedFragmentComponent"
 import PropertyComponent from "./../property/PropertyComponent";
-import DocumentResourceViewer from "./../document-resource-viewer/DocumentResourceViewer"
 
 import template from "./template.html!";
 import "./style.css!";
@@ -16,7 +16,7 @@ import "./style.css!";
 @Component( {
 	selector: "document-named-fragments",
 	template: template,
-	directives: [ CORE_DIRECTIVES, PropertyComponent, DocumentResourceViewer ],
+	directives: [ PropertyComponent, NamedFragmentComponent ],
 } )
 
 export default class NamedFragmentsViewerComponent {
@@ -26,35 +26,58 @@ export default class NamedFragmentsViewerComponent {
 
 	nodesTab:JQuery;
 	openedNamedFragments:RDFNode.Class[] = [];
-	@Input() documentURI:string;
+	namedFragmentsChanges:Map<string, NamedFragmentRecords> = new Map<string, NamedFragmentRecords>();
+
 	@Input() bNodes:RDFNode.Class[] = [];
 	@Input() namedFragments:RDFNode.Class[] = [];
-	@Output() onOpenNamedFragment:EventEmitter<string> = new EventEmitter<string>();
+	@Input() documentURI:string = "";
+
+	@Output() onChanges:EventEmitter<Map<string, NamedFragmentRecords>> = new EventEmitter<Map<string, NamedFragmentRecords>>();
 	@Output() onOpenBNode:EventEmitter<string> = new EventEmitter<string>();
+	@Output() onOpenNamedFragment:EventEmitter<string> = new EventEmitter<string>();
 
 	constructor( element:ElementRef ) {
 		this.element = element;
 	}
 
-	ngAfterViewInit():void {
+	ngAfterContentInit():void {
 		this.$element = $( this.element.nativeElement );
 		this.nodesTab = this.$element.find( ".tabular.namedfragments.menu" ).tab();
+	}
+
+	ngOnChanges( changes:{[propName:string]:SimpleChange} ):void {
+		if ( ( changes[ "namedFragments" ].currentValue !== changes[ "namedFragments" ].previousValue ) ) {
+			this.openedNamedFragments = [];
+			this.goToNamedFragment( "all-namedFragments" );
+		}
 	}
 
 	getPropertiesName( property:any ):string[] {
 		return Object.keys( property );
 	}
 
+	notifyNamedFragmentHasChanged( records:NamedFragmentRecords, namedFragment:RDFNode.Class ) {
+		if ( typeof records === "undefined" || records === null ) {
+			this.namedFragmentsChanges.delete( namedFragment[ "@id" ] );
+			this.onChanges.emit( this.namedFragmentsChanges );
+			return;
+		}
+		if ( records.changes.size > 0 || records.additions.size > 0 || records.deletions.size > 0 ) {
+			this.namedFragmentsChanges.set( namedFragment[ "@id" ], records );
+		} else {
+			this.namedFragmentsChanges.delete( namedFragment[ "@id" ] );
+		}
+		this.onChanges.emit( this.namedFragmentsChanges );
+	}
+
 	openNamedFragment( nodeOrId:RDFNode.Class|string ):void {
-		let idx:number;
 		let node:RDFNode.Class;
 		if ( typeof nodeOrId === "string" ) {
 			node = this.namedFragments.find( ( node )=> { return node[ "@id" ] === nodeOrId} );
 		} else {
 			node = nodeOrId;
 		}
-		idx = this.openedNamedFragments.indexOf( node );
-		if ( idx === - 1 )this.openedNamedFragments.push( node );
+		if ( this.openedNamedFragments.indexOf( node ) === - 1 )this.openedNamedFragments.push( node );
 		setTimeout( () => {
 			this.refreshTabs();
 			this.goToNamedFragment( "namedfragment_" + this.getNormalizedUri( node[ "@id" ] ) );
@@ -72,10 +95,11 @@ export default class NamedFragmentsViewerComponent {
 		this.onOpenNamedFragment.emit( "namedFragments" );
 	}
 
-	closeNamedFragment( node:RDFNode.Class ):void {
-		let idx:number = this.openedNamedFragments.indexOf( node );
+	closeNamedFragment( namedFragment:RDFNode.Class ):void {
+		let idx:number = this.openedNamedFragments.indexOf( namedFragment );
 		this.openedNamedFragments.splice( idx, 1 );
-		this.goToNamedFragment( "allNamedFragments" );
+		this.goToNamedFragment( "all-namedFragments" );
+		if ( this.namedFragmentsChanges.has( namedFragment[ "@id" ] ) )this.notifyNamedFragmentHasChanged( null, namedFragment );
 	}
 
 	refreshTabs():void {

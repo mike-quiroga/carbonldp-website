@@ -60,7 +60,8 @@
 						                          [namedFragments]="namedFragments"
 
 						                          (onOpenBNode)="openBNode($event)"
-						                          (onOpenNamedFragment)="goToSection($event)"></document-named-fragments>
+						                          (onOpenNamedFragment)="goToSection($event)"
+						                          (onChanges)="notifyNamedFragments($event)"></document-named-fragments>
 					</div>
 				</div>
 			</div>
