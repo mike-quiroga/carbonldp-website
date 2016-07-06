@@ -42,13 +42,22 @@
 </div>
 <div class="ui bottom attached tab segment"
      *ngFor="let bNode of openedBNodes; let i = index;" [attr.data-tab]="'bnode'+bNode['@id']">
-	<document-resource class="column"
-	                   (onOpenBNode)="openBNode( $event )"
-	                   (onOpenNamedFragment)="openNamedFragment($event)"
-	                   [documentURI]="documentURI"
-	                   [rootNode]="bNode"
-	                   [canEdit]="false"
-	                   [bNodes]="bNodes"
-	                   [namedFragments]="namedFragments">
-	</document-resource>
+	<bnode class="column"
+	       [documentURI]="documentURI"
+	       [bNode]="bNode"
+	       [bNodes]="bNodes"
+	       [namedFragments]="namedFragments"
+	       (onOpenBNode)="openBNode( $event )"
+	       (onOpenNamedFragment)="openNamedFragment($event)"
+	       (onChanges)="notifyDocumentBNodeHasChanged($event, bNode)">
+	</bnode>
+	<!--<document-resource class="column"-->
+	<!--(onOpenBNode)="openBNode( $event )"-->
+	<!--(onOpenNamedFragment)="openNamedFragment($event)"-->
+	<!--[documentURI]="documentURI"-->
+	<!--[rootNode]="bNode"-->
+	<!--[canEdit]="false"-->
+	<!--[bNodes]="bNodes"-->
+	<!--[namedFragments]="namedFragments">-->
+	<!--</document-resource>-->
 </div>

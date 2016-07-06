@@ -21,6 +21,7 @@ import BNodesViewerComponent from "./../bnodes-viewer/BNodesViewerComponent";
 import NamedFragmentsViewerComponent from "./../named-fragments-viewer/NamedFragmentsViewerComponent";
 import PropertyComponent from "./../property/PropertyComponent";
 import { Property, PropertyRow } from "./../property/PropertyComponent";
+import { BNodeRecords } from "./../bnodes-viewer/bnode/BNodeComponent";
 
 import template from "./template.html!";
 import "./style.css!";
@@ -43,9 +44,11 @@ export default class DocumentViewerComponent {
 
 	rootNodeHasChanged:boolean = false;
 	rootNodeRecords:RootRecords;
+	bNodesHaveChanged:boolean = false;
+	bNodesChanges:Map<string, BNodeRecords>;
 
 	get documentContentHasChanged() {
-		return this.rootNodeHasChanged;
+		return this.rootNodeHasChanged || this.bNodesHaveChanged;
 	}
 
 
@@ -162,37 +165,75 @@ export default class DocumentViewerComponent {
 		this.rootNodeHasChanged = records.changes.size > 0 || records.additions.size > 0 || records.deletions.size > 0;
 	}
 
+	notifyBNode( bNodeChanges:Map<string, BNodeRecords> ):void {
+		this.bNodesChanges = bNodeChanges;
+		this.bNodesHaveChanged = bNodeChanges.size > 0;
+	}
+
 	modifyRootNodeWithChanges():void {
-		if ( this.rootNodeRecords.deletions.size > 0 ) {
-			this.rootNodeRecords.deletions.forEach( ( property, key )=> {
-				delete this.rootNode[ key ];
-			} );
-		}
-		if ( this.rootNodeRecords.additions.size > 0 ) {
-			this.rootNodeRecords.additions.forEach( ( property, key )=> {
-				this.rootNode[ key ] = property.added.value;
-			} );
-		}
-		if ( this.rootNodeRecords.changes.size > 0 ) {
-			this.rootNodeRecords.changes.forEach( ( property, key )=> {
-				if ( property.modified.id !== property.modified.name ) {
+		if ( ! ! this.rootNodeRecords ) {
+			if ( this.rootNodeRecords.deletions.size > 0 ) {
+				this.rootNodeRecords.deletions.forEach( ( property, key )=> {
 					delete this.rootNode[ key ];
-					this.rootNode[ property.modified.name ] = property.modified.value;
-				} else {
-					this.rootNode[ key ] = property.modified.value;
-				}
-			} );
+				} );
+			}
+			if ( this.rootNodeRecords.additions.size > 0 ) {
+				this.rootNodeRecords.additions.forEach( ( property, key )=> {
+					this.rootNode[ key ] = property.added.value;
+				} );
+			}
+			if ( this.rootNodeRecords.changes.size > 0 ) {
+				this.rootNodeRecords.changes.forEach( ( property, key )=> {
+					if ( property.modified.id !== property.modified.name ) {
+						delete this.rootNode[ key ];
+						this.rootNode[ property.modified.name ] = property.modified.value;
+					} else {
+						this.rootNode[ key ] = property.modified.value;
+					}
+				} );
+			}
 		}
+	}
+
+	modifyBNodesWithChanges():void {
+		let tempBNode;
+		this.bNodesChanges.forEach( ( bNodeRecords:BNodeRecords, bNodeId:string )=> {
+			tempBNode = this.bNodes.find( (bNode => {return bNode[ "@id" ] === bNodeId}) );
+			if ( bNodeRecords.deletions.size > 0 ) {
+				bNodeRecords.deletions.forEach( ( property, key )=> {
+					delete tempBNode[ key ];
+				} );
+			}
+			if ( bNodeRecords.additions.size > 0 ) {
+				bNodeRecords.additions.forEach( ( property, key )=> {
+					tempBNode[ key ] = property.added.value;
+				} );
+			}
+			if ( bNodeRecords.changes.size > 0 ) {
+				bNodeRecords.changes.forEach( ( property, key )=> {
+					if ( property.modified.id !== property.modified.name ) {
+						delete tempBNode[ key ];
+						tempBNode[ property.modified.name ] = property.modified.value;
+					} else {
+						tempBNode[ key ] = property.modified.value;
+					}
+				} );
+			}
+		} );
 	}
 
 	saveDocument():void {
 		this.savingDocument = true;
+		console.log( JSON.stringify( this.document, null, "\t" ) );
 		this.modifyRootNodeWithChanges();
+		this.modifyBNodesWithChanges();
+		console.log( JSON.stringify( this.document, null, "\t" ) );
 		let body:string = JSON.stringify( this.document, null, "\t" );
 		this.documentsResolverService.update( this.document[ "@id" ], body, this.documentContext ).then(
 			( updatedDocument:RDFDocument.Class )=> {
 				this.document = updatedDocument[ 0 ];
 				this.rootNodeRecords = new RootRecords();
+				this.bNodesChanges = new Map<string, BNodeRecords>();
 			},
 			( error:HTTPError )=> {
 				console.error( error );
@@ -204,6 +245,7 @@ export default class DocumentViewerComponent {
 		).then( ()=> {
 			this.savingDocument = false;
 			this.rootNodeHasChanged = this.records.changes.size > 0 || this.records.additions.size > 0 || this.records.deletions.size > 0;
+			this.bNodesHaveChanged = this.bNodesChanges.size > 0;
 		} );
 	}
 

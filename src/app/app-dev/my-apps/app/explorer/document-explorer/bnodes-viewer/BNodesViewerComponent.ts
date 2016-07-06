@@ -6,8 +6,9 @@ import "semantic-ui/semantic";
 
 import * as RDFNode from "carbonldp/RDF/RDFNode";
 
+import BNodeComponent from "./bnode/BNodeComponent"
+import { BNode, BNodeRecords } from "./bnode/BNodeComponent"
 import PropertyComponent from "./../property/PropertyComponent";
-import DocumentResourceViewer from "./../document-resource-viewer/DocumentResourceViewer"
 
 import template from "./template.html!";
 import "./style.css!";
@@ -15,7 +16,7 @@ import "./style.css!";
 @Component( {
 	selector: "document-bnodes",
 	template: template,
-	directives: [ CORE_DIRECTIVES, PropertyComponent, DocumentResourceViewer ],
+	directives: [ CORE_DIRECTIVES, PropertyComponent, BNodeComponent ],
 } )
 
 export default class BNodesViewerComponent {
@@ -25,9 +26,13 @@ export default class BNodesViewerComponent {
 
 	nodesTab:JQuery;
 	openedBNodes:RDFNode.Class[] = [];
+	bNodesChanges:Map<string, BNodeRecords> = new Map<string, BNodeRecords>();
+
 	@Input() bNodes:RDFNode.Class[] = [];
 	@Input() namedFragments:RDFNode.Class[] = [];
 	@Input() documentURI:string = "";
+
+	@Output() onChangesOnBnodes:EventEmitter<Map<string, BNodeRecords>> = new EventEmitter<Map<string, BNodeRecords>>();
 	@Output() onOpenBNode:EventEmitter<string> = new EventEmitter<string>();
 	@Output() onOpenNamedFragment:EventEmitter<string> = new EventEmitter<string>();
 
@@ -51,16 +56,28 @@ export default class BNodesViewerComponent {
 		return Object.keys( property );
 	}
 
+	notifyDocumentBNodeHasChanged( records:BNodeRecords, bNode:RDFNode.Class ) {
+		if ( typeof records === "undefined" ) {
+			this.bNodesChanges.delete( bNode[ "@id" ] );
+			this.onChangesOnBnodes.emit( this.bNodesChanges );
+			return;
+		}
+		if ( records.changes.size > 0 || records.additions.size > 0 || records.deletions.size > 0 ) {
+			this.bNodesChanges.set( bNode[ "@id" ], records );
+		} else {
+			this.bNodesChanges.delete( bNode[ "@id" ] );
+		}
+		this.onChangesOnBnodes.emit( this.bNodesChanges );
+	}
+
 	openBNode( nodeOrId:RDFNode.Class|string ):void {
-		let idx:number;
 		let node:RDFNode.Class;
 		if ( typeof nodeOrId === "string" ) {
 			node = this.bNodes.find( ( node )=> { return node[ "@id" ] === nodeOrId} );
 		} else {
 			node = nodeOrId;
 		}
-		idx = this.openedBNodes.indexOf( node );
-		if ( idx === - 1 ) this.openedBNodes.push( node );
+		if ( this.openedBNodes.indexOf( node ) === - 1 ) this.openedBNodes.push( node );
 		setTimeout( () => {
 			this.refreshTabs();
 			this.goToBNode( "bnode" + node[ "@id" ] );

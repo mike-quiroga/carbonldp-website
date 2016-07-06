@@ -50,7 +50,8 @@
 						                 [namedFragments]="namedFragments"
 
 						                 (onOpenBNode)="goToSection($event)"
-						                 (onOpenNamedFragment)="openNamedFragment($event)"></document-bnodes>
+						                 (onOpenNamedFragment)="openNamedFragment($event)"
+						                 (onChangesOnBnodes)="notifyBNode($event)"></document-bnodes>
 					</div>
 					<div class="ui tab segment" data-tab="namedFragments">
 						<document-named-fragments class="column"
