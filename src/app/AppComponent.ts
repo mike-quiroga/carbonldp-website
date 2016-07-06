@@ -8,7 +8,7 @@ import { Angulartics2 } from "angulartics2";
 import WebsiteView from "app/website/WebsiteView";
 import AppDevLoginView from "app/auth/app-dev-login/AppDevLoginView";
 
-import AppDevComponent from "app/app-dev/AppDevComponent";
+import { AppDevView } from "app/app-dev/app-dev.view";
 
 import template from "./template.html!";
 import "./style.css!";
@@ -21,7 +21,7 @@ import "./style.css!";
 } )
 @RouteConfig( [
 	{
-		path: "app-dev/...", as: "AppDev", component: AppDevComponent,
+		path: "app-dev/...", as: "AppDev", component: AppDevView,
 		data: {
 			alias: "AppDev",
 			displayName: "Home",

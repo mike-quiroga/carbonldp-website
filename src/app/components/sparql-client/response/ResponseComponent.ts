@@ -22,9 +22,9 @@ export class ResponseComponent {
 	@Input() response:SPARQLClientResponse;
 	@Input() prefixes:{ [ prefix:string ]:string };
 
-	@Output() onRemove:EventEmitter<SPARQLClientResponse> = new EventEmitter();
-	@Output() onConfigure:EventEmitter<SPARQLClientResponse> = new EventEmitter();
-	@Output() onReExecute:EventEmitter<SPARQLClientResponse> = new EventEmitter();
+	@Output() onRemove:EventEmitter<SPARQLClientResponse> = new EventEmitter<SPARQLClientResponse>();
+	@Output() onConfigure:EventEmitter<SPARQLClientResponse> = new EventEmitter<SPARQLClientResponse>();
+	@Output() onReExecute:EventEmitter<SPARQLClientResponse> = new EventEmitter<SPARQLClientResponse>();
 
 	sparqlFormats:SPARQLFormats = SPARQLFormats;
 
@@ -172,7 +172,7 @@ export class SPARQLClientResponse {
 	data:string = null;
 
 	setData( data:any ):void {
-		if ( typeof data !== "string" ) {
+		if( typeof data !== "string" ) {
 			data = JSON.stringify( data, null, 2 );
 		}
 		this.data = data;

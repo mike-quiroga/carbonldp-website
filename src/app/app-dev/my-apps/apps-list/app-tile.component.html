@@ -1,5 +1,5 @@
 <div class="content">
-	<a class="header" [routerLink]="[ '/AppDev/MyApps/App', {slug: app.slug}, 'AppDashboard']">
+	<a class="header" (click)="onOpenApp( app )">
 		{{app.appContext.name}}
 	</a>
 </div>

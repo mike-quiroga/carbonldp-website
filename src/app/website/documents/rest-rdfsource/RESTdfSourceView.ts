@@ -1,6 +1,6 @@
-import {Component, ElementRef} from "@angular/core";
-import {CORE_DIRECTIVES} from "@angular/common";
-import {Title} from "@angular/platform-browser";
+import { Component, ElementRef } from "@angular/core";
+import { CORE_DIRECTIVES } from "@angular/common";
+import { Title } from "@angular/platform-browser";
 
 import HighlightDirective from "app/directives/HighlightDirective";
 
@@ -30,10 +30,6 @@ export default class RESTDFSourceView {
 		this.sidebarService = sidebarService;
 		this.title = title;
 
-	}
-
-	ngAfterViewInit():void {
-		this.$element = $( this.element.nativeElement );
 	}
 
 	ngAfterViewInit():void {

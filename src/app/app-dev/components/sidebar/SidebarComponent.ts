@@ -6,7 +6,7 @@ import $ from "jquery";
 import "semantic-ui/semantic";
 
 import SidebarService from "./service/SidebarService"
-import App from "app/app-dev/my-apps/app/App"
+import { App } from "app/app-dev/my-apps/app/app"
 import SidebarItem from "./SidebarItem";
 
 import template from "./template.html!";

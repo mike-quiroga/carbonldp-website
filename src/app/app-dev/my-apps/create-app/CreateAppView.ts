@@ -4,16 +4,14 @@ import { Router, ROUTER_DIRECTIVES } from "@angular/router-deprecated";
 
 import Carbon from "carbonldp/Carbon";
 import * as CarbonApp from "carbonldp/App";
-import * as HTTPResponse from "carbonldp/HTTP/Response";
-import * as HTTPErrors from "carbonldp/HTTP/Errors";
-import * as HTTPError from "carbonldp/HTTP/Errors/HTTPError";
+import * as HTTP from "carbonldp/HTTP";
 import * as Pointer from "carbonldp/Pointer";
 
 import $ from "jquery";
 import "semantic-ui/semantic";
 
 import AppContextService from "./../../AppContextService";
-import App from "./../app/App";
+import { App } from "./../app/app";
 
 import template from "./template.html!";
 
@@ -71,7 +69,7 @@ export default class CreateAppView {
 	ngAfterViewInit():void {
 		this.name.valueChanges.subscribe(
 			( value ):void => {
-				if ( value ) {
+				if( value ) {
 					this._slug = this.getSanitizedSlug( value );
 					this.slug.updateValueAndValidity();
 				}
@@ -80,16 +78,16 @@ export default class CreateAppView {
 	}
 
 	slugLostControl( evt:any ):void {
-		if ( ! evt.target.value.match( /^[a-z0-9]+(?:-[a-z0-9]*)*(?:\/*)$/ ) ) {
+		if( ! evt.target.value.match( /^[a-z0-9]+(?:-[a-z0-9]*)*(?:\/*)$/ ) ) {
 			(<Control> this.slug).updateValue( this.getSanitizedSlug( evt.target.value ) );
 			this._slug = this.slug.value;
 		}
 	}
 
 	getSanitizedSlug( slug:string ):string {
-		if ( slug ) {
+		if( slug ) {
 			slug = slug.toLowerCase().replace( /[^\w ]+/g, "" ).replace( / +/g, "-" );
-			if ( slug.charAt( slug.length - 1 ) !== "/" ) slug += "/";
+			if( slug.charAt( slug.length - 1 ) !== "/" ) slug += "/";
 		}
 		return slug;
 	}
@@ -108,7 +106,7 @@ export default class CreateAppView {
 		this.slug.markAsDirty( true );
 		this.description.markAsDirty( true );
 
-		if ( ! this.createAppForm.valid ) {
+		if( ! this.createAppForm.valid ) {
 			this.submitting = false;
 			return;
 		}
@@ -122,9 +120,9 @@ export default class CreateAppView {
 		this.createApp( slug, <CarbonApp.Class>appDocument );
 	}
 
-	createApp( slug:string, appDocument:CarbonApp.Class ):Promise<[ Pointer.Class, HTTPResponse.Class]> {
+	createApp( slug:string, appDocument:CarbonApp.Class ):Promise<[ Pointer.Class, HTTP.Response.Class]> {
 		return this.carbon.apps.create( slug, appDocument ).then(
-			( [appPointer, appCreationResponse]:[ Pointer.Class, HTTPResponse.Class] ) => {
+			( [appPointer, appCreationResponse]:[ Pointer.Class, HTTP.Response.Class] ) => {
 				this.submitting = false;
 				this.persistedSlug = this._slug;
 				this.persistedName = this._name;
@@ -136,40 +134,40 @@ export default class CreateAppView {
 				);
 				this.displaySuccessMessage = true;
 			},
-			( error:HTTPError.HTTPError ) => {
+			( error:HTTP.Errors.Error ) => {
 				this.setErrorMessage( error );
 				this.submitting = false;
 			}
 		);
 	}
 
-	setErrorMessage( error:HTTPError.HTTPError ):void {
+	setErrorMessage( error:HTTP.Errors.Error ):void {
 		switch ( true ) {
-			case error instanceof HTTPErrors.BadRequestError:
+			case error instanceof HTTP.Errors.BadRequestError:
 				this.errorMessage = "";
 				break;
-			case error instanceof HTTPErrors.ConflictError:
+			case error instanceof HTTP.Errors.ConflictError:
 				this.errorMessage = "There's already a resource with that slug. Error:" + error.response.status;
 				break;
-			case error instanceof HTTPErrors.ForbiddenError:
+			case error instanceof HTTP.Errors.ForbiddenError:
 				this.errorMessage = "Forbidden Action.";
 				break;
-			case error instanceof HTTPErrors.NotFoundError:
+			case error instanceof HTTP.Errors.NotFoundError:
 				this.errorMessage = "Couldn't found the requested URL.";
 				break;
-			case error instanceof HTTPErrors.RequestEntityTooLargeError:
+			case error instanceof HTTP.Errors.RequestEntityTooLargeError:
 				this.errorMessage = "Request entity too large.";
 				break;
-			case error instanceof HTTPErrors.UnauthorizedError:
+			case error instanceof HTTP.Errors.UnauthorizedError:
 				this.errorMessage = "Unauthorized operation.";
 				break;
-			case error instanceof HTTPErrors.InternalServerErrorError:
+			case error instanceof HTTP.Errors.InternalServerErrorError:
 				this.errorMessage = "An error occurred while trying to create the app. Please try again later. Error: " + error.response.status;
 				break;
-			case error instanceof HTTPErrors.ServiceUnavailableError:
+			case error instanceof HTTP.Errors.ServiceUnavailableError:
 				this.errorMessage = "Service currently unavailable.";
 				break;
-			case error instanceof HTTPErrors.UnknownError:
+			case error instanceof HTTP.Errors.UnknownError:
 				this.errorMessage = "An error occurred while trying to create the app. Please try again later. Error: " + error.response.status;
 				break;
 			default:
@@ -180,8 +178,8 @@ export default class CreateAppView {
 
 
 	slugValidator( slug:Control ):any {
-		if ( ! slug.value ) return null;
-		if ( slug.value.match( /^[a-z0-9]+(?:-[a-z0-9]*)*(?:\/*)$/ ) ) {
+		if( ! slug.value ) return null;
+		if( slug.value.match( /^[a-z0-9]+(?:-[a-z0-9]*)*(?:\/*)$/ ) ) {
 			return null;
 		}
 		return { "invalidSlug": true };
@@ -191,7 +189,7 @@ export default class CreateAppView {
 		let message:JQuery = $( evt.srcElement ).closest( ".ui.message" );
 		message.transition( {
 			onComplete: ():void => {
-				if ( message.hasClass( "success" ) ) {
+				if( message.hasClass( "success" ) ) {
 					this.displaySuccessMessage = false;
 				} else {
 					this.errorMessage = "";

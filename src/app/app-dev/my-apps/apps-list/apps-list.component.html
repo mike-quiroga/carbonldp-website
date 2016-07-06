@@ -13,7 +13,7 @@
 		</tr>
 	</thead>
 	<tbody>
-		<tr *ngFor="let app of apps; let i = index;" (click)="navigateTo([ '/AppDev/MyApps/App', {slug: app.slug}, 'AppDashboard'])">
+		<tr *ngFor="let app of apps; let i = index;" (click)="onOpenApp( app )">
 			<td>
 				<h3 class="ui image header">
 					<div class="content">

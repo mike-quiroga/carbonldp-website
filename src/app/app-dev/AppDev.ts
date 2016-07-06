@@ -1,5 +1,5 @@
 import { Provider } from "@angular/core";
-import AppDevComponent from "app/app-dev/AppDevComponent";
+import { AppDevView } from "app/app-dev/app-dev.view";
 import AppContextService from "app/app-dev/AppContextService";
 import ErrorsAreaService from "app/app-dev/components/errors-area/service/ErrorsAreaService";
 import DocumentsResolverService from "app/app-dev/my-apps/app/explorer/document-explorer/DocumentsResolverService";
@@ -8,8 +8,8 @@ import BackupsService from "./my-apps/app/configuration/app-configuration/backup
 import { SIDEBAR_PROVIDERS } from "./components/sidebar/Sidebar";
 
 export const APP_DEV_PROVIDERS = [
-	new Provider( AppDevComponent, {
-		useClass: AppDevComponent
+	new Provider( AppDevView, {
+		useClass: AppDevView
 	} ),
 	new Provider( AppContextService, {
 		useClass: AppContextService

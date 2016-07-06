@@ -1,16 +1,19 @@
-import { Component } from "@angular/core";
+import { Component, provide } from "@angular/core";
 import { CORE_DIRECTIVES } from "@angular/common";
 import { ROUTER_DIRECTIVES, RouteConfig, RouterOutlet } from "@angular/router-deprecated";
 
-
+import { MyAppsSidebarService } from "./my-apps-sidebar.service";
 import AppDetailView from "./app/AppDetailView";
-import AppsListView from "./apps-list/AppsListView";
+import AppsListView from "./apps-list/apps-list.view";
 import CreateAppView from "./create-app/CreateAppView";
 
 @Component( {
 	selector: "my-apps",
-	template: "<router-outlet></router-outlet>",
+	template: `<router-outlet></router-outlet>`,
 	directives: [ CORE_DIRECTIVES, ROUTER_DIRECTIVES, RouterOutlet ],
+	providers: [
+		provide( MyAppsSidebarService, { useClass: MyAppsSidebarService } )
+	]
 } )
 @RouteConfig( [
 	{
@@ -46,4 +49,7 @@ import CreateAppView from "./create-app/CreateAppView";
 		},
 	},
 ] )
-export default class MyAppsView { }
+export class MyAppsView {
+}
+
+export default MyAppsView

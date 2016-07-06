@@ -4,9 +4,9 @@ import { ROUTER_DIRECTIVES, RouteConfig, Router, RouterOutlet, RouteParams } fro
 
 import * as CarbonApp from "carbonldp/App";
 
-import SidebarService from "./../../components/sidebar/service/SidebarService";
+import { MyAppsSidebarService } from "./../my-apps-sidebar.service";
 import AppContextService from "./../../AppContextService";
-import App from "./App";
+import { App } from "./app";
 
 import DashboardView from "./dashboard/DashboardView";
 import SPARQLEditorView from "./sparql-editor/SPARQLEditorView";
@@ -77,18 +77,18 @@ export default class AppDetailView {
 	routeParams:RouteParams;
 
 	appContext:CarbonApp.Context;
-	private sidebarService:SidebarService;
+	private myAppsSidebarService:MyAppsSidebarService;
 	private appContextService:AppContextService;
 
 	private element:ElementRef;
 	private $element:JQuery;
 	private timer:number;
 
-	constructor( router:Router, element:ElementRef, routeParams:RouteParams, sidebarService:SidebarService, appContextService:AppContextService ) {
+	constructor( router:Router, element:ElementRef, routeParams:RouteParams, myAppsSidebarService:MyAppsSidebarService, appContextService:AppContextService ) {
 		this.router = router;
 		this.element = element;
 		this.routeParams = routeParams;
-		this.sidebarService = sidebarService;
+		this.myAppsSidebarService = myAppsSidebarService;
 		this.appContextService = appContextService;
 	}
 
@@ -101,14 +101,15 @@ export default class AppDetailView {
 		this.appContextService.get( slug ).then(
 			( appContext:CarbonApp.Context ):void => {
 				this.appContext = appContext;
-				let app:App = <App>{
+				let app:App = {
 					name: appContext.app.name,
 					created: appContext.app.created,
 					modified: appContext.app.modified,
 					slug: slug,
-					app: appContext,
+					appContext: appContext,
 				};
-				this.sidebarService.addApp( app );
+				this.myAppsSidebarService.addApp( app );
+				this.myAppsSidebarService.openApp( app );
 			},
 			( error:any ):void => {
 				// TODO: Check error type
@@ -117,7 +118,7 @@ export default class AppDetailView {
 				let countDown:any = setInterval(
 					():void => {
 						this.timer --;
-						if ( this.timer === 0 ) {
+						if( this.timer === 0 ) {
 							this.router.navigate( [ "/AppDev/MyApps/List" ] );
 							clearInterval( countDown );
 						}

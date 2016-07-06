@@ -6,7 +6,7 @@ import $ from "jquery";
 import "semantic-ui/semantic";
 
 import SidebarService from "./../../../components/sidebar/service/SidebarService";
-import App from "./../App";
+import { App } from "./../app";
 
 import template from "./template.html!";
 

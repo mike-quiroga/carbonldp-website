@@ -3,7 +3,7 @@ import { Router, ROUTER_DIRECTIVES } from "@angular/router-deprecated";
 
 import "semantic-ui/semantic";
 
-import App from "./../../app/App";
+import { App } from "./../../app/app";
 
 import template from "./template.html!";
 

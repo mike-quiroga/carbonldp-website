@@ -7,33 +7,26 @@ import { Observable } from "rxjs/Rx";
 import "semantic-ui/semantic";
 
 import Carbon from "carbonldp/Carbon";
-import * as CarbonApp from "carbonldp/App";
 import * as PersistedDocument from "carbonldp/PersistedDocument";
 import * as HTTP from "carbonldp/HTTP";
-import * as HTTPErrors from "carbonldp/HTTP/Errors";
-import * as HTTPError from "carbonldp/HTTP/Errors/HTTPError";
+
+import { MyAppsSidebarService } from "./../my-apps-sidebar.service";
 
 import AppContextService from "./../../AppContextService";
-import AppTileComponent from "./app-tile/AppTileComponent";
-import AppsListComponent from "./apps-list/AppsListComponent";
+import AppTileComponent from "./app-tile.component";
+import AppsListComponent from "./apps-list.component";
 import App from "./../app/App";
 import Message from "./../../components/errors-area/ErrorsAreaComponent";
 
-import template from "./template.html!";
-import "./style.css!";
+import template from "./apps-list.view.html!";
+import "./apps-list.view.css!";
 
 @Component( {
 	selector: "my-apps-list",
 	template: template,
 	directives: [ CORE_DIRECTIVES, ROUTER_DIRECTIVES, AppTileComponent, AppsListComponent ],
 } )
-export default class AppsListView {
-	router:Router;
-	element:ElementRef;
-	$element:JQuery;
-	carbon:Carbon;
-
-	appContextService:AppContextService;
+export class AppsListView {
 	apps:App[] = [];
 	results:App[] = [];
 
@@ -47,12 +40,21 @@ export default class AppsListView {
 	deleting:boolean = false;
 	deleteError:Message;
 
-	constructor( element:ElementRef, router:Router, appContextService:AppContextService, title:Title, carbon:Carbon ) {
+	private element:ElementRef;
+	private $element:JQuery;
+	private router:Router;
+	private carbon:Carbon;
+	private appContextService:AppContextService;
+	private myAppsSidebarService:MyAppsSidebarService;
+
+	constructor( element:ElementRef, router:Router, appContextService:AppContextService, title:Title, carbon:Carbon, myAppsSidebarService:MyAppsSidebarService ) {
 		this.element = element;
 		this.$element = $( this.element.nativeElement );
 		this.appContextService = appContextService;
 		this.router = router;
 		this.carbon = carbon;
+		this.myAppsSidebarService = myAppsSidebarService;
+
 		title.setTitle( "My Apps" );
 	}
 
@@ -87,7 +89,7 @@ export default class AppsListView {
 			return app.appContext.name.toLowerCase().search( term.toLowerCase() ) > - 1 || app.slug.toLowerCase().search( term.toLowerCase() ) > - 1
 		} );
 		this.errorMessage = "";
-		if ( this.results.length === 0 && term.length > 0 ) {
+		if( this.results.length === 0 && term.length > 0 ) {
 			this.errorMessage = "No apps found.";
 		}
 	}
@@ -103,7 +105,7 @@ export default class AppsListView {
 	}
 
 	onApproveAppDeletion( approvedApp:App ):void {
-		if ( this.deleting ) {
+		if( this.deleting ) {
 			return;
 		}
 		this.deleting = true;
@@ -113,7 +115,7 @@ export default class AppsListView {
 				this.toggleDeleteConfirmationModal();
 				this.apps.splice( this.apps.indexOf( approvedApp ), 1 );
 			},
-			( error:HTTPError.HTTPError ):void => {
+			( error:HTTP.Errors.Error ):void => {
 				this.deleteError = this.getErrorMessage( error );
 			}
 		).then(
@@ -124,26 +126,31 @@ export default class AppsListView {
 		);
 	}
 
-	deleteApp( app:App ):Promise<HTTP.Response.Class> {
-		return (<PersistedDocument.Class>app.appContext).destroy();
+	openApp( app:App ):void {
+		this.myAppsSidebarService.addApp( app );
+		this.router.navigate( [ "/AppDev/MyApps/App", { slug: app.slug }, "AppDashboard" ] );
 	}
 
-	getErrorMessage( error:HTTPError.HTTPError ):Message {
+	deleteApp( app:App ):Promise<HTTP.Response.Class> {
+		return (<PersistedDocument.Class>(<any>app.appContext)).destroy();
+	}
+
+	getErrorMessage( error:HTTP.Errors.Error ):Message {
 		let content:string = "";
 		switch ( true ) {
-			case error instanceof HTTPErrors.ForbiddenError:
+			case error instanceof HTTP.Errors.ForbiddenError:
 				content = "Denied Access.";
-			case error instanceof HTTPErrors.UnauthorizedError:
+			case error instanceof HTTP.Errors.UnauthorizedError:
 				content = "Wrong credentials.";
-			case error instanceof HTTPErrors.BadGatewayError:
+			case error instanceof HTTP.Errors.BadGatewayError:
 				content = "An error occurred while trying to login. Please try again later. Error: " + error.response.status;
-			case error instanceof HTTPErrors.GatewayTimeoutError:
+			case error instanceof HTTP.Errors.GatewayTimeoutError:
 				content = "An error occurred while trying to login. Please try again later. Error: " + error.response.status;
-			case error instanceof HTTPErrors.InternalServerErrorError:
+			case error instanceof HTTP.Errors.InternalServerErrorError:
 				content = "An error occurred while trying to login. Please try again later. Error: " + error.response.status;
-			case error instanceof HTTPErrors.UnknownError:
+			case error instanceof HTTP.Errors.UnknownError:
 				content = "An error occurred while trying to login. Please try again later. Error: " + error.response.status;
-			case error instanceof HTTPErrors.ServiceUnavailableError:
+			case error instanceof HTTP.Errors.ServiceUnavailableError:
 				content = "Service currently unavailable.";
 			default:
 				content = "There was a problem processing the request. Error: " + error.response.status;
@@ -193,3 +200,5 @@ export default class AppsListView {
 		);
 	}
 }
+
+export default AppsListView;

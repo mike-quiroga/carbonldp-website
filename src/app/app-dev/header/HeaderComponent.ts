@@ -9,6 +9,7 @@ import "semantic-ui/semantic";
 
 import template from "./template.html!";
 import "./style.css!";
+
 @Component( {
 	selector: "header",
 	template: template,
