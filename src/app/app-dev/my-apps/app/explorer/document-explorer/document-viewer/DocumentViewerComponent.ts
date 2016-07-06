@@ -16,6 +16,7 @@ import { Error as HTTPError } from "carbonldp/HTTP/Errors";
 import DocumentsResolverService from "./../DocumentsResolverService";
 
 import DocumentResourceViewerComponent from "./../document-resource-viewer/DocumentResourceViewer";
+import { RootRecords } from "./../document-resource-viewer/DocumentResourceViewer";
 import BNodesViewerComponent from "./../bnodes-viewer/BNodesViewerComponent";
 import NamedFragmentsViewerComponent from "./../named-fragments-viewer/NamedFragmentsViewerComponent";
 import PropertyComponent from "./../property/PropertyComponent";
@@ -40,6 +41,14 @@ export default class DocumentViewerComponent {
 	namedFragments:RDFNode.Class[] = [];
 	savingError:HTTPError;
 
+	rootNodeHasChanged:boolean = false;
+	rootNodeRecords:RootRecords;
+
+	get documentContentHasChanged() {
+		return this.rootNodeHasChanged;
+	}
+
+
 	documentsResolverService:DocumentsResolverService;
 	@Input() uri:string;
 	@Input() documentContext:SDKContext.Class;
@@ -58,7 +67,6 @@ export default class DocumentViewerComponent {
 	@Output() onLoadingDocument:EventEmitter<boolean> = new EventEmitter<boolean>();
 	@Output() onSavingDocument:EventEmitter<boolean> = new EventEmitter<boolean>();
 
-	documentContentHasChanged:boolean = false;
 	private _savingDocument:boolean = false;
 	set savingDocument( value:boolean ) {
 		this._savingDocument = value;
@@ -76,6 +84,7 @@ export default class DocumentViewerComponent {
 	get loadingDocument():boolean { return this._loadingDocument; }
 
 	records:DocumentRecords = new DocumentRecords();
+
 
 	constructor( element:ElementRef, documentsResolverService:DocumentsResolverService ) {
 		this.element = element;
@@ -102,7 +111,6 @@ export default class DocumentViewerComponent {
 			this.records.changes.clear();
 			this.records.additions.clear();
 			this.records.deletions.clear();
-			this.documentContentHasChanged = this.records.changes.size > 0 || this.records.additions.size > 0 || this.records.deletions.size > 0;
 			this.setRoot();
 			this.generateMaps();
 			this.loadingDocument = false;
@@ -149,50 +157,24 @@ export default class DocumentViewerComponent {
 		this.$element.find( ".secondary.menu.document.tabs .item" ).tab( "changeTab", section );
 	}
 
-	changeProperty( property:PropertyRow ):void {
-		if ( typeof property.modified !== "undefined" ) {
-			if ( property.modified.id !== property.modified.name )this.records.changes.set( property.modified.id, property );
-			else this.records.changes.set( property.modified.id, property );
-		} else {
-			this.records.changes.delete( property.copy.id );
-		}
-		this.documentContentHasChanged = this.records.changes.size > 0 || this.records.additions.size > 0 || this.records.deletions.size > 0;
-	}
-
-	deleteProperty( property:PropertyRow ):void {
-		if ( typeof property.added !== "undefined" ) {
-			this.records.additions.delete( property.added.id );
-		} else if ( typeof property.deleted !== "undefined" ) {
-			this.records.deletions.set( property.deleted.id, property );
-		}
-		this.documentContentHasChanged = this.records.changes.size > 0 || this.records.additions.size > 0 || this.records.deletions.size > 0;
-	}
-
-	addProperty( property:PropertyRow ):void {
-		if ( typeof property.added !== "undefined" ) {
-			if ( property.added.id === property.added.name ) {
-				this.records.additions.set( property.added.id, property );
-			} else {
-				this.records.additions.delete( property.added.id );
-				this.records.additions.set( property.added.name, property );
-			}
-		}
-		this.documentContentHasChanged = this.records.changes.size > 0 || this.records.additions.size > 0 || this.records.deletions.size > 0;
+	notifyRootNode( records:RootRecords ):void {
+		this.rootNodeRecords = records;
+		this.rootNodeHasChanged = records.changes.size > 0 || records.additions.size > 0 || records.deletions.size > 0;
 	}
 
 	modifyRootNodeWithChanges():void {
-		if ( this.records.deletions.size > 0 ) {
-			this.records.deletions.forEach( ( property, key )=> {
+		if ( this.rootNodeRecords.deletions.size > 0 ) {
+			this.rootNodeRecords.deletions.forEach( ( property, key )=> {
 				delete this.rootNode[ key ];
 			} );
 		}
-		if ( this.records.additions.size > 0 ) {
-			this.records.additions.forEach( ( property, key )=> {
+		if ( this.rootNodeRecords.additions.size > 0 ) {
+			this.rootNodeRecords.additions.forEach( ( property, key )=> {
 				this.rootNode[ key ] = property.added.value;
 			} );
 		}
-		if ( this.records.changes.size > 0 ) {
-			this.records.changes.forEach( ( property, key )=> {
+		if ( this.rootNodeRecords.changes.size > 0 ) {
+			this.rootNodeRecords.changes.forEach( ( property, key )=> {
 				if ( property.modified.id !== property.modified.name ) {
 					delete this.rootNode[ key ];
 					this.rootNode[ property.modified.name ] = property.modified.value;
@@ -210,9 +192,7 @@ export default class DocumentViewerComponent {
 		this.documentsResolverService.update( this.document[ "@id" ], body, this.documentContext ).then(
 			( updatedDocument:RDFDocument.Class )=> {
 				this.document = updatedDocument[ 0 ];
-				this.records.changes.clear();
-				this.records.additions.clear();
-				this.records.deletions.clear();
+				this.rootNodeRecords = new RootRecords();
 			},
 			( error:HTTPError )=> {
 				console.error( error );
@@ -223,7 +203,7 @@ export default class DocumentViewerComponent {
 			}
 		).then( ()=> {
 			this.savingDocument = false;
-			this.documentContentHasChanged = this.records.changes.size > 0 || this.records.additions.size > 0 || this.records.deletions.size > 0;
+			this.rootNodeHasChanged = this.records.changes.size > 0 || this.records.additions.size > 0 || this.records.deletions.size > 0;
 		} );
 	}
 

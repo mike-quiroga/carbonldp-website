@@ -30,34 +30,36 @@
 					</div>
 					<div class="ui active tab segment" data-tab="documentResource">
 						<document-resource class="column"
-						                   (onOpenBNode)="openBNode($event)"
-						                   (onOpenNamedFragment)="openNamedFragment($event)"
-						                   (onChangeProperty)="changeProperty($event)"
-						                   (onDeleteProperty)="deleteProperty($event)"
-						                   (onSaveNewProperty)="addProperty($event)"
+
 						                   [rootNode]="rootNode"
-						                   [onAddNewProperty]="onAddNewProperty"
 						                   [hiddenProperties]="['@id']"
 						                   [bNodes]="bNodes"
+						                   [namedFragments]="namedFragments"
 						                   [documentURI]="rootNode['@id']"
-						                   [namedFragments]="namedFragments">
+
+						                   (onOpenBNode)="openBNode($event)"
+						                   (onOpenNamedFragment)="openNamedFragment($event)"
+						                   (onChanges)="notifyRootNode($event)">
 						</document-resource>
 					</div>
 					<div class="ui tab segment" data-tab="bNodes">
 						<document-bnodes class="column"
-						                 (onOpenBNode)="goToSection($event)"
-						                 (onOpenNamedFragment)="openNamedFragment($event)"
+
 						                 [documentURI]="document['@id']"
 						                 [bNodes]="bNodes"
-						                 [namedFragments]="namedFragments"></document-bnodes>
+						                 [namedFragments]="namedFragments"
+
+						                 (onOpenBNode)="goToSection($event)"
+						                 (onOpenNamedFragment)="openNamedFragment($event)"></document-bnodes>
 					</div>
 					<div class="ui tab segment" data-tab="namedFragments">
 						<document-named-fragments class="column"
-						                          (onOpenBNode)="openBNode($event)"
-						                          (onOpenNamedFragment)="goToSection($event)"
 						                          [documentURI]="document['@id']"
 						                          [bNodes]="bNodes"
-						                          [namedFragments]="namedFragments"></document-named-fragments>
+						                          [namedFragments]="namedFragments"
+
+						                          (onOpenBNode)="openBNode($event)"
+						                          (onOpenNamedFragment)="goToSection($event)"></document-named-fragments>
 					</div>
 				</div>
 			</div>

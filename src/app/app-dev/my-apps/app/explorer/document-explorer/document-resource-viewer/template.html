@@ -1,4 +1,4 @@
-<button class="ui right labeled icon button" (click)="addProperty()" *ngIf="canEdit">
+<button class="ui right labeled icon button" (click)="createProperty()" *ngIf="canEdit">
 	<i class="add icon"></i>
 	Add new property
 </button>
@@ -7,28 +7,34 @@
 	<template ngFor let-propertyrow="$implicit" [ngForOf]="properties" let-i="index">
 		<document-property class="property item"
 		                   *ngIf="!propertyrow.deleted && !propertyrow.added && canDisplay(propertyrow.copy.name)"
-		                   [property]="propertyrow"
 		                   [attr.data-tar]="propertyrow.copy.name"
+
+		                   [property]="propertyrow"
 		                   [bNodes]="bNodes"
 		                   [namedFragments]="namedFragments"
 		                   [canEdit]="canEdit"
 		                   [documentURI]="documentURI"
-		                   (onChangeProperty)="changeProperty($event, propertyrow)"
-		                   (onDeleteProperty)="deleteProperty($event, propertyrow)"
+
+		                   (onChangeProperty)="changeProperty(propertyrow, i)"
+		                   (onDeleteProperty)="deleteProperty(propertyrow, i)"
+
 		                   (onGoToBNode)="openBNode( $event )"
 		                   (onGoToNamedFragment)="openNamedFragment($event)">
 		</document-property>
 		<document-property class="property added-property item transition hidden"
 		                   *ngIf="!!propertyrow.added && canDisplay(propertyrow.added.name)"
-		                   [property]="propertyrow"
 		                   [attr.data-tar]="propertyrow.added.name"
+
+		                   [property]="propertyrow"
 		                   [bNodes]="bNodes"
 		                   [namedFragments]="namedFragments"
-		                   [mode]="modes.EDIT"
-		                   [canEdit]="canEdit"
+		                   [canEdit]="true"
 		                   [documentURI]="documentURI"
-		                   (onSaveNewProperty)="saveNewProperty($event, propertyrow, i)"
-		                   (onDeleteNewProperty)="deleteNewProperty($event, propertyrow, i)"
+		                   [mode]="modes.EDIT"
+
+		                   (onSaveNewProperty)="addProperty(propertyrow, i)"
+		                   (onDeleteNewProperty)="deleteNewProperty(propertyrow, i)"
+
 		                   (onGoToBNode)="openBNode( $event )"
 		                   (onGoToNamedFragment)="openNamedFragment($event)">
 		</document-property>

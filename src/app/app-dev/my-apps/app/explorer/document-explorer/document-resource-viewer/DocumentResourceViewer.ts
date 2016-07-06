@@ -22,22 +22,24 @@ export default class DocumentResourceComponent {
 	element:ElementRef;
 	$element:JQuery;
 	modes:Modes = Modes;
+	properties:PropertyRow[] = [];
+	records:RootRecords;
+	private _rootHasChanged:boolean;
+	set rootHasChanged( hasChanged:boolean ) {
+		this._rootHasChanged = hasChanged;
+		if ( hasChanged ) this.onChanges.emit( this.records );
+	}
+	get rootHasChanged() {
+		return this._rootHasChanged;
+	}
+
 	@Input() displayOnly:string[] = [];
 	@Input() hiddenProperties:string[] = [];
 	@Input() bNodes:RDFNode.Class[] = [];
 	@Input() namedFragments:RDFNode.Class[] = [];
 	@Input() canEdit:boolean = true;
 	@Input() documentURI:string = "";
-
-	@Output() onOpenBNode:EventEmitter<string> = new EventEmitter<string>();
-	@Output() onOpenNamedFragment:EventEmitter<string> = new EventEmitter<string>();
-	@Output() onChangeProperty:EventEmitter<PropertyRow> = new EventEmitter<PropertyRow>();
-	@Output() onDeleteProperty:EventEmitter<PropertyRow> = new EventEmitter<PropertyRow>();
-	@Output() onAddProperty:EventEmitter<PropertyRow> = new EventEmitter<PropertyRow>();
-	@Output() onSaveNewProperty:EventEmitter<PropertyRow> = new EventEmitter<PropertyRow>();
-	properties:PropertyRow[] = [];
-
-	_rootNode:RDFNode.Class;
+	private _rootNode:RDFNode.Class;
 	@Input() set rootNode( value:RDFNode.Class ) {
 		this._rootNode = value;
 		this.getProperties();
@@ -46,6 +48,11 @@ export default class DocumentResourceComponent {
 	get rootNode() {
 		return this._rootNode;
 	}
+
+	@Output() onOpenBNode:EventEmitter<string> = new EventEmitter<string>();
+	@Output() onOpenNamedFragment:EventEmitter<string> = new EventEmitter<string>();
+	@Output() onChanges:EventEmitter<RootRecords> = new EventEmitter<RootRecords>();
+
 
 	constructor( element:ElementRef ) {
 		this.element = element;
@@ -70,24 +77,41 @@ export default class DocumentResourceComponent {
 		return this.hiddenProperties.indexOf( propertyName ) !== - 1 ? false : true;
 	}
 
-	changeProperty( property:Property, propertyRow:PropertyRow ):void {
-		this.onChangeProperty.emit( propertyRow );
+	changeProperty( property:PropertyRow, index:number ):void {
+		if ( typeof this.records === "undefined" ) this.records = new RootRecords();
+		if ( typeof property.modified !== "undefined" ) {
+			this.records.changes.set( property.modified.id, property );
+		} else {
+			this.records.changes.delete( property.copy.id );
+		}
+		this.rootHasChanged = this.records.changes.size > 0 || this.records.additions.size > 0 || this.records.deletions.size > 0;
 	}
 
-	deleteProperty( property:Property, propertyRow:PropertyRow ):void {
-		this.onDeleteProperty.emit( propertyRow );
+	deleteProperty( property:PropertyRow, index:number ):void {
+		if ( typeof this.records === "undefined" ) this.records = new RootRecords();
+		if ( typeof property.added !== "undefined" ) {
+			this.records.additions.delete( property.added.id );
+			this.properties.splice( index, 1 );
+		} else if ( typeof property.deleted !== "undefined" ) {
+			this.records.deletions.set( property.deleted.id, property );
+		}
+		this.rootHasChanged = this.records.changes.size > 0 || this.records.additions.size > 0 || this.records.deletions.size > 0;
 	}
 
-	deleteNewProperty( property:Property, propertyRow:PropertyRow, index:number ):void {
-		this.properties.splice( index, 1 );
-		this.onDeleteProperty.emit( propertyRow );
+	addProperty( property:PropertyRow, index:number ):void {
+		if ( typeof this.records === "undefined" ) this.records = new RootRecords();
+		if ( typeof property.added !== "undefined" ) {
+			if ( property.added.id === property.added.name ) {
+				this.records.additions.set( property.added.id, property );
+			} else {
+				this.records.additions.delete( property.added.id );
+				this.records.additions.set( property.added.name, property );
+			}
+		}
+		this.rootHasChanged = this.records.changes.size > 0 || this.records.additions.size > 0 || this.records.deletions.size > 0;
 	}
 
-	saveNewProperty( property:Property, propertyRow:PropertyRow ):void {
-		this.onSaveNewProperty.emit( propertyRow );
-	}
-
-	addProperty( property:Property, propertyRow:PropertyRow ):void {
+	createProperty( property:Property, propertyRow:PropertyRow ):void {
 		let newProperty:PropertyRow = <PropertyRow>{
 			added: <Property>{
 				id: "",
@@ -111,4 +135,10 @@ export default class DocumentResourceComponent {
 			} );
 		} );
 	}
+}
+
+export class RootRecords {
+	changes:Map<string,PropertyRow> = new Map<string, PropertyRow>();
+	deletions:Map<string,PropertyRow> = new Map<string, PropertyRow>();
+	additions:Map<string,PropertyRow> = new Map<string, PropertyRow>();
 }
