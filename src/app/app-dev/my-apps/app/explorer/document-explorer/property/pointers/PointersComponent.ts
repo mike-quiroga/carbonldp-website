@@ -1,27 +1,20 @@
-import { Component, ElementRef, ViewEncapsulation, Input, Output, EventEmitter, SimpleChange } from "@angular/core";
-import { Control, AbstractControl, Validators } from '@angular/common';
+import { Component, Input, Output, EventEmitter } from "@angular/core";
 
-import $ from "jquery";
 import "semantic-ui/semantic";
 
-import * as NS from "carbonldp/NS";
-import * as Utils from "carbonldp/Utils";
 import * as RDFNode from "carbonldp/RDF/RDFNode";
-import * as URI from "carbonldp/RDF/URI";
 
-import { IterableMapPipe } from "./../../iterable-map/IterableMapPipe";
 import PointerComponent from "./pointer/PointerComponent";
 import { Pointer, PointerRow, Modes } from "./pointer/PointerComponent";
 
 import template from "./template.html!";
-import "./style.css!";
+import style from "./style.css!text";
 
 @Component( {
 	selector: "pointers",
 	template: template,
-	encapsulation: ViewEncapsulation.Emulated,
+	styles: [ style ],
 	directives: [ PointerComponent ],
-	pipes: [ IterableMapPipe ],
 } )
 
 export default class PointersComponent {
@@ -80,10 +73,6 @@ export default class PointersComponent {
 
 	canDisplayPointers():boolean {
 		return this.getUntouchedPointers().length > 0 || this.getAddedPointers().length > 0 || this.getModifiedPointers().length > 0;
-	}
-
-	getPointers():PointerRow[] {
-		return this.pointers.filter( ( pointer:PointerRow ) => typeof pointer.copy !== "undefined" );
 	}
 
 	getAddedPointers():PointerRow[] {
