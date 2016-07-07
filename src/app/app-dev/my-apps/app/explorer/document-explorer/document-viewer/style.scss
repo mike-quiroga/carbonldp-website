@@ -1,12 +1,9 @@
-document-viewer {
-	.ui.menu:not(.vertical) .item.hidden {
-		display: none;
-	}
+:host {
+	display: block;
+	padding: 0;
+
 	.saving-message {
-		//position: absolute;
 		z-index: 1;
-		//width: 97%;
-		//padding: 0 1em 1em;
 	}
 	.document-content {
 		overflow-y: scroll;
@@ -18,6 +15,6 @@ document-viewer {
 	margin-top: 0;
 }
 
-.ui.grid > .row > document-viewer.ui.segment.column {
+.ui.grid > .row > :host.ui.segment.column {
 	padding: 0;
 }

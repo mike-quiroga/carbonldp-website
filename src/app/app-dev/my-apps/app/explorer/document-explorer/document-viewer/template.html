@@ -39,7 +39,7 @@
 
 						                   (onOpenBNode)="openBNode($event)"
 						                   (onOpenNamedFragment)="openNamedFragment($event)"
-						                   (onChanges)="notifyRootNode($event)">
+						                   (onChanges)="registerRootNodeChanges($event)">
 						</document-resource>
 					</div>
 					<div class="ui tab segment" data-tab="bNodes">
@@ -51,7 +51,7 @@
 
 						                 (onOpenBNode)="goToSection($event)"
 						                 (onOpenNamedFragment)="openNamedFragment($event)"
-						                 (onChangesOnBnodes)="notifyBNode($event)"></document-bnodes>
+						                 (onChanges)="registerBNodeChanges($event)"></document-bnodes>
 					</div>
 					<div class="ui tab segment" data-tab="namedFragments">
 						<document-named-fragments class="column"
@@ -61,7 +61,7 @@
 
 						                          (onOpenBNode)="openBNode($event)"
 						                          (onOpenNamedFragment)="goToSection($event)"
-						                          (onChanges)="notifyNamedFragments($event)"></document-named-fragments>
+						                          (onChanges)="registerNamedFragmentsChanges($event)"></document-named-fragments>
 					</div>
 				</div>
 			</div>

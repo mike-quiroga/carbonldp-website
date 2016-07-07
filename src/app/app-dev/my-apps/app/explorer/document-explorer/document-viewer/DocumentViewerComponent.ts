@@ -1,15 +1,11 @@
 import { Component, ElementRef, Input, Output, EventEmitter, SimpleChange, ViewChild } from "@angular/core";
-import { CORE_DIRECTIVES } from "@angular/common";
 
 import $ from "jquery";
 import "semantic-ui/semantic";
 
 import * as RDFNode from "carbonldp/RDF/RDFNode";
-import * as URI from "carbonldp/RDF/URI";
 import * as SDKContext from "carbonldp/SDKContext";
 import * as RDFDocument from "carbonldp/RDF/Document";
-import * as NS from "carbonldp/NS";
-import * as Utils from "carbonldp/Utils";
 import { JSONLDParser as JSONLDParser } from "carbonldp/HTTP";
 import { Error as HTTPError } from "carbonldp/HTTP/Errors";
 
@@ -20,18 +16,18 @@ import { RootRecords } from "./../document-resource-viewer/DocumentResourceViewe
 import BNodesViewerComponent from "./../bnodes-viewer/BNodesViewerComponent";
 import NamedFragmentsViewerComponent from "./../named-fragments-viewer/NamedFragmentsViewerComponent";
 import PropertyComponent from "./../property/PropertyComponent";
-import { Property, PropertyRow } from "./../property/PropertyComponent";
 import { BNodeRecords } from "./../bnodes-viewer/bnode/BNodeComponent";
 import { NamedFragmentRecords } from "./../named-fragments-viewer/named-fragment/NamedFragmentComponent";
 
 import template from "./template.html!";
-import "./style.css!";
+import style from "./style.css!text";
 
 @Component( {
 	selector: "document-viewer",
 	host: { "[class.ui]": "true", "[class.basic]": "true", "[class.segment]": "true", },
 	template: template,
-	directives: [ CORE_DIRECTIVES, DocumentResourceViewerComponent, BNodesViewerComponent, NamedFragmentsViewerComponent, PropertyComponent ],
+	styles: [ style ],
+	directives: [ DocumentResourceViewerComponent, BNodesViewerComponent, NamedFragmentsViewerComponent, PropertyComponent ],
 } )
 
 export default class DocumentViewerComponent {
@@ -58,20 +54,19 @@ export default class DocumentViewerComponent {
 	documentsResolverService:DocumentsResolverService;
 	@Input() uri:string;
 	@Input() documentContext:SDKContext.Class;
-
 	private _document:RDFDocument.Class;
-	get document():RDFDocument.Class {return this._document;}
-
 	@Input() set document( value:RDFDocument.Class ) {
 		this._document = value;
 		this.receiveDocument( value );
 	}
 
+	get document():RDFDocument.Class {return this._document;}
+
+	@Output() onLoadingDocument:EventEmitter<boolean> = new EventEmitter<boolean>();
+	@Output() onSavingDocument:EventEmitter<boolean> = new EventEmitter<boolean>();
 
 	@ViewChild( BNodesViewerComponent ) documentBNodes:BNodesViewerComponent;
 	@ViewChild( NamedFragmentsViewerComponent ) documentNamedFragments:NamedFragmentsViewerComponent;
-	@Output() onLoadingDocument:EventEmitter<boolean> = new EventEmitter<boolean>();
-	@Output() onSavingDocument:EventEmitter<boolean> = new EventEmitter<boolean>();
 
 	private _savingDocument:boolean = false;
 	set savingDocument( value:boolean ) {
@@ -94,6 +89,7 @@ export default class DocumentViewerComponent {
 		this.element = element;
 		this.documentsResolverService = documentsResolverService;
 	}
+
 
 	ngAfterViewInit():void {
 		this.$element = $( this.element.nativeElement );
@@ -159,17 +155,17 @@ export default class DocumentViewerComponent {
 		this.$element.find( ".secondary.menu.document.tabs .item" ).tab( "changeTab", section );
 	}
 
-	notifyRootNode( records:RootRecords ):void {
+	registerRootNodeChanges( records:RootRecords ):void {
 		this.rootNodeRecords = records;
 		this.rootNodeHasChanged = records.changes.size > 0 || records.additions.size > 0 || records.deletions.size > 0;
 	}
 
-	notifyBNode( bNodeChanges:Map<string, BNodeRecords> ):void {
+	registerBNodeChanges( bNodeChanges:Map<string, BNodeRecords> ):void {
 		this.bNodesChanges = bNodeChanges;
 		this.bNodesHaveChanged = bNodeChanges.size > 0;
 	}
 
-	notifyNamedFragments( namedFragmentsChanges:Map<string, NamedFragmentRecords> ):void {
+	registerNamedFragmentsChanges( namedFragmentsChanges:Map<string, NamedFragmentRecords> ):void {
 		this.namedFragmentsChanges = namedFragmentsChanges;
 		this.namedFragmentsHaveChanged = namedFragmentsChanges.size > 0;
 	}
@@ -264,11 +260,9 @@ export default class DocumentViewerComponent {
 
 	saveDocument():void {
 		this.savingDocument = true;
-		console.log( JSON.stringify( this.document, null, "\t" ) );
 		this.modifyRootNodeWithChanges();
 		this.modifyBNodesWithChanges();
 		this.modifyNamedFragmentsWithChanges();
-		console.log( JSON.stringify( this.document, null, "\t" ) );
 		let body:string = JSON.stringify( this.document, null, "\t" );
 		this.documentsResolverService.update( this.document[ "@id" ], body, this.documentContext ).then(
 			( updatedDocument:RDFDocument.Class )=> {
@@ -277,6 +271,7 @@ export default class DocumentViewerComponent {
 			},
 			( error:HTTPError )=> {
 				console.error( error );
+				// TODO: Change this method to use the correct HTTPError when Javascript SDK implements it
 				this.getErrors( error ).then( ( errors )=> {
 					error[ "errors" ] = errors;
 					this.savingError = error;
@@ -314,10 +309,4 @@ export default class DocumentViewerComponent {
 		if ( ! divPosition ) return;
 		this.$element.animate( { scrollTop: divPosition.top }, "fast" );
 	}
-}
-
-class DocumentRecords {
-	changes:Map<string,PropertyRow> = new Map<string, PropertyRow>();
-	deletions:Map<string,PropertyRow> = new Map<string, PropertyRow>();
-	additions:Map<string,PropertyRow> = new Map<string, PropertyRow>();
 }

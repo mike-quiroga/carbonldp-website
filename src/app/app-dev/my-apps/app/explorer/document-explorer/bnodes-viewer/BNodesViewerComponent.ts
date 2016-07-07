@@ -1,5 +1,4 @@
 import { Component, ElementRef, Input, Output, EventEmitter, SimpleChange } from "@angular/core";
-import { CORE_DIRECTIVES } from "@angular/common";
 
 import $ from "jquery";
 import "semantic-ui/semantic";
@@ -16,7 +15,7 @@ import "./style.css!";
 @Component( {
 	selector: "document-bnodes",
 	template: template,
-	directives: [ CORE_DIRECTIVES, PropertyComponent, BNodeComponent ],
+	directives: [ PropertyComponent, BNodeComponent ],
 } )
 
 export default class BNodesViewerComponent {
@@ -32,7 +31,7 @@ export default class BNodesViewerComponent {
 	@Input() namedFragments:RDFNode.Class[] = [];
 	@Input() documentURI:string = "";
 
-	@Output() onChangesOnBnodes:EventEmitter<Map<string, BNodeRecords>> = new EventEmitter<Map<string, BNodeRecords>>();
+	@Output() onChanges:EventEmitter<Map<string, BNodeRecords>> = new EventEmitter<Map<string, BNodeRecords>>();
 	@Output() onOpenBNode:EventEmitter<string> = new EventEmitter<string>();
 	@Output() onOpenNamedFragment:EventEmitter<string> = new EventEmitter<string>();
 
@@ -57,9 +56,9 @@ export default class BNodesViewerComponent {
 	}
 
 	notifyDocumentBNodeHasChanged( records:BNodeRecords, bNode:RDFNode.Class ) {
-		if ( typeof records === "undefined" ) {
+		if ( typeof records === "undefined" || records === null ) {
 			this.bNodesChanges.delete( bNode[ "@id" ] );
-			this.onChangesOnBnodes.emit( this.bNodesChanges );
+			this.onChanges.emit( this.bNodesChanges );
 			return;
 		}
 		if ( records.changes.size > 0 || records.additions.size > 0 || records.deletions.size > 0 ) {
@@ -67,7 +66,7 @@ export default class BNodesViewerComponent {
 		} else {
 			this.bNodesChanges.delete( bNode[ "@id" ] );
 		}
-		this.onChangesOnBnodes.emit( this.bNodesChanges );
+		this.onChanges.emit( this.bNodesChanges );
 	}
 
 	openBNode( nodeOrId:RDFNode.Class|string ):void {
@@ -94,10 +93,11 @@ export default class BNodesViewerComponent {
 		this.onOpenBNode.emit( "bNodes" );
 	}
 
-	closeBNode( node:RDFNode.Class ):void {
-		let idx:number = this.openedBNodes.indexOf( node );
+	closeBNode( bNode:RDFNode.Class ):void {
+		let idx:number = this.openedBNodes.indexOf( bNode );
 		this.openedBNodes.splice( idx, 1 );
 		this.goToBNode( "all" );
+		if ( this.bNodesChanges.has( bNode[ "@id" ] ) )this.notifyDocumentBNodeHasChanged( null, bNode );
 	}
 
 	refreshTabs():void {

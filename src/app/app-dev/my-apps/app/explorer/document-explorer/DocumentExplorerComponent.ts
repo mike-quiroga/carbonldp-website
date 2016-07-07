@@ -1,5 +1,4 @@
 import { Component, ElementRef, Input } from "@angular/core";
-import { CORE_DIRECTIVES } from "@angular/common";
 
 import $ from "jquery";
 import "semantic-ui/semantic";
@@ -19,7 +18,7 @@ import "./style.css!";
 @Component( {
 	selector: "document-explorer",
 	template: template,
-	directives: [ CORE_DIRECTIVES, DocumentTreeViewComponent, DocumentViewerComponent ],
+	directives: [ DocumentTreeViewComponent, DocumentViewerComponent ],
 } )
 
 export default class DocumentExplorerComponent {
