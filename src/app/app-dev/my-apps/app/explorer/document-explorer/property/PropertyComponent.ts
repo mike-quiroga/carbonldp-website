@@ -295,7 +295,7 @@ export default class PropertyComponent {
 }
 
 export interface PropertyRow {
-	copy:any;
+	copy?:any;
 	added?:any;
 	modified?:any;
 	deleted?:any;

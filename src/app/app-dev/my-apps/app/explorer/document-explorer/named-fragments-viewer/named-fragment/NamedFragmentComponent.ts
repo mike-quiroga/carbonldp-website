@@ -108,7 +108,7 @@ export default class NamedFragmentComponent {
 	}
 
 	createProperty( property:Property, propertyRow:PropertyRow ):void {
-		let newProperty:PropertyRow = <PropertyRow>{
+		let newProperty:PropertyRow = {
 			added: <Property>{
 				id: "",
 				name: "New Property",
