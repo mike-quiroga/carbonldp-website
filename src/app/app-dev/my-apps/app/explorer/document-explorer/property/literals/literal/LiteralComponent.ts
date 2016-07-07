@@ -11,11 +11,12 @@ import * as URI from "carbonldp/RDF/URI";
 
 
 import template from "./template.html!";
-import "./style.css!";
+import style from "./style.css!text";
 
 @Component( {
 	selector: "tr.literal",
 	template: template,
+	styles: [ style ],
 } )
 
 export default class LiteralComponent {
@@ -829,6 +830,7 @@ export default class LiteralComponent {
 			this.value = ! ! this.tempLiteral[ "@value" ] ? this.tempLiteral[ "@value" ] : this.literal.copy[ "@value" ];
 			this.type = ! ! this.tempLiteral[ "@type" ] ? this.tempLiteral[ "@type" ] : this.literal.copy[ "@type" ];
 			this.language = ! ! this.tempLiteral[ "@language" ] ? this.tempLiteral[ "@language" ] : this.literal.copy[ "@language" ];
+
 		} else if ( typeof this.literal.added !== "undefined" ) {
 			this.value = ! ! this.tempLiteral[ "@value" ] ? this.tempLiteral[ "@value" ] : this.literal.added[ "@value" ];
 			this.type = ! ! this.tempLiteral[ "@type" ] ? this.tempLiteral[ "@type" ] : this.literal.added[ "@type" ];
@@ -989,50 +991,6 @@ export default class LiteralComponent {
 			}
 		} );
 		return xsdDataTypes;
-	}
-
-	private getParsedValue( value:string|boolean|number ):string|boolean|number {
-		if ( typeof value === "undefined" && ! ! this.input ) value = this.input.value.toLowerCase().trim();
-		switch ( this.type ) {
-			// Boolean
-			case NS.XSD.DataType.boolean:
-				value = Utils.isBoolean( SDKLiteral.Factory.parse( value, this.type ) ) ? SDKLiteral.Factory.parse( value, this.type ) : value;
-				break;
-
-			// Numbers
-			case NS.XSD.DataType.int :
-			case NS.XSD.DataType.integer :
-				value = ! isNaN( value ) && ! isNaN( SDKLiteral.Factory.parse( value, this.type ) ) && Utils.isInteger( SDKLiteral.Factory.parse( value, this.type ) ) ? SDKLiteral.Factory.parse( value, this.type ) : value;
-				break;
-
-			case NS.XSD.DataType.byte :
-			case NS.XSD.DataType.decimal :
-			case NS.XSD.DataType.long :
-			case NS.XSD.DataType.negativeInteger :
-			case NS.XSD.DataType.nonNegativeInteger :
-			case NS.XSD.DataType.nonPositiveInteger :
-			case NS.XSD.DataType.positiveInteger :
-			case NS.XSD.DataType.short :
-			case NS.XSD.DataType.unsignedLong :
-			case NS.XSD.DataType.unsignedInt :
-			case NS.XSD.DataType.unsignedShort :
-			case NS.XSD.DataType.unsignedByte :
-			case NS.XSD.DataType.double :
-			case NS.XSD.DataType.float :
-				value = ! isNaN( value ) && ! isNaN( SDKLiteral.Factory.parse( value, this.type ) ) && Utils.isNumber( SDKLiteral.Factory.parse( value, this.type ) ) ? SDKLiteral.Factory.parse( value, this.type ) : value;
-				break;
-
-			// Dates
-			case NS.XSD.DataType.date:
-			case NS.XSD.DataType.dateTime:
-			case NS.XSD.DataType.time:
-				value = Utils.isDate( SDKLiteral.Factory.parse( value, this.type ) ) ? SDKLiteral.Factory.parse( value, this.type ) : value;
-				break;
-
-			default:
-				break;
-		}
-		return value;
 	}
 
 	private valueValidator( control:AbstractControl ):any {
