@@ -1,13 +1,12 @@
-import { Component, ElementRef, Input, Output, EventEmitter, SimpleChange } from "@angular/core";
+import { Component, ElementRef, Input, Output, EventEmitter } from "@angular/core";
 
 import $ from "jquery";
 import "semantic-ui/semantic";
 
 import * as RDFNode from "carbonldp/RDF/RDFNode";
-import * as URI from "carbonldp/RDF/URI";
 
-import { Property, PropertyRow, Modes } from "./../property/PropertyComponent";
 import PropertyComponent from "./../property/PropertyComponent";
+import { Property, PropertyRow, Modes } from "./../property/PropertyComponent";
 
 import template from "./template.html!";
 
@@ -27,7 +26,7 @@ export default class DocumentResourceComponent {
 	private _rootHasChanged:boolean;
 	set rootHasChanged( hasChanged:boolean ) {
 		this._rootHasChanged = hasChanged;
-		if ( hasChanged ) this.onChanges.emit( this.records );
+		this.onChanges.emit( this.records );
 	}
 	get rootHasChanged() {
 		return this._rootHasChanged;

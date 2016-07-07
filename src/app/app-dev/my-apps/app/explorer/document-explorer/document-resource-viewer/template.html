@@ -12,7 +12,6 @@
 		                   [property]="propertyrow"
 		                   [bNodes]="bNodes"
 		                   [namedFragments]="namedFragments"
-		                   [canEdit]="canEdit"
 		                   [documentURI]="documentURI"
 
 		                   (onChangeProperty)="changeProperty(propertyrow, i)"
@@ -28,12 +27,11 @@
 		                   [property]="propertyrow"
 		                   [bNodes]="bNodes"
 		                   [namedFragments]="namedFragments"
-		                   [canEdit]="true"
 		                   [documentURI]="documentURI"
 		                   [mode]="modes.EDIT"
 
 		                   (onSaveNewProperty)="addProperty(propertyrow, i)"
-		                   (onDeleteNewProperty)="deleteNewProperty(propertyrow, i)"
+		                   (onDeleteNewProperty)="deleteProperty(propertyrow, i)"
 
 		                   (onGoToBNode)="openBNode( $event )"
 		                   (onGoToNamedFragment)="openNamedFragment($event)">
