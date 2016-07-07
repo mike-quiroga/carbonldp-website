@@ -12,11 +12,12 @@ import * as SDKContext from "carbonldp/SDKContext";
 import * as RDFDocument from "carbonldp/RDF/Document";
 
 import template from "./template.html!";
-import "./style.css!";
+import style from "./style.css!text";
 
 @Component( {
 	selector: "document-treeview",
 	template: template,
+	styles: [ style ],
 } )
 
 export default class DocumentTreeViewComponent {
@@ -27,9 +28,9 @@ export default class DocumentTreeViewComponent {
 	nodeChildren:any[] = [];
 
 	@Input() documentContext:SDKContext.Class;
-	@Output() onResolveUri:EventEmitter<RDFDocument.Class> = new EventEmitter();
-	@Output() onError:EventEmitter<HTTP.Errors.Error> = new EventEmitter();
-	@Output() onLoadingDocument:EventEmitter<boolean> = new EventEmitter();
+	@Output() onResolveUri:EventEmitter<RDFDocument.Class> = new EventEmitter<RDFDocument.Class>();
+	@Output() onError:EventEmitter<HTTP.Errors.Error> = new EventEmitter<HTTP.Errors.Error>();
+	@Output() onLoadingDocument:EventEmitter<boolean> = new EventEmitter<boolean>();
 
 	constructor( element:ElementRef ) {
 		this.element = element;
@@ -56,11 +57,9 @@ export default class DocumentTreeViewComponent {
 	getDocumentTree():Promise<PersistedDocument.Class> {
 		return this.documentContext.documents.get( "" ).then(
 			( [ resolvedRoot, response ]:[ PersistedDocument.Class, HTTP.Response.Class ] ) => {
-				resolvedRoot.contains.forEach(
-					( pointer:Pointer.Class ) => {
-						this.nodeChildren.push( this.buildNode( pointer.id ) );
-					}
-				);
+				resolvedRoot.contains.forEach( ( pointer:Pointer.Class ) => {
+					this.nodeChildren.push( this.buildNode( pointer.id ) );
+				} );
 				return resolvedRoot;
 			}
 		).catch( ( error:HTTP.Errors.Error ) => {
