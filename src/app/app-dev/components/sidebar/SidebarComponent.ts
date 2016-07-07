@@ -6,8 +6,7 @@ import $ from "jquery";
 import "semantic-ui/semantic";
 
 import SidebarService from "./service/SidebarService"
-import { App } from "app/app-dev/my-apps/app/app"
-import SidebarItem from "./SidebarItem";
+import * as App from "app/app-dev/my-apps/app/app"
 
 import template from "./template.html!";
 import "./style.css!";
@@ -22,7 +21,7 @@ export default class SidebarComponent {
 	element:ElementRef;
 	$element:JQuery;
 	sidebarService:SidebarService;
-	apps:App[] = [];
+	apps:App.Class[] = [];
 	location:Location;
 
 	constructor( router:Router, element:ElementRef, location:Location, sidebarService:SidebarService ) {
@@ -49,13 +48,13 @@ export default class SidebarComponent {
 	}
 
 
-	addApp( app:App ):void {
+	addApp( app:App.Class ):void {
 		! this.slugExists( app.slug ) ? this.apps.push( app ) : null;
 	}
 
 	toggle():void {
 		this.sidebarService.toggleMenuButtonEmitter.emit( null );
-		if ( this.$element.is( ":visible" ) ) {
+		if( this.$element.is( ":visible" ) ) {
 			this.$element.animate( { "width": "0" }, 400, () => {
 				this.$element.hide();
 			} );
@@ -83,7 +82,7 @@ export default class SidebarComponent {
 		switch ( typeof slug ) {
 			case "string":
 				let url:string[] = this.location.path().split( "/" );
-				if ( fullRoute ) {
+				if( fullRoute ) {
 					return url.indexOf( slug ) > - 1;
 				} else {
 					return url[ url.length - 1 ].indexOf( slug ) > - 1;
@@ -92,11 +91,11 @@ export default class SidebarComponent {
 				// TODO: Change this to use a non private variables implementation.
 				let instruction = this.router.generate( slug );
 				let router = this.router;
-				if ( ! fullRoute ) {
+				if( ! fullRoute ) {
 					while ( instruction.child ) {
 						instruction = instruction.child;
-						if ( typeof router._childRouter === "undefined" || router._childRouter === null ) continue;
-						if ( typeof router._childRouter._currentInstruction === "undefined" || router._childRouter._currentInstruction === null ) continue;
+						if( typeof router._childRouter === "undefined" || router._childRouter === null ) continue;
+						if( typeof router._childRouter._currentInstruction === "undefined" || router._childRouter._currentInstruction === null ) continue;
 						router = router._childRouter;
 					}
 				}

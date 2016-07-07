@@ -17,7 +17,7 @@
 			<td>
 				<h3 class="ui image header">
 					<div class="content">
-						{{app.appContext.name}}
+						{{app.name}}
 						<div class="sub header">
 							{{app.slug}}
 						</div>
@@ -25,13 +25,13 @@
 				</h3>
 			</td>
 			<td>
-				{{app.appContext.created | date:"MMMM/dd/yyyy H:mm hrs"}}
+				{{app.created | date:"MMMM/dd/yyyy H:mm hrs"}}
 			</td>
 			<td>
-				{{app.appContext.modified | date:"MMMM/dd/yyyy H:mm hrs"}}
+				{{app.modified | date:"MMMM/dd/yyyy H:mm hrs"}}
 			</td>
 			<td class="center aligned">
-				<app-action-buttons [app]="app" (deleteApp)="onDeleteApp(app)"></app-action-buttons>
+				<app-action-buttons [app]="app" (deleteApp)="onDeleteApp( app )"></app-action-buttons>
 			</td>
 		</tr>
 	</tbody>

@@ -1,12 +1,12 @@
 import { Component, Host, Inject, forwardRef } from "@angular/core";
 
-import "semantic-ui/semantic";
-
 import * as App from "carbonldp/App";
 
-import AppDetailView from "./../AppDetailView";
+import { AppDetailView } from "./../app-detail.view";
 import SPARQLClientComponent from "app/components/sparql-client/SPARQLClientComponent";
 import ErrorsAreaService from "app/app-dev/components/errors-area/service/ErrorsAreaService";
+
+import "semantic-ui/semantic";
 
 import template from "./template.html!";
 
@@ -21,8 +21,8 @@ export default class SPARQLEditorView {
 	appContext:App.Context;
 	private errorsAreaService:ErrorsAreaService;
 
-	constructor( errorsAreaService:ErrorsAreaService, @Host() @Inject( forwardRef( () => AppDetailView ) )appDetail:AppDetailView ) {
-		this.appContext = appDetail.appContext;
+	constructor( errorsAreaService:ErrorsAreaService, @Host() @Inject( forwardRef( () => AppDetailView ) ) appDetail:AppDetailView ) {
+		this.appContext = appDetail.app.context;
 		this.errorsAreaService = errorsAreaService;
 	}
 

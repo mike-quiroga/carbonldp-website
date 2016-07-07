@@ -3,19 +3,19 @@ import { Router, ROUTER_DIRECTIVES } from "@angular/router-deprecated";
 
 import "semantic-ui/semantic";
 
-import { App } from "./../../app/app";
+import * as App from "./../app/app";
 
-import template from "./template.html!";
+import template from "./app-action-buttons.component.html!";
 
 @Component( {
 	selector: "app-action-buttons",
 	template: template,
-	directives: [ ROUTER_DIRECTIVES, ],
+	directives: [ ROUTER_DIRECTIVES ],
 } )
-export default class AppActionButtons {
+export class AppActionButtonsComponent {
 	router:Router;
-	@Input() app:App;
-	@Output() deleteApp:EventEmitter<App> = new EventEmitter();
+	@Input() app:App.Class;
+	@Output() deleteApp:EventEmitter<App.Class> = new EventEmitter<App.Class>();
 
 	constructor( router:Router ) {
 		this.router = router;
@@ -30,3 +30,5 @@ export default class AppActionButtons {
 		event.stopPropagation();
 	}
 }
+
+export default AppActionButtonsComponent;

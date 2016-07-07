@@ -2,14 +2,14 @@ import { Injectable, EventEmitter } from "@angular/core";
 
 import { SidebarService, SidebarGroup, SidebarDivider, SidebarSubmenu } from "carbon-panel/sidebar.service";
 
-import { App } from "./app/app";
+import * as App from "./app/app";
 
 @Injectable()
 export class MyAppsSidebarService {
 
 	private sidebarService:SidebarService;
 	private openAppsGroup:SidebarGroup;
-	private openApps:Map<App, SidebarSubmenu> = new Map<App, SidebarSubmenu>();
+	private openApps:Map<App.Class, SidebarSubmenu> = new Map<App.Class, SidebarSubmenu>();
 	private openAppsDivider:SidebarDivider = {
 		type: "divider",
 		name: "Open Apps",
@@ -28,7 +28,7 @@ export class MyAppsSidebarService {
 		this.sidebarService.addItem( this.openAppsGroup );
 	}
 
-	addApp( app:App ):void {
+	addApp( app:App.Class ):void {
 		if( this.openApps.has( app ) ) return;
 
 		if( this.openApps.size === 0 ) this.addOpenAppsDivider();
@@ -74,21 +74,21 @@ export class MyAppsSidebarService {
 		this.openApps.set( app, appSubmenu );
 	}
 
-	openApp( app:App ):void {
+	openApp( app:App.Class ):void {
 		if( ! this.openApps.has( app ) ) return;
 
 		let appSubmenu:SidebarSubmenu = this.openApps.get( app );
 		appSubmenu.open = true;
 	}
 
-	closeApp( app:App ):void {
+	closeApp( app:App.Class ):void {
 		if( ! this.openApps.has( app ) ) return;
 
 		let appSubmenu:SidebarSubmenu = this.openApps.get( app );
 		appSubmenu.open = false;
 	}
 
-	removeApp( app:App ):void {
+	removeApp( app:App.Class ):void {
 		if( ! this.openApps.has( app ) ) return;
 
 		let appSubmenu:SidebarSubmenu = this.openApps.get( app );

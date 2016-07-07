@@ -26,9 +26,9 @@ export default class DocumentTreeViewComponent {
 	nodeChildren:any[] = [];
 
 	@Input() documentContext:SDKContext.Class;
-	@Output() onResolveUri:EventEmitter<RDFDocument.Class> = new EventEmitter();
-	@Output() onError:EventEmitter<HTTP.Errors.Error> = new EventEmitter();
-	@Output() onLoadingDocument:EventEmitter<boolean> = new EventEmitter();
+	@Output() onResolveUri:EventEmitter<RDFDocument.Class> = new EventEmitter<RDFDocument.Class>();
+	@Output() onError:EventEmitter<HTTP.Errors.Error> = new EventEmitter<HTTP.Errors.Error>();
+	@Output() onLoadingDocument:EventEmitter<boolean> = new EventEmitter<boolean>();
 
 	constructor( element:ElementRef ) {
 		this.element = element;
@@ -133,7 +133,7 @@ export default class DocumentTreeViewComponent {
 		this.getNodeChildren( parentNode.data.pointer.id ).then(
 			( children:any[] ):void => {
 				this.emptyNode( parentId );
-				if ( children.length > 0 ) {
+				if( children.length > 0 ) {
 					children.forEach( ( childNode:any ) => this.addChild( parentId, childNode, position ) );
 				}
 			}
@@ -153,7 +153,7 @@ export default class DocumentTreeViewComponent {
 	getNodeChildren( uri:string ):Promise<any[]> {
 		return this.documentContext.documents.get( uri ).then(
 			( [resolvedRoot, response]:[PersistedDocument.Class, HTTP.Response.Class] ) => {
-				if ( ! resolvedRoot.contains ) return [];
+				if( ! resolvedRoot.contains ) return [];
 
 				return resolvedRoot.contains.map( ( pointer:Pointer.Class ):void => {
 					return this.buildNode( pointer.id );
@@ -166,13 +166,13 @@ export default class DocumentTreeViewComponent {
 
 
 	getSlug( pointer:Pointer.Class | string ):string {
-		if ( typeof pointer !== "string" ) return ( <Pointer.Class>pointer ).id;
+		if( typeof pointer !== "string" ) return ( <Pointer.Class>pointer ).id;
 
 		return URI.Util.getSlug( <string>pointer );
 	}
 
 	private removeTrailingSlash( slug:string ):string {
-		if ( slug.endsWith( "/" ) ) {
+		if( slug.endsWith( "/" ) ) {
 			return slug.substr( 0, slug.length - 1 );
 		} else {
 			return slug;

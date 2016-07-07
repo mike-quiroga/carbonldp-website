@@ -4,8 +4,8 @@ import { Router, ROUTER_DIRECTIVES } from "@angular/router-deprecated";
 
 import "semantic-ui/semantic";
 
-import { App } from "./../app/app";
-import AppActionButtons from "./app-action-buttons/AppActionButtons";
+import * as App from "./../app/app";
+import AppActionButtonsComponent from "./app-action-buttons.component";
 
 import template from "./apps-list.component.html!";
 import "./apps-list.component.css!";
@@ -13,12 +13,12 @@ import "./apps-list.component.css!";
 @Component( {
 	selector: "apps-list",
 	template: template,
-	directives: [ CORE_DIRECTIVES, ROUTER_DIRECTIVES, AppActionButtons, ],
+	directives: [ CORE_DIRECTIVES, ROUTER_DIRECTIVES, AppActionButtonsComponent, ],
 } )
 export class AppsListComponent {
-	@Input() apps:App[];
-	@Output() openApp:EventEmitter<App> = new EventEmitter<App>();
-	@Output() deleteApp:EventEmitter<App> = new EventEmitter();
+	@Input() apps:App.Class[];
+	@Output() openApp:EventEmitter<App.Class> = new EventEmitter<App.Class>();
+	@Output() deleteApp:EventEmitter<App.Class> = new EventEmitter<App.Class>();
 
 	headers:Header[] = [ { name: "Name", value: "name" }, { name: "Creation", value: "created" }, { name: "Modification Date", value: "modified" } ];
 	sortedColumn:string = null;
@@ -38,18 +38,18 @@ export class AppsListComponent {
 		if( this.sortedColumn === header.value ) this.ascending = ! this.ascending;
 		this.sortedColumn = header.value;
 
-		this.apps.sort( ( contextA, contextB ) => {
-			if( contextA.appContext[ this.sortedColumn ] > contextB.appContext[ this.sortedColumn ] ) return this.ascending ? - 1 : 1;
-			if( contextA.appContext[ this.sortedColumn ] < contextB.appContext[ this.sortedColumn ] ) return this.ascending ? 1 : - 1;
+		this.apps.sort( ( appA, appB ) => {
+			if( appA[ this.sortedColumn ] > appB[ this.sortedColumn ] ) return this.ascending ? - 1 : 1;
+			if( appA[ this.sortedColumn ] < appB[ this.sortedColumn ] ) return this.ascending ? 1 : - 1;
 			return 0;
 		} );
 	}
 
-	onOpenApp( appContext:App ):void {
+	onOpenApp( appContext:App.Class ):void {
 		this.openApp.emit( appContext );
 	}
 
-	onDeleteApp( appContext:App ):void {
+	onDeleteApp( appContext:App.Class ):void {
 		this.deleteApp.emit( appContext );
 	}
 }

@@ -14,7 +14,7 @@ import "./style.css!";
 	template: template,
 	directives: [ CORE_DIRECTIVES ],
 } )
-export default class ErrorsAreaComponent {
+export class ErrorsAreaComponent {
 	element:ElementRef;
 	$element:JQuery;
 	messages:Message[] = [];
@@ -40,6 +40,9 @@ export default class ErrorsAreaComponent {
 	}
 
 }
+
+export default ErrorsAreaComponent;
+
 export interface Message {
 	title:string;
 	content:string;

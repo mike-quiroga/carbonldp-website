@@ -43,7 +43,7 @@ export default class DocumentViewerComponent {
 	@Input() documentContext:SDKContext.Class;
 	@ViewChild( BNodesViewerComponent ) documentBNodes:BNodesViewerComponent;
 	@ViewChild( NamedFragmentsViewerComponent ) namedFragments:NamedFragmentsViewerComponent;
-	@Output() onLoadingDocument:EventEmitter<boolean> = new EventEmitter();
+	@Output() onLoadingDocument:EventEmitter<boolean> = new EventEmitter<boolean>();
 
 	set loadingDocument( value:boolean ) {
 		this._loadingDocument = value;
@@ -65,7 +65,7 @@ export default class DocumentViewerComponent {
 	}
 
 	ngOnChanges( changes:{[propName:string]:SimpleChange} ):void {
-		if ( changes[ "uri" ] && ! ! changes[ "uri" ].currentValue && changes[ "uri" ].currentValue !== changes[ "uri" ].previousValue ) {
+		if( changes[ "uri" ] && ! ! changes[ "uri" ].currentValue && changes[ "uri" ].currentValue !== changes[ "uri" ].previousValue ) {
 			this.loadingDocument = true;
 			this.getDocument( this.uri, this.documentContext ).then(
 				( document:RDFDocument.Class ) => {
@@ -74,7 +74,7 @@ export default class DocumentViewerComponent {
 				}
 			);
 		}
-		if ( changes[ "document" ] && ! ! changes[ "document" ].currentValue && changes[ "document" ].currentValue !== changes[ "document" ].previousValue ) {
+		if( changes[ "document" ] && ! ! changes[ "document" ].currentValue && changes[ "document" ].currentValue !== changes[ "document" ].previousValue ) {
 			this.receiveDocument();
 		}
 	}
@@ -125,15 +125,15 @@ export default class DocumentViewerComponent {
 	}
 
 	goToSection( section:string ):void {
-		if ( this.sections.indexOf( section ) === - 1 ) return;
+		if( this.sections.indexOf( section ) === - 1 ) return;
 		this.scrollTo( ">div:first-child" );
 		this.$element.find( ".secondary.menu.document.tabs .item" ).tab( "changeTab", section );
 	}
 
 	private scrollTo( selector:string ):void {
-		if ( ! this.$element ) return;
+		if( ! this.$element ) return;
 		let divPosition:JQueryCoordinates = this.$element.find( selector ).position();
-		if ( ! divPosition ) return;
+		if( ! divPosition ) return;
 		this.$element.animate( { scrollTop: divPosition.top }, "fast" );
 	}
 }

@@ -2,9 +2,8 @@ import { Component, Host, Inject, forwardRef } from "@angular/core";
 
 import "semantic-ui/semantic";
 
-import * as App from "carbonldp/App";
-
-import AppDetailView from "./../AppDetailView";
+import * as App from "./../app";
+import { AppDetailView } from "./../app-detail.view";
 import DocumentExplorerComponent from "./document-explorer/DocumentExplorerComponent";
 import template from "./template.html!";
 
@@ -15,9 +14,9 @@ import template from "./template.html!";
 } )
 
 export default class ExplorerView {
-	appContext:App.Context;
+	app:App.Class;
 
-	constructor( @Host() @Inject( forwardRef( () => AppDetailView ) )appDetail:AppDetailView ) {
-		this.appContext = appDetail.appContext;
+	constructor( @Host() @Inject( forwardRef( () => AppDetailView ) ) appDetail:AppDetailView ) {
+		this.app = appDetail.app;
 	}
 }

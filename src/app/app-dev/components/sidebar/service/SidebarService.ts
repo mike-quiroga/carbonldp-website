@@ -1,6 +1,6 @@
 import { Injectable, EventEmitter } from "@angular/core";
 
-import { App } from "app/app-dev/my-apps/app/app";
+import * as App from "app/app-dev/my-apps/app/app";
 import SidebarItem from "./../SidebarItem";
 
 @Injectable()
@@ -21,7 +21,7 @@ export default class SidebarService {
 		item.icon = icon ? icon : null;
 	}
 
-	addApp( app:App ):void {
+	addApp( app:App.Class ):void {
 		this.addAppEmitter.emit( app );
 	}
 

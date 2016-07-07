@@ -1,17 +1,17 @@
 import { Component, ElementRef, Host, Inject, forwardRef } from "@angular/core";
 import { CORE_DIRECTIVES } from "@angular/common";
-import { ROUTER_PROVIDERS, Router, Instruction } from "@angular/router-deprecated";
+import { Router } from "@angular/router-deprecated";
 
 import $ from "jquery";
 import "semantic-ui/semantic";
 
-import * as App from "carbonldp/App";
+import * as App from "./../app";
 
-import AppDetailView from "./../AppDetailView";
+import { AppDetailView } from "./../app-detail.view";
 import EditAppComponent from "./edit-app-component/EditAppComponent";
 import ErrorsAreaService from "app/app-dev/components/errors-area/service/ErrorsAreaService";
 
-import template from "./template.html!";
+import template from "./edit-app.view.html!";
 
 @Component( {
 	selector: "edit-app-view",
@@ -19,17 +19,17 @@ import template from "./template.html!";
 	directives: [ CORE_DIRECTIVES, EditAppComponent, ],
 } )
 
-export default class SPARQLEditorView {
+export class EditAppView {
 	router:Router;
 	element:ElementRef;
 	$element:JQuery;
-	appContext:App.Context;
+	app:App.Class;
 	private errorsAreaService:ErrorsAreaService;
 
-	constructor( router:Router, element:ElementRef, errorsAreaService:ErrorsAreaService, @Host() @Inject( forwardRef( () => AppDetailView ) )appDetail:AppDetailView ) {
+	constructor( router:Router, element:ElementRef, errorsAreaService:ErrorsAreaService, @Host() @Inject( forwardRef( () => AppDetailView ) ) appDetail:AppDetailView ) {
 		this.router = router;
 		this.element = element;
-		this.appContext = appDetail.appContext;
+		this.app = appDetail.app;
 		this.errorsAreaService = errorsAreaService;
 	}
 
@@ -46,5 +46,6 @@ export default class SPARQLEditorView {
 			error.endpoint
 		);
 	}
-
 }
+
+export default EditAppView;

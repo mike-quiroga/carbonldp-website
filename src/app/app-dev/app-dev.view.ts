@@ -1,4 +1,5 @@
 import { Component, ElementRef, provide, Inject, OnInit, EventEmitter } from "@angular/core";
+import { Location } from "@angular/common";
 import { Router, RouteConfig, RouterOutlet } from "@angular/router-deprecated";
 
 import { Authenticated } from "angular2-carbonldp/decorators";
@@ -42,10 +43,10 @@ import style from "./app-dev.view.css!text";
 	],
 	providers: [
 		provide( RouterService, {
-			useFactory: ( router:Router ):() => RouterService => {
-				return new RouterService( router );
+			useFactory: ( router:Router, location:Location ):RouterService => {
+				return new RouterService( router, location );
 			},
-			deps: [ Router ]
+			deps: [ Router, Location ]
 		} ),
 		provide( HeaderService, { useClass: HeaderService } ),
 		provide( SidebarService, { useClass: SidebarService } ),

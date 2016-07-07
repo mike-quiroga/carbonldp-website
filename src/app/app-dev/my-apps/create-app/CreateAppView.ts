@@ -11,7 +11,7 @@ import $ from "jquery";
 import "semantic-ui/semantic";
 
 import AppContextService from "./../../AppContextService";
-import { App } from "./../app/app";
+import * as App from "./../app/app";
 
 import template from "./template.html!";
 
@@ -115,30 +115,25 @@ export default class CreateAppView {
 		let slug:string = data.slug;
 		let description:string = data.description;
 
-		let appDocument:App = <App>(CarbonApp.Factory.create( name ));
+		let appDocument:CarbonApp.Class = CarbonApp.Factory.create( name );
 		appDocument.description = description;
-		this.createApp( slug, <CarbonApp.Class>appDocument );
+		this.createApp( slug, appDocument );
 	}
 
 	createApp( slug:string, appDocument:CarbonApp.Class ):Promise<[ Pointer.Class, HTTP.Response.Class]> {
-		return this.carbon.apps.create( slug, appDocument ).then(
-			( [appPointer, appCreationResponse]:[ Pointer.Class, HTTP.Response.Class] ) => {
-				this.submitting = false;
-				this.persistedSlug = this._slug;
-				this.persistedName = this._name;
-				this.carbon.apps.getContext( appPointer ).then(
-					( appContext:CarbonApp.Context ):void => {
-						this.persistedSlug = this.appContextService.getSlug( appContext );
-						this.persistedName = appContext.app.name;
-					}
-				);
-				this.displaySuccessMessage = true;
-			},
-			( error:HTTP.Errors.Error ) => {
-				this.setErrorMessage( error );
-				this.submitting = false;
-			}
-		);
+		return this.carbon.apps.create( slug, appDocument ).then( ( [appPointer, appCreationResponse]:[ Pointer.Class, HTTP.Response.Class] ) => {
+			this.submitting = false;
+			this.persistedSlug = this._slug;
+			this.persistedName = this._name;
+			return this.carbon.apps.getContext( appPointer );
+		} ).then( ( appContext:CarbonApp.Context ):void => {
+			this.persistedSlug = this.appContextService.getSlug( appContext );
+			this.persistedName = appContext.app.name;
+			this.displaySuccessMessage = true;
+		} ).catch( ( error:HTTP.Errors.Error ) => {
+			this.setErrorMessage( error );
+			this.submitting = false;
+		} );
 	}
 
 	setErrorMessage( error:HTTP.Errors.Error ):void {

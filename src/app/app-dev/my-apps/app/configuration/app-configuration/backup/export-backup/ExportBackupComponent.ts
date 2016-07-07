@@ -51,7 +51,7 @@ export default class ExportBackupComponent {
 
 		this.jobsService.runJob( this.backupJob ).then( ( execution:PersistedDocument.Class )=> {
 			return this.monitorExecution( execution ).catch( ( executionOrError:HTTPError|PersistedDocument.Class ) => {
-				if ( executionOrError.hasOwnProperty( "response" ) ) return Promise.reject( executionOrError );
+				if( executionOrError.hasOwnProperty( "response" ) ) return Promise.reject( executionOrError );
 				let errorMessage:Message = <Message>{
 					title: "Couldn't execute backup.",
 					content: "An error occurred while executing your export backup job. This may be caused due to a bad configuration during the creation of your job.",
@@ -77,7 +77,8 @@ export default class ExportBackupComponent {
 
 	monitorExecution( execution:PersistedDocument.Class ):Promise<PersistedDocument.Class> {
 		return new Promise<PersistedDocument.Class>( ( resolve:( result:any ) => void, reject:( error:HTTPError|PersistedDocument.Class ) => void ) => {
-			let interval:number = setInterval( ()=> {
+			// setInterval in the browser returns a number but in NodeJS it returns a Time object, that's why this variable needs to be of type "any"
+			let interval:any = setInterval( ()=> {
 				execution.refresh().then( ()=> {
 					switch ( execution[ Job.Execution.STATUS ].id ) {
 						case Job.ExecutionStatus.FINISHED:

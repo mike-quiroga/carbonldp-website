@@ -3,8 +3,8 @@ import { CORE_DIRECTIVES } from "@angular/common";
 import { ROUTER_DIRECTIVES, RouteConfig, RouterOutlet } from "@angular/router-deprecated";
 
 import { MyAppsSidebarService } from "./my-apps-sidebar.service";
-import AppDetailView from "./app/AppDetailView";
-import AppsListView from "./apps-list/apps-list.view";
+import { AppDetailView } from "./app/app-detail.view";
+import { AppsListView } from "./apps-list/apps-list.view";
 import CreateAppView from "./create-app/CreateAppView";
 
 @Component( {

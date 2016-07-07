@@ -32,7 +32,7 @@ providers = providers
 	.concat( CARBON_PROVIDERS )
 	.concat( CARBON_SERVICES_PROVIDERS );
 
-if ( "<%- angular.debug %>" === "false" ) enableProdMode();
+if( "<%- angular.debug %>" === "false" ) enableProdMode();
 
 bootstrap( AppComponent, [
 	FORM_PROVIDERS,
@@ -41,11 +41,11 @@ bootstrap( AppComponent, [
 	Title,
 	Angulartics2,
 
-	provide( APP_BASE_HREF, {useValue: "<%- url.base %>"} ),
+	provide( APP_BASE_HREF, { useValue: "<%- url.base %>" } ),
 
 	providers,
 	BLOG_PROVIDERS,
 	APP_DEV_PROVIDERS,
-] ).then( ( appRef:ComponentRef ) => {
+] ).then( ( appRef:ComponentRef<AppComponent> ) => {
 	appInjector( appRef.injector );
 } );

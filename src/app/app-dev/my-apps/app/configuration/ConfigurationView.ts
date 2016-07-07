@@ -4,7 +4,7 @@ import "semantic-ui/semantic";
 
 import * as App from "carbonldp/App";
 
-import AppDetailView from "./../AppDetailView";
+import { AppDetailView } from "./../app-detail.view";
 import AppConfigurationComponent from "./app-configuration/AppConfigurationComponent";
 
 import template from "./template.html!";
@@ -18,8 +18,8 @@ import template from "./template.html!";
 export default class ConfigurationView {
 	appContext:App.Context;
 
-	constructor( @Host() @Inject( forwardRef( () => AppDetailView ) )appDetail:AppDetailView ) {
-		this.appContext = appDetail.appContext;
+	constructor( @Host() @Inject( forwardRef( () => AppDetailView ) ) appDetail:AppDetailView ) {
+		this.appContext = appDetail.app.context;
 	}
 
 }

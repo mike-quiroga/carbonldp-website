@@ -7,16 +7,16 @@ import { Observable } from "rxjs/Rx";
 import "semantic-ui/semantic";
 
 import Carbon from "carbonldp/Carbon";
-import * as PersistedDocument from "carbonldp/PersistedDocument";
+import * as CarbonApp from "carbonldp/App";
 import * as HTTP from "carbonldp/HTTP";
 
 import { MyAppsSidebarService } from "./../my-apps-sidebar.service";
 
 import AppContextService from "./../../AppContextService";
-import AppTileComponent from "./app-tile.component";
-import AppsListComponent from "./apps-list.component";
-import App from "./../app/App";
-import Message from "./../../components/errors-area/ErrorsAreaComponent";
+import { AppTileComponent } from "./app-tile.component";
+import { AppsListComponent } from "./apps-list.component";
+import * as App from "./../app/app";
+import { Message } from "./../../components/errors-area/ErrorsAreaComponent";
 
 import template from "./apps-list.view.html!";
 import "./apps-list.view.css!";
@@ -27,14 +27,14 @@ import "./apps-list.view.css!";
 	directives: [ CORE_DIRECTIVES, ROUTER_DIRECTIVES, AppTileComponent, AppsListComponent ],
 } )
 export class AppsListView {
-	apps:App[] = [];
-	results:App[] = [];
+	apps:App.Class[] = [];
+	results:App.Class[] = [];
 
 	loading:boolean = false;
 	tileView:boolean = false;
 	searchBox:JQuery;
 	errorMessage:string = "";
-	askingApp:App;
+	askingApp:App.Class;
 
 	deleteAppConfirmationModal:JQuery;
 	deleting:boolean = false;
@@ -86,7 +86,7 @@ export class AppsListView {
 
 	searchApp( term:string ):void {
 		this.results = this.apps.filter( ( app ) => {
-			return app.appContext.name.toLowerCase().search( term.toLowerCase() ) > - 1 || app.slug.toLowerCase().search( term.toLowerCase() ) > - 1
+			return app.name.toLowerCase().search( term.toLowerCase() ) > - 1 || app.slug.toLowerCase().search( term.toLowerCase() ) > - 1
 		} );
 		this.errorMessage = "";
 		if( this.results.length === 0 && term.length > 0 ) {
@@ -94,7 +94,7 @@ export class AppsListView {
 		}
 	}
 
-	askConfirmationToDeleteApp( selectedApp:App ):void {
+	askConfirmationToDeleteApp( selectedApp:App.Class ):void {
 		this.askingApp = selectedApp;
 		this.toggleDeleteConfirmationModal();
 	}
@@ -104,35 +104,28 @@ export class AppsListView {
 		this.deleteError = null;
 	}
 
-	onApproveAppDeletion( approvedApp:App ):void {
-		if( this.deleting ) {
-			return;
-		}
+	onApproveAppDeletion( approvedApp:App.Class ):void {
+		if( this.deleting ) return;
 		this.deleting = true;
 		this.deleteError = null;
-		this.deleteApp( approvedApp ).then(
-			( response:HTTP.Response.Class ):void => {
-				this.toggleDeleteConfirmationModal();
-				this.apps.splice( this.apps.indexOf( approvedApp ), 1 );
-			},
-			( error:HTTP.Errors.Error ):void => {
-				this.deleteError = this.getErrorMessage( error );
-			}
-		).then(
-			():void => {
-				this.deleting = false;
-				this.searchApp( this.searchBox.val() );
-			}
-		);
+		this.deleteApp( approvedApp ).then( ( response:HTTP.Response.Class ):void => {
+			this.toggleDeleteConfirmationModal();
+			this.apps.splice( this.apps.indexOf( approvedApp ), 1 );
+		} ).catch( ( error:HTTP.Errors.Error ):void => {
+			this.deleteError = this.getErrorMessage( error );
+		} ).then( ():void => {
+			this.deleting = false;
+			this.searchApp( this.searchBox.val() );
+		} );
 	}
 
-	openApp( app:App ):void {
+	openApp( app:App.Class ):void {
 		this.myAppsSidebarService.addApp( app );
 		this.router.navigate( [ "/AppDev/MyApps/App", { slug: app.slug }, "AppDashboard" ] );
 	}
 
-	deleteApp( app:App ):Promise<HTTP.Response.Class> {
-		return (<PersistedDocument.Class>(<any>app.appContext)).destroy();
+	deleteApp( app:App.Class ):Promise<HTTP.Response.Class> {
+		return app.destroy();
 	}
 
 	getErrorMessage( error:HTTP.Errors.Error ):Message {
@@ -140,25 +133,34 @@ export class AppsListView {
 		switch ( true ) {
 			case error instanceof HTTP.Errors.ForbiddenError:
 				content = "Denied Access.";
+				break;
 			case error instanceof HTTP.Errors.UnauthorizedError:
 				content = "Wrong credentials.";
+				break;
 			case error instanceof HTTP.Errors.BadGatewayError:
 				content = "An error occurred while trying to login. Please try again later. Error: " + error.response.status;
+				break;
 			case error instanceof HTTP.Errors.GatewayTimeoutError:
 				content = "An error occurred while trying to login. Please try again later. Error: " + error.response.status;
+				break;
 			case error instanceof HTTP.Errors.InternalServerErrorError:
 				content = "An error occurred while trying to login. Please try again later. Error: " + error.response.status;
+				break;
 			case error instanceof HTTP.Errors.UnknownError:
 				content = "An error occurred while trying to login. Please try again later. Error: " + error.response.status;
+				break;
 			case error instanceof HTTP.Errors.ServiceUnavailableError:
 				content = "Service currently unavailable.";
+				break;
 			default:
 				content = "There was a problem processing the request. Error: " + error.response.status;
+				break;
 		}
-		return <Message>{
+
+		return {
 			title: error.name,
 			content: ! ! error.message ? error.message : content,
-			statusCode: error.response.status,
+			statusCode: "" + error.response.status,
 			statusMessage: error.response.request.statusText,
 			endpoint: "",
 		};
@@ -179,25 +181,24 @@ export class AppsListView {
 
 	routerOnActivate():void {
 		this.loading = true;
-		this.appContextService.getAll().then(
-			( appContexts:any ):void => {
-				appContexts.forEach( ( appContext ) => {
-					this.apps.push( <App>{
-						slug: this.appContextService.getSlug( appContext ),
-						appContext: appContext.app,
-					} );
-				} );
-				this.results = this.apps;
-			},
-			( error:any ):void => {
-				console.error( error );
-				this.errorMessage = "An error occurred. Please, try again later.";
-			}
-		).then(
-			():void => {
-				this.loading = false;
-			}
-		);
+		this.loadApps().then( ( apps:App.Class[] ):void => {
+			this.results = apps;
+
+			this.loading = false;
+		} ).catch( ( error:any ):void => {
+			// TODO: Show a more specific error message
+			console.error( error );
+			this.errorMessage = "An error occurred. Please, try again later.";
+
+			this.loading = false;
+		} );
+	}
+
+	private loadApps():Promise< App.Class[] > {
+		return this.appContextService.getAll().then( ( appContexts:CarbonApp.Context[] ) => {
+			this.apps = appContexts.map( App.Factory.createFrom );
+			return this.apps;
+		} );
 	}
 }
 

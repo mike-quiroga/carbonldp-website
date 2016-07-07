@@ -6,17 +6,18 @@ import * as CarbonApp from "carbonldp/App";
 
 import { MyAppsSidebarService } from "./../my-apps-sidebar.service";
 import AppContextService from "./../../AppContextService";
-import { App } from "./app";
+import * as App from "./app";
 
-import DashboardView from "./dashboard/DashboardView";
+import { AppDashboardView } from "./app-dashboard.view";
 import SPARQLEditorView from "./sparql-editor/SPARQLEditorView";
-import EditAppView from "./edit-app/EditAppView";
+import { EditAppView } from "./edit-app/edit-app.view";
 import ExplorerView from "./explorer/ExplorerView";
 import ConfigurationView from "./configuration/ConfigurationView";
 
 
-import template from "./template.html!";
-import "./style.css!";
+import template from "./app-detail.view.html!";
+// TODO: Use encapsulated styles
+import "./app-detail.view.css!";
 
 @Component( {
 	selector: "app-detail",
@@ -28,7 +29,7 @@ import "./style.css!";
 	{
 		path: "/",
 		as: "AppDashboard",
-		component: DashboardView,
+		component: AppDashboardView,
 		useAsDefault: true,
 		data: {
 			alias: "AppDashboard",
@@ -72,11 +73,12 @@ import "./style.css!";
 		},
 	},
 ] )
-export default class AppDetailView {
-	router:Router;
-	routeParams:RouteParams;
+export class AppDetailView {
+	app:App.Class;
 
-	appContext:CarbonApp.Context;
+	private router:Router;
+	private routeParams:RouteParams;
+
 	private myAppsSidebarService:MyAppsSidebarService;
 	private appContextService:AppContextService;
 
@@ -98,32 +100,24 @@ export default class AppDetailView {
 
 	routerOnActivate():void {
 		let slug:string = this.routeParams.get( "slug" );
-		this.appContextService.get( slug ).then(
-			( appContext:CarbonApp.Context ):void => {
-				this.appContext = appContext;
-				let app:App = {
-					name: appContext.app.name,
-					created: appContext.app.created,
-					modified: appContext.app.modified,
-					slug: slug,
-					appContext: appContext,
-				};
-				this.myAppsSidebarService.addApp( app );
-				this.myAppsSidebarService.openApp( app );
-			},
-			( error:any ):void => {
-				// TODO: Check error type
-				console.log( error );
-				this.timer = 5;
-				let countDown:any = setInterval(
-					():void => {
-						this.timer --;
-						if( this.timer === 0 ) {
-							this.router.navigate( [ "/AppDev/MyApps/List" ] );
-							clearInterval( countDown );
-						}
-					}, 1000 );
-			}
-		);
+		this.appContextService.get( slug ).then( ( appContext:CarbonApp.Context ):void => {
+			this.app = App.Factory.createFrom( appContext );
+
+			this.myAppsSidebarService.addApp( this.app );
+			this.myAppsSidebarService.openApp( this.app );
+		} ).catch( ( error:any ):void => {
+			// TODO: Check error type
+			console.log( error );
+			this.timer = 5;
+			let countDown:any = setInterval( ():void => {
+				this.timer --;
+				if( this.timer === 0 ) {
+					this.router.navigate( [ "/AppDev/MyApps/List" ] );
+					clearInterval( countDown );
+				}
+			}, 1000 );
+		} );
 	}
 }
+
+export default AppDetailView;

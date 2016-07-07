@@ -4,8 +4,8 @@ import { ROUTER_DIRECTIVES } from "@angular/router-deprecated";
 
 import "semantic-ui/semantic";
 
-import { App } from "./../app/app";
-import AppActionButtons from "./app-action-buttons/AppActionButtons";
+import * as App from "./../app/app";
+import { AppActionButtonsComponent } from "./app-action-buttons.component";
 
 import template from "./app-tile.component.html!";
 import "./app-tile.component.css!";
@@ -13,18 +13,20 @@ import "./app-tile.component.css!";
 @Component( {
 	selector: "app-tile",
 	template: template,
-	directives: [ CORE_DIRECTIVES, ROUTER_DIRECTIVES, AppActionButtons ],
+	directives: [ CORE_DIRECTIVES, ROUTER_DIRECTIVES, AppActionButtonsComponent ],
 } )
-export default class AppTileComponent {
-	@Input() app:App;
-	@Output() openApp:EventEmitter<App> = new EventEmitter<App>();
-	@Output() deleteApp:EventEmitter<App> = new EventEmitter<App>();
+export class AppTileComponent {
+	@Input() app:App.Class;
+	@Output() openApp:EventEmitter<App.Class> = new EventEmitter<App.Class>();
+	@Output() deleteApp:EventEmitter<App.Class> = new EventEmitter<App.Class>();
 
-	onOpenApp( appContext:App ):void {
-		this.openApp.emit( appContext );
+	onOpenApp( app:App.Class ):void {
+		this.openApp.emit( app );
 	}
 
-	onDeleteApp( appContext:App ):void {
-		this.deleteApp.emit( appContext );
+	onDeleteApp( app:App.Class ):void {
+		this.deleteApp.emit( app );
 	}
 }
+
+export default AppTileComponent;

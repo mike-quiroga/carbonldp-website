@@ -65,7 +65,7 @@ export default class BackupsListComponent {
 	}
 
 	ngOnChanges( changes:{[propName:string]:SimpleChange} ):void {
-		if ( changes[ "backupJob" ] && ! ! changes[ "backupJob" ].currentValue && changes[ "backupJob" ].currentValue !== changes[ "backupJob" ].previousValue ) {
+		if( changes[ "backupJob" ] && ! ! changes[ "backupJob" ].currentValue && changes[ "backupJob" ].currentValue !== changes[ "backupJob" ].previousValue ) {
 			this.loadingBackups = true;
 			this.getBackups().then( ( backups:PersistedDocument.Class[] ) => {
 				this.loadingBackups = false;
@@ -112,13 +112,13 @@ export default class BackupsListComponent {
 	deleteBackup( backup:PersistedDocument.Class ):Promise<Response.Class> {
 		this.deletingBackup = true;
 		return this.backupsService.delete( backup.id, this.appContext ).then( ( response:Response.Class ):Response.Class => {
-			if ( response.status !== HTTPStatusCode.OK ) return Promise.reject( response );
+			if( response.status !== HTTPStatusCode.OK ) return <any>Promise.reject( response );
 			this.getBackups();
 			this.closeDeleteModal();
 			return response;
 		} ).catch( ( errorOrResponse:HTTPError|Response.Class )=> {
 			let deleteMessage:Message;
-			if ( errorOrResponse.hasOwnProperty( "response" ) ) {
+			if( errorOrResponse.hasOwnProperty( "response" ) ) {
 				deleteMessage = <Message>{
 					title: (<HTTPError>errorOrResponse).name,
 					content: "Couldn't delete the backup.",
