@@ -7,15 +7,16 @@ import * as RDFNode from "carbonldp/RDF/RDFNode";
 import * as URI from "carbonldp/RDF/URI";
 
 import NamedFragmentComponent from "./named-fragment/NamedFragmentComponent"
-import { NamedFragment, NamedFragmentRecords } from "./named-fragment/NamedFragmentComponent"
+import { NamedFragmentRecords } from "./named-fragment/NamedFragmentComponent"
 import PropertyComponent from "./../property/PropertyComponent";
 
 import template from "./template.html!";
-import "./style.css!";
+import style from "./style.css!text";
 
 @Component( {
 	selector: "document-named-fragments",
 	template: template,
+	styles: [ style ],
 	directives: [ PropertyComponent, NamedFragmentComponent ],
 } )
 
