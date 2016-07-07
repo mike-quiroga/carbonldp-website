@@ -6,15 +6,16 @@ import "semantic-ui/semantic";
 import * as RDFNode from "carbonldp/RDF/RDFNode";
 
 import BNodeComponent from "./bnode/BNodeComponent"
-import { BNode, BNodeRecords } from "./bnode/BNodeComponent"
+import { BNodeRecords } from "./bnode/BNodeComponent"
 import PropertyComponent from "./../property/PropertyComponent";
 
 import template from "./template.html!";
-import "./style.css!";
+import style from "./style.css!text";
 
 @Component( {
 	selector: "document-bnodes",
 	template: template,
+	styles: [ style ],
 	directives: [ PropertyComponent, BNodeComponent ],
 } )
 
