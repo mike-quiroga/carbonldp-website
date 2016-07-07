@@ -1,19 +1,20 @@
-import { Component, ElementRef, Input, Output, EventEmitter, SimpleChange } from "@angular/core";
+import { Component, ElementRef, Input, Output, EventEmitter } from "@angular/core";
 
 import $ from "jquery";
 import "semantic-ui/semantic";
 
 import * as RDFNode from "carbonldp/RDF/RDFNode";
-import * as URI from "carbonldp/RDF/URI";
 
 import { Property, PropertyRow, Modes } from "./../../property/PropertyComponent";
 import PropertyComponent from "./../../property/PropertyComponent";
 
 import template from "./template.html!";
+import style from "./style.css!text";
 
 @Component( {
 	selector: "bnode",
 	template: template,
+	styles: [ style ],
 	directives: [ PropertyComponent ],
 } )
 
