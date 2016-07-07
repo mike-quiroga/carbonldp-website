@@ -30,7 +30,7 @@
 		          [property]="propertyrow"
 		          [bNodes]="bNodes"
 		          [namedFragments]="namedFragments"
-		          [canEdit]="canEdit"
+		          [canEdit]="propertyrow.copy.name==='https://carbonldp.com/ns/v1/platform#bNodeIdentifier'? false : canEdit"
 		          [documentURI]="documentURI"
 		          [existingProperties]="existingProperties"
 
