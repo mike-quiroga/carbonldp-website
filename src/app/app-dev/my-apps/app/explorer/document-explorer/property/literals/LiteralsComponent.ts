@@ -1,27 +1,18 @@
-import { Component, ElementRef, ViewEncapsulation, Input, Output, EventEmitter, SimpleChange } from "@angular/core";
-import { Control, AbstractControl, Validators } from '@angular/common';
+import { Component, Input, Output, EventEmitter } from "@angular/core";
 
-import $ from "jquery";
 import "semantic-ui/semantic";
 
-import * as NS from "carbonldp/NS";
-import * as Utils from "carbonldp/Utils";
-import * as RDFNode from "carbonldp/RDF/RDFNode";
-import * as URI from "carbonldp/RDF/URI";
-
-import { IterableMapPipe } from "./../../iterable-map/IterableMapPipe";
 import LiteralComponent from "./literal/LiteralComponent";
 import { Literal, LiteralRow, Modes } from "./literal/LiteralComponent";
 
 import template from "./template.html!";
-import "./style.css!";
+import style from "./style.css!text";
 
 @Component( {
 	selector: "literals",
 	template: template,
-	encapsulation: ViewEncapsulation.Emulated,
+	styles: [ style ],
 	directives: [ LiteralComponent ],
-	pipes: [ IterableMapPipe ],
 } )
 
 export default class LiteralsComponent {
@@ -84,10 +75,6 @@ export default class LiteralsComponent {
 
 	canDisplayLiterals():boolean {
 		return this.getUntouchedLiterals().length > 0 || this.getAddedLiterals().length > 0 || this.getModifiedLiterals().length > 0;
-	}
-
-	getLiterals():LiteralRow[] {
-		return this.literals.filter( ( literal:LiteralRow ) => typeof literal.copy !== "undefined" );
 	}
 
 	getAddedLiterals():LiteralRow[] {

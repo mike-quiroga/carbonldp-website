@@ -22,8 +22,8 @@
 			    [canEdit]="canEdit"
 			    [canDisplayLanguage]="isLanguagePresent || isEditingLiteral"
 			    (onSave)="saveNewLiteral($event, literal, i)"
-			    (onEditMode)="editModeChanged($event)"
-			    (onDeleteNewLiteral)="deleteNewLiteral($event, i)"></tr>
+			    (onDeleteNewLiteral)="deleteNewLiteral($event, i)"
+			    (onEditMode)="editModeChanged($event)"></tr>
 		</template>
 	</tbody>
 </table>
