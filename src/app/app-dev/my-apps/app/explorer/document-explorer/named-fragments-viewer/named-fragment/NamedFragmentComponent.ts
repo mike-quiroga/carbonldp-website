@@ -112,7 +112,7 @@ export default class NamedFragmentComponent {
 			}
 		};
 		this.properties.splice( 2, 0, newProperty );
-		if ( ! ! this.$element ) setTimeout( ()=>this.$element.find( "document-property.added-property" ).first().transition( "drop" ) );
+		if ( ! ! this.$element ) setTimeout( ()=>this.$element.find( "property.added-property" ).first().transition( "drop" ) );
 	}
 
 	getProperties():void {

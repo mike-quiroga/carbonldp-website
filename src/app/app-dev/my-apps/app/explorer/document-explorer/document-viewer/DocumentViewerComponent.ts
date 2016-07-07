@@ -108,9 +108,9 @@ export default class DocumentViewerComponent {
 		if ( ! ! document ) {
 			console.log( "whole document has changed! %o: ", document );
 			this.loadingDocument = true;
-			this.clearDocumentChanges();
 			this.setRoot();
 			this.generateFragments();
+			this.clearDocumentChanges();
 			this.loadingDocument = false;
 			this.savingError = null;
 			setTimeout(
@@ -267,7 +267,6 @@ export default class DocumentViewerComponent {
 		this.documentsResolverService.update( this.document[ "@id" ], body, this.documentContext ).then(
 			( updatedDocument:RDFDocument.Class )=> {
 				this.document = updatedDocument[ 0 ];
-				this.clearDocumentChanges();
 			},
 			( error:HTTPError )=> {
 				console.error( error );

@@ -41,6 +41,7 @@ export default class DocumentResourceComponent {
 	private _rootNode:RDFNode.Class;
 	@Input() set rootNode( value:RDFNode.Class ) {
 		this._rootNode = value;
+		this.records = new RootRecords();
 		this.getProperties();
 	}
 
@@ -119,7 +120,7 @@ export default class DocumentResourceComponent {
 			}
 		};
 		this.properties.splice( 2, 0, newProperty );
-		if ( ! ! this.$element ) setTimeout( ()=>this.$element.find( "document-property.added-property" ).first().transition( "drop" ) );
+		if ( ! ! this.$element ) setTimeout( ()=>this.$element.find( "property.added-property" ).first().transition( "drop" ) );
 	}
 
 	getProperties():void {

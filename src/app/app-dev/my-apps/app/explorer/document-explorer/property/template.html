@@ -60,7 +60,7 @@
 		<div [hidden]="mode === modes.READ">
 			<div class="ui error form">
 				<div class="ui fluid action input">
-					<input type="text" [ngFormControl]="nameInput" (keyup.escape)="cancel()" (keyup.enter)="nameInput.valid? save() : null">
+					<input type="text" [ngFormControl]="nameInput" (keyup.escape)="cancelEdition()" (keyup.enter)="nameInput.valid? save() : null">
 					<button class="ui button"
 					        [disabled]="!nameInput.valid"
 					        (click)="save(nameInput.value)">Save
@@ -105,6 +105,7 @@
 			          [canEdit]="canEdit"
 			          [(literals)]="literals"
 			          [onAddNewLiteral]="addNewLiteral"
+
 			          (onLiteralsChanges)="checkForChangesOnLiterals($event)"></literals>
 			<pointers #pointersContainer
 			          [canEdit]="canEdit"
@@ -113,19 +114,10 @@
 			          [bNodes]="bNodes"
 			          [namedFragments]="namedFragments"
 			          [documentURI]="documentURI"
+
 			          (onGoToBNode)="goToBNode($event)"
 			          (onGoToNamedFragment)="goToNamedFragment($event)"
 			          (onPointersChanges)="checkForChangesOnPointers($event)"></pointers>
-		</div>
-		<div class="ui styled accordion" *ngIf="hasHeader('@list')">
-			<div class="title" *ngFor="let item of value; let i = index;">
-				<i class="dropdown icon"></i>
-				@list
-			</div>
-			<div class="content" *ngFor="let item of value; let i = index;">
-				<property-list [list]="item['@list']"
-				               (onGoToBNode)="goToBNode($event)"></property-list>
-			</div>
 		</div>
 	</div>
 </div>

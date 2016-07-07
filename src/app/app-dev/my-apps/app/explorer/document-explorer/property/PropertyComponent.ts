@@ -17,11 +17,12 @@ import PointersComponent from "./pointers/PointersComponent";
 import { PointerRow } from "./pointers/pointer/PointerComponent";
 
 import template from "./template.html!";
-import "./style.css!";
+import style from "./style.css!text";
 
 @Component( {
-	selector: "document-property",
+	selector: "property",
 	template: template,
+	styles: [ style ],
 	directives: [ ListViewerComponent, LiteralsComponent, PointersComponent ],
 	host: { "[class.has-changed]": "property.modified", "[class.deleted-property]": "property.deleted", "[class.added-property]": "property.added" },
 } )
@@ -36,26 +37,22 @@ export default class PropertyComponent {
 	tempPointers:PointerRow[];
 	tempProperty:Property = <Property>{};
 	copyOrAdded:string;
+
 	id:string;
 	name:string;
 	value:any[] = [];
+
 	addNewLiteral:EventEmitter<boolean> = new EventEmitter<boolean>();
 	addNewPointer:EventEmitter<boolean> = new EventEmitter<boolean>();
-	commonHeaders:string[] = [ "@id", "@type", "@value" ];
+	commonToken:string[] = [ "@id", "@type", "@value" ];
 	modes:Modes = Modes;
 	nameInput:AbstractControl = new Control( this.name, Validators.compose( [ Validators.required, this.nameValidator.bind( this ) ] ) );
+
 	@Input() mode:string = Modes.READ;
 	@Input() documentURI:string;
 	@Input() bNodes:RDFNode.Class[] = [];
 	@Input() namedFragments:RDFNode.Class[] = [];
 	@Input() canEdit:boolean = true;
-
-	@Output() onGoToBNode:EventEmitter<string> = new EventEmitter<string>();
-	@Output() onGoToNamedFragment:EventEmitter<string> = new EventEmitter<string>();
-	@Output() onChangeProperty:EventEmitter<Property> = new EventEmitter<Property>();
-	@Output() onDeleteProperty:EventEmitter<PropertyRow> = new EventEmitter<PropertyRow>();
-	@Output() onDeleteNewProperty:EventEmitter<PropertyRow> = new EventEmitter<PropertyRow>();
-	@Output() onSaveNewProperty:EventEmitter<PropertyRow> = new EventEmitter<PropertyRow>();
 	private _property:PropertyRow;
 	@Input() set property( prop:PropertyRow ) {
 		this.copyOrAdded = typeof prop.copy !== "undefined" ? "copy" : "added";
@@ -72,8 +69,14 @@ export default class PropertyComponent {
 			this.value = prop[ this.copyOrAdded ].value;
 		}
 	}
-
 	get property():PropertyRow { return this._property; }
+
+	@Output() onGoToBNode:EventEmitter<string> = new EventEmitter<string>();
+	@Output() onGoToNamedFragment:EventEmitter<string> = new EventEmitter<string>();
+	@Output() onChangeProperty:EventEmitter<Property> = new EventEmitter<Property>();
+	@Output() onDeleteProperty:EventEmitter<PropertyRow> = new EventEmitter<PropertyRow>();
+	@Output() onDeleteNewProperty:EventEmitter<PropertyRow> = new EventEmitter<PropertyRow>();
+	@Output() onSaveNewProperty:EventEmitter<PropertyRow> = new EventEmitter<PropertyRow>();
 
 	nameHasChanged:boolean = false;
 	literalsHaveChanged:boolean = false;
@@ -97,7 +100,7 @@ export default class PropertyComponent {
 	}
 
 	getDisplayName( uri:string ):string {
-		if ( this.commonHeaders.indexOf( uri ) > - 1 )return uri;
+		if ( this.commonToken.indexOf( uri ) > - 1 )return uri;
 		if ( URI.Util.hasFragment( uri ) )return this.getFragment( uri );
 
 		return URI.Util.getSlug( uri );
@@ -112,36 +115,8 @@ export default class PropertyComponent {
 		return URI.Util.getSlug( uri );
 	}
 
-	hasHeader( header:string, property?:any ):boolean {
-		let headers:string[] = this.getHeaders( ! ! property ? property : this.value );
-		return headers.indexOf( header ) > - 1 ? true : false;
-	}
-
-	hasCommonHeaders( property?:any ):boolean {
-		let headers:string[] = this.getHeaders( ! ! property ? property.value : this.value );
-		return headers.indexOf( "@id" ) > - 1 ? true : headers.indexOf( "@type" ) > - 1 ? true : headers.indexOf( "@value" ) > - 1 ? true : false;
-	}
-
-	getHeaders( property:any[] ):string[] {
-		let temp:string[] = [];
-		property.forEach( ( prop )=> {
-			temp = temp.concat( Object.keys( prop ) );
-		} );
-		return temp.filter( ( item, pos ) => {
-			return temp.indexOf( item ) == pos
-		} );
-	}
-
 	getFragment( uri:string ):string {
 		return URI.Util.getFragment( uri );
-	}
-
-	getTypeOf( property:any ):string {
-		return typeof property;
-	}
-
-	isLiteral( property:any ):boolean {
-		return SDKLiteral.Factory.is( property );
 	}
 
 	isArray( property:any ):boolean {
@@ -151,14 +126,6 @@ export default class PropertyComponent {
 	isUrl( uri:string ):boolean {
 		let r = /^(ftp|http|https):\/\/[^ "]+$/;
 		return r.test( uri );
-	}
-
-	isBNode( uri:string ):boolean {
-		return ! ! uri ? URI.Util.isBNodeID( uri ) : false;
-	}
-
-	isNamedFragment( uri:string ):boolean {
-		return ! ! uri ? URI.Util.isFragmentOf( uri, this.documentURI ) : false;
 	}
 
 	goToBNode( id:string ):void {
@@ -204,6 +171,13 @@ export default class PropertyComponent {
 		this.$element.find( ".confirm-deletion.dimmer" ).dimmer( "hide" );
 	}
 
+	cancelEdition():void {
+		if ( this.nameInput.valid ) {
+			this.mode = Modes.READ;
+			(<Control>this.nameInput).updateValue( this.name );
+		}
+	}
+
 	askToConfirmDeletion():void {
 		this.$element.find( ".confirm-deletion.dimmer" ).dimmer( "show" );
 	}
@@ -214,13 +188,6 @@ export default class PropertyComponent {
 		} else {
 			this.property.deleted = this.property.copy;
 			this.onDeleteProperty.emit( this.property );
-		}
-	}
-
-	cancel():void {
-		if ( this.nameInput.valid ) {
-			this.mode = Modes.READ;
-			(<Control>this.nameInput).updateValue( this.name );
 		}
 	}
 
@@ -258,27 +225,23 @@ export default class PropertyComponent {
 
 	checkForChangesOnName( newName:string ):void {
 		this.name = newName;
-
 		if ( typeof this.name !== "undefined" && (this.name !== this.property[ this.copyOrAdded ].name || this.name !== this.tempProperty.name ) ) {
 			this.tempProperty.name = this.name;
-			this.changePropertyValues();
+			this.changePropertyContent();
 		}
-		// if ( ! this.propertyHasChanged ) delete this.property.modified;
 	}
 
 	checkForChangesOnLiterals( literals:LiteralRow[] ):void {
 		this.tempLiterals = literals;
-		this.changePropertyValues();
-		// if ( ! this.propertyHasChanged ) delete this.property.modified;
+		this.changePropertyContent();
 	}
 
 	checkForChangesOnPointers( pointers:PointerRow[] ):void {
 		this.tempPointers = pointers;
-		this.changePropertyValues();
-		// if ( ! this.propertyHasChanged ) delete this.property.modified;
+		this.changePropertyContent();
 	}
 
-	changePropertyValues():void {
+	changePropertyContent():void {
 		this.tempProperty.id = this.id;
 		this.tempProperty.name = this.name;
 		// Change name

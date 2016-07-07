@@ -5,7 +5,7 @@
 <div class="ui divider" *ngIf="canEdit"></div>
 <div class="ui divided items">
 	<template ngFor let-propertyrow="$implicit" [ngForOf]="properties" let-i="index">
-		<document-property class="property added-property item transition hidden"
+		<property class="property added-property item transition hidden"
 		                   *ngIf="!!propertyrow.added"
 		                   [attr.data-tar]="propertyrow.added.name"
 
@@ -21,8 +21,8 @@
 
 		                   (onGoToBNode)="openBNode( $event )"
 		                   (onGoToNamedFragment)="openNamedFragment($event)">
-		</document-property>
-		<document-property class="property item"
+		</property>
+		<property class="property item"
 		                   *ngIf="!propertyrow.deleted && !propertyrow.added"
 		                   [attr.data-tar]="propertyrow.copy.name"
 
@@ -37,6 +37,6 @@
 
 		                   (onGoToBNode)="openBNode( $event )"
 		                   (onGoToNamedFragment)="openNamedFragment($event)">
-		</document-property>
+		</property>
 	</template>
 </div>

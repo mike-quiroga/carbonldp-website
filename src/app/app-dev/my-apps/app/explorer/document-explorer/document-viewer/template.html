@@ -15,11 +15,10 @@
 </a>
 <div class="ui basic segment document-content" *ngIf="document">
 	<div class="ui divided items">
-		<document-property class="property item"
-		                   [documentURI]="rootNode['@id']"
-		                   [propertyName]="'@id'"
-		                   [property]="{copy:{id:'@id', name:'@id', value:rootNode['@id']}}">
-		</document-property>
+		<property class="property item"
+		          [documentURI]="rootNode['@id']"
+		          [property]="{copy:{id:'@id', name:'@id', value:rootNode['@id']}}">
+		</property>
 		<div class="item">
 			<div class="content">
 				<div class="description">

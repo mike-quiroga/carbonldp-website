@@ -1,8 +1,8 @@
-document-property {
+:host {
 	.content {
 		.header {
 			.slug {
-				color: orangered;
+				color: #FF4500;
 			}
 		}
 
@@ -21,28 +21,28 @@ document-property {
 			}
 		}
 	}
+	> .content > .status.indicator {
+		float: right;
+	}
 }
 
-document-property > .content > .status.indicator {
-	float: right;
-}
-
-.ui.items > .item .meta input {
+.ui.items > :host.item .meta input {
+	// Remove gap between input and save button when creating/editing a property name
 	margin-right: 0;
 }
 
-.ui.items > .item.added-property {
+.ui.items > :host.item.added-property {
 	background-color: #F1FAFF;
 	padding-left: 15px;
 	padding-right: 15px;
 }
 
-.ui.items > .item.has-changed {
+.ui.items > :host.item.has-changed {
 	background-color: #FFFFE0;
 	padding-left: 15px;
 	padding-right: 15px;
 }
 
-.ui.divided.items > .item .content {
+.ui.divided.items > :host.item .content {
 	margin-top: 2%;
 }
