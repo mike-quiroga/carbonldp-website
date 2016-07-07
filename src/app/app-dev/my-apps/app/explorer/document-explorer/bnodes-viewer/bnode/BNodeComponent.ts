@@ -23,6 +23,7 @@ export default class BNodeComponent {
 	$element:JQuery;
 	modes:Modes = Modes;
 	properties:PropertyRow[] = [];
+	existingProperties:string[] = [];
 	records:BNodeRecords;
 	private _bNodeHasChanged:boolean;
 	set bNodeHasChanged( hasChanged:boolean ) {
@@ -76,6 +77,7 @@ export default class BNodeComponent {
 		} else {
 			this.records.changes.delete( property.copy.id );
 		}
+		this.updateExistingProperties();
 		this.bNodeHasChanged = this.records.changes.size > 0 || this.records.additions.size > 0 || this.records.deletions.size > 0;
 	}
 
@@ -87,6 +89,7 @@ export default class BNodeComponent {
 		} else if ( typeof property.deleted !== "undefined" ) {
 			this.records.deletions.set( property.deleted.id, property );
 		}
+		this.updateExistingProperties();
 		this.bNodeHasChanged = this.records.changes.size > 0 || this.records.additions.size > 0 || this.records.deletions.size > 0;
 	}
 
@@ -100,6 +103,7 @@ export default class BNodeComponent {
 				this.records.additions.set( property.added.name, property );
 			}
 		}
+		this.updateExistingProperties();
 		this.bNodeHasChanged = this.records.changes.size > 0 || this.records.additions.size > 0 || this.records.deletions.size > 0;
 	}
 
@@ -117,7 +121,8 @@ export default class BNodeComponent {
 
 	getProperties():void {
 		this.properties = [];
-		Object.keys( this.bNode ).forEach( ( propName:string )=> {
+		this.updateExistingProperties();
+		this.existingProperties.forEach( ( propName:string )=> {
 			this.properties.push( <PropertyRow>{
 				copy: <Property>{
 					id: propName,
@@ -128,13 +133,22 @@ export default class BNodeComponent {
 		} );
 	}
 
+	updateExistingProperties():void {
+		this.existingProperties = Object.keys( this.bNode );
+		if ( ! this.records ) return;
+		this.records.additions.forEach( ( value, key )=> {
+			this.existingProperties.push( key );
+		} );
+		this.records.changes.forEach( ( value, key )=> {
+			if ( value.modified.id !== value.modified.name ) {
+				this.existingProperties.splice( this.existingProperties.indexOf( value.modified.id ), 1, value.modified.name );
+			}
+		} );
+		this.records.deletions.forEach( ( value, key )=> {
+			this.existingProperties.splice( this.existingProperties.indexOf( value.deleted.id ), 1 );
+		} );
+	}
 }
-// export interface WorkingBNode {
-// 	copy:any;
-// 	added?:any;
-// 	modified?:any;
-// 	deleted?:any;
-// }
 export class BNode {
 	id:string;
 	properties:Property[];

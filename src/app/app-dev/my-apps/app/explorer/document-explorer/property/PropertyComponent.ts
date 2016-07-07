@@ -53,6 +53,7 @@ export default class PropertyComponent {
 	@Input() bNodes:RDFNode.Class[] = [];
 	@Input() namedFragments:RDFNode.Class[] = [];
 	@Input() canEdit:boolean = true;
+	@Input() existingProperties:string[] = [];
 	private _property:PropertyRow;
 	@Input() set property( prop:PropertyRow ) {
 		this.copyOrAdded = typeof prop.copy !== "undefined" ? "copy" : "added";
@@ -69,6 +70,7 @@ export default class PropertyComponent {
 			this.value = prop[ this.copyOrAdded ].value;
 		}
 	}
+
 	get property():PropertyRow { return this._property; }
 
 	@Output() onGoToBNode:EventEmitter<string> = new EventEmitter<string>();
@@ -282,6 +284,7 @@ export default class PropertyComponent {
 	private nameValidator( control:AbstractControl ):any {
 		if ( ! ! control ) {
 			if ( typeof control.value === "undefined" || control.value === null || ! control.value ) return null;
+			if ( this.existingProperties.indexOf( control.value ) !== - 1 && this.id !== control.value ) return { "duplicatedPropertyName": true };
 			if ( ! /^(?:(?:(?:https?|ftp):)?\/\/)(?:\S+(?::\S*)?@)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,})).?)(?::\d{2,5})?(?:[/?#]\S*)?$/i.test( control.value ) )
 				return { "invalidName": true };
 			if ( control.value.split( "#" ).length > 2 ) return { "duplicatedHashtag": true };

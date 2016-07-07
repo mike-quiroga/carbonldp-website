@@ -71,6 +71,7 @@
 					<p *ngIf="nameInput.hasError('invalidName')">Enter a valid URL. Only alphanumeric values (a-z, A-Z, 0..9)</p>
 					<p *ngIf="nameInput.hasError('missingFragment')">The name slug must be placed after a hashtag (#) symbol.</p>
 					<p *ngIf="nameInput.hasError('duplicatedHashtag')">Use only one hashtag (#) symbol.</p>
+					<p *ngIf="nameInput.hasError('duplicatedPropertyName')">A property with that name already exists.</p>
 				</div>
 			</div>
 		</div>

@@ -22,12 +22,14 @@ export default class DocumentResourceComponent {
 	$element:JQuery;
 	modes:Modes = Modes;
 	properties:PropertyRow[] = [];
+	existingProperties:string[] = [];
 	records:RootRecords;
 	private _rootHasChanged:boolean;
 	set rootHasChanged( hasChanged:boolean ) {
 		this._rootHasChanged = hasChanged;
 		this.onChanges.emit( this.records );
 	}
+
 	get rootHasChanged() {
 		return this._rootHasChanged;
 	}
@@ -84,6 +86,7 @@ export default class DocumentResourceComponent {
 		} else {
 			this.records.changes.delete( property.copy.id );
 		}
+		this.updateExistingProperties();
 		this.rootHasChanged = this.records.changes.size > 0 || this.records.additions.size > 0 || this.records.deletions.size > 0;
 	}
 
@@ -95,6 +98,7 @@ export default class DocumentResourceComponent {
 		} else if ( typeof property.deleted !== "undefined" ) {
 			this.records.deletions.set( property.deleted.id, property );
 		}
+		this.updateExistingProperties();
 		this.rootHasChanged = this.records.changes.size > 0 || this.records.additions.size > 0 || this.records.deletions.size > 0;
 	}
 
@@ -108,6 +112,7 @@ export default class DocumentResourceComponent {
 				this.records.additions.set( property.added.name, property );
 			}
 		}
+		this.updateExistingProperties();
 		this.rootHasChanged = this.records.changes.size > 0 || this.records.additions.size > 0 || this.records.deletions.size > 0;
 	}
 
@@ -125,14 +130,31 @@ export default class DocumentResourceComponent {
 
 	getProperties():void {
 		this.properties = [];
-		Object.keys( this.rootNode ).forEach( ( propName:string )=> {
-			this.properties.push( <PropertyRow>{
-				copy: <Property>{
+		this.updateExistingProperties();
+		this.existingProperties.forEach( ( propName:string )=> {
+			this.properties.push( {
+				copy: {
 					id: propName,
 					name: propName,
 					value: this.rootNode[ propName ]
 				}
 			} );
+		} );
+	}
+
+	updateExistingProperties():void {
+		this.existingProperties = Object.keys( this.rootNode );
+		if ( ! this.records ) return;
+		this.records.additions.forEach( ( value, key )=> {
+			this.existingProperties.push( key );
+		} );
+		this.records.changes.forEach( ( value, key )=> {
+			if ( value.modified.id !== value.modified.name ) {
+				this.existingProperties.splice( this.existingProperties.indexOf( value.modified.id ), 1, value.modified.name );
+			}
+		} );
+		this.records.deletions.forEach( ( value, key )=> {
+			this.existingProperties.splice( this.existingProperties.indexOf( value.deleted.id ), 1 );
 		} );
 	}
 }

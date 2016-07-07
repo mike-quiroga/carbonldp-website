@@ -177,11 +177,6 @@ export default class DocumentViewerComponent {
 					delete this.rootNode[ key ];
 				} );
 			}
-			if ( this.rootNodeRecords.additions.size > 0 ) {
-				this.rootNodeRecords.additions.forEach( ( property, key )=> {
-					this.rootNode[ key ] = property.added.value;
-				} );
-			}
 			if ( this.rootNodeRecords.changes.size > 0 ) {
 				this.rootNodeRecords.changes.forEach( ( property, key )=> {
 					if ( property.modified.id !== property.modified.name ) {
@@ -190,6 +185,11 @@ export default class DocumentViewerComponent {
 					} else {
 						this.rootNode[ key ] = property.modified.value;
 					}
+				} );
+			}
+			if ( this.rootNodeRecords.additions.size > 0 ) {
+				this.rootNodeRecords.additions.forEach( ( property, key )=> {
+					this.rootNode[ key ] = property.added.value;
 				} );
 			}
 		}
@@ -204,11 +204,6 @@ export default class DocumentViewerComponent {
 					delete tempBNode[ key ];
 				} );
 			}
-			if ( bNodeRecords.additions.size > 0 ) {
-				bNodeRecords.additions.forEach( ( property, key )=> {
-					tempBNode[ key ] = property.added.value;
-				} );
-			}
 			if ( bNodeRecords.changes.size > 0 ) {
 				bNodeRecords.changes.forEach( ( property, key )=> {
 					if ( property.modified.id !== property.modified.name ) {
@@ -217,6 +212,11 @@ export default class DocumentViewerComponent {
 					} else {
 						tempBNode[ key ] = property.modified.value;
 					}
+				} );
+			}
+			if ( bNodeRecords.additions.size > 0 ) {
+				bNodeRecords.additions.forEach( ( property, key )=> {
+					tempBNode[ key ] = property.added.value;
 				} );
 			}
 		} );
@@ -231,11 +231,6 @@ export default class DocumentViewerComponent {
 					delete tempNamedFragment[ key ];
 				} );
 			}
-			if ( namedFragmentRecords.additions.size > 0 ) {
-				namedFragmentRecords.additions.forEach( ( property, key )=> {
-					tempNamedFragment[ key ] = property.added.value;
-				} );
-			}
 			if ( namedFragmentRecords.changes.size > 0 ) {
 				namedFragmentRecords.changes.forEach( ( property, key )=> {
 					if ( property.modified.id !== property.modified.name ) {
@@ -244,6 +239,11 @@ export default class DocumentViewerComponent {
 					} else {
 						tempNamedFragment[ key ] = property.modified.value;
 					}
+				} );
+			}
+			if ( namedFragmentRecords.additions.size > 0 ) {
+				namedFragmentRecords.additions.forEach( ( property, key )=> {
+					tempNamedFragment[ key ] = property.added.value;
 				} );
 			}
 		} );

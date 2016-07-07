@@ -6,35 +6,37 @@
 <div class="ui divided items">
 	<template ngFor let-propertyrow="$implicit" [ngForOf]="properties" let-i="index">
 		<property class="property item"
-		                   *ngIf="!propertyrow.deleted && !propertyrow.added && canDisplay(propertyrow.copy.name)"
-		                   [attr.data-tar]="propertyrow.copy.name"
+		          *ngIf="!propertyrow.deleted && !propertyrow.added && canDisplay(propertyrow.copy.name)"
+		          [attr.data-tar]="propertyrow.copy.name"
 
-		                   [property]="propertyrow"
-		                   [bNodes]="bNodes"
-		                   [namedFragments]="namedFragments"
-		                   [documentURI]="documentURI"
+		          [property]="propertyrow"
+		          [bNodes]="bNodes"
+		          [namedFragments]="namedFragments"
+		          [documentURI]="documentURI"
+		          [existingProperties]="existingProperties"
 
-		                   (onChangeProperty)="changeProperty(propertyrow, i)"
-		                   (onDeleteProperty)="deleteProperty(propertyrow, i)"
+		          (onChangeProperty)="changeProperty(propertyrow, i)"
+		          (onDeleteProperty)="deleteProperty(propertyrow, i)"
 
-		                   (onGoToBNode)="openBNode( $event )"
-		                   (onGoToNamedFragment)="openNamedFragment($event)">
+		          (onGoToBNode)="openBNode( $event )"
+		          (onGoToNamedFragment)="openNamedFragment($event)">
 		</property>
 		<property class="property added-property item transition hidden"
-		                   *ngIf="!!propertyrow.added && canDisplay(propertyrow.added.name)"
-		                   [attr.data-tar]="propertyrow.added.name"
+		          *ngIf="!!propertyrow.added && canDisplay(propertyrow.added.name)"
+		          [attr.data-tar]="propertyrow.added.name"
 
-		                   [property]="propertyrow"
-		                   [bNodes]="bNodes"
-		                   [namedFragments]="namedFragments"
-		                   [documentURI]="documentURI"
-		                   [mode]="modes.EDIT"
+		          [property]="propertyrow"
+		          [bNodes]="bNodes"
+		          [namedFragments]="namedFragments"
+		          [documentURI]="documentURI"
+		          [existingProperties]="existingProperties"
+		          [mode]="modes.EDIT"
 
-		                   (onSaveNewProperty)="addProperty(propertyrow, i)"
-		                   (onDeleteNewProperty)="deleteProperty(propertyrow, i)"
+		          (onSaveNewProperty)="addProperty(propertyrow, i)"
+		          (onDeleteNewProperty)="deleteProperty(propertyrow, i)"
 
-		                   (onGoToBNode)="openBNode( $event )"
-		                   (onGoToNamedFragment)="openNamedFragment($event)">
+		          (onGoToBNode)="openBNode( $event )"
+		          (onGoToNamedFragment)="openNamedFragment($event)">
 		</property>
 	</template>
 </div>
