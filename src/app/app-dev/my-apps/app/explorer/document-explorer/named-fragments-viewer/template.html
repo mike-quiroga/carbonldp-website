@@ -20,7 +20,7 @@
 	</a>
 </div>
 <div class="ui bottom attached tab segment active" data-tab="all-namedFragments">
-	<table class="ui small very compact striped selectable celled table">
+	<table class="ui small very compact striped selectable celled table" *ngIf="namedFragments.length > 0">
 		<thead>
 			<tr>
 				<th>@id</th>
@@ -35,6 +35,9 @@
 			</tr>
 		</tbody>
 	</table>
+	<div class="ui message" *ngIf="!namedFragments || namedFragments.length===0">
+		<p>No named fragments to show.</p>
+	</div>
 </div>
 <div class="ui bottom attached tab segment"
      *ngFor="let namedFragment of openedNamedFragments; let i = index;" [attr.data-tab]="'namedfragment_'+getNormalizedUri(namedFragment['@id'])">
