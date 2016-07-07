@@ -7,15 +7,13 @@ import "semantic-ui/semantic";
 import * as RDFNode from "carbonldp/RDF/RDFNode";
 import * as URI from "carbonldp/RDF/URI";
 
-import { IterableMapPipe } from "./../../../iterable-map/IterableMapPipe";
-
 import template from "./template.html!";
-import "./style.css!";
+import style from "./style.css!text";
 
 @Component( {
 	selector: "tr.pointer",
 	template: template,
-	pipes: [ IterableMapPipe ]
+	styles: [ style ],
 } )
 
 export default class PointerComponent {
