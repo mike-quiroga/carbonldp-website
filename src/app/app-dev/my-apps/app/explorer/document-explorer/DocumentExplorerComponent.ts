@@ -13,11 +13,12 @@ import DocumentTreeViewComponent from "./document-treeview/DocumentTreeViewCompo
 import { Message } from "./../../../../components/errors-area/ErrorsAreaComponent";
 
 import template from "./template.html!";
-import "./style.css!";
+import style from "./style.css!text";
 
 @Component( {
 	selector: "document-explorer",
 	template: template,
+	styles: [ style ],
 	directives: [ DocumentTreeViewComponent, DocumentViewerComponent ],
 } )
 
