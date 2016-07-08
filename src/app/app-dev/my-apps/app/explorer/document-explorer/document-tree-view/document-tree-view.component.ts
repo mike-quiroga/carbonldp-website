@@ -11,8 +11,8 @@ import * as URI from "carbonldp/RDF/URI";
 import * as SDKContext from "carbonldp/SDKContext";
 import * as RDFDocument from "carbonldp/RDF/Document";
 
-import template from "./template.html!";
-import style from "./style.css!text";
+import template from "./document-tree-view.component.html!";
+import style from "./document-tree-view.component.css!text";
 
 @Component( {
 	selector: "document-treeview",

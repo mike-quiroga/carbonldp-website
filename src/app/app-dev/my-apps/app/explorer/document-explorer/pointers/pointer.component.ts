@@ -7,8 +7,8 @@ import "semantic-ui/semantic";
 import * as RDFNode from "carbonldp/RDF/RDFNode";
 import * as URI from "carbonldp/RDF/URI";
 
-import template from "./template.html!";
-import style from "./style.css!text";
+import template from "./pointer.component.html!";
+import style from "./pointer.component.css!text";
 
 @Component( {
 	selector: "tr.pointer",

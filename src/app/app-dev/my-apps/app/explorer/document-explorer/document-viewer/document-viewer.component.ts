@@ -10,25 +10,25 @@ import * as RDFDocument from "carbonldp/RDF/Document";
 import { JSONLDParser as JSONLDParser } from "carbonldp/HTTP";
 import { Error as HTTPError } from "carbonldp/HTTP/Errors";
 
-import DocumentsResolverService from "./../DocumentsResolverService";
+import DocumentsResolverService from "./../documents-resolver.service.ts";
 
-import DocumentResourceViewerComponent from "./../document-resource-viewer/DocumentResourceViewer";
-import { RootRecords } from "./../document-resource-viewer/DocumentResourceViewer";
-import BNodesViewerComponent from "./../bnodes-viewer/BNodesViewerComponent";
-import NamedFragmentsViewerComponent from "./../named-fragments-viewer/NamedFragmentsViewerComponent";
-import PropertyComponent from "./../property/PropertyComponent";
-import { BNodeRecords } from "./../bnodes-viewer/bnode/BNodeComponent";
-import { NamedFragmentRecords } from "./../named-fragments-viewer/named-fragment/NamedFragmentComponent";
+import DocumentResourceComponent from "./../document-resource/document-resource.component";
+import { RootRecords } from "./../document-resource/document-resource.component";
+import BlankNodesComponent from "./../blank-nodes/blank-nodes.component";
+import NamedFragmentsComponent from "./../named-fragments/named-fragments.component";
+import PropertyComponent from "./../property/property.component";
+import { BlankNodeRecords } from "./../blank-nodes/blank-node.component";
+import { NamedFragmentRecords } from "./../named-fragments/named-fragment.component";
 
-import template from "./template.html!";
-import style from "./style.css!text";
+import template from "./document-viewer.component.html!";
+import style from "./document-viewer.component.css!text";
 
 @Component( {
 	selector: "document-viewer",
 	host: { "[class.ui]": "true", "[class.basic]": "true", "[class.segment]": "true", },
 	template: template,
 	styles: [ style ],
-	directives: [ DocumentResourceViewerComponent, BNodesViewerComponent, NamedFragmentsViewerComponent, PropertyComponent ],
+	directives: [ DocumentResourceComponent, BlankNodesComponent, NamedFragmentsComponent, PropertyComponent ],
 } )
 
 export default class DocumentViewerComponent {
@@ -43,7 +43,7 @@ export default class DocumentViewerComponent {
 	rootNodeHasChanged:boolean = false;
 	rootNodeRecords:RootRecords;
 	bNodesHaveChanged:boolean = false;
-	bNodesChanges:Map<string, BNodeRecords>;
+	bNodesChanges:Map<string, BlankNodeRecords>;
 	namedFragmentsHaveChanged:boolean = false;
 	namedFragmentsChanges:Map<string, NamedFragmentRecords>;
 
@@ -66,8 +66,8 @@ export default class DocumentViewerComponent {
 	@Output() onLoadingDocument:EventEmitter<boolean> = new EventEmitter<boolean>();
 	@Output() onSavingDocument:EventEmitter<boolean> = new EventEmitter<boolean>();
 
-	@ViewChild( BNodesViewerComponent ) documentBNodes:BNodesViewerComponent;
-	@ViewChild( NamedFragmentsViewerComponent ) documentNamedFragments:NamedFragmentsViewerComponent;
+	@ViewChild( BlankNodesComponent ) documentBNodes:BlankNodesComponent;
+	@ViewChild( NamedFragmentsComponent ) documentNamedFragments:NamedFragmentsComponent;
 
 	private _savingDocument:boolean = false;
 	set savingDocument( value:boolean ) {
@@ -161,7 +161,7 @@ export default class DocumentViewerComponent {
 		this.rootNodeHasChanged = records.changes.size > 0 || records.additions.size > 0 || records.deletions.size > 0;
 	}
 
-	registerBNodeChanges( bNodeChanges:Map<string, BNodeRecords> ):void {
+	registerBNodeChanges( bNodeChanges:Map<string, BlankNodeRecords> ):void {
 		this.bNodesChanges = bNodeChanges;
 		this.bNodesHaveChanged = bNodeChanges.size > 0;
 	}
@@ -198,7 +198,7 @@ export default class DocumentViewerComponent {
 
 	modifyBNodesWithChanges():void {
 		let tempBNode;
-		this.bNodesChanges.forEach( ( bNodeRecords:BNodeRecords, bNodeId:string )=> {
+		this.bNodesChanges.forEach( ( bNodeRecords:BlankNodeRecords, bNodeId:string )=> {
 			tempBNode = this.bNodes.find( (bNode => {return bNode[ "@id" ] === bNodeId}) );
 			if ( bNodeRecords.deletions.size > 0 ) {
 				bNodeRecords.deletions.forEach( ( property, key )=> {
@@ -252,7 +252,7 @@ export default class DocumentViewerComponent {
 
 	clearDocumentChanges():void {
 		this.rootNodeRecords = new RootRecords();
-		this.bNodesChanges = new Map<string, BNodeRecords>();
+		this.bNodesChanges = new Map<string, BlankNodeRecords>();
 		this.namedFragmentsChanges = new Map<string, NamedFragmentRecords>();
 		this.rootNodeHasChanged = false;
 		this.bNodesHaveChanged = false;

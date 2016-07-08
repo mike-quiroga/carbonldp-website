@@ -2,11 +2,11 @@ import { Component, Input, Output, EventEmitter } from "@angular/core";
 
 import "semantic-ui/semantic";
 
-import LiteralComponent from "./literal/LiteralComponent";
-import { Literal, LiteralRow, Modes } from "./literal/LiteralComponent";
+import LiteralComponent from "./literal.component";
+import { Literal, LiteralRow, Modes } from "./literal.component";
 
-import template from "./template.html!";
-import style from "./style.css!text";
+import template from "./literals.component.html!";
+import style from "./literals.component.css!text";
 
 @Component( {
 	selector: "literals",

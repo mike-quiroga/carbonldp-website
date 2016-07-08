@@ -6,12 +6,12 @@ import "semantic-ui/semantic";
 import * as RDFNode from "carbonldp/RDF/RDFNode";
 import * as URI from "carbonldp/RDF/URI";
 
-import NamedFragmentComponent from "./named-fragment/NamedFragmentComponent"
-import { NamedFragmentRecords } from "./named-fragment/NamedFragmentComponent"
-import PropertyComponent from "./../property/PropertyComponent";
+import NamedFragmentComponent from "./named-fragment.component"
+import { NamedFragmentRecords } from "./named-fragment.component"
+import PropertyComponent from "./../property/property.component";
 
-import template from "./template.html!";
-import style from "./style.css!text";
+import template from "./named-fragments.component.html!";
+import style from "./named-fragments.component.css!text";
 
 @Component( {
 	selector: "document-named-fragments",
@@ -20,7 +20,7 @@ import style from "./style.css!text";
 	directives: [ PropertyComponent, NamedFragmentComponent ],
 } )
 
-export default class NamedFragmentsViewerComponent {
+export default class NamedFragmentsComponent {
 
 	element:ElementRef;
 	$element:JQuery;

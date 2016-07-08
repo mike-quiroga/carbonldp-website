@@ -4,11 +4,11 @@ import "semantic-ui/semantic";
 
 import * as RDFNode from "carbonldp/RDF/RDFNode";
 
-import PointerComponent from "./pointer/PointerComponent";
-import { Pointer, PointerRow, Modes } from "./pointer/PointerComponent";
+import PointerComponent from "./pointer.component";
+import { Pointer, PointerRow, Modes } from "./pointer.component";
 
-import template from "./template.html!";
-import style from "./style.css!text";
+import template from "./pointers.component.html!";
+import style from "./pointers.component.css!text";
 
 @Component( {
 	selector: "pointers",

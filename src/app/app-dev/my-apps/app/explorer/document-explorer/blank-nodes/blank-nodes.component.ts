@@ -5,34 +5,34 @@ import "semantic-ui/semantic";
 
 import * as RDFNode from "carbonldp/RDF/RDFNode";
 
-import BNodeComponent from "./bnode/BNodeComponent"
-import { BNodeRecords } from "./bnode/BNodeComponent"
-import PropertyComponent from "./../property/PropertyComponent";
+import BlankNodeComponent from "./blank-node.component"
+import { BlankNodeRecords } from "./blank-node.component"
+import PropertyComponent from "./../property/property.component";
 
-import template from "./template.html!";
-import style from "./style.css!text";
+import template from "./blank-nodes.component.html!";
+import style from "./blank-nodes.component.css!text";
 
 @Component( {
 	selector: "document-bnodes",
 	template: template,
 	styles: [ style ],
-	directives: [ PropertyComponent, BNodeComponent ],
+	directives: [ PropertyComponent, BlankNodeComponent ],
 } )
 
-export default class BNodesViewerComponent {
+export default class BlankNodesComponent {
 
 	element:ElementRef;
 	$element:JQuery;
 
 	nodesTab:JQuery;
 	openedBNodes:RDFNode.Class[] = [];
-	bNodesChanges:Map<string, BNodeRecords> = new Map<string, BNodeRecords>();
+	bNodesChanges:Map<string, BlankNodeRecords> = new Map<string, BlankNodeRecords>();
 
 	@Input() bNodes:RDFNode.Class[] = [];
 	@Input() namedFragments:RDFNode.Class[] = [];
 	@Input() documentURI:string = "";
 
-	@Output() onChanges:EventEmitter<Map<string, BNodeRecords>> = new EventEmitter<Map<string, BNodeRecords>>();
+	@Output() onChanges:EventEmitter<Map<string, BlankNodeRecords>> = new EventEmitter<Map<string, BlankNodeRecords>>();
 	@Output() onOpenBNode:EventEmitter<string> = new EventEmitter<string>();
 	@Output() onOpenNamedFragment:EventEmitter<string> = new EventEmitter<string>();
 
@@ -56,7 +56,7 @@ export default class BNodesViewerComponent {
 		return Object.keys( property );
 	}
 
-	notifyDocumentBNodeHasChanged( records:BNodeRecords, bNode:RDFNode.Class ) {
+	notifyDocumentBNodeHasChanged( records:BlankNodeRecords, bNode:RDFNode.Class ) {
 		if ( typeof records === "undefined" || records === null ) {
 			this.bNodesChanges.delete( bNode[ "@id" ] );
 			this.onChanges.emit( this.bNodesChanges );

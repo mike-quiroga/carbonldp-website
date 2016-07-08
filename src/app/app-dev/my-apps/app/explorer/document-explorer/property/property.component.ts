@@ -10,20 +10,19 @@ import * as URI from "carbonldp/RDF/URI";
 import * as RDFNode from "carbonldp/RDF/RDFNode";
 import * as Utils from "carbonldp/Utils";
 
-import ListViewerComponent from "./../list-viewer/ListViewerComponent";
-import LiteralsComponent from "./literals/LiteralsComponent";
-import { LiteralRow } from "./literals/literal/LiteralComponent";
-import PointersComponent from "./pointers/PointersComponent";
-import { PointerRow } from "./pointers/pointer/PointerComponent";
+import LiteralsComponent from "./../literals/literals.component";
+import { LiteralRow } from "./../literals/literal.component";
+import PointersComponent from "./../pointers/pointers.component";
+import { PointerRow } from "./../pointers/pointer.component";
 
-import template from "./template.html!";
-import style from "./style.css!text";
+import template from "./property.component.html!";
+import style from "./property.component.css!text";
 
 @Component( {
 	selector: "property",
 	template: template,
 	styles: [ style ],
-	directives: [ ListViewerComponent, LiteralsComponent, PointersComponent ],
+	directives: [ LiteralsComponent, PointersComponent ],
 	host: { "[class.has-changed]": "property.modified", "[class.deleted-property]": "property.deleted", "[class.added-property]": "property.added" },
 } )
 

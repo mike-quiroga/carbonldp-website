@@ -5,55 +5,52 @@ import "semantic-ui/semantic";
 
 import * as RDFNode from "carbonldp/RDF/RDFNode";
 
-import PropertyComponent from "./../property/PropertyComponent";
-import { Property, PropertyRow, Modes } from "./../property/PropertyComponent";
+import { Property, PropertyRow, Modes } from "./../property/property.component";
+import PropertyComponent from "./../property/property.component";
 
-import template from "./template.html!";
+import template from "./named-fragment.component.html!";
 
 @Component( {
-	selector: "document-resource",
+	selector: "named-fragment",
 	template: template,
 	directives: [ PropertyComponent ],
 } )
 
-export default class DocumentResourceComponent {
+export default class NamedFragmentComponent {
 
 	element:ElementRef;
 	$element:JQuery;
 	modes:Modes = Modes;
 	properties:PropertyRow[] = [];
 	existingProperties:string[] = [];
-	records:RootRecords;
-	private _rootHasChanged:boolean;
-	set rootHasChanged( hasChanged:boolean ) {
-		this._rootHasChanged = hasChanged;
+	records:NamedFragmentRecords;
+	private _namedFragmentChanged:boolean;
+	set namedFragmentChanged( hasChanged:boolean ) {
+		this._namedFragmentChanged = hasChanged;
 		this.onChanges.emit( this.records );
 	}
 
-	get rootHasChanged() {
-		return this._rootHasChanged;
+	get namedFragmentChanged() {
+		return this.namedFragmentChanged;
 	}
 
-	@Input() displayOnly:string[] = [];
-	@Input() hiddenProperties:string[] = [];
 	@Input() bNodes:RDFNode.Class[] = [];
 	@Input() namedFragments:RDFNode.Class[] = [];
 	@Input() canEdit:boolean = true;
 	@Input() documentURI:string = "";
-	private _rootNode:RDFNode.Class;
-	@Input() set rootNode( value:RDFNode.Class ) {
-		this._rootNode = value;
-		this.records = new RootRecords();
+	private _namedFragment:RDFNode.Class;
+	@Input() set namedFragment( value:RDFNode.Class ) {
+		this._namedFragment = value;
 		this.getProperties();
 	}
 
-	get rootNode() {
-		return this._rootNode;
+	get namedFragment() {
+		return this._namedFragment;
 	}
 
 	@Output() onOpenBNode:EventEmitter<string> = new EventEmitter<string>();
 	@Output() onOpenNamedFragment:EventEmitter<string> = new EventEmitter<string>();
-	@Output() onChanges:EventEmitter<RootRecords> = new EventEmitter<RootRecords>();
+	@Output() onChanges:EventEmitter<NamedFragmentRecords> = new EventEmitter<NamedFragmentRecords>();
 
 
 	constructor( element:ElementRef ) {
@@ -72,26 +69,19 @@ export default class DocumentResourceComponent {
 		this.onOpenNamedFragment.emit( id );
 	}
 
-	canDisplay( propertyName:any ):boolean {
-		if ( typeof propertyName === "undefined" ) return false;
-		if ( this.displayOnly.length === 0 && this.hiddenProperties.length === 0 ) return true;
-		if ( this.displayOnly.length > 0 ) return this.displayOnly.indexOf( propertyName ) !== - 1 ? true : false;
-		return this.hiddenProperties.indexOf( propertyName ) !== - 1 ? false : true;
-	}
-
 	changeProperty( property:PropertyRow, index:number ):void {
-		if ( typeof this.records === "undefined" ) this.records = new RootRecords();
+		if ( typeof this.records === "undefined" ) this.records = new NamedFragmentRecords();
 		if ( typeof property.modified !== "undefined" ) {
 			this.records.changes.set( property.modified.id, property );
 		} else {
 			this.records.changes.delete( property.copy.id );
 		}
 		this.updateExistingProperties();
-		this.rootHasChanged = this.records.changes.size > 0 || this.records.additions.size > 0 || this.records.deletions.size > 0;
+		this.namedFragmentChanged = this.records.changes.size > 0 || this.records.additions.size > 0 || this.records.deletions.size > 0;
 	}
 
 	deleteProperty( property:PropertyRow, index:number ):void {
-		if ( typeof this.records === "undefined" ) this.records = new RootRecords();
+		if ( typeof this.records === "undefined" ) this.records = new NamedFragmentRecords();
 		if ( typeof property.added !== "undefined" ) {
 			this.records.additions.delete( property.added.id );
 			this.properties.splice( index, 1 );
@@ -99,11 +89,11 @@ export default class DocumentResourceComponent {
 			this.records.deletions.set( property.deleted.id, property );
 		}
 		this.updateExistingProperties();
-		this.rootHasChanged = this.records.changes.size > 0 || this.records.additions.size > 0 || this.records.deletions.size > 0;
+		this.namedFragmentChanged = this.records.changes.size > 0 || this.records.additions.size > 0 || this.records.deletions.size > 0;
 	}
 
 	addProperty( property:PropertyRow, index:number ):void {
-		if ( typeof this.records === "undefined" ) this.records = new RootRecords();
+		if ( typeof this.records === "undefined" ) this.records = new NamedFragmentRecords();
 		if ( typeof property.added !== "undefined" ) {
 			if ( property.added.id === property.added.name ) {
 				this.records.additions.set( property.added.id, property );
@@ -113,11 +103,11 @@ export default class DocumentResourceComponent {
 			}
 		}
 		this.updateExistingProperties();
-		this.rootHasChanged = this.records.changes.size > 0 || this.records.additions.size > 0 || this.records.deletions.size > 0;
+		this.namedFragmentChanged = this.records.changes.size > 0 || this.records.additions.size > 0 || this.records.deletions.size > 0;
 	}
 
 	createProperty( property:Property, propertyRow:PropertyRow ):void {
-		let newProperty:PropertyRow = <PropertyRow>{
+		let newProperty:PropertyRow = {
 			added: <Property>{
 				id: "",
 				name: "New Property",
@@ -132,18 +122,18 @@ export default class DocumentResourceComponent {
 		this.properties = [];
 		this.updateExistingProperties();
 		this.existingProperties.forEach( ( propName:string )=> {
-			this.properties.push( {
-				copy: {
+			this.properties.push( <PropertyRow>{
+				copy: <Property>{
 					id: propName,
 					name: propName,
-					value: this.rootNode[ propName ]
+					value: this.namedFragment[ propName ]
 				}
 			} );
 		} );
 	}
 
 	updateExistingProperties():void {
-		this.existingProperties = Object.keys( this.rootNode );
+		this.existingProperties = Object.keys( this.namedFragment );
 		if ( ! this.records ) return;
 		this.records.additions.forEach( ( value, key )=> {
 			this.existingProperties.push( key );
@@ -158,8 +148,11 @@ export default class DocumentResourceComponent {
 		} );
 	}
 }
-
-export class RootRecords {
+export class NamedFragment {
+	id:string;
+	properties:Property[];
+}
+export class NamedFragmentRecords {
 	changes:Map<string,PropertyRow> = new Map<string, PropertyRow>();
 	deletions:Map<string,PropertyRow> = new Map<string, PropertyRow>();
 	additions:Map<string,PropertyRow> = new Map<string, PropertyRow>();

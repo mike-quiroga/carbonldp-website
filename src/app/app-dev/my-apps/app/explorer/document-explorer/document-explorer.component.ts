@@ -7,13 +7,13 @@ import * as SDKContext from "carbonldp/SDKContext";
 import * as RDFDocument from "carbonldp/RDF/Document";
 import * as HTTP from "carbonldp/HTTP";
 
-import DocumentsResolverService from "./../document-explorer/DocumentsResolverService"
-import DocumentViewerComponent from "./document-viewer/DocumentViewerComponent";
-import DocumentTreeViewComponent from "./document-treeview/DocumentTreeViewComponent";
+import DocumentsResolverService from "./documents-resolver.service.ts"
+import DocumentViewerComponent from "./document-viewer/document-viewer.component";
+import DocumentTreeViewComponent from "./document-tree-view/document-tree-view.component";
 import { Message } from "./../../../../components/errors-area/ErrorsAreaComponent";
 
-import template from "./template.html!";
-import style from "./style.css!text";
+import template from "./document-explorer.component.html!";
+import style from "./document-explorer.component.css!text";
 
 @Component( {
 	selector: "document-explorer",

@@ -9,9 +9,8 @@ import * as Utils from "carbonldp/Utils";
 import * as SDKLiteral from "carbonldp/RDF/Literal";
 import * as URI from "carbonldp/RDF/URI";
 
-
-import template from "./template.html!";
-import style from "./style.css!text";
+import template from "./literal.component.html!";
+import style from "./literal.component.css!text";
 
 @Component( {
 	selector: "tr.literal",
@@ -35,7 +34,7 @@ export default class LiteralComponent {
 			this.initializeLanguageDropdown()
 		}
 	}
-
+	
 	get mode() {
 		return this._mode;
 	}
