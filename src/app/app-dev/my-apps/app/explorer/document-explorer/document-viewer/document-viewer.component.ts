@@ -172,26 +172,21 @@ export default class DocumentViewerComponent {
 
 	modifyRootNodeWithChanges():void {
 		if ( ! ! this.rootNodeRecords ) {
-			if ( this.rootNodeRecords.deletions.size > 0 ) {
-				this.rootNodeRecords.deletions.forEach( ( property, key )=> {
+			this.rootNodeRecords.deletions.forEach( ( property, key )=> {
+				delete this.rootNode[ key ];
+			} );
+			this.rootNodeRecords.changes.forEach( ( property, key )=> {
+				if ( property.modified.id !== property.modified.name ) {
 					delete this.rootNode[ key ];
-				} );
-			}
-			if ( this.rootNodeRecords.changes.size > 0 ) {
-				this.rootNodeRecords.changes.forEach( ( property, key )=> {
-					if ( property.modified.id !== property.modified.name ) {
-						delete this.rootNode[ key ];
-						this.rootNode[ property.modified.name ] = property.modified.value;
-					} else {
-						this.rootNode[ key ] = property.modified.value;
-					}
-				} );
-			}
-			if ( this.rootNodeRecords.additions.size > 0 ) {
-				this.rootNodeRecords.additions.forEach( ( property, key )=> {
-					this.rootNode[ key ] = property.added.value;
-				} );
-			}
+					this.rootNode[ property.modified.name ] = property.modified.value;
+				} else {
+					this.rootNode[ key ] = property.modified.value;
+				}
+			} );
+			this.rootNodeRecords.additions.forEach( ( property, key )=> {
+				this.rootNode[ key ] = property.added.value;
+			} );
+
 		}
 	}
 
@@ -199,26 +194,21 @@ export default class DocumentViewerComponent {
 		let tempBNode;
 		this.bNodesChanges.forEach( ( bNodeRecords:BlankNodeRecords, bNodeId:string )=> {
 			tempBNode = this.bNodes.find( (bNode => {return bNode[ "@id" ] === bNodeId}) );
-			if ( bNodeRecords.deletions.size > 0 ) {
-				bNodeRecords.deletions.forEach( ( property, key )=> {
+			bNodeRecords.deletions.forEach( ( property, key )=> {
+				delete tempBNode[ key ];
+			} );
+			bNodeRecords.changes.forEach( ( property, key )=> {
+				if ( property.modified.id !== property.modified.name ) {
 					delete tempBNode[ key ];
-				} );
-			}
-			if ( bNodeRecords.changes.size > 0 ) {
-				bNodeRecords.changes.forEach( ( property, key )=> {
-					if ( property.modified.id !== property.modified.name ) {
-						delete tempBNode[ key ];
-						tempBNode[ property.modified.name ] = property.modified.value;
-					} else {
-						tempBNode[ key ] = property.modified.value;
-					}
-				} );
-			}
-			if ( bNodeRecords.additions.size > 0 ) {
-				bNodeRecords.additions.forEach( ( property, key )=> {
-					tempBNode[ key ] = property.added.value;
-				} );
-			}
+					tempBNode[ property.modified.name ] = property.modified.value;
+				} else {
+					tempBNode[ key ] = property.modified.value;
+				}
+			} );
+			bNodeRecords.additions.forEach( ( property, key )=> {
+				tempBNode[ key ] = property.added.value;
+			} );
+
 		} );
 	}
 
@@ -226,26 +216,21 @@ export default class DocumentViewerComponent {
 		let tempNamedFragment;
 		this.namedFragmentsChanges.forEach( ( namedFragmentRecords:NamedFragmentRecords, namedFragmentId:string )=> {
 			tempNamedFragment = this.namedFragments.find( (namedFragment => {return namedFragment[ "@id" ] === namedFragmentId}) );
-			if ( namedFragmentRecords.deletions.size > 0 ) {
-				namedFragmentRecords.deletions.forEach( ( property, key )=> {
+			namedFragmentRecords.deletions.forEach( ( property, key )=> {
+				delete tempNamedFragment[ key ];
+			} );
+			namedFragmentRecords.changes.forEach( ( property, key )=> {
+				if ( property.modified.id !== property.modified.name ) {
 					delete tempNamedFragment[ key ];
-				} );
-			}
-			if ( namedFragmentRecords.changes.size > 0 ) {
-				namedFragmentRecords.changes.forEach( ( property, key )=> {
-					if ( property.modified.id !== property.modified.name ) {
-						delete tempNamedFragment[ key ];
-						tempNamedFragment[ property.modified.name ] = property.modified.value;
-					} else {
-						tempNamedFragment[ key ] = property.modified.value;
-					}
-				} );
-			}
-			if ( namedFragmentRecords.additions.size > 0 ) {
-				namedFragmentRecords.additions.forEach( ( property, key )=> {
-					tempNamedFragment[ key ] = property.added.value;
-				} );
-			}
+					tempNamedFragment[ property.modified.name ] = property.modified.value;
+				} else {
+					tempNamedFragment[ key ] = property.modified.value;
+				}
+			} );
+			namedFragmentRecords.additions.forEach( ( property, key )=> {
+				tempNamedFragment[ key ] = property.added.value;
+			} );
+
 		} );
 	}
 
@@ -267,23 +252,22 @@ export default class DocumentViewerComponent {
 		this.documentsResolverService.update( this.document[ "@id" ], body, this.documentContext ).then(
 			( updatedDocument:RDFDocument.Class )=> {
 				this.document = updatedDocument[ 0 ];
-			},
-			( error:HTTPError )=> {
-				this.savingErrorMessage = {
-					title: error.name,
-					content: (<XMLHttpRequest>error.response.request).statusText,
-					statusCode: "" + error.response.status,
-					statusMessage: (<XMLHttpRequest>error.response.request).statusText,
-					endpoint: (<any>error.response.request).responseURL,
-				};
-				if ( ! ! error.response.data ) {
-					// TODO: Change this method to use the correct HTTPError when Javascript SDK implements it
-					this.getErrors( error ).then( ( errors )=> {
-						this.savingErrorMessage.errors = errors;
-					} );
-				}
 			}
-		).then( ()=> {
+		).catch( ( error:HTTPError )=> {
+			this.savingErrorMessage = {
+				title: error.name,
+				content: (<XMLHttpRequest>error.response.request).statusText,
+				statusCode: "" + error.response.status,
+				statusMessage: (<XMLHttpRequest>error.response.request).statusText,
+				endpoint: (<any>error.response.request).responseURL,
+			};
+			if ( ! ! error.response.data ) {
+				// TODO: Change this method to use the correct HTTPError when Javascript SDK implements it
+				this.getErrors( error ).then( ( errors )=> {
+					this.savingErrorMessage.errors = errors;
+				} );
+			}
+		} ).then( ()=> {
 			this.savingDocument = false;
 			this.rootNodeHasChanged = this.rootNodeRecords.changes.size > 0 || this.rootNodeRecords.additions.size > 0 || this.rootNodeRecords.deletions.size > 0;
 			this.bNodesHaveChanged = this.bNodesChanges.size > 0;

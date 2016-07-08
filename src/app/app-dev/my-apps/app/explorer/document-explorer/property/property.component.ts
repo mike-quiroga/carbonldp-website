@@ -300,7 +300,6 @@ export interface PropertyRow {
 	modified?:any;
 	deleted?:any;
 }
-
 export interface Property {
 	id:string;
 	name:string;

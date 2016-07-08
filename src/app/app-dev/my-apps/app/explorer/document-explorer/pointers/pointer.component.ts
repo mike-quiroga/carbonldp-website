@@ -7,6 +7,8 @@ import "semantic-ui/semantic";
 import * as RDFNode from "carbonldp/RDF/RDFNode";
 import * as URI from "carbonldp/RDF/URI";
 
+import { Modes } from "./../property/property.component"
+
 import template from "./pointer.component.html!";
 import style from "./pointer.component.css!text";
 
@@ -187,10 +189,6 @@ export default class PointerComponent {
 		this.onGoToNamedFragment.emit( id );
 	}
 
-}
-export class Modes {
-	static EDIT:string = "EDIT";
-	static READ:string = "READ";
 }
 export interface PointerRow {
 	copy:Pointer;

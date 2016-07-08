@@ -9,6 +9,8 @@ import * as Utils from "carbonldp/Utils";
 import * as SDKLiteral from "carbonldp/RDF/Literal";
 import * as URI from "carbonldp/RDF/URI";
 
+import { Modes } from "./../property/property.component"
+
 import template from "./literal.component.html!";
 import style from "./literal.component.css!text";
 
@@ -34,7 +36,7 @@ export default class LiteralComponent {
 			this.initializeLanguageDropdown()
 		}
 	}
-	
+
 	get mode() {
 		return this._mode;
 	}
@@ -1054,10 +1056,6 @@ export default class LiteralComponent {
 		return null;
 	}
 
-}
-export class Modes {
-	static EDIT:string = "EDIT";
-	static READ:string = "READ";
 }
 export interface LiteralRow {
 	copy:Literal;
