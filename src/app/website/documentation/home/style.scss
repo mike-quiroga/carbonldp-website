@@ -1,20 +1,32 @@
 documents-list {
-	.flex-container {
-		padding: 0;
-		margin: 0;
-		list-style: none;
 
-		display: -webkit-box;
-		display: -moz-box;
-		display: -ms-flexbox;
-		display: -webkit-flex;
-		display: flex;
+	#main-doc {
+		padding-top: 55px;
+		padding-bottom: 75px;
 
-		-webkit-flex-flow: row wrap;
-		justify-content: space-around;
+		.main-title {
+			font-size: 2.2rem;
+			letter-spacing: 0.7px;
+			/*font-size:2.4rem;*/
+			margin-top: 50px;
+			margin-bottom: 50px;
+		}
+
+		.feature {
+			.title {
+				margin-top: 40px;
+				font-size: 1.5rem;
+				margin-bottom: 30px;
+			}
+		}
+
+		.ui.circular.image {
+			margin-bottom: 20px;
+			margin-top: 10px;
+		}
 	}
 
-	.ui.menu:first-child {
+	/*.ui.menu:first-child {
 		margin-top: 14px;
 	}
 
@@ -32,11 +44,11 @@ documents-list {
 	}
 	.ui.vertical.menu {
 		/*max-width: 296px;*/
-		padding: 0px;
+	/*	padding: 0px;
 		margin-left: 14px;
 		margin-right: 14px;
 		> .header.item {
-			background-color: #607080;
+			background-color: #363F48;
 			//background-color: rgba(33, 133, 208, 0.3);
 			//color: #054264;
 			color: white;
@@ -51,15 +63,6 @@ documents-list {
 
 	.ui.segment:first-child {
 		margin-top: 14px;
-	}
+	}*/
 
-	.flex-item {
-		background: none;
-		padding: 5px;
-		width: 400px;
-		height: 250px;
-		margin-top: 10px;
-
-		font-weight: bold;
-	}
 }
