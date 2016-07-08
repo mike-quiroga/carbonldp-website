@@ -34,7 +34,7 @@ newsletter-form {
 		color: white;
 	}
 
-	.ui.vertical.segment {
+	.ui.padded.grid {
 		> h2 {
 			padding: 30px;
 		}
@@ -44,8 +44,9 @@ newsletter-form {
 	}
 
 	.ui.message {
-		margin-left: 500px;
-		margin-right: 500px;
+		margin-left: 89px;
+		margin-right: 89px;
 		padding: 10px;
 	}
+
 }
