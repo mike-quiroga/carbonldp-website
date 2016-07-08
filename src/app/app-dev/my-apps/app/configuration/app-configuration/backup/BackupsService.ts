@@ -30,6 +30,12 @@ export default class BackupsService {
 		} );
 	}
 
+	getDownloadURL( documentURI:string ):Promise<string> {
+		return this.carbon.documents.getDownloadURL( documentURI ).then( ( documentDownloadURI:string ) => {
+			return documentDownloadURI;
+		} );
+	}
+
 	delete( uri:string, appContext:SDKContext.Class ):Promise<HTTP.Response.Class> {
 		return appContext.documents.delete( uri );
 	}
