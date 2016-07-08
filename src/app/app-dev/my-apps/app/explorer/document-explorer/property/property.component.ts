@@ -85,6 +85,7 @@ export default class PropertyComponent {
 
 	get propertyHasChanged():boolean { return this.nameHasChanged || this.literalsHaveChanged || this.pointersHaveChanged; }
 
+	// TODO: Add @lists and @sets support
 	constructor( element:ElementRef ) {
 		this.element = element;
 	}
