@@ -3,7 +3,8 @@ import { Component, Input, Output, EventEmitter } from "@angular/core";
 import "semantic-ui/semantic";
 
 import LiteralComponent from "./literal.component";
-import { Literal, LiteralRow, Modes } from "./literal.component";
+import { Modes } from "./../property/property.component";
+import { Literal, LiteralRow } from "./literal.component";
 
 import template from "./literals.component.html!";
 import style from "./literals.component.css!text";
