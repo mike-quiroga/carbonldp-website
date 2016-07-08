@@ -107,7 +107,6 @@ export default class DocumentViewerComponent {
 
 	receiveDocument( document:RDFDocument.Class ):void {
 		if ( ! ! document ) {
-			console.log( "whole document has changed! %o: ", document );
 			this.loadingDocument = true;
 			this.setRoot();
 			this.generateFragments();
