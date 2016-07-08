@@ -1,10 +1,11 @@
 <div class="ui segment" [ngClass]="{loading:loadingBackups}">
-	<div class="ui middle aligned divided list" *ngIf="backups?.length > 0 && errorMessages.length === 0">
+	<div class="ui middle aligned divided list" *ngIf="backups?.length > 0 && errorMessages.length === 0 && !failedDownloadMessage">
 		<div class="item" *ngFor="let backup of backups; let i=index">
 			<div class="right floated content">
 				<div class="ui mini basic icon buttons" title="Download">
-					<button class="ui green basic button" title="Download"
-					        (click)="downloadBackup(backup.id)">
+					<button #downLoadButton
+					        class="ui green basic button" title="Download"
+					        (click)="downloadBackup(backup.id, downLoadButton)">
 						<i class="arrow down icon"></i>
 					</button>
 					<button class="ui red basic button" title="Delete"
@@ -19,7 +20,7 @@
 			</div>
 		</div>
 	</div>
-	<div class="ui icon message" *ngIf="backups?.length === 0">
+	<div class="ui icon message" *ngIf="backups?.length === 0 && !failedDownloadMessage">
 		<i class="info circle icon"></i>
 		<div class="content">
 			<div class="header">
@@ -35,6 +36,11 @@
 		               [closable]="false">
 		</error-message>
 	</div>
+	<div class="ui basic segment" *ngIf="!!failedDownloadMessage && errorMessages.length === 0">
+		<error-message [message]="failedDownloadMessage"
+		               (onClose)="closeFailedDownloadMessage($event)"
+		               [closable]="true"></error-message>
+	</div>
 </div>
 <div class="ui delete backup modal">
 	<div class="header">
@@ -43,8 +49,8 @@
 	<div class="content">
 		<div class="description">
 			<div class="ui header">Are you sure?</div>
-			<p>You are about to delete the backup "<span class="emphasize">{{askingBackupToRemove?.fileIdentifier}}</span>" created on <span class="emphasize">{{askingBackupToRemove?.created |
-				date:"MMM dd, yyy - HH:mm"}} hrs.</span>.</p>
+			<p>You are about to delete the backup
+				"<span class="emphasize">{{askingBackupToRemove?.fileIdentifier}}</span>" created on <span class="emphasize">{{askingBackupToRemove?.created | date:"MMM dd, yyy - HH:mm"}} hrs.</span>.</p>
 			<p>Are you sure you want to delete it?</p>
 			<div class="errors" *ngIf="deleteMessages.length>0">
 				<error-message *ngFor="let deleteMessage of deleteMessages; let i=index"
