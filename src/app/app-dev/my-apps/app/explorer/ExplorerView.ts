@@ -4,7 +4,7 @@ import "semantic-ui/semantic";
 
 import * as App from "./../app";
 import { AppDetailView } from "./../app-detail.view";
-import DocumentExplorerComponent from "./document-explorer/DocumentExplorerComponent";
+import DocumentExplorerComponent from "./document-explorer/document-explorer.component";
 import template from "./template.html!";
 
 @Component( {

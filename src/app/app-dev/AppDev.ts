@@ -2,7 +2,7 @@ import { Provider } from "@angular/core";
 import { AppDevView } from "app/app-dev/app-dev.view";
 import AppContextService from "app/app-dev/AppContextService";
 import ErrorsAreaService from "app/app-dev/components/errors-area/service/ErrorsAreaService";
-import DocumentsResolverService from "app/app-dev/my-apps/app/explorer/document-explorer/DocumentsResolverService";
+import DocumentsResolverService from "app/app-dev/my-apps/app/explorer/document-explorer/documents-resolver.service";
 import JobsService from "./my-apps/app/configuration/app-configuration/job/JobsService";
 import BackupsService from "./my-apps/app/configuration/app-configuration/backup/BackupsService";
 import { SIDEBAR_PROVIDERS } from "./components/sidebar/Sidebar";

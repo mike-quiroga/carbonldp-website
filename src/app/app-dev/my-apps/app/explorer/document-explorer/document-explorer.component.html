@@ -1,0 +1,30 @@
+<div class="ui divided grid segment" [ngClass]="{loading:loadingDocument || savingDocument}">
+
+	<div class="row" *ngIf="messages.length > 0">
+		<div class="sixteen wide column">
+			<div class="ui error message transition" *ngFor="let message of messages">
+				<div class="header">
+					{{message.title}}
+				</div>
+				<p>
+					<span *ngIf="message.content">{{message.content}}<br></span>
+					<span *ngIf="message.statusCode">Status: {{message.statusCode}} - {{message.statusMessage}}<br></span>
+					<span *ngIf="message.endpoint">URI: {{message.endpoint}}</span>
+				</p>
+			</div>
+		</div>
+	</div>
+	<div class="stretched row">
+		<document-treeview class="five wide column treeview-container"
+		                   [documentContext]="documentContext"
+		                   (onError)="handleError($event)"
+		                   (onLoadingDocument)="onLoadingDocument($event)"
+		                   (onResolveUri)="resolveDocument($event)"></document-treeview>
+		<document-viewer class="eleven wide column"
+		                 [document]="inspectingDocument"
+		                 [documentContext]="documentContext"
+		                 (onSavingDocument)="showLoading($event)"
+		                 (onLoadingDocument)="onLoadingDocument($event)"></document-viewer>
+
+	</div>
+</div>

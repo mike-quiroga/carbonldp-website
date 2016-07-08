@@ -1,3 +1,77 @@
+# 0.5.16 (June 8, 2016)
+- Fix bug with SPARQL Editor that hides the initial h from http when displaying results.
+- Fix my-apps action buttons to redirect to proper route.
+- Add auth ticket to URL when trying to download backups to BackupsService and BackupsListComponent.
+- Add errorMessage when the creation of the document download URL fails.
+- Add jstree as a devDependency in node
+- Add to PropertyValueComponent new read and edit modes.
+- Add document edition functionality to Document Explorer, so that you can do the following:
+  - Document:
+  	- Create:
+      - Properties
+    - Delete:
+      - Properties
+    - Read:
+      - Properties
+      - Blank Nodes
+      - Named Fragments
+    - Edit:
+      - Properties
+      - Blank Nodes
+      - Named Fragments
+  - Property:
+  	- Create:
+      - Literals (@value, @type and @language)
+      - Pointers (@id)
+  	- Delete:
+      - Literals (@value, @type and @language)
+      - Pointers (@id)
+    - Read:
+      - @id
+      - @type
+      - Literals (@value, @type and @language)
+      - Pointers (@id)
+      - Any custom properties (E.g: http://example.org/ns#PropertyName)
+    - Edit:
+      - Literals (@value, @type and @language)
+      - Pointers (@id)
+      - Any custom properties (E.g: http://example.org/ns#PropertyName)
+- Changed DocumentsResolverService to refresh ETags whenever a document is being fetched.
+- Add new components:
+  - BlankNodeComponent (To display a blank node)
+  - NamedFragmentComponent (To display a named fragment)
+  - LiteralComponent (To display the contents of a property literal)
+  - LiteralsComponent (To display the literals of a property)
+  - PointerComponent (To display the contents of a pointer literal)
+  - PointersComponent (To display the pointers of a property)
+- Rename DocumentExplorer components to follow angular's 2 naming convention:
+  - Documents Resolver Service
+    -  DocumentsResolverService.ts -> document-resolver.service.ts
+  - Document Explorer
+    -  DocumentExplorerComponent .ts-> document-explorer.component.ts
+  - Document Tree View
+    -  DocumentTreeViewComponent.ts -> document-tree-view.component.ts
+  - Document Viewer
+    -  DocumentViewerComponent.ts -> document-viewer.component.ts
+  - Blank Nodes
+    -  BNodeComponent.ts -> blank-node.component.ts
+    -  BNodesComponent.ts -> blank-nodes.component.ts
+  - Named Fragments
+    -  NamedFragmentComponent.ts -> named-fragment.component.ts
+    -  NamedFragmentsComponent.ts -> named-fragments.component.ts
+  - Document Resource
+    -  DocumentResourceViewerComponent.ts -> document-resource.component.ts
+  - Property
+    -  PropertyComponent.ts -> property.component.ts
+  - List Viewer
+    -  ListViewerComponent.ts -> list-viewer.component.ts
+  - Lists
+    -  LiteralComponent.ts -> literal.component.ts
+    -  LiteralsComponent.ts -> literals.component.ts
+  - Pointers
+    -  PointerComponent.ts -> pointer.component.ts
+    -  PointersComponent.ts -> pointers.component.ts
+
 # 0.5.15 (June 1, 2016)
 - Implement new design for Home page.
 - Content improvements/corrections to Getting Started with the REST API.
