@@ -5,7 +5,8 @@ import "semantic-ui/semantic";
 import * as RDFNode from "carbonldp/RDF/RDFNode";
 
 import PointerComponent from "./pointer.component";
-import { Pointer, PointerRow, Modes } from "./pointer.component";
+import { Modes } from "./../property/property.component";
+import { Pointer, PointerRow } from "./pointer.component";
 
 import template from "./pointers.component.html!";
 import style from "./pointers.component.css!text";
