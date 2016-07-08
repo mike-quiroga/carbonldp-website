@@ -19,7 +19,6 @@ export default class DocumentsResolverService {
 	}
 
 	get( uri:string, documentContext:SDKContext.Class ):Promise<RDFDocument.Class> {
-		// if ( this.documents.has( uri ) ) return Promise.resolve( this.documents.get( uri ).document );
 		if ( ! uri || ! documentContext ) return <any> Promise.reject( new Error( "Provide the required parameters" ) );
 		let requestOptions:HTTP.Request.Options = { sendCredentialsOnCORS: true, };
 		if ( documentContext && documentContext.auth.isAuthenticated() ) documentContext.auth.addAuthentication( requestOptions );
