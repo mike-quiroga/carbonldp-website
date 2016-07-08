@@ -385,13 +385,15 @@ let inMemoryOtherDocument:Document.Class = Document.Factory.createFrom( {
 inMemoryDocument.someProperty = "Property value";
 inMemoryDocument.anotherProperty = 123;
 
-let fragment:Fragment.Class = inMemoryDocument.createFragment( {
-    someProperty: "hello"
-} );
+inMemoryDocument.greeting = inMemoryDocument.createFragment( {
+                                someProperty: "hello"
+							} );
 
 let namedFragment:NamedFragment.Class = inMemoryDocument.createNamedFragment( "my-slug", {
-    someOtherProperty: "good-bye"
-} );
+                                            someOtherProperty: "good-bye"
+										} );
+
+inMemoryDocument.goodbye = namedFragment;
 							</code></pre>
 							<!--@formatter:on-->
 							</div>
@@ -429,13 +431,14 @@ let inMemoryOtherDocument = Document.Factory.createFrom( {
 inMemoryDocument.someProperty = "Property value";
 inMemoryDocument.anotherProperty = 123;
 
-let fragment = inMemoryDocument.createFragment( {
+inMemoryDocument.greeting = inMemoryDocument.createFragment( {
     someProperty: "hello"
 } );
 
 let namedFragment = inMemoryDocument.createNamedFragment( "my-slug", {
     someOtherProperty: "good-bye"
 } );
+inMemoryDocument.goodbye = namedFragment;
 						</code></pre>
 							<!--@formatter:on-->
 							</div>

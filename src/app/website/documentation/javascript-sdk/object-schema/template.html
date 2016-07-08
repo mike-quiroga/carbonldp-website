@@ -39,19 +39,23 @@
 						</div>
 					</div>
 					<section>
-						<h2 class="ui header">Object Schema</h2>
-						<p>The object schema is used to map prefixes to URIs and to map properties to URIs, forming a vocabulary for their
-							applications. Prefixes are short words or abbreviations that expand to a URI.</p>
+						<h2 class="ui header">Object Schema definition</h2>
 
-						<p>Prefixes may be defined as any JSON string different from the JSON-LD keywords.</p>
+						<p>To store and relate data semantically through out different systems, we need to maintain a data schema
+							that is shared and understood by everyone.
+							The object schema serves this purpose, through it we can use prefixes and
+							properties to abbreviate the communication with the platform and provide useful information about the relations
+							the data holds.</p>
 
-						<p>The object schema describes the properties used in your Documents through the direct use of URIs or through aliases or
-							prefixes that expand to URIs.
-							Allowing properties to be represented by an unambiguous identifier. This helps prevent developers
-							from stepping in each other's vocabularies, and makes data useful in the outside.
-							The URIs used to describe the properties may contain its definitions.</p>
+						<p>The object schema lives in the <a>context</a> and is used to define properties and to map prefixes and
+							properties to URIs, forming a vocabulary for your applications.</p>
 
-						<p>This concept is based on <a href="https://www.w3.org/TR/2012/WD-json-ld-syntax-20120712/#the-context">The Context</a>
+						<p>The object schema describes the properties used in your Documents through the direct use of URIs or through prefixes
+							that expand to URIs. Allowing properties to be represented by an unambiguous identifier.
+							This helps prevent developers from stepping in each other's vocabularies, and makes data useful on the outside.
+							The URIs used to describe the properties may contain its definitions or relevant information about the properties.</p>
+
+						<p>This concept is based in part on <a href="https://www.w3.org/TR/2012/WD-json-ld-syntax-20120712/#the-context">The Context</a>
 							definition of JSON-LD.</p>
 
 						<p>Carbon's object schema is made of:</p>
@@ -66,6 +70,9 @@
 
 							<p>Prefixes may be seen as abbreviations, whose value is a simple string that expands to a URI</p>
 
+							<p> Prefixes are short words or abbreviations, whose value expands to a URI and can be any
+								JSON string different from the <a href="https://www.w3.org/TR/json-ld/#dfn-keyword">JSON-LD keywords.</a></p>
+
 							<div>
 								<!--@formatter:off-->
 							<pre><code class="highlighted typescript">
@@ -79,42 +86,101 @@
 
 						<section>
 							<h3 class="ui header">Properties</h3>
-							<p>The value of a property is mapped by a JSON object that may contain an @id, @type, @language, or @container keyword.</p>
 
+							<p>The value of a property is mapped by a JSON object that contains JSON-LD keywords that describe it.
+								A property must always be described by at least the <code>@id</code>, though it is recommended to also
+								describe the data <code>@type</code>, to ensure that the expected data is of the right type.
+							</p>
+
+
+							<p><code>@id</code> uniquely identifies the property with an IRI.</p>
+
+							<p><code>@type</code> can be defined as:</p>
+							<ul>
+								<li>literal: corresponds to a property that contains specific type of data, it is defined by a URI.</li>
+								<li>pointer: corresponds to a property that points to a resource, it is defined by @id.</li>
+							</ul>
 							<div>
 								<!--@formatter:off-->
 							<pre><code class="highlighted typescript">
 	{
 	    "title": {
-	        "@id": "ex:title",
-	        "@type": "xsd:string"
-	    }
+	        "@id": "http://example.org/ns#title",
+	        "@type": "http://www.w3.org/2001/XMLSchema#string"
+	    },
+		"post": {
+			"@id": "http://example.otg/ns#post",
+			"@type: "@id"
+		}
 	}
 							</code></pre>
 								<!--@formatter:on-->
 							</div>
+							<p>In the example shown, the property <code>title</code> is mapped to the URI defined in @id, and its @type has
+								been described as a string. The <code>post</code> property @type has been defined as a pointer.</p>
+							<p>These are the supported types in Carbon JS SDK: </p>
+
+							<div class="ui segment">
+								<table class="ui small very compact celled table">
+									<thead>
+										<tr>
+											<th colspan="4">Types</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr>
+											<td>date</td>
+											<td>integer</td>
+											<td>unsignedLong</td>
+											<td>double</td>
+										</tr>
+										<tr>
+											<td>dateTime</td>
+											<td>int</td>
+											<td>long</td>
+											<td>boolean</td>
+										</tr>
+										<tr>
+											<td>time</td>
+											<td>unsignedInt</td>
+											<td>float</td>
+											<td>string</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+							<br/>
+							<p><code>@container</code> keyword describes if the property is multi-valued, in other words an array, its value may be:</p>
+							<ul>
+								<li><code>@set</code> defines an unordered set of data.</li>
+								<li><code>@list</code> defines an ordered set of data.</li>
+							</ul>
+							<p>If this keyword is not present, the SDK will assume the described property is single-valued. </p>
+
 						</section>
 					</section>
+
 					<section>
 						<h2 class="ui header">Types of Object Schemas</h2>
 						<p>There are two types of object schemas:</p>
 						<ul>
 							<li>General</li>
-							<li>By type</li>
+							<li>By resource type</li>
 						</ul>
-						<p>Both types of object schemas can be defined using the methos <code>extendsObjectSchema()</code>
+						<p>A Carbon resource always uses the general object schema and, depending on the types of the resource,
+							it may also use the object schemas by type.</p>
+						<p>Both types of object schemas can be defined using the method <code>extendsObjectSchema()</code>
 							from the <a>Carbon.SDKContext.Class</a> class.</p>
 
 						<section>
 							<h3 class="ui header">General object schema</h3>
-							<p>This object schema, when defined, can be used by every Carbon Document in your application.
-								As long as the Documents do not have a specific object schema defined.</p>
+							<p>This object schema, when defined, is used by every Carbon resource in your application.</p>
 
 							<p>The next example shows how to define a general object schema</p>
 
 							<div>
 								<!--@formatter:off-->
-						<pre><code class="highlighted typescript">
+						<pre><code class="highlighted javascript">
 carbon.extendObjectSchema( {
 	"acl": "http://www.w3.org/ns/auth/acl#",
 	"api": "http://purl.org/linked-data/api/vocab#",
@@ -149,12 +215,15 @@ carbon.extendObjectSchema( {
 
 						<section>
 							<h3 class="ui header">Object schema by type</h3>
-							<p>Object schemas can be defined by types. A Document can be decribes by any number of types. For
-								example, a Document is a Container......</p>
+							<p>Object schemas can be defined by type. Remember, Carbon resources like Documents, fragments and named fragments
+								have the <code>types</code> property that holds the types that a resource has. We can define
+								a specific object schema for each type. Since resources in Carbon are multi typed, you can expect to have
+								several object schemas by type that apply to one resource. It is important to mention that both Documents and fragments can have different types.
+								This means that an object schema applied to a Document its not necessarily applied to its fragments and vice versa.</p>
 
 							<div>
 								<!--@formatter:off-->
-						<pre><code class="highlighted typescript">
+						<pre><code class="highlighted javascript">
 carbon.extendObjectSchema( "http://example.org/ns#BlogPost" , {
 	"acl": "http://www.w3.org/ns/auth/acl#",
 	"api": "http://purl.org/linked-data/api/vocab#",
@@ -188,8 +257,87 @@ carbon.extendObjectSchema( "http://example.org/ns#BlogPost" , {
 							</div>
 						</section>
 					</section>
-
 					<section>
+						<h2 class="ui header">Extending the object schema</h2>
+						<p>There is a pre defined general object schema in
+							the SDK context.
+							It is through this object schema that the communication between the SDK and Carbon platform is possible.
+							You can extend the object schema either in the application context or in the platform context using the
+							<code>extendObjectSchema()</code> method. But beware of
+							how <a>inheritance in contexts</a> works. Remember it has a similar inheritance as the <a target="_blank"
+							                                                                                          href="https://developer.mozilla.org/en/docs/Web/JavaScript/Inheritance_and_the_prototype_chain"
+							>JavaScript's prototypal inheritance</a>.</p>
+
+						<p>When extending an object schema, either the general or by resource type, new prefixes and/or properties definitions
+							are added to it. However, if the object schema doesn't exist in the scope where you are working (application context/platform context/SDK context),
+							a pre existing object schema in a broader scope is searched for. If found it is copied to the scope where you are working and
+							it is extended. If not found then it will be defined in the context in which you are working.</p>
+
+						<p>In the next sample code there are two object schemas being defined: the general and for type BlogPost.
+						The first is defined in the platform and the latter in the application context of my-first-app</p>
+						<div>
+							<!--@formatter:off-->
+						<pre><code class="highlighted javascript">
+//extending the general object schema in the platform context
+carbon.extendObjectSchema( {
+	"ex": "http://example.org/ns#",
+	"foaf": "http://xmlns.com/foaf/0.1/",
+	"xsd": "http://www.w3.org/2001/XMLSchema#",
+	"title": {
+		"@id": "ex:title",
+		"@type": "xsd:string"
+	},
+	"name": {
+		"@id": "foaf:name",
+		"@type": "xsd:string"
+	}
+} );
+
+//extending the object schema of the type: BlogPost in the application context
+myFirstAppContext.extendObjectSchema( "http://example.org/ns#BlogPost" , {
+	"ex": "http://example.org/ns#",
+	"xsd": "http://www.w3.org/2001/XMLSchema#",
+	"tags": {
+		"@id": "ex:tag",
+		"@type": "@id",
+		"@container": "@set"
+	}
+} );
+
+</code></pre>
+							<!--@formatter:on-->
+						</div>
+<p>The general object schema will be available for your entire platform, for all your resources in all your application.
+The Blog Post object schema is defined only for the application context of my-first-app, other applications in your platform
+will not be able to use it. Focusing on inheritance once more, the BlogPost object schema has only been defined in the application context,
+if later on you define it on the platform context with some extra prefixes for example: </p>
+
+<pre><code class="highlighted javascript">
+//extending the object schema of the type: BlogPost in the application context
+carbon.extendObjectSchema( "http://example.org/ns#BlogPost" , {
+		"ex": "http://example.org/ns#",
+		"xsd": "http://www.w3.org/2001/XMLSchema#",
+		"description": {
+			"@id": "ex:description",
+			"@type": "xsd:string"
+		},
+		"tags": {
+			"@id": "ex:tag",
+			"@type": "@id",
+			"@container": "@set"
+		}
+} );
+</code></pre>
+
+<p>The object schema for the type BlogPost will have the description property available to every application in the carbon context
+except my-firs-app. Why? Because, the object schema for BlogPost type for this particular application context
+was defined before the schema in the platform context. Once an object schema is defined in a context of narrower scope, any change made to the schemas in the broader
+scope will not affect it. Here is where caution is needed, to avoid inconsistencies in the communication
+with the platform. It may very well be that you wish to maintain different scopes, for your applications and for your platform,
+but beware of using properties undefined in your schemas, you could be loosing valuable information.</p>
+					</section>
+					<section>
+						<h2 class="ui header">Conclusion</h2>
 
 					</section>
 				</article>

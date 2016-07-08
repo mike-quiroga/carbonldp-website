@@ -63,6 +63,11 @@ header {
 		a.item.logo:hover {
 			background: none;
 		}
+
+	}
+
+	.ui.dropdown > a.item:hover {
+		background: rgba(0,0,0,.05);
 	}
 
 }
