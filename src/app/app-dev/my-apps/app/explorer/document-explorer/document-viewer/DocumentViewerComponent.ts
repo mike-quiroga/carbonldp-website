@@ -3,6 +3,7 @@ import { Component, ElementRef, Input, Output, EventEmitter, SimpleChange, ViewC
 import $ from "jquery";
 import "semantic-ui/semantic";
 
+import { Message } from "app/app-dev/components/errors-area/ErrorsAreaComponent";
 import * as RDFNode from "carbonldp/RDF/RDFNode";
 import * as SDKContext from "carbonldp/SDKContext";
 import * as RDFDocument from "carbonldp/RDF/Document";
@@ -37,7 +38,7 @@ export default class DocumentViewerComponent {
 	rootNode:RDFNode.Class;
 	bNodes:RDFNode.Class[] = [];
 	namedFragments:RDFNode.Class[] = [];
-	savingError:HTTPError;
+	savingErrorMessage:Message;
 
 	rootNodeHasChanged:boolean = false;
 	rootNodeRecords:RootRecords;
@@ -112,7 +113,7 @@ export default class DocumentViewerComponent {
 			this.generateFragments();
 			this.clearDocumentChanges();
 			this.loadingDocument = false;
-			this.savingError = null;
+			this.savingErrorMessage = null;
 			setTimeout(
 				()=> {
 					this.goToSection( "documentResource" );
@@ -269,12 +270,19 @@ export default class DocumentViewerComponent {
 				this.document = updatedDocument[ 0 ];
 			},
 			( error:HTTPError )=> {
-				console.error( error );
-				// TODO: Change this method to use the correct HTTPError when Javascript SDK implements it
-				this.getErrors( error ).then( ( errors )=> {
-					error[ "errors" ] = errors;
-					this.savingError = error;
-				} );
+				this.savingErrorMessage = {
+					title: error.name,
+					content: (<XMLHttpRequest>error.response.request).statusText,
+					statusCode: "" + error.response.status,
+					statusMessage: (<XMLHttpRequest>error.response.request).statusText,
+					endpoint: (<any>error.response.request).responseURL,
+				};
+				if ( ! ! error.response.data ) {
+					// TODO: Change this method to use the correct HTTPError when Javascript SDK implements it
+					this.getErrors( error ).then( ( errors )=> {
+						this.savingErrorMessage.errors = errors;
+					} );
+				}
 			}
 		).then( ()=> {
 			this.savingDocument = false;
@@ -289,17 +297,14 @@ export default class DocumentViewerComponent {
 		let mainError = {};
 		let errors:any[] = [];
 		return parser.parse( error.response.data ).then( ( mainErrors )=> {
-			console.log( mainErrors );
 			mainError = mainErrors.find( ( error )=> { return error[ "@type" ].indexOf( "https://carbonldp.com/ns/v1/platform#ErrorResponse" ) !== - 1} );
 			errors = mainErrors.filter( ( error )=> { return error[ "@type" ].indexOf( "https://carbonldp.com/ns/v1/platform#Error" ) !== - 1} );
-			console.log( "MainError:%o", mainError );
-			console.log( "Errors:%o", errors );
 			return errors;
 		} );
 	}
 
 	clearSavingError():void {
-		this.savingError = null;
+		this.savingErrorMessage = null;
 	}
 
 	private scrollTo( selector:string ):void {
