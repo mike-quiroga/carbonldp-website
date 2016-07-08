@@ -1,6 +1,8 @@
 # 0.5.16 (June 8, 2016)
 - Fix bug with SPARQL Editor that hides the initial h from http when displaying results.
 - Fix my-apps action buttons to redirect to proper route.
+- Add auth ticket to URL when trying to download backups to BackupsService and BackupsListComponent.
+- Add errorMessage when the creation of the document download URL fails.
 - Add jstree as a devDependency in node
 - Add to PropertyValueComponent new read and edit modes.
 - Add document edition functionality to Document Explorer, so that you can do the following:
