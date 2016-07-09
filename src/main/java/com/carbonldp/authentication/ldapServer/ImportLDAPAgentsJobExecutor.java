@@ -47,7 +47,7 @@ public class ImportLDAPAgentsJobExecutor implements TypedJobExecutor {
 		transactionWrapper.runWithSystemPermissionsInAppContext( app, () -> {
 			List<LDAPAgent> agents = ldapServerService.registerLDAPAgents( ldapServer, importLDAPAgentsJob.getLDAPUsernameFields(), app );
 			if ( defaultAppRole == null ) return;
-			
+
 			IRI roleAgentsContainerIRI = appRoleService.getAgentsContainerIRI( defaultAppRole );
 			Set<IRI> agentsIRI = agents.stream().map( LDAPAgent::getIRI ).collect( Collectors.toSet() );
 			appRoleService.addAgents( roleAgentsContainerIRI, agentsIRI );

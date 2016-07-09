@@ -61,7 +61,7 @@ public class SesameExecutionService extends AbstractSesameLDPService implements 
 	}
 
 	@Override
-	public void addErrorDescription( IRI executionIRI, String error ){
+	public void addErrorDescription( IRI executionIRI, String error ) {
 		executionRepository.addErrorDescription( executionIRI, error );
 		sourceRepository.touch( executionIRI );
 	}

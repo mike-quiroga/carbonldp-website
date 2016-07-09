@@ -10,6 +10,7 @@ import com.carbonldp.exceptions.StupidityException;
 import com.carbonldp.ldp.AbstractSesameLDPService;
 import com.carbonldp.ldp.sources.RDFSource;
 import com.carbonldp.ldp.sources.RDFSourceService;
+import com.carbonldp.ldp.containers.ContainerService;
 import com.carbonldp.models.Infraction;
 import com.carbonldp.rdf.RDFDocument;
 import com.carbonldp.utils.AuthenticationUtil;
@@ -36,6 +37,8 @@ public abstract class SesameAgentsService extends AbstractSesameLDPService imple
 	protected ConfigurationRepository configurationRepository;
 	protected AgentValidatorRepository agentValidatorRepository;
 	protected RDFSourceService sourceService;
+	protected ContainerService containerService;
+
 	protected JavaMailSender mailSender;
 
 	@Override
@@ -171,4 +174,9 @@ public abstract class SesameAgentsService extends AbstractSesameLDPService imple
 
 	@Autowired
 	public void setSourceService( RDFSourceService sourceService ) { this.sourceService = sourceService; }
+
+	@Autowired
+	public void setContainerService( ContainerService containerService ) {
+		this.containerService = containerService;
+	}
 }
