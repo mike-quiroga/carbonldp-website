@@ -63,6 +63,8 @@ public class RequestLoggerFilter extends GenericFilterBean {
 				exceptionMessageWriter( request, response, responseEntity );
 				LOG.error( "An exception reached the top of the chain. Exception: {}", e );
 			} finally {
+				LOG.debug( HTTPUtil.printResponseInfo( response ) );
+
 				removeRequestUniqueID();
 			}
 		}

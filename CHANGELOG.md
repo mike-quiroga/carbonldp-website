@@ -1,3 +1,14 @@
+# 0.38.2 (2016/06/29)
+- Fix blank node replacement
+- Fix spring beans dependency problem
+
+# 0.38.1 (2016/06/27)
+- Fix [LDP-710](https://jira.base22.com/browse/LDP-710) - New BlankNodes are being merged with old ones
+
+# 0.38.0 (2016/06/21)
+- [LDP-478](https://jira.base22.com/browse/LDP-478) - Execute SPARQL Update requests as a system agent
+- Fix [LDP-708](https://jira.base22.com/browse/LDP-708) - CORS requests fail with a 403 Forbidden status code
+
 # 0.37.0 (2016/06/17)
 - [LDP-691](https://jira.base22.com/browse/LDP-691) - Federate application authentication to an LDAP instance
 

@@ -13,4 +13,7 @@ public interface AgentService {
 
 	@PreAuthorize( "hasPermission(#agentContainerIRI, 'CREATE_CHILD')" )
 	public void create( IRI agentContainerIRI, Agent agent );
+
+	@PreAuthorize( "hasPermission(#source, 'UPDATE')" )
+	public void replace( IRI source, Agent agent );
 }

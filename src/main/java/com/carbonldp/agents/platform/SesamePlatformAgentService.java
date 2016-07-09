@@ -9,7 +9,6 @@ import com.carbonldp.authorization.acl.ACL;
 import com.carbonldp.exceptions.ResourceAlreadyExistsException;
 import com.carbonldp.ldp.containers.ContainerService;
 import org.openrdf.model.IRI;
-
 import org.openrdf.model.impl.SimpleValueFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -83,4 +82,5 @@ public class SesamePlatformAgentService extends SesameAgentsService {
 
 	@Autowired
 	public void setPlatformAgentRepository( PlatformAgentRepository platformAgentRepository ) { this.platformAgentRepository = platformAgentRepository; }
+
 }

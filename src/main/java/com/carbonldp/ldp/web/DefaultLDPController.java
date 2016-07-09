@@ -29,6 +29,7 @@ public class DefaultLDPController extends AbstractLDPController {
 	private BaseDELETERequestHandler deleteHandler;
 
 	private BaseSPARQLQueryPOSTRequestHandler sparqlQueryHandler;
+	private BaseSPARQLUpdatePOSTRequestHandler sparqlUpdateHandler;
 
 	private InteractionModelController rdfSourceController;
 
@@ -64,8 +65,13 @@ public class DefaultLDPController extends AbstractLDPController {
 	}
 
 	@RequestMapping( method = RequestMethod.POST, consumes = "application/sparql-query" )
-	public ResponseEntity<Object> handleSPARQLPost( @RequestBody String query, HttpServletRequest request, HttpServletResponse response ) {
+	public ResponseEntity<Object> handleSPARQLQueryPost( @RequestBody String query, HttpServletRequest request, HttpServletResponse response ) {
 		return sparqlQueryHandler.handleRequest( query, request, response );
+	}
+
+	@RequestMapping( method = RequestMethod.POST, consumes = "application/sparql-update" )
+	public ResponseEntity<Object> handleSPARQLUpdatePOST( @RequestBody String query, HttpServletRequest request, HttpServletResponse response ) {
+		return sparqlUpdateHandler.handleRequest( query, request, response );
 	}
 
 	@RequestMapping( method = RequestMethod.POST, consumes = "multipart/*" )
@@ -102,6 +108,9 @@ public class DefaultLDPController extends AbstractLDPController {
 
 	@Autowired
 	public void setSPARQLQueryHandler( BaseSPARQLQueryPOSTRequestHandler sparqlQueryHandler ) { this.sparqlQueryHandler = sparqlQueryHandler; }
+
+	@Autowired
+	public void setSPARQLUpdateHandler( BaseSPARQLUpdatePOSTRequestHandler sparqlUpdateHandler ) { this.sparqlUpdateHandler = sparqlUpdateHandler; }
 
 	@Autowired
 	public void setDeleteHandler( BaseDELETERequestHandler deleteHandler ) { this.deleteHandler = deleteHandler; }
