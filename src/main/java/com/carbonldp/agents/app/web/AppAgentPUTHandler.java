@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * @author NestorVenegas
- * @since _version_
+ * @since 0.39.0
  */
 
 @RequestHandler
