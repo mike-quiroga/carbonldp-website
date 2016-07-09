@@ -41,7 +41,7 @@ public interface RDFSourceService {
 	public void replace( RDFSource source );
 
 	@PreAuthorize( "hasPermission(#targetIRI, 'UPDATE')" )
-	public void replace( IRI targetIRI, RDFDocument documentToAdd, RDFDocument documentToDelete );
+	public void patch( IRI targetIRI, RDFDocument documentToAdd, RDFDocument documentToDelete );
 
 	@PreAuthorize( "hasPermission(#sourceIRI, 'UPDATE')" )
 	public void subtract( IRI sourceIRI, RDFDocument document );

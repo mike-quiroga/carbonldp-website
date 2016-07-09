@@ -20,7 +20,6 @@ import org.openrdf.model.IRI;
 import org.openrdf.model.Value;
 import org.openrdf.model.impl.AbstractModel;
 import org.openrdf.model.impl.LinkedHashModel;
-import org.openrdf.model.impl.SimpleValueFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -54,7 +53,7 @@ public abstract class SesameAgentsService extends AbstractSesameLDPService imple
 		Agent agentToAdd = new Agent( documentToAdd, agent.getIRI() );
 		if ( agentToAdd.getPassword() != null ) setAgentPasswordFields( agentToAdd );
 
-		sourceService.replace( originalSource.getIRI(), documentToAdd, documentToDelete );
+		sourceService.patch( originalSource.getIRI(), documentToAdd, documentToDelete );
 	}
 
 	protected void validate( Agent agent ) {

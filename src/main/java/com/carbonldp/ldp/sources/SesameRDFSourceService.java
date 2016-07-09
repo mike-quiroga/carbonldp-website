@@ -134,11 +134,11 @@ public class SesameRDFSourceService extends AbstractSesameLDPService implements 
 		AbstractModel toDelete = originalDocument.stream().filter( statement -> ! ModelUtil.containsStatement( newDocument, statement ) ).collect( Collectors.toCollection( LinkedHashModel::new ) );
 		RDFDocument documentToDelete = new RDFDocument( toDelete, source.getIRI() );
 
-		replace( originalSource.getIRI(), documentToAdd, documentToDelete );
+		patch( originalSource.getIRI(), documentToAdd, documentToDelete );
 	}
 
 	@Override
-	public void replace( IRI targetIRI, RDFDocument documentToAdd, RDFDocument documentToDelete ) {
+	public void patch( IRI targetIRI, RDFDocument documentToAdd, RDFDocument documentToDelete ) {
 		DateTime modifiedTime = DateTime.now();
 		subtract( targetIRI, documentToDelete );
 		add( targetIRI, documentToAdd );
