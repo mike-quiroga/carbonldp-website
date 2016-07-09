@@ -20,7 +20,7 @@ public class AppAgentsPOSTHandler extends AgentsPostHandler {
 
 	private AgentService appAgentService;
 
-	protected void createAgent(IRI agentContainerIRI, Agent documentResourceView ) {
+	protected void createAgent( IRI agentContainerIRI, Agent documentResourceView ) {
 		try {
 			appAgentService.create( agentContainerIRI, documentResourceView );
 		} catch ( ResourceAlreadyExistsException e ) {
