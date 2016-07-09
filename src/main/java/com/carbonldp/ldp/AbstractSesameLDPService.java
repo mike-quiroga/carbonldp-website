@@ -15,8 +15,6 @@ public abstract class AbstractSesameLDPService extends AbstractSesameService {
 	protected RDFDocumentRepository documentRepository;
 	protected RDFBlankNodeRepository blankNodeRepository;
 
-
-
 	@Autowired
 	public void setRDFSourceRepository( RDFSourceRepository sourceRepository ) { this.sourceRepository = sourceRepository; }
 
