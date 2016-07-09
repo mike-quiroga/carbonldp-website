@@ -6,6 +6,7 @@ import com.carbonldp.agents.SesameAgentsService;
 import com.carbonldp.apps.roles.AppRoleRepository;
 import com.carbonldp.authorization.acl.ACL;
 import com.carbonldp.exceptions.ResourceAlreadyExistsException;
+import com.carbonldp.ldp.sources.RDFSourceService;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
@@ -49,4 +50,9 @@ public class SesameAppAgentService extends SesameAgentsService {
 
 	@Autowired
 	public void setAppRoleRepository( AppRoleRepository appRoleRepository ) { this.appRoleRepository = appRoleRepository; }
+
+	@Autowired
+	public void setSourceService( RDFSourceService sourceService ) {
+		this.sourceService = sourceService;
+	}
 }
