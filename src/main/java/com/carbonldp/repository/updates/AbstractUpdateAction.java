@@ -13,6 +13,7 @@ import com.carbonldp.ldp.containers.ContainerService;
 import com.carbonldp.ldp.sources.RDFSourceRepository;
 import com.carbonldp.ldp.sources.RDFSourceService;
 import com.carbonldp.rdf.RDFDocumentRepository;
+import com.carbonldp.rdf.RDFMapRepository;
 import com.carbonldp.sparql.SPARQLTemplate;
 import com.carbonldp.spring.TransactionWrapper;
 import com.carbonldp.utils.Action;
@@ -47,6 +48,7 @@ public abstract class AbstractUpdateAction extends AbstractComponent implements 
 	protected RDFSourceService sourceService;
 	protected AppRoleRepository appRoleRepository;
 	protected ContainerService containerService;
+	protected RDFMapRepository mapRepository;
 	protected static ValueFactory valueFactory = SimpleValueFactory.getInstance();
 
 	public void run() {
@@ -92,5 +94,6 @@ public abstract class AbstractUpdateAction extends AbstractComponent implements 
 		sourceService = context.getBean( RDFSourceService.class );
 		appRoleRepository = context.getBean( AppRoleRepository.class );
 		containerService = context.getBean( ContainerService.class );
+		mapRepository = context.getBean( RDFMapRepository.class );
 	}
 }

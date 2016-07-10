@@ -2,6 +2,7 @@ package com.carbonldp.rdf;
 
 import com.carbonldp.utils.IRIUtil;
 import org.joda.time.DateTime;
+import org.openrdf.model.BNode;
 import org.openrdf.model.IRI;
 import org.openrdf.model.Value;
 import org.openrdf.model.ValueFactory;
@@ -97,6 +98,30 @@ public class SesameRDFResourceRepository extends SesameRDFNodeRepository<IRI> im
 	public Set<IRI> getIRIs( IRI resourceIRI, RDFNodeEnum pred ) {
 		IRI documentIRI = getDocumentIRI( resourceIRI );
 		return super.getIRIs( resourceIRI, pred, documentIRI );
+	}
+
+	@Override
+	public BNode getBNode( IRI resourceIRI, IRI pred ) {
+		IRI documentIRI = getDocumentIRI( resourceIRI );
+		return super.getBNode( resourceIRI, pred, documentIRI );
+	}
+
+	@Override
+	public BNode getBNode( IRI resourceIRI, RDFNodeEnum pred ) {
+		IRI documentIRI = getDocumentIRI( resourceIRI );
+		return super.getBNode( resourceIRI, pred, documentIRI );
+	}
+
+	@Override
+	public Set<BNode> getBNodes( IRI resourceIRI, IRI pred ) {
+		IRI documentIRI = getDocumentIRI( resourceIRI );
+		return super.getBNodes( resourceIRI, pred, documentIRI );
+	}
+
+	@Override
+	public Set<BNode> getBNodes( IRI resourceIRI, RDFNodeEnum pred ) {
+		IRI documentIRI = getDocumentIRI( resourceIRI );
+		return super.getBNodes( resourceIRI, pred, documentIRI );
 	}
 
 	@Override

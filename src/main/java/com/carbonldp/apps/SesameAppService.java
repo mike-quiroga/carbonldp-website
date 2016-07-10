@@ -25,6 +25,7 @@ import com.carbonldp.models.Infraction;
 import com.carbonldp.namespaces.LDP;
 import com.carbonldp.rdf.RDFListFactory;
 import com.carbonldp.rdf.RDFMap;
+import com.carbonldp.rdf.RDFMapRepository;
 import com.carbonldp.rdf.RDFResource;
 import com.carbonldp.utils.IRIUtil;
 import com.carbonldp.web.exceptions.NotFoundException;
@@ -53,6 +54,7 @@ public class SesameAppService extends AbstractSesameLDPService implements AppSer
 	protected AppRoleService appRoleService;
 	protected RDFSourceService sourceService;
 	protected AgentRepository platformAgentRepository;
+	protected RDFMapRepository mapRepository;
 
 	@Override
 	public boolean exists( IRI appIRI ) {
@@ -134,12 +136,11 @@ public class SesameAppService extends AbstractSesameLDPService implements AppSer
 		if ( ! ( rawAuthentication instanceof AgentAuthenticationToken ) ) throw new IllegalStateException( "The authentication token isn't supported." );
 		IRI agentIRI = ( (AgentAuthenticationToken) rawAuthentication ).getAgent().getIRI();
 		Agent agentResource = platformAgentRepository.get( agentIRI );
-		BNode rdfMapBNode = agentResource.getBNode( PlatformAgentDescription.Property.APP_ROLE_MAP );
-		if ( rdfMapBNode == null ) return;
-		RDFMap map = new RDFMap( agentResource.getBaseModel(), rdfMapBNode, agentIRI );
-		map.clean();
-		map.add( (Value) app.getIRI(), (Value) role.getIRI() );
-		sourceService.replace( agentResource );
+		IRI rdfMapIRI = agentResource.getIRI( PlatformAgentDescription.Property.APP_ROLE_MAP );
+		if ( rdfMapIRI == null ) return;
+
+		mapRepository.clean( rdfMapIRI );
+		mapRepository.add( rdfMapIRI, app.getIRI(), role.getIRI() );
 	}
 
 	private BasicContainer createRootContainer( App app ) {
@@ -272,5 +273,10 @@ public class SesameAppService extends AbstractSesameLDPService implements AppSer
 	@Qualifier( "platformAgentRepository" )
 	public void setPlatformAgentRepository( AgentRepository platformAgentRepository ) {
 		this.platformAgentRepository = platformAgentRepository;
+	}
+
+	@Autowired
+	public void setMapRepository( RDFMapRepository mapRepository ) {
+		this.mapRepository = mapRepository;
 	}
 }

@@ -12,13 +12,14 @@ import com.carbonldp.authorization.Platform;
 import com.carbonldp.authorization.acl.ACEDescription;
 import com.carbonldp.authorization.acl.ACL;
 import com.carbonldp.exceptions.ResourceAlreadyExistsException;
+import com.carbonldp.ldp.containers.BasicContainerFactory;
 import com.carbonldp.models.Infraction;
-import com.carbonldp.rdf.RDFMap;
-import com.carbonldp.rdf.RDFMapDescription;
+import com.carbonldp.rdf.*;
 import com.carbonldp.web.exceptions.BadRequestException;
 import org.openrdf.model.BNode;
 import org.openrdf.model.IRI;
 import org.openrdf.model.Value;
+import org.openrdf.model.ValueFactory;
 import org.openrdf.model.impl.SimpleValueFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -29,6 +30,8 @@ public class SesamePlatformAgentService extends SesameAgentsService {
 	protected PlatformAgentRepository platformAgentRepository;
 	protected AppService appService;
 	protected AppRoleRepository appRoleRepository;
+	protected RDFResourceRepository resourceRepository;
+	protected RDFMapRepository mapRepository;
 
 	@Override
 	public void register( Agent agent ) {
@@ -45,11 +48,11 @@ public class SesamePlatformAgentService extends SesameAgentsService {
 		setAgentPasswordFields( agent );
 
 		addAgentToDefaultPlatformRole( agent );
-		createAppRoleMap( agent );
 
 		platformAgentRepository.create( agent );
 		ACL agentACL = aclRepository.createACL( agent.getIRI() );
 		addAgentDefaultPermissions( agent, agentACL );
+		createAppRoleMap( agent );
 
 		if ( requireValidation ) {
 			AgentValidator validator = createAgentValidator( agent );
@@ -63,20 +66,20 @@ public class SesamePlatformAgentService extends SesameAgentsService {
 
 	@Override
 	public void delete( IRI agentIRI ) {
+		IRI rdfMapIRI = null;
 		if ( sourceRepository.exists( agentIRI ) ) {
 			Agent agentResource = platformAgentRepository.get( agentIRI );
-			BNode rdfMapBNode = agentResource.getBNode( PlatformAgentDescription.Property.APP_ROLE_MAP );
-			if ( rdfMapBNode == null ) throw new BadRequestException( 0x2014 );
-			RDFMap map = new RDFMap( agentResource.getBaseModel(), rdfMapBNode, agentIRI );
-			map.clean();
-			Set<Value> apps = map.getKeys();
+			rdfMapIRI = agentResource.getIRI( PlatformAgentDescription.Property.APP_ROLE_MAP );
+			if ( rdfMapIRI == null ) throw new BadRequestException( 0x2014 );
+			mapRepository.clean( rdfMapIRI );
+			Set<Value> apps = mapRepository.getKeys( rdfMapIRI );
 			for ( Value app : apps ) {
 				IRI appIRI = SimpleValueFactory.getInstance().createIRI( app.stringValue() );
 				App appResource = appService.get( appIRI );
 				String adminRoleString = transactionWrapper.runInAppContext( appResource, () -> {
 					return appRoleRepository.getContainerIRI() + Vars.getInstance().getAppAdminRole();
 				} );
-				Set<Value> roles = map.getValues( app );
+				Set<Value> roles = mapRepository.getValues( rdfMapIRI, app );
 				for ( Value role : roles ) {
 					if ( role.stringValue().equals( adminRoleString ) ) {
 						throw new BadRequestException( new Infraction( 0x2013, "app", appIRI.stringValue() ) );
@@ -84,14 +87,17 @@ public class SesamePlatformAgentService extends SesameAgentsService {
 				}
 			}
 		}
+		sourceRepository.delete( rdfMapIRI, true );
 		sourceRepository.delete( agentIRI, true );
 	}
 
 	public void createAppRoleMap( Agent agent ) {
-		BNode mapBNode = SimpleValueFactory.getInstance().createBNode();
-		RDFMap map = new RDFMap( agent.getBaseModel(), mapBNode, agent.getIRI() );
-		map.addType( RDFMapDescription.Resource.CLASS.getIRI() );
-		agent.add( PlatformAgentDescription.Property.APP_ROLE_MAP.getIRI(), mapBNode );
+		ValueFactory valueFactory = SimpleValueFactory.getInstance();
+		IRI rdfMapIRI = valueFactory.createIRI( agent.getIRI().stringValue() + Vars.getInstance().getRdfMap() );
+		RDFMap map = RDFMapFactory.getInstance().create( rdfMapIRI );
+		containerRepository.createChild( agent.getIRI(), map );
+		resourceRepository.add( agent.getIRI(), PlatformAgentDescription.Property.APP_ROLE_MAP.getIRI(), map.getIRI() );
+
 	}
 
 	private void addAgentDefaultPermissions( Agent agent, ACL agentACL ) {
@@ -126,4 +132,14 @@ public class SesamePlatformAgentService extends SesameAgentsService {
 
 	@Autowired
 	public void setAppRoleRepository( AppRoleRepository appRoleRepository ) { this.appRoleRepository = appRoleRepository; }
+
+	@Autowired
+	public void setResourceRepository( RDFResourceRepository resourceRepository ) {
+		this.resourceRepository = resourceRepository;
+	}
+
+	@Autowired
+	public void setMapRepository( RDFMapRepository mapRepository ) {
+		this.mapRepository = mapRepository;
+	}
 }

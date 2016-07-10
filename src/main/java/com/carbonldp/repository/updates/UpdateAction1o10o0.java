@@ -37,9 +37,8 @@ public class UpdateAction1o10o0 extends AbstractUpdateAction {
 		transactionWrapper.runWithSystemPermissionsInPlatformContext( () -> {
 			for ( IRI platformAgentIRI : platformAgentIRIs ) {
 				Agent agentResource = platformAgentRepository.get( platformAgentIRI );
-				if ( agentResource.getBNode( PlatformAgentDescription.Property.APP_ROLE_MAP ) == null && ! platformAgentIRI.stringValue().equals( platformAgentRepository.getAgentsContainerIRI().stringValue() + "admin/" ) ) {
+				if ( agentResource.getIRI( PlatformAgentDescription.Property.APP_ROLE_MAP ) == null && ! platformAgentIRI.stringValue().equals( platformAgentRepository.getAgentsContainerIRI().stringValue() + "admin/" ) ) {
 					sesamePlatformAgentService.createAppRoleMap( agentResource );
-					sourceService.replace( agentResource );
 				}
 			}
 		} );
@@ -64,11 +63,9 @@ public class UpdateAction1o10o0 extends AbstractUpdateAction {
 
 	private void addRoleToAgentMap( IRI roleMemberIRI, App app, IRI roleIRI ) {
 		Agent agent = platformAgentRepository.get( roleMemberIRI );
-		BNode rdfMapBNode = agent.getBNode( PlatformAgentDescription.Property.APP_ROLE_MAP );
-		if ( rdfMapBNode == null ) return;
-		RDFMap map = new RDFMap( agent.getBaseModel(), rdfMapBNode, agent.getIRI() );
-		map.clean();
-		map.add( (Value) app.getIRI(), (Value) roleIRI );
-		sourceService.replace( agent );
+		IRI rdfMapIRI = agent.getIRI( PlatformAgentDescription.Property.APP_ROLE_MAP );
+		if ( rdfMapIRI == null ) return;
+		mapRepository.clean( rdfMapIRI );
+		mapRepository.add( rdfMapIRI, app.getIRI(), roleIRI );
 	}
 }

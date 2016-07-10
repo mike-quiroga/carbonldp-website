@@ -95,6 +95,11 @@ public class RepositoriesConfig {
 	}
 
 	@Bean
+	public RDFMapRepository mapRepository() {
+		return new SesameRDFMapRepository( connectionFactory, resourceRepository(), documentRepository() );
+	}
+
+	@Bean
 	public RDFBlankNodeRepository blankNodeRepository() {
 		return new SesameRDFBlankNodeRepository( connectionFactory );
 	}

@@ -186,6 +186,67 @@ public abstract class SesameRDFNodeRepository<T extends Resource> extends Abstra
 		return properties;
 	}
 
+	public BNode getBNode( T subject, IRI pred, IRI documentIRI ) {
+		return connectionTemplate.readStatements(
+			connection -> connection.getStatements( subject, pred, null, false, documentIRI ),
+			statements -> {
+				while ( statements.hasNext() ) {
+					Value value = statements.next().getObject();
+					if ( ValueUtil.isBNode( value ) ) return ValueUtil.getBNode( value );
+				}
+				return null;
+			}
+		);
+	}
+
+	public BNode getBNode( T subject, RDFNodeEnum pred, IRI documentIRI ) {
+		for ( IRI predIRI : pred.getIRIs() ) {
+			BNode object = connectionTemplate.readStatements(
+				connection -> connection.getStatements( subject, predIRI, null, false, documentIRI ),
+				statements -> {
+					while ( statements.hasNext() ) {
+						Value value = statements.next().getObject();
+						if ( ValueUtil.isBNode( value ) ) return ValueUtil.getBNode( value );
+					}
+					return null;
+				}
+			);
+			if ( object != null ) return object;
+		}
+		return null;
+	}
+
+	public Set<BNode> getBNodes( T subject, IRI pred, IRI documentIRI ) {
+		return connectionTemplate.readStatements(
+			connection -> connection.getStatements( subject, pred, null, false, documentIRI ),
+			statements -> {
+				Set<BNode> properties = new HashSet<>();
+				while ( statements.hasNext() ) {
+					Value value = statements.next().getObject();
+					if ( ValueUtil.isBNode( value ) ) properties.add( ValueUtil.getBNode( value ) );
+				}
+				return properties;
+			}
+		);
+	}
+
+	public Set<BNode> getBNodes( T subject, RDFNodeEnum pred, IRI documentIRI ) {
+		Set<BNode> properties = new HashSet<>();
+		for ( IRI predIRI : pred.getIRIs() ) {
+			connectionTemplate.readStatements(
+				connection -> connection.getStatements( subject, predIRI, null, false, documentIRI ),
+				statements -> {
+					while ( statements.hasNext() ) {
+						Value value = statements.next().getObject();
+						if ( ValueUtil.isBNode( value ) ) properties.add( ValueUtil.getBNode( value ) );
+					}
+					return null;
+				}
+			);
+		}
+		return properties;
+	}
+
 	public Boolean getBoolean( T subject, IRI pred, IRI documentIRI ) {
 		return connectionTemplate.readStatements(
 			connection -> connection.getStatements( subject, pred, null, false, documentIRI ),

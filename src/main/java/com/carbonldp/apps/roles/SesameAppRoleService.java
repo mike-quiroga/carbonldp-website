@@ -14,6 +14,7 @@ import com.carbonldp.ldp.containers.*;
 import com.carbonldp.ldp.sources.RDFSourceService;
 import com.carbonldp.models.Infraction;
 import com.carbonldp.rdf.RDFMap;
+import com.carbonldp.rdf.RDFMapRepository;
 import com.carbonldp.rdf.RDFResource;
 import org.joda.time.DateTime;
 import org.openrdf.model.BNode;
@@ -35,7 +36,7 @@ public class SesameAppRoleService extends AbstractSesameLDPService implements Ap
 
 	protected RDFSourceService sourceService;
 	protected ContainerService containerService;
-
+	protected RDFMapRepository mapRepository;
 	protected PlatformAgentRepository platformAgentRepository;
 	protected AppRoleRepository appRoleRepository;
 
@@ -65,12 +66,10 @@ public class SesameAppRoleService extends AbstractSesameLDPService implements Ap
 			IRI appIRI = AppContextHolder.getContext().getApplication().getIRI();
 			transactionWrapper.runInPlatformContext( () -> {
 				Agent agentResource = platformAgentRepository.get( agent );
-				BNode rdfMapBNode = agentResource.getBNode( PlatformAgentDescription.Property.APP_ROLE_MAP );
-				if(rdfMapBNode == null ) return;
-				RDFMap map = new RDFMap( agentResource.getBaseModel(), rdfMapBNode, agent );
-				map.clean();
-				map.add( (Value) appIRI, (Value) roleIRI );
-				sourceService.replace( agentResource );
+				IRI rdfMapIRI = agentResource.getIRI( PlatformAgentDescription.Property.APP_ROLE_MAP );
+				if ( rdfMapIRI == null ) return;
+				mapRepository.clean( rdfMapIRI );
+				mapRepository.add( rdfMapIRI, appIRI, roleIRI );
 			} );
 		}
 
@@ -108,12 +107,10 @@ public class SesameAppRoleService extends AbstractSesameLDPService implements Ap
 			IRI appIRI = AppContextHolder.getContext().getApplication().getIRI();
 			transactionWrapper.runInPlatformContext( () -> {
 				Agent agentResource = platformAgentRepository.get( agent );
-				BNode rdfMapBNode = agentResource.getBNode( PlatformAgentDescription.Property.APP_ROLE_MAP );
-				if ( rdfMapBNode == null ) return;
-				RDFMap map = new RDFMap( agentResource.getBaseModel(), rdfMapBNode, agent );
-				map.clean();
-				map.remove( (Value) appIRI, (Value) roleIRI );
-				sourceService.replace( agentResource );
+				IRI rdfMapIRI = agentResource.getIRI( PlatformAgentDescription.Property.APP_ROLE_MAP );
+				if ( rdfMapIRI == null ) return;
+				mapRepository.clean(rdfMapIRI);
+				mapRepository.remove(rdfMapIRI,appIRI, roleIRI );
 			} );
 		}
 
@@ -209,4 +206,9 @@ public class SesameAppRoleService extends AbstractSesameLDPService implements Ap
 
 	@Autowired
 	public void setAppRoleRepository( AppRoleRepository appRoleRepository ) { this.appRoleRepository = appRoleRepository; }
+
+	@Autowired
+	public void setMapRepository( RDFMapRepository mapRepository ) {
+		this.mapRepository = mapRepository;
+	}
 }
