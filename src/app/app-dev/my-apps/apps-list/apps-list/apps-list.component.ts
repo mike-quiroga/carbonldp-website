@@ -4,8 +4,8 @@ import { Router, ROUTER_DIRECTIVES } from "@angular/router-deprecated";
 
 import "semantic-ui/semantic";
 
-import * as App from "./../app/app";
-import AppActionButtonsComponent from "./app-action-buttons.component";
+import * as App from "../../app/app";
+import AppActionButtonsComponent from "../app-action-buttons/app-action-buttons.component";
 
 import template from "./apps-list.component.html!";
 import "./apps-list.component.css!";

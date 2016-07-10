@@ -71,10 +71,10 @@ export default class PointerComponent {
 	@Output() onGoToNamedFragment:EventEmitter<string> = new EventEmitter<string>();
 
 	// Literal Value;
-	private _id:string|boolean|number = "";
-	get id() {return this._id;}
+	private _id:string = "";
+	get id():string {return this._id;}
 
-	set id( id:string|boolean|number ) {
+	set id( id:string ) {
 		this._id = id;
 		if ( ! ! this.idInput && this.idInput.value !== this.id )(<Control>this.idInput).updateValue( this.id );
 		this.checkForChangesOnPointers();
@@ -110,7 +110,7 @@ export default class PointerComponent {
 	checkForChangesOnPointers():void {
 		if ( typeof this.id === "undefined" ) return;
 		let idx:number = this.bNodes.concat( this.namedFragments ).findIndex( ( nfOrBN )=> {return nfOrBN[ "@id" ] === this.id;} );
-		this.isBNode = URI.Util.isBNodeID( this.id );
+		this.isBNode = URI.Util.isBNodeID( <string>this.id );
 		this.isNamedFragment = URI.Util.isFragmentOf( this.id, this.documentURI );
 		this.existsOnPointers = idx !== - 1;
 	}

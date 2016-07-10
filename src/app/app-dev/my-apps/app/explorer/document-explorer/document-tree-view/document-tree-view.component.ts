@@ -55,14 +55,12 @@ export default class DocumentTreeViewComponent {
 	}
 
 	getDocumentTree():Promise<PersistedDocument.Class> {
-		return this.documentContext.documents.get( "" ).then(
-			( [ resolvedRoot, response ]:[ PersistedDocument.Class, HTTP.Response.Class ] ) => {
-				resolvedRoot.contains.forEach( ( pointer:Pointer.Class ) => {
-					this.nodeChildren.push( this.buildNode( pointer.id ) );
-				} );
-				return resolvedRoot;
-			}
-		).catch( ( error:HTTP.Errors.Error ) => {
+		return this.documentContext.documents.get( "" ).then( ( [ resolvedRoot, response ]:[ PersistedDocument.Class, HTTP.Response.Class ] ) => {
+			resolvedRoot.contains.forEach( ( pointer:Pointer.Class ) => {
+				this.nodeChildren.push( this.buildNode( pointer.id ) );
+			} );
+			return resolvedRoot;
+		} ).catch( ( error:HTTP.Errors.Error ) => {
 			console.error( "Error:%o", error );
 			this.onError.emit( error );
 		} );
@@ -118,10 +116,11 @@ export default class DocumentTreeViewComponent {
 	}
 
 	emptyNode( nodeId:string ):void {
-		let children:JQuery|JQuery[] = this.documentTree.jstree( true ).get_children_dom( nodeId );
-		while ( children.length > 0 ) {
-			this.documentTree.jstree( true ).delete_node( children[ 0 ] );
-			(<JQuery[]>children).splice( 0, 1 );
+		let $children:JQuery = this.documentTree.jstree( true ).get_children_dom( nodeId );
+		let childElements:Element[] = jQuery.makeArray( $children );
+		while ( childElements.length > 0 ) {
+			this.documentTree.jstree( true ).delete_node( childElements[ 0 ] );
+			childElements.splice( 0, 1 );
 		}
 	}
 
@@ -130,14 +129,12 @@ export default class DocumentTreeViewComponent {
 		let $documentTree:JSTree = this.documentTree.jstree( true );
 
 		$documentTree.set_icon( parentNode, $documentTree.settings.types.loading.icon );
-		this.getNodeChildren( parentNode.data.pointer.id ).then(
-			( children:any[] ):void => {
-				this.emptyNode( parentId );
-				if( children.length > 0 ) {
-					children.forEach( ( childNode:any ) => this.addChild( parentId, childNode, position ) );
-				}
+		this.getNodeChildren( parentNode.data.pointer.id ).then( ( children:any[] ):void => {
+			this.emptyNode( parentId );
+			if( children.length > 0 ) {
+				children.forEach( ( childNode:any ) => this.addChild( parentId, childNode, position ) );
 			}
-		).then( () => {
+		} ).then( () => {
 			$documentTree.set_icon( parentNode, oldIcon );
 		} );
 	}
@@ -151,15 +148,13 @@ export default class DocumentTreeViewComponent {
 	}
 
 	getNodeChildren( uri:string ):Promise<any[]> {
-		return this.documentContext.documents.get( uri ).then(
-			( [resolvedRoot, response]:[PersistedDocument.Class, HTTP.Response.Class] ) => {
-				if( ! resolvedRoot.contains ) return [];
+		return this.documentContext.documents.get( uri ).then( ( [resolvedRoot, response]:[PersistedDocument.Class, HTTP.Response.Class] ) => {
+			if( ! resolvedRoot.contains ) return [];
 
-				return resolvedRoot.contains.map( ( pointer:Pointer.Class ):void => {
-					return this.buildNode( pointer.id );
-				} );
-			}
-		).catch( ( error ) => {
+			return resolvedRoot.contains.map( ( pointer:Pointer.Class ):void => {
+				return this.buildNode( pointer.id );
+			} );
+		} ).catch( ( error ) => {
 			console.log( "Error: %o", error );
 		} );
 	}

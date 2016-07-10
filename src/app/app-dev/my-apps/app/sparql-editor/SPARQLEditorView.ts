@@ -16,7 +16,7 @@ import template from "./template.html!";
 	directives: [ SPARQLClientComponent, ],
 } )
 
-export default class SPARQLEditorView {
+export class SPARQLEditorView {
 	$element:JQuery;
 	appContext:App.Context;
 	private errorsAreaService:ErrorsAreaService;
@@ -35,5 +35,4 @@ export default class SPARQLEditorView {
 			error.endpoint
 		);
 	}
-
 }

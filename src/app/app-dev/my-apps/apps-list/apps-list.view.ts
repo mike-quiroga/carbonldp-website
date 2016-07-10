@@ -13,8 +13,8 @@ import * as HTTP from "carbonldp/HTTP";
 import { MyAppsSidebarService } from "./../my-apps-sidebar.service";
 
 import AppContextService from "./../../AppContextService";
-import { AppTileComponent } from "./app-tile.component";
-import { AppsListComponent } from "./apps-list.component";
+import { AppTileComponent } from "./app-tile/app-tile.component";
+import { AppsListComponent } from "./apps-list/apps-list.component";
 import * as App from "./../app/app";
 import { Message } from "./../../components/errors-area/ErrorsAreaComponent";
 

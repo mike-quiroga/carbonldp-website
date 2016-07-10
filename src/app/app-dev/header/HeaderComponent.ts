@@ -15,7 +15,7 @@ import "./style.css!";
 	template: template,
 	directives: [ CORE_DIRECTIVES, ROUTER_DIRECTIVES, ],
 } )
-export default class HeaderComponent {
+export class HeaderComponent {
 	router:Router;
 	element:ElementRef;
 	$element:JQuery;
