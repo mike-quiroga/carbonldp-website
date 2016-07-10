@@ -4,7 +4,7 @@ import com.carbonldp.web.RequestHandler;
 
 /**
  * @author MiguelAraCo
- * @since _version_
+ * @since 0.39.0
  */
 @RequestHandler
 public class BaseSPARQLUpdatePOSTRequestHandler extends AbstractSPARQLUpdatePOSTRequestHandler {

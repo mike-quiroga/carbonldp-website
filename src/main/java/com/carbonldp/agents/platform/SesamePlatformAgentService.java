@@ -12,6 +12,7 @@ import com.carbonldp.authorization.Platform;
 import com.carbonldp.authorization.acl.ACEDescription;
 import com.carbonldp.authorization.acl.ACL;
 import com.carbonldp.exceptions.ResourceAlreadyExistsException;
+import com.carbonldp.ldp.containers.ContainerService;
 import com.carbonldp.ldp.containers.BasicContainerFactory;
 import com.carbonldp.models.Infraction;
 import com.carbonldp.rdf.*;
@@ -62,6 +63,15 @@ public class SesamePlatformAgentService extends SesameAgentsService {
 			sendValidationEmail( agent, validator );
 			// TODO: Create "resend validation" resource
 		}
+	}
+
+	@Override
+	public void create( IRI agentContainerIRI, Agent agent ) {
+		validate( agent );
+		String email = agent.getEmails().iterator().next();
+		if ( platformAgentRepository.existsWithEmail( email ) ) throw new ResourceAlreadyExistsException();
+		setAgentPasswordFields( agent );
+		containerService.createChild( agentContainerIRI, agent );
 	}
 
 	@Override
@@ -126,6 +136,7 @@ public class SesamePlatformAgentService extends SesameAgentsService {
 
 	@Autowired
 	public void setPlatformAgentRepository( PlatformAgentRepository platformAgentRepository ) { this.platformAgentRepository = platformAgentRepository; }
+
 
 	@Autowired
 	public void setAppService( AppService appService ) { this.appService = appService; }

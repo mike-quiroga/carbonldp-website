@@ -22,12 +22,12 @@ public abstract class AbstractRequestWithBodyHandler<E extends RDFResource> exte
 	protected Set<RDFResource> getRequestDocumentResources( AbstractModel requestModel ) {
 		Set<RDFResource> documentResources = new HashSet<>();
 		requestModel.subjects()
-					.stream()
-					.filter( ValueUtil::isIRI )
-					.map( ValueUtil::getIRI )
-					.filter( uri -> ! IRIUtil.hasFragment( uri ) )
-					.map( uri -> new RDFResource( requestModel, uri ) )
-					.forEach( documentResources::add )
+		            .stream()
+		            .filter( ValueUtil::isIRI )
+		            .map( ValueUtil::getIRI )
+		            .filter( uri -> ! IRIUtil.hasFragment( uri ) )
+		            .map( uri -> new RDFResource( requestModel, uri ) )
+		            .forEach( documentResources::add )
 		;
 		return documentResources;
 	}

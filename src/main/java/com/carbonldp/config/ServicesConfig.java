@@ -41,9 +41,6 @@ import org.springframework.context.annotation.Configuration;
 public class ServicesConfig {
 
 	@Autowired
-	private SesameConnectionFactory connectionFactory;
-
-	@Autowired
 	private ACLPermissionEvaluator permissionEvaluator;
 
 	@Autowired
@@ -72,11 +69,6 @@ public class ServicesConfig {
 	@Bean
 	public ACLService aclService() {
 		return new SesameACLService( permissionEvaluator );
-	}
-
-	@Bean
-	public SPARQLService sparqlService() {
-		return new SesameSPARQLService( connectionFactory );
 	}
 
 	@Bean
@@ -135,8 +127,6 @@ public class ServicesConfig {
 	}
 
 	@Bean
-	public SPARQLService sparqlService() {
-		return new SesameSPARQLService( connectionFactory );
-	}
+	public SPARQLService sparqlService() { return new SesameSPARQLService( connectionFactory );}
 
 }

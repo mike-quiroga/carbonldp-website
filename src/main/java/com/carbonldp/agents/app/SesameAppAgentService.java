@@ -6,6 +6,8 @@ import com.carbonldp.agents.SesameAgentsService;
 import com.carbonldp.apps.roles.AppRoleRepository;
 import com.carbonldp.authorization.acl.ACL;
 import com.carbonldp.exceptions.ResourceAlreadyExistsException;
+import com.carbonldp.ldp.sources.RDFSourceService;
+import com.carbonldp.ldp.containers.ContainerService;
 import org.openrdf.model.IRI;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -45,6 +47,15 @@ public class SesameAppAgentService extends SesameAgentsService {
 
 	}
 
+	@Override
+	public void create( IRI agentContainerIRI, Agent agent ) {
+		validate( agent );
+		String email = agent.getEmails().iterator().next();
+		if ( appAgentRepository.existsWithEmail( email ) ) throw new ResourceAlreadyExistsException();
+		setAgentPasswordFields( agent );
+		containerService.createChild( agentContainerIRI, agent );
+	}
+
 	public void delete( IRI agentIRI ) {
 		sourceRepository.delete( agentIRI, true );
 	}
@@ -54,4 +65,9 @@ public class SesameAppAgentService extends SesameAgentsService {
 
 	@Autowired
 	public void setAppRoleRepository( AppRoleRepository appRoleRepository ) { this.appRoleRepository = appRoleRepository; }
+
+	@Autowired
+	public void setSourceService( RDFSourceService sourceService ) {
+		this.sourceService = sourceService;
+	}
 }
