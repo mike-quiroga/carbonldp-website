@@ -16,7 +16,8 @@ import AppContextService from "./../../AppContextService";
 import { AppTileComponent } from "./app-tile/app-tile.component";
 import { AppsListComponent } from "./apps-list/apps-list.component";
 import * as App from "./../app/app";
-import { Message } from "./../../components/errors-area/ErrorsAreaComponent";
+
+import { Message } from "carbon-panel/errors-area/error-message.component";
 
 import template from "./apps-list.view.html!";
 import "./apps-list.view.css!";

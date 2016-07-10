@@ -12,8 +12,8 @@ import { StatusCode as HTTPStatusCode } from "carbonldp/HTTP";
 import { Error as HTTPError } from "carbonldp/HTTP/Errors";
 
 import BackupsService from "./../BackupsService";
-import { Message } from "app/app-dev/components/errors-area/ErrorsAreaComponent";
-import ErrorMessageComponent from "app/app-dev/components/errors-area/error-message/ErrorMessageComponent";
+import { ErrorsAreaComponent } from "carbon-panel/errors-area/errors-area.component";
+import { Message, ErrorMessageComponent } from "carbon-panel/errors-area/error-message.component";
 
 import template from "./template.html!";
 import style from "./style.css!text";

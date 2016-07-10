@@ -9,7 +9,7 @@ import AppContextService from "./../../AppContextService";
 import * as App from "./app";
 
 import { AppDashboardView } from "./app-dashboard.view";
-import SPARQLEditorView from "./sparql-editor/SPARQLEditorView";
+import { SPARQLEditorView } from "./sparql-editor/SPARQLEditorView";
 import { EditAppView } from "./edit-app/edit-app.view";
 import ExplorerView from "./explorer/ExplorerView";
 import ConfigurationView from "./configuration/ConfigurationView";

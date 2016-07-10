@@ -13,8 +13,8 @@ import { Error as HTTPError } from "carbonldp/HTTP/Errors";
 import BackupsService from "./../BackupsService";
 import JobsService from "./../../job/JobsService";
 import * as Job from "./../../job/Job";
-import ErrorMessageComponent from "app/app-dev/components/errors-area/error-message/ErrorMessageComponent";
-import { Message } from "app/app-dev/components/errors-area/ErrorsAreaComponent";
+
+import { Message, ErrorMessageComponent } from "carbon-panel/errors-area/error-message.component";
 
 import template from "./template.html!";
 import "./style.css!";

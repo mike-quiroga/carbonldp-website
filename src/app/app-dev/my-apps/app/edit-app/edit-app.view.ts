@@ -9,7 +9,7 @@ import * as App from "./../app";
 
 import { AppDetailView } from "./../app-detail.view";
 import EditAppComponent from "./edit-app-component/EditAppComponent";
-import ErrorsAreaService from "app/app-dev/components/errors-area/service/ErrorsAreaService";
+import { ErrorsAreaService } from "carbon-panel/errors-area/errors-area.service";
 
 import template from "./edit-app.view.html!";
 

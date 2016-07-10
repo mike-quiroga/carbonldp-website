@@ -31,15 +31,15 @@
 		</div>
 	</div>
 	<div class="ui basic segment" *ngIf="errorMessages.length > 0">
-		<error-message *ngFor="let errorMessage of errorMessages; let i=index"
+		<cp-error-message *ngFor="let errorMessage of errorMessages; let i=index"
 		               [message]="errorMessage"
 		               [closable]="false">
-		</error-message>
+		</cp-error-message>
 	</div>
 	<div class="ui basic segment" *ngIf="!!failedDownloadMessage && errorMessages.length === 0">
-		<error-message [message]="failedDownloadMessage"
+		<cp-error-message [message]="failedDownloadMessage"
 		               (onClose)="closeFailedDownloadMessage($event)"
-		               [closable]="true"></error-message>
+		               [closable]="true"></cp-error-message>
 	</div>
 </div>
 <div class="ui delete backup modal">
@@ -53,11 +53,11 @@
 				"<span class="emphasize">{{askingBackupToRemove?.fileIdentifier}}</span>" created on <span class="emphasize">{{askingBackupToRemove?.created | date:"MMM dd, yyy - HH:mm"}} hrs.</span>.</p>
 			<p>Are you sure you want to delete it?</p>
 			<div class="errors" *ngIf="deleteMessages.length>0">
-				<error-message *ngFor="let deleteMessage of deleteMessages; let i=index"
+				<cp-error-message *ngFor="let deleteMessage of deleteMessages; let i=index"
 				               [message]="deleteMessage"
 				               [closable]="true"
 				               (onClose)="removeDeleteErrorMessage(i)">
-				</error-message>
+				</cp-error-message>
 			</div>
 		</div>
 	</div>

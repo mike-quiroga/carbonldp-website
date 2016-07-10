@@ -10,7 +10,8 @@ import * as HTTP from "carbonldp/HTTP";
 import DocumentsResolverService from "./documents-resolver.service.ts"
 import DocumentViewerComponent from "./document-viewer/document-viewer.component";
 import DocumentTreeViewComponent from "./document-tree-view/document-tree-view.component";
-import { Message } from "./../../../../components/errors-area/ErrorsAreaComponent";
+
+import { Message } from "carbon-panel/errors-area/error-message.component";
 
 import template from "./document-explorer.component.html!";
 import style from "./document-explorer.component.css!text";

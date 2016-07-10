@@ -3,7 +3,7 @@ import { Component, ElementRef, Input, Output, EventEmitter, SimpleChange, ViewC
 import $ from "jquery";
 import "semantic-ui/semantic";
 
-import { Message } from "app/app-dev/components/errors-area/ErrorsAreaComponent";
+import { Message } from "carbon-panel/errors-area/error-message.component";
 import * as RDFNode from "carbonldp/RDF/RDFNode";
 import * as SDKContext from "carbonldp/SDKContext";
 import * as RDFDocument from "carbonldp/RDF/Document";

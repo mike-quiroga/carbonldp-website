@@ -107,10 +107,10 @@
 						</div>
 					</div>
 				</div>
-				<error-message *ngFor="let errorMessage of errorMessages; let i=index"
+				<cp-error-message *ngFor="let errorMessage of errorMessages; let i=index"
 				               [message]="errorMessage"
 				               [closable]="true"
-				               (onClose)="removeMessage(i)"></error-message>
+				               (onClose)="removeMessage(i)"></cp-error-message>
 			</div>
 		</div>
 	</div>

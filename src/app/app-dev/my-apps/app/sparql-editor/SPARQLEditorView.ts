@@ -4,7 +4,7 @@ import * as App from "carbonldp/App";
 
 import { AppDetailView } from "./../app-detail.view";
 import SPARQLClientComponent from "app/components/sparql-client/SPARQLClientComponent";
-import ErrorsAreaService from "app/app-dev/components/errors-area/service/ErrorsAreaService";
+import { ErrorsAreaService } from "carbon-panel/errors-area/errors-area.service";
 
 import "semantic-ui/semantic";
 

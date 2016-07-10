@@ -5,17 +5,16 @@ import { Router, RouteConfig, RouterOutlet } from "@angular/router-deprecated";
 import { Authenticated } from "angular2-carbonldp/decorators";
 import { AuthService } from "angular2-carbonldp/services";
 
-// import SidebarService from "./components/sidebar/service/SidebarService";
-
 import { RouterService } from "carbon-panel/router.service";
 import { HeaderComponent } from "carbon-panel/header.component";
 import { HeaderService } from "carbon-panel/header.service";
 import { SidebarComponent } from "carbon-panel/sidebar.component";
 import { SidebarService } from "carbon-panel/sidebar.service";
 import { MenuBarComponent } from "carbon-panel/menu-bar.component";
+import { ErrorsAreaComponent } from "carbon-panel/errors-area/errors-area.component";
+import { ErrorsAreaService } from "carbon-panel/errors-area/errors-area.service";
 
 import FooterComponent from "./footer/FooterComponent";
-import ErrorsAreaComponent from "./components/errors-area/ErrorsAreaComponent";
 
 import DashboardView from "./dashboard/DashboardView";
 import { MyAppsView } from "./my-apps/my-apps.view";
@@ -50,6 +49,7 @@ import style from "./app-dev.view.css!text";
 		} ),
 		provide( HeaderService, { useClass: HeaderService } ),
 		provide( SidebarService, { useClass: SidebarService } ),
+		provide( ErrorsAreaService, { useClass: ErrorsAreaService } ),
 	]
 } )
 @RouteConfig( [
