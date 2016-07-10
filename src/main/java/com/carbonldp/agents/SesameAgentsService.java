@@ -8,9 +8,19 @@ import com.carbonldp.config.ConfigurationRepository;
 import com.carbonldp.exceptions.InvalidResourceException;
 import com.carbonldp.exceptions.StupidityException;
 import com.carbonldp.ldp.AbstractSesameLDPService;
+import com.carbonldp.ldp.sources.RDFSource;
+import com.carbonldp.ldp.sources.RDFSourceService;
+import com.carbonldp.ldp.containers.ContainerService;
 import com.carbonldp.models.Infraction;
+import com.carbonldp.rdf.RDFDocument;
 import com.carbonldp.utils.AuthenticationUtil;
+import com.carbonldp.utils.ModelUtil;
+import com.carbonldp.utils.RDFDocumentUtil;
 import freemarker.template.*;
+import org.openrdf.model.IRI;
+import org.openrdf.model.Value;
+import org.openrdf.model.impl.AbstractModel;
+import org.openrdf.model.impl.LinkedHashModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -19,17 +29,35 @@ import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public abstract class SesameAgentsService extends AbstractSesameLDPService implements AgentService {
 
 	protected ConfigurationRepository configurationRepository;
 	protected AgentValidatorRepository agentValidatorRepository;
+	protected RDFSourceService sourceService;
+	protected ContainerService containerService;
 
 	protected JavaMailSender mailSender;
+
+	@Override
+	public void replace( IRI source, Agent agent ) {
+		validateNumberOfPasswordAndEmails( agent );
+		RDFSource originalSource = sourceService.get( agent.getIRI() );
+		RDFDocument originalDocument = originalSource.getDocument();
+
+		RDFDocument newDocument = RDFDocumentUtil.mapBNodeSubjects( originalDocument, agent.getDocument() );
+
+		AbstractModel toAdd = newDocument.stream().filter( statement -> ! ModelUtil.containsStatement( originalDocument, statement ) ).collect( Collectors.toCollection( LinkedHashModel::new ) );
+		RDFDocument documentToAdd = new RDFDocument( toAdd, source );
+		AbstractModel toDelete = originalDocument.stream().filter( statement -> ! ModelUtil.containsStatement( newDocument, statement ) ).collect( Collectors.toCollection( LinkedHashModel::new ) );
+		RDFDocument documentToDelete = new RDFDocument( toDelete, source );
+		Agent agentToAdd = new Agent( documentToAdd, agent.getIRI() );
+		if ( agentToAdd.getPassword() != null ) setAgentPasswordFields( agentToAdd );
+
+		sourceService.patch( originalSource.getIRI(), documentToAdd, documentToDelete );
+	}
 
 	protected void validate( Agent agent ) {
 		List<Infraction> infractions = AgentFactory.getInstance().validate( agent );
@@ -77,6 +105,14 @@ public abstract class SesameAgentsService extends AbstractSesameLDPService imple
 		}
 
 		mailSender.send( message );
+	}
+
+	private void validateNumberOfPasswordAndEmails( Agent agent ) {
+		Set<Value> passwords = agent.getProperties( AgentDescription.Property.PASSWORD );
+		if ( passwords.size() > 1 ) throw new InvalidResourceException( new Infraction( 0x2004, "property", AgentDescription.Property.PASSWORD.getIRI().stringValue() ) );
+
+		Set<Value> emails = agent.getProperties( AgentDescription.Property.EMAIL );
+		if ( emails.size() < 1 ) throw new InvalidResourceException( new Infraction( 0x2004, "property", AgentDescription.Property.PASSWORD.getIRI().stringValue() ) );
 	}
 
 	private String prepareEmailText( Agent agent, AgentValidator validator ) throws IOException {
@@ -135,4 +171,12 @@ public abstract class SesameAgentsService extends AbstractSesameLDPService imple
 
 	@Autowired
 	public void setMailSender( JavaMailSender mailSender ) { this.mailSender = mailSender; }
+
+	@Autowired
+	public void setSourceService( RDFSourceService sourceService ) { this.sourceService = sourceService; }
+
+	@Autowired
+	public void setContainerService( ContainerService containerService ) {
+		this.containerService = containerService;
+	}
 }

@@ -23,7 +23,7 @@ import javax.servlet.http.HttpServletResponse;
 
 @Controller
 @RequestMapping( value = "/platform/apps/*/ldap-servers/" )
-public class LDAPServersController  extends AbstractController {
+public class LDAPServersController extends AbstractController {
 	private LDAPServerPOSTHandler postRequestHandler;
 
 	@InteractionModel( value = {APIPreferences.InteractionModel.CONTAINER}, handlesDefault = true )

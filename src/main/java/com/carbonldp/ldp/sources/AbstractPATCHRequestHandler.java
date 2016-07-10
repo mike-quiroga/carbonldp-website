@@ -114,10 +114,10 @@ public abstract class AbstractPATCHRequestHandler extends AbstractLDPRequestHand
 
 	private Set<DeleteAction> getDeleteActions( PATCHRequest patchRequest ) {
 		return patchRequest.getDeleteActions()
-				.stream()
-				.map( uri -> new RDFNode( patchRequest.getBaseModel(), uri ) )
-				.map( DeleteAction::new )
-				.collect( Collectors.toSet() )
+		                   .stream()
+		                   .map( uri -> new RDFNode( patchRequest.getBaseModel(), uri ) )
+		                   .map( DeleteAction::new )
+		                   .collect( Collectors.toSet() )
 			;
 	}
 
@@ -154,10 +154,10 @@ public abstract class AbstractPATCHRequestHandler extends AbstractLDPRequestHand
 
 	private Set<SetAction> getSetActions( PATCHRequest patchRequest ) {
 		return patchRequest.getSetActions()
-				.stream()
-				.map( uri -> new RDFNode( patchRequest.getBaseModel(), uri ) )
-				.map( SetAction::new )
-				.collect( Collectors.toSet() )
+		                   .stream()
+		                   .map( uri -> new RDFNode( patchRequest.getBaseModel(), uri ) )
+		                   .map( SetAction::new )
+		                   .collect( Collectors.toSet() )
 			;
 	}
 
@@ -194,10 +194,10 @@ public abstract class AbstractPATCHRequestHandler extends AbstractLDPRequestHand
 
 	private Set<AddAction> getAddActions( PATCHRequest patchRequest ) {
 		return patchRequest.getAddActions()
-				.stream()
-				.map( uri -> new RDFNode( patchRequest.getBaseModel(), uri ) )
-				.map( AddAction::new )
-				.collect( Collectors.toSet() )
+		                   .stream()
+		                   .map( uri -> new RDFNode( patchRequest.getBaseModel(), uri ) )
+		                   .map( AddAction::new )
+		                   .collect( Collectors.toSet() )
 			;
 	}
 

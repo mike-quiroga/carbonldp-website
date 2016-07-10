@@ -39,6 +39,8 @@ public class PlatformAgentUsernamePasswordAuthenticationProvider extends SesameU
 
 		if ( agent == null ) throw new BadCredentialsException( "Wrong credentials" );
 
+		if ( ! agent.isEnabled() ) throw new BadCredentialsException( "Wrong credentials" );
+
 		String hashedPassword = getHashedPassword( password, agent );
 
 		if ( ! passwordsMatch( hashedPassword, agent ) ) throw new BadCredentialsException( "Wrong credentials" );

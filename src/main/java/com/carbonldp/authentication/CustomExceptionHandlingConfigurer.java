@@ -170,7 +170,7 @@ public class CustomExceptionHandlingConfigurer<H extends HttpSecurityBuilder<H>>
 		DelegatingAuthenticationEntryPoint entryPoint = new DelegatingAuthenticationEntryPoint(
 			defaultEntryPointMappings );
 		entryPoint.setDefaultEntryPoint( defaultEntryPointMappings.values().iterator()
-																  .next() );
+		                                                          .next() );
 		return entryPoint;
 	}
 
