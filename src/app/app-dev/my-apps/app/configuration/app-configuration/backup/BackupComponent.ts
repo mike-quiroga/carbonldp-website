@@ -13,7 +13,6 @@ import ExportBackupComponent from "./export-backup/ExportBackupComponent"
 import BackupsListComponent from "./bacukps-list/BackupsListComponents"
 
 import template from "./template.html!";
-import "./style.css!";
 
 @Component( {
 	selector: "backup",

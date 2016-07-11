@@ -1,4 +1,4 @@
-import { Component } from "@angular/core";
+import {Component} from "@angular/core";
 import {RouteConfig, RouterOutlet} from "@angular/router-deprecated";
 
 import HomeView from "./home/HomeView";
@@ -15,13 +15,10 @@ import InteractionModelsView from "./rest-api/interaction-models/InteractionMode
 import JavaScriptSDKGettingStartedView from "./javascript-sdk/getting-started/GettingStartedView";
 import JavaScriptSDKContextsView from "./javascript-sdk/contexts/ContextsView";
 import JavaScriptSDKObjectModelView from "./javascript-sdk/object-model/ObjectModelView";
-import CarbonAppCreateAppView from "./carbon-app/CreateAppView";
 
 import RESTObjectModelView from "./rest-api/rest-object-model/RESTObjectModelView";
 import RESTRdfSourceView from "./rest-api/rest-rdfsource/RESTRdfSourceView";
 import RESTContainersView from "./rest-api/rest-containers/RESTContainersView";
-
-import "./style.css!";
 
 @Component( {
 	selector: "documents",
@@ -37,7 +34,7 @@ import "./style.css!";
 	{ path: "/ldp-concepts", as: "LDPConcepts", component: LDPConceptsView },
 	{ path: "/carbon-ldp-concepts", as: "CarbonLDPConcepts", component: CarbonLDPConceptsView },
 
-	{ path: "/rest-api", as: "RESTApi", redirectTo: [ "./RESTApiGettingStarted" ]  },
+	{ path: "/rest-api", as: "RESTApi", redirectTo: [ "./RESTApiGettingStarted" ] },
 	{ path: "/rest-api/getting-started", as: "RESTApiGettingStarted", component: RESTApiGettingStarted },
 	{ path: "/rest-api/interaction-models", as: "RESTApiInteractionModels", component: InteractionModelsView },
 
@@ -46,9 +43,9 @@ import "./style.css!";
 	{ path: "/javascript-sdk/contexts", as: "JavaScriptSDKContexts", component: JavaScriptSDKContextsView },
 	{ path: "/javascript-sdk/object-model", as: "JavaScriptSDKObjectModel", component: JavaScriptSDKObjectModelView },
 
-	{path: "/rest-api/rest-object-model", as: "RESTApiObjectModel", component: RESTObjectModelView},
-	{path: "/rest-api/rest-rdfsource", as: "RESTApiRdfSource", component: RESTRdfSourceView},
-	{path: "/rest-api/rest-containers", as: "RESTApiContainers", component: RESTContainersView},
+	{ path: "/rest-api/rest-object-model", as: "RESTApiObjectModel", component: RESTObjectModelView },
+	{ path: "/rest-api/rest-rdfsource", as: "RESTApiRdfSource", component: RESTRdfSourceView },
+	{ path: "/rest-api/rest-containers", as: "RESTApiContainers", component: RESTContainersView },
 ] )
 export default class DocumentationComponent {
 
