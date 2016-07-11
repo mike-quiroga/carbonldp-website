@@ -43,7 +43,7 @@ export default class HomeView {
 	}
 
 	routerOnActivate():void {
-		this.title.setTitle( "Home" );
+		this.title.setTitle( "CarbonLDP | Home" );
 	}
 
 	routerOnDeactivate():void {

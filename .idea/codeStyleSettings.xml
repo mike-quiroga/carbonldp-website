@@ -32,11 +32,12 @@
         <MarkdownNavigatorCodeStyleSettings>
           <option name="RIGHT_MARGIN" value="72" />
         </MarkdownNavigatorCodeStyleSettings>
+        <MultiMarkdownCodeStyleSettings>
+          <option name="RIGHT_MARGIN" value="72" />
+        </MultiMarkdownCodeStyleSettings>
         <TypeScriptCodeStyleSettings>
           <option name="REFORMAT_C_STYLE_COMMENTS" value="false" />
-          <option name="USE_PUBLIC_MODIFIER" value="true" />
           <option name="SPACES_WITHIN_OBJECT_LITERAL_BRACES" value="true" />
-          <option name="SPACES_WITHIN_IMPORTS" value="true" />
         </TypeScriptCodeStyleSettings>
         <XML>
           <option name="XML_LEGACY_SETTINGS_IMPORTED" value="true" />

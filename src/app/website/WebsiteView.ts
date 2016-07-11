@@ -17,7 +17,7 @@ import UIExamplesView from "app/website/ui-examples/UIExamplesView";
 
 import HeaderComponent from "app/website/header/HeaderComponent";
 import FooterComponent from "app/website/footer/FooterComponent";
-import DocumentsComponent from "app/website/documents/DocumentsComponent";
+import DocumentationComponent from "app/website/documentation/DocumentationComponent";
 
 import template from "./template.html!";
 import "./style.css!";
@@ -35,24 +35,31 @@ import "./style.css!";
 	{ path: "blog", as: "Blog", component: BlogView },
 	{ path: "blog/posts/:id", as: "BlogPost", component: BlogPostView },
 
-	{ path: "documents/...", as: "Documents", component: DocumentsComponent },
+	{ path: "documentation/...", as: "Documentation", component: DocumentationComponent },
 
 	{ path: "sparql-client", as: "SPARQLClient", component: SPARQLClientComponent },
 	{ path: "ui-examples", as: "UIExamples", component: UIExamplesView },
 	{ path: "signup-thanks", as: "SignupThanks", component: SignupThanksView },
 ] )
-
 export default class WebsiteView {
 	element:ElementRef;
 	$element:JQuery;
+	router:Router;
+	prevUrl = "";
 
-	constructor( router:Router, element:ElementRef ) {
+	constructor( router:Router, element:ElementRef, private location:Location ) {
 		this.element = element;
+		this.router = router;
+		this.router.parent.subscribe( ( url ) => {
+			if ( this.prevUrl !== url ) {
+				$( "html, body" ).scrollTop( 0 );
+				this.prevUrl = url;
+			}
+		} );
 	}
 
 	ngAfterViewInit():void {
 		this.$element = $( this.element.nativeElement );
 	}
-
 
 }

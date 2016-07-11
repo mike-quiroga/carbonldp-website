@@ -1,3 +1,11 @@
+# 0.5.17 (July 11, 2016)
+- Add partial draft JavaScript SDK Object Model.
+- Add global styles for documentation.
+- Complete draft JavaScript SDK Contexts.
+- Content improvements/corrections to Getting Started with the REST API.
+- Fix WebsiteView to scroll to Top on route change.
+- Combine documents into documentation.
+
 # 0.5.16 (June 8, 2016)
 - Fix bug with SPARQL Editor that hides the initial h from http when displaying results.
 - Fix my-apps action buttons to redirect to proper route.
