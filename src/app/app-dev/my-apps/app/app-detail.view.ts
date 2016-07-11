@@ -5,7 +5,8 @@ import { ROUTER_DIRECTIVES, RouteConfig, Router, RouterOutlet, RouteParams } fro
 import * as CarbonApp from "carbonldp/App";
 
 import { MyAppsSidebarService } from "./../my-apps-sidebar.service";
-import AppContextService from "./../../AppContextService";
+// import AppContextService from "./../../AppContextService";
+import { AppContextService } from "carbon-panel/my-apps/app-context.service";
 import * as App from "./app";
 
 import { AppDashboardView } from "./app-dashboard.view";

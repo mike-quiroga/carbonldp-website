@@ -13,6 +13,7 @@ import { SidebarService } from "carbon-panel/sidebar.service";
 import { MenuBarComponent } from "carbon-panel/menu-bar.component";
 import { ErrorsAreaComponent } from "carbon-panel/errors-area/errors-area.component";
 import { ErrorsAreaService } from "carbon-panel/errors-area/errors-area.service";
+// import { MyAppsView } from "carbon-panel/my-apps/my-apps.view"
 
 import FooterComponent from "./footer/FooterComponent";
 

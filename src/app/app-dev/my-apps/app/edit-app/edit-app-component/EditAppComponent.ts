@@ -10,7 +10,8 @@ import * as PersistedApp from "carbonldp/PersistedApp";
 import $ from "jquery";
 import "semantic-ui/semantic";
 
-import AppContextService from "./../../../../AppContextService";
+// import AppContextService from "./../../../../AppContextService";
+import { AppContextService } from "carbon-panel/my-apps/app-context.service";
 
 import template from "./template.html!";
 import "./style.css!";
