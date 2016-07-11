@@ -1,6 +1,5 @@
 import { Component, ElementRef } from "@angular/core";
 import { Title } from "@angular/platform-browser";
-import { CORE_DIRECTIVES } from "@angular/common";
 import { Router, ROUTER_DIRECTIVES } from "@angular/router-deprecated";
 import { Observable } from "rxjs/Rx";
 
@@ -25,9 +24,9 @@ import "./apps-list.view.css!";
 @Component( {
 	selector: "my-apps-list",
 	template: template,
-	directives: [ CORE_DIRECTIVES, ROUTER_DIRECTIVES, AppTileComponent, AppsListComponent ],
+	directives: [ ROUTER_DIRECTIVES, AppTileComponent, AppsListComponent ],
 } )
-export class AppsListView {
+export class AppsCatalogComponent {
 	apps:App.Class[] = [];
 	results:App.Class[] = [];
 
