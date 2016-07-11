@@ -27,9 +27,26 @@ export default class HomeView {
 
 	ngAfterViewInit():void {
 		this.$element = $( this.element.nativeElement );
+		this.$element.find( ".doc-categories a[href]" ).on( "click", this.scrollTo );
 	}
 
 	routerOnActivate():void {
 		this.title.setTitle( "Documentation" );
+	}
+
+
+	scrollTo( event:any ):boolean {
+		let id:string = $( event.currentTarget ).attr( "href" ).replace( "#", "" );
+		let $element:JQuery = $( "#" + id );
+		let position:number = $element.offset().top - 100;
+
+		$( "html, body" ).animate( {
+			scrollTop: position
+		}, 500 );
+		location.hash = "#" + id;
+		event.stopImmediatePropagation();
+		event.preventDefault();
+
+		return false;
 	}
 }

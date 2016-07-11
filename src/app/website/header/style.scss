@@ -66,8 +66,13 @@ header {
 
 	}
 
-	.ui.dropdown > a.item:hover {
-		background: rgba(0,0,0,.05);
+	.ui.dropdown.link.item {
+		> a.item {
+			background: none;
+			>.router-link-active:hover {
+				background: none;
+			}
+		}
 	}
 
 }
