@@ -1,4 +1,4 @@
-# 0.5.17 (June 16, 2016)
+# 0.5.17 (July 11, 2016)
 - Add partial draft JavaScript SDK Object Model.
 - Add global styles for documentation.
 - Complete draft JavaScript SDK Contexts.
