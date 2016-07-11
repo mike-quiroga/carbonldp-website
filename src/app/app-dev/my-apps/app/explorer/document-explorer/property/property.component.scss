@@ -1,0 +1,48 @@
+:host {
+	.content {
+		.header {
+			.slug {
+				color: #FF4500;
+			}
+		}
+
+		.description {
+			.ui.accordion {
+				width: 100%;
+			}
+			.edit.form.segment {
+				padding: 0;
+			}
+		}
+
+		.inverted.dimmer {
+			.description {
+				color: #000000;
+			}
+		}
+	}
+	> .content > .status.indicator {
+		float: right;
+	}
+}
+
+.ui.items > :host.item .meta input {
+	// Remove gap between input and save button when creating/editing a property name
+	margin-right: 0;
+}
+
+.ui.items > :host.item.added-property {
+	background-color: #F1FAFF;
+	padding-left: 15px;
+	padding-right: 15px;
+}
+
+.ui.items > :host.item.has-changed {
+	background-color: #FFFFE0;
+	padding-left: 15px;
+	padding-right: 15px;
+}
+
+.ui.divided.items > :host.item .content {
+	margin-top: 2%;
+}

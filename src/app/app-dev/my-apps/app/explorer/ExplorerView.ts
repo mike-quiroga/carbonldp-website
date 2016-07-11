@@ -5,7 +5,7 @@ import "semantic-ui/semantic";
 import * as App from "carbonldp/App";
 
 import AppDetailView from "./../AppDetailView";
-import DocumentExplorerComponent from "./document-explorer/DocumentExplorerComponent";
+import DocumentExplorerComponent from "./document-explorer/document-explorer.component";
 import template from "./template.html!";
 
 @Component( {

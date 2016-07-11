@@ -34,27 +34,27 @@
 
 					<div class="ui message">
 						<div class="content">
-							<p>A Context (platform context or application context), is an object that provides a
-								single place for storing various settings and state information that can be used
-								throughout your application.</p>
+							<p><strong>TL;DR</strong> A <span class="highlight">context</span> is an object that stores settings and state information that can be used
+								throughout your application.
+							</p>
 						</div>
 					</div>
 
 					<section>
 						<h2 class="ui header"> What is a context?</h2>
-						<p>A Context object refers to either the Carbon Platform or Application with which you
-							are working. Context objects give you a single place to store various settings and
-							state information that can be used throughout your application. Server settings,
-							such as the host for your Carbon platform, for example, are defined in the Platform
-							context. Authentication information and object schema are also stored in
-							context objects.</p>
+						<p>A <span class="highlight">context</span> object commonly refers to the Carbon platform or Carbon application with which you
+							are working. Context objects store settings and state information that can be used throughout
+							your application. For example, server settings, such as the host for your Carbon platform, are defined in the platform
+							context. Authentication information and object schema are also stored in context objects.
+						</p>
 						<!--TODO:Add object schema link-->
 						<p>The information that's stored in the context objects is continually referenced by
-							other objects, so they are important to the proper function of the SDK. Since the
+							other objects, so they are critical for the proper functioning of the SDK. Since the
 							nature of HTTP is inherently stateless, the context objects can also be useful for
 							managing application state within the client. In addition to the specific context
 							settings that are required, for example, you can use contexts to store arbitrary
-							settings and state information that may be useful to your custom application.</p>
+							settings and state information that may be useful to your custom application.
+						</p>
 
 						<p>Configuring settings and state information in a context object simplifies the
 							programming process. Setting the server host or domain in the platform context,
@@ -63,171 +63,183 @@
 							                                            data-content="URIs play a key role in enabling Linked Data and can be used to uniquely identify virtually any concept physical or abstract. A URI may or may not be resolvable on the Web."
 							                                            target="_blank"
 							                                            href="https://www.w3.org/TR/ld-glossary/#uniform-resource-identifier"
-							>URIs</a> throughout your code.The relative URIs will be resolved against the
-							context, making your code more or less independent from the location of the
-							platform.</p>
+							>URIs</a> throughout your code. These relative <a class="ui definition"
+							                                                  data-title="URI - Uniform Resource Identifier"
+							                                                  data-content="URIs play a key role in enabling Linked Data and can be used to uniquely identify virtually any concept physical or abstract. A URI may or may not be resolvable on the Web."
+							                                                  target="_blank"
+							                                                  href="https://www.w3.org/TR/ld-glossary/#uniform-resource-identifier"
+							>URIs</a> will be resolved against the <span class="highlight">context</span>, making
+							your code independent from the location of the platform.
+						</p>
 
 
 					</section>
 
 					<section>
 						<h2 class="ui header">Platform context</h2>
-						<p>All contexts reference the location where resources are persisted. The platform
-							context references the location of a Carbon platform server. It contains the
-							host/domain of the server, and it gives you access to define and modify settings,
-							authentication services and object schemas that will be available globally for the
-							Carbon SDK modules to use.</p>
+						<p>
+							Most <span class="highlight">contexts</span> reference the location where resources
+							are persisted. The platform <span class="highlight">context</span> references the location of a Carbon platform
+							server. It contains the host/domain of the server, and it gives you access to define
+							and modify settings, authentication services and object schemas that will be available
+							globally for the Carbon SDK modules to use.
+						</p>
 
 						<section>
 							<h3 class="ui header">Declare the platform context </h3>
 
-							<p>The platform context belongs to the <a target="_blank" href="https://github.com/CarbonLDP/CarbonLDP-JS-SDK/tree/develop/doc#Carbon"
-							>Carbon</a> class. To declare a platform context you need to import Carbon from the <code>carbonldp/Carbon</code>
-								library and create a new instance of the Carbon object.</p>
+							<p>The platform <span class="highlight">context</span> belongs to the <a target="_blank"
+							                                                                         href="https://github.com/CarbonLDP/CarbonLDP-JS-SDK/tree/develop/doc#Carbon"
+							>Carbon</a> class. To declare a platform <span class="highlight">context</span> you need to
+								import Carbon from the <code>carbonldp/Carbon</code> library and create a new instance
+								of the Carbon object.
+							</p>
 							<div>
 								<div class="ui top attached tabular menu">
 									<a class="item active" data-tab="typescript">TypeScript</a>
 									<a class="item" data-tab="javascript">JavaScript</a>
 								</div>
 								<div class="ui bottom attached tab segment active" data-tab="typescript">
-
 									<!--@formatter:off-->
-								<pre><code class="highlighted typescript">
-import Carbon from "carbonldp/Carbon";
+									<pre><code highlight class="typescript">
+										import Carbon from "carbonldp/Carbon";
 
-let carbonContext:Carbon = new Carbon();
-								</code></pre>
-								<!--@formatter:on-->
+										let carbonContext:Carbon = new Carbon();
+									</code></pre>
+									<!--@formatter:on-->
 								</div>
 								<div class="ui bottom attached tab segment" data-tab="javascript">
 									<!--@formatter:off-->
-									<pre><code class="highlighted javascript">
-
-
-let carbonContext = new Carbon();
-							</code></pre>
-							<!--@formatter:on-->
+									<pre><code highlight class="javascript">
+										let carbonContext = new Carbon();
+									</code></pre>
+									<!--@formatter:on-->
 								</div>
 							</div>
-							<p>Without making any changes to the platform context (the instance,
+							<p>Without making any changes to the platform <span class="highlight">context</span> (the instance,
 								<code>carbonContext</code>, declared above), you can now call the <code>resolve()</code>
-								method on it to see the default URI against which relative URIs will be
-								resolved. For example:</p>
+								method on it to see the default URI against which relative URIs will be resolved. E.g.:
+							</p>
 							<div>
 								<div class="ui top attached tabular menu">
 									<a class="item active" data-tab="typescript">TypeScript</a>
 									<a class="item" data-tab="javascript">JavaScript</a>
 								</div>
 								<div class="ui bottom attached tab segment active" data-tab="typescript">
-
 									<!--@formatter:off-->
-								<pre><code class="highlighted typescript">
-console.log( carbonContext.resolve( "" ) );
-								</code></pre>
-								<!--@formatter:on-->
+									<pre><code highlight class="typescript">
+										console.log( carbonContext.resolve( "" ) );
+									</code></pre>
+									<!--@formatter:on-->
 								</div>
 								<div class="ui bottom attached tab segment" data-tab="javascript">
 									<!--@formatter:off-->
-									<pre><code class="highlighted javascript">
-console.log( carbonContext.resolve( "" ) );
-							</code></pre>
-							<!--@formatter:on-->
+									<pre><code highlight class="javascript">
+										console.log( carbonContext.resolve( "" ) );
+									</code></pre>
+									<!--@formatter:on-->
 								</div>
 							</div>
 							<p>The <code>resolve()</code> method resolves the relative URI provided( "" )
-								to an absolute URI and prints <code>https://carbonldp.com/platform/</code>.</p>
+								to an absolute URI and prints <code>https://carbonldp.com/platform/</code>.
+							</p>
 
 						</section>
 
 					</section>
 					<section>
 						<h2 class="ui header">Application context</h2>
-						<p>An application context references an application that exists within your platform.
-							It belongs to the <a target="_blank" href="https://github.com/CarbonLDP/CarbonLDP-JS-SDK/tree/develop/doc#Carbon-App-Context"
-							> Carbon.App.Context</a>class.</p>
+						<p>An application <span class="highlight">context</span> references an application that exists within your platform.
+							It belongs to the <a target="_blank"
+							                     href="https://github.com/CarbonLDP/CarbonLDP-JS-SDK/tree/develop/doc#Carbon-App-Context"
+							> Carbon.App.Context</a>class.
+						</p>
 
-						<p>The application context allows you to set application-specific settings and information
+						<p>The application <span class="highlight">context</span> allows you to set application-specific settings and information
 							that will be shared and used by all the Carbon modules and methods. You can configure
 							the <a class="ui definition"
 							       data-title="Roles"
 							       data-content="Roles are resources that can have one or more agents (users) as members."
 							>roles</a> and <a class="ui definition"
-							                   data-title="Agents"
-							                   data-content="Agents are Carbon users. There are platform and applications agents."
+							                  data-title="Agents"
+							                  data-content="Agents are Carbon users. There are platform and applications agents."
 							>agents</a> specific to the application, and you can use it to access the app's
-							documents and data. The application context also provides convenient access to any
-							information that's in its associated platform context. To see more in depth information
-							about the App Context class, see: <a target="_blank" href="https://github.com/CarbonLDP/CarbonLDP-JS-SDK/tree/develop/doc#Carbon-App-Context"
-							>Carbon.App.Context</a>.</p>
+							documents and data. The application <span class="highlight">context</span> also provides convenient access to any
+							information that's in its associated platform <span class="highlight">context</span>. To see more in depth information
+							about the class, see: <a target="_blank" href="https://github.com/CarbonLDP/CarbonLDP-JS-SDK/tree/develop/doc#Carbon-App-Context"
+							>Carbon.App.Context</a>.
+						</p>
 
 
 						<section>
 
-							<h3 class="ui header">Getting the App Context</h3>
+							<h3 class="ui header">Getting an App Context</h3>
 
-							<p>Once you have your platform context declared, you can get the application context
-								that will reference it. With this context you can use all the modules and methods
-								available to the application, for example: to retrieve the documents that
-								live inside your application, or to create new documents.</p>
+							<p>Once you have your platform <span class="highlight">context</span> declared, you
+								can get the application <span class="highlight">context</span> that will reference it.
+								With this <span class="highlight">context</span> you can use all the modules and methods
+								available to the application like retrieve documents that live inside the application,
+								or create new ones.
+							</p>
 
 							<p>The following example adds to the previous example and shows how to retrieve the
-								application context for an application named "test-app". To retrieve an application
-								context, you need to have created the application first. If you do not have an
-								application yet, please create it.</p>
-<!--TODO:add link to create an app in REST API or other-->
+								application <span class="highlight">context</span> for an application named "test-app".
+								To retrieve an application <span class="highlight">context</span>, you need to have
+								created the application first. If you do not have an application yet, please create it.
+							</p>
+							<!--TODO: Add link to create an app in REST API or other-->
 							<div>
 								<div class="ui top attached tabular menu">
 									<a class="item active" data-tab="typescript">TypeScript</a>
 									<a class="item" data-tab="javascript">JavaScript</a>
 								</div>
 								<div class="ui bottom attached tab segment active" data-tab="typescript">
-
 									<!--@formatter:off-->
-								<pre><code class="highlighted typescript">
-import Carbon from "carbonldp/Carbon";
-import * as App from "carbonldp/App";
+									<pre><code highlight class="typescript">
+										import Carbon from "carbonldp/Carbon";
+										import * as App from "carbonldp/App";
 
-let carbonContext:Carbon = new Carbon();
+										let carbonContext:Carbon = new Carbon();
 
-carbonContext.apps.getAppContext( "test-app/" ).then(
-	( appContext:App.Context ) => {
-		appContext.resolve( "" ); // https://carbonldp.com/apps/test-app/
-	}
-);
-								</code></pre>
-								<!--@formatter:on-->
+										carbonContext.apps.getAppContext( "test-app/" ).then(
+											( appContext:App.Context ) => {
+												appContext.resolve( "" ); // https://carbonldp.com/apps/test-app/
+											}
+										);
+									</code></pre>
+									<!--@formatter:on-->
 								</div>
 								<div class="ui bottom attached tab segment" data-tab="javascript">
 									<!--@formatter:off-->
-									<pre><code class="highlighted javascript">
+									<pre><code highlight class="javascript">
+										let carbonContext = new Carbon();
 
-
-
-let carbonContext = new Carbon();
-
-carbonContext.apps.getAppContext( "test-app/" ).then(
-	function( appContext ){
-		appContext.resolve( "" ); // https://carbonldp.com/apps/test-app/
-	}
-);
-							</code></pre>
-							<!--@formatter:on-->
+										carbonContext.apps.getAppContext( "test-app/" ).then(
+											function( appContext ){
+												appContext.resolve( "" ); // https://carbonldp.com/apps/test-app/
+											}
+										);
+									</code></pre>
+									<!--@formatter:on-->
 								</div>
 							</div>
 							<p>The <code>apps.getAppContext()</code> method returns a Promise that, when resolved,
-								gives you the App Context.</p>
+								gives you the app <span class="highlight">context</span>.
+							</p>
 
 						</section>
 					</section>
 					<section>
-						<h2 class="ui header">Access/Modify your contexts</h2>
+						<h2 class="ui header">Access/Modify your Contexts</h2>
 
-						<p>Now that you have declared a platform context and retrieved an application context,
-							you can work with them. A platform context has, by default, some pre-defined settings,
-							whereas an application context does not. After declaring the contexts you can set new
-							settings or modify/delete the pre-existing ones.</p>
+						<p>Now that you have declared a platform <span class="highlight">context</span> and retrieved
+							an application <span class="highlight">context</span>, it's time to work with them.
+							A platform <span class="highlight">context</span> has, by default, some pre-defined settings,
+							whereas an application <span class="highlight">context</span> does not. After declaring
+							them you can set new settings or modify/delete pre-existing ones.
+						</p>
 
-						<p>The pre defined settings of a Carbon platform context are:</p>
+						<p>Some of the pre defined settings of a Carbon platform <span class="highlight">context</span> are:</p>
 						<ul>
 							<li>domain: "carbonldp.com"</li>
 							<li>http.ssl: true</li>
@@ -238,69 +250,70 @@ carbonContext.apps.getAppContext( "test-app/" ).then(
 							<li>vocabulary: "vocabulary/#"</li>
 						</ul>
 
-						<p>You can add as many custom settings to either context as you wish. Remember,
-							there are no predefined settings for an application context.</p>
+						<p>You can add as many custom settings to either <span class="highlight">context</span> as you wish.
+							Remember, there are no predefined settings for an application <span class="highlight">context</span>.
+						</p>
 
-						<p>Following is an example of changing a default setting of the platform context
-							and adding a custom setting to the app context.</p>
+						<p>Following is an example of changing a default setting of the platform <span class="highlight">context</span>
+							and adding a custom setting to the app <span class="highlight">context</span>.
+						</p>
 						<div>
 							<div class="ui top attached tabular menu">
 								<a class="item active" data-tab="typescript">TypeScript</a>
 								<a class="item" data-tab="javascript">JavaScript</a>
 							</div>
 							<div class="ui bottom attached tab segment active" data-tab="typescript">
-
 								<!--@formatter:off-->
-								<pre><code class="highlighted typescript">
-import Carbon from "carbonldp/Carbon";
+								<pre><code highlight class="typescript">
+									import Carbon from "carbonldp/Carbon";
 
-let carbonContext:Carbon = new Carbon();
-let appContext:App.Context;
+									let carbonContext:Carbon = new Carbon();
+									let appContext:App.Context;
 
-//Modify predefined setting of platform context...
-carbonContext.setSetting( "domain", "myorganization.com" );
+									// Modify predefined setting of platform context...
+									carbonContext.setSetting( "domain", "myorganization.com" );
 
-//Carbon application context set new setting
-carbonContext.apps.getAppContext( "test-app/" ).then(
-   ( appContext:App.Context ) => {
-      appContext.setSetting( "name", "Awesome-programmer" );
-	console.log( appContext.getSetting( "name" ) ); // prints Awesome-programmer
-   }
-);
+									// Carbon application context set new setting
+									carbonContext.apps.getAppContext( "test-app/" ).then(
+									   ( appContext:App.Context ) => {
+									      appContext.setSetting( "name", "Awesome-programmer" );
+										console.log( appContext.getSetting( "name" ) ); // prints Awesome-programmer
+									   }
+									);
 
-console.log( carbonContext.resolve( "" ) ); // prints https://myorganization.com/platform/
+									console.log( carbonContext.resolve( "" ) ); // prints https://myorganization.com/platform/
 								</code></pre>
 								<!--@formatter:on-->
 							</div>
 							<div class="ui bottom attached tab segment" data-tab="javascript">
 								<!--@formatter:off-->
-								<pre><code class="highlighted javascript">
+								<pre><code highlight class="javascript">
+									let carbonContext = new Carbon();
+									let appContext;
 
+									// Modify predefined setting of platform context...
+									carbonContext.setSetting( "domain","myorganization.com" );
 
-let carbonContext = new Carbon();
-let appContext;
+									// Carbon application context set new setting
+									carbonContext.apss.getAppContext( "test-app/" ).then(
+										function( appContext ){
+											appContext.setSetting( "name", "Awesome-programmer" );
+											console.log( appContext.getSetting( "name" ) ); // prints Awesome-programmer
+										}
+									);
 
-//Modify predefined setting of platform context...
-carbonContext.setSetting( "domain","myorganization.com" );
-
-//Carbon application context set new setting
-carbonContext.apss.getAppContext( "test-app/" ).then(
-	function( appContext ){
-		appContext.setSetting( "name", "Awesome-programmer" );
-		console.log( appContext.getSetting( "name" ) ); // prints Awesome-programmer
-	}
-);
-
-console.log( carbonContext.resolve( "" ) ); // prints https://myorganization.com/platform/
+									console.log( carbonContext.resolve( "" ) ); // prints https://myorganization.com/platform/
 								</code></pre>
 							<!--@formatter:on-->
 							</div>
 						</div>
 						<p>The <code>setSetting()</code> method defines new settings or modifies preexisting
-							settings in a context object. It receives two parameters: a string with name of
-							the setting, and a value for the setting of any type. If the method called is used
-							on a platform context, it will be a platform setting. Likewise, if it is used on an
-							application context then it will be an application setting.</p>
+							settings in a <span class="highlight">context</span> object. It receives two
+							parameters: a string with name of the setting, and a value for the setting of any type.
+							If the method called is used on a platform <span class="highlight">context</span>, it
+							will be a platform setting. Likewise, if it is used on an application <span class="highlight">context</span>
+							then it will be an application setting.
+						</p>
 
 					</section>
 
@@ -309,123 +322,122 @@ console.log( carbonContext.resolve( "" ) ); // prints https://myorganization.com
 						<h2 class="ui header">Inheritance</h2>
 						<p>In this section we will discuss the inheritance of settings and authentication services,
 							the object schema inheritance will be discussed in the Object Schema Documentation,
-							as is a more complex subject.</p>
-<!--TODO: Add link to object schema documentation-->
-						<p>The application context has access to all the settings, services and object schema
-							contained in the platform context, unless those settings are explicitly overwritten.
-							This means that when there is an attempt to access a setting in an application context,
-							it is retrieved first from the application context. If the given setting is not defined
-							in the application context from which it was called, then it is retrieved from the
-							associated platform context. If the setting is found in neither of the two, it means
+							as it is a more complex subject.
+						</p>
+						<!--TODO: Add link to object schema documentation-->
+						<p>An application <span class="highlight">context</span> has access to all settings, services and object schemas
+							contained in the platform <span class="highlight">context</span>, unless those settings are explicitly overwritten.
+							This means that when there is an attempt to access a setting in an application <span class="highlight">context</span>,
+							it is retrieved first from it. If the given setting is not defined
+							in that <span class="highlight">context</span>, then it is retrieved from the
+							associated platform <span class="highlight">context</span>. If the setting is not found in neither of the two, it means
 							the setting has not been defined. This type of inheritance is similar to
 							<a target="_blank" href="https://developer.mozilla.org/en/docs/Web/JavaScript/Inheritance_and_the_prototype_chain"
-							>JavaScript's prototypal inheritance</a>.</p>
+							>JavaScript's prototypal inheritance</a>.
+						</p>
 
-						<p>The following example illustrates the inheritance of context settings - assuming two
-							Carbon applications: <code>test-app</code> and <code>your-app</code>.</p>
+						<p>The following example illustrates the inheritance of <span class="highlight">context</span> settings - assuming two
+							Carbon applications: <code>test-app</code> and <code>your-app</code>.
+						</p>
 						<div>
 							<div class="ui top attached tabular menu">
 								<a class="item active" data-tab="typescript">TypeScript</a>
 								<a class="item" data-tab="javascript">JavaScript</a>
 							</div>
 							<div class="ui bottom attached tab segment active" data-tab="typescript">
-
 								<!--@formatter:off-->
-								<pre><code class="highlighted typescript">
-import Carbon from "carbonldp/Carbon";
-import * as App from "carbonldp/App";
+								<pre><code highlight class="typescript">
+									import Carbon from "carbonldp/Carbon";
+									import * as App from "carbonldp/App";
 
-let carbonContext:Carbon = new Carbon();
-let testAppContext:App.Context;
-let yourAppContext:App.Context;
+									let carbonContext:Carbon = new Carbon();
+									let testAppContext:App.Context;
+									let yourAppContext:App.Context;
 
-//Get your application contexts
-carbonContext.apps.getAppContext( "test-app/" )
-.then(( appContext:App.Context ) => {
-      testAppContext = appContext;
-      return carbonContext.apps.getAppContext( "your-app/" );
-   })
-.then(( appContext:App.Context ) => {
-      yourAppContext = appContext;
+									// Get your application contexts
+									carbonContext.apps.getAppContext( "test-app/" )
+									.then(( appContext:App.Context ) => {
+									      testAppContext = appContext;
+									      return carbonContext.apps.getAppContext( "your-app/" );
+									   })
+									.then(( appContext:App.Context ) => {
+									      yourAppContext = appContext;
 
-      // The name setting has not yet been set and it is not predefined in the platform or app contexts...
-      carbonContext.getSetting( "name" );  // returns null
-      testAppContext.getSetting( "name" ); // returns null
-      yourAppContext.getSetting( "name" ); // returns null
-
-
-      // Set 'name' setting in test-app app context...
-      testAppContext.setSetting( "name", "TestApp" );
-      carbonContext.getSetting( "name" );  // returns null
-      testAppContext.getSetting( "name" ); // returns 'TestApp'
-      yourAppContext.getSetting( "name" ); // returns null
+									      // The name setting has not yet been set and it is not predefined in the platform or app contexts...
+									      carbonContext.getSetting( "name" );  // returns null
+									      testAppContext.getSetting( "name" ); // returns null
+									      yourAppContext.getSetting( "name" ); // returns null
 
 
-      // Set 'name' setting in the platform context...
-      carbonContext.setSetting( "name", "CarbonPlatform" );
+									      // Set 'name' setting in test-app app context...
+									      testAppContext.setSetting( "name", "TestApp" );
+									      carbonContext.getSetting( "name" );  // returns null
+									      testAppContext.getSetting( "name" ); // returns 'TestApp'
+									      yourAppContext.getSetting( "name" ); // returns null
 
-      carbonContext.getSetting( "name" );  // returns 'CarbonPlatform'
-      testAppContext.getSetting( "name" ); // returns 'TestApp'
-      yourAppContext.getSetting( "name" ); // returns 'CarbonPlatform'
 
-      // Deleting an app setting...
-      testAppContext.deleteSetting( "name" );
+									      // Set 'name' setting in the platform context...
+									      carbonContext.setSetting( "name", "CarbonPlatform" );
 
-      carbonContext.getSetting( "name" );  // returns 'CarbonPlatform'
-      testAppContext.getSetting( "name" ); // returns 'CarbonPlatform'
-      yourAppContext.getSetting( "name" ); // returns 'CarbonPlatform'
-});
+									      carbonContext.getSetting( "name" );  // returns 'CarbonPlatform'
+									      testAppContext.getSetting( "name" ); // returns 'TestApp'
+									      yourAppContext.getSetting( "name" ); // returns 'CarbonPlatform'
+
+									      // Deleting an app setting...
+									      testAppContext.deleteSetting( "name" );
+
+									      carbonContext.getSetting( "name" );  // returns 'CarbonPlatform'
+									      testAppContext.getSetting( "name" ); // returns 'CarbonPlatform'
+									      yourAppContext.getSetting( "name" ); // returns 'CarbonPlatform'
+									});
 								</code></pre>
 								<!--@formatter:on-->
 							</div>
 							<div class="ui bottom attached tab segment" data-tab="javascript">
 								<!--@formatter:off-->
-									<pre><code class="highlighted javascript">
+								<pre><code highlight class="javascript">
+									let carbonContext = new Carbon();
+									let testAppContext;
+									let yourAppContext;
+
+									// Get your application contexts
+									carbonContext.apps.getAppContext( "test-app/" )
+									.then( function( appContext ){
+									      testAppContext = appContext;
+									      return carbonContext.apps.getAppContext( "your-app/" );
+									   })
+									.then( function( appContext ){
+									      yourAppContext = appContext;
+
+									      // The name setting has not yet been set and it is not predefined in the platform or app contexts...
+									      carbonContext.getSetting( "name" );  // returns null
+									      testAppContext.getSetting( "name" ); // returns null
+									      yourAppContext.getSetting( "name" ); // returns null
 
 
-
-let carbonContext = new Carbon();
-let testAppContext;
-let yourAppContext;
-
-//Get your application contexts
-carbonContext.apps.getAppContext( "test-app/" )
-.then( function( appContext ){
-      testAppContext = appContext;
-      return carbonContext.apps.getAppContext( "your-app/" );
-   })
-.then( function( appContext ){
-      yourAppContext = appContext;
-
-      // The name setting has not yet been set and it is not predefined in the platform or app contexts...
-      carbonContext.getSetting( "name" );  // returns null
-      testAppContext.getSetting( "name" ); // returns null
-      yourAppContext.getSetting( "name" ); // returns null
+									      // Set 'name' setting in test-app app context...
+									      testAppContext.setSetting( "name", "TestApp" );
+									      carbonContext.getSetting( "name" );  // returns null
+									      testAppContext.getSetting( "name" ); // returns 'TestApp'
+									      yourAppContext.getSetting( "name" ); // returns null
 
 
-      // Set 'name' setting in test-app app context...
-      testAppContext.setSetting( "name", "TestApp" );
-      carbonContext.getSetting( "name" );  // returns null
-      testAppContext.getSetting( "name" ); // returns 'TestApp'
-      yourAppContext.getSetting( "name" ); // returns null
+									      // Set 'name' setting in the platform context...
+									      carbonContext.setSetting( "name", "CarbonPlatform" );
 
+									      carbonContext.getSetting( "name" );  // returns 'CarbonPlatform'
+									      testAppContext.getSetting( "name" ); // returns 'TestApp'
+									      yourAppContext.getSetting( "name" ); // returns 'CarbonPlatform'
 
-      // Set 'name' setting in the platform context...
-      carbonContext.setSetting( "name", "CarbonPlatform" );
+									      // Deleting an app setting...
+									      testAppContext.deleteSetting( "name" );
 
-      carbonContext.getSetting( "name" );  // returns 'CarbonPlatform'
-      testAppContext.getSetting( "name" ); // returns 'TestApp'
-      yourAppContext.getSetting( "name" ); // returns 'CarbonPlatform'
-
-      // Deleting an app setting...
-      testAppContext.deleteSetting( "name" );
-
-      carbonContext.getSetting( "name" );  // returns 'CarbonPlatform'
-      testAppContext.getSetting( "name" ); // returns 'CarbonPlatform'
-      yourAppContext.getSetting( "name" ); // returns 'CarbonPlatform'
-});
-									</code></pre>
-							<!--@formatter:on-->
+									      carbonContext.getSetting( "name" );  // returns 'CarbonPlatform'
+									      testAppContext.getSetting( "name" ); // returns 'CarbonPlatform'
+									      yourAppContext.getSetting( "name" ); // returns 'CarbonPlatform'
+									});
+								</code></pre>
+								<!--@formatter:on-->
 							</div>
 						</div>
 					</section>

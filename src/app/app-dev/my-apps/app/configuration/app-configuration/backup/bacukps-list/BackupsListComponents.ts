@@ -40,6 +40,7 @@ export default class BackupsListComponent {
 	errorMessages:Message[] = [];
 	refreshPeriod:number = 15000;
 	deleteMessages:Message[] = [];
+	failedDownloadMessage:Message;
 
 	@Input() backupJob:PersistedDocument.Class;
 	@Input() appContext:App.Context;
@@ -99,9 +100,26 @@ export default class BackupsListComponent {
 		} );
 	}
 
-	downloadBackup( uri:string ):void {
-		window.open( uri );
-		// TODO: implement a way to download without prompt when Platform supports it.
+	downloadBackup( uri:string, downLoadButton:HTMLButtonElement ):void {
+		downLoadButton.classList.add( "loading" );
+		this.failedDownloadMessage = null;
+		this.backupsService.getDownloadURL( uri ).then( ( getDownloadURL:string ) => {
+			window.open( getDownloadURL );
+		} ).catch( ( error:HTTPError )=> {
+			let deleteMessage:Message;
+			deleteMessage = <Message>{
+				title: (<HTTPError>error).name,
+				content: "Couldn't generate download link.",
+				endpoint: (<any>(<HTTPError>error).response.request).responseURL,
+				statusCode: "" + (<XMLHttpRequest>(<HTTPError>error).response.request).status,
+				statusMessage: (<XMLHttpRequest>(<HTTPError>error).response.request).statusText
+			};
+			this.failedDownloadMessage = deleteMessage;
+		} ).then( ()=> {downLoadButton.classList.remove( "loading" );} );
+	}
+
+	closeFailedDownloadMessage():void {
+		this.failedDownloadMessage = null;
 	}
 
 	askToDeleteBackup( askingBackupToRemove:PersistedDocument.Class ):void {

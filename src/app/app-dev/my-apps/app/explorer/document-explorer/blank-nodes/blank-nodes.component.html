@@ -1,0 +1,59 @@
+<h2 class="ui header">
+	<i class="icons">
+		<i class="thin circle blue icon"></i>
+		<i class="corner thin circle icon"></i>
+	</i>
+	Blank Nodes
+</h2>
+<div class="ui section divider"></div>
+<div class="ui top attached tabular bnodes menu">
+	<a class="item active" data-tab="all">All Nodes</a>
+	<a class="item"
+	   *ngFor="let bNode of openedBNodes; let i = index;"
+	   [attr.data-tab]="'bnode'+bNode['@id']">
+		<p>
+			{{ bNode["@id"] }}
+			<button class="circular ui icon basic mini button" (click)="closeBNode(bNode)">
+				<i class="icon close"></i>
+			</button>
+		</p>
+	</a>
+</div>
+<div class="ui bottom attached tab segment active" data-tab="all">
+	<table class="ui small very compact striped selectable celled table" *ngIf="bNodes.length > 0">
+		<thead>
+			<tr>
+				<th>@id</th>
+				<th>https://carbonldp.com/ns/v1/platform#bNodeIdentifier</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr *ngFor="let bNode of bNodes; let i = index;"
+			    (click)="openBNode(bNode)">
+				<td>
+					{{ bNode["@id"] }}
+				</td>
+				<td>
+					<span *ngIf="!!bNode['https://carbonldp.com/ns/v1/platform#bNodeIdentifier']">
+						{{ bNode['https://carbonldp.com/ns/v1/platform#bNodeIdentifier'][0]["@value"] }}
+					</span>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+	<div class="ui message" *ngIf="!bNodes || bNodes.length===0">
+		<p>No blank nodes to show.</p>
+	</div>
+</div>
+<div class="ui bottom attached tab segment"
+     *ngFor="let bNode of openedBNodes; let i = index;" [attr.data-tab]="'bnode'+bNode['@id']">
+	<bnode class="column"
+	       [documentURI]="documentURI"
+	       [bNode]="bNode"
+	       [bNodes]="bNodes"
+	       [namedFragments]="namedFragments"
+	       (onOpenBNode)="openBNode( $event )"
+	       (onOpenNamedFragment)="openNamedFragment($event)"
+	       (onChanges)="notifyDocumentBNodeHasChanged($event, bNode)">
+	</bnode>
+</div>

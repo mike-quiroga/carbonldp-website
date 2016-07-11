@@ -1,7 +1,7 @@
-import {Component, ElementRef, ChangeDetectorRef } from "@angular/core";
-import { CORE_DIRECTIVES } from "@angular/common";
-import { Title } from "@angular/platform-browser";
+import {Component, ElementRef, ChangeDetectorRef} from "@angular/core";
+import {Title} from "@angular/platform-browser";
 
+import HighlightDirective from "app/directives/HighlightDirective";
 import SidebarComponent from "./../../sidebar/SidebarComponent";
 
 import highlight from "highlight.js";
@@ -9,11 +9,10 @@ import "highlight.js/styles/tomorrow-night.css!";
 
 import template from "./template.html!";
 
-
 @Component( {
 	selector: "contexts",
 	template: template,
-	directives: [ CORE_DIRECTIVES, SidebarComponent ],
+	directives: [ SidebarComponent, HighlightDirective ],
 	providers: [ Title ],
 } )
 export default class ContextsView {
@@ -31,9 +30,10 @@ export default class ContextsView {
 		this.changeDetector = changeDetector;
 	}
 
-	routerOnActivate():void{
+	routerOnActivate():void {
 		this.title.setTitle( "Contexts - JavaScript SDK" );
 	}
+
 	ngAfterViewInit():void {
 		this.$element = $( this.element.nativeElement );
 		this.initializeAccordions();
@@ -52,7 +52,7 @@ export default class ContextsView {
 	}
 
 	highlightCode():void {
-		this.$element.find( "pre code.highlighted" ).each( function( index:number ):void {
+		this.$element.find( "pre code.highlighted" ).each( function ( index:number ):void {
 			highlight.highlightBlock( this );
 		} );
 	}
@@ -64,9 +64,9 @@ export default class ContextsView {
 	}
 
 	initializePopUp():void {
-		$(".ui.definition")
-			.popup({
+		$( ".ui.definition" )
+			.popup( {
 				on: "hover"
-			});
+			} );
 	}
 }

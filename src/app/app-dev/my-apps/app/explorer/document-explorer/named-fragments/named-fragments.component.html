@@ -1,0 +1,56 @@
+<h2 class="ui header">
+	<i class="icons">
+		<i class="puzzle green icon"></i>
+		<i class="corner puzzle icon"></i>
+	</i>
+	Named Fragments
+</h2>
+<div class="ui section divider"></div>
+<div class="ui top attached tabular namedfragments menu">
+	<a class="item active" data-tab="all-namedFragments">All Named Fragments</a>
+	<a class="item"
+	   *ngFor="let namedFragment of openedNamedFragments; let i = index;"
+	   [attr.data-tab]="'namedfragment_'+getNormalizedUri(namedFragment['@id'])">
+		<p>
+			{{getSlug(namedFragment["@id"])}}
+			<button class="circular ui icon basic mini button" (click)="closeNamedFragment(namedFragment)">
+				<i class="icon close"></i>
+			</button>
+		</p>
+	</a>
+</div>
+<div class="ui bottom attached tab segment active" data-tab="all-namedFragments">
+	<table class="ui small very compact striped selectable celled table" *ngIf="namedFragments.length > 0">
+		<thead>
+			<tr>
+				<th>@id</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr *ngFor="let namedFragment of namedFragments; let i = index;"
+			    (click)="openNamedFragment(namedFragment)">
+				<td>
+					{{namedFragment["@id"]}}
+				</td>
+			</tr>
+		</tbody>
+	</table>
+	<div class="ui message" *ngIf="!namedFragments || namedFragments.length===0">
+		<p>No named fragments to show.</p>
+	</div>
+</div>
+<div class="ui bottom attached tab segment"
+     *ngFor="let namedFragment of openedNamedFragments; let i = index;" [attr.data-tab]="'namedfragment_'+getNormalizedUri(namedFragment['@id'])">
+	<div class="ui divided items">
+		<named-fragment class="column"
+		                [documentURI]="documentURI"
+		                [bNodes]="bNodes"
+		                [namedFragment]="namedFragment"
+		                [namedFragments]="namedFragments"
+
+		                (onOpenBNode)="openBNode( $event )"
+		                (onOpenNamedFragment)="openNamedFragment($event)"
+		                (onChanges)="notifyNamedFragmentHasChanged($event, namedFragment)">
+		</named-fragment>
+	</div>
+</div>
