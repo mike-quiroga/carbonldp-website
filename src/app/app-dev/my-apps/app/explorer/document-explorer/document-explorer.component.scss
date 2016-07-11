@@ -1,0 +1,22 @@
+:host {
+
+	display: block;
+	background-color: red !important;
+
+	.ui.segment {
+		color: #000000;
+	}
+	> .ui.divided.grid.segment {
+		max-height: 800px;
+
+		> .stretched.row {
+			border: 1px solid lightgray;
+			margin: 1%;
+			padding: 0;
+
+			> .treeview-container {
+				padding: 0;
+			}
+		}
+	}
+}

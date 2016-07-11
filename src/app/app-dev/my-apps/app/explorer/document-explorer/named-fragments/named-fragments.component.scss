@@ -1,0 +1,10 @@
+:host {
+	display: block;
+	.segment[data-tab="all-namedFragments"] {
+		table {
+			tr, td {
+				cursor: pointer;
+			}
+		}
+	}
+}

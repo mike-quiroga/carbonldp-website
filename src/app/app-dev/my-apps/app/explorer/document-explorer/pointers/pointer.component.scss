@@ -1,0 +1,28 @@
+:host {
+
+	.dropdown.fragments {
+		.item[data-value='bNodes-category'],
+		.item[data-value='named-fragments-category'] {
+			text-align: center;
+		}
+		.text {
+			.description {
+				display: none;
+			}
+		}
+		.item {
+			.title {
+				line-height: 1em;
+				font-size: 1.2em;
+				display: block;
+			}
+			.description {
+				color: gray;
+				font-size: .8em;
+			}
+		}
+	}
+	.hidden {
+		display: none;
+	}
+}

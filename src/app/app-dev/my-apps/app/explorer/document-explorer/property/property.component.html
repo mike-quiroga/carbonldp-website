@@ -1,0 +1,124 @@
+<div class="content" *ngIf="name === '@id'">
+	<div class="header">
+		<p *ngIf="!isUrl(value)">
+			<i class="file outline icon"></i> {{value}}</p>
+		<p *ngIf="isUrl(value)">
+			<i class="file outline icon"></i>
+			<a class="name" [attr.href]="value"
+			   target="_blank"><span class="parentURI">
+				{{getParentURI(value)}}</span><span class="slug">{{getSlug(value)}}</span>
+			</a>
+		</p>
+	</div>
+</div>
+
+<div class="content" *ngIf="!property.deleted && name === '@type'">
+	<p class="header">
+		{{name}}
+	</p>
+	<div class="description" *ngIf="isArray(value)">
+		<div class="ui horizontal list">
+			<div class="item" *ngFor="let type of value; let j = index;">
+				<div class="ui label">
+					<i [ngClass]="getTypeIcon(type)" class="icon"></i>
+					{{getDisplayName(type)}}
+				</div>
+			</div>
+		</div>
+		<table class="ui very compact striped small celled table">
+			<tr class="center aligned">
+				<th>{{name}}</th>
+			</tr>
+			<tr *ngFor="let type of value; let j = index;">
+				<td>{{type}}</td>
+			</tr>
+		</table>
+	</div>
+</div>
+
+<div class="content" *ngIf="!property.deleted && name !== '@id' && name !== '@type'">
+	<div class="ui confirm-deletion inverted dimmer">
+		<div class="content">
+			<div class="center">
+				<h2 class="ui header"><i class="trash outline red icon"></i> Are you sure?</h2>
+				<p class="ui description">Confirm to delete the property: '{{name}}'</p>
+				<div class="ui red button" title="Confirm deletion" (click)="deleteProperty()">Confirm</div>
+				<div class="ui button" title="Cancel deletion" (click)="cancelDeletion()">Cancel</div>
+			</div>
+		</div>
+	</div>
+	<p class="ui blue label status indicator" *ngIf="!!property.added">Added</p>
+	<p class="ui yellow label status indicator" *ngIf="!!property.modified">Changed</p>
+	<div class="header">
+		<p>{{getDisplayName(name)}}</p>
+	</div>
+	<div class="meta">
+		<div [hidden]="mode === modes.EDIT">
+			<a *ngIf="isUrl(name)" [attr.href]="name" target="_blank">{{name}}</a>
+			<p *ngIf="!isUrl(name)">{{name}}</p>
+		</div>
+		<div [hidden]="mode === modes.READ">
+			<div class="ui error form">
+				<div class="ui fluid action input">
+					<input type="text" [ngFormControl]="nameInput" (keyup.escape)="cancelEdition()" (keyup.enter)="nameInput.valid? save() : null">
+					<button class="ui button"
+					        [disabled]="!nameInput.valid"
+					        (click)="save(nameInput.value)">Save
+					</button>
+				</div>
+				<div class="ui error message wide" *ngIf="!nameInput.valid">
+					<p *ngIf="nameInput.hasError('required')">Enter a name for the property.</p>
+					<p *ngIf="nameInput.hasError('invalidName')">Enter a valid URL. Only alphanumeric values (a-z, A-Z, 0..9)</p>
+					<p *ngIf="nameInput.hasError('missingFragment')">The name slug must be placed after a hashtag (#) symbol.</p>
+					<p *ngIf="nameInput.hasError('duplicatedHashtag')">Use only one hashtag (#) symbol.</p>
+					<p *ngIf="nameInput.hasError('duplicatedPropertyName')">A property with that name already exists.</p>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="description" [hidden]="!id">
+		<div *ngIf="canEdit">
+			<button class="ui right labeled icon basic mini button" (click)="addLiteral()">
+				<i class="plus icon"></i>
+				Add Literal
+			</button>
+			<button class="ui right labeled icon basic mini button" (click)="addPointer()">
+				<i class="plus icon"></i>
+				Add Pointer
+			</button>
+			<div class="ui icon bottom left pointing dropdown basic mini button options" title="Options">
+				<i class="ellipsis horizontal icon"></i>
+				<div class="menu">
+					<div class="item" title="Edit Property's name" (click)="onEditName()">
+						<i class="edit icon"></i> Edit Name
+					</div>
+					<div class="item" title="Options" (click)="askToConfirmDeletion()">
+						<i class="trash outline red icon"></i> Delete Property
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="ui mini warning message" [hidden]="literalsContainer.canDisplayLiterals() || pointersContainer.canDisplayPointers()">
+			<p>The property needs at least one literal or one pointer in order to be saved, otherwise the property won't be added to the document. Add a literal or pointer.</p>
+		</div>
+		<div [hidden]="!literalsContainer.canDisplayLiterals() && !pointersContainer.canDisplayPointers()">
+			<literals #literalsContainer
+			          [canEdit]="canEdit"
+			          [(literals)]="literals"
+			          [onAddNewLiteral]="addNewLiteral"
+
+			          (onLiteralsChanges)="checkForChangesOnLiterals($event)"></literals>
+			<pointers #pointersContainer
+			          [canEdit]="canEdit"
+			          [(pointers)]="pointers"
+			          [onAddNewPointer]="addNewPointer"
+			          [bNodes]="bNodes"
+			          [namedFragments]="namedFragments"
+			          [documentURI]="documentURI"
+
+			          (onGoToBNode)="goToBNode($event)"
+			          (onGoToNamedFragment)="goToNamedFragment($event)"
+			          (onPointersChanges)="checkForChangesOnPointers($event)"></pointers>
+		</div>
+	</div>
+</div>
