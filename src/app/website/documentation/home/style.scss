@@ -22,6 +22,10 @@ documents-list {
 		.ui.circular.image {
 			margin-bottom: 20px;
 			margin-top: 30px;
+			img {
+				height: 150px;
+				width: auto;
+			}
 		}
 
 		.center.aligned.column.feature:hover {
@@ -67,29 +71,11 @@ documents-list {
 				}
 			}
 		}
-		.ui.main.container:first-of-type{
+		.ui.main.container:first-of-type {
 			margin-top: 6em;
 		}
 		.ui.main.container:last-of-type {
 			margin-bottom: 6em;
-		}
-
-		.doc-list { //rest api
-			clear: both;
-			display: block;
-			p {
-				font-size: 16px;
-				a {
-					font-weight: bold;
-					color: #0192cf;
-					/*border-bottom: 1px dotted #f89828;*/
-				}
-				a:hover {
-					color: #19b7fb;
-					border-bottom: none;
-				}
-			}
-
 		}
 
 		.doc-list.ui.list {
@@ -97,7 +83,7 @@ documents-list {
 			.item { //essential contents
 				padding-top: 1.3em;
 				font-size: 16px;
-				.header{
+				.header {
 					font-weight: normal;
 				}
 				.header span {
@@ -117,23 +103,6 @@ documents-list {
 			}
 		}
 
-		.doc-list {
-			.ui.grid {
-				.three a {
-					font-weight: bold;
-					color: #0192cf;
-					border-bottom: 1px dotted #f89828;
-				}
-				.three a:hover {
-					cursor: pointer;
-					color: #19b7fb;
-					font-weight: bold;
-					border-bottom: none;
-				}
-				.thirteen {
-					padding-left: 0;
-				}
-			}
-		}
 	}
 }
+
