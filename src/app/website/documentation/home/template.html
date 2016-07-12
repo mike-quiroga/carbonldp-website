@@ -1,14 +1,14 @@
 <div>
 	<div class="ui inverted vertical center aligned segment big-stone" id="doc-categories">
 		<div class="ui main container">
-			<div class="ui four column top aligned stackable centered grid">
-				<div class="row">
+			<div class="ui four column top aligned centered grid">
+				<div class="computer tablet only row">
 					<div class="ten wide center aligned column">
 						<h2 class="main-title">Carbon LDP Documentation</h2>
 					</div>
 				</div>
 
-				<div class="doc-categories row">
+				<div class="doc-categories computer tablet only row">
 					<a href="#essential-concepts" class="center aligned column feature">
 						<div class="ui centered small circular image">
 							<img src="assets/images/ico-books-300x300.png"></div>
@@ -31,6 +31,34 @@
 							<h3 class="title">App Dev</h3>
 					</a>
 				</div>
+				<div class="mobile only row">
+					<div class="ten wide center aligned column">
+						<h2 class="main-title">Carbon LDP Documentation</h2>
+					</div>
+				</div>
+				<div class="doc-categories mobile only two column row">
+					<a href="#essential-concepts" class="center aligned column feature">
+						<div class="ui centered small circular image">
+							<img src="assets/images/ico-books-300x300.png"></div>
+						<h3 class="title">Essential concepts</h3>
+					</a>
+					<a href="#rest-api" class="center aligned column feature">
+						<div class="ui centered small circular image">
+							<img src="assets/images/ico-rest-150x150.gif"></div>
+						<h3 class="title">REST API</h3>
+					</a>
+					<a href="#javascript-sdk" class="center aligned column feature">
+						<div class="ui centered small circular image">
+							<img src="assets/images/ico-javascript-150x150.gif"></div>
+						<h3 class="title">JavaScript SDK</h3>
+					</a>
+
+					<a href="#app-dev" class="center aligned column feature">
+						<div class="ui centered small circular image">
+							<img src="assets/images/ico-cubes-300x300.png"></div>
+						<h3 class="title">App Dev</h3>
+					</a>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -48,7 +76,7 @@
 				</div>
 				<div class="doc-list ui bulleted list">
 					<div class="item">
-						<div class="header" [routerLink]="[ '../LinkedDataConcepts' ]"><span>Linked Data Concepts</span></div>
+						<div class="header" [routerLink]="[ '../LinkedDataConcepts' ]"><span>Linked data concepts</span></div>
 						<div class="summary">General overview of the basic idea behind Linked Data and why it can make your applications more powerful.</div>
 					</div>
 					<!--<div class="item">
@@ -70,16 +98,16 @@
 				</div>
 				<div class="doc-list ui bulleted list">
 					<div class="item">
-						<div class="header" [routerLink]="[ '../RESTApiGettingStarted' ]"><span>Getting Started</span></div>
+						<div class="header" [routerLink]="[ '../RESTApiGettingStarted' ]"><span>Getting started</span></div>
 						<div class="summary">How to build an example application using the Carbon LDP REST API.</div>
 					</div>
 					<div class="item">
-						<div class="header" [routerLink]="[ '../RESTApiObjectModel' ]"><span>Object Model</span></div>
+						<div class="header" [routerLink]="[ '../RESTApiObjectModel' ]"><span>Object model</span></div>
 						<div>A summary of the various types of resources you can manage and interact with using REST.
 						</div>
 					</div>
 					<div class="item">
-						<div class="header" [routerLink]="[ '../RESTApiInteractionModels' ]"><span>Interaction Models</span></div>
+						<div class="header" [routerLink]="[ '../RESTApiInteractionModels' ]"><span>Interaction models</span></div>
 						<div class="summary">An explanation of the way you can interact with the resources on the Carbon Server.</div>
 					</div>
 				</div>
@@ -95,8 +123,12 @@
 				</div>
 				<div class="doc-list ui bulleted list">
 					<div class="item">
-						<div class="header" [routerLink]="[ '../JavaScriptSDKGettingStarted' ]"><span>Getting Started</span></div>
+						<div class="header" [routerLink]="[ '../JavaScriptSDKGettingStarted' ]"><span>Getting started</span></div>
 						<div class="summary">Guide to install Carbon JavaScriptSDK and start creating and manipulating data with its basic methods.</div>
+					</div>
+					<div class="item">
+						<div class="header" [routerLink]="[ '../JavaScriptSDKObjectModel' ]"><span>Object model</span></div>
+						<div class="summary">An in depth description of the Carbon Object Model.</div>
 					</div>
 					<div class="item">
 						<div class="header" [routerLink]="[ '../JavaScriptSDKContexts' ]"><span>Contexts</span></div>
@@ -105,8 +137,8 @@
 						</div>
 					</div>
 					<div class="item">
-						<div class="header" [routerLink]="[ '../JavaScriptSDKObjectModel' ]"><span>Object Model</span></div>
-						<div class="summary">An in depth description of the Carbon Object Model.</div>
+						<div class="header" [routerLink]="[ '../JavaScriptSDKObjectModel' ]"><span>Object schema</span></div>
+						<div class="summary">What is the object schema, how to define and use it..</div>
 					</div>
 				</div>
 			</div>
