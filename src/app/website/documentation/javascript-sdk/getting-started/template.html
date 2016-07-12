@@ -83,7 +83,7 @@
 							</div>
 							<div class="content">
 								<p>If you are not using a package manager you can clone the source code with the following command:</p>
-								<pre><code class="highlighted bash">git clone https://github.com/CarbonLDP/CarbonLDP-JS-SDK.git</code></pre>
+								<pre><code highlight class="bash">git clone https://github.com/CarbonLDP/CarbonLDP-JS-SDK.git</code></pre>
 								<p>It already includes a pre-compiled version of the source code so you can just jump right in.</p>
 							</div>
 							<div class="active title">
@@ -91,7 +91,7 @@
 								npm
 							</div>
 							<div class="active content">
-								<pre><code class="highlighted bash">npm install carbonldp --save</code></pre>
+								<pre><code highlight class="bash">npm install carbonldp --save</code></pre>
 							</div>
 							<div class="title">
 								<i class="dropdown icon"></i>
@@ -99,7 +99,7 @@
 							</div>
 							<div class="content">
 								<!--@formatter:off-->
-								<pre><code class="highlighted bash">
+								<pre><code highlight class="bash">
 jspm install npm:carbonldp
 # We also need to install one of carbonldp's dependencies
 jspm install npm:jsonld
@@ -116,7 +116,7 @@ jspm install npm:jsonld
 							<div class="content">
 								<p>The SDK comes with a bundled version that you can import directly into your html:</p>
 								<!--@formatter:off-->
-								<pre><code class="highlighted html">
+								<pre><code highlight class="html">
 &lt;script src="--sdk-directory--/dist/bundles/Carbon.sfx.js"&gt;&lt;/script&gt;
 								</code></pre>
 								<!--@formatter:on-->
@@ -131,7 +131,7 @@ jspm install npm:jsonld
 									Each time you see in an example something like:
 								</p>
 								<!--@formatter:off-->
-								<pre><code class="highlighted javascript">
+								<pre><code highlight class="javascript">
 import * as Errors from "carbonldp/HTTP/Errors";
 								</code></pre>
 								<!--@formatter:on-->
@@ -140,7 +140,7 @@ import * as Errors from "carbonldp/HTTP/Errors";
 									to access the same module. For example, accessing that module using the global namespace would be:
 								</p>
 								<!--@formatter:off-->
-								<pre><code class="highlighted javascript">
+								<pre><code highlight class="javascript">
 Carbon.HTTP.Errors
 								</code></pre>
 								<!--@formatter:on-->
@@ -160,7 +160,7 @@ Carbon.HTTP.Errors
 									export of the module. That export will also be available as the named export <code>Class</code>. For example:
 								</p>
 								<!--@formatter:off-->
-								<pre><code class="highlighted javascript">
+								<pre><code highlight class="javascript">
 // This:
 import Document from "carbonldp/Document";
 let myDocument:Document = new Document();
@@ -177,7 +177,7 @@ let myDocument:Document.Class = new Document.Class();
 									Still, you can use selective imports but you'll likely need to rename the import variables like:
 								</p>
 								<!--@formatter:off-->
-								<pre><code class="highlighted javascript">
+								<pre><code highlight class="javascript">
 import { Factory as DocumentFactory, Class as Document } from "carbonldp/Document";
 								</code></pre>
 								<!--@formatter:on-->
@@ -186,7 +186,7 @@ import { Factory as DocumentFactory, Class as Document } from "carbonldp/Documen
 									Example:
 								</p>
 								<!--@formatter:off-->
-								<pre><code class="highlighted javascript">
+								<pre><code highlight class="javascript">
 import * as Errors from "carbonldp/HTTP/Errors";
 import * as Request from "carbonldp/HTTP/Request";
 
@@ -226,11 +226,11 @@ HTTP.Request === Request; // true
 							</div>
 							<div class="ui bottom attached tab segment active" data-tab="typescript">
 								<!--@formatter:off-->
-							<pre><code class="highlighted typescript">
+							<pre><code highlight class="typescript">
 import * as App from "carbonldp/App";
 import Carbon from "carbonldp/Carbon";
 
-let carbon:Carbon = new Carbon(); //platform context
+let carbon:Carbon = new Carbon(); // platform context
 let myAppContext:AppContext;
 
 carbon.apps.get( "your-app-slug-here/" ).then( ( appContext:App.Context ) => {
@@ -241,15 +241,15 @@ carbon.apps.get( "your-app-slug-here/" ).then( ( appContext:App.Context ) => {
 							</div>
 							<div class="ui bottom attached tab segment" data-tab="javascript">
 								<!--@formatter:off-->
-							<pre><code class="highlighted javascript">
+							<pre><code highlight class="javascript">
 
 
 
-let carbon = new Carbon(); //platform context
+let carbon = new Carbon(); // platform context
 let myAppContext;
 
 carbon.apps.get( "your-app-slug-here/" ).then( function( appContext ) => {
-    myAppContext = appContext; //retrieving you app context
+    myAppContext = appContext; // retrieving you app context
 }).catch( console.error );
 							</code></pre>
 							<!--@formatter:on-->
@@ -273,17 +273,17 @@ carbon.apps.get( "your-app-slug-here/" ).then( function( appContext ) => {
 							</div>
 							<div class="ui bottom attached tab segment active" data-tab="typescript">
 								<!--@formatter:off-->
-							<pre><code class="highlighted typescript">
-//imports
+							<pre><code highlight class="typescript">
+// imports
 import * Response from "carbonldp/HTTP/Response";
 import * Document from "carbonldp/Document";
 
-let carbon:Carbon = new Carbon(); //platform context
+let carbon:Carbon = new Carbon(); // platform context
 let myAppContext:AppContext;
 let rootDocument:PersistedDocument.Class;
 
 carbon.apps.get( "your-app-slug-here/" ).then( ( appContext:App.Context ) => {
-    myAppContext = appContext; //retrieving you app context
+    myAppContext = appContext; // retrieving you app context
 
     myAppContext.documents.get( "/" ).then(
         ( [ document, response ]:[ PersistedDocument.Class, Response.Class ] ) => {
@@ -296,17 +296,17 @@ carbon.apps.get( "your-app-slug-here/" ).then( ( appContext:App.Context ) => {
 							</div>
 							<div class="ui bottom attached tab segment" data-tab="javascript">
 								<!--@formatter:off-->
-							<pre><code class="highlighted javascript">
+							<pre><code highlight class="javascript">
 
 
 
 
-let carbon:Carbon = new Carbon(); //platform context
+let carbon:Carbon = new Carbon(); // platform context
 let myAppContext;
 let rootDocument;
 
 carbon.apps.get( "your-app-slug-here/" ).then( function( appContext ) => {
-    myAppContext = appContext; //retrieving you app context
+    myAppContext = appContext; // retrieving you app context
 
     myAppContext.documents.get( "/" ).then(
         function( [document, response] ) => {
@@ -354,18 +354,18 @@ carbon.apps.get( "your-app-slug-here/" ).then( function( appContext ) => {
 
 							<div class="ui bottom attached tab segment active" data-tab="typescript">
 								<!--@formatter:off-->
-							<pre><code class="highlighted typescript">
-//imports
+							<pre><code highlight class="typescript">
+// imports
 import * as Document from "carbonldp/Document";
 import * as Fragment from "carbonldp/Fragment";
 import * as NamedFragment from "carbonldp/NamedFragment";
 
-//Create an empty Document
+// Create an empty Document
 let inMemoryDocument:Document.Class = Document.Factory.create();
 
-//Create a Document from an object
+// Create a Document from an object
 let inMemoryOtherDocument:Document.Class = Document.Factory.createFrom( {
-    //Document properties
+    // Document properties
     someProperty: "Property value",
     anotherProperty: 123,
     data: [
@@ -381,7 +381,7 @@ let inMemoryOtherDocument:Document.Class = Document.Factory.createFrom( {
     ]
 } );
 
-//Add properties, fragments and namedFragments to a Document
+// Add properties, fragments and namedFragments to a Document
 inMemoryDocument.someProperty = "Property value";
 inMemoryDocument.anotherProperty = 123;
 
@@ -400,18 +400,18 @@ inMemoryDocument.goodbye = namedFragment;
 
 							<div class="ui bottom attached tab segment" data-tab="javascript">
 								<!--@formatter:off-->
-							<pre><code class="highlighted javascript">
+							<pre><code highlight class="javascript">
 
 
 
 
 
-//Create an empty Document
+// Create an empty Document
 let inMemoryDocument = Document.Factory.create();
 
-//Create a Document from an object
+// Create a Document from an object
 let inMemoryOtherDocument = Document.Factory.createFrom( {
-    //Document properties
+    // Document properties
     someProperty: "Property value",
     anotherProperty: 123,
     data: [
@@ -427,7 +427,7 @@ let inMemoryOtherDocument = Document.Factory.createFrom( {
     ]
 } );
 
-//Add properties, fragments and namedFragments to a Document
+// Add properties, fragments and namedFragments to a Document
 inMemoryDocument.someProperty = "Property value";
 inMemoryDocument.anotherProperty = 123;
 
@@ -467,7 +467,7 @@ inMemoryDocument.goodbye = namedFragment;
 
 							<div class="ui bottom attached tab segment active" data-tab="typescript">
 								<!--@formatter:off-->
-							<pre><code class="highlighted typescript">
+							<pre><code highlight class="typescript">
 //...
 import * as Pointer from "carbonldp/Pointer";
 import * as Response from "carbonldp/HTTP/Response";
@@ -477,13 +477,13 @@ import * as Response from "carbonldp/HTTP/Response";
 platformContext.apps.getContext( "your-app-slug-here/" ).then( ( appContext:App.Context ) => {
     myAppContext = appContext;
 
-    //Persist the in memory Document: myDocument as a child of "parent-id/"
+    // Persist the in memory Document: myDocument as a child of "parent-id/"
     myAppContext.documents.createChild( "parent-id/", myDocument ).then(
         ( [ documentPointer, response ]:[ Pointer.Class, Response.Class ] ) => {
-            console.log( documentPointer.id); //your persisted Doc id
+            console.log( documentPointer.id); // your persisted Doc id
     });
 
-    //Persisting an object as a child of the root Document
+    // Persisting an object as a child of the root Document
     myAppContext.documents.createChild( "/", {
         name: "Miguel",
         data: [
@@ -498,7 +498,7 @@ platformContext.apps.getContext( "your-app-slug-here/" ).then( ( appContext:App.
             }
         ]
     } ).then(( [ documentPointer, response ]:[ Pointer.Class, Response.Class ] ) => {
-            console.log( documentPointer.id); //your persisted Doc id
+            console.log( documentPointer.id); // your persisted Doc id
     });
 
 }).catch( console.error );
@@ -508,19 +508,19 @@ platformContext.apps.getContext( "your-app-slug-here/" ).then( ( appContext:App.
 
 							<div class="ui bottom attached tab segment" data-tab="javascript">
 								<!--@formatter:off-->
-							<pre><code class="highlighted javascript">
-//.. Declare required contexts, create in memory Document
+							<pre><code highlight class="javascript">
+//... Declare required contexts, create in memory Document
 
 platformContext.apps.getContext( "your-app-slug-here/" ).then( function( appContext ) => {
     myAppContext = appContext;
 
-    //Persist the in memory Document: myDocument as a child of "parent-id/"
+    // Persist the in memory Document: myDocument as a child of "parent-id/"
     myAppContext.documents.createChild( "parent-id/", myDocument ).then(
         function( [documentPointer, response] ) => {
-            console.log( documentPointer.id); //your persisted Doc id
+            console.log( documentPointer.id); // your persisted Doc id
     });
 
-    //Persisting an object as a child of the root Document
+    // Persisting an object as a child of the root Document
     myAppContext.documents.createChild( "/", {
         name: "Miguel",
         data: [
@@ -535,7 +535,7 @@ platformContext.apps.getContext( "your-app-slug-here/" ).then( function( appCont
             }
         ]
     } ).then( function( [documentPointer, response] ) => {
-            console.log( documentPointer.id); //your persisted Doc id
+            console.log( documentPointer.id); // your persisted Doc id
     });
 
 }).catch( console.error );
@@ -562,17 +562,17 @@ platformContext.apps.getContext( "your-app-slug-here/" ).then( function( appCont
 							</div>
 							<div class="ui bottom attached tab segment active" data-tab="typescript">
 								<!--@formatter:off-->
-							<pre><code class="highlighted typescript">
-//...
+							<pre><code highlight class="typescript">
+// ...
 import * as Pointer from "carbonldp/Pointer";
 import * as Response from "carbonldp/HTTP/Response";
 
-//...
+// ...
 
 platformContext.apps.getContext( "your-app-slug-here/" ).then( ( appContext:App.Context ) => {
     myAppContext = appContext;
 
-    //Persisting the object as a child of the root Document, with the id child-id
+    // Persisting the object as a child of the root Document, with the id child-id
     myAppContext.documents.createChild( "/", "child-id", {
         name: "Miguel",
         data: [
@@ -588,10 +588,10 @@ platformContext.apps.getContext( "your-app-slug-here/" ).then( ( appContext:App.
         ]
     });
 
-    //Persist myDocument as a child of "parent-id/", with an id "my new child"
+    // Persist myDocument as a child of "parent-id/", with an id "my new child"
     myAppContext.documents.createChild( "parent-id/", "my new child", myDocument ).then(
         ( [ documentPointer, response ]:[ Pointer.Class, Response.Class ] ) => {
-            console.log( documentPointer.id); //the id of you newly created Document
+            console.log( documentPointer.id); // the id of you newly created Document
     });
 
 }).catch( console.error );
@@ -600,13 +600,13 @@ platformContext.apps.getContext( "your-app-slug-here/" ).then( ( appContext:App.
 							</div>
 							<div class="ui bottom attached tab segment" data-tab="javascript">
 								<!--@formatter:off-->
-							<pre><code class="highlighted javascript">
-//...
+							<pre><code highlight class="javascript">
+// ...
 
 platformContext.apps.getContext( "your-app-slug-here/" ).then( function( appContext:App.Context ){
     myAppContext = appContext;
 
-    //Persisting the object as a child of the root Document, with the id child-id
+    // Persisting the object as a child of the root Document, with the id child-id
     myAppContext.documents.createChild( "/", "child-id", {
         name: "Miguel",
         data: [
@@ -622,10 +622,10 @@ platformContext.apps.getContext( "your-app-slug-here/" ).then( function( appCont
         ]
     });
 
-    //Persist myDocument as a child of "parent-id/", with an id "my new child"
+    // Persist myDocument as a child of "parent-id/", with an id "my new child"
     myAppContext.documents.createChild( "parent-id/", "my new child", myDocument ).then(
         function( [ documentPointer, response ] ){
-            console.log( documentPointer.id); //the id of you newly created Document
+            console.log( documentPointer.id); // the id of you newly created Document
     });
 
 }).catch( console.error );
@@ -654,11 +654,11 @@ platformContext.apps.getContext( "your-app-slug-here/" ).then( function( appCont
 
 							<div class="ui bottom attached tab segment active" data-tab="typescript">
 								<!--@formatter:off-->
-							<pre><code class="highlighted typescript">
-//...
+							<pre><code highlight class="typescript">
+// ...
 import * as PersistedDocument from "carbonldp/PersistedDocument";
 
-//...
+// ...
 let documentPointer:Pointer.Class;
 let myPersistedDocument:PersistedDocument.Class;
 
@@ -680,11 +680,11 @@ platformContext.apps.getContext( "your-app-slug-here/" ).then( ( appContext:App.
 
 							<div class="ui bottom attached tab segment" data-tab="javascript">
 								<!--@formatter:off-->
-							<pre><code class="highlighted javascript">
+							<pre><code highlight class="javascript">
 
 
 
-//...
+// ...
 let documentPointer;
 let myPersistedDocument;
 
@@ -732,10 +732,10 @@ platformContext.apps.getContext( "your-app-slug-here/" ).then( function( appCont
 
 							<div class="ui bottom attached tab segment active" data-tab="typescript">
 								<!--@formatter:off-->
-							<pre><code class="highlighted typescript">
-//imports
+							<pre><code highlight class="typescript">
+// imports
 
-//declarations
+// declarations
 
 platformContext.apps.getAppContext( "your-app-slug/" ).then(
     ( appContext:App.Context ) =>{
@@ -758,10 +758,10 @@ platformContext.apps.getAppContext( "your-app-slug/" ).then(
 
 							<div class="ui bottom attached tab segment" data-tab="javascript">
 								<!--@formatter:off-->
-							<pre><code class="highlighted javascript">
+							<pre><code highlight class="javascript">
 
 
-//declarations
+// declarations
 
 platformContext.apps.getAppContext( "your-app-slug/" ).then(
     function( appContext ){
@@ -798,7 +798,7 @@ platformContext.apps.getAppContext( "your-app-slug/" ).then(
 
 							<div class="ui bottom attached tab segment active" data-tab="typescript">
 								<!--@formatter:off-->
-							<pre><code class="highlighted typescript">
+							<pre><code highlight class="typescript">
 import * as App from "carbonldp/App";
 import Carbon from "carbonldp/Carbon";
 
@@ -815,7 +815,7 @@ platformContext.apps.getAppContext( "your-app-slug/" ).then( ( appContext:App.Co
 
 							<div class="ui bottom attached tab segment" data-tab="javascript">
 								<!--@formatter:off-->
-							<pre><code class="highlighted javascript">
+							<pre><code highlight class="javascript">
 
 
 
@@ -865,10 +865,10 @@ platformContext.apps.getAppContext( "your-app-slug/" ).then( function( appContex
 
 								<div class="ui bottom attached tab segment active" data-tab="typescript">
 									<!--@formatter:off-->
-							<pre><code class="highlighted typescript">
-//imports
+							<pre><code highlight class="typescript">
+// imports
 
-//declarations
+// declarations
 
 platformContext.apps.getAppContext( "your-app-slug/" ).then(
     ( appContext:App.Context ) => {
@@ -890,10 +890,10 @@ platformContext.apps.getAppContext( "your-app-slug/" ).then(
 
 								<div class="ui bottom attached tab segment" data-tab="javascript">
 									<!--@formatter:off-->
-							<pre><code class="highlighted javascript">
+							<pre><code highlight class="javascript">
 
 
-//declarations
+// declarations
 
 platformContext.apps.getAppContext( "your-app-slug/" ).then(
     function( appContext ){
@@ -945,10 +945,10 @@ platformContext.apps.getAppContext( "your-app-slug/" ).then(
 
 								<div class="ui bottom attached tab segment active" data-tab="typescript">
 									<!--@formatter:off-->
-							<pre><code class="highlighted typescript">
-//imports
+							<pre><code highlight class="typescript">
+// imports
 
-//declarations
+// declarations
 
 platformContext.apps.getAppContext( "your-app-slug/" ).then(
     ( appContext:App.Context ) =>{
@@ -959,7 +959,7 @@ platformContext.apps.getAppContext( "your-app-slug/" ).then(
                 let myPromises:Promise&lt;Response.Class&gt;[] = [];
 
                 console.log( "members: ", members );
-                    //members: member4, member1, member3, member2
+                    // members: member4, member1, member3, member2
 
                 myPromises.push( myAppContext.documents.addMember("parentURI/", "memberToAddURI/"));
                 myPromises.push( myAppContext.documents.removeMember("parentURI/", "member2/"));
@@ -980,10 +980,10 @@ platformContext.apps.getAppContext( "your-app-slug/" ).then(
 
 								<div class="ui bottom attached tab segment" data-tab="javascript">
 									<!--@formatter:off-->
-							<pre><code class="highlighted javascript">
+							<pre><code highlight class="javascript">
 
 
-//declarations
+// declarations
 
 platformContext.apps.getAppContext( "your-app-slug/" ).then(
     function( appContext ){
@@ -994,7 +994,7 @@ platformContext.apps.getAppContext( "your-app-slug/" ).then(
                 let myPromises = [];
 
                 console.log( "members: ", members );
-                    //members: member4, member1, member3, member2
+                    // members: member4, member1, member3, member2
 
                 myPromises.push( myAppContext.documents.addMember("parentURI/", "memberToAddURI/"));
                 myPromises.push( myAppContext.documents.removeMember("parentURI/", "member2/"));
@@ -1048,20 +1048,20 @@ platformContext.apps.getAppContext( "your-app-slug/" ).then(
 
 							<div class="ui bottom attached tab segment active" data-tab="typescript">
 								<!--@formatter:off-->
-							<pre><code class="highlighted typescript">
-//imports
+							<pre><code highlight class="typescript">
+// imports
 
-//declarations
+// declarations
 let myObject:Object  = { name: "myNieces", description: "All the nieces of myParent."};
 let myAccessPoint:AccessPoint.Class;
 let nephews:AccessPoint.Class;
 let nieces:AccessPoint.Class;
 
-//create() create an in memory access point
+// create() create an in memory access point
 myAccess = AccessPoint.Factory.create( myParent, "documentRelation", "inverseDocumentRelation" );
 nephews = AccessPoint.Factory.create( myParent, "nephew", "uncle" );
 
-//createFrom() create an in memory access point from an object.
+// createFrom() create an in memory access point from an object.
 nieces = AccessPoint.Factory.createFrom( myObject, myParent, "niece", "aunt" );
 							</code></pre>
 							<!--@formatter:on-->
@@ -1069,20 +1069,20 @@ nieces = AccessPoint.Factory.createFrom( myObject, myParent, "niece", "aunt" );
 
 							<div class="ui bottom attached tab segment" data-tab="javascript">
 								<!--@formatter:off-->
-							<pre><code class="highlighted javascript">
-//imports
+							<pre><code highlight class="javascript">
+// imports
 
-//declarations
+// declarations
 let myObject = { name: "myNieces", description: "All the nieces of myParent."};
 let myAccess;
 let nephews;
 let nieces;
 
-//create() create an in memory access point
+// create() create an in memory access point
 myAccess = AccessPoint.Factory.create( myParent, "documentRelation", "inverseDocumentRelation" );
 nephews = AccessPoint.Factory.create( myParent, "nephew", "uncle" );
 
-//createFrom() create an in memory access point from an object.
+// createFrom() create an in memory access point from an object.
 nieces = AccessPoint.Factory.createFrom( myObject, myParent, "niece", "aunt" );
 							</code></pre>
 							<!--@formatter:on-->
@@ -1111,20 +1111,20 @@ nieces = AccessPoint.Factory.createFrom( myObject, myParent, "niece", "aunt" );
 
 							<div class="ui bottom attached tab segment active" data-tab="typescript">
 								<!--@formatter:off-->
-							<pre><code class="highlighted typescript">
-//imports
+							<pre><code highlight class="typescript">
+// imports
 
 let myPersistedDocument:PersistedDocument.Class;
 let myParent:Pointer.Class;
 let myAccessPoint:AccessPoint.Class;
 
-//create() access point in memory
+// create() access point in memory
 myAccessPoint = AccessPoint.Factory.create( myParent, "documentRelation", "inverseDocumentRelation" );
 
-//createAccessPoint() creates a persisted access point from an in memory access point
+// createAccessPoint() creates a persisted access point from an in memory access point
 AppContext.documents.createAccessPoint( "parentURI" , myAccessPoint );
 
-//createAccessPoint() creates a persisted access point for a persisted document
+// createAccessPoint() creates a persisted access point for a persisted document
 myPersistedDocument.createAccessPoint( myAccessPointObject );
 							</code></pre>
 							<!--@formatter:on-->
@@ -1132,20 +1132,20 @@ myPersistedDocument.createAccessPoint( myAccessPointObject );
 
 							<div class="ui bottom attached tab segment" data-tab="javascript">
 								<!--@formatter:off-->
-							<pre><code class="highlighted javascript">
+							<pre><code highlight class="javascript">
 
 
 let myPersistedDocument;
 let myParent;
 let myAccessPoint;
 
-//create() access point in memory
+// create() access point in memory
 myAccessPoint = AccessPoint.Factory.create( myParent, "documentRelation", "inverseDocumentRelation" );
 
-//createAccessPoint() creates a persisted access point from an in memory access point
+// createAccessPoint() creates a persisted access point from an in memory access point
 AppContext.documents.createAccessPoint( "parentURI" , myAccessPoint );
 
-//createAccessPoint() creates a persisted access point for a persisted document
+// createAccessPoint() creates a persisted access point for a persisted document
 myPersistedDocument.createAccessPoint( myAccessPointObject );
 							</code></pre>
 							<!--@formatter:on-->
@@ -1165,7 +1165,7 @@ myPersistedDocument.createAccessPoint( myAccessPointObject );
 
 							<div class="ui bottom attached tab segment active" data-tab="typescript">
 								<!--@formatter:off-->
-						<!--	<pre><code class="highlighted typescript">
+						<!--	<pre><code highlight class="typescript">
 import * as Document from "carbonldp/PersistedDocument";
 import * as Pointer from "carbonldp/Pointer";
 import * as Response from "carbonldp/HTTP/Response";
@@ -1212,7 +1212,7 @@ platformContext.apps.getContext( "contacts/" ).then( ( appContext:App.Context ) 
 
 							<div class="ui bottom attached tab segment" data-tab="javascript">
 								<!--@formatter:off-->
-							<!--<pre><code class="highlighted javascript">
+							<!--<pre><code highlight class="javascript">
 
 
 							</code></pre>

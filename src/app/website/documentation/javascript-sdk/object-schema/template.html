@@ -75,7 +75,7 @@
 
 							<div>
 								<!--@formatter:off-->
-							<pre><code class="highlighted typescript">
+							<pre><code highlight class="typescript">
 	{
 	    "skos": "http://www.w3.org/2004/02/skos/core#"
 	}
@@ -102,7 +102,7 @@
 							</ul>
 							<div>
 								<!--@formatter:off-->
-							<pre><code class="highlighted typescript">
+							<pre><code highlight class="typescript">
 	{
 	    "title": {
 	        "@id": "http://example.org/ns#title",
@@ -180,7 +180,7 @@
 
 							<div>
 								<!--@formatter:off-->
-						<pre><code class="highlighted javascript">
+						<pre><code highlight class="javascript">
 carbon.extendObjectSchema( {
 	"acl": "http://www.w3.org/ns/auth/acl#",
 	"api": "http://purl.org/linked-data/api/vocab#",
@@ -223,7 +223,7 @@ carbon.extendObjectSchema( {
 
 							<div>
 								<!--@formatter:off-->
-						<pre><code class="highlighted javascript">
+						<pre><code highlight class="javascript">
 carbon.extendObjectSchema( "http://example.org/ns#BlogPost" , {
 	"acl": "http://www.w3.org/ns/auth/acl#",
 	"api": "http://purl.org/linked-data/api/vocab#",
@@ -277,8 +277,8 @@ carbon.extendObjectSchema( "http://example.org/ns#BlogPost" , {
 						The first is defined in the platform and the latter in the application context of my-first-app</p>
 						<div>
 							<!--@formatter:off-->
-						<pre><code class="highlighted javascript">
-//extending the general object schema in the platform context
+						<pre><code highlight class="javascript">
+// extending the general object schema in the platform context
 carbon.extendObjectSchema( {
 	"ex": "http://example.org/ns#",
 	"foaf": "http://xmlns.com/foaf/0.1/",
@@ -293,7 +293,7 @@ carbon.extendObjectSchema( {
 	}
 } );
 
-//extending the object schema of the type: BlogPost in the application context
+// extending the object schema of the type: BlogPost in the application context
 myFirstAppContext.extendObjectSchema( "http://example.org/ns#BlogPost" , {
 	"ex": "http://example.org/ns#",
 	"xsd": "http://www.w3.org/2001/XMLSchema#",
@@ -312,8 +312,8 @@ The Blog Post object schema is defined only for the application context of my-fi
 will not be able to use it. Focusing on inheritance once more, the BlogPost object schema has only been defined in the application context,
 if later on you define it on the platform context with some extra prefixes for example: </p>
 
-<pre><code class="highlighted javascript">
-//extending the object schema of the type: BlogPost in the application context
+<pre><code highlight class="javascript">
+// extending the object schema of the type: BlogPost in the application context
 carbon.extendObjectSchema( "http://example.org/ns#BlogPost" , {
 		"ex": "http://example.org/ns#",
 		"xsd": "http://www.w3.org/2001/XMLSchema#",

@@ -5,6 +5,7 @@ import { Title } from "@angular/platform-browser";
 
 import SidebarComponent from "./../../sidebar/SidebarComponent";
 
+import HighlightDirective from "app/directives/HighlightDirective";
 import highlight from "highlight.js";
 import "highlight.js/styles/tomorrow-night.css!";
 
@@ -14,7 +15,7 @@ import template from "./template.html!";
 @Component( {
 	selector: "getting-started",
 	template: template,
-	directives: [ CORE_DIRECTIVES, ROUTER_DIRECTIVES, SidebarComponent ],
+	directives: [ CORE_DIRECTIVES, ROUTER_DIRECTIVES, SidebarComponent, HighlightDirective ],
 	providers: [ Title ],
 } )
 export default class GettingStartedView {
