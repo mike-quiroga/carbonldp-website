@@ -3,10 +3,12 @@
 - Add new documentation landing page.
 - Add styles for new documentation landing page.
 - Add new icon images.
+- Add HighlightDirective in documentation.
 - Complete initial draft JavaScript SDK Object Model.
 - Complete initial draft JavaScript SDK Getting Started.
 - Fix router links to documentation in documentation landing page.
 - Modify header documentation menu.
+- Modify example comments in JS SDK documentation.
 
 # 0.5.17 (July 11, 2016)
 - Add partial draft JavaScript SDK Object Model.
