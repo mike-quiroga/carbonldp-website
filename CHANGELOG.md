@@ -1,13 +1,3 @@
-#
-- Add complete initial draft JavaScript SDK Object Schema.
-- Add new documentation landing page.
-- Add styles for new documentation landing page.
-- Add new icon images.
-- Complete initial draft JavaScript SDK Object Model.
-- Complete initial draft JavaScript SDK Getting Started.
-- Fix router links to documentation in documentation landing page.
-- Modify header documentation menu.
-
 # 0.5.17 (July 11, 2016)
 - Add partial draft JavaScript SDK Object Model.
 - Add global styles for documentation.
