@@ -23,7 +23,6 @@ import javax.servlet.http.HttpServletResponse;
 public class AppAgentsController extends AbstractLDPController {
 
 	private AppAgentsPOSTHandler postRequestHandler;
-	private AppAgentsDELETEHandler deleteRequestHandler;
 
 	@RequestMapping( method = RequestMethod.POST, consumes = {
 		Consts.RDFMediaTypes.TURTLE,
@@ -41,19 +40,9 @@ public class AppAgentsController extends AbstractLDPController {
 		return postRequestHandler.handleRequest( requestDocument, request, response );
 	}
 
-	@RequestMapping( method = RequestMethod.DELETE )
-	public ResponseEntity<Object> deleteAgent( @RequestBody( required = false ) RDFDocument requestDocument, HttpServletRequest request, HttpServletResponse response ) {
-		return deleteRequestHandler.handleRequest( requestDocument, request, response );
-	}
-
 	@Autowired
 	public void setPOSTRequestHandler( AppAgentsPOSTHandler postRequestHandler ) {
 		this.postRequestHandler = postRequestHandler;
-	}
-
-	@Autowired
-	public void setDeleteRequestHandler( AppAgentsDELETEHandler deleteRequestHandler ) {
-		this.deleteRequestHandler = deleteRequestHandler;
 	}
 
 }

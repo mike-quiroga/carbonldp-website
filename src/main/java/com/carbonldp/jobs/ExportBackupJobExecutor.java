@@ -3,8 +3,10 @@ package com.carbonldp.jobs;
 import com.carbonldp.Consts;
 import com.carbonldp.Vars;
 import com.carbonldp.apps.App;
+import com.carbonldp.exceptions.JobException;
 import com.carbonldp.ldp.nonrdf.backup.BackupService;
 import com.carbonldp.ldp.sources.RDFSourceRepository;
+import com.carbonldp.models.Infraction;
 import com.carbonldp.repository.FileRepository;
 import com.carbonldp.spring.TransactionWrapper;
 import org.openrdf.model.IRI;
@@ -37,6 +39,9 @@ public class ExportBackupJobExecutor implements TypedJobExecutor {
 
 	@Override
 	public void execute( App app, Job job, Execution execution ) {
+
+		if ( ! job.hasType( ExportBackupJobDescription.Resource.CLASS ) ) throw new JobException( new Infraction( 0x2001, "rdf.type", ExportBackupJobDescription.Resource.CLASS.getIRI().stringValue() ) );
+
 		String appRepositoryID = app.getRepositoryID();
 		String appRepositoryPath = Vars.getInstance().getAppsFilesDirectory().concat( Consts.SLASH ).concat( appRepositoryID );
 		File nonRDFSourceDirectory = new File( appRepositoryPath );

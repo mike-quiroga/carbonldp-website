@@ -18,7 +18,7 @@ public interface ExecutionRepository {
 
 	public Execution peek( IRI executionQueueLocationIRI );
 
-	public void addResult(IRI executionIRI, Value status);
+	public void addResult( IRI executionIRI, Value status );
 
-	public void addErrorDescription(IRI executionIRI, String error);
+	public void addErrorDescription( IRI executionIRI, String error );
 }

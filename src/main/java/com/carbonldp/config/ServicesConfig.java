@@ -7,10 +7,13 @@ import com.carbonldp.apps.AppService;
 import com.carbonldp.apps.SesameAppService;
 import com.carbonldp.apps.roles.AppRoleService;
 import com.carbonldp.apps.roles.SesameAppRoleService;
+import com.carbonldp.authentication.ldapServer.app.LDAPServerService;
+import com.carbonldp.authentication.ldapServer.app.SesameLDAPServerService;
 import com.carbonldp.authentication.ticket.JWTicketAuthenticationService;
 import com.carbonldp.authentication.ticket.TicketService;
 import com.carbonldp.authentication.token.JWTokenAuthenticationService;
 import com.carbonldp.authentication.token.TokenService;
+import com.carbonldp.authorization.acl.ACLPermissionEvaluator;
 import com.carbonldp.authorization.acl.ACLService;
 import com.carbonldp.authorization.acl.SesameACLService;
 import com.carbonldp.jobs.ExecutionService;
@@ -26,17 +29,22 @@ import com.carbonldp.ldp.nonrdf.backup.SesameBackupService;
 import com.carbonldp.ldp.sources.RDFSourceService;
 import com.carbonldp.ldp.sources.SesameRDFSourceService;
 import com.carbonldp.platform.api.PlatformAPIService;
+import com.carbonldp.sparql.SPARQLService;
+import com.carbonldp.sparql.SesameSPARQLService;
 import com.carbonldp.spring.ServicesInvoker;
+import org.openrdf.spring.SesameConnectionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.access.PermissionEvaluator;
 
 @Configuration
 public class ServicesConfig {
 
 	@Autowired
-	private PermissionEvaluator permissionEvaluator;
+	private ACLPermissionEvaluator permissionEvaluator;
+
+	@Autowired
+	private SesameConnectionFactory connectionFactory;
 
 	@Bean
 	public TokenService tokenService() {
@@ -94,6 +102,11 @@ public class ServicesConfig {
 	}
 
 	@Bean
+	public LDAPServerService ldapServerService() {
+		return new SesameLDAPServerService();
+	}
+
+	@Bean
 	public NonRDFSourceService nonRDFResourceService() {
 		return new SesameNonRDFSourceService();
 	}
@@ -112,4 +125,8 @@ public class ServicesConfig {
 	public ExecutionService executionService() {
 		return new SesameExecutionService();
 	}
+
+	@Bean
+	public SPARQLService sparqlService() { return new SesameSPARQLService( connectionFactory );}
+
 }

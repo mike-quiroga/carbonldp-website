@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public class InheritanceACLPermissionVoter extends AbstractACLPermissionVoter implements ACLPermissionVoter {
+public class InheritanceACLPermissionVoter extends AbstractACLPermissionVoter {
 
 	@Override
 	public Vote vote( Map<RDFNodeEnum, Set<IRI>> subjects, Set<ACEDescription.Permission> permissions, IRI objectIRI ) {

@@ -7,7 +7,6 @@ import com.carbonldp.utils.IRIUtil;
 import com.carbonldp.utils.RDFNodeUtil;
 import org.apache.commons.lang3.NotImplementedException;
 import org.openrdf.model.IRI;
-
 import org.openrdf.model.impl.SimpleValueFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,6 +21,8 @@ public class ACLPermissionEvaluator implements PermissionEvaluator {
 	protected final Logger LOG = LoggerFactory.getLogger( this.getClass() );
 	private final List<ACLPermissionVoter> voters;
 
+	private CachedPermissionEvaluator cachedPermissionEvaluator;
+
 	public ACLPermissionEvaluator( ACLPermissionVoter... voters ) {
 		if ( voters.length <= 0 ) throw new IllegalArgumentException( "At least one voter needs to be provided." );
 		List<ACLPermissionVoter> tempVoters = new ArrayList<ACLPermissionVoter>();
@@ -34,11 +35,12 @@ public class ACLPermissionEvaluator implements PermissionEvaluator {
 
 	@Override
 	public boolean hasPermission( Authentication authentication, Object targetDomainObject, Object permission ) {
-		if ( targetDomainObject == null ) return false;
+		if ( cachedPermissionEvaluator == null ) {
+			LOG.warn( "cachedPermissionEvaluator is null, ACL evaluation will not use cache" );
+			return this.resolveHasPermission( authentication, targetDomainObject, permission );
+		}
 
-		IRI objectIRI = getObjectIRI( targetDomainObject );
-
-		return hasPermission( authentication, objectIRI, permission );
+		return cachedPermissionEvaluator.hasPermission( authentication, targetDomainObject, permission );
 	}
 
 	@Override
@@ -47,7 +49,15 @@ public class ACLPermissionEvaluator implements PermissionEvaluator {
 		throw new NotImplementedException( "IDs and types cannot be converted to a IRI (yet)." );
 	}
 
-	private boolean hasPermission( Authentication authentication, IRI objectIRI, Object permission ) {
+	public boolean resolveHasPermission( Authentication authentication, Object targetDomainObject, Object permission ) {
+		if ( targetDomainObject == null ) return false;
+
+		IRI objectIRI = getObjectIRI( targetDomainObject );
+
+		return resolveHasPermission( authentication, objectIRI, permission );
+	}
+
+	private boolean resolveHasPermission( Authentication authentication, IRI objectIRI, Object permission ) {
 		Set<Permission> permissions = resolvePermissions( permission );
 		Map<RDFNodeEnum, Set<IRI>> subjects = SubjectsRetrievalStrategy.getSubjects( authentication );
 
@@ -76,7 +86,6 @@ public class ACLPermissionEvaluator implements PermissionEvaluator {
 		// TODO: Support non IRIObject objects (create/assign them one?)
 
 		throw new IllegalArgumentException( "Unsupported domain object: " + targetDomainObject );
-
 	}
 
 	private Set<Permission> resolvePermissions( Object permission ) {
@@ -111,4 +120,6 @@ public class ACLPermissionEvaluator implements PermissionEvaluator {
 	private Set<Permission> resolvePermissions( IRI[] permissionIRIs ) {
 		return RDFNodeUtil.findByIRIs( Arrays.asList( permissionIRIs ), Permission.class );
 	}
+
+	public void setCachedPermissionEvaluator( CachedPermissionEvaluator cachedPermissionEvaluator ) {this.cachedPermissionEvaluator = cachedPermissionEvaluator;}
 }

@@ -9,6 +9,6 @@ public class TestingTestng {
 	@BeforeSuite
 	public void varsInit() {
 		System.out.println( "hello hello" );
-		
+
 	}
 }

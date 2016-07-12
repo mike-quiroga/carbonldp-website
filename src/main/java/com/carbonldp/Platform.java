@@ -5,6 +5,8 @@ import com.beust.jcommander.Parameter;
 import com.beust.jcommander.converters.CommaParameterSplitter;
 import com.beust.jcommander.converters.FileConverter;
 import com.carbonldp.apps.context.AppContextConfig;
+import com.carbonldp.authorization.acl.ACLWiringConfig;
+import com.carbonldp.cache.CacheConfig;
 import com.carbonldp.config.ConfigurationConfig;
 import com.carbonldp.config.RepositoriesConfig;
 import com.carbonldp.config.ServicesConfig;
@@ -178,7 +180,9 @@ public class Platform {
 			ConfigurationConfig.class,
 			RepositoriesConfig.class,
 			AppContextConfig.class,
+			CacheConfig.class,
 			SecurityConfig.class,
+			ACLWiringConfig.class,
 			ServicesConfig.class,
 			MailConfig.class,
 			LOGConfig.class,

@@ -33,7 +33,6 @@ public class SesameAppRoleRepository extends AbstractSesameLDPRepository impleme
 	private final RDFSourceRepository sourceRepository;
 	private final ContainerRepository containerRepository;
 
-	private String containerSlug;
 	private String agentsContainerSlug;
 
 	private static String getParentsQuery;
@@ -126,10 +125,6 @@ public class SesameAppRoleRepository extends AbstractSesameLDPRepository impleme
 		IRI rootContainerIRI = appContext.getApplication().getRootContainerIRI();
 		if ( rootContainerIRI == null ) throw new IllegalStateException( "The app in the AppContext doesn't have a rootContainerIRI." );
 		return getContainerIRI( rootContainerIRI );
-	}
-
-	private IRI getContainerIRI( IRI rootContainerIRI ) {
-		return IRIUtil.createChildIRI( rootContainerIRI, containerSlug );
 	}
 
 	public IRI getAgentsContainerIRI( IRI appRoleIRI ) {

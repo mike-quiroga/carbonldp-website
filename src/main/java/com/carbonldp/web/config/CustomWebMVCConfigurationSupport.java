@@ -46,6 +46,20 @@ public class CustomWebMVCConfigurationSupport extends DelegatingWebMvcConfigurat
 			handlerMapping.setUrlPathHelper( configurer.getUrlPathHelper() );
 		}
 
+		disableDefaultCORSProcessor( handlerMapping );
+
 		return handlerMapping;
+	}
+
+	/**
+	 * This method disables the default spring CORSProcessor that works with @{@link org.springframework.web.bind.annotation.CrossOrigin} annotations.
+	 * The platform is using a filter based system to provide CORS support and spring native system interferes with it.
+	 *
+	 * @param handlerMapping
+	 * @see <a href="http://docs.spring.io/spring/docs/current/spring-framework-reference/html/cors.html">CORS Support</a>
+	 * @see com.carbonldp.web.cors.CORSContextFilter
+	 */
+	private void disableDefaultCORSProcessor( CustomRequestMappingHandlerMapping handlerMapping ) {
+		handlerMapping.setCorsProcessor( ( configuration, request, response ) -> true );
 	}
 }

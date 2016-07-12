@@ -2,9 +2,9 @@ package com.carbonldp.apps.context;
 
 import com.carbonldp.Vars;
 import com.carbonldp.apps.App;
+import com.carbonldp.exceptions.ResourceDoesntExistException;
 import com.carbonldp.web.AbstractUniqueFilter;
 import org.openrdf.model.IRI;
-
 import org.openrdf.model.impl.SimpleValueFactory;
 import org.springframework.http.HttpStatus;
 
@@ -41,7 +41,7 @@ public class AppContextPersistenceFilter extends AbstractUniqueFilter {
 			// TODO: Add more information
 			request.removeAttribute( FILTER_APPLIED );
 			response.setStatus( HttpStatus.NOT_FOUND.value() );
-			return;
+			throw new ResourceDoesntExistException();
 		}
 
 		AppContext context = AppContextHolder.createEmptyContext();
