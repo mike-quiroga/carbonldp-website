@@ -2,7 +2,7 @@ import { Component } from "@angular/core";
 import { CORE_DIRECTIVES, FORM_DIRECTIVES, FormBuilder, ControlGroup, AbstractControl, Validators, LocationStrategy } from "@angular/common";
 import { ROUTER_DIRECTIVES, ROUTER_PROVIDERS, Router } from "@angular/router-deprecated";
 
-import { ValidationService } from "app/components/validation-service/ValidationService";
+import { EmailValidator } from "carbon-panel/custom-validators";
 
 import $ from "jquery";
 import "semantic-ui/semantic";
@@ -27,7 +27,7 @@ export class NewsletterFormComponent {
 	constructor( router:Router, formBuilder:FormBuilder ) {
 		this.router = router;
 		this.subscribeForm = formBuilder.group( {
-			"email": [ "", Validators.compose( [ Validators.required, ValidationService.emailValidator ] ) ]
+			"email": [ "", Validators.compose( [ Validators.required, EmailValidator ] ) ]
 		} );
 		this.email = this.subscribeForm.controls[ "email" ];
 		this.location = location;
