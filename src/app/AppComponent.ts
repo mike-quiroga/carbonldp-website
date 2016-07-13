@@ -6,7 +6,7 @@ import { Angulartics2GoogleAnalytics } from "angulartics2/src/providers/angulart
 import { Angulartics2 } from "angulartics2";
 
 import WebsiteView from "app/website/WebsiteView";
-import AppDevLoginView from "app/auth/app-dev-login/AppDevLoginView";
+import { AppDevLoginView } from "app/auth/app-dev-login/app-dev-login.view";
 
 import { AppDevView } from "app/app-dev/app-dev.view";
 
