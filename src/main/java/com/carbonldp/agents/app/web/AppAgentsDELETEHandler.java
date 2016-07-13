@@ -3,7 +3,7 @@ package com.carbonldp.agents.app.web;
 import com.carbonldp.ldp.web.AbstractDELETERequestHandler;
 import com.carbonldp.web.RequestHandler;
 import com.carbonldp.web.exceptions.NotImplementedException;
-import org.openrdf.model.IRI;
+import org.eclipse.rdf4j.model.IRI;
 
 /**
  * @author NestorVenegas

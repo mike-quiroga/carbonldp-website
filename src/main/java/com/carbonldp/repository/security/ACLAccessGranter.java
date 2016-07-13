@@ -1,7 +1,7 @@
 package com.carbonldp.repository.security;
 
 import com.carbonldp.authorization.acl.ACEDescription;
-import org.openrdf.model.Statement;
+import org.eclipse.rdf4j.model.Statement;
 import org.springframework.security.access.PermissionEvaluator;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;

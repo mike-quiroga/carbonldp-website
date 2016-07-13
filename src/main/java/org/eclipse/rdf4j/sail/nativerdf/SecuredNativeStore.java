@@ -1,20 +1,20 @@
-package org.openrdf.sail.nativerdf;
+package org.eclipse.rdf4j.sail.nativerdf;
 
-import info.aduna.concurrent.locks.Lock;
-import info.aduna.concurrent.locks.LockManager;
-import info.aduna.io.MavenUtil;
 import org.apache.commons.io.FileUtils;
-import org.openrdf.IsolationLevel;
-import org.openrdf.IsolationLevels;
-import org.openrdf.model.ValueFactory;
-import org.openrdf.query.algebra.evaluation.federation.FederatedServiceResolver;
-import org.openrdf.query.algebra.evaluation.federation.FederatedServiceResolverImpl;
-import org.openrdf.sail.NotifyingSailConnection;
-import org.openrdf.sail.SailException;
-import org.openrdf.sail.base.SailSource;
-import org.openrdf.sail.base.SailStore;
-import org.openrdf.sail.base.SnapshotSailStore;
-import org.openrdf.sail.helpers.DirectoryLockManager;
+import org.eclipse.rdf4j.IsolationLevel;
+import org.eclipse.rdf4j.IsolationLevels;
+import org.eclipse.rdf4j.common.concurrent.locks.Lock;
+import org.eclipse.rdf4j.common.concurrent.locks.LockManager;
+import org.eclipse.rdf4j.common.io.MavenUtil;
+import org.eclipse.rdf4j.model.ValueFactory;
+import org.eclipse.rdf4j.query.algebra.evaluation.federation.FederatedServiceResolver;
+import org.eclipse.rdf4j.query.algebra.evaluation.federation.FederatedServiceResolverImpl;
+import org.eclipse.rdf4j.sail.NotifyingSailConnection;
+import org.eclipse.rdf4j.sail.SailException;
+import org.eclipse.rdf4j.sail.base.SailSource;
+import org.eclipse.rdf4j.sail.base.SailStore;
+import org.eclipse.rdf4j.sail.base.SnapshotSailStore;
+import org.eclipse.rdf4j.sail.helpers.DirectoryLockManager;
 
 import java.io.File;
 import java.io.IOException;
@@ -26,7 +26,7 @@ import java.util.concurrent.locks.ReentrantLock;
  */
 public class SecuredNativeStore extends NativeStore {
 
-	private static final String VERSION = MavenUtil.loadVersion( "org.openrdf.sesame", "sesame-sail-nativerdf", "devel" );
+	private static final String VERSION = MavenUtil.loadVersion( "org.eclipse.rdf4j.sesame", "sesame-sail-nativerdf", "devel" );
 
 	/**
 	 * Specifies which triple indexes this native store must use.

@@ -1,7 +1,7 @@
 package com.carbonldp.jobs;
 
-import org.openrdf.model.IRI;
-import org.openrdf.model.Value;
+import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.Value;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 /**

@@ -1,6 +1,6 @@
 package com.carbonldp.ldp.patch;
 
-import org.openrdf.model.IRI;
+import org.eclipse.rdf4j.model.IRI;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 public interface PATCHRequestService {

@@ -3,7 +3,7 @@ package com.carbonldp.agents.validators;
 import com.carbonldp.ldp.web.AbstractGETRequestHandler;
 import com.carbonldp.web.RequestHandler;
 import com.carbonldp.web.exceptions.NotImplementedException;
-import org.openrdf.model.IRI;
+import org.eclipse.rdf4j.model.IRI;
 import org.springframework.http.ResponseEntity;
 
 @RequestHandler

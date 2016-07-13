@@ -1,8 +1,8 @@
 package com.carbonldp.repository.txn;
 
 import com.carbonldp.AbstractComponent;
-import org.openrdf.repository.RepositoryConnection;
-import org.openrdf.repository.RepositoryException;
+import org.eclipse.rdf4j.repository.RepositoryConnection;
+import org.eclipse.rdf4j.repository.RepositoryException;
 
 /**
  * @author MiguelAraCo

@@ -13,14 +13,14 @@ import com.carbonldp.rdf.RDFDocumentRepository;
 import com.carbonldp.sparql.SPARQLTemplate;
 import com.carbonldp.spring.TransactionWrapper;
 import com.carbonldp.utils.Action;
-import org.openrdf.model.IRI;
+import org.eclipse.rdf4j.model.IRI;
 
-import org.openrdf.model.ValueFactory;
-import org.openrdf.model.impl.SimpleValueFactory;
-import org.openrdf.repository.RepositoryException;
-import org.openrdf.rio.RDFFormat;
-import org.openrdf.rio.RDFParseException;
-import org.openrdf.spring.SesameConnectionFactory;
+import org.eclipse.rdf4j.model.ValueFactory;
+import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
+import org.eclipse.rdf4j.repository.RepositoryException;
+import org.eclipse.rdf4j.rio.RDFFormat;
+import org.eclipse.rdf4j.rio.RDFParseException;
+import org.eclipse.rdf4j.spring.SesameConnectionFactory;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 import java.io.IOException;

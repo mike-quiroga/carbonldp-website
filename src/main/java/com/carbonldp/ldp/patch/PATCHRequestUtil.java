@@ -2,8 +2,8 @@ package com.carbonldp.ldp.patch;
 
 import com.carbonldp.rdf.RDFResource;
 import com.carbonldp.utils.RDFNodeUtil;
-import org.openrdf.model.IRI;
-import org.openrdf.model.Statement;
+import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.Statement;
 
 import java.util.Collection;
 import java.util.HashSet;

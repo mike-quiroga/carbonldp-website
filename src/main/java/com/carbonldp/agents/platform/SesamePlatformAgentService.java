@@ -7,9 +7,9 @@ import com.carbonldp.authorization.Platform;
 import com.carbonldp.authorization.acl.ACEDescription;
 import com.carbonldp.authorization.acl.ACL;
 import com.carbonldp.exceptions.ResourceAlreadyExistsException;
-import org.openrdf.model.IRI;
+import org.eclipse.rdf4j.model.IRI;
 
-import org.openrdf.model.impl.SimpleValueFactory;
+import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Arrays;

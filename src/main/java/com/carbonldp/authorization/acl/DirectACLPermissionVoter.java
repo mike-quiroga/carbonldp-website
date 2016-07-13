@@ -4,7 +4,7 @@ import com.carbonldp.authorization.acl.ACEDescription.Permission;
 import com.carbonldp.rdf.RDFNodeEnum;
 import com.carbonldp.utils.ACLUtil;
 import com.carbonldp.web.exceptions.NotImplementedException;
-import org.openrdf.model.IRI;
+import org.eclipse.rdf4j.model.IRI;
 
 import java.util.HashMap;
 import java.util.Map;

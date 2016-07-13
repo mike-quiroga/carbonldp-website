@@ -1,6 +1,6 @@
 package com.carbonldp.sparql;
 
-import org.openrdf.query.TupleQueryResult;
+import org.eclipse.rdf4j.query.TupleQueryResult;
 
 public class SPARQLTupleResult implements SPARQLResult<TupleQueryResult> {
 	private TupleQueryResult result;

@@ -9,7 +9,7 @@ import com.carbonldp.mail.MailConfig;
 import com.carbonldp.repository.txn.TxnConfig;
 import com.carbonldp.security.SecurityConfig;
 import com.carbonldp.test.authorization.RunWithAnnotatedServiceMock;
-import org.openrdf.spring.SesameConnectionFactory;
+import org.eclipse.rdf4j.spring.SesameConnectionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
