@@ -19,7 +19,7 @@ import Carbon from "carbonldp/Carbon";
 import { AppComponent } from "./app.component";
 
 import { BLOG_PROVIDERS } from "app/website/blog/Blog";
-import { APP_DEV_PROVIDERS } from "app/app-dev/AppDev";
+import { APP_DEV_PROVIDERS } from "./app-dev/app-dev";
 
 import { Angulartics2 } from "angulartics2";
 
