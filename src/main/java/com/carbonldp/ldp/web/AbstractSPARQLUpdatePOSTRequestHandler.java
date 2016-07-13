@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 
 /**
  * @author MiguelAraCo
- * @since _version_
+ * @since 0.39.0
  */
 @RequestHandler
 public class AbstractSPARQLUpdatePOSTRequestHandler extends AbstractLDPRequestHandler {

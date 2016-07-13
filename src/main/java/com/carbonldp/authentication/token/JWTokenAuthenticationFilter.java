@@ -92,7 +92,7 @@ public class JWTokenAuthenticationFilter extends GenericFilterBean implements Fi
 		return authenticationManager.authenticate( authRequest );
 	}
 
-	private String extractAndDecodeHeader( String jwt) {
+	private String extractAndDecodeHeader( String jwt ) {
 		byte[] signingKey;
 		try {
 			signingKey = DatatypeConverter.parseBase64Binary( Vars.getInstance().getTokenKey() );

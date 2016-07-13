@@ -66,7 +66,7 @@ public class RDFDocumentMessageConverter extends ModelMessageConverter<RDFDocume
 		} catch ( RDFParseException | RDFHandlerException | IOException e ) {
 			throw new BadRequestException( new Infraction( 0x6001, "formatToUse", formatToUse.getName() ) );
 		}
-		
+
 		// TODO: Fix the root cause instead of monkey patching it
 		return setGenericBNodes( documentRDFHandler.getDocument() );
 	}
@@ -80,7 +80,7 @@ public class RDFDocumentMessageConverter extends ModelMessageConverter<RDFDocume
 			String randomUUID = UUID.randomUUID().toString();
 			toChange.put( subject, valueFactory.createBNode( randomUUID ) );
 		}
-		ModelUtil.replace(document.getBaseModel(),toChange);
+		ModelUtil.replace( document.getBaseModel(), toChange );
 
 		return document;
 	}

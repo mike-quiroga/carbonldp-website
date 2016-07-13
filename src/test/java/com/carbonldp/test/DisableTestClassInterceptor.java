@@ -21,8 +21,8 @@ public class DisableTestClassInterceptor implements IMethodInterceptor {
 	@Override
 	public List<IMethodInstance> intercept( List<IMethodInstance> list, ITestContext iTestContext ) {
 		return list.stream()
-				   .filter( this::declaringClassIsEnabled )
-				   .collect( Collectors.toList() );
+		           .filter( this::declaringClassIsEnabled )
+		           .collect( Collectors.toList() );
 
 	}
 

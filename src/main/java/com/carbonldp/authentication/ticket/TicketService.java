@@ -11,5 +11,5 @@ import org.springframework.security.access.prepost.PreAuthorize;
 public interface TicketService {
 
 	@PreAuthorize( "hasPermission(#targetIRI, 'READ')" )
-	public Ticket createTicket(IRI targetIRI);
+	public Ticket createTicket( IRI targetIRI );
 }

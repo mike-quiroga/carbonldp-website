@@ -14,10 +14,10 @@ public class PATCHRequestUtil {
 
 	public Set<DeleteAction> getDeleteActions( PATCHRequest patchRequest ) {
 		return patchRequest.getDeleteActions()
-						   .stream()
-						   .map( uri -> new RDFResource( patchRequest.getBaseModel(), uri ) )
-						   .map( DeleteAction::new )
-						   .collect( Collectors.toSet() )
+		                   .stream()
+		                   .map( uri -> new RDFResource( patchRequest.getBaseModel(), uri ) )
+		                   .map( DeleteAction::new )
+		                   .collect( Collectors.toSet() )
 			;
 	}
 
@@ -49,10 +49,10 @@ public class PATCHRequestUtil {
 
 	private Set<SetAction> getSetActions( PATCHRequest patchRequest ) {
 		return patchRequest.getSetActions()
-						   .stream()
-						   .map( uri -> new RDFResource( patchRequest.getBaseModel(), uri ) )
-						   .map( SetAction::new )
-						   .collect( Collectors.toSet() )
+		                   .stream()
+		                   .map( uri -> new RDFResource( patchRequest.getBaseModel(), uri ) )
+		                   .map( SetAction::new )
+		                   .collect( Collectors.toSet() )
 			;
 	}
 
@@ -88,10 +88,10 @@ public class PATCHRequestUtil {
 
 	private Set<AddAction> getAddActions( PATCHRequest patchRequest ) {
 		return patchRequest.getAddActions()
-						   .stream()
-						   .map( uri -> new RDFResource( patchRequest.getBaseModel(), uri ) )
-						   .map( AddAction::new )
-						   .collect( Collectors.toSet() )
+		                   .stream()
+		                   .map( uri -> new RDFResource( patchRequest.getBaseModel(), uri ) )
+		                   .map( AddAction::new )
+		                   .collect( Collectors.toSet() )
 			;
 	}
 

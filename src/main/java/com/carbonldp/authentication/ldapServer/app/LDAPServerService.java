@@ -19,5 +19,5 @@ public interface LDAPServerService {
 
 	public LDAPServer get( IRI targetIRI );
 
-	public List<LDAPAgent> registerLDAPAgents( LDAPServer ldapServer, Set<String> usernameFields,App app );
+	public List<LDAPAgent> registerLDAPAgents( LDAPServer ldapServer, Set<String> usernameFields, App app );
 }

@@ -32,6 +32,8 @@ public class IRIAuthenticationProvider extends AbstractSesameAuthenticationProvi
 		Agent agent = agentRepository.get( agentIRI );
 		if ( agent == null || agent.getBaseModel().size() == 0 ) throw new BadCredentialsException( "Wrong credentials" );
 
+		if ( ! agent.isEnabled() ) throw new BadCredentialsException( "Wrong credentials" );
+
 		return createAgentAuthenticationToken( agent );
 
 	}

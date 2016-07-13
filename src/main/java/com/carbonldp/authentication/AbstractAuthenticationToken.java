@@ -68,8 +68,8 @@ public abstract class AbstractAuthenticationToken implements Authentication {
 	private void addPlatformRoles( Set<GrantedAuthority> tempAuthorities ) {
 		for ( Platform.Role platformRole : this.platformRoles ) {
 			String authorityName = ( new StringBuilder() ).append( PLATFORM_ROLE_PREFIX )
-														  .append( platformRole.name() )
-														  .toString();
+			                                              .append( platformRole.name() )
+			                                              .toString();
 			tempAuthorities.add( new SimpleGrantedAuthority( authorityName ) );
 		}
 	}
@@ -77,8 +77,8 @@ public abstract class AbstractAuthenticationToken implements Authentication {
 	private void addPlatformPrivileges( Set<GrantedAuthority> tempAuthorities ) {
 		for ( Platform.Privilege platformPrivilege : this.platformPrivileges ) {
 			String authorityName = ( new StringBuilder() ).append( PLATFORM_PRIVILEGE_PREFIX )
-														  .append( platformPrivilege.name() )
-														  .toString();
+			                                              .append( platformPrivilege.name() )
+			                                              .toString();
 			tempAuthorities.add( new SimpleGrantedAuthority( authorityName ) );
 		}
 	}

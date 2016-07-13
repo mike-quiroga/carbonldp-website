@@ -24,8 +24,8 @@ public final class JWTUtil {
 		byte[] apiKeySecretBytes = DatatypeConverter.parseBase64Binary( Vars.getInstance().getTokenKey() );
 		Key signingKey = new SecretKeySpec( apiKeySecretBytes, signatureAlgorithm.getJcaName() );
 		return Jwts.builder()
-				   .setSubject( password )
-				   .signWith( signatureAlgorithm, signingKey );
+		           .setSubject( password )
+		           .signWith( signatureAlgorithm, signingKey );
 	}
 
 	public static String encode( String password ) {
