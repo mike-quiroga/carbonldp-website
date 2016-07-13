@@ -1,7 +1,7 @@
-import { Component, ElementRef, ChangeDetectorRef } from "@angular/core";
-import { CORE_DIRECTIVES } from "@angular/common";
-import { ROUTER_DIRECTIVES, Router } from "@angular/router-deprecated";
-import { Title } from "@angular/platform-browser";
+import {Component, ElementRef, ChangeDetectorRef} from "@angular/core";
+import {Location} from "@angular/common";
+import {ROUTER_DIRECTIVES, Router} from "@angular/router-deprecated";
+import {Title} from "@angular/platform-browser";
 
 import SidebarComponent from "./../../sidebar/SidebarComponent";
 
@@ -15,7 +15,7 @@ import template from "./template.html!";
 @Component( {
 	selector: "getting-started",
 	template: template,
-	directives: [ CORE_DIRECTIVES, ROUTER_DIRECTIVES, SidebarComponent, HighlightDirective ],
+	directives: [ ROUTER_DIRECTIVES, SidebarComponent, HighlightDirective ],
 	providers: [ Title ],
 } )
 export default class GettingStartedView {
@@ -25,12 +25,14 @@ export default class GettingStartedView {
 	title:Title;
 	contentReady:boolean = false;
 
+	private location:Location;
 	private changeDetector:ChangeDetectorRef;
 
-	constructor( router:Router, element:ElementRef, title:Title, changeDetector:ChangeDetectorRef ) {
+	constructor( element:ElementRef, title:Title, router:Router, location:Location, changeDetector:ChangeDetectorRef ) {
 		this.element = element;
-		this.router = router;
 		this.title = title;
+		this.router = router;
+		this.location = location;
 		this.changeDetector = changeDetector;
 	}
 
