@@ -115,7 +115,7 @@
 									</tr>
 								</tbody>
 							</table>
-							<pre highlight class="turtle">
+							<pre cphighlight class="turtle">
 								@prefix cs:&#60;https://carbonldp.com/ns/v1/security#&#62;.
 								@prefix vcard:&#60;http://www.w3.org/2001/vcard-rdf/3.0#&#62;.
 
@@ -318,7 +318,7 @@
 								server-minted URI always ends with a trailing slash.</p>
 
 							<p>You will need to authorize the request using the username and password of the agent that was defined in the body of the former POST request. Both the username and
-							password are case-sensitive; use the same case you used when defining the username and password in the Agent resource.</p>
+								password are case-sensitive; use the same case you used when defining the username and password in the Agent resource.</p>
 
 							<table class="ui celled table">
 								<tbody>
@@ -365,7 +365,7 @@
 								<strong>200 OK</strong>
 							</p>
 
-							<pre highlight class="json">
+							<pre cphighlight class="json">
 								[
 								   {
 								      "@graph":[
@@ -488,7 +488,7 @@
 							<strong>Body (required)</strong>
 						</p>
 
-						<pre highlight class="turtle">
+						<pre cphighlight class="turtle">
 							@prefix cs:&#60;https://carbonldp.com/ns/v1/security#&#62;.
 
 							<>
@@ -557,7 +557,7 @@
 
 							<p><strong>Example root container for an app</strong></p>
 
-							<pre highlight class="turtle">
+							<pre cphighlight class="turtle">
 								&#60;https://local.carbonldp.com/apps/taxonomy-hub/&#62;
 									a
 										&#60;http://www.w3.org/ns/ldp#RDFSource&#62; ,
@@ -662,7 +662,7 @@
 
 							<p>A SKOS Concept can have a preferred lexical label, which will be useful in representing it in a user interface. We'll be able to define a label for a concept as shown
 								below.</p>
-							<pre highlight class="turtle">
+							<pre cphighlight class="turtle">
 								&#60;carbon-document-uri&#62;
 									a skos:Concept;
 									skos:prefLabel "animals".
@@ -670,7 +670,7 @@
 
 							<p>We can also support locale-specific labels.</p>
 
-							<pre highlight class="turtle">
+							<pre cphighlight class="turtle">
 								&#60;carbon-document-uri&#62;
 									rdf:type skos:Concept;
 									skos:prefLabel "animals"@en;
@@ -691,7 +691,7 @@
 								property is used to assert the inverse, namely when one concept is narrower in meaning (i.e. more specific) than another. For example:
 							</p>
 
-							<pre highlight class="turtle">
+							<pre cphighlight class="turtle">
 								&#60;carbon-document-uri&#62;
 									rdf:type skos:Concept;
 									skos:prefLabel "animals"@en;
@@ -743,7 +743,7 @@
 
 							<p>Here's an example of what an instance of a ConceptScheme with four top concepts might look like:</p>
 
-							<pre highlight class="turtle">
+							<pre cphighlight class="turtle">
 								&#60;carbon-document-uri&#62;
 									rdf:type skos:ConceptScheme;
 									dct:title "Content Topics";
@@ -764,7 +764,7 @@
 								<b>Namespaces used</b>
 							</p>
 
-							<pre highlight class="turtle">
+							<pre cphighlight class="turtle">
 								@prefix skos:&#60;http://www.w3.org/2004/02/skos/core#&#62;.
 								@prefix dct:&#60;http://purl.org/dc/terms/&#62;.
 							</pre>
@@ -919,7 +919,7 @@
 								<strong>Body (required)</strong>
 							</p>
 
-							<pre highlight class="turtle">
+							<pre cphighlight class="turtle">
 								@prefix ldp:&#60;http://www.w3.org/ns/ldp#&#62;.
 
 								&#60;&#62;
@@ -984,7 +984,7 @@
 								<strong>Body (required)</strong>
 							</p>
 
-							<pre highlight class="turtle">
+							<pre cphighlight class="turtle">
 								@prefix ldp:&#60;http://www.w3.org/ns/ldp#&#62;.
 								@prefix skos:&#60;http://www.w3.org/2004/02/skos/core#&#62;.
 								@prefix dct:&#60;http://purl.org/dc/terms/&#62;.
@@ -1067,7 +1067,7 @@
 								<strong>Body (required)</strong>
 							</p>
 
-							<pre highlight class="turtle">
+							<pre cphighlight class="turtle">
 								@prefix ldp:&#60;http://www.w3.org/ns/ldp#&#62;.
 								@prefix skos:&#60;http://www.w3.org/2004/02/skos/core#&#62;.
 
@@ -1169,7 +1169,7 @@
 								<strong>Body (required)</strong>
 							</p>
 
-							<pre highlight class="turtle">
+							<pre cphighlight class="turtle">
 								@prefix ldp:&#60;http://www.w3.org/ns/ldp#&#62;.
 								@prefix skos:&#60;http://www.w3.org/2004/02/skos/core#&#62;.
 
@@ -1268,7 +1268,7 @@
 								<strong>Body (required)</strong>
 							</p>
 
-							<pre highlight class="turtle">
+							<pre cphighlight class="turtle">
 								@prefix c:&#60;https://carbonldp.com/ns/v1/platform#&#62;.
 
 								_:b0
@@ -1329,7 +1329,7 @@
 								<strong>Body (required)</strong>
 							</p>
 
-							<pre highlight class="turtle">
+							<pre cphighlight class="turtle">
 								@prefix ldp:&#60;http://www.w3.org/ns/ldp#&#62;.
 								@prefix skos:&#60;http://www.w3.org/2004/02/skos/core#&#62;.
 
@@ -1382,7 +1382,7 @@
 								<strong>Body (required)</strong>
 							</p>
 
-							<pre highlight class="turtle">
+							<pre cphighlight class="turtle">
 								@prefix c:&#60;https://carbonldp.com/ns/v1/platform#&#62;.
 
 								_:b0
@@ -1436,7 +1436,7 @@
 								<strong>Body (required)</strong>
 							</p>
 
-							<pre highlight class="turtle">
+							<pre cphighlight class="turtle">
 								@prefix ldp:&#60;http://www.w3.org/ns/ldp#&#62;.
 								@prefix skos:&#60;http://www.w3.org/2004/02/skos/core#&#62;.
 
@@ -1493,7 +1493,7 @@
 								<strong>Body (required)</strong>
 							</p>
 
-							<pre highlight class="turtle">
+							<pre cphighlight class="turtle">
 								@prefix c:&#60;https://carbonldp.com/ns/v1/platform#&#62;.
 
 								_:b0
@@ -1554,7 +1554,7 @@
 								<strong>Body (required)</strong>
 							</p>
 
-							<pre highlight class="turtle">
+							<pre cphighlight class="turtle">
 								@prefix ldp:&#60;http://www.w3.org/ns/ldp#&#62;.
 								@prefix skos:&#60;http://www.w3.org/2004/02/skos/core#&#62;.
 
@@ -1609,7 +1609,7 @@
 								<strong>Body (required)</strong>
 							</p>
 
-							<pre highlight class="turtle">
+							<pre cphighlight class="turtle">
 								@prefix ldp:&#60;http://www.w3.org/ns/ldp#&#62;.
 								@prefix skos:&#60;http://www.w3.org/2004/02/skos/core#&#62;.
 
@@ -1660,7 +1660,7 @@
 								<strong>Body (required)</strong>
 							</p>
 
-							<pre highlight class="turtle">
+							<pre cphighlight class="turtle">
 								@prefix c:&#60;https://carbonldp.com/ns/v1/platform#&#62;.
 
 								_:b0
@@ -1707,7 +1707,7 @@
 								<strong>Body (required)</strong>
 							</p>
 
-							<pre highlight class="turtle">
+							<pre cphighlight class="turtle">
 								@prefix c:&#60;https://carbonldp.com/ns/v1/platform#&#62;.
 
 								_:b0
@@ -1787,7 +1787,7 @@
 									</tbody>
 								</table>
 
-								<pre highlight class="turtle">
+								<pre cphighlight class="turtle">
 									@prefix cs:&#60;https://carbonldp.com/ns/v1/security#&#62;.
 
 									&#60;&#62;
@@ -1837,7 +1837,7 @@
 										</tr>
 									</tbody>
 								</table>
-								<pre highlight class="turtle">
+								<pre cphighlight class="turtle">
 									@prefix cs:&#60;https://carbonldp.com/ns/v1/security#&#62;.
 
 									&#60;&#62;
@@ -1888,7 +1888,7 @@
 								</tbody>
 							</table>
 
-							<pre highlight class="turtle">
+							<pre cphighlight class="turtle">
 								@prefix cs:&#60;https://carbonldp.com/ns/v1/security#&#62;.
 								@prefix vcard:&#60;http://www.w3.org/2001/vcard-rdf/3.0#&#62;.
 
@@ -1931,7 +1931,7 @@
 								</tbody>
 							</table>
 
-							<pre highlight class="turtle">
+							<pre cphighlight class="turtle">
 								@prefix cs:&#60;https://carbonldp.com/ns/v1/security#&#62;.
 								@prefix vcard:&#60;http://www.w3.org/2001/vcard-rdf/3.0#&#62;.
 
@@ -1984,7 +1984,7 @@
 								</tbody>
 							</table>
 
-							<pre highlight class="turtle">
+							<pre cphighlight class="turtle">
 								@prefix c:&#60;https://carbonldp.com/ns/v1/platform#&#62;.
 
 								_:b0
@@ -2025,7 +2025,7 @@
 								</tbody>
 							</table>
 
-							<pre highlight class="turtle">
+							<pre cphighlight class="turtle">
 								@prefix c:&#60;https://carbonldp.com/ns/v1/platform#&#62;.
 
 								_:b0
@@ -2076,7 +2076,7 @@
 								</tbody>
 							</table>
 
-							<pre highlight class="turtle">
+							<pre cphighlight class="turtle">
 								@prefix c:&#60;https://carbonldp.com/ns/v1/platform#&#62;.
 
 								_:b0
@@ -2122,7 +2122,7 @@
 								</tbody>
 							</table>
 
-							<pre highlight class="turtle">
+							<pre cphighlight class="turtle">
 								@prefix c:&#60;https://carbonldp.com/ns/v1/platform#&#62;.
 
 								_:b0
@@ -2134,7 +2134,7 @@
 
 							<p>If you inspect, the app-admin/ container, you should see the child role specified as follows:</p>
 
-							<pre highlight class="turtle">
+							<pre cphighlight class="turtle">
 								&#60;https://local.carbonldp.com/apps/taxonomy-hub/roles/app-admin/&#62;
 									&#60;https://carbonldp.com/ns/v1/security#childRole&#62;
 										&#60;https://local.carbonldp.com/apps/taxonomy-hub/roles/user/&#62;
@@ -2154,7 +2154,7 @@
 
 							<p>The resulting ACL is shown below.</p>
 
-							<pre highlight class="turtle">
+							<pre cphighlight class="turtle">
 								&#60;https://local.carbonldp.com/apps/taxonomy-hub/~acl/&#62;
 									a &#60;https://carbonldp.com/ns/v1/security#AccessControlList&#62; ;
 									&#60;https://carbonldp.com/ns/v1/security#accessTo&#62; &#60;https://local.carbonldp.com/apps/taxonomy-hub/&#62; ;
@@ -2253,7 +2253,7 @@
 								</tbody>
 							</table>
 
-							<pre highlight class="turtle">
+							<pre cphighlight class="turtle">
 								&#60;https://local.carbonldp.com/apps/taxonomy-hub/~acl/&#62;
 									a &#60;https://carbonldp.com/ns/v1/security#AccessControlList&#62; ;
 									&#60;https://carbonldp.com/ns/v1/security#accessTo&#62; &#60;https://local.carbonldp.com/apps/taxonomy-hub/&#62; ;

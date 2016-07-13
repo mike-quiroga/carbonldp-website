@@ -2,7 +2,7 @@ import { Component, ElementRef } from "@angular/core";
 import { CORE_DIRECTIVES } from "@angular/common";
 import { Title } from "@angular/platform-browser";
 
-import HighlightDirective from "app/directives/HighlightDirective";
+import { HighlightDirective } from "carbon-panel/directives/highlight.directive";
 
 import SidebarService from "./../sidebar/service/SidebarService";
 import SidebarComponent from "./../sidebar/SidebarComponent";

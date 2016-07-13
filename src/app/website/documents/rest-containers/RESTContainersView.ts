@@ -2,8 +2,6 @@ import { Component, ElementRef } from "@angular/core";
 import { CORE_DIRECTIVES } from "@angular/common";
 import { Title } from "@angular/platform-browser";
 
-import HighlightDirective from "app/directives/HighlightDirective";
-
 import SidebarService from "./../sidebar/service/SidebarService";
 import SidebarComponent from "./../sidebar/SidebarComponent";
 
@@ -15,7 +13,7 @@ import template from "./template.html!";
 @Component( {
 	selector: "rest-containers",
 	template: template,
-	directives: [ CORE_DIRECTIVES, HighlightDirective, SidebarComponent ],
+	directives: [ CORE_DIRECTIVES, SidebarComponent ],
 	providers: [ Title, SidebarService ],
 } )
 export default class RESTContainersView {

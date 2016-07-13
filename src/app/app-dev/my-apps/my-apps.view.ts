@@ -1,16 +1,16 @@
 import { Component, provide } from "@angular/core";
-import { CORE_DIRECTIVES } from "@angular/common";
 import { ROUTER_DIRECTIVES, RouteConfig, RouterOutlet } from "@angular/router-deprecated";
 
-import { MyAppsSidebarService } from "./my-apps-sidebar.service";
-import { AppDetailView } from "./app/app-detail.view";
-import { AppsListView } from "./apps-list/apps-list.view";
-import CreateAppView from "./create-app/CreateAppView";
+import { MyAppsSidebarService } from "carbon-panel/my-apps/my-apps-sidebar.service";
+import { AppContentView } from "carbon-panel/my-apps/app-content/app-content.view";
+import { AppsCatalogView } from "carbon-panel/my-apps/apps-catalog/apps-catalog.view";
+import { CreateAppView } from "carbon-panel/my-apps/create-app/create-app.view";
 
 @Component( {
 	selector: "my-apps",
 	template: `<router-outlet></router-outlet>`,
-	directives: [ CORE_DIRECTIVES, ROUTER_DIRECTIVES, RouterOutlet ],
+	styles: [ ":host { display: block; }" ],
+	directives: [ ROUTER_DIRECTIVES, RouterOutlet ],
 	providers: [
 		provide( MyAppsSidebarService, { useClass: MyAppsSidebarService } )
 	]
@@ -19,7 +19,7 @@ import CreateAppView from "./create-app/CreateAppView";
 	{
 		path: "/",
 		as: "List",
-		component: AppsListView,
+		component: AppsCatalogView,
 		useAsDefault: true,
 		data: {
 			alias: "List",
@@ -29,7 +29,7 @@ import CreateAppView from "./create-app/CreateAppView";
 	{
 		path: "/:slug/...",
 		as: "App",
-		component: AppDetailView,
+		component: AppContentView,
 		data: {
 			alias: "App",
 			displayName: "App",
