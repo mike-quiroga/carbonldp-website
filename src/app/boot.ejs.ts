@@ -16,7 +16,7 @@ import { CARBON_SERVICES_PROVIDERS } from "angular2-carbonldp/services";
 
 import Carbon from "carbonldp/Carbon";
 
-import AppComponent from "app/AppComponent";
+import { AppComponent } from "./app.component";
 
 import { BLOG_PROVIDERS } from "app/website/blog/Blog";
 import { APP_DEV_PROVIDERS } from "app/app-dev/AppDev";
