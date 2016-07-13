@@ -73,18 +73,13 @@ import style from "./app-dev.view.css!text";
 	},
 ] )
 export class AppDevView implements OnInit {
-	element:ElementRef;
-	$element:JQuery;
-
-	sidebar:JQuery;
 
 	private headerService:HeaderService;
 	private sidebarService:SidebarService;
 	private authService:AuthService.Class;
 	private router:Router;
 
-	constructor( element:ElementRef, headerService:HeaderService, sidebarService:SidebarService, @Inject( AuthService.Token ) authService:AuthService.Class, router:Router ) {
-		this.element = element;
+	constructor( headerService:HeaderService, sidebarService:SidebarService, @Inject( AuthService.Token ) authService:AuthService.Class, router:Router ) {
 		this.headerService = headerService;
 		this.sidebarService = sidebarService;
 		this.authService = authService;
@@ -94,11 +89,6 @@ export class AppDevView implements OnInit {
 	ngOnInit():void {
 		this.populateHeader();
 		this.populateSidebar();
-	}
-
-	ngAfterViewInit():void {
-		this.$element = $( this.element.nativeElement );
-		this.sidebar = this.$element.children( ".ui.sidebar" );
 	}
 
 	toggleSidebar():void {
