@@ -33,7 +33,7 @@
 						Log in
 					</a>
 					<div *ngIf="!isActive('./Login')" class="ui login popup bottom right transition hidden">
-						<login [container]="'.login.popup'"></login>
+						<cp-login [container]="'.login.popup'"></cp-login>
 					</div>
 				</div>
 				<div *ngIf=" authService.isAuthenticated() " class="right menu">
