@@ -41,11 +41,12 @@ public class SesameACLService extends AbstractSesameLDPService implements ACLSer
 	@Override
 	public void replace( ACL newACL ) {
 		IRI aclIRI = newACL.getIRI();
+		ACL oldACL = get( aclIRI );
+		checkManageSecurityPermission(oldAcl);
+
 
 		if ( ! sourceRepository.exists( aclIRI ) ) throw new ResourceDoesntExistException();
 		validateACL( newACL );
-
-		ACL oldACL = get( aclIRI );
 
 		Map<Subject, SubjectPermissions> oldACLSubjects = getACLSubjects( oldACL );
 		Map<Subject, SubjectPermissions> newACLSubjects = getACLSubjects( newACL );
