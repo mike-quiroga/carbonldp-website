@@ -1,5 +1,6 @@
 import {Component, ElementRef, ChangeDetectorRef } from "@angular/core";
 import { CORE_DIRECTIVES } from "@angular/common";
+import { RouteConfig, RouterOutlet, RouterLink } from "@angular/router-deprecated";
 import { Title } from "@angular/platform-browser";
 
 import SidebarComponent from "./../../sidebar/SidebarComponent";
@@ -15,7 +16,7 @@ import template from "./template.html!";
 @Component( {
 	selector: "object-model",
 	template: template,
-	directives: [ CORE_DIRECTIVES, SidebarComponent, HighlightDirective ],
+	directives: [ CORE_DIRECTIVES, SidebarComponent, HighlightDirective, RouterLink ],
 	providers: [ Title ],
 } )
 export default class ObjectModelView {
@@ -41,6 +42,7 @@ export default class ObjectModelView {
 		this.initializeAccordions();
 		this.initializeTabs();
 		this.highlightCode();
+		this.initializePopUp();
 		this.initializeSidebar();
 	}
 
@@ -62,5 +64,12 @@ export default class ObjectModelView {
 		window.setTimeout( () => {
 			this.contentReady = true;
 		}, 0 );
+	}
+
+	initializePopUp():void {
+		$( ".ui.definition" )
+			.popup( {
+				on: "hover"
+			} );
 	}
 }

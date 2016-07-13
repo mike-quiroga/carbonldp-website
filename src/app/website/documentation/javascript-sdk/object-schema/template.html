@@ -47,13 +47,11 @@
 							properties to abbreviate the communication with the platform and provide useful information about the relations
 							the data holds.</p>
 
-						<p>The object schema lives in the <a>context</a> and is used to define properties and to map prefixes and
-							properties to URIs, forming a vocabulary for your applications.</p>
-
-						<p>The object schema describes the properties used in your Documents through the direct use of URIs or through prefixes
-							that expand to URIs. Allowing properties to be represented by an unambiguous identifier.
-							This helps prevent developers from stepping in each other's vocabularies, and makes data useful on the outside.
-							The URIs used to describe the properties may contain its definitions or relevant information about the properties.</p>
+						<p>The object schema lives in the <a>context object</a> and is used to describe the properties used in your Documents.
+							It maps prefixes and properties to URIs, forming a vocabulary for your applications. This allows properties to be
+							represented by an unambiguous identifier. This helps prevent developers from stepping in
+							each other's vocabularies, and makes data useful on the outside. The URIs used to describe the properties may contain
+							its definitions or relevant information about them.</p>
 
 						<p>This concept is based in part on <a href="https://www.w3.org/TR/2012/WD-json-ld-syntax-20120712/#the-context">The Context</a>
 							definition of JSON-LD.</p>
@@ -76,9 +74,9 @@
 							<div>
 								<!--@formatter:off-->
 							<pre><code highlight class="typescript">
-	{
-	    "skos": "http://www.w3.org/2004/02/skos/core#"
-	}
+							{
+							    "skos": "http://www.w3.org/2004/02/skos/core#"
+							}
 							</code></pre>
 								<!--@formatter:on-->
 							</div>

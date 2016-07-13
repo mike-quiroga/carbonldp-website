@@ -1,5 +1,6 @@
 import {Component, ElementRef, ChangeDetectorRef} from "@angular/core";
 import {Title} from "@angular/platform-browser";
+import { RouteConfig, RouterOutlet, RouterLink } from "@angular/router-deprecated";
 
 import HighlightDirective from "app/directives/HighlightDirective";
 import SidebarComponent from "./../../sidebar/SidebarComponent";
@@ -12,7 +13,7 @@ import template from "./template.html!";
 @Component( {
 	selector: "contexts",
 	template: template,
-	directives: [ SidebarComponent, HighlightDirective ],
+	directives: [ SidebarComponent, HighlightDirective, RouterLink ],
 	providers: [ Title ],
 } )
 export default class ContextsView {
