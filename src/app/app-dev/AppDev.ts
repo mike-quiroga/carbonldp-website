@@ -5,7 +5,7 @@ import { ErrorsAreaService } from "carbon-panel/errors-area/errors-area.service"
 import { DocumentsResolverService } from "carbon-panel/my-apps/app-content/explorer/document-explorer/documents-resolver.service";
 import { JobsService } from "carbon-panel/my-apps/app-content/configuration/job/jobs.service";
 import { BackupsService } from "carbon-panel/my-apps/app-content/configuration/backup/backups.service";
-import { SIDEBAR_PROVIDERS } from "./components/sidebar/Sidebar";
+import { SidebarService } from "carbon-panel/sidebar.service";
 
 export const APP_DEV_PROVIDERS = [
 	new Provider( AppDevView, {
@@ -26,5 +26,7 @@ export const APP_DEV_PROVIDERS = [
 	new Provider( BackupsService, {
 		useClass: BackupsService
 	} ),
-	SIDEBAR_PROVIDERS
+	new Provider( SidebarService, {
+		useClass: SidebarService
+	} )
 ];
