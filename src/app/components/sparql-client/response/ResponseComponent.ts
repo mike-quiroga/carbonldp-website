@@ -1,6 +1,7 @@
 import { Component, Input, Output, ElementRef, EventEmitter } from "@angular/core";
 
-import * as CodeMirrorComponent from "app/components/code-mirror/CodeMirrorComponent";
+// import * as CodeMirrorComponent from "app/components/code-mirror/CodeMirrorComponent";
+import * as CodeMirrorComponent from "carbon-panel/code-mirror/code-mirror.component";
 import { ResultsetTableComponent } from "./../resultset-table/ResultsetTableComponent";
 
 import $ from "jquery";

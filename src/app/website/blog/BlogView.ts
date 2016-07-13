@@ -9,7 +9,8 @@ import "semantic-ui/semantic";
 import BlogService from "./service/BlogService";
 import BlogPost from "./blog-post/BlogPost";
 import BlogPostThumbnailComponent from "./blog-post-thumbnail/BlogPostThumbnailComponent";
-import * as CodeMirrorComponent from "app/components/code-mirror/CodeMirrorComponent";
+// import * as CodeMirrorComponent from "app/components/code-mirror/CodeMirrorComponent";
+import * as CodeMirrorComponent from "carbon-panel/code-mirror/code-mirror.component";
 import template from "./template.html!";
 import "./style.css!";
 
