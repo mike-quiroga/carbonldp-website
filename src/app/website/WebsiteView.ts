@@ -12,7 +12,6 @@ import BlogView from "app/website/blog/BlogView";
 import BlogPostView from "app/website/blog/blog-post/BlogPostView";
 import SignupThanksView from "./signup-thanks/SignupThanksView";
 
-import SPARQLClientComponent from "app/components/sparql-client/SPARQLClientComponent";
 import UIExamplesView from "app/website/ui-examples/UIExamplesView";
 
 import HeaderComponent from "app/website/header/HeaderComponent";
@@ -37,7 +36,6 @@ import "./style.css!";
 
 	{ path: "documents/...", as: "Documents", component: DocumentsComponent },
 
-	{ path: "sparql-client", as: "SPARQLClient", component: SPARQLClientComponent },
 	{ path: "ui-examples", as: "UIExamples", component: UIExamplesView },
 	{ path: "signup-thanks", as: "SignupThanks", component: SignupThanksView },
 ] )
