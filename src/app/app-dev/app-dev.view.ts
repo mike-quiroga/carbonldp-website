@@ -16,7 +16,7 @@ import { ErrorsAreaService } from "carbon-panel/errors-area/errors-area.service"
 
 import FooterComponent from "./footer/FooterComponent";
 
-import DashboardView from "./dashboard/DashboardView";
+import { DashboardView } from "./dashboard/dashboard.view";
 import { MyAppsView } from "./my-apps/my-apps.view";
 
 import $ from "jquery";
