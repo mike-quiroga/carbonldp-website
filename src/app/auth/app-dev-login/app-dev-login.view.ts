@@ -6,7 +6,7 @@ import Credentials from "carbonldp/Auth/Credentials";
 import { NotAuthenticated } from "angular2-carbonldp/decorators";
 import { LoginComponent } from "carbon-panel/login.component";
 
-import FooterComponent from "app/app-dev/footer/FooterComponent";
+import { FooterComponent } from "../../app-dev/footer/footer.component";
 
 import $ from "jquery";
 import "semantic-ui/semantic";

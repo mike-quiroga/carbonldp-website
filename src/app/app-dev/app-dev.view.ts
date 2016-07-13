@@ -14,8 +14,7 @@ import { MenuBarComponent } from "carbon-panel/menu-bar.component";
 import { ErrorsAreaComponent } from "carbon-panel/errors-area/errors-area.component";
 import { ErrorsAreaService } from "carbon-panel/errors-area/errors-area.service";
 
-import FooterComponent from "./footer/FooterComponent";
-
+import { FooterComponent } from "./footer/footer.component";
 import { DashboardView } from "./dashboard/dashboard.view";
 import { MyAppsView } from "./my-apps/my-apps.view";
 
