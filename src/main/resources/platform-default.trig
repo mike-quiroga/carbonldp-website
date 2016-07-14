@@ -84,7 +84,8 @@
 			cs:CreateAccessPoint,
 			cs:Download,
 			cs:Upload,
-			cs:AddMember.
+			cs:AddMember,
+			cs:ManageSecurity.
 	<platform/~acl/#ace-235235234235>
 		a cs:AccessControlEntry;
 		cs:subjectClass cs:PlatformRole;
