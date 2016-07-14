@@ -1,4 +1,4 @@
-# 0.5.17 (July 14, 2016)
+# 0.5.18 (July 14, 2016)
 - Fix @angular package version to rc.1
 - Remove the following from App Dev:
   - Animated carbon logo component.
@@ -22,7 +22,15 @@
 - Remove unusued imports and variables from all AppDev components.
 - Change MyApps component to use the whole component from carbon panel.
 
-# 0.5.17 (July 8, 2016)
+# 0.5.17 (July 11, 2016)
+- Add partial draft JavaScript SDK Object Model.
+- Add global styles for documentation.
+- Complete draft JavaScript SDK Contexts.
+- Content improvements/corrections to Getting Started with the REST API.
+- Fix WebsiteView to scroll to Top on route change.
+- Combine documents into documentation.
+
+# 0.5.16 (June 8, 2016)
 - Fix bug with SPARQL Editor that hides the initial h from http when displaying results.
 - Fix my-apps action buttons to redirect to proper route.
 - Add auth ticket to URL when trying to download backups to BackupsService and BackupsListComponent.
