@@ -1,8 +1,8 @@
 package com.carbonldp.repository.updates;
 
 import com.carbonldp.Vars;
-import org.openrdf.model.Resource;
-import org.openrdf.repository.RepositoryException;
+import org.eclipse.rdf4j.model.Resource;
+import org.eclipse.rdf4j.repository.RepositoryException;
 
 /**
  * @author MiguelAraCo

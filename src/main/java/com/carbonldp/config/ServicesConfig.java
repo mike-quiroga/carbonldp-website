@@ -32,7 +32,7 @@ import com.carbonldp.platform.api.PlatformAPIService;
 import com.carbonldp.sparql.SPARQLService;
 import com.carbonldp.sparql.SesameSPARQLService;
 import com.carbonldp.spring.ServicesInvoker;
-import org.openrdf.spring.SesameConnectionFactory;
+import org.eclipse.rdf4j.spring.SesameConnectionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

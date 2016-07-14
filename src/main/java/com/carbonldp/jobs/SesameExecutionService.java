@@ -7,12 +7,12 @@ import com.carbonldp.rdf.RDFDocument;
 import com.carbonldp.rdf.RDFResource;
 import com.carbonldp.repository.ConnectionRWTemplate;
 import org.eclipse.jetty.server.ConnectionFactory;
-import org.openrdf.model.BNode;
-import org.openrdf.model.IRI;
-import org.openrdf.model.Value;
-import org.openrdf.model.impl.LinkedHashModel;
-import org.openrdf.model.vocabulary.RDF;
-import org.openrdf.spring.SesameConnectionFactory;
+import org.eclipse.rdf4j.model.BNode;
+import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.Value;
+import org.eclipse.rdf4j.model.impl.LinkedHashModel;
+import org.eclipse.rdf4j.model.vocabulary.RDF;
+import org.eclipse.rdf4j.spring.SesameConnectionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**

@@ -3,12 +3,12 @@ package com.carbonldp.test.rdf;
 import com.carbonldp.rdf.RDFDocument;
 import com.carbonldp.rdf.RDFDocumentRepository;
 import com.carbonldp.test.AbstractIT;
-import org.openrdf.model.IRI;
-import org.openrdf.model.Model;
-import org.openrdf.model.impl.AbstractModel;
-import org.openrdf.model.impl.LinkedHashModel;
-import org.openrdf.model.impl.SimpleValueFactory;
-import org.openrdf.model.util.Models;
+import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.Model;
+import org.eclipse.rdf4j.model.impl.AbstractModel;
+import org.eclipse.rdf4j.model.impl.LinkedHashModel;
+import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
+import org.eclipse.rdf4j.model.util.Models;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.testng.annotations.Test;
 

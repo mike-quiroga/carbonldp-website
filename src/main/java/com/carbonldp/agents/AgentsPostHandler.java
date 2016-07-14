@@ -3,7 +3,7 @@ package com.carbonldp.agents;
 import com.carbonldp.authentication.AnonymousAuthenticationToken;
 import com.carbonldp.ldp.containers.BasicContainer;
 import com.carbonldp.ldp.web.AbstractRDFPostRequestHandler;
-import org.openrdf.model.IRI;
+import org.eclipse.rdf4j.model.IRI;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 

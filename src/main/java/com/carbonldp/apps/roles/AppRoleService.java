@@ -1,7 +1,7 @@
 package com.carbonldp.apps.roles;
 
 import com.carbonldp.apps.AppRole;
-import org.openrdf.model.IRI;
+import org.eclipse.rdf4j.model.IRI;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.util.Collection;

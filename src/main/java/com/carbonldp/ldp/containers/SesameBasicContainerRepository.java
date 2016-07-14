@@ -3,10 +3,10 @@ package com.carbonldp.ldp.containers;
 import com.carbonldp.ldp.containers.ContainerDescription.Type;
 import com.carbonldp.rdf.RDFDocumentRepository;
 import com.carbonldp.rdf.RDFResourceRepository;
-import org.openrdf.model.IRI;
-import org.openrdf.model.Statement;
-import org.openrdf.model.Value;
-import org.openrdf.spring.SesameConnectionFactory;
+import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.Statement;
+import org.eclipse.rdf4j.model.Value;
+import org.eclipse.rdf4j.spring.SesameConnectionFactory;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;

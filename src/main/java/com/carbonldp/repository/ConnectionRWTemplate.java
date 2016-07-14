@@ -2,12 +2,12 @@ package com.carbonldp.repository;
 
 import com.carbonldp.exceptions.StupidityException;
 import com.carbonldp.repository.txn.RepositoryRuntimeException;
-import org.openrdf.model.Statement;
-import org.openrdf.query.MalformedQueryException;
-import org.openrdf.repository.RepositoryConnection;
-import org.openrdf.repository.RepositoryException;
-import org.openrdf.repository.RepositoryResult;
-import org.openrdf.spring.SesameConnectionFactory;
+import org.eclipse.rdf4j.model.Statement;
+import org.eclipse.rdf4j.query.MalformedQueryException;
+import org.eclipse.rdf4j.repository.RepositoryConnection;
+import org.eclipse.rdf4j.repository.RepositoryException;
+import org.eclipse.rdf4j.repository.RepositoryResult;
+import org.eclipse.rdf4j.spring.SesameConnectionFactory;
 
 public class ConnectionRWTemplate {
 	private final SesameConnectionFactory connectionFactory;

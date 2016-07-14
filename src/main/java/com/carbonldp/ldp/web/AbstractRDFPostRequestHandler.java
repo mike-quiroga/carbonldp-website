@@ -19,10 +19,10 @@ import com.carbonldp.web.exceptions.BadRequestException;
 import com.carbonldp.web.exceptions.ConflictException;
 import com.carbonldp.web.exceptions.NotFoundException;
 import org.joda.time.DateTime;
-import org.openrdf.model.IRI;
-import org.openrdf.model.impl.AbstractModel;
+import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.impl.AbstractModel;
 
-import org.openrdf.model.impl.SimpleValueFactory;
+import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;

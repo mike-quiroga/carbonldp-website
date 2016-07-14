@@ -6,7 +6,7 @@ import com.carbonldp.exceptions.ExceptionConverter;
 import com.carbonldp.utils.HTTPUtil;
 import com.carbonldp.web.converters.AbstractModelMessageConverter;
 import org.apache.logging.log4j.ThreadContext;
-import org.openrdf.model.impl.AbstractModel;
+import org.eclipse.rdf4j.model.impl.AbstractModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.Marker;

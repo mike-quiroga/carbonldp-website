@@ -4,8 +4,8 @@ import com.carbonldp.Vars;
 import com.carbonldp.apps.App;
 import com.carbonldp.exceptions.ResourceDoesntExistException;
 import com.carbonldp.web.AbstractUniqueFilter;
-import org.openrdf.model.IRI;
-import org.openrdf.model.impl.SimpleValueFactory;
+import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import org.springframework.http.HttpStatus;
 
 import javax.servlet.http.HttpServletRequest;

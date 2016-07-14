@@ -1,13 +1,13 @@
-package org.openrdf.sail.nativerdf;
+package org.eclipse.rdf4j.sail.nativerdf;
 
 import com.carbonldp.repository.security.RepositorySecurityAccessGranter;
 import com.carbonldp.repository.security.RepositorySecurityAccessGrantersHolder;
 import com.carbonldp.repository.security.RepositorySecuritySwitch;
-import info.aduna.iteration.CloseableIteration;
-import org.openrdf.model.Resource;
-import org.openrdf.model.Statement;
-import org.openrdf.model.Value;
-import org.openrdf.sail.SailException;
+import org.eclipse.rdf4j.common.iteration.CloseableIteration;
+import org.eclipse.rdf4j.model.Resource;
+import org.eclipse.rdf4j.model.Statement;
+import org.eclipse.rdf4j.model.Value;
+import org.eclipse.rdf4j.sail.SailException;
 
 import java.io.File;
 import java.io.IOException;
@@ -27,7 +27,7 @@ public class SecuredNativeSailStore extends NativeSailStore {
 	}
 
 	@Override
-	CloseableIteration<? extends Statement, SailException> createStatementIterator( Resource subj, org.openrdf.model.URI pred, Value obj, boolean explicit, Resource... contexts ) throws IOException {
+	CloseableIteration<? extends Statement, SailException> createStatementIterator( Resource subj, org.eclipse.rdf4j.model.URI pred, Value obj, boolean explicit, Resource... contexts ) throws IOException {
 		CloseableIteration<? extends Statement, SailException> originalIteration = super.createStatementIterator( subj, pred, obj, explicit, contexts );
 
 		return new SecuredRepositoryResult( originalIteration );

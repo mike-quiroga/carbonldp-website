@@ -1,6 +1,6 @@
 package com.carbonldp.sparql;
 
-import org.openrdf.query.GraphQueryResult;
+import org.eclipse.rdf4j.query.GraphQueryResult;
 
 public class SPARQLGraphResult implements SPARQLResult<GraphQueryResult> {
 	private GraphQueryResult result;
