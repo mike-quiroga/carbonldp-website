@@ -21,8 +21,8 @@ public class UpdateAction1o0o0 extends AbstractUpdateAction {
 
 	private static String configurationFile;
 	private static final String resourcesFile = "platform-default.trig";
-	private static final String usernameLine = "platform.system.agent.username";
-	private static final String passwordLine = "platform.system.agent.password";
+	private static final String usernameLine = "platform.system-agent.username";
+	private static final String passwordLine = "platform.system-agent.password";
 
 	@Override
 	public void execute() throws Exception {
