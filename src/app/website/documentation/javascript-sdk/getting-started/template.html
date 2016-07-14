@@ -19,7 +19,7 @@
 				<article class="ui vertical segment" id="article">
 
 					<header>
-						<h1 class="ui header">Getting Started with the JavaScript SDK</h1>
+						<h1 class="ui header">Getting started with the JavaScript SDK</h1>
 					</header>
 
 					<div class="ui icon yellow message">
@@ -41,7 +41,7 @@
 						</div>
 					</div>
 					<section>
-						<h2 class="ui header">Prerequisite Knowledge</h2>
+						<h2 class="ui header">Prerequisite knowledge</h2>
 						<p>
 							To better understand this guide and its code examples, a working knowledge of the following prerequisite topics is required.
 						</p>
@@ -211,24 +211,27 @@
 					</section>
 
 					<section>
-						<h2 class="ui header">Creating Contexts</h2>
+						<h2 class="ui header">Creating contexts</h2>
 						<p>
 							Now that you have your brand new app (If you don't have your app yet, please
-							<a>create it</a>! (link) ). Let's start with some basic things you can do, like creating
-							documents, saving documents, creating links between Documents, etc.
+							<a>create it</a>! (link) ). Let's start with some basic things you can do, like creating,
+							saving, linking <span class="highlight">documents</span>, etc.
+						</p>
+						<!--TODO add link to Create App from App Dev-->
+						<p>
+							Before you can manipulate <span class="highlight">Carbon objects</span>, you need to
+							create a <span class="highlight">Carbon platform context</span>. This
+							<span class="highlight">context</span> will provide a reference to the
+							<span class="highlight">Carbon platform instance</span> you are working with. (For more
+							about Carbon contexts see: <a [routerLink]="['../JavaScriptSDKContexts']">Contexts</a>)
 						</p>
 
-						<p>
-							Before you can manipulate Carbon objects, you need to create a Carbon platform context.
-							This context will provide a reference to the Carbon platform instance you are
-							working with. (For more about Carbon contexts see: <a [routerLink]="['../JavaScriptSDKContexts']">Contexts</a>)
-						</p>
-
-						<p>
-							After you create a Carbon platform context, you need an Application
+						<p>After you create a <span class="highlight">Carbon platform context</span>, you need an
+							<span class="highlight">application</span>
 							<a [routerLink]="[ '../JavaScriptSDKContexts' ]">context</a> that references the
-							application on which you will be working on. The app context is retrieve from a
-							previously created application</p>
+							<span class="highlight">application</span> on which you will be working on. The
+							<span class="highlight">app context</span> is retrieved from a previously created
+							<span class="highlight">application</span>.</p>
 						<div>
 							<div class="ui top attached tabular menu">
 								<a class="item active" data-tab="typescript">TypeScript</a>
@@ -263,19 +266,21 @@
 							</div>
 						</div>
 						<p>
-							The <code>apps.get()</code> method returns a Promise that when resolved, will give you the
-							app <a [routerLink]="[ '../JavaScriptSDKContexts' ]">context</a> you need.
+							The <code>apps.get()</code> method returns a promise that when resolved, will give you the
+							<a [routerLink]="[ '../JavaScriptSDKContexts' ]"><span class="highlight">app context</span>
+							</a> you need.
 						</p>
 
 					</section>
 
 					<section>
-						<h2 class="ui header">Retrieving a Document</h2>
-						<!-- TODO: Link to the explanation of the root Document -->
-						<p>
-							Now with your app <a [routerLink]="[ '../JavaScriptSDKContexts' ]">context</a> you can start
-							working with your app's data. You'll retrieve your <a>root document</a>, which is the root of all
-							your document nodes.
+						<h2 class="ui header">Retrieving a document</h2>
+
+						<p>Now with your <span class="highlight">app</span>
+							<a [routerLink]="[ '../JavaScriptSDKContexts' ]">context</a> you can start working with
+							your app's data. You'll retrieve your
+							<a [routerLink]="[ '../JavaScriptSDKObjectModel']">root document</a>, which is the root of
+							all your <span class="highlight">document</span> nodes.
 						</p>
 						<div>
 							<div class="ui top attached tabular menu">
@@ -326,40 +331,59 @@
 							</div>
 						</div>
 						<p>
-							The <code>documents.get()</code> method accepts a relative URI. That relative URI is going
-							to be resolved to an absolute URI using the context in which we are working on (in this
-							case <code>appContext</code>). To see to what URI it'll resolve you can execute
-							<code>appContext.resolve( "/" )</code>.
+							The <code>documents.get()</code> method accepts a relative
+							<a class="outsidelink" target="_blank"
+							   href="https://www.w3.org/TR/ld-glossary/#uniform-resource-identifier">URI</a>. That
+							relative <a class="outsidelink" target="_blank"
+							            href="https://www.w3.org/TR/ld-glossary/#uniform-resource-identifier">URI</a>
+							is going to be resolved to an absolute <a class="outsidelink" target="_blank"
+							                                          href="https://www.w3.org/TR/ld-glossary/#uniform-resource-identifier">URI</a>
+							using the <span class="highlight">context</span> in which we are working on (in this case
+							<code>appContext</code>). To see to what <a class="outsidelink" target="_blank"
+							                                            href="https://www.w3.org/TR/ld-glossary/#uniform-resource-identifier">URI</a>
+							it'll resolve you can execute <code>appContext.resolve( "/" )</code>.
 						</p>
 					</section>
 
 					<section>
-						<h2 class="ui header">Creating a Document</h2>
-						<p>
-							The root document that you just retrieved can be seen as the root folder of all your documents.
-							It is not recommended to modify it. Instead you should create children
-							documents to hold your data.
+						<h2 class="ui header">Creating a document</h2>
+						<p>The <span class="highlight">root document</span> that you just retrieved can be seen as the
+							root folder of all your <span class="highlight">documents</span>.It is not recommended to
+							modify it. Instead you should create <span class="highlight">child documents</span> to hold
+							your data.
 						</p>
-						<p>
-							You can start by creating documents in memory, which will need to be persisted later on.
-							To create an in memory document you can use two methods:
+						<p>You can start by creating <span class="highlight">documents in memory</span>, which will need
+							to be persisted later on. To create an <span class="highlight">in memory document</span> you
+							can use two methods:
 						</p>
 						<ul>
-							<li><code><a>Document.Factory.create()</a></code> to create an empty document, in which properties, fragments and named fragments could be defined later on.</li>
-							<li><code><a>Document.Factory.createFrom()</a></code> to create a document from a javascript object.</li>
+							<li><code><a>Document.Factory.create()</a></code> to create an empty
+								<span class="highlight">document</span>, in which
+								<span class="highlight">properties</span>, <span class="highlight">fragments</span>
+								and <span class="highlight">named fragments</span> could be defined later on.
+							</li>
+							<li><code><a>Document.Factory.createFrom()</a></code> to create a
+								<span class="highlight">document</span> from a JavaScript object.
+							</li>
 						</ul>
 
 						<p>
-							In both cases, the document created will not be a persisted document, until you specifically do so
-							as will be discussed in section <a href="#persisting-a-document">Persisting a Document</a>.
+							In both cases, the <span class="highlight">document</span> created will not be a
+							<span class="highlight">persisted document</span>, until you specifically do so
+							as will be discussed in section Persisting a document.
+							<!--TODO: Add link to section-->
 						</p>
 
-						<!-- TODO: Link to the Object Model document -->
-						<p>
-							You can add properties to an in memory document as you will do it in any JavaScript object. To add fragments or named fragments you
-							should use the methods <code>document.createFragment()</code> or <code>document.createNamedFragment()</code> respectively.
-							In the next example, you will see how to create an in memory document using both methods discussed, as well as how to add properties, fragments
-							and named fragments to it.
+						<p>You can add <span class="highlight">properties</span> to an
+							<span class="highlight">in memory document</span> as you will do it in any JavaScript
+							object. To add <span class="highlight">fragments</span> or
+							<span class="highlight">named fragments</span> you should use the methods
+							<code>document.createFragment()</code> or <code>document.createNamedFragment()</code>
+							respectively. In the next example, you will see how to create an
+							<span class="highlight">in memory document</span> using both methods discussed, as well as
+							how to add <span class="highlight">properties</span>,
+							<span class="highlight">fragments</span> and <span class="highlight">named fragments</span>
+							to it.
 						</p>
 
 						<div>
@@ -458,18 +482,24 @@
 					</section>
 
 					<section>
-						<h2 class="ui header">Persisting a Document</h2>
-						<p>
-							A persisted document is a document that has been saved in Carbon through the method
-							<a>createChild()</a>. The platform handles the fundamental parent-child relation between documents. Every document
-							must be the child of a previous existing document, being the root document the first
-							parent in your application. As mentioned in <a href="#retrieving-a-document">Retrieving a Document</a>, the root Document id is "/".
-						</p>
+						<h2 class="ui header">Persisting a document</h2>
 
+						<p>A <span class="highlight">persisted document</span> is a <span class="highlight">document</span>
+							that has been saved in <span class="highlight">Carbon</span> through the method
+							<code>createChild()</code>. The <span class="highlight">platform</span> handles the
+							fundamental <span class="highlight">parent-child relation</span> between
+							<span class="highlight">documents</span>. Every <span class="highlight">document</span>
+							must be the child of a previous existing <span class="highlight">document</span>, being the
+							<span class="highlight">root document</span> the first
+							parent in your <span class="highlight">application</span>. As mentioned in Retrieving a
+							document, the <span class="highlight">root document</span> id is "/".
+						</p>
+						<!--TODO add link to section Retrieving a document-->
 						<p>
-							The <a>createChild()</a> method can be invoked with different signatures. Is a
-							requisite to provide the parent id and a child document or JavaScript object from which
-							the child document can be created.
+							The <code>createChild()</code> method can be invoked with different signatures. It is a
+							requisite to provide the <span class="highlight">parent</span> id and a
+							<span class="highlight">document</span> or JavaScript object from which
+							the <span class="highlight">child document</span> can be created.
 						</p>
 
 						<div>
@@ -556,16 +586,22 @@
 								<!--@formatter:on-->
 							</div>
 						</div>
-						<p>The <code>documents.createChild()</code> method returns an unresolved document pointer,
-							that when resolved gives you access to the new document's content. You can provide an
-							id to the document you are creating as a second parameter of the method. The id is known
-							as the child-id/ and it can be any string that will be taken as a suggestion by Carbon
-							and will ultimately be converted into a valid id for the document you are creating. With this id
-							the new document can be retrieve, through the method <code>get()</code> or, as mentioned
-							before, through the resolution of the document pointer. This will be discussed in the
-							section <a>Resolving a document pointer</a>. </p>
-
-						<p>The next sample code shows the method createChild used with the child-id parameter.</p>
+						<p>The <code>documents.createChild()</code> method returns an unresolved
+							<span class="highlight">document pointer</span>, that when resolved gives you access to
+							the new <span class="highlight">document's</span> content. You can provide an
+							<span class="highlight">id</span> to the <span class="highlight">document</span> you are
+							creating as a second parameter of the method. The <span class="highlight">id</span> is known
+							as the <code>child-id/</code> and it can be any string that will be taken as a suggestion
+							by <span class="highlight">Carbon</span> and will ultimately be converted into a valid
+							<span class="highlight">id</span> for the <span class="highlight">document</span> you are
+							creating. With this <span class="highlight">id</span> the new
+							<span class="highlight">document</span> can be retrieve, through the method
+							<code>get()</code> or, as mentioned before, through the resolution of the
+							<span class="highlight">document pointer</span>. This will be discussed in the
+							section Resolving a document pointer.</p>
+						<!-- TODO: add link to section Resolving a document pointer-->
+						<p>The next sample code shows the method <code>createChild()</code> used with the
+							<code>child-id</code> parameter.</p>
 
 						<div>
 							<div class="ui top attached tabular menu">
@@ -649,14 +685,14 @@
 					</section>
 
 					<section>
-						<h2 class="ui header">Resolving a Document Pointer</h2>
+						<h2 class="ui header">Resolving a document pointer</h2>
 
-						<p>
-							In the last section you created a persisted document obtaining
-							an unresolved document pointer to your new document, with the property
-							<code>documentPointer.id</code>.
-							To access the document information you need to resolve this pointer,
-							as shown in the next example.
+						<p>In the last section you created a <span class="highlight">persisted document</span>
+							obtaining an unresolved <span class="highlight">document pointer</span> to your new
+							<span class="highlight">document</span>, with the <span class="highlight">property</span>
+							<code>documentPointer.id</code>. To access the <span class="highlight">document</span>
+							information you need to resolve this <span class="highlight">pointer</span>, as shown in
+							the next example.
 						</p>
 
 						<div>
@@ -717,21 +753,29 @@
 					</section>
 
 					<section>
-						<h2 class="ui header">Modifying and Saving a Document</h2>
+						<h2 class="ui header">Modifying and saving a document</h2>
 
-						<p>
-							All documents in Carbon can be modified. However all the changes done to a document,
-							are done in memory. To persist the modifications the documents need to be saved.
+						<p>All <span class="highlight">documents</span> in <span class="highlight">Carbon</span> can
+							be modified. However all the changes done to a <span class="highlight">document</span>,
+							are done in memory. To persist the modifications the
+							<span class="highlight">documents</span> need to be saved.
 						</p>
 
 						<p>To modify a document you should:</p>
 						<ul>
-							<li>Retrieve the document:
+							<li>Retrieve the <span class="highlight">document</span>:
 								<ul>
-									<li><code>get()</code> using the document id as describe in <a href="#retrieving-a-document">Retrieving a Document</a></li>
+									<li><code>get()</code> using the <span class="highlight">document</span> id as
+										describe in Retrieving a document
+									</li>
+									<!--TODO: add linkt to section retrieving a document-->
 								</ul>
 							</li>
-							<li>Modify the document. Add, modify or delete properties, fragments, named fragments.</li>
+							<li>Modify the <span class="highlight">document</span>: Add, modify or delete
+								<span class="highlight">properties</span>,
+								<span class="highlight">fragments</span>,
+								<span class="highlight">named fragments</span>.
+							</li>
 							<li>Save the changes through <code>document.save()</code> method.</li>
 						</ul>
 
@@ -795,10 +839,13 @@
 					</section>
 
 					<section>
-						<h2 class="ui header">Deleting a Document</h2>
+						<h2 class="ui header">Deleting a document</h2>
 						<p>
-							The method <code>delete</code> of <a>Carbon.Documents</a> class allows you to delete any persisted document,
-							by providing its URI
+							The method <code>delete</code> of <a target="_blank"
+							                                     href="https://github.com/CarbonLDP/CarbonLDP-JS-SDK/tree/develop/doc#Carbon-Documents">Carbon.Documents</a>
+							class allows you to delete any <span class="highlight">persisted document</span>,
+							by providing its <a class="outsidelink" target="_blank"
+							                    href="https://www.w3.org/TR/ld-glossary/#uniform-resource-identifier">URI</a>.
 						</p>
 
 						<div>
@@ -842,32 +889,53 @@
 					</section>
 
 					<section>
-						<h2 class="ui header">Linking Documents</h2>
+						<h2 class="ui header">Linking documents</h2>
 
-						<p>
-							Carbon documents can be related to other documents through their properties.
-							These properties can be defined manually, however,
-							to simplify the relation management Carbon handles specific properties such as contains
-							and members, belonging to the parent-child relation and membership relation respectively.
-							Carbon provides you with methods to handle both, these properties and the list of documents
-							related through them.
+						<p><span class="highlight">Carbon documents</span> can be related to other
+							<span class="highlight">documents</span> through their
+							<span class="highlight">properties</span>. These <span class="highlight">properties</span>
+							can be defined manually, however, to simplify the relation management
+							<span class="highlight">Carbon</span> handles specific
+							<span class="highlight">properties</span> such as <code>contains</code>
+							and <code>members</code>, belonging to the
+							<span class="highlight">parent-child relation</span> and
+							<span class="highlight">membership relation</span> respectively.
+							<span class="highlight">Carbon</span> provides you with methods to handle both, these
+							<span class="highlight">properties</span> and the
+							<span class="highlight">list of documents</span> related through them.
 						</p>
 
 						<section>
 							<h3 class="ui header">Parent-child Relation</h3>
 							<p>
-								The parent child relation exists as a rule for all documents and is automatically
-								maintained by Carbon as a <a>hard link</a> between two documents. When a new document is persisted, the parent-child relation is
-								created and from this you can obtained all the documents created as children
-								of any given document, in the form of pointers. This can be accomplished through
+								The <span class="highlight">parent child relation</span> exists as a rule for all
+								<span class="highlight">documents</span> and is automatically maintained by
+								<span class="highlight">Carbon</span> as a <span class="highlight">hard link</span>
+								between two <span class="highlight">documents</span>. A
+								<span class="highlight">hard link</span> is related to the data structure in
+								<span class="highlight">Carbon</span>, when a
+								<span class="highlight">document</span> is deleted all its
+								<span class="highlight">child documents</span> will be deleted as well.
+
+								When a new <span class="highlight">document</span> is persisted, the
+								<span class="highlight">parent-child relation</span> is created. Allowing you to
+								obtained all the <span class="highlight">documents</span> created as children
+								of any given <span class="highlight">document</span>, in the form of
+								<span class="highlight">pointers</span>. This can be accomplished through
 								the methods:
 							</p>
 							<ul>
-								<li>listChildren: Return all the children of the container specified.</li>
-								<li>getChildren: Retrieves all the children of a document and their content.</li>
+								<li><code>listChildren</code>: Return all the children of the
+									<span class="highlight">container</span> specified.
+								</li>
+								<li><code>getChildren</code>: Retrieves all the children of a
+									<span class="highlight">document</span> and their content.
+								</li>
 							</ul>
 
-							<p>From <a>Carbon.Documents</a> class.</p>
+							<p>From <a target="_blank"
+							           href="https://github.com/CarbonLDP/CarbonLDP-JS-SDK/tree/develop/doc#Carbon-Documents">Carbon.Documents</a>
+								class.</p>
 
 							<div>
 								<div class="ui top attached tabular menu">
@@ -929,22 +997,43 @@
 						<section>
 							<h3 class="ui header">Membership Relation</h3>
 
-							<p>
-								The membership relation is a property that exists in all Carbon documents that relates
-								documents with other documents through a <a>soft link</a>. All Carbon documents can manage
-								one member list per document. Members can be added to, removed from, listed or retrieved using these methods.
+							<p>The <span class="highlight">membership relation</span> is a
+								<span class="highlight">property</span> that exists in all
+								<span class="highlight">Carbon documents</span> that relates
+								<span class="highlight">documents</span> with other
+								<span class="highlight">documents through</span> a
+								<span class="highlight">soft link</span>. All
+								<span class="highlight">Carbon documents</span> can manage one member
+								<span class="highlight">list</span> per <span class="highlight">document</span>.
+								<span class="highlight">Members</span> can be added to, removed from, listed or
+								retrieved using these methods.
 							</p>
 
 							<ul>
-								<li><code>addMember</code> | <code>addMembers</code>: Add the specified resource/resources URIs or pointers as
-									member/members of the document container specified.
+								<li><code>addMember</code> | <code>addMembers</code>: Add the specified
+									<span class="highlight">resource/resources</span> <a class="outsidelink" target="_blank"
+									                                                     href="https://www.w3.org/TR/ld-glossary/#uniform-resource-identifier"
+									>URIs</a> or <span class="highlight">pointers</span> as
+									<span class="highlight">member/members</span> of the
+									<span class="highlight">document</span> container specified.
 								</li>
-								<li><code>removeMember</code> | <code>removeMembers</code>: Remove the specified resource/resources URIs or
-									pointers as member/members of the document container specified.
+								<li><code>removeMember</code> | <code>removeMembers</code>: Remove the specified
+									<span class="highlight">resource/resources</span> <a class="outsidelink" target="_blank"
+									                                                     href="https://www.w3.org/TR/ld-glossary/#uniform-resource-identifier"
+									>URIs</a> or <span class="highlight">pointers</span> as
+									<span class="highlight">member/members</span> of the
+									<span class="highlight">document</span> container specified.
 								</li>
-								<li><code>removeAllMembers</code>: Remove all the members of the document container specified.</li>
-								<li><code>listMembers</code>: Retrieves all the members of a document with out resolving them.</li>
-								<li><code>getMembers</code>: Retrieves all the members of a document and their contents.</li>
+								<li><code>removeAllMembers</code>: Remove all the
+									<span class="highlight">members</span> of the <span class="highlight">document</span>
+									container specified.
+								</li>
+								<li><code>listMembers</code>: Retrieves all the <span class="highlight">members</span>
+									of a <span class="highlight">document</span> with out resolving them.
+								</li>
+								<li><code>getMembers</code>: Retrieves all the <span class="highlight">members</span>
+									of a <span class="highlight">document</span> and their contents.
+								</li>
 							</ul>
 
 							<p>From <a>Carbon.Documents</a> class.</p>
@@ -1031,24 +1120,29 @@
 
 
 					<section>
-						<h2 class="ui header">Creating an Access Point</h2>
+						<h2 class="ui header">Creating an access point</h2>
 						<p>
-							As mentioned in the previous section, documents can handle up to one member relation within them.
-							To manage several member relations Documents need the help of <a>access points</a>
+							As mentioned in the previous section, <span class="highlight">documents</span> can handle
+							up to one <span class="highlight">member relation</span> within them. To manage several
+							<span class="highlight">member relations</span> <span class="highlight">documents</span>
+							need the help of <span class="highlight">access points</span>.
 						</p>
 
 						<p>
-							First you need to create the access point in memory. Like a document, an Access Point can be created as
-							a new empty access point or from a pre existing JavaScript object with any number of properties,
+							First you need to create the <span class="highlight">access point</span> in memory.
+							Like a <span class="highlight">document</span>, an <span class="highlight">access point</span>
+							can be created as a new empty <span class="highlight">access point</span> or from a pre
+							existing JavaScript object with any number of <span class="highlight">properties</span>,
 							using the methods:
 						</p>
 						<ul>
-							<li><code>create()</code> creates an access point</li>
-							<li><code>createFrom()</code> creates an access point from a JavaScript object</li>
+							<li><code>create()</code> creates an <span class="highlight">access point</span></li>
+							<li><code>createFrom()</code> creates an <span class="highlight">access point</span> from a JavaScript object</li>
 						</ul>
 						<p>
-							From the <a>Carbon.AccessPoint.Factory</a> class. Both of these methods have two required parameters
-							and an optional one:
+							From the <a target="_blank"
+							            href="https://github.com/CarbonLDP/CarbonLDP-JS-SDK/tree/develop/doc#Carbon-AccessPoints">Carbon.AccessPoint.Factory</a>
+							class. Both of these methods have two required parameters and an optional one:
 						</p>
 						<ul>
 							<li><code>membershipResource</code></li>
@@ -1108,14 +1202,25 @@
 					</section>
 
 					<section>
-						<h2 class="ui header">Persisting an Access Point</h2>
-						<p>After creating an access point in memory it must be persisted.</p>
-						<p>Now that you have an access point object you can create a persisted access point, by passing it
-							to the <code>createAccessPoint()</code> method from <a>Carbon.Documents</a> class. This methods will
-							create a persisted access point for a document specified in the "parent" URI passed as a parameter.
-							Remember this URI must match the URI of the membership resource defined in the access point in memory.
-							You can also call this method from a persisted document with the same name method,
-							<code>createAccessPoint()</code> from <a>Carbon.PersistedDocument.Factory</a> class.</p>
+						<h2 class="ui header">Persisting an access point</h2>
+						<p>After creating an <span class="highlight">access point</span> in memory it must be persisted.</p>
+						<p>Now that you have an <span class="highlight">access point</span> object you can create a
+							<span class="highlight">persisted access point</span>, by passing it to the <code>createAccessPoint()</code>
+							method from
+							<a target="_blank"
+							   href="https://github.com/CarbonLDP/CarbonLDP-JS-SDK/tree/develop/doc#Carbon-Documents">Carbon.Documents</a>
+							class. This methods will create a <span class="highlight">persisted access point</span> for
+							a <span class="highlight">document specified</span> in the "parent" <a class="outsidelink" target="_blank"
+							                                                                     href="https://www.w3.org/TR/ld-glossary/#uniform-resource-identifier"
+							>URI</a> passed as a parameter. Remember this <a class="outsidelink" target="_blank"
+							                                                 href="https://www.w3.org/TR/ld-glossary/#uniform-resource-identifier"
+							>URI</a> must match the <a class="outsidelink" target="_blank"
+							                           href="https://www.w3.org/TR/ld-glossary/#uniform-resource-identifier"
+							>URI</a> of the <span class="highlight">membership resource</span> defined in the
+							<span class="highlight">access point</span> in memory. You can also call this method from a
+							<span class="highlight">persisted document</span> with the same name method, <code>createAccessPoint()</code> from
+							<a target="_blank"
+							   href="https://github.com/CarbonLDP/CarbonLDP-JS-SDK/tree/develop/doc#Carbon-PersistedDocument">Carbon.PersistedDocument.Factory</a> class.</p>
 
 						<div>
 							<div class="ui top attached tabular menu">

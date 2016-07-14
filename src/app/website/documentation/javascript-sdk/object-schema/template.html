@@ -9,7 +9,7 @@
 				<span class="section">JavaScript SDK</span>
 				<i class="right arrow icon divider"></i>
 
-				<div class="active section">Getting Started</div>
+				<div class="active section">Object schema</div>
 			</div>
 		</div>
 	</div>
@@ -19,7 +19,7 @@
 				<article class="ui vertical segment" id="article">
 
 					<header>
-						<h1 class="ui header">Object Schema</h1>
+						<h1 class="ui header">Object schema</h1>
 					</header>
 
 					<div class="ui icon yellow message">
@@ -39,44 +39,60 @@
 						</div>
 					</div>
 					<section>
-						<h2 class="ui header">Object Schema definition</h2>
+						<h2 class="ui header">Object schema definition</h2>
 
-						<p>To store and relate data semantically through out different systems, we need to maintain a data schema
-							that is shared and understood by everyone.
-							The object schema serves this purpose, through it we can use prefixes and
-							properties to abbreviate the communication with the platform and provide useful information about the relations
-							the data holds.</p>
+						<p>To store and relate data semantically through out different systems, we need to maintain a
+							data schema that is shared and understood by everyone. The
+							<span class="highlight">object schema</span> serves this purpose, through it we can use
+							<span class="highlight">prefixes</span> and <span class="highlight">properties</span> to
+							abbreviate the communication with the platform and provide useful information about
+							the relations the data holds.</p>
 
-						<p>The object schema lives in the <a>context object</a> and is used to describe the properties used in your Documents.
-							It maps prefixes and properties to URIs, forming a vocabulary for your applications. This allows properties to be
-							represented by an unambiguous identifier. This helps prevent developers from stepping in
-							each other's vocabularies, and makes data useful on the outside. The URIs used to describe the properties may contain
-							its definitions or relevant information about them.</p>
+						<p>The <span class="highlight">object schema</span> lives in the
+							<a [routerLink]="[ '../JavaScriptSDKContexts' ]"><span class="highlight">context object</span></a>
+							and is used to describe the <span class="highlight">properties</span> used in your
+							<span class="highlight">documents</span>. It maps <span class="highlight">prefixes</span>
+							and <span class="highlight">properties</span> to <a class="outsidelink" target="_blank"
+							                                                    href="https://www.w3.org/TR/ld-glossary/#uniform-resource-identifier">URIs</a>,
+							forming a <span class="highlight">vocabulary</span> for your
+							<span class="highlight">applications</span>. This allows
+							<span class="highlight">properties</span> to be represented by an unambiguous identifier.
+							Preventing developers from stepping in each other's <span class="highlight">vocabularies</span>,
+							and makes data useful on the outside. The <a class="outsidelink" target="_blank"
+							                                             href="https://www.w3.org/TR/ld-glossary/#uniform-resource-identifier">URIs</a>
+							used to describe the <span class="highlight">properties</span> may contain its definitions or
+							relevant information about them.</p>
 
-						<p>This concept is based in part on <a href="https://www.w3.org/TR/2012/WD-json-ld-syntax-20120712/#the-context">The Context</a>
+						<p>This concept is based in part on <a class="outsidelink" target="_blank"
+						                                       href="https://www.w3.org/TR/2012/WD-json-ld-syntax-20120712/#the-context">The Context</a>
 							definition of JSON-LD.</p>
 
-						<p>Carbon's object schema is made of:</p>
+						<p>Carbon's <span class="highlight">object schema</span> is made of:</p>
 						<ul>
-							<li>Prefixes: simple string that expands to a URI.</li>
-							<li>Properties: JSON object describing a property.</li>
+							<li><span class="highlight">Prefixes</span>: simple string that expands to a URI.</li>
+							<li><span class="highlight">Properties</span>: JSON object describing a property.</li>
 						</ul>
 
 
 						<section>
 							<h3 class="ui header">Prefixes</h3>
 
-							<p>Prefixes may be seen as abbreviations, whose value is a simple string that expands to a URI</p>
+							<p>Prefixes may be seen as abbreviations, whose value is a simple string that expands to a
+								<a class="outsidelink" target="_blank"
+								   href="https://www.w3.org/TR/ld-glossary/#uniform-resource-identifier">URI</a></p>
 
-							<p> Prefixes are short words or abbreviations, whose value expands to a URI and can be any
-								JSON string different from the <a href="https://www.w3.org/TR/json-ld/#dfn-keyword">JSON-LD keywords.</a></p>
+							<p><span class="highlight">Prefixes</span> are short words or abbreviations, whose value
+								expands to a <a class="outsidelink" target="_blank"
+								                href="https://www.w3.org/TR/ld-glossary/#uniform-resource-identifier">URI</a>
+								and can be any JSON string different from the <a class="outsidelink" target="_blank"
+								                                                 href="https://www.w3.org/TR/json-ld/#dfn-keyword">JSON-LD keywords.</a></p>
 
 							<div>
 								<!--@formatter:off-->
 							<pre><code highlight class="typescript">
-							{
-							    "skos": "http://www.w3.org/2004/02/skos/core#"
-							}
+								{
+								    "skos": "http://www.w3.org/2004/02/skos/core#"
+								}
 							</code></pre>
 								<!--@formatter:on-->
 							</div>
@@ -85,254 +101,316 @@
 						<section>
 							<h3 class="ui header">Properties</h3>
 
-							<p>The value of a property is mapped by a JSON object that contains JSON-LD keywords that describe it.
-								A property must always be described by at least the <code>@id</code>, though it is recommended to also
-								describe the data <code>@type</code>, to ensure that the expected data is of the right type.
+							<p>The value of a <span class="highlight">property</span> is mapped by a JSON object that
+								contains <a class="outsidelink" target="_blank"
+								            href="https://www.w3.org/TR/json-ld/#dfn-keyword">JSON-LD keywords.</a>
+								that describe it. A <span class="highlight">property</span> must always be described by
+								at least the <code>@id</code>, though it is recommended to also describe the data
+								<code>@type</code>, to ensure that the expected data is of the right type.
 							</p>
 
 
-							<p><code>@id</code> uniquely identifies the property with an IRI.</p>
+							<p><code>@id</code> uniquely identifies the <span class="highlight">property</span> with a
+								<a class="outsidelink" target="_blank"
+								   href="https://www.w3.org/TR/ld-glossary/#uniform-resource-identifier">URI</a>.</p>
 
 							<p><code>@type</code> can be defined as:</p>
 							<ul>
-								<li>literal: corresponds to a property that contains specific type of data, it is defined by a URI.</li>
-								<li>pointer: corresponds to a property that points to a resource, it is defined by @id.</li>
+								<li><span class="highlight">literal</span>: corresponds to a
+									<span class="highlight">property</span> that contains specific type of data, it is
+									defined by a <a class="outsidelink" target="_blank"
+									                href="https://www.w3.org/TR/ld-glossary/#uniform-resource-identifier">URI.</a></li>
+								<li><span class="highlight">pointer</span>: corresponds to a
+									<span class="highlight">property</span> that points to a resource, it is defined by
+									<code>@id</code>.
+								</li>
 							</ul>
 							<div>
 								<!--@formatter:off-->
 							<pre><code highlight class="typescript">
-	{
-	    "title": {
-	        "@id": "http://example.org/ns#title",
-	        "@type": "http://www.w3.org/2001/XMLSchema#string"
-	    },
-		"post": {
-			"@id": "http://example.otg/ns#post",
-			"@type: "@id"
-		}
-	}
+								{
+								    "title": {
+								        "@id": "http://example.org/ns#title",
+								        "@type": "http://www.w3.org/2001/XMLSchema#string"
+								    },
+									"post": {
+										"@id": "http://example.otg/ns#post",
+										"@type: "@id"
+									}
+								}
 							</code></pre>
 								<!--@formatter:on-->
 							</div>
-							<p>In the example shown, the property <code>title</code> is mapped to the URI defined in @id, and its @type has
-								been described as a string. The <code>post</code> property @type has been defined as a pointer.</p>
-							<p>These are the supported types in Carbon JS SDK: </p>
+							<p>In the example shown, the <span class="highlight">property</span> <code>title</code>
+								is mapped to the <a class="outsidelink" target="_blank"
+								                    href="https://www.w3.org/TR/ld-glossary/#uniform-resource-identifier">URI</a>
+								defined in <code>@id</code>, and its <code>@type</code> has been described as a string.
+								The <code>post</code> <span class="highlight">property</span> <code>@type</code> has
+								been defined as a <span class="highlight">pointer</span>.</p>
 
-							<div class="ui segment">
-								<table class="ui small very compact celled table">
-									<thead>
-										<tr>
-											<th colspan="4">Types</th>
-										</tr>
-									</thead>
-									<tbody>
-										<tr>
-											<td>date</td>
-											<td>integer</td>
-											<td>unsignedLong</td>
-											<td>double</td>
-										</tr>
-										<tr>
-											<td>dateTime</td>
-											<td>int</td>
-											<td>long</td>
-											<td>boolean</td>
-										</tr>
-										<tr>
-											<td>time</td>
-											<td>unsignedInt</td>
-											<td>float</td>
-											<td>string</td>
-										</tr>
-									</tbody>
-								</table>
-							</div>
-							<br/>
-							<p><code>@container</code> keyword describes if the property is multi-valued, in other words an array, its value may be:</p>
-							<ul>
-								<li><code>@set</code> defines an unordered set of data.</li>
-								<li><code>@list</code> defines an ordered set of data.</li>
-							</ul>
-							<p>If this keyword is not present, the SDK will assume the described property is single-valued. </p>
+								<p>These are the supported <span class="highlight">types</span> in
+									<span class="highlight">Carbon JavaScript SDK: </span></p>
+
+								<div class="ui segment">
+									<table class="ui small very compact celled table">
+										<thead>
+											<tr>
+												<th colspan="4">Types</th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr>
+												<td>date</td>
+												<td>integer</td>
+												<td>unsignedLong</td>
+												<td>double</td>
+											</tr>
+											<tr>
+												<td>dateTime</td>
+												<td>int</td>
+												<td>long</td>
+												<td>boolean</td>
+											</tr>
+											<tr>
+												<td>time</td>
+												<td>unsignedInt</td>
+												<td>float</td>
+												<td>string</td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+								<br/>
+								<p><code>@container</code> keyword describes if the <span class="highlight">property</span>
+									is multi-valued, in other words an array, its value may be:</p>
+								<ul>
+									<li><code>@set</code> defines an unordered set of data.</li>
+									<li><code>@list</code> defines an ordered set of data.</li>
+								</ul>
+								<p>If this keyword is not present, the <span class="highlight">JavaScript SDK</span> will assume the
+									described property is single-valued. </p>
 
 						</section>
 					</section>
 
 					<section>
-						<h2 class="ui header">Types of Object Schemas</h2>
-						<p>There are two types of object schemas:</p>
+						<h2 class="ui header">Types of object schemas</h2>
+						<p>There are two types of <span class="highlight">object schemas</span>:</p>
 						<ul>
 							<li>General</li>
 							<li>By resource type</li>
 						</ul>
-						<p>A Carbon resource always uses the general object schema and, depending on the types of the resource,
-							it may also use the object schemas by type.</p>
-						<p>Both types of object schemas can be defined using the method <code>extendsObjectSchema()</code>
-							from the <a>Carbon.SDKContext.Class</a> class.</p>
+						<p>A <span class="highlight">Carbon resource</span> always uses the
+							<span class="highlight">general object schema</span> and, depending on the
+							<span class="highlight">types</span> of the resource, it may also use the
+							<span class="highlight">object schemas by type</span>.</p>
+
+						<p>Both types of <span class="highlight">object schemas</span> can be defined using the method
+							<code>extendsObjectSchema()</code> from the
+							<a target="_blank" href="https://github.com/CarbonLDP/CarbonLDP-JS-SDK/tree/develop/doc#Carbon-SDKContext">Carbon.SDKContext.Class</a>
+							class.</p>
 
 						<section>
 							<h3 class="ui header">General object schema</h3>
-							<p>This object schema, when defined, is used by every Carbon resource in your application.</p>
+							<p>This <span class="highlight">object schema</span>, when defined, is used by every
+								<span class="highlight">Carbon resource</span> in your
+								<span class="highlight">application</span>.</p>
 
-							<p>The next example shows how to define a general object schema</p>
+							<p>The next example shows how to define a <span class="highlight">general object schema</span>.</p>
 
 							<div>
 								<!--@formatter:off-->
-						<pre><code highlight class="javascript">
-carbon.extendObjectSchema( {
-	"acl": "http://www.w3.org/ns/auth/acl#",
-	"api": "http://purl.org/linked-data/api/vocab#",
-	"c": "http://carbonldp.com/ns/v1/platform#",
-	"cs": "http://carbonldp.com/ns/v1/security#",
-	"cp": "http://carbonldp.com/ns/v1/patch#",
-	"ex": "http://example.org/ns#",
-	"foaf": "http://xmlns.com/foaf/0.1/",
-	"geonames": "http://www.geonames.org/ontology#",
-	"gr": "http://purl.org/goodrelations/v1#",
-	"http": "http://www.w3.org/2006/http#",
-	"ldp": "http://www.w3.org/ns/ldp#",
-	"rss": "http://purl.org/rss/1.0/",
-	"sd": "http://www.w3.org/ns/sparql-service-description#",
-	"skos": "http://www.w3.org/2004/02/skos/core#",
-	"types": "http://rdfs.org/sioc/types#",
-	"vcard": "http://www.w3.org/2001/vcard-rdf/3.0#",
-	"xsd": "http://www.w3.org/2001/XMLSchema#",
-	"title": {
-		"@id": "ex:title",
-		"@type": "xsd:string"
-	},
-	"name": {
-		"@id": "foaf:name",
-		"@type": "xsd:string"
-	}
-} );
-</code></pre>
+							<pre><code highlight class="javascript">
+								carbon.extendObjectSchema( {
+									"acl": "http://www.w3.org/ns/auth/acl#",
+									"api": "http://purl.org/linked-data/api/vocab#",
+									"c": "http://carbonldp.com/ns/v1/platform#",
+									"cs": "http://carbonldp.com/ns/v1/security#",
+									"cp": "http://carbonldp.com/ns/v1/patch#",
+									"ex": "http://example.org/ns#",
+									"foaf": "http://xmlns.com/foaf/0.1/",
+									"geonames": "http://www.geonames.org/ontology#",
+									"gr": "http://purl.org/goodrelations/v1#",
+									"http": "http://www.w3.org/2006/http#",
+									"ldp": "http://www.w3.org/ns/ldp#",
+									"rss": "http://purl.org/rss/1.0/",
+									"sd": "http://www.w3.org/ns/sparql-service-description#",
+									"skos": "http://www.w3.org/2004/02/skos/core#",
+									"types": "http://rdfs.org/sioc/types#",
+									"vcard": "http://www.w3.org/2001/vcard-rdf/3.0#",
+									"xsd": "http://www.w3.org/2001/XMLSchema#",
+									"title": {
+										"@id": "ex:title",
+										"@type": "xsd:string"
+									},
+									"name": {
+										"@id": "foaf:name",
+										"@type": "xsd:string"
+									}
+								} );
+							</code></pre>
 							<!--@formatter:on-->
 							</div>
 						</section>
 
 						<section>
 							<h3 class="ui header">Object schema by type</h3>
-							<p>Object schemas can be defined by type. Remember, Carbon resources like Documents, fragments and named fragments
-								have the <code>types</code> property that holds the types that a resource has. We can define
-								a specific object schema for each type. Since resources in Carbon are multi typed, you can expect to have
-								several object schemas by type that apply to one resource. It is important to mention that both Documents and fragments can have different types.
-								This means that an object schema applied to a Document its not necessarily applied to its fragments and vice versa.</p>
+							<p><span class="highlight">Object schemas</span> can be defined by type. Remember,
+								<span class="highlight">Carbon resources</span> like
+								<span class="highlight">documents</span>, <span class="highlight">fragments</span>
+								and <span class="highlight">named fragments</span> have the <code>types</code> property
+								that holds the <span class="highlight">types</span> that a resource has. We can define
+								a specific <span class="highlight">object schema</span> for each type. Since resources
+								in <span class="highlight">Carbon</span> are multi typed, you can expect to have several
+								<span class="highlight">object schemas</span> by type that apply to one resource. It is
+								important to mention that both <span class="highlight">documents</span> and
+								<span class="highlight">fragments</span> can have different
+								<span class="highlight">types</span>. This means that an
+								<span class="highlight">object schema</span> applied to a
+								<span class="highlight">document</span> its not necessarily applied to its
+								<span class="highlight">fragments</span> and vice versa.</p>
 
 							<div>
 								<!--@formatter:off-->
-						<pre><code highlight class="javascript">
-carbon.extendObjectSchema( "http://example.org/ns#BlogPost" , {
-	"acl": "http://www.w3.org/ns/auth/acl#",
-	"api": "http://purl.org/linked-data/api/vocab#",
-	"c": "http://carbonldp.com/ns/v1/platform#",
-	"cs": "http://carbonldp.com/ns/v1/security#",
-	"cp": "http://carbonldp.com/ns/v1/patch#",
-	"ex": "http://example.org/ns#",
-	"foaf": "http://xmlns.com/foaf/0.1/",
-	"geo": "http://www.w3.org/2003/01/geo/wgs84_pos#",
-	"http": "http://www.w3.org/2006/http#",
-	"ldp": "http://www.w3.org/ns/ldp#",
-	"owl": "http://www.w3.org/2002/07/owl#",
-	"rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
-	"sfn": "http://www.w3.org/ns/sparql#",
-	"skos": "http://www.w3.org/2004/02/skos/core#",
-	"types": "http://rdfs.org/sioc/types#",
-	"xsd": "http://www.w3.org/2001/XMLSchema#",
-	"title": {
-		"@id": "ex:title",
-		"@type": "xsd:string"
-	},
-	"tags": {
-		"@id": "ex:tag",
-		"@type": "@id",
-		"@container": "@set"
-	}
-} );
+								<pre><code highlight class="javascript">
+									carbon.extendObjectSchema( "http://example.org/ns#BlogPost" , {
+										"acl": "http://www.w3.org/ns/auth/acl#",
+										"api": "http://purl.org/linked-data/api/vocab#",
+										"c": "http://carbonldp.com/ns/v1/platform#",
+										"cs": "http://carbonldp.com/ns/v1/security#",
+										"cp": "http://carbonldp.com/ns/v1/patch#",
+										"ex": "http://example.org/ns#",
+										"foaf": "http://xmlns.com/foaf/0.1/",
+										"geo": "http://www.w3.org/2003/01/geo/wgs84_pos#",
+										"http": "http://www.w3.org/2006/http#",
+										"ldp": "http://www.w3.org/ns/ldp#",
+										"owl": "http://www.w3.org/2002/07/owl#",
+										"rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+										"sfn": "http://www.w3.org/ns/sparql#",
+										"skos": "http://www.w3.org/2004/02/skos/core#",
+										"types": "http://rdfs.org/sioc/types#",
+										"xsd": "http://www.w3.org/2001/XMLSchema#",
+										"title": {
+											"@id": "ex:title",
+											"@type": "xsd:string"
+										},
+										"tags": {
+											"@id": "ex:tag",
+											"@type": "@id",
+											"@container": "@set"
+										}
+									} );
 
-</code></pre>
+								</code></pre>
 							<!--@formatter:on-->
 							</div>
 						</section>
 					</section>
 					<section>
 						<h2 class="ui header">Extending the object schema</h2>
-						<p>There is a pre defined general object schema in
-							the SDK context.
-							It is through this object schema that the communication between the SDK and Carbon platform is possible.
-							You can extend the object schema either in the application context or in the platform context using the
-							<code>extendObjectSchema()</code> method. But beware of
-							how <a>inheritance in contexts</a> works. Remember it has a similar inheritance as the <a target="_blank"
-							                                                                                          href="https://developer.mozilla.org/en/docs/Web/JavaScript/Inheritance_and_the_prototype_chain"
+						<p>There is a pre defined <span class="highlight">general object schema</span> in the
+							<span class="highlight">SDK context</span>. It is through this
+							<span class="highlight">object schema</span> that the communication between the
+							<span class="highlight">JavaScript SDK</span> and <span class="highlight">Carbon platform</span> is
+							possible. You can extend the <span class="highlight">object schema</span> either in the
+							<span class="highlight">application context</span> or in the
+							<span class="highlight">platform context</span> using the
+							<code>extendObjectSchema()</code> method. But beware of how
+							<a [routerLink]="[ '../JavaScriptSDKContexts' ]">inheritance in contexts</a> works.
+							Remember it has a similar inheritance as the <a target="_blank"
+							                                                href="https://developer.mozilla.org/en/docs/Web/JavaScript/Inheritance_and_the_prototype_chain"
 							>JavaScript's prototypal inheritance</a>.</p>
 
-						<p>When extending an object schema, either the general or by resource type, new prefixes and/or properties definitions
-							are added to it. However, if the object schema doesn't exist in the scope where you are working (application context/platform context/SDK context),
-							a pre existing object schema in a broader scope is searched for. If found it is copied to the scope where you are working and
-							it is extended. If not found then it will be defined in the context in which you are working.</p>
+						<p>When extending an <span class="highlight">object schema</span>, either the general or by
+							<span class="highlight">resource type</span>, new <span class="highlight">prefixes</span>
+							and/or <span class="highlight">properties</span> definitions are added to it. However, if
+							the <span class="highlight">object schema</span> doesn't exist in the scope where you are
+							working (application context/platform context/SDK context), a pre existing
+							<span class="highlight">object schema</span> in a broader scope is searched for. If found
+							it is copied and extended into the scope where you are working. If not found then it will
+							be defined in the context in which you are working.</p>
 
-						<p>In the next sample code there are two object schemas being defined: the general and for type BlogPost.
-						The first is defined in the platform and the latter in the application context of my-first-app</p>
+						<p>In the next sample code there are two <span class="highlight">object schemas</span> being
+							defined: the general and for the type BlogPost. The first is defined in the
+							<span class="highlight">platform context </span> and the latter in the
+							<span class="highlight">application context</span> of my-first-app</p>
 						<div>
 							<!--@formatter:off-->
-						<pre><code highlight class="javascript">
-// extending the general object schema in the platform context
-carbon.extendObjectSchema( {
-	"ex": "http://example.org/ns#",
-	"foaf": "http://xmlns.com/foaf/0.1/",
-	"xsd": "http://www.w3.org/2001/XMLSchema#",
-	"title": {
-		"@id": "ex:title",
-		"@type": "xsd:string"
-	},
-	"name": {
-		"@id": "foaf:name",
-		"@type": "xsd:string"
-	}
-} );
+							<pre><code highlight class="javascript">
+								// extending the general object schema in the platform context
+								carbon.extendObjectSchema( {
+									"ex": "http://example.org/ns#",
+									"foaf": "http://xmlns.com/foaf/0.1/",
+									"xsd": "http://www.w3.org/2001/XMLSchema#",
+									"title": {
+										"@id": "ex:title",
+										"@type": "xsd:string"
+									},
+									"name": {
+										"@id": "foaf:name",
+										"@type": "xsd:string"
+									}
+								} );
 
-// extending the object schema of the type: BlogPost in the application context
-myFirstAppContext.extendObjectSchema( "http://example.org/ns#BlogPost" , {
-	"ex": "http://example.org/ns#",
-	"xsd": "http://www.w3.org/2001/XMLSchema#",
-	"tags": {
-		"@id": "ex:tag",
-		"@type": "@id",
-		"@container": "@set"
-	}
-} );
+								// extending the object schema of the type: BlogPost in the application context
+								myFirstAppContext.extendObjectSchema( "http://example.org/ns#BlogPost" , {
+									"ex": "http://example.org/ns#",
+									"xsd": "http://www.w3.org/2001/XMLSchema#",
+									"tags": {
+										"@id": "ex:tag",
+										"@type": "@id",
+										"@container": "@set"
+									}
+								} );
 
-</code></pre>
+							</code></pre>
 							<!--@formatter:on-->
 						</div>
-<p>The general object schema will be available for your entire platform, for all your resources in all your application.
-The Blog Post object schema is defined only for the application context of my-first-app, other applications in your platform
-will not be able to use it. Focusing on inheritance once more, the BlogPost object schema has only been defined in the application context,
-if later on you define it on the platform context with some extra prefixes for example: </p>
+						<p>The <span class="highlight">general object schema</span> will be available for your entire
+							<span class="highlight">platform</span>, for all your <span class="highlight">resources</span>
+							in all your <span class="highlight">application</span>. The Blog Post object schema is
+							defined only for the <span class="highlight">application context</span> of my-first-app,
+							other <span class="highlight">applications</span> in your <span class="highlight">platform</span>
+							will not be able to use it. Focusing on inheritance once more, the BlogPost
+							<span class="highlight">object schema</span> has only been defined in the
+							<span class="highlight">application context</span>, if later on you define it on the
+							<span class="highlight">platform context</span> with some extra prefixes for example: </p>
 
-<pre><code highlight class="javascript">
-// extending the object schema of the type: BlogPost in the application context
-carbon.extendObjectSchema( "http://example.org/ns#BlogPost" , {
-		"ex": "http://example.org/ns#",
-		"xsd": "http://www.w3.org/2001/XMLSchema#",
-		"description": {
-			"@id": "ex:description",
-			"@type": "xsd:string"
-		},
-		"tags": {
-			"@id": "ex:tag",
-			"@type": "@id",
-			"@container": "@set"
-		}
-} );
-</code></pre>
+						<div>
+							<pre><code highlight class="javascript">
+								// extending the object schema of the type: BlogPost in the application context
+								carbon.extendObjectSchema( "http://example.org/ns#BlogPost" , {
+								"ex": "http://example.org/ns#",
+								"xsd": "http://www.w3.org/2001/XMLSchema#",
+								"description": {
+								"@id": "ex:description",
+								"@type": "xsd:string"
+								},
+								"tags": {
+								"@id": "ex:tag",
+								"@type": "@id",
+								"@container": "@set"
+								}
+								} );
+							</code></pre>
+						</div>
 
-<p>The object schema for the type BlogPost will have the description property available to every application in the carbon context
-except my-firs-app. Why? Because, the object schema for BlogPost type for this particular application context
-was defined before the schema in the platform context. Once an object schema is defined in a context of narrower scope, any change made to the schemas in the broader
-scope will not affect it. Here is where caution is needed, to avoid inconsistencies in the communication
-with the platform. It may very well be that you wish to maintain different scopes, for your applications and for your platform,
-but beware of using properties undefined in your schemas, you could be loosing valuable information.</p>
+						<p>The <span class="highlight">object schema</span> for the type BlogPost will have the
+							description <span class="highlight">property</span> available to every
+							<span class="highlight">application</span> in the <span class="highlight">carbon context</span>
+							except my-firs-app. Why? Because, the <span class="highlight">object schema</span> for
+							BlogPost type for this particular <span class="highlight">application context</span> was
+							defined before the <span class="highlight">object schema</span> in the
+							<span class="highlight">platform context</span>. Once an
+							<span class="highlight">object schema</span> is defined in a
+							<span class="highlight">context</span> of narrower scope, any change made to the
+							<span class="highlight">object schemas</span> in the broader scope will not affect it.
+							Here is where caution is needed, to avoid inconsistencies in the communication with the
+							<span class="highlight">platform</span>. It may very well be that you wish to maintain
+							different <span class="highlight">object schemas</span>, for your
+							<span class="highlight">applications</span> and for your <span class="highlight">platform</span>,
+							but beware of using <span class="highlight">properties</span> undefined in your
+							<span class="highlight">object schemas</span>, you could be loosing valuable information.</p>
 					</section>
 					<section>
 						<h2 class="ui header">Conclusion</h2>

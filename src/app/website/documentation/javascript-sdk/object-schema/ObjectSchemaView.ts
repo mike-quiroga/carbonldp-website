@@ -1,5 +1,7 @@
 import {Component, ElementRef, ChangeDetectorRef } from "@angular/core";
 import { CORE_DIRECTIVES } from "@angular/common";
+
+import { RouteConfig, RouterOutlet, RouterLink } from "@angular/router-deprecated";
 import { Title } from "@angular/platform-browser";
 
 import SidebarComponent from "./../../sidebar/SidebarComponent";
@@ -15,7 +17,7 @@ import template from "./template.html!";
 @Component( {
 	selector: "object-schema",
 	template: template,
-	directives: [ CORE_DIRECTIVES, SidebarComponent, HighlightDirective ],
+	directives: [ CORE_DIRECTIVES, SidebarComponent, HighlightDirective, RouterLink ],
 	providers: [ Title ],
 } )
 export default class ObjectModelView {

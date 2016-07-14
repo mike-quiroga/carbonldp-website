@@ -35,30 +35,33 @@
 						<span class="highlight">documents</span>(Data) linked to each other through relations that can be searched for
 						by humans or machines.</p>
 
-					<p><span class="highlight">Documents</span> are JavaScript objects identified by a <a class="outsidelink"
-					                                                                                      target=" _blank"
-					                                                                                      href="https://www.w3.org/TR/ld-glossary/#uniform-resource-identifier"
-					>URI</a>,
-						they hold any sort of data and can be grouped in <span class="highlight">applications<span class="highlight">. An
-							<span class="highlight">application</span> is represented in <span class="highlight">Carbon</span> through a <span class="highlight">document</span> in the platform. This
-							<span class="highlight">application document</span> holds descriptive information about the <span class="highlight">application</span> and
-							points to it. <span class="highlight">Documents</span> can relate to other <span class="highlight">documents</span> through links
-							creating the desired Data Web. Any two <span class="highlight">documents</span> can be linked in <span class="highlight">Carbon</span>, the nature
-							of the relation between them is given through the <span class="highlight">document properties</span> of which we
-							will talk later on.</p>
+					<p><span class="highlight">Documents</span> are JavaScript objects identified by a
+						<a class="outsidelink" target=" _blank"
+						   href="https://www.w3.org/TR/ld-glossary/#uniform-resource-identifier">URI</a>, they hold any
+						sort of data and can be grouped in <span class="highlight">applications</span>. An
+						<span class="highlight">application</span> is represented in <span class="highlight">Carbon</span>
+						through a <span class="highlight">document</span> in the <span class="highlight">platform</span>.
+						This <span class="highlight">application document</span> holds descriptive information about the
+						<span class="highlight">application</span> and points to it.
+						<span class="highlight">Documents</span> can relate to other
+						<span class="highlight">documents</span> through links creating the desired Data Web. Any two
+						<span class="highlight">documents</span> can be linked in <span class="highlight">Carbon</span>,
+						the nature of the relation between them is given through the
+						<span class="highlight">document properties</span> of which we will talk later on.</p>
 
 					<section>
 						<h2 class="ui header">Carbon document definition</h2>
 
-						<p>A <span class="highlight">Carbon document</span> is a JavaScript object identified by a <a class="outsidelink"
-						                                                                                              target="_blank"
-						                                                                                              href="https://www.w3.org/TR/ld-glossary/#uniform-resource-identifier">URIs</a>
-							, that can have any number of properties and nested objects. <span class="highlight">Documents</span>
-							are the simplest unit of information in <span class="highlight">Carbon</span>. It is important to mention
-							that all the <span class="highlight">documents'</span> <a class="outsidelink"
-							                                                          target="_blank"
-							                                                          href="https://www.w3.org/TR/ld-glossary/#uniform-resource-identifier">URIs</a>
-							in <span class="highlight">Carbon</span> end with “/”.</p>
+						<p>A <span class="highlight">Carbon document</span> is a JavaScript object identified by a
+							<a class="outsidelink"
+							   target="_blank"
+							   href="https://www.w3.org/TR/ld-glossary/#uniform-resource-identifier">URIs</a>, that can
+							have any number of properties and nested objects. <span class="highlight">Documents</span>
+							are the simplest unit of information in <span class="highlight">Carbon</span>. It is
+							important to mention that all the <span class="highlight">documents'</span>
+							<a class="outsidelink" target="_blank"
+							   href="https://www.w3.org/TR/ld-glossary/#uniform-resource-identifier">URIs</a> in
+							<span class="highlight">Carbon</span> end with “/”.</p>
 
 						<p>A <span class="highlight">Carbon document</span> is composed of:</p>
 						<ul>
@@ -67,13 +70,15 @@
 							<li><span class="highlight">Named fragments</span></li>
 						</ul>
 
-						<p>A <span class="highlight">Carbon document</span> is composed of different parts created from the properties
-							of the JavaScript object defined. All the properties that hold values in a
-							JavaScript object are maintained as <span class="highlight">properties</span> of a <span class="highlight">Carbon document</span>, while
-							the nested objects correspond to other carbon resources called <span class="highlight">fragments</span> or <span class="highlight">named fragments</span>,
-							depending on whether or not the nested objects have an <span class="highlight">id</span> defined or not.
-							These resources are linked to the <span class="highlight">document</span> of which they are part of by <span class="highlight">properties</span>
-							that point to them.</p>
+						<p>A <span class="highlight">Carbon document</span> is composed of different parts created from
+							the properties of the JavaScript object defined. All the properties that hold values in a
+							JavaScript object are maintained as <span class="highlight">properties</span> of a
+							<span class="highlight">Carbon document</span>, while the nested objects correspond to other
+							carbon resources called <span class="highlight">fragments</span> or
+							<span class="highlight">named fragments</span>, depending on whether or not the nested
+							objects have an <span class="highlight">id</span> defined or not. These resources are linked
+							to the <span class="highlight">document</span> of which they are part of by
+							<span class="highlight">properties</span> that point to them.</p>
 
 						<div class="centered">
 							<img src="assets/images/object_model.png" width="840">
@@ -82,11 +87,16 @@
 
 						<section>
 							<h3 class="ui header">Properties</h3>
-							<p>A <span class="highlight">property</span> is a value associated with a <span class="highlight">Carbon resource</span>, that can be added, changed or
-								deleted. There can exist any number of <span class="highlight">properties</span> of any nature. <span class="highlight">Carbon</span> handles certain
-								relevant <span class="highlight">properties</span> to provide information or relate <span class="highlight">documents</span>, for example:
-								“<span class="highlight">contains</span>” or “<span class="highlight">members</span>” are <span class="highlight">properties</span> that exist in all
-								<span class="highlight">Carbon documents</span> providing information about related Documents.</p>
+							<p>A <span class="highlight">property</span> is a value associated with a
+								<span class="highlight">Carbon resource</span>, that can be added, changed or deleted.
+								There can exist any number of <span class="highlight">properties</span> of any nature.
+								<span class="highlight">Carbon</span> handles certain relevant
+								<span class="highlight">properties</span> to provide information or relate
+								<span class="highlight">documents</span>, for example:
+								“<span class="highlight">contains</span>” or “<span class="highlight">members</span>”
+								are <span class="highlight">properties</span> that exist in all
+								<span class="highlight">Carbon documents</span> providing information about
+								<span class="highlight">related documents</span>.</p>
 
 							<p>Another important <span class="highlight">property</span> is <span class="highlight"><code>types</code></span>, which is present in
 								<span class="highlight">documents</span>,
@@ -100,14 +110,16 @@
 								validations and uses for your tagged resources. This tag will also help you to defined
 								and used <span class="highlight">object schema</span> by type, a subject that is
 								discussed in <a [routerLink]="[ '../JavaScriptSDKObjectSchema' ]">
-									<span class="highlight">object schema's</span></a>documentation.</p>
+									<span class="highlight">object schema's</span></a> documentation.</p>
 						</section>
 						<section>
 							<h3 class="ui header">Fragments</h3>
-							<p>A <span class="highlight">fragment</span> is a JavaScript object nested inside a <span class="highlight">document</span>. <span class="highlight">Fragments</span> can
-								only be referenced from within the <span class="highlight">document</span> to which they belong, through
-								their <span class="highlight">ids</span>. These <span class="highlight">ids</span> can be automatically assigned by the <span class="highlight">Carbon JavaScript
-									SDK</span> or
+							<p>A <span class="highlight">fragment</span> is a JavaScript object nested inside a
+								<span class="highlight">document</span>. <span class="highlight">Fragments</span> can only
+								be referenced from within the <span class="highlight">document</span> to which they
+								belong, through their <span class="highlight">ids</span>. These
+								<span class="highlight">ids</span> can be automatically assigned by the
+								<span class="highlight">Carbon JavaScript SDK</span> or
 								defined by you and they must always start with an underscore followed by a
 								colon, for example: <code>_:123</code>.</p>
 						</section>
@@ -115,16 +127,20 @@
 						<section>
 							<h3 class="ui header">Named fragments</h3>
 
-							<p>A <span class="highlight">named fragment</span> is, like a <span class="highlight">fragment</span>, a JavaScript object nested inside a
-								<span class="highlight">document</span>. However, <span class="highlight">named fragments</span> have <span class="highlight">ids</span> that are referable from outside
-								of the <span class="highlight">document</span> to which they belong. These <span class="highlight">ids</span> must always start with a #,
-								for example: <code>#namedFragment</code>. To reference a named fragment from the
-								inside you can use either the <span class="highlight">id</span> or the complete <a class="outsidelink"
-								                                                                                   target="_blank"
-								                                                                                   href="https://www.w3.org/TR/ld-glossary/#uniform-resource-identifier"
-								>URI</a>, from outside you can only reference it through the latter one. The complete <a class="outsidelink"
-								                                                                                         target="_blank"
-								                                                                                         href="https://www.w3.org/TR/ld-glossary/#uniform-resource-identifier"
+							<p>A <span class="highlight">named fragment</span> is, like a
+								<span class="highlight">fragment</span>, a JavaScript object nested inside a
+								<span class="highlight">document</span>. However,
+								<span class="highlight">named fragments</span> have <span class="highlight">ids</span>
+								that are referable from outside of the <span class="highlight">document</span> to which
+								they belong. These <span class="highlight">ids</span> must always start with a
+								<code>#</code>, for example: <code>#namedFragment</code>. To reference a
+								<span class="highlight">named fragment</span> from the inside you can use either the
+								<span class="highlight">id</span> or the complete <a class="outsidelink" target="_blank"
+								                                                     href="https://www.w3.org/TR/ld-glossary/#uniform-resource-identifier"
+								>URI</a>, from outside you can only reference it through the latter one. The complete
+								<a class="outsidelink"
+								   target="_blank"
+								   href="https://www.w3.org/TR/ld-glossary/#uniform-resource-identifier"
 								>URI</a> is composed of the <span class="highlight">document's URI</span> and the <span class="highlight">id</span> of the <span class="highlight">named fragment</span>,
 								for example:
 								<code>https://carbonldp.com/apps/test-app/myDocument/#namedFragment</code>.</p>
@@ -306,7 +322,7 @@
 						<h2 class="ui header">Root document</h2>
 
 						<p>As we mentioned in the previous section the <span class="highlight">Carbon document</span>
-							structure can be viewed as a tree, , beginning with the
+							structure can be viewed as a tree, beginning with the
 							<span class="highlight"><strong>root document</strong></span>.
 							You can't create a <span class="highlight">document</span> that doesn't have a
 							<span class="highlight">parent document</span>.</p>
@@ -316,15 +332,16 @@
 							which is automatically defined at the creation of the <span class="highlight">application</span>.
 							The <span class="highlight">root document</span> is the root parent for all the
 							<span class="highlight">documents</span> created in an <span class="highlight">application</span>.
-							The <span class="highlight">root document</span> is the first parent document in an
-							<span class="highlight">application</span> where the first <span class="highlight">child documents</span>
-							will be created.</p>
+							The <span class="highlight">root document</span> is the first
+							<span class="highlight">parent document</span> in an <span class="highlight">application</span>
+							where the first <span class="highlight">child documents</span> will be created.</p>
 
 						<p>The default documents contained in a <span class="highlight">root document</span> are:
-							<span class="highlight">agents/</span>, <span class="highlight">roles/</span> and
-							<span class="highlight">auth-tokens/</span>, which are involve in
-							<span class="highlight">Carbon security</span> a subject
-							that will be discussed in other <span class="highlight">documents</span>.</p>
+							<span class="highlight"><code>agents/</code></span>,
+							<span class="highlight"><code>roles/</code></span> and
+							<span class="highlight"><code>auth-tokens/</code></span>, which are involve in
+							<span class="highlight">Carbon security</span> a subject that will be discussed in other
+							<span class="highlight">documents</span>.</p>
 					</section>
 
 
@@ -332,24 +349,23 @@
 						<h3 class="ui header">Access points</h3>
 
 						<p>An <span class="highlight">access point</span> is a <span class="highlight">Carbon document</span>
-							that is in charge of creating <span class="highlight">membership relations</span>
-							between its <span class="highlight">parent document</span> and any other
-							<span class="highlight">document</span>.</p>
+							that is in charge of creating <span class="highlight">membership relations</span> between its
+							<span class="highlight">parent document</span> and any other <span class="highlight">document</span>.</p>
 
 						<p><span class="highlight">Access points</span> allow you to maintain a
-							<span class="highlight">list of documents</span> using a <span class="highlight">membership
-							relation property</span> <code>.hasMemberRelation</code>, that is configured on its
-							creation. Through the <span class="highlight">access point</span> a
-							<span class="highlight">relation</span> is added as a <span class="highlight">property</span>
-							in its <span class="highlight">parent document</span>. The <span class="highlight">property</span>
-							points to the <span class="highlight">document</span> you want the parent to relate
-							with. In an <span class="highlight">access point</span> you can also configure a
-							<span class="highlight">reverse relation</span>, that will be added to the
+							<span class="highlight">list of documents</span> using a
+							<span class="highlight">membership relation property</span> <code>.hasMemberRelation</code>,
+							that is configured on its creation. Through the <span class="highlight">access point</span>
+							a <span class="highlight">relation</span> is added as a <span class="highlight">property</span>
+							in its <span class="highlight">parent document</span>. The
+							<span class="highlight">property</span> points to the <span class="highlight">document</span>
+							you want the parent to relate with. In an <span class="highlight">access point</span> you can
+							also configure a <span class="highlight">reverse relation</span>, that will be added to the
 							<span class="highlight">document</span> you wish to relate to the
-							<span class="highlight">parent document</span> of the <span class="highlight">access point</span>.
-							<span class="highlight">access points</span> may seem like
-							<span class="highlight">child documents</span>, however since they only hold the property
-							<code>.hasMemberRelation</code> and its reverse, they are not considered
+							<span class="highlight">parent document</span> of the
+							<span class="highlight">access point</span>. <span class="highlight">Access points</span> may
+							seem like <span class="highlight">child documents</span>, however since they only hold the
+							property <code>.hasMemberRelation</code> and its reverse, they are not considered
 							<span class="highlight">child documents</span>.</p>
 
 						<p>A <span class="highlight">document</span> can have as many
@@ -362,7 +378,7 @@
 					</section>
 					<section>
 						<h3 class="ui header">Conclusion</h3>
-						<p><span class="highlight">CarbonM</span> is a Linked Data Platform that allows to create and
+						<p><span class="highlight">Carbon</span> is a Linked Data Platform that allows to create and
 							manage your data web through <span class="highlight">documents</span>.</p>
 
 						<p>In simplest terms a <span class="highlight">Carbon document</span> is the basic unit of
