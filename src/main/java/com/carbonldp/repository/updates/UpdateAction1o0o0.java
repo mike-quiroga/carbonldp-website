@@ -1,7 +1,13 @@
 package com.carbonldp.repository.updates;
 
 import com.carbonldp.Vars;
+import com.carbonldp.agents.Agent;
+import com.carbonldp.agents.AgentFactory;
+import com.carbonldp.authorization.Platform;
+import com.carbonldp.rdf.RDFResource;
+import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Resource;
+import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import org.eclipse.rdf4j.repository.RepositoryException;
 
 import java.util.ArrayList;
