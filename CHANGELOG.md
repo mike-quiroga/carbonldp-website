@@ -1,4 +1,28 @@
-# 0.5.16 (June 8, 2016)
+# 0.5.17 (July 14, 2016)
+- Fix @angular package version to rc.1
+- Remove the following from App Dev:
+  - Animated carbon logo component.
+  - Unused modal component.
+  - SPARQLClient component.
+  - ValidationService.
+  - jstree from node_dependencies on packages.json
+  - CodeMirrorComponent.
+  - LoginComponent.
+  - Highlight directive.
+  - AppContextService.
+  - App component and view.
+  - Apps-list component.
+  - Create-app component.
+  - My-apps-sidebar service.
+  - HeaderComponent.
+  - Sidebar component.
+- Change styles of all components and views of AppDev to use :host.
+- Change all the providers to use the ones from carbon panel.
+- Rename files of AppDevLoginView to align with code style.
+- Remove unusued imports and variables from all AppDev components.
+- Change MyApps component to use the whole component from carbon panel.
+
+# 0.5.17 (July 8, 2016)
 - Fix bug with SPARQL Editor that hides the initial h from http when displaying results.
 - Fix my-apps action buttons to redirect to proper route.
 - Add auth ticket to URL when trying to download backups to BackupsService and BackupsListComponent.
