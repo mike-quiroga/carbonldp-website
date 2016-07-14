@@ -15,10 +15,10 @@ import com.carbonldp.repository.ConnectionRWTemplate;
 import com.carbonldp.repository.FileRepository;
 import com.carbonldp.spring.TransactionWrapper;
 import com.carbonldp.utils.ZipUtil;
-import org.openrdf.model.Resource;
-import org.openrdf.model.IRI;
-import org.openrdf.rio.RDFFormat;
-import org.openrdf.spring.SesameConnectionFactory;
+import org.eclipse.rdf4j.model.Resource;
+import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.rio.RDFFormat;
+import org.eclipse.rdf4j.spring.SesameConnectionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.*;

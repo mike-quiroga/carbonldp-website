@@ -2,7 +2,7 @@ package com.carbonldp.repository.updates;
 
 import com.carbonldp.apps.App;
 import com.carbonldp.rdf.RDFBlankNodeDescription;
-import org.openrdf.model.vocabulary.RDF;
+import org.eclipse.rdf4j.model.vocabulary.RDF;
 
 import java.util.Set;
 

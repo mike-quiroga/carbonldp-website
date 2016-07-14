@@ -6,15 +6,15 @@ import com.carbonldp.apps.context.AppContext;
 import com.carbonldp.apps.context.AppContextHolder;
 import com.carbonldp.apps.context.AppContextImpl;
 import com.carbonldp.repository.RepositoryService;
-import org.openrdf.repository.Repository;
-import org.openrdf.repository.RepositoryConnection;
-import org.openrdf.repository.RepositoryException;
-import org.openrdf.repository.config.RepositoryConfigException;
-import org.openrdf.repository.manager.RepositoryManager;
-import org.openrdf.spring.RepositoryConnectionFactory;
-import org.openrdf.spring.SesameConnectionFactory;
-import org.openrdf.spring.SesameTransactionException;
-import org.openrdf.spring.SesameTransactionObject;
+import org.eclipse.rdf4j.repository.Repository;
+import org.eclipse.rdf4j.repository.RepositoryConnection;
+import org.eclipse.rdf4j.repository.RepositoryException;
+import org.eclipse.rdf4j.repository.config.RepositoryConfigException;
+import org.eclipse.rdf4j.repository.manager.RepositoryManager;
+import org.eclipse.rdf4j.spring.RepositoryConnectionFactory;
+import org.eclipse.rdf4j.spring.SesameConnectionFactory;
+import org.eclipse.rdf4j.spring.SesameTransactionException;
+import org.eclipse.rdf4j.spring.SesameTransactionObject;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -24,7 +24,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * <p>
- * Handles connections to multiple {@link org.openrdf.repository.Repository}s. Depending on the {@link AppContextHolder}
+ * Handles connections to multiple {@link org.eclipse.rdf4j.repository.Repository}s. Depending on the {@link AppContextHolder}
  * , it can manage connections from the platform repository or the applications repositories manager.
  * </p>
  * <p/>

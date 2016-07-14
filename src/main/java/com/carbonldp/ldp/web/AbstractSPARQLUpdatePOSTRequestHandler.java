@@ -2,7 +2,7 @@ package com.carbonldp.ldp.web;
 
 import com.carbonldp.web.RequestHandler;
 import com.carbonldp.web.exceptions.NotFoundException;
-import org.openrdf.model.IRI;
+import org.eclipse.rdf4j.model.IRI;
 import org.springframework.http.ResponseEntity;
 
 import javax.servlet.http.HttpServletRequest;

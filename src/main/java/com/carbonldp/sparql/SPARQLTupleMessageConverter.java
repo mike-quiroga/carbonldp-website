@@ -1,10 +1,10 @@
 package com.carbonldp.sparql;
 
-import org.openrdf.query.QueryEvaluationException;
-import org.openrdf.query.QueryResultHandlerException;
-import org.openrdf.query.TupleQueryResult;
-import org.openrdf.query.resultio.QueryResultIO;
-import org.openrdf.query.resultio.TupleQueryResultFormat;
+import org.eclipse.rdf4j.query.QueryEvaluationException;
+import org.eclipse.rdf4j.query.QueryResultHandlerException;
+import org.eclipse.rdf4j.query.TupleQueryResult;
+import org.eclipse.rdf4j.query.resultio.QueryResultIO;
+import org.eclipse.rdf4j.query.resultio.TupleQueryResultFormat;
 import org.springframework.http.HttpOutputMessage;
 import org.springframework.http.MediaType;
 

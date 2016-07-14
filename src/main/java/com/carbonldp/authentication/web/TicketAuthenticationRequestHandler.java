@@ -9,7 +9,7 @@ import com.carbonldp.models.Infraction;
 import com.carbonldp.rdf.RDFBlankNode;
 import com.carbonldp.rdf.RDFDocument;
 import com.carbonldp.web.RequestHandler;
-import org.openrdf.model.IRI;
+import org.eclipse.rdf4j.model.IRI;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

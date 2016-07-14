@@ -24,7 +24,7 @@ import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.ContextHandler;
 import org.eclipse.jetty.webapp.Configuration;
 import org.eclipse.jetty.webapp.WebAppContext;
-import org.openrdf.sail.config.SailRegistry;
+import org.eclipse.rdf4j.sail.config.SailRegistry;
 import org.springframework.beans.factory.config.PropertiesFactoryBean;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.PathResource;
@@ -123,6 +123,7 @@ public class Platform {
 		server.setAttribute( "requestHeaderSize", Vars.getInstance().getRequestHeaderSize() );
 		server.setAttribute( "responseHeaderSize", Vars.getInstance().getResponseHeaderSize() );
 		server.setHandler( contextHandler );
+		// TODO: This could fail due to several reasons (e.g. BindException). Carbon should exit in that case
 		server.start();
 		server.join();
 	}

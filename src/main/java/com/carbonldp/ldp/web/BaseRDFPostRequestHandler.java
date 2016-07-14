@@ -2,7 +2,7 @@ package com.carbonldp.ldp.web;
 
 import com.carbonldp.ldp.containers.BasicContainer;
 import com.carbonldp.web.RequestHandler;
-import org.openrdf.model.IRI;
+import org.eclipse.rdf4j.model.IRI;
 
 @RequestHandler
 public class BaseRDFPostRequestHandler extends AbstractRDFPostRequestHandler<BasicContainer> {

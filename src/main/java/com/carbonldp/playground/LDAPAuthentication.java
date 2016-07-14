@@ -28,7 +28,7 @@ public class LDAPAuthentication {
 			LdapTemplate ldapTemplate = new LdapTemplate( ldapContextSource );
 
 			AndFilter filter = new AndFilter();
-//			filter.and( new EqualsFilter( "objectClass", "person" ) );
+			// filter.and( new EqualsFilter( "objectClass", "person" ) );
 			filter.and( new EqualsFilter( "uid", "einstein" ) );
 			boolean exists = ldapTemplate.authenticate( "", filter.toString(), "elMismisimoAlbertEinstein" );
 

@@ -1,14 +1,8 @@
 package com.carbonldp.repository.updates;
 
 import com.carbonldp.Vars;
-import com.carbonldp.agents.Agent;
-import com.carbonldp.agents.AgentFactory;
-import com.carbonldp.authorization.Platform;
-import com.carbonldp.rdf.RDFResource;
-import org.openrdf.model.IRI;
-import org.openrdf.model.Resource;
-import org.openrdf.model.impl.SimpleValueFactory;
-import org.openrdf.repository.RepositoryException;
+import org.eclipse.rdf4j.model.Resource;
+import org.eclipse.rdf4j.repository.RepositoryException;
 
 import java.util.ArrayList;
 import java.util.List;

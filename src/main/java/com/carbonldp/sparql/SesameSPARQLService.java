@@ -6,12 +6,12 @@ import com.carbonldp.repository.security.RequestDomainAccessGranter;
 import com.carbonldp.web.exceptions.BadRequestException;
 import com.carbonldp.web.exceptions.NotFoundException;
 import com.carbonldp.web.exceptions.NotImplementedException;
-import org.openrdf.model.IRI;
-import org.openrdf.model.Value;
-import org.openrdf.query.MalformedQueryException;
-import org.openrdf.query.QueryLanguage;
-import org.openrdf.query.parser.*;
-import org.openrdf.spring.SesameConnectionFactory;
+import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.Value;
+import org.eclipse.rdf4j.query.MalformedQueryException;
+import org.eclipse.rdf4j.query.QueryLanguage;
+import org.eclipse.rdf4j.query.parser.*;
+import org.eclipse.rdf4j.spring.SesameConnectionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 

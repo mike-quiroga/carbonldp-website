@@ -6,7 +6,7 @@ import com.carbonldp.agents.AgentsPostHandler;
 import com.carbonldp.exceptions.ResourceAlreadyExistsException;
 import com.carbonldp.web.RequestHandler;
 import com.carbonldp.web.exceptions.ConflictException;
-import org.openrdf.model.IRI;
+import org.eclipse.rdf4j.model.IRI;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 

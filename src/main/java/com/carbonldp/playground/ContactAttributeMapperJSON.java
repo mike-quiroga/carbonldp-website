@@ -1,5 +1,6 @@
 package com.carbonldp.playground;
 
+import com.carbonldp.agents.LDAPAgent;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.ldap.core.AttributesMapper;
@@ -12,8 +13,8 @@ import javax.naming.directory.Attributes;
  * @author JorgeEspinosa
  * @since 0.37.0
  */
-public class ContactAttributeMapperJSON implements AttributesMapper {
-	public Object mapFromAttributes( Attributes attributes ) throws NamingException {
+public class ContactAttributeMapperJSON implements AttributesMapper<LDAPAgent> {
+	public LDAPAgent mapFromAttributes( Attributes attributes ) throws NamingException {
 		NamingEnumeration<String> ids = attributes.getIDs();
 		JSONObject jsonObject = new JSONObject();
 		while ( ids.hasMoreElements() ) {
@@ -24,6 +25,7 @@ public class ContactAttributeMapperJSON implements AttributesMapper {
 				e.printStackTrace();
 			}
 		}
-		return jsonObject.toString();
+		// return jsonObject.toString();
+		return null;
 	}
 }

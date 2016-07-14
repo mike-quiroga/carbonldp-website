@@ -2,7 +2,7 @@ package com.carbonldp.authorization.acl;
 
 import com.carbonldp.authorization.acl.ACEDescription.Permission;
 import com.carbonldp.rdf.RDFNodeEnum;
-import org.openrdf.model.IRI;
+import org.eclipse.rdf4j.model.IRI;
 
 import java.util.Map;
 import java.util.Set;
