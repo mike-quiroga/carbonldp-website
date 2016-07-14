@@ -8,9 +8,9 @@ import com.carbonldp.config.ConfigurationRepository;
 import com.carbonldp.exceptions.InvalidResourceException;
 import com.carbonldp.exceptions.StupidityException;
 import com.carbonldp.ldp.AbstractSesameLDPService;
+import com.carbonldp.ldp.containers.ContainerService;
 import com.carbonldp.ldp.sources.RDFSource;
 import com.carbonldp.ldp.sources.RDFSourceService;
-import com.carbonldp.ldp.containers.ContainerService;
 import com.carbonldp.models.Infraction;
 import com.carbonldp.rdf.RDFDocument;
 import com.carbonldp.utils.AuthenticationUtil;
@@ -18,6 +18,7 @@ import com.carbonldp.utils.ModelUtil;
 import com.carbonldp.utils.RDFDocumentUtil;
 import freemarker.template.*;
 import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.Model;
 import org.eclipse.rdf4j.model.Value;
 import org.eclipse.rdf4j.model.impl.AbstractModel;
 import org.eclipse.rdf4j.model.impl.LinkedHashModel;
@@ -52,7 +53,12 @@ public abstract class SesameAgentsService extends AbstractSesameLDPService imple
 		AbstractModel toAdd = newDocument.stream().filter( statement -> ! ModelUtil.containsStatement( originalDocument, statement ) ).collect( Collectors.toCollection( LinkedHashModel::new ) );
 		RDFDocument documentToAdd = new RDFDocument( toAdd, source );
 		AbstractModel toDelete = originalDocument.stream().filter( statement -> ! ModelUtil.containsStatement( newDocument, statement ) ).collect( Collectors.toCollection( LinkedHashModel::new ) );
+
 		RDFDocument documentToDelete = new RDFDocument( toDelete, source );
+		if ( toDelete.contains( null, AgentDescription.Property.PASSWORD.getIRI(), null ) ) {
+			Model statement = originalDocument.filter( null, AgentDescription.Property.SALT.getIRI(), null );
+			documentToDelete.addAll( statement );
+		}
 		Agent agentToAdd = new Agent( documentToAdd, agent.getIRI() );
 		if ( agentToAdd.getPassword() != null ) setAgentPasswordFields( agentToAdd );
 
