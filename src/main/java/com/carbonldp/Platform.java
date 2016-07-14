@@ -123,6 +123,7 @@ public class Platform {
 		server.setAttribute( "requestHeaderSize", Vars.getInstance().getRequestHeaderSize() );
 		server.setAttribute( "responseHeaderSize", Vars.getInstance().getResponseHeaderSize() );
 		server.setHandler( contextHandler );
+		// TODO: This could fail due to several reasons (e.g. BindException). Carbon should exit in that case
 		server.start();
 		server.join();
 	}
