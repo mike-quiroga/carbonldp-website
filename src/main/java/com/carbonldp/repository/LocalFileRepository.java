@@ -298,19 +298,19 @@ public class LocalFileRepository implements FileRepository {
 
 		File inFile = new File( file );
 		File tempFile = new File( inFile.getAbsolutePath() + ".tmp" );
-		BufferedReader br = getBufferedReader( file );
-		PrintWriter pw = getPrintWriter( tempFile );
+		BufferedReader bufferedReader = getBufferedReader( file );
+		PrintWriter printWriter = getPrintWriter( tempFile );
 
 		String line = null;
-		while ( ( line = readLine(br) ) != null ) {
+		while ( ( line = readLine(bufferedReader) ) != null ) {
 			if ( ! hasToBeRemoved( line, linesToRemove ) ) {
-				pw.println( line );
-				pw.flush();
+				printWriter.println( line );
+				printWriter.flush();
 			}
 		}
-		pw.close();
+		printWriter.close();
 		try {
-			br.close();
+			bufferedReader.close();
 		} catch ( IOException e ) {
 			throw new RuntimeException( "buffered reader could not be closed", e );
 		}
@@ -319,9 +319,9 @@ public class LocalFileRepository implements FileRepository {
 
 	}
 
-	private String readLine(BufferedReader br){
+	private String readLine(BufferedReader bufferedReader){
 		try {
-			return br.readLine();
+			return bufferedReader.readLine();
 		} catch ( IOException e ) {
 			throw new RuntimeException( "line can not be readed", e );
 		}
@@ -341,10 +341,6 @@ public class LocalFileRepository implements FileRepository {
 		} catch ( FileNotFoundException e ) {
 			throw new RuntimeException( "file could not be read", e );
 		}
-	}
-
-	private void removeLines() {
-
 	}
 
 	private boolean hasToBeRemoved( String line, List<String> linesToRemove ) {

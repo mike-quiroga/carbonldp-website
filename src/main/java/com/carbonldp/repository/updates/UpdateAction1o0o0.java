@@ -49,14 +49,16 @@ public class UpdateAction1o0o0 extends AbstractUpdateAction {
 	}
 
 	private void createSystemUser( String userName, String password ) {
-		transactionWrapper.runWithAnonymousRoleInPlatformContext( () -> {
-			Agent agent = createSystemAgent( userName, password );
-			platformAgentService.register( agent );
+		Agent agent = createSystemAgent( userName, password );
+		transactionWrapper.runWithSystemPermissionsInPlatformContext( () -> {
+			IRI agentsContainerIRI = platformAgentRepository.getAgentsContainerIRI();
+			platformAgentService.create( agentsContainerIRI, agent );
 			containerRepository.addMember( SimpleValueFactory.getInstance().createIRI( Platform.Role.SYSTEM.getIRI().stringValue() + "agents/" ), agent.getIRI() );
-			removeSystemCredentials();
 		} );
+		removeSystemCredentials();
 	}
-	private void removeSystemCredentials(){
+
+	private void removeSystemCredentials() {
 		List<String> toRemove = new ArrayList<>();
 		toRemove.add( usernameLine );
 		toRemove.add( passwordLine );
@@ -67,6 +69,7 @@ public class UpdateAction1o0o0 extends AbstractUpdateAction {
 		IRI agentIRI = valueFactory.createIRI( platformAgentRepository.getAgentsContainerIRI().stringValue() + "system/" );
 		RDFResource resource = new RDFResource( agentIRI );
 		Agent agent = AgentFactory.getInstance().create( resource );
+		agent.setEnabled( true );
 		agent.setEmail( userName );
 		agent.setPassword( password );
 		return agent;
