@@ -22,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
 
 import java.io.*;
+import java.nio.Buffer;
 import java.nio.file.Files;
 import java.util.List;
 import java.util.Map;
@@ -294,34 +295,62 @@ public class LocalFileRepository implements FileRepository {
 
 	@Override
 	public void removeLineFromFileStartingWith( String file, List<String> linesToRemove ) {
-		try {
-			File inFile = new File( file );
-			File tempFile = new File( inFile.getAbsolutePath() + ".tmp" );
-			BufferedReader br = new BufferedReader( new FileReader( file ) );
-			PrintWriter pw = new PrintWriter( new FileWriter( tempFile ) );
-			String line = null;
-			while ( ( line = br.readLine() ) != null ) {
-				boolean printValue = true;
-				for(String lineToRemove : linesToRemove ) {
-					if ( line.trim().startsWith( lineToRemove ) ) {
-						printValue = false;
-						break;
-					}
-				}
-				if(printValue) {
-					pw.println( line );
-					pw.flush();
-				}
+
+		File inFile = new File( file );
+		File tempFile = new File( inFile.getAbsolutePath() + ".tmp" );
+		BufferedReader br = getBufferedReader( file );
+		PrintWriter pw = getPrintWriter( tempFile );
+
+		String line = null;
+		while ( ( line = readLine(br) ) != null ) {
+			if ( ! hasToBeRemoved( line, linesToRemove ) ) {
+				pw.println( line );
+				pw.flush();
 			}
-			pw.close();
-			br.close();
-			inFile.delete();
-			tempFile.renameTo( inFile );
-		} catch ( FileNotFoundException e ) {
-			throw new RuntimeException( "The file was not found. Exception:", e );
-		} catch ( IOException e ) {
-			throw new RuntimeException( "There was problems with the input/output. Exception:", e );
 		}
+		pw.close();
+		try {
+			br.close();
+		} catch ( IOException e ) {
+			throw new RuntimeException( "buffered reader could not be closed", e );
+		}
+		inFile.delete();
+		tempFile.renameTo( inFile );
+
+	}
+
+	private String readLine(BufferedReader br){
+		try {
+			return br.readLine();
+		} catch ( IOException e ) {
+			throw new RuntimeException( "line can not be readed", e );
+		}
+	}
+
+	private PrintWriter getPrintWriter( File tempFile ) {
+		try {
+			return new PrintWriter( new FileWriter( tempFile ) );
+		} catch ( IOException e ) {
+			throw new RuntimeException( "printWriter could not be created", e );
+		}
+	}
+
+	private BufferedReader getBufferedReader( String file ) {
+		try {
+			return new BufferedReader( new FileReader( file ) );
+		} catch ( FileNotFoundException e ) {
+			throw new RuntimeException( "file could not be read", e );
+		}
+	}
+
+	private void removeLines() {
+
+	}
+
+	private boolean hasToBeRemoved( String line, List<String> linesToRemove ) {
+		for ( String lineToRemove : linesToRemove )
+			if ( line.trim().startsWith( lineToRemove ) ) return true;
+		return false;
 	}
 
 	@Autowired

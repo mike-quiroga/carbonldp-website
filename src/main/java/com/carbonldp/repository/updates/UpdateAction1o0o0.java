@@ -50,17 +50,25 @@ public class UpdateAction1o0o0 extends AbstractUpdateAction {
 
 	private void createSystemUser( String userName, String password ) {
 		transactionWrapper.runWithAnonymousRoleInPlatformContext( () -> {
-			IRI agentIRI = valueFactory.createIRI( platformAgentRepository.getAgentsContainerIRI().stringValue() + "system/" );
-			RDFResource resource = new RDFResource( agentIRI );
-			Agent agent = AgentFactory.getInstance().create( resource );
-			agent.setEmail( userName );
-			agent.setPassword( password );
+			Agent agent = createSystemAgent( userName, password );
 			platformAgentService.register( agent );
 			containerRepository.addMember( SimpleValueFactory.getInstance().createIRI( Platform.Role.SYSTEM.getIRI().stringValue() + "agents/" ), agent.getIRI() );
-			List<String> toRemove = new ArrayList<>();
-			toRemove.add( usernameLine );
-			toRemove.add( passwordLine );
-			localFileRepository.removeLineFromFileStartingWith( configurationFile, toRemove );
+			removeSystemCredentials();
 		} );
+	}
+	private void removeSystemCredentials(){
+		List<String> toRemove = new ArrayList<>();
+		toRemove.add( usernameLine );
+		toRemove.add( passwordLine );
+		localFileRepository.removeLineFromFileStartingWith( configurationFile, toRemove );
+	}
+
+	private Agent createSystemAgent( String userName, String password ) {
+		IRI agentIRI = valueFactory.createIRI( platformAgentRepository.getAgentsContainerIRI().stringValue() + "system/" );
+		RDFResource resource = new RDFResource( agentIRI );
+		Agent agent = AgentFactory.getInstance().create( resource );
+		agent.setEmail( userName );
+		agent.setPassword( password );
+		return agent;
 	}
 }
