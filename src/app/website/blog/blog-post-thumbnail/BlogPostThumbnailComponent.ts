@@ -3,7 +3,8 @@ import { CORE_DIRECTIVES } from "@angular/common";
 import { ROUTER_DIRECTIVES, Router } from "@angular/router-deprecated";
 
 import BlogPost from "./../blog-post/BlogPost";
-import * as CodeMirrorComponent from "app/components/code-mirror/CodeMirrorComponent";
+// import * as CodeMirrorComponent from "app/components/code-mirror/CodeMirrorComponent";
+import * as CodeMirrorComponent from "carbon-panel/code-mirror/code-mirror.component";
 
 import "semantic-ui/semantic";
 

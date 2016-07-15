@@ -1,3 +1,27 @@
+# 0.5.18 (July 14, 2016)
+- Fix @angular package version to rc.1
+- Remove the following from App Dev:
+  - Animated carbon logo component.
+  - Unused modal component.
+  - SPARQLClient component.
+  - ValidationService.
+  - jstree from node_dependencies on packages.json
+  - CodeMirrorComponent.
+  - LoginComponent.
+  - Highlight directive.
+  - AppContextService.
+  - App component and view.
+  - Apps-list component.
+  - Create-app component.
+  - My-apps-sidebar service.
+  - HeaderComponent.
+  - Sidebar component.
+- Change styles of all components and views of AppDev to use :host.
+- Change all the providers to use the ones from carbon panel.
+- Rename files of AppDevLoginView to align with code style.
+- Remove unusued imports and variables from all AppDev components.
+- Change MyApps component to use the whole component from carbon panel.
+
 # 0.5.17 (July 11, 2016)
 - Add partial draft JavaScript SDK Object Model.
 - Add global styles for documentation.

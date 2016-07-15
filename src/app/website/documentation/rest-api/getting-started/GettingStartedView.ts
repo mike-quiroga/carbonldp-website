@@ -4,7 +4,7 @@ import { Title } from "@angular/platform-browser";
 
 import Carbon from "carbonldp/Carbon";
 
-import HighlightDirective from "app/directives/HighlightDirective";
+import { HighlightDirective } from "carbon-panel/directives/highlight.directive";
 
 import SidebarComponent from "./../../sidebar/SidebarComponent";
 

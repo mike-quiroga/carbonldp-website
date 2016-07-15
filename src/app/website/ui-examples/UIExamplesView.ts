@@ -1,7 +1,8 @@
 import { Component, ElementRef } from "@angular/core";
 import { CORE_DIRECTIVES, FORM_DIRECTIVES } from "@angular/common";
 
-import * as CodeMirrorComponent from "app/components/code-mirror/CodeMirrorComponent";
+// import * as CodeMirrorComponent from "app/components/code-mirror/CodeMirrorComponent";
+import * as CodeMirrorComponent from "carbon-panel/code-mirror/code-mirror.component";
 
 import $ from "jquery";
 import "semantic-ui/semantic";

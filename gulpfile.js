@@ -47,9 +47,7 @@ const config = {
 			"node_modules/systemjs/dist/system.src.js",
 			"node_modules/rxjs/bundles/Rx.js"
 		],
-		packages: [
-			"node_modules/jstree/**/*"
-		]
+		packages: []
 	}
 };
 
@@ -158,6 +156,7 @@ gulp.task( "serve:afterCompilation", () => {
 			directoryListing: false,
 			fallback: "/carbon-website/src/index.html",
 			open: true,
+			port: 8081,
 		} ) );
 } );
 

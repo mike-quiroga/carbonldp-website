@@ -1,6 +1,6 @@
 import { Component, ElementRef } from "@angular/core";
 
-import LoginComponent from "app/components/login/LoginComponent";
+import { LoginComponent } from "carbon-panel/login.component";
 
 import $ from "jquery";
 import "semantic-ui/semantic";

@@ -31,10 +31,6 @@ export default class RESTContainersView {
 
 	ngAfterViewInit():void {
 		this.$element = $( this.element.nativeElement );
-	}
-
-	ngAfterViewInit():void {
-		this.$element = $( this.element.nativeElement );
 		this.createAccordions();
 		this.initializeSidebar();
 	}
