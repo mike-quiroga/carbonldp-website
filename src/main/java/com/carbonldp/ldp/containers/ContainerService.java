@@ -3,8 +3,8 @@ package com.carbonldp.ldp.containers;
 import com.carbonldp.descriptions.APIPreferences;
 import com.carbonldp.http.OrderByRetrievalPreferences;
 import org.joda.time.DateTime;
-import org.openrdf.model.IRI;
-import org.openrdf.model.Statement;
+import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.Statement;
 import org.springframework.security.access.prepost.PostFilter;
 import org.springframework.security.access.prepost.PreAuthorize;
 

@@ -2,9 +2,9 @@ package com.carbonldp.sparql;
 
 import com.carbonldp.Consts;
 import com.carbonldp.repository.ConnectionRWTemplate;
-import org.openrdf.model.Value;
-import org.openrdf.query.*;
-import org.openrdf.spring.SesameConnectionFactory;
+import org.eclipse.rdf4j.model.Value;
+import org.eclipse.rdf4j.query.*;
+import org.eclipse.rdf4j.spring.SesameConnectionFactory;
 
 import java.util.Map;
 

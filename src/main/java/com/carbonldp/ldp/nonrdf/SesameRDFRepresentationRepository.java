@@ -4,7 +4,7 @@ import com.carbonldp.ldp.AbstractSesameLDPRepository;
 import com.carbonldp.rdf.RDFDocumentRepository;
 import com.carbonldp.rdf.RDFResourceRepository;
 import com.carbonldp.repository.FileRepository;
-import org.openrdf.spring.SesameConnectionFactory;
+import org.eclipse.rdf4j.spring.SesameConnectionFactory;
 import org.springframework.util.Assert;
 
 import java.io.File;

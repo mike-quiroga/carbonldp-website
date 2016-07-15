@@ -5,7 +5,7 @@ import com.carbonldp.HTTPHeaders;
 import com.carbonldp.Vars;
 import com.carbonldp.ldp.web.AbstractGETRequestHandler;
 import com.carbonldp.web.RequestHandler;
-import org.openrdf.model.IRI;
+import org.eclipse.rdf4j.model.IRI;
 
 import javax.servlet.http.HttpServletResponse;
 

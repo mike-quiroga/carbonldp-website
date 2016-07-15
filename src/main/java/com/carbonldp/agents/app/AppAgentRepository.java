@@ -2,7 +2,7 @@ package com.carbonldp.agents.app;
 
 import com.carbonldp.agents.AgentRepository;
 import com.carbonldp.ldp.containers.Container;
-import org.openrdf.model.IRI;
+import org.eclipse.rdf4j.model.IRI;
 
 /**
  * @author NestorVenegas

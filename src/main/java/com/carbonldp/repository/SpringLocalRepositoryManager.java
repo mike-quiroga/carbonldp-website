@@ -1,6 +1,6 @@
 package com.carbonldp.repository;
 
-import org.openrdf.repository.manager.LocalRepositoryManager;
+import org.eclipse.rdf4j.repository.manager.LocalRepositoryManager;
 
 import javax.annotation.PreDestroy;
 import java.io.File;

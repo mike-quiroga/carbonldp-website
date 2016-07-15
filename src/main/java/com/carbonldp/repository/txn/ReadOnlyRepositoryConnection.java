@@ -1,11 +1,11 @@
 package com.carbonldp.repository.txn;
 
-import info.aduna.iteration.Iteration;
-import org.openrdf.IsolationLevel;
-import org.openrdf.model.*;
-import org.openrdf.query.*;
-import org.openrdf.repository.*;
-import org.openrdf.rio.*;
+import org.eclipse.rdf4j.IsolationLevel;
+import org.eclipse.rdf4j.common.iteration.Iteration;
+import org.eclipse.rdf4j.model.*;
+import org.eclipse.rdf4j.query.*;
+import org.eclipse.rdf4j.repository.*;
+import org.eclipse.rdf4j.rio.*;
 
 import java.io.File;
 import java.io.IOException;

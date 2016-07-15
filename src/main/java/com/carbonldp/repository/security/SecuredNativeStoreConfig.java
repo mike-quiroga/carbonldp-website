@@ -1,6 +1,6 @@
 package com.carbonldp.repository.security;
 
-import org.openrdf.sail.nativerdf.config.NativeStoreConfig;
+import org.eclipse.rdf4j.sail.nativerdf.config.NativeStoreConfig;
 
 /**
  * @author MiguelAraCo

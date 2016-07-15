@@ -1,7 +1,7 @@
 package com.carbonldp.repository;
 
 import com.carbonldp.apps.App;
-import org.openrdf.model.IRI;
+import org.eclipse.rdf4j.model.IRI;
 
 import java.io.File;
 import java.util.Map;

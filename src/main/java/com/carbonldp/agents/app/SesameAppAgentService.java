@@ -8,7 +8,7 @@ import com.carbonldp.authorization.acl.ACL;
 import com.carbonldp.exceptions.ResourceAlreadyExistsException;
 import com.carbonldp.ldp.sources.RDFSourceService;
 import com.carbonldp.ldp.containers.ContainerService;
-import org.openrdf.model.IRI;
+import org.eclipse.rdf4j.model.IRI;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**

@@ -1,7 +1,7 @@
 package com.carbonldp.authorization;
 
 import com.carbonldp.agents.Agent;
-import org.openrdf.model.IRI;
+import org.eclipse.rdf4j.model.IRI;
 
 import java.util.Set;
 

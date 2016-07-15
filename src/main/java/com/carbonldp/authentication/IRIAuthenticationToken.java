@@ -1,6 +1,6 @@
 package com.carbonldp.authentication;
 
-import org.openrdf.model.IRI;
+import org.eclipse.rdf4j.model.IRI;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 
 /**

@@ -3,7 +3,7 @@ package com.carbonldp.apps.web;
 import com.carbonldp.ldp.sources.AbstractPATCHRequestHandler;
 import com.carbonldp.rdf.RDFDocument;
 import com.carbonldp.web.RequestHandler;
-import org.openrdf.model.IRI;
+import org.eclipse.rdf4j.model.IRI;
 
 @RequestHandler
 public class AppPATCHHandler extends AbstractPATCHRequestHandler {

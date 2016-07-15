@@ -1,6 +1,6 @@
 package com.carbonldp.rdf;
 
-import org.openrdf.model.IRI;
+import org.eclipse.rdf4j.model.IRI;
 
 import java.util.Collection;
 import java.util.Set;

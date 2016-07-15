@@ -1,7 +1,7 @@
 package com.carbonldp.rdf;
 
-import org.openrdf.model.BNode;
-import org.openrdf.model.IRI;
+import org.eclipse.rdf4j.model.BNode;
+import org.eclipse.rdf4j.model.IRI;
 
 /**
  * @author NestorVenegas
