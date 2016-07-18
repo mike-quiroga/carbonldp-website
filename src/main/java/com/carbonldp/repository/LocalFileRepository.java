@@ -10,7 +10,7 @@ import com.carbonldp.exceptions.NotADirectoryException;
 import com.carbonldp.exceptions.NotCreatedException;
 import com.carbonldp.utils.IRIUtil;
 import com.carbonldp.ldp.sources.RDFSourceRepository;
-import com.carbonldp.utils.TriGWriter;
+import com.carbonldp.utils.NQuadsWriter;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.ValueFactory;
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
@@ -96,15 +96,15 @@ public class LocalFileRepository implements FileRepository {
 	public File createAppRepositoryRDFFile() {
 		File temporaryFile;
 		FileOutputStream outputStream = null;
-		final TriGWriter trigWriter;
+		final NQuadsWriter nQuadsWriter;
 		try {
-			temporaryFile = File.createTempFile( Vars.getInstance().getAppDataFileName(), Consts.PERIOD.concat( RDFFormat.TRIG.getDefaultFileExtension() ) );
+			temporaryFile = File.createTempFile( Vars.getInstance().getAppDataFileName(), Consts.PERIOD.concat( RDFFormat.NQUADS.getDefaultFileExtension() ) );
 			temporaryFile.deleteOnExit();
 
 			outputStream = new FileOutputStream( temporaryFile );
-			trigWriter = new TriGWriter( outputStream );
-			trigWriter.setBase( AppContextHolder.getContext().getApplication().getRootContainerIRI().stringValue() );
-			connectionTemplate.write( connection -> connection.export( trigWriter ) );
+			nQuadsWriter = new NQuadsWriter( outputStream );
+			nQuadsWriter.setBase( AppContextHolder.getContext().getApplication().getRootContainerIRI().stringValue() );
+			connectionTemplate.write( connection -> connection.export( nQuadsWriter ) );
 
 		} catch ( IOException | SecurityException e ) {
 			throw new RuntimeException( "The temporary file couldn't be created. Exception:", e );
