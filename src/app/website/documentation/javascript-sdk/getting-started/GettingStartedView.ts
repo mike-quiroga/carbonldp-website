@@ -41,6 +41,7 @@ export default class GettingStartedView {
 		this.initializeAccordions();
 		this.initializeTabs();
 		this.highlightCode();
+		this.$element.find( ".sectionlink a[href]" ).on( "click", this.scrollTo );
 		this.initializeSidebar();
 	}
 
@@ -69,5 +70,20 @@ export default class GettingStartedView {
 		window.setTimeout( () => {
 			this.contentReady = true;
 		}, 0 );
+	}
+
+	scrollTo( event:any ):boolean {
+		let id:string = $( event.currentTarget ).attr( "href" ).replace( "#", "" );
+		let $element:JQuery = $( "#" + id );
+		let position:number = $element.offset().top - 100;
+
+		$( "html, body" ).animate( {
+			scrollTop: position
+		}, 500 );
+		location.hash = "#" + id;
+		event.stopImmediatePropagation();
+		event.preventDefault();
+
+		return false;
 	}
 }

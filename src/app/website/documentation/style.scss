@@ -14,6 +14,9 @@ documents{
 			padding-top: 1em;
 			padding-left: 2em;
 		}
+		.ui.segment.bottom.attached:last-child{
+			margin-bottom: 1rem;
+		}
 	}
 	.ui.accordion {
 		margin-bottom: 1em;

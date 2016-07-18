@@ -85,7 +85,7 @@
 						</div>
 						<br/>
 
-						<section>
+						<section class="subsection">
 							<h3 class="ui header">Properties</h3>
 							<p>A <span class="highlight">property</span> is a value associated with a
 								<span class="highlight">Carbon resource</span>, that can be added, changed or deleted.
@@ -112,7 +112,7 @@
 								discussed in <a [routerLink]="[ '../JavaScriptSDKObjectSchema' ]">
 									<span class="highlight">object schema's</span></a> documentation.</p>
 						</section>
-						<section>
+						<section class="subsection">
 							<h3 class="ui header">Fragments</h3>
 							<p>A <span class="highlight">fragment</span> is a JavaScript object nested inside a
 								<span class="highlight">document</span>. <span class="highlight">Fragments</span> can only
@@ -124,7 +124,7 @@
 								colon, for example: <code>_:123</code>.</p>
 						</section>
 
-						<section>
+						<section class="subsection">
 							<h3 class="ui header">Named fragments</h3>
 
 							<p>A <span class="highlight">named fragment</span> is, like a
@@ -150,6 +150,36 @@
 							                                                                      href="https://www.w3.org/TR/ld-glossary/#uniform-resource-identifier"
 							>URIs</a> in <span class="highlight">Carbon</span> end with “/”.</p>
 						</section>
+
+						<br/>
+						<p>You can create <span class="highlight"> persisted documents</span> in, either a, two steps or one step process.</p>
+						<ul>
+							<li>Two steps: create, then persist. Create <span class="highlight">documents in memory</span> first, which will need
+								to be persisted later on. To create an <span class="highlight">in memory document</span> you
+								can use two methods:
+								<ul>
+									<li><code>Document.Factory.create()</code> to create an empty
+										<span class="highlight">document</span>, in which
+										<span class="highlight">properties</span>, <span class="highlight">fragments</span>
+										and <span class="highlight">named fragments</span> could be defined later on.
+									</li>
+									<li><code>Document.Factory.createFrom()</code> to create a
+										<span class="highlight">document</span> from a JavaScript object.
+									</li>
+								</ul>
+							<li>One step: directly create persisted documents, as discussed in section Creating and persisting a document of the
+								<a [routerLink]="[ '../JavaScriptSDKGettingStarted' ]">Javascript SDK Getting Started</a></li>
+						</ul>
+
+						<p>You can add <span class="highlight">properties</span> to an
+							<span class="highlight">in memory document</span> as you will do it in any JavaScript
+							object. To add <span class="highlight">fragments</span> or
+							<span class="highlight">named fragments</span> you should use the methods
+							<code>document.createFragment()</code> or <code>document.createNamedFragment()</code>
+							respectively. For more methods to handle your <span class="highlight">documents</span>,
+							see: <a target="_blank" href="https://github.com/CarbonLDP/CarbonLDP-JS-SDK/tree/develop/doc#Carbon-Documents">Carbon.Documents</a> class.
+						</p>
+
 					</section>
 					<section>
 

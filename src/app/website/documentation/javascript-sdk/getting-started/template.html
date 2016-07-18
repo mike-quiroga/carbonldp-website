@@ -47,12 +47,13 @@
 						</p>
 						<ul>
 							<li>
-								<strong>HTML, CSS, JavaScript:</strong> See: <a href="https://developer.mozilla.org/en-US/docs/Web">Mozilla Developer
+								<strong>HTML, CSS, JavaScript:</strong> See: <a class="outsidelink" target="_blank" href="https://developer.mozilla.org/en-US/docs/Web">Mozilla Developer
 								Network</a>.
 							</li>
 							<li>
 								<strong>Promises:</strong> A standard-based way of handling asynchronous JavaScript logic.
-								See: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise">Promise object</a> (Mozilla Developer Network).
+								See: <a class="outsidelink" target="_blank" href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise">Promise object</a> (Mozilla
+								Developer Network).
 							</li>
 						</ul>
 						<p>
@@ -61,14 +62,14 @@
 						<ul>
 							<li>
 								<strong>TypeScript:</strong> Carbon's JavaScript SDK is written in TypeScript, a JavaScript
-								superset language, maintained by Microsoft. See: <a href="http://www.typescriptlang.org/">TypeScript</a>.
+								superset language, maintained by Microsoft. See: <a class="outsidelink" target="_blank" href="http://www.typescriptlang.org/">TypeScript</a>.
 							</li>
 							<li>
-								<strong>Package Managers:</strong> Carbon recommends <a href="http://jspm.io/">JSPM</a>
+								<strong>Package Managers:</strong> Carbon recommends <a class="outsidelink" target="_blank" href="http://jspm.io/">JSPM</a>
 							</li>
 							<li>
 								<strong>ES2015 Modules:</strong> ES2015 modules let you "import" a file from another one so you can modularize
-								your application. See: <a href="http://exploringjs.com/es6/ch_modules.html">Modules</a> (Exploring ES6, by Dr. Axel Rauschmayer)
+								your application. See: <a class="outsidelink" target="_blank" href="http://exploringjs.com/es6/ch_modules.html">Modules</a> (Exploring ES6, by Dr. Axel Rauschmayer)
 							</li>
 						</ul>
 					</section>
@@ -158,8 +159,9 @@
 							<div class="active content">
 								<p>
 									To be able to use ES2015 modules a transpiler like Babel, Traceur or TypeScript needs to be used. This documentation won't cover the details of
-									setting one up, but we recommend using <a href="http://jspm.io/">JSPM</a> as a package manager, configured to use
-									<a href="http://www.typescriptlang.org/">TypeScript</a> as a transpiler. That way you can use ES2015 features and bundle your dependencies together!
+									setting one up, but we recommend using <a class="outsidelink" target="_blank" href="http://jspm.io/">JSPM</a> as a package manager, configured to use
+									<a class="outsidelink" target="_blank" href="http://www.typescriptlang.org/">TypeScript</a> as a transpiler. That way you can use ES2015 features and bundle your
+									dependencies together!
 								</p>
 								<p>
 									Each module in Carbon will export at least one named export. Some of the modules will also export a <code>default</code> export containing the "main"
@@ -206,7 +208,7 @@
 
 						<p>
 							Now that you have installed Carbon successfully you can create your very first app
-							using the UI App. Click <a>here</a> to find out how.
+							using the UI App. Click <a target="_blank" [routerLink]="['/AppDev/MyApps/Create']">here</a> to find out how.
 						</p>
 					</section>
 
@@ -214,10 +216,10 @@
 						<h2 class="ui header">Creating contexts</h2>
 						<p>
 							Now that you have your brand new app (If you don't have your app yet, please
-							<a>create it</a>! (link) ). Let's start with some basic things you can do, like creating,
+							<a target="_blank" [routerLink]="['/AppDev/MyApps/Create']">create it</a>! ). Let's start with some basic things you can do, like creating,
 							saving, linking <span class="highlight">documents</span>, etc.
 						</p>
-						<!--TODO add link to Create App from App Dev-->
+
 						<p>
 							Before you can manipulate <span class="highlight">Carbon objects</span>, you need to
 							create a <span class="highlight">Carbon platform context</span>. This
@@ -258,8 +260,11 @@
 									let carbon = new Carbon(); // platform context
 									let myAppContext;
 
-									carbon.apps.get( "your-app-slug-here/" ).then( function( appContext ) => {
+
+									carbon.apps.get( "your-app-slug-here/" ).then( function( appContext ){
+
 									    myAppContext = appContext; // retrieving you app context
+
 									}).catch( console.error );
 								</code></pre>
 								<!--@formatter:on-->
@@ -300,7 +305,6 @@
 
 									carbon.apps.get( "your-app-slug-here/" ).then( ( appContext:App.Context ) => {
 									    myAppContext = appContext; // retrieving you app context
-
 									    myAppContext.documents.get( "/" ).then(
 									        ( [ document, response ]:[ PersistedDocument.Class, Response.Class ] ) => {
 									            rootDocument = document;
@@ -317,13 +321,16 @@
 									let myAppContext;
 									let rootDocument;
 
-									carbon.apps.get( "your-app-slug-here/" ).then( function( appContext ) => {
+
+									carbon.apps.get( "your-app-slug-here/" ).then(
+										function( appContext ) => {
+
 									    myAppContext = appContext; // retrieving you app context
 
 									    myAppContext.documents.get( "/" ).then(
-									        function( [document, response] ) => {
+									        function( [document, response] ){
 									            rootDocument = document;
-										});
+											});
 
 									}).catch( console.error );
 								</code></pre>
@@ -346,155 +353,26 @@
 					</section>
 
 					<section>
-						<h2 class="ui header">Creating a document</h2>
+						<h2 class="ui header">Creating and persisting a document</h2>
 						<p>The <span class="highlight">root document</span> that you just retrieved can be seen as the
 							root folder of all your <span class="highlight">documents</span>.It is not recommended to
 							modify it. Instead you should create <span class="highlight">child documents</span> to hold
-							your data.
-						</p>
-						<p>You can start by creating <span class="highlight">documents in memory</span>, which will need
-							to be persisted later on. To create an <span class="highlight">in memory document</span> you
-							can use two methods:
-						</p>
-						<ul>
-							<li><code><a>Document.Factory.create()</a></code> to create an empty
-								<span class="highlight">document</span>, in which
-								<span class="highlight">properties</span>, <span class="highlight">fragments</span>
-								and <span class="highlight">named fragments</span> could be defined later on.
-							</li>
-							<li><code><a>Document.Factory.createFrom()</a></code> to create a
-								<span class="highlight">document</span> from a JavaScript object.
-							</li>
-						</ul>
-
-						<p>
-							In both cases, the <span class="highlight">document</span> created will not be a
-							<span class="highlight">persisted document</span>, until you specifically do so
-							as will be discussed in section Persisting a document.
-							<!--TODO: Add link to section-->
-						</p>
-
-						<p>You can add <span class="highlight">properties</span> to an
-							<span class="highlight">in memory document</span> as you will do it in any JavaScript
-							object. To add <span class="highlight">fragments</span> or
-							<span class="highlight">named fragments</span> you should use the methods
-							<code>document.createFragment()</code> or <code>document.createNamedFragment()</code>
-							respectively. In the next example, you will see how to create an
-							<span class="highlight">in memory document</span> using both methods discussed, as well as
-							how to add <span class="highlight">properties</span>,
-							<span class="highlight">fragments</span> and <span class="highlight">named fragments</span>
-							to it.
-						</p>
-
-						<div>
-							<div class="ui top attached tabular menu">
-								<a class="item active" data-tab="typescript">TypeScript</a>
-								<a class="item" data-tab="javascript">JavaScript</a>
-							</div>
-
-							<div class="ui bottom attached tab segment active" data-tab="typescript">
-								<!--@formatter:off-->
-								<pre><code highlight class="typescript">
-									// imports
-									import * as Document from "carbonldp/Document";
-									import * as Fragment from "carbonldp/Fragment";
-									import * as NamedFragment from "carbonldp/NamedFragment";
-
-									// Create an empty Document
-									let inMemoryDocument:Document.Class = Document.Factory.create();
-
-									// Create a Document from an object
-									let inMemoryOtherDocument:Document.Class = Document.Factory.createFrom( {
-									    // Document properties
-									    someProperty: "Property value",
-									    anotherProperty: 123,
-									    data: [
-									        // Fragment
-									        {
-									            someProperty: "hello"
-									        },
-									        // Named Fragment
-									        {
-									            id: "#my-slug",
-									            someOtherProperty: "good-bye"
-									        }
-									    ]
-									} );
-
-									// Add properties, fragments and namedFragments to a Document
-									inMemoryDocument.someProperty = "Property value";
-									inMemoryDocument.anotherProperty = 123;
-
-									inMemoryDocument.greeting = inMemoryDocument.createFragment( {
-									                                someProperty: "hello"
-																} );
-
-									let namedFragment:NamedFragment.Class = inMemoryDocument.createNamedFragment( "my-slug", {
-									                                            someOtherProperty: "good-bye"
-																			} );
-
-									inMemoryDocument.goodbye = namedFragment;
-								</code></pre>
-								<!--@formatter:on-->
-							</div>
-
-							<div class="ui bottom attached tab segment" data-tab="javascript">
-								<!--@formatter:off-->
-								<pre><code highlight class="javascript">
-									// Create an empty Document
-									let inMemoryDocument = Document.Factory.create();
-
-									// Create a Document from an object
-									let inMemoryOtherDocument = Document.Factory.createFrom( {
-									    // Document properties
-									    someProperty: "Property value",
-									    anotherProperty: 123,
-									    data: [
-									        // Fragment
-									        {
-									            someProperty: "hello"
-									        },
-									        // Named Fragment
-									        {
-									            id: "#my-slug",
-									            someOtherProperty: "good-bye"
-									        }
-									    ]
-									} );
-
-									// Add properties, fragments and namedFragments to a Document
-									inMemoryDocument.someProperty = "Property value";
-									inMemoryDocument.anotherProperty = 123;
-
-									inMemoryDocument.greeting = inMemoryDocument.createFragment( {
-									    someProperty: "hello"
-									} );
-
-									let namedFragment = inMemoryDocument.createNamedFragment( "my-slug", {
-									    someOtherProperty: "good-bye"
-									} );
-									inMemoryDocument.goodbye = namedFragment;
-								</code></pre>
-								<!--@formatter:on-->
-							</div>
-						</div>
-
-					</section>
-
-					<section>
-						<h2 class="ui header">Persisting a document</h2>
-
-						<p>A <span class="highlight">persisted document</span> is a <span class="highlight">document</span>
-							that has been saved in <span class="highlight">Carbon</span> through the method
-							<code>createChild()</code>. The <span class="highlight">platform</span> handles the
+							your data. The <span class="highlight">platform</span> handles the
 							fundamental <span class="highlight">parent-child relation</span> between
 							<span class="highlight">documents</span>. Every <span class="highlight">document</span>
 							must be the child of a previous existing <span class="highlight">document</span>, being the
 							<span class="highlight">root document</span> the first
-							parent in your <span class="highlight">application</span>. As mentioned in Retrieving a
-							document, the <span class="highlight">root document</span> id is "/".
+							parent in your <span class="highlight">application</span>. As mentioned in
+							<span class="sectinlink"><a href="#retrieving-a-document">Retrieving a
+								document</a></span>, the <span class="highlight">root document</span> id is <code>"/"</code>.
 						</p>
-						<!--TODO add link to section Retrieving a document-->
+
+						<p>When you create a child document, you are creating a
+							<span class="highlight">persisted document</span>, a <span class="highlight">document</span>
+							that has been saved in <span class="highlight">Carbon platform</span>, through the method
+							<code>createChild()</code>.
+						</p>
+
 						<p>
 							The <code>createChild()</code> method can be invoked with different signatures. It is a
 							requisite to provide the <span class="highlight">parent</span> id and a
@@ -535,10 +413,8 @@
 									                someProperty: "hello"
 									            },
 									            // Named Fragment
-									            {
-									                id: "#my-slug",
-									                someOtherProperty: "good-bye"
-									            }
+									            {   id: "#my-slug",
+									                someOtherProperty: "good-bye" }
 									        ]
 									    } ).then(( [ documentPointer, response ]:[ Pointer.Class, Response.Class ] ) => {
 									            console.log( documentPointer.id); // your persisted Doc id
@@ -554,12 +430,14 @@
 								<pre><code highlight class="javascript">
 									//... Declare required contexts, create in memory Document
 
-									platformContext.apps.getContext( "your-app-slug-here/" ).then( function( appContext ) => {
-									    myAppContext = appContext;
+									platformContext.apps.getContext( "your-app-slug-here/" ).then(
+										function( appContext ){
+
+										myAppContext = appContext;
 
 									    // Persist the in memory Document: myDocument as a child of "parent-id/"
 									    myAppContext.documents.createChild( "parent-id/", myDocument ).then(
-									        function( [documentPointer, response] ) => {
+									        function( [documentPointer, response] ) {
 									            console.log( documentPointer.id); // your persisted Doc id
 									    });
 
@@ -577,7 +455,7 @@
 									                someOtherProperty: "good-bye"
 									            }
 									        ]
-									    } ).then( function( [documentPointer, response] ) => {
+									    } ).then( function( [documentPointer, response] ){
 									            console.log( documentPointer.id); // your persisted Doc id
 									    });
 
@@ -598,8 +476,8 @@
 							<span class="highlight">document</span> can be retrieve, through the method
 							<code>get()</code> or, as mentioned before, through the resolution of the
 							<span class="highlight">document pointer</span>. This will be discussed in the
-							section Resolving a document pointer.</p>
-						<!-- TODO: add link to section Resolving a document pointer-->
+							section <span class="sectionlink"><a href="#resolving-a-document-pointer">resolving a document pointer</a></span>.</p>
+
 						<p>The next sample code shows the method <code>createChild()</code> used with the
 							<code>child-id</code> parameter.</p>
 
@@ -616,7 +494,6 @@
 									import * as Response from "carbonldp/HTTP/Response";
 
 									// ...
-
 									platformContext.apps.getContext( "your-app-slug-here/" ).then( ( appContext:App.Context ) => {
 									    myAppContext = appContext;
 
@@ -629,11 +506,9 @@
 									                someProperty: "hello"
 									            },
 									            // Named Fragment
-									            {
-									                id: "#my-slug",
-									                someOtherProperty: "good-bye"
-									            }
-									        ]
+									            {   id: "#my-slug",
+									                someOtherProperty: "good-bye" }
+											]
 									    });
 
 									    // Persist myDocument as a child of "parent-id/", with an id "my new child"
@@ -673,6 +548,7 @@
 									    // Persist myDocument as a child of "parent-id/", with an id "my new child"
 									    myAppContext.documents.createChild( "parent-id/", "my new child", myDocument ).then(
 									        function( [ documentPointer, response ] ){
+
 									            console.log( documentPointer.id); // the id of you newly created Document
 									    });
 
@@ -713,10 +589,8 @@
 
 									platformContext.apps.getContext( "your-app-slug-here/" ).then( ( appContext:App.Context ) => {
 									    myAppContext = appContext;
-
 										myAppContext.documents.createChild( "/", myDocument ).then(
 									        ( [ documentPointer, response ]:[ Pointer.Class, Response.Class ] ) => {
-
 									            documentPointer.resolve().then(
 									                ( [ document, response ]:[ PersistedDocument.Class, Response.Class ] ) => {
 									                    myPersistedDocument = document;
@@ -745,6 +619,7 @@
 									                    myPersistedDocument = document;
 												});
 											});
+
 									}).catch( console.error );
 								</code></pre>
 								<!--@formatter:on-->
@@ -766,9 +641,8 @@
 							<li>Retrieve the <span class="highlight">document</span>:
 								<ul>
 									<li><code>get()</code> using the <span class="highlight">document</span> id as
-										describe in Retrieving a document
+										describe in <span class="sectionlink"><a href="#retrieving-a-document">retrieving a document</a></span>
 									</li>
-									<!--TODO: add linkt to section retrieving a document-->
 								</ul>
 							</li>
 							<li>Modify the <span class="highlight">document</span>: Add, modify or delete
@@ -821,6 +695,7 @@
 
 									        appContext.documents.get( "your-document-id/" ).then(
 									            function( [ document, response ] ){
+
 									                document.newProperty = "You!";
 									                document.anotherProperty = anotherDocument;
 									                delete document.someOldProperty;
@@ -830,6 +705,7 @@
 									                        console.log( document );
 									                });
 									        });
+
 									}).catch( console.error() );
 								</code></pre>
 								<!--@formatter:on-->
@@ -863,9 +739,7 @@
 									let platformContext:Carbon = new Carbon();
 
 									platformContext.apps.getAppContext( "your-app-slug/" ).then( ( appContext:App.Context ) =>{
-
 									    appContext.documents.delete( "documentURI" );
-
 									}).catch( console.error() );
 								</code></pre>
 								<!--@formatter:on-->
@@ -876,7 +750,8 @@
 								<pre><code highlight class="javascript">
 									let platformContext = new Carbon();
 
-									platformContext.apps.getAppContext( "your-app-slug/" ).then( function( appContext:App.Context ){
+									platformContext.apps.getAppContext( "your-app-slug/" ).then(
+										function( appContext:App.Context ){
 
 									    appContext.documents.delete( "documentURI");
 
@@ -975,6 +850,7 @@
 
 										platformContext.apps.getAppContext( "your-app-slug/" ).then(
 										    function( appContext ){
+
 										        myAppContext = appContext;
 
 										        myAppContext.documents.getChildren( "parentURI" ).then(
@@ -986,6 +862,7 @@
 										        function( [ Children, response ] ){
 										            console.log( "list of children:", children );
 										        });
+
 										});
 									</code></pre>
 									<!--@formatter:on-->
@@ -1085,6 +962,7 @@
 										// declarations
 
 										platformContext.apps.getAppContext( "your-app-slug/" ).then(
+
 										    function( appContext ){
 										        myAppContext = appContext;
 
@@ -1107,6 +985,7 @@
 										                    console.log( "members: ", members );
 										                        // members: member1, member4, memberToAddURI, member3
 										        });
+
 										});
 									</code></pre>
 									<!--@formatter:on-->
@@ -1180,13 +1059,13 @@
 							<div class="ui bottom attached tab segment" data-tab="javascript">
 								<!--@formatter:off-->
 								<pre><code highlight class="javascript">
-									// imports
 
 									// declarations
 									let myObject = { name: "myNieces", description: "All the nieces of myParent."};
 									let myAccess;
 									let nephews;
 									let nieces;
+
 
 									// create() create an in memory access point
 									myAccess = AccessPoint.Factory.create( myParent, "documentRelation", "inverseDocumentRelation" );
@@ -1211,7 +1090,7 @@
 							   href="https://github.com/CarbonLDP/CarbonLDP-JS-SDK/tree/develop/doc#Carbon-Documents">Carbon.Documents</a>
 							class. This methods will create a <span class="highlight">persisted access point</span> for
 							a <span class="highlight">document specified</span> in the "parent" <a class="outsidelink" target="_blank"
-							                                                                     href="https://www.w3.org/TR/ld-glossary/#uniform-resource-identifier"
+							                                                                       href="https://www.w3.org/TR/ld-glossary/#uniform-resource-identifier"
 							>URI</a> passed as a parameter. Remember this <a class="outsidelink" target="_blank"
 							                                                 href="https://www.w3.org/TR/ld-glossary/#uniform-resource-identifier"
 							>URI</a> must match the <a class="outsidelink" target="_blank"
@@ -1252,9 +1131,11 @@
 							<div class="ui bottom attached tab segment" data-tab="javascript">
 								<!--@formatter:off-->
 								<pre><code highlight class="javascript">
+
 									let myPersistedDocument;
 									let myParent;
 									let myAccessPoint;
+
 
 									// create() access point in memory
 									myAccessPoint = AccessPoint.Factory.create( myParent, "documentRelation", "inverseDocumentRelation" );
@@ -1271,71 +1152,466 @@
 					</section>
 					<section>
 						<h2 class="ui header">Conclusion</h2>
+						<p>Reviewing everything we learn. We are going to maintain information for patients and doctor of Carbon Hospital</p>
 
-						<p>Not yet documented</p>
+						<ul>
+							<li>Creating data</li>
+							<ul>
+								<li><a target="_blank" [routerLink]="['/AppDev/MyApps/Create']">Create an application</a>: carbon-hospital-database/.</li>
+								<li>Create documents for:</li>
+								<ul>
+									<li>patients: John Doe, John Jr. Doe, Jane Doe, Mary Smith</li>
+									<li>doctors: John Stevenson, Jane Grey, Alex Karev</li>
+								</ul>
+								<li>Create access points for each doctor to maintain a list of patients</li>
+								<li>Create access points for each patient to maintain a list of doctors</li>
+							</ul>
+							<li>Manipulating data</li>
+							<ul>
+								<li>Add John Jr as a member of Dr Alex Karev's and Dr Jane Grey patients list, viceversa</li>
+								<li>Add John and Mary as members of Dr John Stevenson' patients list.</li>
+								<li>Add a named fragment: "medical-history" to all the patients' documents.</li>
+								<li>Add properties to Jane Doe.</li>
+							</ul>
+						</ul>
+						<p>Remember all changes or additions in Carbon documents must be saved, for the to be persisted.</p>
+						<div>
+							<div class="ui top attached tabular menu">
+								<a class="item active" data-tab="creating-data">Creating Data</a>
+								<a class="item" data-tab="manipulating-data">Manipulating Data</a>
+							</div>
 
-						<!--						<div>
-													<div class="ui top attached tabular menu">
-														<a class="item active" data-tab="typescript">TypeScript</a>
-														<a class="item" data-tab="javascript">JavaScript</a>
-													</div>
+							<div class="ui bottom attached tab segment active" data-tab="creating-data">
+								<div>
+									<div class="ui top attached tabular menu">
+										<a class="item active" data-tab="typescript">TypeScript</a>
+										<a class="item" data-tab="javascript">JavaScript</a>
+									</div>
 
-													<div class="ui bottom attached tab segment active" data-tab="typescript">
-														<!--@formatter:off-->
-						<!--	<pre><code highlight class="typescript">
-import * as Document from "carbonldp/PersistedDocument";
-import * as Pointer from "carbonldp/Pointer";
-import * as Response from "carbonldp/HTTP/Response";
-import * as App from "carbonldp/App";
-import Carbon from "carbonldp/Carbon";
+									<div class="ui bottom attached tab segment active" data-tab="typescript">
+										<!--@formatter:off-->
+										<pre><code highlight class="typescript">
+											import * as HTTPErrors from "carbonldp/HTTP/Errors";
+											import * as Pointer from "carbonldp/Pointer";
+											import * as Response from "carbonldp/HTTP/Response";
+											import * as App from "carbonldp/App";
+											import Carbon from "carbonldp/Carbon";
 
-let platformContext:Carbon = new Carbon(); //platform context
-let myAppContext:AppContext;
-let rootDocument:PersistedDocument.Class;
-//in memory Document
+											let platformContext:Carbon = new Carbon(); //platform context
 
-let JohnDoe:Document.Class = Document.Factory.create();
-JohnDoe.name = "John";
-JohnDoe.lastName = "Doe";
-JohnDoe.dateOfBirth = 1988/06/20;
-JohnDoe.phone = 8112097378
+											platformCarbon.setSetting( "domain", "carbonserver.com" );//location of carbon server
+											platformCarbon.auth.authenticate( "user@email.com", "password" )
+											.then( ( credentials:Credentials ) => {
 
-let JaneDoe:Document.Class = Document.Factory.create();
-let JohnJrDoe:Document.Class = Document.Factory.create();
-let GregDoe:Document.Class = Document.Factory.create();
-let SamSmith:Document.Class = Document.Factory.create();
-let MattSmith:Document.Class = Document.Factory.create();
-let MarySmith:Document.Class = Document.Factory.create();
+												let myAppContext:AppContext;
 
-platformContext.apps.getContext( "contacts/" ).then( ( appContext:App.Context ) => {
-    myAppContext = appContext; //retrieving you app context
+												let patients = { description: "patients of Carbon Memorial Hospital" };
+												let doctors = { description: "doctors of Carbon Memorial Hospital" };
 
-    let myPromises:Promise&lt;Response.Class&gt;[] = [];
+												let myPatients:Pointer.Class[];
+												let myDoctors:Pointer.Class[];
 
-    myPromises.push( myAppContext.documents.createChild( "/", JohnDoe ));
-	myPromises.push( myAppContext.documents.createChild( "/", JaneDoe ));
-	myPromises.push( myAppContext.documents.createChild( "/", GregDoe ));
-	myPromises.push( myAppContext.documents.createChild( "/", SamSmith ));
+												//Retrieve your application context
+												platformContext.apps.getContext( "carbon-hospital-database/" ).then(
+													( appContext:App.Context ) => {
+													    myAppContext = appContext;
 
-    return Promise.all( myPromises );
+														//Create patients as a child of the root document
+														return myAppContext.documents.createChild( "/", "patients", patients );
 
-}).then( ( [ document, response ]:[ PersistedDocument.Class[], Response.Class[] ] ) => {
-    rootDocument = document;
+												}).then(([document, response]:[ Pointer.Class, Response.Class ]) => {
 
-});
-							</code></pre>
+													let myPromises:Promise&lt;Response.Class&gt;[] = [];
+
+													//Create four documents as children of patients document.
+												    myPromises.push(
+														myAppContext.documents.createChild( document.id,
+																							{ name: "John",
+																							lastName: "Doe",
+																							dateOfBirth: new Date("06/20/1988"),
+																							bloodType: "O+" } ));
+													myPromises.push(
+														myAppContext.documents.createChild( document.id, { name: "Jane",
+																											lastName: "Doe",
+																											bloodType: "A+"} ));
+													myPromises.push(
+														myAppContext.documents.createChild( document.id, { name: "John Jr",
+																											lastName: "Doe",
+																											bloodType: "A+"} ));
+													myPromises.push(
+														myAppContext.documents.createChild( document.id, { name: "Mary",
+																											lastName: "Smith",
+																											bloodType: "O+" }));
+
+												    return Promise.all( myPromises );
+
+												}).then(( serverResponses :[ Pointer.Class, Response.Class ][]) => {
+
+													//store patient's document pointers to be used later on
+													myPatients = serverResponses.map(
+														([ document, response ]:[Pointer.Class, Response.Class]) => document);
+
+													//create doctors document as a child of the root document
+													return myAppContext.documents.createChild( "/", "doctors", doctors );
+
+												}).then(([document, response]:[ Pointer.Class, Response.Class ]) => {
+
+													let myPromises:Promise&lt;Response.Class&gt;[] = [];
+
+													//Create four documents as children of doctors document.
+												    myPromises.push( myAppContext.documents.createChild( document.id,
+																										{ name: "John",
+																										lastName: "Stevenson",
+																										specialty: "cardiology" }));
+													myPromises.push( myAppContext.documents.createChild( document.id,
+																										{ name: "Jane",
+																										lastName: "Grey",
+																										specialty: "general surgery" }));
+													myPromises.push( myAppContext.documents.createChild( document.id,
+																										{ name: "Alex",
+																										lastName: "Karev",
+																										specialty: "pediatrics"}));
+
+												    return Promise.all( myPromises );
+
+												}).then(( serverResponses :[ Pointer.Class, Response.Class ][] ) => {
+
+													//store document pointers to be used later on
+													myDoctors = serverResponses.map(
+														([ document, response ]:[Pointer.Class, Response.Class]) => document);
+
+													//for each doctor document create an access point to maintain a patient's list
+													myDoctors.forEach( (doctor:Pointer.Class) => {
+														let accessPoint = AccessPoint.Factory.create(doctor, "patient", "doctor" );
+														myAppContext.documents.createAccessPoint( accessPoint, "patients");
+													});
+
+													//for each patient document create an access point to maintain a doctor's list
+													myPatients.forEach((patient:Pointer.Class)=> {
+														let accessPoint = AccessPoint.Factory.create(patient, "doctor", "patient" );
+														myAppContext.documents.createAccessPoint( accessPoint, "doctors");
+													});
+												});
+											}).catch( ( error:HTTPErrors.Error )=> {
+												console.error( error );
+											} );
+
+										</code></pre>
+										<!--@formatter:on-->
+									</div>
+
+									<div class="ui bottom attached tab segment" data-tab="javascript">
+										<!--@formatter:off-->
+										<pre><code highlight class="javascript">
+											let platformContext = new Carbon(); //platform context
+
+											platformCarbon.setSetting( "domain", "carbonserver.com" );//location of carbon server
+
+											platformCarbon.auth.authenticate( "user@email.com", "password" ).then(
+												function( credentials:Credentials ){
+
+												let myAppContext;
+
+												let patients = { description: "patients of Carbon Memorial Hospital" };
+												let doctors = { description: "doctors of Carbon Memorial Hospital" };
+												let myPatients:Pointer.Class[];
+												let myDoctors:Pointer.Class[];
+
+												//Retrieve your application context
+												platformContext.apps.getContext( "carbon-hospital-database/" ).then(
+													function( appContext ){
+													    myAppContext = appContext; //retrieving you app context
+
+														//Create patients as a child of the root document
+														return myAppContext.documents.createChild( "/", "patients", patients );
+
+												}).then(function([document, response]){
+													let myPromises:Promise&lt;Response.Class&gt;[] = [];
+
+													//Create four documents as children of patients document.
+												    myPromises.push(
+														myAppContext.documents.createChild( document.id,
+																							{ name: "John",
+																							lastName: "Doe",
+																							dateOfBirth: new Date("06/20/1988"),
+																							bloodType: "O+" } ));
+													myPromises.push(
+														myAppContext.documents.createChild( document.id, { name: "Jane",
+																											lastName: "Doe",
+																											bloodType: "A+"} ));
+													myPromises.push(
+														myAppContext.documents.createChild( document.id, { name: "John Jr",
+																											lastName: "Doe",
+																											bloodType: "A+"} ));
+													myPromises.push(
+														myAppContext.documents.createChild( document.id, { name: "Mary",
+																											lastName: "Smith",
+																											bloodType: "O+" }));
+
+												    return Promise.all( myPromises );
+
+												}).then( function( serverResponses ){
+
+													//store patient's document pointers to be used later on
+													myPatients = serverResponses.map( function([ document, response ]){
+														return document;
+													});
+
+													//create doctors document as a child of the root document
+													return myAppContext.documents.createChild( "/", "doctors", doctors );
+
+												}).then( function([document, response] ) => {
+
+													let myPromises:Promise&lt;Response.Class&gt;[] = [];
+
+													//Create four documents as children of doctors document.
+												    myPromises.push( myAppContext.documents.createChild( document.id,
+																										{ name: "John",
+																										lastName: "Stevenson",
+																										specialty: "cardiology" }));
+													myPromises.push( myAppContext.documents.createChild( document.id,
+																										{ name: "Jane",
+																										lastName: "Grey",
+																										specialty: "general surgery" }));
+													myPromises.push( myAppContext.documents.createChild( document.id,
+																										{ name: "Alex",
+																										lastName: "Karev",
+																										specialty: "pediatrics"}));
+
+												    return Promise.all( myPromises );
+
+												}).then( function( serverResponses ){
+
+													//store document pointers to be used later on
+													myDoctors = serverResponses.map( function([ document, response ]){
+														return document;
+													});
+
+													//for each doctor document create an access point to maintain a patient's list
+													myDoctors.forEach( function( doctor ){
+														let accessPoint = AccessPoint.Factory.create(doctor, "patient", "doctor");
+
+														myAppContext.documents.createAccessPoint( accessPoint, "patients");
+													});
+
+													//for each patient document create an access point to maintain a doctor's list
+													myPatients.forEach( function( patient ){
+														let accessPoint = AccessPoint.Factory.create(patient, "doctor", "patient");
+
+														myAppContext.documents.createAccessPoint( accessPoint, "doctors");
+													});
+												});
+											}).catch( function( error ){
+												console.error( error );
+											} );
+
+										</code></pre>
+										<!--@formatter:on-->
+									</div>
+								</div>
+							</div>
+							<div class="ui bottom attached tab segment" data-tab="manipulating-data">
+
+								<div>
+									<div class="ui top attached tabular menu">
+										<a class="item active" data-tab="typescript">TypeScript</a>
+										<a class="item" data-tab="javascript">JavaScript</a>
+									</div>
+
+									<div class="ui bottom attached tab segment active" data-tab="typescript">
+										<!--@formatter:off-->
+										<pre><code highlight class="typescript">
+										import * as HTTPErrors from "carbonldp/HTTP/Errors";
+										import * as PersistedDocument from "carbonldp/PersistedDocument";
+										import * as Response from "carbonldp/HTTP/Response";
+										import * as App from "carbonldp/App";
+										import Carbon from "carbonldp/Carbon";
+
+										let platformCarbon:Carbon = new Carbon();
+
+										platformCarbon.setSetting( "domain", "carbonldp.base22.io" );
+										platformCarbon.auth.authenticate( "admin@carbonldp.com", "hello" )
+											.then( ( credentials:Credentials ) => {
+												console.log( "credentials: ", credentials );
+
+											let myAppContext:App.Context;
+											let myPersistedPatients:PersistedDocument.Class[];
+											let myPersistedDoctors:PersistedDocument.Class[];
+
+											platformCarbon.apps.getContext( "carbon-hospital/" ).then( ( appContext:App.Context ) => {
+												myAppContext = appContext; //retrieving you app context
+
+												// retrieving child documents of patients/
+												return myAppContext.documents.getChildren("patients/")
+
+											}).then(([children, response]:[PersistedDocument.Class[],Response.Class])=> {
+
+												// retrieving child documents of doctors/
+												myPersistedPatients = children;
+												return myAppContext.documents.getChildren("doctors/");
+
+											}).then(([children, response]:[PersistedDocument.Class[],Response.Class])=> {
+												myPersistedDoctors = children;
+
+												let myPromises:Promise<[PersistedDocument.Class, Response.Class]>[] = [];
+
+													// Add named fragment to every patient
+													myPersistedPatients.forEach((patient:PersistedDocument.Class)=> {
+														let fragmentExist = patient.hasFragment("medical-history");
+														if(!fragmentExist) {
+															patient.medicalHistory = patient.createNamedFragment("medical-history",
+																												{status: "healthy"});
+															myPromises.push( patient.save().then( () => patient.refresh() ) );
+														}
+													});
+													return Promise.all( myPromises );
+
+											}).then(()=> {
+												let myPromises:Promise<[PersistedDocument.Class, Response.Class]>[] = [];
+
+												// Add properties for patients John Jr Doe, Jane Doe
+												myPersistedPatients.forEach((patient:PersistedDocument.Class)=> {
+													if (patient.name === "John Jr") {
+														patient.dateOfBirth = new Date("07/15/2016");
+														myPromises.push(patient.save().then(() => patient.refresh()));
+
+													} else if (patient.name === "Jane") {
+														patient.dateOfBirth = new Date("01/11/1990");
+														myPromises.push(patient.save().then(() => patient.refresh()));
+													}
+												});
+												return Promise.all(myPromises);
+											}).then(() => {
+
+												myPersistedPatients.forEach((patient:PersistedDocument.Class)=> {
+													if (patient.name === "John Jr") {
+														myPersistedDoctors.forEach((doctor:PersistedDocument.Class)=> {
+															if (doctor.name === "Alex") {
+																myAppContext.documents.addMember(doctor.id + "patients/", patient);
+															} else if (doctor.name === "Jane") {
+																myAppContext.documents.addMember(patient.id + "doctors/", doctor);
+															}
+														});
+													} else if (patient.name === "Mary") {
+														myPersistedDoctors.forEach((doctor:PersistedDocument.Class)=> {
+															if (doctor.name === "John") {
+																myAppContext.documents.addMember(doctor.id + "patients/", patient);
+															} else if (doctor.name === "Jane") {
+																myAppContext.documents.addMember(patient.id + "doctors/", doctor);
+															}
+														});
+													} else if (patient.name === "John") {
+														myPersistedDoctors.forEach((doctor:PersistedDocument.Class)=> {
+															if (doctor.name === "John") {
+																myAppContext.documents.addMember(doctor.id + "patients/", patient);
+															}
+														});
+													}
+												});
+											});
+										} ).catch( ( error:HTTPErrors.Error )=> {
+											console.error( error );
+										} );
+										</code></pre>
+										<!--@formatter:on-->
+									</div>
+
+									<div class="ui bottom attached tab segment" data-tab="javascript">
+										<!--@formatter:off-->
+										<pre><code highlight class="javascript">
+										let platformCarbon = new Carbon();
+
+										platformCarbon.setSetting( "domain", "carbonldp.base22.io" );
+										platformCarbon.auth.authenticate( "admin@carbonldp.com", "hello" )
+											.then( function( credentials:Credentials ){
+												console.log( "credentials: ", credentials );
+
+											let myAppContext;
+											let myPersistedPatients;
+											let myPersistedDoctors;
+
+											platformCarbon.apps.getContext( "carbon-hospital/" ).then( function( appContext ){
+												myAppContext = appContext; //retrieving you app context
+
+												// retrieving child documents of patients/
+												return myAppContext.documents.getChildren("patients/")
+
+											}).then(function([children, response]){
+
+												// retrieving child documents of doctors/
+												myPersistedPatients = children;
+												return myAppContext.documents.getChildren("doctors/");
+
+											}).then(function([children, response]){
+												myPersistedDoctors = children;
+
+												let myPromises = [];
+
+													// Add named fragment to every patient
+													myPersistedPatients.forEach( function(patient){
+														let fragmentExist = patient.hasFragment("medical-history");
+														if(!fragmentExist) {
+															patient.medicalHistory = patient.createNamedFragment("medical-history",
+																												{status: "healthy"});
+															myPromises.push( patient.save().then( function(){   patient.refresh()   } ) );
+														}
+													});
+													return Promise.all( myPromises );
+
+											}).then( function(){
+												let myPromises = [];
+
+												// Add properties for patients John Jr Doe, Jane Doe
+												myPersistedPatients.forEach( function(patient){
+													if (patient.name === "John Jr") {
+														patient.dateOfBirth = new Date("07/15/2016");
+														myPromises.push(patient.save().then(function(){ return patient.refresh();}));
+
+													} else if (patient.name === "Jane") {
+														patient.dateOfBirth = new Date("01/11/1990");
+														myPromises.push(patient.save().then(function(){ return patient.refresh();}));
+													}
+												});
+												return Promise.all(myPromises);
+											}).then(function() {
+
+												myPersistedPatients.forEach( function(patient){
+													if (patient.name === "John Jr") {
+														myPersistedDoctors.forEach( function(doctor){
+															if (doctor.name === "Alex") {
+																myAppContext.documents.addMember(doctor.id + "patients/", patient);
+															} else if (doctor.name === "Jane") {
+																myAppContext.documents.addMember(patient.id + "doctors/", doctor);
+															}
+														});
+													} else if (patient.name === "Mary") {
+														myPersistedDoctors.forEach( function(doctor){
+															if (doctor.name === "John") {
+																myAppContext.documents.addMember(doctor.id + "patients/", patient);
+															} else if (doctor.name === "Jane") {
+																myAppContext.documents.addMember(patient.id + "doctors/", doctor);
+															}
+														});
+													} else if (patient.name === "John") {
+														myPersistedDoctors.forEach( function(doctor){
+															if (doctor.name === "John") {
+																myAppContext.documents.addMember(doctor.id + "patients/", patient);
+															}
+														});
+													}
+												});
+											});
+										} ).catch( function( error ){
+											console.error( error );
+										} );
+
+
+										</code></pre>
 							<!--@formatter:on-->
-						<!--</div>
-
-						<div class="ui bottom attached tab segment" data-tab="javascript">
-							<!--@formatter:off-->
-							<!--<pre><code highlight class="javascript">
-
-
-							</code></pre>
-							<!--@formatter:on-->
-						<!--</div>
-					</div>-->
+									</div>
+								</div>
+							</div>
+						</div>
 					</section>
 
 				</article>
