@@ -2,7 +2,8 @@ import {Component, ElementRef, ChangeDetectorRef} from "@angular/core";
 import {Title} from "@angular/platform-browser";
 import { RouteConfig, RouterOutlet, RouterLink } from "@angular/router-deprecated";
 
-import HighlightDirective from "app/directives/HighlightDirective";
+//import HighlightDirective from "app/directives/HighlightDirective";
+import { HighlightDirective } from "carbon-panel/directives/highlight.directive";
 import SidebarComponent from "./../../sidebar/SidebarComponent";
 
 import highlight from "highlight.js";

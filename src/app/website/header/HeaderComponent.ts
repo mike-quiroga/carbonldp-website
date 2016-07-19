@@ -7,7 +7,7 @@ import { AuthService } from "angular2-carbonldp/services";
 import $ from "jquery";
 import "semantic-ui/semantic";
 
-import LoginComponent from "app/components/login/LoginComponent";
+import { LoginComponent } from "carbon-panel/login.component";
 
 import template from "./template.html!";
 import "./style.css!";

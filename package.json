@@ -1,6 +1,6 @@
 {
   "name": "carbon-website",
-  "version": "0.5.17",
+  "version": "0.5.18",
   "description": "Public Website for carbonldp.com",
   "main": "dist/index.html",
   "author": "Base22 LLC",
@@ -63,7 +63,7 @@
     "systemjs": "0.19.26",
     "systemjs-builder": "0.15.14",
     "tslint": "^3.10.2",
-    "typescript": "^1.8.10",
+    "typescript": "^1.9.0-dev.20160624-1.0",
     "typings": "^1.0.4",
     "yargs": "^4.7.1",
     "zone.js": "^0.6.12"
@@ -80,7 +80,7 @@
     },
     "dependencies": {
       "angulartics2": "npm:angulartics2@^1.0.11",
-      "codemirror": "npm:codemirror@^5.12.0",
+      "codemirror": "npm:codemirror@^5.16.0",
       "css": "github:systemjs/plugin-css@^0.1.20",
       "highlight.js": "npm:highlight.js@^9.3.0",
       "jquery": "npm:jquery@^2.2.1",
