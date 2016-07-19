@@ -86,7 +86,7 @@
 							</div>
 							<div class="content">
 								<p>If you are not using a package manager you can clone the source code with the following command:</p>
-								<pre><code highlight class="bash">
+								<pre><code cphighlight class="bash">
 									git clone https://github.com/CarbonLDP/CarbonLDP-JS-SDK.git
 								</code></pre>
 								<p>It already includes a pre-compiled version of the source code so you can just jump right in.</p>
@@ -96,7 +96,7 @@
 								npm
 							</div>
 							<div class="active content">
-								<pre><code highlight class="bash">
+								<pre><code cphighlight class="bash">
 									npm install carbonldp --save
 								</code></pre>
 							</div>
@@ -106,7 +106,7 @@
 							</div>
 							<div class="content">
 								<!--@formatter:off-->
-								<pre><code highlight class="bash">
+								<pre><code cphighlight class="bash">
 									jspm install npm:carbonldp
 									# We also need to install one of carbonldp's dependencies
 									jspm install npm:jsonld
@@ -123,7 +123,7 @@
 							<div class="content">
 								<p>The SDK comes with a bundled version that you can import directly into your html:</p>
 								<!--@formatter:off-->
-								<pre><code highlight class="html">
+								<pre><code cphighlight class="html">
 									&lt;script src="--sdk-directory--/dist/bundles/Carbon.sfx.js"&gt;&lt;/script&gt;
 								</code></pre>
 								<!--@formatter:on-->
@@ -138,7 +138,7 @@
 									Each time you see in an example something like:
 								</p>
 								<!--@formatter:off-->
-								<pre><code highlight class="javascript">
+								<pre><code cphighlight class="javascript">
 									import * as Errors from "carbonldp/HTTP/Errors";
 								</code></pre>
 								<!--@formatter:on-->
@@ -147,7 +147,7 @@
 									to access the same module. For example, accessing that module using the global namespace would be:
 								</p>
 								<!--@formatter:off-->
-								<pre><code highlight class="javascript">
+								<pre><code cphighlight class="javascript">
 									Carbon.HTTP.Errors
 								</code></pre>
 								<!--@formatter:on-->
@@ -168,7 +168,7 @@
 									export of the module. That export will also be available as the named export <code>Class</code>. For example:
 								</p>
 								<!--@formatter:off-->
-								<pre><code highlight class="javascript">
+								<pre><code cphighlight class="javascript">
 									// This:
 									import Document from "carbonldp/Document";
 									let myDocument:Document = new Document();
@@ -184,7 +184,7 @@
 									imports but you'll likely need to rename the import variables like:
 								</p>
 								<!--@formatter:off-->
-								<pre><code highlight class="javascript">
+								<pre><code cphighlight class="javascript">
 									import { Factory as DocumentFactory, Class as Document } from "carbonldp/Document";
 								</code></pre>
 								<!--@formatter:on-->
@@ -193,7 +193,7 @@
 									Example:
 								</p>
 								<!--@formatter:off-->
-								<pre><code highlight class="javascript">
+								<pre><code cphighlight class="javascript">
 									import * as Errors from "carbonldp/HTTP/Errors";
 									import * as Request from "carbonldp/HTTP/Request";
 
@@ -241,7 +241,7 @@
 							</div>
 							<div class="ui bottom attached tab segment active" data-tab="typescript">
 								<!--@formatter:off-->
-								<pre><code highlight class="typescript">
+								<pre><code cphighlight class="typescript">
 									import * as App from "carbonldp/App";
 									import Carbon from "carbonldp/Carbon";
 
@@ -256,7 +256,7 @@
 							</div>
 							<div class="ui bottom attached tab segment" data-tab="javascript">
 								<!--@formatter:off-->
-								<pre><code highlight class="javascript">
+								<pre><code cphighlight class="javascript">
 									let carbon = new Carbon(); // platform context
 									let myAppContext;
 
@@ -298,7 +298,7 @@
 							</div>
 							<div class="ui bottom attached tab segment active" data-tab="typescript">
 								<!--@formatter:off-->
-								<pre><code highlight class="typescript">
+								<pre><code cphighlight class="typescript">
 									// imports
 									import * Response from "carbonldp/HTTP/Response";
 									import * Document from "carbonldp/Document";
@@ -320,7 +320,7 @@
 							</div>
 							<div class="ui bottom attached tab segment" data-tab="javascript">
 								<!--@formatter:off-->
-								<pre><code highlight class="javascript">
+								<pre><code cphighlight class="javascript">
 									let carbon:Carbon = new Carbon(); // platform context
 									let myAppContext;
 									let rootDocument;
@@ -392,7 +392,7 @@
 
 							<div class="ui bottom attached tab segment active" data-tab="typescript">
 								<!--@formatter:off-->
-								<pre><code highlight class="typescript">
+								<pre><code cphighlight class="typescript">
 									//...
 									import * as Pointer from "carbonldp/Pointer";
 									import * as Response from "carbonldp/HTTP/Response";
@@ -431,7 +431,7 @@
 
 							<div class="ui bottom attached tab segment" data-tab="javascript">
 								<!--@formatter:off-->
-								<pre><code highlight class="javascript">
+								<pre><code cphighlight class="javascript">
 									//... Declare required contexts, create in memory Document
 
 									platformContext.apps.getContext( "your-app-slug-here/" ).then(
@@ -492,7 +492,7 @@
 							</div>
 							<div class="ui bottom attached tab segment active" data-tab="typescript">
 								<!--@formatter:off-->
-								<pre><code highlight class="typescript">
+								<pre><code cphighlight class="typescript">
 									// ...
 									import * as Pointer from "carbonldp/Pointer";
 									import * as Response from "carbonldp/HTTP/Response";
@@ -527,7 +527,7 @@
 							</div>
 							<div class="ui bottom attached tab segment" data-tab="javascript">
 								<!--@formatter:off-->
-								<pre><code highlight class="javascript">
+								<pre><code cphighlight class="javascript">
 									// ...
 
 									platformContext.apps.getContext( "your-app-slug-here/" ).then( function( appContext:App.Context ){
@@ -583,7 +583,7 @@
 
 							<div class="ui bottom attached tab segment active" data-tab="typescript">
 								<!--@formatter:off-->
-								<pre><code highlight class="typescript">
+								<pre><code cphighlight class="typescript">
 									// ...
 									import * as PersistedDocument from "carbonldp/PersistedDocument";
 
@@ -607,7 +607,7 @@
 
 							<div class="ui bottom attached tab segment" data-tab="javascript">
 								<!--@formatter:off-->
-								<pre><code highlight class="javascript">
+								<pre><code cphighlight class="javascript">
 									// ...
 									let documentPointer;
 									let myPersistedDocument;
@@ -667,7 +667,7 @@
 
 							<div class="ui bottom attached tab segment active" data-tab="typescript">
 								<!--@formatter:off-->
-								<pre><code highlight class="typescript">
+								<pre><code cphighlight class="typescript">
 									// imports
 
 									// declarations
@@ -695,7 +695,7 @@
 
 							<div class="ui bottom attached tab segment" data-tab="javascript">
 								<!--@formatter:off-->
-								<pre><code highlight class="javascript">
+								<pre><code cphighlight class="javascript">
 									// declarations
 
 									platformContext.apps.getAppContext( "your-app-slug/" ).then(
@@ -740,7 +740,7 @@
 
 							<div class="ui bottom attached tab segment active" data-tab="typescript">
 								<!--@formatter:off-->
-								<pre><code highlight class="typescript">
+								<pre><code cphighlight class="typescript">
 									import * as App from "carbonldp/App";
 									import Carbon from "carbonldp/Carbon";
 
@@ -755,7 +755,7 @@
 
 							<div class="ui bottom attached tab segment" data-tab="javascript">
 								<!--@formatter:off-->
-								<pre><code highlight class="javascript">
+								<pre><code cphighlight class="javascript">
 									let platformContext = new Carbon();
 
 									platformContext.apps.getAppContext( "your-app-slug/" ).then(
@@ -828,7 +828,7 @@
 
 								<div class="ui bottom attached tab segment active" data-tab="typescript">
 									<!--@formatter:off-->
-									<pre><code highlight class="typescript">
+									<pre><code cphighlight class="typescript">
 										// imports
 
 										// declarations
@@ -853,7 +853,7 @@
 
 								<div class="ui bottom attached tab segment" data-tab="javascript">
 									<!--@formatter:off-->
-									<pre><code highlight class="javascript">
+									<pre><code cphighlight class="javascript">
 										// declarations
 
 										platformContext.apps.getAppContext( "your-app-slug/" ).then(
@@ -931,7 +931,7 @@
 
 								<div class="ui bottom attached tab segment active" data-tab="typescript">
 									<!--@formatter:off-->
-									<pre><code highlight class="typescript">
+									<pre><code cphighlight class="typescript">
 										// imports
 
 										// declarations
@@ -966,7 +966,7 @@
 
 								<div class="ui bottom attached tab segment" data-tab="javascript">
 									<!--@formatter:off-->
-									<pre><code highlight class="javascript">
+									<pre><code cphighlight class="javascript">
 										// declarations
 
 										platformContext.apps.getAppContext( "your-app-slug/" ).then(
@@ -1045,7 +1045,7 @@
 
 							<div class="ui bottom attached tab segment active" data-tab="typescript">
 								<!--@formatter:off-->
-								<pre><code highlight class="typescript">
+								<pre><code cphighlight class="typescript">
 									// imports
 
 									// declarations
@@ -1066,7 +1066,7 @@
 
 							<div class="ui bottom attached tab segment" data-tab="javascript">
 								<!--@formatter:off-->
-								<pre><code highlight class="javascript">
+								<pre><code cphighlight class="javascript">
 
 									// declarations
 									let myObject = { name: "myNieces", description: "All the nieces of myParent."};
@@ -1117,7 +1117,7 @@
 
 							<div class="ui bottom attached tab segment active" data-tab="typescript">
 								<!--@formatter:off-->
-								<pre><code highlight class="typescript">
+								<pre><code cphighlight class="typescript">
 									// imports
 
 									let myPersistedDocument:PersistedDocument.Class;
@@ -1138,7 +1138,7 @@
 
 							<div class="ui bottom attached tab segment" data-tab="javascript">
 								<!--@formatter:off-->
-								<pre><code highlight class="javascript">
+								<pre><code cphighlight class="javascript">
 
 									let myPersistedDocument;
 									let myParent;
@@ -1205,7 +1205,7 @@
 
 									<div class="ui bottom attached tab segment active" data-tab="typescript">
 										<!--@formatter:off-->
-										<pre><code highlight class="typescript">
+										<pre><code cphighlight class="typescript">
 											import * as HTTPErrors from "carbonldp/HTTP/Errors";
 											import * as Pointer from "carbonldp/Pointer";
 											import * as Response from "carbonldp/HTTP/Response";
@@ -1317,7 +1317,7 @@
 
 									<div class="ui bottom attached tab segment" data-tab="javascript">
 										<!--@formatter:off-->
-										<pre><code highlight class="javascript">
+										<pre><code cphighlight class="javascript">
 											let platformContext = new Carbon(); // platform context
 
 											platformCarbon.setSetting( "domain", "carbonserver.com" );// location of carbon server
@@ -1435,7 +1435,7 @@
 
 									<div class="ui bottom attached tab segment active" data-tab="typescript">
 										<!--@formatter:off-->
-										<pre><code highlight class="typescript">
+										<pre><code cphighlight class="typescript">
 										import * as HTTPErrors from "carbonldp/HTTP/Errors";
 										import * as PersistedDocument from "carbonldp/PersistedDocument";
 										import * as Response from "carbonldp/HTTP/Response";
@@ -1529,7 +1529,7 @@
 
 									<div class="ui bottom attached tab segment" data-tab="javascript">
 										<!--@formatter:off-->
-										<pre><code highlight class="javascript">
+										<pre><code cphighlight class="javascript">
 										let platformCarbon = new Carbon();
 
 										platformCarbon.setSetting( "domain", "carbonldp.base22.io" );
@@ -1626,7 +1626,7 @@
 
 									<div class="ui bottom attached tab segment active" data-tab="typescript">
 										<!--@formatter:off-->
-										<pre><code highlight class="typescript">
+										<pre><code cphighlight class="typescript">
 										import * as HTTPErrors from "carbonldp/HTTP/Errors";
 										import * as PersistedDocument from "carbonldp/PersistedDocument";
 										import * as Pointer from "carbonldp/Pointer";
@@ -1681,7 +1681,7 @@
 
 									<div class="ui bottom attached tab segment" data-tab="javascript">
 										<!--@formatter:off-->
-										<pre><code highlight class="javascript">
+										<pre><code cphighlight class="javascript">
 
 										platformContext = new Carbon();
 										platformContext.setSetting( "domain", "carbonldp.base22.io" );
