@@ -34,9 +34,7 @@
         </MarkdownNavigatorCodeStyleSettings>
         <TypeScriptCodeStyleSettings>
           <option name="REFORMAT_C_STYLE_COMMENTS" value="false" />
-          <option name="USE_PUBLIC_MODIFIER" value="true" />
           <option name="SPACES_WITHIN_OBJECT_LITERAL_BRACES" value="true" />
-          <option name="SPACES_WITHIN_IMPORTS" value="true" />
         </TypeScriptCodeStyleSettings>
         <XML>
           <option name="XML_LEGACY_SETTINGS_IMPORTED" value="true" />
@@ -115,6 +113,7 @@
           <option name="SPACE_WITHIN_CATCH_PARENTHESES" value="true" />
           <option name="SPACE_WITHIN_SWITCH_PARENTHESES" value="true" />
           <option name="SPACE_WITHIN_BRACKETS" value="true" />
+          <option name="SPACE_BEFORE_IF_PARENTHESES" value="false" />
           <option name="KEEP_SIMPLE_BLOCKS_IN_ONE_LINE" value="true" />
           <option name="KEEP_SIMPLE_METHODS_IN_ONE_LINE" value="true" />
           <indentOptions>

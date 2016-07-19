@@ -6,7 +6,8 @@ import { NewsletterFormComponent } from "../newsletter-form/NewsletterFormCompon
 
 import $ from "jquery";
 import "semantic-ui/semantic";
-import * as CodeMirrorComponent from "app/components/code-mirror/CodeMirrorComponent";
+// import * as CodeMirrorComponent from "app/components/code-mirror/CodeMirrorComponent";
+import * as CodeMirrorComponent from "carbon-panel/code-mirror/code-mirror.component";
 
 import template from "./template.html!";
 import "./style.css!";
@@ -23,12 +24,13 @@ export default class HomeView {
 	$element:JQuery;
 	$mainMenu:JQuery;
 	$articles:JQuery;
+	title:Title;
 	$carbonLogo:JQuery;
 
 	constructor( router:Router, element:ElementRef, title:Title ) {
 		this.router = router;
 		this.element = element;
-		title.setTitle("Home");
+		this.title = title;
 	}
 
 	ngAfterViewInit():void {
@@ -39,6 +41,10 @@ export default class HomeView {
 		this.createDropdownMenus();
 		this.addMenuVisibilityHandlers();
 		this.createAccordions();
+	}
+
+	routerOnActivate():void {
+		this.title.setTitle( "CarbonLDP | Home" );
 	}
 
 	routerOnDeactivate():void {

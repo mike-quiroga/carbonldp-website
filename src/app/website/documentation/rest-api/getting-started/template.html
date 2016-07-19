@@ -1,0 +1,2378 @@
+<div class="ui main grid container">
+
+	<div class="row">
+		<div class="sixteen wide column">
+			<div class="ui breadcrumb">
+				<span class="section">Documentation</span> <i class="right chevron icon divider"></i> <span class="section">REST API</span> <i class="right arrow icon divider"></i>
+			</div>
+		</div>
+		<sidebar-component [mobile]="true" [parentElement]="element" [contentReady]="contentReady" class="sixteen wide mobile only column"></sidebar-component>
+	</div>
+	<div class="row">
+		<div class="twelve wide computer twelve wide tablet sixteen wide mobile column">
+			<main>
+				<article class="ui vertical segment" id="article">
+
+					<header>
+						<h1 class="ui header">Getting Started with the REST API</h1>
+					</header>
+
+					<div class="ui icon yellow message">
+						<i class="warning sign icon"></i>
+
+						<div class="content">
+							<div class="header">Pre-release Documentation</div>
+							<p>Although Carbon LDP is not yet released, we're publishing documentation as it is prepared so that you can preview what's in store.</p>
+						</div>
+					</div>
+
+					<div class="ui message">
+						<div class="content">
+							<p class="larger">This guide describes how to build an example application using the Carbon LDP REST API. The REST API provides a way for applications to interact with the
+								Carbon platform
+								using HTTP verbs (GET, POST, PUT, DELETE, etc.) and resources identified by URIs. The REST API is considered to be a lower-level API than the JavaScript SDK. Doing
+								things directly with the
+								REST API is generally more tedious than with the JavaScript SDK. However, understanding the REST API provides a lot of insight into how the platform works and can be
+								advantageous for
+								developers who seek to advance their understanding of the platform.</p>
+						</div>
+					</div>
+
+					<section>
+						<h2 class="ui header">About the example application</h2>
+
+						<p>In this guide, we'll use the REST API to create a simple, but useful taxonomy service. A taxonomy is a controlled vocabulary of terms, organized in a hierarchy, that can be
+							used for
+							classifying and organizing information. Taxonomies are commonly used in web applications. Their terms are used for tagging content and as facets to help users filter and
+							find. In this exercise,
+							you'll learn some of the the most important functions of the REST API as well as fundamental Linked Data Platform concepts. You'll also have a useful application that you
+							can use to create and
+							manage a single 'canonical' source of terms such as a corporate enterprise taxonomy. Other applications will be able to consume and use the taxonomy service using the very
+							same API.</p>
+
+						<p>In this guide, we'll use the following steps to complete the application:</p>
+
+						<ol>
+							<li>Create an account on carbonldp.com</li>
+							<li>Create an application</li>
+							<li>Model the application (vocabulary, resources, containers)</li>
+							<li>Create application resources</li>
+							<li>Secure the application</li>
+						</ol>
+
+						<p>
+							Since this guide focuses on the REST API, you'll need a tool that can help you create and send HTTP requests. We recommend <a href="https://www.getpostman.com/">Postman</a>.
+							It's a great tool,
+							it's free, and it's the one we'll be featuring in this guide. But feel free to use the tool you're most comfortable with. <br> <br>
+							<img src="assets/images/postman-logo.png"
+							     width="197" height="68">
+						</p>
+
+					</section>
+
+					<section>
+
+						<h2 class="ui header">Create an account on carbonldp.com</h2>
+
+						<p>
+							To interact with Carbon through the REST API, we'll need a Carbon user account. Even this can be done through the REST API, so let's start by issuing a POST to create a new
+							account. The resource that comprises a Carbon account is known as an <em>Agent</em> - a <em>platform agent</em> to be precise. Later, you will learn about 
+							<em>application agents</em>, which represent accounts specifically for users of the applications you build.
+						</p>
+
+						<section>
+							<h3 class="ui header">Create the request</h3>
+
+							<p>Create the following HTTP request to create a platform account.</p>
+
+							<p>
+								<span class="ui blue horizontal label">POST</span> <code>{{protocolAndHost}}/platform/agents/</code>
+							</p>
+
+							<table class="ui celled table">
+								<thead>
+									<tr>
+										<th><span>HTTP Header</span></th>
+										<th>Value</th>
+										<th>Required?</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td>Content-Type</td>
+										<td>text/turtle</td>
+										<td>Yes</td>
+									</tr>
+									<tr>
+										<td>Prefer</td>
+										<td><span class="nolink">http://www.w3.org/ns/ldp#Container</span>; rel=interaction-model</td>
+										<td>Yes</td>
+									</tr>
+									<tr>
+										<td>Slug</td>
+										<td>jane-doe</td>
+										<td>No</td>
+									</tr>
+								</tbody>
+							</table>
+							<pre cphighlight class="turtle">
+								@prefix cs:&#60;https://carbonldp.com/ns/v1/security#&#62;.
+								@prefix vcard:&#60;http://www.w3.org/2001/vcard-rdf/3.0#&#62;.
+
+								<>
+									a cs:Agent;
+									cs:name "Jane Doe";
+									vcard:email "jane.doe@example.org";
+									cs:password "MyStr0ngP@ssw0rd#".
+							</pre>
+						</section>
+
+						<section>
+							<h3 class="ui header">Review the request</h3>
+
+							<p>Before issuing this request, you may want to examine its parts. To get more information about each part in the request, click to expand an item of interest below.</p>
+
+							<div class="ui styled fluid accordion">
+								<div class="title">
+									<i class="dropdown icon"></i> Content-Type
+								</div>
+								<div class="content">
+									<p>Since the request method is POST, the Content-Type HTTP header tells the platform what kind of content to expect in the body of the request. We use turtle (Terse
+										RDF Triple Language) in
+										our documentation because it's brief and clean. Once you understand the turtle syntax, you'll find that it's very easy to read and write. In all, Carbon
+										supports the following content types:</p>
+									<ul>
+										<li>Turtle: text/turtle</li>
+										<li>JSON-LD: application/ld+json</li>
+										<li>RDF XML: application/rdf+xml</li>
+									</ul>
+								</div>
+								<div class="title">
+									<i class="dropdown icon"></i> Prefer
+								</div>
+								<div class="content">
+									<p>
+										The <code>Prefer</code> header uses a link relation to specify the <em>interaction model</em> of the target resource, which is the resource we're posting to -
+										the <code>/platform/agents/</code>
+										container. By using this header, we're specifying the desired behavior of the resource. Because we're adding a member resource to the target container, we need
+										it to behave like a container
+										as opposed to an <code>RDFSource</code> or a  <code>NonRDFSource</code> . In all, Carbon supports the following interaction model values for the
+										<code>Prefer</code> header:
+									</p>
+									<ul>
+										<li><code>http://www.w3.org/ns/ldp#Container; rel=interaction-model</code></li>
+										<li><code>http://www.w3.org/ns/ldp#RDFSource; rel=interaction-model</code></li>
+										<li><code>http://www.w3.org/ns/ldp#NonRDFSource; rel=interaction-model</code></li>
+									</ul>
+								</div>
+								<div class="title">
+									<i class="dropdown icon"></i> Slug
+								</div>
+								<div class="content">
+									<p>
+										The <code>Slug</code> header is intended to give the server a hint as to how to mint a new URI for the resource being created. If a slug is not provided, Carbon
+										will generate a random number
+										for the URI of the agent. In this case, however, we're specifying a preference to use jane-doe. Therefore, if it is available for use, the server will mint the
+										following URI:
+									</p>
+
+									<p>
+										<code>{{protocolAndHost}}/platform/agents/jane-doe/</code>
+									</p>
+								</div>
+								<div class="title">
+									<i class="dropdown icon"></i> Body
+								</div>
+								<div class="content">
+
+									<p>The body of the request is an RDF graph of triples written in Turtle, which we told the server we'd be using in the Content-Type header.</p>
+
+									<p>Using Turtle's @prefix directive we declare short prefix names so that we don't have to repeat long URIs in the triples that follow.</p>
+
+									<p>Following is a brief description of each of the required triples that come after the namespace declarations:</p>
+
+									<table class="ui celled table">
+										<thead>
+											<tr>
+												<th>Subject</th>
+												<th>Predicate</th>
+												<th>Object</th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr>
+												<td>
+													<pre>&lt;&gt;</pre>
+												</td>
+												<td>
+													<pre>a</pre>
+												</td>
+												<td>
+													<pre>cs:Agent</pre>
+												</td>
+											</tr>
+											<tr>
+												<td colspan="3">
+													<p>
+														The subject specifies an empty value relative to the base URI. In turtle, URIs are written enclosed in '&lt;' and '&gt;' and may be absolute RDF
+														URI References or relative to the current
+														base URI. <br/>The token 'a' in the predicate position always specifies the RDF type of the resource, which is a short way of writing:
+													</p> <code>http://www.w3.org/1999/02/22-rdf-syntax-ns#type</code>
+
+													<p>In the object position, we specify the RDF type as being an Agent from the Carbon LDP security vocabulary.</p>
+												</td>
+											</tr>
+											<tr>
+												<td>
+													<pre>&lt;&gt;</pre>
+												</td>
+												<td>
+													<pre>cs:name</pre>
+												</td>
+												<td>
+													<pre>"Jane Doe"</pre>
+												</td>
+											</tr>
+											<tr>
+												<td colspan="3">The name is a literal string that should specify a common name for the user; we recommend using the first and last name.</td>
+											</tr>
+											<tr>
+												<td>
+													<pre>&lt;&gt;</pre>
+												</td>
+												<td>
+													<pre>vcard:email</pre>
+												</td>
+												<td>
+													<pre>"jane.doe@example.org"</pre>
+												</td>
+											</tr>
+											<tr>
+												<td colspan="3">The email is a literal string that should be a valid contact email address for the user. It also serves as the login user ID.</td>
+											</tr>
+											<tr>
+												<td>
+													<pre>&lt;&gt;</pre>
+												</td>
+												<td>
+													<pre>cs:password</pre>
+												</td>
+												<td>
+													<pre>"MyStr0ngP@ssw0rd#"</pre>
+												</td>
+											</tr>
+											<tr>
+												<td colspan="3">The password is a literal string that should be the desired password.</td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+							</div>
+						</section>
+
+						<section>
+
+							<h3 class="ui header">Issue the request to create an account</h3>
+
+							<p>Issue the POST request.</p>
+
+							<p>A successful request will result in HTTP status code 201 Created. The ETag header in the response will confirm the time of creation and the Location header will provide
+								the server minted URI for the new Agent resource. For example:</p>
+
+							<table class="ui celled table">
+								<thead>
+									<tr>
+										<th>HTTP Header</th>
+										<th>Value</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td>ETag</td>
+										<td><span>W/"2015-11-09T19:18:30.863Z"</span></td>
+									</tr>
+									<tr>
+										<td>Location</td>
+										<td><span>{{protocolAndHost}}/platform/agents/jane-doe/</span></td>
+									</tr>
+								</tbody>
+							</table>
+
+						</section>
+
+						<section>
+
+							<h3 class="ui header">Examine the new Agent resource</h3>
+
+							<p>
+								Now, let's take a look at the newly created resource by issuing a <code>GET</code> request to the URI that was minted for the resource.
+							</p>
+
+							<p>Create the following HTTP request to get the platform Agent.</p>
+
+							<p>
+								<span class="ui blue horizontal label">GET</span> <code>{{protocolAndHost}}/platform/agents/jane-doe/</code>
+							</p>
+
+							<p>Note the trailing slash in the URI. An RDFSource created in Carbon is automatically also a Container (a feature Carbon manages for you), so the
+								server-minted URI always ends with a trailing slash.</p>
+
+							<p>You will need to authorize the request using the username and password of the agent that was defined in the body of the former POST request. Both the username and
+								password are case-sensitive; use the same case you used when defining the username and password in the Agent resource.</p>
+
+							<table class="ui celled table">
+								<tbody>
+									<tr>
+										<td><strong>Username</strong></td>
+										<td>jane.doe5@example.org</td>
+									</tr>
+									<tr>
+										<td><strong>Password</strong></td>
+										<td>MyStr0ngP@ssw0rd#</td>
+									</tr>
+								</tbody>
+							</table>
+
+							<p>
+								If you paste the URI in the address bar of your web browser and hit enter, for example, you should be prompted for the username and password. If you issue the request
+								with Postman or another tool, you should add Basic Auth to the request.<br/> <br/>Let's also add an Accept header to change the format of the response to JSON LD.
+							</p>
+
+							<table class="ui celled table">
+								<thead>
+									<tr>
+										<th>HTTP Header</th>
+										<th>Value</th>
+										<th colspan="1">Required?</th>
+									</tr>
+								</thead>
+								<tbody>
+
+									<tr>
+										<td>Authorization</td>
+										<td>Basic ...</td>
+										<td>Yes</td>
+									</tr>
+									<tr>
+										<td>Accept</td>
+										<td>application/ld+json</td>
+										<td>No (default is text/turtle)</td>
+									</tr>
+								</tbody>
+							</table>
+
+							<p>
+								<strong>200 OK</strong>
+							</p>
+
+							<pre cphighlight class="json">
+								[
+								   {
+								      "@graph":[
+								         {
+								            "@id":"{{protocolAndHost}}/platform/agents/jane-doe/",
+								            "@type":[
+								               "http://www.w3.org/ns/ldp#BasicContainer",
+								               "http://www.w3.org/ns/ldp#RDFSource",
+								               "http://www.w3.org/ns/ldp#Container",
+								               "https://carbonldp.com/ns/v1/security#Agent"
+								            ],
+								            "http://www.w3.org/2001/vcard-rdf/3.0#email":[
+								               {
+								                  "@value":"jane.doe@example.org"
+								               }
+								            ],
+								            "http://www.w3.org/ns/ldp#hasMemberRelation":[
+								               {
+								                  "@id":"http://www.w3.org/ns/ldp#member"
+								               }
+								            ],
+								            "https://carbonldp.com/ns/v1/platform#created":[
+								               {
+								                  "@type":"http://www.w3.org/2001/XMLSchema#dateTime",
+								                  "@value":"2015-11-13T22:28:46.101Z"
+								               }
+								            ],
+								            "https://carbonldp.com/ns/v1/platform#defaultInteractionModel":[
+								               {
+								                  "@id":"http://www.w3.org/ns/ldp#RDFSource"
+								               }
+								            ],
+								            "https://carbonldp.com/ns/v1/platform#modified":[
+								               {
+								                  "@type":"http://www.w3.org/2001/XMLSchema#dateTime",
+								                  "@value":"2015-11-13T22:28:46.101Z"
+								               }
+								            ],
+								            "https://carbonldp.com/ns/v1/security#enabled":[
+								               {
+								                  "@type":"http://www.w3.org/2001/XMLSchema#boolean",
+								                  "@value":"true"
+								               }
+								            ],
+								            "https://carbonldp.com/ns/v1/security#name":[
+								               {
+								                  "@value":"Jane Doe"
+								               }
+								            ],
+								            "https://carbonldp.com/ns/v1/security#password":[
+								               {
+								                  "@value":"6bdabc50688f615775a82963ce381ab5df8be9447cb4a806b1cd8d919e1174bb"
+								               }
+								            ],
+								            "https://carbonldp.com/ns/v1/security#platformRole":[
+								               {
+								                  "@id":"{{protocolAndHost}}/platform/roles/app-developer/"
+								               }
+								            ],
+								            "https://carbonldp.com/ns/v1/security#salt":[
+								               {
+								                  "@value":"ot8lotu5vb9r0siuqb7ip2ep8j"
+								               }
+								            ]
+								         }
+								      ],
+								      "@id":"{{protocolAndHost}}/platform/agents/jane-doe/"
+								   }
+								]
+							</pre>
+						</section>
+					</section>
+
+					<section>
+						<h2 class="ui header">Create an application</h2>
+
+						<p>With your newly created platform account, you can now create an Application.</p>
+
+						<p>To create an application, issue the following request. Be sure to use your own unique name for the Slug or omit the Slug. You should also provide a unique name for the
+							application in the
+							body of the request.</p>
+
+						<p>
+							<span class="ui blue horizontal label">POST</span> <code>{{protocolAndHost}}/platform/apps/</code>
+						</p>
+
+						<table class="ui celled table">
+							<thead>
+								<tr>
+									<th>HTTP Header</th>
+									<th>Value</th>
+									<th colspan="1">Required?</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td>Authorization</td>
+									<td>Basic ...</td>
+									<td>Yes</td>
+								</tr>
+								<tr>
+									<td>Prefer</td>
+									<td>http://www.w3.org/ns/ldp#Container; rel=interaction-model</td>
+									<td>Yes</td>
+								</tr>
+								<tr>
+									<td>Content-Type</td>
+									<td>text/turtle</td>
+									<td>Yes</td>
+								</tr>
+								<tr>
+									<td>Slug</td>
+									<td>taxonomy-hub</td>
+									<td>No</td>
+								</tr>
+							</tbody>
+						</table>
+
+						<p>
+							<strong>Body (required)</strong>
+						</p>
+
+						<pre cphighlight class="turtle">
+							@prefix cs:&#60;https://carbonldp.com/ns/v1/security#&#62;.
+
+							<>
+								a cs:Application;
+								cs:name "Taxonomy Hub".
+						</pre>
+
+						<p>Issue the POST request.</p>
+
+						<p>A successful request will result in HTTP status code 201 Created. It will also respond with the server-minted URI for the Application resource, which in the case of our
+							example is:</p>
+
+						<p>
+							<code>{{protocolAndHost}}/platform/apps/taxonomy-hub/</code>
+						</p>
+
+						<section>
+							<h3 class="ui header">Examine the application root container</h3>
+
+							<p>You can always verify a newly created resource by issuing a GET request to its URI, but it's important to keep in mind that the URI created for the Application only
+								references the
+								metadata resource for your application. When a new Application is created, Carbon also creates an access point at the following URI:</p>
+
+							<p>
+								<code>{{protocolAndHost}}/apps/&lt;app-slug&gt;/</code>
+							</p>
+
+							<p>So, in the case of our example, the application's access point or root URI would be:</p>
+
+							<p>
+								<code>{{protocolAndHost}}/apps/taxonomy-hub/</code>
+							</p>
+
+							<p>The difference between this URI and the URI of the Application metadata resource is the absence of the /platform segment after the host name.</p>
+
+							<p>Issue the following request to examine the root container that Carbon created for you.</p>
+
+							<p>
+								<span class="ui blue horizontal label">GET</span> <code>{{protocolAndHost}}/apps/taxonomy-hub/</code>
+							</p>
+
+							<table class="ui celled table">
+								<thead>
+									<tr>
+										<th>HTTP Header</th>
+										<th>Value</th>
+										<th colspan="1">Required?</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td>Authorization</td>
+										<td>Basic ...</td>
+										<td>Yes</td>
+									</tr>
+									<tr>
+										<td>Prefer</td>
+										<td><span class="nolink">http://www.w3.org/ns/ldp#Container</span>; rel=interaction-model</td>
+										<td>Yes</td>
+									</tr>
+								</tbody>
+							</table>
+
+							<p>Notice that this time, since we did not specify an Accept header of type <code>application/ld+json</code>, the response we'll get back will be in the default
+								Turtle syntax. While JSON-LD is often easiest to process with JavaScript, you will typically find Turtle to be a little more compact and easier to read.</p>
+
+							<p><strong>Example root container for an app</strong></p>
+
+							<pre cphighlight class="turtle">
+								&#60;https://local.carbonldp.com/apps/taxonomy-hub/&#62;
+									a
+										&#60;http://www.w3.org/ns/ldp#RDFSource&#62; ,
+										&#60;http://www.w3.org/ns/ldp#Container&#62; ,
+										&#60;http://www.w3.org/ns/ldp#BasicContainer&#62; ;
+									&#60;http://www.w3.org/ns/ldp#member&#62;
+										&#60;https://local.carbonldp.com/apps/taxonomy-hub/roles/&#62; ,
+										&#60;https://local.carbonldp.com/apps/taxonomy-hub/agents/&#62; ,
+										&#60;https://local.carbonldp.com/apps/taxonomy-hub/auth-tokens/&#62; ;
+									&#60;https://carbonldp.com/ns/v1/platform#created&#62; "2016-04-01T11:58:03.543-05:00"^^&#60;http://www.w3.org/2001/XMLSchema#dateTime&#62; ;
+
+									&#60;http://www.w3.org/ns/ldp#hasMemberRelation&#62; &#60;http://www.w3.org/ns/ldp#member&#62; ;
+									&#60;https://carbonldp.com/ns/v1/security#accessControlList&#62; &#60;https://local.carbonldp.com/apps/taxonomy-hub/~acl/&#62; ;
+									&#60;https://carbonldp.com/ns/v1/platform#modified&#62; "2016-04-01T11:58:03.543-05:00"^^&#60;http://www.w3.org/2001/XMLSchema#dateTime&#62; .
+							</pre>
+						</section>
+
+					</section>
+
+					<section>
+
+						<h2 class="ui header">Model the application</h2>
+
+						<p>Now that you have an application root created, you can begin to create RDF documents in the application. Before you start posting arbitrary RDF documents, however, it's a
+							good idea to
+							design a general model for the application. Answering the following questions can help you determine what the model should be.</p>
+
+						<ul>
+							<li>What entities will the resources in our application represent?</li>
+							<li>What data attributes (or triples) will they have?</li>
+							<li>Are there existing RDF vocabularies we can leverage for those attributes?</li>
+							<li>What kinds of relationships (links) will we make in our data or with data in other sources?</li>
+							<li>How will we use container behavior to create, modify, and enumerate member documents?</li>
+						</ul>
+
+						<p>Answering these questions up-front will help provide a logical and structured way to build your application. One way to think about this is to think about the most common
+							use cases for the
+							data and the following six areas of consideration:</p>
+
+						<ol>
+							<li><strong>Classes/Entities</strong> - The taxonomy terms are the main item of interest or <em>entity</em> we'll be working with - the main resource we'll be managing in
+								the Carbon app.
+							</li>
+							<li><strong>Class/Entity Properties</strong> - Taxonomy terms are pretty simple; they're just concepts or labels. Perhaps they can be expressed in multiple languages.</li>
+							<li><strong> <strong>Class/Entity</strong> Relationships
+							</strong> - A taxonomy implies that these terms are organized in a hierarchy, so we need to think about how to use container behavior to support that structure.
+							</li>
+							<li><strong>Application Functionality</strong> - The data for our application, the taxonomy terms, will typically be metadata used to help describe the subject and nature
+								of information in
+								other systems, so we'll allow other apps to make REST requests to consume the service.
+							</li>
+							<li><strong>Security</strong> - We'll need varying degrees of access to the data in our app, so we'll need to come up with the appropriate roles for controlling access.
+							</li>
+							<li><strong>User Interface</strong> - It's also likely that we'll want a user interface that makes it easy for permitted individuals to visualize and manage the taxonomy.
+								Such a UI will likely employ the use of a tree control.
+							</li>
+						</ol>
+
+
+						<section>
+							<h3 class="ui header">Re-using an established linked data vocabulary called SKOS</h3>
+
+							<p>It's always a best-practice to re-use established linked data vocabularies instead of (re-)inventing duplicates and as it turns out, there's already a good vocabulary
+								that fits the needs of our application. It's called SKOS (Simple Knowledge Organization System). According to the SKOS Primer, it &quot;provides a model for
+								expressing the basic structure and content of concept schemes such as thesauri, classification schemes, subject heading lists, taxonomies, folksonomies, and other
+								similar types of controlled vocabulary.&quot; Sounds right up our alley, doesn't it? When we investigate SKOS, we not only see that it will suit the needs of our
+								app, but that it provides a lot of clues about how we should model everything.</p>
+						</section>
+
+						<section>
+							<h3 class="ui header">Mini SKOS Simple Knowledge Organization System primer</h3>
+
+							<p>
+								<strong>skos:Concept</strong>
+							</p>
+
+							<p>
+								SKOS introduces the class  <code>skos:Concept</code> , which allows implementors to assert that a given resource is a concept. This is done in two steps:
+							</p>
+
+							<ol>
+								<li>by creating (or reusing) a Uniform Resource Identifier (URI) to uniquely identify the concept.</li>
+								<li>by asserting in RDF, using the property <code>rdf:type</code>, that the resource identified by this URI is of type <code>skos:Concept</code>.
+								</li>
+							</ol>
+
+							<p>So, there you can see, we already have the class that can represent a taxonomy term. This means that when we create resources that represent taxonomy terms, we simply
+								need to assert that
+								it's an rdf:type skos:Concept. For example:</p>
+
+							<p>
+								<code>&lt;Carbon-document-URI&gt; a skos:Concept.</code>
+							</p>
+
+							<p>
+								(Remember, ' <code>a</code> ' in turtle is shorthand for <code>rdf:type</code> ).
+							</p>
+
+							<p>
+								<strong>skos:prefLabel</strong>
+							</p>
+
+							<p>A SKOS Concept can have a preferred lexical label, which will be useful in representing it in a user interface. We'll be able to define a label for a concept as shown
+								below.</p>
+							<pre cphighlight class="turtle">
+								&#60;carbon-document-uri&#62;
+									a skos:Concept;
+									skos:prefLabel "animals".
+							</pre>
+
+							<p>We can also support locale-specific labels.</p>
+
+							<pre cphighlight class="turtle">
+								&#60;carbon-document-uri&#62;
+									rdf:type skos:Concept;
+									skos:prefLabel "animals"@en;
+									skos:prefLabel "animaux"@fr.
+							</pre>
+
+							<p>There is also a <code>skos:altLabel</code> and a <code>skos:hiddenLabel</code>, which can be used in the future, but we'll keep it simple for now and just stick to the
+								<code>skos:prefLabel</code>.</p>
+
+							<p>
+								<strong>skos:broader and skos:narrower (semantic relationships)</strong>
+							</p>
+
+							<p>The <code>skos:broader</code> and <code>skos:narrower</code> properties give us what we need to express hierarchical links between our concepts.</p>
+
+							<p>
+								To assert that one concept is broader in meaning (i.e. more general) than another, the  <code>skos:broader</code> property is used. The  <code>skos:narrower</code>
+								property is used to assert the inverse, namely when one concept is narrower in meaning (i.e. more specific) than another. For example:
+							</p>
+
+							<pre cphighlight class="turtle">
+								&#60;carbon-document-uri&#62;
+									rdf:type skos:Concept;
+									skos:prefLabel "animals"@en;
+									skos:narrower ex:mammals.
+							</pre>
+
+							<p>
+								In SKOS, there is also the notion of a  <code>skos:related</code> link, which is used to assert an associative relationship. But again, we can add such things in the
+								future. For now, we'll just stick to the parent/child relationship afforded by <code>skos:broader</code> and <code>skos:narrower</code> .
+							</p>
+
+							<p>
+								<strong>skos:inScheme</strong>
+							</p>
+
+							<p>
+								The <code>skos:inScheme</code> property is another we'll use in concept documents. This property will allow us to associate a concept to one or more taxonomies. In our
+								app, taxonomies can be represented by the <code>skos:ConceptScheme</code> , which is described next.
+							</p>
+
+							<p>
+								<strong>skos:ConceptScheme</strong>
+							</p>
+
+							<p>
+								The <code>skos:ConceptScheme</code> class will represent a taxonomy that concepts belong to. We'll use two properties with this class: <code>dct:title</code> and <code>skos:hasTopConcept</code>
+								.
+							</p>
+
+							<p>
+								<strong>dct:title</strong>
+							</p>
+
+							<p>
+								The <code>dct:title</code> property is actually from another popular vocabulary - the Terms vocabulary of the Dublin Core Metadata Initiative. We'll use it to add a
+								title to the taxonomies we
+								create.
+							</p>
+
+							<p>
+								<strong>skos:hasTopConcept</strong>
+							</p>
+
+							<p>
+								The <code>skos:hasTopConcept</code> property will provide an efficient access to the entry points of our broader/narrower concept hierarchies. This property will allow
+								our app to link a
+								concept scheme (a taxonomy in our case) to the concepts it contains. The top concepts will represent the root concepts in the taxonomies we create.
+							</p>
+
+							<p>Here's an example of what an instance of a ConceptScheme with four top concepts might look like:</p>
+
+							<pre cphighlight class="turtle">
+								&#60;carbon-document-uri&#62;
+									rdf:type skos:ConceptScheme;
+									dct:title "Content Topics";
+									skos:hasTopConcept
+										&#60;carbon-document-uri&#62;,
+										&#60;carbon-document-uri&#62;,
+										&#60;carbon-document-uri&#62;,
+										&#60;carbon-document-uri&#62;.
+							</pre>
+
+							<p>We now have all that we need to for the classes and properties required for our app. Relationships (links) between some of these properties as well as between additional
+								LDP properties
+								will allow us to organize concepts in a hierarchy and within a taxonomy concept scheme.</p>
+
+							<p>Before we move on, it's worth mentioning that prefixes we've used come from the following namespaces.</p>
+
+							<p>
+								<b>Namespaces used</b>
+							</p>
+
+							<pre cphighlight class="turtle">
+								@prefix skos:&#60;http://www.w3.org/2004/02/skos/core#&#62;.
+								@prefix dct:&#60;http://purl.org/dc/terms/&#62;.
+							</pre>
+
+							<p>There's more to SKOS than what we've covered here, so if you're interested in learning more, the following are good reference resources:</p>
+							<ul>
+								<li><a href="http://www.w3.org/2004/02/skos/intro">Introduction to SKOS</a></li>
+								<li><a href="http://www.w3.org/TR/2009/NOTE-skos-primer-20090818/">SKOS Simple Knowledge Organization System Primer</a></li>
+								<li><a href="http://www.w3.org/TR/skos-reference/">SKOS Simple Knowledge Organization System Reference</a></li>
+							</ul>
+						</section>
+
+						<section>
+							<h3 class="ui header">Consider the role of LDP containers</h3>
+
+							<p>It may seem intuitive to model the container behavior for our application in such way that each concept is a container to its narrower concepts. Or, in other words, so
+								that
+								narrower concepts
+								are represented as membership triples on their broader concepts.</p>
+
+							<p>Let's imagine the following simple taxonomy, for example:</p>
+
+							<ul>
+								<li>Topics (ConceptScheme)
+									<ul>
+										<li>Design (Top Concept 1)
+											<ul>
+												<li>Information Architecture (Concept 1.1)</li>
+											</ul>
+										</li>
+										<li>Technology (Top Concept 2)
+											<ul>
+												<li>HTML5 (Concept 2.1)</li>
+												<li>JavaScript (Concept 2.2)</li>
+											</ul>
+										</li>
+									</ul>
+								</li>
+							</ul>
+							<p>The intuitive container behavior to model might be as follows:</p>
+							<ul>
+								<li>taxonomy-hub/topics/
+									<ul>
+										<li>design/
+											<ul>
+												<li>information-architecture/</li>
+											</ul>
+										</li>
+										<li>technology/
+											<ul>
+												<li>html5/</li>
+												<li>javascript/</li>
+											</ul>
+										</li>
+									</ul>
+								</li>
+							</ul>
+							<p>Though Carbon enforces no restriction on doing this, there are a few reasons why we might not want to.</p>
+
+							<p>First, as the depth of your taxonomy increases, so too does the length of your concept URIs. We should keep in mind that the fully qualified URI for each concept will
+								also include the
+								host and the base URI to the app. In this model, just one level deeper from the top concept could produce the following URI:</p>
+
+							<p>
+								<code>{{protocolAndHost}}/platform/apps/taxonomy-hub/topics/technology/javascript</code>
+							</p>
+
+							<p>You can see how the addition of just a few more levels could lengthen the URI significantly.</p>
+
+							<p>Another possible problem is that it creates a tight coupling between the URI for each concept and the location of the concept in a hierarchy. When you move categories
+								around, you'd have to revise the URIs for several other concepts to keep the implication in tact. Furthermore, if you ever wanted to share concepts between branches
+								of a taxonomy, or across multiple taxonomies, the implication of the URI would only be logical in one of the cases.</p>
+
+							<p>Finally, there is a more elegant approach for leveraging container behavior that can reduce the work required to manage the taxonomies.</p>
+
+							<ul>
+								<li>taxonomy-hub/schemes/
+									<ul>
+										<li>topics/
+											<ul>
+												<li>top-concepts/</li>
+												<li>design/</li>
+												<li>information-architecture/</li>
+												<li>technology/</li>
+												<li>html5/</li>
+												<li>javascript/</li>
+											</ul>
+										</li>
+									</ul>
+								</li>
+							</ul>
+							<p>
+								We've flattened things out a bit so that all concepts are direct children of the <code>topics/</code> container. We've also added a new container called
+								<code>top-concepts/</code> to help us manage which concepts are root (top) concepts in the scheme. 
+							</p>
+
+							<p>As we work with this alternative approach, you'll begin to see why it's an improvement.</p>
+						</section>
+
+					</section>
+
+					<section>
+
+						<h2 class="ui header">Create application resources</h2>
+
+						<section>
+							<h3 class="ui header">Create the schemes/ container</h3>
+
+							<p>
+								Let's start by creating the <code>schemes/</code> container. Since the application will always have only one <code>schemes/</code> container, this will be a one-time
+								affair.
+							</p>
+
+							<p>Create the following request.</p>
+
+							<p>
+								<span class="ui blue horizontal label">POST</span> <code>{{protocolAndHost}}/apps/taxonomy-hub/</code>
+							</p>
+
+							<table class="ui celled table">
+								<thead>
+									<tr>
+										<th>HTTP Header</th>
+										<th>Value</th>
+										<th colspan="1">Required?</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td>Authorization</td>
+										<td>Basic ...</td>
+										<td>Yes</td>
+									</tr>
+									<tr>
+										<td>Content-Type</td>
+										<td>text/turtle</td>
+										<td>Yes</td>
+									</tr>
+									<tr>
+										<td>Prefer</td>
+										<td><span class="nolink">http://www.w3.org/ns/ldp#Container</span>; rel=interaction-model</td>
+										<td>Yes</td>
+									</tr>
+									<tr>
+										<td>Slug</td>
+										<td>schemes</td>
+										<td>No</td>
+									</tr>
+								</tbody>
+							</table>
+
+							<p>
+								<strong>Body (required)</strong>
+							</p>
+
+							<pre cphighlight class="turtle">
+								@prefix ldp:&#60;http://www.w3.org/ns/ldp#&#62;.
+
+								&#60;&#62;
+									a ldp:BasicContainer.
+							</pre>
+
+							<p>We're specifying a Basic Container so that membership will automatically be recorded on the container when new schemes are posted, which will provide an easy way to list
+								available schemes.</p>
+
+							<p>Issue the request. A successful response should provide the HTTP status code 201 Created.</p>
+
+						</section>
+
+						<section>
+
+							<h3 class="ui header">Create example Concept Scheme</h3>
+
+							<p>
+								Now that we have the <code>schemes/</code> container, we can create one or more Concept Scheme containers within it. Since this is an action that would likely be
+								repeated by end-users, it would make sense to incorporate the capability into a user interface. For now, however, let's be clear on what is required for the
+								underlying HTTP request.
+							</p>
+
+							<p>
+								<span class="ui blue horizontal label">POST</span> <code>{{protocolAndHost}}/apps/taxonomy-hub/schemes/</code>
+							</p>
+
+							<table class="ui celled table">
+								<thead>
+									<tr>
+										<th>HTTP Header</th>
+										<th>Value</th>
+										<th colspan="1">Required?</th>
+									</tr>
+								</thead>
+								<tbody>
+
+									<tr>
+										<td>Authorization</td>
+										<td>Basic ...</td>
+										<td>Yes</td>
+									</tr>
+									<tr>
+										<td>Content-Type</td>
+										<td>text/turtle</td>
+										<td>Yes</td>
+									</tr>
+									<tr>
+										<td>Prefer</td>
+										<td><span class="nolink">http://www.w3.org/ns/ldp#Container</span>; rel=interaction-model</td>
+										<td>Yes</td>
+									</tr>
+									<tr>
+										<td>Slug</td>
+										<td>topics</td>
+										<td>No</td>
+									</tr>
+								</tbody>
+							</table>
+
+							<p>
+								<strong>Body (required)</strong>
+							</p>
+
+							<pre cphighlight class="turtle">
+								@prefix ldp:&#60;http://www.w3.org/ns/ldp#&#62;.
+								@prefix skos:&#60;http://www.w3.org/2004/02/skos/core#&#62;.
+								@prefix dct:&#60;http://purl.org/dc/terms/&#62;.
+
+								&#60;&#62;
+									a ldp:BasicContainer, skos:ConceptScheme;
+									ldp:memberOfRelation skos:inScheme;
+									dct:title "Topics".
+							</pre>
+
+							<p>Take note of the following triple on the container:</p>
+
+							<p>
+								<code>&lt;&gt; ldp:memberOfRelation skos:inScheme</code>
+							</p>
+
+							<p>This configures the container to automatically add a link in each member that is added to the container. Whenever we POST a new concept into this scheme, Carbon will
+								automatically add the following triple to the concept document:</p>
+
+							<p>
+								<code>&lt;concept-uri&gt; skos:inScheme &lt;{{protocolAndHost}}/apps/taxonomy-hub/schemes/&gt;</code>
+							</p>
+
+							<p>Create and issue the request. A successful request should result in HTT status 201 Created.</p>
+
+							<p>This illustrates an interesting use of BasicContainer behavior. In the next step, we'll see another interesting use of container behavior with a DirectContainer.</p>
+						</section>
+
+						<section>
+
+							<h3 class="ui header">Create the top-concepts/ Direct Container</h3>
+
+							<p>
+								As stated earlier, the <code>top-concepts/</code> container will give us an easy way to list the root concepts in a taxonomy. Our application should therefore create a
+								<code>top-concepts/</code> container in every scheme created. You'd likely want to automate the creation of this container in the function that creates the scheme
+								container, but for now, we'll do it by hand to complete the exercise. That is to say, for now, we're only supporting one concept scheme (taxonomy).
+							</p>
+
+							<p>This time, we'll make use of a Direct Container. A Direct Container creates an access point that helps you manage membership triples in another container.</p>
+
+							<p>Create the following request.</p>
+
+							<p>
+								<span class="ui blue horizontal label">POST</span> <code>{{protocolAndHost}}/apps/taxonomy-hub/schemes/topics/</code>
+							</p>
+
+							<table class="ui celled table">
+								<thead>
+									<tr>
+										<th>HTTP Header</th>
+										<th>Value</th>
+										<th colspan="1">Required?</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td>Authorization</td>
+										<td>Basic ...</td>
+										<td>Yes</td>
+									</tr>
+									<tr>
+										<td>Content-Type</td>
+										<td>text/turtle</td>
+										<td>Yes</td>
+									</tr>
+									<tr>
+										<td>Prefer</td>
+										<td>http://www.w3.org/ns/ldp#RDFSource;rel=interaction-model</td>
+										<td>Yes</td>
+									</tr>
+									<tr>
+										<td>Slug</td>
+										<td>top-concepts</td>
+										<td>No</td>
+									</tr>
+								</tbody>
+							</table>
+
+							<p>
+								<strong>Body (required)</strong>
+							</p>
+
+							<pre cphighlight class="turtle">
+								@prefix ldp:&#60;http://www.w3.org/ns/ldp#&#62;.
+								@prefix skos:&#60;http://www.w3.org/2004/02/skos/core#&#62;.
+
+								&#60;&#62;
+									a ldp:DirectContainer;
+									ldp:membershipResource &#60;{{protocolAndHost}}/apps/taxonomy-hub/schemes/topics/&#62;;
+									ldp:hasMemberRelation skos:hasTopConcept.
+							</pre>
+
+							<p>
+								Notice, this time, we use the Prefer header to set the interaction model to RDF Source instead of Container. This keeps the <code>topics/</code> container that we're
+								posting to from recognizing
+								the <code>top-concepts/</code> container as a member. That is to say, it keeps it from recording a membership triple for the <code>top-concepts/</code> container. The
+								outcome we want is for all
+								concepts to be listed as members of the <code>topics/</code> container, but not the <code>top-concepts/</code> container.
+							</p>
+
+							<p>
+								The  <code>ldp:membershipResource</code> predicate of this Direct Container specifies an entirely different resource where membership triples should be written.
+								Whenever we post to this
+								container (the <code>top-concepts/</code> container), a membership triple will be written to the specified resource, which is the <code>topics/</code> container. In
+								other words, if we later put
+								a Concept to the <code>top-concepts/</code> container, that concept will become a member of the <code>topics/</code> container. Why would we want to do this? To
+								understand, we have to consider
+								the  <code>ldp:hasMemberRelation</code> predicate, which is also used.
+							</p>
+
+							<p>
+								Whenever the <code>top-concepts/</code> container writes a membership triple to the container specified by <code>ldp:membershipResource</code> , it will use the
+								predicate <code>skos:hasTopConcept</code>
+								to represent that membership relationship because of what's defined by <code>ldp:hasMemberRelation</code> . This feature exists so that we can use a different
+								vocabulary other than the standard
+								LDP vocabulary to represent membership relations. When we post to <code>top-concepts/</code> , for example, the following statement will be added to the
+								<code>topics/</code> container:
+							</p>
+
+							<p>
+								<code>&lt;{{protocolAndHost}}/apps/taxonomy-hub/schemes/topics/&gt; skos:hasTopConcept &lt;member-URI&gt;</code>
+							</p>
+
+							<p>
+								We will not be posting to the <code>top-concepts/</code> container to create new documents. Instead, we'll post new concepts to the <code>topics/</code> container to
+								create them and then later
+								put the top concepts into the <code>top-concepts/</code> container. If you <em>post</em> a new resource to a container, the container creates a membership triple and a
+								containment triple, but
+								if you <em>put</em> an existing resource to a container, the container creates only a membership triple.
+							</p>
+
+							<p>Issue the request. A successful response should provide the HTTP status code 201 Created.</p>
+						</section>
+
+						<section>
+							<h2 class="ui header">Create a root Concept</h2>
+
+							<p>Now, we're ready to start creating concepts in our Topics taxonomy. This, of course, is a function that the GUI of our app would probably handle, but doing a few
+								manually is important to
+								this learning exercise.</p>
+
+							<p>For our first Concept, create the following request.</p>
+
+							<p>
+
+								<span class="ui blue horizontal label">POST</span> <code>{{protocolAndHost}}/apps/taxonomy-hub/schemes/topics/</code>
+							</p>
+
+							<table class="ui celled table">
+								<thead>
+									<tr>
+										<th>HTTP Header</th>
+										<th>Value</th>
+										<th colspan="1">Required?</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td>Authorization</td>
+										<td>Basic ...</td>
+										<td>Yes</td>
+									</tr>
+									<tr>
+										<td>Content-Type</td>
+										<td>text/turtle</td>
+										<td>Yes</td>
+									</tr>
+									<tr>
+										<td>Prefer</td>
+										<td><span class="nolink">http://www.w3.org/ns/ldp#Container</span>; rel=interaction-model</td>
+										<td>Yes</td>
+									</tr>
+									<tr>
+										<td>Slug</td>
+										<td>design</td>
+										<td>No</td>
+									</tr>
+								</tbody>
+							</table>
+
+							<p>
+								<strong>Body (required)</strong>
+							</p>
+
+							<pre cphighlight class="turtle">
+								@prefix ldp:&#60;http://www.w3.org/ns/ldp#&#62;.
+								@prefix skos:&#60;http://www.w3.org/2004/02/skos/core#&#62;.
+
+								&#60;&#62;
+									a ldp:BasicContainer, skos:Concept;
+									ldp:hasMemberRelation skos:narrower;
+									ldp:memberOfRelation skos:broader;
+									skos:prefLabel "Design"@en;
+									skos:prefLabel "DiseÃ±o"@es.
+							</pre>
+
+							<p>
+								Notice, this time that the ldp:hasMemberRelation is skos:narrower. That means that any concept that is later PUT to this container will force a membership triple to be
+								written on the container
+								using  <code>skos:narrower</code> as the predicate.
+							</p>
+
+							<p>
+								The <code>ldp:memberOfRelation</code> allows the inverse to be true. Any concept that is added to the membership of this container will get a triple written to it,
+								which defines this concept as
+								its <code>skos:broader</code> concept. When we add the Information Architecture concept as a member, for example, the <code>information-architecture/</code> resource
+								will receive the following
+								triple. 
+							</p>
+
+							<p>
+								<code>&lt;...topics/design/information-architecture/&gt; skos:broader &lt;......topics/design/&gt;</code>
+							</p>
+
+							<p>As we can see now, features of a container support what's needed to use the SKOS vocabulary. From any concept, we have a way to look both downwards and upwards in the
+								hierarchy.</p>
+
+							<p>Issue the request. A successful response should provide the HTTP status code 201 Created.</p>
+						</section>
+
+						<section>
+
+							<h2 class="ui header">Add root Concepts as member of the scheme</h2>
+
+							<p>
+								Now that the root concept is created, it is a member of its parent container. In other words, its parent container, <em>topics</em>, links to it with the following
+								membership triple:
+							</p>
+
+							<p>
+								<code>&lt;&gt; &lt;http://www.w3.org/ns/ldp#member&gt; &lt;{{protocolAndHost}}/apps/taxonomy-hub/schemes/topics/design/&gt;</code>
+							</p>
+
+							<p>Since the parent container is a Basic Container, the concept is also contained by it. The parent container expresses this relationship with the following containment
+								triple:</p>
+
+							<p>
+								<code>&lt;&gt; &lt;http://www.w3.org/ns/ldp#contains&gt; &lt;{{protocolAndHost}}/apps/taxonomy-hub/schemes/topics/design/&gt;</code>
+							</p>
+
+							<p>What's needed now is to identify the root concept as a member of the topics scheme with the skos:hasTopConcept relation. This will be done when we PUT the concept to the
+								top-concepts
+								container.</p>
+
+							<p>
+								<span>Create the following request.</span>
+							</p>
+
+							<p>
+								<span class="ui blue horizontal label">PUT</span> <code>{{protocolAndHost}}/apps/taxonomy-hub/schemes/topics/top-concepts/</code>
+							</p>
+
+							<table class="ui celled table">
+								<thead>
+									<tr>
+										<th>HTTP Header</th>
+										<th>Value</th>
+										<th colspan="1">Required?</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td>Authorization</td>
+										<td>Basic ...</td>
+										<td>Yes</td>
+									</tr>
+									<tr>
+										<td>Content-Type</td>
+										<td>text/turtle</td>
+										<td>Yes</td>
+									</tr>
+									<tr>
+										<td>Prefer</td>
+										<td><span class="nolink">http://www.w3.org/ns/ldp#Container</span>; rel=interaction-model</td>
+										<td>Yes</td>
+									</tr>
+								</tbody>
+							</table>
+
+							<p>
+								<strong>Body (required)</strong>
+							</p>
+
+							<pre cphighlight class="turtle">
+								@prefix c:&#60;https://carbonldp.com/ns/v1/platform#&#62;.
+
+								_:b0
+									a c:AddMemberAction;
+									c:targetMember &#60;{{protocolAndHost}}/apps/taxonomy-hub/schemes/topics/design/&#62;.
+							</pre>
+
+							<p>Notice that the Carbon vocabulary is used. The class of the resource is a Carbon <code>AddMemberAction</code> with the specified member to add to the container we're
+								putting it to.</p>
+
+							<p>Issue the request. A successful response should provide 200 OK.</p>
+
+							<p>
+								Now, if you examine the <code>{{protocolAndHost}}/apps/taxonomy-hub/schemes/topics/</code> container (GET), you'll see the membership triple link to the
+								<code>design/</code> concept written
+								as <code>skos:hasTopConcept</code>.
+							</p>
+
+							<p>In the same way, let's add the other top concept, Technology. Create and issue the following request, which should result in the 201 Created status code.</p>
+
+							<p>
+								<span class="ui blue horizontal label">POST</span> <code>{{protocolAndHost}}/apps/taxonomy-hub/schemes/topics/</code>
+							</p>
+
+							<table class="ui celled table">
+								<thead>
+									<tr>
+										<th>HTTP Header</th>
+										<th>Value</th>
+										<th colspan="1">Required?</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td>Authorization</td>
+										<td>Basic ...</td>
+										<td>Yes</td>
+									</tr>
+									<tr>
+										<td>Content-Type</td>
+										<td>text/turtle</td>
+										<td>Yes</td>
+									</tr>
+									<tr>
+										<td>Prefer</td>
+										<td>http://www.w3.org/ns/ldp#Container; rel=interaction-model</td>
+										<td>Yes</td>
+									</tr>
+									<tr>
+										<td>Slug</td>
+										<td>technology</td>
+										<td> No</td>
+									</tr>
+								</tbody>
+							</table>
+
+							<p>
+								<strong>Body (required)</strong>
+							</p>
+
+							<pre cphighlight class="turtle">
+								@prefix ldp:&#60;http://www.w3.org/ns/ldp#&#62;.
+								@prefix skos:&#60;http://www.w3.org/2004/02/skos/core#&#62;.
+
+								&#60;&#62;
+								    a ldp:BasicContainer, skos:Concept;
+								    ldp:hasMemberRelation skos:narrower;
+								    ldp:memberOfRelation skos:broader;
+								    skos:prefLabel "Technology"@en;
+								    skos:prefLabel "Tecnología"@es.
+							</pre>
+
+							<p>A successful POST should result in HTTP status 201 Created.</p>
+
+							<p>Again, identify this root concept as a member of the topics scheme with the skos:hasTopConcept relation, which is done when we PUT the concept to the top-concepts
+								container.</p>
+
+							<p>
+								<span class="ui blue horizontal label">PUT</span> <code>{{protocolAndHost}}/apps/taxonomy-hub/schemes/topics/top-concepts/</code>
+							</p>
+
+							<table class="ui celled table">
+								<thead>
+									<tr>
+										<th>HTTP Header</th>
+										<th>Value</th>
+										<th colspan="1">Required?</th>
+									</tr>
+								</thead>
+								<tbody>
+
+									<tr>
+										<td>Authorization</td>
+										<td>Basic ...</td>
+										<td>Yes</td>
+									</tr>
+									<tr>
+										<td>Content-Type</td>
+										<td>text/turtle</td>
+										<td>Yes</td>
+									</tr>
+									<tr>
+										<td>Prefer</td>
+										<td><span class="nolink">http://www.w3.org/ns/ldp#Container</span>; rel=interaction-model</td>
+										<td>Yes</td>
+									</tr>
+								</tbody>
+							</table>
+
+							<p>
+								<strong>Body (required)</strong>
+							</p>
+
+							<pre cphighlight class="turtle">
+								@prefix c:&#60;https://carbonldp.com/ns/v1/platform#&#62;.
+
+								_:b0
+									a c:AddMemberAction;
+									c:targetMember &#60;{{protocolAndHost}}/apps/taxonomy-hub/schemes/topics/technology/&#62;.
+							</pre>
+
+							<p>A successful PUT should result in HTTP status 200 OK.</p>
+
+							<p>Next, let's create one of the second-level concepts, Information Architecture (Concept 1.1), which is a narrower concept of the Design top concept we already created.
+								Create and issue
+								the following request.</p>
+
+							<p>
+								<span class="ui blue horizontal label">POST</span> <code>{{protocolAndHost}}/apps/taxonomy-hub/schemes/topics/</code>
+							</p>
+
+							<table class="ui celled table">
+								<thead>
+									<tr>
+										<th>HTTP Header</th>
+										<th>Value</th>
+										<th colspan="1">Required?</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td>Authorization</td>
+										<td>Basic ...</td>
+										<td>Yes</td>
+									</tr>
+									<tr>
+										<td>Content-Type</td>
+										<td>text/turtle</td>
+										<td>Yes</td>
+									</tr>
+									<tr>
+										<td>Prefer</td>
+										<td>http://www.w3.org/ns/ldp#Container; rel=interaction-model</td>
+										<td>Yes</td>
+									</tr>
+									<tr>
+										<td>Slug</td>
+										<td>information-architecture</td>
+										<td> No</td>
+									</tr>
+								</tbody>
+							</table>
+
+							<p>
+								<strong>Body (required)</strong>
+							</p>
+
+							<pre cphighlight class="turtle">
+								@prefix ldp:&#60;http://www.w3.org/ns/ldp#&#62;.
+								@prefix skos:&#60;http://www.w3.org/2004/02/skos/core#&#62;.
+
+								&#60;&#62;
+									a ldp:BasicContainer, skos:Concept;
+									ldp:hasMemberRelation skos:narrower;
+									ldp:memberOfRelation skos:broader;
+									skos:prefLabel "Information Architecture".
+							</pre>
+
+							<p>A successful POST should result in HTTP status 201 Created.</p>
+
+							<p>
+								Next, we must make <span>Information Architecture (Concept 1.1) a narrower concept of Design (Concept 1) by adding it to the Design concept's container
+								membership.</span>
+							</p>
+
+							<p>
+								<span>Create and issue the following request:</span>
+							</p>
+
+							<p>
+								<span class="ui blue horizontal label">PUT</span> <code>{{protocolAndHost}}/apps/taxonomy-hub/schemes/topics/design/</code>
+							</p>
+
+							<table class="ui celled table">
+								<thead>
+									<tr>
+										<th>HTTP Header</th>
+										<th>Value</th>
+										<th colspan="1">Required?</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td>Authorization</td>
+										<td>Basic ...</td>
+										<td>Yes</td>
+									</tr>
+									<tr>
+										<td>Content-Type</td>
+										<td>text/turtle</td>
+										<td>Yes</td>
+									</tr>
+									<tr>
+										<td>Prefer</td>
+										<td>http://www.w3.org/ns/ldp#Container; rel=interaction-model</td>
+										<td>Yes</td>
+									</tr>
+								</tbody>
+							</table>
+
+							<p>
+								<strong>Body (required)</strong>
+							</p>
+
+							<pre cphighlight class="turtle">
+								@prefix c:&#60;https://carbonldp.com/ns/v1/platform#&#62;.
+
+								_:b0
+									a c:AddMemberAction;
+									c:targetMember &#60;{{protocolAndHost}}/apps/taxonomy-hub/schemes/topics/information-architecture/&#62;.
+							</pre>
+
+							<p>
+								If you examine the <code>design/</code> container now, you will see the membership triple for the <code>information-architecture/</code> container defined by <code>skos:narrower</code>.
+								If you examine the information-architecture/ container, you will see skos:broader linking to its parent, design/. Great.
+							</p>
+
+							<p>Finally, we will create concepts 2.1 and 2.2, and then make them members of the parent Concept 2.</p>
+
+							<p>
+								<strong>Create Concept 2.1</strong>
+							</p>
+
+							<p>
+
+								<span class="ui blue horizontal label">POST</span> <code>{{protocolAndHost}}/apps/taxonomy-hub/schemes/topics/</code>
+							</p>
+
+
+							<table class="ui celled table">
+								<thead>
+									<tr>
+										<th>HTTP Header</th>
+										<th>Value</th>
+										<th colspan="1">Required?</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td>Authorization</td>
+										<td>Basic ...</td>
+										<td>Yes</td>
+									</tr>
+									<tr>
+										<td>Content-Type</td>
+										<td>text/turtle</td>
+										<td>Yes</td>
+									</tr>
+									<tr>
+										<td>Prefer</td>
+										<td>http://www.w3.org/ns/ldp#Container; rel=interaction-model</td>
+										<td>Yes</td>
+									</tr>
+									<tr>
+										<td>Slug</td>
+										<td>html5</td>
+										<td>No</td>
+									</tr>
+								</tbody>
+							</table>
+
+							<p>
+								<strong>Body (required)</strong>
+							</p>
+
+							<pre cphighlight class="turtle">
+								@prefix ldp:&#60;http://www.w3.org/ns/ldp#&#62;.
+								@prefix skos:&#60;http://www.w3.org/2004/02/skos/core#&#62;.
+
+								&#60;&#62;
+									a ldp:BasicContainer, skos:Concept;
+									ldp:hasMemberRelation skos:narrower;
+									ldp:memberOfRelation skos:broader;
+									skos:prefLabel "HTML5".
+							</pre>
+
+							<p>
+								<strong>Create Concept 2.2</strong>
+							</p>
+
+							<p>
+								<span class="ui blue horizontal label">POST</span> <code>{{protocolAndHost}}/apps/taxonomy-hub/schemes/topics/</code>
+							</p>
+
+							<table class="ui celled table">
+								<thead>
+									<tr>
+										<th>HTTP Header</th>
+										<th>Value</th>
+										<th colspan="1">Required?</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td>Authorization</td>
+										<td>Basic ...</td>
+										<td>Yes</td>
+									</tr>
+									<tr>
+										<td>Content-Type</td>
+										<td>text/turtle</td>
+										<td>Yes</td>
+									</tr>
+									<tr>
+										<td>Prefer</td>
+										<td>http://www.w3.org/ns/ldp#Container; rel=interaction-model</td>
+										<td>Yes</td>
+									</tr>
+									<tr>
+										<td>Slug</td>
+										<td>javascript</td>
+										<td>No</td>
+									</tr>
+								</tbody>
+							</table>
+
+							<p>
+								<strong>Body (required)</strong>
+							</p>
+
+							<pre cphighlight class="turtle">
+								@prefix ldp:&#60;http://www.w3.org/ns/ldp#&#62;.
+								@prefix skos:&#60;http://www.w3.org/2004/02/skos/core#&#62;.
+
+								&#60;&#62;
+									a ldp:BasicContainer, skos:Concept;
+									ldp:hasMemberRelation skos:narrower;
+									ldp:memberOfRelation skos:broader;
+									skos:prefLabel "JavaScript".
+							</pre>
+
+							<p>
+								<strong>Add Concept 2.1 to membership of parent</strong>
+							</p>
+
+							<p>
+								<span class="ui blue horizontal label">PUT</span> <code>{{protocolAndHost}}/apps/taxonomy-hub/schemes/topics/technology/</code>
+							</p>
+
+
+							<table class="ui celled table">
+								<thead>
+									<tr>
+										<th>HTTP Header</th>
+										<th>Value</th>
+										<th>Required?</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td>Authorization</td>
+										<td>Basic ...</td>
+										<td>Yes</td>
+									</tr>
+									<tr>
+										<td>Content-Type</td>
+										<td>text/turtle</td>
+										<td>Yes</td>
+									</tr>
+									<tr>
+										<td>Prefer</td>
+										<td>http://www.w3.org/ns/ldp#Container; rel=interaction-model</td>
+										<td>Yes</td>
+									</tr>
+								</tbody>
+							</table>
+
+							<p>
+								<strong>Body (required)</strong>
+							</p>
+
+							<pre cphighlight class="turtle">
+								@prefix c:&#60;https://carbonldp.com/ns/v1/platform#&#62;.
+
+								_:b0
+									a c:AddMemberAction;
+									c:targetMember &#60;{{protocolAndHost}}/apps/taxonomy-hub/schemes/topics/html5/&#62;.
+							</pre>
+
+							<p>
+								<strong>Add Concept 2.2 to membership of parent</strong>
+							</p>
+
+							<p>
+								<span class="ui blue horizontal label">PUT</span> <code>{{protocolAndHost}}/apps/taxonomy-hub/schemes/topics/technology/</code>
+							</p>
+
+							<table class="ui celled table">
+								<thead>
+									<tr>
+										<th>HTTP Header</th>
+										<th>Value</th>
+										<th>Required?</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td>Authorization</td>
+										<td>Basic ...</td>
+										<td>Yes</td>
+									</tr>
+									<tr>
+										<td>Content-Type</td>
+										<td>text/turtle</td>
+										<td>Yes</td>
+									</tr>
+									<tr>
+										<td>Prefer</td>
+										<td>http://www.w3.org/ns/ldp#Container; rel=interaction-model</td>
+										<td>Yes</td>
+									</tr>
+								</tbody>
+							</table>
+
+							<p>
+								<strong>Body (required)</strong>
+							</p>
+
+							<pre cphighlight class="turtle">
+								@prefix c:&#60;https://carbonldp.com/ns/v1/platform#&#62;.
+
+								_:b0
+									a c:AddMemberAction;
+									c:targetMember &#60;{{host}}/apps/taxonomy-hub/schemes/topics/javascript/&#62;.
+							</pre>
+
+						</section>
+
+					</section>
+
+					<section>
+
+						<h2 class="ui header">Secure the application</h2>
+
+						<p>Setting up security for a Carbon application involves the following general steps:</p>
+
+						<ul>
+							<li>Create application roles</li>
+							<li>Create application users</li>
+							<li>Assign users to roles</li>
+							<li>Put roles into the role-hierarchy</li>
+							<li>Assign permissions on your application structure to the application roles</li>
+						</ul>
+
+						<section>
+
+							<h3 class="ui header">Create application roles</h3>
+
+							<p>
+								Roles allow us to control access to application resources. A role defines what kind of access a group of users have on one or more resources. For this app, we'll create
+								the two roles:
+							</p>
+
+							<ul>
+								<li><strong>editor</strong> - Role for all available operations.</li>
+								<li><strong>user</strong> - Role for read-only operations.</li>
+							</ul>
+
+							<section>
+
+								<h4>Create the editor role</h4>
+
+								<p>Issue the following HTTP request to create the editor role.</p>
+
+								<p><span class="ui blue horizontal label">POST</span> <code>{{protocolAndHost}}/apps/taxonomy-hub/roles/</code></p>
+
+								<table class="ui celled table">
+									<thead>
+										<tr>
+											<th><span>HTTP Header</span></th>
+											<th>Value</th>
+											<th>Required?</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr>
+											<td>Authorization</td>
+											<td>Basic ...</td>
+											<td>Yes</td>
+										</tr>
+										<tr>
+											<td>Content-Type</td>
+											<td>text/turtle</td>
+											<td>Yes</td>
+										</tr>
+										<tr>
+											<td>Prefer</td>
+											<td><span class="nolink">http://www.w3.org/ns/ldp#Container</span>; rel=interaction-model</td>
+											<td>Yes</td>
+										</tr>
+										<tr>
+											<td>Slug</td>
+											<td>editor</td>
+											<td>No</td>
+										</tr>
+									</tbody>
+								</table>
+
+								<pre cphighlight class="turtle">
+									@prefix cs:&#60;https://carbonldp.com/ns/v1/security#&#62;.
+
+									&#60;&#62;
+									 a cs:AppRole;
+									    cs:name "editor";
+									    cs:description "Role for all available operations." .
+								</pre>
+
+							</section>
+
+							<section>
+
+								<h4>Create the user role</h4>
+
+								<p>Issue the following HTTP request to create the user role.</p>
+
+								<p><span class="ui blue horizontal label">POST</span> <code>{{protocolAndHost}}/apps/taxonomy-hub/roles/</code></p>
+
+								<table class="ui celled table">
+									<thead>
+										<tr>
+											<th><span>HTTP Header</span></th>
+											<th>Value</th>
+											<th>Required?</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr>
+											<td>Authorization</td>
+											<td>Basic ...</td>
+											<td>Yes</td>
+										</tr>
+										<tr>
+											<td>Content-Type</td>
+											<td>text/turtle</td>
+											<td>Yes</td>
+										</tr>
+										<tr>
+											<td>Prefer</td>
+											<td><span class="nolink">http://www.w3.org/ns/ldp#Container</span>; rel=interaction-model</td>
+											<td>Yes</td>
+										</tr>
+										<tr>
+											<td>Slug</td>
+											<td>user</td>
+											<td>No</td>
+										</tr>
+									</tbody>
+								</table>
+								<pre cphighlight class="turtle">
+									@prefix cs:&#60;https://carbonldp.com/ns/v1/security#&#62;.
+
+									&#60;&#62;
+									 a cs:AppRole;
+									    cs:name "user";
+									    cs:description "Role for read-only operations." .
+								</pre>
+							</section>
+
+						</section>
+
+
+						<section>
+							<h3 class="ui header">Create application users</h3>
+
+							<p>For this exercise, we'll create just two users - one to add to the editor role and another to add to the user role.</p>
+
+							<h4>Create agent, testuser1</h4>
+
+							<p>Issue the following HTTP request to create the first user (an Agent).</p>
+
+							<p><span class="ui blue horizontal label">POST</span> <code>{{protocolAndHost}}/apps/taxonomy-hub/agents/</code></p>
+
+							<table class="ui celled table">
+								<thead>
+									<tr>
+										<th><span>HTTP Header</span></th>
+										<th>Value</th>
+										<th>Required?</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td>Content-Type</td>
+										<td>text/turtle</td>
+										<td>Yes</td>
+									</tr>
+									<tr>
+										<td>Prefer</td>
+										<td><span class="nolink">http://www.w3.org/ns/ldp#Container</span>; rel=interaction-model</td>
+										<td>Yes</td>
+									</tr>
+									<tr>
+										<td>Slug</td>
+										<td>testuser1</td>
+										<td>No</td>
+									</tr>
+								</tbody>
+							</table>
+
+							<pre cphighlight class="turtle">
+								@prefix cs:&#60;https://carbonldp.com/ns/v1/security#&#62;.
+								@prefix vcard:&#60;http://www.w3.org/2001/vcard-rdf/3.0#&#62;.
+
+								&#60;&#62;
+									a cs:Agent;
+								    vcard:email "user1@example.com" ;
+								    cs:password "password".
+							</pre>
+
+							<h4>Create agent, testuser2</h4>
+
+							<p>Issue the following HTTP request to create the second user (an Agent).</p>
+
+							<p><span class="ui blue horizontal label">POST</span> <code>{{protocolAndHost}}/apps/taxonomy-hub/agents/</code></p>
+
+							<table class="ui celled table">
+								<thead>
+									<tr>
+										<th><span>HTTP Header</span></th>
+										<th>Value</th>
+										<th>Required?</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td>Content-Type</td>
+										<td>text/turtle</td>
+										<td>Yes</td>
+									</tr>
+									<tr>
+										<td>Prefer</td>
+										<td><span class="nolink">http://www.w3.org/ns/ldp#Container</span>; rel=interaction-model</td>
+										<td>Yes</td>
+									</tr>
+									<tr>
+										<td>Slug</td>
+										<td>testuser2</td>
+										<td>No</td>
+									</tr>
+								</tbody>
+							</table>
+
+							<pre cphighlight class="turtle">
+								@prefix cs:&#60;https://carbonldp.com/ns/v1/security#&#62;.
+								@prefix vcard:&#60;http://www.w3.org/2001/vcard-rdf/3.0#&#62;.
+
+								&#60;&#62;
+									a cs:Agent;
+								    vcard:email "user2@example.com" ;
+								    cs:password "password".
+							</pre>
+
+						</section>
+
+
+						<section>
+							<h3 class="ui header">Assign users to roles</h3>
+
+							<p>In Carbon a role is similar to a user group. Roles are resources that can have one or more agents (users) as members.
+								In this step, we will assign testuser1 to the Editor role and testuser2 to the User role. To add an agent to a role, we
+								put the agent to the membership of the <code>agents</code> container within the container that represents the role.</p>
+
+							<h4>Add testuser1 to the editor role</h4>
+
+							<p>Issue the following HTTP request to add testuser1 to the editor role.</p>
+
+							<p><span class="ui blue horizontal label">PUT</span> <code>{{protocolAndHost}}/apps/taxonomy-hub/roles/editor/agents/</code></p>
+
+							<table class="ui celled table">
+								<thead>
+									<tr>
+										<th><span>HTTP Header</span></th>
+										<th>Value</th>
+										<th>Required?</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td>Authorization</td>
+										<td>Basic ...</td>
+										<td>Yes</td>
+									</tr>
+									<tr>
+										<td>Content-Type</td>
+										<td>text/turtle</td>
+										<td>Yes</td>
+									</tr>
+									<tr>
+										<td>Prefer</td>
+										<td><span class="nolink">http://www.w3.org/ns/ldp#Container</span>; rel=interaction-model</td>
+										<td>Yes</td>
+									</tr>
+								</tbody>
+							</table>
+
+							<pre cphighlight class="turtle">
+								@prefix c:&#60;https://carbonldp.com/ns/v1/platform#&#62;.
+
+								_:b0
+									a c:AddMemberAction;
+									c:targetMember &#60;{{protoocolAndHost}}/apps/taxonomy-hub/agents/testuser1/&#62;.
+							</pre>
+
+							<h4>Add testuser2 to the user role</h4>
+
+							<p>Issue the following HTTP request to add testuser2 to the user role.</p>
+
+							<p><span class="ui blue horizontal label">PUT</span> <code>{{protocolAndHost}}/apps/taxonomy-hub/roles/user/agents/</code></p>
+
+							<table class="ui celled table">
+								<thead>
+									<tr>
+										<th><span>HTTP Header</span></th>
+										<th>Value</th>
+										<th>Required?</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td>Authorization</td>
+										<td>Basic ...</td>
+										<td>Yes</td>
+									</tr>
+									<tr>
+										<td>Content-Type</td>
+										<td>text/turtle</td>
+										<td>Yes</td>
+									</tr>
+									<tr>
+										<td>Prefer</td>
+										<td><span class="nolink">http://www.w3.org/ns/ldp#Container</span>; rel=interaction-model</td>
+										<td>Yes</td>
+									</tr>
+								</tbody>
+							</table>
+
+							<pre cphighlight class="turtle">
+								@prefix c:&#60;https://carbonldp.com/ns/v1/platform#&#62;.
+
+								_:b0
+									a c:AddMemberAction;
+									c:targetMember &#60;{{protocolAndHost}}/apps/taxonomy-hub/agents/testuser2/&#62;.
+							</pre>
+						</section>
+
+						<section>
+
+							<h3 class="ui header">Put the roles into the role-hierarchy</h3>
+
+							<p>We'll need to give permissions to our roles on resources. But we cannot assign permissions for the roles yet because the roles have not been positioned in the role
+								hierarchy.
+								Carbon has a role hierarchy so that permissions can be inherited from the parent in any place within the hierarchy. The hierarchy always starts at
+								<code>/apps/&lt;app-name&gt;/roles/app-admin/</code>. So, in order to be able to apply permissions (ACLs - Access Control List) on any resource, the roles that will
+								be part of an ACL will need
+								to exist
+								within the role hierarchy.</p>
+
+							<h4>Put the editor role into the role hierarchy</h4>
+
+							<p><span class="ui blue horizontal label">PUT</span> <code>{{protocolAndHost}}/apps/taxonomy-hub/roles/app-admin/</code></p>
+
+							<table class="ui celled table">
+								<thead>
+									<tr>
+										<th><span>HTTP Header</span></th>
+										<th>Value</th>
+										<th>Required?</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td>Authorization</td>
+										<td>Basic ...</td>
+										<td>Yes</td>
+									</tr>
+									<tr>
+										<td>Content-Type</td>
+										<td>text/turtle</td>
+										<td>Yes</td>
+									</tr>
+									<tr>
+										<td>Prefer</td>
+										<td><span class="nolink">http://www.w3.org/ns/ldp#Container</span>; rel=interaction-model</td>
+										<td>Yes</td>
+									</tr>
+								</tbody>
+							</table>
+
+							<pre cphighlight class="turtle">
+								@prefix c:&#60;https://carbonldp.com/ns/v1/platform#&#62;.
+
+								_:b0
+									a c:AddMemberAction;
+									c:targetMember &#60;/apps/taxonomy-hub/roles/editor/&#62;.
+							</pre>
+
+							<p>A successful PUT should result in HTTP status 200 OK.</p>
+
+							<p>If you inspect, the app-admin/ container, you should see the child role specified as follows:</p>
+
+							<p><code>&lt;https://local.carbonldp.com/apps/taxonomy-hub/roles/app-admin/&gt; &lt;https://carbonldp.com/ns/v1/security#childRole&gt; &lt;https://local.carbonldp.com/apps/taxonomy-hub/roles/editor/&gt;</code>
+							</p>
+
+							<h4>Put the user role into the role hierarchy</h4>
+
+							<p><span class="ui blue horizontal label">PUT</span> <code>{{protocolAndHost}}/apps/taxonomy-hub/roles/app-admin/</code></p>
+
+							<table class="ui celled table">
+								<thead>
+									<tr>
+										<th><span>HTTP Header</span></th>
+										<th>Value</th>
+										<th>Required?</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td>Authorization</td>
+										<td>Basic ...</td>
+										<td>Yes</td>
+									</tr>
+									<tr>
+										<td>Content-Type</td>
+										<td>text/turtle</td>
+										<td>Yes</td>
+									</tr>
+									<tr>
+										<td>Prefer</td>
+										<td><span class="nolink">http://www.w3.org/ns/ldp#Container</span>; rel=interaction-model</td>
+										<td>Yes</td>
+									</tr>
+								</tbody>
+							</table>
+
+							<pre cphighlight class="turtle">
+								@prefix c:&#60;https://carbonldp.com/ns/v1/platform#&#62;.
+
+								_:b0
+									a c:AddMemberAction;
+									c:targetMember &#60;/apps/taxonomy-hub/roles/user/&#62;.
+							</pre>
+
+							<p>A successful PUT should result in HTTP status 200 OK.</p>
+
+							<p>If you inspect, the app-admin/ container, you should see the child role specified as follows:</p>
+
+							<pre cphighlight class="turtle">
+								&#60;https://local.carbonldp.com/apps/taxonomy-hub/roles/app-admin/&#62;
+									&#60;https://carbonldp.com/ns/v1/security#childRole&#62;
+										&#60;https://local.carbonldp.com/apps/taxonomy-hub/roles/user/&#62;
+							</pre>
+
+						</section>
+						<section>
+
+							<h3 class="ui header">Assign permissions to the application roles</h3>
+
+							<p>Next, we need to assign permissions to the application roles we've created. In Carbon, resources can have an AccessControlList (ACL),
+								which defines what permissions roles have on the given resource. Let's take a look.</p>
+
+							<p>Issue the following request to get the ACL for the application's root container, take notice that the interaction model used in this
+								request is RDFSource, as shown in the Prefer header.</p>
+
+							<p><span class="ui blue horizontal label">GET</span> <code>{{protocolAndHost}}/apps/taxonomy-hub/~acl/</code></p>
+
+							<table class="ui celled table">
+								<thead>
+									<tr>
+										<th><span>HTTP Header</span></th>
+										<th>Value</th>
+										<th>Required?</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td>Authorization</td>
+										<td>Basic ...</td>
+										<td>Yes</td>
+									</tr>
+									<tr>
+										<td>Prefer</td>
+										<td><span class="nolink">http://www.w3.org/ns/ldp#RDFSource</span>; rel=interaction-model</td>
+										<td>Yes</td>
+									</tr>
+								</tbody>
+							</table>
+
+							<p>The resulting ACL is shown below.</p>
+
+							<pre cphighlight class="turtle">
+								&#60;https://local.carbonldp.com/apps/taxonomy-hub/~acl/&#62;
+									a &#60;https://carbonldp.com/ns/v1/security#AccessControlList&#62; ;
+									&#60;https://carbonldp.com/ns/v1/security#accessTo&#62; &#60;https://local.carbonldp.com/apps/taxonomy-hub/&#62; ;
+									&#60;https://carbonldp.com/ns/v1/security#accessControlEntry&#62; _:node1af9bsvs3x2 ;
+									&#60;https://carbonldp.com/ns/v1/security#inheritableEntry&#62; _:node1af9bsvs3x3 .
+
+								_:node1af9bsvs3x2
+									a &#60;https://carbonldp.com/ns/v1/security#AccessControlEntry&#62; ;
+									&#60;https://carbonldp.com/ns/v1/security#subjectClass&#62; &#60;https://carbonldp.com/ns/v1/security#AppRole&#62; ;
+									&#60;https://carbonldp.com/ns/v1/security#subject&#62; &#60;https://local.carbonldp.com/apps/taxonomy-hub/roles/app-admin/&#62; ;
+									&#60;https://carbonldp.com/ns/v1/security#permission&#62;
+										&#60;https://carbonldp.com/ns/v1/security#Read&#62; ,
+										&#60;https://carbonldp.com/ns/v1/security#CreateAccessPoint&#62; ,
+										&#60;https://carbonldp.com/ns/v1/security#Upload&#62; ,
+										&#60;https://carbonldp.com/ns/v1/security#Extend&#62; ,
+										&#60;https://carbonldp.com/ns/v1/security#Download&#62; ,
+										&#60;https://carbonldp.com/ns/v1/security#AddMember&#62; ,
+										&#60;https://carbonldp.com/ns/v1/security#Update&#62; ,
+										&#60;https://carbonldp.com/ns/v1/security#CreateChild&#62; ,
+										&#60;https://carbonldp.com/ns/v1/security#RemoveMember&#62; ;
+									&#60;https://carbonldp.com/ns/v1/security#granting&#62; true ;
+									&#60;https://carbonldp.com/ns/v1/platform#bNodeIdentifier&#62; "9292cddf-08f8-4d07-90f2-987951cc2a44" .
+
+								_:node1af9bsvs3x3
+									a &#60;https://carbonldp.com/ns/v1/security#AccessControlEntry&#62; ;
+									&#60;https://carbonldp.com/ns/v1/security#subjectClass&#62; &#60;https://carbonldp.com/ns/v1/security#AppRole&#62; ;
+									&#60;https://carbonldp.com/ns/v1/security#subject&#62; &#60;https://local.carbonldp.com/apps/taxonomy-hub/roles/app-admin/&#62; ;
+									&#60;https://carbonldp.com/ns/v1/security#permission&#62;
+										&#60;https://carbonldp.com/ns/v1/security#Read&#62; ,
+										&#60;https://carbonldp.com/ns/v1/security#CreateAccessPoint&#62; ,
+										&#60;https://carbonldp.com/ns/v1/security#Upload&#62; ,
+										&#60;https://carbonldp.com/ns/v1/security#Extend&#62; ,
+										&#60;https://carbonldp.com/ns/v1/security#Download&#62; ,
+										&#60;https://carbonldp.com/ns/v1/security#AddMember&#62; ,
+										&#60;https://carbonldp.com/ns/v1/security#Update&#62; ,
+										&#60;https://carbonldp.com/ns/v1/security#CreateChild&#62; ,
+										&#60;https://carbonldp.com/ns/v1/security#RemoveMember&#62; ,
+										&#60;https://carbonldp.com/ns/v1/security#Delete&#62; ;
+									&#60;https://carbonldp.com/ns/v1/security#granting&#62; true ;
+									&#60;https://carbonldp.com/ns/v1/platform#bNodeIdentifier&#62; "735e1e37-c2c4-4ae4-81ed-99a41d5b4ced" .
+							</pre>
+
+							<p>
+								The ACL defines a <code>accessControlEntry</code> and an <code>inheritableEntry</code>, each linking to an <code>AccessControlEntry</code> by way of a blank nodes.
+								The entry linked by <code>accessControlEntry</code> defines access to the resource itself. The entry linked by <code>inheritableEntry</code> defines permissions
+								that can be inherited by child resources when the child resources do not override them.
+							</p>
+
+
+							<h4>Give the Editor role all permissions and the user role READ permissions.</h4>
+
+							<p>The best way to modify permissions on a resource using the REST API is to start by getting the ACL for the resource as we've done here. We can then copy and
+								paste that ACL into a text editor, make some manual modifications, and then update the ACL.</p>
+
+							<p>For each role, repeat the following procedure.</p>
+
+							<ul>
+								<li>Copy an existing AccessControlEntry stanza and paste it at the bottom.
+								<li>Remove the <code>bNodeIdentifier</code> triple from the pasted stanza (Carbon will automatically generate a new one when we update the ACL).</li>
+								<li>Change the name of the blank node so that it is unique in the file.</li>
+								<li>Change the <code>security#subject</code> literal value to be the URI of the role that you are giving the permissions.</li>
+								<li>Add the new blank nodes to the <code>security#accessControlEntry</code> and <code>security#inheritableEntry</code> triples near the top.</li>
+							</ul>
+
+							<p>When you are done, you should end up with something similar to what is shown in the body of the following request. To update the ACL, you then issue a <code>PUT</code>
+								request to replace the ACL.</p>
+
+
+							<p><span class="ui blue horizontal label">PUT</span> <code>{{protocolAndHost}}/apps/taxonomy-hub/~acl/</code></p>
+
+							<table class="ui celled table">
+								<thead>
+									<tr>
+										<th><span>HTTP Header</span></th>
+										<th>Value</th>
+										<th>Required?</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td>Authorization</td>
+										<td>Basic ...</td>
+										<td>Yes</td>
+									</tr>
+									<tr>
+										<td>Content-Type</td>
+										<td>text/turtle</td>
+										<td>Yes</td>
+									</tr>
+									<tr>
+										<td>Prefer</td>
+										<td><span class="nolink">http://www.w3.org/ns/ldp#RDFSource</span>; rel=interaction-model</td>
+										<td>Yes</td>
+									</tr>
+								</tbody>
+							</table>
+
+							<pre cphighlight class="turtle">
+								&#60;https://local.carbonldp.com/apps/taxonomy-hub/~acl/&#62;
+									a &#60;https://carbonldp.com/ns/v1/security#AccessControlList&#62; ;
+									&#60;https://carbonldp.com/ns/v1/security#accessTo&#62; &#60;https://local.carbonldp.com/apps/taxonomy-hub/&#62; ;
+									&#60;https://carbonldp.com/ns/v1/security#accessControlEntry&#62;
+										_:node1af9bsvs3x2,
+										_:abc,
+										_:xyz ;
+									&#60;https://carbonldp.com/ns/v1/security#inheritableEntry&#62;
+										_:node1af9bsvs3x3,
+										_:abc,
+										_:xyz .
+
+								_:node1af9bsvs3x2
+									a &#60;https://carbonldp.com/ns/v1/security#AccessControlEntry&#62; ;
+									&#60;https://carbonldp.com/ns/v1/security#subjectClass&#62; &#60;https://carbonldp.com/ns/v1/security#AppRole&#62; ;
+									&#60;https://carbonldp.com/ns/v1/security#subject&#62; &#60;https://local.carbonldp.com/apps/taxonomy-hub/roles/app-admin/&#62; ;
+									&#60;https://carbonldp.com/ns/v1/security#permission&#62;
+										&#60;https://carbonldp.com/ns/v1/security#Read&#62; ,
+										&#60;https://carbonldp.com/ns/v1/security#CreateAccessPoint&#62; ,
+										&#60;https://carbonldp.com/ns/v1/security#Upload&#62; ,
+										&#60;https://carbonldp.com/ns/v1/security#Extend&#62; ,
+										&#60;https://carbonldp.com/ns/v1/security#Download&#62; ,
+										&#60;https://carbonldp.com/ns/v1/security#AddMember&#62; ,
+										&#60;https://carbonldp.com/ns/v1/security#Update&#62; ,
+										&#60;https://carbonldp.com/ns/v1/security#CreateChild&#62; ,
+										&#60;https://carbonldp.com/ns/v1/security#RemoveMember&#62; ;
+									&#60;https://carbonldp.com/ns/v1/security#granting&#62; true ;
+									&#60;https://carbonldp.com/ns/v1/platform#bNodeIdentifier&#62; "9292cddf-08f8-4d07-90f2-987951cc2a44" .
+
+								_:node1af9bsvs3x3
+									a &#60;https://carbonldp.com/ns/v1/security#AccessControlEntry&#62; ;
+									&#60;https://carbonldp.com/ns/v1/security#subjectClass&#62; &#60;https://carbonldp.com/ns/v1/security#AppRole&#62; ;
+									&#60;https://carbonldp.com/ns/v1/security#subject&#62; &#60;https://local.carbonldp.com/apps/taxonomy-hub/roles/app-admin/&#62; ;
+									&#60;https://carbonldp.com/ns/v1/security#permission&#62;
+										&#60;https://carbonldp.com/ns/v1/security#Read&#62; ,
+										&#60;https://carbonldp.com/ns/v1/security#CreateAccessPoint&#62; ,
+										&#60;https://carbonldp.com/ns/v1/security#Upload&#62; ,
+										&#60;https://carbonldp.com/ns/v1/security#Extend&#62; ,
+										&#60;https://carbonldp.com/ns/v1/security#Download&#62; ,
+										&#60;https://carbonldp.com/ns/v1/security#AddMember&#62; ,
+										&#60;https://carbonldp.com/ns/v1/security#Update&#62; ,
+										&#60;https://carbonldp.com/ns/v1/security#CreateChild&#62; ,
+										&#60;https://carbonldp.com/ns/v1/security#RemoveMember&#62; ,
+										&#60;https://carbonldp.com/ns/v1/security#Delete&#62; ;
+									&#60;https://carbonldp.com/ns/v1/security#granting&#62; true ;
+									&#60;https://carbonldp.com/ns/v1/platform#bNodeIdentifier&#62; "735e1e37-c2c4-4ae4-81ed-99a41d5b4ced" .
+
+								_:abc
+									a &#60;https://carbonldp.com/ns/v1/security#AccessControlEntry&#62; ;
+									&#60;https://carbonldp.com/ns/v1/security#subjectClass&#62; &#60;https://carbonldp.com/ns/v1/security#AppRole&#62; ;
+									&#60;https://carbonldp.com/ns/v1/security#subject&#62; &#60;https://local.carbonldp.com/apps/taxonomy-hub/roles/editor/&#62; ;
+									&#60;https://carbonldp.com/ns/v1/security#permission&#62;
+										&#60;https://carbonldp.com/ns/v1/security#Read&#62; ,
+										&#60;https://carbonldp.com/ns/v1/security#CreateAccessPoint&#62; ,
+										&#60;https://carbonldp.com/ns/v1/security#Upload&#62; ,
+										&#60;https://carbonldp.com/ns/v1/security#Extend&#62; ,
+										&#60;https://carbonldp.com/ns/v1/security#Download&#62; ,
+										&#60;https://carbonldp.com/ns/v1/security#AddMember&#62; ,
+										&#60;https://carbonldp.com/ns/v1/security#Update&#62; ,
+										&#60;https://carbonldp.com/ns/v1/security#CreateChild&#62; ,
+										&#60;https://carbonldp.com/ns/v1/security#RemoveMember&#62; ;
+									&#60;https://carbonldp.com/ns/v1/security#granting&#62; true .
+
+								_:xyz
+									a &#60;https://carbonldp.com/ns/v1/security#AccessControlEntry&#62; ;
+									&#60;https://carbonldp.com/ns/v1/security#subjectClass&#62; &#60;https://carbonldp.com/ns/v1/security#AppRole&#62; ;
+									&#60;https://carbonldp.com/ns/v1/security#subject&#62; &#60;https://local.carbonldp.com/apps/taxonomy-hub/roles/user/&#62; ;
+									&#60;https://carbonldp.com/ns/v1/security#permission&#62; &#60;https://carbonldp.com/ns/v1/security#Read&#62; ;
+									&#60;https://carbonldp.com/ns/v1/security#granting&#62; true .
+							</pre>
+
+							<p>A successful PUT should result in HTTP status 200 OK.</p>
+
+						</section>
+
+
+					</section>
+
+					<section>
+
+						<h2 class="ui header">Conclusion</h2>
+
+						<p>This guide described how to build an example application using the Carbon LDP REST API. Normally, developers will prefer use of the App DEV GUI and the JavaScript SDK,
+							which together simplify the process of building an app. Still, all functions of the platform can be accessed via the REST API and those developers who understand it may
+							find
+							its use to be advantageous in some cases.</p>
+
+					</section>
+
+				</article>
+			</main>
+		</div>
+		<sidebar-component [mobile]="false" [parentElement]="element" [contentReady]="contentReady" class="four wide computer only four wide tablet only column"></sidebar-component>
+
+	</div>
+
+</div>
+
