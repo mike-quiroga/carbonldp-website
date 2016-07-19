@@ -5,6 +5,7 @@ import org.eclipse.rdf4j.model.IRI;
 
 import java.io.File;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 public interface FileRepository {
@@ -20,7 +21,7 @@ public interface FileRepository {
 
 	public void emptyDirectory( App app );
 
-	public File createAppRepositoryRDFFile();
+	public File createAppRepositoryRDFFile( String domainCode, String appCode );
 
 	public File createZipFile( Map<File, String> fileToNameMap );
 
@@ -29,6 +30,8 @@ public interface FileRepository {
 	public void deleteFile( File file );
 
 	public void deleteDirectory( File file );
+
+	public File createTempFile( Set<String> tempFileData );
 
 	public String getFilesDirectory( App app );
 }

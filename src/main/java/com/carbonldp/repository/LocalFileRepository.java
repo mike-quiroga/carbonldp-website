@@ -93,7 +93,7 @@ public class LocalFileRepository implements FileRepository {
 	}
 
 	@Override
-	public File createAppRepositoryRDFFile() {
+	public File createAppRepositoryRDFFile( String domainCode, String appCode ) {
 		File temporaryFile;
 		FileOutputStream outputStream = null;
 		final NQuadsWriter nQuadsWriter;
@@ -104,6 +104,11 @@ public class LocalFileRepository implements FileRepository {
 			outputStream = new FileOutputStream( temporaryFile );
 			nQuadsWriter = new NQuadsWriter( outputStream );
 			nQuadsWriter.setBase( AppContextHolder.getContext().getApplication().getRootContainerIRI().stringValue() );
+			nQuadsWriter.setDomain( Vars.getInstance().getHost() );
+			nQuadsWriter.setDomainCode( domainCode );
+			String appValue = AppContextHolder.getContext().getApplication().getIRI().stringValue();
+			nQuadsWriter.setApp( appValue );
+			nQuadsWriter.setAppCode( appCode );
 			connectionTemplate.write( connection -> connection.export( nQuadsWriter ) );
 
 		} catch ( IOException | SecurityException e ) {
@@ -190,6 +195,30 @@ public class LocalFileRepository implements FileRepository {
 			}
 		}
 		file.delete();
+	}
+
+	@Override
+	public File createTempFile( Set<String> tempFileData ) {
+		File tempFile = null;
+		FileWriter fw = null;
+		try {
+			tempFile = File.createTempFile( "file:", ".tmp" );
+			tempFile.deleteOnExit();
+			fw = new FileWriter( tempFile );
+			PrintWriter pw = new PrintWriter( fw );
+			for ( String line : tempFileData )
+				pw.println( line );
+		} catch ( Exception e ) {
+			throw new RuntimeException( "There is a problem creating the temporary file. Exception: ", e );
+		} finally {
+			try {
+				if ( null != fw )
+					fw.close();
+			} catch ( Exception e2 ) {
+				throw new RuntimeException( "The FileWriter couldn't be closed. Exception: ", e2 );
+			}
+		}
+		return tempFile;
 	}
 
 	private void addFileToZip( ZipOutputStream zipOutputStream, File file, File directoryFile, String fileNameInsideZip ) {

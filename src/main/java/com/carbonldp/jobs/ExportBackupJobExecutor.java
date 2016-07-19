@@ -16,8 +16,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.File;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author NestorVenegas
@@ -42,13 +41,14 @@ public class ExportBackupJobExecutor implements TypedJobExecutor {
 
 		if ( ! job.hasType( ExportBackupJobDescription.Resource.CLASS ) ) throw new JobException( new Infraction( 0x2001, "rdf.type", ExportBackupJobDescription.Resource.CLASS.getIRI().stringValue() ) );
 
-		String appRepositoryID = app.getRepositoryID();
-		String appRepositoryPath = Vars.getInstance().getAppsFilesDirectory().concat( Consts.SLASH ).concat( appRepositoryID );
-		File nonRDFSourceDirectory = new File( appRepositoryPath );
-		File rdfRepositoryFile = transactionWrapper.runInAppContext( app, () -> fileRepository.createAppRepositoryRDFFile() );
 		Map<File, String> entries = new HashMap<>();
-		entries.put( rdfRepositoryFile, Vars.getInstance().getAppDataFileName() + Consts.PERIOD + RDFFormat.NQUADS.getDefaultFileExtension() );
-		if ( nonRDFSourceDirectory.exists() ) entries.put( nonRDFSourceDirectory, Vars.getInstance().getAppDataDirectoryName() );
+		String domainCode = UUID.randomUUID().toString();
+		String appCode = UUID.randomUUID().toString();
+
+		addNonRDFSourceDirectoryToEntries( entries, app.getRepositoryID() );
+		addConfigFileToEntries( entries, domainCode, appCode );
+		File rdfRepositoryFile = addRDFRepositoryFileToEntries( app, entries, domainCode, appCode );
+
 		File zipFile = fileRepository.createZipFile( entries );
 
 		IRI backupIRI = createAppBackup( app.getIRI(), zipFile );
@@ -57,6 +57,27 @@ public class ExportBackupJobExecutor implements TypedJobExecutor {
 		fileRepository.deleteFile( rdfRepositoryFile );
 
 		executionService.addResult( execution.getIRI(), backupIRI );
+	}
+
+	private void addNonRDFSourceDirectoryToEntries( Map<File, String> entries, String appRepositoryID ) {
+		String appRepositoryPath = Vars.getInstance().getAppsFilesDirectory().concat( Consts.SLASH ).concat( appRepositoryID );
+		File nonRDFSourceDirectory = new File( appRepositoryPath );
+		if ( nonRDFSourceDirectory.exists() ) entries.put( nonRDFSourceDirectory, Vars.getInstance().getAppDataDirectoryName() );
+	}
+
+	private void addConfigFileToEntries( Map<File, String> entries, String domainCode, String appCode ) {
+		String configFileName = Vars.getInstance().getBackupsConfigFile();
+		Set<String> configFileData = new HashSet<>();
+		configFileData.add( Vars.getInstance().getBackupsConfigDomainCode() + " = " + domainCode );
+		configFileData.add( Vars.getInstance().getBackupsConfigAppCode() + " = " + appCode );
+		File configFile = fileRepository.createTempFile( configFileData );
+		entries.put( configFile, configFileName );
+	}
+
+	private File addRDFRepositoryFileToEntries( App app, Map<File, String> entries, String domainCode, String appCode ) {
+		File rdfRepositoryFile = transactionWrapper.runInAppContext( app, () -> fileRepository.createAppRepositoryRDFFile( domainCode, appCode ) );
+		entries.put( rdfRepositoryFile, Vars.getInstance().getAppDataFileName() + Consts.PERIOD + RDFFormat.NQUADS.getDefaultFileExtension() );
+		return rdfRepositoryFile;
 	}
 
 	private IRI createAppBackup( IRI appIRI, File zipFile ) {
