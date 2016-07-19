@@ -103,10 +103,10 @@ public class LocalFileRepository implements FileRepository {
 
 			outputStream = new FileOutputStream( temporaryFile );
 			nQuadsWriter = new NQuadsWriter( outputStream );
-			nQuadsWriter.setBase( AppContextHolder.getContext().getApplication().getRootContainerIRI().stringValue() );
 			nQuadsWriter.setDomain( Vars.getInstance().getHost() );
 			nQuadsWriter.setDomainCode( domainCode );
 			String appValue = AppContextHolder.getContext().getApplication().getIRI().stringValue();
+			appValue = appValue.substring( Vars.getInstance().getAppsContainerURL().length(), appValue.length() - 1 );
 			nQuadsWriter.setApp( appValue );
 			nQuadsWriter.setAppCode( appCode );
 			connectionTemplate.write( connection -> connection.export( nQuadsWriter ) );
