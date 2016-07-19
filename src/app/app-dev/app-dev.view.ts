@@ -1,4 +1,4 @@
-import { Component, ElementRef, provide, Inject, OnInit, EventEmitter } from "@angular/core";
+import { Component, provide, Inject, OnInit, EventEmitter } from "@angular/core";
 import { Location } from "@angular/common";
 import { Router, RouteConfig, RouterOutlet } from "@angular/router-deprecated";
 
@@ -18,7 +18,8 @@ import { FooterComponent } from "./footer/footer.component";
 import { DashboardView } from "./dashboard/dashboard.view";
 import { MyAppsView } from "./my-apps/my-apps.view";
 
-import $ from "jquery";
+import { NotFoundErrorView } from "./error-pages/not-found-error/not-found-error.view";
+
 import "semantic-ui/semantic";
 
 import template from "./app-dev.view.html!";
@@ -69,6 +70,15 @@ import style from "./app-dev.view.css!text";
 		data: {
 			alias: "MyApps",
 			displayName: "My Apps",
+		},
+	},
+	{
+		path: "**",
+		as: "NotFoundError",
+		component: NotFoundErrorView,
+		data: {
+			alias: "NotFoundError",
+			displayName: "404",
 		},
 	},
 ] )

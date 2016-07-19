@@ -9,6 +9,8 @@ import WebsiteView from "app/website/WebsiteView";
 import { AppDevLoginView } from "app/auth/app-dev-login/app-dev-login.view";
 import { AppDevView } from "app/app-dev/app-dev.view";
 
+import { NotFoundErrorView } from "app/error-pages/not-found-error/not-found-error.view";
+
 import template from "./app.component.html!";
 import style from "./app.component.css!text";
 
@@ -31,6 +33,7 @@ import style from "./app.component.css!text";
 	{ path: "login", as: "AppDevLogin", component: AppDevLoginView },
 	// TODO: Remove 'site' portion from the URL. Right now Angular doesn't behave like it should with blank child URLs
 	{ path: "site/...", as: "Website", component: WebsiteView },
+	{ path: "**", as: "NotFoundError", component: NotFoundErrorView },
 ] )
 export class AppComponent {
 	// Importing angulartics2, angulartics2GoogleAnalytics as per documentation of angulartics2 plug-in
