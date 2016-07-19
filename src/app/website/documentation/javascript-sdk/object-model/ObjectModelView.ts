@@ -5,7 +5,7 @@ import { Title } from "@angular/platform-browser";
 
 import SidebarComponent from "./../../sidebar/SidebarComponent";
 
-import HighlightDirective from "app/directives/HighlightDirective";
+import HighlightDirective from "carbon-panel/directives/highlight.directive";
 import highlight from "highlight.js";
 import "highlight.js/styles/tomorrow-night.css!";
 
