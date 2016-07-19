@@ -47,7 +47,7 @@ public class ExportBackupJobExecutor implements TypedJobExecutor {
 		File nonRDFSourceDirectory = new File( appRepositoryPath );
 		File rdfRepositoryFile = transactionWrapper.runInAppContext( app, () -> fileRepository.createAppRepositoryRDFFile() );
 		Map<File, String> entries = new HashMap<>();
-		entries.put( rdfRepositoryFile, Vars.getInstance().getAppDataFileName() + Consts.PERIOD + RDFFormat.TRIG.getDefaultFileExtension() );
+		entries.put( rdfRepositoryFile, Vars.getInstance().getAppDataFileName() + Consts.PERIOD + RDFFormat.NQUADS.getDefaultFileExtension() );
 		if ( nonRDFSourceDirectory.exists() ) entries.put( nonRDFSourceDirectory, Vars.getInstance().getAppDataDirectoryName() );
 		File zipFile = fileRepository.createZipFile( entries );
 
