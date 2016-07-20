@@ -3,7 +3,6 @@ package com.carbonldp.jobs;
 import com.carbonldp.Consts;
 import com.carbonldp.Vars;
 import com.carbonldp.apps.App;
-import com.carbonldp.apps.context.AppContext;
 import com.carbonldp.apps.context.AppContextHolder;
 import com.carbonldp.exceptions.JobException;
 import com.carbonldp.ldp.nonrdf.NonRDFSourceService;
@@ -15,16 +14,17 @@ import com.carbonldp.repository.ConnectionRWTemplate;
 import com.carbonldp.repository.FileRepository;
 import com.carbonldp.spring.TransactionWrapper;
 import com.carbonldp.utils.ZipUtil;
-import org.eclipse.rdf4j.model.Resource;
+import org.apache.commons.io.IOUtils;
 import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.Resource;
 import org.eclipse.rdf4j.rio.RDFFormat;
 import org.eclipse.rdf4j.spring.SesameConnectionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.*;
-import java.util.Enumeration;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * @author JorgeEspinosa
@@ -66,10 +66,44 @@ public class ImportBackupJobExecutor implements TypedJobExecutor {
 	private void replaceApp( File backupFile ) {
 		IRI appIRI = AppContextHolder.getContext().getApplication().getRootContainerIRI();
 
-		InputStream trigInputStream = ZipUtil.unZipFile( backupFile, Vars.getInstance().getAppDataFileName() + Consts.PERIOD + RDFFormat.TRIG.getDefaultFileExtension() );
-		if ( trigInputStream == null ) throw new JobException( new Infraction( 0x1012 ) );
+		InputStream nQuadsInputStream = ZipUtil.unZipFile( backupFile, Vars.getInstance().getAppDataFileName() + Consts.PERIOD + RDFFormat.NQUADS.getDefaultFileExtension() );
+
+		InputStream configFileStream = ZipUtil.unZipFile( backupFile, Vars.getInstance().getBackupsConfigFile() );
+
+		if ( nQuadsInputStream == null || configFileStream == null ) throw new JobException( new Infraction( 0x1012 ) );
+
+		Map<String, String> configurationMap = fileRepository.getBackupConfiguration( configFileStream );
+		Map<String, String> replaceMap = createReplaceMap( configurationMap, AppContextHolder.getContext().getApplication().getIRI().stringValue(), RDFFormat.NQUADS );
+		replaceAppNQuadsFile( nQuadsInputStream, appIRI, replaceMap );
+		
+	}
+
+	private void replaceAppNQuadsFile( InputStream stream, IRI appIRI, Map<String, String> map ) {
 		connectionTemplate.write( connection -> connection.remove( (Resource) null, null, null ) );
-		connectionTemplate.write( connection -> connection.add( trigInputStream, appIRI.stringValue(), RDFFormat.TRIG ) );
+		BufferedReader in = new BufferedReader( new InputStreamReader( stream ) );
+
+		Set<String> keySet = map.keySet();
+		try {
+			for ( String line = in.readLine(); line != null; line = in.readLine() ) {
+				for ( String key : keySet ) {
+					line = line.replace( key, map.get( key ) );
+				}
+
+				InputStream lineStream = IOUtils.toInputStream( line, "UTF-8" );
+				connectionTemplate.write( connection -> connection.add( lineStream, appIRI.stringValue(), RDFFormat.NQUADS ) );
+			}
+		} catch ( IOException e ) {
+
+		}
+	}
+
+	private Map<String, String> createReplaceMap( Map<String, String> configurationMap, String app, RDFFormat format ) {
+		Map<String, String> replaceMap = new LinkedHashMap<>();
+		String appValue = AppContextHolder.getContext().getApplication().getIRI().stringValue();
+		appValue = appValue.substring( Vars.getInstance().getAppsContainerURL().length(), appValue.length() - 1 );
+		replaceMap.put( "https://" + configurationMap.get( Vars.getInstance().getBackupsConfigDomainCode() ) + "/", Vars.getInstance().getHost() );
+		replaceMap.put( configurationMap.get( Vars.getInstance().getBackupsConfigAppCode() ), appValue );
+		return replaceMap;
 	}
 
 	@Autowired

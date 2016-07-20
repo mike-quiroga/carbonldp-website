@@ -6,8 +6,10 @@ import com.carbonldp.apps.App;
 import com.carbonldp.apps.context.AppContext;
 import com.carbonldp.apps.context.AppContextHolder;
 import com.carbonldp.exceptions.FileNotDeletedException;
+import com.carbonldp.exceptions.InvalidResourceException;
 import com.carbonldp.exceptions.NotADirectoryException;
 import com.carbonldp.exceptions.NotCreatedException;
+import com.carbonldp.models.Infraction;
 import com.carbonldp.utils.IRIUtil;
 import com.carbonldp.ldp.sources.RDFSourceRepository;
 import com.carbonldp.utils.NQuadsWriter;
@@ -23,6 +25,7 @@ import org.springframework.core.io.FileSystemResource;
 
 import java.io.*;
 import java.nio.file.Files;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
@@ -219,6 +222,32 @@ public class LocalFileRepository implements FileRepository {
 			}
 		}
 		return tempFile;
+	}
+
+	@Override
+	public Map<String, String> getBackupConfiguration( InputStream configStream ) {
+		Map<String, String> configuration = new LinkedHashMap<>();
+		InputStreamReader inputStreamReader = new InputStreamReader( configStream );
+		BufferedReader br = new BufferedReader( inputStreamReader );
+		try {
+			for ( String line = br.readLine(); line != null; line = br.readLine() ) {
+				int div = line.indexOf( "=" );
+				if ( div == - 1 ) throw new InvalidResourceException( new Infraction( 0x2015 ) );
+				String key = line.substring( 0, div ).trim();
+				String value = line.substring( div + 1 ).trim();
+				configuration.put( key, value );
+			}
+			return configuration;
+		} catch ( Exception e ) {
+			throw new RuntimeException( "There is a problem reading the configuration file. Exception: ", e );
+		} finally {
+			try {
+				if ( null != inputStreamReader )
+					inputStreamReader.close();
+			} catch ( Exception e2 ) {
+				throw new RuntimeException( "The inputStreamReader couldn't be closed. Exception: ", e2 );
+			}
+		}
 	}
 
 	private void addFileToZip( ZipOutputStream zipOutputStream, File file, File directoryFile, String fileNameInsideZip ) {
