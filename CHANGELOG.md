@@ -1,7 +1,11 @@
 # 0.5.19 (July 20, 2016)
-- Fix website view to show correct version of header on mobile and computer view.
-- Add scroll to top on App Dev whenever a change of route is made.
-- Add 404 error page on Global App and App Dev.
+- Fix vertical center alignment of some text on Home page, which was misaligned depending on the screen width.
+- Make html head title consistent with page title.
+- Simplify use of Title service.
+- Add LinkedIn showcase page to social icons in footer.
+- Fix primary navigation bar to switch rendering on mobile devices (it wasn't switching on iPhone, for example).
+- Add scroll to top on App Dev whenever a change of route is made it was already implemented in public Website.
+- Add 404 error pages to Website and App Dev.
 
 # 0.5.18 (July 14, 2016)
 - Fix @angular package version to rc.1
