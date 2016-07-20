@@ -93,7 +93,7 @@ public class SesameAppService extends AbstractSesameLDPService implements AppSer
 			Container appTicketsContainer = appTokensRepository.createTicketsContainer( rootContainerIRI );
 			aclRepository.createACL( appTicketsContainer.getIRI() );
 
-			Container agentMeContainer = createAgentMeContainer( rootContainerIRI );
+			Container agentMeContainer = createAgentMeContainer(appAgentsContainer.getIRI() );
 			aclRepository.createACL( agentMeContainer.getIRI() );
 
 			addDefaultPermissions( appAdminRole, rootContainerACL );
@@ -123,11 +123,11 @@ public class SesameAppService extends AbstractSesameLDPService implements AppSer
 		sourceService.replace( app );
 	}
 
-	private BasicContainer createAgentMeContainer( IRI rootContainerIRI ) {
-		IRI agentMeContainerIRI = IRIUtil.createChildIRI( rootContainerIRI, Vars.getInstance().getAgentMeContainer() );
+	private BasicContainer createAgentMeContainer( IRI agentsContainerIRI ) {
+		IRI agentMeContainerIRI = IRIUtil.createChildIRI( agentsContainerIRI, Vars.getInstance().getAppAgentMeContainer() );
 
 		BasicContainer agentMeContainer = BasicContainerFactory.getInstance().create( new RDFResource( agentMeContainerIRI ) );
-		containerRepository.createChild( rootContainerIRI, agentMeContainer );
+		containerRepository.createChild( agentsContainerIRI, agentMeContainer );
 		return agentMeContainer;
 	}
 
