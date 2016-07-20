@@ -77,6 +77,9 @@ export default class SidebarComponent {
 				onTopPassed: function () {
 					_self.activateSection( this );
 				},
+				onTopPassedReverse: function(){
+					_self.deactivateFirstSection( this );
+				},
 				onBottomPassedReverse: function () {
 					_self.activateSection( this );
 				},
@@ -87,12 +90,15 @@ export default class SidebarComponent {
 				onTopPassed: function () {
 					_self.activateSubSection( this );
 				},
+				onTopPassedReverse: function(){
+					_self.deactivateFirstSubSection( this );
+				},
 				onBottomPassedReverse: function () {
 					_self.activateSubSection( this );
 				}
 			} );
 		} else {
-			// Assing classes for mobile size sidebar
+			// Assign classes for mobile size sidebar
 			this.$followMenu = $( "<div />" ).addClass( "ui vertical following fluid accordion menu mobile" ).html( html );
 			$sticky = $( "<div />" ).addClass( "ui segment" ).html( this.$followMenu ).prepend( '<p class="ui header">Content</p>' );
 			this.sidebar.html( $sticky );
@@ -158,6 +164,7 @@ export default class SidebarComponent {
 		let isActive:boolean = $currentSection.hasClass( "active" );
 		let hasSubsection:boolean = this.sections.eq( index ).children( "section" ).length > 0;
 
+		console.log( "follow: ", index );
 		$followSection.removeClass( "active" );
 		$followSection.find( ".active" ).not( ".toggled" ).removeClass( "active" );
 
@@ -191,6 +198,34 @@ export default class SidebarComponent {
 
 		if ( ! accordionIsActive ) {
 			$accordion.addClass( "active" );
+		}
+
+	}
+
+	deactivateFirstSection( elm: any):void{
+		let $section:JQuery = $( elm );
+		let index:number = this.sections.index( $section );
+		let $followSection:JQuery = this.$followMenu.children( ".item" );
+		let $accordion:JQuery = this.$followMenu.children( ".item" ).find( ".menu" );
+		let accordionIsActive:boolean = $accordion.hasClass( "active" );
+
+		if ( index === 0 ) {
+			$followSection.removeClass( "active" );
+		}
+
+		if ( accordionIsActive ){
+			$accordion.removeClass( "active" );
+		}
+
+	}
+
+	deactivateFirstSubSection( elm: any):void{
+		let $section:JQuery = $( elm );
+		let index:number = this.subSections.index( $section );
+		let $followSection:JQuery = this.$followMenu.find( ".menu > .item" );
+
+		if ( index === 0 ) {
+			$followSection.removeClass( "active" );
 		}
 
 	}
