@@ -29,12 +29,10 @@
           <option name="OBJECT_WRAPPING" value="5" />
           <option name="ARRAY_WRAPPING" value="5" />
         </JSON>
-        <MarkdownNavigatorCodeStyleSettings>
-          <option name="RIGHT_MARGIN" value="72" />
-        </MarkdownNavigatorCodeStyleSettings>
         <TypeScriptCodeStyleSettings>
           <option name="REFORMAT_C_STYLE_COMMENTS" value="false" />
           <option name="SPACES_WITHIN_OBJECT_LITERAL_BRACES" value="true" />
+          <option name="SPACES_WITHIN_IMPORTS" value="true" />
         </TypeScriptCodeStyleSettings>
         <XML>
           <option name="XML_LEGACY_SETTINGS_IMPORTED" value="true" />
