@@ -19,7 +19,7 @@ export default class CarbonLDPConceptsView {
 
 	constructor( element:ElementRef, title:Title ) {
 		this.element = element;
-		title.setTitle(  "Carbon LDP Concepts" );
+		title.setTitle( "Carbon LDP Concepts" );
 	}
 
 	ngAfterViewInit():void {
