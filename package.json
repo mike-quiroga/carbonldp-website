@@ -1,6 +1,6 @@
 {
   "name": "carbon-website",
-  "version": "0.5.18",
+  "version": "0.5.19",
   "description": "Public Website for carbonldp.com",
   "main": "dist/index.html",
   "author": "Base22 LLC",
@@ -216,7 +216,7 @@
             }
           }
         },
-        "map": {}
+        "map": { }
       },
       "npm:browserify-zlib@0.1.4": {
         "dependencies": {
@@ -241,7 +241,7 @@
         }
       },
       "npm:typescript@1.8.9": {
-        "browser": {},
+        "browser": { },
         "map": {
           "buffer": "@empty",
           "child_process": "@empty",

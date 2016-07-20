@@ -1,3 +1,8 @@
+# 0.5.19 (July 20, 2016)
+- Fix website view to show correct version of header on mobile and computer view.
+- Add scroll to top on App Dev whenever a change of route is made.
+- Add 404 error page on Global App and App Dev.
+
 # 0.5.18 (July 14, 2016)
 - Fix @angular package version to rc.1
 - Remove the following from App Dev:
