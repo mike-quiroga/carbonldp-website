@@ -216,7 +216,7 @@
             }
           }
         },
-        "map": { }
+        "map": {}
       },
       "npm:browserify-zlib@0.1.4": {
         "dependencies": {
@@ -241,7 +241,7 @@
         }
       },
       "npm:typescript@1.8.9": {
-        "browser": { },
+        "browser": {},
         "map": {
           "buffer": "@empty",
           "child_process": "@empty",
