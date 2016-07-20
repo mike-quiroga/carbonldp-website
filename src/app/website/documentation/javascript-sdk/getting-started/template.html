@@ -134,7 +134,7 @@
 								</p>
 								<h3>Carbon Variable as a Namespace</h3>
 								<p>
-									The <code>Carbon</code> object chains together all the Carbon modules together, so you can access them even if you are using the Global approach.
+									The <code>Carbon</code> object chains together all the Carbon modules, so you can access them even if you are using the Global approach.
 									Each time you see in an example something like:
 								</p>
 								<!--@formatter:off-->
@@ -207,33 +207,32 @@
 						</div>
 
 						<p>
-							Now that you have installed Carbon successfully you can create your very first app
-							using the UI App. Click <a target="_blank" [routerLink]="['/AppDev/MyApps/Create']">here</a> to find out how.
+							Before you can save data in Carbon, you need to create an application. Click <a target="_blank" [routerLink]="['/AppDev/MyApps/Create']">here</a> if you haven't done it.
 						</p>
 					</section>
 
 					<section>
 						<h2 class="ui header">Creating contexts</h2>
 						<p>
-							Now that you have your brand new app (If you don't have your app yet, please
-							<a target="_blank" [routerLink]="['/AppDev/MyApps/Create']">create it</a>! ). Let's start with some basic things you can do, like creating,
+							Now that you have your brand new app (if you don't have your app yet, please
+							<a target="_blank" [routerLink]="['/AppDev/MyApps/Create']">create it</a>!). Let's start with some basic things you can do, like creating,
 							saving, linking <span class="highlight">documents</span>, etc.
 						</p>
 
 						<p>
-							Before you can manipulate <span class="highlight">Carbon objects</span>, you need to
-							create a <span class="highlight">Carbon platform context</span>. This
+							First of all, you need to create a <span class="highlight">Carbon platform context</span>. This
 							<span class="highlight">context</span> will provide a reference to the
-							<span class="highlight">Carbon platform instance</span> you are working with. (For more
-							about Carbon contexts see: <a [routerLink]="['../JavaScriptSDKContexts']">Contexts</a>)
+							<span class="highlight">Carbon platform instance</span> you are working with (for more
+							about Carbon contexts see: <a [routerLink]="['../JavaScriptSDKContexts']">Contexts</a>).
 						</p>
 
-						<p>After you create a <span class="highlight">Carbon platform context</span>, you need an
-							<span class="highlight">application</span>
+						<p>
+							Then you need an <span class="highlight">application</span>
 							<a [routerLink]="[ '../JavaScriptSDKContexts' ]">context</a> that references the
 							<span class="highlight">application</span> on which you will be working on. The
-							<span class="highlight">app context</span> is retrieved from a previously created
-							<span class="highlight">application</span>.</p>
+							<span class="highlight">app context</span> is retrieved from your previously created
+							<span class="highlight">application</span>.
+						</p>
 						<div>
 							<div class="ui top attached tabular menu">
 								<a class="item active" data-tab="typescript">TypeScript</a>
@@ -249,7 +248,7 @@
 									let myAppContext:AppContext;
 
 									carbon.apps.get( "your-app-slug-here/" ).then( ( appContext:App.Context ) => {
-									    myAppContext = appContext; //retrieving you app context
+									    myAppContext = appContext; //retrieving your app context
 									}).catch( console.error );
 								</code></pre>
 								<!--@formatter:on-->
@@ -260,16 +259,18 @@
 									let carbon = new Carbon(); // platform context
 									let myAppContext;
 
+									carbon.apps.get( "your-app-slug-here/" ).then( function( appContext ) {
 
-									carbon.apps.get( "your-app-slug-here/" ).then( function( appContext ){
+									    myAppContext = appContext; // retrieving your app context
 
-									    myAppContext = appContext; // retrieving you app context
-
-									}).catch( console.error );
+									} ).catch( console.error );
 								</code></pre>
 								<!--@formatter:on-->
 							</div>
 						</div>
+						<p>
+							Be sure to replace <code>your-app-slug-here/</code> with your app slug.
+						</p>
 						<p>
 							The <code>apps.get()</code> method returns a promise that when resolved, will give you the
 							<a [routerLink]="[ '../JavaScriptSDKContexts' ]"><span class="highlight">app context</span>
@@ -279,17 +280,16 @@
 					</section>
 
 					<section>
-						<h2 class="ui header">Retrieving a document</h2>
-
-						<p>Now with your <span class="highlight">app</span>
-							<a [routerLink]="[ '../JavaScriptSDKContexts' ]">context</a> you can start working with
-							your app's data. First you'll retrieve your
-							<a [routerLink]="[ '../JavaScriptSDKObjectModel']">root document</a>, which is the root of
-							all your <span class="highlight">document</span> nodes. A <span class="highlight">document</span>
-							in <span class="highlight">Carbon</span> is basically a JavaScript object identified by a URI, it is
-							composed of <span class="highlight">properties</span>,
-							<span class="highlight">fragments</span> and <span class="highlight">named fragments</span>, see:
-							<a [routerLink]="[ '../JavaScriptSDKObjectModel' ]">JavaScript SDK Object model</a>.
+						<h2 class="ui header">Creating a document</h2>
+						<p>
+							Now that you have your app context, you can start working with your app's data. Carbon stores data
+							in documents which are basically a normal JavaScript object identified by a URI. These documents are
+							composed by properties, <span class="highlight">fragments</span> and <span class="highlight">named fragments</span>.
+							For more information see: <a [routerLink]="[ '../JavaScriptSDKObjectModel' ]">JavaScript SDK Object model</a>.
+						</p>
+						<p>
+							Any carbon <span class="highlight">context</span> has a <code>documents</code> service that
+							helps you manage your documents. To create a document we need to call the method <code>createChild</code> of this service:
 						</p>
 						<div>
 							<div class="ui top attached tabular menu">
@@ -299,192 +299,88 @@
 							<div class="ui bottom attached tab segment active" data-tab="typescript">
 								<!--@formatter:off-->
 								<pre><code cphighlight class="typescript">
-									// imports
+									// ... additional imports
 									import * Response from "carbonldp/HTTP/Response";
-									import * Document from "carbonldp/Document";
+									import * Pointer from "carbonldp/Pointer";
 
-									let carbon:Carbon = new Carbon(); // platform context
 									let myAppContext:AppContext;
-									let rootDocument:PersistedDocument.Class;
 
-									carbon.apps.get( "your-app-slug-here/" ).then( ( appContext:App.Context ) => {
-									    myAppContext = appContext; // retrieving you app context
-									    myAppContext.documents.get( "/" ).then(
-									        ( [ document, response ]:[ PersistedDocument.Class, Response.Class ] ) => {
-									            rootDocument = document;
-										});
+									// ... app context retrieval
 
-									}).catch( console.error );
+									// JavaScript object to be persisted as a Carbon document
+									let project:any = {
+										name: "Project X",
+										tasks: [
+											{
+												name: "Task 1",
+												dueDate: new Date( "2016-04-02" )
+											},
+											{
+												name: "Task 2",
+												dueDate: new Date( "2016-04-08" )
+											}
+										]
+									};
+
+									myAppContext.documents.createChild( "/", project ).then(
+										( [ projectPointer, response ]:[ Pointer.Class, Response.Class ] ) => {
+											console.log( project === projectPointer ); // true
+											console.log( project.id ); // document's URI
+										}
+									).catch( console.error );
 								</code></pre>
 								<!--@formatter:on-->
 							</div>
 							<div class="ui bottom attached tab segment" data-tab="javascript">
 								<!--@formatter:off-->
 								<pre><code cphighlight class="javascript">
-									let carbon:Carbon = new Carbon(); // platform context
+									// ... imports
+
 									let myAppContext;
-									let rootDocument;
 
+									// ... app context retrieval
 
-									carbon.apps.get( "your-app-slug-here/" ).then(
-										function( appContext ) => {
+									// JavaScript object to be persisted as a Carbon document
+									let project = {
+										name: "Project X",
+										tasks: [
+											{
+												name: "Task 1",
+												dueDate: new Date( "2016-04-02" )
+											},
+											{
+												name: "Task 2",
+												dueDate: new Date( "2016-04-08" )
+											}
+										]
+									};
 
-									    myAppContext = appContext; // retrieving you app context
-
-									    myAppContext.documents.get( "/" ).then(
-									        function( [document, response] ){
-									            rootDocument = document;
-											});
-
-									}).catch( console.error );
+									myAppContext.documents.createChild( "/", project ).then(
+										( [ projectPointer, response ] ) => {
+											console.log( project === projectPointer ); // true
+											console.log( project.id ); // document's URI
+										}
+									).catch( console.error );
 								</code></pre>
 								<!--@formatter:on-->
 							</div>
 						</div>
 						<p>
-							The <code>documents.get()</code> method accepts a relative
-							<a class="outsidelink" target="_blank"
-							   href="https://www.w3.org/TR/ld-glossary/#uniform-resource-identifier">URI</a>. That
-							relative <a class="outsidelink" target="_blank"
-							            href="https://www.w3.org/TR/ld-glossary/#uniform-resource-identifier">URI</a>
-							is going to be resolved to an absolute <a class="outsidelink" target="_blank"
-							                                          href="https://www.w3.org/TR/ld-glossary/#uniform-resource-identifier">URI</a>
-							using the <span class="highlight">context</span> in which we are working on (in this case
-							<code>appContext</code>). To see to what <a class="outsidelink" target="_blank"
-							                                            href="https://www.w3.org/TR/ld-glossary/#uniform-resource-identifier">URI</a>
-							it'll resolve you can execute <code>appContext.resolve( "/" )</code>.
+							After executing that, the information inside of <code>project</code> will have been persisted in Carbon. Nested objects
+							will also be saved inside of the document, so pretty much any json object can be saved as a Carbon document (as long as
+							the json's information is contained inside of an object, not an array).
 						</p>
-					</section>
-
-					<section>
-						<h2 class="ui header">Creating and persisting a document</h2>
-						<p>The <span class="highlight">root document</span> that you just retrieved can be seen as the
-							root folder of all your <span class="highlight">documents</span>. It is not recommended to
-							modify it. Instead you should create <span class="highlight">child documents</span> to hold
-							your data. The <span class="highlight">platform</span> handles the
-							fundamental <span class="highlight">parent-child relation</span> between
-							<span class="highlight">documents</span>. Every <span class="highlight">document</span>
-							must be the child of a previous existing <span class="highlight">document</span>, being the
-							<span class="highlight">root document</span> the first
-							parent in your <span class="highlight">application</span>. As mentioned in
-							<span class="sectinlink"><a href="#retrieving-a-document">Retrieving a
-								document</a></span>, the <span class="highlight">root document</span> id is <code>"/"</code>.
-						</p>
-
-						<p>When you create a child document, you are creating a
-							<span class="highlight">persisted document</span>, a <span class="highlight">document</span>
-							that has been saved in <span class="highlight">Carbon platform</span>, through the method
-							<code>createChild()</code>.
-						</p>
-
 						<p>
-							The <code>createChild()</code> method can be invoked with different signatures. It is a
-							requisite to provide the <span class="highlight">parent</span> id and a
-							<span class="highlight">document</span> or JavaScript object from which
-							the <span class="highlight">child document</span> can be created.
+							Notice that the promise returned by <code>createChild</code> is returning a <code>Pointer.Class</code> object. This type
+							of objects "point" to a persisted document in Carbon. They can be resolved to retrieve their information as we will see
+							later on.
 						</p>
-
-						<div>
-							<div class="ui top attached tabular menu">
-								<a class="item active" data-tab="typescript">TypeScript</a>
-								<a class="item" data-tab="javascript">JavaScript</a>
-							</div>
-
-							<div class="ui bottom attached tab segment active" data-tab="typescript">
-								<!--@formatter:off-->
-								<pre><code cphighlight class="typescript">
-									//...
-									import * as Pointer from "carbonldp/Pointer";
-									import * as Response from "carbonldp/HTTP/Response";
-
-									//.. Declare required contexts, create in memory Document
-
-									platformContext.apps.getContext( "your-app-slug-here/" ).then( ( appContext:App.Context ) => {
-									    myAppContext = appContext;
-
-									    // Persist the in memory Document: myDocument as a child of "parent-id/"
-									    myAppContext.documents.createChild( "parent-id/", myDocument ).then(
-									        ( [ documentPointer, response ]:[ Pointer.Class, Response.Class ] ) => {
-									            console.log( documentPointer.id); // your persisted Doc id
-									    });
-
-									    // Persisting an object as a child of the root Document
-									    myAppContext.documents.createChild( "/", {
-									        name: "Miguel",
-									        data: [
-									            // Fragment
-									            {
-									                someProperty: "hello"
-									            },
-									            // Named Fragment
-									            {   id: "#my-slug",
-									                someOtherProperty: "good-bye" }
-									        ]
-									    } ).then(( [ documentPointer, response ]:[ Pointer.Class, Response.Class ] ) => {
-									            console.log( documentPointer.id); // your persisted Doc id
-									    });
-
-									}).catch( console.error );
-								</code></pre>
-								<!--@formatter:on-->
-							</div>
-
-							<div class="ui bottom attached tab segment" data-tab="javascript">
-								<!--@formatter:off-->
-								<pre><code cphighlight class="javascript">
-									//... Declare required contexts, create in memory Document
-
-									platformContext.apps.getContext( "your-app-slug-here/" ).then(
-										function( appContext ){
-
-										myAppContext = appContext;
-
-									    // Persist the in memory Document: myDocument as a child of "parent-id/"
-									    myAppContext.documents.createChild( "parent-id/", myDocument ).then(
-									        function( [documentPointer, response] ) {
-									            console.log( documentPointer.id); // your persisted Doc id
-									    });
-
-									    // Persisting an object as a child of the root Document
-									    myAppContext.documents.createChild( "/", {
-									        name: "Miguel",
-									        data: [
-									            // Fragment
-									            {
-									                someProperty: "hello"
-									            },
-									            // Named Fragment
-									            {
-									                id: "#my-slug",
-									                someOtherProperty: "good-bye"
-									            }
-									        ]
-									    } ).then( function( [documentPointer, response] ){
-									            console.log( documentPointer.id); // your persisted Doc id
-									    });
-
-									}).catch( console.error );
-								</code></pre>
-								<!--@formatter:on-->
-							</div>
-						</div>
-						<p>The <code>documents.createChild()</code> method returns an unresolved
-							<span class="highlight">document pointer</span>, that when resolved gives you access to
-							the new <span class="highlight">document's</span> content. You can provide an
-							<span class="highlight">id</span> to the <span class="highlight">document</span> you are
-							creating as a second parameter of the method. The <span class="highlight">id</span> is known
-							as the <code>child-id/</code> and it can be any string that will be taken as a suggestion
-							by <span class="highlight">Carbon</span> and will ultimately be converted into a valid
-							<span class="highlight">id</span> for the <span class="highlight">document</span> you are
-							creating. With this <span class="highlight">id</span> the new
-							<span class="highlight">document</span> can be retrieve, through the method
-							<code>get()</code> or, as mentioned before, through the resolution of the
-							<span class="highlight">document pointer</span>. This will be discussed in the
-							section <span class="sectionlink"><a href="#resolving-a-document-pointer">resolving a document pointer</a></span>.</p>
-
-						<p>The next sample code shows the method <code>createChild()</code> used with the
-							<code>child-id</code> parameter.</p>
-
+						<p>
+							If you've just executed this, you'll notice that the document's id (or URI) ends with something like <code>1264563453436/</code>.
+							Carbon automatically assigns URIs to newly created documents. If you want to customize the ending portion of the URI,
+							a third parameter can be passed to the <code>createChild</code> method. This parameter is called <code>slug</code>
+							and it serves as a suggestion for Carbon when forging the document's URI:
+						</p>
 						<div>
 							<div class="ui top attached tabular menu">
 								<a class="item active" data-tab="typescript">TypeScript</a>
@@ -494,34 +390,12 @@
 								<!--@formatter:off-->
 								<pre><code cphighlight class="typescript">
 									// ...
-									import * as Pointer from "carbonldp/Pointer";
-									import * as Response from "carbonldp/HTTP/Response";
 
-									// ...
-									platformContext.apps.getContext( "your-app-slug-here/" ).then( ( appContext:App.Context ) => {
-									    myAppContext = appContext;
-
-									    // Persisting the object as a child of the root Document, with the id child-id
-									    myAppContext.documents.createChild( "/", "child-id", {
-									        name: "Miguel",
-									        data: [
-									            // Fragment
-									            {
-									                someProperty: "hello"
-									            },
-									            // Named Fragment
-									            {   id: "#my-slug",
-									                someOtherProperty: "good-bye" }
-											]
-									    });
-
-									    // Persist myDocument as a child of "parent-id/", with an id "my new child"
-									    myAppContext.documents.createChild( "parent-id/", "my new child", myDocument ).then(
-									        ( [ documentPointer, response ]:[ Pointer.Class, Response.Class ] ) => {
-									            console.log( documentPointer.id); // the id of you newly created Document
-									    });
-
-									}).catch( console.error );
+									myAppContext.documents.createChild( "/", project, "My sUp4 Project!" ).then(
+										( [ projectPointer, response ]:[ Pointer.Class, Response.Class ] ) => {
+											console.log( project.id ); // .../my-supa-project/
+										}
+									).catch( console.error );
 								</code></pre>
 								<!--@formatter:on-->
 							</div>
@@ -530,111 +404,137 @@
 								<pre><code cphighlight class="javascript">
 									// ...
 
-									platformContext.apps.getContext( "your-app-slug-here/" ).then( function( appContext:App.Context ){
-									    myAppContext = appContext;
-
-									    // Persisting the object as a child of the root Document, with the id child-id
-									    myAppContext.documents.createChild( "/", "child-id", {
-									        name: "Miguel",
-									        data: [
-									            // Fragment
-									            {
-									                someProperty: "hello"
-									            },
-									            // Named Fragment
-									            {
-									                id: "#my-slug",
-									                someOtherProperty: "good-bye"
-									            }
-									        ]
-									    });
-
-									    // Persist myDocument as a child of "parent-id/", with an id "my new child"
-									    myAppContext.documents.createChild( "parent-id/", "my new child", myDocument ).then(
-									        function( [ documentPointer, response ] ){
-
-									            console.log( documentPointer.id); // the id of you newly created Document
-									    });
-
-									}).catch( console.error );
+									myAppContext.documents.createChild( "/", project, "My sUp4 Project!" ).then(
+										( [ projectPointer, response ] ) => {
+											console.log( project.id ); // .../my-supa-project/
+										}
+									).catch( console.error );
 								</code></pre>
 								<!--@formatter:on-->
 							</div>
 						</div>
-
 					</section>
-
 					<section>
-						<h2 class="ui header">Resolving a document pointer</h2>
-
-						<p>In the last section you created a <span class="highlight">persisted document</span>
-							obtaining an unresolved <span class="highlight">document pointer</span> to your new
-							<span class="highlight">document</span>, with the <span class="highlight">property</span>
-							<code>documentPointer.id</code>. To access the <span class="highlight">document</span>
-							information you need to resolve this <span class="highlight">pointer</span>, as shown in
-							the next example.
+						<h2 class="ui header">Retrieving a document</h2>
+						<p>
+							Documents can be retrieved by their URIs or by following other documents' links. In fact, you can paste the <code>id</code>
+							you just retrieved when persisting your first document in your browser and you should receive an <code>XML</code>
+							representation of it.
 						</p>
-
+						<p>
+							Like creating documents, retrieving them can be done using the <code>documents</code> service inside of any Carbon context.
+							To do so, you can use its <code>get</code> method:
+						</p>
 						<div>
 							<div class="ui top attached tabular menu">
 								<a class="item active" data-tab="typescript">TypeScript</a>
 								<a class="item" data-tab="javascript">JavaScript</a>
 							</div>
-
 							<div class="ui bottom attached tab segment active" data-tab="typescript">
 								<!--@formatter:off-->
 								<pre><code cphighlight class="typescript">
-									// ...
-									import * as PersistedDocument from "carbonldp/PersistedDocument";
+									// ... additional imports
+									import * Response from "carbonldp/HTTP/Response";
+									import * PersistedDocument from "carbonldp/PersistedDocument";
 
-									// ...
-									let documentPointer:Pointer.Class;
-									let myPersistedDocument:PersistedDocument.Class;
+									let myAppContext:AppContext;
 
-									platformContext.apps.getContext( "your-app-slug-here/" ).then( ( appContext:App.Context ) => {
-									    myAppContext = appContext;
-										myAppContext.documents.createChild( "/", myDocument ).then(
-									        ( [ documentPointer, response ]:[ Pointer.Class, Response.Class ] ) => {
-									            documentPointer.resolve().then(
-									                ( [ document, response ]:[ PersistedDocument.Class, Response.Class ] ) => {
-									                    myPersistedDocument = document;
-												});
-											});
-									}).catch( console.error );
+									// ... app context retrieval
+
+									// ID of the Carbon document you want to retrieve
+									let projectID:string = "https://example.com/your-document-id/";
+
+									myAppContext.documents.get( projectID ).then(
+										( [ project, response ]:[ PersistedDocument.Class, Response.Class ] ) => {
+											console.log( project.name ); // "Project X"
+										}
+									).catch( console.error );
 								</code></pre>
 								<!--@formatter:on-->
 							</div>
-
 							<div class="ui bottom attached tab segment" data-tab="javascript">
 								<!--@formatter:off-->
 								<pre><code cphighlight class="javascript">
-									// ...
-									let documentPointer;
-									let myPersistedDocument;
+									// ... imports
 
-									platformContext.apps.getContext( "your-app-slug-here/" ).then( function( appContext ){
-									    myAppContext = appContext;
+									let myAppContext;
 
-										myAppContext.documents.createChild( "/", myDocument ).then(
-									        function( [ documentPointer, response ] ){
+									// ... app context retrieval
 
-									            documentPointer.resolve().then(
-									                function( [ document, response ] ){
-									                    myPersistedDocument = document;
-												});
-											});
+									// ID of the Carbon document you want to retrieve
+									let projectID = "https://example.com/your-document-id/";
 
-									}).catch( console.error );
+									myAppContext.documents.get( projectID ).then(
+										( [ project, response ] ) => {
+											console.log( project.name ); // "Project X"
+										}
+									).catch( console.error );
 								</code></pre>
 								<!--@formatter:on-->
 							</div>
 						</div>
+						<p>
+							In this example we used the id of the document, but there are times that instead of having the id, you have a
+							<code>Pointer.Class</code> object. This can happen for example when a document points to another document through a property,
+							or as soon as you create a document and receive a pointer back. These pointers have a <code>resolve</code> method
+							that helps you retrieve their information:
+						</p>
+						<div>
+							<div class="ui top attached tabular menu">
+								<a class="item active" data-tab="typescript">TypeScript</a>
+								<a class="item" data-tab="javascript">JavaScript</a>
+							</div>
+							<div class="ui bottom attached tab segment active" data-tab="typescript">
+								<!--@formatter:off-->
+								<pre><code cphighlight class="typescript">
+									// ... additional imports
+									import * Response from "carbonldp/HTTP/Response";
+									import * PersistedDocument from "carbonldp/PersistedDocument";
+									import * Pointer from "carbonldp/Pointer";
+
+									let projectPointer:Pointer.Class;
+
+									// ... document pointer acquisition
+
+									projectPointer.resolve().then(
+										( [ project, response ]:[ PersistedDocument.Class, Response.Class ] ) => {
+											console.log( project.name ); // "Project X"
+										}
+									).catch( console.error );
+								</code></pre>
+								<!--@formatter:on-->
+							</div>
+							<div class="ui bottom attached tab segment" data-tab="javascript">
+								<!--@formatter:off-->
+								<pre><code cphighlight class="javascript">
+									// ... imports
+
+									let projectPointer;
+
+									// ... document pointer acquisition
+
+									projectPointer.resolve().then(
+										( [ project, response ] ) => {
+											console.log( project.name ); // "Project X"
+										}
+									).catch( console.error );
+								</code></pre>
+								<!--@formatter:on-->
+							</div>
+						</div>
+						<p>
+							As you can see, <code>Pointer.Class</code> objects have two states, resolved and unresolved. When a pointer
+							isn't resolved it doesn't contain the document's information (or it may be just out of sync with the server)
+							but it can be used to link other documents to it as we'll see later, or you can also use its
+							<code>resolve</code> method to retrieve its information.
+						</p>
 					</section>
 
 					<section>
 						<h2 class="ui header">Modifying and saving a document</h2>
 
-						<p>All <span class="highlight">documents</span> in <span class="highlight">Carbon</span> can
+						<p>
+							All <span class="highlight">documents</span> in <span class="highlight">Carbon</span> can
 							be modified. However all the changes done to a <span class="highlight">document</span>,
 							are done in memory. To persist the modifications the
 							<span class="highlight">documents</span> need to be saved.
@@ -656,80 +556,8 @@
 							</li>
 							<li>Save the changes through <code>document.save()</code> method.</li>
 						</ul>
-						<p>To add properties just defined them as you will in a JavaScript object, but to add fragments and named fragments
-						you should use the methods <code>createFragment()</code> or <code>createNamedFragment()</code> respectively.</p>
-
-						<div>
-							<div class="ui top attached tabular menu">
-								<a class="item active" data-tab="typescript">TypeScript</a>
-								<a class="item" data-tab="javascript">JavaScript</a>
-							</div>
-
-							<div class="ui bottom attached tab segment active" data-tab="typescript">
-								<!--@formatter:off-->
-								<pre><code cphighlight class="typescript">
-									// imports
-
-									// declarations
-
-									platformContext.apps.getAppContext( "your-app-slug/" ).then(
-									    ( appContext:App.Context ) =>{
-
-									        appContext.documents.get( "your-document-id/" ).then(
-									            ( [ document, response ]:[ Document.Class, Response.Class ] ) => {
-									                document.newProperty = "You!";
-									                document.anotherProperty = anotherDocument;
-									                delete document.someOldProperty;
-													document.addFragment = document.createNamedFragment( "fragment",
-                                                                        { name: "namedFragment1"});
-
-									                document.save().then(
-									                    ( [ document, response ]:[ PersistedDocument.Class, Response.Class ] ) =>{
-									                        console.log( document );
-									                });
-									        });
-									}).catch( console.error() );
-								</code></pre>
-								<!--@formatter:on-->
-							</div>
-
-							<div class="ui bottom attached tab segment" data-tab="javascript">
-								<!--@formatter:off-->
-								<pre><code cphighlight class="javascript">
-									// declarations
-
-									platformContext.apps.getAppContext( "your-app-slug/" ).then(
-									    function( appContext ){
-
-									        appContext.documents.get( "your-document-id/" ).then(
-									            function( [ document, response ] ){
-
-									                document.newProperty = "You!";
-									                document.anotherProperty = anotherDocument;
-									                delete document.someOldProperty;
-
-									                document.save().then(
-									                    function( [ document, response ] ){
-									                        console.log( document );
-									                });
-									        });
-
-									}).catch( console.error() );
-								</code></pre>
-								<!--@formatter:on-->
-							</div>
-						</div>
-
-					</section>
-
-					<section>
-						<h2 class="ui header">Deleting a document</h2>
 						<p>
-							The method <code>delete</code> of <a target="_blank"
-							                                     href="https://github.com/CarbonLDP/CarbonLDP-JS-SDK/tree/develop/doc#Carbon-Documents">Carbon.Documents</a>
-							class allows you to delete any <span class="highlight">persisted document</span>,
-							by providing its <a class="outsidelink" target="_blank"
-							                    href="https://www.w3.org/TR/ld-glossary/#uniform-resource-identifier">URI</a>.
+							Document properties can be added/modified/removed as with any normal JavaScript object.
 						</p>
 
 						<div>
@@ -741,14 +569,32 @@
 							<div class="ui bottom attached tab segment active" data-tab="typescript">
 								<!--@formatter:off-->
 								<pre><code cphighlight class="typescript">
-									import * as App from "carbonldp/App";
-									import Carbon from "carbonldp/Carbon";
+									// ... imports
 
-									let platformContext:Carbon = new Carbon();
+									let project:PersistedDocument.Class;
 
-									platformContext.apps.getAppContext( "your-app-slug/" ).then( ( appContext:App.Context ) =>{
-									    appContext.documents.delete( "documentURI" );
-									}).catch( console.error() );
+									// ... document retrieval
+
+									project.name = "Project's New Name";
+									project.task.push( {
+										name: "Task 3",
+										dueDate: new Date( "2016-05-02" )
+									} );
+									project.description = {
+										type: "markdown",
+										content: "# Some description here"
+									};
+
+									project.save().then(
+										( [ projectPointer, response ]:[ Pointer.Class, Response.Class ] ) => {
+											console.log( projectPointer === project );
+											return projectPointer.refresh();
+										}
+									).then(
+										( [ projectPointer, response ]:[ PersistedDocument.Class, Response.Class ] ) => {
+											// Continue doing stuff...
+										}
+									).catch( console.error );
 								</code></pre>
 								<!--@formatter:on-->
 							</div>
@@ -756,19 +602,109 @@
 							<div class="ui bottom attached tab segment" data-tab="javascript">
 								<!--@formatter:off-->
 								<pre><code cphighlight class="javascript">
-									let platformContext = new Carbon();
+									// ... imports
 
-									platformContext.apps.getAppContext( "your-app-slug/" ).then(
-										function( appContext:App.Context ){
+									let project:PersistedDocument.Class;
 
-									    appContext.documents.delete( "documentURI");
+									// ... document retrieval
 
-									}).catch( console.error() );
+									project.name = "Project's New Name";
+									project.task.push( {
+										name: "Task 3",
+										dueDate: new Date( "2016-05-02" )
+									} );
+									project.description = {
+										type: "markdown",
+										content: "# Some description here"
+									};
+
+									project.save().then(
+										( [ projectPointer, response ]:[ Pointer.Class, Response.Class ] ) => {
+											console.log( projectPointer === project );
+											return projectPointer.refresh();
+										}
+									).then(
+										( [ projectPointer, response ]:[ PersistedDocument.Class, Response.Class ] ) => {
+											// Continue doing stuff...
+										}
+									).catch( console.error );
 								</code></pre>
 								<!--@formatter:on-->
 							</div>
 						</div>
-						<p>The <code>delete()</code> methods returns a promise with the server's response.</p>
+						<p>
+							Notice that we used the <code>save</code> method and immediately after, we called another method that we haven't
+							talked about, <code>refresh</code>. Every persisted document has this method and it helps you sync the in memory
+							representation of the document with the server's information. In this case we used it because after the document was
+							saved, Carbon could have added or modified some of its properties (noticeably properties like <code>modified</code>).
+						</p>
+						<p>
+							This is a very common thing to do, therefore persisted documents also have the method <code>saveAndRefresh</code>
+							which do both things at once.
+						</p>
+					</section>
+
+					<section>
+						<h2 class="ui header">Deleting a document</h2>
+						<p>
+							As when creating and retrieving documents, the <code>documents</code> service can help you
+							delete a persisted document through its <code>delete</code> method. To do so, you need to
+							provide the document's URI:
+						</p>
+
+						<div>
+							<div class="ui top attached tabular menu">
+								<a class="item active" data-tab="typescript">TypeScript</a>
+								<a class="item" data-tab="javascript">JavaScript</a>
+							</div>
+
+							<div class="ui bottom attached tab segment active" data-tab="typescript">
+								<!--@formatter:off-->
+								<pre><code cphighlight class="typescript">
+									// ... additional imports
+									import * Response from "carbonldp/HTTP/Response";
+
+									let myAppContext:AppContext;
+
+									// ... app context retrieval
+
+									// ID of the Carbon document you want to delete
+									let projectID:string = "https://example.com/your-document-id/";
+
+									myAppContext.documents.delete( projectID ).then(
+										( response:Response.Class ) => {
+											// continue doing stuff...
+										}
+									).catch( console.error );
+								</code></pre>
+								<!--@formatter:on-->
+							</div>
+
+							<div class="ui bottom attached tab segment" data-tab="javascript">
+								<!--@formatter:off-->
+								<pre><code cphighlight class="javascript">
+									// ... imports
+
+									let myAppContext;
+
+									// ... app context retrieval
+
+									// ID of the Carbon document you want to delete
+									let projectID = "https://example.com/your-document-id/";
+
+									myAppContext.documents.delete( projectID ).then(
+										( response ) => {
+											// continue doing stuff...
+										}
+									).catch( console.error );
+								</code></pre>
+								<!--@formatter:on-->
+							</div>
+						</div>
+						<p>
+							Like in retrieving a document, a document can also be deleted through a pointer. To do that,
+
+						</p>
 					</section>
 
 					<section>
