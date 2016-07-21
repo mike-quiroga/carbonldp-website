@@ -2,10 +2,11 @@ package com.carbonldp.authentication.token;
 
 import com.carbonldp.AbstractComponent;
 import com.carbonldp.Vars;
-import com.carbonldp.authentication.*;
+import com.carbonldp.authentication.AgentAuthenticationToken;
+import com.carbonldp.authentication.Token;
+import com.carbonldp.authentication.TokenFactory;
 import com.carbonldp.exceptions.StupidityException;
 import io.jsonwebtoken.SignatureAlgorithm;
-import org.eclipse.rdf4j.model.IRI;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
