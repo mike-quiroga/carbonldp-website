@@ -1,0 +1,11 @@
+{
+  "angular": {
+    "debug": false
+  },
+  "url": {
+    "base": "/"
+  },
+  "carbon": {
+    "domain": "carbonldp.com"
+  }
+}

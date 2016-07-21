@@ -1,5 +1,6 @@
 import {Component, ElementRef, ChangeDetectorRef } from "@angular/core";
 import { CORE_DIRECTIVES } from "@angular/common";
+
 import { RouteConfig, RouterOutlet, RouterLink } from "@angular/router-deprecated";
 import { Title } from "@angular/platform-browser";
 
@@ -14,7 +15,7 @@ import template from "./template.html!";
 
 
 @Component( {
-	selector: "object-model",
+	selector: "object-schema",
 	template: template,
 	directives: [ CORE_DIRECTIVES, SidebarComponent, HighlightDirective, RouterLink ],
 	providers: [ Title ],
@@ -30,29 +31,18 @@ export default class ObjectModelView {
 
 	constructor( element:ElementRef, title:Title, changeDetector:ChangeDetectorRef ) {
 		this.element = element;
-
 		this.title = title;
-		this.title.setTitle( "Object Model - JavaScript SDK" );
+		this.title.setTitle( "Object Schema - JavaScript SDK" );
 
 		this.changeDetector = changeDetector;
 	}
 
 	ngAfterViewInit():void {
 		this.$element = $( this.element.nativeElement );
-		this.initializeAccordions();
-		this.initializeTabs();
 		this.highlightCode();
-		this.initializePopUp();
 		this.initializeSidebar();
 	}
 
-	initializeAccordions():void {
-		this.$element.find( ".ui.accordion" ).accordion();
-	}
-
-	initializeTabs():void {
-		this.$element.find( ".tabular.menu .item" ).tab();
-	}
 
 	highlightCode():void {
 		this.$element.find( "pre code.highlighted" ).each( function( index:number ):void {
@@ -64,12 +54,5 @@ export default class ObjectModelView {
 		window.setTimeout( () => {
 			this.contentReady = true;
 		}, 0 );
-	}
-
-	initializePopUp():void {
-		$( ".ui.definition" )
-			.popup( {
-				on: "hover"
-			} );
 	}
 }

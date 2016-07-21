@@ -6,7 +6,7 @@
 				<i class="right chevron icon divider"></i>
 				<span class="section">JavaScript SDK</span>
 				<i class="right arrow icon divider"></i>
-				<div class="active section">Object Model</div>
+				<div class="active section">Object model</div>
 			</div>
 		</div>
 	</div>
@@ -15,7 +15,7 @@
 			<main>
 				<article class="ui vertical segment" id="article">
 					<header>
-						<h1 class="ui header">Object Model</h1>
+						<h1 class="ui header">Object model</h1>
 					</header>
 
 					<div class="ui icon yellow message">
@@ -31,130 +31,219 @@
 							<p class="larger">This document presents an in depth description of the Carbon Object Model</p>
 						</div>
 					</div>
+					<p><span class="highlight">Carbon</span> is a Linked Data Platform, its objective is to create a web of
+						<span class="highlight">documents</span>(Data) linked to each other through relations that can be searched for
+						by humans or machines.</p>
+
+					<p><span class="highlight">Documents</span> are JavaScript objects identified by a
+						<a class="outsidelink" target=" _blank"
+						   href="https://www.w3.org/TR/ld-glossary/#uniform-resource-identifier">URI</a>, they hold any
+						sort of data and can be grouped in <span class="highlight">applications</span>. An
+						<span class="highlight">application</span> is represented in <span class="highlight">Carbon</span>
+						through a <span class="highlight">document</span> in the <span class="highlight">platform</span>.
+						This <span class="highlight">application document</span> holds descriptive information about the
+						<span class="highlight">application</span> and points to it.
+						<span class="highlight">Documents</span> can relate to other
+						<span class="highlight">documents</span> through links creating the desired Data Web. Any two
+						<span class="highlight">documents</span> can be linked in <span class="highlight">Carbon</span>,
+						the nature of the relation between them is given through the
+						<span class="highlight">document properties</span> of which we will talk later on.</p>
+
 					<section>
-						<p>Carbon is a Linked Data Plartform, its objective is to create a web of
-							Documents linked to each other through relations that can be searched for
-							by humans or machines.</p>
+						<h2 class="ui header">Carbon document definition</h2>
 
-						<p>Documents are javascript objects identified by a URI
-							that hold any sort of data and can be grouped in Applications. An
-							Application is represented in Carbon through a Document in the platform. This
-							Application Document holds descriptive information about the application and
-							points to the application. Documents can relate to other Documents through links
-							creating the desired Data Web. Any two Documents can be linked in Carbon, the nature
-							of the relation between them is given through the Document properties of which we
-							will talk later on.</p>
+						<p>A <span class="highlight">Carbon document</span> is a JavaScript object identified by a
+							<a class="outsidelink"
+							   target="_blank"
+							   href="https://www.w3.org/TR/ld-glossary/#uniform-resource-identifier">URIs</a>, that can
+							have any number of properties and nested objects. <span class="highlight">Documents</span>
+							are the simplest unit of information in <span class="highlight">Carbon</span>. It is
+							important to mention that all the <span class="highlight">documents'</span>
+							<a class="outsidelink" target="_blank"
+							   href="https://www.w3.org/TR/ld-glossary/#uniform-resource-identifier">URIs</a> in
+							<span class="highlight">Carbon</span> end with “/”.</p>
 
-					</section>
-					<section>
-						<h2 class="ui header">Carbon Document definition</h2>
-
-						<p>A Carbon Document is a javascript object identified by a URI, that can have
-							any number of properties and nested objects. It is important to mention
-							that all the Documents’ URIs in Carbon end with “/”.</p>
-
-						<p>A Carbon Document is composed of different parts created from the properties
-							of the javascript object defined. All the properties that hold values in a
-							javascript object are maintained as properties of a Carbon Document, while
-							the nested objects correspond to what we call fragments or named fragments,
-							depending on whether or not the nested objects have an id defined or not.</p>
-
-						<p>A Carbon Document is composed of:</p>
+						<p>A <span class="highlight">Carbon document</span> is composed of:</p>
 						<ul>
-							<li>Properties</li>
-							<li>Fragments</li>
-							<li>NamedFragments</li>
+							<li><span class="highlight">Properties</span></li>
+							<li><span class="highlight">Fragments</span></li>
+							<li><span class="highlight">Named fragments</span></li>
 						</ul>
 
+						<p>A <span class="highlight">Carbon document</span> is composed of different parts created from
+							the properties of the JavaScript object defined. All the properties that hold values in a
+							JavaScript object are maintained as <span class="highlight">properties</span> of a
+							<span class="highlight">Carbon document</span>, while the nested objects correspond to other
+							carbon resources called <span class="highlight">fragments</span> or
+							<span class="highlight">named fragments</span>, depending on whether or not the nested
+							objects have an <span class="highlight">id</span> defined or not. These resources are linked
+							to the <span class="highlight">document</span> of which they are part of by
+							<span class="highlight">properties</span> that point to them.</p>
 
 						<div class="centered">
 							<img src="assets/images/object_model.png" width="840">
 						</div>
 						<br/>
 
-						<section>
+						<section class="subsection">
 							<h3 class="ui header">Properties</h3>
-							<p>A property is a value associated with the Carbon Document, that can be
-								added, changed or deleted. There can exist any number of properties of any
-								nature. Carbon handles certain relevant properties to relate Documents,
-								for example: “contains” or “members” are properties in all carbon Documents
-								that provide you with information about related Documents. These properties
-								will be further discussed in future sections.</p>
+							<p>A <span class="highlight">property</span> is a value associated with a
+								<span class="highlight">Carbon resource</span>, that can be added, changed or deleted.
+								There can exist any number of <span class="highlight">properties</span> of any nature.
+								<span class="highlight">Carbon</span> handles certain relevant
+								<span class="highlight">properties</span> to provide information or relate
+								<span class="highlight">documents</span>, for example:
+								“<span class="highlight">contains</span>” or “<span class="highlight">members</span>”
+								are <span class="highlight">properties</span> that exist in all
+								<span class="highlight">Carbon documents</span> providing information about
+								<span class="highlight">related documents</span>.</p>
+
+							<p>Another important <span class="highlight">property</span> is <span class="highlight"><code>types</code></span>, which is present in
+								<span class="highlight">documents</span>,
+								<span class="highlight">fragments</span> and <span class="highlight">named fragments</span>. All resources in <span class="highlight">Carbon</span> are multi typed and
+								the
+								property
+								<span class="highlight"><code>types</code></span> holds the array of types that a resource has. Each type is describe by a<a class="outsidelink"
+								                                                                                                                             target="_blank"
+								                                                                                                                             href="https://www.w3.org/TR/ld-glossary/#uniform-resource-identifier">
+									URIs</a> and serves as a sort of tag, that will allow you to implement customized definitions,
+								validations and uses for your tagged resources. This tag will also help you to defined
+								and used <span class="highlight">object schema</span> by type, a subject that is
+								discussed in <a [routerLink]="[ '../JavaScriptSDKObjectSchema' ]">
+									<span class="highlight">object schema's</span></a> documentation.</p>
 						</section>
-						<section>
+						<section class="subsection">
 							<h3 class="ui header">Fragments</h3>
-							<p>A fragment is a javascript object nested inside a Document. Fragments can
-								only be referenced from within the Document to which they belong, through
-								their ids. These ids can be automatically assigned by the Carbon SDK or
+							<p>A <span class="highlight">fragment</span> is a JavaScript object nested inside a
+								<span class="highlight">document</span>. <span class="highlight">Fragments</span> can only
+								be referenced from within the <span class="highlight">document</span> to which they
+								belong, through their <span class="highlight">ids</span>. These
+								<span class="highlight">ids</span> can be automatically assigned by the
+								<span class="highlight">Carbon JavaScript SDK</span> or
 								defined by you and they must always start with an underscore followed by a
 								colon, for example: <code>_:123</code>.</p>
 						</section>
 
-						<section>
-							<h3 class="ui header">Named Fragments</h3>
+						<section class="subsection">
+							<h3 class="ui header">Named fragments</h3>
 
-							<p>A Named Fragment is, like a Fragment, a javascript object nested inside a
-								Document. However, Named Fragments have ids that are referable from outside
-								of the Document to which they belong. These ids must always start with a #,
-								for example: <code>#namedFragment</code>. To reference a Named Fragment from the
-								inside you can use either the id or the complete URI, however from outside you can only
-								reference it through the complete URI. The complete URI is composed of the
-								Document's URI and the id of the Named Fragment, for example:
+							<p>A <span class="highlight">named fragment</span> is, like a
+								<span class="highlight">fragment</span>, a JavaScript object nested inside a
+								<span class="highlight">document</span>. However,
+								<span class="highlight">named fragments</span> have <span class="highlight">ids</span>
+								that are referable from outside of the <span class="highlight">document</span> to which
+								they belong. These <span class="highlight">ids</span> must always start with a
+								<code>#</code>, for example: <code>#namedFragment</code>. To reference a
+								<span class="highlight">named fragment</span> from the inside you can use either the
+								<span class="highlight">id</span> or the complete <a class="outsidelink" target="_blank"
+								                                                     href="https://www.w3.org/TR/ld-glossary/#uniform-resource-identifier"
+								>URI</a>, from outside you can only reference it through the latter one. The complete
+								<a class="outsidelink"
+								   target="_blank"
+								   href="https://www.w3.org/TR/ld-glossary/#uniform-resource-identifier"
+								>URI</a> is composed of the <span class="highlight">document's URI</span> and the <span class="highlight">id</span> of the <span class="highlight">named fragment</span>,
+								for example:
 								<code>https://carbonldp.com/apps/test-app/myDocument/#namedFragment</code>.</p>
 
-							<p>Remember that all the Documents’ URIs in Carbon end with “/”.</p>
+							<p>Remember that all the <span class="highlight">documents’</span> <a class="outsidelink"
+							                                                                      target="_blank"
+							                                                                      href="https://www.w3.org/TR/ld-glossary/#uniform-resource-identifier"
+							>URIs</a> in <span class="highlight">Carbon</span> end with “/”.</p>
 						</section>
+
+						<br/>
+						<p>You can create <span class="highlight"> persisted documents</span> in, either a, two steps or one step process.</p>
+						<ul>
+							<li>Two steps: create, then persist. Create <span class="highlight">documents in memory</span> first, which will need
+								to be persisted later on. To create an <span class="highlight">in memory document</span> you
+								can use two methods:
+								<ul>
+									<li><code>Document.Factory.create()</code> to create an empty
+										<span class="highlight">document</span>, in which
+										<span class="highlight">properties</span>, <span class="highlight">fragments</span>
+										and <span class="highlight">named fragments</span> could be defined later on.
+									</li>
+									<li><code>Document.Factory.createFrom()</code> to create a
+										<span class="highlight">document</span> from a JavaScript object.
+									</li>
+								</ul>
+							<li>One step: directly create persisted documents, as discussed in section Creating and persisting a document of the
+								<a [routerLink]="[ '../JavaScriptSDKGettingStarted' ]">Javascript SDK Getting Started</a></li>
+						</ul>
+
+						<p>You can add <span class="highlight">properties</span> to an
+							<span class="highlight">in memory document</span> as you will do it in any JavaScript
+							object. To add <span class="highlight">fragments</span> or
+							<span class="highlight">named fragments</span> you should use the methods
+							<code>document.createFragment()</code> or <code>document.createNamedFragment()</code>
+							respectively. For more methods to handle your <span class="highlight">documents</span>,
+							see: <a target="_blank" href="https://github.com/CarbonLDP/CarbonLDP-JS-SDK/tree/develop/doc#Carbon-Documents">Carbon.Documents</a> class.
+						</p>
+
 					</section>
 					<section>
 
 						<h2 class="ui header">Document relationships</h2>
 
-						<p>A list of Documents is maintained through the links to other Documents that
-							exist in them. A link connects two Carbon Documents denoting a relationship
-							between them. This is done by adding a property in one Document that points
-							to another Document. The type of relation between the Documents can be
-							specified depending of the method used to link them. There are some types
-							of relationships that are maintained and supported by Carbon: parent-child
-							relation and membership relation. But there can be other types of
-							personalized relations.</p>
+						<p>A <span class="highlight">list of documents</span> is maintained through
+							<span class="highlight">links</span> to other <span class="highlight">documents</span> that
+							exist in them. A <span class="highlight">link</span> connects two
+							<span class="highlight">Carbon documents</span> denoting a <span class="highlight">relationship</span>
+							between them. This is done by adding a <span class="highlight">property</span> in one
+							<span class="highlight">document</span> that points to another <span class="highlight">document</span>.
+							The type of relation between <span class="highlight">documents</span> can be specified in
+							accordance to the method used to link them. There are some types of relationships that are
+							maintained and supported by <span class="highlight">Carbon</span>, fore example,
+							<span class="highlight">parent-child relation</span> and <span class="highlight">membership relation</span>.
+							But there can be any number of customized <span class="highlight">relationships</span>.</p>
 
-						<p>Carbon Document structure can be viewed, at first sight as a tree, in the
-							sense that every Document you create is the child of a previous existing
-							Document. You can't create a Document that doesn't have a parent Document.
-							From this fundamental concept Carbon manages the parent-child link between
-							documents.</p>
+						<p><span class="highlight">Carbon document</span> structure can be viewed, at first sight as a
+							tree, in the sense that every <span class="highlight">document</span> you create is the
+							child of a previous existing <span class="highlight">document</span>. You can't create a
+							<span class="highlight">document</span> that doesn't have a
+							<span class="highlight">parent document.</span> From this fundamental concept
+							<span class="highlight">Carbon</span> manages the <span class="highlight">parent-child link</span>
+							between <span class="highlight">documents</span>.</p>
 
 						<section class="subsection">
 							<h3 class="ui header">Parent-child relation</h3>
 
-							<p>The parent-child relation exists in every document that has children
-								Documents. It is a list automatically maintained by Carbon that contains
-								pointers to all the children of a given Document. Through the method
-								<code>.listChildren()</code> you can obtain such list. This particular
-								link is called a <strong>hard link</strong>strongk because it holds a
-								relation to the structure of the Document, and the deletion of a
-								Document will directly affect all the Documents related to it through
-								this type of link.</p>
+							<p>The <span class="highlight">parent-child relation</span> exists in every <span class="highlight">document</span>
+								that has <span class="highlight">child documents</span>. It is a list automatically
+								maintained by <span class="highlight">Carbon</span> that contains pointers to all the
+								<span class="highlight">child documents</span> of a given <span class="highlight">document</span>.
+								Through the method <a target="_blank"
+								                      href="https://github.com/CarbonLDP/CarbonLDP-JS-SDK/tree/develop/doc#Carbon-Documents"><code>.listChildren()</code></a>
+								you can obtain such list. This particular <span class="highlight">link</span> is called
+								a <span class="highlight"><strong>hard link</strong></span> because it holds a relation
+								to the structure of the <span class="highlight">document</span>, and the deletion of a
+								<span class="highlight">document</span> will directly affect all the <span class="highlight">documents</span>
+								related to it through this type of <span class="highlight">link</span>.</p>
 							<br/>
 						</section>
 
-						<p>But Carbon structure is not only a tree. Carbon can manage any type of
-							relations between any two given Documents, you will see that as links
-							between Documents are added the tree like structure transforms into a true
-							web of data. The links between Documents allow you to manage them through
-							lists. The relations between Documents can be added through different
-							methods.</p>
+						<p>But <span class="highlight">Carbon structure</span> is not only a tree.
+							<span class="highlight">Carbon</span> can manage any type of
+							<span class="highlight">relations</span> between any two given
+							<span class="highlight">documents</span>, you will see that as <span class="highlight">links</span>
+							between <span class="highlight">documents</span> are added the tree like structure
+							transforms into a true web of data. The <span class="highlight">links</span> between
+							<span class="highlight">documents</span> allow you to manage them through
+							<span class="highlight">lists</span>. The relations between <span class="highlight">documents</span>
+							can be added through different methods.</p>
 
 						<section class="subsection">
 							<h3 class="ui header">Linking through properties</h3>
-							<p>You can manually add a property linking your document to
-								any Document you wish. Any number of linking properties can be manually
-								added to a Document; however, they will have to be manually managed meaning
-								there are no modules or methods that can help you maintain a list of the
-								Documents linked or the relation they have between each other. You would
-								have to retrieve all the documents properties to access the links you have
-								defined. This next sample code shows how a link between Documents can be
-								created.</p>
+							<p>You can manually add a <span class="highlight">property</span> linking your
+								<span class="highlight">document</span> to any <span class="highlight">document</span>
+								you wish. Any number of <span class="highlight">linking properties</span> can be
+								manually added to a <span class="highlight">document</span>; however, they will have to
+								be manually managed meaning there are no modules or methods that can help you maintain
+								a <span class="highlight">list</span>, of the <span class="highlight">document</span>
+								linked or the relation they have between each other. You would have to retrieve all the
+								<span class="highlight">document's properties</span> to access the <span class="highlight">links</span>
+								you have defined. This next sample code shows how a <span class="highlight">link</span>
+								between <span class="highlight">documents</span> can be created.</p>
 
 							<div>
 								<div class="ui top attached tabular menu">
@@ -163,43 +252,49 @@
 								</div>
 								<div class="ui bottom attached tab segment active" data-tab="typescript">
 									<!--@formatter:off-->
-									<pre><code class="highlighted typescript">
-let myDocumentA:PersistedDocument.Class;
-let myDocumentB:PersistedDocument.Class;
+									<pre><code highlight class="typescript">
+									let myDocumentA:PersistedDocument.Class;
+									let myDocumentB:PersistedDocument.Class;
 
-myDocumentA.linkingProperty = myDocumentB;
+									myDocumentA.linkingProperty = myDocumentB;
 									</code></pre>
-							<!--@formatter:on-->
+									<!--@formatter:on-->
 								</div>
 								<div class="ui bottom attached tab segment" data-tab="javascript">
 									<!--@formatter:off-->
-									<pre><code class="highlighted javascript">
-let myDocumentA;
-let myDocumentB;
+									<pre><code highlight class="javascript">
+									let myDocumentA;
+									let myDocumentB;
 
-myDocumentA.linkingProperty = myDocumentB;
+									myDocumentA.linkingProperty = myDocumentB;
 									</code></pre>
-							<!--@formatter:on-->
+									<!--@formatter:on-->
 								</div>
 							</div>
 						</section>
 
 						<br/>
-						<p>To avoid the inconvenience of manually managing your related Documents.
-							Carbon gives you tools to manage certain links through specific properties
-							such as the “members” relation that can be managed from within the Document
-							or from a special type of Document called Access Point.</p>
+						<p>To avoid the inconvenience of manually managing your related <span class="highlight">documents</span>.
+							<span class="highlight">Carbon</span> gives you tools to manage certain
+							<span class="highlight">links</span> through specific <span class="highlight">properties</span>
+							such as “<span class="highlight">members</span>” relation that can be managed from within the
+							<span class="highlight">document</span> or from a special type of
+							<span class="highlight">document</span> called <span class="highlight">access point</span>.</p>
 
 						<section class="subsection">
-							<h3>Member relation within the Document</h3>
-							<p>The members relation is defined by the property <code>.hasMemberRelation</code>
-								that exists in every Carbon Document, and it is predefined with the value
-								"member". At the creation of a Document this property can be configure
-								to give a more meaningful description of the relation between a Document
-								and its members, you can also define the special property
-								<code>memberOfRelation</code> that allows you to create a reverse link
-								in the Documents you add as members. With these two properties your
-								document is linked in a two way relationship.</p>
+							<h3>Member relation within the document</h3>
+							<p>The <span class="highlight">members relation</span> is defined by the
+								<span class="highlight">property</span> <code>.hasMemberRelation</code> that exists
+								in every <span class="highlight">Carbon document</span>, and it is predefined with the
+								value "member". At the creation of a <span class="highlight">document</span>
+								this <span class="highlight">property</span> can be configure to give a more meaningful
+								description of the relation between a <span class="highlight">document</span> and its
+								<span class="highlight">members</span>, you can also define the special property
+								<code>memberOfRelation</code> that allows you to create a
+								<span class="highlight">reverse link</span> in the <span class="highlight">documents</span>
+								you add as <span class="highlight">members</span>. With these two
+								<span class="highlight">properties</span> your
+								<span class="highlight">document</span> is linked in a two way relationship.</p>
 
 							<div>
 								<div class="ui top attached tabular menu">
@@ -208,101 +303,134 @@ myDocumentA.linkingProperty = myDocumentB;
 								</div>
 								<div class="ui bottom attached tab segment active" data-tab="typescript">
 									<!--@formatter:off-->
-									<pre><code class="highlighted typescript">
-let Peter:Document.Class;
-let John:Document.Class = Document.Factory.createFrom( {
-	hasMemberRelation: "nephews";
-	memberOfRelation: "uncles";
-});
+									<pre><code highlight class="typescript">
+										let Peter:Document.Class;
+										let John:Document.Class = Document.Factory.createFrom( {
+											hasMemberRelation: "nephews";
+											memberOfRelation: "uncles";
+										});
 
-John.addMember( Peter );
+										John.addMember( Peter );
 
 									</code></pre>
-							<!--@formatter:on-->
+									<!--@formatter:on-->
 								</div>
 								<div class="ui bottom attached tab segment" data-tab="javascript">
 									<!--@formatter:off-->
-									<pre><code class="highlighted javascript">
-let Peter;
-let John = Document.Factory.createFrom( {
-	hasMemberRelation: "nephews";
-	memberOfRelation: "uncles";
-});
+									<pre><code highlight class="javascript">
+										let Peter;
+										let John = Document.Factory.createFrom( {
+											hasMemberRelation: "nephews";
+											memberOfRelation: "uncles";
+										});
 
-John.addMember( Peter );
+										John.addMember( Peter );
 
 									</code></pre>
-							<!--@formatter:on-->
+									<!--@formatter:on-->
 								</div>
 							</div>
 							<br/>
-							<p>This type of links allows you to maintain a list of Documents inside a
-								Document, that share a special relation with it. This type of links
-								are known as <strong>soft links</strong> because they hold no relation
-								to the Documents' structure. If you delete a soft link the only thing
-								deleted is the relation between the Documents, however no Documents are
-								affected. In a Document you can only support one member relation list.
-								If you need to support more than one list you can use Access Points, that
-								will be discussed later on.</p>
+							<p>This type of <span class="highlight">links</span>
+								allows you to maintain a list of <span class="highlight">documents</span>
+								inside a <span class="highlight">document</span>, denoting a special
+								<span class="highlight">relation</span> between them. This type of
+								<span class="highlight">links</span> are known as
+								<span class="highlight"><strong>soft links</strong></span> because they hold no
+								relation to the <span class="highlight">documents' structure</span>. If you delete a
+								<span class="highlight">soft link</span> the only thing deleted is the
+								<span class="highlight">relation</span> between the <span class="highlight">documents</span>,
+								however no <span class="highlight">documents</span> are affected. In a
+								<span class="highlight">document</span> you can only support one
+								<span class="highlight">member relation list</span>. If you need to support more than
+								one list you can use <span class="highlight">access points</span>, that will be
+								discussed later on.</p>
 						</section>
 					</section>
 
 					<section>
-						<h2 class="ui header">Root Document</h2>
+						<h2 class="ui header">Root document</h2>
 
-						<p>As we mentioned in the previous section the Carbon Document structure can be
-							viewed as a tree, in the sense that every Document you create is the child of
-							a previous existing Document, beginning with the <strong>root Document</strong>.
-							You can't create a Document that doesn't have a parent Document.</p>
+						<p>As we mentioned in the previous section the <span class="highlight">Carbon document</span>
+							structure can be viewed as a tree, beginning with the
+							<span class="highlight"><strong>root document</strong></span>.
+							You can't create a <span class="highlight">document</span> that doesn't have a
+							<span class="highlight">parent document</span>.</p>
 
-						<p>In a Carbon Application everything starts with one document: the Root
-							Document, which is automatically defined at the creation of the
-							Application. The root Document is the root parent for all the Documents
-							created in an Application. The root document is the first parent Document
-							in an application where the first child Documents will be created.</p>
+						<p>In a <span class="highlight">Carbon application</span> everything starts with one
+							<span class="highlight">document</span>: the <span class="highlight">root document</span>,
+							which is automatically defined at the creation of the <span class="highlight">application</span>.
+							The <span class="highlight">root document</span> is the root parent for all the
+							<span class="highlight">documents</span> created in an <span class="highlight">application</span>.
+							The <span class="highlight">root document</span> is the first
+							<span class="highlight">parent document</span> in an <span class="highlight">application</span>
+							where the first <span class="highlight">child documents</span> will be created.</p>
 
-						<p>The default Documents contained in a root Document are: agents/, roles/
-							and auth-tokens/, which are involve in Carbon Security a subject
-							that will be discussed in other documents.</p>
+						<p>The default documents contained in a <span class="highlight">root document</span> are:
+							<span class="highlight"><code>agents/</code></span>,
+							<span class="highlight"><code>roles/</code></span> and
+							<span class="highlight"><code>auth-tokens/</code></span>, which are involve in
+							<span class="highlight">Carbon security</span> a subject that will be discussed in other
+							<span class="highlight">documents</span>.</p>
 					</section>
 
 
 					<section>
-						<h3 class="ui header">Access Points</h3>
+						<h3 class="ui header">Access points</h3>
 
-						<p>An Access Point is a carbon Document that is in charge of creating membership
-							relations between its parent Document and any other Document.</p>
+						<p>An <span class="highlight">access point</span> is a <span class="highlight">Carbon document</span>
+							that is in charge of creating <span class="highlight">membership relations</span> between its
+							<span class="highlight">parent document</span> and any other <span class="highlight">document</span>.</p>
 
-						<p>Access Points allow you to maintain a list of Documents using a membership
-							relation property <code>.hasMemberRelation</code>, that is configured on its creation.
-							Through the Access Point a relation is added as a property in its parent
-							Document. The property points to the Document you want the parent to relate
-							with. In an Access Point you can also configure a reverse relation, that
-							will be added to the document you wish to relate to the parent Document of
-							the Access Point. Access Points may seem like child Documents, however since
-							they only hold the property <code>.hasMemberRelation</code> and its reverse, they
-							are not considered child Documents.</p>
+						<p><span class="highlight">Access points</span> allow you to maintain a
+							<span class="highlight">list of documents</span> using a
+							<span class="highlight">membership relation property</span> <code>.hasMemberRelation</code>,
+							that is configured on its creation. Through the <span class="highlight">access point</span>
+							a <span class="highlight">relation</span> is added as a <span class="highlight">property</span>
+							in its <span class="highlight">parent document</span>. The
+							<span class="highlight">property</span> points to the <span class="highlight">document</span>
+							you want the parent to relate with. In an <span class="highlight">access point</span> you can
+							also configure a <span class="highlight">reverse relation</span>, that will be added to the
+							<span class="highlight">document</span> you wish to relate to the
+							<span class="highlight">parent document</span> of the
+							<span class="highlight">access point</span>. <span class="highlight">Access points</span> may
+							seem like <span class="highlight">child documents</span>, however since they only hold the
+							property <code>.hasMemberRelation</code> and its reverse, they are not considered
+							<span class="highlight">child documents</span>.</p>
 
-						<p>A Document can have as many Access Points as you may wish, allowing you to
-							manage many membership relations and Documents lists in the Document where they
-							where defined. Access Points behave in a similar way to the membership relation
-							that exists with the Document.</p>
+						<p>A <span class="highlight">document</span> can have as many
+							<span class="highlight">access points</span> as you may wish, allowing you to
+							manage many <span class="highlight">membership relations</span> and
+							<span class="highlight">documents' lists</span> in the <span class="highlight">document</span>
+							where they were defined. <span class="highlight">Access points</span> behave in a similar way
+							to the <span class="highlight">membership relation</span> that exists with the
+							<span class="highlight">document</span>.</p>
 					</section>
 					<section>
 						<h3 class="ui header">Conclusion</h3>
-						<p>Carbon is a Linked Data Platform that allows to create and manage your data web through
-							Documents.</p>
+						<p><span class="highlight">Carbon</span> is a Linked Data Platform that allows to create and
+							manage your data web through <span class="highlight">documents</span>.</p>
 
-						<p>In simplest terms a Carbon Document is the basic unit of information in
-							Carbon. A Document can relate to other Documents through properties that linked them
-							with a given relation. Carbon through specific properties like <code>.contains</code>
-							and <code>.members</code> helps you relate and manage related Documents easily. Through
-							these properties a list of related Documents can be obtained. Carbon Documents manage
-							one list of children Documents and one list of member Documents. To manage more than one
-							list of members they use Access Points. Documents in Carbon are grouped together in
-							applications, that are represented in the platform by an Application Document that
-							holds its description and the pointer to the rootDocument. Below you see a simple
-							diagram of the basic Carbon object model.</p>
+						<p>In simplest terms a <span class="highlight">Carbon document</span> is the basic unit of
+							information in <span class="highlight">Carbon</span>. A <span class="highlight">document</span>
+							can relate to other <span class="highlight">documents</span> through
+							<span class="highlight">properties</span> that link them with a given
+							<span class="highlight">relation</span>. <span class="highlight">Carbon</span>,
+							through specific <span class="highlight">properties</span> like <code>.contains</code>
+							and <code>.members</code> helps you relate and manage <span class="highlight">related documents</span>
+							easily. Through them a <span class="highlight">list</span> of
+							<span class="highlight">related documents</span> can be obtained.
+							<span class="highlight">Carbon documents</span> manage one <span class="highlight">list</span>
+							of <span class="highlight">child documents</span> and one <span class="highlight">list</span>
+							of <span class="highlight">member documents</span>. To manage more than one
+							<span class="highlight">list of members</span> they use
+							<span class="highlight">access points</span>. <span class="highlight">Documents</span>
+							in <span class="highlight">Carbon</span> are grouped together in
+							<span class="highlight">applications</span>, that are represented in the
+							<span class="highlight">platform</span> by an <span class="highlight">application's document</span>
+							that holds its description and the <span class="highlight">pointer</span> to the
+							<span class="highlight">root document</span>. Below you see a simple diagram of the basic
+							<span class="highlight">Carbon object model</span>.</p>
 
 						<div class="centered">
 							<img src="assets/images/js-sdk-object-model-diagram.svg" width="840">

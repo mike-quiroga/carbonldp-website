@@ -1,5 +1,5 @@
-import {Component} from "@angular/core";
-import {RouteConfig, RouterOutlet} from "@angular/router-deprecated";
+import { Component } from "@angular/core";
+import { RouteConfig, RouterOutlet } from "@angular/router-deprecated";
 
 import HomeView from "./home/HomeView";
 
@@ -12,13 +12,16 @@ import CarbonLDPConceptsView from "./carbon-ldp-concepts/CarbonLDPConceptsView";
 import RESTApiGettingStarted from "./rest-api/getting-started/GettingStartedView";
 import InteractionModelsView from "./rest-api/interaction-models/InteractionModelsView";
 
-import JavaScriptSDKGettingStartedView from "./javascript-sdk/getting-started/GettingStartedView";
+import JavaScriptSDKGettingStartedView from "./javascript-sdk/getting-started.view";
 import JavaScriptSDKContextsView from "./javascript-sdk/contexts/ContextsView";
 import JavaScriptSDKObjectModelView from "./javascript-sdk/object-model/ObjectModelView";
+import JavaScriptSDKObjectSchemaView from "./javascript-sdk/object-schema/ObjectSchemaView";
 
 import RESTObjectModelView from "./rest-api/rest-object-model/RESTObjectModelView";
 import RESTRdfSourceView from "./rest-api/rest-rdfsource/RESTRdfSourceView";
 import RESTContainersView from "./rest-api/rest-containers/RESTContainersView";
+
+import "./style.css!";
 
 @Component( {
 	selector: "documents",
@@ -42,6 +45,7 @@ import RESTContainersView from "./rest-api/rest-containers/RESTContainersView";
 	{ path: "/javascript-sdk/getting-started", as: "JavaScriptSDKGettingStarted", component: JavaScriptSDKGettingStartedView },
 	{ path: "/javascript-sdk/contexts", as: "JavaScriptSDKContexts", component: JavaScriptSDKContextsView },
 	{ path: "/javascript-sdk/object-model", as: "JavaScriptSDKObjectModel", component: JavaScriptSDKObjectModelView },
+	{ path: "/javascript-sdk/object-schema", as: "JavaScriptSDKObjectSchema", component: JavaScriptSDKObjectSchemaView },
 
 	{ path: "/rest-api/rest-object-model", as: "RESTApiObjectModel", component: RESTObjectModelView },
 	{ path: "/rest-api/rest-rdfsource", as: "RESTApiRdfSource", component: RESTRdfSourceView },

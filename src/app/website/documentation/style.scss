@@ -1,0 +1,34 @@
+documents{
+	> * { display:block; }
+
+	section {
+		margin-top: 2em;
+		padding-top: 2em;
+		padding-bottom: 1em;
+		> section {
+			margin-top: 1em;
+			padding-top: 1em;
+			padding-bottom: 1em;
+		}
+		.subsection {
+			padding-top: 1em;
+			padding-left: 2em;
+		}
+		.ui.segment.bottom.attached:last-child{
+			margin-bottom: 1rem;
+		}
+	}
+	.ui.accordion {
+		margin-bottom: 1em;
+	}
+
+	.sixteen.wide.mobile.only.column {
+		padding-left: 0;
+		padding-right: 0;
+	}
+
+	a.outsidelink{
+		color: black;
+		border-bottom: 1px dotted #f89828;
+	}
+}

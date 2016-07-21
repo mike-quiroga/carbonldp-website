@@ -1,3 +1,15 @@
+#
+- Add complete initial draft JavaScript SDK Object Schema.
+- Add new documentation landing page.
+- Add styles for new documentation landing page.
+- Add new icon images.
+- Add HighlightDirective in documentation.
+- Complete initial draft JavaScript SDK Object Model.
+- Complete initial draft JavaScript SDK Getting Started.
+- Fix router links to documentation in documentation landing page.
+- Modify header documentation menu.
+- Modify example comments in JS SDK documentation.
+
 # 0.5.18 (July 14, 2016)
 - Fix @angular package version to rc.1
 - Remove the following from App Dev:
