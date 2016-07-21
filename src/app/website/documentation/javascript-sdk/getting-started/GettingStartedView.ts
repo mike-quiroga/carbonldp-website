@@ -3,9 +3,14 @@ import {Location} from "@angular/common";
 import {ROUTER_DIRECTIVES, Router} from "@angular/router-deprecated";
 import {Title} from "@angular/platform-browser";
 
-import SidebarComponent from "./../../sidebar/SidebarComponent";
 
 import HighlightDirective from "carbon-panel/directives/highlight.directive";
+import {TabsComponent} from "carbon-panel/semantic/tabs.component";
+import {TabComponent} from "carbon-panel/semantic/tab.component";
+
+import SidebarComponent from "./../../sidebar/SidebarComponent";
+
+
 import highlight from "highlight.js";
 import "highlight.js/styles/tomorrow-night.css!";
 
@@ -15,7 +20,7 @@ import template from "./template.html!";
 @Component( {
 	selector: "getting-started",
 	template: template,
-	directives: [ ROUTER_DIRECTIVES, SidebarComponent, HighlightDirective ],
+	directives: [ ROUTER_DIRECTIVES, SidebarComponent, HighlightDirective, TabsComponent, TabComponent ],
 	providers: [ Title ],
 } )
 export default class GettingStartedView {

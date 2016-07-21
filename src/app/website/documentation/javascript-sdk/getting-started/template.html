@@ -21,7 +21,6 @@
 					<header>
 						<h1 class="ui header">Getting started with the JavaScript SDK</h1>
 					</header>
-
 					<div class="ui icon yellow message">
 						<i class="warning sign icon"></i>
 
@@ -212,71 +211,165 @@
 					</section>
 
 					<section>
-						<h2 class="ui header">Creating contexts</h2>
+						<h2 class="ui header">Creating a platform context</h2>
 						<p>
 							Now that you have your brand new app (if you don't have your app yet, please
 							<a target="_blank" [routerLink]="['/AppDev/MyApps/Create']">create it</a>!). Let's start with some basic things you can do, like creating,
 							saving, linking <span class="highlight">documents</span>, etc.
 						</p>
-
 						<p>
 							First of all, you need to create a <span class="highlight">Carbon platform context</span>. This
 							<span class="highlight">context</span> will provide a reference to the
 							<span class="highlight">Carbon platform instance</span> you are working with (for more
 							about Carbon contexts see: <a [routerLink]="['../JavaScriptSDKContexts']">Contexts</a>).
 						</p>
-
-						<p>
-							Then you need an <span class="highlight">application</span>
-							<a [routerLink]="[ '../JavaScriptSDKContexts' ]">context</a> that references the
-							<span class="highlight">application</span> on which you will be working on. The
-							<span class="highlight">app context</span> is retrieved from your previously created
-							<span class="highlight">application</span>.
-						</p>
-						<div>
-							<div class="ui top attached tabular menu">
-								<a class="item active" data-tab="typescript">TypeScript</a>
-								<a class="item" data-tab="javascript">JavaScript</a>
-							</div>
-							<div class="ui bottom attached tab segment active" data-tab="typescript">
+						<sui-tabs>
+							<sui-tab title="TypeScript">
 								<!--@formatter:off-->
 								<pre><code cphighlight class="typescript">
-									import * as App from "carbonldp/App";
 									import Carbon from "carbonldp/Carbon";
 
 									let carbon:Carbon = new Carbon(); // platform context
-									let myAppContext:AppContext;
+								</code></pre>
+								<!--@formatter:on-->
+							</sui-tab>
+							<sui-tab title="JavaScript">
+								<!--@formatter:off-->
+								<pre><code cphighlight class="javascript">
+									let carbon = new Carbon(); // platform context
+								</code></pre>
+								<!--@formatter:on-->
+							</sui-tab>
+						</sui-tabs>
+						<p>
+							By default, platform contexts point to the instance in <code>carbonldp.com</code>. If you need to change this,
+							you can do it by changing the <code>domain</code> setting:
+						</p>
+						<sui-tabs>
+							<sui-tab title="TypeScript">
+								<!--@formatter:off-->
+								<pre><code cphighlight class="typescript">
+									import Carbon from "carbonldp/Carbon";
+
+									let carbon:Carbon = new Carbon(); // platform context
+									carbon.setSetting( "domain", "my-carbon-instance.com:8080" );
+								</code></pre>
+								<!--@formatter:on-->
+							</sui-tab>
+							<sui-tab title="JavaScript">
+								<!--@formatter:off-->
+								<pre><code cphighlight class="javascript">
+									let carbon = new Carbon(); // platform context
+									carbon.setSetting( "domain", "my-carbon-instance.com:8080" );
+								</code></pre>
+								<!--@formatter:on-->
+							</sui-tab>
+						</sui-tabs>
+					</section>
+					<section>
+						<h2 class="ui header">Authenticating</h2>
+						<p>
+							After creating the platform context you need to tell the platform who you are by authenticating
+							yourself.
+						</p>
+						<p>
+							All authentication/authorization related actions are done through the <code>auth</code> service
+							every context has. This service provides an <code>authenticate</code> method where you can pass
+							your credentials:
+						</p>
+						<sui-tabs>
+							<sui-tab title="TypeScript">
+								<!--@formatter:off-->
+								<pre><code cphighlight class="typescript">
+									// ... additional imports
+									import * as Token from "carbonldp/Auth/Token";
+
+									// ... platform context creation
+
+									carbon.auth.authenticate( "your@email.com", "YouRP455word" ).then(
+										( token:Token.Class ) => {
+											console.log( carbon.auth.authenticatedAgent ); // Yourself!
+										}
+									);
+								</code></pre>
+								<!--@formatter:on-->
+							</sui-tab>
+							<sui-tab title="JavaScript">
+								<!--@formatter:off-->
+								<pre><code cphighlight class="typescript">
+									// ... imports
+
+									// ... platform context creation
+
+									carbon.auth.authenticate( "your@email.com", "YouRP455word" ).then(
+										( token ) => {
+											console.log( carbon.auth.authenticatedAgent ); // Yourself!
+										}
+									);
+								</code></pre>
+								<!--@formatter:on-->
+							</sui-tab>
+						</sui-tabs>
+						<p>
+							It's important to notice that you are authenticated in that specific context (and its child contexts).
+							You could create additional platform contexts (or other type of contexts) and do stuff authenticated
+							as other agents.
+						</p>
+					</section>
+					<section>
+						<h2 class="ui header">Retrieving an App Context</h2>
+						<p>
+							To access your application data, you need an <span class="highlight">application</span>
+							<a [routerLink]="[ '../JavaScriptSDKContexts' ]">context</a> that references the
+							<span class="highlight">application</span> on which you will be working on.
+						</p>
+						<p>
+							To retrieve it, you can use the <code>apps</code> service of the platform context:
+						</p>
+						<sui-tabs>
+							<sui-tab title="TypeScript">
+								<!--@formatter:off-->
+								<pre><code cphighlight class="typescript">
+									// ... additional imports
+									import * as App from "carbonldp/App";
+
+									// ... platform context creation and authentication
+
+									let myAppContext:App.Context;
 
 									carbon.apps.get( "your-app-slug-here/" ).then( ( appContext:App.Context ) => {
 									    myAppContext = appContext; //retrieving your app context
 									}).catch( console.error );
 								</code></pre>
 								<!--@formatter:on-->
-							</div>
-							<div class="ui bottom attached tab segment" data-tab="javascript">
+							</sui-tab>
+							<sui-tab title="JavaScript">
 								<!--@formatter:off-->
-								<pre><code cphighlight class="javascript">
-									let carbon = new Carbon(); // platform context
+								<pre><code cphighlight class="typescript">
+									// ... additional imports
+
+									// ... platform context creation and authentication
+
 									let myAppContext;
 
-									carbon.apps.get( "your-app-slug-here/" ).then( function( appContext ) {
-
-									    myAppContext = appContext; // retrieving your app context
-
-									} ).catch( console.error );
+									carbon.apps.get( "your-app-slug-here/" ).then( ( appContext ) => {
+									    myAppContext = appContext; //retrieving your app context
+									}).catch( console.error );
 								</code></pre>
 								<!--@formatter:on-->
-							</div>
-						</div>
-						<p>
-							Be sure to replace <code>your-app-slug-here/</code> with your app slug.
-						</p>
+							</sui-tab>
+						</sui-tabs>
 						<p>
 							The <code>apps.get()</code> method returns a promise that when resolved, will give you the
 							<a [routerLink]="[ '../JavaScriptSDKContexts' ]"><span class="highlight">app context</span>
-							</a> you need.
+							</a> you need. Be sure to replace <code>your-app-slug-here/</code> with your app slug.
 						</p>
-
+						<p>
+							This context is a child of the platform context you created. Because of that, any setting
+							or authentication information you saved in your platform context, is accessible
+							(and will be used) by this application context (for more see the Inheritance section of
+							<a [routerLink]="[ '../JavaScriptSDKContexts' ]">Contexts</a>).
+						</p>
 					</section>
 
 					<section>
@@ -291,19 +384,16 @@
 							Any carbon <span class="highlight">context</span> has a <code>documents</code> service that
 							helps you manage your documents. To create a document we need to call the method <code>createChild</code> of this service:
 						</p>
-						<div>
-							<div class="ui top attached tabular menu">
-								<a class="item active" data-tab="typescript">TypeScript</a>
-								<a class="item" data-tab="javascript">JavaScript</a>
-							</div>
-							<div class="ui bottom attached tab segment active" data-tab="typescript">
+						<sui-tabs>
+							<sui-tab title="TypeScript">
 								<!--@formatter:off-->
 								<pre><code cphighlight class="typescript">
 									// ... additional imports
+									import * as App from "carbonldp/App";
 									import * Response from "carbonldp/HTTP/Response";
 									import * Pointer from "carbonldp/Pointer";
 
-									let myAppContext:AppContext;
+									let myAppContext:App.Context;
 
 									// ... app context retrieval
 
@@ -330,8 +420,8 @@
 									).catch( console.error );
 								</code></pre>
 								<!--@formatter:on-->
-							</div>
-							<div class="ui bottom attached tab segment" data-tab="javascript">
+							</sui-tab>
+							<sui-tab title="JavaScript">
 								<!--@formatter:off-->
 								<pre><code cphighlight class="javascript">
 									// ... imports
@@ -363,8 +453,8 @@
 									).catch( console.error );
 								</code></pre>
 								<!--@formatter:on-->
-							</div>
-						</div>
+							</sui-tab>
+						</sui-tabs>
 						<p>
 							After executing that, the information inside of <code>project</code> will have been persisted in Carbon. Nested objects
 							will also be saved inside of the document, so pretty much any json object can be saved as a Carbon document (as long as
@@ -381,38 +471,69 @@
 							a third parameter can be passed to the <code>createChild</code> method. This parameter is called <code>slug</code>
 							and it serves as a suggestion for Carbon when forging the document's URI:
 						</p>
-						<div>
-							<div class="ui top attached tabular menu">
-								<a class="item active" data-tab="typescript">TypeScript</a>
-								<a class="item" data-tab="javascript">JavaScript</a>
-							</div>
-							<div class="ui bottom attached tab segment active" data-tab="typescript">
+						<sui-tabs>
+							<sui-tab title="TypeScript">
 								<!--@formatter:off-->
 								<pre><code cphighlight class="typescript">
 									// ...
 
-									myAppContext.documents.createChild( "/", project, "My sUp4 Project!" ).then(
+									myAppContext.documents.createChild( "/", "My sUp4 Project!", project ).then(
 										( [ projectPointer, response ]:[ Pointer.Class, Response.Class ] ) => {
 											console.log( project.id ); // .../my-supa-project/
 										}
 									).catch( console.error );
 								</code></pre>
 								<!--@formatter:on-->
-							</div>
-							<div class="ui bottom attached tab segment" data-tab="javascript">
+							</sui-tab>
+							<sui-tab title="JavaScript">
 								<!--@formatter:off-->
 								<pre><code cphighlight class="javascript">
 									// ...
 
-									myAppContext.documents.createChild( "/", project, "My sUp4 Project!" ).then(
+									myAppContext.documents.createChild( "/", "My sUp4 Project!", project ).then(
 										( [ projectPointer, response ] ) => {
 											console.log( project.id ); // .../my-supa-project/
 										}
 									).catch( console.error );
 								</code></pre>
 								<!--@formatter:on-->
-							</div>
-						</div>
+							</sui-tab>
+						</sui-tabs>
+						<p>
+							Another thing to notice is that the method is called create<strong>Child</strong>. All documents stored in Carbon are children of
+							another document. In this case we are specifying our newly created document's parent through the first parameter <code>"/"</code>.
+							That string represents a relative URI, one that can be resolved against something else. In this case it is being resolved to the
+							base URI the context has. To see to what that would resolve to you can use a <code>context</code> <code>resolve</code> method:
+						</p>
+						<sui-tabs>
+							<sui-tab title="TypeScript">
+								<!--@formatter:off-->
+								<pre><code cphighlight class="typescript">
+									// ... additional imports
+									import * as App from "carbonldp/App";
+
+									let myAppContext:App.Context;
+
+									// ... app context retrieval
+
+									console.log( myAppContext.resolve( "" ) ); // https://.../your-app-slug/
+								</code></pre>
+								<!--@formatter:on-->
+							</sui-tab>
+							<sui-tab title="JavaScript">
+								<!--@formatter:off-->
+								<pre><code cphighlight class="javascript">
+									// ... imports
+
+									let myAppContext;
+
+									// ... app context retrieval
+
+									console.log( myAppContext.resolve( "" ) ); // https://.../your-app-slug/
+								</code></pre>
+								<!--@formatter:on-->
+							</sui-tab>
+						</sui-tabs>
 					</section>
 					<section>
 						<h2 class="ui header">Retrieving a document</h2>
@@ -425,19 +546,16 @@
 							Like creating documents, retrieving them can be done using the <code>documents</code> service inside of any Carbon context.
 							To do so, you can use its <code>get</code> method:
 						</p>
-						<div>
-							<div class="ui top attached tabular menu">
-								<a class="item active" data-tab="typescript">TypeScript</a>
-								<a class="item" data-tab="javascript">JavaScript</a>
-							</div>
-							<div class="ui bottom attached tab segment active" data-tab="typescript">
+						<sui-tabs>
+							<sui-tab title="TypeScript">
 								<!--@formatter:off-->
 								<pre><code cphighlight class="typescript">
 									// ... additional imports
+									import * as App from "carbonldp/App";
 									import * Response from "carbonldp/HTTP/Response";
 									import * PersistedDocument from "carbonldp/PersistedDocument";
 
-									let myAppContext:AppContext;
+									let myAppContext:App.Context;
 
 									// ... app context retrieval
 
@@ -451,8 +569,8 @@
 									).catch( console.error );
 								</code></pre>
 								<!--@formatter:on-->
-							</div>
-							<div class="ui bottom attached tab segment" data-tab="javascript">
+							</sui-tab>
+							<sui-tab title="JavaScript">
 								<!--@formatter:off-->
 								<pre><code cphighlight class="javascript">
 									// ... imports
@@ -471,20 +589,16 @@
 									).catch( console.error );
 								</code></pre>
 								<!--@formatter:on-->
-							</div>
-						</div>
+							</sui-tab>
+						</sui-tabs>
 						<p>
 							In this example we used the id of the document, but there are times that instead of having the id, you have a
 							<code>Pointer.Class</code> object. This can happen for example when a document points to another document through a property,
 							or as soon as you create a document and receive a pointer back. These pointers have a <code>resolve</code> method
 							that helps you retrieve their information:
 						</p>
-						<div>
-							<div class="ui top attached tabular menu">
-								<a class="item active" data-tab="typescript">TypeScript</a>
-								<a class="item" data-tab="javascript">JavaScript</a>
-							</div>
-							<div class="ui bottom attached tab segment active" data-tab="typescript">
+						<sui-tabs>
+							<sui-tab title="TypeScript">
 								<!--@formatter:off-->
 								<pre><code cphighlight class="typescript">
 									// ... additional imports
@@ -503,8 +617,8 @@
 									).catch( console.error );
 								</code></pre>
 								<!--@formatter:on-->
-							</div>
-							<div class="ui bottom attached tab segment" data-tab="javascript">
+							</sui-tab>
+							<sui-tab title="JavaScript">
 								<!--@formatter:off-->
 								<pre><code cphighlight class="javascript">
 									// ... imports
@@ -520,8 +634,8 @@
 									).catch( console.error );
 								</code></pre>
 								<!--@formatter:on-->
-							</div>
-						</div>
+							</sui-tab>
+						</sui-tabs>
 						<p>
 							As you can see, <code>Pointer.Class</code> objects have two states, resolved and unresolved. When a pointer
 							isn't resolved it doesn't contain the document's information (or it may be just out of sync with the server)
@@ -559,17 +673,12 @@
 						<p>
 							Document properties can be added/modified/removed as with any normal JavaScript object.
 						</p>
-
-						<div>
-							<div class="ui top attached tabular menu">
-								<a class="item active" data-tab="typescript">TypeScript</a>
-								<a class="item" data-tab="javascript">JavaScript</a>
-							</div>
-
-							<div class="ui bottom attached tab segment active" data-tab="typescript">
+						<sui-tabs>
+							<sui-tab title="TypeScript">
 								<!--@formatter:off-->
 								<pre><code cphighlight class="typescript">
-									// ... imports
+									// ... additional imports
+									import * PersistedDocument from "carbonldp/PersistedDocument";
 
 									let project:PersistedDocument.Class;
 
@@ -597,14 +706,13 @@
 									).catch( console.error );
 								</code></pre>
 								<!--@formatter:on-->
-							</div>
-
-							<div class="ui bottom attached tab segment" data-tab="javascript">
+							</sui-tab>
+							<sui-tab title="JavaScript">
 								<!--@formatter:off-->
 								<pre><code cphighlight class="javascript">
 									// ... imports
 
-									let project:PersistedDocument.Class;
+									let project;
 
 									// ... document retrieval
 
@@ -630,8 +738,8 @@
 									).catch( console.error );
 								</code></pre>
 								<!--@formatter:on-->
-							</div>
-						</div>
+							</sui-tab>
+						</sui-tabs>
 						<p>
 							Notice that we used the <code>save</code> method and immediately after, we called another method that we haven't
 							talked about, <code>refresh</code>. Every persisted document has this method and it helps you sync the in memory
@@ -651,20 +759,15 @@
 							delete a persisted document through its <code>delete</code> method. To do so, you need to
 							provide the document's URI:
 						</p>
-
-						<div>
-							<div class="ui top attached tabular menu">
-								<a class="item active" data-tab="typescript">TypeScript</a>
-								<a class="item" data-tab="javascript">JavaScript</a>
-							</div>
-
-							<div class="ui bottom attached tab segment active" data-tab="typescript">
+						<sui-tabs>
+							<sui-tab title="TypeScript">
 								<!--@formatter:off-->
 								<pre><code cphighlight class="typescript">
 									// ... additional imports
+									import * as App from "carbonldp/App";
 									import * Response from "carbonldp/HTTP/Response";
 
-									let myAppContext:AppContext;
+									let myAppContext:App.Context;
 
 									// ... app context retrieval
 
@@ -678,9 +781,8 @@
 									).catch( console.error );
 								</code></pre>
 								<!--@formatter:on-->
-							</div>
-
-							<div class="ui bottom attached tab segment" data-tab="javascript">
+							</sui-tab>
+							<sui-tab title="JavaScript">
 								<!--@formatter:off-->
 								<pre><code cphighlight class="javascript">
 									// ... imports
@@ -699,979 +801,418 @@
 									).catch( console.error );
 								</code></pre>
 								<!--@formatter:on-->
-							</div>
-						</div>
+							</sui-tab>
+						</sui-tabs>
 						<p>
-							Like in retrieving a document, a document can also be deleted through a pointer. To do that,
+							Like in retrieving a document, a document can also be deleted through a pointer. But in this case,
+							the pointer must have been already resolved. To do so, you can use a <code>PersistedDocument.Class</code>
+							<code>delete</code> method:
+						</p>
+						<sui-tabs>
+							<sui-tab title="TypeScript">
+								<!--@formatter:off-->
+								<pre><code cphighlight class="typescript">
+									// ... additional imports
+									import * PersistedDocument from "carbonldp/PersistedDocument";
+									import * Response from "carbonldp/HTTP/Response";
 
+									let project:PersistedDocument.Class;
+
+									// persisted document retrieval
+
+									project.delete().then(
+										( response:Response.Class ) => {
+											// continue doing stuff...
+										}
+									).catch( console.error );
+								</code></pre>
+								<!--@formatter:on-->
+							</sui-tab>
+							<sui-tab title="JavaScript">
+								<!--@formatter:off-->
+								<pre><code cphighlight class="javascript">
+									// ... imports
+
+									let project;
+
+									// persisted document retrieval
+
+									project.delete().then(
+										( response ) => {
+											// continue doing stuff...
+										}
+									).catch( console.error );
+								</code></pre>
+								<!--@formatter:on-->
+							</sui-tab>
+						</sui-tabs>
+						<p>
+							In fact, this pattern can be seen across several methods, where both the <code>documents</code> service
+							and resolved pointers expose similar methods. For example, <code>createChild</code> is also exposed by a
+							resolved pointer and allows you to create a direct child of that document. Basically, if you don't have
+							a resolved reference of the document, use <code>documents</code> service. But if you already have one, you
+							can call the action through the pointer directly (which may make code more readable, and in some cases more efficient).
 						</p>
 					</section>
 
 					<section>
 						<h2 class="ui header">Linking documents</h2>
-
-						<p><span class="highlight">Carbon documents</span> can be related to other
-							<span class="highlight">documents</span> through their
-							<span class="highlight">properties</span>. These <span class="highlight">properties</span>
-							can be defined manually, however, to simplify the relation management
-							<span class="highlight">Carbon</span> handles specific
-							<span class="highlight">properties</span> such as <code>contains</code>
-							and <code>members</code>, belonging to the
-							<span class="highlight">parent-child relation</span> and
-							<span class="highlight">membership relation</span> respectively.
-							<span class="highlight">Carbon</span> provides you with methods to handle both, these
-							<span class="highlight">properties</span> and the
-							<span class="highlight">list of documents</span> related through them.
+						<p>
+							One of the core features of Carbon LDP, is linking data (after all, it's a Linked Data Platform). Documents can
+							be linked to other documents through normal JavaScript properties:
 						</p>
+						<sui-tabs>
+							<sui-tab title="TypeScript">
+								<!--@formatter:off-->
+								<pre><code cphighlight class="typescript">
+									// ... additional imports
+									import * PersistedDocument from "carbonldp/PersistedDocument";
 
+									let project1:PersistedDocument.Class;
+									let project2:PersistedDocument.Class;
+
+									// ... persisted documents retrieval
+
+									project1.relatedProject = project2;
+								</code></pre>
+								<!--@formatter:on-->
+							</sui-tab>
+							<sui-tab title="JavaScript">
+								<!--@formatter:off-->
+								<pre><code cphighlight class="javascript">
+									// ... additional imports
+									import * PersistedDocument from "carbonldp/PersistedDocument";
+
+									let project1:PersistedDocument.Class;
+									let project2:PersistedDocument.Class;
+
+									// ... persisted documents retrieval
+
+									project1.relatedProject = project2;
+								</code></pre>
+								<!--@formatter:on-->
+							</sui-tab>
+						</sui-tabs>
+						<p>
+							There are also special properties Carbon handles for you. The most important ones are <code>contains</code>,
+							which represents the document parent-child relation, and <code>members</code> which represents membership relation.
+						</p>
 						<section>
-							<h3 class="ui header">Parent-child Relation</h3>
+							<h3 class="ui header">Parent-child relation</h3>
 							<p>
-								The <span class="highlight">parent child relation</span> exists as a rule for all
-								<span class="highlight">documents</span> and is automatically maintained by
-								<span class="highlight">Carbon</span> as a <span class="highlight">hard link</span>
-								between two <span class="highlight">documents</span>. A
-								<span class="highlight">hard link</span> is related to the data structure in
-								<span class="highlight">Carbon</span>, when a
-								<span class="highlight">document</span> is deleted all its
-								<span class="highlight">child documents</span> will be deleted as well.
-
-								When a new <span class="highlight">document</span> is persisted, the
-								<span class="highlight">parent-child relation</span> is created. Allowing you to
-								obtained all the <span class="highlight">documents</span> created as children
-								of any given <span class="highlight">document</span>, in the form of
-								<span class="highlight">pointers</span>. This can be accomplished through
-								the methods:
+								Like we said before, every document that is saved in Carbon must have a parent. When a document gets
+								created it's automatically added to the array contained in its parent <code>contains</code> property.
+								The SDK gives you convenient methods to handle this array, such as:
 							</p>
 							<ul>
-								<li><code>listChildren</code>: Return all the children of the
-									<span class="highlight">container</span> specified.
+								<li>
+									<code>documents.listChildren</code>: Returns a list of unresolved pointers for each of the document children
 								</li>
-								<li><code>getChildren</code>: Retrieves all the children of a
-									<span class="highlight">document</span> and their content.
+								<li>
+									<code>documents.getChildren</code>: Returns a list of RESOLVED pointers for each of the document children
 								</li>
 							</ul>
-
-							<p>From <a target="_blank"
-							           href="https://github.com/CarbonLDP/CarbonLDP-JS-SDK/tree/develop/doc#Carbon-Documents">Carbon.Documents</a>
-								class.</p>
-
-							<div>
-								<div class="ui top attached tabular menu">
-									<a class="item active" data-tab="typescript">TypeScript</a>
-									<a class="item" data-tab="javascript">JavaScript</a>
-								</div>
-
-								<div class="ui bottom attached tab segment active" data-tab="typescript">
+							<sui-tabs>
+								<sui-tab title="TypeScript">
 									<!--@formatter:off-->
 									<pre><code cphighlight class="typescript">
-										// imports
+										// ... additional imports
+										import * as App from "carbonldp/App";
 
-										// declarations
+										let myAppContext:App.Context;
 
-										platformContext.apps.getAppContext( "your-app-slug/" ).then(
-										    ( appContext:App.Context ) => {
-										        myAppContext = appContext;
+										// ... app context retrieval
 
-										        myAppContext.documents.getChildren( "parentURI" ).then(
-										        ( [ children, response ] : [ PersistedDocument.Class[], HTTP.Response.Class] ) => {
-										            console.log( children );
-										        });
+										myAppContext.documents.listChildren( "projects/" ).then(
+											( [ projectPointers, response ] : [ Pointer.Class[], HTTP.Response.Class]) => {
+										        console.log( projectPointers ); // array of unresolved pointers
+											}
+										);
 
-										        myAppContext.documents.listChildren( "parentURI" ).then(
-										        ( [ Children, response ] : [ Pointer.Class[], HTTP.Response.Class]) => {
-										            console.log( "list of children:", children );
-										        });
-										});
+										myAppContext.documents.getChildren( "projects/" ).then(
+											( [ projects, response ] : [ PersistedDocument.Class[], HTTP.Response.Class] ) => {
+										        console.log( projects ); // array of resolved pointers
+											}
+										);
 									</code></pre>
 									<!--@formatter:on-->
-								</div>
-
-								<div class="ui bottom attached tab segment" data-tab="javascript">
+								</sui-tab>
+								<sui-tab title="JavaScript">
 									<!--@formatter:off-->
 									<pre><code cphighlight class="javascript">
-										// declarations
+										// ... imports
 
-										platformContext.apps.getAppContext( "your-app-slug/" ).then(
-										    function( appContext ){
+										let myAppContext;
 
-										        myAppContext = appContext;
+										// ... app context retrieval
 
-										        myAppContext.documents.getChildren( "parentURI" ).then(
-										        function( [ children, response ] ){
-										            console.log( children );
-										        });
+										myAppContext.documents.listChildren( "projects/" ).then(
+											( [ projectPointers, response ] ) => {
+										        console.log( projectPointers ); // array of unresolved pointers
+											}
+										);
 
-										        myAppContext.documents.listChildren( "parentURI" ).then(
-										        function( [ Children, response ] ){
-										            console.log( "list of children:", children );
-										        });
-
-										});
+										myAppContext.documents.getChildren( "projects/" ).then(
+											( [ projects, response ] ) => {
+										        console.log( projects ); // array of resolved pointers
+											}
+										);
 									</code></pre>
 									<!--@formatter:on-->
+								</sui-tab>
+							</sui-tabs>
+							<p>
+								Like <code>createChild</code> and <code>delete</code>, <code>listChildren</code> and <code>getChildren</code>
+								are also accessible through a persisted document. See, there's a pattern!
+							</p>
+							<div class="ui info icon message">
+								<i class="info circle icon"></i>
+								<div class="content">
+									<p>
+										The last example could show you weird results. The <code>documents</code> service
+										caches pointers, so listing children of a document while at the same time retrieving them will return
+										you the same objects.
+									</p>
 								</div>
 							</div>
-
+							<p>
+								It's worth mentioning that parent-child relations are considered <span class="highlight">hard links</span>.
+								They are directly related to the structure of the data. Meaning, if you delete the relation,
+								the child gets deleted too. By consequence, if you delete a parent, all of its children will also be
+								deleted (and the children of its children, and so on).
+							</p>
 						</section>
-
 						<section>
 							<h3 class="ui header">Membership Relation</h3>
-
-							<p>The <span class="highlight">membership relation</span> is a
-								<span class="highlight">property</span> that exists in all
-								<span class="highlight">Carbon documents</span> that relates
-								<span class="highlight">documents</span> with other
-								<span class="highlight">documents through</span> a
-								<span class="highlight">soft link</span>. All
-								<span class="highlight">Carbon documents</span> can manage one member
-								<span class="highlight">list</span> per <span class="highlight">document</span>.
-								<span class="highlight">Members</span> can be added to, removed from, listed or
-								retrieved using these methods.
+							<p>
+								Because parent-child relations are <span class="highlight">hard links</span>, it is not recommended
+								to use them in your app logic. Instead, Carbon helps you manage another type of relation, considered as
+								a <span class="highlight">soft link</span>, membership relations.
 							</p>
-
+							<p>
+								All carbon documents can maintain a list of members. The relation between the document and its members can be
+								configured, through the properties:
+							</p>
 							<ul>
-								<li><code>addMember</code> | <code>addMembers</code>: Add the specified
-									<span class="highlight">resource/resources</span> <a class="outsidelink" target="_blank"
-									                                                     href="https://www.w3.org/TR/ld-glossary/#uniform-resource-identifier"
-									>URIs</a> or <span class="highlight">pointers</span> as
-									<span class="highlight">member/members</span> of the
-									<span class="highlight">document</span> container specified.
+								<li>
+									<code>hasMemberRelation</code>: Configures the property that will hold the array of members
+									(by default <code>members</code>)
 								</li>
-								<li><code>removeMember</code> | <code>removeMembers</code>: Remove the specified
-									<span class="highlight">resource/resources</span> <a class="outsidelink" target="_blank"
-									                                                     href="https://www.w3.org/TR/ld-glossary/#uniform-resource-identifier"
-									>URIs</a> or <span class="highlight">pointers</span> as
-									<span class="highlight">member/members</span> of the
-									<span class="highlight">document</span> container specified.
-								</li>
-								<li><code>removeAllMembers</code>: Remove all the
-									<span class="highlight">members</span> of the <span class="highlight">document</span>
-									container specified.
-								</li>
-								<li><code>listMembers</code>: Retrieves all the <span class="highlight">members</span>
-									of a <span class="highlight">document</span> with out resolving them.
-								</li>
-								<li><code>getMembers</code>: Retrieves all the <span class="highlight">members</span>
-									of a <span class="highlight">document</span> and their contents.
+								<li>
+									<code>isMemberOfRelation</code>: Configures the property that each member will have, that links back to the
+									document they are member of (none by default)
 								</li>
 							</ul>
-
-							<p>From <a>Carbon.Documents</a> class.</p>
-
-							<div>
-								<div class="ui top attached tabular menu">
-									<a class="item active" data-tab="typescript">TypeScript</a>
-									<a class="item" data-tab="javascript">JavaScript</a>
-								</div>
-
-								<div class="ui bottom attached tab segment active" data-tab="typescript">
+							<p>
+								These properties are configured in the document that will maintain the member array. Members can be added, removed,
+								listed or retrieved, through the following methods in the <code>documents</code> service (and the document itself too):
+							</p>
+							<ul>
+								<li>
+									<code>addMember/addMembers</code>: Adds the provided pointers as members of the document
+								</li>
+								<li>
+									<code>listMembers</code>: Like <code>listChildren</code>, returns an array of unresolved pointers for each member
+								</li>
+								<li>
+									<code>getMembers</code>: Like <code>getChildren</code>, returns an array of RESOLVED pointers for each member
+								</li>
+								<li>
+									<code>removeMember/removeMembers/removeAllMembers</code>: Removes the specified members (without deleting them)
+								</li>
+							</ul>
+							<sui-tabs>
+								<sui-tab title="TypeScript">
 									<!--@formatter:off-->
 									<pre><code cphighlight class="typescript">
-										// imports
+										// ... additional imports
+										import * as App from "carbonldp/App";
+										import * PersistedDocument from "carbonldp/PersistedDocument";
+										import * as Response from "carbonldp/HTTP/Response";
 
-										// declarations
+										let myAppContext:App.Context;
 
-										platformContext.apps.getAppContext( "your-app-slug/" ).then(
-										    ( appContext:App.Context ) =>{
-										        myAppContext = appContext;
+										// ... app context retrieval
 
-										        myAppContext.documents.listMembers( "parentURI/" ).then(
-										            ( [members, response]:[Pointer.Class[], Response.Class] ) =>{
-										                let myPromises:Promise&lt;Response.Class&gt;[] = [];
+										let project:any = {
+											name: "Important project",
 
-										                console.log( "members: ", members );
-										                    // members: member4, member1, member3, member2
+											hasMemberRelation: tasks,
+											isMemberOfRelation: project
+										};
 
-										                myPromises.push( myAppContext.documents.addMember("parentURI/", "memberToAddURI/"));
-										                myPromises.push( myAppContext.documents.removeMember("parentURI/", "member2/"));
+										let task1:any = { name: "Task 1" };
+										let task2:any = { name: "Task 2" };
+										let task3:any = { name: "Task 3" };
 
-										                return Promise.all( myPromises );
+										// ... project, task1, task2 and task3 persistence (createChild, etc)
 
-										        }).then( ( responses:Response.Class[] ) => {
-										            myAppContext.documents.listMembers( "parentURI" ).then(
-										                ( [ members, response ] : [ Pointer.Class[], Response.Class ] ) =>{
+										project.addMembers( [ task1, task2, task3 ] ).then(
+											( response:Response.Class ) => {
+												return project.resolve();
+											}
+										).then(
+											( [ project, response ]:[ PersistedDocument.Class, Response.Class ] ) => {
+												console.log( project.tasks ); // Pointers for task1, task2 and task3. Added because of the configured hasMemberRelation
+												console.log( project.tasks.indexOf( task1 ) !== -1 ); // true (remember, pointers are cached and reused)
+												console.log( project.tasks.indexOf( task2 ) !== -1 ); // true
+												console.log( project.tasks.indexOf( task3 ) !== -1 ); // true
 
-										                    console.log( "members: ", members );
-										                        // members: member1, member4, memberToAddURI, member3
-										        });
-										});
+												return project.listMembers();
+											}
+										).then(
+											( [ taskPointers, response ]:[ Pointer.Class, Response.Class ] ) => {
+												console.log( taskPointers ); // Pointers for task1, task2 and task3
+
+												return project.removeMember( task2 );
+											}
+										).then(
+											( response:Response.Class ) => {
+												console.log( "Task 2 is no longer a member of the project" );
+
+												return project.getMembers();
+											}
+										).then(
+											( [ tasks, response ]:[ PersistedDocument.Class, Response.Class ] ) => {
+												console.log( tasks ); // task1 and task3 documents
+												console.log( task[0].project ); // pointer to project. Added due to the configured isMemberOfRelation
+											}
+										).catch( console.error );
 									</code></pre>
 									<!--@formatter:on-->
-								</div>
-
-								<div class="ui bottom attached tab segment" data-tab="javascript">
+								</sui-tab>
+								<sui-tab title="JavaScript">
 									<!--@formatter:off-->
 									<pre><code cphighlight class="javascript">
-										// declarations
+										// ... imports
 
-										platformContext.apps.getAppContext( "your-app-slug/" ).then(
+										let myAppContext;
 
-										    function( appContext ){
-										        myAppContext = appContext;
+										// ... app context retrieval
 
-										        myAppContext.documents.listMembers( "parentURI/" ).then(
-										            function( [members, response] ){
-										                let myPromises = [];
+										let project = {
+											name: "Important project",
 
-										                console.log( "members: ", members );
-										                    // members: member4, member1, member3, member2
+											hasMemberRelation: tasks,
+											isMemberOfRelation: project
+										};
 
-										                myPromises.push( myAppContext.documents.addMember("parentURI/", "memberToAddURI/"));
-										                myPromises.push( myAppContext.documents.removeMember("parentURI/", "member2/"));
+										let task1 = { name: "Task 1" };
+										let task2 = { name: "Task 2" };
+										let task3 = { name: "Task 3" };
 
-										                return Promise.all( myPromises );
+										// ... project, task1, task2 and task3 persistence (createChild, etc)
 
-										        }).then( function( responses ){
-										            myAppContext.documents.listMembers( "parentURI" ).then(
-										                function( [ members, response ] ){
+										project.addMembers( [ task1, task2, task3 ] ).then(
+											( response ) => {
+												return project.resolve();
+											}
+										).then(
+											( [ project, response ] ) => {
+												console.log( project.tasks ); // Pointers for task1, task2 and task3. Added because of the configured hasMemberRelation
+												console.log( project.tasks.indexOf( task1 ) !== -1 ); // true (remember, pointers are cached and reused)
+												console.log( project.tasks.indexOf( task2 ) !== -1 ); // true
+												console.log( project.tasks.indexOf( task3 ) !== -1 ); // true
 
-										                    console.log( "members: ", members );
-										                        // members: member1, member4, memberToAddURI, member3
-										        });
+												return project.listMembers();
+											}
+										).then(
+											( [ taskPointers, response ] ) => {
+												console.log( taskPointers ); // Pointers for task1, task2 and task3
 
-										});
+												return project.removeMember( task2 );
+											}
+										).then(
+											( response ) => {
+												console.log( "Task 2 is no longer a member of the project" );
+
+												return project.getMembers();
+											}
+										).then(
+											( [ tasks, response ] ) => {
+												console.log( tasks ); // task1 and task3 documents
+												console.log( task[0].project ); // pointer to project. Added due to the configured isMemberOfRelation
+											}
+										).catch( console.error );
 									</code></pre>
 									<!--@formatter:on-->
-								</div>
-							</div>
-
+								</sui-tab>
+							</sui-tabs>
 						</section>
-
-
 					</section>
-
-
 					<section>
 						<h2 class="ui header">Creating an access point</h2>
 						<p>
-							As mentioned in the previous section, <span class="highlight">documents</span> can handle
-							up to one <span class="highlight">member relation</span> within them. To manage several
-							<span class="highlight">member relations</span> <span class="highlight">documents</span>
-							need the help of <span class="highlight">access points</span>.
+							Membership relations have a limitation though, a document can only maintain one list through one property. So what happens when
+							you want to manage members of another property? For example, what happens if we want to manage a list of people that are members
+							of the project? Well, this can be accomplished using access points.
 						</p>
-
 						<p>
-							First you need to create the <span class="highlight">access point</span> in memory.
-							Like a <span class="highlight">document</span>, an <span class="highlight">access point</span>
-							can be created as a new empty <span class="highlight">access point</span> or from a pre
-							existing JavaScript object with any number of <span class="highlight">properties</span>,
-							using the methods:
+							Access points are special documents whose purpose is to maintain a list of members of another document. Any document can have
+							any number of access points, removing the limitation we talked about.
 						</p>
-						<ul>
-							<li><code>create()</code> creates an <span class="highlight">access point</span></li>
-							<li><code>createFrom()</code> creates an <span class="highlight">access point</span> from a JavaScript object</li>
-						</ul>
 						<p>
-							From the <a target="_blank"
-							            href="https://github.com/CarbonLDP/CarbonLDP-JS-SDK/tree/develop/doc#Carbon-AccessPoints">Carbon.AccessPoint.Factory</a>
-							class. Both of these methods have two required parameters and an optional one:
+							Like normal documents, access points can be customized by specifying a <code>hasMemberRelation</code> and a
+							<code>isMemberOfRelation</code>. To create an access point for a document you can use the <code>createAccessPoint</code> method
+							of the <code>documents</code> service or of a persisted document.
 						</p>
-						<ul>
-							<li><code>membershipResource</code></li>
-							<li><code>hasMemberRelation</code></li>
-							<li><code>memberOfRelation</code>(optional)</li>
-						</ul>
-						<p></p>
-						<div>
-							<div class="ui top attached tabular menu">
-								<a class="item active" data-tab="typescript">TypeScript</a>
-								<a class="item" data-tab="javascript">JavaScript</a>
-							</div>
-
-							<div class="ui bottom attached tab segment active" data-tab="typescript">
+						<sui-tabs>
+							<sui-tab title="TypeScript">
 								<!--@formatter:off-->
 								<pre><code cphighlight class="typescript">
-									// imports
+									// ... additional imports
+									import * as AccessPoint from "carbonldp/AccessPoint";
+									import * as PersistedDocument from "carbonldp/PersistedDocument";
 
-									// declarations
-									let myObject:Object  = { name: "myNieces", description: "All the nieces of myParent."};
-									let myAccessPoint:AccessPoint.Class;
-									let nephews:AccessPoint.Class;
-									let nieces:AccessPoint.Class;
+									let project:PersistedDocument.Class;
 
-									// create() create an in memory access point
-									myAccess = AccessPoint.Factory.create( myParent, "documentRelation", "inverseDocumentRelation" );
-									nephews = AccessPoint.Factory.create( myParent, "nephew", "uncle" );
+									// ... project document retrieval
 
-									// createFrom() create an in memory access point from an object.
-									nieces = AccessPoint.Factory.createFrom( myObject, myParent, "niece", "aunt" );
+									let projectMembersAccessPoint:AccessPoint = {
+										hasMemberRelation: "people",
+										isMemberOfRelation: "projects"
+									};
+
+									project.createAccessPoint( "people", projectMembersAccessPoint ).then(
+										( [ accessPointPointer, response ]:[ Pointer.Class, Response.Class ] ) => {
+											return accessPointPointer.resolve();
+										}
+									).then(
+										( [ accessPoint, response ]:[ PersistedDocument.Class, Response.Class ] ) => {
+											// continue doing stuff (accessPoint.listMembers/addMember/etc...)
+										}
+									).catch( console.error );
 								</code></pre>
 								<!--@formatter:on-->
-							</div>
-
-							<div class="ui bottom attached tab segment" data-tab="javascript">
+							</sui-tab>
+							<sui-tab title="JavaScript">
 								<!--@formatter:off-->
 								<pre><code cphighlight class="javascript">
+									// ... imports
 
-									// declarations
-									let myObject = { name: "myNieces", description: "All the nieces of myParent."};
-									let myAccess;
-									let nephews;
-									let nieces;
+									let project;
 
+									// ... project document retrieval
 
-									// create() create an in memory access point
-									myAccess = AccessPoint.Factory.create( myParent, "documentRelation", "inverseDocumentRelation" );
-									nephews = AccessPoint.Factory.create( myParent, "nephew", "uncle" );
+									let projectMembersAccessPoint = {
+										hasMemberRelation: "people",
+										isMemberOfRelation: "projects"
+									};
 
-									// createFrom() create an in memory access point from an object.
-									nieces = AccessPoint.Factory.createFrom( myObject, myParent, "niece", "aunt" );
+									project.createAccessPoint( "people", projectMembersAccessPoint ).then(
+										( [ accessPointPointer, response ] ) => {
+											return accessPointPointer.resolve();
+										}
+									).then(
+										( [ accessPoint, response ] ) => {
+											// continue doing stuff (accessPoint.listMembers/addMember/etc...)
+										}
+									).catch( console.error );
 								</code></pre>
 								<!--@formatter:on-->
-							</div>
-						</div>
-
+							</sui-tab>
+						</sui-tabs>
 					</section>
-
-					<section>
-						<h2 class="ui header">Persisting an access point</h2>
-						<p>After creating an <span class="highlight">access point</span> in memory it must be persisted.</p>
-						<p>Now that you have an <span class="highlight">access point</span> object you can create a
-							<span class="highlight">persisted access point</span>, by passing it to the <code>createAccessPoint()</code>
-							method from
-							<a target="_blank"
-							   href="https://github.com/CarbonLDP/CarbonLDP-JS-SDK/tree/develop/doc#Carbon-Documents">Carbon.Documents</a>
-							class. This methods will create a <span class="highlight">persisted access point</span> for
-							a <span class="highlight">document specified</span> in the "parent" <a class="outsidelink" target="_blank"
-							                                                                       href="https://www.w3.org/TR/ld-glossary/#uniform-resource-identifier"
-							>URI</a> passed as a parameter. Remember this <a class="outsidelink" target="_blank"
-							                                                 href="https://www.w3.org/TR/ld-glossary/#uniform-resource-identifier"
-							>URI</a> must match the <a class="outsidelink" target="_blank"
-							                           href="https://www.w3.org/TR/ld-glossary/#uniform-resource-identifier"
-							>URI</a> of the <span class="highlight">membership resource</span> defined in the
-							<span class="highlight">access point</span> in memory. You can also call this method from a
-							<span class="highlight">persisted document</span> with the same name method, <code>createAccessPoint()</code> from
-							<a target="_blank"
-							   href="https://github.com/CarbonLDP/CarbonLDP-JS-SDK/tree/develop/doc#Carbon-PersistedDocument">Carbon.PersistedDocument.Factory</a> class.</p>
-
-						<div>
-							<div class="ui top attached tabular menu">
-								<a class="item active" data-tab="typescript">TypeScript</a>
-								<a class="item" data-tab="javascript">JavaScript</a>
-							</div>
-
-							<div class="ui bottom attached tab segment active" data-tab="typescript">
-								<!--@formatter:off-->
-								<pre><code cphighlight class="typescript">
-									// imports
-
-									let myPersistedDocument:PersistedDocument.Class;
-									let myParent:Pointer.Class;
-									let myAccessPoint:AccessPoint.Class;
-
-									// create() access point in memory
-									myAccessPoint = AccessPoint.Factory.create( myParent, "documentRelation", "inverseDocumentRelation" );
-
-									// createAccessPoint() creates a persisted access point from an in memory access point
-									AppContext.documents.createAccessPoint( "parentURI" , myAccessPoint );
-
-									// createAccessPoint() creates a persisted access point for a persisted document
-									myPersistedDocument.createAccessPoint( myAccessPointObject );
-								</code></pre>
-								<!--@formatter:on-->
-							</div>
-
-							<div class="ui bottom attached tab segment" data-tab="javascript">
-								<!--@formatter:off-->
-								<pre><code cphighlight class="javascript">
-
-									let myPersistedDocument;
-									let myParent;
-									let myAccessPoint;
-
-
-									// create() access point in memory
-									myAccessPoint = AccessPoint.Factory.create( myParent, "documentRelation", "inverseDocumentRelation" );
-
-									// createAccessPoint() creates a persisted access point from an in memory access point
-									AppContext.documents.createAccessPoint( "parentURI" , myAccessPoint );
-
-									// createAccessPoint() creates a persisted access point for a persisted document
-									myPersistedDocument.createAccessPoint( myAccessPointObject );
-								</code></pre>
-								<!--@formatter:on-->
-							</div>
-						</div>
-					</section>
-					<section>
-						<h2 class="ui header">Conclusion</h2>
-						<p>Reviewing everything we learn. We are going to maintain information for patients and doctor of Carbon Hospital</p>
-
-						<ul>
-							<li>Creating data</li>
-							<ul>
-								<li><a target="_blank" [routerLink]="['/AppDev/MyApps/Create']">Create an application</a>: <code>carbon-hospital/</code>.</li>
-								<li>Create documents for:</li>
-								<ul>
-									<li>patients: John Doe, John Jr. Doe, Jane Doe, Mary Smith</li>
-									<li>doctors: John Stevenson, Jane Grey, Alex Karev</li>
-								</ul>
-								<li>Create access points for each doctor to maintain a list of patients</li>
-								<li>Create access points for each patient to maintain a list of doctors</li>
-							</ul>
-							<li>Modifying data</li>
-							<ul>
-								<li>Add a named fragment: "medical-history" to all the patients' documents.</li>
-								<li>Add properties to Jane Doe.</li>
-								<li>Add John Jr as a member of Dr Alex Karev's and Dr Violet Grey patients list, viceversa</li>
-								<li>Add John and Mary as members of Dr James Stevenson' patients list.</li>
-							</ul>
-							<li>Retrieving data</li>
-							<ul>
-								<li>List all child documents of the application's root document.</li>
-								<li>Get all child documents of <code>patients/</code>.</li>
-								<li>For each child document in <code>patients/</code>: list all members of access point: <code>doctors/</code></li>
-							</ul>
-						</ul>
-						<p>Remember all changes or additions in Carbon documents must be saved, for the to be persisted.</p>
-						<div>
-							<div class="ui top attached tabular menu">
-								<a class="item active" data-tab="creating-data">Creating Data</a>
-								<a class="item" data-tab="modifying-data">Modifying Data</a>
-								<a class="item" data-tab="retrieving-data">Retrieving Data</a>
-							</div>
-
-							<div class="ui bottom attached tab segment active" data-tab="creating-data">
-								<div>
-									<div class="ui top attached tabular menu">
-										<a class="item active" data-tab="typescript">TypeScript</a>
-										<a class="item" data-tab="javascript">JavaScript</a>
-									</div>
-
-									<div class="ui bottom attached tab segment active" data-tab="typescript">
-										<!--@formatter:off-->
-										<pre><code cphighlight class="typescript">
-											import * as HTTPErrors from "carbonldp/HTTP/Errors";
-											import * as Pointer from "carbonldp/Pointer";
-											import * as Response from "carbonldp/HTTP/Response";
-											import * as App from "carbonldp/App";
-											import Carbon from "carbonldp/Carbon";
-
-											let platformContext:Carbon = new Carbon(); // platform context
-
-											platformCarbon.setSetting( "domain", "carbonserver.com" );// location of carbon server
-											platformCarbon.auth.authenticate( "user@email.com", "password" )
-											.then( ( credentials:Credentials ) => {
-
-												let myAppContext:AppContext;
-
-												let patients = { description: "patients of Carbon Memorial Hospital" };
-												let doctors = { description: "doctors of Carbon Memorial Hospital" };
-
-												let myPatients:Pointer.Class[];
-												let myDoctors:Pointer.Class[];
-
-												// Retrieve your application context
-												platformContext.apps.getContext( "carbon-hospital-database/" ).then(
-													( appContext:App.Context ) => {
-													    myAppContext = appContext;
-
-														// Create patients as a child of the root document
-														return myAppContext.documents.createChild( "/", "patients", patients );
-
-												}).then(([document, response]:[ Pointer.Class, Response.Class ]) => {
-
-													let myPromises:Promise&lt;Response.Class&gt;[] = [];
-
-													// Create four documents as children of patients document.
-												    myPromises.push(
-														myAppContext.documents.createChild( document.id,
-																							{ name: "John",
-																							lastName: "Doe",
-																							dateOfBirth: new Date("06/20/1988"),
-																							bloodType: "O+" } ));
-													myPromises.push(
-														myAppContext.documents.createChild( document.id, { name: "Jane",
-																											lastName: "Doe",
-																											bloodType: "A+"} ));
-													myPromises.push(
-														myAppContext.documents.createChild( document.id, { name: "John Jr",
-																											lastName: "Doe",
-																											bloodType: "A+"} ));
-													myPromises.push(
-														myAppContext.documents.createChild( document.id, { name: "Mary",
-																											lastName: "Smith",
-																											bloodType: "O+" }));
-
-												    return Promise.all( myPromises );
-
-												}).then(( serverResponses :[ Pointer.Class, Response.Class ][]) => {
-
-													// store patient's document pointers to be used later on
-													myPatients = serverResponses.map(
-														([ document, response ]:[Pointer.Class, Response.Class]) => document);
-
-													// create doctors document as a child of the root document
-													return myAppContext.documents.createChild( "/", "doctors", doctors );
-
-												}).then(([document, response]:[ Pointer.Class, Response.Class ]) => {
-
-													let myPromises:Promise&lt;Response.Class&gt;[] = [];
-
-													// Create four documents as children of doctors document.
-												    myPromises.push( myAppContext.documents.createChild( document.id,
-																										{ name: "James",
-																										lastName: "Stevenson",
-																										specialty: "cardiology" }));
-													myPromises.push( myAppContext.documents.createChild( document.id,
-																										{ name:  "Violet",
-																										lastName: "Grey",
-																										specialty: "general surgery" }));
-													myPromises.push( myAppContext.documents.createChild( document.id,
-																										{ name: "Alex",
-																										lastName: "Karev",
-																										specialty: "pediatrics"}));
-
-												    return Promise.all( myPromises );
-
-												}).then(( serverResponses :[ Pointer.Class, Response.Class ][] ) => {
-
-													// store document pointers to be used later on
-													myDoctors = serverResponses.map(
-														([ document, response ]:[Pointer.Class, Response.Class]) => document);
-
-													// for each doctor document create an access point to maintain a patient's list
-													myDoctors.forEach( (doctor:Pointer.Class) => {
-														let accessPoint = AccessPoint.Factory.create(doctor, "patient", "doctor" );
-														myAppContext.documents.createAccessPoint( accessPoint, "patients");
-													});
-
-													// for each patient document create an access point to maintain a doctor's list
-													myPatients.forEach((patient:Pointer.Class)=> {
-														let accessPoint = AccessPoint.Factory.create(patient, "doctor", "patient" );
-														myAppContext.documents.createAccessPoint( accessPoint, "doctors");
-													});
-												});
-											}).catch( ( error:HTTPErrors.Error )=> {
-												console.error( error );
-											} );
-
-										</code></pre>
-										<!--@formatter:on-->
-									</div>
-
-									<div class="ui bottom attached tab segment" data-tab="javascript">
-										<!--@formatter:off-->
-										<pre><code cphighlight class="javascript">
-											let platformContext = new Carbon(); // platform context
-
-											platformCarbon.setSetting( "domain", "carbonserver.com" );// location of carbon server
-
-											platformCarbon.auth.authenticate( "user@email.com", "password" ).then(
-												function( credentials:Credentials ){
-
-												let myAppContext;
-
-												let patients = { description: "patients of Carbon Memorial Hospital" };
-												let doctors = { description: "doctors of Carbon Memorial Hospital" };
-												let myPatients:Pointer.Class[];
-												let myDoctors:Pointer.Class[];
-
-												// Retrieve your application context
-												platformContext.apps.getContext( "carbon-hospital-database/" ).then(
-													function( appContext ){
-													    myAppContext = appContext; // retrieving you app context
-
-														// Create patients as a child of the root document
-														return myAppContext.documents.createChild( "/", "patients", patients );
-
-												}).then(function([document, response]){
-													let myPromises:Promise&lt;Response.Class&gt;[] = [];
-
-													// Create four documents as children of patients document.
-												    myPromises.push(
-														myAppContext.documents.createChild( document.id,
-																							{ name: "John",
-																							lastName: "Doe",
-																							dateOfBirth: new Date("06/20/1988"),
-																							bloodType: "O+" } ));
-													myPromises.push(
-														myAppContext.documents.createChild( document.id, { name: "Jane",
-																											lastName: "Doe",
-																											bloodType: "A+"} ));
-													myPromises.push(
-														myAppContext.documents.createChild( document.id, { name: "John Jr",
-																											lastName: "Doe",
-																											bloodType: "A+"} ));
-													myPromises.push(
-														myAppContext.documents.createChild( document.id, { name: "Mary",
-																											lastName: "Smith",
-																											bloodType: "O+" }));
-
-												    return Promise.all( myPromises );
-
-												}).then( function( serverResponses ){
-
-													// store patient's document pointers to be used later on
-													myPatients = serverResponses.map( function([ document, response ]){
-														return document;
-													});
-
-													// create doctors document as a child of the root document
-													return myAppContext.documents.createChild( "/", "doctors", doctors );
-
-												}).then( function([document, response] ) => {
-
-													let myPromises:Promise&lt;Response.Class&gt;[] = [];
-
-													// Create four documents as children of doctors document.
-												    myPromises.push( myAppContext.documents.createChild( document.id,
-																										{ name: "James",
-																										lastName: "Stevenson",
-																										specialty: "cardiology" }));
-													myPromises.push( myAppContext.documents.createChild( document.id,
-																										{ name: "Violet",
-																										lastName: "Grey",
-																										specialty: "general surgery" }));
-													myPromises.push( myAppContext.documents.createChild( document.id,
-																										{ name: "Alex",
-																										lastName: "Karev",
-																										specialty: "pediatrics"}));
-
-												    return Promise.all( myPromises );
-
-												}).then( function( serverResponses ){
-
-													// store document pointers to be used later on
-													myDoctors = serverResponses.map( function([ document, response ]){
-														return document;
-													});
-
-													// for each doctor document create an access point to maintain a patient's list
-													myDoctors.forEach( function( doctor ){
-														let accessPoint = AccessPoint.Factory.create(doctor, "patient", "doctor");
-
-														myAppContext.documents.createAccessPoint( accessPoint, "patients");
-													});
-
-													// for each patient document create an access point to maintain a doctor's list
-													myPatients.forEach( function( patient ){
-														let accessPoint = AccessPoint.Factory.create(patient, "doctor", "patient");
-
-														myAppContext.documents.createAccessPoint( accessPoint, "doctors");
-													});
-												});
-											}).catch( function( error ){
-												console.error( error );
-											} );
-
-										</code></pre>
-										<!--@formatter:on-->
-									</div>
-								</div>
-							</div>
-							<div class="ui bottom attached tab segment" data-tab="modifying-data">
-
-								<div>
-									<div class="ui top attached tabular menu">
-										<a class="item active" data-tab="typescript">TypeScript</a>
-										<a class="item" data-tab="javascript">JavaScript</a>
-									</div>
-
-									<div class="ui bottom attached tab segment active" data-tab="typescript">
-										<!--@formatter:off-->
-										<pre><code cphighlight class="typescript">
-										import * as HTTPErrors from "carbonldp/HTTP/Errors";
-										import * as PersistedDocument from "carbonldp/PersistedDocument";
-										import * as Response from "carbonldp/HTTP/Response";
-										import * as App from "carbonldp/App";
-										import Carbon from "carbonldp/Carbon";
-
-										let platformCarbon:Carbon = new Carbon();
-
-										platformCarbon.setSetting( "domain", "carbonldp.base22.io" );
-										platformCarbon.auth.authenticate( "admin@carbonldp.com", "hello" )
-											.then( ( credentials:Credentials ) => {
-												console.log( "credentials: ", credentials );
-
-											let myAppContext:App.Context;
-											let myPersistedPatients:PersistedDocument.Class[];
-											let myPersistedDoctors:PersistedDocument.Class[];
-
-											platformCarbon.apps.getContext( "carbon-hospital/" ).then( ( appContext:App.Context ) => {
-												myAppContext = appContext; // retrieving you app context
-
-												// retrieving child documents of patients/
-												return myAppContext.documents.getChildren("patients/")
-
-											}).then(([children, response]:[PersistedDocument.Class[],Response.Class])=> {
-
-												// retrieving child documents of doctors/
-												myPersistedPatients = children;
-												return myAppContext.documents.getChildren("doctors/");
-
-											}).then(([children, response]:[PersistedDocument.Class[],Response.Class])=> {
-												myPersistedDoctors = children;
-
-												let myPromises:Promise<[PersistedDocument.Class, Response.Class]>[] = [];
-
-													// Add named fragment to every patient
-													myPersistedPatients.forEach((patient:PersistedDocument.Class)=> {
-														let fragmentExist = patient.hasFragment("medical-history");
-														if(!fragmentExist) {
-															patient.medicalHistory = patient.createNamedFragment("medical-history",
-																												{status: "healthy"});
-															myPromises.push( patient.save().then( () => patient.refresh() ) );
-														}
-													});
-													return Promise.all( myPromises );
-
-											}).then(()=> {
-												let myPromises:Promise<[PersistedDocument.Class, Response.Class]>[] = [];
-
-												// Add properties for patients John Jr Doe, Jane Doe
-												myPersistedPatients.forEach((patient:PersistedDocument.Class)=> {
-													if (patient.name === "Jane") {
-														patient.dateOfBirth = new Date("01/11/1990");
-														myPromises.push(patient.save().then(() => patient.refresh()));
-													}
-												});
-												return Promise.all(myPromises);
-											}).then(() => {
-
-												myPersistedPatients.forEach((patient:PersistedDocument.Class)=> {
-													if (patient.name === "John Jr") {
-														myPersistedDoctors.forEach((doctor:PersistedDocument.Class)=> {
-															if (doctor.name === "Alex") {
-																myAppContext.documents.addMember(doctor.id + "patients/", patient);
-															} else if (doctor.name ===  "Violet") {
-																myAppContext.documents.addMember(patient.id + "doctors/", doctor);
-															}
-														});
-													} else if (patient.name === "Mary") {
-														myPersistedDoctors.forEach((doctor:PersistedDocument.Class)=> {
-															if (doctor.name ===  "James") {
-																myAppContext.documents.addMember(doctor.id + "patients/", patient);
-															} else if (doctor.name ===  "Violet") {
-																myAppContext.documents.addMember(patient.id + "doctors/", doctor);
-															}
-														});
-													} else if (patient.name === "John") {
-														myPersistedDoctors.forEach((doctor:PersistedDocument.Class)=> {
-															if (doctor.name ===  "James") {
-																myAppContext.documents.addMember(doctor.id + "patients/", patient);
-															}
-														});
-													}
-												});
-											});
-										} ).catch( ( error:HTTPErrors.Error )=> {
-											console.error( error );
-										} );
-										</code></pre>
-										<!--@formatter:on-->
-									</div>
-
-									<div class="ui bottom attached tab segment" data-tab="javascript">
-										<!--@formatter:off-->
-										<pre><code cphighlight class="javascript">
-										let platformCarbon = new Carbon();
-
-										platformCarbon.setSetting( "domain", "carbonldp.base22.io" );
-										platformCarbon.auth.authenticate( "admin@carbonldp.com", "hello" )
-											.then( function( credentials:Credentials ){
-												console.log( "credentials: ", credentials );
-
-											let myAppContext;
-											let myPersistedPatients;
-											let myPersistedDoctors;
-
-											platformCarbon.apps.getContext( "carbon-hospital/" ).then( function( appContext ){
-												myAppContext = appContext; // retrieving you app context
-
-												// retrieving child documents of patients/
-												return myAppContext.documents.getChildren("patients/")
-
-											}).then(function([children, response]){
-
-												// retrieving child documents of doctors/
-												myPersistedPatients = children;
-												return myAppContext.documents.getChildren("doctors/");
-
-											}).then(function([children, response]){
-												myPersistedDoctors = children;
-
-												let myPromises = [];
-
-													// Add named fragment to every patient
-													myPersistedPatients.forEach( function(patient){
-														let fragmentExist = patient.hasFragment("medical-history");
-														if(!fragmentExist) {
-															patient.medicalHistory = patient.createNamedFragment("medical-history",
-																												{status: "healthy"});
-															myPromises.push( patient.save().then( function(){   patient.refresh()   } ) );
-														}
-													});
-													return Promise.all( myPromises );
-
-											}).then( function(){
-												let myPromises = [];
-
-												// Add properties for patients John Jr Doe, Jane Doe
-												myPersistedPatients.forEach( function(patient){
-													if (patient.name === "Jane") {
-														patient.dateOfBirth = new Date("01/11/1990");
-														myPromises.push(patient.save().then(function(){ return patient.refresh();}));
-													}
-												});
-												return Promise.all(myPromises);
-											}).then(function() {
-
-												myPersistedPatients.forEach( function(patient){
-													if (patient.name === "John Jr") {
-														myPersistedDoctors.forEach( function(doctor){
-															if (doctor.name === "Alex") {
-																myAppContext.documents.addMember(doctor.id + "patients/", patient);
-															} else if (doctor.name ===  "Violet") {
-																myAppContext.documents.addMember(patient.id + "doctors/", doctor);
-															}
-														});
-													} else if (patient.name === "Mary") {
-														myPersistedDoctors.forEach( function(doctor){
-															if (doctor.name ===  "James") {
-																myAppContext.documents.addMember(doctor.id + "patients/", patient);
-															}
-														});
-													} else if (patient.name === "John") {
-														myPersistedDoctors.forEach( function(doctor){
-															if (doctor.name ===  "James") {
-																myAppContext.documents.addMember(doctor.id + "patients/", patient);
-															}
-														});
-													}
-												});
-											});
-										} ).catch( function( error ){
-											console.error( error );
-										} );
-
-
-										</code></pre>
-							<!--@formatter:on-->
-									</div>
-								</div>
-							</div>
-							<div class="ui bottom attached tab segment" data-tab="retrieving-data">
-
-								<div>
-									<div class="ui top attached tabular menu">
-										<a class="item active" data-tab="typescript">TypeScript</a>
-										<a class="item" data-tab="javascript">JavaScript</a>
-									</div>
-
-									<div class="ui bottom attached tab segment active" data-tab="typescript">
-										<!--@formatter:off-->
-										<pre><code cphighlight class="typescript">
-										import * as HTTPErrors from "carbonldp/HTTP/Errors";
-										import * as PersistedDocument from "carbonldp/PersistedDocument";
-										import * as Pointer from "carbonldp/Pointer";
-										import * as Response from "carbonldp/HTTP/Response";
-										import * as App from "carbonldp/App";
-										import Carbon from "carbonldp/Carbon";
-
-										platformContext = new Carbon();
-										platformContext.setSetting( "domain", "carbonldp.base22.io" );
-										platformContext.auth.authenticate( "admin@carbonldp.com", "hello" )
-											.then( ( credentials ){
-
-												let myAppContext;
-												let patients;
-
-												// Retrieve your application context
-												platformContext.apps.getContext( "carbon-hospital/" ).then( ( appContext ) => {
-
-													myAppContext = appContext;
-
-													// list all the children of my root document
-													return myAppContext.documents.listChildren( "/" );
-
-												}).then( ( [ children, response ] ) => {
-													console.log( "list of children:", children );
-
-													// getting the document patients/
-													return myAppContext.documents.get("patients/");
-
-												}).then( ( [ document, response ] ) => {
-													patients = document;
-
-													return patients.getChildren();
-
-												}).then( ( [ children, response ] ) => {
-													console.log( "patients/ children: ", children );
-
-													children.forEach( ( child ) => {
-														myAppContext.documents.listMembers( child.id + "doctors/" ).then(
-															( [ doctors, response ] ) => {
-																console.log( "Doctors of ",child.name," ",child.lastName,": ",doctors)
-															});
-													});
-												});
-
-											} ).catch( ( error:HTTPErrors.Error ) => {
-												console.error( error );
-											} );
-											</code></pre>
-										<!--@formatter:on-->
-									</div>
-
-									<div class="ui bottom attached tab segment" data-tab="javascript">
-										<!--@formatter:off-->
-										<pre><code cphighlight class="javascript">
-
-										platformContext = new Carbon();
-										platformContext.setSetting( "domain", "carbonldp.base22.io" );
-										platformContext.auth.authenticate( "admin@carbonldp.com", "hello" ).then(
-											function( credentials ){
-
-											let myAppContext;
-											let patients;
-
-											// Retrieve your application context
-											platformContext.apps.getContext( "carbon-hospital/" ).then( function( appContext ){
-
-												myAppContext = appContext;
-
-												// list all the children of my root document
-												return myAppContext.documents.listChildren( "/" );
-
-											}).then( function( [ children, response ] ){
-
-												console.log( "list of children:", children );
-
-												// getting the document patients/
-												return myAppContext.documents.get("patients/");
-
-											}).then( function( [ document, response ] ){
-												patients = document;
-
-												return patients.getChildren();
-
-											}).then( function( [ children, response ] ){
-
-												console.log( "patients/ children: ", children );
-
-												children.forEach( function( child ){
-													myAppContext.documents.listMembers( child.id + "doctors/" ).then(
-														function( [ doctors, response ] ){
-															console.log( "Doctors of ",child.name," ",child.lastName,": ",doctors)
-													});
-												});
-											});
-
-										} ).catch( ( error:HTTPErrors.Error )=> {
-
-											console.error( error );
-
-										} );
-										</code></pre>
-										<!--@formatter:on-->
-									</div>
-								</div>
-							</div>
-						</div>
-					</section>
-
 				</article>
 			</main>
 		</div>
