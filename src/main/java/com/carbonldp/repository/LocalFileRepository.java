@@ -22,7 +22,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
 
 import java.io.*;
+import java.nio.Buffer;
 import java.nio.file.Files;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
@@ -289,6 +291,62 @@ public class LocalFileRepository implements FileRepository {
 		directory = directory.concat( app.getRepositoryID() );
 
 		return directory;
+	}
+
+	@Override
+	public void removeLineFromFileStartingWith( String file, List<String> linesToRemove ) {
+
+		File inFile = new File( file );
+		File tempFile = new File( inFile.getAbsolutePath() + ".tmp" );
+		BufferedReader bufferedReader = getBufferedReader( file );
+		PrintWriter printWriter = getPrintWriter( tempFile );
+
+		String line = null;
+		while ( ( line = readLine(bufferedReader) ) != null ) {
+			if ( ! hasToBeRemoved( line, linesToRemove ) ) {
+				printWriter.println( line );
+				printWriter.flush();
+			}
+		}
+		printWriter.close();
+		try {
+			bufferedReader.close();
+		} catch ( IOException e ) {
+			throw new RuntimeException( "buffered reader could not be closed", e );
+		}
+		inFile.delete();
+		tempFile.renameTo( inFile );
+
+	}
+
+	private String readLine(BufferedReader bufferedReader){
+		try {
+			return bufferedReader.readLine();
+		} catch ( IOException e ) {
+			throw new RuntimeException( "line can not be readed", e );
+		}
+	}
+
+	private PrintWriter getPrintWriter( File tempFile ) {
+		try {
+			return new PrintWriter( new FileWriter( tempFile ) );
+		} catch ( IOException e ) {
+			throw new RuntimeException( "printWriter could not be created", e );
+		}
+	}
+
+	private BufferedReader getBufferedReader( String file ) {
+		try {
+			return new BufferedReader( new FileReader( file ) );
+		} catch ( FileNotFoundException e ) {
+			throw new RuntimeException( "file could not be read", e );
+		}
+	}
+
+	private boolean hasToBeRemoved( String line, List<String> linesToRemove ) {
+		for ( String lineToRemove : linesToRemove )
+			if ( line.trim().startsWith( lineToRemove ) ) return true;
+		return false;
 	}
 
 	@Autowired
