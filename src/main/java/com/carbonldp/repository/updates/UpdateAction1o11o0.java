@@ -1,11 +1,12 @@
 package com.carbonldp.repository.updates;
+
 import com.carbonldp.apps.App;
-	import com.carbonldp.namespaces.LDP;
+import com.carbonldp.namespaces.LDP;
 
-	import java.util.Set;
+import java.util.Set;
 
-	import static com.carbonldp.Consts.NEW_LINE;
-	import static com.carbonldp.Consts.TAB;
+import static com.carbonldp.Consts.NEW_LINE;
+import static com.carbonldp.Consts.TAB;
 
 /**
  * @author JorgeEspinosa
@@ -15,7 +16,7 @@ public class UpdateAction1o11o0 extends AbstractUpdateAction {
 	final String updateIsMemberOfRelationQuery = "" +
 		"DELETE { " + NEW_LINE +
 		TAB + "GRAPH ?g {" + NEW_LINE +
-		TAB + TAB + "?s <http://www.w3.org/ns/ldp#memberOfRelation> ?o " + NEW_LINE +
+		TAB + TAB + "?s <http://www.w3.org/ns/ldp#isMemberOfRelation> ?o " + NEW_LINE +
 		TAB + "}" + NEW_LINE +
 		"}" + NEW_LINE +
 		"INSERT { " + NEW_LINE +
@@ -25,7 +26,7 @@ public class UpdateAction1o11o0 extends AbstractUpdateAction {
 		"}" + NEW_LINE +
 		"WHERE { " + NEW_LINE +
 		TAB + "GRAPH ?g {" + NEW_LINE +
-		TAB + TAB + "?s <http://www.w3.org/ns/ldp#memberOfRelation> ?o" + NEW_LINE +
+		TAB + TAB + "?s <http://www.w3.org/ns/ldp#isMemberOfRelation> ?o" + NEW_LINE +
 		TAB + "}" + NEW_LINE +
 		"}";
 

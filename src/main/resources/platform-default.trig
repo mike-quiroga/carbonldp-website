@@ -164,7 +164,7 @@
 		a 	ldp:DirectContainer;
 		ldp:membershipResource	<platform/roles/system/>;
 		ldp:hasMemberRelation	cs:agent;
-		ldp:memberOfRelation	cs:platformRole.
+		ldp:isMemberOfRelation	cs:platformRole.
 }
 <platform/roles/system/privileges/> {
 	<platform/roles/system/privileges/>
