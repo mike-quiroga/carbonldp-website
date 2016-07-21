@@ -189,7 +189,7 @@
 		a 	ldp:DirectContainer;
 		ldp:membershipResource	<platform/roles/admin/>;
 		ldp:hasMemberRelation	cs:agent;
-		ldp:memberOfRelation	cs:platformRole.
+		ldp:isMemberOfRelation	cs:platformRole.
 }
 <platform/roles/admin/privileges/> {
 	<platform/roles/admin/privileges/>
@@ -213,7 +213,7 @@
 		a 	ldp:DirectContainer;
 		ldp:membershipResource	<platform/roles/app-developer/>;
 		ldp:hasMemberRelation	cs:agent;
-		ldp:memberOfRelation	cs:platformRole.
+		ldp:isMemberOfRelation	cs:platformRole.
 }
 <platform/roles/app-developer/privileges/> {
 	<platform/roles/app-developer/privileges/>
@@ -237,7 +237,7 @@
 		a 	ldp:DirectContainer;
 		ldp:membershipResource	<platform/roles/registered-agent/>;
 		ldp:hasMemberRelation	cs:agent;
-		ldp:memberOfRelation	cs:platformRole.
+		ldp:isMemberOfRelation	cs:platformRole.
 }
 <platform/roles/registered-agent/privileges/> {
 	<platform/roles/registered-agent/privileges/>
