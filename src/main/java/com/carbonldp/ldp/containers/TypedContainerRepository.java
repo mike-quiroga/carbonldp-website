@@ -1,9 +1,9 @@
 package com.carbonldp.ldp.containers;
 
 import com.carbonldp.ldp.containers.ContainerDescription.Type;
-import org.openrdf.model.IRI;
-import org.openrdf.model.Statement;
-import org.openrdf.model.Value;
+import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.Statement;
+import org.eclipse.rdf4j.model.Value;
 
 import java.util.Map;
 import java.util.Set;

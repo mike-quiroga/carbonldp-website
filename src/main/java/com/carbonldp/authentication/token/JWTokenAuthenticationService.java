@@ -5,7 +5,7 @@ import com.carbonldp.Vars;
 import com.carbonldp.authentication.*;
 import com.carbonldp.exceptions.StupidityException;
 import io.jsonwebtoken.SignatureAlgorithm;
-import org.openrdf.model.IRI;
+import org.eclipse.rdf4j.model.IRI;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 

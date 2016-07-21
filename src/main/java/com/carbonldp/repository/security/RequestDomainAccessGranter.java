@@ -3,8 +3,8 @@ package com.carbonldp.repository.security;
 import com.carbonldp.utils.IRIUtil;
 import com.carbonldp.utils.RequestUtil;
 import com.carbonldp.utils.ValueUtil;
-import org.openrdf.model.Resource;
-import org.openrdf.model.Statement;
+import org.eclipse.rdf4j.model.Resource;
+import org.eclipse.rdf4j.model.Statement;
 
 /**
  * @author MiguelAraCo

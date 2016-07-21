@@ -11,19 +11,12 @@ import com.carbonldp.ldp.sources.RDFSource;
 import com.carbonldp.ldp.sources.RDFSourceDescription;
 import com.carbonldp.ldp.sources.RDFSourceService;
 import com.carbonldp.models.Infraction;
-import com.carbonldp.rdf.RDFBlankNode;
-import com.carbonldp.rdf.RDFDocumentFactory;
-import com.carbonldp.rdf.RDFResource;
-import com.carbonldp.rdf.RDFResourceRepository;
-import com.carbonldp.rdf.RDFResourceDescription;
+import com.carbonldp.rdf.*;
 import com.carbonldp.sparql.SecuredRepositoryTemplate;
 import com.carbonldp.spring.ServicesInvoker;
+import org.eclipse.rdf4j.model.*;
+import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import org.joda.time.DateTime;
-import org.openrdf.model.BNode;
-import org.openrdf.model.IRI;
-import org.openrdf.model.Statement;
-import org.openrdf.model.ValueFactory;
-import org.openrdf.model.impl.SimpleValueFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.File;
@@ -216,7 +209,7 @@ public class SesameContainerService extends AbstractSesameLDPService implements 
 		ValueFactory valueFactory = SimpleValueFactory.getInstance();
 
 		BNode bNode = valueFactory.createBNode();
-		RDFBlankNode responseMetadata = new RDFBlankNode( container.getDocument(), bNode, null );
+		RDFBlankNode responseMetadata = new RDFBlankNode( container.getDocument(), bNode, (Resource) null );
 		responseMetadata.add( RDFSourceDescription.Property.TYPE.getIRI(), ResponseMetadataDescription.Resource.CLASS.getIRI() );
 		responseMetadata.add( RDFSourceDescription.Property.TYPE.getIRI(), RDFResourceDescription.Resource.VOLATILE.getIRI() );
 		return responseMetadata;

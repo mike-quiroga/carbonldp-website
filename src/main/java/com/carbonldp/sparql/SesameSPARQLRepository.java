@@ -1,7 +1,7 @@
 package com.carbonldp.sparql;
 
 import com.carbonldp.repository.AbstractSesameRepository;
-import org.openrdf.spring.SesameConnectionFactory;
+import org.eclipse.rdf4j.spring.SesameConnectionFactory;
 
 public class SesameSPARQLRepository extends AbstractSesameRepository {
 

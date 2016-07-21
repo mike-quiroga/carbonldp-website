@@ -3,7 +3,7 @@ package com.carbonldp.ldp.web;
 import com.carbonldp.Consts;
 import com.carbonldp.HTTPHeaders;
 import com.carbonldp.http.Link;
-import org.openrdf.model.IRI;
+import org.eclipse.rdf4j.model.IRI;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 

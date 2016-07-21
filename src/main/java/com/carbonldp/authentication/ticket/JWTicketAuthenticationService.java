@@ -17,7 +17,7 @@ import com.carbonldp.models.Infraction;
 import com.carbonldp.web.exceptions.ForbiddenException;
 import com.carbonldp.utils.IRIUtil;
 import io.jsonwebtoken.SignatureAlgorithm;
-import org.openrdf.model.IRI;
+import org.eclipse.rdf4j.model.IRI;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.PermissionEvaluator;
 import org.springframework.security.core.Authentication;

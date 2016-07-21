@@ -3,7 +3,7 @@ package com.carbonldp.authentication;
 import com.carbonldp.AbstractComponent;
 import com.carbonldp.apps.context.RunInPlatformContext;
 import com.carbonldp.authorization.*;
-import org.openrdf.model.IRI;
+import org.eclipse.rdf4j.model.IRI;
 import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
 

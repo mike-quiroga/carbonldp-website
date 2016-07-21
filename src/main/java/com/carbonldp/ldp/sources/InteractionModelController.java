@@ -3,7 +3,7 @@ package com.carbonldp.ldp.sources;
 import com.carbonldp.descriptions.APIPreferences;
 import com.carbonldp.rdf.RDFDocument;
 import com.carbonldp.web.config.InteractionModel;
-import org.openrdf.model.impl.AbstractModel;
+import org.eclipse.rdf4j.model.impl.AbstractModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;

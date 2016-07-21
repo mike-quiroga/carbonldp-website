@@ -8,7 +8,7 @@ import com.carbonldp.apps.context.AppContextPersistenceFilter;
 import com.carbonldp.test.AbstractIT;
 import com.carbonldp.test.ActionCallback;
 import org.mockito.Mockito;
-import org.openrdf.model.impl.SimpleValueFactory;
+import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.testng.annotations.Test;
 

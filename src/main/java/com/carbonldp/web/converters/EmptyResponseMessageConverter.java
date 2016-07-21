@@ -3,7 +3,7 @@ package com.carbonldp.web.converters;
 import com.carbonldp.HTTPHeaders;
 import com.carbonldp.models.EmptyResponse;
 import com.carbonldp.utils.MediaTypeUtil;
-import org.openrdf.rio.RDFFormat;
+import org.eclipse.rdf4j.rio.RDFFormat;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpInputMessage;
 import org.springframework.http.HttpOutputMessage;

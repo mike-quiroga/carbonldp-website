@@ -8,8 +8,8 @@ import com.carbonldp.ldp.containers.Container;
 import com.carbonldp.ldp.containers.ContainerRepository;
 import com.carbonldp.ldp.sources.RDFSourceRepository;
 import com.carbonldp.rdf.RDFResource;
-import org.openrdf.model.IRI;
-import org.openrdf.spring.SesameConnectionFactory;
+import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.spring.SesameConnectionFactory;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 

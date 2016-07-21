@@ -9,7 +9,7 @@ import com.carbonldp.apps.context.AppContextHolder;
 import com.carbonldp.repository.FileRepository;
 import com.carbonldp.repository.LocalFileRepository;
 import com.carbonldp.test.AbstractIT;
-import org.openrdf.model.impl.SimpleValueFactory;
+import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.testng.Assert;
 import org.testng.SkipException;

@@ -2,7 +2,7 @@ package com.carbonldp.ldp.nonrdf.backup;
 
 import com.carbonldp.exceptions.ResourceDoesntExistException;
 import com.carbonldp.ldp.AbstractSesameLDPService;
-import org.openrdf.model.IRI;
+import org.eclipse.rdf4j.model.IRI;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.File;

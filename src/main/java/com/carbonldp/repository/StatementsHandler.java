@@ -1,6 +1,6 @@
 package com.carbonldp.repository;
 
-import org.openrdf.model.Statement;
+import org.eclipse.rdf4j.model.Statement;
 
 public interface StatementsHandler {
 	public void start();

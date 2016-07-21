@@ -3,12 +3,12 @@ package com.carbonldp.repository.updates;
 import com.carbonldp.apps.App;
 import com.carbonldp.rdf.RDFBlankNodeDescription;
 import com.carbonldp.utils.ValueUtil;
-import org.openrdf.model.IRI;
-import org.openrdf.model.Literal;
-import org.openrdf.model.Value;
-import org.openrdf.model.impl.SimpleValueFactory;
-import org.openrdf.query.BindingSet;
-import org.openrdf.repository.RepositoryException;
+import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.Literal;
+import org.eclipse.rdf4j.model.Value;
+import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
+import org.eclipse.rdf4j.query.BindingSet;
+import org.eclipse.rdf4j.repository.RepositoryException;
 
 import java.util.Set;
 import java.util.UUID;

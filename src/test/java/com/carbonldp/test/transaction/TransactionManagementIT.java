@@ -4,10 +4,10 @@ import com.carbonldp.Vars;
 import com.carbonldp.agents.AgentDescription;
 import com.carbonldp.test.AbstractIT;
 import com.carbonldp.test.TransactionActionTemplate;
-import org.openrdf.model.IRI;
-import org.openrdf.model.Resource;
-import org.openrdf.model.Value;
-import org.openrdf.model.impl.SimpleValueFactory;
+import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.Resource;
+import org.eclipse.rdf4j.model.Value;
+import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.testng.annotations.Test;
 

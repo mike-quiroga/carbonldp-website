@@ -6,9 +6,9 @@ import com.carbonldp.apps.context.AppContextHolder;
 import com.carbonldp.namespaces.CS;
 import com.carbonldp.utils.LiteralUtil;
 import com.carbonldp.utils.ValueUtil;
-import org.openrdf.model.Literal;
-import org.openrdf.model.Value;
-import org.openrdf.model.impl.SimpleValueFactory;
+import org.eclipse.rdf4j.model.Literal;
+import org.eclipse.rdf4j.model.Value;
+import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 
 import java.util.Set;
 import java.util.regex.Pattern;

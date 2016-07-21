@@ -4,9 +4,9 @@ import com.carbonldp.ldp.containers.ContainerDescription.Type;
 import com.carbonldp.rdf.RDFDocumentRepository;
 import com.carbonldp.rdf.RDFResourceRepository;
 import com.carbonldp.utils.RDFNodeUtil;
-import org.openrdf.model.IRI;
-import org.openrdf.model.Value;
-import org.openrdf.spring.SesameConnectionFactory;
+import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.Value;
+import org.eclipse.rdf4j.spring.SesameConnectionFactory;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Map;

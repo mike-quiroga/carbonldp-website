@@ -81,7 +81,7 @@ public class LOGConfigurationFactory extends ConfigurationFactory {
 		// TODO: Find out what class is logging using "/" as a name
 		configurationBuilder.add( configurationBuilder.newLogger( "/", Level.WARN ) );
 		configurationBuilder.add( configurationBuilder.newLogger( "org.springframework", Level.WARN ) );
-		configurationBuilder.add( configurationBuilder.newLogger( "org.openrdf", Level.WARN ) );
+		configurationBuilder.add( configurationBuilder.newLogger( "org.eclipse.rdf4j", Level.WARN ) );
 		configurationBuilder.add( configurationBuilder.newLogger( "com.carbonldp", Level.TRACE ) );
 	}
 

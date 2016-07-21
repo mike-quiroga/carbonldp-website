@@ -9,7 +9,7 @@ import com.carbonldp.authorization.PlatformRoleDescription;
 import com.carbonldp.rdf.RDFNodeEnum;
 import com.carbonldp.rdf.RDFResource;
 import com.carbonldp.utils.RDFNodeUtil;
-import org.openrdf.model.IRI;
+import org.eclipse.rdf4j.model.IRI;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 

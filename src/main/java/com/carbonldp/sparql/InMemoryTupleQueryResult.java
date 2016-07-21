@@ -1,9 +1,9 @@
 package com.carbonldp.sparql;
 
 import com.google.common.collect.ImmutableList;
-import org.openrdf.query.BindingSet;
-import org.openrdf.query.QueryEvaluationException;
-import org.openrdf.query.TupleQueryResult;
+import org.eclipse.rdf4j.query.BindingSet;
+import org.eclipse.rdf4j.query.QueryEvaluationException;
+import org.eclipse.rdf4j.query.TupleQueryResult;
 
 import java.util.ArrayList;
 import java.util.Iterator;

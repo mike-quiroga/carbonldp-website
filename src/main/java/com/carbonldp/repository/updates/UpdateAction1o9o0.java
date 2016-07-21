@@ -3,6 +3,8 @@ package com.carbonldp.repository.updates;
 import com.carbonldp.Vars;
 import com.carbonldp.apps.App;
 import com.carbonldp.utils.IRIUtil;
+import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.util.URIUtil;
 
 import java.util.Set;
 
