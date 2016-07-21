@@ -35,7 +35,7 @@
 						<div class="content">
 							<p class="larger">
 								This guide introduces you to the use of the Carbon JavaScript SDK. In it you will find an
-								installing guide and the basic methods needed to start using our platform
+								installation guide and the basic methods needed to start using our platform.
 							</p>
 						</div>
 					</div>
@@ -204,18 +204,22 @@
 								<!--@formatter:on-->
 							</div>
 						</div>
+						<div class="ui icon yellow message">
+							<i class="warning sign icon"></i>
 
-						<p>
-							Before you can save data in Carbon, you need to create an application. Click <a target="_blank" [routerLink]="['/AppDev/MyApps/Create']">here</a> if you haven't done it.
-						</p>
+							<div class="content">
+								<p>
+									<!-- TODO: Add link to register page -->
+									Before you can save data in Carbon, you need to create an account. Click here if you haven't done it.
+								</p>
+							</div>
+						</div>
 					</section>
 
 					<section>
 						<h2 class="ui header">Creating a platform context</h2>
 						<p>
-							Now that you have your brand new app (if you don't have your app yet, please
-							<a target="_blank" [routerLink]="['/AppDev/MyApps/Create']">create it</a>!). Let's start with some basic things you can do, like creating,
-							saving, linking <span class="highlight">documents</span>, etc.
+							Let's start with some basic things you can do, like creating, saving and linking documents; among other things.
 						</p>
 						<p>
 							First of all, you need to create a <span class="highlight">Carbon platform context</span>. This
@@ -270,7 +274,8 @@
 						<h2 class="ui header">Authenticating</h2>
 						<p>
 							After creating the platform context you need to tell the platform who you are by authenticating
-							yourself.
+							<!-- TODO: Add link to register page -->
+							yourself (if you haven't created an account, click here to do it).
 						</p>
 						<p>
 							All authentication/authorization related actions are done through the <code>auth</code> service
@@ -319,11 +324,22 @@
 					<section>
 						<h2 class="ui header">Retrieving an App Context</h2>
 						<p>
-							To access your application data, you need an <span class="highlight">application</span>
-							<a [routerLink]="[ '../JavaScriptSDKContexts' ]">context</a> that references the
-							<span class="highlight">application</span> on which you will be working on.
+							Carbon stores your data in "applications". These applications are separate containers of information.
+							Data can be linked between applications, but its management is treated separately.
 						</p>
+						<div class="ui icon yellow message">
+							<i class="warning sign icon"></i>
+
+							<div class="content">
+								<p>
+									Before continuing, you need to create your first application, if you haven't done it, click
+									<a [routerLink]="[ '/AppDev/MyApps/Create' ]">here</a> to do so (remember to note your application slug, because we'll use it later).
+								</p>
+							</div>
+						</div>
 						<p>
+							To access your application data, you need an <span class="highlight">application</span>
+							<a [routerLink]="[ '../JavaScriptSDKContexts' ]">context</a> that references it, on which you will be working on.
 							To retrieve it, you can use the <code>apps</code> service of the platform context:
 						</p>
 						<sui-tabs>
@@ -376,13 +392,13 @@
 						<h2 class="ui header">Creating a document</h2>
 						<p>
 							Now that you have your app context, you can start working with your app's data. Carbon stores data
-							in documents which are basically a normal JavaScript object identified by a URI. These documents are
-							composed by properties, <span class="highlight">fragments</span> and <span class="highlight">named fragments</span>.
+							in documents, which are basically a normal JavaScript object identified by a URI (Unique Resource Identifier).
+							These documents are composed by properties, <span class="highlight">fragments</span> and <span class="highlight">named fragments</span>.
 							For more information see: <a [routerLink]="[ '../JavaScriptSDKObjectModel' ]">JavaScript SDK Object model</a>.
 						</p>
 						<p>
 							Any carbon <span class="highlight">context</span> has a <code>documents</code> service that
-							helps you manage your documents. To create a document we need to call the method <code>createChild</code> of this service:
+							helps you manage your documents. To create one you need to call the method <code>createChild</code> of this service:
 						</p>
 						<sui-tabs>
 							<sui-tab title="TypeScript">
@@ -391,14 +407,14 @@
 									// ... additional imports
 									import * as App from "carbonldp/App";
 									import * Response from "carbonldp/HTTP/Response";
-									import * Pointer from "carbonldp/Pointer";
+									import * PersistedDocument from "carbonldp/PersistedDocument";
 
 									let myAppContext:App.Context;
 
 									// ... app context retrieval
 
 									// JavaScript object to be persisted as a Carbon document
-									let project:any = {
+									let project:Project = { // Project being a business specific interface defined somewhere
 										name: "Project X",
 										tasks: [
 											{
@@ -412,9 +428,9 @@
 										]
 									};
 
-									myAppContext.documents.createChild( "/", project ).then(
-										( [ projectPointer, response ]:[ Pointer.Class, Response.Class ] ) => {
-											console.log( project === projectPointer ); // true
+									myAppContext.documents.createChild&lt;Project&gt;( "/", project ).then(
+										( [ persistedProject, response ]:[ Project & PersistedDocument.Class, Response.Class ] ) => {
+											console.log( project === persistedProject ); // true
 											console.log( project.id ); // document's URI
 										}
 									).catch( console.error );
@@ -446,8 +462,8 @@
 									};
 
 									myAppContext.documents.createChild( "/", project ).then(
-										( [ projectPointer, response ] ) => {
-											console.log( project === projectPointer ); // true
+										( [ persistedProject, response ] ) => {
+											console.log( project === persistedProject ); // true
 											console.log( project.id ); // document's URI
 										}
 									).catch( console.error );
@@ -457,13 +473,13 @@
 						</sui-tabs>
 						<p>
 							After executing that, the information inside of <code>project</code> will have been persisted in Carbon. Nested objects
-							will also be saved inside of the document, so pretty much any json object can be saved as a Carbon document (as long as
-							the json's information is contained inside of an object, not an array).
+							will also be saved inside of the document, so pretty much any JSON object can be saved as a Carbon document (as long as
+							the JSON's information is contained inside of an object, not an array).
 						</p>
 						<p>
-							Notice that the promise returned by <code>createChild</code> is returning a <code>Pointer.Class</code> object. This type
-							of objects "point" to a persisted document in Carbon. They can be resolved to retrieve their information as we will see
-							later on.
+							Notice that the promise returned by <code>createChild</code> is returning a <code>PersistedDocument.Class</code> object.
+							This type of object represent a saved document in Carbon. It may or may not have the latest server information. You can make sure
+							that you have its latest changes by using its <code>refresh</code> method.
 						</p>
 						<p>
 							If you've just executed this, you'll notice that the document's id (or URI) ends with something like <code>1264563453436/</code>.
@@ -477,9 +493,9 @@
 								<pre><code cphighlight class="typescript">
 									// ...
 
-									myAppContext.documents.createChild( "/", "My sUp4 Project!", project ).then(
-										( [ projectPointer, response ]:[ Pointer.Class, Response.Class ] ) => {
-											console.log( project.id ); // .../my-supa-project/
+									myAppContext.documents.createChild&lt;Project&gt;( "/", "My sUp4 Project!", project ).then(
+										( [ persistedProject, response ]:[ Project & PersistedDocument.Class, Response.Class ] ) => {
+											console.log( persistedProject.id ); // .../my-supa-project/
 										}
 									).catch( console.error );
 								</code></pre>
@@ -491,8 +507,8 @@
 									// ...
 
 									myAppContext.documents.createChild( "/", "My sUp4 Project!", project ).then(
-										( [ projectPointer, response ] ) => {
-											console.log( project.id ); // .../my-supa-project/
+										( [ persistedProject, response ] ) => {
+											console.log( persistedProject.id ); // .../my-supa-project/
 										}
 									).catch( console.error );
 								</code></pre>
@@ -503,7 +519,7 @@
 							Another thing to notice is that the method is called create<strong>Child</strong>. All documents stored in Carbon are children of
 							another document. In this case we are specifying our newly created document's parent through the first parameter <code>"/"</code>.
 							That string represents a relative URI, one that can be resolved against something else. In this case it is being resolved to the
-							base URI the context has. To see to what that would resolve to you can use a <code>context</code> <code>resolve</code> method:
+							base URI the context has. To see to what that would resolve you can use a <code>context</code> <code>resolve</code> method:
 						</p>
 						<sui-tabs>
 							<sui-tab title="TypeScript">
@@ -539,7 +555,7 @@
 						<h2 class="ui header">Retrieving a document</h2>
 						<p>
 							Documents can be retrieved by their URIs or by following other documents' links. In fact, you can paste the <code>id</code>
-							you just retrieved when persisting your first document in your browser and you should receive an <code>XML</code>
+							you just retrieved when persisting your first document in your browser and you should see an <code>XML</code>
 							representation of it.
 						</p>
 						<p>
@@ -562,8 +578,8 @@
 									// ID of the Carbon document you want to retrieve
 									let projectID:string = "https://example.com/your-document-id/";
 
-									myAppContext.documents.get( projectID ).then(
-										( [ project, response ]:[ PersistedDocument.Class, Response.Class ] ) => {
+									myAppContext.documents.get&lt;Project&gt;( projectID ).then(
+										( [ project, response ]:[ Project & PersistedDocument.Class, Response.Class ] ) => {
 											console.log( project.name ); // "Project X"
 										}
 									).catch( console.error );
@@ -594,8 +610,8 @@
 						<p>
 							In this example we used the id of the document, but there are times that instead of having the id, you have a
 							<code>Pointer.Class</code> object. This can happen for example when a document points to another document through a property,
-							or as soon as you create a document and receive a pointer back. These pointers have a <code>resolve</code> method
-							that helps you retrieve their information:
+							or as soon as you create a document and receive a pointer back (<code>PersistedDocument.Class</code> extends <code>Pointer.Class</code>).
+							These pointers have a <code>resolve</code> method that helps you retrieve their information:
 						</p>
 						<sui-tabs>
 							<sui-tab title="TypeScript">
@@ -610,8 +626,8 @@
 
 									// ... document pointer acquisition
 
-									projectPointer.resolve().then(
-										( [ project, response ]:[ PersistedDocument.Class, Response.Class ] ) => {
+									projectPointer.resolve&lt;Project&gt;().then(
+										( [ project, response ]:[ Project & PersistedDocument.Class, Response.Class ] ) => {
 											console.log( project.name ); // "Project X"
 										}
 									).catch( console.error );
@@ -639,7 +655,7 @@
 						<p>
 							As you can see, <code>Pointer.Class</code> objects have two states, resolved and unresolved. When a pointer
 							isn't resolved it doesn't contain the document's information (or it may be just out of sync with the server)
-							but it can be used to link other documents to it as we'll see later, or you can also use its
+							but it can be used to link other documents to it as we'll see later. You can also use its
 							<code>resolve</code> method to retrieve its information.
 						</p>
 					</section>
@@ -650,15 +666,16 @@
 						<p>
 							All <span class="highlight">documents</span> in <span class="highlight">Carbon</span> can
 							be modified. However all the changes done to a <span class="highlight">document</span>,
-							are done in memory. To persist the modifications the
-							<span class="highlight">documents</span> need to be saved.
+							are done in memory. To persist the modifications the <span class="highlight">document</span> needs to be saved.
 						</p>
 
-						<p>To modify a document you should:</p>
+						<p>
+							To modify a document you should:
+						</p>
 						<ul>
 							<li>Retrieve the <span class="highlight">document</span>:
 								<ul>
-									<li><code>get()</code> using the <span class="highlight">document</span> id as
+									<li><code>get</code> using the <span class="highlight">document</span> id as
 										describe in <span class="sectionlink"><a href="#retrieving-a-document">retrieving a document</a></span>
 									</li>
 								</ul>
@@ -668,7 +685,7 @@
 								<span class="highlight">fragments</span>,
 								<span class="highlight">named fragments</span>.
 							</li>
-							<li>Save the changes through <code>document.save()</code> method.</li>
+							<li>Save the changes through <code>document.save</code> method.</li>
 						</ul>
 						<p>
 							Document properties can be added/modified/removed as with any normal JavaScript object.
@@ -680,7 +697,7 @@
 									// ... additional imports
 									import * PersistedDocument from "carbonldp/PersistedDocument";
 
-									let project:PersistedDocument.Class;
+									let project:Project & PersistedDocument.Class;
 
 									// ... document retrieval
 
@@ -694,13 +711,14 @@
 										content: "# Some description here"
 									};
 
-									project.save().then(
-										( [ projectPointer, response ]:[ Pointer.Class, Response.Class ] ) => {
-											console.log( projectPointer === project );
-											return projectPointer.refresh();
+									project.save&lt;Project&gt;().then(
+										( [ savedProject, response ]:[ Project & PersistedDocument.Class, Response.Class ] ) => {
+											console.log( savedProject === project ); // true
+											return savedProject.refresh&lt;Project&gt;();
 										}
 									).then(
-										( [ projectPointer, response ]:[ PersistedDocument.Class, Response.Class ] ) => {
+										( [ refreshedProject, response ]:[ Project & PersistedDocument.Class, Response.Class ] ) => {
+											console.log( refreshedProject === project ); // true
 											// Continue doing stuff...
 										}
 									).catch( console.error );
@@ -727,12 +745,13 @@
 									};
 
 									project.save().then(
-										( [ projectPointer, response ]:[ Pointer.Class, Response.Class ] ) => {
-											console.log( projectPointer === project );
-											return projectPointer.refresh();
+										( [ savedProject, response ] ) => {
+											console.log( savedProject === project ); // true
+											return savedProject.refresh();
 										}
 									).then(
-										( [ projectPointer, response ]:[ PersistedDocument.Class, Response.Class ] ) => {
+										( [ refreshedProject, response ] ) => {
+											console.log( refreshedProject === project ); // true
 											// Continue doing stuff...
 										}
 									).catch( console.error );
@@ -741,14 +760,14 @@
 							</sui-tab>
 						</sui-tabs>
 						<p>
-							Notice that we used the <code>save</code> method and immediately after, we called another method that we haven't
-							talked about, <code>refresh</code>. Every persisted document has this method and it helps you sync the in memory
+							Notice that we used the <code>save</code> method and immediately after, we called <code>refresh</code>.
+							Remember that every persisted document has this method and it helps you sync the in memory
 							representation of the document with the server's information. In this case we used it because after the document was
 							saved, Carbon could have added or modified some of its properties (noticeably properties like <code>modified</code>).
 						</p>
 						<p>
 							This is a very common thing to do, therefore persisted documents also have the method <code>saveAndRefresh</code>
-							which do both things at once.
+							which does both things at once.
 						</p>
 					</section>
 
@@ -804,8 +823,7 @@
 							</sui-tab>
 						</sui-tabs>
 						<p>
-							Like in retrieving a document, a document can also be deleted through a pointer. But in this case,
-							the pointer must have been already resolved. To do so, you can use a <code>PersistedDocument.Class</code>
+							Like in "Retrieving a document", a document can also be deleted through the <code>PersistedDocument.Class</code>'s
 							<code>delete</code> method:
 						</p>
 						<sui-tabs>
@@ -816,7 +834,7 @@
 									import * PersistedDocument from "carbonldp/PersistedDocument";
 									import * Response from "carbonldp/HTTP/Response";
 
-									let project:PersistedDocument.Class;
+									let project:Project & PersistedDocument.Class;
 
 									// persisted document retrieval
 
@@ -848,10 +866,10 @@
 						</sui-tabs>
 						<p>
 							In fact, this pattern can be seen across several methods, where both the <code>documents</code> service
-							and resolved pointers expose similar methods. For example, <code>createChild</code> is also exposed by a
-							resolved pointer and allows you to create a direct child of that document. Basically, if you don't have
+							and <code>PersistedDocument.Class</code> expose similar methods. For example, <code>createChild</code> is also exposed by a
+							<code>PersistedDocument.Class</code> object and allows you to create a direct child of that document. Basically, if you don't have
 							a resolved reference of the document, use <code>documents</code> service. But if you already have one, you
-							can call the action through the pointer directly (which may make code more readable, and in some cases more efficient).
+							can call the action through the <code>PersistedDocument.Class</code> directly (which may make code more readable, and in some cases more efficient).
 						</p>
 					</section>
 
@@ -868,8 +886,8 @@
 									// ... additional imports
 									import * PersistedDocument from "carbonldp/PersistedDocument";
 
-									let project1:PersistedDocument.Class;
-									let project2:PersistedDocument.Class;
+									let project1:Project & PersistedDocument.Class;
+									let project2:Project & PersistedDocument.Class;
 
 									// ... persisted documents retrieval
 
@@ -881,10 +899,9 @@
 								<!--@formatter:off-->
 								<pre><code cphighlight class="javascript">
 									// ... additional imports
-									import * PersistedDocument from "carbonldp/PersistedDocument";
 
-									let project1:PersistedDocument.Class;
-									let project2:PersistedDocument.Class;
+									let project1;
+									let project2;
 
 									// ... persisted documents retrieval
 
@@ -906,10 +923,10 @@
 							</p>
 							<ul>
 								<li>
-									<code>documents.listChildren</code>: Returns a list of unresolved pointers for each of the document children
+									<code>documents.listChildren</code>: Returns a list of unresolved <code>PersistedDocument.Class</code> objects for each of the document children
 								</li>
 								<li>
-									<code>documents.getChildren</code>: Returns a list of RESOLVED pointers for each of the document children
+									<code>documents.getChildren</code>: Returns a list of RESOLVED <code>PersistedDocument.Class</code> objects for each of the document children
 								</li>
 							</ul>
 							<sui-tabs>
@@ -923,15 +940,15 @@
 
 										// ... app context retrieval
 
-										myAppContext.documents.listChildren( "projects/" ).then(
-											( [ projectPointers, response ] : [ Pointer.Class[], HTTP.Response.Class]) => {
-										        console.log( projectPointers ); // array of unresolved pointers
+										myAppContext.documents.listChildren&lt;Project&gt;( "projects/" ).then(
+											( [ unresolvedProjects, response ] : [ ( Project & PersistedDocument.Class )[], HTTP.Response.Class]) => {
+										        console.log( unresolvedProjects ); // array of unresolved pointers
 											}
 										);
 
-										myAppContext.documents.getChildren( "projects/" ).then(
-											( [ projects, response ] : [ PersistedDocument.Class[], HTTP.Response.Class] ) => {
-										        console.log( projects ); // array of resolved pointers
+										myAppContext.documents.getChildren&lt;Project&gt;( "projects/" ).then(
+											( [ resolvedProjects, response ] : [ ( Project & PersistedDocument.Class )[], HTTP.Response.Class] ) => {
+										        console.log( resolvedProjects ); // array of resolved pointers
 											}
 										);
 									</code></pre>
@@ -947,13 +964,13 @@
 										// ... app context retrieval
 
 										myAppContext.documents.listChildren( "projects/" ).then(
-											( [ projectPointers, response ] ) => {
+											( [ unresolvedProjects, response ] ) => {
 										        console.log( projectPointers ); // array of unresolved pointers
 											}
 										);
 
 										myAppContext.documents.getChildren( "projects/" ).then(
-											( [ projects, response ] ) => {
+											( [ resolvedProjects, response ] ) => {
 										        console.log( projects ); // array of resolved pointers
 											}
 										);
@@ -963,7 +980,7 @@
 							</sui-tabs>
 							<p>
 								Like <code>createChild</code> and <code>delete</code>, <code>listChildren</code> and <code>getChildren</code>
-								are also accessible through a persisted document. See, there's a pattern!
+								are also accessible through a <code>PersistedDocument.Class</code>. See, there's a pattern!
 							</p>
 							<div class="ui info icon message">
 								<i class="info circle icon"></i>
@@ -990,6 +1007,15 @@
 								a <span class="highlight">soft link</span>, membership relations.
 							</p>
 							<p>
+								The meaning of a membership relation is up to your application logic to define it. It can mean things like,
+								a project's list of tasks, a person's friends, a person's assets, etc. You must be thinking
+								<!-- TODO: Use a css class instead of an <i> block -->
+								<i>"well I can already do that with normal JavaScript properties, what are the advantages of treating them as 'membership relations'?"</i>.
+								It's true that you can manually manage lists, but to do so, you would need to manage the whole document. By configuring
+								a property to act as a "membership relation", you enable things like retrieving the list without retrieving the complete document,
+								adding new elements without retrieving the list, etc.
+							</p>
+							<p>
 								All carbon documents can maintain a list of members. The relation between the document and its members can be
 								configured, through the properties:
 							</p>
@@ -1012,10 +1038,10 @@
 									<code>addMember/addMembers</code>: Adds the provided pointers as members of the document
 								</li>
 								<li>
-									<code>listMembers</code>: Like <code>listChildren</code>, returns an array of unresolved pointers for each member
+									<code>listMembers</code>: Like <code>listChildren</code>, returns an array of unresolved <code>PersistedDocument.Class</code> objects for each member
 								</li>
 								<li>
-									<code>getMembers</code>: Like <code>getChildren</code>, returns an array of RESOLVED pointers for each member
+									<code>getMembers</code>: Like <code>getChildren</code>, returns an array of RESOLVED <code>PersistedDocument.Class</code> objects for each member
 								</li>
 								<li>
 									<code>removeMember/removeMembers/removeAllMembers</code>: Removes the specified members (without deleting them)
@@ -1034,35 +1060,35 @@
 
 										// ... app context retrieval
 
-										let project:any = {
+										let project:Project = {
 											name: "Important project",
 
 											hasMemberRelation: tasks,
 											isMemberOfRelation: project
 										};
 
-										let task1:any = { name: "Task 1" };
-										let task2:any = { name: "Task 2" };
-										let task3:any = { name: "Task 3" };
+										let task1:Task = { name: "Task 1" }; // Being "Task" a business specific interface defined somewhere
+										let task2:Task = { name: "Task 2" };
+										let task3:Task = { name: "Task 3" };
 
 										// ... project, task1, task2 and task3 persistence (createChild, etc)
 
 										project.addMembers( [ task1, task2, task3 ] ).then(
 											( response:Response.Class ) => {
-												return project.resolve();
+												return project.resolve&lt;Project&gt;();
 											}
 										).then(
-											( [ project, response ]:[ PersistedDocument.Class, Response.Class ] ) => {
+											( [ project, response ]:[ Project & PersistedDocument.Class, Response.Class ] ) => {
 												console.log( project.tasks ); // Pointers for task1, task2 and task3. Added because of the configured hasMemberRelation
 												console.log( project.tasks.indexOf( task1 ) !== -1 ); // true (remember, pointers are cached and reused)
 												console.log( project.tasks.indexOf( task2 ) !== -1 ); // true
 												console.log( project.tasks.indexOf( task3 ) !== -1 ); // true
 
-												return project.listMembers();
+												return project.listMembers&lt;Task&gt;();
 											}
 										).then(
-											( [ taskPointers, response ]:[ Pointer.Class, Response.Class ] ) => {
-												console.log( taskPointers ); // Pointers for task1, task2 and task3
+											( [ unresolvedTasks, response ]:[ Task & PersistedDocument.Class, Response.Class ] ) => {
+												console.log( unresolvedTasks ); // Pointers for task1, task2 and task3
 
 												return project.removeMember( task2 );
 											}
@@ -1070,11 +1096,11 @@
 											( response:Response.Class ) => {
 												console.log( "Task 2 is no longer a member of the project" );
 
-												return project.getMembers();
+												return project.getMembers&lt;Task&gt;();
 											}
 										).then(
-											( [ tasks, response ]:[ PersistedDocument.Class, Response.Class ] ) => {
-												console.log( tasks ); // task1 and task3 documents
+											( [ resolvedTasks, response ]:[ Task & PersistedDocument.Class, Response.Class ] ) => {
+												console.log( resolvedTasks ); // task1 and task3 documents
 												console.log( task[0].project ); // pointer to project. Added due to the configured isMemberOfRelation
 											}
 										).catch( console.error );
@@ -1117,8 +1143,8 @@
 												return project.listMembers();
 											}
 										).then(
-											( [ taskPointers, response ] ) => {
-												console.log( taskPointers ); // Pointers for task1, task2 and task3
+											( [ unresolvedTasks, response ] ) => {
+												console.log( unresolvedTasks ); // Pointers for task1, task2 and task3
 
 												return project.removeMember( task2 );
 											}
@@ -1129,8 +1155,8 @@
 												return project.getMembers();
 											}
 										).then(
-											( [ tasks, response ] ) => {
-												console.log( tasks ); // task1 and task3 documents
+											( [ resolvedTasks, response ] ) => {
+												console.log( resolvedTasks ); // task1 and task3 documents
 												console.log( task[0].project ); // pointer to project. Added due to the configured isMemberOfRelation
 											}
 										).catch( console.error );
@@ -1144,7 +1170,7 @@
 						<h2 class="ui header">Creating an access point</h2>
 						<p>
 							Membership relations have a limitation though, a document can only maintain one list through one property. So what happens when
-							you want to manage members of another property? For example, what happens if we want to manage a list of people that are members
+							you want to manage members of another property? For example, what happens if you want to manage a list of people that are members
 							of the project? Well, this can be accomplished using access points.
 						</p>
 						<p>
@@ -1152,9 +1178,9 @@
 							any number of access points, removing the limitation we talked about.
 						</p>
 						<p>
-							Like normal documents, access points can be customized by specifying a <code>hasMemberRelation</code> and a
+							Like normal documents, access points can be customized by specifying a <code>hasMemberRelation</code> and an
 							<code>isMemberOfRelation</code>. To create an access point for a document you can use the <code>createAccessPoint</code> method
-							of the <code>documents</code> service or of a persisted document.
+							of the <code>documents</code> service or of a <code>PersistedDocument.Class</code> object.
 						</p>
 						<sui-tabs>
 							<sui-tab title="TypeScript">
@@ -1162,6 +1188,7 @@
 								<pre><code cphighlight class="typescript">
 									// ... additional imports
 									import * as AccessPoint from "carbonldp/AccessPoint";
+									import * as PersistedAccessPoint from "carbonldp/PersistedAccessPoint";
 									import * as PersistedDocument from "carbonldp/PersistedDocument";
 
 									let project:PersistedDocument.Class;
@@ -1174,12 +1201,8 @@
 									};
 
 									project.createAccessPoint( "people", projectMembersAccessPoint ).then(
-										( [ accessPointPointer, response ]:[ Pointer.Class, Response.Class ] ) => {
-											return accessPointPointer.resolve();
-										}
-									).then(
-										( [ accessPoint, response ]:[ PersistedDocument.Class, Response.Class ] ) => {
-											// continue doing stuff (accessPoint.listMembers/addMember/etc...)
+										( [ persistedProjectMembersAccessPoint, response ]:[ PersistedAccessPoint.Class, Response.Class ] ) => {
+											// continue doing stuff (persistedProjectMembersAccessPoint.listMembers/addMember/etc...)
 										}
 									).catch( console.error );
 								</code></pre>
@@ -1200,12 +1223,8 @@
 									};
 
 									project.createAccessPoint( "people", projectMembersAccessPoint ).then(
-										( [ accessPointPointer, response ] ) => {
-											return accessPointPointer.resolve();
-										}
-									).then(
-										( [ accessPoint, response ] ) => {
-											// continue doing stuff (accessPoint.listMembers/addMember/etc...)
+										( [ persistedProjectMembersAccessPoint, response ] ) => {
+											// continue doing stuff (persistedProjectMembersAccessPoint.listMembers/addMember/etc...)
 										}
 									).catch( console.error );
 								</code></pre>

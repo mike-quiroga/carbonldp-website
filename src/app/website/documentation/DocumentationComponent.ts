@@ -1,5 +1,5 @@
-import {Component} from "@angular/core";
-import {RouteConfig, RouterOutlet} from "@angular/router-deprecated";
+import { Component } from "@angular/core";
+import { RouteConfig, RouterOutlet } from "@angular/router-deprecated";
 
 import HomeView from "./home/HomeView";
 
@@ -12,12 +12,10 @@ import CarbonLDPConceptsView from "./carbon-ldp-concepts/CarbonLDPConceptsView";
 import RESTApiGettingStarted from "./rest-api/getting-started/GettingStartedView";
 import InteractionModelsView from "./rest-api/interaction-models/InteractionModelsView";
 
-import JavaScriptSDKGettingStartedView from "./javascript-sdk/getting-started/GettingStartedView";
+import JavaScriptSDKGettingStartedView from "./javascript-sdk/getting-started.view";
 import JavaScriptSDKContextsView from "./javascript-sdk/contexts/ContextsView";
 import JavaScriptSDKObjectModelView from "./javascript-sdk/object-model/ObjectModelView";
 import JavaScriptSDKObjectSchemaView from "./javascript-sdk/object-schema/ObjectSchemaView";
-
-import CarbonAppCreateAppView from "./carbon-app/CreateAppView";
 
 import RESTObjectModelView from "./rest-api/rest-object-model/RESTObjectModelView";
 import RESTRdfSourceView from "./rest-api/rest-rdfsource/RESTRdfSourceView";
