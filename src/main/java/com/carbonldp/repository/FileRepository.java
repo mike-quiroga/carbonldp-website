@@ -5,6 +5,7 @@ import org.eclipse.rdf4j.model.IRI;
 
 import java.io.File;
 import java.io.InputStream;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
@@ -37,4 +38,6 @@ public interface FileRepository {
 	public Map<String, String> getBackupConfiguration( InputStream configStream );
 
 	public String getFilesDirectory( App app );
+
+	public void removeLineFromFileStartingWith( String file, List<String> linesToRemove );
 }

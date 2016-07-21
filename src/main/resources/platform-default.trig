@@ -117,10 +117,6 @@
 	<platform/agents/>
 		a 	ldp:BasicContainer;
 		ldp:hasMemberRelation ldp:member;
-		ldp:contains 
-			<platform/agents/admin/>;
-		ldp:member
-			<platform/agents/admin/>;
 		cs:accessControlList <platform/agents/~acl/>.
 }
 <platform/agents/~acl/> {
@@ -136,19 +132,6 @@
 		cs:permission
 			cs:Read,
 			cs:CreateChild.
-}
-<platform/agents/admin/> {
-	<platform/agents/admin/>
-		a 	cs:Agent, ldp:BasicContainer;
-		c:defaultInteractionModel	ldp:RDFSource;
-		ldp:hasMemberRelation ldp:member;
-		vcard:email 
-			"admin@carbonldp.com"^^xsd:string;
-		cs:salt	"53cfbrng0bft2vqkoq4p8mpcmd";
-		cs:password	"52efa2610ca01ea3dd0253204fa7c4ede694be75c51386504003be25df4bb6c2";
-		cs:enabled "true"^^xsd:boolean;
-		cs:platformRole
-			<platform/roles/system/>.
 }
 <platform/roles/> {
 	<platform/roles/>
@@ -174,16 +157,14 @@
 		ldp:hasMemberRelation ldp:member;
 		c:accessPoint
 			<platform/roles/system/agents/>,
-			<platform/roles/system/privileges/>;
-		cs:agent
-			<platform/agents/admin/>.
+			<platform/roles/system/privileges/>.
 }
 <platform/roles/system/agents/> {
 	<platform/roles/system/agents/>
 		a 	ldp:DirectContainer;
 		ldp:membershipResource	<platform/roles/system/>;
 		ldp:hasMemberRelation	cs:agent;
-		ldp:memberOfRelation	cs:platformRole.
+		ldp:isMemberOfRelation	cs:platformRole.
 }
 <platform/roles/system/privileges/> {
 	<platform/roles/system/privileges/>
@@ -208,7 +189,7 @@
 		a 	ldp:DirectContainer;
 		ldp:membershipResource	<platform/roles/admin/>;
 		ldp:hasMemberRelation	cs:agent;
-		ldp:memberOfRelation	cs:platformRole.
+		ldp:isMemberOfRelation	cs:platformRole.
 }
 <platform/roles/admin/privileges/> {
 	<platform/roles/admin/privileges/>
@@ -232,7 +213,7 @@
 		a 	ldp:DirectContainer;
 		ldp:membershipResource	<platform/roles/app-developer/>;
 		ldp:hasMemberRelation	cs:agent;
-		ldp:memberOfRelation	cs:platformRole.
+		ldp:isMemberOfRelation	cs:platformRole.
 }
 <platform/roles/app-developer/privileges/> {
 	<platform/roles/app-developer/privileges/>
@@ -256,7 +237,7 @@
 		a 	ldp:DirectContainer;
 		ldp:membershipResource	<platform/roles/registered-agent/>;
 		ldp:hasMemberRelation	cs:agent;
-		ldp:memberOfRelation	cs:platformRole.
+		ldp:isMemberOfRelation	cs:platformRole.
 }
 <platform/roles/registered-agent/privileges/> {
 	<platform/roles/registered-agent/privileges/>

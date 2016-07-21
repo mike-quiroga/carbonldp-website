@@ -146,7 +146,7 @@ public class SesameBasicContainerRepository extends AbstractTypedContainerReposi
 			TAB + TAB + "?containerIRI ?hasMemberRelation ?containedIRI." + NEW_LINE +
 			TAB + "}." + NEW_LINE +
 			TAB + "GRAPH ?containedIRI {" + NEW_LINE +
-			TAB + TAB + "?containedIRI ?memberOfRelation ?containerIRI." + NEW_LINE +
+			TAB + TAB + "?containedIRI ?isMemberOfRelation ?containerIRI." + NEW_LINE +
 			TAB + "}." + NEW_LINE +
 			"} WHERE {" + NEW_LINE +
 			TAB + "GRAPH ?containerIRI {" + NEW_LINE +
@@ -155,7 +155,7 @@ public class SesameBasicContainerRepository extends AbstractTypedContainerReposi
 			TAB + "}." + NEW_LINE +
 			TAB + "OPTIONAL {" + NEW_LINE +
 			TAB + TAB + "GRAPH ?containedIRI {" + NEW_LINE +
-			TAB + TAB + TAB + "?containedIRI ?memberOfRelation ?containerIRI." + NEW_LINE +
+			TAB + TAB + TAB + "?containedIRI ?isMemberOfRelation ?containerIRI." + NEW_LINE +
 			TAB + TAB + "}." + NEW_LINE +
 			TAB + "}." + NEW_LINE +
 			"}"
