@@ -16,18 +16,14 @@ import template from "./template.html!";
 export default class CarbonLDPConceptsView {
 	element:ElementRef;
 	$element:JQuery;
-	title;
 
 	constructor( element:ElementRef, title:Title ) {
 		this.element = element;
-		this.title = title;
+		title.setTitle( "Carbon LDP Concepts" );
 	}
 
 	ngAfterViewInit():void {
 		this.$element = $( this.element.nativeElement );
 	}
 
-	routerOnActivate():void {
-		this.title.setTitle( "Carbon LDP Concepts" );
-	}
 }

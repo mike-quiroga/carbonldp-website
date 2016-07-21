@@ -1,4 +1,4 @@
-import { Component, ElementRef, provide, Inject, OnInit, EventEmitter } from "@angular/core";
+import { Component, provide, Inject, OnInit, EventEmitter } from "@angular/core";
 import { Location } from "@angular/common";
 import { Router, RouteConfig, RouterOutlet } from "@angular/router-deprecated";
 
@@ -18,7 +18,8 @@ import { FooterComponent } from "./footer/footer.component";
 import { DashboardView } from "./dashboard/dashboard.view";
 import { MyAppsView } from "./my-apps/my-apps.view";
 
-import $ from "jquery";
+import { NotFoundErrorView } from "./error-pages/not-found-error/not-found-error.view";
+
 import "semantic-ui/semantic";
 
 import template from "./app-dev.view.html!";
@@ -71,6 +72,15 @@ import style from "./app-dev.view.css!text";
 			displayName: "My Apps",
 		},
 	},
+	{
+		path: "**",
+		as: "NotFoundError",
+		component: NotFoundErrorView,
+		data: {
+			alias: "NotFoundError",
+			displayName: "404",
+		},
+	},
 ] )
 export class AppDevView implements OnInit {
 
@@ -78,12 +88,19 @@ export class AppDevView implements OnInit {
 	private sidebarService:SidebarService;
 	private authService:AuthService.Class;
 	private router:Router;
+	private prevUrl:string;
 
 	constructor( headerService:HeaderService, sidebarService:SidebarService, @Inject( AuthService.Token ) authService:AuthService.Class, router:Router ) {
 		this.headerService = headerService;
 		this.sidebarService = sidebarService;
 		this.authService = authService;
 		this.router = router;
+		this.router.parent.subscribe( ( url )=> {
+			if( this.prevUrl !== url ) {
+				document.querySelector( ".scrollable-content" ).scrollTo( 0, 0 );
+				this.prevUrl = url;
+			}
+		} );
 	}
 
 	ngOnInit():void {
