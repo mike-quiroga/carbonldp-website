@@ -64,4 +64,16 @@ public class TransactionWrapper {
 		return action.run();
 	}
 
+	@RunWith( platformRoles = Platform.Role.ANONYMOUS )
+	@RunInPlatformContext
+	public void runWithAnonymousRoleInPlatformContext( Action action ) {
+		action.run();
+	}
+
+	@RunWith( platformRoles = Platform.Role.ANONYMOUS )
+	@RunInPlatformContext
+	public <E> E runWithAnonymousRoleInPlatformContext( ActionWithResult<E> action ) {
+		return action.run();
+	}
+
 }
