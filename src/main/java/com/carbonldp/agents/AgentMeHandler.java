@@ -1,9 +1,16 @@
 package com.carbonldp.agents;
 
 import com.carbonldp.authentication.AgentAuthenticationToken;
+import com.carbonldp.ldp.sources.RDFSource;
+import com.carbonldp.ldp.sources.RDFSourceService;
 import com.carbonldp.ldp.web.AbstractLDPRequestHandler;
+import com.carbonldp.spring.TransactionWrapper;
 import com.carbonldp.utils.HTTPUtil;
 import com.carbonldp.web.RequestHandler;
+import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
@@ -19,12 +26,20 @@ import javax.servlet.http.HttpServletResponse;
  */
 @RequestHandler
 public class AgentMeHandler extends AbstractLDPRequestHandler {
+	TransactionWrapper transactionWrapper;
 
 	@Transactional
 	public ResponseEntity<Object> handleRequest( HttpServletRequest request, HttpServletResponse response ) {
 		setUp( request, response );
 		String agentIRIString = getAgentIRIString();
-		return HTTPUtil.redirectTo( response, agentIRIString );
+		IRI agentIRI = SimpleValueFactory.getInstance().createIRI( agentIRIString );
+		response.addHeader( "Target-Location", agentIRIString );
+
+		RDFSource agentSource = sourceService.exists( agentIRI ) ?
+			sourceService.get( agentIRI ) :
+			transactionWrapper.runInPlatformContext( () -> sourceService.get( agentIRI ) );
+
+		return new ResponseEntity<>( agentSource, HttpStatus.OK );
 	}
 
 	private String getAgentIRIString() {
@@ -32,5 +47,10 @@ public class AgentMeHandler extends AbstractLDPRequestHandler {
 		if ( ! ( authentication instanceof AgentAuthenticationToken ) ) throw new AccessDeniedException( "authentication is not an instance of AgentAuthenticationToken" );
 		AgentAuthenticationToken agentToken = (AgentAuthenticationToken) authentication;
 		return agentToken.getAgent().getSubject().stringValue();
+	}
+
+	@Autowired
+	public void setTransactionWrapper( TransactionWrapper transactionWrapper ) {
+		this.transactionWrapper = transactionWrapper;
 	}
 }
