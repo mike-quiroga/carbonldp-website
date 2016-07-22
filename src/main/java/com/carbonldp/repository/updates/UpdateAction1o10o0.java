@@ -5,8 +5,8 @@ import com.carbonldp.apps.App;
 import com.carbonldp.apps.AppRole;
 import com.carbonldp.authorization.acl.ACEDescription;
 import com.carbonldp.authorization.acl.ACL;
-import org.openrdf.model.IRI;
-import org.openrdf.model.impl.SimpleValueFactory;
+import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 
 import java.util.Arrays;
 import java.util.Set;

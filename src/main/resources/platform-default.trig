@@ -1,4 +1,4 @@
-@prefix acl:		<http://www.w3.org/ns/auth/acl#>.
+	@prefix acl:		<http://www.w3.org/ns/auth/acl#>.
 @prefix api:		<http://purl.org/linked-data/api/vocab#>.
 @prefix c:			<https://carbonldp.com/ns/v1/platform#>.
 @prefix cs:			<https://carbonldp.com/ns/v1/security#>.
@@ -164,7 +164,7 @@
 		a 	ldp:DirectContainer;
 		ldp:membershipResource	<platform/roles/system/>;
 		ldp:hasMemberRelation	cs:agent;
-		ldp:memberOfRelation	cs:platformRole.
+		ldp:isMemberOfRelation	cs:platformRole.
 }
 <platform/roles/system/privileges/> {
 	<platform/roles/system/privileges/>
