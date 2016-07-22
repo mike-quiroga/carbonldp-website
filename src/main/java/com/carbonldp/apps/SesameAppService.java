@@ -103,9 +103,7 @@ public class SesameAppService extends AbstractSesameLDPService implements AppSer
 			return appAdminRole;
 		} );
 
-		transactionWrapper.runInAppContext( app, () -> addCurrentAgentToAppAdminRole( adminRole ) );
-
-		addRoleToRDFMap( app, adminRole );
+		addCurrentAgentToAppAdminRole( app, adminRole );
 
 		addAppDefaultPermissions( adminRole, appACL );
 
@@ -134,7 +132,6 @@ public class SesameAppService extends AbstractSesameLDPService implements AppSer
 		IRI agentIRI = ( (AgentAuthenticationToken) rawAuthentication ).getAgent().getIRI();
 		Agent agentResource = platformAgentRepository.get( agentIRI );
 		IRI rdfMapIRI = agentResource.getIRI( PlatformAgentDescription.Property.APP_ROLE_MAP );
-		if ( rdfMapIRI == null ) return;
 
 		mapRepository.clean( rdfMapIRI );
 		mapRepository.add( rdfMapIRI, app.getIRI(), role.getIRI() );
@@ -160,6 +157,13 @@ public class SesameAppService extends AbstractSesameLDPService implements AppSer
 
 	private ACL createAppAdminRoleACL( AppRole appAdminRole ) {
 		return aclRepository.createACL( appAdminRole.getIRI() );
+	}
+
+	private void addCurrentAgentToAppAdminRole( App app, AppRole appAdminRole ) {
+
+		transactionWrapper.runInAppContext( app, () -> addCurrentAgentToAppAdminRole( appAdminRole ) );
+
+		addRoleToRDFMap( app, appAdminRole );
 	}
 
 	private void addCurrentAgentToAppAdminRole( AppRole appAdminRole ) {

@@ -61,7 +61,6 @@ public class UpdateAction1o10o0 extends AbstractUpdateAction {
 	private void addRoleToAgentMap( IRI roleMemberIRI, App app, IRI roleIRI ) {
 		Agent agent = platformAgentRepository.get( roleMemberIRI );
 		IRI rdfMapIRI = agent.getIRI( PlatformAgentDescription.Property.APP_ROLE_MAP );
-		if ( rdfMapIRI == null ) return;
 		mapRepository.clean( rdfMapIRI );
 		mapRepository.add( rdfMapIRI, app.getIRI(), roleIRI );
 	}

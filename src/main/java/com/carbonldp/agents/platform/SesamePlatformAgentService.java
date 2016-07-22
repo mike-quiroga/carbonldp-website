@@ -74,34 +74,41 @@ public class SesamePlatformAgentService extends SesameAgentsService {
 
 	@Override
 	public void delete( IRI agentIRI ) {
-		IRI rdfMapIRI = null;
-		if ( sourceRepository.exists( agentIRI ) ) {
-			Agent agentResource = platformAgentRepository.get( agentIRI );
-			rdfMapIRI = agentResource.getIRI( PlatformAgentDescription.Property.APP_ROLE_MAP );
-			if ( rdfMapIRI == null ) throw new BadRequestException( 0x2014 );
+		if ( ! sourceRepository.exists( agentIRI ) ) return;
+		Agent agentResource = platformAgentRepository.get( agentIRI );
+		IRI rdfMapIRI = agentResource.getIRI( PlatformAgentDescription.Property.APP_ROLE_MAP );
+		if ( ! agentIRI.stringValue().equals( Vars.getInstance().getPlatformAgentSystemURL() ) ) {
 			mapRepository.clean( rdfMapIRI );
 			Set<Value> apps = mapRepository.getKeys( rdfMapIRI );
 			for ( Value app : apps ) {
-				IRI appIRI = SimpleValueFactory.getInstance().createIRI( app.stringValue() );
-				App appResource = appService.get( appIRI );
-				String adminRoleString = transactionWrapper.runInAppContext( appResource, () -> {
-					return appRoleRepository.getContainerIRI() + Vars.getInstance().getAppAdminRole();
-				} );
-				Set<Value> roles = mapRepository.getValues( rdfMapIRI, app );
-				for ( Value role : roles ) {
-					if ( role.stringValue().equals( adminRoleString ) ) {
-						throw new BadRequestException( new Infraction( 0x2013, "app", appIRI.stringValue() ) );
-					}
-				}
+				validateDeletePlatformAgent( app, rdfMapIRI );
 			}
 		}
 		sourceRepository.delete( rdfMapIRI, true );
 		sourceRepository.delete( agentIRI, true );
 	}
 
+	private void validateDeletePlatformAgent( Value app, IRI rdfMapIRI ) {
+		IRI appIRI = SimpleValueFactory.getInstance().createIRI( app.stringValue() );
+		App appResource = appService.get( appIRI );
+		String adminRoleString = transactionWrapper.runInAppContext( appResource, () -> {
+			return appRoleRepository.getContainerIRI() + Vars.getInstance().getAppAdminRole();
+		} );
+		Set<Value> roles = mapRepository.getValues( rdfMapIRI, app );
+		for ( Value role : roles ) {
+			isAdmin( role, adminRoleString, appIRI );
+		}
+	}
+
+	private void isAdmin( Value role, String adminRoleString, IRI appIRI ) {
+		if ( role.stringValue().equals( adminRoleString ) ) {
+			throw new BadRequestException( new Infraction( 0x2013, "app", appIRI.stringValue() ) );
+		}
+	}
+
 	public void createAppRoleMap( Agent agent ) {
 		ValueFactory valueFactory = SimpleValueFactory.getInstance();
-		IRI rdfMapIRI = valueFactory.createIRI( agent.getIRI().stringValue() + Vars.getInstance().getRdfMap() );
+		IRI rdfMapIRI = valueFactory.createIRI( agent.getIRI().stringValue() + Vars.getInstance().getAppRoleMap() );
 		RDFMap map = RDFMapFactory.getInstance().create( rdfMapIRI );
 		containerRepository.createChild( agent.getIRI(), map );
 		resourceRepository.add( agent.getIRI(), PlatformAgentDescription.Property.APP_ROLE_MAP.getIRI(), map.getIRI() );

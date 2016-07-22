@@ -58,16 +58,7 @@ public class SesameAppRoleService extends AbstractSesameLDPService implements Ap
 		containerService.addMember( appRoleAgentContainerIRI, agent );
 
 		if ( isPlatformAgent ) {
-			Container accessPoint = AccessPointFactory.getInstance().getAccessPoint( sourceService.get( appRoleAgentContainerIRI ) );
-			IRI roleIRI = accessPoint.getMembershipResource();
-			IRI appIRI = AppContextHolder.getContext().getApplication().getIRI();
-			transactionWrapper.runInPlatformContext( () -> {
-				Agent agentResource = platformAgentRepository.get( agent );
-				IRI rdfMapIRI = agentResource.getIRI( PlatformAgentDescription.Property.APP_ROLE_MAP );
-				if ( rdfMapIRI == null ) return;
-				mapRepository.clean( rdfMapIRI );
-				mapRepository.add( rdfMapIRI, appIRI, roleIRI );
-			} );
+			modifyMap( agent, appRoleAgentContainerIRI, true );
 		}
 
 		DateTime modifiedTime = DateTime.now();
@@ -99,16 +90,7 @@ public class SesameAppRoleService extends AbstractSesameLDPService implements Ap
 		containerService.removeMember( appRoleAgentContainerIRI, agent );
 
 		if ( isPlatformAgent ) {
-			Container accessPoint = AccessPointFactory.getInstance().getAccessPoint( sourceService.get( appRoleAgentContainerIRI ) );
-			IRI roleIRI = accessPoint.getMembershipResource();
-			IRI appIRI = AppContextHolder.getContext().getApplication().getIRI();
-			transactionWrapper.runInPlatformContext( () -> {
-				Agent agentResource = platformAgentRepository.get( agent );
-				IRI rdfMapIRI = agentResource.getIRI( PlatformAgentDescription.Property.APP_ROLE_MAP );
-				if ( rdfMapIRI == null ) return;
-				mapRepository.clean( rdfMapIRI );
-				mapRepository.remove( rdfMapIRI, appIRI, roleIRI );
-			} );
+			modifyMap( agent, appRoleAgentContainerIRI, false );
 		}
 
 		DateTime modifiedTime = DateTime.now();
@@ -155,6 +137,22 @@ public class SesameAppRoleService extends AbstractSesameLDPService implements Ap
 	@Override
 	public IRI getAgentsContainerIRI( IRI appRoleIRI ) {
 		return appRoleRepository.getAgentsContainerIRI( appRoleIRI );
+	}
+
+	private void modifyMap( IRI agentIRI, IRI appRoleAgentContainerIRI, boolean add ) {
+		Container accessPoint = AccessPointFactory.getInstance().getAccessPoint( sourceService.get( appRoleAgentContainerIRI ) );
+		IRI roleIRI = accessPoint.getMembershipResource();
+		IRI appIRI = AppContextHolder.getContext().getApplication().getIRI();
+		transactionWrapper.runInPlatformContext( () -> {
+			Agent agentResource = platformAgentRepository.get( agentIRI );
+			IRI rdfMapIRI = agentResource.getIRI( PlatformAgentDescription.Property.APP_ROLE_MAP );
+			mapRepository.clean( rdfMapIRI );
+			if ( add ) {
+				mapRepository.add( rdfMapIRI, appIRI, roleIRI );
+			} else {
+				mapRepository.remove( rdfMapIRI, appIRI, roleIRI );
+			}
+		} );
 	}
 
 	private void validate( AppRole appRole ) {
