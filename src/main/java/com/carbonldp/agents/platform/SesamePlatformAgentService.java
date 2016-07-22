@@ -7,9 +7,9 @@ import com.carbonldp.authorization.Platform;
 import com.carbonldp.authorization.acl.ACEDescription;
 import com.carbonldp.authorization.acl.ACL;
 import com.carbonldp.exceptions.ResourceAlreadyExistsException;
-import org.openrdf.model.IRI;
-
-import org.openrdf.model.impl.SimpleValueFactory;
+import com.carbonldp.ldp.containers.ContainerService;
+import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Arrays;
@@ -47,6 +47,15 @@ public class SesamePlatformAgentService extends SesameAgentsService {
 		}
 	}
 
+	@Override
+	public void create( IRI agentContainerIRI, Agent agent ) {
+		validate( agent );
+		String email = agent.getEmails().iterator().next();
+		if ( platformAgentRepository.existsWithEmail( email ) ) throw new ResourceAlreadyExistsException();
+		setAgentPasswordFields( agent );
+		containerService.createChild( agentContainerIRI, agent );
+	}
+
 	private void addAgentDefaultPermissions( Agent agent, ACL agentACL ) {
 		aclRepository.grantPermissions( agentACL, Arrays.asList( agent ), Arrays.asList(
 			ACEDescription.Permission.READ,
@@ -73,4 +82,5 @@ public class SesamePlatformAgentService extends SesameAgentsService {
 
 	@Autowired
 	public void setPlatformAgentRepository( PlatformAgentRepository platformAgentRepository ) { this.platformAgentRepository = platformAgentRepository; }
+
 }

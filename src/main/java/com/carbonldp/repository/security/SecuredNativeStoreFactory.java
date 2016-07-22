@@ -1,10 +1,10 @@
 package com.carbonldp.repository.security;
 
-import org.openrdf.sail.Sail;
-import org.openrdf.sail.config.SailConfigException;
-import org.openrdf.sail.config.SailImplConfig;
-import org.openrdf.sail.nativerdf.SecuredNativeStore;
-import org.openrdf.sail.nativerdf.config.NativeStoreFactory;
+import org.eclipse.rdf4j.sail.Sail;
+import org.eclipse.rdf4j.sail.config.SailConfigException;
+import org.eclipse.rdf4j.sail.config.SailImplConfig;
+import org.eclipse.rdf4j.sail.nativerdf.SecuredNativeStore;
+import org.eclipse.rdf4j.sail.nativerdf.config.NativeStoreFactory;
 
 /**
  * @author MiguelAraCo

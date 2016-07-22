@@ -1,7 +1,7 @@
 package com.carbonldp.sparql;
 
 import com.carbonldp.utils.MediaTypeUtil;
-import info.aduna.lang.FileFormat;
+import org.eclipse.rdf4j.common.lang.FileFormat;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpInputMessage;
 import org.springframework.http.HttpOutputMessage;

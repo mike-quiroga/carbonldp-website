@@ -3,7 +3,7 @@ package com.carbonldp.ldp.sources;
 import com.carbonldp.ldp.containers.AccessPoint;
 import com.carbonldp.rdf.RDFDocument;
 import org.joda.time.DateTime;
-import org.openrdf.model.IRI;
+import org.eclipse.rdf4j.model.IRI;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.access.prepost.PreFilter;
 
@@ -38,7 +38,10 @@ public interface RDFSourceService {
 	public void set( IRI sourceIRI, RDFDocument document );
 
 	@PreAuthorize( "hasPermission(#source, 'UPDATE')" )
-	public DateTime replace( RDFSource source );
+	public void replace( RDFSource source );
+
+	@PreAuthorize( "hasPermission(#targetIRI, 'UPDATE')" )
+	public void patch( IRI targetIRI, RDFDocument documentToAdd, RDFDocument documentToDelete );
 
 	@PreAuthorize( "hasPermission(#sourceIRI, 'UPDATE')" )
 	public void subtract( IRI sourceIRI, RDFDocument document );

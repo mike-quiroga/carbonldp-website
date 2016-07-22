@@ -1,6 +1,6 @@
 package com.carbonldp.repository.security;
 
-import org.openrdf.model.Statement;
+import org.eclipse.rdf4j.model.Statement;
 
 /**
  * @author MiguelAraCo

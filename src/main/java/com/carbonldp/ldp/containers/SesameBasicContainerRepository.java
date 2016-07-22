@@ -3,10 +3,10 @@ package com.carbonldp.ldp.containers;
 import com.carbonldp.ldp.containers.ContainerDescription.Type;
 import com.carbonldp.rdf.RDFDocumentRepository;
 import com.carbonldp.rdf.RDFResourceRepository;
-import org.openrdf.model.IRI;
-import org.openrdf.model.Statement;
-import org.openrdf.model.Value;
-import org.openrdf.spring.SesameConnectionFactory;
+import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.Statement;
+import org.eclipse.rdf4j.model.Value;
+import org.eclipse.rdf4j.spring.SesameConnectionFactory;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
@@ -146,7 +146,7 @@ public class SesameBasicContainerRepository extends AbstractTypedContainerReposi
 			TAB + TAB + "?containerIRI ?hasMemberRelation ?containedIRI." + NEW_LINE +
 			TAB + "}." + NEW_LINE +
 			TAB + "GRAPH ?containedIRI {" + NEW_LINE +
-			TAB + TAB + "?containedIRI ?memberOfRelation ?containerIRI." + NEW_LINE +
+			TAB + TAB + "?containedIRI ?isMemberOfRelation ?containerIRI." + NEW_LINE +
 			TAB + "}." + NEW_LINE +
 			"} WHERE {" + NEW_LINE +
 			TAB + "GRAPH ?containerIRI {" + NEW_LINE +
@@ -155,7 +155,7 @@ public class SesameBasicContainerRepository extends AbstractTypedContainerReposi
 			TAB + "}." + NEW_LINE +
 			TAB + "OPTIONAL {" + NEW_LINE +
 			TAB + TAB + "GRAPH ?containedIRI {" + NEW_LINE +
-			TAB + TAB + TAB + "?containedIRI ?memberOfRelation ?containerIRI." + NEW_LINE +
+			TAB + TAB + TAB + "?containedIRI ?isMemberOfRelation ?containerIRI." + NEW_LINE +
 			TAB + TAB + "}." + NEW_LINE +
 			TAB + "}." + NEW_LINE +
 			"}"

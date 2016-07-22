@@ -2,7 +2,7 @@ package com.carbonldp.ldp.sources;
 
 import com.carbonldp.rdf.RDFResource;
 import com.carbonldp.web.RequestHandler;
-import org.openrdf.model.IRI;
+import org.eclipse.rdf4j.model.IRI;
 
 @RequestHandler( "rdfSource:basePUTRequestHandler" )
 public class BasePUTRequestHandler extends AbstractPUTRequestHandler<RDFSource> {

@@ -1,8 +1,8 @@
 package com.carbonldp.jobs;
 
-import org.openrdf.model.BNode;
-import org.openrdf.model.IRI;
-import org.openrdf.model.Value;
+import org.eclipse.rdf4j.model.BNode;
+import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.Value;
 
 /**
  * @author NestorVenegas
@@ -18,7 +18,7 @@ public interface ExecutionRepository {
 
 	public Execution peek( IRI executionQueueLocationIRI );
 
-	public void addResult(IRI executionIRI, Value status);
+	public void addResult( IRI executionIRI, Value status );
 
-	public void addErrorDescription(IRI executionIRI, String error);
+	public void addErrorDescription( IRI executionIRI, String error );
 }

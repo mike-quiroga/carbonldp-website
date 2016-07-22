@@ -3,7 +3,7 @@ package com.carbonldp.authentication.ldapServer.app;
 import com.carbonldp.agents.LDAPAgent;
 import com.carbonldp.apps.App;
 import com.carbonldp.authentication.LDAPServer;
-import org.openrdf.model.IRI;
+import org.eclipse.rdf4j.model.IRI;
 
 import java.util.List;
 import java.util.Set;
@@ -19,5 +19,5 @@ public interface LDAPServerService {
 
 	public LDAPServer get( IRI targetIRI );
 
-	public List<LDAPAgent> registerLDAPAgents( LDAPServer ldapServer, Set<String> usernameFields,App app );
+	public List<LDAPAgent> registerLDAPAgents( LDAPServer ldapServer, Set<String> usernameFields, App app );
 }

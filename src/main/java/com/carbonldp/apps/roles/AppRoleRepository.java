@@ -4,7 +4,7 @@ import com.carbonldp.agents.Agent;
 import com.carbonldp.apps.App;
 import com.carbonldp.apps.AppRole;
 import com.carbonldp.ldp.containers.Container;
-import org.openrdf.model.IRI;
+import org.eclipse.rdf4j.model.IRI;
 
 import java.util.Set;
 

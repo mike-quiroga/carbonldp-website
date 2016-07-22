@@ -58,7 +58,10 @@ public class LDAPAuthenticationProvider extends SesameUsernamePasswordAuthentica
 		Set<Agent> agents = agentRepository.findByUID( username );
 		if ( agents.isEmpty() ) throw new BadCredentialsException( "Wrong credentials" );
 		for ( Agent agent : agents ) {
-			if ( authenticate( agent, username, password ) ) return createAgentAuthenticationToken( agent );
+			if ( authenticate( agent, username, password ) ) {
+				if ( ! agent.isEnabled() ) throw new BadCredentialsException( "Wrong credentials" );
+				return createAgentAuthenticationToken( agent );
+			}
 		}
 		throw new BadCredentialsException( "Wrong credentials" );
 	}

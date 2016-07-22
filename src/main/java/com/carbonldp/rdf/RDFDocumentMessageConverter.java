@@ -1,6 +1,5 @@
 package com.carbonldp.rdf;
 
-import com.carbonldp.authorization.acl.SesameACLService;
 import com.carbonldp.config.ConfigurationRepository;
 import com.carbonldp.models.Infraction;
 import com.carbonldp.utils.IRIUtil;
@@ -8,15 +7,15 @@ import com.carbonldp.utils.ModelUtil;
 import com.carbonldp.utils.ValueUtil;
 import com.carbonldp.web.converters.ModelMessageConverter;
 import com.carbonldp.web.exceptions.BadRequestException;
-import org.openrdf.model.IRI;
-import org.openrdf.model.Resource;
-import org.openrdf.model.Statement;
-import org.openrdf.model.ValueFactory;
-import org.openrdf.model.impl.AbstractModel;
-import org.openrdf.model.impl.LinkedHashModel;
-import org.openrdf.model.impl.SimpleValueFactory;
-import org.openrdf.rio.*;
-import org.openrdf.rio.helpers.AbstractRDFHandler;
+import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.Resource;
+import org.eclipse.rdf4j.model.Statement;
+import org.eclipse.rdf4j.model.ValueFactory;
+import org.eclipse.rdf4j.model.impl.AbstractModel;
+import org.eclipse.rdf4j.model.impl.LinkedHashModel;
+import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
+import org.eclipse.rdf4j.rio.*;
+import org.eclipse.rdf4j.rio.helpers.AbstractRDFHandler;
 import org.springframework.http.HttpInputMessage;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -67,7 +66,7 @@ public class RDFDocumentMessageConverter extends ModelMessageConverter<RDFDocume
 		} catch ( RDFParseException | RDFHandlerException | IOException e ) {
 			throw new BadRequestException( new Infraction( 0x6001, "formatToUse", formatToUse.getName() ) );
 		}
-		
+
 		// TODO: Fix the root cause instead of monkey patching it
 		return setGenericBNodes( documentRDFHandler.getDocument() );
 	}
@@ -81,8 +80,7 @@ public class RDFDocumentMessageConverter extends ModelMessageConverter<RDFDocume
 			String randomUUID = UUID.randomUUID().toString();
 			toChange.put( subject, valueFactory.createBNode( randomUUID ) );
 		}
-		ModelUtil.replace(document.getBaseModel(),toChange);
-
+		ModelUtil.replace( document.getBaseModel(), toChange );
 
 		return document;
 	}

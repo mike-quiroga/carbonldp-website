@@ -4,10 +4,10 @@ import com.carbonldp.rdf.RDFDocumentRepository;
 import com.carbonldp.rdf.RDFResourceRepository;
 import com.carbonldp.utils.RDFNodeUtil;
 import com.carbonldp.utils.ValueUtil;
-import org.openrdf.model.IRI;
-import org.openrdf.model.Statement;
-import org.openrdf.model.Value;
-import org.openrdf.spring.SesameConnectionFactory;
+import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.Statement;
+import org.eclipse.rdf4j.model.Value;
+import org.eclipse.rdf4j.spring.SesameConnectionFactory;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
@@ -88,7 +88,7 @@ public abstract class AbstractAccessPointRepository extends AbstractTypedContain
 			TAB + TAB + "?membershipResource ?hasMemberRelation ?member" + NEW_LINE +
 			TAB + "}" + NEW_LINE +
 			TAB + "GRAPH ?member {" + NEW_LINE +
-			TAB + TAB + "?member ?memberOfRelation ?container" + NEW_LINE +
+			TAB + TAB + "?member ?isMemberOfRelation ?container" + NEW_LINE +
 			TAB + "}" + NEW_LINE +
 			"} WHERE {" + NEW_LINE +
 			TAB + "GRAPH ?container {" + NEW_LINE +
@@ -100,10 +100,10 @@ public abstract class AbstractAccessPointRepository extends AbstractTypedContain
 			TAB + "}" + NEW_LINE +
 			TAB + "OPTIONAL {" + NEW_LINE +
 			TAB + TAB + "GRAPH ?container {" + NEW_LINE +
-			TAB + TAB + TAB + RDFNodeUtil.generatePredicateStatement( "?container", "?memberOfRelation", ContainerDescription.Property.MEMBER_OF_RELATION ) + NEW_LINE +
+			TAB + TAB + TAB + RDFNodeUtil.generatePredicateStatement( "?container", "?isMemberOfRelation", ContainerDescription.Property.IS_MEMBER_OF_RELATION ) + NEW_LINE +
 			TAB + TAB + "}" + NEW_LINE +
 			TAB + TAB + "GRAPH ?member {" + NEW_LINE +
-			TAB + TAB + TAB + "?member ?memberOfRelation ?container" + NEW_LINE +
+			TAB + TAB + TAB + "?member ?isMemberOfRelation ?container" + NEW_LINE +
 			TAB + TAB + "}" + NEW_LINE +
 			TAB + "}" + NEW_LINE +
 			"}"

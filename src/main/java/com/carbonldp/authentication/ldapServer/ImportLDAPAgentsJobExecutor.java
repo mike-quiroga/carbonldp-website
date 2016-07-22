@@ -12,7 +12,7 @@ import com.carbonldp.jobs.*;
 import com.carbonldp.ldp.sources.RDFSourceService;
 import com.carbonldp.models.Infraction;
 import com.carbonldp.spring.TransactionWrapper;
-import org.openrdf.model.IRI;
+import org.eclipse.rdf4j.model.IRI;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
@@ -47,7 +47,7 @@ public class ImportLDAPAgentsJobExecutor implements TypedJobExecutor {
 		transactionWrapper.runWithSystemPermissionsInAppContext( app, () -> {
 			List<LDAPAgent> agents = ldapServerService.registerLDAPAgents( ldapServer, importLDAPAgentsJob.getLDAPUsernameFields(), app );
 			if ( defaultAppRole == null ) return;
-			
+
 			IRI roleAgentsContainerIRI = appRoleService.getAgentsContainerIRI( defaultAppRole );
 			Set<IRI> agentsIRI = agents.stream().map( LDAPAgent::getIRI ).collect( Collectors.toSet() );
 			appRoleService.addAgents( roleAgentsContainerIRI, agentsIRI );

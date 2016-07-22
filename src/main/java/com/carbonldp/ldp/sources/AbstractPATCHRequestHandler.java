@@ -13,11 +13,11 @@ import com.carbonldp.rdf.RDFResource;
 import com.carbonldp.utils.RDFNodeUtil;
 import com.carbonldp.web.exceptions.BadRequestException;
 import com.carbonldp.web.exceptions.NotFoundException;
-import org.openrdf.model.IRI;
-import org.openrdf.model.Resource;
-import org.openrdf.model.Statement;
-import org.openrdf.model.impl.AbstractModel;
-import org.openrdf.model.impl.LinkedHashModel;
+import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.Resource;
+import org.eclipse.rdf4j.model.Statement;
+import org.eclipse.rdf4j.model.impl.AbstractModel;
+import org.eclipse.rdf4j.model.impl.LinkedHashModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
@@ -114,10 +114,10 @@ public abstract class AbstractPATCHRequestHandler extends AbstractLDPRequestHand
 
 	private Set<DeleteAction> getDeleteActions( PATCHRequest patchRequest ) {
 		return patchRequest.getDeleteActions()
-				.stream()
-				.map( uri -> new RDFNode( patchRequest.getBaseModel(), uri ) )
-				.map( DeleteAction::new )
-				.collect( Collectors.toSet() )
+		                   .stream()
+		                   .map( uri -> new RDFNode( patchRequest.getBaseModel(), uri ) )
+		                   .map( DeleteAction::new )
+		                   .collect( Collectors.toSet() )
 			;
 	}
 
@@ -154,10 +154,10 @@ public abstract class AbstractPATCHRequestHandler extends AbstractLDPRequestHand
 
 	private Set<SetAction> getSetActions( PATCHRequest patchRequest ) {
 		return patchRequest.getSetActions()
-				.stream()
-				.map( uri -> new RDFNode( patchRequest.getBaseModel(), uri ) )
-				.map( SetAction::new )
-				.collect( Collectors.toSet() )
+		                   .stream()
+		                   .map( uri -> new RDFNode( patchRequest.getBaseModel(), uri ) )
+		                   .map( SetAction::new )
+		                   .collect( Collectors.toSet() )
 			;
 	}
 
@@ -194,10 +194,10 @@ public abstract class AbstractPATCHRequestHandler extends AbstractLDPRequestHand
 
 	private Set<AddAction> getAddActions( PATCHRequest patchRequest ) {
 		return patchRequest.getAddActions()
-				.stream()
-				.map( uri -> new RDFNode( patchRequest.getBaseModel(), uri ) )
-				.map( AddAction::new )
-				.collect( Collectors.toSet() )
+		                   .stream()
+		                   .map( uri -> new RDFNode( patchRequest.getBaseModel(), uri ) )
+		                   .map( AddAction::new )
+		                   .collect( Collectors.toSet() )
 			;
 	}
 

@@ -3,7 +3,7 @@ package com.carbonldp.ldp.sources;
 import com.carbonldp.ldp.containers.AccessPoint;
 import com.carbonldp.rdf.RDFNodeEnum;
 import org.joda.time.DateTime;
-import org.openrdf.model.IRI;
+import org.eclipse.rdf4j.model.IRI;
 
 import java.util.Set;
 

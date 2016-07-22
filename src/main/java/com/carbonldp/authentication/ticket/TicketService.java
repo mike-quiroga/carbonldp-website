@@ -1,7 +1,7 @@
 package com.carbonldp.authentication.ticket;
 
 import com.carbonldp.authentication.Ticket;
-import org.openrdf.model.IRI;
+import org.eclipse.rdf4j.model.IRI;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 /**
@@ -11,5 +11,5 @@ import org.springframework.security.access.prepost.PreAuthorize;
 public interface TicketService {
 
 	@PreAuthorize( "hasPermission(#targetIRI, 'READ')" )
-	public Ticket createTicket(IRI targetIRI);
+	public Ticket createTicket( IRI targetIRI );
 }

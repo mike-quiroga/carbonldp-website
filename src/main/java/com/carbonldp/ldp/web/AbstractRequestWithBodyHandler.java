@@ -5,10 +5,10 @@ import com.carbonldp.rdf.RDFResource;
 import com.carbonldp.utils.IRIUtil;
 import com.carbonldp.utils.ValueUtil;
 import com.carbonldp.web.exceptions.BadRequestException;
-import org.openrdf.model.IRI;
-import org.openrdf.model.Resource;
-import org.openrdf.model.impl.AbstractModel;
-import org.openrdf.model.impl.SimpleValueFactory;
+import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.Resource;
+import org.eclipse.rdf4j.model.impl.AbstractModel;
+import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -22,12 +22,12 @@ public abstract class AbstractRequestWithBodyHandler<E extends RDFResource> exte
 	protected Set<RDFResource> getRequestDocumentResources( AbstractModel requestModel ) {
 		Set<RDFResource> documentResources = new HashSet<>();
 		requestModel.subjects()
-					.stream()
-					.filter( ValueUtil::isIRI )
-					.map( ValueUtil::getIRI )
-					.filter( uri -> ! IRIUtil.hasFragment( uri ) )
-					.map( uri -> new RDFResource( requestModel, uri ) )
-					.forEach( documentResources::add )
+		            .stream()
+		            .filter( ValueUtil::isIRI )
+		            .map( ValueUtil::getIRI )
+		            .filter( uri -> ! IRIUtil.hasFragment( uri ) )
+		            .map( uri -> new RDFResource( requestModel, uri ) )
+		            .forEach( documentResources::add )
 		;
 		return documentResources;
 	}

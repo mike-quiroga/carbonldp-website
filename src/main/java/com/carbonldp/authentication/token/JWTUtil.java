@@ -2,7 +2,7 @@ package com.carbonldp.authentication.token;
 
 import com.carbonldp.Vars;
 import io.jsonwebtoken.*;
-import org.openrdf.model.IRI;
+import org.eclipse.rdf4j.model.IRI;
 import org.springframework.security.authentication.BadCredentialsException;
 
 import javax.crypto.spec.SecretKeySpec;
@@ -24,8 +24,8 @@ public final class JWTUtil {
 		byte[] apiKeySecretBytes = DatatypeConverter.parseBase64Binary( Vars.getInstance().getTokenKey() );
 		Key signingKey = new SecretKeySpec( apiKeySecretBytes, signatureAlgorithm.getJcaName() );
 		return Jwts.builder()
-				   .setSubject( password )
-				   .signWith( signatureAlgorithm, signingKey );
+		           .setSubject( password )
+		           .signWith( signatureAlgorithm, signingKey );
 	}
 
 	public static String encode( String password ) {

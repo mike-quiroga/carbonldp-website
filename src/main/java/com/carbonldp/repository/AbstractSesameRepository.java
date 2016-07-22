@@ -3,8 +3,8 @@ package com.carbonldp.repository;
 import com.carbonldp.AbstractComponent;
 import com.carbonldp.sparql.SPARQLTemplate;
 import com.carbonldp.utils.IRIUtil;
-import org.openrdf.model.IRI;
-import org.openrdf.spring.SesameConnectionFactory;
+import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.spring.SesameConnectionFactory;
 
 public class AbstractSesameRepository extends AbstractComponent {
 	protected final SesameConnectionFactory connectionFactory;

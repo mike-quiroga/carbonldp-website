@@ -2,12 +2,9 @@ package com.carbonldp.repository.updates;
 
 import com.carbonldp.Vars;
 import com.carbonldp.apps.App;
-import com.carbonldp.ldp.containers.BasicContainer;
-import com.carbonldp.ldp.containers.BasicContainerFactory;
-import com.carbonldp.rdf.RDFResource;
 import com.carbonldp.utils.IRIUtil;
-import org.openrdf.model.IRI;
-import org.openrdf.model.util.URIUtil;
+import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.util.URIUtil;
 
 import java.util.Set;
 

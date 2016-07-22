@@ -1,6 +1,8 @@
 package com.carbonldp.repository.updates;
 
 import com.carbonldp.AbstractComponent;
+import com.carbonldp.agents.AgentRepository;
+import com.carbonldp.agents.AgentService;
 import com.carbonldp.apps.App;
 import com.carbonldp.apps.AppRepository;
 import com.carbonldp.apps.roles.AppRoleRepository;
@@ -9,15 +11,18 @@ import com.carbonldp.authorization.acl.ACLRepository;
 import com.carbonldp.ldp.containers.ContainerRepository;
 import com.carbonldp.ldp.sources.RDFSourceRepository;
 import com.carbonldp.rdf.RDFDocumentRepository;
+import com.carbonldp.repository.FileRepository;
 import com.carbonldp.sparql.SPARQLTemplate;
 import com.carbonldp.spring.TransactionWrapper;
 import com.carbonldp.utils.Action;
-import org.openrdf.model.ValueFactory;
-import org.openrdf.model.impl.SimpleValueFactory;
-import org.openrdf.repository.RepositoryException;
-import org.openrdf.rio.RDFFormat;
-import org.openrdf.rio.RDFParseException;
-import org.openrdf.spring.SesameConnectionFactory;
+import org.eclipse.rdf4j.model.IRI;
+
+import org.eclipse.rdf4j.model.ValueFactory;
+import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
+import org.eclipse.rdf4j.repository.RepositoryException;
+import org.eclipse.rdf4j.rio.RDFFormat;
+import org.eclipse.rdf4j.rio.RDFParseException;
+import org.eclipse.rdf4j.spring.SesameConnectionFactory;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 import java.io.IOException;
@@ -38,6 +43,9 @@ public abstract class AbstractUpdateAction extends AbstractComponent implements 
 	protected RDFSourceRepository sourceRepository;
 	protected ACLRepository aclRepository;
 	protected RDFDocumentRepository documentRepository;
+	protected FileRepository localFileRepository;
+	protected AgentRepository platformAgentRepository;
+	protected AgentService platformAgentService;
 	protected AppRoleRepository appRoleRepository;
 	protected static ValueFactory valueFactory = SimpleValueFactory.getInstance();
 
@@ -79,6 +87,9 @@ public abstract class AbstractUpdateAction extends AbstractComponent implements 
 		aclRepository = context.getBean( ACLRepository.class );
 		documentRepository = context.getBean( RDFDocumentRepository.class );
 		appTokensRepository = context.getBean( AppTokenRepository.class );
+		localFileRepository = context.getBean( FileRepository.class );
+		platformAgentRepository = context.getBean( "platformAgentRepository", AgentRepository.class );
+		platformAgentService = context.getBean( "platformAgentService", AgentService.class );
 		appRoleRepository = context.getBean( AppRoleRepository.class );
 	}
 }
