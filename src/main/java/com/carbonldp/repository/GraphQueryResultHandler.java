@@ -1,9 +1,9 @@
 package com.carbonldp.repository;
 
 import com.carbonldp.repository.txn.RepositoryRuntimeException;
-import org.openrdf.model.Statement;
-import org.openrdf.query.GraphQueryResult;
-import org.openrdf.query.QueryEvaluationException;
+import org.eclipse.rdf4j.model.Statement;
+import org.eclipse.rdf4j.query.GraphQueryResult;
+import org.eclipse.rdf4j.query.QueryEvaluationException;
 
 public abstract class GraphQueryResultHandler implements StatementsHandler {
 	public void handle( GraphQueryResult queryResult ) {

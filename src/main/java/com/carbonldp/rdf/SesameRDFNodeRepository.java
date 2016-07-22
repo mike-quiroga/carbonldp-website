@@ -7,9 +7,9 @@ import com.carbonldp.utils.ValueUtil;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.ISODateTimeFormat;
-import org.openrdf.model.*;
-import org.openrdf.model.impl.SimpleValueFactory;
-import org.openrdf.spring.SesameConnectionFactory;
+import org.eclipse.rdf4j.model.*;
+import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
+import org.eclipse.rdf4j.spring.SesameConnectionFactory;
 
 import java.util.Collection;
 import java.util.HashSet;

@@ -4,7 +4,7 @@ import com.carbonldp.apps.App;
 import com.carbonldp.apps.AppRepository;
 import com.carbonldp.authorization.Platform;
 import com.carbonldp.authorization.RunWith;
-import org.openrdf.model.IRI;
+import org.eclipse.rdf4j.model.IRI;
 
 public class AppContextRepository {
 	private final AppRepository appRepository;

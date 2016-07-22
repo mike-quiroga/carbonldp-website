@@ -4,7 +4,7 @@ import com.carbonldp.Consts;
 import com.carbonldp.HTTPHeaders;
 import com.carbonldp.http.Link;
 import com.carbonldp.web.converters.ModelMessageConverter;
-import org.openrdf.model.Model;
+import org.eclipse.rdf4j.model.Model;
 import org.springframework.http.HttpHeaders;
 
 public class RDFResourceMessageConverter extends ModelMessageConverter<RDFResource> {

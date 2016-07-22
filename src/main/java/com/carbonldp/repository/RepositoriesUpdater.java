@@ -26,8 +26,13 @@ import java.util.Map;
  * @since 0.9.0-ALPHA
  */
 public class RepositoriesUpdater extends AbstractComponent {
+	private static String configurationFile;
 	private static final String versionFileName = "version";
 	private static final String versionFileCharset = "UTF-8";
+
+	public RepositoriesUpdater( String configurationFile ) {
+		this.configurationFile = configurationFile;
+	}
 
 	private static Map<RepositoryVersion, Action> versionsUpdates = new HashMap<RepositoryVersion, Action>() {{
 		put( new RepositoryVersion( "1.0.0" ), new UpdateAction1o0o0() );
@@ -41,6 +46,7 @@ public class RepositoriesUpdater extends AbstractComponent {
 		put( new RepositoryVersion( "1.8.0" ), new UpdateAction1o8o0() );
 		put( new RepositoryVersion( "1.9.0" ), new UpdateAction1o9o0() );
 		put( new RepositoryVersion( "1.10.0" ), new UpdateAction1o10o0() );
+		put( new RepositoryVersion( "1.11.0" ), new UpdateAction1o11o0() );
 	}};
 
 	public boolean repositoriesAreUpToDate() {
@@ -132,6 +138,7 @@ public class RepositoriesUpdater extends AbstractComponent {
 		RepositoryVersion defaultVersion = new RepositoryVersion( "1.0.0" );
 		LOG.debug( "-- createDefaultRepository(context) - Running creation of repository version: '{}'...", getLatestVersion() );
 		Action action = RepositoriesUpdater.versionsUpdates.get( defaultVersion );
+		( (UpdateAction1o0o0) action ).setConfigurationFile( configurationFile );
 		( (AbstractUpdateAction) action ).setBeans( context );
 		action.run();
 		LOG.debug( "-- createDefaultRepository(context) - Repository creation version: '{}', complete.", getLatestVersion() );

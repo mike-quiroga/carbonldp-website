@@ -4,7 +4,7 @@ import com.carbonldp.exceptions.InvalidResourceException;
 import com.carbonldp.models.Infraction;
 import com.carbonldp.rdf.RDFResource;
 import com.carbonldp.web.RequestHandler;
-import org.openrdf.model.IRI;
+import org.eclipse.rdf4j.model.IRI;
 
 import java.util.List;
 

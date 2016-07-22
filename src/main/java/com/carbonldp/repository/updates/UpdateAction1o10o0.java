@@ -4,12 +4,9 @@ import com.carbonldp.agents.Agent;
 import com.carbonldp.agents.PlatformAgentDescription;
 import com.carbonldp.agents.platform.SesamePlatformAgentService;
 import com.carbonldp.apps.App;
-import com.carbonldp.rdf.RDFMap;
 import com.carbonldp.utils.ValueUtil;
-import org.openrdf.model.BNode;
-import org.openrdf.model.IRI;
-import org.openrdf.model.Statement;
-import org.openrdf.model.Value;
+import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.Statement;
 import org.springframework.aop.framework.Advised;
 
 import java.util.Set;
@@ -37,7 +34,7 @@ public class UpdateAction1o10o0 extends AbstractUpdateAction {
 		transactionWrapper.runWithSystemPermissionsInPlatformContext( () -> {
 			for ( IRI platformAgentIRI : platformAgentIRIs ) {
 				Agent agentResource = platformAgentRepository.get( platformAgentIRI );
-				if ( agentResource.getIRI( PlatformAgentDescription.Property.APP_ROLE_MAP ) == null && ! platformAgentIRI.stringValue().equals( platformAgentRepository.getAgentsContainerIRI().stringValue() + "admin/" ) ) {
+				if ( agentResource.getIRI( PlatformAgentDescription.Property.APP_ROLE_MAP ) == null ) {
 					sesamePlatformAgentService.createAppRoleMap( agentResource );
 				}
 			}

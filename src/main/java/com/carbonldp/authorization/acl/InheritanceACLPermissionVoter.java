@@ -6,8 +6,8 @@ import com.carbonldp.apps.context.AppContextHolder;
 import com.carbonldp.rdf.RDFNodeEnum;
 import com.carbonldp.utils.ACLUtil;
 import com.carbonldp.web.exceptions.NotImplementedException;
-import org.openrdf.model.IRI;
-import org.openrdf.model.impl.SimpleValueFactory;
+import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 
 import java.util.HashSet;
 import java.util.List;

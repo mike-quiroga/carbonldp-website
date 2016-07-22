@@ -9,11 +9,11 @@ import com.carbonldp.repository.GraphQueryResultHandler;
 import com.carbonldp.utils.RDFNodeUtil;
 import com.carbonldp.utils.SPARQLUtil;
 import com.carbonldp.utils.ValueUtil;
-import org.openrdf.model.IRI;
-import org.openrdf.model.Statement;
-import org.openrdf.model.Value;
-import org.openrdf.query.BindingSet;
-import org.openrdf.spring.SesameConnectionFactory;
+import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.Statement;
+import org.eclipse.rdf4j.model.Value;
+import org.eclipse.rdf4j.query.BindingSet;
+import org.eclipse.rdf4j.spring.SesameConnectionFactory;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
@@ -75,10 +75,10 @@ public abstract class AbstractTypedContainerRepository extends AbstractSesameLDP
 	static {
 		StringBuilder queryBuilder = new StringBuilder();
 		queryBuilder
-			.append( "SELECT ?memberOfRelation WHERE {" ).append( NEW_LINE )
+			.append( "SELECT ?isMemberOfRelation WHERE {" ).append( NEW_LINE )
 			.append( TAB ).append( "GRAPH ?containerIRI {" ).append( NEW_LINE )
-			.append( TAB ).append( TAB ).append( RDFNodeUtil.generatePredicateStatement( "?containerIRI", "?memberOfRelation", ContainerDescription.Property.MEMBER_OF_RELATION ) ).append( NEW_LINE )
-			.append( TAB ).append( TAB ).append( "FILTER(isIRI(?memberOfRelation))." ).append( NEW_LINE )
+			.append( TAB ).append( TAB ).append( RDFNodeUtil.generatePredicateStatement( "?containerIRI", "?isMemberOfRelation", ContainerDescription.Property.IS_MEMBER_OF_RELATION ) ).append( NEW_LINE )
+			.append( TAB ).append( TAB ).append( "FILTER(isIRI(?isMemberOfRelation))." ).append( NEW_LINE )
 			.append( TAB ).append( "}" ).append( NEW_LINE )
 			.append( "}" ).append( NEW_LINE )
 			.append( "LIMIT 1" )
@@ -93,7 +93,7 @@ public abstract class AbstractTypedContainerRepository extends AbstractSesameLDP
 
 		return sparqlTemplate.executeTupleQuery( getMemberOfRelation_query, bindings, queryResult -> {
 			if ( ! queryResult.hasNext() ) return null;
-			else return ValueUtil.getIRI( queryResult.next().getBinding( "memberOfRelation" ).getValue() );
+			else return ValueUtil.getIRI( queryResult.next().getBinding( "isMemberOfRelation" ).getValue() );
 		} );
 	}
 
@@ -170,9 +170,9 @@ public abstract class AbstractTypedContainerRepository extends AbstractSesameLDP
 	}
 
 	protected void addMemberOfRelation( IRI containerIRI, IRI member ) {
-		IRI memberOfRelation = getMemberOfRelation( containerIRI );
+		IRI isMemberOfRelation = getMemberOfRelation( containerIRI );
 		IRI membershipResource = getMembershipResource( containerIRI );
-		if ( memberOfRelation != null ) connectionTemplate.write( connection -> connection.add( member, memberOfRelation, membershipResource, member ) );
+		if ( isMemberOfRelation != null ) connectionTemplate.write( connection -> connection.add( member, isMemberOfRelation, membershipResource, member ) );
 	}
 
 	@Override
@@ -215,7 +215,7 @@ public abstract class AbstractTypedContainerRepository extends AbstractSesameLDP
 		Collection<IRI> values = new HashSet<>();
 		values.add( RDFSourceDescription.Property.TYPE.getIRI() );
 		values.add( ContainerDescription.Property.HAS_MEMBER_RELATION.getIRI() );
-		values.add( ContainerDescription.Property.MEMBER_OF_RELATION.getIRI() );
+		values.add( ContainerDescription.Property.IS_MEMBER_OF_RELATION.getIRI() );
 		values.add( ContainerDescription.Property.MEMBERSHIP_RESOURCE.getIRI() );
 		values.add( ContainerDescription.Property.INSERTED_CONTENT_RELATION.getIRI() );
 

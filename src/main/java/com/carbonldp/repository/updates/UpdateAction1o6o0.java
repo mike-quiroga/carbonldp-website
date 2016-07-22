@@ -13,8 +13,8 @@ import com.carbonldp.ldp.containers.DirectContainerFactory;
 import com.carbonldp.namespaces.LDP;
 import com.carbonldp.rdf.RDFListFactory;
 import com.carbonldp.rdf.RDFResource;
-import org.openrdf.model.IRI;
-import org.openrdf.model.vocabulary.RDF;
+import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.vocabulary.RDF;
 
 import java.util.Set;
 

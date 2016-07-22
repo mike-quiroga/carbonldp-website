@@ -7,8 +7,8 @@ import com.carbonldp.ldp.nonrdf.RDFRepresentationDescription;
 import com.carbonldp.ldp.sources.RDFSource;
 import com.carbonldp.rdf.RDFResourceDescription;
 import com.carbonldp.web.converters.ModelMessageConverter;
-import org.openrdf.model.Model;
-import org.openrdf.model.Value;
+import org.eclipse.rdf4j.model.Model;
+import org.eclipse.rdf4j.model.Value;
 import org.springframework.http.HttpHeaders;
 
 import java.util.Set;

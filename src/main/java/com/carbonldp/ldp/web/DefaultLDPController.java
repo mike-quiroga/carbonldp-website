@@ -5,7 +5,7 @@ import com.carbonldp.ldp.nonrdf.BaseNonRDFPostRequestHandler;
 import com.carbonldp.ldp.sources.InteractionModelController;
 import com.carbonldp.rdf.RDFDocument;
 import com.carbonldp.web.exceptions.NotImplementedException;
-import org.openrdf.model.impl.AbstractModel;
+import org.eclipse.rdf4j.model.impl.AbstractModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;

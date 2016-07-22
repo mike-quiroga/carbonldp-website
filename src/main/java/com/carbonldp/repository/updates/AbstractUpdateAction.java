@@ -17,12 +17,14 @@ import com.carbonldp.rdf.RDFMapRepository;
 import com.carbonldp.sparql.SPARQLTemplate;
 import com.carbonldp.spring.TransactionWrapper;
 import com.carbonldp.utils.Action;
-import org.openrdf.model.ValueFactory;
-import org.openrdf.model.impl.SimpleValueFactory;
-import org.openrdf.repository.RepositoryException;
-import org.openrdf.rio.RDFFormat;
-import org.openrdf.rio.RDFParseException;
-import org.openrdf.spring.SesameConnectionFactory;
+import com.carbonldp.repository.FileRepository;
+
+import org.eclipse.rdf4j.model.ValueFactory;
+import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
+import org.eclipse.rdf4j.repository.RepositoryException;
+import org.eclipse.rdf4j.rio.RDFFormat;
+import org.eclipse.rdf4j.rio.RDFParseException;
+import org.eclipse.rdf4j.spring.SesameConnectionFactory;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 import java.io.IOException;
@@ -44,11 +46,12 @@ public abstract class AbstractUpdateAction extends AbstractComponent implements 
 	protected ACLRepository aclRepository;
 	protected RDFDocumentRepository documentRepository;
 	protected AgentRepository platformAgentRepository;
-	protected AgentService platformAgentService;
 	protected RDFSourceService sourceService;
 	protected AppRoleRepository appRoleRepository;
 	protected ContainerService containerService;
 	protected RDFMapRepository mapRepository;
+	protected FileRepository localFileRepository;
+	protected AgentService platformAgentService;
 	protected static ValueFactory valueFactory = SimpleValueFactory.getInstance();
 
 	public void run() {
@@ -89,11 +92,12 @@ public abstract class AbstractUpdateAction extends AbstractComponent implements 
 		aclRepository = context.getBean( ACLRepository.class );
 		documentRepository = context.getBean( RDFDocumentRepository.class );
 		appTokensRepository = context.getBean( AppTokenRepository.class );
-		platformAgentRepository = context.getBean( "platformAgentRepository", AgentRepository.class );
-		platformAgentService = context.getBean( "platformAgentService", AgentService.class );
 		sourceService = context.getBean( RDFSourceService.class );
 		appRoleRepository = context.getBean( AppRoleRepository.class );
 		containerService = context.getBean( ContainerService.class );
 		mapRepository = context.getBean( RDFMapRepository.class );
+		localFileRepository = context.getBean( FileRepository.class );
+		platformAgentRepository = context.getBean( "platformAgentRepository", AgentRepository.class );
+		platformAgentService = context.getBean( "platformAgentService", AgentService.class );
 	}
 }

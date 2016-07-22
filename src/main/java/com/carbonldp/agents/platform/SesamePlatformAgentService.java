@@ -12,16 +12,13 @@ import com.carbonldp.authorization.Platform;
 import com.carbonldp.authorization.acl.ACEDescription;
 import com.carbonldp.authorization.acl.ACL;
 import com.carbonldp.exceptions.ResourceAlreadyExistsException;
-import com.carbonldp.ldp.containers.ContainerService;
-import com.carbonldp.ldp.containers.BasicContainerFactory;
 import com.carbonldp.models.Infraction;
 import com.carbonldp.rdf.*;
 import com.carbonldp.web.exceptions.BadRequestException;
-import org.openrdf.model.BNode;
-import org.openrdf.model.IRI;
-import org.openrdf.model.Value;
-import org.openrdf.model.ValueFactory;
-import org.openrdf.model.impl.SimpleValueFactory;
+import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.Value;
+import org.eclipse.rdf4j.model.ValueFactory;
+import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Arrays;
@@ -72,6 +69,7 @@ public class SesamePlatformAgentService extends SesameAgentsService {
 		if ( platformAgentRepository.existsWithEmail( email ) ) throw new ResourceAlreadyExistsException();
 		setAgentPasswordFields( agent );
 		containerService.createChild( agentContainerIRI, agent );
+		createAppRoleMap( agent );
 	}
 
 	@Override
@@ -136,7 +134,6 @@ public class SesamePlatformAgentService extends SesameAgentsService {
 
 	@Autowired
 	public void setPlatformAgentRepository( PlatformAgentRepository platformAgentRepository ) { this.platformAgentRepository = platformAgentRepository; }
-
 
 	@Autowired
 	public void setAppService( AppService appService ) { this.appService = appService; }

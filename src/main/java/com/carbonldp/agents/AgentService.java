@@ -1,6 +1,6 @@
 package com.carbonldp.agents;
 
-import org.openrdf.model.IRI;
+import org.eclipse.rdf4j.model.IRI;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 /**
@@ -8,7 +8,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
  * @since 0.14.0-ALPHA
  */
 public interface AgentService {
-	@PreAuthorize( "! isAuthenticated() or hasRole('ROLE_ANONYMOUS')" )
+	@PreAuthorize( " ! isAuthenticated() or hasRole('ROLE_ANONYMOUS')" )
 	public void register( Agent agent );
 
 	@PreAuthorize( "hasPermission(#agentIRI, 'DELETE')" )

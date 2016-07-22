@@ -13,13 +13,10 @@ import com.carbonldp.ldp.AbstractSesameLDPService;
 import com.carbonldp.ldp.containers.*;
 import com.carbonldp.ldp.sources.RDFSourceService;
 import com.carbonldp.models.Infraction;
-import com.carbonldp.rdf.RDFMap;
 import com.carbonldp.rdf.RDFMapRepository;
 import com.carbonldp.rdf.RDFResource;
 import org.joda.time.DateTime;
-import org.openrdf.model.BNode;
-import org.openrdf.model.IRI;
-import org.openrdf.model.Value;
+import org.eclipse.rdf4j.model.IRI;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Collection;
@@ -109,8 +106,8 @@ public class SesameAppRoleService extends AbstractSesameLDPService implements Ap
 				Agent agentResource = platformAgentRepository.get( agent );
 				IRI rdfMapIRI = agentResource.getIRI( PlatformAgentDescription.Property.APP_ROLE_MAP );
 				if ( rdfMapIRI == null ) return;
-				mapRepository.clean(rdfMapIRI);
-				mapRepository.remove(rdfMapIRI,appIRI, roleIRI );
+				mapRepository.clean( rdfMapIRI );
+				mapRepository.remove( rdfMapIRI, appIRI, roleIRI );
 			} );
 		}
 
