@@ -203,22 +203,18 @@ public class LocalFileRepository implements FileRepository {
 
 	@Override
 	public File createTempFile( Set<String> tempFileData ) {
-		File tempFile = null;
+		File tempFile = createEmptyTempFile();
 		FileWriter fw = null;
 		try {
-			tempFile = File.createTempFile( "file:", ".tmp" );
-			tempFile.deleteOnExit();
 			fw = new FileWriter( tempFile );
-			PrintWriter pw = new PrintWriter( fw );
-			for ( String line : tempFileData )
-				pw.println( line );
-		} catch ( Exception e ) {
-			throw new RuntimeException( "There is a problem creating the temporary file. Exception: ", e );
+			writeInTempFile( fw, tempFileData );
+		} catch ( IOException e ) {
+			throw new RuntimeException( "There is a problem writing the temporary file. Exception: ", e );
 		} finally {
 			try {
 				if ( null != fw )
 					fw.close();
-			} catch ( Exception e2 ) {
+			} catch ( IOException e2 ) {
 				throw new RuntimeException( "The FileWriter couldn't be closed. Exception: ", e2 );
 			}
 		}
@@ -227,28 +223,84 @@ public class LocalFileRepository implements FileRepository {
 
 	@Override
 	public Map<String, String> getBackupConfiguration( InputStream configStream ) {
-		Map<String, String> configuration = new LinkedHashMap<>();
 		InputStreamReader inputStreamReader = new InputStreamReader( configStream );
 		BufferedReader br = new BufferedReader( inputStreamReader );
 		try {
-			for ( String line = br.readLine(); line != null; line = br.readLine() ) {
-				int div = line.indexOf( "=" );
-				if ( div == - 1 ) throw new InvalidResourceException( new Infraction( 0x2015 ) );
-				String key = line.substring( 0, div ).trim();
-				String value = line.substring( div + 1 ).trim();
-				configuration.put( key, value );
-			}
-			return configuration;
-		} catch ( Exception e ) {
+			return createConfigurationMap( br );
+		} catch ( IOException e ) {
 			throw new RuntimeException( "There is a problem reading the configuration file. Exception: ", e );
 		} finally {
 			try {
 				if ( null != inputStreamReader )
 					inputStreamReader.close();
-			} catch ( Exception e2 ) {
+			} catch ( IOException e2 ) {
 				throw new RuntimeException( "The inputStreamReader couldn't be closed. Exception: ", e2 );
 			}
 		}
+	}
+
+	@Override
+	public String getFilesDirectory( App app ) {
+		String directory = Vars.getInstance().getAppsFilesDirectory();
+		if ( ! directory.endsWith( Consts.SLASH ) ) directory = directory.concat( Consts.SLASH );
+		directory = directory.concat( app.getRepositoryID() );
+
+		return directory;
+	}
+
+	@Override
+	public void removeLineFromFileStartingWith( String file, List<String> linesToRemove ) {
+
+		File inFile = new File( file );
+		File tempFile = new File( inFile.getAbsolutePath() + ".tmp" );
+		BufferedReader bufferedReader = getBufferedReader( file );
+		PrintWriter printWriter = getPrintWriter( tempFile );
+
+		String line = null;
+		while ( ( line = readLine( bufferedReader ) ) != null ) {
+			if ( ! hasToBeRemoved( line, linesToRemove ) ) {
+				printWriter.println( line );
+				printWriter.flush();
+			}
+		}
+		printWriter.close();
+		try {
+			bufferedReader.close();
+		} catch ( IOException e ) {
+			throw new RuntimeException( "buffered reader could not be closed", e );
+		}
+		inFile.delete();
+		tempFile.renameTo( inFile );
+
+	}
+
+	private File createEmptyTempFile() {
+		File tempFile = null;
+		try {
+			tempFile = File.createTempFile( "file:", ".tmp" );
+			tempFile.deleteOnExit();
+		} catch ( IOException e ) {
+			throw new RuntimeException( "There is a problem creating the temporary file. Exception: ", e );
+		}
+		return tempFile;
+	}
+
+	private void writeInTempFile( FileWriter fw, Set<String> tempFileData ) {
+		PrintWriter pw = new PrintWriter( fw );
+		for ( String line : tempFileData )
+			pw.println( line );
+	}
+
+	private Map<String, String> createConfigurationMap( BufferedReader br ) throws IOException {
+		Map<String, String> configuration = new LinkedHashMap<>();
+		for ( String line = br.readLine(); line != null; line = br.readLine() ) {
+			int div = line.indexOf( "=" );
+			if ( div == - 1 ) throw new InvalidResourceException( new Infraction( 0x2015 ) );
+			String key = line.substring( 0, div ).trim();
+			String value = line.substring( div + 1 ).trim();
+			configuration.put( key, value );
+		}
+		return configuration;
 	}
 
 	private void addFileToZip( ZipOutputStream zipOutputStream, File file, File directoryFile, String fileNameInsideZip ) {
@@ -339,41 +391,6 @@ public class LocalFileRepository implements FileRepository {
 		}
 
 		return directory;
-	}
-
-	@Override
-	public String getFilesDirectory( App app ) {
-		String directory = Vars.getInstance().getAppsFilesDirectory();
-		if ( ! directory.endsWith( Consts.SLASH ) ) directory = directory.concat( Consts.SLASH );
-		directory = directory.concat( app.getRepositoryID() );
-
-		return directory;
-	}
-
-	@Override
-	public void removeLineFromFileStartingWith( String file, List<String> linesToRemove ) {
-
-		File inFile = new File( file );
-		File tempFile = new File( inFile.getAbsolutePath() + ".tmp" );
-		BufferedReader bufferedReader = getBufferedReader( file );
-		PrintWriter printWriter = getPrintWriter( tempFile );
-
-		String line = null;
-		while ( ( line = readLine( bufferedReader ) ) != null ) {
-			if ( ! hasToBeRemoved( line, linesToRemove ) ) {
-				printWriter.println( line );
-				printWriter.flush();
-			}
-		}
-		printWriter.close();
-		try {
-			bufferedReader.close();
-		} catch ( IOException e ) {
-			throw new RuntimeException( "buffered reader could not be closed", e );
-		}
-		inFile.delete();
-		tempFile.renameTo( inFile );
-
 	}
 
 	private String readLine( BufferedReader bufferedReader ) {

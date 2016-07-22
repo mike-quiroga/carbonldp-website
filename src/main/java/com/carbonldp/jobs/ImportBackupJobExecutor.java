@@ -75,25 +75,33 @@ public class ImportBackupJobExecutor implements TypedJobExecutor {
 		Map<String, String> configurationMap = fileRepository.getBackupConfiguration( configFileStream );
 		Map<String, String> replaceMap = createReplaceMap( configurationMap, AppContextHolder.getContext().getApplication().getIRI().stringValue(), RDFFormat.NQUADS );
 		replaceAppNQuadsFile( nQuadsInputStream, appIRI, replaceMap );
-		
+
 	}
 
 	private void replaceAppNQuadsFile( InputStream stream, IRI appIRI, Map<String, String> map ) {
 		connectionTemplate.write( connection -> connection.remove( (Resource) null, null, null ) );
 		BufferedReader in = new BufferedReader( new InputStreamReader( stream ) );
-
-		Set<String> keySet = map.keySet();
 		try {
-			for ( String line = in.readLine(); line != null; line = in.readLine() ) {
-				for ( String key : keySet ) {
-					line = line.replace( key, map.get( key ) );
-				}
-
-				InputStream lineStream = IOUtils.toInputStream( line, "UTF-8" );
-				connectionTemplate.write( connection -> connection.add( lineStream, appIRI.stringValue(), RDFFormat.NQUADS ) );
-			}
+			addLinesToRepository( in, appIRI, map );
 		} catch ( IOException e ) {
+			throw new RuntimeException( "There is a problem reading the nQuads file. Exception:", e );
+		} finally {
+			try {
+				in.close();
+			} catch ( IOException e ) {
+				throw new RuntimeException( "The buffer couldn't be closed. Exception:", e );
+			}
+		}
+	}
 
+	private void addLinesToRepository( BufferedReader in, IRI appIRI, Map<String, String> map ) throws IOException {
+		Set<String> keySet = map.keySet();
+		for ( String line = in.readLine(); line != null; line = in.readLine() ) {
+			for ( String key : keySet ) {
+				line = line.replace( key, map.get( key ) );
+			}
+			InputStream lineStream = IOUtils.toInputStream( line, "UTF-8" );
+			connectionTemplate.write( connection -> connection.add( lineStream, appIRI.stringValue(), RDFFormat.NQUADS ) );
 		}
 	}
 
