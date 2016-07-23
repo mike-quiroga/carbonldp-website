@@ -71,7 +71,7 @@ public class TokenAuthenticationRequestHandler extends AbstractLDPRequestHandler
 
 	private void addResponseMetadata( Token token, RDFSource agentModel ) {
 		RDFBlankNode responseDescription = getResponseMetadata( token );
-		int eTag = ModelUtil.calculateETag( token );
+		int eTag = ModelUtil.calculateETag( agentModel );
 		String valueETag = HTTPUtil.formatStrongEtag( eTag );
 
 		BNode bNode = SimpleValueFactory.getInstance().createBNode();
