@@ -1,0 +1,193 @@
+<div class="ui main grid container">
+	<div class="row">
+		<div class="sixteen wide column">
+			<div class="ui breadcrumb">
+				<a class="section" [routerLink]="[ '../Documentation' ]">Documentation</a>
+				<i class="right chevron icon divider"></i>
+				<a class="section" [routerLink]="[ '../JavaScriptSDK' ]">JavaScript SDK</a>
+				<i class="right arrow icon divider"></i>
+				<div class="active section">Object model</div>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="twelve wide computer twelve wide tablet sixteen wide mobile column">
+			<main>
+				<article class="ui vertical segment" id="article">
+					<header>
+						<h1 class="ui header">Object model</h1>
+					</header>
+
+					<div class="ui icon yellow message">
+						<i class="warning sign icon"></i>
+						<div class="content">
+							<div class="header">Pre-release Documentation</div>
+							<p>Although Carbon LDP is not yet released, we're publishing documentation as it is prepared so that you can preview what's in store.</p>
+						</div>
+					</div>
+
+					<section>
+						<h2 class="ui header">Documents</h2>
+						<p>
+							The main model handled by Carbon is called a document. A document is a normal JavaScript object identified by an ID.
+						</p>
+						<section>
+							<h3 class="ui header">URIs</h3>
+							<p>
+								Using a numerical value as an ID would be prone to collisions. Using a
+								<a href="https://en.wikipedia.org/wiki/Universally_unique_identifier" rel="noopener" class="outsidelink" target="_blank">UUID</a>
+								would solve the collision problem but would make the ID relative to the application (making the ID hard to resolve without knowing
+								where it came from). That's why Carbon uses Unique Resource Identifiers (or URIs).
+							</p>
+							<p>
+								URIs are strings that identify resources in a network. Any URL you can think off is also considered a URI, but not all URIs are URLs.
+								The main difference is that a URL can change the resource it is pointing at, while URIs can also belong to a resource forever (in which case
+								they would be URNs (Unique Resource Names).
+							</p>
+							<p>
+								Basically, <code>URI = URL + URN</code>
+							</p>
+							<p>
+								URIs follow a <a href="https://es.wikipedia.org/wiki/URI_scheme" rel="noopener" class="outsidelink" target="_blank">scheme</a>. Carbon document' URIs, follow the
+								<code>http
+								</code>
+								or <code>https</code> scheme (depending on the platform's configuration).
+							</p>
+							<p>
+								Using URIs as identifiers allow Carbon objects to be <strong>unique</strong>, <strong>resolvable</strong> and <strong>relative to
+								the network</strong>.
+							</p>
+						</section>
+						<section>
+							<h3 class="ui header">Properties</h3>
+							<p>
+								Like any JavaScript object, Carbon documents store data in properties. Properties can be named and contain whatever your
+								application needs, but there are special ones that you should be aware of:
+							</p>
+							<ul>
+								<li><code>id</code>: ID of the document, the previous section talks about this property more in depth. It is present in</li>
+								<li>
+									<code>slug</code>: Holds the last part of the URI the document is identified with. For example the URI:
+									<code>https://example.com/resource-1/</code> would have as a slug <code>resource-1</code>. This property proves to be
+									useful when the document needs to be sent through a URL, an application route, etc. to later on retrieve it through its parent.
+								</li>
+								<li><code>types</code>: Holds all the types the document is marked with. You can read more about this property <a href="">here</a></li>
+								<li><code>created</code>: Date of when the document was created</li>
+								<li><code>modified</code>: Date of when the document was modified</li>
+								<li><code>hasMemberRelation</code>: Configures the property that will hold the array of document members</li>
+								<li><code>isMemberOfRelation</code>: Specifies the property that the member will acquire that points back to the document</li>
+							</ul>
+						</section>
+						<section>
+							<h3 class="ui header">Fragments and Named Fragments</h3>
+							<p>
+								Documents may also contain nested objects. There are two types of nested objects, <code>fragments</code> and <code>named fragments</code>:
+							</p>
+							<!--@formatter:off-->
+							<pre><code cpHighlight class="javascript">
+								var document = {                                        // =================== Document
+									id: "https://.../projects/project-x/",
+									name: "Project X",
+									description: {                                      // -------- Fragment
+										format: "html",
+										content: "&lt;div&gt;Some content&lt;/div&gt;"
+									},                                                  // -------- End: Fragment
+									sow: {                                              // -------- Named Fragment
+										id: "#sow",
+										signedOn: new Date( "2016-04-03" ),
+										clauses: [ // ... ]
+									}                                                   // -------- End: Named Fragment
+								};                                                      // =================== End: Document
+							</code></pre>
+							<!--@formatter:on-->
+							<p>
+								Fragments are identified by an ID, just like documents, but the key difference is that their ID is not a URI. Instead
+								fragments use IDs of the form <code><strong>_:</strong>RANDOM-STRING</code>. These IDs are local to the document, making impossible to link
+								fragments from outside of the document.
+							</p>
+							<p>
+								Named fragments on the other hand, are identified by a URI relative to the document. This means, named fragments ARE
+								referenceable from outside the document. Their URIs have the form <code>DOCUMENT-URI<strong>#</strong>NAMED-FRAGMENT-SLUG</code>,
+								but there are times (like in the example) where they can be written relative to the document like
+								<code><strong>#</strong>NAMED-FRAGMENT-SLUG</code>.
+							</p>
+							<div class="ui info icon message">
+								<i class="info circle icon"></i>
+								<div class="content">
+									<div class="header">In a Nutshell</div>
+									<p>
+										If the object you want to save doesn't make sense without the context of another object, save it as a
+										<strong>fragment</strong>. If it is an essential part of the document, but it makes sense to talk about
+										it from outside, create a <strong>named fragment</strong>.
+									</p>
+									<p>
+										Most of the times <strong>documents</strong> and <strong>fragments</strong> are enough to model any kind of data.
+									</p>
+								</div>
+							</div>
+						</section>
+					</section>
+					<section>
+						<h2>Object Types</h2>
+						<p>
+							Any object stored in Carbon (documents, fragments or named fragments), can be marked with "types". These types can help you
+							understand an object without iterating through its properties. They can tell your application what type of properties the
+							object will have, act as flags (or tags) on the object, or any other usage you can come up with.
+						</p>
+						<p>
+							Carbon automatically adds certain types to your objects when handling them, so you must be careful when doing assumptions about them.
+						</p>
+						<p>
+							The property <code>types</code> will contain an array of types the object has been marked with. To make assumptions about it you can
+							use an object's <code>hasType</code> method:
+						</p>
+						<sui-tabs>
+							<sui-tab title="TypeScript">
+								<!--@formatter:off-->
+									<pre><code cpHighlight class="typescript">
+										// ... additional imports
+										import * as PersistedDocument from "carbonldp/PersistedDocument";
+
+										let project:Project & PersistedDocument.Class;
+
+										// ... project retrieval
+
+										project.types.push( "project", "important-project" );
+
+										console.log( project.hasType( "project" ) ); // true
+										console.log( project.types.length !== 2 ); // true, remember Carbon may add more types to the document
+									</code></pre>
+									<!--@formatter:on-->
+							</sui-tab>
+							<sui-tab title="JavaScript">
+								<!--@formatter:off-->
+									<pre><code cpHighlight class="javascript">
+										// ... imports
+										let project;
+
+										// ... project retrieval
+
+										project.types.push( "project", "important-project" );
+
+										console.log( project.hasType( "project" ) ); // true
+										console.log( project.types.length !== 2 ); // true, remember Carbon may add more types to the document
+									</code></pre>
+									<!--@formatter:on-->
+							</sui-tab>
+						</sui-tabs>
+					</section>
+					<div class="ui positive icon message">
+						<i class="arrow right icon"></i>
+						<div class="content">
+							<div class="header">Next step</div>
+							<div class="header">
+								<a [routerLink]="[ '../JavaScriptSDKContexts' ]">Contexts</a>
+							</div>
+						</div>
+					</div>
+				</article>
+			</main>
+		</div>
+		<sidebar-component [mobile]="false" [parentElement]="element" [contentReady]="contentReady" class="four wide computer only four wide tablet only column"></sidebar-component>
+	</div>
+</div>

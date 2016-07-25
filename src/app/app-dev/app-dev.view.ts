@@ -97,7 +97,7 @@ export class AppDevView implements OnInit {
 		this.router = router;
 		this.router.parent.subscribe( ( url )=> {
 			if( this.prevUrl !== url ) {
-				document.querySelector( ".scrollable-content" ).scrollTo( 0, 0 );
+				document.querySelector( ".scrollable-content" ).scrollTop = 0;
 				this.prevUrl = url;
 			}
 		} );

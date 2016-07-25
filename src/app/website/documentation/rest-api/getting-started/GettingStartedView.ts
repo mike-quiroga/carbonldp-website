@@ -22,7 +22,6 @@ import template from "./template.html!";
 export default class GettingStartedView {
 	element:ElementRef;
 	$element:JQuery;
-	title:Title;
 	protocolAndHost:string;
 	title:Title;
 

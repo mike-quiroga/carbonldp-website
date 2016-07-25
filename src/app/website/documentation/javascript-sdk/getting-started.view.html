@@ -4,9 +4,9 @@
 		<div class="sixteen wide column">
 
 			<div class="ui breadcrumb">
-				<span class="section">Documentation</span>
+				<a class="section" [routerLink]="[ '../Documentation' ]">Documentation</a>
 				<i class="right chevron icon divider"></i>
-				<span class="section">JavaScript SDK</span>
+				<a class="section" [routerLink]="[ '../JavaScriptSDK' ]">JavaScript SDK</a>
 				<i class="right arrow icon divider"></i>
 
 				<div class="active section">Getting Started</div>
@@ -85,7 +85,7 @@
 							</div>
 							<div class="content">
 								<p>If you are not using a package manager you can clone the source code with the following command:</p>
-								<pre><code cphighlight class="bash">
+								<pre><code cpHighlight class="bash">
 									git clone https://github.com/CarbonLDP/CarbonLDP-JS-SDK.git
 								</code></pre>
 								<p>It already includes a pre-compiled version of the source code so you can just jump right in.</p>
@@ -95,7 +95,7 @@
 								npm
 							</div>
 							<div class="active content">
-								<pre><code cphighlight class="bash">
+								<pre><code cpHighlight class="bash">
 									npm install carbonldp --save
 								</code></pre>
 							</div>
@@ -105,7 +105,7 @@
 							</div>
 							<div class="content">
 								<!--@formatter:off-->
-								<pre><code cphighlight class="bash">
+								<pre><code cpHighlight class="bash">
 									jspm install npm:carbonldp
 									# We also need to install one of carbonldp's dependencies
 									jspm install npm:jsonld
@@ -122,7 +122,7 @@
 							<div class="content">
 								<p>The SDK comes with a bundled version that you can import directly into your html:</p>
 								<!--@formatter:off-->
-								<pre><code cphighlight class="html">
+								<pre><code cpHighlight class="html">
 									&lt;script src="--sdk-directory--/dist/bundles/Carbon.sfx.js"&gt;&lt;/script&gt;
 								</code></pre>
 								<!--@formatter:on-->
@@ -137,7 +137,7 @@
 									Each time you see in an example something like:
 								</p>
 								<!--@formatter:off-->
-								<pre><code cphighlight class="javascript">
+								<pre><code cpHighlight class="javascript">
 									import * as Errors from "carbonldp/HTTP/Errors";
 								</code></pre>
 								<!--@formatter:on-->
@@ -146,7 +146,7 @@
 									to access the same module. For example, accessing that module using the global namespace would be:
 								</p>
 								<!--@formatter:off-->
-								<pre><code cphighlight class="javascript">
+								<pre><code cpHighlight class="javascript">
 									Carbon.HTTP.Errors
 								</code></pre>
 								<!--@formatter:on-->
@@ -167,7 +167,7 @@
 									export of the module. That export will also be available as the named export <code>Class</code>. For example:
 								</p>
 								<!--@formatter:off-->
-								<pre><code cphighlight class="javascript">
+								<pre><code cpHighlight class="javascript">
 									// This:
 									import Document from "carbonldp/Document";
 									let myDocument:Document = new Document();
@@ -183,7 +183,7 @@
 									imports but you'll likely need to rename the import variables like:
 								</p>
 								<!--@formatter:off-->
-								<pre><code cphighlight class="javascript">
+								<pre><code cpHighlight class="javascript">
 									import { Factory as DocumentFactory, Class as Document } from "carbonldp/Document";
 								</code></pre>
 								<!--@formatter:on-->
@@ -192,7 +192,7 @@
 									Example:
 								</p>
 								<!--@formatter:off-->
-								<pre><code cphighlight class="javascript">
+								<pre><code cpHighlight class="javascript">
 									import * as Errors from "carbonldp/HTTP/Errors";
 									import * as Request from "carbonldp/HTTP/Request";
 
@@ -230,7 +230,7 @@
 						<sui-tabs>
 							<sui-tab title="TypeScript">
 								<!--@formatter:off-->
-								<pre><code cphighlight class="typescript">
+								<pre><code cpHighlight class="typescript">
 									import Carbon from "carbonldp/Carbon";
 
 									let carbon:Carbon = new Carbon(); // platform context
@@ -239,7 +239,7 @@
 							</sui-tab>
 							<sui-tab title="JavaScript">
 								<!--@formatter:off-->
-								<pre><code cphighlight class="javascript">
+								<pre><code cpHighlight class="javascript">
 									let carbon = new Carbon(); // platform context
 								</code></pre>
 								<!--@formatter:on-->
@@ -252,7 +252,7 @@
 						<sui-tabs>
 							<sui-tab title="TypeScript">
 								<!--@formatter:off-->
-								<pre><code cphighlight class="typescript">
+								<pre><code cpHighlight class="typescript">
 									import Carbon from "carbonldp/Carbon";
 
 									let carbon:Carbon = new Carbon(); // platform context
@@ -262,7 +262,7 @@
 							</sui-tab>
 							<sui-tab title="JavaScript">
 								<!--@formatter:off-->
-								<pre><code cphighlight class="javascript">
+								<pre><code cpHighlight class="javascript">
 									let carbon = new Carbon(); // platform context
 									carbon.setSetting( "domain", "my-carbon-instance.com:8080" );
 								</code></pre>
@@ -285,7 +285,7 @@
 						<sui-tabs>
 							<sui-tab title="TypeScript">
 								<!--@formatter:off-->
-								<pre><code cphighlight class="typescript">
+								<pre><code cpHighlight class="typescript">
 									// ... additional imports
 									import * as Token from "carbonldp/Auth/Token";
 
@@ -301,7 +301,7 @@
 							</sui-tab>
 							<sui-tab title="JavaScript">
 								<!--@formatter:off-->
-								<pre><code cphighlight class="typescript">
+								<pre><code cpHighlight class="typescript">
 									// ... imports
 
 									// ... platform context creation
@@ -317,14 +317,14 @@
 						</sui-tabs>
 						<p>
 							It's important to notice that you are authenticated in that specific context (and its child contexts).
-							You could create additional platform contexts (or other type of contexts) and do stuff authenticated
-							as other agents.
+							You could create additional platform contexts (or other type of contexts) and authenticate on them with
+							other credentials.
 						</p>
 					</section>
 					<section>
-						<h2 class="ui header">Retrieving an App Context</h2>
+						<h2 class="ui header">Retrieving an app context</h2>
 						<p>
-							Carbon stores your data in "applications". These applications are separate containers of information.
+							Carbon stores your data in "applications" which are separate containers of information.
 							Data can be linked between applications, but its management is treated separately.
 						</p>
 						<div class="ui icon yellow message">
@@ -345,7 +345,7 @@
 						<sui-tabs>
 							<sui-tab title="TypeScript">
 								<!--@formatter:off-->
-								<pre><code cphighlight class="typescript">
+								<pre><code cpHighlight class="typescript">
 									// ... additional imports
 									import * as App from "carbonldp/App";
 
@@ -361,7 +361,7 @@
 							</sui-tab>
 							<sui-tab title="JavaScript">
 								<!--@formatter:off-->
-								<pre><code cphighlight class="typescript">
+								<pre><code cpHighlight class="typescript">
 									// ... additional imports
 
 									// ... platform context creation and authentication
@@ -392,7 +392,7 @@
 						<h2 class="ui header">Creating a document</h2>
 						<p>
 							Now that you have your app context, you can start working with your app's data. Carbon stores data
-							in documents, which are basically a normal JavaScript object identified by a URI (Unique Resource Identifier).
+							in documents, which are basically normal JavaScript objects identified by a URI (Unique Resource Identifier).
 							These documents are composed by properties, <span class="highlight">fragments</span> and <span class="highlight">named fragments</span>.
 							For more information see: <a [routerLink]="[ '../JavaScriptSDKObjectModel' ]">JavaScript SDK Object model</a>.
 						</p>
@@ -403,11 +403,11 @@
 						<sui-tabs>
 							<sui-tab title="TypeScript">
 								<!--@formatter:off-->
-								<pre><code cphighlight class="typescript">
+								<pre><code cpHighlight class="typescript">
 									// ... additional imports
 									import * as App from "carbonldp/App";
-									import * Response from "carbonldp/HTTP/Response";
-									import * PersistedDocument from "carbonldp/PersistedDocument";
+									import * as Response from "carbonldp/HTTP/Response";
+									import * as PersistedDocument from "carbonldp/PersistedDocument";
 
 									let myAppContext:App.Context;
 
@@ -439,7 +439,7 @@
 							</sui-tab>
 							<sui-tab title="JavaScript">
 								<!--@formatter:off-->
-								<pre><code cphighlight class="javascript">
+								<pre><code cpHighlight class="javascript">
 									// ... imports
 
 									let myAppContext;
@@ -490,7 +490,7 @@
 						<sui-tabs>
 							<sui-tab title="TypeScript">
 								<!--@formatter:off-->
-								<pre><code cphighlight class="typescript">
+								<pre><code cpHighlight class="typescript">
 									// ...
 
 									myAppContext.documents.createChild&lt;Project&gt;( "/", "My sUp4 Project!", project ).then(
@@ -503,7 +503,7 @@
 							</sui-tab>
 							<sui-tab title="JavaScript">
 								<!--@formatter:off-->
-								<pre><code cphighlight class="javascript">
+								<pre><code cpHighlight class="javascript">
 									// ...
 
 									myAppContext.documents.createChild( "/", "My sUp4 Project!", project ).then(
@@ -524,7 +524,7 @@
 						<sui-tabs>
 							<sui-tab title="TypeScript">
 								<!--@formatter:off-->
-								<pre><code cphighlight class="typescript">
+								<pre><code cpHighlight class="typescript">
 									// ... additional imports
 									import * as App from "carbonldp/App";
 
@@ -538,7 +538,7 @@
 							</sui-tab>
 							<sui-tab title="JavaScript">
 								<!--@formatter:off-->
-								<pre><code cphighlight class="javascript">
+								<pre><code cpHighlight class="javascript">
 									// ... imports
 
 									let myAppContext;
@@ -565,11 +565,11 @@
 						<sui-tabs>
 							<sui-tab title="TypeScript">
 								<!--@formatter:off-->
-								<pre><code cphighlight class="typescript">
+								<pre><code cpHighlight class="typescript">
 									// ... additional imports
 									import * as App from "carbonldp/App";
-									import * Response from "carbonldp/HTTP/Response";
-									import * PersistedDocument from "carbonldp/PersistedDocument";
+									import * as Response from "carbonldp/HTTP/Response";
+									import * as PersistedDocument from "carbonldp/PersistedDocument";
 
 									let myAppContext:App.Context;
 
@@ -588,7 +588,7 @@
 							</sui-tab>
 							<sui-tab title="JavaScript">
 								<!--@formatter:off-->
-								<pre><code cphighlight class="javascript">
+								<pre><code cpHighlight class="javascript">
 									// ... imports
 
 									let myAppContext;
@@ -616,11 +616,11 @@
 						<sui-tabs>
 							<sui-tab title="TypeScript">
 								<!--@formatter:off-->
-								<pre><code cphighlight class="typescript">
+								<pre><code cpHighlight class="typescript">
 									// ... additional imports
-									import * Response from "carbonldp/HTTP/Response";
-									import * PersistedDocument from "carbonldp/PersistedDocument";
-									import * Pointer from "carbonldp/Pointer";
+									import * as Response from "carbonldp/HTTP/Response";
+									import * as PersistedDocument from "carbonldp/PersistedDocument";
+									import * as Pointer from "carbonldp/Pointer";
 
 									let projectPointer:Pointer.Class;
 
@@ -636,7 +636,7 @@
 							</sui-tab>
 							<sui-tab title="JavaScript">
 								<!--@formatter:off-->
-								<pre><code cphighlight class="javascript">
+								<pre><code cpHighlight class="javascript">
 									// ... imports
 
 									let projectPointer;
@@ -672,13 +672,13 @@
 						<p>
 							To modify a document you should:
 						</p>
-						<ul>
+						<ol>
 							<li>Retrieve the <span class="highlight">document</span>:
-								<ul>
+								<ol>
 									<li><code>get</code> using the <span class="highlight">document</span> id as
-										describe in <span class="sectionlink"><a href="#retrieving-a-document">retrieving a document</a></span>
+										described in <span class="sectionlink"><a href="#retrieving-a-document">retrieving a document</a></span>
 									</li>
-								</ul>
+								</ol>
 							</li>
 							<li>Modify the <span class="highlight">document</span>: Add, modify or delete
 								<span class="highlight">properties</span>,
@@ -686,16 +686,16 @@
 								<span class="highlight">named fragments</span>.
 							</li>
 							<li>Save the changes through <code>document.save</code> method.</li>
-						</ul>
+						</ol>
 						<p>
 							Document properties can be added/modified/removed as with any normal JavaScript object.
 						</p>
 						<sui-tabs>
 							<sui-tab title="TypeScript">
 								<!--@formatter:off-->
-								<pre><code cphighlight class="typescript">
+								<pre><code cpHighlight class="typescript">
 									// ... additional imports
-									import * PersistedDocument from "carbonldp/PersistedDocument";
+									import * as PersistedDocument from "carbonldp/PersistedDocument";
 
 									let project:Project & PersistedDocument.Class;
 
@@ -727,7 +727,7 @@
 							</sui-tab>
 							<sui-tab title="JavaScript">
 								<!--@formatter:off-->
-								<pre><code cphighlight class="javascript">
+								<pre><code cpHighlight class="javascript">
 									// ... imports
 
 									let project;
@@ -781,10 +781,10 @@
 						<sui-tabs>
 							<sui-tab title="TypeScript">
 								<!--@formatter:off-->
-								<pre><code cphighlight class="typescript">
+								<pre><code cpHighlight class="typescript">
 									// ... additional imports
 									import * as App from "carbonldp/App";
-									import * Response from "carbonldp/HTTP/Response";
+									import * as Response from "carbonldp/HTTP/Response";
 
 									let myAppContext:App.Context;
 
@@ -803,7 +803,7 @@
 							</sui-tab>
 							<sui-tab title="JavaScript">
 								<!--@formatter:off-->
-								<pre><code cphighlight class="javascript">
+								<pre><code cpHighlight class="javascript">
 									// ... imports
 
 									let myAppContext;
@@ -829,10 +829,10 @@
 						<sui-tabs>
 							<sui-tab title="TypeScript">
 								<!--@formatter:off-->
-								<pre><code cphighlight class="typescript">
+								<pre><code cpHighlight class="typescript">
 									// ... additional imports
-									import * PersistedDocument from "carbonldp/PersistedDocument";
-									import * Response from "carbonldp/HTTP/Response";
+									import * as PersistedDocument from "carbonldp/PersistedDocument";
+									import * as Response from "carbonldp/HTTP/Response";
 
 									let project:Project & PersistedDocument.Class;
 
@@ -848,7 +848,7 @@
 							</sui-tab>
 							<sui-tab title="JavaScript">
 								<!--@formatter:off-->
-								<pre><code cphighlight class="javascript">
+								<pre><code cpHighlight class="javascript">
 									// ... imports
 
 									let project;
@@ -882,9 +882,9 @@
 						<sui-tabs>
 							<sui-tab title="TypeScript">
 								<!--@formatter:off-->
-								<pre><code cphighlight class="typescript">
+								<pre><code cpHighlight class="typescript">
 									// ... additional imports
-									import * PersistedDocument from "carbonldp/PersistedDocument";
+									import * as PersistedDocument from "carbonldp/PersistedDocument";
 
 									let project1:Project & PersistedDocument.Class;
 									let project2:Project & PersistedDocument.Class;
@@ -897,7 +897,7 @@
 							</sui-tab>
 							<sui-tab title="JavaScript">
 								<!--@formatter:off-->
-								<pre><code cphighlight class="javascript">
+								<pre><code cpHighlight class="javascript">
 									// ... additional imports
 
 									let project1;
@@ -932,7 +932,7 @@
 							<sui-tabs>
 								<sui-tab title="TypeScript">
 									<!--@formatter:off-->
-									<pre><code cphighlight class="typescript">
+									<pre><code cpHighlight class="typescript">
 										// ... additional imports
 										import * as App from "carbonldp/App";
 
@@ -956,7 +956,7 @@
 								</sui-tab>
 								<sui-tab title="JavaScript">
 									<!--@formatter:off-->
-									<pre><code cphighlight class="javascript">
+									<pre><code cpHighlight class="javascript">
 										// ... imports
 
 										let myAppContext;
@@ -1050,10 +1050,10 @@
 							<sui-tabs>
 								<sui-tab title="TypeScript">
 									<!--@formatter:off-->
-									<pre><code cphighlight class="typescript">
+									<pre><code cpHighlight class="typescript">
 										// ... additional imports
 										import * as App from "carbonldp/App";
-										import * PersistedDocument from "carbonldp/PersistedDocument";
+										import * as PersistedDocument from "carbonldp/PersistedDocument";
 										import * as Response from "carbonldp/HTTP/Response";
 
 										let myAppContext:App.Context;
@@ -1109,7 +1109,7 @@
 								</sui-tab>
 								<sui-tab title="JavaScript">
 									<!--@formatter:off-->
-									<pre><code cphighlight class="javascript">
+									<pre><code cpHighlight class="javascript">
 										// ... imports
 
 										let myAppContext;
@@ -1185,24 +1185,43 @@
 						<sui-tabs>
 							<sui-tab title="TypeScript">
 								<!--@formatter:off-->
-								<pre><code cphighlight class="typescript">
+								<pre><code cpHighlight class="typescript">
 									// ... additional imports
 									import * as AccessPoint from "carbonldp/AccessPoint";
 									import * as PersistedAccessPoint from "carbonldp/PersistedAccessPoint";
 									import * as PersistedDocument from "carbonldp/PersistedDocument";
 
-									let project:PersistedDocument.Class;
+									let project:Project & PersistedDocument.Class;
+									let person1:Person & PersistedDocument.Class;
+									let person2:Person & PersistedDocument.Class;
 
-									// ... project document retrieval
+									// ... project, person1 and person2 document retrieval
 
 									let projectMembersAccessPoint:AccessPoint = {
-										hasMemberRelation: "people",
-										isMemberOfRelation: "projects"
+										hasMemberRelation: "people", // property used to store the member list in the accessPoint's document
+										isMemberOfRelation: "projects" // property used to link back members to the document they are members of
 									};
 
 									project.createAccessPoint( "people", projectMembersAccessPoint ).then(
 										( [ persistedProjectMembersAccessPoint, response ]:[ PersistedAccessPoint.Class, Response.Class ] ) => {
-											// continue doing stuff (persistedProjectMembersAccessPoint.listMembers/addMember/etc...)
+											console.log( projectMembersAccessPoint === persistedProjectMembersAccessPoint ); // true
+											return persistedProjectMembersAccessPoint.addMembers( [ person1, person2 ] );
+										}
+									).then(
+										( response:Response.Class ) => {
+											return project.refresh&lt;Project&gt;();
+										}
+									).then(
+										( [ refreshedProject, response ]:[ Project & PersistedDocument.Class, Response.Class ] ) => {
+											console.log( project === refreshedProject ); // true
+											console.log( refreshedProject.people ); // Pointers to person1 and person2
+
+											return person1.refresh&lt;Person&gt;();
+										}
+									).then(
+										( [ refreshedPerson1, response ]:[ Person & PersistedDocument.Class, Response.Class ] ) => {
+											console.log( person1 === refreshedPerson1 ); // true
+											console.log( refreshedPerson1.projects ); // Pointer to project
 										}
 									).catch( console.error );
 								</code></pre>
@@ -1210,7 +1229,7 @@
 							</sui-tab>
 							<sui-tab title="JavaScript">
 								<!--@formatter:off-->
-								<pre><code cphighlight class="javascript">
+								<pre><code cpHighlight class="javascript">
 									// ... imports
 
 									let project;
@@ -1232,6 +1251,19 @@
 							</sui-tab>
 						</sui-tabs>
 					</section>
+					<div class="ui positive icon message">
+						<i class="arrow right icon"></i>
+						<div class="content">
+							<div class="header">Next step</div>
+							<p>
+								This was a short introduction to what the SDK and Carbon can do. You should be able to develop simple applications
+								after reading this document, but to really master the inner works of the SDK you can continue reading:
+							</p>
+							<div class="header">
+								<a [routerLink]="[ '../JavaScriptSDKObjectModel' ]">Object Model</a>
+							</div>
+						</div>
+					</div>
 				</article>
 			</main>
 		</div>

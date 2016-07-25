@@ -16,7 +16,7 @@ import UIExamplesView from "app/website/ui-examples/UIExamplesView";
 
 import HeaderComponent from "app/website/header/HeaderComponent";
 import FooterComponent from "app/website/footer/FooterComponent";
-import DocumentationComponent from "app/website/documentation/DocumentationComponent";
+import DocumentationView from "app/website/documentation/documentation.view";
 
 import template from "./template.html!";
 import "./style.css!";
@@ -34,7 +34,7 @@ import "./style.css!";
 	{ path: "blog", as: "Blog", component: BlogView },
 	{ path: "blog/posts/:id", as: "BlogPost", component: BlogPostView },
 
-	{ path: "documentation/...", as: "Documentation", component: DocumentationComponent },
+	{ path: "documentation/...", as: "Documentation", component: DocumentationView },
 
 	{ path: "ui-examples", as: "UIExamples", component: UIExamplesView },
 	{ path: "signup-thanks", as: "SignupThanks", component: SignupThanksView },
@@ -49,7 +49,7 @@ export default class WebsiteView {
 		this.element = element;
 		this.router = router;
 		this.router.parent.subscribe( ( url ) => {
-			if ( this.prevUrl !== url ) {
+			if( this.prevUrl !== url ) {
 				$( "html, body" ).scrollTop( 0 );
 				this.prevUrl = url;
 			}

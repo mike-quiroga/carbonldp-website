@@ -29,11 +29,11 @@
 //	@googleSubset      : 'latin,latin-ext';
 
 // Pontano Sans
-	@fontName          : 'Pontano Sans';
-	@googleFontSizes   : '600, 600italic';
-	@googleSubset      : 'latin,latin-ext';
+//	@fontName          : 'Pontano Sans';
+//	@googleFontSizes   : '600, 600italic';
+//	@googleSubset      : 'latin,latin-ext';
 
-
+@emSize            : 16px;
 
 @fontSmoothing     : antialiased;
 @headerFont        : @fontName, 'Helvetica Neue', Arial, Helvetica, sans-serif;

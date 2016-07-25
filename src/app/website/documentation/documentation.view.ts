@@ -12,16 +12,17 @@ import CarbonLDPConceptsView from "./carbon-ldp-concepts/CarbonLDPConceptsView";
 import RESTApiGettingStarted from "./rest-api/getting-started/GettingStartedView";
 import InteractionModelsView from "./rest-api/interaction-models/InteractionModelsView";
 
+import JavaScriptSDKView from "./javascript-sdk/javascript-sdk.view";
 import JavaScriptSDKGettingStartedView from "./javascript-sdk/getting-started.view";
 import JavaScriptSDKContextsView from "./javascript-sdk/contexts/ContextsView";
-import JavaScriptSDKObjectModelView from "./javascript-sdk/object-model/ObjectModelView";
+import JavaScriptSDKObjectModelView from "./javascript-sdk/object-model.view";
 import JavaScriptSDKObjectSchemaView from "./javascript-sdk/object-schema/ObjectSchemaView";
 
 import RESTObjectModelView from "./rest-api/rest-object-model/RESTObjectModelView";
 import RESTRdfSourceView from "./rest-api/rest-rdfsource/RESTRdfSourceView";
 import RESTContainersView from "./rest-api/rest-containers/RESTContainersView";
 
-import "./style.css!";
+import "./documentation.view.css!";
 
 @Component( {
 	selector: "documents",
@@ -41,7 +42,7 @@ import "./style.css!";
 	{ path: "/rest-api/getting-started", as: "RESTApiGettingStarted", component: RESTApiGettingStarted },
 	{ path: "/rest-api/interaction-models", as: "RESTApiInteractionModels", component: InteractionModelsView },
 
-	{ path: "/javascript-sdk", as: "JavaScriptSDK", redirectTo: [ "./JavaScriptSDKGettingStarted" ] },
+	{ path: "/javascript-sdk", as: "JavaScriptSDK", component: JavaScriptSDKView },
 	{ path: "/javascript-sdk/getting-started", as: "JavaScriptSDKGettingStarted", component: JavaScriptSDKGettingStartedView },
 	{ path: "/javascript-sdk/contexts", as: "JavaScriptSDKContexts", component: JavaScriptSDKContextsView },
 	{ path: "/javascript-sdk/object-model", as: "JavaScriptSDKObjectModel", component: JavaScriptSDKObjectModelView },
@@ -51,6 +52,8 @@ import "./style.css!";
 	{ path: "/rest-api/rest-rdfsource", as: "RESTApiRdfSource", component: RESTRdfSourceView },
 	{ path: "/rest-api/rest-containers", as: "RESTApiContainers", component: RESTContainersView },
 ] )
-export default class DocumentationComponent {
+export class DocumentationView {
 
 }
+
+export default DocumentationView;

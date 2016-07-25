@@ -1,7 +1,6 @@
 import { Component, Input, ElementRef, OnChanges, SimpleChange } from "@angular/core";
 import { CORE_DIRECTIVES } from "@angular/common"
 import { ROUTER_DIRECTIVES, ROUTER_PROVIDERS, Router, Instruction, RouteParams } from "@angular/router-deprecated";
-import SidebarService from "./service/SidebarService";
 
 import $ from "jquery";
 import "semantic-ui/semantic";

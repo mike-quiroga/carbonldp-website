@@ -47,14 +47,13 @@ website {
 	}
 
 	pre, code {
-		white-space: pre-wrap;
 		word-wrap: break-word;
 		word-spacing: 0;
 		font-size: 13px;
-		line-height: 16px;
+		line-height: 1.4em;
 	}
 
-	pre[hightlight] {
+	pre[cphighlight], code[cphighlight] {
 		font-size: 14px;
 	}
 
