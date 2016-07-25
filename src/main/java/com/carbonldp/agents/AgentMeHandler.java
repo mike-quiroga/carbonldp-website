@@ -33,7 +33,7 @@ public class AgentMeHandler extends AbstractLDPRequestHandler {
 		setUp( request, response );
 		String agentIRIString = getAgentIRIString();
 		IRI agentIRI = SimpleValueFactory.getInstance().createIRI( agentIRIString );
-		response.addHeader( "Target-Location", agentIRIString );
+		response.addHeader( "Content-Location", agentIRIString );
 
 		RDFSource agentSource = sourceService.exists( agentIRI ) ?
 			sourceService.get( agentIRI ) :
