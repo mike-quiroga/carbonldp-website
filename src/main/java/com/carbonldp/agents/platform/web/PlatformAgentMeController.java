@@ -20,7 +20,7 @@ public class PlatformAgentMeController {
 	private AgentMeHandler getHandler;
 
 	@RequestMapping( method = {RequestMethod.GET, RequestMethod.HEAD, RequestMethod.OPTIONS} )
-	public ResponseEntity<Object> redirectToAgent( HttpServletRequest request, HttpServletResponse response ) {
+	public ResponseEntity<Object> getAgent( HttpServletRequest request, HttpServletResponse response ) {
 		return getHandler.handleRequest( request, response );
 	}
 

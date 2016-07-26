@@ -31,9 +31,8 @@ public class AgentMeHandler extends AbstractLDPRequestHandler {
 	@Transactional
 	public ResponseEntity<Object> handleRequest( HttpServletRequest request, HttpServletResponse response ) {
 		setUp( request, response );
-		String agentIRIString = getAgentIRIString();
-		IRI agentIRI = SimpleValueFactory.getInstance().createIRI( agentIRIString );
-		response.addHeader( "Content-Location", agentIRIString );
+		IRI agentIRI = getAgentIRIString();
+		response.addHeader( "Content-Location", agentIRI.stringValue() );
 
 		RDFSource agentSource = sourceService.exists( agentIRI ) ?
 			sourceService.get( agentIRI ) :
@@ -42,11 +41,11 @@ public class AgentMeHandler extends AbstractLDPRequestHandler {
 		return new ResponseEntity<>( agentSource, HttpStatus.OK );
 	}
 
-	private String getAgentIRIString() {
+	private IRI getAgentIRIString() {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		if ( ! ( authentication instanceof AgentAuthenticationToken ) ) throw new AccessDeniedException( "authentication is not an instance of AgentAuthenticationToken" );
 		AgentAuthenticationToken agentToken = (AgentAuthenticationToken) authentication;
-		return agentToken.getAgent().getSubject().stringValue();
+		return agentToken.getAgent().getSubject();
 	}
 
 	@Autowired
