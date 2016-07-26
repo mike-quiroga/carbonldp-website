@@ -12,23 +12,23 @@
 					<a href="#essential-concepts" class="center aligned column feature">
 						<div class="ui centered small circular image">
 							<img src="assets/images/ico-books-300x300.png"></div>
-							<h3 class="title">Essential concepts</h3>
+						<h3 class="title">Essential concepts</h3>
 					</a>
 					<a href="#rest-api" class="center aligned column feature">
 						<div class="ui centered small circular image">
 							<img src="assets/images/ico-rest-150x150.gif"></div>
-							<h3 class="title">REST API</h3>
+						<h3 class="title">REST API</h3>
 					</a>
 					<a href="#javascript-sdk" class="center aligned column feature">
 						<div class="ui centered small circular image">
 							<img src="assets/images/ico-javascript-150x150.gif"></div>
-							<h3 class="title">JavaScript SDK</h3>
+						<h3 class="title">JavaScript SDK</h3>
 					</a>
 
 					<a href="#app-dev" class="center aligned column feature">
 						<div class="ui centered small circular image">
 							<img src="assets/images/ico-cubes-300x300.png"></div>
-							<h3 class="title">App Dev</h3>
+						<h3 class="title">App Dev</h3>
 					</a>
 				</div>
 				<div class="mobile only row">
@@ -74,18 +74,24 @@
 				<div class="description">
 					<p>Basic Linked Data knowledge.</p>
 				</div>
-				<div class="doc-list ui bulleted list">
-					<div class="item">
-						<div class="header"><span [routerLink]="[ '../LinkedDataConcepts' ]">Linked data concepts</span></div>
-						<div class="summary">General overview of the basic idea behind Linked Data and why it can make your applications more powerful.</div>
+				<div class="doc-list">
+					<div class="ui bulleted list">
+						<div class="item">
+							<div class="header"><span [routerLink]="[ '../LinkedDataConcepts' ]">Linked data concepts</span></div>
+							<div class="summary">General overview of the basic idea behind Linked Data and why it can make your applications more powerful.</div>
+						</div>
+						<!--<div class="item">
+							<div class="header" [routerLink]="[ '../LDPConcepts' ]">LDP Concepts</div>
+							<div class="summary"></div>
+						</div>-->
+						<!--<div class="item">
+							<div class="header" [routerLink]="[ '../AboutCarbonLDP' ]"><span>About Carbon LDP</span></div>
+							<div class="summary">What is Carbon LDP, how can it be used.</div>
+						</div>-->
 					</div>
-					<!--<div class="item">
-						<div class="header" [routerLink]="[ '../LDPConcepts' ]">LDP Concepts</div>
-						<div class="summary"></div>
-					</div>-->
-					<!--<div class="item">
-						<div class="header" [routerLink]="[ '../AboutCarbonLDP' ]"><span>About Carbon LDP</span></div>
-						<div class="summary">What is Carbon LDP, how can it be used.</div>
+					<!--TODO:Add more... link when above documents are added-->
+					<!--<div class="more item">
+						<div class="header"><span [routerLink]="[ '../EssentialConcepts' ]">More...</span></div>
 					</div>-->
 				</div>
 			</div>
@@ -96,20 +102,26 @@
 					<p>Access and manage applications and data by URIs using RESTful requests over HTTP (GET, POST, PUT, DELETE). Configure apps, schedule server-side jobs, execute queries - <em>
 						everything</em> in Carbon is RESTful.</p>
 				</div>
-				<div class="doc-list ui bulleted list">
-					<div class="item">
-						<div class="header"><span [routerLink]="[ '../RESTApiGettingStarted' ]">Getting started</span></div>
-						<div class="summary">How to build an example application using the Carbon LDP REST API.</div>
-					</div>
-					<div class="item">
-						<div class="header"><span [routerLink]="[ '../RESTApiObjectModel' ]">Object model</span></div>
-						<div>A summary of the various types of resources you can manage and interact with using REST.
+				<div class="doc-list">
+					<div class="ui bulleted list">
+						<div class="item">
+							<div class="header"><span [routerLink]="[ '../RESTApiGettingStarted' ]">Getting started</span></div>
+							<div class="summary">How to build an example application using the Carbon LDP REST API.</div>
+						</div>
+						<div class="item">
+							<div class="header"><span [routerLink]="[ '../RESTApiObjectModel' ]">Object model</span></div>
+							<div>A summary of the various types of resources you can manage and interact with using REST.
+							</div>
+						</div>
+						<div class="item">
+							<div class="header"><span [routerLink]="[ '../RESTApiInteractionModels' ]">Interaction models</span></div>
+							<div class="summary">An explanation of the way you can interact with the resources on the Carbon Server.</div>
 						</div>
 					</div>
-					<div class="item">
-						<div class="header"><span [routerLink]="[ '../RESTApiInteractionModels' ]">Interaction models</span></div>
-						<div class="summary">An explanation of the way you can interact with the resources on the Carbon Server.</div>
-					</div>
+					<!--TODO:Add more... link when above documents are added-->
+					<!--<div class="more item">
+						<div class="header"><span [routerLink]="[ '../RESTApi' ]">More...</span></div>
+					</div>-->
 				</div>
 			</div>
 			<div class="ui main container" id="javascript-sdk">
@@ -121,24 +133,25 @@
 					<p>The JavaScript Software Developer's Kit, available from the npm package manager, allows you to manage RDF data using familiar JavaScript and
 						TypeScript programming techniques and tools. Build for execution within a web browser or Node.js.</p>
 				</div>
-				<div class="doc-list ui bulleted list">
-					<div class="item">
-						<div class="header"><span  [routerLink]="[ '../JavaScriptSDKGettingStarted' ]">Getting started</span></div>
-						<div class="summary">Guide to install Carbon JavaScriptSDK and start creating and manipulating data with its basic methods.</div>
-					</div>
-					<div class="item">
-						<div class="header"><span  [routerLink]="[ '../JavaScriptSDKObjectModel' ]">Object model</span></div>
-						<div class="summary">An in depth description of the Carbon Object Model.</div>
-					</div>
-					<div class="item">
-						<div class="header"><span  [routerLink]="[ '../JavaScriptSDKContexts' ]">Contexts</span></div>
-						<div clas="summary"> What is a context in Carbon JS SDK, how to declare,
-							access and modify it.
+				<div class="doc-list">
+					<div class="ui bulleted list">
+						<div class="item">
+							<div class="header"><span [routerLink]="[ '../JavaScriptSDKGettingStarted' ]">Getting started</span></div>
+							<div class="summary">Guide to install Carbon JavaScriptSDK and start creating and manipulating data with its basic methods.</div>
+						</div>
+						<div class="item">
+							<div class="header"><span [routerLink]="[ '../JavaScriptSDKObjectModel' ]">Object model</span></div>
+							<div class="summary">An in depth description of the Carbon Object Model.</div>
+						</div>
+						<div class="item">
+							<div class="header"><span [routerLink]="[ '../JavaScriptSDKContexts' ]">Contexts</span></div>
+							<div clas="summary"> What is a context in Carbon JS SDK, how to declare,
+								access and modify it.
+							</div>
 						</div>
 					</div>
-					<div class="item">
-						<div class="header"><span  [routerLink]="[ '../JavaScriptSDKObjectSchema' ]">Object schema</span></div>
-						<div class="summary">What is the object schema, how to define and use it..</div>
+					<div class="more item">
+						<div class="header"><span [routerLink]="[ '../JavaScriptSDK' ]">More...</span></div>
 					</div>
 				</div>
 			</div>

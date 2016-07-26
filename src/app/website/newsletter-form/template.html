@@ -1,13 +1,12 @@
 <div class="ui orange inverted vertical center aligned segment">
-	<h2>Sign up to receive news and<br/>get notified when we launch!</h2>
-
 	<form [ngFormModel]="subscribeForm" (ngSubmit)="onSubmit($event)" method="post" name="icpsignup" id="icpsignup">
 		<!--action="https://app.icontact.com/icp/signup.php"-->
 
 		<div class="ui action input">
-			<div class="field" [ngClass]="{ error: (email.touched && !email.valid) }">
-				<input name="fields_email" class="email" type="text" placeholder="your@email.com" [ngFormControl]="subscribeForm.controls[ 'email' ]">
-			</div>
+			<!--<div class="field" [ngClass]="{ error: (email.touched && !email.valid) }">-->
+				<input name="fields_email" [ngClass]="{ error: (email.touched && !email.valid) }" class="field email" type="text" placeholder="your@email.com"
+			[ngFormControl]="subscribeForm.controls[ 'email' ]">
+			<!--</div>-->
 			<button id="send" type="submit" class="ui inverted secondary button submit">SEND</button>
 		</div>
 

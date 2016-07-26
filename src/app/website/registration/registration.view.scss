@@ -1,0 +1,46 @@
+:host {
+	display: block;
+	min-height: 100%;
+
+	#doc-categories {
+		padding-top: 100px;
+		padding-bottom: 25px;
+		.feature {
+			h2{
+				color: white;
+				margin-bottom: 20px;
+				margin-top: 0;
+			}
+		}
+
+		.ui.circular.image {
+			margin-bottom: 20px;
+			margin-top: 30px;
+			img {
+				height: 150px;
+				width: auto;
+			}
+		}
+	}
+
+	.newsletter.row{
+		background: #F89828;
+			h2{
+				margin-bottom: 0;
+			}
+
+	}
+	.form.row{
+		padding-top: 75px;
+		padding-bottom: 75px;
+		background-color: white;
+	}
+	.ui.form .field:last-child{
+		margin-bottom: 1em;
+	}
+
+	> div.grid {
+		height: 100%;
+	}
+
+}

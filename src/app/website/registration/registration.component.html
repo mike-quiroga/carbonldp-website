@@ -1,0 +1,58 @@
+<form [ngFormModel]="registrationForm" class="ui form attached segment large registrationForm" role="form" (submit)="onSubmit(registrationForm.value, $event)">
+	<div class="field" [ngClass]="{ error: (email.touched && !email.valid) }">
+		<div class="ui left icon input">
+			<i class="user icon"></i>
+			<input type="text"
+			       name="email"
+			       placeholder="E-mail address"
+			       ngControl="email"
+			       [disabled]="!registrationForm.valid || registrationForm.valid">
+		</div>
+	</div>
+	<div ngControlGroup="matchingPassword">
+		<div class="field" [ngClass]="{ error: (passwordGroup.touched && !passwordGroup.valid) }">
+			<div class="ui left icon input">
+				<i class="lock icon"></i>
+				<input type="password"
+				       name="password"
+				       placeholder="password"
+				       ngControl="password"
+				       [disabled]="!registrationForm.valid || registrationForm.valid">
+			</div>
+		</div>
+		<div class="field" [ngClass]="{ error: ( passwordGroup.touched && !passwordGroup.valid) }">
+			<div class="ui left icon input">
+				<i class="lock icon"></i>
+				<input type="password"
+				       name="confirmPassword"
+				       placeholder="confirm password"
+				       ngControl="confirmPassword"
+				       [disabled]="!registrationForm.valid || registrationForm.valid">
+			</div>
+		</div>
+	</div>
+
+	<!--Always disabled-->
+	<button type="submit"
+	        [ngClass]="{ loading: sending }"
+	        class="ui fluid large submit button"
+	        [disabled]="!registrationForm.valid || registrationForm.valid"
+	        (click)="onSubmit(registrationForm.value, $event)">
+		Register
+	</button>
+</form>
+<div class="ui bottom attached negative message"
+     *ngIf="(email.touched && !email.valid) || (!!errorMessage) || (password.touched && (!password.valid || !passwordGroup.valid) ) || (confirmPassword.touched && (!confirmPassword.valid || !passwordGroup.valid))">
+
+	<ul class="list">
+		<li *ngIf="email.hasError('required')">email is required.</li>
+		<li *ngIf="!email.hasError('required') && email.hasError('invalidEmailAddress')">Enter a valid email address.</li>
+		<li *ngIf="!!errorMessage">{{errorMessage}}</li>
+	</ul>
+	<ul class="list">
+		<li *ngIf="password.hasError('required')">password is required.</li>
+		<li *ngIf="confirmPassword.hasError('required')">password confirmation is required.</li>
+		<li *ngIf="!password.hasError('required') && password.hasError('invalidPassword')">password is invalid.</li>
+		<li *ngIf="passwordGroup.hasError('passwordNotConfirmed')">passwords do not match.</li>
+	</ul>
+</div>

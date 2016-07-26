@@ -7,6 +7,7 @@ import Carbon from "carbonldp/Carbon";
 import HomeView from "app/website/home/HomeView";
 
 import LoginView from "app/website/auth/login/LoginView";
+import RegistrationView from "app/website/registration/registration.view";
 
 import BlogView from "app/website/blog/BlogView";
 import BlogPostView from "app/website/blog/blog-post/BlogPostView";
@@ -30,6 +31,7 @@ import "./style.css!";
 	{ path: "", as: "Home", component: HomeView, useAsDefault: true },
 
 	{ path: "login", as: "Login", component: LoginView },
+	{ path: "registration", as: "Registration", component: RegistrationView },
 
 	{ path: "blog", as: "Blog", component: BlogView },
 	{ path: "blog/posts/:id", as: "BlogPost", component: BlogPostView },

@@ -10,11 +10,12 @@ import "semantic-ui/semantic";
 import * as CodeMirrorComponent from "carbon-panel/code-mirror/code-mirror.component";
 
 import template from "./template.html!";
-import "./style.css!";
+import style from "./style.css!text";
 
 @Component( {
 	selector: "home",
 	template: template,
+	styles: [ style ],
 	directives: [ CORE_DIRECTIVES, ROUTER_DIRECTIVES, CodeMirrorComponent.Class, NewsletterFormComponent ],
 	providers: [ Title ]
 } )
