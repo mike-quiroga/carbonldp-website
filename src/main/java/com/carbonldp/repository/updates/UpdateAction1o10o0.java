@@ -42,6 +42,7 @@ public class UpdateAction1o10o0 extends AbstractUpdateAction {
 			} );
 		}
 	}
+
 	private void addDefaultPermissionsToBackupsContainer( AppRole appAdminRole, ACL backupContainerACL ) {
 		aclRepository.grantPermissions( backupContainerACL, Arrays.asList( appAdminRole ), Arrays.asList(
 			ACEDescription.Permission.READ,
