@@ -69,9 +69,9 @@ public class SesameAppService extends AbstractSesameLDPService implements AppSer
 		if ( appACL == null ) {
 			throw new IllegalStateException( "Resource couldn't be created" );
 		}
-		createBackupContainer( app );
-		createJobsContainer( app );
-		createLDAPServersContainer( app );
+		ACL aclBackupContainer = createBackupContainer( app );
+		ACL aclJobsContainer = createJobsContainer( app );
+		ACL aclLDAPContainer = createLDAPServersContainer( app );
 
 		AppRole adminRole = transactionWrapper.runWithSystemPermissionsInAppContext( app, () -> {
 			Container rootContainer = createRootContainer( app );
@@ -96,6 +96,9 @@ public class SesameAppService extends AbstractSesameLDPService implements AppSer
 
 			return appAdminRole;
 		} );
+		addDefaultPermissionsToBackupsContainer( adminRole, aclBackupContainer );
+		addDefaultPermissionsToJobsContainer( adminRole, aclJobsContainer );
+		addDefaultPermissionsToLDAPContainer( adminRole, aclLDAPContainer );
 
 		transactionWrapper.runInAppContext( app, () -> addCurrentAgentToAppAdminRole( adminRole ) );
 
@@ -164,6 +167,42 @@ public class SesameAppService extends AbstractSesameLDPService implements AppSer
 		aclRepository.addInheritablePermissions( rootContainerACL, Arrays.asList( appAdminRole ), Arrays.asList( ACEDescription.Permission.values() ), true );
 	}
 
+	private void addDefaultPermissionsToBackupsContainer( AppRole appAdminRole, ACL backupContainerACL ) {
+		aclRepository.grantPermissions( backupContainerACL, Arrays.asList( appAdminRole ), Arrays.asList(
+			ACEDescription.Permission.READ,
+			ACEDescription.Permission.UPLOAD
+		), false );
+		aclRepository.addInheritablePermissions( backupContainerACL, Arrays.asList( appAdminRole ), Arrays.asList(
+			ACEDescription.Permission.READ,
+			ACEDescription.Permission.DELETE,
+			ACEDescription.Permission.DOWNLOAD
+		), true );
+	}
+
+	private void addDefaultPermissionsToJobsContainer( AppRole appAdminRole, ACL jobsContainerACL ) {
+		aclRepository.grantPermissions( jobsContainerACL, Arrays.asList( appAdminRole ), Arrays.asList(
+			ACEDescription.Permission.READ,
+			ACEDescription.Permission.CREATE_CHILD
+		), false );
+		aclRepository.addInheritablePermissions( jobsContainerACL, Arrays.asList( appAdminRole ), Arrays.asList(
+			ACEDescription.Permission.READ,
+			ACEDescription.Permission.UPDATE,
+			ACEDescription.Permission.DELETE
+		), true );
+	}
+
+	private void addDefaultPermissionsToLDAPContainer( AppRole appAdminRole, ACL jobsContainerACL ) {
+		aclRepository.grantPermissions( jobsContainerACL, Arrays.asList( appAdminRole ), Arrays.asList(
+			ACEDescription.Permission.READ,
+			ACEDescription.Permission.CREATE_CHILD
+		), false );
+		aclRepository.addInheritablePermissions( jobsContainerACL, Arrays.asList( appAdminRole ), Arrays.asList(
+			ACEDescription.Permission.READ,
+			ACEDescription.Permission.UPDATE,
+			ACEDescription.Permission.DELETE
+		), true );
+	}
+
 	private void addAppDefaultPermissions( AppRole adminRole, ACL appACL ) {
 		aclRepository.grantPermissions( appACL, Arrays.asList( adminRole ), Arrays.asList(
 			ACEDescription.Permission.READ,
@@ -177,12 +216,12 @@ public class SesameAppService extends AbstractSesameLDPService implements AppSer
 		if ( ! infractions.isEmpty() ) throw new InvalidResourceException( infractions );
 	}
 
-	private void createBackupContainer( App app ) {
+	private ACL createBackupContainer( App app ) {
 		IRI containerIRI = generateBackupContainerIRI( app );
 		RDFResource backupsResource = new RDFResource( containerIRI );
 		BasicContainer backupsContainer = BasicContainerFactory.getInstance().create( backupsResource );
 		containerRepository.createChild( app.getIRI(), backupsContainer );
-		aclRepository.createACL( backupsContainer.getIRI() );
+		return aclRepository.createACL( backupsContainer.getIRI() );
 	}
 
 	private IRI generateBackupContainerIRI( App app ) {
@@ -191,7 +230,7 @@ public class SesameAppService extends AbstractSesameLDPService implements AppSer
 		return valueFactory.createIRI( appString + backupsString );
 	}
 
-	private void createJobsContainer( App app ) {
+	private ACL createJobsContainer( App app ) {
 		IRI containerIRI = generateJobsContainerIRI( app );
 		RDFResource jobsResource = new RDFResource( containerIRI );
 		BasicContainer jobsContainer = BasicContainerFactory.getInstance().create( jobsResource, valueFactory.createIRI( LDP.Properties.MEMBER ), JobDescription.Property.EXECUTION_QUEUE_LOCATION.getIRI() );
@@ -199,7 +238,7 @@ public class SesameAppService extends AbstractSesameLDPService implements AppSer
 		RDFListFactory.getInstance().createQueue( jobsContainer );
 
 		containerRepository.createChild( app.getIRI(), jobsContainer );
-		aclRepository.createACL( jobsContainer.getIRI() );
+		return aclRepository.createACL( jobsContainer.getIRI() );
 	}
 
 	private IRI generateJobsContainerIRI( App app ) {
@@ -208,12 +247,12 @@ public class SesameAppService extends AbstractSesameLDPService implements AppSer
 		return valueFactory.createIRI( appString + jobsString );
 	}
 
-	private void createLDAPServersContainer( App app ) {
+	private ACL createLDAPServersContainer( App app ) {
 		IRI containerIRI = generateLDAPServersContainerIRI( app );
 		RDFResource ldapServersResource = new RDFResource( containerIRI );
 		BasicContainer ldapServersContainer = BasicContainerFactory.getInstance().create( ldapServersResource );
 		containerRepository.createChild( app.getIRI(), ldapServersContainer );
-		aclRepository.createACL( ldapServersContainer.getIRI() );
+		return aclRepository.createACL( ldapServersContainer.getIRI() );
 	}
 
 	private IRI generateLDAPServersContainerIRI( App app ) {
