@@ -2,38 +2,80 @@ package com.carbonldp.repository.updates;
 
 import com.carbonldp.Vars;
 import com.carbonldp.apps.App;
-import com.carbonldp.ldp.containers.BasicContainer;
-import com.carbonldp.ldp.containers.BasicContainerFactory;
-import com.carbonldp.rdf.RDFResource;
-import com.carbonldp.utils.IRIUtil;
+import com.carbonldp.apps.AppRole;
+import com.carbonldp.authorization.acl.ACEDescription;
+import com.carbonldp.authorization.acl.ACL;
 import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 
+import java.util.Arrays;
 import java.util.Set;
 
 /**
- * @author NestorVenegas
+ * @author JorgeEspinosa
  * @since _version_
  */
 public class UpdateAction1o10o0 extends AbstractUpdateAction {
 
 	@Override
 	protected void execute() throws Exception {
-		transactionWrapper.runWithSystemPermissionsInPlatformContext( () -> {
-			IRI agentMe = valueFactory.createIRI( Vars.getInstance().getPlatformAgentMeURL() );
-			BasicContainer agentMeContainer = BasicContainerFactory.getInstance().create( new RDFResource( agentMe ) );
-			IRI agents = valueFactory.createIRI( Vars.getInstance().getAgentsContainerURL() );
-			containerRepository.createChild( agents, agentMeContainer );
-			aclRepository.createACL( agentMe );
-		} );
 		Set<App> apps = getAllApps();
 		for ( App app : apps ) {
-			transactionWrapper.runWithSystemPermissionsInAppContext( app, () -> {
-				IRI agentsContainerIRI = IRIUtil.createChildIRI( app.getRootContainerIRI(), Vars.getInstance().getAppAgentsContainer() );
-				IRI agentMeContainerIRI = IRIUtil.createChildIRI( agentsContainerIRI, Vars.getInstance().getAppAgentMeContainer() );
-				BasicContainer agentMeContainer = BasicContainerFactory.getInstance().create( new RDFResource( agentMeContainerIRI ) );
-				containerRepository.createChild( agentsContainerIRI, agentMeContainer );
-				aclRepository.createACL( agentMeContainer.getIRI() );
+			AppRole adminRole = transactionWrapper.runWithSystemPermissionsInAppContext( app, () -> {
+				IRI adminRoleIRI = SimpleValueFactory.getInstance().createIRI( appRoleRepository.getContainerIRI().stringValue() + "app-admin/" );
+				return new AppRole( sourceRepository.get( adminRoleIRI ) );
+			} );
+			transactionWrapper.runWithSystemPermissionsInPlatformContext( () -> {
+				String appString = app.getIRI().stringValue();
+				String backupsString = Vars.getInstance().getBackupsContainer();
+				IRI backupsIRI = valueFactory.createIRI( appString + backupsString );
+				ACL backupsACL = aclRepository.getResourceACL( backupsIRI );
+				addDefaultPermissionsToBackupsContainer( adminRole, backupsACL );
+				String jobsString = Vars.getInstance().getJobsContainer();
+				IRI jobsIRI = valueFactory.createIRI( appString + jobsString );
+				ACL jobsACL = aclRepository.getResourceACL( jobsIRI );
+				addDefaultPermissionsToJobsContainer( adminRole, jobsACL );
+				String ldapServersString = Vars.getInstance().getAppLDAPServerContainer();
+				IRI ldapServersIRI = valueFactory.createIRI( appString + ldapServersString );
+				ACL ldapServersACL = aclRepository.getResourceACL( ldapServersIRI );
+				addDefaultPermissionsToLDAPContainer( adminRole, ldapServersACL );
 			} );
 		}
+	}
+
+	private void addDefaultPermissionsToBackupsContainer( AppRole appAdminRole, ACL backupContainerACL ) {
+		aclRepository.grantPermissions( backupContainerACL, Arrays.asList( appAdminRole ), Arrays.asList(
+			ACEDescription.Permission.READ,
+			ACEDescription.Permission.UPLOAD
+		), false );
+		aclRepository.addInheritablePermissions( backupContainerACL, Arrays.asList( appAdminRole ), Arrays.asList(
+			ACEDescription.Permission.READ,
+			ACEDescription.Permission.DELETE,
+			ACEDescription.Permission.DOWNLOAD
+		), true );
+	}
+
+	private void addDefaultPermissionsToJobsContainer( AppRole appAdminRole, ACL jobsContainerACL ) {
+		aclRepository.grantPermissions( jobsContainerACL, Arrays.asList( appAdminRole ), Arrays.asList(
+			ACEDescription.Permission.READ,
+			ACEDescription.Permission.CREATE_CHILD
+		), false );
+		aclRepository.addInheritablePermissions( jobsContainerACL, Arrays.asList( appAdminRole ), Arrays.asList(
+			ACEDescription.Permission.READ,
+			ACEDescription.Permission.UPDATE,
+			ACEDescription.Permission.DELETE
+		), true );
+	}
+
+	private void addDefaultPermissionsToLDAPContainer( AppRole appAdminRole, ACL jobsContainerACL ) {
+		aclRepository.grantPermissions( jobsContainerACL, Arrays.asList( appAdminRole ), Arrays.asList(
+			ACEDescription.Permission.READ,
+			ACEDescription.Permission.CREATE_CHILD
+		), false );
+		aclRepository.addInheritablePermissions( jobsContainerACL, Arrays.asList( appAdminRole ), Arrays.asList(
+			ACEDescription.Permission.READ,
+			ACEDescription.Permission.UPDATE,
+			ACEDescription.Permission.DELETE
+		), true );
 	}
 }
