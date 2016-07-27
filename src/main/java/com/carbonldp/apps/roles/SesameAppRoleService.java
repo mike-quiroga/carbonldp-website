@@ -58,12 +58,8 @@ public class SesameAppRoleService extends AbstractSesameLDPService implements Ap
 		containerService.addMember( appRoleAgentContainerIRI, agent );
 
 		if ( isPlatformAgent ) {
-			modifyMap( agent, appRoleAgentContainerIRI, true );
+			modifyAppRoleMap( agent, appRoleAgentContainerIRI, true );
 		}
-
-		DateTime modifiedTime = DateTime.now();
-		IRI membershipResource = containerRepository.getTypedRepository( containerService.getContainerType( appRoleAgentContainerIRI ) ).getMembershipResource( appRoleAgentContainerIRI );
-		sourceRepository.touch( membershipResource, modifiedTime );
 	}
 
 	@Override
@@ -90,12 +86,8 @@ public class SesameAppRoleService extends AbstractSesameLDPService implements Ap
 		containerService.removeMember( appRoleAgentContainerIRI, agent );
 
 		if ( isPlatformAgent ) {
-			modifyMap( agent, appRoleAgentContainerIRI, false );
+			modifyAppRoleMap( agent, appRoleAgentContainerIRI, false );
 		}
-
-		DateTime modifiedTime = DateTime.now();
-		IRI membershipResource = containerRepository.getTypedRepository( containerService.getContainerType( appRoleAgentContainerIRI ) ).getMembershipResource( appRoleAgentContainerIRI );
-		sourceRepository.touch( membershipResource, modifiedTime );
 	}
 
 	@Override
@@ -139,7 +131,7 @@ public class SesameAppRoleService extends AbstractSesameLDPService implements Ap
 		return appRoleRepository.getAgentsContainerIRI( appRoleIRI );
 	}
 
-	private void modifyMap( IRI agentIRI, IRI appRoleAgentContainerIRI, boolean add ) {
+	private void modifyAppRoleMap( IRI agentIRI, IRI appRoleAgentContainerIRI, boolean add ) {
 		Container accessPoint = AccessPointFactory.getInstance().getAccessPoint( sourceService.get( appRoleAgentContainerIRI ) );
 		IRI roleIRI = accessPoint.getMembershipResource();
 		IRI appIRI = AppContextHolder.getContext().getApplication().getIRI();
