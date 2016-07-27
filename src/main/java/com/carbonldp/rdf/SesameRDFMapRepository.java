@@ -29,6 +29,7 @@ public class SesameRDFMapRepository extends AbstractSesameLDPRepository implemen
 	RDFSourceRepository sourceRepository;
 
 	public Set<RDFBlankNode> getEntries( IRI mapIRI ) {
+		clean( mapIRI );
 		RDFSource sourceMap = sourceRepository.get( mapIRI );
 		Set<BNode> entriesBNodes = resourceRepository.getBNodes( mapIRI, RDFMapDescription.Property.ENTRY );
 		Set<RDFBlankNode> entries = entriesBNodes.stream().map( entryBNode -> new RDFBlankNode( sourceMap.getBaseModel(), entryBNode ) ).collect( Collectors.toSet() );
@@ -37,6 +38,7 @@ public class SesameRDFMapRepository extends AbstractSesameLDPRepository implemen
 	}
 
 	public RDFBlankNode getEntry( IRI mapIRI, Value key ) {
+		clean( mapIRI );
 		Set<BNode> entriesBNodes = resourceRepository.getBNodes( mapIRI, RDFMapDescription.Property.ENTRY );
 		RDFSource sourceMap = sourceRepository.get( mapIRI );
 		RDFBlankNode entry;
@@ -49,15 +51,17 @@ public class SesameRDFMapRepository extends AbstractSesameLDPRepository implemen
 	}
 
 	public Set<Value> getKeys( IRI mapIRI ) {
+		clean( mapIRI );
 		Set<BNode> entriesBNodes = resourceRepository.getBNodes( mapIRI, RDFMapDescription.Property.ENTRY );
 		Set<Value> keys = new HashSet<>();
 		keys.addAll( entriesBNodes.stream()
-		                          .map( entryBNode -> blankNodeRepository.getProperty( entryBNode, RDFMapDescription.EntryProperty.KEY, mapIRI ) )
-		                          .collect( Collectors.toList() ) );
+								  .map( entryBNode -> blankNodeRepository.getProperty( entryBNode, RDFMapDescription.EntryProperty.KEY, mapIRI ) )
+								  .collect( Collectors.toList() ) );
 		return keys;
 	}
 
 	public boolean hasKey( IRI mapIRI, Value key ) {
+		clean( mapIRI );
 		Set<BNode> entriesBNodes = resourceRepository.getBNodes( mapIRI, RDFMapDescription.Property.ENTRY );
 		for ( BNode entryBNode : entriesBNodes ) {
 			Value persistedKey = blankNodeRepository.getProperty( entryBNode, RDFMapDescription.EntryProperty.KEY, mapIRI );
@@ -67,6 +71,7 @@ public class SesameRDFMapRepository extends AbstractSesameLDPRepository implemen
 	}
 
 	public Value getValue( IRI mapIRI, Value key ) {
+		clean( mapIRI );
 		Set<BNode> entriesBNodes = resourceRepository.getBNodes( mapIRI, RDFMapDescription.Property.ENTRY );
 		for ( BNode entryBNode : entriesBNodes ) {
 			Value persistedKey = blankNodeRepository.getProperty( entryBNode, RDFMapDescription.EntryProperty.KEY, mapIRI );
@@ -77,6 +82,7 @@ public class SesameRDFMapRepository extends AbstractSesameLDPRepository implemen
 	}
 
 	public Set<Value> getValues( IRI mapIRI, Value key ) {
+		clean( mapIRI );
 		Set<BNode> entriesBNodes = resourceRepository.getBNodes( mapIRI, RDFMapDescription.Property.ENTRY );
 		for ( BNode entryBNode : entriesBNodes ) {
 			Value persistedKey = blankNodeRepository.getProperty( entryBNode, RDFMapDescription.EntryProperty.KEY, mapIRI );
@@ -87,6 +93,7 @@ public class SesameRDFMapRepository extends AbstractSesameLDPRepository implemen
 	}
 
 	public void add( IRI mapIRI, Value key, Value... values ) {
+		clean( mapIRI );
 		BNode entryBNode;
 		if ( hasKey( mapIRI, key ) ) entryBNode = getEntry( mapIRI, key ).getSubject();
 		else {
@@ -100,6 +107,7 @@ public class SesameRDFMapRepository extends AbstractSesameLDPRepository implemen
 	}
 
 	public void remove( IRI mapIRI, Value key, Value... values ) {
+		clean( mapIRI );
 		if ( ! hasKey( mapIRI, key ) ) return;
 		BNode entryBNode = getEntry( mapIRI, key ).getSubject();
 
@@ -113,6 +121,7 @@ public class SesameRDFMapRepository extends AbstractSesameLDPRepository implemen
 	}
 
 	public void remove( IRI mapIRI, Value key ) {
+		clean( mapIRI );
 		if ( ! hasKey( mapIRI, key ) ) return;
 		BNode entryBNode = getEntry( mapIRI, key ).getSubject();
 		blankNodeRepository.remove( entryBNode, RDFMapDescription.EntryProperty.VALUE, mapIRI );
@@ -120,7 +129,7 @@ public class SesameRDFMapRepository extends AbstractSesameLDPRepository implemen
 		resourceRepository.remove( mapIRI, RDFMapDescription.Property.ENTRY.getIRI(), entryBNode );
 	}
 
-	public void clean( IRI mapIRI ) {
+	private void clean( IRI mapIRI ) {
 		Set<BNode> entryBNodes = resourceRepository.getBNodes( mapIRI, RDFMapDescription.Property.ENTRY );
 		for ( BNode entry : entryBNodes ) {
 			if ( ! blankNodeRepository.hasProperty( entry, RDFMapDescription.EntryProperty.KEY, mapIRI ) ) {

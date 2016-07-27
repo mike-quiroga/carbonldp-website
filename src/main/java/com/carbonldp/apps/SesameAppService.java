@@ -134,10 +134,9 @@ public class SesameAppService extends AbstractSesameLDPService implements AppSer
 		if ( ! ( rawAuthentication instanceof AgentAuthenticationToken ) ) throw new IllegalStateException( "The authentication token isn't supported." );
 		IRI agentIRI = ( (AgentAuthenticationToken) rawAuthentication ).getAgent().getIRI();
 		Agent agentResource = platformAgentRepository.get( agentIRI );
-		IRI rdfMapIRI = agentResource.getIRI( PlatformAgentDescription.Property.APP_ROLE_MAP );
+		IRI appRoleMapIRI = agentResource.getIRI( PlatformAgentDescription.Property.APP_ROLE_MAP );
 
-		mapRepository.clean( rdfMapIRI );
-		mapRepository.add( rdfMapIRI, app.getIRI(), role.getIRI() );
+		mapRepository.add( appRoleMapIRI, app.getIRI(), role.getIRI() );
 	}
 
 	private BasicContainer createRootContainer( App app ) {

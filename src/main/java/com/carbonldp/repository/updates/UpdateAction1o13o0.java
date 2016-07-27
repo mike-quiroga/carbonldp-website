@@ -19,16 +19,16 @@ public class UpdateAction1o13o0 extends AbstractUpdateAction {
 
 	@Override
 	protected void execute() throws Exception {
-		createRDFMaps();
+		createAppRoleMap();
 		Set<App> apps = getAllApps();
 		for ( App app : apps ) {
 			transactionWrapper.runWithSystemPermissionsInAppContext( app, () -> {
-				addRolesToAgentMaps( app );
+				addRolesToAppRoleMaps( app );
 			} );
 		}
 	}
 
-	private void createRDFMaps() throws Exception {
+	private void createAppRoleMap() throws Exception {
 		Set<IRI> platformAgentIRIs = containerRepository.getMemberIRIs( platformAgentRepository.getAgentsContainerIRI() );
 		SesamePlatformAgentService sesamePlatformAgentService = (SesamePlatformAgentService) ( (Advised) platformAgentService ).getTargetSource().getTarget();
 		transactionWrapper.runWithSystemPermissionsInPlatformContext( () -> {
@@ -41,7 +41,7 @@ public class UpdateAction1o13o0 extends AbstractUpdateAction {
 		} );
 	}
 
-	private void addRolesToAgentMaps( App app ) {
+	private void addRolesToAppRoleMaps( App app ) {
 		IRI appRoleContainerIRI = appRoleRepository.getContainerIRI();
 		Set<Statement> members = containerService.getMembershipTriples( appRoleContainerIRI );
 		for ( Statement member : members ) {
@@ -51,17 +51,16 @@ public class UpdateAction1o13o0 extends AbstractUpdateAction {
 				IRI roleMemberIRI = ValueUtil.getIRI( roleMember.getObject() );
 				if ( platformAgentRepository.exists( roleMemberIRI ) ) {
 					transactionWrapper.runWithSystemPermissionsInPlatformContext( () -> {
-						addRoleToAgentMap( roleMemberIRI, app, roleIRI );
+						addRoleToAppRoleMap( roleMemberIRI, app, roleIRI );
 					} );
 				}
 			}
 		}
 	}
 
-	private void addRoleToAgentMap( IRI roleMemberIRI, App app, IRI roleIRI ) {
+	private void addRoleToAppRoleMap( IRI roleMemberIRI, App app, IRI roleIRI ) {
 		Agent agent = platformAgentRepository.get( roleMemberIRI );
-		IRI rdfMapIRI = agent.getIRI( PlatformAgentDescription.Property.APP_ROLE_MAP );
-		mapRepository.clean( rdfMapIRI );
-		mapRepository.add( rdfMapIRI, app.getIRI(), roleIRI );
+		IRI appRoleMapIRI = agent.getIRI( PlatformAgentDescription.Property.APP_ROLE_MAP );
+		mapRepository.add( appRoleMapIRI, app.getIRI(), roleIRI );
 	}
 }

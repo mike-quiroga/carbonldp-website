@@ -28,6 +28,4 @@ public interface RDFMapRepository {
 	public void remove( IRI mapIRI, Value key, Value... values );
 
 	public void remove( IRI mapIRI, Value key );
-
-	public void clean( IRI mapIRI );
 }

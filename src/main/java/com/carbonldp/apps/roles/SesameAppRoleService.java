@@ -145,12 +145,11 @@ public class SesameAppRoleService extends AbstractSesameLDPService implements Ap
 		IRI appIRI = AppContextHolder.getContext().getApplication().getIRI();
 		transactionWrapper.runInPlatformContext( () -> {
 			Agent agentResource = platformAgentRepository.get( agentIRI );
-			IRI rdfMapIRI = agentResource.getIRI( PlatformAgentDescription.Property.APP_ROLE_MAP );
-			mapRepository.clean( rdfMapIRI );
+			IRI appRoleMapIRI = agentResource.getIRI( PlatformAgentDescription.Property.APP_ROLE_MAP );
 			if ( add ) {
-				mapRepository.add( rdfMapIRI, appIRI, roleIRI );
+				mapRepository.add( appRoleMapIRI, appIRI, roleIRI );
 			} else {
-				mapRepository.remove( rdfMapIRI, appIRI, roleIRI );
+				mapRepository.remove( appRoleMapIRI, appIRI, roleIRI );
 			}
 		} );
 	}

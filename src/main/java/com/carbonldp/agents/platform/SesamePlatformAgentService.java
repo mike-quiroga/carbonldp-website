@@ -80,7 +80,6 @@ public class SesamePlatformAgentService extends SesameAgentsService {
 		IRI appRoleMapIRI = agentResource.getIRI( PlatformAgentDescription.Property.APP_ROLE_MAP );
 		if ( agentIRI.stringValue().equals( Vars.getInstance().getPlatformAgentSystemURL() ) )
 			throw new BadRequestException( new Infraction( 0x2014 ) );
-		mapRepository.clean( appRoleMapIRI );
 		Set<Value> apps = mapRepository.getKeys( appRoleMapIRI );
 		for ( Value app : apps ) {
 			validateDeletePlatformAgent( ValueUtil.getIRI( app ), appRoleMapIRI );
@@ -96,12 +95,12 @@ public class SesamePlatformAgentService extends SesameAgentsService {
 		transactionWrapper.runInAppContext( appResource, () -> {
 			String adminRoleString = appRoleRepository.getContainerIRI() + Vars.getInstance().getAppAdminRole();
 			for ( Value role : roles ) {
-				validateAdmin( ValueUtil.getIRI( role ), adminRoleString, appIRI );
+				validateIsTheOnlyAdmin( ValueUtil.getIRI( role ), adminRoleString, appIRI );
 			}
 		} );
 	}
 
-	private void validateAdmin( IRI role, String adminRoleString, IRI appIRI ) {
+	private void validateIsTheOnlyAdmin( IRI role, String adminRoleString, IRI appIRI ) {
 		if ( ! role.stringValue().equals( adminRoleString ) ) return;
 		Set<IRI> adminAgentsIRIs = containerRepository.getMemberIRIs( SimpleValueFactory.getInstance().createIRI( adminRoleString + Vars.getInstance().getAgentsContainer() ) );
 		if ( adminAgentsIRIs.size() > 1 ) return;
