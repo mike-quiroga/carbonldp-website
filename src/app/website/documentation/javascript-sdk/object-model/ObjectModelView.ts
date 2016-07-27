@@ -1,4 +1,4 @@
-import {Component, ElementRef, ChangeDetectorRef } from "@angular/core";
+import { Component, ElementRef, ChangeDetectorRef } from "@angular/core";
 import { CORE_DIRECTIVES } from "@angular/common";
 import { RouteConfig, RouterOutlet, RouterLink } from "@angular/router-deprecated";
 import { Title } from "@angular/platform-browser";
@@ -10,7 +10,6 @@ import highlight from "highlight.js";
 import "highlight.js/styles/tomorrow-night.css!";
 
 import template from "./template.html!";
-
 
 
 @Component( {
@@ -55,7 +54,7 @@ export default class ObjectModelView {
 	}
 
 	highlightCode():void {
-		this.$element.find( "pre code.highlighted" ).each( function( index:number ):void {
+		this.$element.find( "pre code.highlighted" ).each( function ( index:number ):void {
 			highlight.highlightBlock( this );
 		} );
 	}

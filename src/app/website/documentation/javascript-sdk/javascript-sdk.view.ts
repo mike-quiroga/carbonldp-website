@@ -6,11 +6,11 @@ import { RouteConfig, RouterOutlet, RouterLink } from "@angular/router-deprecate
 import $ from "jquery";
 import "semantic-ui/semantic";
 
-import template from "./home.view.html!";
-import style from "./home.view.css!text";
+import template from "./javascript-sdk.view.html!";
+import style from "./javascript-sdk.view.css!text";
 
 @Component( {
-	selector: "home",
+	selector: "javascript-sdk",
 	template: template,
 	styles: [ style ],
 	directives: [ CORE_DIRECTIVES, RouterLink ],
@@ -31,6 +31,6 @@ export default class HomeView {
 	}
 
 	routerOnActivate():void {
-		this.title.setTitle( "Essential Concepts Documentation" );
+		this.title.setTitle( "JavaScript SDK Documentation" );
 	}
 }

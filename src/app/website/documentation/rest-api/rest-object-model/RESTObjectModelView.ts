@@ -1,6 +1,6 @@
-import {Component, ElementRef} from "@angular/core";
-import {CORE_DIRECTIVES} from "@angular/common";
-import {Title} from "@angular/platform-browser";
+import { Component, ElementRef } from "@angular/core";
+import { CORE_DIRECTIVES } from "@angular/common";
+import { Title } from "@angular/platform-browser";
 import SidebarComponent from "./../../sidebar/SidebarComponent";
 
 import $ from "jquery";

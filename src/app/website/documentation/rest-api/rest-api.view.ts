@@ -6,11 +6,11 @@ import { RouteConfig, RouterOutlet, RouterLink } from "@angular/router-deprecate
 import $ from "jquery";
 import "semantic-ui/semantic";
 
-import template from "./home.view.html!";
-import style from "./home.view.css!text";
+import template from "./rest-api.view.html!";
+import style from "./rest-api.view.css!text";
 
 @Component( {
-	selector: "home",
+	selector: "rest-api",
 	template: template,
 	styles: [ style ],
 	directives: [ CORE_DIRECTIVES, RouterLink ],
@@ -28,10 +28,9 @@ export default class HomeView {
 
 	ngAfterViewInit():void {
 		this.$element = $( this.element.nativeElement );
-		this.$element.find( ".doc-categories a[href]" ).on( "click", this.scrollTo );
 	}
 
 	routerOnActivate():void {
-		this.title.setTitle( "JavaScript SDK Documentation" );
+		this.title.setTitle( "Essential Concepts Documentation" );
 	}
 }

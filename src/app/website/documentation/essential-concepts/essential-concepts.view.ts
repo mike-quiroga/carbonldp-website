@@ -6,17 +6,17 @@ import { RouteConfig, RouterOutlet, RouterLink } from "@angular/router-deprecate
 import $ from "jquery";
 import "semantic-ui/semantic";
 
-import template from "./home.view.html!";
-import style from "./home.view.css!text";
+import template from "./essential-concepts.view.html!";
+import style from "./essential-concepts.view.css!text";
 
 @Component( {
-	selector: "home",
+	selector: "essential-concepts",
 	template: template,
 	styles: [ style ],
 	directives: [ CORE_DIRECTIVES, RouterLink ],
 	providers: [ Title ],
 } )
-export default class HomeView {
+export default class EssentialComponentsView {
 	element:ElementRef;
 	$element:JQuery;
 	title:Title;

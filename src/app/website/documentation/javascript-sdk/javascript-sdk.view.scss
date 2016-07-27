@@ -1,13 +1,13 @@
 :host {
 	padding-top: 93px;
-	.big-stone{
+	.big-stone {
 		border-bottom: 5px solid #0192cf;
 	}
 
 	#docs {
 		.ui.container {
 			height: auto;
-			.ui.breadcrumb>.section:hover{
+			.ui.breadcrumb > .section:hover {
 				cursor: pointer;
 			}
 			.ui.header {
