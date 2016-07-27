@@ -1,7 +1,7 @@
-import { Component, ElementRef } from "@angular/core";
+import { Component, ElementRef, AfterViewInit } from "@angular/core";
 import { CORE_DIRECTIVES } from "@angular/common";
 import { Title } from "@angular/platform-browser";
-import { RouteConfig, RouterOutlet, RouterLink } from "@angular/router-deprecated";
+import { RouterLink, OnActivate } from "@angular/router-deprecated";
 
 import $ from "jquery";
 import "semantic-ui/semantic";
@@ -16,10 +16,11 @@ import style from "./javascript-sdk.view.css!text";
 	directives: [ CORE_DIRECTIVES, RouterLink ],
 	providers: [ Title ],
 } )
-export default class HomeView {
-	element:ElementRef;
-	$element:JQuery;
-	title:Title;
+export class JavaScriptSDKView implements AfterViewInit, OnActivate{
+
+	private element:ElementRef;
+	private $element:JQuery;
+	private title:Title;
 
 	constructor( element:ElementRef, title:Title ) {
 		this.element = element;
@@ -34,3 +35,5 @@ export default class HomeView {
 		this.title.setTitle( "JavaScript SDK Documentation" );
 	}
 }
+
+export default JavaScriptSDKView;

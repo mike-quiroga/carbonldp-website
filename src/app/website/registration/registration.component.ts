@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input, Output, Inject, EventEmitter } from "@angular/core";
+import { Component, ElementRef, Input, Output, Inject, EventEmitter, OnInit } from "@angular/core";
 import { CORE_DIRECTIVES, FORM_DIRECTIVES, FormBuilder, ControlGroup, AbstractControl, Validators } from "@angular/common";
 
 import { AuthService } from "angular2-carbonldp/services";
@@ -7,39 +7,37 @@ import Credentials from "carbonldp/Auth/Credentials";
 import * as HTTP from "carbonldp/HTTP";
 
 import { EmailValidator } from "carbon-panel/custom-validators";
-import { ValidatorFn } from "@angular/common/src/forms/directives/validators";
 
 
 import $ from "jquery";
 import "semantic-ui/semantic";
 
 import template from "./registration.component.html!";
+import style from "./registration.component.css!text";
 
 @Component( {
 	selector: "cp-registration",
 	template: template,
-	styles: [ ":host { display:block; } " ],
+	styles: [ style ],
 	directives: [ CORE_DIRECTIVES, FORM_DIRECTIVES ],
 } )
-export class RegistrationComponent {
+export class RegistrationComponent implements OnInit {
 	@Input( "container" ) container:string|JQuery;
 	@Output( "onRegistration" ) onRegistration:EventEmitter<Credentials> = new EventEmitter<Credentials>();
 
-	element:ElementRef;
+	private element:ElementRef;
+	private $element:JQuery;
 
-	$element:JQuery;
-	$registrationForm:JQuery;
+	private $registrationForm:JQuery;
 
-	sending:boolean = false;
-	errorMessage:string = "";
+	private sending:boolean = false;
+	private errorMessage:string = "";
 
-	registrationForm:ControlGroup;
-
-	email:AbstractControl; // To make available the state of the input in the template
-	matchingPassword:ControlGroup;
-	passwordGroup:ControlGroup;
-	password:AbstractControl; // To make available the state of the input in the template
-	confirmPassword:AbstractControl;
+	private registrationForm:ControlGroup;
+	private email:AbstractControl; // To make available the state of the input in the template
+	private passwordGroup:ControlGroup;
+	private password:AbstractControl; // To make available the state of the input in the template
+	private confirmPassword:AbstractControl;
 
 	private formBuilder:FormBuilder; // Validators
 	private authService:AuthService.Class;
@@ -56,14 +54,14 @@ export class RegistrationComponent {
 		this.$registrationForm.find( ".ui.checkbox" ).checkbox();
 		this.registrationForm = this.formBuilder.group( {
 			email: [ "", Validators.compose( [ Validators.required, EmailValidator ] ) ],
-			matchingPassword: this.formBuilder.group({
+			passwordGroup: this.formBuilder.group({
 				password: [ "", Validators.compose( [ Validators.required ] ) ],
 				confirmPassword: [ "", Validators.compose( [ Validators.required ] ) ],
 			}, { validator: this.matchPasswordValidator }),
 		} );
 
 		this.email = this.registrationForm.controls[ "email" ];
-		this.passwordGroup = <ControlGroup>this.registrationForm.controls[ "matchingPassword"];
+		this.passwordGroup = <ControlGroup>this.registrationForm.controls[ "passwordGroup"];
 		this.password = this.passwordGroup.controls[ "password" ];
 		this.confirmPassword = this.passwordGroup.controls[ "confirmPassword" ];
 	}
@@ -107,32 +105,7 @@ export class RegistrationComponent {
 
 	setErrorMessage( error:HTTP.Errors.Error ):void {
 		//TODO: Handle registration service errors
-		/*switch ( true ) {
-			case error instanceof HTTP.Errors.ForbiddenError:
-				this.errorMessage = "Denied Access.";
-				break;
-			case error instanceof HTTP.Errors.UnauthorizedError:
-				this.errorMessage = "Wrong credentials.";
-				break;
-			case error instanceof HTTP.Errors.BadGatewayError:
-				this.errorMessage = "An error occurred while trying to login. Please try again later. Error: " + error.response.status;
-				break;
-			case error instanceof HTTP.Errors.GatewayTimeoutError:
-				this.errorMessage = "An error occurred while trying to login. Please try again later. Error: " + error.response.status;
-				break;
-			case error instanceof HTTP.Errors.InternalServerErrorError:
-				this.errorMessage = "An error occurred while trying to login. Please try again later. Error: " + error.response.status;
-				break;
-			case error instanceof HTTP.Errors.UnknownError:
-				this.errorMessage = "An error occurred while trying to login. Please try again later. Error: " + error.response.status;
-				break;
-			case error instanceof HTTP.Errors.ServiceUnavailableError:
-				this.errorMessage = "Service currently unavailable.";
-				break;
-			default:
-				this.errorMessage = "There was a problem processing the request. Error: " + error.response.status;
-				break;
-		}*/
+
 	}
 
 	shakeForm():void {

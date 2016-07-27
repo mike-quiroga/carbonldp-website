@@ -2,32 +2,30 @@
 	<div class="ui center aligned grid description">
 		<div class="big-stone row">
 		</div>
-		<div id="docs">
-			<div class="ui container" id="rest-api">
-				<div class="ui breadcrumb">
-					<span class="section" [routerLink]="['../Documentation/Documentation']">Documentation</span>
-					<i class="right chevron icon divider"></i>
+		<div class="ui container" id="rest-api">
+			<div class="ui breadcrumb">
+				<span class="section" [routerLink]="['../Documentation/Documentation']">Documentation</span>
+				<i class="right chevron icon divider"></i>
+			</div>
+			<div class="ui header"><img class="ui small left floated image" src="assets/images/ico-rest-150x150.gif">
+				<h2>REST API</h2></div>
+			<div class="description">
+				<p>Access and manage applications and data by URIs using RESTful requests over HTTP (GET, POST, PUT, DELETE). Configure apps, schedule server-side jobs, execute queries - <em>
+					everything</em> in Carbon is RESTful.</p>
+			</div>
+			<div class="ui bulleted list">
+				<div class="item">
+					<div class="header"><span [routerLink]="[ '../RESTApiGettingStarted' ]">Getting started</span></div>
+					<div class="summary">How to build an example application using the Carbon LDP REST API.</div>
 				</div>
-				<div class="ui header"><img class="ui small left floated image" src="assets/images/ico-rest-150x150.gif">
-					<h2>REST API</h2></div>
-				<div class="description">
-					<p>Access and manage applications and data by URIs using RESTful requests over HTTP (GET, POST, PUT, DELETE). Configure apps, schedule server-side jobs, execute queries - <em>
-						everything</em> in Carbon is RESTful.</p>
+				<div class="item">
+					<div class="header"><span [routerLink]="[ '../RESTApiObjectModel' ]">Object model</span></div>
+					<div>A summary of the various types of resources you can manage and interact with using REST.
+					</div>
 				</div>
-				<div class="doc-list ui bulleted list">
-					<div class="item">
-						<div class="header"><span [routerLink]="[ '../RESTApiGettingStarted' ]">Getting started</span></div>
-						<div class="summary">How to build an example application using the Carbon LDP REST API.</div>
-					</div>
-					<div class="item">
-						<div class="header"><span [routerLink]="[ '../RESTApiObjectModel' ]">Object model</span></div>
-						<div>A summary of the various types of resources you can manage and interact with using REST.
-						</div>
-					</div>
-					<div class="item">
-						<div class="header"><span [routerLink]="[ '../RESTApiInteractionModels' ]">Interaction models</span></div>
-						<div class="summary">An explanation of the way you can interact with the resources on the Carbon Server.</div>
-					</div>
+				<div class="item">
+					<div class="header"><span [routerLink]="[ '../RESTApiInteractionModels' ]">Interaction models</span></div>
+					<div class="summary">An explanation of the way you can interact with the resources on the Carbon Server.</div>
 				</div>
 			</div>
 		</div>

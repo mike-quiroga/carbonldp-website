@@ -9,7 +9,7 @@
 			       [disabled]="!registrationForm.valid || registrationForm.valid">
 		</div>
 	</div>
-	<div ngControlGroup="matchingPassword">
+	<div ngControlGroup="passwordGroup">
 		<div class="field" [ngClass]="{ error: (passwordGroup.touched && !passwordGroup.valid) }">
 			<div class="ui left icon input">
 				<i class="lock icon"></i>

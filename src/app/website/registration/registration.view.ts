@@ -1,7 +1,7 @@
 import { Component, ElementRef, AfterViewInit } from "@angular/core";
 import { CORE_DIRECTIVES } from "@angular/common";
 import { Title } from "@angular/platform-browser";
-import { RouteConfig, RouterOutlet, RouterLink } from "@angular/router-deprecated";
+import { RouterLink, OnActivate } from "@angular/router-deprecated";
 
 import { RegistrationComponent } from "./registration.component";
 import { NewsletterFormComponent } from "../newsletter-form/NewsletterFormComponent"
@@ -19,10 +19,11 @@ import style from "./registration.view.css!text";
 	providers: [ Title ],
 	styles: [ style ]
 } )
-export default class RegistrationView implements AfterViewInit {
-	element:ElementRef;
-	$element:JQuery;
-	title:Title;
+export class RegistrationView implements AfterViewInit, OnActivate {
+
+	private element:ElementRef;
+	private $element:JQuery;
+	private title:Title;
 
 	constructor( element:ElementRef, title:Title ) {
 		this.element = element;
@@ -35,11 +36,9 @@ export default class RegistrationView implements AfterViewInit {
 
 	routerOnActivate():void {
 		this.title.setTitle( "Registration" );
-		//$('.page-content').addClass('registration');
 
 	}
 
-	routerOnDeactivate():void {
-		//$('.page-content').removeClass('registration');
-	}
 }
+
+export default RegistrationView;
