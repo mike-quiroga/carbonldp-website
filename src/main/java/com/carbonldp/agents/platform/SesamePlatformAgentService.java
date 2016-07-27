@@ -92,13 +92,13 @@ public class SesamePlatformAgentService extends SesameAgentsService {
 	private void validateDeletePlatformAgent( IRI app, IRI rdfMapIRI ) {
 		IRI appIRI = SimpleValueFactory.getInstance().createIRI( app.stringValue() );
 		App appResource = appService.get( appIRI );
-		String adminRoleString = transactionWrapper.runInAppContext( appResource, () -> {
-			return appRoleRepository.getContainerIRI() + Vars.getInstance().getAppAdminRole();
-		} );
 		Set<Value> roles = mapRepository.getValues( rdfMapIRI, app );
-		for ( Value role : roles ) {
-			validateAdmin( ValueUtil.getIRI( role ), adminRoleString, appIRI );
-		}
+		transactionWrapper.runInAppContext( appResource, () -> {
+			String adminRoleString = appRoleRepository.getContainerIRI() + Vars.getInstance().getAppAdminRole();
+			for ( Value role : roles ) {
+				validateAdmin( ValueUtil.getIRI( role ), adminRoleString, appIRI );
+			}
+		} );
 	}
 
 	private void validateAdmin( IRI role, String adminRoleString, IRI appIRI ) {
