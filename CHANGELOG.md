@@ -1,16 +1,4 @@
 #
-- Add registration component, with temporary disabled form
-- Add more... button in documentation landing page
-- Add landing page for Essential Concepts documentation
-- Add landing page for REST Api documentation
-- Add landing page for Javascript SDK documentation
-- Add manual breadcrumbs for each landing page
-- Add links to each landing pages in header -> documentation menu
-- Group essential concepts documentation(carbon-ldp-concepts, ldp-concepts, linked-data-concepts) inside an essential-concepts folder
-- Modify newsletter-form input to have same size as button
-- Remove text from newsletter-form component
-
-#
 - Add complete initial draft JavaScript SDK Object Schema.
 - Add new documentation landing page.
 - Add styles for new documentation landing page.
