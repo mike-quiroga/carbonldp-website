@@ -155,22 +155,22 @@
 						<sui-tabs>
 							<sui-tab title="TypeScript">
 								<!--@formatter:off-->
-									<pre><code cpHighlight class="typescript">
-										// ... additional imports
-										import * as PersistedDocument from "carbonldp/PersistedDocument";
+								<pre><code cpHighlight class="typescript">
+									// ... additional imports
+									import * as PersistedDocument from "carbonldp/PersistedDocument";
 
-										let project:Project & PersistedDocument.Class;
+									let project:Project & PersistedDocument.Class;
 
-										// ... project retrieval
+									// ... project retrieval
 
-										project.types.push( "project", "important-project" );
+									project.types.push( "project", "important-project" );
 
-										console.log( project.hasType( "project" ) ); // true
-										console.log( project.types.length !== 2 ); // true, remember Carbon may add more types to the document
-									</code></pre>
-									<!--@formatter:on-->
+									console.log( project.hasType( "project" ) ); // true
+									console.log( project.types.length !== 2 ); // true, remember Carbon may add more types to the document
+								</code></pre>
+								<!--@formatter:on-->
 							</sui-tab>
-							<sui-tab title="JavaScript">
+							<sui-tab title="JavaScript ES2015">
 								<!--@formatter:off-->
 									<pre><code cpHighlight class="javascript">
 										// ... imports
@@ -184,6 +184,20 @@
 										console.log( project.types.length !== 2 ); // true, remember Carbon may add more types to the document
 									</code></pre>
 									<!--@formatter:on-->
+							</sui-tab>
+							<sui-tab title="JavaScript ES5">
+								<!--@formatter:off-->
+								<pre><code cpHighlight class="javascript">
+									var project;
+
+									// ... project retrieval
+
+									project.types.push( "project", "important-project" );
+
+									console.log( project.hasType( "project" ) ); // true
+									console.log( project.types.length !== 2 ); // true, remember Carbon may add more types to the document
+								</code></pre>
+								<!--@formatter:on-->
 							</sui-tab>
 						</sui-tabs>
 					</section>

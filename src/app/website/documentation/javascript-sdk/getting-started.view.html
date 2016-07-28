@@ -218,6 +218,44 @@
 								</div>
 							</div>
 						</sui-accordion>
+						<p>
+							Next, you need to decide what language (and what version) you are going to use. The SDK can be used with the following ones:
+						</p>
+						<ul>
+							<li>
+								<strong>TypeScript:</strong> a JavaScript superset language, maintained by Microsoft. See:
+								<a class="outsidelink" target="_blank" href="http://www.typescriptlang.org/">TypeScript</a>.
+							</li>
+							<li>
+								<strong>JavaScript ES2015+:</strong> JavaScript with the new features introduced in the ES2015 standard. In order for you to use it, you'll
+								likely need a transpiler like
+								<a class="outsidelink" target="_blank" href="https://babeljs.io/">BabelJS</a> or
+								<a class="outsidelink" target="_blank" href="https://github.com/google/traceur-compiler">Traceur</a>
+							</li>
+							<li>
+								<strong>JavaScript ES5:</strong> The good old JS, no arrow functions, let declarations or any of that magic. To use the SDK with this
+								JavaScript version you'll need to include the following polyfill before including the SDK:
+								<!--@formatter:off-->
+								<pre><code cpHighlight class="html">
+									&lt;script src="https://cdnjs.cloudflare.com/ajax/libs/es6-shim/0.35.1/es6-shim.min.js"&gt;&lt;/script&gt;
+								</code></pre>
+								<!--@formatter:on-->
+							</li>
+						</ul>
+						<p>
+							Our code examples are written in all of these languages, so before continuing please select which one you'll use:
+						</p>
+						<div class="ui buttons">
+							<button class="ui button" (click)="selectLanguage( 0 )" [class.active]="selectedLanguage === 0">TypeScript</button>
+							<div class="or"></div>
+							<button class="ui button" (click)="selectLanguage( 1 )" [class.active]="selectedLanguage === 1">JS ES2015+</button>
+							<div class="or"></div>
+							<button class="ui button" (click)="selectLanguage( 2 )" [class.active]="selectedLanguage === 2">JS ES5</button>
+						</div>
+					</section>
+
+					<section>
+						<h2 class="ui header">Creating a platform context</h2>
 						<div class="ui icon yellow message">
 							<i class="warning sign icon"></i>
 							<div class="content">
@@ -227,10 +265,6 @@
 								</p>
 							</div>
 						</div>
-					</section>
-
-					<section>
-						<h2 class="ui header">Creating a platform context</h2>
 						<p>
 							Let's start with some basic things you can do, like creating, saving and linking documents; among other things.
 						</p>
@@ -240,7 +274,7 @@
 							<span class="highlight">Carbon platform instance</span> you are working with (for more
 							about Carbon contexts see: <a [routerLink]="['../JavaScriptSDKContexts']">Contexts</a>).
 						</p>
-						<sui-tabs>
+						<sui-tabs [(activeTab)]="selectedLanguage">
 							<sui-tab title="TypeScript">
 								<!--@formatter:off-->
 								<pre><code cpHighlight class="typescript">
@@ -269,7 +303,7 @@
 							By default, platform contexts point to the instance in <code>carbonldp.com</code>. If you need to change this,
 							you can do it by changing the <code>domain</code> setting:
 						</p>
-						<sui-tabs>
+						<sui-tabs [(activeTab)]="selectedLanguage">
 							<sui-tab title="TypeScript">
 								<!--@formatter:off-->
 								<pre><code cpHighlight class="typescript">
@@ -310,7 +344,7 @@
 							every context has. This service provides an <code>authenticate</code> method where you can pass
 							your credentials:
 						</p>
-						<sui-tabs>
+						<sui-tabs [(activeTab)]="selectedLanguage">
 							<sui-tab title="TypeScript">
 								<!--@formatter:off-->
 								<pre><code cpHighlight class="typescript">
@@ -390,7 +424,7 @@
 							<a [routerLink]="[ '../JavaScriptSDKContexts' ]">context</a> that references it, on which you will be working on.
 							To retrieve it, you can use the <code>apps</code> service of the platform context:
 						</p>
-						<sui-tabs>
+						<sui-tabs [(activeTab)]="selectedLanguage">
 							<sui-tab title="TypeScript">
 								<!--@formatter:off-->
 								<pre><code cpHighlight class="typescript">
@@ -474,7 +508,7 @@
 							Any carbon <span class="highlight">context</span> has a <code>documents</code> service that
 							helps you manage your documents. To create one you need to call the method <code>createChild</code> of this service:
 						</p>
-						<sui-tabs>
+						<sui-tabs [(activeTab)]="selectedLanguage">
 							<sui-tab title="TypeScript">
 								<!--@formatter:off-->
 								<pre><code cpHighlight class="typescript">
@@ -595,7 +629,7 @@
 							a third parameter can be passed to the <code>createChild</code> method. This parameter is called <code>slug</code>
 							and it serves as a suggestion for Carbon when forging the document's URI:
 						</p>
-						<sui-tabs>
+						<sui-tabs [(activeTab)]="selectedLanguage">
 							<sui-tab title="TypeScript">
 								<!--@formatter:off-->
 								<pre><code cpHighlight class="typescript">
@@ -645,7 +679,7 @@
 							That string represents a relative URI, one that can be resolved against something else. In this case it is being resolved to the
 							base URI the context has. To see to what that would resolve you can use a <code>context</code> <code>resolve</code> method:
 						</p>
-						<sui-tabs>
+						<sui-tabs [(activeTab)]="selectedLanguage">
 							<sui-tab title="TypeScript">
 								<!--@formatter:off-->
 								<pre><code cpHighlight class="typescript">
@@ -697,7 +731,7 @@
 							Like creating documents, retrieving them can be done using the <code>documents</code> service inside of any Carbon context.
 							To do so, you can use its <code>get</code> method:
 						</p>
-						<sui-tabs>
+						<sui-tabs [(activeTab)]="selectedLanguage">
 							<sui-tab title="TypeScript">
 								<!--@formatter:off-->
 								<pre><code cpHighlight class="typescript">
@@ -769,7 +803,7 @@
 							or as soon as you create a document and receive a pointer back (<code>PersistedDocument.Class</code> extends <code>Pointer.Class</code>).
 							These pointers have a <code>resolve</code> method that helps you retrieve their information:
 						</p>
-						<sui-tabs>
+						<sui-tabs [(activeTab)]="selectedLanguage">
 							<sui-tab title="TypeScript">
 								<!--@formatter:off-->
 								<pre><code cpHighlight class="typescript">
@@ -864,7 +898,7 @@
 						<p>
 							Document properties can be added/modified/removed as with any normal JavaScript object.
 						</p>
-						<sui-tabs>
+						<sui-tabs [(activeTab)]="selectedLanguage">
 							<sui-tab title="TypeScript">
 								<!--@formatter:off-->
 								<pre><code cpHighlight class="typescript">
@@ -989,7 +1023,7 @@
 							delete a persisted document through its <code>delete</code> method. To do so, you need to
 							provide the document's URI:
 						</p>
-						<sui-tabs>
+						<sui-tabs [(activeTab)]="selectedLanguage">
 							<sui-tab title="TypeScript">
 								<!--@formatter:off-->
 								<pre><code cpHighlight class="typescript">
@@ -1055,7 +1089,7 @@
 							Like in "Retrieving a document", a document can also be deleted through the <code>PersistedDocument.Class</code>'s
 							<code>delete</code> method:
 						</p>
-						<sui-tabs>
+						<sui-tabs [(activeTab)]="selectedLanguage">
 							<sui-tab title="TypeScript">
 								<!--@formatter:off-->
 								<pre><code cpHighlight class="typescript">
@@ -1123,7 +1157,7 @@
 							One of the core features of Carbon LDP, is linking data (after all, it's a Linked Data Platform). Documents can
 							be linked to other documents through normal JavaScript properties:
 						</p>
-						<sui-tabs>
+						<sui-tabs [(activeTab)]="selectedLanguage">
 							<sui-tab title="TypeScript">
 								<!--@formatter:off-->
 								<pre><code cpHighlight class="typescript">
@@ -1185,7 +1219,7 @@
 									<code>documents.getChildren</code>: Returns a list of RESOLVED <code>PersistedDocument.Class</code> objects for each of the document children
 								</li>
 							</ul>
-							<sui-tabs>
+							<sui-tabs [(activeTab)]="selectedLanguage">
 								<sui-tab title="TypeScript">
 									<!--@formatter:off-->
 									<pre><code cpHighlight class="typescript">
@@ -1330,7 +1364,7 @@
 									<code>removeMember/removeMembers/removeAllMembers</code>: Removes the specified members (without deleting them)
 								</li>
 							</ul>
-							<sui-tabs>
+							<sui-tabs [(activeTab)]="selectedLanguage">
 								<sui-tab title="TypeScript">
 									<!--@formatter:off-->
 									<pre><code cpHighlight class="typescript">
@@ -1528,7 +1562,7 @@
 							<code>isMemberOfRelation</code>. To create an access point for a document you can use the <code>createAccessPoint</code> method
 							of the <code>documents</code> service or of a <code>PersistedDocument.Class</code> object.
 						</p>
-						<sui-tabs>
+						<sui-tabs [(activeTab)]="selectedLanguage">
 							<sui-tab title="TypeScript">
 								<!--@formatter:off-->
 								<pre><code cpHighlight class="typescript">

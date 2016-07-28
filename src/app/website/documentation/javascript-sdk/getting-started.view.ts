@@ -26,6 +26,7 @@ export class GettingStartedView implements AfterViewInit, OnActivate {
 	private title:Title;
 	private location:Location;
 	private changeDetector:ChangeDetectorRef;
+	private selectedLanguage:number = 0;
 
 	constructor( element:ElementRef, title:Title, location:Location, changeDetector:ChangeDetectorRef ) {
 		this.element = element;
@@ -47,6 +48,10 @@ export class GettingStartedView implements AfterViewInit, OnActivate {
 		window.setTimeout( () => {
 			this.contentReady = true;
 		}, 0 );
+	}
+
+	selectLanguage( language:number ):void {
+		this.selectedLanguage = language;
 	}
 }
 
