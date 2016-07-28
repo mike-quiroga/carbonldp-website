@@ -41,7 +41,8 @@
 
 <platform/> {
 	<platform/>
-		a 	ldp:BasicContainer;
+		a 	ldp:BasicContainer,
+			cs:ProtectedDocument;
 		ldp:hasMemberRelation ldp:member;
 		ldp:contains
 			<platform/api/>,
@@ -95,7 +96,8 @@
 }
 <platform/apps/> {
 	<platform/apps/>
-		a 	ldp:BasicContainer;
+		a 	ldp:BasicContainer,
+			cs:ProtectedDocument;
 		ldp:hasMemberRelation ldp:member;
 		cs:accessControlList <platform/apps/~acl/>.
 }
@@ -116,7 +118,8 @@
 }
 <platform/agents/> {
 	<platform/agents/>
-		a 	ldp:BasicContainer;
+		a 	ldp:BasicContainer,
+			cs:ProtectedDocument;
 		ldp:hasMemberRelation ldp:member;
 		cs:accessControlList <platform/agents/~acl/>.
 }
@@ -136,7 +139,8 @@
 }
 <platform/roles/> {
 	<platform/roles/>
-		a 	ldp:BasicContainer;
+		a 	ldp:BasicContainer,
+			cs:ProtectedDocument;
 		ldp:hasMemberRelation ldp:member;
 		ldp:contains
 			<platform/roles/system/>,
@@ -153,7 +157,7 @@
 }
 <platform/roles/system/> {
 	<platform/roles/system/>
-		a 	cs:PlatformRole, ldp:BasicContainer;
+		a 	cs:PlatformRole, ldp:BasicContainer, cs:ProtectedDocument;
 		c:defaultInteractionModel	ldp:RDFSource;
 		ldp:hasMemberRelation ldp:member;
 		c:accessPoint
@@ -162,21 +166,23 @@
 }
 <platform/roles/system/agents/> {
 	<platform/roles/system/agents/>
-		a 	ldp:DirectContainer;
+		a 	ldp:DirectContainer,
+			cs:ProtectedDocument;
 		ldp:membershipResource	<platform/roles/system/>;
 		ldp:hasMemberRelation	cs:agent;
 		ldp:isMemberOfRelation	cs:platformRole.
 }
 <platform/roles/system/privileges/> {
 	<platform/roles/system/privileges/>
-		a 	ldp:DirectContainer;
+		a 	ldp:DirectContainer,
+			cs:ProtectedDocument;
 		ldp:membershipResource	<platform/roles/system/>;
 		ldp:hasMemberRelation	cs:platformPrivilege.
 }
 
 <platform/roles/admin/> {
 	<platform/roles/admin/>
-		a 	cs:PlatformRole, ldp:BasicContainer;
+		a 	cs:PlatformRole, ldp:BasicContainer, cs:ProtectedDocument;
 		c:defaultInteractionModel	ldp:RDFSource;
 		ldp:hasMemberRelation ldp:member;
 		c:accessPoint	
@@ -187,20 +193,20 @@
 }
 <platform/roles/admin/agents/> {
 	<platform/roles/admin/agents/>
-		a 	ldp:DirectContainer;
+		a 	ldp:DirectContainer, cs:ProtectedDocument;
 		ldp:membershipResource	<platform/roles/admin/>;
 		ldp:hasMemberRelation	cs:agent;
 		ldp:isMemberOfRelation	cs:platformRole.
 }
 <platform/roles/admin/privileges/> {
 	<platform/roles/admin/privileges/>
-		a 	ldp:DirectContainer;
+		a 	ldp:DirectContainer, cs:ProtectedDocument;
 		ldp:membershipResource	<platform/roles/admin/>;
 		ldp:hasMemberRelation	cs:platformPrivilege.
 }
 <platform/roles/app-developer/> {
 	<platform/roles/app-developer/>
-		a 	cs:PlatformRole, ldp:BasicContainer;
+		a 	cs:PlatformRole, ldp:BasicContainer, cs:ProtectedDocument;
 		c:defaultInteractionModel	ldp:RDFSource;
 		ldp:hasMemberRelation ldp:member;
 		c:accessPoint
@@ -211,20 +217,20 @@
 }
 <platform/roles/app-developer/agents/> {
 	<platform/roles/app-developer/agents/>
-		a 	ldp:DirectContainer;
+		a 	ldp:DirectContainer, cs:ProtectedDocument;
 		ldp:membershipResource	<platform/roles/app-developer/>;
 		ldp:hasMemberRelation	cs:agent;
 		ldp:isMemberOfRelation	cs:platformRole.
 }
 <platform/roles/app-developer/privileges/> {
 	<platform/roles/app-developer/privileges/>
-		a 	ldp:DirectContainer;
+		a 	ldp:DirectContainer, cs:ProtectedDocument;
 		ldp:membershipResource	<platform/roles/app-developer/>;
 		ldp:hasMemberRelation	cs:platformPrivilege.
 }
 <platform/roles/registered-agent/> {
 	<platform/roles/registered-agent/>
-		a 	cs:PlatformRole, ldp:BasicContainer;
+		a 	cs:PlatformRole, ldp:BasicContainer, cs:ProtectedDocument;
 		c:defaultInteractionModel	ldp:RDFSource;
 		ldp:hasMemberRelation ldp:member;
 		c:accessPoint
@@ -235,20 +241,20 @@
 }
 <platform/roles/registered-agent/agents/> {
 	<platform/roles/registered-agent/agents/>
-		a 	ldp:DirectContainer;
+		a 	ldp:DirectContainer, cs:ProtectedDocument;
 		ldp:membershipResource	<platform/roles/registered-agent/>;
 		ldp:hasMemberRelation	cs:agent;
 		ldp:isMemberOfRelation	cs:platformRole.
 }
 <platform/roles/registered-agent/privileges/> {
 	<platform/roles/registered-agent/privileges/>
-		a 	ldp:DirectContainer;
+		a 	ldp:DirectContainer, cs:ProtectedDocument;
 		ldp:membershipResource	<platform/roles/registered-agent/>;
 		ldp:hasMemberRelation	cs:platformPrivilege.
 }
 <platform/roles/anonymous/> {
 	<platform/roles/anonymous/>
-		a 	cs:PlatformRole, ldp:BasicContainer;
+		a 	cs:PlatformRole, ldp:BasicContainer, cs:ProtectedDocument;
 		c:defaultInteractionModel	ldp:RDFSource;
 		ldp:hasMemberRelation ldp:member;
 		c:accessPoint
@@ -256,13 +262,13 @@
 }
 <platform/roles/anonymous/privileges/> {
 	<platform/roles/anonymous/privileges/>
-		a 	ldp:DirectContainer;
+		a 	ldp:DirectContainer, cs:ProtectedDocument;
 		ldp:membershipResource	<platform/roles/anonymous/>;
 		ldp:hasMemberRelation	cs:platformPrivilege.
 }
 <platform/privileges/> {
 	<platform/privileges/>
-		a 	ldp:BasicContainer;
+		a 	ldp:BasicContainer, cs:ProtectedDocument;
 		ldp:hasMemberRelation ldp:member;
 		ldp:contains
 			<platform/privileges/create-applications/>;
@@ -271,18 +277,18 @@
 }
 <platform/privileges/create-applications/> {
 	<platform/privileges/create-applications/>
-		a	cs:PlatformPrivilege, ldp:BasicContainer;
+		a	cs:PlatformPrivilege, ldp:BasicContainer, cs:ProtectedDocument;
 		c:defaultInteractionModel	ldp:RDFSource;
 		ldp:hasMemberRelation ldp:member;
 		cs:name	"Create Applications".
 }
 <platform/auth-tokens/> {
 	<platform/auth-tokens/>
-		a 	ldp:BasicContainer;
+		a 	ldp:BasicContainer, cs:ProtectedDocument;
 		c:defaultInteractionModel	ldp:Container.
 }
 <platform/auth-tickets/> {
 	<platform/auth-tickets/>
-		a 	ldp:BasicContainer;
+		a 	ldp:BasicContainer, cs:ProtectedDocument;
 		c:defaultInteractionModel	ldp:Container.
 }
