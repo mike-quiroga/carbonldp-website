@@ -4,9 +4,9 @@
 		<div class="sixteen wide column">
 
 			<div class="ui breadcrumb">
-				<span class="section">Documentation</span>
+				<a class="section" [routerLink]="[ '../Documentation' ]">Documentation</a>
 				<i class="right chevron icon divider"></i>
-				<span class="section">JavaScript SDK</span>
+				<a class="section" [routerLink]="[ '../JavaScriptSDK' ]">JavaScript SDK</a>
 				<i class="right arrow icon divider"></i>
 
 				<div class="active section">Object schema</div>
@@ -21,6 +21,17 @@
 					<header>
 						<h1 class="ui header">Object schema</h1>
 					</header>
+
+					<div class="ui info icon message">
+						<i class="arrow left icon"></i>
+						<div class="content">
+							<div class="header">Previous step</div>
+							<p></p>
+							<div class="header">
+								<a [routerLink]="[ '../JavaScriptSDKContexts' ]">Contexts</a>
+							</div>
+						</div>
+					</div>
 
 					<div class="ui icon yellow message">
 						<i class="warning sign icon"></i>
@@ -148,47 +159,47 @@
 								The <code>post</code> <span class="highlight">property</span> <code>@type</code> has
 								been defined as a <span class="highlight">pointer</span>.</p>
 
-								<p>These are the supported <span class="highlight">types</span> in
-									<span class="highlight">Carbon JavaScript SDK: </span></p>
+							<p>These are the supported <span class="highlight">types</span> in
+								<span class="highlight">Carbon JavaScript SDK: </span></p>
 
-								<div class="ui segment">
-									<table class="ui small very compact celled table">
-										<thead>
-											<tr>
-												<th colspan="4">Types</th>
-											</tr>
-										</thead>
-										<tbody>
-											<tr>
-												<td>date</td>
-												<td>integer</td>
-												<td>unsignedLong</td>
-												<td>double</td>
-											</tr>
-											<tr>
-												<td>dateTime</td>
-												<td>int</td>
-												<td>long</td>
-												<td>boolean</td>
-											</tr>
-											<tr>
-												<td>time</td>
-												<td>unsignedInt</td>
-												<td>float</td>
-												<td>string</td>
-											</tr>
-										</tbody>
-									</table>
-								</div>
-								<br/>
-								<p><code>@container</code> keyword describes if the <span class="highlight">property</span>
-									is multi-valued, in other words an array, its value may be:</p>
-								<ul>
-									<li><code>@set</code> defines an unordered set of data.</li>
-									<li><code>@list</code> defines an ordered set of data.</li>
-								</ul>
-								<p>If this keyword is not present, the <span class="highlight">JavaScript SDK</span> will assume the
-									described property is single-valued. </p>
+							<div class="ui segment">
+								<table class="ui small very compact celled table">
+									<thead>
+										<tr>
+											<th colspan="4">Types</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr>
+											<td>date</td>
+											<td>integer</td>
+											<td>unsignedLong</td>
+											<td>double</td>
+										</tr>
+										<tr>
+											<td>dateTime</td>
+											<td>int</td>
+											<td>long</td>
+											<td>boolean</td>
+										</tr>
+										<tr>
+											<td>time</td>
+											<td>unsignedInt</td>
+											<td>float</td>
+											<td>string</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+							<br/>
+							<p><code>@container</code> keyword describes if the <span class="highlight">property</span>
+								is multi-valued, in other words an array, its value may be:</p>
+							<ul>
+								<li><code>@set</code> defines an unordered set of data.</li>
+								<li><code>@list</code> defines an ordered set of data.</li>
+							</ul>
+							<p>If this keyword is not present, the <span class="highlight">JavaScript SDK</span> will assume the
+								described property is single-valued. </p>
 
 						</section>
 					</section>

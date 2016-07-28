@@ -1,14 +1,11 @@
-import {Component, ElementRef, ChangeDetectorRef} from "@angular/core";
-import {Title} from "@angular/platform-browser";
-import { RouteConfig, RouterOutlet, RouterLink } from "@angular/router-deprecated";
+import { Component, ElementRef, ChangeDetectorRef, AfterViewInit } from "@angular/core";
+import { Title } from "@angular/platform-browser";
+import { RouterLink, OnActivate } from "@angular/router-deprecated";
 
 import { HighlightDirective } from "carbon-panel/directives/highlight.directive";
-import SidebarComponent from "./../../sidebar/SidebarComponent";
+import SidebarComponent from "./../sidebar/SidebarComponent";
 
-import highlight from "highlight.js";
-import "highlight.js/styles/tomorrow-night.css!";
-
-import template from "./template.html!";
+import template from "./contexts.view.html!";
 
 @Component( {
 	selector: "contexts",
@@ -16,13 +13,12 @@ import template from "./template.html!";
 	directives: [ SidebarComponent, HighlightDirective, RouterLink ],
 	providers: [ Title ],
 } )
-export default class ContextsView {
-	element:ElementRef;
-	$element:JQuery;
-	title:Title;
-
+export class ContextsView implements AfterViewInit, OnActivate {
 	contentReady:boolean = false;
 
+	private element:ElementRef;
+	private $element:JQuery;
+	private title:Title;
 	private changeDetector:ChangeDetectorRef;
 
 	constructor( element:ElementRef, title:Title, changeDetector:ChangeDetectorRef ) {
@@ -37,25 +33,8 @@ export default class ContextsView {
 
 	ngAfterViewInit():void {
 		this.$element = $( this.element.nativeElement );
-		this.initializeAccordions();
-		this.initializeTabs();
-		this.highlightCode();
 		this.initializeSidebar();
 		this.initializePopUp();
-	}
-
-	initializeAccordions():void {
-		this.$element.find( ".ui.accordion" ).accordion();
-	}
-
-	initializeTabs():void {
-		this.$element.find( ".tabular.menu .item" ).tab();
-	}
-
-	highlightCode():void {
-		this.$element.find( "pre code.highlighted" ).each( function ( index:number ):void {
-			highlight.highlightBlock( this );
-		} );
 	}
 
 	initializeSidebar():void {
@@ -71,3 +50,5 @@ export default class ContextsView {
 			} );
 	}
 }
+
+export default ContextsView;

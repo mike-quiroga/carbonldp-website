@@ -14,9 +14,9 @@ import InteractionModelsView from "./rest-api/interaction-models/InteractionMode
 
 import JavaScriptSDKView from "./javascript-sdk/javascript-sdk.view";
 import JavaScriptSDKGettingStartedView from "./javascript-sdk/getting-started.view";
-import JavaScriptSDKContextsView from "./javascript-sdk/contexts/ContextsView";
+import JavaScriptSDKContextsView from "./javascript-sdk/contexts.view";
 import JavaScriptSDKObjectModelView from "./javascript-sdk/object-model.view";
-import JavaScriptSDKObjectSchemaView from "./javascript-sdk/object-schema/ObjectSchemaView";
+import JavaScriptSDKObjectSchemaView from "./javascript-sdk/object-schema.view";
 
 import RESTObjectModelView from "./rest-api/rest-object-model/RESTObjectModelView";
 import RESTRdfSourceView from "./rest-api/rest-rdfsource/RESTRdfSourceView";
