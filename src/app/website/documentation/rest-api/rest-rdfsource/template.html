@@ -93,7 +93,7 @@
 							header.
 						</p>
 
-					<pre cphighlight class="turtle">
+						<pre cphighlight class="turtle">
 						@prefix ldp:&#60;http://www.w3.org/ns/ldp#&#62;.
 						@prefix ex:&#60;http://www.base22.com/2016/05/ex#&#62;.
 
@@ -119,7 +119,7 @@
 
 						<p><strong>Example request to create RDFSource :</strong></p>
 
-					<pre cphighlight>
+						<pre cphighlight>
 						POST /apps/rest-examples/persons/ HTTP/1.1
 						Authorization: Basic
 						Content-Type: application/trig
@@ -190,7 +190,7 @@
 
 						<p>Following is the response from retrieving a newly created RDFSource (from the &quot;Create&quot; example above).</p>
 
-					<pre cphighlight>
+						<pre cphighlight>
 					&lt;https://carbonldp.com/apps/rest-examples/persons/john-doe/&gt; {
 						&lt;https://carbonldp.com/apps/rest-examples/persons/john-doe/&gt; a &lt;http://www.w3.org/ns/ldp#BasicContainer&gt; , &lt;http://www.w3.org/ns/ldp#Container&gt; , &lt;http://www.w3.org/ns/ldp#RDFSource&gt; , &lt;http://www.base22.com/2016/05/ex#Person&gt; ;
 							&lt;http://www.w3.org/ns/ldp#hasMemberRelation&gt; &lt;http://www.w3.org/ns/ldp#member&gt; ;
@@ -269,7 +269,7 @@
 
 						<p><strong>Body (required)</strong></p>
 
-					<pre cphighlight class="turtle">
+						<pre cphighlight class="turtle">
 					&lt;https://dev.carbonldp.com/apps/rest-examples/persons/john-doe/&gt; {
 						&lt;https://dev.carbonldp.com/apps/rest-examples/persons/john-doe/&gt; a &lt;http://www.w3.org/ns/ldp#BasicContainer&gt; , &lt;http://www.w3.org/ns/ldp#Container&gt; , &lt;http://www.w3.org/ns/ldp#RDFSource&gt; , &lt;http://www.base22.com/2016/05/ex#Person&gt; ;
 							&lt;http://www.w3.org/ns/ldp#hasMemberRelation&gt; &lt;http://www.w3.org/ns/ldp#member&gt; ;
@@ -296,7 +296,7 @@
 
 						<p><strong>Example request to update RDFSource :</strong></p>
 
-					<pre cphighlight>
+						<pre cphighlight>
 						PUT /apps/rest-examples/persons/john-doe/ HTTP/1.1
 						Authorization: Basic YWRtaW5AY2FyYm9ubGRwLmNvbTpoZWxsbw==
 						Prefer: http://www.w3.org/ns/ldp#RDFSource; rel=interaction-model
@@ -350,7 +350,7 @@
 
 						<p><strong>Example request to delete RDFSource :</strong></p>
 
-					<pre cphighlight>
+						<pre cphighlight>
 						DELETE /apps/rest-examples/persons/john-doe/ HTTP/1.1
 						Authorization: Basic
 					</pre>

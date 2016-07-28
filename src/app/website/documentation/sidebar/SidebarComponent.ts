@@ -1,7 +1,6 @@
 import { Component, Input, ElementRef, OnChanges, SimpleChange } from "@angular/core";
 import { CORE_DIRECTIVES } from "@angular/common"
 import { ROUTER_DIRECTIVES, ROUTER_PROVIDERS, Router, Instruction, RouteParams } from "@angular/router-deprecated";
-import SidebarService from "./service/SidebarService";
 
 import $ from "jquery";
 import "semantic-ui/semantic";
@@ -34,9 +33,9 @@ export default class SidebarComponent {
 	}
 
 	ngOnChanges( changeRecord:any ):void {
-		if ( "contentReady" in changeRecord ) {
+		if( "contentReady" in changeRecord ) {
 			let change:SimpleChange = changeRecord.contentReady;
-			if ( change.currentValue ) this.buildSidebar();
+			if( change.currentValue ) this.buildSidebar();
 		}
 	}
 
@@ -54,7 +53,7 @@ export default class SidebarComponent {
 	}
 
 	buildSidebar():void {
-		if ( typeof this.sidebar === "undefined" || this.sidebar.length === 0 ) return;
+		if( typeof this.sidebar === "undefined" || this.sidebar.length === 0 ) return;
 
 		let html:string = "";
 		let $sticky:JQuery;
@@ -67,7 +66,7 @@ export default class SidebarComponent {
 		} );
 
 		// Assign class for computer and tablets size sidebar
-		if ( ! this.mobile ) {
+		if( ! this.mobile ) {
 			this.$followMenu = $( "<div />" ).addClass( "ui vertical following fluid accordion text menu" ).html( html );
 			$sticky = $( "<div />" ).addClass( "ui sticky segment" ).html( this.$followMenu ).prepend( '<p class="ui header">Content</p>' );
 			this.sidebar.html( $sticky );
@@ -77,7 +76,7 @@ export default class SidebarComponent {
 				onTopPassed: function () {
 					_self.activateSection( this );
 				},
-				onTopPassedReverse: function(){
+				onTopPassedReverse: function () {
 					_self.deactivateFirstSection( this );
 				},
 				onBottomPassedReverse: function () {
@@ -90,7 +89,7 @@ export default class SidebarComponent {
 				onTopPassed: function () {
 					_self.activateSubSection( this );
 				},
-				onTopPassedReverse: function(){
+				onTopPassedReverse: function () {
 					_self.deactivateFirstSubSection( this );
 				},
 				onBottomPassedReverse: function () {
@@ -125,7 +124,7 @@ export default class SidebarComponent {
 		this.setSectionID( $section, headerID );
 		let html:string = `<div class="item">`;
 
-		if ( subSections.length === 0 ) {
+		if( subSections.length === 0 ) {
 			html += `<a class="${ activeClass } title " href="#${ headerID }">${ headerText }</a></div>`;
 		} else {
 			html += `<a class="${ activeClass } title " href="#${ headerID }">${ headerText }</a><i class="dropdown icon"></i>`;
@@ -133,7 +132,7 @@ export default class SidebarComponent {
 
 		// If subsections exist, then iterate each section
 		let component:SidebarComponent = this;
-		if ( subSections.length > 0 ) {
+		if( subSections.length > 0 ) {
 			html += `<div class="content menu">`;
 
 			$.each( subSections, function ( index:number, subSection:HTMLElement ) {
@@ -168,12 +167,12 @@ export default class SidebarComponent {
 		$followSection.removeClass( "active" );
 		$followSection.find( ".active" ).not( ".toggled" ).removeClass( "active" );
 
-		if ( ! isActive ) {
+		if( ! isActive ) {
 
 			$currentSection.addClass( "active" );
 		}
 
-		if ( hasSubsection ) {
+		if( hasSubsection ) {
 			$currentSection.find( ".menu" ).addClass( "active" );
 		}
 
@@ -191,40 +190,40 @@ export default class SidebarComponent {
 		let $accordion:JQuery = this.$followMenu.children( ".item" ).find( ".menu" );
 		let accordionIsActive:boolean = $accordion.hasClass( "active" );
 
-		if ( index !== - 1 && ! isActive ) {
+		if( index !== - 1 && ! isActive ) {
 			$followSection.filter( ".active" ).removeClass( "active" );
 			$activeSection.addClass( "active" );
 		}
 
-		if ( ! accordionIsActive ) {
+		if( ! accordionIsActive ) {
 			$accordion.addClass( "active" );
 		}
 
 	}
 
-	deactivateFirstSection( elm: any):void{
+	deactivateFirstSection( elm:any ):void {
 		let $section:JQuery = $( elm );
 		let index:number = this.sections.index( $section );
 		let $followSection:JQuery = this.$followMenu.children( ".item" );
 		let $accordion:JQuery = this.$followMenu.children( ".item" ).find( ".menu" );
 		let accordionIsActive:boolean = $accordion.hasClass( "active" );
 
-		if ( index === 0 ) {
+		if( index === 0 ) {
 			$followSection.removeClass( "active" );
 		}
 
-		if ( accordionIsActive ){
+		if( accordionIsActive ) {
 			$accordion.removeClass( "active" );
 		}
 
 	}
 
-	deactivateFirstSubSection( elm: any):void{
+	deactivateFirstSubSection( elm:any ):void {
 		let $section:JQuery = $( elm );
 		let index:number = this.subSections.index( $section );
 		let $followSection:JQuery = this.$followMenu.find( ".menu > .item" );
 
-		if ( index === 0 ) {
+		if( index === 0 ) {
 			$followSection.removeClass( "active" );
 		}
 
@@ -252,10 +251,10 @@ export default class SidebarComponent {
 	toggleDropdown( event:any ):boolean {
 		let $target:JQuery = $( event.currentTarget );
 		let $accordion:JQuery = $target.parent( ".item" ).find( ".content.menu" );
-		if ( $accordion ) {
+		if( $accordion ) {
 			let accordionIsActive:boolean = $accordion.hasClass( "active" );
 
-			if ( accordionIsActive ) {
+			if( accordionIsActive ) {
 				$accordion.removeClass( "active" );
 				$accordion.removeClass( "toggled" );
 			} else {
