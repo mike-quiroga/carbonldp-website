@@ -6,28 +6,28 @@
 			       name="email"
 			       placeholder="E-mail address"
 			       ngControl="email"
-			       [disabled]="!registrationForm.valid || registrationForm.valid">
+			       [disabled]="true">
 		</div>
 	</div>
 	<div ngControlGroup="passwordGroup">
-		<div class="field" [ngClass]="{ error: (passwordGroup.touched && !passwordGroup.valid) }">
+		<div class="field" [ngClass]="{ error: (password.touched && !password.valid) }">
 			<div class="ui left icon input">
 				<i class="lock icon"></i>
 				<input type="password"
 				       name="password"
 				       placeholder="password"
 				       ngControl="password"
-				       [disabled]="!registrationForm.valid || registrationForm.valid">
+				       [disabled]="true">
 			</div>
 		</div>
-		<div class="field" [ngClass]="{ error: ( passwordGroup.touched && !passwordGroup.valid) }">
+		<div class="field" [ngClass]="{ error: ( confirmPassword.touched && !confirmPassword.valid) }">
 			<div class="ui left icon input">
 				<i class="lock icon"></i>
 				<input type="password"
 				       name="confirmPassword"
 				       placeholder="confirm password"
 				       ngControl="confirmPassword"
-				       [disabled]="!registrationForm.valid || registrationForm.valid">
+				       [disabled]="true">
 			</div>
 		</div>
 	</div>

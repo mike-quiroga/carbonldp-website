@@ -12,18 +12,18 @@ import { EmailValidator } from "carbon-panel/custom-validators";
 import $ from "jquery";
 import "semantic-ui/semantic";
 
-import template from "./registration.component.html!";
-import style from "./registration.component.css!text";
+import template from "./register.component.html!";
+import style from "./register.component.css!text";
 
 @Component( {
-	selector: "cp-registration",
+	selector: "cp-register",
 	template: template,
 	styles: [ style ],
 	directives: [ CORE_DIRECTIVES, FORM_DIRECTIVES ],
 } )
-export class RegistrationComponent implements OnInit {
+export class RegisterComponent implements OnInit {
 	@Input( "container" ) container:string|JQuery;
-	@Output( "onRegistration" ) onRegistration:EventEmitter<Credentials> = new EventEmitter<Credentials>();
+	@Output( "onRegister" ) onRegister:EventEmitter<Credentials> = new EventEmitter<Credentials>();
 
 	private element:ElementRef;
 	private $element:JQuery;
@@ -118,4 +118,4 @@ export class RegistrationComponent implements OnInit {
 	}
 }
 
-export default RegistrationComponent;
+export default RegisterComponent;

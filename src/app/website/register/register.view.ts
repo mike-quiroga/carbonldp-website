@@ -3,23 +3,23 @@ import { CORE_DIRECTIVES } from "@angular/common";
 import { Title } from "@angular/platform-browser";
 import { RouterLink, OnActivate } from "@angular/router-deprecated";
 
-import { RegistrationComponent } from "./registration.component";
+import { RegisterComponent } from "./register.component";
 import { NewsletterFormComponent } from "../newsletter-form/NewsletterFormComponent"
 
 import $ from "jquery";
 import "semantic-ui/semantic";
 
-import template from "./registration.view.html!";
-import style from "./registration.view.css!text";
+import template from "./register.view.html!";
+import style from "./register.view.css!text";
 
 @Component( {
-	selector: "registration",
+	selector: "register",
 	template: template,
-	directives: [ CORE_DIRECTIVES, RouterLink, RegistrationComponent, NewsletterFormComponent ],
+	directives: [ CORE_DIRECTIVES, RouterLink, RegisterComponent, NewsletterFormComponent ],
 	providers: [ Title ],
 	styles: [ style ]
 } )
-export class RegistrationView implements AfterViewInit, OnActivate {
+export class RegisterView implements AfterViewInit, OnActivate {
 
 	private element:ElementRef;
 	private $element:JQuery;
@@ -35,10 +35,10 @@ export class RegistrationView implements AfterViewInit, OnActivate {
 	}
 
 	routerOnActivate():void {
-		this.title.setTitle( "Registration" );
+		this.title.setTitle( "Register" );
 
 	}
 
 }
 
-export default RegistrationView;
+export default RegisterView;
