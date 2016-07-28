@@ -1,5 +1,7 @@
-documents{
-	> * { display:block; }
+documents {
+	> * {
+		display: block;
+	}
 
 	section {
 		margin-top: 2em;
@@ -14,7 +16,7 @@ documents{
 			padding-top: 1em;
 			padding-left: 2em;
 		}
-		.ui.segment.bottom.attached:last-child{
+		.ui.segment.bottom.attached:last-child {
 			margin-bottom: 1rem;
 		}
 	}
@@ -27,7 +29,7 @@ documents{
 		padding-right: 0;
 	}
 
-	a.outsidelink{
+	a.outsidelink {
 		color: black;
 		border-bottom: 1px dotted #f89828;
 	}

@@ -3,20 +3,23 @@ import { CORE_DIRECTIVES } from "@angular/common";
 import { Title } from "@angular/platform-browser";
 import { RouterLink, OnActivate } from "@angular/router-deprecated";
 
+import { RegisterComponent } from "./register.component";
+import { NewsletterFormComponent } from "../newsletter-form/NewsletterFormComponent"
+
 import $ from "jquery";
 import "semantic-ui/semantic";
 
-import template from "./javascript-sdk.view.html!";
-import style from "./javascript-sdk.view.css!text";
+import template from "./register.view.html!";
+import style from "./register.view.css!text";
 
 @Component( {
-	selector: "javascript-sdk",
+	selector: "register",
 	template: template,
-	styles: [ style ],
-	directives: [ CORE_DIRECTIVES, RouterLink ],
+	directives: [ CORE_DIRECTIVES, RouterLink, RegisterComponent, NewsletterFormComponent ],
 	providers: [ Title ],
+	styles: [ style ]
 } )
-export class JavaScriptSDKView implements AfterViewInit, OnActivate{
+export class RegisterView implements AfterViewInit, OnActivate {
 
 	private element:ElementRef;
 	private $element:JQuery;
@@ -32,8 +35,10 @@ export class JavaScriptSDKView implements AfterViewInit, OnActivate{
 	}
 
 	routerOnActivate():void {
-		this.title.setTitle( "JavaScript SDK Documentation" );
+		this.title.setTitle( "Register" );
+
 	}
+
 }
 
-export default JavaScriptSDKView;
+export default RegisterView;

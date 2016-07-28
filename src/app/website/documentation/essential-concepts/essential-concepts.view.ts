@@ -6,17 +6,18 @@ import { RouterLink, OnActivate } from "@angular/router-deprecated";
 import $ from "jquery";
 import "semantic-ui/semantic";
 
-import template from "./javascript-sdk.view.html!";
-import style from "./javascript-sdk.view.css!text";
+import template from "./essential-concepts.view.html!";
+import style from "./essential-concepts.view.css!text";
 
 @Component( {
-	selector: "javascript-sdk",
+	selector: "essential-concepts",
 	template: template,
 	styles: [ style ],
 	directives: [ CORE_DIRECTIVES, RouterLink ],
 	providers: [ Title ],
 } )
-export class JavaScriptSDKView implements AfterViewInit, OnActivate{
+
+export class EssentialConceptsView implements AfterViewInit, OnActivate {
 
 	private element:ElementRef;
 	private $element:JQuery;
@@ -32,8 +33,8 @@ export class JavaScriptSDKView implements AfterViewInit, OnActivate{
 	}
 
 	routerOnActivate():void {
-		this.title.setTitle( "JavaScript SDK Documentation" );
+		this.title.setTitle( "Essential Concepts Documentation" );
 	}
 }
 
-export default JavaScriptSDKView;
+export default EssentialConceptsView;

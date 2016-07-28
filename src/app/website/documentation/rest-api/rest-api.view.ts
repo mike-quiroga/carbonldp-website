@@ -6,17 +6,18 @@ import { RouterLink, OnActivate } from "@angular/router-deprecated";
 import $ from "jquery";
 import "semantic-ui/semantic";
 
-import template from "./javascript-sdk.view.html!";
-import style from "./javascript-sdk.view.css!text";
+import template from "./rest-api.view.html!";
+import style from "./rest-api.view.css!text";
 
 @Component( {
-	selector: "javascript-sdk",
+	selector: "rest-api",
 	template: template,
 	styles: [ style ],
 	directives: [ CORE_DIRECTIVES, RouterLink ],
 	providers: [ Title ],
 } )
-export class JavaScriptSDKView implements AfterViewInit, OnActivate{
+
+export class RESTApiView implements AfterViewInit, OnActivate {
 
 	private element:ElementRef;
 	private $element:JQuery;
@@ -32,8 +33,8 @@ export class JavaScriptSDKView implements AfterViewInit, OnActivate{
 	}
 
 	routerOnActivate():void {
-		this.title.setTitle( "JavaScript SDK Documentation" );
+		this.title.setTitle( "Essential Concepts Documentation" );
 	}
 }
 
-export default JavaScriptSDKView;
+export default RESTApiView;
