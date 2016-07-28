@@ -2,6 +2,8 @@ package com.carbonldp.authentication;
 
 import com.carbonldp.agents.Agent;
 import com.carbonldp.agents.AgentRepository;
+import com.carbonldp.apps.App;
+import com.carbonldp.apps.context.AppContext;
 import com.carbonldp.apps.context.AppContextHolder;
 import com.carbonldp.apps.context.RunInAppContext;
 import com.carbonldp.authorization.Platform;
@@ -38,6 +40,7 @@ public class AppAgentUsernamePasswordAuthenticationProvider extends SesameUserna
 		String hashedPassword = getHashedPassword( password, agent );
 		if ( ! passwordsMatch( hashedPassword, agent ) ) throw new BadCredentialsException( "Wrong credentials" );
 
+		App app = AppContextHolder.getContext().getApplication();
 		return createAgentAuthenticationToken( agent );
 	}
 

@@ -6,6 +6,7 @@ import com.carbonldp.authorization.acl.ACEDescription;
 import com.carbonldp.authorization.acl.ACL;
 import com.carbonldp.config.ConfigurationRepository;
 import com.carbonldp.exceptions.InvalidResourceException;
+import com.carbonldp.exceptions.ResourceAlreadyExistsException;
 import com.carbonldp.exceptions.StupidityException;
 import com.carbonldp.ldp.AbstractSesameLDPService;
 import com.carbonldp.ldp.containers.ContainerService;
@@ -39,6 +40,7 @@ public abstract class SesameAgentsService extends AbstractSesameLDPService imple
 	protected AgentValidatorRepository agentValidatorRepository;
 	protected RDFSourceService sourceService;
 	protected ContainerService containerService;
+	protected AgentRepository agentRepository;
 
 	protected JavaMailSender mailSender;
 
@@ -63,6 +65,15 @@ public abstract class SesameAgentsService extends AbstractSesameLDPService imple
 		if ( agentToAdd.getPassword() != null ) setAgentPasswordFields( agentToAdd );
 
 		sourceService.patch( originalSource.getIRI(), documentToAdd, documentToDelete );
+	}
+
+	@Override
+	public void create( IRI agentContainerIRI, Agent agent ) {
+		validate( agent );
+		String email = agent.getEmails().iterator().next();
+		if ( agentRepository.existsWithEmail( email ) ) throw new ResourceAlreadyExistsException();
+		setAgentPasswordFields( agent );
+		containerService.createChild( agentContainerIRI, agent );
 	}
 
 	protected void validate( Agent agent ) {

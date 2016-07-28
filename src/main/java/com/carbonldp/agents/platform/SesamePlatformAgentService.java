@@ -7,7 +7,6 @@ import com.carbonldp.authorization.Platform;
 import com.carbonldp.authorization.acl.ACEDescription;
 import com.carbonldp.authorization.acl.ACL;
 import com.carbonldp.exceptions.ResourceAlreadyExistsException;
-import com.carbonldp.ldp.containers.ContainerService;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +14,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.Arrays;
 
 public class SesamePlatformAgentService extends SesameAgentsService {
-	protected PlatformAgentRepository platformAgentRepository;
+
+	@Override
+	public Agent get( IRI agentIRI ) {
+		return agentRepository.get( agentIRI );
+	}
 
 	@Override
 	public void register( Agent agent ) {
@@ -23,7 +26,7 @@ public class SesamePlatformAgentService extends SesameAgentsService {
 		validate( agent );
 
 		String email = agent.getEmails().iterator().next();
-		if ( platformAgentRepository.existsWithEmail( email ) ) throw new ResourceAlreadyExistsException();
+		if ( agentRepository.existsWithEmail( email ) ) throw new ResourceAlreadyExistsException();
 
 		boolean requireValidation = configurationRepository.requireAgentEmailValidation();
 		if ( requireValidation ) agent.setEnabled( false );
@@ -33,7 +36,7 @@ public class SesamePlatformAgentService extends SesameAgentsService {
 
 		addAgentToDefaultPlatformRole( agent );
 
-		platformAgentRepository.create( agent );
+		agentRepository.create( agent );
 		ACL agentACL = aclRepository.createACL( agent.getIRI() );
 		addAgentDefaultPermissions( agent, agentACL );
 
@@ -45,15 +48,6 @@ public class SesamePlatformAgentService extends SesameAgentsService {
 			sendValidationEmail( agent, validator );
 			// TODO: Create "resend validation" resource
 		}
-	}
-
-	@Override
-	public void create( IRI agentContainerIRI, Agent agent ) {
-		validate( agent );
-		String email = agent.getEmails().iterator().next();
-		if ( platformAgentRepository.existsWithEmail( email ) ) throw new ResourceAlreadyExistsException();
-		setAgentPasswordFields( agent );
-		containerService.createChild( agentContainerIRI, agent );
 	}
 
 	private void addAgentDefaultPermissions( Agent agent, ACL agentACL ) {
@@ -81,6 +75,6 @@ public class SesamePlatformAgentService extends SesameAgentsService {
 	}
 
 	@Autowired
-	public void setPlatformAgentRepository( PlatformAgentRepository platformAgentRepository ) { this.platformAgentRepository = platformAgentRepository; }
+	public void setPlatformAgentRepository( PlatformAgentRepository platformAgentRepository ) { this.agentRepository = platformAgentRepository; }
 
 }

@@ -1,11 +1,9 @@
 package com.carbonldp.authentication.web;
 
-import com.carbonldp.agents.AgentRepository;
+import com.carbonldp.agents.AgentService;
 import com.carbonldp.authentication.Token;
 import com.carbonldp.authentication.token.TokenService;
-import com.carbonldp.ldp.containers.ResourceMetadata;
-import com.carbonldp.ldp.containers.ResourceMetadataDescription;
-import com.carbonldp.ldp.containers.ResponseMetadataDescription;
+import com.carbonldp.ldp.containers.*;
 import com.carbonldp.ldp.sources.RDFSource;
 import com.carbonldp.ldp.sources.RDFSourceDescription;
 import com.carbonldp.ldp.web.AbstractLDPRequestHandler;
@@ -42,12 +40,9 @@ public class TokenAuthenticationRequestHandler extends AbstractLDPRequestHandler
 	@Autowired
 	TransactionWrapper transactionWrapper;
 
-	@Autowired
-	@Qualifier( "platformAgentRepository" )
-	AgentRepository platformAgentRepository;
-	@Autowired
-	@Qualifier( "appAgentRepository" )
-	AgentRepository appAgentRepository;
+	AgentService appAgentService;
+
+	AgentService platformAgentService;
 
 	@Transactional
 	public ResponseEntity<Object> handleRequest( HttpServletRequest request, HttpServletResponse response ) {
@@ -57,11 +52,10 @@ public class TokenAuthenticationRequestHandler extends AbstractLDPRequestHandler
 
 		IRI agentIRI = token.getCredentialsOf();
 		RDFSource agentModel;
-		if ( platformAgentRepository.exists( agentIRI ) ) {
-			agentModel = platformAgentRepository.get( agentIRI );
-		} else {
-			agentModel = appAgentRepository.get( agentIRI );
-		}
+		agentModel = token.getRelatedApp() == null ?
+			platformAgentService.get( agentIRI ) :
+			appAgentService.get( agentIRI );
+
 		token.getBaseModel().addAll( agentModel );
 
 		addResponseMetadata( token, agentModel );
@@ -70,27 +64,15 @@ public class TokenAuthenticationRequestHandler extends AbstractLDPRequestHandler
 	}
 
 	private void addResponseMetadata( Token token, RDFSource agentModel ) {
-		RDFBlankNode responseDescription = getResponseMetadata( token );
-		int eTag = ModelUtil.calculateETag( agentModel );
-		String valueETag = HTTPUtil.formatStrongEtag( eTag );
-
-		BNode bNode = SimpleValueFactory.getInstance().createBNode();
-
-		ResourceMetadata resourceMetadata = new ResourceMetadata( token, bNode );
-		resourceMetadata.addType( ResourceMetadataDescription.Resource.CLASS.getIRI() );
-		resourceMetadata.addType( RDFResourceDescription.Resource.VOLATILE.getIRI() );
-		resourceMetadata.setETag( valueETag );
-		resourceMetadata.setResource( agentModel.getIRI() );
-
-		responseDescription.addResponseMetadata( bNode );
+		RDFBlankNode responseDescription = ResponseMetadataFactory.getInstance().getResponseMetadata( token );
+		ResourceMetadataFactory.getInstance().create( token.getBaseModel(),responseDescription, agentModel);
 	}
 
-	private RDFBlankNode getResponseMetadata( Token token ) {
-		ValueFactory valueFactory = SimpleValueFactory.getInstance();
-		BNode bNode = valueFactory.createBNode();
-		RDFBlankNode responseMetadata = new RDFBlankNode( token, bNode, (Resource) null );
-		responseMetadata.add( RDFSourceDescription.Property.TYPE.getIRI(), ResponseMetadataDescription.Resource.CLASS.getIRI() );
-		responseMetadata.add( RDFSourceDescription.Property.TYPE.getIRI(), RDFResourceDescription.Resource.VOLATILE.getIRI() );
-		return responseMetadata;
-	}
+	@Autowired
+	@Qualifier( "appAgentService" )
+	public void setAppAgentService( AgentService appAgentService ) {this.appAgentService = appAgentService;}
+
+	@Autowired
+	@Qualifier( "platformAgentService" )
+	public void setPlatformAgentService( AgentService platformAgentService ) {this.platformAgentService = platformAgentService;}
 }

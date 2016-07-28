@@ -18,7 +18,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 public class SesameAppAgentService extends SesameAgentsService {
 
-	protected AppAgentRepository appAgentRepository;
 	protected AppRoleRepository appRoleRepository;
 
 	@Override
@@ -26,14 +25,14 @@ public class SesameAppAgentService extends SesameAgentsService {
 		validate( agent );
 
 		String email = agent.getEmails().iterator().next();
-		if ( appAgentRepository.existsWithEmail( email ) ) throw new ResourceAlreadyExistsException();
+		if ( agentRepository.existsWithEmail( email ) ) throw new ResourceAlreadyExistsException();
 		setAgentPasswordFields( agent );
 
 		boolean requireValidation = configurationRepository.requireAgentEmailValidation();
 		if ( requireValidation ) agent.setEnabled( false );
 		else agent.setEnabled( true );
 
-		appAgentRepository.create( agent );
+		agentRepository.create( agent );
 		aclRepository.createACL( agent.getIRI() );
 
 		if ( requireValidation ) {
@@ -48,16 +47,12 @@ public class SesameAppAgentService extends SesameAgentsService {
 	}
 
 	@Override
-	public void create( IRI agentContainerIRI, Agent agent ) {
-		validate( agent );
-		String email = agent.getEmails().iterator().next();
-		if ( appAgentRepository.existsWithEmail( email ) ) throw new ResourceAlreadyExistsException();
-		setAgentPasswordFields( agent );
-		containerService.createChild( agentContainerIRI, agent );
+	public Agent get( IRI agentIRI ) {
+		return agentRepository.get( agentIRI );
 	}
 
 	@Autowired
-	public void setAppAgentRepository( AppAgentRepository appAgentRepository ) { this.appAgentRepository = appAgentRepository; }
+	public void setAppAgentRepository( AppAgentRepository appAgentRepository ) { this.agentRepository = appAgentRepository; }
 
 	@Autowired
 	public void setAppRoleRepository( AppRoleRepository appRoleRepository ) { this.appRoleRepository = appRoleRepository; }
