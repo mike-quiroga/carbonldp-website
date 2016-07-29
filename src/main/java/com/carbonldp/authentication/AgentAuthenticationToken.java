@@ -1,6 +1,7 @@
 package com.carbonldp.authentication;
 
 import com.carbonldp.agents.Agent;
+import com.carbonldp.apps.App;
 import com.carbonldp.apps.AppRole;
 import com.carbonldp.apps.roles.AppRolesHolder;
 import com.carbonldp.authorization.Platform;
@@ -17,7 +18,7 @@ public class AgentAuthenticationToken extends AbstractAuthenticationToken implem
 	private static final long serialVersionUID = - 8845911646804638633L;
 
 	private final Agent agent;
-
+	private final App app;
 	private final Set<AppRole> appRoles;
 
 	public AgentAuthenticationToken( Agent agent, Set<Platform.Role> platformRoles, Set<Platform.Privilege> platformPrivileges ) {
@@ -25,6 +26,16 @@ public class AgentAuthenticationToken extends AbstractAuthenticationToken implem
 
 		Assert.notNull( agent );
 		this.agent = agent;
+		this.app = null;
+		this.appRoles = new HashSet<>();
+	}
+
+	public AgentAuthenticationToken( App app, Agent agent, Set<Platform.Role> platformRoles, Set<Platform.Privilege> platformPrivileges ) {
+		super( platformRoles, platformPrivileges );
+
+		Assert.notNull( agent );
+		this.agent = agent;
+		this.app = app;
 		this.appRoles = new HashSet<>();
 	}
 
@@ -57,6 +68,8 @@ public class AgentAuthenticationToken extends AbstractAuthenticationToken implem
 	public Agent getAgent() {
 		return agent;
 	}
+
+	public App getApp() {return app;}
 
 	@Override
 	public Object getPrincipal() {
