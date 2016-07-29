@@ -41,11 +41,11 @@ public class SesameACLService extends AbstractSesameLDPService implements ACLSer
 	@Override
 	public void replace( ACL newACL ) {
 		IRI aclIRI = newACL.getIRI();
+		ACL oldACL = get( aclIRI );
+		checkManageSecurityPermission( oldACL );
 
 		if ( ! sourceRepository.exists( aclIRI ) ) throw new ResourceDoesntExistException();
 		validateACL( newACL );
-
-		ACL oldACL = get( aclIRI );
 
 		Map<Subject, SubjectPermissions> oldACLSubjects = getACLSubjects( oldACL );
 		Map<Subject, SubjectPermissions> newACLSubjects = getACLSubjects( newACL );
@@ -59,6 +59,16 @@ public class SesameACLService extends AbstractSesameLDPService implements ACLSer
 		aclRepository.replace( aclToPersist );
 
 		sourceRepository.touch( aclIRI );
+	}
+
+	private void checkManageSecurityPermission( ACL acl ) {
+
+		if ( ! permissionEvaluator.hasPermission( SecurityContextHolder.getContext().getAuthentication(), acl.getAccessTo(), ACEDescription.Permission.MANAGE_SECURITY ) ) {
+			Map<String, String> errorMessage = new HashMap<>();
+			errorMessage.put( "action", "modify permissions" );
+			errorMessage.put( "uri", acl.getAccessTo().stringValue() );
+			throw new ForbiddenException( new Infraction( 0x7001, errorMessage ) );
+		}
 	}
 
 	// TODO: compact the resulting ACL
@@ -197,7 +207,11 @@ public class SesameACLService extends AbstractSesameLDPService implements ACLSer
 			if ( subjectClass == null ) throw new StupidityException( "There's no subjectClass property in the ACE" );
 			switch ( subjectClass ) {
 				case AGENT:
-					throw new NotImplementedException();
+					IRI agentToModifyIRI = subject.getIRI();
+					IRI agentIRI = agentAuthenticationToken.getAgent().getIRI();
+
+					if ( agentToModifyIRI.equals( agentIRI ) ) throw new ForbiddenException( 0x7002 );
+					break;
 				case APP_ROLE:
 					App app = AppContextHolder.getContext().getApplication();
 					if ( app == null ) throw new IllegalStateException( "Unable to add an app role permission on the platform context" );

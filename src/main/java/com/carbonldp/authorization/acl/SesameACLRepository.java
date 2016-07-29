@@ -12,15 +12,14 @@ import com.carbonldp.utils.ACLUtil;
 import com.carbonldp.utils.IRIUtil;
 import com.carbonldp.web.exceptions.NotImplementedException;
 import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.Resource;
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import org.eclipse.rdf4j.spring.SesameConnectionFactory;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collection;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 @CacheConfig( cacheNames = "acl" )
 @Transactional
@@ -84,8 +83,9 @@ public class SesameACLRepository extends AbstractSesameLDPRepository implements 
 			ACE ace = ACEFactory.getInstance().create( acl, subjectClass, subjectIRIs, permissions, true );
 			acl.addACEntry( ace.getSubject() );
 		} else {
-			// TODO: Implement
-			throw new NotImplementedException();
+			for ( ACE ace : aces ) {
+				permissions.forEach( ace::addPermission );
+			}
 		}
 	}
 
@@ -121,8 +121,9 @@ public class SesameACLRepository extends AbstractSesameLDPRepository implements 
 			ACE ace = ACEFactory.getInstance().create( acl, subjectClass, subjectIRIs, permissions, granting );
 			acl.addInheritableEntry( ace.getSubject() );
 		} else {
-			// TODO: Implement
-			throw new NotImplementedException();
+			for ( ACE ace : aces ) {
+				permissions.forEach( ace::addPermission );
+			}
 		}
 	}
 

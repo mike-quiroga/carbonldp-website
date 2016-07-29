@@ -5,6 +5,7 @@ import com.carbonldp.agents.AgentRepository;
 import com.carbonldp.agents.AgentService;
 import com.carbonldp.apps.App;
 import com.carbonldp.apps.AppRepository;
+import com.carbonldp.apps.roles.AppRoleRepository;
 import com.carbonldp.authentication.token.app.AppTokenRepository;
 import com.carbonldp.authorization.acl.ACLRepository;
 import com.carbonldp.ldp.containers.ContainerRepository;
@@ -45,6 +46,7 @@ public abstract class AbstractUpdateAction extends AbstractComponent implements 
 	protected FileRepository localFileRepository;
 	protected AgentRepository platformAgentRepository;
 	protected AgentService platformAgentService;
+	protected AppRoleRepository appRoleRepository;
 	protected static ValueFactory valueFactory = SimpleValueFactory.getInstance();
 
 	public void run() {
@@ -88,5 +90,6 @@ public abstract class AbstractUpdateAction extends AbstractComponent implements 
 		localFileRepository = context.getBean( FileRepository.class );
 		platformAgentRepository = context.getBean( "platformAgentRepository", AgentRepository.class );
 		platformAgentService = context.getBean( "platformAgentService", AgentService.class );
+		appRoleRepository = context.getBean( AppRoleRepository.class );
 	}
 }
