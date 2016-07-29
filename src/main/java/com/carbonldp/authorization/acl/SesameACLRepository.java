@@ -83,11 +83,9 @@ public class SesameACLRepository extends AbstractSesameLDPRepository implements 
 			ACE ace = ACEFactory.getInstance().create( acl, subjectClass, subjectIRIs, permissions, true );
 			acl.addACEntry( ace.getSubject() );
 		} else {
-			Set<Resource> subjectsACEs = new HashSet<>();
 			for ( ACE ace : aces ) {
-				subjectsACEs.add( ace.getSubject() );
+				permissions.forEach( ace::addPermission );
 			}
-			acl.setACEntries( subjectsACEs );
 		}
 	}
 
@@ -123,11 +121,9 @@ public class SesameACLRepository extends AbstractSesameLDPRepository implements 
 			ACE ace = ACEFactory.getInstance().create( acl, subjectClass, subjectIRIs, permissions, granting );
 			acl.addInheritableEntry( ace.getSubject() );
 		} else {
-			Set<Resource> subjectsACEs = new HashSet<>();
 			for ( ACE ace : aces ) {
-				subjectsACEs.add( ace.getSubject() );
+				permissions.forEach( ace::addPermission );
 			}
-			acl.setACEntries( subjectsACEs );
 		}
 	}
 
