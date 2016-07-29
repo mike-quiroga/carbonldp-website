@@ -20,45 +20,7 @@ public class SesamePlatformAgentService extends SesameAgentsService {
 		return agentRepository.get( agentIRI );
 	}
 
-	@Override
-	public void register( Agent agent ) {
-
-		validate( agent );
-
-		String email = agent.getEmails().iterator().next();
-		if ( agentRepository.existsWithEmail( email ) ) throw new ResourceAlreadyExistsException();
-
-		boolean requireValidation = configurationRepository.requireAgentEmailValidation();
-		if ( requireValidation ) agent.setEnabled( false );
-		else agent.setEnabled( true );
-
-		setAgentPasswordFields( agent );
-
-		addAgentToDefaultPlatformRole( agent );
-
-		agentRepository.create( agent );
-		ACL agentACL = aclRepository.createACL( agent.getIRI() );
-		addAgentDefaultPermissions( agent, agentACL );
-
-		if ( requireValidation ) {
-			AgentValidator validator = createAgentValidator( agent );
-			ACL validatorACL = aclRepository.createACL( validator.getIRI() );
-			addValidatorDefaultPermissions( validatorACL );
-
-			sendValidationEmail( agent, validator );
-			// TODO: Create "resend validation" resource
-		}
-	}
-
-	private void addAgentDefaultPermissions( Agent agent, ACL agentACL ) {
-		aclRepository.grantPermissions( agentACL, Arrays.asList( agent ), Arrays.asList(
-			ACEDescription.Permission.READ,
-			ACEDescription.Permission.UPDATE,
-			ACEDescription.Permission.DELETE
-		), false );
-	}
-
-	private void addAgentToDefaultPlatformRole( Agent agent ) {
+	protected void addAgentToDefaultRole( Agent agent ) {
 		IRI defaultPlatformRoleIRI = getDefaultPlatformRoleIRI();
 		IRI roleAgentsContainerIRI = getRoleAgentsContainerIRI( defaultPlatformRoleIRI );
 

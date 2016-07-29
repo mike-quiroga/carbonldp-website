@@ -41,7 +41,7 @@ public class AppAgentUsernamePasswordAuthenticationProvider extends SesameUserna
 		if ( ! passwordsMatch( hashedPassword, agent ) ) throw new BadCredentialsException( "Wrong credentials" );
 
 		App app = AppContextHolder.getContext().getApplication();
-		return createAgentAuthenticationToken( agent );
+		return createAgentAuthenticationToken(app, agent );
 	}
 
 	@Override

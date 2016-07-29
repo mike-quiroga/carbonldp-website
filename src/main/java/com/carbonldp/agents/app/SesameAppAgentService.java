@@ -21,32 +21,6 @@ public class SesameAppAgentService extends SesameAgentsService {
 	protected AppRoleRepository appRoleRepository;
 
 	@Override
-	public void register( Agent agent ) {
-		validate( agent );
-
-		String email = agent.getEmails().iterator().next();
-		if ( agentRepository.existsWithEmail( email ) ) throw new ResourceAlreadyExistsException();
-		setAgentPasswordFields( agent );
-
-		boolean requireValidation = configurationRepository.requireAgentEmailValidation();
-		if ( requireValidation ) agent.setEnabled( false );
-		else agent.setEnabled( true );
-
-		agentRepository.create( agent );
-		aclRepository.createACL( agent.getIRI() );
-
-		if ( requireValidation ) {
-			AgentValidator validator = createAgentValidator( agent );
-			ACL validatorACL = aclRepository.createACL( validator.getIRI() );
-			addValidatorDefaultPermissions( validatorACL );
-
-			sendValidationEmail( agent, validator );
-			// TODO: Create "resend validation" resource
-		}
-
-	}
-
-	@Override
 	public Agent get( IRI agentIRI ) {
 		return agentRepository.get( agentIRI );
 	}
@@ -56,9 +30,4 @@ public class SesameAppAgentService extends SesameAgentsService {
 
 	@Autowired
 	public void setAppRoleRepository( AppRoleRepository appRoleRepository ) { this.appRoleRepository = appRoleRepository; }
-
-	@Autowired
-	public void setSourceService( RDFSourceService sourceService ) {
-		this.sourceService = sourceService;
-	}
 }
