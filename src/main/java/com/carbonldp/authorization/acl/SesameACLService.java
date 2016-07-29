@@ -209,9 +209,8 @@ public class SesameACLService extends AbstractSesameLDPService implements ACLSer
 				case AGENT:
 					IRI agentToModifyIRI = subject.getIRI();
 					IRI agentIRI = agentAuthenticationToken.getAgent().getIRI();
-					if ( agentToModifyIRI.equals( agentIRI ) ) {
-						throw new ForbiddenException( 0x7002 );
-					}
+
+					if ( agentToModifyIRI.equals( agentIRI ) ) throw new ForbiddenException( 0x7002 );
 					break;
 				case APP_ROLE:
 					App app = AppContextHolder.getContext().getApplication();
