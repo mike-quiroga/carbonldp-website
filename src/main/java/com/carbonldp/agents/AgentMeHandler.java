@@ -1,14 +1,13 @@
 package com.carbonldp.agents;
 
+import com.carbonldp.apps.App;
+import com.carbonldp.apps.context.AppContextHolder;
 import com.carbonldp.authentication.AgentAuthenticationToken;
 import com.carbonldp.ldp.sources.RDFSource;
-import com.carbonldp.ldp.sources.RDFSourceService;
 import com.carbonldp.ldp.web.AbstractLDPRequestHandler;
 import com.carbonldp.spring.TransactionWrapper;
-import com.carbonldp.utils.HTTPUtil;
 import com.carbonldp.web.RequestHandler;
 import org.eclipse.rdf4j.model.IRI;
-import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,21 +30,29 @@ public class AgentMeHandler extends AbstractLDPRequestHandler {
 	@Transactional
 	public ResponseEntity<Object> handleRequest( HttpServletRequest request, HttpServletResponse response ) {
 		setUp( request, response );
-		IRI agentIRI = getAgentIRIString();
+		AgentAuthenticationToken agentToken = getAgentIRI();
+		IRI agentIRI = agentToken.getAgent().getSubject();
+		App agentRelatedAppContext = agentToken.getApp();
+
+		RDFSource agentSource = getAgentSource( agentIRI, agentRelatedAppContext );
+
 		response.addHeader( "Content-Location", agentIRI.stringValue() );
-
-		RDFSource agentSource = sourceService.exists( agentIRI ) ?
-			sourceService.get( agentIRI ) :
-			transactionWrapper.runInPlatformContext( () -> sourceService.get( agentIRI ) );
-
 		return new ResponseEntity<>( agentSource, HttpStatus.OK );
 	}
 
-	private IRI getAgentIRIString() {
+	private AgentAuthenticationToken getAgentIRI() {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		if ( ! ( authentication instanceof AgentAuthenticationToken ) ) throw new AccessDeniedException( "authentication is not an instance of AgentAuthenticationToken" );
-		AgentAuthenticationToken agentToken = (AgentAuthenticationToken) authentication;
-		return agentToken.getAgent().getSubject();
+		return (AgentAuthenticationToken) authentication;
+	}
+
+	private RDFSource getAgentSource( IRI agentIRI, App agentRelatedAppContext ) {
+		App appContext = AppContextHolder.getContext().getApplication();
+		if ( appContext == null ) return sourceService.get( agentIRI );
+		if ( appContext.equals( agentRelatedAppContext ) ) return sourceService.get( agentIRI );
+		return agentRelatedAppContext == null ?
+			transactionWrapper.runInPlatformContext( () -> sourceService.get( agentIRI ) ) :
+			sourceService.get( agentIRI );
 	}
 
 	@Autowired
