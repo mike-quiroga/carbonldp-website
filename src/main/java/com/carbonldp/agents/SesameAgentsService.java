@@ -4,8 +4,10 @@ import com.carbonldp.agents.validators.AgentValidatorRepository;
 import com.carbonldp.authorization.Platform;
 import com.carbonldp.authorization.acl.ACEDescription;
 import com.carbonldp.authorization.acl.ACL;
+import com.carbonldp.authorization.acl.ACLRepository;
 import com.carbonldp.config.ConfigurationRepository;
 import com.carbonldp.exceptions.InvalidResourceException;
+import com.carbonldp.exceptions.ResourceAlreadyExistsException;
 import com.carbonldp.exceptions.StupidityException;
 import com.carbonldp.ldp.AbstractSesameLDPService;
 import com.carbonldp.ldp.containers.ContainerService;
@@ -39,8 +41,51 @@ public abstract class SesameAgentsService extends AbstractSesameLDPService imple
 	protected AgentValidatorRepository agentValidatorRepository;
 	protected RDFSourceService sourceService;
 	protected ContainerService containerService;
+	protected AgentRepository agentRepository;
+	protected ACLRepository aclRepository;
 
 	protected JavaMailSender mailSender;
+
+	@Override
+	public void register( Agent agent ) {
+
+		validate( agent );
+
+		String email = agent.getEmails().iterator().next();
+		if ( agentRepository.existsWithEmail( email ) ) throw new ResourceAlreadyExistsException();
+		setAgentPasswordFields( agent );
+
+		boolean requireValidation = configurationRepository.requireAgentEmailValidation();
+		if ( requireValidation ) agent.setEnabled( false );
+		else agent.setEnabled( true );
+
+		addAgentToDefaultRole( agent );
+
+		agentRepository.create( agent );
+		aclRepository.createACL( agent.getIRI() );
+		addAgentDefaultPermissions( agent );
+
+		if ( requireValidation ) {
+			AgentValidator validator = createAgentValidator( agent );
+			ACL validatorACL = aclRepository.createACL( validator.getIRI() );
+			addValidatorDefaultPermissions( validatorACL );
+
+			sendValidationEmail( agent, validator );
+			// TODO: Create "resend validation" resource
+		}
+	}
+
+	@Override
+	public void create( IRI agentContainerIRI, Agent agent ) {
+		validate( agent );
+		String email = agent.getEmails().iterator().next();
+		if ( agentRepository.existsWithEmail( email ) ) throw new ResourceAlreadyExistsException();
+		setAgentPasswordFields( agent );
+		addAgentToDefaultRole( agent );
+
+		containerService.createChild( agentContainerIRI, agent );
+		addAgentDefaultPermissions( agent );
+	}
 
 	@Override
 	public void replace( IRI source, Agent agent ) {
@@ -64,6 +109,16 @@ public abstract class SesameAgentsService extends AbstractSesameLDPService imple
 
 		sourceService.patch( originalSource.getIRI(), documentToAdd, documentToDelete );
 	}
+
+	protected void addAgentDefaultPermissions( Agent agent ) {
+		aclRepository.grantPermissions( agent.getIRI(), Arrays.asList( agent ), Arrays.asList(
+			ACEDescription.Permission.READ,
+			ACEDescription.Permission.UPDATE,
+			ACEDescription.Permission.DELETE
+		), false );
+	}
+
+	protected void addAgentToDefaultRole( Agent agent ) {}
 
 	protected void validate( Agent agent ) {
 		List<Infraction> infractions = AgentFactory.getInstance().validate( agent );
@@ -184,5 +239,10 @@ public abstract class SesameAgentsService extends AbstractSesameLDPService imple
 	@Autowired
 	public void setContainerService( ContainerService containerService ) {
 		this.containerService = containerService;
+	}
+
+	@Autowired
+	public void setAclRepository( ACLRepository aclRepository ) {
+		this.aclRepository = aclRepository;
 	}
 }

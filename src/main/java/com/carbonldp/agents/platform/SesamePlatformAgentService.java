@@ -46,7 +46,7 @@ public class SesamePlatformAgentService extends SesameAgentsService {
 
 		setAgentPasswordFields( agent );
 
-		addAgentToDefaultPlatformRole( agent );
+		addAgentToDefaultRole( agent );
 
 		platformAgentRepository.create( agent );
 		ACL agentACL = aclRepository.createACL( agent.getIRI() );
@@ -61,6 +61,11 @@ public class SesamePlatformAgentService extends SesameAgentsService {
 			sendValidationEmail( agent, validator );
 			// TODO: Create "resend validation" resource
 		}
+	}
+
+	@Override
+	public Agent get( IRI agentIRI ) {
+		return platformAgentRepository.get( agentIRI );
 	}
 
 	@Override
@@ -125,7 +130,7 @@ public class SesamePlatformAgentService extends SesameAgentsService {
 		), false );
 	}
 
-	private void addAgentToDefaultPlatformRole( Agent agent ) {
+	protected void addAgentToDefaultRole( Agent agent ) {
 		IRI defaultPlatformRoleIRI = getDefaultPlatformRoleIRI();
 		IRI roleAgentsContainerIRI = getRoleAgentsContainerIRI( defaultPlatformRoleIRI );
 
@@ -151,12 +156,8 @@ public class SesamePlatformAgentService extends SesameAgentsService {
 	public void setAppRoleRepository( AppRoleRepository appRoleRepository ) { this.appRoleRepository = appRoleRepository; }
 
 	@Autowired
-	public void setResourceRepository( RDFResourceRepository resourceRepository ) {
-		this.resourceRepository = resourceRepository;
-	}
+	public void setResourceRepository( RDFResourceRepository resourceRepository ) { this.resourceRepository = resourceRepository; }
 
 	@Autowired
-	public void setMapRepository( RDFMapRepository mapRepository ) {
-		this.mapRepository = mapRepository;
-	}
+	public void setMapRepository( RDFMapRepository mapRepository ) { this.mapRepository = mapRepository; }
 }
