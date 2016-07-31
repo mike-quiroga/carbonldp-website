@@ -7,6 +7,27 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 public abstract class CORSContextFilter extends AbstractUniqueFilter {
+	// TODO: Add them as needed instead of all of them all the time
+	protected static final String EXPOSE_HEADERS;
+
+	static {
+		CharSequence[] headers = new String[]{
+			HTTPHeaders.ACCEPT_PATCH,
+			HTTPHeaders.ACCEPT_POST,
+			HTTPHeaders.ACCEPT_PUT,
+			HTTPHeaders.ALLOW,
+			HTTPHeaders.CONTENT_LENGTH,
+			HTTPHeaders.CONTENT_LOCATION,
+			HTTPHeaders.ETAG,
+			HTTPHeaders.LINK,
+			HTTPHeaders.LOCATION,
+			HTTPHeaders.PREFER,
+			HTTPHeaders.PREFERENCE_APPLIED
+		};
+
+		EXPOSE_HEADERS = String.join( ", ", headers );
+	}
+
 	public CORSContextFilter( String filterAppliedFlag ) {
 		super( filterAppliedFlag );
 	}
@@ -18,18 +39,7 @@ public abstract class CORSContextFilter extends AbstractUniqueFilter {
 
 		if ( ! isOriginAllowed( origin ) ) return;
 
-		String exposeHeaders = HTTPHeaders.ACCEPT_PATCH + ", " +
-			HTTPHeaders.ACCEPT_POST + ", " +
-			HTTPHeaders.ACCEPT_PUT + ", " +
-			HTTPHeaders.ALLOW + ", " +
-			HTTPHeaders.CONTENT_LENGTH + ", " +
-			HTTPHeaders.ETAG + ", " +
-			HTTPHeaders.LINK + ", " +
-			HTTPHeaders.LOCATION + ", " +
-			HTTPHeaders.PREFER + ", " +
-			HTTPHeaders.PREFERENCE_APPLIED;
-
-		response.addHeader( HTTPHeaders.ACCESS_CONTROL_EXPOSE_HEADERS, exposeHeaders );
+		response.addHeader( HTTPHeaders.ACCESS_CONTROL_EXPOSE_HEADERS, EXPOSE_HEADERS );
 		response.addHeader( "Access-Control-Allow-Credentials", "true" );
 		response.addHeader( "Access-Control-Allow-Origin", origin );
 
