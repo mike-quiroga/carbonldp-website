@@ -1,5 +1,6 @@
 package com.carbonldp.agents.platform;
 
+import com.carbonldp.agents.Agent;
 import com.carbonldp.agents.SesameAgentsRepository;
 import com.carbonldp.apps.context.RunInPlatformContext;
 import com.carbonldp.ldp.containers.ContainerRepository;
@@ -21,6 +22,12 @@ public class SesamePlatformAgentRepository extends SesameAgentsRepository implem
 	@Override
 	public IRI getAgentsContainerIRI() {
 		return agentsContainerIRI;
+	}
+
+	@RunInPlatformContext
+	@Override
+	public Agent get( IRI iri ) {
+		return super.get( iri );
 	}
 
 	@RunInPlatformContext

@@ -2,10 +2,13 @@ package com.carbonldp.authentication.token;
 
 import com.carbonldp.AbstractComponent;
 import com.carbonldp.Vars;
-import com.carbonldp.authentication.*;
+import com.carbonldp.apps.App;
+import com.carbonldp.apps.context.AppContextHolder;
+import com.carbonldp.authentication.AgentAuthenticationToken;
+import com.carbonldp.authentication.Token;
+import com.carbonldp.authentication.TokenFactory;
 import com.carbonldp.exceptions.StupidityException;
 import io.jsonwebtoken.SignatureAlgorithm;
-import org.eclipse.rdf4j.model.IRI;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
@@ -24,8 +27,11 @@ public class JWTokenAuthenticationService extends AbstractComponent implements T
 		if ( ! ( authentication instanceof AgentAuthenticationToken ) ) throw new StupidityException( "authentication is not an instance of AgentAuthenticationToken" );
 		AgentAuthenticationToken agentToken = (AgentAuthenticationToken) authentication;
 		String agentTokenString = agentToken.getAgent().getSubject().stringValue();
+		App app = agentToken.getApp();
 
-		return TokenFactory.getInstance().create( agentTokenString, expTime, signatureAlgorithm );
+		return app == null ?
+			TokenFactory.getInstance().create( agentTokenString, expTime, signatureAlgorithm ) :
+			TokenFactory.getInstance().create( app.getIRI(), agentTokenString, expTime, signatureAlgorithm );
 
 	}
 

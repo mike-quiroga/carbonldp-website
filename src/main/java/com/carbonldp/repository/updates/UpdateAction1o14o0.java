@@ -14,7 +14,7 @@ import static com.carbonldp.Consts.TAB;
  * @author NestorVenegas
  * @since _version_
  */
-public class UpdateAction1o15o0 extends AbstractUpdateAction {
+public class UpdateAction1o14o0 extends AbstractUpdateAction {
 
 	final String addProtectedDocumentType = "" +
 		"INSERT { " + NEW_LINE +

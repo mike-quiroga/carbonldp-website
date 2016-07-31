@@ -16,4 +16,7 @@ public interface AgentService {
 
 	@PreAuthorize( "hasPermission(#source, 'UPDATE')" )
 	public void replace( IRI source, Agent agent );
+
+	@PreAuthorize( "hasPermission(#agentIRI, 'READ')" )
+	public Agent get(IRI agentIRI);
 }

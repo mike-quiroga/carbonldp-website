@@ -78,5 +78,4 @@ public class UpdateAction1o10o0 extends AbstractUpdateAction {
 			ACEDescription.Permission.DELETE
 		), true );
 	}
-
 }
