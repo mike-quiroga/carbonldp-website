@@ -9,15 +9,12 @@ import com.carbonldp.exceptions.FileNotDeletedException;
 import com.carbonldp.exceptions.InvalidResourceException;
 import com.carbonldp.exceptions.NotADirectoryException;
 import com.carbonldp.exceptions.NotCreatedException;
+import com.carbonldp.ldp.sources.RDFSourceRepository;
 import com.carbonldp.models.Infraction;
 import com.carbonldp.utils.IRIUtil;
-import com.carbonldp.ldp.sources.RDFSourceRepository;
-import com.carbonldp.utils.NQuadsWriter;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.ValueFactory;
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
-import org.eclipse.rdf4j.rio.RDFFormat;
-import org.eclipse.rdf4j.spring.SesameConnectionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,17 +22,12 @@ import org.springframework.core.io.FileSystemResource;
 
 import java.io.*;
 import java.nio.file.Files;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 public class LocalFileRepository implements FileRepository {
 	protected final Logger LOG = LoggerFactory.getLogger( this.getClass() );
-	private ConnectionRWTemplate connectionTemplate;
 	private RDFSourceRepository sourceRepository;
 
 	@Override
@@ -92,78 +84,53 @@ public class LocalFileRepository implements FileRepository {
 	public void emptyDirectory( App app ) {
 		File appDirectory = new File( getFilesDirectory( app ) );
 		deleteDirectory( appDirectory );
+
 		if ( appDirectory.exists() ) throw new FileNotDeletedException( 0x1010 );
+
+		// TODO: mkdir could fail and the method wouldn't do something about it
 		appDirectory.mkdir();
 	}
 
 	@Override
-	public File createAppRepositoryRDFFile( String domainCode, String appCode ) {
+	public File createZipFile( Map<String, File> filesMap ) {
+		ZipOutputStream zipOutputStream;
+
 		File temporaryFile;
-		FileOutputStream outputStream = null;
-		final NQuadsWriter nQuadsWriter;
 		try {
-			temporaryFile = File.createTempFile( Vars.getInstance().getAppDataFileName(), Consts.PERIOD.concat( RDFFormat.NQUADS.getDefaultFileExtension() ) );
+			temporaryFile = File.createTempFile( IRIUtil.createRandomSlug(), null );
 			temporaryFile.deleteOnExit();
-
-			outputStream = new FileOutputStream( temporaryFile );
-			nQuadsWriter = new NQuadsWriter( outputStream );
-			nQuadsWriter.setDomain( Vars.getInstance().getHost() );
-			nQuadsWriter.setDomainCode( domainCode );
-			String appValue = AppContextHolder.getContext().getApplication().getIRI().stringValue();
-			appValue = appValue.substring( Vars.getInstance().getAppsContainerURL().length(), appValue.length() - 1 );
-			nQuadsWriter.setApp( appValue );
-			nQuadsWriter.setAppCode( appCode );
-			connectionTemplate.write( connection -> connection.export( nQuadsWriter ) );
-
-		} catch ( IOException | SecurityException e ) {
-			throw new RuntimeException( "The temporary file couldn't be created. Exception:", e );
-		} finally {
-			try {
-				outputStream.close();
-			} catch ( IOException e ) {
-				LOG.warn( "The outputStream couldn't be closed. Exception: ", e );
-			}
+			zipOutputStream = new ZipOutputStream( new FileOutputStream( temporaryFile ) );
+		} catch ( FileNotFoundException e ) {
+			throw new RuntimeException( "there's no such file", e );
+		} catch ( IOException e ) {
+			throw new RuntimeException( e );
 		}
-		return temporaryFile;
-	}
 
-	@Override
-	public File createZipFile( Map<File, String> fileToNameMap ) {
-		ZipOutputStream zipOutputStream = null;
-		FileOutputStream fileOutputStream = null;
 		try {
-			File temporaryFile;
-			try {
-				temporaryFile = File.createTempFile( IRIUtil.createRandomSlug(), null );
-				temporaryFile.deleteOnExit();
-				fileOutputStream = new FileOutputStream( temporaryFile );
-			} catch ( FileNotFoundException e ) {
-				throw new RuntimeException( "there's no such file", e );
-			} catch ( IOException e ) {
-				throw new RuntimeException( e );
-			}
-			zipOutputStream = new ZipOutputStream( fileOutputStream );
+			for ( Map.Entry<String, File> entries : filesMap.entrySet() ) {
+				String fileName = entries.getKey();
+				File file = entries.getValue();
 
-			Set<File> files = fileToNameMap.keySet();
-			for ( File file : files ) {
 				if ( file.isDirectory() ) {
 					File[] listFiles = file.listFiles();
-					for ( File listFile : listFiles ) {
-						addFileToZip( zipOutputStream, listFile, file, fileToNameMap.get( file ) );
+					if ( listFiles == null ) continue;
+					for ( File folderFile : listFiles ) {
+						addFileToZip( zipOutputStream, folderFile, file, fileName );
 					}
 				} else {
-					addFileToZip( zipOutputStream, file, null, fileToNameMap.get( file ) );
+					addFileToZip( zipOutputStream, file, null, fileName );
 				}
 			}
-			return temporaryFile;
 		} finally {
 			try {
 				zipOutputStream.close();
-				fileOutputStream.close();
 			} catch ( IOException e ) {
 				LOG.warn( "zip stream could no be closed" );
 			}
 		}
+
+		return temporaryFile;
+
 	}
 
 	@Override
@@ -202,18 +169,29 @@ public class LocalFileRepository implements FileRepository {
 	}
 
 	@Override
-	public File createTempFile( Set<String> tempFileData ) {
-		File tempFile = createEmptyTempFile();
-		FileWriter fw = null;
+	public File createTempFile() {
 		try {
-			fw = new FileWriter( tempFile );
-			writeInTempFile( fw, tempFileData );
+			File tempFile = File.createTempFile( "carbon", ".tmp" );
+			tempFile.deleteOnExit();
+
+			return tempFile;
+		} catch ( IOException e ) {
+			throw new RuntimeException( "There is a problem creating the temporary file. Exception: ", e );
+		}
+	}
+
+	@Override
+	public File createTempFile( Set<String> tempFileData ) {
+		File tempFile = createTempFile();
+		FileWriter fileWriter = null;
+		try {
+			fileWriter = new FileWriter( tempFile );
+			writeInTempFile( fileWriter, tempFileData );
 		} catch ( IOException e ) {
 			throw new RuntimeException( "There is a problem writing the temporary file. Exception: ", e );
 		} finally {
 			try {
-				if ( null != fw )
-					fw.close();
+				if ( null != fileWriter ) fileWriter.close();
 			} catch ( IOException e2 ) {
 				throw new RuntimeException( "The FileWriter couldn't be closed. Exception: ", e2 );
 			}
@@ -231,10 +209,9 @@ public class LocalFileRepository implements FileRepository {
 			throw new RuntimeException( "There is a problem reading the configuration file. Exception: ", e );
 		} finally {
 			try {
-				if ( null != inputStreamReader )
-					inputStreamReader.close();
+				inputStreamReader.close();
 			} catch ( IOException e2 ) {
-				throw new RuntimeException( "The inputStreamReader couldn't be closed. Exception: ", e2 );
+				LOG.warn( "The inputStreamReader couldn't be closed. Exception: ", e2 );
 			}
 		}
 	}
@@ -272,17 +249,6 @@ public class LocalFileRepository implements FileRepository {
 		inFile.delete();
 		tempFile.renameTo( inFile );
 
-	}
-
-	private File createEmptyTempFile() {
-		File tempFile = null;
-		try {
-			tempFile = File.createTempFile( "file:", ".tmp" );
-			tempFile.deleteOnExit();
-		} catch ( IOException e ) {
-			throw new RuntimeException( "There is a problem creating the temporary file. Exception: ", e );
-		}
-		return tempFile;
 	}
 
 	private void writeInTempFile( FileWriter fw, Set<String> tempFileData ) {
@@ -421,11 +387,6 @@ public class LocalFileRepository implements FileRepository {
 		for ( String lineToRemove : linesToRemove )
 			if ( line.trim().startsWith( lineToRemove ) ) return true;
 		return false;
-	}
-
-	@Autowired
-	public void setConnectionTemplate( SesameConnectionFactory connectionFactory ) {
-		this.connectionTemplate = new ConnectionRWTemplate( connectionFactory );
 	}
 
 	@Autowired

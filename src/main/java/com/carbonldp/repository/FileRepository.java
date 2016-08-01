@@ -23,15 +23,15 @@ public interface FileRepository {
 
 	public void emptyDirectory( App app );
 
-	public File createAppRepositoryRDFFile( String domainCode, String appCode );
-
-	public File createZipFile( Map<File, String> fileToNameMap );
+	public File createZipFile( Map<String, File> files );
 
 	public IRI createBackupIRI( IRI appIRI );
 
 	public void deleteFile( File file );
 
 	public void deleteDirectory( File file );
+
+	public File createTempFile();
 
 	public File createTempFile( Set<String> tempFileData );
 

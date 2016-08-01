@@ -109,8 +109,8 @@ public class ImportBackupJobExecutor implements TypedJobExecutor {
 		Map<String, String> replaceMap = new LinkedHashMap<>();
 		String appValue = AppContextHolder.getContext().getApplication().getIRI().stringValue();
 		appValue = appValue.substring( Vars.getInstance().getAppsContainerURL().length(), appValue.length() - 1 );
-		replaceMap.put( "https://" + configurationMap.get( Vars.getInstance().getBackupsConfigDomainCode() ) + "/", Vars.getInstance().getHost() );
-		replaceMap.put( configurationMap.get( Vars.getInstance().getBackupsConfigAppCode() ), appValue );
+		replaceMap.put( "https://" + configurationMap.get( Vars.getInstance().getBackupsConfigDomainPlaceholder() ) + "/", Vars.getInstance().getHost() );
+		replaceMap.put( configurationMap.get( Vars.getInstance().getBackupsConfigAppPlaceholder() ), appValue );
 		return replaceMap;
 	}
 
