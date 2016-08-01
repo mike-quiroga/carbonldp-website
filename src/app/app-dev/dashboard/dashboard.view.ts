@@ -1,6 +1,8 @@
 import { Component } from "@angular/core";
+import { Title } from "@angular/platform-browser";
 
 import template from "./dashboard.view.html!";
+
 
 @Component( {
 	selector: "dashboard",
@@ -9,7 +11,15 @@ import template from "./dashboard.view.html!";
 } )
 export class DashboardView {
 
-	constructor() { }
+	private title:Title
+
+	constructor(title:Title) {
+		this.title = title;
+	}
+
+	routerOnActivate():void {
+		this.title.setTitle( "App Dev | Dashboard" );
+	}
 }
 
 export default DashboardView;
