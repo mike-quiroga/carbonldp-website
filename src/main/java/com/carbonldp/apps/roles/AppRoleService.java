@@ -16,13 +16,19 @@ public interface AppRoleService {
 
 	public boolean exists( IRI appIRI );
 
-	public void addAgents( IRI appRoleAgentContainerIRI, Collection<IRI> agents );
-
 	public void create( AppRole appRole );
 
-	public void addChildren( IRI parentRole, Set<IRI> childs );
+	public void addChildren( IRI parentRole, Set<IRI> children );
+
+	public void addAgents( IRI appRoleAgentContainerIRI, Collection<IRI> agents );
 
 	public void addAgent( IRI appRoleAgentConatinerIRI, IRI agent );
+
+	public void removeAgents( IRI appRoleAgentContainerIRI );
+
+	public void removeAgents( IRI appRoleAgentContainerIRI, Collection<IRI> agents );
+
+	public void removeAgent( IRI appRoleAgentConatinerIRI, IRI agent );
 
 	public void addChild( IRI parentRole, IRI child );
 

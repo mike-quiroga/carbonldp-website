@@ -11,6 +11,9 @@ public interface AgentService {
 	@PreAuthorize( " ! isAuthenticated() or hasRole('ROLE_ANONYMOUS')" )
 	public void register( Agent agent );
 
+	@PreAuthorize( "hasPermission(#agentIRI, 'DELETE')" )
+	public void delete( IRI agentIRI );
+
 	@PreAuthorize( "hasPermission(#agentContainerIRI, 'CREATE_CHILD')" )
 	public void create( IRI agentContainerIRI, Agent agent );
 

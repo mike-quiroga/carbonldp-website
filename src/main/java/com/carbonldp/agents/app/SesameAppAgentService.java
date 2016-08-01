@@ -25,6 +25,10 @@ public class SesameAppAgentService extends SesameAgentsService {
 		return agentRepository.get( agentIRI );
 	}
 
+	public void delete( IRI agentIRI ) {
+		sourceRepository.delete( agentIRI, true );
+	}
+
 	@Autowired
 	public void setAppAgentRepository( AppAgentRepository appAgentRepository ) { this.agentRepository = appAgentRepository; }
 

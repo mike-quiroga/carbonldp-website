@@ -16,9 +16,9 @@ import java.util.List;
 public class BasePUTRequestHandler extends AbstractPUTRequestHandler<RDFResource> {
 
 	@Override
-	protected void executeAction( IRI targetUri, AddMembersAction members ) {
+	protected void executeAction( IRI targetIRI, AddMembersAction members ) {
 		validate( members );
-		containerService.addMembers( targetUri, members.getMembers() );
+		containerService.addMembers( targetIRI, members.getMembers() );
 	}
 
 	protected void validate( AddMembersAction membersAction ) {

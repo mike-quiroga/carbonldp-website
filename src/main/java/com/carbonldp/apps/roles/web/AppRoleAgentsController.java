@@ -24,6 +24,7 @@ import javax.servlet.http.HttpServletResponse;
 public class AppRoleAgentsController extends AbstractLDPController {
 
 	private AppRoleAgentsPUTHandler appRoleAgentsPUTHandler;
+	private AppRoleAgentsDELETEHandler appRoleAgentsDELETEHandler;
 
 	@RequestMapping( method = RequestMethod.PUT )
 	@InteractionModel( APIPreferences.InteractionModel.CONTAINER )
@@ -31,6 +32,16 @@ public class AppRoleAgentsController extends AbstractLDPController {
 		return appRoleAgentsPUTHandler.handleRequest( requestDocument, request, response );
 	}
 
+	@RequestMapping( method = RequestMethod.DELETE )
+	@InteractionModel( APIPreferences.InteractionModel.CONTAINER )
+	public ResponseEntity<Object> removeAgentFromRole( @RequestBody RDFDocument requestDocument, HttpServletRequest request, HttpServletResponse response ) {
+		return appRoleAgentsDELETEHandler.handleRequest( requestDocument, request, response );
+	}
+
+
 	@Autowired
 	public void setAppRoleAgentsPUTHandler( AppRoleAgentsPUTHandler appRoleAgentsPUTHandler ) { this.appRoleAgentsPUTHandler = appRoleAgentsPUTHandler; }
+
+	@Autowired
+	public void setAppRoleAgentsDELETEHandler( AppRoleAgentsDELETEHandler appRoleAgentsDELETEHandler ) { this.appRoleAgentsDELETEHandler = appRoleAgentsDELETEHandler; }
 }

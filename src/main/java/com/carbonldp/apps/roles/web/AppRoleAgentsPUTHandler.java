@@ -23,9 +23,9 @@ public class AppRoleAgentsPUTHandler extends AbstractPUTRequestHandler<RDFResour
 	protected AppRoleService appRoleService;
 
 	@Override
-	protected void executeAction( IRI targetUri, AddMembersAction members ) {
+	protected void executeAction( IRI targetIRI, AddMembersAction members ) {
 		validate( members );
-		appRoleService.addAgents( targetUri, members.getMembers() );
+		appRoleService.addAgents( targetIRI, members.getMembers() );
 	}
 
 	protected void validate( AddMembersAction membersAction ) {

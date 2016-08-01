@@ -87,12 +87,16 @@ public class AbstractDELETERequestHandler extends AbstractLDPRequestHandler {
 		Set<APIPreferences.ContainerDeletePreference> deletePreferences = getContainerDeletePreferences( targetIRI );
 
 		if ( deletePreferences.contains( APIPreferences.ContainerDeletePreference.MEMBERSHIP_RESOURCES ) ) throw new NotImplementedException();
-		if ( deletePreferences.contains( APIPreferences.ContainerDeletePreference.MEMBERSHIP_TRIPLES ) ) containerService.removeMembers( targetIRI );
+		if ( deletePreferences.contains( APIPreferences.ContainerDeletePreference.MEMBERSHIP_TRIPLES ) ) removeMembers( targetIRI );
 		if ( deletePreferences.contains( APIPreferences.ContainerDeletePreference.CONTAINED_RESOURCES ) ) containerService.deleteContainedResources( targetIRI );
 		if ( deletePreferences.contains( APIPreferences.ContainerDeletePreference.CONTAINER ) ) containerService.delete( targetIRI );
 		if ( deletePreferences.contains( APIPreferences.ContainerDeletePreference.SELECTED_MEMBERSHIP_TRIPLES ) ) removeSelectiveMembers( requestDocument, targetIRI );
 
 		return createSuccessfulDeleteResponse();
+	}
+
+	protected void removeMembers( IRI targetIRI ) {
+		containerService.removeMembers( targetIRI );
 	}
 
 	protected void removeSelectiveMembers( RDFDocument requestDocument, IRI targetIRI ) {
@@ -102,7 +106,10 @@ public class AbstractDELETERequestHandler extends AbstractLDPRequestHandler {
 		if ( subject == null ) throw new StupidityException( "The model wasn't validated like it should." );
 		RemoveMembersAction members = new RemoveMembersAction( requestDocument.getBaseModel(), subject );
 		validate( members );
+		executeAction( targetIRI, members );
+	}
 
+	protected void executeAction( IRI targetIRI, RemoveMembersAction members ) {
 		containerService.removeMembers( targetIRI, members.getMembers() );
 	}
 

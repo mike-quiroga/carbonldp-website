@@ -2,6 +2,8 @@ package com.carbonldp.apps;
 
 import com.carbonldp.Vars;
 import com.carbonldp.agents.Agent;
+import com.carbonldp.agents.AgentRepository;
+import com.carbonldp.agents.PlatformAgentDescription;
 import com.carbonldp.agents.app.AppAgentRepository;
 import com.carbonldp.apps.roles.AppRoleRepository;
 import com.carbonldp.apps.roles.AppRoleService;
@@ -22,6 +24,7 @@ import com.carbonldp.ldp.sources.RDFSourceService;
 import com.carbonldp.models.Infraction;
 import com.carbonldp.namespaces.LDP;
 import com.carbonldp.rdf.RDFListFactory;
+import com.carbonldp.rdf.RDFMapRepository;
 import com.carbonldp.rdf.RDFResource;
 import com.carbonldp.utils.IRIUtil;
 import com.carbonldp.web.exceptions.NotFoundException;
@@ -29,6 +32,7 @@ import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.ValueFactory;
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
@@ -46,6 +50,8 @@ public class SesameAppService extends AbstractSesameLDPService implements AppSer
 	protected AppTokenRepository appTokensRepository;
 	protected AppRoleService appRoleService;
 	protected RDFSourceService sourceService;
+	protected AgentRepository platformAgentRepository;
+	protected RDFMapRepository mapRepository;
 
 	@Override
 	public boolean exists( IRI appIRI ) {
@@ -93,7 +99,7 @@ public class SesameAppService extends AbstractSesameLDPService implements AppSer
 			Container appTicketsContainer = appTokensRepository.createTicketsContainer( rootContainerIRI );
 			aclRepository.createACL( appTicketsContainer.getIRI() );
 
-			Container agentMeContainer = createAgentMeContainer(appAgentsContainer.getIRI() );
+			Container agentMeContainer = createAgentMeContainer( appAgentsContainer.getIRI() );
 			aclRepository.createACL( agentMeContainer.getIRI() );
 
 			addDefaultPermissions( appAdminRole, rootContainerACL );
@@ -104,7 +110,7 @@ public class SesameAppService extends AbstractSesameLDPService implements AppSer
 		addDefaultPermissionsToJobsContainer( adminRole, aclJobsContainer );
 		addDefaultPermissionsToLDAPContainer( adminRole, aclLDAPContainer );
 
-		transactionWrapper.runInAppContext( app, () -> addCurrentAgentToAppAdminRole( adminRole ) );
+		addCurrentAgentToAppAdminRole( app, adminRole );
 
 		addAppDefaultPermissions( adminRole, appACL );
 
@@ -124,6 +130,17 @@ public class SesameAppService extends AbstractSesameLDPService implements AppSer
 
 		if ( ! exists( appIRI ) ) throw new NotFoundException();
 		sourceService.replace( app );
+	}
+
+	private void addRoleToRDFMap( App app, AppRole role ) {
+		Authentication rawAuthentication = SecurityContextHolder.getContext().getAuthentication();
+		if ( rawAuthentication == null ) throw new IllegalStateException( "The security context is empty" );
+		if ( ! ( rawAuthentication instanceof AgentAuthenticationToken ) ) throw new IllegalStateException( "The authentication token isn't supported." );
+		IRI agentIRI = ( (AgentAuthenticationToken) rawAuthentication ).getAgent().getIRI();
+		Agent agentResource = platformAgentRepository.get( agentIRI );
+		IRI appRoleMapIRI = agentResource.getIRI( PlatformAgentDescription.Property.APP_ROLE_MAP );
+
+		mapRepository.add( appRoleMapIRI, app.getIRI(), role.getIRI() );
 	}
 
 	private BasicContainer createAgentMeContainer( IRI agentsContainerIRI ) {
@@ -154,6 +171,13 @@ public class SesameAppService extends AbstractSesameLDPService implements AppSer
 
 	private ACL createAppAdminRoleACL( AppRole appAdminRole ) {
 		return aclRepository.createACL( appAdminRole.getIRI() );
+	}
+
+	private void addCurrentAgentToAppAdminRole( App app, AppRole appAdminRole ) {
+
+		transactionWrapper.runInAppContext( app, () -> addCurrentAgentToAppAdminRole( appAdminRole ) );
+
+		addRoleToRDFMap( app, appAdminRole );
 	}
 
 	private void addCurrentAgentToAppAdminRole( AppRole appAdminRole ) {
@@ -296,4 +320,15 @@ public class SesameAppService extends AbstractSesameLDPService implements AppSer
 
 	@Autowired
 	public void setAppRoleService( AppRoleService appRoleService ) { this.appRoleService = appRoleService; }
+
+	@Autowired
+	@Qualifier( "platformAgentRepository" )
+	public void setPlatformAgentRepository( AgentRepository platformAgentRepository ) {
+		this.platformAgentRepository = platformAgentRepository;
+	}
+
+	@Autowired
+	public void setMapRepository( RDFMapRepository mapRepository ) {
+		this.mapRepository = mapRepository;
+	}
 }
