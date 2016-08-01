@@ -1,4 +1,4 @@
-	@prefix acl:		<http://www.w3.org/ns/auth/acl#>.
+@prefix acl:		<http://www.w3.org/ns/auth/acl#>.
 @prefix api:		<http://purl.org/linked-data/api/vocab#>.
 @prefix c:			<https://carbonldp.com/ns/v1/platform#>.
 @prefix cs:			<https://carbonldp.com/ns/v1/security#>.
@@ -167,10 +167,14 @@
 <platform/roles/system/agents/> {
 	<platform/roles/system/agents/>
 		a 	ldp:DirectContainer,
-			cs:ProtectedDocument;
+        	cs:ProtectedDocument;
+		c:appRoleMap _:40a99bda-651f-424e-b58c-a48b536f9dea;
 		ldp:membershipResource	<platform/roles/system/>;
 		ldp:hasMemberRelation	cs:agent;
 		ldp:isMemberOfRelation	cs:platformRole.
+
+	_:40a99bda-651f-424e-b58c-a48b536f9dea a <https://carbonldp.com/ns/v1/platform#Map> ;
+        	<https://carbonldp.com/ns/v1/platform#bNodeIdentifier> "40a99bda-651f-424e-b58c-a48b536f9dea" .
 }
 <platform/roles/system/privileges/> {
 	<platform/roles/system/privileges/>

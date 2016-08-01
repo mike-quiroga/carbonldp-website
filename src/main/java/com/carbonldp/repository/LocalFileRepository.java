@@ -8,8 +8,8 @@ import com.carbonldp.apps.context.AppContextHolder;
 import com.carbonldp.exceptions.FileNotDeletedException;
 import com.carbonldp.exceptions.NotADirectoryException;
 import com.carbonldp.exceptions.NotCreatedException;
-import com.carbonldp.utils.IRIUtil;
 import com.carbonldp.ldp.sources.RDFSourceRepository;
+import com.carbonldp.utils.IRIUtil;
 import com.carbonldp.utils.TriGWriter;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.ValueFactory;
@@ -22,7 +22,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
 
 import java.io.*;
-import java.nio.Buffer;
 import java.nio.file.Files;
 import java.util.List;
 import java.util.Map;

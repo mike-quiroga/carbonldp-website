@@ -9,13 +9,15 @@ import com.carbonldp.apps.roles.AppRoleRepository;
 import com.carbonldp.authentication.token.app.AppTokenRepository;
 import com.carbonldp.authorization.acl.ACLRepository;
 import com.carbonldp.ldp.containers.ContainerRepository;
+import com.carbonldp.ldp.containers.ContainerService;
 import com.carbonldp.ldp.sources.RDFSourceRepository;
+import com.carbonldp.ldp.sources.RDFSourceService;
 import com.carbonldp.rdf.RDFDocumentRepository;
-import com.carbonldp.repository.FileRepository;
+import com.carbonldp.rdf.RDFMapRepository;
 import com.carbonldp.sparql.SPARQLTemplate;
 import com.carbonldp.spring.TransactionWrapper;
 import com.carbonldp.utils.Action;
-import org.eclipse.rdf4j.model.IRI;
+import com.carbonldp.repository.FileRepository;
 
 import org.eclipse.rdf4j.model.ValueFactory;
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
@@ -43,10 +45,13 @@ public abstract class AbstractUpdateAction extends AbstractComponent implements 
 	protected RDFSourceRepository sourceRepository;
 	protected ACLRepository aclRepository;
 	protected RDFDocumentRepository documentRepository;
-	protected FileRepository localFileRepository;
 	protected AgentRepository platformAgentRepository;
-	protected AgentService platformAgentService;
+	protected RDFSourceService sourceService;
 	protected AppRoleRepository appRoleRepository;
+	protected ContainerService containerService;
+	protected RDFMapRepository mapRepository;
+	protected FileRepository localFileRepository;
+	protected AgentService platformAgentService;
 	protected static ValueFactory valueFactory = SimpleValueFactory.getInstance();
 
 	public void run() {
@@ -87,9 +92,12 @@ public abstract class AbstractUpdateAction extends AbstractComponent implements 
 		aclRepository = context.getBean( ACLRepository.class );
 		documentRepository = context.getBean( RDFDocumentRepository.class );
 		appTokensRepository = context.getBean( AppTokenRepository.class );
+		sourceService = context.getBean( RDFSourceService.class );
+		appRoleRepository = context.getBean( AppRoleRepository.class );
+		containerService = context.getBean( ContainerService.class );
+		mapRepository = context.getBean( RDFMapRepository.class );
 		localFileRepository = context.getBean( FileRepository.class );
 		platformAgentRepository = context.getBean( "platformAgentRepository", AgentRepository.class );
 		platformAgentService = context.getBean( "platformAgentService", AgentService.class );
-		appRoleRepository = context.getBean( AppRoleRepository.class );
 	}
 }
