@@ -207,7 +207,11 @@ public class SesameACLService extends AbstractSesameLDPService implements ACLSer
 			if ( subjectClass == null ) throw new StupidityException( "There's no subjectClass property in the ACE" );
 			switch ( subjectClass ) {
 				case AGENT:
-					throw new NotImplementedException();
+					IRI agentToModifyIRI = subject.getIRI();
+					IRI agentIRI = agentAuthenticationToken.getAgent().getIRI();
+
+					if ( agentToModifyIRI.equals( agentIRI ) ) throw new ForbiddenException( 0x7002 );
+					break;
 				case APP_ROLE:
 					App app = AppContextHolder.getContext().getApplication();
 					if ( app == null ) throw new IllegalStateException( "Unable to add an app role permission on the platform context" );

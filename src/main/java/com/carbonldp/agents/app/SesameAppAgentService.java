@@ -18,52 +18,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 public class SesameAppAgentService extends SesameAgentsService {
 
-	protected AppAgentRepository appAgentRepository;
 	protected AppRoleRepository appRoleRepository;
 
 	@Override
-	public void register( Agent agent ) {
-		validate( agent );
-
-		String email = agent.getEmails().iterator().next();
-		if ( appAgentRepository.existsWithEmail( email ) ) throw new ResourceAlreadyExistsException();
-		setAgentPasswordFields( agent );
-
-		boolean requireValidation = configurationRepository.requireAgentEmailValidation();
-		if ( requireValidation ) agent.setEnabled( false );
-		else agent.setEnabled( true );
-
-		appAgentRepository.create( agent );
-		aclRepository.createACL( agent.getIRI() );
-
-		if ( requireValidation ) {
-			AgentValidator validator = createAgentValidator( agent );
-			ACL validatorACL = aclRepository.createACL( validator.getIRI() );
-			addValidatorDefaultPermissions( validatorACL );
-
-			sendValidationEmail( agent, validator );
-			// TODO: Create "resend validation" resource
-		}
-
-	}
-
-	@Override
-	public void create( IRI agentContainerIRI, Agent agent ) {
-		validate( agent );
-		String email = agent.getEmails().iterator().next();
-		if ( appAgentRepository.existsWithEmail( email ) ) throw new ResourceAlreadyExistsException();
-		setAgentPasswordFields( agent );
-		containerService.createChild( agentContainerIRI, agent );
+	public Agent get( IRI agentIRI ) {
+		return agentRepository.get( agentIRI );
 	}
 
 	@Autowired
-	public void setAppAgentRepository( AppAgentRepository appAgentRepository ) { this.appAgentRepository = appAgentRepository; }
+	public void setAppAgentRepository( AppAgentRepository appAgentRepository ) { this.agentRepository = appAgentRepository; }
 
 	@Autowired
 	public void setAppRoleRepository( AppRoleRepository appRoleRepository ) { this.appRoleRepository = appRoleRepository; }
-
-	@Autowired
-	public void setSourceService( RDFSourceService sourceService ) {
-		this.sourceService = sourceService;
-	}
 }

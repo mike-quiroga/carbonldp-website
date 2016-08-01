@@ -75,22 +75,26 @@ public class SesameAppService extends AbstractSesameLDPService implements AppSer
 
 		AppRole adminRole = transactionWrapper.runWithSystemPermissionsInAppContext( app, () -> {
 			Container rootContainer = createRootContainer( app );
-			ACL rootContainerACL = aclRepository.createACL( rootContainer.getIRI() );
+			IRI rootContainerIRI = rootContainer.getIRI();
+			ACL rootContainerACL = aclRepository.createACL( rootContainerIRI );
 
-			Container appRolesContainer = appRoleRepository.createAppRolesContainer( rootContainer.getIRI() );
+			Container appRolesContainer = appRoleRepository.createAppRolesContainer( rootContainerIRI );
 			aclRepository.createACL( appRolesContainer.getIRI() );
 
 			AppRole appAdminRole = createAppAdminRole( appRolesContainer );
 			aclRepository.createACL( appAdminRole.getIRI() );
 
-			Container appAgentsContainer = appAgentRepository.createAppAgentsContainer( rootContainer.getIRI() );
+			Container appAgentsContainer = appAgentRepository.createAppAgentsContainer( rootContainerIRI );
 			aclRepository.createACL( appAgentsContainer.getIRI() );
 
-			Container appTokensContainer = appTokensRepository.createAppTokensContainer( rootContainer.getIRI() );
+			Container appTokensContainer = appTokensRepository.createAppTokensContainer( rootContainerIRI );
 			aclRepository.createACL( appTokensContainer.getIRI() );
 
-			Container appTicketsContainer = appTokensRepository.createTicketsContainer( rootContainer.getIRI() );
+			Container appTicketsContainer = appTokensRepository.createTicketsContainer( rootContainerIRI );
 			aclRepository.createACL( appTicketsContainer.getIRI() );
+
+			Container agentMeContainer = createAgentMeContainer(appAgentsContainer.getIRI() );
+			aclRepository.createACL( agentMeContainer.getIRI() );
 
 			addDefaultPermissions( appAdminRole, rootContainerACL );
 
@@ -120,6 +124,14 @@ public class SesameAppService extends AbstractSesameLDPService implements AppSer
 
 		if ( ! exists( appIRI ) ) throw new NotFoundException();
 		sourceService.replace( app );
+	}
+
+	private BasicContainer createAgentMeContainer( IRI agentsContainerIRI ) {
+		IRI agentMeContainerIRI = IRIUtil.createChildIRI( agentsContainerIRI, Vars.getInstance().getAppAgentMeContainer() );
+
+		BasicContainer agentMeContainer = BasicContainerFactory.getInstance().create( new RDFResource( agentMeContainerIRI ) );
+		containerRepository.createChild( agentsContainerIRI, agentMeContainer );
+		return agentMeContainer;
 	}
 
 	private BasicContainer createRootContainer( App app ) {
