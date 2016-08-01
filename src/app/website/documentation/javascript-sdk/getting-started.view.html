@@ -438,7 +438,7 @@
 
 									let myAppContext:App.Context;
 
-									carbon.apps.get( "your-app-slug-here/" ).then(
+									carbon.apps.getContext( "your-app-slug-here/" ).then(
 										( appContext:App.Context ) => {
 									        myAppContext = appContext; // retrieving your app context
 										}
@@ -457,7 +457,7 @@
 
 									let myAppContext;
 
-									carbon.apps.get( "your-app-slug-here/" ).then(
+									carbon.apps.getContext( "your-app-slug-here/" ).then(
 										( appContext ) => {
 									        myAppContext = appContext; // retrieving your app context
 										}
@@ -474,7 +474,7 @@
 
 									let myAppContext;
 
-									carbon.apps.get( "your-app-slug-here/" ).then(
+									carbon.apps.getContext( "your-app-slug-here/" ).then(
 										function( appContext ) {
 									        myAppContext = appContext; // retrieving your app context
 										}
@@ -484,7 +484,7 @@
 							</sui-tab>
 						</sui-tabs>
 						<p>
-							The <code>apps.get()</code> method returns a promise that when resolved, will give you the
+							The <code>apps.getContext()</code> method returns a promise that when resolved, will give you the
 							<a [routerLink]="[ '../JavaScriptSDKContexts' ]"><span class="highlight">app context</span>
 							</a> you need. Be sure to replace <code>your-app-slug-here/</code> with your app slug.
 						</p>
@@ -539,7 +539,7 @@
 									myAppContext.documents.createChild&lt;Project&gt;( "/", project ).then(
 										( [ persistedProject, response ]:[ Project & PersistedDocument.Class, Response.Class ] ) => {
 											console.log( project === persistedProject ); // true
-											console.log( project.id ); // document's URI
+											console.log( persistedProject.id ); // document's URI
 										}
 									).catch( console.error );
 								</code></pre>
