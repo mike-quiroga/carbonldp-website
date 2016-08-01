@@ -11,6 +11,7 @@ import com.carbonldp.rdf.RelativeNQuadsWriter;
 import com.carbonldp.repository.ConnectionRWTemplate;
 import com.carbonldp.repository.FileRepository;
 import com.carbonldp.spring.TransactionWrapper;
+import com.carbonldp.utils.IRIUtil;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.rio.RDFFormat;
 import org.eclipse.rdf4j.spring.SesameConnectionFactory;
@@ -101,8 +102,7 @@ public class ExportBackupJobExecutor implements TypedJobExecutor {
 
 			outputStream = new FileOutputStream( temporaryFile );
 
-			String appSlug = app.getIRI().stringValue();
-			appSlug = appSlug.substring( Vars.getInstance().getAppsContainerURL().length() );
+			String appSlug = IRIUtil.getSlug( app.getIRI().stringValue() );
 
 			RelativeNQuadsWriter nQuadsWriter = new RelativeNQuadsWriter( outputStream, domainPlaceholder, appSlug, appPlaceholder );
 
