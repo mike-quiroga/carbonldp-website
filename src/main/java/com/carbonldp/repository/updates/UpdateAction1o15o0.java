@@ -22,9 +22,7 @@ public class UpdateAction1o15o0 extends AbstractUpdateAction {
 		createAppRoleMap();
 		Set<App> apps = getAllApps();
 		for ( App app : apps ) {
-			transactionWrapper.runWithSystemPermissionsInAppContext( app, () -> {
-				addRolesToAppRoleMaps( app );
-			} );
+			transactionWrapper.runWithSystemPermissionsInAppContext( app, () -> addRolesToAppRoleMaps( app ) );
 		}
 	}
 
