@@ -1,5 +1,4 @@
 import { Component, provide } from "@angular/core";
-import { Title } from "@angular/platform-browser";
 import { ROUTER_DIRECTIVES, RouteConfig, RouterOutlet } from "@angular/router-deprecated";
 
 import { MyAppsSidebarService } from "carbon-panel/my-apps/my-apps-sidebar.service";
@@ -51,14 +50,8 @@ import { CreateAppView } from "carbon-panel/my-apps/create-app/create-app.view";
 	},
 ] )
 export class MyAppsView {
-	private title:Title;
 
-	constructor(title:Title){
-		this.title =title;
-	}
-
-	routerOnActivate(){
-		this.title.setTitle("App Dev | My Apps");
+	constructor(){
 	}
 }
 
