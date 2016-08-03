@@ -1,5 +1,6 @@
 package com.carbonldp.jobs;
 
+import com.carbonldp.AbstractComponent;
 import com.carbonldp.Consts;
 import com.carbonldp.Vars;
 import com.carbonldp.apps.App;
@@ -17,11 +18,16 @@ import com.carbonldp.utils.ZipUtil;
 import org.apache.commons.io.IOUtils;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Resource;
+import org.eclipse.rdf4j.model.Statement;
 import org.eclipse.rdf4j.rio.RDFFormat;
+import org.eclipse.rdf4j.rio.helpers.BasicParserSettings;
+import org.eclipse.rdf4j.rio.helpers.StatementCollector;
+import org.eclipse.rdf4j.rio.nquads.NQuadsParser;
 import org.eclipse.rdf4j.spring.SesameConnectionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.*;
+import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
@@ -31,7 +37,7 @@ import java.util.Set;
  * @author NestorVenegas
  * @since 0.33.0
  */
-public class ImportBackupJobExecutor implements TypedJobExecutor {
+public class ImportBackupJobExecutor extends AbstractComponent implements TypedJobExecutor {
 	private NonRDFSourceService nonRDFSourceService;
 	private RDFSourceService sourceService;
 	private ConnectionRWTemplate connectionTemplate;
@@ -57,10 +63,10 @@ public class ImportBackupJobExecutor implements TypedJobExecutor {
 
 		File backupFile = nonRDFSourceService.getResource( backupRDFRepresentation );
 
-		fileRepository.emptyDirectory( app );
 		transactionWrapper.runInAppContext( app, () -> replaceApp( backupFile ) );
-		ZipUtil.unZipDirectory( backupFile, Vars.getInstance().getAppDataDirectoryName() + Consts.SLASH, new File( fileRepository.getFilesDirectory( app ) ) );
 
+		fileRepository.emptyDirectory( app );
+		ZipUtil.unZipDirectory( backupFile, Vars.getInstance().getAppDataDirectoryName() + Consts.SLASH, new File( fileRepository.getFilesDirectory( app ) ) );
 	}
 
 	private void replaceApp( File backupFile ) {
@@ -80,16 +86,16 @@ public class ImportBackupJobExecutor implements TypedJobExecutor {
 
 	private void replaceAppNQuadsFile( InputStream stream, IRI appIRI, Map<String, String> map ) {
 		connectionTemplate.write( connection -> connection.remove( (Resource) null, null, null ) );
-		BufferedReader in = new BufferedReader( new InputStreamReader( stream ) );
+		BufferedReader reader = new BufferedReader( new InputStreamReader( stream ) );
 		try {
-			addLinesToRepository( in, appIRI, map );
+			addLinesToRepository( reader, appIRI, map );
 		} catch ( IOException e ) {
-			throw new RuntimeException( "There is a problem reading the nQuads file. Exception:", e );
+			throw new RuntimeException( "The NQuads file couldn't be read. Exception:", e );
 		} finally {
 			try {
-				in.close();
+				reader.close();
 			} catch ( IOException e ) {
-				throw new RuntimeException( "The buffer couldn't be closed. Exception:", e );
+				LOG.warn( "The buffer couldn't be closed. Exception:", e );
 			}
 		}
 	}
@@ -100,9 +106,29 @@ public class ImportBackupJobExecutor implements TypedJobExecutor {
 			for ( String key : keySet ) {
 				line = line.replace( key, map.get( key ) );
 			}
-			InputStream lineStream = IOUtils.toInputStream( line, "UTF-8" );
-			connectionTemplate.write( connection -> connection.add( lineStream, appIRI.stringValue(), RDFFormat.NQUADS ) );
+
+			Statement statement = parseLine( line, appIRI );
+
+			if ( statement == null ) continue;
+
+			connectionTemplate.write( connection -> connection.add( statement ) );
 		}
+	}
+
+	private Statement parseLine( String line, IRI baseIRI ) throws IOException {
+		InputStream lineStream = IOUtils.toInputStream( line, "UTF-8" );
+
+		NQuadsParser parser = new NQuadsParser();
+		StatementCollector collector = new StatementCollector();
+
+		// BNode IDs need to be preserved because we are parsing line by line
+		// If the IDs are not preserved, the parser would create a different BNode ID per statement
+		parser.set( BasicParserSettings.PRESERVE_BNODE_IDS, true );
+		parser.setRDFHandler( collector );
+		parser.parse( lineStream, baseIRI.stringValue() );
+
+		Collection<Statement> statements = collector.getStatements();
+		return statements.stream().findFirst().orElse( null );
 	}
 
 	private Map<String, String> createReplaceMap( Map<String, String> configurationMap, String app, RDFFormat format ) {
