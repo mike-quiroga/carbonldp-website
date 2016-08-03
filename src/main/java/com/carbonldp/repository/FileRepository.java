@@ -4,8 +4,10 @@ import com.carbonldp.apps.App;
 import org.eclipse.rdf4j.model.IRI;
 
 import java.io.File;
+import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 public interface FileRepository {
@@ -21,15 +23,19 @@ public interface FileRepository {
 
 	public void emptyDirectory( App app );
 
-	public File createAppRepositoryRDFFile();
-
-	public File createZipFile( Map<File, String> fileToNameMap );
+	public File createZipFile( Map<String, File> files );
 
 	public IRI createBackupIRI( IRI appIRI );
 
 	public void deleteFile( File file );
 
 	public void deleteDirectory( File file );
+
+	public File createTempFile();
+
+	public File createTempFile( Set<String> tempFileData );
+
+	public Map<String, String> getBackupConfiguration( InputStream configStream );
 
 	public String getFilesDirectory( App app );
 
