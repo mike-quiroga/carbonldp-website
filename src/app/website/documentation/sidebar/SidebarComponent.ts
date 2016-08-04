@@ -1,6 +1,6 @@
-import { Component, Input, ElementRef, OnChanges, SimpleChange } from "@angular/core";
-import { CORE_DIRECTIVES } from "@angular/common"
-import { ROUTER_DIRECTIVES, ROUTER_PROVIDERS, Router, Instruction, RouteParams } from "@angular/router-deprecated";
+import {Component, Input, ElementRef, OnChanges, SimpleChange} from "@angular/core";
+import {CORE_DIRECTIVES} from "@angular/common"
+import {ROUTER_DIRECTIVES, ROUTER_PROVIDERS, Router, Instruction, RouteParams} from "@angular/router-deprecated";
 
 import $ from "jquery";
 import "semantic-ui/semantic";
@@ -13,33 +13,33 @@ import template from "./template.html!";
 	directives: [ CORE_DIRECTIVES, ROUTER_DIRECTIVES ]
 } )
 export default class SidebarComponent {
-	elementRef:ElementRef;
-	$element:JQuery;
-	$container:JQuery;
-	$followMenu:JQuery;
-	sidebar:any;
-	sections:any;
-	subSections:any;
+	elementRef: ElementRef;
+	$element: JQuery;
+	$container: JQuery;
+	$followMenu: JQuery;
+	sidebar: any;
+	sections: any;
+	subSections: any;
 
-	@Input() parentElement:ElementRef;
-	@Input() mobile:boolean;
-	@Input() contentReady:boolean;
+	@Input() parentElement: ElementRef;
+	@Input() mobile: boolean;
+	@Input() contentReady: boolean;
 
-	host:string = "dev.carbonldp.com";
+	host: string = "dev.carbonldp.com";
 
-	constructor( element:ElementRef ) {
+	constructor( element: ElementRef ) {
 		this.elementRef = element;
 		this.$element = $( element.nativeElement );
 	}
 
-	ngOnChanges( changeRecord:any ):void {
+	ngOnChanges( changeRecord: any ): void {
 		if( "contentReady" in changeRecord ) {
-			let change:SimpleChange = changeRecord.contentReady;
+			let change: SimpleChange = changeRecord.contentReady;
 			if( change.currentValue ) this.buildSidebar();
 		}
 	}
 
-	ngAfterViewInit():void {
+	ngAfterViewInit(): void {
 		this.$container = $( this.parentElement.nativeElement ).find( "article" );
 		this.sections = this.$container.children( "section" );
 		this.subSections = this.sections.children( "section" );
@@ -48,20 +48,20 @@ export default class SidebarComponent {
 		this.createAccordions();
 	}
 
-	createAccordions():void {
+	createAccordions(): void {
 		this.$followMenu.accordion();
 	}
 
-	buildSidebar():void {
+	buildSidebar(): void {
 		if( typeof this.sidebar === "undefined" || this.sidebar.length === 0 ) return;
 
-		let html:string = "";
-		let $sticky:JQuery;
+		let html: string = "";
+		let $sticky: JQuery;
 		let _self = this;
 
 		// Foreach section in the article build template
-		$.each( this.sections, function ( index:number, section:HTMLElement ) {
-			let $currentSection:JQuery = $( section );
+		$.each( this.sections, function ( index: number, section: HTMLElement ) {
+			let $currentSection: JQuery = $( section );
 			html += _self.createMenuSectionItemHTML( $currentSection, index === 0 );
 		} );
 
@@ -115,14 +115,14 @@ export default class SidebarComponent {
 	}
 
 	// Build template for each section of the article
-	createMenuSectionItemHTML( $section, active ):string {
-		let subSections:JQuery = $section.children( "section" );
-		let activeClass:string = active ? "active" : "";
-		let headerText:string = this.getHeaderText( $section );
-		let headerID:string = this.getHeaderID( headerText );
+	createMenuSectionItemHTML( $section, active ): string {
+		let subSections: JQuery = $section.children( "section" );
+		let activeClass: string = active ? "active" : "";
+		let headerText: string = this.getHeaderText( $section );
+		let headerID: string = this.getHeaderID( headerText );
 
 		this.setSectionID( $section, headerID );
-		let html:string = `<div class="item">`;
+		let html: string = `<div class="item">`;
 
 		if( subSections.length === 0 ) {
 			html += `<a class="${ activeClass } title " href="#${ headerID }">${ headerText }</a></div>`;
@@ -131,12 +131,12 @@ export default class SidebarComponent {
 		}
 
 		// If subsections exist, then iterate each section
-		let component:SidebarComponent = this;
+		let component: SidebarComponent = this;
 		if( subSections.length > 0 ) {
 			html += `<div class="content menu">`;
 
-			$.each( subSections, function ( index:number, subSection:HTMLElement ) {
-				let $subSection:JQuery = $( subSection );
+			$.each( subSections, function ( index: number, subSection: HTMLElement ) {
+				let $subSection: JQuery = $( subSection );
 				html += component.createMenuSubsectionItemHTML( $subSection );
 			} );
 			html += `</div>`;
@@ -147,23 +147,22 @@ export default class SidebarComponent {
 	}
 
 	// Build template for each subsection of the section
-	createMenuSubsectionItemHTML( $subSection:JQuery ):string {
-		let headerText:string = this.getHeaderText( $subSection );
-		let headerID:string = this.getHeaderID( headerText );
+	createMenuSubsectionItemHTML( $subSection: JQuery ): string {
+		let headerText: string = this.getHeaderText( $subSection );
+		let headerID: string = this.getHeaderID( headerText );
 
 		this.setSectionID( $subSection, headerID );
 		return `<a class="item" href="#${ headerID }">${ headerText }</a>`;
 	}
 
-	activateSection( elm:any ):void {
-		let $section:JQuery = $( elm );
-		let index:number = this.sections.index( $section );
-		let $followSection:JQuery = this.$followMenu.children( ".item" );
-		let $currentSection:JQuery = $followSection.eq( index );
-		let isActive:boolean = $currentSection.hasClass( "active" );
-		let hasSubsection:boolean = this.sections.eq( index ).children( "section" ).length > 0;
-
-		console.log( "follow: ", index );
+	activateSection( elm: any ): void {
+		let $section: JQuery = $( elm );
+		let index: number = this.sections.index( $section );
+		let $followSection: JQuery = this.$followMenu.children( ".item" );
+		let $currentSection: JQuery = $followSection.eq( index );
+		let isActive: boolean = $currentSection.hasClass( "active" );
+		let hasSubsection: boolean = this.sections.eq( index ).children( "section" ).length > 0;
+		
 		$followSection.removeClass( "active" );
 		$followSection.find( ".active" ).not( ".toggled" ).removeClass( "active" );
 
@@ -181,14 +180,14 @@ export default class SidebarComponent {
 	}
 
 	// Expands accordion sections as you scroll through the sections elements inside a section of the page.
-	activateSubSection( elm:any ):void {
-		let $section:JQuery = $( elm );
-		let index:number = this.subSections.index( $section );
-		let $followSection:JQuery = this.$followMenu.find( ".menu > .item" );
-		let $activeSection:JQuery = $followSection.eq( index );
-		let isActive:boolean = $activeSection.hasClass( "active" );
-		let $accordion:JQuery = this.$followMenu.children( ".item" ).find( ".menu" );
-		let accordionIsActive:boolean = $accordion.hasClass( "active" );
+	activateSubSection( elm: any ): void {
+		let $section: JQuery = $( elm );
+		let index: number = this.subSections.index( $section );
+		let $followSection: JQuery = this.$followMenu.find( ".menu > .item" );
+		let $activeSection: JQuery = $followSection.eq( index );
+		let isActive: boolean = $activeSection.hasClass( "active" );
+		let $accordion: JQuery = this.$followMenu.children( ".item" ).find( ".menu" );
+		let accordionIsActive: boolean = $accordion.hasClass( "active" );
 
 		if( index !== - 1 && ! isActive ) {
 			$followSection.filter( ".active" ).removeClass( "active" );
@@ -201,12 +200,12 @@ export default class SidebarComponent {
 
 	}
 
-	deactivateFirstSection( elm:any ):void {
-		let $section:JQuery = $( elm );
-		let index:number = this.sections.index( $section );
-		let $followSection:JQuery = this.$followMenu.children( ".item" );
-		let $accordion:JQuery = this.$followMenu.children( ".item" ).find( ".menu" );
-		let accordionIsActive:boolean = $accordion.hasClass( "active" );
+	deactivateFirstSection( elm: any ): void {
+		let $section: JQuery = $( elm );
+		let index: number = this.sections.index( $section );
+		let $followSection: JQuery = this.$followMenu.children( ".item" );
+		let $accordion: JQuery = this.$followMenu.children( ".item" ).find( ".menu" );
+		let accordionIsActive: boolean = $accordion.hasClass( "active" );
 
 		if( index === 0 ) {
 			$followSection.removeClass( "active" );
@@ -218,10 +217,10 @@ export default class SidebarComponent {
 
 	}
 
-	deactivateFirstSubSection( elm:any ):void {
-		let $section:JQuery = $( elm );
-		let index:number = this.subSections.index( $section );
-		let $followSection:JQuery = this.$followMenu.find( ".menu > .item" );
+	deactivateFirstSubSection( elm: any ): void {
+		let $section: JQuery = $( elm );
+		let index: number = this.subSections.index( $section );
+		let $followSection: JQuery = this.$followMenu.find( ".menu > .item" );
 
 		if( index === 0 ) {
 			$followSection.removeClass( "active" );
@@ -230,10 +229,10 @@ export default class SidebarComponent {
 	}
 
 	// Scroll to selected section or subsection in the article
-	scrollTo( event:any ):boolean {
-		let id:string = $( event.currentTarget ).attr( "href" ).replace( "#", "" );
-		let $element:JQuery = $( "#" + id );
-		let position:number = $element.offset().top - 100;
+	scrollTo( event: any ): boolean {
+		let id: string = $( event.currentTarget ).attr( "href" ).replace( "#", "" );
+		let $element: JQuery = $( "#" + id );
+		let position: number = $element.offset().top - 100;
 
 		$element.addClass( "active" );
 
@@ -248,11 +247,11 @@ export default class SidebarComponent {
 	}
 
 	// Toggle selected accordion menu in sidebar
-	toggleDropdown( event:any ):boolean {
-		let $target:JQuery = $( event.currentTarget );
-		let $accordion:JQuery = $target.parent( ".item" ).find( ".content.menu" );
+	toggleDropdown( event: any ): boolean {
+		let $target: JQuery = $( event.currentTarget );
+		let $accordion: JQuery = $target.parent( ".item" ).find( ".content.menu" );
 		if( $accordion ) {
-			let accordionIsActive:boolean = $accordion.hasClass( "active" );
+			let accordionIsActive: boolean = $accordion.hasClass( "active" );
 
 			if( accordionIsActive ) {
 				$accordion.removeClass( "active" );
@@ -268,18 +267,18 @@ export default class SidebarComponent {
 	}
 
 	// Gets the name of the section using the first children header of the section
-	getHeaderText( $section:JQuery ):string {
+	getHeaderText( $section: JQuery ): string {
 		return $section.children( ":header" ).eq( 0 ).text();
 	}
 
 	// Escapes a given text to use it safely with selectors
-	getHeaderID( text:string ):string {
+	getHeaderID( text: string ): string {
 		text = text.replace( /[,]/g, "" ).replace( /\s+/g, "-" ).replace( /[^-,'A-Za-z0-9]+/g, "" ).toLowerCase();
 		return encodeURIComponent( text );
 	}
 
 	// Sets the id to the section using the name of the first children header of the section
-	setSectionID( $section:JQuery, headerID:string ):void {
+	setSectionID( $section: JQuery, headerID: string ): void {
 		$section.attr( "id", headerID );
 	}
 }
