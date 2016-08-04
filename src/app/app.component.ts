@@ -26,7 +26,7 @@ import style from "./app.component.css!text";
 		path: "app-dev/...", as: "AppDev", component: AppDevView,
 		data: {
 			alias: "AppDev",
-			displayName: "Home",
+			displayName: "App Dev",
 		},
 	},
 	{ path: "", redirectTo: [ "./Website" ] },
