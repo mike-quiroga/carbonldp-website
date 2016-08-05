@@ -9,6 +9,7 @@ import java.util.Set;
 import static com.carbonldp.Consts.*;
 
 /**
+ * delete bNodeID in list's bnodes
  * @author NestorVenegas
  * @since 0.33.0
  */

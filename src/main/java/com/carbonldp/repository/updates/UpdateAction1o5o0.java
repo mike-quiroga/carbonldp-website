@@ -3,6 +3,8 @@ package com.carbonldp.repository.updates;
 import com.carbonldp.Vars;
 
 /**
+ * add acl to platform/apps/
+ *
  * @author JorgeEspinosa
  * @since 0.28.3-ALPHA
  */

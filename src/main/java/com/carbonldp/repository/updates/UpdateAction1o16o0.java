@@ -11,6 +11,7 @@ import java.util.Arrays;
 import java.util.Set;
 
 /**
+ * enable create executions for appAdmin
  * @author NestorVenegas
  * @since _version_
  */

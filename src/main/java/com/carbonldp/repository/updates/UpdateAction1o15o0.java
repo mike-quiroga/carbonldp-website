@@ -12,6 +12,7 @@ import org.springframework.aop.framework.Advised;
 import java.util.Set;
 
 /**
+ * add app role map to platform agents
  * @author JorgeEspinosa
  * @since _version_
  */

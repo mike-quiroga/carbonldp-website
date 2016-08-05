@@ -12,6 +12,7 @@ import java.util.Arrays;
 import java.util.Set;
 
 /**
+ * add default permissions to backups, ldap and jobs containers
  * @author JorgeEspinosa
  * @since _version_
  */

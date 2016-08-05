@@ -9,6 +9,7 @@ import java.util.Set;
 import static com.carbonldp.Consts.*;
 
 /**
+ * add ACL to property that points to the resource's ACL
  * @author JorgeEspinosa
  * @since 0.27.8-ALPHA
  */

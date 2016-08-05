@@ -11,6 +11,7 @@ import static com.carbonldp.Consts.NEW_LINE;
 import static com.carbonldp.Consts.TAB;
 
 /**
+ *  add protectedDocument type to all resources but acl
  * @author NestorVenegas
  * @since _version_
  */

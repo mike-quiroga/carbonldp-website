@@ -9,6 +9,7 @@ import static com.carbonldp.Consts.NEW_LINE;
 import static com.carbonldp.Consts.TAB;
 
 /**
+ * change memberOfRelation to isMemberOfRelation
  * @author JorgeEspinosa
  * @since _version_
  */

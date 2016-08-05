@@ -10,6 +10,7 @@ import java.util.Arrays;
 import java.util.Set;
 
 /**
+ * add manage security permissions to app admin
  * @author NestorVenegas
  * @since _version_
  */
