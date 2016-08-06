@@ -159,8 +159,7 @@ export default class SidebarComponent {
 		let $currentSection: JQuery = $followSection.eq( index );
 		let isActive: boolean = $currentSection.hasClass( "active" );
 		let hasSubsection: boolean = this.sections.eq( index ).children( "section" ).length > 0;
-
-		console.log( "follow: ", index );
+		
 		$followSection.removeClass( "active" );
 		$followSection.find( ".active" ).not( ".toggled" ).removeClass( "active" );
 
