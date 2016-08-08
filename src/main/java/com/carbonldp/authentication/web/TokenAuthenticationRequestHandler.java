@@ -1,6 +1,7 @@
 package com.carbonldp.authentication.web;
 
-import com.carbonldp.agents.AgentService;
+
+import com.carbonldp.apps.context.AppContextHolder;
 import com.carbonldp.authentication.Token;
 import com.carbonldp.authentication.token.TokenService;
 import com.carbonldp.ldp.containers.ResourceMetadataFactory;
@@ -12,7 +13,6 @@ import com.carbonldp.spring.TransactionWrapper;
 import com.carbonldp.web.RequestHandler;
 import org.eclipse.rdf4j.model.IRI;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,10 +33,6 @@ public class TokenAuthenticationRequestHandler extends AbstractLDPRequestHandler
 	@Autowired
 	TransactionWrapper transactionWrapper;
 
-	AgentService appAgentService;
-
-	AgentService platformAgentService;
-
 	@Transactional
 	public ResponseEntity<Object> handleRequest( HttpServletRequest request, HttpServletResponse response ) {
 		setUp( request, response );
@@ -45,9 +41,10 @@ public class TokenAuthenticationRequestHandler extends AbstractLDPRequestHandler
 
 		IRI agentIRI = token.getCredentialsOf();
 		RDFSource agentModel;
-		agentModel = token.getRelatedApp() == null ?
-			platformAgentService.get( agentIRI ) :
-			appAgentService.get( agentIRI );
+
+		agentModel = ( ( token.getRelatedApp() == null ) && ( AppContextHolder.getContext().getApplication() != null ) ) ?
+			transactionWrapper.runInPlatformContext( () -> sourceService.get( agentIRI ) ) :
+			sourceService.get( agentIRI );
 
 		token.getBaseModel().addAll( agentModel );
 
@@ -60,12 +57,4 @@ public class TokenAuthenticationRequestHandler extends AbstractLDPRequestHandler
 		RDFBlankNode responseDescription = ResponseMetadataFactory.getInstance().getResponseMetadata( token );
 		ResourceMetadataFactory.getInstance().create( token.getBaseModel(), responseDescription, agentModel );
 	}
-
-	@Autowired
-	@Qualifier( "appAgentService" )
-	public void setAppAgentService( AgentService appAgentService ) {this.appAgentService = appAgentService;}
-
-	@Autowired
-	@Qualifier( "platformAgentService" )
-	public void setPlatformAgentService( AgentService platformAgentService ) {this.platformAgentService = platformAgentService;}
 }
