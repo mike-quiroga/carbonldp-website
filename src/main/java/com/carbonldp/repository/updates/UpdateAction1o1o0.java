@@ -19,6 +19,7 @@ import java.util.Set;
 
 /**
  * change IRIs to HTTPS
+ *
  * @author MiguelAraCo
  * @since 0.28.0-ALPHA
  */

@@ -12,8 +12,9 @@ import java.util.Set;
 
 /**
  * enable create executions for appAdmin
+ *
  * @author NestorVenegas
- * @since _version_
+ * @since 0.40.0
  */
 public class UpdateAction1o16o0 extends AbstractUpdateAction {
 
@@ -29,7 +30,7 @@ public class UpdateAction1o16o0 extends AbstractUpdateAction {
 		AppRole appAdmin = transactionWrapper.runWithSystemPermissionsInAppContext( app, () -> new AppRole( sourceRepository.get( appAdminIRI ) ) );
 		IRI jobsContainerIRI = generateJobsContainerIRI( app );
 
-		aclRepository.addInheritablePermissions( jobsContainerIRI, Arrays.asList( appAdmin ), Arrays.asList( ACEDescription.Permission.CREATE_CHILD ),true );
+		aclRepository.addInheritablePermissions( jobsContainerIRI, Arrays.asList( appAdmin ), Arrays.asList( ACEDescription.Permission.CREATE_CHILD ), true );
 	}
 
 	private IRI generateJobsContainerIRI( App app ) {

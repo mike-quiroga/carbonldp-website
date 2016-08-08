@@ -9,7 +9,6 @@ import com.carbonldp.utils.IRIUtil;
 import com.carbonldp.web.exceptions.BadRequestException;
 import com.carbonldp.web.exceptions.NotFoundException;
 import org.eclipse.rdf4j.model.IRI;
-
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

@@ -11,8 +11,9 @@ import java.util.Set;
 
 /**
  * add manage security permissions to app admin
+ *
  * @author NestorVenegas
- * @since _version_
+ * @since 0.40.0
  */
 public class UpdateAction1o12o0 extends AbstractUpdateAction {
 
@@ -28,7 +29,7 @@ public class UpdateAction1o12o0 extends AbstractUpdateAction {
 		IRI appRolesContainer = appRoleRepository.getContainerIRI();
 		IRI appAdminRoleIRI = IRIUtil.createChildIRI( appRolesContainer, "app-admin/" );
 		AppRole appRole = appRoleRepository.get( appAdminRoleIRI );
-		aclRepository.grantPermissions( app.getRootContainerIRI(), Arrays.asList( appRole ), Arrays.asList( ACEDescription.Permission.MANAGE_SECURITY ),false );
+		aclRepository.grantPermissions( app.getRootContainerIRI(), Arrays.asList( appRole ), Arrays.asList( ACEDescription.Permission.MANAGE_SECURITY ), false );
 		aclRepository.addInheritablePermissions( app.getRootContainerIRI(), Arrays.asList( appRole ), Arrays.asList( ACEDescription.Permission.MANAGE_SECURITY ), true );
 	}
 }

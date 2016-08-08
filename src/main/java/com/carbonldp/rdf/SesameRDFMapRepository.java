@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 
 /**
  * @author NestorVenegas
- * @since _version_
+ * @since 0.40.0
  */
 
 @Transactional
@@ -55,8 +55,8 @@ public class SesameRDFMapRepository extends AbstractSesameLDPRepository implemen
 		Set<BNode> entriesBNodes = resourceRepository.getBNodes( mapIRI, RDFMapDescription.Property.ENTRY );
 		Set<Value> keys = new HashSet<>();
 		keys.addAll( entriesBNodes.stream()
-								  .map( entryBNode -> blankNodeRepository.getProperty( entryBNode, RDFMapDescription.EntryProperty.KEY, mapIRI ) )
-								  .collect( Collectors.toList() ) );
+		                          .map( entryBNode -> blankNodeRepository.getProperty( entryBNode, RDFMapDescription.EntryProperty.KEY, mapIRI ) )
+		                          .collect( Collectors.toList() ) );
 		return keys;
 	}
 

@@ -13,8 +13,9 @@ import java.util.Set;
 
 /**
  * add app role map to platform agents
+ *
  * @author JorgeEspinosa
- * @since _version_
+ * @since 0.40.0
  */
 public class UpdateAction1o15o0 extends AbstractUpdateAction {
 

@@ -1,3 +1,16 @@
+# 0.40.0 (2016/07/31)
+- [LDP-392](https://jira.base22.com/browse/LDP-392) - Delete platform agents
+- [LDP-747](https://jira.base22.com/browse/LDP-747) - Return agent's representation when creating an auth token
+- [LDP-740](https://jira.base22.com/browse/LDP-740) - Return authenticated agent's representation through agents/me/
+- [LDP-755](https://jira.base22.com/browse/LDP-755) - Add agents as subjects of an ACE
+- [LDP-754](https://jira.base22.com/browse/LDP-754) - Add cs:ProtectedDocument rdf:type to documents with ACLs
+- [LDP-717](https://jira.base22.com/browse/LDP-717) - Add the permission cs:ManageSecurity, needed to change ACLs related to a document
+- [LDP-694](https://jira.base22.com/browse/LDP-694) - Specify system agent's credentials through the configuration file
+- Fix [LDP-577](https://jira.base22.com/browse/LDP-577) - Rename ldp:memberOfRelation to ldp:isMemberOfRelation
+- Fix [LDP-689](https://jira.base22.com/browse/LDP-689) - jobs/ and backups/ are not accessible to app admins
+- Fix [LDP-687](https://jira.base22.com/browse/LDP-687) - Backups generated are tied to the domain they were generated on
+- Update sesame to rdf4j
+
 # 0.39.0 (2016/07/08)
 - [LDP-707](https://jira.base22.com/browse/LDP-707) - Create platform and app agents
 - [LDP-393](https://jira.base22.com/browse/LDP-393) - Edit platform and app agents

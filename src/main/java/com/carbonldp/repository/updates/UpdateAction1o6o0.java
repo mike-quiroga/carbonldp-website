@@ -1,20 +1,14 @@
 package com.carbonldp.repository.updates;
 
-import com.carbonldp.Consts;
 import com.carbonldp.Vars;
 import com.carbonldp.apps.App;
-import com.carbonldp.apps.AppDescription;
-import com.carbonldp.jobs.ExecutionDescription;
 import com.carbonldp.jobs.JobDescription;
 import com.carbonldp.ldp.containers.BasicContainer;
 import com.carbonldp.ldp.containers.BasicContainerFactory;
-import com.carbonldp.ldp.containers.DirectContainer;
-import com.carbonldp.ldp.containers.DirectContainerFactory;
 import com.carbonldp.namespaces.LDP;
 import com.carbonldp.rdf.RDFListFactory;
 import com.carbonldp.rdf.RDFResource;
 import org.eclipse.rdf4j.model.IRI;
-import org.eclipse.rdf4j.model.vocabulary.RDF;
 
 import java.util.Set;
 

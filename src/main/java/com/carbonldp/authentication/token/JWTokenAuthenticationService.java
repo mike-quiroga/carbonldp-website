@@ -3,7 +3,6 @@ package com.carbonldp.authentication.token;
 import com.carbonldp.AbstractComponent;
 import com.carbonldp.Vars;
 import com.carbonldp.apps.App;
-import com.carbonldp.apps.context.AppContextHolder;
 import com.carbonldp.authentication.AgentAuthenticationToken;
 import com.carbonldp.authentication.Token;
 import com.carbonldp.authentication.TokenFactory;

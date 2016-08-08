@@ -21,7 +21,7 @@ import java.io.OutputStream;
  * configuration later on
  *
  * @author JorgeEspinosa
- * @since _version_
+ * @since 0.40.0
  */
 public class RelativeNQuadsWriter extends NQuadsWriter {
 	private final String host;

@@ -14,11 +14,10 @@ import com.carbonldp.ldp.sources.RDFSourceRepository;
 import com.carbonldp.ldp.sources.RDFSourceService;
 import com.carbonldp.rdf.RDFDocumentRepository;
 import com.carbonldp.rdf.RDFMapRepository;
+import com.carbonldp.repository.FileRepository;
 import com.carbonldp.sparql.SPARQLTemplate;
 import com.carbonldp.spring.TransactionWrapper;
 import com.carbonldp.utils.Action;
-import com.carbonldp.repository.FileRepository;
-
 import org.eclipse.rdf4j.model.ValueFactory;
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import org.eclipse.rdf4j.repository.RepositoryException;

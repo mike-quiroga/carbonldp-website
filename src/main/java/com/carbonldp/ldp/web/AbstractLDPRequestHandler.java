@@ -21,12 +21,11 @@ import com.carbonldp.web.AbstractRequestHandler;
 import com.carbonldp.web.exceptions.BadRequestException;
 import com.carbonldp.web.exceptions.PreconditionFailedException;
 import com.carbonldp.web.exceptions.PreconditionRequiredException;
-import org.joda.time.DateTime;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Resource;
 import org.eclipse.rdf4j.model.impl.AbstractModel;
-
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
+import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.servlet.http.HttpServletRequest;

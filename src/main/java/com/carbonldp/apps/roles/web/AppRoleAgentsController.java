@@ -38,7 +38,6 @@ public class AppRoleAgentsController extends AbstractLDPController {
 		return appRoleAgentsDELETEHandler.handleRequest( requestDocument, request, response );
 	}
 
-
 	@Autowired
 	public void setAppRoleAgentsPUTHandler( AppRoleAgentsPUTHandler appRoleAgentsPUTHandler ) { this.appRoleAgentsPUTHandler = appRoleAgentsPUTHandler; }
 

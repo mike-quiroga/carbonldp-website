@@ -21,7 +21,7 @@ import javax.servlet.http.HttpServletResponse;
 
 /**
  * @author NestorVenegas
- * @since _version_
+ * @since 0.40.0
  */
 @RequestHandler
 public class AgentMeHandler extends AbstractLDPRequestHandler {

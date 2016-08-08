@@ -17,6 +17,7 @@ import static com.carbonldp.Consts.*;
 
 /**
  * add bNodeIdentifier
+ *
  * @author JorgeEspinosa
  * @since 0.28.0-ALPHA
  */

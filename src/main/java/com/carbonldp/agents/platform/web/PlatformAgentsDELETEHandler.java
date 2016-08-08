@@ -3,9 +3,9 @@ package com.carbonldp.agents.platform.web;
 import com.carbonldp.agents.AgentService;
 import com.carbonldp.ldp.web.AbstractDELETERequestHandler;
 import com.carbonldp.web.RequestHandler;
+import org.eclipse.rdf4j.model.IRI;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.eclipse.rdf4j.model.IRI;
 
 /**
  * @author NestorVenegas

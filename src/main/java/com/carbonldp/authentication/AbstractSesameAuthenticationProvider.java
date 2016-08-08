@@ -4,7 +4,6 @@ import com.carbonldp.agents.Agent;
 import com.carbonldp.agents.AgentRepository;
 import com.carbonldp.apps.App;
 import com.carbonldp.authorization.*;
-import org.eclipse.rdf4j.model.IRI;
 
 import java.util.Set;
 

@@ -15,8 +15,8 @@ import com.carbonldp.ldp.sources.RDFSourceService;
 import com.carbonldp.models.Infraction;
 import com.carbonldp.rdf.RDFMapRepository;
 import com.carbonldp.rdf.RDFResource;
-import org.joda.time.DateTime;
 import org.eclipse.rdf4j.model.IRI;
+import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Collection;

@@ -7,13 +7,13 @@ import org.eclipse.rdf4j.model.vocabulary.RDF;
 
 import java.util.Set;
 
-import static com.carbonldp.Consts.NEW_LINE;
-import static com.carbonldp.Consts.TAB;
+import static com.carbonldp.Consts.*;
 
 /**
- *  add protectedDocument type to all resources but acl
+ * add protectedDocument type to all resources but acl
+ *
  * @author NestorVenegas
- * @since _version_
+ * @since 0.40.0
  */
 public class UpdateAction1o14o0 extends AbstractUpdateAction {
 

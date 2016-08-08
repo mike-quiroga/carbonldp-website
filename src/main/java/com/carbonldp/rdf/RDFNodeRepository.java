@@ -1,9 +1,9 @@
 package com.carbonldp.rdf;
 
-import org.joda.time.DateTime;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Resource;
 import org.eclipse.rdf4j.model.Value;
+import org.joda.time.DateTime;
 
 import java.util.Collection;
 import java.util.Set;

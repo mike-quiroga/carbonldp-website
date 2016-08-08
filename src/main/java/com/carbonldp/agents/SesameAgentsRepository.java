@@ -21,8 +21,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import static com.carbonldp.Consts.NEW_LINE;
-import static com.carbonldp.Consts.TAB;
+import static com.carbonldp.Consts.*;
 
 /**
  * @author Nestor

@@ -18,7 +18,6 @@ public class PlatformAgentController extends AbstractLDPController {
 
 	private PlatformAgentsDELETEHandler deleteRequestHandler;
 
-
 	@RequestMapping( method = RequestMethod.DELETE )
 	public ResponseEntity<Object> deleteAgent( @RequestBody( required = false ) RDFDocument requestDocument, HttpServletRequest request, HttpServletResponse response ) {
 		return deleteRequestHandler.handleRequest( requestDocument, request, response );

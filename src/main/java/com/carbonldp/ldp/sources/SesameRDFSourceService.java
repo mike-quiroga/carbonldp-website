@@ -19,13 +19,13 @@ import com.carbonldp.utils.IRIUtil;
 import com.carbonldp.utils.ModelUtil;
 import com.carbonldp.utils.RDFDocumentUtil;
 import com.carbonldp.utils.ValueUtil;
-import org.joda.time.DateTime;
 import org.eclipse.rdf4j.model.BNode;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Resource;
 import org.eclipse.rdf4j.model.impl.AbstractModel;
 import org.eclipse.rdf4j.model.impl.LinkedHashModel;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
+import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;

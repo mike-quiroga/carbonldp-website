@@ -6,29 +6,20 @@ import com.carbonldp.authentication.AgentAuthenticationToken;
 import com.carbonldp.authentication.ImportLDAPAgentsJob;
 import com.carbonldp.authentication.ImportLDAPAgentsJobFactory;
 import com.carbonldp.authorization.acl.ACEDescription;
-import com.carbonldp.authorization.acl.ACEDescription;
 import com.carbonldp.exceptions.InvalidResourceException;
-import com.carbonldp.exceptions.ResourceDoesntExistException;
 import com.carbonldp.ldp.AbstractSesameLDPService;
 import com.carbonldp.ldp.containers.ContainerService;
 import com.carbonldp.ldp.sources.RDFSourceService;
 import com.carbonldp.models.Infraction;
 import com.carbonldp.rdf.RDFResourceRepository;
-import com.carbonldp.web.exceptions.ForbiddenException;
 import com.carbonldp.web.exceptions.BadRequestException;
 import com.carbonldp.web.exceptions.ForbiddenException;
 import org.eclipse.rdf4j.model.IRI;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.PermissionEvaluator;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.access.PermissionEvaluator;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.*;
 
 /**

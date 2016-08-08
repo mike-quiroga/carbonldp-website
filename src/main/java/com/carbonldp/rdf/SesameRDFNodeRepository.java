@@ -4,12 +4,12 @@ import com.carbonldp.repository.AbstractSesameRepository;
 import com.carbonldp.repository.ConnectionRWTemplate;
 import com.carbonldp.utils.LiteralUtil;
 import com.carbonldp.utils.ValueUtil;
-import org.joda.time.DateTime;
-import org.joda.time.format.DateTimeFormatter;
-import org.joda.time.format.ISODateTimeFormat;
 import org.eclipse.rdf4j.model.*;
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import org.eclipse.rdf4j.spring.SesameConnectionFactory;
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormatter;
+import org.joda.time.format.ISODateTimeFormat;
 
 import java.util.Collection;
 import java.util.HashSet;

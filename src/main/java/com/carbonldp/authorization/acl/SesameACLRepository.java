@@ -12,14 +12,15 @@ import com.carbonldp.utils.ACLUtil;
 import com.carbonldp.utils.IRIUtil;
 import com.carbonldp.web.exceptions.NotImplementedException;
 import org.eclipse.rdf4j.model.IRI;
-import org.eclipse.rdf4j.model.Resource;
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import org.eclipse.rdf4j.spring.SesameConnectionFactory;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Map;
+import java.util.Set;
 
 @CacheConfig( cacheNames = "acl" )
 @Transactional

@@ -1,8 +1,8 @@
 package com.carbonldp.authentication.ldapServer.web;
 
-import com.carbonldp.authentication.ldapServer.app.LDAPServerService;
 import com.carbonldp.authentication.LDAPServer;
 import com.carbonldp.authentication.LDAPServerFactory;
+import com.carbonldp.authentication.ldapServer.app.LDAPServerService;
 import com.carbonldp.ldp.containers.BasicContainer;
 import com.carbonldp.ldp.web.AbstractRDFPostRequestHandler;
 import com.carbonldp.web.RequestHandler;

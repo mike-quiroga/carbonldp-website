@@ -3,21 +3,14 @@ package com.carbonldp.authentication.web;
 import com.carbonldp.agents.AgentService;
 import com.carbonldp.authentication.Token;
 import com.carbonldp.authentication.token.TokenService;
-import com.carbonldp.ldp.containers.*;
+import com.carbonldp.ldp.containers.ResourceMetadataFactory;
+import com.carbonldp.ldp.containers.ResponseMetadataFactory;
 import com.carbonldp.ldp.sources.RDFSource;
-import com.carbonldp.ldp.sources.RDFSourceDescription;
 import com.carbonldp.ldp.web.AbstractLDPRequestHandler;
 import com.carbonldp.rdf.RDFBlankNode;
-import com.carbonldp.rdf.RDFResourceDescription;
 import com.carbonldp.spring.TransactionWrapper;
-import com.carbonldp.utils.HTTPUtil;
-import com.carbonldp.utils.ModelUtil;
 import com.carbonldp.web.RequestHandler;
-import org.eclipse.rdf4j.model.BNode;
 import org.eclipse.rdf4j.model.IRI;
-import org.eclipse.rdf4j.model.Resource;
-import org.eclipse.rdf4j.model.ValueFactory;
-import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
@@ -65,7 +58,7 @@ public class TokenAuthenticationRequestHandler extends AbstractLDPRequestHandler
 
 	private void addResponseMetadata( Token token, RDFSource agentModel ) {
 		RDFBlankNode responseDescription = ResponseMetadataFactory.getInstance().getResponseMetadata( token );
-		ResourceMetadataFactory.getInstance().create( token.getBaseModel(),responseDescription, agentModel);
+		ResourceMetadataFactory.getInstance().create( token.getBaseModel(), responseDescription, agentModel );
 	}
 
 	@Autowired

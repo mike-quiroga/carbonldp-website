@@ -2,12 +2,10 @@ package com.carbonldp.jobs;
 
 import com.carbonldp.apps.App;
 import com.carbonldp.exceptions.CarbonNoStackTraceRuntimeException;
-import com.carbonldp.exceptions.InvalidResourceException;
 import com.carbonldp.rdf.RDFResourceRepository;
 import com.carbonldp.spring.TransactionWrapper;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.ldap.ServiceUnavailableException;
 import org.springframework.scheduling.annotation.Async;
 
 import java.util.List;

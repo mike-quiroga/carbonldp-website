@@ -5,13 +5,13 @@ import com.carbonldp.namespaces.LDP;
 
 import java.util.Set;
 
-import static com.carbonldp.Consts.NEW_LINE;
-import static com.carbonldp.Consts.TAB;
+import static com.carbonldp.Consts.*;
 
 /**
  * change memberOfRelation to isMemberOfRelation
+ *
  * @author JorgeEspinosa
- * @since _version_
+ * @since 0.40.0
  */
 public class UpdateAction1o11o0 extends AbstractUpdateAction {
 	final String updateIsMemberOfRelationQuery = "" +

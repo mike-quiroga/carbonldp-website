@@ -2,13 +2,12 @@ package com.carbonldp.rdf;
 
 import com.carbonldp.utils.IRIUtil;
 import org.eclipse.rdf4j.model.BNode;
-import org.joda.time.DateTime;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Value;
 import org.eclipse.rdf4j.model.ValueFactory;
-
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import org.eclipse.rdf4j.spring.SesameConnectionFactory;
+import org.joda.time.DateTime;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;

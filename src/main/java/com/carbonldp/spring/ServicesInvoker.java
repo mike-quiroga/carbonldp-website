@@ -3,7 +3,6 @@ package com.carbonldp.spring;
 import com.carbonldp.agents.AgentService;
 import com.carbonldp.apps.AppService;
 import com.carbonldp.apps.roles.AppRoleService;
-import com.carbonldp.authentication.Ticket;
 import com.carbonldp.authentication.ticket.TicketService;
 import com.carbonldp.authentication.token.TokenService;
 import com.carbonldp.authorization.acl.ACLService;

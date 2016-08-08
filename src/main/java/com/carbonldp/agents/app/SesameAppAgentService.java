@@ -1,13 +1,8 @@
 package com.carbonldp.agents.app;
 
 import com.carbonldp.agents.Agent;
-import com.carbonldp.agents.AgentValidator;
 import com.carbonldp.agents.SesameAgentsService;
 import com.carbonldp.apps.roles.AppRoleRepository;
-import com.carbonldp.authorization.acl.ACL;
-import com.carbonldp.exceptions.ResourceAlreadyExistsException;
-import com.carbonldp.ldp.sources.RDFSourceService;
-import com.carbonldp.ldp.containers.ContainerService;
 import org.eclipse.rdf4j.model.IRI;
 import org.springframework.beans.factory.annotation.Autowired;
 

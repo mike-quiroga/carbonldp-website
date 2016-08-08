@@ -21,5 +21,5 @@ public interface AgentService {
 	public void replace( IRI source, Agent agent );
 
 	@PreAuthorize( "hasPermission(#agentIRI, 'READ')" )
-	public Agent get(IRI agentIRI);
+	public Agent get( IRI agentIRI );
 }

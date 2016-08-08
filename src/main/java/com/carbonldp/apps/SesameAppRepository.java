@@ -1,7 +1,6 @@
 package com.carbonldp.apps;
 
 import com.carbonldp.Vars;
-import com.carbonldp.apps.context.AppContextHolder;
 import com.carbonldp.ldp.containers.ContainerDescription.Type;
 import com.carbonldp.ldp.containers.ContainerRepository;
 import com.carbonldp.ldp.sources.RDFSource;
@@ -21,7 +20,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
-import java.util.concurrent.RunnableFuture;
 
 // TODO: make sure that get app methods are running in platform context
 @Transactional

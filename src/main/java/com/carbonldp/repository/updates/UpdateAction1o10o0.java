@@ -13,8 +13,9 @@ import java.util.Set;
 
 /**
  * add default permissions to backups, ldap and jobs containers
+ *
  * @author JorgeEspinosa
- * @since _version_
+ * @since 0.40.0
  */
 public class UpdateAction1o10o0 extends AbstractUpdateAction {
 
