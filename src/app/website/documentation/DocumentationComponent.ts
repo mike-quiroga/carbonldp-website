@@ -1,5 +1,5 @@
-import { Component } from "@angular/core";
-import { RouteConfig, RouterOutlet } from "@angular/router-deprecated";
+import {Component} from "@angular/core";
+import {RouteConfig, RouterOutlet} from "@angular/router-deprecated";
 
 import HomeView from "./home/HomeView";
 
@@ -33,27 +33,113 @@ import "./style.css!";
 	directives: [ RouterOutlet ],
 } )
 @RouteConfig( [
-	{ path: "/", name: "Documentation", component: HomeView },
+	{ path: "/", name: "Documentation", component: HomeView, data: {
+		alias: "Documentation",
+		displayName: "Documentation",
+	}, },
 
-	{ path: "/about-carbon-ldp", as: "AboutCarbonLDP", component: AboutCarbonLDPView },
+	{
+		path: "/about-carbon-ldp", as: "AboutCarbonLDP", component: AboutCarbonLDPView, data: {
+		alias: "About",
+		displayName: "About Carbon LDP",
+	},
+	},
 
-	{ path: "/essential-concepts", name: "EssentialConcepts", component: EssentialConceptsView },
-	{ path: "/essential-concepts/linked-data-concepts", as: "LinkedDataConcepts", component: LinkedDataConceptsView },
-	{ path: "/essential-concepts/ldp-concepts", as: "LDPConcepts", component: LDPConceptsView },
-	{ path: "/essential-concepts/carbon-ldp-concepts", as: "CarbonLDPConcepts", component: CarbonLDPConceptsView },
+	{
+		path: "/essential-concepts", name: "EssentialConcepts", component: EssentialConceptsView,
+		data: {
+			alias: "EssentialConcepts",
+			displayName: "Essential Concepts",
+		},
+	},
+	{
+		path: "/essential-concepts/linked-data-concepts", as: "LinkedDataConcepts", component: LinkedDataConceptsView,
+		data: {
+			alias: "Linked Data Concepts",
+			displayName: "Linked Data Concepts",
+		},
+	},
+	{
+		path: "/essential-concepts/ldp-concepts", as: "LDPConcepts", component: LDPConceptsView,
+		data: {
+			alias: "LDP concepts",
+			displayName: "LDP concepts",
+		},
+	},
+	{
+		path: "/essential-concepts/carbon-ldp-concepts", as: "CarbonLDPConcepts", component: CarbonLDPConceptsView, data: {
+		alias: "Carbon LDP concepts",
+		displayName: "Carbon LDP concepts",
+	},
+	},
 
-	{ path: "/rest-api", name: "RESTApi", component: RESTApiView }, ,
-	{ path: "/rest-api/getting-started", as: "RESTApiGettingStarted", component: RESTApiGettingStarted },
-	{ path: "/rest-api/interaction-models", as: "RESTApiInteractionModels", component: InteractionModelsView },
-	{ path: "/rest-api/rest-object-model", as: "RESTApiObjectModel", component: RESTObjectModelView },
-	{ path: "/rest-api/rest-rdfsource", as: "RESTApiRdfSource", component: RESTRdfSourceView },
-	{ path: "/rest-api/rest-containers", as: "RESTApiContainers", component: RESTContainersView },
+	{
+		path: "/rest-api", name: "RESTApi", component: RESTApiView, data: {
+		alias: "REST",
+		displayName: "REST API",
+	},
+	},
+	{
+		path: "/rest-api/getting-started", as: "RESTApiGettingStarted", component: RESTApiGettingStarted,
+		data: {
+			alias: "REST Getting started",
+			displayName: "Getting Started with REST API",
+		},
+	},
+	{
+		path: "/rest-api/interaction-models", as: "RESTApiInteractionModels", component: InteractionModelsView,
+		data: {
+			alias: "Interaction Models",
+			displayName: "Interaction Models",
+		},
+	},
+	{
+		path: "/rest-api/rest-object-model", as: "RESTApiObjectModel", component: RESTObjectModelView,
+		data: {
+			alias: "REST API Object Model",
+			displayName: "REST API Object Model",
+		},
+	},
+	{
+		path: "/rest-api/rest-rdfsource", as: "RESTApiRdfSource", component: RESTRdfSourceView,
+		data: {
+			alias: "RDF Source",
+			displayName: "RDF Source",
+		},
+	},
+	{
+		path: "/rest-api/rest-containers", as: "RESTApiContainers", component: RESTContainersView,
+		data: {
+			alias: "Containers",
+			displayName: "Containers",
+		},
+	},
 
-	{ path: "/javascript-sdk", name: "JavaScriptSDK", component: JavaScriptSDKView },
-	{ path: "/javascript-sdk/getting-started", as: "JavaScriptSDKGettingStarted", component: JavaScriptSDKGettingStartedView },
-	{ path: "/javascript-sdk/contexts", as: "JavaScriptSDKContexts", component: JavaScriptSDKContextsView },
-	{ path: "/javascript-sdk/object-model", as: "JavaScriptSDKObjectModel", component: JavaScriptSDKObjectModelView },
-	{ path: "/javascript-sdk/object-schema", as: "JavaScriptSDKObjectSchema", component: JavaScriptSDKObjectSchemaView },
+	{ path: "/javascript-sdk", name: "JavaScriptSDK", component: JavaScriptSDKView,
+		data: {
+			alias: "JavaScript SDK",
+			displayName: "JavaScript SDK",
+		},},
+	{ path: "/javascript-sdk/getting-started", as: "JavaScriptSDKGettingStarted", component: JavaScriptSDKGettingStartedView,
+		data: {
+			alias: "GettingStartedJS",
+			displayName: "Getting Started with JavaScript SDK",
+		},},
+	{ path: "/javascript-sdk/contexts", as: "JavaScriptSDKContexts", component: JavaScriptSDKContextsView,
+		data: {
+			alias: "Contexts",
+			displayName: "Contexts",
+		},},
+	{ path: "/javascript-sdk/object-model", as: "JavaScriptSDKObjectModel", component: JavaScriptSDKObjectModelView,
+		data: {
+			alias: "JavaScript SDK Object Model",
+			displayName: "JavaScript SDK Object Model",
+		},},
+	{ path: "/javascript-sdk/object-schema", as: "JavaScriptSDKObjectSchema", component: JavaScriptSDKObjectSchemaView,
+		data: {
+			alias: "Object Schema",
+			displayName: "Object Schema",
+		},},
 
 ] )
 export default class DocumentationComponent {

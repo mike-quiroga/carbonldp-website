@@ -1,6 +1,5 @@
 import { Component, ElementRef } from "@angular/core";
 import { CORE_DIRECTIVES } from "@angular/common";
-import { Title } from "@angular/platform-browser";
 
 import $ from "jquery";
 import "semantic-ui/semantic";
@@ -11,17 +10,15 @@ import "./style.css!";
 @Component( {
 	selector: "signup-thanks",
 	template: template,
-	directives: [ CORE_DIRECTIVES ],
-	providers: [ Title ]
+	directives: [ CORE_DIRECTIVES ]
 } )
 
 export default class SignupThanksView {
 	element:ElementRef;
 	$element:JQuery;
 
-	constructor( element:ElementRef, title:Title ) {
+	constructor( element:ElementRef ) {
 		this.element = element;
-		title.setTitle( "Thank you!" );
 	}
 
 	ngAfterViewInit():void {

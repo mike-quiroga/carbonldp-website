@@ -1,6 +1,5 @@
 import { Component, ElementRef } from "@angular/core";
 import { CORE_DIRECTIVES } from "@angular/common";
-import { Title } from "@angular/platform-browser";
 import { RouteConfig, RouterOutlet, RouterLink } from "@angular/router-deprecated";
 
 import $ from "jquery";
@@ -12,17 +11,14 @@ import "./style.css!";
 @Component( {
 	selector: "documents-list",
 	template: template,
-	directives: [ CORE_DIRECTIVES, RouterLink ],
-	providers: [ Title ],
+	directives: [ CORE_DIRECTIVES, RouterLink ]
 } )
 export default class HomeView {
 	element:ElementRef;
 	$element:JQuery;
-	title:Title;
 
-	constructor( element:ElementRef, title:Title ) {
+	constructor( element:ElementRef ) {
 		this.element = element;
-		this.title = title;
 	}
 
 	ngAfterViewInit():void {
@@ -30,9 +26,6 @@ export default class HomeView {
 		this.$element.find( ".doc-categories a[href]" ).on( "click", this.scrollTo );
 	}
 
-	routerOnActivate():void {
-		this.title.setTitle( "Documentation" );
-	}
 
 
 	scrollTo( event:any ):boolean {

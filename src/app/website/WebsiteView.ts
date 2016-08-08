@@ -1,6 +1,6 @@
-import { Component, ElementRef } from "@angular/core";
-import { CORE_DIRECTIVES, Location } from "@angular/common";
-import { ROUTER_DIRECTIVES, RouteConfig, RouterLink, Router } from "@angular/router-deprecated";
+import {Component, ElementRef} from "@angular/core";
+import {CORE_DIRECTIVES, Location} from "@angular/common";
+import {ROUTER_DIRECTIVES, RouteConfig, RouterLink, Router} from "@angular/router-deprecated";
 
 import Carbon from "carbonldp/Carbon";
 
@@ -30,35 +30,70 @@ import "./style.css!";
 @RouteConfig( [
 	{ path: "", as: "Home", component: HomeView, useAsDefault: true },
 
-	{ path: "login", as: "Login", component: LoginView },
-	{ path: "register", as: "Register", component: RegisterView },
-
-	{ path: "blog", as: "Blog", component: BlogView },
-	{ path: "blog/posts/:id", as: "BlogPost", component: BlogPostView },
+	{
+		path: "login", as: "Login", component: LoginView,
+		data: {
+			alias: "LogIn",
+			displayName: "Log In"
+		},
+	},
+	{
+		path: "register", as: "Register", component: RegisterView,
+		data: {
+			alias: "Register",
+			displayName: "Register"
+		},
+	},
+	{
+		path: "blog", as: "Blog", component: BlogView,
+		data: {
+			alias: "Blog",
+			displayName: "Blog"
+		},
+	},
+	{
+		path: "blog/posts/:id", as: "BlogPost", component: BlogPostView,
+		data: {
+			alias: "Blog",
+			displayName: "Blog"
+		},
+	},
 
 	{ path: "documentation/...", as: "Documentation", component: DocumentationComponent },
 
-	{ path: "ui-examples", as: "UIExamples", component: UIExamplesView },
-	{ path: "signup-thanks", as: "SignupThanks", component: SignupThanksView },
+	{
+		path: "ui-examples", as: "UIExamples", component: UIExamplesView,
+		data: {
+			alias: "UI",
+			displayName: "UI Examples"
+		},
+	},
+	{
+		path: "signup-thanks", as: "SignupThanks", component: SignupThanksView,
+		data: {
+			alias: "SignupThanks",
+			displayName: "Thank you"
+		},
+	},
 ] )
 export default class WebsiteView {
-	element:ElementRef;
-	$element:JQuery;
-	router:Router;
+	element: ElementRef;
+	$element: JQuery;
+	router: Router;
 	prevUrl = "";
 
-	constructor( router:Router, element:ElementRef, private location:Location ) {
+	constructor( router: Router, element: ElementRef, private location: Location ) {
 		this.element = element;
 		this.router = router;
 		this.router.parent.subscribe( ( url ) => {
-			if ( this.prevUrl !== url ) {
+			if( this.prevUrl !== url ) {
 				$( "html, body" ).scrollTop( 0 );
 				this.prevUrl = url;
 			}
 		} );
 	}
 
-	ngAfterViewInit():void {
+	ngAfterViewInit(): void {
 		this.$element = $( this.element.nativeElement );
 	}
 
