@@ -1,10 +1,7 @@
 package com.carbonldp.agents.platform;
 
 import com.carbonldp.Vars;
-import com.carbonldp.agents.Agent;
-import com.carbonldp.agents.AgentValidator;
-import com.carbonldp.agents.PlatformAgentDescription;
-import com.carbonldp.agents.SesameAgentsService;
+import com.carbonldp.agents.*;
 import com.carbonldp.apps.App;
 import com.carbonldp.apps.AppService;
 import com.carbonldp.apps.roles.AppRoleRepository;
@@ -24,12 +21,13 @@ import org.eclipse.rdf4j.model.Value;
 import org.eclipse.rdf4j.model.ValueFactory;
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.ldap.repository.Query;
 
 import java.util.Arrays;
 import java.util.Set;
 
 public class SesamePlatformAgentService extends SesameAgentsService {
-	protected PlatformAgentRepository platformAgentRepository;
 	protected AppService appService;
 	protected AppRoleRepository appRoleRepository;
 	protected RDFResourceRepository resourceRepository;
@@ -37,54 +35,25 @@ public class SesamePlatformAgentService extends SesameAgentsService {
 
 	@Override
 	public void register( Agent agent ) {
-
-		validate( agent );
-
-		String email = agent.getEmails().iterator().next();
-		if ( platformAgentRepository.existsWithEmail( email ) ) throw new ResourceAlreadyExistsException();
-
-		boolean requireValidation = configurationRepository.requireAgentEmailValidation();
-		if ( requireValidation ) agent.setEnabled( false );
-		else agent.setEnabled( true );
-
-		setAgentPasswordFields( agent );
-
-		addAgentToDefaultRole( agent );
-
-		platformAgentRepository.create( agent );
-		ACL agentACL = aclRepository.createACL( agent.getIRI() );
-		addAgentDefaultPermissions( agent, agentACL );
+		super.register( agent );
 		createAppRoleMap( agent );
-
-		if ( requireValidation ) {
-			AgentValidator validator = createAgentValidator( agent );
-			ACL validatorACL = aclRepository.createACL( validator.getIRI() );
-			addValidatorDefaultPermissions( validatorACL );
-
-			sendValidationEmail( agent, validator );
-			// TODO: Create "resend validation" resource
-		}
 	}
 
 	@Override
 	public Agent get( IRI agentIRI ) {
-		return platformAgentRepository.get( agentIRI );
+		return agentRepository.get( agentIRI );
 	}
 
 	@Override
 	public void create( IRI agentContainerIRI, Agent agent ) {
-		validate( agent );
-		String email = agent.getEmails().iterator().next();
-		if ( platformAgentRepository.existsWithEmail( email ) ) throw new ResourceAlreadyExistsException();
-		setAgentPasswordFields( agent );
-		containerService.createChild( agentContainerIRI, agent );
+		super.create( agentContainerIRI, agent );
 		createAppRoleMap( agent );
 	}
 
 	@Override
 	public void delete( IRI agentIRI ) {
 		if ( ! sourceRepository.exists( agentIRI ) ) return;
-		Agent agentResource = platformAgentRepository.get( agentIRI );
+		Agent agentResource = agentRepository.get( agentIRI );
 		IRI appRoleMapIRI = agentResource.getIRI( PlatformAgentDescription.Property.APP_ROLE_MAP );
 		if ( agentIRI.stringValue().equals( Vars.getInstance().getPlatformAgentSystemURL() ) )
 			throw new BadRequestException( new Infraction( 0x2014 ) );
@@ -125,14 +94,6 @@ public class SesamePlatformAgentService extends SesameAgentsService {
 
 	}
 
-	private void addAgentDefaultPermissions( Agent agent, ACL agentACL ) {
-		aclRepository.grantPermissions( agentACL, Arrays.asList( agent ), Arrays.asList(
-			ACEDescription.Permission.READ,
-			ACEDescription.Permission.UPDATE,
-			ACEDescription.Permission.DELETE
-		), false );
-	}
-
 	protected void addAgentToDefaultRole( Agent agent ) {
 		IRI defaultPlatformRoleIRI = getDefaultPlatformRoleIRI();
 		IRI roleAgentsContainerIRI = getRoleAgentsContainerIRI( defaultPlatformRoleIRI );
@@ -150,7 +111,7 @@ public class SesamePlatformAgentService extends SesameAgentsService {
 	}
 
 	@Autowired
-	public void setPlatformAgentRepository( PlatformAgentRepository platformAgentRepository ) { this.platformAgentRepository = platformAgentRepository; }
+	public void setPlatformAgentRepository( PlatformAgentRepository agentRepository ) { this.agentRepository = agentRepository; }
 
 	@Autowired
 	public void setAppService( AppService appService ) { this.appService = appService; }

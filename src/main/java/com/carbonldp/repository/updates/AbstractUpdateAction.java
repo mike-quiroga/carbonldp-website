@@ -51,6 +51,7 @@ public abstract class AbstractUpdateAction extends AbstractComponent implements 
 	protected RDFMapRepository mapRepository;
 	protected FileRepository localFileRepository;
 	protected AgentService platformAgentService;
+	protected AgentRepository appAgentRepository;
 	protected static ValueFactory valueFactory = SimpleValueFactory.getInstance();
 
 	public void run() {
@@ -98,5 +99,6 @@ public abstract class AbstractUpdateAction extends AbstractComponent implements 
 		localFileRepository = context.getBean( FileRepository.class );
 		platformAgentRepository = context.getBean( "platformAgentRepository", AgentRepository.class );
 		platformAgentService = context.getBean( "platformAgentService", AgentService.class );
+		appAgentRepository = context.getBean( "appAgentRepository", AgentRepository.class );
 	}
 }
