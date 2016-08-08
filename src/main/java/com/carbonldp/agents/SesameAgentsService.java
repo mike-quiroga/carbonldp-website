@@ -111,11 +111,11 @@ public abstract class SesameAgentsService extends AbstractSesameLDPService imple
 	}
 
 	protected void addAgentDefaultPermissions( Agent agent ) {
-		aclRepository.grantPermissions( agent.getIRI(), Arrays.asList( agent ), Arrays.asList(
-			ACEDescription.Permission.READ,
-			ACEDescription.Permission.UPDATE,
-			ACEDescription.Permission.DELETE
-		), false );
+//		aclRepository.grantPermissions( agent.getIRI(), Arrays.asList( agent ), Arrays.asList(
+//			ACEDescription.Permission.READ,
+//			ACEDescription.Permission.UPDATE,
+//			ACEDescription.Permission.DELETE
+//		), false );
 	}
 
 	protected void addAgentToDefaultRole( Agent agent ) {}

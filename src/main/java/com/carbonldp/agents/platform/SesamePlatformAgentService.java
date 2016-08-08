@@ -52,8 +52,7 @@ public class SesamePlatformAgentService extends SesameAgentsService {
 		addAgentToDefaultRole( agent );
 
 		platformAgentRepository.create( agent );
-		ACL agentACL = aclRepository.createACL( agent.getIRI() );
-		addAgentDefaultPermissions( agent, agentACL );
+		addAgentDefaultPermissions( agent);
 		createAppRoleMap( agent );
 
 		if ( requireValidation ) {
@@ -123,14 +122,6 @@ public class SesamePlatformAgentService extends SesameAgentsService {
 		containerRepository.createChild( agent.getIRI(), map );
 		resourceRepository.add( agent.getIRI(), PlatformAgentDescription.Property.APP_ROLE_MAP.getIRI(), map.getIRI() );
 
-	}
-
-	private void addAgentDefaultPermissions( Agent agent, ACL agentACL ) {
-		aclRepository.grantPermissions( agentACL, Arrays.asList( agent ), Arrays.asList(
-			ACEDescription.Permission.READ,
-			ACEDescription.Permission.UPDATE,
-			ACEDescription.Permission.DELETE
-		), false );
 	}
 
 	protected void addAgentToDefaultRole( Agent agent ) {
