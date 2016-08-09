@@ -35,7 +35,7 @@ import style from "./app.component.css!text";
 		path: "login", as: "AppDevLogin", component: AppDevLoginView,
 		data: {
 			alias: "AppDevLogIn",
-			displayName: "Log In",
+			displayName: "Carbon LDP Log In",
 		},
 	},
 	// TODO: Remove 'site' portion from the URL. Right now Angular doesn't behave like it should with blank child URLs
@@ -61,60 +61,68 @@ export class AppComponent {
 	constructor( title: Title, router: Router, angulartics2: Angulartics2, angulartics2GoogleAnalytics: Angulartics2GoogleAnalytics ) {
 		this.router = router;
 		this.title = title;
-		this.router.subscribe( ( url ) => {
-			this.defineTitle( url );
+		this.router.subscribe( ( ) => {
+			this.defineTitle( );
 		} );
 	}
 
-	defineTitle( url ) {
+	defineTitle( ) {
 		let title: string = "";
 		let rootComponent = this.router.root.currentInstruction.component.routeData.data[ "displayName" ];
 		let displayName;
+		let slug;
 		let auxRouter = this.router.root.currentInstruction.child;
-		if( rootComponent === "Home" ) {
-			while ( auxRouter !== null ) {
-				displayName = auxRouter.component.routeData.data[ "displayName" ];
+
+		if( rootComponent === "Home" )
+			rootComponent = "Carbon LDP";
+
+		while ( auxRouter !== null ) {
+			displayName = auxRouter.component.routeData.data[ "displayName" ];
+			slug = auxRouter.component.params[ "slug" ];
+			if( (slug !== null) && (typeof slug !== 'undefined') ) {
 				if( displayName === "App" ) {
-					if( auxRouter.child === null )
-						title = title + displayName + " | ";
-					else
-						title = title + displayName + " > ";
+					title += displayName + "(" + slug + ") > ";
 				}
 				else {
 					if( auxRouter.child === null )
 						if( typeof displayName === 'undefined' )
 							title = "";
 						else
-							title = title + displayName + " | ";
-
-					}
-					auxRouter = auxRouter.child;
+							title += displayName + "(" + slug + ") | ";
 				}
 			}
-		else
-			{
-				while ( auxRouter !== null ) {
-					if( auxRouter.child === null ) {
-						displayName = auxRouter.component.routeData.data[ "displayName" ];
+			else {
+				if( displayName === "App" ) {
+					title = title + displayName + " > ";
+				}
+				else {
+					if( auxRouter.child === null )
 						if( typeof displayName === 'undefined' )
 							title = "";
 						else
-							title = title + displayName + " | ";
-					}
-					auxRouter = auxRouter.child;
+							title += displayName + " | ";
 				}
 
 			}
-			rootComponent = "Carbon LDP";
-			title = title + rootComponent;
-			if( title === "Home | Carbon LDP" )
-				title = "Dashboard | Carbon LDP";
-			this.title.setTitle( title );
-
+			auxRouter = auxRouter.child;
 		}
+
+		title += rootComponent;
+		if( title === "Home | Carbon LDP" )
+			title = "Dashboard | Carbon LDP";
+		this.title.setTitle( title );
 
 	}
 
-	export
-	default
-	AppComponent;
+	/*getAppName( auxRouter ): string {
+		let appSlug: string = auxRouter.component.params[ "slug" ];
+		console.log( auxRouter.child );
+		/*if( appSlug ===null || typeof appSlug ==='undefined' )
+			return "App";
+		 else
+			return appSlug;}*/
+
+
+}
+
+export default AppComponent;
