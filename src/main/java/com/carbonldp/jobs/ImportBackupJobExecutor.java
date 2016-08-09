@@ -132,10 +132,12 @@ public class ImportBackupJobExecutor extends AbstractComponent implements TypedJ
 	}
 
 	private Map<String, String> createReplaceMap( Map<String, String> configurationMap, String app, RDFFormat format ) {
+		String protocol = Vars.getInstance().getProtocol();
+		if ( ! protocol.endsWith( "://" ) ) protocol += "://";
 		Map<String, String> replaceMap = new LinkedHashMap<>();
 		String appValue = AppContextHolder.getContext().getApplication().getIRI().stringValue();
 		appValue = appValue.substring( Vars.getInstance().getAppsContainerURL().length(), appValue.length() - 1 );
-		replaceMap.put( "https://" + configurationMap.get( Vars.getInstance().getBackupsConfigDomainPlaceholder() ) + "/", Vars.getInstance().getHost() );
+		replaceMap.put( protocol + configurationMap.get( Vars.getInstance().getBackupsConfigDomainPlaceholder() ) + "/", Vars.getInstance().getHost() );
 		replaceMap.put( configurationMap.get( Vars.getInstance().getBackupsConfigAppPlaceholder() ), appValue );
 		return replaceMap;
 	}
