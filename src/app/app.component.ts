@@ -114,15 +114,6 @@ export class AppComponent {
 
 	}
 
-	/*getAppName( auxRouter ): string {
-		let appSlug: string = auxRouter.component.params[ "slug" ];
-		console.log( auxRouter.child );
-		/*if( appSlug ===null || typeof appSlug ==='undefined' )
-			return "App";
-		 else
-			return appSlug;}*/
-
-
 }
 
 export default AppComponent;
