@@ -1,5 +1,5 @@
-import {Component, ElementRef} from "@angular/core";
-import {CORE_DIRECTIVES} from "@angular/common";
+import { Component, ElementRef } from "@angular/core";
+import { CORE_DIRECTIVES } from "@angular/common";
 import SidebarComponent from "./../../sidebar/SidebarComponent";
 import $ from "jquery";
 import "semantic-ui/semantic";

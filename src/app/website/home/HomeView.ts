@@ -18,19 +18,19 @@ import style from "./style.css!text";
 	directives: [ CORE_DIRECTIVES, ROUTER_DIRECTIVES, CodeMirrorComponent.Class, NewsletterFormComponent ],
 } )
 export default class HomeView {
-	router:Router;
-	element:ElementRef;
-	$element:JQuery;
-	$mainMenu:JQuery;
-	$articles:JQuery;
-	$carbonLogo:JQuery;
+	router: Router;
+	element: ElementRef;
+	$element: JQuery;
+	$mainMenu: JQuery;
+	$articles: JQuery;
+	$carbonLogo: JQuery;
 
-	constructor( router:Router, element:ElementRef) {
+	constructor( router: Router, element: ElementRef ) {
 		this.router = router;
 		this.element = element;
 	}
 
-	ngAfterViewInit():void {
+	ngAfterViewInit(): void {
 		this.$element = $( this.element.nativeElement );
 		this.$mainMenu = $( "header > .menu" );
 		this.$articles = $( "#articles" ).find( ".column" );
@@ -41,39 +41,39 @@ export default class HomeView {
 	}
 
 
-	routerOnDeactivate():void {
+	routerOnDeactivate(): void {
 		this.removeMenuVisibilityHandlers();
 	}
 
-	isActive( route:string ):boolean {
-		let instruction:any = this.router.generate( [ route ] );
+	isActive( route: string ): boolean {
+		let instruction: any = this.router.generate( [ route ] );
 		return this.router.isRouteActive( instruction );
 	}
 
-	createDropdownMenus():void {
+	createDropdownMenus(): void {
 		this.$element.find( ".ui.dropdown" ).dropdown( {
 			on: "hover"
 		} );
 	}
 
-	addMenuVisibilityHandlers():void {
+	addMenuVisibilityHandlers(): void {
 		this.$articles.visibility( {
 			once: false,
-			onTopVisible: ():void => {
+			onTopVisible: (): void => {
 				this.addTextAnimation();
 			}
 		} );
 	}
 
-	removeMenuVisibilityHandlers():void {
+	removeMenuVisibilityHandlers(): void {
 		this.$articles.visibility( "destroy" );
 	}
 
-	scrollTo( event:any ):boolean {
+	scrollTo( event: any ): boolean {
 		let
-			id:string = $( event.srcElement ).attr( "href" ).replace( "#", "" ),
-			$element:JQuery = $( "#" + id ),
-			position:number = $element.offset().top - 80
+			id: string = $( event.srcElement ).attr( "href" ).replace( "#", "" ),
+			$element: JQuery = $( "#" + id ),
+			position: number = $element.offset().top - 80
 			;
 		$element.addClass( "active" );
 		$( "html, body" ).animate( {
@@ -85,12 +85,12 @@ export default class HomeView {
 		return false;
 	}
 
-	addTextAnimation():void {
-		let paragraphs:JQuery = this.$articles.find( "p" );
+	addTextAnimation(): void {
+		let paragraphs: JQuery = this.$articles.find( "p" );
 		paragraphs.transition( "scale in" );
 	}
 
-	createAccordions():void {
+	createAccordions(): void {
 		this.$element.find( ".ui.accordion" ).accordion();
 	}
 

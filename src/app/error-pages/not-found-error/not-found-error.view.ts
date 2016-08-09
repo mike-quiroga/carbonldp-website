@@ -1,5 +1,5 @@
 import {Component} from "@angular/core";
-import { ROUTER_DIRECTIVES } from "@angular/router-deprecated";
+import {ROUTER_DIRECTIVES} from "@angular/router-deprecated";
 
 import template from "./not-found-error.view.html!";
 import style from "./not-found-error.view.css!text";

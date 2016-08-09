@@ -15,5 +15,4 @@ export class DashboardView {
 	}
 
 }
-
 export default DashboardView;

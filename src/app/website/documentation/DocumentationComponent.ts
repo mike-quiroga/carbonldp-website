@@ -1,5 +1,5 @@
-import {Component} from "@angular/core";
-import {RouteConfig, RouterOutlet} from "@angular/router-deprecated";
+import { Component } from "@angular/core";
+import { RouteConfig, RouterOutlet } from "@angular/router-deprecated";
 
 import HomeView from "./home/HomeView";
 
@@ -33,10 +33,12 @@ import "./style.css!";
 	directives: [ RouterOutlet ],
 } )
 @RouteConfig( [
-	{ path: "/", name: "Documentation", component: HomeView, data: {
+	{
+		path: "/", name: "Documentation", component: HomeView, data: {
 		alias: "Documentation",
 		displayName: "Documentation",
-	}, },
+	},
+	},
 
 	{
 		path: "/about-carbon-ldp", as: "AboutCarbonLDP", component: AboutCarbonLDPView, data: {
@@ -115,31 +117,41 @@ import "./style.css!";
 		},
 	},
 
-	{ path: "/javascript-sdk", name: "JavaScriptSDK", component: JavaScriptSDKView,
+	{
+		path: "/javascript-sdk", name: "JavaScriptSDK", component: JavaScriptSDKView,
 		data: {
 			alias: "JavaScript SDK",
 			displayName: "JavaScript SDK",
-		},},
-	{ path: "/javascript-sdk/getting-started", as: "JavaScriptSDKGettingStarted", component: JavaScriptSDKGettingStartedView,
+		},
+	},
+	{
+		path: "/javascript-sdk/getting-started", as: "JavaScriptSDKGettingStarted", component: JavaScriptSDKGettingStartedView,
 		data: {
 			alias: "GettingStartedJS",
 			displayName: "Getting Started with JavaScript SDK",
-		},},
-	{ path: "/javascript-sdk/contexts", as: "JavaScriptSDKContexts", component: JavaScriptSDKContextsView,
+		},
+	},
+	{
+		path: "/javascript-sdk/contexts", as: "JavaScriptSDKContexts", component: JavaScriptSDKContextsView,
 		data: {
 			alias: "Contexts",
 			displayName: "Contexts",
-		},},
-	{ path: "/javascript-sdk/object-model", as: "JavaScriptSDKObjectModel", component: JavaScriptSDKObjectModelView,
+		},
+	},
+	{
+		path: "/javascript-sdk/object-model", as: "JavaScriptSDKObjectModel", component: JavaScriptSDKObjectModelView,
 		data: {
 			alias: "JavaScript SDK Object Model",
 			displayName: "JavaScript SDK Object Model",
-		},},
-	{ path: "/javascript-sdk/object-schema", as: "JavaScriptSDKObjectSchema", component: JavaScriptSDKObjectSchemaView,
+		},
+	},
+	{
+		path: "/javascript-sdk/object-schema", as: "JavaScriptSDKObjectSchema", component: JavaScriptSDKObjectSchemaView,
 		data: {
 			alias: "Object Schema",
 			displayName: "Object Schema",
-		},},
+		},
+	},
 
 ] )
 export default class DocumentationComponent {
