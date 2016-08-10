@@ -80,6 +80,7 @@ public class ExportBackupJobExecutor implements TypedJobExecutor {
 		Set<String> configFileData = new HashSet<>();
 		configFileData.add( Vars.getInstance().getBackupsConfigDomainPlaceholder() + "=" + domainPlaceholder );
 		configFileData.add( Vars.getInstance().getBackupsConfigAppPlaceholder() + "=" + appPlaceholder );
+		configFileData.add( Vars.getInstance().getProtocolPlaceHolder() + "=" + Vars.getInstance().getProtocol() );
 
 		File configFile = fileRepository.createTempFile( configFileData );
 		filesMap.put( configFileName, configFile );

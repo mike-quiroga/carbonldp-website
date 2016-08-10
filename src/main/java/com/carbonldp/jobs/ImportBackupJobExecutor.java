@@ -125,15 +125,16 @@ public class ImportBackupJobExecutor extends AbstractComponent implements TypedJ
 		// If the IDs are not preserved, the parser would create a different BNode ID per statement
 		parser.set( BasicParserSettings.PRESERVE_BNODE_IDS, true );
 		parser.setRDFHandler( collector );
-		parser.parse( lineStream, baseIRI.stringValue() );
+			parser.parse( lineStream, baseIRI.stringValue() );
 
 		Collection<Statement> statements = collector.getStatements();
 		return statements.stream().findFirst().orElse( null );
 	}
 
 	private Map<String, String> createReplaceMap( Map<String, String> configurationMap, String app, RDFFormat format ) {
-		String protocol = Vars.getInstance().getProtocol();
+		String protocol = configurationMap.get( Vars.getInstance().getProtocolPlaceHolder() );
 		if ( ! protocol.endsWith( "://" ) ) protocol += "://";
+		configurationMap.remove( Vars.getInstance().getProtocolPlaceHolder() );
 		Map<String, String> replaceMap = new LinkedHashMap<>();
 		String appValue = AppContextHolder.getContext().getApplication().getIRI().stringValue();
 		appValue = appValue.substring( Vars.getInstance().getAppsContainerURL().length(), appValue.length() - 1 );

@@ -1,5 +1,6 @@
 package com.carbonldp.jobs;
 
+import com.carbonldp.AbstractComponent;
 import com.carbonldp.apps.App;
 import com.carbonldp.exceptions.CarbonNoStackTraceRuntimeException;
 import com.carbonldp.rdf.RDFResourceRepository;
@@ -15,7 +16,7 @@ import java.util.List;
  * @since 0.33.0
  */
 
-public class JobsExecutor {
+public class JobsExecutor extends AbstractComponent {
 	private final List<TypedJobExecutor> typedJobs;
 	private JobService jobService;
 	private ExecutionService executionService;
@@ -45,6 +46,7 @@ public class JobsExecutor {
 			executionService.addErrorDescription( execution.getIRI(), e.getMessage() );
 			hasErrors = true;
 		} catch ( Exception e ) {
+			LOG.error( "Unable to complete job execution: " + execution.getIRI().stringValue(), e );
 			executionService.changeExecutionStatus( execution.getIRI(), ExecutionDescription.Status.UNKNOWN );
 			hasErrors = true;
 		} finally {
