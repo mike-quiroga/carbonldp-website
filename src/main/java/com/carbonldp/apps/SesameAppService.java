@@ -245,7 +245,8 @@ public class SesameAppService extends AbstractSesameLDPService implements AppSer
 		aclRepository.grantPermissions( appACL, Arrays.asList( adminRole ), Arrays.asList(
 			ACEDescription.Permission.READ,
 			ACEDescription.Permission.UPDATE,
-			ACEDescription.Permission.DELETE
+			ACEDescription.Permission.DELETE,
+			ACEDescription.Permission.MANAGE_SECURITY
 		), true );
 	}
 
