@@ -16,7 +16,7 @@ export default class LinkedDataConceptsView {
 	element:ElementRef;
 	$element:JQuery;
 
-	constructor( element:ElementRef) {
+	constructor( element:ElementRef ) {
 		this.element = element;
 	}
 

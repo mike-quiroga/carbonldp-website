@@ -42,7 +42,7 @@ export class NewsletterFormComponent {
 		this.email.markAsTouched();
 		let icpForm:HTMLElement = document.getElementById( 'icpsignup' );
 
-		if ( this.subscribeForm.valid ) {
+		if( this.subscribeForm.valid ) {
 			icpForm.action = "https://app.icontact.com/icp/signup.php";
 			icpForm.submit();
 		}

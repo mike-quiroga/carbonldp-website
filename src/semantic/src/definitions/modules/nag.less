@@ -8,13 +8,12 @@
  *
  */
 
-
 /*******************************
             Theme
 *******************************/
 
-@type    : 'module';
-@element : 'nag';
+@type: 'module';
+@element: 'nag';
 
 @import (multiple) '../../theme.config';
 
@@ -23,58 +22,55 @@
 *******************************/
 
 .ui.nag {
-  display: none;
-  opacity: @opacity;
-  position: @position;
+	display: none;
+	opacity: @opacity;
+	position: @position;
 
-  top: @top;
-  left: 0px;
-  z-index: @zIndex;
+	top: @top;
+	left: 0px;
+	z-index: @zIndex;
 
-  min-height: @minHeight;
-  width: @width;
+	min-height: @minHeight;
+	width: @width;
 
-  margin: @margin;
-  padding: @padding;
+	margin: @margin;
+	padding: @padding;
 
-  background: @background;
-  box-shadow: @boxShadow;
+	background: @background;
+	box-shadow: @boxShadow;
 
-  font-size: @fontSize;
-  text-align: @textAlign;
-  color: @color;
+	font-size: @fontSize;
+	text-align: @textAlign;
+	color: @color;
 
-  border-radius: @topBorderRadius;
-  transition: @transition;
+	border-radius: @topBorderRadius;
+	transition: @transition;
 }
 
 a.ui.nag {
-  cursor: pointer;
+	cursor: pointer;
 }
 
 .ui.nag > .title {
-  display: inline-block;
-  margin: @titleMargin;
-  color: @titleColor;
+	display: inline-block;
+	margin: @titleMargin;
+	color: @titleColor;
 }
-
 
 .ui.nag > .close.icon {
-  cursor: pointer;
-  opacity: @closeOpacity;
+	cursor: pointer;
+	opacity: @closeOpacity;
 
-  position: absolute;
-  top: @closeTop;
-  right: @closeRight;
+	position: absolute;
+	top: @closeTop;
+	right: @closeRight;
 
-  font-size: @closeSize;
+	font-size: @closeSize;
 
-  margin: @closeMargin;
-  color: @closeColor;
-  transition: @closeTransition;
+	margin: @closeMargin;
+	color: @closeColor;
+	transition: @closeTransition;
 }
-
-
 
 /*******************************
              States
@@ -82,27 +78,25 @@ a.ui.nag {
 
 /* Hover */
 .ui.nag:hover {
-  background: @nagHoverBackground;
-  opacity: @nagHoverOpacity;
+	background: @nagHoverBackground;
+	opacity: @nagHoverOpacity;
 }
 
 .ui.nag .close:hover {
-  opacity: @closeHoverOpacity;
+	opacity: @closeHoverOpacity;
 }
-
 
 /*******************************
            Variations
 *******************************/
-
 
 /*--------------
      Static
 ---------------*/
 
 .ui.overlay.nag {
-  position: absolute;
-  display: block;
+	position: absolute;
+	display: block;
 }
 
 /*--------------
@@ -110,7 +104,7 @@ a.ui.nag {
 ---------------*/
 
 .ui.fixed.nag {
-  position: fixed;
+	position: fixed;
 }
 
 /*--------------
@@ -119,9 +113,9 @@ a.ui.nag {
 
 .ui.bottom.nags,
 .ui.bottom.nag {
-  border-radius: @bottomBorderRadius;
-  top: auto;
-  bottom: @bottom;
+	border-radius: @bottomBorderRadius;
+	top: auto;
+	bottom: @bottom;
 }
 
 /*--------------
@@ -130,29 +124,31 @@ a.ui.nag {
 
 .ui.inverted.nags .nag,
 .ui.inverted.nag {
-  background-color: @invertedBackground;
-  color: @darkTextColor;
+	background-color: @invertedBackground;
+	color: @darkTextColor;
 }
+
 .ui.inverted.nags .nag .close,
 .ui.inverted.nags .nag .title,
 .ui.inverted.nag .close,
 .ui.inverted.nag .title {
-  color: @lightTextColor;
+	color: @lightTextColor;
 }
-
 
 /*******************************
            Groups
 *******************************/
 
 .ui.nags .nag {
-  border-radius: @groupedBorderRadius !important;
+	border-radius: @groupedBorderRadius !important;
 }
+
 .ui.nags .nag:last-child {
-  border-radius: @topBorderRadius;
+	border-radius: @topBorderRadius;
 }
+
 .ui.bottom.nags .nag:last-child {
-  border-radius: @bottomBorderRadius;
+	border-radius: @bottomBorderRadius;
 }
 
 .loadUIOverrides();

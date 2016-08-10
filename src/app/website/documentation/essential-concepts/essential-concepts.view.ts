@@ -17,14 +17,14 @@ import style from "./essential-concepts.view.css!text";
 
 export class EssentialConceptsView implements AfterViewInit {
 
-	private element: ElementRef;
-	private $element: JQuery;
+	private element:ElementRef;
+	private $element:JQuery;
 
-	constructor( element: ElementRef ) {
+	constructor( element:ElementRef ) {
 		this.element = element;
 	}
 
-	ngAfterViewInit(): void {
+	ngAfterViewInit():void {
 		this.$element = $( this.element.nativeElement );
 	}
 

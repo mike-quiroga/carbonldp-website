@@ -25,5 +25,5 @@ export default class SignupThanksView {
 		this.$element = $( this.element.nativeElement );
 		ga( "send", "event", "Newsletter", "Subscription" );
 	}
-	
+
 }

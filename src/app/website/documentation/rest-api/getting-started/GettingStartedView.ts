@@ -18,14 +18,14 @@ import template from "./template.html!";
 	directives: [ CORE_DIRECTIVES, HighlightDirective, SidebarComponent ]
 } )
 export default class GettingStartedView {
-	element: ElementRef;
-	$element: JQuery;
-	protocolAndHost: string;
+	element:ElementRef;
+	$element:JQuery;
+	protocolAndHost:string;
 
-	private carbon: Carbon;
-	private contentReady: boolean = false;
+	private carbon:Carbon;
+	private contentReady:boolean = false;
 
-	constructor( element: ElementRef, carbon: Carbon ) {
+	constructor( element:ElementRef, carbon:Carbon ) {
 		this.element = element;
 
 		this.carbon = carbon;
@@ -33,14 +33,14 @@ export default class GettingStartedView {
 		this.protocolAndHost = `${ this.carbon.getSetting( "http.ssl" ) ? "https" : "http" }://${ this.carbon.getSetting( "domain" ) }`;
 	}
 
-	ngAfterViewInit(): void {
+	ngAfterViewInit():void {
 		this.$element = $( this.element.nativeElement );
 		this.createAccordions();
 
 		window.setTimeout( () => this.contentReady = true, 0 );
 	}
 
-	createAccordions(): void {
+	createAccordions():void {
 		this.$element.find( ".ui.accordion" ).accordion();
 	}
 }

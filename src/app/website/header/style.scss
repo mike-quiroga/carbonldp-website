@@ -28,19 +28,19 @@ header {
 		border: 1px solid #e9e9e9;
 		box-shadow: 0 0 5px 5px rgba(0, 0, 0, .2);
 
-		.home{
+		.home {
 			display: block;
 			padding: 11px 16px;
-			color: rgba(0,0,0,.85);
+			color: rgba(0, 0, 0, .85);
 			font-size: .78571429em;
 			font-weight: bold;
 			text-transform: uppercase;
 			white-space: nowrap;
 		}
 
-		.home:hover{
-			background: rgba(0,0,0,.05);
-			color: rgba(0,0,0,.95);
+		.home:hover {
+			background: rgba(0, 0, 0, .05);
+			color: rgba(0, 0, 0, .95);
 		}
 
 		.item:first-of-type {
@@ -88,6 +88,6 @@ header {
 	}
 
 	.ui.dropdown > a.item:hover {
-		background: rgba(0,0,0,.05);
+		background: rgba(0, 0, 0, .05);
 	}
 }

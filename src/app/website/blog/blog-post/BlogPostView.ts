@@ -49,7 +49,7 @@ export default class BlogPostView {
 
 
 	routerOnActivate():void {
-		if ( typeof this.postID === "undefined" || this.postID === null ) {
+		if( typeof this.postID === "undefined" || this.postID === null ) {
 			return;
 		} else {
 			this.blogService.getPost( this.postID ).then(

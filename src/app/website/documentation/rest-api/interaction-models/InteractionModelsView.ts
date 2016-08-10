@@ -12,20 +12,20 @@ import template from "./template.html!";
 	directives: [ CORE_DIRECTIVES, SidebarComponent ]
 } )
 export default class InteractionModelsView {
-	element: ElementRef;
-	$element: JQuery;
-	private contentReady: boolean = false;
+	element:ElementRef;
+	$element:JQuery;
+	private contentReady:boolean = false;
 
-	constructor( element: ElementRef ) {
+	constructor( element:ElementRef ) {
 		this.element = element;
 	}
 
-	ngAfterViewInit(): void {
+	ngAfterViewInit():void {
 		this.$element = $( this.element.nativeElement );
 		this.initializeSidebar();
 	}
 
-	initializeSidebar(): void {
+	initializeSidebar():void {
 		window.setTimeout( () => {
 			this.contentReady = true;
 		}, 0 );

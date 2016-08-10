@@ -16,7 +16,7 @@ import style from "./javascript-sdk.view.css!text";
 	directives: [ CORE_DIRECTIVES, RouterLink ],
 	providers: [ Title ],
 } )
-export class JavaScriptSDKView implements AfterViewInit, OnActivate{
+export class JavaScriptSDKView implements AfterViewInit, OnActivate {
 
 	private element:ElementRef;
 	private $element:JQuery;

@@ -1,16 +1,16 @@
-import {Component} from "@angular/core";
-import {CORE_DIRECTIVES} from "@angular/common";
-import {ROUTER_DIRECTIVES, RouteConfig, Router} from "@angular/router-deprecated";
-import {Title} from "@angular/platform-browser";
+import { Component } from "@angular/core";
+import { CORE_DIRECTIVES } from "@angular/common";
+import { ROUTER_DIRECTIVES, RouteConfig, Router } from "@angular/router-deprecated";
+import { Title } from "@angular/platform-browser";
 
-import {Angulartics2GoogleAnalytics} from "angulartics2/src/providers/angulartics2-google-analytics";
-import {Angulartics2} from "angulartics2";
+import { Angulartics2GoogleAnalytics } from "angulartics2/src/providers/angulartics2-google-analytics";
+import { Angulartics2 } from "angulartics2";
 
 import WebsiteView from "app/website/WebsiteView";
-import {AppDevLoginView} from "app/auth/app-dev-login/app-dev-login.view";
-import {AppDevView} from "app/app-dev/app-dev.view";
+import { AppDevLoginView } from "app/auth/app-dev-login/app-dev-login.view";
+import { AppDevView } from "app/app-dev/app-dev.view";
 
-import {NotFoundErrorView} from "app/error-pages/not-found-error/not-found-error.view";
+import { NotFoundErrorView } from "app/error-pages/not-found-error/not-found-error.view";
 
 import template from "./app.component.html!";
 import style from "./app.component.css!text";
@@ -55,10 +55,10 @@ import style from "./app.component.css!text";
 	},
 ] )
 export class AppComponent {
-	router: Router;
-	title: Title;
+	router:Router;
+	title:Title;
 	// Importing angulartics2, angulartics2GoogleAnalytics as per documentation of angulartics2 plug-in
-	constructor( title: Title, router: Router, angulartics2: Angulartics2, angulartics2GoogleAnalytics: Angulartics2GoogleAnalytics ) {
+	constructor( title:Title, router:Router, angulartics2:Angulartics2, angulartics2GoogleAnalytics:Angulartics2GoogleAnalytics ) {
 		this.router = router;
 		this.title = title;
 		this.router.subscribe( () => {
@@ -67,7 +67,7 @@ export class AppComponent {
 	}
 
 	defineTitle() {
-		let title: string = "";
+		let title:string = "";
 		let rootComponent = this.router.root.currentInstruction.component.routeData.data[ "displayName" ];
 		let auxRouter = this.router.root.currentInstruction.child;
 
@@ -88,7 +88,7 @@ export class AppComponent {
 				}
 				parameter = parameters[ parameterName ];
 			}
-			console.log(mainComponent);
+			console.log( mainComponent );
 			if( parameter !== null ) {
 				if( auxRouter.child === null ) {
 					if( typeof displayName === 'undefined' ) title = "";
