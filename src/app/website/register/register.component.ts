@@ -54,14 +54,14 @@ export class RegisterComponent implements OnInit {
 		this.$registrationForm.find( ".ui.checkbox" ).checkbox();
 		this.registrationForm = this.formBuilder.group( {
 			email: [ "", Validators.compose( [ Validators.required, EmailValidator ] ) ],
-			passwordGroup: this.formBuilder.group({
+			passwordGroup: this.formBuilder.group( {
 				password: [ "", Validators.compose( [ Validators.required ] ) ],
 				confirmPassword: [ "", Validators.compose( [ Validators.required ] ) ],
-			}, { validator: this.matchPasswordValidator }),
+			}, { validator: this.matchPasswordValidator } ),
 		} );
 
 		this.email = this.registrationForm.controls[ "email" ];
-		this.passwordGroup = <ControlGroup>this.registrationForm.controls[ "passwordGroup"];
+		this.passwordGroup = <ControlGroup>this.registrationForm.controls[ "passwordGroup" ];
 		this.password = this.passwordGroup.controls[ "password" ];
 		this.confirmPassword = this.passwordGroup.controls[ "confirmPassword" ];
 	}
@@ -79,7 +79,7 @@ export class RegisterComponent implements OnInit {
 			return;
 		}
 
-		 //TODO: Add registration service
+		//TODO: Add registration service
 
 	}
 
@@ -92,7 +92,6 @@ export class RegisterComponent implements OnInit {
 			return { "passwordNotConfirmed": true };
 		}
 	}
-
 
 
 	getDays( firstDate:Date, lastDate:Date ):number {

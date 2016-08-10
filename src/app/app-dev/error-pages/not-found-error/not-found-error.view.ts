@@ -10,7 +10,8 @@ import style from "./not-found-error.view.css!text";
 } )
 export class NotFoundErrorView {
 
-	constructor() { }
+	constructor() {
+	}
 }
 
 export default NotFoundErrorView;

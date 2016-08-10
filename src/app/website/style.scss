@@ -4,11 +4,12 @@ website {
 
 	display: flex;
 	flex-direction: column;
+	flex-wrap: nowrap;
 	align-items: center;
 
 	> .page-content {
 		width: 100%;
-		
+
 		// Safari doesn't display correctly the footer if flex shrink is configured
 		flex: 1 0 auto;
 

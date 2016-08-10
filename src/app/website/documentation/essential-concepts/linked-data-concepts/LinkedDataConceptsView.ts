@@ -1,6 +1,5 @@
 import { Component, ElementRef } from "@angular/core";
 import { CORE_DIRECTIVES } from "@angular/common";
-import { Title } from "@angular/platform-browser";
 
 import $ from "jquery";
 import "semantic-ui/semantic";
@@ -11,16 +10,14 @@ import "./style.css!";
 @Component( {
 	selector: "linked-data-concepts",
 	template: template,
-	directives: [ CORE_DIRECTIVES ],
-	providers: [ Title ],
+	directives: [ CORE_DIRECTIVES ]
 } )
 export default class LinkedDataConceptsView {
 	element:ElementRef;
 	$element:JQuery;
 
-	constructor( element:ElementRef, title:Title ) {
+	constructor( element:ElementRef ) {
 		this.element = element;
-		title.setTitle( "Linked Data Concepts" );
 	}
 
 	ngAfterViewInit():void {

@@ -4,8 +4,8 @@
 
 		<div class="ui action input">
 			<!--<div class="field" [ngClass]="{ error: (email.touched && !email.valid) }">-->
-				<input name="fields_email" [ngClass]="{ error: (email.touched && !email.valid) }" class="field email" type="text" placeholder="your@email.com"
-			[ngFormControl]="subscribeForm.controls[ 'email' ]">
+			<input name="fields_email" [ngClass]="{ error: (email.touched && !email.valid) }" class="field email" type="text" placeholder="your@email.com"
+			       [ngFormControl]="subscribeForm.controls[ 'email' ]">
 			<!--</div>-->
 			<button id="send" type="submit" class="ui inverted secondary button submit">SEND</button>
 		</div>

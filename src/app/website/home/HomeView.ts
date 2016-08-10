@@ -1,7 +1,6 @@
 import { Component, ElementRef } from "@angular/core";
 import { CORE_DIRECTIVES, NgForm } from "@angular/common";
 import { ROUTER_DIRECTIVES, ROUTER_PROVIDERS, Router, Instruction } from "@angular/router-deprecated";
-import { Title } from "@angular/platform-browser";
 import { NewsletterFormComponent } from "../newsletter-form/NewsletterFormComponent";
 
 import $ from "jquery";
@@ -17,7 +16,6 @@ import style from "./style.css!text";
 	template: template,
 	styles: [ style ],
 	directives: [ CORE_DIRECTIVES, ROUTER_DIRECTIVES, CodeMirrorComponent.Class, NewsletterFormComponent ],
-	providers: [ Title ]
 } )
 export default class HomeView {
 	router:Router;
@@ -25,13 +23,11 @@ export default class HomeView {
 	$element:JQuery;
 	$mainMenu:JQuery;
 	$articles:JQuery;
-	title:Title;
 	$carbonLogo:JQuery;
 
-	constructor( router:Router, element:ElementRef, title:Title ) {
+	constructor( router:Router, element:ElementRef ) {
 		this.router = router;
 		this.element = element;
-		this.title = title;
 	}
 
 	ngAfterViewInit():void {
@@ -44,9 +40,6 @@ export default class HomeView {
 		this.createAccordions();
 	}
 
-	routerOnActivate():void {
-		this.title.setTitle( "CarbonLDP | Home" );
-	}
 
 	routerOnDeactivate():void {
 		this.removeMenuVisibilityHandlers();

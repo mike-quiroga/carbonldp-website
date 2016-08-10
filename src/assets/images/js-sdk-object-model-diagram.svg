@@ -157,8 +157,8 @@
                     <tspan x="0.138922691" y="11.3199881">Application Document app1/</tspan>
                 </text>
                 <text id="rootContainer:-rootD" font-family="Helvetica" font-size="11.0963836" font-weight="normal" fill="#000000">
-                    <tspan x="3.86475496" y="36.7286693">rootContainer: rootDocument </tspan>
-                    <tspan x="3.86475496" y="50.7286693">			  </tspan>
+                    <tspan x="3.86475496" y="36.7286693">rootContainer: rootDocument</tspan>
+                    <tspan x="3.86475496" y="50.7286693"></tspan>
                     <tspan x="94.0306165" y="50.7286693" font-size="10.0058422">apps/app1/</tspan>
                 </text>
             </g>
@@ -247,7 +247,7 @@
                 <use id="Grandchild1" stroke="#979797" mask="url(#mask-44)" stroke-width="2" fill="#FFFFFF" xlink:href="#path-43"></use>
                 <use id="rootDoc" stroke="#979797" mask="url(#mask-46)" stroke-width="2" fill="#FFFFFF" xlink:href="#path-45"></use>
                 <text id="child1/" font-family="Helvetica" font-size="7.77214257" font-weight="normal" fill="#000000">
-                    <tspan x="13.6323519" y="78.3077128"> child1/</tspan>
+                    <tspan x="13.6323519" y="78.3077128">child1/</tspan>
                 </text>
                 <text id="child2/" font-family="Helvetica" font-size="7.77214257" font-weight="normal" fill="#000000">
                     <tspan x="76.6534224" y="67.9252444">child2/</tspan>
@@ -256,10 +256,10 @@
                     <tspan x="116.95123" y="142.493666">child1/</tspan>
                 </text>
                 <text id="Grandchild1/" font-family="Helvetica" font-size="7.77214257" font-weight="normal" fill="#000000">
-                    <tspan x="122.691167" y="199.936502"> child2/</tspan>
+                    <tspan x="122.691167" y="199.936502">child2/</tspan>
                 </text>
                 <text id="Grandchild1/" font-family="Helvetica" font-size="7.77214257" font-weight="normal" fill="#000000">
-                    <tspan x="35.1571181" y="203.715636">           child1/</tspan>
+                    <tspan x="35.1571181" y="203.715636">child1/</tspan>
                 </text>
                 <text id="app1/" font-family="Helvetica" font-size="8.45461182" font-weight="normal" fill="#000000">
                     <tspan x="5.05305835" y="9">app1/</tspan>

@@ -2,6 +2,7 @@ import { Component } from "@angular/core";
 
 import template from "./dashboard.view.html!";
 
+
 @Component( {
 	selector: "dashboard",
 	template: template,
@@ -9,7 +10,9 @@ import template from "./dashboard.view.html!";
 } )
 export class DashboardView {
 
-	constructor() { }
-}
 
+	constructor() {
+	}
+
+}
 export default DashboardView;
