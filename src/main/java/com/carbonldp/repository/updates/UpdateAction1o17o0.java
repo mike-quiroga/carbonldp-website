@@ -11,7 +11,7 @@ import java.util.Set;
 
 /**
  * @author NestorVenegas
- * @since _version_
+ * @since 0.40.1
  */
 public class UpdateAction1o17o0 extends AbstractUpdateAction {
 
@@ -39,6 +39,7 @@ public class UpdateAction1o17o0 extends AbstractUpdateAction {
 
 	private void addAgentDefaultPermissions( Agent agent ) {
 		ACL agentACL = aclRepository.getResourceACL( agent.getIRI() );
+		if ( agentACL == null ) agentACL = aclRepository.createACL( agent.getIRI() );
 		aclRepository.grantPermissions( agentACL, Arrays.asList( agent ), Arrays.asList(
 			ACEDescription.Permission.READ,
 			ACEDescription.Permission.UPDATE,

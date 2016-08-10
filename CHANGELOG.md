@@ -1,4 +1,10 @@
-# 0.40.0 (2016/07/31)
+# 0.40.2 (2016/08/09)
+- Fix support for http (instead of https) and ports inside of URIs
+
+# 0.40.1 (2016/08/08)
+- Fix issue that didn't let old agents retrieve their own representation
+
+# 0.40.0 (2016/08/07)
 - [LDP-392](https://jira.base22.com/browse/LDP-392) - Delete platform agents
 - [LDP-747](https://jira.base22.com/browse/LDP-747) - Return agent's representation when creating an auth token
 - [LDP-740](https://jira.base22.com/browse/LDP-740) - Return authenticated agent's representation through agents/me/
