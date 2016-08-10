@@ -1,7 +1,5 @@
 import { Component, ElementRef } from "@angular/core";
 import { CORE_DIRECTIVES } from "@angular/common";
-import { Title } from "@angular/platform-browser";
-
 import $ from "jquery";
 import "semantic-ui/semantic";
 
@@ -11,18 +9,16 @@ import template from "./template.html!";
 	selector: "carbon-ldp-concepts",
 	template: template,
 	directives: [ CORE_DIRECTIVES ],
-	providers: [ Title ],
 } )
 export default class CarbonLDPConceptsView {
-	element: ElementRef;
-	$element: JQuery;
+	element:ElementRef;
+	$element:JQuery;
 
-	constructor( element: ElementRef, title: Title ) {
+	constructor( element:ElementRef ) {
 		this.element = element;
-		title.setTitle( "Carbon LDP Concepts" );
 	}
 
-	ngAfterViewInit(): void {
+	ngAfterViewInit():void {
 		this.$element = $( this.element.nativeElement );
 	}
 

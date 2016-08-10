@@ -1,6 +1,5 @@
 import { Component, ElementRef, AfterViewInit } from "@angular/core";
 import { CORE_DIRECTIVES } from "@angular/common";
-import { Title } from "@angular/platform-browser";
 import { RouterLink, OnActivate } from "@angular/router-deprecated";
 
 import $ from "jquery";
@@ -13,28 +12,22 @@ import style from "./rest-api.view.css!text";
 	selector: "rest-api",
 	template: template,
 	styles: [ style ],
-	directives: [ CORE_DIRECTIVES, RouterLink ],
-	providers: [ Title ],
+	directives: [ CORE_DIRECTIVES, RouterLink ]
 } )
 
-export class RESTApiView implements AfterViewInit, OnActivate {
+export class RESTApiView implements AfterViewInit {
 
-	private element: ElementRef;
-	private $element: JQuery;
-	private title: Title;
+	private element:ElementRef;
+	private $element:JQuery;
 
-	constructor( element: ElementRef, title: Title ) {
+	constructor( element:ElementRef ) {
 		this.element = element;
-		this.title = title;
 	}
 
-	ngAfterViewInit(): void {
+	ngAfterViewInit():void {
 		this.$element = $( this.element.nativeElement );
 	}
 
-	routerOnActivate(): void {
-		this.title.setTitle( "Essential Concepts Documentation" );
-	}
 }
 
 export default RESTApiView;

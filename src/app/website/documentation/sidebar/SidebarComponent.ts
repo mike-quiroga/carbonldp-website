@@ -1,6 +1,6 @@
-import { Component, Input, ElementRef, OnChanges, SimpleChange } from "@angular/core";
+import { Component, Input, ElementRef, SimpleChange } from "@angular/core";
 import { CORE_DIRECTIVES } from "@angular/common"
-import { ROUTER_DIRECTIVES, ROUTER_PROVIDERS, Router, Instruction, RouteParams } from "@angular/router-deprecated";
+import { ROUTER_DIRECTIVES } from "@angular/router-deprecated";
 
 import $ from "jquery";
 import "semantic-ui/semantic";

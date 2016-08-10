@@ -30,16 +30,51 @@ import "./style.css!";
 @RouteConfig( [
 	{ path: "", as: "Home", component: HomeView, useAsDefault: true },
 
-	{ path: "login", as: "Login", component: LoginView },
-	{ path: "register", as: "Register", component: RegisterView },
-
-	{ path: "blog", as: "Blog", component: BlogView },
-	{ path: "blog/posts/:id", as: "BlogPost", component: BlogPostView },
+	{
+		path: "login", as: "Login", component: LoginView,
+		data: {
+			alias: "LogIn",
+			displayName: "Log In"
+		},
+	},
+	{
+		path: "register", as: "Register", component: RegisterView,
+		data: {
+			alias: "Register",
+			displayName: "Register"
+		},
+	},
+	{
+		path: "blog", as: "Blog", component: BlogView,
+		data: {
+			alias: "Blog",
+			displayName: "Blog"
+		},
+	},
+	{
+		path: "blog/posts/:id", as: "BlogPost", component: BlogPostView,
+		data: {
+			alias: "Blog",
+			displayName: "Blog"
+		},
+	},
 
 	{ path: "documentation/...", as: "Documentation", component: DocumentationView },
 
-	{ path: "ui-examples", as: "UIExamples", component: UIExamplesView },
-	{ path: "signup-thanks", as: "SignupThanks", component: SignupThanksView },
+	{
+		path: "ui-examples", as: "UIExamples", component: UIExamplesView,
+		data: {
+			alias: "UI",
+			displayName: "UI Examples"
+		},
+	},
+	{
+		path: "signup-thanks", as: "SignupThanks", component: SignupThanksView,
+		data: {
+			alias: "SignupThanks",
+			displayName: "Thank you"
+		},
+	},
 ] )
 export default class WebsiteView {
 	element: ElementRef;

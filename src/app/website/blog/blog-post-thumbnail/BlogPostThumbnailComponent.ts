@@ -19,24 +19,24 @@ import "./style.css!";
 export default class BlogPostThumbnailComponent {
 	static parameters = [ [ Router ], [ ElementRef ], [ DynamicComponentLoader ] ];
 
-	router: Router;
-	dcl: DynamicComponentLoader;
+	router:Router;
+	dcl:DynamicComponentLoader;
 
-	element: ElementRef;
-	isNewPost: boolean;
+	element:ElementRef;
+	isNewPost:boolean;
 
-	@Input() blogPost: BlogPost;
+	@Input() blogPost:BlogPost;
 
 	get codeMirrorMode() { return CodeMirrorComponent.Mode; }
 
-	constructor( router: Router, element: ElementRef, dcl: DynamicComponentLoader ) {
+	constructor( router:Router, element:ElementRef, dcl:DynamicComponentLoader ) {
 		this.router = router;
 		this.element = element;
 		this.dcl = dcl;
 
 	}
 
-	ngOnInit(): void {
+	ngOnInit():void {
 		this.isNewPost = false;
 		if( this.blogPost.creationDate ) {
 			this.blogPost.creationDate = new Date( Date.parse( this.blogPost.creationDate.toString() ) );
@@ -45,8 +45,8 @@ export default class BlogPostThumbnailComponent {
 
 	}
 
-	ngAfterViewInit(): void {
-		let excerpt: string = this.blogPost.excerpt;
+	ngAfterViewInit():void {
+		let excerpt:string = this.blogPost.excerpt;
 		if( ! ! this.blogPost.filename ) {
 			@Component( {
 				selector: "compiled-component",

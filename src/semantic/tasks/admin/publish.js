@@ -1,6 +1,6 @@
 /*******************************
-          Release All
-*******************************/
+ Release All
+ *******************************/
 
 /*
  This task update all SUI individual component repos with new versions of components
@@ -10,16 +10,16 @@
 */
 
 var
-  runSequence = require('run-sequence')
-;
+	runSequence = require( 'run-sequence' )
+	;
 
 /* Release All */
-module.exports = function(callback) {
+module.exports = function( callback ) {
 
-  runSequence(
-    'update distributions', // commit less/css versions to github
-    'update components', // commit components to github
-    callback
-  );
+	runSequence(
+		'update distributions', // commit less/css versions to github
+		'update components', // commit components to github
+		callback
+	);
 
 };

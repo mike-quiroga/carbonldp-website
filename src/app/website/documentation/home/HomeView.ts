@@ -1,6 +1,5 @@
 import { Component, ElementRef } from "@angular/core";
 import { CORE_DIRECTIVES } from "@angular/common";
-import { Title } from "@angular/platform-browser";
 import { RouteConfig, RouterOutlet, RouterLink } from "@angular/router-deprecated";
 
 import $ from "jquery";
@@ -12,33 +11,26 @@ import "./style.css!";
 @Component( {
 	selector: "documents-list",
 	template: template,
-	directives: [ CORE_DIRECTIVES, RouterLink ],
-	providers: [ Title ],
+	directives: [ CORE_DIRECTIVES, RouterLink ]
 } )
 export default class HomeView {
-	element: ElementRef;
-	$element: JQuery;
-	title: Title;
+	element:ElementRef;
+	$element:JQuery;
 
-	constructor( element: ElementRef, title: Title ) {
+	constructor( element:ElementRef ) {
 		this.element = element;
-		this.title = title;
 	}
 
-	ngAfterViewInit(): void {
+	ngAfterViewInit():void {
 		this.$element = $( this.element.nativeElement );
 		this.$element.find( ".doc-categories a[href]" ).on( "click", this.scrollTo );
 	}
 
-	routerOnActivate(): void {
-		this.title.setTitle( "Documentation" );
-	}
 
-
-	scrollTo( event: any ): boolean {
-		let id: string = $( event.currentTarget ).attr( "href" ).replace( "#", "" );
-		let $element: JQuery = $( "#" + id );
-		let position: number = $element.offset().top - 100;
+	scrollTo( event:any ):boolean {
+		let id:string = $( event.currentTarget ).attr( "href" ).replace( "#", "" );
+		let $element:JQuery = $( "#" + id );
+		let position:number = $element.offset().top - 100;
 
 		$( "html, body" ).animate( {
 			scrollTop: position
