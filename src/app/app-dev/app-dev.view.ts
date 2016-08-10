@@ -13,6 +13,7 @@ import { SidebarService } from "carbon-panel/sidebar.service";
 import { MenuBarComponent } from "carbon-panel/menu-bar.component";
 import { ErrorsAreaComponent } from "carbon-panel/errors-area/errors-area.component";
 import { ErrorsAreaService } from "carbon-panel/errors-area/errors-area.service";
+import { MyAppsSidebarService } from "carbon-panel/my-apps/my-apps-sidebar.service";
 import { MyAppsView } from "carbon-panel/my-apps/my-apps.view";
 
 import { FooterComponent } from "./footer/footer.component";
@@ -50,6 +51,10 @@ import style from "./app-dev.view.css!text";
 		provide( HeaderService, { useClass: HeaderService } ),
 		provide( SidebarService, { useClass: SidebarService } ),
 		provide( ErrorsAreaService, { useClass: ErrorsAreaService } ),
+
+		// If we provide MyAppsSidebarService inside of my-apps.view, Angular would create a new instance each time my-apps is revisited
+		// leading to duplicate entries in the sidebar
+		provide( MyAppsSidebarService, { useClass: MyAppsSidebarService } ),
 	]
 } )
 @RouteConfig( [
