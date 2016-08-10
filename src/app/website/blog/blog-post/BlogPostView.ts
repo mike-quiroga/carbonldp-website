@@ -19,22 +19,22 @@ import "./style.css!";
 	providers: [ BlogService, Location ]
 } )
 export default class BlogPostView {
-	router:Router;
-	dcl:DynamicComponentLoader;
-	routeParams:RouteParams;
-	location:Location;
+	router: Router;
+	dcl: DynamicComponentLoader;
+	routeParams: RouteParams;
+	location: Location;
 
-	blogService:BlogService;
+	blogService: BlogService;
 
-	element:ElementRef;
-	$element:JQuery;
+	element: ElementRef;
+	$element: JQuery;
 
-	blogPost:BlogPost = new BlogPost();
-	postID:number;
+	blogPost: BlogPost = new BlogPost();
+	postID: number;
 
 	get codeMirrorMode() { return CodeMirrorComponent.Mode; }
 
-	constructor( router:Router, element:ElementRef, dcl:DynamicComponentLoader, routeParams:RouteParams, location:Location, blogService:BlogService ) {
+	constructor( router: Router, element: ElementRef, dcl: DynamicComponentLoader, routeParams: RouteParams, location: Location, blogService: BlogService ) {
 		this.router = router;
 		this.element = element;
 		this.dcl = dcl;
@@ -48,27 +48,27 @@ export default class BlogPostView {
 	}
 
 
-	routerOnActivate():void {
-		if ( typeof this.postID === "undefined" || this.postID === null ) {
+	routerOnActivate(): void {
+		if( typeof this.postID === "undefined" || this.postID === null ) {
 			return;
 		} else {
 			this.blogService.getPost( this.postID ).then(
 				( post )=> {
 					this.blogPost = post;
 
-					let fileName:string = post.filename;
-					let postComponent:Type = this.createPostComponent( fileName );
+					let fileName: string = post.filename;
+					let postComponent: Type = this.createPostComponent( fileName );
 					this.renderPostComponent( postComponent );
 				}
 			);
 		}
 	}
 
-	ngAfterViewInit():void {
+	ngAfterViewInit(): void {
 		this.$element = $( this.element.nativeElement );
 	}
 
-	private createPostComponent( fileName:string ):Type {
+	private createPostComponent( fileName: string ): Type {
 		// 'this' doesn't point to where it should inside of decorators
 		let view = this;
 		@Component( {
@@ -77,13 +77,13 @@ export default class BlogPostView {
 			templateUrl: `${ view.location.platformStrategy.getBaseHref() }assets/blog-posts/${ fileName }`
 		} )
 		class CompiledComponent {
-			element:ElementRef;
+			element: ElementRef;
 
-			constructor( element:ElementRef ) {
+			constructor( element: ElementRef ) {
 				this.element = element;
 			}
 
-			ngAfterViewInit():void {
+			ngAfterViewInit(): void {
 
 			}
 		}
@@ -91,7 +91,7 @@ export default class BlogPostView {
 		return CompiledComponent;
 	}
 
-	private renderPostComponent( postComponent:Type ):void {
+	private renderPostComponent( postComponent: Type ): void {
 		this.dcl.loadIntoLocation( postComponent, this.element, "content" );
 	}
 }

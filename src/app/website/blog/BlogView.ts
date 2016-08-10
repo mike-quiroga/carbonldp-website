@@ -21,18 +21,18 @@ import "./style.css!";
 	providers: [ BlogService, Title ]
 } )
 export default class BlogView {
-	router:Router;
-	dcl:DynamicComponentLoader;
-	title:Title;
+	router: Router;
+	dcl: DynamicComponentLoader;
+	title: Title;
 
-	blogService:BlogService;
+	blogService: BlogService;
 
-	element:ElementRef;
-	$element:JQuery;
+	element: ElementRef;
+	$element: JQuery;
 
-	blogPosts:BlogPost[];
+	blogPosts: BlogPost[];
 
-	constructor( router:Router, element:ElementRef, dcl:DynamicComponentLoader, blogService:BlogService, title:Title ) {
+	constructor( router: Router, element: ElementRef, dcl: DynamicComponentLoader, blogService: BlogService, title: Title ) {
 		this.router = router;
 		this.element = element;
 		this.dcl = dcl;
@@ -40,7 +40,7 @@ export default class BlogView {
 		this.title = title;
 	}
 
-	getPostsList():void {
+	getPostsList(): void {
 		this.blogService.getPostsList().then(
 			( blogPosts ) => {
 				this.blogPosts = blogPosts;
@@ -49,11 +49,11 @@ export default class BlogView {
 	}
 
 
-	ngAfterViewInit():void {
+	ngAfterViewInit(): void {
 		this.$element = $( this.element.nativeElement );
 	}
 
-	routerOnActivate():void {
+	routerOnActivate(): void {
 		this.getPostsList();
 		this.title.setTitle( "Blog" );
 	}

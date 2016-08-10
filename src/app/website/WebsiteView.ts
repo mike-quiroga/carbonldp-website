@@ -42,23 +42,23 @@ import "./style.css!";
 	{ path: "signup-thanks", as: "SignupThanks", component: SignupThanksView },
 ] )
 export default class WebsiteView {
-	element:ElementRef;
-	$element:JQuery;
-	router:Router;
+	element: ElementRef;
+	$element: JQuery;
+	router: Router;
 	prevUrl = "";
 
-	constructor( router:Router, element:ElementRef, private location:Location ) {
+	constructor( router: Router, element: ElementRef, private location: Location ) {
 		this.element = element;
 		this.router = router;
 		this.router.parent.subscribe( ( url ) => {
-			if ( this.prevUrl !== url ) {
+			if( this.prevUrl !== url ) {
 				$( "html, body" ).scrollTop( 0 );
 				this.prevUrl = url;
 			}
 		} );
 	}
 
-	ngAfterViewInit():void {
+	ngAfterViewInit(): void {
 		this.$element = $( this.element.nativeElement );
 	}
 

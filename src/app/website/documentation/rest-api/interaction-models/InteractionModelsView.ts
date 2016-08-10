@@ -14,26 +14,26 @@ import template from "./template.html!";
 	providers: [ Title ],
 } )
 export default class InteractionModelsView {
-	element:ElementRef;
-	$element:JQuery;
-	title:Title;
-	private contentReady:boolean = false;
+	element: ElementRef;
+	$element: JQuery;
+	title: Title;
+	private contentReady: boolean = false;
 
-	constructor( element:ElementRef, title:Title ) {
+	constructor( element: ElementRef, title: Title ) {
 		this.element = element;
 		this.title = title;
 	}
 
-	ngAfterViewInit():void {
+	ngAfterViewInit(): void {
 		this.$element = $( this.element.nativeElement );
 		this.initializeSidebar();
 	}
 
-	routerOnActivate():void {
+	routerOnActivate(): void {
 		this.title.setTitle( "Interaction models" );
 	}
 
-	initializeSidebar():void {
+	initializeSidebar(): void {
 		window.setTimeout( () => {
 			this.contentReady = true;
 		}, 0 );

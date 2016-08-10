@@ -20,16 +20,16 @@ import template from "./template.html!";
 	providers: [ Title ]
 } )
 export default class GettingStartedView {
-	element:ElementRef;
-	$element:JQuery;
-	title:Title;
-	protocolAndHost:string;
-	title:Title;
+	element: ElementRef;
+	$element: JQuery;
+	title: Title;
+	protocolAndHost: string;
+	title: Title;
 
-	private carbon:Carbon;
-	private contentReady:boolean = false;
+	private carbon: Carbon;
+	private contentReady: boolean = false;
 
-	constructor( element:ElementRef, title:Title, carbon:Carbon ) {
+	constructor( element: ElementRef, title: Title, carbon: Carbon ) {
 		this.element = element;
 
 		this.carbon = carbon;
@@ -38,18 +38,18 @@ export default class GettingStartedView {
 		this.protocolAndHost = `${ this.carbon.getSetting( "http.ssl" ) ? "https" : "http" }://${ this.carbon.getSetting( "domain" ) }`;
 	}
 
-	ngAfterViewInit():void {
+	ngAfterViewInit(): void {
 		this.$element = $( this.element.nativeElement );
 		this.createAccordions();
 
 		window.setTimeout( () => this.contentReady = true, 0 );
 	}
 
-	routerOnActivate():void {
+	routerOnActivate(): void {
 		this.title.setTitle( "Getting started - Rest API" );
 	}
 
-	createAccordions():void {
+	createAccordions(): void {
 		this.$element.find( ".ui.accordion" ).accordion();
 	}
 }

@@ -25,16 +25,16 @@ import style from "./getting-started.view.css!text";
 	providers: [ Title ],
 } )
 export default class GettingStartedView {
-	router:Router;
-	element:ElementRef;
-	$element:JQuery;
-	title:Title;
-	contentReady:boolean = false;
+	router: Router;
+	element: ElementRef;
+	$element: JQuery;
+	title: Title;
+	contentReady: boolean = false;
 
-	private location:Location;
-	private changeDetector:ChangeDetectorRef;
+	private location: Location;
+	private changeDetector: ChangeDetectorRef;
 
-	constructor( element:ElementRef, title:Title, router:Router, location:Location, changeDetector:ChangeDetectorRef ) {
+	constructor( element: ElementRef, title: Title, router: Router, location: Location, changeDetector: ChangeDetectorRef ) {
 		this.element = element;
 		this.title = title;
 		this.router = router;
@@ -42,7 +42,7 @@ export default class GettingStartedView {
 		this.changeDetector = changeDetector;
 	}
 
-	ngAfterViewInit():void {
+	ngAfterViewInit(): void {
 		this.$element = $( this.element.nativeElement );
 		this.initializeAccordions();
 		this.initializeTabs();
@@ -51,37 +51,37 @@ export default class GettingStartedView {
 		this.initializeSidebar();
 	}
 
-	routerOnActivate():void {
+	routerOnActivate(): void {
 		this.title.setTitle( "Getting started - JavaScript SDK" );
 	}
 
-	initializeAccordions():void {
+	initializeAccordions(): void {
 		this.$element.find( ".ui.accordion" ).accordion();
 	}
 
-	initializeTabs():void {
+	initializeTabs(): void {
 		this.$element.find( ".tabular.menu .item" ).tab( {
 			history: false
 		} );
 
 	}
 
-	highlightCode():void {
-		this.$element.find( "pre code.highlighted" ).each( function ( index:number ):void {
+	highlightCode(): void {
+		this.$element.find( "pre code.highlighted" ).each( function ( index: number ): void {
 			highlight.highlightBlock( this );
 		} );
 	}
 
-	initializeSidebar():void {
+	initializeSidebar(): void {
 		window.setTimeout( () => {
 			this.contentReady = true;
 		}, 0 );
 	}
 
-	scrollTo( event:any ):boolean {
-		let id:string = $( event.currentTarget ).attr( "href" ).replace( "#", "" );
-		let $element:JQuery = $( "#" + id );
-		let position:number = $element.offset().top - 100;
+	scrollTo( event: any ): boolean {
+		let id: string = $( event.currentTarget ).attr( "href" ).replace( "#", "" );
+		let $element: JQuery = $( "#" + id );
+		let position: number = $element.offset().top - 100;
 
 		$( "html, body" ).animate( {
 			scrollTop: position

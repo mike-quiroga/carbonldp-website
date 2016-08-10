@@ -14,15 +14,15 @@ import template from "./template.html!";
 	providers: [ Title ]
 } )
 export default class AboutCarbonLDPViews {
-	element:ElementRef;
-	$element:JQuery;
+	element: ElementRef;
+	$element: JQuery;
 
-	constructor( element:ElementRef, title:Title ) {
+	constructor( element: ElementRef, title: Title ) {
 		this.element = element;
 		title.setTitle( "About Carbon LDP" );
 	}
 
-	ngAfterViewInit():void {
+	ngAfterViewInit(): void {
 		this.$element = $( this.element.nativeElement );
 	}
 

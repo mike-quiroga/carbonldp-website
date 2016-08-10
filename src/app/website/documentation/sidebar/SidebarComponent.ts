@@ -1,6 +1,6 @@
-import {Component, Input, ElementRef, OnChanges, SimpleChange} from "@angular/core";
-import {CORE_DIRECTIVES} from "@angular/common"
-import {ROUTER_DIRECTIVES, ROUTER_PROVIDERS, Router, Instruction, RouteParams} from "@angular/router-deprecated";
+import { Component, Input, ElementRef, OnChanges, SimpleChange } from "@angular/core";
+import { CORE_DIRECTIVES } from "@angular/common"
+import { ROUTER_DIRECTIVES, ROUTER_PROVIDERS, Router, Instruction, RouteParams } from "@angular/router-deprecated";
 
 import $ from "jquery";
 import "semantic-ui/semantic";
@@ -159,7 +159,7 @@ export default class SidebarComponent {
 		let $currentSection: JQuery = $followSection.eq( index );
 		let isActive: boolean = $currentSection.hasClass( "active" );
 		let hasSubsection: boolean = this.sections.eq( index ).children( "section" ).length > 0;
-		
+
 		$followSection.removeClass( "active" );
 		$followSection.find( ".active" ).not( ".toggled" ).removeClass( "active" );
 

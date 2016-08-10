@@ -23,11 +23,11 @@ import { APP_DEV_PROVIDERS } from "./app-dev/app-dev";
 
 import { Angulartics2 } from "angulartics2";
 
-let carbon:Carbon = new Carbon();
+let carbon: Carbon = new Carbon();
 carbon.setSetting( "domain", "<%- carbon.domain %>" );
 activeContext.initialize( carbon );
 
-let providers:Provider[] = [];
+let providers: Provider[] = [];
 providers = providers
 	.concat( CARBON_PROVIDERS )
 	.concat( CARBON_SERVICES_PROVIDERS );
@@ -46,6 +46,6 @@ bootstrap( AppComponent, [
 	providers,
 	BLOG_PROVIDERS,
 	APP_DEV_PROVIDERS,
-] ).then( ( appRef:ComponentRef<AppComponent> ) => {
+] ).then( ( appRef: ComponentRef<AppComponent> ) => {
 	appInjector( appRef.injector );
 } );

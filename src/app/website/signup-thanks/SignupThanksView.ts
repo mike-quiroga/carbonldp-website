@@ -16,17 +16,17 @@ import "./style.css!";
 } )
 
 export default class SignupThanksView {
-	element:ElementRef;
-	$element:JQuery;
+	element: ElementRef;
+	$element: JQuery;
 
-	constructor( element:ElementRef, title:Title ) {
+	constructor( element: ElementRef, title: Title ) {
 		this.element = element;
 		title.setTitle( "Thank you!" );
 	}
 
-	ngAfterViewInit():void {
+	ngAfterViewInit(): void {
 		this.$element = $( this.element.nativeElement );
 		ga( "send", "event", "Newsletter", "Subscription" );
 	}
-	
+
 }

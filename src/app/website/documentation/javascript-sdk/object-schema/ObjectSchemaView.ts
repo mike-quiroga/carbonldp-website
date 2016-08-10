@@ -20,15 +20,15 @@ import template from "./template.html!";
 	providers: [ Title ],
 } )
 export default class ObjectModelView {
-	element:ElementRef;
-	$element:JQuery;
-	title:Title;
+	element: ElementRef;
+	$element: JQuery;
+	title: Title;
 
-	contentReady:boolean = false;
+	contentReady: boolean = false;
 
-	private changeDetector:ChangeDetectorRef;
+	private changeDetector: ChangeDetectorRef;
 
-	constructor( element:ElementRef, title:Title, changeDetector:ChangeDetectorRef ) {
+	constructor( element: ElementRef, title: Title, changeDetector: ChangeDetectorRef ) {
 		this.element = element;
 		this.title = title;
 		this.title.setTitle( "Object Schema - JavaScript SDK" );
@@ -36,20 +36,20 @@ export default class ObjectModelView {
 		this.changeDetector = changeDetector;
 	}
 
-	ngAfterViewInit():void {
+	ngAfterViewInit(): void {
 		this.$element = $( this.element.nativeElement );
 		this.highlightCode();
 		this.initializeSidebar();
 	}
 
 
-	highlightCode():void {
-		this.$element.find( "pre code.highlighted" ).each( function ( index:number ):void {
+	highlightCode(): void {
+		this.$element.find( "pre code.highlighted" ).each( function ( index: number ): void {
 			highlight.highlightBlock( this );
 		} );
 	}
 
-	initializeSidebar():void {
+	initializeSidebar(): void {
 		window.setTimeout( () => {
 			this.contentReady = true;
 		}, 0 );

@@ -17,21 +17,21 @@ import "./style.css!";
 	directives: [ CORE_DIRECTIVES, CodeMirrorComponent.Class, FORM_DIRECTIVES ]
 } )
 export default class UIExamplesView {
-	element:ElementRef;
-	$element:JQuery;
+	element: ElementRef;
+	$element: JQuery;
 
-	mainMenu:JQuery;
-	elementsTabContent:JQuery;
-	collectionsTabContent:JQuery;
-	viewsTabContent:JQuery;
-	modulesTabContent:JQuery;
+	mainMenu: JQuery;
+	elementsTabContent: JQuery;
+	collectionsTabContent: JQuery;
+	viewsTabContent: JQuery;
+	modulesTabContent: JQuery;
 
 
-	constructor( element:ElementRef ) {
+	constructor( element: ElementRef ) {
 		this.element = element;
 	}
 
-	ngAfterViewInit():void {
+	ngAfterViewInit(): void {
 		this.$element = $( this.element.nativeElement );
 		this.mainMenu = this.$element.find( ".mainhead .menu " );
 		this.mainMenu.find( ".item" ).tab();
@@ -45,11 +45,11 @@ export default class UIExamplesView {
 		this.enableModulesJavascript();
 	}
 
-	enableCollectionsJavascript():void {
+	enableCollectionsJavascript(): void {
 		this.collectionsTabContent.find( ".ui.dropdown" ).dropdown();
 		this.collectionsTabContent.find( ".ui.checkbox" ).checkbox();
 		this.collectionsTabContent.find( ".menu a.item" ).on( "click", function () {
-			if ( ! $( this ).hasClass( "dropdown" ) ) {
+			if( ! $( this ).hasClass( "dropdown" ) ) {
 				$( this )
 					.addClass( "active" )
 					.closest( ".ui.menu" )
@@ -64,15 +64,15 @@ export default class UIExamplesView {
 		} );
 	}
 
-	enableViewsJavascript():void {
+	enableViewsJavascript(): void {
 		this.viewsTabContent.find( ".star.rating" ).rating();
 		this.viewsTabContent.find( ".card .dimmer" ).dimmer( {
 			on: "hover"
 		} );
 	}
 
-	enableModulesJavascript():void {
-		let demo:JQuery;
+	enableModulesJavascript(): void {
+		let demo: JQuery;
 
 
 		// Accordion
@@ -176,7 +176,7 @@ export default class UIExamplesView {
 			search: "//api.semantic-ui.com/search/{query}"
 		} );
 		// Search
-		let content:any = [
+		let content: any = [
 			{ title: "Andorrs" },
 			{ title: "United Arab Emirates" },
 			{ title: "Afghanistas" },
@@ -440,16 +440,16 @@ export default class UIExamplesView {
 		// Shape
 		demo = this.modulesTabContent.find( ".shape.demos .container" );
 		let
-			$directionButton:JQuery = this.modulesTabContent.find( ".shape.demos .direction .button" ),
+			$directionButton: JQuery = this.modulesTabContent.find( ".shape.demos .direction .button" ),
 			handler;
 		// event handlers
 		handler = {
 			rotate: function () {
 				let
-					$shape:JQuery = $( this ).closest( ".buttons" ).prevAll( ".ui.shape" ).eq( 0 ),
-					direction:JQuery = $( this ).data( "direction" ) || false,
-					animation:JQuery = $( this ).data( "animation" ) || false;
-				if ( direction && animation ) {
+					$shape: JQuery = $( this ).closest( ".buttons" ).prevAll( ".ui.shape" ).eq( 0 ),
+					direction: JQuery = $( this ).data( "direction" ) || false,
+					animation: JQuery = $( this ).data( "animation" ) || false;
+				if( direction && animation ) {
 					$shape.shape( animation + "." + direction );
 				}
 			}
@@ -469,7 +469,7 @@ export default class UIExamplesView {
 					direction = $( this ).data( "direction" )
 					;
 				$( this ).addClass( "active" ).siblings().removeClass( "active" );
-				if ( direction === "top" || direction === "bottom" ) {
+				if( direction === "top" || direction === "bottom" ) {
 					_self.modulesTabContent.find( ".horizontal.button" ).addClass( "disabled" );
 				}
 				else {
@@ -482,7 +482,7 @@ export default class UIExamplesView {
 					transition = $( this ).data( "transition" ),
 					direction = _self.modulesTabContent.find( ".sidebar.direction.demo .buttons .button.active" ).data( "direction" ),
 					dimPage = _self.modulesTabContent.find( ".sidebar.direction.demo .dim" ).checkbox( "is checked" );
-				if ( $( this ).filter( ".disabled" ).length === 0 ) {
+				if( $( this ).filter( ".disabled" ).length === 0 ) {
 					_self.modulesTabContent.find( "." + direction + ".demo.sidebar" ).sidebar( {
 						context: _self.modulesTabContent.find( ".pushable.dimmable" ),
 						dimPage: dimPage,
@@ -506,7 +506,7 @@ export default class UIExamplesView {
 		demo = this.modulesTabContent.find( ".transition.demo" );
 		demo.find( " .button" ).on( "click", function () {
 			var animation = $( this ).text();
-			if ( typeof animation == "string" ) {
+			if( typeof animation == "string" ) {
 				animation = animation.toLowerCase();
 			}
 			_self.modulesTabContent.find( ".transition.demo .image" ).transition( {

@@ -15,15 +15,15 @@ import "./style.css!";
 	providers: [ Title ],
 } )
 export default class LinkedDataConceptsView {
-	element:ElementRef;
-	$element:JQuery;
+	element: ElementRef;
+	$element: JQuery;
 
-	constructor( element:ElementRef, title:Title ) {
+	constructor( element: ElementRef, title: Title ) {
 		this.element = element;
 		title.setTitle( "Linked Data Concepts" );
 	}
 
-	ngAfterViewInit():void {
+	ngAfterViewInit(): void {
 		this.$element = $( this.element.nativeElement );
 	}
 

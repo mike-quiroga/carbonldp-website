@@ -21,20 +21,20 @@ import style from "./register.view.css!text";
 } )
 export class RegisterView implements AfterViewInit, OnActivate {
 
-	private element:ElementRef;
-	private $element:JQuery;
-	private title:Title;
+	private element: ElementRef;
+	private $element: JQuery;
+	private title: Title;
 
-	constructor( element:ElementRef, title:Title ) {
+	constructor( element: ElementRef, title: Title ) {
 		this.element = element;
 		this.title = title;
 	}
 
-	ngAfterViewInit():void {
+	ngAfterViewInit(): void {
 		this.$element = $( this.element.nativeElement );
 	}
 
-	routerOnActivate():void {
+	routerOnActivate(): void {
 		this.title.setTitle( "Register" );
 
 	}

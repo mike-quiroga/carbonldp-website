@@ -6,25 +6,25 @@ import BlogPost from "./../blog-post/BlogPost";
 
 @Injectable()
 export default class BlogService {
-	http:Http;
-	location:Location;
+	http: Http;
+	location: Location;
 
-	data:string;
+	data: string;
 
-	constructor( http:Http, location:Location ) {
+	constructor( http: Http, location: Location ) {
 		this.http = http;
 		this.location = location;
 	}
 
-	getPost( id:number ):Promise<BlogPost> {
+	getPost( id: number ): Promise<BlogPost> {
 		return this.getPostsList().then( ( posts )=> {
-			let post:BlogPost = posts[ id ];
+			let post: BlogPost = posts[ id ];
 			post.creationDate = new Date( Date.parse( post.creationDate.toString() ) );
 			return post;
 		} );
 	}
 
-	getPostsList():Promise<BlogPost[]> {
+	getPostsList(): Promise<BlogPost[]> {
 		return this.http.get( `${ this.location.platformStrategy.getBaseHref() }assets/blog-posts/bloglist.json` )
 			.toPromise()
 			.then( ( response ) => {

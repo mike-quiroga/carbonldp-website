@@ -17,14 +17,14 @@ import "./style.css!";
 } )
 
 export class NewsletterFormComponent {
-	router:Router;
-	subscribeForm:ControlGroup;
-	email:AbstractControl;
+	router: Router;
+	subscribeForm: ControlGroup;
+	email: AbstractControl;
 	redirectPage;
 	errorPage;
 	location;
 
-	constructor( router:Router, formBuilder:FormBuilder ) {
+	constructor( router: Router, formBuilder: FormBuilder ) {
 		this.router = router;
 		this.subscribeForm = formBuilder.group( {
 			"email": [ "", Validators.compose( [ Validators.required, EmailValidator ] ) ]
@@ -38,11 +38,11 @@ export class NewsletterFormComponent {
 		this.errorPage = document.location.href;
 	}
 
-	onSubmit( $event:any ):void {
+	onSubmit( $event: any ): void {
 		this.email.markAsTouched();
-		let icpForm:HTMLElement = document.getElementById( 'icpsignup' );
+		let icpForm: HTMLElement = document.getElementById( 'icpsignup' );
 
-		if ( this.subscribeForm.valid ) {
+		if( this.subscribeForm.valid ) {
 			icpForm.action = "https://app.icontact.com/icp/signup.php";
 			icpForm.submit();
 		}

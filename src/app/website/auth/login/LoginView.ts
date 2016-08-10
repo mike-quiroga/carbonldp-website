@@ -13,10 +13,10 @@ import template from "./template.html!";
 	directives: [ LoginComponent, ],
 } )
 export default class LoginView {
-	element:ElementRef;
-	$element:JQuery;
+	element: ElementRef;
+	$element: JQuery;
 
-	constructor( element:ElementRef ) {
+	constructor( element: ElementRef ) {
 		this.element = element;
 		this.$element = $( this.element.nativeElement );
 	}

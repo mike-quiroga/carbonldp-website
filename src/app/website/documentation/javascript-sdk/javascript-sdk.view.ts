@@ -16,22 +16,22 @@ import style from "./javascript-sdk.view.css!text";
 	directives: [ CORE_DIRECTIVES, RouterLink ],
 	providers: [ Title ],
 } )
-export class JavaScriptSDKView implements AfterViewInit, OnActivate{
+export class JavaScriptSDKView implements AfterViewInit, OnActivate {
 
-	private element:ElementRef;
-	private $element:JQuery;
-	private title:Title;
+	private element: ElementRef;
+	private $element: JQuery;
+	private title: Title;
 
-	constructor( element:ElementRef, title:Title ) {
+	constructor( element: ElementRef, title: Title ) {
 		this.element = element;
 		this.title = title;
 	}
 
-	ngAfterViewInit():void {
+	ngAfterViewInit(): void {
 		this.$element = $( this.element.nativeElement );
 	}
 
-	routerOnActivate():void {
+	routerOnActivate(): void {
 		this.title.setTitle( "JavaScript SDK Documentation" );
 	}
 }

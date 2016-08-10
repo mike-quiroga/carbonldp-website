@@ -18,34 +18,34 @@ import template from "./template.html!";
 	providers: [ Title ],
 } )
 export default class RESTRdfSourceView {
-	element:ElementRef;
-	$element:JQuery;
-	title:Title;
+	element: ElementRef;
+	$element: JQuery;
+	title: Title;
 
-	private contentReady:boolean = false;
+	private contentReady: boolean = false;
 
-	constructor( element:ElementRef, title:Title ) {
+	constructor( element: ElementRef, title: Title ) {
 		this.element = element;
 		this.title = title;
 
 	}
 
-	ngAfterViewInit():void {
+	ngAfterViewInit(): void {
 		this.$element = $( this.element.nativeElement );
 		this.createAccordions();
 		this.initializeSidebar();
 	}
 
-	routerOnActivate():void {
+	routerOnActivate(): void {
 		this.title.setTitle( "RDFSource" );
 	}
 
-	createAccordions():void {
+	createAccordions(): void {
 		this.$element.find( ".ui.accordion" ).accordion();
 	}
 
 
-	initializeSidebar():void {
+	initializeSidebar(): void {
 		window.setTimeout( () => {
 			this.contentReady = true;
 		}, 0 );
