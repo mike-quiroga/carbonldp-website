@@ -1,6 +1,6 @@
-import { Component, Input, ElementRef, OnChanges, SimpleChange } from "@angular/core";
+import { Component, Input, ElementRef, SimpleChange } from "@angular/core";
 import { CORE_DIRECTIVES } from "@angular/common"
-import { ROUTER_DIRECTIVES, ROUTER_PROVIDERS, Router, Instruction, RouteParams } from "@angular/router-deprecated";
+import { ROUTER_DIRECTIVES } from "@angular/router-deprecated";
 
 import $ from "jquery";
 import "semantic-ui/semantic";
@@ -89,9 +89,6 @@ export default class SidebarComponent {
 				onTopPassed: function () {
 					_self.activateSubSection( this );
 				},
-				onTopPassedReverse: function () {
-					_self.deactivateFirstSubSection( this );
-				},
 				onBottomPassedReverse: function () {
 					_self.activateSubSection( this );
 				}
@@ -163,7 +160,6 @@ export default class SidebarComponent {
 		let isActive:boolean = $currentSection.hasClass( "active" );
 		let hasSubsection:boolean = this.sections.eq( index ).children( "section" ).length > 0;
 
-		console.log( "follow: ", index );
 		$followSection.removeClass( "active" );
 		$followSection.find( ".active" ).not( ".toggled" ).removeClass( "active" );
 
@@ -210,24 +206,15 @@ export default class SidebarComponent {
 
 		if( index === 0 ) {
 			$followSection.removeClass( "active" );
-		}
 
-		if( accordionIsActive ) {
-			$accordion.removeClass( "active" );
-		}
-
-	}
-
-	deactivateFirstSubSection( elm:any ):void {
-		let $section:JQuery = $( elm );
-		let index:number = this.subSections.index( $section );
-		let $followSection:JQuery = this.$followMenu.find( ".menu > .item" );
-
-		if( index === 0 ) {
-			$followSection.removeClass( "active" );
+			if( accordionIsActive ) {
+				$accordion.not( ".toggled" ).removeClass( "active" );
+				$accordion.children( ".item" ).removeClass( "active" );
+			}
 		}
 
 	}
+
 
 	// Scroll to selected section or subsection in the article
 	scrollTo( event:any ):boolean {

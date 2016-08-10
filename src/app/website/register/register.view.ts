@@ -1,7 +1,6 @@
 import { Component, ElementRef, AfterViewInit } from "@angular/core";
 import { CORE_DIRECTIVES } from "@angular/common";
-import { Title } from "@angular/platform-browser";
-import { RouterLink, OnActivate } from "@angular/router-deprecated";
+import { RouterLink } from "@angular/router-deprecated";
 
 import { RegisterComponent } from "./register.component";
 import { NewsletterFormComponent } from "../newsletter-form/NewsletterFormComponent"
@@ -16,28 +15,21 @@ import style from "./register.view.css!text";
 	selector: "register",
 	template: template,
 	directives: [ CORE_DIRECTIVES, RouterLink, RegisterComponent, NewsletterFormComponent ],
-	providers: [ Title ],
 	styles: [ style ]
 } )
-export class RegisterView implements AfterViewInit, OnActivate {
+export class RegisterView implements AfterViewInit {
 
 	private element:ElementRef;
 	private $element:JQuery;
-	private title:Title;
 
-	constructor( element:ElementRef, title:Title ) {
+	constructor( element:ElementRef ) {
 		this.element = element;
-		this.title = title;
 	}
 
 	ngAfterViewInit():void {
 		this.$element = $( this.element.nativeElement );
 	}
 
-	routerOnActivate():void {
-		this.title.setTitle( "Register" );
-
-	}
 
 }
 

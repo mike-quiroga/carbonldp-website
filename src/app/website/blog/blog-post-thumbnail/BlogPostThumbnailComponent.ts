@@ -38,7 +38,7 @@ export default class BlogPostThumbnailComponent {
 
 	ngOnInit():void {
 		this.isNewPost = false;
-		if ( this.blogPost.creationDate ) {
+		if( this.blogPost.creationDate ) {
 			this.blogPost.creationDate = new Date( Date.parse( this.blogPost.creationDate.toString() ) );
 			this.isNewPost = this.blogPost.creationDate.getDay() == new Date().getDay();
 		}
@@ -47,7 +47,7 @@ export default class BlogPostThumbnailComponent {
 
 	ngAfterViewInit():void {
 		let excerpt:string = this.blogPost.excerpt;
-		if ( ! ! this.blogPost.filename ) {
+		if( ! ! this.blogPost.filename ) {
 			@Component( {
 				selector: "compiled-component",
 				directives: [ CORE_DIRECTIVES, ROUTER_DIRECTIVES, CodeMirrorComponent.Class ],

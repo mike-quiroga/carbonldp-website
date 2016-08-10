@@ -50,6 +50,9 @@ import { CreateAppView } from "carbon-panel/my-apps/create-app/create-app.view";
 	},
 ] )
 export class MyAppsView {
+
+	constructor() {
+	}
 }
 
 export default MyAppsView
