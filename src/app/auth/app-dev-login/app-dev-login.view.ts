@@ -24,17 +24,17 @@ import style from "./app-dev-login.view.css!text";
 	directives: [ LoginComponent, FooterComponent, ],
 } )
 export class AppDevLoginView {
-	element: ElementRef;
-	$element: JQuery;
-	router: Router;
+	element:ElementRef;
+	$element:JQuery;
+	router:Router;
 
-	constructor( element: ElementRef, router: Router ) {
+	constructor( element:ElementRef, router:Router ) {
 		this.element = element;
 		this.$element = $( this.element.nativeElement );
 		this.router = router;
 	}
 
-	saveCredentials( credentials: Credentials ): void {
+	saveCredentials( credentials:Credentials ):void {
 		this.router.navigate( [ "/AppDev" ] );
 	}
 

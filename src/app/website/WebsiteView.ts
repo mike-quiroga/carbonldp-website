@@ -77,12 +77,12 @@ import "./style.css!";
 	},
 ] )
 export default class WebsiteView {
-	element: ElementRef;
-	$element: JQuery;
-	router: Router;
+	element:ElementRef;
+	$element:JQuery;
+	router:Router;
 	prevUrl = "";
 
-	constructor( router: Router, element: ElementRef, private location: Location ) {
+	constructor( router:Router, element:ElementRef, private location:Location ) {
 		this.element = element;
 		this.router = router;
 		this.router.parent.subscribe( ( url ) => {
@@ -93,7 +93,7 @@ export default class WebsiteView {
 		} );
 	}
 
-	ngAfterViewInit(): void {
+	ngAfterViewInit():void {
 		this.$element = $( this.element.nativeElement );
 	}
 

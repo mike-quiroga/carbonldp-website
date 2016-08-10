@@ -17,37 +17,37 @@ import "./style.css!";
 	directives: [ CORE_DIRECTIVES, ROUTER_DIRECTIVES, LoginComponent, ],
 } )
 export default class HeaderComponent {
-	router: Router;
-	element: ElementRef;
-	$element: JQuery;
-	authService: AuthService.Class;
+	router:Router;
+	element:ElementRef;
+	$element:JQuery;
+	authService:AuthService.Class;
 
-	constructor( router: Router, element: ElementRef, @Inject( AuthService.Token ) authService: AuthService.Class ) {
+	constructor( router:Router, element:ElementRef, @Inject( AuthService.Token ) authService:AuthService.Class ) {
 		this.router = router;
 		this.element = element;
 		this.authService = authService;
 	}
 
-	ngAfterViewInit(): void {
+	ngAfterViewInit():void {
 		this.$element = $( this.element.nativeElement );
 		this.createDropdownMenus();
 		this.createCollapsableMenus();
 		this.createLoginPopUp();
 	}
 
-	isActive( route: string ): boolean {
-		let instruction: Instruction = this.router.generate( [ route ] );
+	isActive( route:string ):boolean {
+		let instruction:Instruction = this.router.generate( [ route ] );
 		return this.router.isRouteActive( instruction );
 	}
 
-	createDropdownMenus(): void {
+	createDropdownMenus():void {
 		this.$element.find( ".ui.dropdown" ).dropdown( {
 			on: "hover",
 		} );
 	}
 
-	createCollapsableMenus(): void {
-		let verticalMenu: JQuery = this.$element.find( ".ui.vertical.menu" );
+	createCollapsableMenus():void {
+		let verticalMenu:JQuery = this.$element.find( ".ui.vertical.menu" );
 		this.$element.find( ".right.menu.open" ).on( "click", function ( e ) {
 			e.preventDefault();
 			verticalMenu.toggle();
@@ -55,7 +55,7 @@ export default class HeaderComponent {
 		verticalMenu.toggle();
 	}
 
-	createLoginPopUp(): void {
+	createLoginPopUp():void {
 		this.$element.find( ".computer.tablet .login.item" ).popup( {
 			popup: this.$element.find( ".login.popup" ),
 			hoverable: false,
@@ -68,11 +68,11 @@ export default class HeaderComponent {
 		} );
 	}
 
-	ngAfterViewChecked(): void {
+	ngAfterViewChecked():void {
 		this.createLoginPopUp();
 	}
 
-	logOut(): void {
+	logOut():void {
 		this.authService.logout();
 		this.router.navigate( [ "/Home" ] );
 	}

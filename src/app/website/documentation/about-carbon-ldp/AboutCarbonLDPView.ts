@@ -12,14 +12,14 @@ import template from "./template.html!";
 	directives: [ CORE_DIRECTIVES ],
 } )
 export default class AboutCarbonLDPViews {
-	element: ElementRef;
-	$element: JQuery;
+	element:ElementRef;
+	$element:JQuery;
 
 	constructor( element:ElementRef ) {
 		this.element = element;
 	}
 
-	ngAfterViewInit(): void {
+	ngAfterViewInit():void {
 		this.$element = $( this.element.nativeElement );
 	}
 

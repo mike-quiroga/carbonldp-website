@@ -21,7 +21,7 @@ export class ContextsView implements AfterViewInit, OnActivate {
 	private title:Title;
 	private changeDetector:ChangeDetectorRef;
 
-	constructor( element: ElementRef, title: Title, changeDetector: ChangeDetectorRef ) {
+	constructor( element:ElementRef, title:Title, changeDetector:ChangeDetectorRef ) {
 		this.element = element;
 		this.title = title;
 		this.changeDetector = changeDetector;
@@ -43,7 +43,7 @@ export class ContextsView implements AfterViewInit, OnActivate {
 		}, 0 );
 	}
 
-	initializePopUp(): void {
+	initializePopUp():void {
 		$( ".ui.definition" )
 			.popup( {
 				on: "hover"

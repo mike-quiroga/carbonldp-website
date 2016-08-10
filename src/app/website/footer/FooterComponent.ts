@@ -16,33 +16,33 @@ import "./style.css!";
 	directives: [ Angulartics2On ]
 } )
 export default class FooterComponent {
-	element: ElementRef;
+	element:ElementRef;
 	$element;
 	date = new Date();
 	year = this.date.getFullYear();
 
 
-	constructor( element: ElementRef ) {
+	constructor( element:ElementRef ) {
 		this.element = element;
 
 	}
 
-	ngAfterViewInit(): void {
+	ngAfterViewInit():void {
 		this.$element = $( this.element.nativeElement );
 		this.addSocialButtonsAnimations();
 	}
 
-	ngOnDestroy(): void {
+	ngOnDestroy():void {
 		this.$element.find( ".social-icons .icon" ).unbind( "mouseenter", triggerPulseTransition );
 	}
 
-	addSocialButtonsAnimations(): void {
+	addSocialButtonsAnimations():void {
 		this.$element.find( ".social-icons .icon" ).mouseenter( triggerPulseTransition );
 	}
 
 }
 
-function triggerPulseTransition(): void {
+function triggerPulseTransition():void {
 	var $element = $( this );
 	$element.transition( "pulse" );
 }
