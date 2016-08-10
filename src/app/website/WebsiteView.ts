@@ -17,7 +17,7 @@ import UIExamplesView from "app/website/ui-examples/UIExamplesView";
 
 import HeaderComponent from "app/website/header/HeaderComponent";
 import FooterComponent from "app/website/footer/FooterComponent";
-import DocumentationComponent from "app/website/documentation/DocumentationComponent";
+import DocumentationView from "app/website/documentation/documentation.view";
 
 import template from "./template.html!";
 import "./style.css!";
@@ -59,7 +59,7 @@ import "./style.css!";
 		},
 	},
 
-	{ path: "documentation/...", as: "Documentation", component: DocumentationComponent },
+	{ path: "documentation/...", as: "Documentation", component: DocumentationView },
 
 	{
 		path: "ui-examples", as: "UIExamples", component: UIExamplesView,

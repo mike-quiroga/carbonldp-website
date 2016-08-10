@@ -1,17 +1,14 @@
-import { Component, ElementRef, ChangeDetectorRef } from "@angular/core";
+import { Component, ElementRef, ChangeDetectorRef, AfterViewInit } from "@angular/core";
 import { CORE_DIRECTIVES } from "@angular/common";
 
-import { RouteConfig, RouterOutlet, RouterLink } from "@angular/router-deprecated";
+import { RouterLink, OnActivate } from "@angular/router-deprecated";
 import { Title } from "@angular/platform-browser";
 
-import SidebarComponent from "./../../sidebar/SidebarComponent";
-
 import HighlightDirective from "carbon-panel/directives/highlight.directive";
-import highlight from "highlight.js";
-import "highlight.js/styles/tomorrow-night.css!";
 
-import template from "./template.html!";
+import SidebarComponent from "./../sidebar/SidebarComponent";
 
+import template from "./object-schema.view.html!";
 
 @Component( {
 	selector: "object-schema",
@@ -19,34 +16,26 @@ import template from "./template.html!";
 	directives: [ CORE_DIRECTIVES, SidebarComponent, HighlightDirective, RouterLink ],
 	providers: [ Title ],
 } )
-export default class ObjectModelView {
-	element:ElementRef;
-	$element:JQuery;
-	title:Title;
+export class ObjectModelView implements AfterViewInit, OnActivate {
 
 	contentReady:boolean = false;
 
+	private element:ElementRef;
+	private title:Title;
 	private changeDetector:ChangeDetectorRef;
 
 	constructor( element:ElementRef, title:Title, changeDetector:ChangeDetectorRef ) {
 		this.element = element;
 		this.title = title;
-		this.title.setTitle( "Object Schema - JavaScript SDK" );
-
 		this.changeDetector = changeDetector;
 	}
 
 	ngAfterViewInit():void {
-		this.$element = $( this.element.nativeElement );
-		this.highlightCode();
 		this.initializeSidebar();
 	}
 
-
-	highlightCode():void {
-		this.$element.find( "pre code.highlighted" ).each( function ( index:number ):void {
-			highlight.highlightBlock( this );
-		} );
+	routerOnActivate():void {
+		this.title.setTitle( "Object Schema - JavaScript SDK" );
 	}
 
 	initializeSidebar():void {
@@ -55,3 +44,5 @@ export default class ObjectModelView {
 		}, 0 );
 	}
 }
+
+export default ObjectModelView;

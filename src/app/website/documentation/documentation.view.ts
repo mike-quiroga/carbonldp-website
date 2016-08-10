@@ -17,15 +17,13 @@ import RESTObjectModelView from "./rest-api/rest-object-model/RESTObjectModelVie
 import RESTRdfSourceView from "./rest-api/rest-rdfsource/RESTRdfSourceView";
 import RESTContainersView from "./rest-api/rest-containers/RESTContainersView";
 
-
 import JavaScriptSDKView from "./javascript-sdk/javascript-sdk.view";
 import JavaScriptSDKGettingStartedView from "./javascript-sdk/getting-started.view";
-import JavaScriptSDKContextsView from "./javascript-sdk/contexts/ContextsView";
-import JavaScriptSDKObjectModelView from "./javascript-sdk/object-model/ObjectModelView";
-import JavaScriptSDKObjectSchemaView from "./javascript-sdk/object-schema/ObjectSchemaView";
+import JavaScriptSDKContextsView from "./javascript-sdk/contexts.view";
+import JavaScriptSDKObjectModelView from "./javascript-sdk/object-model.view";
+import JavaScriptSDKObjectSchemaView from "./javascript-sdk/object-schema.view";
 
-
-import "./style.css!";
+import "./documentation.view.css!";
 
 @Component( {
 	selector: "documents",
@@ -118,7 +116,7 @@ import "./style.css!";
 	},
 
 	{
-		path: "/javascript-sdk", name: "JavaScriptSDK", component: JavaScriptSDKView,
+		path: "/javascript-sdk", as: "JavaScriptSDK", component: JavaScriptSDKView,
 		data: {
 			alias: "JavaScript SDK",
 			displayName: "JavaScript SDK",
@@ -154,6 +152,8 @@ import "./style.css!";
 	},
 
 ] )
-export default class DocumentationComponent {
+export class DocumentationView {
 
 }
+
+export default DocumentationView;

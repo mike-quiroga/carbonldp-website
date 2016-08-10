@@ -4,9 +4,9 @@
 		<div class="sixteen wide column">
 
 			<div class="ui breadcrumb">
-				<span class="section">Documentation</span>
+				<a class="section" [routerLink]="[ '../Documentation' ]">Documentation</a>
 				<i class="right chevron icon divider"></i>
-				<span class="section">JavaScript SDK</span>
+				<a class="section" [routerLink]="[ '../JavaScriptSDK' ]">JavaScript SDK</a>
 				<i class="right arrow icon divider"></i>
 
 				<div class="active section">Getting Started</div>
@@ -46,12 +46,12 @@
 						</p>
 						<ul>
 							<li>
-								<strong>HTML, CSS, JavaScript:</strong> See: <a class="outsidelink" target="_blank" href="https://developer.mozilla.org/en-US/docs/Web">Mozilla Developer
+								<strong>HTML, CSS, JavaScript:</strong> See: <a class="outsidelink" target="_blank" rel="noopener" href="https://developer.mozilla.org/en-US/docs/Web">Mozilla Developer
 								Network</a>.
 							</li>
 							<li>
 								<strong>Promises:</strong> A standard-based way of handling asynchronous JavaScript logic.
-								See: <a class="outsidelink" target="_blank" href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise">Promise object</a> (Mozilla
+								See: <a class="outsidelink" target="_blank" rel="noopener" href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise">Promise object</a> (Mozilla
 								Developer Network).
 							</li>
 						</ul>
@@ -61,14 +61,14 @@
 						<ul>
 							<li>
 								<strong>TypeScript:</strong> Carbon's JavaScript SDK is written in TypeScript, a JavaScript
-								superset language, maintained by Microsoft. See: <a class="outsidelink" target="_blank" href="http://www.typescriptlang.org/">TypeScript</a>.
+								superset language, maintained by Microsoft. See: <a class="outsidelink" target="_blank" rel="noopener" href="http://www.typescriptlang.org/">TypeScript</a>.
 							</li>
 							<li>
-								<strong>Package Managers:</strong> Carbon recommends <a class="outsidelink" target="_blank" href="http://jspm.io/">JSPM</a>
+								<strong>Package Managers:</strong> Carbon recommends <a class="outsidelink" target="_blank" rel="noopener" href="http://jspm.io/">JSPM</a>
 							</li>
 							<li>
 								<strong>ES2015 Modules:</strong> ES2015 modules let you "import" a file from another one so you can modularize
-								your application. See: <a class="outsidelink" target="_blank" href="http://exploringjs.com/es6/ch_modules.html">Modules</a> (Exploring ES6, by Dr. Axel Rauschmayer)
+								your application. See: <a class="outsidelink" target="_blank" rel="noopener" href="http://exploringjs.com/es6/ch_modules.html">Modules</a> (Exploring ES6, by Dr. Axel Rauschmayer)
 							</li>
 						</ul>
 					</section>
@@ -78,146 +78,209 @@
 						<p>
 							Installing the SDK depends on what package manager you are using:
 						</p>
-						<div class="ui styled fluid accordion">
-							<div class="title">
-								<i class="dropdown icon"></i>
-								Package manager?
+						<sui-accordion class="styled fluid">
+							<div suiCollapsible>
+								<div class="title">
+									<i class="dropdown icon"></i>
+									Package manager?
+								</div>
+								<div class="content">
+									<p>If you are not using a package manager you can clone the source code with the following command:</p>
+									<!--@formatter:off-->
+									<pre><code cpHighlight class="bash">
+										git clone https://github.com/CarbonLDP/CarbonLDP-JS-SDK.git
+									</code></pre>
+									<!--@formatter:on-->
+									<p>It already includes a pre-compiled version of the source code so you can just jump right in.</p>
+								</div>
 							</div>
-							<div class="content">
-								<p>If you are not using a package manager you can clone the source code with the following command:</p>
-								<pre><code cphighlight class="bash">
-									git clone https://github.com/CarbonLDP/CarbonLDP-JS-SDK.git
-								</code></pre>
-								<p>It already includes a pre-compiled version of the source code so you can just jump right in.</p>
+							<div suiCollapsible [suiActive]="true">
+								<div class="title">
+									<i class="dropdown icon"></i>
+									npm
+								</div>
+								<div class="content">
+									<!--@formatter:off-->
+									<pre><code cpHighlight class="bash">
+										npm install carbonldp --save
+									</code></pre>
+									<!--@formatter:on-->
+								</div>
 							</div>
-							<div class="active title">
-								<i class="dropdown icon"></i>
-								npm
+							<div suiCollapsible>
+								<div class="title">
+									<i class="dropdown icon"></i>
+									jspm
+								</div>
+								<div class="content">
+									<!--@formatter:off-->
+									<pre><code cpHighlight class="bash">
+										jspm install npm:carbonldp
+										# We also need to install one of carbonldp's dependencies
+										jspm install npm:jsonld
+									</code></pre>
+									<!--@formatter:on-->
+								</div>
 							</div>
-							<div class="active content">
-								<pre><code cphighlight class="bash">
-									npm install carbonldp --save
-								</code></pre>
-							</div>
-							<div class="title">
-								<i class="dropdown icon"></i>
-								jspm
-							</div>
-							<div class="content">
-								<!--@formatter:off-->
-								<pre><code cphighlight class="bash">
-									jspm install npm:carbonldp
-									# We also need to install one of carbonldp's dependencies
-									jspm install npm:jsonld
-								</code></pre>
-								<!--@formatter:on-->
-							</div>
-						</div>
+						</sui-accordion>
 						<p>After it has been installed, the way you'll use it will depend on your development environment:</p>
-						<div class="ui styled fluid accordion">
-							<div class="title">
-								<i class="dropdown icon"></i>
-								Browser - Global Window Object
+						<sui-accordion class="styled fluid">
+							<div suiCollapsible>
+								<div class="title">
+									<i class="dropdown icon"></i>
+									Browser - Global Window Object
+								</div>
+								<div class="content">
+									<p>The SDK comes with a bundled version that you can import directly into your html:</p>
+									<!--@formatter:off-->
+									<pre><code cpHighlight class="html">
+										&lt;script src="--sdk-directory--/dist/bundles/Carbon.sfx.js"&gt;&lt;/script&gt;
+									</code></pre>
+									<!--@formatter:on-->
+									<p>
+										After that, a variable named <code>Carbon</code> will be accessible in the global scope. This variable will serve as both a class constructor
+										and a namespace. It's usage as a class constructor is the same as when using ES2015 Modules, but its namespace nature is unique to the Global
+										approach.
+									</p>
+									<h3>Carbon Variable as a Namespace</h3>
+									<p>
+										The <code>Carbon</code> object chains together all the Carbon modules, so you can access them even if you are using the Global approach.
+										Each time you see in an example something like:
+									</p>
+									<!--@formatter:off-->
+									<pre><code cpHighlight class="javascript">
+										import * as Errors from "carbonldp/HTTP/Errors";
+									</code></pre>
+									<!--@formatter:on-->
+									<p>
+										You can take the portion after <code>carbonldp/</code>, replace the <code>/</code>s with <code>.</code> and append that to the Carbon namespace
+										to access the same module. For example, accessing that module using the global namespace would be:
+									</p>
+									<!--@formatter:off-->
+									<pre><code cpHighlight class="javascript">
+										Carbon.HTTP.Errors
+									</code></pre>
+									<!--@formatter:on-->
+								</div>
 							</div>
-							<div class="content">
-								<p>The SDK comes with a bundled version that you can import directly into your html:</p>
-								<!--@formatter:off-->
-								<pre><code cphighlight class="html">
-									&lt;script src="--sdk-directory--/dist/bundles/Carbon.sfx.js"&gt;&lt;/script&gt;
-								</code></pre>
-								<!--@formatter:on-->
-								<p>
-									After that, a variable named <code>Carbon</code> will be accessible in the global scope. This variable will serve as both a class constructor
-									and a namespace. It's usage as a class constructor is the same as when using ES2015 Modules, but its namespace nature is unique to the Global
-									approach.
-								</p>
-								<h3>Carbon Variable as a Namespace</h3>
-								<p>
-									The <code>Carbon</code> object chains together all the Carbon modules, so you can access them even if you are using the Global approach.
-									Each time you see in an example something like:
-								</p>
-								<!--@formatter:off-->
-								<pre><code cphighlight class="javascript">
-									import * as Errors from "carbonldp/HTTP/Errors";
-								</code></pre>
-								<!--@formatter:on-->
-								<p>
-									You can take the portion after <code>carbonldp/</code>, replace the <code>/</code>s with <code>.</code> and append that to the Carbon namespace
-									to access the same module. For example, accessing that module using the global namespace would be:
-								</p>
-								<!--@formatter:off-->
-								<pre><code cphighlight class="javascript">
-									Carbon.HTTP.Errors
-								</code></pre>
-								<!--@formatter:on-->
-							</div>
-							<div class="active title">
-								<i class="dropdown icon"></i>
-								Browser - ES2015 Modules
-							</div>
-							<div class="active content">
-								<p>
-									To be able to use ES2015 modules a transpiler like Babel, Traceur or TypeScript needs to be used. This documentation won't cover the details of
-									setting one up, but we recommend using <a class="outsidelink" target="_blank" href="http://jspm.io/">JSPM</a> as a package manager, configured to use
-									<a class="outsidelink" target="_blank" href="http://www.typescriptlang.org/">TypeScript</a> as a transpiler. That way you can use ES2015 features and bundle your
-									dependencies together!
-								</p>
-								<p>
-									Each module in Carbon will export at least one named export. Some of the modules will also export a <code>default</code> export containing the "main"
-									export of the module. That export will also be available as the named export <code>Class</code>. For example:
-								</p>
-								<!--@formatter:off-->
-								<pre><code cphighlight class="javascript">
-									// This:
-									import Document from "carbonldp/Document";
-									let myDocument:Document = new Document();
+							<div suiCollapsible [suiActive]="true">
+								<div class="title">
+									<i class="dropdown icon"></i>
+									Browser - ES2015 Modules
+								</div>
+								<div class="content">
+									<p>
+										To be able to use ES2015 modules a transpiler like Babel, Traceur or TypeScript needs to be used. This documentation won't cover the details of
+										setting one up, but we recommend using <a class="outsidelink" target="_blank" rel="noopener" href="http://jspm.io/">JSPM</a> as a package manager, configured to use
+										<a class="outsidelink" target="_blank" rel="noopener" href="http://www.typescriptlang.org/">TypeScript</a> as a transpiler. That way you can use ES2015 features and bundle
+										your dependencies together!
+									</p>
+									<p>
+										Each module in Carbon will export at least one named export. Some of the modules will also export a <code>default</code> export containing the "main"
+										export of the module. That export will also be available as the named export <code>Class</code>. For example:
+									</p>
+									<!--@formatter:off-->
+									<pre><code cpHighlight class="javascript">
+										// This:
+										import Document from "carbonldp/Document";
+										let myDocument:Document = new Document();
 
-									// Is the same as this:
-									import * as Document from "carbonldp/Document";
-									let myDocument:Document.Class = new Document.Class();
-								</code></pre>
-								<!--@formatter:on-->
-								<p>We recommend not using default exports, but we provide them in case you are only using the "main" export of a file.</p>
-								<p>
-									The semantics behind Carbon's modules are based on the usage of the import all statement. Still, you can use selective
-									imports but you'll likely need to rename the import variables like:
-								</p>
-								<!--@formatter:off-->
-								<pre><code cphighlight class="javascript">
-									import { Factory as DocumentFactory, Class as Document } from "carbonldp/Document";
-								</code></pre>
-								<!--@formatter:on-->
-								<p>
-									For each folder inside the Carbon source, there is a module at the same level with the same name that exports everything contained by the folder.
-									Example:
-								</p>
-								<!--@formatter:off-->
-								<pre><code cphighlight class="javascript">
-									import * as Errors from "carbonldp/HTTP/Errors";
-									import * as Request from "carbonldp/HTTP/Request";
+										// Is the same as this:
+										import * as Document from "carbonldp/Document";
+										let myDocument:Document.Class = new Document.Class();
+									</code></pre>
+									<!--@formatter:on-->
+									<p>We recommend not using default exports, but we provide them in case you are only using the "main" export of a file.</p>
+									<p>
+										The semantics behind Carbon's modules are based on the usage of the import all statement. Still, you can use selective
+										imports but you'll likely need to rename the import variables like:
+									</p>
+									<!--@formatter:off-->
+									<pre><code cpHighlight class="javascript">
+										import { Factory as DocumentFactory, Class as Document } from "carbonldp/Document";
+									</code></pre>
+									<!--@formatter:on-->
+									<p>
+										For each folder inside the Carbon source, there is a module at the same level with the same name that exports everything contained by the folder.
+										Example:
+									</p>
+									<!--@formatter:off-->
+									<pre><code cpHighlight class="javascript">
+										import * as Errors from "carbonldp/HTTP/Errors";
+										import * as Request from "carbonldp/HTTP/Request";
 
-									import * as HTTP from "carbonldp/HTTP";
+										import * as HTTP from "carbonldp/HTTP";
 
-									HTTP.Errors === Errors; // true
-									HTTP.Request === Request; // true
-								</code></pre>
-								<!--@formatter:on-->
+										HTTP.Errors === Errors; // true
+										HTTP.Request === Request; // true
+									</code></pre>
+									<!--@formatter:on-->
+								</div>
 							</div>
+						</sui-accordion>
+						<p>
+							Next, you need to decide what language (and what version) you are going to use. The SDK can be used with the following ones:
+						</p>
+						<ul>
+							<li>
+								<strong>TypeScript:</strong> a JavaScript superset language, maintained by Microsoft. See:
+								<a class="outsidelink" target="_blank" rel="noopener" href="http://www.typescriptlang.org/">TypeScript</a>.
+							</li>
+							<li>
+								<strong>JavaScript ES2015+:</strong> JavaScript with the new features introduced in the ES2015 standard. In order for you to use it, you'll
+								likely need a transpiler like
+								<a class="outsidelink" target="_blank" rel="noopener" href="https://babeljs.io/">BabelJS</a> or
+								<a class="outsidelink" target="_blank" rel="noopener" href="https://github.com/google/traceur-compiler">Traceur</a>
+							</li>
+							<li>
+								<strong>JavaScript ES5:</strong> The good old JS, no arrow functions, let declarations or any of that magic. To use the SDK with this
+								JavaScript version you'll need to include the following polyfill before including the SDK:
+								<!--@formatter:off-->
+								<pre><code cpHighlight class="html">
+									&lt;script src="https://cdnjs.cloudflare.com/ajax/libs/es6-shim/0.35.1/es6-shim.min.js"&gt;&lt;/script&gt;
+								</code></pre>
+								<!--@formatter:on-->
+							</li>
+						</ul>
+						<p>
+							Our code examples are written in all of these languages, so before continuing please select which one you'll use:
+						</p>
+						<div class="ui buttons">
+							<button class="ui button" (click)="selectLanguage( 0 )" [class.active]="selectedLanguage === 0">TypeScript</button>
+							<div class="or"></div>
+							<button class="ui button" (click)="selectLanguage( 1 )" [class.active]="selectedLanguage === 1">JS ES2015+</button>
+							<div class="or"></div>
+							<button class="ui button" (click)="selectLanguage( 2 )" [class.active]="selectedLanguage === 2">JS ES5</button>
 						</div>
-						<div class="ui icon yellow message">
-							<i class="warning sign icon"></i>
+						<p>
 
+						</p>
+						<div class="ui icon info message">
+							<i class="info circle icon"></i>
 							<div class="content">
 								<p>
-									<!-- TODO: Add link to register page -->
-									Before you can save data in Carbon, you need to create an account. Click here if you haven't done it.
+									We created boilerplate projects for each of the supported languages. They can serve as a good starting point:
 								</p>
+								<ul>
+									<li><a class="outsidelink" target="_blank" rel="noopener" href="https://github.com/CarbonLDP/carbon-typescript-boilerplate">TypeScript</a></li>
+									<li><a class="outsidelink" target="_blank" rel="noopener" href="https://github.com/CarbonLDP/carbon-js-es2015-boilerplate">JavaScript ES2015+</a></li>
+									<li><a class="outsidelink" target="_blank" rel="noopener" href="https://github.com/CarbonLDP/carbon-js-es5-boilerplate">JavaScript ES5</a></li>
+								</ul>
 							</div>
 						</div>
 					</section>
 
 					<section>
 						<h2 class="ui header">Creating a platform context</h2>
+						<div class="ui icon yellow message">
+							<i class="warning sign icon"></i>
+							<div class="content">
+								<p>
+									Before you can save data in Carbon, you need to create an account. Click
+									<a [routerLink]="[ '/Website/Register' ]">here</a> if you haven't done it.
+								</p>
+							</div>
+						</div>
 						<p>
 							Let's start with some basic things you can do, like creating, saving and linking documents; among other things.
 						</p>
@@ -227,20 +290,27 @@
 							<span class="highlight">Carbon platform instance</span> you are working with (for more
 							about Carbon contexts see: <a [routerLink]="['../JavaScriptSDKContexts']">Contexts</a>).
 						</p>
-						<sui-tabs>
+						<sui-tabs [(activeTab)]="selectedLanguage">
 							<sui-tab title="TypeScript">
 								<!--@formatter:off-->
-								<pre><code cphighlight class="typescript">
+								<pre><code cpHighlight class="typescript">
 									import Carbon from "carbonldp/Carbon";
 
 									let carbon:Carbon = new Carbon(); // platform context
 								</code></pre>
 								<!--@formatter:on-->
 							</sui-tab>
-							<sui-tab title="JavaScript">
+							<sui-tab title="JavaScript ES2015">
 								<!--@formatter:off-->
-								<pre><code cphighlight class="javascript">
+								<pre><code cpHighlight class="javascript">
 									let carbon = new Carbon(); // platform context
+								</code></pre>
+								<!--@formatter:on-->
+							</sui-tab>
+							<sui-tab title="JavaScript ES5">
+								<!--@formatter:off-->
+								<pre><code cpHighlight class="javascript">
+									var carbon = new Carbon(); // platform context
 								</code></pre>
 								<!--@formatter:on-->
 							</sui-tab>
@@ -249,10 +319,10 @@
 							By default, platform contexts point to the instance in <code>carbonldp.com</code>. If you need to change this,
 							you can do it by changing the <code>domain</code> setting:
 						</p>
-						<sui-tabs>
+						<sui-tabs [(activeTab)]="selectedLanguage">
 							<sui-tab title="TypeScript">
 								<!--@formatter:off-->
-								<pre><code cphighlight class="typescript">
+								<pre><code cpHighlight class="typescript">
 									import Carbon from "carbonldp/Carbon";
 
 									let carbon:Carbon = new Carbon(); // platform context
@@ -260,10 +330,18 @@
 								</code></pre>
 								<!--@formatter:on-->
 							</sui-tab>
-							<sui-tab title="JavaScript">
+							<sui-tab title="JavaScript ES2015">
 								<!--@formatter:off-->
-								<pre><code cphighlight class="javascript">
+								<pre><code cpHighlight class="javascript">
 									let carbon = new Carbon(); // platform context
+									carbon.setSetting( "domain", "my-carbon-instance.com:8080" );
+								</code></pre>
+								<!--@formatter:on-->
+							</sui-tab>
+							<sui-tab title="JavaScript ES5">
+								<!--@formatter:off-->
+								<pre><code cpHighlight class="javascript">
+									var carbon = new Carbon(); // platform context
 									carbon.setSetting( "domain", "my-carbon-instance.com:8080" );
 								</code></pre>
 								<!--@formatter:on-->
@@ -282,12 +360,15 @@
 							every context has. This service provides an <code>authenticate</code> method where you can pass
 							your credentials:
 						</p>
-						<sui-tabs>
+						<sui-tabs [(activeTab)]="selectedLanguage">
 							<sui-tab title="TypeScript">
 								<!--@formatter:off-->
-								<pre><code cphighlight class="typescript">
+								<pre><code cpHighlight class="typescript">
 									// ... additional imports
+									import Carbon from "carbonldp/Carbon";
 									import * as Token from "carbonldp/Auth/Token";
+
+									let carbon:Carbon;
 
 									// ... platform context creation
 
@@ -299,10 +380,12 @@
 								</code></pre>
 								<!--@formatter:on-->
 							</sui-tab>
-							<sui-tab title="JavaScript">
+							<sui-tab title="JavaScript ES2015">
 								<!--@formatter:off-->
-								<pre><code cphighlight class="typescript">
+								<pre><code cpHighlight class="javascript">
 									// ... imports
+
+									let carbon;
 
 									// ... platform context creation
 
@@ -314,17 +397,32 @@
 								</code></pre>
 								<!--@formatter:on-->
 							</sui-tab>
+							<sui-tab title="JavaScript ES5">
+								<!--@formatter:off-->
+								<pre><code cpHighlight class="javascript">
+									var carbon;
+
+									// ... platform context creation
+
+									carbon.auth.authenticate( "your@email.com", "YouRP455word" ).then(
+										function( token ) {
+											console.log( carbon.auth.authenticatedAgent ); // Yourself!
+										}
+									);
+								</code></pre>
+								<!--@formatter:on-->
+							</sui-tab>
 						</sui-tabs>
 						<p>
 							It's important to notice that you are authenticated in that specific context (and its child contexts).
-							You could create additional platform contexts (or other type of contexts) and do stuff authenticated
-							as other agents.
+							You could create additional platform contexts (or other type of contexts) and authenticate on them with
+							other credentials.
 						</p>
 					</section>
 					<section>
-						<h2 class="ui header">Retrieving an App Context</h2>
+						<h2 class="ui header">Retrieving an app context</h2>
 						<p>
-							Carbon stores your data in "applications". These applications are separate containers of information.
+							Carbon stores your data in "applications" which are separate containers of information.
 							Data can be linked between applications, but its management is treated separately.
 						</p>
 						<div class="ui icon yellow message">
@@ -342,41 +440,67 @@
 							<a [routerLink]="[ '../JavaScriptSDKContexts' ]">context</a> that references it, on which you will be working on.
 							To retrieve it, you can use the <code>apps</code> service of the platform context:
 						</p>
-						<sui-tabs>
+						<sui-tabs [(activeTab)]="selectedLanguage">
 							<sui-tab title="TypeScript">
 								<!--@formatter:off-->
-								<pre><code cphighlight class="typescript">
+								<pre><code cpHighlight class="typescript">
 									// ... additional imports
+									import Carbon from "carbonldp/Carbon"
 									import * as App from "carbonldp/App";
+
+									let carbon:Carbon;
 
 									// ... platform context creation and authentication
 
 									let myAppContext:App.Context;
 
-									carbon.apps.get( "your-app-slug-here/" ).then( ( appContext:App.Context ) => {
-									    myAppContext = appContext; //retrieving your app context
-									}).catch( console.error );
+									carbon.apps.getContext( "your-app-slug-here/" ).then(
+										( appContext:App.Context ) => {
+									        myAppContext = appContext; // retrieving your app context
+										}
+									).catch( console.error );
 								</code></pre>
 								<!--@formatter:on-->
 							</sui-tab>
-							<sui-tab title="JavaScript">
+							<sui-tab title="JavaScript ES2015">
 								<!--@formatter:off-->
-								<pre><code cphighlight class="typescript">
-									// ... additional imports
+								<pre><code cpHighlight class="javascript">
+									// ... imports
+
+									let carbon;
 
 									// ... platform context creation and authentication
 
 									let myAppContext;
 
-									carbon.apps.get( "your-app-slug-here/" ).then( ( appContext ) => {
-									    myAppContext = appContext; //retrieving your app context
-									}).catch( console.error );
+									carbon.apps.getContext( "your-app-slug-here/" ).then(
+										( appContext ) => {
+									        myAppContext = appContext; // retrieving your app context
+										}
+									).catch( console.error );
+								</code></pre>
+								<!--@formatter:on-->
+							</sui-tab>
+							<sui-tab title="JavaScript ES2015">
+								<!--@formatter:off-->
+								<pre><code cpHighlight class="javascript">
+									var carbon;
+
+									// ... platform context creation and authentication
+
+									let myAppContext;
+
+									carbon.apps.getContext( "your-app-slug-here/" ).then(
+										function( appContext ) {
+									        myAppContext = appContext; // retrieving your app context
+										}
+									).catch( console.error );
 								</code></pre>
 								<!--@formatter:on-->
 							</sui-tab>
 						</sui-tabs>
 						<p>
-							The <code>apps.get()</code> method returns a promise that when resolved, will give you the
+							The <code>apps.getContext()</code> method returns a promise that when resolved, will give you the
 							<a [routerLink]="[ '../JavaScriptSDKContexts' ]"><span class="highlight">app context</span>
 							</a> you need. Be sure to replace <code>your-app-slug-here/</code> with your app slug.
 						</p>
@@ -392,7 +516,7 @@
 						<h2 class="ui header">Creating a document</h2>
 						<p>
 							Now that you have your app context, you can start working with your app's data. Carbon stores data
-							in documents, which are basically a normal JavaScript object identified by a URI (Unique Resource Identifier).
+							in documents, which are basically normal JavaScript objects identified by a URI (Unique Resource Identifier).
 							These documents are composed by properties, <span class="highlight">fragments</span> and <span class="highlight">named fragments</span>.
 							For more information see: <a [routerLink]="[ '../JavaScriptSDKObjectModel' ]">JavaScript SDK Object model</a>.
 						</p>
@@ -400,14 +524,14 @@
 							Any carbon <span class="highlight">context</span> has a <code>documents</code> service that
 							helps you manage your documents. To create one you need to call the method <code>createChild</code> of this service:
 						</p>
-						<sui-tabs>
+						<sui-tabs [(activeTab)]="selectedLanguage">
 							<sui-tab title="TypeScript">
 								<!--@formatter:off-->
-								<pre><code cphighlight class="typescript">
+								<pre><code cpHighlight class="typescript">
 									// ... additional imports
 									import * as App from "carbonldp/App";
-									import * Response from "carbonldp/HTTP/Response";
-									import * PersistedDocument from "carbonldp/PersistedDocument";
+									import * as Response from "carbonldp/HTTP/Response";
+									import * as PersistedDocument from "carbonldp/PersistedDocument";
 
 									let myAppContext:App.Context;
 
@@ -431,15 +555,15 @@
 									myAppContext.documents.createChild&lt;Project&gt;( "/", project ).then(
 										( [ persistedProject, response ]:[ Project & PersistedDocument.Class, Response.Class ] ) => {
 											console.log( project === persistedProject ); // true
-											console.log( project.id ); // document's URI
+											console.log( persistedProject.id ); // document's URI
 										}
 									).catch( console.error );
 								</code></pre>
 								<!--@formatter:on-->
 							</sui-tab>
-							<sui-tab title="JavaScript">
+							<sui-tab title="JavaScript ES2015">
 								<!--@formatter:off-->
-								<pre><code cphighlight class="javascript">
+								<pre><code cpHighlight class="javascript">
 									// ... imports
 
 									let myAppContext;
@@ -470,6 +594,40 @@
 								</code></pre>
 								<!--@formatter:on-->
 							</sui-tab>
+							<sui-tab title="JavaScript ES5">
+								<!--@formatter:off-->
+								<pre><code cpHighlight class="javascript">
+									var myAppContext;
+
+									// ... app context retrieval
+
+									// JavaScript object to be persisted as a Carbon document
+									var project = {
+										name: "Project X",
+										tasks: [
+											{
+												name: "Task 1",
+												dueDate: new Date( "2016-04-02" )
+											},
+											{
+												name: "Task 2",
+												dueDate: new Date( "2016-04-08" )
+											}
+										]
+									};
+
+									myAppContext.documents.createChild( "/", project ).then(
+										function( result ) {
+											var persistedProject = result[ 0 ];
+											var response = result[ 1 ];
+
+											console.log( project === persistedProject ); // true
+											console.log( project.id ); // document's URI
+										}
+									).catch( console.error );
+								</code></pre>
+								<!--@formatter:on-->
+							</sui-tab>
 						</sui-tabs>
 						<p>
 							After executing that, the information inside of <code>project</code> will have been persisted in Carbon. Nested objects
@@ -487,13 +645,13 @@
 							a third parameter can be passed to the <code>createChild</code> method. This parameter is called <code>slug</code>
 							and it serves as a suggestion for Carbon when forging the document's URI:
 						</p>
-						<sui-tabs>
+						<sui-tabs [(activeTab)]="selectedLanguage">
 							<sui-tab title="TypeScript">
 								<!--@formatter:off-->
-								<pre><code cphighlight class="typescript">
+								<pre><code cpHighlight class="typescript">
 									// ...
 
-									myAppContext.documents.createChild&lt;Project&gt;( "/", "My sUp4 Project!", project ).then(
+									myAppContext.documents.createChild&lt;Project&gt;( "/", project, "My sUp4 Project!" ).then(
 										( [ persistedProject, response ]:[ Project & PersistedDocument.Class, Response.Class ] ) => {
 											console.log( persistedProject.id ); // .../my-supa-project/
 										}
@@ -501,13 +659,29 @@
 								</code></pre>
 								<!--@formatter:on-->
 							</sui-tab>
-							<sui-tab title="JavaScript">
+							<sui-tab title="JavaScript ES2015">
 								<!--@formatter:off-->
-								<pre><code cphighlight class="javascript">
+								<pre><code cpHighlight class="javascript">
 									// ...
 
-									myAppContext.documents.createChild( "/", "My sUp4 Project!", project ).then(
+									myAppContext.documents.createChild( "/", project, "My sUp4 Project!" ).then(
 										( [ persistedProject, response ] ) => {
+											console.log( persistedProject.id ); // .../my-supa-project/
+										}
+									).catch( console.error );
+								</code></pre>
+								<!--@formatter:on-->
+							</sui-tab>
+							<sui-tab title="JavaScript ES5">
+								<!--@formatter:off-->
+								<pre><code cpHighlight class="javascript">
+									// ...
+
+									myAppContext.documents.createChild( "/", project, "My sUp4 Project!" ).then(
+										function( result ) {
+											var persistedProject = result[ 0 ];
+											var response = result[ 1 ];
+
 											console.log( persistedProject.id ); // .../my-supa-project/
 										}
 									).catch( console.error );
@@ -521,10 +695,10 @@
 							That string represents a relative URI, one that can be resolved against something else. In this case it is being resolved to the
 							base URI the context has. To see to what that would resolve you can use a <code>context</code> <code>resolve</code> method:
 						</p>
-						<sui-tabs>
+						<sui-tabs [(activeTab)]="selectedLanguage">
 							<sui-tab title="TypeScript">
 								<!--@formatter:off-->
-								<pre><code cphighlight class="typescript">
+								<pre><code cpHighlight class="typescript">
 									// ... additional imports
 									import * as App from "carbonldp/App";
 
@@ -536,12 +710,23 @@
 								</code></pre>
 								<!--@formatter:on-->
 							</sui-tab>
-							<sui-tab title="JavaScript">
+							<sui-tab title="JavaScript ES2015">
 								<!--@formatter:off-->
-								<pre><code cphighlight class="javascript">
+								<pre><code cpHighlight class="javascript">
 									// ... imports
 
 									let myAppContext;
+
+									// ... app context retrieval
+
+									console.log( myAppContext.resolve( "" ) ); // https://.../your-app-slug/
+								</code></pre>
+								<!--@formatter:on-->
+							</sui-tab>
+							<sui-tab title="JavaScript ES5">
+								<!--@formatter:off-->
+								<pre><code cpHighlight class="javascript">
+									var myAppContext;
 
 									// ... app context retrieval
 
@@ -562,14 +747,14 @@
 							Like creating documents, retrieving them can be done using the <code>documents</code> service inside of any Carbon context.
 							To do so, you can use its <code>get</code> method:
 						</p>
-						<sui-tabs>
+						<sui-tabs [(activeTab)]="selectedLanguage">
 							<sui-tab title="TypeScript">
 								<!--@formatter:off-->
-								<pre><code cphighlight class="typescript">
+								<pre><code cpHighlight class="typescript">
 									// ... additional imports
 									import * as App from "carbonldp/App";
-									import * Response from "carbonldp/HTTP/Response";
-									import * PersistedDocument from "carbonldp/PersistedDocument";
+									import * as Response from "carbonldp/HTTP/Response";
+									import * as PersistedDocument from "carbonldp/PersistedDocument";
 
 									let myAppContext:App.Context;
 
@@ -586,9 +771,9 @@
 								</code></pre>
 								<!--@formatter:on-->
 							</sui-tab>
-							<sui-tab title="JavaScript">
+							<sui-tab title="JavaScript ES2015">
 								<!--@formatter:off-->
-								<pre><code cphighlight class="javascript">
+								<pre><code cpHighlight class="javascript">
 									// ... imports
 
 									let myAppContext;
@@ -606,6 +791,27 @@
 								</code></pre>
 								<!--@formatter:on-->
 							</sui-tab>
+							<sui-tab title="JavaScript ES5">
+								<!--@formatter:off-->
+								<pre><code cpHighlight class="javascript">
+									var myAppContext;
+
+									// ... app context retrieval
+
+									// ID of the Carbon document you want to retrieve
+									var projectID = "https://example.com/your-document-id/";
+
+									myAppContext.documents.get( projectID ).then(
+										function( result ) {
+											var project = result[ 0 ];
+											var response = result[ 1 ];
+
+											console.log( project.name ); // "Project X"
+										}
+									).catch( console.error );
+								</code></pre>
+								<!--@formatter:on-->
+							</sui-tab>
 						</sui-tabs>
 						<p>
 							In this example we used the id of the document, but there are times that instead of having the id, you have a
@@ -613,14 +819,14 @@
 							or as soon as you create a document and receive a pointer back (<code>PersistedDocument.Class</code> extends <code>Pointer.Class</code>).
 							These pointers have a <code>resolve</code> method that helps you retrieve their information:
 						</p>
-						<sui-tabs>
+						<sui-tabs [(activeTab)]="selectedLanguage">
 							<sui-tab title="TypeScript">
 								<!--@formatter:off-->
-								<pre><code cphighlight class="typescript">
+								<pre><code cpHighlight class="typescript">
 									// ... additional imports
-									import * Response from "carbonldp/HTTP/Response";
-									import * PersistedDocument from "carbonldp/PersistedDocument";
-									import * Pointer from "carbonldp/Pointer";
+									import * as Response from "carbonldp/HTTP/Response";
+									import * as PersistedDocument from "carbonldp/PersistedDocument";
+									import * as Pointer from "carbonldp/Pointer";
 
 									let projectPointer:Pointer.Class;
 
@@ -634,9 +840,9 @@
 								</code></pre>
 								<!--@formatter:on-->
 							</sui-tab>
-							<sui-tab title="JavaScript">
+							<sui-tab title="JavaScript ES2015">
 								<!--@formatter:off-->
-								<pre><code cphighlight class="javascript">
+								<pre><code cpHighlight class="javascript">
 									// ... imports
 
 									let projectPointer;
@@ -645,6 +851,24 @@
 
 									projectPointer.resolve().then(
 										( [ project, response ] ) => {
+											console.log( project.name ); // "Project X"
+										}
+									).catch( console.error );
+								</code></pre>
+								<!--@formatter:on-->
+							</sui-tab>
+							<sui-tab title="JavaScript ES5">
+								<!--@formatter:off-->
+								<pre><code cpHighlight class="javascript">
+									var projectPointer;
+
+									// ... document pointer acquisition
+
+									projectPointer.resolve().then(
+										function( result ) {
+											var project = result[ 0 ];
+											var response = result[ 1 ];
+
 											console.log( project.name ); // "Project X"
 										}
 									).catch( console.error );
@@ -672,13 +896,13 @@
 						<p>
 							To modify a document you should:
 						</p>
-						<ul>
+						<ol>
 							<li>Retrieve the <span class="highlight">document</span>:
-								<ul>
+								<ol>
 									<li><code>get</code> using the <span class="highlight">document</span> id as
-										describe in <span class="sectionlink"><a href="#retrieving-a-document">retrieving a document</a></span>
+										described in <span class="sectionlink"><a href="#retrieving-a-document">retrieving a document</a></span>
 									</li>
-								</ul>
+								</ol>
 							</li>
 							<li>Modify the <span class="highlight">document</span>: Add, modify or delete
 								<span class="highlight">properties</span>,
@@ -686,16 +910,16 @@
 								<span class="highlight">named fragments</span>.
 							</li>
 							<li>Save the changes through <code>document.save</code> method.</li>
-						</ul>
+						</ol>
 						<p>
 							Document properties can be added/modified/removed as with any normal JavaScript object.
 						</p>
-						<sui-tabs>
+						<sui-tabs [(activeTab)]="selectedLanguage">
 							<sui-tab title="TypeScript">
 								<!--@formatter:off-->
-								<pre><code cphighlight class="typescript">
+								<pre><code cpHighlight class="typescript">
 									// ... additional imports
-									import * PersistedDocument from "carbonldp/PersistedDocument";
+									import * as PersistedDocument from "carbonldp/PersistedDocument";
 
 									let project:Project & PersistedDocument.Class;
 
@@ -725,9 +949,9 @@
 								</code></pre>
 								<!--@formatter:on-->
 							</sui-tab>
-							<sui-tab title="JavaScript">
+							<sui-tab title="JavaScript ES2015">
 								<!--@formatter:off-->
-								<pre><code cphighlight class="javascript">
+								<pre><code cpHighlight class="javascript">
 									// ... imports
 
 									let project;
@@ -758,6 +982,43 @@
 								</code></pre>
 								<!--@formatter:on-->
 							</sui-tab>
+							<sui-tab title="JavaScript ES5">
+								<!--@formatter:off-->
+								<pre><code cpHighlight class="javascript">
+									var project;
+
+									// ... document retrieval
+
+									project.name = "Project's New Name";
+									project.task.push( {
+										name: "Task 3",
+										dueDate: new Date( "2016-05-02" )
+									} );
+									project.description = {
+										type: "markdown",
+										content: "# Some description here"
+									};
+
+									project.save().then(
+										function( result ) => {
+											var savedProject = result[ 0 ];
+											var response = result[ 0 ];
+
+											console.log( savedProject === project ); // true
+											return savedProject.refresh();
+										}
+									).then(
+										function( result ) => {
+											var refreshedProject = result[ 0 ];
+											var response = result[ 0 ];
+
+											console.log( refreshedProject === project ); // true
+											// Continue doing stuff...
+										}
+									).catch( console.error );
+								</code></pre>
+								<!--@formatter:on-->
+							</sui-tab>
 						</sui-tabs>
 						<p>
 							Notice that we used the <code>save</code> method and immediately after, we called <code>refresh</code>.
@@ -778,13 +1039,13 @@
 							delete a persisted document through its <code>delete</code> method. To do so, you need to
 							provide the document's URI:
 						</p>
-						<sui-tabs>
+						<sui-tabs [(activeTab)]="selectedLanguage">
 							<sui-tab title="TypeScript">
 								<!--@formatter:off-->
-								<pre><code cphighlight class="typescript">
+								<pre><code cpHighlight class="typescript">
 									// ... additional imports
 									import * as App from "carbonldp/App";
-									import * Response from "carbonldp/HTTP/Response";
+									import * as Response from "carbonldp/HTTP/Response";
 
 									let myAppContext:App.Context;
 
@@ -801,9 +1062,9 @@
 								</code></pre>
 								<!--@formatter:on-->
 							</sui-tab>
-							<sui-tab title="JavaScript">
+							<sui-tab title="JavaScript ES2015">
 								<!--@formatter:off-->
-								<pre><code cphighlight class="javascript">
+								<pre><code cpHighlight class="javascript">
 									// ... imports
 
 									let myAppContext;
@@ -821,18 +1082,36 @@
 								</code></pre>
 								<!--@formatter:on-->
 							</sui-tab>
+							<sui-tab title="JavaScript ES5">
+								<!--@formatter:off-->
+								<pre><code cpHighlight class="javascript">
+									var myAppContext;
+
+									// ... app context retrieval
+
+									// ID of the Carbon document you want to delete
+									var projectID = "https://example.com/your-document-id/";
+
+									myAppContext.documents.delete( projectID ).then(
+										function( response ) {
+											// continue doing stuff...
+										}
+									).catch( console.error );
+								</code></pre>
+								<!--@formatter:on-->
+							</sui-tab>
 						</sui-tabs>
 						<p>
 							Like in "Retrieving a document", a document can also be deleted through the <code>PersistedDocument.Class</code>'s
 							<code>delete</code> method:
 						</p>
-						<sui-tabs>
+						<sui-tabs [(activeTab)]="selectedLanguage">
 							<sui-tab title="TypeScript">
 								<!--@formatter:off-->
-								<pre><code cphighlight class="typescript">
+								<pre><code cpHighlight class="typescript">
 									// ... additional imports
-									import * PersistedDocument from "carbonldp/PersistedDocument";
-									import * Response from "carbonldp/HTTP/Response";
+									import * as PersistedDocument from "carbonldp/PersistedDocument";
+									import * as Response from "carbonldp/HTTP/Response";
 
 									let project:Project & PersistedDocument.Class;
 
@@ -846,9 +1125,9 @@
 								</code></pre>
 								<!--@formatter:on-->
 							</sui-tab>
-							<sui-tab title="JavaScript">
+							<sui-tab title="JavaScript ES2015">
 								<!--@formatter:off-->
-								<pre><code cphighlight class="javascript">
+								<pre><code cpHighlight class="javascript">
 									// ... imports
 
 									let project;
@@ -857,6 +1136,21 @@
 
 									project.delete().then(
 										( response ) => {
+											// continue doing stuff...
+										}
+									).catch( console.error );
+								</code></pre>
+								<!--@formatter:on-->
+							</sui-tab>
+							<sui-tab title="JavaScript ES5">
+								<!--@formatter:off-->
+								<pre><code cpHighlight class="javascript">
+									var project;
+
+									// persisted document retrieval
+
+									project.delete().then(
+										function( response ) {
 											// continue doing stuff...
 										}
 									).catch( console.error );
@@ -879,12 +1173,12 @@
 							One of the core features of Carbon LDP, is linking data (after all, it's a Linked Data Platform). Documents can
 							be linked to other documents through normal JavaScript properties:
 						</p>
-						<sui-tabs>
+						<sui-tabs [(activeTab)]="selectedLanguage">
 							<sui-tab title="TypeScript">
 								<!--@formatter:off-->
-								<pre><code cphighlight class="typescript">
+								<pre><code cpHighlight class="typescript">
 									// ... additional imports
-									import * PersistedDocument from "carbonldp/PersistedDocument";
+									import * as PersistedDocument from "carbonldp/PersistedDocument";
 
 									let project1:Project & PersistedDocument.Class;
 									let project2:Project & PersistedDocument.Class;
@@ -895,13 +1189,25 @@
 								</code></pre>
 								<!--@formatter:on-->
 							</sui-tab>
-							<sui-tab title="JavaScript">
+							<sui-tab title="JavaScript ES2015">
 								<!--@formatter:off-->
-								<pre><code cphighlight class="javascript">
-									// ... additional imports
+								<pre><code cpHighlight class="javascript">
+									// ... imports
 
 									let project1;
 									let project2;
+
+									// ... persisted documents retrieval
+
+									project1.relatedProject = project2;
+								</code></pre>
+								<!--@formatter:on-->
+							</sui-tab>
+							<sui-tab title="JavaScript ES5">
+								<!--@formatter:off-->
+								<pre><code cpHighlight class="javascript">
+									var project1;
+									var project2;
 
 									// ... persisted documents retrieval
 
@@ -929,10 +1235,10 @@
 									<code>documents.getChildren</code>: Returns a list of RESOLVED <code>PersistedDocument.Class</code> objects for each of the document children
 								</li>
 							</ul>
-							<sui-tabs>
+							<sui-tabs [(activeTab)]="selectedLanguage">
 								<sui-tab title="TypeScript">
 									<!--@formatter:off-->
-									<pre><code cphighlight class="typescript">
+									<pre><code cpHighlight class="typescript">
 										// ... additional imports
 										import * as App from "carbonldp/App";
 
@@ -954,9 +1260,9 @@
 									</code></pre>
 									<!--@formatter:on-->
 								</sui-tab>
-								<sui-tab title="JavaScript">
+								<sui-tab title="JavaScript ES2015">
 									<!--@formatter:off-->
-									<pre><code cphighlight class="javascript">
+									<pre><code cpHighlight class="javascript">
 										// ... imports
 
 										let myAppContext;
@@ -971,6 +1277,33 @@
 
 										myAppContext.documents.getChildren( "projects/" ).then(
 											( [ resolvedProjects, response ] ) => {
+										        console.log( projects ); // array of resolved pointers
+											}
+										);
+									</code></pre>
+									<!--@formatter:on-->
+								</sui-tab>
+								<sui-tab title="JavaScript ES5">
+									<!--@formatter:off-->
+									<pre><code cpHighlight class="javascript">
+										var myAppContext;
+
+										// ... app context retrieval
+
+										myAppContext.documents.listChildren( "projects/" ).then(
+											function( [ unresolvedProjects, response ] ) {
+												var unresolvedProjects = result[ 0 ];
+												var response = result[ 1 ];
+
+										        console.log( projectPointers ); // array of unresolved pointers
+											}
+										);
+
+										myAppContext.documents.getChildren( "projects/" ).then(
+											function( [ resolvedProjects, response ] ) {
+												var resolvedProjects = result[ 0 ];
+												var response = result[ 1 ];
+
 										        console.log( projects ); // array of resolved pointers
 											}
 										);
@@ -1047,13 +1380,13 @@
 									<code>removeMember/removeMembers/removeAllMembers</code>: Removes the specified members (without deleting them)
 								</li>
 							</ul>
-							<sui-tabs>
+							<sui-tabs [(activeTab)]="selectedLanguage">
 								<sui-tab title="TypeScript">
 									<!--@formatter:off-->
-									<pre><code cphighlight class="typescript">
+									<pre><code cpHighlight class="typescript">
 										// ... additional imports
 										import * as App from "carbonldp/App";
-										import * PersistedDocument from "carbonldp/PersistedDocument";
+										import * as PersistedDocument from "carbonldp/PersistedDocument";
 										import * as Response from "carbonldp/HTTP/Response";
 
 										let myAppContext:App.Context;
@@ -1063,8 +1396,8 @@
 										let project:Project = {
 											name: "Important project",
 
-											hasMemberRelation: tasks,
-											isMemberOfRelation: project
+											hasMemberRelation: "tasks",
+											isMemberOfRelation: "project"
 										};
 
 										let task1:Task = { name: "Task 1" }; // Being "Task" a business specific interface defined somewhere
@@ -1107,9 +1440,9 @@
 									</code></pre>
 									<!--@formatter:on-->
 								</sui-tab>
-								<sui-tab title="JavaScript">
+								<sui-tab title="JavaScript ES2015">
 									<!--@formatter:off-->
-									<pre><code cphighlight class="javascript">
+									<pre><code cpHighlight class="javascript">
 										// ... imports
 
 										let myAppContext;
@@ -1163,6 +1496,69 @@
 									</code></pre>
 									<!--@formatter:on-->
 								</sui-tab>
+								<sui-tab title="JavaScript ES5">
+									<!--@formatter:off-->
+									<pre><code cpHighlight class="javascript">
+										var myAppContext;
+
+										// ... app context retrieval
+
+										var project = {
+											name: "Important project",
+
+											hasMemberRelation: tasks,
+											isMemberOfRelation: project
+										};
+
+										var task1 = { name: "Task 1" };
+										var task2 = { name: "Task 2" };
+										var task3 = { name: "Task 3" };
+
+										// ... project, task1, task2 and task3 persistence (createChild, etc)
+
+										project.addMembers( [ task1, task2, task3 ] ).then(
+											function( response ) {
+												return project.resolve();
+											}
+										).then(
+											function( result ) {
+												var project = result[ 0 ];
+												var response = result[ 1 ];
+
+												console.log( project.tasks ); // Pointers for task1, task2 and task3. Added because of the configured hasMemberRelation
+												console.log( project.tasks.indexOf( task1 ) !== -1 ); // true (remember, pointers are cached and reused)
+												console.log( project.tasks.indexOf( task2 ) !== -1 ); // true
+												console.log( project.tasks.indexOf( task3 ) !== -1 ); // true
+
+												return project.listMembers();
+											}
+										).then(
+											function( result ) {
+												var unresolvedTasks = result[ 0 ];
+												var response = result[ 1 ];
+
+												console.log( unresolvedTasks ); // Pointers for task1, task2 and task3
+
+												return project.removeMember( task2 );
+											}
+										).then(
+											function( response ) {
+												console.log( "Task 2 is no longer a member of the project" );
+
+												return project.getMembers();
+											}
+										).then(
+											function( result ) {
+												var resolvedTasks = result[ 0 ];
+												var response = result[ 1 ];
+
+												console.log( resolvedTasks ); // task1 and task3 documents
+												console.log( task[0].project ); // pointer to project. Added due to the configured isMemberOfRelation
+											}
+										).catch( console.error );
+									</code></pre>
+									<!--@formatter:on-->
+								</sui-tab>
 							</sui-tabs>
 						</section>
 					</section>
@@ -1182,49 +1578,140 @@
 							<code>isMemberOfRelation</code>. To create an access point for a document you can use the <code>createAccessPoint</code> method
 							of the <code>documents</code> service or of a <code>PersistedDocument.Class</code> object.
 						</p>
-						<sui-tabs>
+						<sui-tabs [(activeTab)]="selectedLanguage">
 							<sui-tab title="TypeScript">
 								<!--@formatter:off-->
-								<pre><code cphighlight class="typescript">
+								<pre><code cpHighlight class="typescript">
 									// ... additional imports
 									import * as AccessPoint from "carbonldp/AccessPoint";
 									import * as PersistedAccessPoint from "carbonldp/PersistedAccessPoint";
 									import * as PersistedDocument from "carbonldp/PersistedDocument";
 
-									let project:PersistedDocument.Class;
+									let project:Project & PersistedDocument.Class;
+									let person1:Person & PersistedDocument.Class;
+									let person2:Person & PersistedDocument.Class;
 
-									// ... project document retrieval
+									// ... project, person1 and person2 document retrieval
 
 									let projectMembersAccessPoint:AccessPoint = {
-										hasMemberRelation: "people",
-										isMemberOfRelation: "projects"
+										hasMemberRelation: "people", // property used to store the member list in the accessPoint's document
+										isMemberOfRelation: "projects" // property used to link back members to the document they are members of
 									};
 
 									project.createAccessPoint( "people", projectMembersAccessPoint ).then(
 										( [ persistedProjectMembersAccessPoint, response ]:[ PersistedAccessPoint.Class, Response.Class ] ) => {
-											// continue doing stuff (persistedProjectMembersAccessPoint.listMembers/addMember/etc...)
+											console.log( projectMembersAccessPoint === persistedProjectMembersAccessPoint ); // true
+
+											return persistedProjectMembersAccessPoint.addMembers( [ person1, person2 ] );
+										}
+									).then(
+										( response:Response.Class ) => {
+											return project.refresh&lt;Project&gt;();
+										}
+									).then(
+										( [ refreshedProject, response ]:[ Project & PersistedDocument.Class, Response.Class ] ) => {
+											console.log( project === refreshedProject ); // true
+											console.log( refreshedProject.people ); // Pointers to person1 and person2
+
+											return person1.refresh&lt;Person&gt;();
+										}
+									).then(
+										( [ refreshedPerson1, response ]:[ Person & PersistedDocument.Class, Response.Class ] ) => {
+											console.log( person1 === refreshedPerson1 ); // true
+											console.log( refreshedPerson1.projects ); // Pointer to project
 										}
 									).catch( console.error );
 								</code></pre>
 								<!--@formatter:on-->
 							</sui-tab>
-							<sui-tab title="JavaScript">
+							<sui-tab title="JavaScript ES2015">
 								<!--@formatter:off-->
-								<pre><code cphighlight class="javascript">
+								<pre><code cpHighlight class="javascript">
 									// ... imports
 
 									let project;
+									let person1;
+									let person2;
 
-									// ... project document retrieval
+									// ... project, person1 and person2 document retrieval
 
 									let projectMembersAccessPoint = {
-										hasMemberRelation: "people",
-										isMemberOfRelation: "projects"
+										hasMemberRelation: "people", // property used to store the member list in the accessPoint's document
+										isMemberOfRelation: "projects" // property used to link back members to the document they are members of
 									};
 
 									project.createAccessPoint( "people", projectMembersAccessPoint ).then(
 										( [ persistedProjectMembersAccessPoint, response ] ) => {
-											// continue doing stuff (persistedProjectMembersAccessPoint.listMembers/addMember/etc...)
+											console.log( projectMembersAccessPoint === persistedProjectMembersAccessPoint ); // true
+
+											return persistedProjectMembersAccessPoint.addMembers( [ person1, person2 ] );
+										}
+									).then(
+										( response ) => {
+											return project.refresh&lt;Project&gt;();
+										}
+									).then(
+										( [ refreshedProject, response ] ) => {
+											console.log( project === refreshedProject ); // true
+											console.log( refreshedProject.people ); // Pointers to person1 and person2
+
+											return person1.refresh&lt;Person&gt;();
+										}
+									).then(
+										( [ refreshedPerson1, response ] ) => {
+											console.log( person1 === refreshedPerson1 ); // true
+											console.log( refreshedPerson1.projects ); // Pointer to project
+										}
+									).catch( console.error );
+								</code></pre>
+								<!--@formatter:on-->
+							</sui-tab>
+							<sui-tab title="JavaScript ES5">
+								<!--@formatter:off-->
+								<pre><code cpHighlight class="javascript">
+									// ... imports
+
+									var project;
+									var person1;
+									var person2;
+
+									// ... project, person1 and person2 document retrieval
+
+									var projectMembersAccessPoint = {
+										hasMemberRelation: "people", // property used to store the member list in the accessPoint's document
+										isMemberOfRelation: "projects" // property used to link back members to the document they are members of
+									};
+
+									project.createAccessPoint( "people", projectMembersAccessPoint ).then(
+										function( result ) {
+											var persistedProjectMembersAccessPoint = result[ 0 ];
+											var response = result[ 1 ];
+
+											console.log( projectMembersAccessPoint === persistedProjectMembersAccessPoint ); // true
+
+											return persistedProjectMembersAccessPoint.addMembers( [ person1, person2 ] );
+										}
+									).then(
+										function( response ) {
+											return project.refresh&lt;Project&gt;();
+										}
+									).then(
+										function( result ) {
+											var refreshedProject = result[ 0 ];
+											var response = result[ 1 ];
+
+											console.log( project === refreshedProject ); // true
+											console.log( refreshedProject.people ); // Pointers to person1 and person2
+
+											return person1.refresh&lt;Person&gt;();
+										}
+									).then(
+										function( result ) {
+											var refreshedPerson1 = result[ 0 ];
+											var response = result[ 1 ];
+
+											console.log( person1 === refreshedPerson1 ); // true
+											console.log( refreshedPerson1.projects ); // Pointer to project
 										}
 									).catch( console.error );
 								</code></pre>
@@ -1232,6 +1719,19 @@
 							</sui-tab>
 						</sui-tabs>
 					</section>
+					<div class="ui positive icon message">
+						<i class="arrow right icon"></i>
+						<div class="content">
+							<div class="header">Next step</div>
+							<p>
+								This was a short introduction to what the SDK and Carbon can do. You should be able to develop simple applications
+								after reading this document, but to really master the inner works of the SDK you can continue reading:
+							</p>
+							<div class="header">
+								<a [routerLink]="[ '../JavaScriptSDKObjectModel' ]">Object Model</a>
+							</div>
+						</div>
+					</div>
 				</article>
 			</main>
 		</div>

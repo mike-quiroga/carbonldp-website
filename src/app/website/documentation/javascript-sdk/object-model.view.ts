@@ -1,16 +1,13 @@
-import { Component, ElementRef, ChangeDetectorRef } from "@angular/core";
+import { Component, ElementRef, ChangeDetectorRef, AfterViewInit } from "@angular/core";
 import { CORE_DIRECTIVES } from "@angular/common";
-import { RouteConfig, RouterOutlet, RouterLink } from "@angular/router-deprecated";
+import { RouterLink } from "@angular/router-deprecated";
 import { Title } from "@angular/platform-browser";
 
-import SidebarComponent from "./../../sidebar/SidebarComponent";
+import SidebarComponent from "./../sidebar/SidebarComponent";
 
 import HighlightDirective from "carbon-panel/directives/highlight.directive";
-import highlight from "highlight.js";
-import "highlight.js/styles/tomorrow-night.css!";
 
-import template from "./template.html!";
-
+import template from "./object-model.view.html!";
 
 @Component( {
 	selector: "object-model",
@@ -18,45 +15,29 @@ import template from "./template.html!";
 	directives: [ CORE_DIRECTIVES, SidebarComponent, HighlightDirective, RouterLink ],
 	providers: [ Title ],
 } )
-export default class ObjectModelView {
-	element:ElementRef;
-	$element:JQuery;
-	title:Title;
-
+export class ObjectModelView implements AfterViewInit {
 	contentReady:boolean = false;
 
+	private element:ElementRef;
+	private $element:JQuery;
 	private changeDetector:ChangeDetectorRef;
 
 	constructor( element:ElementRef, title:Title, changeDetector:ChangeDetectorRef ) {
 		this.element = element;
-
-		this.title = title;
-		this.title.setTitle( "Object Model - JavaScript SDK" );
-
 		this.changeDetector = changeDetector;
+
+		title.setTitle( "Object Model - JavaScript SDK" );
 	}
 
 	ngAfterViewInit():void {
 		this.$element = $( this.element.nativeElement );
 		this.initializeAccordions();
-		this.initializeTabs();
-		this.highlightCode();
 		this.initializePopUp();
 		this.initializeSidebar();
 	}
 
 	initializeAccordions():void {
 		this.$element.find( ".ui.accordion" ).accordion();
-	}
-
-	initializeTabs():void {
-		this.$element.find( ".tabular.menu .item" ).tab();
-	}
-
-	highlightCode():void {
-		this.$element.find( "pre code.highlighted" ).each( function ( index:number ):void {
-			highlight.highlightBlock( this );
-		} );
 	}
 
 	initializeSidebar():void {
@@ -66,9 +47,10 @@ export default class ObjectModelView {
 	}
 
 	initializePopUp():void {
-		$( ".ui.definition" )
-			.popup( {
-				on: "hover"
-			} );
+		this.$element.find( ".ui.definition" ).popup( {
+			on: "hover"
+		} );
 	}
 }
+
+export default ObjectModelView;
