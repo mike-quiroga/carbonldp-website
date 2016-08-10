@@ -8,7 +8,9 @@ website {
 
 	> .page-content {
 		width: 100%;
-		flex: 1 1 auto;
+		
+		// Safari doesn't display correctly the footer if flex shrink is configured
+		flex: 1 0 auto;
 
 		.main {
 			margin-top: 6em;
