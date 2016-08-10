@@ -1,4 +1,4 @@
-#
+# 0.6.0 (2016/08/10)
 - Add complete initial draft JavaScript SDK Object Schema.
 - Add new documentation landing page.
 - Add styles for new documentation landing page.
