@@ -88,7 +88,6 @@ export class AppComponent {
 				}
 				parameter = parameters[ parameterName ];
 			}
-			console.log( mainComponent );
 			if( parameter !== null ) {
 				if( auxRouter.child === null ) {
 					if( typeof displayName === 'undefined' ) title = "";
@@ -114,7 +113,6 @@ export class AppComponent {
 		if( title === "Home | Carbon LDP" )
 			title = "Dashboard | Carbon LDP";
 		this.title.setTitle( title );
-
 	}
 
 }
