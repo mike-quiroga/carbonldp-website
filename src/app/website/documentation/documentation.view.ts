@@ -17,15 +17,13 @@ import RESTObjectModelView from "./rest-api/rest-object-model/RESTObjectModelVie
 import RESTRdfSourceView from "./rest-api/rest-rdfsource/RESTRdfSourceView";
 import RESTContainersView from "./rest-api/rest-containers/RESTContainersView";
 
-
 import JavaScriptSDKView from "./javascript-sdk/javascript-sdk.view";
 import JavaScriptSDKGettingStartedView from "./javascript-sdk/getting-started.view";
-import JavaScriptSDKContextsView from "./javascript-sdk/contexts/ContextsView";
-import JavaScriptSDKObjectModelView from "./javascript-sdk/object-model/ObjectModelView";
-import JavaScriptSDKObjectSchemaView from "./javascript-sdk/object-schema/ObjectSchemaView";
+import JavaScriptSDKContextsView from "./javascript-sdk/contexts.view";
+import JavaScriptSDKObjectModelView from "./javascript-sdk/object-model.view";
+import JavaScriptSDKObjectSchemaView from "./javascript-sdk/object-schema.view";
 
-
-import "./style.css!";
+import "./documentation.view.css!";
 
 @Component( {
 	selector: "documents",
@@ -49,13 +47,15 @@ import "./style.css!";
 	{ path: "/rest-api/rest-rdfsource", as: "RESTApiRdfSource", component: RESTRdfSourceView },
 	{ path: "/rest-api/rest-containers", as: "RESTApiContainers", component: RESTContainersView },
 
-	{ path: "/javascript-sdk", name: "JavaScriptSDK", component: JavaScriptSDKView },
+	{ path: "/javascript-sdk", as: "JavaScriptSDK", component: JavaScriptSDKView },
 	{ path: "/javascript-sdk/getting-started", as: "JavaScriptSDKGettingStarted", component: JavaScriptSDKGettingStartedView },
 	{ path: "/javascript-sdk/contexts", as: "JavaScriptSDKContexts", component: JavaScriptSDKContextsView },
 	{ path: "/javascript-sdk/object-model", as: "JavaScriptSDKObjectModel", component: JavaScriptSDKObjectModelView },
 	{ path: "/javascript-sdk/object-schema", as: "JavaScriptSDKObjectSchema", component: JavaScriptSDKObjectSchemaView },
 
 ] )
-export default class DocumentationComponent {
+export class DocumentationView {
 
 }
+
+export default DocumentationView;

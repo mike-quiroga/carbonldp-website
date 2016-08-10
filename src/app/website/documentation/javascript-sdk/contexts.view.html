@@ -4,9 +4,9 @@
 		<div class="sixteen wide column">
 
 			<div class="ui breadcrumb">
-				<span class="section">Documentation</span>
+				<a class="section" [routerLink]="[ '../Documentation' ]">Documentation</a>
 				<i class="right chevron icon divider"></i>
-				<span class="section">JavaScript SDK</span>
+				<a class="section" [routerLink]="[ '../JavaScriptSDK' ]">JavaScript SDK</a>
 				<i class="right arrow icon divider"></i>
 
 				<div class="active section">Contexts</div>
@@ -21,6 +21,17 @@
 					<header>
 						<h1 class="ui header">Contexts</h1>
 					</header>
+					<div class="ui info icon message">
+						<i class="arrow left icon"></i>
+						<div class="content">
+							<div class="header">Previous step</div>
+							<p></p>
+							<div class="header">
+								<a [routerLink]="[ '../JavaScriptSDKObjectModel' ]">Object Model</a>
+							</div>
+						</div>
+					</div>
+
 
 					<div class="ui icon yellow message">
 						<i class="warning sign icon"></i>
@@ -107,7 +118,7 @@
 								</div>
 								<div class="ui bottom attached tab segment active" data-tab="typescript">
 									<!--@formatter:off-->
-									<pre><code cphighlight class="typescript">
+									<pre><code cpHighlight class="typescript">
 										import Carbon from "carbonldp/Carbon";
 
 										let carbonContext:Carbon = new Carbon();
@@ -116,7 +127,7 @@
 								</div>
 								<div class="ui bottom attached tab segment" data-tab="javascript">
 									<!--@formatter:off-->
-									<pre><code cphighlight class="javascript">
+									<pre><code cpHighlight class="javascript">
 
 										let carbonContext = new Carbon();
 
@@ -142,14 +153,14 @@
 								</div>
 								<div class="ui bottom attached tab segment active" data-tab="typescript">
 									<!--@formatter:off-->
-									<pre><code cphighlight class="typescript">
+									<pre><code cpHighlight class="typescript">
 										console.log( carbonContext.resolve( "" ) );
 									</code></pre>
 									<!--@formatter:on-->
 								</div>
 								<div class="ui bottom attached tab segment" data-tab="javascript">
 									<!--@formatter:off-->
-									<pre><code cphighlight class="javascript">
+									<pre><code cpHighlight class="javascript">
 										console.log( carbonContext.resolve( "" ) );
 									</code></pre>
 									<!--@formatter:on-->
@@ -218,7 +229,7 @@
 								</div>
 								<div class="ui bottom attached tab segment active" data-tab="typescript">
 									<!--@formatter:off-->
-									<pre><code cphighlight class="typescript">
+									<pre><code cpHighlight class="typescript">
 										import Carbon from "carbonldp/Carbon";
 										import * as App from "carbonldp/App";
 
@@ -234,7 +245,7 @@
 								</div>
 								<div class="ui bottom attached tab segment" data-tab="javascript">
 									<!--@formatter:off-->
-									<pre><code cphighlight class="javascript">
+									<pre><code cpHighlight class="javascript">
 
 										let carbonContext = new Carbon();
 
@@ -290,7 +301,7 @@
 							</div>
 							<div class="ui bottom attached tab segment active" data-tab="typescript">
 								<!--@formatter:off-->
-								<pre><code cphighlight class="typescript">
+								<pre><code cpHighlight class="typescript">
 									import Carbon from "carbonldp/Carbon";
 
 									let carbonContext:Carbon = new Carbon();
@@ -313,7 +324,7 @@
 							</div>
 							<div class="ui bottom attached tab segment" data-tab="javascript">
 								<!--@formatter:off-->
-								<pre><code cphighlight class="javascript">
+								<pre><code cpHighlight class="javascript">
 
 									let carbonContext = new Carbon();
 									let appContext;
@@ -379,7 +390,7 @@
 							</div>
 							<div class="ui bottom attached tab segment active" data-tab="typescript">
 								<!--@formatter:off-->
-								<pre><code cphighlight class="typescript">
+								<pre><code cpHighlight class="typescript">
 									import Carbon from "carbonldp/Carbon";
 									import * as App from "carbonldp/App";
 
@@ -428,7 +439,7 @@
 							</div>
 							<div class="ui bottom attached tab segment" data-tab="javascript">
 								<!--@formatter:off-->
-								<pre><code cphighlight class="javascript">
+								<pre><code cpHighlight class="javascript">
 
 									let carbonContext = new Carbon();
 									let testAppContext;
@@ -489,6 +500,16 @@
 							<span class="highlight">application</span>. <span class="highlight">Contexts</span> are a
 							fundamental tool to achieve a successful communication with Carbon.</p>
 					</section>
+					<div class="ui positive icon message">
+						<i class="arrow right icon"></i>
+						<div class="content">
+							<div class="header">Next step</div>
+							<p></p>
+							<div class="header">
+								<a [routerLink]="[ '../JavaScriptSDKObjectSchema' ]">Object Schema</a>
+							</div>
+						</div>
+					</div>
 				</article>
 			</main>
 		</div>

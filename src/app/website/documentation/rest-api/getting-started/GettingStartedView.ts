@@ -20,16 +20,15 @@ import template from "./template.html!";
 	providers: [ Title ]
 } )
 export default class GettingStartedView {
-	element: ElementRef;
-	$element: JQuery;
-	title: Title;
-	protocolAndHost: string;
-	title: Title;
+	element:ElementRef;
+	$element:JQuery;
+	protocolAndHost:string;
+	title:Title;
 
-	private carbon: Carbon;
-	private contentReady: boolean = false;
+	private carbon:Carbon;
+	private contentReady:boolean = false;
 
-	constructor( element: ElementRef, title: Title, carbon: Carbon ) {
+	constructor( element:ElementRef, title:Title, carbon:Carbon ) {
 		this.element = element;
 
 		this.carbon = carbon;

@@ -4,9 +4,9 @@
 		<div class="sixteen wide column">
 
 			<div class="ui breadcrumb">
-				<span class="section">Documentation</span>
+				<a class="section" [routerLink]="[ '../Documentation' ]">Documentation</a>
 				<i class="right chevron icon divider"></i>
-				<span class="section">JavaScript SDK</span>
+				<a class="section" [routerLink]="[ '../JavaScriptSDK' ]">JavaScript SDK</a>
 				<i class="right arrow icon divider"></i>
 
 				<div class="active section">Object schema</div>
@@ -21,6 +21,17 @@
 					<header>
 						<h1 class="ui header">Object schema</h1>
 					</header>
+
+					<div class="ui info icon message">
+						<i class="arrow left icon"></i>
+						<div class="content">
+							<div class="header">Previous step</div>
+							<p></p>
+							<div class="header">
+								<a [routerLink]="[ '../JavaScriptSDKContexts' ]">Contexts</a>
+							</div>
+						</div>
+					</div>
 
 					<div class="ui icon yellow message">
 						<i class="warning sign icon"></i>
@@ -89,11 +100,11 @@
 
 							<div>
 								<!--@formatter:off-->
-							<pre><code highlight class="typescript">
-								{
-								    "skos": "http://www.w3.org/2004/02/skos/core#"
-								}
-							</code></pre>
+								<pre><code cpHighlight class="typescript">
+									{
+									    "skos": "http://www.w3.org/2004/02/skos/core#"
+									}
+								</code></pre>
 								<!--@formatter:on-->
 							</div>
 						</section>
@@ -127,18 +138,18 @@
 							</ul>
 							<div>
 								<!--@formatter:off-->
-							<pre><code highlight class="typescript">
-								{
-								    "title": {
-								        "@id": "http://example.org/ns#title",
-								        "@type": "http://www.w3.org/2001/XMLSchema#string"
-								    },
-									"post": {
-										"@id": "http://example.otg/ns#post",
-										"@type: "@id"
+								<pre><code cpHighlight class="typescript">
+									{
+									    "title": {
+									        "@id": "http://example.org/ns#title",
+									        "@type": "http://www.w3.org/2001/XMLSchema#string"
+									    },
+										"post": {
+											"@id": "http://example.otg/ns#post",
+											"@type: "@id"
+										}
 									}
-								}
-							</code></pre>
+								</code></pre>
 								<!--@formatter:on-->
 							</div>
 							<p>In the example shown, the <span class="highlight">property</span> <code>title</code>
@@ -220,36 +231,36 @@
 
 							<div>
 								<!--@formatter:off-->
-							<pre><code highlight class="javascript">
-								carbon.extendObjectSchema( {
-									"acl": "http://www.w3.org/ns/auth/acl#",
-									"api": "http://purl.org/linked-data/api/vocab#",
-									"c": "http://carbonldp.com/ns/v1/platform#",
-									"cs": "http://carbonldp.com/ns/v1/security#",
-									"cp": "http://carbonldp.com/ns/v1/patch#",
-									"ex": "http://example.org/ns#",
-									"foaf": "http://xmlns.com/foaf/0.1/",
-									"geonames": "http://www.geonames.org/ontology#",
-									"gr": "http://purl.org/goodrelations/v1#",
-									"http": "http://www.w3.org/2006/http#",
-									"ldp": "http://www.w3.org/ns/ldp#",
-									"rss": "http://purl.org/rss/1.0/",
-									"sd": "http://www.w3.org/ns/sparql-service-description#",
-									"skos": "http://www.w3.org/2004/02/skos/core#",
-									"types": "http://rdfs.org/sioc/types#",
-									"vcard": "http://www.w3.org/2001/vcard-rdf/3.0#",
-									"xsd": "http://www.w3.org/2001/XMLSchema#",
-									"title": {
-										"@id": "ex:title",
-										"@type": "xsd:string"
-									},
-									"name": {
-										"@id": "foaf:name",
-										"@type": "xsd:string"
-									}
-								} );
-							</code></pre>
-							<!--@formatter:on-->
+								<pre><code cpHighlight class="javascript">
+									carbon.extendObjectSchema( {
+										"acl": "http://www.w3.org/ns/auth/acl#",
+										"api": "http://purl.org/linked-data/api/vocab#",
+										"c": "http://carbonldp.com/ns/v1/platform#",
+										"cs": "http://carbonldp.com/ns/v1/security#",
+										"cp": "http://carbonldp.com/ns/v1/patch#",
+										"ex": "http://example.org/ns#",
+										"foaf": "http://xmlns.com/foaf/0.1/",
+										"geonames": "http://www.geonames.org/ontology#",
+										"gr": "http://purl.org/goodrelations/v1#",
+										"http": "http://www.w3.org/2006/http#",
+										"ldp": "http://www.w3.org/ns/ldp#",
+										"rss": "http://purl.org/rss/1.0/",
+										"sd": "http://www.w3.org/ns/sparql-service-description#",
+										"skos": "http://www.w3.org/2004/02/skos/core#",
+										"types": "http://rdfs.org/sioc/types#",
+										"vcard": "http://www.w3.org/2001/vcard-rdf/3.0#",
+										"xsd": "http://www.w3.org/2001/XMLSchema#",
+										"title": {
+											"@id": "ex:title",
+											"@type": "xsd:string"
+										},
+										"name": {
+											"@id": "foaf:name",
+											"@type": "xsd:string"
+										}
+									} );
+								</code></pre>
+								<!--@formatter:on-->
 							</div>
 						</section>
 
@@ -272,7 +283,7 @@
 
 							<div>
 								<!--@formatter:off-->
-								<pre><code highlight class="javascript">
+								<pre><code cpHighlight class="javascript">
 									carbon.extendObjectSchema( "http://example.org/ns#BlogPost" , {
 										"acl": "http://www.w3.org/ns/auth/acl#",
 										"api": "http://purl.org/linked-data/api/vocab#",
@@ -302,7 +313,7 @@
 									} );
 
 								</code></pre>
-							<!--@formatter:on-->
+								<!--@formatter:on-->
 							</div>
 						</section>
 					</section>
@@ -336,7 +347,7 @@
 							<span class="highlight">application context</span> of my-first-app</p>
 						<div>
 							<!--@formatter:off-->
-							<pre><code highlight class="javascript">
+							<pre><code cpHighlight class="javascript">
 								// extending the general object schema in the platform context
 								carbon.extendObjectSchema( {
 									"ex": "http://example.org/ns#",
@@ -362,7 +373,6 @@
 										"@container": "@set"
 									}
 								} );
-
 							</code></pre>
 							<!--@formatter:on-->
 						</div>
@@ -377,22 +387,24 @@
 							<span class="highlight">platform context</span> with some extra prefixes for example: </p>
 
 						<div>
-							<pre><code highlight class="javascript">
+							<!--@formatter:off-->
+							<pre><code cpHighlight class="javascript">
 								// extending the object schema of the type: BlogPost in the application context
 								carbon.extendObjectSchema( "http://example.org/ns#BlogPost" , {
-								"ex": "http://example.org/ns#",
-								"xsd": "http://www.w3.org/2001/XMLSchema#",
-								"description": {
-								"@id": "ex:description",
-								"@type": "xsd:string"
-								},
-								"tags": {
-								"@id": "ex:tag",
-								"@type": "@id",
-								"@container": "@set"
-								}
+									"ex": "http://example.org/ns#",
+									"xsd": "http://www.w3.org/2001/XMLSchema#",
+									"description": {
+										"@id": "ex:description",
+										"@type": "xsd:string"
+									},
+									"tags": {
+										"@id": "ex:tag",
+										"@type": "@id",
+										"@container": "@set"
+									}
 								} );
 							</code></pre>
+							<!--@formatter:on-->
 						</div>
 
 						<p>The <span class="highlight">object schema</span> for the type BlogPost will have the
@@ -414,7 +426,6 @@
 					</section>
 					<section>
 						<h2 class="ui header">Conclusion</h2>
-
 					</section>
 				</article>
 			</main>
