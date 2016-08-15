@@ -25,7 +25,6 @@ import { Angulartics2 } from "angulartics2";
 
 let carbon:Carbon = new Carbon();
 carbon.setSetting( "domain", "<%- carbon.domain %>" );
-carbon.setSetting( "http.ssl", false );
 activeContext.initialize( carbon );
 
 let providers:Provider[] = [];
