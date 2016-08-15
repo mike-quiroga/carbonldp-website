@@ -6,7 +6,7 @@ import { Title } from "@angular/platform-browser";
 import HighlightDirective from "carbon-panel/directives/highlight.directive";
 import { SUI_COMPONENTS } from "carbon-panel/semantic";
 
-import SidebarComponent from "./../sidebar/SidebarComponent";
+import SidebarComponent from "../sidebar/sidebar.component";
 
 import template from "./getting-started.view.html!";
 import style from "./getting-started.view.css!text";

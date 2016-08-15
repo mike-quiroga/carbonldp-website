@@ -3,7 +3,7 @@ import { CORE_DIRECTIVES } from "@angular/common";
 import { RouterLink } from "@angular/router-deprecated";
 
 import { RegisterComponent } from "./register.component";
-import { NewsletterFormComponent } from "../newsletter-form/NewsletterFormComponent"
+import { NewsletterFormComponent } from "../newsletter-form/newsletter-form.component"
 
 import $ from "jquery";
 import "semantic-ui/semantic";

@@ -6,7 +6,7 @@ import { Title } from "@angular/platform-browser";
 import { Angulartics2GoogleAnalytics } from "angulartics2/src/providers/angulartics2-google-analytics";
 import { Angulartics2 } from "angulartics2";
 
-import WebsiteView from "app/website/WebsiteView";
+import WebsiteView from "./website/website.view";
 import { AppDevLoginView } from "app/auth/app-dev-login/app-dev-login.view";
 import { AppDevView } from "app/app-dev/app-dev.view";
 

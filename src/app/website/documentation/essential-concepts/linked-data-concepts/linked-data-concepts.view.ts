@@ -1,22 +1,19 @@
 import { Component, ElementRef, AfterViewInit } from "@angular/core";
 import { CORE_DIRECTIVES } from "@angular/common";
-import { RouterLink } from "@angular/router-deprecated";
 
 import $ from "jquery";
 import "semantic-ui/semantic";
 
-import template from "./rest-api.view.html!";
-import style from "./rest-api.view.css!text";
+import template from "./linked-data-concepts.view.html!";
+import style from "./linked-data-concepts.view.css!text";
 
 @Component( {
-	selector: "rest-api",
+	selector: "linked-data-concepts",
 	template: template,
+	directives: [ CORE_DIRECTIVES ],
 	styles: [ style ],
-	directives: [ CORE_DIRECTIVES, RouterLink ]
 } )
-
-export class RESTApiView implements AfterViewInit {
-
+export class LinkedDataConceptsView implements AfterViewInit {
 	private element:ElementRef;
 	private $element:JQuery;
 
@@ -30,4 +27,4 @@ export class RESTApiView implements AfterViewInit {
 
 }
 
-export default RESTApiView;
+export default LinkedDataConceptsView;

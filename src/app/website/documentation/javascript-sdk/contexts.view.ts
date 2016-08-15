@@ -3,7 +3,7 @@ import { Title } from "@angular/platform-browser";
 import { RouterLink, OnActivate } from "@angular/router-deprecated";
 
 import { HighlightDirective } from "carbon-panel/directives/highlight.directive";
-import SidebarComponent from "./../sidebar/SidebarComponent";
+import SidebarComponent from "../sidebar/sidebar.component";
 
 import template from "./contexts.view.html!";
 

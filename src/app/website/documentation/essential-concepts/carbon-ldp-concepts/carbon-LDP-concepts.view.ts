@@ -1,22 +1,16 @@
 import { Component, ElementRef, AfterViewInit } from "@angular/core";
 import { CORE_DIRECTIVES } from "@angular/common";
-import { RouterLink } from "@angular/router-deprecated";
-
 import $ from "jquery";
 import "semantic-ui/semantic";
 
-import template from "./rest-api.view.html!";
-import style from "./rest-api.view.css!text";
+import template from "./carbon-LDP-concepts.view.html!";
 
 @Component( {
-	selector: "rest-api",
+	selector: "carbon-ldp-concepts",
 	template: template,
-	styles: [ style ],
-	directives: [ CORE_DIRECTIVES, RouterLink ]
+	directives: [ CORE_DIRECTIVES ],
 } )
-
-export class RESTApiView implements AfterViewInit {
-
+export class CarbonLDPConceptsView implements AfterViewInit {
 	private element:ElementRef;
 	private $element:JQuery;
 
@@ -30,4 +24,4 @@ export class RESTApiView implements AfterViewInit {
 
 }
 
-export default RESTApiView;
+export default CarbonLDPConceptsView;

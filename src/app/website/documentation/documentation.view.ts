@@ -1,21 +1,21 @@
-import { Component } from "@angular/core";
+import { Component, ViewEncapsulation } from "@angular/core";
 import { RouteConfig, RouterOutlet } from "@angular/router-deprecated";
 
-import HomeView from "./home/HomeView";
+import HomeView from "./home/home.view";
 
-import AboutCarbonLDPView from "./about-carbon-ldp/AboutCarbonLDPView";
+import AboutCarbonLDPView from "./about-carbon-ldp/about-carbon-LDP.view";
 
 import EssentialConceptsView from "./essential-concepts/essential-concepts.view";
-import LinkedDataConceptsView from "./essential-concepts/linked-data-concepts/LinkedDataConceptsView";
-import LDPConceptsView from "./essential-concepts/ldp-concepts/LDPConceptsView";
-import CarbonLDPConceptsView from "./essential-concepts/carbon-ldp-concepts/CarbonLDPConceptsView";
+import LinkedDataConceptsView from "./essential-concepts/linked-data-concepts/linked-data-concepts.view";
+import LDPConceptsView from "./essential-concepts/ldp-concepts/LDP-concepts.view";
+import CarbonLDPConceptsView from "./essential-concepts/carbon-ldp-concepts/carbon-LDP-concepts.view";
 
 import RESTApiView from "./rest-api/rest-api.view";
-import RESTApiGettingStarted from "./rest-api/getting-started/GettingStartedView";
-import InteractionModelsView from "./rest-api/interaction-models/InteractionModelsView";
-import RESTObjectModelView from "./rest-api/rest-object-model/RESTObjectModelView";
-import RESTRdfSourceView from "./rest-api/rest-rdfsource/RESTRdfSourceView";
-import RESTContainersView from "./rest-api/rest-containers/RESTContainersView";
+import RESTApiGettingStarted from "./rest-api/getting-started/getting-started.view";
+import InteractionModelsView from "./rest-api/interaction-models/interaction-models.view";
+import RESTObjectModelView from "./rest-api/rest-object-model/object-model.view";
+import RESTRdfSourceView from "./rest-api/rest-rdfsource/RDF-source.view";
+import RESTContainersView from "./rest-api/rest-containers/containers.view";
 
 import JavaScriptSDKView from "./javascript-sdk/javascript-sdk.view";
 import JavaScriptSDKGettingStartedView from "./javascript-sdk/getting-started.view";
@@ -23,12 +23,14 @@ import JavaScriptSDKContextsView from "./javascript-sdk/contexts.view";
 import JavaScriptSDKObjectModelView from "./javascript-sdk/object-model.view";
 import JavaScriptSDKObjectSchemaView from "./javascript-sdk/object-schema.view";
 
-import "./documentation.view.css!";
+import style from "./documentation.view.css!text";
 
 @Component( {
 	selector: "documents",
 	template: "<router-outlet></router-outlet>",
 	directives: [ RouterOutlet ],
+	encapsulation: ViewEncapsulation.None,
+	styles: [ style ],
 } )
 @RouteConfig( [
 	{

@@ -1,22 +1,20 @@
 import { Component, ElementRef, AfterViewInit } from "@angular/core";
 import { CORE_DIRECTIVES } from "@angular/common";
-import { RouterLink } from "@angular/router-deprecated";
 
 import $ from "jquery";
 import "semantic-ui/semantic";
 
-import template from "./rest-api.view.html!";
-import style from "./rest-api.view.css!text";
+import template from "./signup-thanks.view.html!";
+import style from "./signup-thanks.view.css!text";
 
 @Component( {
-	selector: "rest-api",
+	selector: "signup-thanks",
 	template: template,
+	directives: [ CORE_DIRECTIVES ],
 	styles: [ style ],
-	directives: [ CORE_DIRECTIVES, RouterLink ]
 } )
 
-export class RESTApiView implements AfterViewInit {
-
+export class SignupThanksView implements AfterViewInit {
 	private element:ElementRef;
 	private $element:JQuery;
 
@@ -26,8 +24,9 @@ export class RESTApiView implements AfterViewInit {
 
 	ngAfterViewInit():void {
 		this.$element = $( this.element.nativeElement );
+		ga( "send", "event", "Newsletter", "Subscription" );
 	}
 
 }
 
-export default RESTApiView;
+export default SignupThanksView;
