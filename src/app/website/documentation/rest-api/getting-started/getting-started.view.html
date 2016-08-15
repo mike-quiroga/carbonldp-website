@@ -115,7 +115,7 @@
 									</tr>
 								</tbody>
 							</table>
-							<pre cphighlight class="turtle">
+							<pre><code cpHighlight class="turtle">
 								@prefix cs:&#60;https://carbonldp.com/ns/v1/security#&#62;.
 								@prefix vcard:&#60;http://www.w3.org/2001/vcard-rdf/3.0#&#62;.
 
@@ -124,7 +124,7 @@
 									cs:name "Jane Doe";
 									vcard:email "jane.doe@example.org";
 									cs:password "MyStr0ngP@ssw0rd#".
-							</pre>
+							</code></pre>
 						</section>
 
 						<section>
@@ -365,7 +365,7 @@
 								<strong>200 OK</strong>
 							</p>
 
-							<pre cphighlight class="json">
+							<pre><code cpHighlight class="json">
 								[
 								   {
 								      "@graph":[
@@ -435,7 +435,7 @@
 								      "@id":"{{protocolAndHost}}/platform/agents/jane-doe/"
 								   }
 								]
-							</pre>
+							</code></pre>
 						</section>
 					</section>
 
@@ -488,13 +488,13 @@
 							<strong>Body (required)</strong>
 						</p>
 
-						<pre cphighlight class="turtle">
+						<pre><code cpHighlight class="turtle">
 							@prefix cs:&#60;https://carbonldp.com/ns/v1/security#&#62;.
 
 							<>
 								a cs:Application;
 								cs:name "Taxonomy Hub".
-						</pre>
+						</code></pre>
 
 						<p>Issue the POST request.</p>
 
@@ -557,7 +557,7 @@
 
 							<p><strong>Example root container for an app</strong></p>
 
-							<pre cphighlight class="turtle">
+							<pre><code cpHighlight class="turtle">
 								&#60;https://local.carbonldp.com/apps/taxonomy-hub/&#62;
 									a
 										&#60;http://www.w3.org/ns/ldp#RDFSource&#62; ,
@@ -572,7 +572,7 @@
 									&#60;http://www.w3.org/ns/ldp#hasMemberRelation&#62; &#60;http://www.w3.org/ns/ldp#member&#62; ;
 									&#60;https://carbonldp.com/ns/v1/security#accessControlList&#62; &#60;https://local.carbonldp.com/apps/taxonomy-hub/~acl/&#62; ;
 									&#60;https://carbonldp.com/ns/v1/platform#modified&#62; "2016-04-01T11:58:03.543-05:00"^^&#60;http://www.w3.org/2001/XMLSchema#dateTime&#62; .
-							</pre>
+							</code></pre>
 						</section>
 
 					</section>
@@ -662,20 +662,20 @@
 
 							<p>A SKOS Concept can have a preferred lexical label, which will be useful in representing it in a user interface. We'll be able to define a label for a concept as shown
 								below.</p>
-							<pre cphighlight class="turtle">
+							<pre><code cpHighlight class="turtle">
 								&#60;carbon-document-uri&#62;
 									a skos:Concept;
 									skos:prefLabel "animals".
-							</pre>
+							</code></pre>
 
 							<p>We can also support locale-specific labels.</p>
 
-							<pre cphighlight class="turtle">
+							<pre><code cpHighlight class="turtle">
 								&#60;carbon-document-uri&#62;
 									rdf:type skos:Concept;
 									skos:prefLabel "animals"@en;
 									skos:prefLabel "animaux"@fr.
-							</pre>
+							</code></pre>
 
 							<p>There is also a <code>skos:altLabel</code> and a <code>skos:hiddenLabel</code>, which can be used in the future, but we'll keep it simple for now and just stick to the
 								<code>skos:prefLabel</code>.</p>
@@ -691,12 +691,12 @@
 								property is used to assert the inverse, namely when one concept is narrower in meaning (i.e. more specific) than another. For example:
 							</p>
 
-							<pre cphighlight class="turtle">
+							<pre><code cpHighlight class="turtle">
 								&#60;carbon-document-uri&#62;
 									rdf:type skos:Concept;
 									skos:prefLabel "animals"@en;
 									skos:narrower ex:mammals.
-							</pre>
+							</code></pre>
 
 							<p>
 								In SKOS, there is also the notion of a  <code>skos:related</code> link, which is used to assert an associative relationship. But again, we can add such things in the
@@ -743,7 +743,7 @@
 
 							<p>Here's an example of what an instance of a ConceptScheme with four top concepts might look like:</p>
 
-							<pre cphighlight class="turtle">
+							<pre><code cpHighlight class="turtle">
 								&#60;carbon-document-uri&#62;
 									rdf:type skos:ConceptScheme;
 									dct:title "Content Topics";
@@ -752,7 +752,7 @@
 										&#60;carbon-document-uri&#62;,
 										&#60;carbon-document-uri&#62;,
 										&#60;carbon-document-uri&#62;.
-							</pre>
+							</code></pre>
 
 							<p>We now have all that we need to for the classes and properties required for our app. Relationships (links) between some of these properties as well as between additional
 								LDP properties
@@ -764,10 +764,10 @@
 								<b>Namespaces used</b>
 							</p>
 
-							<pre cphighlight class="turtle">
+							<pre><code cpHighlight class="turtle">
 								@prefix skos:&#60;http://www.w3.org/2004/02/skos/core#&#62;.
 								@prefix dct:&#60;http://purl.org/dc/terms/&#62;.
-							</pre>
+							</code></pre>
 
 							<p>There's more to SKOS than what we've covered here, so if you're interested in learning more, the following are good reference resources:</p>
 							<ul>
@@ -920,12 +920,12 @@
 								<strong>Body (required)</strong>
 							</p>
 
-							<pre cphighlight class="turtle">
+							<pre><code cpHighlight class="turtle">
 								@prefix ldp:&#60;http://www.w3.org/ns/ldp#&#62;.
 
 								&#60;&#62;
 									a ldp:BasicContainer.
-							</pre>
+							</code></pre>
 
 							<p>We're specifying a Basic Container so that membership will automatically be recorded on the container when new schemes are posted, which will provide an easy way to list
 								available schemes.</p>
@@ -985,7 +985,7 @@
 								<strong>Body (required)</strong>
 							</p>
 
-							<pre cphighlight class="turtle">
+							<pre><code cpHighlight class="turtle">
 								@prefix ldp:&#60;http://www.w3.org/ns/ldp#&#62;.
 								@prefix skos:&#60;http://www.w3.org/2004/02/skos/core#&#62;.
 								@prefix dct:&#60;http://purl.org/dc/terms/&#62;.
@@ -994,7 +994,7 @@
 									a ldp:BasicContainer, skos:ConceptScheme;
 									ldp:memberOfRelation skos:inScheme;
 									dct:title "Topics".
-							</pre>
+							</code></pre>
 
 							<p>Take note of the following triple on the container:</p>
 
@@ -1068,7 +1068,7 @@
 								<strong>Body (required)</strong>
 							</p>
 
-							<pre cphighlight class="turtle">
+							<pre><code cpHighlight class="turtle">
 								@prefix ldp:&#60;http://www.w3.org/ns/ldp#&#62;.
 								@prefix skos:&#60;http://www.w3.org/2004/02/skos/core#&#62;.
 
@@ -1076,7 +1076,7 @@
 									a ldp:DirectContainer;
 									ldp:membershipResource &#60;{{protocolAndHost}}/apps/taxonomy-hub/schemes/topics/&#62;;
 									ldp:hasMemberRelation skos:hasTopConcept.
-							</pre>
+							</code></pre>
 
 							<p>
 								Notice, this time, we use the Prefer header to set the interaction model to RDF Source instead of Container. This keeps the <code>topics/</code> container that we're
@@ -1170,7 +1170,7 @@
 								<strong>Body (required)</strong>
 							</p>
 
-							<pre cphighlight class="turtle">
+							<pre><code cpHighlight class="turtle">
 								@prefix ldp:&#60;http://www.w3.org/ns/ldp#&#62;.
 								@prefix skos:&#60;http://www.w3.org/2004/02/skos/core#&#62;.
 
@@ -1180,7 +1180,7 @@
 									ldp:memberOfRelation skos:broader;
 									skos:prefLabel "Design"@en;
 									skos:prefLabel "DiseÃ±o"@es.
-							</pre>
+							</code></pre>
 
 							<p>
 								Notice, this time that the ldp:hasMemberRelation is skos:narrower. That means that any concept that is later PUT to this container will force a membership triple to be
@@ -1269,13 +1269,13 @@
 								<strong>Body (required)</strong>
 							</p>
 
-							<pre cphighlight class="turtle">
+							<pre><code cpHighlight class="turtle">
 								@prefix c:&#60;https://carbonldp.com/ns/v1/platform#&#62;.
 
 								_:b0
 									a c:AddMemberAction;
 									c:targetMember &#60;{{protocolAndHost}}/apps/taxonomy-hub/schemes/topics/design/&#62;.
-							</pre>
+							</code></pre>
 
 							<p>Notice that the Carbon vocabulary is used. The class of the resource is a Carbon <code>AddMemberAction</code> with the specified member to add to the container we're
 								putting it to.</p>
@@ -1330,7 +1330,7 @@
 								<strong>Body (required)</strong>
 							</p>
 
-							<pre cphighlight class="turtle">
+							<pre><code cpHighlight class="turtle">
 								@prefix ldp:&#60;http://www.w3.org/ns/ldp#&#62;.
 								@prefix skos:&#60;http://www.w3.org/2004/02/skos/core#&#62;.
 
@@ -1340,7 +1340,7 @@
 								    ldp:memberOfRelation skos:broader;
 								    skos:prefLabel "Technology"@en;
 								    skos:prefLabel "Tecnología"@es.
-							</pre>
+							</code></pre>
 
 							<p>A successful POST should result in HTTP status 201 Created.</p>
 
@@ -1383,13 +1383,13 @@
 								<strong>Body (required)</strong>
 							</p>
 
-							<pre cphighlight class="turtle">
+							<pre><code cpHighlight class="turtle">
 								@prefix c:&#60;https://carbonldp.com/ns/v1/platform#&#62;.
 
 								_:b0
 									a c:AddMemberAction;
 									c:targetMember &#60;{{protocolAndHost}}/apps/taxonomy-hub/schemes/topics/technology/&#62;.
-							</pre>
+							</code></pre>
 
 							<p>A successful PUT should result in HTTP status 200 OK.</p>
 
@@ -1437,7 +1437,7 @@
 								<strong>Body (required)</strong>
 							</p>
 
-							<pre cphighlight class="turtle">
+							<pre><code cpHighlight class="turtle">
 								@prefix ldp:&#60;http://www.w3.org/ns/ldp#&#62;.
 								@prefix skos:&#60;http://www.w3.org/2004/02/skos/core#&#62;.
 
@@ -1446,7 +1446,7 @@
 									ldp:hasMemberRelation skos:narrower;
 									ldp:memberOfRelation skos:broader;
 									skos:prefLabel "Information Architecture".
-							</pre>
+							</code></pre>
 
 							<p>A successful POST should result in HTTP status 201 Created.</p>
 
@@ -1494,13 +1494,13 @@
 								<strong>Body (required)</strong>
 							</p>
 
-							<pre cphighlight class="turtle">
+							<pre><code cpHighlight class="turtle">
 								@prefix c:&#60;https://carbonldp.com/ns/v1/platform#&#62;.
 
 								_:b0
 									a c:AddMemberAction;
 									c:targetMember &#60;{{protocolAndHost}}/apps/taxonomy-hub/schemes/topics/information-architecture/&#62;.
-							</pre>
+							</code></pre>
 
 							<p>
 								If you examine the <code>design/</code> container now, you will see the membership triple for the <code>information-architecture/</code> container defined by <code>skos:narrower</code>.
@@ -1555,7 +1555,7 @@
 								<strong>Body (required)</strong>
 							</p>
 
-							<pre cphighlight class="turtle">
+							<pre><code cpHighlight class="turtle">
 								@prefix ldp:&#60;http://www.w3.org/ns/ldp#&#62;.
 								@prefix skos:&#60;http://www.w3.org/2004/02/skos/core#&#62;.
 
@@ -1564,7 +1564,7 @@
 									ldp:hasMemberRelation skos:narrower;
 									ldp:memberOfRelation skos:broader;
 									skos:prefLabel "HTML5".
-							</pre>
+							</code></pre>
 
 							<p>
 								<strong>Create Concept 2.2</strong>
@@ -1610,7 +1610,7 @@
 								<strong>Body (required)</strong>
 							</p>
 
-							<pre cphighlight class="turtle">
+							<pre><code cpHighlight class="turtle">
 								@prefix ldp:&#60;http://www.w3.org/ns/ldp#&#62;.
 								@prefix skos:&#60;http://www.w3.org/2004/02/skos/core#&#62;.
 
@@ -1619,7 +1619,7 @@
 									ldp:hasMemberRelation skos:narrower;
 									ldp:memberOfRelation skos:broader;
 									skos:prefLabel "JavaScript".
-							</pre>
+							</code></pre>
 
 							<p>
 								<strong>Add Concept 2.1 to membership of parent</strong>
@@ -1661,13 +1661,13 @@
 								<strong>Body (required)</strong>
 							</p>
 
-							<pre cphighlight class="turtle">
+							<pre><code cpHighlight class="turtle">
 								@prefix c:&#60;https://carbonldp.com/ns/v1/platform#&#62;.
 
 								_:b0
 									a c:AddMemberAction;
 									c:targetMember &#60;{{protocolAndHost}}/apps/taxonomy-hub/schemes/topics/html5/&#62;.
-							</pre>
+							</code></pre>
 
 							<p>
 								<strong>Add Concept 2.2 to membership of parent</strong>
@@ -1708,13 +1708,13 @@
 								<strong>Body (required)</strong>
 							</p>
 
-							<pre cphighlight class="turtle">
+							<pre><code cpHighlight class="turtle">
 								@prefix c:&#60;https://carbonldp.com/ns/v1/platform#&#62;.
 
 								_:b0
 									a c:AddMemberAction;
 									c:targetMember &#60;{{host}}/apps/taxonomy-hub/schemes/topics/javascript/&#62;.
-							</pre>
+							</code></pre>
 
 						</section>
 
@@ -1788,14 +1788,14 @@
 									</tbody>
 								</table>
 
-								<pre cphighlight class="turtle">
+								<pre><code cpHighlight class="turtle">
 									@prefix cs:&#60;https://carbonldp.com/ns/v1/security#&#62;.
 
 									&#60;&#62;
 									 a cs:AppRole;
 									    cs:name "editor";
 									    cs:description "Role for all available operations." .
-								</pre>
+								</code></pre>
 
 							</section>
 
@@ -1838,14 +1838,14 @@
 										</tr>
 									</tbody>
 								</table>
-								<pre cphighlight class="turtle">
+								<pre><code cpHighlight class="turtle">
 									@prefix cs:&#60;https://carbonldp.com/ns/v1/security#&#62;.
 
 									&#60;&#62;
 									 a cs:AppRole;
 									    cs:name "user";
 									    cs:description "Role for read-only operations." .
-								</pre>
+								</code></pre>
 							</section>
 
 						</section>
@@ -1889,7 +1889,7 @@
 								</tbody>
 							</table>
 
-							<pre cphighlight class="turtle">
+							<pre><code cpHighlight class="turtle">
 								@prefix cs:&#60;https://carbonldp.com/ns/v1/security#&#62;.
 								@prefix vcard:&#60;http://www.w3.org/2001/vcard-rdf/3.0#&#62;.
 
@@ -1897,7 +1897,7 @@
 									a cs:Agent;
 								    vcard:email "user1@example.com" ;
 								    cs:password "password".
-							</pre>
+							</code></pre>
 
 							<h4>Create agent, testuser2</h4>
 
@@ -1932,7 +1932,7 @@
 								</tbody>
 							</table>
 
-							<pre cphighlight class="turtle">
+							<pre><code cpHighlight class="turtle">
 								@prefix cs:&#60;https://carbonldp.com/ns/v1/security#&#62;.
 								@prefix vcard:&#60;http://www.w3.org/2001/vcard-rdf/3.0#&#62;.
 
@@ -1940,7 +1940,7 @@
 									a cs:Agent;
 								    vcard:email "user2@example.com" ;
 								    cs:password "password".
-							</pre>
+							</code></pre>
 
 						</section>
 
@@ -1985,13 +1985,13 @@
 								</tbody>
 							</table>
 
-							<pre cphighlight class="turtle">
+							<pre><code cpHighlight class="turtle">
 								@prefix c:&#60;https://carbonldp.com/ns/v1/platform#&#62;.
 
 								_:b0
 									a c:AddMemberAction;
 									c:targetMember &#60;{{protoocolAndHost}}/apps/taxonomy-hub/agents/testuser1/&#62;.
-							</pre>
+							</code></pre>
 
 							<h4>Add testuser2 to the user role</h4>
 
@@ -2026,13 +2026,13 @@
 								</tbody>
 							</table>
 
-							<pre cphighlight class="turtle">
+							<pre><code cpHighlight class="turtle">
 								@prefix c:&#60;https://carbonldp.com/ns/v1/platform#&#62;.
 
 								_:b0
 									a c:AddMemberAction;
 									c:targetMember &#60;{{protocolAndHost}}/apps/taxonomy-hub/agents/testuser2/&#62;.
-							</pre>
+							</code></pre>
 						</section>
 
 						<section>
@@ -2078,13 +2078,13 @@
 								</tbody>
 							</table>
 
-							<pre cphighlight class="turtle">
+							<pre><code cpHighlight class="turtle">
 								@prefix c:&#60;https://carbonldp.com/ns/v1/platform#&#62;.
 
 								_:b0
 									a c:AddMemberAction;
 									c:targetMember &#60;/apps/taxonomy-hub/roles/editor/&#62;.
-							</pre>
+							</code></pre>
 
 							<p>A successful PUT should result in HTTP status 200 OK.</p>
 
@@ -2124,23 +2124,23 @@
 								</tbody>
 							</table>
 
-							<pre cphighlight class="turtle">
+							<pre><code cpHighlight class="turtle">
 								@prefix c:&#60;https://carbonldp.com/ns/v1/platform#&#62;.
 
 								_:b0
 									a c:AddMemberAction;
 									c:targetMember &#60;/apps/taxonomy-hub/roles/user/&#62;.
-							</pre>
+							</code></pre>
 
 							<p>A successful PUT should result in HTTP status 200 OK.</p>
 
 							<p>If you inspect, the app-admin/ container, you should see the child role specified as follows:</p>
 
-							<pre cphighlight class="turtle">
+							<pre><code cpHighlight class="turtle">
 								&#60;https://local.carbonldp.com/apps/taxonomy-hub/roles/app-admin/&#62;
 									&#60;https://carbonldp.com/ns/v1/security#childRole&#62;
 										&#60;https://local.carbonldp.com/apps/taxonomy-hub/roles/user/&#62;
-							</pre>
+							</code></pre>
 
 						</section>
 						<section>
@@ -2179,7 +2179,7 @@
 
 							<p>The resulting ACL is shown below.</p>
 
-							<pre cphighlight class="turtle">
+							<pre><code cpHighlight class="turtle">
 								&#60;https://local.carbonldp.com/apps/taxonomy-hub/~acl/&#62;
 									a &#60;https://carbonldp.com/ns/v1/security#AccessControlList&#62; ;
 									&#60;https://carbonldp.com/ns/v1/security#accessTo&#62; &#60;https://local.carbonldp.com/apps/taxonomy-hub/&#62; ;
@@ -2220,7 +2220,7 @@
 										&#60;https://carbonldp.com/ns/v1/security#Delete&#62; ;
 									&#60;https://carbonldp.com/ns/v1/security#granting&#62; true ;
 									&#60;https://carbonldp.com/ns/v1/platform#bNodeIdentifier&#62; "735e1e37-c2c4-4ae4-81ed-99a41d5b4ced" .
-							</pre>
+							</code></pre>
 
 							<p>
 								The ACL defines a <code>accessControlEntry</code> and an <code>inheritableEntry</code>, each linking to an <code>AccessControlEntry</code> by way of a blank nodes.
@@ -2277,7 +2277,7 @@
 								</tbody>
 							</table>
 
-							<pre cphighlight class="turtle">
+							<pre><code cpHighlight class="turtle">
 								&#60;https://local.carbonldp.com/apps/taxonomy-hub/~acl/&#62;
 									a &#60;https://carbonldp.com/ns/v1/security#AccessControlList&#62; ;
 									&#60;https://carbonldp.com/ns/v1/security#accessTo&#62; &#60;https://local.carbonldp.com/apps/taxonomy-hub/&#62; ;
@@ -2347,7 +2347,7 @@
 									&#60;https://carbonldp.com/ns/v1/security#subject&#62; &#60;https://local.carbonldp.com/apps/taxonomy-hub/roles/user/&#62; ;
 									&#60;https://carbonldp.com/ns/v1/security#permission&#62; &#60;https://carbonldp.com/ns/v1/security#Read&#62; ;
 									&#60;https://carbonldp.com/ns/v1/security#granting&#62; true .
-							</pre>
+							</code></pre>
 
 							<p>A successful PUT should result in HTTP status 200 OK.</p>
 

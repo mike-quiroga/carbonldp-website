@@ -281,7 +281,7 @@
 							<div class="content">
 								<p>
 									Before you can save data in Carbon, you need to create an account. Click
-									<a [routerLink]="[ '/Website/Register' ]">here</a> if you haven't done it.
+									<a target="_blank" [routerLink]="[ '/Website/Register' ]">here</a> if you haven't done it.
 								</p>
 							</div>
 						</div>
@@ -356,8 +356,7 @@
 						<h2 class="ui header">Authenticating</h2>
 						<p>
 							After creating the platform context you need to tell the platform who you are by authenticating
-							<!-- TODO: Add link to register page -->
-							yourself (if you haven't created an account, click here to do it).
+							yourself (if you haven't created an account, click <a target="_blank" [routerLink]="[ '/Website/Register' ]">here</a> to do it).
 						</p>
 						<p>
 							All authentication/authorization related actions are done through the <code>auth</code> service
@@ -435,7 +434,7 @@
 							<div class="content">
 								<p>
 									Before continuing, you need to create your first application, if you haven't done it, click
-									<a [routerLink]="[ '/AppDev/MyApps/Create' ]">here</a> to do so (remember to note your application slug, because we'll use it later).
+									<a target="_blank" [routerLink]="[ '/AppDev/MyApps/Create' ]">here</a> to do so (remember to note your application slug, because we'll use it later).
 								</p>
 							</div>
 						</div>
@@ -904,7 +903,7 @@
 							<li>Retrieve the <span class="highlight">document</span>:
 								<ol>
 									<li><code>get</code> using the <span class="highlight">document</span> id as
-										described in <span class="sectionlink"><a href="#retrieving-a-document">retrieving a document</a></span>
+										described in <span class="sectionlink">retrieving a document</span>
 									</li>
 								</ol>
 							</li>
