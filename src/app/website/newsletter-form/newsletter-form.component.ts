@@ -34,8 +34,8 @@ export class NewsletterFormComponent implements OnInit {
 	}
 
 	ngOnInit() {
-		this.redirectPage = document.location.href + "/signup-thanks/";
-		this.errorPage = document.location.href;
+		this.redirectPage = document.location.origin + "/site/signup-thanks/";
+		this.errorPage = document.location.origin + "/error/";
 	}
 
 	onSubmit( $event:any ):void {
@@ -48,5 +48,3 @@ export class NewsletterFormComponent implements OnInit {
 		}
 	}
 }
-
-export default NewsletterFormComponent;
