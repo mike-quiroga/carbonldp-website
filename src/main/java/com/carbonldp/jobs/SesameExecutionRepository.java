@@ -9,6 +9,7 @@ import com.carbonldp.rdf.RDFResourceRepository;
 import com.carbonldp.utils.ValueUtil;
 import org.eclipse.rdf4j.model.BNode;
 import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.Resource;
 import org.eclipse.rdf4j.model.Value;
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
@@ -72,15 +73,9 @@ public class SesameExecutionRepository extends AbstractSesameLDPRepository imple
 	@Override
 	public void enqueue( BNode bNode, IRI executionQueueLocationIRI ) {
 		RDFSource executionQueueLocation = sourceRepository.get( executionQueueLocationIRI );
-		IRI executionQueue = executionQueueLocation.getIRI( ExecutionDescription.List.QUEUE.getIRI() );
-
-		Map<String, Value> bindings = new HashMap<>();
-		bindings.put( "bnode", bNode );
-		bindings.put( "queue", executionQueue );
-		bindings.put( "context", executionQueueLocationIRI );
-
-		sparqlTemplate.executeUpdate( enqueueQuery, bindings );
-
+		BNode queueFirstElement = executionQueueLocation.getBNode( ExecutionDescription.List.QUEUE.getIRI() );
+		if ( queueFirstElement == null ) resourceRepository.add( executionQueueLocationIRI, ExecutionDescription.List.QUEUE.getIRI(), bNode );
+		else enqueueElement( bNode, queueFirstElement, executionQueueLocationIRI );
 	}
 
 	private static final String dequeueQuery;
@@ -89,35 +84,33 @@ public class SesameExecutionRepository extends AbstractSesameLDPRepository imple
 		dequeueQuery = "" +
 			"DELETE {" + NEW_LINE +
 			TAB + "GRAPH ?context {" + NEW_LINE +
-			TAB + TAB + "?queue <" + RDF.REST + "> ?dequeueElement." + NEW_LINE +
-			TAB + TAB + "?dequeueElement ?p ?o." + NEW_LINE +
+			TAB + TAB + "?context <" + ExecutionDescription.List.QUEUE.getIRI() + "> ?queueFirstElement." + NEW_LINE +
+			TAB + TAB + "?queueFirstElement ?p ?o." + NEW_LINE +
 			TAB + "}." + NEW_LINE +
 			"}" + NEW_LINE +
 			"INSERT {" + NEW_LINE +
 			TAB + "GRAPH ?context {" + NEW_LINE +
-			TAB + TAB + "?queue <" + RDF.REST + "> ?nextElement ." + NEW_LINE +
+			TAB + TAB + "?context <" + ExecutionDescription.List.QUEUE.getIRI() + "> ?nextElement ." + NEW_LINE +
 			TAB + "}." + NEW_LINE +
 			"}" + NEW_LINE +
 			"WHERE {" + NEW_LINE +
 			TAB + "GRAPH ?context {" + NEW_LINE +
-			TAB + TAB + "?queue <" + RDF.REST + "> ?dequeueElement ." + NEW_LINE +
-			TAB + TAB + "?dequeueElement <" + RDF.REST + "> ?nextElement . " + NEW_LINE +
-			TAB + TAB + "?dequeueElement ?p ?o." + NEW_LINE +
+			TAB + TAB + "?queueFirstElement <" + RDF.REST + "> ?nextElement ." + NEW_LINE +
+			TAB + TAB + "?queueFirstElement ?p ?o." + NEW_LINE +
 			TAB + "}." + NEW_LINE +
 			"}";
 	}
 
 	@Override
 	public void dequeue( IRI executionQueueLocationIRI ) {
-		RDFSource executionQueueLocation = sourceRepository.get( executionQueueLocationIRI );
-		IRI executionQueue = executionQueueLocation.getIRI( ExecutionDescription.List.QUEUE.getIRI() );
+		Resource queueFirstElement = resourceRepository.getResource( executionQueueLocationIRI, ExecutionDescription.List.QUEUE.getIRI() );
 
 		Map<String, Value> bindings = new HashMap<>();
-		bindings.put( "queue", executionQueue );
+		bindings.put( "queueFirstElement", queueFirstElement );
 		bindings.put( "context", executionQueueLocationIRI );
 
 		sparqlTemplate.executeUpdate( dequeueQuery, bindings );
-
+		if ( resourceRepository.getResource( executionQueueLocationIRI, ExecutionDescription.List.QUEUE.getIRI() ).equals( RDF.NIL ) ) resourceRepository.remove( executionQueueLocationIRI, ExecutionDescription.List.QUEUE.getIRI() );
 	}
 
 	private static final String peekQuery;
@@ -127,16 +120,15 @@ public class SesameExecutionRepository extends AbstractSesameLDPRepository imple
 			"SELECT ?item" + NEW_LINE +
 			"WHERE {" + NEW_LINE +
 			TAB + "GRAPH ?context {" + NEW_LINE +
-			TAB + TAB + "?queue <" + RDF.REST + "> ?queueElement ." + NEW_LINE +
-			TAB + TAB + "?queueElement <" + RDF.FIRST + "> ?item ; " + NEW_LINE +
+			TAB + TAB + "?queue <" + RDF.FIRST + "> ?item ; " + NEW_LINE +
 			TAB + "}." + NEW_LINE +
 			"}";
 	}
 
 	@Override
 	public Execution peek( IRI executionQueueLocationIRI ) {
-		RDFSource executionQueueLocation = sourceRepository.get( executionQueueLocationIRI );
-		IRI executionQueue = executionQueueLocation.getIRI( ExecutionDescription.List.QUEUE.getIRI() );
+		BNode executionQueue = resourceRepository.getBNode( executionQueueLocationIRI, ExecutionDescription.List.QUEUE.getIRI() );
+		if ( executionQueue == null ) return null;
 
 		Map<String, Value> bindings = new HashMap<>();
 		bindings.put( "queue", executionQueue );
@@ -152,6 +144,16 @@ public class SesameExecutionRepository extends AbstractSesameLDPRepository imple
 		} );
 		if ( executionIRI == null ) return null;
 		return new Execution( sourceRepository.get( executionIRI ) );
+	}
+
+	private void enqueueElement( BNode bNode, BNode queueFirstElement, IRI executionQueueLocationIRI ) {
+
+		Map<String, Value> bindings = new HashMap<>();
+		bindings.put( "bnode", bNode );
+		bindings.put( "queue", queueFirstElement );
+		bindings.put( "context", executionQueueLocationIRI );
+
+		sparqlTemplate.executeUpdate( enqueueQuery, bindings );
 	}
 
 	@Override

@@ -2,6 +2,7 @@ package com.carbonldp.rdf;
 
 import org.eclipse.rdf4j.model.BNode;
 import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.Resource;
 import org.eclipse.rdf4j.model.Value;
 import org.joda.time.DateTime;
 
@@ -42,6 +43,14 @@ public interface RDFResourceRepository extends RDFNodeRepository<IRI> {
 	public Set<BNode> getBNodes( IRI resourceIRI, IRI pred );
 
 	public Set<BNode> getBNodes( IRI resourceIRI, RDFNodeEnum pred );
+
+	public Resource getResource (IRI resourceIRI, RDFNodeEnum pred);
+
+	public Resource getResource (IRI resourceIRI, IRI pred);
+
+	public Set<Resource> getResources (IRI resourceIRI, RDFNodeEnum pred);
+
+	public Set<Resource> getResources (IRI resourceIRI, IRI pred);
 
 	public Boolean getBoolean( IRI resourceIRI, IRI pred );
 
