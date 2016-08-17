@@ -3,7 +3,7 @@ import { CORE_DIRECTIVES } from "@angular/common";
 
 import "semantic-ui/semantic";
 
-import template from "./about-carbon-LDP.view.html!";
+import template from "./about-carbon-ldp.view.html!";
 
 @Component( {
 	selector: "about-carbon-ldp",

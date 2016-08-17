@@ -1,21 +1,18 @@
 import { Component, ElementRef, AfterViewInit } from "@angular/core";
 import { CORE_DIRECTIVES } from "@angular/common";
+import SidebarComponent from "./../sidebar/sidebar.component";
 
-import SidebarComponent from "./../../sidebar/sidebar.component";
-
-import $ from "jquery";
 import "semantic-ui/semantic";
 
-import template from "./containers.view.html!";
+import template from "./object-model.view.html!";
 
 @Component( {
-	selector: "rest-containers",
+	selector: "object-model",
 	template: template,
 	directives: [ CORE_DIRECTIVES, SidebarComponent ]
 } )
-export class ContainersView implements AfterViewInit {
+export class ObjectModelView implements AfterViewInit {
 	private element:ElementRef;
-	private $element:JQuery;
 	private contentReady:boolean = false;
 
 	constructor( element:ElementRef ) {
@@ -23,13 +20,7 @@ export class ContainersView implements AfterViewInit {
 	}
 
 	ngAfterViewInit():void {
-		this.$element = $( this.element.nativeElement );
-		this.createAccordions();
 		this.initializeSidebar();
-	}
-
-	createAccordions():void {
-		this.$element.find( ".ui.accordion" ).accordion();
 	}
 
 	initializeSidebar():void {
@@ -38,5 +29,4 @@ export class ContainersView implements AfterViewInit {
 		}, 0 );
 	}
 }
-export default ContainersView;
-
+export default ObjectModelView;

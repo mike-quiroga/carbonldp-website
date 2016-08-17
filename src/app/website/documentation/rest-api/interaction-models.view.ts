@@ -1,18 +1,18 @@
 import { Component, ElementRef, AfterViewInit } from "@angular/core";
 import { CORE_DIRECTIVES } from "@angular/common";
-import SidebarComponent from "./../../sidebar/sidebar.component";
+import SidebarComponent from "./../sidebar/sidebar.component";
 
 import "semantic-ui/semantic";
 
-import template from "./object-model.view.html!";
+import template from "./interaction-models.view.html!";
 
 @Component( {
-	selector: "object-model",
+	selector: "interaction-models",
 	template: template,
 	directives: [ CORE_DIRECTIVES, SidebarComponent ]
 } )
-export class ObjectModelView implements AfterViewInit {
-	private element:ElementRef;
+export class InteractionModelsView implements AfterViewInit {
+	element:ElementRef;
 	private contentReady:boolean = false;
 
 	constructor( element:ElementRef ) {
@@ -29,4 +29,6 @@ export class ObjectModelView implements AfterViewInit {
 		}, 0 );
 	}
 }
-export default ObjectModelView;
+
+export default InteractionModelsView;
+

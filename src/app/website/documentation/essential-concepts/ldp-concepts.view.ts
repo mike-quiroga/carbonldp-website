@@ -3,7 +3,7 @@ import { CORE_DIRECTIVES } from "@angular/common";
 
 import "semantic-ui/semantic";
 
-import template from "./LDP-concepts.view.html!";
+import template from "./ldp-concepts.view.html!";
 
 
 @Component( {
