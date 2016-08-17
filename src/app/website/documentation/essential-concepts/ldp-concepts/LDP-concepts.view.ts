@@ -1,4 +1,4 @@
-import { Component, ElementRef, AfterViewInit } from "@angular/core";
+import { Component, ElementRef } from "@angular/core";
 import { CORE_DIRECTIVES } from "@angular/common";
 
 import $ from "jquery";
@@ -12,17 +12,6 @@ import template from "./LDP-concepts.view.html!";
 	template: template,
 	directives: [ CORE_DIRECTIVES ],
 } )
-export class LDPConceptsView implements AfterViewInit{
-	private element:ElementRef;
-	private $element:JQuery;
-
-	constructor( element:ElementRef ) {
-		this.element = element;
-	}
-
-	ngAfterViewInit():void {
-		this.$element = $( this.element.nativeElement );
-	}
-
+export class LDPConceptsView {
 }
 export default LDPConceptsView;
