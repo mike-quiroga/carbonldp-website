@@ -17,8 +17,8 @@ import org.springframework.transaction.annotation.Transactional;
  * @author NestorVenegas
  * @since 0.15.0-ALPHA
  */
-public class IRIAuthenticationProvider extends AbstractSesameAuthenticationProvider {
-	public IRIAuthenticationProvider( AgentRepository agentRepository, PlatformRoleRepository platformRoleRepository, PlatformPrivilegeRepository platformPrivilegeRepository ) {
+public class PlatformIRIAuthenticationProvider extends AbstractSesameAuthenticationProvider {
+	public PlatformIRIAuthenticationProvider( AgentRepository agentRepository, PlatformRoleRepository platformRoleRepository, PlatformPrivilegeRepository platformPrivilegeRepository ) {
 		super( agentRepository, platformRoleRepository, platformPrivilegeRepository );
 	}
 
