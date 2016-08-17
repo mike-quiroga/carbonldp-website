@@ -1,6 +1,6 @@
 import { Component, DynamicComponentLoader, ElementRef } from "@angular/core";
 import { CORE_DIRECTIVES } from "@angular/common";
-import { ROUTER_DIRECTIVES, Router } from "@angular/router-deprecated";
+import { ROUTER_DIRECTIVES, Router, OnActivate } from "@angular/router-deprecated";
 
 import "semantic-ui/semantic";
 
@@ -19,7 +19,7 @@ import style from "./blog.view.css!text";
 	providers: [ BlogService ],
 	styles: [ style ],
 } )
-export default class BlogView {
+export default class BlogView implements OnActivate {
 	router:Router;
 	dcl:DynamicComponentLoader;
 	blogService:BlogService;

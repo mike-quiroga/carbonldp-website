@@ -1,9 +1,9 @@
-import { Component, ElementRef, Input, DynamicComponentLoader } from "@angular/core";
+import { Component, ElementRef, Input, DynamicComponentLoader, OnInit, AfterViewInit } from "@angular/core";
 import { CORE_DIRECTIVES } from "@angular/common";
 import { ROUTER_DIRECTIVES, Router } from "@angular/router-deprecated";
 
-import BlogPost from "../blog-post/blog-post";
-// import * as CodeMirrorComponent from "app/components/code-mirror/CodeMirrorComponent";
+import BlogPost from "./../blog-post/blog-post";
+
 import * as CodeMirrorComponent from "carbon-panel/code-mirror/code-mirror.component";
 
 import "semantic-ui/semantic";
@@ -17,14 +17,14 @@ import style from "./blog-post-thumbnail.component.css!text";
 	directives: [ CORE_DIRECTIVES, ROUTER_DIRECTIVES, CodeMirrorComponent.Class ],
 	styles: [ style ],
 } )
-export default class BlogPostThumbnailComponent {
+export class BlogPostThumbnailComponent implements OnInit, AfterViewInit{
 	static parameters = [ [ Router ], [ ElementRef ], [ DynamicComponentLoader ] ];
 
-	router:Router;
+	private router:Router;
 	dcl:DynamicComponentLoader;
 
-	element:ElementRef;
-	isNewPost:boolean;
+	private element:ElementRef;
+	private isNewPost:boolean;
 
 	@Input() blogPost:BlogPost;
 
@@ -60,3 +60,5 @@ export default class BlogPostThumbnailComponent {
 		}
 	}
 }
+
+export default BlogPostThumbnailComponent;

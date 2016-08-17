@@ -1,13 +1,12 @@
 import { Component, ElementRef, DynamicComponentLoader, Type } from "@angular/core";
 import { CORE_DIRECTIVES, Location } from "@angular/common";
-import { ROUTER_DIRECTIVES, Router, RouteParams } from "@angular/router-deprecated";
+import { ROUTER_DIRECTIVES, Router, RouteParams, OnActivate } from "@angular/router-deprecated";
 
 import * as CodeMirrorComponent from "carbon-panel/code-mirror/code-mirror.component";
 
 import BlogService from "../service/blog.service";
 import BlogPost from "./blog-post";
 
-import $ from "jquery";
 import "semantic-ui/semantic";
 
 import template from "./blog-post.view.html!";
@@ -20,7 +19,7 @@ import style from "./blog-post.view.css!text";
 	providers: [ BlogService, Location ],
 	styles: [ style ],
 } )
-export default class BlogPostView {
+export class BlogPostView implements OnActivate {
 	router:Router;
 	dcl:DynamicComponentLoader;
 	routeParams:RouteParams;
@@ -93,3 +92,5 @@ export default class BlogPostView {
 		this.dcl.loadIntoLocation( postComponent, this.element, "content" );
 	}
 }
+
+export default BlogPostView;
