@@ -13,7 +13,6 @@ import template from "./interaction-models.view.html!";
 } )
 export class InteractionModelsView implements AfterViewInit {
 	element:ElementRef;
-	$element:JQuery;
 	private contentReady:boolean = false;
 
 	constructor( element:ElementRef ) {
