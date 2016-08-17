@@ -5,7 +5,7 @@ import { Injectable } from "@angular/core";
 import { Http } from "@angular/http";
 import { Location } from "@angular/common";
 
-import BlogPost from "../blog-post/blog-post";
+import BlogPost from "./../blog-post/blog-post";
 
 @Injectable()
 export default class BlogService {
