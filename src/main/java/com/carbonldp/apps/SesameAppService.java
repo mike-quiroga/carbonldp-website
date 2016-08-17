@@ -274,7 +274,7 @@ public class SesameAppService extends AbstractSesameLDPService implements AppSer
 		RDFResource jobsResource = new RDFResource( containerIRI );
 		BasicContainer jobsContainer = BasicContainerFactory.getInstance().create( jobsResource, valueFactory.createIRI( LDP.Properties.MEMBER ), JobDescription.Property.EXECUTION_QUEUE_LOCATION.getIRI() );
 
-		RDFListFactory.getInstance().createQueue( jobsContainer );
+		//RDFListFactory.getInstance().createQueue( jobsContainer );
 
 		containerRepository.createChild( app.getIRI(), jobsContainer );
 		return aclRepository.createACL( jobsContainer.getIRI() );
