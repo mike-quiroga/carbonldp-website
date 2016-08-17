@@ -2,6 +2,7 @@ import { Component } from "@angular/core";
 import { CORE_DIRECTIVES } from "@angular/common";
 import { ROUTER_DIRECTIVES, RouteConfig, Router } from "@angular/router-deprecated";
 import { Title } from "@angular/platform-browser";
+import { Meta } from "./website/meta";
 
 import { Angulartics2GoogleAnalytics } from "angulartics2/src/providers/angulartics2-google-analytics";
 import { Angulartics2 } from "angulartics2";
@@ -57,10 +58,12 @@ import style from "./app.component.css!text";
 export class AppComponent {
 	router:Router;
 	title:Title;
+	meta:Meta;
 	// Importing angulartics2, angulartics2GoogleAnalytics as per documentation of angulartics2 plug-in
-	constructor( title:Title, router:Router, angulartics2:Angulartics2, angulartics2GoogleAnalytics:Angulartics2GoogleAnalytics ) {
+	constructor( meta:Meta, title:Title, router:Router, angulartics2:Angulartics2, angulartics2GoogleAnalytics:Angulartics2GoogleAnalytics ) {
 		this.router = router;
 		this.title = title;
+		this.meta = meta;
 		this.router.subscribe( () => {
 			this.defineTitle();
 		} );
@@ -113,6 +116,7 @@ export class AppComponent {
 		if( title === "Home | Carbon LDP" )
 			title = "Dashboard | Carbon LDP";
 		this.title.setTitle( title );
+		console.log( this.meta.setMeta() );
 	}
 
 }
