@@ -3,7 +3,7 @@ import { CORE_DIRECTIVES } from "@angular/common";
 
 import { HighlightDirective } from "carbon-panel/directives/highlight.directive";
 
-import SidebarComponent from "../../sidebar/sidebar.component";
+import SidebarComponent from "./../../sidebar/sidebar.component";
 
 import $ from "jquery";
 import "semantic-ui/semantic";

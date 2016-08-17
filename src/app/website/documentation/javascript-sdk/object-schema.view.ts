@@ -1,12 +1,11 @@
 import { Component, ElementRef, ChangeDetectorRef, AfterViewInit } from "@angular/core";
 import { CORE_DIRECTIVES } from "@angular/common";
 
-import { RouterLink, OnActivate } from "@angular/router-deprecated";
-import { Title } from "@angular/platform-browser";
+import { RouterLink } from "@angular/router-deprecated";
 
 import HighlightDirective from "carbon-panel/directives/highlight.directive";
 
-import SidebarComponent from "../sidebar/sidebar.component";
+import SidebarComponent from "./../sidebar/sidebar.component";
 
 import template from "./object-schema.view.html!";
 
@@ -14,28 +13,21 @@ import template from "./object-schema.view.html!";
 	selector: "object-schema",
 	template: template,
 	directives: [ CORE_DIRECTIVES, SidebarComponent, HighlightDirective, RouterLink ],
-	providers: [ Title ],
 } )
-export class ObjectModelView implements AfterViewInit, OnActivate {
+export class ObjectModelView implements AfterViewInit {
 
 	contentReady:boolean = false;
 
 	private element:ElementRef;
-	private title:Title;
 	private changeDetector:ChangeDetectorRef;
 
-	constructor( element:ElementRef, title:Title, changeDetector:ChangeDetectorRef ) {
+	constructor( element:ElementRef, changeDetector:ChangeDetectorRef ) {
 		this.element = element;
-		this.title = title;
 		this.changeDetector = changeDetector;
 	}
 
 	ngAfterViewInit():void {
 		this.initializeSidebar();
-	}
-
-	routerOnActivate():void {
-		this.title.setTitle( "Object Schema - JavaScript SDK" );
 	}
 
 	initializeSidebar():void {

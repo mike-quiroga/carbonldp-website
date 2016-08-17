@@ -1,4 +1,4 @@
-import { Component, ElementRef, AfterViewInit } from "@angular/core";
+import { Component } from "@angular/core";
 import { CORE_DIRECTIVES } from "@angular/common";
 import { RouterLink } from "@angular/router-deprecated";
 
@@ -17,20 +17,7 @@ import style from "./register.view.css!text";
 	directives: [ CORE_DIRECTIVES, RouterLink, RegisterComponent, NewsletterFormComponent ],
 	styles: [ style ]
 } )
-export class RegisterView implements AfterViewInit {
-
-	private element:ElementRef;
-	private $element:JQuery;
-
-	constructor( element:ElementRef ) {
-		this.element = element;
-	}
-
-	ngAfterViewInit():void {
-		this.$element = $( this.element.nativeElement );
-	}
-
-
+export class RegisterView {
 }
 
 export default RegisterView;

@@ -1,6 +1,6 @@
-import { Component, ElementRef, Input, DynamicComponentLoader, Type } from "@angular/core";
+import { Component, ElementRef, DynamicComponentLoader, Type } from "@angular/core";
 import { CORE_DIRECTIVES, Location } from "@angular/common";
-import { ROUTER_DIRECTIVES, ROUTER_PROVIDERS, Router, Instruction, RouteParams } from "@angular/router-deprecated";
+import { ROUTER_DIRECTIVES, Router, RouteParams } from "@angular/router-deprecated";
 
 import * as CodeMirrorComponent from "carbon-panel/code-mirror/code-mirror.component";
 
@@ -64,10 +64,6 @@ export default class BlogPostView {
 				}
 			);
 		}
-	}
-
-	ngAfterViewInit():void {
-		this.$element = $( this.element.nativeElement );
 	}
 
 	private createPostComponent( fileName:string ):Type {

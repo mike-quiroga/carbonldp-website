@@ -1,4 +1,3 @@
-import { Observable } from "rxjs/Rx";
 import "rxjs/operator/toPromise";
 
 import { Injectable } from "@angular/core";

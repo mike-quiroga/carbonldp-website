@@ -1,7 +1,6 @@
-import { Component, ElementRef } from "@angular/core";
+import { Component } from "@angular/core";
 import { CORE_DIRECTIVES } from "@angular/common";
 
-import $ from "jquery";
 import "semantic-ui/semantic";
 
 import template from "./linked-data-concepts.view.html!";

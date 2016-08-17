@@ -1,12 +1,11 @@
 import { Component, ElementRef, ChangeDetectorRef, AfterViewInit } from "@angular/core";
 import { Location } from "@angular/common";
-import { ROUTER_DIRECTIVES, OnActivate } from "@angular/router-deprecated";
-import { Title } from "@angular/platform-browser";
+import { ROUTER_DIRECTIVES } from "@angular/router-deprecated";
 
 import HighlightDirective from "carbon-panel/directives/highlight.directive";
 import { SUI_COMPONENTS } from "carbon-panel/semantic";
 
-import SidebarComponent from "../sidebar/sidebar.component";
+import SidebarComponent from "./../sidebar/sidebar.component";
 
 import template from "./getting-started.view.html!";
 import style from "./getting-started.view.css!text";
@@ -16,32 +15,23 @@ import style from "./getting-started.view.css!text";
 	template: template,
 	styles: [ style ],
 	directives: [ ROUTER_DIRECTIVES, SidebarComponent, HighlightDirective, SUI_COMPONENTS, ],
-	providers: [ Title ],
 } )
-export class GettingStartedView implements AfterViewInit, OnActivate {
+export class GettingStartedView implements AfterViewInit {
 	contentReady:boolean = false;
 
 	private element:ElementRef;
-	private $element:JQuery;
-	private title:Title;
 	private location:Location;
 	private changeDetector:ChangeDetectorRef;
 	private selectedLanguage:number = 0;
 
-	constructor( element:ElementRef, title:Title, location:Location, changeDetector:ChangeDetectorRef ) {
+	constructor( element:ElementRef, location:Location, changeDetector:ChangeDetectorRef ) {
 		this.element = element;
-		this.title = title;
 		this.location = location;
 		this.changeDetector = changeDetector;
 	}
 
 	ngAfterViewInit():void {
-		this.$element = $( this.element.nativeElement );
 		this.initializeSidebar();
-	}
-
-	routerOnActivate():void {
-		this.title.setTitle( "Getting started - JavaScript SDK" );
 	}
 
 	initializeSidebar():void {

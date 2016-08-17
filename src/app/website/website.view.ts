@@ -1,4 +1,4 @@
-import { Component, ElementRef, ViewEncapsulation, AfterViewInit } from "@angular/core";
+import { Component, ViewEncapsulation } from "@angular/core";
 import { CORE_DIRECTIVES } from "@angular/common";
 import { ROUTER_DIRECTIVES, RouteConfig, Router } from "@angular/router-deprecated";
 
@@ -77,14 +77,11 @@ import style from "./website.view.css!text";
 		},
 	},
 ] )
-export class WebsiteView implements AfterViewInit {
-	private element:ElementRef;
-	private $element:JQuery;
+export class WebsiteView {
 	private router:Router;
 	private prevUrl = "";
 
-	constructor( router:Router, element:ElementRef ) {
-		this.element = element;
+	constructor( router:Router ) {
 		this.router = router;
 		this.router.parent.subscribe( ( url ) => {
 			if( this.prevUrl !== url ) {
@@ -92,10 +89,6 @@ export class WebsiteView implements AfterViewInit {
 				this.prevUrl = url;
 			}
 		} );
-	}
-
-	ngAfterViewInit():void {
-		this.$element = $( this.element.nativeElement );
 	}
 
 }

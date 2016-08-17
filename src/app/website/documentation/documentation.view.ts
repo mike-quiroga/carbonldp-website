@@ -3,18 +3,18 @@ import { RouteConfig, RouterOutlet } from "@angular/router-deprecated";
 
 import HomeView from "./home/home.view";
 
-import AboutCarbonLDPView from "./about-carbon-ldp/about-carbon-LDP.view";
+import AboutCarbonLDPView from "./about-carbon-ldp/about-carbon-ldp.view";
 
 import EssentialConceptsView from "./essential-concepts/essential-concepts.view";
 import LinkedDataConceptsView from "./essential-concepts/linked-data-concepts/linked-data-concepts.view";
-import LDPConceptsView from "./essential-concepts/ldp-concepts/LDP-concepts.view";
-import CarbonLDPConceptsView from "./essential-concepts/carbon-ldp-concepts/carbon-LDP-concepts.view";
+import LDPConceptsView from "./essential-concepts/ldp-concepts/ldp-concepts.view";
+import CarbonLDPConceptsView from "./essential-concepts/carbon-ldp-concepts/carbon-ldp-concepts.view";
 
 import RESTApiView from "./rest-api/rest-api.view";
 import RESTApiGettingStarted from "./rest-api/getting-started/getting-started.view";
 import InteractionModelsView from "./rest-api/interaction-models/interaction-models.view";
 import RESTObjectModelView from "./rest-api/rest-object-model/object-model.view";
-import RESTRdfSourceView from "./rest-api/rest-rdfsource/RDF-source.view";
+import RESTRdfSourceView from "./rest-api/rest-rdfsource/rdf-source.view";
 import RESTContainersView from "./rest-api/rest-containers/containers.view";
 
 import JavaScriptSDKView from "./javascript-sdk/javascript-sdk.view";

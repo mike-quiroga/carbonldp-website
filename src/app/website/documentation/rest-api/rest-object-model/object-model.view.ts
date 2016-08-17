@@ -1,8 +1,7 @@
 import { Component, ElementRef, AfterViewInit } from "@angular/core";
 import { CORE_DIRECTIVES } from "@angular/common";
-import SidebarComponent from "../../sidebar/sidebar.component";
+import SidebarComponent from "./../../sidebar/sidebar.component";
 
-import $ from "jquery";
 import "semantic-ui/semantic";
 
 import template from "./object-model.view.html!";
@@ -14,7 +13,6 @@ import template from "./object-model.view.html!";
 } )
 export class ObjectModelView implements AfterViewInit {
 	private element:ElementRef;
-	private $element:JQuery;
 	private contentReady:boolean = false;
 
 	constructor( element:ElementRef ) {
@@ -22,7 +20,6 @@ export class ObjectModelView implements AfterViewInit {
 	}
 
 	ngAfterViewInit():void {
-		this.$element = $( this.element.nativeElement );
 		this.initializeSidebar();
 	}
 

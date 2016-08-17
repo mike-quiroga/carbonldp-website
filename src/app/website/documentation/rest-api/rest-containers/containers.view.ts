@@ -1,7 +1,7 @@
 import { Component, ElementRef, AfterViewInit } from "@angular/core";
 import { CORE_DIRECTIVES } from "@angular/common";
 
-import SidebarComponent from "../../sidebar/sidebar.component";
+import SidebarComponent from "./../../sidebar/sidebar.component";
 
 import $ from "jquery";
 import "semantic-ui/semantic";
@@ -20,7 +20,6 @@ export class ContainersView implements AfterViewInit {
 
 	constructor( element:ElementRef ) {
 		this.element = element;
-
 	}
 
 	ngAfterViewInit():void {
