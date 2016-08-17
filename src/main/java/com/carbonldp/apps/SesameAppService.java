@@ -23,7 +23,6 @@ import com.carbonldp.ldp.containers.ContainerService;
 import com.carbonldp.ldp.sources.RDFSourceService;
 import com.carbonldp.models.Infraction;
 import com.carbonldp.namespaces.LDP;
-import com.carbonldp.rdf.RDFListFactory;
 import com.carbonldp.rdf.RDFMapRepository;
 import com.carbonldp.rdf.RDFResource;
 import com.carbonldp.utils.IRIUtil;
@@ -273,8 +272,6 @@ public class SesameAppService extends AbstractSesameLDPService implements AppSer
 		IRI containerIRI = generateJobsContainerIRI( app );
 		RDFResource jobsResource = new RDFResource( containerIRI );
 		BasicContainer jobsContainer = BasicContainerFactory.getInstance().create( jobsResource, valueFactory.createIRI( LDP.Properties.MEMBER ), JobDescription.Property.EXECUTION_QUEUE_LOCATION.getIRI() );
-
-		//RDFListFactory.getInstance().createQueue( jobsContainer );
 
 		containerRepository.createChild( app.getIRI(), jobsContainer );
 		return aclRepository.createACL( jobsContainer.getIRI() );
