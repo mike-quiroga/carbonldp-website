@@ -2,15 +2,16 @@ import { Component, ElementRef, Input, DynamicComponentLoader, Type } from "@ang
 import { CORE_DIRECTIVES, Location } from "@angular/common";
 import { ROUTER_DIRECTIVES, ROUTER_PROVIDERS, Router, Instruction, RouteParams } from "@angular/router-deprecated";
 
-import $ from "jquery";
-import "semantic-ui/semantic";
+import * as CodeMirrorComponent from "carbon-panel/code-mirror/code-mirror.component";
 
 import BlogService from "../service/blog.service";
 import BlogPost from "./blog-post";
-// import * as CodeMirrorComponent from "app/components/code-mirror/CodeMirrorComponent";
-import * as CodeMirrorComponent from "carbon-panel/code-mirror/code-mirror.component";
+
+import $ from "jquery";
+import "semantic-ui/semantic";
+
 import template from "./blog-post.view.html!";
-import style from"./blog-post.view.css!text";
+import style from "./blog-post.view.css!text";
 
 @Component( {
 	selector: "blog-post",
