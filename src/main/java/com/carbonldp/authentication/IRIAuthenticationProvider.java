@@ -22,8 +22,8 @@ import org.springframework.transaction.annotation.Transactional;
  * @author NestorVenegas
  * @since 0.15.0-ALPHA
  */
-public class PlatformIRIAuthenticationProvider extends AbstractSesameAuthenticationProvider {
-	public PlatformIRIAuthenticationProvider( AgentRepository agentRepository, PlatformRoleRepository platformRoleRepository, PlatformPrivilegeRepository platformPrivilegeRepository ) {
+public class IRIAuthenticationProvider extends AbstractSesameAuthenticationProvider {
+	public IRIAuthenticationProvider( AgentRepository agentRepository, PlatformRoleRepository platformRoleRepository, PlatformPrivilegeRepository platformPrivilegeRepository ) {
 		super( agentRepository, platformRoleRepository, platformPrivilegeRepository );
 	}
 
@@ -39,17 +39,18 @@ public class PlatformIRIAuthenticationProvider extends AbstractSesameAuthenticat
 		IRI agentIRI = iriAuthenticationToken.getAgentIRI();
 		IRI appRelatedIRI = iriAuthenticationToken.getAppRelatedIRI();
 		Agent agent;
+		App appRelated = null;
 		validateCredentials( agentIRI );
 		if ( appRelatedIRI == null ) agent = agentRepository.get( agentIRI );
 		else {
-			App appRelated = appRepository.get( appRelatedIRI );
+			appRelated = appRepository.get( appRelatedIRI );
 			agent = transactionWrapper.runWithSystemPermissionsInAppContext( appRelated, () -> new Agent( sourceRepository.get( agentIRI ) ) );
 		}
 		if ( agent == null || agent.getBaseModel().size() == 0 ) throw new BadCredentialsException( "Wrong credentials" );
 
 		if ( ! agent.isEnabled() ) throw new BadCredentialsException( "Wrong credentials" );
 
-		return createAgentAuthenticationToken( agent );
+		return createAgentAuthenticationToken( appRelated, agent );
 
 	}
 
