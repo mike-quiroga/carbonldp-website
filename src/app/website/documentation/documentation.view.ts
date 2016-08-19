@@ -37,6 +37,10 @@ import style from "./documentation.view.css!text";
 		path: "/", name: "Documentation", component: HomeView, data: {
 		alias: "Documentation",
 		displayName: "Documentation",
+		description: {
+			name: "description",
+			content: "Find all documents related to Carbon, from the basics concepts of Linked Data to the GUI.",
+		}
 	},
 	},
 
@@ -44,6 +48,10 @@ import style from "./documentation.view.css!text";
 		path: "/about-carbon-ldp", as: "AboutCarbonLDP", component: AboutCarbonLDPView, data: {
 		alias: "About",
 		displayName: "About Carbon LDP",
+		description: {
+			name: "description",
+			content: "Carbon LDP is a Linked Data Platform for building web apps that manage and link data within your enterprise and across the World Wide Web.",
+		}
 	},
 	},
 
@@ -52,6 +60,10 @@ import style from "./documentation.view.css!text";
 		data: {
 			alias: "EssentialConcepts",
 			displayName: "Essential Concepts",
+			description: {
+				name: "description",
+				content: "Basic Linked Data knowledge. Helpful documentation for a general overview of Linked Data.",
+			}
 		},
 	},
 	{
@@ -59,6 +71,10 @@ import style from "./documentation.view.css!text";
 		data: {
 			alias: "Linked Data Concepts",
 			displayName: "Linked Data Concepts",
+			description: {
+				name: "description",
+				content: "General overview of the basic idea behind Linked Data and why it can make your applications more powerful.",
+			}
 		},
 	},
 	{
@@ -79,6 +95,10 @@ import style from "./documentation.view.css!text";
 		path: "/rest-api", name: "RESTApi", component: RESTApiView, data: {
 		alias: "REST",
 		displayName: "REST API",
+		description: {
+			name: "description",
+			content: "Access and manage applications and data by URIs using RESTful requests over HTTP. Configure apps, schedule server-side jobs, execute queries - everything in Carbon is RESTful.",
+		}
 	},
 	},
 	{
@@ -86,6 +106,10 @@ import style from "./documentation.view.css!text";
 		data: {
 			alias: "REST Getting started",
 			displayName: "Getting Started with REST API",
+			description: {
+				name: "description",
+				content: "Guide to get you started. How to build an example application using the Carbon LDP REST API.",
+			}
 		},
 	},
 	{
@@ -93,6 +117,10 @@ import style from "./documentation.view.css!text";
 		data: {
 			alias: "Interaction Models",
 			displayName: "Interaction Models",
+			description: {
+				name: "description",
+				content: "An explanation of the way you can interact with the resources on the Carbon Server.",
+			}
 		},
 	},
 	{
@@ -100,6 +128,10 @@ import style from "./documentation.view.css!text";
 		data: {
 			alias: "REST API Object Model",
 			displayName: "REST API Object Model",
+			description: {
+				name: "description",
+				content: "A summary of the various types of resources you can manage and interact with using REST.",
+			}
 		},
 	},
 	{
@@ -122,6 +154,10 @@ import style from "./documentation.view.css!text";
 		data: {
 			alias: "JavaScript SDK",
 			displayName: "JavaScript SDK",
+			description: {
+				name: "description",
+				content: "The JavaScript Software Developer's Kit, available from the npm package manager, allows you to manage RDF data using familiar JavaScript and TypeScript programming techniques and tools. Build for execution within a web browser or Node.js.",
+			}
 		},
 	},
 	{
@@ -129,6 +165,10 @@ import style from "./documentation.view.css!text";
 		data: {
 			alias: "GettingStartedJS",
 			displayName: "Getting Started with JavaScript SDK",
+			description: {
+				name: "description",
+				content: "Guide to install Carbon JavaScriptSDK and start creating and manipulating data with its basic methods.",
+			}
 		},
 	},
 	{
@@ -136,6 +176,10 @@ import style from "./documentation.view.css!text";
 		data: {
 			alias: "Contexts",
 			displayName: "Contexts",
+			description: {
+				name: "description",
+				content: "What is a context in Carbon JS SDK, how to declare, access and modify it.",
+			}
 		},
 	},
 	{
@@ -143,6 +187,10 @@ import style from "./documentation.view.css!text";
 		data: {
 			alias: "JavaScript SDK Object Model",
 			displayName: "JavaScript SDK Object Model",
+			description: {
+				name: "description",
+				content: "An in depth description of the Carbon Object Model.",
+			}
 		},
 	},
 	{
@@ -150,6 +198,10 @@ import style from "./documentation.view.css!text";
 		data: {
 			alias: "Object Schema",
 			displayName: "Object Schema",
+			description: {
+				name: "description",
+				content: "What is the object schema, how to define and use it.",
+			}
 		},
 	},
 

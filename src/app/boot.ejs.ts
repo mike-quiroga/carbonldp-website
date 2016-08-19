@@ -6,6 +6,7 @@ import "reflect-metadata";
 
 import { bootstrap } from "@angular/platform-browser-dynamic";
 import { Title } from "@angular/platform-browser";
+import { MetaTagService } from "./website/meta-tag.service";
 import { provide, enableProdMode, Provider, ComponentRef } from "@angular/core";
 import { FORM_PROVIDERS, APP_BASE_HREF } from "@angular/common";
 import { ROUTER_PROVIDERS } from "@angular/router-deprecated";
@@ -40,6 +41,7 @@ bootstrap( AppComponent, [
 	HTTP_PROVIDERS,
 	Title,
 	Angulartics2,
+	MetaTagService,
 
 	provide( APP_BASE_HREF, { useValue: "<%- url.base %>" } ),
 
@@ -48,4 +50,4 @@ bootstrap( AppComponent, [
 	APP_DEV_PROVIDERS,
 ] ).then( ( appRef:ComponentRef<AppComponent> ) => {
 	appInjector( appRef.injector );
-} );
+} )

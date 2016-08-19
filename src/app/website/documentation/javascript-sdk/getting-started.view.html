@@ -929,7 +929,7 @@
 									// ... document retrieval
 
 									project.name = "Project's New Name";
-									project.task.push( {
+									project.tasks.push( {
 										name: "Task 3",
 										dueDate: new Date( "2016-05-02" )
 									} );
@@ -962,7 +962,7 @@
 									// ... document retrieval
 
 									project.name = "Project's New Name";
-									project.task.push( {
+									project.tasks.push( {
 										name: "Task 3",
 										dueDate: new Date( "2016-05-02" )
 									} );
@@ -993,7 +993,7 @@
 									// ... document retrieval
 
 									project.name = "Project's New Name";
-									project.task.push( {
+									project.tasks.push( {
 										name: "Task 3",
 										dueDate: new Date( "2016-05-02" )
 									} );
@@ -1423,7 +1423,7 @@
 												return project.listMembers&lt;Task&gt;();
 											}
 										).then(
-											( [ unresolvedTasks, response ]:[ Task & PersistedDocument.Class, Response.Class ] ) => {
+											( [ unresolvedTasks, response ]:[ (Task & PersistedDocument.Class)[], Response.Class ] ) => {
 												console.log( unresolvedTasks ); // Pointers for task1, task2 and task3
 
 												return project.removeMember( task2 );
@@ -1435,9 +1435,9 @@
 												return project.getMembers&lt;Task&gt;();
 											}
 										).then(
-											( [ resolvedTasks, response ]:[ Task & PersistedDocument.Class, Response.Class ] ) => {
+											( [ resolvedTasks, response ]:[ (Task & PersistedDocument.Class)[], Response.Class ] ) => {
 												console.log( resolvedTasks ); // task1 and task3 documents
-												console.log( task[0].project ); // pointer to project. Added due to the configured isMemberOfRelation
+												console.log( resolvedTasks.task[0].project ); // pointer to project. Added due to the configured isMemberOfRelation
 											}
 										).catch( console.error );
 									</code></pre>
@@ -1493,7 +1493,7 @@
 										).then(
 											( [ resolvedTasks, response ] ) => {
 												console.log( resolvedTasks ); // task1 and task3 documents
-												console.log( task[0].project ); // pointer to project. Added due to the configured isMemberOfRelation
+												console.log( resolvedTasks.task[0].project ); // pointer to project. Added due to the configured isMemberOfRelation
 											}
 										).catch( console.error );
 									</code></pre>
@@ -1556,7 +1556,7 @@
 												var response = result[ 1 ];
 
 												console.log( resolvedTasks ); // task1 and task3 documents
-												console.log( task[0].project ); // pointer to project. Added due to the configured isMemberOfRelation
+												console.log( resolvedTasks.task[0].project ); // pointer to project. Added due to the configured isMemberOfRelation
 											}
 										).catch( console.error );
 									</code></pre>

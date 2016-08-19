@@ -17,7 +17,7 @@ import style from "./blog-post-thumbnail.component.css!text";
 	directives: [ CORE_DIRECTIVES, ROUTER_DIRECTIVES, CodeMirrorComponent.Class ],
 	styles: [ style ],
 } )
-export class BlogPostThumbnailComponent implements OnInit, AfterViewInit{
+export class BlogPostThumbnailComponent implements OnInit, AfterViewInit {
 	static parameters = [ [ Router ], [ ElementRef ], [ DynamicComponentLoader ] ];
 
 	private router:Router;

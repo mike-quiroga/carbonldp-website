@@ -17,7 +17,7 @@ import style from "./ui-examples.view.css!text";
 	directives: [ CORE_DIRECTIVES, CodeMirrorComponent.Class, FORM_DIRECTIVES ],
 	styles: [ style ],
 } )
-export class UIExamplesView implements AfterViewInit{
+export class UIExamplesView implements AfterViewInit {
 	private element:ElementRef;
 	private $element:JQuery;
 

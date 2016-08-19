@@ -17,7 +17,7 @@ import style from "./home.view.css!text";
 	styles: [ style ],
 	directives: [ CORE_DIRECTIVES, ROUTER_DIRECTIVES, CodeMirrorComponent.Class, NewsletterFormComponent ],
 } )
-export class HomeView implements AfterViewInit, OnDeactivate{
+export class HomeView implements AfterViewInit, OnDeactivate {
 	private router:Router;
 	private element:ElementRef;
 	private $element:JQuery;

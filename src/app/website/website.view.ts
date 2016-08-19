@@ -29,8 +29,15 @@ import style from "./website.view.css!text";
 	styles: [ style ],
 } )
 @RouteConfig( [
-	{ path: "", as: "Home", component: HomeView, useAsDefault: true },
-
+	{
+		path: "", as: "Home", component: HomeView, useAsDefault: true,
+		data: {
+			description: {
+				name: "description",
+				content: "Carbon LDP is a Linked Data Platform for building web apps that manage and link data within your enterprise and across the World Wide Web.",
+			},
+		},
+	},
 	{
 		path: "login", as: "Login", component: LoginView,
 		data: {
@@ -42,21 +49,21 @@ import style from "./website.view.css!text";
 		path: "register", as: "Register", component: RegisterView,
 		data: {
 			alias: "Register",
-			displayName: "Register"
+			displayName: "Register",
 		},
 	},
 	{
 		path: "blog", as: "Blog", component: BlogView,
 		data: {
 			alias: "Blog",
-			displayName: "Blog"
+			displayName: "Blog",
 		},
 	},
 	{
 		path: "blog/posts/:id", as: "BlogPost", component: BlogPostView,
 		data: {
 			alias: "Blog",
-			displayName: "Blog"
+			displayName: "Blog",
 		},
 	},
 
@@ -73,7 +80,11 @@ import style from "./website.view.css!text";
 		path: "signup-thanks", as: "SignupThanks", component: SignupThanksView,
 		data: {
 			alias: "SignupThanks",
-			displayName: "Thank you"
+			displayName: "Thank you",
+			description: {
+				name: "description",
+				content: "Carbon's newsletter keeps you updated. Thank you, for signing up!",
+			}
 		},
 	},
 ] )

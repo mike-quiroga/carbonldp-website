@@ -14,7 +14,7 @@ import style from "./home.view.css!text";
 	directives: [ CORE_DIRECTIVES, RouterLink ],
 	styles: [ style ],
 } )
-export class HomeView implements AfterViewInit{
+export class HomeView implements AfterViewInit {
 	private element:ElementRef;
 	private $element:JQuery;
 
