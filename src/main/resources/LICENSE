@@ -1,0 +1,27 @@
+LICENSE INFORMATION
+
+The Software listed below is licensed under the following License Information terms and conditions in addition to the Software license terms previously agreed to by Licensee and Base22. If Licensee has not previously agreed to license terms in effect for the Software, the Base22 Software License Agreement (SLA-2016-08-001) applies.
+
+Software Name: Carbon LDP (Platform)
+
+As described in the Base22 Software Licence Agreement ("SLA") and this License Information, Base22 grants Licensee a limited right to use the Software. This right is limited to the level of Authorized Use, paid for by Licensee as evidenced in the Proof of Entitlement. Licensee's use may also be limited to a specified machine, or only as Supporting Software, or subject to other restrictions. As Licensee has not paid for all of the economic value of the Software, no other use is permitted without the payment of additional fees. In addition, Licensee is not authorized to use the Software to provide commercial IT services to any third party, to provide commercial hosting or timesharing, or to sublicense, rent, or lease the Software unless expressly provided for in the applicable agreements under which Licensee obtains authorizations to use the Software. Additional rights may be available to Licensee subject to the payment of additional fees or under different or supplementary terms. Base22 reserves the right to determine whether to make such additional rights available to Licensee.
+
+Benchmarking
+
+Licensee may disclose the results of any benchmark test of the Software or its subcomponents to any third party provided that Licensee (A) publicly discloses the complete methodology used in the benchmark test (for example, hardware and software setup, installation procedure and configuration files), (B) performs Licensee's benchmark testing running the Software in its Specified Operating Environment using the latest applicable updates, patches and fixes available for the Software from Base22 or third parties that provide Base22 products ("Third Parties"), and (C) follows any and all performance tuning and "best practices" guidance available in the Software's documentation and on Base22's support web sites for the Software. If Licensee publishes the results of any benchmark tests for the Software, then notwithstanding anything to the contrary in any agreement between Licensee and Base22 or Third Parties, Base22 and Third Parties will have the right to publish the results of benchmark tests with respect to Licensee's products provided Base22 or Third Parties complies with the requirements of (A), (B) and (C) above in its testing of Licensee's products.
+
+The above benchmarking terms apply to the following Software programs or subcomponents:
+
+Carbon LDP (Platform)
+
+Source Components and Sample Materials
+
+The Software may include some components in source code form ("Source Components") and other materials identified as Sample Materials. Licensee may copy and modify Source Components and Sample Materials for internal use only provided such use is within the limits of the license rights under this Agreement, provided however that Licensee may not alter or delete any copyright information or notices contained in the Source Components or Sample Materials. Base22 provides the Source Components and Sample Materials without obligation of support and "AS IS", WITH NO WARRANTY OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING THE WARRANTY OF TITLE, NON-INFRINGEMENT OR NON-INTERFERENCE AND THE IMPLIED WARRANTIES AND CONDITIONS OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
+
+Authorized Use
+
+"Authorized Use" is the level at which Licensee is authorized to execute or run the Software. That level may be measured by number of users, number of applications served by the Software, number of queries or requests made to the Software within a given time period, number of documents or data records managed by the Software, or other level of use specified by Base22. The Authorized Use is to be detailed in the Licensee's Proof of Entitlement ("PoE").
+
+Support and Upgrades
+
+For Authorized Use that includes support, the term of support is to be dfined in the Licensee's PoE (usually one year from the date of the initial license of the Software or one year from the date of the purchase of support as evidenced by the PoE). During the support period, the Licensee is entitled to applicable updates, patches and fixes made available for the Software. After Licensees support period expires, Licensee is entitled to renew support for a percentage (usually 20%) of the Software License Fee that is in effect at the time of renewal for the Licensee's Authorized Use Tier.
