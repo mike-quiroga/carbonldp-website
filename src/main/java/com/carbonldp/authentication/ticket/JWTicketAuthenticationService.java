@@ -2,6 +2,7 @@ package com.carbonldp.authentication.ticket;
 
 import com.carbonldp.AbstractComponent;
 import com.carbonldp.Vars;
+import com.carbonldp.apps.App;
 import com.carbonldp.authentication.AgentAuthenticationToken;
 import com.carbonldp.authentication.Ticket;
 import com.carbonldp.authentication.TicketFactory;
@@ -36,8 +37,11 @@ public class JWTicketAuthenticationService extends AbstractComponent implements 
 		if ( ! ( authentication instanceof AgentAuthenticationToken ) ) throw new StupidityException( "authentication is not an instance of AgentAuthenticationToken" );
 		AgentAuthenticationToken agentToken = (AgentAuthenticationToken) authentication;
 		String agentTokenString = agentToken.getAgent().getSubject().stringValue();
+		App appRelated = agentToken.getApp();
 
-		return TicketFactory.getInstance().create( agentTokenString, expTime, signatureAlgorithm, targetIRI );
+		return appRelated != null ?
+			TicketFactory.getInstance().create( appRelated.getIRI(), agentTokenString, expTime, signatureAlgorithm, targetIRI ) :
+			TicketFactory.getInstance().create( agentTokenString, expTime, signatureAlgorithm, targetIRI );
 	}
 
 	@Autowired

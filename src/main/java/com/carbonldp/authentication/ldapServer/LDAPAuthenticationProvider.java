@@ -31,6 +31,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -72,7 +73,8 @@ public class LDAPAuthenticationProvider extends SesameUsernamePasswordAuthentica
 		RDFSource sourceServer = transactionWrapper.runInPlatformContext( () -> sourceRepository.get( ldapAgent.getLDAPServer() ) );
 		LDAPServer ldapServer = new LDAPServer( sourceServer );
 		String encodedPassword = ldapServer.getPassword();
-		ldapServer.setPassword( JWTUtil.decode( encodedPassword ) );
+		Map<String, Object> claims = JWTUtil.decode( encodedPassword );
+		ldapServer.setPassword( (String) claims.get( "sub" ) );
 		LdapTemplate ldapTemplate;
 		try {
 			ldapTemplate = LDAPUtil.getLDAPTemplate( ldapServer );

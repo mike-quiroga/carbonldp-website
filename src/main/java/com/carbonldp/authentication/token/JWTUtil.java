@@ -1,6 +1,7 @@
 package com.carbonldp.authentication.token;
 
 import com.carbonldp.Vars;
+import com.carbonldp.exceptions.StupidityException;
 import io.jsonwebtoken.*;
 import org.eclipse.rdf4j.model.IRI;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -39,32 +40,27 @@ public final class JWTUtil {
 		return builder.compact();
 	}
 
-	public static String decode( String password ) throws UnsupportedJwtException, MalformedJwtException, SignatureException, ExpiredJwtException, IllegalArgumentException {
+	public static Map<String, Object> decode( String password ) throws UnsupportedJwtException, MalformedJwtException, SignatureException, ExpiredJwtException, IllegalArgumentException {
 		return decode( password, null );
 	}
 
-	public static String decode( String password, IRI targetIRI ) throws UnsupportedJwtException, MalformedJwtException, SignatureException, ExpiredJwtException, IllegalArgumentException {
+	public static Map<String, Object> decode( String password, IRI targetIRI ) {
 		byte[] signingKey;
+		try {
+			signingKey = DatatypeConverter.parseBase64Binary( Vars.getInstance().getTokenKey() );
+		} catch ( IllegalArgumentException e ) {
+			throw new StupidityException( e );
+		}
 
-		signingKey = DatatypeConverter.parseBase64Binary( Vars.getInstance().getTokenKey() );
-
-		Claims claims = Jwts
-			.parser()
-			.setSigningKey( signingKey )
-			.parseClaimsJws( password )
-			.getBody();
-		validateTargetIRI( claims, targetIRI );
-		return claims.getSubject();
-	}
-
-	private static void validateTargetIRI( Claims claims, IRI targetIRI ) {
-		Map targetIRIClaims = (Map) claims.get( "targetIRI" );
-		if ( targetIRIClaims != null && targetIRI == null ) throw new BadCredentialsException( "invalid target IRI" );
-
-		if ( targetIRI != null ) {
-			if ( targetIRIClaims == null ) throw new BadCredentialsException( "invalid target IRI" );
-			String tokenTargetIRI = (String) targetIRIClaims.get( "namespace" );
-			if ( ! tokenTargetIRI.equals( targetIRI.stringValue() ) ) throw new BadCredentialsException( "invalid target IRI" );
+		try {
+			Claims claims = Jwts
+				.parser()
+				.setSigningKey( signingKey )
+				.parseClaimsJws( password )
+				.getBody();
+			return claims;
+		} catch ( UnsupportedJwtException | MalformedJwtException | SignatureException | ExpiredJwtException | IllegalArgumentException e ) {
+			throw new BadCredentialsException( "The JSON Web Token isn't valid, nested exception: ", e );
 		}
 	}
 }
