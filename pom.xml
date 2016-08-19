@@ -3,10 +3,16 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.carbonldp</groupId>
     <artifactId>carbon-platform</artifactId>
-    <version>0.40.2</version>
+    <version>0.40.3</version>
     <packaging>jar</packaging>
     <name>Carbon LDP</name>
     <url>http://carbonldp.com/</url>
+    <licenses>
+        <license>
+            <name>BASE22 SLA 2016-08-001</name>
+            <distribution>manual</distribution>
+        </license>
+    </licenses>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
