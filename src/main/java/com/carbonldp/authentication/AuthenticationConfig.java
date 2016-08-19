@@ -9,6 +9,7 @@ import com.carbonldp.authentication.ticket.JWTicketAuthenticationEntryPoint;
 import com.carbonldp.authentication.ticket.JWTicketAuthenticationFilter;
 import com.carbonldp.authentication.token.JWTokenAuthenticationEntryPoint;
 import com.carbonldp.authentication.token.JWTokenAuthenticationFilter;
+import com.carbonldp.authentication.web.AppIRIAuthenticationProvider;
 import com.carbonldp.authorization.PlatformPrivilegeRepository;
 import com.carbonldp.authorization.PlatformRoleRepository;
 import com.carbonldp.authorization.SecurityContextExchanger;
@@ -51,7 +52,8 @@ public class AuthenticationConfig {
 	@Autowired
 	public void configureGlobal( AuthenticationManagerBuilder auth ) {
 		auth.authenticationProvider( platformAgentUsernamePasswordAuthenticationProvider() );
-		auth.authenticationProvider( tokenAuthenticationProvider() );
+		auth.authenticationProvider( platformTokenAuthenticationProvider() );
+		auth.authenticationProvider( appTokenAuthenticationProvider() );
 		auth.authenticationProvider( appsAgentUsernamePasswordAuthenticationProvider() );
 		auth.authenticationProvider( ldapAuthenticationProvider() );
 	}
@@ -68,8 +70,13 @@ public class AuthenticationConfig {
 	public AuthenticationProvider ldapAuthenticationProvider() {return new LDAPAuthenticationProvider( appAgentRepository, platformRoleRepository, platformPrivilegeRepository );}
 
 	@Bean
-	public AuthenticationProvider tokenAuthenticationProvider() {
-		return new IRIAuthenticationProvider( platformAgentRepository, platformRoleRepository, platformPrivilegeRepository );
+	public AuthenticationProvider platformTokenAuthenticationProvider() {
+		return new PlatformIRIAuthenticationProvider( platformAgentRepository, platformRoleRepository, platformPrivilegeRepository );
+	}
+
+	@Bean
+	public AuthenticationProvider appTokenAuthenticationProvider() {
+		return new AppIRIAuthenticationProvider( appAgentRepository, platformRoleRepository, platformPrivilegeRepository );
 	}
 
 	@Bean
