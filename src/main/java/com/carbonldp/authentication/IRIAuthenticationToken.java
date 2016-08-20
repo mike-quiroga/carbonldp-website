@@ -13,10 +13,12 @@ import org.springframework.security.authentication.AbstractAuthenticationToken;
 
 public class IRIAuthenticationToken extends AbstractAuthenticationToken {
 	private IRI agentIRI;
+	private IRI appRelatedIRI;
 
-	public IRIAuthenticationToken( IRI agentIRI ) {
+	public IRIAuthenticationToken( IRI agentIRI, IRI appRelatedIRI ) {
 		super( null );
 		this.agentIRI = agentIRI;
+		this.appRelatedIRI = appRelatedIRI;
 	}
 
 	@Override
@@ -32,4 +34,6 @@ public class IRIAuthenticationToken extends AbstractAuthenticationToken {
 	public IRI getAgentIRI() {
 		return agentIRI;
 	}
+
+	public IRI getAppRelatedIRI() { return appRelatedIRI;}
 }

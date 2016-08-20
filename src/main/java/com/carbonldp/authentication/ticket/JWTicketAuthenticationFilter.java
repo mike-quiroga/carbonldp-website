@@ -4,10 +4,7 @@ import com.carbonldp.Consts;
 import com.carbonldp.authentication.IRIAuthenticationToken;
 import com.carbonldp.authentication.token.JWTUtil;
 import com.carbonldp.utils.RequestUtil;
-import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.MalformedJwtException;
-import io.jsonwebtoken.SignatureException;
-import io.jsonwebtoken.UnsupportedJwtException;
+import io.jsonwebtoken.*;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import org.slf4j.Logger;
@@ -80,23 +77,25 @@ public class JWTicketAuthenticationFilter extends GenericFilterBean implements F
 	}
 
 	private Authentication authenticate( String jwt, HttpServletRequest httpRequest ) {
-		String agentString = extractAndDecodeHeader( jwt, httpRequest );
-		IRI agentIRI = SimpleValueFactory.getInstance().createIRI( agentString );
+		Map claims = extractAndDecodeHeader( jwt, httpRequest );
+		IRI agentIRI = SimpleValueFactory.getInstance().createIRI( (String) claims.get( "sub" ) );
+		IRI appRelatedIRI = claims.containsKey( "appRelated" ) ?
+			SimpleValueFactory.getInstance().createIRI( (String) claims.get( "appRelated" ) ) :
+			null;
 
-		if ( LOG.isDebugEnabled() ) LOG.debug( "JWTicket Authentication Authorization header found for user '" + agentString + "'" );
+		if ( LOG.isDebugEnabled() ) LOG.debug( "JWTicket Authentication Authorization header found for user '" + agentIRI.stringValue() + "'" );
 
-		IRIAuthenticationToken authRequest = new IRIAuthenticationToken( agentIRI );
+		IRIAuthenticationToken authRequest = new IRIAuthenticationToken( agentIRI, appRelatedIRI );
 
 		return authenticationManager.authenticate( authRequest );
 	}
 
-	private String extractAndDecodeHeader( String jwt, HttpServletRequest httpRequest ) {
+	private Map<String, Object> extractAndDecodeHeader( String jwt, HttpServletRequest httpRequest ) {
 		IRI targetIRI = getTargetIRI( httpRequest );
-		try {
-			return JWTUtil.decode( jwt, targetIRI );
-		} catch ( UnsupportedJwtException | MalformedJwtException | SignatureException | ExpiredJwtException | IllegalArgumentException e ) {
-			throw new BadCredentialsException( "The JSON Web Token isn't valid, nested exception: ", e );
-		}
+		Map claims = JWTUtil.decode( jwt, targetIRI );
+		validateTargetIRI( claims, targetIRI );
+		return claims;
+
 	}
 
 	private IRI getTargetIRI( HttpServletRequest request ) {
@@ -104,4 +103,15 @@ public class JWTicketAuthenticationFilter extends GenericFilterBean implements F
 		return SimpleValueFactory.getInstance().createIRI( url );
 	}
 
+	private static void validateTargetIRI( Map<String, Object> claims, IRI targetIRI ) {
+		Map targetMap = (Map)claims.get("targetIRI");
+		if ( targetMap  == null ) throw new BadCredentialsException( "invalid ticket" );
+		String tokenTargetIRI = (String) ((Map)claims.get("targetIRI")).get( "namespace" );
+		if ( tokenTargetIRI != null && targetIRI == null ) throw new BadCredentialsException( "invalid target IRI" );
+
+		if ( targetIRI != null ) {
+			if ( tokenTargetIRI == null ) throw new BadCredentialsException( "invalid target IRI" );
+			if ( ! tokenTargetIRI.equals( targetIRI.stringValue() ) ) throw new BadCredentialsException( "invalid target IRI" );
+		}
+	}
 }
