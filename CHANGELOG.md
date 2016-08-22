@@ -1,3 +1,6 @@
+# 0.40.3 (2016/08/19)
+- Fix [LDP-791](https://jira.base22.com/browse/LDP-791) - Authenticating an app agent with an auth token returns a 401
+
 # 0.40.2 (2016/08/09)
 - Fix support for http (instead of https) and ports inside of URIs
 

@@ -35,6 +35,7 @@ import javax.naming.NamingException;
 import javax.naming.directory.Attributes;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -66,7 +67,8 @@ public class SesameLDAPServerService extends AbstractSesameLDPService implements
 		IRI agentsContainerIRI = agentRepository.getAgentsContainerIRI();
 		LdapTemplate ldapTemplate;
 		String encodedPassword = ldapServer.getPassword();
-		ldapServer.setPassword( JWTUtil.decode( encodedPassword ) );
+		Map<String, Object> claims = JWTUtil.decode( encodedPassword );
+		ldapServer.setPassword( (String) claims.get( "sub" ) );
 		try {
 			ldapTemplate = LDAPUtil.getLDAPTemplate( ldapServer );
 		} catch ( UnsupportedJwtException | MalformedJwtException | SignatureException | IllegalArgumentException e ) {

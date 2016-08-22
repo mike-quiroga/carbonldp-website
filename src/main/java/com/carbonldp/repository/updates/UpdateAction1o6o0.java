@@ -6,7 +6,6 @@ import com.carbonldp.jobs.JobDescription;
 import com.carbonldp.ldp.containers.BasicContainer;
 import com.carbonldp.ldp.containers.BasicContainerFactory;
 import com.carbonldp.namespaces.LDP;
-import com.carbonldp.rdf.RDFListFactory;
 import com.carbonldp.rdf.RDFResource;
 import org.eclipse.rdf4j.model.IRI;
 
@@ -49,7 +48,6 @@ public class UpdateAction1o6o0 extends AbstractUpdateAction {
 		IRI containerIRI = valueFactory.createIRI( appString + jobsString );
 		RDFResource jobsResource = new RDFResource( containerIRI );
 		BasicContainer jobsContainer = BasicContainerFactory.getInstance().create( jobsResource, valueFactory.createIRI( LDP.Properties.MEMBER ), JobDescription.Property.EXECUTION_QUEUE_LOCATION.getIRI() );
-		RDFListFactory.getInstance().createQueue( jobsContainer );
 
 		containerRepository.createChild( app.getIRI(), jobsContainer );
 		aclRepository.createACL( jobsContainer.getIRI() );

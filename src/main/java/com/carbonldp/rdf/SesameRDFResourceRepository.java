@@ -1,10 +1,7 @@
 package com.carbonldp.rdf;
 
 import com.carbonldp.utils.IRIUtil;
-import org.eclipse.rdf4j.model.BNode;
-import org.eclipse.rdf4j.model.IRI;
-import org.eclipse.rdf4j.model.Value;
-import org.eclipse.rdf4j.model.ValueFactory;
+import org.eclipse.rdf4j.model.*;
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import org.eclipse.rdf4j.spring.SesameConnectionFactory;
 import org.joda.time.DateTime;
@@ -120,6 +117,30 @@ public class SesameRDFResourceRepository extends SesameRDFNodeRepository<IRI> im
 	public Set<BNode> getBNodes( IRI resourceIRI, RDFNodeEnum pred ) {
 		IRI documentIRI = getDocumentIRI( resourceIRI );
 		return super.getBNodes( resourceIRI, pred, documentIRI );
+	}
+
+	@Override
+	public Resource getResource( IRI resourceIRI, RDFNodeEnum pred ) {
+		IRI documentIRI = getDocumentIRI( resourceIRI );
+		return super.getResource( resourceIRI, pred, documentIRI );
+	}
+
+	@Override
+	public Resource getResource( IRI resourceIRI, IRI pred ) {
+		IRI documentIRI = getDocumentIRI( resourceIRI );
+		return super.getResource( resourceIRI, pred, documentIRI );
+	}
+
+	@Override
+	public Set<Resource> getResources( IRI resourceIRI, RDFNodeEnum pred ) {
+		IRI documentIRI = getDocumentIRI( resourceIRI );
+		return super.getResources( resourceIRI, pred, documentIRI );
+	}
+
+	@Override
+	public Set<Resource> getResources( IRI resourceIRI, IRI pred ) {
+		IRI documentIRI = getDocumentIRI( resourceIRI );
+		return super.getResources( resourceIRI, pred, documentIRI );
 	}
 
 	@Override

@@ -51,7 +51,7 @@ public class AuthenticationConfig {
 	@Autowired
 	public void configureGlobal( AuthenticationManagerBuilder auth ) {
 		auth.authenticationProvider( platformAgentUsernamePasswordAuthenticationProvider() );
-		auth.authenticationProvider( tokenAuthenticationProvider() );
+		auth.authenticationProvider( platformTokenAuthenticationProvider() );
 		auth.authenticationProvider( appsAgentUsernamePasswordAuthenticationProvider() );
 		auth.authenticationProvider( ldapAuthenticationProvider() );
 	}
@@ -68,7 +68,7 @@ public class AuthenticationConfig {
 	public AuthenticationProvider ldapAuthenticationProvider() {return new LDAPAuthenticationProvider( appAgentRepository, platformRoleRepository, platformPrivilegeRepository );}
 
 	@Bean
-	public AuthenticationProvider tokenAuthenticationProvider() {
+	public AuthenticationProvider platformTokenAuthenticationProvider() {
 		return new IRIAuthenticationProvider( platformAgentRepository, platformRoleRepository, platformPrivilegeRepository );
 	}
 

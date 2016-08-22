@@ -78,39 +78,27 @@ public class JWTokenAuthenticationFilter extends GenericFilterBean implements Fi
 	}
 
 	private Authentication authenticate( String jwt ) {
-		String agentString = extractAndDecodeHeader( jwt );
-		IRI agentIRI = SimpleValueFactory.getInstance().createIRI( agentString );
+		Map claims = extractAndDecodeHeader( jwt );
+		IRI agentIRI = SimpleValueFactory.getInstance().createIRI( (String) claims.get( "sub" ) );
+		IRI appRelatedIRI = claims.containsKey( "appRelated" ) ?
+			SimpleValueFactory.getInstance().createIRI( (String) claims.get( "appRelated" ) ) :
+			null;
 
-		if ( LOG.isDebugEnabled() ) LOG.debug( "JWToken Authentication Authorization header found for user '" + agentString + "'" );
+		if ( LOG.isDebugEnabled() ) LOG.debug( "JWToken Authentication Authorization header found for user '" + agentIRI.stringValue() + "'" );
 
-		IRIAuthenticationToken authRequest = new IRIAuthenticationToken( agentIRI );
+		IRIAuthenticationToken authRequest = new IRIAuthenticationToken( agentIRI, appRelatedIRI );
 
 		return authenticationManager.authenticate( authRequest );
 	}
 
-	private String extractAndDecodeHeader( String jwt ) {
-		byte[] signingKey;
-		try {
-			signingKey = DatatypeConverter.parseBase64Binary( Vars.getInstance().getTokenKey() );
-		} catch ( IllegalArgumentException e ) {
-			throw new StupidityException( e );
-		}
-
-		try {
-			Claims claims = Jwts
-				.parser()
-				.setSigningKey( signingKey )
-				.parseClaimsJws( jwt )
-				.getBody();
-			validateTargetIRI( claims );
-			return claims.getSubject();
-		} catch ( UnsupportedJwtException | MalformedJwtException | SignatureException | ExpiredJwtException | IllegalArgumentException e ) {
-			throw new BadCredentialsException( "The JSON Web Token isn't valid, nested exception: ", e );
-		}
+	private Map extractAndDecodeHeader( String jwt ) {
+		Map claims = JWTUtil.decode( jwt );
+		validateTargetIRI( claims );
+		return claims;
 	}
 
-	private void validateTargetIRI( Claims claims ) {
-		Map targetIRIClaims = (Map) claims.get( "targetIRI" );
+	private void validateTargetIRI( Map claims ) {
+		Object targetIRIClaims = claims.get( "targetIRI" );
 		if ( targetIRIClaims != null ) throw new AccessDeniedException( "invalid target IRI" );
 	}
 

@@ -144,9 +144,7 @@ public class SesameJobService extends AbstractSesameLDPService implements JobSer
 	}
 
 	@Autowired
-	public void setResourceRepository( RDFResourceRepository resourceRepository ) {
-		this.resourceRepository = resourceRepository;
-	}
+	public void setResourceRepository( RDFResourceRepository resourceRepository ) {this.resourceRepository = resourceRepository;}
 
 	@Autowired
 	public void setPermissionEvaluator( PermissionEvaluator permissionEvaluator ) {

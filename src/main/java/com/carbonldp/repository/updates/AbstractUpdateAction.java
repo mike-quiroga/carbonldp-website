@@ -8,12 +8,14 @@ import com.carbonldp.apps.AppRepository;
 import com.carbonldp.apps.roles.AppRoleRepository;
 import com.carbonldp.authentication.token.app.AppTokenRepository;
 import com.carbonldp.authorization.acl.ACLRepository;
+import com.carbonldp.jobs.ExecutionRepository;
 import com.carbonldp.ldp.containers.ContainerRepository;
 import com.carbonldp.ldp.containers.ContainerService;
 import com.carbonldp.ldp.sources.RDFSourceRepository;
 import com.carbonldp.ldp.sources.RDFSourceService;
 import com.carbonldp.rdf.RDFDocumentRepository;
 import com.carbonldp.rdf.RDFMapRepository;
+import com.carbonldp.rdf.RDFResourceRepository;
 import com.carbonldp.repository.FileRepository;
 import com.carbonldp.sparql.SPARQLTemplate;
 import com.carbonldp.spring.TransactionWrapper;
@@ -52,6 +54,8 @@ public abstract class AbstractUpdateAction extends AbstractComponent implements 
 	protected FileRepository localFileRepository;
 	protected AgentService platformAgentService;
 	protected AgentRepository appAgentRepository;
+	protected ExecutionRepository executionRepository;
+	protected RDFResourceRepository resourceRepository;
 	protected static ValueFactory valueFactory = SimpleValueFactory.getInstance();
 
 	public void run() {
@@ -100,5 +104,7 @@ public abstract class AbstractUpdateAction extends AbstractComponent implements 
 		platformAgentRepository = context.getBean( "platformAgentRepository", AgentRepository.class );
 		platformAgentService = context.getBean( "platformAgentService", AgentService.class );
 		appAgentRepository = context.getBean( "appAgentRepository", AgentRepository.class );
+		executionRepository = context.getBean( ExecutionRepository.class );
+		resourceRepository = context.getBean( RDFResourceRepository.class );
 	}
 }

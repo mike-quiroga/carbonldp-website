@@ -247,6 +247,67 @@ public abstract class SesameRDFNodeRepository<T extends Resource> extends Abstra
 		return properties;
 	}
 
+	public Resource getResource( T subject, RDFNodeEnum pred, IRI documentIRI ) {
+		for ( IRI predIRI : pred.getIRIs() ) {
+			Resource object = connectionTemplate.readStatements(
+				connection -> connection.getStatements( subject, predIRI, null, false, documentIRI ),
+				statements -> {
+					while ( statements.hasNext() ) {
+						Value value = statements.next().getObject();
+						if ( ValueUtil.isResource( value ) ) return ValueUtil.getResource( value );
+					}
+					return null;
+				}
+			);
+			if ( object != null ) return object;
+		}
+		return null;
+	}
+
+	public Resource getResource( T subject, IRI pred, IRI documentIRI ) {
+		return connectionTemplate.readStatements(
+			connection -> connection.getStatements( subject, pred, null, false, documentIRI ),
+			statements -> {
+				while ( statements.hasNext() ) {
+					Value value = statements.next().getObject();
+					if ( ValueUtil.isResource( value ) ) return ValueUtil.getResource( value );
+				}
+				return null;
+			}
+		);
+	}
+
+	public Set<Resource> getResources( T subject, RDFNodeEnum pred, IRI documentIRI ) {
+		Set<Resource> properties = new HashSet<>();
+		for ( IRI predIRI : pred.getIRIs() ) {
+			connectionTemplate.readStatements(
+				connection -> connection.getStatements( subject, predIRI, null, false, documentIRI ),
+				statements -> {
+					while ( statements.hasNext() ) {
+						Value value = statements.next().getObject();
+						if ( ValueUtil.isResource( value ) ) properties.add( ValueUtil.getResource( value ) );
+					}
+					return null;
+				}
+			);
+		}
+		return properties;
+	}
+
+	public Set<Resource> getResources( T subject, IRI pred, IRI documentIRI ) {
+		return connectionTemplate.readStatements(
+			connection -> connection.getStatements( subject, pred, null, false, documentIRI ),
+			statements -> {
+				Set<Resource> properties = new HashSet<>();
+				while ( statements.hasNext() ) {
+					Value value = statements.next().getObject();
+					if ( ValueUtil.isResource( value ) ) properties.add( ValueUtil.getResource( value ) );
+				}
+				return properties;
+			}
+		);
+	}
+
 	public Boolean getBoolean( T subject, IRI pred, IRI documentIRI ) {
 		return connectionTemplate.readStatements(
 			connection -> connection.getStatements( subject, pred, null, false, documentIRI ),
