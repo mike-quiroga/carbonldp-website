@@ -52,7 +52,7 @@ public class SesameLDAPServerService extends AbstractSesameLDPService implements
 	@Override
 	public void create( IRI targetIRI, LDAPServer ldapServer ) {
 		validate( ldapServer );
-		String passwordEncoded = JWTUtil.encode( ldapServer.getPassword() );
+		String passwordEncoded = JWTUtil.encodeLDAPPassword( ldapServer.getPassword() );
 		ldapServer.setPassword( passwordEncoded );
 		containerService.createChild( targetIRI, ldapServer );
 	}

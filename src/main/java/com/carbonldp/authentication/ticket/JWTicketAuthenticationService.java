@@ -3,9 +3,8 @@ package com.carbonldp.authentication.ticket;
 import com.carbonldp.AbstractComponent;
 import com.carbonldp.Vars;
 import com.carbonldp.apps.App;
-import com.carbonldp.authentication.AgentAuthenticationToken;
-import com.carbonldp.authentication.Ticket;
-import com.carbonldp.authentication.TicketFactory;
+import com.carbonldp.authentication.*;
+import com.carbonldp.authentication.token.JWTUtil;
 import com.carbonldp.exceptions.InvalidResourceException;
 import com.carbonldp.exceptions.StupidityException;
 import com.carbonldp.ldp.sources.RDFSourceService;
@@ -32,16 +31,24 @@ public class JWTicketAuthenticationService extends AbstractComponent implements 
 	public Ticket createTicket( IRI targetIRI ) {
 		if ( ! sourceService.exists( targetIRI ) ) throw new InvalidResourceException( new Infraction( 0x2011, "iri", targetIRI.stringValue() ) );
 		Date expTime = new Date( System.currentTimeMillis() + Vars.getInstance().getTicketExpirationTime() );
-		SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		if ( ! ( authentication instanceof AgentAuthenticationToken ) ) throw new StupidityException( "authentication is not an instance of AgentAuthenticationToken" );
 		AgentAuthenticationToken agentToken = (AgentAuthenticationToken) authentication;
 		String agentTokenString = agentToken.getAgent().getSubject().stringValue();
 		App appRelated = agentToken.getApp();
 
-		return appRelated != null ?
-			TicketFactory.getInstance().create( appRelated.getIRI(), agentTokenString, expTime, signatureAlgorithm, targetIRI ) :
-			TicketFactory.getInstance().create( agentTokenString, expTime, signatureAlgorithm, targetIRI );
+		String jwt;
+		Ticket ticket;
+
+		if ( appRelated == null ) {
+			jwt = JWTUtil.encodeTicket( agentTokenString, expTime, targetIRI );
+			ticket = TicketFactory.getInstance().getRDFTicket( null, jwt, expTime, targetIRI );
+		} else {
+			jwt = JWTUtil.encodeTicket( appRelated.getIRI(), agentTokenString, expTime, targetIRI );
+			ticket = TicketFactory.getInstance().getRDFTicket( appRelated.getIRI(), jwt, expTime, targetIRI );
+		}
+
+		return ticket;
 	}
 
 	@Autowired

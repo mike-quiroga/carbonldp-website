@@ -92,7 +92,7 @@ public class JWTicketAuthenticationFilter extends GenericFilterBean implements F
 
 	private Map<String, Object> extractAndDecodeHeader( String jwt, HttpServletRequest httpRequest ) {
 		IRI targetIRI = getTargetIRI( httpRequest );
-		Map claims = JWTUtil.decode( jwt, targetIRI );
+		Map claims = JWTUtil.decode( jwt);
 		validateTargetIRI( claims, targetIRI );
 		return claims;
 
