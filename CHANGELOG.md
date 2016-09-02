@@ -1,3 +1,9 @@
+# 0.41.0 (2016/09/02)
+- [LDP-773](https://jira.base22.com/browse/LDP-773) - Compress server response using gzip
+- [LDP-795](https://jira.base22.com/browse/LDP-795) - Move JWT logic from carbon commons to carbon platform
+- Fix [LDP-798](https://jira.base22.com/browse/LDP-798) - avoid removing "apps" string besides the needed one in AppContextPersistenceFilter
+- Fix a bug that made the platform pull an app repository into memory
+
 # 0.40.4 (2016/08/19)
 - Make app agents able to authenticate when targeting platform resources (only when using token or ticket authentication)
 
