@@ -175,6 +175,9 @@ public abstract class AbstractLDPRequestHandler extends AbstractRequestHandler {
 		if ( ! requestETag.startsWith( "\"" ) && ! requestETag.endsWith( "\"" ) ) {
 			requestETag = "\"" + requestETag + "\"";
 		}
+		if( requestETag.endsWith( "--gzip\"" ) ) {
+			requestETag = requestETag.replace( "--gzip", "" );
+		}
 		try {
 			Integer.parseInt( requestETag.substring( 1, requestETag.length() - 1 ) );
 		} catch ( NumberFormatException e ) {

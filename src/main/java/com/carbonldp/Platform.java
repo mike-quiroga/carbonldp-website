@@ -22,6 +22,8 @@ import com.carbonldp.utils.PropertiesUtil;
 import com.carbonldp.web.config.WebConfig;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.ContextHandler;
+import org.eclipse.jetty.server.handler.HandlerCollection;
+import org.eclipse.jetty.server.handler.gzip.GzipHandler;
 import org.eclipse.jetty.webapp.Configuration;
 import org.eclipse.jetty.webapp.WebAppContext;
 import org.eclipse.rdf4j.sail.config.SailRegistry;
@@ -30,6 +32,7 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.PathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.security.web.context.AbstractSecurityWebApplicationInitializer;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.context.ContextLoaderListener;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
@@ -119,10 +122,26 @@ public class Platform {
 
 			}
 		} );
+		HandlerCollection handlerList = new HandlerCollection();
+
+		GzipHandler gzipHandler = new GzipHandler();
+		gzipHandler.setHandler( contextHandler );
+		gzipHandler.setIncludedMethods(
+			RequestMethod.DELETE.toString(),
+			RequestMethod.GET.toString(),
+			RequestMethod.HEAD.toString(),
+			RequestMethod.OPTIONS.toString(),
+			RequestMethod.PATCH.toString(),
+			RequestMethod.POST.toString(),
+			RequestMethod.PUT.toString(),
+			RequestMethod.TRACE.toString()
+		);
+		handlerList.addHandler( gzipHandler );
 
 		server.setAttribute( "requestHeaderSize", Vars.getInstance().getRequestHeaderSize() );
 		server.setAttribute( "responseHeaderSize", Vars.getInstance().getResponseHeaderSize() );
-		server.setHandler( contextHandler );
+		handlerList.addHandler( contextHandler );
+		server.setHandler( handlerList );
 		// TODO: This could fail due to several reasons (e.g. BindException). Carbon should exit in that case
 		server.start();
 		server.join();
