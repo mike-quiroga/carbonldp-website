@@ -1,3 +1,6 @@
+# 0.40.4 (2016/08/19)
+- Make app agents able to authenticate when targeting platform resources (only when using token or ticket authentication)
+
 # 0.40.3 (2016/08/19)
 - Fix [LDP-791](https://jira.base22.com/browse/LDP-791) - Authenticating an app agent with an auth token returns a 401
 
