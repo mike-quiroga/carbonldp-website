@@ -21,16 +21,24 @@ public class JWTokenAuthenticationService extends AbstractComponent implements T
 
 	public Token createToken() {
 		Date expTime = new Date( System.currentTimeMillis() + Vars.getInstance().getTokenExpirationTime() );
-		SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		if ( ! ( authentication instanceof AgentAuthenticationToken ) ) throw new StupidityException( "authentication is not an instance of AgentAuthenticationToken" );
 		AgentAuthenticationToken agentToken = (AgentAuthenticationToken) authentication;
 		String agentTokenString = agentToken.getAgent().getSubject().stringValue();
 		App app = agentToken.getApp();
 
-		return app == null ?
-			TokenFactory.getInstance().create( agentTokenString, expTime, signatureAlgorithm ) :
-			TokenFactory.getInstance().create( app.getIRI(), agentTokenString, expTime, signatureAlgorithm );
+		String jwt;
+		Token token;
+
+		if ( app == null ) {
+			jwt = JWTUtil.encodeToken( agentTokenString, expTime );
+			token = TokenFactory.getInstance().getRDFToken( null, jwt, expTime, agentTokenString );
+		} else {
+			jwt = JWTUtil.encodeToken( app.getIRI(), agentTokenString, expTime );
+			token = TokenFactory.getInstance().getRDFToken( app.getIRI(), jwt, expTime, agentTokenString );
+		}
+
+		return token;
 
 	}
 

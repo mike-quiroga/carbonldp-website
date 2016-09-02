@@ -10,6 +10,7 @@ import javax.crypto.spec.SecretKeySpec;
 import javax.xml.bind.DatatypeConverter;
 import java.security.Key;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -20,38 +21,56 @@ public final class JWTUtil {
 
 	private JWTUtil() {}
 
-	private static JwtBuilder createJwtBuilder( String password ) {
+	private static JwtBuilder createJwtBuilder( String subject ) {return createJwtBuilder( subject, null, null );}
+
+	private static JwtBuilder createJwtBuilder( String subject, Map<String, Object> claims, Date expTime ) {
 		SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
 		byte[] apiKeySecretBytes = DatatypeConverter.parseBase64Binary( Vars.getInstance().getTokenKey() );
 		Key signingKey = new SecretKeySpec( apiKeySecretBytes, signatureAlgorithm.getJcaName() );
-		return Jwts.builder()
-		           .setSubject( password )
-		           .signWith( signatureAlgorithm, signingKey );
+
+		JwtBuilder builder = Jwts.builder();
+		if ( claims != null ) builder = builder.setClaims( claims );
+		builder = builder.setSubject( subject );
+		builder = builder.signWith( signatureAlgorithm, signingKey );
+		if ( expTime != null ) builder = builder.setExpiration( expTime );
+		return builder;
 	}
 
-	public static String encode( String password ) {
+	public static String encodeLDAPPassword( String password ) {
 		JwtBuilder builder = createJwtBuilder( password );
 		return builder.compact();
 	}
 
-	public static String encode( String password, Date expTime ) {
-		JwtBuilder builder = createJwtBuilder( password );
-		builder.setExpiration( expTime );
+	public static String encodeToken( String agentToken, Date expTime ) {
+		return encodeToken( null, agentToken, expTime );
+	}
+
+	public static String encodeToken( IRI appIRI, String agentToken, Date expTime ) {
+		Map<String, Object> claims = new HashMap<>();
+		if ( appIRI != null ) claims.put( "appRelated", appIRI.stringValue() );
+		JwtBuilder builder = createJwtBuilder( agentToken, claims, expTime );
 		return builder.compact();
 	}
 
-	public static Map<String, Object> decode( String password ) throws UnsupportedJwtException, MalformedJwtException, SignatureException, ExpiredJwtException, IllegalArgumentException {
-		return decode( password, null );
+	public static String encodeTicket( String agentToken, Date expTime, IRI targetIRI ) {return encodeTicket( null, agentToken, expTime, targetIRI );}
+
+	public static String encodeTicket( IRI appIRI, String agentToken, Date expTime, IRI targetIRI ) {
+
+		Map<String, Object> claims = new HashMap<>();
+		claims.put( "targetIRI", targetIRI );
+		if ( appIRI != null ) claims.put( "appRelated", appIRI.stringValue() );
+		JwtBuilder builder = createJwtBuilder( agentToken, claims, expTime );
+		return builder.compact();
+
 	}
 
-	public static Map<String, Object> decode( String password, IRI targetIRI ) {
+	public static Map<String, Object> decode( String password ) {
 		byte[] signingKey;
 		try {
 			signingKey = DatatypeConverter.parseBase64Binary( Vars.getInstance().getTokenKey() );
 		} catch ( IllegalArgumentException e ) {
 			throw new StupidityException( e );
 		}
-
 		try {
 			Claims claims = Jwts
 				.parser()
