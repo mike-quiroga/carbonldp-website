@@ -15,23 +15,23 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 public class SesamePlatformRoleRepository extends AbstractSesameRepository implements PlatformRoleRepository {
-	private final RDFSourceRepository sourceService;
+	private final RDFSourceRepository sourceRepository;
 	private final ContainerRepository containerRepository;
 	private final IRI platformRolesContainerIRI;
 
 	private final Type platformRolesContainerType = Type.BASIC;
 
-	public SesamePlatformRoleRepository( SesameConnectionFactory connectionFactory, RDFSourceRepository sourceService, ContainerRepository containerRepository,
+	public SesamePlatformRoleRepository( SesameConnectionFactory connectionFactory, RDFSourceRepository sourceRepository, ContainerRepository containerRepository,
 		IRI platformRolesContainerIRI ) {
 		super( connectionFactory );
-		this.sourceService = sourceService;
+		this.sourceRepository = sourceRepository;
 		this.containerRepository = containerRepository;
 		this.platformRolesContainerIRI = platformRolesContainerIRI;
 	}
 
 	public Set<PlatformRole> get( Set<IRI> platformRoleIRIs ) {
 		Set<IRI> platformRolesIRIs = containerRepository.filterMembers( platformRolesContainerIRI, platformRoleIRIs, platformRolesContainerType );
-		Set<RDFSource> sources = sourceService.get( platformRolesIRIs );
+		Set<RDFSource> sources = sourceRepository.get( platformRolesIRIs );
 
 		return sources.stream().map( PlatformRole::new ).collect( Collectors.toSet() );
 	}

@@ -106,7 +106,10 @@ public class SesameRDFSourceRepository extends AbstractSesameLDPRepository imple
 	// TODO: Decide. Should it return empty objects?
 	@Override
 	public Set<RDFSource> get( Set<IRI> sourceIRIs ) {
+		if ( sourceIRIs.isEmpty() ) return new HashSet<>();
+
 		Resource[] contexts = sourceIRIs.toArray( new Resource[sourceIRIs.size()] );
+
 		AbstractModel sourcesModel = connectionTemplate.readStatements(
 			connection -> connection.getStatements( null, null, null, false, contexts ),
 			repositoryResult -> {

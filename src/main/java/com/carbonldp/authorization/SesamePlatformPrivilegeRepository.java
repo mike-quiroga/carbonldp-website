@@ -31,10 +31,10 @@ public class SesamePlatformPrivilegeRepository extends AbstractSesameRepository 
 	}
 
 	public Set<PlatformPrivilege> get( Set<PlatformRole> platformRoles ) {
-		Set<PlatformPrivilege> privileges = new HashSet<PlatformPrivilege>();
+		Set<PlatformPrivilege> privileges = new HashSet<>();
 		if ( platformRoles.isEmpty() ) return privileges;
 
-		Set<IRI> privilegeIRIs = new HashSet<IRI>();
+		Set<IRI> privilegeIRIs = new HashSet<>();
 		for ( PlatformRole role : platformRoles ) {
 			privilegeIRIs.addAll( role.getPrivileges() );
 		}
