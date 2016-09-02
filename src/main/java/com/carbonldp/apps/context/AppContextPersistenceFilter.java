@@ -65,7 +65,7 @@ public class AppContextPersistenceFilter extends AbstractUniqueFilter {
 
 		if ( ! requestIRI.startsWith( Vars.getInstance().getAppsEntryPoint() ) ) return null;
 
-		requestIRI = requestIRI.replace( Vars.getInstance().getAppsEntryPoint(), EMPTY_STRING );
+		requestIRI = requestIRI.replaceFirst( Vars.getInstance().getAppsEntryPoint(), EMPTY_STRING );
 
 		if ( requestIRI.isEmpty() ) return null;
 
