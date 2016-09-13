@@ -80,6 +80,13 @@ gulp.task( "compile-boot", () => {
 		.pipe( gulp.dest( "src/app/" ) )
 } );
 
+gulp.task( "compile-config", () => {
+	return gulp.src( "src/app/config.ejs.ts" )
+		.pipe( ejs( profileConfig ) )
+		.pipe( rename( "config.ts" ) )
+		.pipe( gulp.dest( "src/app/" ) )
+} );
+
 gulp.task( "compile-index", () => {
 	return gulp.src( "dist/index.ejs.html" )
 		.pipe( ejs( profileConfig ) )
@@ -131,7 +138,7 @@ gulp.task( "copy-node-dependencies:packages", () => {
 
 gulp.task( "serve", ( done ) => {
 	runSequence(
-		[ "build-semantic", "compile-styles", "compile-boot", "copy-node-dependencies" ],
+		[ "build-semantic", "compile-styles", "compile-boot","compile-config", "copy-node-dependencies" ],
 		"serve:afterCompilation",
 		done
 	);
@@ -333,7 +340,7 @@ gulp.task( "clean:src", ( done ) => {
 gulp.task( "build", [ "clean:dist" ], ( done ) => {
 	runSequence(
 		"clean:dist",
-		[ "compile-styles", "compile-boot", "compile-index", "copy-semantic", "copy-assets" ],
+		[ "compile-styles", "compile-boot", "compile-index", "compile-config", "copy-semantic", "copy-assets" ],
 		"bundle",
 		done
 	);

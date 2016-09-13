@@ -1,32 +1,38 @@
-import { Provider } from "@angular/core";
 import { AppDevView } from "app/app-dev/app-dev.view";
-import { AppContextService } from "carbon-panel/my-apps/app-context.service";
-import { ErrorsAreaService } from "carbon-panel/errors-area/errors-area.service";
-import { DocumentsResolverService } from "carbon-panel/my-apps/app-content/explorer/document-explorer/documents-resolver.service";
-import { JobsService } from "carbon-panel/my-apps/app-content/configuration/job/jobs.service";
-import { BackupsService } from "carbon-panel/my-apps/app-content/configuration/backup/backups.service";
-import { SidebarService } from "carbon-panel/sidebar.service";
+import { AppContextService } from "carbonldp-panel/my-apps/app-context.service";
+import { ErrorsAreaService } from "carbonldp-panel/errors-area/errors-area.service";
+import { DocumentsResolverService } from "carbonldp-panel/my-apps/app-content/explorer/document-explorer/documents-resolver.service";
+import { JobsService } from "carbonldp-panel/my-apps/app-content/configuration/job/jobs.service";
+import { BackupsService } from "carbonldp-panel/my-apps/app-content/configuration/backup/backups.service";
+import { SidebarService } from "carbonldp-panel/sidebar.service";
 
 export const APP_DEV_PROVIDERS = [
-	new Provider( AppDevView, {
+	{
+		provide: AppDevView,
 		useClass: AppDevView
-	} ),
-	new Provider( AppContextService, {
+	},
+	{
+		provide: AppContextService,
 		useClass: AppContextService
-	} ),
-	new Provider( ErrorsAreaService, {
+	},
+	{
+		provide: ErrorsAreaService,
 		useClass: ErrorsAreaService
-	} ),
-	new Provider( DocumentsResolverService, {
+	},
+	{
+		provide: DocumentsResolverService,
 		useClass: DocumentsResolverService
-	} ),
-	new Provider( JobsService, {
+	},
+	{
+		provide: JobsService,
 		useClass: JobsService
-	} ),
-	new Provider( BackupsService, {
+	},
+	{
+		provide: BackupsService,
 		useClass: BackupsService
-	} ),
-	new Provider( SidebarService, {
+	},
+	{
+		provide: SidebarService,
 		useClass: SidebarService
-	} )
+	}
 ];

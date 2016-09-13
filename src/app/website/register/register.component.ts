@@ -1,12 +1,12 @@
 import { Component, ElementRef, Input, Output, Inject, EventEmitter, OnInit } from "@angular/core";
-import { CORE_DIRECTIVES, FORM_DIRECTIVES, FormBuilder, ControlGroup, AbstractControl, Validators } from "@angular/common";
 
+import { FormBuilder, ControlGroup, AbstractControl, Validators } from "@angular/common";
 import { AuthService } from "angular2-carbonldp/services";
 
 import Credentials from "carbonldp/Auth/Credentials";
 import * as HTTP from "carbonldp/HTTP";
 
-import { EmailValidator } from "carbon-panel/custom-validators";
+import { EmailValidator } from "carbonldp-panel/custom-validators";
 
 
 import $ from "jquery";
@@ -19,7 +19,6 @@ import style from "./register.component.css!text";
 	selector: "cp-register",
 	template: template,
 	styles: [ style ],
-	directives: [ CORE_DIRECTIVES, FORM_DIRECTIVES ],
 } )
 export class RegisterComponent implements OnInit {
 	@Input( "container" ) container:string|JQuery;
