@@ -3,19 +3,22 @@ import { CommonModule, DeprecatedFormsModule } from "@angular/common";
 import { routing } from "./website.routing";
 
 // Components
+import { HeaderComponent } from "./header/header.component";
+import { FooterComponent } from "./footer/footer.component";
+import { RegisterComponent } from "./register/register.component";
+import { SidebarComponent } from "./documentation/sidebar/sidebar.component";
+import { NewsletterFormComponent } from "./newsletter-form/newsletter-form.component";
+import { Angulartics2On } from "angulartics2/src/core/angulartics2On";
 import { WebsiteView } from "./website.view";
 import { HomeView } from "./home/home.view";
 import { RegisterView } from "./register/register.view";
+import { UIExamplesView } from "./ui-examples/ui-examples.view";
 import { SignupThanksView } from "./signup-thanks/signup-thanks.view";
-import { AboutCarbonLDPView } from "./documentation/about-carbon-ldp/about-carbon-ldp.view";
-// import { UIExamplesView } from "./ui-examples/ui-examples.view";
-// import { LoginView } from "./auth/login/login.view";
-// import { BlogView } from "./blog/blog.view";
-// import { BlogPostView } from "./blog/blog-post/blog-post.view";
 
 // Documentation
+import { AboutCarbonLDPView } from "./documentation/about-carbon-ldp/about-carbon-ldp.view";
 import { DocumentationView } from "./documentation/documentation.view";
-import { HomeView as DocumentationHomeView} from "./documentation/home/home.view";
+import { HomeView as DocumentationHomeView } from "./documentation/home/home.view";
 // Documentation - > Essential Concepts
 import { EssentialConceptsView } from "./documentation/essential-concepts/essential-concepts.view";
 import { LinkedDataConceptsView } from "./documentation/essential-concepts/linked-data-concepts.view";
@@ -35,12 +38,6 @@ import { ContextsView } from "./documentation/javascript-sdk/contexts.view";
 import { ObjectModelView as JavaScriptSDKObjectModelView } from "./documentation/javascript-sdk/object-model.view";
 import { ObjectSchemaView } from "./documentation/javascript-sdk/object-schema.view";
 
-import { HeaderComponent } from "./header/header.component";
-import { FooterComponent } from "./footer/footer.component";
-import { RegisterComponent } from "./register/register.component";
-import { SidebarComponent } from "./documentation/sidebar/sidebar.component";
-import { NewsletterFormComponent } from "./newsletter-form/newsletter-form.component";
-import { Angulartics2On } from "angulartics2/src/core/angulartics2On";
 
 // Modules
 import { SemanticModule } from "carbonldp-panel/semantic/semantic.module";
@@ -61,6 +58,7 @@ import { HighlightDirective } from "carbonldp-panel/directives/highlight.directi
 		HomeView,
 		SignupThanksView,
 		RegisterView,
+		UIExamplesView,
 
 		HeaderComponent,
 		FooterComponent,
@@ -69,22 +67,22 @@ import { HighlightDirective } from "carbonldp-panel/directives/highlight.directi
 		RegisterComponent,
 		HighlightDirective,
 
+		// Documentation
 		DocumentationView,
 		DocumentationHomeView,
 		AboutCarbonLDPView,
-		//
+
+		// Documentation - > Essential Concepts
 		EssentialConceptsView,
 		LinkedDataConceptsView,
-		// LDPConceptsView,
-		// CarbonLDPConceptsView,
-		//
+
+		// Documentation - > RESTApi
 		RESTApiView,
 		GettingStartedView,
 		InteractionModelsView,
 		ObjectModelView,
-		// RDFSourceView,
-		// ContainersView,
-		//
+
+		// Documentation - > JavaScriptSDK
 		JavaScriptSDKView,
 		JavaScriptSDKGettingStartedView,
 		ContextsView,
