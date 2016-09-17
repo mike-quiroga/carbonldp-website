@@ -1,11 +1,12 @@
 {
-	"angular": {
-		"debug": true
-	},
-	"url": {
-		"base": "/carbon-website/src/"
-	},
-	"carbon": {
-		"domain": "local.carbonldp.com"
-	}
+  "angular": {
+    "debug": true
+  },
+  "url": {
+    "base": "/carbon-website/src/"
+  },
+  "carbon": {
+    "protocol": "http",
+    "domain": "localhost:8083"
+  }
 }

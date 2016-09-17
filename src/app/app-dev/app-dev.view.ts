@@ -16,7 +16,7 @@ import style from "./app-dev.view.css!text";
 	selector: "app-dev",
 	template: template,
 	styles: [ style ],
-})
+} )
 export class AppDevView implements OnInit {
 
 	private headerService:HeaderService;
@@ -87,6 +87,7 @@ export class AppDevView implements OnInit {
 	}
 
 	private populateSidebar():void {
+		this.sidebarService.clear();
 		this.sidebarService.addItems( [
 			{
 				type: "link",

@@ -29,9 +29,6 @@ import { PanelModule } from "carbonldp-panel/panel.module";
 		NotFoundErrorView,
 		DashboardView,
 	],
-	exports: [
-		FooterComponent,
-	],
 	providers: [
 		CARBON_PROVIDERS,
 		CARBON_SERVICES_PROVIDERS,

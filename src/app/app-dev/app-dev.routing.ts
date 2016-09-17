@@ -10,7 +10,7 @@ import { NotFoundErrorView } from "./error-pages/not-found-error/not-found-error
 import { DashboardView } from "./dashboard/dashboard.view";
 
 //Modules
-import { MyAppsModule} from "carbonldp-panel/my-apps/my-apps.module";
+import { MyAppsModule } from "carbonldp-panel/my-apps/my-apps.module";
 
 
 const appDevRoutes:Routes = [
