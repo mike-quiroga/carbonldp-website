@@ -6,7 +6,7 @@ import { AuthenticatedGuard, NotAuthenticatedGuard } from "angular2-carbonldp/gu
 import { ActiveContextResolver } from "angular2-carbonldp/resolvers";
 
 //Components
-import { AppDevLoginView} from "app/auth/app-dev-login/app-dev-login.view";
+import { AppDevLoginView } from "app/auth/app-dev-login/app-dev-login.view";
 import { NotFoundErrorView } from "app/error-pages/not-found-error/not-found-error.view";
 
 import { WebsiteModule } from "./website/website.module";
@@ -30,13 +30,12 @@ const appRoutes:Routes = [
 			title: "Log In | Carbon LDP",
 		},
 	},
-	//TODO: Remove 'site' portion from the URL. Right now Angular doesn't behave like it should with blank child URLs
 	{
 		path: "",
-			data:{
-				title: "Carbon LDP"
-			},
-			loadChildren: () => WebsiteModule,
+		data: {
+			title: "Carbon LDP"
+		},
+		loadChildren: () => WebsiteModule,
 	},
 	{
 		path: "**",

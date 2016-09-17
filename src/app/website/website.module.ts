@@ -5,29 +5,30 @@ import { routing } from "./website.routing";
 // Components
 import { WebsiteView } from "./website.view";
 import { HomeView } from "./home/home.view";
-// import { LoginView } from "./auth/login/login.view";
 import { RegisterView } from "./register/register.view";
-// import { BlogView } from "./blog/blog.view";
-// import { BlogPostView } from "./blog/blog-post/blog-post.view";
 import { SignupThanksView } from "./signup-thanks/signup-thanks.view";
 import { AboutCarbonLDPView } from "./documentation/about-carbon-ldp/about-carbon-ldp.view";
 // import { UIExamplesView } from "./ui-examples/ui-examples.view";
+// import { LoginView } from "./auth/login/login.view";
+// import { BlogView } from "./blog/blog.view";
+// import { BlogPostView } from "./blog/blog-post/blog-post.view";
+
 // Documentation
 import { DocumentationView } from "./documentation/documentation.view";
 import { HomeView as DocumentationHomeView} from "./documentation/home/home.view";
-// Essential Concepts
+// Documentation - > Essential Concepts
 import { EssentialConceptsView } from "./documentation/essential-concepts/essential-concepts.view";
 import { LinkedDataConceptsView } from "./documentation/essential-concepts/linked-data-concepts.view";
 // import { LDPConceptsView } from "./documentation/essential-concepts/ldp-concepts.view";
 // import { CarbonLDPConceptsView } from "./documentation/essential-concepts/carbon-ldp-concepts.view";
-// RESTApi
+// Documentation - > RESTApi
 import { RESTApiView } from "./documentation/rest-api/rest-api.view";
 import { GettingStartedView } from "./documentation/rest-api/getting-started.view";
 import { InteractionModelsView } from "./documentation/rest-api/interaction-models.view";
 import { ObjectModelView } from "./documentation/rest-api/object-model.view";
 import { RDFSourceView } from "./documentation/rest-api/rdf-source.view";
 import { ContainersView } from "./documentation/rest-api/containers.view";
-// JavaScriptSDK
+// Documentation - > JavaScriptSDK
 import { JavaScriptSDKView } from "./documentation/javascript-sdk/javascript-sdk.view";
 import { GettingStartedView as JavaScriptSDKGettingStartedView } from "./documentation/javascript-sdk/getting-started.view";
 import { ContextsView } from "./documentation/javascript-sdk/contexts.view";
