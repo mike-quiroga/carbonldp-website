@@ -1,11 +1,11 @@
 import { ModuleWithProviders } from "@angular/core";
 import { Routes, RouterModule } from "@angular/router";
 
-//Guards
+// Guards
 import { AuthenticatedGuard, NotAuthenticatedGuard } from "angular2-carbonldp/guards";
 import { ActiveContextResolver } from "angular2-carbonldp/resolvers";
 
-//Components
+// Components
 import { AppDevLoginView } from "app/auth/app-dev-login/app-dev-login.view";
 import { NotFoundErrorView } from "app/error-pages/not-found-error/not-found-error.view";
 
