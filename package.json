@@ -1,5 +1,5 @@
 {
-  "name": "carbon-website",
+  "name": "carbonldp-website",
   "version": "0.6.0",
   "description": "Public Website for carbonldp.com",
   "main": "dist/index.html",
@@ -198,6 +198,20 @@
               "zone.js"
             ]
           }
+        }
+      },
+      "npm:@angular/router@3.0.0-rc.2": {
+        "meta": {
+          "src/*.js": {
+            "deps": [
+              "reflect-metadata",
+              "zone.js"
+            ]
+          }
+        },
+        "map": {
+          "@angular/router": ".",
+          "./testing": "./bundles/router-testing.umd.js"
         }
       },
       "npm:browserify-des@1.0.0": {

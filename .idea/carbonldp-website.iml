@@ -7,8 +7,8 @@
     <content url="file://$MODULE_DIR$/../angular2-carbonldp">
       <excludeFolder url="file://$MODULE_DIR$/../angular2-carbonldp/node_modules" />
     </content>
-    <content url="file://$MODULE_DIR$/../carbon-panel">
-      <excludeFolder url="file://$MODULE_DIR$/../carbon-panel/node_modules" />
+    <content url="file://$MODULE_DIR$/../carbonldp-panel">
+      <excludeFolder url="file://$MODULE_DIR$/../carbonldp-panel/node_modules" />
     </content>
     <content url="file://$MODULE_DIR$">
       <excludeFolder url="file://$MODULE_DIR$/jspm_packages" />

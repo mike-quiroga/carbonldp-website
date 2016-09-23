@@ -163,7 +163,7 @@ gulp.task( "serve:afterCompilation", () => {
 		.pipe( webserver( {
 			livereload: false,
 			directoryListing: false,
-			fallback: "/carbon-website/src/index.html",
+			fallback: "/carbonldp-website/src/index.html",
 			open: true,
 			port: 8081,
 		} ) );

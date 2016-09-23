@@ -3,7 +3,7 @@
     "debug": true
   },
   "url": {
-    "base": "/carbon-website/src/"
+    "base": "/carbonldp-website/src/"
   },
   "carbon": {
     "protocol": "http",
