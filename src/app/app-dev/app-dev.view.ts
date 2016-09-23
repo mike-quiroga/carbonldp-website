@@ -28,6 +28,7 @@ export class AppDevView implements OnInit {
 	constructor( headerService:HeaderService, sidebarService:SidebarService, @Inject( AuthService.Token ) authService:AuthService.Class, router:Router ) {
 		this.headerService = headerService;
 		this.sidebarService = sidebarService;
+		this.sidebarService.base = "/app-dev";
 		this.authService = authService;
 		this.router = router;
 		this.router.events.subscribe( ( event:Event )=> {

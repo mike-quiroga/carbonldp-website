@@ -67,7 +67,6 @@ SystemJS.config( {
 	map: {
 		"@angular/http": "npm:@angular/http@2.0.0-rc.5",
 		"@angular/platform-browser-dynamic": "npm:@angular/platform-browser-dynamic@2.0.0-rc.5",
-		"@angular/router-deprecated": "npm:@angular/router-deprecated@2.0.0-rc.1",
 		"@angular/common": "npm:@angular/common@2.0.0-rc.5",
 		"@angular/compiler": "npm:@angular/compiler@2.0.0-rc.5",
 		"@angular/core": "npm:@angular/core@2.0.0-rc.5",
