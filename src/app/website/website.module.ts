@@ -1,5 +1,7 @@
 import { NgModule } from "@angular/core";
-import { CommonModule, DeprecatedFormsModule } from "@angular/common";
+//import { DeprecatedFormsModule } from "@angular/common";
+import { CommonModule } from "@angular/common";
+import { FormsModule } from "@angular/forms";
 import { routing } from "./website.routing";
 
 // Components
@@ -14,7 +16,7 @@ import { AboutCarbonLDPView } from "./documentation/about-carbon-ldp/about-carbo
 // import { UIExamplesView } from "./ui-examples/ui-examples.view";
 // Documentation
 import { DocumentationView } from "./documentation/documentation.view";
-import { HomeView as DocumentationHomeView} from "./documentation/home/home.view";
+import { HomeView as DocumentationHomeView } from "./documentation/home/home.view";
 // Essential Concepts
 import { EssentialConceptsView } from "./documentation/essential-concepts/essential-concepts.view";
 import { LinkedDataConceptsView } from "./documentation/essential-concepts/linked-data-concepts.view";
@@ -44,13 +46,16 @@ import { Angulartics2On } from "angulartics2/src/core/angulartics2On";
 // Modules
 import { SemanticModule } from "carbonldp-panel/semantic/semantic.module";
 import { HighlightDirective } from "carbonldp-panel/directives/highlight.directive";
+import { EmailValidator } from "carbonldp-panel/custom-validators";
+import { PasswordValidator } from "carbonldp-panel/custom-validators";
+import { MatchValidator } from "carbonldp-panel/custom-validators";
 
 
 @NgModule( {
 	imports: [
 		CommonModule,
-		DeprecatedFormsModule,
 		SemanticModule,
+		FormsModule,
 		routing
 	],
 	declarations: [
@@ -67,6 +72,9 @@ import { HighlightDirective } from "carbonldp-panel/directives/highlight.directi
 		SidebarComponent,
 		RegisterComponent,
 		HighlightDirective,
+		EmailValidator,
+		PasswordValidator,
+		MatchValidator,
 
 		DocumentationView,
 		DocumentationHomeView,
@@ -93,5 +101,6 @@ import { HighlightDirective } from "carbonldp-panel/directives/highlight.directi
 
 	],
 } )
+
 export class WebsiteModule {
 }

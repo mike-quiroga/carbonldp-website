@@ -8,12 +8,13 @@
  *
  */
 
+
 /*******************************
             Theme
 *******************************/
 
-@type: 'module';
-@element: 'search';
+@type    : 'module';
+@element : 'search';
 
 @import (multiple) '../../theme.config';
 
@@ -22,40 +23,41 @@
 *******************************/
 
 .ui.search {
-	position: relative;
+  position: relative;
 }
 
 .ui.search > .prompt {
-	margin: 0em;
-	outline: none;
-	-webkit-appearance: none;
-	-webkit-tap-highlight-color: rgba(255, 255, 255, 0);
+  margin: 0em;
+  outline: none;
+  -webkit-appearance: none;
+  -webkit-tap-highlight-color:  rgba(255, 255, 255, 0);
 
-	text-shadow: none;
-	font-style: normal;
-	font-weight: normal;
+  text-shadow: none;
+  font-style: normal;
+  font-weight: normal;
 
-	line-height: @promptLineHeight;
-	padding: @promptPadding;
-	font-size: @promptFontSize;
+  line-height: @promptLineHeight;
+  padding: @promptPadding;
+  font-size: @promptFontSize;
 
-	background: @promptBackground;
-	border: @promptBorder;
-	color: @promptColor;
-	box-shadow: @promptBoxShadow;
-	transition: @promptTransition;
+  background: @promptBackground;
+  border: @promptBorder;
+  color: @promptColor;
+  box-shadow: @promptBoxShadow;
+  transition: @promptTransition;
 }
 
 .ui.search .prompt {
-	border-radius: @promptBorderRadius;
+  border-radius: @promptBorderRadius;
 }
+
 
 /*--------------
      Icon
 ---------------*/
 
 .ui.search .prompt ~ .search.icon {
-	cursor: pointer;
+  cursor: pointer;
 }
 
 /*--------------
@@ -63,31 +65,29 @@
 ---------------*/
 
 .ui.search > .results {
-	display: none;
+  display: none;
 
-	position: absolute;
-	top: 100%;
-	left: 0%;
-	transform-origin: center top;
-	white-space: normal;
+  position: absolute;
+  top: 100%;
+  left: 0%;
+  transform-origin: center top;
+  white-space: normal;
 
-	background: @resultsBackground;
+  background: @resultsBackground;
 
-	margin-top: @resultsDistance;
-	width: @resultsWidth;
+  margin-top: @resultsDistance;
+  width: @resultsWidth;
 
-	border-radius: @resultsBorderRadius;
-	box-shadow: @resultsBoxShadow;
-	border: @resultsBorder;
-	z-index: @resultsZIndex;
+  border-radius: @resultsBorderRadius;
+  box-shadow: @resultsBoxShadow;
+  border: @resultsBorder;
+  z-index: @resultsZIndex;
 }
-
 .ui.search > .results > :first-child {
-	border-radius: @resultsBorderRadius @resultsBorderRadius 0em 0em;
+  border-radius: @resultsBorderRadius @resultsBorderRadius 0em 0em;
 }
-
 .ui.search > .results > :last-child {
-	border-radius: 0em 0em @resultsBorderRadius @resultsBorderRadius;
+  border-radius: 0em 0em @resultsBorderRadius @resultsBorderRadius;
 }
 
 /*--------------
@@ -95,34 +95,32 @@
 ---------------*/
 
 .ui.search > .results .result {
-	cursor: pointer;
-	display: block;
-	overflow: hidden;
-	font-size: @resultFontSize;
-	padding: @resultPadding;
-	color: @resultTextColor;
-	line-height: @resultLineHeight;
-	border-bottom: @resultDivider;
+  cursor: pointer;
+  display: block;
+  overflow: hidden;
+  font-size: @resultFontSize;
+  padding: @resultPadding;
+  color: @resultTextColor;
+  line-height: @resultLineHeight;
+  border-bottom: @resultDivider;
 }
-
 .ui.search > .results .result:last-child {
-	border-bottom: @resultLastDivider !important;
+  border-bottom: @resultLastDivider !important;
 }
 
 /* Image */
 .ui.search > .results .result .image {
-	float: @resultImageFloat;
-	overflow: hidden;
-	background: @resultImageBackground;
-	width: @resultImageWidth;
-	height: @resultImageHeight;
-	border-radius: @resultImageBorderRadius;
+  float: @resultImageFloat;
+  overflow: hidden;
+  background: @resultImageBackground;
+  width: @resultImageWidth;
+  height: @resultImageHeight;
+  border-radius: @resultImageBorderRadius;
 }
-
 .ui.search > .results .result .image img {
-	display: block;
-	width: auto;
-	height: 100%;
+  display: block;
+  width: auto;
+  height: 100%;
 }
 
 /*--------------
@@ -130,26 +128,24 @@
 ---------------*/
 
 .ui.search > .results .result .image + .content {
-	margin: @resultImageMargin;
+  margin: @resultImageMargin;
 }
 
 .ui.search > .results .result .title {
-	margin: @resultTitleMargin;
-	font-family: @resultTitleFont;
-	font-weight: @resultTitleFontWeight;
-	font-size: @resultTitleFontSize;
-	color: @resultTitleColor;
+  margin: @resultTitleMargin;
+  font-family: @resultTitleFont;
+  font-weight: @resultTitleFontWeight;
+  font-size: @resultTitleFontSize;
+  color: @resultTitleColor;
 }
-
 .ui.search > .results .result .description {
-	margin-top: @resultDescriptionDistance;
-	font-size: @resultDescriptionFontSize;
-	color: @resultDescriptionColor;
+  margin-top: @resultDescriptionDistance;
+  font-size: @resultDescriptionFontSize;
+  color: @resultDescriptionColor;
 }
-
 .ui.search > .results .result .price {
-	float: @resultPriceFloat;
-	color: @resultPriceColor;
+  float: @resultPriceFloat;
+  color: @resultPriceColor;
 }
 
 /*--------------
@@ -157,32 +153,31 @@
 ---------------*/
 
 .ui.search > .results > .message {
-	padding: @messageVerticalPadding @messageHorizontalPadding;
+  padding: @messageVerticalPadding @messageHorizontalPadding;
 }
-
 .ui.search > .results > .message .header {
-	font-family: @headerFont;
-	font-size: @messageHeaderFontSize;
-	font-weight: @messageHeaderFontWeight;
-	color: @messageHeaderColor;
+  font-family: @headerFont;
+  font-size: @messageHeaderFontSize;
+  font-weight: @messageHeaderFontWeight;
+  color: @messageHeaderColor;
 }
-
 .ui.search > .results > .message .description {
-	margin-top: @messageDescriptionDistance;
-	font-size: @messageDescriptionFontSize;
-	color: @messageDescriptionColor;
+  margin-top: @messageDescriptionDistance;
+  font-size: @messageDescriptionFontSize;
+  color: @messageDescriptionColor;
 }
 
 /* View All Results */
 .ui.search > .results > .action {
-	display: block;
-	border-top: @actionBorder;
-	background: @actionBackground;
-	padding: @actionPadding;
-	color: @actionColor;
-	font-weight: @actionFontWeight;
-	text-align: @actionAlign;
+  display: block;
+  border-top: @actionBorder;
+  background: @actionBackground;
+  padding: @actionPadding;
+  color: @actionColor;
+  font-weight: @actionFontWeight;
+  text-align: @actionAlign;
 }
+
 
 /*******************************
             States
@@ -193,9 +188,9 @@
 ---------------------*/
 
 .ui.search > .prompt:focus {
-	border-color: @promptFocusBorderColor;
-	background: @promptFocusBackground;
-	color: @promptFocusColor;
+  border-color: @promptFocusBorderColor;
+  background: @promptFocusBackground;
+  color: @promptFocusColor;
 }
 
 /*--------------------
@@ -203,40 +198,40 @@
 ---------------------*/
 
 .ui.loading.search .input > i.icon:before {
-	position: absolute;
-	content: '';
-	top: 50%;
-	left: 50%;
+  position: absolute;
+  content: '';
+  top: 50%;
+  left: 50%;
 
-	margin: @loaderMargin;
-	width: @loaderSize;
-	height: @loaderSize;
+  margin: @loaderMargin;
+  width: @loaderSize;
+  height: @loaderSize;
 
-	border-radius: @circularRadius;
-	border: @loaderLineWidth solid @loaderFillColor;
+  border-radius: @circularRadius;
+  border: @loaderLineWidth solid @loaderFillColor;
 }
-
 .ui.loading.search .input > i.icon:after {
-	position: absolute;
-	content: '';
-	top: 50%;
-	left: 50%;
+  position: absolute;
+  content: '';
+  top: 50%;
+  left: 50%;
 
-	margin: @loaderMargin;
-	width: @loaderSize;
-	height: @loaderSize;
+  margin: @loaderMargin;
+  width: @loaderSize;
+  height: @loaderSize;
 
-	animation: button-spin @loaderSpeed linear;
-	animation-iteration-count: infinite;
+  animation: button-spin @loaderSpeed linear;
+  animation-iteration-count: infinite;
 
-	border-radius: @circularRadius;
+  border-radius: @circularRadius;
 
-	border-color: @loaderLineColor transparent transparent;
-	border-style: solid;
-	border-width: @loaderLineWidth;
+  border-color: @loaderLineColor transparent transparent;
+  border-style: solid;
+  border-width: @loaderLineWidth;
 
-	box-shadow: 0px 0px 0px 1px transparent;
+  box-shadow: 0px 0px 0px 1px transparent;
 }
+
 
 /*--------------
       Hover
@@ -244,11 +239,10 @@
 
 .ui.search > .results .result:hover,
 .ui.category.search > .results .category .result:hover {
-	background: @resultHoverBackground;
+  background: @resultHoverBackground;
 }
-
 .ui.search .action:hover {
-	background: @actionHoverBackground;
+  background: @actionHoverBackground;
 }
 
 /*--------------
@@ -256,27 +250,24 @@
 ---------------*/
 
 .ui.category.search > .results .category.active {
-	background: @categoryActiveBackground;
+  background: @categoryActiveBackground;
 }
-
 .ui.category.search > .results .category.active > .name {
-	color: @categoryNameActiveColor;
+  color: @categoryNameActiveColor;
 }
 
 .ui.search > .results .result.active,
 .ui.category.search > .results .category .result.active {
-	position: relative;
-	border-left-color: @resultActiveBorderLeft;
-	background: @resultActiveBackground;
-	box-shadow: @resultActiveBoxShadow;
+  position: relative;
+  border-left-color: @resultActiveBorderLeft;
+  background: @resultActiveBackground;
+  box-shadow: @resultActiveBoxShadow;
 }
-
 .ui.search > .results .result.active .title {
-	color: @resultActiveTitleColor;
+  color: @resultActiveTitleColor;
 }
-
 .ui.search > .results .result.active .description {
-	color: @resultActiveDescriptionColor;
+  color: @resultActiveDescriptionColor;
 }
 
 /*******************************
@@ -288,91 +279,87 @@
 ---------------*/
 
 .ui.search.selection .prompt {
-	border-radius: @selectionPromptBorderRadius;
+  border-radius: @selectionPromptBorderRadius;
 }
 
 /* Remove input */
 .ui.search.selection > .icon.input > .remove.icon {
-	pointer-events: none;
-	position: absolute;
-	left: auto;
-	opacity: 0;
-	color: @selectionCloseIconColor;
-	top: @selectionCloseTop;
-	right: @selectionCloseRight;
-	transition: @selectionCloseTransition;
+  pointer-events: none;
+  position: absolute;
+  left: auto;
+  opacity: 0;
+  color: @selectionCloseIconColor;
+  top: @selectionCloseTop;
+  right: @selectionCloseRight;
+  transition: @selectionCloseTransition;
 }
-
 .ui.search.selection > .icon.input > .active.remove.icon {
-	cursor: pointer;
-	opacity: @selectionCloseIconOpacity;
-	pointer-events: auto;
+  cursor: pointer;
+  opacity: @selectionCloseIconOpacity;
+  pointer-events: auto;
 }
-
 .ui.search.selection > .icon.input:not([class*="left icon"]) > .icon ~ .remove.icon {
-	right: @selectionCloseIconInputRight;
+  right: @selectionCloseIconInputRight;
+}
+.ui.search.selection > .icon.input > .remove.icon:hover {
+  opacity: @selectionCloseIconHoverOpacity;
+  color: @selectionCloseIconHoverColor;
 }
 
-.ui.search.selection > .icon.input > .remove.icon:hover {
-	opacity: @selectionCloseIconHoverOpacity;
-	color: @selectionCloseIconHoverColor;
-}
 
 /*--------------
     Category
 ---------------*/
 
 .ui.category.search .results {
-	width: @categoryResultsWidth;
+  width: @categoryResultsWidth;
 }
 
 /* Category */
 .ui.category.search > .results .category {
-	background: @categoryBackground;
-	box-shadow: @categoryBoxShadow;
-	border-bottom: @categoryDivider;
-	transition: @categoryTransition;
+  background: @categoryBackground;
+  box-shadow: @categoryBoxShadow;
+  border-bottom: @categoryDivider;
+  transition: @categoryTransition;
 }
 
 /* Last Category */
 .ui.category.search > .results .category:last-child {
-	border-bottom: none;
+  border-bottom: none;
 }
 
 /* First / Last */
 .ui.category.search > .results .category:first-child .name + .result {
-	border-radius: 0em @resultsBorderRadius 0em 0em;
+  border-radius: 0em @resultsBorderRadius 0em 0em;
 }
-
 .ui.category.search > .results .category:last-child .result:last-child {
-	border-radius: 0em 0em @resultsBorderRadius 0em;
+  border-radius: 0em 0em @resultsBorderRadius 0em;
 }
 
 /* Category Result */
 .ui.category.search > .results .category .result {
-	background: @categoryResultBackground;
-	margin-left: @categoryNameWidth;
-	border-left: @categoryResultLeftBorder;
-	border-bottom: @categoryResultDivider;
-	transition: @categoryResultTransition;
-	padding: @categoryResultPadding;
+  background: @categoryResultBackground;
+  margin-left: @categoryNameWidth;
+  border-left: @categoryResultLeftBorder;
+  border-bottom: @categoryResultDivider;
+  transition: @categoryResultTransition;
+  padding: @categoryResultPadding;
 }
-
 .ui.category.search > .results .category:last-child .result:last-child {
-	border-bottom: @categoryResultLastDivider;
+  border-bottom: @categoryResultLastDivider;
 }
 
 /* Category Result Name */
 .ui.category.search > .results .category > .name {
-	width: @categoryNameWidth;
-	background: @categoryNameBackground;
-	font-family: @categoryNameFont;
-	font-size: @categoryNameFontSize;
-	float: @categoryNameFontSize;
-	float: @categoryNameFloat;
-	padding: @categoryNamePadding;
-	font-weight: @categoryNameFontWeight;
-	color: @categoryNameColor;
+  width: @categoryNameWidth;
+  background: @categoryNameBackground;
+  font-family: @categoryNameFont;
+  font-size: @categoryNameFontSize;
+  float: @categoryNameFontSize;
+  float: @categoryNameFloat;
+  padding: @categoryNamePadding;
+  font-weight: @categoryNameFontWeight;
+  color: @categoryNameColor;
 }
 
 /*******************************
@@ -384,13 +371,12 @@
 --------------------*/
 
 .ui[class*="left aligned"].search > .results {
-	right: auto;
-	left: 0%;
+  right: auto;
+  left: 0%;
 }
-
 .ui[class*="right aligned"].search > .results {
-	right: 0%;
-	left: auto;
+  right: 0%;
+  left: auto;
 }
 
 /*--------------
@@ -398,39 +384,34 @@
 ---------------*/
 
 .ui.fluid.search .results {
-	width: 100%;
+  width: 100%;
 }
+
 
 /*--------------
       Sizes
 ---------------*/
 
 .ui.mini.search {
-	font-size: @relativeMini;
+  font-size: @relativeMini;
 }
-
 .ui.small.search {
-	font-size: @relativeSmall;
+  font-size: @relativeSmall;
 }
-
 .ui.search {
-	font-size: @relativeMedium;
+  font-size: @relativeMedium;
 }
-
 .ui.large.search {
-	font-size: @relativeLarge;
+  font-size: @relativeLarge;
 }
-
 .ui.big.search {
-	font-size: @relativeBig;
+  font-size: @relativeBig;
 }
-
 .ui.huge.search {
-	font-size: @relativeHuge;
+  font-size: @relativeHuge;
 }
-
 .ui.massive.search {
-	font-size: @relativeMassive;
+  font-size: @relativeMassive;
 }
 
 .loadUIOverrides();

@@ -1,4 +1,4 @@
-SystemJS.config( {
+SystemJS.config({
 	transpiler: "plugin-typescript",
 	typescriptOptions: {
 		"tsconfig": true
@@ -54,24 +54,25 @@ SystemJS.config( {
 		}
 	},
 	map: {
-		"html": "github:systemjs/plugin-text@0.0.7"
+		"html": "github:systemjs/plugin-text@0.0.7",
+		"@angular/router-deprecated": "npm:@angular/router-deprecated@2.0.0-rc.1",
+		"@angular/forms": "npm:@angular/forms@0.3.0"
 	}
-} );
+});
 
-SystemJS.config( {
+SystemJS.config({
 	packageConfigPaths: [
 		"github:*/*.json",
 		"npm:@*/*.json",
 		"npm:*.json"
 	],
 	map: {
+		"forms": "npm:@angular/forms@0.3.0",
 		"@angular/http": "npm:@angular/http@2.0.0-rc.5",
 		"@angular/platform-browser-dynamic": "npm:@angular/platform-browser-dynamic@2.0.0-rc.5",
-		"@angular/router-deprecated": "npm:@angular/router-deprecated@2.0.0-rc.1",
 		"@angular/common": "npm:@angular/common@2.0.0-rc.5",
 		"@angular/compiler": "npm:@angular/compiler@2.0.0-rc.5",
 		"@angular/core": "npm:@angular/core@2.0.0-rc.5",
-		"@angular/forms": "npm:@angular/forms@0.3.0",
 		"@angular/platform-browser": "npm:@angular/platform-browser@2.0.0-rc.5",
 		"@angular/router": "npm:@angular/router@3.0.0-rc.2",
 		"angulartics2": "npm:angulartics2@1.0.11",
@@ -410,4 +411,4 @@ SystemJS.config( {
 			}
 		}
 	}
-} );
+});
