@@ -11,7 +11,7 @@ src/app/**/*.css
 src/app/**/*.js
 src/app/**/*.map
 
-src/app/boot.ts
+src/app/config.ejs.ts
 
 dist/site/
 

@@ -113,7 +113,7 @@ SystemJS.config({
         "create-hash": "npm:create-hash@1.1.2",
         "browserify-rsa": "npm:browserify-rsa@4.0.1",
         "parse-asn1": "npm:parse-asn1@5.0.0",
-        "elliptic": "npm:elliptic@6.3.1",
+        "elliptic": "npm:elliptic@6.3.2",
         "bn.js": "npm:bn.js@4.11.6"
       }
     },
@@ -160,7 +160,7 @@ SystemJS.config({
     },
     "npm:create-ecdh@4.0.0": {
       "map": {
-        "elliptic": "npm:elliptic@6.3.1",
+        "elliptic": "npm:elliptic@6.3.2",
         "bn.js": "npm:bn.js@4.11.6"
       }
     },
@@ -321,7 +321,7 @@ SystemJS.config({
     },
     "npm:carbonldp@0.37.0": {
       "map": {
-        "file-type": "@empty"
+        "file-type": "npm:file-type@3.8.0"
       }
     },
     "github:frankwallis/plugin-typescript@5.1.2": {
@@ -329,12 +329,12 @@ SystemJS.config({
         "typescript": "npm:typescript@2.0.3"
       }
     },
-    "npm:elliptic@6.3.1": {
+    "npm:elliptic@6.3.2": {
       "map": {
-        "bn.js": "npm:bn.js@4.11.6",
         "inherits": "npm:inherits@2.0.3",
-        "hash.js": "npm:hash.js@1.0.3",
-        "brorand": "npm:brorand@1.0.6"
+        "bn.js": "npm:bn.js@4.11.6",
+        "brorand": "npm:brorand@1.0.6",
+        "hash.js": "npm:hash.js@1.0.3"
       }
     }
   }
