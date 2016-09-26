@@ -159,11 +159,11 @@ gulp.task( "serve:afterCompilation", () => {
 		util.log( util.colors.red( "Error" ), error.message );
 	} );
 
-	return gulp.src( "../" )
+	return gulp.src( "." )
 		.pipe( webserver( {
 			livereload: false,
 			directoryListing: false,
-			fallback: "/carbonldp-website/src/index.html",
+			fallback: "/src/index.html",
 			open: true,
 			port: 8081,
 		} ) );
