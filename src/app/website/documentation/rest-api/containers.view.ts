@@ -1,8 +1,4 @@
 import { Component, ElementRef, AfterViewInit } from "@angular/core";
-import { CORE_DIRECTIVES } from "@angular/common";
-
-import SidebarComponent from "./../sidebar/sidebar.component";
-
 import $ from "jquery";
 import "semantic-ui/semantic";
 
@@ -11,7 +7,6 @@ import template from "./containers.view.html!";
 @Component( {
 	selector: "rest-containers",
 	template: template,
-	directives: [ CORE_DIRECTIVES, SidebarComponent ]
 } )
 export class ContainersView implements AfterViewInit {
 	private element:ElementRef;

@@ -53,38 +53,23 @@ const config = {
 	}
 };
 
-gulp.task( "ts-lint", () => {
-	return gulp.src( config.source.typescript )
-		.pipe( tslint() )
-		.pipe( tslint.report( "prose" ) )
-		;
+gulp.task( "default", [ "serve" ] );
+
+gulp.task( "build", [ "clean:dist" ], ( done ) => {
+	runSequence(
+		"clean:dist",
+		[ "compile:styles", "compile:index", "compile:config", "copy:semantic", "copy:assets" ],
+		"bundle",
+		done
+	);
 } );
 
-gulp.task( "compile-styles", () => {
-	return gulp.src( config.source.sass, { base: "./" } )
-		.pipe( ejs( profileConfig ) )
-		.pipe( sourcemaps.init() )
-		.pipe( sass().on( "error", sass.logError ) )
-		.pipe( autoprefixer( {
-			browsers: [ "last 2 versions" ]
+gulp.task( "build:semantic", () => {
+	return gulp.src( "src/semantic/gulpfile.js", { read: false } )
+		.pipe( chug( {
+			tasks: [ "build" ]
 		} ) )
-		.pipe( sourcemaps.write( "." ) )
-		.pipe( gulp.dest( "." ) )
 		;
-} );
-
-gulp.task( "compile-boot", () => {
-	return gulp.src( "src/app/boot.ejs.ts" )
-		.pipe( ejs( profileConfig ) )
-		.pipe( rename( "boot.ts" ) )
-		.pipe( gulp.dest( "src/app/" ) )
-} );
-
-gulp.task( "compile-index", () => {
-	return gulp.src( "dist/index.ejs.html" )
-		.pipe( ejs( profileConfig ) )
-		.pipe( rename( "index.html" ) )
-		.pipe( gulp.dest( "dist/site/" ) );
 } );
 
 gulp.task( "bundle", () => {
@@ -94,72 +79,6 @@ gulp.task( "bundle", () => {
 		mangle: false,
 		sourceMaps: false
 	} );
-} );
-
-gulp.task( "build-semantic", () => {
-	return gulp.src( "src/semantic/gulpfile.js", { read: false } )
-		.pipe( chug( {
-			tasks: [ "build" ]
-		} ) )
-		;
-} );
-
-gulp.task( "copy-semantic", [ "build-semantic" ], () => {
-	return gulp.src( "src/semantic/dist/**/*", {
-		base: "src/semantic/dist"
-	} ).pipe( gulp.dest( "dist/site/assets/semantic" ) );
-} );
-
-// TODO: Minify files
-gulp.task( "copy-assets", [ "copy-node-dependencies" ], () => {
-	return gulp.src( "src/assets/**/*", {
-		base: "src/assets"
-	} ).pipe( gulp.dest( "dist/site/assets" ) );
-} );
-
-gulp.task( "copy-node-dependencies", () => {
-	gulp.start( 'copy-node-dependencies:files', 'copy-node-dependencies:packages' );
-} );
-
-gulp.task( "copy-node-dependencies:files", () => {
-	return gulp.src( config.nodeDependencies.files ).pipe( gulp.dest( "src/assets/node_modules" ) );
-} );
-
-gulp.task( "copy-node-dependencies:packages", () => {
-	return gulp.src( config.nodeDependencies.packages, { base: "node_modules" } ).pipe( gulp.dest( "src/assets/node_modules" ) );
-} );
-
-gulp.task( "serve", ( done ) => {
-	runSequence(
-		[ "build-semantic", "compile-styles", "compile-boot", "copy-node-dependencies" ],
-		"serve:afterCompilation",
-		done
-	);
-} );
-
-
-gulp.task( "serve:afterCompilation", () => {
-	gulp.src( "src/semantic/gulpfile.js", { read: false } )
-		.pipe( chug( {
-			tasks: [ "watch" ]
-		} ) )
-	;
-
-	watch( config.source.sass, ( file ) => {
-		util.log( "SCSS file changed: ", file.path );
-		gulp.start( "compile-styles" );
-	} ).on( "error", function( error ) {
-		util.log( util.colors.red( "Error" ), error.message );
-	} );
-
-	return gulp.src( "../" )
-		.pipe( webserver( {
-			livereload: false,
-			directoryListing: false,
-			fallback: "/carbon-website/src/index.html",
-			open: true,
-			port: 8081,
-		} ) );
 } );
 
 gulp.task( "clean:dist", () => {
@@ -330,11 +249,96 @@ gulp.task( "clean:src", ( done ) => {
 	}
 } );
 
-gulp.task( "build", [ "clean:dist" ], ( done ) => {
+gulp.task( "compile:config", () => {
+	return gulp.src( "src/app/config.ejs.ts" )
+		.pipe( ejs( profileConfig ) )
+		.pipe( rename( "config.ts" ) )
+		.pipe( gulp.dest( "src/app/" ) )
+} );
+
+gulp.task( "compile:index", () => {
+	return gulp.src( "dist/index.ejs.html" )
+		.pipe( ejs( profileConfig ) )
+		.pipe( rename( "index.html" ) )
+		.pipe( gulp.dest( "dist/site/" ) );
+} );
+
+gulp.task( "compile:styles", () => {
+	return gulp.src( config.source.sass, { base: "./" } )
+		.pipe( ejs( profileConfig ) )
+		.pipe( sourcemaps.init() )
+		.pipe( sass().on( "error", sass.logError ) )
+		.pipe( autoprefixer( {
+			browsers: [ "last 2 versions" ]
+		} ) )
+		.pipe( sourcemaps.write( "." ) )
+		.pipe( gulp.dest( "." ) )
+		;
+} );
+
+gulp.task( "copy:node-dependencies", () => {
+	gulp.start( 'copy:node-dependencies:files', 'copy:node-dependencies:packages' );
+} );
+
+gulp.task( "copy:node-dependencies:files", () => {
+	return gulp.src( config.nodeDependencies.files ).pipe( gulp.dest( "src/assets/node_modules" ) );
+} );
+
+gulp.task( "copy:node-dependencies:packages", () => {
+	return gulp.src( config.nodeDependencies.packages, { base: "node_modules" } ).pipe( gulp.dest( "src/assets/node_modules" ) );
+} );
+
+gulp.task( "copy:semantic", [ "build:semantic" ], () => {
+	return gulp.src( "src/semantic/dist/**/*", {
+		base: "src/semantic/dist"
+	} ).pipe( gulp.dest( "dist/site/assets/semantic" ) );
+} );
+
+// TODO: Minify files
+gulp.task( "copy:assets", [ "copy:node-dependencies" ], () => {
+	return gulp.src( "src/assets/**/*", {
+		base: "src/assets"
+	} ).pipe( gulp.dest( "dist/site/assets" ) );
+} );
+
+gulp.task( "lint", [ "lint:typescript" ] );
+
+gulp.task( "lint:typescript", () => {
+	return gulp.src( config.source.typescript )
+		.pipe( tslint() )
+		.pipe( tslint.report( "prose" ) )
+		;
+} );
+
+gulp.task( "serve", ( done ) => {
 	runSequence(
-		"clean:dist",
-		[ "compile-styles", "compile-boot", "compile-index", "copy-semantic", "copy-assets" ],
-		"bundle",
+		[ "build:semantic", "compile:styles", "compile:config", "copy:node-dependencies" ],
+		"serve:afterCompilation",
 		done
 	);
+} );
+
+
+gulp.task( "serve:afterCompilation", () => {
+	gulp.src( "src/semantic/gulpfile.js", { read: false } )
+		.pipe( chug( {
+			tasks: [ "watch" ]
+		} ) )
+	;
+
+	watch( config.source.sass, ( file ) => {
+		util.log( "SCSS file changed: ", file.path );
+		gulp.start( "compile:styles" );
+	} ).on( "error", function( error ) {
+		util.log( util.colors.red( "Error" ), error.message );
+	} );
+
+	return gulp.src( "." )
+		.pipe( webserver( {
+			livereload: false,
+			directoryListing: false,
+			fallback: "/src/index.html",
+			open: true,
+			port: 8081,
+		} ) );
 } );

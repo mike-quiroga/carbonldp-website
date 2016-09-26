@@ -1,11 +1,6 @@
 import { Component, ElementRef, AfterViewInit } from "@angular/core";
-import { CORE_DIRECTIVES } from "@angular/common";
 
 import Carbon from "carbonldp/Carbon";
-
-import { HighlightDirective } from "carbon-panel/directives/highlight.directive";
-
-import SidebarComponent from "./../sidebar/sidebar.component";
 
 import $ from "jquery";
 import "semantic-ui/semantic";
@@ -15,7 +10,6 @@ import template from "./getting-started.view.html!";
 @Component( {
 	selector: "getting-started-rest-api",
 	template: template,
-	directives: [ CORE_DIRECTIVES, HighlightDirective, SidebarComponent ]
 } )
 export class GettingStartedView implements AfterViewInit {
 	private element:ElementRef;

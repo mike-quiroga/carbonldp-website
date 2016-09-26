@@ -4,9 +4,9 @@
 		<div class="sixteen wide column">
 
 			<div class="ui breadcrumb">
-				<a class="section" [routerLink]="[ '../Documentation' ]">Documentation</a>
+				<a class="section" [routerLink]="[ '..' ]">Documentation</a>
 				<i class="right chevron icon divider"></i>
-				<a class="section" [routerLink]="[ '../JavaScriptSDK' ]">JavaScript SDK</a>
+				<a class="section" [routerLink]="[ '../javascript-sdk' ]">JavaScript SDK</a>
 				<i class="right arrow icon divider"></i>
 
 				<div class="active section">Object schema</div>
@@ -28,7 +28,7 @@
 							<div class="header">Previous step</div>
 							<p></p>
 							<div class="header">
-								<a [routerLink]="[ '../JavaScriptSDKContexts' ]">Contexts</a>
+								<a [routerLink]="[ '../javascript-sdk-contexts' ]">Contexts</a>
 							</div>
 						</div>
 					</div>
@@ -101,9 +101,9 @@
 							<div>
 								<!--@formatter:off-->
 								<pre><code cpHighlight class="typescript">
-									{
+									&#123;
 									    "skos": "http://www.w3.org/2004/02/skos/core#"
-									}
+									&#125;
 								</code></pre>
 								<!--@formatter:on-->
 							</div>
@@ -139,16 +139,16 @@
 							<div>
 								<!--@formatter:off-->
 								<pre><code cpHighlight class="typescript">
-									{
-									    "title": {
+									&#123;
+									    "title": &#123;
 									        "@id": "http://example.org/ns#title",
 									        "@type": "http://www.w3.org/2001/XMLSchema#string"
-									    },
-										"post": {
+									    &#125;,
+										"post": &#123;
 											"@id": "http://example.otg/ns#post",
 											"@type: "@id"
-										}
-									}
+										&#125;
+									&#125;
 								</code></pre>
 								<!--@formatter:on-->
 							</div>
@@ -232,7 +232,7 @@
 							<div>
 								<!--@formatter:off-->
 								<pre><code cpHighlight class="javascript">
-									carbon.extendObjectSchema( {
+									carbon.extendObjectSchema( &#123;
 										"acl": "http://www.w3.org/ns/auth/acl#",
 										"api": "http://purl.org/linked-data/api/vocab#",
 										"c": "http://carbonldp.com/ns/v1/platform#",
@@ -250,15 +250,15 @@
 										"types": "http://rdfs.org/sioc/types#",
 										"vcard": "http://www.w3.org/2001/vcard-rdf/3.0#",
 										"xsd": "http://www.w3.org/2001/XMLSchema#",
-										"title": {
+										"title": &#123;
 											"@id": "ex:title",
 											"@type": "xsd:string"
-										},
-										"name": {
+										&#125;,
+										"name": &#123;
 											"@id": "foaf:name",
 											"@type": "xsd:string"
-										}
-									} );
+										&#125;
+									&#125; );
 								</code></pre>
 								<!--@formatter:on-->
 							</div>
@@ -284,7 +284,7 @@
 							<div>
 								<!--@formatter:off-->
 								<pre><code cpHighlight class="javascript">
-									carbon.extendObjectSchema( "http://example.org/ns#BlogPost" , {
+									carbon.extendObjectSchema( "http://example.org/ns#BlogPost" , &#123;
 										"acl": "http://www.w3.org/ns/auth/acl#",
 										"api": "http://purl.org/linked-data/api/vocab#",
 										"c": "http://carbonldp.com/ns/v1/platform#",
@@ -301,16 +301,16 @@
 										"skos": "http://www.w3.org/2004/02/skos/core#",
 										"types": "http://rdfs.org/sioc/types#",
 										"xsd": "http://www.w3.org/2001/XMLSchema#",
-										"title": {
+										"title": &#123;
 											"@id": "ex:title",
 											"@type": "xsd:string"
-										},
-										"tags": {
+										&#125;,
+										"tags": &#123;
 											"@id": "ex:tag",
 											"@type": "@id",
 											"@container": "@set"
-										}
-									} );
+										&#125;
+									&#125; );
 
 								</code></pre>
 								<!--@formatter:on-->
@@ -349,30 +349,30 @@
 							<!--@formatter:off-->
 							<pre><code cpHighlight class="javascript">
 								// extending the general object schema in the platform context
-								carbon.extendObjectSchema( {
+								carbon.extendObjectSchema( &#123;
 									"ex": "http://example.org/ns#",
 									"foaf": "http://xmlns.com/foaf/0.1/",
 									"xsd": "http://www.w3.org/2001/XMLSchema#",
-									"title": {
+									"title": &#123;
 										"@id": "ex:title",
 										"@type": "xsd:string"
-									},
-									"name": {
+									&#125;,
+									"name": &#123;
 										"@id": "foaf:name",
 										"@type": "xsd:string"
-									}
-								} );
+									&#125;
+								&#125; );
 
 								// extending the object schema of the type: BlogPost in the application context
-								myFirstAppContext.extendObjectSchema( "http://example.org/ns#BlogPost" , {
+								myFirstAppContext.extendObjectSchema( "http://example.org/ns#BlogPost" , &#123;
 									"ex": "http://example.org/ns#",
 									"xsd": "http://www.w3.org/2001/XMLSchema#",
-									"tags": {
+									"tags": &#123;
 										"@id": "ex:tag",
 										"@type": "@id",
 										"@container": "@set"
-									}
-								} );
+									&#125;
+								&#125; );
 							</code></pre>
 							<!--@formatter:on-->
 						</div>
@@ -390,19 +390,19 @@
 							<!--@formatter:off-->
 							<pre><code cpHighlight class="javascript">
 								// extending the object schema of the type: BlogPost in the application context
-								carbon.extendObjectSchema( "http://example.org/ns#BlogPost" , {
+								carbon.extendObjectSchema( "http://example.org/ns#BlogPost" , &#123;
 									"ex": "http://example.org/ns#",
 									"xsd": "http://www.w3.org/2001/XMLSchema#",
-									"description": {
+									"description": &#123;
 										"@id": "ex:description",
 										"@type": "xsd:string"
-									},
-									"tags": {
+									&#125;,
+									"tags": &#123;
 										"@id": "ex:tag",
 										"@type": "@id",
 										"@container": "@set"
-									}
-								} );
+									&#125;
+								&#125; );
 							</code></pre>
 							<!--@formatter:on-->
 						</div>

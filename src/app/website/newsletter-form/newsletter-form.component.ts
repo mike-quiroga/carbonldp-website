@@ -1,8 +1,10 @@
 import { Component, OnInit } from "@angular/core";
-import { CORE_DIRECTIVES, FORM_DIRECTIVES, FormBuilder, ControlGroup, AbstractControl, Validators } from "@angular/common";
-import { Router } from "@angular/router-deprecated";
 
-import { EmailValidator } from "carbon-panel/custom-validators";
+import { FormBuilder, ControlGroup, AbstractControl, Validators } from "@angular/common";
+
+import { Router } from "@angular/router";
+
+import { EmailValidator } from "carbonldp-panel/custom-validators";
 
 import "semantic-ui/semantic";
 
@@ -12,7 +14,6 @@ import style from "./newsletter-form.component.css!text";
 @Component( {
 	selector: "newsletter-form",
 	template: template,
-	directives: [ CORE_DIRECTIVES, FORM_DIRECTIVES ],
 	styles: [ style ],
 } )
 
@@ -34,7 +35,7 @@ export class NewsletterFormComponent implements OnInit {
 	}
 
 	ngOnInit() {
-		this.redirectPage = document.location.origin + "/site/signup-thanks/";
+		this.redirectPage = document.location.origin + "/signup-thanks/";
 		this.errorPage = document.location.origin + "/error/";
 	}
 

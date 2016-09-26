@@ -1,8 +1,4 @@
 import { Component, ElementRef, AfterViewInit } from "@angular/core";
-import { CORE_DIRECTIVES, FORM_DIRECTIVES } from "@angular/common";
-
-// import * as CodeMirrorComponent from "app/components/code-mirror/CodeMirrorComponent";
-import * as CodeMirrorComponent from "carbon-panel/code-mirror/code-mirror.component";
 
 import $ from "jquery";
 import "semantic-ui/semantic";
@@ -14,10 +10,9 @@ import style from "./ui-examples.view.css!text";
 @Component( {
 	selector: "carbon-ui",
 	template: template,
-	directives: [ CORE_DIRECTIVES, CodeMirrorComponent.Class, FORM_DIRECTIVES ],
 	styles: [ style ],
 } )
-export class UIExamplesView implements AfterViewInit{
+export class UIExamplesView implements AfterViewInit {
 	private element:ElementRef;
 	private $element:JQuery;
 

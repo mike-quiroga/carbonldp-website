@@ -1,4 +1,4 @@
-# carbon-website
+# carbonldp-website
 
 Source code for [carbonldp.com](https://carbonldp.com)
 

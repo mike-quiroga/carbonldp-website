@@ -1,6 +1,4 @@
 import { Component, ElementRef, AfterViewInit } from "@angular/core";
-import { CORE_DIRECTIVES } from "@angular/common";
-import { RouterLink } from "@angular/router-deprecated";
 
 import $ from "jquery";
 import "semantic-ui/semantic";
@@ -11,7 +9,6 @@ import style from "./home.view.css!text";
 @Component( {
 	selector: "documents-list",
 	template: template,
-	directives: [ CORE_DIRECTIVES, RouterLink ],
 	styles: [ style ],
 } )
 export class HomeView implements AfterViewInit{

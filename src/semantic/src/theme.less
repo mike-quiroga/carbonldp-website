@@ -24,6 +24,7 @@
 /* Site theme site.variables */
 @import (optional) "@{siteFolder}/globals/site.variables";
 
+
 /*-------------------
  Component Variables
 ---------------------*/
@@ -37,6 +38,7 @@
 /* Site Theme */
 @import (optional) "@{siteFolder}/@{type}s/@{element}.variables";
 
+
 /*******************************
              Mix-ins
 *******************************/
@@ -46,7 +48,7 @@
 -------------------*/
 
 .loadFonts() when (@importGoogleFonts) {
-	@import url('@{googleProtocol}fonts.googleapis.com/css?family=@{googleFontRequest}');
+  @import url('@{googleProtocol}fonts.googleapis.com/css?family=@{googleFontRequest}');
 }
 
 /*------------------
@@ -54,6 +56,6 @@
 -------------------*/
 
 .loadUIOverrides() {
-	@import (optional) "@{themesFolder}/@{theme}/@{type}s/@{element}.overrides";
-	@import (optional) "@{siteFolder}/@{type}s/@{element}.overrides";
+  @import (optional) "@{themesFolder}/@{theme}/@{type}s/@{element}.overrides";
+  @import (optional) "@{siteFolder}/@{type}s/@{element}.overrides";
 }

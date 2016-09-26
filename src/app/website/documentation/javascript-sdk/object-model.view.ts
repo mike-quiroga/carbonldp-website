@@ -1,17 +1,10 @@
 import { Component, ElementRef, ChangeDetectorRef, AfterViewInit } from "@angular/core";
-import { CORE_DIRECTIVES } from "@angular/common";
-import { RouterLink } from "@angular/router-deprecated";
-
-import SidebarComponent from "./../sidebar/sidebar.component";
-
-import HighlightDirective from "carbon-panel/directives/highlight.directive";
 
 import template from "./object-model.view.html!";
 
 @Component( {
 	selector: "object-model",
 	template: template,
-	directives: [ CORE_DIRECTIVES, SidebarComponent, HighlightDirective, RouterLink ],
 } )
 export class ObjectModelView implements AfterViewInit {
 	contentReady:boolean = false;

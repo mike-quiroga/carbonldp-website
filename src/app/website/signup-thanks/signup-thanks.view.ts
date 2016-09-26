@@ -1,5 +1,4 @@
 import { Component, AfterViewInit } from "@angular/core";
-import { CORE_DIRECTIVES } from "@angular/common";
 
 import "semantic-ui/semantic";
 
@@ -9,7 +8,6 @@ import style from "./signup-thanks.view.css!text";
 @Component( {
 	selector: "signup-thanks",
 	template: template,
-	directives: [ CORE_DIRECTIVES ],
 	styles: [ style ],
 } )
 
