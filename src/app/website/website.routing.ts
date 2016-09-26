@@ -1,27 +1,21 @@
 import { ModuleWithProviders } from "@angular/core";
 import { Routes, RouterModule } from "@angular/router";
 
-//Components
+// Components
 import { WebsiteView } from "./website.view";
 import { HomeView } from "./home/home.view";
-//
 // import { LoginView } from "./auth/login/login.view";
 import { RegisterView } from "./register/register.view";
-//
 // import { BlogView } from "./blog/blog.view";
 // import { BlogPostView } from "./blog/blog-post/blog-post.view";
 import { SignupThanksView } from "./signup-thanks/signup-thanks.view";
-//
 // import { UIExamplesView } from "./ui-examples/ui-examples.view";
-//
 
 import { DocumentationView } from "app/website/documentation/documentation.view";
-//DOCUMENTATION
-// import { SidebarComponent } from "./documentation/sidebar/sidebar.component";
+// DOCUMENTATION
 import { HomeView as DocumentationHomeView } from "./documentation/home/home.view";
-//
 import { AboutCarbonLDPView } from "./documentation/about-carbon-ldp/about-carbon-ldp.view";
-//Essential Concepts
+// Essential Concepts
 import { EssentialConceptsView } from "./documentation/essential-concepts/essential-concepts.view";
 import { LinkedDataConceptsView } from "./documentation/essential-concepts/linked-data-concepts.view";
 // import { LDPConceptsView } from "./documentation/essential-concepts/ldp-concepts.view";
@@ -43,12 +37,11 @@ import { ObjectModelView as JavaScriptSDKObjectModelView } from "./documentation
 import { ObjectSchemaView } from "./documentation/javascript-sdk/object-schema.view";
 
 
-
 const websiteRoutes:Routes = [
 	{
 		path: "",
 		component: WebsiteView,
-		data:{
+		data: {
 			title: false,
 		},
 		children: [
@@ -87,7 +80,7 @@ const websiteRoutes:Routes = [
 					{
 						path: "",
 						component: DocumentationHomeView,
-						data:{
+						data: {
 							title: "Documentation"
 						}
 					},

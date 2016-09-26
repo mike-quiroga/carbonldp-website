@@ -12,7 +12,7 @@ import template from "./register.component.html!";
 import style from "./register.component.css!text";
 
 @Component( {
-	selector: "cp-register",
+	selector: "register",
 	template: template,
 	styles: [ style ],
 } )

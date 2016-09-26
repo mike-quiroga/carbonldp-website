@@ -7,8 +7,8 @@
 			       name="email"
 			       [(ngModel)]="register.email"
 			       required email
-			       #email="ngModel">
-			<!--[disabled]="true">-->
+			       #email="ngModel"
+				[disabled]="true">
 		</div>
 	</div>
 	<div class="field" [ngClass]="{ error: (password.touched && !password.valid) }">
@@ -18,9 +18,9 @@
 			       name="password"
 			       [(ngModel)]="register.password"
 			       placeholder="password"
-			       required password
-			       #password="ngModel">
-			<!--[disabled]="true">-->
+			       required
+			       #password="ngModel"
+			[disabled]="true">
 		</div>
 	</div>
 	<div class="field" [ngClass]="{ error: ( confirmPassword.touched && !confirmPassword.valid) }">
@@ -32,8 +32,8 @@
 			       placeholder="confirm password"
 			       [matchTo]="register.password"
 			       required match
-			       #confirmPassword="ngModel">
-			<!--[disabled]="true">-->
+			       #confirmPassword="ngModel"
+					[disabled]="true">
 
 		</div>
 	</div>
@@ -56,7 +56,6 @@
 	</ul>
 	<ul *ngIf="!password.valid" class="list">
 		<li *ngIf="password.errors.required">password is required.</li>
-		<li *ngIf="!password.errors.required && password.errors.invalidPassword">password is invalid.</li>
 	</ul>
 	<ul *ngIf="!confirmPassword.valid" class="list">
 		<li *ngIf="confirmPassword.errors.required">password confirmation is required.</li>
