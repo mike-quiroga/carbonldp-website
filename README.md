@@ -21,9 +21,16 @@ Source code for [carbonldp.com](https://carbonldp.com)
     - `carbonldp-panel`
     - `CarbonLDP-JS-SDK`
     - `angular2-carbonldp`
-3. cd into `carbon-website`
+3. cd into `carbonldp-website`
 4. run `npm install && typings install`
-5. To start the application server run `npm start` or `gulp serve`
+5. To make changes to any dependency project visible to this project, you must link them using the following commands:
+    - `jspm link ../carbonldp-panel/dist`
+    - `jspm link ../CarbonLDP-JS-SDK/dist`
+    - `jspm link ../angular2-carbonldp/dist`
+    
+    Answer `no` to any change JSPM suggests to make follow by a `yes` when it asks to confirm the decision.
+    For more information see: [JSPM link](http://jspm.io/0.17-beta-guide/linking.html)
+6. To start the application server run `npm start` or `gulp serve`
 
 ### Gulp Tasks
 
