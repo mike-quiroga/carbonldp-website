@@ -1,0 +1,51 @@
+#!/bin/sh
+
+NODE_VERSION="v6.7.0"
+
+function update_node_js() {
+	local VERSION=$1
+	if [[ -z $VERSION ]]; then
+		echo "${red}Expected version number to be passed into update_node_js"
+		return 1;
+	fi
+
+	local CURRENT_DIRECTORY=`pwd`
+	mkdir node
+	cd node
+	echo "Downloading NodeJS $VERSION"
+	curl http://nodejs.org/dist/$VERSION/node-$VERSION-linux-x64.tar.gz | tar xz --strip-components=1
+
+	export PATH=$CURRENT_DIRECTORY/node/bin:$PATH
+
+	cd $CURRENT_DIRECTORY
+
+	echo "NodeJS updated to $VERSION"
+}
+
+update_node_js $NODE_VERSION
+
+echo "Installing Node dependencies..."
+npm install
+echo "Node dependencies installed"
+
+echo "Installing jspm..."
+npm install -g jspm@beta
+echo "jspm version $(jspm --version) installed"
+
+echo "Installing jspm dependencies"
+jspm install
+echo "jspm dependencies installed"
+
+echo "Installing typings..."
+npm install -g typings
+echo "typings version $(typings --version) installed"
+
+echo "Installing definition files"
+typings install
+echo "Definition files installed"
+
+echo "Installing gulp..."
+npm install -g gulp
+echo "gulp installed"
+
+gulp build --profile prod
