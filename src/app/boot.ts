@@ -8,13 +8,10 @@ import "zone.js/dist/long-stack-trace-zone";
 import { enableProdMode, NgModuleRef } from "@angular/core";
 import { platformBrowserDynamic } from "@angular/platform-browser-dynamic";
 
-
 import { CARBON_PROTOCOL, CARBON_DOMAIN, DEBUG } from "app/config";
-import { appInjector, activeContext, CARBON_PROVIDERS } from "angular2-carbonldp/boot";
-
+import { appInjector, activeContext } from "angular2-carbonldp/boot";
 
 import Carbon from "carbonldp/Carbon";
-
 import { AppModule } from "app/app.module";
 
 
@@ -30,4 +27,3 @@ platformBrowserDynamic().bootstrapModule( AppModule ).then( ( appRef:NgModuleRef
 } ).catch( ( error ) => {
 	console.error( error );
 } );
-

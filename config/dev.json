@@ -6,6 +6,7 @@
 		"base": "/"
 	},
 	"carbon": {
-		"domain": "dev.carbonldp.com"
+		"protocol": "http",
+		"domain": "localhost:8083"
 	}
 }
