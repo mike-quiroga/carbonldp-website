@@ -99,7 +99,7 @@
     "devDependencies": {},
     "peerDependencies": {
       "@angular/common": "npm:@angular/common@2.0.0-rc.5",
-      "@angular/compiler": "npm:@angular/compiler@^2.0.0-rc.5",
+      "@angular/compiler": "npm:@angular/compiler@2.0.0-rc.5",
       "@angular/core": "npm:@angular/core@2.0.0-rc.5",
       "@angular/forms": "npm:@angular/forms@0.3.0",
       "@angular/http": "npm:@angular/http@2.0.0-rc.5",
@@ -128,7 +128,7 @@
       "url": "github:jspm/nodelibs-url@^0.2.0-alpha",
       "util": "github:jspm/nodelibs-util@^0.2.0-alpha",
       "vm": "github:jspm/nodelibs-vm@^0.2.0-alpha",
-      "zone.js": "npm:zone.js@^0.6.21"
+      "zone.js": "npm:zone.js@^0.6.6"
     },
     "overrides": {
       "npm:@angular/common@2.0.0-rc.5": {

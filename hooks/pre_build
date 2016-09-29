@@ -32,15 +32,19 @@ echo "Installing jspm..."
 npm install -g jspm@beta
 echo "jspm version $(jspm --version) installed"
 
-echo "Installing jspm dependencies"
-jspm install
+echo "Installing jspm dependencies..."
+jspm install --yes
 echo "jspm dependencies installed"
+
+echo "Installing angular RC5 packages..."
+jspm install npm:rxjs@5.0.0-beta.6 npm:@angular/core@2.0.0-rc.5 npm:@angular/common@2.0.0-rc.5 npm:@angular/compiler@2.0.0-rc.5 npm:@angular/platform-browser@2.0.0-rc.5 npm:@angular/platform-browser-dynamic@2.0.0-rc.5 npm:@angular/http@2.0.0-rc.5 --yes
+echo "Angular RC5 packages installed"
 
 echo "Installing typings..."
 npm install -g typings
 echo "typings version $(typings --version) installed"
 
-echo "Installing definition files"
+echo "Installing definition files..."
 typings install
 echo "Definition files installed"
 
