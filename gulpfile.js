@@ -55,9 +55,9 @@ const config = {
 
 gulp.task( "default", [ "serve" ] );
 
-gulp.task( "build", [ "clean:dist" ], ( done ) => {
+gulp.task( "build", ( done ) => {
 	runSequence(
-		"clean:dist",
+		[ "clean:dist", "copy:node-dependencies" ],
 		[ "compile:styles", "compile:index", "compile:config", "copy:semantic", "copy:assets" ],
 		"bundle",
 		done
