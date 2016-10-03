@@ -1,4 +1,4 @@
-export const CARBON_PROTOCOL:string = "https";
-export const CARBON_DOMAIN:string = "carbonldp.base22.io";
+export const CARBON_PROTOCOL:string = "http";
+export const CARBON_DOMAIN:string = "localhost:8083";
 export const DEBUG:boolean = "true" === "true";
-export const URL_BASE:string = "/";
+export const URL_BASE:string = "/src/";
