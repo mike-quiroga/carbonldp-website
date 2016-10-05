@@ -8,7 +8,7 @@
 			       [(ngModel)]="register.email"
 			       required email
 			       #email="ngModel"
-				[disabled]="true">
+			       [disabled]="true">
 		</div>
 	</div>
 	<div class="field" [ngClass]="{ error: (password.touched && !password.valid) }">
@@ -20,7 +20,7 @@
 			       placeholder="password"
 			       required
 			       #password="ngModel"
-			[disabled]="true">
+			       [disabled]="true">
 		</div>
 	</div>
 	<div class="field" [ngClass]="{ error: ( confirmPassword.touched && !confirmPassword.valid) }">
@@ -31,9 +31,10 @@
 			       [(ngModel)]="register.confirmPassword"
 			       placeholder="confirm password"
 			       [matchTo]="register.password"
+			       [control]="confirmPassword"
 			       required match
 			       #confirmPassword="ngModel"
-					[disabled]="true">
+			       [disabled]="true">
 
 		</div>
 	</div>
