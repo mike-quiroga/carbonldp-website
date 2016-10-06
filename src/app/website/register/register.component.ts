@@ -43,7 +43,7 @@ export class RegisterComponent implements OnInit {
 		this.$element = $( this.element.nativeElement );
 		this.$registrationForm = this.$element.find( "form.registrationForm" );
 		this.$registrationForm.find( ".ui.checkbox" ).checkbox();
-		}
+	}
 
 	onSubmit( data:{ email:string, password:string, confirmPassword:string }, $event:any ):void {
 		$event.preventDefault();
@@ -51,7 +51,6 @@ export class RegisterComponent implements OnInit {
 		//TODO: Add registration service
 
 	}
-
 
 
 	getDays( firstDate:Date, lastDate:Date ):number {

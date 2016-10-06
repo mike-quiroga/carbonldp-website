@@ -21,6 +21,7 @@ export class NewsletterFormComponent implements OnInit {
 	subscribe:{ email:string } = {
 		email: ""
 	}
+
 	constructor( router:Router ) {
 		this.router = router;
 		this.location = location;
@@ -34,8 +35,8 @@ export class NewsletterFormComponent implements OnInit {
 	onSubmit( $event:any ):void {
 		//this.email.markAsTouched();
 		let icpForm:HTMLElement = document.getElementById( 'icpsignup' );
-			icpForm.action = "https://app.icontact.com/icp/signup.php";
-			icpForm.submit();
+		icpForm.action = "https://app.icontact.com/icp/signup.php";
+		icpForm.submit();
 
 	}
 }

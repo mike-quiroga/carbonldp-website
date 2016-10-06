@@ -13,7 +13,7 @@ import style from "./home.view.css!text";
 	styles: [ style ],
 } )
 
-export class HomeView implements AfterViewInit{
+export class HomeView implements AfterViewInit {
 	private router:Router;
 	private element:ElementRef;
 	private $element:JQuery;

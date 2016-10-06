@@ -45,7 +45,6 @@ import { SemanticModule } from "carbonldp-panel/semantic/semantic.module";
 import { DirectivesModule } from "carbonldp-panel/directives.module";
 
 
-
 @NgModule( {
 	imports: [
 		CommonModule,
