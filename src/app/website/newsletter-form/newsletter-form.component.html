@@ -8,7 +8,7 @@
 			       placeholder="E-mail address"
 			       name="fields_email"
 			       [(ngModel)]="subscribe.email"
-			       required email
+			       required cp-email
 			       #email="ngModel">
 			<!--</div>-->
 			<button [disabled]=!subscribeForm.valid id="send" type="submit" class="ui inverted secondary button submit">SEND</button>

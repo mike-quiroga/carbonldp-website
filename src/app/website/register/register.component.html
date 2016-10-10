@@ -6,7 +6,7 @@
 			       placeholder="E-mail address"
 			       name="email"
 			       [(ngModel)]="register.email"
-			       required email
+			       required cp-email
 			       #email="ngModel"
 			       [disabled]="true">
 		</div>
@@ -32,7 +32,7 @@
 			       placeholder="confirm password"
 			       [matchTo]="register.password"
 			       [control]="confirmPassword"
-			       required match
+			       required cp-match
 			       #confirmPassword="ngModel"
 			       [disabled]="true">
 
