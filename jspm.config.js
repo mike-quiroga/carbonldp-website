@@ -98,7 +98,7 @@ SystemJS.config({
         "browserify-sign": "npm:browserify-sign@4.0.0",
         "randombytes": "npm:randombytes@2.0.3",
         "create-hmac": "npm:create-hmac@1.1.4",
-        "pbkdf2": "npm:pbkdf2@3.0.8",
+        "pbkdf2": "npm:pbkdf2@3.0.9",
         "public-encrypt": "npm:public-encrypt@4.0.0",
         "diffie-hellman": "npm:diffie-hellman@5.0.2",
         "create-hash": "npm:create-hash@1.1.2",
@@ -115,11 +115,6 @@ SystemJS.config({
         "parse-asn1": "npm:parse-asn1@5.0.0",
         "elliptic": "npm:elliptic@6.3.2",
         "bn.js": "npm:bn.js@4.11.6"
-      }
-    },
-    "npm:pbkdf2@3.0.8": {
-      "map": {
-        "create-hmac": "npm:create-hmac@1.1.4"
       }
     },
     "npm:create-hmac@1.1.4": {
@@ -167,7 +162,7 @@ SystemJS.config({
     "npm:parse-asn1@5.0.0": {
       "map": {
         "create-hash": "npm:create-hash@1.1.2",
-        "pbkdf2": "npm:pbkdf2@3.0.8",
+        "pbkdf2": "npm:pbkdf2@3.0.9",
         "asn1.js": "npm:asn1.js@4.8.1",
         "evp_bytestokey": "npm:evp_bytestokey@1.0.0",
         "browserify-aes": "npm:browserify-aes@1.0.6"
@@ -255,7 +250,7 @@ SystemJS.config({
       "map": {
         "isarray": "npm:isarray@1.0.0",
         "base64-js": "npm:base64-js@1.2.0",
-        "ieee754": "npm:ieee754@1.1.6"
+        "ieee754": "npm:ieee754@1.1.8"
       }
     },
     "npm:readable-stream@2.1.5": {
@@ -335,6 +330,11 @@ SystemJS.config({
     "npm:angular2-carbonldp@0.3.3": {
       "map": {
         "js-cookie": "npm:js-cookie@2.1.3"
+      }
+    },
+    "npm:pbkdf2@3.0.9": {
+      "map": {
+        "create-hmac": "npm:create-hmac@1.1.4"
       }
     }
   }
