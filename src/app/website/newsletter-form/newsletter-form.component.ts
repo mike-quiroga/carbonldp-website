@@ -33,7 +33,6 @@ export class NewsletterFormComponent implements OnInit {
 	}
 
 	onSubmit( $event:any ):void {
-		//this.email.markAsTouched();
 		let icpForm:HTMLElement = document.getElementById( 'icpsignup' );
 		icpForm.action = "https://app.icontact.com/icp/signup.php";
 		icpForm.submit();
