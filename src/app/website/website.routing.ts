@@ -7,7 +7,9 @@ import { HomeView } from "./home/home.view";
 import { RegisterView } from "./register/register.view";
 import { SignupThanksView } from "./signup-thanks/signup-thanks.view";
 import { UIExamplesView } from "./ui-examples/ui-examples.view";
+import { LicenseView } from './license/license.view'
 import { DocumentationView } from "app/website/documentation/documentation.view";
+
 // Documentation
 import { HomeView as DocumentationHomeView } from "./documentation/home/home.view";
 import { AboutCarbonLDPView } from "./documentation/about-carbon-ldp/about-carbon-ldp.view";
@@ -63,6 +65,13 @@ const websiteRoutes:Routes = [
 				component: UIExamplesView,
 				data: {
 					title: "UI Examples"
+				},
+			},
+			{
+				path: "license",
+				component: LicenseView,
+				data: {
+					title: "License"
 				},
 			},
 			{
