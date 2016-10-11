@@ -19,12 +19,20 @@ website {
 
 	}
 
-	> footer {
+	> website-footer {
 		width: 100%;
 		flex: 0 0 auto;
 	}
 	.ui.menu a.logo {
 		padding-left: 0;
+	}
+
+	/*
+	Correct for https://github.com/Semantic-Org/Semantic-UI/issues/4637
+	until resolved by Semantic-UI
+	*/
+	.ui.message ul {
+		opacity: .85;
 	}
 
 	img.logo {
@@ -65,4 +73,13 @@ website {
 		padding-top: 2em;
 	}
 
+	#content-masthead {
+		margin-top: 65px;
+	}
+
+	.featured-image {
+		width: 100%;
+	}
+
 }
+

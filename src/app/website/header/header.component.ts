@@ -11,7 +11,7 @@ import template from "./header.component.html!";
 import style from "./header.component.css!text";
 
 @Component( {
-	selector: "header",
+	selector: "website-header",
 	template: template,
 	styles: [ style ],
 } )
