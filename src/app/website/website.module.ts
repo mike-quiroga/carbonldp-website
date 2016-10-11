@@ -14,6 +14,7 @@ import { HomeView } from "./home/home.view";
 import { RegisterView } from "./register/register.view";
 import { UIExamplesView } from "./ui-examples/ui-examples.view";
 import { SignupThanksView } from "./signup-thanks/signup-thanks.view";
+import { QuickStartGuideView } from "./documentation/quick-start-guide/quick-start-guide.view";
 
 // Documentation
 import { AboutCarbonLDPView } from "./documentation/about-carbon-ldp/about-carbon-ldp.view";
@@ -70,6 +71,7 @@ import { HighlightDirective } from "carbonldp-panel/directives/highlight.directi
 		// Documentation
 		DocumentationView,
 		DocumentationHomeView,
+		QuickStartGuideView,
 		AboutCarbonLDPView,
 
 		// Documentation - > Essential Concepts
