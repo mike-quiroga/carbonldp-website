@@ -255,7 +255,7 @@ SystemJS.config({
       "map": {
         "isarray": "npm:isarray@1.0.0",
         "base64-js": "npm:base64-js@1.2.0",
-        "ieee754": "npm:ieee754@1.1.6"
+        "ieee754": "npm:ieee754@1.1.8"
       }
     },
     "npm:readable-stream@2.1.5": {

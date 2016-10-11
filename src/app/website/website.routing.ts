@@ -9,10 +9,11 @@ import { SignupThanksView } from "./signup-thanks/signup-thanks.view";
 import { UIExamplesView } from "./ui-examples/ui-examples.view";
 import { LicenseView } from './license/license.view'
 import { DocumentationView } from "app/website/documentation/documentation.view";
+import { AboutCarbonLDPView } from "./about/about-carbon-ldp.view";
 
 // Documentation
 import { HomeView as DocumentationHomeView } from "./documentation/home/home.view";
-import { AboutCarbonLDPView } from "./documentation/about-carbon-ldp/about-carbon-ldp.view";
+
 // Documentation -> Essential Concepts
 import { EssentialConceptsView } from "./documentation/essential-concepts/essential-concepts.view";
 import { LinkedDataConceptsView } from "./documentation/essential-concepts/linked-data-concepts.view";
@@ -44,6 +45,13 @@ const websiteRoutes:Routes = [
 				component: HomeView,
 				data: {
 					title: "Home",
+				},
+			},
+			{
+				path: "about",
+				component: AboutCarbonLDPView,
+				data: {
+					title: "About",
 				},
 			},
 			{
@@ -87,13 +95,6 @@ const websiteRoutes:Routes = [
 						data: {
 							title: "Documentation"
 						}
-					},
-					{
-						path: "about-carbon-ldp",
-						component: AboutCarbonLDPView,
-						data: {
-							title: "About Carbon LDP",
-						},
 					},
 					{
 						path: "essential-concepts",
