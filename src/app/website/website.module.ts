@@ -16,7 +16,7 @@ import { UIExamplesView } from "./ui-examples/ui-examples.view";
 import { SignupThanksView } from "./signup-thanks/signup-thanks.view";
 
 // Documentation
-import { AboutCarbonLDPView } from "./documentation/about-carbon-ldp/about-carbon-ldp.view";
+import { AboutCarbonLDPView } from "./about/about-carbon-ldp.view";
 import { DocumentationView } from "./documentation/documentation.view";
 import { HomeView as DocumentationHomeView } from "./documentation/home/home.view";
 // Documentation - > Essential Concepts
