@@ -24,6 +24,8 @@ dist/site/
 
 # Semantic UI
 **/semantic/dist/
+**/semantic/tasks/
+**/semantic/gulpfile.js
 
 reports/
 
