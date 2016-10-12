@@ -70,7 +70,7 @@
     "zone.js": "^0.6.12"
   },
   "scripts": {
-    "postinstall": "jspm config registries.github.remote https://github.jspm.io && jspm config registries.github.remote https://github.jspm.io && jspm config registries.github.auth Q2FyYm9uRGVwbG95ZXI6NGMxZjMzYTMyZTI3OGU0ODBmZmY2MDg1MWEyNTZlMzcxNzJkZTllOA== && jspm config registries.github.maxRepoSize 0 && jspm config registries.github.handler jspm-github && jspm install",
+    "postinstall": "node scripts/force-semantic-ui-to-install-correctly.js && npm explore semantic-ui -- npm run-script install",
     "start": "gulp serve",
     "test": "gulp test"
   },
