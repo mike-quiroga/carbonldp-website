@@ -61,6 +61,7 @@ Gulp defines two tasks:
     - `custom`: Directory to store custom description files
     - `typings.d.ts`: Main description file. Aggregates all other description files
 - `.gitignore`: Ignore file for git
+- `.travis.yml`: Travis configuration file
 - `CHANGELOG.md`: File to track package changes
 - `Dockerfile`: Docker file used to create the docker image
 - `gulpfile.js`: Gulp configuration file
