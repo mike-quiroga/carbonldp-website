@@ -39,7 +39,7 @@ SystemJS.config({
     "local:*.json"
   ],
   map: {
-    "@angular/forms": "npm:@angular/forms@0.3.0",
+    "@angular/forms": "npm:@angular/forms@2.0.2",
     "@angular/common": "npm:@angular/common@2.0.2",
     "@angular/compiler": "npm:@angular/compiler@2.0.2",
     "@angular/core": "npm:@angular/core@2.0.2",
@@ -47,12 +47,12 @@ SystemJS.config({
     "@angular/platform-browser": "npm:@angular/platform-browser@2.0.2",
     "@angular/platform-browser-dynamic": "npm:@angular/platform-browser-dynamic@2.0.2",
     "@angular/router": "npm:@angular/router@3.0.2",
-    "angular2-carbonldp": "npm:angular2-carbonldp@0.4.3-rc.1",
+    "angular2-carbonldp": "npm:angular2-carbonldp@0.4.1",
     "angulartics2": "npm:angulartics2@1.1.9",
     "assert": "github:jspm/nodelibs-assert@0.2.0-alpha",
     "buffer": "github:jspm/nodelibs-buffer@0.2.0-alpha",
     "carbonldp": "npm:carbonldp@0.37.0",
-    "carbonldp-panel": "npm:carbonldp-panel@0.3.1",
+    "carbonldp-panel": "local:carbonldp-panel@0.3.1",
     "child_process": "github:jspm/nodelibs-child_process@0.2.0-alpha",
     "codemirror": "npm:codemirror@5.19.0",
     "constants": "github:jspm/nodelibs-constants@0.2.0-alpha",
@@ -337,7 +337,7 @@ SystemJS.config({
         "symbol-observable": "npm:symbol-observable@1.0.3"
       }
     },
-    "npm:angular2-carbonldp@0.4.3-rc.1": {
+    "npm:angular2-carbonldp@0.4.1": {
       "map": {
         "js-cookie": "npm:js-cookie@2.1.3"
       }
