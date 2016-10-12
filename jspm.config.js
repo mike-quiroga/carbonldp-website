@@ -52,7 +52,7 @@ SystemJS.config({
     "assert": "github:jspm/nodelibs-assert@0.2.0-alpha",
     "buffer": "github:jspm/nodelibs-buffer@0.2.0-alpha",
     "carbonldp": "npm:carbonldp@0.37.0",
-    "carbonldp-panel": "local:carbonldp-panel@0.3.1",
+    "carbonldp-panel": "npm:carbonldp-panel@0.3.1",
     "child_process": "github:jspm/nodelibs-child_process@0.2.0-alpha",
     "codemirror": "npm:codemirror@5.19.0",
     "constants": "github:jspm/nodelibs-constants@0.2.0-alpha",
