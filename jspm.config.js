@@ -39,15 +39,15 @@ SystemJS.config({
     "local:*.json"
   ],
   map: {
-    "@angular/forms": "npm:@angular/forms@0.3.0",
-    "@angular/common": "npm:@angular/common@2.0.0-rc.5",
-    "@angular/compiler": "npm:@angular/compiler@2.0.0-rc.5",
-    "@angular/core": "npm:@angular/core@2.0.0-rc.5",
-    "@angular/http": "npm:@angular/http@2.0.0-rc.5",
-    "@angular/platform-browser": "npm:@angular/platform-browser@2.0.0-rc.5",
-    "@angular/platform-browser-dynamic": "npm:@angular/platform-browser-dynamic@2.0.0-rc.5",
-    "@angular/router": "npm:@angular/router@3.0.0-rc.2",
-    "angular2-carbonldp": "npm:angular2-carbonldp@0.3.3",
+    "@angular/forms": "npm:@angular/forms@2.0.2",
+    "@angular/common": "npm:@angular/common@2.0.2",
+    "@angular/compiler": "npm:@angular/compiler@2.0.2",
+    "@angular/core": "npm:@angular/core@2.0.2",
+    "@angular/http": "npm:@angular/http@2.0.2",
+    "@angular/platform-browser": "npm:@angular/platform-browser@2.0.2",
+    "@angular/platform-browser-dynamic": "npm:@angular/platform-browser-dynamic@2.0.2",
+    "@angular/router": "npm:@angular/router@3.0.2",
+    "angular2-carbonldp": "npm:angular2-carbonldp@0.4.1",
     "angulartics2": "npm:angulartics2@1.1.9",
     "assert": "github:jspm/nodelibs-assert@0.2.0-alpha",
     "buffer": "github:jspm/nodelibs-buffer@0.2.0-alpha",
@@ -71,7 +71,7 @@ SystemJS.config({
     "plugin-typescript": "github:frankwallis/plugin-typescript@5.1.2",
     "process": "github:jspm/nodelibs-process@0.2.0-alpha",
     "reflect-metadata": "npm:reflect-metadata@0.1.8",
-    "rxjs": "npm:rxjs@5.0.0-beta.6",
+    "rxjs": "npm:rxjs@5.0.0-beta.12",
     "stream": "github:jspm/nodelibs-stream@0.2.0-alpha",
     "string_decoder": "github:jspm/nodelibs-string_decoder@0.2.0-alpha",
     "text": "github:systemjs/plugin-text@0.0.9",
@@ -327,14 +327,19 @@ SystemJS.config({
         "hash.js": "npm:hash.js@1.0.3"
       }
     },
-    "npm:angular2-carbonldp@0.3.3": {
-      "map": {
-        "js-cookie": "npm:js-cookie@2.1.3"
-      }
-    },
     "npm:pbkdf2@3.0.9": {
       "map": {
         "create-hmac": "npm:create-hmac@1.1.4"
+      }
+    },
+    "npm:rxjs@5.0.0-beta.12": {
+      "map": {
+        "symbol-observable": "npm:symbol-observable@1.0.3"
+      }
+    },
+    "npm:angular2-carbonldp@0.4.1": {
+      "map": {
+        "js-cookie": "npm:js-cookie@2.1.3"
       }
     }
   }

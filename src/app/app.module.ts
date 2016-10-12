@@ -1,5 +1,6 @@
 import { NgModule } from "@angular/core";
-import { APP_BASE_HREF, DeprecatedFormsModule } from "@angular/common";
+import { APP_BASE_HREF } from "@angular/common";
+import { FormsModule } from "@angular/forms";
 import { BrowserModule, Title } from "@angular/platform-browser";
 import { HttpModule } from "@angular/http";
 
@@ -23,9 +24,9 @@ import { PanelModule } from "carbonldp-panel/panel.module";
 @NgModule( {
 	imports: [
 		BrowserModule,
-		DeprecatedFormsModule,
 		routing,
 		HttpModule,
+		FormsModule,
 		PanelModule.forRoot()
 	],
 	declarations: [
