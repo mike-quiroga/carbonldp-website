@@ -1,5 +1,7 @@
 # carbonldp-website
 
+[![Build Status](https://travis-ci.org/CarbonLDP/carbonldp-website.svg)](https://travis-ci.org/CarbonLDP/carbonldp-website)
+
 Source code for [carbonldp.com](https://carbonldp.com)
 
 ## Development 
