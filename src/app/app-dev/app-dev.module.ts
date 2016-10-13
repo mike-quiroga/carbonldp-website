@@ -1,5 +1,6 @@
 import { NgModule } from "@angular/core";
-import { CommonModule, DeprecatedFormsModule } from "@angular/common";
+import { CommonModule } from "@angular/common";
+import { FormsModule } from "@angular/forms";
 import { routing, appDevRoutingProviders } from "./app-dev.routing";
 
 // Providers
@@ -19,8 +20,8 @@ import { PanelModule } from "carbonldp-panel/panel.module";
 @NgModule( {
 	imports: [
 		CommonModule,
-		DeprecatedFormsModule,
 		PanelModule,
+		FormsModule,
 		routing
 	],
 	declarations: [
@@ -28,6 +29,7 @@ import { PanelModule } from "carbonldp-panel/panel.module";
 		AppDevView,
 		NotFoundErrorView,
 		DashboardView,
+
 	],
 	providers: [
 		CARBON_PROVIDERS,

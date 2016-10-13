@@ -41,8 +41,11 @@
 		color: rgba(0, 0, 0, .95);
 	}
 
-	.item:first-of-type {
+	.item{
 		color: #585a5a;
+	}
+
+	.item:first-of-type {
 		.item.logo {
 			padding-right: 44px;
 		}

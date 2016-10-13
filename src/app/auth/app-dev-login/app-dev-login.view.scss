@@ -1,6 +1,9 @@
 :host {
 	display: block;
 	height: 100%;
+	//remove this styles if class gets rendered
+	background-color: #6C7680;
+	color: #ffffff;
 	> div.grid {
 		height: 100%;
 	}
