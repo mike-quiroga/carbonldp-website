@@ -7,7 +7,7 @@ import template from "./footer.component.html!";
 import style from "./footer.component.css!text";
 
 @Component( {
-	selector: "footer",
+	selector: "website-footer",
 	template: template,
 	styles: [ style ],
 } )

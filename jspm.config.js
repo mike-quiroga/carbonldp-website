@@ -39,15 +39,15 @@ SystemJS.config({
     "local:*.json"
   ],
   map: {
-    "@angular/forms": "npm:@angular/forms@0.3.0",
-    "@angular/common": "npm:@angular/common@2.0.0-rc.5",
-    "@angular/compiler": "npm:@angular/compiler@2.0.0-rc.5",
-    "@angular/core": "npm:@angular/core@2.0.0-rc.5",
-    "@angular/http": "npm:@angular/http@2.0.0-rc.5",
-    "@angular/platform-browser": "npm:@angular/platform-browser@2.0.0-rc.5",
-    "@angular/platform-browser-dynamic": "npm:@angular/platform-browser-dynamic@2.0.0-rc.5",
-    "@angular/router": "npm:@angular/router@3.0.0-rc.2",
-    "angular2-carbonldp": "npm:angular2-carbonldp@0.3.2",
+    "@angular/forms": "npm:@angular/forms@2.0.2",
+    "@angular/common": "npm:@angular/common@2.0.2",
+    "@angular/compiler": "npm:@angular/compiler@2.0.2",
+    "@angular/core": "npm:@angular/core@2.0.2",
+    "@angular/http": "npm:@angular/http@2.0.2",
+    "@angular/platform-browser": "npm:@angular/platform-browser@2.0.2",
+    "@angular/platform-browser-dynamic": "npm:@angular/platform-browser-dynamic@2.0.2",
+    "@angular/router": "npm:@angular/router@3.0.2",
+    "angular2-carbonldp": "npm:angular2-carbonldp@0.4.1",
     "angulartics2": "npm:angulartics2@1.1.9",
     "assert": "github:jspm/nodelibs-assert@0.2.0-alpha",
     "buffer": "github:jspm/nodelibs-buffer@0.2.0-alpha",
@@ -71,7 +71,7 @@ SystemJS.config({
     "plugin-typescript": "github:frankwallis/plugin-typescript@5.1.2",
     "process": "github:jspm/nodelibs-process@0.2.0-alpha",
     "reflect-metadata": "npm:reflect-metadata@0.1.8",
-    "rxjs": "npm:rxjs@5.0.0-beta.6",
+    "rxjs": "npm:rxjs@5.0.0-beta.12",
     "stream": "github:jspm/nodelibs-stream@0.2.0-alpha",
     "string_decoder": "github:jspm/nodelibs-string_decoder@0.2.0-alpha",
     "text": "github:systemjs/plugin-text@0.0.9",
@@ -98,7 +98,7 @@ SystemJS.config({
         "browserify-sign": "npm:browserify-sign@4.0.0",
         "randombytes": "npm:randombytes@2.0.3",
         "create-hmac": "npm:create-hmac@1.1.4",
-        "pbkdf2": "npm:pbkdf2@3.0.8",
+        "pbkdf2": "npm:pbkdf2@3.0.9",
         "public-encrypt": "npm:public-encrypt@4.0.0",
         "diffie-hellman": "npm:diffie-hellman@5.0.2",
         "create-hash": "npm:create-hash@1.1.2",
@@ -115,11 +115,6 @@ SystemJS.config({
         "parse-asn1": "npm:parse-asn1@5.0.0",
         "elliptic": "npm:elliptic@6.3.2",
         "bn.js": "npm:bn.js@4.11.6"
-      }
-    },
-    "npm:pbkdf2@3.0.8": {
-      "map": {
-        "create-hmac": "npm:create-hmac@1.1.4"
       }
     },
     "npm:create-hmac@1.1.4": {
@@ -167,7 +162,7 @@ SystemJS.config({
     "npm:parse-asn1@5.0.0": {
       "map": {
         "create-hash": "npm:create-hash@1.1.2",
-        "pbkdf2": "npm:pbkdf2@3.0.8",
+        "pbkdf2": "npm:pbkdf2@3.0.9",
         "asn1.js": "npm:asn1.js@4.8.1",
         "evp_bytestokey": "npm:evp_bytestokey@1.0.0",
         "browserify-aes": "npm:browserify-aes@1.0.6"
@@ -255,7 +250,7 @@ SystemJS.config({
       "map": {
         "isarray": "npm:isarray@1.0.0",
         "base64-js": "npm:base64-js@1.2.0",
-        "ieee754": "npm:ieee754@1.1.6"
+        "ieee754": "npm:ieee754@1.1.8"
       }
     },
     "npm:readable-stream@2.1.5": {
@@ -314,11 +309,6 @@ SystemJS.config({
         "process": "npm:process@0.11.9"
       }
     },
-    "npm:angular2-carbonldp@0.3.2": {
-      "map": {
-        "js-cookie": "npm:js-cookie@2.1.3"
-      }
-    },
     "npm:carbonldp@0.37.0": {
       "map": {
         "file-type": "npm:file-type@3.8.0"
@@ -335,6 +325,21 @@ SystemJS.config({
         "bn.js": "npm:bn.js@4.11.6",
         "brorand": "npm:brorand@1.0.6",
         "hash.js": "npm:hash.js@1.0.3"
+      }
+    },
+    "npm:pbkdf2@3.0.9": {
+      "map": {
+        "create-hmac": "npm:create-hmac@1.1.4"
+      }
+    },
+    "npm:rxjs@5.0.0-beta.12": {
+      "map": {
+        "symbol-observable": "npm:symbol-observable@1.0.3"
+      }
+    },
+    "npm:angular2-carbonldp@0.4.1": {
+      "map": {
+        "js-cookie": "npm:js-cookie@2.1.3"
       }
     }
   }

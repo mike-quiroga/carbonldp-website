@@ -1,5 +1,7 @@
 # carbonldp-website
 
+[![Build Status](https://travis-ci.org/CarbonLDP/carbonldp-website.svg)](https://travis-ci.org/CarbonLDP/carbonldp-website)
+
 Source code for [carbonldp.com](https://carbonldp.com)
 
 ## Development 
@@ -13,17 +15,24 @@ Source code for [carbonldp.com](https://carbonldp.com)
     - typings: `npm install -g typings`
 2. Clone dependency projects alongside the project's directory:
     - CarbonLDP-JS-SDK: `gulp clone https://github.com/CarbonLDP/CarbonLDP-JS-SDK.git`
-    - carbon-panel: `gulp clone https://github.com/CarbonLDP/carbon-panel.git`
+    - carbonldp-panel: `gulp clone https://github.com/CarbonLDP/carbonldp-panel.git`
     - angular2-carbonldp: `gulp clone https://github.com/CarbonLDP/angular2-carbonldp.git`
     
     You should end up with the following directories in the same directory:
-    - `carbon-website`
-    - `carbon-panel`
+    - `carbonldp-website`
+    - `carbonldp-panel`
     - `CarbonLDP-JS-SDK`
     - `angular2-carbonldp`
-3. cd into `carbon-website`
+3. cd into `carbonldp-website`
 4. run `npm install && typings install`
-5. To start the application server run `npm start` or `gulp serve`
+5. To make changes to any dependency project visible to this project, you must link them using the following commands:
+    - `jspm link ../carbonldp-panel/dist`
+    - `jspm link ../CarbonLDP-JS-SDK/dist`
+    - `jspm link ../angular2-carbonldp/dist`
+    
+    Answer `no` to any change JSPM suggests to make follow by a `yes` when it asks to confirm the decision.
+    For more information see: [JSPM link](http://jspm.io/0.17-beta-guide/linking.html)
+6. To start the application server run `npm start` or `gulp serve`
 
 ### Gulp Tasks
 
@@ -38,7 +47,6 @@ Gulp defines two tasks:
 - `config`: Configuration files that are used when compiling the application
 - `dist`: Distribution related files
     - `site`: Compiled files. Ready to be served
-    - `Dockerfile`: Docker file used to create the docker image
     - `index.ejs.html`: Template to create the compiled `site/index.html` file
     - `nginx.conf`: Configuration file for the nginx server inside the docker image
 - `jspm_packages`: jspm dependencies (don't touch them)
@@ -53,10 +61,11 @@ Gulp defines two tasks:
     - `custom`: Directory to store custom description files
     - `typings.d.ts`: Main description file. Aggregates all other description files
 - `.gitignore`: Ignore file for git
+- `.travis.yml`: Travis configuration file
 - `CHANGELOG.md`: File to track package changes
+- `Dockerfile`: Docker file used to create the docker image
 - `gulpfile.js`: Gulp configuration file
-- `jspm.browser.js`: JSPM browser specific configuration file
-- `jspm.config.js`: JSPM general configuration file
+- `jspm.config.js`: JSPM configuration file
 - `package.json`: npm configuration file (it also contains JSPM dependency registry)
 - `README.md`: === this
 - `semantic.json`: semantic-ui configuration file
@@ -68,4 +77,5 @@ Gulp defines two tasks:
 
 - Configure a test framework
 - Configure code linting (tslint and sasslint)
-- Rename `gulp` tasks to comply with the latest naming convention and document them
+- Document gulp tasks
+- Divide gulpfile into separate files

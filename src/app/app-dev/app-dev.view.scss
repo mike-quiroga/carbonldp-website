@@ -7,10 +7,10 @@
 	background-color: #6C7680;
 	color: #ffffff;
 
-	cp-header {
-		.ui.navigation.inverted.menu {
+	cp-header.ui.navigation.inverted.menu {
 			background-color: #363F48;
-		}
+			margin: 0;
+			border-radius: 0;
 	}
 
 	cp-sidebar.ui.vertical.menu {

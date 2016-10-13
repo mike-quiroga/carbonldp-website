@@ -18,7 +18,6 @@ const appRoutes:Routes = [
 		data: {
 			alias: "",
 			title: "Carbon LDP",
-
 		},
 		loadChildren: () => AppDevModule,
 	},

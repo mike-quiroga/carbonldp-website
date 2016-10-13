@@ -38,9 +38,9 @@ export class AppComponent {
 			currentRoute:ActivatedRoute = this.route.root;
 		do {
 			if( currentRoute.snapshot.data[ "title" ] !== false ) {
-				if( ! !(typeof currentRoute.snapshot.data[ "title" ] !== 'undefined' || typeof currentRoute.snapshot.data[ "displayName" ] !== "undefined") && currentRoute.snapshot )
+				if( ! ! (typeof currentRoute.snapshot.data[ "title" ] !== 'undefined' || typeof currentRoute.snapshot.data[ "displayName" ] !== "undefined") && currentRoute.snapshot )
 					activatedRoutes.push( currentRoute.snapshot );
-				}
+			}
 			currentRoute = currentRoute.children[ 0 ];
 		} while ( currentRoute );
 

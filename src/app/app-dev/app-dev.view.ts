@@ -1,4 +1,4 @@
-import { Component, provide, Inject, OnInit, EventEmitter } from "@angular/core";
+import { Component, Inject, OnInit, EventEmitter } from "@angular/core";
 
 import { Router, NavigationEnd } from "@angular/router";
 
