@@ -10,7 +10,7 @@
 		"paths": {
 			"app/*": [ "src/app/*" ],
 			"carbonldp/*": [ "../CarbonLDP-JS-SDK/dist/*" ],
-			"carbon-panel/*": [ "../carbon-panel/dist/*" ]
+			"carbonldp-panel/*": [ "../carbonldp-panel/dist/*" ]
 		}
 	},
 	"exclude": [

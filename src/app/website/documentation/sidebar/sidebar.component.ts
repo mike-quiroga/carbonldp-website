@@ -1,6 +1,4 @@
 import { Component, Input, ElementRef, SimpleChange, AfterViewInit, OnChanges } from "@angular/core";
-import { CORE_DIRECTIVES } from "@angular/common"
-import { ROUTER_DIRECTIVES } from "@angular/router-deprecated";
 
 import $ from "jquery";
 import "semantic-ui/semantic";
@@ -10,7 +8,6 @@ import template from "./sidebar.component.html!";
 @Component( {
 	selector: "sidebar-component",
 	template: template,
-	directives: [ CORE_DIRECTIVES, ROUTER_DIRECTIVES ],
 	styles: [ style ]
 } )
 export class SidebarComponent implements AfterViewInit, OnChanges {

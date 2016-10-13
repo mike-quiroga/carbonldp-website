@@ -1,6 +1,4 @@
 import { Component } from "@angular/core";
-import { CORE_DIRECTIVES } from "@angular/common";
-import { RouterLink } from "@angular/router-deprecated";
 
 import "semantic-ui/semantic";
 
@@ -11,7 +9,6 @@ import style from "./rest-api.view.css!text";
 	selector: "rest-api",
 	template: template,
 	styles: [ style ],
-	directives: [ CORE_DIRECTIVES, RouterLink ]
 } )
 
 export class RESTApiView {

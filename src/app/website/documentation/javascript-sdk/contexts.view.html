@@ -4,9 +4,9 @@
 		<div class="sixteen wide column">
 
 			<div class="ui breadcrumb">
-				<a class="section" [routerLink]="[ '../Documentation' ]">Documentation</a>
+				<a class="section" [routerLink]="[ '..' ]">Documentation</a>
 				<i class="right chevron icon divider"></i>
-				<a class="section" [routerLink]="[ '../JavaScriptSDK' ]">JavaScript SDK</a>
+				<a class="section" [routerLink]="[ '../javascript-sdk' ]">JavaScript SDK</a>
 				<i class="right arrow icon divider"></i>
 
 				<div class="active section">Contexts</div>
@@ -27,7 +27,7 @@
 							<div class="header">Previous step</div>
 							<p></p>
 							<div class="header">
-								<a [routerLink]="[ '../JavaScriptSDKObjectModel' ]">Object Model</a>
+								<a [routerLink]="[ '../javascript-sdk-object-model' ]">Object Model</a>
 							</div>
 						</div>
 					</div>
@@ -60,7 +60,7 @@
 							can be used throughout your <span class="highlight">application</span>. For example, server
 							settings, such as the host for your <span class="highlight">Carbon platform</span>, are
 							defined in the <span class="highlight">platform context</span>. Authentication information
-							and <a [routerLink]="[ '../JavaScriptSDKObjectSchema' ]">object schema</a> are also stored
+							and <a [routerLink]="[ '../javascript-sdk-object-schema' ]">object schema</a> are also stored
 							in <span class="highlight">context</span> objects.
 						</p>
 						<p>The information that's stored in the <span class="highlight">context</span> objects is
@@ -97,7 +97,7 @@
 							the server, and it gives you access to define and modify
 							<span class="highlight">settings</span>,
 							<span class="highlight">authentication services</span> and
-							<a [routerLink]="[ '../JavaScriptSDKObjectSchema' ]"><span class="highlight">object schemas</span></a>
+							<a [routerLink]="[ '../javascript-sdk-object-schema' ]"><span class="highlight">object schemas</span></a>
 							that will be available globally for the <a target="_blank" href="https://github.com/CarbonLDP/CarbonLDP-JS-SDK/tree/develop/doc">
 							<span class="highlight">Carbon SDK modules</span></a> to use.
 						</p>
@@ -236,9 +236,9 @@
 										let carbonContext:Carbon = new Carbon();
 
 										carbonContext.apps.getAppContext( "test-app/" ).then(
-											( appContext:App.Context ) => {
+											( appContext:App.Context ) => &#123;
 												appContext.resolve( "" ); // https://carbonldp.com/apps/test-app/
-											}
+											&#125;
 										);
 									</code></pre>
 									<!--@formatter:on-->
@@ -250,9 +250,9 @@
 										let carbonContext = new Carbon();
 
 										carbonContext.apps.getAppContext( "test-app/" ).then(
-											function( appContext ){
+											function( appContext )&#123;
 												appContext.resolve( "" ); // https://carbonldp.com/apps/test-app/
-											}
+											&#125;
 										);
 
 									</code></pre>
@@ -312,10 +312,10 @@
 
 									// Carbon application context set new setting
 									carbonContext.apps.getAppContext( "test-app/" ).then(
-									   ( appContext:App.Context ) => {
+									   ( appContext:App.Context ) => &#123;
 									      appContext.setSetting( "name", "Awesome-programmer" );
 										console.log( appContext.getSetting( "name" ) ); // prints Awesome-programmer
-									   }
+									   &#125;
 									);
 
 									console.log( carbonContext.resolve( "" ) ); // prints https://myorganization.com/platform/
@@ -334,10 +334,10 @@
 
 									// Carbon application context set new setting
 									carbonContext.apss.getAppContext( "test-app/" ).then(
-										function( appContext ){
+										function( appContext )&#123;
 											appContext.setSetting( "name", "Awesome-programmer" );
 											console.log( appContext.getSetting( "name" ) ); // prints Awesome-programmer
-										}
+										&#125;
 									);
 
 									console.log( carbonContext.resolve( "" ) ); // prints https://myorganization.com/platform/
@@ -365,11 +365,11 @@
 							<span class="highlight">authentication services</span> and
 							<span class="highlight">object schema</span>.However, the
 							<span class="highlight">object schema</span> inheritance will be further discussed in
-							the section extending the object schema of the <a [routerLink]="[ '../JavaScriptSDKObjectSchema' ]">object schema</a> Documentation.
+							the section extending the object schema of the <a [routerLink]="[ '../javascript-sdk-object-schema' ]">object schema</a> Documentation.
 						</p>
 
 						<p>An <span class="highlight">application context</span> has access to all settings, services and
-							<a [routerLink]="[ '../JavaScriptSDKObjectSchema' ]">object schemas</a> contained in the
+							<a [routerLink]="[ '../javascript-sdk-object-schema' ]">object schemas</a> contained in the
 							<span class="highlight">platform context</span>, unless those settings are explicitly overwritten.
 							This means that when there is an attempt to access a setting in an <span class="highlight">application context</span>,
 							it is retrieved first from it. If the given setting is not defined in that
@@ -400,11 +400,11 @@
 
 									// Get your application contexts
 									carbonContext.apps.getAppContext( "test-app/" )
-									.then(( appContext:App.Context ) => {
+									.then(( appContext:App.Context ) => &#123;
 									      testAppContext = appContext;
 									      return carbonContext.apps.getAppContext( "your-app/" );
-									   })
-									.then(( appContext:App.Context ) => {
+									   &#125;)
+									.then(( appContext:App.Context ) => &#123;
 									      yourAppContext = appContext;
 
 									      // The name setting has not yet been set and it is not predefined in the platform or app contexts...
@@ -433,7 +433,7 @@
 									      carbonContext.getSetting( "name" );  // returns 'CarbonPlatform'
 									      testAppContext.getSetting( "name" ); // returns 'CarbonPlatform'
 									      yourAppContext.getSetting( "name" ); // returns 'CarbonPlatform'
-									});
+									&#125;);
 								</code></pre>
 								<!--@formatter:on-->
 							</div>
@@ -447,11 +447,11 @@
 
 									// Get your application contexts
 									carbonContext.apps.getAppContext( "test-app/" )
-									.then( function( appContext ){
+									.then( function( appContext )&#123;
 									      testAppContext = appContext;
 									      return carbonContext.apps.getAppContext( "your-app/" );
-									   })
-									.then( function( appContext ){
+									   &#125;)
+									.then( function( appContext )&#123;
 									      yourAppContext = appContext;
 
 									      // The name setting has not yet been set and it is not predefined in the platform or app contexts...
@@ -480,7 +480,7 @@
 									      carbonContext.getSetting( "name" );  // returns 'CarbonPlatform'
 									      testAppContext.getSetting( "name" ); // returns 'CarbonPlatform'
 									      yourAppContext.getSetting( "name" ); // returns 'CarbonPlatform'
-									});
+									&#125;);
 
 								</code></pre>
 								<!--@formatter:on-->
@@ -506,7 +506,7 @@
 							<div class="header">Next step</div>
 							<p></p>
 							<div class="header">
-								<a [routerLink]="[ '../JavaScriptSDKObjectSchema' ]">Object Schema</a>
+								<a [routerLink]="[ '../javascript-sdk-object-schema' ]">Object Schema</a>
 							</div>
 						</div>
 					</div>

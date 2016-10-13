@@ -1,20 +1,12 @@
 import { Component, ElementRef, ChangeDetectorRef, AfterViewInit } from "@angular/core";
-import { CORE_DIRECTIVES } from "@angular/common";
-
-import { RouterLink } from "@angular/router-deprecated";
-
-import HighlightDirective from "carbon-panel/directives/highlight.directive";
-
-import SidebarComponent from "./../sidebar/sidebar.component";
 
 import template from "./object-schema.view.html!";
 
 @Component( {
 	selector: "object-schema",
 	template: template,
-	directives: [ CORE_DIRECTIVES, SidebarComponent, HighlightDirective, RouterLink ],
 } )
-export class ObjectModelView implements AfterViewInit {
+export class ObjectSchemaView implements AfterViewInit {
 
 	contentReady:boolean = false;
 
@@ -37,4 +29,4 @@ export class ObjectModelView implements AfterViewInit {
 	}
 }
 
-export default ObjectModelView;
+export default ObjectSchemaView;

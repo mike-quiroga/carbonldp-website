@@ -1,15 +1,10 @@
 import { Component, ElementRef, ChangeDetectorRef, AfterViewInit } from "@angular/core";
-import { RouterLink } from "@angular/router-deprecated";
-
-import { HighlightDirective } from "carbon-panel/directives/highlight.directive";
-import SidebarComponent from "./../sidebar/sidebar.component";
 
 import template from "./contexts.view.html!";
 
 @Component( {
 	selector: "contexts",
 	template: template,
-	directives: [ SidebarComponent, HighlightDirective, RouterLink ],
 } )
 export class ContextsView implements AfterViewInit {
 	contentReady:boolean = false;

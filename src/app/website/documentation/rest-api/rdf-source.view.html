@@ -40,7 +40,7 @@
 						<p>To create a new RDFSource, POST the new document to the URI of a container.</p>
 
 						<p>
-							<span class="ui blue horizontal label">POST</span> <code>/apps/{app-name}/{container}/</code>
+							<span class="ui blue horizontal label">POST</span> <code>/apps/&#123;app-name&#125;/&#123;container&#125;/</code>
 						</p>
 
 						<table class="ui celled table">
@@ -77,7 +77,7 @@
 								</tr>
 								<tr>
 									<td>Slug</td>
-									<td>{john-doe}</td>
+									<td>&#123;john-doe&#125;</td>
 									<td>No</td>
 								</tr>
 							</tbody>
@@ -97,13 +97,13 @@
 						@prefix ldp:&#60;http://www.w3.org/ns/ldp#&#62;.
 						@prefix ex:&#60;http://www.base22.com/2016/05/ex#&#62;.
 
-						&#60;&#62; {
+						&#60;&#62; {{ '{' }}
 							&#60;&#62;
 								a ldp:RDFSource, ex:Person;
 								ex:firstName "John";
 								ex:lastName "Doe";
 								ex:phoneNumber "(555) 555-5555".
-						}
+						{{ '}' }}
 					</pre>
 
 						<p>Issue the request. A successful response should provide the HTTP status code 201 Created.</p>
@@ -129,13 +129,11 @@
 						@prefix ldp:&lt;http://www.w3.org/ns/ldp#&gt;.
 						@prefix ex:&lt;http://www.base22.com/2016/05/ex#&gt;.
 
-						&lt;&gt; {
-						    &lt;&gt;
 						        a ldp:RDFSource, ex:Person;
 						        ex:firstName "John";
 						        ex:lastName "Doe";
 						        ex:phoneNumber "(555) 555-5555".
-						}
+						{{ '}' }}
 					</pre>
 
 
@@ -146,7 +144,7 @@
 						<p>To retrieve an RDFSource, issue a GET request to the document's URI.</p>
 
 						<p>
-							<span class="ui blue horizontal label">GET</span> <code>/apps/{app-name}/{container}/{rdfsource}/</code>
+							<span class="ui blue horizontal label">GET</span> <code>/apps/{{ '{' }}app-name{{ '}' }}/{{ '{' }}container{{ '}' }}/{{ '{' }}rdfsource{{ '}' }}/</code>
 						</p>
 
 						<table class="ui celled table">
@@ -191,7 +189,7 @@
 						<p>Following is the response from retrieving a newly created RDFSource (from the &quot;Create&quot; example above).</p>
 
 						<pre cphighlight>
-					&lt;https://carbonldp.com/apps/rest-examples/persons/john-doe/&gt; {
+					&lt;https://carbonldp.com/apps/rest-examples/persons/john-doe/&gt; {{ '{' }}
 						&lt;https://carbonldp.com/apps/rest-examples/persons/john-doe/&gt; a &lt;http://www.w3.org/ns/ldp#BasicContainer&gt; , &lt;http://www.w3.org/ns/ldp#Container&gt; , &lt;http://www.w3.org/ns/ldp#RDFSource&gt; , &lt;http://www.base22.com/2016/05/ex#Person&gt; ;
 							&lt;http://www.w3.org/ns/ldp#hasMemberRelation&gt; &lt;http://www.w3.org/ns/ldp#member&gt; ;
 							&lt;https://carbonldp.com/ns/v1/platform#created&gt; &quot;2016-05-31T23:29:18.624Z&quot;^^&lt;http://www.w3.org/2001/XMLSchema#dateTime&gt; ;
@@ -201,7 +199,7 @@
 							&lt;http://www.base22.com/2016/05/ex#lastName&gt; &quot;Doe&quot; ;
 							&lt;http://www.base22.com/2016/05/ex#phoneNumber&gt; &quot;(555) 555-5555&quot; ;
 							&lt;https://carbonldp.com/ns/v1/platform#defaultInteractionModel&gt; &lt;http://www.w3.org/ns/ldp#RDFSource&gt; .
-					}
+					{{ '}' }}
 					</pre>
 
 						<p>
@@ -224,7 +222,7 @@
 							the existing document; patching individual properties to change a document is not supported at this time.</p>
 
 						<p>
-							<span class="ui blue horizontal label">PUT</span> <code>/apps/{app-name}/{container}/{rdfsource}/</code>
+							<span class="ui blue horizontal label">PUT</span> <code>/apps/{{ '{' }}app-name{{ '}' }}/{{ '{' }}container{{ '}' }}/{{ '{' }}rdfsource{{ '}' }}/</code>
 						</p>
 
 						<table class="ui celled table">
@@ -261,7 +259,7 @@
 								</tr>
 								<tr>
 									<td>If-Match</td>
-									<td>{ETag value}</td>
+									<td>{{ '{' }}ETag value{{ '}' }}</td>
 									<td>Yes</td>
 								</tr>
 							</tbody>
@@ -270,7 +268,7 @@
 						<p><strong>Body (required)</strong></p>
 
 						<pre cphighlight class="turtle">
-					&lt;https://dev.carbonldp.com/apps/rest-examples/persons/john-doe/&gt; {
+						&lt;https://dev.carbonldp.com/apps/rest-examples/persons/john-doe/&gt; {{ '{' }}
 						&lt;https://dev.carbonldp.com/apps/rest-examples/persons/john-doe/&gt; a &lt;http://www.w3.org/ns/ldp#BasicContainer&gt; , &lt;http://www.w3.org/ns/ldp#Container&gt; , &lt;http://www.w3.org/ns/ldp#RDFSource&gt; , &lt;http://www.base22.com/2016/05/ex#Person&gt; ;
 							&lt;http://www.w3.org/ns/ldp#hasMemberRelation&gt; &lt;http://www.w3.org/ns/ldp#member&gt; ;
 							&lt;https://carbonldp.com/ns/v1/platform#created&gt; &quot;2016-05-31T23:29:18.624Z&quot;^^&lt;http://www.w3.org/2001/XMLSchema#dateTime&gt; ;
@@ -281,7 +279,7 @@
 							&lt;http://www.base22.com/2016/05/ex#phoneNumber&gt; &quot;(555) 555-5555&quot; ;
 							&lt;https://carbonldp.com/ns/v1/platform#defaultInteractionModel&gt; &lt;http://www.w3.org/ns/ldp#RDFSource&gt; ;
 							&lt;http://www.base22.com/2016/05/ex#email&gt; &quot;john.doe@example.org&quot; .
-					}
+					{{ '}' }}
 					</pre>
 
 						<p>A successful update request will result in HTTP status code 200 OK.</p>
@@ -303,7 +301,7 @@
 						Content-Type: application/trig
 						If-Match: "429274222"
 
-						&lt;https://dev.carbonldp.com/apps/rest-examples/persons/john-doe/&gt; {
+						&lt;https://dev.carbonldp.com/apps/rest-examples/persons/john-doe/&gt; {{ '{' }}
 							&lt;https://dev.carbonldp.com/apps/rest-examples/persons/john-doe/&gt; a &lt;http://www.w3.org/ns/ldp#BasicContainer&gt; , &lt;http://www.w3.org/ns/ldp#Container&gt; , &lt;http://www.w3.org/ns/ldp#RDFSource&gt; , &lt;http://www.base22.com/2016/05/ex#Person&gt; ;
 								&lt;http://www.w3.org/ns/ldp#hasMemberRelation&gt; &lt;http://www.w3.org/ns/ldp#member&gt; ;
 								&lt;https://carbonldp.com/ns/v1/platform#created&gt; "2016-05-31T23:29:18.624Z"^^&lt;http://www.w3.org/2001/XMLSchema#dateTime&gt; ;
@@ -314,7 +312,7 @@
 								&lt;http://www.base22.com/2016/05/ex#phoneNumber&gt; "(555) 555-5555" ;
 								&lt;https://carbonldp.com/ns/v1/platform#defaultInteractionModel&gt; &lt;http://www.w3.org/ns/ldp#RDFSource&gt; ;
 								&lt;http://www.base22.com/2016/05/ex#email&gt; "john.doe@example.org" .
-						}
+						{{ '}' }}
 
 					</pre>
 
@@ -326,7 +324,7 @@
 						<p>To delete an RDFSource document, issue a DELETE request with an empty body to the URI of the document to be deleted.</p>
 
 						<p>
-							<span class="ui blue horizontal label">DELETE</span> <code>/apps/{app-name}/{container}/{rdfsource}/</code>
+							<span class="ui blue horizontal label">DELETE</span> <code>/apps/{{ '{' }}app-name{{ '}' }}/{{ '{' }}container{{ '}' }}/{{ '{' }}rdfsource{{ '}' }}/</code>
 						</p>
 
 						<table class="ui celled table">

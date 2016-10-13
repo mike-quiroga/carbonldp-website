@@ -8,12 +8,13 @@
  *
  */
 
+
 /*******************************
             Theme
 *******************************/
 
-@type: 'module';
-@element: 'sticky';
+@type    : 'module';
+@element : 'sticky';
 
 @import (multiple) '../../theme.config';
 
@@ -22,9 +23,9 @@
 *******************************/
 
 .ui.sticky {
-	position: static;
-	transition: @transition;
-	z-index: @zIndex;
+  position: static;
+  transition: @transition;
+  z-index: @zIndex;
 }
 
 /*******************************
@@ -33,41 +34,41 @@
 
 /* Bound */
 .ui.sticky.bound {
-	position: absolute;
-	left: auto;
-	right: auto;
+  position: absolute;
+  left: auto;
+  right: auto;
 }
 
 /* Fixed */
 .ui.sticky.fixed {
-	position: fixed;
-	left: auto;
-	right: auto;
+  position: fixed;
+  left: auto;
+  right: auto;
 }
 
 /* Bound/Fixed Position */
 .ui.sticky.bound.top,
 .ui.sticky.fixed.top {
-	top: 0px;
-	bottom: auto;
+  top: 0px;
+  bottom: auto;
 }
-
 .ui.sticky.bound.bottom,
 .ui.sticky.fixed.bottom {
-	top: auto;
-	bottom: 0px;
+  top: auto;
+  bottom: 0px;
 }
+
 
 /*******************************
             Types
 *******************************/
 
 .ui.native.sticky {
-	position: -webkit-sticky;
-	position: -moz-sticky;
-	position: -ms-sticky;
-	position: -o-sticky;
-	position: sticky;
+  position: -webkit-sticky;
+  position: -moz-sticky;
+  position: -ms-sticky;
+  position: -o-sticky;
+  position: sticky;
 }
 
 .loadUIOverrides();

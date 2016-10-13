@@ -11,7 +11,7 @@ src/app/**/*.css
 src/app/**/*.js
 src/app/**/*.map
 
-src/app/boot.ts
+src/app/config.ejs.ts
 
 dist/site/
 
@@ -24,6 +24,8 @@ dist/site/
 
 # Semantic UI
 **/semantic/dist/
+**/semantic/tasks/
+**/semantic/gulpfile.js
 
 reports/
 

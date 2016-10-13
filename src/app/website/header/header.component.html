@@ -4,39 +4,30 @@
 		<div class="ui top fixed borderless menu primary-nav">
 			<div class="ui container">
 
-				<a class="item logo" [routerLink]="[ './Home' ]"><img class="ui small image logo" src="assets/images/carbon-logo-150x48.png"/></a>
+				<a class="item logo" [routerLink]="[ '' ]"><img class="ui small image logo" src="assets/images/carbon-logo-150x48.png"/></a>
 
-				<!--<a class="item" [routerLink]="[ './Home' ]" [ngClass]="{active: isActive('./Home') }">Home</a>-->
-				<!--<a class="item" [routerLink]="[ './Blog' ]" [ngClass]="{active: isActive('./Blog') }">Blog</a>-->
-
-				<div class="ui dropdown link item"><a class="item" [routerLink]="[ './Documentation/Documentation' ]">Documentation</a><i class="dropdown icon"></i>
+				<div class="ui dropdown link item"><a class="item" [routerLink]="[ '/documentation' ]">Documentation</a><i class="dropdown icon"></i>
 
 					<div class="menu">
-						<a class="item" [routerLink]="[ './Documentation/AboutCarbonLDP' ]">About Carbon LDP</a>
-						<div class="divider"></div>
-						<a class="home" [routerLink]="[ './Documentation/EssentialConcepts' ]">Essential Concepts</a>
-						<a class="item" [routerLink]="[ './Documentation/LinkedDataConcepts' ]">Linked Data Concepts</a>
-						<!--<a class="item" [routerLink]="[ './Documentation/LDPConcepts' ]">Linked Data Platform Concepts</a>-->
-						<!--<a class="item" [routerLink]="[ './Documentation/CarbonLDPConcepts' ]">Carbon LDP Concepts</a>-->
+						<a class="home" [routerLink]="[ '/documentation/essential-concepts' ]">Essential Concepts</a>
+						<a class="item" [routerLink]="[ '/documentation/linked-data-concepts' ]">Linked Data Concepts</a>
 
 						<div class="divider"></div>
-						<a class="home" [routerLink]="[ './Documentation/RESTApi' ]">REST API</a>
-						<a class="item" [routerLink]="[ './Documentation/RESTApiGettingStarted' ]">Getting Started with the REST API</a>
-						<a class="item" [routerLink]="[ './Documentation/RESTApiObjectModel' ]">REST API Object Model</a>
-						<!--<a class="item" [routerLink]="[ './Documentation/RESTApiInteractionModels' ]">Interaction Models</a>-->
-						<!--<a class="item" [routerLink]="[ './Documentation/RESTApiRdfSource' ]">RDFSource</a>-->
-						<!-- a class="item" [routerLink]="[ './Documentation/RESTApiContainers' ]">Containers</a -->
+						<a class="home" [routerLink]="[ '/documentation/rest-api' ]">REST API</a>
+						<a class="item" [routerLink]="[ '/documentation/rest-api-getting-started' ]">Getting Started with the REST API</a>
+						<a class="item" [routerLink]="[ '/documentation/rest-api-object-model' ]">REST API Object Model</a>
 
 						<div class="divider"></div>
-						<a class="home" [routerLink]="[ './Documentation/JavaScriptSDK' ]">JavaScript SDK</a>
-						<a class="item" [routerLink]="[ './Documentation/JavaScriptSDKGettingStarted' ]">Getting Started</a>
-						<a class="item" [routerLink]="[ './Documentation/JavaScriptSDKObjectModel' ]">Object Model</a>
-						<!--<a class="item" [routerLink]="[ './Documentation/JavaScriptSDKContexts' ]">Contexts</a>-->
-						<!--<a class="item" [routerLink]="[ './Documentation/JavaScriptSDKObjectSchema' ]">Object Schema</a>-->
+						<a class="home" [routerLink]="[ '/documentation/javascript-sdk' ]">JavaScript SDK</a>
+						<a class="item" [routerLink]="[ '/documentation/javascript-sdk-getting-started' ]">Getting Started</a>
+						<a class="item" [routerLink]="[ '/documentation/javascript-sdk-object-model' ]">Object Model</a>
 						<div class="divider"></div>
-						<a class="item" [routerLink]="[ './Documentation/Documentation' ]">More...</a>
+						<a class="item" [routerLink]="[ '/documentation' ]">More...</a>
 					</div>
 				</div>
+
+				<a class="item" [routerLink]="[ '/about' ]">About</a>
+
 				<!--<div *ngIf=" ! authService.isAuthenticated() " class="right menu">
 					<a *ngIf="!isActive('./Login')" class="item login">
 						Log in
@@ -64,16 +55,6 @@
 	<div class="mobile tablet only row">
 		<div class="ui fixed menu">
 			<a class="item logo" [routerLink]="[ './Home' ]"><img class="ui small image logo" src="assets/images/carbon-logo-150x48.png"/></a>
-			<!--
-				<div class="menu">
-					<a class="item">
-						Log in
-					</a>
-					<a class="item">
-						Sign up
-					</a>
-				</div>
-			-->
 			<div class="right menu open">
 				<a href="" class="menu item">
 					<i class="content icon"></i>
@@ -81,36 +62,27 @@
 			</div>
 		</div>
 		<div class="ui fixed vertical menu">
-			<a class="item" [routerLink]="[ './Home' ]" [ngClass]="{active: isActive('./Home') }">Home</a>
-			<!--<a class="item" [routerLink]="[ './Blog' ]" [ngClass]="{active: isActive('./Blog') }">Blog</a>
-			<a *ngIf="!isActive('./Login')" class="item login" [routerLink]="[ '/AppDevLogin' ]">
-				Log in
-			</a>-->
-			<div class="ui dropdown link item"><a class="item" [routerLink]="[ './Documentation/Documentation' ]">Documentation</a><i class="dropdown icon"></i>
+			<!--todo: REMOVE IS ACTIVE-->
+			<a class="item" [routerLink]="[ '' ]" routerLinkActive="active">Home</a>
+
+			<div class="ui dropdown link item"><a class="item" [routerLink]="[ '/documentation' ]">Documentation</a><i class="dropdown icon"></i>
 				<div class="menu">
-					<a class="item" [routerLink]="[ './Documentation/AboutCarbonLDP' ]">About Carbon LDP</a>
-					<div class="divider"></div>
-					<a class="home" [routerLink]="[ './Documentation/EssentialConcepts' ]">Essential Concepts</a>
-					<a class="item" [routerLink]="[ './Documentation/LinkedDataConcepts' ]">Linked Data Concepts</a>
-					<!--<a class="item" [routerLink]="[ './Documentation/LDPConcepts' ]">Linked Data Platform Concepts</a>-->
-					<!--<a class="item" [routerLink]="[ './Documentation/CarbonLDPConcepts' ]">Carbon LDP Concepts</a>-->
+					<a class="home" [routerLink]="[ '/documentation/essential-concepts' ]">Essential Concepts</a>
+					<a class="item" [routerLink]="[ '/documentation/linked-data-concepts' ]">Linked Data Concepts</a>
 
 					<div class="divider"></div>
-					<a class="home" [routerLink]="[ './Documentation/RESTApi' ]">REST API</a>
-					<a class="item" [routerLink]="[ './Documentation/RESTApiGettingStarted' ]">Getting Started with the REST API</a>
-					<a class="item" [routerLink]="[ './Documentation/RESTApiObjectModel' ]">REST API Object Model</a>
-					<!--<a class="item" [routerLink]="[ './Documentation/RESTApiInteractionModels' ]">Interaction Models</a>-->
-					<!--<a class="item" [routerLink]="[ './Documentation/RESTApiRdfSource' ]">RDFSource</a>-->
+					<a class="home" [routerLink]="[ '/documentation/rest-api' ]">REST API</a>
+					<a class="item" [routerLink]="[ '/documentation/rest-api-getting-started' ]">Getting Started with the REST API</a>
+					<a class="item" [routerLink]="[ '/documentation/rest-api-obect-model' ]">REST API Object Model</a>
 					<div class="divider"></div>
-					<a class="home" [routerLink]="[ './Documentation/JavaScriptSDK' ]">JavaScript SDK</a>
-					<a class="item" [routerLink]="[ './Documentation/JavaScriptSDKGettingStarted' ]">Getting Started</a>
-					<a class="item" [routerLink]="[ './Documentation/JavaScriptSDKObjectModel' ]">Object Model</a>
-					<!--<a class="item" [routerLink]="[ './Documentation/JavaScriptSDKContexts' ]">Contexts</a>-->
-					<!--<a class="item" [routerLink]="[ './Documentation/JavaScriptSDKObjectSchema' ]">Object Schema</a>-->
+					<a class="home" [routerLink]="[ '/documentation/javascript-sdk' ]">JavaScript SDK</a>
+					<a class="item" [routerLink]="[ '/documentation/javascript-sdk-getting-started' ]">Getting Started</a>
+					<a class="item" [routerLink]="[ '/documentation/javascript-sdk-object-model' ]">Object Model</a>
 					<div class="divider"></div>
-					<a class="item" [routerLink]="[ './Documentation/Documentation' ]">More...</a>
+					<a class="item" [routerLink]="[ '/documentation' ]">More...</a>
 				</div>
 			</div>
+			<a class="item" [routerLink]="[ '/about' ]">About</a>
 		</div>
 	</div>
 </div>

@@ -1,11 +1,5 @@
 import { Component, ElementRef, ChangeDetectorRef, AfterViewInit } from "@angular/core";
 import { Location } from "@angular/common";
-import { ROUTER_DIRECTIVES } from "@angular/router-deprecated";
-
-import HighlightDirective from "carbon-panel/directives/highlight.directive";
-import { SUI_COMPONENTS } from "carbon-panel/semantic";
-
-import SidebarComponent from "./../sidebar/sidebar.component";
 
 import template from "./getting-started.view.html!";
 import style from "./getting-started.view.css!text";
@@ -14,7 +8,6 @@ import style from "./getting-started.view.css!text";
 	selector: "getting-started",
 	template: template,
 	styles: [ style ],
-	directives: [ ROUTER_DIRECTIVES, SidebarComponent, HighlightDirective, SUI_COMPONENTS, ],
 } )
 export class GettingStartedView implements AfterViewInit {
 	contentReady:boolean = false;

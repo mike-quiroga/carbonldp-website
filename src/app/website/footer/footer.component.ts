@@ -1,7 +1,4 @@
 import { Component, ElementRef, AfterViewInit, OnDestroy } from "@angular/core";
-import { Angulartics2On } from "angulartics2/src/core/angulartics2On";
-import { Angulartics2 } from "angulartics2";
-
 
 import $ from "jquery";
 import "semantic-ui/semantic";
@@ -10,9 +7,8 @@ import template from "./footer.component.html!";
 import style from "./footer.component.css!text";
 
 @Component( {
-	selector: "footer",
+	selector: "website-footer",
 	template: template,
-	directives: [ Angulartics2On ],
 	styles: [ style ],
 } )
 export class FooterComponent implements AfterViewInit, OnDestroy {

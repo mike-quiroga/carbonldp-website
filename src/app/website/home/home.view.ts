@@ -1,12 +1,8 @@
 import { Component, ElementRef, AfterViewInit } from "@angular/core";
-import { CORE_DIRECTIVES } from "@angular/common";
-import { ROUTER_DIRECTIVES, Router, OnDeactivate } from "@angular/router-deprecated";
-import { NewsletterFormComponent } from "../newsletter-form/newsletter-form.component";
+import { Router } from "@angular/router";
 
 import $ from "jquery";
 import "semantic-ui/semantic";
-
-import * as CodeMirrorComponent from "carbon-panel/code-mirror/code-mirror.component";
 
 import template from "./home.view.html!";
 import style from "./home.view.css!text";
@@ -15,9 +11,9 @@ import style from "./home.view.css!text";
 	selector: "home",
 	template: template,
 	styles: [ style ],
-	directives: [ CORE_DIRECTIVES, ROUTER_DIRECTIVES, CodeMirrorComponent.Class, NewsletterFormComponent ],
 } )
-export class HomeView implements AfterViewInit, OnDeactivate {
+
+export class HomeView implements AfterViewInit {
 	private router:Router;
 	private element:ElementRef;
 	private $element:JQuery;
@@ -37,16 +33,6 @@ export class HomeView implements AfterViewInit, OnDeactivate {
 		this.createDropdownMenus();
 		this.addMenuVisibilityHandlers();
 		this.createAccordions();
-	}
-
-
-	routerOnDeactivate():void {
-		this.removeMenuVisibilityHandlers();
-	}
-
-	isActive( route:string ):boolean {
-		let instruction:any = this.router.generate( [ route ] );
-		return this.router.isRouteActive( instruction );
 	}
 
 	createDropdownMenus():void {

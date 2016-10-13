@@ -2,9 +2,9 @@
 	<div class="row">
 		<div class="sixteen wide column">
 			<div class="ui breadcrumb">
-				<a class="section" [routerLink]="[ '../Documentation' ]">Documentation</a>
+				<a class="section" [routerLink]="[ '..' ]">Documentation</a>
 				<i class="right chevron icon divider"></i>
-				<a class="section" [routerLink]="[ '../JavaScriptSDK' ]">JavaScript SDK</a>
+				<a class="section" [routerLink]="[ '../javascript-sdk' ]">JavaScript SDK</a>
 				<i class="right arrow icon divider"></i>
 				<div class="active section">Object model</div>
 			</div>
@@ -24,7 +24,7 @@
 							<div class="header">Previous step</div>
 							<p></p>
 							<div class="header">
-								<a [routerLink]="[ '../JavaScriptSDKGettingStarted' ]">Getting Started</a>
+								<a [routerLink]="[ '../javascript-sdk-getting-started' ]">Getting Started</a>
 							</div>
 						</div>
 					</div>
@@ -96,19 +96,19 @@
 							</p>
 							<!--@formatter:off-->
 							<pre><code cpHighlight class="javascript">
-								var document = {                                        // =================== Document
+								var document = &#123;                                        // =================== Document
 									id: "https://.../projects/project-x/",
 									name: "Project X",
-									description: {                                      // -------- Fragment
+									description: &#123;                                      // -------- Fragment
 										format: "html",
 										content: "&lt;div&gt;Some content&lt;/div&gt;"
-									},                                                  // -------- End: Fragment
-									sow: {                                              // -------- Named Fragment
+									&#125;,                                                  // -------- End: Fragment
+									sow: &#123;                                              // -------- Named Fragment
 										id: "#sow",
 										signedOn: new Date( "2016-04-03" ),
 										clauses: [ // ... ]
-									}                                                   // -------- End: Named Fragment
-								};                                                      // =================== End: Document
+									&#125;                                                   // -------- End: Named Fragment
+								&#125;;                                                      // =================== End: Document
 							</code></pre>
 							<!--@formatter:on-->
 							<p>
@@ -207,7 +207,7 @@
 							<div class="header">Next step</div>
 							<p></p>
 							<div class="header">
-								<a [routerLink]="[ '../JavaScriptSDKContexts' ]">Contexts</a>
+								<a [routerLink]="[ '../javascript-sdk-contexts' ]">Contexts</a>
 							</div>
 						</div>
 					</div>

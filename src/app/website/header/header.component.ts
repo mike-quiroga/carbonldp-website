@@ -1,21 +1,18 @@
 import { Component, ElementRef, Inject, AfterViewInit, AfterViewChecked } from "@angular/core";
-import { CORE_DIRECTIVES } from "@angular/common";
-import { ROUTER_DIRECTIVES, Router, Instruction } from "@angular/router-deprecated";
+import { Router } from "@angular/router";
 
 import { AuthService } from "angular2-carbonldp/services";
 
 import $ from "jquery";
 import "semantic-ui/semantic";
 
-import { LoginComponent } from "carbon-panel/login.component";
 
 import template from "./header.component.html!";
 import style from "./header.component.css!text";
 
 @Component( {
-	selector: "header",
+	selector: "website-header",
 	template: template,
-	directives: [ CORE_DIRECTIVES, ROUTER_DIRECTIVES, LoginComponent, ],
 	styles: [ style ],
 } )
 export class HeaderComponent implements AfterViewInit, AfterViewChecked {
@@ -35,11 +32,6 @@ export class HeaderComponent implements AfterViewInit, AfterViewChecked {
 		this.createDropdownMenus();
 		this.createCollapsableMenus();
 		this.createLoginPopUp();
-	}
-
-	isActive( route:string ):boolean {
-		let instruction:Instruction = this.router.generate( [ route ] );
-		return this.router.isRouteActive( instruction );
 	}
 
 	createDropdownMenus():void {
@@ -76,7 +68,7 @@ export class HeaderComponent implements AfterViewInit, AfterViewChecked {
 
 	logOut():void {
 		this.authService.logout();
-		this.router.navigate( [ "/Home" ] );
+		this.router.navigate( [ "/home" ] );
 	}
 }
 

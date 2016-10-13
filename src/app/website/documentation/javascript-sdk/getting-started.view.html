@@ -4,9 +4,9 @@
 		<div class="sixteen wide column">
 
 			<div class="ui breadcrumb">
-				<a class="section" [routerLink]="[ '../Documentation' ]">Documentation</a>
+				<a class="section" [routerLink]="[ '..' ]">Documentation</a>
 				<i class="right chevron icon divider"></i>
-				<a class="section" [routerLink]="[ '../JavaScriptSDK' ]">JavaScript SDK</a>
+				<a class="section" [routerLink]="[ '../javascript-sdk' ]">JavaScript SDK</a>
 				<i class="right arrow icon divider"></i>
 
 				<div class="active section">Getting Started</div>
@@ -201,7 +201,7 @@
 									</p>
 									<!--@formatter:off-->
 									<pre><code cpHighlight class="javascript">
-										import { Factory as DocumentFactory, Class as Document } from "carbonldp/Document";
+										import &#123; Factory as DocumentFactory, Class as Document &#125; from "carbonldp/Document";
 									</code></pre>
 									<!--@formatter:on-->
 									<p>
@@ -281,7 +281,7 @@
 							<div class="content">
 								<p>
 									Before you can save data in Carbon, you need to create an account. Click
-									<a target="_blank" [routerLink]="[ '/Website/Register' ]">here</a> if you haven't done it.
+									<a target="_blank" [routerLink]="[ '/register' ]">here</a> if you haven't done it.
 								</p>
 							</div>
 						</div>
@@ -292,7 +292,7 @@
 							First of all, you need to create a <span class="highlight">Carbon platform context</span>. This
 							<span class="highlight">context</span> will provide a reference to the
 							<span class="highlight">Carbon platform instance</span> you are working with (for more
-							about Carbon contexts see: <a [routerLink]="['../JavaScriptSDKContexts']">Contexts</a>).
+							about Carbon contexts see: <a [routerLink]="['../javascript-sdk-contexts']">Contexts</a>).
 						</p>
 						<sui-tabs [(activeTab)]="selectedLanguage">
 							<sui-tab title="TypeScript">
@@ -356,7 +356,7 @@
 						<h2 class="ui header">Authenticating</h2>
 						<p>
 							After creating the platform context you need to tell the platform who you are by authenticating
-							yourself (if you haven't created an account, click <a target="_blank" [routerLink]="[ '/Website/Register' ]">here</a> to do it).
+							yourself (if you haven't created an account, click <a target="_blank" [routerLink]="[ '/register' ]">here</a> to do it).
 						</p>
 						<p>
 							All authentication/authorization related actions are done through the <code>auth</code> service
@@ -376,9 +376,9 @@
 									// ... platform context creation
 
 									carbon.auth.authenticate( "your@email.com", "YouRP455word" ).then(
-										( token:Token.Class ) => {
+										( token:Token.Class ) => &#123;
 											console.log( carbon.auth.authenticatedAgent ); // Yourself!
-										}
+										&#125;
 									);
 								</code></pre>
 								<!--@formatter:on-->
@@ -393,9 +393,9 @@
 									// ... platform context creation
 
 									carbon.auth.authenticate( "your@email.com", "YouRP455word" ).then(
-										( token ) => {
+										( token ) => &#123;
 											console.log( carbon.auth.authenticatedAgent ); // Yourself!
-										}
+										&#125;
 									);
 								</code></pre>
 								<!--@formatter:on-->
@@ -408,9 +408,9 @@
 									// ... platform context creation
 
 									carbon.auth.authenticate( "your@email.com", "YouRP455word" ).then(
-										function( token ) {
+										function( token ) &#123;
 											console.log( carbon.auth.authenticatedAgent ); // Yourself!
-										}
+										&#125;
 									);
 								</code></pre>
 								<!--@formatter:on-->
@@ -434,13 +434,13 @@
 							<div class="content">
 								<p>
 									Before continuing, you need to create your first application, if you haven't done it, click
-									<a target="_blank" [routerLink]="[ '/AppDev/MyApps/Create' ]">here</a> to do so (remember to note your application slug, because we'll use it later).
+									<a target="_blank" [routerLink]="[ '/app-dev/my-apps/create' ]">here</a> to do so (remember to note your application slug, because we'll use it later).
 								</p>
 							</div>
 						</div>
 						<p>
 							To access your application data, you need an <span class="highlight">application</span>
-							<a [routerLink]="[ '../JavaScriptSDKContexts' ]">context</a> that references it, on which you will be working on.
+							<a [routerLink]="[ '../javascript-sdk-contexts' ]">context</a> that references it, on which you will be working on.
 							To retrieve it, you can use the <code>apps</code> service of the platform context:
 						</p>
 						<sui-tabs [(activeTab)]="selectedLanguage">
@@ -458,9 +458,9 @@
 									let myAppContext:App.Context;
 
 									carbon.apps.getContext( "your-app-slug-here/" ).then(
-										( appContext:App.Context ) => {
+										( appContext:App.Context ) => &#123;
 									        myAppContext = appContext; // retrieving your app context
-										}
+										&#125;
 									).catch( console.error );
 								</code></pre>
 								<!--@formatter:on-->
@@ -477,9 +477,9 @@
 									let myAppContext;
 
 									carbon.apps.getContext( "your-app-slug-here/" ).then(
-										( appContext ) => {
+										( appContext ) => &#123;
 									        myAppContext = appContext; // retrieving your app context
-										}
+										&#125;
 									).catch( console.error );
 								</code></pre>
 								<!--@formatter:on-->
@@ -494,9 +494,9 @@
 									var myAppContext;
 
 									carbon.apps.getContext( "your-app-slug-here/" ).then(
-										function( appContext ) {
+										function( appContext ) &#123;
 									        myAppContext = appContext; // retrieving your app context
-										}
+										&#125;
 									).catch( console.error );
 								</code></pre>
 								<!--@formatter:on-->
@@ -504,14 +504,14 @@
 						</sui-tabs>
 						<p>
 							The <code>apps.getContext()</code> method returns a promise that when resolved, will give you the
-							<a [routerLink]="[ '../JavaScriptSDKContexts' ]"><span class="highlight">app context</span>
+							<a [routerLink]="[ '../javascript-sdk-contexts' ]"><span class="highlight">app context</span>
 							</a> you need. Be sure to replace <code>your-app-slug-here/</code> with your app slug.
 						</p>
 						<p>
 							This context is a child of the platform context you created. Because of that, any setting
 							or authentication information you saved in your platform context, is accessible
 							(and will be used) by this application context (for more see the Inheritance section of
-							<a [routerLink]="[ '../JavaScriptSDKContexts' ]">Contexts</a>).
+							<a [routerLink]="[ '../javascript-sdk-contexts' ]">Contexts</a>).
 						</p>
 					</section>
 
@@ -521,7 +521,7 @@
 							Now that you have your app context, you can start working with your app's data. Carbon stores data
 							in documents, which are basically normal JavaScript objects identified by a URI (Unique Resource Identifier).
 							These documents are composed by properties, <span class="highlight">fragments</span> and <span class="highlight">named fragments</span>.
-							For more information see: <a [routerLink]="[ '../JavaScriptSDKObjectModel' ]">JavaScript SDK Object model</a>.
+							For more information see: <a [routerLink]="[ '../javascript-sdk-object-model' ]">JavaScript SDK Object model</a>.
 						</p>
 						<p>
 							Any carbon <span class="highlight">context</span> has a <code>documents</code> service that
@@ -541,25 +541,25 @@
 									// ... app context retrieval
 
 									// JavaScript object to be persisted as a Carbon document
-									let project:Project = { // Project being a business specific interface defined somewhere
+									let project:Project = &#123; // Project being a business specific interface defined somewhere
 										name: "Project X",
 										tasks: [
-											{
+											&#123;
 												name: "Task 1",
 												dueDate: new Date( "2016-04-02" )
-											},
-											{
+											&#125;,
+											&#123;
 												name: "Task 2",
 												dueDate: new Date( "2016-04-08" )
-											}
+											&#125;
 										]
-									};
+									&#125;;
 
 									myAppContext.documents.createChild&lt;Project&gt;( "/", project ).then(
-										( [ persistedProject, response ]:[ Project & PersistedDocument.Class, Response.Class ] ) => {
+										( [ persistedProject, response ]:[ Project & PersistedDocument.Class, Response.Class ] ) => &#123;
 											console.log( project === persistedProject ); // true
 											console.log( persistedProject.id ); // document's URI
-										}
+										&#125;
 									).catch( console.error );
 								</code></pre>
 								<!--@formatter:on-->
@@ -574,25 +574,25 @@
 									// ... app context retrieval
 
 									// JavaScript object to be persisted as a Carbon document
-									let project = {
+									let project = &#123;
 										name: "Project X",
 										tasks: [
-											{
+											&#123;
 												name: "Task 1",
 												dueDate: new Date( "2016-04-02" )
-											},
-											{
+											&#125;,
+											&#123;
 												name: "Task 2",
 												dueDate: new Date( "2016-04-08" )
-											}
+											&#125;
 										]
-									};
+									&#125;;
 
 									myAppContext.documents.createChild( "/", project ).then(
-										( [ persistedProject, response ] ) => {
+										( [ persistedProject, response ] ) => &#123;
 											console.log( project === persistedProject ); // true
 											console.log( project.id ); // document's URI
-										}
+										&#125;
 									).catch( console.error );
 								</code></pre>
 								<!--@formatter:on-->
@@ -605,28 +605,28 @@
 									// ... app context retrieval
 
 									// JavaScript object to be persisted as a Carbon document
-									var project = {
+									var project = &#123;
 										name: "Project X",
 										tasks: [
-											{
+											&#123;
 												name: "Task 1",
 												dueDate: new Date( "2016-04-02" )
-											},
-											{
+											&#125;,
+											&#123;
 												name: "Task 2",
 												dueDate: new Date( "2016-04-08" )
-											}
+											&#125;
 										]
-									};
+									&#125;;
 
 									myAppContext.documents.createChild( "/", project ).then(
-										function( result ) {
+										function( result ) &#123;
 											var persistedProject = result[ 0 ];
 											var response = result[ 1 ];
 
 											console.log( project === persistedProject ); // true
 											console.log( project.id ); // document's URI
-										}
+										&#125;
 									).catch( console.error );
 								</code></pre>
 								<!--@formatter:on-->
@@ -655,9 +655,9 @@
 									// ...
 
 									myAppContext.documents.createChild&lt;Project&gt;( "/", project, "My sUp4 Project!" ).then(
-										( [ persistedProject, response ]:[ Project & PersistedDocument.Class, Response.Class ] ) => {
+										( [ persistedProject, response ]:[ Project & PersistedDocument.Class, Response.Class ] ) => &#123;
 											console.log( persistedProject.id ); // .../my-supa-project/
-										}
+										&#125;
 									).catch( console.error );
 								</code></pre>
 								<!--@formatter:on-->
@@ -668,9 +668,9 @@
 									// ...
 
 									myAppContext.documents.createChild( "/", project, "My sUp4 Project!" ).then(
-										( [ persistedProject, response ] ) => {
+										( [ persistedProject, response ] ) => &#123;
 											console.log( persistedProject.id ); // .../my-supa-project/
-										}
+										&#125;
 									).catch( console.error );
 								</code></pre>
 								<!--@formatter:on-->
@@ -681,12 +681,12 @@
 									// ...
 
 									myAppContext.documents.createChild( "/", project, "My sUp4 Project!" ).then(
-										function( result ) {
+										function( result ) &#123;
 											var persistedProject = result[ 0 ];
 											var response = result[ 1 ];
 
 											console.log( persistedProject.id ); // .../my-supa-project/
-										}
+										&#125;
 									).catch( console.error );
 								</code></pre>
 								<!--@formatter:on-->
@@ -767,9 +767,9 @@
 									let projectID:string = "https://example.com/your-document-id/";
 
 									myAppContext.documents.get&lt;Project&gt;( projectID ).then(
-										( [ project, response ]:[ Project & PersistedDocument.Class, Response.Class ] ) => {
+										( [ project, response ]:[ Project & PersistedDocument.Class, Response.Class ] ) => &#123;
 											console.log( project.name ); // "Project X"
-										}
+										&#125;
 									).catch( console.error );
 								</code></pre>
 								<!--@formatter:on-->
@@ -787,9 +787,9 @@
 									let projectID = "https://example.com/your-document-id/";
 
 									myAppContext.documents.get( projectID ).then(
-										( [ project, response ] ) => {
+										( [ project, response ] ) => &#123;
 											console.log( project.name ); // "Project X"
-										}
+										&#125;
 									).catch( console.error );
 								</code></pre>
 								<!--@formatter:on-->
@@ -805,12 +805,12 @@
 									var projectID = "https://example.com/your-document-id/";
 
 									myAppContext.documents.get( projectID ).then(
-										function( result ) {
+										function( result ) &#123;
 											var project = result[ 0 ];
 											var response = result[ 1 ];
 
 											console.log( project.name ); // "Project X"
-										}
+										&#125;
 									).catch( console.error );
 								</code></pre>
 								<!--@formatter:on-->
@@ -836,9 +836,9 @@
 									// ... document pointer acquisition
 
 									projectPointer.resolve&lt;Project&gt;().then(
-										( [ project, response ]:[ Project & PersistedDocument.Class, Response.Class ] ) => {
+										( [ project, response ]:[ Project & PersistedDocument.Class, Response.Class ] ) => &#123;
 											console.log( project.name ); // "Project X"
-										}
+										&#125;
 									).catch( console.error );
 								</code></pre>
 								<!--@formatter:on-->
@@ -853,9 +853,9 @@
 									// ... document pointer acquisition
 
 									projectPointer.resolve().then(
-										( [ project, response ] ) => {
+										( [ project, response ] ) => &#123;
 											console.log( project.name ); // "Project X"
-										}
+										&#125;
 									).catch( console.error );
 								</code></pre>
 								<!--@formatter:on-->
@@ -868,12 +868,12 @@
 									// ... document pointer acquisition
 
 									projectPointer.resolve().then(
-										function( result ) {
+										function( result ) &#123;
 											var project = result[ 0 ];
 											var response = result[ 1 ];
 
 											console.log( project.name ); // "Project X"
-										}
+										&#125;
 									).catch( console.error );
 								</code></pre>
 								<!--@formatter:on-->
@@ -929,25 +929,25 @@
 									// ... document retrieval
 
 									project.name = "Project's New Name";
-									project.tasks.push( {
+									project.task.push( &#123;
 										name: "Task 3",
 										dueDate: new Date( "2016-05-02" )
-									} );
-									project.description = {
+									&#125; );
+									project.description = &#123;
 										type: "markdown",
 										content: "# Some description here"
-									};
+									&#125;;
 
 									project.save&lt;Project&gt;().then(
-										( [ savedProject, response ]:[ Project & PersistedDocument.Class, Response.Class ] ) => {
+										( [ savedProject, response ]:[ Project & PersistedDocument.Class, Response.Class ] ) => &#123;
 											console.log( savedProject === project ); // true
 											return savedProject.refresh&lt;Project&gt;();
-										}
+										&#125;
 									).then(
-										( [ refreshedProject, response ]:[ Project & PersistedDocument.Class, Response.Class ] ) => {
+										( [ refreshedProject, response ]:[ Project & PersistedDocument.Class, Response.Class ] ) => &#123;
 											console.log( refreshedProject === project ); // true
 											// Continue doing stuff...
-										}
+										&#125;
 									).catch( console.error );
 								</code></pre>
 								<!--@formatter:on-->
@@ -962,25 +962,25 @@
 									// ... document retrieval
 
 									project.name = "Project's New Name";
-									project.tasks.push( {
+									project.task.push( &#123;
 										name: "Task 3",
 										dueDate: new Date( "2016-05-02" )
-									} );
-									project.description = {
+									&#125; );
+									project.description = &#123;
 										type: "markdown",
 										content: "# Some description here"
-									};
+									&#125;;
 
 									project.save().then(
-										( [ savedProject, response ] ) => {
+										( [ savedProject, response ] ) => &#123;
 											console.log( savedProject === project ); // true
 											return savedProject.refresh();
-										}
+										&#125;
 									).then(
-										( [ refreshedProject, response ] ) => {
+										( [ refreshedProject, response ] ) => &#123;
 											console.log( refreshedProject === project ); // true
 											// Continue doing stuff...
-										}
+										&#125;
 									).catch( console.error );
 								</code></pre>
 								<!--@formatter:on-->
@@ -993,31 +993,31 @@
 									// ... document retrieval
 
 									project.name = "Project's New Name";
-									project.tasks.push( {
+									project.task.push( &#123;
 										name: "Task 3",
 										dueDate: new Date( "2016-05-02" )
-									} );
-									project.description = {
+									&#125; );
+									project.description = &#123;
 										type: "markdown",
 										content: "# Some description here"
-									};
+									&#125;;
 
 									project.save().then(
-										function( result ) => {
+										function( result ) => &#123;
 											var savedProject = result[ 0 ];
 											var response = result[ 0 ];
 
 											console.log( savedProject === project ); // true
 											return savedProject.refresh();
-										}
+										&#125;
 									).then(
-										function( result ) => {
+										function( result ) => &#123;
 											var refreshedProject = result[ 0 ];
 											var response = result[ 0 ];
 
 											console.log( refreshedProject === project ); // true
 											// Continue doing stuff...
-										}
+										&#125;
 									).catch( console.error );
 								</code></pre>
 								<!--@formatter:on-->
@@ -1058,9 +1058,9 @@
 									let projectID:string = "https://example.com/your-document-id/";
 
 									myAppContext.documents.delete( projectID ).then(
-										( response:Response.Class ) => {
+										( response:Response.Class ) => &#123;
 											// continue doing stuff...
-										}
+										&#125;
 									).catch( console.error );
 								</code></pre>
 								<!--@formatter:on-->
@@ -1078,9 +1078,9 @@
 									let projectID = "https://example.com/your-document-id/";
 
 									myAppContext.documents.delete( projectID ).then(
-										( response ) => {
+										( response ) => &#123;
 											// continue doing stuff...
-										}
+										&#125;
 									).catch( console.error );
 								</code></pre>
 								<!--@formatter:on-->
@@ -1096,9 +1096,9 @@
 									var projectID = "https://example.com/your-document-id/";
 
 									myAppContext.documents.delete( projectID ).then(
-										function( response ) {
+										function( response ) &#123;
 											// continue doing stuff...
-										}
+										&#125;
 									).catch( console.error );
 								</code></pre>
 								<!--@formatter:on-->
@@ -1121,9 +1121,9 @@
 									// persisted document retrieval
 
 									project.delete().then(
-										( response:Response.Class ) => {
+										( response:Response.Class ) => &#123;
 											// continue doing stuff...
-										}
+										&#125;
 									).catch( console.error );
 								</code></pre>
 								<!--@formatter:on-->
@@ -1138,9 +1138,9 @@
 									// persisted document retrieval
 
 									project.delete().then(
-										( response ) => {
+										( response ) => &#123;
 											// continue doing stuff...
-										}
+										&#125;
 									).catch( console.error );
 								</code></pre>
 								<!--@formatter:on-->
@@ -1153,9 +1153,9 @@
 									// persisted document retrieval
 
 									project.delete().then(
-										function( response ) {
+										function( response ) &#123;
 											// continue doing stuff...
-										}
+										&#125;
 									).catch( console.error );
 								</code></pre>
 								<!--@formatter:on-->
@@ -1250,15 +1250,15 @@
 										// ... app context retrieval
 
 										myAppContext.documents.listChildren&lt;Project&gt;( "projects/" ).then(
-											( [ unresolvedProjects, response ] : [ ( Project & PersistedDocument.Class )[], HTTP.Response.Class]) => {
+											( [ unresolvedProjects, response ] : [ ( Project & PersistedDocument.Class )[], HTTP.Response.Class]) => &#123;
 										        console.log( unresolvedProjects ); // array of unresolved pointers
-											}
+											&#125;
 										);
 
 										myAppContext.documents.getChildren&lt;Project&gt;( "projects/" ).then(
-											( [ resolvedProjects, response ] : [ ( Project & PersistedDocument.Class )[], HTTP.Response.Class] ) => {
+											( [ resolvedProjects, response ] : [ ( Project & PersistedDocument.Class )[], HTTP.Response.Class] ) => &#123;
 										        console.log( resolvedProjects ); // array of resolved pointers
-											}
+											&#125;
 										);
 									</code></pre>
 									<!--@formatter:on-->
@@ -1273,15 +1273,15 @@
 										// ... app context retrieval
 
 										myAppContext.documents.listChildren( "projects/" ).then(
-											( [ unresolvedProjects, response ] ) => {
+											( [ unresolvedProjects, response ] ) => &#123;
 										        console.log( projectPointers ); // array of unresolved pointers
-											}
+											&#125;
 										);
 
 										myAppContext.documents.getChildren( "projects/" ).then(
-											( [ resolvedProjects, response ] ) => {
+											( [ resolvedProjects, response ] ) => &#123;
 										        console.log( projects ); // array of resolved pointers
-											}
+											&#125;
 										);
 									</code></pre>
 									<!--@formatter:on-->
@@ -1294,21 +1294,21 @@
 										// ... app context retrieval
 
 										myAppContext.documents.listChildren( "projects/" ).then(
-											function( [ unresolvedProjects, response ] ) {
+											function( [ unresolvedProjects, response ] ) &#123;
 												var unresolvedProjects = result[ 0 ];
 												var response = result[ 1 ];
 
 										        console.log( projectPointers ); // array of unresolved pointers
-											}
+											&#125;
 										);
 
 										myAppContext.documents.getChildren( "projects/" ).then(
-											function( [ resolvedProjects, response ] ) {
+											function( [ resolvedProjects, response ] ) &#123;
 												var resolvedProjects = result[ 0 ];
 												var response = result[ 1 ];
 
 										        console.log( projects ); // array of resolved pointers
-											}
+											&#125;
 										);
 									</code></pre>
 									<!--@formatter:on-->
@@ -1396,49 +1396,49 @@
 
 										// ... app context retrieval
 
-										let project:Project = {
+										let project:Project = &#123;
 											name: "Important project",
 
 											hasMemberRelation: "tasks",
 											isMemberOfRelation: "project"
-										};
+										&#125;;
 
-										let task1:Task = { name: "Task 1" }; // Being "Task" a business specific interface defined somewhere
-										let task2:Task = { name: "Task 2" };
-										let task3:Task = { name: "Task 3" };
+										let task1:Task = &#123; name: "Task 1" &#125;; // Being "Task" a business specific interface defined somewhere
+										let task2:Task = &#123; name: "Task 2" &#125;;
+										let task3:Task = &#123; name: "Task 3" &#125;;
 
 										// ... project, task1, task2 and task3 persistence (createChild, etc)
 
 										project.addMembers( [ task1, task2, task3 ] ).then(
-											( response:Response.Class ) => {
+											( response:Response.Class ) => &#123;
 												return project.resolve&lt;Project&gt;();
-											}
+											&#125;
 										).then(
-											( [ project, response ]:[ Project & PersistedDocument.Class, Response.Class ] ) => {
+											( [ project, response ]:[ Project & PersistedDocument.Class, Response.Class ] ) => &#123;
 												console.log( project.tasks ); // Pointers for task1, task2 and task3. Added because of the configured hasMemberRelation
 												console.log( project.tasks.indexOf( task1 ) !== -1 ); // true (remember, pointers are cached and reused)
 												console.log( project.tasks.indexOf( task2 ) !== -1 ); // true
 												console.log( project.tasks.indexOf( task3 ) !== -1 ); // true
 
 												return project.listMembers&lt;Task&gt;();
-											}
+											&#125;
 										).then(
-											( [ unresolvedTasks, response ]:[ (Task & PersistedDocument.Class)[], Response.Class ] ) => {
+											( [ unresolvedTasks, response ]:[ Task & PersistedDocument.Class, Response.Class ] ) => &#123;
 												console.log( unresolvedTasks ); // Pointers for task1, task2 and task3
 
 												return project.removeMember( task2 );
-											}
+											&#125;
 										).then(
-											( response:Response.Class ) => {
+											( response:Response.Class ) => &#123;
 												console.log( "Task 2 is no longer a member of the project" );
 
 												return project.getMembers&lt;Task&gt;();
-											}
+											&#125;
 										).then(
-											( [ resolvedTasks, response ]:[ (Task & PersistedDocument.Class)[], Response.Class ] ) => {
+											( [ resolvedTasks, response ]:[ Task & PersistedDocument.Class, Response.Class ] ) => &#123;
 												console.log( resolvedTasks ); // task1 and task3 documents
-												console.log( resolvedTasks.task[0].project ); // pointer to project. Added due to the configured isMemberOfRelation
-											}
+												console.log( task[0].project ); // pointer to project. Added due to the configured isMemberOfRelation
+											&#125;
 										).catch( console.error );
 									</code></pre>
 									<!--@formatter:on-->
@@ -1452,49 +1452,49 @@
 
 										// ... app context retrieval
 
-										let project = {
+										let project = &#123;
 											name: "Important project",
 
 											hasMemberRelation: tasks,
 											isMemberOfRelation: project
-										};
+										&#125;;
 
-										let task1 = { name: "Task 1" };
-										let task2 = { name: "Task 2" };
-										let task3 = { name: "Task 3" };
+										let task1 = &#123; name: "Task 1" &#125;;
+										let task2 = &#123; name: "Task 2" &#125;;
+										let task3 = &#123; name: "Task 3" &#125;;
 
 										// ... project, task1, task2 and task3 persistence (createChild, etc)
 
 										project.addMembers( [ task1, task2, task3 ] ).then(
-											( response ) => {
+											( response ) => &#123;
 												return project.resolve();
-											}
+											&#125;
 										).then(
-											( [ project, response ] ) => {
+											( [ project, response ] ) => &#123;
 												console.log( project.tasks ); // Pointers for task1, task2 and task3. Added because of the configured hasMemberRelation
 												console.log( project.tasks.indexOf( task1 ) !== -1 ); // true (remember, pointers are cached and reused)
 												console.log( project.tasks.indexOf( task2 ) !== -1 ); // true
 												console.log( project.tasks.indexOf( task3 ) !== -1 ); // true
 
 												return project.listMembers();
-											}
+											&#125;
 										).then(
-											( [ unresolvedTasks, response ] ) => {
+											( [ unresolvedTasks, response ] ) => &#123;
 												console.log( unresolvedTasks ); // Pointers for task1, task2 and task3
 
 												return project.removeMember( task2 );
-											}
+											&#125;
 										).then(
-											( response ) => {
+											( response ) => &#123;
 												console.log( "Task 2 is no longer a member of the project" );
 
 												return project.getMembers();
-											}
+											&#125;
 										).then(
-											( [ resolvedTasks, response ] ) => {
+											( [ resolvedTasks, response ] ) => &#123;
 												console.log( resolvedTasks ); // task1 and task3 documents
-												console.log( resolvedTasks.task[0].project ); // pointer to project. Added due to the configured isMemberOfRelation
-											}
+												console.log( task[0].project ); // pointer to project. Added due to the configured isMemberOfRelation
+											&#125;
 										).catch( console.error );
 									</code></pre>
 									<!--@formatter:on-->
@@ -1506,25 +1506,25 @@
 
 										// ... app context retrieval
 
-										var project = {
+										var project = &#123;
 											name: "Important project",
 
 											hasMemberRelation: tasks,
 											isMemberOfRelation: project
-										};
+										&#125;;
 
-										var task1 = { name: "Task 1" };
-										var task2 = { name: "Task 2" };
-										var task3 = { name: "Task 3" };
+										var task1 = &#123; name: "Task 1" &#125;;
+										var task2 = &#123; name: "Task 2" &#125;;
+										var task3 = &#123; name: "Task 3" &#125;;
 
 										// ... project, task1, task2 and task3 persistence (createChild, etc)
 
 										project.addMembers( [ task1, task2, task3 ] ).then(
-											function( response ) {
+											function( response ) &#123;
 												return project.resolve();
-											}
+											&#125;
 										).then(
-											function( result ) {
+											function( result ) &#123;
 												var project = result[ 0 ];
 												var response = result[ 1 ];
 
@@ -1534,30 +1534,30 @@
 												console.log( project.tasks.indexOf( task3 ) !== -1 ); // true
 
 												return project.listMembers();
-											}
+											&#125;
 										).then(
-											function( result ) {
+											function( result ) &#123;
 												var unresolvedTasks = result[ 0 ];
 												var response = result[ 1 ];
 
 												console.log( unresolvedTasks ); // Pointers for task1, task2 and task3
 
 												return project.removeMember( task2 );
-											}
+											&#125;
 										).then(
-											function( response ) {
+											function( response ) &#123;
 												console.log( "Task 2 is no longer a member of the project" );
 
 												return project.getMembers();
-											}
+											&#125;
 										).then(
-											function( result ) {
+											function( result ) &#123;
 												var resolvedTasks = result[ 0 ];
 												var response = result[ 1 ];
 
 												console.log( resolvedTasks ); // task1 and task3 documents
-												console.log( resolvedTasks.task[0].project ); // pointer to project. Added due to the configured isMemberOfRelation
-											}
+												console.log( task[0].project ); // pointer to project. Added due to the configured isMemberOfRelation
+											&#125;
 										).catch( console.error );
 									</code></pre>
 									<!--@formatter:on-->
@@ -1596,33 +1596,33 @@
 
 									// ... project, person1 and person2 document retrieval
 
-									let projectMembersAccessPoint:AccessPoint = {
+									let projectMembersAccessPoint:AccessPoint = &#123;
 										hasMemberRelation: "people", // property used to store the member list in the accessPoint's document
 										isMemberOfRelation: "projects" // property used to link back members to the document they are members of
-									};
+									&#125;;
 
 									project.createAccessPoint( "people", projectMembersAccessPoint ).then(
-										( [ persistedProjectMembersAccessPoint, response ]:[ PersistedAccessPoint.Class, Response.Class ] ) => {
+										( [ persistedProjectMembersAccessPoint, response ]:[ PersistedAccessPoint.Class, Response.Class ] ) => &#123;
 											console.log( projectMembersAccessPoint === persistedProjectMembersAccessPoint ); // true
 
 											return persistedProjectMembersAccessPoint.addMembers( [ person1, person2 ] );
-										}
+										&#125;
 									).then(
-										( response:Response.Class ) => {
+										( response:Response.Class ) => &#123;
 											return project.refresh&lt;Project&gt;();
-										}
+										&#125;
 									).then(
-										( [ refreshedProject, response ]:[ Project & PersistedDocument.Class, Response.Class ] ) => {
+										( [ refreshedProject, response ]:[ Project & PersistedDocument.Class, Response.Class ] ) => &#123;
 											console.log( project === refreshedProject ); // true
 											console.log( refreshedProject.people ); // Pointers to person1 and person2
 
 											return person1.refresh&lt;Person&gt;();
-										}
+										&#125;
 									).then(
-										( [ refreshedPerson1, response ]:[ Person & PersistedDocument.Class, Response.Class ] ) => {
+										( [ refreshedPerson1, response ]:[ Person & PersistedDocument.Class, Response.Class ] ) => &#123;
 											console.log( person1 === refreshedPerson1 ); // true
 											console.log( refreshedPerson1.projects ); // Pointer to project
-										}
+										&#125;
 									).catch( console.error );
 								</code></pre>
 								<!--@formatter:on-->
@@ -1638,33 +1638,33 @@
 
 									// ... project, person1 and person2 document retrieval
 
-									let projectMembersAccessPoint = {
+									let projectMembersAccessPoint = &#123;
 										hasMemberRelation: "people", // property used to store the member list in the accessPoint's document
 										isMemberOfRelation: "projects" // property used to link back members to the document they are members of
-									};
+									&#125;;
 
 									project.createAccessPoint( "people", projectMembersAccessPoint ).then(
-										( [ persistedProjectMembersAccessPoint, response ] ) => {
+										( [ persistedProjectMembersAccessPoint, response ] ) => &#123;
 											console.log( projectMembersAccessPoint === persistedProjectMembersAccessPoint ); // true
 
 											return persistedProjectMembersAccessPoint.addMembers( [ person1, person2 ] );
-										}
+										&#125;
 									).then(
-										( response ) => {
+										( response ) => &#123;
 											return project.refresh&lt;Project&gt;();
-										}
+										&#125;
 									).then(
-										( [ refreshedProject, response ] ) => {
+										( [ refreshedProject, response ] ) => &#123;
 											console.log( project === refreshedProject ); // true
 											console.log( refreshedProject.people ); // Pointers to person1 and person2
 
 											return person1.refresh&lt;Person&gt;();
-										}
+										&#125;
 									).then(
-										( [ refreshedPerson1, response ] ) => {
+										( [ refreshedPerson1, response ] ) => &#123;
 											console.log( person1 === refreshedPerson1 ); // true
 											console.log( refreshedPerson1.projects ); // Pointer to project
-										}
+										&#125;
 									).catch( console.error );
 								</code></pre>
 								<!--@formatter:on-->
@@ -1680,26 +1680,26 @@
 
 									// ... project, person1 and person2 document retrieval
 
-									var projectMembersAccessPoint = {
+									var projectMembersAccessPoint = &#123;
 										hasMemberRelation: "people", // property used to store the member list in the accessPoint's document
 										isMemberOfRelation: "projects" // property used to link back members to the document they are members of
-									};
+									&#125;;
 
 									project.createAccessPoint( "people", projectMembersAccessPoint ).then(
-										function( result ) {
+										function( result ) &#123;
 											var persistedProjectMembersAccessPoint = result[ 0 ];
 											var response = result[ 1 ];
 
 											console.log( projectMembersAccessPoint === persistedProjectMembersAccessPoint ); // true
 
 											return persistedProjectMembersAccessPoint.addMembers( [ person1, person2 ] );
-										}
+										&#125;
 									).then(
-										function( response ) {
+										function( response ) &#123;
 											return project.refresh&lt;Project&gt;();
-										}
+										&#125;
 									).then(
-										function( result ) {
+										function( result ) &#123;
 											var refreshedProject = result[ 0 ];
 											var response = result[ 1 ];
 
@@ -1707,15 +1707,15 @@
 											console.log( refreshedProject.people ); // Pointers to person1 and person2
 
 											return person1.refresh&lt;Person&gt;();
-										}
+										&#125;
 									).then(
-										function( result ) {
+										function( result ) &#123;
 											var refreshedPerson1 = result[ 0 ];
 											var response = result[ 1 ];
 
 											console.log( person1 === refreshedPerson1 ); // true
 											console.log( refreshedPerson1.projects ); // Pointer to project
-										}
+										&#125;
 									).catch( console.error );
 								</code></pre>
 								<!--@formatter:on-->
@@ -1731,7 +1731,7 @@
 								after reading this document, but to really master the inner works of the SDK you can continue reading:
 							</p>
 							<div class="header">
-								<a [routerLink]="[ '../JavaScriptSDKObjectModel' ]">Object Model</a>
+								<a [routerLink]="[ '../javascript-sdk-object-model' ]">Object Model</a>
 							</div>
 						</div>
 					</div>
