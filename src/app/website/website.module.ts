@@ -17,6 +17,7 @@ import { UIExamplesView } from "./ui-examples/ui-examples.view";
 import { SignupThanksView } from "./signup-thanks/signup-thanks.view";
 import { AboutCarbonLDPView } from "./about/about-carbon-ldp.view";
 import { LicenseView } from "./license/license.view";
+import { CommunityAndSupportView } from "./community-and-support/community-and-support.view";
 
 // Documentation
 import { DocumentationView } from "./documentation/documentation.view";
@@ -65,6 +66,7 @@ import { DirectivesModule } from "carbonldp-panel/directives.module";
 		UIExamplesView,
 		LicenseView,
 		AboutCarbonLDPView,
+		CommunityAndSupportView,
 
 		HeaderComponent,
 		FooterComponent,

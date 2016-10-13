@@ -10,6 +10,7 @@ import { UIExamplesView } from "./ui-examples/ui-examples.view";
 import { LicenseView } from './license/license.view'
 import { DocumentationView } from "app/website/documentation/documentation.view";
 import { AboutCarbonLDPView } from "./about/about-carbon-ldp.view";
+import { CommunityAndSupportView } from "./community-and-support/community-and-support.view";
 
 // Documentation
 import { HomeView as DocumentationHomeView } from "./documentation/home/home.view";
@@ -45,6 +46,13 @@ const websiteRoutes:Routes = [
 				component: HomeView,
 				data: {
 					title: "Home",
+				},
+			},
+			{
+				path: "community-and-support",
+				component: CommunityAndSupportView,
+				data: {
+					title: "Community &amp; Support",
 				},
 			},
 			{
