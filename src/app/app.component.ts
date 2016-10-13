@@ -2,6 +2,7 @@ import { Component } from "@angular/core";
 
 import { Router, Event, NavigationEnd, ActivatedRoute, ActivatedRouteSnapshot } from "@angular/router";
 import { Title } from "@angular/platform-browser";
+import { MetaTagService } from "./website/meta-tag.service";
 
 import { Angulartics2GoogleAnalytics } from "angulartics2/src/providers/angulartics2-google-analytics";
 import { Angulartics2 } from "angulartics2";
@@ -20,23 +21,27 @@ export class AppComponent {
 	router:Router;
 	title:Title;
 	route:ActivatedRoute;
+	metaTagService:MetaTagService;
 	// Importing angulartics2, angulartics2GoogleAnalytics as per documentation of angulartics2 plug-in
-	constructor( route:ActivatedRoute, title:Title, router:Router, angulartics2:Angulartics2, angulartics2GoogleAnalytics:Angulartics2GoogleAnalytics ) {
+	constructor( metaTagService:MetaTagService, route:ActivatedRoute, title:Title, router:Router, angulartics2:Angulartics2, angulartics2GoogleAnalytics:Angulartics2GoogleAnalytics ) {
 		this.router = router;
 		this.title = title;
 		this.route = route;
+		this.metaTagService = metaTagService;
 		this.router.events.subscribe( ( event:Event ) => {
 			if( event instanceof NavigationEnd ) {
-				this.defineTitle();
+				this.defineTags();
 			}
 		} );
 	}
 
-	private defineTitle() {
+	private defineTags() {
 		let title:string = "",
+			metaTag:string = "",
 			activatedRoutes:ActivatedRouteSnapshot[] = [],
 			currentRoute:ActivatedRoute = this.route.root;
 		do {
+			metaTag = currentRoute.snapshot.data[ "description" ];
 			if( currentRoute.snapshot.data[ "title" ] !== false ) {
 				if( ! ! (typeof currentRoute.snapshot.data[ "title" ] !== 'undefined' || typeof currentRoute.snapshot.data[ "displayName" ] !== "undefined") && currentRoute.snapshot )
 					activatedRoutes.push( currentRoute.snapshot );
@@ -52,6 +57,18 @@ export class AppComponent {
 		} );
 		title = title + (activatedRoutes.length > 1 ? " | " : " ") + this.getTitle( activatedRoutes[ 0 ] );
 		this.title.setTitle( title );
+
+		this.metaTagService.setMetaTag( "title", title );
+		this.metaTagService.setMetaTag( "og:title", title );
+		if( typeof metaTag === 'undefined' || ! metaTag ) {
+			this.metaTagService.removeMetaTags( "description" );
+			this.metaTagService.removeMetaTags( "og:description" );
+		}
+		else {
+			let ogMetaTag = "og:" + metaTag[ "name" ];
+			this.metaTagService.setMetaTag( metaTag[ "name" ], metaTag[ "content" ] );
+			this.metaTagService.setMetaTag( ogMetaTag, metaTag[ "content" ] );
+		}
 	}
 
 	private getTitle( snapShot:ActivatedRouteSnapshot ):string {
@@ -63,6 +80,7 @@ export class AppComponent {
 		} else title += snapShot.data[ "displayName" ];
 		return title;
 	}
+
 }
 
 export default AppComponent;

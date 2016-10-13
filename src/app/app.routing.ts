@@ -27,6 +27,10 @@ const appRoutes:Routes = [
 		data: {
 			alias: "AppDevLogIn",
 			title: "Log In | Carbon LDP",
+			description: {
+				name: "description",
+				content: "Log in and use time-saving tools in the Application Developer's Console, a GUI that helps you visualize and manage applications and data outside of code.",
+			}
 		},
 	},
 	{
