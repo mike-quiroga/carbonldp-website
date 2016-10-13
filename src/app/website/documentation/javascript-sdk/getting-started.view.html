@@ -184,7 +184,7 @@
 										export of the module. That export will also be available as the named export <code>Class</code>. For example:
 									</p>
 									<!--@formatter:off-->
-									<pre><code cpHighlight class="javascript">
+									<pre><code cpHighlight class="typescript">
 										// This:
 										import Document from "carbonldp/Document";
 										let myDocument:Document = new Document();
@@ -1715,6 +1715,413 @@
 
 											console.log( person1 === refreshedPerson1 ); // true
 											console.log( refreshedPerson1.projects ); // Pointer to project
+										&#125;
+									).catch( console.error );
+								</code></pre>
+								<!--@formatter:on-->
+							</sui-tab>
+						</sui-tabs>
+					</section>
+					<section>
+						<h2 class="ui header">Putting it all together</h2>
+						<p>
+							Here's an example of all the actions we talked about joined together into a single script:
+						</p>
+						<sui-tabs [(activeTab)]="selectedLanguage">
+							<sui-tab title="TypeScript">
+								<!--@formatter:off-->
+								<pre><code cpHighlight class="typescript">
+									import Carbon from &quot;carbonldp/Carbon&quot;;
+									import * as Token from &quot;carbonldp/Auth/Token&quot;;
+									import * as App from &quot;carbonldp/App&quot;;
+									import * as Response from &quot;carbonldp/HTTP/Response&quot;;
+									import * as PersistedAccessPoint from &quot;carbonldp/PersistedAccessPoint&quot;;
+									import * as PersistedDocument from &quot;carbonldp/PersistedDocument&quot;;
+
+									interface Task &#123;
+										name:string;
+										dueDate:Date;
+									&#125;
+
+									interface Project &#123;
+										name:string;
+										description?:&#123;
+											type:string;
+											content:string;
+										&#125;;
+										tasks?:Task[];  // If there are no tasks this property won't exist
+									&#125;
+
+									let project:Project = &#123;
+										name: &quot;Project X&quot;
+									&#125;;
+									let persistedProject:Project &amp; PersistedDocument.Class;
+									let tasksAccessPoint:PersistedAccessPoint.Class;
+									let persistedTask1:Task &amp; PersistedDocument.Class;
+									let persistedTask2:Task &amp; PersistedDocument.Class;
+
+									let carbon:Carbon = new Carbon();
+									carbon.setSetting( &quot;domain&quot;, &quot;localhost:8083&quot; );
+									carbon.setSetting( &quot;http.ssl&quot;, false ); // Turning off HTTPS (only needed if your server isn't using it)
+
+									let appContext:App.Context;
+
+									carbon.auth.authenticate( &quot;your@email.com&quot;, &quot;YouRP455word&quot; ).then(
+										( token:Token.Class ) =&gt; &#123;
+											console.log( `Hello $&#123; carbon.auth.authenticatedAgent.name &#125;!` );
+
+											// Retrieving the application context
+											return carbon.apps.getContext( &quot;your-app-slug-here/&quot; );
+										&#125;
+									).then(
+										( _appContext:App.Context ) =&gt; &#123;
+											appContext = _appContext;
+
+											// Creating a document
+											return appContext.documents.createChild&lt;Project&gt;( &quot;/&quot;, project );
+										&#125;
+									).then(
+										( [ _persistedProject, response ]:[ Project &amp; PersistedDocument.Class, Response.Class ] ) =&gt; &#123;
+											persistedProject = _persistedProject;
+
+											console.log( project === persistedProject ); // true
+											console.log( persistedProject.id ); // document's URI
+											console.log( &quot;created&quot; in persistedProject ); // false - The project was persisted but it's latest state hasn't been retrieved from the server
+
+											// Read the just created document
+											return appContext.documents.get&lt;Project&gt;( persistedProject.id ); // Can also be `return persistedProject.refresh();`
+										&#125;
+									).then(
+										( [ persistedProject, response ]:[ Project &amp; PersistedDocument.Class, Response.Class ] ) =&gt; &#123;
+											console.log( project === persistedProject ); // true - The same object was updated with its latest properties
+											console.log( persistedProject.created ); // Creation date
+
+											persistedProject.description = &#123;
+												type: &quot;markdown&quot;,
+												content: &quot;# Some description here&quot;
+											&#125;;
+
+											// Save the latest state to the server
+											return persistedProject.save&lt;Project&gt;(); // Can also be `appContext.documents.save&lt;Project&gt;( persistedProject );`
+										&#125;
+									).then(
+										( [ persistedProject, response ]:[ Project &amp; PersistedDocument.Class, Response.Class ] ) =&gt; &#123;
+											console.log( project === persistedProject ); // true
+
+											// Creating an access point for the project to manage tasks
+											return persistedProject.createAccessPoint( &#123;
+												hasMemberRelation: &quot;tasks&quot;
+											&#125;, &quot;tasks&quot; );
+										&#125;
+									).then(
+										( [ _tasksAccessPoint, response ]:[ PersistedAccessPoint.Class, Response.Class ] ) =&gt; &#123;
+											tasksAccessPoint = _tasksAccessPoint;
+
+											// Creating a task so we can add it to the project later on
+											return appContext.documents.createChild&lt;Task&gt;( &quot;/&quot;, &#123;
+												name: &quot;Do something&quot;,
+												dueDate: new Date()
+											&#125; );
+										&#125;
+									).then(
+										( [ persistedTask, response ]:[ Task &amp; PersistedDocument.Class, Response.Class ] ) =&gt; &#123;
+											persistedTask1 = persistedTask;
+
+											// Creating another task so we can add it to the project later on
+											return appContext.documents.createChild&lt;Task&gt;( &quot;/&quot;, &#123;
+												name: &quot;Do something else&quot;,
+												dueDate: new Date()
+											&#125; );
+										&#125;
+									).then(
+										( [ persistedTask, response ]:[ Task &amp; PersistedDocument.Class, Response.Class ] ) =&gt; &#123;
+											persistedTask2 = persistedTask;
+
+											// Adding them to the project through the AccessPoint
+											return tasksAccessPoint.addMembers( [ persistedTask1, persistedTask2 ] );
+										&#125;
+									).then(
+										( response:Response.Class ) =&gt; &#123;
+
+											// Refreshing the project so we can check if the tasks were added
+											return persistedProject.refresh&lt;Project&gt;();
+										&#125;
+									).then(
+										( [ persistedProject, response ]:[ Project &amp; PersistedDocument.Class, Response.Class ] ) =&gt; &#123;
+											console.log( project === persistedProject ); // true - Still the same object
+											console.log( &quot;tasks&quot; in persistedProject ); // true
+											console.log( persistedProject.tasks.indexOf( persistedTask1 ) !== - 1 ); // true - There's the first task
+											console.log( persistedProject.tasks.indexOf( persistedTask2 ) !== - 1 ); // true - There's the other task
+
+											// Deleting everything
+											let promises:Promise&lt;Response.Class&gt;[] = [];
+											promises.push( persistedProject.delete() );
+											promises.push( persistedTask1.delete() );
+											promises.push( persistedTask2.delete() );
+
+											return Promise.all( promises );
+										&#125;
+									).then(
+										( responses:Response.Class[] ) =&gt; &#123;
+
+											console.log( &quot;All done!&quot; );
+										&#125;
+									).catch( console.error );
+								</code></pre>
+								<!--@formatter:on-->
+							</sui-tab>
+							<sui-tab title="JavaScript ES2015">
+								<!--@formatter:off-->
+								<pre><code cpHighlight class="javascript">
+									import Carbon from &quot;carbonldp/Carbon&quot;;
+
+									let project = &#123;
+										name: &quot;Project X&quot;
+									&#125;;
+									let persistedProject;
+									let tasksAccessPoint;
+									let persistedTask1;
+									let persistedTask2;
+
+									let carbon = new Carbon();
+									carbon.setSetting( &quot;domain&quot;, &quot;localhost:8083&quot; );
+									carbon.setSetting( &quot;http.ssl&quot;, false ); // Turning off HTTPS (only needed if your server isn't using it)
+
+									let appContext;
+
+									carbon.auth.authenticate( &quot;your@email.com&quot;, &quot;YouRP455word&quot; ).then(
+										( token ) =&gt; &#123;
+											console.log( `Hello $&#123; carbon.auth.authenticatedAgent.name &#125;!` );
+
+											// Retrieving the application context
+											return carbon.apps.getContext( &quot;your-app-slug-here/&quot; );
+										&#125;
+									).then(
+										( _appContext ) =&gt; &#123;
+											appContext = _appContext;
+
+											// Creating a document
+											return appContext.documents.createChild( &quot;/&quot;, project );
+										&#125;
+									).then(
+										( [ _persistedProject, response ] ) =&gt; &#123;
+											persistedProject = _persistedProject;
+
+											console.log( project === persistedProject ); // true
+											console.log( persistedProject.id ); // document's URI
+											console.log( &quot;created&quot; in persistedProject ); // false - The project was persisted but it's latest state hasn't been retrieved from the server
+
+											// Read the just created document
+											return appContext.documents.get( persistedProject.id ); // Can also be `return persistedProject.refresh();`
+										&#125;
+									).then(
+										( [ persistedProject, response ] ) =&gt; &#123;
+											console.log( project === persistedProject ); // true - The same object was updated with its latest properties
+											console.log( persistedProject.created ); // Creation date
+
+											persistedProject.description = &#123;
+												type: &quot;markdown&quot;,
+												content: &quot;# Some description here&quot;
+											&#125;;
+
+											// Save the latest state to the server
+											return persistedProject.save(); // Can also be `appContext.documents.save&lt;Project&gt;( persistedProject );`
+										&#125;
+									).then(
+										( [ persistedProject, response ] ) =&gt; &#123;
+											console.log( project === persistedProject ); // true
+
+											// Creating an access point for the project to manage tasks
+											return persistedProject.createAccessPoint( &#123;
+												hasMemberRelation: &quot;tasks&quot;
+											&#125;, &quot;tasks&quot; );
+										&#125;
+									).then(
+										( [ _tasksAccessPoint, response ] ) =&gt; &#123;
+											tasksAccessPoint = _tasksAccessPoint;
+
+											// Creating a task so we can add it to the project later on
+											return appContext.documents.createChild( &quot;/&quot;, &#123;
+												name: &quot;Do something&quot;,
+												dueDate: new Date()
+											&#125; );
+										&#125;
+									).then(
+										( [ persistedTask, response ] ) =&gt; &#123;
+											persistedTask1 = persistedTask;
+
+											// Creating another task so we can add it to the project later on
+											return appContext.documents.createChild( &quot;/&quot;, &#123;
+												name: &quot;Do something else&quot;,
+												dueDate: new Date()
+											&#125; );
+										&#125;
+									).then(
+										( [ persistedTask, response ] ) =&gt; &#123;
+											persistedTask2 = persistedTask;
+
+											// Adding them to the project through the AccessPoint
+											return tasksAccessPoint.addMembers( [ persistedTask1, persistedTask2 ] );
+										&#125;
+									).then(
+										( response ) =&gt; &#123;
+
+											// Refreshing the project so we can check if the tasks were added
+											return persistedProject.refresh();
+										&#125;
+									).then(
+										( [ persistedProject, response ] ) =&gt; &#123;
+											console.log( project === persistedProject ); // true - Still the same object
+											console.log( &quot;tasks&quot; in persistedProject ); // true
+											console.log( persistedProject.tasks.indexOf( persistedTask1 ) !== - 1 ); // true - There's the first task
+											console.log( persistedProject.tasks.indexOf( persistedTask2 ) !== - 1 ); // true - There's the other task
+
+											// Deleting everything
+											let promises = [];
+											promises.push( persistedProject.delete() );
+											promises.push( persistedTask1.delete() );
+											promises.push( persistedTask2.delete() );
+
+											return Promise.all( promises );
+										&#125;
+									).then(
+										( responses ) =&gt; &#123;
+
+											console.log( &quot;All done!&quot; );
+										&#125;
+									).catch( console.error );
+								</code></pre>
+								<!--@formatter:on-->
+							</sui-tab>
+							<sui-tab title="JavaScript ES5">
+								<!--@formatter:off-->
+								<pre><code cpHighlight class="javascript">
+									var project = &#123;
+										name: &quot;Project X&quot;
+									&#125;;
+									var persistedProject;
+									var tasksAccessPoint;
+									var persistedTask1;
+									var persistedTask2;
+
+									var carbon = new Carbon();
+									carbon.setSetting( &quot;domain&quot;, &quot;localhost:8083&quot; );
+									carbon.setSetting( &quot;http.ssl&quot;, false ); // Turning off HTTPS (only needed if your server isn't using it)
+
+									var appContext;
+
+									carbon.auth.authenticate( &quot;your@email.com&quot;, &quot;YouRP455word&quot; ).then(
+										function ( token ) &#123;
+											console.log( `Hello $&#123; carbon.auth.authenticatedAgent.name &#125;!` );
+
+											// Retrieving the application context
+											return carbon.apps.getContext( &quot;your-app-slug-here/&quot; );
+										&#125;
+									).then(
+										function ( _appContext ) &#123;
+											appContext = _appContext;
+
+											// Creating a document
+											return appContext.documents.createChild( &quot;/&quot;, project );
+										&#125;
+									).then(
+										function ( results ) &#123;
+											persistedProject = results[ 0 ];
+											var response = results[ 1 ]
+
+											console.log( project === persistedProject ); // true
+											console.log( persistedProject.id ); // document's URI
+											console.log( &quot;created&quot; in persistedProject ); // false - The project was persisted but it's latest state hasn't been retrieved from the server
+
+											// Read the just created document
+											return appContext.documents.get( persistedProject.id ); // Can also be `return persistedProject.refresh();`
+										&#125;
+									).then(
+										function ( results ) &#123;
+											persistedProject = results[ 0 ]; // This is not actually needed because the reference will be the same
+											var response = results[ 1 ];
+
+											console.log( project === persistedProject ); // true - The same object was updated with its latest properties
+											console.log( persistedProject.created ); // Creation date
+
+											persistedProject.description = &#123;
+												type: &quot;markdown&quot;,
+												content: &quot;# Some description here&quot;
+											&#125;;
+
+											// Save the latest state to the server
+											return persistedProject.save(); // Can also be `appContext.documents.save&lt;Project&gt;( persistedProject );`
+										&#125;
+									).then(
+										function ( results ) &#123;
+											persistedProject = results[ 0 ]; // This is not actually needed because the reference will be the same
+											var response = results[ 1 ];
+
+											console.log( project === persistedProject ); // true
+
+											// Creating an access point for the project to manage tasks
+											return persistedProject.createAccessPoint( &#123;
+												hasMemberRelation: &quot;tasks&quot;
+											&#125;, &quot;tasks&quot; );
+										&#125;
+									).then(
+										function ( results ) &#123;
+											tasksAccessPoint = results[ 0 ];
+											var response = results[ 1 ];
+
+											// Creating a task so we can add it to the project later on
+											return appContext.documents.createChild( &quot;/&quot;, &#123;
+												name: &quot;Do something&quot;,
+												dueDate: new Date()
+											&#125; );
+										&#125;
+									).then(
+										function ( results ) &#123;
+											persistedTask1 = results[ 0 ];
+											var response = results[ 1 ];
+
+											// Creating another task so we can add it to the project later on
+											return appContext.documents.createChild( &quot;/&quot;, &#123;
+												name: &quot;Do something else&quot;,
+												dueDate: new Date()
+											&#125; );
+										&#125;
+									).then(
+										function ( results ) &#123;
+											persistedTask2 = results[ 0 ];
+											var response = results[ 1 ];
+
+											// Adding them to the project through the AccessPoint
+											return tasksAccessPoint.addMembers( [ persistedTask1, persistedTask2 ] );
+										&#125;
+									).then(
+										function ( response ) &#123;
+
+											// Refreshing the project so we can check if the tasks were added
+											return persistedProject.refresh();
+										&#125;
+									).then(
+										function ( results ) &#123;
+											persistedProject = results[ 0 ]; // This is not actually needed because the reference will be the same
+											var response = results[ 1 ];
+
+											console.log( project === persistedProject ); // true - Still the same object
+											console.log( &quot;tasks&quot; in persistedProject ); // true
+											console.log( persistedProject.tasks.indexOf( persistedTask1 ) !== - 1 ); // true - There's the first task
+											console.log( persistedProject.tasks.indexOf( persistedTask2 ) !== - 1 ); // true - There's the other task
+
+											// Deleting everything
+											var promises = [];
+											promises.push( persistedProject.delete() );
+											promises.push( persistedTask1.delete() );
+											promises.push( persistedTask2.delete() );
+
+											return Promise.all( promises );
+										&#125;
+									).then(
+										function ( responses ) &#123;
+
+											console.log( &quot;All done!&quot; );
 										&#125;
 									).catch( console.error );
 								</code></pre>
