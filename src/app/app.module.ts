@@ -11,6 +11,7 @@ import { CARBON_SERVICES_PROVIDERS } from "angular2-carbonldp/services";
 import { routing, appRoutingProviders } from "./app.routing";
 import { Angulartics2 } from "angulartics2";
 import { Angulartics2GoogleAnalytics } from "angulartics2/src/providers/angulartics2-google-analytics";
+import { MetaTagService } from "./website/meta-tag.service";
 
 // Components
 import { AppComponent } from "./app.component";
@@ -45,6 +46,7 @@ import { PanelModule } from "carbonldp-panel/panel.module";
 		CARBON_PROVIDERS,
 		CARBON_SERVICES_PROVIDERS,
 		Title,
+		MetaTagService,
 	],
 	bootstrap: [ AppComponent ],
 } )
