@@ -1,10 +1,6 @@
 import { Component, OnInit } from "@angular/core";
 
-import { FormBuilder, ControlGroup, AbstractControl, Validators } from "@angular/common";
-
 import { Router } from "@angular/router";
-
-import { EmailValidator } from "carbonldp-panel/custom-validators";
 
 import "semantic-ui/semantic";
 
@@ -19,18 +15,15 @@ import style from "./newsletter-form.component.css!text";
 
 export class NewsletterFormComponent implements OnInit {
 	private router:Router;
-	private subscribeForm:ControlGroup;
-	private email:AbstractControl;
 	private redirectPage;
 	private errorPage;
 	private location;
+	subscribe:{ email:string } = {
+		email: ""
+	}
 
-	constructor( router:Router, formBuilder:FormBuilder ) {
+	constructor( router:Router ) {
 		this.router = router;
-		this.subscribeForm = formBuilder.group( {
-			"email": [ "", Validators.compose( [ Validators.required, EmailValidator ] ) ]
-		} );
-		this.email = this.subscribeForm.controls[ "email" ];
 		this.location = location;
 	}
 
@@ -40,12 +33,9 @@ export class NewsletterFormComponent implements OnInit {
 	}
 
 	onSubmit( $event:any ):void {
-		this.email.markAsTouched();
 		let icpForm:HTMLElement = document.getElementById( 'icpsignup' );
+		icpForm.action = "https://app.icontact.com/icp/signup.php";
+		icpForm.submit();
 
-		if( this.subscribeForm.valid ) {
-			icpForm.action = "https://app.icontact.com/icp/signup.php";
-			icpForm.submit();
-		}
 	}
 }

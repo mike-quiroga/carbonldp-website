@@ -11,7 +11,7 @@ import style from "./home.view.css!text";
 	template: template,
 	styles: [ style ],
 } )
-export class HomeView implements AfterViewInit{
+export class HomeView implements AfterViewInit {
 	private element:ElementRef;
 	private $element:JQuery;
 

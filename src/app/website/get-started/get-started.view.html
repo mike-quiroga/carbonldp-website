@@ -88,65 +88,12 @@
 
 				</div>
 
-				<!--
-				<section>
-
-					<h2 class="ui header">Register</h2>
-
-					<form class="ui form">
-						<div class="two fields">
-							<div class="required field">
-								<label>Name</label>
-								<input type="text" name="name" placeholder="First and Last Name">
-							</div>
-							<div class="required field">
-								<label>E-mail</label>
-								<input type="text" name="email">
-							</div>
-						</div>
-						<div class="field">
-							<label>Organization / Affiliation</label>
-							<input type="text" name="organization">
-						</div>
-						<div class="field">
-							<label>Project Description</label>
-							<textarea rows="2" placeholder="Tell us what you want to create."></textarea>
-						</div>
-						<div class="field">
-							<label>How did you hear about us?</label>
-							<input type="text" name="discovery">
-						</div>
-						<button class="ui button" type="submit">Submit</button>
-					</form>
-
-				</section>
-				-->
 
 				<section>
 
-					<form class="ui form" id="ic_signupform" method="POST" action="https://app.icontact.com/icp/core/mycontacts/signup/designer/form/?id=63&cid=581321&lid=23554">
-						
-						<div dataname="listGroups" data-validation-type="1" data-label="Lists" style="display: none; width: 100%;">
-							<label class="checkbox">
-								<input type="checkbox" alt="" name="data[listGroups][]" value="786116" checked="checked">Carbon LDP Registered Users</label>
-						</div>
+					<h2 class="ui header">Register for Carbon LDP</h2>
 
-						<div class="formEl fieldtype-input required" data-validation-type="1" data-label="Name" style="display: inline-block; width: 100%;">
-							<label>Name<span class="indicator required">*</span></label><input type="text" placeholder="First and Last Name" name="data[carbon-full-name]"></div>
-						<div class="formEl fieldtype-input required" data-validation-type="1" data-label="Email" style="display: inline-block; width: 100%;">
-							<label>Email<span class="indicator required">*</span></label><input type="text" placeholder="" name="data[email]"></div>
-						<div class="formEl fieldtype-input" data-validation-type="1" data-label="Organization / Affiliation" style="display: inline-block; width: 100%;"><label>Organization /
-							Affiliation<span class="indicator required">*</span></label><input type="text" placeholder="" name="data[company]"></div>
-						<div class="formEl fieldtype-input" data-validation-type="1" data-label="Project Description" style="display: inline-block; width: 100%;"><label>Project
-							Description<span class="indicator required">*</span></label><input type="text" placeholder="Please, tell us what you plan to create." name="data[carbon-project-desc]">
-						</div>
-						<div class="formEl fieldtype-input" data-validation-type="1" data-label="How did you hear about us?" style="display: inline-block; width: 100%;"><label>How did you hear
-							about us?<span class="indicator required">*</span></label><input type="text" placeholder="" name="data[carbon-how-disc]"></div>
-						<div class="submit-container"><input type="submit" value="Submit" class="btn btn-submit"></div>
-
-
-					</form>
-
+					<register-form></register-form>
 
 				</section>
 

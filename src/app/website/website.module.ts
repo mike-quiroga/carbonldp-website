@@ -1,5 +1,6 @@
 import { NgModule } from "@angular/core";
-import { CommonModule, DeprecatedFormsModule } from "@angular/common";
+import { CommonModule } from "@angular/common";
+import { FormsModule } from "@angular/forms";
 import { routing } from "./website.routing";
 
 // Components
@@ -17,6 +18,7 @@ import { SignupThanksView } from "./signup-thanks/signup-thanks.view";
 import { AboutCarbonLDPView } from "./about/about-carbon-ldp.view";
 import { LicenseView } from "./license/license.view";
 import { GetStartedView } from "./get-started/get-started.view";
+import { RegisterFormComponent } from "./get-started/register-form.component";
 
 // Documentation
 import { DocumentationView } from "./documentation/documentation.view";
@@ -45,13 +47,14 @@ import { ObjectSchemaView } from "./documentation/javascript-sdk/object-schema.v
 
 // Modules
 import { SemanticModule } from "carbonldp-panel/semantic/semantic.module";
-import { HighlightDirective } from "carbonldp-panel/directives/highlight.directive";
+import { DirectivesModule } from "carbonldp-panel/directives.module";
 
 @NgModule( {
 	imports: [
 		CommonModule,
-		DeprecatedFormsModule,
 		SemanticModule,
+		FormsModule,
+		DirectivesModule,
 		routing
 	],
 	declarations: [
@@ -71,7 +74,7 @@ import { HighlightDirective } from "carbonldp-panel/directives/highlight.directi
 		NewsletterFormComponent,
 		SidebarComponent,
 		RegisterComponent,
-		HighlightDirective,
+		RegisterFormComponent,
 
 		// Documentation
 		DocumentationView,

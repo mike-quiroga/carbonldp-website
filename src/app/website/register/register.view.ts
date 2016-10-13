@@ -6,7 +6,7 @@ import template from "./register.view.html!";
 import style from "./register.view.css!text";
 
 @Component( {
-	selector: "register",
+	selector: "register-view",
 	template: template,
 	styles: [ style ]
 } )
