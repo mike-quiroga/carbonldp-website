@@ -46,6 +46,10 @@ const websiteRoutes:Routes = [
 				component: HomeView,
 				data: {
 					title: "Home",
+					description: {
+						name: "description",
+						content: "Carbon LDP is a Linked Data Platform for building web apps that manage and link data within your enterprise and across the World Wide Web.",
+					},
 				},
 			},
 			{
@@ -53,6 +57,10 @@ const websiteRoutes:Routes = [
 				component: AboutCarbonLDPView,
 				data: {
 					title: "About",
+					description: {
+						name: "description",
+						content: "Carbon LDP is a Linked Data Platform for building web apps that manage and link data within your enterprise and across the World Wide Web.",
+					}
 				},
 			},
 			{
@@ -94,7 +102,11 @@ const websiteRoutes:Routes = [
 						path: "",
 						component: DocumentationHomeView,
 						data: {
-							title: "Documentation"
+							title: "Documentation",
+							description: {
+								name: "description",
+								content: "Find all documents related to Carbon, from the basics concepts of Linked Data to the GUI.",
+							}
 						}
 					},
 					{
@@ -109,6 +121,10 @@ const websiteRoutes:Routes = [
 						component: EssentialConceptsView,
 						data: {
 							title: "Essential Concepts",
+							description: {
+								name: "description",
+								content: "Basic Linked Data knowledge. Helpful documentation for a general overview of Linked Data.",
+							}
 						},
 					},
 					{
@@ -116,6 +132,10 @@ const websiteRoutes:Routes = [
 						component: LinkedDataConceptsView,
 						data: {
 							title: "Linked Data Concepts",
+							description: {
+								name: "description",
+								content: "General overview of the basic idea behind Linked Data and why it can make your applications more powerful.",
+							}
 						},
 					},
 					{
@@ -123,6 +143,10 @@ const websiteRoutes:Routes = [
 						component: RESTApiView,
 						data: {
 							title: "REST API",
+							description: {
+								name: "description",
+								content: "Access and manage applications and data by URIs using RESTful requests over HTTP. Configure apps, schedule server-side jobs, execute queries - everything in Carbon is RESTful.",
+							}
 						},
 					},
 					{
@@ -130,6 +154,10 @@ const websiteRoutes:Routes = [
 						component: GettingStartedView,
 						data: {
 							title: "Getting Started with REST API",
+							description: {
+								name: "description",
+								content: "Guide to get you started. How to build an example application using the Carbon LDP REST API.",
+							}
 						},
 					},
 					{
@@ -137,6 +165,10 @@ const websiteRoutes:Routes = [
 						component: InteractionModelsView,
 						data: {
 							title: "Interaction Models",
+							description: {
+								name: "description",
+								content: "An explanation of the way you can interact with the resources on the Carbon Server.",
+							}
 						},
 					},
 					{
@@ -144,6 +176,10 @@ const websiteRoutes:Routes = [
 						component: ObjectModelView,
 						data: {
 							title: "REST API Object Model",
+							description: {
+								name: "description",
+								content: "A summary of the various types of resources you can manage and interact with using REST.",
+							}
 						},
 					},
 					{
@@ -151,6 +187,10 @@ const websiteRoutes:Routes = [
 						component: JavaScriptSDKView,
 						data: {
 							title: "JavaScript SDK",
+							description: {
+								name: "description",
+								content: "The JavaScript Software Developer's Kit, available from the npm package manager, allows you to manage RDF data using familiar JavaScript and TypeScript programming techniques and tools. Build for execution within a web browser or Node.js.",
+							}
 						},
 					},
 					{
@@ -158,6 +198,10 @@ const websiteRoutes:Routes = [
 						component: JavaScriptSDKGettingStartedView,
 						data: {
 							title: "Getting Started with JavaScript SDK",
+							description: {
+								name: "description",
+								content: "Guide to install Carbon JavaScriptSDK and start creating and manipulating data with its basic methods.",
+							}
 						},
 					},
 					{
@@ -165,6 +209,10 @@ const websiteRoutes:Routes = [
 						component: ContextsView,
 						data: {
 							title: "Contexts",
+							description: {
+								name: "description",
+								content: "What is a context in Carbon JS SDK, how to declare, access and modify it.",
+							}
 						},
 					},
 					{
@@ -172,6 +220,10 @@ const websiteRoutes:Routes = [
 						component: JavaScriptSDKObjectModelView,
 						data: {
 							title: "JavaScript SDK Object Model",
+							description: {
+								name: "description",
+								content: "An in depth description of the Carbon Object Model.",
+							}
 						},
 					},
 					{
@@ -179,6 +231,10 @@ const websiteRoutes:Routes = [
 						component: ObjectSchemaView,
 						data: {
 							title: "Object Schema",
+							description: {
+								name: "description",
+								content: "What is the object schema, how to define and use it.",
+							}
 						},
 					}
 				]
