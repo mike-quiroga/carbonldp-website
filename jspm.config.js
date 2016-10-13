@@ -51,7 +51,7 @@ SystemJS.config({
     "angulartics2": "npm:angulartics2@1.1.9",
     "assert": "github:jspm/nodelibs-assert@0.2.0-alpha",
     "buffer": "github:jspm/nodelibs-buffer@0.2.0-alpha",
-    "carbonldp": "npm:carbonldp@0.39.0",
+    "carbonldp": "npm:carbonldp@0.37.0",
     "carbonldp-panel": "npm:carbonldp-panel@0.4.0",
     "child_process": "github:jspm/nodelibs-child_process@0.2.0-alpha",
     "codemirror": "npm:codemirror@5.19.0",
@@ -337,7 +337,7 @@ SystemJS.config({
         "js-cookie": "npm:js-cookie@2.1.3"
       }
     },
-    "npm:carbonldp@0.39.0": {
+    "npm:carbonldp@0.37.0": {
       "map": {
         "file-type": "npm:file-type@3.8.0"
       }

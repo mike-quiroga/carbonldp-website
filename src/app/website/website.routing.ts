@@ -11,6 +11,7 @@ import { LicenseView } from './license/license.view'
 import { DocumentationView } from "app/website/documentation/documentation.view";
 import { AboutCarbonLDPView } from "./about/about-carbon-ldp.view";
 import { CommunityAndSupportView } from "./community-and-support/community-and-support.view";
+import { GetStartedView } from "./get-started/get-started.view";
 
 // Documentation
 import { HomeView as DocumentationHomeView } from "./documentation/home/home.view";
@@ -58,6 +59,13 @@ const websiteRoutes:Routes = [
 				component: CommunityAndSupportView,
 				data: {
 					title: "Community &amp; Support",
+				},
+			},
+			{
+				path: "get-started",
+				component: GetStartedView,
+				data: {
+					title: "Get Started",
 				},
 			},
 			{
@@ -121,7 +129,11 @@ const websiteRoutes:Routes = [
 						path: "quick-start-guide",
 						component: QuickStartGuideView,
 						data: {
-							title: "Quick Start Guide"
+							title: "Quick Start Guide",
+							description: {
+								name: "description",
+								content: "Quick start instructions to help you get up and running everything you need to work with CarbonLDP.",
+							}
 						}
 					},
 					{

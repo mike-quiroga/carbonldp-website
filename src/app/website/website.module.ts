@@ -19,6 +19,8 @@ import { QuickStartGuideView } from "./documentation/quick-start-guide/quick-sta
 import { AboutCarbonLDPView } from "./about/about-carbon-ldp.view";
 import { LicenseView } from "./license/license.view";
 import { CommunityAndSupportView } from "./community-and-support/community-and-support.view";
+import { GetStartedView } from "./get-started/get-started.view";
+import { RegisterFormComponent } from "./get-started/register-form.component";
 
 
 // Documentation
@@ -69,12 +71,14 @@ import { DirectivesModule } from "carbonldp-panel/directives.module";
 		LicenseView,
 		AboutCarbonLDPView,
 		CommunityAndSupportView,
+		GetStartedView,
 
 		HeaderComponent,
 		FooterComponent,
 		NewsletterFormComponent,
 		SidebarComponent,
 		RegisterComponent,
+		RegisterFormComponent,
 
 		// Documentation
 		DocumentationView,
