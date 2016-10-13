@@ -27,7 +27,7 @@ export class AppComponent {
 		this.router = router;
 		this.title = title;
 		this.route = route;
-		this.metaTagService metaTagService;
+		this.metaTagService = metaTagService;
 		this.router.events.subscribe( ( event:Event ) => {
 			if( event instanceof NavigationEnd ) {
 				this.defineTitle();
@@ -70,67 +70,68 @@ export class AppComponent {
 
 
 	defineTags() {
-		let title:string = "";
-		let metaTag = "";
-		let rootComponent = this.router.root.currentInstruction.component.routeData;
-		let auxRouter = this.router.root.currentInstruction.child;
-
-		while ( auxRouter !== null ) {
-			let displayName = auxRouter.component.routeData.data[ "displayName" ];
-			let mainComponent = auxRouter.component.routeData.data[ "main" ];
-			metaTag = auxRouter.component.routeData.data[ "description" ];
-			let parameters = auxRouter.component.params;
-
-			let parameter = null;
-			for ( let parameterName in parameters ) {
-				if( ! parameters.hasOwnProperty( parameterName ) ) continue;
-				if( parameter !== null ) {
-					parameter = null;
-					break;
-				}
-				parameter = parameters[ parameterName ];
-			}
-			if( parameter !== null ) {
-				if( auxRouter.child === null ) {
-					if( typeof displayName === 'undefined' ) title = "";
-					else title += displayName + "(" + parameter + ") | ";
-				} else {
-					if( mainComponent )
-						title += displayName + "(" + parameter + ") > ";
-				}
-
-			} else {
-				if( auxRouter.child === null ) {
-					if( typeof displayName === 'undefined' ) title = "";
-					else title += displayName + " | ";
-				} else {
-					if( mainComponent ) title = title + displayName + " > ";
-				}
-
-			}
-			auxRouter = auxRouter.child;
-		}
-
-		if( rootComponent.data[ "displayName" ] === "Home" )
-			rootComponent.data[ "displayName" ] = "Carbon LDP";
-
-		title += rootComponent.data[ "displayName" ];
-
-		if( title === "Home | Carbon LDP" ) title = "Dashboard | Carbon LDP";
-
-		this.title.setTitle( title );
-		this.metaTagService.setMetaTag( "title", title );
-		this.metaTagService.setMetaTag( "og:title", title );
-
-		if( typeof metaTag === 'undefined' || ! metaTag ) {
-			this.metaTagService.removeMetaTags( "description" );
-			this.metaTagService.removeMetaTags( "og:description" );
-		}
-		else {
-			let ogMetaTag = "og:" + metaTag[ "name" ];
-			this.metaTagService.setMetaTag( metaTag[ "name" ], metaTag[ "content" ] );
-			this.metaTagService.setMetaTag( ogMetaTag, metaTag[ "content" ] );
-		}
+		console.log("add metatags");
+		// let title:string = "";
+		// let metaTag = "";
+		// let rootComponent = this.router.root.currentInstruction.component.routeData;
+		// let auxRouter = this.router.root.currentInstruction.child;
+		//
+		// while ( auxRouter !== null ) {
+		// 	let displayName = auxRouter.component.routeData.data[ "displayName" ];
+		// 	let mainComponent = auxRouter.component.routeData.data[ "main" ];
+		// 	metaTag = auxRouter.component.routeData.data[ "description" ];
+		// 	let parameters = auxRouter.component.params;
+		//
+		// 	let parameter = null;
+		// 	for ( let parameterName in parameters ) {
+		// 		if( ! parameters.hasOwnProperty( parameterName ) ) continue;
+		// 		if( parameter !== null ) {
+		// 			parameter = null;
+		// 			break;
+		// 		}
+		// 		parameter = parameters[ parameterName ];
+		// 	}
+		// 	if( parameter !== null ) {
+		// 		if( auxRouter.child === null ) {
+		// 			if( typeof displayName === 'undefined' ) title = "";
+		// 			else title += displayName + "(" + parameter + ") | ";
+		// 		} else {
+		// 			if( mainComponent )
+		// 				title += displayName + "(" + parameter + ") > ";
+		// 		}
+		//
+		// 	} else {
+		// 		if( auxRouter.child === null ) {
+		// 			if( typeof displayName === 'undefined' ) title = "";
+		// 			else title += displayName + " | ";
+		// 		} else {
+		// 			if( mainComponent ) title = title + displayName + " > ";
+		// 		}
+		//
+		// 	}
+		// 	auxRouter = auxRouter.child;
+		// }
+		//
+		// if( rootComponent.data[ "displayName" ] === "Home" )
+		// 	rootComponent.data[ "displayName" ] = "Carbon LDP";
+		//
+		// title += rootComponent.data[ "displayName" ];
+		//
+		// if( title === "Home | Carbon LDP" ) title = "Dashboard | Carbon LDP";
+		//
+		// this.title.setTitle( title );
+		// this.metaTagService.setMetaTag( "title", title );
+		// this.metaTagService.setMetaTag( "og:title", title );
+		//
+		// if( typeof metaTag === 'undefined' || ! metaTag ) {
+		// 	this.metaTagService.removeMetaTags( "description" );
+		// 	this.metaTagService.removeMetaTags( "og:description" );
+		// }
+		// else {
+		// 	let ogMetaTag = "og:" + metaTag[ "name" ];
+		// 	this.metaTagService.setMetaTag( metaTag[ "name" ], metaTag[ "content" ] );
+		// 	this.metaTagService.setMetaTag( ogMetaTag, metaTag[ "content" ] );
+		// }
 	}
 }
 
