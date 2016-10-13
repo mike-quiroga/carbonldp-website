@@ -13,6 +13,7 @@ import { AboutCarbonLDPView } from "./about/about-carbon-ldp.view";
 
 // Documentation
 import { HomeView as DocumentationHomeView } from "./documentation/home/home.view";
+import { QuickStartGuideView } from "./documentation/quick-start-guide/quick-start-guide.view";
 
 // Documentation -> Essential Concepts
 import { EssentialConceptsView } from "./documentation/essential-concepts/essential-concepts.view";
@@ -94,6 +95,13 @@ const websiteRoutes:Routes = [
 						component: DocumentationHomeView,
 						data: {
 							title: "Documentation"
+						}
+					},
+					{
+						path: "quick-start-guide",
+						component: QuickStartGuideView,
+						data: {
+							title: "Quick Start Guide"
 						}
 					},
 					{
