@@ -28,14 +28,18 @@ export class AppComponent {
 		this.title = title;
 		this.route = route;
 		this.metaTagService = metaTagService;
-		this.router.events.subscribe( ( event:Event ) => {
-			if( event instanceof NavigationEnd ) {
-				this.defineTags();
-			}
+	}
+
+	ngOnInit() {
+		this.router.events.filter( event => event instanceof NavigationEnd ).subscribe( event => {
+			this.defineMetaTags();
+
+			// Temporary workaround to fix angular/angular#7791 and scroll to the top after navigating to a new view
+			window.scroll( 0, 0 );
 		} );
 	}
 
-	private defineTags() {
+	private defineMetaTags() {
 		let title:string = "",
 			metaTag:string = "",
 			activatedRoutes:ActivatedRouteSnapshot[] = [],
