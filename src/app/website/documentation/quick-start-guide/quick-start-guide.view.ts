@@ -1,4 +1,5 @@
 import { Component, ElementRef, AfterViewInit } from "@angular/core";
+import { ActivatedRoute } from "@angular/router";
 
 import $ from "jquery";
 import "semantic-ui/semantic";
@@ -17,12 +18,18 @@ export class QuickStartGuideView implements AfterViewInit {
 
 	private randomString:string;
 
-	constructor( element:ElementRef ) {
+	displaySuccessMessage:boolean = false;
+	route:ActivatedRoute;
+
+	constructor( element:ElementRef, route:ActivatedRoute ) {
 		this.element = element;
+		this.route = route;
 	}
 
 	ngOnInit():void {
 		this.randomString = this.generateRandomString( 32, "aA#" );
+		if(this.route.queryParams.value["registered"] === "true")
+			this.displaySuccessMessage = true;
 	}
 
 	ngAfterViewInit():void {
@@ -46,6 +53,10 @@ export class QuickStartGuideView implements AfterViewInit {
 		for ( let i = length; i > 0; -- i ) result += mask[ Math.floor( Math.random() * mask.length ) ];
 
 		return result;
+	}
+
+	clearMessages( evt:Event ):void {
+		this.displaySuccessMessage = false;
 	}
 }
 export default QuickStartGuideView;

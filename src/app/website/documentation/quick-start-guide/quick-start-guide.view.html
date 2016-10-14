@@ -1,6 +1,10 @@
 <div class="ui main grid container">
 	<div class="row">
 		<div class="sixteen wide column">
+			<div class="ui bottom attached success message" *ngIf="!!displaySuccessMessage">
+				<i class="close icon" (click)="clearMessages($event)"></i>
+				<strong>Thank you!</strong> Your registration was successful.
+			</div>
 			<div class="ui breadcrumb">
 				<span class="section">Documentation</span> <i class="right chevron icon divider"></i>
 			</div>
@@ -107,7 +111,7 @@ This message shows that your installation appears to be working correctly.
 							<h3 class="ui header">Create the platform configuration file</h3>
 							<p>The platform's configuration is initialized from the properties contained in a file called <code>config.properties</code>, which you will need to create in the
 								<code>carbon/config</code> directory.</p>
-							<p><strong>config.properties</strong></p>
+								<p><strong>config.properties</strong></p>
 							<!-- @formatter:off -->
 							<pre><code cpHighlight class="asciidoc">
 								platform.domain = localhost:8083
