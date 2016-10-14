@@ -18,15 +18,26 @@
 						<h1 class="ui header">Object model</h1>
 					</header>
 
-					<div class="ui info icon message">
-						<i class="arrow left icon"></i>
-						<div class="content">
-							<div class="header">Previous step</div>
-							<p></p>
-							<div class="header">
-								<a [routerLink]="[ '../javascript-sdk-getting-started' ]">Getting Started</a>
+					<div class="documentation-steps ui fluid steps">
+						<a class="step" [routerLink]="[ '../javascript-sdk-getting-started' ]">
+							<i class="arrow left icon"></i>
+							<div class="content">
+								<div class="title">Previous</div>
+								<div class="description">Getting Started</div>
+							</div>
+						</a>
+						<div class="active step">
+							<div class="content">
+								<div class="title">Object Model</div>
 							</div>
 						</div>
+						<a class="step" [routerLink]="[ '../javascript-sdk-contexts' ]">
+							<i class="arrow right icon"></i>
+							<div class="content">
+								<div class="title">Next</div>
+								<div class="description">Contexts</div>
+							</div>
+						</a>
 					</div>
 
 					<div class="ui icon yellow message">
@@ -201,15 +212,26 @@
 							</sui-tab>
 						</sui-tabs>
 					</section>
-					<div class="ui positive icon message">
-						<i class="arrow right icon"></i>
-						<div class="content">
-							<div class="header">Next step</div>
-							<p></p>
-							<div class="header">
-								<a [routerLink]="[ '../javascript-sdk-contexts' ]">Contexts</a>
+					<div class="documentation-steps ui fluid steps">
+						<a class="step" [routerLink]="[ '../javascript-sdk-getting-started' ]">
+							<i class="arrow left icon"></i>
+							<div class="content">
+								<div class="title">Previous</div>
+								<div class="description">Getting Started</div>
+							</div>
+						</a>
+						<div class="active completed step">
+							<div class="content">
+								<div class="title">Object Model</div>
 							</div>
 						</div>
+						<a class="step" [routerLink]="[ '../javascript-sdk-contexts' ]">
+							<i class="arrow right icon"></i>
+							<div class="content">
+								<div class="title">Next</div>
+								<div class="description">Contexts</div>
+							</div>
+						</a>
 					</div>
 				</article>
 			</main>

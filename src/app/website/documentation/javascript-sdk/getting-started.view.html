@@ -21,6 +21,23 @@
 					<header>
 						<h1 class="ui header">Getting started with the JavaScript SDK</h1>
 					</header>
+
+					<div class="documentation-steps ui fluid steps">
+						<div class="active step">
+							<!--<i class="payment icon"></i>-->
+							<div class="content">
+								<div class="title">Getting Started</div>
+							</div>
+						</div>
+						<a class="step" [routerLink]="[ '../javascript-sdk-object-model' ]">
+							<i class="arrow right icon"></i>
+							<div class="content">
+								<div class="title">Next</div>
+								<div class="description">Object Model</div>
+							</div>
+						</a>
+					</div>
+
 					<div class="ui icon yellow message">
 						<i class="warning sign icon"></i>
 
@@ -2129,18 +2146,24 @@
 							</sui-tab>
 						</sui-tabs>
 					</section>
-					<div class="ui positive icon message">
-						<i class="arrow right icon"></i>
-						<div class="content">
-							<div class="header">Next step</div>
-							<p>
-								This was a short introduction to what the SDK and Carbon can do. You should be able to develop simple applications
-								after reading this document, but to really master the inner works of the SDK you can continue reading:
-							</p>
-							<div class="header">
-								<a [routerLink]="[ '../javascript-sdk-object-model' ]">Object Model</a>
+					<p>
+						This was a short introduction to what the SDK and Carbon can do. You should be able to develop simple applications
+						after reading this document, but to really master the inner works of the SDK you can continue reading about the Object Model.
+					</p>
+					<div class="documentation-steps ui fluid steps">
+						<div class="active completed step">
+							<!--<i class="payment icon"></i>-->
+							<div class="content">
+								<div class="title">Getting Started</div>
 							</div>
 						</div>
+						<a class="step" [routerLink]="[ '../javascript-sdk-object-model' ]">
+							<i class="arrow right icon"></i>
+							<div class="content">
+								<div class="title">Next</div>
+								<div class="description">Object Model</div>
+							</div>
+						</a>
 					</div>
 				</article>
 			</main>
