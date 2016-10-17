@@ -27,9 +27,8 @@ export class QuickStartGuideView implements AfterViewInit {
 	}
 
 	ngOnInit():void {
+		this.displaySuccessMessage = this.route.queryParams.value[ "registered" ] === "true";
 		this.randomString = this.generateRandomString( 32, "aA#" );
-		if(this.route.queryParams.value["registered"] === "true")
-			this.displaySuccessMessage = true;
 	}
 
 	ngAfterViewInit():void {
