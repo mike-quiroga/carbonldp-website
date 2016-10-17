@@ -1,4 +1,27 @@
+# 0.7.0 (2016/10/17)
+
+- Added success message after registration on quick start guide page
+- Added Quick Start to documentation home
+- Changed JS SDK and REST API order on header menu, and documentation home
+- Modified About page for BETA release
+- Fixed log in on tablet view
+- Removed App-Dev from documentation home
+- Removed facebook link on footer
+- Completed #59, Create Get Started registration page and add to primary navigation.
+- Added final example to JS-SDK Getting Started page
+- Completed #60, Create Community & Support page and add to primary navigation
+- Completed [LDP-790](https://jira.base22.com/browse/LDP-790) Add meta-tag.service
+- Added description to routes
+- Modified JavaScript SDK getting started document examples
+- Update branch to angular2.0.2
+- Completed #58, Write Quick Start Guide and add to navigation menu
+- Upgraded to angular 2.0.2
+- Completed #62, Header and footer components use reserved HTML elements as selector
+- Completed #61, Create license page (in router, but not linked to by anything yet; found at `/license` or `/src/license`.
+- Completed #47, Finish the About page sufficient for Beta release and move out it from under Documentation and into the primary nav bar.
+
 # 0.6.0 (2016/08/10)
+
 - Add complete initial draft JavaScript SDK Object Schema.
 - Add new documentation landing page.
 - Add styles for new documentation landing page.
@@ -11,6 +34,7 @@
 - Modify example comments in JS SDK documentation.
 
 # 0.5.18 (July 14, 2016)
+
 - Fix @angular package version to rc.1
 - Remove the following from App Dev:
   - Animated carbon logo component.
@@ -35,6 +59,7 @@
 - Change MyApps component to use the whole component from carbon panel.
 
 # 0.5.17 (July 11, 2016)
+
 - Add partial draft JavaScript SDK Object Model.
 - Add global styles for documentation.
 - Complete draft JavaScript SDK Contexts.
@@ -43,6 +68,7 @@
 - Combine documents into documentation.
 
 # 0.5.16 (June 8, 2016)
+
 - Fix bug with SPARQL Editor that hides the initial h from http when displaying results.
 - Fix my-apps action buttons to redirect to proper route.
 - Add auth ticket to URL when trying to download backups to BackupsService and BackupsListComponent.

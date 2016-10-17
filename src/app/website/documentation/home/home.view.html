@@ -1,6 +1,6 @@
 <div>
 	<div class="ui vertical center aligned segment">
-		<div class="ui four column top aligned centered computer tablet only grid">
+		<div class="ui four column top aligned centered computer only grid">
 
 			<div class="row">
 				<div class="ten wide center aligned column">
@@ -9,26 +9,57 @@
 			</div>
 
 			<div class="doc-categories row">
+				<a href="#quick-guide" class="center aligned column feature">
+					<div class="ui centered small circular image">
+						<img src="assets/images/ico-open-book.png"></div>
+					<h3 class="title">Quick Start</h3>
+				</a>
 				<a href="#essential-concepts" class="center aligned column feature">
 					<div class="ui centered small circular image">
 						<img src="assets/images/ico-books-300x300.png"></div>
 					<h3 class="title">Essential concepts</h3>
-				</a>
-				<a href="#rest-api" class="center aligned column feature">
-					<div class="ui centered small circular image">
-						<img src="assets/images/ico-rest-150x150.gif"></div>
-					<h3 class="title">REST API</h3>
 				</a>
 				<a href="#javascript-sdk" class="center aligned column feature">
 					<div class="ui centered small circular image">
 						<img src="assets/images/ico-javascript-150x150.gif"></div>
 					<h3 class="title">JavaScript SDK</h3>
 				</a>
-
-				<a href="#app-dev" class="center aligned column feature">
+				<a href="#rest-api" class="center aligned column feature">
 					<div class="ui centered small circular image">
-						<img src="assets/images/ico-cubes-300x300.png"></div>
-					<h3 class="title">App Dev</h3>
+						<img src="assets/images/ico-rest-150x150.gif"></div>
+					<h3 class="title">REST API</h3>
+				</a>
+
+			</div>
+		</div>
+		<div class="ui four column top aligned centered tablet only grid">
+
+			<div class="row">
+				<div class="ten wide center aligned column">
+					<h2 class="main-title">Carbon LDP Documentation</h2>
+				</div>
+			</div>
+
+			<div class="doc-categories row">
+				<a href="#quick-guide" class="center aligned column feature">
+					<div class="ui centered small circular image">
+						<img src="assets/images/ico-open-book.png"></div>
+					<h3 class="title">Quick Start Guide</h3>
+				</a>
+				<a href="#essential-concepts" class="center aligned column feature">
+					<div class="ui centered small circular image">
+						<img src="assets/images/ico-books-300x300.png"></div>
+					<h3 class="title">Essential concepts</h3>
+				</a>
+				<a href="#javascript-sdk" class="center aligned column feature">
+					<div class="ui centered small circular image">
+						<img src="assets/images/ico-javascript-150x150.gif"></div>
+					<h3 class="title">JavaScript SDK</h3>
+				</a>
+				<a href="#rest-api" class="center aligned column feature">
+					<div class="ui centered small circular image">
+						<img src="assets/images/ico-rest-150x150.gif"></div>
+					<h3 class="title">REST API</h3>
 				</a>
 			</div>
 		</div>
@@ -36,8 +67,15 @@
 
 			<div class="row">
 				<div class="ten wide center aligned column">
-					<h2 class="main-title">Carbon LDP Documentation</h2>
+					<h2 class="main-title ui header">Carbon&nbsp;LDP Documentation</h2>
 				</div>
+			</div>
+			<div class="doc-categories two column row">
+				<a href="#quick-guide" class="center aligned column feature">
+					<div class="ui centered small circular image">
+						<img src="assets/images/ico-open-book.png"></div>
+					<h3 class="title">Quick Start Guide</h3>
+				</a>
 			</div>
 			<div class="doc-categories two column row">
 				<a href="#essential-concepts" class="center aligned column feature">
@@ -45,27 +83,40 @@
 						<img src="assets/images/ico-books-300x300.png"></div>
 					<h3 class="title">Essential concepts</h3>
 				</a>
-				<a href="#rest-api" class="center aligned column feature">
-					<div class="ui centered small circular image">
-						<img src="assets/images/ico-rest-150x150.gif"></div>
-					<h3 class="title">REST API</h3>
-				</a>
+			</div>
+			<div class="doc-categories two column row">
 				<a href="#javascript-sdk" class="center aligned column feature">
 					<div class="ui centered small circular image">
 						<img src="assets/images/ico-javascript-150x150.gif"></div>
 					<h3 class="title">JavaScript SDK</h3>
 				</a>
-
-				<a href="#app-dev" class="center aligned column feature">
+			</div>
+			<div class="doc-categories two column row">
+				<a href="#rest-api" class="center aligned column feature">
 					<div class="ui centered small circular image">
-						<img src="assets/images/ico-cubes-300x300.png"></div>
-					<h3 class="title">App Dev</h3>
+						<img src="assets/images/ico-rest-150x150.gif"></div>
+					<h3 class="title">REST API</h3>
 				</a>
 			</div>
 		</div>
 	</div>
 
-	<div class="ui center aligned grid description">
+	<div class="ui grid description">
+		<div class="ui container" id="quick-guide">
+			<div class="ui header">
+				<img class="ui small left floated image" src="assets/images/ico-open-book.png">
+				<h2>Quick Start</h2></div>
+			<div class="description">
+				<p>Start now!</p>
+			</div>
+			<div class="ui bulleted list">
+				<div class="item">
+					<div class="header"><span [routerLink]="[ 'quick-start-guide' ]">Quick Start Guide</span></div>
+					<p>Get started now, with this easy to follow, quick start guide</p>
+				</div>
+			</div>
+			<!--TODO:Add more... link when above documents are added-->
+		</div>
 		<div class="ui container" id="essential-concepts">
 			<div class="ui header">
 				<img class="ui small left floated image" src="assets/images/ico-books-300x300.png">
@@ -81,31 +132,6 @@
 			</div>
 			<!--TODO:Add more... link when above documents are added-->
 		</div>
-		<div class="ui container" id="rest-api">
-			<div class="ui header"><img class="ui small left floated image" src="assets/images/ico-rest-150x150.gif">
-				<h2>REST API</h2></div>
-			<div class="description">
-				<p>Access and manage applications and data by URIs using RESTful requests over HTTP (GET, POST, PUT, DELETE). Configure apps, schedule server-side jobs, execute queries - <em>
-					everything</em> in Carbon is RESTful.</p>
-			</div>
-			<div class="ui bulleted list">
-				<div class="item">
-					<div class="header"><span [routerLink]="[ 'rest-api-getting-started' ]">Getting started</span></div>
-					<div class="summary">How to build an example application using the Carbon LDP REST API.</div>
-				</div>
-				<div class="item">
-					<div class="header"><span [routerLink]="[ 'rest-api-object-model' ]">Object model</span></div>
-					<div>A summary of the various types of resources you can manage and interact with using REST.
-					</div>
-				</div>
-				<div class="item">
-					<div class="header"><span [routerLink]="[ 'rest-api-interaction-models' ]">Interaction models</span></div>
-					<div class="summary">An explanation of the way you can interact with the resources on the Carbon Server.</div>
-				</div>
-			</div>
-			<!--TODO:Add more... link when above documents are added-->
-		</div>
-
 		<div class="ui container" id="javascript-sdk">
 			<div class="ui header">
 				<img class="ui small left floated image" src="assets/images/ico-javascript-150x150.gif">
@@ -135,15 +161,29 @@
 				<div class="header"><span [routerLink]="[ 'javascript-sdk' ]">More...</span></div>
 			</div>
 		</div>
-		<div class="ui container" id="app-dev">
-			<div class="ui header">
-				<img class="ui small left floated image" src="assets/images/ico-cubes-300x300.png">
-				<h2>App Dev</h2>
-			</div>
+		<div class="ui container" id="rest-api">
+			<div class="ui header"><img class="ui small left floated image" src="assets/images/ico-rest-150x150.gif">
+				<h2>REST API</h2></div>
 			<div class="description">
-				<p>Use time-saving tools in the Application Developer's Console, a GUI that helps you visualize and manage applications and data outside of code. Visualize your container
-					hierarchy and click resources to inspect data.</p>
+				<p>Access and manage applications and data by URIs using RESTful requests over HTTP (GET, POST, PUT, DELETE). Configure apps, schedule server-side jobs, execute queries - <em>
+					everything</em> in Carbon is RESTful.</p>
 			</div>
+			<div class="ui bulleted list">
+				<div class="item">
+					<div class="header"><span [routerLink]="[ 'rest-api-getting-started' ]">Getting started</span></div>
+					<div class="summary">How to build an example application using the Carbon LDP REST API.</div>
+				</div>
+				<div class="item">
+					<div class="header"><span [routerLink]="[ 'rest-api-object-model' ]">Object model</span></div>
+					<div>A summary of the various types of resources you can manage and interact with using REST.
+					</div>
+				</div>
+				<div class="item">
+					<div class="header"><span [routerLink]="[ 'rest-api-interaction-models' ]">Interaction models</span></div>
+					<div class="summary">An explanation of the way you can interact with the resources on the Carbon Server.</div>
+				</div>
+			</div>
+			<!--TODO:Add more... link when above documents are added-->
 		</div>
 	</div>
 </div>

@@ -3,9 +3,16 @@
 	border-bottom: 25px solid #0192cf;
 	margin-top: 0em;
 
+	.four.column.top.aligned{
+		margin-top: 50px;
+	}
+
 }
 
-.ui.computer.tablet.only.grid {
+.ui.computer.only.grid {
+	margin: 2.5em 8em 3em 8em;
+}
+.ui.tablet.only.grid {
 	margin: 2.5em 8em 3em 8em;
 }
 
@@ -13,7 +20,7 @@
 	margin: 0em 2em 2em 2em;
 }
 
-.computer.tablet.only {
+.computer.only {
 	.main-title {
 		font-size: 2.2rem;
 		letter-spacing: 0.7px;
@@ -49,11 +56,56 @@
 	}
 }
 
+.tablet.only {
+	.main-title {
+		font-size: 2.2rem;
+		letter-spacing: 0.7px;
+		color: white;
+		margin-top: 50px;
+		margin-bottom: 50px;
+	}
+	.feature {
+		padding: 10px;
+		.title {
+			font-size: 1.35rem;
+			color: white;
+			margin-bottom: 20px;
+		}
+	}
+
+	.ui.circular.image {
+		margin-bottom: 20px;
+		margin-top: 30px;
+		img {
+			display: inline;
+			height: 100px;
+			width: 100px;
+			border: 0;
+			margin: 0;
+		}
+	}
+
+	.center.aligned.column.feature:hover {
+		box-shadow: 0 0 15px 0 #0192cf;
+		border-radius: .5em;
+	}
+
+	a {
+		border-radius: 0;
+	}
+}
+
 .mobile.only {
+
+	h3{
+		margin: 0;
+	}
+
 	.main-title {
 		font-size: 2rem;
 		letter-spacing: 0.7px;
 		color: white;
+
 		margin-top: 10px;
 		margin-bottom: 10px;
 	}

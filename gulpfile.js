@@ -55,10 +55,11 @@ const config = {
 
 gulp.task( "default", [ "serve" ] );
 
-gulp.task( "build", [ "clean:dist" ], ( done ) => {
+gulp.task( "build", ( done ) => {
 	runSequence(
-		"clean:dist",
-		[ "compile:styles", "compile:index", "compile:config", "copy:semantic", "copy:assets" ],
+		[ "clean:dist" ],
+		[ "compile:styles", "compile:index", "compile:config", "copy:semantic", "copy:node-dependencies" ],
+		[ "copy:assets" ],
 		"bundle",
 		done
 	);
@@ -295,7 +296,7 @@ gulp.task( "copy:semantic", [ "build:semantic" ], () => {
 } );
 
 // TODO: Minify files
-gulp.task( "copy:assets", [ "copy:node-dependencies" ], () => {
+gulp.task( "copy:assets", () => {
 	return gulp.src( "src/assets/**/*", {
 		base: "src/assets"
 	} ).pipe( gulp.dest( "dist/site/assets" ) );
