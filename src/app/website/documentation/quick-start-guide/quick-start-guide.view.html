@@ -15,9 +15,21 @@
 						<h1 class="ui header">Quick Start Guide</h1>
 					</header>
 
-					<div class="ui message">
+					<div class="ui success message" *ngIf="displaySuccessMessage">
 						<div class="content">
-							<p class="larger">
+							<p>
+								<strong>Thank you!</strong> Your registration was successful
+							</p>
+							<p>
+								This guide describes how to download, install, and run all the components necessary
+								to get started with application development using Carbon LDP as quickly as possible.
+							</p>
+						</div>
+
+					</div>
+					<div class="ui message" *ngIf="! displaySuccessMessage">
+						<div class="content">
+							<p>
 								This guide describes how to download, install, and run all the components necessary
 								to get started with application development using Carbon LDP as quickly as possible.
 							</p>
@@ -86,7 +98,7 @@ This message shows that your installation appears to be working correctly.
 							as when new features or bug fixes are released. It is also a suggested prerequisite for getting better community support through GitHub issue tracking; we prioritize our
 							registered users first. What's more, registration qualifies you to receive Valued Feedback Rewards for providing useful feedback. If you haven't already
 							registered, please <a class="item" [routerLink]="[ '/get-started' ]">Get Started</a>. After filling out a very brief form, you'll be returned to this guide.</p>
-							<!-- TODO: Change link to registration page -->
+						<!-- TODO: Change link to registration page -->
 						<section>
 							<h3 class="ui header">Create the platform's directory structure</h3>
 							<p>
@@ -321,9 +333,10 @@ This message shows that your installation appears to be working correctly.
 							when new versions are available, please be sure to register. If you haven't already registered, please <a class="item" [routerLink]="[ '/get-started' ]">Get Started</a>.
 						</p>
 
-						<p>To update the platform and workbench you need to pull the remote images again by running the following commands:<p>
+						<p>To update the platform and workbench you need to pull the remote images again by running the following commands:
+						<p>
 
-						<!-- @formatter:off -->
+							<!-- @formatter:off -->
 						<pre><code cpHighlight class="bash">
 							docker pull carbonldp/carbonldp-platform:latest
 						</code></pre>

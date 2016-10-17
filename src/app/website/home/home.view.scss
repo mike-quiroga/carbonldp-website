@@ -170,9 +170,16 @@
 
 			}
 			.right.column {
-				.signup-form.container {
+				.get-started.container {
 					float: left;
 					max-width: 525px !important;
+					span{
+						color: white;
+						text-decoration: underline;
+					}
+					span:hover{
+						cursor: pointer;
+					}
 				}
 			}
 		}
@@ -191,9 +198,12 @@
 
 			}
 			.right.column {
-				.signup-form.container {
-					float: left;
+				display: flex;
+				justify-content: center;
+				.get-started.container {
+					align-self: center;
 					max-width: 350px !important;
+
 				}
 			}
 		}
@@ -209,7 +219,7 @@
 
 			}
 			.right.column {
-				.signup-form.container {
+				.get-started.container {
 
 				}
 			}
@@ -219,10 +229,11 @@
 
 	.ui.white.button, .ui.white.buttons .button {
 		background-color: #fff;
-		color: #0192cf;
 		text-shadow: none;
+		color: orange;
 		background-image: none;
-		margin-top: 35px;
+		margin-top: 20px;
+		margin-bottom: 20px;
 	}
 
 }
