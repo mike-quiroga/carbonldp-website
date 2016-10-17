@@ -27,14 +27,21 @@ export class QuickStartGuideView implements AfterViewInit {
 	}
 
 	ngOnInit():void {
-		this.displaySuccessMessage = this.route.queryParams.value[ "registered" ] === "true";
 		this.randomString = this.generateRandomString( 32, "aA#" );
+
+		this.subscribeToRegisteredMessage();
 	}
 
 	ngAfterViewInit():void {
 		this.$element = $( this.element.nativeElement );
 		this.createAccordions();
 		window.setTimeout( () => this.contentReady = true, 0 );
+	}
+
+	subscribeToRegisteredMessage():void {
+		this.route.queryParams.subscribe( ( parameters:{ [ key:string ]:any } ) => {
+			this.displaySuccessMessage = parameters[ "registered" ] === "true";
+		} );
 	}
 
 	createAccordions():void {
@@ -52,10 +59,6 @@ export class QuickStartGuideView implements AfterViewInit {
 		for ( let i = length; i > 0; -- i ) result += mask[ Math.floor( Math.random() * mask.length ) ];
 
 		return result;
-	}
-
-	clearMessages( evt:Event ):void {
-		this.displaySuccessMessage = false;
 	}
 }
 export default QuickStartGuideView;
