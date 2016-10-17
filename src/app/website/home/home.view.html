@@ -38,21 +38,18 @@
 	<div class="blue computer only row">
 		<div class="column">
 			<h1>Carbon LDP is a Linked Data Platform for building web apps that manage and link data within your enterprise and across the World Wide Web.</h1>
-			<p><a class="ui white button" href="#signup" (click)="scrollTo($event)">Get notified when we launch!</a></p>
 		</div>
 	</div>
 	<!-- TABLET ONLY (REPEAT) -->
 	<div class="blue tablet only row">
 		<div class="column">
 			<h1>Carbon LDP is a Linked Data Platform for building web apps that manage and link data within your enterprise and across the World Wide Web.</h1>
-			<p><a class="ui white button" href="#signup" (click)="scrollTo($event)">Get notified when we launch!</a></p>
 		</div>
 	</div>
 	<!-- MOBILE ONLY (REPEAT) -->
 	<div class="blue mobile only row">
 		<div class="column">
 			<h2>Carbon LDP is a Linked Data Platform for building web apps that manage and link data within your enterprise and across the World Wide Web.</h2>
-			<p><a class="ui white button" href="#signup" (click)="scrollTo($event)">Get notified when we launch!</a></p>
 		</div>
 	</div>
 
@@ -199,9 +196,10 @@
 		</div>
 		<div class="orange right column">
 			<div class="ui vertical center aligned segment">
-				<div class="ui text signup-form container">
-					<h2>Sign up to receive news and<br/>get notified when we launch!</h2>
-					<newsletter-form id="signup"></newsletter-form>
+				<div class="ui text get-started container">
+					<h2>"Our <span [routerLink]="['license']">license</span> grants you perpetual, worldwide, non-exclusive, no-charge, and royalty-free use!"</h2>
+					<a class="ui white button" [routerLink]="['get-started']">Get Started!</a>
+					<!--<newsletter-form id="signup"></newsletter-form>-->
 				</div>
 			</div>
 		</div>
@@ -218,10 +216,9 @@
 			</div>
 		</div>
 		<div class="orange right column">
-			<div class="ui vertical center aligned segment">
-				<div class="ui text signup-form container">
-					<newsletter-form id="signup"></newsletter-form>
-				</div>
+			<div class="ui vertical center aligned segment get-started container">
+					<a class="ui white button" [routerLink]="['get-started']">Get Started!</a>
+					<!--<newsletter-form id="signup"></newsletter-form>-->
 			</div>
 		</div>
 	</div>
@@ -236,7 +233,8 @@
 		</div>
 		<div class="orange right column">
 			<div class="ui vertical center aligned segment">
-				<newsletter-form id="signup"></newsletter-form>
+				<a class="ui white button" [routerLink]="['get-started']">Get Started!</a>
+				<!--<newsletter-form id="signup"></newsletter-form>-->
 			</div>
 		</div>
 	</div>

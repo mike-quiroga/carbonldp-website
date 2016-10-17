@@ -21,17 +21,28 @@
 					<header>
 						<h1 class="ui header">Contexts</h1>
 					</header>
-					<div class="ui info icon message">
-						<i class="arrow left icon"></i>
-						<div class="content">
-							<div class="header">Previous step</div>
-							<p></p>
-							<div class="header">
-								<a [routerLink]="[ '../javascript-sdk-object-model' ]">Object Model</a>
+
+					<div class="documentation-steps ui fluid steps">
+						<a class="step" [routerLink]="[ '../javascript-sdk-object-model' ]">
+							<i class="arrow left icon"></i>
+							<div class="content">
+								<div class="title">Previous</div>
+								<div class="description">Object Model</div>
+							</div>
+						</a>
+						<div class="active step">
+							<div class="content">
+								<div class="title">Contexts</div>
 							</div>
 						</div>
+						<a class="step" [routerLink]="[ '../javascript-sdk-object-schema' ]">
+							<i class="arrow right icon"></i>
+							<div class="content">
+								<div class="title">Next</div>
+								<div class="description">Object Schema</div>
+							</div>
+						</a>
 					</div>
-
 
 					<div class="ui icon yellow message">
 						<i class="warning sign icon"></i>
@@ -500,15 +511,26 @@
 							<span class="highlight">application</span>. <span class="highlight">Contexts</span> are a
 							fundamental tool to achieve a successful communication with Carbon.</p>
 					</section>
-					<div class="ui positive icon message">
-						<i class="arrow right icon"></i>
-						<div class="content">
-							<div class="header">Next step</div>
-							<p></p>
-							<div class="header">
-								<a [routerLink]="[ '../javascript-sdk-object-schema' ]">Object Schema</a>
+					<div class="documentation-steps ui fluid steps">
+						<a class="step" [routerLink]="[ '../javascript-sdk-object-model' ]">
+							<i class="arrow left icon"></i>
+							<div class="content">
+								<div class="title">Previous</div>
+								<div class="description">Object Model</div>
+							</div>
+						</a>
+						<div class="active completed step">
+							<div class="content">
+								<div class="title">Contexts</div>
 							</div>
 						</div>
+						<a class="step" [routerLink]="[ '../javascript-sdk-object-schema' ]">
+							<i class="arrow right icon"></i>
+							<div class="content">
+								<div class="title">Next</div>
+								<div class="description">Object Schema</div>
+							</div>
+						</a>
 					</div>
 				</article>
 			</main>

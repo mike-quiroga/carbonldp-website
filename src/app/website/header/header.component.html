@@ -4,13 +4,22 @@
 		<div class="ui top fixed borderless menu primary-nav">
 			<div class="ui container">
 
-				<a class="item logo" [routerLink]="[ '' ]"><img class="ui small image logo" src="assets/images/carbon-logo-150x48.png"/></a>
+				<a class="item logo" [routerLink]="[ '' ]"><img class="ui small image logo" src="assets/images/carbon-logo-150x48.png" alt="Home"/></a>
 
+				<a class="item" [routerLink]="[ '/get-started' ]">Get Started</a>
 				<div class="ui dropdown link item"><a class="item" [routerLink]="[ '/documentation' ]">Documentation</a><i class="dropdown icon"></i>
 
 					<div class="menu">
+						<a class="item" [routerLink]="[ '/documentation/quick-start-guide' ]">Quick Start Guide</a>
+						<div class="divider"></div>
+
 						<a class="home" [routerLink]="[ '/documentation/essential-concepts' ]">Essential Concepts</a>
 						<a class="item" [routerLink]="[ '/documentation/linked-data-concepts' ]">Linked Data Concepts</a>
+
+						<div class="divider"></div>
+						<a class="home" [routerLink]="[ '/documentation/javascript-sdk' ]">JavaScript SDK</a>
+						<a class="item" [routerLink]="[ '/documentation/javascript-sdk-getting-started' ]">Getting Started</a>
+						<a class="item" [routerLink]="[ '/documentation/javascript-sdk-object-model' ]">Object Model</a>
 
 						<div class="divider"></div>
 						<a class="home" [routerLink]="[ '/documentation/rest-api' ]">REST API</a>
@@ -18,14 +27,10 @@
 						<a class="item" [routerLink]="[ '/documentation/rest-api-object-model' ]">REST API Object Model</a>
 
 						<div class="divider"></div>
-						<a class="home" [routerLink]="[ '/documentation/javascript-sdk' ]">JavaScript SDK</a>
-						<a class="item" [routerLink]="[ '/documentation/javascript-sdk-getting-started' ]">Getting Started</a>
-						<a class="item" [routerLink]="[ '/documentation/javascript-sdk-object-model' ]">Object Model</a>
-						<div class="divider"></div>
 						<a class="item" [routerLink]="[ '/documentation' ]">More...</a>
 					</div>
 				</div>
-
+				<a class="item" [routerLink]="[ '/community-and-support' ]">Community &amp; Support</a>
 				<a class="item" [routerLink]="[ '/about' ]">About</a>
 
 				<!--<div *ngIf=" ! authService.isAuthenticated() " class="right menu">
@@ -54,7 +59,19 @@
 
 	<div class="mobile tablet only row">
 		<div class="ui fixed menu">
-			<a class="item logo" [routerLink]="[ './Home' ]"><img class="ui small image logo" src="assets/images/carbon-logo-150x48.png"/></a>
+
+			<a class="item logo" [routerLink]="[ '' ]"><img class="ui small image logo" src="assets/images/carbon-logo-150x48.png" alt="Home"/></a>
+			<!--
+				<div class="menu">
+					<a class="item">
+						Log in
+					</a>
+					<a class="item">
+						Sign up
+					</a>
+				</div>
+			-->
+
 			<div class="right menu open">
 				<a href="" class="menu item">
 					<i class="content icon"></i>
@@ -62,11 +79,20 @@
 			</div>
 		</div>
 		<div class="ui fixed vertical menu">
-			<!--todo: REMOVE IS ACTIVE-->
-			<a class="item" [routerLink]="[ '' ]" routerLinkActive="active">Home</a>
+
+			<!--TODO: REMOVE IS ACTIVE-->
+
+			<a class="item" [routerLink]="[ '/get-started' ]">Get Started</a>
+			<!--<a class="item" [routerLink]="[ './Blog' ]" [ngClass]="{active: isActive('./Blog') }">Blog</a>
+			<a *ngIf="!isActive('./Login')" class="item login" [routerLink]="[ '/AppDevLogin' ]">
+				Log in
+			</a>-->
 
 			<div class="ui dropdown link item"><a class="item" [routerLink]="[ '/documentation' ]">Documentation</a><i class="dropdown icon"></i>
 				<div class="menu">
+					<a class="item" [routerLink]="[ '/documentation/quick-start-guide' ]">Quick Start Guide</a>
+					<div class="divider"></div>
+
 					<a class="home" [routerLink]="[ '/documentation/essential-concepts' ]">Essential Concepts</a>
 					<a class="item" [routerLink]="[ '/documentation/linked-data-concepts' ]">Linked Data Concepts</a>
 
@@ -82,6 +108,7 @@
 					<a class="item" [routerLink]="[ '/documentation' ]">More...</a>
 				</div>
 			</div>
+			<a class="item" [routerLink]="[ '/community-and-support' ]">Community &amp; Support</a>
 			<a class="item" [routerLink]="[ '/about' ]">About</a>
 		</div>
 	</div>

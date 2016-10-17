@@ -33,4 +33,39 @@ documents {
 		color: black;
 		border-bottom: 1px dotted #f89828;
 	}
+
+	.documentation-steps.ui.steps {
+		.completed.step:before {
+			margin-right: 1rem;
+			font-size: 2.5em;
+
+			color: #21BA45;
+			font-family: Step;
+			content: '\e800';
+		}
+
+		.step:nth-child(1):not( .completed ) {
+			justify-content: flex-start;
+
+			> .content {
+				flex: 1;
+				text-align: center;
+			}
+		}
+
+		.step:nth-child(2):not( .active ),
+		.step:nth-child(3) {
+			flex-direction: row-reverse;
+			justify-content: flex-start;
+
+			> .icon {
+				margin: 0;
+			}
+
+			> .content {
+				flex: 1;
+				text-align: center;
+			}
+		}
+	}
 }
