@@ -97,26 +97,28 @@
 							<sui-tabs [(activeTab)]="selectedLanguage">
 								<sui-tab title="TypeScript">
 									<!--@formatter:off-->
-								<pre><code cpHighlight class="typescript">
-								import Carbon from "carbonldp/Carbon";
+									<pre><code cpHighlight class="typescript">
+										import Carbon from "carbonldp/Carbon";
 
-								let carbonContext:Carbon = new Carbon();
-								</code></pre>
-								<!--@formatter:on-->
+										let carbonContext:Carbon = new Carbon();
+									</code></pre>
+									<!--@formatter:on-->
 								</sui-tab>
 								<sui-tab title="JavaScript ES2015">
 									<!--@formatter:off-->
-								<pre><code cpHighlight class="javascript">
-									//...
-								</code></pre>
-								<!--@formatter:on-->
+									<pre><code cpHighlight class="javascript">
+										import Carbon from "carbonldp/Carbon";
+
+										let carbonContext = new Carbon();
+									</code></pre>
+									<!--@formatter:on-->
 								</sui-tab>
 								<sui-tab title="JavaScript ES5">
 									<!--@formatter:off-->
-								<pre><code cpHighlight class="javascript">
-									//...
-								</code></pre>
-								<!--@formatter:on-->
+									<pre><code cpHighlight class="javascript">
+										var carbonContext = Carbon();
+									</code></pre>
+									<!--@formatter:on-->
 								</sui-tab>
 							</sui-tabs>
 
@@ -195,33 +197,47 @@
 							<sui-tabs [(activeTab)]="selectedLanguage">
 								<sui-tab title="TypeScript">
 									<!--@formatter:off-->
-								<pre><code cpHighlight class="typescript">
-								import Carbon from "carbonldp/Carbon";
-								import * as App from "carbonldp/App";
+									<pre><code cpHighlight class="typescript">
+										import Carbon from "carbonldp/Carbon";
+										import * as App from "carbonldp/App";
 
-								let carbonContext:Carbon = new Carbon();
+										let carbonContext:Carbon = new Carbon();
 
-								carbonContext.apps.getAppContext( "test-app/" ).then(
-									( appContext:App.Context ) => &#123;
-										appContext.resolve( "" ); // https://carbonldp.com/apps/test-app/
-									&#125;
-								);
-								</code></pre>
-								<!--@formatter:on-->
+										carbonContext.apps.getAppContext( "test-app/" ).then(
+											( appContext:App.Context ) => &#123;
+												appContext.resolve( "" ); // https://carbonldp.com/apps/test-app/
+											&#125;
+										);
+									</code></pre>
+									<!--@formatter:on-->
 								</sui-tab>
 								<sui-tab title="JavaScript ES2015">
 									<!--@formatter:off-->
-								<pre><code cpHighlight class="javascript">
-									//...
-								</code></pre>
-								<!--@formatter:on-->
+									<pre><code cpHighlight class="javascript">
+										import Carbon from "carbonldp/Carbon";
+
+										let carbonContext = new Carbon();
+
+										carbonContext.apps.getAppContext( "test-app/" ).then(
+											( appContext ) => &#123;
+												appContext.resolve( "" ); // https://carbonldp.com/apps/test-app/
+											&#125;
+										);
+									</code></pre>
+									<!--@formatter:on-->
 								</sui-tab>
 								<sui-tab title="JavaScript ES5">
 									<!--@formatter:off-->
-								<pre><code cpHighlight class="javascript">
-									//...
-								</code></pre>
-								<!--@formatter:on-->
+									<pre><code cpHighlight class="javascript">
+										var carbonContext = new Carbon();
+
+										carbonContext.apps.getAppContext( "test-app/" ).then(
+											function( appContext ) &#123;
+												appContext.resolve( "" ); // https://carbonldp.com/apps/test-app/
+											&#125;
+										);
+									</code></pre>
+									<!--@formatter:on-->
 								</sui-tab>
 							</sui-tabs>
 
@@ -263,37 +279,68 @@
 							<sui-tab title="TypeScript">
 								<!--@formatter:off-->
 								<pre><code cpHighlight class="typescript">
-								import Carbon from "carbonldp/Carbon";
+									import Carbon from "carbonldp/Carbon";
+									import * as App from "carbonldp/App";
 
-								let carbonContext:Carbon = new Carbon();
-								let appContext:App.Context;
+									let carbonContext:Carbon = new Carbon();
+									let appContext:App.Context;
 
-								// Modify predefined setting of platform context...
-								carbonContext.setSetting( "domain", "myorganization.com" );
+									// Modify predefined setting of platform context...
+									carbonContext.setSetting( "domain", "myorganization.com" );
 
-								// Carbon application context set new setting
-								carbonContext.apps.getAppContext( "test-app/" ).then(
-								   ( appContext:App.Context ) => &#123;
-								      appContext.setSetting( "name", "Awesome-programmer" );
-									console.log( appContext.getSetting( "name" ) ); // prints Awesome-programmer
-								   &#125;
-								);
+									// Carbon application context set new setting
+									carbonContext.apps.getAppContext( "test-app/" ).then(
+									   ( appContext:App.Context ) => &#123;
+									      appContext.setSetting( "name", "Awesome-programmer" );
+										console.log( appContext.getSetting( "name" ) ); // prints Awesome-programmer
+									   &#125;
+									);
 
-								console.log( carbonContext.resolve( "" ) ); // prints https://myorganization.com/platform/
+									console.log( carbonContext.resolve( "" ) ); // prints https://myorganization.com/platform/
 								</code></pre>
 								<!--@formatter:on-->
 							</sui-tab>
 							<sui-tab title="JavaScript ES2015">
 								<!--@formatter:off-->
 								<pre><code cpHighlight class="javascript">
-									//...
+									import Carbon from "carbonldp/Carbon";
+
+									let carbonContext = new Carbon();
+									let appContext;
+
+									// Modify predefined setting of platform context...
+									carbonContext.setSetting( "domain", "myorganization.com" );
+
+									// Carbon application context set new setting
+									carbonContext.apps.getAppContext( "test-app/" ).then(
+									   ( appContext ) => &#123;
+									      appContext.setSetting( "name", "Awesome-programmer" );
+										console.log( appContext.getSetting( "name" ) ); // prints Awesome-programmer
+									   &#125;
+									);
+
+									console.log( carbonContext.resolve( "" ) ); // prints https://myorganization.com/platform/
 								</code></pre>
 								<!--@formatter:on-->
 							</sui-tab>
 							<sui-tab title="JavaScript ES5">
 								<!--@formatter:off-->
 								<pre><code cpHighlight class="javascript">
-									//...
+									var carbonContext = new Carbon();
+									var appContext;
+
+									// Modify predefined setting of platform context...
+									carbonContext.setSetting( "domain", "myorganization.com" );
+
+									// Carbon application context set new setting
+									carbonContext.apps.getAppContext( "test-app/" ).then(
+									   function( appContext ) &#123;
+									      appContext.setSetting( "name", "Awesome-programmer" );
+										console.log( appContext.getSetting( "name" ) ); // prints Awesome-programmer
+									   &#125;
+									);
+
+									console.log( carbonContext.resolve( "" ) ); // prints https://myorganization.com/platform/
 								</code></pre>
 								<!--@formatter:on-->
 							</sui-tab>
@@ -337,63 +384,149 @@
 							<sui-tab title="TypeScript">
 								<!--@formatter:off-->
 								<pre><code cpHighlight class="typescript">
-								import Carbon from "carbonldp/Carbon";
-								import * as App from "carbonldp/App";
+									import Carbon from "carbonldp/Carbon";
+									import * as App from "carbonldp/App";
 
-								let carbonContext:Carbon = new Carbon();
-								let testAppContext:App.Context;
-								let yourAppContext:App.Context;
+									let carbonContext:Carbon = new Carbon();
+									let testAppContext:App.Context;
+									let yourAppContext:App.Context;
 
-								// Get your application contexts
-								carbonContext.apps.getAppContext( "test-app/" )
-								.then(( appContext:App.Context ) => &#123;
-								      testAppContext = appContext;
-								      return carbonContext.apps.getAppContext( "your-app/" );
-								   &#125;)
-								.then(( appContext:App.Context ) => &#123;
-								      yourAppContext = appContext;
+									// Get your application contexts
+									carbonContext.apps.getAppContext( "test-app/" ).then(
+										( appContext:App.Context ) => &#123;
+											testAppContext = appContext;
+											return carbonContext.apps.getAppContext( "your-app/" );
+								        &#125;
+									).then(
+										( appContext:App.Context ) => &#123;
+											yourAppContext = appContext;
 
-								      // The name setting has not yet been set and it is not predefined in the platform or app contexts...
-								      carbonContext.getSetting( "name" );  // returns null
-								      testAppContext.getSetting( "name" ); // returns null
-								      yourAppContext.getSetting( "name" ); // returns null
-
-
-								      // Set 'name' setting in test-app app context...
-								      testAppContext.setSetting( "name", "TestApp" );
-								      carbonContext.getSetting( "name" );  // returns null
-								      testAppContext.getSetting( "name" ); // returns 'TestApp'
-								      yourAppContext.getSetting( "name" ); // returns null
+											// The name setting has not yet been set and it is not predefined in the platform or app contexts...
+											carbonContext.getSetting( "name" );  // returns null
+											testAppContext.getSetting( "name" ); // returns null
+											yourAppContext.getSetting( "name" ); // returns null
 
 
-								      // Set 'name' setting in the platform context...
-								      carbonContext.setSetting( "name", "CarbonPlatform" );
+											// Set 'name' setting in test-app app context...
+											testAppContext.setSetting( "name", "TestApp" );
+											carbonContext.getSetting( "name" );  // returns null
+											testAppContext.getSetting( "name" ); // returns 'TestApp'
+											yourAppContext.getSetting( "name" ); // returns null
 
-								      carbonContext.getSetting( "name" );  // returns 'CarbonPlatform'
-								      testAppContext.getSetting( "name" ); // returns 'TestApp'
-								      yourAppContext.getSetting( "name" ); // returns 'CarbonPlatform'
 
-								      // Deleting an app setting...
-								      testAppContext.deleteSetting( "name" );
+											// Set 'name' setting in the platform context...
+											carbonContext.setSetting( "name", "CarbonPlatform" );
 
-								      carbonContext.getSetting( "name" );  // returns 'CarbonPlatform'
-								      testAppContext.getSetting( "name" ); // returns 'CarbonPlatform'
-								      yourAppContext.getSetting( "name" ); // returns 'CarbonPlatform'
-								&#125;);
+											carbonContext.getSetting( "name" );  // returns 'CarbonPlatform'
+											testAppContext.getSetting( "name" ); // returns 'TestApp'
+											yourAppContext.getSetting( "name" ); // returns 'CarbonPlatform'
+
+											// Deleting an app setting...
+											testAppContext.deleteSetting( "name" );
+
+											carbonContext.getSetting( "name" );  // returns 'CarbonPlatform'
+											testAppContext.getSetting( "name" ); // returns 'CarbonPlatform'
+											yourAppContext.getSetting( "name" ); // returns 'CarbonPlatform'
+										&#125;
+									);
 								</code></pre>
 								<!--@formatter:on-->
 							</sui-tab>
 							<sui-tab title="JavaScript ES2015">
 								<!--@formatter:off-->
 								<pre><code cpHighlight class="javascript">
-									//...
+									import Carbon from "carbonldp/Carbon";
+
+									let carbonContext = new Carbon();
+									let testAppContext;
+									let yourAppContext;
+
+									// Get your application contexts
+									carbonContext.apps.getAppContext( "test-app/" ).then(
+										( appContext ) => &#123;
+											testAppContext = appContext;
+											return carbonContext.apps.getAppContext( "your-app/" );
+								        &#125;
+									).then(
+										( appContext ) => &#123;
+											yourAppContext = appContext;
+
+											// The name setting has not yet been set and it is not predefined in the platform or app contexts...
+											carbonContext.getSetting( "name" );  // returns null
+											testAppContext.getSetting( "name" ); // returns null
+											yourAppContext.getSetting( "name" ); // returns null
+
+
+											// Set 'name' setting in test-app app context...
+											testAppContext.setSetting( "name", "TestApp" );
+											carbonContext.getSetting( "name" );  // returns null
+											testAppContext.getSetting( "name" ); // returns 'TestApp'
+											yourAppContext.getSetting( "name" ); // returns null
+
+
+											// Set 'name' setting in the platform context...
+											carbonContext.setSetting( "name", "CarbonPlatform" );
+
+											carbonContext.getSetting( "name" );  // returns 'CarbonPlatform'
+											testAppContext.getSetting( "name" ); // returns 'TestApp'
+											yourAppContext.getSetting( "name" ); // returns 'CarbonPlatform'
+
+											// Deleting an app setting...
+											testAppContext.deleteSetting( "name" );
+
+											carbonContext.getSetting( "name" );  // returns 'CarbonPlatform'
+											testAppContext.getSetting( "name" ); // returns 'CarbonPlatform'
+											yourAppContext.getSetting( "name" ); // returns 'CarbonPlatform'
+										&#125;
+									);
 								</code></pre>
 								<!--@formatter:on-->
 							</sui-tab>
 							<sui-tab title="JavaScript ES5">
 								<!--@formatter:off-->
 								<pre><code cpHighlight class="javascript">
-									//...
+									var carbonContext = new Carbon();
+									var testAppContext;
+									var yourAppContext;
+
+									// Get your application contexts
+									carbonContext.apps.getAppContext( "test-app/" ).then(
+										function( appContext ) &#123;
+											testAppContext = appContext;
+											return carbonContext.apps.getAppContext( "your-app/" );
+								        &#125;
+									).then(
+										function( appContext ) &#123;
+											yourAppContext = appContext;
+
+											// The name setting has not yet been set and it is not predefined in the platform or app contexts...
+											carbonContext.getSetting( "name" );  // returns null
+											testAppContext.getSetting( "name" ); // returns null
+											yourAppContext.getSetting( "name" ); // returns null
+
+
+											// Set 'name' setting in test-app app context...
+											testAppContext.setSetting( "name", "TestApp" );
+											carbonContext.getSetting( "name" );  // returns null
+											testAppContext.getSetting( "name" ); // returns 'TestApp'
+											yourAppContext.getSetting( "name" ); // returns null
+
+
+											// Set 'name' setting in the platform context...
+											carbonContext.setSetting( "name", "CarbonPlatform" );
+
+											carbonContext.getSetting( "name" );  // returns 'CarbonPlatform'
+											testAppContext.getSetting( "name" ); // returns 'TestApp'
+											yourAppContext.getSetting( "name" ); // returns 'CarbonPlatform'
+
+											// Deleting an app setting...
+											testAppContext.deleteSetting( "name" );
+
+											carbonContext.getSetting( "name" );  // returns 'CarbonPlatform'
+											testAppContext.getSetting( "name" ); // returns 'CarbonPlatform'
+											yourAppContext.getSetting( "name" ); // returns 'CarbonPlatform'
+										&#125;
+									);
 								</code></pre>
 								<!--@formatter:on-->
 							</sui-tab>
