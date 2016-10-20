@@ -2,14 +2,14 @@ import { Component, ElementRef, ChangeDetectorRef, AfterViewInit  } from "@angul
 
 import "semantic-ui/semantic";
 
-import template from "./uploading-files.view.html!";
+import template from "./authorization.view.html!";
 
 @Component( {
-	selector: "uploading-files",
+	selector: "authorization",
 	template: template,
 } )
 
-export class UploadingFilesView {
+export class AuthorizationView {
 	contentReady:boolean = false;
 
 	private element:ElementRef;
@@ -45,4 +45,4 @@ export class UploadingFilesView {
 	}
 }
 
-export default UploadingFilesView;
+export default AuthorizationView;

@@ -2,14 +2,14 @@ import { Component, ElementRef, ChangeDetectorRef, AfterViewInit  } from "@angul
 
 import "semantic-ui/semantic";
 
-import template from "./uploading-files.view.html!";
+import template from "./access-points.view.html!";
 
 @Component( {
-	selector: "uploading-files",
+	selector: "access-points",
 	template: template,
 } )
 
-export class UploadingFilesView {
+export class AccessPointsView {
 	contentReady:boolean = false;
 
 	private element:ElementRef;
@@ -45,4 +45,4 @@ export class UploadingFilesView {
 	}
 }
 
-export default UploadingFilesView;
+export default AccessPointsView;

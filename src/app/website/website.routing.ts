@@ -33,6 +33,11 @@ import { GettingStartedView as JavaScriptSDKGettingStartedView } from "./documen
 import { ContextsView } from "./documentation/javascript-sdk/contexts.view";
 import { ObjectModelView as JavaScriptSDKObjectModelView } from "./documentation/javascript-sdk/object-model.view";
 import { ObjectSchemaView } from "./documentation/javascript-sdk/object-schema.view";
+import { UploadingFilesView } from "./documentation/javascript-sdk/uploading-files.view";
+import { QueryingView } from "./documentation/javascript-sdk/querying.view";
+import { AuthenticationView } from "./documentation/javascript-sdk/authentication.view";
+import { AuthorizationView } from "./documentation/javascript-sdk/authorization.view";
+import { AccessPointsView } from "./documentation/javascript-sdk/access-points.view";
 
 
 const websiteRoutes:Routes = [
@@ -256,7 +261,42 @@ const websiteRoutes:Routes = [
 								content: "What is the object schema, how to define and use it.",
 							}
 						},
-					}
+					},
+					{
+						path: "javascript-sdk-uploading-files",
+						component: UploadingFilesView,
+						data: {
+							title: "Uploading Files",
+						},
+					},
+					{
+						path: "javascript-sdk-querying",
+						component: QueryingView,
+						data: {
+							title: "Querying",
+						},
+					},
+					{
+						path: "javascript-sdk-authentication",
+						component: AuthenticationView,
+						data: {
+							title: "Authentication",
+						},
+					},
+					{
+						path: "javascript-sdk-authorization",
+						component: AuthorizationView,
+						data: {
+							title: "Authorization",
+						},
+					},
+					{
+						path: "javascript-sdk-access-points",
+						component: AccessPointsView,
+						data: {
+							title: "Access Points",
+						},
+					},
 				]
 			}
 		]
