@@ -25,8 +25,8 @@ import { RESTApiView } from "./documentation/rest-api/rest-api.view";
 import { GettingStartedView } from "./documentation/rest-api/getting-started.view";
 import { InteractionModelsView } from "./documentation/rest-api/interaction-models.view";
 import { ObjectModelView } from "./documentation/rest-api/object-model.view";
-// import { RDFSourceView } from "./documentation/rest-api/rdf-source.view";
-// import { ContainersView } from "./documentation/rest-api/containers.view";
+import { RDFSourceView } from "./documentation/rest-api/rdf-source.view";
+import { ContainersView } from "./documentation/rest-api/containers.view";
 // Documentation -> JavaScriptSDK
 import { JavaScriptSDKView } from "./documentation/javascript-sdk/javascript-sdk.view";
 import { GettingStartedView as JavaScriptSDKGettingStartedView } from "./documentation/javascript-sdk/getting-started.view";
@@ -207,6 +207,21 @@ const websiteRoutes:Routes = [
 							}
 						},
 					},
+					{
+						path: "rest-api-containers",
+						component: ContainersView,
+						data: {
+							title: "Containers",
+						},
+					},
+					{
+						path: "rest-api-rdf-source",
+						component: RDFSourceView,
+						data: {
+							title: "RDF Source",
+						},
+					},
+
 					{
 						path: "javascript-sdk",
 						component: JavaScriptSDKView,
