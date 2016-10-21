@@ -12,8 +12,7 @@ Source code for [carbonldp.com](https://carbonldp.com)
     - [node.js](https://nodejs.org/en/)
     - gulp: `npm install gulp -g`
     - jspm: `npm install jspm -g`
-    - typings: `npm install -g typings`
-2. Clone dependency projects alongside the project's directory:
+2. (optional) Clone dependency projects alongside the project's directory:
     - CarbonLDP-JS-SDK: `gulp clone https://github.com/CarbonLDP/CarbonLDP-JS-SDK.git`
     - carbonldp-panel: `gulp clone https://github.com/CarbonLDP/carbonldp-panel.git`
     - angular2-carbonldp: `gulp clone https://github.com/CarbonLDP/angular2-carbonldp.git`
@@ -23,9 +22,11 @@ Source code for [carbonldp.com](https://carbonldp.com)
     - `carbonldp-panel`
     - `CarbonLDP-JS-SDK`
     - `angular2-carbonldp`
-3. cd into `carbonldp-website`
-4. run `npm install && typings install`
-5. To make changes to any dependency project visible to this project, you must link them using the following commands:
+    
+    After this, cd into `carbonldp-website`
+3. run `npm install`
+4. run `jspm install`
+5. (optional) To make changes to any dependency project visible to this project, you must link them using the following commands:
     - `jspm link ../carbonldp-panel/dist`
     - `jspm link ../CarbonLDP-JS-SDK/dist`
     - `jspm link ../angular2-carbonldp/dist`
@@ -61,17 +62,18 @@ Gulp defines two tasks:
     - `custom`: Directory to store custom description files
     - `typings.d.ts`: Main description file. Aggregates all other description files
 - `.gitignore`: Ignore file for git
+- `.gitmodules`: git submodules configuration file
 - `.travis.yml`: Travis configuration file
 - `CHANGELOG.md`: File to track package changes
 - `Dockerfile`: Docker file used to create the docker image
 - `gulpfile.js`: Gulp configuration file
 - `jspm.config.js`: JSPM configuration file
+- `LICENSE`: Da rulz
 - `package.json`: npm configuration file (it also contains JSPM dependency registry)
 - `README.md`: === this
 - `semantic.json`: semantic-ui configuration file
 - `tsconfig.json`: TypeScript compiler configuration file
 - `tslint.json`: [tslint](https://github.com/palantir/tslint) configuration file
-- `typings.json`: [typings](https://github.com/typings/typings) configuration file
 
 ## TODO
 
