@@ -38,8 +38,8 @@ import { RESTApiView } from "./documentation/rest-api/rest-api.view";
 import { GettingStartedView } from "./documentation/rest-api/getting-started.view";
 import { InteractionModelsView } from "./documentation/rest-api/interaction-models.view";
 import { ObjectModelView } from "./documentation/rest-api/object-model.view";
-// import { RDFSourceView } from "./documentation/rest-api/rdf-source.view";
-// import { ContainersView } from "./documentation/rest-api/containers.view";
+import { RDFSourceView } from "./documentation/rest-api/rdf-source.view";
+import { ContainersView } from "./documentation/rest-api/containers.view";
 
 // Documentation - > JavaScriptSDK
 import { JavaScriptSDKView } from "./documentation/javascript-sdk/javascript-sdk.view";
@@ -99,6 +99,8 @@ import { DirectivesModule } from "carbonldp-panel/directives.module";
 		GettingStartedView,
 		InteractionModelsView,
 		ObjectModelView,
+		RDFSourceView,
+		ContainersView,
 
 		// Documentation - > JavaScriptSDK
 		JavaScriptSDKView,
