@@ -20,9 +20,34 @@
 						<h1 class="ui header">Uploading Files</h1>
 					</header>
 
-					<div class="soon-to-be-documented">Not yet documented.</div>
+					<div class="documentation-steps ui fluid steps">
+						<a class="step" [routerLink]="[ '../javascript-sdk-uploading-files' ]">
+							<i class="arrow left icon"></i>
+							<div class="content">
+								<div class="title">Previous</div>
+								<div class="description">Uploading Files</div>
+							</div>
+						</a>
+						<div class="active step">
+							<!--<i class="payment icon"></i>-->
+							<div class="content">
+								<div class="title">Querying</div>
+							</div>
+						</div>
+						<a class="step" [routerLink]="[ '../javascript-sdk-authentication' ]">
+							<i class="arrow right icon"></i>
+							<div class="content">
+								<div class="title">Next</div>
+								<div class="description">Authentication</div>
+							</div>
+						</a>
+					</div>
 
-
+					<div class="soon-to-be-documented">
+						<p>Sorry, this topic hasn't been documented :(</p>
+					</div>
+					<p>We are doing our best to catch up quickly with the documentation. If you have questions regarding
+						this topic you can always ask us directly through our community. See how <a [routerLink]="[ '/community-and-support' ]">here</a></p>
 				</article>
 			</main>
 
