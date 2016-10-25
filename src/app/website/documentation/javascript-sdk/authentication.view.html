@@ -1,0 +1,59 @@
+<div class="ui main grid container">
+	<div class="row">
+		<div class="sixteen wide column">
+
+			<div class="ui breadcrumb">
+				<a class="section" [routerLink]="[ '..' ]">Documentation</a>
+				<i class="right chevron icon divider"></i>
+				<a class="section" [routerLink]="[ '../javascript-sdk' ]">JavaScript SDK</a>
+				<i class="right arrow icon divider"></i>
+				<div class="active section">Authentication</div>
+			</div>
+
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="twelve wide column">
+			<main>
+				<article class="ui vertical segment" id="article">
+					<header>
+						<h1 class="ui header">Authentication</h1>
+					</header>
+
+					<div class="documentation-steps ui fluid steps">
+						<a class="step" [routerLink]="[ '../javascript-sdk-querying' ]">
+							<i class="arrow left icon"></i>
+							<div class="content">
+								<div class="title">Previous</div>
+								<div class="description">Querying</div>
+							</div>
+						</a>
+						<div class="active step">
+							<!--<i class="payment icon"></i>-->
+							<div class="content">
+								<div class="title">Authentication</div>
+							</div>
+						</div>
+						<a class="step" [routerLink]="[ '../javascript-sdk-authorization' ]">
+							<i class="arrow right icon"></i>
+							<div class="content">
+								<div class="title">Next</div>
+								<div class="description">Authorization</div>
+							</div>
+						</a>
+					</div>
+
+					<div class="soon-to-be-documented">
+						<p>Sorry, this topic hasn't been documented :(</p>
+					</div>
+					<p>We are doing our best to catch up quickly with the documentation. If you have questions regarding
+						this topic you can always ask us directly through our community. See how <a [routerLink]="[ '/community-and-support' ]">here</a></p>
+				</article>
+			</main>
+
+		</div>
+		<!--<sidebar-component [mobile]="false" [parentElement]="element" [contentReady]="contentReady" class="four wide computer only four wide tablet only column"></sidebar-component>-->
+	</div>
+
+</div>

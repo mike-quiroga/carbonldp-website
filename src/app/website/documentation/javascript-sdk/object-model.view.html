@@ -40,21 +40,18 @@
 						</a>
 					</div>
 
-					<div class="ui icon yellow message">
-						<i class="warning sign icon"></i>
-						<div class="content">
-							<div class="header">Pre-release Documentation</div>
-							<p>Although Carbon LDP is not yet released, we're publishing documentation as it is prepared so that you can preview what's in store.</p>
-						</div>
-					</div>
-
 					<section>
 						<h2 class="ui header">Documents</h2>
 						<p>
-							The main model handled by Carbon is called a document. A document is a normal JavaScript object identified by an ID.
+							The main model object handled by Carbon LDP is called a Document. A Document begins as a normal JavaScript object containing any
+							number of data attributes (key/value pairs) that you care to define. Typically, a Document represents a data <em>entity</em>
+							of a given type (e.g. Person, Project, Product, Invoice). It can have literal datatype properties (e.g. string, date, number) and
+							pointers that link to other resources. When a normal JavaScript object is saved to Carbon, it receives a URI that uniquely
+							identifies it on a network or the web. That URI can then be used to retrieve the document or to query for specific
+							data attributes within it. Of course, queries can also be used to find data across multiple documents.
 						</p>
 						<section>
-							<h3 class="ui header">URIs</h3>
+							<h3 class="ui header">URIs as Identifiers</h3>
 							<p>
 								Using a numerical value as an ID would be prone to collisions. Using a
 								<a href="https://en.wikipedia.org/wiki/Universally_unique_identifier" rel="noopener" class="outsidelink" target="_blank">UUID</a>
@@ -62,7 +59,7 @@
 								where it came from). That's why Carbon uses Unique Resource Identifiers (or URIs).
 							</p>
 							<p>
-								URIs are strings that identify resources in a network. Any URL you can think off is also considered a URI, but not all URIs are URLs.
+								URIs are strings that identify resources in a network. Any URL you can think of is also considered a URI, but not all URIs are URLs.
 								The main difference is that a URL can change the resource it is pointing at, while URIs can also belong to a resource forever (in which case
 								they would be URNs (Unique Resource Names).
 							</p>
@@ -76,28 +73,28 @@
 								or <code>https</code> scheme (depending on the platform's configuration).
 							</p>
 							<p>
-								Using URIs as identifiers allow Carbon objects to be <strong>unique</strong>, <strong>resolvable</strong> and <strong>relative to
+								Using URIs as identifiers allow Carbon documents to be <strong>unique</strong>, <strong>resolvable</strong> and <strong>relative to
 								the network</strong>.
 							</p>
 						</section>
 						<section>
 							<h3 class="ui header">Properties</h3>
 							<p>
-								Like any JavaScript object, Carbon documents store data in properties. Properties can be named and contain whatever your
-								application needs, but there are special ones that you should be aware of:
+								Like any JavaScript object, Carbon documents store data in properties. Properties can be named and contain whatever data values your
+								application needs, but there are reserved properties that you should be aware of:
 							</p>
 							<ul>
-								<li><code>id</code>: ID of the document, the previous section talks about this property more in depth. It is present in</li>
+								<li><code>id</code>: URI of the document.</li>
 								<li>
 									<code>slug</code>: Holds the last part of the URI the document is identified with. For example the URI:
-									<code>https://example.com/resource-1/</code> would have as a slug <code>resource-1</code>. This property proves to be
-									useful when the document needs to be sent through a URL, an application route, etc. to later on retrieve it through its parent.
+									<code>https://example.com/resource-1/</code> would have as a slug <code>resource-1</code>. This property can be useful when
+									used as a relative URI when retrieving a child Document from a parent.
 								</li>
-								<li><code>types</code>: Holds all the types the document is marked with. You can read more about this property <a href="">here</a></li>
-								<li><code>created</code>: Date of when the document was created</li>
-								<li><code>modified</code>: Date of when the document was modified</li>
-								<li><code>hasMemberRelation</code>: Configures the property that will hold the array of document members</li>
-								<li><code>isMemberOfRelation</code>: Specifies the property that the member will acquire that points back to the document</li>
+								<li><code>types</code>: An array holding one or more named classes that describe the type of the document (e.g. Person, Project, Product, Invoice).</li>
+								<li><code>created</code>: Date when the document was created.</li>
+								<li><code>modified</code>: Date when the document was last modified.</li>
+								<li><code>hasMemberRelation</code>: Configures the property that will hold the array of Document members.</li>
+								<li><code>isMemberOfRelation</code>: Specifies the property that a member Document will acquire that links back to its container Document.</li>
 							</ul>
 						</section>
 						<section>
@@ -124,26 +121,25 @@
 							<!--@formatter:on-->
 							<p>
 								Fragments are identified by an ID, just like documents, but the key difference is that their ID is not a URI. Instead
-								fragments use IDs of the form <code><strong>_:</strong>RANDOM-STRING</code>. These IDs are local to the document, making impossible to link
-								fragments from outside of the document.
+								fragments use IDs of the form <code><strong>_:</strong>RANDOM-STRING</code>. These IDs are local to the document, making it impossible to link
+								to fragments from outside of the document.
 							</p>
 							<p>
 								Named fragments on the other hand, are identified by a URI relative to the document. This means, named fragments ARE
 								referenceable from outside the document. Their URIs have the form <code>DOCUMENT-URI<strong>#</strong>NAMED-FRAGMENT-SLUG</code>,
-								but there are times (like in the example) where they can be written relative to the document like
+								but there are times (as shown in the example) where they can be written relative to the document like
 								<code><strong>#</strong>NAMED-FRAGMENT-SLUG</code>.
 							</p>
 							<div class="ui info icon message">
 								<i class="info circle icon"></i>
 								<div class="content">
 									<div class="header">In a Nutshell</div>
+									<p>You can save JavaScript objects with simple key/value pairs (Carbon documents). The value of a given key may be a nested
+										object which, in turn, becomes either a <em>fragment</em> or a <em>named fragment</em>.</p>
 									<p>
-										If the object you want to save doesn't make sense without the context of another object, save it as a
-										<strong>fragment</strong>. If it is an essential part of the document, but it makes sense to talk about
-										it from outside, create a <strong>named fragment</strong>.
-									</p>
-									<p>
-										Most of the times <strong>documents</strong> and <strong>fragments</strong> are enough to model any kind of data.
+										If it doesn't make sense to reference the inner object outside of the containing document, you can
+										save the inner object as a <strong>fragment</strong>. If it is an essential part of the document, but it makes
+										sense to reference it from outside, you can create a <strong>named fragment</strong>.
 									</p>
 								</div>
 							</div>
@@ -152,16 +148,14 @@
 					<section>
 						<h2>Object Types</h2>
 						<p>
-							Any object stored in Carbon (documents, fragments or named fragments), can be marked with "types". These types can help you
-							understand an object without iterating through its properties. They can tell your application what type of properties the
-							object will have, act as flags (or tags) on the object, or any other usage you can come up with.
+							Any object stored in Carbon (documents, fragments or named fragments), can be marked with "types". These types can be thought of
+							as classes or classifications that describe the type of the object.
 						</p>
+						<p>You can classify an object as any custom type, but be aware that Carbon also automatically assigns certain system types when an object
+							is saved.</p>
 						<p>
-							Carbon automatically adds certain types to your objects when handling them, so you must be careful when doing assumptions about them.
-						</p>
-						<p>
-							The property <code>types</code> will contain an array of types the object has been marked with. To make assumptions about it you can
-							use an object's <code>hasType</code> method:
+							The property <code>types</code> will contain an array of types. To determine whether a document represents an object of a given type,
+							you can use the document's <code>hasType</code> method:
 						</p>
 						<sui-tabs>
 							<sui-tab title="TypeScript">
@@ -212,6 +206,19 @@
 							</sui-tab>
 						</sui-tabs>
 					</section>
+
+					<section>
+						<h2 class="ui header">Conclusion</h2>
+						<p>JavaScript objects can be defined with datatype properties, pointers (links) to other resources, fragments (inner-objects),
+							and named fragments (externally referenceable inner-objects). These objects, once saved and/or retrieved using the JavaScript
+							SDK are Document objects. Each Document object is uniquely identified by a URI, which can be used to link to, retrieve, update,
+							or delete the Document.</p>
+						<p>Persisted Documents will always be classified with certain system types, but can also be classified with custom
+							types (e.g. Person, Project, Product, Invoice).</p>
+						<p>Document objects are the main data objects you work with using the JavaScript SDK and the primary means by which you create,
+							read, update, and delete data.</p>
+					</section>
+
 					<div class="documentation-steps ui fluid steps">
 						<a class="step" [routerLink]="[ '../javascript-sdk-getting-started' ]">
 							<i class="arrow left icon"></i>

@@ -35,16 +35,13 @@
 								<div class="title">Object Schema</div>
 							</div>
 						</div>
-					</div>
-					<div class="ui icon yellow message">
-						<i class="warning sign icon"></i>
-
-						<div class="content">
-							<div class="header">Pre-release Documentation</div>
-							<p>
-								Although Carbon LDP is not yet released, we're publishing documentation as it is prepared so that you can preview what's in store.
-							</p>
-						</div>
+						<a class="step" [routerLink]="[ '../javascript-sdk-uploading-files' ]">
+							<i class="arrow right icon"></i>
+							<div class="content">
+								<div class="title">Next</div>
+								<div class="description">Uploading Files</div>
+							</div>
+						</a>
 					</div>
 					<div class="ui message">
 						<div class="content">
@@ -431,6 +428,28 @@
 					<!--<section>
 						<h2 class="ui header">Conclusion</h2>
 					</section>-->
+					<div class="documentation-steps ui fluid steps">
+						<a class="step" [routerLink]="[ '../javascript-sdk-contexts' ]">
+							<i class="arrow left icon"></i>
+							<div class="content">
+								<div class="title">Previous</div>
+								<div class="description">Contexts</div>
+							</div>
+						</a>
+						<div class="active completed step">
+							<!--<i class="payment icon"></i>-->
+							<div class="content">
+								<div class="title">Object Schema</div>
+							</div>
+						</div>
+						<a class="step" [routerLink]="[ '../javascript-sdk-uploading-files' ]">
+							<i class="arrow right icon"></i>
+							<div class="content">
+								<div class="title">Next</div>
+								<div class="description">Uploading Files</div>
+							</div>
+						</a>
+					</div>
 				</article>
 			</main>
 		</div>
