@@ -46,9 +46,9 @@
 					<div class="ui message">
 						<div class="content">
 							<p>TODO: Abstract</p>
-							<p>The SDK does its best to try to guess the desire outcome of retrieving documents or saving new ones. It tries to parse known data types into native JavaScript types
-								and vice versa. But sometimes there is not enough data for the SDK to correctly guess the expected behavior. To make sure the SDK behaves as expected, a web application
-								can give more information about properties and objects to the SDK through a context's object schema. An object schema is</p>
+							<!--<p>The SDK does its best to try to guess the desire outcome of retrieving documents or saving new ones. It tries to parse known data types into native JavaScript types-->
+							<!--and vice versa. But sometimes there is not enough data for the SDK to correctly guess the expected behavior. To make sure the SDK behaves as expected, a web application-->
+							<!--can give more information about properties and objects to the SDK through a context's object schema. An object schema is</p>-->
 						</div>
 					</div>
 					<section>
@@ -111,13 +111,14 @@
 						</code></pre>
 						<!--@formatter:on-->
 						<p>The object passed to the <code>extendObjectSchema</code> method is a <code>@context</code> object defined in the <a
-							href="https://www.w3.org/TR/json-ld/#the-context">JSON-LD specification</a>. If you aren't familiar with that specification, don't worry. You don't need to understand the
-							specification to be able to use object schemas, but again, the more information you posses, the better.</p>
+							href="https://www.w3.org/TR/json-ld/#the-context" target="_blank" rel="noopener">JSON-LD specification</a>. If you aren't familiar with that specification, don't worry.
+							You don'tneed to understand the specification to be able to use object schemas, but again, the more information you posses, the better.</p>
 						<p>Properties inside of the object passed to <code>extendObjectSchema</code> will describe different aspects of the schema your application will use.</p>
-						<section>
-							<h3 class="ui header">Properties</h3>
-							<p>To provide information about the properties your application objects will have, a property with the same name needs to be defined on the object schema:</p>
-							<!--@formatter:off-->
+					</section>
+					<section>
+						<h2 class="ui header">Properties</h2>
+						<p>To provide information about the properties your application objects will have, a property with the same name needs to be defined on the object schema:</p>
+						<!--@formatter:off-->
 							<pre><code cpHighlight class="javascript">
 								appContext.extendObjectSchema( &#123;
 									"labels": &#123;
@@ -126,19 +127,19 @@
 								&#125; );
 							</code></pre>
 							<!--@formatter:on-->
-							<section>
-								<h4 class="ui header">Collections (@container)</h4>
-								<p>Properties by default are assumed to be one value only unless proven otherwise. That's why if you save a document with a property that holds an array with one
-									value, once you retrieve it you'll receive only the value, not the array.</p>
-								<p>To specify that a property is always going to hold an array, you can declare the <code>@container</code> property on the object that describes the property.</p>
-								<p>That property will need to have one of the following values depending on what collection type you want to have:</p>
-								<ul>
-									<li><code>@set</code>: for unordered arrays (meaning retrieving a document with that property several times will yield different results)</li>
-									<li><code>@list</code>: for ordered arrays (keep in mind that this type of collection takes more space and is more expensive overall)</li>
-									<li><code>@map</code>: for language based maps (TO BE DOCUMENTED)</li>
-								</ul>
-								<p>For example, imagine that the application handled objects like the following one:</p>
-								<!--@formatter:off-->
+						<section>
+							<h3 class="ui header">Collections (@container)</h3>
+							<p>Properties by default are assumed to be one value only unless proven otherwise. That's why if you save a document with a property that holds an array with one
+								value, once you retrieve it you'll receive only the value, not the array.</p>
+							<p>To specify that a property is always going to hold an array, you can declare the <code>@container</code> property on the object that describes the property.</p>
+							<p>That property will need to have one of the following values depending on what collection type you want to have:</p>
+							<ul>
+								<li><code>@set</code>: for unordered arrays (meaning retrieving a document with that property several times will yield different results)</li>
+								<li><code>@list</code>: for ordered arrays (keep in mind that this type of collection takes more space and is more expensive overall)</li>
+								<li><code>@map</code>: for language based maps (TO BE DOCUMENTED)</li>
+							</ul>
+							<p>For example, imagine that the application handled objects like the following one:</p>
+							<!--@formatter:off-->
 								<pre><code cpHighlight class="javascript">
 									var project = &#123;
 										labels: [
@@ -155,11 +156,11 @@
 									&#125;;
 								</code></pre>
 								<!--@formatter:on-->
-								<p>The <code>labels</code> property is going to have a collection as a value, but it doesn't need to keep it's order. After all, its only valuable information is
-									that it "has" this and that label.</p>
-								<p>On the other hand, the <code>tasks</code> property needs to keep the order of tasks because it indicates the order of their execution or importance.</p>
-								<p>The object schema should be extended as follows:</p>
-								<!--@formatter:off-->
+							<p>The <code>labels</code> property is going to have a collection as a value, but it doesn't need to keep it's order. After all, its only valuable information is
+								that it "has" this and that label.</p>
+							<p>On the other hand, the <code>tasks</code> property needs to keep the order of tasks because it indicates the order of their execution or importance.</p>
+							<p>The object schema should be extended as follows:</p>
+							<!--@formatter:off-->
 								<pre><code cpHighlight class="javascript">
 									appContext.extendObjectSchema( &#123;
 										"labels": &#123;
@@ -171,25 +172,25 @@
 									&#125; );
 								</code></pre>
 								<!--@formatter:on-->
-								<p>Having done that, persisting the resource and then reading it again will yield the expected results.</p>
-							</section>
-							<section>
-								<h4 class="ui header">Data types (@type)</h4>
-								<p>The SDK does a really good job on saving values with the right data type. Strings will be saved as strings, booleans will be saved as booleans, etc. But imagine
-									the following scenario:</p>
-								<ol>
-									<li>Application A and B are developed using the same Carbon application to store their data</li>
-									<li>Both applications are programmed to understand Project objects with a property "content" that holds a string</li>
-									<li>Later on complex "content" properties are added to application B. Now app B understands "content" properties that hold objects (with a type, and other
-										properties).
-									</li>
-								</ol>
-								<p>Because application A hasn't been updated, and both apps are using the same data, app A is probably going to crash whenever it finds a complex "content" property
-									.</p>
-								<p>To avoid this, it is a good practice to define what type the property is meant to have on each application. This is done by specifying a <code>@type</code>
-									property on the object that describes the property "content":
-								</p>
-								<!--@formatter:off-->
+							<p>Having done that, persisting the resource and then reading it again will yield the expected results.</p>
+						</section>
+						<section>
+							<h3 class="ui header">Data types (@type)</h3>
+							<p>The SDK does a really good job on saving values with the right data type. Strings will be saved as strings, booleans will be saved as booleans, etc. But imagine
+								the following scenario:</p>
+							<ol>
+								<li>Application A and B are developed using the same Carbon application to store their data</li>
+								<li>Both applications are programmed to understand Project objects with a property "content" that holds a string</li>
+								<li>Later on complex "content" properties are added to application B. Now app B understands "content" properties that hold objects (with a type, and other
+									properties).
+								</li>
+							</ol>
+							<p>Because application A hasn't been updated, and both apps are using the same data, app A is probably going to crash whenever it finds a complex "content" property
+								.</p>
+							<p>To avoid this, it is a good practice to define what type the property is meant to have on each application. This is done by specifying a <code>@type</code>
+								property on the object that describes the property "content":
+							</p>
+							<!--@formatter:off-->
 								<pre><code cpHighlight class="javascript">
 									appContext.extendObjectSchema( &#123;
 										"content": &#123;
@@ -198,27 +199,223 @@
 									&#125; );
 								</code></pre>
 								<!--@formatter:on-->
-								<p>If the application A has its object schema set this way it won't have a problem. The SDK will filter any "content" non string value when retrieving the project.</p>
-								<p>The most common accepted types are:</p>
-								<ul>
-									<li><code>@id</code>: When the value type is a pointer to another object</li>
-									<li><code>string</code></li>
-									<li><code>boolean</code></li>
-									<li><code>integer</code></li>
-									<li><code>double</code></li>
-									<li><code>float</code></li>
-									<li><code>long</code></li>
-									<li><code>date</code></li>
-									<li><code>dateTime</code></li>
-									<li><code>time</code></li>
-								</ul>
-							</section>
+							<p>If the application A has its object schema set this way it won't have a problem. The SDK will filter any "content" non string value when retrieving the project.</p>
+							<p>The most common accepted types are:</p>
+							<ul>
+								<li><code>@id</code>: When the value type is a pointer to another object</li>
+								<li><code>string</code></li>
+								<li><code>boolean</code></li>
+								<li><code>integer</code></li>
+								<li><code>double</code></li>
+								<li><code>float</code></li>
+								<li><code>long</code></li>
+								<li><code>date</code></li>
+								<li><code>dateTime</code></li>
+								<li><code>time</code></li>
+							</ul>
+							<p>All of these types (except <code>@id</code>) are part of the <a href="https://www.w3.org/TR/xmlschema-2/" target="_blank" rel="noopener">xml schema data
+								types.</a></p>
+						</section>
+						<section>
+							<h3 class="ui header">IDs (@id)</h3>
+							<p>So far we have solved all of the problems we stated at the start of this document. But there's another problem lurking around. Imagine the following scenario:</p>
+							<ul>
+								<li>Application <strong>A</strong> and application <strong>B</strong> want to share data by using the same Carbon app</li>
+								<li>
+									<p>Application <strong>A</strong> handles objects like the following one:</p>
+									<!--@formatter:off-->
+									<pre><code cpHighlight class="javascript">
+										var client = &#123;
+											name: "Miguel",
+											lastName: "Aragón"
+										&#125;;
+									</code></pre>
+									<!--@formatter:on-->
+								</li>
+								<li>
+									<p>On the other hand application <strong>B</strong> was programmed to handle objects like this:</p>
+									<!--@formatter:off-->
+									<pre><code cpHighlight class="javascript">
+										var client = &#123;
+											firstName: "Cody",
+											lastName: "Burleson"
+										&#125;;
+									</code></pre>
+									<!--@formatter:on-->
+								</li>
+							</ul>
+							<p>These two applications will not be able to integrate because they use a different property for the same purpose. Application <strong>A</strong> uses
+								<code>name</code> to refer to first names, and application <strong>B</strong> uses <code>firstName</code> instead.</p>
+							<p>There are two options: one application renames the property to use the same as the other application (expensive!), or they define the same <code>@id</code> on their
+								own object schema.</p>
+							<p>The property <code>@id</code> configures the unique id the property will have when saved on the platform. That way even if two or more applications are using
+								different property names for the same "real" property, they can integrate by using a unique id for that property.</p>
+							<p>In this example the problem would be solved by following these steps:</p>
+							<ul>
+								<li>
+									<p>Application <strong>A</strong> extends its object schema like this:</p>
+									<!--@formatter:off-->
+									<pre><code cpHighlight class="javascript">
+										appContext.extendObjectSchema( &#123;
+											"name": &#123;
+												"@id": "lastName",
+												"@type": "string"
+											&#125;
+										&#125; );
+									</code></pre>
+									<!--@formatter:on-->
+								</li>
+								<li>
+									<p>Application <strong>B</strong> extends its this way:</p>
+									<!--@formatter:off-->
+									<pre><code cpHighlight class="javascript">
+										appContext.extendObjectSchema( &#123;
+											"lastName": &#123;
+												"@id": "lastName",
+												"@type": "string"
+											&#125;
+										&#125; );
+									</code></pre>
+									<!--@formatter:on-->
+								</li>
+							</ul>
+							<p>With that setup, the SDK will translate the properties when saving or retrieving documents and both of the applications will be using the same <em>standardized</em>
+								name for their properties.</p>
+						</section>
+						<section>
+							<h3 class="ui header">Vocabularies</h3>
+							<p>Storing properties with names like <code>name</code> or <code>title</code> is meant to cause collisions. A Carbon application could use "name" to define people's
+								first names while another one could use it to define their complete name. Or even worse, they could use it to define the name of a country.</p>
+							<p>That's why by default each time a new property is saved to a Carbon app it is saved as a uniform resource identifier (URI). For example, if your JavaScript
+								application saves an object with a property <code>title</code>, the property will actually be saved as something like:</p>
+							<p><code>http://localhost:8083/apps/your-app-slug/vocabulary/#title</code></p>
+							<p>Let's decompose that URI:</p>
+							<ul>
+								<li><code>http://</code>: The protocol your Carbon platform is configured with</li>
+								<li><code>localhost</code>: The address of your Carbon platform</li>
+								<li><code>:8083</code>: The port the Carbon platform is listening on</li>
+								<li><code>apps/your-app-slug/</code>: Your Carbon app slug</li>
+								<li><code>vocabulary/</code>: A document inside of your Carbon app</li>
+								<li><code>#title</code>: The slug of a fragment inside of the <code>vocabulary/</code> document</li>
+							</ul>
+							<p>This means that the property is saved using the id of a fragment, inside of a document called <code>vocabulary/</code> from your application.</p>
+							<p>By doing this, you are able to go and save data about the property itself. You could for example go and add a description to the property by modifying the
+								<code>vocabulary/</code> document:</p>
+							<sui-tabs>
+								<sui-tab title="TypeScript">
+									<!--@formatter:off-->
+									<pre><code cpHighlight class="typescript">
+										import * as App from "carbonldp/App";
+										import * as HTTP from "carbonldp/HTTP";
+										import * as PersistedDocument from "carbonldp/PersistedDocument";
+										import * as PersistedFragment from "carbonldp/PersistedFragment";
+
+										let appContext:App.Context;
+
+										// ... retrieve appContext
+
+										appContext.get( "vocabulary/" ).then(
+											( [ vocabulary, response ]:[ PersistedDocument.Class, HTTP.Response.Class ] ) => &#123;
+												let title:PersistedFragment.Class = vocabulary.getFragment( "title" );
+
+												// Add metadata about the title property
+												title.description = "The title of a book";
+
+												return vocabulary.save();
+											&#125;
+										).then(
+											( response:HTTP.Response.Class ) => &#123;
+												// ...
+											&#125;
+										).catch( console.error );
+									</code></pre>
+									<!--@formatter:on-->
+								</sui-tab>
+								<sui-tab title="JavaScript ES2015">
+									<!--@formatter:off-->
+									<pre><code cpHighlight class="javascript">
+										let appContext;
+
+										// ... retrieve appContext
+
+										appContext.get( "vocabulary/" ).then(
+											( [ vocabulary, response ] ) => &#123;
+												let title = vocabulary.getFragment( "title" );
+
+												// Add metadata about the title property
+												title.description = "The title of a book";
+
+												return vocabulary.save();
+											&#125;
+										).then(
+											( response ) => &#123;
+												// ...
+											&#125;
+										).catch( console.error );
+									</code></pre>
+									<!--@formatter:on-->
+								</sui-tab>
+								<sui-tab title="JavaScript ES5">
+									<!--@formatter:off-->
+									<pre><code cpHighlight class="javascript">
+										var appContext;
+
+										// ... retrieve appContext
+
+										appContext.get( "vocabulary/" ).then(
+											function( result ) &#123;
+												var vocabulary = result[ 0 ];
+												var title = vocabulary.getFragment( "title" );
+
+												// Add metadata about the title property
+												title.description = "The title of a book";
+
+												return vocabulary.save();
+											&#125;
+										).then(
+											function( response ) &#123;
+												// ...
+											&#125;
+										).catch( console.error );
+									</code></pre>
+									<!--@formatter:on-->
+								</sui-tab>
+							</sui-tabs>
+							<p>The default document those fragments are saved in is called <code>vocabulary</code> because it collects all of the terms you use in your application. By developing an
+								application you are essentially creating a new vocabulary.</p>
+							<p>If that's the case you may think: "Well what if I reuse the terms from one application on another one?". Well, that's one of the main advantages of building a
+								vocabulary!</p>
+							<p>If you have a Carbon application (application <strong>A</strong>) with an already established amount of terms, and you want to create a new Carbon app (application
+								<strong>B</strong>) that understands data from your already existing application you can accomplish it by defining the <code>@id</code> of the property in the object
+								schema:</p>
+							<!--@formatter:off-->
+							<pre><code cpHighlight class="javascript">
+								// In application B
+								appBContext.extendObjectSchema( &#123;
+									"title": &#123;
+										"@id": "http://localhost:8083/apps/application-a-slug/vocabulary/#title"
+									&#125;
+								&#125; );
+							</code></pre>
+							<!--@formatter:on-->
+							<p><strong>Note</strong>: This is only needed if your applications are not sharing a Carbon application.</p>
+							<p>Sharing vocabularies opens a lot of interesting possibilities. For example, you could create your own vocabulary that only contains terms about social connections.
+								Or one that is only about geo location terms. Later on you could make those vocabularies public so other people could use them and make their data compatible with
+								each other!</p>
+							<p>Well guess what? People have been doing that for quite some time. There are a lot of well established vocabularies that you can use on your application to make your
+								data worldwide compatible. You can search for these vocabularies using the <a href="https://lov.okfn.org/dataset/lov/" target="_blank" rel="noopener">Linked Open
+									Vocabulary searcher</a>.</p>
+							<p>It is <strong>highly recommended</strong> to use existing vocabularies instead of new, custom ones.</p>
 						</section>
 					</section>
-					<!-- TODO: Add conclusion-->
-					<!--<section>
-						<h2 class="ui header">Conclusion</h2>
-					</section>-->
+					<!--<section>-->
+					<!--<h2 class="ui header">Prefixes</h2>-->
+					<!--<p></p>-->
+					<!--</section>-->
+					<!--<section>-->
+					<!--<h2 class="ui header">Conclusion</h2>-->
+					<!--<p></p>-->
+					<!--</section>-->
 					<div class="documentation-steps ui fluid steps">
 						<a class="step" [routerLink]="[ '../javascript-sdk-contexts' ]">
 							<i class="arrow left icon"></i>
