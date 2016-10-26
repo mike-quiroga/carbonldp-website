@@ -29,6 +29,10 @@ documents {
 		padding-right: 0;
 	}
 
+	.ui.breadcrumb > .section:hover {
+		cursor: pointer;
+	}
+
 	a.outsidelink {
 		color: black;
 		border-bottom: 1px dotted #f89828;
