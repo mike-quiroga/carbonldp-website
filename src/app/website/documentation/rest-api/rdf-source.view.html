@@ -3,9 +3,9 @@
 		<div class="sixteen wide column">
 
 			<div class="ui breadcrumb">
-				<span class="section">Documentation</span>
+				<a class="section" [routerLink]="[ '..' ]">Documentation</a>
 				<i class="right chevron icon divider"></i>
-				<span class="section">REST API</span>
+				<a class="section" [routerLink]="[ '../rest-api' ]">REST API</a>
 				<i class="right arrow icon divider"></i>
 				<div class="active section">RDF Source</div>
 			</div>
@@ -22,334 +22,341 @@
 						<h1 class="ui header">RDF Source</h1>
 					</header>
 
-					<div class="ui message">
-						<div class="content">
-							<p class="larger">
-								You can use the Carbon LDP REST API to create, read, update, and delete RDFSource documents. Here's how...
-							</p>
-						</div>
+					<div class="soon-to-be-documented">
+						<p>Sorry, this topic hasn't been documented :(</p>
 					</div>
-
-					<section>
-						<h2 class="ui header">Create</h2>
-
-						<p>To create a new RDFSource, POST the new document to the URI of a container.</p>
-
-						<p>
-							<span class="ui blue horizontal label">POST</span> <code>/apps/&#123;app-name&#125;/&#123;container&#125;/</code>
-						</p>
-
-						<table class="ui celled table">
-							<thead>
-								<tr>
-									<th>HTTP Header</th>
-									<th>Value</th>
-									<th colspan="1">Required?</th>
-								</tr>
-							</thead>
-							<tbody>
-								<tr>
-									<td>Authorization</td>
-									<td>Basic ...</td>
-									<td>Yes</td>
-								</tr>
-								<tr>
-									<td>Content-Type</td>
-									<td>
-										Either of:<br/>
-										<ul>
-											<li>text/turtle</li>
-											<li>application/ld+json</li>
-											<li>application/rdf+xml</li>
-											<li>application/trig</li>
-										</ul>
-									</td>
-									<td>Yes</td>
-								</tr>
-								<tr>
-									<td>Prefer</td>
-									<td><span class="nolink">http://www.w3.org/ns/ldp#Container</span>; rel=interaction-model</td>
-									<td>Yes</td>
-								</tr>
-								<tr>
-									<td>Slug</td>
-									<td>&#123;john-doe&#125;</td>
-									<td>No</td>
-								</tr>
-							</tbody>
-						</table>
-
-						<p>
-							<strong>Body (required)</strong>
-						</p>
-
-						<p>
-							The RDFSource document is required in the entity body of the request. Following is an example RDFSource document
-							in TRIG syntax. The syntax used for the body must match what you declare in the <code>Content-Type</code>
-							header.
-						</p>
-
-						<pre><code cpHighlight class="turtle">
-						@prefix ldp:&#60;http://www.w3.org/ns/ldp#&#62;.
-						@prefix ex:&#60;http://www.base22.com/2016/05/ex#&#62;.
-
-						&#60;&#62; &#123;
-							&#60;&#62;
-								a ldp:RDFSource, ex:Person;
-								ex:firstName "John";
-								ex:lastName "Doe";
-								ex:phoneNumber "(555) 555-5555".
-						&#125;
-						</code></pre>
-
-						<p>Issue the request. A successful response should provide the HTTP status code 201 Created.</p>
-
-						<p>If the optional <code>Slug</code> header is provided, the server will attempt to mint a URI for the document by
-							appending the slug to the path. If the slug is not provided, the server will generate a random long number for the URI.
-						</p>
-						<p>The document's fully qualified URI will be returned by the <code>Location</code> header in the response. Whether or not the server mints the URI using a slug or random long
-							number, the URI will always end with a trailing forward-slash.
-						</p>
-
-						<p>An ETag header will also be returned, which can be used to determine if the document has changed since it was first created or last modified.</p>
-
-						<p><strong>Example request to create RDFSource :</strong></p>
-
-						<pre><code cpHighlight class="turtle">
-						POST /apps/rest-examples/persons/ HTTP/1.1
-						Authorization: Basic
-						Content-Type: application/trig
-						Prefer: http://www.w3.org/ns/ldp#Container; rel=interaction-model
-						Slug: john-doe
-
-						@prefix ldp:&lt;http://www.w3.org/ns/ldp#&gt;.
-						@prefix ex:&lt;http://www.base22.com/2016/05/ex#&gt;.
-
-						        a ldp:RDFSource, ex:Person;
-						        ex:firstName "John";
-						        ex:lastName "Doe";
-						        ex:phoneNumber "(555) 555-5555".
-						&#125;
-					</code></pre>
+					<p>We are doing our best to catch up quickly with the documentation. If you have questions regarding
+						this topic you can always ask us directly through our community. See how <a [routerLink]="[ '/community-and-support' ]">here</a></p>
 
 
-					</section>
+					<!--<div class="ui message">-->
+						<!--<div class="content">-->
+							<!--<p>-->
+								<!--You can use the Carbon LDP REST API to create, read, update, and delete RDFSource documents. Here's how...-->
+							<!--</p>-->
+						<!--</div>-->
+					<!--</div>-->
 
-					<section>
-						<h2>Retrieve</h2>
-						<p>To retrieve an RDFSource, issue a GET request to the document's URI.</p>
+					<!--<section>-->
+						<!--<h2 class="ui header">Create</h2>-->
 
-						<p>
-							<span class="ui blue horizontal label">GET</span> <code>/apps/&#123;app-name&#125;/&#123;container&#125;/&#123;rdfsource&#125;/</code>
-						</p>
+						<!--<p>To create a new RDFSource, POST the new document to the URI of a container.</p>-->
 
-						<table class="ui celled table">
-							<thead>
-								<tr>
-									<th>HTTP Header</th>
-									<th>Value</th>
-									<th colspan="1">Required?</th>
-								</tr>
-							</thead>
-							<tbody>
-								<tr>
-									<td>Authorization</td>
-									<td>Basic ...</td>
-									<td>Yes</td>
-								</tr>
-								<tr>
-									<td>Accept</td>
-									<td>
-										Either of:<br/>
-										<ul>
-											<li>text/turtle</li>
-											<li>application/ld+json</li>
-											<li>application/rdf+xml</li>
-											<li>application/trig</li>
-										</ul>
-									</td>
-									<td>No</td>
-								</tr>
-								<tr>
-									<td>Prefer</td>
-									<td><span class="nolink">http://www.w3.org/ns/ldp#RDFSource</span>; rel=interaction-model</td>
-									<td>Yes</td>
-								</tr>
-							</tbody>
-						</table>
+						<!--<p>-->
+							<!--<span class="ui blue horizontal label">POST</span> <code>/apps/&#123;app-name&#125;/&#123;container&#125;/</code>-->
+						<!--</p>-->
 
-						<p>A successful request will result with HTTP status code 200 OK.</p>
+						<!--<table class="ui celled table">-->
+							<!--<thead>-->
+								<!--<tr>-->
+									<!--<th>HTTP Header</th>-->
+									<!--<th>Value</th>-->
+									<!--<th colspan="1">Required?</th>-->
+								<!--</tr>-->
+							<!--</thead>-->
+							<!--<tbody>-->
+								<!--<tr>-->
+									<!--<td>Authorization</td>-->
+									<!--<td>Basic ...</td>-->
+									<!--<td>Yes</td>-->
+								<!--</tr>-->
+								<!--<tr>-->
+									<!--<td>Content-Type</td>-->
+									<!--<td>-->
+										<!--Either of:<br/>-->
+										<!--<ul>-->
+											<!--<li>text/turtle</li>-->
+											<!--<li>application/ld+json</li>-->
+											<!--<li>application/rdf+xml</li>-->
+											<!--<li>application/trig</li>-->
+										<!--</ul>-->
+									<!--</td>-->
+									<!--<td>Yes</td>-->
+								<!--</tr>-->
+								<!--<tr>-->
+									<!--<td>Prefer</td>-->
+									<!--<td><span class="nolink">http://www.w3.org/ns/ldp#Container</span>; rel=interaction-model</td>-->
+									<!--<td>Yes</td>-->
+								<!--</tr>-->
+								<!--<tr>-->
+									<!--<td>Slug</td>-->
+									<!--<td>&#123;john-doe&#125;</td>-->
+									<!--<td>No</td>-->
+								<!--</tr>-->
+							<!--</tbody>-->
+						<!--</table>-->
 
-						<p><strong>Example response from retrieving an RDFSource :</strong></p>
+						<!--<p>-->
+							<!--<strong>Body (required)</strong>-->
+						<!--</p>-->
 
-						<p>Following is the response from retrieving a newly created RDFSource (from the &quot;Create&quot; example above).</p>
+						<!--<p>-->
+							<!--The RDFSource document is required in the entity body of the request. Following is an example RDFSource document-->
+							<!--in TRIG syntax. The syntax used for the body must match what you declare in the <code>Content-Type</code>-->
+							<!--header.-->
+						<!--</p>-->
 
-						<pre><code cpHighlight>
-					&lt;https://carbonldp.com/apps/rest-examples/persons/john-doe/&gt;&#123;
-						&lt;https://carbonldp.com/apps/rest-examples/persons/john-doe/&gt; a &lt;http://www.w3.org/ns/ldp#BasicContainer&gt; , &lt;http://www.w3.org/ns/ldp#Container&gt; , &lt;http://www.w3.org/ns/ldp#RDFSource&gt; , &lt;http://www.base22.com/2016/05/ex#Person&gt; ;
-							&lt;http://www.w3.org/ns/ldp#hasMemberRelation&gt; &lt;http://www.w3.org/ns/ldp#member&gt; ;
-							&lt;https://carbonldp.com/ns/v1/platform#created&gt; &quot;2016-05-31T23:29:18.624Z&quot;^^&lt;http://www.w3.org/2001/XMLSchema#dateTime&gt; ;
-							&lt;https://carbonldp.com/ns/v1/platform#modified&gt; &quot;2016-06-01T17:05:18.949Z&quot;^^&lt;http://www.w3.org/2001/XMLSchema#dateTime&gt; ;
-							&lt;https://carbonldp.com/ns/v1/security#accessControlList&gt; &lt;https://dev.carbonldp.com/apps/rest-examples/persons/john-doe/~acl/&gt; ;
-							&lt;http://www.base22.com/2016/05/ex#firstName&gt; &quot;John&quot; ;
-							&lt;http://www.base22.com/2016/05/ex#lastName&gt; &quot;Doe&quot; ;
-							&lt;http://www.base22.com/2016/05/ex#phoneNumber&gt; &quot;(555) 555-5555&quot; ;
-							&lt;https://carbonldp.com/ns/v1/platform#defaultInteractionModel&gt; &lt;http://www.w3.org/ns/ldp#RDFSource&gt; .
-					&#125;
-					</code></pre>
+						<!--<pre><code cpHighlight class="turtle">-->
+						<!--@prefix ldp:&#60;http://www.w3.org/ns/ldp#&#62;.-->
+						<!--@prefix ex:&#60;http://www.base22.com/2016/05/ex#&#62;.-->
 
-						<p>
-							You may notice that additional properties are added to an RDFSource when it is created such as created, modified, and accessControlList. These are called <em>system managed
-							properties</em>, which Carbon adds automatically when you post new RDFSource documents.</p>
+						<!--&#60;&#62; &#123;-->
+							<!--&#60;&#62;-->
+								<!--a ldp:RDFSource, ex:Person;-->
+								<!--ex:firstName "John";-->
+								<!--ex:lastName "Doe";-->
+								<!--ex:phoneNumber "(555) 555-5555".-->
+						<!--&#125;-->
+						<!--</code></pre>-->
 
-						<p>You may also notice that, in addition to the type RDFSource, the resource is now also a BasicContainer. This is a convenient feature of Carbon LDP. When an RDFSource is
-							created, it is automatically treated also as container. Therefore, you can read an RDFSource as an RDFSource document and a container depending on the interaction model you
-							provide in the <code>Prefer</code> header of the GET request. If you're interested in the properties of the resource (as an entity), you should prefer the RDFSource
-							interaction model when you issue the GET request. If you're interested in the membership of the resource as a container, you should prefer the container interaction model
-							when you issue the GET request.
-						</p>
+						<!--<p>Issue the request. A successful response should provide the HTTP status code 201 Created.</p>-->
 
-					</section>
+						<!--<p>If the optional <code>Slug</code> header is provided, the server will attempt to mint a URI for the document by-->
+							<!--appending the slug to the path. If the slug is not provided, the server will generate a random long number for the URI.-->
+						<!--</p>-->
+						<!--<p>The document's fully qualified URI will be returned by the <code>Location</code> header in the response. Whether or not the server mints the URI using a slug or random long-->
+							<!--number, the URI will always end with a trailing forward-slash.-->
+						<!--</p>-->
 
-					<section>
-						<h2>Update</h2>
+						<!--<p>An ETag header will also be returned, which can be used to determine if the document has changed since it was first created or last modified.</p>-->
 
-						<p>To update an existing RDFSource, issue a PUT request to the URI of the document to replace it with the document being submitted. A PUT request is a complete replacement of
-							the existing document; patching individual properties to change a document is not supported at this time.</p>
+						<!--<p><strong>Example request to create RDFSource :</strong></p>-->
 
-						<p>
-							<span class="ui blue horizontal label">PUT</span> <code>/apps/&#123;app-name&#125;/&#123;container&#125;/&#123;rdfsource&#125;/</code>
-						</p>
+						<!--<pre><code cpHighlight class="turtle">-->
+						<!--POST /apps/rest-examples/persons/ HTTP/1.1-->
+						<!--Authorization: Basic-->
+						<!--Content-Type: application/trig-->
+						<!--Prefer: http://www.w3.org/ns/ldp#Container; rel=interaction-model-->
+						<!--Slug: john-doe-->
 
-						<table class="ui celled table">
-							<thead>
-								<tr>
-									<th>HTTP Header</th>
-									<th>Value</th>
-									<th colspan="1">Required?</th>
-								</tr>
-							</thead>
-							<tbody>
-								<tr>
-									<td>Authorization</td>
-									<td>Basic ...</td>
-									<td>Yes</td>
-								</tr>
-								<tr>
-									<td>Content-Type</td>
-									<td>
-										Either of:<br/>
-										<ul>
-											<li>text/turtle</li>
-											<li>application/ld+json</li>
-											<li>application/rdf+xml</li>
-											<li>application/trig</li>
-										</ul>
-									</td>
-									<td>Yes</td>
-								</tr>
-								<tr>
-									<td>Prefer</td>
-									<td><span class="nolink">http://www.w3.org/ns/ldp#RDFSource</span>; rel=interaction-model</td>
-									<td>Yes</td>
-								</tr>
-								<tr>
-									<td>If-Match</td>
-									<td>&#123;ETag value&#125;</td>
-									<td>Yes</td>
-								</tr>
-							</tbody>
-						</table>
+						<!--@prefix ldp:&lt;http://www.w3.org/ns/ldp#&gt;.-->
+						<!--@prefix ex:&lt;http://www.base22.com/2016/05/ex#&gt;.-->
 
-						<p><strong>Body (required)</strong></p>
-
-						<pre><code cpHighlight class="turtle">
-						&lt;https://dev.carbonldp.com/apps/rest-examples/persons/john-doe/&gt; &#123;
-						&lt;https://dev.carbonldp.com/apps/rest-examples/persons/john-doe/&gt; a &lt;http://www.w3.org/ns/ldp#BasicContainer&gt; , &lt;http://www.w3.org/ns/ldp#Container&gt; , &lt;http://www.w3.org/ns/ldp#RDFSource&gt; , &lt;http://www.base22.com/2016/05/ex#Person&gt; ;
-							&lt;http://www.w3.org/ns/ldp#hasMemberRelation&gt; &lt;http://www.w3.org/ns/ldp#member&gt; ;
-							&lt;https://carbonldp.com/ns/v1/platform#created&gt; &quot;2016-05-31T23:29:18.624Z&quot;^^&lt;http://www.w3.org/2001/XMLSchema#dateTime&gt; ;
-							&lt;https://carbonldp.com/ns/v1/platform#modified&gt; &quot;2016-06-01T17:05:18.949Z&quot;^^&lt;http://www.w3.org/2001/XMLSchema#dateTime&gt; ;
-							&lt;https://carbonldp.com/ns/v1/security#accessControlList&gt; &lt;https://dev.carbonldp.com/apps/rest-examples/persons/john-doe/~acl/&gt; ;
-							&lt;http://www.base22.com/2016/05/ex#firstName&gt; &quot;John&quot; ;
-							&lt;http://www.base22.com/2016/05/ex#lastName&gt; &quot;Doe&quot; ;
-							&lt;http://www.base22.com/2016/05/ex#phoneNumber&gt; &quot;(555) 555-5555&quot; ;
-							&lt;https://carbonldp.com/ns/v1/platform#defaultInteractionModel&gt; &lt;http://www.w3.org/ns/ldp#RDFSource&gt; ;
-							&lt;http://www.base22.com/2016/05/ex#email&gt; &quot;john.doe@example.org&quot; .
-					&#125;
-					</code></pre>
-
-						<p>A successful update request will result in HTTP status code 200 OK.</p>
-						<p>
-							The best way to update an existing RDFSource document is to first retrieve it with a GET request and then modify what the server returned. This ensures that you will retain
-							any system managed properties that may have been added. Though system managed properties can not be changed by you, they must still exist in the document or the PUT request
-							will fail.
-						</p>
-						<p>Also required for a successful update is the If-Match header. It's value must match the ETag value obtained from a previous GET or HEAD request. This mechanism helps to
-							ensure that the document you're attempting to update has not been changed since you last retrieved it.</p>
+						        <!--a ldp:RDFSource, ex:Person;-->
+						        <!--ex:firstName "John";-->
+						        <!--ex:lastName "Doe";-->
+						        <!--ex:phoneNumber "(555) 555-5555".-->
+						<!--&#125;-->
+					<!--</code></pre>-->
 
 
-						<p><strong>Example request to update RDFSource :</strong></p>
+					<!--</section>-->
 
-						<pre><code cpHighlight>
-						PUT /apps/rest-examples/persons/john-doe/ HTTP/1.1
-						Authorization: Basic YWRtaW5AY2FyYm9ubGRwLmNvbTpoZWxsbw==
-						Prefer: http://www.w3.org/ns/ldp#RDFSource; rel=interaction-model
-						Content-Type: application/trig
-						If-Match: "429274222"
+					<!--<section>-->
+						<!--<h2>Retrieve</h2>-->
+						<!--<p>To retrieve an RDFSource, issue a GET request to the document's URI.</p>-->
 
-						&lt;https://dev.carbonldp.com/apps/rest-examples/persons/john-doe/&gt; &#123;
-							&lt;https://dev.carbonldp.com/apps/rest-examples/persons/john-doe/&gt; a &lt;http://www.w3.org/ns/ldp#BasicContainer&gt; , &lt;http://www.w3.org/ns/ldp#Container&gt; , &lt;http://www.w3.org/ns/ldp#RDFSource&gt; , &lt;http://www.base22.com/2016/05/ex#Person&gt; ;
-								&lt;http://www.w3.org/ns/ldp#hasMemberRelation&gt; &lt;http://www.w3.org/ns/ldp#member&gt; ;
-								&lt;https://carbonldp.com/ns/v1/platform#created&gt; "2016-05-31T23:29:18.624Z"^^&lt;http://www.w3.org/2001/XMLSchema#dateTime&gt; ;
-								&lt;https://carbonldp.com/ns/v1/platform#modified&gt; "2016-06-01T17:05:18.949Z"^^&lt;http://www.w3.org/2001/XMLSchema#dateTime&gt; ;
-								&lt;https://carbonldp.com/ns/v1/security#accessControlList&gt; &lt;https://dev.carbonldp.com/apps/rest-examples/persons/john-doe/~acl/&gt; ;
-								&lt;http://www.base22.com/2016/05/ex#firstName&gt; "John" ;
-								&lt;http://www.base22.com/2016/05/ex#lastName&gt; "Doe" ;
-								&lt;http://www.base22.com/2016/05/ex#phoneNumber&gt; "(555) 555-5555" ;
-								&lt;https://carbonldp.com/ns/v1/platform#defaultInteractionModel&gt; &lt;http://www.w3.org/ns/ldp#RDFSource&gt; ;
-								&lt;http://www.base22.com/2016/05/ex#email&gt; "john.doe@example.org" .
-						&#125;
+						<!--<p>-->
+							<!--<span class="ui blue horizontal label">GET</span> <code>/apps/&#123;app-name&#125;/&#123;container&#125;/&#123;rdfsource&#125;/</code>-->
+						<!--</p>-->
 
-					</code></pre>
+						<!--<table class="ui celled table">-->
+							<!--<thead>-->
+								<!--<tr>-->
+									<!--<th>HTTP Header</th>-->
+									<!--<th>Value</th>-->
+									<!--<th colspan="1">Required?</th>-->
+								<!--</tr>-->
+							<!--</thead>-->
+							<!--<tbody>-->
+								<!--<tr>-->
+									<!--<td>Authorization</td>-->
+									<!--<td>Basic ...</td>-->
+									<!--<td>Yes</td>-->
+								<!--</tr>-->
+								<!--<tr>-->
+									<!--<td>Accept</td>-->
+									<!--<td>-->
+										<!--Either of:<br/>-->
+										<!--<ul>-->
+											<!--<li>text/turtle</li>-->
+											<!--<li>application/ld+json</li>-->
+											<!--<li>application/rdf+xml</li>-->
+											<!--<li>application/trig</li>-->
+										<!--</ul>-->
+									<!--</td>-->
+									<!--<td>No</td>-->
+								<!--</tr>-->
+								<!--<tr>-->
+									<!--<td>Prefer</td>-->
+									<!--<td><span class="nolink">http://www.w3.org/ns/ldp#RDFSource</span>; rel=interaction-model</td>-->
+									<!--<td>Yes</td>-->
+								<!--</tr>-->
+							<!--</tbody>-->
+						<!--</table>-->
 
-					</section>
+						<!--<p>A successful request will result with HTTP status code 200 OK.</p>-->
 
-					<section>
-						<h2>Delete</h2>
+						<!--<p><strong>Example response from retrieving an RDFSource :</strong></p>-->
 
-						<p>To delete an RDFSource document, issue a DELETE request with an empty body to the URI of the document to be deleted.</p>
+						<!--<p>Following is the response from retrieving a newly created RDFSource (from the &quot;Create&quot; example above).</p>-->
 
-						<p>
-							<span class="ui blue horizontal label">DELETE</span> <code>/apps/&#123;app-name&#125;/&#123;container&#125;/&#123;rdfsource&#125;/</code>
-						</p>
+						<!--<pre><code cpHighlight>-->
+					<!--&lt;https://carbonldp.com/apps/rest-examples/persons/john-doe/&gt;&#123;-->
+						<!--&lt;https://carbonldp.com/apps/rest-examples/persons/john-doe/&gt; a &lt;http://www.w3.org/ns/ldp#BasicContainer&gt; , &lt;http://www.w3.org/ns/ldp#Container&gt; , &lt;http://www.w3.org/ns/ldp#RDFSource&gt; , &lt;http://www.base22.com/2016/05/ex#Person&gt; ;-->
+							<!--&lt;http://www.w3.org/ns/ldp#hasMemberRelation&gt; &lt;http://www.w3.org/ns/ldp#member&gt; ;-->
+							<!--&lt;https://carbonldp.com/ns/v1/platform#created&gt; &quot;2016-05-31T23:29:18.624Z&quot;^^&lt;http://www.w3.org/2001/XMLSchema#dateTime&gt; ;-->
+							<!--&lt;https://carbonldp.com/ns/v1/platform#modified&gt; &quot;2016-06-01T17:05:18.949Z&quot;^^&lt;http://www.w3.org/2001/XMLSchema#dateTime&gt; ;-->
+							<!--&lt;https://carbonldp.com/ns/v1/security#accessControlList&gt; &lt;https://dev.carbonldp.com/apps/rest-examples/persons/john-doe/~acl/&gt; ;-->
+							<!--&lt;http://www.base22.com/2016/05/ex#firstName&gt; &quot;John&quot; ;-->
+							<!--&lt;http://www.base22.com/2016/05/ex#lastName&gt; &quot;Doe&quot; ;-->
+							<!--&lt;http://www.base22.com/2016/05/ex#phoneNumber&gt; &quot;(555) 555-5555&quot; ;-->
+							<!--&lt;https://carbonldp.com/ns/v1/platform#defaultInteractionModel&gt; &lt;http://www.w3.org/ns/ldp#RDFSource&gt; .-->
+					<!--&#125;-->
+					<!--</code></pre>-->
 
-						<table class="ui celled table">
-							<thead>
-								<tr>
-									<th>HTTP Header</th>
-									<th>Value</th>
-									<th colspan="1">Required?</th>
-								</tr>
-							</thead>
-							<tbody>
-								<tr>
-									<td>Authorization</td>
-									<td>Basic ...</td>
-									<td>Yes</td>
-								</tr>
-							</tbody>
-						</table>
+						<!--<p>-->
+							<!--You may notice that additional properties are added to an RDFSource when it is created such as created, modified, and accessControlList. These are called <em>system managed-->
+							<!--properties</em>, which Carbon adds automatically when you post new RDFSource documents.</p>-->
 
-						<p>A successful request will result with HTTP status code 200 OK.</p>
+						<!--<p>You may also notice that, in addition to the type RDFSource, the resource is now also a BasicContainer. This is a convenient feature of Carbon LDP. When an RDFSource is-->
+							<!--created, it is automatically treated also as container. Therefore, you can read an RDFSource as an RDFSource document and a container depending on the interaction model you-->
+							<!--provide in the <code>Prefer</code> header of the GET request. If you're interested in the properties of the resource (as an entity), you should prefer the RDFSource-->
+							<!--interaction model when you issue the GET request. If you're interested in the membership of the resource as a container, you should prefer the container interaction model-->
+							<!--when you issue the GET request.-->
+						<!--</p>-->
 
-						<p><strong>Example request to delete RDFSource :</strong></p>
+					<!--</section>-->
 
-						<pre><code cpHighlight>
-						DELETE /apps/rest-examples/persons/john-doe/ HTTP/1.1
-						Authorization: Basic
-					</code></pre>
+					<!--<section>-->
+						<!--<h2>Update</h2>-->
 
-					</section>
+						<!--<p>To update an existing RDFSource, issue a PUT request to the URI of the document to replace it with the document being submitted. A PUT request is a complete replacement of-->
+							<!--the existing document; patching individual properties to change a document is not supported at this time.</p>-->
+
+						<!--<p>-->
+							<!--<span class="ui blue horizontal label">PUT</span> <code>/apps/&#123;app-name&#125;/&#123;container&#125;/&#123;rdfsource&#125;/</code>-->
+						<!--</p>-->
+
+						<!--<table class="ui celled table">-->
+							<!--<thead>-->
+								<!--<tr>-->
+									<!--<th>HTTP Header</th>-->
+									<!--<th>Value</th>-->
+									<!--<th colspan="1">Required?</th>-->
+								<!--</tr>-->
+							<!--</thead>-->
+							<!--<tbody>-->
+								<!--<tr>-->
+									<!--<td>Authorization</td>-->
+									<!--<td>Basic ...</td>-->
+									<!--<td>Yes</td>-->
+								<!--</tr>-->
+								<!--<tr>-->
+									<!--<td>Content-Type</td>-->
+									<!--<td>-->
+										<!--Either of:<br/>-->
+										<!--<ul>-->
+											<!--<li>text/turtle</li>-->
+											<!--<li>application/ld+json</li>-->
+											<!--<li>application/rdf+xml</li>-->
+											<!--<li>application/trig</li>-->
+										<!--</ul>-->
+									<!--</td>-->
+									<!--<td>Yes</td>-->
+								<!--</tr>-->
+								<!--<tr>-->
+									<!--<td>Prefer</td>-->
+									<!--<td><span class="nolink">http://www.w3.org/ns/ldp#RDFSource</span>; rel=interaction-model</td>-->
+									<!--<td>Yes</td>-->
+								<!--</tr>-->
+								<!--<tr>-->
+									<!--<td>If-Match</td>-->
+									<!--<td>&#123;ETag value&#125;</td>-->
+									<!--<td>Yes</td>-->
+								<!--</tr>-->
+							<!--</tbody>-->
+						<!--</table>-->
+
+						<!--<p><strong>Body (required)</strong></p>-->
+
+						<!--<pre><code cpHighlight class="turtle">-->
+						<!--&lt;https://dev.carbonldp.com/apps/rest-examples/persons/john-doe/&gt; &#123;-->
+						<!--&lt;https://dev.carbonldp.com/apps/rest-examples/persons/john-doe/&gt; a &lt;http://www.w3.org/ns/ldp#BasicContainer&gt; , &lt;http://www.w3.org/ns/ldp#Container&gt; , &lt;http://www.w3.org/ns/ldp#RDFSource&gt; , &lt;http://www.base22.com/2016/05/ex#Person&gt; ;-->
+							<!--&lt;http://www.w3.org/ns/ldp#hasMemberRelation&gt; &lt;http://www.w3.org/ns/ldp#member&gt; ;-->
+							<!--&lt;https://carbonldp.com/ns/v1/platform#created&gt; &quot;2016-05-31T23:29:18.624Z&quot;^^&lt;http://www.w3.org/2001/XMLSchema#dateTime&gt; ;-->
+							<!--&lt;https://carbonldp.com/ns/v1/platform#modified&gt; &quot;2016-06-01T17:05:18.949Z&quot;^^&lt;http://www.w3.org/2001/XMLSchema#dateTime&gt; ;-->
+							<!--&lt;https://carbonldp.com/ns/v1/security#accessControlList&gt; &lt;https://dev.carbonldp.com/apps/rest-examples/persons/john-doe/~acl/&gt; ;-->
+							<!--&lt;http://www.base22.com/2016/05/ex#firstName&gt; &quot;John&quot; ;-->
+							<!--&lt;http://www.base22.com/2016/05/ex#lastName&gt; &quot;Doe&quot; ;-->
+							<!--&lt;http://www.base22.com/2016/05/ex#phoneNumber&gt; &quot;(555) 555-5555&quot; ;-->
+							<!--&lt;https://carbonldp.com/ns/v1/platform#defaultInteractionModel&gt; &lt;http://www.w3.org/ns/ldp#RDFSource&gt; ;-->
+							<!--&lt;http://www.base22.com/2016/05/ex#email&gt; &quot;john.doe@example.org&quot; .-->
+					<!--&#125;-->
+					<!--</code></pre>-->
+
+						<!--<p>A successful update request will result in HTTP status code 200 OK.</p>-->
+						<!--<p>-->
+							<!--The best way to update an existing RDFSource document is to first retrieve it with a GET request and then modify what the server returned. This ensures that you will retain-->
+							<!--any system managed properties that may have been added. Though system managed properties can not be changed by you, they must still exist in the document or the PUT request-->
+							<!--will fail.-->
+						<!--</p>-->
+						<!--<p>Also required for a successful update is the If-Match header. It's value must match the ETag value obtained from a previous GET or HEAD request. This mechanism helps to-->
+							<!--ensure that the document you're attempting to update has not been changed since you last retrieved it.</p>-->
+
+
+						<!--<p><strong>Example request to update RDFSource :</strong></p>-->
+
+						<!--<pre><code cpHighlight>-->
+						<!--PUT /apps/rest-examples/persons/john-doe/ HTTP/1.1-->
+						<!--Authorization: Basic YWRtaW5AY2FyYm9ubGRwLmNvbTpoZWxsbw==-->
+						<!--Prefer: http://www.w3.org/ns/ldp#RDFSource; rel=interaction-model-->
+						<!--Content-Type: application/trig-->
+						<!--If-Match: "429274222"-->
+
+						<!--&lt;https://dev.carbonldp.com/apps/rest-examples/persons/john-doe/&gt; &#123;-->
+							<!--&lt;https://dev.carbonldp.com/apps/rest-examples/persons/john-doe/&gt; a &lt;http://www.w3.org/ns/ldp#BasicContainer&gt; , &lt;http://www.w3.org/ns/ldp#Container&gt; , &lt;http://www.w3.org/ns/ldp#RDFSource&gt; , &lt;http://www.base22.com/2016/05/ex#Person&gt; ;-->
+								<!--&lt;http://www.w3.org/ns/ldp#hasMemberRelation&gt; &lt;http://www.w3.org/ns/ldp#member&gt; ;-->
+								<!--&lt;https://carbonldp.com/ns/v1/platform#created&gt; "2016-05-31T23:29:18.624Z"^^&lt;http://www.w3.org/2001/XMLSchema#dateTime&gt; ;-->
+								<!--&lt;https://carbonldp.com/ns/v1/platform#modified&gt; "2016-06-01T17:05:18.949Z"^^&lt;http://www.w3.org/2001/XMLSchema#dateTime&gt; ;-->
+								<!--&lt;https://carbonldp.com/ns/v1/security#accessControlList&gt; &lt;https://dev.carbonldp.com/apps/rest-examples/persons/john-doe/~acl/&gt; ;-->
+								<!--&lt;http://www.base22.com/2016/05/ex#firstName&gt; "John" ;-->
+								<!--&lt;http://www.base22.com/2016/05/ex#lastName&gt; "Doe" ;-->
+								<!--&lt;http://www.base22.com/2016/05/ex#phoneNumber&gt; "(555) 555-5555" ;-->
+								<!--&lt;https://carbonldp.com/ns/v1/platform#defaultInteractionModel&gt; &lt;http://www.w3.org/ns/ldp#RDFSource&gt; ;-->
+								<!--&lt;http://www.base22.com/2016/05/ex#email&gt; "john.doe@example.org" .-->
+						<!--&#125;-->
+
+					<!--</code></pre>-->
+
+					<!--</section>-->
+
+					<!--<section>-->
+						<!--<h2>Delete</h2>-->
+
+						<!--<p>To delete an RDFSource document, issue a DELETE request with an empty body to the URI of the document to be deleted.</p>-->
+
+						<!--<p>-->
+							<!--<span class="ui blue horizontal label">DELETE</span> <code>/apps/&#123;app-name&#125;/&#123;container&#125;/&#123;rdfsource&#125;/</code>-->
+						<!--</p>-->
+
+						<!--<table class="ui celled table">-->
+							<!--<thead>-->
+								<!--<tr>-->
+									<!--<th>HTTP Header</th>-->
+									<!--<th>Value</th>-->
+									<!--<th colspan="1">Required?</th>-->
+								<!--</tr>-->
+							<!--</thead>-->
+							<!--<tbody>-->
+								<!--<tr>-->
+									<!--<td>Authorization</td>-->
+									<!--<td>Basic ...</td>-->
+									<!--<td>Yes</td>-->
+								<!--</tr>-->
+							<!--</tbody>-->
+						<!--</table>-->
+
+						<!--<p>A successful request will result with HTTP status code 200 OK.</p>-->
+
+						<!--<p><strong>Example request to delete RDFSource :</strong></p>-->
+
+						<!--<pre><code cpHighlight>-->
+						<!--DELETE /apps/rest-examples/persons/john-doe/ HTTP/1.1-->
+						<!--Authorization: Basic-->
+					<!--</code></pre>-->
+
+					<!--</section>-->
 
 				</article>
 			</main>
@@ -357,7 +364,7 @@
 
 		</div>
 
-		<sidebar-component [mobile]="false" [parentElement]="element" [contentReady]="contentReady" class="four wide computer only four wide tablet only column"></sidebar-component>
+		<!--<sidebar-component [mobile]="false" [parentElement]="element" [contentReady]="contentReady" class="four wide computer only four wide tablet only column"></sidebar-component>-->
 
 	</div>
 
