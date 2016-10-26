@@ -20,6 +20,8 @@ const sass = require( "gulp-sass" );
 const autoprefixer = require( "gulp-autoprefixer" );
 const sourcemaps = require( "gulp-sourcemaps" );
 
+const uglify = require( "gulp-uglify" );
+
 const webserver = require( "gulp-webserver" );
 
 const argv = require( "yargs" )
@@ -61,6 +63,7 @@ gulp.task( "build", ( done ) => {
 		[ "compile:styles", "compile:index", "compile:config", "copy:semantic", "copy:node-dependencies" ],
 		[ "copy:assets" ],
 		"bundle",
+		"minify:bundle",
 		done
 	);
 } );
@@ -307,8 +310,15 @@ gulp.task( "lint", [ "lint:typescript" ] );
 gulp.task( "lint:typescript", () => {
 	return gulp.src( config.source.typescript )
 		.pipe( tslint() )
-		.pipe( tslint.report( "prose" ) )
-		;
+		.pipe( tslint.report( "prose" ) );
+} );
+
+gulp.task( "minify:bundle", () => {
+	return gulp.src( "dist/site/main.sfx.js" )
+		.pipe( uglify( {
+			mangle: false
+		} ) )
+		.pipe( gulp.dest( "dist/site" ) );
 } );
 
 gulp.task( "serve", ( done ) => {
