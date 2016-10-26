@@ -50,7 +50,7 @@ documents {
 
 		.step:nth-child(1):not( .completed ) {
 			justify-content: flex-start;
-			flex-direction: row-reverse;
+			flex-direction: row;
 
 			> .content {
 				flex: 1;
