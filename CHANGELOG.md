@@ -1,3 +1,7 @@
+# 0.8.1 (2016/10/26)
+
+- Fixed gzip on proxied requests
+
 # 0.8.0 (2016/10/25)
 
 - Completed #56 - Review and finalize Object Model document in the JavaScript SDK documentation
