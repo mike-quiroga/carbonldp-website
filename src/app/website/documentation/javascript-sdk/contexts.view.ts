@@ -11,6 +11,7 @@ export class ContextsView implements AfterViewInit {
 
 	private element:ElementRef;
 	private changeDetector:ChangeDetectorRef;
+	private selectedLanguage:number = 0;
 
 	constructor( element:ElementRef, changeDetector:ChangeDetectorRef ) {
 		this.element = element;
@@ -33,6 +34,10 @@ export class ContextsView implements AfterViewInit {
 			.popup( {
 				on: "hover"
 			} );
+	}
+
+	selectLanguage( language:number ):void {
+		this.selectedLanguage = language;
 	}
 }
 
