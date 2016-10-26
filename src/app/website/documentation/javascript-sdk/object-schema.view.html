@@ -45,10 +45,10 @@
 					</div>
 					<div class="ui message">
 						<div class="content">
-							<p>TODO: Abstract</p>
-							<!--<p>The SDK does its best to try to guess the desire outcome of retrieving documents or saving new ones. It tries to parse known data types into native JavaScript types-->
-							<!--and vice versa. But sometimes there is not enough data for the SDK to correctly guess the expected behavior. To make sure the SDK behaves as expected, a web application-->
-							<!--can give more information about properties and objects to the SDK through a context's object schema. An object schema is</p>-->
+							<p><strong>TL;DR</strong> The SDK does its best to try to guess the desire outcome of retrieving documents or saving new ones. It tries to parse known data types into
+								native JavaScript types and vice versa. But sometimes there is not enough data for the SDK to correctly guess the expected behavior. To make sure the SDK behaves as
+								expected, a web application can give more information about properties and objects to the SDK through a context's object schema.</p>
+							<p>Any context has an object schema that can be <em>extended</em> through the <code>extendObjectSchema</code> method.</p>
 						</div>
 					</div>
 					<section>
@@ -408,14 +408,252 @@
 							<p>It is <strong>highly recommended</strong> to use existing vocabularies instead of new, custom ones.</p>
 						</section>
 					</section>
+					<section>
+						<h2 class="ui header">Prefixes</h2>
+						<p>If you start using other vocabularies (either from other Carbon apps, or from well established vocabularies), you'll soon find daunting having to write complete URIs
+							when extending object schemas.</p>
+						<p>Prefixes come to the rescue! A prefix is a short keyword that can be used as a base of a URI. For example, having the following URI:</p>
+						<p><code>http://localhost:8083/apps/application-a-slug/vocabulary/#title</code></p>
+						<p>You could define the prefix <code>appA</code> and make it equivalent to <code>http://localhost:8083/apps/application-a-slug/vocabulary/#</code>. That way each time you
+							wanted to use that vocabulary you would only need to write <code>appA:title</code>.</p>
+						<p>Prefixes can be defined in the object schema by defining a property with a string value. The previous example could be defined like this:</p>
+						<!--@formatter:off-->
+						<pre><code cpHighlight class="javascript">
+							appContext.extendObjectSchema( &#123;
+								"appA": "http://localhost:8083/apps/application-a-slug/vocabulary/#",
+								"title": &#123;
+									"@id": "appA:title",
+									"@type": "string"
+								&#125;,
+								"content": &#123;
+									"@id": "appA:content",
+									"@type": "string"
+								&#125;
+							&#125; );
+						</code></pre>
+						<!--@formatter:on-->
+					</section>
+					<section>
+						<h2 class="ui header">Object types</h2>
+						<p>There's a problem left to solve. Imagine an application programmed to handle <code>book</code> objects and <code>blog post</code> objects like the following ones:</p>
+						<!--@formatter:off-->
+						<pre><code cpHighlight class="javascript">
+							var book = &#123;
+								title: "The most awesome book you'll ever read"
+							&#125;;
+
+							var blogPost = &#123;
+								title: "How jellyfish age"
+							&#125;;
+						</code></pre>
+						<!--@formatter:on-->
+						<p>Here the problem lies in that both objects use the same property name, <code>title</code>, but they use it for different purposes. A book title cannot be interpreted as
+							a blog post title, and if you try to differentiate them by extending the object schema you won't be able to (at least not in the way we have done it so far)
+							:</p>
+						<!--@formatter:off-->
+						<pre><code cpHighlight class="javascript">
+							appContext.extendObjectSchema( &#123;
+								"title": &#123;
+									"@id": "bookTitle"
+								&#125;,
+								"title": &#123;         // ERROR: Duplicate property name
+									"@id": "postTitle"
+								&#125;
+							&#125; );
+						</code></pre>
+						<!--@formatter:on-->
+						<p>To make a distinction between them, first you need to tag each object with a different type. Types help you <em>tag</em> objects to treat them differently. With them you can
+							filter a list of objects, apply specific rules depending on their types, make assumptions on the properties they'll have based on their types, etc.</p>
+						<p>You can tag objects when saving them as documents:</p>
+						<sui-tabs>
+							<sui-tab title="TypeScript">
+								<!--@formatter:off-->
+								<pre><code cpHighlight class="typescript">
+									import * as App from "carbonldp/App";
+									import * as HTTP from "carbonldp/HTTP";
+									import * as PersistedDocument from "carbonldp/PersistedDocument";
+
+									let appContext:App.Context;
+
+									// ... retrieve app context
+
+									appContext.documents.createChild( &#123;
+										types: [
+											"Book"
+										]
+									&#125; ).then(
+										( [ book, response ]:[ PersistedDocument.Class, HTTP.Response.Class ] ) => &#123;
+											// ...
+										&#125;
+									).catch( console.error );
+								</code></pre>
+								<!--@formatter:on-->
+							</sui-tab>
+							<sui-tab title="JavaScript ES2015">
+								<!--@formatter:off-->
+								<pre><code cpHighlight class="javascript">
+									let appContext;
+
+									// ... retrieve app context
+
+									appContext.documents.createChild( &#123;
+										types: [
+											"Book"
+										]
+									&#125; ).then(
+										( [ book, response ] ) => &#123;
+											// ...
+										&#125;
+									).catch( console.error );
+								</code></pre>
+								<!--@formatter:on-->
+							</sui-tab>
+							<sui-tab title="JavaScript ES5">
+								<!--@formatter:off-->
+								<pre><code cpHighlight class="javascript">
+									var appContext;
+
+									// ... retrieve app context
+
+									appContext.documents.createChild( &#123;
+										types: [
+											"Book"
+										]
+									&#125; ).then(
+										function( result ) &#123;
+											// ...
+										&#125;
+									).catch( console.error );
+								</code></pre>
+								<!--@formatter:on-->
+							</sui-tab>
+						</sui-tabs>
+						<p>Or you can add or remove types from persisted resources with the <code>addType</code> and <code>removeType</code>:</p>
+						<sui-tabs>
+							<sui-tab title="TypeScript">
+								<!--@formatter:off-->
+								<pre><code cpHighlight class="typescript">
+									import * as App from "carbonldp/App";
+									import * as HTTP from "carbonldp/HTTP";
+									import * as PersistedDocument from "carbonldp/PersistedDocument";
+
+									let appContext:App.Context;
+
+									// ... retrieve app context
+
+									appContext.documents.get&#60;Book&#62;( "books/awesome-book/" ).then(
+										( [ book, response ]:[ Book & PersistedDocument.Class, HTTP.Response.Class ] ) => &#123;
+											book.addType( "Book" );
+											book.removeType( "UncategorizedObject" ); // Not actually a type, just an example
+
+											return book.save&#60;Book&#62;();
+										&#125;
+									).then(
+										( [ book, response ]:[ Book & PersistedDocument.Class, HTTP.Response.Class ] ) => &#123;
+											// ...
+										&#125;
+									).catch( console.error );
+								</code></pre>
+								<!--@formatter:on-->
+							</sui-tab>
+							<sui-tab title="JavaScript ES2015">
+								<!--@formatter:off-->
+								<pre><code cpHighlight class="javascript">
+									let appContext;
+
+									// ... retrieve app context
+
+									appContext.documents.get( "books/awesome-book/" ).then(
+										( [ book, response ] ) => &#123;
+											book.addType( "Book" );
+											book.removeType( "UncategorizedObject" ); // Not actually a type, just an example
+
+											return book.save();
+										&#125;
+									).then(
+										( [ book, response ] ) => &#123;
+											// ...
+										&#125;
+									).catch( console.error );
+								</code></pre>
+								<!--@formatter:on-->
+							</sui-tab>
+							<sui-tab title="JavaScript ES5">
+								<!--@formatter:off-->
+								<pre><code cpHighlight class="javascript">
+									var appContext:App.Context;
+
+									// ... retrieve app context
+
+									appContext.documents.get( "books/awesome-book/" ).then(
+										function( result ) &#123;
+											var book = result[ 0 ];
+											book.addType( "Book" );
+											book.removeType( "UncategorizedObject" ); // Not actually a type, just an example
+
+											return book.save();
+										&#125;
+									).then(
+										function( result ) &#123;
+											// ...
+										&#125;
+									).catch( console.error );
+								</code></pre>
+								<!--@formatter:on-->
+							</sui-tab>
+						</sui-tabs>
+						<p>Once you tag your objects like that you can extend a type specific object schema by defining the type to be extended as the first parameter of
+							<code>extendObjectSchema</code>:</p>
+						<!--@formatter:off-->
+						<pre><code cpHighlight class="javascript">
+							appContext.extendObjectSchema( "Book", &#123;
+								"title": &#123;
+									"@id": "bookTitle",
+									"@type": "string"
+								&#125;
+							&#125; );
+							appContext.extendObjectSchema( "BlogPost", &#123;
+								"title": &#123;
+									"@id": "postTitle",
+									"@type": "string"
+								&#125;
+							&#125; );
+						</code></pre>
+						<!--@formatter:on-->
+						<p>That way the SDK will treat them as different properties. Extending the object schema without specifying a type is called
+							<strong>"extending the GLOBAL object schema"</strong>, and specifying a type is called <strong>"extending the type's object schema"</strong>.</p>
+						<p>The following rules apply to type's object schemas:</p>
+						<ul>
+							<li>Any property or prefix defined in the global schema will also be defined in a type schema</li>
+							<li>If a type schema defines a property that the global schema already defined, the type schema property will apply</li>
+						</ul>
+						<p>It is a good practice to define <strong>prefixes</strong> in the global schema, and <strong>properties</strong> in a type specific object schema.</p>
+					</section>
 					<!--<section>-->
-					<!--<h2 class="ui header">Prefixes</h2>-->
+					<!--<h2 class="ui header">Inheritance</h2>-->
 					<!--<p></p>-->
 					<!--</section>-->
-					<!--<section>-->
-					<!--<h2 class="ui header">Conclusion</h2>-->
-					<!--<p></p>-->
-					<!--</section>-->
+					<section>
+						<h2 class="ui header">Conclusion</h2>
+						<p>The SDK does its best to try to guess the desire outcome of retrieving documents or saving new ones. It tries to parse known data types into
+							native JavaScript types and vice versa. But sometimes there is not enough data for the SDK to correctly guess the expected behavior. To make sure the SDK behaves as
+							expected, a web application can give more information about properties and objects to the SDK through a context's object schema.</p>
+						<p>Any context has an object schema that can be <em>extended</em> through the <code>extendObjectSchema</code> method.</p>
+						<p>When extending object schemas properties can be described by declaring a property with an object value. The following properties can be inside that object:</p>
+						<ul>
+							<li><code>@id</code>: To specify the URI to use for the property</li>
+							<li><code>@type</code>: To declare what data types the application expects on that property</li>
+							<li>
+								<code>@container</code>: To force the SDK to use a specific container type for the property:
+								<ul>
+									<li><code>@set</code>: Unordered list</li>
+									<li><code>@list</code>: Ordered list</li>
+									<li><code>@map</code>: Language based map</li>
+								</ul>
+							</li>
+						</ul>
+						<p>Prefixes can be defined by declaring a property with a string value. Prefixes can be used to shorten any URI.</p>
+					</section>
 					<div class="documentation-steps ui fluid steps">
 						<a class="step" [routerLink]="[ '../javascript-sdk-contexts' ]">
 							<i class="arrow left icon"></i>
