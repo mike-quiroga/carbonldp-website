@@ -1,3 +1,19 @@
+# 0.8.0 (2016/10/25)
+
+- Completed #56 - Review and finalize Object Model document in the JavaScript SDK documentation
+- Completed #78 - Add components for pending documents
+- Complete #88 standardize documentation styles and messages
+- Modified first icon for gitter rooms in community and support view
+- Modified abstract content in community and support view
+- Modified rdf-source.html to show not yet documented message
+- Modified header labels for REST API
+- Standardized different aspects of documentation pages: 
+    - Abstract message box
+    - Breadcrumbs
+    - Not yet documented message
+- Completed #55 - Review and refine JS SDK > Contexts documentation
+- Improved performance by enabling gzip and minifying prod files
+
 # 0.7.0 (2016/10/17)
 
 - Added success message after registration on quick start guide page
