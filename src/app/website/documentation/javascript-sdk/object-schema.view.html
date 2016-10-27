@@ -45,8 +45,8 @@
 					</div>
 					<div class="ui message">
 						<div class="content">
-							<p><strong>TL;DR</strong> The SDK does its best to try to guess the desire outcome of retrieving documents or saving new ones. It tries to parse known data types into
-								native JavaScript types and vice versa. But sometimes there is not enough data for the SDK to correctly guess the expected behavior. To make sure the SDK behaves as
+							<p>For convenience, the SDK does its best to try to guess your desired outcome when saving and retrieving documents. It tries to parse known data types into
+								native JavaScript types and vice-versa. But sometimes there is not enough data for the SDK to correctly guess the expected behavior. To make sure the SDK behaves as
 								expected, a web application can give more information about properties and objects to the SDK through a context's object schema.</p>
 							<p>Any context has an object schema that can be <em>extended</em> through the <code>extendObjectSchema</code> method.</p>
 						</div>
@@ -55,7 +55,8 @@
 						<p>Even though the information stored in the platform can seem to be normal JSON, it is not. If you haven't read about the
 							<a [routerLink]="[ '../linked-data-concepts' ]">Essential Concepts of Linked Data</a> don't worry, you won't need them to understand the basics behind object schemas,
 							but it wouldn't hurt you to read them either.</p>
-						<p>The platform stores each document as a set of statements (or triples). These statements add into each other to create an entity. For example, the following object:</p>
+						<p>The platform stores each document as a set of statements (or RDF <em>triples</em>). These statements together comprise an entity or resource. For example, the following
+							object:</p>
 						<!--@formatter:off-->
 						<pre><code cpHighlight class="javascript">
 							var project = &#123;
@@ -410,7 +411,7 @@
 					</section>
 					<section>
 						<h2 class="ui header">Prefixes</h2>
-						<p>If you start using other vocabularies (either from other Carbon apps, or from well established vocabularies), you'll soon find daunting having to write complete URIs
+						<p>If you start using other vocabularies (either from other Carbon apps, or from well established vocabularies), you might find it cumbersome to have to write complete URIs
 							when extending object schemas.</p>
 						<p>Prefixes come to the rescue! A prefix is a short keyword that can be used as a base of a URI. For example, having the following URI:</p>
 						<p><code>http://localhost:8083/apps/application-a-slug/vocabulary/#title</code></p>
@@ -435,7 +436,7 @@
 					</section>
 					<section>
 						<h2 class="ui header">Object types</h2>
-						<p>There's a problem left to solve. Imagine an application programmed to handle <code>book</code> objects and <code>blog post</code> objects like the following ones:</p>
+						<p>There's a problem left to solve. Imagine an application programmed to handle <code>book</code> objects and <code>blog post</code> objects like the following:</p>
 						<!--@formatter:off-->
 						<pre><code cpHighlight class="javascript">
 							var book = &#123;
@@ -635,7 +636,7 @@
 					<!--</section>-->
 					<section>
 						<h2 class="ui header">Conclusion</h2>
-						<p>The SDK does its best to try to guess the desire outcome of retrieving documents or saving new ones. It tries to parse known data types into
+						<p>The SDK does its best to try to guess the desired outcome of retrieving documents or saving new ones. It tries to parse known data types into
 							native JavaScript types and vice versa. But sometimes there is not enough data for the SDK to correctly guess the expected behavior. To make sure the SDK behaves as
 							expected, a web application can give more information about properties and objects to the SDK through a context's object schema.</p>
 						<p>Any context has an object schema that can be <em>extended</em> through the <code>extendObjectSchema</code> method.</p>
