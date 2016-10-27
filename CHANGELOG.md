@@ -1,3 +1,15 @@
+# 0.9.0 (2016/10/27)
+
+- Completed #54 - Review and refine JS SDK > Object Schema documentation
+- Completed #90 - Implement new about page design  
+- Completed #94 - Add content menu for mobile view in all documents
+- Completed #82 - Improve mobile menu
+    - Fixed mobile view styles
+    - Modified documentation menu to close when a selection is made
+- Fixed #93 - Inconsistent layout for previous and next on mobile sizing
+    - Fixed styles in documentation.view.scss for  "ui steps" class
+    - Added column width for documents content in computer, tablet and mobile views
+
 # 0.8.1 (2016/10/26)
 
 - Fixed gzip on proxied requests
