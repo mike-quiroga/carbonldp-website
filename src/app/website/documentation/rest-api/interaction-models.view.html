@@ -14,12 +14,18 @@
 	</div>
 
 	<div class="row">
-		<div class="twelve wide column">
+		<div class="twelve wide computer twelve wide tablet sixteen wide mobile column">
 			<main>
 				<article class="ui vertical segment" id="article">
 					<header>
 						<h1>Interaction Models</h1>
 					</header>
+
+					<div class="ui grid">
+						<div class="row">
+							<sidebar-component [mobile]="true" [parentElement]="element" [contentReady]="contentReady" class="sixteen wide mobile only column"></sidebar-component>
+						</div>
+					</div>
 
 					<p>
 						When you interact with a given document on the Carbon server, you can specify a model that governs how the server behaves with respect to it. A document in Carbon can be

@@ -37,12 +37,17 @@ export class HeaderComponent implements AfterViewInit, AfterViewChecked {
 	createDropdownMenus():void {
 		this.$element.find( ".ui.dropdown" ).dropdown( {
 			on: "hover",
+			action: "hide",
 		} );
 	}
 
 	createCollapsableMenus():void {
 		let verticalMenu:JQuery = this.$element.find( ".ui.vertical.menu" );
 		this.$element.find( ".right.menu.open" ).on( "click", function ( e ) {
+			e.preventDefault();
+			verticalMenu.toggle();
+		} );
+		verticalMenu.on( "click", function ( e ) {
 			e.preventDefault();
 			verticalMenu.toggle();
 		} );
