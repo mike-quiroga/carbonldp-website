@@ -17,15 +17,43 @@
 
 	<!---Google Analytics-->
 	<script>
-		window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
-		ga('create', 'UA-75786977-1', 'auto');
-		ga('send', 'pageview');
+		window.ga = window.ga || function() {
+				(ga.q = ga.q || []).push( arguments )
+			};
+		ga.l = + new Date;
+		ga( 'create', 'UA-75786977-1', 'auto' );
+		ga( 'send', 'pageview' );
 	</script>
 	<script async src="https://www.google-analytics.com/analytics.js"></script>
 	<!-- End of Google Analytics-->
 </head>
 <body>
-	<app></app>
+	<app>
+		<style>
+			html, body {
+				width: 100%;
+				height: 100%;
+				margin: 0;
+			}
+
+			app {
+				height: 100vh;
+				display: -webkit-box;
+				display: -webkit-flex;
+				display: -ms-flexbox;
+				display: flex;
+				-webkit-box-align: center;
+				-webkit-align-items: center;
+				-ms-flex-align: center;
+				align-items: center;
+				-webkit-box-pack: center;
+				-webkit-justify-content: center;
+				-ms-flex-pack: center;
+				justify-content: center;
+			}
+		</style>
+		<img src="assets/images/carbon-logo-150x48.png">
+	</app>
 	<script src="assets/node_modules/system-polyfills.src.js"></script>
 	<script src="assets/node_modules/es6-shim.js"></script>
 	<script src="assets/node_modules/system.src.js"></script>
