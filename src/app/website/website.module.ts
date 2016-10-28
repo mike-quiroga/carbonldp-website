@@ -47,7 +47,7 @@ import { GettingStartedView as JavaScriptSDKGettingStartedView } from "./documen
 import { ContextsView } from "./documentation/javascript-sdk/contexts.view";
 import { ObjectModelView as JavaScriptSDKObjectModelView } from "./documentation/javascript-sdk/object-model.view";
 import { ObjectSchemaView } from "./documentation/javascript-sdk/object-schema.view";
-import { UploadingFilesView } from "./documentation/javascript-sdk/uploading-files.view";
+import { UploadingFilesView } from "./documentation/javascript-sdk/files.view";
 import { QueryingView } from "./documentation/javascript-sdk/querying.view";
 import { AuthenticationView } from "./documentation/javascript-sdk/authentication.view";
 import { AuthorizationView } from "./documentation/javascript-sdk/authorization.view";

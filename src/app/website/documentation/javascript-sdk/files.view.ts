@@ -2,10 +2,10 @@ import { Component, ElementRef, ChangeDetectorRef, AfterViewInit  } from "@angul
 
 import "semantic-ui/semantic";
 
-import template from "./uploading-files.view.html!";
+import template from "./files.view.html!";
 
 @Component( {
-	selector: "uploading-files",
+	selector: "files",
 	template: template,
 } )
 
