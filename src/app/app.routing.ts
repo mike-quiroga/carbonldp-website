@@ -6,33 +6,33 @@ import { AuthenticatedGuard, NotAuthenticatedGuard } from "angular2-carbonldp/gu
 import { ActiveContextResolver } from "angular2-carbonldp/resolvers";
 
 // Components
-import { AppDevLoginView } from "app/auth/app-dev-login/app-dev-login.view";
+// import { AppDevLoginView } from "app/auth/app-dev-login/app-dev-login.view";
 import { NotFoundErrorView } from "app/error-pages/not-found-error/not-found-error.view";
 
 import { WebsiteModule } from "./website/website.module";
-import { AppDevModule } from "./app-dev/app-dev.module";
+// import { AppDevModule } from "./app-dev/app-dev.module";
 
 const appRoutes:Routes = [
-	{
-		path: "app-dev",
-		data: {
-			alias: "",
-			title: "Carbon LDP",
-		},
-		loadChildren: () => AppDevModule,
-	},
-	{
-		path: "login",
-		component: AppDevLoginView,
-		data: {
-			alias: "AppDevLogIn",
-			title: "Log In | Carbon LDP",
-			description: {
-				name: "description",
-				content: "Log in and use time-saving tools in the Application Developer's Console, a GUI that helps you visualize and manage applications and data outside of code.",
-			}
-		},
-	},
+	// {
+	// 	path: "app-dev",
+	// 	data: {
+	// 		alias: "",
+	// 		title: "Carbon LDP",
+	// 	},
+	// 	loadChildren: () => AppDevModule,
+	// },
+	// {
+	// 	path: "login",
+	// 	component: AppDevLoginView,
+	// 	data: {
+	// 		alias: "AppDevLogIn",
+	// 		title: "Log In | Carbon LDP",
+	// 		description: {
+	// 			name: "description",
+	// 			content: "Log in and use time-saving tools in the Application Developer's Console, a GUI that helps you visualize and manage applications and data outside of code.",
+	// 		}
+	// 	},
+	// },
 	{
 		path: "",
 		data: {
