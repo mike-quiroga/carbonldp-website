@@ -15,11 +15,11 @@ import { MetaTagService } from "./website/meta-tag.service";
 
 // Components
 import { AppComponent } from "./app.component";
-import { AppDevLoginView } from "./auth/app-dev-login/app-dev-login.view";
+// import { AppDevLoginView } from "./auth/app-dev-login/app-dev-login.view";
 import { NotFoundErrorView } from "app/error-pages/not-found-error/not-found-error.view";
 
 // Modules
-import { PanelModule } from "carbonldp-panel/panel.module";
+// import { PanelModule } from "carbonldp-panel/panel.module";
 
 
 @NgModule( {
@@ -28,11 +28,10 @@ import { PanelModule } from "carbonldp-panel/panel.module";
 		routing,
 		HttpModule,
 		FormsModule,
-		PanelModule.forRoot()
 	],
 	declarations: [
 		AppComponent,
-		AppDevLoginView,
+		// AppDevLoginView,
 		NotFoundErrorView,
 	],
 	providers: [

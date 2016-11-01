@@ -38,6 +38,7 @@
 						</a>
 					</div>
 
+
 					<div class="ui message">
 						<div class="content">
 							<p>
@@ -86,7 +87,15 @@
 							</li>
 						</ul>
 					</section>
-
+					<div class="ui icon yellow message">
+						<i class="warning sign icon"></i>
+						<div class="content">
+							<p>
+								Before starting this guide, please <a [routerLink]="[ '/get-started' ]">register</a> and follow the steps in the
+								<a [routerLink]="[ '../quick-start-guide' ]">quick start guide</a> to install your Carbon platform and Workbench, if you have already done so, let the fun begin.
+							</p>
+						</div>
+					</div>
 					<section>
 						<h2 class="ui header">Installing the SDK</h2>
 						<p>
@@ -292,8 +301,8 @@
 							<i class="warning sign icon"></i>
 							<div class="content">
 								<p>
-									Before you can save data in Carbon, you need to create an account. Click
-									<a target="_blank" [routerLink]="[ '/register' ]">here</a> if you haven't done it.
+									Before you can save data in your platform, you need to create an account. If you haven't done it, follow the steps in section <em>create an agent</em> of the
+									<a [routerLink]="[ '../quick-start-guide' ]" fragment="create-an-agent" href="#create-an-agent">quick start guide</a>.
 								</p>
 							</div>
 						</div>
@@ -368,7 +377,10 @@
 						<h2 class="ui header">Authenticating</h2>
 						<p>
 							After creating the platform context you need to tell the platform who you are by authenticating
-							yourself (if you haven't created an account, click <a target="_blank" [routerLink]="[ '/register' ]">here</a> to do it).
+							yourself (if you haven't created an account yet, follow the steps in the section <em>create an agent</em> of the <a [routerLink]="[ '../quick-start-guide' ]"
+							                                                                                                        fragment="create-an-agent"
+							                                                                            href="#create-an-agent">quick start guide
+						</a> ).
 						</p>
 						<p>
 							All authentication/authorization related actions are done through the <code>auth</code> service
@@ -445,8 +457,13 @@
 
 							<div class="content">
 								<p>
-									Before continuing, you need to create your first application, if you haven't done it, click
-									<a target="_blank" [routerLink]="[ '/app-dev/my-apps/create' ]">here</a> to do so (remember to note your application slug, because we'll use it later).
+									Before continuing, you need to create your first application, if you haven't done it, follow the steps in the section <em>create an application</em> of the
+									<a [routerLink]="[ '../quick-start-guide']" fragment="create-a-new-application" href="#create-a-new-application">quick start guide</a>  (remember to note
+									your
+									application
+									slug, because
+									we'll
+									use	it later).
 								</p>
 							</div>
 						</div>
