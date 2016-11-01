@@ -20,7 +20,6 @@ export class WebsiteView {
 
 	ngAfterViewInit(){
 		$(window).scroll(function() {
-			console.log("scrolling");
 			if ($(this).scrollTop()) {
 				$(".scroll-top > .ui.button").fadeIn();
 			} else {
