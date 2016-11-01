@@ -1,3 +1,11 @@
+# 0.10.0 (2016/11/01) :skull:
+
+- Completed #53 - Document how to upload and download files
+- Completed #97 - Disable app-dev module in website
+- Completed #98 - Update links in JS SDK getting started
+- Completed #102 - Disable all app-dev references from website.routing, and all documents
+- Removed unnecessary code to scroll top from website, there is an implemented fix in app.component
+
 # 0.9.0 (2016/10/27)
 
 - Completed #54 - Review and refine JS SDK > Object Schema documentation
