@@ -5,15 +5,15 @@
 			<input type="checkbox" alt="" name="data[listGroups][]" value="786116" checked="checked">Carbon LDP Registered Users</label>
 	</div>
 	<div class="two fields">
-		<div class="required field">
+		<div class="required field" [ngClass]="{error: registerForm.touched && !name.valid}">
 			<label>Name</label>
 			<input type="text"
 			       placeholder="First and Last Name"
-			       name="data[carbon-full-name]" ngModel required>
+			       name="data[carbon-full-name]" ngModel required #name="ngModel">
 		</div>
-		<div class="required field">
+		<div class="required field" [ngClass]="{error: registerForm.touched && !email.valid}">
 			<label>Email</label>
-			<input type="text" name="data[email]" ngModel required>
+			<input type="text" name="data[email]" ngModel required cp-email #email="ngModel">
 		</div>
 	</div>
 	<div class="field">
@@ -29,6 +29,15 @@
 	<div class="field">
 		<label>How did you hear about us?</label>
 		<input type="text" name="data[carbon-how-disc]" ngModel>
+	</div>
+	<div class="ui bottom attached negative message" *ngIf="!registerForm.valid && registerForm.touched">
+		<ul *ngIf="!name.valid" class="list">
+			<li *ngIf="name.control.hasError('required')">name is required.</li>
+		</ul>
+		<ul *ngIf="!email.valid" class="list">
+			<li *ngIf="email.control.hasError('required')">email is required.</li>
+			<li *ngIf="email.control.hasError('invalidEmailAddress')">Enter a valid email address.</li>
+		</ul>
 	</div>
 	<button class="ui primary button" type="submit" [disabled]="!registerForm.valid">Submit</button>
 </form>

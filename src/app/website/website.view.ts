@@ -12,6 +12,22 @@ import style from "./website.view.css!text";
 } )
 
 export class WebsiteView {
+	private router:Router;
+
+	constructor( router:Router ) {
+		this.router = router;
+	}
+
+	ngAfterViewInit(){
+		$(window).scroll(function() {
+			console.log("scrolling");
+			if ($(this).scrollTop()) {
+				$(".scroll-top > .ui.button").fadeIn();
+			} else {
+				$(".scroll-top > .ui.button").fadeOut();
+			}
+		});
+	}
 
 }
 
