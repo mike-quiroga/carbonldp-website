@@ -1,5 +1,4 @@
-import { Component, ViewEncapsulation } from "@angular/core";
-import { Router, NavigationEnd, Event } from "@angular/router";
+import { Component, ViewEncapsulation, AfterViewInit } from "@angular/core";
 
 import template from "./website.view.html!";
 import style from "./website.view.css!text";
@@ -11,21 +10,28 @@ import style from "./website.view.css!text";
 	styles: [ style ],
 } )
 
-export class WebsiteView {
-	private router:Router;
+export class WebsiteView implements AfterViewInit {
 
-	constructor( router:Router ) {
-		this.router = router;
+	ngAfterViewInit() {
+		this.initializeScrollTopButton();
 	}
 
-	ngAfterViewInit(){
-		$(window).scroll(function() {
-			if ($(this).scrollTop()) {
-				$(".scroll-top > .ui.button").fadeIn();
+	initializeScrollTopButton():void {
+		let $scrollTopButton:JQuery = $( ".scroll-top > .ui.button" );
+		let $window:JQuery = $( window );
+
+		$window.scroll( function () {
+			if( $window.scrollTop() ) {
+				$scrollTopButton.fadeIn();
 			} else {
-				$(".scroll-top > .ui.button").fadeOut();
+				$scrollTopButton.fadeOut();
 			}
-		});
+		} );
+	}
+
+	scrollTop(){
+		window.scroll( 0, 0 )
+		return true;
 	}
 
 }
