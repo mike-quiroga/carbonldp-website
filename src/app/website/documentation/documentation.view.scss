@@ -3,6 +3,10 @@ documents {
 		display: block;
 	}
 
+	h2.hidden, h3.hidden {
+		display: none;
+	}
+
 	section {
 		margin-top: 2em;
 		padding-top: 2em;

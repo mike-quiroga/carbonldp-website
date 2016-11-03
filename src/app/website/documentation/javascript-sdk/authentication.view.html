@@ -48,8 +48,11 @@
 							<sidebar-component [mobile]="true" [parentElement]="element" [contentReady]="contentReady" class="sixteen wide mobile only column"></sidebar-component>
 						</div>
 					</div>
-					<p>Authenticating an agent was briefly covered in the <a [routerLink]="[ '../getting-started' ]">Getting Started</a> page. This page we'll provide more
-						information about authentication in general.</p>
+					<section>
+						<h2 class="hidden">Introduction</h2>
+						<p>Authenticating an agent was briefly covered in the <a [routerLink]="[ '../getting-started' ]">Getting Started</a> page. This page we'll provide more
+							information about authentication in general.</p>
+					</section>
 					<section>
 						<h2 class="ui header">Logging in</h2>
 						<p>As discussed before, an agent can be authenticated on a context by using the <code>authenticate</code> method in the <code>Auth</code> service, e.g.:</p>
