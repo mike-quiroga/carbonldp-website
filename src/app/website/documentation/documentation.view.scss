@@ -74,13 +74,26 @@ documents {
 		}
 	}
 
-	.soon-to-be-documented{
+	.soon-to-be-documented {
 		margin-top: 40px;
 		color: rgba(0, 145, 207, 0.79);
 		font-style: italic;
 		font-size: 22px;
 	}
-	.not-yet{
-		color:gray;
+	.not-yet {
+		color: gray;
+	}
+
+	sui-tabs /deep/ .ui.tabular.menu {
+		border-bottom: 0px;
+	}
+
+	sui-tab.ui.segment {
+		padding: 0;
+		border: 0;
+	}
+
+	sui-tab > pre {
+		margin: 0;
 	}
 }

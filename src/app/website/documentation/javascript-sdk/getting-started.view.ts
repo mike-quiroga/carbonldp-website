@@ -2,12 +2,10 @@ import { Component, ElementRef, ChangeDetectorRef, AfterViewInit } from "@angula
 import { Location } from "@angular/common";
 
 import template from "./getting-started.view.html!";
-import style from "./getting-started.view.css!text";
 
 @Component( {
 	selector: "getting-started",
 	template: template,
-	styles: [ style ],
 } )
 export class GettingStartedView implements AfterViewInit {
 	contentReady:boolean = false;
