@@ -3,9 +3,9 @@
 		<div class="sixteen wide column">
 
 			<div class="ui breadcrumb">
-				<a class="section" [routerLink]="[ '..' ]">Documentation</a>
+				<a class="section" [routerLink]="[ '../..' ]">Documentation</a>
 				<i class="right chevron icon divider"></i>
-				<a class="section" [routerLink]="[ '../javascript-sdk' ]">JavaScript SDK</a>
+				<a class="section" [routerLink]="[ '..' ]">JavaScript SDK</a>
 				<i class="right arrow icon divider"></i>
 				<div class="active section">Authentication</div>
 			</div>
@@ -22,7 +22,7 @@
 					</header>
 
 					<div class="documentation-steps ui fluid steps">
-						<a class="step" [routerLink]="[ '../javascript-sdk-querying' ]">
+						<a class="step" [routerLink]="[ '../querying' ]">
 							<i class="arrow left icon"></i>
 							<div class="content">
 								<div class="title">Previous</div>
@@ -35,7 +35,7 @@
 								<div class="title">Authentication</div>
 							</div>
 						</div>
-						<a class="step" [routerLink]="[ '../javascript-sdk-authorization' ]">
+						<a class="step" [routerLink]="[ '../authorization' ]">
 							<i class="arrow right icon"></i>
 							<div class="content">
 								<div class="title">Next</div>
@@ -48,7 +48,7 @@
 							<sidebar-component [mobile]="true" [parentElement]="element" [contentReady]="contentReady" class="sixteen wide mobile only column"></sidebar-component>
 						</div>
 					</div>
-					<p>Authenticating an agent was briefly covered in the <a [routerLink]="[ '../javascript-sdk-getting-started' ]">Getting Started</a> page. This page we'll provide more
+					<p>Authenticating an agent was briefly covered in the <a [routerLink]="[ '../getting-started' ]">Getting Started</a> page. This page we'll provide more
 						information about authentication in general.</p>
 					<section>
 						<h2 class="ui header">Logging in</h2>
