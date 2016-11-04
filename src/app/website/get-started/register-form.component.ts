@@ -8,16 +8,9 @@ import template from "./register-form.component.html!text";
 } )
 
 export class RegisterFormComponent {
-
-
 	onSubmit( $event:any ):void {
-
-		//console.log( $event );
-
-		let icpForm = document.getElementById( 'icpsignup' );
+		let icpForm:HTMLFormElement = <any> document.getElementById( "icpsignup" );
 		icpForm.action = "https://app.icontact.com/icp/core/mycontacts/signup/designer/form/?id=63&cid=581321&lid=23554";
 		icpForm.submit();
-
 	}
-
 }

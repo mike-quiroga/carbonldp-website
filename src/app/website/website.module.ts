@@ -42,7 +42,8 @@ import { RDFSourceView } from "./documentation/rest-api/rdf-source.view";
 import { ContainersView } from "./documentation/rest-api/containers.view";
 
 // Documentation - > JavaScriptSDK
-import { JavaScriptSDKView } from "./documentation/javascript-sdk/javascript-sdk.view";
+import { JavaScriptSDKView } from "./documentation/javascript-sdk.view";
+import { JavaScriptSDKHomeView } from "./documentation/javascript-sdk/javascript-sdk-home.view";
 import { GettingStartedView as JavaScriptSDKGettingStartedView } from "./documentation/javascript-sdk/getting-started.view";
 import { ContextsView } from "./documentation/javascript-sdk/contexts.view";
 import { ObjectModelView as JavaScriptSDKObjectModelView } from "./documentation/javascript-sdk/object-model.view";
@@ -104,6 +105,7 @@ import { DirectivesModule } from "carbonldp-panel/directives.module";
 
 		// Documentation - > JavaScriptSDK
 		JavaScriptSDKView,
+		JavaScriptSDKHomeView,
 		JavaScriptSDKGettingStartedView,
 		ContextsView,
 		JavaScriptSDKObjectModelView,

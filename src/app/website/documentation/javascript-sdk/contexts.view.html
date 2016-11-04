@@ -4,9 +4,9 @@
 		<div class="sixteen wide column">
 
 			<div class="ui breadcrumb">
-				<a class="section" [routerLink]="[ '..' ]">Documentation</a>
+				<a class="section" [routerLink]="[ '../..' ]">Documentation</a>
 				<i class="right chevron icon divider"></i>
-				<a class="section" [routerLink]="[ '../javascript-sdk' ]">JavaScript SDK</a>
+				<a class="section" [routerLink]="[ '..' ]">JavaScript SDK</a>
 				<i class="right arrow icon divider"></i>
 				<div class="active section">Contexts</div>
 			</div>
@@ -22,7 +22,7 @@
 					</header>
 
 					<div class="documentation-steps ui fluid steps">
-						<a class="step" [routerLink]="[ '../javascript-sdk-object-model' ]">
+						<a class="step" [routerLink]="[ '../object-model' ]">
 							<i class="arrow left icon"></i>
 							<div class="content">
 								<div class="title">Previous</div>
@@ -34,7 +34,7 @@
 								<div class="title">Contexts</div>
 							</div>
 						</div>
-						<a class="step" [routerLink]="[ '../javascript-sdk-object-schema' ]">
+						<a class="step" [routerLink]="[ '../object-schema' ]">
 							<i class="arrow right icon"></i>
 							<div class="content">
 								<div class="title">Next</div>
@@ -63,7 +63,7 @@
 						<p>A <em>context</em> object refers to the <em>Carbon platform</em> or <em>Carbon application</em> with which
 							you are working. Context objects store settings and state information that can be used throughout your application.
 							For example, server settings, such as the host for your Carbon platform server, are defined in the platform context.
-							Authentication information and <a [routerLink]="[ '../javascript-sdk-object-schema' ]">object schema</a> are also stored
+							Authentication information and <a [routerLink]="[ '../object-schema' ]">object schema</a> are also stored
 							in context objects.
 						</p>
 						<p>The information that's stored in the context objects is continually referenced by other objects, making them critical for
@@ -85,7 +85,7 @@
 						<p>
 							The <span class="highlight">platform context</span> references the location of a Carbon platform server.
 							It contains the host/domain of the server, and it gives you access to define and modify settings, authentication services and
-							<a [routerLink]="[ '../javascript-sdk-object-schema' ]">object schemas</a> that will be available globally for the
+							<a [routerLink]="[ '../object-schema' ]">object schemas</a> that will be available globally for the
 							<a target="_blank" href="https://github.com/CarbonLDP/CarbonLDP-JS-SDK/tree/develop/doc">Carbon SDK modules</a> to use.
 						</p>
 
@@ -367,11 +367,11 @@
 						<p>In this section we will discuss the inheritance of settings, authentication services and
 							object schema defined in context objects. However, the object schema inheritance will be
 							further discussed in the section extending the object schema of the
-							<a [routerLink]="[ '../javascript-sdk-object-schema' ]">object schema documentation</a>.
+							<a [routerLink]="[ '../object-schema' ]">object schema documentation</a>.
 						</p>
 
 						<p>An application context has access to all settings, services and
-							<a [routerLink]="[ '../javascript-sdk-object-schema' ]">object schemas</a> contained in the
+							<a [routerLink]="[ '../object-schema' ]">object schemas</a> contained in the
 							platform context, unless those settings are explicitly overwritten. This means that when there
 							is an attempt to access a setting in an application context, it is retrieved first from it.
 							If the given setting is not defined in that application context, then it is retrieved from its
@@ -551,7 +551,7 @@
 							with your Carbon platform server using the JavaScript SDK.</p>
 					</section>
 					<div class="documentation-steps ui fluid steps">
-						<a class="step" [routerLink]="[ '../javascript-sdk-object-model' ]">
+						<a class="step" [routerLink]="[ '../object-model' ]">
 							<i class="arrow left icon"></i>
 							<div class="content">
 								<div class="title">Previous</div>
@@ -563,7 +563,7 @@
 								<div class="title">Contexts</div>
 							</div>
 						</div>
-						<a class="step" [routerLink]="[ '../javascript-sdk-object-schema' ]">
+						<a class="step" [routerLink]="[ '../object-schema' ]">
 							<i class="arrow right icon"></i>
 							<div class="content">
 								<div class="title">Next</div>

@@ -18,9 +18,10 @@ export class NewsletterFormComponent implements OnInit {
 	private redirectPage;
 	private errorPage;
 	private location;
+
 	subscribe:{ email:string } = {
 		email: ""
-	}
+	};
 
 	constructor( router:Router ) {
 		this.router = router;
@@ -33,7 +34,7 @@ export class NewsletterFormComponent implements OnInit {
 	}
 
 	onSubmit( $event:any ):void {
-		let icpForm:HTMLElement = document.getElementById( 'icpsignup' );
+		let icpForm:HTMLFormElement = <any>document.getElementById( "icpsignup" );
 		icpForm.action = "https://app.icontact.com/icp/signup.php";
 		icpForm.submit();
 
