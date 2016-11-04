@@ -21,7 +21,7 @@
 	-->
 
 	<div class="row">
-		<div class="twelve wide column">
+		<div class="twelve wide computer only twelve wide tablet only sixteen wide mobile only column">
 
 			<article class="ui vertical segment" id="article">
 
@@ -38,6 +38,11 @@
 				<p>We care about your opinion and we want to address your questions, needs, and issues as quickly as possible. Carbon LDP is incredible software, but with your help, we can make
 					it better. We urge you to register for the beta, create new applications, and share your experiences with us. We'll do our best to address your feedback in a timely manner.</p>
 
+				<div class="ui mobile only grid">
+					<div class="row">
+						<sidebar-component [mobile]="true" [parentElement]="element" [contentReady]="contentReady" class="sixteen wide mobile only column"></sidebar-component>
+					</div>
+				</div>
 
 				<section>
 					<h2 class="ui header">Register for the Beta and Community Support</h2>
