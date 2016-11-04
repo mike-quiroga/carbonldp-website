@@ -4,9 +4,9 @@
 		<div class="sixteen wide column">
 
 			<div class="ui breadcrumb">
-				<a class="section" [routerLink]="[ '..' ]">Documentation</a>
+				<a class="section" [routerLink]="[ '../..' ]">Documentation</a>
 				<i class="right chevron icon divider"></i>
-				<a class="section" [routerLink]="[ '../javascript-sdk' ]">JavaScript SDK</a>
+				<a class="section" [routerLink]="[ '..' ]">JavaScript SDK</a>
 				<i class="right arrow icon divider"></i>
 
 				<div class="active section">Getting Started</div>
@@ -29,7 +29,7 @@
 								<div class="title">Getting Started</div>
 							</div>
 						</div>
-						<a class="step" [routerLink]="[ '../javascript-sdk-object-model' ]">
+						<a class="step" [routerLink]="[ '../object-model' ]">
 							<i class="arrow right icon"></i>
 							<div class="content">
 								<div class="title">Next</div>
@@ -313,7 +313,7 @@
 							First of all, you need to create a <span class="highlight">Carbon platform context</span>. This
 							<span class="highlight">context</span> will provide a reference to the
 							<span class="highlight">Carbon platform instance</span> you are working with (for more
-							about Carbon contexts see: <a [routerLink]="['../javascript-sdk-contexts']">Contexts</a>).
+							about Carbon contexts see: <a [routerLink]="['../contexts']">Contexts</a>).
 						</p>
 						<sui-tabs [(activeTab)]="selectedLanguage">
 							<sui-tab title="TypeScript">
@@ -378,8 +378,8 @@
 						<p>
 							After creating the platform context you need to tell the platform who you are by authenticating
 							yourself (if you haven't created an account yet, follow the steps in the section <em>create an agent</em> of the <a [routerLink]="[ '../quick-start-guide' ]"
-							                                                                                                        fragment="create-an-agent"
-							                                                                            href="#create-an-agent">quick start guide
+							                                                                                                                    fragment="create-an-agent"
+							                                                                                                                    href="#create-an-agent">quick start guide
 						</a> ).
 						</p>
 						<p>
@@ -458,18 +458,14 @@
 							<div class="content">
 								<p>
 									Before continuing, you need to create your first application, if you haven't done it, follow the steps in the section <em>create an application</em> of the
-									<a [routerLink]="[ '../quick-start-guide']" fragment="create-a-new-application" href="#create-a-new-application">quick start guide</a>  (remember to note
-									your
-									application
-									slug, because
-									we'll
-									use	it later).
+									<a [routerLink]="[ '../quick-start-guide']" fragment="create-a-new-application" href="#create-a-new-application">quick start guide</a> (remember to note your
+									application slug, because we'll use it later).
 								</p>
 							</div>
 						</div>
 						<p>
 							To access your application data, you need an <span class="highlight">application</span>
-							<a [routerLink]="[ '../javascript-sdk-contexts' ]">context</a> that references it, on which you will be working on.
+							<a [routerLink]="[ '../contexts' ]">context</a> that references it, on which you will be working on.
 							To retrieve it, you can use the <code>apps</code> service of the platform context:
 						</p>
 						<sui-tabs [(activeTab)]="selectedLanguage">
@@ -533,14 +529,14 @@
 						</sui-tabs>
 						<p>
 							The <code>apps.getContext()</code> method returns a promise that when resolved, will give you the
-							<a [routerLink]="[ '../javascript-sdk-contexts' ]"><span class="highlight">app context</span>
+							<a [routerLink]="[ '../contexts' ]"><span class="highlight">app context</span>
 							</a> you need. Be sure to replace <code>your-app-slug-here/</code> with your app slug.
 						</p>
 						<p>
 							This context is a child of the platform context you created. Because of that, any setting
 							or authentication information you saved in your platform context, is accessible
 							(and will be used) by this application context (for more see the Inheritance section of
-							<a [routerLink]="[ '../javascript-sdk-contexts' ]">Contexts</a>).
+							<a [routerLink]="[ '../contexts' ]">Contexts</a>).
 						</p>
 					</section>
 
@@ -550,7 +546,7 @@
 							Now that you have your app context, you can start working with your app's data. Carbon stores data
 							in documents, which are basically normal JavaScript objects identified by a URI (Unique Resource Identifier).
 							These documents are composed by properties, <span class="highlight">fragments</span> and <span class="highlight">named fragments</span>.
-							For more information see: <a [routerLink]="[ '../javascript-sdk-object-model' ]">JavaScript SDK Object model</a>.
+							For more information see: <a [routerLink]="[ '../object-model' ]">JavaScript SDK Object model</a>.
 						</p>
 						<p>
 							Any carbon <span class="highlight">context</span> has a <code>documents</code> service that
@@ -2169,7 +2165,7 @@
 								<div class="title">Getting Started</div>
 							</div>
 						</div>
-						<a class="step" [routerLink]="[ '../javascript-sdk-object-model' ]">
+						<a class="step" [routerLink]="[ '../object-model' ]">
 							<i class="arrow right icon"></i>
 							<div class="content">
 								<div class="title">Next</div>

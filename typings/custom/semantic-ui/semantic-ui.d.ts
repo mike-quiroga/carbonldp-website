@@ -290,6 +290,16 @@ interface SemanticShapeArguments extends SemanticDebugSettings {
 	};
 }
 
+interface SemanticStickyArguments extends SemanticDebugSettings {
+	pushing?:boolean;
+	jitter?:number;
+	observeChanges?:boolean;
+	context?:boolean | HTMLElement;
+	scrollContext?:HTMLElement;
+	offset?:number;
+	bottomOffset?:number
+}
+
 interface JQuery {
 	accordion( arguments?:any ):JQuery;
 	checkbox( arguments?:any ):JQuery;
@@ -297,7 +307,7 @@ interface JQuery {
 
 	dropdown( arguments?:SemanticDropdownArguments ):JQuery;
 	dropdown( action:"set selected", value:string );
-	
+
 	form( arguments:any ):JQuery;
 
 	modal( action:"attach events" | "", selector:string ):JQuery;
@@ -316,6 +326,11 @@ interface JQuery {
 	shape( arguments?:SemanticShapeArguments ):JQuery;
 
 	sidebar( arguments?:any ):JQuery;
+
+	sticky( action:"refresh" ):JQuery;
+	sticky( arguments:SemanticStickyArguments ):JQuery;
+	sticky():JQuery;
+
 	tab( arguments?:SemanticTabArguments ):JQuery;
 	transition( arguments:any ):JQuery;
 	visibility( arguments:SemanticVisibilityArguments ):JQuery;

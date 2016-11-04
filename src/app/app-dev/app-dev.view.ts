@@ -1,4 +1,5 @@
 import { Component, Inject, OnInit, EventEmitter } from "@angular/core";
+import { Event } from "@angular/router";
 
 import { Router, NavigationEnd } from "@angular/router";
 
@@ -78,7 +79,8 @@ export class AppDevView implements OnInit {
 					{
 						icon: "sign out icon",
 						name: "Log Out",
-						onClick: onLogout,
+						// TODO: Find why the compiler is complaining about EventEmitter<any> not being the same as EventEmitter<any> ?
+						onClick: <any> onLogout,
 						index: 100,
 					}
 				],

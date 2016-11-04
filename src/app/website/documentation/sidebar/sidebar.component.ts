@@ -66,7 +66,7 @@ export class SidebarComponent implements AfterViewInit, OnChanges {
 		// Assign class for computer and tablets size sidebar
 		if( ! this.mobile ) {
 			this.$followMenu = $( "<div />" ).addClass( "ui vertical following fluid accordion text menu" ).html( html );
-			$sticky = $( "<div />" ).addClass( "ui sticky segment" ).html( this.$followMenu ).prepend( '<p class="ui header">Content</p>' );
+			$sticky = $( "<div />" ).addClass( "ui sticky segment" ).append( '<p class="ui header">Content</p>' ).append( this.$followMenu );
 			this.sidebar.html( $sticky );
 			this.sections.visibility( {
 				once: false,
@@ -94,7 +94,7 @@ export class SidebarComponent implements AfterViewInit, OnChanges {
 		} else {
 			// Assign classes for mobile size sidebar
 			this.$followMenu = $( "<div />" ).addClass( "ui vertical following fluid accordion menu mobile" ).html( html );
-			$sticky = $( "<div />" ).addClass( "ui segment" ).html( this.$followMenu ).prepend( '<p class="ui header">Content</p>' );
+			$sticky = $( "<div />" ).addClass( "ui segment" ).append( '<p class="ui header">Content</p>' ).append( this.$followMenu );
 			this.sidebar.html( $sticky );
 		}
 
@@ -192,7 +192,6 @@ export class SidebarComponent implements AfterViewInit, OnChanges {
 		if( ! accordionIsActive ) {
 			$accordion.addClass( "active" );
 		}
-
 	}
 
 	deactivateFirstSection( elm:any ):void {

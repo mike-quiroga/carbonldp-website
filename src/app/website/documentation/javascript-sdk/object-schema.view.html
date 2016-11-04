@@ -4,9 +4,9 @@
 		<div class="sixteen wide column">
 
 			<div class="ui breadcrumb">
-				<a class="section" [routerLink]="[ '..' ]">Documentation</a>
+				<a class="section" [routerLink]="[ '../..' ]">Documentation</a>
 				<i class="right chevron icon divider"></i>
-				<a class="section" [routerLink]="[ '../javascript-sdk' ]">JavaScript SDK</a>
+				<a class="section" [routerLink]="[ '..' ]">JavaScript SDK</a>
 				<i class="right arrow icon divider"></i>
 
 				<div class="active section">Object schema</div>
@@ -22,7 +22,7 @@
 						<h1 class="ui header">Object schema</h1>
 					</header>
 					<div class="documentation-steps ui fluid steps">
-						<a class="step" [routerLink]="[ '../javascript-sdk-contexts' ]">
+						<a class="step" [routerLink]="[ '../contexts' ]">
 							<i class="arrow left icon"></i>
 							<div class="content">
 								<div class="title">Previous</div>
@@ -35,7 +35,7 @@
 								<div class="title">Object Schema</div>
 							</div>
 						</div>
-						<a class="step" [routerLink]="[ '../javascript-sdk-files' ]">
+						<a class="step" [routerLink]="[ '../files' ]">
 							<i class="arrow right icon"></i>
 							<div class="content">
 								<div class="title">Next</div>
@@ -57,6 +57,7 @@
 						</div>
 					</div>
 					<section>
+						<h2 class="hidden">Introduction</h2>
 						<p>Even though the information stored in the platform can seem to be normal JSON, it is not. If you haven't read about the
 							<a [routerLink]="[ '../linked-data-concepts' ]">Essential Concepts of Linked Data</a> don't worry, you won't need them to understand the basics behind object schemas,
 							but it wouldn't hurt you to read them either.</p>
@@ -105,7 +106,7 @@
 						<h2 class="ui header">What is an Object Schema?</h2>
 						<p>An object schema provides information about the properties the SDK can expect. On it, a web application can force the SDK to treat values as arrays, force arrays to be
 							ordered, tell the SDK to ignore values of unknown types, etc.</p>
-						<p>Object schemas are stored inside of a <a [routerLink]="[ '../javascript-sdk-contexts' ]">context</a>. Each context has it's own object schema, and child contexts inherit
+						<p>Object schemas are stored inside of a <a [routerLink]="[ '../contexts' ]">context</a>. Each context has it's own object schema, and child contexts inherit
 							their object schema from their parent's.
 						</p>
 						<p>To provide new information to the object schema the <code>context.extendObjectSchema</code> method can be used:</p>
@@ -661,7 +662,7 @@
 						<p>Prefixes can be defined by declaring a property with a string value. Prefixes can be used to shorten any URI.</p>
 					</section>
 					<div class="documentation-steps ui fluid steps">
-						<a class="step" [routerLink]="[ '../javascript-sdk-contexts' ]">
+						<a class="step" [routerLink]="[ '../contexts' ]">
 							<i class="arrow left icon"></i>
 							<div class="content">
 								<div class="title">Previous</div>
@@ -674,7 +675,7 @@
 								<div class="title">Object Schema</div>
 							</div>
 						</div>
-						<a class="step" [routerLink]="[ '../javascript-sdk-files' ]">
+						<a class="step" [routerLink]="[ '../files' ]">
 							<i class="arrow right icon"></i>
 							<div class="content">
 								<div class="title">Next</div>

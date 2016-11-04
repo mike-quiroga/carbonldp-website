@@ -28,7 +28,8 @@ import { ObjectModelView } from "./documentation/rest-api/object-model.view";
 import { RDFSourceView } from "./documentation/rest-api/rdf-source.view";
 import { ContainersView } from "./documentation/rest-api/containers.view";
 // Documentation -> JavaScriptSDK
-import { JavaScriptSDKView } from "./documentation/javascript-sdk/javascript-sdk.view";
+import { JavaScriptSDKView } from "./documentation/javascript-sdk.view";
+import { JavaScriptSDKHomeView } from "./documentation/javascript-sdk/javascript-sdk-home.view";
 import { GettingStartedView as JavaScriptSDKGettingStartedView } from "./documentation/javascript-sdk/getting-started.view";
 import { ContextsView } from "./documentation/javascript-sdk/contexts.view";
 import { ObjectModelView as JavaScriptSDKObjectModelView } from "./documentation/javascript-sdk/object-model.view";
@@ -221,97 +222,105 @@ const websiteRoutes:Routes = [
 							title: "RDF Source",
 						},
 					},
-
 					{
 						path: "javascript-sdk",
 						component: JavaScriptSDKView,
 						data: {
-							title: "JavaScript SDK",
-							description: {
-								name: "description",
-								content: "The JavaScript Software Developer's Kit, available from the npm package manager, allows you to manage RDF data using familiar JavaScript and TypeScript programming techniques and tools. Build for execution within a web browser or Node.js.",
-							}
+							title: false
 						},
-					},
-					{
-						path: "javascript-sdk-getting-started",
-						component: JavaScriptSDKGettingStartedView,
-						data: {
-							title: "Getting Started with JavaScript SDK",
-							description: {
-								name: "description",
-								content: "Guide to install Carbon JavaScriptSDK and start creating and manipulating data with its basic methods.",
-							}
-						},
-					},
-					{
-						path: "javascript-sdk-contexts",
-						component: ContextsView,
-						data: {
-							title: "Contexts",
-							description: {
-								name: "description",
-								content: "What is a context in Carbon JS SDK, how to declare, access and modify it.",
-							}
-						},
-					},
-					{
-						path: "javascript-sdk-object-model",
-						component: JavaScriptSDKObjectModelView,
-						data: {
-							title: "JavaScript SDK Object Model",
-							description: {
-								name: "description",
-								content: "An in depth description of the Carbon Object Model.",
-							}
-						},
-					},
-					{
-						path: "javascript-sdk-object-schema",
-						component: ObjectSchemaView,
-						data: {
-							title: "Object Schema",
-							description: {
-								name: "description",
-								content: "What is the object schema, how to define and use it.",
-							}
-						},
-					},
-					{
-						path: "javascript-sdk-files",
-						component: UploadingFilesView,
-						data: {
-							title: "Uploading Files",
-						},
-					},
-					{
-						path: "javascript-sdk-querying",
-						component: QueryingView,
-						data: {
-							title: "Querying",
-						},
-					},
-					{
-						path: "javascript-sdk-authentication",
-						component: AuthenticationView,
-						data: {
-							title: "Authentication",
-						},
-					},
-					{
-						path: "javascript-sdk-authorization",
-						component: AuthorizationView,
-						data: {
-							title: "Authorization",
-						},
-					},
-					{
-						path: "javascript-sdk-access-points",
-						component: AccessPointsView,
-						data: {
-							title: "Access Points",
-						},
-					},
+						children: [
+							{
+								path: "",
+								component: JavaScriptSDKHomeView,
+								data: {
+									title: "JavaScript SDK",
+									description: {
+										name: "description",
+										content: "The JavaScript Software Developer's Kit, available from the npm package manager, allows you to manage RDF data using familiar JavaScript and TypeScript programming techniques and tools. Build for execution within a web browser or Node.js.",
+									}
+								},
+							},
+							{
+								path: "getting-started",
+								component: JavaScriptSDKGettingStartedView,
+								data: {
+									title: "Getting Started with JavaScript SDK",
+									description: {
+										name: "description",
+										content: "Guide to install Carbon JavaScriptSDK and start creating and manipulating data with its basic methods.",
+									}
+								},
+							},
+							{
+								path: "contexts",
+								component: ContextsView,
+								data: {
+									title: "Contexts",
+									description: {
+										name: "description",
+										content: "What is a context in Carbon JS SDK, how to declare, access and modify it.",
+									}
+								},
+							},
+							{
+								path: "object-model",
+								component: JavaScriptSDKObjectModelView,
+								data: {
+									title: "JavaScript SDK Object Model",
+									description: {
+										name: "description",
+										content: "An in depth description of the Carbon Object Model.",
+									}
+								},
+							},
+							{
+								path: "object-schema",
+								component: ObjectSchemaView,
+								data: {
+									title: "Object Schema",
+									description: {
+										name: "description",
+										content: "What is the object schema, how to define and use it.",
+									}
+								},
+							},
+							{
+								path: "files",
+								component: UploadingFilesView,
+								data: {
+									title: "Uploading Files",
+								},
+							},
+							{
+								path: "querying",
+								component: QueryingView,
+								data: {
+									title: "Querying",
+								},
+							},
+							{
+								path: "authentication",
+								component: AuthenticationView,
+								data: {
+									title: "Authentication",
+								},
+							},
+							{
+								path: "authorization",
+								component: AuthorizationView,
+								data: {
+									title: "Authorization",
+								},
+							},
+							{
+								path: "access-points",
+								component: AccessPointsView,
+								data: {
+									title: "Access Points",
+								},
+							},
+						]
+					}
 				]
 			}
 		]
