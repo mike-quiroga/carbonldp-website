@@ -12,7 +12,7 @@ import style from "./website.view.css!text";
 
 export class WebsiteView implements AfterViewInit {
 
-	ngAfterViewInit() {
+	ngAfterViewInit():void {
 		this.initializeScrollTopButton();
 	}
 
@@ -29,9 +29,8 @@ export class WebsiteView implements AfterViewInit {
 		} );
 	}
 
-	scrollTop(){
-		window.scroll( 0, 0 )
-		return true;
+	scrollTop():void {
+		window.scroll( 0, 0 );
 	}
 
 }
