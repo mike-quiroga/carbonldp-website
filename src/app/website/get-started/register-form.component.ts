@@ -1,5 +1,5 @@
 import { Component, ViewChild } from "@angular/core";
-import { NgForm, AbstractControl } from "@angular/forms";
+import { NgForm } from "@angular/forms";
 
 import template from "./register-form.component.html!text";
 
