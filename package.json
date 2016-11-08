@@ -78,7 +78,7 @@
   },
   "scripts": {
     "postinstall": "node scripts/force-semantic-ui-to-install-correctly.js && npm explore semantic-ui -- npm run-script install",
-    "start": "gulp serve",
+    "start": "cd server && jspm run server --root $(pwd)/.. --base src --route-table app/website/website.routing.json --open-browser",
     "test": "gulp test"
   },
   "jspm": {
