@@ -29,11 +29,6 @@ SystemJS.config({
           "loader": "plugin-typescript"
         }
       }
-    },
-    "github:frankwallis/plugin-typescript@5.2.9": {
-      "map": {
-        "typescript": "npm:typescript@2.1.1"
-      }
     }
   }
 });

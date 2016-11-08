@@ -73,6 +73,7 @@ export class AppBooter {
 			this.app.get( "*", ( request:Express.Request, response:Express.Response ):void => {
 				// TODO: Make file location configurable
 				response.render( "index.ejs", {
+					base: this.options.base,
 					title: "CarbonLDP",
 					description: "Carbon LDP is a Linked Data Platform for building web apps that manage and link data within your enterprise and across the World Wide Web"
 				} );
@@ -117,6 +118,7 @@ export class AppBooter {
 			this.app.get( routePath, ( request:Express.Request, response:Express.Response ):void => {
 				// TODO: Make file location configurable
 				response.render( "index.ejs", {
+					base: this.options.base,
 					title: title,
 					description: description
 				} );

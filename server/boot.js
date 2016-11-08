@@ -55,6 +55,7 @@ System.register(["express", "compression", "yargs", "opn"], function(exports_1, 
                         _this.app.get("*", function (request, response) {
                             // TODO: Make file location configurable
                             response.render("index.ejs", {
+                                base: _this.options.base,
                                 title: "CarbonLDP",
                                 description: "Carbon LDP is a Linked Data Platform for building web apps that manage and link data within your enterprise and across the World Wide Web"
                             });
@@ -77,6 +78,7 @@ System.register(["express", "compression", "yargs", "opn"], function(exports_1, 
                     return options;
                 };
                 AppBooter.prototype.registerDynamicRoutes = function (routes, base) {
+                    var _this = this;
                     if (base === void 0) { base = this.options.base; }
                     var _loop_1 = function(routeName) {
                         if (!routes.hasOwnProperty(routeName))
@@ -92,6 +94,7 @@ System.register(["express", "compression", "yargs", "opn"], function(exports_1, 
                         this_1.app.get(routePath, function (request, response) {
                             // TODO: Make file location configurable
                             response.render("index.ejs", {
+                                base: _this.options.base,
                                 title: title,
                                 description: description
                             });

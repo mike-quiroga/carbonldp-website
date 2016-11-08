@@ -2,13 +2,21 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
-	<base href="/src/">
+	<base href="<%- base %>">
 
+	<% if( title && title !== "Carbon LDP" ) { %>
+	<title><%- title %> | Carbon LDP</title>
+	<meta name="title" content="<%- title %> | Carbon LDP">
+	<meta name="og:title" content="<%- title %> | Carbon LDP">
+	<% } else { %>
 	<title>Carbon LDP</title>
-	<meta name="title" content="<%- title %>">
-	<meta name="og:title" content="<%- title %>">
+	<meta name="title" content="Carbon LDP">
+	<meta name="og:title" content="Carbon LDP">
+	<% } %>
+
 	<meta name="description" content="<%- description %>">
 	<meta name="og:description" content="<%- description %>">
+
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 
 	<link rel="shortcut icon" href="assets/images/carbon-icon-144x144.png"/>

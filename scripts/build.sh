@@ -22,4 +22,18 @@ echo "Installing definition files..."
 typings install
 echo "Definition files installed"
 
+echo "Setting up express server..."
+cd server
+
+echo "Installing Node dependencies for server..."
+npm install
+echo "Node dependencies installed"
+
+echo "Installing jspm dependencies for server..."
+jspm install
+echo "jspm dependencies installed"
+
+cd ..
+echo "Express server ready"
+
 gulp build --profile prod
