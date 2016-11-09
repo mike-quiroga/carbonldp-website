@@ -1,3 +1,16 @@
+# 0.11.0 (2016/11/09)
+
+- Completed #50 - Document JS SDK authentication
+- Completed #101 - Add back to top button in website for mobile view
+- Completed #99 - Add required fields and email validation on register-form in get started
+- Created a NodeJS based server to replace the current one. This server will be fed with the route table to generate metadata tags properly
+- Added dynamic generation of `sitemap.xml` through the new server and route table
+- Fixed #107 - Mobile rendering
+    - Added viewport metatag to index.ejs
+    - Added sidebar for mobile view in community and support page
+    - Modified website styles to render correctly on mobile view
+
+
 # 0.10.0 (2016/11/01) :skull:
 
 - Completed #53 - Document how to upload and download files

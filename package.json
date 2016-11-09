@@ -1,6 +1,6 @@
 {
   "name": "carbonldp-website",
-  "version": "0.10.0",
+  "version": "0.11.0",
   "description": "Source code of carbonldp.com",
   "main": "dist/index.html",
   "author": "Base22 LLC",
@@ -78,7 +78,7 @@
   },
   "scripts": {
     "postinstall": "node scripts/force-semantic-ui-to-install-correctly.js && npm explore semantic-ui -- npm run-script install",
-    "start": "cd server && jspm run server --root $(pwd)/.. --base src --route-table app/website/website.routing.json --open-browser",
+    "start": "{ gulp build:dev; } && { gulp watch & { cd server && jspm run server --root $(pwd)/.. --base src --route-table app/website/website.routing.json --open-browser; }; }",
     "test": "gulp test"
   },
   "jspm": {
