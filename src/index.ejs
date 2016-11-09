@@ -2,14 +2,21 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
-	<base href="/src/">
+	<base href="<%- base %>">
 
+	<% if( title && title !== "Carbon LDP" ) { %>
+	<title><%- title %> | Carbon LDP</title>
+	<meta name="title" content="<%- title %> | Carbon LDP">
+	<meta name="og:title" content="<%- title %> | Carbon LDP">
+	<% } else { %>
 	<title>Carbon LDP</title>
 	<meta name="title" content="Carbon LDP">
 	<meta name="og:title" content="Carbon LDP">
-	<meta name="description"
-	      content="Carbon LDP is a Linked Data Platform for building web apps that manage and link data within your enterprise and across the World Wide Web.">
-	<meta name="og:description" content="Carbon LDP is a Linked Data Platform for building web apps that manage and link data within your enterprise and across the World Wide Web.">
+	<% } %>
+
+	<meta name="description" content="<%- description %>">
+	<meta name="og:description" content="<%- description %>">
+
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 
 	<link rel="shortcut icon" href="assets/images/carbon-icon-144x144.png"/>
@@ -40,20 +47,23 @@
 			html, body {
 				width: 100%;
 				height: 100%;
-			}
-
-			body {
-				display: flex;
-				flex-direction: column;
-				justify-content: center;
-				align-items: center;
+				margin: 0;
 			}
 
 			app {
+				height: 100vh;
+				display: -webkit-box;
+				display: -webkit-flex;
+				display: -ms-flexbox;
 				display: flex;
-				flex-direction: row;
-				justify-content: center;
+				-webkit-box-align: center;
+				-webkit-align-items: center;
+				-ms-flex-align: center;
 				align-items: center;
+				-webkit-box-pack: center;
+				-webkit-justify-content: center;
+				-ms-flex-pack: center;
+				justify-content: center;
 			}
 
 			.loading-error {
@@ -64,8 +74,7 @@
 				border: 1px solid #9f3a38;
 			}
 		</style>
-		<img src="assets/images/loading.gif" alt="Loading..." width="32" height="33">
-		<div>Loading...</div>
+		<img src="assets/images/carbon-logo-150x48.png">
 		<div class="loading-error">x_x</div>
 	</app>
 

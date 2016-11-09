@@ -1,15 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<base href="<%- url.base %>">
+	<base href="<%- base %>">
 
 	<meta charset="UTF-8">
+
+	<% if( title && title !== "Carbon LDP" ) { %>
+	<title><%- title %> | Carbon LDP</title>
+	<meta name="title" content="<%- title %> | Carbon LDP">
+	<meta name="og:title" content="<%- title %> | Carbon LDP">
+	<% } else { %>
 	<title>Carbon LDP</title>
 	<meta name="title" content="Carbon LDP">
 	<meta name="og:title" content="Carbon LDP">
-	<meta name="description"
-	      content="Carbon LDP is a Linked Data Platform for building web apps that manage and link data within your enterprise and across the World Wide Web">
-	<meta name="og:description" content="Carbon LDP is a Linked Data Platform for building web apps that manage and link data within your enterprise and across the World Wide Web">
+	<% } %>
+
+	<meta name="description" content="<%- description %>">
+	<meta name="og:description" content="<%- description %>">
+
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 
 	<link rel="stylesheet" href="assets/semantic/semantic.min.css">
