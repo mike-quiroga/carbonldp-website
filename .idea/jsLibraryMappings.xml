@@ -3,6 +3,6 @@
   <component name="JavaScriptLibraryMappings">
     <file url="PROJECT" libraries="{tsconfig$roots}" />
     <includedPredefinedLibrary name="ECMAScript 6" />
-    <includedPredefinedLibrary name="Node.js Core" />
+    <excludedPredefinedLibrary name="carbonldp-website/server/node_modules" />
   </component>
 </project>
