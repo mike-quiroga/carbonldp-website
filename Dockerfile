@@ -7,4 +7,4 @@ WORKDIR /usr/share/server
 
 EXPOSE 80
 
-CMD jspm run server --port 80 --root /usr/share/server/html --route-table route-table.json
+ENTRYPOINT jspm run server --port 80 --root /usr/share/server/html --route-table route-table.json
