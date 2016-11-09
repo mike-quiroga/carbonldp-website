@@ -26,6 +26,7 @@
       "express": "npm:express@^4.14.0",
       "json": "github:systemjs/plugin-json@^0.2.2",
       "opn": "npm:opn@^4.0.2",
+      "sitemap": "npm:sitemap@^1.8.2",
       "source-map-support": "npm:source-map-support@^0.4.6",
       "yargs": "npm:yargs@^6.3.0"
     },
@@ -118,5 +119,6 @@
         }
       }
     }
-  }
+  },
+  "devDependencies": {}
 }

@@ -1,7 +1,7 @@
-System.register(["express", "compression", "yargs", "opn"], function(exports_1, context_1) {
+System.register(["express", "compression", "sitemap", "yargs", "opn"], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
-    var express_1, compression_1, yargs_1, opn_1;
+    var express_1, compression_1, sitemap_1, yargs_1, opn_1;
     var argv, AppBooter;
     function generateRandomNumber(min, max) {
         min = Math.ceil(min);
@@ -16,6 +16,9 @@ System.register(["express", "compression", "yargs", "opn"], function(exports_1, 
             function (compression_1_1) {
                 compression_1 = compression_1_1;
             },
+            function (sitemap_1_1) {
+                sitemap_1 = sitemap_1_1;
+            },
             function (yargs_1_1) {
                 yargs_1 = yargs_1_1;
             },
@@ -25,6 +28,8 @@ System.register(["express", "compression", "yargs", "opn"], function(exports_1, 
         execute: function() {
             argv = yargs_1.default
                 .usage("Usage: -r rootDirectory [-b baseURL]")
+                .describe("hostname", "Hostname the website is going to be accessible through")
+                .default("hostname", "http://localhost")
                 .describe("root", "Active profile to load configuration from")
                 .demand("root", "You need to specify a root directory for the server to serve files from")
                 .describe("port", "Port for the server to listen on")
@@ -52,6 +57,17 @@ System.register(["express", "compression", "yargs", "opn"], function(exports_1, 
                         _this.app.use(compression_1.default());
                         _this.app.use(express_1.default.static(_this.options.root));
                         _this.registerDynamicRoutes(routeMap);
+                        var sitemap = _this.createSitemap(routeMap);
+                        _this.app.get("/sitemap.xml", function (request, response) {
+                            sitemap.toXML(function (error, xml) {
+                                if (error) {
+                                    console.error(error);
+                                    return response.status(500).end();
+                                }
+                                response.header("Content-Type", "application/xml");
+                                response.send(xml);
+                            });
+                        });
                         _this.app.get("*", function (request, response) {
                             // TODO: Make file location configurable
                             response.render("index.ejs", {
@@ -104,6 +120,32 @@ System.register(["express", "compression", "yargs", "opn"], function(exports_1, 
                     for (var routeName in routes) {
                         _loop_1(routeName);
                     }
+                };
+                AppBooter.prototype.createSitemap = function (routes) {
+                    var urls = this.generateSitemapURLs(routes);
+                    var hostname = this.options.port === "80" || this.options.port === 80 ? this.options.hostname : this.options.hostname + ":" + this.options.port;
+                    return sitemap_1.default.createSitemap({
+                        hostname: hostname,
+                        cacheTime: 600 * 1000,
+                        urls: urls
+                    });
+                };
+                AppBooter.prototype.generateSitemapURLs = function (routes, base) {
+                    if (base === void 0) { base = this.options.base; }
+                    var urls = [];
+                    for (var routeName in routes) {
+                        if (!routes.hasOwnProperty(routeName))
+                            continue;
+                        var route = routes[routeName];
+                        var routePath = base + routeName;
+                        routePath = routePath ? routePath : "/";
+                        urls.push({
+                            url: routePath
+                        });
+                        if (route.children)
+                            urls = urls.concat(this.generateSitemapURLs(route.children, routePath.endsWith("/") ? routePath : routePath + "/"));
+                    }
+                    return urls;
                 };
                 AppBooter.prototype.openBrowser = function () {
                     var _this = this;

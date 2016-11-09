@@ -13,6 +13,9 @@ src/app/**/*.map
 
 src/app/config.ts
 
+server/boot.js
+server/boot.js.map
+
 dist/site/
 
 # Typings

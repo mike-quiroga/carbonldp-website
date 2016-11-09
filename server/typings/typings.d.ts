@@ -1,0 +1,1 @@
+/// <reference path="./custom/sitemap/index.d.ts" />

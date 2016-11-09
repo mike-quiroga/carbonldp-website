@@ -61,6 +61,7 @@ SystemJS.config({
     "path": "npm:jspm-nodelibs-path@0.2.1",
     "process": "npm:jspm-nodelibs-process@0.2.0",
     "querystring": "npm:jspm-nodelibs-querystring@0.2.0",
+    "sitemap": "npm:sitemap@1.8.2",
     "source-map-support": "npm:source-map-support@0.4.6",
     "stream": "npm:jspm-nodelibs-stream@0.2.0",
     "string_decoder": "npm:jspm-nodelibs-string_decoder@0.2.0",
@@ -587,6 +588,12 @@ SystemJS.config({
       "map": {
         "readable-stream": "npm:readable-stream@2.1.5",
         "pako": "npm:pako@0.2.9"
+      }
+    },
+    "npm:sitemap@1.8.2": {
+      "map": {
+        "url-join": "npm:url-join@1.1.0",
+        "underscore": "npm:underscore@1.8.3"
       }
     }
   }

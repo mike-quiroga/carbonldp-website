@@ -1,10 +1,18 @@
 import Express from "express";
 import compression from "compression";
+
+import { Sitemap } from "sitemap";
+import SitemapBuilder from "sitemap";
+
 import yargs from "yargs";
 import opn from "opn";
 
-const argv:AppBooterOptions = <any>yargs
+
+const argv:AppBooterOptions = yargs
 	.usage( "Usage: -r rootDirectory [-b baseURL]" )
+
+	.describe( "hostname", "Hostname the website is going to be accessible through" )
+	.default( "hostname", "http://localhost" )
 
 	.describe( "root", "Active profile to load configuration from" )
 	.demand( "root", "You need to specify a root directory for the server to serve files from" )
@@ -33,6 +41,7 @@ function generateRandomNumber( min:number, max:number ):number {
 export interface AppBooterOptions {
 	root:string;
 
+	hostname:string;
 	port:number;
 	base:string;
 	routeTable:string;
@@ -69,6 +78,19 @@ export class AppBooter {
 			this.app.use( Express.static( this.options.root ) );
 
 			this.registerDynamicRoutes( routeMap );
+
+			let sitemap:Sitemap = this.createSitemap( routeMap );
+
+			this.app.get( "/sitemap.xml", ( request:Express.Request, response:Express.Response ):void => {
+				sitemap.toXML( ( error:any, xml:string ):void => {
+					if( error ) {
+						console.error( error );
+						return response.status( 500 ).end();
+					}
+					response.header( "Content-Type", "application/xml" );
+					response.send( xml );
+				} );
+			} );
 
 			this.app.get( "*", ( request:Express.Request, response:Express.Response ):void => {
 				// TODO: Make file location configurable
@@ -124,6 +146,39 @@ export class AppBooter {
 				} );
 			} );
 		}
+	}
+
+	createSitemap( routes:RouteMap ):Sitemap {
+		let urls:Sitemap.URL[] = this.generateSitemapURLs( routes );
+
+		let hostname:string = this.options.port === <any>"80" || this.options.port === 80 ? this.options.hostname : `${ this.options.hostname }:${ this.options.port }`;
+
+		return SitemapBuilder.createSitemap( {
+			hostname: hostname,
+			cacheTime: 600 * 1000,
+			urls: urls
+		} );
+	}
+
+	generateSitemapURLs( routes:RouteMap, base:string = this.options.base ):Sitemap.URL[] {
+		let urls:Sitemap.URL[] = [];
+
+		for ( let routeName in routes ) {
+			if( ! routes.hasOwnProperty( routeName ) ) continue;
+
+			let route:Route = routes[ routeName ];
+			let routePath:string = base + routeName;
+
+			routePath = routePath ? routePath : "/";
+
+			urls.push( {
+				url: routePath
+			} );
+
+			if( route.children ) urls = urls.concat( this.generateSitemapURLs( route.children, routePath.endsWith( "/" ) ? routePath : routePath + "/" ) );
+		}
+
+		return urls;
 	}
 
 	openBrowser():Promise<any> {
