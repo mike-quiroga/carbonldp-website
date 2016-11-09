@@ -1,0 +1,169 @@
+{
+  "": {
+    "children": {
+      "": {
+        "data": {
+          "title": "Home",
+          "description": "Carbon LDP is a Linked Data Platform for building web apps that manage and link data within your enterprise and across the World Wide Web."
+        }
+      },
+      "community-and-support": {
+        "data": {
+          "title": "Community &amp; Support"
+        }
+      },
+      "get-started": {
+        "data": {
+          "title": "Get Started"
+        }
+      },
+      "about": {
+        "data": {
+          "title": "About",
+          "description": "Carbon LDP is a Linked Data Platform for building web apps that manage and link data within your enterprise and across the World Wide Web."
+        }
+      },
+      "register": {
+        "data": {
+          "title": "Register"
+        }
+      },
+      "signup-thanks": {
+        "data": {
+          "title": "Thank you"
+        }
+      },
+      "ui-examples": {
+        "data": {
+          "title": "UI Examples"
+        }
+      },
+      "license": {
+        "data": {
+          "title": "License"
+        }
+      },
+      "documentation": {
+        "children": {
+          "": {
+            "data": {
+              "title": "Documentation",
+              "description": "Find all documents related to Carbon, from the basics concepts of Linked Data to the GUI."
+            }
+          },
+          "quick-start-guide": {
+            "data": {
+              "title": "Quick Start Guide",
+              "description": "Quick start instructions to help you get up and running everything you need to work with CarbonLDP."
+            }
+          },
+          "essential-concepts": {
+            "data": {
+              "title": "Essential Concepts",
+              "description": "Basic Linked Data knowledge. Helpful documentation for a general overview of Linked Data."
+            }
+          },
+          "linked-data-concepts": {
+            "data": {
+              "title": "Linked Data Concepts",
+              "description": "General overview of the basic idea behind Linked Data and why it can make your applications more powerful."
+            }
+          },
+          "rest-api": {
+            "data": {
+              "title": "REST API",
+              "description": "Access and manage applications and data by URIs using RESTful requests over HTTP. Configure apps, schedule server-side jobs, execute queries - everything in Carbon is RESTful."
+            }
+          },
+          "rest-api-getting-started": {
+            "data": {
+              "title": "Getting Started with REST API",
+              "description": "Guide to get you started. How to build an example application using the Carbon LDP REST API."
+            }
+          },
+          "rest-api-interaction-models": {
+            "data": {
+              "title": "Interaction Models",
+              "description": "An explanation of the way you can interact with the resources on the Carbon Server."
+            }
+          },
+          "rest-api-object-model": {
+            "data": {
+              "title": "REST API Object Model",
+              "description": "A summary of the various types of resources you can manage and interact with using REST."
+            }
+          },
+          "rest-api-containers": {
+            "data": {
+              "title": "Containers"
+            }
+          },
+          "rest-api-rdf-source": {
+            "data": {
+              "title": "RDF Source"
+            }
+          },
+          "javascript-sdk": {
+            "children": {
+              "": {
+                "data": {
+                  "title": "JavaScript SDK",
+                  "description": "The JavaScript Software Developer's Kit, available from the npm package manager, allows you to manage RDF data using familiar JavaScript and TypeScript programming techniques and tools. Build for execution within a web browser or Node.js."
+                }
+              },
+              "getting-started": {
+                "data": {
+                  "title": "Getting Started with JavaScript SDK",
+                  "description": "Guide to install Carbon JavaScriptSDK and start creating and manipulating data with its basic methods."
+                }
+              },
+              "contexts": {
+                "data": {
+                  "title": "Contexts",
+                  "description": "What is a context in Carbon JS SDK, how to declare, access and modify it."
+                }
+              },
+              "object-model": {
+                "data": {
+                  "title": "JavaScript SDK Object Model",
+                  "description": "An in depth description of the Carbon Object Model."
+                }
+              },
+              "object-schema": {
+                "data": {
+                  "title": "Object Schema",
+                  "description": "What is the object schema, how to define and use it."
+                }
+              },
+              "files": {
+                "data": {
+                  "title": "Uploading Files"
+                }
+              },
+              "querying": {
+                "data": {
+                  "title": "Querying"
+                }
+              },
+              "authentication": {
+                "data": {
+                  "title": "Authentication"
+                }
+              },
+              "authorization": {
+                "data": {
+                  "title": "Authorization"
+                }
+              },
+              "access-points": {
+                "data": {
+                  "title": "Access Points"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

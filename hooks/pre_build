@@ -1,6 +1,6 @@
 #!/bin/bash
 
-git submodule init
-git submodule update
+# git submodule init
+# git submodule update
 
 docker run -i --rm -v $(pwd):/usr/src/project carbonldp/jspm-typescript /usr/src/project/scripts/build.sh

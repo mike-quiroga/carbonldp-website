@@ -60,7 +60,7 @@ gulp.task( "default", [ "serve" ] );
 gulp.task( "build", ( done ) => {
 	runSequence(
 		[ "clean:dist" ],
-		[ "compile:styles", "compile:index", "compile:config", "copy:semantic", "copy:node-dependencies" ],
+		[ "compile:styles", "copy:index", "copy:route-table", "compile:config", "copy:semantic", "copy:node-dependencies" ],
 		[ "copy:assets" ],
 		"bundle",
 		"minify:bundle",
@@ -260,13 +260,6 @@ gulp.task( "compile:config", () => {
 		.pipe( gulp.dest( "src/app/" ) )
 } );
 
-gulp.task( "compile:index", () => {
-	return gulp.src( "dist/index.ejs.html" )
-		.pipe( ejs( profileConfig ) )
-		.pipe( rename( "index.html" ) )
-		.pipe( gulp.dest( "dist/site/" ) );
-} );
-
 gulp.task( "compile:styles", () => {
 	return gulp.src( config.source.sass, { base: "./" } )
 		.pipe( ejs( profileConfig ) )
@@ -280,6 +273,11 @@ gulp.task( "compile:styles", () => {
 		;
 } );
 
+gulp.task( "copy:index", () => {
+	return gulp.src( "dist/index.ejs" )
+		.pipe( gulp.dest( "dist/site/" ) );
+} );
+
 gulp.task( "copy:node-dependencies", () => {
 	gulp.start( 'copy:node-dependencies:files', 'copy:node-dependencies:packages' );
 } );
@@ -290,6 +288,12 @@ gulp.task( "copy:node-dependencies:files", () => {
 
 gulp.task( "copy:node-dependencies:packages", () => {
 	return gulp.src( config.nodeDependencies.packages, { base: "node_modules" } ).pipe( gulp.dest( "src/assets/node_modules" ) );
+} );
+
+gulp.task( "copy:route-table", () => {
+	return gulp.src( "src/app/website/website.routing.json" )
+		.pipe( rename( "route-table.json" ) )
+		.pipe( gulp.dest( "dist/site/" ) );
 } );
 
 gulp.task( "copy:semantic", [ "build:semantic" ], () => {
