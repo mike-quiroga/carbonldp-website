@@ -22,8 +22,6 @@ const sourcemaps = require( "gulp-sourcemaps" );
 
 const uglify = require( "gulp-uglify" );
 
-const webserver = require( "gulp-webserver" );
-
 const argv = require( "yargs" )
 	.usage( "Usage: [-p profile]" )
 	.describe( "p", "Active profile to load configuration from" )
@@ -64,6 +62,13 @@ gulp.task( "build", ( done ) => {
 		[ "copy:assets" ],
 		"bundle",
 		"minify:bundle",
+		done
+	);
+} );
+
+gulp.task( "build:dev", ( done ) => {
+	runSequence(
+		[ "build:semantic", "compile:styles", "compile:config", "copy:node-dependencies" ],
 		done
 	);
 } );
@@ -325,35 +330,17 @@ gulp.task( "minify:bundle", () => {
 		.pipe( gulp.dest( "dist/site" ) );
 } );
 
-gulp.task( "serve", ( done ) => {
-	runSequence(
-		[ "build:semantic", "compile:styles", "compile:config", "copy:node-dependencies" ],
-		"serve:afterCompilation",
-		done
-	);
-} );
-
-
-gulp.task( "serve:afterCompilation", () => {
+gulp.task( "watch", () => {
 	gulp.src( "src/semantic/gulpfile.js", { read: false } )
 		.pipe( chug( {
 			tasks: [ "watch" ]
 		} ) )
 	;
 
-	watch( config.source.sass, ( file ) => {
+	return watch( config.source.sass, ( file ) => {
 		util.log( "SCSS file changed: ", file.path );
 		gulp.start( "compile:styles" );
 	} ).on( "error", function( error ) {
 		util.log( util.colors.red( "Error" ), error.message );
 	} );
-
-	return gulp.src( "." )
-		.pipe( webserver( {
-			livereload: false,
-			directoryListing: false,
-			fallback: "/src/index.html",
-			open: true,
-			port: 8081,
-		} ) );
 } );

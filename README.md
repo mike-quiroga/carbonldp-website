@@ -33,14 +33,13 @@ Source code for [carbonldp.com](https://carbonldp.com)
     
     Answer `no` to any change JSPM suggests to make follow by a `yes` when it asks to confirm the decision.
     For more information see: [JSPM link](http://jspm.io/0.17-beta-guide/linking.html)
-6. To start the application server run `npm start` or `gulp serve`
+6. To start the application server run `npm start`
 
 ### Gulp Tasks
 
-Gulp defines two tasks:
+Main gulp tasks:
 
-1. `build`: Same as `npm install`. Build the source code and prepare it for production (inside of the dist/ folder).
-2. `serve`: Same as `npm start`. Will start a live-server instance with the source code.
+1. `build`: Build the source code and prepare it for production (inside of the dist/ folder)
 
 ### File Structure
 
@@ -52,6 +51,7 @@ Gulp defines two tasks:
     - `nginx.conf`: Configuration file for the nginx server inside the docker image
 - `jspm_packages`: jspm dependencies (don't touch them)
 - `node_modules`: npm dependencies (don't touch them)
+- `server`: Website server's source code (it may be moved to a different project later on)
 - `src`: All source files
     - `app`: Source files for the Angular2 application
     - `assets`: Any asset (image, json, etc.). Before adding stylesheets think if they belong to a component, or can be added to the semantic-ui theme

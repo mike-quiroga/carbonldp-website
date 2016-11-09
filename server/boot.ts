@@ -7,7 +7,6 @@ import SitemapBuilder from "sitemap";
 import yargs from "yargs";
 import opn from "opn";
 
-
 const argv:AppBooterOptions = yargs
 	.usage( "Usage: -r rootDirectory [-b baseURL]" )
 
@@ -66,8 +65,6 @@ export class AppBooter {
 	}
 
 	init():void {
-		console.log( process.env.NODE_ENV );
-
 		this.getRouteTable().then( ( routeMap:RouteMap ) => {
 			this.app = Express();
 
