@@ -19,6 +19,13 @@ export class GettingStartedView implements AfterViewInit {
 	private carbon:Carbon;
 	private contentReady:boolean = false;
 
+	private selectedLanguage:number = 0;
+
+	private languages:{ [ name:string ]:number } = {
+		trig: 0,
+		jsonld: 1
+	};
+
 	constructor( element:ElementRef, carbon:Carbon ) {
 		this.element = element;
 
@@ -36,6 +43,10 @@ export class GettingStartedView implements AfterViewInit {
 
 	createAccordions():void {
 		this.$element.find( ".ui.accordion" ).accordion();
+	}
+
+	selectLanguage( language:number ):void {
+		this.selectedLanguage = language;
 	}
 }
 
