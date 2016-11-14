@@ -64,7 +64,7 @@ const websiteRoutes:Routes = [
 				path: "community-and-support",
 				component: CommunityAndSupportView,
 				data: {
-					title: "Community &amp; Support",
+					title: "Community & Support",
 				},
 			},
 			{
