@@ -62,18 +62,38 @@
 	}
 
 	#brief {
-
-		.computer.only > .column {
-			max-width: 600px;
-			letter-spacing: 0.3px;
+		.computer.only {
+			padding: 100px;
+			> .column {
+				max-width: 600px;
+				letter-spacing: 0.3px;
+				p {
+					font-weight: bold;
+					font-size: 32px;
+				}
+			}
 		}
-		.tablet.only > .column {
-			max-width: 500px;
-			letter-spacing: 0.3px;
+		.tablet.only {
+			padding: 80px;
+			> .column {
+				max-width: 500px;
+				letter-spacing: 0.3px;
+				p {
+					font-weight: bold;
+					font-size: 28px;
+				}
+			}
 		}
-		.mobile.only > .column {
-			max-width: 380px;
-			letter-spacing: 0.3px;
+		.mobile.only {
+			padding: 50px;
+			> .column {
+				max-width: 380px;
+				letter-spacing: 0.3px;
+				p {
+					font-weight: bold;
+					font-size: 24px;
+				}
+			}
 		}
 	}
 
@@ -148,11 +168,11 @@
 	.ui.grid > .blue.column, .ui.grid > .blue.row, .ui.grid > .row > .blue.column {
 		background-color: #0192cf !important;
 		color: #FFF;
-		padding: 100px;
+		//padding: 100px;
 	}
 
 	.ui.sign-up.grid {
-		.row {
+		.computer.row {
 			min-height: 240px;
 			display: flex;
 			flex-direction: row;
@@ -184,6 +204,48 @@
 					width: 100%;
 					font-size: 22px;
 					text-align: center;
+				}
+			}
+		}
+		.tablet.row {
+			min-height: 240px;
+			display: flex;
+			flex-direction: row;
+			.left.column, .right.column {
+				display: flex;
+				flex: 1;
+			}
+			.right.column {
+				flex-direction: row;
+				background: #F89828;
+
+				color: #fff;
+			}
+			.left.column {
+				flex-direction: row-reverse;
+				background: #fff;
+			}
+			.container {
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				justify-content: center;
+
+				flex: 0 0 auto;
+				padding: 0 50px;
+				width: 361px;
+
+				p {
+					width: 100%;
+					font-size: 22px;
+					text-align: center;
+				}
+			}
+		}
+		.mobile.row {
+			.container {
+				p {
+					font-size: 22px;
 				}
 			}
 		}
