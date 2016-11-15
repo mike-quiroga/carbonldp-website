@@ -33,7 +33,8 @@ Source code for [carbonldp.com](https://carbonldp.com)
     
     Answer `no` to any change JSPM suggests to make follow by a `yes` when it asks to confirm the decision.
     For more information see: [JSPM link](http://jspm.io/0.17-beta-guide/linking.html)
-6. To start the application server run `npm start`
+6. Run `npm install` and `jspm install` inside of the `server` directory
+7. To start the application server run `npm start`
 
 ### Gulp Tasks
 

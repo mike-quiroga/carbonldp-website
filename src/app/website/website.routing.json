@@ -137,7 +137,8 @@
               },
               "files": {
                 "data": {
-                  "title": "Uploading Files"
+                  "title": "Uploading Files",
+                  "description": "How to upload, download and describe files"
                 }
               },
               "querying": {
@@ -147,12 +148,14 @@
               },
               "authentication": {
                 "data": {
-                  "title": "Authentication"
+                  "title": "Authentication",
+                  "description": "Logging in, logging out and everything you need to know about it"
                 }
               },
               "authorization": {
                 "data": {
-                  "title": "Authorization"
+                  "title": "Authorization",
+                  "description": "Granting or denying permissions to subjects on documents"
                 }
               },
               "access-points": {

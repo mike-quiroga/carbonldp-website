@@ -1,3 +1,7 @@
+# 0.12.0 (2016/11/10)
+
+- Completed #50 - Document JS SDK authorization
+
 # 0.11.1 (2016/11/09)
 
 - Changed CMD statement to ENTRYPOINT in docker image to allow arguments

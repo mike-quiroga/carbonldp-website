@@ -289,6 +289,7 @@ const websiteRoutes:Routes = [
 								component: UploadingFilesView,
 								data: {
 									title: "Uploading Files",
+									description: "How to upload, download and describe files",
 								},
 							},
 							{
@@ -303,6 +304,7 @@ const websiteRoutes:Routes = [
 								component: AuthenticationView,
 								data: {
 									title: "Authentication",
+									description: "Logging in, logging out and everything you need to know about it"
 								},
 							},
 							{
@@ -310,6 +312,7 @@ const websiteRoutes:Routes = [
 								component: AuthorizationView,
 								data: {
 									title: "Authorization",
+									description: "Granting or denying permissions to subjects on documents"
 								},
 							},
 							{
