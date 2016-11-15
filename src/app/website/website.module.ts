@@ -38,15 +38,21 @@ import { RESTApiView } from "./documentation/rest-api/rest-api.view";
 import { GettingStartedView } from "./documentation/rest-api/getting-started.view";
 import { InteractionModelsView } from "./documentation/rest-api/interaction-models.view";
 import { ObjectModelView } from "./documentation/rest-api/object-model.view";
-// import { RDFSourceView } from "./documentation/rest-api/rdf-source.view";
-// import { ContainersView } from "./documentation/rest-api/containers.view";
+import { RDFSourceView } from "./documentation/rest-api/rdf-source.view";
+import { ContainersView } from "./documentation/rest-api/containers.view";
 
 // Documentation - > JavaScriptSDK
-import { JavaScriptSDKView } from "./documentation/javascript-sdk/javascript-sdk.view";
+import { JavaScriptSDKView } from "./documentation/javascript-sdk.view";
+import { JavaScriptSDKHomeView } from "./documentation/javascript-sdk/javascript-sdk-home.view";
 import { GettingStartedView as JavaScriptSDKGettingStartedView } from "./documentation/javascript-sdk/getting-started.view";
 import { ContextsView } from "./documentation/javascript-sdk/contexts.view";
 import { ObjectModelView as JavaScriptSDKObjectModelView } from "./documentation/javascript-sdk/object-model.view";
 import { ObjectSchemaView } from "./documentation/javascript-sdk/object-schema.view";
+import { UploadingFilesView } from "./documentation/javascript-sdk/files.view";
+import { QueryingView } from "./documentation/javascript-sdk/querying.view";
+import { AuthenticationView } from "./documentation/javascript-sdk/authentication.view";
+import { AuthorizationView } from "./documentation/javascript-sdk/authorization.view";
+import { AccessPointsView } from "./documentation/javascript-sdk/access-points.view";
 
 // Modules
 import { SemanticModule } from "carbonldp-panel/semantic/semantic.module";
@@ -94,13 +100,21 @@ import { DirectivesModule } from "carbonldp-panel/directives.module";
 		GettingStartedView,
 		InteractionModelsView,
 		ObjectModelView,
+		RDFSourceView,
+		ContainersView,
 
 		// Documentation - > JavaScriptSDK
 		JavaScriptSDKView,
+		JavaScriptSDKHomeView,
 		JavaScriptSDKGettingStartedView,
 		ContextsView,
 		JavaScriptSDKObjectModelView,
-		ObjectSchemaView
+		ObjectSchemaView,
+		UploadingFilesView,
+		QueryingView,
+		AuthenticationView,
+		AuthorizationView,
+		AccessPointsView,
 	],
 } )
 export class WebsiteModule {

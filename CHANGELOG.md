@@ -1,3 +1,64 @@
+# 0.12.0 (2016/11/10)
+
+- Completed #50 - Document JS SDK authorization
+
+# 0.11.1 (2016/11/09)
+
+- Changed CMD statement to ENTRYPOINT in docker image to allow arguments
+
+# 0.11.0 (2016/11/09)
+
+- Completed #50 - Document JS SDK authentication
+- Completed #101 - Add back to top button in website for mobile view
+- Completed #99 - Add required fields and email validation on register-form in get started
+- Created a NodeJS based server to replace the current one. This server will be fed with the route table to generate metadata tags properly
+- Added dynamic generation of `sitemap.xml` through the new server and route table
+- Fixed #107 - Mobile rendering
+    - Added viewport metatag to index.ejs
+    - Added sidebar for mobile view in community and support page
+    - Modified website styles to render correctly on mobile view
+
+
+# 0.10.0 (2016/11/01) :skull:
+
+- Completed #53 - Document how to upload and download files
+- Completed #97 - Disable app-dev module in website
+- Completed #98 - Update links in JS SDK getting started
+- Completed #102 - Disable all app-dev references from website.routing, and all documents
+- Removed unnecessary code to scroll top from website, there is an implemented fix in app.component
+
+# 0.9.0 (2016/10/27)
+
+- Completed #54 - Review and refine JS SDK > Object Schema documentation
+- Completed #90 - Implement new about page design  
+- Completed #94 - Add content menu for mobile view in all documents
+- Completed #82 - Improve mobile menu
+    - Fixed mobile view styles
+    - Modified documentation menu to close when a selection is made
+- Fixed #93 - Inconsistent layout for previous and next on mobile sizing
+    - Fixed styles in documentation.view.scss for  "ui steps" class
+    - Added column width for documents content in computer, tablet and mobile views
+
+# 0.8.1 (2016/10/26)
+
+- Fixed gzip on proxied requests
+
+# 0.8.0 (2016/10/25)
+
+- Completed #56 - Review and finalize Object Model document in the JavaScript SDK documentation
+- Completed #78 - Add components for pending documents
+- Complete #88 standardize documentation styles and messages
+- Modified first icon for gitter rooms in community and support view
+- Modified abstract content in community and support view
+- Modified rdf-source.html to show not yet documented message
+- Modified header labels for REST API
+- Standardized different aspects of documentation pages: 
+    - Abstract message box
+    - Breadcrumbs
+    - Not yet documented message
+- Completed #55 - Review and refine JS SDK > Contexts documentation
+- Improved performance by enabling gzip and minifying prod files
+
 # 0.7.0 (2016/10/17)
 
 - Added success message after registration on quick start guide page

@@ -3,6 +3,10 @@ documents {
 		display: block;
 	}
 
+	h2.hidden, h3.hidden {
+		display: none;
+	}
+
 	section {
 		margin-top: 2em;
 		padding-top: 2em;
@@ -29,6 +33,10 @@ documents {
 		padding-right: 0;
 	}
 
+	.ui.breadcrumb > .section:hover {
+		cursor: pointer;
+	}
+
 	a.outsidelink {
 		color: black;
 		border-bottom: 1px dotted #f89828;
@@ -46,6 +54,7 @@ documents {
 
 		.step:nth-child(1):not( .completed ) {
 			justify-content: flex-start;
+			flex-direction: row;
 
 			> .content {
 				flex: 1;
@@ -67,5 +76,28 @@ documents {
 				text-align: center;
 			}
 		}
+	}
+
+	.soon-to-be-documented {
+		margin-top: 40px;
+		color: rgba(0, 145, 207, 0.79);
+		font-style: italic;
+		font-size: 22px;
+	}
+	.not-yet {
+		color: gray;
+	}
+
+	sui-tabs .ui.tabular.menu {
+		border-bottom: 0px;
+	}
+
+	sui-tab.ui.segment {
+		padding: 0;
+		border: 0;
+	}
+
+	sui-tab > pre {
+		margin: 0;
 	}
 }

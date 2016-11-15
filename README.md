@@ -12,8 +12,7 @@ Source code for [carbonldp.com](https://carbonldp.com)
     - [node.js](https://nodejs.org/en/)
     - gulp: `npm install gulp -g`
     - jspm: `npm install jspm -g`
-    - typings: `npm install -g typings`
-2. Clone dependency projects alongside the project's directory:
+2. (optional) Clone dependency projects alongside the project's directory:
     - CarbonLDP-JS-SDK: `gulp clone https://github.com/CarbonLDP/CarbonLDP-JS-SDK.git`
     - carbonldp-panel: `gulp clone https://github.com/CarbonLDP/carbonldp-panel.git`
     - angular2-carbonldp: `gulp clone https://github.com/CarbonLDP/angular2-carbonldp.git`
@@ -23,23 +22,25 @@ Source code for [carbonldp.com](https://carbonldp.com)
     - `carbonldp-panel`
     - `CarbonLDP-JS-SDK`
     - `angular2-carbonldp`
-3. cd into `carbonldp-website`
-4. run `npm install && typings install`
-5. To make changes to any dependency project visible to this project, you must link them using the following commands:
+    
+    After this, cd into `carbonldp-website`
+3. run `npm install`
+4. run `jspm install`
+5. (optional) To make changes to any dependency project visible to this project, you must link them using the following commands:
     - `jspm link ../carbonldp-panel/dist`
     - `jspm link ../CarbonLDP-JS-SDK/dist`
     - `jspm link ../angular2-carbonldp/dist`
     
     Answer `no` to any change JSPM suggests to make follow by a `yes` when it asks to confirm the decision.
     For more information see: [JSPM link](http://jspm.io/0.17-beta-guide/linking.html)
-6. To start the application server run `npm start` or `gulp serve`
+6. Run `npm install` and `jspm install` inside of the `server` directory
+7. To start the application server run `npm start`
 
 ### Gulp Tasks
 
-Gulp defines two tasks:
+Main gulp tasks:
 
-1. `build`: Same as `npm install`. Build the source code and prepare it for production (inside of the dist/ folder).
-2. `serve`: Same as `npm start`. Will start a live-server instance with the source code.
+1. `build`: Build the source code and prepare it for production (inside of the dist/ folder)
 
 ### File Structure
 
@@ -51,6 +52,7 @@ Gulp defines two tasks:
     - `nginx.conf`: Configuration file for the nginx server inside the docker image
 - `jspm_packages`: jspm dependencies (don't touch them)
 - `node_modules`: npm dependencies (don't touch them)
+- `server`: Website server's source code (it may be moved to a different project later on)
 - `src`: All source files
     - `app`: Source files for the Angular2 application
     - `assets`: Any asset (image, json, etc.). Before adding stylesheets think if they belong to a component, or can be added to the semantic-ui theme
@@ -61,17 +63,18 @@ Gulp defines two tasks:
     - `custom`: Directory to store custom description files
     - `typings.d.ts`: Main description file. Aggregates all other description files
 - `.gitignore`: Ignore file for git
+- `.gitmodules`: git submodules configuration file
 - `.travis.yml`: Travis configuration file
 - `CHANGELOG.md`: File to track package changes
 - `Dockerfile`: Docker file used to create the docker image
 - `gulpfile.js`: Gulp configuration file
 - `jspm.config.js`: JSPM configuration file
+- `LICENSE`: Da rulz
 - `package.json`: npm configuration file (it also contains JSPM dependency registry)
 - `README.md`: === this
 - `semantic.json`: semantic-ui configuration file
 - `tsconfig.json`: TypeScript compiler configuration file
 - `tslint.json`: [tslint](https://github.com/palantir/tslint) configuration file
-- `typings.json`: [typings](https://github.com/typings/typings) configuration file
 
 ## TODO
 

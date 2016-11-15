@@ -2,8 +2,9 @@
 	<div class="ui center aligned grid description">
 		<div class="ui container" id="rest-api">
 			<div class="ui breadcrumb">
-				<span class="section" [routerLink]="['..']">Documentation</span>
+				<a class="section" [routerLink]="[ '..' ]">Documentation</a>
 				<i class="right chevron icon divider"></i>
+				<div class="active section">REST API</div>
 			</div>
 			<div class="ui header"><img class="ui small left floated image" src="assets/images/ico-rest-150x150.gif">
 				<h2>REST API</h2></div>
@@ -24,6 +25,14 @@
 				<div class="item">
 					<div class="header"><span [routerLink]="[ '../rest-api-interaction-models' ]">Interaction models</span></div>
 					<div class="summary">An explanation of the way you can interact with the resources on the Carbon Server.</div>
+				</div>
+				<div class="item">
+					<div class="header"><span [routerLink]="[ '../rest-api-containers' ]">Containers</span></div>
+					<div class="summary not-yet">Not yet documented</div>
+				</div>
+				<div class="item">
+					<div class="header"><span [routerLink]="[ '../rest-api-rdf-source' ]">RDF Source</span></div>
+					<div class="summary not-yet">Not yet documented</div>
 				</div>
 			</div>
 		</div>

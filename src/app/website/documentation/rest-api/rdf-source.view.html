@@ -3,32 +3,41 @@
 		<div class="sixteen wide column">
 
 			<div class="ui breadcrumb">
-				<span class="section">Documentation</span> <i class="right chevron icon divider"></i> <span class="section">REST API</span> <i class="right arrow icon divider"></i>
+				<a class="section" [routerLink]="[ '..' ]">Documentation</a>
+				<i class="right chevron icon divider"></i>
+				<a class="section" [routerLink]="[ '../rest-api' ]">REST API</a>
+				<i class="right arrow icon divider"></i>
+				<div class="active section">RDF Source</div>
 			</div>
-
-			<h1>RDFSource</h1>
 
 		</div>
 	</div>
 
 	<div class="row">
-		<div class="twelve wide column">
+		<div class="twelve wide computer twleve wide tablet sixteen wide mobile column">
 			<main>
 				<article class="ui vertical segment" id="article">
 
+					<header>
+						<h1 class="ui header">RDF Source</h1>
+					</header>
 
-					<div class="ui icon yellow message">
-						<i class="warning sign icon"></i>
-						<div class="content">
-							<div class="header">Pre-release Documentation</div>
-							<p>Although Carbon LDP is not yet released, we're publishing documentation as it is prepared so that you can
-								preview what's in store.</p>
-						</div>
+					<!--<div class="ui mobile only grid">-->
+						<!--<div class="row">-->
+							<!--<sidebar-component [mobile]="true" [parentElement]="element" [contentReady]="contentReady" class="sixteen wide mobile only column"></sidebar-component>-->
+						<!--</div>-->
+					<!--</div>-->
+
+					<div class="soon-to-be-documented">
+						<p>Sorry, this topic hasn't been documented :(</p>
 					</div>
+					<p>We are doing our best to catch up quickly with the documentation. If you have questions regarding
+						this topic you can always ask us directly through our community. See how <a [routerLink]="[ '/community-and-support' ]">here</a></p>
 
+<!-- original content
 					<div class="ui message">
 						<div class="content">
-							<p class="larger">
+							<p>
 								You can use the Carbon LDP REST API to create, read, update, and delete RDFSource documents. Here's how...
 							</p>
 						</div>
@@ -93,18 +102,18 @@
 							header.
 						</p>
 
-						<pre cphighlight class="turtle">
+						<pre><code cpHighlight class="turtle">
 						@prefix ldp:&#60;http://www.w3.org/ns/ldp#&#62;.
 						@prefix ex:&#60;http://www.base22.com/2016/05/ex#&#62;.
 
-						&#60;&#62; {{ '{' }}
+						&#60;&#62; &#123;
 							&#60;&#62;
 								a ldp:RDFSource, ex:Person;
 								ex:firstName "John";
 								ex:lastName "Doe";
 								ex:phoneNumber "(555) 555-5555".
-						{{ '}' }}
-					</pre>
+						&#125;
+						</code></pre>
 
 						<p>Issue the request. A successful response should provide the HTTP status code 201 Created.</p>
 
@@ -119,7 +128,7 @@
 
 						<p><strong>Example request to create RDFSource :</strong></p>
 
-						<pre cphighlight>
+						<pre><code cpHighlight class="turtle">
 						POST /apps/rest-examples/persons/ HTTP/1.1
 						Authorization: Basic
 						Content-Type: application/trig
@@ -133,8 +142,8 @@
 						        ex:firstName "John";
 						        ex:lastName "Doe";
 						        ex:phoneNumber "(555) 555-5555".
-						{{ '}' }}
-					</pre>
+						&#125;
+					</code></pre>
 
 
 					</section>
@@ -144,7 +153,7 @@
 						<p>To retrieve an RDFSource, issue a GET request to the document's URI.</p>
 
 						<p>
-							<span class="ui blue horizontal label">GET</span> <code>/apps/{{ '{' }}app-name{{ '}' }}/{{ '{' }}container{{ '}' }}/{{ '{' }}rdfsource{{ '}' }}/</code>
+							<span class="ui blue horizontal label">GET</span> <code>/apps/&#123;app-name&#125;/&#123;container&#125;/&#123;rdfsource&#125;/</code>
 						</p>
 
 						<table class="ui celled table">
@@ -188,8 +197,8 @@
 
 						<p>Following is the response from retrieving a newly created RDFSource (from the &quot;Create&quot; example above).</p>
 
-						<pre cphighlight>
-					&lt;https://carbonldp.com/apps/rest-examples/persons/john-doe/&gt; {{ '{' }}
+						<pre><code cpHighlight>
+					&lt;https://carbonldp.com/apps/rest-examples/persons/john-doe/&gt;&#123;
 						&lt;https://carbonldp.com/apps/rest-examples/persons/john-doe/&gt; a &lt;http://www.w3.org/ns/ldp#BasicContainer&gt; , &lt;http://www.w3.org/ns/ldp#Container&gt; , &lt;http://www.w3.org/ns/ldp#RDFSource&gt; , &lt;http://www.base22.com/2016/05/ex#Person&gt; ;
 							&lt;http://www.w3.org/ns/ldp#hasMemberRelation&gt; &lt;http://www.w3.org/ns/ldp#member&gt; ;
 							&lt;https://carbonldp.com/ns/v1/platform#created&gt; &quot;2016-05-31T23:29:18.624Z&quot;^^&lt;http://www.w3.org/2001/XMLSchema#dateTime&gt; ;
@@ -199,8 +208,8 @@
 							&lt;http://www.base22.com/2016/05/ex#lastName&gt; &quot;Doe&quot; ;
 							&lt;http://www.base22.com/2016/05/ex#phoneNumber&gt; &quot;(555) 555-5555&quot; ;
 							&lt;https://carbonldp.com/ns/v1/platform#defaultInteractionModel&gt; &lt;http://www.w3.org/ns/ldp#RDFSource&gt; .
-					{{ '}' }}
-					</pre>
+					&#125;
+					</code></pre>
 
 						<p>
 							You may notice that additional properties are added to an RDFSource when it is created such as created, modified, and accessControlList. These are called <em>system managed
@@ -222,7 +231,7 @@
 							the existing document; patching individual properties to change a document is not supported at this time.</p>
 
 						<p>
-							<span class="ui blue horizontal label">PUT</span> <code>/apps/{{ '{' }}app-name{{ '}' }}/{{ '{' }}container{{ '}' }}/{{ '{' }}rdfsource{{ '}' }}/</code>
+							<span class="ui blue horizontal label">PUT</span> <code>/apps/&#123;app-name&#125;/&#123;container&#125;/&#123;rdfsource&#125;/</code>
 						</p>
 
 						<table class="ui celled table">
@@ -259,7 +268,7 @@
 								</tr>
 								<tr>
 									<td>If-Match</td>
-									<td>{{ '{' }}ETag value{{ '}' }}</td>
+									<td>&#123;ETag value&#125;</td>
 									<td>Yes</td>
 								</tr>
 							</tbody>
@@ -267,8 +276,8 @@
 
 						<p><strong>Body (required)</strong></p>
 
-						<pre cphighlight class="turtle">
-						&lt;https://dev.carbonldp.com/apps/rest-examples/persons/john-doe/&gt; {{ '{' }}
+						<pre><code cpHighlight class="turtle">
+						&lt;https://dev.carbonldp.com/apps/rest-examples/persons/john-doe/&gt; &#123;
 						&lt;https://dev.carbonldp.com/apps/rest-examples/persons/john-doe/&gt; a &lt;http://www.w3.org/ns/ldp#BasicContainer&gt; , &lt;http://www.w3.org/ns/ldp#Container&gt; , &lt;http://www.w3.org/ns/ldp#RDFSource&gt; , &lt;http://www.base22.com/2016/05/ex#Person&gt; ;
 							&lt;http://www.w3.org/ns/ldp#hasMemberRelation&gt; &lt;http://www.w3.org/ns/ldp#member&gt; ;
 							&lt;https://carbonldp.com/ns/v1/platform#created&gt; &quot;2016-05-31T23:29:18.624Z&quot;^^&lt;http://www.w3.org/2001/XMLSchema#dateTime&gt; ;
@@ -279,8 +288,8 @@
 							&lt;http://www.base22.com/2016/05/ex#phoneNumber&gt; &quot;(555) 555-5555&quot; ;
 							&lt;https://carbonldp.com/ns/v1/platform#defaultInteractionModel&gt; &lt;http://www.w3.org/ns/ldp#RDFSource&gt; ;
 							&lt;http://www.base22.com/2016/05/ex#email&gt; &quot;john.doe@example.org&quot; .
-					{{ '}' }}
-					</pre>
+					&#125;
+					</code></pre>
 
 						<p>A successful update request will result in HTTP status code 200 OK.</p>
 						<p>
@@ -294,14 +303,14 @@
 
 						<p><strong>Example request to update RDFSource :</strong></p>
 
-						<pre cphighlight>
+						<pre><code cpHighlight>
 						PUT /apps/rest-examples/persons/john-doe/ HTTP/1.1
 						Authorization: Basic YWRtaW5AY2FyYm9ubGRwLmNvbTpoZWxsbw==
 						Prefer: http://www.w3.org/ns/ldp#RDFSource; rel=interaction-model
 						Content-Type: application/trig
 						If-Match: "429274222"
 
-						&lt;https://dev.carbonldp.com/apps/rest-examples/persons/john-doe/&gt; {{ '{' }}
+						&lt;https://dev.carbonldp.com/apps/rest-examples/persons/john-doe/&gt; &#123;
 							&lt;https://dev.carbonldp.com/apps/rest-examples/persons/john-doe/&gt; a &lt;http://www.w3.org/ns/ldp#BasicContainer&gt; , &lt;http://www.w3.org/ns/ldp#Container&gt; , &lt;http://www.w3.org/ns/ldp#RDFSource&gt; , &lt;http://www.base22.com/2016/05/ex#Person&gt; ;
 								&lt;http://www.w3.org/ns/ldp#hasMemberRelation&gt; &lt;http://www.w3.org/ns/ldp#member&gt; ;
 								&lt;https://carbonldp.com/ns/v1/platform#created&gt; "2016-05-31T23:29:18.624Z"^^&lt;http://www.w3.org/2001/XMLSchema#dateTime&gt; ;
@@ -312,9 +321,9 @@
 								&lt;http://www.base22.com/2016/05/ex#phoneNumber&gt; "(555) 555-5555" ;
 								&lt;https://carbonldp.com/ns/v1/platform#defaultInteractionModel&gt; &lt;http://www.w3.org/ns/ldp#RDFSource&gt; ;
 								&lt;http://www.base22.com/2016/05/ex#email&gt; "john.doe@example.org" .
-						{{ '}' }}
+						&#125;
 
-					</pre>
+					</code></pre>
 
 					</section>
 
@@ -324,7 +333,7 @@
 						<p>To delete an RDFSource document, issue a DELETE request with an empty body to the URI of the document to be deleted.</p>
 
 						<p>
-							<span class="ui blue horizontal label">DELETE</span> <code>/apps/{{ '{' }}app-name{{ '}' }}/{{ '{' }}container{{ '}' }}/{{ '{' }}rdfsource{{ '}' }}/</code>
+							<span class="ui blue horizontal label">DELETE</span> <code>/apps/&#123;app-name&#125;/&#123;container&#125;/&#123;rdfsource&#125;/</code>
 						</p>
 
 						<table class="ui celled table">
@@ -348,12 +357,12 @@
 
 						<p><strong>Example request to delete RDFSource :</strong></p>
 
-						<pre cphighlight>
+						<pre><code cpHighlight>
 						DELETE /apps/rest-examples/persons/john-doe/ HTTP/1.1
 						Authorization: Basic
-					</pre>
+					</code></pre>
 
-					</section>
+					</section>-->
 
 				</article>
 			</main>
@@ -361,7 +370,7 @@
 
 		</div>
 
-		<sidebar-component [mobile]="false" [parentElement]="element" [contentReady]="contentReady" class="four wide computer only four wide tablet only column"></sidebar-component>
+		<!--<sidebar-component [mobile]="false" [parentElement]="element" [contentReady]="contentReady" class="four wide computer only four wide tablet only column"></sidebar-component>-->
 
 	</div>
 

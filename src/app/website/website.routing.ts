@@ -25,14 +25,20 @@ import { RESTApiView } from "./documentation/rest-api/rest-api.view";
 import { GettingStartedView } from "./documentation/rest-api/getting-started.view";
 import { InteractionModelsView } from "./documentation/rest-api/interaction-models.view";
 import { ObjectModelView } from "./documentation/rest-api/object-model.view";
-// import { RDFSourceView } from "./documentation/rest-api/rdf-source.view";
-// import { ContainersView } from "./documentation/rest-api/containers.view";
+import { RDFSourceView } from "./documentation/rest-api/rdf-source.view";
+import { ContainersView } from "./documentation/rest-api/containers.view";
 // Documentation -> JavaScriptSDK
-import { JavaScriptSDKView } from "./documentation/javascript-sdk/javascript-sdk.view";
+import { JavaScriptSDKView } from "./documentation/javascript-sdk.view";
+import { JavaScriptSDKHomeView } from "./documentation/javascript-sdk/javascript-sdk-home.view";
 import { GettingStartedView as JavaScriptSDKGettingStartedView } from "./documentation/javascript-sdk/getting-started.view";
 import { ContextsView } from "./documentation/javascript-sdk/contexts.view";
 import { ObjectModelView as JavaScriptSDKObjectModelView } from "./documentation/javascript-sdk/object-model.view";
 import { ObjectSchemaView } from "./documentation/javascript-sdk/object-schema.view";
+import { UploadingFilesView } from "./documentation/javascript-sdk/files.view";
+import { QueryingView } from "./documentation/javascript-sdk/querying.view";
+import { AuthenticationView } from "./documentation/javascript-sdk/authentication.view";
+import { AuthorizationView } from "./documentation/javascript-sdk/authorization.view";
+import { AccessPointsView } from "./documentation/javascript-sdk/access-points.view";
 
 
 const websiteRoutes:Routes = [
@@ -203,59 +209,120 @@ const websiteRoutes:Routes = [
 						},
 					},
 					{
+						path: "rest-api-containers",
+						component: ContainersView,
+						data: {
+							title: "Containers",
+						},
+					},
+					{
+						path: "rest-api-rdf-source",
+						component: RDFSourceView,
+						data: {
+							title: "RDF Source",
+						},
+					},
+					{
 						path: "javascript-sdk",
 						component: JavaScriptSDKView,
 						data: {
-							title: "JavaScript SDK",
-							description: {
-								name: "description",
-								content: "The JavaScript Software Developer's Kit, available from the npm package manager, allows you to manage RDF data using familiar JavaScript and TypeScript programming techniques and tools. Build for execution within a web browser or Node.js.",
-							}
+							title: false
 						},
-					},
-					{
-						path: "javascript-sdk-getting-started",
-						component: JavaScriptSDKGettingStartedView,
-						data: {
-							title: "Getting Started with JavaScript SDK",
-							description: {
-								name: "description",
-								content: "Guide to install Carbon JavaScriptSDK and start creating and manipulating data with its basic methods.",
-							}
-						},
-					},
-					{
-						path: "javascript-sdk-contexts",
-						component: ContextsView,
-						data: {
-							title: "Contexts",
-							description: {
-								name: "description",
-								content: "What is a context in Carbon JS SDK, how to declare, access and modify it.",
-							}
-						},
-					},
-					{
-						path: "javascript-sdk-object-model",
-						component: JavaScriptSDKObjectModelView,
-						data: {
-							title: "JavaScript SDK Object Model",
-							description: {
-								name: "description",
-								content: "An in depth description of the Carbon Object Model.",
-							}
-						},
-					},
-					{
-						path: "javascript-sdk-object-schema",
-						component: ObjectSchemaView,
-						data: {
-							title: "Object Schema",
-							description: {
-								name: "description",
-								content: "What is the object schema, how to define and use it.",
-							}
-						},
+						children: [
+							{
+								path: "",
+								component: JavaScriptSDKHomeView,
+								data: {
+									title: "JavaScript SDK",
+									description: {
+										name: "description",
+										content: "The JavaScript Software Developer's Kit, available from the npm package manager, allows you to manage RDF data using familiar JavaScript and TypeScript programming techniques and tools. Build for execution within a web browser or Node.js.",
+									}
+								},
+							},
+							{
+								path: "getting-started",
+								component: JavaScriptSDKGettingStartedView,
+								data: {
+									title: "Getting Started with JavaScript SDK",
+									description: {
+										name: "description",
+										content: "Guide to install Carbon JavaScriptSDK and start creating and manipulating data with its basic methods.",
+									}
+								},
+							},
+							{
+								path: "contexts",
+								component: ContextsView,
+								data: {
+									title: "Contexts",
+									description: {
+										name: "description",
+										content: "What is a context in Carbon JS SDK, how to declare, access and modify it.",
+									}
+								},
+							},
+							{
+								path: "object-model",
+								component: JavaScriptSDKObjectModelView,
+								data: {
+									title: "JavaScript SDK Object Model",
+									description: {
+										name: "description",
+										content: "An in depth description of the Carbon Object Model.",
+									}
+								},
+							},
+							{
+								path: "object-schema",
+								component: ObjectSchemaView,
+								data: {
+									title: "Object Schema",
+									description: {
+										name: "description",
+										content: "What is the object schema, how to define and use it.",
+									}
+								},
+							},
+							{
+								path: "files",
+								component: UploadingFilesView,
+								data: {
+									title: "Uploading Files",
+									description: "How to upload, download and describe files",
+								},
+							},
+							{
+								path: "querying",
+								component: QueryingView,
+								data: {
+									title: "Querying",
+								},
+							},
+							{
+								path: "authentication",
+								component: AuthenticationView,
+								data: {
+									title: "Authentication",
+									description: "Logging in, logging out and everything you need to know about it"
+								},
+							},
+							{
+								path: "authorization",
+								component: AuthorizationView,
+								data: {
+									title: "Authorization",
+									description: "Granting or denying permissions to subjects on documents"
+								},
+							},
+							{
+								path: "access-points",
+								component: AccessPointsView,
+								data: {
+									title: "Access Points",
+								},
+							},
+						]
 					}
 				]
 			}

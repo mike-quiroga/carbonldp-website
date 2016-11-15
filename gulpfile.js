@@ -20,7 +20,7 @@ const sass = require( "gulp-sass" );
 const autoprefixer = require( "gulp-autoprefixer" );
 const sourcemaps = require( "gulp-sourcemaps" );
 
-const webserver = require( "gulp-webserver" );
+const uglify = require( "gulp-uglify" );
 
 const argv = require( "yargs" )
 	.usage( "Usage: [-p profile]" )
@@ -58,9 +58,17 @@ gulp.task( "default", [ "serve" ] );
 gulp.task( "build", ( done ) => {
 	runSequence(
 		[ "clean:dist" ],
-		[ "compile:styles", "compile:index", "compile:config", "copy:semantic", "copy:node-dependencies" ],
+		[ "compile:styles", "copy:index", "copy:route-table", "compile:config", "copy:semantic", "copy:node-dependencies" ],
 		[ "copy:assets" ],
 		"bundle",
+		"minify:bundle",
+		done
+	);
+} );
+
+gulp.task( "build:dev", ( done ) => {
+	runSequence(
+		[ "build:semantic", "compile:styles", "compile:config", "copy:node-dependencies" ],
 		done
 	);
 } );
@@ -257,13 +265,6 @@ gulp.task( "compile:config", () => {
 		.pipe( gulp.dest( "src/app/" ) )
 } );
 
-gulp.task( "compile:index", () => {
-	return gulp.src( "dist/index.ejs.html" )
-		.pipe( ejs( profileConfig ) )
-		.pipe( rename( "index.html" ) )
-		.pipe( gulp.dest( "dist/site/" ) );
-} );
-
 gulp.task( "compile:styles", () => {
 	return gulp.src( config.source.sass, { base: "./" } )
 		.pipe( ejs( profileConfig ) )
@@ -277,6 +278,11 @@ gulp.task( "compile:styles", () => {
 		;
 } );
 
+gulp.task( "copy:index", () => {
+	return gulp.src( "dist/index.ejs" )
+		.pipe( gulp.dest( "dist/site/" ) );
+} );
+
 gulp.task( "copy:node-dependencies", () => {
 	gulp.start( 'copy:node-dependencies:files', 'copy:node-dependencies:packages' );
 } );
@@ -287,6 +293,12 @@ gulp.task( "copy:node-dependencies:files", () => {
 
 gulp.task( "copy:node-dependencies:packages", () => {
 	return gulp.src( config.nodeDependencies.packages, { base: "node_modules" } ).pipe( gulp.dest( "src/assets/node_modules" ) );
+} );
+
+gulp.task( "copy:route-table", () => {
+	return gulp.src( "src/app/website/website.routing.json" )
+		.pipe( rename( "route-table.json" ) )
+		.pipe( gulp.dest( "dist/site/" ) );
 } );
 
 gulp.task( "copy:semantic", [ "build:semantic" ], () => {
@@ -307,39 +319,28 @@ gulp.task( "lint", [ "lint:typescript" ] );
 gulp.task( "lint:typescript", () => {
 	return gulp.src( config.source.typescript )
 		.pipe( tslint() )
-		.pipe( tslint.report( "prose" ) )
-		;
+		.pipe( tslint.report( "prose" ) );
 } );
 
-gulp.task( "serve", ( done ) => {
-	runSequence(
-		[ "build:semantic", "compile:styles", "compile:config", "copy:node-dependencies" ],
-		"serve:afterCompilation",
-		done
-	);
+gulp.task( "minify:bundle", () => {
+	return gulp.src( "dist/site/main.sfx.js" )
+		.pipe( uglify( {
+			mangle: false
+		} ) )
+		.pipe( gulp.dest( "dist/site" ) );
 } );
 
-
-gulp.task( "serve:afterCompilation", () => {
+gulp.task( "watch", () => {
 	gulp.src( "src/semantic/gulpfile.js", { read: false } )
 		.pipe( chug( {
 			tasks: [ "watch" ]
 		} ) )
 	;
 
-	watch( config.source.sass, ( file ) => {
+	return watch( config.source.sass, ( file ) => {
 		util.log( "SCSS file changed: ", file.path );
 		gulp.start( "compile:styles" );
 	} ).on( "error", function( error ) {
 		util.log( util.colors.red( "Error" ), error.message );
 	} );
-
-	return gulp.src( "." )
-		.pipe( webserver( {
-			livereload: false,
-			directoryListing: false,
-			fallback: "/src/index.html",
-			open: true,
-			port: 8081,
-		} ) );
 } );

@@ -11,7 +11,10 @@ src/app/**/*.css
 src/app/**/*.js
 src/app/**/*.map
 
-src/app/config.ejs.ts
+src/app/config.ts
+
+server/boot.js
+server/boot.js.map
 
 dist/site/
 

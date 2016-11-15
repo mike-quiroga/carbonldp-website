@@ -3,10 +3,13 @@
 	<div class="row">
 		<div class="sixteen wide column">
 			<div class="ui breadcrumb">
-				<span class="section">Documentation</span> <i class="right chevron icon divider"></i> <span class="section">REST API</span> <i class="right arrow icon divider"></i>
+				<a class="section" [routerLink]="[ '..' ]">Documentation</a>
+				<i class="right chevron icon divider"></i>
+				<a class="section" [routerLink]="[ '../rest-api' ]">REST API</a>
+				<i class="right arrow icon divider"></i>
+				<div class="active section">Getting Started</div>
 			</div>
 		</div>
-		<sidebar-component [mobile]="true" [parentElement]="element" [contentReady]="contentReady" class="sixteen wide mobile only column"></sidebar-component>
 	</div>
 	<div class="row">
 		<div class="twelve wide computer twelve wide tablet sixteen wide mobile column">
@@ -19,16 +22,21 @@
 
 					<div class="ui message">
 						<div class="content">
-							<p class="larger">This guide describes how to build an example application using the Carbon LDP REST API. The REST API provides a way for applications to interact with the
+							<p>This guide describes how to build an example application using the Carbon LDP REST API. The REST API provides a way for applications to interact with the
 								Carbon platform
-								using HTTP verbs (GET, POST, PUT, DELETE, etc.) and resources identified by URIs. The REST API is considered to be a lower-level API than the JavaScript SDK. Doing
+								using HTTP verbs (GET, POST, PUT, DELETE, etc.) and resources identified by URIs.<br/> The REST API is considered to be a lower-level API than the JavaScript SDK.
+								Doing
 								things directly with the
 								REST API is generally more tedious than with the JavaScript SDK. However, understanding the REST API provides a lot of insight into how the platform works and can be
 								advantageous for
 								developers who seek to advance their understanding of the platform.</p>
 						</div>
 					</div>
-
+					<div class="ui mobile only grid">
+						<div class="row">
+							<sidebar-component [mobile]="true" [parentElement]="element" [contentReady]="contentReady" class="sixteen wide mobile only column"></sidebar-component>
+						</div>
+					</div>
 					<section>
 						<h2 class="ui header">About the example application</h2>
 

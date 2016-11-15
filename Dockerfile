@@ -1,6 +1,10 @@
-FROM nginx
+FROM carbonldp/jspm-typescript
 
-COPY dist/site /usr/share/nginx/html
-COPY dist/nginx.conf /etc/nginx/nginx.conf
+COPY server /usr/share/server
+COPY dist/site /usr/share/server/html
+
+WORKDIR /usr/share/server
 
 EXPOSE 80
+
+ENTRYPOINT jspm run server --port 80 --root /usr/share/server/html --route-table route-table.json

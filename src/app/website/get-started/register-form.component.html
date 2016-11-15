@@ -1,19 +1,32 @@
-<form class="ui form" (ngSubmit)="onSubmit(registerForm.value)" #registerForm="ngForm" method="POST" id="icpsignup">
+<form id="icpsignup" class="ui form"
+      method="POST"
+      (ngSubmit)="onSubmit(registerForm.value)"
+      #registerForm="ngForm">
 
-	<div dataname="listGroups" data-validation-type="1" data-label="Lists" style="display: none; width: 100%;">
+	<div data-name="listGroups" data-validation-type="1" data-label="Lists" style="display: none; width: 100%;">
 		<label class="checkbox">
 			<input type="checkbox" alt="" name="data[listGroups][]" value="786116" checked="checked">Carbon LDP Registered Users</label>
 	</div>
 	<div class="two fields">
-		<div class="required field">
+		<div class="required field" [ngClass]="{ error: ! name.valid }">
 			<label>Name</label>
 			<input type="text"
 			       placeholder="First and Last Name"
-			       name="data[carbon-full-name]" ngModel required>
+			       name="data[carbon-full-name]"
+			       ngModel
+			       cpValidation
+			       required
+			       #name="cpValidation">
 		</div>
-		<div class="required field">
+		<div class="required field" [ngClass]="{ error: ! email.valid }">
 			<label>Email</label>
-			<input type="text" name="data[email]" ngModel required>
+			<input type="text"
+			       name="data[email]"
+			       ngModel
+			       cpValidation
+			       required
+			       cp-email
+			       #email="cpValidation">
 		</div>
 	</div>
 	<div class="field">
@@ -29,6 +42,15 @@
 	<div class="field">
 		<label>How did you hear about us?</label>
 		<input type="text" name="data[carbon-how-disc]" ngModel>
+	</div>
+	<div class="ui bottom attached negative message" *ngIf="! name.valid || ! email.valid">
+		<ul *ngIf="! name.valid" class="list">
+			<li *ngIf="name.control.hasError('required')">Please enter your name</li>
+		</ul>
+		<ul *ngIf="! email.valid" class="list">
+			<li *ngIf="email.control.hasError('required')">Please enter your email address</li>
+			<li *ngIf="email.control.hasError('invalidEmailAddress')">Please enter a valid email address</li>
+		</ul>
 	</div>
 	<button class="ui primary button" type="submit" [disabled]="!registerForm.valid">Submit</button>
 </form>

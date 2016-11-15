@@ -1,14 +1,6 @@
 <component name="libraryTable">
   <library name="tsconfig$roots" type="javaScript">
-    <properties>
-      <sourceFilesUrls>
-        <item url="file://$PROJECT_DIR$/../CarbonLDP-JS-SDK/dist" />
-      </sourceFilesUrls>
-    </properties>
-    <CLASSES>
-      <root url="file://$PROJECT_DIR$/../carbonldp-panel/dist" />
-      <root url="file://$PROJECT_DIR$/../CarbonLDP-JS-SDK/dist" />
-    </CLASSES>
+    <CLASSES />
     <SOURCES />
   </library>
 </component>
