@@ -16,15 +16,6 @@
 			<main>
 				<article class="ui vertical segment" id="article">
 
-
-					<div class="ui icon yellow message">
-						<i class="warning sign icon"></i>
-						<div class="content">
-							<div class="header">Pre-release Documentation</div>
-							<p>Although Carbon LDP is not yet released, we're publishing documentation as it is prepared so that you can preview what's in store.</p>
-						</div>
-					</div>
-
 					<p>
 						When you interact with a given document on the Carbon server, you can specify a model that governs how the server behaves with respect to it. A document in Carbon can be
 						treated
@@ -35,9 +26,10 @@
 					<p>The preferred interaction model is specified by the HTTP <code>Prefer</code> header, which must have one of the following values:</p>
 
 					<ul>
-						<li><code>http://www.w3.org/ns/ldp#Container; rel=interaction-model</code></li>
-						<li><code>http://www.w3.org/ns/ldp#RDFSource; rel=interaction-model</code></li>
-						<li><code>http://www.w3.org/ns/ldp#NonRDFSource; rel=interaction-model</code></li>
+						<li>RDFSource: <code>"http://www.w3.org/ns/ldp#RDFSource"; rel=interaction-model</code></li>
+						<li>Container: <code>"http://www.w3.org/ns/ldp#Container"; rel=interaction-model</code></li>
+						<li>Non-RDFSource: <code>"http://www.w3.org/ns/ldp#NonRDFSource"; rel=interaction-model</code></li>
+
 					</ul>
 
 					<section>
@@ -65,6 +57,326 @@
 							resource it
 							represents.
 						</p>
+						<div>
+							<p>
+								<span class="ui green horizontal label">GET</span><br/>
+								retrieve all the container related properties.
+							</p>
+							<table class="ui celled table">
+								<thead>
+									<tr>
+										<th>HTTP Header</th>
+										<th>Value</th>
+										<th colspan="1">Required?</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td>Authorization</td>
+										<td>Basic ...</td>
+										<td>Yes</td>
+									</tr>
+									<tr>
+										<td>Accept</td>
+										<td>application/trig</td>
+										<td>No (default is text/turtle)</td>
+									</tr>
+									<tr>
+										<td>Prefer</td>
+										<td><span class="nolink">http://www.w3.org/ns/ldp#Container</span>; rel=interaction-model</td>
+										<td>Yes</td>
+									</tr>
+								</tbody>
+							</table>
+							<p>
+								you can also filter and manage the retrieved information by adding the following <code>Prefer</code> headers:
+							</p>
+							<table class="ui celled table">
+								<thead>
+									<tr>
+										<th>Value</th>
+										<th>Description</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td>
+											http://www.w3.org/ns/ldp#PreferContainment<br>
+											https://carbonldp.com/ns/v1/platform#PreferContainmentTriples
+										</td>
+										<td>Refers to containment triples.</td>
+									</tr>
+									<tr>
+										<td>
+											http://www.w3.org/ns/ldp#PreferMembership<br>
+											https://carbonldp.com/ns/v1/platform#PreferMembershipTriples
+										</td>
+										<td>Refers to membership triples.</td>
+									</tr>
+									<tr>
+										<td>
+											http://www.w3.org/ns/ldp#PreferEmptyContainer<br>
+											http://www.w3.org/ns/ldp#PreferMinimalContainer
+										</td>
+										<td>Refers container properties (other than the containment and/or membership triples).</td>
+									</tr>
+									<tr>
+										<td>
+											https://carbonldp.com/ns/v1/platform#PreferContainmentResources
+										</td>
+										<td>Refers to a representation of the contained resources.</td>
+									</tr>
+									<tr>
+										<td>
+											https://carbonldp.com/ns/v1/platform#PreferMembershipResources
+										</td>
+										<td>Include a representation of the resources that are members of the container (subject to individual ACLs evaluations).</td>
+									</tr>
+								</tbody>
+							</table>
+							<p>
+								The Prefer header value should look like the following:
+							<p>
+							<p>
+								<code>return=representation; omit=http://www.w3.org/ns/ldp#PreferContainment</code>
+							</p>
+							<p>
+								Where the <code>return=representation</code> tells the platform that the header have preferences about how you want the information to be presented and the
+								<code>omit</code> or <code>include</code> part says whether you want that preference to be included or omitted in the retrieved representation.
+							</p>
+							<p>
+								Regarding the representation of the member resources and triples, you can send the following URL parameters to order/limit the resources returned:
+							</p>
+
+							<ul>
+								<li>
+									orderBy
+									<ul>
+										<li>Orders the container members/contained resources by one or more properties.</li>
+										<li>
+											The property values would be ordered following the SPARQL ORDER BY operator:
+											<ul>
+												<li>BNodes (without any particular order)</li>
+												<li>IRIs (ordered by their string value)</li>
+												<li>numeric</li>
+												<li>http://www.w3.org/2001/XMLSchema#dateTime</li>
+												<li>literals with language tags(they are not compared across different languages but they are ordered by language tag's string)</li>
+												<li>http://www.w3.org/2001/XMLSchema#boolean (false first)</li>
+												<li>simple literals</li>
+											</ul>
+										</li>
+										<li>
+											Examples:
+											<ul>
+												<li>
+													orderBy=&lt;http://example.com/ns#property1&gt; <br>
+													Will order all of the members in ASCENDING order based on the http://example.com/ns#property1 property.
+												</li>
+												<li>
+													orderBy=-&lt;http://example.com/ns#property1&gt;<br>
+													Will order all of the members in DESCENDING order
+												</li>
+												<li>
+													orderBy=&lt;http://example.com/ns#property1&gt;;xsd:string<br>
+													Will order all of the members that have a string literal value, comparing these literals as strings. The accepted literal types are:
+													<ul>
+														<li>numeric (not http://www.w3.org/2001/XMLSchema#numeric, just numeric)</li>
+														<li>http://www.w3.org/2001/XMLSchema#string</li>
+														<li>http://www.w3.org/2001/XMLSchema#boolean</li>
+														<li>http://www.w3.org/2001/XMLSchema#dateTime</li>
+													</ul>
+												</li>
+												<li>
+													orderBy=&lt;http://example.com/ns#property1&gt;;http://www.w3.org/2001/XMLSchema#string;es<br>
+													Will order all of the members that have a string literal value, with the language tag "es".
+												</li>
+												<li>
+													orderBy=&lt;http://example.com/ns#property1&gt;,&lt;http://example.com/ns#property2&gt;<br>
+													Will order all of the members first by property1 and then by property2
+												</li>
+											</ul>
+										</li>
+									</ul>
+								</li>
+								<li>
+									limit
+									<ul>
+										<li>Number of members to include in the request</li>
+										<li>
+											Example:
+											<ul>
+												<li>
+													limit=10<br>
+													Will include only the first 10 members
+												</li>
+											</ul>
+										</li>
+									</ul>
+								</li>
+								<li>
+									offset
+									<ul>
+										<li>Start from the offset +1 member</li>
+										<li>
+											Example:
+											<ul>
+												<li>
+													offset=5<br>
+													Will include members from the 6th and beyond
+												</li>
+											</ul>
+										</li>
+									</ul>
+								</li>
+							</ul>
+
+						</div>
+						<div>
+							<p>
+								<span class="ui orange horizontal label">POST</span><br/>
+								Create a child for that Document
+							</p>
+							<table class="ui celled table">
+								<thead>
+									<tr>
+										<th>HTTP Header</th>
+										<th>Value</th>
+										<th colspan="1">Required?</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td>Authorization</td>
+										<td>Basic ...</td>
+										<td>Yes</td>
+									</tr>
+									<tr>
+										<td>Content-Type</td>
+										<td>application/trig</td>
+										<td>Yes</td>
+									</tr>
+									<tr>
+										<td>Prefer</td>
+										<td><span class="nolink">http://www.w3.org/ns/ldp#Container</span>; rel=interaction-model</td>
+										<td>Yes</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+						<div>
+							<p>
+								<span class="ui blue horizontal label">PUT</span><br/>
+								Add a member to the Document
+							</p>
+							<table class="ui celled table">
+								<thead>
+									<tr>
+										<th>HTTP Header</th>
+										<th>Value</th>
+										<th colspan="1">Required?</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td>Authorization</td>
+										<td>Basic ...</td>
+										<td>Yes</td>
+									</tr>
+									<tr>
+										<td>Content-Type</td>
+										<td>application/trig</td>
+										<td>Yes</td>
+									</tr>
+									<tr>
+										<td>Prefer</td>
+										<td><span class="nolink">http://www.w3.org/ns/ldp#Container</span>; rel=interaction-model</td>
+										<td>Yes</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+						<div>
+							<p>
+								<span class="ui red horizontal label">DELETE</span><br/>
+								Delete container-related information
+							</p>
+
+							<table class="ui celled table">
+								<thead>
+									<tr>
+										<th>HTTP Header</th>
+										<th>Value</th>
+										<th colspan="1">Required?</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td>Authorization</td>
+										<td>Basic ...</td>
+										<td>Yes</td>
+									</tr>
+									<tr>
+										<td>Content-Type</td>
+										<td>application/trig</td>
+										<td>Yes</td>
+									</tr>
+									<tr>
+										<td>Prefer</td>
+										<td><span class="nolink">http://www.w3.org/ns/ldp#Container</span>; rel=interaction-model</td>
+										<td>Yes</td>
+									</tr>
+								</tbody>
+							</table>
+							<p>
+								You can select the information you want to delete by using the following <code>Prefer</code> headers:
+							</p>
+							<table class="ui celled table">
+								<thead>
+									<tr>
+										<th>Value</th>
+										<th>Description</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td>
+											http://carbonldp.com/ns/v1/platform#PreferMembershipTriples
+										</td>
+										<td>Refers to all Membership triples.</td>
+									</tr>
+									<tr>
+										<td>
+											http://carbonldp.com/ns/v1/platform#PreferContainedResources
+										</td>
+										<td>Refers to contained resources and containment triples</td>
+									</tr>
+									<tr>
+										<td>
+											http://carbonldp.com/ns/v1/platform#PreferMembershipResources
+										</td>
+										<td>Refers to all the members of the container</td>
+									</tr>
+									<tr>
+										<td>
+											http://carbonldp.com/ns/v1/platform#PreferContainer
+										</td>
+										<td>Refers to all the elements that would be normally targeted if the LDP Container was treated as an LDP-RS in the elements targeted for deletion (this also includes the contained resources).</td>
+									</tr>
+									<tr>
+										<td>
+											http://carbonldp.com/ns/v1/platform#PreferSelectedMembershipTriples
+										</td>
+										<td>Refers to the selected Membership triples.</td>
+									</tr>
+								</tbody>
+							</table>
+							<p>
+								The <code>Prefer</code> header value should look like the following:
+							</p>
+							<p>
+								<code>return=representation; omit=http://carbonldp.com/ns/v1/platform#PreferSelectedMembershipTriples</code>
+							</p>
+						</div>
 					</section>
 					<section>
 						<h2>LDP RDF Source Behavior</h2>
@@ -90,6 +402,126 @@
 								model to create a document with a given URI that will not be contained by any given Container (i.e. to create an <em>access point</em>).
 							</p>
 						</div>
+
+						<div>
+							<p>
+								<span class="ui green horizontal label">GET</span><br/>
+								Retrieve all the information stored in the Document.
+							</p>
+							<table class="ui celled table">
+								<thead>
+									<tr>
+										<th>HTTP Header</th>
+										<th>Value</th>
+										<th colspan="1">Required?</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td>Authorization</td>
+										<td>Basic ...</td>
+										<td>Yes</td>
+									</tr>
+									<tr>
+										<td>Accept</td>
+										<td>application/trig</td>
+										<td>No (default is text/turtle)</td>
+									</tr>
+									<tr>
+										<td>Prefer</td>
+										<td><span class="nolink">http://www.w3.org/ns/ldp#RDFSource</span>; rel=interaction-model</td>
+										<td>Yes</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+						<div>
+							<p>
+								<span class="ui orange horizontal label">POST</span><br/>
+								Create an Access Point for that Document
+							</p>
+							<table class="ui celled table">
+								<thead>
+									<tr>
+										<th>HTTP Header</th>
+										<th>Value</th>
+										<th colspan="1">Required?</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td>Authorization</td>
+										<td>Basic ...</td>
+										<td>Yes</td>
+									</tr>
+									<tr>
+										<td>Content-Type</td>
+										<td>application/trig</td>
+										<td>Yes</td>
+									</tr>
+									<tr>
+										<td>Prefer</td>
+										<td><span class="nolink">http://www.w3.org/ns/ldp#RDFSource</span>; rel=interaction-model</td>
+										<td>Yes</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+						<div>
+							<p>
+								<span class="ui blue horizontal label">PUT</span><br/>
+								Replace the Document with the one sent
+							</p>
+							<table class="ui celled table">
+								<thead>
+									<tr>
+										<th>HTTP Header</th>
+										<th>Value</th>
+										<th colspan="1">Required?</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td>Authorization</td>
+										<td>Basic ...</td>
+										<td>Yes</td>
+									</tr>
+									<tr>
+										<td>Content-Type</td>
+										<td>application/trig</td>
+										<td>Yes</td>
+									</tr>
+									<tr>
+										<td>Prefer</td>
+										<td><span class="nolink">http://www.w3.org/ns/ldp#RDFSource</span>; rel=interaction-model</td>
+										<td>Yes</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+						<div>
+							<p>
+								<span class="ui red horizontal label">DELETE</span><br/>
+								delete the document, it's children and their references among the repository
+							</p>
+						</div>
+						<table class="ui celled table">
+							<thead>
+								<tr>
+									<th>HTTP Header</th>
+									<th>Value</th>
+									<th colspan="1">Required?</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td>Authorization</td>
+									<td>Basic ...</td>
+									<td>Yes</td>
+								</tr>
+							</tbody>
+						</table>
+
 					</section>
 					<section>
 						<h2>LDP NonRDF Source Behavior</h2>
@@ -110,6 +542,94 @@
 						<div class="ui message">
 							<p>When a server is behaving with the Non-RDF Source interaction model, it treats the given resource as a non-RDF &quot;file&quot;.</p>
 						</div>
+
+						<div>
+							<p>
+								<span class="ui green horizontal label">GET</span><br/>
+								Download the Non-RDF Source, if you want to retrieve the metadata, you can do it by using the RDF-Source interaction model
+							</p>
+							<table class="ui celled table">
+								<thead>
+									<tr>
+										<th>HTTP Header</th>
+										<th>Value</th>
+										<th colspan="1">Required?</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td>Authorization</td>
+										<td>Basic ...</td>
+										<td>Yes</td>
+									</tr>
+									<tr>
+										<td>Prefer</td>
+										<td><span class="nolink">http://www.w3.org/ns/ldp#NonRDFSource</span>; rel=interaction-model</td>
+										<td>Yes</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+						<div>
+							<p>
+								<span class="ui blue horizontal label">PUT</span><br/>
+								Replace the Non-RDF Source with the one sent
+							</p>
+							<table class="ui celled table">
+								<thead>
+									<tr>
+										<th>HTTP Header</th>
+										<th>Value</th>
+										<th colspan="1">Required?</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td>Authorization</td>
+										<td>Basic ...</td>
+										<td>Yes</td>
+									</tr>
+									<tr>
+										<td>Prefer</td>
+										<td><span class="nolink">http://www.w3.org/ns/ldp#NonRDFSource</span>; rel=interaction-model</td>
+										<td>Yes</td>
+									</tr>
+									<tr>
+										<td>If-Match</td>
+										<td>"1234567890"</td>
+										<td>Yes</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+						<div>
+							<p>
+								<span class="ui red horizontal label">DELETE</span><br/>
+								delete the Non-RDF Source, it's metadata and their references among the repository
+							</p>
+							<table class="ui celled table">
+								<thead>
+									<tr>
+										<th>HTTP Header</th>
+										<th>Value</th>
+										<th colspan="1">Required?</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td>Authorization</td>
+										<td>Basic ...</td>
+										<td>Yes</td>
+									</tr>
+									<tr>
+										<td>Prefer</td>
+										<td><span class="nolink">http://www.w3.org/ns/ldp#NonRDFSource</span>; rel=interaction-model</td>
+										<td>Yes</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+
 					</section>
 				</article>
 			</main>

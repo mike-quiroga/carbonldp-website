@@ -16,16 +16,6 @@
 			<main>
 				<article class="ui vertical segment" id="article">
 
-
-					<div class="ui icon yellow message">
-						<i class="warning sign icon"></i>
-						<div class="content">
-							<div class="header">Pre-release Documentation</div>
-							<p>Although Carbon LDP is not yet released, we're publishing documentation as it is prepared so that you can
-								preview what's in store.</p>
-						</div>
-					</div>
-
 					<div class="ui message">
 						<div class="content">
 							<p class="larger">
@@ -36,6 +26,12 @@
 
 					<section>
 						<h2>Object Model</h2>
+						<p>
+							The base object model handled by Carbon LDP is called a Document. A Document is basically a <a href="https://www.w3.org/2004/03/trix/">named graph</a>. Typically, a
+							Document represents a data entity of a given type (e.g. Agent, App, AccessPoint). When a Document is created in Carbon, it receives a IRI that uniquely identifies it on
+							a network or the web and such IRI can then be used to retrieve the document itself or can be used to query for specific data within it. Of course, queries can also be
+							used to find data across multiple documents.
+						</p>
 
 						<p>The following diagram depicts the all of the objects you can manage and interact with using REST. All objects are RDF resources. You can think of them as RDF <em>documents
 						</em> which, once created, are identified by a URI. You can create, update, read, and delete these objects by issuing HTTP requests to the URI of the resource or its
