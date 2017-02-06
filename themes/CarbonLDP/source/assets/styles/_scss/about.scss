@@ -1,0 +1,36 @@
+.numberedList-description {
+  display: table-cell;
+  font-size: 16px;
+}
+
+.numberedList-item {
+ margin: 0 0 30px 0;
+}
+
+
+/* Semantic UI overwritten classes */
+.ui.list.numberedList{
+  padding: 20px 0 10px 0;
+}
+
+
+.ui.message.message--about {
+  color: #0091CF;
+  padding: 15px 70px 15px 108px;
+}
+
+.ui.message.infoMessage--about{
+  color: black;
+  padding: 45px 55px
+}
+
+@media (max-width: 767px){
+  .ui.message.message--about {
+    font-size: 16px;
+    padding: 26px 24px;
+  }
+  .ui.message.infoMessage--about{
+    padding: 26px 24px;
+    font-size: 16px;
+  }
+}

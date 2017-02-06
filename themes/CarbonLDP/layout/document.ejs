@@ -1,0 +1,19 @@
+<div class="ui container grid">
+    <div class="row">
+        <div class="twelve wide computer only twelve wide tablet only sixteen wide mobile only column">
+                <div class="mainContent">
+                    <div class="ui breadcrumb">
+                        <a class="section" href="..">Documentation</a>
+                        <i class="right chevron icon divider"></i>
+                        <div class="active section"><%- page.title %></div>
+                    </div>
+                    <%- page.content %>
+                </div>
+            </div>
+        <%if ( page.sidebarEnabled ) {%>
+        <div class="four wide computer tablet only column">
+            <sidebar content="mainContent"></sidebar>
+        </div>
+        <%}%>
+    </div>
+</div>

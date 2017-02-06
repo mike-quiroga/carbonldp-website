@@ -1,0 +1,13 @@
+<%- layout(`
+    <html>
+    ${ partial( '_partial/head' ) }
+    <body class="site">
+        ${ partial( '_partial/header' ) }
+        <div class="site-content ${ typeof page.title === "undefined" ? "site-content--home" : "" }">
+            ${ body }
+        </div>
+        ${ partial( '_partial/footer' )  }
+        ${ partial( '_partial/after-footer') }
+    </body>
+    </html>
+`) %>

@@ -1,9 +1,6 @@
 FROM carbonldp/jspm-typescript
 
-COPY server /usr/share/server
-COPY dist/site /usr/share/server/html
-
-WORKDIR /usr/share/server
+COPY public /usr/share/server/html
 
 EXPOSE 80
 
