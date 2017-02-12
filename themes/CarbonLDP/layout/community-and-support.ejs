@@ -1,20 +1,9 @@
 <div class="ui container grid">
 
-        <!-- TODO: add breadcrumb
-        <div class="row">
-            <div class="sixteen wide column">
-                <div class="ui breadcrumb">
-                    <div class="active section">About</div>
-                </div>
-                <h1>About Carbon LDP</h1>
-            </div>
-        </div>
-        -->
-
     <div class="twelve wide computer only twelve wide tablet only sixteen wide mobile only column">
         <div class="mainContent">
 
-            <h1 class="mainContent-title">Community &amp; Support</h1>
+            <h1>Community &amp; Support</h1>
 
             <div class="ui message">
                 <p>Here, you will find a number of ways to participate in our growing community, provide feedback, and get support.</p>
@@ -22,20 +11,15 @@
 
             <p>We care about your opinion and we want to address your questions, needs, and issues as quickly as possible. Carbon LDP is incredible software, but with your help, we can make
                 it better. We urge you to register for the beta, create new applications, and share your experiences with us. We'll do our best to address your feedback in a timely manner.</p>
-<!-- TODO: add sidebar
-            <div class="ui mobile only grid">
-                <div class="row">
-                    <sidebar-component [mobile]="true" [parentElement]="element" [contentReady]="contentReady" class="sixteen wide mobile only column"></sidebar-component>
-                </div>
-            </div> -->
+
 
             <section class="mainContent-section">
                 <h2>Register for the Beta and Community Support</h2>
                 <p>First, before anything else, please consider registering for the beta and to join our community. Registered users receive important news and announcements such as when new
                     software updates become available. Registered users also receive priority in the community support queue. What's more, registered users who provide valuable beta feedback
                     (questions, suggestions, defects, and feature requests) are eligible for Valued Feedback Rewards, which we give generously.</p>
-                <p>If you haven't already, why not <strong><a class="item" [routerLink]="[ '/get-started' ]">Get Started</a></strong> now?</p>
-                <p>Not sure yet? There's no harm in trying. Our <a class="item" [routerLink]="[ '/license' ]">license</a> grants you perpetual, worldwide, non-exclusive, no-charge, and
+                <p>If you haven't already, why not <strong><a class="item" href="/get-started">Get Started</a></strong> now?</p>
+                <p>Not sure yet? There's no harm in trying. Our <a class="item" href="/license">license</a> grants you perpetual, worldwide, non-exclusive, no-charge, and
                     royalty-free use.</p>
             </section>
 
@@ -43,19 +27,19 @@
                 <h2>Review Product Documentation</h2>
                 <p>The official product documentation is always your first line of support. There, you'll find a Quick Start Guide with instructions on how to download and run Carbon LDP.
                     You'll also find information on how to build secure, data-centric and semantic web apps. Here are some recommended places to start...</p>
-                <p><i class="big book icon"></i> <strong><a class="item" [routerLink]="[ '/documentation' ]">Documentation Home</a></strong> - Official home for the product documentation.</p>
-                <p><i class="big file text outline icon"></i> <strong><a href="quick-start-guide">Quick Start Guide</a></strong> - Learn how to download, configure, and run Carbon LDP and the
+                <p><i class="big book icon"></i> <strong><a class="item" href="/documentation">Documentation Home</a></strong> - Official home for the product documentation.</p>
+                <p><i class="big file text outline icon"></i> <strong><a href="/documentation/quick-start-guide">Quick Start Guide</a></strong> - Learn how to download, configure, and run Carbon LDP and the
                     Workbench.</p>
-                <p><i class="big file text outline icon"></i> <strong><a class="item" [routerLink]="[ '/documentation/javascript-sdk/getting-started' ]">Getting Started with the JavaScript
+                <p><i class="big file text outline icon"></i> <strong><a class="item" href="/documentation/javascript-sdk/getting-started">Getting Started with the JavaScript
                             SDK</a></strong>
                     -
                     Learn how to use the
                     JavaScript SDK to build rich applications with pure client-side code.</p>
-                <p><i class="big file text outline icon"></i> <strong><a class="item" [routerLink]="[ '/documentation/rest-api-getting-started' ]">Getting Started with the REST API</a></strong> -
+                <p><i class="big file text outline icon"></i> <strong><a class="item" href="/documentation/rest-api/getting-started">Getting Started with the REST API</a></strong> -
                     Learn how to
                     use the REST API, which
                     provides a lower-level programming interface than the JavaScript SDK.</p>
-                <p><i class="big file text outline icon"></i> <strong><a href="https://github.com/CarbonLDP/CarbonLDP-JS-SDK/tree/develop/doc">JavaScript SDK API Reference</a></strong> (on GitHub)
+                <p><i class="big file text outline icon"></i> <strong><a href="http://carbonldp.github.io/carbonldp-js-sdk/">JavaScript SDK API Reference</a></strong> (on GitHub)
                     - Learn the classes and methods available in the JavaScript SDK.</p>
             </section>
 
@@ -114,11 +98,14 @@
                 <p>Stay in-the-know by following us on the following social media channels.</p>
 
                 <p><i class="big twitter square icon"></i><a href="https://twitter.com/CarbonLDP">Carbon LDP on Twitter</a></p>
+                <p><i class="big youtube square icon"></i><a href="https://www.youtube.com/channel/UCuNWXjT19Gnpo7I502PTZ_Q"> Carbon LDP on YouTube</a></p>
                 <p><i class="big linkedin square icon"></i><a href="https://www.linkedin.com/company/carbon-ldp"> Carbon LDP on LinkedIn</a></p>
+
 
             </section>
         </div>
     </div>
-    <!-- TODO: add sidebar
-    <sidebar-component [mobile]="false" [parentElement]="element" [contentReady]="contentReady" class="four wide computer only four wide tablet only column"></sidebar-component> -->
+    <div class="four wide computer tablet only column">
+        <sidebar content="mainContent"></sidebar>
+    </div>
 </div>

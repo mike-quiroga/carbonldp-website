@@ -1,5 +1,6 @@
 @import "_partial/header";
 @import "_partial/footer";
+@import "./palletColor";
 
 
 //TODO: implement a css for the license page, after talks with Cody - jimena Jan 19, 2017
@@ -19,9 +20,6 @@
   width: 100%;
 }
 
-.pageSection{
-  width: 100%;
-}
 
 .mainContent{
   margin: 4.5rem 2rem;
@@ -29,8 +27,23 @@
 }
 
 .mainContent-section{
-  margin-top: 32px;
-  padding-top: 32px;
+  margin-top: 2em;
+  padding: 1em 0;
+}
+
+.mainContent-subSection{
+  margin-top: 1em;
+  padding-top: 1em;
+}
+code{
+  padding: 0 4px;
+  background-color: #f2f2f2;
+  border-radius: 3px;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  word-spacing: 0;
+  font-size: 13px;
+  line-height: 1.4em;
 }
 
 //documentation-homes
@@ -42,6 +55,7 @@
 }
 
 .category-titleContainer{
+  margin: calc(2rem - .14285em) 0 1rem;
   height: auto;
   display: flex;
   align-items: center;
@@ -50,7 +64,6 @@
 .category-itemTitle{
   font-weight: bold;
   color: #0192cf;
-  /*border-bottom: 1px dotted #f89828;*/
 }
 
 .category-itemTitle:hover {
@@ -69,27 +82,11 @@
   padding-top: .85rem;
 }
 
-//quick start guide
-
-.codeHighlight{
-  display: block;
-  overflow-x: auto;
-  background: #1d1f21;
-  color: #c5c8c6;
-  padding: .5em;
-  word-spacing: 0;
-  line-height: 1.4em;
-  border-radius: 3px;
-  overflow-wrap: break-word;
+a{
   word-wrap: break-word;
 }
 
 /* Semantic UI overwritten classes */
-
-//addition to h1 style, overwrites margin-top:0
-h1.mainContent-title{
-  margin: 1rem 0;
-}
 
 // This is an addition to button classes of semantic ui, a completely white button, with colored text
 // colored text is provided by class .button--<color>Text
@@ -120,6 +117,11 @@ h1.mainContent-title{
     margin-top: 64px;
   }
 
+  .mainContent{
+    margin: 4.5rem 1rem;
+    font-size: 1.1em;
+  }
+
 }
 
 @media only screen and (max-width: 767px){
@@ -129,7 +131,7 @@ h1.mainContent-title{
   }
 
   .mainContent{
-    margin: 2rem 2rem 4rem 1rem;
+    margin: 2rem 0.5rem;
     font-size: 1.1em;
   }
 
@@ -157,194 +159,25 @@ h1.mainContent-title{
 
 }
 
-
-/* Colors for Background, all Backgrounds come with white text */
-// Big Stone
-.bigStoneBG {
-  background-color: #363F48;
-  color: #ffffff;
+.scrollTop {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  z-index: 101;
+  display: none;
 }
 
-.bigStone1BG {
-  background-color: #6C7680;
-  color: #ffffff;
+.ui.button.scrollTop-button {
+  margin: 30px 40px;
+  padding: 0;
+  background-color: #363f48;
+  opacity: 0.7;
+  height:50px;
+  width:50px;
+  border-radius: 50px;
 }
 
-.bigStone2BG {
-  background-color: #4F5A64;
-  color: #ffffff;
-}
-
-.bigStone3BG {
-  background-color: #1E272F;
-  color: #ffffff;
-}
-
-.bigStone4BG {
-  background-color: #13202C;
-  color: #ffffff;
-}
-
-// French Gray
-.frenchGrayBG{
-  background-color: #BABCBE;
-  color: #363F48;
-}
-
-.frenchGray1BG {
-  background-color: #FFFFFF;
-  color: #363F48;
-}
-
-.frenchGray2BG {
-  background-color: #EFEFEF;
-  color: #363F48;
-}
-
-.frenchGray3BG {
-  background-color: #90959A;
-  color: #363F48;
-}
-
-.frenchGray4BG {
-  background-color: #707A83;
-  color: #363F48;
-}
-
-// Vivid Violet
-.vividVioletBG{
-  background-color: #7F4098;
-  color: #ffffff;
-}
-
-.vividViolet1BG {
-  background-color: #C297D3;
-  color: #ffffff;
-}
-
-.vividViolet2BG {
-  background-color: #9C63B2;
-  color: #ffffff;
-}
-
-.vividViolet3BG {
-  background-color: #6B2886;
-  color: #ffffff;
-}
-
-.vividViolet4BG {
-  background-color: #53156C;
-  color: #ffffff;
-}
-
-// California
-.californiaBG {
-  background-color: #F89728;
-  color: #ffffff;
-}
-
-.california1BG {
-  background-color: #FFC17A;
-  color: #ffffff;
-}
-
-.california2BG {
-  background-color: #FFAE51;
-  color: #ffffff;
-}
-
-.california3BG {
-  background-color: #D37507;
-  color: #ffffff;
-}
-
-.california4BG {
-  background-color: #A65900;
-  color: #ffffff;
-}
-
-.californiaText {
-  color:#F89728;
-}
-
-// Bright Pink
-.brightPinkBG {
-  background-color: #E20178;
-  color: #ffffff;
-}
-
-.brightPink1BG {
-  background-color: #E95AA5;
-  color: #ffffff;
-}
-
-.brightPink2BG {
-  background-color: #E52F8F;
-  color: #ffffff;
-}
-
-.brightPink3BG {
-  background-color: #C8006A;
-  color: #ffffff;
-}
-
-.brightPink4BG {
-  background-color: #9B0052;
-  color: #ffffff;
-}
-
-// Dull lime
-.dullLimeBG{
-  background-color: #53B948;
-  color: #ffffff;
-}
-
-.dullLime1BG {
-  background-color: #A7E6A1;
-  color: #ffffff;
-}
-
-.dullLime2BG {
-  background-color: #7AD471;
-  color: #ffffff;
-}
-
-.dullLime3BG {
-  background-color: #35A32A;
-  color: #ffffff;
-}
-
-.dullLime4BG {
-  background-color: #1E8213;
-  color: #ffffff;
-}
-
-// Electric Blue
-.electricBlueBG{
-  background-color: #0091CF;
-  color: #ffffff;
-}
-
-.electricBlue1BG {
-  background-color: #19B7FB;
-  color: #ffffff;
-}
-
-.electricBlue2BG {
-  background-color: #05B3FF;
-  color: #ffffff;
-}
-
-.electricBlue3BG {
-  background-color: #006997;
-  color: #ffffff;
-}
-
-.electricBlue4BG {
-  background-color: #005376;
-  color: #ffffff;
-}
-
-.electricBlueText {
-  color: #0091CF;
+i.icon.scrollTop-icon {
+  font-size: 28px;
+  color: #19B7FB;
 }

@@ -42,6 +42,7 @@
     "hexo-renderer-stylus": "^0.3.1",
     "hexo-server": "^0.2.0",
     "hexo-util": "^0.6.0",
+    "hexo-widgets": "^1.0.0-alpha.3",
     "jsdom": "^9.9.1",
     "jsdom-global": "^2.1.1",
     "semantic-ui": "^2.2.7"

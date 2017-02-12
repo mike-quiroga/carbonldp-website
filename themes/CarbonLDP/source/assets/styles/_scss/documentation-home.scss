@@ -1,7 +1,5 @@
 .categoriesMenuContainer{
   max-width:100%;
-  //height: 570px;
-  //height:620px;
   min-height: 77.2vh;
   padding: 13vh 0 0 0;
   border-bottom: 25px solid #0192cf;
@@ -9,7 +7,6 @@
 
 h1.categoriesMenu-title{
   font-size:2.5rem;
-  //font-size: 2.2rem;
   text-align: center;
   letter-spacing: 0.7px;
 }
@@ -21,12 +18,12 @@ h1.categoriesMenu-title{
 }
 
 .ui.grid .categoriesMenu{
-  //padding: 5em 3em 0 3em;
   padding: 6.5em 3em 0 3em;
 }
 
 .categoriesMenu-button {
   padding: 1.2rem;
+  margin: 25px 0;
 }
 
 .categoriesMenu-button:hover {
@@ -50,6 +47,7 @@ h1.categoriesMenu-title{
     display: flex;
     align-items: center;
 }
+//addition to h1 style, overwrites margin-top:0
 
 h2.category-title{
   margin: 0;

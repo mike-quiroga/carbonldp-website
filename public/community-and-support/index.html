@@ -23,6 +23,71 @@
 
   <link rel="stylesheet" href="/semantic/dist/semantic.min.css">
 
+  <style>.sidebar{
+    margin: 10em 1em 6em 0;
+}
+
+/* Give sidebar a z-index greater than header */
+.sidebar .ui.sticky{
+    z-index: 0;
+}
+
+/* Remove box-shadow and border */
+.sidebar .ui.segment{
+    box-shadow: none;
+    border: none;
+}
+
+/* Change color to black when title active */
+.ui.accordion .item.active .title:not(.ui).sidebar-title{
+    color: black;
+}
+.ui.vertical.menu .menu .item.active .sidebar-title{
+    color: black;
+}
+/* Change color of section items to gray */
+.ui.accordion .title:not(.ui).sidebar-title{
+    color: rgba(0,0,0,.6);
+    padding-right: 10px;
+}
+
+/* Change color to black when title hovered */
+.ui.accordion .title:not(.ui).sidebar-title:hover{
+    color: black;
+}
+
+
+/* Add left margin to sidebar menu */
+.ui.vertical.text.menu.sidebar-verticalMenu {
+    margin-left: 1.2em;
+}
+
+.ui.vertical.text.menu .item:not(.dropdown)>.menu.sidebar-verticalSubMenu{
+    margin: 0 0.8em;
+}
+
+.ui.accordion.menu .item .title.sidebar-title--dropdown{
+    display: inline;
+}
+
+.ui.vertical.text.menu .item>i.icon.sidebar-dropdownIcon{
+    float: right;
+}
+
+@media (min-width: 768px) and (max-width: 992px) {
+    .sidebar .ui.sticky{
+        padding: 0;
+    }
+    .ui.vertical.text.menu.sidebar-verticalMenu {
+        margin-left: .6em;
+    }
+
+    .ui.accordion .title:not(.ui).sidebar-title{
+        padding-right: 0;
+    }
+
+}</style>
+
   <link rel="stylesheet" href="/assets/styles/css/main.min.css">
 
 
@@ -36,6 +101,7 @@
 
   <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
   <script src="/semantic/dist/semantic.min.js"></script>
+  
 </head>
 
     <body class="site">
@@ -43,7 +109,7 @@
 	<div class="ui grid removeSideMargins">
 		<div class="computer only row">
 			<div class="ui top fixed borderless menu">
-				<div class="ui container">
+				<div class="ui container navMenu">
 					<a class="item transparentBG" href="/"><img class="ui small image" src="/assets/images/carbon-logo-header.png" alt="Home"></a>
 
 					
@@ -79,7 +145,7 @@
 		</div>
 		<div class="mobile tablet only row">
 			<div class="ui top fixed borderless menu navMenu">
-				<div class="ui container">
+				<div class="ui container navMenu">
 					<a class="item navMenu-carbonLogoButton transparentBG" href="/"><img class="ui navMenu-carbonLogo image" src="/assets/images/carbon-logo-header.png" alt="Home"></a>
 					<div class="ui right icon item navMenu-openerButton">
 						<!--<div class="menu item">-->
@@ -87,7 +153,7 @@
 					</div>
 				</div>
 			</div>
-			<div class="ui fixed fluid vertical menu navMenu-verticalMenu">
+			<div class="ui fixed fluid vertical menu navMenu-verticalMenu" style="display: none;">
 				
 
 				<a class="item" href="/get-started">Get Started</a>
@@ -123,24 +189,15 @@
 		</div>
 	</div>
 </header>
-        <div class="site-content ">
-            <div class="ui container grid">
 
-        <!-- TODO: add breadcrumb
-        <div class="row">
-            <div class="sixteen wide column">
-                <div class="ui breadcrumb">
-                    <div class="active section">About</div>
-                </div>
-                <h1>About Carbon LDP</h1>
-            </div>
-        </div>
-        -->
+        <div class="site-content ">
+            
+            <div class="ui container grid">
 
     <div class="twelve wide computer only twelve wide tablet only sixteen wide mobile only column">
         <div class="mainContent">
 
-            <h1 class="mainContent-title">Community &amp; Support</h1>
+            <h1>Community &amp; Support</h1>
 
             <div class="ui message">
                 <p>Here, you will find a number of ways to participate in our growing community, provide feedback, and get support.</p>
@@ -148,47 +205,42 @@
 
             <p>We care about your opinion and we want to address your questions, needs, and issues as quickly as possible. Carbon LDP is incredible software, but with your help, we can make
                 it better. We urge you to register for the beta, create new applications, and share your experiences with us. We'll do our best to address your feedback in a timely manner.</p>
-<!-- TODO: add sidebar
-            <div class="ui mobile only grid">
-                <div class="row">
-                    <sidebar-component [mobile]="true" [parentElement]="element" [contentReady]="contentReady" class="sixteen wide mobile only column"></sidebar-component>
-                </div>
-            </div> -->
 
-            <section class="mainContent-section">
+
+            <section class="mainContent-section" id="register-for-the-beta-and-community-support">
                 <h2>Register for the Beta and Community Support</h2>
                 <p>First, before anything else, please consider registering for the beta and to join our community. Registered users receive important news and announcements such as when new
                     software updates become available. Registered users also receive priority in the community support queue. What's more, registered users who provide valuable beta feedback
                     (questions, suggestions, defects, and feature requests) are eligible for Valued Feedback Rewards, which we give generously.</p>
-                <p>If you haven't already, why not <strong><a class="item" [routerlink]="[ '/get-started' ]">Get Started</a></strong> now?</p>
-                <p>Not sure yet? There's no harm in trying. Our <a class="item" [routerlink]="[ '/license' ]">license</a> grants you perpetual, worldwide, non-exclusive, no-charge, and
+                <p>If you haven't already, why not <strong><a class="item" href="/get-started">Get Started</a></strong> now?</p>
+                <p>Not sure yet? There's no harm in trying. Our <a class="item" href="/license">license</a> grants you perpetual, worldwide, non-exclusive, no-charge, and
                     royalty-free use.</p>
             </section>
 
-            <section class="mainContent-section">
+            <section class="mainContent-section" id="review-product-documentation">
                 <h2>Review Product Documentation</h2>
                 <p>The official product documentation is always your first line of support. There, you'll find a Quick Start Guide with instructions on how to download and run Carbon LDP.
                     You'll also find information on how to build secure, data-centric and semantic web apps. Here are some recommended places to start...</p>
-                <p><i class="big book icon"></i> <strong><a class="item" [routerlink]="[ '/documentation' ]">Documentation Home</a></strong> - Official home for the product documentation.</p>
-                <p><i class="big file text outline icon"></i> <strong><a href="quick-start-guide">Quick Start Guide</a></strong> - Learn how to download, configure, and run Carbon LDP and the
+                <p><i class="big book icon"></i> <strong><a class="item" href="/documentation">Documentation Home</a></strong> - Official home for the product documentation.</p>
+                <p><i class="big file text outline icon"></i> <strong><a href="/documentation/quick-start-guide">Quick Start Guide</a></strong> - Learn how to download, configure, and run Carbon LDP and the
                     Workbench.</p>
-                <p><i class="big file text outline icon"></i> <strong><a class="item" [routerlink]="[ '/documentation/javascript-sdk/getting-started' ]">Getting Started with the JavaScript
+                <p><i class="big file text outline icon"></i> <strong><a class="item" href="/documentation/javascript-sdk/getting-started">Getting Started with the JavaScript
                             SDK</a></strong>
                     -
                     Learn how to use the
                     JavaScript SDK to build rich applications with pure client-side code.</p>
-                <p><i class="big file text outline icon"></i> <strong><a class="item" [routerlink]="[ '/documentation/rest-api-getting-started' ]">Getting Started with the REST API</a></strong> -
+                <p><i class="big file text outline icon"></i> <strong><a class="item" href="/documentation/rest-api/getting-started">Getting Started with the REST API</a></strong> -
                     Learn how to
                     use the REST API, which
                     provides a lower-level programming interface than the JavaScript SDK.</p>
-                <p><i class="big file text outline icon"></i> <strong><a href="https://github.com/CarbonLDP/CarbonLDP-JS-SDK/tree/develop/doc">JavaScript SDK API Reference</a></strong> (on GitHub)
+                <p><i class="big file text outline icon"></i> <strong><a href="http://carbonldp.github.io/carbonldp-js-sdk/">JavaScript SDK API Reference</a></strong> (on GitHub)
                     - Learn the classes and methods available in the JavaScript SDK.</p>
             </section>
 
-            <section class="mainContent-section">
+            <section class="mainContent-section" id="get-support">
                 <h2>Get Support</h2>
 
-                <section class="mainContent-section">
+                <section class="mainContent-section" id="feedback-questions-and-issues">
                     <h3>Feedback, Questions, and Issues</h3>
                     <p>We use GitHub to host our git repositories and to track project issues (e.g. bugs, features, questions, suggestions, tasks). To learn about the conventions we use and
                         the workflow we follow for prioritizing and managing issues, please
@@ -203,7 +255,7 @@
                         We distribute rewards to registered users based first on derived value to the product and community, and then by random selection.</p>
                 </section>
 
-                <section class="mainContent-section">
+                <section class="mainContent-section" id="gitter-rooms">
                     <h3>Gitter Rooms</h3>
                     <p>Gitter is an instant messaging and chat room system for developers and users of GitHub repositories.
                         Carbon LDP staff and community users can often be found listening and lingering in the following rooms.
@@ -224,7 +276,7 @@
                 </section>
 
 
-                <section class="mainContent-section">
+                <section class="mainContent-section" id="premium-support-and-consulting-services">
                     <h3>Premium Support and Consulting Services</h3>
                     <p>While we do our best respond to all users in a timely manner, we have a limited number of support staff. As such, we are unable to make any service-level support
                         guarantees outside of our Premium Support offering. For guaranteed response times and a direct line to our subject matter experts, please contact us by email.
@@ -235,51 +287,233 @@
             </section>
 
 
-            <section class="mainContent-section">
+            <section class="mainContent-section" id="follow-us">
                 <h2>Follow Us</h2>
                 <p>Stay in-the-know by following us on the following social media channels.</p>
 
                 <p><i class="big twitter square icon"></i><a href="https://twitter.com/CarbonLDP">Carbon LDP on Twitter</a></p>
+                <p><i class="big youtube square icon"></i><a href="https://www.youtube.com/channel/UCuNWXjT19Gnpo7I502PTZ_Q"> Carbon LDP on YouTube</a></p>
                 <p><i class="big linkedin square icon"></i><a href="https://www.linkedin.com/company/carbon-ldp"> Carbon LDP on LinkedIn</a></p>
+
 
             </section>
         </div>
     </div>
-    <!-- TODO: add sidebar
-    <sidebar-component [mobile]="false" [parentElement]="element" [contentReady]="contentReady" class="four wide computer only four wide tablet only column"></sidebar-component> -->
+    <div class="four wide computer tablet only column">
+        <div class="sidebar" content="mainContent">
+	<div class="ui sticky segment">
+		<h2 class="ui header">Content</h2>
+		<div class="ui vertical following fluid accordion text menu sidebar-verticalMenu">
+
+		
+
+			<div class="item"><a class="title sidebar-title" href="#register-for-the-beta-and-community-support">Register for the Beta and Community Support</a></div>
+
+			
+
+			<div class="item"><a class="title sidebar-title" href="#review-product-documentation">Review Product Documentation</a></div>
+
+			
+
+			<div class="item">
+
+				<a class="title sidebar-title sidebar-title--dropdown" href="#get-support">Get Support</a><i class="dropdown icon sidebar-dropdownIcon"></i>
+
+				<div class="content menu sidebar-verticalSubMenu">
+
+				
+
+					<a class="item sidebar-title" href="#feedback-questions-and-issues">Feedback, Questions, and Issues</a>
+
+				
+
+					<a class="item sidebar-title" href="#gitter-rooms">Gitter Rooms</a>
+
+				
+
+					<a class="item sidebar-title" href="#premium-support-and-consulting-services">Premium Support and Consulting Services</a>
+
+				
+
+				</div>
+			</div>
+		
+
+			<div class="item"><a class="title sidebar-title" href="#follow-us">Follow Us</a></div>
+
+			
+		</div>
+	</div>
 </div>
+    </div>
+</div>
+
         </div>
         <div class="footer bigStoneBG">
-    <div class="ui middle aligned padded grid computer only">
-        <div class="four wide center aligned column">
-            <a href="http://base22.com/"><img class="footer-base22Logo" src="/assets/images/base22-logo-white.png"></a>
+    <!--<div class="ui container">-->
+        <div class="ui middle aligned padded grid computer tablet only">
+            <!--<div class="four wide column">-->
+            <div class="four wide center aligned column">
+                <a href="http://base22.com/"><img class="footer-base22Logo" src="/assets/images/base22-logo-white.png"></a>
+            </div>
+            <div class="eight wide center aligned stretched column">
+                <p class="footer-copyrightText">© 2017 Base22 Technology Group, LLC. All Rights Reserved.</p>
+            </div>
+            <!--<div class="four wide right aligned column">-->
+            <div class="four wide left aligned column">
+                <a angulartics2on="click" angularticsevent="OutboundClick" angularticscategory="Twitter" href="https://twitter.com/CarbonLDP"><i class="circular twitter icon footer-socialIcon"></i></a>
+                <a angulartics2on="click" angularticsevent="OutboundClick" angularticscategory="YouTube" href="https://www.youtube.com/channel/UCuNWXjT19Gnpo7I502PTZ_Q"><i class="circular youtube icon footer-socialIcon"></i></a>
+                <a angulartics2on="click" angularticsevent="OutboundClick" angularticscategory="LinkedIn" href="https://www.linkedin.com/company/carbon-ldp"><i class="circular linkedin icon footer-socialIcon"></i></a>
+            </div>
         </div>
-        <div class="eight wide center aligned stretched column">
-            <p class="footer-copyrightText">© 2017 Base22 Technology Group, LLC. All Rights Reserved.</p>
-        </div>
-        <div class="four wide left aligned column">
-            <a angulartics2on="click" angularticsevent="OutboundClick" angularticscategory="Twitter" href="https://twitter.com/CarbonLDP"><i class="circular twitter icon footer-socialIcon"></i></a>
-            <a angulartics2on="click" angularticsevent="OutboundClick" angularticscategory="YouTube" href="https://www.youtube.com/channel/UCuNWXjT19Gnpo7I502PTZ_Q"><i class="circular youtube icon footer-socialIcon"></i></a>
-            <a angulartics2on="click" angularticsevent="OutboundClick" angularticscategory="LinkedIn" href="https://www.linkedin.com/company/carbon-ldp"><i class="circular linkedin icon footer-socialIcon"></i></a>
-        </div>
-    </div>
-    <div class="ui centered padded grid mobile tablet only">
-        <div class="left aligned eight wide column">
-            <a href="http://base22.com/"><img class="footer-base22Logo" src="/assets/images/base22-logo-white.png"></a>
-        </div>
-        <div class="right aligned eight wide column">
-            <a angulartics2on="click" angularticsevent="OutboundClick" angularticscategory="Twitter" href="https://twitter.com/CarbonLDP"><i class="circular twitter icon footer-socialIcon"></i></a>
-            <a angulartics2on="click" angularticsevent="OutboundClick" angularticscategory="YouTube" href="https://www.youtube.com/channel/UCuNWXjT19Gnpo7I502PTZ_Q"><i class="circular youtube icon footer-socialIcon"></i></a>
-            <a angulartics2on="click" angularticsevent="OutboundClick" angularticscategory="LinkedIn" href="https://www.linkedin.com/company/carbon-ldp"><i class="circular linkedin icon footer-socialIcon"></i></a>
-        </div>
-        <div class="center aligned twelve wide column">
-            <p class="footer-copyrightText">© 2017 Base22 Technology Group, LLC. All&nbsp;Rights&nbsp;Reserved.</p>
-        </div>
+        <div class="ui centered padded grid mobile only">
+            <div class="left aligned eight wide column">
+                <a href="http://base22.com/"><img class="footer-base22Logo" src="/assets/images/base22-logo-white.png"></a>
+            </div>
+            <div class="right aligned eight wide column">
+                <a angulartics2on="click" angularticsevent="OutboundClick" angularticscategory="Twitter" href="https://twitter.com/CarbonLDP"><i class="circular twitter icon footer-socialIcon"></i></a>
+                <a angulartics2on="click" angularticsevent="OutboundClick" angularticscategory="YouTube" href="https://www.youtube.com/channel/UCuNWXjT19Gnpo7I502PTZ_Q"><i class="circular youtube icon footer-socialIcon"></i></a>
+                <a angulartics2on="click" angularticsevent="OutboundClick" angularticscategory="LinkedIn" href="https://www.linkedin.com/company/carbon-ldp"><i class="circular linkedin icon footer-socialIcon"></i></a>
+            </div>
+            <div class="center aligned twelve wide column">
+                <p class="footer-copyrightText">© 2017 Base22 Technology Group, LLC. All&nbsp;Rights&nbsp;Reserved.</p>
+            </div>
+        <!--</div>-->
     </div>
 </div>
 
         
 <script src="/js/script.js"></script>
+        <script>(function( window ){ $( document ).ready( function() {
+	
+	let $sidebar = $(".sidebar");
+	let $content = $("."+$sidebar.attr("content"));	
+	let $sections = $content.children( "section" );
+
+	// Detect when section is passed
+	$sections.visibility( {
+		once: false,
+		offset: 150,
+		onTopPassed: function () {
+			 activateSection( this, $sidebar, $content );
+		},
+		onTopPassedReverse: function () {
+			 deactivateFirstSection( this, $sidebar, $content );
+		},
+		onBottomPassedReverse: function () {
+			activateSection( this, $sidebar, $content );
+		},
+	} );
+
+	// Make sidebar stick to its position
+	$( ".sidebar > .ui.sticky" ).sticky( {
+		observeChanges: true,
+		context: ".mainContent",
+		offset: 100
+	} );
+
+	// Activate toggle dropdown
+	$( ".sidebar .item > .dropdown.icon" ).on( "click", toggleDropdown);
+
+	$( ".sidebar .item > .title" ).on( "click", activateItem) ;
+
+	$( ".sidebar  a.item " ).on( "click", activateItem) ;
+
+	// Toggle selected accordion menu in sidebar
+	function toggleDropdown( event ){
+		let $target = $( event.currentTarget );
+
+		let $accordion = $target.parent( ".item" ).find( ".content.menu" );
+		if( $accordion ) {
+			let accordionIsActive = $accordion.hasClass( "active" );
+
+			if( accordionIsActive ) {
+				$accordion.removeClass( "active" );
+				$accordion.removeClass( "toggled" );
+			} else {
+				$accordion.addClass( "active" );
+				$accordion.addClass( "toggled" );
+			}
+		}
+		$( ".ui.sticky" ).sticky( "refresh" );
+		
+		return false;
+	}
+
+	function activateItem(event){
+
+		let $item = $( event.currentTarget ).parent(".item");
+
+		let $allItems = $item.siblings(".item");
+		$allItems.removeClass("active");
+		$item.addClass("active");
+
+		event.preventDefault();
+	
+		return false;
+
+	}
+
+
+	function activateSection( elm, $sidebar, $content) {
+
+		let $section = $( elm );
+		let $sections = $content.children( "section" );
+		let index = $sections.index( $section );
+		let $followSection = $sidebar.find( ".following.menu" ).children( ".item" );
+		let $currentSection = $followSection.eq( index );
+
+		let isActive = $currentSection.hasClass( "active" );
+
+		let hasSubsection= $sections.eq( index ).children( "section" ).length > 0;
+
+		$followSection.removeClass( "active" );
+		$followSection.find( ".active" ).not( ".toggled" ).removeClass( "active" );
+
+		if( ! isActive ) {
+
+			$currentSection.addClass( "active" );
+		}
+
+		if( hasSubsection ) {
+			$currentSection.find( ".menu" ).addClass( "active" );
+		}
+
+		$( ".ui.sticky" ).sticky( "refresh" );
+
+
+	}
+
+	function deactivateFirstSection( elm, $sidebar, $content) {
+
+		let $section = $( elm );
+		let $sections = $content.children( "section" );
+
+		let index = $sections.index( $section );
+		let $followSection = $sidebar.find( ".following.menu" ).children( ".item" );
+		let $currentSection = $followSection.eq( index );
+		let isActive = $currentSection.hasClass( "active" );
+		// let hasSubsection= $sections.eq( index ).children( "section" ).length > 0;
+		let $subSectionMenu = $currentSection.find( ".menu" );
+
+
+		if( index === 0 ) {
+
+			$currentSection.removeClass( "active" );
+
+			if( $subSectionMenu.length > 0 ) {
+				$currentSection.find( ".menu" ).not(".toggled").removeClass( "active" );
+				$subSectionMenu.find( ".item" ).removeClass("active");
+			}
+
+		}
+
+		$( ".ui.sticky" ).sticky( "refresh" );
+
+	}
+
+
+}); })( window );</script><script id="widgets-scripts"></script>
     
     
 </body></html>

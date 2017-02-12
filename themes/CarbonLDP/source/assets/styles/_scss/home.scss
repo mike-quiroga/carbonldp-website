@@ -5,11 +5,9 @@
 .cover--home {
   background-image: url("../../images/night-sky.jpg") !important;
   background-repeat: no-repeat !important;
-  //position: relative !important;
   background-position: center center !important;
-  //width: 100% !important;
   background-size: cover !important;
-  height: 700px;
+  height: 750px;
   min-height: 95%;
 }
 
@@ -110,7 +108,6 @@
 
 .feature-paragraph{
   font-size: .95em;
-  /* text-align: justify; */
   padding-left: 10px;
   padding-right: 10px;
 }
@@ -212,7 +209,6 @@
 
   .feature-paragraph{
     font-size: 1.1em;
-    /* text-align: justify; */
     padding: 8px;
   }
 }
@@ -243,7 +239,6 @@
   .banner-paragraph {
     font-size: 22px;
     font-weight: normal;
-    //max-width: 380px;
   }
 
   .newsSection{
@@ -295,7 +290,6 @@
 
   .feature-paragraph{
     font-size: 1.2em;
-    /* text-align: justify; */
     padding-left: 16px;
     padding-right: 16px;
   }

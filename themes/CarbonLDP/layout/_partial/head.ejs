@@ -19,6 +19,7 @@
     title = __('tag') + ': ' + page.tag;
   }
   %>
+  <link rel="shortcut icon" href="/assets/images/carbon-icon-144x144.png">
   <title><% if (title){ %><%= title %> | <% } %><%= config.title %></title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
@@ -28,11 +29,10 @@
     <link rel="alternate" href="<%- theme.rss %>" title="<%= config.title %>" type="application/atom+xml">
   <% } %>
 
-  <% if (theme.favicon){ %>
-    <link rel="icon" href="<%- theme.favicon %>">
-  <% } %>
 
   <%- css("/semantic/dist/semantic.min")%>
+
+  <link id="widgets-styles">
 
   <%- css("/assets/styles/css/main.min")%>
 
@@ -53,4 +53,5 @@
           integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
           crossorigin="anonymous"></script>
   <script src="/semantic/dist/semantic.min.js"></script>
+  <script id="widgets-scripts"></script>
 </head>

@@ -2,7 +2,7 @@
 	<div class="ui grid removeSideMargins">
 		<div class="computer only row">
 			<div class="ui top fixed borderless menu">
-				<div class="ui container">
+				<div class="ui container navMenu">
 					<a class="item transparentBG" href="/"><img class="ui small image" src="/assets/images/carbon-logo-header.png" alt="Home"/></a>
 
 					<% for (var i in theme.nav){
@@ -26,7 +26,7 @@
 		</div>
 		<div class="mobile tablet only row">
 			<div class="ui top fixed borderless menu navMenu">
-				<div class="ui container">
+				<div class="ui container navMenu">
 					<a class="item navMenu-carbonLogoButton transparentBG" href="/"><img class="ui navMenu-carbonLogo image" src="/assets/images/carbon-logo-header.png" alt="Home"/></a>
 					<div class="ui right icon item navMenu-openerButton">
 						<!--<div class="menu item">-->
@@ -34,7 +34,7 @@
 					</div>
 				</div>
 			</div>
-			<div class="ui fixed fluid vertical menu navMenu-verticalMenu">
+			<div class="ui fixed fluid vertical menu navMenu-verticalMenu" style="display: none;">
 				<% for (var i in theme.nav){
 				if (theme.nav[i].children === null ){%>
 

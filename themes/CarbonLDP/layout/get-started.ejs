@@ -1,18 +1,8 @@
-<div class="ui grid container">
-    <!--
-    <div class="row">
-        <div class="sixteen wide column">
-            <div class="ui breadcrumb">
-                <div class="active section">About</div>
-            </div>
-            <h1>About Carbon LDP</h1>
-        </div>
-    </div>
-    -->
+<div class="ui container grid">
     <div class="twelve wide computer only fourteen wide tablet only sixteen wide mobile only column">
         <div class="mainContent">
 
-            <h1 class="mainContent-title">Get Started</h1>
+            <h1>Get Started</h1>
 
             <div class="ui huge message">
                 <p>Register now to download Carbon LDP (beta) and start building secure,
@@ -146,12 +136,14 @@
                         <div class="field">
                             <label>Name</label>
                             <input type="text"
+                                   id = "icpsignupName"
                                    placeholder="First and Last Name"
                                    name="data[carbon-full-name]">
                         </div>
                         <div class="field">
                             <label>Email</label>
                             <input type="text"
+                                   id = "icpsignupEmail"
                                    name="data[email]">
                         </div>
                     </div>
@@ -163,7 +155,7 @@
 
                     <div class="field">
                         <label>Project Description</label>
-                        <textarea rows="2" placeholder="Please, tell us what you plan to create." name="data[carbon-project-desc]" ngModel></textarea>
+                        <textarea rows="2" placeholder="Please, tell us what you plan to create." name="data[carbon-project-desc]"></textarea>
                     </div>
 
                     <div class="field">
@@ -171,13 +163,11 @@
                         <input type="text" name="data[carbon-how-disc]" ngModel>
                     </div>
 
-                    <button class="ui californiaBG button" type="submit">Submit</button>
+                    <button id="icpsignupSubmitButton" class="ui californiaBG button" type="submit" disabled="true">Submit</button>
 
                     <!-- TODO: make form functional without jQuery -->
                     <div class="ui error message">
                         <ul>
-                            <>
-                            <li>Please enter a valid email address</li>
                         </ul>
                     </div>
                 </form>
@@ -185,7 +175,4 @@
             </section>
         </div>
     </div>
-    <aside class="four wide computer only two wide tablet only column">
-    </aside>
 </div>
-<sidebar></sidebar>
