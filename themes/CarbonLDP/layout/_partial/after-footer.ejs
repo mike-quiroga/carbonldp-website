@@ -1,4 +1,4 @@
 <%- js("js/script")%>
-<% if (page.layout === "get-started" ) {%>
-<%- js( "js/get-started-form")%>
+<% if (page.script ) {%>
+<%- js( `js/${page.script}`)%>
 <%}%>

@@ -1,0 +1,29 @@
+<div class=" sixteen wide mobile only column">
+	<div class="staticContentMenu">
+		<h2 class="staticContentMenuTitle">Content</h2>
+		<div class="ui vertical accordion fluid menu mobile">
+			<% for( let i = 0, length = sectionsTree.length; i < length; i ++ ) {
+			if( sectionsTree[i]["subsections"].length === 0) { %>
+
+			<div class="item"><a class ="title staticContentMenu-title" href="#<%= sectionsTree[i].id%>"><%=sectionsTree[i].title%></a></div>
+
+			<% } else { %>
+
+			<div class="item">
+
+				<a class="title staticContentMenu-title staticContentMenu-title--dropdown" href="#<%= sectionsTree[i].id%>"><%=sectionsTree[i].title%></a><i class="dropdown icon .staticContentMenu-dropdownIcon"></i>
+
+				<div class="content menu">
+
+					<% let subsections = sectionsTree[i].subsections
+					for( let i = 0, length = subsections.length; i < length; i ++ ) { %>
+
+					<a class="item" href="#<%= subsections[i].id%>"><%=subsections[i].title%></a>
+
+					<%}%>
+				</div>
+			</div>
+			<%}}%>
+		</div>
+	</div>
+</div>

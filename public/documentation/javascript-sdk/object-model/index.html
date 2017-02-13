@@ -1,0 +1,1131 @@
+<!DOCTYPE html><html><head>
+  <meta charset="utf-8">
+  
+
+
+  <link rel="shortcut icon" href="/assets/images/carbon-icon-144x144.png">
+  <title>Object Model | Carbon LDP</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="google-site-verification" content="gz0ah_pGpAlB4Q5a_bxykr1Zdo_CfXHyAb2tJiADVhE">
+
+  <meta name="description" content="Object model
+
+
+	
+		
+		
+			Previous
+			Getting Started
+		
+	
+	
+		
+			Object Model
+		
+	
+	
+		
+		
+			Next
+			Contexts
+		
+	
+
+
+
+	
+		
+	
+
+
+
+	Documents
+	
+		The main model object handled by Carbon LDP is calle">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Object Model">
+<meta property="og:url" content="https://carbonldp.com/documentation/javascript-sdk/object-model/index.html">
+<meta property="og:site_name" content="Carbon LDP">
+<meta property="og:description" content="Object model
+
+
+	
+		
+		
+			Previous
+			Getting Started
+		
+	
+	
+		
+			Object Model
+		
+	
+	
+		
+		
+			Next
+			Contexts
+		
+	
+
+
+
+	
+		
+	
+
+
+
+	Documents
+	
+		The main model object handled by Carbon LDP is calle">
+<meta property="og:updated_time" content="2017-02-13T17:40:38.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Object Model">
+<meta name="twitter:description" content="Object model
+
+
+	
+		
+		
+			Previous
+			Getting Started
+		
+	
+	
+		
+			Object Model
+		
+	
+	
+		
+		
+			Next
+			Contexts
+		
+	
+
+
+
+	
+		
+	
+
+
+
+	Documents
+	
+		The main model object handled by Carbon LDP is calle">
+  
+    <link rel="alternate" href="/atom.xml" title="Carbon LDP" type="application/atom+xml">
+  
+
+
+  <link rel="stylesheet" href="/semantic/dist/semantic.min.css">
+  <style>/* Tomorrow Night Theme */
+/* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
+/* Original theme - https://github.com/chriskempson/tomorrow-theme */
+/* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
+
+/* Tomorrow Comment */
+.hljs-comment,
+.hljs-quote {
+  color: #969896;
+}
+
+/* Tomorrow Red */
+.hljs-variable,
+.hljs-template-variable,
+.hljs-tag,
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-regexp,
+.hljs-deletion {
+  color: #cc6666;
+}
+
+/* Tomorrow Orange */
+.hljs-number,
+.hljs-built_in,
+.hljs-builtin-name,
+.hljs-literal,
+.hljs-type,
+.hljs-params,
+.hljs-meta,
+.hljs-link {
+  color: #de935f;
+}
+
+/* Tomorrow Yellow */
+.hljs-attribute {
+  color: #f0c674;
+}
+
+/* Tomorrow Green */
+.hljs-string,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-addition {
+  color: #b5bd68;
+}
+
+/* Tomorrow Blue */
+.hljs-title,
+.hljs-section {
+  color: #81a2be;
+}
+
+/* Tomorrow Purple */
+.hljs-keyword,
+.hljs-selector-tag {
+  color: #b294bb;
+}
+
+.hljs {
+  display: block;
+  overflow-x: auto;
+  background: #1d1f21;
+  color: #c5c8c6;
+  padding: 0.5em;
+}
+
+.hljs-emphasis {
+  font-style: italic;
+}
+
+.hljs-strong {
+  font-weight: bold;
+}
+</style><style>.hljs {
+    font-family: "Lucida Console", Monaco, monospace;
+    font-size: .8em;
+    line-height: 1.4em;
+}</style><style>.sidebar{
+    margin: 10em 1em 6em 0;
+}
+
+/* Give sidebar a z-index greater than header */
+.sidebar .ui.sticky{
+    z-index: 0;
+}
+
+/* Remove box-shadow and border */
+.sidebar .ui.segment{
+    box-shadow: none;
+    border: none;
+}
+
+/* Change color to black when title active */
+.ui.accordion .item.active .title:not(.ui).sidebar-title{
+    color: black;
+    font-weight: 700;
+}
+.ui.vertical.menu .menu .item.active .sidebar-title{
+    color: black;
+}
+/* Change color of section items to gray */
+.ui.accordion .title:not(.ui).sidebar-title{
+    color: rgba(0,0,0,.6);
+    padding-right: 10px;
+}
+
+/* Change color to black when title hovered */
+.ui.accordion .title:not(.ui).sidebar-title:hover{
+    color: black;
+}
+
+
+/* Add left margin to sidebar menu */
+.ui.vertical.text.menu.sidebar-verticalMenu {
+    margin-left: 1.2em;
+}
+
+.ui.vertical.text.menu .item:not(.dropdown)>.menu.sidebar-verticalSubMenu{
+    margin: 0 0.8em;
+}
+
+.ui.accordion.menu .item .title.sidebar-title--dropdown{
+    display: inline;
+}
+
+.ui.vertical.text.menu .item>i.icon.sidebar-dropdownIcon{
+    float: right;
+}
+
+@media (min-width: 768px) and (max-width: 992px) {
+    .sidebar .ui.sticky{
+        padding: 0;
+    }
+    .ui.vertical.text.menu.sidebar-verticalMenu {
+        margin-left: .6em;
+    }
+
+    .ui.accordion .title:not(.ui).sidebar-title{
+        padding-right: 0;
+    }
+
+}</style><style>.staticContentMenu{
+    margin: 2em 0;
+}
+
+h2.staticContentMenu-title{
+    font-size: 1.4em;
+}
+
+.ui.accordion.menu .item .title.staticContentMenu-title--dropdown{
+    display: inline;
+}
+
+.ui.vertical.text.menu .item>i.icon.staticContentMenu-dropdownIcon{
+    float: right;
+}
+
+.ui.accordion .title:not(.ui).staticContentMenu-title{
+    color: rgba(0,0,0,.6);
+}</style><style>.ui.grid.tabsComponent {
+    margin: 1rem 0;
+}
+
+.ui.grid.tabsComponent .row.tabs{
+    padding: 0;
+}
+
+.ui.attached.segment.tabs{
+    border-top: 0;
+    padding: 0 1rem;
+    margin: 0;
+}
+
+@media (max-width: 767px) {
+    .ui.attached.segment.tabs{
+        border: 0;
+        padding: 0;
+        margin: 0;
+    }
+
+    .tabs-tab *{
+        margin:0;
+    }
+
+}
+</style>
+  <link rel="stylesheet" href="/assets/styles/css/main.min.css">
+
+
+  
+  <link rel="stylesheet" href="/assets/styles/css/home.min.css">
+  
+
+  
+  <link rel="stylesheet" href="/assets/styles/css/document.min.css">
+  
+
+
+  <!-- Google Analytics -->
+  <script>
+    window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+    ga('create', 'UA-75786977-1', 'auto');
+    ga('send', 'pageview');
+  </script>
+  <script async="" src="https://www.google-analytics.com/analytics.js"></script>
+  <!-- End Google Analytics -->
+
+  <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+  <script src="/semantic/dist/semantic.min.js"></script>
+  
+</head>
+
+    <body class="site">
+        <header class="header">
+	<div class="ui grid removeSideMargins">
+		<div class="computer only row">
+			<div class="ui top fixed borderless menu">
+				<div class="ui container navMenu">
+					<a class="item transparentBG" href="/"><img class="ui small image" src="/assets/images/carbon-logo-header.png" alt="Home"></a>
+
+					
+
+					<a class="item" href="/get-started">Get Started</a>
+
+						
+
+					<div class="ui dropdown link item navMenu-dropdownButton"><a class="item navMenu-dropdownLink" href="/documentation">Documentation</a><i class="dropdown icon"></i>
+						<div class="menu">
+						
+						<a class="item" href="/documentation/quick-start-guide">Quick Start Guide</a>
+						
+						<a class="item" href="/documentation/essential-concepts">Essential Concepts</a>
+						
+						<a class="item" href="/documentation/javascript-sdk">JavaScript SDK</a>
+						
+						<a class="item" href="/documentation/rest-api">REST API</a>
+						
+						</div>
+					</div>
+						
+
+					<a class="item" href="/community-and-support">Community &amp; Support</a>
+
+						
+
+					<a class="item" href="/about">About</a>
+
+						
+				</div>
+			</div>
+		</div>
+		<div class="mobile tablet only row">
+			<div class="ui top fixed borderless menu navMenu">
+				<div class="ui container navMenu">
+					<a class="item navMenu-carbonLogoButton transparentBG" href="/"><img class="ui navMenu-carbonLogo image" src="/assets/images/carbon-logo-header.png" alt="Home"></a>
+					<div class="ui right icon item navMenu-openerButton">
+						<!--<div class="menu item">-->
+							<i class="content icon"></i>
+					</div>
+				</div>
+			</div>
+			<div class="ui fixed fluid vertical menu navMenu-verticalMenu" style="display: none;">
+				
+
+				<a class="item" href="/get-started">Get Started</a>
+
+				
+
+				<div class="ui dropdown link item navMenu-dropdownButton--mobile"><a class="item navMenu-dropdownText">Documentation<i class="dropdown icon"></i></a>
+					<div class="menu navMenu-dropdownMenu">
+						
+						<a class="item" href="/documentation/quick-start-guide">Quick Start Guide</a>
+						
+						<a class="item" href="/documentation/essential-concepts">Essential Concepts</a>
+						
+						<a class="item" href="/documentation/javascript-sdk">JavaScript SDK</a>
+						
+						<a class="item" href="/documentation/rest-api">REST API</a>
+						
+						<div class="divider"></div>
+						<a class="item" href="/documentation">All documents...</a>
+					</div>
+				</div>
+				
+
+				<a class="item" href="/community-and-support">Community &amp; Support</a>
+
+				
+
+				<a class="item" href="/about">About</a>
+
+				
+			</div>
+
+		</div>
+	</div>
+</header>
+        <div class="ui scrollTop mobile only grid">
+			<button class="ui icon button scrollTop-button"><i class="angle up icon scrollTop-icon"></i></button>
+		</div>
+        <div class="site-content ">
+            
+            <div class="ui container grid">
+        <div class="row">
+            <div class="twelve wide computer only twelve wide tablet only sixteen wide mobile only column">
+                    <div class="mainContent">
+                        <div class="ui breadcrumb">
+	
+	
+
+	<a class="section" href="/documentation">Documentation</a>
+
+	
+	<i class="right chevron icon divider"></i>
+	<a class="section" href="/documentation/javascript-sdk">JavaScript SDK</a>
+	
+
+	<i class="right arrow icon divider"></i>
+	<div class="active section" href="/documentation/javascript-sdk/object-model">Object Model</div>
+</div>
+
+                        
+                        
+
+<h1>Object model</h1>
+
+<div class="documentation-steps ui fluid steps">
+	<a class="step" href="../getting-started">
+		<i class="arrow left icon"></i>
+		<div class="content">
+			<div class="title">Previous</div>
+			<div class="description">Getting Started</div>
+		</div>
+	</a>
+	<div class="active step">
+		<div class="content">
+			<div class="title">Object Model</div>
+		</div>
+	</div>
+	<a class="step" href="../contexts">
+		<i class="arrow right icon"></i>
+		<div class="content">
+			<div class="title">Next</div>
+			<div class="description">Contexts</div>
+		</div>
+	</a>
+</div>
+
+<div class="ui mobile only grid">
+	<div class="row">
+		<div class=" sixteen wide mobile only column">
+	<div class="staticContentMenu">
+		<h2 class="staticContentMenuTitle">Content</h2>
+		<div class="ui vertical accordion fluid menu mobile">
+			
+
+			<div class="item">
+
+				<a class="title staticContentMenu-title staticContentMenu-title--dropdown" href="#documents">Documents</a><i class="dropdown icon .staticContentMenu-dropdownIcon"></i>
+
+				<div class="content menu">
+
+					
+
+					<a class="item" href="#uris-as-identifiers">URIs as Identifiers</a>
+
+					
+
+					<a class="item" href="#properties">Properties</a>
+
+					
+
+					<a class="item" href="#fragments-and-named-fragments">Fragments and Named Fragments</a>
+
+					
+				</div>
+			</div>
+			
+
+			<div class="item"><a class="title staticContentMenu-title" href="#object-types">Object Types</a></div>
+
+			
+
+			<div class="item"><a class="title staticContentMenu-title" href="#conclusion">Conclusion</a></div>
+
+			
+		</div>
+	</div>
+</div>
+	</div>
+</div>
+
+<section class="mainContent-section" id="documents">
+	<h2>Documents</h2>
+	<p>
+		The main model object handled by Carbon LDP is called a Document. A Document begins as a normal JavaScript object containing any
+		number of data attributes (key/value pairs) that you care to define. Typically, a Document represents a data <em>entity</em>
+		of a given type (e.g. Person, Project, Product, Invoice). It can have literal datatype properties (e.g. string, date, number) and
+		pointers that link to other resources. When a normal JavaScript object is saved to Carbon, it receives a URI that uniquely
+		identifies it on a network or the web. That URI can then be used to retrieve the document or to query for specific
+		data attributes within it. Of course, queries can also be used to find data across multiple documents.
+	</p>
+	<section class="mainContent-subSection" id="uris-as-identifiers">
+		<h3>URIs as Identifiers</h3>
+		<p>
+			Using a numerical value as an ID would be prone to collisions. Using a
+			<a href="https://en.wikipedia.org/wiki/Universally_unique_identifier" rel="noopener" class="outsidelink" target="_blank">UUID</a>
+			would solve the collision problem but would make the ID relative to the application (making the ID hard to resolve without knowing
+			where it came from). That's why Carbon uses Unique Resource Identifiers (or URIs).
+		</p>
+		<p>
+			URIs are strings that identify resources in a network. Any URL you can think of is also considered a URI, but not all URIs are URLs.
+			The main difference is that a URL can change the resource it is pointing at, while URIs can also belong to a resource forever (in which case
+			they would be URNs (Unique Resource Names).
+		</p>
+		<p>
+			Basically, <code>URI = URL + URN</code>
+		</p>
+		<p>
+			URIs follow a <a href="https://es.wikipedia.org/wiki/URI_scheme" rel="noopener" class="outsidelink" target="_blank">scheme</a>. Carbon document' URIs, follow the
+			<code>http
+			</code>
+			or <code>https</code> scheme (depending on the platform's configuration).
+		</p>
+		<p>
+			Using URIs as identifiers allow Carbon documents to be <strong>unique</strong>, <strong>resolvable</strong> and <strong>relative to
+				the network</strong>.
+		</p>
+	</section>
+	<section class="mainContent-subSection" id="properties">
+		<h3>Properties</h3>
+		<p>
+			Like any JavaScript object, Carbon documents store data in properties. Properties can be named and contain whatever data values your
+			application needs, but there are reserved properties that you should be aware of:
+		</p>
+		<ul>
+			<li><code>id</code>: URI of the document.</li>
+			<li>
+				<code>slug</code>: Holds the last part of the URI the document is identified with. For example the URI:
+				<code>https://example.com/resource-1/</code> would have as a slug <code>resource-1</code>. This property can be useful when
+				used as a relative URI when retrieving a child Document from a parent.
+			</li>
+			<li><code>types</code>: An array holding one or more named classes that describe the type of the document (e.g. Person, Project, Product, Invoice).</li>
+			<li><code>created</code>: Date when the document was created.</li>
+			<li><code>modified</code>: Date when the document was last modified.</li>
+			<li><code>hasMemberRelation</code>: Configures the property that will hold the array of Document members.</li>
+			<li><code>isMemberOfRelation</code>: Specifies the property that a member Document will acquire that links back to its container Document.</li>
+		</ul>
+	</section>
+	<section class="mainContent-subSection" id="fragments-and-named-fragments">
+		<h3>Fragments and Named Fragments</h3>
+		<p>
+			Documents may also contain nested objects. There are two types of nested objects, <code>fragments</code> and <code>named fragments</code>:
+		</p>
+		
+		<pre><code class="javascript hljs"><span class="hljs-keyword">var</span> <span class="hljs-built_in">document</span> = {                                        <span class="hljs-comment">// =================== Document</span>
+    id: <span class="hljs-string">"https://.../projects/project-x/"</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-string">"Project X"</span>,
+    <span class="hljs-attr">description</span>: {                                      <span class="hljs-comment">// -------- Fragment</span>
+        format: <span class="hljs-string">"html"</span>,
+        <span class="hljs-attr">content</span>: <span class="hljs-string">"&lt;div&gt;Some content&lt;/div&gt;"</span>
+    },                                                  <span class="hljs-comment">// -------- End: Fragment</span>
+    sow: {                                              <span class="hljs-comment">// -------- Named Fragment</span>
+        id: <span class="hljs-string">"#sow"</span>,
+        <span class="hljs-attr">signedOn</span>: <span class="hljs-keyword">new</span> <span class="hljs-built_in">Date</span>( <span class="hljs-string">"2016-04-03"</span> ),
+        <span class="hljs-attr">clauses</span>: [ <span class="hljs-comment">// ... ]</span>
+    }                                                   <span class="hljs-comment">// -------- End: Named Fragment</span>
+};                                                      <span class="hljs-comment">// =================== End: Document</span></code></pre>
+		
+		<p>
+			Fragments are identified by an ID, just like documents, but the key difference is that their ID is not a URI. Instead
+			fragments use IDs of the form <code><strong>_:</strong>RANDOM-STRING</code>. These IDs are local to the document, making it impossible to link
+			to fragments from outside of the document.
+		</p>
+		<p>
+			Named fragments on the other hand, are identified by a URI relative to the document. This means, named fragments ARE
+			referenceable from outside the document. Their URIs have the form <code>DOCUMENT-URI<strong>#</strong>NAMED-FRAGMENT-SLUG</code>,
+			but there are times (as shown in the example) where they can be written relative to the document like
+			<code><strong>#</strong>NAMED-FRAGMENT-SLUG</code>.
+		</p>
+		<div class="ui info icon message">
+			<i class="info circle icon"></i>
+			<div class="content">
+				<div class="header">In a Nutshell</div>
+				<p>You can save JavaScript objects with simple key/value pairs (Carbon documents). The value of a given key may be a nested
+					object which, in turn, becomes either a <em>fragment</em> or a <em>named fragment</em>.</p>
+				<p>
+					If it doesn't make sense to reference the inner object outside of the containing document, you can
+					save the inner object as a <strong>fragment</strong>. If it is an essential part of the document, but it makes
+					sense to reference it from outside, you can create a <strong>named fragment</strong>.
+				</p>
+			</div>
+		</div>
+	</section>
+</section>
+<section class="mainContent-section" id="object-types">
+	<h2>Object Types</h2>
+	<p>
+		Any object stored in Carbon (documents, fragments or named fragments), can be marked with "types". These types can be thought of
+		as classes or classifications that describe the type of the object.
+	</p>
+	<p>You can classify an object as any custom type, but be aware that Carbon also automatically assigns certain system types when an object
+		is saved.</p>
+	<p>
+		The property <code>types</code> will contain an array of types. To determine whether a document represents an object of a given type,
+		you can use the document's <code>hasType</code> method:
+	</p>
+	<div class="ui grid tabsComponent">
+	
+		<div class="ui computer tablet only row tabs">
+			<div class="ui top attached tabular menu tabs-titles">
+				
+				
+					<a class="tabs-title active item" data-tab="ryEIAfZi">TypeScript</a>
+				
+				
+					<a class="tabs-title  item" data-tab="xsZKuZDq">JavaScript ES2015</a>
+				
+				
+					<a class="tabs-title  item" data-tab="yKnBpHxc">JavaScript ES5</a>
+				
+			</div>
+		</div>
+		<div class="ui mobile only row tabs">
+			<div class="ui compact selection dropdown tabs-options">
+				<i class="dropdown icon"></i>
+				<div class="text">TypeScript</div>
+				<div class="menu">
+					
+					
+					<div class="tabs-option item" data-tab="ryEIAfZi">TypeScript</div>
+					
+					
+					<div class="tabs-option item" data-tab="xsZKuZDq">JavaScript ES2015</div>
+					
+					
+					<div class="tabs-option item" data-tab="yKnBpHxc">JavaScript ES5</div>
+					
+				</div>
+			</div>
+		</div>
+
+		
+			
+			<div class="tabs-tab ui bottom attached tabs active tab segment" data-tab="ryEIAfZi">
+				
+			
+			<pre><code class="typescript hljs"><span class="hljs-comment">// ... additional imports</span>
+<span class="hljs-keyword">import</span> * as PersistedDocument from <span class="hljs-string">"carbonldp/PersistedDocument"</span>;
+
+<span class="hljs-keyword">let</span> project:Project &amp; PersistedDocument.Class;
+
+<span class="hljs-comment">// ... project retrieval</span>
+
+project.types.push( <span class="hljs-string">"project"</span>, <span class="hljs-string">"important-project"</span> );
+
+<span class="hljs-built_in">console</span>.log( project.hasType( <span class="hljs-string">"project"</span> ) ); <span class="hljs-comment">// true</span>
+<span class="hljs-built_in">console</span>.log( project.types.length !== <span class="hljs-number">2</span> ); <span class="hljs-comment">// true, remember Carbon may add more types to the document</span></code></pre>
+			
+		
+			</div>
+		
+			
+			<div class="tabs-tab ui bottom attached tabs  tab segment" data-tab="xsZKuZDq">
+				
+			
+				<pre><code class="javascript hljs"><span class="hljs-comment">// ... imports</span>
+<span class="hljs-keyword">let</span> project;
+
+<span class="hljs-comment">// ... project retrieval</span>
+
+project.types.push( <span class="hljs-string">"project"</span>, <span class="hljs-string">"important-project"</span> );
+
+<span class="hljs-built_in">console</span>.log( project.hasType( <span class="hljs-string">"project"</span> ) ); <span class="hljs-comment">// true</span>
+<span class="hljs-built_in">console</span>.log( project.types.length !== <span class="hljs-number">2</span> ); <span class="hljs-comment">// true, remember Carbon may add more types to the document</span></code></pre>
+				
+		
+			</div>
+		
+			
+			<div class="tabs-tab ui bottom attached tabs  tab segment" data-tab="yKnBpHxc">
+				
+			
+			<pre><code class="javascript hljs"><span class="hljs-keyword">var</span> project;
+
+<span class="hljs-comment">// ... project retrieval</span>
+
+project.types.push( <span class="hljs-string">"project"</span>, <span class="hljs-string">"important-project"</span> );
+
+<span class="hljs-built_in">console</span>.log( project.hasType( <span class="hljs-string">"project"</span> ) ); <span class="hljs-comment">// true</span>
+<span class="hljs-built_in">console</span>.log( project.types.length !== <span class="hljs-number">2</span> ); <span class="hljs-comment">// true, remember Carbon may add more types to the document</span></code></pre>
+			
+		
+			</div>
+		
+	
+</div>
+
+</section>
+
+<section class="mainContent-section" id="conclusion">
+	<h2>Conclusion</h2>
+	<p>JavaScript objects can be defined with datatype properties, pointers (links) to other resources, fragments (inner-objects),
+		and named fragments (externally referenceable inner-objects). These objects, once saved and/or retrieved using the JavaScript
+		SDK are Document objects. Each Document object is uniquely identified by a URI, which can be used to link to, retrieve, update,
+		or delete the Document.</p>
+	<p>Persisted Documents will always be classified with certain system types, but can also be classified with custom
+		types (e.g. Person, Project, Product, Invoice).</p>
+	<p>Document objects are the main data objects you work with using the JavaScript SDK and the primary means by which you create,
+		read, update, and delete data.</p>
+</section>
+
+<div class="documentation-steps ui fluid steps">
+	<a class="step" href="../getting-started">
+		<i class="arrow left icon"></i>
+		<div class="content">
+			<div class="title">Previous</div>
+			<div class="description">Getting Started</div>
+		</div>
+	</a>
+	<div class="active completed step">
+		<div class="content">
+			<div class="title">Object Model</div>
+		</div>
+	</div>
+	<a class="step" href="../contexts">
+		<i class="arrow right icon"></i>
+		<div class="content">
+			<div class="title">Next</div>
+			<div class="description">Contexts</div>
+		</div>
+	</a>
+</div>
+
+                        
+
+                    </div>
+                </div>
+            
+            <div class="four wide computer tablet only column">
+                <div class="sidebar" content="mainContent">
+	<div class="ui sticky segment">
+		<h2 class="ui header">Content</h2>
+		<div class="ui vertical following fluid accordion text menu sidebar-verticalMenu">
+
+		
+
+			<div class="item">
+
+				<a class="title sidebar-title sidebar-title--dropdown" href="#documents">Documents</a><i class="dropdown icon sidebar-dropdownIcon"></i>
+
+				<div class="content menu sidebar-verticalSubMenu">
+
+				
+
+					<a class="item sidebar-title" href="#uris-as-identifiers">URIs as Identifiers</a>
+
+				
+
+					<a class="item sidebar-title" href="#properties">Properties</a>
+
+				
+
+					<a class="item sidebar-title" href="#fragments-and-named-fragments">Fragments and Named Fragments</a>
+
+				
+
+				</div>
+			</div>
+		
+
+			<div class="item"><a class="title sidebar-title" href="#object-types">Object Types</a></div>
+
+			
+
+			<div class="item"><a class="title sidebar-title" href="#conclusion">Conclusion</a></div>
+
+			
+		</div>
+	</div>
+</div>
+            </div>
+            
+        </div>
+    </div>
+
+        </div>
+        <div class="footer bigStoneBG">
+        <div class="ui middle aligned padded grid computer tablet only">
+
+            <div class="four wide center aligned column">
+                <a href="http://base22.com/"><img class="footer-base22Logo" src="/assets/images/base22-logo-white.png"></a>
+            </div>
+            <div class="eight wide center aligned stretched column">
+                <p class="footer-copyrightText">© 2017 Base22 Technology Group, LLC. All Rights Reserved.</p>
+            </div>
+            <div class="four wide left aligned column">
+                <a angulartics2on="click" angularticsevent="OutboundClick" angularticscategory="Twitter" href="https://twitter.com/CarbonLDP"><i class="circular twitter icon footer-socialIcon"></i></a>
+                <a angulartics2on="click" angularticsevent="OutboundClick" angularticscategory="YouTube" href="https://www.youtube.com/channel/UCuNWXjT19Gnpo7I502PTZ_Q"><i class="circular youtube icon footer-socialIcon"></i></a>
+                <a angulartics2on="click" angularticsevent="OutboundClick" angularticscategory="LinkedIn" href="https://www.linkedin.com/company/carbon-ldp"><i class="circular linkedin icon footer-socialIcon"></i></a>
+            </div>
+        </div>
+        <div class="ui centered padded grid mobile only">
+            <div class="left aligned eight wide column">
+                <a href="http://base22.com/"><img class="footer-base22Logo" src="/assets/images/base22-logo-white.png"></a>
+            </div>
+            <div class="right aligned eight wide column">
+                <a angulartics2on="click" angularticsevent="OutboundClick" angularticscategory="Twitter" href="https://twitter.com/CarbonLDP"><i class="circular twitter icon footer-socialIcon"></i></a>
+                <a angulartics2on="click" angularticsevent="OutboundClick" angularticscategory="YouTube" href="https://www.youtube.com/channel/UCuNWXjT19Gnpo7I502PTZ_Q"><i class="circular youtube icon footer-socialIcon"></i></a>
+                <a angulartics2on="click" angularticsevent="OutboundClick" angularticscategory="LinkedIn" href="https://www.linkedin.com/company/carbon-ldp"><i class="circular linkedin icon footer-socialIcon"></i></a>
+            </div>
+            <div class="center aligned twelve wide column">
+                <p class="footer-copyrightText">© 2017 Base22 Technology Group, LLC. All&nbsp;Rights&nbsp;Reserved.</p>
+            </div>
+    </div>
+</div>
+
+        <script src="/js/script.js"></script>
+
+        <script>(function( window ){ $( document ).ready( function() {
+
+	let $sidebar = $(".sidebar");
+	let $sidebarFollowingMenu = $(".sidebar").find( ".following.menu" );
+	let $content = $("."+$sidebar.attr("content"));	
+	let $sections = $content.children( "section" );
+	let $subSections = $sections.children( "section" );
+
+	// Detect when section is passed
+	$sections.visibility( {
+		once: false,
+		offset: 150,
+		onTopPassed: function () {
+			 activateSection( this, $sidebarFollowingMenu, $sections );
+		},
+		onTopPassedReverse: function () {
+			 deactivateFirstSection( this, $sidebarFollowingMenu, $sections );
+		},
+		onBottomPassedReverse: function () {
+			activateSection( this, $sidebarFollowingMenu, $sections);
+		},
+	} );
+
+	$subSections.visibility( {
+		once: false,
+		offset: 150,
+		onTopPassed: function () {
+				activateSubSection( this, $sidebarFollowingMenu, $subSections );
+		},
+		onBottomPassedReverse: function () {
+				activateSubSection( this, $sidebarFollowingMenu, $subSections );
+		}
+	} );
+
+
+	// Make sidebar stick to its position
+	$( ".sidebar > .ui.sticky" ).sticky( {
+		observeChanges: true,
+		context: ".mainContent",
+		offset: 100
+	} );
+
+	// Activate toggle dropdown
+	$( ".sidebar .item > .dropdown.icon" ).on( "click", toggleDropdown);
+
+	//Activate click on items and subitems
+	$( ".sidebar .item > .title" ).on( "click", activateItem) ;
+	$( ".sidebar  a.item " ).on( "click", activateSubItem) ;
+
+	// Toggle selected accordion menu in sidebar
+	function toggleDropdown( event ){
+		let $target = $( event.currentTarget );
+
+		let $accordion = $target.parent( ".item" ).find( ".content.menu" );
+		if( $accordion ) {
+			let accordionIsActive = $accordion.hasClass( "active" );
+
+			if( accordionIsActive ) {
+				$accordion.removeClass( "active" );
+				$accordion.removeClass( "toggled" );
+			} else {
+				$accordion.addClass( "active" );
+				$accordion.addClass( "toggled" );
+			}
+		}
+		$( ".ui.sticky" ).sticky( "refresh" );
+		
+		return false;
+	}
+
+	function activateItem(event){
+
+		let $item = $( event.currentTarget ).parent(".item");
+
+		let $allItems = $item.siblings(".item");
+		$allItems.removeClass("active");
+		$item.addClass("active");
+
+		event.preventDefault();
+	
+		return false;
+
+	}
+
+	function activateSubItem(event){
+
+		let $item = $( event.currentTarget );
+
+		let $allItems = $item.siblings(".item");
+		$allItems.removeClass("active");
+		$item.addClass("active");
+
+		event.preventDefault();
+
+		return false;
+
+	}
+
+
+
+	function activateSection( elm, $menu, $sections) {
+
+		let $section = $( elm );
+		let index = $sections.index( $section );
+		let $followSection = $menu.children( ".item" );
+		let $currentSection = $followSection.eq( index );
+
+		let isActive = $currentSection.hasClass( "active" );
+
+		let hasSubsection= $sections.eq( index ).children( "section" ).length > 0;
+
+		$followSection.removeClass( "active" );
+		$followSection.find( ".active" ).not( ".toggled" ).removeClass( "active" );
+
+		if( ! isActive ) {
+
+			$currentSection.addClass( "active" );
+		}
+
+		if( hasSubsection ) {
+			$currentSection.find( ".menu" ).addClass( "active" );
+		}
+
+		$( ".ui.sticky" ).sticky( "refresh" );
+
+		return false;
+
+	}
+
+	function activateSubSection( elm, $menu, $subSections ){
+		let $section  = $( elm );
+		let index = $subSections.index( $section );
+		let $followSection = $menu.find( ".menu > .item" );
+		let $activeSection = $followSection.eq( index );
+		let isActive = $activeSection.hasClass( "active" );
+		let $subSectionMenu = $menu.children( ".item" ).find( ".menu" );
+		let subSectionMenuIsActive = $subSectionMenu.hasClass( "active" );
+
+		if( index !== - 1 && ! isActive ) {
+			$followSection.filter( ".active" ).removeClass( "active" );
+			$activeSection.addClass( "active" );
+		}
+
+		if( ! subSectionMenuIsActive ) {
+			$subSectionMenu.addClass( "active" );
+		}
+
+		$( ".ui.sticky" ).sticky( "refresh" );
+
+		return false;
+	}
+
+	function deactivateFirstSection( elm, $menu, $sections) {
+
+		let $section = $( elm );
+		let index = $sections.index( $section );
+		let $followSection = $menu.children( ".item" );
+		let $currentSection = $followSection.eq( index );
+		let isActive = $currentSection.hasClass( "active" );
+		let $subSectionMenu = $currentSection.find( ".menu" );
+
+
+		if( index === 0 ) {
+
+			$currentSection.removeClass( "active" );
+
+			if( $subSectionMenu.length > 0 ) {
+				$currentSection.find( ".menu" ).not(".toggled").removeClass( "active" );
+				$subSectionMenu.find( ".item" ).removeClass("active");
+			}
+
+		}
+
+		$( ".ui.sticky" ).sticky( "refresh" );
+
+		return false;
+	}
+
+
+}); })( window );</script><script>(function( window ){ $( document ).ready( function() {
+
+
+	let $sidebar = $(".staticContentMenu");
+	let $content = $("."+$sidebar.attr("content"));
+	let $sections = $content.children( ".mainContent-section" );
+
+	// Detect when section is passed
+	$sections.visibility( {
+		once: false,
+		offset: 150,
+		onTopPassed: function () {
+			// _self.activateSection( this );
+			console.log("top passed");
+		},
+		onTopPassedReverse: function () {
+			// _self.deactivateFirstSection( this );
+		},
+		onBottomPassedReverse: function () {
+			// _self.activateSection( this );
+		},
+	} );
+
+
+
+	// Activate toggle dropdown
+	$( ".staticContentMenu .item > .dropdown.icon" ).on( "click", toggleDropdown);
+
+
+	// Toggle selected accordion menu in sidebar
+	function toggleDropdown( event ){
+		let $target = $( event.currentTarget );
+		$( ".ui.sticky" ).sticky( "refresh" );
+		let $accordion = $target.parent( ".item" ).find( ".content.menu" );
+		if( $accordion ) {
+			let accordionIsActive = $accordion.hasClass( "active" );
+
+			if( accordionIsActive ) {
+				$accordion.removeClass( "active" );
+				$accordion.removeClass( "toggled" );
+			} else {
+				$accordion.addClass( "active" );
+				$accordion.addClass( "toggled" );
+			}
+		}
+
+		return false;
+	}
+
+
+}); })( window );</script><script>(function( window ){ $( document ).ready( function() {
+	let tabs = document.querySelectorAll(".tabs-titles > .tabs-title, .tabs-options .tabs-option" );
+	for (var i = 0; i < tabs.length; i++) {
+		tabs[i].addEventListener('click', changeTabSelection );
+	}
+});
+
+
+
+
+function changeTabSelection(e) {
+
+	let clickedTab = $(e.currentTarget);
+	let selectedOption = clickedTab.attr("data-tab");
+	let selectedText = clickedTab.html();
+	let tabComponent = clickedTab.parent();
+
+	//select TabComponent to where the clicked tab/option belongs
+	while( ! tabComponent.hasClass("tabsComponent")) {
+		tabComponent = tabComponent.parent();
+	}
+
+	// select TabComponent elements
+	let tabs = tabComponent.find(".tabs-title,.tabs-tab")
+	let options = tabComponent.find(".tabs-option")
+
+	// Remove all active classes from elements
+	options.removeClass("active selected");
+	tabs.removeClass("active");
+
+	// Add active classes on selected options/tabs
+	tabs.each( function(){
+		let tab = $(this);
+		if( tab.attr("data-tab") === selectedOption ) tab.addClass("active");
+	});
+	
+	options.each(function() {
+		let option = $(this);
+		if( option.attr("data-tab") === selectedOption ) option.addClass("active selected");
+	});
+
+	// Change text of selection
+	if( clickedTab.hasClass("tabs-title")){
+		let text =  tabComponent.find(".tabs-options .text");
+		text.html(selectedText);
+	}
+
+	return true;
+}
+
+
+
+ })( window );</script><script id="widgets-scripts"></script>
+    
+    
+</body></html>

@@ -1,0 +1,3743 @@
+<!DOCTYPE html><html><head>
+  <meta charset="utf-8">
+  
+
+
+  <link rel="shortcut icon" href="/assets/images/carbon-icon-144x144.png">
+  <title>Getting Started | Carbon LDP</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="google-site-verification" content="gz0ah_pGpAlB4Q5a_bxykr1Zdo_CfXHyAb2tJiADVhE">
+
+  <meta name="description" content="Getting started with the JavaScript SDK
+
+
+	
+		
+		
+			Getting Started
+		
+	
+	
+		
+		
+			Next
+			Object Model
+		
+	
+
+
+
+
+	
+		
+			This guide introduces you to the use of the Carbon JavaScript SDK. In it you">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Getting Started">
+<meta property="og:url" content="https://carbonldp.com/documentation/javascript-sdk/getting-started/index.html">
+<meta property="og:site_name" content="Carbon LDP">
+<meta property="og:description" content="Getting started with the JavaScript SDK
+
+
+	
+		
+		
+			Getting Started
+		
+	
+	
+		
+		
+			Next
+			Object Model
+		
+	
+
+
+
+
+	
+		
+			This guide introduces you to the use of the Carbon JavaScript SDK. In it you">
+<meta property="og:updated_time" content="2017-02-10T22:26:25.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Getting Started">
+<meta name="twitter:description" content="Getting started with the JavaScript SDK
+
+
+	
+		
+		
+			Getting Started
+		
+	
+	
+		
+		
+			Next
+			Object Model
+		
+	
+
+
+
+
+	
+		
+			This guide introduces you to the use of the Carbon JavaScript SDK. In it you">
+  
+    <link rel="alternate" href="/atom.xml" title="Carbon LDP" type="application/atom+xml">
+  
+
+
+  <link rel="stylesheet" href="/semantic/dist/semantic.min.css">
+  <style>/* Tomorrow Night Theme */
+/* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
+/* Original theme - https://github.com/chriskempson/tomorrow-theme */
+/* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
+
+/* Tomorrow Comment */
+.hljs-comment,
+.hljs-quote {
+  color: #969896;
+}
+
+/* Tomorrow Red */
+.hljs-variable,
+.hljs-template-variable,
+.hljs-tag,
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-regexp,
+.hljs-deletion {
+  color: #cc6666;
+}
+
+/* Tomorrow Orange */
+.hljs-number,
+.hljs-built_in,
+.hljs-builtin-name,
+.hljs-literal,
+.hljs-type,
+.hljs-params,
+.hljs-meta,
+.hljs-link {
+  color: #de935f;
+}
+
+/* Tomorrow Yellow */
+.hljs-attribute {
+  color: #f0c674;
+}
+
+/* Tomorrow Green */
+.hljs-string,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-addition {
+  color: #b5bd68;
+}
+
+/* Tomorrow Blue */
+.hljs-title,
+.hljs-section {
+  color: #81a2be;
+}
+
+/* Tomorrow Purple */
+.hljs-keyword,
+.hljs-selector-tag {
+  color: #b294bb;
+}
+
+.hljs {
+  display: block;
+  overflow-x: auto;
+  background: #1d1f21;
+  color: #c5c8c6;
+  padding: 0.5em;
+}
+
+.hljs-emphasis {
+  font-style: italic;
+}
+
+.hljs-strong {
+  font-weight: bold;
+}
+</style><style>.hljs {
+    font-family: "Lucida Console", Monaco, monospace;
+    font-size: .8em;
+    line-height: 1.4em;
+}</style><style>.sidebar{
+    margin: 10em 1em 6em 0;
+}
+
+/* Give sidebar a z-index greater than header */
+.sidebar .ui.sticky{
+    z-index: 0;
+}
+
+/* Remove box-shadow and border */
+.sidebar .ui.segment{
+    box-shadow: none;
+    border: none;
+}
+
+/* Change color to black when title active */
+.ui.accordion .item.active .title:not(.ui).sidebar-title{
+    color: black;
+    font-weight: 700;
+}
+.ui.vertical.menu .menu .item.active .sidebar-title{
+    color: black;
+}
+/* Change color of section items to gray */
+.ui.accordion .title:not(.ui).sidebar-title{
+    color: rgba(0,0,0,.6);
+    padding-right: 10px;
+}
+
+/* Change color to black when title hovered */
+.ui.accordion .title:not(.ui).sidebar-title:hover{
+    color: black;
+}
+
+
+/* Add left margin to sidebar menu */
+.ui.vertical.text.menu.sidebar-verticalMenu {
+    margin-left: 1.2em;
+}
+
+.ui.vertical.text.menu .item:not(.dropdown)>.menu.sidebar-verticalSubMenu{
+    margin: 0 0.8em;
+}
+
+.ui.accordion.menu .item .title.sidebar-title--dropdown{
+    display: inline;
+}
+
+.ui.vertical.text.menu .item>i.icon.sidebar-dropdownIcon{
+    float: right;
+}
+
+@media (min-width: 768px) and (max-width: 992px) {
+    .sidebar .ui.sticky{
+        padding: 0;
+    }
+    .ui.vertical.text.menu.sidebar-verticalMenu {
+        margin-left: .6em;
+    }
+
+    .ui.accordion .title:not(.ui).sidebar-title{
+        padding-right: 0;
+    }
+
+}</style><style>.staticContentMenu{
+    margin: 2em 0;
+}
+
+h2.staticContentMenu-title{
+    font-size: 1.4em;
+}
+
+.ui.accordion.menu .item .title.staticContentMenu-title--dropdown{
+    display: inline;
+}
+
+.ui.vertical.text.menu .item>i.icon.staticContentMenu-dropdownIcon{
+    float: right;
+}
+
+.ui.accordion .title:not(.ui).staticContentMenu-title{
+    color: rgba(0,0,0,.6);
+}</style><style>.ui.grid.tabsComponent {
+    margin: 1rem 0;
+}
+
+.ui.grid.tabsComponent .row.tabs{
+    padding: 0;
+}
+
+.ui.attached.segment.tabs{
+    border-top: 0;
+    padding: 0 1rem;
+    margin: 0;
+}
+
+@media (max-width: 767px) {
+    .ui.attached.segment.tabs{
+        border: 0;
+        padding: 0;
+        margin: 0;
+    }
+
+    .tabs-tab *{
+        margin:0;
+    }
+
+}
+</style>
+  <link rel="stylesheet" href="/assets/styles/css/main.min.css">
+
+
+  
+  <link rel="stylesheet" href="/assets/styles/css/home.min.css">
+  
+
+  
+  <link rel="stylesheet" href="/assets/styles/css/document.min.css">
+  
+
+
+  <!-- Google Analytics -->
+  <script>
+    window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+    ga('create', 'UA-75786977-1', 'auto');
+    ga('send', 'pageview');
+  </script>
+  <script async="" src="https://www.google-analytics.com/analytics.js"></script>
+  <!-- End Google Analytics -->
+
+  <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+  <script src="/semantic/dist/semantic.min.js"></script>
+  
+</head>
+
+    <body class="site">
+        <header class="header">
+	<div class="ui grid removeSideMargins">
+		<div class="computer only row">
+			<div class="ui top fixed borderless menu">
+				<div class="ui container navMenu">
+					<a class="item transparentBG" href="/"><img class="ui small image" src="/assets/images/carbon-logo-header.png" alt="Home"></a>
+
+					
+
+					<a class="item" href="/get-started">Get Started</a>
+
+						
+
+					<div class="ui dropdown link item navMenu-dropdownButton"><a class="item navMenu-dropdownLink" href="/documentation">Documentation</a><i class="dropdown icon"></i>
+						<div class="menu">
+						
+						<a class="item" href="/documentation/quick-start-guide">Quick Start Guide</a>
+						
+						<a class="item" href="/documentation/essential-concepts">Essential Concepts</a>
+						
+						<a class="item" href="/documentation/javascript-sdk">JavaScript SDK</a>
+						
+						<a class="item" href="/documentation/rest-api">REST API</a>
+						
+						</div>
+					</div>
+						
+
+					<a class="item" href="/community-and-support">Community &amp; Support</a>
+
+						
+
+					<a class="item" href="/about">About</a>
+
+						
+				</div>
+			</div>
+		</div>
+		<div class="mobile tablet only row">
+			<div class="ui top fixed borderless menu navMenu">
+				<div class="ui container navMenu">
+					<a class="item navMenu-carbonLogoButton transparentBG" href="/"><img class="ui navMenu-carbonLogo image" src="/assets/images/carbon-logo-header.png" alt="Home"></a>
+					<div class="ui right icon item navMenu-openerButton">
+						<!--<div class="menu item">-->
+							<i class="content icon"></i>
+					</div>
+				</div>
+			</div>
+			<div class="ui fixed fluid vertical menu navMenu-verticalMenu" style="display: none;">
+				
+
+				<a class="item" href="/get-started">Get Started</a>
+
+				
+
+				<div class="ui dropdown link item navMenu-dropdownButton--mobile"><a class="item navMenu-dropdownText">Documentation<i class="dropdown icon"></i></a>
+					<div class="menu navMenu-dropdownMenu">
+						
+						<a class="item" href="/documentation/quick-start-guide">Quick Start Guide</a>
+						
+						<a class="item" href="/documentation/essential-concepts">Essential Concepts</a>
+						
+						<a class="item" href="/documentation/javascript-sdk">JavaScript SDK</a>
+						
+						<a class="item" href="/documentation/rest-api">REST API</a>
+						
+						<div class="divider"></div>
+						<a class="item" href="/documentation">All documents...</a>
+					</div>
+				</div>
+				
+
+				<a class="item" href="/community-and-support">Community &amp; Support</a>
+
+				
+
+				<a class="item" href="/about">About</a>
+
+				
+			</div>
+
+		</div>
+	</div>
+</header>
+        <div class="ui scrollTop mobile only grid">
+			<button class="ui icon button scrollTop-button"><i class="angle up icon scrollTop-icon"></i></button>
+		</div>
+        <div class="site-content ">
+            
+            <div class="ui container grid">
+        <div class="row">
+            <div class="twelve wide computer only twelve wide tablet only sixteen wide mobile only column">
+                    <div class="mainContent">
+                        <div class="ui breadcrumb">
+	
+	
+
+	<a class="section" href="/documentation">Documentation</a>
+
+	
+	<i class="right chevron icon divider"></i>
+	<a class="section" href="/documentation/javascript-sdk">JavaScript SDK</a>
+	
+
+	<i class="right arrow icon divider"></i>
+	<div class="active section" href="/documentation/javascript-sdk/getting-started">Getting Started</div>
+</div>
+
+                        
+                        
+<h1>Getting started with the JavaScript SDK</h1>
+
+<div class="documentation-steps ui fluid steps">
+	<div class="active step">
+		<!--<i class="payment icon"></i>-->
+		<div class="content">
+			<div class="title">Getting Started</div>
+		</div>
+	</div>
+	<a class="step" href="../object-model">
+		<i class="arrow right icon"></i>
+		<div class="content">
+			<div class="title">Next</div>
+			<div class="description">Object Model</div>
+		</div>
+	</a>
+</div>
+
+
+<div class="ui message">
+	<div class="content">
+		<p>
+			This guide introduces you to the use of the Carbon JavaScript SDK. In it you will find an
+			installation guide and the basic methods needed to start using our platform.
+		</p>
+	</div>
+</div>
+
+
+<div class="ui mobile only grid">
+	<div class="row">
+		<div class=" sixteen wide mobile only column">
+	<div class="staticContentMenu">
+		<h2 class="staticContentMenuTitle">Content</h2>
+		<div class="ui vertical accordion fluid menu mobile">
+			
+
+			<div class="item"><a class="title staticContentMenu-title" href="#prerequisite-knowledge">Prerequisite knowledge</a></div>
+
+			
+
+			<div class="item"><a class="title staticContentMenu-title" href="#installing-the-sdk">Installing the SDK</a></div>
+
+			
+
+			<div class="item"><a class="title staticContentMenu-title" href="#creating-a-platform-context">Creating a platform context</a></div>
+
+			
+
+			<div class="item"><a class="title staticContentMenu-title" href="#authenticating">Authenticating</a></div>
+
+			
+
+			<div class="item"><a class="title staticContentMenu-title" href="#retrieving-an-app-context">Retrieving an app context</a></div>
+
+			
+
+			<div class="item"><a class="title staticContentMenu-title" href="#creating-a-document">Creating a document</a></div>
+
+			
+
+			<div class="item"><a class="title staticContentMenu-title" href="#retrieving-a-document">Retrieving a document</a></div>
+
+			
+
+			<div class="item"><a class="title staticContentMenu-title" href="#modifying-and-saving-a-document">Modifying and saving a document</a></div>
+
+			
+
+			<div class="item"><a class="title staticContentMenu-title" href="#deleting-a-document">Deleting a document</a></div>
+
+			
+
+			<div class="item">
+
+				<a class="title staticContentMenu-title staticContentMenu-title--dropdown" href="#linking-documents">Linking documents</a><i class="dropdown icon .staticContentMenu-dropdownIcon"></i>
+
+				<div class="content menu">
+
+					
+
+					<a class="item" href="#parent-child-relation">Parent-child relation</a>
+
+					
+
+					<a class="item" href="#membership-relation">Membership Relation</a>
+
+					
+				</div>
+			</div>
+			
+
+			<div class="item"><a class="title staticContentMenu-title" href="#creating-an-access-point">Creating an access point</a></div>
+
+			
+
+			<div class="item"><a class="title staticContentMenu-title" href="#putting-it-all-together">Putting it all together</a></div>
+
+			
+		</div>
+	</div>
+</div>
+	</div>
+</div>
+
+
+<section class="mainContent-section" id="prerequisite-knowledge">
+	<h2>Prerequisite knowledge</h2>
+	<p>
+		To better understand this guide and its code examples, a working knowledge of the following prerequisite topics is required.
+	</p>
+	<ul>
+		<li>
+			<strong>HTML, CSS, JavaScript:</strong> See: <a class="outsidelink" target="_blank" rel="noopener" href="https://developer.mozilla.org/en-US/docs/Web">Mozilla Developer
+				Network</a>.
+		</li>
+		<li>
+			<strong>Promises:</strong> A standard-based way of handling asynchronous JavaScript logic.
+			See: <a class="outsidelink" target="_blank" rel="noopener" href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise">Promise
+				object</a> (Mozilla
+			Developer Network).
+		</li>
+	</ul>
+	<p>
+		Additionally, knowledge on the following topics is highly recommended:
+	</p>
+	<ul>
+		<li>
+			<strong>TypeScript:</strong> Carbon's JavaScript SDK is written in TypeScript, a JavaScript
+			superset language, maintained by Microsoft. See: <a class="outsidelink" target="_blank" rel="noopener" href="http://www.typescriptlang.org/">TypeScript</a>.
+		</li>
+		<li>
+			<strong>Package Managers:</strong> Carbon recommends <a class="outsidelink" target="_blank" rel="noopener" href="http://jspm.io/">JSPM</a>
+		</li>
+		<li>
+			<strong>ES2015 Modules:</strong> ES2015 modules let you "import" a file from another one so you can modularize
+			your application. See: <a class="outsidelink" target="_blank" rel="noopener" href="http://exploringjs.com/es6/ch_modules.html">Modules</a> (Exploring ES6, by Dr. Axel
+			Rauschmayer)
+		</li>
+	</ul>
+</section>
+
+<div class="ui icon yellow message">
+	<i class="warning sign icon"></i>
+	<div class="content">
+		<p>
+			Before starting this guide, please <a href="/get-started">register</a> and follow the steps in the
+			<a href="/documentation/quick-start-guide">quick start guide</a> to install your Carbon platform and Workbench, if you have already done so, let the fun begin.
+		</p>
+	</div>
+</div>
+<section class="mainContent-section" id="installing-the-sdk">
+	<h2>Installing the SDK</h2>
+	<p>
+		Installing the SDK depends on what package manager you are using:
+	</p>
+
+	<div class="ui styled fluid accordion">
+		<div class="title">
+			<i class="dropdown icon"></i>
+			Package manager?
+		</div>
+		<div class="content">
+			<p>If you are not using a package manager you can clone the source code with the following command:</p>
+
+			<pre><code class="bash hljs">git <span class="hljs-built_in">clone</span> https://github.com/CarbonLDP/CarbonLDP-JS-SDK.git</code></pre>
+
+			<p>It already includes a pre-compiled version of the source code so you can just jump right in.</p>
+		</div>
+		<div class="active title">
+			<i class="dropdown icon"></i>
+			npm
+		</div>
+		<div class="active content">
+			<pre><code class="bash hljs">npm install carbonldp --save</code></pre>
+		</div>
+		<div class="title">
+			<i class="dropdown icon"></i>
+			jspm
+		</div>
+		<div class="content">
+			<pre><code class="bash hljs">jspm install npm:carbonldp
+<span class="hljs-comment"># We also need to install one of carbonldp's dependencies</span>
+jspm install npm:jsonld</code></pre>
+
+		</div>
+	</div>
+
+	<p>After it has been installed, the way you'll use it will depend on your development environment:</p>
+
+	<div class="ui styled fluid accordion">
+		<div class="title">
+			<i class="dropdown icon"></i>
+				Browser - Global Window Object
+			</div>
+			<div class="content">
+				<p>The SDK comes with a bundled version that you can import directly into your html:</p>
+
+				<pre><code class="html hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">src</span>=<span class="hljs-string">"--sdk-directory--/dist/bundles/Carbon.sfx.js"</span>&gt;</span><span class="undefined"></span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span></code></pre>
+
+				<p>
+					After that, a variable named <code>Carbon</code> will be accessible in the global scope. This variable will serve as both a class constructor
+					and a namespace. It's usage as a class constructor is the same as when using ES2015 Modules, but its namespace nature is unique to the Global
+					approach.
+				</p>
+				<h3>Carbon Variable as a Namespace</h3>
+				<p>
+					The <code>Carbon</code> object chains together all the Carbon modules, so you can access them even if you are using the Global approach.
+					Each time you see in an example something like:
+				</p>
+
+				<pre><code class="javascript hljs"><span class="hljs-keyword">import</span> * <span class="hljs-keyword">as</span> Errors <span class="hljs-keyword">from</span> <span class="hljs-string">"carbonldp/HTTP/Errors"</span>;</code></pre>
+
+				<p>
+					You can take the portion after <code>carbonldp/</code>, replace the <code>/</code>s with <code>.</code> and append that to the Carbon namespace
+					to access the same module. For example, accessing that module using the global namespace would be:
+				</p>
+
+				<pre><code class="javascript hljs">Carbon.HTTP.Errors</code></pre>
+
+			</div>
+
+	<div class="active title">
+		<i class="dropdown icon"></i>
+				Browser - ES2015 Modules
+			</div>
+			<div class="active content">
+				<p>
+					To be able to use ES2015 modules a transpiler like Babel, Traceur or TypeScript needs to be used. This documentation won't cover the details of
+					setting one up, but we recommend using <a class="outsidelink" target="_blank" rel="noopener" href="http://jspm.io/">JSPM</a> as a package manager, configured to
+					use
+					<a class="outsidelink" target="_blank" rel="noopener" href="http://www.typescriptlang.org/">TypeScript</a> as a transpiler. That way you can use ES2015 features
+					and bundle
+					your dependencies together!
+				</p>
+				<p>
+					Each module in Carbon will export at least one named export. Some of the modules will also export a <code>default</code> export containing the "main"
+					export of the module. That export will also be available as the named export <code>Class</code>. For example:
+				</p>
+
+				<pre><code class="typescript hljs"><span class="hljs-comment">// This:</span>
+<span class="hljs-keyword">import</span> Document from <span class="hljs-string">"carbonldp/Document"</span>;
+<span class="hljs-keyword">let</span> myDocument:Document = <span class="hljs-keyword">new</span> Document();
+
+<span class="hljs-comment">// Is the same as this:</span>
+<span class="hljs-keyword">import</span> * as Document from <span class="hljs-string">"carbonldp/Document"</span>;
+<span class="hljs-keyword">let</span> myDocument:Document.Class = <span class="hljs-keyword">new</span> Document.Class();</code></pre>
+
+				<p>We recommend not using default exports, but we provide them in case you are only using the "main" export of a file.</p>
+				<p>
+					The semantics behind Carbon's modules are based on the usage of the import all statement. Still, you can use selective
+					imports but you'll likely need to rename the import variables like:
+				</p>
+
+				<pre><code class="javascript hljs"><span class="hljs-keyword">import</span> { Factory <span class="hljs-keyword">as</span> DocumentFactory, Class <span class="hljs-keyword">as</span> Document } <span class="hljs-keyword">from</span> <span class="hljs-string">"carbonldp/Document"</span>;</code></pre>
+
+				<p>
+					For each folder inside the Carbon source, there is a module at the same level with the same name that exports everything contained by the folder.
+					Example:
+				</p>
+
+				<pre><code class="javascript hljs"><span class="hljs-keyword">import</span> * <span class="hljs-keyword">as</span> Errors <span class="hljs-keyword">from</span> <span class="hljs-string">"carbonldp/HTTP/Errors"</span>;
+<span class="hljs-keyword">import</span> * <span class="hljs-keyword">as</span> Request <span class="hljs-keyword">from</span> <span class="hljs-string">"carbonldp/HTTP/Request"</span>;
+
+<span class="hljs-keyword">import</span> * <span class="hljs-keyword">as</span> HTTP <span class="hljs-keyword">from</span> <span class="hljs-string">"carbonldp/HTTP"</span>;
+
+HTTP.Errors === Errors; <span class="hljs-comment">// true</span>
+HTTP.Request === Request; <span class="hljs-comment">// true</span></code></pre>
+
+			</div>
+		</div>
+	<p>
+		Next, you need to decide what language (and what version) you are going to use. The SDK can be used with the following ones:
+	</p>
+	<ul>
+		<li>
+			<strong>TypeScript:</strong> a JavaScript superset language, maintained by Microsoft. See:
+			<a class="outsidelink" target="_blank" rel="noopener" href="http://www.typescriptlang.org/">TypeScript</a>.
+		</li>
+		<li>
+			<strong>JavaScript ES2015+:</strong> JavaScript with the new features introduced in the ES2015 standard. In order for you to use it, you'll
+			likely need a transpiler like
+			<a class="outsidelink" target="_blank" rel="noopener" href="https://babeljs.io/">BabelJS</a> or
+			<a class="outsidelink" target="_blank" rel="noopener" href="https://github.com/google/traceur-compiler">Traceur</a>
+		</li>
+		<li>
+			<strong>JavaScript ES5:</strong> The good old JS, no arrow functions, let declarations or any of that magic. To use the SDK with this
+			JavaScript version you'll need to include the following polyfill before including the SDK:
+
+			<pre><code class="html hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">src</span>=<span class="hljs-string">"https://cdnjs.cloudflare.com/ajax/libs/es6-shim/0.35.1/es6-shim.min.js"</span>&gt;</span><span class="undefined"></span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span></code></pre>
+
+		</li>
+	</ul>
+	<!-- TODO: Add collective language selection of all tabs -->
+	<p>
+		Our code examples are written in all of these languages. <!-- so before continuing please select which one you'll use:-->
+	</p>
+	<!--<div class="ui compact buttons">-->
+		<!--<button class="ui button" (click)="selectLanguage( 0 )" [class.active]="selectedLanguage === 0">TypeScript</button>-->
+		<!--<div class="or"></div>-->
+		<!--<button class="ui button" (click)="selectLanguage( 1 )" [class.active]="selectedLanguage === 1">JS ES2015+</button>-->
+		<!--<div class="or"></div>-->
+		<!--<button class="ui button" (click)="selectLanguage( 2 )" [class.active]="selectedLanguage === 2">JS ES5</button>-->
+	<!--</div>-->
+	<p>
+
+	</p>
+	<div class="ui icon info message">
+		<i class="info circle icon"></i>
+		<div class="content">
+			<p>
+				We created boilerplate projects for each of the supported languages. They can serve as a good starting point:
+			</p>
+			<ul>
+				<li><a class="outsidelink" target="_blank" rel="noopener" href="https://github.com/CarbonLDP/carbon-typescript-boilerplate">TypeScript</a></li>
+				<li><a class="outsidelink" target="_blank" rel="noopener" href="https://github.com/CarbonLDP/carbon-js-es2015-boilerplate">JavaScript ES2015+</a></li>
+				<li><a class="outsidelink" target="_blank" rel="noopener" href="https://github.com/CarbonLDP/carbon-js-es5-boilerplate">JavaScript ES5</a></li>
+			</ul>
+		</div>
+	</div>
+</section>
+
+<section class="mainContent-section" id="creating-a-platform-context">
+	<h2>Creating a platform context</h2>
+	<div class="ui icon yellow message">
+		<i class="warning sign icon"></i>
+		<div class="content">
+			<p>
+				Before you can save data in your platform, you need to create an account. If you haven't done it, follow the steps in section <em>create an agent</em> of the
+				<a href="/documentation/quick-start-guide" fragment="create-an-agent">quick start guide</a>.
+			</p>
+		</div>
+	</div>
+	<p>
+		Let's start with some basic things you can do, like creating, saving and linking documents; among other things.
+	</p>
+	<p>
+		First of all, you need to create a <span class="highlight">Carbon platform context</span>. This
+		<span class="highlight">context</span> will provide a reference to the
+		<span class="highlight">Carbon platform instance</span> you are working with (for more
+		about Carbon contexts see: <a href="../contexts">Contexts</a>).
+	</p>
+	<div class="ui grid tabsComponent">
+	
+		<div class="ui computer tablet only row tabs">
+			<div class="ui top attached tabular menu tabs-titles">
+				
+				
+					<a class="tabs-title active item" data-tab="typescript">TypeScript</a>
+				
+				
+					<a class="tabs-title  item" data-tab="javascript-es2015">JavaScript ES2015</a>
+				
+				
+					<a class="tabs-title  item" data-tab="javascript-es5">JavaScript ES5</a>
+				
+			</div>
+		</div>
+		<div class="ui mobile only row tabs">
+			<div class="ui compact selection dropdown tabs-options">
+				<i class="dropdown icon"></i>
+				<div class="text">TypeScript</div>
+				<div class="menu">
+					
+					
+					<div class="tabs-option item" data-tab="typescript">TypeScript</div>
+					
+					
+					<div class="tabs-option item" data-tab="javascript-es2015">JavaScript ES2015</div>
+					
+					
+					<div class="tabs-option item" data-tab="javascript-es5">JavaScript ES5</div>
+					
+				</div>
+			</div>
+		</div>
+
+		
+			
+			<div class="tabs-tab ui bottom attached tabs active tab segment" data-tab="typescript">
+				
+			<pre><code class="typescript hljs"><span class="hljs-keyword">import</span> Carbon from <span class="hljs-string">"carbonldp/Carbon"</span>;
+
+<span class="hljs-keyword">let</span> carbon:Carbon = <span class="hljs-keyword">new</span> Carbon(); <span class="hljs-comment">// platform context</span></code></pre>
+		
+			</div>
+		
+			
+			<div class="tabs-tab ui bottom attached tabs  tab segment" data-tab="javascript-es2015">
+				
+			<pre><code class="javascript hljs"><span class="hljs-keyword">let</span> carbon = <span class="hljs-keyword">new</span> Carbon(); <span class="hljs-comment">// platform context</span></code></pre>
+		
+			</div>
+		
+			
+			<div class="tabs-tab ui bottom attached tabs  tab segment" data-tab="javascript-es5">
+				
+			<pre><code class="javascript hljs"><span class="hljs-keyword">var</span> carbon = <span class="hljs-keyword">new</span> Carbon(); <span class="hljs-comment">// platform context</span></code></pre>
+		
+			</div>
+		
+	
+</div>
+
+	<p>
+		By default, platform contexts point to the instance in <code>carbonldp.com</code>. If you need to change this,
+		you can do it by changing the <code>domain</code> setting:
+	</p>
+	<div class="ui grid tabsComponent">
+	
+		<div class="ui computer tablet only row tabs">
+			<div class="ui top attached tabular menu tabs-titles">
+				
+				
+					<a class="tabs-title active item" data-tab="sOUnujUG">TypeScript</a>
+				
+				
+					<a class="tabs-title  item" data-tab="QBwGZuUE">JavaScript ES2015</a>
+				
+				
+					<a class="tabs-title  item" data-tab="iTkvoLCr">JavaScript ES5</a>
+				
+			</div>
+		</div>
+		<div class="ui mobile only row tabs">
+			<div class="ui compact selection dropdown tabs-options">
+				<i class="dropdown icon"></i>
+				<div class="text">TypeScript</div>
+				<div class="menu">
+					
+					
+					<div class="tabs-option item" data-tab="sOUnujUG">TypeScript</div>
+					
+					
+					<div class="tabs-option item" data-tab="QBwGZuUE">JavaScript ES2015</div>
+					
+					
+					<div class="tabs-option item" data-tab="iTkvoLCr">JavaScript ES5</div>
+					
+				</div>
+			</div>
+		</div>
+
+		
+			
+			<div class="tabs-tab ui bottom attached tabs active tab segment" data-tab="sOUnujUG">
+				
+
+			<pre><code class="typescript hljs"><span class="hljs-keyword">import</span> Carbon from <span class="hljs-string">"carbonldp/Carbon"</span>;
+
+<span class="hljs-keyword">let</span> carbon:Carbon = <span class="hljs-keyword">new</span> Carbon(); <span class="hljs-comment">// platform context</span>
+carbon.setSetting( <span class="hljs-string">"domain"</span>, <span class="hljs-string">"my-carbon-instance.com:8080"</span> );</code></pre>
+
+		
+			</div>
+		
+			
+			<div class="tabs-tab ui bottom attached tabs  tab segment" data-tab="QBwGZuUE">
+				
+
+			<pre><code class="javascript hljs"><span class="hljs-keyword">let</span> carbon = <span class="hljs-keyword">new</span> Carbon(); <span class="hljs-comment">// platform context</span>
+carbon.setSetting( <span class="hljs-string">"domain"</span>, <span class="hljs-string">"my-carbon-instance.com:8080"</span> );</code></pre>
+
+		
+			</div>
+		
+			
+			<div class="tabs-tab ui bottom attached tabs  tab segment" data-tab="iTkvoLCr">
+				
+
+			<pre><code class="javascript hljs"><span class="hljs-keyword">var</span> carbon = <span class="hljs-keyword">new</span> Carbon(); <span class="hljs-comment">// platform context</span>
+carbon.setSetting( <span class="hljs-string">"domain"</span>, <span class="hljs-string">"my-carbon-instance.com:8080"</span> );</code></pre>
+
+		
+			</div>
+		
+	
+</div>
+
+</section>
+<section class="mainContent-section" id="authenticating">
+	<h2>Authenticating</h2>
+	<p>
+		After creating the platform context you need to tell the platform who you are by authenticating
+		yourself (if you haven't created an account yet, follow the steps in the section <em>create an agent</em> of the <a href="/documentation/quick-start-guide" fragment="create-an-agent">quick start guide
+		</a> ).
+	</p>
+	<p>
+		All authentication/authorization related actions are done through the <code>auth</code> service
+		every context has. This service provides an <code>authenticate</code> method where you can pass
+		your credentials:
+	</p>
+	<div class="ui grid tabsComponent">
+	
+		<div class="ui computer tablet only row tabs">
+			<div class="ui top attached tabular menu tabs-titles">
+				
+				
+					<a class="tabs-title active item" data-tab="PoNyUYwE">TypeScript</a>
+				
+				
+					<a class="tabs-title  item" data-tab="lOcpciOp">JavaScript ES2015</a>
+				
+				
+					<a class="tabs-title  item" data-tab="oROzxkiX">JavaScript ES5</a>
+				
+			</div>
+		</div>
+		<div class="ui mobile only row tabs">
+			<div class="ui compact selection dropdown tabs-options">
+				<i class="dropdown icon"></i>
+				<div class="text">TypeScript</div>
+				<div class="menu">
+					
+					
+					<div class="tabs-option item" data-tab="PoNyUYwE">TypeScript</div>
+					
+					
+					<div class="tabs-option item" data-tab="lOcpciOp">JavaScript ES2015</div>
+					
+					
+					<div class="tabs-option item" data-tab="oROzxkiX">JavaScript ES5</div>
+					
+				</div>
+			</div>
+		</div>
+
+		
+			
+			<div class="tabs-tab ui bottom attached tabs active tab segment" data-tab="PoNyUYwE">
+				
+
+			<pre><code class="typescript hljs"><span class="hljs-comment">// ... additional imports</span>
+<span class="hljs-keyword">import</span> Carbon from <span class="hljs-string">"carbonldp/Carbon"</span>;
+<span class="hljs-keyword">import</span> * as Token from <span class="hljs-string">"carbonldp/Auth/Token"</span>;
+
+<span class="hljs-keyword">let</span> carbon:Carbon;
+
+<span class="hljs-comment">// ... platform context creation</span>
+
+carbon.auth.authenticate( <span class="hljs-string">"your@email.com"</span>, <span class="hljs-string">"YouRP455word"</span> ).then(
+    ( token:Token.Class ) =&gt; {
+        <span class="hljs-built_in">console</span>.log( carbon.auth.authenticatedAgent ); <span class="hljs-comment">// Yourself!</span>
+    }
+);</code></pre>
+
+		
+			</div>
+		
+			
+			<div class="tabs-tab ui bottom attached tabs  tab segment" data-tab="lOcpciOp">
+				
+
+			<pre><code class="javascript hljs"><span class="hljs-comment">// ... imports</span>
+
+<span class="hljs-keyword">let</span> carbon;
+
+<span class="hljs-comment">// ... platform context creation</span>
+
+carbon.auth.authenticate( <span class="hljs-string">"your@email.com"</span>, <span class="hljs-string">"YouRP455word"</span> ).then(
+    <span class="hljs-function">(<span class="hljs-params"> token </span>) =&gt;</span> {
+        <span class="hljs-built_in">console</span>.log( carbon.auth.authenticatedAgent ); <span class="hljs-comment">// Yourself!</span>
+    }
+);</code></pre>
+
+		
+			</div>
+		
+			
+			<div class="tabs-tab ui bottom attached tabs  tab segment" data-tab="oROzxkiX">
+				
+
+			<pre><code class="javascript hljs"><span class="hljs-keyword">var</span> carbon;
+
+<span class="hljs-comment">// ... platform context creation</span>
+
+carbon.auth.authenticate( <span class="hljs-string">"your@email.com"</span>, <span class="hljs-string">"YouRP455word"</span> ).then(
+    <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> token </span>) </span>{
+        <span class="hljs-built_in">console</span>.log( carbon.auth.authenticatedAgent ); <span class="hljs-comment">// Yourself!</span>
+    }
+);</code></pre>
+
+		
+			</div>
+		
+	
+</div>
+
+	<p>
+		It's important to notice that you are authenticated in that specific context (and its child contexts).
+		You could create additional platform contexts (or other type of contexts) and authenticate on them with
+		other credentials.
+	</p>
+</section>
+<section class="mainContent-section" id="retrieving-an-app-context">
+	<h2>Retrieving an app context</h2>
+	<p>
+		Carbon stores your data in "applications" which are separate containers of information.
+		Data can be linked between applications, but its management is treated separately.
+	</p>
+	<div class="ui icon yellow message">
+		<i class="warning sign icon"></i>
+
+		<div class="content">
+			<p>
+				Before continuing, you need to create your first application, if you haven't done it, follow the steps in the section <em>create an application</em> of the
+				<a href="/documentation/quick-start-guide" fragment="create-a-new-application">quick start guide</a> (remember to note your
+				application slug, because we'll use it later).
+			</p>
+		</div>
+	</div>
+	<p>
+		To access your application data, you need an <span class="highlight">application</span>
+		<a href="../contexts">context</a> that references it, on which you will be working on.
+		To retrieve it, you can use the <code>apps</code> service of the platform context:
+	</p>
+	<div class="ui grid tabsComponent">
+	
+		<div class="ui computer tablet only row tabs">
+			<div class="ui top attached tabular menu tabs-titles">
+				
+				
+					<a class="tabs-title active item" data-tab="MvbeMyib">TypeScript</a>
+				
+				
+					<a class="tabs-title  item" data-tab="DLzOzSZS">JavaScript ES2015</a>
+				
+				
+					<a class="tabs-title  item" data-tab="SYbqYWzJ">JavaScript ES2015</a>
+				
+			</div>
+		</div>
+		<div class="ui mobile only row tabs">
+			<div class="ui compact selection dropdown tabs-options">
+				<i class="dropdown icon"></i>
+				<div class="text">TypeScript</div>
+				<div class="menu">
+					
+					
+					<div class="tabs-option item" data-tab="MvbeMyib">TypeScript</div>
+					
+					
+					<div class="tabs-option item" data-tab="DLzOzSZS">JavaScript ES2015</div>
+					
+					
+					<div class="tabs-option item" data-tab="SYbqYWzJ">JavaScript ES2015</div>
+					
+				</div>
+			</div>
+		</div>
+
+		
+			
+			<div class="tabs-tab ui bottom attached tabs active tab segment" data-tab="MvbeMyib">
+				
+
+			<pre><code class="typescript hljs"><span class="hljs-comment">// ... additional imports</span>
+<span class="hljs-keyword">import</span> Carbon from <span class="hljs-string">"carbonldp/Carbon"</span>
+<span class="hljs-keyword">import</span> * as App from <span class="hljs-string">"carbonldp/App"</span>;
+
+<span class="hljs-keyword">let</span> carbon:Carbon;
+
+<span class="hljs-comment">// ... platform context creation and authentication</span>
+
+<span class="hljs-keyword">let</span> myAppContext:App.Context;
+
+carbon.apps.getContext( <span class="hljs-string">"your-app-slug-here/"</span> ).then(
+    ( appContext:App.Context ) =&gt; {
+        myAppContext = appContext; <span class="hljs-comment">// retrieving your app context</span>
+    }
+).catch( <span class="hljs-built_in">console</span>.error );</code></pre>
+
+		
+			</div>
+		
+			
+			<div class="tabs-tab ui bottom attached tabs  tab segment" data-tab="DLzOzSZS">
+				
+
+			<pre><code class="javascript hljs"><span class="hljs-comment">// ... imports</span>
+
+<span class="hljs-keyword">let</span> carbon;
+
+<span class="hljs-comment">// ... platform context creation and authentication</span>
+
+<span class="hljs-keyword">let</span> myAppContext;
+
+carbon.apps.getContext( <span class="hljs-string">"your-app-slug-here/"</span> ).then(
+    <span class="hljs-function">(<span class="hljs-params"> appContext </span>) =&gt;</span> {
+        myAppContext = appContext; <span class="hljs-comment">// retrieving your app context</span>
+    }
+).catch( <span class="hljs-built_in">console</span>.error );</code></pre>
+
+		
+			</div>
+		
+			
+			<div class="tabs-tab ui bottom attached tabs  tab segment" data-tab="SYbqYWzJ">
+				
+
+			<pre><code class="javascript hljs"><span class="hljs-keyword">var</span> carbon;
+
+<span class="hljs-comment">// ... platform context creation and authentication</span>
+
+<span class="hljs-keyword">var</span> myAppContext;
+
+carbon.apps.getContext( <span class="hljs-string">"your-app-slug-here/"</span> ).then(
+    <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> appContext </span>) </span>{
+        myAppContext = appContext; <span class="hljs-comment">// retrieving your app context</span>
+    }
+).catch( <span class="hljs-built_in">console</span>.error );</code></pre>
+
+		
+			</div>
+		
+	
+</div>
+
+	<p>
+		The <code>apps.getContext()</code> method returns a promise that when resolved, will give you the
+		<a href="../contexts"><span class="highlight">app context</span>
+		</a> you need. Be sure to replace <code>your-app-slug-here/</code> with your app slug.
+	</p>
+	<p>
+		This context is a child of the platform context you created. Because of that, any setting
+		or authentication information you saved in your platform context, is accessible
+		(and will be used) by this application context (for more see the Inheritance section of
+		<a href="../contexts">Contexts</a>).
+	</p>
+</section>
+
+<section class="mainContent-section" id="creating-a-document">
+	<h2>Creating a document</h2>
+	<p>
+		Now that you have your app context, you can start working with your app's data. Carbon stores data
+		in documents, which are basically normal JavaScript objects identified by a URI (Unique Resource Identifier).
+		These documents are composed by properties, <span class="highlight">fragments</span> and <span class="highlight">named fragments</span>.
+		For more information see: <a href="../object-model">JavaScript SDK Object model</a>.
+	</p>
+	<p>
+		Any carbon <span class="highlight">context</span> has a <code>documents</code> service that
+		helps you manage your documents. To create one you need to call the method <code>createChild</code> of this service:
+	</p>
+	<div class="ui grid tabsComponent">
+	
+		<div class="ui computer tablet only row tabs">
+			<div class="ui top attached tabular menu tabs-titles">
+				
+				
+					<a class="tabs-title active item" data-tab="KoMORSAO">TypeScript</a>
+				
+				
+					<a class="tabs-title  item" data-tab="vkfAopQr">JavaScript ES2015</a>
+				
+				
+					<a class="tabs-title  item" data-tab="ToGJXArZ">JavaScript ES5</a>
+				
+			</div>
+		</div>
+		<div class="ui mobile only row tabs">
+			<div class="ui compact selection dropdown tabs-options">
+				<i class="dropdown icon"></i>
+				<div class="text">TypeScript</div>
+				<div class="menu">
+					
+					
+					<div class="tabs-option item" data-tab="KoMORSAO">TypeScript</div>
+					
+					
+					<div class="tabs-option item" data-tab="vkfAopQr">JavaScript ES2015</div>
+					
+					
+					<div class="tabs-option item" data-tab="ToGJXArZ">JavaScript ES5</div>
+					
+				</div>
+			</div>
+		</div>
+
+		
+			
+			<div class="tabs-tab ui bottom attached tabs active tab segment" data-tab="KoMORSAO">
+				
+
+			<pre><code class="typescript hljs"><span class="hljs-comment">// ... additional imports</span>
+<span class="hljs-keyword">import</span> * as App from <span class="hljs-string">"carbonldp/App"</span>;
+<span class="hljs-keyword">import</span> * as Response from <span class="hljs-string">"carbonldp/HTTP/Response"</span>;
+<span class="hljs-keyword">import</span> * as PersistedDocument from <span class="hljs-string">"carbonldp/PersistedDocument"</span>;
+
+<span class="hljs-keyword">let</span> myAppContext:App.Context;
+
+<span class="hljs-comment">// ... app context retrieval</span>
+
+<span class="hljs-comment">// JavaScript object to be persisted as a Carbon document</span>
+<span class="hljs-keyword">let</span> project:Project = { <span class="hljs-comment">// Project being a business specific interface defined somewhere</span>
+    name: <span class="hljs-string">"Project X"</span>,
+    tasks: [
+        {
+            name: <span class="hljs-string">"Task 1"</span>,
+            dueDate: <span class="hljs-keyword">new</span> <span class="hljs-built_in">Date</span>( <span class="hljs-string">"2016-04-02"</span> )
+        },
+        {
+            name: <span class="hljs-string">"Task 2"</span>,
+            dueDate: <span class="hljs-keyword">new</span> <span class="hljs-built_in">Date</span>( <span class="hljs-string">"2016-04-08"</span> )
+        }
+    ]
+};
+
+myAppContext.documents.createChild&lt;Project&gt;( <span class="hljs-string">"/"</span>, project ).then(
+    ( [ persistedProject, response ]:[ Project &amp; PersistedDocument.Class, Response.Class ] ) =&gt; {
+        <span class="hljs-built_in">console</span>.log( project === persistedProject ); <span class="hljs-comment">// true</span>
+        <span class="hljs-built_in">console</span>.log( persistedProject.id ); <span class="hljs-comment">// document's URI</span>
+    }
+).catch( <span class="hljs-built_in">console</span>.error );</code></pre>
+
+		
+			</div>
+		
+			
+			<div class="tabs-tab ui bottom attached tabs  tab segment" data-tab="vkfAopQr">
+				
+
+			<pre><code class="javascript hljs"><span class="hljs-comment">// ... imports</span>
+
+<span class="hljs-keyword">let</span> myAppContext;
+
+<span class="hljs-comment">// ... app context retrieval</span>
+
+<span class="hljs-comment">// JavaScript object to be persisted as a Carbon document</span>
+<span class="hljs-keyword">let</span> project = {
+    <span class="hljs-attr">name</span>: <span class="hljs-string">"Project X"</span>,
+    <span class="hljs-attr">tasks</span>: [
+        {
+            <span class="hljs-attr">name</span>: <span class="hljs-string">"Task 1"</span>,
+            <span class="hljs-attr">dueDate</span>: <span class="hljs-keyword">new</span> <span class="hljs-built_in">Date</span>( <span class="hljs-string">"2016-04-02"</span> )
+        },
+        {
+            <span class="hljs-attr">name</span>: <span class="hljs-string">"Task 2"</span>,
+            <span class="hljs-attr">dueDate</span>: <span class="hljs-keyword">new</span> <span class="hljs-built_in">Date</span>( <span class="hljs-string">"2016-04-08"</span> )
+        }
+    ]
+};
+
+myAppContext.documents.createChild( <span class="hljs-string">"/"</span>, project ).then(
+    <span class="hljs-function">(<span class="hljs-params"> [ persistedProject, response ] </span>) =&gt;</span> {
+        <span class="hljs-built_in">console</span>.log( project === persistedProject ); <span class="hljs-comment">// true</span>
+        <span class="hljs-built_in">console</span>.log( project.id ); <span class="hljs-comment">// document's URI</span>
+    }
+).catch( <span class="hljs-built_in">console</span>.error );</code></pre>
+
+		
+			</div>
+		
+			
+			<div class="tabs-tab ui bottom attached tabs  tab segment" data-tab="ToGJXArZ">
+				
+
+			<pre><code class="javascript hljs"><span class="hljs-keyword">var</span> myAppContext;
+
+<span class="hljs-comment">// ... app context retrieval</span>
+
+<span class="hljs-comment">// JavaScript object to be persisted as a Carbon document</span>
+<span class="hljs-keyword">var</span> project = {
+    <span class="hljs-attr">name</span>: <span class="hljs-string">"Project X"</span>,
+    <span class="hljs-attr">tasks</span>: [
+        {
+            <span class="hljs-attr">name</span>: <span class="hljs-string">"Task 1"</span>,
+            <span class="hljs-attr">dueDate</span>: <span class="hljs-keyword">new</span> <span class="hljs-built_in">Date</span>( <span class="hljs-string">"2016-04-02"</span> )
+        },
+        {
+            <span class="hljs-attr">name</span>: <span class="hljs-string">"Task 2"</span>,
+            <span class="hljs-attr">dueDate</span>: <span class="hljs-keyword">new</span> <span class="hljs-built_in">Date</span>( <span class="hljs-string">"2016-04-08"</span> )
+        }
+    ]
+};
+
+myAppContext.documents.createChild( <span class="hljs-string">"/"</span>, project ).then(
+    <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> result </span>) </span>{
+        <span class="hljs-keyword">var</span> persistedProject = result[ <span class="hljs-number">0</span> ];
+        <span class="hljs-keyword">var</span> response = result[ <span class="hljs-number">1</span> ];
+
+        <span class="hljs-built_in">console</span>.log( project === persistedProject ); <span class="hljs-comment">// true</span>
+        <span class="hljs-built_in">console</span>.log( project.id ); <span class="hljs-comment">// document's URI</span>
+    }
+).catch( <span class="hljs-built_in">console</span>.error );</code></pre>
+
+		
+			</div>
+		
+	
+</div>
+
+	<p>
+		After executing that, the information inside of <code>project</code> will have been persisted in Carbon. Nested objects
+		will also be saved inside of the document, so pretty much any JSON object can be saved as a Carbon document (as long as
+		the JSON's information is contained inside of an object, not an array).
+	</p>
+	<p>
+		Notice that the promise returned by <code>createChild</code> is returning a <code>PersistedDocument.Class</code> object.
+		This type of object represent a saved document in Carbon. It may or may not have the latest server information. You can make sure
+		that you have its latest changes by using its <code>refresh</code> method.
+	</p>
+	<p>
+		If you've just executed this, you'll notice that the document's id (or URI) ends with something like <code>1264563453436/</code>.
+		Carbon automatically assigns URIs to newly created documents. If you want to customize the ending portion of the URI,
+		a third parameter can be passed to the <code>createChild</code> method. This parameter is called <code>slug</code>
+		and it serves as a suggestion for Carbon when forging the document's URI:
+	</p>
+	<div class="ui grid tabsComponent">
+	
+		<div class="ui computer tablet only row tabs">
+			<div class="ui top attached tabular menu tabs-titles">
+				
+				
+					<a class="tabs-title active item" data-tab="RBALtTSu">TypeScript</a>
+				
+				
+					<a class="tabs-title  item" data-tab="YuXJwIsT">JavaScript ES2015</a>
+				
+				
+					<a class="tabs-title  item" data-tab="TgMWjVsH">JavaScript ES5</a>
+				
+			</div>
+		</div>
+		<div class="ui mobile only row tabs">
+			<div class="ui compact selection dropdown tabs-options">
+				<i class="dropdown icon"></i>
+				<div class="text">TypeScript</div>
+				<div class="menu">
+					
+					
+					<div class="tabs-option item" data-tab="RBALtTSu">TypeScript</div>
+					
+					
+					<div class="tabs-option item" data-tab="YuXJwIsT">JavaScript ES2015</div>
+					
+					
+					<div class="tabs-option item" data-tab="TgMWjVsH">JavaScript ES5</div>
+					
+				</div>
+			</div>
+		</div>
+
+		
+			
+			<div class="tabs-tab ui bottom attached tabs active tab segment" data-tab="RBALtTSu">
+				
+
+			<pre><code class="typescript hljs"><span class="hljs-comment">// ...</span>
+
+myAppContext.documents.createChild&lt;Project&gt;( <span class="hljs-string">"/"</span>, project, <span class="hljs-string">"My sUp4 Project!"</span> ).then(
+    ( [ persistedProject, response ]:[ Project &amp; PersistedDocument.Class, Response.Class ] ) =&gt; {
+        <span class="hljs-built_in">console</span>.log( persistedProject.id ); <span class="hljs-comment">// .../my-supa-project/</span>
+    }
+).catch( <span class="hljs-built_in">console</span>.error );</code></pre>
+
+		
+			</div>
+		
+			
+			<div class="tabs-tab ui bottom attached tabs  tab segment" data-tab="YuXJwIsT">
+				
+
+			<pre><code class="javascript hljs"><span class="hljs-comment">// ...</span>
+
+myAppContext.documents.createChild( <span class="hljs-string">"/"</span>, project, <span class="hljs-string">"My sUp4 Project!"</span> ).then(
+    <span class="hljs-function">(<span class="hljs-params"> [ persistedProject, response ] </span>) =&gt;</span> {
+        <span class="hljs-built_in">console</span>.log( persistedProject.id ); <span class="hljs-comment">// .../my-supa-project/</span>
+    }
+).catch( <span class="hljs-built_in">console</span>.error );</code></pre>
+
+		
+			</div>
+		
+			
+			<div class="tabs-tab ui bottom attached tabs  tab segment" data-tab="TgMWjVsH">
+				
+
+			<pre><code class="javascript hljs"><span class="hljs-comment">// ...</span>
+
+myAppContext.documents.createChild( <span class="hljs-string">"/"</span>, project, <span class="hljs-string">"My sUp4 Project!"</span> ).then(
+    <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> result </span>) </span>{
+        <span class="hljs-keyword">var</span> persistedProject = result[ <span class="hljs-number">0</span> ];
+        <span class="hljs-keyword">var</span> response = result[ <span class="hljs-number">1</span> ];
+
+        <span class="hljs-built_in">console</span>.log( persistedProject.id ); <span class="hljs-comment">// .../my-supa-project/</span>
+    }
+).catch( <span class="hljs-built_in">console</span>.error );</code></pre>
+
+		
+			</div>
+		
+	
+</div>
+
+	<p>
+		Another thing to notice is that the method is called create<strong>Child</strong>. All documents stored in Carbon are children of
+		another document. In this case we are specifying our newly created document's parent through the first parameter <code>"/"</code>.
+		That string represents a relative URI, one that can be resolved against something else. In this case it is being resolved to the
+		base URI the context has. To see to what that would resolve you can use a <code>context</code> <code>resolve</code> method:
+	</p>
+	<div class="ui grid tabsComponent">
+	
+		<div class="ui computer tablet only row tabs">
+			<div class="ui top attached tabular menu tabs-titles">
+				
+				
+					<a class="tabs-title active item" data-tab="pXRKoNfP">TypeScript</a>
+				
+				
+					<a class="tabs-title  item" data-tab="WiwVJMBr">JavaScript ES2015</a>
+				
+				
+					<a class="tabs-title  item" data-tab="dEAKIcUJ">JavaScript ES5</a>
+				
+			</div>
+		</div>
+		<div class="ui mobile only row tabs">
+			<div class="ui compact selection dropdown tabs-options">
+				<i class="dropdown icon"></i>
+				<div class="text">TypeScript</div>
+				<div class="menu">
+					
+					
+					<div class="tabs-option item" data-tab="pXRKoNfP">TypeScript</div>
+					
+					
+					<div class="tabs-option item" data-tab="WiwVJMBr">JavaScript ES2015</div>
+					
+					
+					<div class="tabs-option item" data-tab="dEAKIcUJ">JavaScript ES5</div>
+					
+				</div>
+			</div>
+		</div>
+
+		
+			
+			<div class="tabs-tab ui bottom attached tabs active tab segment" data-tab="pXRKoNfP">
+				
+
+			<pre><code class="typescript hljs"><span class="hljs-comment">// ... additional imports</span>
+<span class="hljs-keyword">import</span> * as App from <span class="hljs-string">"carbonldp/App"</span>;
+
+<span class="hljs-keyword">let</span> myAppContext:App.Context;
+
+<span class="hljs-comment">// ... app context retrieval</span>
+
+<span class="hljs-built_in">console</span>.log( myAppContext.resolve( <span class="hljs-string">""</span> ) ); <span class="hljs-comment">// https://.../your-app-slug/</span></code></pre>
+
+		
+			</div>
+		
+			
+			<div class="tabs-tab ui bottom attached tabs  tab segment" data-tab="WiwVJMBr">
+				
+
+			<pre><code class="javascript hljs"><span class="hljs-comment">// ... imports</span>
+
+<span class="hljs-keyword">let</span> myAppContext;
+
+<span class="hljs-comment">// ... app context retrieval</span>
+
+<span class="hljs-built_in">console</span>.log( myAppContext.resolve( <span class="hljs-string">""</span> ) ); <span class="hljs-comment">// https://.../your-app-slug/</span></code></pre>
+
+		
+			</div>
+		
+			
+			<div class="tabs-tab ui bottom attached tabs  tab segment" data-tab="dEAKIcUJ">
+				
+
+			<pre><code class="javascript hljs"><span class="hljs-keyword">var</span> myAppContext;
+
+<span class="hljs-comment">// ... app context retrieval</span>
+
+<span class="hljs-built_in">console</span>.log( myAppContext.resolve( <span class="hljs-string">""</span> ) ); <span class="hljs-comment">// https://.../your-app-slug/</span></code></pre>
+
+		
+			</div>
+		
+	
+</div>
+
+</section>
+<section class="mainContent-section" id="retrieving-a-document">
+	<h2>Retrieving a document</h2>
+	<p>
+		Documents can be retrieved by their URIs or by following other documents' links. In fact, you can paste the <code>id</code>
+		you just retrieved when persisting your first document in your browser and you should see an <code>XML</code>
+		representation of it.
+	</p>
+	<p>
+		Like creating documents, retrieving them can be done using the <code>documents</code> service inside of any Carbon context.
+		To do so, you can use its <code>get</code> method:
+	</p>
+	<div class="ui grid tabsComponent">
+	
+		<div class="ui computer tablet only row tabs">
+			<div class="ui top attached tabular menu tabs-titles">
+				
+				
+					<a class="tabs-title active item" data-tab="WZqfsdpU">TypeScript</a>
+				
+				
+					<a class="tabs-title  item" data-tab="IteAHJrF">JavaScript ES2015</a>
+				
+				
+					<a class="tabs-title  item" data-tab="YTzpfXyz">JavaScript ES5</a>
+				
+			</div>
+		</div>
+		<div class="ui mobile only row tabs">
+			<div class="ui compact selection dropdown tabs-options">
+				<i class="dropdown icon"></i>
+				<div class="text">TypeScript</div>
+				<div class="menu">
+					
+					
+					<div class="tabs-option item" data-tab="WZqfsdpU">TypeScript</div>
+					
+					
+					<div class="tabs-option item" data-tab="IteAHJrF">JavaScript ES2015</div>
+					
+					
+					<div class="tabs-option item" data-tab="YTzpfXyz">JavaScript ES5</div>
+					
+				</div>
+			</div>
+		</div>
+
+		
+			
+			<div class="tabs-tab ui bottom attached tabs active tab segment" data-tab="WZqfsdpU">
+				
+
+			<pre><code class="typescript hljs"><span class="hljs-comment">// ... additional imports</span>
+<span class="hljs-keyword">import</span> * as App from <span class="hljs-string">"carbonldp/App"</span>;
+<span class="hljs-keyword">import</span> * as Response from <span class="hljs-string">"carbonldp/HTTP/Response"</span>;
+<span class="hljs-keyword">import</span> * as PersistedDocument from <span class="hljs-string">"carbonldp/PersistedDocument"</span>;
+
+<span class="hljs-keyword">let</span> myAppContext:App.Context;
+
+<span class="hljs-comment">// ... app context retrieval</span>
+
+<span class="hljs-comment">// ID of the Carbon document you want to retrieve</span>
+<span class="hljs-keyword">let</span> projectID:<span class="hljs-built_in">string</span> = <span class="hljs-string">"https://example.com/your-document-id/"</span>;
+
+myAppContext.documents.get&lt;Project&gt;( projectID ).then(
+    ( [ project, response ]:[ Project &amp; PersistedDocument.Class, Response.Class ] ) =&gt; {
+        <span class="hljs-built_in">console</span>.log( project.name ); <span class="hljs-comment">// "Project X"</span>
+    }
+).catch( <span class="hljs-built_in">console</span>.error );</code></pre>
+
+		
+			</div>
+		
+			
+			<div class="tabs-tab ui bottom attached tabs  tab segment" data-tab="IteAHJrF">
+				
+
+			<pre><code class="javascript hljs"><span class="hljs-comment">// ... imports</span>
+
+<span class="hljs-keyword">let</span> myAppContext;
+
+<span class="hljs-comment">// ... app context retrieval</span>
+
+<span class="hljs-comment">// ID of the Carbon document you want to retrieve</span>
+<span class="hljs-keyword">let</span> projectID = <span class="hljs-string">"https://example.com/your-document-id/"</span>;
+
+myAppContext.documents.get( projectID ).then(
+    <span class="hljs-function">(<span class="hljs-params"> [ project, response ] </span>) =&gt;</span> {
+        <span class="hljs-built_in">console</span>.log( project.name ); <span class="hljs-comment">// "Project X"</span>
+    }
+).catch( <span class="hljs-built_in">console</span>.error );</code></pre>
+
+		
+			</div>
+		
+			
+			<div class="tabs-tab ui bottom attached tabs  tab segment" data-tab="YTzpfXyz">
+				
+
+			<pre><code class="javascript hljs"><span class="hljs-keyword">var</span> myAppContext;
+
+<span class="hljs-comment">// ... app context retrieval</span>
+
+<span class="hljs-comment">// ID of the Carbon document you want to retrieve</span>
+<span class="hljs-keyword">var</span> projectID = <span class="hljs-string">"https://example.com/your-document-id/"</span>;
+
+myAppContext.documents.get( projectID ).then(
+    <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> result </span>) </span>{
+        <span class="hljs-keyword">var</span> project = result[ <span class="hljs-number">0</span> ];
+        <span class="hljs-keyword">var</span> response = result[ <span class="hljs-number">1</span> ];
+
+        <span class="hljs-built_in">console</span>.log( project.name ); <span class="hljs-comment">// "Project X"</span>
+    }
+).catch( <span class="hljs-built_in">console</span>.error );</code></pre>
+
+		
+			</div>
+		
+	
+</div>
+
+	<p>
+		In this example we used the id of the document, but there are times that instead of having the id, you have a
+		<code>Pointer.Class</code> object. This can happen for example when a document points to another document through a property,
+		or as soon as you create a document and receive a pointer back (<code>PersistedDocument.Class</code> extends <code>Pointer.Class</code>).
+		These pointers have a <code>resolve</code> method that helps you retrieve their information:
+	</p>
+	<div class="ui grid tabsComponent">
+	
+		<div class="ui computer tablet only row tabs">
+			<div class="ui top attached tabular menu tabs-titles">
+				
+				
+					<a class="tabs-title active item" data-tab="EhXtfJNR">TypeScript</a>
+				
+				
+					<a class="tabs-title  item" data-tab="pHhmTYIR">JavaScript ES2015</a>
+				
+				
+					<a class="tabs-title  item" data-tab="hgBXhNvl">JavaScript ES5</a>
+				
+			</div>
+		</div>
+		<div class="ui mobile only row tabs">
+			<div class="ui compact selection dropdown tabs-options">
+				<i class="dropdown icon"></i>
+				<div class="text">TypeScript</div>
+				<div class="menu">
+					
+					
+					<div class="tabs-option item" data-tab="EhXtfJNR">TypeScript</div>
+					
+					
+					<div class="tabs-option item" data-tab="pHhmTYIR">JavaScript ES2015</div>
+					
+					
+					<div class="tabs-option item" data-tab="hgBXhNvl">JavaScript ES5</div>
+					
+				</div>
+			</div>
+		</div>
+
+		
+			
+			<div class="tabs-tab ui bottom attached tabs active tab segment" data-tab="EhXtfJNR">
+				
+
+			<pre><code class="typescript hljs"><span class="hljs-comment">// ... additional imports</span>
+<span class="hljs-keyword">import</span> * as Response from <span class="hljs-string">"carbonldp/HTTP/Response"</span>;
+<span class="hljs-keyword">import</span> * as PersistedDocument from <span class="hljs-string">"carbonldp/PersistedDocument"</span>;
+<span class="hljs-keyword">import</span> * as Pointer from <span class="hljs-string">"carbonldp/Pointer"</span>;
+
+<span class="hljs-keyword">let</span> projectPointer:Pointer.Class;
+
+<span class="hljs-comment">// ... document pointer acquisition</span>
+
+projectPointer.resolve&lt;Project&gt;().then(
+    ( [ project, response ]:[ Project &amp; PersistedDocument.Class, Response.Class ] ) =&gt; {
+        <span class="hljs-built_in">console</span>.log( project.name ); <span class="hljs-comment">// "Project X"</span>
+    }
+).catch( <span class="hljs-built_in">console</span>.error );</code></pre>
+
+		
+			</div>
+		
+			
+			<div class="tabs-tab ui bottom attached tabs  tab segment" data-tab="pHhmTYIR">
+				
+
+			<pre><code class="javascript hljs"><span class="hljs-comment">// ... imports</span>
+
+<span class="hljs-keyword">let</span> projectPointer;
+
+<span class="hljs-comment">// ... document pointer acquisition</span>
+
+projectPointer.resolve().then(
+    <span class="hljs-function">(<span class="hljs-params"> [ project, response ] </span>) =&gt;</span> {
+        <span class="hljs-built_in">console</span>.log( project.name ); <span class="hljs-comment">// "Project X"</span>
+    }
+).catch( <span class="hljs-built_in">console</span>.error );</code></pre>
+
+		
+			</div>
+		
+			
+			<div class="tabs-tab ui bottom attached tabs  tab segment" data-tab="hgBXhNvl">
+				
+
+			<pre><code class="javascript hljs"><span class="hljs-keyword">var</span> projectPointer;
+
+<span class="hljs-comment">// ... document pointer acquisition</span>
+
+projectPointer.resolve().then(
+    <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> result </span>) </span>{
+        <span class="hljs-keyword">var</span> project = result[ <span class="hljs-number">0</span> ];
+        <span class="hljs-keyword">var</span> response = result[ <span class="hljs-number">1</span> ];
+
+        <span class="hljs-built_in">console</span>.log( project.name ); <span class="hljs-comment">// "Project X"</span>
+    }
+).catch( <span class="hljs-built_in">console</span>.error );</code></pre>
+
+		
+			</div>
+		
+	
+</div>
+
+	<p>
+		As you can see, <code>Pointer.Class</code> objects have two states, resolved and unresolved. When a pointer
+		isn't resolved it doesn't contain the document's information (or it may be just out of sync with the server)
+		but it can be used to link other documents to it as we'll see later. You can also use its
+		<code>resolve</code> method to retrieve its information.
+	</p>
+</section>
+
+<section class="mainContent-section" id="modifying-and-saving-a-document">
+	<h2>Modifying and saving a document</h2>
+
+	<p>
+		All <span class="highlight">documents</span> in <span class="highlight">Carbon</span> can
+		be modified. However all the changes done to a <span class="highlight">document</span>,
+		are done in memory. To persist the modifications the <span class="highlight">document</span> needs to be saved.
+	</p>
+
+	<p>
+		To modify a document you should:
+	</p>
+	<ol>
+		<li>Retrieve the <span class="highlight">document</span>:
+			<ol>
+				<li><code>get</code> using the <span class="highlight">document</span> id as
+					described in <span class="sectionlink">retrieving a document</span>
+				</li>
+			</ol>
+		</li>
+		<li>Modify the <span class="highlight">document</span>: Add, modify or delete
+			<span class="highlight">properties</span>,
+			<span class="highlight">fragments</span>,
+			<span class="highlight">named fragments</span>.
+		</li>
+		<li>Save the changes through <code>document.save</code> method.</li>
+	</ol>
+	<p>
+		Document properties can be added/modified/removed as with any normal JavaScript object.
+	</p>
+	<div class="ui grid tabsComponent">
+	
+		<div class="ui computer tablet only row tabs">
+			<div class="ui top attached tabular menu tabs-titles">
+				
+				
+					<a class="tabs-title active item" data-tab="CSbBqjQC">TypeScript</a>
+				
+				
+					<a class="tabs-title  item" data-tab="eeRUhQRs">JavaScript ES2015</a>
+				
+				
+					<a class="tabs-title  item" data-tab="ZDCekAVK">JavaScript ES5</a>
+				
+			</div>
+		</div>
+		<div class="ui mobile only row tabs">
+			<div class="ui compact selection dropdown tabs-options">
+				<i class="dropdown icon"></i>
+				<div class="text">TypeScript</div>
+				<div class="menu">
+					
+					
+					<div class="tabs-option item" data-tab="CSbBqjQC">TypeScript</div>
+					
+					
+					<div class="tabs-option item" data-tab="eeRUhQRs">JavaScript ES2015</div>
+					
+					
+					<div class="tabs-option item" data-tab="ZDCekAVK">JavaScript ES5</div>
+					
+				</div>
+			</div>
+		</div>
+
+		
+			
+			<div class="tabs-tab ui bottom attached tabs active tab segment" data-tab="CSbBqjQC">
+				
+
+			<pre><code class="typescript hljs"><span class="hljs-comment">// ... additional imports</span>
+<span class="hljs-keyword">import</span> * as PersistedDocument from <span class="hljs-string">"carbonldp/PersistedDocument"</span>;
+
+<span class="hljs-keyword">let</span> project:Project &amp; PersistedDocument.Class;
+
+<span class="hljs-comment">// ... document retrieval</span>
+
+project.name = <span class="hljs-string">"Project's New Name"</span>;
+project.task.push( {
+    name: <span class="hljs-string">"Task 3"</span>,
+    dueDate: <span class="hljs-keyword">new</span> <span class="hljs-built_in">Date</span>( <span class="hljs-string">"2016-05-02"</span> )
+} );
+project.description = {
+    <span class="hljs-keyword">type</span>: <span class="hljs-string">"markdown"</span>,
+    content: <span class="hljs-string">"# Some description here"</span>
+};
+
+project.save&lt;Project&gt;().then(
+    ( [ savedProject, response ]:[ Project &amp; PersistedDocument.Class, Response.Class ] ) =&gt; {
+        <span class="hljs-built_in">console</span>.log( savedProject === project ); <span class="hljs-comment">// true</span>
+        <span class="hljs-keyword">return</span> savedProject.refresh&lt;Project&gt;();
+    }
+).then(
+    ( [ refreshedProject, response ]:[ Project &amp; PersistedDocument.Class, Response.Class ] ) =&gt; {
+        <span class="hljs-built_in">console</span>.log( refreshedProject === project ); <span class="hljs-comment">// true</span>
+        <span class="hljs-comment">// Continue doing stuff...</span>
+    }
+).catch( <span class="hljs-built_in">console</span>.error );</code></pre>
+
+		
+			</div>
+		
+			
+			<div class="tabs-tab ui bottom attached tabs  tab segment" data-tab="eeRUhQRs">
+				
+
+			<pre><code class="javascript hljs"><span class="hljs-comment">// ... imports</span>
+
+<span class="hljs-keyword">let</span> project;
+
+<span class="hljs-comment">// ... document retrieval</span>
+
+project.name = <span class="hljs-string">"Project's New Name"</span>;
+project.task.push( {
+    <span class="hljs-attr">name</span>: <span class="hljs-string">"Task 3"</span>,
+    <span class="hljs-attr">dueDate</span>: <span class="hljs-keyword">new</span> <span class="hljs-built_in">Date</span>( <span class="hljs-string">"2016-05-02"</span> )
+} );
+project.description = {
+    <span class="hljs-attr">type</span>: <span class="hljs-string">"markdown"</span>,
+    <span class="hljs-attr">content</span>: <span class="hljs-string">"# Some description here"</span>
+};
+
+project.save().then(
+    <span class="hljs-function">(<span class="hljs-params"> [ savedProject, response ] </span>) =&gt;</span> {
+        <span class="hljs-built_in">console</span>.log( savedProject === project ); <span class="hljs-comment">// true</span>
+        <span class="hljs-keyword">return</span> savedProject.refresh();
+    }
+).then(
+    <span class="hljs-function">(<span class="hljs-params"> [ refreshedProject, response ] </span>) =&gt;</span> {
+        <span class="hljs-built_in">console</span>.log( refreshedProject === project ); <span class="hljs-comment">// true</span>
+        <span class="hljs-comment">// Continue doing stuff...</span>
+    }
+).catch( <span class="hljs-built_in">console</span>.error );</code></pre>
+
+		
+			</div>
+		
+			
+			<div class="tabs-tab ui bottom attached tabs  tab segment" data-tab="ZDCekAVK">
+				
+
+			<pre><code class="javascript hljs"><span class="hljs-keyword">var</span> project;
+
+<span class="hljs-comment">// ... document retrieval</span>
+
+project.name = <span class="hljs-string">"Project's New Name"</span>;
+project.task.push( {
+    <span class="hljs-attr">name</span>: <span class="hljs-string">"Task 3"</span>,
+    <span class="hljs-attr">dueDate</span>: <span class="hljs-keyword">new</span> <span class="hljs-built_in">Date</span>( <span class="hljs-string">"2016-05-02"</span> )
+} );
+project.description = {
+    <span class="hljs-attr">type</span>: <span class="hljs-string">"markdown"</span>,
+    <span class="hljs-attr">content</span>: <span class="hljs-string">"# Some description here"</span>
+};
+
+project.save().then(
+    <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> result </span>) =&gt; </span>{
+        <span class="hljs-keyword">var</span> savedProject = result[ <span class="hljs-number">0</span> ];
+        <span class="hljs-keyword">var</span> response = result[ <span class="hljs-number">0</span> ];
+
+        <span class="hljs-built_in">console</span>.log( savedProject === project ); <span class="hljs-comment">// true</span>
+        <span class="hljs-keyword">return</span> savedProject.refresh();
+    }
+).then(
+    <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> result </span>) =&gt; </span>{
+        <span class="hljs-keyword">var</span> refreshedProject = result[ <span class="hljs-number">0</span> ];
+        <span class="hljs-keyword">var</span> response = result[ <span class="hljs-number">0</span> ];
+
+        <span class="hljs-built_in">console</span>.log( refreshedProject === project ); <span class="hljs-comment">// true</span>
+        <span class="hljs-comment">// Continue doing stuff...</span>
+    }
+).catch( <span class="hljs-built_in">console</span>.error );</code></pre>
+
+		
+			</div>
+		
+	
+</div>
+
+	<p>
+		Notice that we used the <code>save</code> method and immediately after, we called <code>refresh</code>.
+		Remember that every persisted document has this method and it helps you sync the in memory
+		representation of the document with the server's information. In this case we used it because after the document was
+		saved, Carbon could have added or modified some of its properties (noticeably properties like <code>modified</code>).
+	</p>
+	<p>
+		This is a very common thing to do, therefore persisted documents also have the method <code>saveAndRefresh</code>
+		which does both things at once.
+	</p>
+</section>
+
+<section class="mainContent-section" id="deleting-a-document">
+	<h2>Deleting a document</h2>
+	<p>
+		As when creating and retrieving documents, the <code>documents</code> service can help you
+		delete a persisted document through its <code>delete</code> method. To do so, you need to
+		provide the document's URI:
+	</p>
+	<div class="ui grid tabsComponent">
+	
+		<div class="ui computer tablet only row tabs">
+			<div class="ui top attached tabular menu tabs-titles">
+				
+				
+					<a class="tabs-title active item" data-tab="tmXtbMsW">TypeScript</a>
+				
+				
+					<a class="tabs-title  item" data-tab="HaIukFSj">JavaScript ES2015</a>
+				
+				
+					<a class="tabs-title  item" data-tab="thGspOmJ">JavaScript ES5</a>
+				
+			</div>
+		</div>
+		<div class="ui mobile only row tabs">
+			<div class="ui compact selection dropdown tabs-options">
+				<i class="dropdown icon"></i>
+				<div class="text">TypeScript</div>
+				<div class="menu">
+					
+					
+					<div class="tabs-option item" data-tab="tmXtbMsW">TypeScript</div>
+					
+					
+					<div class="tabs-option item" data-tab="HaIukFSj">JavaScript ES2015</div>
+					
+					
+					<div class="tabs-option item" data-tab="thGspOmJ">JavaScript ES5</div>
+					
+				</div>
+			</div>
+		</div>
+
+		
+			
+			<div class="tabs-tab ui bottom attached tabs active tab segment" data-tab="tmXtbMsW">
+				
+
+			<pre><code class="typescript hljs"><span class="hljs-comment">// ... additional imports</span>
+<span class="hljs-keyword">import</span> * as App from <span class="hljs-string">"carbonldp/App"</span>;
+<span class="hljs-keyword">import</span> * as Response from <span class="hljs-string">"carbonldp/HTTP/Response"</span>;
+
+<span class="hljs-keyword">let</span> myAppContext:App.Context;
+
+<span class="hljs-comment">// ... app context retrieval</span>
+
+<span class="hljs-comment">// ID of the Carbon document you want to delete</span>
+<span class="hljs-keyword">let</span> projectID:<span class="hljs-built_in">string</span> = <span class="hljs-string">"https://example.com/your-document-id/"</span>;
+
+myAppContext.documents.delete( projectID ).then(
+    ( response:Response.Class ) =&gt; {
+        <span class="hljs-comment">// continue doing stuff...</span>
+    }
+).catch( <span class="hljs-built_in">console</span>.error );</code></pre>
+
+		
+			</div>
+		
+			
+			<div class="tabs-tab ui bottom attached tabs  tab segment" data-tab="HaIukFSj">
+				
+
+			<pre><code class="javascript hljs"><span class="hljs-comment">// ... imports</span>
+
+<span class="hljs-keyword">let</span> myAppContext;
+
+<span class="hljs-comment">// ... app context retrieval</span>
+
+<span class="hljs-comment">// ID of the Carbon document you want to delete</span>
+<span class="hljs-keyword">let</span> projectID = <span class="hljs-string">"https://example.com/your-document-id/"</span>;
+
+myAppContext.documents.delete( projectID ).then(
+    <span class="hljs-function">(<span class="hljs-params"> response </span>) =&gt;</span> {
+        <span class="hljs-comment">// continue doing stuff...</span>
+    }
+).catch( <span class="hljs-built_in">console</span>.error );</code></pre>
+
+		
+			</div>
+		
+			
+			<div class="tabs-tab ui bottom attached tabs  tab segment" data-tab="thGspOmJ">
+				
+
+			<pre><code class="javascript hljs"><span class="hljs-keyword">var</span> myAppContext;
+
+<span class="hljs-comment">// ... app context retrieval</span>
+
+<span class="hljs-comment">// ID of the Carbon document you want to delete</span>
+<span class="hljs-keyword">var</span> projectID = <span class="hljs-string">"https://example.com/your-document-id/"</span>;
+
+myAppContext.documents.delete( projectID ).then(
+    <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> response </span>) </span>{
+        <span class="hljs-comment">// continue doing stuff...</span>
+    }
+).catch( <span class="hljs-built_in">console</span>.error );</code></pre>
+
+		
+			</div>
+		
+	
+</div>
+
+	<p>
+		Like in "Retrieving a document", a document can also be deleted through the <code>PersistedDocument.Class</code>'s
+		<code>delete</code> method:
+	</p>
+	<div class="ui grid tabsComponent">
+	
+		<div class="ui computer tablet only row tabs">
+			<div class="ui top attached tabular menu tabs-titles">
+				
+				
+					<a class="tabs-title active item" data-tab="xIlHKBdm">TypeScript</a>
+				
+				
+					<a class="tabs-title  item" data-tab="xxVnELlE">JavaScript ES2015</a>
+				
+				
+					<a class="tabs-title  item" data-tab="MFZVEkGw">JavaScript ES5</a>
+				
+			</div>
+		</div>
+		<div class="ui mobile only row tabs">
+			<div class="ui compact selection dropdown tabs-options">
+				<i class="dropdown icon"></i>
+				<div class="text">TypeScript</div>
+				<div class="menu">
+					
+					
+					<div class="tabs-option item" data-tab="xIlHKBdm">TypeScript</div>
+					
+					
+					<div class="tabs-option item" data-tab="xxVnELlE">JavaScript ES2015</div>
+					
+					
+					<div class="tabs-option item" data-tab="MFZVEkGw">JavaScript ES5</div>
+					
+				</div>
+			</div>
+		</div>
+
+		
+			
+			<div class="tabs-tab ui bottom attached tabs active tab segment" data-tab="xIlHKBdm">
+				
+
+			<pre><code class="typescript hljs"><span class="hljs-comment">// ... additional imports</span>
+<span class="hljs-keyword">import</span> * as PersistedDocument from <span class="hljs-string">"carbonldp/PersistedDocument"</span>;
+<span class="hljs-keyword">import</span> * as Response from <span class="hljs-string">"carbonldp/HTTP/Response"</span>;
+
+<span class="hljs-keyword">let</span> project:Project &amp; PersistedDocument.Class;
+
+<span class="hljs-comment">// persisted document retrieval</span>
+
+project.delete().then(
+    ( response:Response.Class ) =&gt; {
+        <span class="hljs-comment">// continue doing stuff...</span>
+    }
+).catch( <span class="hljs-built_in">console</span>.error );</code></pre>
+
+		
+			</div>
+		
+			
+			<div class="tabs-tab ui bottom attached tabs  tab segment" data-tab="xxVnELlE">
+				
+
+			<pre><code class="javascript hljs"><span class="hljs-comment">// ... imports</span>
+
+<span class="hljs-keyword">let</span> project;
+
+<span class="hljs-comment">// persisted document retrieval</span>
+
+project.delete().then(
+    <span class="hljs-function">(<span class="hljs-params"> response </span>) =&gt;</span> {
+        <span class="hljs-comment">// continue doing stuff...</span>
+    }
+).catch( <span class="hljs-built_in">console</span>.error );</code></pre>
+
+		
+			</div>
+		
+			
+			<div class="tabs-tab ui bottom attached tabs  tab segment" data-tab="MFZVEkGw">
+				
+
+			<pre><code class="javascript hljs"><span class="hljs-keyword">var</span> project;
+
+<span class="hljs-comment">// persisted document retrieval</span>
+
+project.delete().then(
+    <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> response </span>) </span>{
+        <span class="hljs-comment">// continue doing stuff...</span>
+    }
+).catch( <span class="hljs-built_in">console</span>.error );</code></pre>
+
+		
+			</div>
+		
+	
+</div>
+
+	<p>
+		In fact, this pattern can be seen across several methods, where both the <code>documents</code> service
+		and <code>PersistedDocument.Class</code> expose similar methods. For example, <code>createChild</code> is also exposed by a
+		<code>PersistedDocument.Class</code> object and allows you to create a direct child of that document. Basically, if you don't have
+		a resolved reference of the document, use <code>documents</code> service. But if you already have one, you
+		can call the action through the <code>PersistedDocument.Class</code> directly (which may make code more readable, and in some cases more efficient).
+	</p>
+</section>
+
+<section class="mainContent-section" id="linking-documents">
+	<h2>Linking documents</h2>
+	<p>
+		One of the core features of Carbon LDP, is linking data (after all, it's a Linked Data Platform). Documents can
+		be linked to other documents through normal JavaScript properties:
+	</p>
+	<div class="ui grid tabsComponent">
+	
+		<div class="ui computer tablet only row tabs">
+			<div class="ui top attached tabular menu tabs-titles">
+				
+				
+					<a class="tabs-title active item" data-tab="cVYenirh">TypeScript</a>
+				
+				
+					<a class="tabs-title  item" data-tab="jTYLnENt">JavaScript ES2015</a>
+				
+				
+					<a class="tabs-title  item" data-tab="PnOrdwUr">JavaScript ES5</a>
+				
+			</div>
+		</div>
+		<div class="ui mobile only row tabs">
+			<div class="ui compact selection dropdown tabs-options">
+				<i class="dropdown icon"></i>
+				<div class="text">TypeScript</div>
+				<div class="menu">
+					
+					
+					<div class="tabs-option item" data-tab="cVYenirh">TypeScript</div>
+					
+					
+					<div class="tabs-option item" data-tab="jTYLnENt">JavaScript ES2015</div>
+					
+					
+					<div class="tabs-option item" data-tab="PnOrdwUr">JavaScript ES5</div>
+					
+				</div>
+			</div>
+		</div>
+
+		
+			
+			<div class="tabs-tab ui bottom attached tabs active tab segment" data-tab="cVYenirh">
+				
+
+			<pre><code class="typescript hljs"><span class="hljs-comment">// ... additional imports</span>
+<span class="hljs-keyword">import</span> * as PersistedDocument from <span class="hljs-string">"carbonldp/PersistedDocument"</span>;
+
+<span class="hljs-keyword">let</span> project1:Project &amp; PersistedDocument.Class;
+<span class="hljs-keyword">let</span> project2:Project &amp; PersistedDocument.Class;
+
+<span class="hljs-comment">// ... persisted documents retrieval</span>
+
+project1.relatedProject = project2;</code></pre>
+
+		
+			</div>
+		
+			
+			<div class="tabs-tab ui bottom attached tabs  tab segment" data-tab="jTYLnENt">
+				
+
+			<pre><code class="javascript hljs"><span class="hljs-comment">// ... imports</span>
+
+<span class="hljs-keyword">let</span> project1;
+<span class="hljs-keyword">let</span> project2;
+
+<span class="hljs-comment">// ... persisted documents retrieval</span>
+
+project1.relatedProject = project2;</code></pre>
+
+		
+			</div>
+		
+			
+			<div class="tabs-tab ui bottom attached tabs  tab segment" data-tab="PnOrdwUr">
+				
+
+			<pre><code class="javascript hljs"><span class="hljs-keyword">var</span> project1;
+<span class="hljs-keyword">var</span> project2;
+
+<span class="hljs-comment">// ... persisted documents retrieval</span>
+
+project1.relatedProject = project2;</code></pre>
+
+		
+			</div>
+		
+	
+</div>
+
+	<p>
+		There are also special properties Carbon handles for you. The most important ones are <code>contains</code>,
+		which represents the document parent-child relation, and <code>members</code> which represents membership relation.
+	</p>
+	<section class="mainContent-subSection" id="parent-child-relation">
+		<h3>Parent-child relation</h3>
+		<p>
+			Like we said before, every document that is saved in Carbon must have a parent. When a document gets
+			created it's automatically added to the array contained in its parent <code>contains</code> property.
+			The SDK gives you convenient methods to handle this array, such as:
+		</p>
+		<ul>
+			<li>
+				<code>documents.listChildren</code>: Returns a list of unresolved <code>PersistedDocument.Class</code> objects for each of the document children
+			</li>
+			<li>
+				<code>documents.getChildren</code>: Returns a list of RESOLVED <code>PersistedDocument.Class</code> objects for each of the document children
+			</li>
+		</ul>
+		<div class="ui grid tabsComponent">
+	
+		<div class="ui computer tablet only row tabs">
+			<div class="ui top attached tabular menu tabs-titles">
+				
+				
+					<a class="tabs-title active item" data-tab="pJRxRxVe">TypeScript</a>
+				
+				
+					<a class="tabs-title  item" data-tab="MHCAAnED">JavaScript ES2015</a>
+				
+				
+					<a class="tabs-title  item" data-tab="AUpRbOmo">JavaScript ES5</a>
+				
+			</div>
+		</div>
+		<div class="ui mobile only row tabs">
+			<div class="ui compact selection dropdown tabs-options">
+				<i class="dropdown icon"></i>
+				<div class="text">TypeScript</div>
+				<div class="menu">
+					
+					
+					<div class="tabs-option item" data-tab="pJRxRxVe">TypeScript</div>
+					
+					
+					<div class="tabs-option item" data-tab="MHCAAnED">JavaScript ES2015</div>
+					
+					
+					<div class="tabs-option item" data-tab="AUpRbOmo">JavaScript ES5</div>
+					
+				</div>
+			</div>
+		</div>
+
+		
+			
+			<div class="tabs-tab ui bottom attached tabs active tab segment" data-tab="pJRxRxVe">
+				
+
+				<pre><code class="typescript hljs"><span class="hljs-comment">// ... additional imports</span>
+<span class="hljs-keyword">import</span> * as App from <span class="hljs-string">"carbonldp/App"</span>;
+
+<span class="hljs-keyword">let</span> myAppContext:App.Context;
+
+<span class="hljs-comment">// ... app context retrieval</span>
+
+myAppContext.documents.listChildren&lt;Project&gt;( <span class="hljs-string">"projects/"</span> ).then(
+    ( [ unresolvedProjects, response ] : [ ( Project &amp; PersistedDocument.Class )[], HTTP.Response.Class]) =&gt; {
+        <span class="hljs-built_in">console</span>.log( unresolvedProjects ); <span class="hljs-comment">// array of unresolved pointers</span>
+    }
+);
+
+myAppContext.documents.getChildren&lt;Project&gt;( <span class="hljs-string">"projects/"</span> ).then(
+    ( [ resolvedProjects, response ] : [ ( Project &amp; PersistedDocument.Class )[], HTTP.Response.Class] ) =&gt; {
+        <span class="hljs-built_in">console</span>.log( resolvedProjects ); <span class="hljs-comment">// array of resolved pointers</span>
+    }
+);</code></pre>
+
+			
+			</div>
+		
+			
+			<div class="tabs-tab ui bottom attached tabs  tab segment" data-tab="MHCAAnED">
+				
+
+				<pre><code class="javascript hljs"><span class="hljs-comment">// ... imports</span>
+
+<span class="hljs-keyword">let</span> myAppContext;
+
+<span class="hljs-comment">// ... app context retrieval</span>
+
+myAppContext.documents.listChildren( <span class="hljs-string">"projects/"</span> ).then(
+    <span class="hljs-function">(<span class="hljs-params"> [ unresolvedProjects, response ] </span>) =&gt;</span> {
+        <span class="hljs-built_in">console</span>.log( projectPointers ); <span class="hljs-comment">// array of unresolved pointers</span>
+    }
+);
+
+myAppContext.documents.getChildren( <span class="hljs-string">"projects/"</span> ).then(
+    <span class="hljs-function">(<span class="hljs-params"> [ resolvedProjects, response ] </span>) =&gt;</span> {
+        <span class="hljs-built_in">console</span>.log( projects ); <span class="hljs-comment">// array of resolved pointers</span>
+    }
+);</code></pre>
+
+			
+			</div>
+		
+			
+			<div class="tabs-tab ui bottom attached tabs  tab segment" data-tab="AUpRbOmo">
+				
+
+				<pre><code class="javascript hljs"><span class="hljs-keyword">var</span> myAppContext;
+
+<span class="hljs-comment">// ... app context retrieval</span>
+
+myAppContext.documents.listChildren( <span class="hljs-string">"projects/"</span> ).then(
+    <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> [ unresolvedProjects, response ] </span>) </span>{
+        <span class="hljs-keyword">var</span> unresolvedProjects = result[ <span class="hljs-number">0</span> ];
+        <span class="hljs-keyword">var</span> response = result[ <span class="hljs-number">1</span> ];
+
+        <span class="hljs-built_in">console</span>.log( projectPointers ); <span class="hljs-comment">// array of unresolved pointers</span>
+    }
+);
+
+myAppContext.documents.getChildren( <span class="hljs-string">"projects/"</span> ).then(
+    <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> [ resolvedProjects, response ] </span>) </span>{
+        <span class="hljs-keyword">var</span> resolvedProjects = result[ <span class="hljs-number">0</span> ];
+        <span class="hljs-keyword">var</span> response = result[ <span class="hljs-number">1</span> ];
+
+        <span class="hljs-built_in">console</span>.log( projects ); <span class="hljs-comment">// array of resolved pointers</span>
+    }
+);</code></pre>
+
+			
+			</div>
+		
+	
+</div>
+
+		<p>
+			Like <code>createChild</code> and <code>delete</code>, <code>listChildren</code> and <code>getChildren</code>
+			are also accessible through a <code>PersistedDocument.Class</code>. See, there's a pattern!
+		</p>
+		<div class="ui info icon message">
+			<i class="info circle icon"></i>
+			<div class="content">
+				<p>
+					The last example could show you weird results. The <code>documents</code> service
+					caches pointers, so listing children of a document while at the same time retrieving them will return
+					you the same objects.
+				</p>
+			</div>
+		</div>
+		<p>
+			It's worth mentioning that parent-child relations are considered <span class="highlight">hard links</span>.
+			They are directly related to the structure of the data. Meaning, if you delete the relation,
+			the child gets deleted too. By consequence, if you delete a parent, all of its children will also be
+			deleted (and the children of its children, and so on).
+		</p>
+	</section>
+	<section class="mainContent-subSection" id="membership-relation">
+		<h3>Membership Relation</h3>
+		<p>
+			Because parent-child relations are <span class="highlight">hard links</span>, it is not recommended
+			to use them in your app logic. Instead, Carbon helps you manage another type of relation, considered as
+			a <span class="highlight">soft link</span>, membership relations.
+		</p>
+		<p>
+			The meaning of a membership relation is up to your application logic to define it. It can mean things like,
+			a project's list of tasks, a person's friends, a person's assets, etc. You must be thinking
+			<!-- TODO: Use a css class instead of an <i> block -->
+			<i>"well I can already do that with normal JavaScript properties, what are the advantages of treating them as 'membership relations'?"</i>.
+			It's true that you can manually manage lists, but to do so, you would need to manage the whole document. By configuring
+			a property to act as a "membership relation", you enable things like retrieving the list without retrieving the complete document,
+			adding new elements without retrieving the list, etc.
+		</p>
+		<p>
+			All carbon documents can maintain a list of members. The relation between the document and its members can be
+			configured, through the properties:
+		</p>
+		<ul>
+			<li>
+				<code>hasMemberRelation</code>: Configures the property that will hold the array of members
+				(by default <code>members</code>)
+			</li>
+			<li>
+				<code>isMemberOfRelation</code>: Configures the property that each member will have, that links back to the
+				document they are member of (none by default)
+			</li>
+		</ul>
+		<p>
+			These properties are configured in the document that will maintain the member array. Members can be added, removed,
+			listed or retrieved, through the following methods in the <code>documents</code> service (and the document itself too):
+		</p>
+		<ul>
+			<li>
+				<code>addMember/addMembers</code>: Adds the provided pointers as members of the document
+			</li>
+			<li>
+				<code>listMembers</code>: Like <code>listChildren</code>, returns an array of unresolved <code>PersistedDocument.Class</code> objects for each member
+			</li>
+			<li>
+				<code>getMembers</code>: Like <code>getChildren</code>, returns an array of RESOLVED <code>PersistedDocument.Class</code> objects for each member
+			</li>
+			<li>
+				<code>removeMember/removeMembers/removeAllMembers</code>: Removes the specified members (without deleting them)
+			</li>
+		</ul>
+		<div class="ui grid tabsComponent">
+	
+		<div class="ui computer tablet only row tabs">
+			<div class="ui top attached tabular menu tabs-titles">
+				
+				
+					<a class="tabs-title active item" data-tab="JfQBlvce">TypeScript</a>
+				
+				
+					<a class="tabs-title  item" data-tab="vwHPjIZP">JavaScript ES2015</a>
+				
+				
+					<a class="tabs-title  item" data-tab="cNtwufdA">JavaScript ES5</a>
+				
+			</div>
+		</div>
+		<div class="ui mobile only row tabs">
+			<div class="ui compact selection dropdown tabs-options">
+				<i class="dropdown icon"></i>
+				<div class="text">TypeScript</div>
+				<div class="menu">
+					
+					
+					<div class="tabs-option item" data-tab="JfQBlvce">TypeScript</div>
+					
+					
+					<div class="tabs-option item" data-tab="vwHPjIZP">JavaScript ES2015</div>
+					
+					
+					<div class="tabs-option item" data-tab="cNtwufdA">JavaScript ES5</div>
+					
+				</div>
+			</div>
+		</div>
+
+		
+			
+			<div class="tabs-tab ui bottom attached tabs active tab segment" data-tab="JfQBlvce">
+				
+
+				<pre><code class="typescript hljs"><span class="hljs-comment">// ... additional imports</span>
+<span class="hljs-keyword">import</span> * as App from <span class="hljs-string">"carbonldp/App"</span>;
+<span class="hljs-keyword">import</span> * as PersistedDocument from <span class="hljs-string">"carbonldp/PersistedDocument"</span>;
+<span class="hljs-keyword">import</span> * as Response from <span class="hljs-string">"carbonldp/HTTP/Response"</span>;
+
+<span class="hljs-keyword">let</span> myAppContext:App.Context;
+
+<span class="hljs-comment">// ... app context retrieval</span>
+
+<span class="hljs-keyword">let</span> project:Project = {
+    name: <span class="hljs-string">"Important project"</span>,
+
+    hasMemberRelation: <span class="hljs-string">"tasks"</span>,
+    isMemberOfRelation: <span class="hljs-string">"project"</span>
+};
+
+<span class="hljs-keyword">let</span> task1:Task = { name: <span class="hljs-string">"Task 1"</span> }; <span class="hljs-comment">// Being "Task" a business specific interface defined somewhere</span>
+<span class="hljs-keyword">let</span> task2:Task = { name: <span class="hljs-string">"Task 2"</span> };
+<span class="hljs-keyword">let</span> task3:Task = { name: <span class="hljs-string">"Task 3"</span> };
+
+<span class="hljs-comment">// ... project, task1, task2 and task3 persistence (createChild, etc)</span>
+
+project.addMembers( [ task1, task2, task3 ] ).then(
+    ( response:Response.Class ) =&gt; {
+        <span class="hljs-keyword">return</span> project.resolve&lt;Project&gt;();
+    }
+).then(
+    ( [ project, response ]:[ Project &amp; PersistedDocument.Class, Response.Class ] ) =&gt; {
+        <span class="hljs-built_in">console</span>.log( project.tasks ); <span class="hljs-comment">// Pointers for task1, task2 and task3. Added because of the configured hasMemberRelation</span>
+        <span class="hljs-built_in">console</span>.log( project.tasks.indexOf( task1 ) !== <span class="hljs-number">-1</span> ); <span class="hljs-comment">// true (remember, pointers are cached and reused)</span>
+        <span class="hljs-built_in">console</span>.log( project.tasks.indexOf( task2 ) !== <span class="hljs-number">-1</span> ); <span class="hljs-comment">// true</span>
+        <span class="hljs-built_in">console</span>.log( project.tasks.indexOf( task3 ) !== <span class="hljs-number">-1</span> ); <span class="hljs-comment">// true</span>
+
+        <span class="hljs-keyword">return</span> project.listMembers&lt;Task&gt;();
+    }
+).then(
+    ( [ unresolvedTasks, response ]:[ Task &amp; PersistedDocument.Class, Response.Class ] ) =&gt; {
+        <span class="hljs-built_in">console</span>.log( unresolvedTasks ); <span class="hljs-comment">// Pointers for task1, task2 and task3</span>
+
+        <span class="hljs-keyword">return</span> project.removeMember( task2 );
+    }
+).then(
+    ( response:Response.Class ) =&gt; {
+        <span class="hljs-built_in">console</span>.log( <span class="hljs-string">"Task 2 is no longer a member of the project"</span> );
+
+        <span class="hljs-keyword">return</span> project.getMembers&lt;Task&gt;();
+    }
+).then(
+    ( [ resolvedTasks, response ]:[ Task &amp; PersistedDocument.Class, Response.Class ] ) =&gt; {
+        <span class="hljs-built_in">console</span>.log( resolvedTasks ); <span class="hljs-comment">// task1 and task3 documents</span>
+        <span class="hljs-built_in">console</span>.log( task[<span class="hljs-number">0</span>].project ); <span class="hljs-comment">// pointer to project. Added due to the configured isMemberOfRelation</span>
+    }
+).catch( <span class="hljs-built_in">console</span>.error );</code></pre>
+
+			
+			</div>
+		
+			
+			<div class="tabs-tab ui bottom attached tabs  tab segment" data-tab="vwHPjIZP">
+				
+
+				<pre><code class="javascript hljs"><span class="hljs-comment">// ... imports</span>
+
+<span class="hljs-keyword">let</span> myAppContext;
+
+<span class="hljs-comment">// ... app context retrieval</span>
+
+<span class="hljs-keyword">let</span> project = {
+    <span class="hljs-attr">name</span>: <span class="hljs-string">"Important project"</span>,
+
+    <span class="hljs-attr">hasMemberRelation</span>: tasks,
+    <span class="hljs-attr">isMemberOfRelation</span>: project
+};
+
+<span class="hljs-keyword">let</span> task1 = { <span class="hljs-attr">name</span>: <span class="hljs-string">"Task 1"</span> };
+<span class="hljs-keyword">let</span> task2 = { <span class="hljs-attr">name</span>: <span class="hljs-string">"Task 2"</span> };
+<span class="hljs-keyword">let</span> task3 = { <span class="hljs-attr">name</span>: <span class="hljs-string">"Task 3"</span> };
+
+<span class="hljs-comment">// ... project, task1, task2 and task3 persistence (createChild, etc)</span>
+
+project.addMembers( [ task1, task2, task3 ] ).then(
+    <span class="hljs-function">(<span class="hljs-params"> response </span>) =&gt;</span> {
+        <span class="hljs-keyword">return</span> project.resolve();
+    }
+).then(
+    <span class="hljs-function">(<span class="hljs-params"> [ project, response ] </span>) =&gt;</span> {
+        <span class="hljs-built_in">console</span>.log( project.tasks ); <span class="hljs-comment">// Pointers for task1, task2 and task3. Added because of the configured hasMemberRelation</span>
+        <span class="hljs-built_in">console</span>.log( project.tasks.indexOf( task1 ) !== <span class="hljs-number">-1</span> ); <span class="hljs-comment">// true (remember, pointers are cached and reused)</span>
+        <span class="hljs-built_in">console</span>.log( project.tasks.indexOf( task2 ) !== <span class="hljs-number">-1</span> ); <span class="hljs-comment">// true</span>
+        <span class="hljs-built_in">console</span>.log( project.tasks.indexOf( task3 ) !== <span class="hljs-number">-1</span> ); <span class="hljs-comment">// true</span>
+
+        <span class="hljs-keyword">return</span> project.listMembers();
+    }
+).then(
+    <span class="hljs-function">(<span class="hljs-params"> [ unresolvedTasks, response ] </span>) =&gt;</span> {
+        <span class="hljs-built_in">console</span>.log( unresolvedTasks ); <span class="hljs-comment">// Pointers for task1, task2 and task3</span>
+
+        <span class="hljs-keyword">return</span> project.removeMember( task2 );
+    }
+).then(
+    <span class="hljs-function">(<span class="hljs-params"> response </span>) =&gt;</span> {
+        <span class="hljs-built_in">console</span>.log( <span class="hljs-string">"Task 2 is no longer a member of the project"</span> );
+
+        <span class="hljs-keyword">return</span> project.getMembers();
+    }
+).then(
+    <span class="hljs-function">(<span class="hljs-params"> [ resolvedTasks, response ] </span>) =&gt;</span> {
+        <span class="hljs-built_in">console</span>.log( resolvedTasks ); <span class="hljs-comment">// task1 and task3 documents</span>
+        <span class="hljs-built_in">console</span>.log( task[<span class="hljs-number">0</span>].project ); <span class="hljs-comment">// pointer to project. Added due to the configured isMemberOfRelation</span>
+    }
+).catch( <span class="hljs-built_in">console</span>.error );</code></pre>
+
+			
+			</div>
+		
+			
+			<div class="tabs-tab ui bottom attached tabs  tab segment" data-tab="cNtwufdA">
+				
+
+				<pre><code class="javascript hljs"><span class="hljs-keyword">var</span> myAppContext;
+
+<span class="hljs-comment">// ... app context retrieval</span>
+
+<span class="hljs-keyword">var</span> project = {
+    <span class="hljs-attr">name</span>: <span class="hljs-string">"Important project"</span>,
+
+    <span class="hljs-attr">hasMemberRelation</span>: tasks,
+    <span class="hljs-attr">isMemberOfRelation</span>: project
+};
+
+<span class="hljs-keyword">var</span> task1 = { <span class="hljs-attr">name</span>: <span class="hljs-string">"Task 1"</span> };
+<span class="hljs-keyword">var</span> task2 = { <span class="hljs-attr">name</span>: <span class="hljs-string">"Task 2"</span> };
+<span class="hljs-keyword">var</span> task3 = { <span class="hljs-attr">name</span>: <span class="hljs-string">"Task 3"</span> };
+
+<span class="hljs-comment">// ... project, task1, task2 and task3 persistence (createChild, etc)</span>
+
+project.addMembers( [ task1, task2, task3 ] ).then(
+    <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> response </span>) </span>{
+        <span class="hljs-keyword">return</span> project.resolve();
+    }
+).then(
+    <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> result </span>) </span>{
+        <span class="hljs-keyword">var</span> project = result[ <span class="hljs-number">0</span> ];
+        <span class="hljs-keyword">var</span> response = result[ <span class="hljs-number">1</span> ];
+
+        <span class="hljs-built_in">console</span>.log( project.tasks ); <span class="hljs-comment">// Pointers for task1, task2 and task3. Added because of the configured hasMemberRelation</span>
+        <span class="hljs-built_in">console</span>.log( project.tasks.indexOf( task1 ) !== <span class="hljs-number">-1</span> ); <span class="hljs-comment">// true (remember, pointers are cached and reused)</span>
+        <span class="hljs-built_in">console</span>.log( project.tasks.indexOf( task2 ) !== <span class="hljs-number">-1</span> ); <span class="hljs-comment">// true</span>
+        <span class="hljs-built_in">console</span>.log( project.tasks.indexOf( task3 ) !== <span class="hljs-number">-1</span> ); <span class="hljs-comment">// true</span>
+
+        <span class="hljs-keyword">return</span> project.listMembers();
+    }
+).then(
+    <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> result </span>) </span>{
+        <span class="hljs-keyword">var</span> unresolvedTasks = result[ <span class="hljs-number">0</span> ];
+        <span class="hljs-keyword">var</span> response = result[ <span class="hljs-number">1</span> ];
+
+        <span class="hljs-built_in">console</span>.log( unresolvedTasks ); <span class="hljs-comment">// Pointers for task1, task2 and task3</span>
+
+        <span class="hljs-keyword">return</span> project.removeMember( task2 );
+    }
+).then(
+    <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> response </span>) </span>{
+        <span class="hljs-built_in">console</span>.log( <span class="hljs-string">"Task 2 is no longer a member of the project"</span> );
+
+        <span class="hljs-keyword">return</span> project.getMembers();
+    }
+).then(
+    <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> result </span>) </span>{
+        <span class="hljs-keyword">var</span> resolvedTasks = result[ <span class="hljs-number">0</span> ];
+        <span class="hljs-keyword">var</span> response = result[ <span class="hljs-number">1</span> ];
+
+        <span class="hljs-built_in">console</span>.log( resolvedTasks ); <span class="hljs-comment">// task1 and task3 documents</span>
+        <span class="hljs-built_in">console</span>.log( task[<span class="hljs-number">0</span>].project ); <span class="hljs-comment">// pointer to project. Added due to the configured isMemberOfRelation</span>
+    }
+).catch( <span class="hljs-built_in">console</span>.error );</code></pre>
+
+			
+			</div>
+		
+	
+</div>
+
+	</section>
+</section>
+<section class="mainContent-section" id="creating-an-access-point">
+	<h2>Creating an access point</h2>
+	<p>
+		Membership relations have a limitation though, a document can only maintain one list through one property. So what happens when
+		you want to manage members of another property? For example, what happens if you want to manage a list of people that are members
+		of the project? Well, this can be accomplished using access points.
+	</p>
+	<p>
+		Access points are special documents whose purpose is to maintain a list of members of another document. Any document can have
+		any number of access points, removing the limitation we talked about.
+	</p>
+	<p>
+		Like normal documents, access points can be customized by specifying a <code>hasMemberRelation</code> and an
+		<code>isMemberOfRelation</code>. To create an access point for a document you can use the <code>createAccessPoint</code> method
+		of the <code>documents</code> service or of a <code>PersistedDocument.Class</code> object.
+	</p>
+	<div class="ui grid tabsComponent">
+	
+		<div class="ui computer tablet only row tabs">
+			<div class="ui top attached tabular menu tabs-titles">
+				
+				
+					<a class="tabs-title active item" data-tab="ScuHTjGv">TypeScript</a>
+				
+				
+					<a class="tabs-title  item" data-tab="rtWDKkVa">JavaScript ES2015</a>
+				
+				
+					<a class="tabs-title  item" data-tab="kQoKhZPR">JavaScript ES5</a>
+				
+			</div>
+		</div>
+		<div class="ui mobile only row tabs">
+			<div class="ui compact selection dropdown tabs-options">
+				<i class="dropdown icon"></i>
+				<div class="text">TypeScript</div>
+				<div class="menu">
+					
+					
+					<div class="tabs-option item" data-tab="ScuHTjGv">TypeScript</div>
+					
+					
+					<div class="tabs-option item" data-tab="rtWDKkVa">JavaScript ES2015</div>
+					
+					
+					<div class="tabs-option item" data-tab="kQoKhZPR">JavaScript ES5</div>
+					
+				</div>
+			</div>
+		</div>
+
+		
+			
+			<div class="tabs-tab ui bottom attached tabs active tab segment" data-tab="ScuHTjGv">
+				
+
+			<pre><code class="typescript hljs"><span class="hljs-comment">// ... additional imports</span>
+<span class="hljs-keyword">import</span> * as AccessPoint from <span class="hljs-string">"carbonldp/AccessPoint"</span>;
+<span class="hljs-keyword">import</span> * as PersistedAccessPoint from <span class="hljs-string">"carbonldp/PersistedAccessPoint"</span>;
+<span class="hljs-keyword">import</span> * as PersistedDocument from <span class="hljs-string">"carbonldp/PersistedDocument"</span>;
+
+<span class="hljs-keyword">let</span> project:Project &amp; PersistedDocument.Class;
+<span class="hljs-keyword">let</span> person1:Person &amp; PersistedDocument.Class;
+<span class="hljs-keyword">let</span> person2:Person &amp; PersistedDocument.Class;
+
+<span class="hljs-comment">// ... project, person1 and person2 document retrieval</span>
+
+<span class="hljs-keyword">let</span> projectMembersAccessPoint:AccessPoint = {
+    hasMemberRelation: <span class="hljs-string">"people"</span>, <span class="hljs-comment">// property used to store the member list in the accessPoint's document</span>
+    isMemberOfRelation: <span class="hljs-string">"projects"</span> <span class="hljs-comment">// property used to link back members to the document they are members of</span>
+};
+
+project.createAccessPoint( <span class="hljs-string">"people"</span>, projectMembersAccessPoint ).then(
+    ( [ persistedProjectMembersAccessPoint, response ]:[ PersistedAccessPoint.Class, Response.Class ] ) =&gt; {
+        <span class="hljs-built_in">console</span>.log( projectMembersAccessPoint === persistedProjectMembersAccessPoint ); <span class="hljs-comment">// true</span>
+
+        <span class="hljs-keyword">return</span> persistedProjectMembersAccessPoint.addMembers( [ person1, person2 ] );
+    }
+).then(
+    ( response:Response.Class ) =&gt; {
+        <span class="hljs-keyword">return</span> project.refresh&lt;Project&gt;();
+    }
+).then(
+    ( [ refreshedProject, response ]:[ Project &amp; PersistedDocument.Class, Response.Class ] ) =&gt; {
+        <span class="hljs-built_in">console</span>.log( project === refreshedProject ); <span class="hljs-comment">// true</span>
+        <span class="hljs-built_in">console</span>.log( refreshedProject.people ); <span class="hljs-comment">// Pointers to person1 and person2</span>
+
+        <span class="hljs-keyword">return</span> person1.refresh&lt;Person&gt;();
+    }
+).then(
+    ( [ refreshedPerson1, response ]:[ Person &amp; PersistedDocument.Class, Response.Class ] ) =&gt; {
+        <span class="hljs-built_in">console</span>.log( person1 === refreshedPerson1 ); <span class="hljs-comment">// true</span>
+        <span class="hljs-built_in">console</span>.log( refreshedPerson1.projects ); <span class="hljs-comment">// Pointer to project</span>
+    }
+).catch( <span class="hljs-built_in">console</span>.error );</code></pre>
+
+		
+			</div>
+		
+			
+			<div class="tabs-tab ui bottom attached tabs  tab segment" data-tab="rtWDKkVa">
+				
+
+			<pre><code class="javascript hljs"><span class="hljs-comment">// ... imports</span>
+
+<span class="hljs-keyword">let</span> project;
+<span class="hljs-keyword">let</span> person1;
+<span class="hljs-keyword">let</span> person2;
+
+<span class="hljs-comment">// ... project, person1 and person2 document retrieval</span>
+
+<span class="hljs-keyword">let</span> projectMembersAccessPoint = {
+    <span class="hljs-attr">hasMemberRelation</span>: <span class="hljs-string">"people"</span>, <span class="hljs-comment">// property used to store the member list in the accessPoint's document</span>
+    isMemberOfRelation: <span class="hljs-string">"projects"</span> <span class="hljs-comment">// property used to link back members to the document they are members of</span>
+};
+
+project.createAccessPoint( <span class="hljs-string">"people"</span>, projectMembersAccessPoint ).then(
+    <span class="hljs-function">(<span class="hljs-params"> [ persistedProjectMembersAccessPoint, response ] </span>) =&gt;</span> {
+        <span class="hljs-built_in">console</span>.log( projectMembersAccessPoint === persistedProjectMembersAccessPoint ); <span class="hljs-comment">// true</span>
+
+        <span class="hljs-keyword">return</span> persistedProjectMembersAccessPoint.addMembers( [ person1, person2 ] );
+    }
+).then(
+    <span class="hljs-function">(<span class="hljs-params"> response </span>) =&gt;</span> {
+        <span class="hljs-keyword">return</span> project.refresh&lt;Project&gt;();
+    }
+).then(
+    <span class="hljs-function">(<span class="hljs-params"> [ refreshedProject, response ] </span>) =&gt;</span> {
+        <span class="hljs-built_in">console</span>.log( project === refreshedProject ); <span class="hljs-comment">// true</span>
+        <span class="hljs-built_in">console</span>.log( refreshedProject.people ); <span class="hljs-comment">// Pointers to person1 and person2</span>
+
+        <span class="hljs-keyword">return</span> person1.refresh&lt;Person&gt;();
+    }
+).then(
+    <span class="hljs-function">(<span class="hljs-params"> [ refreshedPerson1, response ] </span>) =&gt;</span> {
+        <span class="hljs-built_in">console</span>.log( person1 === refreshedPerson1 ); <span class="hljs-comment">// true</span>
+        <span class="hljs-built_in">console</span>.log( refreshedPerson1.projects ); <span class="hljs-comment">// Pointer to project</span>
+    }
+).catch( <span class="hljs-built_in">console</span>.error );</code></pre>
+
+		
+			</div>
+		
+			
+			<div class="tabs-tab ui bottom attached tabs  tab segment" data-tab="kQoKhZPR">
+				
+
+			<pre><code class="javascript hljs"><span class="hljs-comment">// ... imports</span>
+
+<span class="hljs-keyword">var</span> project;
+<span class="hljs-keyword">var</span> person1;
+<span class="hljs-keyword">var</span> person2;
+
+<span class="hljs-comment">// ... project, person1 and person2 document retrieval</span>
+
+<span class="hljs-keyword">var</span> projectMembersAccessPoint = {
+    <span class="hljs-attr">hasMemberRelation</span>: <span class="hljs-string">"people"</span>, <span class="hljs-comment">// property used to store the member list in the accessPoint's document</span>
+    isMemberOfRelation: <span class="hljs-string">"projects"</span> <span class="hljs-comment">// property used to link back members to the document they are members of</span>
+};
+
+project.createAccessPoint( <span class="hljs-string">"people"</span>, projectMembersAccessPoint ).then(
+    <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> result </span>) </span>{
+        <span class="hljs-keyword">var</span> persistedProjectMembersAccessPoint = result[ <span class="hljs-number">0</span> ];
+        <span class="hljs-keyword">var</span> response = result[ <span class="hljs-number">1</span> ];
+
+        <span class="hljs-built_in">console</span>.log( projectMembersAccessPoint === persistedProjectMembersAccessPoint ); <span class="hljs-comment">// true</span>
+
+        <span class="hljs-keyword">return</span> persistedProjectMembersAccessPoint.addMembers( [ person1, person2 ] );
+    }
+).then(
+    <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> response </span>) </span>{
+        <span class="hljs-keyword">return</span> project.refresh&lt;Project&gt;();
+    }
+).then(
+    <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> result </span>) </span>{
+        <span class="hljs-keyword">var</span> refreshedProject = result[ <span class="hljs-number">0</span> ];
+        <span class="hljs-keyword">var</span> response = result[ <span class="hljs-number">1</span> ];
+
+        <span class="hljs-built_in">console</span>.log( project === refreshedProject ); <span class="hljs-comment">// true</span>
+        <span class="hljs-built_in">console</span>.log( refreshedProject.people ); <span class="hljs-comment">// Pointers to person1 and person2</span>
+
+        <span class="hljs-keyword">return</span> person1.refresh&lt;Person&gt;();
+    }
+).then(
+    <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> result </span>) </span>{
+        <span class="hljs-keyword">var</span> refreshedPerson1 = result[ <span class="hljs-number">0</span> ];
+        <span class="hljs-keyword">var</span> response = result[ <span class="hljs-number">1</span> ];
+
+        <span class="hljs-built_in">console</span>.log( person1 === refreshedPerson1 ); <span class="hljs-comment">// true</span>
+        <span class="hljs-built_in">console</span>.log( refreshedPerson1.projects ); <span class="hljs-comment">// Pointer to project</span>
+    }
+).catch( <span class="hljs-built_in">console</span>.error );</code></pre>
+
+		
+			</div>
+		
+	
+</div>
+
+</section>
+<section class="mainContent-section" id="putting-it-all-together">
+	<h2>Putting it all together</h2>
+	<p>
+		Here's an example of all the actions we talked about joined together into a single script:
+	</p>
+	<div class="ui grid tabsComponent">
+	
+		<div class="ui computer tablet only row tabs">
+			<div class="ui top attached tabular menu tabs-titles">
+				
+				
+					<a class="tabs-title active item" data-tab="NcnHklNl">TypeScript</a>
+				
+				
+					<a class="tabs-title  item" data-tab="XtcBztlP">JavaScript ES2015</a>
+				
+				
+					<a class="tabs-title  item" data-tab="cxxNjMGf">JavaScript ES5</a>
+				
+			</div>
+		</div>
+		<div class="ui mobile only row tabs">
+			<div class="ui compact selection dropdown tabs-options">
+				<i class="dropdown icon"></i>
+				<div class="text">TypeScript</div>
+				<div class="menu">
+					
+					
+					<div class="tabs-option item" data-tab="NcnHklNl">TypeScript</div>
+					
+					
+					<div class="tabs-option item" data-tab="XtcBztlP">JavaScript ES2015</div>
+					
+					
+					<div class="tabs-option item" data-tab="cxxNjMGf">JavaScript ES5</div>
+					
+				</div>
+			</div>
+		</div>
+
+		
+			
+			<div class="tabs-tab ui bottom attached tabs active tab segment" data-tab="NcnHklNl">
+				
+
+			<pre><code class="typescript hljs"><span class="hljs-keyword">import</span> Carbon from <span class="hljs-string">"carbonldp/Carbon"</span>;
+<span class="hljs-keyword">import</span> * as Token from <span class="hljs-string">"carbonldp/Auth/Token"</span>;
+<span class="hljs-keyword">import</span> * as App from <span class="hljs-string">"carbonldp/App"</span>;
+<span class="hljs-keyword">import</span> * as Response from <span class="hljs-string">"carbonldp/HTTP/Response"</span>;
+<span class="hljs-keyword">import</span> * as PersistedAccessPoint from <span class="hljs-string">"carbonldp/PersistedAccessPoint"</span>;
+<span class="hljs-keyword">import</span> * as PersistedDocument from <span class="hljs-string">"carbonldp/PersistedDocument"</span>;
+
+<span class="hljs-keyword">interface</span> Task {
+    name:<span class="hljs-built_in">string</span>;
+    dueDate:<span class="hljs-built_in">Date</span>;
+}
+
+<span class="hljs-keyword">interface</span> Project {
+    name:<span class="hljs-built_in">string</span>;
+    description?:{
+        <span class="hljs-keyword">type</span>:<span class="hljs-built_in">string</span>;
+        content:<span class="hljs-built_in">string</span>;
+    };
+    tasks?:Task[];  <span class="hljs-comment">// If there are no tasks this property won't exist</span>
+}
+
+<span class="hljs-keyword">let</span> project:Project = {
+    name: <span class="hljs-string">"Project X"</span>
+};
+<span class="hljs-keyword">let</span> persistedProject:Project &amp; PersistedDocument.Class;
+<span class="hljs-keyword">let</span> tasksAccessPoint:PersistedAccessPoint.Class;
+<span class="hljs-keyword">let</span> persistedTask1:Task &amp; PersistedDocument.Class;
+<span class="hljs-keyword">let</span> persistedTask2:Task &amp; PersistedDocument.Class;
+
+<span class="hljs-keyword">let</span> carbon:Carbon = <span class="hljs-keyword">new</span> Carbon();
+carbon.setSetting( <span class="hljs-string">"domain"</span>, <span class="hljs-string">"localhost:8083"</span> );
+carbon.setSetting( <span class="hljs-string">"http.ssl"</span>, <span class="hljs-literal">false</span> ); <span class="hljs-comment">// Turning off HTTPS (only needed if your server isn't using it)</span>
+
+<span class="hljs-keyword">let</span> appContext:App.Context;
+
+carbon.auth.authenticate( <span class="hljs-string">"your@email.com"</span>, <span class="hljs-string">"YouRP455word"</span> ).then(
+    ( token:Token.Class ) =&gt; {
+        <span class="hljs-built_in">console</span>.log( <span class="hljs-string">`Hello <span class="hljs-subst">${ carbon.auth.authenticatedAgent.name }</span>!`</span> );
+
+        <span class="hljs-comment">// Retrieving the application context</span>
+        <span class="hljs-keyword">return</span> carbon.apps.getContext( <span class="hljs-string">"your-app-slug-here/"</span> );
+    }
+).then(
+    ( _appContext:App.Context ) =&gt; {
+        appContext = _appContext;
+
+        <span class="hljs-comment">// Creating a document</span>
+        <span class="hljs-keyword">return</span> appContext.documents.createChild&lt;Project&gt;( <span class="hljs-string">"/"</span>, project );
+    }
+).then(
+    ( [ _persistedProject, response ]:[ Project &amp; PersistedDocument.Class, Response.Class ] ) =&gt; {
+        persistedProject = _persistedProject;
+
+        <span class="hljs-built_in">console</span>.log( project === persistedProject ); <span class="hljs-comment">// true</span>
+        <span class="hljs-built_in">console</span>.log( persistedProject.id ); <span class="hljs-comment">// document's URI</span>
+        <span class="hljs-built_in">console</span>.log( <span class="hljs-string">"created"</span> <span class="hljs-keyword">in</span> persistedProject ); <span class="hljs-comment">// false - The project was persisted but it's latest state hasn't been retrieved from the server</span>
+
+        <span class="hljs-comment">// Read the just created document</span>
+        <span class="hljs-keyword">return</span> appContext.documents.get&lt;Project&gt;( persistedProject.id ); <span class="hljs-comment">// Can also be `return persistedProject.refresh();`</span>
+    }
+).then(
+    ( [ persistedProject, response ]:[ Project &amp; PersistedDocument.Class, Response.Class ] ) =&gt; {
+        <span class="hljs-built_in">console</span>.log( project === persistedProject ); <span class="hljs-comment">// true - The same object was updated with its latest properties</span>
+        <span class="hljs-built_in">console</span>.log( persistedProject.created ); <span class="hljs-comment">// Creation date</span>
+
+        persistedProject.description = {
+            <span class="hljs-keyword">type</span>: <span class="hljs-string">"markdown"</span>,
+            content: <span class="hljs-string">"# Some description here"</span>
+        };
+
+        <span class="hljs-comment">// Save the latest state to the server</span>
+        <span class="hljs-keyword">return</span> persistedProject.save&lt;Project&gt;(); <span class="hljs-comment">// Can also be `appContext.documents.save&lt;Project&gt;( persistedProject );`</span>
+    }
+).then(
+    ( [ persistedProject, response ]:[ Project &amp; PersistedDocument.Class, Response.Class ] ) =&gt; {
+        <span class="hljs-built_in">console</span>.log( project === persistedProject ); <span class="hljs-comment">// true</span>
+
+        <span class="hljs-comment">// Creating an access point for the project to manage tasks</span>
+        <span class="hljs-keyword">return</span> persistedProject.createAccessPoint( {
+            hasMemberRelation: <span class="hljs-string">"tasks"</span>
+        }, <span class="hljs-string">"tasks"</span> );
+    }
+).then(
+    ( [ _tasksAccessPoint, response ]:[ PersistedAccessPoint.Class, Response.Class ] ) =&gt; {
+        tasksAccessPoint = _tasksAccessPoint;
+
+        <span class="hljs-comment">// Creating a task so we can add it to the project later on</span>
+        <span class="hljs-keyword">return</span> appContext.documents.createChild&lt;Task&gt;( <span class="hljs-string">"/"</span>, {
+            name: <span class="hljs-string">"Do something"</span>,
+            dueDate: <span class="hljs-keyword">new</span> <span class="hljs-built_in">Date</span>()
+        } );
+    }
+).then(
+    ( [ persistedTask, response ]:[ Task &amp; PersistedDocument.Class, Response.Class ] ) =&gt; {
+        persistedTask1 = persistedTask;
+
+        <span class="hljs-comment">// Creating another task so we can add it to the project later on</span>
+        <span class="hljs-keyword">return</span> appContext.documents.createChild&lt;Task&gt;( <span class="hljs-string">"/"</span>, {
+            name: <span class="hljs-string">"Do something else"</span>,
+            dueDate: <span class="hljs-keyword">new</span> <span class="hljs-built_in">Date</span>()
+        } );
+    }
+).then(
+    ( [ persistedTask, response ]:[ Task &amp; PersistedDocument.Class, Response.Class ] ) =&gt; {
+        persistedTask2 = persistedTask;
+
+        <span class="hljs-comment">// Adding them to the project through the AccessPoint</span>
+        <span class="hljs-keyword">return</span> tasksAccessPoint.addMembers( [ persistedTask1, persistedTask2 ] );
+    }
+).then(
+    ( response:Response.Class ) =&gt; {
+
+        <span class="hljs-comment">// Refreshing the project so we can check if the tasks were added</span>
+        <span class="hljs-keyword">return</span> persistedProject.refresh&lt;Project&gt;();
+    }
+).then(
+    ( [ persistedProject, response ]:[ Project &amp; PersistedDocument.Class, Response.Class ] ) =&gt; {
+        <span class="hljs-built_in">console</span>.log( project === persistedProject ); <span class="hljs-comment">// true - Still the same object</span>
+        <span class="hljs-built_in">console</span>.log( <span class="hljs-string">"tasks"</span> <span class="hljs-keyword">in</span> persistedProject ); <span class="hljs-comment">// true</span>
+        <span class="hljs-built_in">console</span>.log( persistedProject.tasks.indexOf( persistedTask1 ) !== - <span class="hljs-number">1</span> ); <span class="hljs-comment">// true - There's the first task</span>
+        <span class="hljs-built_in">console</span>.log( persistedProject.tasks.indexOf( persistedTask2 ) !== - <span class="hljs-number">1</span> ); <span class="hljs-comment">// true - There's the other task</span>
+
+        <span class="hljs-comment">// Deleting everything</span>
+        <span class="hljs-keyword">let</span> promises:Promise&lt;Response.Class&gt;[] = [];
+        promises.push( persistedProject.delete() );
+        promises.push( persistedTask1.delete() );
+        promises.push( persistedTask2.delete() );
+
+        <span class="hljs-keyword">return</span> Promise.all( promises );
+    }
+).then(
+    ( responses:Response.Class[] ) =&gt; {
+
+        <span class="hljs-built_in">console</span>.log( <span class="hljs-string">"All done!"</span> );
+    }
+).catch( <span class="hljs-built_in">console</span>.error );</code></pre>
+
+		
+			</div>
+		
+			
+			<div class="tabs-tab ui bottom attached tabs  tab segment" data-tab="XtcBztlP">
+				
+
+			<pre><code class="javascript hljs"><span class="hljs-keyword">import</span> Carbon <span class="hljs-keyword">from</span> <span class="hljs-string">"carbonldp/Carbon"</span>;
+
+<span class="hljs-keyword">let</span> project = {
+    <span class="hljs-attr">name</span>: <span class="hljs-string">"Project X"</span>
+};
+<span class="hljs-keyword">let</span> persistedProject;
+<span class="hljs-keyword">let</span> tasksAccessPoint;
+<span class="hljs-keyword">let</span> persistedTask1;
+<span class="hljs-keyword">let</span> persistedTask2;
+
+<span class="hljs-keyword">let</span> carbon = <span class="hljs-keyword">new</span> Carbon();
+carbon.setSetting( <span class="hljs-string">"domain"</span>, <span class="hljs-string">"localhost:8083"</span> );
+carbon.setSetting( <span class="hljs-string">"http.ssl"</span>, <span class="hljs-literal">false</span> ); <span class="hljs-comment">// Turning off HTTPS (only needed if your server isn't using it)</span>
+
+<span class="hljs-keyword">let</span> appContext;
+
+carbon.auth.authenticate( <span class="hljs-string">"your@email.com"</span>, <span class="hljs-string">"YouRP455word"</span> ).then(
+    <span class="hljs-function">(<span class="hljs-params"> token </span>) =&gt;</span> {
+        <span class="hljs-built_in">console</span>.log( <span class="hljs-string">`Hello <span class="hljs-subst">${ carbon.auth.authenticatedAgent.name }</span>!`</span> );
+
+        <span class="hljs-comment">// Retrieving the application context</span>
+        <span class="hljs-keyword">return</span> carbon.apps.getContext( <span class="hljs-string">"your-app-slug-here/"</span> );
+    }
+).then(
+    <span class="hljs-function">(<span class="hljs-params"> _appContext </span>) =&gt;</span> {
+        appContext = _appContext;
+
+        <span class="hljs-comment">// Creating a document</span>
+        <span class="hljs-keyword">return</span> appContext.documents.createChild( <span class="hljs-string">"/"</span>, project );
+    }
+).then(
+    <span class="hljs-function">(<span class="hljs-params"> [ _persistedProject, response ] </span>) =&gt;</span> {
+        persistedProject = _persistedProject;
+
+        <span class="hljs-built_in">console</span>.log( project === persistedProject ); <span class="hljs-comment">// true</span>
+        <span class="hljs-built_in">console</span>.log( persistedProject.id ); <span class="hljs-comment">// document's URI</span>
+        <span class="hljs-built_in">console</span>.log( <span class="hljs-string">"created"</span> <span class="hljs-keyword">in</span> persistedProject ); <span class="hljs-comment">// false - The project was persisted but it's latest state hasn't been retrieved from the server</span>
+
+        <span class="hljs-comment">// Read the just created document</span>
+        <span class="hljs-keyword">return</span> appContext.documents.get( persistedProject.id ); <span class="hljs-comment">// Can also be `return persistedProject.refresh();`</span>
+    }
+).then(
+    <span class="hljs-function">(<span class="hljs-params"> [ persistedProject, response ] </span>) =&gt;</span> {
+        <span class="hljs-built_in">console</span>.log( project === persistedProject ); <span class="hljs-comment">// true - The same object was updated with its latest properties</span>
+        <span class="hljs-built_in">console</span>.log( persistedProject.created ); <span class="hljs-comment">// Creation date</span>
+
+        persistedProject.description = {
+            <span class="hljs-attr">type</span>: <span class="hljs-string">"markdown"</span>,
+            <span class="hljs-attr">content</span>: <span class="hljs-string">"# Some description here"</span>
+        };
+
+        <span class="hljs-comment">// Save the latest state to the server</span>
+        <span class="hljs-keyword">return</span> persistedProject.save(); <span class="hljs-comment">// Can also be `appContext.documents.save&lt;Project&gt;( persistedProject );`</span>
+    }
+).then(
+    <span class="hljs-function">(<span class="hljs-params"> [ persistedProject, response ] </span>) =&gt;</span> {
+        <span class="hljs-built_in">console</span>.log( project === persistedProject ); <span class="hljs-comment">// true</span>
+
+        <span class="hljs-comment">// Creating an access point for the project to manage tasks</span>
+        <span class="hljs-keyword">return</span> persistedProject.createAccessPoint( {
+            <span class="hljs-attr">hasMemberRelation</span>: <span class="hljs-string">"tasks"</span>
+        }, <span class="hljs-string">"tasks"</span> );
+    }
+).then(
+    <span class="hljs-function">(<span class="hljs-params"> [ _tasksAccessPoint, response ] </span>) =&gt;</span> {
+        tasksAccessPoint = _tasksAccessPoint;
+
+        <span class="hljs-comment">// Creating a task so we can add it to the project later on</span>
+        <span class="hljs-keyword">return</span> appContext.documents.createChild( <span class="hljs-string">"/"</span>, {
+            <span class="hljs-attr">name</span>: <span class="hljs-string">"Do something"</span>,
+            <span class="hljs-attr">dueDate</span>: <span class="hljs-keyword">new</span> <span class="hljs-built_in">Date</span>()
+        } );
+    }
+).then(
+    <span class="hljs-function">(<span class="hljs-params"> [ persistedTask, response ] </span>) =&gt;</span> {
+        persistedTask1 = persistedTask;
+
+        <span class="hljs-comment">// Creating another task so we can add it to the project later on</span>
+        <span class="hljs-keyword">return</span> appContext.documents.createChild( <span class="hljs-string">"/"</span>, {
+            <span class="hljs-attr">name</span>: <span class="hljs-string">"Do something else"</span>,
+            <span class="hljs-attr">dueDate</span>: <span class="hljs-keyword">new</span> <span class="hljs-built_in">Date</span>()
+        } );
+    }
+).then(
+    <span class="hljs-function">(<span class="hljs-params"> [ persistedTask, response ] </span>) =&gt;</span> {
+        persistedTask2 = persistedTask;
+
+        <span class="hljs-comment">// Adding them to the project through the AccessPoint</span>
+        <span class="hljs-keyword">return</span> tasksAccessPoint.addMembers( [ persistedTask1, persistedTask2 ] );
+    }
+).then(
+    <span class="hljs-function">(<span class="hljs-params"> response </span>) =&gt;</span> {
+
+        <span class="hljs-comment">// Refreshing the project so we can check if the tasks were added</span>
+        <span class="hljs-keyword">return</span> persistedProject.refresh();
+    }
+).then(
+    <span class="hljs-function">(<span class="hljs-params"> [ persistedProject, response ] </span>) =&gt;</span> {
+        <span class="hljs-built_in">console</span>.log( project === persistedProject ); <span class="hljs-comment">// true - Still the same object</span>
+        <span class="hljs-built_in">console</span>.log( <span class="hljs-string">"tasks"</span> <span class="hljs-keyword">in</span> persistedProject ); <span class="hljs-comment">// true</span>
+        <span class="hljs-built_in">console</span>.log( persistedProject.tasks.indexOf( persistedTask1 ) !== - <span class="hljs-number">1</span> ); <span class="hljs-comment">// true - There's the first task</span>
+        <span class="hljs-built_in">console</span>.log( persistedProject.tasks.indexOf( persistedTask2 ) !== - <span class="hljs-number">1</span> ); <span class="hljs-comment">// true - There's the other task</span>
+
+        <span class="hljs-comment">// Deleting everything</span>
+        <span class="hljs-keyword">let</span> promises = [];
+        promises.push( persistedProject.delete() );
+        promises.push( persistedTask1.delete() );
+        promises.push( persistedTask2.delete() );
+
+        <span class="hljs-keyword">return</span> <span class="hljs-built_in">Promise</span>.all( promises );
+    }
+).then(
+    <span class="hljs-function">(<span class="hljs-params"> responses </span>) =&gt;</span> {
+
+        <span class="hljs-built_in">console</span>.log( <span class="hljs-string">"All done!"</span> );
+    }
+).catch( <span class="hljs-built_in">console</span>.error );</code></pre>
+
+		
+			</div>
+		
+			
+			<div class="tabs-tab ui bottom attached tabs  tab segment" data-tab="cxxNjMGf">
+				
+
+			<pre><code class="javascript hljs"><span class="hljs-keyword">var</span> project = {
+    <span class="hljs-attr">name</span>: <span class="hljs-string">"Project X"</span>
+};
+<span class="hljs-keyword">var</span> persistedProject;
+<span class="hljs-keyword">var</span> tasksAccessPoint;
+<span class="hljs-keyword">var</span> persistedTask1;
+<span class="hljs-keyword">var</span> persistedTask2;
+
+<span class="hljs-keyword">var</span> carbon = <span class="hljs-keyword">new</span> Carbon();
+carbon.setSetting( <span class="hljs-string">"domain"</span>, <span class="hljs-string">"localhost:8083"</span> );
+carbon.setSetting( <span class="hljs-string">"http.ssl"</span>, <span class="hljs-literal">false</span> ); <span class="hljs-comment">// Turning off HTTPS (only needed if your server isn't using it)</span>
+
+<span class="hljs-keyword">var</span> appContext;
+
+carbon.auth.authenticate( <span class="hljs-string">"your@email.com"</span>, <span class="hljs-string">"YouRP455word"</span> ).then(
+    <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"> token </span>) </span>{
+        <span class="hljs-built_in">console</span>.log( <span class="hljs-string">`Hello <span class="hljs-subst">${ carbon.auth.authenticatedAgent.name }</span>!`</span> );
+
+        <span class="hljs-comment">// Retrieving the application context</span>
+        <span class="hljs-keyword">return</span> carbon.apps.getContext( <span class="hljs-string">"your-app-slug-here/"</span> );
+    }
+).then(
+    <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"> _appContext </span>) </span>{
+        appContext = _appContext;
+
+        <span class="hljs-comment">// Creating a document</span>
+        <span class="hljs-keyword">return</span> appContext.documents.createChild( <span class="hljs-string">"/"</span>, project );
+    }
+).then(
+    <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"> results </span>) </span>{
+        persistedProject = results[ <span class="hljs-number">0</span> ];
+        <span class="hljs-keyword">var</span> response = results[ <span class="hljs-number">1</span> ]
+
+        <span class="hljs-built_in">console</span>.log( project === persistedProject ); <span class="hljs-comment">// true</span>
+        <span class="hljs-built_in">console</span>.log( persistedProject.id ); <span class="hljs-comment">// document's URI</span>
+        <span class="hljs-built_in">console</span>.log( <span class="hljs-string">"created"</span> <span class="hljs-keyword">in</span> persistedProject ); <span class="hljs-comment">// false - The project was persisted but it's latest state hasn't been retrieved from the server</span>
+
+        <span class="hljs-comment">// Read the just created document</span>
+        <span class="hljs-keyword">return</span> appContext.documents.get( persistedProject.id ); <span class="hljs-comment">// Can also be `return persistedProject.refresh();`</span>
+    }
+).then(
+    <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"> results </span>) </span>{
+        persistedProject = results[ <span class="hljs-number">0</span> ]; <span class="hljs-comment">// This is not actually needed because the reference will be the same</span>
+        <span class="hljs-keyword">var</span> response = results[ <span class="hljs-number">1</span> ];
+
+        <span class="hljs-built_in">console</span>.log( project === persistedProject ); <span class="hljs-comment">// true - The same object was updated with its latest properties</span>
+        <span class="hljs-built_in">console</span>.log( persistedProject.created ); <span class="hljs-comment">// Creation date</span>
+
+        persistedProject.description = {
+            <span class="hljs-attr">type</span>: <span class="hljs-string">"markdown"</span>,
+            <span class="hljs-attr">content</span>: <span class="hljs-string">"# Some description here"</span>
+        };
+
+        <span class="hljs-comment">// Save the latest state to the server</span>
+        <span class="hljs-keyword">return</span> persistedProject.save(); <span class="hljs-comment">// Can also be `appContext.documents.save&lt;Project&gt;( persistedProject );`</span>
+    }
+).then(
+    <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"> results </span>) </span>{
+        persistedProject = results[ <span class="hljs-number">0</span> ]; <span class="hljs-comment">// This is not actually needed because the reference will be the same</span>
+        <span class="hljs-keyword">var</span> response = results[ <span class="hljs-number">1</span> ];
+
+        <span class="hljs-built_in">console</span>.log( project === persistedProject ); <span class="hljs-comment">// true</span>
+
+        <span class="hljs-comment">// Creating an access point for the project to manage tasks</span>
+        <span class="hljs-keyword">return</span> persistedProject.createAccessPoint( {
+            <span class="hljs-attr">hasMemberRelation</span>: <span class="hljs-string">"tasks"</span>
+        }, <span class="hljs-string">"tasks"</span> );
+    }
+).then(
+    <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"> results </span>) </span>{
+        tasksAccessPoint = results[ <span class="hljs-number">0</span> ];
+        <span class="hljs-keyword">var</span> response = results[ <span class="hljs-number">1</span> ];
+
+        <span class="hljs-comment">// Creating a task so we can add it to the project later on</span>
+        <span class="hljs-keyword">return</span> appContext.documents.createChild( <span class="hljs-string">"/"</span>, {
+            <span class="hljs-attr">name</span>: <span class="hljs-string">"Do something"</span>,
+            <span class="hljs-attr">dueDate</span>: <span class="hljs-keyword">new</span> <span class="hljs-built_in">Date</span>()
+        } );
+    }
+).then(
+    <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"> results </span>) </span>{
+        persistedTask1 = results[ <span class="hljs-number">0</span> ];
+        <span class="hljs-keyword">var</span> response = results[ <span class="hljs-number">1</span> ];
+
+        <span class="hljs-comment">// Creating another task so we can add it to the project later on</span>
+        <span class="hljs-keyword">return</span> appContext.documents.createChild( <span class="hljs-string">"/"</span>, {
+            <span class="hljs-attr">name</span>: <span class="hljs-string">"Do something else"</span>,
+            <span class="hljs-attr">dueDate</span>: <span class="hljs-keyword">new</span> <span class="hljs-built_in">Date</span>()
+        } );
+    }
+).then(
+    <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"> results </span>) </span>{
+        persistedTask2 = results[ <span class="hljs-number">0</span> ];
+        <span class="hljs-keyword">var</span> response = results[ <span class="hljs-number">1</span> ];
+
+        <span class="hljs-comment">// Adding them to the project through the AccessPoint</span>
+        <span class="hljs-keyword">return</span> tasksAccessPoint.addMembers( [ persistedTask1, persistedTask2 ] );
+    }
+).then(
+    <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"> response </span>) </span>{
+
+        <span class="hljs-comment">// Refreshing the project so we can check if the tasks were added</span>
+        <span class="hljs-keyword">return</span> persistedProject.refresh();
+    }
+).then(
+    <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"> results </span>) </span>{
+        persistedProject = results[ <span class="hljs-number">0</span> ]; <span class="hljs-comment">// This is not actually needed because the reference will be the same</span>
+        <span class="hljs-keyword">var</span> response = results[ <span class="hljs-number">1</span> ];
+
+        <span class="hljs-built_in">console</span>.log( project === persistedProject ); <span class="hljs-comment">// true - Still the same object</span>
+        <span class="hljs-built_in">console</span>.log( <span class="hljs-string">"tasks"</span> <span class="hljs-keyword">in</span> persistedProject ); <span class="hljs-comment">// true</span>
+        <span class="hljs-built_in">console</span>.log( persistedProject.tasks.indexOf( persistedTask1 ) !== - <span class="hljs-number">1</span> ); <span class="hljs-comment">// true - There's the first task</span>
+        <span class="hljs-built_in">console</span>.log( persistedProject.tasks.indexOf( persistedTask2 ) !== - <span class="hljs-number">1</span> ); <span class="hljs-comment">// true - There's the other task</span>
+
+        <span class="hljs-comment">// Deleting everything</span>
+        <span class="hljs-keyword">var</span> promises = [];
+        promises.push( persistedProject.delete() );
+        promises.push( persistedTask1.delete() );
+        promises.push( persistedTask2.delete() );
+
+        <span class="hljs-keyword">return</span> <span class="hljs-built_in">Promise</span>.all( promises );
+    }
+).then(
+    <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"> responses </span>) </span>{
+
+        <span class="hljs-built_in">console</span>.log( <span class="hljs-string">"All done!"</span> );
+    }
+).catch( <span class="hljs-built_in">console</span>.error );</code></pre>
+
+		
+			</div>
+		
+	
+</div>
+
+</section>
+<p>
+	This was a short introduction to what the SDK and Carbon can do. You should be able to develop simple applications
+	after reading this document, but to really master the inner works of the SDK you can continue reading about the Object Model.
+</p>
+<div class="documentation-steps ui fluid steps">
+	<div class="active completed step">
+		<!--<i class="payment icon"></i>-->
+		<div class="content">
+			<div class="title">Getting Started</div>
+		</div>
+	</div>
+	<a class="step" href="../object-model">
+		<i class="arrow right icon"></i>
+		<div class="content">
+			<div class="title">Next</div>
+			<div class="description">Object Model</div>
+		</div>
+	</a>
+</div>
+
+                        
+
+                    </div>
+                </div>
+            
+            <div class="four wide computer tablet only column">
+                <div class="sidebar" content="mainContent">
+	<div class="ui sticky segment">
+		<h2 class="ui header">Content</h2>
+		<div class="ui vertical following fluid accordion text menu sidebar-verticalMenu">
+
+		
+
+			<div class="item"><a class="title sidebar-title" href="#prerequisite-knowledge">Prerequisite knowledge</a></div>
+
+			
+
+			<div class="item"><a class="title sidebar-title" href="#installing-the-sdk">Installing the SDK</a></div>
+
+			
+
+			<div class="item"><a class="title sidebar-title" href="#creating-a-platform-context">Creating a platform context</a></div>
+
+			
+
+			<div class="item"><a class="title sidebar-title" href="#authenticating">Authenticating</a></div>
+
+			
+
+			<div class="item"><a class="title sidebar-title" href="#retrieving-an-app-context">Retrieving an app context</a></div>
+
+			
+
+			<div class="item"><a class="title sidebar-title" href="#creating-a-document">Creating a document</a></div>
+
+			
+
+			<div class="item"><a class="title sidebar-title" href="#retrieving-a-document">Retrieving a document</a></div>
+
+			
+
+			<div class="item"><a class="title sidebar-title" href="#modifying-and-saving-a-document">Modifying and saving a document</a></div>
+
+			
+
+			<div class="item"><a class="title sidebar-title" href="#deleting-a-document">Deleting a document</a></div>
+
+			
+
+			<div class="item">
+
+				<a class="title sidebar-title sidebar-title--dropdown" href="#linking-documents">Linking documents</a><i class="dropdown icon sidebar-dropdownIcon"></i>
+
+				<div class="content menu sidebar-verticalSubMenu">
+
+				
+
+					<a class="item sidebar-title" href="#parent-child-relation">Parent-child relation</a>
+
+				
+
+					<a class="item sidebar-title" href="#membership-relation">Membership Relation</a>
+
+				
+
+				</div>
+			</div>
+		
+
+			<div class="item"><a class="title sidebar-title" href="#creating-an-access-point">Creating an access point</a></div>
+
+			
+
+			<div class="item"><a class="title sidebar-title" href="#putting-it-all-together">Putting it all together</a></div>
+
+			
+		</div>
+	</div>
+</div>
+            </div>
+            
+        </div>
+    </div>
+
+        </div>
+        <div class="footer bigStoneBG">
+        <div class="ui middle aligned padded grid computer tablet only">
+
+            <div class="four wide center aligned column">
+                <a href="http://base22.com/"><img class="footer-base22Logo" src="/assets/images/base22-logo-white.png"></a>
+            </div>
+            <div class="eight wide center aligned stretched column">
+                <p class="footer-copyrightText">© 2017 Base22 Technology Group, LLC. All Rights Reserved.</p>
+            </div>
+            <div class="four wide left aligned column">
+                <a angulartics2on="click" angularticsevent="OutboundClick" angularticscategory="Twitter" href="https://twitter.com/CarbonLDP"><i class="circular twitter icon footer-socialIcon"></i></a>
+                <a angulartics2on="click" angularticsevent="OutboundClick" angularticscategory="YouTube" href="https://www.youtube.com/channel/UCuNWXjT19Gnpo7I502PTZ_Q"><i class="circular youtube icon footer-socialIcon"></i></a>
+                <a angulartics2on="click" angularticsevent="OutboundClick" angularticscategory="LinkedIn" href="https://www.linkedin.com/company/carbon-ldp"><i class="circular linkedin icon footer-socialIcon"></i></a>
+            </div>
+        </div>
+        <div class="ui centered padded grid mobile only">
+            <div class="left aligned eight wide column">
+                <a href="http://base22.com/"><img class="footer-base22Logo" src="/assets/images/base22-logo-white.png"></a>
+            </div>
+            <div class="right aligned eight wide column">
+                <a angulartics2on="click" angularticsevent="OutboundClick" angularticscategory="Twitter" href="https://twitter.com/CarbonLDP"><i class="circular twitter icon footer-socialIcon"></i></a>
+                <a angulartics2on="click" angularticsevent="OutboundClick" angularticscategory="YouTube" href="https://www.youtube.com/channel/UCuNWXjT19Gnpo7I502PTZ_Q"><i class="circular youtube icon footer-socialIcon"></i></a>
+                <a angulartics2on="click" angularticsevent="OutboundClick" angularticscategory="LinkedIn" href="https://www.linkedin.com/company/carbon-ldp"><i class="circular linkedin icon footer-socialIcon"></i></a>
+            </div>
+            <div class="center aligned twelve wide column">
+                <p class="footer-copyrightText">© 2017 Base22 Technology Group, LLC. All&nbsp;Rights&nbsp;Reserved.</p>
+            </div>
+    </div>
+</div>
+
+        <script src="/js/script.js"></script>
+
+        <script>(function( window ){ $( document ).ready( function() {
+
+	let $sidebar = $(".sidebar");
+	let $sidebarFollowingMenu = $(".sidebar").find( ".following.menu" );
+	let $content = $("."+$sidebar.attr("content"));	
+	let $sections = $content.children( "section" );
+	let $subSections = $sections.children( "section" );
+
+	// Detect when section is passed
+	$sections.visibility( {
+		once: false,
+		offset: 150,
+		onTopPassed: function () {
+			 activateSection( this, $sidebarFollowingMenu, $sections );
+		},
+		onTopPassedReverse: function () {
+			 deactivateFirstSection( this, $sidebarFollowingMenu, $sections );
+		},
+		onBottomPassedReverse: function () {
+			activateSection( this, $sidebarFollowingMenu, $sections);
+		},
+	} );
+
+	$subSections.visibility( {
+		once: false,
+		offset: 150,
+		onTopPassed: function () {
+				activateSubSection( this, $sidebarFollowingMenu, $subSections );
+		},
+		onBottomPassedReverse: function () {
+				activateSubSection( this, $sidebarFollowingMenu, $subSections );
+		}
+	} );
+
+
+	// Make sidebar stick to its position
+	$( ".sidebar > .ui.sticky" ).sticky( {
+		observeChanges: true,
+		context: ".mainContent",
+		offset: 100
+	} );
+
+	// Activate toggle dropdown
+	$( ".sidebar .item > .dropdown.icon" ).on( "click", toggleDropdown);
+
+	//Activate click on items and subitems
+	$( ".sidebar .item > .title" ).on( "click", activateItem) ;
+	$( ".sidebar  a.item " ).on( "click", activateSubItem) ;
+
+	// Toggle selected accordion menu in sidebar
+	function toggleDropdown( event ){
+		let $target = $( event.currentTarget );
+
+		let $accordion = $target.parent( ".item" ).find( ".content.menu" );
+		if( $accordion ) {
+			let accordionIsActive = $accordion.hasClass( "active" );
+
+			if( accordionIsActive ) {
+				$accordion.removeClass( "active" );
+				$accordion.removeClass( "toggled" );
+			} else {
+				$accordion.addClass( "active" );
+				$accordion.addClass( "toggled" );
+			}
+		}
+		$( ".ui.sticky" ).sticky( "refresh" );
+		
+		return false;
+	}
+
+	function activateItem(event){
+
+		let $item = $( event.currentTarget ).parent(".item");
+
+		let $allItems = $item.siblings(".item");
+		$allItems.removeClass("active");
+		$item.addClass("active");
+
+		event.preventDefault();
+	
+		return false;
+
+	}
+
+	function activateSubItem(event){
+
+		let $item = $( event.currentTarget );
+
+		let $allItems = $item.siblings(".item");
+		$allItems.removeClass("active");
+		$item.addClass("active");
+
+		event.preventDefault();
+
+		return false;
+
+	}
+
+
+
+	function activateSection( elm, $menu, $sections) {
+
+		let $section = $( elm );
+		let index = $sections.index( $section );
+		let $followSection = $menu.children( ".item" );
+		let $currentSection = $followSection.eq( index );
+
+		let isActive = $currentSection.hasClass( "active" );
+
+		let hasSubsection= $sections.eq( index ).children( "section" ).length > 0;
+
+		$followSection.removeClass( "active" );
+		$followSection.find( ".active" ).not( ".toggled" ).removeClass( "active" );
+
+		if( ! isActive ) {
+
+			$currentSection.addClass( "active" );
+		}
+
+		if( hasSubsection ) {
+			$currentSection.find( ".menu" ).addClass( "active" );
+		}
+
+		$( ".ui.sticky" ).sticky( "refresh" );
+
+		return false;
+
+	}
+
+	function activateSubSection( elm, $menu, $subSections ){
+		let $section  = $( elm );
+		let index = $subSections.index( $section );
+		let $followSection = $menu.find( ".menu > .item" );
+		let $activeSection = $followSection.eq( index );
+		let isActive = $activeSection.hasClass( "active" );
+		let $subSectionMenu = $menu.children( ".item" ).find( ".menu" );
+		let subSectionMenuIsActive = $subSectionMenu.hasClass( "active" );
+
+		if( index !== - 1 && ! isActive ) {
+			$followSection.filter( ".active" ).removeClass( "active" );
+			$activeSection.addClass( "active" );
+		}
+
+		if( ! subSectionMenuIsActive ) {
+			$subSectionMenu.addClass( "active" );
+		}
+
+		$( ".ui.sticky" ).sticky( "refresh" );
+
+		return false;
+	}
+
+	function deactivateFirstSection( elm, $menu, $sections) {
+
+		let $section = $( elm );
+		let index = $sections.index( $section );
+		let $followSection = $menu.children( ".item" );
+		let $currentSection = $followSection.eq( index );
+		let isActive = $currentSection.hasClass( "active" );
+		let $subSectionMenu = $currentSection.find( ".menu" );
+
+
+		if( index === 0 ) {
+
+			$currentSection.removeClass( "active" );
+
+			if( $subSectionMenu.length > 0 ) {
+				$currentSection.find( ".menu" ).not(".toggled").removeClass( "active" );
+				$subSectionMenu.find( ".item" ).removeClass("active");
+			}
+
+		}
+
+		$( ".ui.sticky" ).sticky( "refresh" );
+
+		return false;
+	}
+
+
+}); })( window );</script><script>(function( window ){ $( document ).ready( function() {
+
+
+	let $sidebar = $(".staticContentMenu");
+	let $content = $("."+$sidebar.attr("content"));
+	let $sections = $content.children( ".mainContent-section" );
+
+	// Detect when section is passed
+	$sections.visibility( {
+		once: false,
+		offset: 150,
+		onTopPassed: function () {
+			// _self.activateSection( this );
+			console.log("top passed");
+		},
+		onTopPassedReverse: function () {
+			// _self.deactivateFirstSection( this );
+		},
+		onBottomPassedReverse: function () {
+			// _self.activateSection( this );
+		},
+	} );
+
+
+
+	// Activate toggle dropdown
+	$( ".staticContentMenu .item > .dropdown.icon" ).on( "click", toggleDropdown);
+
+
+	// Toggle selected accordion menu in sidebar
+	function toggleDropdown( event ){
+		let $target = $( event.currentTarget );
+		$( ".ui.sticky" ).sticky( "refresh" );
+		let $accordion = $target.parent( ".item" ).find( ".content.menu" );
+		if( $accordion ) {
+			let accordionIsActive = $accordion.hasClass( "active" );
+
+			if( accordionIsActive ) {
+				$accordion.removeClass( "active" );
+				$accordion.removeClass( "toggled" );
+			} else {
+				$accordion.addClass( "active" );
+				$accordion.addClass( "toggled" );
+			}
+		}
+
+		return false;
+	}
+
+
+}); })( window );</script><script>(function( window ){ $( document ).ready( function() {
+	let tabs = document.querySelectorAll(".tabs-titles > .tabs-title, .tabs-options .tabs-option" );
+	for (var i = 0; i < tabs.length; i++) {
+		tabs[i].addEventListener('click', changeTabSelection );
+	}
+});
+
+
+
+
+function changeTabSelection(e) {
+
+	let clickedTab = $(e.currentTarget);
+	let selectedOption = clickedTab.attr("data-tab");
+	let selectedText = clickedTab.html();
+	let tabComponent = clickedTab.parent();
+
+	//select TabComponent to where the clicked tab/option belongs
+	while( ! tabComponent.hasClass("tabsComponent")) {
+		tabComponent = tabComponent.parent();
+	}
+
+	// select TabComponent elements
+	let tabs = tabComponent.find(".tabs-title,.tabs-tab")
+	let options = tabComponent.find(".tabs-option")
+
+	// Remove all active classes from elements
+	options.removeClass("active selected");
+	tabs.removeClass("active");
+
+	// Add active classes on selected options/tabs
+	tabs.each( function(){
+		let tab = $(this);
+		if( tab.attr("data-tab") === selectedOption ) tab.addClass("active");
+	});
+	
+	options.each(function() {
+		let option = $(this);
+		if( option.attr("data-tab") === selectedOption ) option.addClass("active selected");
+	});
+
+	// Change text of selection
+	if( clickedTab.hasClass("tabs-title")){
+		let text =  tabComponent.find(".tabs-options .text");
+		text.html(selectedText);
+	}
+
+	return true;
+}
+
+
+
+ })( window );</script><script id="widgets-scripts"></script>
+    
+    
+</body></html>

@@ -1,28 +1,29 @@
 <!DOCTYPE html><html><head>
   <meta charset="utf-8">
   
+
+
+  <link rel="shortcut icon" href="/assets/images/carbon-icon-144x144.png">
   <title>Community &amp; Support | Carbon LDP</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="google-site-verification" content="gz0ah_pGpAlB4Q5a_bxykr1Zdo_CfXHyAb2tJiADVhE">
 
   <meta name="description" content="Carbon LDP is a Linked Data Platform for building web apps that manage and link data within your enterprise and across the World Wide Web.">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Community &amp; Support">
-<meta property="og:url" content="http://yoursite.com/community-and-support/index.html">
+<meta property="og:url" content="https://carbonldp.com/community-and-support/index.html">
 <meta property="og:site_name" content="Carbon LDP">
 <meta property="og:description" content="Carbon LDP is a Linked Data Platform for building web apps that manage and link data within your enterprise and across the World Wide Web.">
 <meta property="og:updated_time" content="2017-01-12T22:48:37.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Community &amp; Support">
 <meta name="twitter:description" content="Carbon LDP is a Linked Data Platform for building web apps that manage and link data within your enterprise and across the World Wide Web.">
-
   
     <link rel="alternate" href="/atom.xml" title="Carbon LDP" type="application/atom+xml">
   
 
-  
 
   <link rel="stylesheet" href="/semantic/dist/semantic.min.css">
-
   <style>.sidebar{
     margin: 10em 1em 6em 0;
 }
@@ -41,6 +42,7 @@
 /* Change color to black when title active */
 .ui.accordion .item.active .title:not(.ui).sidebar-title{
     color: black;
+    font-weight: 700;
 }
 .ui.vertical.menu .menu .item.active .sidebar-title{
     color: black;
@@ -87,7 +89,6 @@
     }
 
 }</style>
-
   <link rel="stylesheet" href="/assets/styles/css/main.min.css">
 
 
@@ -98,6 +99,16 @@
   
   
   
+
+
+  <!-- Google Analytics -->
+  <script>
+    window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+    ga('create', 'UA-75786977-1', 'auto');
+    ga('send', 'pageview');
+  </script>
+  <script async="" src="https://www.google-analytics.com/analytics.js"></script>
+  <!-- End Google Analytics -->
 
   <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
   <script src="/semantic/dist/semantic.min.js"></script>
@@ -189,7 +200,9 @@
 		</div>
 	</div>
 </header>
-
+        <div class="ui scrollTop mobile only grid">
+			<button class="ui icon button scrollTop-button"><i class="angle up icon scrollTop-icon"></i></button>
+		</div>
         <div class="site-content ">
             
             <div class="ui container grid">
@@ -350,16 +363,14 @@
 
         </div>
         <div class="footer bigStoneBG">
-    <!--<div class="ui container">-->
         <div class="ui middle aligned padded grid computer tablet only">
-            <!--<div class="four wide column">-->
+
             <div class="four wide center aligned column">
                 <a href="http://base22.com/"><img class="footer-base22Logo" src="/assets/images/base22-logo-white.png"></a>
             </div>
             <div class="eight wide center aligned stretched column">
                 <p class="footer-copyrightText">© 2017 Base22 Technology Group, LLC. All Rights Reserved.</p>
             </div>
-            <!--<div class="four wide right aligned column">-->
             <div class="four wide left aligned column">
                 <a angulartics2on="click" angularticsevent="OutboundClick" angularticscategory="Twitter" href="https://twitter.com/CarbonLDP"><i class="circular twitter icon footer-socialIcon"></i></a>
                 <a angulartics2on="click" angularticsevent="OutboundClick" angularticscategory="YouTube" href="https://www.youtube.com/channel/UCuNWXjT19Gnpo7I502PTZ_Q"><i class="circular youtube icon footer-socialIcon"></i></a>
@@ -378,32 +389,45 @@
             <div class="center aligned twelve wide column">
                 <p class="footer-copyrightText">© 2017 Base22 Technology Group, LLC. All&nbsp;Rights&nbsp;Reserved.</p>
             </div>
-        <!--</div>-->
     </div>
 </div>
 
-        
-<script src="/js/script.js"></script>
+        <script src="/js/script.js"></script>
+
         <script>(function( window ){ $( document ).ready( function() {
-	
+
 	let $sidebar = $(".sidebar");
+	let $sidebarFollowingMenu = $(".sidebar").find( ".following.menu" );
 	let $content = $("."+$sidebar.attr("content"));	
 	let $sections = $content.children( "section" );
+	let $subSections = $sections.children( "section" );
 
 	// Detect when section is passed
 	$sections.visibility( {
 		once: false,
 		offset: 150,
 		onTopPassed: function () {
-			 activateSection( this, $sidebar, $content );
+			 activateSection( this, $sidebarFollowingMenu, $sections );
 		},
 		onTopPassedReverse: function () {
-			 deactivateFirstSection( this, $sidebar, $content );
+			 deactivateFirstSection( this, $sidebarFollowingMenu, $sections );
 		},
 		onBottomPassedReverse: function () {
-			activateSection( this, $sidebar, $content );
+			activateSection( this, $sidebarFollowingMenu, $sections);
 		},
 	} );
+
+	$subSections.visibility( {
+		once: false,
+		offset: 150,
+		onTopPassed: function () {
+				activateSubSection( this, $sidebarFollowingMenu, $subSections );
+		},
+		onBottomPassedReverse: function () {
+				activateSubSection( this, $sidebarFollowingMenu, $subSections );
+		}
+	} );
+
 
 	// Make sidebar stick to its position
 	$( ".sidebar > .ui.sticky" ).sticky( {
@@ -415,9 +439,9 @@
 	// Activate toggle dropdown
 	$( ".sidebar .item > .dropdown.icon" ).on( "click", toggleDropdown);
 
+	//Activate click on items and subitems
 	$( ".sidebar .item > .title" ).on( "click", activateItem) ;
-
-	$( ".sidebar  a.item " ).on( "click", activateItem) ;
+	$( ".sidebar  a.item " ).on( "click", activateSubItem) ;
 
 	// Toggle selected accordion menu in sidebar
 	function toggleDropdown( event ){
@@ -454,13 +478,27 @@
 
 	}
 
+	function activateSubItem(event){
 
-	function activateSection( elm, $sidebar, $content) {
+		let $item = $( event.currentTarget );
+
+		let $allItems = $item.siblings(".item");
+		$allItems.removeClass("active");
+		$item.addClass("active");
+
+		event.preventDefault();
+
+		return false;
+
+	}
+
+
+
+	function activateSection( elm, $menu, $sections) {
 
 		let $section = $( elm );
-		let $sections = $content.children( "section" );
 		let index = $sections.index( $section );
-		let $followSection = $sidebar.find( ".following.menu" ).children( ".item" );
+		let $followSection = $menu.children( ".item" );
 		let $currentSection = $followSection.eq( index );
 
 		let isActive = $currentSection.hasClass( "active" );
@@ -481,19 +519,40 @@
 
 		$( ".ui.sticky" ).sticky( "refresh" );
 
+		return false;
 
 	}
 
-	function deactivateFirstSection( elm, $sidebar, $content) {
+	function activateSubSection( elm, $menu, $subSections ){
+		let $section  = $( elm );
+		let index = $subSections.index( $section );
+		let $followSection = $menu.find( ".menu > .item" );
+		let $activeSection = $followSection.eq( index );
+		let isActive = $activeSection.hasClass( "active" );
+		let $subSectionMenu = $menu.children( ".item" ).find( ".menu" );
+		let subSectionMenuIsActive = $subSectionMenu.hasClass( "active" );
+
+		if( index !== - 1 && ! isActive ) {
+			$followSection.filter( ".active" ).removeClass( "active" );
+			$activeSection.addClass( "active" );
+		}
+
+		if( ! subSectionMenuIsActive ) {
+			$subSectionMenu.addClass( "active" );
+		}
+
+		$( ".ui.sticky" ).sticky( "refresh" );
+
+		return false;
+	}
+
+	function deactivateFirstSection( elm, $menu, $sections) {
 
 		let $section = $( elm );
-		let $sections = $content.children( "section" );
-
 		let index = $sections.index( $section );
-		let $followSection = $sidebar.find( ".following.menu" ).children( ".item" );
+		let $followSection = $menu.children( ".item" );
 		let $currentSection = $followSection.eq( index );
 		let isActive = $currentSection.hasClass( "active" );
-		// let hasSubsection= $sections.eq( index ).children( "section" ).length > 0;
 		let $subSectionMenu = $currentSection.find( ".menu" );
 
 
@@ -510,6 +569,7 @@
 
 		$( ".ui.sticky" ).sticky( "refresh" );
 
+		return false;
 	}
 
 

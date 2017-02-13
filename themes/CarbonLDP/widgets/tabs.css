@@ -1,0 +1,26 @@
+.ui.grid.tabsComponent {
+    margin: 1rem 0;
+}
+
+.ui.grid.tabsComponent .row.tabs{
+    padding: 0;
+}
+
+.ui.attached.segment.tabs{
+    border-top: 0;
+    padding: 0 1rem;
+    margin: 0;
+}
+
+@media (max-width: 767px) {
+    .ui.attached.segment.tabs{
+        border: 0;
+        padding: 0;
+        margin: 0;
+    }
+
+    .tabs-tab *{
+        margin:0;
+    }
+
+}

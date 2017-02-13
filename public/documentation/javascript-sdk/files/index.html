@@ -1,0 +1,1319 @@
+<!DOCTYPE html><html><head>
+  <meta charset="utf-8">
+  
+
+
+  <link rel="shortcut icon" href="/assets/images/carbon-icon-144x144.png">
+  <title>Files | Carbon LDP</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="google-site-verification" content="gz0ah_pGpAlB4Q5a_bxykr1Zdo_CfXHyAb2tJiADVhE">
+
+  <meta name="description" content="Files
+
+
+	
+		
+		
+			Previous
+			Object Schema
+		
+	
+	
+		
+		
+			Files
+		
+	
+	
+		
+		
+			Next
+			Querying
+		
+	
+
+
+	
+		
+	
+
+
+	Introduction
+	So far we've covered how to save JavaScript objects in the platform.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Files">
+<meta property="og:url" content="https://carbonldp.com/documentation/javascript-sdk/files/index.html">
+<meta property="og:site_name" content="Carbon LDP">
+<meta property="og:description" content="Files
+
+
+	
+		
+		
+			Previous
+			Object Schema
+		
+	
+	
+		
+		
+			Files
+		
+	
+	
+		
+		
+			Next
+			Querying
+		
+	
+
+
+	
+		
+	
+
+
+	Introduction
+	So far we've covered how to save JavaScript objects in the platform.">
+<meta property="og:updated_time" content="2017-02-13T17:40:38.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Files">
+<meta name="twitter:description" content="Files
+
+
+	
+		
+		
+			Previous
+			Object Schema
+		
+	
+	
+		
+		
+			Files
+		
+	
+	
+		
+		
+			Next
+			Querying
+		
+	
+
+
+	
+		
+	
+
+
+	Introduction
+	So far we've covered how to save JavaScript objects in the platform.">
+  
+    <link rel="alternate" href="/atom.xml" title="Carbon LDP" type="application/atom+xml">
+  
+
+
+  <link rel="stylesheet" href="/semantic/dist/semantic.min.css">
+  <style>/* Tomorrow Night Theme */
+/* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
+/* Original theme - https://github.com/chriskempson/tomorrow-theme */
+/* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
+
+/* Tomorrow Comment */
+.hljs-comment,
+.hljs-quote {
+  color: #969896;
+}
+
+/* Tomorrow Red */
+.hljs-variable,
+.hljs-template-variable,
+.hljs-tag,
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-regexp,
+.hljs-deletion {
+  color: #cc6666;
+}
+
+/* Tomorrow Orange */
+.hljs-number,
+.hljs-built_in,
+.hljs-builtin-name,
+.hljs-literal,
+.hljs-type,
+.hljs-params,
+.hljs-meta,
+.hljs-link {
+  color: #de935f;
+}
+
+/* Tomorrow Yellow */
+.hljs-attribute {
+  color: #f0c674;
+}
+
+/* Tomorrow Green */
+.hljs-string,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-addition {
+  color: #b5bd68;
+}
+
+/* Tomorrow Blue */
+.hljs-title,
+.hljs-section {
+  color: #81a2be;
+}
+
+/* Tomorrow Purple */
+.hljs-keyword,
+.hljs-selector-tag {
+  color: #b294bb;
+}
+
+.hljs {
+  display: block;
+  overflow-x: auto;
+  background: #1d1f21;
+  color: #c5c8c6;
+  padding: 0.5em;
+}
+
+.hljs-emphasis {
+  font-style: italic;
+}
+
+.hljs-strong {
+  font-weight: bold;
+}
+</style><style>.hljs {
+    font-family: "Lucida Console", Monaco, monospace;
+    font-size: .8em;
+    line-height: 1.4em;
+}</style><style>.sidebar{
+    margin: 10em 1em 6em 0;
+}
+
+/* Give sidebar a z-index greater than header */
+.sidebar .ui.sticky{
+    z-index: 0;
+}
+
+/* Remove box-shadow and border */
+.sidebar .ui.segment{
+    box-shadow: none;
+    border: none;
+}
+
+/* Change color to black when title active */
+.ui.accordion .item.active .title:not(.ui).sidebar-title{
+    color: black;
+    font-weight: 700;
+}
+.ui.vertical.menu .menu .item.active .sidebar-title{
+    color: black;
+}
+/* Change color of section items to gray */
+.ui.accordion .title:not(.ui).sidebar-title{
+    color: rgba(0,0,0,.6);
+    padding-right: 10px;
+}
+
+/* Change color to black when title hovered */
+.ui.accordion .title:not(.ui).sidebar-title:hover{
+    color: black;
+}
+
+
+/* Add left margin to sidebar menu */
+.ui.vertical.text.menu.sidebar-verticalMenu {
+    margin-left: 1.2em;
+}
+
+.ui.vertical.text.menu .item:not(.dropdown)>.menu.sidebar-verticalSubMenu{
+    margin: 0 0.8em;
+}
+
+.ui.accordion.menu .item .title.sidebar-title--dropdown{
+    display: inline;
+}
+
+.ui.vertical.text.menu .item>i.icon.sidebar-dropdownIcon{
+    float: right;
+}
+
+@media (min-width: 768px) and (max-width: 992px) {
+    .sidebar .ui.sticky{
+        padding: 0;
+    }
+    .ui.vertical.text.menu.sidebar-verticalMenu {
+        margin-left: .6em;
+    }
+
+    .ui.accordion .title:not(.ui).sidebar-title{
+        padding-right: 0;
+    }
+
+}</style><style>.staticContentMenu{
+    margin: 2em 0;
+}
+
+h2.staticContentMenu-title{
+    font-size: 1.4em;
+}
+
+.ui.accordion.menu .item .title.staticContentMenu-title--dropdown{
+    display: inline;
+}
+
+.ui.vertical.text.menu .item>i.icon.staticContentMenu-dropdownIcon{
+    float: right;
+}
+
+.ui.accordion .title:not(.ui).staticContentMenu-title{
+    color: rgba(0,0,0,.6);
+}</style><style>.ui.grid.tabsComponent {
+    margin: 1rem 0;
+}
+
+.ui.grid.tabsComponent .row.tabs{
+    padding: 0;
+}
+
+.ui.attached.segment.tabs{
+    border-top: 0;
+    padding: 0 1rem;
+    margin: 0;
+}
+
+@media (max-width: 767px) {
+    .ui.attached.segment.tabs{
+        border: 0;
+        padding: 0;
+        margin: 0;
+    }
+
+    .tabs-tab *{
+        margin:0;
+    }
+
+}
+</style>
+  <link rel="stylesheet" href="/assets/styles/css/main.min.css">
+
+
+  
+  <link rel="stylesheet" href="/assets/styles/css/home.min.css">
+  
+
+  
+  <link rel="stylesheet" href="/assets/styles/css/document.min.css">
+  
+
+
+  <!-- Google Analytics -->
+  <script>
+    window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+    ga('create', 'UA-75786977-1', 'auto');
+    ga('send', 'pageview');
+  </script>
+  <script async="" src="https://www.google-analytics.com/analytics.js"></script>
+  <!-- End Google Analytics -->
+
+  <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+  <script src="/semantic/dist/semantic.min.js"></script>
+  
+</head>
+
+    <body class="site">
+        <header class="header">
+	<div class="ui grid removeSideMargins">
+		<div class="computer only row">
+			<div class="ui top fixed borderless menu">
+				<div class="ui container navMenu">
+					<a class="item transparentBG" href="/"><img class="ui small image" src="/assets/images/carbon-logo-header.png" alt="Home"></a>
+
+					
+
+					<a class="item" href="/get-started">Get Started</a>
+
+						
+
+					<div class="ui dropdown link item navMenu-dropdownButton"><a class="item navMenu-dropdownLink" href="/documentation">Documentation</a><i class="dropdown icon"></i>
+						<div class="menu">
+						
+						<a class="item" href="/documentation/quick-start-guide">Quick Start Guide</a>
+						
+						<a class="item" href="/documentation/essential-concepts">Essential Concepts</a>
+						
+						<a class="item" href="/documentation/javascript-sdk">JavaScript SDK</a>
+						
+						<a class="item" href="/documentation/rest-api">REST API</a>
+						
+						</div>
+					</div>
+						
+
+					<a class="item" href="/community-and-support">Community &amp; Support</a>
+
+						
+
+					<a class="item" href="/about">About</a>
+
+						
+				</div>
+			</div>
+		</div>
+		<div class="mobile tablet only row">
+			<div class="ui top fixed borderless menu navMenu">
+				<div class="ui container navMenu">
+					<a class="item navMenu-carbonLogoButton transparentBG" href="/"><img class="ui navMenu-carbonLogo image" src="/assets/images/carbon-logo-header.png" alt="Home"></a>
+					<div class="ui right icon item navMenu-openerButton">
+						<!--<div class="menu item">-->
+							<i class="content icon"></i>
+					</div>
+				</div>
+			</div>
+			<div class="ui fixed fluid vertical menu navMenu-verticalMenu" style="display: none;">
+				
+
+				<a class="item" href="/get-started">Get Started</a>
+
+				
+
+				<div class="ui dropdown link item navMenu-dropdownButton--mobile"><a class="item navMenu-dropdownText">Documentation<i class="dropdown icon"></i></a>
+					<div class="menu navMenu-dropdownMenu">
+						
+						<a class="item" href="/documentation/quick-start-guide">Quick Start Guide</a>
+						
+						<a class="item" href="/documentation/essential-concepts">Essential Concepts</a>
+						
+						<a class="item" href="/documentation/javascript-sdk">JavaScript SDK</a>
+						
+						<a class="item" href="/documentation/rest-api">REST API</a>
+						
+						<div class="divider"></div>
+						<a class="item" href="/documentation">All documents...</a>
+					</div>
+				</div>
+				
+
+				<a class="item" href="/community-and-support">Community &amp; Support</a>
+
+				
+
+				<a class="item" href="/about">About</a>
+
+				
+			</div>
+
+		</div>
+	</div>
+</header>
+        <div class="ui scrollTop mobile only grid">
+			<button class="ui icon button scrollTop-button"><i class="angle up icon scrollTop-icon"></i></button>
+		</div>
+        <div class="site-content ">
+            
+            <div class="ui container grid">
+        <div class="row">
+            <div class="twelve wide computer only twelve wide tablet only sixteen wide mobile only column">
+                    <div class="mainContent">
+                        <div class="ui breadcrumb">
+	
+	
+
+	<a class="section" href="/documentation">Documentation</a>
+
+	
+	<i class="right chevron icon divider"></i>
+	<a class="section" href="/documentation/javascript-sdk">JavaScript SDK</a>
+	
+
+	<i class="right arrow icon divider"></i>
+	<div class="active section" href="/documentation/javascript-sdk/files">Files</div>
+</div>
+
+                        
+                        
+<h1>Files</h1>
+
+<div class="documentation-steps ui fluid steps">
+	<a class="step" href="../object-schema">
+		<i class="arrow left icon"></i>
+		<div class="content">
+			<div class="title">Previous</div>
+			<div class="description">Object Schema</div>
+		</div>
+	</a>
+	<div class="active step">
+		<!--<i class="payment icon"></i>-->
+		<div class="content">
+			<div class="title">Files</div>
+		</div>
+	</div>
+	<a class="step" href="../querying">
+		<i class="arrow right icon"></i>
+		<div class="content">
+			<div class="title">Next</div>
+			<div class="description">Querying</div>
+		</div>
+	</a>
+</div>
+<div class="ui mobile only grid">
+	<div class="row">
+		<div class=" sixteen wide mobile only column">
+	<div class="staticContentMenu">
+		<h2 class="staticContentMenuTitle">Content</h2>
+		<div class="ui vertical accordion fluid menu mobile">
+			
+
+			<div class="item"><a class="title staticContentMenu-title" href="#introduction">Introduction</a></div>
+
+			
+
+			<div class="item">
+
+				<a class="title staticContentMenu-title staticContentMenu-title--dropdown" href="#browser">Browser</a><i class="dropdown icon .staticContentMenu-dropdownIcon"></i>
+
+				<div class="content menu">
+
+					
+
+					<a class="item" href="#uploading">Uploading</a>
+
+					
+
+					<a class="item" href="#tracking-upload-progress">Tracking upload progress</a>
+
+					
+
+					<a class="item" href="#downloading">Downloading</a>
+
+					
+				</div>
+			</div>
+			
+
+			<div class="item"><a class="title staticContentMenu-title" href="#nodejs">NodeJS</a></div>
+
+			
+		</div>
+	</div>
+</div>
+	</div>
+</div>
+<section class="mainContent-section" id="introduction">
+	<h2 class="hidden">Introduction</h2>
+	<p>So far we've covered how to save JavaScript objects in the platform. But the platform supports saving (and retrieving) files too. This functionality isn't intended to
+		replace a CDN or static asset repository but it can serve as a dynamic asset repository.</p>
+</section>
+<section class="mainContent-section" id="browser">
+	<h2>Browser</h2>
+	<section class="mainContent-subSection" id="uploading">
+		<h3>Uploading</h3>
+		<p>The SDK uses the File API to access files on the browser. It is highly recommended that you read this very well documented article about how to use it:</p>
+		<p><a href="https://developer.mozilla.org/en-US/docs/Using_files_from_web_applications" target="_blank" rel="noopener">MDN: Using files from web applications</a></p>
+		<p>Once you get your hands on a <a href="https://developer.mozilla.org/en-US/docs/Web/API/File" target="_blank" rel="noopener">File</a> object you can use the
+			<code>upload</code> method of the <code>Documents</code> service or of a <code>PersistedDocument</code> object. This method is very similar to the
+			<code>createChild</code> method that we've already covered:</p>
+		<div class="ui grid tabsComponent">
+	
+		<div class="ui computer tablet only row tabs">
+			<div class="ui top attached tabular menu tabs-titles">
+				
+				
+					<a class="tabs-title active item" data-tab="IfyLTLxg">TypeScript</a>
+				
+				
+					<a class="tabs-title  item" data-tab="PSGHqUpB">JavaScript ES2015</a>
+				
+				
+					<a class="tabs-title  item" data-tab="ohACaDEj">JavaScript ES5</a>
+				
+			</div>
+		</div>
+		<div class="ui mobile only row tabs">
+			<div class="ui compact selection dropdown tabs-options">
+				<i class="dropdown icon"></i>
+				<div class="text">TypeScript</div>
+				<div class="menu">
+					
+					
+					<div class="tabs-option item" data-tab="IfyLTLxg">TypeScript</div>
+					
+					
+					<div class="tabs-option item" data-tab="PSGHqUpB">JavaScript ES2015</div>
+					
+					
+					<div class="tabs-option item" data-tab="ohACaDEj">JavaScript ES5</div>
+					
+				</div>
+			</div>
+		</div>
+
+		
+			
+			<div class="tabs-tab ui bottom attached tabs active tab segment" data-tab="IfyLTLxg">
+				
+				
+				<pre><code class="typescript hljs"><span class="hljs-keyword">import</span> * as App from <span class="hljs-string">"carbonldp/App"</span>;
+<span class="hljs-keyword">import</span> * as HTTP from <span class="hljs-string">"carbonldp/HTTP"</span>;
+<span class="hljs-keyword">import</span> * as PersistedDocument from <span class="hljs-string">"carbonldp/PersistedDocument"</span>;
+<span class="hljs-keyword">import</span> * as RDFRepresentation from <span class="hljs-string">"carbonldp/RDFRepresentation"</span>;
+
+<span class="hljs-keyword">let</span> file:File;
+
+<span class="hljs-comment">// ... get file</span>
+
+<span class="hljs-keyword">let</span> appContext:App.Context;
+
+<span class="hljs-comment">// ... get context</span>
+
+appContext.documents.upload( <span class="hljs-string">"parent-document/"</span>, file, <span class="hljs-string">"Optional Slug"</span> ).then(
+    ( [ fileMetadata, response ]:[ PersistedDocument.Class, HTTP.Response.Class ] ) =&gt; {
+        <span class="hljs-built_in">console</span>.log( fileMetadata.isResolved() ); <span class="hljs-comment">// false</span>
+
+        <span class="hljs-comment">// Resolve document with file's metadata</span>
+        <span class="hljs-keyword">return</span> fileMetadata.resolve&lt;RDFRepresentation.Class&gt;();
+    }
+).then(
+    ( [ fileMetadata, response ]:[ RDFRepresentation.Class &amp; PersistedDocument.Class, HTTP.Response.Class ] ) =&gt; {
+        <span class="hljs-built_in">console</span>.log( fileMetadata.size ); <span class="hljs-comment">// E.g. 100634</span>
+        <span class="hljs-built_in">console</span>.log( fileMetadata.mediaType ); <span class="hljs-comment">// E.g. image/png</span>
+    }
+).catch( <span class="hljs-built_in">console</span>.error );</code></pre>
+				
+			
+			</div>
+		
+			
+			<div class="tabs-tab ui bottom attached tabs  tab segment" data-tab="PSGHqUpB">
+				
+				
+				<pre><code class="javascript hljs"><span class="hljs-keyword">let</span> file;
+
+<span class="hljs-comment">// ... get file</span>
+
+<span class="hljs-keyword">let</span> appContext;
+
+<span class="hljs-comment">// ... get context</span>
+
+appContext.documents.upload( <span class="hljs-string">"parent-document/"</span>, file, <span class="hljs-string">"Optional Slug"</span> ).then(
+    <span class="hljs-function">(<span class="hljs-params"> [ fileMetadata, response ] </span>) =&gt;</span> {
+        <span class="hljs-built_in">console</span>.log( fileMetadata.isResolved() ); <span class="hljs-comment">// false</span>
+
+        <span class="hljs-comment">// Resolve document with file's metadata</span>
+        <span class="hljs-keyword">return</span> fileMetadata.resolve();
+    }
+).then(
+    <span class="hljs-function">(<span class="hljs-params"> [ fileMetadata, response ] </span>) =&gt;</span> {
+        <span class="hljs-built_in">console</span>.log( fileMetadata.size ); <span class="hljs-comment">// E.g. 100634</span>
+        <span class="hljs-built_in">console</span>.log( fileMetadata.mediaType ); <span class="hljs-comment">// E.g. image/png</span>
+    }
+).catch( <span class="hljs-built_in">console</span>.error );</code></pre>
+				
+			
+			</div>
+		
+			
+			<div class="tabs-tab ui bottom attached tabs  tab segment" data-tab="ohACaDEj">
+				
+				
+				<pre><code class="javascript hljs"><span class="hljs-keyword">var</span> file;
+
+<span class="hljs-comment">// ... get file</span>
+
+<span class="hljs-keyword">var</span> appContext;
+
+<span class="hljs-comment">// ... get context</span>
+
+appContext.documents.upload( <span class="hljs-string">"parent-document/"</span>, file, <span class="hljs-string">"Optional Slug"</span> ).then(
+    <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> result </span>) </span>{
+        <span class="hljs-keyword">var</span> fileMetadata = result[ <span class="hljs-number">0</span> ];
+        <span class="hljs-keyword">var</span> response = result[ <span class="hljs-number">1</span> ];
+
+        <span class="hljs-built_in">console</span>.log( fileMetadata.isResolved() ); <span class="hljs-comment">// false</span>
+
+        <span class="hljs-comment">// Resolve document with file's metadata</span>
+        <span class="hljs-keyword">return</span> fileMetadata.resolve();
+    }
+).then(
+    <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> result </span>) </span>{
+        <span class="hljs-keyword">var</span> fileMetadata = result[ <span class="hljs-number">0</span> ];
+        <span class="hljs-keyword">var</span> response = result[ <span class="hljs-number">1</span> ];
+
+        <span class="hljs-built_in">console</span>.log( fileMetadata.size ); <span class="hljs-comment">// E.g. 100634</span>
+        <span class="hljs-built_in">console</span>.log( fileMetadata.mediaType ); <span class="hljs-comment">// E.g. image/png</span>
+    }
+).catch( <span class="hljs-built_in">console</span>.error );</code></pre>
+				
+			
+			</div>
+		
+	
+</div>
+
+		<p>The promise returned by the method will contain an array with the file's metadata as its first item (pretty much like the <code>createChild</code> method). Each time
+			you upload a file a document gets created with the file's metadata. The object you'll receive will be an unresolved pointer to it, which you can resolve with the
+			<code>resolve</code> method.</p>
+		<p>This document acts like a normal document. It can have children, members and even be a parent of other files. You can also add new data to it like you'd to any
+			other document.</p>
+	</section>
+	<section class="mainContent-subSection" id="tracking-upload-progress">
+		<h3>Tracking upload progress</h3>
+		<p>Upload progress can be tracked using the optional <code>options</code> argument. You can pass an
+			<a href="https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest" target="_blank" rel="noopener">XMLHttpRequest</a> through
+			this argument with the <code>request</code> property:</p>
+		<div class="ui grid tabsComponent">
+	
+		<div class="ui computer tablet only row tabs">
+			<div class="ui top attached tabular menu tabs-titles">
+				
+				
+					<a class="tabs-title active item" data-tab="dSCxnrsP">TypeScript</a>
+				
+				
+					<a class="tabs-title  item" data-tab="IwgBzxjx">JavaScript ES2015</a>
+				
+				
+					<a class="tabs-title  item" data-tab="RQGizFQj">JavaScript ES5</a>
+				
+			</div>
+		</div>
+		<div class="ui mobile only row tabs">
+			<div class="ui compact selection dropdown tabs-options">
+				<i class="dropdown icon"></i>
+				<div class="text">TypeScript</div>
+				<div class="menu">
+					
+					
+					<div class="tabs-option item" data-tab="dSCxnrsP">TypeScript</div>
+					
+					
+					<div class="tabs-option item" data-tab="IwgBzxjx">JavaScript ES2015</div>
+					
+					
+					<div class="tabs-option item" data-tab="RQGizFQj">JavaScript ES5</div>
+					
+				</div>
+			</div>
+		</div>
+
+		
+			
+			<div class="tabs-tab ui bottom attached tabs active tab segment" data-tab="dSCxnrsP">
+				
+				
+				<pre><code class="typescript hljs"><span class="hljs-keyword">import</span> * as App from <span class="hljs-string">"carbonldp/App"</span>;
+<span class="hljs-keyword">import</span> * as HTTP from <span class="hljs-string">"carbonldp/HTTP"</span>;
+<span class="hljs-keyword">import</span> * as PersistedDocument from <span class="hljs-string">"carbonldp/PersistedDocument"</span>;
+<span class="hljs-keyword">import</span> * as RDFRepresentation from <span class="hljs-string">"carbonldp/RDFRepresentation"</span>;
+
+<span class="hljs-keyword">let</span> file:File;
+
+<span class="hljs-comment">// ... get file</span>
+
+<span class="hljs-keyword">let</span> appContext:App.Context;
+
+<span class="hljs-comment">// ... get context</span>
+
+<span class="hljs-keyword">let</span> xhr:XMLHttpRequest = <span class="hljs-keyword">new</span> XMLHttpRequest();
+xhr.upload.addEventListener( <span class="hljs-string">"progress"</span>, ( event:ProgressEvent ) =&gt; {
+    <span class="hljs-keyword">let</span> incrementingPercentage:<span class="hljs-built_in">number</span> = <span class="hljs-built_in">parseInt</span>( event.loaded / event.total * <span class="hljs-number">100</span> );
+    <span class="hljs-keyword">let</span> decrementingPercentage:<span class="hljs-built_in">number</span> = <span class="hljs-number">100</span> - incrementingPercentage;
+
+    <span class="hljs-built_in">console</span>.log( incrementingPercentage );
+    <span class="hljs-built_in">console</span>.log( decrementingPercentage );
+} );
+
+appContext.upload( <span class="hljs-string">"parent-document/"</span>, file, <span class="hljs-string">"Optional Slug"</span>, { request: xhr } ).then(
+    ( [ fileMetadata, response ]:[ PersistedDocument.Class, HTTP.Response.Class ] ) =&gt; {
+        <span class="hljs-comment">// ...</span>
+    }
+).catch( <span class="hljs-built_in">console</span>.error );</code></pre>
+				
+			
+			</div>
+		
+			
+			<div class="tabs-tab ui bottom attached tabs  tab segment" data-tab="IwgBzxjx">
+				
+				
+				<pre><code class="javascript hljs"><span class="hljs-keyword">let</span> file;
+
+<span class="hljs-comment">// ... get file</span>
+
+<span class="hljs-keyword">let</span> appContext;
+
+<span class="hljs-comment">// ... get context</span>
+
+<span class="hljs-keyword">let</span> xhr = <span class="hljs-keyword">new</span> XMLHttpRequest();
+xhr.upload.addEventListener( <span class="hljs-string">"progress"</span>, ( event ) =&gt; {
+    <span class="hljs-keyword">let</span> incrementingPercentage:number = <span class="hljs-built_in">parseInt</span>( event.loaded / event.total * <span class="hljs-number">100</span> );
+    <span class="hljs-keyword">let</span> decrementingPercentage:number = <span class="hljs-number">100</span> - incrementingPercentage;
+
+    <span class="hljs-built_in">console</span>.log( incrementingPercentage );
+    <span class="hljs-built_in">console</span>.log( decrementingPercentage );
+} );
+
+appContext.upload( <span class="hljs-string">"parent-document/"</span>, file, <span class="hljs-string">"Optional Slug"</span>, { <span class="hljs-attr">request</span>: xhr } ).then(
+    <span class="hljs-function">(<span class="hljs-params"> [ fileMetadata, response ] </span>) =&gt;</span> {
+        <span class="hljs-comment">// ...</span>
+    }
+).catch( <span class="hljs-built_in">console</span>.error );</code></pre>
+				
+			
+			</div>
+		
+			
+			<div class="tabs-tab ui bottom attached tabs  tab segment" data-tab="RQGizFQj">
+				
+				
+				<pre><code class="javascript hljs"><span class="hljs-keyword">var</span> file;
+
+<span class="hljs-comment">// ... get file</span>
+
+<span class="hljs-keyword">var</span> appContext;
+
+<span class="hljs-comment">// ... get context</span>
+
+<span class="hljs-keyword">var</span> xhr = <span class="hljs-keyword">new</span> XMLHttpRequest();
+xhr.upload.addEventListener( <span class="hljs-string">"progress"</span>, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> event </span>) </span>{
+    <span class="hljs-keyword">var</span> incrementingPercentage:number = <span class="hljs-built_in">parseInt</span>( event.loaded / event.total * <span class="hljs-number">100</span> );
+    <span class="hljs-keyword">var</span> decrementingPercentage:number = <span class="hljs-number">100</span> - incrementingPercentage;
+
+    <span class="hljs-built_in">console</span>.log( incrementingPercentage );
+    <span class="hljs-built_in">console</span>.log( decrementingPercentage );
+} );
+
+appContext.upload( <span class="hljs-string">"parent-document/"</span>, file, <span class="hljs-string">"Optional Slug"</span>, { <span class="hljs-attr">request</span>: xhr } ).then(
+    <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> result </span>) </span>{
+        <span class="hljs-comment">// ...</span>
+    }
+).catch( <span class="hljs-built_in">console</span>.error );</code></pre>
+				
+			
+			</div>
+		
+	
+</div>
+
+	</section>
+	<section class="mainContent-subSection" id="downloading">
+		<h3>Downloading</h3>
+		<p>Files uploaded will get an id assigned. This id, like the one of any document, is going to be a resolvable URI. If you open it in a browser you'll be able to
+			download it.</p>
+		<p>However, if the file is protected by the security scheme, opening it on a browser will prompt for credentials. If you want to provide a link that uses the
+			authentication you may already have in your application you can use the <code>Auth</code> service's <code>getAuthenticatedURL</code> method.</p>
+		<p>This method will return a promise that when resolved will give you a URL with a temporary ticket to authenticate the current user for that request:</p>
+		<div class="ui grid tabsComponent">
+	
+		<div class="ui computer tablet only row tabs">
+			<div class="ui top attached tabular menu tabs-titles">
+				
+				
+					<a class="tabs-title active item" data-tab="cztNjKgt">TypeScript</a>
+				
+				
+					<a class="tabs-title  item" data-tab="XRmdgHsf">JavaScript ES2015</a>
+				
+				
+					<a class="tabs-title  item" data-tab="yvhktYvB">JavaScript ES5</a>
+				
+			</div>
+		</div>
+		<div class="ui mobile only row tabs">
+			<div class="ui compact selection dropdown tabs-options">
+				<i class="dropdown icon"></i>
+				<div class="text">TypeScript</div>
+				<div class="menu">
+					
+					
+					<div class="tabs-option item" data-tab="cztNjKgt">TypeScript</div>
+					
+					
+					<div class="tabs-option item" data-tab="XRmdgHsf">JavaScript ES2015</div>
+					
+					
+					<div class="tabs-option item" data-tab="yvhktYvB">JavaScript ES5</div>
+					
+				</div>
+			</div>
+		</div>
+
+		
+			
+			<div class="tabs-tab ui bottom attached tabs active tab segment" data-tab="cztNjKgt">
+				
+				
+				<pre><code class="typescript hljs"><span class="hljs-keyword">import</span> * as App from <span class="hljs-string">"carbonldp/App"</span>;
+<span class="hljs-keyword">import</span> * as PersistedDocument from <span class="hljs-string">"carbonldp/PersistedDocument"</span>;
+
+<span class="hljs-keyword">let</span> fileMetadata:PersistedDocument.Class;
+
+<span class="hljs-comment">// ... get a pointer to the file's metadata</span>
+
+<span class="hljs-keyword">let</span> appContext:App.Context;
+
+<span class="hljs-comment">// ... get app context</span>
+
+appContext.auth.getAuthenticatedURL( fileMetadata.id ).then(
+    ( authenticatedFileURL:<span class="hljs-built_in">string</span> ) =&gt; {
+        <span class="hljs-built_in">window</span>.open( authenticatedFileURL, <span class="hljs-string">"_blank"</span> ); <span class="hljs-comment">// Open the URL in another window to start the download</span>
+    }
+);</code></pre>
+				
+			
+			</div>
+		
+			
+			<div class="tabs-tab ui bottom attached tabs  tab segment" data-tab="XRmdgHsf">
+				
+				
+				<pre><code class="javascript hljs"><span class="hljs-keyword">let</span> fileMetadata;
+
+<span class="hljs-comment">// ... get a pointer to the file's metadata</span>
+
+<span class="hljs-keyword">let</span> appContext;
+
+<span class="hljs-comment">// ... get app context</span>
+
+appContext.auth.getAuthenticatedURL( fileMetadata.id ).then(
+    <span class="hljs-function">(<span class="hljs-params"> authenticatedFileURL </span>) =&gt;</span> {
+        <span class="hljs-built_in">window</span>.open( authenticatedFileURL, <span class="hljs-string">"_blank"</span> ); <span class="hljs-comment">// Open the URL in another window to start the download</span>
+    }
+);</code></pre>
+				
+			
+			</div>
+		
+			
+			<div class="tabs-tab ui bottom attached tabs  tab segment" data-tab="yvhktYvB">
+				
+				
+				<pre><code class="javascript hljs"><span class="hljs-keyword">var</span> fileMetadata;
+
+<span class="hljs-comment">// ... get a pointer to the file's metadata</span>
+
+<span class="hljs-keyword">var</span> appContext;
+
+<span class="hljs-comment">// ... get app context</span>
+
+appContext.auth.getAuthenticatedURL( fileMetadata.id ).then(
+    <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> authenticatedFileURL </span>) </span>{
+        <span class="hljs-built_in">window</span>.open( authenticatedFileURL, <span class="hljs-string">"_blank"</span> ); <span class="hljs-comment">// Open the URL in another window to start the download</span>
+    }
+);</code></pre>
+				
+			
+			</div>
+		
+	
+</div>
+
+	</section>
+</section>
+<section class="mainContent-section" id="nodejs">
+	<h2>NodeJS</h2>
+	<p>TO BE DOCUMENTED</p>
+</section>
+<div class="documentation-steps ui fluid steps">
+	<a class="step" href="../object-schema">
+		<i class="arrow left icon"></i>
+		<div class="content">
+			<div class="title">Previous</div>
+			<div class="description">Object Schema</div>
+		</div>
+	</a>
+	<div class="active completed step">
+		<!--<i class="payment icon"></i>-->
+		<div class="content">
+			<div class="title">Files</div>
+		</div>
+	</div>
+	<a class="step" href="../querying">
+		<i class="arrow right icon"></i>
+		<div class="content">
+			<div class="title">Next</div>
+			<div class="description">Querying</div>
+		</div>
+	</a>
+</div>
+
+                        
+
+                    </div>
+                </div>
+            
+            <div class="four wide computer tablet only column">
+                <div class="sidebar" content="mainContent">
+	<div class="ui sticky segment">
+		<h2 class="ui header">Content</h2>
+		<div class="ui vertical following fluid accordion text menu sidebar-verticalMenu">
+
+		
+
+			<div class="item"><a class="title sidebar-title" href="#introduction">Introduction</a></div>
+
+			
+
+			<div class="item">
+
+				<a class="title sidebar-title sidebar-title--dropdown" href="#browser">Browser</a><i class="dropdown icon sidebar-dropdownIcon"></i>
+
+				<div class="content menu sidebar-verticalSubMenu">
+
+				
+
+					<a class="item sidebar-title" href="#uploading">Uploading</a>
+
+				
+
+					<a class="item sidebar-title" href="#tracking-upload-progress">Tracking upload progress</a>
+
+				
+
+					<a class="item sidebar-title" href="#downloading">Downloading</a>
+
+				
+
+				</div>
+			</div>
+		
+
+			<div class="item"><a class="title sidebar-title" href="#nodejs">NodeJS</a></div>
+
+			
+		</div>
+	</div>
+</div>
+            </div>
+            
+        </div>
+    </div>
+
+        </div>
+        <div class="footer bigStoneBG">
+        <div class="ui middle aligned padded grid computer tablet only">
+
+            <div class="four wide center aligned column">
+                <a href="http://base22.com/"><img class="footer-base22Logo" src="/assets/images/base22-logo-white.png"></a>
+            </div>
+            <div class="eight wide center aligned stretched column">
+                <p class="footer-copyrightText">© 2017 Base22 Technology Group, LLC. All Rights Reserved.</p>
+            </div>
+            <div class="four wide left aligned column">
+                <a angulartics2on="click" angularticsevent="OutboundClick" angularticscategory="Twitter" href="https://twitter.com/CarbonLDP"><i class="circular twitter icon footer-socialIcon"></i></a>
+                <a angulartics2on="click" angularticsevent="OutboundClick" angularticscategory="YouTube" href="https://www.youtube.com/channel/UCuNWXjT19Gnpo7I502PTZ_Q"><i class="circular youtube icon footer-socialIcon"></i></a>
+                <a angulartics2on="click" angularticsevent="OutboundClick" angularticscategory="LinkedIn" href="https://www.linkedin.com/company/carbon-ldp"><i class="circular linkedin icon footer-socialIcon"></i></a>
+            </div>
+        </div>
+        <div class="ui centered padded grid mobile only">
+            <div class="left aligned eight wide column">
+                <a href="http://base22.com/"><img class="footer-base22Logo" src="/assets/images/base22-logo-white.png"></a>
+            </div>
+            <div class="right aligned eight wide column">
+                <a angulartics2on="click" angularticsevent="OutboundClick" angularticscategory="Twitter" href="https://twitter.com/CarbonLDP"><i class="circular twitter icon footer-socialIcon"></i></a>
+                <a angulartics2on="click" angularticsevent="OutboundClick" angularticscategory="YouTube" href="https://www.youtube.com/channel/UCuNWXjT19Gnpo7I502PTZ_Q"><i class="circular youtube icon footer-socialIcon"></i></a>
+                <a angulartics2on="click" angularticsevent="OutboundClick" angularticscategory="LinkedIn" href="https://www.linkedin.com/company/carbon-ldp"><i class="circular linkedin icon footer-socialIcon"></i></a>
+            </div>
+            <div class="center aligned twelve wide column">
+                <p class="footer-copyrightText">© 2017 Base22 Technology Group, LLC. All&nbsp;Rights&nbsp;Reserved.</p>
+            </div>
+    </div>
+</div>
+
+        <script src="/js/script.js"></script>
+
+        <script>(function( window ){ $( document ).ready( function() {
+
+	let $sidebar = $(".sidebar");
+	let $sidebarFollowingMenu = $(".sidebar").find( ".following.menu" );
+	let $content = $("."+$sidebar.attr("content"));	
+	let $sections = $content.children( "section" );
+	let $subSections = $sections.children( "section" );
+
+	// Detect when section is passed
+	$sections.visibility( {
+		once: false,
+		offset: 150,
+		onTopPassed: function () {
+			 activateSection( this, $sidebarFollowingMenu, $sections );
+		},
+		onTopPassedReverse: function () {
+			 deactivateFirstSection( this, $sidebarFollowingMenu, $sections );
+		},
+		onBottomPassedReverse: function () {
+			activateSection( this, $sidebarFollowingMenu, $sections);
+		},
+	} );
+
+	$subSections.visibility( {
+		once: false,
+		offset: 150,
+		onTopPassed: function () {
+				activateSubSection( this, $sidebarFollowingMenu, $subSections );
+		},
+		onBottomPassedReverse: function () {
+				activateSubSection( this, $sidebarFollowingMenu, $subSections );
+		}
+	} );
+
+
+	// Make sidebar stick to its position
+	$( ".sidebar > .ui.sticky" ).sticky( {
+		observeChanges: true,
+		context: ".mainContent",
+		offset: 100
+	} );
+
+	// Activate toggle dropdown
+	$( ".sidebar .item > .dropdown.icon" ).on( "click", toggleDropdown);
+
+	//Activate click on items and subitems
+	$( ".sidebar .item > .title" ).on( "click", activateItem) ;
+	$( ".sidebar  a.item " ).on( "click", activateSubItem) ;
+
+	// Toggle selected accordion menu in sidebar
+	function toggleDropdown( event ){
+		let $target = $( event.currentTarget );
+
+		let $accordion = $target.parent( ".item" ).find( ".content.menu" );
+		if( $accordion ) {
+			let accordionIsActive = $accordion.hasClass( "active" );
+
+			if( accordionIsActive ) {
+				$accordion.removeClass( "active" );
+				$accordion.removeClass( "toggled" );
+			} else {
+				$accordion.addClass( "active" );
+				$accordion.addClass( "toggled" );
+			}
+		}
+		$( ".ui.sticky" ).sticky( "refresh" );
+		
+		return false;
+	}
+
+	function activateItem(event){
+
+		let $item = $( event.currentTarget ).parent(".item");
+
+		let $allItems = $item.siblings(".item");
+		$allItems.removeClass("active");
+		$item.addClass("active");
+
+		event.preventDefault();
+	
+		return false;
+
+	}
+
+	function activateSubItem(event){
+
+		let $item = $( event.currentTarget );
+
+		let $allItems = $item.siblings(".item");
+		$allItems.removeClass("active");
+		$item.addClass("active");
+
+		event.preventDefault();
+
+		return false;
+
+	}
+
+
+
+	function activateSection( elm, $menu, $sections) {
+
+		let $section = $( elm );
+		let index = $sections.index( $section );
+		let $followSection = $menu.children( ".item" );
+		let $currentSection = $followSection.eq( index );
+
+		let isActive = $currentSection.hasClass( "active" );
+
+		let hasSubsection= $sections.eq( index ).children( "section" ).length > 0;
+
+		$followSection.removeClass( "active" );
+		$followSection.find( ".active" ).not( ".toggled" ).removeClass( "active" );
+
+		if( ! isActive ) {
+
+			$currentSection.addClass( "active" );
+		}
+
+		if( hasSubsection ) {
+			$currentSection.find( ".menu" ).addClass( "active" );
+		}
+
+		$( ".ui.sticky" ).sticky( "refresh" );
+
+		return false;
+
+	}
+
+	function activateSubSection( elm, $menu, $subSections ){
+		let $section  = $( elm );
+		let index = $subSections.index( $section );
+		let $followSection = $menu.find( ".menu > .item" );
+		let $activeSection = $followSection.eq( index );
+		let isActive = $activeSection.hasClass( "active" );
+		let $subSectionMenu = $menu.children( ".item" ).find( ".menu" );
+		let subSectionMenuIsActive = $subSectionMenu.hasClass( "active" );
+
+		if( index !== - 1 && ! isActive ) {
+			$followSection.filter( ".active" ).removeClass( "active" );
+			$activeSection.addClass( "active" );
+		}
+
+		if( ! subSectionMenuIsActive ) {
+			$subSectionMenu.addClass( "active" );
+		}
+
+		$( ".ui.sticky" ).sticky( "refresh" );
+
+		return false;
+	}
+
+	function deactivateFirstSection( elm, $menu, $sections) {
+
+		let $section = $( elm );
+		let index = $sections.index( $section );
+		let $followSection = $menu.children( ".item" );
+		let $currentSection = $followSection.eq( index );
+		let isActive = $currentSection.hasClass( "active" );
+		let $subSectionMenu = $currentSection.find( ".menu" );
+
+
+		if( index === 0 ) {
+
+			$currentSection.removeClass( "active" );
+
+			if( $subSectionMenu.length > 0 ) {
+				$currentSection.find( ".menu" ).not(".toggled").removeClass( "active" );
+				$subSectionMenu.find( ".item" ).removeClass("active");
+			}
+
+		}
+
+		$( ".ui.sticky" ).sticky( "refresh" );
+
+		return false;
+	}
+
+
+}); })( window );</script><script>(function( window ){ $( document ).ready( function() {
+
+
+	let $sidebar = $(".staticContentMenu");
+	let $content = $("."+$sidebar.attr("content"));
+	let $sections = $content.children( ".mainContent-section" );
+
+	// Detect when section is passed
+	$sections.visibility( {
+		once: false,
+		offset: 150,
+		onTopPassed: function () {
+			// _self.activateSection( this );
+			console.log("top passed");
+		},
+		onTopPassedReverse: function () {
+			// _self.deactivateFirstSection( this );
+		},
+		onBottomPassedReverse: function () {
+			// _self.activateSection( this );
+		},
+	} );
+
+
+
+	// Activate toggle dropdown
+	$( ".staticContentMenu .item > .dropdown.icon" ).on( "click", toggleDropdown);
+
+
+	// Toggle selected accordion menu in sidebar
+	function toggleDropdown( event ){
+		let $target = $( event.currentTarget );
+		$( ".ui.sticky" ).sticky( "refresh" );
+		let $accordion = $target.parent( ".item" ).find( ".content.menu" );
+		if( $accordion ) {
+			let accordionIsActive = $accordion.hasClass( "active" );
+
+			if( accordionIsActive ) {
+				$accordion.removeClass( "active" );
+				$accordion.removeClass( "toggled" );
+			} else {
+				$accordion.addClass( "active" );
+				$accordion.addClass( "toggled" );
+			}
+		}
+
+		return false;
+	}
+
+
+}); })( window );</script><script>(function( window ){ $( document ).ready( function() {
+	let tabs = document.querySelectorAll(".tabs-titles > .tabs-title, .tabs-options .tabs-option" );
+	for (var i = 0; i < tabs.length; i++) {
+		tabs[i].addEventListener('click', changeTabSelection );
+	}
+});
+
+
+
+
+function changeTabSelection(e) {
+
+	let clickedTab = $(e.currentTarget);
+	let selectedOption = clickedTab.attr("data-tab");
+	let selectedText = clickedTab.html();
+	let tabComponent = clickedTab.parent();
+
+	//select TabComponent to where the clicked tab/option belongs
+	while( ! tabComponent.hasClass("tabsComponent")) {
+		tabComponent = tabComponent.parent();
+	}
+
+	// select TabComponent elements
+	let tabs = tabComponent.find(".tabs-title,.tabs-tab")
+	let options = tabComponent.find(".tabs-option")
+
+	// Remove all active classes from elements
+	options.removeClass("active selected");
+	tabs.removeClass("active");
+
+	// Add active classes on selected options/tabs
+	tabs.each( function(){
+		let tab = $(this);
+		if( tab.attr("data-tab") === selectedOption ) tab.addClass("active");
+	});
+	
+	options.each(function() {
+		let option = $(this);
+		if( option.attr("data-tab") === selectedOption ) option.addClass("active selected");
+	});
+
+	// Change text of selection
+	if( clickedTab.hasClass("tabs-title")){
+		let text =  tabComponent.find(".tabs-options .text");
+		text.html(selectedText);
+	}
+
+	return true;
+}
+
+
+
+ })( window );</script><script id="widgets-scripts"></script>
+    
+    
+</body></html>

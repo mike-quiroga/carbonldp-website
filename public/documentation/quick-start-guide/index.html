@@ -1,50 +1,57 @@
 <!DOCTYPE html><html><head>
   <meta charset="utf-8">
   
+
+
+  <link rel="shortcut icon" href="/assets/images/carbon-icon-144x144.png">
   <title>Quick Start Guide | Carbon LDP</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="google-site-verification" content="gz0ah_pGpAlB4Q5a_bxykr1Zdo_CfXHyAb2tJiADVhE">
 
   <meta name="description" content="Quick Start Guide
 
 
-
+    
+        Thank you! Your registration was successful
+    
     This guide describes how to download, install, and run all the components necessary
-        to get started with application development using Carbon LDP as quickly as possibl">
+        to get started with a">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Quick Start Guide">
-<meta property="og:url" content="http://yoursite.com/documentation/quick-start-guide/index.html">
+<meta property="og:url" content="https://carbonldp.com/documentation/quick-start-guide/index.html">
 <meta property="og:site_name" content="Carbon LDP">
 <meta property="og:description" content="Quick Start Guide
 
 
-
+    
+        Thank you! Your registration was successful
+    
     This guide describes how to download, install, and run all the components necessary
-        to get started with application development using Carbon LDP as quickly as possibl">
-<meta property="og:image" content="http://yoursite.com/assets/images/carbon-platform-api-response.jpg">
-<meta property="og:image" content="http://yoursite.com/assets/images/workbench-login-prompt.jpg">
-<meta property="og:image" content="http://yoursite.com/assets/images/click-apps-in-workbench.jpg">
-<meta property="og:image" content="http://yoursite.com/assets/images/creat-app-btn-workbench.jpg">
-<meta property="og:image" content="http://yoursite.com/assets/images/new-app-form-example.jpg">
-<meta property="og:image" content="http://yoursite.com/assets/images/apps-list-workbench.jpg">
-<meta property="og:updated_time" content="2017-02-09T03:51:39.000Z">
+        to get started with a">
+<meta property="og:image" content="https://carbonldp.com/assets/images/carbon-platform-api-response.jpg">
+<meta property="og:image" content="https://carbonldp.com/assets/images/workbench-login-prompt.jpg">
+<meta property="og:image" content="https://carbonldp.com/assets/images/click-apps-in-workbench.jpg">
+<meta property="og:image" content="https://carbonldp.com/assets/images/creat-app-btn-workbench.jpg">
+<meta property="og:image" content="https://carbonldp.com/assets/images/new-app-form-example.jpg">
+<meta property="og:image" content="https://carbonldp.com/assets/images/apps-list-workbench.jpg">
+<meta property="og:updated_time" content="2017-02-13T21:00:44.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Quick Start Guide">
 <meta name="twitter:description" content="Quick Start Guide
 
 
-
+    
+        Thank you! Your registration was successful
+    
     This guide describes how to download, install, and run all the components necessary
-        to get started with application development using Carbon LDP as quickly as possibl">
-<meta name="twitter:image" content="http://yoursite.com/assets/images/carbon-platform-api-response.jpg">
-
+        to get started with a">
+<meta name="twitter:image" content="https://carbonldp.com/assets/images/carbon-platform-api-response.jpg">
   
     <link rel="alternate" href="/atom.xml" title="Carbon LDP" type="application/atom+xml">
   
 
-  
 
   <link rel="stylesheet" href="/semantic/dist/semantic.min.css">
-
   <style>/* Tomorrow Night Theme */
 /* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
 /* Original theme - https://github.com/chriskempson/tomorrow-theme */
@@ -142,6 +149,7 @@
 /* Change color to black when title active */
 .ui.accordion .item.active .title:not(.ui).sidebar-title{
     color: black;
+    font-weight: 700;
 }
 .ui.vertical.menu .menu .item.active .sidebar-title{
     color: black;
@@ -187,8 +195,25 @@
         padding-right: 0;
     }
 
-}</style>
+}</style><style>.staticContentMenu{
+    margin: 2em 0;
+}
 
+h2.staticContentMenu-title{
+    font-size: 1.4em;
+}
+
+.ui.accordion.menu .item .title.staticContentMenu-title--dropdown{
+    display: inline;
+}
+
+.ui.vertical.text.menu .item>i.icon.staticContentMenu-dropdownIcon{
+    float: right;
+}
+
+.ui.accordion .title:not(.ui).staticContentMenu-title{
+    color: rgba(0,0,0,.6);
+}</style>
   <link rel="stylesheet" href="/assets/styles/css/main.min.css">
 
 
@@ -199,6 +224,16 @@
   
   <link rel="stylesheet" href="/assets/styles/css/document.min.css">
   
+
+
+  <!-- Google Analytics -->
+  <script>
+    window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+    ga('create', 'UA-75786977-1', 'auto');
+    ga('send', 'pageview');
+  </script>
+  <script async="" src="https://www.google-analytics.com/analytics.js"></script>
+  <!-- End Google Analytics -->
 
   <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
   <script src="/semantic/dist/semantic.min.js"></script>
@@ -290,7 +325,9 @@
 		</div>
 	</div>
 </header>
-
+        <div class="ui scrollTop mobile only grid">
+			<button class="ui icon button scrollTop-button"><i class="angle up icon scrollTop-icon"></i></button>
+		</div>
         <div class="site-content ">
             
             <div class="ui container grid">
@@ -313,12 +350,92 @@
                         
 <h1>Quick Start Guide</h1>
 
-
-<div class="ui message">
+<div class="ui message registrationSuccessMessage">
+    <p class="successMessage">
+        <strong>Thank you!</strong> Your registration was successful
+    </p>
     <p>This guide describes how to download, install, and run all the components necessary
         to get started with application development using Carbon LDP as quickly as possible.</p>
 </div>
 
+<div class="ui mobile only grid">
+    <div class="row">
+        <div class=" sixteen wide mobile only column">
+	<div class="staticContentMenu">
+		<h2 class="staticContentMenuTitle">Content</h2>
+		<div class="ui vertical accordion fluid menu mobile">
+			
+
+			<div class="item"><a class="title staticContentMenu-title" href="#overview">Overview</a></div>
+
+			
+
+			<div class="item"><a class="title staticContentMenu-title" href="#install-docker">Install Docker</a></div>
+
+			
+
+			<div class="item">
+
+				<a class="title staticContentMenu-title staticContentMenu-title--dropdown" href="#configure-and-run-the-carbon-platform">Configure and run the Carbon platform</a><i class="dropdown icon .staticContentMenu-dropdownIcon"></i>
+
+				<div class="content menu">
+
+					
+
+					<a class="item" href="#create-the-platform-s-directory-structure">Create the platform's directory structure</a>
+
+					
+
+					<a class="item" href="#create-the-platform-configuration-file">Create the platform configuration file</a>
+
+					
+
+					<a class="item" href="#run-a-platform-instance">Run a platform instance</a>
+
+					
+				</div>
+			</div>
+			
+
+			<div class="item"><a class="title staticContentMenu-title" href="#run-the-carbon-workbench">Run the Carbon workbench</a></div>
+
+			
+
+			<div class="item"><a class="title staticContentMenu-title" href="#create-an-agent">Create an agent</a></div>
+
+			
+
+			<div class="item"><a class="title staticContentMenu-title" href="#create-a-new-application">Create a new application</a></div>
+
+			
+
+			<div class="item">
+
+				<a class="title staticContentMenu-title staticContentMenu-title--dropdown" href="#develop-with-the-javascript-sdk-rest-api-and-optional-tools">Develop With the JavaScript SDK, REST API, and optional tools</a><i class="dropdown icon .staticContentMenu-dropdownIcon"></i>
+
+				<div class="content menu">
+
+					
+
+					<a class="item" href="#rest-api-and-optional-tools">REST API, and optional tools</a>
+
+					
+				</div>
+			</div>
+			
+
+			<div class="item"><a class="title staticContentMenu-title" href="#provide-feedback-to-help-improve-the-product">Provide Feedback to Help Improve the Product</a></div>
+
+			
+
+			<div class="item"><a class="title staticContentMenu-title" href="#update-your-instances-when-new-versions-are-released">Update Your Instances When New Versions are Released</a></div>
+
+			
+		</div>
+	</div>
+</div>
+    </div>
+</div>
 
 <section class="mainContent-section" id="overview">
 
@@ -407,7 +524,7 @@ This message shows that your installation appears to be working correctly.</code
         <p>The platform's configuration is initialized from the properties contained in a file called <code>config.properties</code>, which you will need to create in the
             <code>carbon/config</code> directory.</p>
         <p><strong>config.properties</strong></p>
-        <!-- @formatter:off -->
+        
        <pre><code class="bash hljs">platform.domain = localhost:8083
 platform.protocol = http
 
@@ -420,7 +537,7 @@ platform.system-agent.password = system
 authentication.realm-name = Your Carbon LDP Instance
 
 token.key = generateARandomStringAndPlaceItHere</code></pre>
-        <!-- @formatter:on -->
+        
 
         <p>It is important to make note of the <code>platform.system-agent.username</code> and <code>platform.system-agent.password</code> because, for security, those
             properties will be automatically removed from the file when the platform is started for the first time.</p>
@@ -491,7 +608,7 @@ token.key = generateARandomStringAndPlaceItHere</code></pre>
     <span class="hljs-_">-e</span> <span class="hljs-string">"CARBON_HOST=localhost:8083"</span> \
     <span class="hljs-_">-e</span> <span class="hljs-string">"CARBON_PROTOCOL=http"</span> \
     carbonldp/carbonldp-workbench</code></pre>
-    <!-- @formatter:on -->
+    
 
     <p>After executing the command, open <code>localhost:8000</code> in your web browser. If the workbench is running, you should be presented with a login page like this:</p>
 
@@ -620,11 +737,11 @@ token.key = generateARandomStringAndPlaceItHere</code></pre>
 
         <!-- @formatter:off -->
     </p><pre><code class="bash hljs">docker pull carbonldp/carbonldp-platform:latest</code></pre>
-    <!-- @formatter:on -->
+    
 
     <!-- @formatter:off -->
     <pre><code class="bash hljs">docker pull carbonldp/carbonldp-workbench:latest</code></pre>
-    <!-- @formatter:on -->
+    
 
     <p></p><p>After that, stop your running instances and delete them with the following commands:</p>
 
@@ -633,11 +750,11 @@ token.key = generateARandomStringAndPlaceItHere</code></pre>
 
     <!--&lt;!&ndash; @formatter:off &ndash;&gt;-->
     <pre><code class="bash hljs">docker stop carbonldp-platform &amp;&amp; docker rm carbonldp-platform</code></pre>
-    <!-- @formatter:on -->
+    
 
     <!-- @formatter:off -->
     <pre><code class="bash hljs">docker stop carbonldp-workbench &amp;&amp; docker rm carbonldp-workbench</code></pre>
-    <!-- @formatter:on -->
+    
 
     <p>You should then create a data backup just in case something goes wrong with the new version. To do that, copy and rename the carbon folder containing your config and
         data.</p>
@@ -653,25 +770,9 @@ token.key = generateARandomStringAndPlaceItHere</code></pre>
     <span class="hljs-_">-e</span> <span class="hljs-string">"CARBON_HOST=localhost:8083"</span> \
     <span class="hljs-_">-e</span> <span class="hljs-string">"CARBON_PROTOCOL=http"</span> \
     carbonldp/carbonldp-workbench:latest</code></pre>
-    <!-- @formatter:on -->
+    
 
 </section>
-
-
-<!-- TODO: add success message after registration redirect
--->
-<!--<div class="ui success message" *ngIf="displaySuccessMessage">-->
-<!--<div class="content">-->
-<!--<p>-->
-<!--<strong>Thank you!</strong> Your registration was successful-->
-<!--</p>-->
-<!--<p>-->
-<!--This guide describes how to download, install, and run all the components necessary-->
-<!--to get started with application development using Carbon LDP as quickly as possible.-->
-<!--</p>-->
-<!--</div>-->
-
-<!--</div>-->
 
 
                         
@@ -764,16 +865,14 @@ token.key = generateARandomStringAndPlaceItHere</code></pre>
 
         </div>
         <div class="footer bigStoneBG">
-    <!--<div class="ui container">-->
         <div class="ui middle aligned padded grid computer tablet only">
-            <!--<div class="four wide column">-->
+
             <div class="four wide center aligned column">
                 <a href="http://base22.com/"><img class="footer-base22Logo" src="/assets/images/base22-logo-white.png"></a>
             </div>
             <div class="eight wide center aligned stretched column">
                 <p class="footer-copyrightText">© 2017 Base22 Technology Group, LLC. All Rights Reserved.</p>
             </div>
-            <!--<div class="four wide right aligned column">-->
             <div class="four wide left aligned column">
                 <a angulartics2on="click" angularticsevent="OutboundClick" angularticscategory="Twitter" href="https://twitter.com/CarbonLDP"><i class="circular twitter icon footer-socialIcon"></i></a>
                 <a angulartics2on="click" angularticsevent="OutboundClick" angularticscategory="YouTube" href="https://www.youtube.com/channel/UCuNWXjT19Gnpo7I502PTZ_Q"><i class="circular youtube icon footer-socialIcon"></i></a>
@@ -792,32 +891,47 @@ token.key = generateARandomStringAndPlaceItHere</code></pre>
             <div class="center aligned twelve wide column">
                 <p class="footer-copyrightText">© 2017 Base22 Technology Group, LLC. All&nbsp;Rights&nbsp;Reserved.</p>
             </div>
-        <!--</div>-->
     </div>
 </div>
 
-        
-<script src="/js/script.js"></script>
+        <script src="/js/script.js"></script>
+
+<script src="/js/quick-start-guide.js"></script>
+
         <script>(function( window ){ $( document ).ready( function() {
-	
+
 	let $sidebar = $(".sidebar");
+	let $sidebarFollowingMenu = $(".sidebar").find( ".following.menu" );
 	let $content = $("."+$sidebar.attr("content"));	
 	let $sections = $content.children( "section" );
+	let $subSections = $sections.children( "section" );
 
 	// Detect when section is passed
 	$sections.visibility( {
 		once: false,
 		offset: 150,
 		onTopPassed: function () {
-			 activateSection( this, $sidebar, $content );
+			 activateSection( this, $sidebarFollowingMenu, $sections );
 		},
 		onTopPassedReverse: function () {
-			 deactivateFirstSection( this, $sidebar, $content );
+			 deactivateFirstSection( this, $sidebarFollowingMenu, $sections );
 		},
 		onBottomPassedReverse: function () {
-			activateSection( this, $sidebar, $content );
+			activateSection( this, $sidebarFollowingMenu, $sections);
 		},
 	} );
+
+	$subSections.visibility( {
+		once: false,
+		offset: 150,
+		onTopPassed: function () {
+				activateSubSection( this, $sidebarFollowingMenu, $subSections );
+		},
+		onBottomPassedReverse: function () {
+				activateSubSection( this, $sidebarFollowingMenu, $subSections );
+		}
+	} );
+
 
 	// Make sidebar stick to its position
 	$( ".sidebar > .ui.sticky" ).sticky( {
@@ -829,9 +943,9 @@ token.key = generateARandomStringAndPlaceItHere</code></pre>
 	// Activate toggle dropdown
 	$( ".sidebar .item > .dropdown.icon" ).on( "click", toggleDropdown);
 
+	//Activate click on items and subitems
 	$( ".sidebar .item > .title" ).on( "click", activateItem) ;
-
-	$( ".sidebar  a.item " ).on( "click", activateItem) ;
+	$( ".sidebar  a.item " ).on( "click", activateSubItem) ;
 
 	// Toggle selected accordion menu in sidebar
 	function toggleDropdown( event ){
@@ -868,13 +982,27 @@ token.key = generateARandomStringAndPlaceItHere</code></pre>
 
 	}
 
+	function activateSubItem(event){
 
-	function activateSection( elm, $sidebar, $content) {
+		let $item = $( event.currentTarget );
+
+		let $allItems = $item.siblings(".item");
+		$allItems.removeClass("active");
+		$item.addClass("active");
+
+		event.preventDefault();
+
+		return false;
+
+	}
+
+
+
+	function activateSection( elm, $menu, $sections) {
 
 		let $section = $( elm );
-		let $sections = $content.children( "section" );
 		let index = $sections.index( $section );
-		let $followSection = $sidebar.find( ".following.menu" ).children( ".item" );
+		let $followSection = $menu.children( ".item" );
 		let $currentSection = $followSection.eq( index );
 
 		let isActive = $currentSection.hasClass( "active" );
@@ -895,19 +1023,40 @@ token.key = generateARandomStringAndPlaceItHere</code></pre>
 
 		$( ".ui.sticky" ).sticky( "refresh" );
 
+		return false;
 
 	}
 
-	function deactivateFirstSection( elm, $sidebar, $content) {
+	function activateSubSection( elm, $menu, $subSections ){
+		let $section  = $( elm );
+		let index = $subSections.index( $section );
+		let $followSection = $menu.find( ".menu > .item" );
+		let $activeSection = $followSection.eq( index );
+		let isActive = $activeSection.hasClass( "active" );
+		let $subSectionMenu = $menu.children( ".item" ).find( ".menu" );
+		let subSectionMenuIsActive = $subSectionMenu.hasClass( "active" );
+
+		if( index !== - 1 && ! isActive ) {
+			$followSection.filter( ".active" ).removeClass( "active" );
+			$activeSection.addClass( "active" );
+		}
+
+		if( ! subSectionMenuIsActive ) {
+			$subSectionMenu.addClass( "active" );
+		}
+
+		$( ".ui.sticky" ).sticky( "refresh" );
+
+		return false;
+	}
+
+	function deactivateFirstSection( elm, $menu, $sections) {
 
 		let $section = $( elm );
-		let $sections = $content.children( "section" );
-
 		let index = $sections.index( $section );
-		let $followSection = $sidebar.find( ".following.menu" ).children( ".item" );
+		let $followSection = $menu.children( ".item" );
 		let $currentSection = $followSection.eq( index );
 		let isActive = $currentSection.hasClass( "active" );
-		// let hasSubsection= $sections.eq( index ).children( "section" ).length > 0;
 		let $subSectionMenu = $currentSection.find( ".menu" );
 
 
@@ -924,6 +1073,57 @@ token.key = generateARandomStringAndPlaceItHere</code></pre>
 
 		$( ".ui.sticky" ).sticky( "refresh" );
 
+		return false;
+	}
+
+
+}); })( window );</script><script>(function( window ){ $( document ).ready( function() {
+
+
+	let $sidebar = $(".staticContentMenu");
+	let $content = $("."+$sidebar.attr("content"));
+	let $sections = $content.children( ".mainContent-section" );
+
+	// Detect when section is passed
+	$sections.visibility( {
+		once: false,
+		offset: 150,
+		onTopPassed: function () {
+			// _self.activateSection( this );
+			console.log("top passed");
+		},
+		onTopPassedReverse: function () {
+			// _self.deactivateFirstSection( this );
+		},
+		onBottomPassedReverse: function () {
+			// _self.activateSection( this );
+		},
+	} );
+
+
+
+	// Activate toggle dropdown
+	$( ".staticContentMenu .item > .dropdown.icon" ).on( "click", toggleDropdown);
+
+
+	// Toggle selected accordion menu in sidebar
+	function toggleDropdown( event ){
+		let $target = $( event.currentTarget );
+		$( ".ui.sticky" ).sticky( "refresh" );
+		let $accordion = $target.parent( ".item" ).find( ".content.menu" );
+		if( $accordion ) {
+			let accordionIsActive = $accordion.hasClass( "active" );
+
+			if( accordionIsActive ) {
+				$accordion.removeClass( "active" );
+				$accordion.removeClass( "toggled" );
+			} else {
+				$accordion.addClass( "active" );
+				$accordion.addClass( "toggled" );
+			}
+		}
+
+		return false;
 	}
 
 

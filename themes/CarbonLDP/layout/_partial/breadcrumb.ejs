@@ -1,0 +1,14 @@
+<div class="ui breadcrumb">
+	<%let elements = breadcrumb(page) %>
+	<%let length = elements.paths.length%>
+
+	<a class="section" href="<%=elements.paths[0]%>"><%=elements.titles[0]%></a>
+
+	<%for ( let i = 1; i < length - 1; i++ ) {%>
+	<i class="right chevron icon divider"></i>
+	<a class="section" href="<%=elements.paths[i]%>"><%=elements.titles[i]%></a>
+	<%}%>
+
+	<i class="right arrow icon divider"></i>
+	<div class="active section" href="<%=elements.paths[length-1]%>"><%=elements.titles[length-1]%></div>
+</div>

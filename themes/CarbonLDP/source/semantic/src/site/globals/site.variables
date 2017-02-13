@@ -1,3 +1,11 @@
 /*******************************
      User Global Variables
 *******************************/
+
+@pageFont          : Helvetica, Arial, sans-serif;
+@importGoogleFonts : false;
+
+
+
+
+

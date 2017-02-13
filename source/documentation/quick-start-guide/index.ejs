@@ -2,16 +2,24 @@
 layout: document
 title: Quick Start Guide
 date: 2017-01-27 16:44:11
+script: quick-start-guide
 ---
 
 <h1>Quick Start Guide</h1>
 
-
-<div class="ui message">
+<div class="ui message registrationSuccessMessage">
+    <p class="successMessage">
+        <strong>Thank you!</strong> Your registration was successful
+    </p>
     <p>This guide describes how to download, install, and run all the components necessary
         to get started with application development using Carbon LDP as quickly as possible.</p>
 </div>
 
+<div class="ui mobile only grid">
+    <div class="row">
+        <staticContentMenu content="mainContent"></staticContentMenu>
+    </div>
+</div>
 
 <section class="mainContent-section">
 
@@ -104,7 +112,7 @@ date: 2017-01-27 16:44:11
         <p>The platform's configuration is initialized from the properties contained in a file called <code>config.properties</code>, which you will need to create in the
             <code>carbon/config</code> directory.</p>
         <p><strong>config.properties</strong></p>
-        <!-- @formatter:off -->
+        
        <pre><code class="bash">
         platform.domain = localhost:8083
         platform.protocol = http
@@ -119,7 +127,7 @@ date: 2017-01-27 16:44:11
 
         token.key = generateARandomStringAndPlaceItHere
         </code></pre>
-        <!-- @formatter:on -->
+        
 
         <p>It is important to make note of the <code>platform.system-agent.username</code> and <code>platform.system-agent.password</code> because, for security, those
             properties will be automatically removed from the file when the platform is started for the first time.</p>
@@ -194,7 +202,7 @@ date: 2017-01-27 16:44:11
             -e &quot;CARBON_PROTOCOL=http&quot; \
             carbonldp/carbonldp-workbench
     </code></pre>
-    <!-- @formatter:on -->
+    
 
     <p>After executing the command, open <code>localhost:8000</code> in your web browser. If the workbench is running, you should be presented with a login page like this:</p>
 
@@ -327,13 +335,13 @@ date: 2017-01-27 16:44:11
     <pre><code class="bash">
         docker pull carbonldp/carbonldp-platform:latest
     </code></pre>
-    <!-- @formatter:on -->
+    
 
     <!-- @formatter:off -->
     <pre><code class="bash">
         docker pull carbonldp/carbonldp-workbench:latest
     </code></pre>
-    <!-- @formatter:on -->
+    
 
     <p>After that, stop your running instances and delete them with the following commands:</p>
 
@@ -344,13 +352,13 @@ date: 2017-01-27 16:44:11
     <pre><code class="bash">
        docker stop carbonldp-platform && docker rm carbonldp-platform
     </code></pre>
-    <!-- @formatter:on -->
+    
 
     <!-- @formatter:off -->
     <pre><code class="bash">
         docker stop carbonldp-workbench && docker rm carbonldp-workbench
     </code></pre>
-    <!-- @formatter:on -->
+    
 
     <p>You should then create a data backup just in case something goes wrong with the new version. To do that, copy and rename the carbon folder containing your config and
         data.</p>
@@ -370,23 +378,7 @@ date: 2017-01-27 16:44:11
         -e &quot;CARBON_PROTOCOL=http&quot; \
         carbonldp/carbonldp-workbench:latest
     </code></pre>
-    <!-- @formatter:on -->
+    
 
 </section>
-
-
-<!-- TODO: add success message after registration redirect
--->
-<!--<div class="ui success message" *ngIf="displaySuccessMessage">-->
-<!--<div class="content">-->
-<!--<p>-->
-<!--<strong>Thank you!</strong> Your registration was successful-->
-<!--</p>-->
-<!--<p>-->
-<!--This guide describes how to download, install, and run all the components necessary-->
-<!--to get started with application development using Carbon LDP as quickly as possible.-->
-<!--</p>-->
-<!--</div>-->
-
-<!--</div>-->
 
