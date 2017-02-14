@@ -5,10 +5,10 @@ module.exports = {
 		// Read attribute "content-selector"
 		// querySelector to load content
 		// Process content to generate sidebar
-		
-		let path = document.location["pathname"].split("/");
-		console.log(document.location.pathname);
-		console.log(hexo.route.get());
+
+		let path = document.location[ "pathname" ].split( "/" );
+		console.log( document.location.pathname );
+		console.log( hexo.route.get() );
 		return Promise.resolve();
 	},
 	// styles: [

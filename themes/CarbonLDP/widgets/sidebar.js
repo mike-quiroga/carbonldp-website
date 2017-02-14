@@ -1,34 +1,34 @@
 $( document ).ready( function() {
 
-	let $sidebar = $(".sidebar");
-	let $sidebarFollowingMenu = $(".sidebar").find( ".following.menu" );
-	let $content = $("."+$sidebar.attr("content"));	
-	let $sections = $content.children( "section" );
-	let $subSections = $sections.children( "section" );
+	var $sidebar = $( ".sidebar" );
+	var $sidebarFollowingMenu = $( ".sidebar" ).find( ".following.menu" );
+	var $content = $( "." + $sidebar.attr( "content" ) );
+	var $sections = $content.children( "section" );
+	var $subSections = $sections.children( "section" );
 
 	// Detect when section is passed
 	$sections.visibility( {
 		once: false,
 		offset: 150,
-		onTopPassed: function () {
-			 activateSection( this, $sidebarFollowingMenu, $sections );
+		onTopPassed: function() {
+			activateSection( this, $sidebarFollowingMenu, $sections );
 		},
-		onTopPassedReverse: function () {
-			 deactivateFirstSection( this, $sidebarFollowingMenu, $sections );
+		onTopPassedReverse: function() {
+			deactivateFirstSection( this, $sidebarFollowingMenu, $sections );
 		},
-		onBottomPassedReverse: function () {
-			activateSection( this, $sidebarFollowingMenu, $sections);
+		onBottomPassedReverse: function() {
+			activateSection( this, $sidebarFollowingMenu, $sections );
 		},
 	} );
 
 	$subSections.visibility( {
 		once: false,
 		offset: 150,
-		onTopPassed: function () {
-				activateSubSection( this, $sidebarFollowingMenu, $subSections );
+		onTopPassed: function() {
+			activateSubSection( this, $sidebarFollowingMenu, $subSections );
 		},
-		onBottomPassedReverse: function () {
-				activateSubSection( this, $sidebarFollowingMenu, $subSections );
+		onBottomPassedReverse: function() {
+			activateSubSection( this, $sidebarFollowingMenu, $subSections );
 		}
 	} );
 
@@ -41,19 +41,19 @@ $( document ).ready( function() {
 	} );
 
 	// Activate toggle dropdown
-	$( ".sidebar .item > .dropdown.icon" ).on( "click", toggleDropdown);
+	$( ".sidebar .item > .dropdown.icon" ).on( "click", toggleDropdown );
 
 	//Activate click on items and subitems
-	$( ".sidebar .item > .title" ).on( "click", activateItem) ;
-	$( ".sidebar  a.item " ).on( "click", activateSubItem) ;
+	$( ".sidebar .item > .title" ).on( "click", activateItem );
+	$( ".sidebar  a.item " ).on( "click", activateSubItem );
 
 	// Toggle selected accordion menu in sidebar
-	function toggleDropdown( event ){
-		let $target = $( event.currentTarget );
+	function toggleDropdown( event ) {
+		var $target = $( event.currentTarget );
 
-		let $accordion = $target.parent( ".item" ).find( ".content.menu" );
+		var $accordion = $target.parent( ".item" ).find( ".content.menu" );
 		if( $accordion ) {
-			let accordionIsActive = $accordion.hasClass( "active" );
+			var accordionIsActive = $accordion.hasClass( "active" );
 
 			if( accordionIsActive ) {
 				$accordion.removeClass( "active" );
@@ -64,31 +64,17 @@ $( document ).ready( function() {
 			}
 		}
 		$( ".ui.sticky" ).sticky( "refresh" );
-		
+
 		return false;
 	}
 
-	function activateItem(event){
+	function activateItem( event ) {
 
-		let $item = $( event.currentTarget ).parent(".item");
+		var $item = $( event.currentTarget ).parent( ".item" );
 
-		let $allItems = $item.siblings(".item");
-		$allItems.removeClass("active");
-		$item.addClass("active");
-
-		event.preventDefault();
-	
-		return false;
-
-	}
-
-	function activateSubItem(event){
-
-		let $item = $( event.currentTarget );
-
-		let $allItems = $item.siblings(".item");
-		$allItems.removeClass("active");
-		$item.addClass("active");
+		var $allItems = $item.siblings( ".item" );
+		$allItems.removeClass( "active" );
+		$item.addClass( "active" );
 
 		event.preventDefault();
 
@@ -96,18 +82,31 @@ $( document ).ready( function() {
 
 	}
 
+	function activateSubItem( event ) {
+
+		var $item = $( event.currentTarget );
+
+		var $allItems = $item.siblings( ".item" );
+		$allItems.removeClass( "active" );
+		$item.addClass( "active" );
+
+		event.preventDefault();
+
+		return false;
+
+	}
 
 
-	function activateSection( elm, $menu, $sections) {
+	function activateSection( elm, $menu, $sections ) {
 
-		let $section = $( elm );
-		let index = $sections.index( $section );
-		let $followSection = $menu.children( ".item" );
-		let $currentSection = $followSection.eq( index );
+		var $section = $( elm );
+		var index = $sections.index( $section );
+		var $followSection = $menu.children( ".item" );
+		var $currentSection = $followSection.eq( index );
 
-		let isActive = $currentSection.hasClass( "active" );
+		var isActive = $currentSection.hasClass( "active" );
 
-		let hasSubsection= $sections.eq( index ).children( "section" ).length > 0;
+		var hasSubsection = $sections.eq( index ).children( "section" ).length > 0;
 
 		$followSection.removeClass( "active" );
 		$followSection.find( ".active" ).not( ".toggled" ).removeClass( "active" );
@@ -127,14 +126,14 @@ $( document ).ready( function() {
 
 	}
 
-	function activateSubSection( elm, $menu, $subSections ){
-		let $section  = $( elm );
-		let index = $subSections.index( $section );
-		let $followSection = $menu.find( ".menu > .item" );
-		let $activeSection = $followSection.eq( index );
-		let isActive = $activeSection.hasClass( "active" );
-		let $subSectionMenu = $menu.children( ".item" ).find( ".menu" );
-		let subSectionMenuIsActive = $subSectionMenu.hasClass( "active" );
+	function activateSubSection( elm, $menu, $subSections ) {
+		var $section = $( elm );
+		var index = $subSections.index( $section );
+		var $followSection = $menu.find( ".menu > .item" );
+		var $activeSection = $followSection.eq( index );
+		var isActive = $activeSection.hasClass( "active" );
+		var $subSectionMenu = $menu.children( ".item" ).find( ".menu" );
+		var subSectionMenuIsActive = $subSectionMenu.hasClass( "active" );
 
 		if( index !== - 1 && ! isActive ) {
 			$followSection.filter( ".active" ).removeClass( "active" );
@@ -150,14 +149,14 @@ $( document ).ready( function() {
 		return false;
 	}
 
-	function deactivateFirstSection( elm, $menu, $sections) {
+	function deactivateFirstSection( elm, $menu, $sections ) {
 
-		let $section = $( elm );
-		let index = $sections.index( $section );
-		let $followSection = $menu.children( ".item" );
-		let $currentSection = $followSection.eq( index );
-		let isActive = $currentSection.hasClass( "active" );
-		let $subSectionMenu = $currentSection.find( ".menu" );
+		var $section = $( elm );
+		var index = $sections.index( $section );
+		var $followSection = $menu.children( ".item" );
+		var $currentSection = $followSection.eq( index );
+		var isActive = $currentSection.hasClass( "active" );
+		var $subSectionMenu = $currentSection.find( ".menu" );
 
 
 		if( index === 0 ) {
@@ -165,8 +164,8 @@ $( document ).ready( function() {
 			$currentSection.removeClass( "active" );
 
 			if( $subSectionMenu.length > 0 ) {
-				$currentSection.find( ".menu" ).not(".toggled").removeClass( "active" );
-				$subSectionMenu.find( ".item" ).removeClass("active");
+				$currentSection.find( ".menu" ).not( ".toggled" ).removeClass( "active" );
+				$subSectionMenu.find( ".item" ).removeClass( "active" );
 			}
 
 		}
@@ -177,4 +176,4 @@ $( document ).ready( function() {
 	}
 
 
-});
+} );

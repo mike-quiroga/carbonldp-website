@@ -1,4 +1,4 @@
-function randomString( length, chars ){
+function randomString( length, chars ) {
 	let mask = "";
 	if( chars.indexOf( "a" ) > - 1 ) mask += "abcdefghijklmnopqrstuvwxyz";
 	if( chars.indexOf( "A" ) > - 1 ) mask += "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -6,7 +6,7 @@ function randomString( length, chars ){
 	if( chars.indexOf( "!" ) > - 1 ) mask += "~`!@#$%^&*()_+-={}[]:\";'<>?,./|\\";
 
 	let result = "";
-	for ( let i = length; i > 0; -- i ) result += mask[ Math.floor( Math.random() * mask.length ) ];
+	for( let i = length; i > 0; -- i ) result += mask[ Math.floor( Math.random() * mask.length ) ];
 
 	return result;
 }
@@ -21,7 +21,7 @@ module.exports = {
 			data.activeTab = 0;
 
 			let foundActiveTab = false;
-			for( let i = 0; i < tabElements.length; i++ ) {
+			for( let i = 0; i < tabElements.length; i ++ ) {
 				let tabElement = tabElements[ i ];
 				if( tabElement.tagName !== "TAB" ) throw new Error( `The 'tabs' widget only allows 'tab' elements. Found ${tabElement.tagName}` );
 
@@ -30,7 +30,7 @@ module.exports = {
 				tab.content = tabElement.innerHTML;
 				tab.id = tabElement.getAttribute( "name" ) ? tabElement.getAttribute( "name" ) : randomString( 8, "aA" );
 
-				tab.active = !! tabElement.getAttribute( "active" );
+				tab.active = ! ! tabElement.getAttribute( "active" );
 				if( tab.active ) {
 					if( foundActiveTab ) throw new Error( "Two 'tabs' where marked as active" );
 					foundActiveTab = true;
@@ -42,7 +42,7 @@ module.exports = {
 
 			if( data.tabs.length > 0 && data.activeTab === 0 ) data.tabs[ 0 ].active = true;
 		} );
-	},styles: [
+	}, styles: [
 		{
 			file: require.resolve( "./tabs.css" ),
 			inline: true

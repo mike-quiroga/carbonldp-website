@@ -1,5 +1,5 @@
 {
-  "base": "themes/CarbonLDP/source/semantic/",
+  "base": "themes/CarbonLDP/semantic/",
   "paths": {
     "source": {
       "config": "src/theme.config",
@@ -8,12 +8,12 @@
       "themes": "src/themes/"
     },
     "output": {
-      "packaged": "dist/",
-      "uncompressed": "dist/components/",
-      "compressed": "dist/components/",
-      "themes": "dist/themes/"
+      "packaged": "../source/assets/semantic/",
+      "uncompressed": "../source/assets/semantic/components/",
+      "compressed": "../source/assets/semantic/components/",
+      "themes": "../source/assets/semantic/themes/"
     },
-    "clean": "dist/"
+    "clean": "../source/assets/semantic/"
   },
   "permission": false,
   "autoInstall": false,
