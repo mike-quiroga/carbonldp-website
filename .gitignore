@@ -5,6 +5,7 @@ db.json
 **/semantic/dist/
 **/semantic/tasks/
 **/semantic/gulpfile.js
+**/source/assets/semantic/
 
 reports/
 
