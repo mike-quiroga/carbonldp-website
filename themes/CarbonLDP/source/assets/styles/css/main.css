@@ -1,3 +1,7 @@
+.ui.container.navMenu {
+  padding-left: .9rem;
+  padding-right: .9rem; }
+
 .ui.menu a.item.transparentBG:hover, .ui.menu a.item.navMenu-dropdownLink, .ui.menu a.item.navMenu-dropdownText {
   background: transparent; }
 
@@ -44,7 +48,8 @@
     top: 55px; } }
 
 .footer {
-  padding: 10px 0; }
+  padding: 10px 0;
+  flex: 0 0 auto; }
 
 .footer-base22Logo {
   width: 130px; }

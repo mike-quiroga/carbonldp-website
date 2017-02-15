@@ -29,12 +29,13 @@
 
 	function validateName( e ) {
 		var errors = form.errorMessage.querySelectorAll( ".name" );
-		errors.forEach( function( error ) {
-			error.remove();
-		} );
+		
+		for( var i = 0, length = errors.length; i < length; i++ ){
+			errors[i].remove();
+		}
 
-		var input = e.srcElement;
-		var field = e.srcElement.parentNode;
+		var input = (e.srcElement||e.target);
+		var field = input.parentNode;
 
 		if( input.value ) {
 			field.classList.remove( "error" );
@@ -45,25 +46,30 @@
 			form.button.disabled = true;
 			var li = document.createElement( "li" );
 			li.classList.add( "name" );
-			li.append( "Please enter your name" );
-			form.errorMessage.querySelector( "ul" ).append( li );
+			var textNode =  document.createTextNode("Please enter your name" );
+			li.appendChild( textNode);
+			form.errorMessage.querySelector( "ul" ).appendChild( li );
 		}
 
 	}
 
 	function validateEmail( e ) {
 		var errors = form.errorMessage.querySelectorAll( ".email" );
-		errors.forEach( function( error ) {
-			error.remove();
-		} );
+
+		for( var i = 0, length = errors.length; i < length; i++ ){
+			errors[i].remove();
+		}
+
 
 		// Get email field htmlElement
-		var input = e.srcElement;
-		var field = e.srcElement.parentNode;
+		var input = (e.srcElement||e.target);
+		var field = input.parentNode;
 
 		// Create li element to add error messages
 		var li = document.createElement( "li" );
 		li.classList.add( "email" );
+
+		
 
 		// Check for input
 		if( input.value ) {
@@ -76,8 +82,9 @@
 				field.classList.add( "error" );
 				form.errorMessage.style.display = "block";
 				form.button.disabled = true;
-				li.append( "Please enter a valid email" );
-				form.errorMessage.querySelector( "ul" ).append( li );
+				var textNode =  document.createTextNode("Please enter a valid email" );
+				li.appendChild( textNode);
+				form.errorMessage.querySelector( "ul" ).appendChild( li );
 			} else {
 				field.classList.remove( "error" );
 				checkForErrorsMessage( form.nameInput );
@@ -86,8 +93,9 @@
 			field.classList.add( "error" );
 			form.button.disabled = true;
 			form.errorMessage.style.display = "block";
-			li.append( "Please enter your email" );
-			form.errorMessage.querySelector( "ul" ).append( li );
+			var textNode =  document.createTextNode("Please enter your email" );
+			li.appendChild( textNode);
+			form.errorMessage.querySelector( "ul" ).appendChild( li );
 		}
 	}
 
