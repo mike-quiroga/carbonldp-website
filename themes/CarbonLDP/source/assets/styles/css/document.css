@@ -5,3 +5,6 @@ h1.category-title {
 
 .successMessage {
   display: none; }
+
+ol, ul {
+  line-height: 1.7rem; }

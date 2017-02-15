@@ -15,7 +15,7 @@
 	var successMessage = document.querySelector( ".registrationSuccessMessage" );
 	var parameters = queryString[ "parameters" ];
 
-	for( var j = 0; i < queryString.parameters.length; i ++ ) {
+	for( var j = 0; j < queryString.parameters.length; j ++ ) {
 		if( parameters[ j ].key !== "registered" ) continue;
 
 		successMessage.classList.add( "success" );

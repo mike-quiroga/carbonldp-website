@@ -77,3 +77,6 @@ h2.category-title {
     width: 70px; }
   .ui.stackable.grid .row.categoriesMenu {
     padding: 1em 3em; } }
+
+ol, ul {
+  line-height: 1.7rem; }

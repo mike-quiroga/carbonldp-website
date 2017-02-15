@@ -34,17 +34,11 @@
 
   <%- css("/assets/semantic/semantic.min")%>
   <link id="widgets-styles">
-  <%- css("/assets/styles/css/main.min")%>
 
+  <%- css("/assets/styles/css/main")%>
 
-  <% if ( (typeof page.title === "undefined" && config.title==="Carbon LDP") || ( typeof page.css ==="undefined")){%>
-  <%- css("/assets/styles/css/home.min")%>
-  <%} else {%>
-  <%- css("/assets/styles/css/"+page.css+".min")%>
-  <%}%>
-
-  <% if ( ( typeof page.layout === "undefined" ) ) { %>
-  <%- partial( "index-head" ) %>
+  <% if ( ( page.layout === "index" ) ) { %>
+  <%- css("/assets/styles/css/home")%>
   <%} else {%>
   <%- partial( `_head/${ page.layout }-head` ) %>
   <%}%>
@@ -58,10 +52,4 @@
   </script>
   <script async src='https://www.google-analytics.com/analytics.js'></script>
   <!-- End Google Analytics -->
-
-  <script src="https://code.jquery.com/jquery-3.1.1.min.js"
-          integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
-          crossorigin="anonymous"></script>
-  <script src="/assets/semantic/semantic.min.js"></script>
-  <script id="widgets-scripts"></script>
 </head>

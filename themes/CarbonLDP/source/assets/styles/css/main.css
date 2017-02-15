@@ -223,15 +223,15 @@ i.icon.footer-socialIcon {
 
 .mainContent {
   margin: 4.5rem 2rem;
-  font-size: 1.1em; }
+  font-size: 1.1rem; }
 
 .mainContent-section {
-  margin-top: 2em;
-  padding: 1em 0; }
+  margin-top: 2rem;
+  padding: 1rem 0; }
 
 .mainContent-subSection {
-  margin-top: 1em;
-  padding-top: 1em; }
+  margin-top: 1rem;
+  padding-top: 1rem; }
 
 code {
   padding: 0 4px;
@@ -241,7 +241,7 @@ code {
   word-wrap: break-word;
   word-spacing: 0;
   font-size: 13px;
-  line-height: 1.4em; }
+  line-height: 1.4rem; }
 
 .ui.image.category-icon {
   height: auto;
@@ -268,7 +268,8 @@ code {
   padding: 1rem 3.6rem 0; }
 
 .ui.list .item.category-item {
-  padding-top: .85rem; }
+  padding-top: .85rem;
+  line-height: 1.7rem; }
 
 a {
   word-wrap: break-word; }
@@ -296,18 +297,18 @@ a {
     margin-top: 64px; }
   .mainContent {
     margin: 4.5rem 1rem;
-    font-size: 1.1em; } }
+    font-size: 1.1rem; } }
 
 @media only screen and (max-width: 767px) {
   .site-content {
     margin-top: 54px; }
   .mainContent {
     margin: 2rem 0.5rem;
-    font-size: 1.1em; }
+    font-size: 1.1rem; }
   .ui.stackable.grid > .column.column--getStarted {
-    padding: 0.214285em 1rem !important; }
+    padding: 0.214285rem 1rem !important; }
   .ui.huge.message {
-    font-size: 1.2em; }
+    font-size: 1.2rem; }
   .category-itemTitle:hover {
     cursor: pointer;
     color: #19b7fb;
@@ -330,7 +331,8 @@ a {
   opacity: 0.7;
   height: 50px;
   width: 50px;
-  border-radius: 50px; }
+  border-radius: 50px;
+  display: none; }
 
 i.icon.scrollTop-icon {
   font-size: 28px;
