@@ -31,10 +31,10 @@
 		var errors = form.errorMessage.querySelectorAll( ".name" );
 		
 		for( var i = 0, length = errors.length; i < length; i++ ){
-			errors[i].remove();
+			errors[i].parentNode.removeChild(errors[i]);
 		}
 
-		var input = (e.srcElement||e.target);
+		var input = e.target;
 		var field = input.parentNode;
 
 		if( input.value ) {
@@ -57,12 +57,12 @@
 		var errors = form.errorMessage.querySelectorAll( ".email" );
 
 		for( var i = 0, length = errors.length; i < length; i++ ){
-			errors[i].remove();
+			errors[i].parentNode.removeChild(errors[i]);
 		}
 
 
 		// Get email field htmlElement
-		var input = (e.srcElement||e.target);
+		var input = e.target;
 		var field = input.parentNode;
 
 		// Create li element to add error messages

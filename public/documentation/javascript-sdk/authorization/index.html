@@ -1,14 +1,4 @@
-<!DOCTYPE html><html><head>
-  <meta charset="utf-8">
-  
-
-
-  <link rel="shortcut icon" href="/assets/images/carbon-icon-144x144.png">
-  <title>Authorization | Carbon LDP</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="google-site-verification" content="gz0ah_pGpAlB4Q5a_bxykr1Zdo_CfXHyAb2tJiADVhE">
-
-  <meta name="description" content="Authorization
+<!DOCTYPE html><html><head><meta charset="utf-8"><link rel="shortcut icon" href="/assets/images/carbon-icon-144x144.png"><title>Authorization | Carbon LDP</title><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1"><meta name="google-site-verification" content="gz0ah_pGpAlB4Q5a_bxykr1Zdo_CfXHyAb2tJiADVhE"><meta name="description" content="Authorization
 
 
 	
@@ -39,12 +29,7 @@
 
 
 	Introduction
-	Authorization refers to the rules that dictate">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Authorization">
-<meta property="og:url" content="https://carbonldp.com/documentation/javascript-sdk/authorization/index.html">
-<meta property="og:site_name" content="Carbon LDP">
-<meta property="og:description" content="Authorization
+	Authorization refers to the rules that dictate"><meta property="og:type" content="website"><meta property="og:title" content="Authorization"><meta property="og:url" content="https://carbonldp.com/documentation/javascript-sdk/authorization/index.html"><meta property="og:site_name" content="Carbon LDP"><meta property="og:description" content="Authorization
 
 
 	
@@ -75,11 +60,7 @@
 
 
 	Introduction
-	Authorization refers to the rules that dictate">
-<meta property="og:updated_time" content="2017-02-15T17:05:16.000Z">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Authorization">
-<meta name="twitter:description" content="Authorization
+	Authorization refers to the rules that dictate"><meta property="og:updated_time" content="2017-02-15T17:05:16.000Z"><meta name="twitter:card" content="summary"><meta name="twitter:title" content="Authorization"><meta name="twitter:description" content="Authorization
 
 
 	
@@ -110,420 +91,7 @@
 
 
 	Introduction
-	Authorization refers to the rules that dictate">
-  
-    <link rel="alternate" href="/atom.xml" title="Carbon LDP" type="application/atom+xml">
-  
-
-
-  <link rel="stylesheet" href="/assets/semantic/semantic.min.css">
-  <style>/* Tomorrow Night Theme */
-/* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
-/* Original theme - https://github.com/chriskempson/tomorrow-theme */
-/* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
-
-/* Tomorrow Comment */
-.hljs-comment,
-.hljs-quote {
-  color: #969896;
-}
-
-/* Tomorrow Red */
-.hljs-variable,
-.hljs-template-variable,
-.hljs-tag,
-.hljs-name,
-.hljs-selector-id,
-.hljs-selector-class,
-.hljs-regexp,
-.hljs-deletion {
-  color: #cc6666;
-}
-
-/* Tomorrow Orange */
-.hljs-number,
-.hljs-built_in,
-.hljs-builtin-name,
-.hljs-literal,
-.hljs-type,
-.hljs-params,
-.hljs-meta,
-.hljs-link {
-  color: #de935f;
-}
-
-/* Tomorrow Yellow */
-.hljs-attribute {
-  color: #f0c674;
-}
-
-/* Tomorrow Green */
-.hljs-string,
-.hljs-symbol,
-.hljs-bullet,
-.hljs-addition {
-  color: #b5bd68;
-}
-
-/* Tomorrow Blue */
-.hljs-title,
-.hljs-section {
-  color: #81a2be;
-}
-
-/* Tomorrow Purple */
-.hljs-keyword,
-.hljs-selector-tag {
-  color: #b294bb;
-}
-
-.hljs {
-  display: block;
-  overflow-x: auto;
-  background: #1d1f21;
-  color: #c5c8c6;
-  padding: 0.5em;
-}
-
-.hljs-emphasis {
-  font-style: italic;
-}
-
-.hljs-strong {
-  font-weight: bold;
-}
-</style><style>.hljs {
-    font-family: "Lucida Console", Monaco, monospace;
-    font-size: .9rem;
-    line-height: 1.4rem;
-}
-</style><style>.sidebar{
-    margin: 10em 1em 6em 0;
-}
-
-/* Give sidebar a z-index greater than header */
-.sidebar .ui.sticky{
-    z-index: 0;
-}
-
-/* Remove box-shadow and border */
-.sidebar .ui.segment{
-    box-shadow: none;
-    border: none;
-}
-
-/* Change color to black when title active */
-.ui.accordion .item.active .title:not(.ui).sidebar-title{
-    color: black;
-    font-weight: 700;
-}
-.ui.vertical.menu .menu .item.active .sidebar-title{
-    color: black;
-}
-/* Change color of section items to gray */
-.ui.accordion .title:not(.ui).sidebar-title{
-    color: rgba(0,0,0,.6);
-    padding-right: 10px;
-}
-
-/* Change color to black when title hovered */
-.ui.accordion .title:not(.ui).sidebar-title:hover{
-    color: black;
-}
-
-
-/* Add left margin to sidebar menu */
-.ui.vertical.text.menu.sidebar-verticalMenu {
-    margin-left: 1.2em;
-}
-
-.ui.vertical.text.menu .item:not(.dropdown)>.menu.sidebar-verticalSubMenu{
-    margin: 0 0.8em;
-}
-
-.ui.accordion.menu .item .title.sidebar-title--dropdown{
-    display: inline;
-}
-
-.ui.vertical.text.menu .item>i.icon.sidebar-dropdownIcon{
-    float: right;
-}
-
-@media (min-width: 768px) and (max-width: 992px) {
-    .sidebar .ui.sticky{
-        padding: 0;
-    }
-    .ui.vertical.text.menu.sidebar-verticalMenu {
-        margin-left: .6em;
-    }
-
-    .ui.accordion .title:not(.ui).sidebar-title{
-        padding-right: 0;
-    }
-
-}</style><style>.staticContentMenu{
-    margin: 2em 0;
-}
-
-h2.staticContentMenu-title{
-    font-size: 1.4em;
-}
-
-.ui.accordion.menu .item .title.staticContentMenu-title--dropdown{
-    display: inline;
-}
-
-.ui.vertical.text.menu .item>i.icon.staticContentMenu-dropdownIcon{
-    float: right;
-}
-
-.ui.accordion .title:not(.ui).staticContentMenu-title{
-    color: rgba(0,0,0,.6);
-}</style>
-
-  <link rel="stylesheet" href="/assets/styles/css/main.css">
-
-  
-  <link rel="stylesheet" href="/assets/styles/css/document.css">
-  
-
-
-  <!-- Google Analytics -->
-  <script>
-    window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
-    ga('create', 'UA-75786977-1', 'auto');
-    ga('send', 'pageview');
-  </script>
-  <script async="" src="https://www.google-analytics.com/analytics.js"></script>
-  <!-- End Google Analytics -->
-</head>
-
-    <body class="site">
-        <header class="header">
-	<div class="ui container">
-	<div class="ui grid removeSideMargins">
-		<div class="computer only row">
-			<div class="ui top fixed borderless menu">
-				<div class="ui container navMenu">
-					<a class="item transparentBG" href="/"><img class="ui small image" src="/assets/images/carbon-logo-header.png" alt="Home"></a>
-
-					
-
-					<a class="item" href="/get-started">Get Started</a>
-
-						
-
-					<div class="ui dropdown link item navMenu-dropdownButton"><a class="item navMenu-dropdownLink" href="/documentation">Documentation</a><i class="dropdown icon"></i>
-						<div class="menu">
-						
-						<a class="item" href="/documentation/quick-start-guide">Quick Start Guide</a>
-						
-						<a class="item" href="/documentation/essential-concepts">Essential Concepts</a>
-						
-						<a class="item" href="/documentation/javascript-sdk">JavaScript SDK</a>
-						
-						<a class="item" href="/documentation/rest-api">REST API</a>
-						
-						</div>
-					</div>
-						
-
-					<a class="item" href="/community-and-support">Community &amp; Support</a>
-
-						
-
-					<a class="item" href="/about">About</a>
-
-						
-				</div>
-			</div>
-		</div>
-		<div class="mobile tablet only row">
-			<div class="ui top fixed borderless menu navMenu">
-				<div class="ui container navMenu">
-					<a class="item navMenu-carbonLogoButton transparentBG" href="/"><img class="ui navMenu-carbonLogo image" src="/assets/images/carbon-logo-header.png" alt="Home"></a>
-					<div class="ui right icon item navMenu-openerButton">
-						<!--<div class="menu item">-->
-							<i class="content icon"></i>
-					</div>
-				</div>
-			</div>
-			<div class="ui fixed fluid vertical menu navMenu-verticalMenu" style="display: none;">
-				
-
-				<a class="item" href="/get-started">Get Started</a>
-
-				
-
-				<div class="ui dropdown link item navMenu-dropdownButton--mobile"><a class="item navMenu-dropdownText">Documentation<i class="dropdown icon"></i></a>
-					<div class="menu navMenu-dropdownMenu">
-						
-						<a class="item" href="/documentation/quick-start-guide">Quick Start Guide</a>
-						
-						<a class="item" href="/documentation/essential-concepts">Essential Concepts</a>
-						
-						<a class="item" href="/documentation/javascript-sdk">JavaScript SDK</a>
-						
-						<a class="item" href="/documentation/rest-api">REST API</a>
-						
-						<div class="divider"></div>
-						<a class="item" href="/documentation">All documents...</a>
-					</div>
-				</div>
-				
-
-				<a class="item" href="/community-and-support">Community &amp; Support</a>
-
-				
-
-				<a class="item" href="/about">About</a>
-
-				
-			</div>
-		</div>
-		</div>
-	</div>
-</header>
-        <div class="ui scrollTop mobile only grid">
-			<button class="ui icon button scrollTop-button"><i class="angle up icon scrollTop-icon"></i></button>
-		</div>
-        <div class="site-content ">
-            
-            <div class="ui container grid">
-        <div class="row">
-            <div class="twelve wide computer only twelve wide tablet only sixteen wide mobile only column">
-                    <div class="mainContent">
-                        <div class="ui breadcrumb">
-	
-	
-
-	<a class="section" href="/documentation">Documentation</a>
-
-	
-	<i class="right chevron icon divider"></i>
-	<a class="section" href="/documentation/javascript-sdk">JavaScript SDK</a>
-	
-
-	<i class="right arrow icon divider"></i>
-	<div class="active section" href="/documentation/javascript-sdk/authorization">Authorization</div>
-</div>
-
-                        
-                        
-<h1>Authorization</h1>
-
-<div class="documentation-steps ui fluid steps">
-	<a class="step" href="../authentication">
-		<i class="arrow left icon"></i>
-		<div class="content">
-			<div class="title">Previous</div>
-			<div class="description">Authentication</div>
-		</div>
-	</a>
-	<div class="active step">
-		<!--<i class="payment icon"></i>-->
-		<div class="content">
-			<div class="title">Authorization</div>
-		</div>
-	</div>
-	<a class="step" href="../access-points">
-		<i class="arrow right icon"></i>
-		<div class="content">
-			<div class="title">Next</div>
-			<div class="description">Access Points</div>
-		</div>
-	</a>
-</div>
-<div class="ui mobile only grid">
-	<div class="row">
-		<div class=" sixteen wide mobile only column">
-	<div class="staticContentMenu">
-		<h2 class="staticContentMenuTitle">Content</h2>
-		<div class="ui vertical accordion fluid menu mobile">
-			
-
-			<div class="item"><a class="title staticContentMenu-title" href="#introduction">Introduction</a></div>
-
-			
-
-			<div class="item">
-
-				<a class="title staticContentMenu-title staticContentMenu-title--dropdown" href="#application-roles">Application roles</a><i class="dropdown icon .staticContentMenu-dropdownIcon"></i>
-
-				<div class="content menu">
-
-					
-
-					<a class="item" href="#creating-an-app-role">Creating an app role</a>
-
-					
-
-					<a class="item" href="#adding-agents-to-a-role">Adding agents to a role</a>
-
-					
-				</div>
-			</div>
-			
-
-			<div class="item"><a class="title staticContentMenu-title" href="#permissions">Permissions</a></div>
-
-			
-
-			<div class="item">
-
-				<a class="title staticContentMenu-title staticContentMenu-title--dropdown" href="#acls">ACLs</a><i class="dropdown icon .staticContentMenu-dropdownIcon"></i>
-
-				<div class="content menu">
-
-					
-
-					<a class="item" href="#retrieving-an-acl">Retrieving an ACL</a>
-
-					
-
-					<a class="item" href="#granting-or-denying-permissions">Granting or denying permissions</a>
-
-					
-
-					<a class="item" href="#inheritance">Inheritance</a>
-
-					
-				</div>
-			</div>
-			
-		</div>
-	</div>
-</div>
-	</div>
-</div>
-<section class="mainContent-section" id="introduction">
-	<h2 class="hidden">Introduction</h2>
-	<p>Authorization refers to the rules that dictate whether an agent can or can't do certain actions. This rules take the form of: <strong>someone</strong> can <strong>do
-			something</strong>, <strong>somewhere</strong>, or more generically: a <strong>subject</strong> has a <strong>permission</strong> on an <strong>object</strong>.</p>
-</section>
-<section class="mainContent-section" id="application-roles">
-	<h2>Application roles</h2>
-	<p>We've talked about one of the possible objects that can act as a subject: agents. But creating rules for a single agent would be too specific for most use cases.
-		Normally, rules are created by stating that a <strong>group</strong> of agents can or can't do something. E.g. "The <em>editors</em> can edit these documents", "The
-		<em>readers</em> can read these other documents", etc.</p>
-	<p>These groups are commonly named after their "role" on the application and they are only meaningful in the context of the application itself.</p>
-	<p>In Carbon, application roles have a hierarchical structure. This structure starts with the <code>app-admins/</code> role which is created automatically by the platform
-		whenever a new application is created.</p>
-	<p>This role should only be used by developers, as being a member of it gives access to every document the application contains.</p>
-	<section class="mainContent-subSection" id="creating-an-app-role">
-		<h3>Creating an app role</h3>
-		<p>The first thing to do when structuring your application's security scheme, is identify and create all the roles needed for your application.</p>
-		<p>Once the roles are identified, they can be created with the <a href="http://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Auth-Roles-Class-createChild" target="_blank" rel="noopener"><code>createChild</code></a> method of the
-			<a href="http://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Auth-Roles-Class" target="_blank" rel="noopener"><code>auth.roles</code></a> service
-			of the application context. This method is very similar to the
-			<a href="http://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Documents-Class" target="_blank" rel="noopener"><code>documents</code></a> service's
-			<a href="http://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Documents-Class-createChild" target="_blank" rel="noopener"><code>createChild</code></a> method (which we
-			already covered). It accepts the parent role (its slug, complete id or the actual role document) as the first parameter, the object that will be used to
-			create the new app role's document (remember, everything's a document!), and an optional slug:</p>
-		<sui-tabs>
-			<sui-tab title="TypeScript">
-
-				<pre><code class="typescript hljs"><span class="hljs-keyword">import</span> * as App from <span class="hljs-string">"carbonldp/App"</span>;
+	Authorization refers to the rules that dictate"><link rel="alternate" href="/atom.xml" title="Carbon LDP" type="application/atom+xml"><link rel="stylesheet" href="/assets/semantic/semantic.min.css"><style>.hljs-comment,.hljs-quote{color:#969896}.hljs-deletion,.hljs-name,.hljs-regexp,.hljs-selector-class,.hljs-selector-id,.hljs-tag,.hljs-template-variable,.hljs-variable{color:#c66}.hljs-built_in,.hljs-builtin-name,.hljs-link,.hljs-literal,.hljs-meta,.hljs-number,.hljs-params,.hljs-type{color:#de935f}.hljs-attribute{color:#f0c674}.hljs-addition,.hljs-bullet,.hljs-string,.hljs-symbol{color:#b5bd68}.hljs-section,.hljs-title{color:#81a2be}.hljs-keyword,.hljs-selector-tag{color:#b294bb}.hljs{display:block;overflow-x:auto;background:#1d1f21;color:#c5c8c6;padding:.5em}.hljs-emphasis{font-style:italic}.hljs-strong{font-weight:700}</style><style>.hljs{font-family:"Lucida Console",Monaco,monospace;font-size:.9rem;line-height:1.4rem}</style><style>.sidebar{margin:10em 1em 6em 0}.sidebar .ui.sticky{z-index:0}.sidebar .ui.segment{box-shadow:none;border:none}.ui.accordion .item.active .title:not(.ui).sidebar-title{color:#000;font-weight:700}.ui.vertical.menu .menu .item.active .sidebar-title{color:#000}.ui.accordion .title:not(.ui).sidebar-title{color:rgba(0,0,0,.6);padding-right:10px}.ui.accordion .title:not(.ui).sidebar-title:hover{color:#000}.ui.vertical.text.menu.sidebar-verticalMenu{margin-left:1.2em}.ui.vertical.text.menu .item:not(.dropdown)>.menu.sidebar-verticalSubMenu{margin:0 .8em}.ui.accordion.menu .item .title.sidebar-title--dropdown{display:inline}.ui.vertical.text.menu .item>i.icon.sidebar-dropdownIcon{float:right}@media (min-width:768px) and (max-width:992px){.sidebar .ui.sticky{padding:0}.ui.vertical.text.menu.sidebar-verticalMenu{margin-left:.6em}.ui.accordion .title:not(.ui).sidebar-title{padding-right:0}}</style><style>.staticContentMenu{margin:2em 0}h2.staticContentMenu-title{font-size:1.4em}.ui.accordion.menu .item .title.staticContentMenu-title--dropdown{display:inline}.ui.vertical.text.menu .item>i.icon.staticContentMenu-dropdownIcon{float:right}.ui.accordion .title:not(.ui).staticContentMenu-title{color:rgba(0,0,0,.6)}</style><link rel="stylesheet" href="/assets/styles/css/main.css"><link rel="stylesheet" href="/assets/styles/css/document.css"><script>window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)},ga.l=+new Date,ga("create","UA-75786977-1","auto"),ga("send","pageview")</script><script async="" src="https://www.google-analytics.com/analytics.js"></script></head><body class="site"><header class="header"><div class="ui container"><div class="ui grid removeSideMargins"><div class="computer only row"><div class="ui top fixed borderless menu"><div class="ui container navMenu"><a class="item transparentBG" href="/"><img class="ui small image" src="/assets/images/carbon-logo-header.png" alt="Home"></a><a class="item" href="/get-started">Get Started</a><div class="ui dropdown link item navMenu-dropdownButton"><a class="item navMenu-dropdownLink" href="/documentation">Documentation</a><i class="dropdown icon"></i><div class="menu"><a class="item" href="/documentation/quick-start-guide">Quick Start Guide</a> <a class="item" href="/documentation/essential-concepts">Essential Concepts</a> <a class="item" href="/documentation/javascript-sdk">JavaScript SDK</a> <a class="item" href="/documentation/rest-api">REST API</a></div></div><a class="item" href="/community-and-support">Community &amp; Support</a> <a class="item" href="/about">About</a></div></div></div><div class="mobile tablet only row"><div class="ui top fixed borderless menu navMenu"><div class="ui container navMenu"><a class="item navMenu-carbonLogoButton transparentBG" href="/"><img class="ui navMenu-carbonLogo image" src="/assets/images/carbon-logo-header.png" alt="Home"></a><div class="ui right icon item navMenu-openerButton"><i class="content icon"></i></div></div></div><div class="ui fixed fluid vertical menu navMenu-verticalMenu" style="display:none"><a class="item" href="/get-started">Get Started</a><div class="ui dropdown link item navMenu-dropdownButton--mobile"><a class="item navMenu-dropdownText">Documentation<i class="dropdown icon"></i></a><div class="menu navMenu-dropdownMenu"><a class="item" href="/documentation/quick-start-guide">Quick Start Guide</a> <a class="item" href="/documentation/essential-concepts">Essential Concepts</a> <a class="item" href="/documentation/javascript-sdk">JavaScript SDK</a> <a class="item" href="/documentation/rest-api">REST API</a><div class="divider"></div><a class="item" href="/documentation">All documents...</a></div></div><a class="item" href="/community-and-support">Community &amp; Support</a> <a class="item" href="/about">About</a></div></div></div></div></header><div class="ui scrollTop mobile only grid"><button class="ui icon button scrollTop-button"><i class="angle up icon scrollTop-icon"></i></button></div><div class="site-content"><div class="ui container grid"><div class="row"><div class="twelve wide computer only twelve wide tablet only sixteen wide mobile only column"><div class="mainContent"><div class="ui breadcrumb"><a class="section" href="/documentation">Documentation</a> <i class="right chevron icon divider"></i> <a class="section" href="/documentation/javascript-sdk">JavaScript SDK</a> <i class="right arrow icon divider"></i><div class="active section" href="/documentation/javascript-sdk/authorization">Authorization</div></div><h1>Authorization</h1><div class="documentation-steps ui fluid steps"><a class="step" href="../authentication"><i class="arrow left icon"></i><div class="content"><div class="title">Previous</div><div class="description">Authentication</div></div></a><div class="active step"><div class="content"><div class="title">Authorization</div></div></div><a class="step" href="../access-points"><i class="arrow right icon"></i><div class="content"><div class="title">Next</div><div class="description">Access Points</div></div></a></div><div class="ui mobile only grid"><div class="row"><div class="sixteen wide mobile only column"><div class="staticContentMenu"><h2 class="staticContentMenuTitle">Content</h2><div class="ui vertical accordion fluid menu mobile"><div class="item"><a class="title staticContentMenu-title" href="#introduction">Introduction</a></div><div class="item"><a class="title staticContentMenu-title staticContentMenu-title--dropdown" href="#application-roles">Application roles</a><i class="dropdown icon .staticContentMenu-dropdownIcon"></i><div class="content menu"><a class="item" href="#creating-an-app-role">Creating an app role</a> <a class="item" href="#adding-agents-to-a-role">Adding agents to a role</a></div></div><div class="item"><a class="title staticContentMenu-title" href="#permissions">Permissions</a></div><div class="item"><a class="title staticContentMenu-title staticContentMenu-title--dropdown" href="#acls">ACLs</a><i class="dropdown icon .staticContentMenu-dropdownIcon"></i><div class="content menu"><a class="item" href="#retrieving-an-acl">Retrieving an ACL</a> <a class="item" href="#granting-or-denying-permissions">Granting or denying permissions</a> <a class="item" href="#inheritance">Inheritance</a></div></div></div></div></div></div></div><section class="mainContent-section" id="introduction"><h2 class="hidden">Introduction</h2><p>Authorization refers to the rules that dictate whether an agent can or can't do certain actions. This rules take the form of: <strong>someone</strong> can <strong>do something</strong>, <strong>somewhere</strong>, or more generically: a <strong>subject</strong> has a <strong>permission</strong> on an <strong>object</strong>.</p></section><section class="mainContent-section" id="application-roles"><h2>Application roles</h2><p>We've talked about one of the possible objects that can act as a subject: agents. But creating rules for a single agent would be too specific for most use cases. Normally, rules are created by stating that a <strong>group</strong> of agents can or can't do something. E.g. "The <em>editors</em> can edit these documents", "The <em>readers</em> can read these other documents", etc.</p><p>These groups are commonly named after their "role" on the application and they are only meaningful in the context of the application itself.</p><p>In Carbon, application roles have a hierarchical structure. This structure starts with the <code>app-admins/</code> role which is created automatically by the platform whenever a new application is created.</p><p>This role should only be used by developers, as being a member of it gives access to every document the application contains.</p><section class="mainContent-subSection" id="creating-an-app-role"><h3>Creating an app role</h3><p>The first thing to do when structuring your application's security scheme, is identify and create all the roles needed for your application.</p><p>Once the roles are identified, they can be created with the <a href="http://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Auth-Roles-Class-createChild" target="_blank" rel="noopener"><code>createChild</code></a> method of the <a href="http://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Auth-Roles-Class" target="_blank" rel="noopener"><code>auth.roles</code></a> service of the application context. This method is very similar to the <a href="http://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Documents-Class" target="_blank" rel="noopener"><code>documents</code></a> service's <a href="http://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Documents-Class-createChild" target="_blank" rel="noopener"><code>createChild</code></a> method (which we already covered). It accepts the parent role (its slug, complete id or the actual role document) as the first parameter, the object that will be used to create the new app role's document (remember, everything's a document!), and an optional slug:</p><sui-tabs><sui-tab title="TypeScript"><pre><code class="typescript hljs"><span class="hljs-keyword">import</span> * as App from <span class="hljs-string">"carbonldp/App"</span>;
 <span class="hljs-keyword">import</span> * as HTTP from <span class="hljs-string">"carbonldp/HTTP"</span>;
 <span class="hljs-keyword">import</span> * as PersistedRole from <span class="hljs-string">"carbonldp/Auth/PersistedRole"</span>;
 
@@ -537,12 +105,7 @@ appContext.auth.roles.createChild( <span class="hljs-string">"app-admins/"</span
     ( [ editorsRole, response ]:[ PersistedRole.Class, HTTP.Response.Class ] ) =&gt; {
         <span class="hljs-comment">// ...</span>
     }
-).catch( <span class="hljs-built_in">console</span>.error );</code></pre>
-
-			</sui-tab>
-			<sui-tab title="JavaScript ES2015">
-
-				<pre><code class="javascript hljs"><span class="hljs-keyword">let</span> appContext;
+).catch( <span class="hljs-built_in">console</span>.error );</code></pre></sui-tab><sui-tab title="JavaScript ES2015"><pre><code class="javascript hljs"><span class="hljs-keyword">let</span> appContext;
 
 <span class="hljs-comment">// ... app context retrieval</span>
 
@@ -552,12 +115,7 @@ appContext.auth.roles.createChild( <span class="hljs-string">"app-admins/"</span
     <span class="hljs-function">(<span class="hljs-params"> [ editorsRole, response ] </span>) =&gt;</span> {
         <span class="hljs-comment">// ...</span>
     }
-).catch( <span class="hljs-built_in">console</span>.error );</code></pre>
-
-			</sui-tab>
-			<sui-tab title="JavaScript ES5">
-
-				<pre><code class="javascript hljs"><span class="hljs-keyword">var</span> appContext;
+).catch( <span class="hljs-built_in">console</span>.error );</code></pre></sui-tab><sui-tab title="JavaScript ES5"><pre><code class="javascript hljs"><span class="hljs-keyword">var</span> appContext;
 
 <span class="hljs-comment">// ... app context retrieval</span>
 
@@ -567,29 +125,7 @@ appContext.auth.roles.createChild( <span class="hljs-string">"app-admins/"</span
     <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> [ editorsRole, response ] </span>) </span>{
         <span class="hljs-comment">// ...</span>
     }
-).catch( <span class="hljs-built_in">console</span>.error );</code></pre>
-
-			</sui-tab>
-		</sui-tabs>
-		<p>As you can see, the previous example is very similar to how a normal document is created. All patterns that applied there apply here too. For example, if you
-			retrieve a <a href="http://carbonldp.github.io/carbonldp-js-sdk/#Carbon-App-PersistedRole-Class" target="_blank" rel="noopener"><code>PersistedRole</code></a>
-			document, you can call its <a href="http://carbonldp.github.io/carbonldp-js-sdk/#Carbon-App-PersistedRole-Class-createChild" target="_blank" rel="noopener"><code>createChild
-				</code></a> method just like you would do it with the
-			<a href="http://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Auth-Roles-Class" target="_blank" rel="noopener"><code>auth.roles</code></a> service (without
-			specifying the parent).
-		</p>
-	</section>
-	<section class="mainContent-subSection" id="adding-agents-to-a-role">
-		<h3>Adding agents to a role</h3>
-		<p>An application role is just a group of agents that represents a functional "role" in the application. Therefore, the roles won't do much unless we add agents to them
-			. This can be done through the method <a href="http://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Auth-Roles-Class-addAgent" target="_blank" rel="noopener"><code>addAgent</code></a> or <a href="http://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Auth-Roles-Class-addAgents" target="_blank" rel="noopener"><code>addAgents</code></a> of the
-			<a href="http://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Auth-Roles-Class" target="_blank" rel="noopener"><code>auth.roles</code></a> service (or of a
-			<a href="http://carbonldp.github.io/carbonldp-js-sdk/#Carbon-App-PersistedRole-Class" target="_blank" rel="noopener"><code>PersistedRole</code></a> document):
-		</p>
-		<sui-tabs>
-			<sui-tab title="TypeScript">
-
-				<pre><code class="typescript hljs"><span class="hljs-keyword">import</span> * as App from <span class="hljs-string">"carbonldp/App"</span>;
+).catch( <span class="hljs-built_in">console</span>.error );</code></pre></sui-tab></sui-tabs><p>As you can see, the previous example is very similar to how a normal document is created. All patterns that applied there apply here too. For example, if you retrieve a <a href="http://carbonldp.github.io/carbonldp-js-sdk/#Carbon-App-PersistedRole-Class" target="_blank" rel="noopener"><code>PersistedRole</code></a> document, you can call its <a href="http://carbonldp.github.io/carbonldp-js-sdk/#Carbon-App-PersistedRole-Class-createChild" target="_blank" rel="noopener"><code>createChild</code></a> method just like you would do it with the <a href="http://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Auth-Roles-Class" target="_blank" rel="noopener"><code>auth.roles</code></a> service (without specifying the parent).</p></section><section class="mainContent-subSection" id="adding-agents-to-a-role"><h3>Adding agents to a role</h3><p>An application role is just a group of agents that represents a functional "role" in the application. Therefore, the roles won't do much unless we add agents to them . This can be done through the method <a href="http://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Auth-Roles-Class-addAgent" target="_blank" rel="noopener"><code>addAgent</code></a> or <a href="http://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Auth-Roles-Class-addAgents" target="_blank" rel="noopener"><code>addAgents</code></a> of the <a href="http://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Auth-Roles-Class" target="_blank" rel="noopener"><code>auth.roles</code></a> service (or of a <a href="http://carbonldp.github.io/carbonldp-js-sdk/#Carbon-App-PersistedRole-Class" target="_blank" rel="noopener"><code>PersistedRole</code></a> document):</p><sui-tabs><sui-tab title="TypeScript"><pre><code class="typescript hljs"><span class="hljs-keyword">import</span> * as App from <span class="hljs-string">"carbonldp/App"</span>;
 <span class="hljs-keyword">import</span> * as HTTP from <span class="hljs-string">"carbonldp/HTTP"</span>;
 
 <span class="hljs-keyword">let</span> appContext:App.Context;
@@ -600,12 +136,7 @@ appContext.auth.roles.addAgent( <span class="hljs-string">"editors/"</span>, <sp
     ( response:HTTP.Response.Class ) =&gt; {
         <span class="hljs-comment">// ...</span>
     }
-).catch( <span class="hljs-built_in">console</span>.error );</code></pre>
-
-			</sui-tab>
-			<sui-tab title="JavaScript ES2015">
-
-				<pre><code class="javascript hljs"><span class="hljs-comment">// ... imports</span>
+).catch( <span class="hljs-built_in">console</span>.error );</code></pre></sui-tab><sui-tab title="JavaScript ES2015"><pre><code class="javascript hljs"><span class="hljs-comment">// ... imports</span>
 
 <span class="hljs-keyword">let</span> appContext;
 
@@ -615,12 +146,7 @@ appContext.auth.roles.addAgent( <span class="hljs-string">"editors/"</span>, <sp
     <span class="hljs-function">(<span class="hljs-params"> response </span>) =&gt;</span> {
         <span class="hljs-comment">// ...</span>
     }
-).catch( <span class="hljs-built_in">console</span>.error );</code></pre>
-
-			</sui-tab>
-			<sui-tab title="JavaScript ES5">
-
-				<pre><code class="javascript hljs"><span class="hljs-comment">// ... imports</span>
+).catch( <span class="hljs-built_in">console</span>.error );</code></pre></sui-tab><sui-tab title="JavaScript ES5"><pre><code class="javascript hljs"><span class="hljs-comment">// ... imports</span>
 
 <span class="hljs-keyword">var</span> appContext;
 
@@ -630,101 +156,11 @@ appContext.auth.roles.addAgent( <span class="hljs-string">"editors/"</span>, <sp
     <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> response </span>) </span>{
         <span class="hljs-comment">// ...</span>
     }
-).catch( <span class="hljs-built_in">console</span>.error );</code></pre>
+).catch( <span class="hljs-built_in">console</span>.error );</code></pre></sui-tab></sui-tabs><p>Like almost all methods in the SDK, to reference a document (in this case an agent), you can use its relative id, its absolute id, or the actual document object (resolved or unresolved).</p></section></section><section class="mainContent-section" id="permissions"><h2>Permissions</h2><p>Now that we've talked about the possible subjects, it's time to talk about the possible actions. These actions are represented by <strong>permissions</strong> in Carbon.</p><p>They can be referenced in code through the <a href="http://carbonldp.github.io/carbonldp-js-sdk/#Carbon-NS-CS-Class" target="_blank" rel="external"><code>Carbon.NS.CS.Class</code></a> object:</p><sui-tabs><sui-tab title="TypeScript"><pre><code class="typescript hljs"><span class="hljs-keyword">import</span> * as CS from <span class="hljs-string">"carbonldp/NS/CS"</span>;
 
-			</sui-tab>
-		</sui-tabs>
-		<p>Like almost all methods in the SDK, to reference a document (in this case an agent), you can use its relative id, its absolute id, or the actual document object
-			(resolved or unresolved).</p>
-	</section>
-</section>
-<section class="mainContent-section" id="permissions">
-	<h2>Permissions</h2>
-	<p>Now that we've talked about the possible subjects, it's time to talk about the possible actions. These actions are represented by <strong>permissions</strong> in Carbon.</p>
-	<p>They can be referenced in code through the <a href="http://carbonldp.github.io/carbonldp-js-sdk/#Carbon-NS-CS-Class" target="_blank" rel="external"><code>Carbon.NS.CS.Class</code></a> object:</p>
-	<sui-tabs>
-		<sui-tab title="TypeScript">
+<span class="hljs-built_in">console</span>.log( CS.Class.Read ); <span class="hljs-comment">// id of the Read permission</span></code></pre></sui-tab><sui-tab title="JavaScript ES2015"><pre><code class="javascript hljs"><span class="hljs-keyword">import</span> * <span class="hljs-keyword">as</span> CS <span class="hljs-keyword">from</span> <span class="hljs-string">"carbonldp/NS/CS"</span>;
 
-			<pre><code class="typescript hljs"><span class="hljs-keyword">import</span> * as CS from <span class="hljs-string">"carbonldp/NS/CS"</span>;
-
-<span class="hljs-built_in">console</span>.log( CS.Class.Read ); <span class="hljs-comment">// id of the Read permission</span></code></pre>
-
-		</sui-tab>
-		<sui-tab title="JavaScript ES2015">
-
-			<pre><code class="javascript hljs"><span class="hljs-keyword">import</span> * <span class="hljs-keyword">as</span> CS <span class="hljs-keyword">from</span> <span class="hljs-string">"carbonldp/NS/CS"</span>;
-
-<span class="hljs-built_in">console</span>.log( CS.Class.Read ); <span class="hljs-comment">// id of the Read permission</span></code></pre>
-
-		</sui-tab>
-		<sui-tab title="JavaScript ES5">
-
-			<pre><code class="javascript hljs"><span class="hljs-built_in">console</span>.log( Carbon.NS.CS.Class.Read ); <span class="hljs-comment">// id of the Read permission</span></code></pre>
-
-		</sui-tab>
-	</sui-tabs>
-	<p>Here's a list of all the permissions in Carbon:</p>
-	<ul>
-		<li>
-			<strong>Read</strong>: Retrieve a document through methods like
-			<a href="http://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Documents-Class" target="_blank" rel="noopener"><code>documents</code></a> service's
-			<a href="http://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Documents-Class-get" target="_blank" rel="noopener"><code>get</code></a> method
-		</li>
-		<li><strong>Download</strong>: Download a file</li>
-		<li>
-			<strong>Update</strong>: Modify a document and persist the changes, for example with the
-			<a href="http://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Documents-Class" target="_blank" rel="noopener"><code>documents</code></a> service's
-			<a href="http://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Documents-Class-save" target="_blank" rel="noopener"><code>save</code></a> method
-		</li>
-		<li><strong>ManageSecurity</strong>: Modify a document's ACL (read ACL section)</li>
-		<li>
-			<strong>CreateChild</strong>: Create children of a document, for example with the
-			<a href="http://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Documents-Class" target="_blank" rel="noopener"><code>documents</code></a> service's
-			<a href="http://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Documents-Class-createChild" target="_blank" rel="noopener"><code>createChild</code></a> method
-		</li>
-		<li>
-			<strong>CreateAccessPoint</strong>: Create access points of a document, for example with the
-			<a href="http://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Documents-Class" target="_blank" rel="noopener"><code>documents</code></a> service's
-			<a href="http://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Documents-Class-createAccessPoint" target="_blank" rel="noopener"><code>createAccessPoint</code></a> method
-		</li>
-		<li>
-			<strong>Upload</strong>: Upload a file on a document, for example with the
-			<a href="http://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Documents-Class" target="_blank" rel="noopener"><code>documents</code></a> service's
-			<a href="http://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Documents-Class-upload" target="_blank" rel="noopener"><code>upload</code></a> method
-		</li>
-		<li>
-			<strong>AddMember</strong>: Add a member to a document, for example with the
-			<a href="http://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Documents-Class" target="_blank" rel="noopener"><code>documents</code></a> service's
-			<a href="http://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Documents-Class-addMember" target="_blank" rel="noopener"><code>addMember</code></a> method
-		</li>
-		<li>
-			<strong>RemoveMember</strong>: Remove a member of a document, for example with the
-			<a href="http://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Documents-Class" target="_blank" rel="noopener"><code>documents</code></a> service's
-			<a href="http://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Documents-Class-removeMember" target="_blank" rel="noopener"><code>removeMember</code></a> method
-		</li>
-		<li>
-			<strong>Delete</strong>: Delete a document, for example with the
-			<a href="http://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Documents-Class" target="_blank" rel="noopener"><code>documents</code></a> service's
-			<a href="http://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Documents-Class-delete" target="_blank" rel="noopener"><code>delete</code></a> method
-		</li>
-	</ul>
-</section>
-<section class="mainContent-section" id="acls">
-	<h2>ACLs</h2>
-	<p>Finally, its time to talk about the <strong>objects</strong> where the <strong>subjects</strong> have <strong>permissions</strong> on. These objects as you may have
-		guessed are any Carbon document available in an application.</p>
-	<p>These documents store their security schema in what's called ACLs (or Access Control List). Which store the rules we've been talking about that apply to the document
-		itself and to its children.</p>
-	<section class="mainContent-subSection" id="retrieving-an-acl">
-		<h3>Retrieving an ACL</h3>
-		<p>To retrieve a document's ACL you can use the
-			<a href="http://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Documents-Class" target="_blank" rel="noopener"><code>documents</code></a> service's
-			<a href="http://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Documents-Class-getACL" target="_blank" rel="noopener"><code>getACL</code></a> method:
-		</p>
-		<sui-tabs>
-			<sui-tab title="TypeScript">
-
-				<pre><code class="typescript hljs"><span class="hljs-keyword">import</span> * as App from <span class="hljs-string">"carbonldp/App"</span>;
+<span class="hljs-built_in">console</span>.log( CS.Class.Read ); <span class="hljs-comment">// id of the Read permission</span></code></pre></sui-tab><sui-tab title="JavaScript ES5"><pre><code class="javascript hljs"><span class="hljs-built_in">console</span>.log( Carbon.NS.CS.Class.Read ); <span class="hljs-comment">// id of the Read permission</span></code></pre></sui-tab></sui-tabs><p>Here's a list of all the permissions in Carbon:</p><ul><li><strong>Read</strong>: Retrieve a document through methods like <a href="http://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Documents-Class" target="_blank" rel="noopener"><code>documents</code></a> service's <a href="http://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Documents-Class-get" target="_blank" rel="noopener"><code>get</code></a> method</li><li><strong>Download</strong>: Download a file</li><li><strong>Update</strong>: Modify a document and persist the changes, for example with the <a href="http://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Documents-Class" target="_blank" rel="noopener"><code>documents</code></a> service's <a href="http://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Documents-Class-save" target="_blank" rel="noopener"><code>save</code></a> method</li><li><strong>ManageSecurity</strong>: Modify a document's ACL (read ACL section)</li><li><strong>CreateChild</strong>: Create children of a document, for example with the <a href="http://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Documents-Class" target="_blank" rel="noopener"><code>documents</code></a> service's <a href="http://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Documents-Class-createChild" target="_blank" rel="noopener"><code>createChild</code></a> method</li><li><strong>CreateAccessPoint</strong>: Create access points of a document, for example with the <a href="http://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Documents-Class" target="_blank" rel="noopener"><code>documents</code></a> service's <a href="http://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Documents-Class-createAccessPoint" target="_blank" rel="noopener"><code>createAccessPoint</code></a> method</li><li><strong>Upload</strong>: Upload a file on a document, for example with the <a href="http://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Documents-Class" target="_blank" rel="noopener"><code>documents</code></a> service's <a href="http://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Documents-Class-upload" target="_blank" rel="noopener"><code>upload</code></a> method</li><li><strong>AddMember</strong>: Add a member to a document, for example with the <a href="http://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Documents-Class" target="_blank" rel="noopener"><code>documents</code></a> service's <a href="http://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Documents-Class-addMember" target="_blank" rel="noopener"><code>addMember</code></a> method</li><li><strong>RemoveMember</strong>: Remove a member of a document, for example with the <a href="http://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Documents-Class" target="_blank" rel="noopener"><code>documents</code></a> service's <a href="http://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Documents-Class-removeMember" target="_blank" rel="noopener"><code>removeMember</code></a> method</li><li><strong>Delete</strong>: Delete a document, for example with the <a href="http://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Documents-Class" target="_blank" rel="noopener"><code>documents</code></a> service's <a href="http://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Documents-Class-delete" target="_blank" rel="noopener"><code>delete</code></a> method</li></ul></section><section class="mainContent-section" id="acls"><h2>ACLs</h2><p>Finally, its time to talk about the <strong>objects</strong> where the <strong>subjects</strong> have <strong>permissions</strong> on. These objects as you may have guessed are any Carbon document available in an application.</p><p>These documents store their security schema in what's called ACLs (or Access Control List). Which store the rules we've been talking about that apply to the document itself and to its children.</p><section class="mainContent-subSection" id="retrieving-an-acl"><h3>Retrieving an ACL</h3><p>To retrieve a document's ACL you can use the <a href="http://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Documents-Class" target="_blank" rel="noopener"><code>documents</code></a> service's <a href="http://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Documents-Class-getACL" target="_blank" rel="noopener"><code>getACL</code></a> method:</p><sui-tabs><sui-tab title="TypeScript"><pre><code class="typescript hljs"><span class="hljs-keyword">import</span> * as App from <span class="hljs-string">"carbonldp/App"</span>;
 <span class="hljs-keyword">import</span> * as HTTP from <span class="hljs-string">"carbonldp/HTTP"</span>;
 <span class="hljs-keyword">import</span> * as PersistedACL from <span class="hljs-string">"carbonldp/PersistedACL"</span>;
 
@@ -736,12 +172,7 @@ appContext.documents.getACL( <span class="hljs-string">"some-document/"</span> )
     ( [ acl, response ]:[ PersistedACL.Class, HTTP.Response.Class ] ) =&gt; {
         <span class="hljs-comment">// ...</span>
     }
-).catch( <span class="hljs-built_in">console</span>.error );</code></pre>
-
-			</sui-tab>
-			<sui-tab title="JavaScript ES2015">
-
-				<pre><code class="javascript hljs"><span class="hljs-comment">// ... imports</span>
+).catch( <span class="hljs-built_in">console</span>.error );</code></pre></sui-tab><sui-tab title="JavaScript ES2015"><pre><code class="javascript hljs"><span class="hljs-comment">// ... imports</span>
 
 <span class="hljs-keyword">let</span> appContext;
 
@@ -751,12 +182,7 @@ appContext.documents.getACL( <span class="hljs-string">"some-document/"</span> )
     <span class="hljs-function">(<span class="hljs-params"> [ acl, response ] </span>) =&gt;</span> {
         <span class="hljs-comment">// ...</span>
     }
-).catch( <span class="hljs-built_in">console</span>.error );</code></pre>
-
-			</sui-tab>
-			<sui-tab title="JavaScript ES5">
-
-				<pre><code class="javascript hljs"><span class="hljs-comment">// ... imports</span>
+).catch( <span class="hljs-built_in">console</span>.error );</code></pre></sui-tab><sui-tab title="JavaScript ES5"><pre><code class="javascript hljs"><span class="hljs-comment">// ... imports</span>
 
 <span class="hljs-keyword">var</span> appContext;
 
@@ -766,19 +192,7 @@ appContext.documents.getACL( <span class="hljs-string">"some-document/"</span> )
     <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> [ acl, response ] </span>) </span>{
         <span class="hljs-comment">// ...</span>
     }
-).catch( <span class="hljs-built_in">console</span>.error );</code></pre>
-
-			</sui-tab>
-		</sui-tabs>
-		<p>
-			Or you can also use the <a href="http://carbonldp.github.io/carbonldp-js-sdk/#Carbon-PersistedProtectedDocument-Class" target="_blank" rel="noopener"><code>PersistedProtectedDocument</code></a>
-			<a href="http://carbonldp.github.io/carbonldp-js-sdk/#Carbon-PersistedProtectedDocument-Class-getACL" target="_blank" rel="noopener"><code>getACL</code></a> method.
-			Any document is a <a href="http://carbonldp.github.io/carbonldp-js-sdk/#Carbon-PersistedProtectedDocument-Class" target="_blank" rel="noopener"><code>PersistedProtectedDocument</code></a> (except for ACLs).
-		</p>
-		<sui-tabs>
-			<sui-tab title="TypeScript">
-
-				<pre><code class="typescript hljs"><span class="hljs-keyword">import</span> * as App from <span class="hljs-string">"carbonldp/App"</span>;
+).catch( <span class="hljs-built_in">console</span>.error );</code></pre></sui-tab></sui-tabs><p>Or you can also use the <a href="http://carbonldp.github.io/carbonldp-js-sdk/#Carbon-PersistedProtectedDocument-Class" target="_blank" rel="noopener"><code>PersistedProtectedDocument</code></a> <a href="http://carbonldp.github.io/carbonldp-js-sdk/#Carbon-PersistedProtectedDocument-Class-getACL" target="_blank" rel="noopener"><code>getACL</code></a> method. Any document is a <a href="http://carbonldp.github.io/carbonldp-js-sdk/#Carbon-PersistedProtectedDocument-Class" target="_blank" rel="noopener"><code>PersistedProtectedDocument</code></a> (except for ACLs).</p><sui-tabs><sui-tab title="TypeScript"><pre><code class="typescript hljs"><span class="hljs-keyword">import</span> * as App from <span class="hljs-string">"carbonldp/App"</span>;
 <span class="hljs-keyword">import</span> * as HTTP from <span class="hljs-string">"carbonldp/HTTP"</span>;
 <span class="hljs-keyword">import</span> * as PersistedACL from <span class="hljs-string">"carbonldp/PersistedACL"</span>;
 <span class="hljs-keyword">import</span> * as PersistedProtectedDocument from <span class="hljs-string">"carbonldp/PersistedProtectedDocument"</span>;
@@ -795,12 +209,7 @@ appContext.documents.get( <span class="hljs-string">"some-document/"</span> ).th
     ( [ someDocumentACL, response ]:[ PersistedACL.Class, HTTP.Response.Class ] ) =&gt; {
         <span class="hljs-comment">// ...</span>
     }
-).catch( <span class="hljs-built_in">console</span>.error );</code></pre>
-
-			</sui-tab>
-			<sui-tab title="JavaScript ES2015">
-
-				<pre><code class="javascript hljs"><span class="hljs-comment">// ... imports</span>
+).catch( <span class="hljs-built_in">console</span>.error );</code></pre></sui-tab><sui-tab title="JavaScript ES2015"><pre><code class="javascript hljs"><span class="hljs-comment">// ... imports</span>
 
 <span class="hljs-keyword">let</span> appContext;
 
@@ -814,12 +223,7 @@ appContext.documents.get( <span class="hljs-string">"some-document/"</span> ).th
     <span class="hljs-function">(<span class="hljs-params"> [ someDocumentACL, response ] </span>) =&gt;</span> {
         <span class="hljs-comment">// ...</span>
     }
-).catch( <span class="hljs-built_in">console</span>.error );</code></pre>
-
-			</sui-tab>
-			<sui-tab title="JavaScript ES5">
-
-				<pre><code class="javascript hljs"><span class="hljs-keyword">var</span> appContext;
+).catch( <span class="hljs-built_in">console</span>.error );</code></pre></sui-tab><sui-tab title="JavaScript ES5"><pre><code class="javascript hljs"><span class="hljs-keyword">var</span> appContext;
 
 <span class="hljs-comment">// ... app context retrieval</span>
 
@@ -831,31 +235,7 @@ appContext.documents.get( <span class="hljs-string">"some-document/"</span> ).th
     <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> [ someDocumentACL, response ] </span>) </span>{
         <span class="hljs-comment">// ...</span>
     }
-).catch( <span class="hljs-built_in">console</span>.error );</code></pre>
-
-			</sui-tab>
-		</sui-tabs>
-		<p>This can be more expensive or cheaper depending on if you have already retrieved the document or not.</p>
-	</section>
-	<section class="mainContent-subSection" id="granting-or-denying-permissions">
-		<h3>Granting or denying permissions</h3>
-		<p>
-			Once you have retrieved a document's ACL you can start granting permissions to subjects or denying them. This can be done with the
-			<a href="http://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Auth-PersistedACL-Class" target="_blank" rel="noopener"><code>PersistedACL</code></a>'s
-			<a href="http://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Auth-PersistedACL-Class-grant" target="_blank" rel="noopener"><code>grant</code></a> method and
-			<a href="http://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Auth-PersistedACL-Class" target="_blank" rel="noopener"><code>PersistedACL</code></a>'s
-			<a href="http://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Auth-PersistedACL-Class-deny" target="_blank" rel="noopener"><code>deny</code></a> method respectively.
-		</p>
-		<p>
-			In these methods both the subject and permission(s) need to be specified, along with the subject's type:
-			<a href="http://carbonldp.github.io/carbonldp-js-sdk/#Carbon-NS-CS-Class+Agent" target="_blank" rel="external"><code>Carbon.NS.CS.Class.Agent</code></a> or
-			<a href="http://carbonldp.github.io/carbonldp-js-sdk/#Carbon-NS-CS-Class+AppRole" target="_blank" rel="external"><code>Carbon.NS.CS.Class.AppRole</code></a>
-		</p>
-		<p>Like with any other document, don't forget to save the ACL's state after modifying it:</p>
-		<sui-tabs>
-			<sui-tab title="TypeScript">
-
-				<pre><code class="typescript hljs"><span class="hljs-keyword">import</span> * as CS from <span class="hljs-string">"carbonldp/NS/CS"</span>;
+).catch( <span class="hljs-built_in">console</span>.error );</code></pre></sui-tab></sui-tabs><p>This can be more expensive or cheaper depending on if you have already retrieved the document or not.</p></section><section class="mainContent-subSection" id="granting-or-denying-permissions"><h3>Granting or denying permissions</h3><p>Once you have retrieved a document's ACL you can start granting permissions to subjects or denying them. This can be done with the <a href="http://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Auth-PersistedACL-Class" target="_blank" rel="noopener"><code>PersistedACL</code></a>'s <a href="http://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Auth-PersistedACL-Class-grant" target="_blank" rel="noopener"><code>grant</code></a> method and <a href="http://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Auth-PersistedACL-Class" target="_blank" rel="noopener"><code>PersistedACL</code></a>'s <a href="http://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Auth-PersistedACL-Class-deny" target="_blank" rel="noopener"><code>deny</code></a> method respectively.</p><p>In these methods both the subject and permission(s) need to be specified, along with the subject's type: <a href="http://carbonldp.github.io/carbonldp-js-sdk/#Carbon-NS-CS-Class+Agent" target="_blank" rel="external"><code>Carbon.NS.CS.Class.Agent</code></a> or <a href="http://carbonldp.github.io/carbonldp-js-sdk/#Carbon-NS-CS-Class+AppRole" target="_blank" rel="external"><code>Carbon.NS.CS.Class.AppRole</code></a></p><p>Like with any other document, don't forget to save the ACL's state after modifying it:</p><sui-tabs><sui-tab title="TypeScript"><pre><code class="typescript hljs"><span class="hljs-keyword">import</span> * as CS from <span class="hljs-string">"carbonldp/NS/CS"</span>;
 <span class="hljs-keyword">import</span> * as HTTP from <span class="hljs-string">"carbonldp/HTTP"</span>;
 <span class="hljs-keyword">import</span> * as PersistedACL from <span class="hljs-string">"carbonldp/Auth/PersistedACL"</span>;
 <span class="hljs-keyword">import</span> * as PersistedRole from <span class="hljs-string">"carbonldp/Auth/PersistedRole"</span>;
@@ -890,12 +270,7 @@ blogPostACL.save().then(
     ( response:HTTP.Response.Class ) =&gt; {
         <span class="hljs-comment">// ...</span>
     }
-).catch( <span class="hljs-built_in">console</span>.error );</code></pre>
-
-			</sui-tab>
-			<sui-tab title="JavaScript ES2015">
-
-				<pre><code class="javascript hljs"><span class="hljs-keyword">import</span> * <span class="hljs-keyword">as</span> CS <span class="hljs-keyword">from</span> <span class="hljs-string">"carbonldp/NS/CS"</span>;
+).catch( <span class="hljs-built_in">console</span>.error );</code></pre></sui-tab><sui-tab title="JavaScript ES2015"><pre><code class="javascript hljs"><span class="hljs-keyword">import</span> * <span class="hljs-keyword">as</span> CS <span class="hljs-keyword">from</span> <span class="hljs-string">"carbonldp/NS/CS"</span>;
 
 <span class="hljs-keyword">let</span> editorsRole;
 
@@ -927,12 +302,7 @@ blogPostACL.save().then(
     <span class="hljs-function">(<span class="hljs-params"> response </span>) =&gt;</span> {
         <span class="hljs-comment">// ...</span>
     }
-).catch( <span class="hljs-built_in">console</span>.error );</code></pre>
-
-			</sui-tab>
-			<sui-tab title="JavaScript ES5">
-
-				<pre><code class="javascript hljs"><span class="hljs-keyword">var</span> editorsRole;
+).catch( <span class="hljs-built_in">console</span>.error );</code></pre></sui-tab><sui-tab title="JavaScript ES5"><pre><code class="javascript hljs"><span class="hljs-keyword">var</span> editorsRole;
 
 <span class="hljs-comment">// .. role retrieval</span>
 
@@ -962,29 +332,7 @@ blogPostACL.save().then(
     <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> response </span>) </span>{
         <span class="hljs-comment">// ...</span>
     }
-).catch( <span class="hljs-built_in">console</span>.error );</code></pre>
-
-			</sui-tab>
-		</sui-tabs>
-	</section>
-	<section class="mainContent-subSection" id="inheritance">
-		<h3>Inheritance</h3>
-		<p>
-			<a href="http://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Auth-PersistedACL-Class-grant" target="_blank" rel="noopener"><code>grant</code></a> and
-			<a href="http://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Auth-PersistedACL-Class-deny" target="_blank" rel="noopener"><code>deny</code></a> will only apply rules
-			where the <strong>object</strong> is the document owner of the ACL. But an ACL can also contain rules that will apply to all of the document's children (and the
-			children of its children, and so on).
-		</p>
-		<p>
-			This can be done by using the
-			<a href="http://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Auth-PersistedACL-Class-configureChildInheritance" target="_blank" rel="noopener"><code>
-					configureChildInheritance</code></a> method. It's usage is basically the same, except that we need to specify whether the inheritance will grant or deny the
-			permissions:
-		</p>
-		<sui-tabs>
-			<sui-tab title="TypeScript">
-
-				<pre><code class="typescript hljs"><span class="hljs-keyword">import</span> * as CS from <span class="hljs-string">"carbonldp/NS/CS"</span>;
+).catch( <span class="hljs-built_in">console</span>.error );</code></pre></sui-tab></sui-tabs></section><section class="mainContent-subSection" id="inheritance"><h3>Inheritance</h3><p><a href="http://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Auth-PersistedACL-Class-grant" target="_blank" rel="noopener"><code>grant</code></a> and <a href="http://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Auth-PersistedACL-Class-deny" target="_blank" rel="noopener"><code>deny</code></a> will only apply rules where the <strong>object</strong> is the document owner of the ACL. But an ACL can also contain rules that will apply to all of the document's children (and the children of its children, and so on).</p><p>This can be done by using the <a href="http://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Auth-PersistedACL-Class-configureChildInheritance" target="_blank" rel="noopener"><code>configureChildInheritance</code></a> method. It's usage is basically the same, except that we need to specify whether the inheritance will grant or deny the permissions:</p><sui-tabs><sui-tab title="TypeScript"><pre><code class="typescript hljs"><span class="hljs-keyword">import</span> * as CS from <span class="hljs-string">"carbonldp/NS/CS"</span>;
 <span class="hljs-keyword">import</span> * as HTTP from <span class="hljs-string">"carbonldp/HTTP"</span>;
 <span class="hljs-keyword">import</span> * as PersistedACL from <span class="hljs-string">"carbonldp/Auth/PersistedACL"</span>;
 <span class="hljs-keyword">import</span> * as PersistedRole from <span class="hljs-string">"carbonldp/Auth/PersistedRole"</span>;
@@ -1016,12 +364,7 @@ blogPostACL.save().then(
     ( response:HTTP.Response.Class ) =&gt; {
         <span class="hljs-comment">// ...</span>
     }
-).catch( <span class="hljs-built_in">console</span>.error );</code></pre>
-
-			</sui-tab>
-			<sui-tab title="JavaScript ES2015">
-
-				<pre><code class="javascript hljs"><span class="hljs-keyword">import</span> * <span class="hljs-keyword">as</span> CS <span class="hljs-keyword">from</span> <span class="hljs-string">"carbonldp/NS/CS"</span>;
+).catch( <span class="hljs-built_in">console</span>.error );</code></pre></sui-tab><sui-tab title="JavaScript ES2015"><pre><code class="javascript hljs"><span class="hljs-keyword">import</span> * <span class="hljs-keyword">as</span> CS <span class="hljs-keyword">from</span> <span class="hljs-string">"carbonldp/NS/CS"</span>;
 
 <span class="hljs-keyword">let</span> editorsRole;
 
@@ -1050,12 +393,7 @@ blogPostACL.save().then(
     <span class="hljs-function">(<span class="hljs-params"> response </span>) =&gt;</span> {
         <span class="hljs-comment">// ...</span>
     }
-).catch( <span class="hljs-built_in">console</span>.error );</code></pre>
-
-			</sui-tab>
-			<sui-tab title="JavaScript ES5">
-
-				<pre><code class="javascript hljs"><span class="hljs-keyword">var</span> editorsRole;
+).catch( <span class="hljs-built_in">console</span>.error );</code></pre></sui-tab><sui-tab title="JavaScript ES5"><pre><code class="javascript hljs"><span class="hljs-keyword">var</span> editorsRole;
 
 <span class="hljs-comment">// .. role retrieval</span>
 
@@ -1082,378 +420,4 @@ blogPostACL.save().then(
     <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> response </span>) </span>{
         <span class="hljs-comment">// ...</span>
     }
-).catch( <span class="hljs-built_in">console</span>.error );</code></pre>
-
-			</sui-tab>
-		</sui-tabs>
-	</section>
-	<div class="ui info message">
-		<div class="header">Note</div>
-		<div class="content">
-			<p>
-				The methods: <a href="http://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Auth-PersistedACL-Class-grant" target="_blank" rel="noopener"><code>grant</code></a>,
-				<a href="http://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Auth-PersistedACL-Class-deny" target="_blank" rel="noopener"><code>deny</code></a> or
-				<a href="http://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Auth-PersistedACL-Class-getChildInheritance" target="_blank" rel="noopener"><code>
-						getChildInheritance</code></a> will only give you information about the rules that ACL has about the document. <strong>Their output won't be affected by
-					inheritance</strong>.
-			</p>
-			<p>We are working on an API to ease retrieving what permissions are granted on a document independently on why they are granted.</p>
-		</div>
-	</div>
-</section>
-<div class="documentation-steps ui fluid steps">
-	<a class="step" href="../authentication">
-		<i class="arrow left icon"></i>
-		<div class="content">
-			<div class="title">Previous</div>
-			<div class="description">Authentication</div>
-		</div>
-	</a>
-	<div class="active completed step">
-		<!--<i class="payment icon"></i>-->
-		<div class="content">
-			<div class="title">Authorization</div>
-		</div>
-	</div>
-	<a class="step" href="../access-points">
-		<i class="arrow right icon"></i>
-		<div class="content">
-			<div class="title">Next</div>
-			<div class="description">Access Points</div>
-		</div>
-	</a>
-</div>
-
-                        
-
-                    </div>
-                </div>
-            
-            <div class="four wide computer tablet only column">
-                <div class="sidebar" content="mainContent">
-	<div class="ui sticky segment">
-		<h2 class="ui header">Content</h2>
-		<div class="ui vertical following fluid accordion text menu sidebar-verticalMenu">
-
-		
-
-			<div class="item"><a class="title sidebar-title" href="#introduction">Introduction</a></div>
-
-			
-
-			<div class="item">
-
-				<a class="title sidebar-title sidebar-title--dropdown" href="#application-roles">Application roles</a><i class="dropdown icon sidebar-dropdownIcon"></i>
-
-				<div class="content menu sidebar-verticalSubMenu">
-
-				
-
-					<a class="item sidebar-title" href="#creating-an-app-role">Creating an app role</a>
-
-				
-
-					<a class="item sidebar-title" href="#adding-agents-to-a-role">Adding agents to a role</a>
-
-				
-
-				</div>
-			</div>
-		
-
-			<div class="item"><a class="title sidebar-title" href="#permissions">Permissions</a></div>
-
-			
-
-			<div class="item">
-
-				<a class="title sidebar-title sidebar-title--dropdown" href="#acls">ACLs</a><i class="dropdown icon sidebar-dropdownIcon"></i>
-
-				<div class="content menu sidebar-verticalSubMenu">
-
-				
-
-					<a class="item sidebar-title" href="#retrieving-an-acl">Retrieving an ACL</a>
-
-				
-
-					<a class="item sidebar-title" href="#granting-or-denying-permissions">Granting or denying permissions</a>
-
-				
-
-					<a class="item sidebar-title" href="#inheritance">Inheritance</a>
-
-				
-
-				</div>
-			</div>
-		
-		</div>
-	</div>
-</div>
-            </div>
-            
-        </div>
-    </div>
-
-        </div>
-        <div class="footer bigStoneBG">
-        <div class="ui middle aligned padded grid computer tablet only">
-
-            <div class="four wide center aligned column">
-                <a href="http://base22.com/"><img class="footer-base22Logo" src="/assets/images/base22-logo-white.png"></a>
-            </div>
-            <div class="eight wide center aligned stretched column">
-                <p class="footer-copyrightText">© 2017 Base22 Technology Group, LLC. All Rights Reserved.</p>
-            </div>
-            <div class="four wide left aligned column">
-                <a angulartics2on="click" angularticsevent="OutboundClick" angularticscategory="Twitter" href="https://twitter.com/CarbonLDP"><i class="circular twitter icon footer-socialIcon"></i></a>
-                <a angulartics2on="click" angularticsevent="OutboundClick" angularticscategory="YouTube" href="https://www.youtube.com/channel/UCuNWXjT19Gnpo7I502PTZ_Q"><i class="circular youtube icon footer-socialIcon"></i></a>
-                <a angulartics2on="click" angularticsevent="OutboundClick" angularticscategory="LinkedIn" href="https://www.linkedin.com/company/carbon-ldp"><i class="circular linkedin icon footer-socialIcon"></i></a>
-            </div>
-        </div>
-        <div class="ui centered padded grid mobile only">
-            <div class="left aligned eight wide column">
-                <a href="http://base22.com/"><img class="footer-base22Logo" src="/assets/images/base22-logo-white.png"></a>
-            </div>
-            <div class="right aligned eight wide column">
-                <a angulartics2on="click" angularticsevent="OutboundClick" angularticscategory="Twitter" href="https://twitter.com/CarbonLDP"><i class="circular twitter icon footer-socialIcon"></i></a>
-                <a angulartics2on="click" angularticsevent="OutboundClick" angularticscategory="YouTube" href="https://www.youtube.com/channel/UCuNWXjT19Gnpo7I502PTZ_Q"><i class="circular youtube icon footer-socialIcon"></i></a>
-                <a angulartics2on="click" angularticsevent="OutboundClick" angularticscategory="LinkedIn" href="https://www.linkedin.com/company/carbon-ldp"><i class="circular linkedin icon footer-socialIcon"></i></a>
-            </div>
-            <div class="center aligned twelve wide column">
-                <p class="footer-copyrightText">© 2017 Base22 Technology Group, LLC. All&nbsp;Rights&nbsp;Reserved.</p>
-            </div>
-    </div>
-</div>
-
-        <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
-<script src="/assets/semantic/semantic.min.js"></script>
-
-<script src="/assets/scripts/main.js"></script>
-
-        <script>(function( window ){ $( document ).ready( function() {
-
-	var $sidebar = $( ".sidebar" );
-	var $sidebarFollowingMenu = $( ".sidebar" ).find( ".following.menu" );
-	var $content = $( "." + $sidebar.attr( "content" ) );
-	var $sections = $content.children( "section" );
-	var $subSections = $sections.children( "section" );
-
-	// Detect when section is passed
-	$sections.visibility( {
-		once: false,
-		offset: 150,
-		onTopPassed: function() {
-			activateSection( this, $sidebarFollowingMenu, $sections );
-		},
-		onTopPassedReverse: function() {
-			deactivateFirstSection( this, $sidebarFollowingMenu, $sections );
-		},
-		onBottomPassedReverse: function() {
-			activateSection( this, $sidebarFollowingMenu, $sections );
-		},
-	} );
-
-	$subSections.visibility( {
-		once: false,
-		offset: 150,
-		onTopPassed: function() {
-			activateSubSection( this, $sidebarFollowingMenu, $subSections );
-		},
-		onBottomPassedReverse: function() {
-			activateSubSection( this, $sidebarFollowingMenu, $subSections );
-		}
-	} );
-
-
-	// Make sidebar stick to its position
-	$( ".sidebar > .ui.sticky" ).sticky( {
-		observeChanges: true,
-		context: ".mainContent",
-		offset: 100
-	} );
-
-	// Activate toggle dropdown
-	$( ".sidebar .item > .dropdown.icon" ).on( "click", toggleDropdown );
-
-	//Activate click on items and subitems
-	$( ".sidebar .item > .title" ).on( "click", activateItem );
-	$( ".sidebar  a.item " ).on( "click", activateSubItem );
-
-	// Toggle selected accordion menu in sidebar
-	function toggleDropdown( event ) {
-		var $target = $( event.currentTarget );
-
-		var $accordion = $target.parent( ".item" ).find( ".content.menu" );
-		if( $accordion ) {
-			var accordionIsActive = $accordion.hasClass( "active" );
-
-			if( accordionIsActive ) {
-				$accordion.removeClass( "active" );
-				$accordion.removeClass( "toggled" );
-			} else {
-				$accordion.addClass( "active" );
-				$accordion.addClass( "toggled" );
-			}
-		}
-		$( ".ui.sticky" ).sticky( "refresh" );
-
-		return false;
-	}
-
-	function activateItem( event ) {
-
-		var $item = $( event.currentTarget ).parent( ".item" );
-
-		var $allItems = $item.siblings( ".item" );
-		$allItems.removeClass( "active" );
-		$item.addClass( "active" );
-
-		event.preventDefault();
-
-		return false;
-
-	}
-
-	function activateSubItem( event ) {
-
-		var $item = $( event.currentTarget );
-
-		var $allItems = $item.siblings( ".item" );
-		$allItems.removeClass( "active" );
-		$item.addClass( "active" );
-
-		event.preventDefault();
-
-		return false;
-
-	}
-
-
-	function activateSection( elm, $menu, $sections ) {
-
-		var $section = $( elm );
-		var index = $sections.index( $section );
-		var $followSection = $menu.children( ".item" );
-		var $currentSection = $followSection.eq( index );
-
-		var isActive = $currentSection.hasClass( "active" );
-
-		var hasSubsection = $sections.eq( index ).children( "section" ).length > 0;
-
-		$followSection.removeClass( "active" );
-		$followSection.find( ".active" ).not( ".toggled" ).removeClass( "active" );
-
-		if( ! isActive ) {
-
-			$currentSection.addClass( "active" );
-		}
-
-		if( hasSubsection ) {
-			$currentSection.find( ".menu" ).addClass( "active" );
-		}
-
-		$( ".ui.sticky" ).sticky( "refresh" );
-
-		return false;
-
-	}
-
-	function activateSubSection( elm, $menu, $subSections ) {
-		var $section = $( elm );
-		var index = $subSections.index( $section );
-		var $followSection = $menu.find( ".menu > .item" );
-		var $activeSection = $followSection.eq( index );
-		var isActive = $activeSection.hasClass( "active" );
-		var $subSectionMenu = $menu.children( ".item" ).find( ".menu" );
-		var subSectionMenuIsActive = $subSectionMenu.hasClass( "active" );
-
-		if( index !== - 1 && ! isActive ) {
-			$followSection.filter( ".active" ).removeClass( "active" );
-			$activeSection.addClass( "active" );
-		}
-
-		if( ! subSectionMenuIsActive ) {
-			$subSectionMenu.addClass( "active" );
-		}
-
-		$( ".ui.sticky" ).sticky( "refresh" );
-
-		return false;
-	}
-
-	function deactivateFirstSection( elm, $menu, $sections ) {
-
-		var $section = $( elm );
-		var index = $sections.index( $section );
-		var $followSection = $menu.children( ".item" );
-		var $currentSection = $followSection.eq( index );
-		var isActive = $currentSection.hasClass( "active" );
-		var $subSectionMenu = $currentSection.find( ".menu" );
-
-
-		if( index === 0 ) {
-
-			$currentSection.removeClass( "active" );
-
-			if( $subSectionMenu.length > 0 ) {
-				$currentSection.find( ".menu" ).not( ".toggled" ).removeClass( "active" );
-				$subSectionMenu.find( ".item" ).removeClass( "active" );
-			}
-
-		}
-
-		$( ".ui.sticky" ).sticky( "refresh" );
-
-		return false;
-	}
-
-
-} ); })( window );</script><script>(function( window ){ $( document ).ready( function() {
-	var $sidebar = $( ".staticContentMenu" );
-	var $content = $( "." + $sidebar.attr( "content" ) );
-	var $sections = $content.children( ".mainContent-section" );
-
-	// Detect when section is passed
-	$sections.visibility( {
-		once: false,
-		offset: 150,
-		onTopPassed: function() {
-			// _self.activateSection( this );
-			console.log( "top passed" );
-		},
-		onTopPassedReverse: function() {
-			// _self.deactivateFirstSection( this );
-		},
-		onBottomPassedReverse: function() {
-			// _self.activateSection( this );
-		},
-	} );
-
-	// Activate toggle dropdown
-	$( ".staticContentMenu .item > .dropdown.icon" ).on( "click", toggleDropdown );
-
-	// Toggle selected accordion menu in sidebar
-	function toggleDropdown( event ) {
-		var $target = $( event.currentTarget );
-		$( ".ui.sticky" ).sticky( "refresh" );
-		var $accordion = $target.parent( ".item" ).find( ".content.menu" );
-		if( $accordion ) {
-			var accordionIsActive = $accordion.hasClass( "active" );
-
-			if( accordionIsActive ) {
-				$accordion.removeClass( "active" );
-				$accordion.removeClass( "toggled" );
-			} else {
-				$accordion.addClass( "active" );
-				$accordion.addClass( "toggled" );
-			}
-		}
-
-		return false;
-	}
-} ); })( window );</script><script id="widgets-scripts"></script>
-    
-    
-</body></html>
+).catch( <span class="hljs-built_in">console</span>.error );</code></pre></sui-tab></sui-tabs></section><div class="ui info message"><div class="header">Note</div><div class="content"><p>The methods: <a href="http://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Auth-PersistedACL-Class-grant" target="_blank" rel="noopener"><code>grant</code></a>, <a href="http://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Auth-PersistedACL-Class-deny" target="_blank" rel="noopener"><code>deny</code></a> or <a href="http://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Auth-PersistedACL-Class-getChildInheritance" target="_blank" rel="noopener"><code>getChildInheritance</code></a> will only give you information about the rules that ACL has about the document. <strong>Their output won't be affected by inheritance</strong>.</p><p>We are working on an API to ease retrieving what permissions are granted on a document independently on why they are granted.</p></div></div></section><div class="documentation-steps ui fluid steps"><a class="step" href="../authentication"><i class="arrow left icon"></i><div class="content"><div class="title">Previous</div><div class="description">Authentication</div></div></a><div class="active completed step"><div class="content"><div class="title">Authorization</div></div></div><a class="step" href="../access-points"><i class="arrow right icon"></i><div class="content"><div class="title">Next</div><div class="description">Access Points</div></div></a></div></div></div><div class="four wide computer tablet only column"><div class="sidebar" content="mainContent"><div class="ui sticky segment"><h2 class="ui header">Content</h2><div class="ui vertical following fluid accordion text menu sidebar-verticalMenu"><div class="item"><a class="title sidebar-title" href="#introduction">Introduction</a></div><div class="item"><a class="title sidebar-title sidebar-title--dropdown" href="#application-roles">Application roles</a><i class="dropdown icon sidebar-dropdownIcon"></i><div class="content menu sidebar-verticalSubMenu"><a class="item sidebar-title" href="#creating-an-app-role">Creating an app role</a> <a class="item sidebar-title" href="#adding-agents-to-a-role">Adding agents to a role</a></div></div><div class="item"><a class="title sidebar-title" href="#permissions">Permissions</a></div><div class="item"><a class="title sidebar-title sidebar-title--dropdown" href="#acls">ACLs</a><i class="dropdown icon sidebar-dropdownIcon"></i><div class="content menu sidebar-verticalSubMenu"><a class="item sidebar-title" href="#retrieving-an-acl">Retrieving an ACL</a> <a class="item sidebar-title" href="#granting-or-denying-permissions">Granting or denying permissions</a> <a class="item sidebar-title" href="#inheritance">Inheritance</a></div></div></div></div></div></div></div></div></div><div class="footer bigStoneBG"><div class="ui middle aligned padded grid computer tablet only"><div class="four wide center aligned column"><a href="http://base22.com/"><img class="footer-base22Logo" src="/assets/images/base22-logo-white.png"></a></div><div class="eight wide center aligned stretched column"><p class="footer-copyrightText">© 2017 Base22 Technology Group, LLC. All Rights Reserved.</p></div><div class="four wide left aligned column"><a angulartics2on="click" angularticsevent="OutboundClick" angularticscategory="Twitter" href="https://twitter.com/CarbonLDP"><i class="circular twitter icon footer-socialIcon"></i></a> <a angulartics2on="click" angularticsevent="OutboundClick" angularticscategory="YouTube" href="https://www.youtube.com/channel/UCuNWXjT19Gnpo7I502PTZ_Q"><i class="circular youtube icon footer-socialIcon"></i></a> <a angulartics2on="click" angularticsevent="OutboundClick" angularticscategory="LinkedIn" href="https://www.linkedin.com/company/carbon-ldp"><i class="circular linkedin icon footer-socialIcon"></i></a></div></div><div class="ui centered padded grid mobile only"><div class="left aligned eight wide column"><a href="http://base22.com/"><img class="footer-base22Logo" src="/assets/images/base22-logo-white.png"></a></div><div class="right aligned eight wide column"><a angulartics2on="click" angularticsevent="OutboundClick" angularticscategory="Twitter" href="https://twitter.com/CarbonLDP"><i class="circular twitter icon footer-socialIcon"></i></a> <a angulartics2on="click" angularticsevent="OutboundClick" angularticscategory="YouTube" href="https://www.youtube.com/channel/UCuNWXjT19Gnpo7I502PTZ_Q"><i class="circular youtube icon footer-socialIcon"></i></a> <a angulartics2on="click" angularticsevent="OutboundClick" angularticscategory="LinkedIn" href="https://www.linkedin.com/company/carbon-ldp"><i class="circular linkedin icon footer-socialIcon"></i></a></div><div class="center aligned twelve wide column"><p class="footer-copyrightText">© 2017 Base22 Technology Group, LLC. All&nbsp;Rights&nbsp;Reserved.</p></div></div></div><script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script><script src="/assets/semantic/semantic.min.js"></script><script src="/assets/scripts/main.js"></script><script>!function(e){$(document).ready(function(){function e(e){var i=$(e.currentTarget),t=i.parent(".item").find(".content.menu");if(t){var s=t.hasClass("active");s?(t.removeClass("active"),t.removeClass("toggled")):(t.addClass("active"),t.addClass("toggled"))}return $(".ui.sticky").sticky("refresh"),!1}function i(e){var i=$(e.currentTarget).parent(".item"),t=i.siblings(".item");return t.removeClass("active"),i.addClass("active"),e.preventDefault(),!1}function t(e){var i=$(e.currentTarget),t=i.siblings(".item");return t.removeClass("active"),i.addClass("active"),e.preventDefault(),!1}function s(e,i,t){var s=$(e),n=t.index(s),a=i.children(".item"),c=a.eq(n),r=c.hasClass("active"),o=t.eq(n).children("section").length>0;return a.removeClass("active"),a.find(".active").not(".toggled").removeClass("active"),r||c.addClass("active"),o&&c.find(".menu").addClass("active"),$(".ui.sticky").sticky("refresh"),!1}function n(e,i,t){var s=$(e),n=t.index(s),a=i.find(".menu > .item"),c=a.eq(n),r=c.hasClass("active"),o=i.children(".item").find(".menu"),d=o.hasClass("active");return n===-1||r||(a.filter(".active").removeClass("active"),c.addClass("active")),d||o.addClass("active"),$(".ui.sticky").sticky("refresh"),!1}function a(e,i,t){var s=$(e),n=t.index(s),a=i.children(".item"),c=a.eq(n),r=(c.hasClass("active"),c.find(".menu"));return 0===n&&(c.removeClass("active"),r.length>0&&(c.find(".menu").not(".toggled").removeClass("active"),r.find(".item").removeClass("active"))),$(".ui.sticky").sticky("refresh"),!1}var c=$(".sidebar"),r=$(".sidebar").find(".following.menu"),o=$("."+c.attr("content")),d=o.children("section"),v=d.children("section");d.visibility({once:!1,offset:150,onTopPassed:function(){s(this,r,d)},onTopPassedReverse:function(){a(this,r,d)},onBottomPassedReverse:function(){s(this,r,d)}}),v.visibility({once:!1,offset:150,onTopPassed:function(){n(this,r,v)},onBottomPassedReverse:function(){n(this,r,v)}}),$(".sidebar > .ui.sticky").sticky({observeChanges:!0,context:".mainContent",offset:100}),$(".sidebar .item > .dropdown.icon").on("click",e),$(".sidebar .item > .title").on("click",i),$(".sidebar  a.item ").on("click",t)})}(window)</script><script>!function(e){$(document).ready(function(){function e(e){var n=$(e.currentTarget);$(".ui.sticky").sticky("refresh");var t=n.parent(".item").find(".content.menu");if(t){var o=t.hasClass("active");o?(t.removeClass("active"),t.removeClass("toggled")):(t.addClass("active"),t.addClass("toggled"))}return!1}var n=$(".staticContentMenu"),t=$("."+n.attr("content")),o=t.children(".mainContent-section");o.visibility({once:!1,offset:150,onTopPassed:function(){console.log("top passed")},onTopPassedReverse:function(){},onBottomPassedReverse:function(){}}),$(".staticContentMenu .item > .dropdown.icon").on("click",e)})}(window)</script><script id="widgets-scripts"></script></body></html>

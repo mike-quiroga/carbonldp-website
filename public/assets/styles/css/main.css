@@ -1,3 +1,7 @@
+.ui.container.navMenu {
+  padding-left: .9rem;
+  padding-right: .9rem; }
+
 .ui.menu a.item.transparentBG:hover, .ui.menu a.item.navMenu-dropdownLink, .ui.menu a.item.navMenu-dropdownText {
   background: transparent; }
 
@@ -44,7 +48,8 @@
     top: 55px; } }
 
 .footer {
-  padding: 10px 0; }
+  padding: 10px 0;
+  flex: 0 0 auto; }
 
 .footer-base22Logo {
   width: 130px; }
@@ -55,11 +60,11 @@
 i.icon.footer-socialIcon {
   color: #647385 !important;
   font-size: 1.25em;
-  box-shadow: inset 0 0 0 0.1em rgba(0, 0, 0, 0.18);
+  box-shadow: none;
   line-height: 1.1em !important; }
   i.icon.footer-socialIcon:hover {
     color: white !important;
-    box-shadow: inset 0 0 0 .1em white; }
+    box-shadow: none; }
 
 /* Colors for Background, all Backgrounds come with color text */
 .bigStoneBG {

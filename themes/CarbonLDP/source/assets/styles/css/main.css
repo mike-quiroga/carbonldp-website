@@ -60,11 +60,11 @@
 i.icon.footer-socialIcon {
   color: #647385 !important;
   font-size: 1.25em;
-  box-shadow: inset 0 0 0 0.1em rgba(0, 0, 0, 0.18);
+  box-shadow: none;
   line-height: 1.1em !important; }
   i.icon.footer-socialIcon:hover {
     color: white !important;
-    box-shadow: inset 0 0 0 .1em white; }
+    box-shadow: none; }
 
 /* Colors for Background, all Backgrounds come with color text */
 .bigStoneBG {
