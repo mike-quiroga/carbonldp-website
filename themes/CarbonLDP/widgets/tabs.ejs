@@ -1,0 +1,31 @@
+<div class="ui grid tabsComponent">
+	<% if( tabs.length > 0 ) { %>
+		<div class="ui computer tablet only row tabs">
+			<div class="ui top attached tabular menu tabs-titles">
+				<% for ( let i = 0; i < tabs.length; i++ ) { %>
+				<% let tab = tabs[i] %>
+					<a class="tabs-title <%- tab.active ? "active" : "" %> item" data-tab="<%- tab.id %>"><%- tab.title %></a>
+				<% } %>
+			</div>
+		</div>
+		<div class="ui mobile only row tabs">
+			<div class="ui compact selection dropdown tabs-options">
+				<i class="dropdown icon"></i>
+				<div class="text"><%-tabs[activeTab].title%></div>
+				<div class="menu">
+					<% for ( let i = 0; i < tabs.length; i++ ) { %>
+					<% let tab = tabs[i] %>
+					<div class="tabs-option item" data-tab="<%- tab.id %>"><%- tab.title %></div>
+					<% } %>
+				</div>
+			</div>
+		</div>
+
+		<% for ( let i = 0; i < tabs.length; i++ ) { %>
+			<% let tab = tabs[i] %>
+			<div class="tabs-tab ui bottom attached tabs <%- tab.active ? "active" : "" %> tab segment" data-tab="<%- tab.id %>">
+				<%- tab.content %>
+			</div>
+		<% } %>
+	<% } %>
+</div>

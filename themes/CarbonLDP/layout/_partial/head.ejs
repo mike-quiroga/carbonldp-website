@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <%
+  var title = page.title;
+
+  if (is_archive()){
+    title = __('archive_a');
+
+    if (is_month()){
+      title += ': ' + page.year + '/' + page.month;
+    } else if (is_year()){
+      title += ': ' + page.year;
+    }
+  } else if (is_category()){
+    title = __('category') + ': ' + page.category;
+  } else if (is_tag()){
+    title = __('tag') + ': ' + page.tag;
+  }
+  %>
+
+
+  <link rel="shortcut icon" href="/assets/images/carbon-icon-144x144.png">
+  <title><% if (title){ %><%= title %> | <% } %><%= config.title %></title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="google-site-verification" content="gz0ah_pGpAlB4Q5a_bxykr1Zdo_CfXHyAb2tJiADVhE" />
+
+  <%- open_graph({twitter_id: theme.twitter, google_plus: theme.google_plus, fb_admins: theme.fb_admins, fb_app_id: theme.fb_app_id}) %>
+  <% if (theme.rss){ %>
+    <link rel="alternate" href="<%- theme.rss %>" title="<%= config.title %>" type="application/atom+xml">
+  <% } %>
+
+
+  <%- css("/assets/semantic/semantic.min")%>
+  <link id="widgets-styles">
+
+  <%- css("/assets/styles/css/main")%>
+
+  <% if ( ( page.layout === "index" ) ) { %>
+  <%- css("/assets/styles/css/home")%>
+  <%} else {%>
+  <%- partial( `_head/${ page.layout }-head` ) %>
+  <%}%>
+
+
+  <!-- Google Analytics -->
+  <script>
+    window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+    ga('create', 'UA-75786977-1', 'auto');
+    ga('send', 'pageview');
+  </script>
+  <script async src='https://www.google-analytics.com/analytics.js'></script>
+  <!-- End Google Analytics -->
+</head>

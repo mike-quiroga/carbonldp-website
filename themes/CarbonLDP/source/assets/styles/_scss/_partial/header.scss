@@ -1,0 +1,78 @@
+.ui.container.navMenu{
+  padding-left: .9rem;
+  padding-right: .9rem;
+}
+.ui.menu a.item.transparentBG:hover, .ui.menu a.item.navMenu-dropdownLink, .ui.menu a.item.navMenu-dropdownText {
+    background: transparent;
+}
+
+.navMenu-carbonLogo{
+  height: auto;
+  width: 150px;
+}
+
+@media only screen and (max-width: 992px){
+
+  .ui.menu.navMenu{
+    height: 65px;
+  }
+
+  .navMenu-carbonLogo{
+    height: auto;
+    width: 135px;
+  }
+
+  .ui.fixed.menu.navMenu-verticalMenu {
+    top: 74px;
+    border: none;
+    box-shadow: 0 0 5px 5px rgba(0, 0, 0, 0.2);
+  }
+
+
+  .ui.menu .item.navMenu-dropdownText {
+   padding: 0;
+
+  }
+
+  .ui.dropdown.item.link .menu.navMenu-dropdownMenu {
+    position: static;
+    margin-top: 15px;
+  }
+
+  .ui.container.navMenu {
+    margin-left: 0em!important;
+    margin-right: 0em!important;
+    width: 100%;
+    max-width: none !important;
+  }
+
+  i.icon {
+    font-size: 1.1em;
+  }
+
+  .ui.fixed.menu.navMenu-verticalMenu {
+    top: 65px;
+    border: none;
+    box-shadow: 0 0 5px 5px rgba(0, 0, 0, 0.2);
+  }
+
+}
+
+
+@media (max-width: 767px){
+
+.ui.menu.navMenu{
+  height: 55px;
+}
+.ui.menu .item.navMenu-carbonLogoButton {
+  padding: 1em 1em;
+}
+
+  .navMenu-carbonLogo{
+    height: auto;
+    width: 120px;
+  }
+  .ui.fixed.menu.navMenu-verticalMenu {
+    top: 55px;
+  }
+}

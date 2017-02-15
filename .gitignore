@@ -1,34 +1,11 @@
-# Read about how to use .gitignore: https://help.github.com/articles/ignoring-files
-# Improved by Alex Arriaga (@alex_arriaga_m) - http://www.alex-arriaga.com
-
-# Include your project-specific ignores in this section
 # ----- Project ignores
-
-src/assets/**/*.css
-src/assets/**/*.map
-
-src/app/**/*.css
-src/app/**/*.js
-src/app/**/*.map
-
-src/app/config.ts
-
-server/boot.js
-server/boot.js.map
-
-dist/site/
-
-# Typings
-**/typings/globals/
-**/typings/index.d.ts
-
-# JSPM
-**/jspm_packages/
+db.json
 
 # Semantic UI
 **/semantic/dist/
 **/semantic/tasks/
 **/semantic/gulpfile.js
+**/source/assets/semantic/
 
 reports/
 
@@ -38,10 +15,6 @@ reports/
 # *.iml
 # *.iws
 
-# Maven
-log/
-target/
-
 # SASS
 .sass-cache/
 /.sass-cache/*
@@ -50,9 +23,6 @@ target/
 # NPM
 **/node_modules/
 npm-debug.log
-
-# Bower
-**/bower_components/
 
 # ----- Operating Systems
 # OS X
@@ -97,23 +67,6 @@ $RECYCLE.BIN/
 *.msm
 *.msp
 
-
-
-#  ----- Other Control Version Systems
-# SVN
-# https://github.com/github/gitignore/blob/master/Global/SVN.gitignore
-.svn/
-
-# CVS
-# https://github.com/github/gitignore/blob/master/Global/CVS.gitignore
-/CVS/*
-*/CVS/*
-.cvsignore
-*/.cvsignore
-
-
-
-
 #  ----- IDEs and editors
 # VIM
 # https://github.com/github/gitignore/blob/master/Global/vim.gitignore
@@ -132,72 +85,3 @@ Session.vim
 # project files should be checked into the repository, unless a significant
 # proportion of contributors will probably not be using SublimeText
 # *.sublime-project
-
-
-# Notepad++
-# https://github.com/github/gitignore/blob/master/Global/NotepadPP.gitignore
-# Notepad++ backups #
-*.bak
-
-
-# Eclipse
-# https://github.com/github/gitignore/blob/master/Global/Eclipse.gitignore
-*.pydevproject
-.metadata
-bin/**
-tmp/**
-tmp/**/*
-*.tmp
-*.swp
-*~.nib
-local.properties
-.loadpath
-/src/main/resources/rebel.xml
-.project
-.settings
-
-# External tool builders
-.externalToolBuilders/
-
-# Locally stored "Eclipse launch configurations"
-*.launch
-
-# CDT-specific
-.cproject
-
-# PDT-specific
-.buildpath
-
-# sbteclipse plugin
-.target
-
-# TeXlipse plugin
-.texlipse
-
-
-# Netbeans
-# https://github.com/github/gitignore/blob/master/Global/NetBeans.gitignore
-nbproject/private/
-nbbuild/
-nbdist/
-nbactions.xml
-nb-configuration.xml
-
-
-# Xcode
-# https://github.com/github/gitignore/blob/master/Global/Xcode.gitignore
-*.pbxuser
-!default.pbxuser
-*.mode1v3
-!default.mode1v3
-*.mode2v3
-!default.mode2v3
-*.perspectivev3
-!default.perspectivev3
-xcuserdata
-*.xccheckout
-profile
-*.moved-aside
-DerivedData
-*.hmap
-*.ipa

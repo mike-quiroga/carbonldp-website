@@ -1,0 +1,1626 @@
+<!DOCTYPE html><html><head>
+  <meta charset="utf-8">
+  
+
+
+  <link rel="shortcut icon" href="/assets/images/carbon-icon-144x144.png">
+  <title>object-schema | Carbon LDP</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="google-site-verification" content="gz0ah_pGpAlB4Q5a_bxykr1Zdo_CfXHyAb2tJiADVhE">
+
+  <meta name="description" content="Object schema
+					
+
+	
+		
+		
+			Previous
+			Contexts
+		
+	
+	
+		
+		
+			Object Schema
+		
+	
+	
+		
+		
+			Next
+			Files
+		
+	
+
+
+
+	
+		For convenience, the SDK does its best to try to guess your desired outcom">
+<meta property="og:type" content="website">
+<meta property="og:title" content="object-schema">
+<meta property="og:url" content="https://carbonldp.com/documentation/javascript-sdk/object-schema/index.html">
+<meta property="og:site_name" content="Carbon LDP">
+<meta property="og:description" content="Object schema
+					
+
+	
+		
+		
+			Previous
+			Contexts
+		
+	
+	
+		
+		
+			Object Schema
+		
+	
+	
+		
+		
+			Next
+			Files
+		
+	
+
+
+
+	
+		For convenience, the SDK does its best to try to guess your desired outcom">
+<meta property="og:updated_time" content="2017-02-13T17:40:38.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="object-schema">
+<meta name="twitter:description" content="Object schema
+					
+
+	
+		
+		
+			Previous
+			Contexts
+		
+	
+	
+		
+		
+			Object Schema
+		
+	
+	
+		
+		
+			Next
+			Files
+		
+	
+
+
+
+	
+		For convenience, the SDK does its best to try to guess your desired outcom">
+  
+    <link rel="alternate" href="/atom.xml" title="Carbon LDP" type="application/atom+xml">
+  
+
+
+  <link rel="stylesheet" href="/assets/semantic/semantic.min.css">
+  <style>/* Tomorrow Night Theme */
+/* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
+/* Original theme - https://github.com/chriskempson/tomorrow-theme */
+/* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
+
+/* Tomorrow Comment */
+.hljs-comment,
+.hljs-quote {
+  color: #969896;
+}
+
+/* Tomorrow Red */
+.hljs-variable,
+.hljs-template-variable,
+.hljs-tag,
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-regexp,
+.hljs-deletion {
+  color: #cc6666;
+}
+
+/* Tomorrow Orange */
+.hljs-number,
+.hljs-built_in,
+.hljs-builtin-name,
+.hljs-literal,
+.hljs-type,
+.hljs-params,
+.hljs-meta,
+.hljs-link {
+  color: #de935f;
+}
+
+/* Tomorrow Yellow */
+.hljs-attribute {
+  color: #f0c674;
+}
+
+/* Tomorrow Green */
+.hljs-string,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-addition {
+  color: #b5bd68;
+}
+
+/* Tomorrow Blue */
+.hljs-title,
+.hljs-section {
+  color: #81a2be;
+}
+
+/* Tomorrow Purple */
+.hljs-keyword,
+.hljs-selector-tag {
+  color: #b294bb;
+}
+
+.hljs {
+  display: block;
+  overflow-x: auto;
+  background: #1d1f21;
+  color: #c5c8c6;
+  padding: 0.5em;
+}
+
+.hljs-emphasis {
+  font-style: italic;
+}
+
+.hljs-strong {
+  font-weight: bold;
+}
+</style><style>.hljs {
+    font-family: "Lucida Console", Monaco, monospace;
+    font-size: .9rem;
+    line-height: 1.4rem;
+}
+</style><style>.sidebar{
+    margin: 10em 1em 6em 0;
+}
+
+/* Give sidebar a z-index greater than header */
+.sidebar .ui.sticky{
+    z-index: 0;
+}
+
+/* Remove box-shadow and border */
+.sidebar .ui.segment{
+    box-shadow: none;
+    border: none;
+}
+
+/* Change color to black when title active */
+.ui.accordion .item.active .title:not(.ui).sidebar-title{
+    color: black;
+    font-weight: 700;
+}
+.ui.vertical.menu .menu .item.active .sidebar-title{
+    color: black;
+}
+/* Change color of section items to gray */
+.ui.accordion .title:not(.ui).sidebar-title{
+    color: rgba(0,0,0,.6);
+    padding-right: 10px;
+}
+
+/* Change color to black when title hovered */
+.ui.accordion .title:not(.ui).sidebar-title:hover{
+    color: black;
+}
+
+
+/* Add left margin to sidebar menu */
+.ui.vertical.text.menu.sidebar-verticalMenu {
+    margin-left: 1.2em;
+}
+
+.ui.vertical.text.menu .item:not(.dropdown)>.menu.sidebar-verticalSubMenu{
+    margin: 0 0.8em;
+}
+
+.ui.accordion.menu .item .title.sidebar-title--dropdown{
+    display: inline;
+}
+
+.ui.vertical.text.menu .item>i.icon.sidebar-dropdownIcon{
+    float: right;
+}
+
+@media (min-width: 768px) and (max-width: 992px) {
+    .sidebar .ui.sticky{
+        padding: 0;
+    }
+    .ui.vertical.text.menu.sidebar-verticalMenu {
+        margin-left: .6em;
+    }
+
+    .ui.accordion .title:not(.ui).sidebar-title{
+        padding-right: 0;
+    }
+
+}</style><style>.staticContentMenu{
+    margin: 2em 0;
+}
+
+h2.staticContentMenu-title{
+    font-size: 1.4em;
+}
+
+.ui.accordion.menu .item .title.staticContentMenu-title--dropdown{
+    display: inline;
+}
+
+.ui.vertical.text.menu .item>i.icon.staticContentMenu-dropdownIcon{
+    float: right;
+}
+
+.ui.accordion .title:not(.ui).staticContentMenu-title{
+    color: rgba(0,0,0,.6);
+}</style><style>.ui.grid.tabsComponent {
+    margin: 1rem 0;
+}
+
+.ui.grid.tabsComponent .row.tabs{
+    padding: 0;
+}
+
+.ui.attached.segment.tabs{
+    border-top: 0;
+    padding: 0 1rem;
+    margin: 0;
+}
+
+@media (max-width: 767px) {
+    .ui.attached.segment.tabs{
+        border: 0;
+        padding: 0;
+        margin: 0;
+    }
+
+    .tabs-tab *{
+        margin:0;
+    }
+
+}
+</style>
+
+  <link rel="stylesheet" href="/assets/styles/css/main.css">
+
+  
+  <link rel="stylesheet" href="/assets/styles/css/document.css">
+  
+
+
+  <!-- Google Analytics -->
+  <script>
+    window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+    ga('create', 'UA-75786977-1', 'auto');
+    ga('send', 'pageview');
+  </script>
+  <script async="" src="https://www.google-analytics.com/analytics.js"></script>
+  <!-- End Google Analytics -->
+</head>
+
+    <body class="site">
+        <header class="header">
+	<div class="ui grid removeSideMargins">
+		<div class="computer only row">
+				<div class="ui top fixed borderless menu">
+					<div class="ui container navMenu">
+						<a class="item transparentBG" href="/"><img class="ui small image" src="/assets/images/carbon-logo-header.png" alt="Home"></a>
+
+						
+
+						<a class="item" href="/get-started">Get Started</a>
+
+							
+
+						<div class="ui dropdown link item navMenu-dropdownButton"><a class="item navMenu-dropdownLink" href="/documentation">Documentation</a><i class="dropdown icon"></i>
+							<div class="menu">
+							
+							<a class="item" href="/documentation/quick-start-guide">Quick Start Guide</a>
+							
+							<a class="item" href="/documentation/essential-concepts">Essential Concepts</a>
+							
+							<a class="item" href="/documentation/javascript-sdk">JavaScript SDK</a>
+							
+							<a class="item" href="/documentation/rest-api">REST API</a>
+							
+							</div>
+						</div>
+							
+
+						<a class="item" href="/community-and-support">Community &amp; Support</a>
+
+							
+
+						<a class="item" href="/about">About</a>
+
+							
+					</div>
+			</div>
+		</div>
+		<div class="mobile tablet only row">
+				<div class="ui top fixed borderless menu navMenu">
+					<div class="ui container navMenu">
+						<a class="item navMenu-carbonLogoButton transparentBG" href="/"><img class="ui navMenu-carbonLogo image" src="/assets/images/carbon-logo-header.png" alt="Home"></a>
+						<div class="ui right icon item navMenu-openerButton">
+							<!--<div class="menu item">-->
+								<i class="content icon"></i>
+						</div>
+					</div>
+				</div>
+				<div class="ui fixed fluid vertical menu navMenu-verticalMenu" style="display: none;">
+					
+
+					<a class="item" href="/get-started">Get Started</a>
+
+					
+
+					<div class="ui dropdown link item navMenu-dropdownButton--mobile"><a class="item navMenu-dropdownText">Documentation<i class="dropdown icon"></i></a>
+						<div class="menu navMenu-dropdownMenu">
+							
+							<a class="item" href="/documentation/quick-start-guide">Quick Start Guide</a>
+							
+							<a class="item" href="/documentation/essential-concepts">Essential Concepts</a>
+							
+							<a class="item" href="/documentation/javascript-sdk">JavaScript SDK</a>
+							
+							<a class="item" href="/documentation/rest-api">REST API</a>
+							
+							<div class="divider"></div>
+							<a class="item" href="/documentation">All documents...</a>
+						</div>
+					</div>
+					
+
+					<a class="item" href="/community-and-support">Community &amp; Support</a>
+
+					
+
+					<a class="item" href="/about">About</a>
+
+					
+				</div>
+		</div>
+	</div>
+</header>
+        <div class="ui scrollTop mobile only grid">
+			<button class="ui icon button scrollTop-button"><i class="angle up icon scrollTop-icon"></i></button>
+		</div>
+        <div class="site-content ">
+            
+            <div class="ui container grid">
+        <div class="row">
+            <div class="twelve wide computer only twelve wide tablet only sixteen wide mobile only column">
+                    <div class="mainContent">
+                        <div class="ui breadcrumb">
+	
+	
+
+	<a class="section" href="/documentation">Documentation</a>
+
+	
+	<i class="right chevron icon divider"></i>
+	<a class="section" href="/documentation/javascript-sdk">JavaScript SDK</a>
+	
+
+	<i class="right arrow icon divider"></i>
+	<div class="active section" href="/documentation/javascript-sdk/object-schema">Object Schema</div>
+</div>
+
+                        
+                        
+<h1>Object schema</h1>
+					
+<div class="documentation-steps ui fluid steps">
+	<a class="step" href="../contexts">
+		<i class="arrow left icon"></i>
+		<div class="content">
+			<div class="title">Previous</div>
+			<div class="description">Contexts</div>
+		</div>
+	</a>
+	<div class="active step">
+		<!--<i class="payment icon"></i>-->
+		<div class="content">
+			<div class="title">Object Schema</div>
+		</div>
+	</div>
+	<a class="step" href="../files">
+		<i class="arrow right icon"></i>
+		<div class="content">
+			<div class="title">Next</div>
+			<div class="description">Files</div>
+		</div>
+	</a>
+</div>
+
+<div class="ui message">
+	<div class="content">
+		<p>For convenience, the SDK does its best to try to guess your desired outcome when saving and retrieving documents. It tries to parse known data types into
+			native JavaScript types and vice-versa. But sometimes there is not enough data for the SDK to correctly guess the expected behavior. To make sure the SDK behaves as
+			expected, a web application can give more information about properties and objects to the SDK through a context's object schema.</p>
+		<p>Any context has an object schema that can be <em>extended</em> through the <code>extendObjectSchema</code> method.</p>
+	</div>
+</div>
+<div class="ui mobile only grid">
+	<div class="row">
+		<div class=" sixteen wide mobile only column">
+	<div class="staticContentMenu">
+		<h2 class="staticContentMenuTitle">Content</h2>
+		<div class="ui vertical accordion fluid menu mobile">
+			
+
+			<div class="item"><a class="title staticContentMenu-title" href="#introduction">Introduction</a></div>
+
+			
+
+			<div class="item"><a class="title staticContentMenu-title" href="#what-is-an-object-schema-">What is an Object Schema?</a></div>
+
+			
+
+			<div class="item">
+
+				<a class="title staticContentMenu-title staticContentMenu-title--dropdown" href="#properties">Properties</a><i class="dropdown icon .staticContentMenu-dropdownIcon"></i>
+
+				<div class="content menu">
+
+					
+
+					<a class="item" href="#collections-container-">Collections (@container)</a>
+
+					
+
+					<a class="item" href="#data-types-type-">Data types (@type)</a>
+
+					
+
+					<a class="item" href="#ids-id-">IDs (@id)</a>
+
+					
+
+					<a class="item" href="#vocabularies">Vocabularies</a>
+
+					
+				</div>
+			</div>
+			
+
+			<div class="item"><a class="title staticContentMenu-title" href="#prefixes">Prefixes</a></div>
+
+			
+
+			<div class="item"><a class="title staticContentMenu-title" href="#object-types">Object types</a></div>
+
+			
+
+			<div class="item"><a class="title staticContentMenu-title" href="#conclusion">Conclusion</a></div>
+
+			
+		</div>
+	</div>
+</div>
+	</div>
+</div>
+<section class="mainContent-section" id="introduction">
+	<h2 class="hidden">Introduction</h2>
+	<p>Even though the information stored in the platform can seem to be normal JSON, it is not. If you haven't read about the
+		<a href="/documents/linked-data-concepts">Essential Concepts of Linked Data</a> don't worry, you won't need them to understand the basics behind object schemas,
+		but it wouldn't hurt you to read them either.</p>
+	<p>The platform stores each document as a set of statements (or RDF <em>triples</em>). These statements together comprise an entity or resource. For example, the following
+		object:</p>
+	
+	<pre><code class="javascript hljs"><span class="hljs-keyword">var</span> project = {
+    <span class="hljs-attr">name</span>: <span class="hljs-string">"Project 1"</span>,
+    <span class="hljs-attr">labels</span>: [
+        <span class="hljs-string">"critical"</span>,
+        <span class="hljs-string">"hr"</span>,
+        <span class="hljs-string">"example"</span>
+    ],
+    <span class="hljs-attr">createdOn</span>: <span class="hljs-keyword">new</span> <span class="hljs-built_in">Date</span>( <span class="hljs-number">2016</span>, <span class="hljs-number">9</span>, <span class="hljs-number">25</span> )
+};</code></pre>
+	
+	<p>Would be saved as statements that can be read:</p>
+	<ul>
+		<li><strong>project</strong> has the <strong>name</strong>, <strong>Project 1</strong> (which is a <strong>string</strong>)</li>
+		<li><strong>project</strong> has the <strong>label</strong>, <strong>critical</strong> (which is a <strong>string</strong>)</li>
+		<li><strong>project</strong> has the <strong>label</strong>, <strong>hr</strong> (which is a <strong>string</strong>)</li>
+		<li><strong>project</strong> has the <strong>label</strong>, <strong>example</strong> (which is a <strong>string</strong>)</li>
+		<li><strong>project</strong> was <strong>createdOn</strong>, <strong>2016/09/25</strong> (which is a <strong>date</strong>)</li>
+	</ul>
+	<p>There are a couple of things to notice here:</p>
+	<ul>
+		<li>The platform saves the type of each property's value</li>
+		<li>It doesn't save information about the value of the property label being an array</li>
+		<li>The statements aren't ordered</li>
+	</ul>
+	<p>Because of this there are several common pitfalls that you can fall into when developing web applications with Carbon:</p>
+	<ul>
+		<li>If you save a document with a property that has an array with only one value, and later on you retrieve the document, the property will point to the value
+			directly. It won't be in an array.
+		</li>
+		<li>Any application that depends on an array keeping its order will behave randomly.</li>
+		<li>If your Carbon application is being used by several web applications, a web application could save statements about a property that other web applications don't
+			expect (nor understand).
+		</li>
+	</ul>
+	<p>All of these pitfalls can be overcome by using <strong>Object Schemas</strong>.</p>
+</section>
+<section class="mainContent-section" id="what-is-an-object-schema-">
+	<h2>What is an Object Schema?</h2>
+	<p>An object schema provides information about the properties the SDK can expect. On it, a web application can force the SDK to treat values as arrays, force arrays to be
+		ordered, tell the SDK to ignore values of unknown types, etc.</p>
+	<p>Object schemas are stored inside of a <a href="../contexts">context</a>. Each context has it's own object schema, and child contexts inherit
+		their object schema from their parent's.
+	</p>
+	<p>To provide new information to the object schema the <code>context.extendObjectSchema</code> method can be used:</p>
+	
+	<pre><code class="javascript hljs">appContext.extendObjectSchema( {
+    <span class="hljs-comment">// New information</span>
+} );</code></pre>
+	
+	<p>The object passed to the <code>extendObjectSchema</code> method is a <code>@context</code> object defined in the <a href="https://www.w3.org/TR/json-ld/#the-context" target="_blank" rel="noopener">JSON-LD specification</a>. If you aren't familiar with that specification, don't worry.
+		You don'tneed to understand the specification to be able to use object schemas, but again, the more information you posses, the better.</p>
+	<p>Properties inside of the object passed to <code>extendObjectSchema</code> will describe different aspects of the schema your application will use.</p>
+</section>
+<section class="mainContent-section" id="properties">
+	<h2>Properties</h2>
+	<p>To provide information about the properties your application objects will have, a property with the same name needs to be defined on the object schema:</p>
+	
+		<pre><code class="javascript hljs">appContext.extendObjectSchema( {
+    <span class="hljs-string">"labels"</span>: {
+        <span class="hljs-comment">// Metadata of the "labels" property</span>
+    }
+} );</code></pre>
+		
+	<section class="mainContent-subSection" id="collections-container-">
+		<h3>Collections (@container)</h3>
+		<p>Properties by default are assumed to be one value only unless proven otherwise. That's why if you save a document with a property that holds an array with one
+			value, once you retrieve it you'll receive only the value, not the array.</p>
+		<p>To specify that a property is always going to hold an array, you can declare the <code>@container</code> property on the object that describes the property.</p>
+		<p>That property will need to have one of the following values depending on what collection type you want to have:</p>
+		<ul>
+			<li><code>@set</code>: for unordered arrays (meaning retrieving a document with that property several times will yield different results)</li>
+			<li><code>@list</code>: for ordered arrays (keep in mind that this type of collection takes more space and is more expensive overall)</li>
+			<li><code>@map</code>: for language based maps (TO BE DOCUMENTED)</li>
+		</ul>
+		<p>For example, imagine that the application handled objects like the following one:</p>
+		
+			<pre><code class="javascript hljs"><span class="hljs-keyword">var</span> project = {
+    <span class="hljs-attr">labels</span>: [
+        <span class="hljs-string">"important"</span>
+    ],
+    <span class="hljs-attr">tasks</span>: [
+        {
+            <span class="hljs-attr">title</span>: <span class="hljs-string">"Do something"</span>
+        },
+        {
+            <span class="hljs-attr">title</span>: <span class="hljs-string">"Then do something else"</span>
+        },
+    ]
+};</code></pre>
+			
+		<p>The <code>labels</code> property is going to have a collection as a value, but it doesn't need to keep it's order. After all, its only valuable information is
+			that it "has" this and that label.</p>
+		<p>On the other hand, the <code>tasks</code> property needs to keep the order of tasks because it indicates the order of their execution or importance.</p>
+		<p>The object schema should be extended as follows:</p>
+		
+			<pre><code class="javascript hljs">appContext.extendObjectSchema( {
+    <span class="hljs-string">"labels"</span>: {
+        <span class="hljs-string">"@container"</span>: <span class="hljs-string">"@set"</span>
+    },
+    <span class="hljs-string">"tasks"</span>: {
+        <span class="hljs-string">"@container"</span>: <span class="hljs-string">"@list"</span>
+    }
+} );</code></pre>
+			
+		<p>Having done that, persisting the resource and then reading it again will yield the expected results.</p>
+	</section>
+	<section class="mainContent-subSection" id="data-types-type-">
+		<h3>Data types (@type)</h3>
+		<p>The SDK does a really good job on saving values with the right data type. Strings will be saved as strings, booleans will be saved as booleans, etc. But imagine
+			the following scenario:</p>
+		<ol>
+			<li>Application A and B are developed using the same Carbon application to store their data</li>
+			<li>Both applications are programmed to understand Project objects with a property "content" that holds a string</li>
+			<li>Later on complex "content" properties are added to application B. Now app B understands "content" properties that hold objects (with a type, and other
+				properties).
+			</li>
+		</ol>
+		<p>Because application A hasn't been updated, and both apps are using the same data, app A is probably going to crash whenever it finds a complex "content" property
+			.</p>
+		<p>To avoid this, it is a good practice to define what type the property is meant to have on each application. This is done by specifying a <code>@type</code>
+			property on the object that describes the property "content":
+		</p>
+		
+			<pre><code class="javascript hljs">appContext.extendObjectSchema( {
+    <span class="hljs-string">"content"</span>: {
+        <span class="hljs-string">"@type"</span>: <span class="hljs-string">"string"</span>
+    }
+} );</code></pre>
+			
+		<p>If the application A has its object schema set this way it won't have a problem. The SDK will filter any "content" non string value when retrieving the project.</p>
+		<p>The most common accepted types are:</p>
+		<ul>
+			<li><code>@id</code>: When the value type is a pointer to another object</li>
+			<li><code>string</code></li>
+			<li><code>boolean</code></li>
+			<li><code>integer</code></li>
+			<li><code>double</code></li>
+			<li><code>float</code></li>
+			<li><code>long</code></li>
+			<li><code>date</code></li>
+			<li><code>dateTime</code></li>
+			<li><code>time</code></li>
+		</ul>
+		<p>All of these types (except <code>@id</code>) are part of the <a href="https://www.w3.org/TR/xmlschema-2/" target="_blank" rel="noopener">xml schema data
+				types.</a></p>
+	</section>
+	<section class="mainContent-subSection" id="ids-id-">
+		<h3>IDs (@id)</h3>
+		<p>So far we have solved all of the problems we stated at the start of this document. But there's another problem lurking around. Imagine the following scenario:</p>
+		<ul>
+			<li>Application <strong>A</strong> and application <strong>B</strong> want to share data by using the same Carbon app</li>
+			<li>
+				<p>Application <strong>A</strong> handles objects like the following one:</p>
+				
+				<pre><code class="javascript hljs"><span class="hljs-keyword">var</span> client = {
+    <span class="hljs-attr">name</span>: <span class="hljs-string">"Miguel"</span>,
+    <span class="hljs-attr">lastName</span>: <span class="hljs-string">"Aragón"</span>
+};</code></pre>
+				
+			</li>
+			<li>
+				<p>On the other hand application <strong>B</strong> was programmed to handle objects like this:</p>
+				
+				<pre><code class="javascript hljs"><span class="hljs-keyword">var</span> client = {
+    <span class="hljs-attr">firstName</span>: <span class="hljs-string">"Cody"</span>,
+    <span class="hljs-attr">lastName</span>: <span class="hljs-string">"Burleson"</span>
+};</code></pre>
+				
+			</li>
+		</ul>
+		<p>These two applications will not be able to integrate because they use a different property for the same purpose. Application <strong>A</strong> uses
+			<code>name</code> to refer to first names, and application <strong>B</strong> uses <code>firstName</code> instead.</p>
+		<p>There are two options: one application renames the property to use the same as the other application (expensive!), or they define the same <code>@id</code> on their
+			own object schema.</p>
+		<p>The property <code>@id</code> configures the unique id the property will have when saved on the platform. That way even if two or more applications are using
+			different property names for the same "real" property, they can integrate by using a unique id for that property.</p>
+		<p>In this example the problem would be solved by following these steps:</p>
+		<ul>
+			<li>
+				<p>Application <strong>A</strong> extends its object schema like this:</p>
+				
+				<pre><code class="javascript hljs">appContext.extendObjectSchema( {
+    <span class="hljs-string">"name"</span>: {
+        <span class="hljs-string">"@id"</span>: <span class="hljs-string">"lastName"</span>,
+        <span class="hljs-string">"@type"</span>: <span class="hljs-string">"string"</span>
+    }
+} );</code></pre>
+				
+			</li>
+			<li>
+				<p>Application <strong>B</strong> extends its this way:</p>
+				
+				<pre><code class="javascript hljs">appContext.extendObjectSchema( {
+    <span class="hljs-string">"lastName"</span>: {
+        <span class="hljs-string">"@id"</span>: <span class="hljs-string">"lastName"</span>,
+        <span class="hljs-string">"@type"</span>: <span class="hljs-string">"string"</span>
+    }
+} );</code></pre>
+				
+			</li>
+		</ul>
+		<p>With that setup, the SDK will translate the properties when saving or retrieving documents and both of the applications will be using the same <em>standardized</em>
+			name for their properties.</p>
+	</section>
+	<section class="mainContent-subSection" id="vocabularies">
+		<h3>Vocabularies</h3>
+		<p>Storing properties with names like <code>name</code> or <code>title</code> is meant to cause collisions. A Carbon application could use "name" to define people's
+			first names while another one could use it to define their complete name. Or even worse, they could use it to define the name of a country.</p>
+		<p>That's why by default each time a new property is saved to a Carbon app it is saved as a uniform resource identifier (URI). For example, if your JavaScript
+			application saves an object with a property <code>title</code>, the property will actually be saved as something like:</p>
+		<p><code>http://localhost:8083/apps/your-app-slug/vocabulary/#title</code></p>
+		<p>Let's decompose that URI:</p>
+		<ul>
+			<li><code>http://</code>: The protocol your Carbon platform is configured with</li>
+			<li><code>localhost</code>: The address of your Carbon platform</li>
+			<li><code>:8083</code>: The port the Carbon platform is listening on</li>
+			<li><code>apps/your-app-slug/</code>: Your Carbon app slug</li>
+			<li><code>vocabulary/</code>: A document inside of your Carbon app</li>
+			<li><code>#title</code>: The slug of a fragment inside of the <code>vocabulary/</code> document</li>
+		</ul>
+		<p>This means that the property is saved using the id of a fragment, inside of a document called <code>vocabulary/</code> from your application.</p>
+		<p>By doing this, you are able to go and save data about the property itself. You could for example go and add a description to the property by modifying the
+			<code>vocabulary/</code> document:</p>
+		<div class="ui grid tabsComponent">
+	
+		<div class="ui computer tablet only row tabs">
+			<div class="ui top attached tabular menu tabs-titles">
+				
+				
+					<a class="tabs-title active item" data-tab="CVHKruPS">TypeScript</a>
+				
+				
+					<a class="tabs-title  item" data-tab="YaNIznSb">JavaScript ES2015</a>
+				
+				
+					<a class="tabs-title  item" data-tab="mjbuIZPk">JavaScript ES5</a>
+				
+			</div>
+		</div>
+		<div class="ui mobile only row tabs">
+			<div class="ui compact selection dropdown tabs-options">
+				<i class="dropdown icon"></i>
+				<div class="text">TypeScript</div>
+				<div class="menu">
+					
+					
+					<div class="tabs-option item" data-tab="CVHKruPS">TypeScript</div>
+					
+					
+					<div class="tabs-option item" data-tab="YaNIznSb">JavaScript ES2015</div>
+					
+					
+					<div class="tabs-option item" data-tab="mjbuIZPk">JavaScript ES5</div>
+					
+				</div>
+			</div>
+		</div>
+
+		
+			
+			<div class="tabs-tab ui bottom attached tabs active tab segment" data-tab="CVHKruPS">
+				
+				
+				<pre><code class="typescript hljs"><span class="hljs-keyword">import</span> * as App from <span class="hljs-string">"carbonldp/App"</span>;
+<span class="hljs-keyword">import</span> * as HTTP from <span class="hljs-string">"carbonldp/HTTP"</span>;
+<span class="hljs-keyword">import</span> * as PersistedDocument from <span class="hljs-string">"carbonldp/PersistedDocument"</span>;
+<span class="hljs-keyword">import</span> * as PersistedFragment from <span class="hljs-string">"carbonldp/PersistedFragment"</span>;
+
+<span class="hljs-keyword">let</span> appContext:App.Context;
+
+<span class="hljs-comment">// ... retrieve appContext</span>
+
+appContext.get( <span class="hljs-string">"vocabulary/"</span> ).then(
+    ( [ vocabulary, response ]:[ PersistedDocument.Class, HTTP.Response.Class ] ) =&gt; {
+        <span class="hljs-keyword">let</span> title:PersistedFragment.Class = vocabulary.getFragment( <span class="hljs-string">"title"</span> );
+
+        <span class="hljs-comment">// Add metadata about the title property</span>
+        title.description = <span class="hljs-string">"The title of a book"</span>;
+
+        <span class="hljs-keyword">return</span> vocabulary.save();
+    }
+).then(
+    ( response:HTTP.Response.Class ) =&gt; {
+        <span class="hljs-comment">// ...</span>
+    }
+).catch( <span class="hljs-built_in">console</span>.error );</code></pre>
+				
+			
+			</div>
+		
+			
+			<div class="tabs-tab ui bottom attached tabs  tab segment" data-tab="YaNIznSb">
+				
+				
+				<pre><code class="javascript hljs"><span class="hljs-keyword">let</span> appContext;
+
+<span class="hljs-comment">// ... retrieve appContext</span>
+
+appContext.get( <span class="hljs-string">"vocabulary/"</span> ).then(
+    <span class="hljs-function">(<span class="hljs-params"> [ vocabulary, response ] </span>) =&gt;</span> {
+        <span class="hljs-keyword">let</span> title = vocabulary.getFragment( <span class="hljs-string">"title"</span> );
+
+        <span class="hljs-comment">// Add metadata about the title property</span>
+        title.description = <span class="hljs-string">"The title of a book"</span>;
+
+        <span class="hljs-keyword">return</span> vocabulary.save();
+    }
+).then(
+    <span class="hljs-function">(<span class="hljs-params"> response </span>) =&gt;</span> {
+        <span class="hljs-comment">// ...</span>
+    }
+).catch( <span class="hljs-built_in">console</span>.error );</code></pre>
+				
+			
+			</div>
+		
+			
+			<div class="tabs-tab ui bottom attached tabs  tab segment" data-tab="mjbuIZPk">
+				
+				
+				<pre><code class="javascript hljs"><span class="hljs-keyword">var</span> appContext;
+
+<span class="hljs-comment">// ... retrieve appContext</span>
+
+appContext.get( <span class="hljs-string">"vocabulary/"</span> ).then(
+    <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> result </span>) </span>{
+        <span class="hljs-keyword">var</span> vocabulary = result[ <span class="hljs-number">0</span> ];
+        <span class="hljs-keyword">var</span> title = vocabulary.getFragment( <span class="hljs-string">"title"</span> );
+
+        <span class="hljs-comment">// Add metadata about the title property</span>
+        title.description = <span class="hljs-string">"The title of a book"</span>;
+
+        <span class="hljs-keyword">return</span> vocabulary.save();
+    }
+).then(
+    <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> response </span>) </span>{
+        <span class="hljs-comment">// ...</span>
+    }
+).catch( <span class="hljs-built_in">console</span>.error );</code></pre>
+				
+			
+			</div>
+		
+	
+</div>
+
+		<p>The default document those fragments are saved in is called <code>vocabulary</code> because it collects all of the terms you use in your application. By developing an
+			application you are essentially creating a new vocabulary.</p>
+		<p>If that's the case you may think: "Well what if I reuse the terms from one application on another one?". Well, that's one of the main advantages of building a
+			vocabulary!</p>
+		<p>If you have a Carbon application (application <strong>A</strong>) with an already established amount of terms, and you want to create a new Carbon app (application
+			<strong>B</strong>) that understands data from your already existing application you can accomplish it by defining the <code>@id</code> of the property in the object
+			schema:</p>
+		
+		<pre><code class="javascript hljs"><span class="hljs-comment">// In application B</span>
+appBContext.extendObjectSchema( {
+    <span class="hljs-string">"title"</span>: {
+        <span class="hljs-string">"@id"</span>: <span class="hljs-string">"http://localhost:8083/apps/application-a-slug/vocabulary/#title"</span>
+    }
+} );</code></pre>
+		
+		<p><strong>Note</strong>: This is only needed if your applications are not sharing a Carbon application.</p>
+		<p>Sharing vocabularies opens a lot of interesting possibilities. For example, you could create your own vocabulary that only contains terms about social connections.
+			Or one that is only about geo location terms. Later on you could make those vocabularies public so other people could use them and make their data compatible with
+			each other!</p>
+		<p>Well guess what? People have been doing that for quite some time. There are a lot of well established vocabularies that you can use on your application to make your
+			data worldwide compatible. You can search for these vocabularies using the <a href="https://lov.okfn.org/dataset/lov/" target="_blank" rel="noopener">Linked Open
+				Vocabulary searcher</a>.</p>
+		<p>It is <strong>highly recommended</strong> to use existing vocabularies instead of new, custom ones.</p>
+	</section>
+</section>
+<section class="mainContent-section" id="prefixes">
+	<h2>Prefixes</h2>
+	<p>If you start using other vocabularies (either from other Carbon apps, or from well established vocabularies), you might find it cumbersome to have to write complete URIs
+		when extending object schemas.</p>
+	<p>Prefixes come to the rescue! A prefix is a short keyword that can be used as a base of a URI. For example, having the following URI:</p>
+	<p><code>http://localhost:8083/apps/application-a-slug/vocabulary/#title</code></p>
+	<p>You could define the prefix <code>appA</code> and make it equivalent to <code>http://localhost:8083/apps/application-a-slug/vocabulary/#</code>. That way each time you
+		wanted to use that vocabulary you would only need to write <code>appA:title</code>.</p>
+	<p>Prefixes can be defined in the object schema by defining a property with a string value. The previous example could be defined like this:</p>
+	
+	<pre><code class="javascript hljs">appContext.extendObjectSchema( {
+    <span class="hljs-string">"appA"</span>: <span class="hljs-string">"http://localhost:8083/apps/application-a-slug/vocabulary/#"</span>,
+    <span class="hljs-string">"title"</span>: {
+        <span class="hljs-string">"@id"</span>: <span class="hljs-string">"appA:title"</span>,
+        <span class="hljs-string">"@type"</span>: <span class="hljs-string">"string"</span>
+    },
+    <span class="hljs-string">"content"</span>: {
+        <span class="hljs-string">"@id"</span>: <span class="hljs-string">"appA:content"</span>,
+        <span class="hljs-string">"@type"</span>: <span class="hljs-string">"string"</span>
+    }
+} );</code></pre>
+	
+</section>
+<section class="mainContent-section" id="object-types">
+	<h2>Object types</h2>
+	<p>There's a problem left to solve. Imagine an application programmed to handle <code>book</code> objects and <code>blog post</code> objects like the following:</p>
+	
+	<pre><code class="javascript hljs"><span class="hljs-keyword">var</span> book = {
+    <span class="hljs-attr">title</span>: <span class="hljs-string">"The most awesome book you'll ever read"</span>
+};
+
+<span class="hljs-keyword">var</span> blogPost = {
+    <span class="hljs-attr">title</span>: <span class="hljs-string">"How jellyfish age"</span>
+};</code></pre>
+	
+	<p>Here the problem lies in that both objects use the same property name, <code>title</code>, but they use it for different purposes. A book title cannot be interpreted as
+		a blog post title, and if you try to differentiate them by extending the object schema you won't be able to (at least not in the way we have done it so far)
+		:</p>
+	
+	<pre><code class="javascript hljs">appContext.extendObjectSchema( {
+    <span class="hljs-string">"title"</span>: {
+        <span class="hljs-string">"@id"</span>: <span class="hljs-string">"bookTitle"</span>
+    },
+    <span class="hljs-string">"title"</span>: {         <span class="hljs-comment">// ERROR: Duplicate property name</span>
+        <span class="hljs-string">"@id"</span>: <span class="hljs-string">"postTitle"</span>
+    }
+} );</code></pre>
+	
+	<p>To make a distinction between them, first you need to tag each object with a different type. Types help you <em>tag</em> objects to treat them differently. With them you can
+		filter a list of objects, apply specific rules depending on their types, make assumptions on the properties they'll have based on their types, etc.</p>
+	<p>You can tag objects when saving them as documents:</p>
+	<div class="ui grid tabsComponent">
+	
+		<div class="ui computer tablet only row tabs">
+			<div class="ui top attached tabular menu tabs-titles">
+				
+				
+					<a class="tabs-title active item" data-tab="VpblzqrC">TypeScript</a>
+				
+				
+					<a class="tabs-title  item" data-tab="qZwhKGAN">JavaScript ES2015</a>
+				
+				
+					<a class="tabs-title  item" data-tab="BcazaQjZ">JavaScript ES5</a>
+				
+			</div>
+		</div>
+		<div class="ui mobile only row tabs">
+			<div class="ui compact selection dropdown tabs-options">
+				<i class="dropdown icon"></i>
+				<div class="text">TypeScript</div>
+				<div class="menu">
+					
+					
+					<div class="tabs-option item" data-tab="VpblzqrC">TypeScript</div>
+					
+					
+					<div class="tabs-option item" data-tab="qZwhKGAN">JavaScript ES2015</div>
+					
+					
+					<div class="tabs-option item" data-tab="BcazaQjZ">JavaScript ES5</div>
+					
+				</div>
+			</div>
+		</div>
+
+		
+			
+			<div class="tabs-tab ui bottom attached tabs active tab segment" data-tab="VpblzqrC">
+				
+			
+			<pre><code class="typescript hljs"><span class="hljs-keyword">import</span> * as App from <span class="hljs-string">"carbonldp/App"</span>;
+<span class="hljs-keyword">import</span> * as HTTP from <span class="hljs-string">"carbonldp/HTTP"</span>;
+<span class="hljs-keyword">import</span> * as PersistedDocument from <span class="hljs-string">"carbonldp/PersistedDocument"</span>;
+
+<span class="hljs-keyword">let</span> appContext:App.Context;
+
+<span class="hljs-comment">// ... retrieve app context</span>
+
+appContext.documents.createChild( {
+    types: [
+        <span class="hljs-string">"Book"</span>
+    ]
+} ).then(
+    ( [ book, response ]:[ PersistedDocument.Class, HTTP.Response.Class ] ) =&gt; {
+        <span class="hljs-comment">// ...</span>
+    }
+).catch( <span class="hljs-built_in">console</span>.error );</code></pre>
+			
+		
+			</div>
+		
+			
+			<div class="tabs-tab ui bottom attached tabs  tab segment" data-tab="qZwhKGAN">
+				
+			
+			<pre><code class="javascript hljs"><span class="hljs-keyword">let</span> appContext;
+
+<span class="hljs-comment">// ... retrieve app context</span>
+
+appContext.documents.createChild( {
+    <span class="hljs-attr">types</span>: [
+        <span class="hljs-string">"Book"</span>
+    ]
+} ).then(
+    <span class="hljs-function">(<span class="hljs-params"> [ book, response ] </span>) =&gt;</span> {
+        <span class="hljs-comment">// ...</span>
+    }
+).catch( <span class="hljs-built_in">console</span>.error );</code></pre>
+			
+		
+			</div>
+		
+			
+			<div class="tabs-tab ui bottom attached tabs  tab segment" data-tab="BcazaQjZ">
+				
+			
+			<pre><code class="javascript hljs"><span class="hljs-keyword">var</span> appContext;
+
+<span class="hljs-comment">// ... retrieve app context</span>
+
+appContext.documents.createChild( {
+    <span class="hljs-attr">types</span>: [
+        <span class="hljs-string">"Book"</span>
+    ]
+} ).then(
+    <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> result </span>) </span>{
+        <span class="hljs-comment">// ...</span>
+    }
+).catch( <span class="hljs-built_in">console</span>.error );</code></pre>
+			
+		
+			</div>
+		
+	
+</div>
+
+	<p>Or you can add or remove types from persisted resources with the <code>addType</code> and <code>removeType</code>:</p>
+	<div class="ui grid tabsComponent">
+	
+		<div class="ui computer tablet only row tabs">
+			<div class="ui top attached tabular menu tabs-titles">
+				
+				
+					<a class="tabs-title active item" data-tab="ENqnwXDd">TypeScript</a>
+				
+				
+					<a class="tabs-title  item" data-tab="zcNEnXiU">JavaScript ES2015</a>
+				
+				
+					<a class="tabs-title  item" data-tab="ncWCmoOQ">JavaScript ES5</a>
+				
+			</div>
+		</div>
+		<div class="ui mobile only row tabs">
+			<div class="ui compact selection dropdown tabs-options">
+				<i class="dropdown icon"></i>
+				<div class="text">TypeScript</div>
+				<div class="menu">
+					
+					
+					<div class="tabs-option item" data-tab="ENqnwXDd">TypeScript</div>
+					
+					
+					<div class="tabs-option item" data-tab="zcNEnXiU">JavaScript ES2015</div>
+					
+					
+					<div class="tabs-option item" data-tab="ncWCmoOQ">JavaScript ES5</div>
+					
+				</div>
+			</div>
+		</div>
+
+		
+			
+			<div class="tabs-tab ui bottom attached tabs active tab segment" data-tab="ENqnwXDd">
+				
+			
+			<pre><code class="typescript hljs"><span class="hljs-keyword">import</span> * as App from <span class="hljs-string">"carbonldp/App"</span>;
+<span class="hljs-keyword">import</span> * as HTTP from <span class="hljs-string">"carbonldp/HTTP"</span>;
+<span class="hljs-keyword">import</span> * as PersistedDocument from <span class="hljs-string">"carbonldp/PersistedDocument"</span>;
+
+<span class="hljs-keyword">let</span> appContext:App.Context;
+
+<span class="hljs-comment">// ... retrieve app context</span>
+
+appContext.documents.get&lt;Book&gt;( <span class="hljs-string">"books/awesome-book/"</span> ).then(
+    ( [ book, response ]:[ Book &amp; PersistedDocument.Class, HTTP.Response.Class ] ) =&gt; {
+        book.addType( <span class="hljs-string">"Book"</span> );
+        book.removeType( <span class="hljs-string">"UncategorizedObject"</span> ); <span class="hljs-comment">// Not actually a type, just an example</span>
+
+        <span class="hljs-keyword">return</span> book.save&lt;Book&gt;();
+    }
+).then(
+    ( [ book, response ]:[ Book &amp; PersistedDocument.Class, HTTP.Response.Class ] ) =&gt; {
+        <span class="hljs-comment">// ...</span>
+    }
+).catch( <span class="hljs-built_in">console</span>.error );</code></pre>
+			
+		
+			</div>
+		
+			
+			<div class="tabs-tab ui bottom attached tabs  tab segment" data-tab="zcNEnXiU">
+				
+			
+			<pre><code class="javascript hljs"><span class="hljs-keyword">let</span> appContext;
+
+<span class="hljs-comment">// ... retrieve app context</span>
+
+appContext.documents.get( <span class="hljs-string">"books/awesome-book/"</span> ).then(
+    <span class="hljs-function">(<span class="hljs-params"> [ book, response ] </span>) =&gt;</span> {
+        book.addType( <span class="hljs-string">"Book"</span> );
+        book.removeType( <span class="hljs-string">"UncategorizedObject"</span> ); <span class="hljs-comment">// Not actually a type, just an example</span>
+
+        <span class="hljs-keyword">return</span> book.save();
+    }
+).then(
+    <span class="hljs-function">(<span class="hljs-params"> [ book, response ] </span>) =&gt;</span> {
+        <span class="hljs-comment">// ...</span>
+    }
+).catch( <span class="hljs-built_in">console</span>.error );</code></pre>
+			
+		
+			</div>
+		
+			
+			<div class="tabs-tab ui bottom attached tabs  tab segment" data-tab="ncWCmoOQ">
+				
+			
+			<pre><code class="javascript hljs"><span class="hljs-keyword">var</span> appContext:App.Context;
+
+<span class="hljs-comment">// ... retrieve app context</span>
+
+appContext.documents.get( <span class="hljs-string">"books/awesome-book/"</span> ).then(
+    <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> result </span>) </span>{
+        <span class="hljs-keyword">var</span> book = result[ <span class="hljs-number">0</span> ];
+        book.addType( <span class="hljs-string">"Book"</span> );
+        book.removeType( <span class="hljs-string">"UncategorizedObject"</span> ); <span class="hljs-comment">// Not actually a type, just an example</span>
+
+        <span class="hljs-keyword">return</span> book.save();
+    }
+).then(
+    <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> result </span>) </span>{
+        <span class="hljs-comment">// ...</span>
+    }
+).catch( <span class="hljs-built_in">console</span>.error );</code></pre>
+			
+		
+			</div>
+		
+	
+</div>
+
+	<p>Once you tag your objects like that you can extend a type specific object schema by defining the type to be extended as the first parameter of
+		<code>extendObjectSchema</code>:</p>
+	
+	<pre><code class="javascript hljs">appContext.extendObjectSchema( <span class="hljs-string">"Book"</span>, {
+    <span class="hljs-string">"title"</span>: {
+        <span class="hljs-string">"@id"</span>: <span class="hljs-string">"bookTitle"</span>,
+        <span class="hljs-string">"@type"</span>: <span class="hljs-string">"string"</span>
+    }
+} );
+appContext.extendObjectSchema( <span class="hljs-string">"BlogPost"</span>, {
+    <span class="hljs-string">"title"</span>: {
+        <span class="hljs-string">"@id"</span>: <span class="hljs-string">"postTitle"</span>,
+        <span class="hljs-string">"@type"</span>: <span class="hljs-string">"string"</span>
+    }
+} );</code></pre>
+	
+	<p>That way the SDK will treat them as different properties. Extending the object schema without specifying a type is called
+		<strong>"extending the GLOBAL object schema"</strong>, and specifying a type is called <strong>"extending the type's object schema"</strong>.</p>
+	<p>The following rules apply to type's object schemas:</p>
+	<ul>
+		<li>Any property or prefix defined in the global schema will also be defined in a type schema</li>
+		<li>If a type schema defines a property that the global schema already defined, the type schema property will apply</li>
+	</ul>
+	<p>It is a good practice to define <strong>prefixes</strong> in the global schema, and <strong>properties</strong> in a type specific object schema.</p>
+</section>
+<!--<section class="mainContent-section">-->
+<!--<h2>Inheritance</h2>-->
+<!--<p></p>-->
+<!--</section>-->
+<section class="mainContent-section" id="conclusion">
+	<h2>Conclusion</h2>
+	<p>The SDK does its best to try to guess the desired outcome of retrieving documents or saving new ones. It tries to parse known data types into
+		native JavaScript types and vice versa. But sometimes there is not enough data for the SDK to correctly guess the expected behavior. To make sure the SDK behaves as
+		expected, a web application can give more information about properties and objects to the SDK through a context's object schema.</p>
+	<p>Any context has an object schema that can be <em>extended</em> through the <code>extendObjectSchema</code> method.</p>
+	<p>When extending object schemas properties can be described by declaring a property with an object value. The following properties can be inside that object:</p>
+	<ul>
+		<li><code>@id</code>: To specify the URI to use for the property</li>
+		<li><code>@type</code>: To declare what data types the application expects on that property</li>
+		<li>
+			<code>@container</code>: To force the SDK to use a specific container type for the property:
+			<ul>
+				<li><code>@set</code>: Unordered list</li>
+				<li><code>@list</code>: Ordered list</li>
+				<li><code>@map</code>: Language based map</li>
+			</ul>
+		</li>
+	</ul>
+	<p>Prefixes can be defined by declaring a property with a string value. Prefixes can be used to shorten any URI.</p>
+</section>
+<div class="documentation-steps ui fluid steps">
+	<a class="step" href="../contexts">
+		<i class="arrow left icon"></i>
+		<div class="content">
+			<div class="title">Previous</div>
+			<div class="description">Contexts</div>
+		</div>
+	</a>
+	<div class="active completed step">
+		<!--<i class="payment icon"></i>-->
+		<div class="content">
+			<div class="title">Object Schema</div>
+		</div>
+	</div>
+	<a class="step" href="../files">
+		<i class="arrow right icon"></i>
+		<div class="content">
+			<div class="title">Next</div>
+			<div class="description">Files</div>
+		</div>
+	</a>
+</div>
+				
+                        
+
+                    </div>
+                </div>
+            
+            <div class="four wide computer tablet only column">
+                <div class="sidebar" content="mainContent">
+	<div class="ui sticky segment">
+		<h2 class="ui header">Content</h2>
+		<div class="ui vertical following fluid accordion text menu sidebar-verticalMenu">
+
+		
+
+			<div class="item"><a class="title sidebar-title" href="#introduction">Introduction</a></div>
+
+			
+
+			<div class="item"><a class="title sidebar-title" href="#what-is-an-object-schema-">What is an Object Schema?</a></div>
+
+			
+
+			<div class="item">
+
+				<a class="title sidebar-title sidebar-title--dropdown" href="#properties">Properties</a><i class="dropdown icon sidebar-dropdownIcon"></i>
+
+				<div class="content menu sidebar-verticalSubMenu">
+
+				
+
+					<a class="item sidebar-title" href="#collections-container-">Collections (@container)</a>
+
+				
+
+					<a class="item sidebar-title" href="#data-types-type-">Data types (@type)</a>
+
+				
+
+					<a class="item sidebar-title" href="#ids-id-">IDs (@id)</a>
+
+				
+
+					<a class="item sidebar-title" href="#vocabularies">Vocabularies</a>
+
+				
+
+				</div>
+			</div>
+		
+
+			<div class="item"><a class="title sidebar-title" href="#prefixes">Prefixes</a></div>
+
+			
+
+			<div class="item"><a class="title sidebar-title" href="#object-types">Object types</a></div>
+
+			
+
+			<div class="item"><a class="title sidebar-title" href="#conclusion">Conclusion</a></div>
+
+			
+		</div>
+	</div>
+</div>
+            </div>
+            
+        </div>
+    </div>
+
+        </div>
+        <!--<div class="footer bigStoneBG">-->
+            <div class="footer bigStoneBG">
+<div class="ui middle aligned padded grid computer tablet only">
+    <div class="row">
+        <div class="four wide center aligned column">
+            <a href="http://base22.com/"><img class="footer-base22Logo" src="/assets/images/base22-logo-white.png"></a>
+        </div>
+        <div class="eight wide center aligned stretched column">
+            <p class="footer-copyrightText">© 2017 Base22 Technology Group, LLC. All Rights Reserved.</p>
+        </div>
+        <div class="four wide left aligned column">
+            <a angulartics2on="click" angularticsevent="OutboundClick" angularticscategory="Twitter" href="https://twitter.com/CarbonLDP"><i class="circular twitter icon footer-socialIcon"></i></a>
+            <a angulartics2on="click" angularticsevent="OutboundClick" angularticscategory="YouTube" href="https://www.youtube.com/channel/UCuNWXjT19Gnpo7I502PTZ_Q"><i class="circular youtube icon footer-socialIcon"></i></a>
+            <a angulartics2on="click" angularticsevent="OutboundClick" angularticscategory="LinkedIn" href="https://www.linkedin.com/company/carbon-ldp"><i class="circular linkedin icon footer-socialIcon"></i></a>
+        </div>
+    </div>
+</div>
+<div class="ui centered padded grid mobile only">
+    <div class="row">
+        <div class="left aligned eight wide column">
+            <a href="http://base22.com/"><img class="footer-base22Logo" src="/assets/images/base22-logo-white.png"></a>
+        </div>
+        <div class="right aligned eight wide column">
+            <a angulartics2on="click" angularticsevent="OutboundClick" angularticscategory="Twitter" href="https://twitter.com/CarbonLDP"><i class="circular twitter icon footer-socialIcon"></i></a>
+            <a angulartics2on="click" angularticsevent="OutboundClick" angularticscategory="YouTube" href="https://www.youtube.com/channel/UCuNWXjT19Gnpo7I502PTZ_Q"><i class="circular youtube icon footer-socialIcon"></i></a>
+            <a angulartics2on="click" angularticsevent="OutboundClick" angularticscategory="LinkedIn" href="https://www.linkedin.com/company/carbon-ldp"><i class="circular linkedin icon footer-socialIcon"></i></a>
+        </div>
+    </div>
+    <div class="row">
+        <div class="center aligned twelve wide column">
+            <p class="footer-copyrightText">© 2017 Base22 Technology Group, LLC. All&nbsp;Rights&nbsp;Reserved.</p>
+        </div>
+    </div>
+</div>
+</div>
+        <!--</div>-->
+        <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+<script src="/assets/semantic/semantic.min.js"></script>
+
+<script src="/assets/scripts/main.js"></script>
+
+        <script>(function( window ){ $( document ).ready( function() {
+
+	var $sidebar = $( ".sidebar" );
+	var $sidebarFollowingMenu = $( ".sidebar" ).find( ".following.menu" );
+	var $content = $( "." + $sidebar.attr( "content" ) );
+	var $sections = $content.children( "section" );
+	var $subSections = $sections.children( "section" );
+
+	// Detect when section is passed
+	$sections.visibility( {
+		once: false,
+		offset: 150,
+		onTopPassed: function() {
+			activateSection( this, $sidebarFollowingMenu, $sections );
+		},
+		onTopPassedReverse: function() {
+			deactivateFirstSection( this, $sidebarFollowingMenu, $sections );
+		},
+		onBottomPassedReverse: function() {
+			activateSection( this, $sidebarFollowingMenu, $sections );
+		},
+	} );
+
+	$subSections.visibility( {
+		once: false,
+		offset: 150,
+		onTopPassed: function() {
+			activateSubSection( this, $sidebarFollowingMenu, $subSections );
+		},
+		onBottomPassedReverse: function() {
+			activateSubSection( this, $sidebarFollowingMenu, $subSections );
+		}
+	} );
+
+
+	// Make sidebar stick to its position
+	$( ".sidebar > .ui.sticky" ).sticky( {
+		observeChanges: true,
+		context: ".mainContent",
+		offset: 100
+	} );
+
+	// Activate toggle dropdown
+	$( ".sidebar .item > .dropdown.icon" ).on( "click", toggleDropdown );
+
+	//Activate click on items and subitems
+	$( ".sidebar .item > .title" ).on( "click", activateItem );
+	$( ".sidebar  a.item " ).on( "click", activateSubItem );
+
+	// Toggle selected accordion menu in sidebar
+	function toggleDropdown( event ) {
+		var $target = $( event.currentTarget );
+
+		var $accordion = $target.parent( ".item" ).find( ".content.menu" );
+		if( $accordion ) {
+			var accordionIsActive = $accordion.hasClass( "active" );
+
+			if( accordionIsActive ) {
+				$accordion.removeClass( "active" );
+				$accordion.removeClass( "toggled" );
+			} else {
+				$accordion.addClass( "active" );
+				$accordion.addClass( "toggled" );
+			}
+		}
+		$( ".ui.sticky" ).sticky( "refresh" );
+
+		return false;
+	}
+
+	function activateItem( event ) {
+
+		var $item = $( event.currentTarget ).parent( ".item" );
+
+		var $allItems = $item.siblings( ".item" );
+		$allItems.removeClass( "active" );
+		$item.addClass( "active" );
+
+		event.preventDefault();
+
+		return false;
+
+	}
+
+	function activateSubItem( event ) {
+
+		var $item = $( event.currentTarget );
+
+		var $allItems = $item.siblings( ".item" );
+		$allItems.removeClass( "active" );
+		$item.addClass( "active" );
+
+		event.preventDefault();
+
+		return false;
+
+	}
+
+
+	function activateSection( elm, $menu, $sections ) {
+
+		var $section = $( elm );
+		var index = $sections.index( $section );
+		var $followSection = $menu.children( ".item" );
+		var $currentSection = $followSection.eq( index );
+
+		var isActive = $currentSection.hasClass( "active" );
+
+		var hasSubsection = $sections.eq( index ).children( "section" ).length > 0;
+
+		$followSection.removeClass( "active" );
+		$followSection.find( ".active" ).not( ".toggled" ).removeClass( "active" );
+
+		if( ! isActive ) {
+
+			$currentSection.addClass( "active" );
+		}
+
+		if( hasSubsection ) {
+			$currentSection.find( ".menu" ).addClass( "active" );
+		}
+
+		$( ".ui.sticky" ).sticky( "refresh" );
+
+		return false;
+
+	}
+
+	function activateSubSection( elm, $menu, $subSections ) {
+		var $section = $( elm );
+		var index = $subSections.index( $section );
+		var $followSection = $menu.find( ".menu > .item" );
+		var $activeSection = $followSection.eq( index );
+		var isActive = $activeSection.hasClass( "active" );
+		var $subSectionMenu = $menu.children( ".item" ).find( ".menu" );
+		var subSectionMenuIsActive = $subSectionMenu.hasClass( "active" );
+
+		if( index !== - 1 && ! isActive ) {
+			$followSection.filter( ".active" ).removeClass( "active" );
+			$activeSection.addClass( "active" );
+		}
+
+		if( ! subSectionMenuIsActive ) {
+			$subSectionMenu.addClass( "active" );
+		}
+
+		$( ".ui.sticky" ).sticky( "refresh" );
+
+		return false;
+	}
+
+	function deactivateFirstSection( elm, $menu, $sections ) {
+
+		var $section = $( elm );
+		var index = $sections.index( $section );
+		var $followSection = $menu.children( ".item" );
+		var $currentSection = $followSection.eq( index );
+		var isActive = $currentSection.hasClass( "active" );
+		var $subSectionMenu = $currentSection.find( ".menu" );
+
+
+		if( index === 0 ) {
+
+			$currentSection.removeClass( "active" );
+
+			if( $subSectionMenu.length > 0 ) {
+				$currentSection.find( ".menu" ).not( ".toggled" ).removeClass( "active" );
+				$subSectionMenu.find( ".item" ).removeClass( "active" );
+			}
+
+		}
+
+		$( ".ui.sticky" ).sticky( "refresh" );
+
+		return false;
+	}
+
+
+} ); })( window );</script><script>(function( window ){ $( document ).ready( function() {
+	var $sidebar = $( ".staticContentMenu" );
+	var $content = $( "." + $sidebar.attr( "content" ) );
+	var $sections = $content.children( ".mainContent-section" );
+
+	// Detect when section is passed
+	$sections.visibility( {
+		once: false,
+		offset: 150,
+		onTopPassed: function() {
+			// _self.activateSection( this );
+			console.log( "top passed" );
+		},
+		onTopPassedReverse: function() {
+			// _self.deactivateFirstSection( this );
+		},
+		onBottomPassedReverse: function() {
+			// _self.activateSection( this );
+		},
+	} );
+
+	// Activate toggle dropdown
+	$( ".staticContentMenu .item > .dropdown.icon" ).on( "click", toggleDropdown );
+
+	// Toggle selected accordion menu in sidebar
+	function toggleDropdown( event ) {
+		var $target = $( event.currentTarget );
+		$( ".ui.sticky" ).sticky( "refresh" );
+		var $accordion = $target.parent( ".item" ).find( ".content.menu" );
+		if( $accordion ) {
+			var accordionIsActive = $accordion.hasClass( "active" );
+
+			if( accordionIsActive ) {
+				$accordion.removeClass( "active" );
+				$accordion.removeClass( "toggled" );
+			} else {
+				$accordion.addClass( "active" );
+				$accordion.addClass( "toggled" );
+			}
+		}
+
+		return false;
+	}
+} ); })( window );</script><script>(function( window ){ $( document ).ready( function() {
+	var tabs = document.querySelectorAll( ".tabs-titles > .tabs-title, .tabs-options .tabs-option" );
+	for( var i = 0; i < tabs.length; i ++ ) {
+		tabs[ i ].addEventListener( 'click', changeTabSelection );
+	}
+} );
+
+function changeTabSelection( e ) {
+
+	var clickedTab = $( e.currentTarget );
+	var selectedOption = clickedTab.attr( "data-tab" );
+	var selectedText = clickedTab.html();
+	var tabComponent = clickedTab.parent();
+
+	//select TabComponent to where the clicked tab/option belongs
+	while( ! tabComponent.hasClass( "tabsComponent" ) ) {
+		tabComponent = tabComponent.parent();
+	}
+
+	// select TabComponent elements
+	var tabs = tabComponent.find( ".tabs-title,.tabs-tab" );
+	var options = tabComponent.find( ".tabs-option" );
+
+	// Remove all active classes from elements
+	options.removeClass( "active selected" );
+	tabs.removeClass( "active" );
+
+	// Add active classes on selected options/tabs
+	tabs.each( function() {
+		var tab = $( this );
+		if( tab.attr( "data-tab" ) === selectedOption ) tab.addClass( "active" );
+	} );
+
+	options.each( function() {
+		var option = $( this );
+		if( option.attr( "data-tab" ) === selectedOption ) option.addClass( "active selected" );
+	} );
+
+	// Change text of selection
+	if( clickedTab.hasClass( "tabs-title" ) ) {
+		var text = tabComponent.find( ".tabs-options .text" );
+		text.html( selectedText );
+	}
+
+	return true;
+}
+
+
+
+ })( window );</script><script id="widgets-scripts"></script>
+    
+    
+</body></html>

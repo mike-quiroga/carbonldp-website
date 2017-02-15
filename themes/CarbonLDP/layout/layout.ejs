@@ -1,0 +1,20 @@
+<%- render_widgets( `
+    <html>
+    ${ partial( '_partial/head' ) }
+    <body class="site">
+        ${ partial( '_partial/header' ) }
+        <div class="ui scrollTop mobile only grid">
+			<button class="ui icon button scrollTop-button"><i class="angle up icon scrollTop-icon"></i></button>
+		</div>
+        <div class="site-content ${ typeof page.title === "undefined" ? "site-content--home" : "" }">
+            ${ typeof page.cover === "undefined" ? "" : `<img class="cover" src="/assets/images/${page.cover.image}" alt="${page.cover.alt}"/>`}
+            ${ body }
+        </div>
+        <!--<div class="footer bigStoneBG">-->
+            ${ partial( '_partial/footer' )  }
+        <!--</div>-->
+        ${ partial( '_partial/after-footer' ) }
+        <script id="widgets-scripts"></script>
+    </body>
+    </html>
+` ) %>

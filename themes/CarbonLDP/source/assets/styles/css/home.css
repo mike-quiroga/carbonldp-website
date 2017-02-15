@@ -1,0 +1,213 @@
+.site-content--home {
+  margin-top: 0; }
+
+.cover--home {
+  background-image: url("../../images/night-sky.jpg") !important;
+  background-repeat: no-repeat !important;
+  background-position: center center !important;
+  background-size: cover !important;
+  min-height: 93vh; }
+
+.masthead {
+  margin-top: 20vh; }
+
+.masthead-title {
+  color: #e1dfdf;
+  font-size: 3rem;
+  text-align: center; }
+
+.ui.image.masthead-carbonLogo {
+  margin-top: 60px;
+  display: block; }
+
+.banner {
+  padding: 100px 0;
+  text-align: center;
+  max-width: 600px;
+  margin: auto; }
+
+.banner--fluid {
+  margin: 0;
+  max-width: 100%;
+  padding: 20px 10px; }
+
+.banner-paragraph {
+  letter-spacing: 0.3px;
+  text-align: center;
+  font-weight: bold;
+  font-size: 32px; }
+
+.newsSection {
+  padding: 4rem 2rem; }
+
+.news {
+  padding: 20px 60px 20px 25px; }
+
+.news-title {
+  font-size: 1.3em;
+  padding-bottom: 10px; }
+
+.news-paragraph {
+  font-size: 1.1em;
+  text-align: justify; }
+
+.news-image {
+  padding: 25px;
+  margin: auto;
+  max-width: 386px; }
+
+.news-paragraph--left {
+  padding-top: 0; }
+
+.news-paragraph--bottom {
+  padding-top: 0px;
+  padding-bottom: 20px; }
+
+.featuresSection {
+  padding-top: 55px;
+  padding-bottom: 75px; }
+
+.featuresSection-titleContainer {
+  margin-top: 50px;
+  margin-bottom: 20px; }
+
+.featuresSection-title {
+  font-size: 2.2rem;
+  letter-spacing: 0.7px; }
+
+.feature {
+  margin-top: 40px; }
+
+.feature-title {
+  font-size: 1.5rem; }
+
+.feature-paragraph {
+  font-size: .95em;
+  padding-left: 10px;
+  padding-right: 10px; }
+
+.feature-icon {
+  margin-bottom: 20px;
+  margin-top: 40px; }
+
+.halfBanner {
+  padding: 50px;
+  text-align: center;
+  align-self: center;
+  margin: auto;
+  max-width: 489px; }
+
+.halfBanner--left {
+  margin-left: auto;
+  margin-right: 0; }
+
+.halfBanner--right {
+  margin-left: 0;
+  margin-right: auto; }
+
+.halfBanner--tablet {
+  max-width: 383px;
+  padding: 50px; }
+
+.halfBanner--fluid {
+  margin: 0;
+  max-width: 100%; }
+
+.halfBanner-paragraph {
+  letter-spacing: 0.3px;
+  text-align: center;
+  font-size: 26px; }
+
+@media (max-width: 1200px) {
+  .cover--home {
+    height: 710px;
+    min-height: 93vh; }
+  .masthead {
+    margin-top: 12vh; } }
+
+@media (min-width: 768px) and (max-width: 992px) {
+  .cover--home {
+    height: 710px;
+    min-height: unset; }
+  .banner {
+    padding: 80px 20px;
+    max-width: 500px; }
+  .banner-paragraph {
+    font-size: 28px; }
+  .halfBanner {
+    max-width: 383px;
+    padding: 50px; }
+  .halfBanner-paragraph {
+    font-size: 22px; }
+  .news {
+    padding: 20px 20px; }
+  .newsSection {
+    padding: 2.5rem 2rem; }
+  .news {
+    padding: 20px 20px; }
+  .news-title {
+    font-size: 1.5em;
+    padding-bottom: 10px; }
+  .news-paragraph {
+    font-size: 1.2em;
+    text-align: justify; }
+  .news-image {
+    padding: 20px; }
+  .feature-title {
+    font-size: 1.8rem;
+    letter-spacing: 1.1px; }
+  .feature-paragraph {
+    font-size: 1.1em;
+    padding: 8px; } }
+
+@media (max-width: 767px) {
+  .cover--home {
+    height: 550px;
+    min-height: unset; }
+  .masthead {
+    margin: 75px 35px 0;
+    padding: 0; }
+  .masthead-title {
+    font-size: 2.1rem; }
+  .masthead-carbonLogo {
+    margin-top: 30px; }
+  .banner {
+    padding: 60px 30px;
+    max-width: 380px; }
+  .banner-paragraph {
+    font-size: 22px;
+    font-weight: normal; }
+  .newsSection {
+    padding: 2.5rem 2rem; }
+  .news {
+    padding: 20px 20px 0 20px; }
+  .news-title {
+    font-size: 1.5em;
+    padding-bottom: 10px; }
+  .news-paragraph {
+    font-size: 1.2em;
+    text-align: justify; }
+  .news-image {
+    padding: 0px 20px 20px 20px; }
+  .featuresSection {
+    padding: 75px 20px; }
+  .featuresSection-titleContainer {
+    margin-top: 20px;
+    margin-bottom: 10px; }
+  .featuresSection-title {
+    font-size: 2.3rem;
+    letter-spacing: 1.1px; }
+  .feature {
+    margin-top: 30px; }
+  .feature-title {
+    font-size: 1.8rem;
+    letter-spacing: 1.1px; }
+  .feature-paragraph {
+    font-size: 1.2em;
+    padding-left: 16px;
+    padding-right: 16px; }
+  .feature-icon {
+    margin-bottom: 20px;
+    margin-top: 40px; }
+  .ui.big.image.masthead-carbonLogo {
+    width: 500px; } }

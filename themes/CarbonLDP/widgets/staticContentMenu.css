@@ -1,0 +1,19 @@
+.staticContentMenu{
+    margin: 2em 0;
+}
+
+h2.staticContentMenu-title{
+    font-size: 1.4em;
+}
+
+.ui.accordion.menu .item .title.staticContentMenu-title--dropdown{
+    display: inline;
+}
+
+.ui.vertical.text.menu .item>i.icon.staticContentMenu-dropdownIcon{
+    float: right;
+}
+
+.ui.accordion .title:not(.ui).staticContentMenu-title{
+    color: rgba(0,0,0,.6);
+}

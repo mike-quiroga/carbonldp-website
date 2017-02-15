@@ -1,0 +1,185 @@
+@import "_partial/header";
+@import "_partial/footer";
+@import "./palletColor";
+
+
+//TODO: implement a css for the license page, after talks with Cody - jimena Jan 19, 2017
+.site{
+  display: flex;
+  flex-direction: column;
+}
+
+.site-content {
+  flex: 1 0 auto;
+  align-items: center;
+  margin-top: 74px;
+}
+
+.cover{
+  max-width:100%;
+  width: 100%;
+}
+
+
+.mainContent{
+  margin: 4.5rem 2rem;
+  font-size: 1.1rem;
+}
+
+.mainContent-section{
+  margin-top: 2rem;
+  padding: 1rem 0;
+}
+
+.mainContent-subSection{
+  margin-top: 1rem;
+  padding-top: 1rem;
+}
+code{
+  padding: 0 4px;
+  background-color: #f2f2f2;
+  border-radius: 3px;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  word-spacing: 0;
+  font-size: 13px;
+  line-height: 1.4rem;
+}
+
+//documentation-homes
+
+.ui.image.category-icon{
+  height: auto;
+  width: 50px;
+  margin:0;
+}
+
+.category-titleContainer{
+  margin: calc(2rem - .14285em) 0 1rem;
+  height: auto;
+  display: flex;
+  align-items: center;
+}
+
+.category-itemTitle{
+  font-weight: bold;
+  color: #0192cf;
+}
+
+.category-itemTitle:hover {
+  cursor: pointer;
+  color: #19b7fb;
+  font-weight: bold;
+  border-bottom: none;
+
+}
+
+.category-description{
+  padding: 1rem 3.6rem 0;
+}
+
+.ui.list .item.category-item{
+  padding-top: .85rem;
+  line-height: 1.7rem;
+}
+
+a{
+  word-wrap: break-word;
+}
+
+/* Semantic UI overwritten classes */
+
+// This is an addition to button classes of semantic ui, a completely white button, with colored text
+// colored text is provided by class .button--<color>Text
+.ui.whiteBG.button, .ui.whiteBG.buttons .ui.button {
+  background-color: #fff;
+  text-shadow: none;
+  background-image: none;
+}
+
+.ui.californiaBG.button, .ui.californiaBG.buttons .ui.button {
+  background-color: #F89728;
+  text-shadow: none;
+  background-image: none;
+  color: #ffffff;
+}
+// The classes .<color>Text MUST always go along side the classes .ui.button
+// to overwrite the predefined color of button in semantic ui
+.ui.button.californiaText{
+  color: #F89728;
+}
+
+.ui.grid.removeSideMargins{
+  margin: -1rem 0;
+}
+
+@media only screen and (max-width: 992px){
+  .site-content {
+    margin-top: 64px;
+  }
+
+  .mainContent{
+    margin: 4.5rem 1rem;
+    font-size: 1.1rem;
+  }
+
+}
+
+@media only screen and (max-width: 767px){
+
+  .site-content {
+    margin-top: 54px;
+  }
+
+  .mainContent{
+    margin: 2rem 0.5rem;
+    font-size: 1.1rem;
+  }
+
+  .ui.stackable.grid>.column.column--getStarted {
+    padding: 0.214285rem 1rem !important;
+  }
+
+  .ui.huge.message{
+    font-size: 1.2rem;
+
+  }
+
+  //documentation
+  .category-itemTitle:hover {
+    cursor: pointer;
+    color: #19b7fb;
+    font-weight: bold;
+    border-bottom: none;
+
+  }
+
+  .category-description{
+    padding: 1rem 1rem 0;
+  }
+
+}
+
+.scrollTop {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  z-index: 101;
+  display: none;
+}
+
+.ui.button.scrollTop-button {
+  margin: 30px 40px;
+  padding: 0;
+  background-color: #363f48;
+  opacity: 0.7;
+  height:50px;
+  width:50px;
+  border-radius: 50px;
+  display: none;
+}
+
+i.icon.scrollTop-icon {
+  font-size: 28px;
+  color: #19B7FB;
+}

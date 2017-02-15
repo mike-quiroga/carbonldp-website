@@ -1,0 +1,65 @@
+.sidebar{
+    margin: 10em 1em 6em 0;
+}
+
+/* Give sidebar a z-index greater than header */
+.sidebar .ui.sticky{
+    z-index: 0;
+}
+
+/* Remove box-shadow and border */
+.sidebar .ui.segment{
+    box-shadow: none;
+    border: none;
+}
+
+/* Change color to black when title active */
+.ui.accordion .item.active .title:not(.ui).sidebar-title{
+    color: black;
+    font-weight: 700;
+}
+.ui.vertical.menu .menu .item.active .sidebar-title{
+    color: black;
+}
+/* Change color of section items to gray */
+.ui.accordion .title:not(.ui).sidebar-title{
+    color: rgba(0,0,0,.6);
+    padding-right: 10px;
+}
+
+/* Change color to black when title hovered */
+.ui.accordion .title:not(.ui).sidebar-title:hover{
+    color: black;
+}
+
+
+/* Add left margin to sidebar menu */
+.ui.vertical.text.menu.sidebar-verticalMenu {
+    margin-left: 1.2em;
+}
+
+.ui.vertical.text.menu .item:not(.dropdown)>.menu.sidebar-verticalSubMenu{
+    margin: 0 0.8em;
+}
+
+.ui.accordion.menu .item .title.sidebar-title--dropdown{
+    display: inline;
+}
+
+.ui.vertical.text.menu .item>i.icon.sidebar-dropdownIcon{
+    float: right;
+}
+
+@media (min-width: 768px) and (max-width: 992px) {
+    .sidebar .ui.sticky{
+        padding: 0;
+    }
+    .ui.vertical.text.menu.sidebar-verticalMenu {
+        margin-left: .6em;
+    }
+
+    .ui.accordion .title:not(.ui).sidebar-title{
+        padding-right: 0;
+    }
+
+}

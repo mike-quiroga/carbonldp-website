@@ -1,10 +1,3 @@
-FROM carbonldp/jspm-typescript
+FROM nginx:1.11.9-alpine
 
-COPY server /usr/share/server
-COPY dist/site /usr/share/server/html
-
-WORKDIR /usr/share/server
-
-EXPOSE 80
-
-ENTRYPOINT jspm run server --port 80 --root /usr/share/server/html --route-table route-table.json
+COPY public /usr/share/nginx/html
