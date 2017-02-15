@@ -1,1 +1,25 @@
-!function(){for(var e={completeQueryString:document.location.search.replace("?",""),parameters:[]},r=e.completeQueryString.split("&"),s=0;s<r.length;s++)r[s]=r[s].split("="),e.parameters.push({key:r[s][0],value:r[s][1]});for(var t=document.querySelector(".registrationSuccessMessage"),a=e.parameters,c=0;c<e.parameters.length;c++)if("registered"===a[c].key){t.classList.add("success"),t.querySelector(".successMessage").style.display="block";break}}();
+(function() {
+	var queryString = {
+		completeQueryString: document.location.search.replace( "?", "" ),
+		parameters: []
+	};
+	var allParameters = queryString[ "completeQueryString" ].split( "&" );
+
+	for( var i = 0; i < allParameters.length; i ++ ) {
+		allParameters[ i ] = allParameters[ i ].split( "=" );
+		queryString.parameters.push( { "key": allParameters[ i ][ 0 ], "value": allParameters[ i ][ 1 ] } );
+	}
+
+
+	var registered = false;
+	var successMessage = document.querySelector( ".registrationSuccessMessage" );
+	var parameters = queryString[ "parameters" ];
+
+	for( var j = 0; j < queryString.parameters.length; j ++ ) {
+		if( parameters[ j ].key !== "registered" ) continue;
+
+		successMessage.classList.add( "success" );
+		successMessage.querySelector( ".successMessage" ).style.display = "block";
+		break;
+	}
+})();
