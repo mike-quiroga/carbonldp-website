@@ -1,1 +1,10 @@
-h1.category-title{margin:0;color:#363f48;height:auto}.successMessage{display:none}ol,ul{line-height:1.7rem}
+h1.category-title {
+  margin: 0;
+  color: #363f48;
+  height: auto; }
+
+.successMessage {
+  display: none; }
+
+ol, ul {
+  line-height: 1.7rem; }

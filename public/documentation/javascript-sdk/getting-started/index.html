@@ -1,4 +1,14 @@
-<!DOCTYPE html><html><head><meta charset="utf-8"><link rel="shortcut icon" href="/assets/images/carbon-icon-144x144.png"><title>Getting Started | Carbon LDP</title><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1"><meta name="google-site-verification" content="gz0ah_pGpAlB4Q5a_bxykr1Zdo_CfXHyAb2tJiADVhE"><meta name="description" content="Getting started with the JavaScript SDK
+<!DOCTYPE html><html><head>
+  <meta charset="utf-8">
+  
+
+
+  <link rel="shortcut icon" href="/assets/images/carbon-icon-144x144.png">
+  <title>Getting Started | Carbon LDP</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="google-site-verification" content="gz0ah_pGpAlB4Q5a_bxykr1Zdo_CfXHyAb2tJiADVhE">
+
+  <meta name="description" content="Getting started with the JavaScript SDK
 
 
 	
@@ -20,7 +30,12 @@
 
 	
 		
-			This guide introduces you to the use of the Carbon JavaScript SDK. In it you"><meta property="og:type" content="website"><meta property="og:title" content="Getting Started"><meta property="og:url" content="https://carbonldp.com/documentation/javascript-sdk/getting-started/index.html"><meta property="og:site_name" content="Carbon LDP"><meta property="og:description" content="Getting started with the JavaScript SDK
+			This guide introduces you to the use of the Carbon JavaScript SDK. In it you">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Getting Started">
+<meta property="og:url" content="https://carbonldp.com/documentation/javascript-sdk/getting-started/index.html">
+<meta property="og:site_name" content="Carbon LDP">
+<meta property="og:description" content="Getting started with the JavaScript SDK
 
 
 	
@@ -42,7 +57,11 @@
 
 	
 		
-			This guide introduces you to the use of the Carbon JavaScript SDK. In it you"><meta property="og:updated_time" content="2017-02-10T22:26:25.000Z"><meta name="twitter:card" content="summary"><meta name="twitter:title" content="Getting Started"><meta name="twitter:description" content="Getting started with the JavaScript SDK
+			This guide introduces you to the use of the Carbon JavaScript SDK. In it you">
+<meta property="og:updated_time" content="2017-02-15T17:05:16.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Getting Started">
+<meta name="twitter:description" content="Getting started with the JavaScript SDK
 
 
 	
@@ -64,28 +83,865 @@
 
 	
 		
-			This guide introduces you to the use of the Carbon JavaScript SDK. In it you"><link rel="alternate" href="/atom.xml" title="Carbon LDP" type="application/atom+xml"><link rel="stylesheet" href="/assets/semantic/semantic.min.css"><style>.hljs-comment,.hljs-quote{color:#969896}.hljs-deletion,.hljs-name,.hljs-regexp,.hljs-selector-class,.hljs-selector-id,.hljs-tag,.hljs-template-variable,.hljs-variable{color:#c66}.hljs-built_in,.hljs-builtin-name,.hljs-link,.hljs-literal,.hljs-meta,.hljs-number,.hljs-params,.hljs-type{color:#de935f}.hljs-attribute{color:#f0c674}.hljs-addition,.hljs-bullet,.hljs-string,.hljs-symbol{color:#b5bd68}.hljs-section,.hljs-title{color:#81a2be}.hljs-keyword,.hljs-selector-tag{color:#b294bb}.hljs{display:block;overflow-x:auto;background:#1d1f21;color:#c5c8c6;padding:.5em}.hljs-emphasis{font-style:italic}.hljs-strong{font-weight:700}</style><style>.hljs{font-family:"Lucida Console",Monaco,monospace;font-size:.9rem;line-height:1.4rem}</style><style>.sidebar{margin:10em 1em 6em 0}.sidebar .ui.sticky{z-index:0}.sidebar .ui.segment{box-shadow:none;border:none}.ui.accordion .item.active .title:not(.ui).sidebar-title{color:#000;font-weight:700}.ui.vertical.menu .menu .item.active .sidebar-title{color:#000}.ui.accordion .title:not(.ui).sidebar-title{color:rgba(0,0,0,.6);padding-right:10px}.ui.accordion .title:not(.ui).sidebar-title:hover{color:#000}.ui.vertical.text.menu.sidebar-verticalMenu{margin-left:1.2em}.ui.vertical.text.menu .item:not(.dropdown)>.menu.sidebar-verticalSubMenu{margin:0 .8em}.ui.accordion.menu .item .title.sidebar-title--dropdown{display:inline}.ui.vertical.text.menu .item>i.icon.sidebar-dropdownIcon{float:right}@media (min-width:768px) and (max-width:992px){.sidebar .ui.sticky{padding:0}.ui.vertical.text.menu.sidebar-verticalMenu{margin-left:.6em}.ui.accordion .title:not(.ui).sidebar-title{padding-right:0}}</style><style>.staticContentMenu{margin:2em 0}h2.staticContentMenu-title{font-size:1.4em}.ui.accordion.menu .item .title.staticContentMenu-title--dropdown{display:inline}.ui.vertical.text.menu .item>i.icon.staticContentMenu-dropdownIcon{float:right}.ui.accordion .title:not(.ui).staticContentMenu-title{color:rgba(0,0,0,.6)}</style><style>.ui.grid.tabsComponent{margin:1rem 0}.ui.grid.tabsComponent .row.tabs{padding:0}.ui.attached.segment.tabs{border-top:0;padding:0 1rem;margin:0}@media (max-width:767px){.ui.attached.segment.tabs{border:0;padding:0;margin:0}.tabs-tab *{margin:0}}</style><link rel="stylesheet" href="/assets/styles/css/main.css"><link rel="stylesheet" href="/assets/styles/css/document.css"><script>window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)},ga.l=+new Date,ga("create","UA-75786977-1","auto"),ga("send","pageview")</script><script async="" src="https://www.google-analytics.com/analytics.js"></script></head><body class="site"><header class="header"><div class="ui container"><div class="ui grid removeSideMargins"><div class="computer only row"><div class="ui top fixed borderless menu"><div class="ui container navMenu"><a class="item transparentBG" href="/"><img class="ui small image" src="/assets/images/carbon-logo-header.png" alt="Home"></a><a class="item" href="/get-started">Get Started</a><div class="ui dropdown link item navMenu-dropdownButton"><a class="item navMenu-dropdownLink" href="/documentation">Documentation</a><i class="dropdown icon"></i><div class="menu"><a class="item" href="/documentation/quick-start-guide">Quick Start Guide</a> <a class="item" href="/documentation/essential-concepts">Essential Concepts</a> <a class="item" href="/documentation/javascript-sdk">JavaScript SDK</a> <a class="item" href="/documentation/rest-api">REST API</a></div></div><a class="item" href="/community-and-support">Community &amp; Support</a> <a class="item" href="/about">About</a></div></div></div><div class="mobile tablet only row"><div class="ui top fixed borderless menu navMenu"><div class="ui container navMenu"><a class="item navMenu-carbonLogoButton transparentBG" href="/"><img class="ui navMenu-carbonLogo image" src="/assets/images/carbon-logo-header.png" alt="Home"></a><div class="ui right icon item navMenu-openerButton"><i class="content icon"></i></div></div></div><div class="ui fixed fluid vertical menu navMenu-verticalMenu" style="display:none"><a class="item" href="/get-started">Get Started</a><div class="ui dropdown link item navMenu-dropdownButton--mobile"><a class="item navMenu-dropdownText">Documentation<i class="dropdown icon"></i></a><div class="menu navMenu-dropdownMenu"><a class="item" href="/documentation/quick-start-guide">Quick Start Guide</a> <a class="item" href="/documentation/essential-concepts">Essential Concepts</a> <a class="item" href="/documentation/javascript-sdk">JavaScript SDK</a> <a class="item" href="/documentation/rest-api">REST API</a><div class="divider"></div><a class="item" href="/documentation">All documents...</a></div></div><a class="item" href="/community-and-support">Community &amp; Support</a> <a class="item" href="/about">About</a></div></div></div></div></header><div class="ui scrollTop mobile only grid"><button class="ui icon button scrollTop-button"><i class="angle up icon scrollTop-icon"></i></button></div><div class="site-content"><div class="ui container grid"><div class="row"><div class="twelve wide computer only twelve wide tablet only sixteen wide mobile only column"><div class="mainContent"><div class="ui breadcrumb"><a class="section" href="/documentation">Documentation</a> <i class="right chevron icon divider"></i> <a class="section" href="/documentation/javascript-sdk">JavaScript SDK</a> <i class="right arrow icon divider"></i><div class="active section" href="/documentation/javascript-sdk/getting-started">Getting Started</div></div><h1>Getting started with the JavaScript SDK</h1><div class="documentation-steps ui fluid steps"><div class="active step"><div class="content"><div class="title">Getting Started</div></div></div><a class="step" href="../object-model"><i class="arrow right icon"></i><div class="content"><div class="title">Next</div><div class="description">Object Model</div></div></a></div><div class="ui message"><div class="content"><p>This guide introduces you to the use of the Carbon JavaScript SDK. In it you will find an installation guide and the basic methods needed to start using our platform.</p></div></div><div class="ui mobile only grid"><div class="row"><div class="sixteen wide mobile only column"><div class="staticContentMenu"><h2 class="staticContentMenuTitle">Content</h2><div class="ui vertical accordion fluid menu mobile"><div class="item"><a class="title staticContentMenu-title" href="#prerequisite-knowledge">Prerequisite knowledge</a></div><div class="item"><a class="title staticContentMenu-title" href="#installing-the-sdk">Installing the SDK</a></div><div class="item"><a class="title staticContentMenu-title" href="#creating-a-platform-context">Creating a platform context</a></div><div class="item"><a class="title staticContentMenu-title" href="#authenticating">Authenticating</a></div><div class="item"><a class="title staticContentMenu-title" href="#retrieving-an-app-context">Retrieving an app context</a></div><div class="item"><a class="title staticContentMenu-title" href="#creating-a-document">Creating a document</a></div><div class="item"><a class="title staticContentMenu-title" href="#retrieving-a-document">Retrieving a document</a></div><div class="item"><a class="title staticContentMenu-title" href="#modifying-and-saving-a-document">Modifying and saving a document</a></div><div class="item"><a class="title staticContentMenu-title" href="#deleting-a-document">Deleting a document</a></div><div class="item"><a class="title staticContentMenu-title staticContentMenu-title--dropdown" href="#linking-documents">Linking documents</a><i class="dropdown icon .staticContentMenu-dropdownIcon"></i><div class="content menu"><a class="item" href="#parent-child-relation">Parent-child relation</a> <a class="item" href="#membership-relation">Membership Relation</a></div></div><div class="item"><a class="title staticContentMenu-title" href="#creating-an-access-point">Creating an access point</a></div><div class="item"><a class="title staticContentMenu-title" href="#putting-it-all-together">Putting it all together</a></div></div></div></div></div></div><section class="mainContent-section" id="prerequisite-knowledge"><h2>Prerequisite knowledge</h2><p>To better understand this guide and its code examples, a working knowledge of the following prerequisite topics is required.</p><ul><li><strong>HTML, CSS, JavaScript:</strong> See: <a class="outsidelink" target="_blank" rel="noopener" href="https://developer.mozilla.org/en-US/docs/Web">Mozilla Developer Network</a>.</li><li><strong>Promises:</strong> A standard-based way of handling asynchronous JavaScript logic. See: <a class="outsidelink" target="_blank" rel="noopener" href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise">Promise object</a> (Mozilla Developer Network).</li></ul><p>Additionally, knowledge on the following topics is highly recommended:</p><ul><li><strong>TypeScript:</strong> Carbon's JavaScript SDK is written in TypeScript, a JavaScript superset language, maintained by Microsoft. See: <a class="outsidelink" target="_blank" rel="noopener" href="http://www.typescriptlang.org/">TypeScript</a>.</li><li><strong>Package Managers:</strong> Carbon recommends <a class="outsidelink" target="_blank" rel="noopener" href="http://jspm.io/">JSPM</a></li><li><strong>ES2015 Modules:</strong> ES2015 modules let you "import" a file from another one so you can modularize your application. See: <a class="outsidelink" target="_blank" rel="noopener" href="http://exploringjs.com/es6/ch_modules.html">Modules</a> (Exploring ES6, by Dr. Axel Rauschmayer)</li></ul></section><div class="ui icon yellow message"><i class="warning sign icon"></i><div class="content"><p>Before starting this guide, please <a href="/get-started">register</a> and follow the steps in the <a href="/documentation/quick-start-guide">quick start guide</a> to install your Carbon platform and Workbench, if you have already done so, let the fun begin.</p></div></div><section class="mainContent-section" id="installing-the-sdk"><h2>Installing the SDK</h2><p>Installing the SDK depends on what package manager you are using:</p><div class="ui styled fluid accordion"><div class="title"><i class="dropdown icon"></i> Package manager?</div><div class="content"><p>If you are not using a package manager you can clone the source code with the following command:</p><pre><code class="bash hljs">git <span class="hljs-built_in">clone</span> https://github.com/CarbonLDP/CarbonLDP-JS-SDK.git</code></pre><p>It already includes a pre-compiled version of the source code so you can just jump right in.</p></div><div class="active title"><i class="dropdown icon"></i> npm</div><div class="active content"><pre><code class="bash hljs">npm install carbonldp --save</code></pre></div><div class="title"><i class="dropdown icon"></i> jspm</div><div class="content"><pre><code class="bash hljs">jspm install npm:carbonldp
+			This guide introduces you to the use of the Carbon JavaScript SDK. In it you">
+  
+    <link rel="alternate" href="/atom.xml" title="Carbon LDP" type="application/atom+xml">
+  
+
+
+  <link rel="stylesheet" href="/assets/semantic/semantic.min.css">
+  <style>/* Tomorrow Night Theme */
+/* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
+/* Original theme - https://github.com/chriskempson/tomorrow-theme */
+/* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
+
+/* Tomorrow Comment */
+.hljs-comment,
+.hljs-quote {
+  color: #969896;
+}
+
+/* Tomorrow Red */
+.hljs-variable,
+.hljs-template-variable,
+.hljs-tag,
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-regexp,
+.hljs-deletion {
+  color: #cc6666;
+}
+
+/* Tomorrow Orange */
+.hljs-number,
+.hljs-built_in,
+.hljs-builtin-name,
+.hljs-literal,
+.hljs-type,
+.hljs-params,
+.hljs-meta,
+.hljs-link {
+  color: #de935f;
+}
+
+/* Tomorrow Yellow */
+.hljs-attribute {
+  color: #f0c674;
+}
+
+/* Tomorrow Green */
+.hljs-string,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-addition {
+  color: #b5bd68;
+}
+
+/* Tomorrow Blue */
+.hljs-title,
+.hljs-section {
+  color: #81a2be;
+}
+
+/* Tomorrow Purple */
+.hljs-keyword,
+.hljs-selector-tag {
+  color: #b294bb;
+}
+
+.hljs {
+  display: block;
+  overflow-x: auto;
+  background: #1d1f21;
+  color: #c5c8c6;
+  padding: 0.5em;
+}
+
+.hljs-emphasis {
+  font-style: italic;
+}
+
+.hljs-strong {
+  font-weight: bold;
+}
+</style><style>.hljs {
+    font-family: "Lucida Console", Monaco, monospace;
+    font-size: .9rem;
+    line-height: 1.4rem;
+}
+</style><style>.sidebar{
+    margin: 10em 1em 6em 0;
+}
+
+/* Give sidebar a z-index greater than header */
+.sidebar .ui.sticky{
+    z-index: 0;
+}
+
+/* Remove box-shadow and border */
+.sidebar .ui.segment{
+    box-shadow: none;
+    border: none;
+}
+
+/* Change color to black when title active */
+.ui.accordion .item.active .title:not(.ui).sidebar-title{
+    color: black;
+    font-weight: 700;
+}
+.ui.vertical.menu .menu .item.active .sidebar-title{
+    color: black;
+}
+/* Change color of section items to gray */
+.ui.accordion .title:not(.ui).sidebar-title{
+    color: rgba(0,0,0,.6);
+    padding-right: 10px;
+}
+
+/* Change color to black when title hovered */
+.ui.accordion .title:not(.ui).sidebar-title:hover{
+    color: black;
+}
+
+
+/* Add left margin to sidebar menu */
+.ui.vertical.text.menu.sidebar-verticalMenu {
+    margin-left: 1.2em;
+}
+
+.ui.vertical.text.menu .item:not(.dropdown)>.menu.sidebar-verticalSubMenu{
+    margin: 0 0.8em;
+}
+
+.ui.accordion.menu .item .title.sidebar-title--dropdown{
+    display: inline;
+}
+
+.ui.vertical.text.menu .item>i.icon.sidebar-dropdownIcon{
+    float: right;
+}
+
+@media (min-width: 768px) and (max-width: 992px) {
+    .sidebar .ui.sticky{
+        padding: 0;
+    }
+    .ui.vertical.text.menu.sidebar-verticalMenu {
+        margin-left: .6em;
+    }
+
+    .ui.accordion .title:not(.ui).sidebar-title{
+        padding-right: 0;
+    }
+
+}</style><style>.staticContentMenu{
+    margin: 2em 0;
+}
+
+h2.staticContentMenu-title{
+    font-size: 1.4em;
+}
+
+.ui.accordion.menu .item .title.staticContentMenu-title--dropdown{
+    display: inline;
+}
+
+.ui.vertical.text.menu .item>i.icon.staticContentMenu-dropdownIcon{
+    float: right;
+}
+
+.ui.accordion .title:not(.ui).staticContentMenu-title{
+    color: rgba(0,0,0,.6);
+}</style><style>.ui.grid.tabsComponent {
+    margin: 1rem 0;
+}
+
+.ui.grid.tabsComponent .row.tabs{
+    padding: 0;
+}
+
+.ui.attached.segment.tabs{
+    border-top: 0;
+    padding: 0 1rem;
+    margin: 0;
+}
+
+@media (max-width: 767px) {
+    .ui.attached.segment.tabs{
+        border: 0;
+        padding: 0;
+        margin: 0;
+    }
+
+    .tabs-tab *{
+        margin:0;
+    }
+
+}
+</style>
+
+  <link rel="stylesheet" href="/assets/styles/css/main.css">
+
+  
+  <link rel="stylesheet" href="/assets/styles/css/document.css">
+  
+
+
+  <!-- Google Analytics -->
+  <script>
+    window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+    ga('create', 'UA-75786977-1', 'auto');
+    ga('send', 'pageview');
+  </script>
+  <script async="" src="https://www.google-analytics.com/analytics.js"></script>
+  <!-- End Google Analytics -->
+</head>
+
+    <body class="site">
+        <header class="header">
+	<div class="ui container">
+	<div class="ui grid removeSideMargins">
+		<div class="computer only row">
+			<div class="ui top fixed borderless menu">
+				<div class="ui container navMenu">
+					<a class="item transparentBG" href="/"><img class="ui small image" src="/assets/images/carbon-logo-header.png" alt="Home"></a>
+
+					
+
+					<a class="item" href="/get-started">Get Started</a>
+
+						
+
+					<div class="ui dropdown link item navMenu-dropdownButton"><a class="item navMenu-dropdownLink" href="/documentation">Documentation</a><i class="dropdown icon"></i>
+						<div class="menu">
+						
+						<a class="item" href="/documentation/quick-start-guide">Quick Start Guide</a>
+						
+						<a class="item" href="/documentation/essential-concepts">Essential Concepts</a>
+						
+						<a class="item" href="/documentation/javascript-sdk">JavaScript SDK</a>
+						
+						<a class="item" href="/documentation/rest-api">REST API</a>
+						
+						</div>
+					</div>
+						
+
+					<a class="item" href="/community-and-support">Community &amp; Support</a>
+
+						
+
+					<a class="item" href="/about">About</a>
+
+						
+				</div>
+			</div>
+		</div>
+		<div class="mobile tablet only row">
+			<div class="ui top fixed borderless menu navMenu">
+				<div class="ui container navMenu">
+					<a class="item navMenu-carbonLogoButton transparentBG" href="/"><img class="ui navMenu-carbonLogo image" src="/assets/images/carbon-logo-header.png" alt="Home"></a>
+					<div class="ui right icon item navMenu-openerButton">
+						<!--<div class="menu item">-->
+							<i class="content icon"></i>
+					</div>
+				</div>
+			</div>
+			<div class="ui fixed fluid vertical menu navMenu-verticalMenu" style="display: none;">
+				
+
+				<a class="item" href="/get-started">Get Started</a>
+
+				
+
+				<div class="ui dropdown link item navMenu-dropdownButton--mobile"><a class="item navMenu-dropdownText">Documentation<i class="dropdown icon"></i></a>
+					<div class="menu navMenu-dropdownMenu">
+						
+						<a class="item" href="/documentation/quick-start-guide">Quick Start Guide</a>
+						
+						<a class="item" href="/documentation/essential-concepts">Essential Concepts</a>
+						
+						<a class="item" href="/documentation/javascript-sdk">JavaScript SDK</a>
+						
+						<a class="item" href="/documentation/rest-api">REST API</a>
+						
+						<div class="divider"></div>
+						<a class="item" href="/documentation">All documents...</a>
+					</div>
+				</div>
+				
+
+				<a class="item" href="/community-and-support">Community &amp; Support</a>
+
+				
+
+				<a class="item" href="/about">About</a>
+
+				
+			</div>
+		</div>
+		</div>
+	</div>
+</header>
+        <div class="ui scrollTop mobile only grid">
+			<button class="ui icon button scrollTop-button"><i class="angle up icon scrollTop-icon"></i></button>
+		</div>
+        <div class="site-content ">
+            
+            <div class="ui container grid">
+        <div class="row">
+            <div class="twelve wide computer only twelve wide tablet only sixteen wide mobile only column">
+                    <div class="mainContent">
+                        <div class="ui breadcrumb">
+	
+	
+
+	<a class="section" href="/documentation">Documentation</a>
+
+	
+	<i class="right chevron icon divider"></i>
+	<a class="section" href="/documentation/javascript-sdk">JavaScript SDK</a>
+	
+
+	<i class="right arrow icon divider"></i>
+	<div class="active section" href="/documentation/javascript-sdk/getting-started">Getting Started</div>
+</div>
+
+                        
+                        
+<h1>Getting started with the JavaScript SDK</h1>
+
+<div class="documentation-steps ui fluid steps">
+	<div class="active step">
+		<!--<i class="payment icon"></i>-->
+		<div class="content">
+			<div class="title">Getting Started</div>
+		</div>
+	</div>
+	<a class="step" href="../object-model">
+		<i class="arrow right icon"></i>
+		<div class="content">
+			<div class="title">Next</div>
+			<div class="description">Object Model</div>
+		</div>
+	</a>
+</div>
+
+
+<div class="ui message">
+	<div class="content">
+		<p>
+			This guide introduces you to the use of the Carbon JavaScript SDK. In it you will find an
+			installation guide and the basic methods needed to start using our platform.
+		</p>
+	</div>
+</div>
+
+
+<div class="ui mobile only grid">
+	<div class="row">
+		<div class=" sixteen wide mobile only column">
+	<div class="staticContentMenu">
+		<h2 class="staticContentMenuTitle">Content</h2>
+		<div class="ui vertical accordion fluid menu mobile">
+			
+
+			<div class="item"><a class="title staticContentMenu-title" href="#prerequisite-knowledge">Prerequisite knowledge</a></div>
+
+			
+
+			<div class="item"><a class="title staticContentMenu-title" href="#installing-the-sdk">Installing the SDK</a></div>
+
+			
+
+			<div class="item"><a class="title staticContentMenu-title" href="#creating-a-platform-context">Creating a platform context</a></div>
+
+			
+
+			<div class="item"><a class="title staticContentMenu-title" href="#authenticating">Authenticating</a></div>
+
+			
+
+			<div class="item"><a class="title staticContentMenu-title" href="#retrieving-an-app-context">Retrieving an app context</a></div>
+
+			
+
+			<div class="item"><a class="title staticContentMenu-title" href="#creating-a-document">Creating a document</a></div>
+
+			
+
+			<div class="item"><a class="title staticContentMenu-title" href="#retrieving-a-document">Retrieving a document</a></div>
+
+			
+
+			<div class="item"><a class="title staticContentMenu-title" href="#modifying-and-saving-a-document">Modifying and saving a document</a></div>
+
+			
+
+			<div class="item"><a class="title staticContentMenu-title" href="#deleting-a-document">Deleting a document</a></div>
+
+			
+
+			<div class="item">
+
+				<a class="title staticContentMenu-title staticContentMenu-title--dropdown" href="#linking-documents">Linking documents</a><i class="dropdown icon .staticContentMenu-dropdownIcon"></i>
+
+				<div class="content menu">
+
+					
+
+					<a class="item" href="#parent-child-relation">Parent-child relation</a>
+
+					
+
+					<a class="item" href="#membership-relation">Membership Relation</a>
+
+					
+				</div>
+			</div>
+			
+
+			<div class="item"><a class="title staticContentMenu-title" href="#creating-an-access-point">Creating an access point</a></div>
+
+			
+
+			<div class="item"><a class="title staticContentMenu-title" href="#putting-it-all-together">Putting it all together</a></div>
+
+			
+		</div>
+	</div>
+</div>
+	</div>
+</div>
+
+
+<section class="mainContent-section" id="prerequisite-knowledge">
+	<h2>Prerequisite knowledge</h2>
+	<p>
+		To better understand this guide and its code examples, a working knowledge of the following prerequisite topics is required.
+	</p>
+	<ul>
+		<li>
+			<strong>HTML, CSS, JavaScript:</strong> See: <a class="outsidelink" target="_blank" rel="noopener" href="https://developer.mozilla.org/en-US/docs/Web">Mozilla Developer
+				Network</a>.
+		</li>
+		<li>
+			<strong>Promises:</strong> A standard-based way of handling asynchronous JavaScript logic.
+			See: <a class="outsidelink" target="_blank" rel="noopener" href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise">Promise
+				object</a> (Mozilla
+			Developer Network).
+		</li>
+	</ul>
+	<p>
+		Additionally, knowledge on the following topics is highly recommended:
+	</p>
+	<ul>
+		<li>
+			<strong>TypeScript:</strong> Carbon's JavaScript SDK is written in TypeScript, a JavaScript
+			superset language, maintained by Microsoft. See: <a class="outsidelink" target="_blank" rel="noopener" href="http://www.typescriptlang.org/">TypeScript</a>.
+		</li>
+		<li>
+			<strong>Package Managers:</strong> Carbon recommends <a class="outsidelink" target="_blank" rel="noopener" href="http://jspm.io/">JSPM</a>
+		</li>
+		<li>
+			<strong>ES2015 Modules:</strong> ES2015 modules let you "import" a file from another one so you can modularize
+			your application. See: <a class="outsidelink" target="_blank" rel="noopener" href="http://exploringjs.com/es6/ch_modules.html">Modules</a> (Exploring ES6, by Dr. Axel
+			Rauschmayer)
+		</li>
+	</ul>
+</section>
+
+<div class="ui icon yellow message">
+	<i class="warning sign icon"></i>
+	<div class="content">
+		<p>
+			Before starting this guide, please <a href="/get-started">register</a> and follow the steps in the
+			<a href="/documentation/quick-start-guide">quick start guide</a> to install your Carbon platform and Workbench, if you have already done so, let the fun begin.
+		</p>
+	</div>
+</div>
+<section class="mainContent-section" id="installing-the-sdk">
+	<h2>Installing the SDK</h2>
+	<p>
+		Installing the SDK depends on what package manager you are using:
+	</p>
+
+	<div class="ui styled fluid accordion">
+		<div class="title">
+			<i class="dropdown icon"></i>
+			Package manager?
+		</div>
+		<div class="content">
+			<p>If you are not using a package manager you can clone the source code with the following command:</p>
+
+			<pre><code class="bash hljs">git <span class="hljs-built_in">clone</span> https://github.com/CarbonLDP/CarbonLDP-JS-SDK.git</code></pre>
+
+			<p>It already includes a pre-compiled version of the source code so you can just jump right in.</p>
+		</div>
+		<div class="active title">
+			<i class="dropdown icon"></i>
+			npm
+		</div>
+		<div class="active content">
+			<pre><code class="bash hljs">npm install carbonldp --save</code></pre>
+		</div>
+		<div class="title">
+			<i class="dropdown icon"></i>
+			jspm
+		</div>
+		<div class="content">
+			<pre><code class="bash hljs">jspm install npm:carbonldp
 <span class="hljs-comment"># We also need to install one of carbonldp's dependencies</span>
-jspm install npm:jsonld</code></pre></div></div><p>After it has been installed, the way you'll use it will depend on your development environment:</p><div class="ui styled fluid accordion"><div class="title"><i class="dropdown icon"></i> Browser - Global Window Object</div><div class="content"><p>The SDK comes with a bundled version that you can import directly into your html:</p><pre><code class="html hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">src</span>=<span class="hljs-string">"--sdk-directory--/dist/bundles/Carbon.sfx.js"</span>&gt;</span><span class="undefined"></span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span></code></pre><p>After that, a variable named <code>Carbon</code> will be accessible in the global scope. This variable will serve as both a class constructor and a namespace. It's usage as a class constructor is the same as when using ES2015 Modules, but its namespace nature is unique to the Global approach.</p><h3>Carbon Variable as a Namespace</h3><p>The <code>Carbon</code> object chains together all the Carbon modules, so you can access them even if you are using the Global approach. Each time you see in an example something like:</p><pre><code class="javascript hljs"><span class="hljs-keyword">import</span> * <span class="hljs-keyword">as</span> Errors <span class="hljs-keyword">from</span> <span class="hljs-string">"carbonldp/HTTP/Errors"</span>;</code></pre><p>You can take the portion after <code>carbonldp/</code>, replace the <code>/</code>s with <code>.</code> and append that to the Carbon namespace to access the same module. For example, accessing that module using the global namespace would be:</p><pre><code class="javascript hljs">Carbon.HTTP.Errors</code></pre></div><div class="active title"><i class="dropdown icon"></i> Browser - ES2015 Modules</div><div class="active content"><p>To be able to use ES2015 modules a transpiler like Babel, Traceur or TypeScript needs to be used. This documentation won't cover the details of setting one up, but we recommend using <a class="outsidelink" target="_blank" rel="noopener" href="http://jspm.io/">JSPM</a> as a package manager, configured to use <a class="outsidelink" target="_blank" rel="noopener" href="http://www.typescriptlang.org/">TypeScript</a> as a transpiler. That way you can use ES2015 features and bundle your dependencies together!</p><p>Each module in Carbon will export at least one named export. Some of the modules will also export a <code>default</code> export containing the "main" export of the module. That export will also be available as the named export <code>Class</code>. For example:</p><pre><code class="typescript hljs"><span class="hljs-comment">// This:</span>
+jspm install npm:jsonld</code></pre>
+
+		</div>
+	</div>
+
+	<p>After it has been installed, the way you'll use it will depend on your development environment:</p>
+
+	<div class="ui styled fluid accordion">
+		<div class="title">
+			<i class="dropdown icon"></i>
+				Browser - Global Window Object
+			</div>
+			<div class="content">
+				<p>The SDK comes with a bundled version that you can import directly into your html:</p>
+
+				<pre><code class="html hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">src</span>=<span class="hljs-string">"--sdk-directory--/dist/bundles/Carbon.sfx.js"</span>&gt;</span><span class="undefined"></span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span></code></pre>
+
+				<p>
+					After that, a variable named <code>Carbon</code> will be accessible in the global scope. This variable will serve as both a class constructor
+					and a namespace. It's usage as a class constructor is the same as when using ES2015 Modules, but its namespace nature is unique to the Global
+					approach.
+				</p>
+				<h3>Carbon Variable as a Namespace</h3>
+				<p>
+					The <code>Carbon</code> object chains together all the Carbon modules, so you can access them even if you are using the Global approach.
+					Each time you see in an example something like:
+				</p>
+
+				<pre><code class="javascript hljs"><span class="hljs-keyword">import</span> * <span class="hljs-keyword">as</span> Errors <span class="hljs-keyword">from</span> <span class="hljs-string">"carbonldp/HTTP/Errors"</span>;</code></pre>
+
+				<p>
+					You can take the portion after <code>carbonldp/</code>, replace the <code>/</code>s with <code>.</code> and append that to the Carbon namespace
+					to access the same module. For example, accessing that module using the global namespace would be:
+				</p>
+
+				<pre><code class="javascript hljs">Carbon.HTTP.Errors</code></pre>
+
+			</div>
+
+	<div class="active title">
+		<i class="dropdown icon"></i>
+				Browser - ES2015 Modules
+			</div>
+			<div class="active content">
+				<p>
+					To be able to use ES2015 modules a transpiler like Babel, Traceur or TypeScript needs to be used. This documentation won't cover the details of
+					setting one up, but we recommend using <a class="outsidelink" target="_blank" rel="noopener" href="http://jspm.io/">JSPM</a> as a package manager, configured to
+					use
+					<a class="outsidelink" target="_blank" rel="noopener" href="http://www.typescriptlang.org/">TypeScript</a> as a transpiler. That way you can use ES2015 features
+					and bundle
+					your dependencies together!
+				</p>
+				<p>
+					Each module in Carbon will export at least one named export. Some of the modules will also export a <code>default</code> export containing the "main"
+					export of the module. That export will also be available as the named export <code>Class</code>. For example:
+				</p>
+
+				<pre><code class="typescript hljs"><span class="hljs-comment">// This:</span>
 <span class="hljs-keyword">import</span> Document from <span class="hljs-string">"carbonldp/Document"</span>;
 <span class="hljs-keyword">let</span> myDocument:Document = <span class="hljs-keyword">new</span> Document();
 
 <span class="hljs-comment">// Is the same as this:</span>
 <span class="hljs-keyword">import</span> * as Document from <span class="hljs-string">"carbonldp/Document"</span>;
-<span class="hljs-keyword">let</span> myDocument:Document.Class = <span class="hljs-keyword">new</span> Document.Class();</code></pre><p>We recommend not using default exports, but we provide them in case you are only using the "main" export of a file.</p><p>The semantics behind Carbon's modules are based on the usage of the import all statement. Still, you can use selective imports but you'll likely need to rename the import variables like:</p><pre><code class="javascript hljs"><span class="hljs-keyword">import</span> { Factory <span class="hljs-keyword">as</span> DocumentFactory, Class <span class="hljs-keyword">as</span> Document } <span class="hljs-keyword">from</span> <span class="hljs-string">"carbonldp/Document"</span>;</code></pre><p>For each folder inside the Carbon source, there is a module at the same level with the same name that exports everything contained by the folder. Example:</p><pre><code class="javascript hljs"><span class="hljs-keyword">import</span> * <span class="hljs-keyword">as</span> Errors <span class="hljs-keyword">from</span> <span class="hljs-string">"carbonldp/HTTP/Errors"</span>;
+<span class="hljs-keyword">let</span> myDocument:Document.Class = <span class="hljs-keyword">new</span> Document.Class();</code></pre>
+
+				<p>We recommend not using default exports, but we provide them in case you are only using the "main" export of a file.</p>
+				<p>
+					The semantics behind Carbon's modules are based on the usage of the import all statement. Still, you can use selective
+					imports but you'll likely need to rename the import variables like:
+				</p>
+
+				<pre><code class="javascript hljs"><span class="hljs-keyword">import</span> { Factory <span class="hljs-keyword">as</span> DocumentFactory, Class <span class="hljs-keyword">as</span> Document } <span class="hljs-keyword">from</span> <span class="hljs-string">"carbonldp/Document"</span>;</code></pre>
+
+				<p>
+					For each folder inside the Carbon source, there is a module at the same level with the same name that exports everything contained by the folder.
+					Example:
+				</p>
+
+				<pre><code class="javascript hljs"><span class="hljs-keyword">import</span> * <span class="hljs-keyword">as</span> Errors <span class="hljs-keyword">from</span> <span class="hljs-string">"carbonldp/HTTP/Errors"</span>;
 <span class="hljs-keyword">import</span> * <span class="hljs-keyword">as</span> Request <span class="hljs-keyword">from</span> <span class="hljs-string">"carbonldp/HTTP/Request"</span>;
 
 <span class="hljs-keyword">import</span> * <span class="hljs-keyword">as</span> HTTP <span class="hljs-keyword">from</span> <span class="hljs-string">"carbonldp/HTTP"</span>;
 
 HTTP.Errors === Errors; <span class="hljs-comment">// true</span>
-HTTP.Request === Request; <span class="hljs-comment">// true</span></code></pre></div></div><p>Next, you need to decide what language (and what version) you are going to use. The SDK can be used with the following ones:</p><ul><li><strong>TypeScript:</strong> a JavaScript superset language, maintained by Microsoft. See: <a class="outsidelink" target="_blank" rel="noopener" href="http://www.typescriptlang.org/">TypeScript</a>.</li><li><strong>JavaScript ES2015+:</strong> JavaScript with the new features introduced in the ES2015 standard. In order for you to use it, you'll likely need a transpiler like <a class="outsidelink" target="_blank" rel="noopener" href="https://babeljs.io/">BabelJS</a> or <a class="outsidelink" target="_blank" rel="noopener" href="https://github.com/google/traceur-compiler">Traceur</a></li><li><strong>JavaScript ES5:</strong> The good old JS, no arrow functions, let declarations or any of that magic. To use the SDK with this JavaScript version you'll need to include the following polyfill before including the SDK:<pre><code class="html hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">src</span>=<span class="hljs-string">"https://cdnjs.cloudflare.com/ajax/libs/es6-shim/0.35.1/es6-shim.min.js"</span>&gt;</span><span class="undefined"></span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span></code></pre></li></ul><p>Our code examples are written in all of these languages.</p><p></p><div class="ui icon info message"><i class="info circle icon"></i><div class="content"><p>We created boilerplate projects for each of the supported languages. They can serve as a good starting point:</p><ul><li><a class="outsidelink" target="_blank" rel="noopener" href="https://github.com/CarbonLDP/carbon-typescript-boilerplate">TypeScript</a></li><li><a class="outsidelink" target="_blank" rel="noopener" href="https://github.com/CarbonLDP/carbon-js-es2015-boilerplate">JavaScript ES2015+</a></li><li><a class="outsidelink" target="_blank" rel="noopener" href="https://github.com/CarbonLDP/carbon-js-es5-boilerplate">JavaScript ES5</a></li></ul></div></div></section><section class="mainContent-section" id="creating-a-platform-context"><h2>Creating a platform context</h2><div class="ui icon yellow message"><i class="warning sign icon"></i><div class="content"><p>Before you can save data in your platform, you need to create an account. If you haven't done it, follow the steps in section <em>create an agent</em> of the <a href="/documentation/quick-start-guide" fragment="create-an-agent">quick start guide</a>.</p></div></div><p>Let's start with some basic things you can do, like creating, saving and linking documents; among other things.</p><p>First of all, you need to create a <span class="highlight">Carbon platform context</span>. This <span class="highlight">context</span> will provide a reference to the <span class="highlight">Carbon platform instance</span> you are working with (for more about Carbon contexts see: <a href="../contexts">Contexts</a>).</p><div class="ui grid tabsComponent"><div class="ui computer tablet only row tabs"><div class="ui top attached tabular menu tabs-titles"><a class="tabs-title active item" data-tab="typescript">TypeScript</a> <a class="tabs-title item" data-tab="javascript-es2015">JavaScript ES2015</a> <a class="tabs-title item" data-tab="javascript-es5">JavaScript ES5</a></div></div><div class="ui mobile only row tabs"><div class="ui compact selection dropdown tabs-options"><i class="dropdown icon"></i><div class="text">TypeScript</div><div class="menu"><div class="tabs-option item" data-tab="typescript">TypeScript</div><div class="tabs-option item" data-tab="javascript-es2015">JavaScript ES2015</div><div class="tabs-option item" data-tab="javascript-es5">JavaScript ES5</div></div></div></div><div class="tabs-tab ui bottom attached tabs active tab segment" data-tab="typescript"><pre><code class="typescript hljs"><span class="hljs-keyword">import</span> Carbon from <span class="hljs-string">"carbonldp/Carbon"</span>;
+HTTP.Request === Request; <span class="hljs-comment">// true</span></code></pre>
 
-<span class="hljs-keyword">let</span> carbon:Carbon = <span class="hljs-keyword">new</span> Carbon(); <span class="hljs-comment">// platform context</span></code></pre></div><div class="tabs-tab ui bottom attached tabs tab segment" data-tab="javascript-es2015"><pre><code class="javascript hljs"><span class="hljs-keyword">let</span> carbon = <span class="hljs-keyword">new</span> Carbon(); <span class="hljs-comment">// platform context</span></code></pre></div><div class="tabs-tab ui bottom attached tabs tab segment" data-tab="javascript-es5"><pre><code class="javascript hljs"><span class="hljs-keyword">var</span> carbon = <span class="hljs-keyword">new</span> Carbon(); <span class="hljs-comment">// platform context</span></code></pre></div></div><p>By default, platform contexts point to the instance in <code>carbonldp.com</code>. If you need to change this, you can do it by changing the <code>domain</code> setting:</p><div class="ui grid tabsComponent"><div class="ui computer tablet only row tabs"><div class="ui top attached tabular menu tabs-titles"><a class="tabs-title active item" data-tab="jcQkPgnd">TypeScript</a> <a class="tabs-title item" data-tab="ndVuiwOk">JavaScript ES2015</a> <a class="tabs-title item" data-tab="mZSBZiTU">JavaScript ES5</a></div></div><div class="ui mobile only row tabs"><div class="ui compact selection dropdown tabs-options"><i class="dropdown icon"></i><div class="text">TypeScript</div><div class="menu"><div class="tabs-option item" data-tab="jcQkPgnd">TypeScript</div><div class="tabs-option item" data-tab="ndVuiwOk">JavaScript ES2015</div><div class="tabs-option item" data-tab="mZSBZiTU">JavaScript ES5</div></div></div></div><div class="tabs-tab ui bottom attached tabs active tab segment" data-tab="jcQkPgnd"><pre><code class="typescript hljs"><span class="hljs-keyword">import</span> Carbon from <span class="hljs-string">"carbonldp/Carbon"</span>;
+			</div>
+		</div>
+	<p>
+		Next, you need to decide what language (and what version) you are going to use. The SDK can be used with the following ones:
+	</p>
+	<ul>
+		<li>
+			<strong>TypeScript:</strong> a JavaScript superset language, maintained by Microsoft. See:
+			<a class="outsidelink" target="_blank" rel="noopener" href="http://www.typescriptlang.org/">TypeScript</a>.
+		</li>
+		<li>
+			<strong>JavaScript ES2015+:</strong> JavaScript with the new features introduced in the ES2015 standard. In order for you to use it, you'll
+			likely need a transpiler like
+			<a class="outsidelink" target="_blank" rel="noopener" href="https://babeljs.io/">BabelJS</a> or
+			<a class="outsidelink" target="_blank" rel="noopener" href="https://github.com/google/traceur-compiler">Traceur</a>
+		</li>
+		<li>
+			<strong>JavaScript ES5:</strong> The good old JS, no arrow functions, let declarations or any of that magic. To use the SDK with this
+			JavaScript version you'll need to include the following polyfill before including the SDK:
+
+			<pre><code class="html hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">src</span>=<span class="hljs-string">"https://cdnjs.cloudflare.com/ajax/libs/es6-shim/0.35.1/es6-shim.min.js"</span>&gt;</span><span class="undefined"></span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span></code></pre>
+
+		</li>
+	</ul>
+	<!-- TODO: Add collective language selection of all tabs -->
+	<p>
+		Our code examples are written in all of these languages. <!-- so before continuing please select which one you'll use:-->
+	</p>
+	<!--<div class="ui compact buttons">-->
+		<!--<button class="ui button" (click)="selectLanguage( 0 )" [class.active]="selectedLanguage === 0">TypeScript</button>-->
+		<!--<div class="or"></div>-->
+		<!--<button class="ui button" (click)="selectLanguage( 1 )" [class.active]="selectedLanguage === 1">JS ES2015+</button>-->
+		<!--<div class="or"></div>-->
+		<!--<button class="ui button" (click)="selectLanguage( 2 )" [class.active]="selectedLanguage === 2">JS ES5</button>-->
+	<!--</div>-->
+	<p>
+
+	</p>
+	<div class="ui icon info message">
+		<i class="info circle icon"></i>
+		<div class="content">
+			<p>
+				We created boilerplate projects for each of the supported languages. They can serve as a good starting point:
+			</p>
+			<ul>
+				<li><a class="outsidelink" target="_blank" rel="noopener" href="https://github.com/CarbonLDP/carbon-typescript-boilerplate">TypeScript</a></li>
+				<li><a class="outsidelink" target="_blank" rel="noopener" href="https://github.com/CarbonLDP/carbon-js-es2015-boilerplate">JavaScript ES2015+</a></li>
+				<li><a class="outsidelink" target="_blank" rel="noopener" href="https://github.com/CarbonLDP/carbon-js-es5-boilerplate">JavaScript ES5</a></li>
+			</ul>
+		</div>
+	</div>
+</section>
+
+<section class="mainContent-section" id="creating-a-platform-context">
+	<h2>Creating a platform context</h2>
+	<div class="ui icon yellow message">
+		<i class="warning sign icon"></i>
+		<div class="content">
+			<p>
+				Before you can save data in your platform, you need to create an account. If you haven't done it, follow the steps in section <em>create an agent</em> of the
+				<a href="/documentation/quick-start-guide" fragment="create-an-agent">quick start guide</a>.
+			</p>
+		</div>
+	</div>
+	<p>
+		Let's start with some basic things you can do, like creating, saving and linking documents; among other things.
+	</p>
+	<p>
+		First of all, you need to create a <span class="highlight">Carbon platform context</span>. This
+		<span class="highlight">context</span> will provide a reference to the
+		<span class="highlight">Carbon platform instance</span> you are working with (for more
+		about Carbon contexts see: <a href="../contexts">Contexts</a>).
+	</p>
+	<div class="ui grid tabsComponent">
+	
+		<div class="ui computer tablet only row tabs">
+			<div class="ui top attached tabular menu tabs-titles">
+				
+				
+					<a class="tabs-title active item" data-tab="typescript">TypeScript</a>
+				
+				
+					<a class="tabs-title  item" data-tab="javascript-es2015">JavaScript ES2015</a>
+				
+				
+					<a class="tabs-title  item" data-tab="javascript-es5">JavaScript ES5</a>
+				
+			</div>
+		</div>
+		<div class="ui mobile only row tabs">
+			<div class="ui compact selection dropdown tabs-options">
+				<i class="dropdown icon"></i>
+				<div class="text">TypeScript</div>
+				<div class="menu">
+					
+					
+					<div class="tabs-option item" data-tab="typescript">TypeScript</div>
+					
+					
+					<div class="tabs-option item" data-tab="javascript-es2015">JavaScript ES2015</div>
+					
+					
+					<div class="tabs-option item" data-tab="javascript-es5">JavaScript ES5</div>
+					
+				</div>
+			</div>
+		</div>
+
+		
+			
+			<div class="tabs-tab ui bottom attached tabs active tab segment" data-tab="typescript">
+				
+			<pre><code class="typescript hljs"><span class="hljs-keyword">import</span> Carbon from <span class="hljs-string">"carbonldp/Carbon"</span>;
+
+<span class="hljs-keyword">let</span> carbon:Carbon = <span class="hljs-keyword">new</span> Carbon(); <span class="hljs-comment">// platform context</span></code></pre>
+		
+			</div>
+		
+			
+			<div class="tabs-tab ui bottom attached tabs  tab segment" data-tab="javascript-es2015">
+				
+			<pre><code class="javascript hljs"><span class="hljs-keyword">let</span> carbon = <span class="hljs-keyword">new</span> Carbon(); <span class="hljs-comment">// platform context</span></code></pre>
+		
+			</div>
+		
+			
+			<div class="tabs-tab ui bottom attached tabs  tab segment" data-tab="javascript-es5">
+				
+			<pre><code class="javascript hljs"><span class="hljs-keyword">var</span> carbon = <span class="hljs-keyword">new</span> Carbon(); <span class="hljs-comment">// platform context</span></code></pre>
+		
+			</div>
+		
+	
+</div>
+
+	<p>
+		By default, platform contexts point to the instance in <code>carbonldp.com</code>. If you need to change this,
+		you can do it by changing the <code>domain</code> setting:
+	</p>
+	<div class="ui grid tabsComponent">
+	
+		<div class="ui computer tablet only row tabs">
+			<div class="ui top attached tabular menu tabs-titles">
+				
+				
+					<a class="tabs-title active item" data-tab="HOocnrKl">TypeScript</a>
+				
+				
+					<a class="tabs-title  item" data-tab="BzYGwJGV">JavaScript ES2015</a>
+				
+				
+					<a class="tabs-title  item" data-tab="QtxqFhfk">JavaScript ES5</a>
+				
+			</div>
+		</div>
+		<div class="ui mobile only row tabs">
+			<div class="ui compact selection dropdown tabs-options">
+				<i class="dropdown icon"></i>
+				<div class="text">TypeScript</div>
+				<div class="menu">
+					
+					
+					<div class="tabs-option item" data-tab="HOocnrKl">TypeScript</div>
+					
+					
+					<div class="tabs-option item" data-tab="BzYGwJGV">JavaScript ES2015</div>
+					
+					
+					<div class="tabs-option item" data-tab="QtxqFhfk">JavaScript ES5</div>
+					
+				</div>
+			</div>
+		</div>
+
+		
+			
+			<div class="tabs-tab ui bottom attached tabs active tab segment" data-tab="HOocnrKl">
+				
+
+			<pre><code class="typescript hljs"><span class="hljs-keyword">import</span> Carbon from <span class="hljs-string">"carbonldp/Carbon"</span>;
 
 <span class="hljs-keyword">let</span> carbon:Carbon = <span class="hljs-keyword">new</span> Carbon(); <span class="hljs-comment">// platform context</span>
-carbon.setSetting( <span class="hljs-string">"domain"</span>, <span class="hljs-string">"my-carbon-instance.com:8080"</span> );</code></pre></div><div class="tabs-tab ui bottom attached tabs tab segment" data-tab="ndVuiwOk"><pre><code class="javascript hljs"><span class="hljs-keyword">let</span> carbon = <span class="hljs-keyword">new</span> Carbon(); <span class="hljs-comment">// platform context</span>
-carbon.setSetting( <span class="hljs-string">"domain"</span>, <span class="hljs-string">"my-carbon-instance.com:8080"</span> );</code></pre></div><div class="tabs-tab ui bottom attached tabs tab segment" data-tab="mZSBZiTU"><pre><code class="javascript hljs"><span class="hljs-keyword">var</span> carbon = <span class="hljs-keyword">new</span> Carbon(); <span class="hljs-comment">// platform context</span>
-carbon.setSetting( <span class="hljs-string">"domain"</span>, <span class="hljs-string">"my-carbon-instance.com:8080"</span> );</code></pre></div></div></section><section class="mainContent-section" id="authenticating"><h2>Authenticating</h2><p>After creating the platform context you need to tell the platform who you are by authenticating yourself (if you haven't created an account yet, follow the steps in the section <em>create an agent</em> of the <a href="/documentation/quick-start-guide" fragment="create-an-agent">quick start guide </a>).</p><p>All authentication/authorization related actions are done through the <code>auth</code> service every context has. This service provides an <code>authenticate</code> method where you can pass your credentials:</p><div class="ui grid tabsComponent"><div class="ui computer tablet only row tabs"><div class="ui top attached tabular menu tabs-titles"><a class="tabs-title active item" data-tab="AXDCsPKV">TypeScript</a> <a class="tabs-title item" data-tab="xpuiIGvm">JavaScript ES2015</a> <a class="tabs-title item" data-tab="FotudbaM">JavaScript ES5</a></div></div><div class="ui mobile only row tabs"><div class="ui compact selection dropdown tabs-options"><i class="dropdown icon"></i><div class="text">TypeScript</div><div class="menu"><div class="tabs-option item" data-tab="AXDCsPKV">TypeScript</div><div class="tabs-option item" data-tab="xpuiIGvm">JavaScript ES2015</div><div class="tabs-option item" data-tab="FotudbaM">JavaScript ES5</div></div></div></div><div class="tabs-tab ui bottom attached tabs active tab segment" data-tab="AXDCsPKV"><pre><code class="typescript hljs"><span class="hljs-comment">// ... additional imports</span>
+carbon.setSetting( <span class="hljs-string">"domain"</span>, <span class="hljs-string">"my-carbon-instance.com:8080"</span> );</code></pre>
+
+		
+			</div>
+		
+			
+			<div class="tabs-tab ui bottom attached tabs  tab segment" data-tab="BzYGwJGV">
+				
+
+			<pre><code class="javascript hljs"><span class="hljs-keyword">let</span> carbon = <span class="hljs-keyword">new</span> Carbon(); <span class="hljs-comment">// platform context</span>
+carbon.setSetting( <span class="hljs-string">"domain"</span>, <span class="hljs-string">"my-carbon-instance.com:8080"</span> );</code></pre>
+
+		
+			</div>
+		
+			
+			<div class="tabs-tab ui bottom attached tabs  tab segment" data-tab="QtxqFhfk">
+				
+
+			<pre><code class="javascript hljs"><span class="hljs-keyword">var</span> carbon = <span class="hljs-keyword">new</span> Carbon(); <span class="hljs-comment">// platform context</span>
+carbon.setSetting( <span class="hljs-string">"domain"</span>, <span class="hljs-string">"my-carbon-instance.com:8080"</span> );</code></pre>
+
+		
+			</div>
+		
+	
+</div>
+
+</section>
+<section class="mainContent-section" id="authenticating">
+	<h2>Authenticating</h2>
+	<p>
+		After creating the platform context you need to tell the platform who you are by authenticating
+		yourself (if you haven't created an account yet, follow the steps in the section <em>create an agent</em> of the <a href="/documentation/quick-start-guide" fragment="create-an-agent">quick start guide
+		</a> ).
+	</p>
+	<p>
+		All authentication/authorization related actions are done through the <code>auth</code> service
+		every context has. This service provides an <code>authenticate</code> method where you can pass
+		your credentials:
+	</p>
+	<div class="ui grid tabsComponent">
+	
+		<div class="ui computer tablet only row tabs">
+			<div class="ui top attached tabular menu tabs-titles">
+				
+				
+					<a class="tabs-title active item" data-tab="FTcEnbdb">TypeScript</a>
+				
+				
+					<a class="tabs-title  item" data-tab="HPMGKnsR">JavaScript ES2015</a>
+				
+				
+					<a class="tabs-title  item" data-tab="GYNIMLRX">JavaScript ES5</a>
+				
+			</div>
+		</div>
+		<div class="ui mobile only row tabs">
+			<div class="ui compact selection dropdown tabs-options">
+				<i class="dropdown icon"></i>
+				<div class="text">TypeScript</div>
+				<div class="menu">
+					
+					
+					<div class="tabs-option item" data-tab="FTcEnbdb">TypeScript</div>
+					
+					
+					<div class="tabs-option item" data-tab="HPMGKnsR">JavaScript ES2015</div>
+					
+					
+					<div class="tabs-option item" data-tab="GYNIMLRX">JavaScript ES5</div>
+					
+				</div>
+			</div>
+		</div>
+
+		
+			
+			<div class="tabs-tab ui bottom attached tabs active tab segment" data-tab="FTcEnbdb">
+				
+
+			<pre><code class="typescript hljs"><span class="hljs-comment">// ... additional imports</span>
 <span class="hljs-keyword">import</span> Carbon from <span class="hljs-string">"carbonldp/Carbon"</span>;
 <span class="hljs-keyword">import</span> * as Token from <span class="hljs-string">"carbonldp/Auth/Token"</span>;
 
@@ -97,7 +953,16 @@ carbon.auth.authenticate( <span class="hljs-string">"your@email.com"</span>, <sp
     ( token:Token.Class ) =&gt; {
         <span class="hljs-built_in">console</span>.log( carbon.auth.authenticatedAgent ); <span class="hljs-comment">// Yourself!</span>
     }
-);</code></pre></div><div class="tabs-tab ui bottom attached tabs tab segment" data-tab="xpuiIGvm"><pre><code class="javascript hljs"><span class="hljs-comment">// ... imports</span>
+);</code></pre>
+
+		
+			</div>
+		
+			
+			<div class="tabs-tab ui bottom attached tabs  tab segment" data-tab="HPMGKnsR">
+				
+
+			<pre><code class="javascript hljs"><span class="hljs-comment">// ... imports</span>
 
 <span class="hljs-keyword">let</span> carbon;
 
@@ -107,7 +972,16 @@ carbon.auth.authenticate( <span class="hljs-string">"your@email.com"</span>, <sp
     <span class="hljs-function">(<span class="hljs-params"> token </span>) =&gt;</span> {
         <span class="hljs-built_in">console</span>.log( carbon.auth.authenticatedAgent ); <span class="hljs-comment">// Yourself!</span>
     }
-);</code></pre></div><div class="tabs-tab ui bottom attached tabs tab segment" data-tab="FotudbaM"><pre><code class="javascript hljs"><span class="hljs-keyword">var</span> carbon;
+);</code></pre>
+
+		
+			</div>
+		
+			
+			<div class="tabs-tab ui bottom attached tabs  tab segment" data-tab="GYNIMLRX">
+				
+
+			<pre><code class="javascript hljs"><span class="hljs-keyword">var</span> carbon;
 
 <span class="hljs-comment">// ... platform context creation</span>
 
@@ -115,7 +989,83 @@ carbon.auth.authenticate( <span class="hljs-string">"your@email.com"</span>, <sp
     <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> token </span>) </span>{
         <span class="hljs-built_in">console</span>.log( carbon.auth.authenticatedAgent ); <span class="hljs-comment">// Yourself!</span>
     }
-);</code></pre></div></div><p>It's important to notice that you are authenticated in that specific context (and its child contexts). You could create additional platform contexts (or other type of contexts) and authenticate on them with other credentials.</p></section><section class="mainContent-section" id="retrieving-an-app-context"><h2>Retrieving an app context</h2><p>Carbon stores your data in "applications" which are separate containers of information. Data can be linked between applications, but its management is treated separately.</p><div class="ui icon yellow message"><i class="warning sign icon"></i><div class="content"><p>Before continuing, you need to create your first application, if you haven't done it, follow the steps in the section <em>create an application</em> of the <a href="/documentation/quick-start-guide" fragment="create-a-new-application">quick start guide</a> (remember to note your application slug, because we'll use it later).</p></div></div><p>To access your application data, you need an <span class="highlight">application</span> <a href="../contexts">context</a> that references it, on which you will be working on. To retrieve it, you can use the <code>apps</code> service of the platform context:</p><div class="ui grid tabsComponent"><div class="ui computer tablet only row tabs"><div class="ui top attached tabular menu tabs-titles"><a class="tabs-title active item" data-tab="rnbhQDIa">TypeScript</a> <a class="tabs-title item" data-tab="FMHQrVzR">JavaScript ES2015</a> <a class="tabs-title item" data-tab="MUGStmvS">JavaScript ES2015</a></div></div><div class="ui mobile only row tabs"><div class="ui compact selection dropdown tabs-options"><i class="dropdown icon"></i><div class="text">TypeScript</div><div class="menu"><div class="tabs-option item" data-tab="rnbhQDIa">TypeScript</div><div class="tabs-option item" data-tab="FMHQrVzR">JavaScript ES2015</div><div class="tabs-option item" data-tab="MUGStmvS">JavaScript ES2015</div></div></div></div><div class="tabs-tab ui bottom attached tabs active tab segment" data-tab="rnbhQDIa"><pre><code class="typescript hljs"><span class="hljs-comment">// ... additional imports</span>
+);</code></pre>
+
+		
+			</div>
+		
+	
+</div>
+
+	<p>
+		It's important to notice that you are authenticated in that specific context (and its child contexts).
+		You could create additional platform contexts (or other type of contexts) and authenticate on them with
+		other credentials.
+	</p>
+</section>
+<section class="mainContent-section" id="retrieving-an-app-context">
+	<h2>Retrieving an app context</h2>
+	<p>
+		Carbon stores your data in "applications" which are separate containers of information.
+		Data can be linked between applications, but its management is treated separately.
+	</p>
+	<div class="ui icon yellow message">
+		<i class="warning sign icon"></i>
+
+		<div class="content">
+			<p>
+				Before continuing, you need to create your first application, if you haven't done it, follow the steps in the section <em>create an application</em> of the
+				<a href="/documentation/quick-start-guide" fragment="create-a-new-application">quick start guide</a> (remember to note your
+				application slug, because we'll use it later).
+			</p>
+		</div>
+	</div>
+	<p>
+		To access your application data, you need an <span class="highlight">application</span>
+		<a href="../contexts">context</a> that references it, on which you will be working on.
+		To retrieve it, you can use the <code>apps</code> service of the platform context:
+	</p>
+	<div class="ui grid tabsComponent">
+	
+		<div class="ui computer tablet only row tabs">
+			<div class="ui top attached tabular menu tabs-titles">
+				
+				
+					<a class="tabs-title active item" data-tab="MTikjpKf">TypeScript</a>
+				
+				
+					<a class="tabs-title  item" data-tab="pNUOrLWy">JavaScript ES2015</a>
+				
+				
+					<a class="tabs-title  item" data-tab="DvMRsvSz">JavaScript ES2015</a>
+				
+			</div>
+		</div>
+		<div class="ui mobile only row tabs">
+			<div class="ui compact selection dropdown tabs-options">
+				<i class="dropdown icon"></i>
+				<div class="text">TypeScript</div>
+				<div class="menu">
+					
+					
+					<div class="tabs-option item" data-tab="MTikjpKf">TypeScript</div>
+					
+					
+					<div class="tabs-option item" data-tab="pNUOrLWy">JavaScript ES2015</div>
+					
+					
+					<div class="tabs-option item" data-tab="DvMRsvSz">JavaScript ES2015</div>
+					
+				</div>
+			</div>
+		</div>
+
+		
+			
+			<div class="tabs-tab ui bottom attached tabs active tab segment" data-tab="MTikjpKf">
+				
+
+			<pre><code class="typescript hljs"><span class="hljs-comment">// ... additional imports</span>
 <span class="hljs-keyword">import</span> Carbon from <span class="hljs-string">"carbonldp/Carbon"</span>
 <span class="hljs-keyword">import</span> * as App from <span class="hljs-string">"carbonldp/App"</span>;
 
@@ -129,7 +1079,16 @@ carbon.apps.getContext( <span class="hljs-string">"your-app-slug-here/"</span> )
     ( appContext:App.Context ) =&gt; {
         myAppContext = appContext; <span class="hljs-comment">// retrieving your app context</span>
     }
-).catch( <span class="hljs-built_in">console</span>.error );</code></pre></div><div class="tabs-tab ui bottom attached tabs tab segment" data-tab="FMHQrVzR"><pre><code class="javascript hljs"><span class="hljs-comment">// ... imports</span>
+).catch( <span class="hljs-built_in">console</span>.error );</code></pre>
+
+		
+			</div>
+		
+			
+			<div class="tabs-tab ui bottom attached tabs  tab segment" data-tab="pNUOrLWy">
+				
+
+			<pre><code class="javascript hljs"><span class="hljs-comment">// ... imports</span>
 
 <span class="hljs-keyword">let</span> carbon;
 
@@ -141,7 +1100,16 @@ carbon.apps.getContext( <span class="hljs-string">"your-app-slug-here/"</span> )
     <span class="hljs-function">(<span class="hljs-params"> appContext </span>) =&gt;</span> {
         myAppContext = appContext; <span class="hljs-comment">// retrieving your app context</span>
     }
-).catch( <span class="hljs-built_in">console</span>.error );</code></pre></div><div class="tabs-tab ui bottom attached tabs tab segment" data-tab="MUGStmvS"><pre><code class="javascript hljs"><span class="hljs-keyword">var</span> carbon;
+).catch( <span class="hljs-built_in">console</span>.error );</code></pre>
+
+		
+			</div>
+		
+			
+			<div class="tabs-tab ui bottom attached tabs  tab segment" data-tab="DvMRsvSz">
+				
+
+			<pre><code class="javascript hljs"><span class="hljs-keyword">var</span> carbon;
 
 <span class="hljs-comment">// ... platform context creation and authentication</span>
 
@@ -151,7 +1119,80 @@ carbon.apps.getContext( <span class="hljs-string">"your-app-slug-here/"</span> )
     <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> appContext </span>) </span>{
         myAppContext = appContext; <span class="hljs-comment">// retrieving your app context</span>
     }
-).catch( <span class="hljs-built_in">console</span>.error );</code></pre></div></div><p>The <code>apps.getContext()</code> method returns a promise that when resolved, will give you the <a href="../contexts"><span class="highlight">app context</span> </a>you need. Be sure to replace <code>your-app-slug-here/</code> with your app slug.</p><p>This context is a child of the platform context you created. Because of that, any setting or authentication information you saved in your platform context, is accessible (and will be used) by this application context (for more see the Inheritance section of <a href="../contexts">Contexts</a>).</p></section><section class="mainContent-section" id="creating-a-document"><h2>Creating a document</h2><p>Now that you have your app context, you can start working with your app's data. Carbon stores data in documents, which are basically normal JavaScript objects identified by a URI (Unique Resource Identifier). These documents are composed by properties, <span class="highlight">fragments</span> and <span class="highlight">named fragments</span>. For more information see: <a href="../object-model">JavaScript SDK Object model</a>.</p><p>Any carbon <span class="highlight">context</span> has a <code>documents</code> service that helps you manage your documents. To create one you need to call the method <code>createChild</code> of this service:</p><div class="ui grid tabsComponent"><div class="ui computer tablet only row tabs"><div class="ui top attached tabular menu tabs-titles"><a class="tabs-title active item" data-tab="AzAfRAtq">TypeScript</a> <a class="tabs-title item" data-tab="JPrrRltO">JavaScript ES2015</a> <a class="tabs-title item" data-tab="ADdEOYok">JavaScript ES5</a></div></div><div class="ui mobile only row tabs"><div class="ui compact selection dropdown tabs-options"><i class="dropdown icon"></i><div class="text">TypeScript</div><div class="menu"><div class="tabs-option item" data-tab="AzAfRAtq">TypeScript</div><div class="tabs-option item" data-tab="JPrrRltO">JavaScript ES2015</div><div class="tabs-option item" data-tab="ADdEOYok">JavaScript ES5</div></div></div></div><div class="tabs-tab ui bottom attached tabs active tab segment" data-tab="AzAfRAtq"><pre><code class="typescript hljs"><span class="hljs-comment">// ... additional imports</span>
+).catch( <span class="hljs-built_in">console</span>.error );</code></pre>
+
+		
+			</div>
+		
+	
+</div>
+
+	<p>
+		The <code>apps.getContext()</code> method returns a promise that when resolved, will give you the
+		<a href="../contexts"><span class="highlight">app context</span>
+		</a> you need. Be sure to replace <code>your-app-slug-here/</code> with your app slug.
+	</p>
+	<p>
+		This context is a child of the platform context you created. Because of that, any setting
+		or authentication information you saved in your platform context, is accessible
+		(and will be used) by this application context (for more see the Inheritance section of
+		<a href="../contexts">Contexts</a>).
+	</p>
+</section>
+
+<section class="mainContent-section" id="creating-a-document">
+	<h2>Creating a document</h2>
+	<p>
+		Now that you have your app context, you can start working with your app's data. Carbon stores data
+		in documents, which are basically normal JavaScript objects identified by a URI (Unique Resource Identifier).
+		These documents are composed by properties, <span class="highlight">fragments</span> and <span class="highlight">named fragments</span>.
+		For more information see: <a href="../object-model">JavaScript SDK Object model</a>.
+	</p>
+	<p>
+		Any carbon <span class="highlight">context</span> has a <code>documents</code> service that
+		helps you manage your documents. To create one you need to call the method <code>createChild</code> of this service:
+	</p>
+	<div class="ui grid tabsComponent">
+	
+		<div class="ui computer tablet only row tabs">
+			<div class="ui top attached tabular menu tabs-titles">
+				
+				
+					<a class="tabs-title active item" data-tab="CyJumVWQ">TypeScript</a>
+				
+				
+					<a class="tabs-title  item" data-tab="TxMcQLZs">JavaScript ES2015</a>
+				
+				
+					<a class="tabs-title  item" data-tab="ahVKFFFL">JavaScript ES5</a>
+				
+			</div>
+		</div>
+		<div class="ui mobile only row tabs">
+			<div class="ui compact selection dropdown tabs-options">
+				<i class="dropdown icon"></i>
+				<div class="text">TypeScript</div>
+				<div class="menu">
+					
+					
+					<div class="tabs-option item" data-tab="CyJumVWQ">TypeScript</div>
+					
+					
+					<div class="tabs-option item" data-tab="TxMcQLZs">JavaScript ES2015</div>
+					
+					
+					<div class="tabs-option item" data-tab="ahVKFFFL">JavaScript ES5</div>
+					
+				</div>
+			</div>
+		</div>
+
+		
+			
+			<div class="tabs-tab ui bottom attached tabs active tab segment" data-tab="CyJumVWQ">
+				
+
+			<pre><code class="typescript hljs"><span class="hljs-comment">// ... additional imports</span>
 <span class="hljs-keyword">import</span> * as App from <span class="hljs-string">"carbonldp/App"</span>;
 <span class="hljs-keyword">import</span> * as Response from <span class="hljs-string">"carbonldp/HTTP/Response"</span>;
 <span class="hljs-keyword">import</span> * as PersistedDocument from <span class="hljs-string">"carbonldp/PersistedDocument"</span>;
@@ -180,7 +1221,16 @@ myAppContext.documents.createChild&lt;Project&gt;( <span class="hljs-string">"/"
         <span class="hljs-built_in">console</span>.log( project === persistedProject ); <span class="hljs-comment">// true</span>
         <span class="hljs-built_in">console</span>.log( persistedProject.id ); <span class="hljs-comment">// document's URI</span>
     }
-).catch( <span class="hljs-built_in">console</span>.error );</code></pre></div><div class="tabs-tab ui bottom attached tabs tab segment" data-tab="JPrrRltO"><pre><code class="javascript hljs"><span class="hljs-comment">// ... imports</span>
+).catch( <span class="hljs-built_in">console</span>.error );</code></pre>
+
+		
+			</div>
+		
+			
+			<div class="tabs-tab ui bottom attached tabs  tab segment" data-tab="TxMcQLZs">
+				
+
+			<pre><code class="javascript hljs"><span class="hljs-comment">// ... imports</span>
 
 <span class="hljs-keyword">let</span> myAppContext;
 
@@ -206,7 +1256,16 @@ myAppContext.documents.createChild( <span class="hljs-string">"/"</span>, projec
         <span class="hljs-built_in">console</span>.log( project === persistedProject ); <span class="hljs-comment">// true</span>
         <span class="hljs-built_in">console</span>.log( project.id ); <span class="hljs-comment">// document's URI</span>
     }
-).catch( <span class="hljs-built_in">console</span>.error );</code></pre></div><div class="tabs-tab ui bottom attached tabs tab segment" data-tab="ADdEOYok"><pre><code class="javascript hljs"><span class="hljs-keyword">var</span> myAppContext;
+).catch( <span class="hljs-built_in">console</span>.error );</code></pre>
+
+		
+			</div>
+		
+			
+			<div class="tabs-tab ui bottom attached tabs  tab segment" data-tab="ahVKFFFL">
+				
+
+			<pre><code class="javascript hljs"><span class="hljs-keyword">var</span> myAppContext;
 
 <span class="hljs-comment">// ... app context retrieval</span>
 
@@ -233,19 +1292,101 @@ myAppContext.documents.createChild( <span class="hljs-string">"/"</span>, projec
         <span class="hljs-built_in">console</span>.log( project === persistedProject ); <span class="hljs-comment">// true</span>
         <span class="hljs-built_in">console</span>.log( project.id ); <span class="hljs-comment">// document's URI</span>
     }
-).catch( <span class="hljs-built_in">console</span>.error );</code></pre></div></div><p>After executing that, the information inside of <code>project</code> will have been persisted in Carbon. Nested objects will also be saved inside of the document, so pretty much any JSON object can be saved as a Carbon document (as long as the JSON's information is contained inside of an object, not an array).</p><p>Notice that the promise returned by <code>createChild</code> is returning a <code>PersistedDocument.Class</code> object. This type of object represent a saved document in Carbon. It may or may not have the latest server information. You can make sure that you have its latest changes by using its <code>refresh</code> method.</p><p>If you've just executed this, you'll notice that the document's id (or URI) ends with something like <code>1264563453436/</code>. Carbon automatically assigns URIs to newly created documents. If you want to customize the ending portion of the URI, a third parameter can be passed to the <code>createChild</code> method. This parameter is called <code>slug</code> and it serves as a suggestion for Carbon when forging the document's URI:</p><div class="ui grid tabsComponent"><div class="ui computer tablet only row tabs"><div class="ui top attached tabular menu tabs-titles"><a class="tabs-title active item" data-tab="nqNASTZh">TypeScript</a> <a class="tabs-title item" data-tab="aurUYeXB">JavaScript ES2015</a> <a class="tabs-title item" data-tab="sEGVOVkJ">JavaScript ES5</a></div></div><div class="ui mobile only row tabs"><div class="ui compact selection dropdown tabs-options"><i class="dropdown icon"></i><div class="text">TypeScript</div><div class="menu"><div class="tabs-option item" data-tab="nqNASTZh">TypeScript</div><div class="tabs-option item" data-tab="aurUYeXB">JavaScript ES2015</div><div class="tabs-option item" data-tab="sEGVOVkJ">JavaScript ES5</div></div></div></div><div class="tabs-tab ui bottom attached tabs active tab segment" data-tab="nqNASTZh"><pre><code class="typescript hljs"><span class="hljs-comment">// ...</span>
+).catch( <span class="hljs-built_in">console</span>.error );</code></pre>
+
+		
+			</div>
+		
+	
+</div>
+
+	<p>
+		After executing that, the information inside of <code>project</code> will have been persisted in Carbon. Nested objects
+		will also be saved inside of the document, so pretty much any JSON object can be saved as a Carbon document (as long as
+		the JSON's information is contained inside of an object, not an array).
+	</p>
+	<p>
+		Notice that the promise returned by <code>createChild</code> is returning a <code>PersistedDocument.Class</code> object.
+		This type of object represent a saved document in Carbon. It may or may not have the latest server information. You can make sure
+		that you have its latest changes by using its <code>refresh</code> method.
+	</p>
+	<p>
+		If you've just executed this, you'll notice that the document's id (or URI) ends with something like <code>1264563453436/</code>.
+		Carbon automatically assigns URIs to newly created documents. If you want to customize the ending portion of the URI,
+		a third parameter can be passed to the <code>createChild</code> method. This parameter is called <code>slug</code>
+		and it serves as a suggestion for Carbon when forging the document's URI:
+	</p>
+	<div class="ui grid tabsComponent">
+	
+		<div class="ui computer tablet only row tabs">
+			<div class="ui top attached tabular menu tabs-titles">
+				
+				
+					<a class="tabs-title active item" data-tab="mzDaVuTt">TypeScript</a>
+				
+				
+					<a class="tabs-title  item" data-tab="ACtGOOKK">JavaScript ES2015</a>
+				
+				
+					<a class="tabs-title  item" data-tab="wmRGSTTK">JavaScript ES5</a>
+				
+			</div>
+		</div>
+		<div class="ui mobile only row tabs">
+			<div class="ui compact selection dropdown tabs-options">
+				<i class="dropdown icon"></i>
+				<div class="text">TypeScript</div>
+				<div class="menu">
+					
+					
+					<div class="tabs-option item" data-tab="mzDaVuTt">TypeScript</div>
+					
+					
+					<div class="tabs-option item" data-tab="ACtGOOKK">JavaScript ES2015</div>
+					
+					
+					<div class="tabs-option item" data-tab="wmRGSTTK">JavaScript ES5</div>
+					
+				</div>
+			</div>
+		</div>
+
+		
+			
+			<div class="tabs-tab ui bottom attached tabs active tab segment" data-tab="mzDaVuTt">
+				
+
+			<pre><code class="typescript hljs"><span class="hljs-comment">// ...</span>
 
 myAppContext.documents.createChild&lt;Project&gt;( <span class="hljs-string">"/"</span>, project, <span class="hljs-string">"My sUp4 Project!"</span> ).then(
     ( [ persistedProject, response ]:[ Project &amp; PersistedDocument.Class, Response.Class ] ) =&gt; {
         <span class="hljs-built_in">console</span>.log( persistedProject.id ); <span class="hljs-comment">// .../my-supa-project/</span>
     }
-).catch( <span class="hljs-built_in">console</span>.error );</code></pre></div><div class="tabs-tab ui bottom attached tabs tab segment" data-tab="aurUYeXB"><pre><code class="javascript hljs"><span class="hljs-comment">// ...</span>
+).catch( <span class="hljs-built_in">console</span>.error );</code></pre>
+
+		
+			</div>
+		
+			
+			<div class="tabs-tab ui bottom attached tabs  tab segment" data-tab="ACtGOOKK">
+				
+
+			<pre><code class="javascript hljs"><span class="hljs-comment">// ...</span>
 
 myAppContext.documents.createChild( <span class="hljs-string">"/"</span>, project, <span class="hljs-string">"My sUp4 Project!"</span> ).then(
     <span class="hljs-function">(<span class="hljs-params"> [ persistedProject, response ] </span>) =&gt;</span> {
         <span class="hljs-built_in">console</span>.log( persistedProject.id ); <span class="hljs-comment">// .../my-supa-project/</span>
     }
-).catch( <span class="hljs-built_in">console</span>.error );</code></pre></div><div class="tabs-tab ui bottom attached tabs tab segment" data-tab="sEGVOVkJ"><pre><code class="javascript hljs"><span class="hljs-comment">// ...</span>
+).catch( <span class="hljs-built_in">console</span>.error );</code></pre>
+
+		
+			</div>
+		
+			
+			<div class="tabs-tab ui bottom attached tabs  tab segment" data-tab="wmRGSTTK">
+				
+
+			<pre><code class="javascript hljs"><span class="hljs-comment">// ...</span>
 
 myAppContext.documents.createChild( <span class="hljs-string">"/"</span>, project, <span class="hljs-string">"My sUp4 Project!"</span> ).then(
     <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> result </span>) </span>{
@@ -254,24 +1395,156 @@ myAppContext.documents.createChild( <span class="hljs-string">"/"</span>, projec
 
         <span class="hljs-built_in">console</span>.log( persistedProject.id ); <span class="hljs-comment">// .../my-supa-project/</span>
     }
-).catch( <span class="hljs-built_in">console</span>.error );</code></pre></div></div><p>Another thing to notice is that the method is called create<strong>Child</strong>. All documents stored in Carbon are children of another document. In this case we are specifying our newly created document's parent through the first parameter <code>"/"</code>. That string represents a relative URI, one that can be resolved against something else. In this case it is being resolved to the base URI the context has. To see to what that would resolve you can use a <code>context</code> <code>resolve</code> method:</p><div class="ui grid tabsComponent"><div class="ui computer tablet only row tabs"><div class="ui top attached tabular menu tabs-titles"><a class="tabs-title active item" data-tab="KMByWMsh">TypeScript</a> <a class="tabs-title item" data-tab="GsasVosx">JavaScript ES2015</a> <a class="tabs-title item" data-tab="XnfshUmr">JavaScript ES5</a></div></div><div class="ui mobile only row tabs"><div class="ui compact selection dropdown tabs-options"><i class="dropdown icon"></i><div class="text">TypeScript</div><div class="menu"><div class="tabs-option item" data-tab="KMByWMsh">TypeScript</div><div class="tabs-option item" data-tab="GsasVosx">JavaScript ES2015</div><div class="tabs-option item" data-tab="XnfshUmr">JavaScript ES5</div></div></div></div><div class="tabs-tab ui bottom attached tabs active tab segment" data-tab="KMByWMsh"><pre><code class="typescript hljs"><span class="hljs-comment">// ... additional imports</span>
+).catch( <span class="hljs-built_in">console</span>.error );</code></pre>
+
+		
+			</div>
+		
+	
+</div>
+
+	<p>
+		Another thing to notice is that the method is called create<strong>Child</strong>. All documents stored in Carbon are children of
+		another document. In this case we are specifying our newly created document's parent through the first parameter <code>"/"</code>.
+		That string represents a relative URI, one that can be resolved against something else. In this case it is being resolved to the
+		base URI the context has. To see to what that would resolve you can use a <code>context</code> <code>resolve</code> method:
+	</p>
+	<div class="ui grid tabsComponent">
+	
+		<div class="ui computer tablet only row tabs">
+			<div class="ui top attached tabular menu tabs-titles">
+				
+				
+					<a class="tabs-title active item" data-tab="qLyDwCJD">TypeScript</a>
+				
+				
+					<a class="tabs-title  item" data-tab="rqDuKgPx">JavaScript ES2015</a>
+				
+				
+					<a class="tabs-title  item" data-tab="yJUvUNMM">JavaScript ES5</a>
+				
+			</div>
+		</div>
+		<div class="ui mobile only row tabs">
+			<div class="ui compact selection dropdown tabs-options">
+				<i class="dropdown icon"></i>
+				<div class="text">TypeScript</div>
+				<div class="menu">
+					
+					
+					<div class="tabs-option item" data-tab="qLyDwCJD">TypeScript</div>
+					
+					
+					<div class="tabs-option item" data-tab="rqDuKgPx">JavaScript ES2015</div>
+					
+					
+					<div class="tabs-option item" data-tab="yJUvUNMM">JavaScript ES5</div>
+					
+				</div>
+			</div>
+		</div>
+
+		
+			
+			<div class="tabs-tab ui bottom attached tabs active tab segment" data-tab="qLyDwCJD">
+				
+
+			<pre><code class="typescript hljs"><span class="hljs-comment">// ... additional imports</span>
 <span class="hljs-keyword">import</span> * as App from <span class="hljs-string">"carbonldp/App"</span>;
 
 <span class="hljs-keyword">let</span> myAppContext:App.Context;
 
 <span class="hljs-comment">// ... app context retrieval</span>
 
-<span class="hljs-built_in">console</span>.log( myAppContext.resolve( <span class="hljs-string">""</span> ) ); <span class="hljs-comment">// https://.../your-app-slug/</span></code></pre></div><div class="tabs-tab ui bottom attached tabs tab segment" data-tab="GsasVosx"><pre><code class="javascript hljs"><span class="hljs-comment">// ... imports</span>
+<span class="hljs-built_in">console</span>.log( myAppContext.resolve( <span class="hljs-string">""</span> ) ); <span class="hljs-comment">// https://.../your-app-slug/</span></code></pre>
+
+		
+			</div>
+		
+			
+			<div class="tabs-tab ui bottom attached tabs  tab segment" data-tab="rqDuKgPx">
+				
+
+			<pre><code class="javascript hljs"><span class="hljs-comment">// ... imports</span>
 
 <span class="hljs-keyword">let</span> myAppContext;
 
 <span class="hljs-comment">// ... app context retrieval</span>
 
-<span class="hljs-built_in">console</span>.log( myAppContext.resolve( <span class="hljs-string">""</span> ) ); <span class="hljs-comment">// https://.../your-app-slug/</span></code></pre></div><div class="tabs-tab ui bottom attached tabs tab segment" data-tab="XnfshUmr"><pre><code class="javascript hljs"><span class="hljs-keyword">var</span> myAppContext;
+<span class="hljs-built_in">console</span>.log( myAppContext.resolve( <span class="hljs-string">""</span> ) ); <span class="hljs-comment">// https://.../your-app-slug/</span></code></pre>
+
+		
+			</div>
+		
+			
+			<div class="tabs-tab ui bottom attached tabs  tab segment" data-tab="yJUvUNMM">
+				
+
+			<pre><code class="javascript hljs"><span class="hljs-keyword">var</span> myAppContext;
 
 <span class="hljs-comment">// ... app context retrieval</span>
 
-<span class="hljs-built_in">console</span>.log( myAppContext.resolve( <span class="hljs-string">""</span> ) ); <span class="hljs-comment">// https://.../your-app-slug/</span></code></pre></div></div></section><section class="mainContent-section" id="retrieving-a-document"><h2>Retrieving a document</h2><p>Documents can be retrieved by their URIs or by following other documents' links. In fact, you can paste the <code>id</code> you just retrieved when persisting your first document in your browser and you should see an <code>XML</code> representation of it.</p><p>Like creating documents, retrieving them can be done using the <code>documents</code> service inside of any Carbon context. To do so, you can use its <code>get</code> method:</p><div class="ui grid tabsComponent"><div class="ui computer tablet only row tabs"><div class="ui top attached tabular menu tabs-titles"><a class="tabs-title active item" data-tab="UZwNaFTG">TypeScript</a> <a class="tabs-title item" data-tab="hrXmvQON">JavaScript ES2015</a> <a class="tabs-title item" data-tab="UPcRXEoE">JavaScript ES5</a></div></div><div class="ui mobile only row tabs"><div class="ui compact selection dropdown tabs-options"><i class="dropdown icon"></i><div class="text">TypeScript</div><div class="menu"><div class="tabs-option item" data-tab="UZwNaFTG">TypeScript</div><div class="tabs-option item" data-tab="hrXmvQON">JavaScript ES2015</div><div class="tabs-option item" data-tab="UPcRXEoE">JavaScript ES5</div></div></div></div><div class="tabs-tab ui bottom attached tabs active tab segment" data-tab="UZwNaFTG"><pre><code class="typescript hljs"><span class="hljs-comment">// ... additional imports</span>
+<span class="hljs-built_in">console</span>.log( myAppContext.resolve( <span class="hljs-string">""</span> ) ); <span class="hljs-comment">// https://.../your-app-slug/</span></code></pre>
+
+		
+			</div>
+		
+	
+</div>
+
+</section>
+<section class="mainContent-section" id="retrieving-a-document">
+	<h2>Retrieving a document</h2>
+	<p>
+		Documents can be retrieved by their URIs or by following other documents' links. In fact, you can paste the <code>id</code>
+		you just retrieved when persisting your first document in your browser and you should see an <code>XML</code>
+		representation of it.
+	</p>
+	<p>
+		Like creating documents, retrieving them can be done using the <code>documents</code> service inside of any Carbon context.
+		To do so, you can use its <code>get</code> method:
+	</p>
+	<div class="ui grid tabsComponent">
+	
+		<div class="ui computer tablet only row tabs">
+			<div class="ui top attached tabular menu tabs-titles">
+				
+				
+					<a class="tabs-title active item" data-tab="eyzocaSe">TypeScript</a>
+				
+				
+					<a class="tabs-title  item" data-tab="EgZVwXZZ">JavaScript ES2015</a>
+				
+				
+					<a class="tabs-title  item" data-tab="YtmttQNv">JavaScript ES5</a>
+				
+			</div>
+		</div>
+		<div class="ui mobile only row tabs">
+			<div class="ui compact selection dropdown tabs-options">
+				<i class="dropdown icon"></i>
+				<div class="text">TypeScript</div>
+				<div class="menu">
+					
+					
+					<div class="tabs-option item" data-tab="eyzocaSe">TypeScript</div>
+					
+					
+					<div class="tabs-option item" data-tab="EgZVwXZZ">JavaScript ES2015</div>
+					
+					
+					<div class="tabs-option item" data-tab="YtmttQNv">JavaScript ES5</div>
+					
+				</div>
+			</div>
+		</div>
+
+		
+			
+			<div class="tabs-tab ui bottom attached tabs active tab segment" data-tab="eyzocaSe">
+				
+
+			<pre><code class="typescript hljs"><span class="hljs-comment">// ... additional imports</span>
 <span class="hljs-keyword">import</span> * as App from <span class="hljs-string">"carbonldp/App"</span>;
 <span class="hljs-keyword">import</span> * as Response from <span class="hljs-string">"carbonldp/HTTP/Response"</span>;
 <span class="hljs-keyword">import</span> * as PersistedDocument from <span class="hljs-string">"carbonldp/PersistedDocument"</span>;
@@ -287,7 +1560,16 @@ myAppContext.documents.get&lt;Project&gt;( projectID ).then(
     ( [ project, response ]:[ Project &amp; PersistedDocument.Class, Response.Class ] ) =&gt; {
         <span class="hljs-built_in">console</span>.log( project.name ); <span class="hljs-comment">// "Project X"</span>
     }
-).catch( <span class="hljs-built_in">console</span>.error );</code></pre></div><div class="tabs-tab ui bottom attached tabs tab segment" data-tab="hrXmvQON"><pre><code class="javascript hljs"><span class="hljs-comment">// ... imports</span>
+).catch( <span class="hljs-built_in">console</span>.error );</code></pre>
+
+		
+			</div>
+		
+			
+			<div class="tabs-tab ui bottom attached tabs  tab segment" data-tab="EgZVwXZZ">
+				
+
+			<pre><code class="javascript hljs"><span class="hljs-comment">// ... imports</span>
 
 <span class="hljs-keyword">let</span> myAppContext;
 
@@ -300,7 +1582,16 @@ myAppContext.documents.get( projectID ).then(
     <span class="hljs-function">(<span class="hljs-params"> [ project, response ] </span>) =&gt;</span> {
         <span class="hljs-built_in">console</span>.log( project.name ); <span class="hljs-comment">// "Project X"</span>
     }
-).catch( <span class="hljs-built_in">console</span>.error );</code></pre></div><div class="tabs-tab ui bottom attached tabs tab segment" data-tab="UPcRXEoE"><pre><code class="javascript hljs"><span class="hljs-keyword">var</span> myAppContext;
+).catch( <span class="hljs-built_in">console</span>.error );</code></pre>
+
+		
+			</div>
+		
+			
+			<div class="tabs-tab ui bottom attached tabs  tab segment" data-tab="YtmttQNv">
+				
+
+			<pre><code class="javascript hljs"><span class="hljs-keyword">var</span> myAppContext;
 
 <span class="hljs-comment">// ... app context retrieval</span>
 
@@ -314,7 +1605,61 @@ myAppContext.documents.get( projectID ).then(
 
         <span class="hljs-built_in">console</span>.log( project.name ); <span class="hljs-comment">// "Project X"</span>
     }
-).catch( <span class="hljs-built_in">console</span>.error );</code></pre></div></div><p>In this example we used the id of the document, but there are times that instead of having the id, you have a <code>Pointer.Class</code> object. This can happen for example when a document points to another document through a property, or as soon as you create a document and receive a pointer back (<code>PersistedDocument.Class</code> extends <code>Pointer.Class</code>). These pointers have a <code>resolve</code> method that helps you retrieve their information:</p><div class="ui grid tabsComponent"><div class="ui computer tablet only row tabs"><div class="ui top attached tabular menu tabs-titles"><a class="tabs-title active item" data-tab="tKHsQNBX">TypeScript</a> <a class="tabs-title item" data-tab="ZyibVBTQ">JavaScript ES2015</a> <a class="tabs-title item" data-tab="PyPRpeqx">JavaScript ES5</a></div></div><div class="ui mobile only row tabs"><div class="ui compact selection dropdown tabs-options"><i class="dropdown icon"></i><div class="text">TypeScript</div><div class="menu"><div class="tabs-option item" data-tab="tKHsQNBX">TypeScript</div><div class="tabs-option item" data-tab="ZyibVBTQ">JavaScript ES2015</div><div class="tabs-option item" data-tab="PyPRpeqx">JavaScript ES5</div></div></div></div><div class="tabs-tab ui bottom attached tabs active tab segment" data-tab="tKHsQNBX"><pre><code class="typescript hljs"><span class="hljs-comment">// ... additional imports</span>
+).catch( <span class="hljs-built_in">console</span>.error );</code></pre>
+
+		
+			</div>
+		
+	
+</div>
+
+	<p>
+		In this example we used the id of the document, but there are times that instead of having the id, you have a
+		<code>Pointer.Class</code> object. This can happen for example when a document points to another document through a property,
+		or as soon as you create a document and receive a pointer back (<code>PersistedDocument.Class</code> extends <code>Pointer.Class</code>).
+		These pointers have a <code>resolve</code> method that helps you retrieve their information:
+	</p>
+	<div class="ui grid tabsComponent">
+	
+		<div class="ui computer tablet only row tabs">
+			<div class="ui top attached tabular menu tabs-titles">
+				
+				
+					<a class="tabs-title active item" data-tab="AKYfITbN">TypeScript</a>
+				
+				
+					<a class="tabs-title  item" data-tab="RarXtRZU">JavaScript ES2015</a>
+				
+				
+					<a class="tabs-title  item" data-tab="CpRVmPeK">JavaScript ES5</a>
+				
+			</div>
+		</div>
+		<div class="ui mobile only row tabs">
+			<div class="ui compact selection dropdown tabs-options">
+				<i class="dropdown icon"></i>
+				<div class="text">TypeScript</div>
+				<div class="menu">
+					
+					
+					<div class="tabs-option item" data-tab="AKYfITbN">TypeScript</div>
+					
+					
+					<div class="tabs-option item" data-tab="RarXtRZU">JavaScript ES2015</div>
+					
+					
+					<div class="tabs-option item" data-tab="CpRVmPeK">JavaScript ES5</div>
+					
+				</div>
+			</div>
+		</div>
+
+		
+			
+			<div class="tabs-tab ui bottom attached tabs active tab segment" data-tab="AKYfITbN">
+				
+
+			<pre><code class="typescript hljs"><span class="hljs-comment">// ... additional imports</span>
 <span class="hljs-keyword">import</span> * as Response from <span class="hljs-string">"carbonldp/HTTP/Response"</span>;
 <span class="hljs-keyword">import</span> * as PersistedDocument from <span class="hljs-string">"carbonldp/PersistedDocument"</span>;
 <span class="hljs-keyword">import</span> * as Pointer from <span class="hljs-string">"carbonldp/Pointer"</span>;
@@ -327,7 +1672,16 @@ projectPointer.resolve&lt;Project&gt;().then(
     ( [ project, response ]:[ Project &amp; PersistedDocument.Class, Response.Class ] ) =&gt; {
         <span class="hljs-built_in">console</span>.log( project.name ); <span class="hljs-comment">// "Project X"</span>
     }
-).catch( <span class="hljs-built_in">console</span>.error );</code></pre></div><div class="tabs-tab ui bottom attached tabs tab segment" data-tab="ZyibVBTQ"><pre><code class="javascript hljs"><span class="hljs-comment">// ... imports</span>
+).catch( <span class="hljs-built_in">console</span>.error );</code></pre>
+
+		
+			</div>
+		
+			
+			<div class="tabs-tab ui bottom attached tabs  tab segment" data-tab="RarXtRZU">
+				
+
+			<pre><code class="javascript hljs"><span class="hljs-comment">// ... imports</span>
 
 <span class="hljs-keyword">let</span> projectPointer;
 
@@ -337,7 +1691,16 @@ projectPointer.resolve().then(
     <span class="hljs-function">(<span class="hljs-params"> [ project, response ] </span>) =&gt;</span> {
         <span class="hljs-built_in">console</span>.log( project.name ); <span class="hljs-comment">// "Project X"</span>
     }
-).catch( <span class="hljs-built_in">console</span>.error );</code></pre></div><div class="tabs-tab ui bottom attached tabs tab segment" data-tab="PyPRpeqx"><pre><code class="javascript hljs"><span class="hljs-keyword">var</span> projectPointer;
+).catch( <span class="hljs-built_in">console</span>.error );</code></pre>
+
+		
+			</div>
+		
+			
+			<div class="tabs-tab ui bottom attached tabs  tab segment" data-tab="CpRVmPeK">
+				
+
+			<pre><code class="javascript hljs"><span class="hljs-keyword">var</span> projectPointer;
 
 <span class="hljs-comment">// ... document pointer acquisition</span>
 
@@ -348,7 +1711,93 @@ projectPointer.resolve().then(
 
         <span class="hljs-built_in">console</span>.log( project.name ); <span class="hljs-comment">// "Project X"</span>
     }
-).catch( <span class="hljs-built_in">console</span>.error );</code></pre></div></div><p>As you can see, <code>Pointer.Class</code> objects have two states, resolved and unresolved. When a pointer isn't resolved it doesn't contain the document's information (or it may be just out of sync with the server) but it can be used to link other documents to it as we'll see later. You can also use its <code>resolve</code> method to retrieve its information.</p></section><section class="mainContent-section" id="modifying-and-saving-a-document"><h2>Modifying and saving a document</h2><p>All <span class="highlight">documents</span> in <span class="highlight">Carbon</span> can be modified. However all the changes done to a <span class="highlight">document</span>, are done in memory. To persist the modifications the <span class="highlight">document</span> needs to be saved.</p><p>To modify a document you should:</p><ol><li>Retrieve the <span class="highlight">document</span>:<ol><li><code>get</code> using the <span class="highlight">document</span> id as described in <span class="sectionlink">retrieving a document</span></li></ol></li><li>Modify the <span class="highlight">document</span>: Add, modify or delete <span class="highlight">properties</span>, <span class="highlight">fragments</span>, <span class="highlight">named fragments</span>.</li><li>Save the changes through <code>document.save</code> method.</li></ol><p>Document properties can be added/modified/removed as with any normal JavaScript object.</p><div class="ui grid tabsComponent"><div class="ui computer tablet only row tabs"><div class="ui top attached tabular menu tabs-titles"><a class="tabs-title active item" data-tab="dfTOUUaG">TypeScript</a> <a class="tabs-title item" data-tab="sBikQoKW">JavaScript ES2015</a> <a class="tabs-title item" data-tab="OtPrxHpC">JavaScript ES5</a></div></div><div class="ui mobile only row tabs"><div class="ui compact selection dropdown tabs-options"><i class="dropdown icon"></i><div class="text">TypeScript</div><div class="menu"><div class="tabs-option item" data-tab="dfTOUUaG">TypeScript</div><div class="tabs-option item" data-tab="sBikQoKW">JavaScript ES2015</div><div class="tabs-option item" data-tab="OtPrxHpC">JavaScript ES5</div></div></div></div><div class="tabs-tab ui bottom attached tabs active tab segment" data-tab="dfTOUUaG"><pre><code class="typescript hljs"><span class="hljs-comment">// ... additional imports</span>
+).catch( <span class="hljs-built_in">console</span>.error );</code></pre>
+
+		
+			</div>
+		
+	
+</div>
+
+	<p>
+		As you can see, <code>Pointer.Class</code> objects have two states, resolved and unresolved. When a pointer
+		isn't resolved it doesn't contain the document's information (or it may be just out of sync with the server)
+		but it can be used to link other documents to it as we'll see later. You can also use its
+		<code>resolve</code> method to retrieve its information.
+	</p>
+</section>
+
+<section class="mainContent-section" id="modifying-and-saving-a-document">
+	<h2>Modifying and saving a document</h2>
+
+	<p>
+		All <span class="highlight">documents</span> in <span class="highlight">Carbon</span> can
+		be modified. However all the changes done to a <span class="highlight">document</span>,
+		are done in memory. To persist the modifications the <span class="highlight">document</span> needs to be saved.
+	</p>
+
+	<p>
+		To modify a document you should:
+	</p>
+	<ol>
+		<li>Retrieve the <span class="highlight">document</span>:
+			<ol>
+				<li><code>get</code> using the <span class="highlight">document</span> id as
+					described in <span class="sectionlink">retrieving a document</span>
+				</li>
+			</ol>
+		</li>
+		<li>Modify the <span class="highlight">document</span>: Add, modify or delete
+			<span class="highlight">properties</span>,
+			<span class="highlight">fragments</span>,
+			<span class="highlight">named fragments</span>.
+		</li>
+		<li>Save the changes through <code>document.save</code> method.</li>
+	</ol>
+	<p>
+		Document properties can be added/modified/removed as with any normal JavaScript object.
+	</p>
+	<div class="ui grid tabsComponent">
+	
+		<div class="ui computer tablet only row tabs">
+			<div class="ui top attached tabular menu tabs-titles">
+				
+				
+					<a class="tabs-title active item" data-tab="ewYBeUuc">TypeScript</a>
+				
+				
+					<a class="tabs-title  item" data-tab="JEvsFMKZ">JavaScript ES2015</a>
+				
+				
+					<a class="tabs-title  item" data-tab="hXsksGki">JavaScript ES5</a>
+				
+			</div>
+		</div>
+		<div class="ui mobile only row tabs">
+			<div class="ui compact selection dropdown tabs-options">
+				<i class="dropdown icon"></i>
+				<div class="text">TypeScript</div>
+				<div class="menu">
+					
+					
+					<div class="tabs-option item" data-tab="ewYBeUuc">TypeScript</div>
+					
+					
+					<div class="tabs-option item" data-tab="JEvsFMKZ">JavaScript ES2015</div>
+					
+					
+					<div class="tabs-option item" data-tab="hXsksGki">JavaScript ES5</div>
+					
+				</div>
+			</div>
+		</div>
+
+		
+			
+			<div class="tabs-tab ui bottom attached tabs active tab segment" data-tab="ewYBeUuc">
+				
+
+			<pre><code class="typescript hljs"><span class="hljs-comment">// ... additional imports</span>
 <span class="hljs-keyword">import</span> * as PersistedDocument from <span class="hljs-string">"carbonldp/PersistedDocument"</span>;
 
 <span class="hljs-keyword">let</span> project:Project &amp; PersistedDocument.Class;
@@ -375,7 +1824,16 @@ project.save&lt;Project&gt;().then(
         <span class="hljs-built_in">console</span>.log( refreshedProject === project ); <span class="hljs-comment">// true</span>
         <span class="hljs-comment">// Continue doing stuff...</span>
     }
-).catch( <span class="hljs-built_in">console</span>.error );</code></pre></div><div class="tabs-tab ui bottom attached tabs tab segment" data-tab="sBikQoKW"><pre><code class="javascript hljs"><span class="hljs-comment">// ... imports</span>
+).catch( <span class="hljs-built_in">console</span>.error );</code></pre>
+
+		
+			</div>
+		
+			
+			<div class="tabs-tab ui bottom attached tabs  tab segment" data-tab="JEvsFMKZ">
+				
+
+			<pre><code class="javascript hljs"><span class="hljs-comment">// ... imports</span>
 
 <span class="hljs-keyword">let</span> project;
 
@@ -401,7 +1859,16 @@ project.save().then(
         <span class="hljs-built_in">console</span>.log( refreshedProject === project ); <span class="hljs-comment">// true</span>
         <span class="hljs-comment">// Continue doing stuff...</span>
     }
-).catch( <span class="hljs-built_in">console</span>.error );</code></pre></div><div class="tabs-tab ui bottom attached tabs tab segment" data-tab="OtPrxHpC"><pre><code class="javascript hljs"><span class="hljs-keyword">var</span> project;
+).catch( <span class="hljs-built_in">console</span>.error );</code></pre>
+
+		
+			</div>
+		
+			
+			<div class="tabs-tab ui bottom attached tabs  tab segment" data-tab="hXsksGki">
+				
+
+			<pre><code class="javascript hljs"><span class="hljs-keyword">var</span> project;
 
 <span class="hljs-comment">// ... document retrieval</span>
 
@@ -431,7 +1898,74 @@ project.save().then(
         <span class="hljs-built_in">console</span>.log( refreshedProject === project ); <span class="hljs-comment">// true</span>
         <span class="hljs-comment">// Continue doing stuff...</span>
     }
-).catch( <span class="hljs-built_in">console</span>.error );</code></pre></div></div><p>Notice that we used the <code>save</code> method and immediately after, we called <code>refresh</code>. Remember that every persisted document has this method and it helps you sync the in memory representation of the document with the server's information. In this case we used it because after the document was saved, Carbon could have added or modified some of its properties (noticeably properties like <code>modified</code>).</p><p>This is a very common thing to do, therefore persisted documents also have the method <code>saveAndRefresh</code> which does both things at once.</p></section><section class="mainContent-section" id="deleting-a-document"><h2>Deleting a document</h2><p>As when creating and retrieving documents, the <code>documents</code> service can help you delete a persisted document through its <code>delete</code> method. To do so, you need to provide the document's URI:</p><div class="ui grid tabsComponent"><div class="ui computer tablet only row tabs"><div class="ui top attached tabular menu tabs-titles"><a class="tabs-title active item" data-tab="MsQwndrV">TypeScript</a> <a class="tabs-title item" data-tab="hujmlKZB">JavaScript ES2015</a> <a class="tabs-title item" data-tab="JZkUPJBi">JavaScript ES5</a></div></div><div class="ui mobile only row tabs"><div class="ui compact selection dropdown tabs-options"><i class="dropdown icon"></i><div class="text">TypeScript</div><div class="menu"><div class="tabs-option item" data-tab="MsQwndrV">TypeScript</div><div class="tabs-option item" data-tab="hujmlKZB">JavaScript ES2015</div><div class="tabs-option item" data-tab="JZkUPJBi">JavaScript ES5</div></div></div></div><div class="tabs-tab ui bottom attached tabs active tab segment" data-tab="MsQwndrV"><pre><code class="typescript hljs"><span class="hljs-comment">// ... additional imports</span>
+).catch( <span class="hljs-built_in">console</span>.error );</code></pre>
+
+		
+			</div>
+		
+	
+</div>
+
+	<p>
+		Notice that we used the <code>save</code> method and immediately after, we called <code>refresh</code>.
+		Remember that every persisted document has this method and it helps you sync the in memory
+		representation of the document with the server's information. In this case we used it because after the document was
+		saved, Carbon could have added or modified some of its properties (noticeably properties like <code>modified</code>).
+	</p>
+	<p>
+		This is a very common thing to do, therefore persisted documents also have the method <code>saveAndRefresh</code>
+		which does both things at once.
+	</p>
+</section>
+
+<section class="mainContent-section" id="deleting-a-document">
+	<h2>Deleting a document</h2>
+	<p>
+		As when creating and retrieving documents, the <code>documents</code> service can help you
+		delete a persisted document through its <code>delete</code> method. To do so, you need to
+		provide the document's URI:
+	</p>
+	<div class="ui grid tabsComponent">
+	
+		<div class="ui computer tablet only row tabs">
+			<div class="ui top attached tabular menu tabs-titles">
+				
+				
+					<a class="tabs-title active item" data-tab="KWPURbIO">TypeScript</a>
+				
+				
+					<a class="tabs-title  item" data-tab="nEwVlTOv">JavaScript ES2015</a>
+				
+				
+					<a class="tabs-title  item" data-tab="kiXUvtEV">JavaScript ES5</a>
+				
+			</div>
+		</div>
+		<div class="ui mobile only row tabs">
+			<div class="ui compact selection dropdown tabs-options">
+				<i class="dropdown icon"></i>
+				<div class="text">TypeScript</div>
+				<div class="menu">
+					
+					
+					<div class="tabs-option item" data-tab="KWPURbIO">TypeScript</div>
+					
+					
+					<div class="tabs-option item" data-tab="nEwVlTOv">JavaScript ES2015</div>
+					
+					
+					<div class="tabs-option item" data-tab="kiXUvtEV">JavaScript ES5</div>
+					
+				</div>
+			</div>
+		</div>
+
+		
+			
+			<div class="tabs-tab ui bottom attached tabs active tab segment" data-tab="KWPURbIO">
+				
+
+			<pre><code class="typescript hljs"><span class="hljs-comment">// ... additional imports</span>
 <span class="hljs-keyword">import</span> * as App from <span class="hljs-string">"carbonldp/App"</span>;
 <span class="hljs-keyword">import</span> * as Response from <span class="hljs-string">"carbonldp/HTTP/Response"</span>;
 
@@ -446,7 +1980,16 @@ myAppContext.documents.delete( projectID ).then(
     ( response:Response.Class ) =&gt; {
         <span class="hljs-comment">// continue doing stuff...</span>
     }
-).catch( <span class="hljs-built_in">console</span>.error );</code></pre></div><div class="tabs-tab ui bottom attached tabs tab segment" data-tab="hujmlKZB"><pre><code class="javascript hljs"><span class="hljs-comment">// ... imports</span>
+).catch( <span class="hljs-built_in">console</span>.error );</code></pre>
+
+		
+			</div>
+		
+			
+			<div class="tabs-tab ui bottom attached tabs  tab segment" data-tab="nEwVlTOv">
+				
+
+			<pre><code class="javascript hljs"><span class="hljs-comment">// ... imports</span>
 
 <span class="hljs-keyword">let</span> myAppContext;
 
@@ -459,7 +2002,16 @@ myAppContext.documents.delete( projectID ).then(
     <span class="hljs-function">(<span class="hljs-params"> response </span>) =&gt;</span> {
         <span class="hljs-comment">// continue doing stuff...</span>
     }
-).catch( <span class="hljs-built_in">console</span>.error );</code></pre></div><div class="tabs-tab ui bottom attached tabs tab segment" data-tab="JZkUPJBi"><pre><code class="javascript hljs"><span class="hljs-keyword">var</span> myAppContext;
+).catch( <span class="hljs-built_in">console</span>.error );</code></pre>
+
+		
+			</div>
+		
+			
+			<div class="tabs-tab ui bottom attached tabs  tab segment" data-tab="kiXUvtEV">
+				
+
+			<pre><code class="javascript hljs"><span class="hljs-keyword">var</span> myAppContext;
 
 <span class="hljs-comment">// ... app context retrieval</span>
 
@@ -470,7 +2022,59 @@ myAppContext.documents.delete( projectID ).then(
     <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> response </span>) </span>{
         <span class="hljs-comment">// continue doing stuff...</span>
     }
-).catch( <span class="hljs-built_in">console</span>.error );</code></pre></div></div><p>Like in "Retrieving a document", a document can also be deleted through the <code>PersistedDocument.Class</code>'s <code>delete</code> method:</p><div class="ui grid tabsComponent"><div class="ui computer tablet only row tabs"><div class="ui top attached tabular menu tabs-titles"><a class="tabs-title active item" data-tab="fBujAkMA">TypeScript</a> <a class="tabs-title item" data-tab="xmQTNOzE">JavaScript ES2015</a> <a class="tabs-title item" data-tab="XjgCzAlv">JavaScript ES5</a></div></div><div class="ui mobile only row tabs"><div class="ui compact selection dropdown tabs-options"><i class="dropdown icon"></i><div class="text">TypeScript</div><div class="menu"><div class="tabs-option item" data-tab="fBujAkMA">TypeScript</div><div class="tabs-option item" data-tab="xmQTNOzE">JavaScript ES2015</div><div class="tabs-option item" data-tab="XjgCzAlv">JavaScript ES5</div></div></div></div><div class="tabs-tab ui bottom attached tabs active tab segment" data-tab="fBujAkMA"><pre><code class="typescript hljs"><span class="hljs-comment">// ... additional imports</span>
+).catch( <span class="hljs-built_in">console</span>.error );</code></pre>
+
+		
+			</div>
+		
+	
+</div>
+
+	<p>
+		Like in "Retrieving a document", a document can also be deleted through the <code>PersistedDocument.Class</code>'s
+		<code>delete</code> method:
+	</p>
+	<div class="ui grid tabsComponent">
+	
+		<div class="ui computer tablet only row tabs">
+			<div class="ui top attached tabular menu tabs-titles">
+				
+				
+					<a class="tabs-title active item" data-tab="BpgTVrqy">TypeScript</a>
+				
+				
+					<a class="tabs-title  item" data-tab="FgiJoHEC">JavaScript ES2015</a>
+				
+				
+					<a class="tabs-title  item" data-tab="IXGlFbJP">JavaScript ES5</a>
+				
+			</div>
+		</div>
+		<div class="ui mobile only row tabs">
+			<div class="ui compact selection dropdown tabs-options">
+				<i class="dropdown icon"></i>
+				<div class="text">TypeScript</div>
+				<div class="menu">
+					
+					
+					<div class="tabs-option item" data-tab="BpgTVrqy">TypeScript</div>
+					
+					
+					<div class="tabs-option item" data-tab="FgiJoHEC">JavaScript ES2015</div>
+					
+					
+					<div class="tabs-option item" data-tab="IXGlFbJP">JavaScript ES5</div>
+					
+				</div>
+			</div>
+		</div>
+
+		
+			
+			<div class="tabs-tab ui bottom attached tabs active tab segment" data-tab="BpgTVrqy">
+				
+
+			<pre><code class="typescript hljs"><span class="hljs-comment">// ... additional imports</span>
 <span class="hljs-keyword">import</span> * as PersistedDocument from <span class="hljs-string">"carbonldp/PersistedDocument"</span>;
 <span class="hljs-keyword">import</span> * as Response from <span class="hljs-string">"carbonldp/HTTP/Response"</span>;
 
@@ -482,7 +2086,16 @@ project.delete().then(
     ( response:Response.Class ) =&gt; {
         <span class="hljs-comment">// continue doing stuff...</span>
     }
-).catch( <span class="hljs-built_in">console</span>.error );</code></pre></div><div class="tabs-tab ui bottom attached tabs tab segment" data-tab="xmQTNOzE"><pre><code class="javascript hljs"><span class="hljs-comment">// ... imports</span>
+).catch( <span class="hljs-built_in">console</span>.error );</code></pre>
+
+		
+			</div>
+		
+			
+			<div class="tabs-tab ui bottom attached tabs  tab segment" data-tab="FgiJoHEC">
+				
+
+			<pre><code class="javascript hljs"><span class="hljs-comment">// ... imports</span>
 
 <span class="hljs-keyword">let</span> project;
 
@@ -492,7 +2105,16 @@ project.delete().then(
     <span class="hljs-function">(<span class="hljs-params"> response </span>) =&gt;</span> {
         <span class="hljs-comment">// continue doing stuff...</span>
     }
-).catch( <span class="hljs-built_in">console</span>.error );</code></pre></div><div class="tabs-tab ui bottom attached tabs tab segment" data-tab="XjgCzAlv"><pre><code class="javascript hljs"><span class="hljs-keyword">var</span> project;
+).catch( <span class="hljs-built_in">console</span>.error );</code></pre>
+
+		
+			</div>
+		
+			
+			<div class="tabs-tab ui bottom attached tabs  tab segment" data-tab="IXGlFbJP">
+				
+
+			<pre><code class="javascript hljs"><span class="hljs-keyword">var</span> project;
 
 <span class="hljs-comment">// persisted document retrieval</span>
 
@@ -500,7 +2122,70 @@ project.delete().then(
     <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> response </span>) </span>{
         <span class="hljs-comment">// continue doing stuff...</span>
     }
-).catch( <span class="hljs-built_in">console</span>.error );</code></pre></div></div><p>In fact, this pattern can be seen across several methods, where both the <code>documents</code> service and <code>PersistedDocument.Class</code> expose similar methods. For example, <code>createChild</code> is also exposed by a <code>PersistedDocument.Class</code> object and allows you to create a direct child of that document. Basically, if you don't have a resolved reference of the document, use <code>documents</code> service. But if you already have one, you can call the action through the <code>PersistedDocument.Class</code> directly (which may make code more readable, and in some cases more efficient).</p></section><section class="mainContent-section" id="linking-documents"><h2>Linking documents</h2><p>One of the core features of Carbon LDP, is linking data (after all, it's a Linked Data Platform). Documents can be linked to other documents through normal JavaScript properties:</p><div class="ui grid tabsComponent"><div class="ui computer tablet only row tabs"><div class="ui top attached tabular menu tabs-titles"><a class="tabs-title active item" data-tab="HlNlKUYz">TypeScript</a> <a class="tabs-title item" data-tab="FFIKiETH">JavaScript ES2015</a> <a class="tabs-title item" data-tab="kpVTaJGk">JavaScript ES5</a></div></div><div class="ui mobile only row tabs"><div class="ui compact selection dropdown tabs-options"><i class="dropdown icon"></i><div class="text">TypeScript</div><div class="menu"><div class="tabs-option item" data-tab="HlNlKUYz">TypeScript</div><div class="tabs-option item" data-tab="FFIKiETH">JavaScript ES2015</div><div class="tabs-option item" data-tab="kpVTaJGk">JavaScript ES5</div></div></div></div><div class="tabs-tab ui bottom attached tabs active tab segment" data-tab="HlNlKUYz"><pre><code class="typescript hljs"><span class="hljs-comment">// ... additional imports</span>
+).catch( <span class="hljs-built_in">console</span>.error );</code></pre>
+
+		
+			</div>
+		
+	
+</div>
+
+	<p>
+		In fact, this pattern can be seen across several methods, where both the <code>documents</code> service
+		and <code>PersistedDocument.Class</code> expose similar methods. For example, <code>createChild</code> is also exposed by a
+		<code>PersistedDocument.Class</code> object and allows you to create a direct child of that document. Basically, if you don't have
+		a resolved reference of the document, use <code>documents</code> service. But if you already have one, you
+		can call the action through the <code>PersistedDocument.Class</code> directly (which may make code more readable, and in some cases more efficient).
+	</p>
+</section>
+
+<section class="mainContent-section" id="linking-documents">
+	<h2>Linking documents</h2>
+	<p>
+		One of the core features of Carbon LDP, is linking data (after all, it's a Linked Data Platform). Documents can
+		be linked to other documents through normal JavaScript properties:
+	</p>
+	<div class="ui grid tabsComponent">
+	
+		<div class="ui computer tablet only row tabs">
+			<div class="ui top attached tabular menu tabs-titles">
+				
+				
+					<a class="tabs-title active item" data-tab="qhEdqWAC">TypeScript</a>
+				
+				
+					<a class="tabs-title  item" data-tab="ihbTfWPa">JavaScript ES2015</a>
+				
+				
+					<a class="tabs-title  item" data-tab="nueAJOvC">JavaScript ES5</a>
+				
+			</div>
+		</div>
+		<div class="ui mobile only row tabs">
+			<div class="ui compact selection dropdown tabs-options">
+				<i class="dropdown icon"></i>
+				<div class="text">TypeScript</div>
+				<div class="menu">
+					
+					
+					<div class="tabs-option item" data-tab="qhEdqWAC">TypeScript</div>
+					
+					
+					<div class="tabs-option item" data-tab="ihbTfWPa">JavaScript ES2015</div>
+					
+					
+					<div class="tabs-option item" data-tab="nueAJOvC">JavaScript ES5</div>
+					
+				</div>
+			</div>
+		</div>
+
+		
+			
+			<div class="tabs-tab ui bottom attached tabs active tab segment" data-tab="qhEdqWAC">
+				
+
+			<pre><code class="typescript hljs"><span class="hljs-comment">// ... additional imports</span>
 <span class="hljs-keyword">import</span> * as PersistedDocument from <span class="hljs-string">"carbonldp/PersistedDocument"</span>;
 
 <span class="hljs-keyword">let</span> project1:Project &amp; PersistedDocument.Class;
@@ -508,19 +2193,104 @@ project.delete().then(
 
 <span class="hljs-comment">// ... persisted documents retrieval</span>
 
-project1.relatedProject = project2;</code></pre></div><div class="tabs-tab ui bottom attached tabs tab segment" data-tab="FFIKiETH"><pre><code class="javascript hljs"><span class="hljs-comment">// ... imports</span>
+project1.relatedProject = project2;</code></pre>
+
+		
+			</div>
+		
+			
+			<div class="tabs-tab ui bottom attached tabs  tab segment" data-tab="ihbTfWPa">
+				
+
+			<pre><code class="javascript hljs"><span class="hljs-comment">// ... imports</span>
 
 <span class="hljs-keyword">let</span> project1;
 <span class="hljs-keyword">let</span> project2;
 
 <span class="hljs-comment">// ... persisted documents retrieval</span>
 
-project1.relatedProject = project2;</code></pre></div><div class="tabs-tab ui bottom attached tabs tab segment" data-tab="kpVTaJGk"><pre><code class="javascript hljs"><span class="hljs-keyword">var</span> project1;
+project1.relatedProject = project2;</code></pre>
+
+		
+			</div>
+		
+			
+			<div class="tabs-tab ui bottom attached tabs  tab segment" data-tab="nueAJOvC">
+				
+
+			<pre><code class="javascript hljs"><span class="hljs-keyword">var</span> project1;
 <span class="hljs-keyword">var</span> project2;
 
 <span class="hljs-comment">// ... persisted documents retrieval</span>
 
-project1.relatedProject = project2;</code></pre></div></div><p>There are also special properties Carbon handles for you. The most important ones are <code>contains</code>, which represents the document parent-child relation, and <code>members</code> which represents membership relation.</p><section class="mainContent-subSection" id="parent-child-relation"><h3>Parent-child relation</h3><p>Like we said before, every document that is saved in Carbon must have a parent. When a document gets created it's automatically added to the array contained in its parent <code>contains</code> property. The SDK gives you convenient methods to handle this array, such as:</p><ul><li><code>documents.listChildren</code>: Returns a list of unresolved <code>PersistedDocument.Class</code> objects for each of the document children</li><li><code>documents.getChildren</code>: Returns a list of RESOLVED <code>PersistedDocument.Class</code> objects for each of the document children</li></ul><div class="ui grid tabsComponent"><div class="ui computer tablet only row tabs"><div class="ui top attached tabular menu tabs-titles"><a class="tabs-title active item" data-tab="GBfRRmKj">TypeScript</a> <a class="tabs-title item" data-tab="AcFkhxae">JavaScript ES2015</a> <a class="tabs-title item" data-tab="DHFAadmq">JavaScript ES5</a></div></div><div class="ui mobile only row tabs"><div class="ui compact selection dropdown tabs-options"><i class="dropdown icon"></i><div class="text">TypeScript</div><div class="menu"><div class="tabs-option item" data-tab="GBfRRmKj">TypeScript</div><div class="tabs-option item" data-tab="AcFkhxae">JavaScript ES2015</div><div class="tabs-option item" data-tab="DHFAadmq">JavaScript ES5</div></div></div></div><div class="tabs-tab ui bottom attached tabs active tab segment" data-tab="GBfRRmKj"><pre><code class="typescript hljs"><span class="hljs-comment">// ... additional imports</span>
+project1.relatedProject = project2;</code></pre>
+
+		
+			</div>
+		
+	
+</div>
+
+	<p>
+		There are also special properties Carbon handles for you. The most important ones are <code>contains</code>,
+		which represents the document parent-child relation, and <code>members</code> which represents membership relation.
+	</p>
+	<section class="mainContent-subSection" id="parent-child-relation">
+		<h3>Parent-child relation</h3>
+		<p>
+			Like we said before, every document that is saved in Carbon must have a parent. When a document gets
+			created it's automatically added to the array contained in its parent <code>contains</code> property.
+			The SDK gives you convenient methods to handle this array, such as:
+		</p>
+		<ul>
+			<li>
+				<code>documents.listChildren</code>: Returns a list of unresolved <code>PersistedDocument.Class</code> objects for each of the document children
+			</li>
+			<li>
+				<code>documents.getChildren</code>: Returns a list of RESOLVED <code>PersistedDocument.Class</code> objects for each of the document children
+			</li>
+		</ul>
+		<div class="ui grid tabsComponent">
+	
+		<div class="ui computer tablet only row tabs">
+			<div class="ui top attached tabular menu tabs-titles">
+				
+				
+					<a class="tabs-title active item" data-tab="LshAgaUh">TypeScript</a>
+				
+				
+					<a class="tabs-title  item" data-tab="LFBNBpcx">JavaScript ES2015</a>
+				
+				
+					<a class="tabs-title  item" data-tab="reTOqieg">JavaScript ES5</a>
+				
+			</div>
+		</div>
+		<div class="ui mobile only row tabs">
+			<div class="ui compact selection dropdown tabs-options">
+				<i class="dropdown icon"></i>
+				<div class="text">TypeScript</div>
+				<div class="menu">
+					
+					
+					<div class="tabs-option item" data-tab="LshAgaUh">TypeScript</div>
+					
+					
+					<div class="tabs-option item" data-tab="LFBNBpcx">JavaScript ES2015</div>
+					
+					
+					<div class="tabs-option item" data-tab="reTOqieg">JavaScript ES5</div>
+					
+				</div>
+			</div>
+		</div>
+
+		
+			
+			<div class="tabs-tab ui bottom attached tabs active tab segment" data-tab="LshAgaUh">
+				
+
+				<pre><code class="typescript hljs"><span class="hljs-comment">// ... additional imports</span>
 <span class="hljs-keyword">import</span> * as App from <span class="hljs-string">"carbonldp/App"</span>;
 
 <span class="hljs-keyword">let</span> myAppContext:App.Context;
@@ -537,7 +2307,16 @@ myAppContext.documents.getChildren&lt;Project&gt;( <span class="hljs-string">"pr
     ( [ resolvedProjects, response ] : [ ( Project &amp; PersistedDocument.Class )[], HTTP.Response.Class] ) =&gt; {
         <span class="hljs-built_in">console</span>.log( resolvedProjects ); <span class="hljs-comment">// array of resolved pointers</span>
     }
-);</code></pre></div><div class="tabs-tab ui bottom attached tabs tab segment" data-tab="AcFkhxae"><pre><code class="javascript hljs"><span class="hljs-comment">// ... imports</span>
+);</code></pre>
+
+			
+			</div>
+		
+			
+			<div class="tabs-tab ui bottom attached tabs  tab segment" data-tab="LFBNBpcx">
+				
+
+				<pre><code class="javascript hljs"><span class="hljs-comment">// ... imports</span>
 
 <span class="hljs-keyword">let</span> myAppContext;
 
@@ -553,7 +2332,16 @@ myAppContext.documents.getChildren( <span class="hljs-string">"projects/"</span>
     <span class="hljs-function">(<span class="hljs-params"> [ resolvedProjects, response ] </span>) =&gt;</span> {
         <span class="hljs-built_in">console</span>.log( projects ); <span class="hljs-comment">// array of resolved pointers</span>
     }
-);</code></pre></div><div class="tabs-tab ui bottom attached tabs tab segment" data-tab="DHFAadmq"><pre><code class="javascript hljs"><span class="hljs-keyword">var</span> myAppContext;
+);</code></pre>
+
+			
+			</div>
+		
+			
+			<div class="tabs-tab ui bottom attached tabs  tab segment" data-tab="reTOqieg">
+				
+
+				<pre><code class="javascript hljs"><span class="hljs-keyword">var</span> myAppContext;
 
 <span class="hljs-comment">// ... app context retrieval</span>
 
@@ -573,7 +2361,124 @@ myAppContext.documents.getChildren( <span class="hljs-string">"projects/"</span>
 
         <span class="hljs-built_in">console</span>.log( projects ); <span class="hljs-comment">// array of resolved pointers</span>
     }
-);</code></pre></div></div><p>Like <code>createChild</code> and <code>delete</code>, <code>listChildren</code> and <code>getChildren</code> are also accessible through a <code>PersistedDocument.Class</code>. See, there's a pattern!</p><div class="ui info icon message"><i class="info circle icon"></i><div class="content"><p>The last example could show you weird results. The <code>documents</code> service caches pointers, so listing children of a document while at the same time retrieving them will return you the same objects.</p></div></div><p>It's worth mentioning that parent-child relations are considered <span class="highlight">hard links</span>. They are directly related to the structure of the data. Meaning, if you delete the relation, the child gets deleted too. By consequence, if you delete a parent, all of its children will also be deleted (and the children of its children, and so on).</p></section><section class="mainContent-subSection" id="membership-relation"><h3>Membership Relation</h3><p>Because parent-child relations are <span class="highlight">hard links</span>, it is not recommended to use them in your app logic. Instead, Carbon helps you manage another type of relation, considered as a <span class="highlight">soft link</span>, membership relations.</p><p>The meaning of a membership relation is up to your application logic to define it. It can mean things like, a project's list of tasks, a person's friends, a person's assets, etc. You must be thinking <i>"well I can already do that with normal JavaScript properties, what are the advantages of treating them as 'membership relations'?"</i>. It's true that you can manually manage lists, but to do so, you would need to manage the whole document. By configuring a property to act as a "membership relation", you enable things like retrieving the list without retrieving the complete document, adding new elements without retrieving the list, etc.</p><p>All carbon documents can maintain a list of members. The relation between the document and its members can be configured, through the properties:</p><ul><li><code>hasMemberRelation</code>: Configures the property that will hold the array of members (by default <code>members</code>)</li><li><code>isMemberOfRelation</code>: Configures the property that each member will have, that links back to the document they are member of (none by default)</li></ul><p>These properties are configured in the document that will maintain the member array. Members can be added, removed, listed or retrieved, through the following methods in the <code>documents</code> service (and the document itself too):</p><ul><li><code>addMember/addMembers</code>: Adds the provided pointers as members of the document</li><li><code>listMembers</code>: Like <code>listChildren</code>, returns an array of unresolved <code>PersistedDocument.Class</code> objects for each member</li><li><code>getMembers</code>: Like <code>getChildren</code>, returns an array of RESOLVED <code>PersistedDocument.Class</code> objects for each member</li><li><code>removeMember/removeMembers/removeAllMembers</code>: Removes the specified members (without deleting them)</li></ul><div class="ui grid tabsComponent"><div class="ui computer tablet only row tabs"><div class="ui top attached tabular menu tabs-titles"><a class="tabs-title active item" data-tab="qzdZFEUg">TypeScript</a> <a class="tabs-title item" data-tab="SMVzkEkB">JavaScript ES2015</a> <a class="tabs-title item" data-tab="XchIwAtX">JavaScript ES5</a></div></div><div class="ui mobile only row tabs"><div class="ui compact selection dropdown tabs-options"><i class="dropdown icon"></i><div class="text">TypeScript</div><div class="menu"><div class="tabs-option item" data-tab="qzdZFEUg">TypeScript</div><div class="tabs-option item" data-tab="SMVzkEkB">JavaScript ES2015</div><div class="tabs-option item" data-tab="XchIwAtX">JavaScript ES5</div></div></div></div><div class="tabs-tab ui bottom attached tabs active tab segment" data-tab="qzdZFEUg"><pre><code class="typescript hljs"><span class="hljs-comment">// ... additional imports</span>
+);</code></pre>
+
+			
+			</div>
+		
+	
+</div>
+
+		<p>
+			Like <code>createChild</code> and <code>delete</code>, <code>listChildren</code> and <code>getChildren</code>
+			are also accessible through a <code>PersistedDocument.Class</code>. See, there's a pattern!
+		</p>
+		<div class="ui info icon message">
+			<i class="info circle icon"></i>
+			<div class="content">
+				<p>
+					The last example could show you weird results. The <code>documents</code> service
+					caches pointers, so listing children of a document while at the same time retrieving them will return
+					you the same objects.
+				</p>
+			</div>
+		</div>
+		<p>
+			It's worth mentioning that parent-child relations are considered <span class="highlight">hard links</span>.
+			They are directly related to the structure of the data. Meaning, if you delete the relation,
+			the child gets deleted too. By consequence, if you delete a parent, all of its children will also be
+			deleted (and the children of its children, and so on).
+		</p>
+	</section>
+	<section class="mainContent-subSection" id="membership-relation">
+		<h3>Membership Relation</h3>
+		<p>
+			Because parent-child relations are <span class="highlight">hard links</span>, it is not recommended
+			to use them in your app logic. Instead, Carbon helps you manage another type of relation, considered as
+			a <span class="highlight">soft link</span>, membership relations.
+		</p>
+		<p>
+			The meaning of a membership relation is up to your application logic to define it. It can mean things like,
+			a project's list of tasks, a person's friends, a person's assets, etc. You must be thinking
+			<!-- TODO: Use a css class instead of an <i> block -->
+			<i>"well I can already do that with normal JavaScript properties, what are the advantages of treating them as 'membership relations'?"</i>.
+			It's true that you can manually manage lists, but to do so, you would need to manage the whole document. By configuring
+			a property to act as a "membership relation", you enable things like retrieving the list without retrieving the complete document,
+			adding new elements without retrieving the list, etc.
+		</p>
+		<p>
+			All carbon documents can maintain a list of members. The relation between the document and its members can be
+			configured, through the properties:
+		</p>
+		<ul>
+			<li>
+				<code>hasMemberRelation</code>: Configures the property that will hold the array of members
+				(by default <code>members</code>)
+			</li>
+			<li>
+				<code>isMemberOfRelation</code>: Configures the property that each member will have, that links back to the
+				document they are member of (none by default)
+			</li>
+		</ul>
+		<p>
+			These properties are configured in the document that will maintain the member array. Members can be added, removed,
+			listed or retrieved, through the following methods in the <code>documents</code> service (and the document itself too):
+		</p>
+		<ul>
+			<li>
+				<code>addMember/addMembers</code>: Adds the provided pointers as members of the document
+			</li>
+			<li>
+				<code>listMembers</code>: Like <code>listChildren</code>, returns an array of unresolved <code>PersistedDocument.Class</code> objects for each member
+			</li>
+			<li>
+				<code>getMembers</code>: Like <code>getChildren</code>, returns an array of RESOLVED <code>PersistedDocument.Class</code> objects for each member
+			</li>
+			<li>
+				<code>removeMember/removeMembers/removeAllMembers</code>: Removes the specified members (without deleting them)
+			</li>
+		</ul>
+		<div class="ui grid tabsComponent">
+	
+		<div class="ui computer tablet only row tabs">
+			<div class="ui top attached tabular menu tabs-titles">
+				
+				
+					<a class="tabs-title active item" data-tab="IkzURDDt">TypeScript</a>
+				
+				
+					<a class="tabs-title  item" data-tab="QZbzHWwk">JavaScript ES2015</a>
+				
+				
+					<a class="tabs-title  item" data-tab="uBlVFoQa">JavaScript ES5</a>
+				
+			</div>
+		</div>
+		<div class="ui mobile only row tabs">
+			<div class="ui compact selection dropdown tabs-options">
+				<i class="dropdown icon"></i>
+				<div class="text">TypeScript</div>
+				<div class="menu">
+					
+					
+					<div class="tabs-option item" data-tab="IkzURDDt">TypeScript</div>
+					
+					
+					<div class="tabs-option item" data-tab="QZbzHWwk">JavaScript ES2015</div>
+					
+					
+					<div class="tabs-option item" data-tab="uBlVFoQa">JavaScript ES5</div>
+					
+				</div>
+			</div>
+		</div>
+
+		
+			
+			<div class="tabs-tab ui bottom attached tabs active tab segment" data-tab="IkzURDDt">
+				
+
+				<pre><code class="typescript hljs"><span class="hljs-comment">// ... additional imports</span>
 <span class="hljs-keyword">import</span> * as App from <span class="hljs-string">"carbonldp/App"</span>;
 <span class="hljs-keyword">import</span> * as PersistedDocument from <span class="hljs-string">"carbonldp/PersistedDocument"</span>;
 <span class="hljs-keyword">import</span> * as Response from <span class="hljs-string">"carbonldp/HTTP/Response"</span>;
@@ -625,7 +2530,16 @@ project.addMembers( [ task1, task2, task3 ] ).then(
         <span class="hljs-built_in">console</span>.log( resolvedTasks ); <span class="hljs-comment">// task1 and task3 documents</span>
         <span class="hljs-built_in">console</span>.log( task[<span class="hljs-number">0</span>].project ); <span class="hljs-comment">// pointer to project. Added due to the configured isMemberOfRelation</span>
     }
-).catch( <span class="hljs-built_in">console</span>.error );</code></pre></div><div class="tabs-tab ui bottom attached tabs tab segment" data-tab="SMVzkEkB"><pre><code class="javascript hljs"><span class="hljs-comment">// ... imports</span>
+).catch( <span class="hljs-built_in">console</span>.error );</code></pre>
+
+			
+			</div>
+		
+			
+			<div class="tabs-tab ui bottom attached tabs  tab segment" data-tab="QZbzHWwk">
+				
+
+				<pre><code class="javascript hljs"><span class="hljs-comment">// ... imports</span>
 
 <span class="hljs-keyword">let</span> myAppContext;
 
@@ -674,7 +2588,16 @@ project.addMembers( [ task1, task2, task3 ] ).then(
         <span class="hljs-built_in">console</span>.log( resolvedTasks ); <span class="hljs-comment">// task1 and task3 documents</span>
         <span class="hljs-built_in">console</span>.log( task[<span class="hljs-number">0</span>].project ); <span class="hljs-comment">// pointer to project. Added due to the configured isMemberOfRelation</span>
     }
-).catch( <span class="hljs-built_in">console</span>.error );</code></pre></div><div class="tabs-tab ui bottom attached tabs tab segment" data-tab="XchIwAtX"><pre><code class="javascript hljs"><span class="hljs-keyword">var</span> myAppContext;
+).catch( <span class="hljs-built_in">console</span>.error );</code></pre>
+
+			
+			</div>
+		
+			
+			<div class="tabs-tab ui bottom attached tabs  tab segment" data-tab="uBlVFoQa">
+				
+
+				<pre><code class="javascript hljs"><span class="hljs-keyword">var</span> myAppContext;
 
 <span class="hljs-comment">// ... app context retrieval</span>
 
@@ -730,7 +2653,73 @@ project.addMembers( [ task1, task2, task3 ] ).then(
         <span class="hljs-built_in">console</span>.log( resolvedTasks ); <span class="hljs-comment">// task1 and task3 documents</span>
         <span class="hljs-built_in">console</span>.log( task[<span class="hljs-number">0</span>].project ); <span class="hljs-comment">// pointer to project. Added due to the configured isMemberOfRelation</span>
     }
-).catch( <span class="hljs-built_in">console</span>.error );</code></pre></div></div></section></section><section class="mainContent-section" id="creating-an-access-point"><h2>Creating an access point</h2><p>Membership relations have a limitation though, a document can only maintain one list through one property. So what happens when you want to manage members of another property? For example, what happens if you want to manage a list of people that are members of the project? Well, this can be accomplished using access points.</p><p>Access points are special documents whose purpose is to maintain a list of members of another document. Any document can have any number of access points, removing the limitation we talked about.</p><p>Like normal documents, access points can be customized by specifying a <code>hasMemberRelation</code> and an <code>isMemberOfRelation</code>. To create an access point for a document you can use the <code>createAccessPoint</code> method of the <code>documents</code> service or of a <code>PersistedDocument.Class</code> object.</p><div class="ui grid tabsComponent"><div class="ui computer tablet only row tabs"><div class="ui top attached tabular menu tabs-titles"><a class="tabs-title active item" data-tab="zIfOxTCh">TypeScript</a> <a class="tabs-title item" data-tab="cMMRFjoW">JavaScript ES2015</a> <a class="tabs-title item" data-tab="kUTaFPao">JavaScript ES5</a></div></div><div class="ui mobile only row tabs"><div class="ui compact selection dropdown tabs-options"><i class="dropdown icon"></i><div class="text">TypeScript</div><div class="menu"><div class="tabs-option item" data-tab="zIfOxTCh">TypeScript</div><div class="tabs-option item" data-tab="cMMRFjoW">JavaScript ES2015</div><div class="tabs-option item" data-tab="kUTaFPao">JavaScript ES5</div></div></div></div><div class="tabs-tab ui bottom attached tabs active tab segment" data-tab="zIfOxTCh"><pre><code class="typescript hljs"><span class="hljs-comment">// ... additional imports</span>
+).catch( <span class="hljs-built_in">console</span>.error );</code></pre>
+
+			
+			</div>
+		
+	
+</div>
+
+	</section>
+</section>
+<section class="mainContent-section" id="creating-an-access-point">
+	<h2>Creating an access point</h2>
+	<p>
+		Membership relations have a limitation though, a document can only maintain one list through one property. So what happens when
+		you want to manage members of another property? For example, what happens if you want to manage a list of people that are members
+		of the project? Well, this can be accomplished using access points.
+	</p>
+	<p>
+		Access points are special documents whose purpose is to maintain a list of members of another document. Any document can have
+		any number of access points, removing the limitation we talked about.
+	</p>
+	<p>
+		Like normal documents, access points can be customized by specifying a <code>hasMemberRelation</code> and an
+		<code>isMemberOfRelation</code>. To create an access point for a document you can use the <code>createAccessPoint</code> method
+		of the <code>documents</code> service or of a <code>PersistedDocument.Class</code> object.
+	</p>
+	<div class="ui grid tabsComponent">
+	
+		<div class="ui computer tablet only row tabs">
+			<div class="ui top attached tabular menu tabs-titles">
+				
+				
+					<a class="tabs-title active item" data-tab="rEEmDGUU">TypeScript</a>
+				
+				
+					<a class="tabs-title  item" data-tab="hXSQxoqb">JavaScript ES2015</a>
+				
+				
+					<a class="tabs-title  item" data-tab="vIiVhrBk">JavaScript ES5</a>
+				
+			</div>
+		</div>
+		<div class="ui mobile only row tabs">
+			<div class="ui compact selection dropdown tabs-options">
+				<i class="dropdown icon"></i>
+				<div class="text">TypeScript</div>
+				<div class="menu">
+					
+					
+					<div class="tabs-option item" data-tab="rEEmDGUU">TypeScript</div>
+					
+					
+					<div class="tabs-option item" data-tab="hXSQxoqb">JavaScript ES2015</div>
+					
+					
+					<div class="tabs-option item" data-tab="vIiVhrBk">JavaScript ES5</div>
+					
+				</div>
+			</div>
+		</div>
+
+		
+			
+			<div class="tabs-tab ui bottom attached tabs active tab segment" data-tab="rEEmDGUU">
+				
+
+			<pre><code class="typescript hljs"><span class="hljs-comment">// ... additional imports</span>
 <span class="hljs-keyword">import</span> * as AccessPoint from <span class="hljs-string">"carbonldp/AccessPoint"</span>;
 <span class="hljs-keyword">import</span> * as PersistedAccessPoint from <span class="hljs-string">"carbonldp/PersistedAccessPoint"</span>;
 <span class="hljs-keyword">import</span> * as PersistedDocument from <span class="hljs-string">"carbonldp/PersistedDocument"</span>;
@@ -768,7 +2757,16 @@ project.createAccessPoint( <span class="hljs-string">"people"</span>, projectMem
         <span class="hljs-built_in">console</span>.log( person1 === refreshedPerson1 ); <span class="hljs-comment">// true</span>
         <span class="hljs-built_in">console</span>.log( refreshedPerson1.projects ); <span class="hljs-comment">// Pointer to project</span>
     }
-).catch( <span class="hljs-built_in">console</span>.error );</code></pre></div><div class="tabs-tab ui bottom attached tabs tab segment" data-tab="cMMRFjoW"><pre><code class="javascript hljs"><span class="hljs-comment">// ... imports</span>
+).catch( <span class="hljs-built_in">console</span>.error );</code></pre>
+
+		
+			</div>
+		
+			
+			<div class="tabs-tab ui bottom attached tabs  tab segment" data-tab="hXSQxoqb">
+				
+
+			<pre><code class="javascript hljs"><span class="hljs-comment">// ... imports</span>
 
 <span class="hljs-keyword">let</span> project;
 <span class="hljs-keyword">let</span> person1;
@@ -803,7 +2801,16 @@ project.createAccessPoint( <span class="hljs-string">"people"</span>, projectMem
         <span class="hljs-built_in">console</span>.log( person1 === refreshedPerson1 ); <span class="hljs-comment">// true</span>
         <span class="hljs-built_in">console</span>.log( refreshedPerson1.projects ); <span class="hljs-comment">// Pointer to project</span>
     }
-).catch( <span class="hljs-built_in">console</span>.error );</code></pre></div><div class="tabs-tab ui bottom attached tabs tab segment" data-tab="kUTaFPao"><pre><code class="javascript hljs"><span class="hljs-comment">// ... imports</span>
+).catch( <span class="hljs-built_in">console</span>.error );</code></pre>
+
+		
+			</div>
+		
+			
+			<div class="tabs-tab ui bottom attached tabs  tab segment" data-tab="vIiVhrBk">
+				
+
+			<pre><code class="javascript hljs"><span class="hljs-comment">// ... imports</span>
 
 <span class="hljs-keyword">var</span> project;
 <span class="hljs-keyword">var</span> person1;
@@ -847,7 +2854,61 @@ project.createAccessPoint( <span class="hljs-string">"people"</span>, projectMem
         <span class="hljs-built_in">console</span>.log( person1 === refreshedPerson1 ); <span class="hljs-comment">// true</span>
         <span class="hljs-built_in">console</span>.log( refreshedPerson1.projects ); <span class="hljs-comment">// Pointer to project</span>
     }
-).catch( <span class="hljs-built_in">console</span>.error );</code></pre></div></div></section><section class="mainContent-section" id="putting-it-all-together"><h2>Putting it all together</h2><p>Here's an example of all the actions we talked about joined together into a single script:</p><div class="ui grid tabsComponent"><div class="ui computer tablet only row tabs"><div class="ui top attached tabular menu tabs-titles"><a class="tabs-title active item" data-tab="tSKTmtzy">TypeScript</a> <a class="tabs-title item" data-tab="QuwuAgzS">JavaScript ES2015</a> <a class="tabs-title item" data-tab="SHkuHjRs">JavaScript ES5</a></div></div><div class="ui mobile only row tabs"><div class="ui compact selection dropdown tabs-options"><i class="dropdown icon"></i><div class="text">TypeScript</div><div class="menu"><div class="tabs-option item" data-tab="tSKTmtzy">TypeScript</div><div class="tabs-option item" data-tab="QuwuAgzS">JavaScript ES2015</div><div class="tabs-option item" data-tab="SHkuHjRs">JavaScript ES5</div></div></div></div><div class="tabs-tab ui bottom attached tabs active tab segment" data-tab="tSKTmtzy"><pre><code class="typescript hljs"><span class="hljs-keyword">import</span> Carbon from <span class="hljs-string">"carbonldp/Carbon"</span>;
+).catch( <span class="hljs-built_in">console</span>.error );</code></pre>
+
+		
+			</div>
+		
+	
+</div>
+
+</section>
+<section class="mainContent-section" id="putting-it-all-together">
+	<h2>Putting it all together</h2>
+	<p>
+		Here's an example of all the actions we talked about joined together into a single script:
+	</p>
+	<div class="ui grid tabsComponent">
+	
+		<div class="ui computer tablet only row tabs">
+			<div class="ui top attached tabular menu tabs-titles">
+				
+				
+					<a class="tabs-title active item" data-tab="XvEzLifI">TypeScript</a>
+				
+				
+					<a class="tabs-title  item" data-tab="udXdTyyI">JavaScript ES2015</a>
+				
+				
+					<a class="tabs-title  item" data-tab="lueMKWdt">JavaScript ES5</a>
+				
+			</div>
+		</div>
+		<div class="ui mobile only row tabs">
+			<div class="ui compact selection dropdown tabs-options">
+				<i class="dropdown icon"></i>
+				<div class="text">TypeScript</div>
+				<div class="menu">
+					
+					
+					<div class="tabs-option item" data-tab="XvEzLifI">TypeScript</div>
+					
+					
+					<div class="tabs-option item" data-tab="udXdTyyI">JavaScript ES2015</div>
+					
+					
+					<div class="tabs-option item" data-tab="lueMKWdt">JavaScript ES5</div>
+					
+				</div>
+			</div>
+		</div>
+
+		
+			
+			<div class="tabs-tab ui bottom attached tabs active tab segment" data-tab="XvEzLifI">
+				
+
+			<pre><code class="typescript hljs"><span class="hljs-keyword">import</span> Carbon from <span class="hljs-string">"carbonldp/Carbon"</span>;
 <span class="hljs-keyword">import</span> * as Token from <span class="hljs-string">"carbonldp/Auth/Token"</span>;
 <span class="hljs-keyword">import</span> * as App from <span class="hljs-string">"carbonldp/App"</span>;
 <span class="hljs-keyword">import</span> * as Response from <span class="hljs-string">"carbonldp/HTTP/Response"</span>;
@@ -982,7 +3043,16 @@ carbon.auth.authenticate( <span class="hljs-string">"your@email.com"</span>, <sp
 
         <span class="hljs-built_in">console</span>.log( <span class="hljs-string">"All done!"</span> );
     }
-).catch( <span class="hljs-built_in">console</span>.error );</code></pre></div><div class="tabs-tab ui bottom attached tabs tab segment" data-tab="QuwuAgzS"><pre><code class="javascript hljs"><span class="hljs-keyword">import</span> Carbon <span class="hljs-keyword">from</span> <span class="hljs-string">"carbonldp/Carbon"</span>;
+).catch( <span class="hljs-built_in">console</span>.error );</code></pre>
+
+		
+			</div>
+		
+			
+			<div class="tabs-tab ui bottom attached tabs  tab segment" data-tab="udXdTyyI">
+				
+
+			<pre><code class="javascript hljs"><span class="hljs-keyword">import</span> Carbon <span class="hljs-keyword">from</span> <span class="hljs-string">"carbonldp/Carbon"</span>;
 
 <span class="hljs-keyword">let</span> project = {
     <span class="hljs-attr">name</span>: <span class="hljs-string">"Project X"</span>
@@ -1098,7 +3168,16 @@ carbon.auth.authenticate( <span class="hljs-string">"your@email.com"</span>, <sp
 
         <span class="hljs-built_in">console</span>.log( <span class="hljs-string">"All done!"</span> );
     }
-).catch( <span class="hljs-built_in">console</span>.error );</code></pre></div><div class="tabs-tab ui bottom attached tabs tab segment" data-tab="SHkuHjRs"><pre><code class="javascript hljs"><span class="hljs-keyword">var</span> project = {
+).catch( <span class="hljs-built_in">console</span>.error );</code></pre>
+
+		
+			</div>
+		
+			
+			<div class="tabs-tab ui bottom attached tabs  tab segment" data-tab="lueMKWdt">
+				
+
+			<pre><code class="javascript hljs"><span class="hljs-keyword">var</span> project = {
     <span class="hljs-attr">name</span>: <span class="hljs-string">"Project X"</span>
 };
 <span class="hljs-keyword">var</span> persistedProject;
@@ -1225,4 +3304,426 @@ carbon.auth.authenticate( <span class="hljs-string">"your@email.com"</span>, <sp
 
         <span class="hljs-built_in">console</span>.log( <span class="hljs-string">"All done!"</span> );
     }
-).catch( <span class="hljs-built_in">console</span>.error );</code></pre></div></div></section><p>This was a short introduction to what the SDK and Carbon can do. You should be able to develop simple applications after reading this document, but to really master the inner works of the SDK you can continue reading about the Object Model.</p><div class="documentation-steps ui fluid steps"><div class="active completed step"><div class="content"><div class="title">Getting Started</div></div></div><a class="step" href="../object-model"><i class="arrow right icon"></i><div class="content"><div class="title">Next</div><div class="description">Object Model</div></div></a></div></div></div><div class="four wide computer tablet only column"><div class="sidebar" content="mainContent"><div class="ui sticky segment"><h2 class="ui header">Content</h2><div class="ui vertical following fluid accordion text menu sidebar-verticalMenu"><div class="item"><a class="title sidebar-title" href="#prerequisite-knowledge">Prerequisite knowledge</a></div><div class="item"><a class="title sidebar-title" href="#installing-the-sdk">Installing the SDK</a></div><div class="item"><a class="title sidebar-title" href="#creating-a-platform-context">Creating a platform context</a></div><div class="item"><a class="title sidebar-title" href="#authenticating">Authenticating</a></div><div class="item"><a class="title sidebar-title" href="#retrieving-an-app-context">Retrieving an app context</a></div><div class="item"><a class="title sidebar-title" href="#creating-a-document">Creating a document</a></div><div class="item"><a class="title sidebar-title" href="#retrieving-a-document">Retrieving a document</a></div><div class="item"><a class="title sidebar-title" href="#modifying-and-saving-a-document">Modifying and saving a document</a></div><div class="item"><a class="title sidebar-title" href="#deleting-a-document">Deleting a document</a></div><div class="item"><a class="title sidebar-title sidebar-title--dropdown" href="#linking-documents">Linking documents</a><i class="dropdown icon sidebar-dropdownIcon"></i><div class="content menu sidebar-verticalSubMenu"><a class="item sidebar-title" href="#parent-child-relation">Parent-child relation</a> <a class="item sidebar-title" href="#membership-relation">Membership Relation</a></div></div><div class="item"><a class="title sidebar-title" href="#creating-an-access-point">Creating an access point</a></div><div class="item"><a class="title sidebar-title" href="#putting-it-all-together">Putting it all together</a></div></div></div></div></div></div></div></div><div class="footer bigStoneBG"><div class="ui middle aligned padded grid computer tablet only"><div class="four wide center aligned column"><a href="http://base22.com/"><img class="footer-base22Logo" src="/assets/images/base22-logo-white.png"></a></div><div class="eight wide center aligned stretched column"><p class="footer-copyrightText">© 2017 Base22 Technology Group, LLC. All Rights Reserved.</p></div><div class="four wide left aligned column"><a angulartics2on="click" angularticsevent="OutboundClick" angularticscategory="Twitter" href="https://twitter.com/CarbonLDP"><i class="circular twitter icon footer-socialIcon"></i></a> <a angulartics2on="click" angularticsevent="OutboundClick" angularticscategory="YouTube" href="https://www.youtube.com/channel/UCuNWXjT19Gnpo7I502PTZ_Q"><i class="circular youtube icon footer-socialIcon"></i></a> <a angulartics2on="click" angularticsevent="OutboundClick" angularticscategory="LinkedIn" href="https://www.linkedin.com/company/carbon-ldp"><i class="circular linkedin icon footer-socialIcon"></i></a></div></div><div class="ui centered padded grid mobile only"><div class="left aligned eight wide column"><a href="http://base22.com/"><img class="footer-base22Logo" src="/assets/images/base22-logo-white.png"></a></div><div class="right aligned eight wide column"><a angulartics2on="click" angularticsevent="OutboundClick" angularticscategory="Twitter" href="https://twitter.com/CarbonLDP"><i class="circular twitter icon footer-socialIcon"></i></a> <a angulartics2on="click" angularticsevent="OutboundClick" angularticscategory="YouTube" href="https://www.youtube.com/channel/UCuNWXjT19Gnpo7I502PTZ_Q"><i class="circular youtube icon footer-socialIcon"></i></a> <a angulartics2on="click" angularticsevent="OutboundClick" angularticscategory="LinkedIn" href="https://www.linkedin.com/company/carbon-ldp"><i class="circular linkedin icon footer-socialIcon"></i></a></div><div class="center aligned twelve wide column"><p class="footer-copyrightText">© 2017 Base22 Technology Group, LLC. All&nbsp;Rights&nbsp;Reserved.</p></div></div></div><script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script><script src="/assets/semantic/semantic.min.js"></script><script src="/assets/scripts/main.js"></script><script>!function(e){$(document).ready(function(){function e(e){var i=$(e.currentTarget),t=i.parent(".item").find(".content.menu");if(t){var s=t.hasClass("active");s?(t.removeClass("active"),t.removeClass("toggled")):(t.addClass("active"),t.addClass("toggled"))}return $(".ui.sticky").sticky("refresh"),!1}function i(e){var i=$(e.currentTarget).parent(".item"),t=i.siblings(".item");return t.removeClass("active"),i.addClass("active"),e.preventDefault(),!1}function t(e){var i=$(e.currentTarget),t=i.siblings(".item");return t.removeClass("active"),i.addClass("active"),e.preventDefault(),!1}function s(e,i,t){var s=$(e),n=t.index(s),a=i.children(".item"),c=a.eq(n),r=c.hasClass("active"),o=t.eq(n).children("section").length>0;return a.removeClass("active"),a.find(".active").not(".toggled").removeClass("active"),r||c.addClass("active"),o&&c.find(".menu").addClass("active"),$(".ui.sticky").sticky("refresh"),!1}function n(e,i,t){var s=$(e),n=t.index(s),a=i.find(".menu > .item"),c=a.eq(n),r=c.hasClass("active"),o=i.children(".item").find(".menu"),d=o.hasClass("active");return n===-1||r||(a.filter(".active").removeClass("active"),c.addClass("active")),d||o.addClass("active"),$(".ui.sticky").sticky("refresh"),!1}function a(e,i,t){var s=$(e),n=t.index(s),a=i.children(".item"),c=a.eq(n),r=(c.hasClass("active"),c.find(".menu"));return 0===n&&(c.removeClass("active"),r.length>0&&(c.find(".menu").not(".toggled").removeClass("active"),r.find(".item").removeClass("active"))),$(".ui.sticky").sticky("refresh"),!1}var c=$(".sidebar"),r=$(".sidebar").find(".following.menu"),o=$("."+c.attr("content")),d=o.children("section"),v=d.children("section");d.visibility({once:!1,offset:150,onTopPassed:function(){s(this,r,d)},onTopPassedReverse:function(){a(this,r,d)},onBottomPassedReverse:function(){s(this,r,d)}}),v.visibility({once:!1,offset:150,onTopPassed:function(){n(this,r,v)},onBottomPassedReverse:function(){n(this,r,v)}}),$(".sidebar > .ui.sticky").sticky({observeChanges:!0,context:".mainContent",offset:100}),$(".sidebar .item > .dropdown.icon").on("click",e),$(".sidebar .item > .title").on("click",i),$(".sidebar  a.item ").on("click",t)})}(window)</script><script>!function(e){$(document).ready(function(){function e(e){var n=$(e.currentTarget);$(".ui.sticky").sticky("refresh");var t=n.parent(".item").find(".content.menu");if(t){var o=t.hasClass("active");o?(t.removeClass("active"),t.removeClass("toggled")):(t.addClass("active"),t.addClass("toggled"))}return!1}var n=$(".staticContentMenu"),t=$("."+n.attr("content")),o=t.children(".mainContent-section");o.visibility({once:!1,offset:150,onTopPassed:function(){console.log("top passed")},onTopPassedReverse:function(){},onBottomPassedReverse:function(){}}),$(".staticContentMenu .item > .dropdown.icon").on("click",e)})}(window)</script><script>!function(t){function a(t){for(var a=$(t.currentTarget),e=a.attr("data-tab"),s=a.html(),n=a.parent();!n.hasClass("tabsComponent");)n=n.parent();var i=n.find(".tabs-title,.tabs-tab"),r=n.find(".tabs-option");if(r.removeClass("active selected"),i.removeClass("active"),i.each(function(){var t=$(this);t.attr("data-tab")===e&&t.addClass("active")}),r.each(function(){var t=$(this);t.attr("data-tab")===e&&t.addClass("active selected")}),a.hasClass("tabs-title")){var o=n.find(".tabs-options .text");o.html(s)}return!0}$(document).ready(function(){for(var t=document.querySelectorAll(".tabs-titles > .tabs-title, .tabs-options .tabs-option"),e=0;e<t.length;e++)t[e].addEventListener("click",a)})}(window)</script><script id="widgets-scripts"></script></body></html>
+).catch( <span class="hljs-built_in">console</span>.error );</code></pre>
+
+		
+			</div>
+		
+	
+</div>
+
+</section>
+<p>
+	This was a short introduction to what the SDK and Carbon can do. You should be able to develop simple applications
+	after reading this document, but to really master the inner works of the SDK you can continue reading about the Object Model.
+</p>
+<div class="documentation-steps ui fluid steps">
+	<div class="active completed step">
+		<!--<i class="payment icon"></i>-->
+		<div class="content">
+			<div class="title">Getting Started</div>
+		</div>
+	</div>
+	<a class="step" href="../object-model">
+		<i class="arrow right icon"></i>
+		<div class="content">
+			<div class="title">Next</div>
+			<div class="description">Object Model</div>
+		</div>
+	</a>
+</div>
+
+                        
+
+                    </div>
+                </div>
+            
+            <div class="four wide computer tablet only column">
+                <div class="sidebar" content="mainContent">
+	<div class="ui sticky segment">
+		<h2 class="ui header">Content</h2>
+		<div class="ui vertical following fluid accordion text menu sidebar-verticalMenu">
+
+		
+
+			<div class="item"><a class="title sidebar-title" href="#prerequisite-knowledge">Prerequisite knowledge</a></div>
+
+			
+
+			<div class="item"><a class="title sidebar-title" href="#installing-the-sdk">Installing the SDK</a></div>
+
+			
+
+			<div class="item"><a class="title sidebar-title" href="#creating-a-platform-context">Creating a platform context</a></div>
+
+			
+
+			<div class="item"><a class="title sidebar-title" href="#authenticating">Authenticating</a></div>
+
+			
+
+			<div class="item"><a class="title sidebar-title" href="#retrieving-an-app-context">Retrieving an app context</a></div>
+
+			
+
+			<div class="item"><a class="title sidebar-title" href="#creating-a-document">Creating a document</a></div>
+
+			
+
+			<div class="item"><a class="title sidebar-title" href="#retrieving-a-document">Retrieving a document</a></div>
+
+			
+
+			<div class="item"><a class="title sidebar-title" href="#modifying-and-saving-a-document">Modifying and saving a document</a></div>
+
+			
+
+			<div class="item"><a class="title sidebar-title" href="#deleting-a-document">Deleting a document</a></div>
+
+			
+
+			<div class="item">
+
+				<a class="title sidebar-title sidebar-title--dropdown" href="#linking-documents">Linking documents</a><i class="dropdown icon sidebar-dropdownIcon"></i>
+
+				<div class="content menu sidebar-verticalSubMenu">
+
+				
+
+					<a class="item sidebar-title" href="#parent-child-relation">Parent-child relation</a>
+
+				
+
+					<a class="item sidebar-title" href="#membership-relation">Membership Relation</a>
+
+				
+
+				</div>
+			</div>
+		
+
+			<div class="item"><a class="title sidebar-title" href="#creating-an-access-point">Creating an access point</a></div>
+
+			
+
+			<div class="item"><a class="title sidebar-title" href="#putting-it-all-together">Putting it all together</a></div>
+
+			
+		</div>
+	</div>
+</div>
+            </div>
+            
+        </div>
+    </div>
+
+        </div>
+        <div class="footer bigStoneBG">
+        <div class="ui middle aligned padded grid computer tablet only">
+
+            <div class="four wide center aligned column">
+                <a href="http://base22.com/"><img class="footer-base22Logo" src="/assets/images/base22-logo-white.png"></a>
+            </div>
+            <div class="eight wide center aligned stretched column">
+                <p class="footer-copyrightText">© 2017 Base22 Technology Group, LLC. All Rights Reserved.</p>
+            </div>
+            <div class="four wide left aligned column">
+                <a angulartics2on="click" angularticsevent="OutboundClick" angularticscategory="Twitter" href="https://twitter.com/CarbonLDP"><i class="circular twitter icon footer-socialIcon"></i></a>
+                <a angulartics2on="click" angularticsevent="OutboundClick" angularticscategory="YouTube" href="https://www.youtube.com/channel/UCuNWXjT19Gnpo7I502PTZ_Q"><i class="circular youtube icon footer-socialIcon"></i></a>
+                <a angulartics2on="click" angularticsevent="OutboundClick" angularticscategory="LinkedIn" href="https://www.linkedin.com/company/carbon-ldp"><i class="circular linkedin icon footer-socialIcon"></i></a>
+            </div>
+        </div>
+        <div class="ui centered padded grid mobile only">
+            <div class="left aligned eight wide column">
+                <a href="http://base22.com/"><img class="footer-base22Logo" src="/assets/images/base22-logo-white.png"></a>
+            </div>
+            <div class="right aligned eight wide column">
+                <a angulartics2on="click" angularticsevent="OutboundClick" angularticscategory="Twitter" href="https://twitter.com/CarbonLDP"><i class="circular twitter icon footer-socialIcon"></i></a>
+                <a angulartics2on="click" angularticsevent="OutboundClick" angularticscategory="YouTube" href="https://www.youtube.com/channel/UCuNWXjT19Gnpo7I502PTZ_Q"><i class="circular youtube icon footer-socialIcon"></i></a>
+                <a angulartics2on="click" angularticsevent="OutboundClick" angularticscategory="LinkedIn" href="https://www.linkedin.com/company/carbon-ldp"><i class="circular linkedin icon footer-socialIcon"></i></a>
+            </div>
+            <div class="center aligned twelve wide column">
+                <p class="footer-copyrightText">© 2017 Base22 Technology Group, LLC. All&nbsp;Rights&nbsp;Reserved.</p>
+            </div>
+    </div>
+</div>
+
+        <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+<script src="/assets/semantic/semantic.min.js"></script>
+
+<script src="/assets/scripts/main.js"></script>
+
+        <script>(function( window ){ $( document ).ready( function() {
+
+	var $sidebar = $( ".sidebar" );
+	var $sidebarFollowingMenu = $( ".sidebar" ).find( ".following.menu" );
+	var $content = $( "." + $sidebar.attr( "content" ) );
+	var $sections = $content.children( "section" );
+	var $subSections = $sections.children( "section" );
+
+	// Detect when section is passed
+	$sections.visibility( {
+		once: false,
+		offset: 150,
+		onTopPassed: function() {
+			activateSection( this, $sidebarFollowingMenu, $sections );
+		},
+		onTopPassedReverse: function() {
+			deactivateFirstSection( this, $sidebarFollowingMenu, $sections );
+		},
+		onBottomPassedReverse: function() {
+			activateSection( this, $sidebarFollowingMenu, $sections );
+		},
+	} );
+
+	$subSections.visibility( {
+		once: false,
+		offset: 150,
+		onTopPassed: function() {
+			activateSubSection( this, $sidebarFollowingMenu, $subSections );
+		},
+		onBottomPassedReverse: function() {
+			activateSubSection( this, $sidebarFollowingMenu, $subSections );
+		}
+	} );
+
+
+	// Make sidebar stick to its position
+	$( ".sidebar > .ui.sticky" ).sticky( {
+		observeChanges: true,
+		context: ".mainContent",
+		offset: 100
+	} );
+
+	// Activate toggle dropdown
+	$( ".sidebar .item > .dropdown.icon" ).on( "click", toggleDropdown );
+
+	//Activate click on items and subitems
+	$( ".sidebar .item > .title" ).on( "click", activateItem );
+	$( ".sidebar  a.item " ).on( "click", activateSubItem );
+
+	// Toggle selected accordion menu in sidebar
+	function toggleDropdown( event ) {
+		var $target = $( event.currentTarget );
+
+		var $accordion = $target.parent( ".item" ).find( ".content.menu" );
+		if( $accordion ) {
+			var accordionIsActive = $accordion.hasClass( "active" );
+
+			if( accordionIsActive ) {
+				$accordion.removeClass( "active" );
+				$accordion.removeClass( "toggled" );
+			} else {
+				$accordion.addClass( "active" );
+				$accordion.addClass( "toggled" );
+			}
+		}
+		$( ".ui.sticky" ).sticky( "refresh" );
+
+		return false;
+	}
+
+	function activateItem( event ) {
+
+		var $item = $( event.currentTarget ).parent( ".item" );
+
+		var $allItems = $item.siblings( ".item" );
+		$allItems.removeClass( "active" );
+		$item.addClass( "active" );
+
+		event.preventDefault();
+
+		return false;
+
+	}
+
+	function activateSubItem( event ) {
+
+		var $item = $( event.currentTarget );
+
+		var $allItems = $item.siblings( ".item" );
+		$allItems.removeClass( "active" );
+		$item.addClass( "active" );
+
+		event.preventDefault();
+
+		return false;
+
+	}
+
+
+	function activateSection( elm, $menu, $sections ) {
+
+		var $section = $( elm );
+		var index = $sections.index( $section );
+		var $followSection = $menu.children( ".item" );
+		var $currentSection = $followSection.eq( index );
+
+		var isActive = $currentSection.hasClass( "active" );
+
+		var hasSubsection = $sections.eq( index ).children( "section" ).length > 0;
+
+		$followSection.removeClass( "active" );
+		$followSection.find( ".active" ).not( ".toggled" ).removeClass( "active" );
+
+		if( ! isActive ) {
+
+			$currentSection.addClass( "active" );
+		}
+
+		if( hasSubsection ) {
+			$currentSection.find( ".menu" ).addClass( "active" );
+		}
+
+		$( ".ui.sticky" ).sticky( "refresh" );
+
+		return false;
+
+	}
+
+	function activateSubSection( elm, $menu, $subSections ) {
+		var $section = $( elm );
+		var index = $subSections.index( $section );
+		var $followSection = $menu.find( ".menu > .item" );
+		var $activeSection = $followSection.eq( index );
+		var isActive = $activeSection.hasClass( "active" );
+		var $subSectionMenu = $menu.children( ".item" ).find( ".menu" );
+		var subSectionMenuIsActive = $subSectionMenu.hasClass( "active" );
+
+		if( index !== - 1 && ! isActive ) {
+			$followSection.filter( ".active" ).removeClass( "active" );
+			$activeSection.addClass( "active" );
+		}
+
+		if( ! subSectionMenuIsActive ) {
+			$subSectionMenu.addClass( "active" );
+		}
+
+		$( ".ui.sticky" ).sticky( "refresh" );
+
+		return false;
+	}
+
+	function deactivateFirstSection( elm, $menu, $sections ) {
+
+		var $section = $( elm );
+		var index = $sections.index( $section );
+		var $followSection = $menu.children( ".item" );
+		var $currentSection = $followSection.eq( index );
+		var isActive = $currentSection.hasClass( "active" );
+		var $subSectionMenu = $currentSection.find( ".menu" );
+
+
+		if( index === 0 ) {
+
+			$currentSection.removeClass( "active" );
+
+			if( $subSectionMenu.length > 0 ) {
+				$currentSection.find( ".menu" ).not( ".toggled" ).removeClass( "active" );
+				$subSectionMenu.find( ".item" ).removeClass( "active" );
+			}
+
+		}
+
+		$( ".ui.sticky" ).sticky( "refresh" );
+
+		return false;
+	}
+
+
+} ); })( window );</script><script>(function( window ){ $( document ).ready( function() {
+	var $sidebar = $( ".staticContentMenu" );
+	var $content = $( "." + $sidebar.attr( "content" ) );
+	var $sections = $content.children( ".mainContent-section" );
+
+	// Detect when section is passed
+	$sections.visibility( {
+		once: false,
+		offset: 150,
+		onTopPassed: function() {
+			// _self.activateSection( this );
+			console.log( "top passed" );
+		},
+		onTopPassedReverse: function() {
+			// _self.deactivateFirstSection( this );
+		},
+		onBottomPassedReverse: function() {
+			// _self.activateSection( this );
+		},
+	} );
+
+	// Activate toggle dropdown
+	$( ".staticContentMenu .item > .dropdown.icon" ).on( "click", toggleDropdown );
+
+	// Toggle selected accordion menu in sidebar
+	function toggleDropdown( event ) {
+		var $target = $( event.currentTarget );
+		$( ".ui.sticky" ).sticky( "refresh" );
+		var $accordion = $target.parent( ".item" ).find( ".content.menu" );
+		if( $accordion ) {
+			var accordionIsActive = $accordion.hasClass( "active" );
+
+			if( accordionIsActive ) {
+				$accordion.removeClass( "active" );
+				$accordion.removeClass( "toggled" );
+			} else {
+				$accordion.addClass( "active" );
+				$accordion.addClass( "toggled" );
+			}
+		}
+
+		return false;
+	}
+} ); })( window );</script><script>(function( window ){ $( document ).ready( function() {
+	var tabs = document.querySelectorAll( ".tabs-titles > .tabs-title, .tabs-options .tabs-option" );
+	for( var i = 0; i < tabs.length; i ++ ) {
+		tabs[ i ].addEventListener( 'click', changeTabSelection );
+	}
+} );
+
+function changeTabSelection( e ) {
+
+	var clickedTab = $( e.currentTarget );
+	var selectedOption = clickedTab.attr( "data-tab" );
+	var selectedText = clickedTab.html();
+	var tabComponent = clickedTab.parent();
+
+	//select TabComponent to where the clicked tab/option belongs
+	while( ! tabComponent.hasClass( "tabsComponent" ) ) {
+		tabComponent = tabComponent.parent();
+	}
+
+	// select TabComponent elements
+	var tabs = tabComponent.find( ".tabs-title,.tabs-tab" );
+	var options = tabComponent.find( ".tabs-option" );
+
+	// Remove all active classes from elements
+	options.removeClass( "active selected" );
+	tabs.removeClass( "active" );
+
+	// Add active classes on selected options/tabs
+	tabs.each( function() {
+		var tab = $( this );
+		if( tab.attr( "data-tab" ) === selectedOption ) tab.addClass( "active" );
+	} );
+
+	options.each( function() {
+		var option = $( this );
+		if( option.attr( "data-tab" ) === selectedOption ) option.addClass( "active selected" );
+	} );
+
+	// Change text of selection
+	if( clickedTab.hasClass( "tabs-title" ) ) {
+		var text = tabComponent.find( ".tabs-options .text" );
+		text.html( selectedText );
+	}
+
+	return true;
+}
+
+
+
+ })( window );</script><script id="widgets-scripts"></script>
+    
+    
+</body></html>

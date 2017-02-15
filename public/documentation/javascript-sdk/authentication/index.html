@@ -1,4 +1,14 @@
-<!DOCTYPE html><html><head><meta charset="utf-8"><link rel="shortcut icon" href="/assets/images/carbon-icon-144x144.png"><title>Authentication | Carbon LDP</title><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1"><meta name="google-site-verification" content="gz0ah_pGpAlB4Q5a_bxykr1Zdo_CfXHyAb2tJiADVhE"><meta name="description" content="Authentication
+<!DOCTYPE html><html><head>
+  <meta charset="utf-8">
+  
+
+
+  <link rel="shortcut icon" href="/assets/images/carbon-icon-144x144.png">
+  <title>Authentication | Carbon LDP</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="google-site-verification" content="gz0ah_pGpAlB4Q5a_bxykr1Zdo_CfXHyAb2tJiADVhE">
+
+  <meta name="description" content="Authentication
 					
 
 
@@ -31,7 +41,12 @@
 	
 
 	Introduction
-	Authenticating an agent was briefly co"><meta property="og:type" content="website"><meta property="og:title" content="Authentication"><meta property="og:url" content="https://carbonldp.com/documentation/javascript-sdk/authentication/index.html"><meta property="og:site_name" content="Carbon LDP"><meta property="og:description" content="Authentication
+	Authenticating an agent was briefly co">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Authentication">
+<meta property="og:url" content="https://carbonldp.com/documentation/javascript-sdk/authentication/index.html">
+<meta property="og:site_name" content="Carbon LDP">
+<meta property="og:description" content="Authentication
 					
 
 
@@ -64,7 +79,11 @@
 	
 
 	Introduction
-	Authenticating an agent was briefly co"><meta property="og:updated_time" content="2017-02-13T17:40:38.000Z"><meta name="twitter:card" content="summary"><meta name="twitter:title" content="Authentication"><meta name="twitter:description" content="Authentication
+	Authenticating an agent was briefly co">
+<meta property="og:updated_time" content="2017-02-15T17:05:16.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Authentication">
+<meta name="twitter:description" content="Authentication
 					
 
 
@@ -97,7 +116,442 @@
 	
 
 	Introduction
-	Authenticating an agent was briefly co"><link rel="alternate" href="/atom.xml" title="Carbon LDP" type="application/atom+xml"><link rel="stylesheet" href="/assets/semantic/semantic.min.css"><style>.hljs-comment,.hljs-quote{color:#969896}.hljs-deletion,.hljs-name,.hljs-regexp,.hljs-selector-class,.hljs-selector-id,.hljs-tag,.hljs-template-variable,.hljs-variable{color:#c66}.hljs-built_in,.hljs-builtin-name,.hljs-link,.hljs-literal,.hljs-meta,.hljs-number,.hljs-params,.hljs-type{color:#de935f}.hljs-attribute{color:#f0c674}.hljs-addition,.hljs-bullet,.hljs-string,.hljs-symbol{color:#b5bd68}.hljs-section,.hljs-title{color:#81a2be}.hljs-keyword,.hljs-selector-tag{color:#b294bb}.hljs{display:block;overflow-x:auto;background:#1d1f21;color:#c5c8c6;padding:.5em}.hljs-emphasis{font-style:italic}.hljs-strong{font-weight:700}</style><style>.hljs{font-family:"Lucida Console",Monaco,monospace;font-size:.9rem;line-height:1.4rem}</style><style>.sidebar{margin:10em 1em 6em 0}.sidebar .ui.sticky{z-index:0}.sidebar .ui.segment{box-shadow:none;border:none}.ui.accordion .item.active .title:not(.ui).sidebar-title{color:#000;font-weight:700}.ui.vertical.menu .menu .item.active .sidebar-title{color:#000}.ui.accordion .title:not(.ui).sidebar-title{color:rgba(0,0,0,.6);padding-right:10px}.ui.accordion .title:not(.ui).sidebar-title:hover{color:#000}.ui.vertical.text.menu.sidebar-verticalMenu{margin-left:1.2em}.ui.vertical.text.menu .item:not(.dropdown)>.menu.sidebar-verticalSubMenu{margin:0 .8em}.ui.accordion.menu .item .title.sidebar-title--dropdown{display:inline}.ui.vertical.text.menu .item>i.icon.sidebar-dropdownIcon{float:right}@media (min-width:768px) and (max-width:992px){.sidebar .ui.sticky{padding:0}.ui.vertical.text.menu.sidebar-verticalMenu{margin-left:.6em}.ui.accordion .title:not(.ui).sidebar-title{padding-right:0}}</style><style>.staticContentMenu{margin:2em 0}h2.staticContentMenu-title{font-size:1.4em}.ui.accordion.menu .item .title.staticContentMenu-title--dropdown{display:inline}.ui.vertical.text.menu .item>i.icon.staticContentMenu-dropdownIcon{float:right}.ui.accordion .title:not(.ui).staticContentMenu-title{color:rgba(0,0,0,.6)}</style><style>.ui.grid.tabsComponent{margin:1rem 0}.ui.grid.tabsComponent .row.tabs{padding:0}.ui.attached.segment.tabs{border-top:0;padding:0 1rem;margin:0}@media (max-width:767px){.ui.attached.segment.tabs{border:0;padding:0;margin:0}.tabs-tab *{margin:0}}</style><link rel="stylesheet" href="/assets/styles/css/main.css"><link rel="stylesheet" href="/assets/styles/css/document.css"><script>window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)},ga.l=+new Date,ga("create","UA-75786977-1","auto"),ga("send","pageview")</script><script async="" src="https://www.google-analytics.com/analytics.js"></script></head><body class="site"><header class="header"><div class="ui container"><div class="ui grid removeSideMargins"><div class="computer only row"><div class="ui top fixed borderless menu"><div class="ui container navMenu"><a class="item transparentBG" href="/"><img class="ui small image" src="/assets/images/carbon-logo-header.png" alt="Home"></a><a class="item" href="/get-started">Get Started</a><div class="ui dropdown link item navMenu-dropdownButton"><a class="item navMenu-dropdownLink" href="/documentation">Documentation</a><i class="dropdown icon"></i><div class="menu"><a class="item" href="/documentation/quick-start-guide">Quick Start Guide</a> <a class="item" href="/documentation/essential-concepts">Essential Concepts</a> <a class="item" href="/documentation/javascript-sdk">JavaScript SDK</a> <a class="item" href="/documentation/rest-api">REST API</a></div></div><a class="item" href="/community-and-support">Community &amp; Support</a> <a class="item" href="/about">About</a></div></div></div><div class="mobile tablet only row"><div class="ui top fixed borderless menu navMenu"><div class="ui container navMenu"><a class="item navMenu-carbonLogoButton transparentBG" href="/"><img class="ui navMenu-carbonLogo image" src="/assets/images/carbon-logo-header.png" alt="Home"></a><div class="ui right icon item navMenu-openerButton"><i class="content icon"></i></div></div></div><div class="ui fixed fluid vertical menu navMenu-verticalMenu" style="display:none"><a class="item" href="/get-started">Get Started</a><div class="ui dropdown link item navMenu-dropdownButton--mobile"><a class="item navMenu-dropdownText">Documentation<i class="dropdown icon"></i></a><div class="menu navMenu-dropdownMenu"><a class="item" href="/documentation/quick-start-guide">Quick Start Guide</a> <a class="item" href="/documentation/essential-concepts">Essential Concepts</a> <a class="item" href="/documentation/javascript-sdk">JavaScript SDK</a> <a class="item" href="/documentation/rest-api">REST API</a><div class="divider"></div><a class="item" href="/documentation">All documents...</a></div></div><a class="item" href="/community-and-support">Community &amp; Support</a> <a class="item" href="/about">About</a></div></div></div></div></header><div class="ui scrollTop mobile only grid"><button class="ui icon button scrollTop-button"><i class="angle up icon scrollTop-icon"></i></button></div><div class="site-content"><div class="ui container grid"><div class="row"><div class="twelve wide computer only twelve wide tablet only sixteen wide mobile only column"><div class="mainContent"><div class="ui breadcrumb"><a class="section" href="/documentation">Documentation</a> <i class="right chevron icon divider"></i> <a class="section" href="/documentation/javascript-sdk">JavaScript SDK</a> <i class="right arrow icon divider"></i><div class="active section" href="/documentation/javascript-sdk/authentication">Authentication</div></div><h1>Authentication</h1><div class="documentation-steps ui fluid steps"><a class="step" href="../querying"><i class="arrow left icon"></i><div class="content"><div class="title">Previous</div><div class="description">Querying</div></div></a><div class="active step"><div class="content"><div class="title">Authentication</div></div></div><a class="step" href="../authorization"><i class="arrow right icon"></i><div class="content"><div class="title">Next</div><div class="description">Authorization</div></div></a></div><div class="ui mobile only grid"><div class="row"><div class="sixteen wide mobile only column"><div class="staticContentMenu"><h2 class="staticContentMenuTitle">Content</h2><div class="ui vertical accordion fluid menu mobile"><div class="item"><a class="title staticContentMenu-title" href="#introduction">Introduction</a></div><div class="item"><a class="title staticContentMenu-title staticContentMenu-title--dropdown" href="#logging-in">Logging in</a><i class="dropdown icon .staticContentMenu-dropdownIcon"></i><div class="content menu"><a class="item" href="#keeping-authentication-across-page-loads">Keeping authentication across page loads</a></div></div><div class="item"><a class="title staticContentMenu-title" href="#logging-out">Logging out</a></div></div></div></div></div></div><section class="mainContent-section" id="introduction"><h2 class="hidden">Introduction</h2><p>Authenticating an agent was briefly covered in the <a href="../getting-started">Getting Started</a> page. This page we'll provide more information about authentication in general.</p></section><section class="mainContent-section" id="logging-in"><h2>Logging in</h2><p>As discussed before, an agent can be authenticated on a context by using the <code>authenticate</code> method in the <code>Auth</code> service, e.g.:</p><div class="ui grid tabsComponent"><div class="ui computer tablet only row tabs"><div class="ui top attached tabular menu tabs-titles"><a class="tabs-title active item" data-tab="wtcgIgVy">TypeScript</a> <a class="tabs-title item" data-tab="nMnTySgI">JavaScript ES2015</a> <a class="tabs-title item" data-tab="JGRjnYTE">JavaScript ES5</a></div></div><div class="ui mobile only row tabs"><div class="ui compact selection dropdown tabs-options"><i class="dropdown icon"></i><div class="text">TypeScript</div><div class="menu"><div class="tabs-option item" data-tab="wtcgIgVy">TypeScript</div><div class="tabs-option item" data-tab="nMnTySgI">JavaScript ES2015</div><div class="tabs-option item" data-tab="JGRjnYTE">JavaScript ES5</div></div></div></div><div class="tabs-tab ui bottom attached tabs active tab segment" data-tab="wtcgIgVy"><pre><code class="typescript hljs"><span class="hljs-comment">// ... additional imports</span>
+	Authenticating an agent was briefly co">
+  
+    <link rel="alternate" href="/atom.xml" title="Carbon LDP" type="application/atom+xml">
+  
+
+
+  <link rel="stylesheet" href="/assets/semantic/semantic.min.css">
+  <style>/* Tomorrow Night Theme */
+/* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
+/* Original theme - https://github.com/chriskempson/tomorrow-theme */
+/* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
+
+/* Tomorrow Comment */
+.hljs-comment,
+.hljs-quote {
+  color: #969896;
+}
+
+/* Tomorrow Red */
+.hljs-variable,
+.hljs-template-variable,
+.hljs-tag,
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-regexp,
+.hljs-deletion {
+  color: #cc6666;
+}
+
+/* Tomorrow Orange */
+.hljs-number,
+.hljs-built_in,
+.hljs-builtin-name,
+.hljs-literal,
+.hljs-type,
+.hljs-params,
+.hljs-meta,
+.hljs-link {
+  color: #de935f;
+}
+
+/* Tomorrow Yellow */
+.hljs-attribute {
+  color: #f0c674;
+}
+
+/* Tomorrow Green */
+.hljs-string,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-addition {
+  color: #b5bd68;
+}
+
+/* Tomorrow Blue */
+.hljs-title,
+.hljs-section {
+  color: #81a2be;
+}
+
+/* Tomorrow Purple */
+.hljs-keyword,
+.hljs-selector-tag {
+  color: #b294bb;
+}
+
+.hljs {
+  display: block;
+  overflow-x: auto;
+  background: #1d1f21;
+  color: #c5c8c6;
+  padding: 0.5em;
+}
+
+.hljs-emphasis {
+  font-style: italic;
+}
+
+.hljs-strong {
+  font-weight: bold;
+}
+</style><style>.hljs {
+    font-family: "Lucida Console", Monaco, monospace;
+    font-size: .9rem;
+    line-height: 1.4rem;
+}
+</style><style>.sidebar{
+    margin: 10em 1em 6em 0;
+}
+
+/* Give sidebar a z-index greater than header */
+.sidebar .ui.sticky{
+    z-index: 0;
+}
+
+/* Remove box-shadow and border */
+.sidebar .ui.segment{
+    box-shadow: none;
+    border: none;
+}
+
+/* Change color to black when title active */
+.ui.accordion .item.active .title:not(.ui).sidebar-title{
+    color: black;
+    font-weight: 700;
+}
+.ui.vertical.menu .menu .item.active .sidebar-title{
+    color: black;
+}
+/* Change color of section items to gray */
+.ui.accordion .title:not(.ui).sidebar-title{
+    color: rgba(0,0,0,.6);
+    padding-right: 10px;
+}
+
+/* Change color to black when title hovered */
+.ui.accordion .title:not(.ui).sidebar-title:hover{
+    color: black;
+}
+
+
+/* Add left margin to sidebar menu */
+.ui.vertical.text.menu.sidebar-verticalMenu {
+    margin-left: 1.2em;
+}
+
+.ui.vertical.text.menu .item:not(.dropdown)>.menu.sidebar-verticalSubMenu{
+    margin: 0 0.8em;
+}
+
+.ui.accordion.menu .item .title.sidebar-title--dropdown{
+    display: inline;
+}
+
+.ui.vertical.text.menu .item>i.icon.sidebar-dropdownIcon{
+    float: right;
+}
+
+@media (min-width: 768px) and (max-width: 992px) {
+    .sidebar .ui.sticky{
+        padding: 0;
+    }
+    .ui.vertical.text.menu.sidebar-verticalMenu {
+        margin-left: .6em;
+    }
+
+    .ui.accordion .title:not(.ui).sidebar-title{
+        padding-right: 0;
+    }
+
+}</style><style>.staticContentMenu{
+    margin: 2em 0;
+}
+
+h2.staticContentMenu-title{
+    font-size: 1.4em;
+}
+
+.ui.accordion.menu .item .title.staticContentMenu-title--dropdown{
+    display: inline;
+}
+
+.ui.vertical.text.menu .item>i.icon.staticContentMenu-dropdownIcon{
+    float: right;
+}
+
+.ui.accordion .title:not(.ui).staticContentMenu-title{
+    color: rgba(0,0,0,.6);
+}</style><style>.ui.grid.tabsComponent {
+    margin: 1rem 0;
+}
+
+.ui.grid.tabsComponent .row.tabs{
+    padding: 0;
+}
+
+.ui.attached.segment.tabs{
+    border-top: 0;
+    padding: 0 1rem;
+    margin: 0;
+}
+
+@media (max-width: 767px) {
+    .ui.attached.segment.tabs{
+        border: 0;
+        padding: 0;
+        margin: 0;
+    }
+
+    .tabs-tab *{
+        margin:0;
+    }
+
+}
+</style>
+
+  <link rel="stylesheet" href="/assets/styles/css/main.css">
+
+  
+  <link rel="stylesheet" href="/assets/styles/css/document.css">
+  
+
+
+  <!-- Google Analytics -->
+  <script>
+    window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+    ga('create', 'UA-75786977-1', 'auto');
+    ga('send', 'pageview');
+  </script>
+  <script async="" src="https://www.google-analytics.com/analytics.js"></script>
+  <!-- End Google Analytics -->
+</head>
+
+    <body class="site">
+        <header class="header">
+	<div class="ui container">
+	<div class="ui grid removeSideMargins">
+		<div class="computer only row">
+			<div class="ui top fixed borderless menu">
+				<div class="ui container navMenu">
+					<a class="item transparentBG" href="/"><img class="ui small image" src="/assets/images/carbon-logo-header.png" alt="Home"></a>
+
+					
+
+					<a class="item" href="/get-started">Get Started</a>
+
+						
+
+					<div class="ui dropdown link item navMenu-dropdownButton"><a class="item navMenu-dropdownLink" href="/documentation">Documentation</a><i class="dropdown icon"></i>
+						<div class="menu">
+						
+						<a class="item" href="/documentation/quick-start-guide">Quick Start Guide</a>
+						
+						<a class="item" href="/documentation/essential-concepts">Essential Concepts</a>
+						
+						<a class="item" href="/documentation/javascript-sdk">JavaScript SDK</a>
+						
+						<a class="item" href="/documentation/rest-api">REST API</a>
+						
+						</div>
+					</div>
+						
+
+					<a class="item" href="/community-and-support">Community &amp; Support</a>
+
+						
+
+					<a class="item" href="/about">About</a>
+
+						
+				</div>
+			</div>
+		</div>
+		<div class="mobile tablet only row">
+			<div class="ui top fixed borderless menu navMenu">
+				<div class="ui container navMenu">
+					<a class="item navMenu-carbonLogoButton transparentBG" href="/"><img class="ui navMenu-carbonLogo image" src="/assets/images/carbon-logo-header.png" alt="Home"></a>
+					<div class="ui right icon item navMenu-openerButton">
+						<!--<div class="menu item">-->
+							<i class="content icon"></i>
+					</div>
+				</div>
+			</div>
+			<div class="ui fixed fluid vertical menu navMenu-verticalMenu" style="display: none;">
+				
+
+				<a class="item" href="/get-started">Get Started</a>
+
+				
+
+				<div class="ui dropdown link item navMenu-dropdownButton--mobile"><a class="item navMenu-dropdownText">Documentation<i class="dropdown icon"></i></a>
+					<div class="menu navMenu-dropdownMenu">
+						
+						<a class="item" href="/documentation/quick-start-guide">Quick Start Guide</a>
+						
+						<a class="item" href="/documentation/essential-concepts">Essential Concepts</a>
+						
+						<a class="item" href="/documentation/javascript-sdk">JavaScript SDK</a>
+						
+						<a class="item" href="/documentation/rest-api">REST API</a>
+						
+						<div class="divider"></div>
+						<a class="item" href="/documentation">All documents...</a>
+					</div>
+				</div>
+				
+
+				<a class="item" href="/community-and-support">Community &amp; Support</a>
+
+				
+
+				<a class="item" href="/about">About</a>
+
+				
+			</div>
+		</div>
+		</div>
+	</div>
+</header>
+        <div class="ui scrollTop mobile only grid">
+			<button class="ui icon button scrollTop-button"><i class="angle up icon scrollTop-icon"></i></button>
+		</div>
+        <div class="site-content ">
+            
+            <div class="ui container grid">
+        <div class="row">
+            <div class="twelve wide computer only twelve wide tablet only sixteen wide mobile only column">
+                    <div class="mainContent">
+                        <div class="ui breadcrumb">
+	
+	
+
+	<a class="section" href="/documentation">Documentation</a>
+
+	
+	<i class="right chevron icon divider"></i>
+	<a class="section" href="/documentation/javascript-sdk">JavaScript SDK</a>
+	
+
+	<i class="right arrow icon divider"></i>
+	<div class="active section" href="/documentation/javascript-sdk/authentication">Authentication</div>
+</div>
+
+                        
+                        
+<h1>Authentication</h1>
+					
+
+<div class="documentation-steps ui fluid steps">
+	<a class="step" href="../querying">
+		<i class="arrow left icon"></i>
+		<div class="content">
+			<div class="title">Previous</div>
+			<div class="description">Querying</div>
+		</div>
+	</a>
+	<div class="active step">
+		<!--<i class="payment icon"></i>-->
+		<div class="content">
+			<div class="title">Authentication</div>
+		</div>
+	</div>
+	<a class="step" href="../authorization">
+		<i class="arrow right icon"></i>
+		<div class="content">
+			<div class="title">Next</div>
+			<div class="description">Authorization</div>
+		</div>
+	</a>
+</div>
+
+	<div class="ui mobile only grid">
+		<div class="row">
+			<div class=" sixteen wide mobile only column">
+	<div class="staticContentMenu">
+		<h2 class="staticContentMenuTitle">Content</h2>
+		<div class="ui vertical accordion fluid menu mobile">
+			
+
+			<div class="item"><a class="title staticContentMenu-title" href="#introduction">Introduction</a></div>
+
+			
+
+			<div class="item">
+
+				<a class="title staticContentMenu-title staticContentMenu-title--dropdown" href="#logging-in">Logging in</a><i class="dropdown icon .staticContentMenu-dropdownIcon"></i>
+
+				<div class="content menu">
+
+					
+
+					<a class="item" href="#keeping-authentication-across-page-loads">Keeping authentication across page loads</a>
+
+					
+				</div>
+			</div>
+			
+
+			<div class="item"><a class="title staticContentMenu-title" href="#logging-out">Logging out</a></div>
+
+			
+		</div>
+	</div>
+</div>
+		</div>
+	</div>
+<section class="mainContent-section" id="introduction">
+	<h2 class="hidden">Introduction</h2>
+	<p>Authenticating an agent was briefly covered in the <a href="../getting-started">Getting Started</a> page. This page we'll provide more
+		information about authentication in general.</p>
+</section>
+<section class="mainContent-section" id="logging-in">
+	<h2>Logging in</h2>
+	<p>As discussed before, an agent can be authenticated on a context by using the <code>authenticate</code> method in the <code>Auth</code> service, e.g.:</p>
+	<div class="ui grid tabsComponent">
+	
+		<div class="ui computer tablet only row tabs">
+			<div class="ui top attached tabular menu tabs-titles">
+				
+				
+					<a class="tabs-title active item" data-tab="pSfMsdbY">TypeScript</a>
+				
+				
+					<a class="tabs-title  item" data-tab="gAUkxCtD">JavaScript ES2015</a>
+				
+				
+					<a class="tabs-title  item" data-tab="yPXGtTEy">JavaScript ES5</a>
+				
+			</div>
+		</div>
+		<div class="ui mobile only row tabs">
+			<div class="ui compact selection dropdown tabs-options">
+				<i class="dropdown icon"></i>
+				<div class="text">TypeScript</div>
+				<div class="menu">
+					
+					
+					<div class="tabs-option item" data-tab="pSfMsdbY">TypeScript</div>
+					
+					
+					<div class="tabs-option item" data-tab="gAUkxCtD">JavaScript ES2015</div>
+					
+					
+					<div class="tabs-option item" data-tab="yPXGtTEy">JavaScript ES5</div>
+					
+				</div>
+			</div>
+		</div>
+
+		
+			
+			<div class="tabs-tab ui bottom attached tabs active tab segment" data-tab="pSfMsdbY">
+				
+			
+			<pre><code class="typescript hljs"><span class="hljs-comment">// ... additional imports</span>
 <span class="hljs-keyword">import</span> Carbon from <span class="hljs-string">"carbonldp/Carbon"</span>;
 <span class="hljs-keyword">import</span> * as Token from <span class="hljs-string">"carbonldp/Auth/Token"</span>;
 
@@ -109,7 +563,16 @@ carbon.auth.authenticate( <span class="hljs-string">"your@email.com"</span>, <sp
     ( token:Token.Class ) =&gt; {
         <span class="hljs-built_in">console</span>.log( carbon.auth.authenticatedAgent ); <span class="hljs-comment">// Yourself!</span>
     }
-);</code></pre></div><div class="tabs-tab ui bottom attached tabs tab segment" data-tab="nMnTySgI"><pre><code class="javascript hljs"><span class="hljs-comment">// ... imports</span>
+);</code></pre>
+			
+		
+			</div>
+		
+			
+			<div class="tabs-tab ui bottom attached tabs  tab segment" data-tab="gAUkxCtD">
+				
+			
+			<pre><code class="javascript hljs"><span class="hljs-comment">// ... imports</span>
 
 <span class="hljs-keyword">let</span> carbon;
 
@@ -119,7 +582,16 @@ carbon.auth.authenticate( <span class="hljs-string">"your@email.com"</span>, <sp
     <span class="hljs-function">(<span class="hljs-params"> token </span>) =&gt;</span> {
         <span class="hljs-built_in">console</span>.log( carbon.auth.authenticatedAgent ); <span class="hljs-comment">// Yourself!</span>
     }
-);</code></pre></div><div class="tabs-tab ui bottom attached tabs tab segment" data-tab="JGRjnYTE"><pre><code class="javascript hljs"><span class="hljs-keyword">var</span> carbon;
+);</code></pre>
+			
+		
+			</div>
+		
+			
+			<div class="tabs-tab ui bottom attached tabs  tab segment" data-tab="yPXGtTEy">
+				
+			
+			<pre><code class="javascript hljs"><span class="hljs-keyword">var</span> carbon;
 
 <span class="hljs-comment">// ... platform context creation</span>
 
@@ -127,7 +599,60 @@ carbon.auth.authenticate( <span class="hljs-string">"your@email.com"</span>, <sp
     <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> token </span>) </span>{
         <span class="hljs-built_in">console</span>.log( carbon.auth.authenticatedAgent ); <span class="hljs-comment">// Yourself!</span>
     }
-);</code></pre></div></div><p>This method will retrieve a <a href="https://tools.ietf.org/html/rfc7519" target="_blank" rel="noopener">JWT</a> token that represents your authentication with the platform, and store it inside of the context you called the method in.</p><p>In the previous example the method was called using the <code>Auth</code> service of the platform context. This means that all requests made by any service of that context will use that authentication. Also, any context derived from it will inherit the authentication and use it on all requests unless the authentication is overwritten on that context. E.g.:</p><div class="ui grid tabsComponent"><div class="ui computer tablet only row tabs"><div class="ui top attached tabular menu tabs-titles"><a class="tabs-title active item" data-tab="sLGTWWOb">TypeScript</a> <a class="tabs-title item" data-tab="sEVyTxlU">JavaScript ES2015</a> <a class="tabs-title item" data-tab="flRlZjWP">JavaScript ES5</a></div></div><div class="ui mobile only row tabs"><div class="ui compact selection dropdown tabs-options"><i class="dropdown icon"></i><div class="text">TypeScript</div><div class="menu"><div class="tabs-option item" data-tab="sLGTWWOb">TypeScript</div><div class="tabs-option item" data-tab="sEVyTxlU">JavaScript ES2015</div><div class="tabs-option item" data-tab="flRlZjWP">JavaScript ES5</div></div></div></div><div class="tabs-tab ui bottom attached tabs active tab segment" data-tab="sLGTWWOb"><pre><code class="typescript hljs"><span class="hljs-comment">// ... additional imports</span>
+);</code></pre>
+			
+		
+			</div>
+		
+	
+</div>
+
+	<p>This method will retrieve a <a href="https://tools.ietf.org/html/rfc7519" target="_blank" rel="noopener">JWT</a> token that represents your authentication with the platform,
+		and store it inside of the context you called the method in.</p>
+	<p>In the previous example the method was called using the <code>Auth</code> service of the platform context. This means that all requests made by any service of that
+		context will use that authentication. Also, any context derived from it will inherit the authentication and use it on all requests unless the authentication is
+		overwritten on that context. E.g.:</p>
+	<div class="ui grid tabsComponent">
+	
+		<div class="ui computer tablet only row tabs">
+			<div class="ui top attached tabular menu tabs-titles">
+				
+				
+					<a class="tabs-title active item" data-tab="pTHLADBd">TypeScript</a>
+				
+				
+					<a class="tabs-title  item" data-tab="DZcBjhob">JavaScript ES2015</a>
+				
+				
+					<a class="tabs-title  item" data-tab="tllmrmlW">JavaScript ES5</a>
+				
+			</div>
+		</div>
+		<div class="ui mobile only row tabs">
+			<div class="ui compact selection dropdown tabs-options">
+				<i class="dropdown icon"></i>
+				<div class="text">TypeScript</div>
+				<div class="menu">
+					
+					
+					<div class="tabs-option item" data-tab="pTHLADBd">TypeScript</div>
+					
+					
+					<div class="tabs-option item" data-tab="DZcBjhob">JavaScript ES2015</div>
+					
+					
+					<div class="tabs-option item" data-tab="tllmrmlW">JavaScript ES5</div>
+					
+				</div>
+			</div>
+		</div>
+
+		
+			
+			<div class="tabs-tab ui bottom attached tabs active tab segment" data-tab="pTHLADBd">
+				
+			
+			<pre><code class="typescript hljs"><span class="hljs-comment">// ... additional imports</span>
 <span class="hljs-keyword">import</span> Carbon from <span class="hljs-string">"carbonldp/Carbon"</span>;
 <span class="hljs-keyword">import</span> * as App from <span class="hljs-string">"carbonldp/App"</span>;
 <span class="hljs-keyword">import</span> * as Token from <span class="hljs-string">"carbonldp/Auth/Token"</span>;
@@ -158,7 +683,16 @@ carbon.auth.authenticate( <span class="hljs-string">"agent1@example.com"</span>,
         <span class="hljs-built_in">console</span>.log( carbon.auth.authenticatedAgent ); <span class="hljs-comment">// Agent 1</span>
         <span class="hljs-built_in">console</span>.log( appContext.auth.authenticatedAgent ); <span class="hljs-comment">// Agent 2</span>
     }
-);</code></pre></div><div class="tabs-tab ui bottom attached tabs tab segment" data-tab="sEVyTxlU"><pre><code class="javascript hljs"><span class="hljs-comment">// ... imports</span>
+);</code></pre>
+			
+		
+			</div>
+		
+			
+			<div class="tabs-tab ui bottom attached tabs  tab segment" data-tab="DZcBjhob">
+				
+			
+			<pre><code class="javascript hljs"><span class="hljs-comment">// ... imports</span>
 
 <span class="hljs-keyword">let</span> carbon;
 
@@ -186,7 +720,16 @@ carbon.auth.authenticate( <span class="hljs-string">"agent1@example.com"</span>,
         <span class="hljs-built_in">console</span>.log( carbon.auth.authenticatedAgent ); <span class="hljs-comment">// Agent 1</span>
         <span class="hljs-built_in">console</span>.log( appContext.auth.authenticatedAgent ); <span class="hljs-comment">// Agent 2</span>
     }
-);</code></pre></div><div class="tabs-tab ui bottom attached tabs tab segment" data-tab="flRlZjWP"><pre><code class="javascript hljs"><span class="hljs-keyword">var</span> carbon;
+);</code></pre>
+			
+		
+			</div>
+		
+			
+			<div class="tabs-tab ui bottom attached tabs  tab segment" data-tab="tllmrmlW">
+				
+			
+			<pre><code class="javascript hljs"><span class="hljs-keyword">var</span> carbon;
 
 <span class="hljs-comment">// ... platform context creation</span>
 
@@ -212,7 +755,62 @@ carbon.auth.authenticate( <span class="hljs-string">"agent1@example.com"</span>,
         <span class="hljs-built_in">console</span>.log( carbon.auth.authenticatedAgent ); <span class="hljs-comment">// Agent 1</span>
         <span class="hljs-built_in">console</span>.log( appContext.auth.authenticatedAgent ); <span class="hljs-comment">// Agent 2</span>
     }
-);</code></pre></div></div><section class="mainContent-subSection" id="keeping-authentication-across-page-loads"><h3>Keeping authentication across page loads</h3><p>As long as your application can hold a reference of the context you are working on, you'll be able to maintain your user's authentication. But what happens if you want to keep your users authenticated across page loads?</p><p>The answer lies on the <a href="https://tools.ietf.org/html/rfc7519" target="_blank" rel="noopener">JWT</a> the <code>authenticate</code> method returns. This token can be saved to later use it to authenticate the agent again with the <code>authenticateUsing</code> method in the <code>Auth</code> service.</p><p>Here's an example on how to do that using cookies, but local storage or any other persistence method could be used:</p><div class="ui grid tabsComponent"><div class="ui computer tablet only row tabs"><div class="ui top attached tabular menu tabs-titles"><a class="tabs-title active item" data-tab="qVsdGqPq">TypeScript</a> <a class="tabs-title item" data-tab="TNulhciI">JavaScript ES2015</a> <a class="tabs-title item" data-tab="ORAUgSNw">JavaScript ES5</a></div></div><div class="ui mobile only row tabs"><div class="ui compact selection dropdown tabs-options"><i class="dropdown icon"></i><div class="text">TypeScript</div><div class="menu"><div class="tabs-option item" data-tab="qVsdGqPq">TypeScript</div><div class="tabs-option item" data-tab="TNulhciI">JavaScript ES2015</div><div class="tabs-option item" data-tab="ORAUgSNw">JavaScript ES5</div></div></div></div><div class="tabs-tab ui bottom attached tabs active tab segment" data-tab="qVsdGqPq"><pre><code class="typescript hljs"><span class="hljs-comment">// ... additional imports</span>
+);</code></pre>
+			
+		
+			</div>
+		
+	
+</div>
+
+	<section class="mainContent-subSection" id="keeping-authentication-across-page-loads">
+		<h3>Keeping authentication across page loads</h3>
+		<p>As long as your application can hold a reference of the context you are working on, you'll be able to maintain your user's authentication. But what happens if you
+			want to keep your users authenticated across page loads?</p>
+		<p>The answer lies on the <a href="https://tools.ietf.org/html/rfc7519" target="_blank" rel="noopener">JWT</a> the <code>authenticate</code> method returns. This token
+			can be saved to later use it to authenticate the agent again with the <code>authenticateUsing</code> method in the <code>Auth</code> service.</p>
+		<p>Here's an example on how to do that using cookies, but local storage or any other persistence method could be used:</p>
+		<div class="ui grid tabsComponent">
+	
+		<div class="ui computer tablet only row tabs">
+			<div class="ui top attached tabular menu tabs-titles">
+				
+				
+					<a class="tabs-title active item" data-tab="RHcCBoni">TypeScript</a>
+				
+				
+					<a class="tabs-title  item" data-tab="kdkMhJnB">JavaScript ES2015</a>
+				
+				
+					<a class="tabs-title  item" data-tab="DJxpkODc">JavaScript ES5</a>
+				
+			</div>
+		</div>
+		<div class="ui mobile only row tabs">
+			<div class="ui compact selection dropdown tabs-options">
+				<i class="dropdown icon"></i>
+				<div class="text">TypeScript</div>
+				<div class="menu">
+					
+					
+					<div class="tabs-option item" data-tab="RHcCBoni">TypeScript</div>
+					
+					
+					<div class="tabs-option item" data-tab="kdkMhJnB">JavaScript ES2015</div>
+					
+					
+					<div class="tabs-option item" data-tab="DJxpkODc">JavaScript ES5</div>
+					
+				</div>
+			</div>
+		</div>
+
+		
+			
+			<div class="tabs-tab ui bottom attached tabs active tab segment" data-tab="RHcCBoni">
+				
+				
+				<pre><code class="typescript hljs"><span class="hljs-comment">// ... additional imports</span>
 <span class="hljs-keyword">import</span> * as App from <span class="hljs-string">"carbonldp/App"</span>;
 <span class="hljs-keyword">import</span> * as Errors from <span class="hljs-string">"carbonldp/Errors"</span>;
 <span class="hljs-keyword">import</span> * as HTTP from <span class="hljs-string">"carbonldp/HTTP"</span>;
@@ -282,7 +880,16 @@ carbon.auth.authenticate( <span class="hljs-string">"agent1@example.com"</span>,
 <span class="hljs-comment">// Simple function to delete a cookie using vanilla JavaScript. jQuery $.removeCookie method could be used instead</span>
 <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">deleteCookie</span>(<span class="hljs-params"> name:<span class="hljs-built_in">string</span> </span>):<span class="hljs-title">void</span> </span>{
     setCookie( name, <span class="hljs-string">""</span>, <span class="hljs-number">-1</span> );
-}</code></pre></div><div class="tabs-tab ui bottom attached tabs tab segment" data-tab="TNulhciI"><pre><code class="javascript hljs"><span class="hljs-comment">// ... imports</span>
+}</code></pre>
+				
+			
+			</div>
+		
+			
+			<div class="tabs-tab ui bottom attached tabs  tab segment" data-tab="kdkMhJnB">
+				
+				
+				<pre><code class="javascript hljs"><span class="hljs-comment">// ... imports</span>
 
 <span class="hljs-keyword">let</span> appContext:App.Context;
 
@@ -348,7 +955,16 @@ carbon.auth.authenticate( <span class="hljs-string">"agent1@example.com"</span>,
 <span class="hljs-comment">// Simple function to delete a cookie using vanilla JavaScript. jQuery $.removeCookie method could be used instead</span>
 <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">deleteCookie</span>(<span class="hljs-params"> name </span>) </span>{
     setCookie( name, <span class="hljs-string">""</span>, <span class="hljs-number">-1</span> );
-}</code></pre></div><div class="tabs-tab ui bottom attached tabs tab segment" data-tab="ORAUgSNw"><pre><code class="javascript hljs"><span class="hljs-keyword">var</span> appContext:App.Context;
+}</code></pre>
+				
+			
+			</div>
+		
+			
+			<div class="tabs-tab ui bottom attached tabs  tab segment" data-tab="DJxpkODc">
+				
+				
+				<pre><code class="javascript hljs"><span class="hljs-keyword">var</span> appContext:App.Context;
 
 <span class="hljs-comment">// ... app context retrieval</span>
 
@@ -412,7 +1028,60 @@ carbon.auth.authenticate( <span class="hljs-string">"agent1@example.com"</span>,
 <span class="hljs-comment">// Simple function to delete a cookie using vanilla JavaScript. jQuery $.removeCookie method could be used instead</span>
 <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">deleteCookie</span>(<span class="hljs-params"> name </span>) </span>{
     setCookie( name, <span class="hljs-string">""</span>, <span class="hljs-number">-1</span> );
-}</code></pre></div></div></section></section><section class="mainContent-section" id="logging-out"><h2>Logging out</h2><p>Clearing the authentication of an agent can be done by using the <code>clearAuthentication</code> method of the <code>Auth</code> service. E.g.:</p><div class="ui grid tabsComponent"><div class="ui computer tablet only row tabs"><div class="ui top attached tabular menu tabs-titles"><a class="tabs-title active item" data-tab="MpDFChZf">TypeScript</a> <a class="tabs-title item" data-tab="ztLCCQCf">JavaScript ES2015</a> <a class="tabs-title item" data-tab="BsOEziuD">JavaScript ES5</a></div></div><div class="ui mobile only row tabs"><div class="ui compact selection dropdown tabs-options"><i class="dropdown icon"></i><div class="text">TypeScript</div><div class="menu"><div class="tabs-option item" data-tab="MpDFChZf">TypeScript</div><div class="tabs-option item" data-tab="ztLCCQCf">JavaScript ES2015</div><div class="tabs-option item" data-tab="BsOEziuD">JavaScript ES5</div></div></div></div><div class="tabs-tab ui bottom attached tabs active tab segment" data-tab="MpDFChZf"><pre><code class="typescript hljs"><span class="hljs-keyword">import</span> * as App from <span class="hljs-string">"carbonldp/App"</span>;
+}</code></pre>
+				
+			
+			</div>
+		
+	
+</div>
+
+	</section>
+</section>
+<section class="mainContent-section" id="logging-out">
+	<h2>Logging out</h2>
+	<p>Clearing the authentication of an agent can be done by using the <code>clearAuthentication</code> method of the <code>Auth</code> service. E.g.:</p>
+	<div class="ui grid tabsComponent">
+	
+		<div class="ui computer tablet only row tabs">
+			<div class="ui top attached tabular menu tabs-titles">
+				
+				
+					<a class="tabs-title active item" data-tab="yxqKfqkQ">TypeScript</a>
+				
+				
+					<a class="tabs-title  item" data-tab="sDeTojOx">JavaScript ES2015</a>
+				
+				
+					<a class="tabs-title  item" data-tab="xBquOpzE">JavaScript ES5</a>
+				
+			</div>
+		</div>
+		<div class="ui mobile only row tabs">
+			<div class="ui compact selection dropdown tabs-options">
+				<i class="dropdown icon"></i>
+				<div class="text">TypeScript</div>
+				<div class="menu">
+					
+					
+					<div class="tabs-option item" data-tab="yxqKfqkQ">TypeScript</div>
+					
+					
+					<div class="tabs-option item" data-tab="sDeTojOx">JavaScript ES2015</div>
+					
+					
+					<div class="tabs-option item" data-tab="xBquOpzE">JavaScript ES5</div>
+					
+				</div>
+			</div>
+		</div>
+
+		
+			
+			<div class="tabs-tab ui bottom attached tabs active tab segment" data-tab="yxqKfqkQ">
+				
+			
+			<pre><code class="typescript hljs"><span class="hljs-keyword">import</span> * as App from <span class="hljs-string">"carbonldp/App"</span>;
 <span class="hljs-keyword">import</span> * as Token from <span class="hljs-string">"carbonldp/Auth/Token"</span>;
 
 <span class="hljs-keyword">let</span> appContext:App.Context;
@@ -427,7 +1096,16 @@ appContext.auth.authenticate( <span class="hljs-string">"agent@example.com"</spa
 
         <span class="hljs-built_in">console</span>.log( appContext.auth.authenticatedAgent ); <span class="hljs-comment">// null</span>
     }
-);</code></pre></div><div class="tabs-tab ui bottom attached tabs tab segment" data-tab="ztLCCQCf"><pre><code class="javascript hljs"><span class="hljs-keyword">let</span> appContext;
+);</code></pre>
+			
+		
+			</div>
+		
+			
+			<div class="tabs-tab ui bottom attached tabs  tab segment" data-tab="sDeTojOx">
+				
+			
+			<pre><code class="javascript hljs"><span class="hljs-keyword">let</span> appContext;
 
 <span class="hljs-comment">// ... app context retrieval</span>
 
@@ -439,7 +1117,16 @@ appContext.auth.authenticate( <span class="hljs-string">"agent@example.com"</spa
 
         <span class="hljs-built_in">console</span>.log( appContext.auth.authenticatedAgent ); <span class="hljs-comment">// null</span>
     }
-);</code></pre></div><div class="tabs-tab ui bottom attached tabs tab segment" data-tab="BsOEziuD"><pre><code class="javascript hljs"><span class="hljs-keyword">var</span> appContext;
+);</code></pre>
+			
+		
+			</div>
+		
+			
+			<div class="tabs-tab ui bottom attached tabs  tab segment" data-tab="xBquOpzE">
+				
+			
+			<pre><code class="javascript hljs"><span class="hljs-keyword">var</span> appContext;
 
 <span class="hljs-comment">// ... app context retrieval</span>
 
@@ -451,4 +1138,367 @@ appContext.auth.authenticate( <span class="hljs-string">"agent@example.com"</spa
 
         <span class="hljs-built_in">console</span>.log( appContext.auth.authenticatedAgent ); <span class="hljs-comment">// null</span>
     }
-);</code></pre></div></div></section></div></div><div class="four wide computer tablet only column"><div class="sidebar" content="mainContent"><div class="ui sticky segment"><h2 class="ui header">Content</h2><div class="ui vertical following fluid accordion text menu sidebar-verticalMenu"><div class="item"><a class="title sidebar-title" href="#introduction">Introduction</a></div><div class="item"><a class="title sidebar-title sidebar-title--dropdown" href="#logging-in">Logging in</a><i class="dropdown icon sidebar-dropdownIcon"></i><div class="content menu sidebar-verticalSubMenu"><a class="item sidebar-title" href="#keeping-authentication-across-page-loads">Keeping authentication across page loads</a></div></div><div class="item"><a class="title sidebar-title" href="#logging-out">Logging out</a></div></div></div></div></div></div></div></div><div class="footer bigStoneBG"><div class="ui middle aligned padded grid computer tablet only"><div class="four wide center aligned column"><a href="http://base22.com/"><img class="footer-base22Logo" src="/assets/images/base22-logo-white.png"></a></div><div class="eight wide center aligned stretched column"><p class="footer-copyrightText">© 2017 Base22 Technology Group, LLC. All Rights Reserved.</p></div><div class="four wide left aligned column"><a angulartics2on="click" angularticsevent="OutboundClick" angularticscategory="Twitter" href="https://twitter.com/CarbonLDP"><i class="circular twitter icon footer-socialIcon"></i></a> <a angulartics2on="click" angularticsevent="OutboundClick" angularticscategory="YouTube" href="https://www.youtube.com/channel/UCuNWXjT19Gnpo7I502PTZ_Q"><i class="circular youtube icon footer-socialIcon"></i></a> <a angulartics2on="click" angularticsevent="OutboundClick" angularticscategory="LinkedIn" href="https://www.linkedin.com/company/carbon-ldp"><i class="circular linkedin icon footer-socialIcon"></i></a></div></div><div class="ui centered padded grid mobile only"><div class="left aligned eight wide column"><a href="http://base22.com/"><img class="footer-base22Logo" src="/assets/images/base22-logo-white.png"></a></div><div class="right aligned eight wide column"><a angulartics2on="click" angularticsevent="OutboundClick" angularticscategory="Twitter" href="https://twitter.com/CarbonLDP"><i class="circular twitter icon footer-socialIcon"></i></a> <a angulartics2on="click" angularticsevent="OutboundClick" angularticscategory="YouTube" href="https://www.youtube.com/channel/UCuNWXjT19Gnpo7I502PTZ_Q"><i class="circular youtube icon footer-socialIcon"></i></a> <a angulartics2on="click" angularticsevent="OutboundClick" angularticscategory="LinkedIn" href="https://www.linkedin.com/company/carbon-ldp"><i class="circular linkedin icon footer-socialIcon"></i></a></div><div class="center aligned twelve wide column"><p class="footer-copyrightText">© 2017 Base22 Technology Group, LLC. All&nbsp;Rights&nbsp;Reserved.</p></div></div></div><script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script><script src="/assets/semantic/semantic.min.js"></script><script src="/assets/scripts/main.js"></script><script>!function(e){$(document).ready(function(){function e(e){var i=$(e.currentTarget),t=i.parent(".item").find(".content.menu");if(t){var s=t.hasClass("active");s?(t.removeClass("active"),t.removeClass("toggled")):(t.addClass("active"),t.addClass("toggled"))}return $(".ui.sticky").sticky("refresh"),!1}function i(e){var i=$(e.currentTarget).parent(".item"),t=i.siblings(".item");return t.removeClass("active"),i.addClass("active"),e.preventDefault(),!1}function t(e){var i=$(e.currentTarget),t=i.siblings(".item");return t.removeClass("active"),i.addClass("active"),e.preventDefault(),!1}function s(e,i,t){var s=$(e),n=t.index(s),a=i.children(".item"),c=a.eq(n),r=c.hasClass("active"),o=t.eq(n).children("section").length>0;return a.removeClass("active"),a.find(".active").not(".toggled").removeClass("active"),r||c.addClass("active"),o&&c.find(".menu").addClass("active"),$(".ui.sticky").sticky("refresh"),!1}function n(e,i,t){var s=$(e),n=t.index(s),a=i.find(".menu > .item"),c=a.eq(n),r=c.hasClass("active"),o=i.children(".item").find(".menu"),d=o.hasClass("active");return n===-1||r||(a.filter(".active").removeClass("active"),c.addClass("active")),d||o.addClass("active"),$(".ui.sticky").sticky("refresh"),!1}function a(e,i,t){var s=$(e),n=t.index(s),a=i.children(".item"),c=a.eq(n),r=(c.hasClass("active"),c.find(".menu"));return 0===n&&(c.removeClass("active"),r.length>0&&(c.find(".menu").not(".toggled").removeClass("active"),r.find(".item").removeClass("active"))),$(".ui.sticky").sticky("refresh"),!1}var c=$(".sidebar"),r=$(".sidebar").find(".following.menu"),o=$("."+c.attr("content")),d=o.children("section"),v=d.children("section");d.visibility({once:!1,offset:150,onTopPassed:function(){s(this,r,d)},onTopPassedReverse:function(){a(this,r,d)},onBottomPassedReverse:function(){s(this,r,d)}}),v.visibility({once:!1,offset:150,onTopPassed:function(){n(this,r,v)},onBottomPassedReverse:function(){n(this,r,v)}}),$(".sidebar > .ui.sticky").sticky({observeChanges:!0,context:".mainContent",offset:100}),$(".sidebar .item > .dropdown.icon").on("click",e),$(".sidebar .item > .title").on("click",i),$(".sidebar  a.item ").on("click",t)})}(window)</script><script>!function(e){$(document).ready(function(){function e(e){var n=$(e.currentTarget);$(".ui.sticky").sticky("refresh");var t=n.parent(".item").find(".content.menu");if(t){var o=t.hasClass("active");o?(t.removeClass("active"),t.removeClass("toggled")):(t.addClass("active"),t.addClass("toggled"))}return!1}var n=$(".staticContentMenu"),t=$("."+n.attr("content")),o=t.children(".mainContent-section");o.visibility({once:!1,offset:150,onTopPassed:function(){console.log("top passed")},onTopPassedReverse:function(){},onBottomPassedReverse:function(){}}),$(".staticContentMenu .item > .dropdown.icon").on("click",e)})}(window)</script><script>!function(t){function a(t){for(var a=$(t.currentTarget),e=a.attr("data-tab"),s=a.html(),n=a.parent();!n.hasClass("tabsComponent");)n=n.parent();var i=n.find(".tabs-title,.tabs-tab"),r=n.find(".tabs-option");if(r.removeClass("active selected"),i.removeClass("active"),i.each(function(){var t=$(this);t.attr("data-tab")===e&&t.addClass("active")}),r.each(function(){var t=$(this);t.attr("data-tab")===e&&t.addClass("active selected")}),a.hasClass("tabs-title")){var o=n.find(".tabs-options .text");o.html(s)}return!0}$(document).ready(function(){for(var t=document.querySelectorAll(".tabs-titles > .tabs-title, .tabs-options .tabs-option"),e=0;e<t.length;e++)t[e].addEventListener("click",a)})}(window)</script><script id="widgets-scripts"></script></body></html>
+);</code></pre>
+			
+		
+			</div>
+		
+	
+</div>
+
+</section>
+
+                        
+
+                    </div>
+                </div>
+            
+            <div class="four wide computer tablet only column">
+                <div class="sidebar" content="mainContent">
+	<div class="ui sticky segment">
+		<h2 class="ui header">Content</h2>
+		<div class="ui vertical following fluid accordion text menu sidebar-verticalMenu">
+
+		
+
+			<div class="item"><a class="title sidebar-title" href="#introduction">Introduction</a></div>
+
+			
+
+			<div class="item">
+
+				<a class="title sidebar-title sidebar-title--dropdown" href="#logging-in">Logging in</a><i class="dropdown icon sidebar-dropdownIcon"></i>
+
+				<div class="content menu sidebar-verticalSubMenu">
+
+				
+
+					<a class="item sidebar-title" href="#keeping-authentication-across-page-loads">Keeping authentication across page loads</a>
+
+				
+
+				</div>
+			</div>
+		
+
+			<div class="item"><a class="title sidebar-title" href="#logging-out">Logging out</a></div>
+
+			
+		</div>
+	</div>
+</div>
+            </div>
+            
+        </div>
+    </div>
+
+        </div>
+        <div class="footer bigStoneBG">
+        <div class="ui middle aligned padded grid computer tablet only">
+
+            <div class="four wide center aligned column">
+                <a href="http://base22.com/"><img class="footer-base22Logo" src="/assets/images/base22-logo-white.png"></a>
+            </div>
+            <div class="eight wide center aligned stretched column">
+                <p class="footer-copyrightText">© 2017 Base22 Technology Group, LLC. All Rights Reserved.</p>
+            </div>
+            <div class="four wide left aligned column">
+                <a angulartics2on="click" angularticsevent="OutboundClick" angularticscategory="Twitter" href="https://twitter.com/CarbonLDP"><i class="circular twitter icon footer-socialIcon"></i></a>
+                <a angulartics2on="click" angularticsevent="OutboundClick" angularticscategory="YouTube" href="https://www.youtube.com/channel/UCuNWXjT19Gnpo7I502PTZ_Q"><i class="circular youtube icon footer-socialIcon"></i></a>
+                <a angulartics2on="click" angularticsevent="OutboundClick" angularticscategory="LinkedIn" href="https://www.linkedin.com/company/carbon-ldp"><i class="circular linkedin icon footer-socialIcon"></i></a>
+            </div>
+        </div>
+        <div class="ui centered padded grid mobile only">
+            <div class="left aligned eight wide column">
+                <a href="http://base22.com/"><img class="footer-base22Logo" src="/assets/images/base22-logo-white.png"></a>
+            </div>
+            <div class="right aligned eight wide column">
+                <a angulartics2on="click" angularticsevent="OutboundClick" angularticscategory="Twitter" href="https://twitter.com/CarbonLDP"><i class="circular twitter icon footer-socialIcon"></i></a>
+                <a angulartics2on="click" angularticsevent="OutboundClick" angularticscategory="YouTube" href="https://www.youtube.com/channel/UCuNWXjT19Gnpo7I502PTZ_Q"><i class="circular youtube icon footer-socialIcon"></i></a>
+                <a angulartics2on="click" angularticsevent="OutboundClick" angularticscategory="LinkedIn" href="https://www.linkedin.com/company/carbon-ldp"><i class="circular linkedin icon footer-socialIcon"></i></a>
+            </div>
+            <div class="center aligned twelve wide column">
+                <p class="footer-copyrightText">© 2017 Base22 Technology Group, LLC. All&nbsp;Rights&nbsp;Reserved.</p>
+            </div>
+    </div>
+</div>
+
+        <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+<script src="/assets/semantic/semantic.min.js"></script>
+
+<script src="/assets/scripts/main.js"></script>
+
+        <script>(function( window ){ $( document ).ready( function() {
+
+	var $sidebar = $( ".sidebar" );
+	var $sidebarFollowingMenu = $( ".sidebar" ).find( ".following.menu" );
+	var $content = $( "." + $sidebar.attr( "content" ) );
+	var $sections = $content.children( "section" );
+	var $subSections = $sections.children( "section" );
+
+	// Detect when section is passed
+	$sections.visibility( {
+		once: false,
+		offset: 150,
+		onTopPassed: function() {
+			activateSection( this, $sidebarFollowingMenu, $sections );
+		},
+		onTopPassedReverse: function() {
+			deactivateFirstSection( this, $sidebarFollowingMenu, $sections );
+		},
+		onBottomPassedReverse: function() {
+			activateSection( this, $sidebarFollowingMenu, $sections );
+		},
+	} );
+
+	$subSections.visibility( {
+		once: false,
+		offset: 150,
+		onTopPassed: function() {
+			activateSubSection( this, $sidebarFollowingMenu, $subSections );
+		},
+		onBottomPassedReverse: function() {
+			activateSubSection( this, $sidebarFollowingMenu, $subSections );
+		}
+	} );
+
+
+	// Make sidebar stick to its position
+	$( ".sidebar > .ui.sticky" ).sticky( {
+		observeChanges: true,
+		context: ".mainContent",
+		offset: 100
+	} );
+
+	// Activate toggle dropdown
+	$( ".sidebar .item > .dropdown.icon" ).on( "click", toggleDropdown );
+
+	//Activate click on items and subitems
+	$( ".sidebar .item > .title" ).on( "click", activateItem );
+	$( ".sidebar  a.item " ).on( "click", activateSubItem );
+
+	// Toggle selected accordion menu in sidebar
+	function toggleDropdown( event ) {
+		var $target = $( event.currentTarget );
+
+		var $accordion = $target.parent( ".item" ).find( ".content.menu" );
+		if( $accordion ) {
+			var accordionIsActive = $accordion.hasClass( "active" );
+
+			if( accordionIsActive ) {
+				$accordion.removeClass( "active" );
+				$accordion.removeClass( "toggled" );
+			} else {
+				$accordion.addClass( "active" );
+				$accordion.addClass( "toggled" );
+			}
+		}
+		$( ".ui.sticky" ).sticky( "refresh" );
+
+		return false;
+	}
+
+	function activateItem( event ) {
+
+		var $item = $( event.currentTarget ).parent( ".item" );
+
+		var $allItems = $item.siblings( ".item" );
+		$allItems.removeClass( "active" );
+		$item.addClass( "active" );
+
+		event.preventDefault();
+
+		return false;
+
+	}
+
+	function activateSubItem( event ) {
+
+		var $item = $( event.currentTarget );
+
+		var $allItems = $item.siblings( ".item" );
+		$allItems.removeClass( "active" );
+		$item.addClass( "active" );
+
+		event.preventDefault();
+
+		return false;
+
+	}
+
+
+	function activateSection( elm, $menu, $sections ) {
+
+		var $section = $( elm );
+		var index = $sections.index( $section );
+		var $followSection = $menu.children( ".item" );
+		var $currentSection = $followSection.eq( index );
+
+		var isActive = $currentSection.hasClass( "active" );
+
+		var hasSubsection = $sections.eq( index ).children( "section" ).length > 0;
+
+		$followSection.removeClass( "active" );
+		$followSection.find( ".active" ).not( ".toggled" ).removeClass( "active" );
+
+		if( ! isActive ) {
+
+			$currentSection.addClass( "active" );
+		}
+
+		if( hasSubsection ) {
+			$currentSection.find( ".menu" ).addClass( "active" );
+		}
+
+		$( ".ui.sticky" ).sticky( "refresh" );
+
+		return false;
+
+	}
+
+	function activateSubSection( elm, $menu, $subSections ) {
+		var $section = $( elm );
+		var index = $subSections.index( $section );
+		var $followSection = $menu.find( ".menu > .item" );
+		var $activeSection = $followSection.eq( index );
+		var isActive = $activeSection.hasClass( "active" );
+		var $subSectionMenu = $menu.children( ".item" ).find( ".menu" );
+		var subSectionMenuIsActive = $subSectionMenu.hasClass( "active" );
+
+		if( index !== - 1 && ! isActive ) {
+			$followSection.filter( ".active" ).removeClass( "active" );
+			$activeSection.addClass( "active" );
+		}
+
+		if( ! subSectionMenuIsActive ) {
+			$subSectionMenu.addClass( "active" );
+		}
+
+		$( ".ui.sticky" ).sticky( "refresh" );
+
+		return false;
+	}
+
+	function deactivateFirstSection( elm, $menu, $sections ) {
+
+		var $section = $( elm );
+		var index = $sections.index( $section );
+		var $followSection = $menu.children( ".item" );
+		var $currentSection = $followSection.eq( index );
+		var isActive = $currentSection.hasClass( "active" );
+		var $subSectionMenu = $currentSection.find( ".menu" );
+
+
+		if( index === 0 ) {
+
+			$currentSection.removeClass( "active" );
+
+			if( $subSectionMenu.length > 0 ) {
+				$currentSection.find( ".menu" ).not( ".toggled" ).removeClass( "active" );
+				$subSectionMenu.find( ".item" ).removeClass( "active" );
+			}
+
+		}
+
+		$( ".ui.sticky" ).sticky( "refresh" );
+
+		return false;
+	}
+
+
+} ); })( window );</script><script>(function( window ){ $( document ).ready( function() {
+	var $sidebar = $( ".staticContentMenu" );
+	var $content = $( "." + $sidebar.attr( "content" ) );
+	var $sections = $content.children( ".mainContent-section" );
+
+	// Detect when section is passed
+	$sections.visibility( {
+		once: false,
+		offset: 150,
+		onTopPassed: function() {
+			// _self.activateSection( this );
+			console.log( "top passed" );
+		},
+		onTopPassedReverse: function() {
+			// _self.deactivateFirstSection( this );
+		},
+		onBottomPassedReverse: function() {
+			// _self.activateSection( this );
+		},
+	} );
+
+	// Activate toggle dropdown
+	$( ".staticContentMenu .item > .dropdown.icon" ).on( "click", toggleDropdown );
+
+	// Toggle selected accordion menu in sidebar
+	function toggleDropdown( event ) {
+		var $target = $( event.currentTarget );
+		$( ".ui.sticky" ).sticky( "refresh" );
+		var $accordion = $target.parent( ".item" ).find( ".content.menu" );
+		if( $accordion ) {
+			var accordionIsActive = $accordion.hasClass( "active" );
+
+			if( accordionIsActive ) {
+				$accordion.removeClass( "active" );
+				$accordion.removeClass( "toggled" );
+			} else {
+				$accordion.addClass( "active" );
+				$accordion.addClass( "toggled" );
+			}
+		}
+
+		return false;
+	}
+} ); })( window );</script><script>(function( window ){ $( document ).ready( function() {
+	var tabs = document.querySelectorAll( ".tabs-titles > .tabs-title, .tabs-options .tabs-option" );
+	for( var i = 0; i < tabs.length; i ++ ) {
+		tabs[ i ].addEventListener( 'click', changeTabSelection );
+	}
+} );
+
+function changeTabSelection( e ) {
+
+	var clickedTab = $( e.currentTarget );
+	var selectedOption = clickedTab.attr( "data-tab" );
+	var selectedText = clickedTab.html();
+	var tabComponent = clickedTab.parent();
+
+	//select TabComponent to where the clicked tab/option belongs
+	while( ! tabComponent.hasClass( "tabsComponent" ) ) {
+		tabComponent = tabComponent.parent();
+	}
+
+	// select TabComponent elements
+	var tabs = tabComponent.find( ".tabs-title,.tabs-tab" );
+	var options = tabComponent.find( ".tabs-option" );
+
+	// Remove all active classes from elements
+	options.removeClass( "active selected" );
+	tabs.removeClass( "active" );
+
+	// Add active classes on selected options/tabs
+	tabs.each( function() {
+		var tab = $( this );
+		if( tab.attr( "data-tab" ) === selectedOption ) tab.addClass( "active" );
+	} );
+
+	options.each( function() {
+		var option = $( this );
+		if( option.attr( "data-tab" ) === selectedOption ) option.addClass( "active selected" );
+	} );
+
+	// Change text of selection
+	if( clickedTab.hasClass( "tabs-title" ) ) {
+		var text = tabComponent.find( ".tabs-options .text" );
+		text.html( selectedText );
+	}
+
+	return true;
+}
+
+
+
+ })( window );</script><script id="widgets-scripts"></script>
+    
+    
+</body></html>
