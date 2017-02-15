@@ -14,6 +14,5 @@ Source code for [carbonldp.com](https://carbonldp.com)
     - hexo: `npm install -g hexo-cli`
 2. run `npm install`
 3. run `gulp build`
-4. run `hexo generate`
-5. run `hexo server` to serve the static site (the actual generated site goes in carbonldp-website/public)
+4. run `hexo server` to serve the static site (the actual generated site goes in carbonldp-website/public)
 

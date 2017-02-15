@@ -1,3 +1,8 @@
+# 1.0.0 (2017/02/15)
+
+- Migrated to a generic site generator
+- TODO: Add detailed changelog information
+
 # 0.12.0 (2016/11/10)
 
 - Completed #50 - Document JS SDK authorization
