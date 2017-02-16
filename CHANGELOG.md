@@ -1,3 +1,7 @@
+# 1.0.2 (2017/02/15)
+
+- Added direct call to `postinstall` script on docker pre_build hook
+
 # 1.0.1 (2017/02/15)
 
 - Changed docker hook to match new dev setup
