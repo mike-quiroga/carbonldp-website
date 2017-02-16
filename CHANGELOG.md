@@ -1,3 +1,8 @@
+# 1.0.3 (2017/02/16)
+
+- Enabled cache in nginx configuration file
+- Enabled compression in nginx configuration file
+
 # 1.0.2 (2017/02/15)
 
 - Added direct call to `postinstall` script on docker pre_build hook
