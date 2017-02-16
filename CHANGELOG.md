@@ -1,3 +1,7 @@
+# 1.0.1 (2017/02/15)
+
+- Changed docker hook to match new dev setup
+
 # 1.0.0 (2017/02/15)
 
 - Migrated to a generic site generator
