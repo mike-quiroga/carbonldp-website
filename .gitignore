@@ -1,5 +1,6 @@
 # ----- Project ignores
 db.json
+public/
 
 # Semantic UI
 **/semantic/dist/
