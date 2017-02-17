@@ -13,3 +13,10 @@ h1.category-title{
 ol, ul{
 	line-height: 1.7rem;
 }
+
+hr{
+	border-top: 1px solid rgba(34, 36, 38, .15);
+	border-bottom: 1px solid rgba(255, 255, 255, .1);
+	border-left: none;
+	border-right: none;
+}

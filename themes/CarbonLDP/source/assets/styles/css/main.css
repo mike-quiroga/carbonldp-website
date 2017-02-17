@@ -5,6 +5,13 @@
 .ui.menu a.item.transparentBG:hover, .ui.menu a.item.navMenu-dropdownLink, .ui.menu a.item.navMenu-dropdownText {
   background: transparent; }
 
+.ui.menu .ui.dropdown .menu > .item.navMenu-subItem {
+  padding-left: 2.5em !important;
+  padding-top: 0.5em !important;
+  padding-bottom: 0.5em !important;
+  font-size: 0.95em !important;
+  color: #6c7680 !important; }
+
 .navMenu-carbonLogo {
   height: auto;
   width: 150px; }
