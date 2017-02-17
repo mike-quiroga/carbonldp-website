@@ -44,7 +44,7 @@ date: 2017-02-08 11:58:11
 		Normally, rules are created by stating that a <strong>group</strong> of agents can or can't do something. E.g. "The <em>editors</em> can edit these documents", "The
 		<em>readers</em> can read these other documents", etc.</p>
 	<p>These groups are commonly named after their "role" on the application and they are only meaningful in the context of the application itself.</p>
-	<p>In Carbon, application roles have a hierarchical structure. This structure starts with the <code>app-admins/</code> role which is created automatically by the platform
+	<p>In Carbon, application roles have a hierarchical structure. This structure starts with the <code>app-admin/</code> role which is created automatically by the platform
 		whenever a new application is created.</p>
 	<p>This role should only be used by developers, as being a member of it gives access to every document the application contains.</p>
 	<section class="mainContent-subSection">
@@ -70,10 +70,14 @@ date: 2017-02-08 11:58:11
 
 					// ... app context retrieval
 
-					appContext.auth.roles.createChild( "app-admins/", &#123;
-						name: "Editors" // Provide a human friendly name for the role
+					// Provide a human friendly name for the role
+					let role:App.Role.Class = App.Role.Factory.create( "Editors" );
+
+
+					appContext.auth.roles.createChild( "app-admin/", &#123;
+						role
 					&#125;, "editors/" ).then(
-						( [ editorsRole, response ]:[ PersistedRole.Class, HTTP.Response.Class ] ) => &#123;
+						( [ editorsRole, response ]:[ PersistedRole.Class, HTTP.Response.Class[] ] ) => &#123;
 							// ...
 						&#125;
 					).catch( console.error );
@@ -86,9 +90,10 @@ date: 2017-02-08 11:58:11
 					let appContext;
 
 					// ... app context retrieval
+					let role = App.Role.Factory.create( "Editors" );
 
-					appContext.auth.roles.createChild( "app-admins/", &#123;
-						name: "Editors" // Provide a human friendly name for the role
+					appContext.auth.roles.createChild( "app-admin/", &#123;
+						role
 					&#125;, "editors/" ).then(
 						( [ editorsRole, response ] ) => &#123;
 							// ...
@@ -104,8 +109,11 @@ date: 2017-02-08 11:58:11
 
 					// ... app context retrieval
 
-					appContext.auth.roles.createChild( "app-admins/", &#123;
-						name: "Editors" // Provide a human friendly name for the role
+					// Provide a human friendly name for the role
+					var role = App.Role.Factory.create( "Editors" );
+
+					appContext.auth.roles.createChild( "app-admin/", &#123;
+						role
 					&#125;, "editors/" ).then(
 						function( [ editorsRole, response ] ) &#123;
 							// ...
