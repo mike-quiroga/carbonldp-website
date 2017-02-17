@@ -58,8 +58,8 @@ date: 2017-02-08 11:58:11
 			<a href="https://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Documents-Class-createChild" target="_blank" rel="noopener"><code>createChild</code></a> method (which we
 			already covered). It accepts the parent role (its slug, complete id or the actual role document) as the first parameter, the object that will be used to
 			create the new app role's document (remember, everything's a document!), and an optional slug:</p>
-		<sui-tabs>
-			<sui-tab title="TypeScript">
+		<tabs>
+			<tab title="TypeScript">
 
 				<pre><code class="typescript">
 					import * as App from "carbonldp/App";
@@ -83,8 +83,8 @@ date: 2017-02-08 11:58:11
 					).catch( console.error );
 				</code></pre>
 
-			</sui-tab>
-			<sui-tab title="JavaScript ES2015">
+			</tab>
+			<tab title="JavaScript ES2015">
 
 				<pre><code class="javascript">
 					let appContext;
@@ -101,8 +101,8 @@ date: 2017-02-08 11:58:11
 					).catch( console.error );
 				</code></pre>
 
-			</sui-tab>
-			<sui-tab title="JavaScript ES5">
+			</tab>
+			<tab title="JavaScript ES5">
 
 				<pre><code class="javascript">
 					var appContext;
@@ -121,8 +121,8 @@ date: 2017-02-08 11:58:11
 					).catch( console.error );
 				</code></pre>
 
-			</sui-tab>
-		</sui-tabs>
+			</tab>
+		</tabs>
 		<p>As you can see, the previous example is very similar to how a normal document is created. All patterns that applied there apply here too. For example, if you
 			retrieve a <a href="https://carbonldp.github.io/carbonldp-js-sdk/#Carbon-App-PersistedRole-Class" target="_blank" rel="noopener"><code>PersistedRole</code></a>
 			document, you can call its <a href="https://carbonldp.github.io/carbonldp-js-sdk/#Carbon-App-PersistedRole-Class-createChild" target="_blank"
@@ -141,8 +141,8 @@ date: 2017-02-08 11:58:11
 			<a href="https://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Auth-Roles-Class" target="_blank" rel="noopener"><code>auth.roles</code></a> service (or of a
 			<a href="https://carbonldp.github.io/carbonldp-js-sdk/#Carbon-App-PersistedRole-Class" target="_blank" rel="noopener"><code>PersistedRole</code></a> document):
 		</p>
-		<sui-tabs>
-			<sui-tab title="TypeScript">
+		<tabs>
+			<tab title="TypeScript">
 
 				<pre><code class="typescript">
 					import * as App from "carbonldp/App";
@@ -159,8 +159,8 @@ date: 2017-02-08 11:58:11
 					).catch( console.error );
 				</code></pre>
 
-			</sui-tab>
-			<sui-tab title="JavaScript ES2015">
+			</tab>
+			<tab title="JavaScript ES2015">
 
 				<pre><code class="javascript">
 					// ... imports
@@ -176,8 +176,8 @@ date: 2017-02-08 11:58:11
 					).catch( console.error );
 				</code></pre>
 
-			</sui-tab>
-			<sui-tab title="JavaScript ES5">
+			</tab>
+			<tab title="JavaScript ES5">
 
 				<pre><code class="javascript">
 					// ... imports
@@ -193,8 +193,8 @@ date: 2017-02-08 11:58:11
 					).catch( console.error );
 				</code></pre>
 
-			</sui-tab>
-		</sui-tabs>
+			</tab>
+		</tabs>
 		<p>Like almost all methods in the SDK, to reference a document (in this case an agent), you can use its relative id, its absolute id, or the actual document object
 			(resolved or unresolved).</p>
 	</section>
@@ -203,8 +203,8 @@ date: 2017-02-08 11:58:11
 	<h2>Permissions</h2>
 	<p>Now that we've talked about the possible subjects, it's time to talk about the possible actions. These actions are represented by <strong>permissions</strong> in Carbon.</p>
 	<p>They can be referenced in code through the <a href="https://carbonldp.github.io/carbonldp-js-sdk/#Carbon-NS-CS-Class"><code>Carbon.NS.CS.Class</code></a> object:</p>
-	<sui-tabs>
-		<sui-tab title="TypeScript">
+	<tabs>
+		<tab title="TypeScript">
 
 			<pre><code class="typescript">
 				import * as CS from "carbonldp/NS/CS";
@@ -212,8 +212,8 @@ date: 2017-02-08 11:58:11
 				console.log( CS.Class.Read ); // id of the Read permission
 			</code></pre>
 
-		</sui-tab>
-		<sui-tab title="JavaScript ES2015">
+		</tab>
+		<tab title="JavaScript ES2015">
 
 			<pre><code class="javascript">
 				import * as CS from "carbonldp/NS/CS";
@@ -221,15 +221,15 @@ date: 2017-02-08 11:58:11
 				console.log( CS.Class.Read ); // id of the Read permission
 			</code></pre>
 
-		</sui-tab>
-		<sui-tab title="JavaScript ES5">
+		</tab>
+		<tab title="JavaScript ES5">
 
 			<pre><code class="javascript">
 				console.log( Carbon.NS.CS.Class.Read ); // id of the Read permission
 			</code></pre>
 
-		</sui-tab>
-	</sui-tabs>
+		</tab>
+	</tabs>
 	<p>Here's a list of all the permissions in Carbon:</p>
 	<ul>
 		<li>
@@ -288,8 +288,8 @@ date: 2017-02-08 11:58:11
 			<a href="https://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Documents-Class" target="_blank" rel="noopener"><code>documents</code></a> service's
 			<a href="https://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Documents-Class-getACL" target="_blank" rel="noopener"><code>getACL</code></a> method:
 		</p>
-		<sui-tabs>
-			<sui-tab title="TypeScript">
+		<tabs>
+			<tab title="TypeScript">
 
 				<pre><code class="typescript">
 					import * as App from "carbonldp/App";
@@ -307,8 +307,8 @@ date: 2017-02-08 11:58:11
 					).catch( console.error );
 				</code></pre>
 
-			</sui-tab>
-			<sui-tab title="JavaScript ES2015">
+			</tab>
+			<tab title="JavaScript ES2015">
 
 				<pre><code class="javascript">
 					// ... imports
@@ -324,8 +324,8 @@ date: 2017-02-08 11:58:11
 					).catch( console.error );
 				</code></pre>
 
-			</sui-tab>
-			<sui-tab title="JavaScript ES5">
+			</tab>
+			<tab title="JavaScript ES5">
 
 				<pre><code class="javascript">
 					// ... imports
@@ -341,8 +341,8 @@ date: 2017-02-08 11:58:11
 					).catch( console.error );
 				</code></pre>
 
-			</sui-tab>
-		</sui-tabs>
+			</tab>
+		</tabs>
 		<p>
 			Or you can also use the <a href="https://carbonldp.github.io/carbonldp-js-sdk/#Carbon-PersistedProtectedDocument-Class" target="_blank"
 			                           rel="noopener"><code>PersistedProtectedDocument</code></a>
@@ -350,8 +350,8 @@ date: 2017-02-08 11:58:11
 			Any document is a <a href="https://carbonldp.github.io/carbonldp-js-sdk/#Carbon-PersistedProtectedDocument-Class" target="_blank"
 			                     rel="noopener"><code>PersistedProtectedDocument</code></a> (except for ACLs).
 		</p>
-		<sui-tabs>
-			<sui-tab title="TypeScript">
+		<tabs>
+			<tab title="TypeScript">
 
 				<pre><code class="typescript">
 					import * as App from "carbonldp/App";
@@ -374,8 +374,8 @@ date: 2017-02-08 11:58:11
 					).catch( console.error );
 				</code></pre>
 
-			</sui-tab>
-			<sui-tab title="JavaScript ES2015">
+			</tab>
+			<tab title="JavaScript ES2015">
 
 				<pre><code class="javascript">
 					// ... imports
@@ -395,8 +395,8 @@ date: 2017-02-08 11:58:11
 					).catch( console.error );
 				</code></pre>
 
-			</sui-tab>
-			<sui-tab title="JavaScript ES5">
+			</tab>
+			<tab title="JavaScript ES5">
 
 				<pre><code class="javascript">
 					var appContext;
@@ -414,8 +414,8 @@ date: 2017-02-08 11:58:11
 					).catch( console.error );
 				</code></pre>
 
-			</sui-tab>
-		</sui-tabs>
+			</tab>
+		</tabs>
 		<p>This can be more expensive or cheaper depending on if you have already retrieved the document or not.</p>
 	</section>
 	<section class="mainContent-subSection">
@@ -435,8 +435,8 @@ date: 2017-02-08 11:58:11
 			<a href="https://carbonldp.github.io/carbonldp-js-sdk/#Carbon-NS-CS-Class+AppRole"><code>Carbon.NS.CS.Class.AppRole</code></a>
 		</p>
 		<p>Like with any other document, don't forget to save the ACL's state after modifying it:</p>
-		<sui-tabs>
-			<sui-tab title="TypeScript">
+		<tabs>
+			<tab title="TypeScript">
 
 				<pre><code class="typescript">
 					import * as CS from "carbonldp/NS/CS";
@@ -477,8 +477,8 @@ date: 2017-02-08 11:58:11
 					).catch( console.error );
 				</code></pre>
 
-			</sui-tab>
-			<sui-tab title="JavaScript ES2015">
+			</tab>
+			<tab title="JavaScript ES2015">
 
 				<pre><code class="javascript">
 					import * as CS from "carbonldp/NS/CS";
@@ -516,8 +516,8 @@ date: 2017-02-08 11:58:11
 					).catch( console.error );
 				</code></pre>
 
-			</sui-tab>
-			<sui-tab title="JavaScript ES5">
+			</tab>
+			<tab title="JavaScript ES5">
 
 				<pre><code class="javascript">
 					var editorsRole;
@@ -553,8 +553,8 @@ date: 2017-02-08 11:58:11
 					).catch( console.error );
 				</code></pre>
 
-			</sui-tab>
-		</sui-tabs>
+			</tab>
+		</tabs>
 	</section>
 	<section class="mainContent-subSection">
 		<h3>Inheritance</h3>
@@ -570,8 +570,8 @@ date: 2017-02-08 11:58:11
 					configureChildInheritance</code></a> method. It's usage is basically the same, except that we need to specify whether the inheritance will grant or deny the
 			permissions:
 		</p>
-		<sui-tabs>
-			<sui-tab title="TypeScript">
+		<tabs>
+			<tab title="TypeScript">
 
 				<pre><code class="typescript">
 					import * as CS from "carbonldp/NS/CS";
@@ -609,8 +609,8 @@ date: 2017-02-08 11:58:11
 					).catch( console.error );
 				</code></pre>
 
-			</sui-tab>
-			<sui-tab title="JavaScript ES2015">
+			</tab>
+			<tab title="JavaScript ES2015">
 
 				<pre><code class="javascript">
 					import * as CS from "carbonldp/NS/CS";
@@ -645,8 +645,8 @@ date: 2017-02-08 11:58:11
 					).catch( console.error );
 				</code></pre>
 
-			</sui-tab>
-			<sui-tab title="JavaScript ES5">
+			</tab>
+			<tab title="JavaScript ES5">
 
 				<pre><code class="javascript">
 					var editorsRole;
@@ -679,8 +679,8 @@ date: 2017-02-08 11:58:11
 					).catch( console.error );
 				</code></pre>
 
-			</sui-tab>
-		</sui-tabs>
+			</tab>
+		</tabs>
 	</section>
 	<div class="ui info message">
 		<div class="header">Note</div>
