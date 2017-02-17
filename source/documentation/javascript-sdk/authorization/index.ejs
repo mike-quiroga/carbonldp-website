@@ -50,9 +50,9 @@ date: 2017-02-08 11:58:11
 	<section class="mainContent-subSection">
 		<h3>Creating an app role</h3>
 		<p>The first thing to do when structuring your application's security scheme, is identify and create all the roles needed for your application.</p>
-		<p>Once the roles are identified, they can be created with the <a href="https://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Auth-Roles-Class-createChild" target="_blank"
+		<p>Once the roles are identified, they can be created with the <a href="https://carbonldp.github.io/carbonldp-js-sdk/#Carbon-App-Roles-Class-createChild" target="_blank"
 		                                                                  rel="noopener"><code>createChild</code></a> method of the
-			<a href="https://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Auth-Roles-Class" target="_blank" rel="noopener"><code>auth.roles</code></a> service
+			<a href="https://carbonldp.github.io/carbonldp-js-sdk/#Carbon-App-Roles-Class" target="_blank" rel="noopener"><code>auth.roles</code></a> service
 			of the application context. This method is very similar to the
 			<a href="https://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Documents-Class" target="_blank" rel="noopener"><code>documents</code></a> service's
 			<a href="https://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Documents-Class-createChild" target="_blank" rel="noopener"><code>createChild</code></a> method (which we
@@ -64,7 +64,6 @@ date: 2017-02-08 11:58:11
 				<pre><code class="typescript">
 					import * as App from "carbonldp/App";
 					import * as HTTP from "carbonldp/HTTP";
-					import * as PersistedRole from "carbonldp/Auth/PersistedRole";
 
 					let appContext:App.Context;
 
@@ -74,10 +73,8 @@ date: 2017-02-08 11:58:11
 					let role:App.Role.Class = App.Role.Factory.create( "Editors" );
 
 
-					appContext.auth.roles.createChild( "app-admin/", &#123;
-						role
-					&#125;, "editors/" ).then(
-						( [ editorsRole, response ]:[ PersistedRole.Class, HTTP.Response.Class[] ] ) => &#123;
+					appContext.auth.roles.createChild( "app-admin/", role, "editors/" ).then(
+						( [ editorsRole, responses ]:[ App.PersistedRole.Class, HTTP.Response.Class[] ] ) => &#123;
 							// ...
 						&#125;
 					).catch( console.error );
@@ -90,12 +87,12 @@ date: 2017-02-08 11:58:11
 					let appContext;
 
 					// ... app context retrieval
+
+					// Provide a human friendly name for the role
 					let role = App.Role.Factory.create( "Editors" );
 
-					appContext.auth.roles.createChild( "app-admin/", &#123;
-						role
-					&#125;, "editors/" ).then(
-						( [ editorsRole, response ] ) => &#123;
+					appContext.auth.roles.createChild( "app-admin/", role, "editors/" ).then(
+						( [ editorsRole, responses ] ) => &#123;
 							// ...
 						&#125;
 					).catch( console.error );
@@ -112,10 +109,8 @@ date: 2017-02-08 11:58:11
 					// Provide a human friendly name for the role
 					var role = App.Role.Factory.create( "Editors" );
 
-					appContext.auth.roles.createChild( "app-admin/", &#123;
-						role
-					&#125;, "editors/" ).then(
-						function( [ editorsRole, response ] ) &#123;
+					appContext.auth.roles.createChild( "app-admin/", role, "editors/" ).then(
+						function( [ editorsRole, responses ] ) &#123;
 							// ...
 						&#125;
 					).catch( console.error );
@@ -128,7 +123,7 @@ date: 2017-02-08 11:58:11
 			document, you can call its <a href="https://carbonldp.github.io/carbonldp-js-sdk/#Carbon-App-PersistedRole-Class-createChild" target="_blank"
 			                              rel="noopener"><code>createChild
 				</code></a> method just like you would do it with the
-			<a href="https://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Auth-Roles-Class" target="_blank" rel="noopener"><code>auth.roles</code></a> service (without
+			<a href="https://carbonldp.github.io/carbonldp-js-sdk/#Carbon-App-Roles-Class" target="_blank" rel="noopener"><code>auth.roles</code></a> service (without
 			specifying the parent).
 		</p>
 	</section>
