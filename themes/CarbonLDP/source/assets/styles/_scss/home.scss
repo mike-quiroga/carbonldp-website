@@ -1,9 +1,5 @@
-.site-content--home{
-  margin-top: 0;
-}
-
 .cover--home {
-  background-image: url("../../images/night-sky.jpg") !important;
+  background-color: #363f48;
   background-repeat: no-repeat !important;
   background-position: center center !important;
   background-size: cover !important;
@@ -40,12 +36,8 @@
 
 .banner-paragraph{
   letter-spacing: 0.3px;
-  //font-weight: bold;
   text-align: center;
   font-weight: bold;
-  //max-width: 600px;
-  //margin-left: auto;
-  //margin-right: auto;
   font-size: 32px;
 }
 
@@ -67,7 +59,7 @@
   text-align: justify;
 }
 
-.news-image{
+.news-imageContainer{
   padding: 25px;
   margin: auto;
   max-width: 386px;
@@ -112,9 +104,11 @@
   padding-right: 10px;
 }
 
-.feature-icon{
+.ui.image.feature-icon{
   margin-bottom: 20px;
   margin-top: 40px;
+  background: white;
+
 }
 
 .halfBanner{
@@ -151,6 +145,22 @@
      font-size: 26px;
    }
 
+/* Semantic UI overwritten classes */
+
+// This is an addition to button classes of semantic ui, a completely white button, with colored text
+// colored text is provided by class .button--<color>Text
+.ui.whiteBG.button, .ui.whiteBG.buttons .ui.button {
+  background-color: #fff;
+  text-shadow: none;
+  background-image: none;
+}
+
+// The classes .<color>Text MUST always go along side the classes .ui.button
+// to overwrite the predefined color of button in semantic ui
+.ui.button.californiaText{
+  color: #F89728;
+}
+
 
 
 @media (max-width: 1200px) {
@@ -170,11 +180,6 @@
 
 @media (min-width: 768px) and (max-width: 992px){
 
-  //.cover--home {
-  //  //height: 680px;
-  //  height: 910px;
-  //}
-
   .cover--home {
     height: 710px;
     min-height: unset;
@@ -187,7 +192,6 @@
   }
   .banner-paragraph {
     font-size: 28px;
-    //max-width: 500px;
   }
 
   .halfBanner {
@@ -221,8 +225,13 @@
     text-align: justify;
   }
 
-  .news-image{
+  .news-imageContainer{
     padding: 20px;
+  }
+
+  .news-image{
+    width: 260px;
+    height: 170px;
   }
 
   .feature-title{
@@ -285,8 +294,13 @@
     text-align: justify;
   }
 
-  .news-image{
+  .news-imageContainer{
     padding: 0px 20px 20px 20px;
+  }
+
+  .news-image{
+    width: 346px;
+    height: 230px;
   }
 
   .featuresSection{
@@ -319,13 +333,23 @@
     padding-right: 16px;
   }
 
-  .feature-icon{
+  .ui.image.feature-icon{
     margin-bottom: 20px;
     margin-top: 40px;
+    display: block;
   }
 
   .ui.big.image.masthead-carbonLogo{
    width: 500px;
+  }
+}
+
+@media (max-width: 467px){
+
+  .news-image{
+    width: 276px;
+    height: 186px;
+    margin: auto;
   }
 }
 

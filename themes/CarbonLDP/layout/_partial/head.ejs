@@ -35,11 +35,12 @@
   <%- css("/assets/semantic/semantic.min")%>
   <link id="widgets-styles">
 
-  <%- css("/assets/styles/css/main")%>
+  <%- inline_css("assets/styles/css/main.css")%>
 
   <% if ( ( page.layout === "index" ) ) { %>
-  <%- css("/assets/styles/css/home")%>
+  <%- inline_css("/assets/styles/css/home.css")%>
   <%} else {%>
+  <%- inline_css("assets/styles/css/page.css")%>
   <%- partial( `_head/${ page.layout }-head` ) %>
   <%}%>
 

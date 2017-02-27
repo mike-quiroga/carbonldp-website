@@ -21,3 +21,56 @@ hr{
 	border-left: none;
 	border-right: none;
 }
+
+
+.ui.image.category-icon{
+	height: auto;
+	width: 50px;
+	margin:0;
+}
+
+.category-titleContainer{
+	margin: calc(2rem - .14285em) 0 1rem;
+	height: auto;
+	display: flex;
+	align-items: center;
+}
+
+.category-itemTitle{
+	font-weight: bold;
+	color: #0192cf;
+}
+
+.category-itemTitle:hover {
+	cursor: pointer;
+	color: #19b7fb;
+	font-weight: bold;
+	border-bottom: none;
+
+}
+
+.category-description{
+	padding: 1rem 3.6rem 0;
+}
+
+.ui.list .item.category-item{
+	padding-top: .85rem;
+	line-height: 1.7rem;
+}
+
+
+@media only screen and (max-width: 767px){
+
+	.category-itemTitle:hover {
+		cursor: pointer;
+		color: #19b7fb;
+		font-weight: bold;
+		border-bottom: none;
+
+	}
+
+	.category-description{
+		padding: 1rem 1rem 0;
+	}
+
+}

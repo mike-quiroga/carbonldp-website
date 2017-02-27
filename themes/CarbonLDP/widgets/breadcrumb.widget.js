@@ -11,10 +11,5 @@ module.exports = {
 		console.log( hexo.route.get() );
 		return Promise.resolve();
 	},
-	// styles: [
-	// 	{
-	// 		file: require.resolve( "./sidebar.css" ),
-	// 		inline: true
-	// 	}
-	// ]
+	
 };
