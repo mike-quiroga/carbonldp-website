@@ -17,7 +17,7 @@
 
 
 	// Activates scroll with offset
-	$( ".sidebar .menu a[href], .categoriesMenu-button, .staticContentMenu .menu a[href], a.section-link" ).on( "click", scrollTo );
+	$( ".sidebar .menu a[href], .categoriesMenu-button, .staticContentMenu .menu a[href]" ).on( "click", scrollTo );
 
 	// Scroll to selected section or subsection in the article
 	function scrollTo( event ) {
