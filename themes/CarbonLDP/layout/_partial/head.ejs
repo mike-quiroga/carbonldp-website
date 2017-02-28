@@ -27,6 +27,7 @@
   <meta name="google-site-verification" content="gz0ah_pGpAlB4Q5a_bxykr1Zdo_CfXHyAb2tJiADVhE" />
 
   <%- open_graph({twitter_id: theme.twitter, google_plus: theme.google_plus, fb_admins: theme.fb_admins, fb_app_id: theme.fb_app_id}) %>
+
   <% if (theme.rss){ %>
     <link rel="alternate" href="<%- theme.rss %>" title="<%= config.title %>" type="application/atom+xml">
   <% } %>
