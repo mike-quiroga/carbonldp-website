@@ -52,3 +52,6 @@ hr {
     border-bottom: none; }
   .category-description {
     padding: 1rem 1rem 0; } }
+
+.ui.fluid.accordion {
+  margin: 20px 0; }
