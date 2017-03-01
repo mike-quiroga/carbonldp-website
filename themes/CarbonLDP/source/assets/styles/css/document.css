@@ -4,7 +4,17 @@ h1.category-title {
   height: auto; }
 
 .successMessage {
-  display: none; }
+  display: none;
+  padding-bottom: 10px; }
 
 ol, ul {
   line-height: 1.7rem; }
+
+hr {
+  border-top: 1px solid rgba(34, 36, 38, 0.15);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  border-left: none;
+  border-right: none; }
+
+.ui.fluid.accordion {
+  margin: 20px 0; }

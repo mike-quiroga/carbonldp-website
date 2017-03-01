@@ -14,7 +14,13 @@ nav:
 	  children: null
 	- name: JavaScript SDK
 	  path: /documentation/javascript-sdk
-	  children: null
+	  children:
+	    - name: Guide
+	      path: /documentation/javascript-sdk
+	      children: null
+	    - name: API Reference
+	      path: https://carbonldp.github.io/carbonldp-js-sdk/
+	      children: null
 	- name: REST API
 	  path: /documentation/rest-api
 	  children: null
