@@ -16,6 +16,9 @@ hr {
   border-left: none;
   border-right: none; }
 
+.ui.fluid.accordion {
+  margin: 20px 0; }
+
 .ui.image.category-icon {
   height: auto;
   width: 50px;
@@ -52,6 +55,3 @@ hr {
     border-bottom: none; }
   .category-description {
     padding: 1rem 1rem 0; } }
-
-.ui.fluid.accordion {
-  margin: 20px 0; }
