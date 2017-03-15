@@ -24,6 +24,7 @@
 
 	function onSubmit( $event ) {
 		form.html.action = "https://app.icontact.com/icp/core/mycontacts/signup/designer/form/?id=63&cid=581321&lid=23554";
+		ga("send", "event", "Registration form", "submit");
 		form.html.submit();
 	}
 
