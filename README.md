@@ -24,5 +24,5 @@ Source code for [carbonldp.com](https://carbonldp.com)
 	- author (optional)
 	- avatar (optional) add the image to themes/source/assets/images
 3. Write your content in markdown ( https://guides.github.com/features/mastering-markdown/ )
-4. Add an excerpt, place a commnet `<!-- more -->` the post excerpt will be from the beginning to where the comment was place.
+4. Add an excerpt, place a comment `<!-- more -->` the post excerpt will be from the beginning to where the comment was place.
 
