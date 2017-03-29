@@ -3,10 +3,11 @@ hexo.extend.helper.register( "breadcrumb", ( page ) => {
 	let path = page.path.replace("/index.html", "");
 	let slugs = path.split( "/" );
 
-	slugs.forEach(( slug, i) => {
-		if(slug === "")
-			slugs.splice(i,1);
-	});
+	let lastSlug = slugs[slugs.length-1];
+
+	if( lastSlug === "")
+			slugs.splice( lastSlug, 1 );
+
 
 	breadcrumbElements.titles = getTitles(slugs);
 	breadcrumbElements.paths = getPaths(slugs);
