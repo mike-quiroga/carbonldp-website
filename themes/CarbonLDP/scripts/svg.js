@@ -5,6 +5,6 @@ const CleanCSS = require( "clean-css" );
 hexo.extend.helper.register( "svg", ( filePath, className ) => {
 	const fileSource = fs.readFileSync( hexo.theme_dir + "source/" + filePath );
 	
-	let data = `<svg-wrapper class="${className}">${fileSource}</svg-wrapper>`;
+	let data = `<div class="${className}">${fileSource}</div>`;
 	return data;
 } );
