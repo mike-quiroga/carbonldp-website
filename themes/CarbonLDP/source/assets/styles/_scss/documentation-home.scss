@@ -17,6 +17,7 @@ h1.categoriesMenu-title{
     padding-top: 2rem;
 }
 
+
 .ui.grid .categoriesMenu{
   padding: 6.5em 3em 0 3em;
 }
@@ -31,10 +32,21 @@ h1.categoriesMenu-title{
   border-radius: .5em;
 }
 
-.ui.image.categoriesMenu-image{
-    height: auto;
-    width: 150px;
+.ui.image.categoriesMenu-icon{
+    height: 200px;
+    width: 200px;
+    background: white;
+    display: flex;
+    align-items: center;
+    svg{
+      margin: 0 auto;
+      display: block;
+      height: auto;
+      width: 150px
+    }
 }
+
+
 
 .ui.image.category-icon{
   height: auto;
@@ -59,6 +71,22 @@ h2.category-title{
   padding-left: 1.22rem;
 }
 
+@media (max-width: 1200px){
+  .ui.image.categoriesMenu-icon{
+    height: 150px;
+    width: 150px;
+    background: white;
+    display: flex;
+    align-items: center;
+    svg{
+      margin: 0 auto;
+      display: block;
+      height: auto;
+      width: 120px
+    }
+  }
+}
+
 @media (max-width: 992px){
 
   .categoriesMenuContainer{
@@ -71,10 +99,20 @@ h2.category-title{
     padding: 2.5em 3em 0 3em;
   }
 
-  .ui.image.categoriesMenu-image{
-    height: auto;
+  .ui.image.categoriesMenu-icon{
+    height: 120px;
     width: 120px;
+    background: white;
+    display: flex;
+    align-items: center;
+    svg{
+      margin: 0 auto;
+      display: block;
+      height: auto;
+      width: 100px
+    }
   }
+
   h1.categoriesMenu-title{
     font-size:2.2rem;
   }
@@ -100,12 +138,18 @@ h2.category-title{
     padding-top: 0.5rem;
   }
 
-  .ui.image.categoriesMenu-image{
-    //margin-bottom: 20px;
-    //margin-top: 30px;
-    //margin: auto;
-    height: auto;
-    width: 70px;
+  .ui.image.categoriesMenu-icon{
+    height: 100px;
+    width: 100px;
+    background: white;
+    display: flex;
+    align-items: center;
+    svg{
+      margin: 0 auto;
+      display: block;
+      height: auto;
+      width: 70px
+    }
   }
 
   .ui.stackable.grid .row.categoriesMenu{

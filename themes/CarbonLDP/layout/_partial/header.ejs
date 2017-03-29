@@ -3,7 +3,9 @@
 		<div class="computer only row">
 				<div class="ui top fixed borderless menu">
 					<div class="ui container navMenu">
-						<a class="item transparentBG" href="/"><img class="ui small image" src="/assets/images/carbon-logo-header.png" alt="Home"/></a>
+						<a class="item transparentBG" href="/">
+							<%- svg("assets/images/carbon-logo-header.svg", "ui navMenu-carbonLogo image")%>
+						</a>
 
 						<% for (var i in theme.nav){
 							if (theme.nav[i].children === null ){%>
@@ -33,7 +35,9 @@
 		<div class="mobile tablet only row">
 			<div class="ui top fixed borderless menu navMenu">
 				<div class="ui container navMenu">
-					<a class="item navMenu-carbonLogoButton transparentBG" href="/"><img class="ui navMenu-carbonLogo image" src="/assets/images/carbon-logo-header.png" alt="Home"/></a>
+					<a class="item navMenu-carbonLogoButton transparentBG" href="/">
+						<%- svg("assets/images/carbon-logo-header.svg", "ui navMenu-carbonLogo image")%>
+					</a>
 					<div class="ui right icon item navMenu-openerButton">
 							<i class="content icon"></i>
 					</div>

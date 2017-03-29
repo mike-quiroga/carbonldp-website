@@ -16,7 +16,7 @@ nav:
 	  path: /documentation/javascript-sdk
 	  children:
 	    - name: Guide
-	      path: /documentation/javascript-sdk
+	      path: /documentation/javascript-sdk/getting-started
 	      children: null
 	    - name: API Reference
 	      path: https://carbonldp.github.io/carbonldp-js-sdk/

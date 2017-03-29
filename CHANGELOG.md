@@ -14,7 +14,11 @@
 # 1.0.0 (2017/02/15)
 
 - Migrated to a generic site generator
-- TODO: Add detailed changelog information
+- Used [hexo](https://hexo.io/docs/) to generate static files
+	- Created layouts for each main page
+	- Created one common layout for all documents
+	- Created hexo-widgets, a plug in for hexo, to process our static files and add widgets before deployment
+- Added meta tag authentication for google search console
 
 # 0.12.0 (2016/11/10)
 
