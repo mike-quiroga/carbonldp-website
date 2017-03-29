@@ -34,3 +34,7 @@ nav:
   path: /about
   children: null
 rss: /atom.xml
+
+
+#Excerpt Link
+excerpt_link: Read More
