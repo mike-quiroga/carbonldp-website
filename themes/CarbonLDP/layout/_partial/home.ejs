@@ -23,30 +23,31 @@
     </div>
 </div>
 
-<div class="newsSection">
-    <div class="ui container">
-        <div class="ui middle aligned stackable centered grid">
-            <div class="row">
-                <div class="nine wide column">
-                    <div class="news">
-                        <h2 class="news-title">Link Documents AND DATA</h2>
-                        <p class="news-paragraph">In his 2009 TED talk, Tim Berners-Lee (a.k.a. The Father of the Web) urged us onward toward the
-                            complete vision for the World Wide Web. "It's called Linked Data," he said. "I want you to make
-                            it. I want you to demand it." </p>
-                        <p class="news-paragraph">We're working to achieve that vision by creating an innovation
-                            platform that can transform how you work with data and give you new advantages from advanced
-                            technology.</p>
-                    </div>
-                </div>
-                <div class="seven wide column">
-                    <div class="news-imageContainer">
-                        <img class="ui image news-image" alt="Tim Berners Lee, the father of the web" src="assets/images/tim-berners-lee-2.jpg" width="336" height="224"/>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+<!--<div class="newsSection">-->
+<!--<div class="ui container">-->
+<!--<div class="ui middle aligned stackable centered grid">-->
+<!--<div class="news row">-->
+<!--<div class="sixteen wide column">-->
+<!--<div> &lt;!&ndash;class="news">&ndash;&gt;-->
+<!--<h2 class="news-title">Link Documents AND DATA</h2>-->
+<!--<p class="news-paragraph">"It's called Linked Data... I want you to make it. I want yout to demand it." - Tim Berners Lee, a.k.a The Father of the Web, 2009</p>-->
+<!--<p class="news-paragraph">In his 2009 TED talk, Tim Berners-Lee (a.k.a. The Father of the Web) urged us onward toward the-->
+<!--complete vision for the World Wide Web. "It's called Linked Data," he said. "I want you to make-->
+<!--it. I want you to demand it." </p>-->
+<!--<p class="news-paragraph">We're working to achieve that vision by creating an innovation-->
+<!--platform that can transform how you work with data and give you new advantages from advanced-->
+<!--technology.</p>-->
+<!--</div>-->
+<!--</div>-->
+<!--<div class="seven wide column">-->
+<!--<div class="news-imageContainer">-->
+<!--<img class="ui image news-image news-image&#45;&#45;timBernersLee" alt="Tim Berners Lee, the father of the web" src="assets/images/tim-berners-lee-2.jpg" width="336" height="224"/>-->
+<!--</div>-->
+<!--</div>-->
+<!--</div>-->
+<!--</div>-->
+<!--</div>-->
+<!--</div>-->
 
 <div class="featuresSection bigStoneBG">
     <div class="ui container">
@@ -72,9 +73,9 @@
                     <div class="feature">
                         <h3 class="feature-title">JavaScript / TypeScript SDK</h3>
                         <%- svg("/assets/images/ico-javascript.svg", "ui small centered circular image feature-icon")%>
-                        <p class="feature-paragraph">The JavaScript Software Developer's Kit, available from the npm package manager, allows you to manage RDF data using familiar JavaScript and
+                        <p class="feature-paragraph">The JavaScript Software Development Kit, available from the npm package manager, allows you to manage RDF data using familiar JavaScript and
                             TypeScript programming techniques and tools. Build for execution within a web browser or Node.js.</p>
-                        </div>
+                    </div>
                 </div>
                 <div class="five wide center aligned column">
                     <div class="feature">
@@ -144,10 +145,9 @@
         </div>
     </div>
 </div>
-
 <div class="ui equal width stackable middle aligned computer tablet only grid removeSideMargins">
     <!-- COMPUTER & TABLET ONLY -->
-    <div class="two column computer tablet only row">
+    <div class="two column computer tablet only electricBlueBG callToAction row">
         <div class="column">
             <div class="halfBanner halfBanner--left">
                 <p class="halfBanner-paragraph"><strong>Carbon is the platform we've always wanted</strong>, so we're
@@ -157,7 +157,7 @@
         </div>
         <div class="column californiaBG">
             <div class="halfBanner halfBanner--right">
-                <p class="halfBanner-paragraph"><strong>Our <span href="/license"><em>license</em></span> grants you perpetual, worldwide, non-exclusive, no-charge, and royalty-free use!</strong></p>
+                <p class="halfBanner-paragraph">Our <span href="/license"><em>license</em></span> grants you perpetual, worldwide, non-exclusive, no-charge, and royalty-free use!</p>
                 <a class="ui whiteBG button californiaText" href="/get-started">Get Started!</a>
             </div>
         </div>
@@ -165,7 +165,7 @@
 </div>
 <!-- MOBILE ONLY (REPEAT) -->
 <div class="ui equal width stackable middle aligned padded mobile only grid">
-    <div class="two column only row">
+    <div class="two column only electricBlueBG callToAction row">
         <div class="column">
             <div class="banner">
                 <p class="banner-paragraph"><strong>Carbon is the platform we've always wanted</strong>, so we're
@@ -174,12 +174,56 @@
             </div>
         </div>
         <div class="column californiaBG">
-            <div class="banner">
+            <div class="banner banner-bordered">
                 <a class="ui whiteBG button californiaText" href="/get-started">Get Started!</a>
             </div>
         </div>
     </div>
 </div>
+<div class="newsSection">
+    <div class="ui container">
+        <div class="ui middle aligned stackable centered grid">
+            <div class="row">
+                <div class="news-titleContainer">
+                    <h2 class="newsSection-title">Announcements</h2>
+                </div>
+            </div>
+            <div class="news row">
+                <div class="seven wide column">
+                    <div class="news-image"> <!--<div class="news-imageContainer">-->
+                        <a href="https://www.ng-conf.org/"><img class="ui image news-image news-image--ngConf" alt="ng-conf April 5th-7th 2017 - The World's Original Angular Conference" src="assets/images/ngConf-logo.png" width="250"/></a>
+                    </div>
+                </div>
+                <div class="nine wide column">
+                    <div class="news-content"><!--<div class="news">-->
+                        <h2 class="news-title">The world's original Angular conference</h2>
+                        <p class="news-date">March 28, 2017</p>
+                        <p class="news-paragraph">Join us and meet our team from April 5th-7th 2017 at Salt Lake City, UT. in the biggest Angular conference in the world.</p>
+                        <p class="news-paragraph">Learn about Carbon LDP, a back-end to your Angular App, and how you can build data-centric apps using the power of linked data.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="ui divider"></div>
+            <div class="news row">
+                <div class="nine wide column">
+                    <div class="news-content"><!--<div class="news">-->
+                        <h2 class="news-title">New Workbench v0.7.1 released</h2>
+                        <p class="news-date">March 6, 2017</p>
+                        <p class="news-paragraph">The Workbench now allows you to manage your user agents' role.  Create, list, view, update, delete roles and populate them with user agents.</p>
+                        <p class="news-paragraph">Follow the steps in the <a href="/documentation/quick-start-guide">quick start guide</a>, to update or download a new instance.</p>
+                    </div>
+                </div>
+                <div class="seven wide column">
+                    <div class="news-image"> <!--<div class="news-imageContainer">-->
+                        <img class="ui image news-image news-image--ngConf" alt="New wrokbench v7.0.1 released" src="assets/images/carbonldp-workbench-0.7.1.png" width="250"/></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 
 
 
