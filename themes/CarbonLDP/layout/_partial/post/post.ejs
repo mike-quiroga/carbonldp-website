@@ -1,5 +1,25 @@
-<%if(postList){%>
-	<%-post.excerpt%>
-<%}else{%>
-<%-post.content%>
-<%}%>
+<div class="post">
+	<h1><%-post.title%> </h1>
+	<div class="post-info">
+		<%if(post.avatar){%>
+		<img class="ui middle aligned avatar spaced image" src="assets/images/<%post.avatar%>">
+		<%} else {%>
+		<%- svg("assets/images/carbon-icon.svg", "ui middle aligned avatar spaced image")%>
+		<%}%>
+		<%-( post.author || "Anonymous")%> | <%= date(post.date) %>
+	</div>
+
+	<div class="post-content">
+		<% if (post.excerpt && postList){ %>
+		<%- post.excerpt %>
+		<% } else { %>
+		<%- post.content %>
+		<% } %>
+	</div>
+
+	<%if( postList ) {%>
+	<%- partial( "_partial/post/post-footer", { readMore: post.excerpt, post: post})%>
+	<%}else {%>
+	<%- partial("_partial/post/post-footer", { readMore: false, post: page})%>
+	<%}%>
+</div>
