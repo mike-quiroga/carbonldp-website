@@ -1,5 +1,5 @@
 <div class="post">
-	<h1><%-post.title%> </h1>
+	<h1><a class="post-titleLink" href="<%- url_for(post.path)%>"><%-post.title%></a></h1>
 	<div class="post-info">
 		<%if(post.avatar){%>
 		<img class="ui middle aligned avatar spaced image" src="/assets/images/<%=post.avatar%>">
