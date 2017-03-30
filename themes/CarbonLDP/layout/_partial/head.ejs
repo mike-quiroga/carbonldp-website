@@ -43,7 +43,7 @@
 
   <%- inline_css("assets/styles/css/main.css")%>
 
-  <% if ( ( page.layout === undefined ) ) { %>
+  <% if ( ( page.layout === "index" ) ) { %>
   <%- inline_css("/assets/styles/css/home.css")%>
   <%} else {%>
   <%- inline_css("assets/styles/css/page.css")%>
