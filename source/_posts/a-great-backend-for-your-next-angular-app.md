@@ -7,7 +7,7 @@ tags:
 
 
 This year, we’re taking Carbon LDP to NG-Conf, the World’s Original Angular Conference, in Salt Lake City, UT (April 5th-7th). If you’re planning to attend, we hope you’ll find us at stand #24 and see how Carbon LDP could be the hottest new addition to your Angular application stack.
-
+<!-- more -->
 NG-Conf was the first ever Angular framework conference. Last year (its third year), brought more than 1500 developers from across the industry to participate in training sessions presented by the entire Google Angular team and other Angular experts. This year, attendance is expected to reach 1600. The conference has had overwhelming popularity and a fast ticket sellout, but if you’ve missed your chance, you might still get a glimpse of action on the conference [Livestream page](https://www.ng-conf.org/livestream/) or at one of the many [NG-Conf Extended](https://www.ng-conf.org/extended/) events taking part across the globe.
 
 ## Why Carbon LDP + Angular?
