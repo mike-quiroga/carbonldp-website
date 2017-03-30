@@ -40,60 +40,63 @@ date: 2017-02-08 11:57:36
 	<h2 class="hidden">Introduction</h2>
 
 	<p>
-		Like the tables of a relational database are queried using SQL, Carbon LDP resources can be queried using
+		Just like tables in a relational database are queried using SQL, Carbon LDP resources can be queried using
 		<a href="https://www.w3.org/TR/sparql11-query/">SPARQL</a>, which is a W3C standard supported by the platform.
 	</p>
-
 	<p>
-		Every document in the platform is an endpoint where you can apply an SPARQL query of the following forms:
+		The main difference with SPARQL is that instead of filtering results to get the desired outcome (like in SQL),
+		you apply <strong>patterns</strong> that are tested over the data to retrieve results. These patters are executed accompanied by
+		an <strong>action</strong> which defines the shape the results will be returned on.
+	</p>
+	<p>
+		There are four different actions:
 	</p>
 	<ul>
 		<li><strong>SELECT</strong></li>
-		<ul>Returns the selected data specified by one or more patterns (we'll explain them later on).</ul>
+		<ul>Returns the matched data in a table-like structure</ul>
 		<li><strong>ASK</strong></li>
-		<ul>Returns a boolean indicating whether one or more patterns match or not.</ul>
+		<ul>Returns true or false indicating whether the data matched the pattern(s) or not</ul>
 		<li><strong>CONSTRUCT</strong></li>
-		<ul>Constructs a non persisted document given one or more patterns as template.</ul>
+		<ul>Restructures the matched data into a graph described by a specified template</ul>
 		<li><strong>DESCRIBE</strong></li>
-		<ul>Returns a description of how the data is internally stored.</ul>
+		<ul>Returns a description of how the data is internally stored</ul>
 	</ul>
 
 	<p>
-		A pattern is a way to refer any value, stored in the platform, using three elements:
+		A <strong>pattern</strong> is defined by using three elements:
 	</p>
 	<ol>
 		<li><strong>Resource</strong>: any document, fragment or named fragment referenced by a URI</li>
 		<li><strong>Property</strong>: the name or URI of a property of the resource</li>
-		<li>And <strong>value</strong>: the value of the property</li>
+		<li><strong>Value</strong>: the value of the property</li>
 	</ol>
 	<p>
-		This said, if we have a project stored with a property <code>name</code> with the value <code>"Project X"</code>,
-		its pattern would be:
+		For example, if we wanted to match a document that represented a project, which has the property <code>name</code>
+		with the value <code>"Project X"</code>, we could use the pattern:
 	</p>
 	<ol>
-		<li><strong>Resource</strong>: <code>projects/project-01/</code> (project URI)</li>
+		<li><strong>Resource</strong>: <code>projects/project-01/</code> (the project's ID/URI)</li>
 		<li><strong>Property</strong>: <code>name</code></li>
-		<li>And <strong>value</strong>: <code>"Project X"</code></li>
+		<li><strong>Value</strong>: <code>"Project X"</code></li>
 	</ol>
 
 	<p>
-		This example pattern is a static one, because we are not asking for any resource just stabilising that this
-		value of this property of this resource exists. Any element of the three indicated in the pattern,
-		can be replaced by a variable, making possible, as this section is named, to query them.
+		This example pattern fully defines all of its pieces. Each pattern piece has the exact value we are trying to match. But querying
+		involves retrieving more data than we already have. That's why each pattern piece can also be a variable.
 	</p>
-
 	<p>
-		<strong>Example:</strong>
-		To query the name of the project you only need the project URI (resource) and the name (property),
-		the value would be represented by a variable in which you will obtain the data you queried for.
+		A variable acts like a wildcard, matching any values the pattern piece can have. But unlike wildcards, a variable stores any value
+		it matches (you can see them as the columns requested on SQL queries).
 	</p>
-
+	<p>
+		<strong>E.g</strong>: To query the name of a project you would only need the project's URI (resource) and the name (property).
+		The value would be represented by a variable in which you will obtain the data you queried for.
+	</p>
 	<p>
 		Now, you may be asking: "what about modifying a document like <code>UPDATE</code> or <code>ALTER</code>?".
-		For that cases the platform also supports <a href="https://www.w3.org/TR/sparql11-update/">SPARQL UPDATE</a>, another W3C standard,
-		that lets you add or delete any data (really, ANY data).
-		Because of this, SPARQL UPDATE is only available for system administrator users for now,
-		but we are working in making it more secure and available to more users.
+		For those cases the platform also supports <a href="https://www.w3.org/TR/sparql11-update/">SPARQL UPDATE</a>, another W3C standard,
+		that lets you add or delete any data (really, ANY data). Because of this, SPARQL UPDATE is only available to system administrator (for now...).
+		We are working on making it more secure and available to more users.
 	</p>
 </section>
 
@@ -102,27 +105,28 @@ date: 2017-02-08 11:57:36
 
 	<p>
 		The SDK integrates our own query builder called <a href="https://github.com/CarbonLDP/sparqler">SPARQLER</a> (SPARQL
-		query buildER) which offers a <a href="https://en.wikipedia.org/wiki/Fluent_interface">fluent interface</a> to help you
-		construct easier queries and prevent errors by malformed patterns.
+		query buildER) which offers a <a href="https://en.wikipedia.org/wiki/Fluent_interface">fluent interface</a> to help you easily
+		construct queries and prevent errors by malformed patterns.
 	</p>
 
 	<div class="ui info icon message">
 		<i class="info circle icon"></i>
 		<div class="content">
 			<p>
-				Currently, we only support <code>SELECT</code> queries with SPARQLER.<br/>
+				Currently, we only support <code>SELECT</code> queries with SPARQLER.
+				<br/>
 				We're working to extend the builder to cover more features.
 			</p>
 		</div>
 	</div>
 
 	<p>
-		To create a query you must call the method <code>sparql( documentURI:string )</code> of the <code>Documents</code>
-		service where you must provide document URI.
+		To create a query you must call the method <code>sparql( documentURI:string )</code> of the <code>documents</code>
+		service where you must provide the document URI you are going to query on.
 	</p>
 	<p>
-		If you already have a <code>PersistedDocument</code> you can call <code>sparql()</code>,
-		where the document URI will be assumed to be the URI of this persisted document.
+		If you already have a <code>PersistedDocument</code> you can also call its <code>sparql()</code> method,
+		to query directly on them.
 	</p>
 
 	<tabs>
@@ -178,6 +182,509 @@ date: 2017-02-08 11:57:36
 			</code></pre>
 		</tab>
 	</tabs>
+
+	<section class="mainContent-section">
+		<h2>SELECT Query</h2>
+
+		<section class="mainContent-subSection">
+			<h3>General structure</h3>
+			<p>
+				SPARQL SELECT queries have the following structure and order:
+			</p>
+			<ol>
+				<li>Select what data to include in the response:</li>
+				<ul>
+					<li><code>.select( ... variables )</code> or <code>.selectAll()</code></li>
+				</ul>
+				<li>Specify the patterns to match:</li>
+				<ul>
+					<li><code>.where( ... patterns )</code></li>
+				</ul>
+				<li>Add optional solution modifiers:</li>
+				<ul>
+					<li><code>.groupBy( ... )</code></li>
+					<li><code>.having( ... )</code></li>
+					<li><code>.orderBy( ... )</code></li>
+					<li><code>.limit( ... )</code></li>
+					<li><code>.offset( ... )</code></li>
+				</ul>
+				<li>And finally execute the query:</li>
+				<ul>
+					<li><code>.execute()</code> or <code>.executeRaw()</code></li>
+				</ul>
+			</ol>
+		</section>
+
+		<section class="mainContent-subSection">
+			<h3>Data Selection</h3>
+			<p>
+				We can specify which variables to be included by using one of two methods:
+			</p>
+			<ul class="list">
+				<li><code>.select( ...variables:string[] )</code>. Specify which variables used in the pattern(s) will be returned with the query result</li>
+				<li><code>.selectAll()</code>. Indicate that all variables used in the pattern(s) will be included in the result</li>
+			</ul>
+
+			<p>
+				In the case of the pattern to match, it's a little different since you need to provide a function where you can
+				construct the pattern:
+			</p>
+			<ul>
+				<li><code>.where( patternFunction:( builder:PatternBuilder ) => GraphPattern )</code>. A single pattern to match</li>
+				<li><code>.where( patternFunction:( builder:PatternBuilder ) => GraphPattern[] )</code>. Multiple patterns to match</li>
+			</ul>
+			<p>
+				As you can see, the <code>patternFunction</code> receives a <code>SPARQL/PatternBuilder</code>
+				object which contains helper properties and functions to construct the patterns you need.
+			</p>
+
+			<h4>Example</h4>
+			<p>
+				Assuming we had the following object stored:
+			</p>
+			<pre><code class="javascript">
+				// Representation of the stored object
+				{
+					// Document URI
+					"@id": "http://localhost:8083/apps/my-app/projects/project-01/",
+
+					// Properties
+				    "name": "Project X",
+					"startDate": "2017/02/19"
+
+					// ...
+				}
+			</code></pre>
+			<p>
+				The following query would retrieve the values of the <code>name</code> and
+				<code>startDate</code> property:
+			</p>
+			<tabs>
+				<tab title="TypeScript">
+					<pre><code class="typescript">
+						import * as App from "carbonldp/App";
+						import { PatternBuilder } from "sparqler/PatternBuilder";
+
+						let appContext:App.Context;
+						// ... get context
+
+						appContext.documents.sparql( "projects/project-01/" )
+							.select( "projectName", "projectStart" )
+							.where( ( _:PatternBuilder ) => {
+								return _.resource( "projects/project-01/" )
+									.has( "name", _.var( "projectName" ) )
+									.and( "startDate", _.var( "projectStart" ) );
+							} )
+							;
+					</code></pre>
+				</tab>
+				<tab title="JavaScript ES2015">
+					<pre><code class="javascript">
+						let appContext;
+						// ... get context
+
+						appContext.documents.sparql( "projects/project-01/" )
+							.select( "projectName", "projectStart" )
+							.where( _ => {
+								return _.resource( "projects/project-01/" )
+									.has( "name", _.var( "projectName" ) )
+									.and( "startDate", _.var( "projectStart" ) );
+							} )
+							;
+					</code></pre>
+				</tab>
+				<tab title="JavaScript ES5">
+					<pre><code class="javascript">
+						var appContext;
+						// ... get context
+
+						appContext.documents.sparql( "projects/project-01/" )
+							.select( "projectName", "projectStart" )
+							.where( function( _ ) {
+								return _.resource( "projects/project-01/" )
+									.has( "name", _.var( "projectName" ) )
+									.and( "startDate", _.var( "projectStart" ) );
+							} )
+							;
+					</code></pre>
+				</tab>
+			</tabs>
+			<p>
+				The query can be translated to:
+			</p>
+			<ul>
+				<li></li>
+				<li>Search for a resource that has the id <code>projects/project-01/</code></li>
+				<li>This resource must have a property <code>name</code> with any value(s)</li>
+				<ul>
+					<li>Store those values in the <em>projectName</em> variable</li>
+				</ul>
+				<li>The resource must also have the property <code>startDate</code> with any value(s)</li>
+				<ul>
+					<li>Store those values in the <em>projectStart</em> variable</li>
+				</ul>
+				<li>Return me the values stored in the variables <em>projectName</em> and <em>projectStart</em></li>
+			</ul>
+			<p>
+				In this example we are using the <code>var( variableName )</code> function that the helper object <code>_</code> has to declare two variables:
+			</p>
+			<ul>
+				<li><code>projectName</code></li>
+				<li><code>projectStart</code></li>
+			</ul>
+			<p>
+				These variables must appear in the pattern to match so they can be assigned values.
+			</p>
+			<p>
+				In the <code>.where()</code> method, we use the <code>PatternBuilder</code> to first indicate we are targeting a resource
+				with the URI: <code>projects/project-01/</code>, and as the URI is relative, it will be automatically resolved to
+				<code>http://localhost:8083/apps/my-app/projects/project-01/</code> (assuming the platform's host is <code>http://localhost:8083/</code>
+				and the app being used is <code>apps/my-app/</code>).
+			</p>
+			<p>
+				From this resource we call the <code>has()</code>method, to indicate that the resource must have a property called <code>name</code>,
+				and then bound its value(s) to the variable <code>projectName</code>.
+			</p>
+			<p>
+				Next we call the <code>and()</code> method, stating that it also needs to have a property <code>startDate</code>,
+				and we bound its value(s) to the variable <code>projectStart</code>.
+			</p>
+
+			<h4>Example</h4>
+			<p>
+				In the case that we want to retrieve the name and start date from all the projects available,
+				we need to take on count the next statements:
+			</p>
+			<ul class="list">
+				<li>The end-point of the query must be the container of the projects: <code>projects/</code></li>
+				<li>The children of the container are under the property: <code>http://www.w3.org/ns/ldp#contains</code></li>
+				<li>We need to bind every child document (project) and ask for its name and start date, as the previous example</li>
+			</ul>
+
+			<tabs>
+				<tab title="TypeScript">
+			<pre><code class="typescript">
+				import * as App from "carbonldp/App";
+				import { PatternBuilder } from "sparqler/PatternBuilder";
+
+				let appContext:App.Context;
+				// ... get context
+
+				appContext.documents.sparql( "projects/" )
+					.prefix( "ldp", "http://www.w3.org/ns/ldp#" )
+					.select( "projectName", "projectStart" )
+					.where( ( _:PatternBuilder ) => {
+						return [
+							_.resource( "projects/" )
+								.has( "ldp:contains", _.var( "everyProject" ) ),
+							_.var( "everyProject" )
+								.has( "name", _.var( "projectName" ) )
+								.and( "startDate", _.var( "projectStart" ) )
+						];
+					} )
+					;
+			</code></pre>
+				</tab>
+				<tab title="JavaScript ES2015">
+			<pre><code class="javascript">
+				let appContext;
+				// ... get context
+
+				appContext.documents.sparql( "projects/" )
+					.prefix( "ldp", "http://www.w3.org/ns/ldp#" )
+					.select( "projectName", "projectStart" )
+					.where( _ => {
+						return [
+							_.resource( "projects/" )
+								.has( "ldp:contains", _.var( "everyProject" ) ),
+							_.var( "everyProject" )
+								.has( "name", _.var( "projectName" ) )
+								.and( "startDate", _.var( "projectStart" ) )
+						];
+					} )
+					;
+				</code></pre>
+				</tab>
+				<tab title="JavaScript ES5">
+			<pre><code class="javascript">
+				var appContext;
+				// ... get context
+
+				appContext.documents.sparql( "projects/" )
+					.prefix( "ldp", "http://www.w3.org/ns/ldp#" )
+					.select( "projectName", "projectStart" )
+					.where( function( _ ) {
+						return [
+							_.resource( "projects/" )
+								.has( "ldp:contains", _.var( "everyProject" ) ),
+							_.var( "everyProject" )
+								.has( "name", _.var( "projectName" ) )
+								.and( "startDate", _.var( "projectStart" ) )
+						];
+					} )
+					;
+			</code></pre>
+				</tab>
+			</tabs>
+
+			<p>
+				As we can see, the major difference is that we return of an array of patterns. The first pattern matches the child
+				documents form the <code>projects/</code> container and bind them to the <code>everyProject</code> variable.
+				Thus with this variable we can ask for the name and start date of every corresponding project.
+			</p>
+
+		</section>
+
+		<section class="mainContent-subSection">
+			<h3>Solution modifiers</h3>
+			<p>
+				This methods are optional and they let you modify the solutions returned:
+			</p>
+			<ul>
+				<li>
+					<code>.groupBy( rawCondition:string )</code>. Group the data in order to calculate aggregated values for a solution
+				</li>
+				<li>
+					<code>.having( rawCondition:string )</code>. Filter grouped solution sets
+				</li>
+				<li>
+					<code>.orderBy( rawCondition:string )</code>. Establish the order of the a sequence of solutions
+				</li>
+				<li>
+					<code>.limit( limit:string )</code>. Restrict the number of solutions returned
+				</li>
+				<li>
+					<code>.offset( offset:string )</code>. Control where the solutions returned start from the overall set of them
+				</li>
+			</ul>
+
+			<h4>Example</h4>
+			<p>
+				Considering the same case of retrieving the name and start date of every project, but with the solutions modifiers
+				we'll retrieve the last 10 projects that have been started.
+			</p>
+			<tabs>
+				<tab title="TypeScript">
+			<pre><code class="typescript">
+				import * as App from "carbonldp/App";
+				import { PatternBuilder } from "sparqler/PatternBuilder";
+
+				let appContext:App.Context;
+				// ... get context
+
+				appContext.documents.sparql( "projects/" )
+					.prefix( "ldp", "http://www.w3.org/ns/ldp#" )
+					.select( "projectName", "projectStart" )
+					.where( ( _:PatternBuilder ) => {
+						return [
+							_.resource( "projects/" )
+								.has( "ldp:contains", _.var( "everyProject" ) ),
+							_.var( "everyProject" )
+								.has( "name", _.var( "projectName" ) )
+								.and( "startDate", _.var( "projectStart" ) )
+						];
+					} )
+					.orderBy( "DESC( ?projectStart )" )
+					.limit( 10 )
+					;
+			</code></pre>
+				</tab>
+				<tab title="JavaScript ES2015">
+			<pre><code class="javascript">
+				let appContext;
+				// ... get context
+
+				appContext.documents.sparql( "projects/" )
+					.prefix( "ldp", "http://www.w3.org/ns/ldp#" )
+					.select( "projectName", "projectStart" )
+					.where( _ => {
+						return [
+							_.resource( "projects/" )
+								.has( "ldp:contains", _.var( "everyProject" ) ),
+							_.var( "everyProject" )
+								.has( "name", _.var( "projectName" ) )
+								.and( "startDate", _.var( "projectStart" ) )
+						];
+					} )
+					.orderBy( "DESC( ?projectStart )" )
+					.limit( 10 )
+					;
+				</code></pre>
+				</tab>
+				<tab title="JavaScript ES5">
+			<pre><code class="javascript">
+				var appContext;
+				// ... get context
+
+				appContext.documents.sparql( "projects/" )
+					.prefix( "ldp", "http://www.w3.org/ns/ldp#" )
+					.select( "projectName", "projectStart" )
+					.where( function( _ ) {
+						return [
+							_.resource( "projects/" )
+								.has( "ldp:contains", _.var( "everyProject" ) ),
+							_.var( "everyProject" )
+								.has( "name", _.var( "projectName" ) )
+								.and( "startDate", _.var( "projectStart" ) )
+						];
+					} )
+					.orderBy( "DESC( ?projectStart )" )
+					.limit( 10 )
+					;
+			</code></pre>
+				</tab>
+			</tabs>
+
+			<p>
+				To be able of retrieving the last started projects we use the <code>.orderBy()</code>
+				method, and as for now SPARQLER only accepts RAW strings, we specify in that the solutions must be sorted in
+				descendant order, with <code>DESC</code>, by the value of the variable <code>projectStart</code> (and yes, the variable needs the
+				<code>?</code> at the beginning).
+			</p>
+			<p>
+				Lastly we limit the solutions to the first 10 elements in the set with the <code>.limit()</code> method.
+			</p>
+		</section>
+
+		<section class="mainContent-subSection">
+			<h3>Query execution</h3>
+
+			<p>
+				Until now we've only been building the query and nothing more, but the important thing is to execute it and use the
+				solutions returned.
+			</p>
+			<p>
+				For a SELECT query we have two methods:
+			</p>
+			<ul>
+				<li>
+					<code>.execute()</code>. Return a promise with the parsed result as described in: <code><a href="https://carbonldp.github.io/carbonldp-js-sdk/#Carbon-SPARQL-SELECTResults-Class">Carbon.SPARQL.SELECTResults.Class</a></code>
+				</li>
+				<li>
+					<code>.executeRaw()</code>. Return a promise with the JSON results as described in the <a href="https://www.w3.org/TR/2013/REC-sparql11-results-json-20130321/#select-results-form">specification</a>: <code><a href="https://carbonldp.github.io/carbonldp-js-sdk/#Carbon-SPARQL-RawResults-Class">Carbon.SPARQL.RawResults.Class</a></code>
+				</li>
+			</ul>
+
+			<h4>Example</h4>
+			<p>
+				Following the previous examples, we'll execute the query we have been building and then return an array of projects with
+				the data obtained.
+			</p>
+			<tabs>
+				<tab title="TypeScript">
+			<pre><code class="typescript">
+				import * as App from "carbonldp/App";
+				import * as SPARQL from "carbonldp/SPARQL";
+				import * as HTTP from "carbonldp/HTTP";
+				import { PatternBuilder } from "sparqler/PatternBuilder";
+
+				let appContext:App.Context;
+				// ... get context
+
+				appContext.documents.sparql( "projects/" )
+					.prefix( "ldp", "http://www.w3.org/ns/ldp#" )
+					.select( "projectName", "projectStart" )
+					.where( ( _:PatternBuilder ) => {
+						return [
+							_.resource( "projects/" )
+								.has( "ldp:contains", _.var( "everyProject" ) ),
+							_.var( "everyProject" )
+								.has( "name", _.var( "projectName" ) )
+								.and( "startDate", _.var( "projectStart" ) )
+						];
+					} )
+					.orderBy( "DESC( ?projectStart )" )
+					.limit( 10 )
+					.execute()
+					.then( ( [ result, response ]:[ SPARQL.SELECTResults.Class, HTTP.Response.Class ] ) => {
+						return result
+							.bindings
+							.map( binding => ( {
+								name: binding[ "projectName" ],
+								startDate: binding[ "projectStart" ],
+							} )
+							;
+					} )
+					;
+			</code></pre>
+				</tab>
+				<tab title="JavaScript ES2015">
+			<pre><code class="javascript">
+				let appContext;
+				// ... get context
+
+				appContext.documents.sparql( "projects/" )
+					.prefix( "ldp", "http://www.w3.org/ns/ldp#" )
+					.select( "projectName", "projectStart" )
+					.where( _ => {
+						return [
+							_.resource( "projects/" )
+								.has( "ldp:contains", _.var( "everyProject" ) ),
+							_.var( "everyProject" )
+								.has( "name", _.var( "projectName" ) )
+								.and( "startDate", _.var( "projectStart" ) )
+						];
+					} )
+					.orderBy( "DESC( ?projectStart )" )
+					.limit( 10 )
+					.execute()
+					.then( ( [ result, response ] ) => {
+						return result
+							.bindings
+							.map( binding => ( {
+								name: binding[ "projectName" ],
+								startDate: binding[ "projectStart" ],
+							} )
+							;
+					} )
+					;
+				</code></pre>
+				</tab>
+				<tab title="JavaScript ES5">
+			<pre><code class="javascript">
+				var appContext;
+				// ... get context
+
+				appContext.documents.sparql( "projects/" )
+					.prefix( "ldp", "http://www.w3.org/ns/ldp#" )
+					.select( "projectName", "projectStart" )
+					.where( function( _ ) {
+						return [
+							_.resource( "projects/" )
+								.has( "ldp:contains", _.var( "everyProject" ) ),
+							_.var( "everyProject" )
+								.has( "name", _.var( "projectName" ) )
+								.and( "startDate", _.var( "projectStart" ) )
+						];
+					} )
+					.orderBy( "DESC( ?projectStart )" )
+					.limit( 10 )
+					.execute()
+					.then( function( [ result, response ] ) {
+						return result
+							.bindings
+							.map( function( binding ) {
+								return {
+									name: binding[ "projectName" ],
+									startDate: binding[ "projectStart" ],
+								};
+							} )
+							;
+					} )
+					;
+			</code></pre>
+				</tab>
+			</tabs>
+
+			<p>
+				The result object contains a property <code>bindings</code>, which is an array containing the solutions of
+				the query. Every element in this array is an object that have the variable names retrieved as keys and its
+				bound value, so we construct our own specific objects from them.
+			</p>
+
+		</section>
+	</section>
+
 
 	<section class="mainContent-subSection">
 		<h3>Query configuration</h3>
@@ -260,493 +767,6 @@ date: 2017-02-08 11:57:36
 		</tabs>
 	</section>
 </section>
-
-<section class="mainContent-section">
-	<h2>SELECT Query</h2>
-
-	<section class="mainContent-subSection">
-		<h3>General structure</h3>
-		<p>
-			Most SPARQL SELECT queries have the following structure and order:
-		</p>
-		<ol>
-			<li>Select what data to include in the response:</li>
-			<ul>
-				<li><code>.select()</code> or <code>.selectAll()</code></li>
-			</ul>
-			<li>Specify the patterns to match:</li>
-			<ul>
-				<li><code>.where()</code></li>
-			</ul>
-			<li>Add optional solution modifiers:</li>
-			<ul>
-				<li><code>.groupBy()</code></li>
-				<li><code>.having()</code></li>
-				<li><code>.orderBy()</code></li>
-				<li><code>.limit()</code></li>
-				<li><code>.offset()</code></li>
-			</ul>
-			<li>Execute the query:</li>
-			<ul>
-				<li><code>.execute()</code> or <code>.executeRaw()</code></li>
-			</ul>
-		</ol>
-	</section>
-
-	<section class="mainContent-subSection">
-		<h3>Data Selection</h3>
-		<p>
-			As seen previously, a SELECT query must have at least two elements:
-			which variables to be in the resulted solutions and
-			the patterns to match.
-		</p>
-
-		<p>
-			We can specify which variables to be included by two methods:
-		</p>
-		<ul class="list">
-			<li><code>.select( ...variables:string[] )</code>. Specify a set of variables to be included in the result</li>
-			<li><code>.selectAll()</code>. Indicate that all variables that appears in the patterns will be included in the result</li>
-		</ul>
-
-		<p>
-			In the case of the pattern to match, it's a little different since you need to provide a functionwhere you can
-			construct that pattern:
-		</p>
-		<ul>
-			<li><code>.where( patternFunction:( builder:PatternBuilder ) => GraphPattern )</code>. A single pattern to match</li>
-			<li><code>.where( patternFunction:( builder:PatternBuilder ) => GraphPattern[] )</code>. Multiple patterns to match</li>
-		</ul>
-		<p>
-			As you can see, the <code>patternFunction</code> receives an <code>SPARQL/PatternBuilder</code>
-			which is an object that contains helper properties and functions to construct the patterns you need.
-		</p>
-
-		<h4>Example 01</h4>
-		<p>
-			Assuming we have the following object stored, we'll retrieve the name and start date of it:
-		</p>
-		<pre><code class="javascript">
-			// Representation of the stored object
-			{
-				// Document URI
-				"id": "http://localhost:8083/apps/my-app/projects/project-01/",
-
-				// Properties
-			    "name": "Project X",
-				"startDate": "2017/02/19"
-
-				// ...
-			}
-		</code></pre>
-
-		<tabs>
-			<tab title="TypeScript">
-			<pre><code class="typescript">
-				import * as App from "carbonldp/App";
-				import { PatternBuilder } from "sparqler/PatternBuilder";
-
-				let appContext:App.Context;
-				// ... get context
-
-				appContext.documents.sparql( "projects/project-01/" )
-					.select( "projectName", "projectStart" )
-					.where( ( _:PatternBuilder ) => {
-						return _.resource( "projects/project-01/" )
-							.has( "name", _.var( "projectName" ) )
-							.and( "startDate", _.var( "projectStart" ) );
-					} )
-					;
-			</code></pre>
-			</tab>
-			<tab title="JavaScript ES2015">
-			<pre><code class="javascript">
-				let appContext;
-				// ... get context
-
-				appContext.documents.sparql( "projects/project-01/" )
-					.select( "projectName", "projectStart" )
-					.where( _ => {
-						return _.resource( "projects/project-01/" )
-							.has( "name", _.var( "projectName" ) )
-							.and( "startDate", _.var( "projectStart" ) );
-					} )
-					;
-				</code></pre>
-			</tab>
-			<tab title="JavaScript ES5">
-			<pre><code class="javascript">
-				var appContext;
-				// ... get context
-
-				appContext.documents.sparql( "projects/project-01/" )
-					.select( "projectName", "projectStart" )
-					.where( function( _ ) {
-						return _.resource( "projects/project-01/" )
-							.has( "name", _.var( "projectName" ) )
-							.and( "startDate", _.var( "projectStart" ) );
-					} )
-					;
-			</code></pre>
-			</tab>
-		</tabs>
-
-		<p>
-			In the example we list two variables to be included in the solution: <code>projectName</code>
-			and <code>projectStart</code>. This variables should appear in the pattern to match, to indicate from where the
-			solution data will be obtained.
-		</p>
-		<p>
-			In the <code>.where()</code> method, we use the <code>PatternBuilder</code> to first indicate we are targeting a resource
-			with the URI: <code>projects/project-01/</code>, and as the URI is relative, it will be resolved to <code>http://localhost:8083/apps/my-app/projects/project-01/</code>.
-		</p>
-		<p>
-			From this resource we call the <code>has()</code>method,
-			where we indicate that the resource have a property called <code>name</code>,
-			and then bound its value to the variable <code>projectName</code>.
-		</p>
-		<p>
-			Next we call the <code>and()</code> method,
-			where we also indicate that the value of the property <code>startDate</code>, of the same resource,
-			will be bound to the variable <code>projectStart</code>.
-		</p>
-
-		<h4>Example 02</h4>
-		<p>
-			In the case that we want to retrieve the name and start date from all the projects available,
-			we need to take on count the next statements:
-		</p>
-		<ul class="list">
-			<li>The end-point of the query must be the container of the projects: <code>projects/</code></li>
-			<li>The children of the container are under the property: <code>http://www.w3.org/ns/ldp#contains</code></li>
-			<li>We need to bind every child document (project) and ask for its name and start date, as the previous example</li>
-		</ul>
-
-		<tabs>
-			<tab title="TypeScript">
-			<pre><code class="typescript">
-				import * as App from "carbonldp/App";
-				import { PatternBuilder } from "sparqler/PatternBuilder";
-
-				let appContext:App.Context;
-				// ... get context
-
-				appContext.documents.sparql( "projects/" )
-					.prefix( "ldp", "http://www.w3.org/ns/ldp#" )
-					.select( "projectName", "projectStart" )
-					.where( ( _:PatternBuilder ) => {
-						return [
-							_.resource( "projects/" )
-								.has( "ldp:contains", _.var( "everyProject" ) ),
-							_.var( "everyProject" )
-								.has( "name", _.var( "projectName" ) )
-								.and( "startDate", _.var( "projectStart" ) )
-						];
-					} )
-					;
-			</code></pre>
-			</tab>
-			<tab title="JavaScript ES2015">
-			<pre><code class="javascript">
-				let appContext;
-				// ... get context
-
-				appContext.documents.sparql( "projects/" )
-					.prefix( "ldp", "http://www.w3.org/ns/ldp#" )
-					.select( "projectName", "projectStart" )
-					.where( _ => {
-						return [
-							_.resource( "projects/" )
-								.has( "ldp:contains", _.var( "everyProject" ) ),
-							_.var( "everyProject" )
-								.has( "name", _.var( "projectName" ) )
-								.and( "startDate", _.var( "projectStart" ) )
-						];
-					} )
-					;
-				</code></pre>
-			</tab>
-			<tab title="JavaScript ES5">
-			<pre><code class="javascript">
-				var appContext;
-				// ... get context
-
-				appContext.documents.sparql( "projects/" )
-					.prefix( "ldp", "http://www.w3.org/ns/ldp#" )
-					.select( "projectName", "projectStart" )
-					.where( function( _ ) {
-						return [
-							_.resource( "projects/" )
-								.has( "ldp:contains", _.var( "everyProject" ) ),
-							_.var( "everyProject" )
-								.has( "name", _.var( "projectName" ) )
-								.and( "startDate", _.var( "projectStart" ) )
-						];
-					} )
-					;
-			</code></pre>
-			</tab>
-		</tabs>
-
-		<p>
-			As we can see, the major difference is that we return of an array of patterns. The first pattern matches the child
-			documents form the <code>projects/</code> container and bind them to the <code>everyProject</code> variable.
-			Thus with this variable we can ask for the name and start date of every corresponding project.
-		</p>
-
-	</section>
-
-	<section class="mainContent-subSection">
-		<h3>Solution modifiers</h3>
-		<p>
-			This methods are optional and they let you modify the solutions returned:
-		</p>
-		<ul>
-			<li>
-				<code>.groupBy( rawCondition:string )</code>. Group the data in order to calculate aggregated values for a solution
-			</li>
-			<li>
-				<code>.having( rawCondition:string )</code>. Filter grouped solution sets
-			</li>
-			<li>
-				<code>.orderBy( rawCondition:string )</code>. Establish the order of the a sequence of solutions
-			</li>
-			<li>
-				<code>.limit( limit:string )</code>. Restrict the number of solutions returned
-			</li>
-			<li>
-				<code>.offset( offset:string )</code>. Control where the solutions returned start from the overall set of them
-			</li>
-		</ul>
-
-		<h4>Example</h4>
-		<p>
-			Considering the same case of retrieving the name and start date of every project, but with the solutions modifiers
-			we'll retrieve the last 10 projects that have been started.
-		</p>
-		<tabs>
-			<tab title="TypeScript">
-			<pre><code class="typescript">
-				import * as App from "carbonldp/App";
-				import { PatternBuilder } from "sparqler/PatternBuilder";
-
-				let appContext:App.Context;
-				// ... get context
-
-				appContext.documents.sparql( "projects/" )
-					.prefix( "ldp", "http://www.w3.org/ns/ldp#" )
-					.select( "projectName", "projectStart" )
-					.where( ( _:PatternBuilder ) => {
-						return [
-							_.resource( "projects/" )
-								.has( "ldp:contains", _.var( "everyProject" ) ),
-							_.var( "everyProject" )
-								.has( "name", _.var( "projectName" ) )
-								.and( "startDate", _.var( "projectStart" ) )
-						];
-					} )
-					.orderBy( "DESC( ?projectStart )" )
-					.limit( 10 )
-					;
-			</code></pre>
-			</tab>
-			<tab title="JavaScript ES2015">
-			<pre><code class="javascript">
-				let appContext;
-				// ... get context
-
-				appContext.documents.sparql( "projects/" )
-					.prefix( "ldp", "http://www.w3.org/ns/ldp#" )
-					.select( "projectName", "projectStart" )
-					.where( _ => {
-						return [
-							_.resource( "projects/" )
-								.has( "ldp:contains", _.var( "everyProject" ) ),
-							_.var( "everyProject" )
-								.has( "name", _.var( "projectName" ) )
-								.and( "startDate", _.var( "projectStart" ) )
-						];
-					} )
-					.orderBy( "DESC( ?projectStart )" )
-					.limit( 10 )
-					;
-				</code></pre>
-			</tab>
-			<tab title="JavaScript ES5">
-			<pre><code class="javascript">
-				var appContext;
-				// ... get context
-
-				appContext.documents.sparql( "projects/" )
-					.prefix( "ldp", "http://www.w3.org/ns/ldp#" )
-					.select( "projectName", "projectStart" )
-					.where( function( _ ) {
-						return [
-							_.resource( "projects/" )
-								.has( "ldp:contains", _.var( "everyProject" ) ),
-							_.var( "everyProject" )
-								.has( "name", _.var( "projectName" ) )
-								.and( "startDate", _.var( "projectStart" ) )
-						];
-					} )
-					.orderBy( "DESC( ?projectStart )" )
-					.limit( 10 )
-					;
-			</code></pre>
-			</tab>
-		</tabs>
-
-		<p>
-			To be able of retrieving the last started projects we use the <code>.orderBy()</code>
-			method, and as for now SPARQLER only accepts RAW strings, we specify in that the solutions must be sorted in
-			descendant order, with <code>DESC</code>, by the value of the variable <code>projectStart</code> (and yes, the variable needs the
-			<code>?</code> at the beginning).
-		</p>
-		<p>
-			Lastly we limit the solutions to the first 10 elements in the set with the <code>.limit()</code> method.
-		</p>
-	</section>
-
-	<section class="mainContent-subSection">
-		<h3>Query execution</h3>
-
-		<p>
-			Until now we've only been building the query and nothing more, but the important thing is to execute it and use the
-			solutions returned.
-		</p>
-		<p>
-			For a SELECT query we have two methods:
-		</p>
-		<ul>
-			<li>
-				<code>.execute()</code>. Return a promise with the parsed result as described in: <code><a href="https://carbonldp.github.io/carbonldp-js-sdk/#Carbon-SPARQL-SELECTResults-Class">Carbon.SPARQL.SELECTResults.Class</a></code>
-			</li>
-			<li>
-				<code>.executeRaw()</code>. Return a promise with the JSON results as described in the <a href="https://www.w3.org/TR/2013/REC-sparql11-results-json-20130321/#select-results-form">specification</a>: <code><a href="https://carbonldp.github.io/carbonldp-js-sdk/#Carbon-SPARQL-RawResults-Class">Carbon.SPARQL.RawResults.Class</a></code>
-			</li>
-		</ul>
-
-		<h4>Example</h4>
-		<p>
-			Following the previous examples, we'll execute the query we have been building and then return an array of projects with
-			the data obtained.
-		</p>
-		<tabs>
-			<tab title="TypeScript">
-			<pre><code class="typescript">
-				import * as App from "carbonldp/App";
-				import * as SPARQL from "carbonldp/SPARQL";
-				import * as HTTP from "carbonldp/HTTP";
-				import { PatternBuilder } from "sparqler/PatternBuilder";
-
-				let appContext:App.Context;
-				// ... get context
-
-				appContext.documents.sparql( "projects/" )
-					.prefix( "ldp", "http://www.w3.org/ns/ldp#" )
-					.select( "projectName", "projectStart" )
-					.where( ( _:PatternBuilder ) => {
-						return [
-							_.resource( "projects/" )
-								.has( "ldp:contains", _.var( "everyProject" ) ),
-							_.var( "everyProject" )
-								.has( "name", _.var( "projectName" ) )
-								.and( "startDate", _.var( "projectStart" ) )
-						];
-					} )
-					.orderBy( "DESC( ?projectStart )" )
-					.limit( 10 )
-					.execute()
-					.then( ( [ result, response ]:[ SPARQL.SELECTResults.Class, HTTP.Response.Class ] ) => {
-						return result
-							.bindings
-							.map( binding => ( {
-								name: binding[ "projectName" ],
-								startDate: binding[ "projectStart" ],
-							} )
-							;
-					} )
-					;
-			</code></pre>
-			</tab>
-			<tab title="JavaScript ES2015">
-			<pre><code class="javascript">
-				let appContext;
-				// ... get context
-
-				appContext.documents.sparql( "projects/" )
-					.prefix( "ldp", "http://www.w3.org/ns/ldp#" )
-					.select( "projectName", "projectStart" )
-					.where( _ => {
-						return [
-							_.resource( "projects/" )
-								.has( "ldp:contains", _.var( "everyProject" ) ),
-							_.var( "everyProject" )
-								.has( "name", _.var( "projectName" ) )
-								.and( "startDate", _.var( "projectStart" ) )
-						];
-					} )
-					.orderBy( "DESC( ?projectStart )" )
-					.limit( 10 )
-					.execute()
-					.then( ( [ result, response ] ) => {
-						return result
-							.bindings
-							.map( binding => ( {
-								name: binding[ "projectName" ],
-								startDate: binding[ "projectStart" ],
-							} )
-							;
-					} )
-					;
-				</code></pre>
-			</tab>
-			<tab title="JavaScript ES5">
-			<pre><code class="javascript">
-				var appContext;
-				// ... get context
-
-				appContext.documents.sparql( "projects/" )
-					.prefix( "ldp", "http://www.w3.org/ns/ldp#" )
-					.select( "projectName", "projectStart" )
-					.where( function( _ ) {
-						return [
-							_.resource( "projects/" )
-								.has( "ldp:contains", _.var( "everyProject" ) ),
-							_.var( "everyProject" )
-								.has( "name", _.var( "projectName" ) )
-								.and( "startDate", _.var( "projectStart" ) )
-						];
-					} )
-					.orderBy( "DESC( ?projectStart )" )
-					.limit( 10 )
-					.execute()
-					.then( function( [ result, response ] ) {
-						return result
-							.bindings
-							.map( function( binding ) {
-								return {
-									name: binding[ "projectName" ],
-									startDate: binding[ "projectStart" ],
-								};
-							} )
-							;
-					} )
-					;
-			</code></pre>
-			</tab>
-		</tabs>
-
-		<p>
-			The result object contains a property <code>bindings</code>, which is an array containing the solutions of
-			the query. Every element in this array is an object that have the variable names retrieved as keys and its
-			bound value, so we construct our own specific objects from them.
-		</p>
-
-	</section>
-
-</section>
-
 
 <section class="mainContent-section">
 	<h2 class="hidden">SPARQL Services</h2>
