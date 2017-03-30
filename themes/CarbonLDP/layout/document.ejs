@@ -2,7 +2,7 @@
     <div class="row">
         <div class="twelve wide computer only twelve wide tablet only sixteen wide mobile only column">
                 <div class="mainContent">
-                    <%- partial("_partial/breadcrumb")%>
+                    <%- partial("_partial/breadcrumb", {shortBreadcrumb:false})%>
 
                     <% if ( page.notDocumented ) {%>
                         <%- partial("_partial/not-yet-documented")%>

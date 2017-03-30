@@ -27,7 +27,14 @@ nav:
 - name: Community & Support
   path: /community-and-support
   children: null
+- name: Blog
+  path: /blog
+  children: null
 - name: About 
   path: /about
   children: null
 rss: /atom.xml
+
+
+#Excerpt Link
+excerpt_link: Read More
