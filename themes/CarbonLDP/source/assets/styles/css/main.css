@@ -12,6 +12,9 @@
   font-size: 0.95em !important;
   color: #6c7680 !important; }
 
+.ui.menu a.item.navMenu-dropdownLink {
+  padding: 0; }
+
 .navMenu-carbonLogo {
   height: auto;
   width: 150px; }
