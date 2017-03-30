@@ -2,7 +2,7 @@
 	<h1><%-post.title%> </h1>
 	<div class="post-info">
 		<%if(post.avatar){%>
-		<img class="ui middle aligned avatar spaced image" src="assets/images/<%post.avatar%>">
+		<img class="ui middle aligned avatar spaced image" src="/assets/images/<%=post.avatar%>">
 		<%} else {%>
 		<%- svg("assets/images/carbon-icon.svg", "ui middle aligned avatar spaced image")%>
 		<%}%>

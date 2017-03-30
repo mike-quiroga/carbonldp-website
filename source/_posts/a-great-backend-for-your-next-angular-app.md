@@ -1,7 +1,7 @@
 ---
 title: A Great Backend for Your Next Angular App
 date: 2017-03-30 19:19:35
-avatar:
+avatar: alvaro-contreras-avatar-blog.jpg
 author: Alvaro Contreras
 tags:
 ---
