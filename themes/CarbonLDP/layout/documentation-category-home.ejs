@@ -1,0 +1,39 @@
+<div class="ui container grid">
+	<div class="row">
+		<div class="twelve wide computer only sixteen wide tablet mobile only column">
+			<div class="mainContent">
+				<%- partial("_partial/breadcrumb")%>
+				<div class="category-titleContainer">
+					<%-svg( `assets/images/${page.icon}`, "ui left floated image category-icon")%><h1 class="category-title"><%= page.title %></h1>
+				</div>
+
+				<div class="category-description">
+					<p><%- page.description %></p>
+
+					<% if ( page.documents ){ %>
+						<div class="ui bulleted list">
+							<% for (var i in page.documents ){ %>
+								<div class="item category-item">
+									<div class="header"><a class="category-itemTitle" href="<%= page.documents[i].link %>"> <%= page.documents[i].title %></a></div>
+									<div class="summary"><%= page.documents[i].summary%></div>
+								</div>
+							<% } %>
+						</div>
+					<%}%>
+
+					<% if( page.otherRelatedLinks) {%>
+						<hr>
+						<div class="ui bulleted list">
+							<% for (var i in page.otherRelatedLinks ){ %>
+								<div class="item category-item">
+									<div class="header"><a class="category-itemTitle" href="<%= page.otherRelatedLinks[i].link %>"><%=page.otherRelatedLinks[i].title%></a></div>
+									<div class="summary"><%= page.otherRelatedLinks[i].summary%></div>
+								</div>
+							<%}%>
+						</div>
+					<% } %>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

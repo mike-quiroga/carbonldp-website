@@ -2,10 +2,16 @@ hexo.extend.helper.register( "breadcrumb", ( page ) => {
 	let breadcrumbElements = {};
 	let path = page.path.replace("/index.html", "");
 	let slugs = path.split( "/" );
-	
+
+	let lastSlug = slugs[slugs.length-1];
+
+	if( lastSlug === "")
+			slugs.splice( lastSlug, 1 );
+
+
 	breadcrumbElements.titles = getTitles(slugs);
 	breadcrumbElements.paths = getPaths(slugs);
-	
+
 	return breadcrumbElements;
 });
 
@@ -48,9 +54,9 @@ function getPaths( slugs ){
 			breadcrumbPath += "/" + slugs[ auxi ];
 			auxi ++;
 		}
-		
+
 		paths.push(breadcrumbPath);
 	});
-	
+
 	return paths;
 }

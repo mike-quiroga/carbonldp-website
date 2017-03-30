@@ -1,21 +1,21 @@
 <div class="ui container grid">
-        <div class="row">
-            <div class="twelve wide computer only twelve wide tablet only sixteen wide mobile only column">
-                    <div class="mainContent">
-                        <%- partial("_partial/breadcrumb")%>
+    <div class="row">
+        <div class="twelve wide computer only twelve wide tablet only sixteen wide mobile only column">
+                <div class="mainContent">
+                    <%- partial("_partial/breadcrumb")%>
 
-                        <% if ( page.notDocumented ) {%>
-                            <%- partial("_partial/not-yet-documented")%>
-                        <% } else { %>
-                        <%- page.content %>
-                        <% } %>
+                    <% if ( page.notDocumented ) {%>
+                        <%- partial("_partial/not-yet-documented")%>
+                    <% } else { %>
+                    <%- page.content %>
+                    <% } %>
 
-                    </div>
                 </div>
-            <%if ( !(page.sidebar || page.notDocumented) ) {%>
-            <div class="four wide computer tablet only column">
-                <sidebar content="mainContent"></sidebar>
             </div>
-            <%}%>
+        <%if ( !(page.sidebar || page.notDocumented) ) {%>
+        <div class="four wide computer tablet only column">
+            <sidebar content="mainContent"></sidebar>
         </div>
+        <%}%>
     </div>
+</div>

@@ -1,8 +1,5 @@
-.site-content--home {
-  margin-top: 0; }
-
 .cover--home {
-  background-image: url("../../images/night-sky.jpg") !important;
+  background-color: #363f48;
   background-repeat: no-repeat !important;
   background-position: center center !important;
   background-size: cover !important;
@@ -51,7 +48,7 @@
   font-size: 1.1em;
   text-align: justify; }
 
-.news-image {
+.news-imageContainer {
   padding: 25px;
   margin: auto;
   max-width: 386px; }
@@ -86,9 +83,10 @@
   padding-left: 10px;
   padding-right: 10px; }
 
-.feature-icon {
+.ui.image.feature-icon {
   margin-bottom: 20px;
-  margin-top: 40px; }
+  margin-top: 40px;
+  background: white; }
 
 .halfBanner {
   padding: 50px;
@@ -117,6 +115,15 @@
   letter-spacing: 0.3px;
   text-align: center;
   font-size: 26px; }
+
+/* Semantic UI overwritten classes */
+.ui.whiteBG.button, .ui.whiteBG.buttons .ui.button {
+  background-color: #fff;
+  text-shadow: none;
+  background-image: none; }
+
+.ui.button.californiaText {
+  color: #F89728; }
 
 @media (max-width: 1200px) {
   .cover--home {
@@ -151,8 +158,11 @@
   .news-paragraph {
     font-size: 1.2em;
     text-align: justify; }
-  .news-image {
+  .news-imageContainer {
     padding: 20px; }
+  .news-image {
+    width: 260px;
+    height: 170px; }
   .feature-title {
     font-size: 1.8rem;
     letter-spacing: 1.1px; }
@@ -187,8 +197,11 @@
   .news-paragraph {
     font-size: 1.2em;
     text-align: justify; }
-  .news-image {
+  .news-imageContainer {
     padding: 0px 20px 20px 20px; }
+  .news-image {
+    width: 346px;
+    height: 230px; }
   .featuresSection {
     padding: 75px 20px; }
   .featuresSection-titleContainer {
@@ -206,8 +219,15 @@
     font-size: 1.2em;
     padding-left: 16px;
     padding-right: 16px; }
-  .feature-icon {
+  .ui.image.feature-icon {
     margin-bottom: 20px;
-    margin-top: 40px; }
+    margin-top: 40px;
+    display: block; }
   .ui.big.image.masthead-carbonLogo {
     width: 500px; } }
+
+@media (max-width: 467px) {
+  .news-image {
+    width: 276px;
+    height: 186px;
+    margin: auto; } }

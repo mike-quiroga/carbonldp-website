@@ -20,8 +20,13 @@
   }
   %>
 
+  <link rel="apple-touch-icon" sizes="180x180" href="/assets/images/favicon/apple-touch-icon.png">
+  <link rel="icon" type="image/png" href="/assets/images/favicon/favicon-32x32.png" sizes="32x32">
+  <link rel="icon" type="image/png" href="/assets/images/favicon/favicon-16x16.png" sizes="16x16">
+  <link rel="manifest" href="/assets/images/favicon/manifest.json">
+  <link rel="mask-icon" href="/assets/images/favicon/safari-pinned-tab.svg" color="#5bbad5">
+  <meta name="theme-color" content="#ffffff">
 
-  <link rel="shortcut icon" href="/assets/images/carbon-icon-144x144.png">
   <title><% if (title){ %><%= title %> | <% } %><%= config.title %></title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="google-site-verification" content="gz0ah_pGpAlB4Q5a_bxykr1Zdo_CfXHyAb2tJiADVhE" />
@@ -36,14 +41,14 @@
   <%- css("/assets/semantic/semantic.min")%>
   <link id="widgets-styles">
 
-  <%- css("/assets/styles/css/main")%>
+  <%- inline_css("assets/styles/css/main.css")%>
 
   <% if ( ( page.layout === "index" ) ) { %>
-  <%- css("/assets/styles/css/home")%>
+  <%- inline_css("/assets/styles/css/home.css")%>
   <%} else {%>
+  <%- inline_css("assets/styles/css/page.css")%>
   <%- partial( `_head/${ page.layout }-head` ) %>
   <%}%>
-
 
   <!-- Google Analytics -->
   <script>
