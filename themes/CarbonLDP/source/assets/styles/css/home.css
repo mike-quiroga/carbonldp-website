@@ -28,6 +28,9 @@
   max-width: 100%;
   padding: 20px 10px; }
 
+.banner-bordered {
+  border-top-color: #363f48; }
+
 .banner-paragraph {
   letter-spacing: 0.3px;
   text-align: center;
@@ -35,14 +38,24 @@
   font-size: 32px; }
 
 .newsSection {
-  padding: 4rem 2rem; }
+  padding: 5.4rem 2rem; }
 
-.news {
-  padding: 20px 60px 20px 25px; }
+.ui.grid > .news.row {
+  padding: 25px 0; }
+
+.news-titleContainer {
+  margin: 30px 0; }
+
+.newsSection-title {
+  font-size: 2.2rem;
+  letter-spacing: 0.7px; }
 
 .news-title {
-  font-size: 1.3em;
-  padding-bottom: 10px; }
+  margin: 0;
+  padding-bottom: 5px; }
+
+.news-date {
+  color: gray; }
 
 .news-paragraph {
   font-size: 1.1em;
@@ -52,6 +65,9 @@
   padding: 25px;
   margin: auto;
   max-width: 386px; }
+
+.news-image {
+  margin: auto; }
 
 .news-paragraph--left {
   padding-top: 0; }
@@ -117,7 +133,16 @@
   font-size: 26px; }
 
 /* Semantic UI overwritten classes */
+.ui.grid > .electricBlueBG.callToAction.row {
+  padding-top: 0;
+  padding-bottom: 0; }
+
 .ui.whiteBG.button, .ui.whiteBG.buttons .ui.button {
+  background-color: #fff;
+  text-shadow: none;
+  background-image: none; }
+
+.ui.californiaBG.button, .ui.californiaBG.buttons .ui.button {
   background-color: #fff;
   text-shadow: none;
   background-image: none; }
@@ -146,12 +171,6 @@
     padding: 50px; }
   .halfBanner-paragraph {
     font-size: 22px; }
-  .news {
-    padding: 20px 20px; }
-  .newsSection {
-    padding: 2.5rem 2rem; }
-  .news {
-    padding: 20px 20px; }
   .news-title {
     font-size: 1.5em;
     padding-bottom: 10px; }
@@ -160,8 +179,7 @@
     text-align: justify; }
   .news-imageContainer {
     padding: 20px; }
-  .news-image {
-    width: 260px;
+  .news-image--timBernersLee {
     height: 170px; }
   .feature-title {
     font-size: 1.8rem;
@@ -187,10 +205,6 @@
   .banner-paragraph {
     font-size: 22px;
     font-weight: normal; }
-  .newsSection {
-    padding: 2.5rem 2rem; }
-  .news {
-    padding: 20px 20px 0 20px; }
   .news-title {
     font-size: 1.5em;
     padding-bottom: 10px; }
@@ -199,8 +213,7 @@
     text-align: justify; }
   .news-imageContainer {
     padding: 0px 20px 20px 20px; }
-  .news-image {
-    width: 346px;
+  .news-image-timBernersLee {
     height: 230px; }
   .featuresSection {
     padding: 75px 20px; }
@@ -227,7 +240,7 @@
     width: 500px; } }
 
 @media (max-width: 467px) {
-  .news-image {
-    width: 276px;
-    height: 186px;
-    margin: auto; } }
+  .news-image--ngConf {
+    width: 150px; }
+  .news-image--timBernersLee {
+    height: 186px; } }
