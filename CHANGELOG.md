@@ -1,3 +1,17 @@
+# 1.1.0 (2017/03/30)
+
+- Completed #142 
+   - Modified home and styles layout to add news section
+   - Added news content
+- Added blog #143 
+    - Fixed breadcrumb for blog
+    - Added blog to navigation menu
+    - Added author and avatar to post scaffold
+    - Added layouts: blog, blog-sidebar, blog-head, post, post/footer
+    - Added read more text in config.yml
+- Fixed SDK description in home from Software Developer's Kit to Software Development Kit
+   
+
 # 1.0.4 (2017/03/30)
 
 - Added svg, inlince css helpers
