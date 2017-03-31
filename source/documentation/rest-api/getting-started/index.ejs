@@ -7,6 +7,13 @@ date: 2017-02-07 19:01:07
 
 <h1>Getting Started with the REST API</h1>
 
+<div class="ui error message">
+	<div class="header">Outdated documentation</div>
+	<div class="content">
+		<p>This documentation is outdated and may not be accurate. It references actions related to a cloud service we used to provide.</p>
+		<p>We are working on updating it.</p>
+	</div>
+</div>
 
 <div class="ui message">
 	<div class="content">
@@ -149,7 +156,7 @@ date: 2017-02-07 19:01:07
 					the <code>/platform/agents/</code>
 					container. By using this header, we're specifying the desired behavior of the resource. Because we're adding a member resource to the target container, we need
 					it to behave like a container
-					as opposed to an <code>RDFSource</code> or a  <code>NonRDFSource</code> . In all, Carbon supports the following interaction model values for the
+					as opposed to an <code>RDFSource</code> or a <code>NonRDFSource</code> . In all, Carbon supports the following interaction model values for the
 					<code>Prefer</code> header:
 				</p>
 				<ul>
@@ -591,7 +598,7 @@ date: 2017-02-07 19:01:07
 		</li>
 		<li><strong>Class/Entity Properties</strong> - Taxonomy terms are pretty simple; they're just concepts or labels. Perhaps they can be expressed in multiple languages.</li>
 		<li><strong> <strong>Class/Entity</strong> Relationships
-		</strong> - A taxonomy implies that these terms are organized in a hierarchy, so we need to think about how to use container behavior to support that structure.
+			</strong> - A taxonomy implies that these terms are organized in a hierarchy, so we need to think about how to use container behavior to support that structure.
 		</li>
 		<li><strong>Application Functionality</strong> - The data for our application, the taxonomy terms, will typically be metadata used to help describe the subject and nature
 			of information in
@@ -623,7 +630,7 @@ date: 2017-02-07 19:01:07
 		</p>
 
 		<p>
-			SKOS introduces the class  <code>skos:Concept</code> , which allows implementors to assert that a given resource is a concept. This is done in two steps:
+			SKOS introduces the class <code>skos:Concept</code> , which allows implementors to assert that a given resource is a concept. This is done in two steps:
 		</p>
 
 		<ol>
@@ -675,7 +682,7 @@ date: 2017-02-07 19:01:07
 		<p>The <code>skos:broader</code> and <code>skos:narrower</code> properties give us what we need to express hierarchical links between our concepts.</p>
 
 		<p>
-			To assert that one concept is broader in meaning (i.e. more general) than another, the  <code>skos:broader</code> property is used. The  <code>skos:narrower</code>
+			To assert that one concept is broader in meaning (i.e. more general) than another, the <code>skos:broader</code> property is used. The <code>skos:narrower</code>
 			property is used to assert the inverse, namely when one concept is narrower in meaning (i.e. more specific) than another. For example:
 		</p>
 
@@ -687,7 +694,7 @@ date: 2017-02-07 19:01:07
 		</code></pre>
 
 		<p>
-			In SKOS, there is also the notion of a  <code>skos:related</code> link, which is used to assert an associative relationship. But again, we can add such things in the
+			In SKOS, there is also the notion of a <code>skos:related</code> link, which is used to assert an associative relationship. But again, we can add such things in the
 			future. For now, we'll just stick to the parent/child relationship afforded by <code>skos:broader</code> and <code>skos:narrower</code> .
 		</p>
 
@@ -1075,13 +1082,13 @@ date: 2017-02-07 19:01:07
 		</p>
 
 		<p>
-			The  <code>ldp:membershipResource</code> predicate of this Direct Container specifies an entirely different resource where membership triples should be written.
+			The <code>ldp:membershipResource</code> predicate of this Direct Container specifies an entirely different resource where membership triples should be written.
 			Whenever we post to this
 			container (the <code>top-concepts/</code> container), a membership triple will be written to the specified resource, which is the <code>topics/</code> container. In
 			other words, if we later put
 			a Concept to the <code>top-concepts/</code> container, that concept will become a member of the <code>topics/</code> container. Why would we want to do this? To
 			understand, we have to consider
-			the  <code>ldp:hasMemberRelation</code> predicate, which is also used.
+			the <code>ldp:hasMemberRelation</code> predicate, which is also used.
 		</p>
 
 		<p>
@@ -1173,7 +1180,7 @@ date: 2017-02-07 19:01:07
 		<p>
 			Notice, this time that the ldp:hasMemberRelation is skos:narrower. That means that any concept that is later PUT to this container will force a membership triple to be
 			written on the container
-			using  <code>skos:narrower</code> as the predicate.
+			using <code>skos:narrower</code> as the predicate.
 		</p>
 
 		<p>
@@ -1440,7 +1447,7 @@ date: 2017-02-07 19:01:07
 
 		<p>
 			Next, we must make <span>Information Architecture (Concept 1.1) a narrower concept of Design (Concept 1) by adding it to the Design concept's container
-			membership.</span>
+				membership.</span>
 		</p>
 
 		<p>

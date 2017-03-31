@@ -1,0 +1,15 @@
+<div class="post-footer ">
+	<span class="post-readMoreButton">
+		<%if( readMore ) { %><a class="ui blue basic button" href="<%- url_for(post.path)%>"><%= theme.excerpt_link %></a> <%}%>
+	</span>
+	<span class="post-socialMediaMenu">
+		<a href="https://twitter.com/intent/tweet?url=<%=config.url%>/<%=post.path%>&text=<%= encodeURI(post.title)%>&via=CarbonLDP" class="article-share-twitter" target="_blank" title="Twitter">
+			<i class="grey big twitter sqaure icon"></i>
+		</a>
+		<a href="https://www.linkedin.com/shareArticle?mini=true&url=<%=config.url%>/<%=post.path%>&title=<%= encodeURI(post.title)%>&summary=My%20favorite%20linked%20data%20platform&source=LinkedIn" class="article-share-linkedin" target="_blank" title="LinkedIn">
+			<i class="grey big linkedin square icon"></i>
+		</a>
+		<a href="https://plus.google.com/share?url=<%=encodeURIComponent(config.url+"/"+post.path)%>" class="article-share-google" target="_blank" title="Google+">
+			<i class="grey big google plus square icon"></i></a>
+	</span>
+</div>

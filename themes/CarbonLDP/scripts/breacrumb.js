@@ -2,12 +2,16 @@ hexo.extend.helper.register( "breadcrumb", ( page ) => {
 	let breadcrumbElements = {};
 	let path = page.path.replace("/index.html", "");
 	let slugs = path.split( "/" );
+	let indexToRemove = slugs.length-1;
+	let lastSlug = slugs[indexToRemove];
 
-	let lastSlug = slugs[slugs.length-1];
-
-	if( lastSlug === "")
-			slugs.splice( lastSlug, 1 );
-
+	if( lastSlug === "") {
+			slugs.splice( indexToRemove, 1 );
+	}
+	
+	if( slugs[0] === ""){
+		slugs.splice( 0, 1 );
+	}
 
 	breadcrumbElements.titles = getTitles(slugs);
 	breadcrumbElements.paths = getPaths(slugs);

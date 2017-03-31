@@ -1,3 +1,21 @@
+# 1.0.4 (2017/03/30)
+
+- Added svg, inlince css helpers
+- Added async-background widget
+- Added base22 ownership message in about page
+- Added warning message to REST API > Getting Started
+- Completed #137 
+    - Added layout for documentation category home
+- Fixed breadcrumb.js to remove blank slugs
+- Fixed #139 - fix typo in JS SDK feature description
+- Fixed #135 - fix images
+    - convert images to .svg 
+    - optimize .png images
+    - add styles to images
+- Fixed #144 - fix screenshot images
+- Fixed #141 - add missing favicons to cover all resolutions
+- Moved styles to the correct .css document
+
 # 1.0.3 (2017/02/16)
 
 - Enabled cache in nginx configuration file
