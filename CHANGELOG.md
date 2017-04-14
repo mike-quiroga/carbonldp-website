@@ -1,3 +1,8 @@
+# 1.1.2 (2017/04/13)
+
+- Fixed #151 - Quick Start Guide still lists angular2-carbonldp but links to angular-carbonldp
+    - Also changed reference to angular2-jspm-carbonldp-boilerplate to the newer angular-carbonldp-boilerplate.
+
 # 1.1.0 (2017/03/30)
 
 - Completed #142 
