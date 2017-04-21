@@ -28,7 +28,7 @@ Source code for [carbonldp.com](https://carbonldp.com)
 
 ### Important Notes for Contributors
 
-- Do not manually modify the CHANGELOG.md file. In our workflow, this is the responsibility of the manager when accepting and merging the pull request.
+- Do not manually modify the CHANGELOG.md file. In our workflow, this is the responsibility of the manager when accepting and merging a pull request.
 
 ### File Structure
 
