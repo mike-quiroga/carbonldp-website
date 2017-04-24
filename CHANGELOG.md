@@ -1,7 +1,3 @@
-# 1.1.1 (2017/04/13)
-
-- Fixed #149 - Broken image in Quick Start Guide
-
 # 1.1.0 (2017/03/30)
 
 - Completed #142 
