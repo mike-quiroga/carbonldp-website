@@ -1,3 +1,17 @@
+# 1.1.1 (2017/04/23)
+
+- Fixed #115
+    - Make all links on REST API index consistent with page titles.
+    - Make all links on Essential Concepts index consistent with page titles.
+    - Add a helpful notes to README.md
+    - Remove cloud references. 
+    - Consolidate steps to make end-to-end process shorter.
+    - Clarify (improve) descriptive copy text.
+    - Convert examples from Turtle to TriG.
+- Fixed #151 - Quick Start Guide still lists angular2-carbonldp but links to angular-carbonldp
+    - Also changed reference to angular2-jspm-carbonldp-boilerplate to the newer angular-carbonldp-boilerplate.
+- Fixed #149 - Broken image in Quick Start Guide
+
 # 1.1.0 (2017/03/30)
 
 - Completed #142 
@@ -14,7 +28,7 @@
 
 # 1.0.4 (2017/03/30)
 
-- Added svg, inlince css helpers
+- Added svg, inline css helpers
 - Added async-background widget
 - Added base22 ownership message in about page
 - Added warning message to REST API > Getting Started
