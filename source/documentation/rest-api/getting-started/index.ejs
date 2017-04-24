@@ -5,7 +5,7 @@ description: Guide to get you started. How to build an example application using
 date: 2017-02-07 19:01:07
 ---
 
-<h1>Getting Started with the REST API</h1>
+<h1>Getting started with the REST API</h1>
 
 <div class="ui message">
 	<div class="content">
@@ -21,7 +21,7 @@ date: 2017-02-07 19:01:07
 </div>
 
 <section class="mainContent-section">
-	<h2 class="ui header">About the Example Application</h2>
+	<h2 class="ui header">About the example application</h2>
 	<p>In this guide, we'll use the REST API to create a simple, but useful taxonomy service. A taxonomy is a controlled vocabulary of terms, organized in a hierarchy, that can be used for classifying and organizing information. Taxonomies are commonly used in web applications. Their terms are used for tagging content and as facets to help users filter and find. In this guide, you'll learn some of the the most important functions of the REST API as well as fundamental Linked Data Platform concepts. You'll also have a useful application that you can use to create and manage a single 'canonical' source of terms such as a corporate enterprise taxonomy. Other applications will be able to consume and use the taxonomy service using the same API.</p>
 	<p>We'll use the following steps to complete the application:</p>
 	<ol>
@@ -40,11 +40,11 @@ date: 2017-02-07 19:01:07
 
 
 <section class="mainContent-section">
-	<h2 class="ui header">Create a User Account</h2>
+	<h2 class="ui header">Create a user account</h2>
 	<p>To interact with Carbon through the REST API, we'll need a user account. This can be done through the Workbench GUI, but since this is a guide on using the REST API, we'll do it by issuing a POST request through HTTP. The resource that comprises a Carbon account is known as an <em>Agent</em> - a <em>platform agent</em> to be precise. Later, you will learn about <em>application agents</em>, which represent accounts specifically for users of the applications you build.
 	</p>
 	<section class="mainContent-subSection">
-		<h3 class="ui header">Create the Request</h3>
+		<h3 class="ui header">Create the request</h3>
 		<p>Create the following HTTP request to create a platform account.</p>
 		<p><span class="ui blue horizontal label">POST</span> <code>http://localhost:8083/platform/agents/</code></p>
 		<table class="ui celled table">
@@ -87,7 +87,7 @@ date: 2017-02-07 19:01:07
 	</section>
 
 	<section class="mainContent-subSection">
-		<h3 class="ui header">Review the Request</h3>
+		<h3 class="ui header">Review the request</h3>
 		<p>Before issuing this request, you may want to examine its parts. To get more information about each part in the request, click to expand an item of interest below.</p>
 		<div class="ui styled fluid accordion">
 			<div class="title">
@@ -205,7 +205,7 @@ date: 2017-02-07 19:01:07
 	</section>
 
 	<section class="mainContent-subSection">
-		<h3 class="ui header">Issue the Request</h3>
+		<h3 class="ui header">Issue the request</h3>
 		<p>Issue the POST request.</p>
 		<p>A successful request will result in HTTP status code 201 Created. The ETag header in the response will confirm the time of creation and the Location header will provide
 			the server minted URI for the new Agent resource. For example:</p>
@@ -230,7 +230,7 @@ date: 2017-02-07 19:01:07
 	</section>
 
 	<section class="mainContent-subSection">
-		<h3 class="ui header">Examine the New Resource</h3>
+		<h3 class="ui header">Examine the new resource</h3>
 		<p>You can now examine the newly created resource by issuing a <code>GET</code> request to the URI that was minted for it.</p>
 		<p>Create the following HTTP request to get the Platform Agent.</p>
 		<p><span class="ui blue horizontal label">GET</span> <code>http://localhost:8083/platform/agents/jane-doe/</code></p>
@@ -371,7 +371,7 @@ date: 2017-02-07 19:01:07
 	</section>
 </section>
 <section class="mainContent-section">
-	<h2 class="ui header">Create an Application</h2>
+	<h2 class="ui header">Create an application</h2>
 	<p>With your newly created platform account, you can now create an Application.</p>
 	<p>To create an application, issue the following request. Be sure to use your own unique name for the Slug or omit the Slug. You should also provide a unique name for the
 		application in the body of the request.</p>
@@ -422,7 +422,7 @@ date: 2017-02-07 19:01:07
 	<p>A successful request will result in HTTP status code <code>201 Created</code>. It will also respond with the server-minted <code>Location</code> URI for the Application resource, which in the case of our example is:</p>
 	<p><code>http://localhost:8083/platform/apps/taxonomy-hub/</code></p>
 	<section class="mainContent-subSection">
-		<h3 class="ui header">Examine the Application Root Container</h3>
+		<h3 class="ui header">Examine the application root container</h3>
 		<p>You can always verify a newly created resource by issuing a GET request to its <code>Location</code> URI, but it's important to keep in mind that the URI created for the Application only references the metadata resource for your application. When a new Application is created, Carbon also creates an access point at the following URI:</p>
 		<p><code>http://localhost:8083/apps/&lt;app-slug&gt;/</code></p>
 		<p>So, in the case of our example, the application's access point or root URI would be:</p>
@@ -476,7 +476,7 @@ date: 2017-02-07 19:01:07
 </section>
 
 <section class="mainContent-section">
-	<h2 class="ui header">Model the Application (Vocabulary, Resources, Containers)</h2>
+	<h2 class="ui header">Model the application (vocabulary, resources, containers)</h2>
 	<p>Now that you have an application root created, you can begin to create RDF documents in the application. Before you start posting arbitrary RDF documents, however, it's a good idea to design a general model for the application. Answering the following questions can help you determine what the model should be.</p>
 	<ul>
 		<li>What entities will the resources in our application represent?</li>
@@ -498,12 +498,12 @@ date: 2017-02-07 19:01:07
 
 
 	<section class="mainContent-subSection">
-		<h3 class="ui header">Re-Using an Established Linked Data Vocabulary Called SKOS</h3>
+		<h3 class="ui header">Re-using an established Linked Data vocabulary called SKOS</h3>
 		<p>It's always a best-practice to re-use established linked data vocabularies instead of inventing duplicates and, as it turns out, there's already a good vocabulary that fits the needs of our application. It's called <a href="http://www.w3.org/2004/02/skos/intro">SKOS (Simple Knowledge Organization System)</a>. According to the <a href="https://www.w3.org/TR/skos-primer/">SKOS Primer</a>, it &quot;provides a model for expressing the basic structure and content of concept schemes such as thesauri, classification schemes, subject heading lists, taxonomies, folksonomies, and other similar types of controlled vocabulary.&quot; Sounds right up our alley, doesn't it? When we investigate SKOS, we not only see that it will suit the needs of our app, but that it provides a lot of clues about how we should model everything.</p>
 	</section>
 
 	<section class="mainContent-subSection">
-		<h3 class="ui header">Mini SKOS Primer</h3>
+		<h3 class="ui header">Mini SKOS primer</h3>
 		<p><strong>skos:Concept</strong></p>
 		<p>SKOS introduces the class <code>skos:Concept</code> , which allows implementors to assert that a given resource is a concept. This is done in two steps:</p>
 		<ol>
@@ -588,7 +588,7 @@ date: 2017-02-07 19:01:07
 	</section>
 
 	<section class="mainContent-subSection">
-		<h3 class="ui header">Consider the Role of LDP Containers</h3>
+		<h3 class="ui header">Consider the role of LDP containers</h3>
 		<p>It may seem intuitive to model the container behavior for our application in such way that each concept is a container to its narrower concepts. Or, in other words, so
 			that
 			narrower concepts
@@ -657,9 +657,9 @@ date: 2017-02-07 19:01:07
 </section>
 
 <section class="mainContent-section">
-	<h2 class="ui header">Create Application Resources</h2>
+	<h2 class="ui header">Create application resources</h2>
 	<section class="mainContent-subSection">
-		<h3 class="ui header">Create the schemes/ Container</h3>
+		<h3 class="ui header">Create the schemes/ container</h3>
 		<p>Let's start by creating the <code>schemes/</code> container. Since the application will always have only one <code>schemes/</code> container, this will be a one-time affair.</p>
 		<p>Create the following request.</p>
 		<p><span class="ui blue horizontal label">POST</span> <code>http://localhost:8083/apps/taxonomy-hub/</code></p>
@@ -710,7 +710,7 @@ date: 2017-02-07 19:01:07
 	</section>
 
 	<section class="mainContent-subSection">
-		<h3 class="ui header">Create Example Concept Scheme</h3>
+		<h3 class="ui header">Create example concept scheme</h3>
 		<p>Now that we have the <code>schemes/</code> container, we can create one or more Concept Scheme containers within it. Since this is an action that would likely be repeated by end-users, it would make sense to incorporate the capability into a user interface. For now, however, let's be clear on what would be required for the underlying HTTP request.</p>
 		<p><span class="ui blue horizontal label">POST</span> <code>http://localhost:8083/apps/taxonomy-hub/schemes/</code></p>
 		<table class="ui celled table">
@@ -823,7 +823,7 @@ date: 2017-02-07 19:01:07
 	</section>
 
 	<section class="mainContent-section">
-		<h2 class="ui header">Create the Top Concepts</h2>
+		<h2 class="ui header">Create the top concepts</h2>
 		<p>Now, we're ready to start creating concepts in our Topics taxonomy. This, of course, is a function that the GUI of our app would probably handle, but doing this manually is important to this learning exercise.</p>
 		<p><strong>Create the Top Concept, Design</strong></p>
 		<p>For our first Top Concept, Design, create the following request.</p>
@@ -930,7 +930,7 @@ date: 2017-02-07 19:01:07
 	</section>
 
 	<section class="mainContent-section">
-		<h2 class="ui header">Add Top Concepts as Members of the Scheme</h2>
+		<h2 class="ui header">Add top concepts as members of the scheme</h2>
 		<p>Now that the root concepts are created, they are members of their parent container. For example, the parent container, <code>topics</code>, links to <code>design/</code> with the following membership triple:</p>
 		<p><code>&lt;&gt; &lt;http://www.w3.org/ns/ldp#member&gt; &lt;http://localhost:8083/apps/taxonomy-hub/schemes/topics/design/&gt;</code></p>
 		<p>Since the parent container is a Basic Container, the concept is also contained by it. The parent container expresses this relationship with the following containment triple:</p>
@@ -980,7 +980,7 @@ date: 2017-02-07 19:01:07
 	</section>
 
 	<section class="mainContent-section">
-			<h2 class="ui header">Add Additional Concepts</h2>
+			<h2 class="ui header">Add additional concepts</h2>
 
 		<p>Next, let's create one of the second-level concepts, Information Architecture (Concept 1.1), which is a narrower concept of the Design top concept we already created. Create and issue the following request.</p>
 
@@ -1216,7 +1216,7 @@ date: 2017-02-07 19:01:07
 </section>
 
 <section class="mainContent-section">
-	<h2 class="ui header">Secure the Application</h2>
+	<h2 class="ui header">Secure the application</h2>
 	<p>Setting up security for a Carbon application involves the following general steps:</p>
 	<ul>
 		<li>Create application roles</li>
@@ -1226,14 +1226,14 @@ date: 2017-02-07 19:01:07
 		<li>Assign permissions on your application structure to the application roles</li>
 	</ul>
 	<section class="mainContent-subSection">
-		<h3 class="ui header">Create Application Roles</h3>
+		<h3 class="ui header">Create application roles</h3>
 		<p>Roles allow us to control access to application resources. A role defines what kind of access a group of users have on one or more resources. For this app, we'll create the two roles:</p>
 		<ul>
 			<li><strong>editor</strong> - Role for all available operations.</li>
 			<li><strong>user</strong> - Role for read-only operations.</li>
 		</ul>
 		<section class="mainContent-subSection">
-			<h4>Create the Editor Role</h4>
+			<h4>Create the editor role</h4>
 			<p>Issue the following HTTP request to create the editor role.</p>
 			<p><span class="ui blue horizontal label">POST</span> <code>http://localhost:8083/apps/taxonomy-hub/roles/</code></p>
 			<table class="ui celled table">
@@ -1283,7 +1283,7 @@ date: 2017-02-07 19:01:07
 		</section>
 
 		<section class="mainContent-subSection">
-			<h4>Create the User Role</h4>
+			<h4>Create the user role</h4>
 			<p>Issue the following HTTP request to create the user role.</p>
 			<p><span class="ui blue horizontal label">POST</span> <code>http://localhost:8083/apps/taxonomy-hub/roles/</code></p>
 			<table class="ui celled table">
@@ -1335,7 +1335,7 @@ date: 2017-02-07 19:01:07
 
 
 	<section class="mainContent-subSection">
-		<h3 class="ui header">Create Application Users</h3>
+		<h3 class="ui header">Create application users</h3>
 		<p>For this exercise, we'll create just two users - one to add to the editor role and another to add to the user role. In Carbon, a user is also referred to as an <em>agent</em>.</p>
 		<h4>Create Agent, testuser1</h4>
 		<p>Issue the following HTTP request to create the first user (an Agent).</p>
@@ -1426,11 +1426,11 @@ date: 2017-02-07 19:01:07
 
 
 	<section class="mainContent-subSection">
-		<h3 class="ui header">Assign Users to Roles</h3>
+		<h3 class="ui header">Assign users to roles</h3>
 		<p>In Carbon a role is similar to a user group. Roles are resources that can have one or more agents (users) as members.
 			In this step, we will assign testuser1 to the Editor role and testuser2 to the User role. To add an agent to a role, we
 			PUT the agent to the membership of the <code>agents</code> container that exists within the container of the role.</p>
-		<h4>Add Test User 1 to the Editor Role</h4>
+		<h4>Add test user 1 to the editor role</h4>
 		<p>Issue the following HTTP request to add testuser1 to the editor role.</p>
 		<p><span class="ui blue horizontal label">PUT</span> <code>http://localhost:8083/apps/taxonomy-hub/roles/editor/agents/</code></p>
 		<table class="ui celled table">
@@ -1468,7 +1468,7 @@ date: 2017-02-07 19:01:07
 			}
 		</code></pre>
 		<p>A successful PUT request results in HTTP status <code>200 OK</code>.</p>
-		<h4>Add Test User 2 to the User Role</h4>
+		<h4>Add test user 2 to the user role</h4>
 		<p>Issue the following HTTP request to add testuser2 to the user role.</p>
 		<p><span class="ui blue horizontal label">PUT</span> <code>http://localhost:8083/apps/taxonomy-hub/roles/user/agents/</code></p>
 		<table class="ui celled table">
@@ -1509,14 +1509,14 @@ date: 2017-02-07 19:01:07
 	</section>
 
 	<section class="mainContent-subSection">
-		<h3 class="ui header">Put the Roles into the Role-Hierarchy</h3>
+		<h3 class="ui header">Put the roles into the role-hierarchy</h3>
 
 		<p>We'll need to give permissions to our roles on resources. But we cannot assign permissions for the roles yet because the roles have not been positioned in the role
 			hierarchy. Carbon has a role hierarchy so that permissions can be inherited from the parent in any place within the hierarchy. The hierarchy always starts at
 			<code>/apps/&lt;app-name&gt;/roles/app-admin/</code>. So, in order to be able to apply permissions (ACLs - Access Control Lists) on any resource, the roles that will
 			be part of an ACL will need to exist within the role hierarchy. We can PUT both the Editor and User roles into to the role hierarchy with a single request.</p>
 
-		<h4>Put the Editor and User Roles into the Role Hierarchy</h4>
+		<h4>Put the editor and user roles into the role hierarchy</h4>
 
 		<p><span class="ui blue horizontal label">PUT</span> <code>http://localhost:8083/apps/taxonomy-hub/roles/app-admin/</code></p>
 		<table class="ui celled table">
@@ -1562,7 +1562,7 @@ date: 2017-02-07 19:01:07
 	</section>
 	<section class="mainContent-subSection">
 
-		<h3 class="ui header">Assign Permissions to the Application Roles</h3>
+		<h3 class="ui header">Assign permissions to the application roles</h3>
 
 		<p>Next, we need to assign permissions to the application roles we've created. In Carbon, resources can have an AccessControlList (ACL),
 			which defines what permissions roles have on the given resource. Let's take a look.</p>
@@ -1626,7 +1626,7 @@ date: 2017-02-07 19:01:07
 			The ACL defines an <code>accessControlEntry</code> and an <code>inheritableEntry</code>, each linking to an <code>AccessControlEntry</code> by way of a blank nodes. The entry linked by <code>accessControlEntry</code> defines access to the resource itself. The entry linked by <code>inheritableEntry</code> defines permissions that can be inherited by child resources when the child resources do not override them.
 		</p>
 
-		<h4>Give the Editor Role All Permissions and the User Role READ Permissions.</h4>
+		<h4>Give the editor role all permissions and the user role READ permissions</h4>
 		<p>The best way to modify permissions on a resource using the REST API is to start by getting the ACL for the resource as we've just done above. We can paste that ACL into a text editor, make some manual modifications, and then update it.</p>
 		<p>Doing this manually, is admittedly cumbersome, but it helps you understand how things work under the hood. For each of the roles (Editor and User), we'll need to repeat the following procedure using the ACL body copied from the step above.</p>
 

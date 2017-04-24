@@ -26,11 +26,9 @@ Source code for [carbonldp.com](https://carbonldp.com)
 3. Write your content in markdown ( https://guides.github.com/features/mastering-markdown/ )
 4. Add an excerpt, place a comment `<!-- more -->` the post excerpt will be from the beginning to where the comment was place.
 
-### Important Notes for Contributors
-
-- Do not manually modify the CHANGELOG.md file. In our workflow, this is the responsibility of the manager when accepting and merging a pull request.
-
 ### File Structure
+
+TODO: Describe each file/directory
 
     .
     ├── .idea                               
@@ -54,3 +52,7 @@ Source code for [carbonldp.com](https://carbonldp.com)
 	├── package.json
 	├── README.md
     └── semantic.json
+    
+### Contributing
+
+- Please read [our conventions and GitHub workflow](https://github.com/CarbonLDP/carbonldp/wiki/GitHub-conventions-and-workflow-for-Carbon-LDP)
