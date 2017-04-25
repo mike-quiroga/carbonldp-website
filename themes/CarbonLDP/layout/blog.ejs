@@ -1,0 +1,14 @@
+<div class="ui container grid">
+	<div class="twelve wide computer only fourteen wide tablet only sixteen wide mobile only column">
+		<div class="mainContent">
+			<% site.posts.sort( 'date', -1 ).each(function(post){ %>
+				<%- partial("_partial/post/post", {post:post, postList:true})%>
+				<div class="ui divider post-divider"></div>
+			<% })%>
+		</div>
+	</div>
+	<div class=" centered aligned four wide computer tablet only column">
+		<%- partial("_partial/blog-sidebar")%>
+	</div>
+
+</div>
