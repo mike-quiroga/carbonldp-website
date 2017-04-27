@@ -39,23 +39,20 @@ date: 2017-02-08 11:57:36
 <section class="mainContent-section">
 	<h2 class="hidden">Introduction</h2>
 
-	<p>
-		Just like tables in a relational database are queried using SQL, Carbon LDP resources can be queried using
-		<a href="https://www.w3.org/TR/sparql11-query/">SPARQL</a>, which is a W3C standard supported by the platform.
+	<p>Carbon LDP resources can be queried using <a href="https://www.w3.org/TR/sparql11-query/">SPARQL</a>, a W3C standard query language.</p>
+
+	<p>SPARQL has <em>some</em> similarities to SQL, the Structured Query Language for relational databases, but there are also fundamental differences.
+		The main difference with SPARQL is that, instead of filtering results to get a desired outcome (like in SQL),
+		you apply <strong>patterns</strong> that are tested over the data to retrieve results. These patterns are given along with <strong>query form</strong> to define the shape of the results.
 	</p>
 	<p>
-		The main difference with SPARQL is that instead of filtering results to get the desired outcome (like in SQL),
-		you apply <strong>patterns</strong> that are tested over the data to retrieve results. These patters are executed accompanied by
-		an <strong>action</strong> which defines the shape the results will be returned on.
-	</p>
-	<p>
-		There are four different actions:
+		There are four different query forms:
 	</p>
 	<ul>
 		<li><strong>SELECT</strong></li>
 		<ul>Returns the matched data in a table-like structure</ul>
 		<li><strong>ASK</strong></li>
-		<ul>Returns true or false indicating whether the data matched the pattern(s) or not</ul>
+		<ul>Returns <code>true</code> or <code>false</code> indicating whether data matched the pattern(s)</ul>
 		<li><strong>CONSTRUCT</strong></li>
 		<ul>Restructures the matched data into a graph described by a specified template</ul>
 		<li><strong>DESCRIBE</strong></li>
@@ -81,12 +78,12 @@ date: 2017-02-08 11:57:36
 	</ol>
 
 	<p>
-		This example pattern fully defines all of its pieces. Each pattern piece has the exact value we are trying to match. But querying
-		involves retrieving more data than we already have. That's why each pattern piece can also be a variable.
+		This example pattern fully defines all of its elements. Each pattern element has the exact value we're trying to match. But querying
+		involves retrieving more data than we already have, so each pattern element can also be a variable.
 	</p>
 	<p>
-		A variable acts like a wildcard, matching any values the pattern piece can have. But unlike wildcards, a variable stores any value
-		it matches (you can see them as the columns requested on SQL queries).
+		A variable acts like a wildcard, matching any values the pattern element can have. But unlike wildcards, a variable stores any value
+		it matches (you can think of them kind of like the columns requested on SQL queries).
 	</p>
 	<p>
 		<strong>E.g</strong>: To query the name of a project you would only need the project's URI (resource) and the name (property).
@@ -95,8 +92,8 @@ date: 2017-02-08 11:57:36
 	<p>
 		Now, you may be asking: "what about modifying a document like <code>UPDATE</code> or <code>ALTER</code>?".
 		For those cases the platform also supports <a href="https://www.w3.org/TR/sparql11-update/">SPARQL UPDATE</a>, another W3C standard,
-		that lets you add or delete any data (really, ANY data). Because of this, SPARQL UPDATE is only available to system administrator (for now...).
-		We are working on making it more secure and available to more users.
+		that lets you add or delete any data (really, ANY data). Because of this, SPARQL UPDATE is currently only available to the System Administrator,
+		though we intend to broaden that scope in a subsequent release.
 	</p>
 </section>
 
@@ -105,8 +102,7 @@ date: 2017-02-08 11:57:36
 
 	<p>
 		The SDK integrates our own query builder called <a href="https://github.com/CarbonLDP/sparqler">SPARQLER</a> (SPARQL
-		query buildER) which offers a <a href="https://en.wikipedia.org/wiki/Fluent_interface">fluent interface</a> to help you easily
-		construct queries and prevent errors by malformed patterns.
+		query buildER) which offers a <a href="https://en.wikipedia.org/wiki/Fluent_interface">fluent interface</a> to help you construct queries and prevent errors by malformed patterns.
 	</p>
 
 	<div class="ui info icon message">
@@ -115,18 +111,17 @@ date: 2017-02-08 11:57:36
 			<p>
 				Currently, we only support <code>SELECT</code> queries with SPARQLER.
 				<br/>
-				We're working to extend the builder to cover more features.
+				We intend to extend the builder to cover more features in a subsequent release.
 			</p>
 		</div>
 	</div>
 
 	<p>
 		To create a query you must call the method <code>sparql( documentURI:string )</code> of the <code>documents</code>
-		service where you must provide the document URI you are going to query on.
+		service along with the document URI to query against.
 	</p>
 	<p>
-		If you already have a <code>PersistedDocument</code> you can also call its <code>sparql()</code> method,
-		to query directly on them.
+		If you already have a <code>PersistedDocument</code> you can also call its <code>sparql()</code> method, to query directly on it.
 	</p>
 
 	<tabs>
@@ -313,7 +308,6 @@ date: 2017-02-08 11:57:36
 				The query can be translated to:
 			</p>
 			<ul>
-				<li></li>
 				<li>Search for a resource that has the id <code>projects/project-01/</code></li>
 				<li>This resource must have a property <code>name</code> with any value(s)</li>
 				<ul>
@@ -326,7 +320,7 @@ date: 2017-02-08 11:57:36
 				<li>Return me the values stored in the variables <em>projectName</em> and <em>projectStart</em></li>
 			</ul>
 			<p>
-				In this example we are using the <code>var( variableName )</code> function that the helper object <code>_</code> has to declare two variables:
+				In this example we are using the <code>var( variableName )</code> function of the helper object <code>_</code> to declare two variables:
 			</p>
 			<ul>
 				<li><code>projectName</code></li>
@@ -342,23 +336,22 @@ date: 2017-02-08 11:57:36
 				and the app being used is <code>apps/my-app/</code>).
 			</p>
 			<p>
-				From this resource we call the <code>has()</code>method, to indicate that the resource must have a property called <code>name</code>,
-				and then bound its value(s) to the variable <code>projectName</code>.
+				From this resource we call the <code>has()</code> method, to indicate that the resource must have a property called <code>name</code>,
+				with value(s) bound to the variable <code>projectName</code>.
 			</p>
 			<p>
 				Next we call the <code>and()</code> method, stating that it also needs to have a property <code>startDate</code>,
-				and we bound its value(s) to the variable <code>projectStart</code>.
+				with value(s) bound to the variable <code>projectStart</code>.
 			</p>
 
 			<h4>Example</h4>
 			<p>
-				In the case that we want to retrieve the name and start date from all the projects available,
-				we need to take on count the next statements:
+				To retrieve the name and start date from <em>all</em> available projects, we need to consider the following:
 			</p>
 			<ul class="list">
 				<li>The end-point of the query must be the container of the projects: <code>projects/</code></li>
 				<li>The children of the container are under the property: <code>http://www.w3.org/ns/ldp#contains</code></li>
-				<li>We need to bind every child document (project) and ask for its name and start date, as the previous example</li>
+				<li>We need to bind every child document (project) and ask for its name and start date, as in the previous example</li>
 			</ul>
 
 			<tabs>
@@ -429,8 +422,8 @@ date: 2017-02-08 11:57:36
 
 			<p>
 				As we can see, the major difference is that we return of an array of patterns. The first pattern matches the child
-				documents form the <code>projects/</code> container and bind them to the <code>everyProject</code> variable.
-				Thus with this variable we can ask for the name and start date of every corresponding project.
+				documents from the <code>projects/</code> container and binds them to the <code>everyProject</code> variable.
+				With this variable we can then ask for the name and start date of every corresponding project.
 			</p>
 
 		</section>
@@ -536,13 +529,10 @@ date: 2017-02-08 11:57:36
 			</tabs>
 
 			<p>
-				To be able of retrieving the last started projects we use the <code>.orderBy()</code>
-				method, and as for now SPARQLER only accepts RAW strings, we specify in that the solutions must be sorted in
-				descendant order, with <code>DESC</code>, by the value of the variable <code>projectStart</code> (and yes, the variable needs the
-				<code>?</code> at the beginning).
-			</p>
-			<p>
-				Lastly we limit the solutions to the first 10 elements in the set with the <code>.limit()</code> method.
+				We use the <code>.orderBy()</code> method to specify a descending order for the results, based on the project start date,
+				and we use the <code>.limit()</code> method to limit the returned solutions to 10. Notice that it is not required to use a
+				question mark with the variables declared with the <code>_.var()</code> helper. However, the solution modifiers like
+				<code>.orderBy()</code> use RAW strings, so we have to use a question mark to specify the variable (e.g. <code>?projectStart.</code>)
 			</p>
 		</section>
 
@@ -561,7 +551,7 @@ date: 2017-02-08 11:57:36
 					<code>.execute()</code>. Return a promise with the parsed result as described in: <code><a href="https://carbonldp.github.io/carbonldp-js-sdk/#Carbon-SPARQL-SELECTResults-Class">Carbon.SPARQL.SELECTResults.Class</a></code>
 				</li>
 				<li>
-					<code>.executeRaw()</code>. Return a promise with the JSON results as described in the <a href="https://www.w3.org/TR/2013/REC-sparql11-results-json-20130321/#select-results-form">specification</a>: <code><a href="https://carbonldp.github.io/carbonldp-js-sdk/#Carbon-SPARQL-RawResults-Class">Carbon.SPARQL.RawResults.Class</a></code>
+					<code>.executeRaw()</code>. Return a promise with the JSON results as described in: <code><a href="https://carbonldp.github.io/carbonldp-js-sdk/#Carbon-SPARQL-RawResults-Class">Carbon.SPARQL.RawResults.Class</a></code>
 				</li>
 			</ul>
 
@@ -677,9 +667,9 @@ date: 2017-02-08 11:57:36
 			</tabs>
 
 			<p>
-				The result object contains a property <code>bindings</code>, which is an array containing the solutions of
-				the query. Every element in this array is an object that have the variable names retrieved as keys and its
-				bound value, so we construct our own specific objects from them.
+				The result object contains a <code>bindings</code> property with an array containing the solutions of
+				the query. Every element in this array is an object that has the variable names as keys and each variable's
+				bound value.
 			</p>
 
 		</section>
@@ -689,7 +679,7 @@ date: 2017-02-08 11:57:36
 	<section class="mainContent-subSection">
 		<h3>Query configuration</h3>
 		<p>
-			With the SPARQLER integration, every query have the following default information:
+			With the SPARQLER integration, every query has access to the following default information:
 		</p>
 		<ul>
 			<li><strong>Prefixes</strong>. Every prefix in the global schema</li>
@@ -769,15 +759,20 @@ date: 2017-02-08 11:57:36
 </section>
 
 <section class="mainContent-section">
+
 	<h2 class="hidden">SPARQL Services</h2>
 
 	<p>
-		If you already have your queries made or even want to use features not available in SPARQLER, the SDK offers
-		methods where you only need to provide the query string in order to execute it. The only feature not available
-		is the use of relative property names, given that the SPARQL specification do not have default vocabulary option.
-	</p>
+		As an alternative to the way of building queries with the SPARQL Query Builder (as we've shown so far), the SDK also
+		supports the use of standard SPARQL queries passed as strings. You might prefer this approach when if you are comfortable
+		writing standard SPARQL queries or in order to leverage features that are not yet available in the SPARQL Query Builder.</p>
+
+	<p>Standard SPARQL queries can be written and tested using the SPARQL Client in the Carbon LDP Workbench. They can then be copied
+		and pasted directly into JavaScript strings as-is. A notable difference is that relative property names cannot be used as they
+		can in the SPARQL Query Builder, so standard SPARQL queries might be more verbose with fully qualified URIs in some cases.</p>
+
 	<p>
-		This methods are also called from the <code>Documents</code> service.
+		The methods to execute a standard SPARQL query (given as a string), are also called from the <code>Documents</code> service.
 	</p>
 
 	<section class="mainContent-subSection">
@@ -787,7 +782,7 @@ date: 2017-02-08 11:57:36
 			<li><code><a href="https://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Documents-Class-executeRawSELECTQuery">executeRawSELECTQuery</a>( documentURI:string, selectQuery: string )</code></li>
 		</ul>
 		<p>
-			This methods are the equivalent to the <code>.execute()</code> and <code>.executeRaw()</code> in a SELECT
+			These methods are the equivalent to the <code>.execute()</code> and <code>.executeRaw()</code> in a SELECT
 			query with the Query Builder.
 		</p>
 
@@ -891,14 +886,17 @@ date: 2017-02-08 11:57:36
 
 	<section class="mainContent-subSection">
 		<h3>ASK Queries</h3>
+
+		A standard SPARQL ASK queriy can be given as string and executed with one of the following:
+
 		<ul>
 			<li><code><a href="https://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Documents-Class-executeASKQuery">executeASKQuery</a>( documentURI:string, askQuery: string )</code></li>
 			<li><code><a href="https://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Documents-Class-executeRawASKQuery">executeRawASKQuery</a>( documentURI:string, askQuery: string )</code></li>
 		</ul>
 
 		<p>
-			The fist option, as the SELECT does, offers you an easier response with only the resulted boolean of the query.
-			Instead, the second one will return the JSON object as described in the <a href="https://www.w3.org/TR/2013/REC-sparql11-results-json-20130321/#ask-result-form">specification</a>:
+			The fist option returns a simple response with only the resulting boolean of the ASK query (e.g. <code>true</code> or <code>false</code>).
+			The second one will return a JSON object as described in the <a href="https://www.w3.org/TR/2013/REC-sparql11-results-json-20130321/#ask-result-form">API Reference</a>:
 			<code><a href="https://carbonldp.github.io/carbonldp-js-sdk/#Carbon-SPARQL-RawResults-Class">Carbon.SPARQL.RawResults.Class</a></code>
 		</p>
 
@@ -970,8 +968,7 @@ date: 2017-02-08 11:57:36
 		</ul>
 
 		<p>
-			The SDK only supports making the CONSTRUCT query and give to you the raw string retrieved by the server. This string
-			is in a JSON-LD format, so you will have to process and parse it to your needs.
+			When using the CONSTRUCT query, the server will respond with a raw string in the JSON-LD format, so you will have to process and parse it to your needs.
 		</p>
 
 		<tabs>
@@ -1072,7 +1069,7 @@ date: 2017-02-08 11:57:36
 		</ul>
 
 		<p>
-			Same as the CONSTRUCT queries, the SDK only returns the RAW JSON-LDP string as the response of this services.
+			When using the DESCRIBE query, the server will respond with a raw string in the JSON-LD format, so you will have to process and parse it to your needs.
 		</p>
 
 		<tabs>
@@ -1134,8 +1131,7 @@ date: 2017-02-08 11:57:36
 		</ul>
 
 		<p>
-			An SPARQL UPDATE doesn't return any result data, thus it's not exactly a query
-			and that's the reason of only one method if this service in the SDK.
+			A SPARQL UPDATE doesn't return any results data, thus it's not exactly a query and there's only one method in the SDK for executing the UPDATE.
 		</p>
 
 		<tabs>
@@ -1214,7 +1210,55 @@ date: 2017-02-08 11:57:36
 		</tabs>
 	</section>
 
+	<section class="mainContent-section">
+		<h2>Conclusion</h2>
+
+		<p>In this guide, we've demonstrated two alternative ways to query with SPARQL using the SDK:</p>
+
+		<ul>
+			<li>Using the <strong>SPARQL Query Builder</strong> (a.k.a. SPARQLER) - a fluent chain of methods assembled in a dot-notation to build up a query.</li>
+			<li>Using <strong>SPARQL Services</strong> - methods that accept a standard SPARQL query string passed in a parameter to the method.</li>
+		</ul>
+
+		<p>We also provided an overview, with code examples, for the different query forms <code>SELECT</code>, <code>ASK</code>, <code>CONSTRUCT</code>, <code>DESCRIBE</code>, and <code>UPDATE</code>.</p>
+
+	</section>
+
 </section>
+
+<div class="ui section divider"></div>
+
+
+
+<h3>Want to know more?</h3>
+
+<p>Now that you understand how to query with SPARQL using the SDK, you may want to learn more about the SPARQL language. We recommend the following references:</p>
+
+<div class="ui list">
+	<div class="item">
+		<img class="ui avatar image" src="/assets/images/ld_icons_rdf_83x83.png" alt="RDF Icon"/>
+		<div class="content">
+			<a class="header" href="https://www.w3.org/TR/sparql11-overview/"><strong>SPARQL 1.1 Overview</strong></a>
+			<div class="description">Introduction from the W3C.</div>
+		</div>
+	</div>
+	<div class="item">
+		<img class="ui avatar image" src="/assets/images/ld_icons_rdf_83x83.png" alt="RDF Icon"/>
+		<div class="content">
+			<a class="header" href="https://www.w3.org/TR/sparql11-query/"><strong>SPARQL 1.1 Query Language</strong></a>
+			<div class="description">Specification from the W3C.</div>
+		</div>
+	</div>
+	<div class="item">
+		<img class="ui avatar image" src="/assets/images/ld_icons_rdf_83x83.png" alt="RDF Icon"/>
+		<div class="content">
+			<a class="header" href="https://www.amazon.com/Learning-SPARQL-Querying-Updating-1-1/dp/1449371434"><strong>Learning SPARQL</strong></a>
+			<div class="description">Book about <em>Querying and Updating with SPARQL 1.1</em>, by Bob DuCharme, O'REILLY<sup>&reg;</sup>.</div>
+		</div>
+	</div>
+</div>
+
+<div class="ui section divider"></div>
 
 <div class="documentation-steps ui fluid steps">
 	<a class="step" href="../files">
