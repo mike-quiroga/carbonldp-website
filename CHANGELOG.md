@@ -1,3 +1,7 @@
+# 1.2.0 (2017/05/02)
+
+- Added SPARQLer documentation
+
 # 1.1.1 (2017/04/23)
 
 - Fixed #115
