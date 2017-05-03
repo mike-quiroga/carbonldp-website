@@ -350,13 +350,13 @@ date: 2017-02-08 11:56:44
 <section class="mainContent-section">
 	<h2>Authenticating</h2>
 	<p>
-		After creating the platform context you need to tell the platform who you are by authenticating
-		yourself (if you haven't created an account yet, follow the steps in the section <em>create an agent</em> of the  <a href="/documentation/quick-start-guide">quick start guide
+		After creating the platform instance you need to tell it who you are by authenticating
+		yourself (if you haven't created an account yet, follow the steps in the section <em>create a user</em> of the  <a href="/documentation/quick-start-guide">quick start guide
 		</a> ).
 	</p>
 	<p>
 		All authentication/authorization related actions are done through the <code>auth</code> service
-		every context has. This service provides an <code>authenticate</code> method where you can pass
+		every instance has. This service provides an <code>authenticate</code> method where you can pass
 		your credentials:
 	</p>
 	<tabs>
@@ -369,7 +369,7 @@ date: 2017-02-08 11:56:44
 
 				let carbon:Carbon;
 
-				// ... platform context creation
+				// ... platform instance creation
 
 				carbon.auth.authenticate( "your@email.com", "YouRP455word" ).then(
 					( token:Token.Class ) => &#123;
@@ -401,7 +401,7 @@ date: 2017-02-08 11:56:44
 			<pre><code class="javascript">
 				var carbon;
 
-				// ... platform context creation
+				// ... platform instance creation
 
 				carbon.auth.authenticate( "your@email.com", "YouRP455word" ).then(
 					function( token ) &#123;
@@ -412,116 +412,18 @@ date: 2017-02-08 11:56:44
 
 		</tab>
 	</tabs>
-	<p>
-		It's important to notice that you are authenticated in that specific context (and its child contexts).
-		You could create additional platform contexts (or other type of contexts) and authenticate on them with
-		other credentials.
-	</p>
-</section>
-<section class="mainContent-section">
-	<h2>Retrieving an app context</h2>
-	<p>
-		Carbon stores your data in "applications" which are separate containers of information.
-		Data can be linked between applications, but its management is treated separately.
-	</p>
-	<div class="ui icon yellow message">
-		<i class="warning sign icon"></i>
-
-		<div class="content">
-			<p>
-				Before continuing, you need to create your first application, if you haven't done it, follow the steps in the section <em>create an application</em> of the
-				<a href="/documentation/quick-start-guide" fragment="create-a-new-application" href="#create-a-new-application">quick start guide</a> (remember to note your
-				application slug, because we'll use it later).
-			</p>
-		</div>
-	</div>
-	<p>
-		To access your application data, you need an <span class="highlight">application</span>
-		<a href="../contexts">context</a> that references it, on which you will be working on.
-		To retrieve it, you can use the <code>apps</code> service of the platform context:
-	</p>
-	<tabs>
-		<tab title="TypeScript">
-
-			<pre><code class="typescript">
-				// ... additional imports
-				import Carbon from "carbonldp/Carbon"
-				import * as App from "carbonldp/App";
-
-				let carbon:Carbon;
-
-				// ... platform context creation and authentication
-
-				let myAppContext:App.Context;
-
-				carbon.apps.getContext( "your-app-slug-here/" ).then(
-					( appContext:App.Context ) => &#123;
-				        myAppContext = appContext; // retrieving your app context
-					&#125;
-				).catch( console.error );
-			</code></pre>
-
-		</tab>
-		<tab title="JavaScript ES2015">
-
-			<pre><code class="javascript">
-				// ... imports
-
-				let carbon;
-
-				// ... platform context creation and authentication
-
-				let myAppContext;
-
-				carbon.apps.getContext( "your-app-slug-here/" ).then(
-					( appContext ) => &#123;
-				        myAppContext = appContext; // retrieving your app context
-					&#125;
-				).catch( console.error );
-			</code></pre>
-
-		</tab>
-		<tab title="JavaScript ES2015">
-
-			<pre><code class="javascript">
-				var carbon;
-
-				// ... platform context creation and authentication
-
-				var myAppContext;
-
-				carbon.apps.getContext( "your-app-slug-here/" ).then(
-					function( appContext ) &#123;
-				        myAppContext = appContext; // retrieving your app context
-					&#125;
-				).catch( console.error );
-			</code></pre>
-
-		</tab>
-	</tabs>
-	<p>
-		The <code>apps.getContext()</code> method returns a promise that when resolved, will give you the
-		<a href="../contexts"><span class="highlight">app context</span>
-		</a> you need. Be sure to replace <code>your-app-slug-here/</code> with your app slug.
-	</p>
-	<p>
-		This context is a child of the platform context you created. Because of that, any setting
-		or authentication information you saved in your platform context, is accessible
-		(and will be used) by this application context (for more see the Inheritance section of
-		<a href="../contexts">Contexts</a>).
-	</p>
 </section>
 
 <section class="mainContent-section">
 	<h2>Creating a document</h2>
 	<p>
-		Now that you have your app context, you can start working with your app's data. Carbon stores data
+		Now that you have your instance, you can start working with your data. Carbon stores data
 		in documents, which are basically normal JavaScript objects identified by a URI (Unique Resource Identifier).
 		These documents are composed by properties, <span class="highlight">fragments</span> and <span class="highlight">named fragments</span>.
 		For more information see: <a href="../object-model">JavaScript SDK Object model</a>.
 	</p>
 	<p>
-		Any carbon <span class="highlight">context</span> has a <code>documents</code> service that
+		Any carbon <span class="highlight">instance</span> has a <code>documents</code> service that
 		helps you manage your documents. To create one you need to call the method <code>createChild</code> of this service:
 	</p>
 	<tabs>
@@ -529,13 +431,12 @@ date: 2017-02-08 11:56:44
 
 			<pre><code class="typescript">
 				// ... additional imports
-				import * as App from "carbonldp/App";
 				import * as Response from "carbonldp/HTTP/Response";
 				import * as PersistedDocument from "carbonldp/PersistedDocument";
 
-				let myAppContext:App.Context;
+				let carbon:Carbon;
 
-				// ... app context retrieval
+				// ... platform instance
 
 				// JavaScript object to be persisted as a Carbon document
 				let project:Project = &#123; // Project being a business specific interface defined somewhere
@@ -552,7 +453,7 @@ date: 2017-02-08 11:56:44
 					]
 				&#125;;
 
-				myAppContext.documents.createChild&lt;Project&gt;( "/", project ).then(
+				carbon.documents.createChild&lt;Project&gt;( "/", project ).then(
 					( [ persistedProject, response ]:[ Project & PersistedDocument.Class, Response.Class ] ) => &#123;
 						console.log( project === persistedProject ); // true
 						console.log( persistedProject.id ); // document's URI
@@ -566,9 +467,9 @@ date: 2017-02-08 11:56:44
 			<pre><code class="javascript">
 				// ... imports
 
-				let myAppContext;
+				let carbon;
 
-				// ... app context retrieval
+				// ... platform instance
 
 				// JavaScript object to be persisted as a Carbon document
 				let project = &#123;
@@ -585,7 +486,7 @@ date: 2017-02-08 11:56:44
 					]
 				&#125;;
 
-				myAppContext.documents.createChild( "/", project ).then(
+				carbon.documents.createChild( "/", project ).then(
 					( [ persistedProject, response ] ) => &#123;
 						console.log( project === persistedProject ); // true
 						console.log( project.id ); // document's URI
@@ -597,9 +498,9 @@ date: 2017-02-08 11:56:44
 		<tab title="JavaScript ES5">
 
 			<pre><code class="javascript">
-				var myAppContext;
+				var carbon;
 
-				// ... app context retrieval
+				// ... platform instance
 
 				// JavaScript object to be persisted as a Carbon document
 				var project = &#123;
@@ -616,7 +517,7 @@ date: 2017-02-08 11:56:44
 					]
 				&#125;;
 
-				myAppContext.documents.createChild( "/", project ).then(
+				carbon.documents.createChild( "/", project ).then(
 					function( result ) &#123;
 						var persistedProject = result[ 0 ];
 						var response = result[ 1 ];
@@ -651,7 +552,7 @@ date: 2017-02-08 11:56:44
 			<pre><code class="typescript">
 				// ...
 
-				myAppContext.documents.createChild&lt;Project&gt;( "/", project, "My sUp4 Project!" ).then(
+				carbon.documents.createChild&lt;Project&gt;( "/", project, "My sUp4 Project!" ).then(
 					( [ persistedProject, response ]:[ Project & PersistedDocument.Class, Response.Class ] ) => &#123;
 						console.log( persistedProject.id ); // .../my-supa-project/
 					&#125;
@@ -664,7 +565,7 @@ date: 2017-02-08 11:56:44
 			<pre><code class="javascript">
 				// ...
 
-				myAppContext.documents.createChild( "/", project, "My sUp4 Project!" ).then(
+				carbon.documents.createChild( "/", project, "My sUp4 Project!" ).then(
 					( [ persistedProject, response ] ) => &#123;
 						console.log( persistedProject.id ); // .../my-supa-project/
 					&#125;
@@ -677,7 +578,7 @@ date: 2017-02-08 11:56:44
 			<pre><code class="javascript">
 				// ...
 
-				myAppContext.documents.createChild( "/", project, "My sUp4 Project!" ).then(
+				carbon.documents.createChild( "/", project, "My sUp4 Project!" ).then(
 					function( result ) &#123;
 						var persistedProject = result[ 0 ];
 						var response = result[ 1 ];
@@ -693,20 +594,19 @@ date: 2017-02-08 11:56:44
 		Another thing to notice is that the method is called create<strong>Child</strong>. All documents stored in Carbon are children of
 		another document. In this case we are specifying our newly created document's parent through the first parameter <code>"/"</code>.
 		That string represents a relative URI, one that can be resolved against something else. In this case it is being resolved to the
-		base URI the context has. To see to what that would resolve you can use a <code>context</code> <code>resolve</code> method:
+		base URI our instance has. To see to what that would resolve you can use a <code>resolve</code> method:
 	</p>
 	<tabs>
 		<tab title="TypeScript">
 
 			<pre><code class="typescript">
-				// ... additional imports
-				import * as App from "carbonldp/App";
+				// ... imports
 
-				let myAppContext:App.Context;
+				let carbon:Carbon;
 
-				// ... app context retrieval
+				// ... platform instance
 
-				console.log( myAppContext.resolve( "" ) ); // https://.../your-app-slug/
+				console.log( carbon.resolve( "" ) ); // https://your-domain.com/
 			</code></pre>
 
 		</tab>
@@ -715,22 +615,22 @@ date: 2017-02-08 11:56:44
 			<pre><code class="javascript">
 				// ... imports
 
-				let myAppContext;
+				let carbon;
 
-				// ... app context retrieval
+				// ... platform instance
 
-				console.log( myAppContext.resolve( "" ) ); // https://.../your-app-slug/
+				console.log( carbon.resolve( "" ) ); // https://your-domain.com/
 			</code></pre>
 
 		</tab>
 		<tab title="JavaScript ES5">
 
 			<pre><code class="javascript">
-				var myAppContext;
+				var carbon;
 
-				// ... app context retrieval
+				// ... platform instance
 
-				console.log( myAppContext.resolve( "" ) ); // https://.../your-app-slug/
+				console.log( carbon.resolve( "" ) ); // https://your-domain.com/
 			</code></pre>
 
 		</tab>
