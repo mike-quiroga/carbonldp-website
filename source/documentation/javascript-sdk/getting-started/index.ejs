@@ -594,7 +594,7 @@ date: 2017-02-08 11:56:44
 		Another thing to notice is that the method is called create<strong>Child</strong>. All documents stored in Carbon are children of
 		another document. In this case we are specifying our newly created document's parent through the first parameter <code>"/"</code>.
 		That string represents a relative URI, one that can be resolved against something else. In this case it is being resolved to the
-		base URI our instance has. To see to what that would resolve you can use a <code>resolve</code> method:
+		base URI our instance has, which is our domain. To see to what that would resolve you can use a <code>resolve</code> method:
 	</p>
 	<tabs>
 		<tab title="TypeScript">
@@ -644,7 +644,7 @@ date: 2017-02-08 11:56:44
 		representation of it.
 	</p>
 	<p>
-		Like creating documents, retrieving them can be done using the <code>documents</code> service inside of any Carbon context.
+		Like creating documents, retrieving them can be done using the <code>documents</code> service inside of any Carbon instance.
 		To do so, you can use its <code>get</code> method:
 	</p>
 	<tabs>
@@ -652,18 +652,17 @@ date: 2017-02-08 11:56:44
 
 			<pre><code class="typescript">
 				// ... additional imports
-				import * as App from "carbonldp/App";
 				import * as Response from "carbonldp/HTTP/Response";
 				import * as PersistedDocument from "carbonldp/PersistedDocument";
 
-				let myAppContext:App.Context;
+				let carbon:Carbon;
 
-				// ... app context retrieval
+				// ... platform instance
 
 				// ID of the Carbon document you want to retrieve
 				let projectID:string = "https://example.com/your-document-id/";
 
-				myAppContext.documents.get&lt;Project&gt;( projectID ).then(
+				carbon.documents.get&lt;Project&gt;( projectID ).then(
 					( [ project, response ]:[ Project & PersistedDocument.Class, Response.Class ] ) => &#123;
 						console.log( project.name ); // "Project X"
 					&#125;
@@ -676,14 +675,14 @@ date: 2017-02-08 11:56:44
 			<pre><code class="javascript">
 				// ... imports
 
-				let myAppContext;
+				let carbon;
 
-				// ... app context retrieval
+				// ... platform instance
 
 				// ID of the Carbon document you want to retrieve
 				let projectID = "https://example.com/your-document-id/";
 
-				myAppContext.documents.get( projectID ).then(
+				carbon.documents.get( projectID ).then(
 					( [ project, response ] ) => &#123;
 						console.log( project.name ); // "Project X"
 					&#125;
@@ -694,14 +693,14 @@ date: 2017-02-08 11:56:44
 		<tab title="JavaScript ES5">
 
 			<pre><code class="javascript">
-				var myAppContext;
+				var carbon;
 
-				// ... app context retrieval
+				// ... platform instance
 
 				// ID of the Carbon document you want to retrieve
 				var projectID = "https://example.com/your-document-id/";
 
-				myAppContext.documents.get( projectID ).then(
+				carbon.documents.get( projectID ).then(
 					function( result ) &#123;
 						var project = result[ 0 ];
 						var response = result[ 1 ];
