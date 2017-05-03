@@ -943,17 +943,16 @@ date: 2017-02-08 11:56:44
 
 			<pre><code class="typescript">
 				// ... additional imports
-				import * as App from "carbonldp/App";
 				import * as Response from "carbonldp/HTTP/Response";
 
-				let myAppContext:App.Context;
+				let carbon:Carbon;
 
-				// ... app context retrieval
+				// ... platform instance
 
 				// ID of the Carbon document you want to delete
 				let projectID:string = "https://example.com/your-document-id/";
 
-				myAppContext.documents.delete( projectID ).then(
+				carbon.documents.delete( projectID ).then(
 					( response:Response.Class ) => &#123;
 						// continue doing stuff...
 					&#125;
@@ -966,14 +965,14 @@ date: 2017-02-08 11:56:44
 			<pre><code class="javascript">
 				// ... imports
 
-				let myAppContext;
+				let carbon;
 
-				// ... app context retrieval
+				// ... platform instance
 
 				// ID of the Carbon document you want to delete
 				let projectID = "https://example.com/your-document-id/";
 
-				myAppContext.documents.delete( projectID ).then(
+				carbon.documents.delete( projectID ).then(
 					( response ) => &#123;
 						// continue doing stuff...
 					&#125;
@@ -984,14 +983,14 @@ date: 2017-02-08 11:56:44
 		<tab title="JavaScript ES5">
 
 			<pre><code class="javascript">
-				var myAppContext;
+				var carbon;
 
-				// ... app context retrieval
+				// ... platform instance
 
 				// ID of the Carbon document you want to delete
 				var projectID = "https://example.com/your-document-id/";
 
-				myAppContext.documents.delete( projectID ).then(
+				carbon.documents.delete( projectID ).then(
 					function( response ) &#123;
 						// continue doing stuff...
 					&#125;
