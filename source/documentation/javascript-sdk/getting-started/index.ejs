@@ -9,7 +9,6 @@ date: 2017-02-08 11:56:44
 
 <div class="documentation-steps ui fluid steps">
 	<div class="active step">
-		<!--<i class="payment icon"></i>-->
 		<div class="content">
 			<div class="title">Getting started</div>
 		</div>
@@ -279,13 +278,13 @@ date: 2017-02-08 11:56:44
 </section>
 
 <section class="mainContent-section">
-	<h2>Creating a platform context</h2>
+	<h2>Creating a platform instance</h2>
 	<div class="ui icon yellow message">
 		<i class="warning sign icon"></i>
 		<div class="content">
 			<p>
-				Before you can save data in your platform, you need to create an account. If you haven't done it, follow the steps in section <em>create an agent</em> of the
-				<a href="/documentation/quick-start-guide" fragment="create-an-agent" href="#create-an-agent">quick start guide</a>.
+				Before you can save data in your platform, you need to create an account. If you haven't done it, follow the steps in section <em>create a user</em> of the
+				<a href="/documentation/quick-start-guide" fragment="create-a-user" href="#create-a-user">quick start guide</a>.
 			</p>
 		</div>
 	</div>
@@ -293,32 +292,30 @@ date: 2017-02-08 11:56:44
 		Let's start with some basic things you can do, like creating, saving and linking documents; among other things.
 	</p>
 	<p>
-		First of all, you need to create a <span class="highlight">Carbon platform context</span>. This
-		<span class="highlight">context</span> will provide a reference to the
-		<span class="highlight">Carbon platform instance</span> you are working with (for more
-		about Carbon contexts see: <a href="../contexts">Contexts</a>).
+		First of all, you need to create a <span class="highlight">Carbon platform instance</span>. This is the
+		<span class="highlight">instance</span> you will be working with.
 	</p>
 	<tabs>
 		<tab title="TypeScript" name="typescript">
 			<pre><code class="typescript">
 				import Carbon from "carbonldp/Carbon";
 
-				let carbon:Carbon = new Carbon(); // platform context
+				let carbon:Carbon = new Carbon(); // platform instance
 			</code></pre>
 		</tab>
 		<tab title="JavaScript ES2015" name="javascript-es2015">
 			<pre><code class="javascript">
-				let carbon = new Carbon(); // platform context
+				let carbon = new Carbon(); // platform instance
 			</code></pre>
 		</tab>
 		<tab title="JavaScript ES5" name="javascript-es5">
 			<pre><code class="javascript">
-				var carbon = new Carbon(); // platform context
+				var carbon = new Carbon(); // platform instance
 			</code></pre>
 		</tab>
 	</tabs>
 	<p>
-		By default, platform contexts point to the instance in <code>carbonldp.com</code>. If you need to change this,
+		By default, platform instances point to <code>carbonldp.com</code>. If you need to change this,
 		you can do it by changing the <code>domain</code> setting:
 	</p>
 	<tabs>
@@ -327,7 +324,7 @@ date: 2017-02-08 11:56:44
 			<pre><code class="typescript">
 				import Carbon from "carbonldp/Carbon";
 
-				let carbon:Carbon = new Carbon(); // platform context
+				let carbon:Carbon = new Carbon(); // platform instance
 				carbon.setSetting( "domain", "my-carbon-instance.com:8080" );
 			</code></pre>
 
@@ -335,7 +332,7 @@ date: 2017-02-08 11:56:44
 		<tab title="JavaScript ES2015">
 
 			<pre><code class="javascript">
-				let carbon = new Carbon(); // platform context
+				let carbon = new Carbon(); // platform instance
 				carbon.setSetting( "domain", "my-carbon-instance.com:8080" );
 			</code></pre>
 
@@ -343,7 +340,7 @@ date: 2017-02-08 11:56:44
 		<tab title="JavaScript ES5">
 
 			<pre><code class="javascript">
-				var carbon = new Carbon(); // platform context
+				var carbon = new Carbon(); // platform instance
 				carbon.setSetting( "domain", "my-carbon-instance.com:8080" );
 			</code></pre>
 
