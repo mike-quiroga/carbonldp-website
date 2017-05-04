@@ -92,21 +92,20 @@ date: 2017-02-08 12:08:58
 	<h2>What is an object schema?</h2>
 	<p>An object schema provides information about the properties the SDK can expect. On it, a web application can force the SDK to treat values as arrays, force arrays to be
 		ordered, tell the SDK to ignore values of unknown types, etc.</p>
-	<p>Object schemas are stored inside of a <a href="../contexts">context</a>. Each context has it's own object schema, and child contexts inherit
-		their object schema from their parent's.
+	<p>The object schema is stored inside of our platform instance, and it applies to all your stored documents.
 	</p>
-	<p>To provide new information to the object schema the <code>context.extendObjectSchema</code> method can be used:</p>
+	<p>To provide new information to the object schema the <code>carbon.extendObjectSchema</code> method can be used:</p>
 	
 	<pre><code class="javascript">
-		appContext.extendObjectSchema( &#123;
+		carbon.extendObjectSchema( &#123;
 			// New information
 		&#125; );
 	</code></pre>
 	
 	<p>The object passed to the <code>extendObjectSchema</code> method is a <code>@context</code> object defined in the <a
 			href="https://www.w3.org/TR/json-ld/#the-context" target="_blank" rel="noopener">JSON-LD specification</a>. If you aren't familiar with that specification, don't worry.
-		You don'tneed to understand the specification to be able to use object schemas, but again, the more information you posses, the better.</p>
-	<p>Properties inside of the object passed to <code>extendObjectSchema</code> will describe different aspects of the schema your application will use.</p>
+		You don't need to understand the specification to be able to use object schemas, but again, the more information you posses, the better.</p>
+	<p>Properties inside of the object passed to <code>extendObjectSchema</code> will describe different aspects of the schema your instance will use.</p>
 </section>
 <section class="mainContent-section">
 	<h2>Properties</h2>
