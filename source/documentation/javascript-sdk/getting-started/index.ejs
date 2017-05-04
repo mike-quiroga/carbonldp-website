@@ -1626,7 +1626,6 @@ date: 2017-02-08 11:56:44
 			<pre><code class="typescript">
 				import Carbon from &quot;carbonldp/Carbon&quot;;
 				import * as Token from &quot;carbonldp/Auth/Token&quot;;
-				import * as App from &quot;carbonldp/App&quot;;
 				import * as Response from &quot;carbonldp/HTTP/Response&quot;;
 				import * as PersistedAccessPoint from &quot;carbonldp/PersistedAccessPoint&quot;;
 				import * as PersistedDocument from &quot;carbonldp/PersistedDocument&quot;;
@@ -1657,21 +1656,13 @@ date: 2017-02-08 11:56:44
 				carbon.setSetting( &quot;domain&quot;, &quot;localhost:8083&quot; );
 				carbon.setSetting( &quot;http.ssl&quot;, false ); // Turning off HTTPS (only needed if your server isn't using it)
 
-				let appContext:App.Context;
 
 				carbon.auth.authenticate( &quot;your@email.com&quot;, &quot;YouRP455word&quot; ).then(
 					( token:Token.Class ) =&gt; &#123;
 						console.log( `Hello $&#123; carbon.auth.authenticatedAgent.name &#125;!` );
 
-						// Retrieving the application context
-						return carbon.apps.getContext( &quot;your-app-slug-here/&quot; );
-					&#125;
-				).then(
-					( _appContext:App.Context ) =&gt; &#123;
-						appContext = _appContext;
-
 						// Creating a document
-						return appContext.documents.createChild&lt;Project&gt;( &quot;/&quot;, project );
+						return carbon.documents.createChild&lt;Project&gt;( &quot;/&quot;, project );
 					&#125;
 				).then(
 					( [ _persistedProject, response ]:[ Project &amp; PersistedDocument.Class, Response.Class ] ) =&gt; &#123;
@@ -1682,7 +1673,7 @@ date: 2017-02-08 11:56:44
 						console.log( &quot;created&quot; in persistedProject ); // false - The project was persisted but it's latest state hasn't been retrieved from the server
 
 						// Read the just created document
-						return appContext.documents.get&lt;Project&gt;( persistedProject.id ); // Can also be `return persistedProject.refresh();`
+						return carbon.documents.get&lt;Project&gt;( persistedProject.id ); // Can also be `return persistedProject.refresh();`
 					&#125;
 				).then(
 					( [ persistedProject, response ]:[ Project &amp; PersistedDocument.Class, Response.Class ] ) =&gt; &#123;
@@ -1695,7 +1686,7 @@ date: 2017-02-08 11:56:44
 						&#125;;
 
 						// Save the latest state to the server
-						return persistedProject.save&lt;Project&gt;(); // Can also be `appContext.documents.save&lt;Project&gt;( persistedProject );`
+						return persistedProject.save&lt;Project&gt;(); // Can also be `carbon.documents.save&lt;Project&gt;( persistedProject );`
 					&#125;
 				).then(
 					( [ persistedProject, response ]:[ Project &amp; PersistedDocument.Class, Response.Class ] ) =&gt; &#123;
@@ -1711,7 +1702,7 @@ date: 2017-02-08 11:56:44
 						tasksAccessPoint = _tasksAccessPoint;
 
 						// Creating a task so we can add it to the project later on
-						return appContext.documents.createChild&lt;Task&gt;( &quot;/&quot;, &#123;
+						return carbon.documents.createChild&lt;Task&gt;( &quot;/&quot;, &#123;
 							name: &quot;Do something&quot;,
 							dueDate: new Date()
 						&#125; );
@@ -1721,7 +1712,7 @@ date: 2017-02-08 11:56:44
 						persistedTask1 = persistedTask;
 
 						// Creating another task so we can add it to the project later on
-						return appContext.documents.createChild&lt;Task&gt;( &quot;/&quot;, &#123;
+						return carbon.documents.createChild&lt;Task&gt;( &quot;/&quot;, &#123;
 							name: &quot;Do something else&quot;,
 							dueDate: new Date()
 						&#125; );
@@ -1780,21 +1771,12 @@ date: 2017-02-08 11:56:44
 				carbon.setSetting( &quot;domain&quot;, &quot;localhost:8083&quot; );
 				carbon.setSetting( &quot;http.ssl&quot;, false ); // Turning off HTTPS (only needed if your server isn't using it)
 
-				let appContext;
-
 				carbon.auth.authenticate( &quot;your@email.com&quot;, &quot;YouRP455word&quot; ).then(
 					( token ) =&gt; &#123;
 						console.log( `Hello $&#123; carbon.auth.authenticatedAgent.name &#125;!` );
 
-						// Retrieving the application context
-						return carbon.apps.getContext( &quot;your-app-slug-here/&quot; );
-					&#125;
-				).then(
-					( _appContext ) =&gt; &#123;
-						appContext = _appContext;
-
 						// Creating a document
-						return appContext.documents.createChild( &quot;/&quot;, project );
+						return carbon.documents.createChild( &quot;/&quot;, project );
 					&#125;
 				).then(
 					( [ _persistedProject, response ] ) =&gt; &#123;
@@ -1805,7 +1787,7 @@ date: 2017-02-08 11:56:44
 						console.log( &quot;created&quot; in persistedProject ); // false - The project was persisted but it's latest state hasn't been retrieved from the server
 
 						// Read the just created document
-						return appContext.documents.get( persistedProject.id ); // Can also be `return persistedProject.refresh();`
+						return carbon.documents.get( persistedProject.id ); // Can also be `return persistedProject.refresh();`
 					&#125;
 				).then(
 					( [ persistedProject, response ] ) =&gt; &#123;
@@ -1818,7 +1800,7 @@ date: 2017-02-08 11:56:44
 						&#125;;
 
 						// Save the latest state to the server
-						return persistedProject.save(); // Can also be `appContext.documents.save&lt;Project&gt;( persistedProject );`
+						return persistedProject.save(); // Can also be `carbon.documents.save&lt;Project&gt;( persistedProject );`
 					&#125;
 				).then(
 					( [ persistedProject, response ] ) =&gt; &#123;
@@ -1834,7 +1816,7 @@ date: 2017-02-08 11:56:44
 						tasksAccessPoint = _tasksAccessPoint;
 
 						// Creating a task so we can add it to the project later on
-						return appContext.documents.createChild( &quot;/&quot;, &#123;
+						return carbon.documents.createChild( &quot;/&quot;, &#123;
 							name: &quot;Do something&quot;,
 							dueDate: new Date()
 						&#125; );
@@ -1844,7 +1826,7 @@ date: 2017-02-08 11:56:44
 						persistedTask1 = persistedTask;
 
 						// Creating another task so we can add it to the project later on
-						return appContext.documents.createChild( &quot;/&quot;, &#123;
+						return carbon.documents.createChild( &quot;/&quot;, &#123;
 							name: &quot;Do something else&quot;,
 							dueDate: new Date()
 						&#125; );
@@ -1901,21 +1883,12 @@ date: 2017-02-08 11:56:44
 				carbon.setSetting( &quot;domain&quot;, &quot;localhost:8083&quot; );
 				carbon.setSetting( &quot;http.ssl&quot;, false ); // Turning off HTTPS (only needed if your server isn't using it)
 
-				var appContext;
-
 				carbon.auth.authenticate( &quot;your@email.com&quot;, &quot;YouRP455word&quot; ).then(
 					function ( token ) &#123;
 						console.log( `Hello $&#123; carbon.auth.authenticatedAgent.name &#125;!` );
 
-						// Retrieving the application context
-						return carbon.apps.getContext( &quot;your-app-slug-here/&quot; );
-					&#125;
-				).then(
-					function ( _appContext ) &#123;
-						appContext = _appContext;
-
 						// Creating a document
-						return appContext.documents.createChild( &quot;/&quot;, project );
+						return carbon.documents.createChild( &quot;/&quot;, project );
 					&#125;
 				).then(
 					function ( results ) &#123;
@@ -1927,7 +1900,7 @@ date: 2017-02-08 11:56:44
 						console.log( &quot;created&quot; in persistedProject ); // false - The project was persisted but it's latest state hasn't been retrieved from the server
 
 						// Read the just created document
-						return appContext.documents.get( persistedProject.id ); // Can also be `return persistedProject.refresh();`
+						return carbon.documents.get( persistedProject.id ); // Can also be `return persistedProject.refresh();`
 					&#125;
 				).then(
 					function ( results ) &#123;
@@ -1943,7 +1916,7 @@ date: 2017-02-08 11:56:44
 						&#125;;
 
 						// Save the latest state to the server
-						return persistedProject.save(); // Can also be `appContext.documents.save&lt;Project&gt;( persistedProject );`
+						return persistedProject.save(); // Can also be `carbon.documents.save&lt;Project&gt;( persistedProject );`
 					&#125;
 				).then(
 					function ( results ) &#123;
@@ -1963,7 +1936,7 @@ date: 2017-02-08 11:56:44
 						var response = results[ 1 ];
 
 						// Creating a task so we can add it to the project later on
-						return appContext.documents.createChild( &quot;/&quot;, &#123;
+						return carbon.documents.createChild( &quot;/&quot;, &#123;
 							name: &quot;Do something&quot;,
 							dueDate: new Date()
 						&#125; );
@@ -1974,7 +1947,7 @@ date: 2017-02-08 11:56:44
 						var response = results[ 1 ];
 
 						// Creating another task so we can add it to the project later on
-						return appContext.documents.createChild( &quot;/&quot;, &#123;
+						return carbon.documents.createChild( &quot;/&quot;, &#123;
 							name: &quot;Do something else&quot;,
 							dueDate: new Date()
 						&#125; );
