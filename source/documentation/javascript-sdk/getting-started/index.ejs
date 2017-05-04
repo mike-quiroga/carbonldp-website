@@ -1138,19 +1138,18 @@ date: 2017-02-08 11:56:44
 
 				<pre><code class="typescript">
 					// ... additional imports
-					import * as App from "carbonldp/App";
 
-					let myAppContext:App.Context;
+					let carbon:Carbon;
 
-					// ... app context retrieval
+					// ... platform instance
 
-					myAppContext.documents.listChildren&lt;Project&gt;( "projects/" ).then(
+					carbon.documents.listChildren&lt;Project&gt;( "projects/" ).then(
 						( [ unresolvedProjects, response ] : [ ( Project & PersistedDocument.Class )[], HTTP.Response.Class]) => &#123;
 					        console.log( unresolvedProjects ); // array of unresolved pointers
 						&#125;
 					);
 
-					myAppContext.documents.getChildren&lt;Project&gt;( "projects/" ).then(
+					carbon.documents.getChildren&lt;Project&gt;( "projects/" ).then(
 						( [ resolvedProjects, response ] : [ ( Project & PersistedDocument.Class )[], HTTP.Response.Class] ) => &#123;
 					        console.log( resolvedProjects ); // array of resolved pointers
 						&#125;
@@ -1163,17 +1162,17 @@ date: 2017-02-08 11:56:44
 				<pre><code class="javascript">
 					// ... imports
 
-					let myAppContext;
+					let carbon
 
-					// ... app context retrieval
+					// ... platform instance
 
-					myAppContext.documents.listChildren( "projects/" ).then(
+					carbon.documents.listChildren( "projects/" ).then(
 						( [ unresolvedProjects, response ] ) => &#123;
 					        console.log( projectPointers ); // array of unresolved pointers
 						&#125;
 					);
 
-					myAppContext.documents.getChildren( "projects/" ).then(
+					carbon.documents.getChildren( "projects/" ).then(
 						( [ resolvedProjects, response ] ) => &#123;
 					        console.log( projects ); // array of resolved pointers
 						&#125;
@@ -1184,11 +1183,11 @@ date: 2017-02-08 11:56:44
 			<tab title="JavaScript ES5">
 
 				<pre><code class="javascript">
-					var myAppContext;
+					var carbon;
 
-					// ... app context retrieval
+					// ... platform instance
 
-					myAppContext.documents.listChildren( "projects/" ).then(
+					carbon.documents.listChildren( "projects/" ).then(
 						function( [ unresolvedProjects, response ] ) &#123;
 							var unresolvedProjects = result[ 0 ];
 							var response = result[ 1 ];
@@ -1197,7 +1196,7 @@ date: 2017-02-08 11:56:44
 						&#125;
 					);
 
-					myAppContext.documents.getChildren( "projects/" ).then(
+					carbon.documents.getChildren( "projects/" ).then(
 						function( [ resolvedProjects, response ] ) &#123;
 							var resolvedProjects = result[ 0 ];
 							var response = result[ 1 ];
@@ -1283,13 +1282,12 @@ date: 2017-02-08 11:56:44
 
 				<pre><code class="typescript">
 					// ... additional imports
-					import * as App from "carbonldp/App";
 					import * as PersistedDocument from "carbonldp/PersistedDocument";
 					import * as Response from "carbonldp/HTTP/Response";
 
-					let myAppContext:App.Context;
+					let carbon:Carbon;
 
-					// ... app context retrieval
+					// ... platform instance
 
 					let project:Project = &#123;
 						name: "Important project",
@@ -1343,9 +1341,9 @@ date: 2017-02-08 11:56:44
 				<pre><code class="javascript">
 					// ... imports
 
-					let myAppContext;
+					let carbon;
 
-					// ... app context retrieval
+					// ... platform instance
 
 					let project = &#123;
 						name: "Important project",
@@ -1397,9 +1395,9 @@ date: 2017-02-08 11:56:44
 			<tab title="JavaScript ES5">
 
 				<pre><code class="javascript">
-					var myAppContext;
+					var carbon;
 
-					// ... app context retrieval
+					// ... platform instance
 
 					var project = &#123;
 						name: "Important project",
