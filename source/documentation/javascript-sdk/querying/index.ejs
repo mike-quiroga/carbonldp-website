@@ -127,12 +127,15 @@ date: 2017-02-08 11:57:36
 	<tabs>
 		<tab title="TypeScript">
 			<pre><code class="typescript">
-				import * as App from "carbonldp/App";
 				import * as PersistedDocument from "carbonldp/PersistedDocument";
 
-				let appContext:App.Context;
-				// ... get context
-				appContext.documents.sparql( "resource-end-point/" )
+				let carbon:Carbon;
+
+				// ... initialize your Carbon object
+
+				// ... authenticate if needed
+
+				carbon.documents.sparql( "resource-end-point/" )
 					// ... query construction
 					;
 
@@ -146,9 +149,13 @@ date: 2017-02-08 11:57:36
 		</tab>
 		<tab title="JavaScript ES2015">
 			<pre><code class="javascript">
-				let appContext;
-				// ... get context
-				appContext.documents.sparql( "resource-end-point/" )
+				let carbon;
+
+				// ... initialize your Carbon object
+
+				// ... authenticate if needed
+
+				carbon.documents.sparql( "resource-end-point/" )
 					// ... query construction
 					;
 
@@ -162,9 +169,13 @@ date: 2017-02-08 11:57:36
 		</tab>
 		<tab title="JavaScript ES5">
 			<pre><code class="javascript">
-				var appContext;
-				// ... get context
-				appContext.documents.sparql( "resource-end-point/" )
+				var carbon;
+
+				// ... initialize your Carbon object
+
+				// ... authenticate if needed
+
+				carbon.documents.sparql( "resource-end-point/" )
 					// ... query construction
 					;
 
@@ -241,7 +252,7 @@ date: 2017-02-08 11:57:36
 				// Representation of the stored object
 				{
 					// Document URI
-					"@id": "http://localhost:8083/apps/my-app/projects/project-01/",
+					"@id": "http://localhost:8083/projects/project-01/",
 
 					// Properties
 				    "name": "Project X",
@@ -257,13 +268,15 @@ date: 2017-02-08 11:57:36
 			<tabs>
 				<tab title="TypeScript">
 					<pre><code class="typescript">
-						import * as App from "carbonldp/App";
 						import { PatternBuilder } from "sparqler/PatternBuilder";
 
-						let appContext:App.Context;
-						// ... get context
+						let carbon:Carbon;
 
-						appContext.documents.sparql( "projects/project-01/" )
+						// ... initialize your Carbon object
+
+						// ... authenticate if needed
+
+						carbon.documents.sparql( "projects/project-01/" )
 							.select( "projectName", "projectStart" )
 							.where( ( _:PatternBuilder ) => {
 								return _.resource( "projects/project-01/" )
@@ -275,10 +288,13 @@ date: 2017-02-08 11:57:36
 				</tab>
 				<tab title="JavaScript ES2015">
 					<pre><code class="javascript">
-						let appContext;
-						// ... get context
+						let carbon;
 
-						appContext.documents.sparql( "projects/project-01/" )
+						// ... initialize your Carbon object
+
+						// ... authenticate if needed
+
+						carbon.documents.sparql( "projects/project-01/" )
 							.select( "projectName", "projectStart" )
 							.where( _ => {
 								return _.resource( "projects/project-01/" )
@@ -290,10 +306,13 @@ date: 2017-02-08 11:57:36
 				</tab>
 				<tab title="JavaScript ES5">
 					<pre><code class="javascript">
-						var appContext;
-						// ... get context
+						var carbon;
 
-						appContext.documents.sparql( "projects/project-01/" )
+						// ... initialize your Carbon object
+
+						// ... authenticate if needed
+
+						carbon.documents.sparql( "projects/project-01/" )
 							.select( "projectName", "projectStart" )
 							.where( function( _ ) {
 								return _.resource( "projects/project-01/" )
@@ -332,8 +351,7 @@ date: 2017-02-08 11:57:36
 			<p>
 				In the <code>.where()</code> method, we use the <code>PatternBuilder</code> to first indicate we are targeting a resource
 				with the URI: <code>projects/project-01/</code>, and as the URI is relative, it will be automatically resolved to
-				<code>http://localhost:8083/apps/my-app/projects/project-01/</code> (assuming the platform's host is <code>http://localhost:8083/</code>
-				and the app being used is <code>apps/my-app/</code>).
+				<code>http://localhost:8083/projects/project-01/</code> (assuming the platform's host is <code>http://localhost:8083/</code>).
 			</p>
 			<p>
 				From this resource we call the <code>has()</code> method, to indicate that the resource must have a property called <code>name</code>,
@@ -357,13 +375,15 @@ date: 2017-02-08 11:57:36
 			<tabs>
 				<tab title="TypeScript">
 			<pre><code class="typescript">
-				import * as App from "carbonldp/App";
 				import { PatternBuilder } from "sparqler/PatternBuilder";
 
-				let appContext:App.Context;
-				// ... get context
+				let carbon:Carbon;
 
-				appContext.documents.sparql( "projects/" )
+				// ... initialize your Carbon object
+
+				// ... authenticate if needed
+
+				carbon.documents.sparql( "projects/" )
 					.prefix( "ldp", "http://www.w3.org/ns/ldp#" )
 					.select( "projectName", "projectStart" )
 					.where( ( _:PatternBuilder ) => {
@@ -380,10 +400,13 @@ date: 2017-02-08 11:57:36
 				</tab>
 				<tab title="JavaScript ES2015">
 			<pre><code class="javascript">
-				let appContext;
-				// ... get context
+				let carbon;
 
-				appContext.documents.sparql( "projects/" )
+				// ... initialize your Carbon object
+
+				// ... authenticate if needed
+
+				carbon.documents.sparql( "projects/" )
 					.prefix( "ldp", "http://www.w3.org/ns/ldp#" )
 					.select( "projectName", "projectStart" )
 					.where( _ => {
@@ -400,10 +423,13 @@ date: 2017-02-08 11:57:36
 				</tab>
 				<tab title="JavaScript ES5">
 			<pre><code class="javascript">
-				var appContext;
-				// ... get context
+				var carbon;
 
-				appContext.documents.sparql( "projects/" )
+				// ... initialize your Carbon object
+
+				// ... authenticate if needed
+
+				carbon.documents.sparql( "projects/" )
 					.prefix( "ldp", "http://www.w3.org/ns/ldp#" )
 					.select( "projectName", "projectStart" )
 					.where( function( _ ) {
@@ -459,13 +485,15 @@ date: 2017-02-08 11:57:36
 			<tabs>
 				<tab title="TypeScript">
 			<pre><code class="typescript">
-				import * as App from "carbonldp/App";
 				import { PatternBuilder } from "sparqler/PatternBuilder";
 
-				let appContext:App.Context;
-				// ... get context
+				let carbon:Carbon;
 
-				appContext.documents.sparql( "projects/" )
+				// ... initialize your Carbon object
+
+				// ... authenticate if needed
+
+				carbon.documents.sparql( "projects/" )
 					.prefix( "ldp", "http://www.w3.org/ns/ldp#" )
 					.select( "projectName", "projectStart" )
 					.where( ( _:PatternBuilder ) => {
@@ -484,10 +512,13 @@ date: 2017-02-08 11:57:36
 				</tab>
 				<tab title="JavaScript ES2015">
 			<pre><code class="javascript">
-				let appContext;
-				// ... get context
+				let carbon:Carbon;
 
-				appContext.documents.sparql( "projects/" )
+				// ... initialize your Carbon object
+
+				// ... authenticate if needed
+
+				carbon.documents.sparql( "projects/" )
 					.prefix( "ldp", "http://www.w3.org/ns/ldp#" )
 					.select( "projectName", "projectStart" )
 					.where( _ => {
@@ -506,10 +537,13 @@ date: 2017-02-08 11:57:36
 				</tab>
 				<tab title="JavaScript ES5">
 			<pre><code class="javascript">
-				var appContext;
-				// ... get context
+				var carbon;
 
-				appContext.documents.sparql( "projects/" )
+				// ... initialize your Carbon object
+
+				// ... authenticate if needed
+
+				carbon.documents.sparql( "projects/" )
 					.prefix( "ldp", "http://www.w3.org/ns/ldp#" )
 					.select( "projectName", "projectStart" )
 					.where( function( _ ) {
@@ -563,15 +597,17 @@ date: 2017-02-08 11:57:36
 			<tabs>
 				<tab title="TypeScript">
 			<pre><code class="typescript">
-				import * as App from "carbonldp/App";
 				import * as SPARQL from "carbonldp/SPARQL";
 				import * as HTTP from "carbonldp/HTTP";
 				import { PatternBuilder } from "sparqler/PatternBuilder";
 
-				let appContext:App.Context;
-				// ... get context
+				let carbon:Carbon;
 
-				appContext.documents.sparql( "projects/" )
+				// ... initialize your Carbon object
+
+				// ... authenticate if needed
+
+				carbon.documents.sparql( "projects/" )
 					.prefix( "ldp", "http://www.w3.org/ns/ldp#" )
 					.select( "projectName", "projectStart" )
 					.where( ( _:PatternBuilder ) => {
@@ -600,10 +636,13 @@ date: 2017-02-08 11:57:36
 				</tab>
 				<tab title="JavaScript ES2015">
 			<pre><code class="javascript">
-				let appContext;
-				// ... get context
+				let carbon;
 
-				appContext.documents.sparql( "projects/" )
+				// ... initialize your Carbon object
+
+				// ... authenticate if needed
+
+				carbon.documents.sparql( "projects/" )
 					.prefix( "ldp", "http://www.w3.org/ns/ldp#" )
 					.select( "projectName", "projectStart" )
 					.where( _ => {
@@ -632,10 +671,13 @@ date: 2017-02-08 11:57:36
 				</tab>
 				<tab title="JavaScript ES5">
 			<pre><code class="javascript">
-				var appContext;
-				// ... get context
+				var carbon;
 
-				appContext.documents.sparql( "projects/" )
+				// ... initialize your Carbon object
+
+				// ... authenticate if needed
+
+				carbon.documents.sparql( "projects/" )
 					.prefix( "ldp", "http://www.w3.org/ns/ldp#" )
 					.select( "projectName", "projectStart" )
 					.where( function( _ ) {
@@ -683,8 +725,8 @@ date: 2017-02-08 11:57:36
 		</p>
 		<ul>
 			<li><strong>Prefixes</strong>. Every prefix in the global schema</li>
-			<li><strong>Vocabulary</strong>. The application vocabulary to resolve property names, as in the <a href="http://localhost:4000/documentation/javascript-sdk/object-schema/#vocabularies">Object Schema</a></li>
-			<li><strong>Base</strong>. The URI of the current context to resolve relative resources. In the case of an <code>App.Context</code> it is the app URI.</li>
+			<li><strong>Vocabulary</strong>. The platform instance vocabulary to resolve property names, as in the <a href="http://localhost:4000/documentation/javascript-sdk/object-schema/#vocabularies">Object Schema</a></li>
+			<li><strong>Base</strong>. The URI where your platform instance lives, against which relative URIs will be resolved.</li>
 		</ul>
 
 		<p>
@@ -700,12 +742,13 @@ date: 2017-02-08 11:57:36
 		<tabs>
 			<tab title="TypeScript">
 			<pre><code class="typescript">
-				import * as App from "carbonldp/App";
+				let carbon:Carbon;
 
-				let appContext:App.Context;
-				// ... get context
+				// ... initialize your Carbon object
 
-				appContext.documents.sparql( "resource-end-point/" )
+				// ... authenticate if needed
+
+				carbon.documents.sparql( "resource-end-point/" )
 					// Sets a well defined vocabulary
 					.vocab( "https://schema.org/" )
 
@@ -720,10 +763,13 @@ date: 2017-02-08 11:57:36
 			</tab>
 			<tab title="JavaScript ES2015">
 			<pre><code class="javascript">
-				let appContext;
-				// ... get context
+				let carbon;
 
-				appContext.documents.sparql( "resource-end-point/" )
+				// ... initialize your Carbon object
+
+				// ... authenticate if needed
+
+				carbon.documents.sparql( "resource-end-point/" )
 					// Sets a well defined vocabulary
 					.vocab( "https://schema.org/" )
 
@@ -738,10 +784,13 @@ date: 2017-02-08 11:57:36
 			</tab>
 			<tab title="JavaScript ES5">
 			<pre><code class="javascript">
-				var appContext;
-				// ... get context
+				var carbon;
 
-				appContext.documents.sparql( "resource-end-point/" )
+				// ... initialize your Carbon object
+
+				// ... authenticate if needed
+
+				carbon.documents.sparql( "resource-end-point/" )
 					// Sets a well defined vocabulary
 					.vocab( "https://schema.org/" )
 
@@ -789,15 +838,17 @@ date: 2017-02-08 11:57:36
 		<tabs>
 			<tab title="TypeScript">
 			<pre><code class="typescript">
-				import * as App from "carbonldp/App";
 				import * as SPARQL from "carbonldp/SPARQL";
 				import * as HTTP from "carbonldp/HTTP";
 
-				let appContext:App.Context;
-				// ... get context
+				let carbon:Carbon;
 
-				appContext.documents.executeSELECTQuery( "projects/", `
-					BASE &lt;http://localhost:8083/apps/my-app/>
+				// ... initialize your Carbon object
+
+				// ... authenticate if needed
+
+				carbon.documents.executeSELECTQuery( "projects/", `
+					BASE &lt;http://localhost:8083/>
 					PREFIX ldp: &lt;http://www.w3.org/ns/ldp#>
 					SELECT ?projectName ?projectStart
 					WHERE {
@@ -822,11 +873,14 @@ date: 2017-02-08 11:57:36
 			</tab>
 			<tab title="JavaScript ES2015">
 			<pre><code class="javascript">
-				let appContext;
-				// ... get context
+				let carbon;
 
-				appContext.documents.executeSELECTQuery( "projects/", `
-					BASE &lt;http://localhost:8083/apps/my-app/>
+				// ... initialize your Carbon object
+
+				// ... authenticate if needed
+
+				carbon.documents.executeSELECTQuery( "projects/", `
+					BASE &lt;http://localhost:8083/>
 					PREFIX ldp: &lt;http://www.w3.org/ns/ldp#>
 					SELECT ?projectName ?projectStart
 					WHERE {
@@ -851,11 +905,14 @@ date: 2017-02-08 11:57:36
 			</tab>
 			<tab title="JavaScript ES5">
 			<pre><code class="javascript">
-				var appContext;
-				// ... get context
+				var carbon;
 
-				appContext.documents.executeSELECTQuery( "projects/", "" +
-					"BASE &lt;http://localhost:8083/apps/my-app/>" +
+				// ... initialize your Carbon object
+
+				// ... authenticate if needed
+
+				carbon.documents.executeSELECTQuery( "projects/", "" +
+					"BASE &lt;http://localhost:8083/>" +
 					"PREFIX ldp: &lt;http://www.w3.org/ns/ldp#>" +
 					"SELECT ?projectName ?projectStart" +
 					"WHERE {" +
@@ -903,14 +960,16 @@ date: 2017-02-08 11:57:36
 		<tabs>
 			<tab title="TypeScript">
 			<pre><code class="typescript">
-				import * as App from "carbonldp/App";
 				import * as HTTP from "carbonldp/HTTP";
 
-				let appContext:App.Context;
-				// ... get context
+				let carbon:Carbon;
 
-				appContext.documents.executeASKQuery( "projects/project-01/", `
-					BASE        &lt;http://localhost:8083/apps/my-app/>
+				// ... initialize your Carbon object
+
+				// ... authenticate if needed
+
+				carbon.documents.executeASKQuery( "projects/project-01/", `
+					BASE        &lt;http://localhost:8083/>
 					ASK {
 					    &lt;projects/project-01/> &lt;vocabulary/#name> "Project X" ;
 											   &lt;vocabulary/#startDate> "2017/02/19"
@@ -924,11 +983,14 @@ date: 2017-02-08 11:57:36
 			</tab>
 			<tab title="JavaScript ES2015">
 			<pre><code class="javascript">
-				let appContext;
-				// ... get context
+				let carbon;
 
-				appContext.documents.executeASKQuery( "projects/project-01/", `
-					BASE        &lt;http://localhost:8083/apps/my-app/>
+				// ... initialize your Carbon object
+
+				// ... authenticate if needed
+
+				carbon.documents.executeASKQuery( "projects/project-01/", `
+					BASE        &lt;http://localhost:8083/>
 					ASK {
 					    &lt;projects/project-01/> &lt;vocabulary/#name> "Project X" ;
 											   &lt;vocabulary/#startDate> "2017/02/19"
@@ -942,11 +1004,14 @@ date: 2017-02-08 11:57:36
 			</tab>
 			<tab title="JavaScript ES5">
 			<pre><code class="javascript">
-				var appContext;
-				// ... get context
+				var carbon;
 
-				appContext.documents.executeASKQuery( "projects/project-01/", "" +
-					"BASE        &lt;http://localhost:8083/apps/my-app/>" +
+				// ... initialize your Carbon object
+
+				// ... authenticate if needed
+
+				carbon.documents.executeASKQuery( "projects/project-01/", "" +
+					"BASE        &lt;http://localhost:8083/>" +
 					"ASK {" +
 					"    &lt;projects/project-01/> &lt;vocabulary/#name> \"Project X\" ;" +
 					"                           &lt;vocabulary/#startDate> \"2017/02/19\"" +
@@ -974,14 +1039,16 @@ date: 2017-02-08 11:57:36
 		<tabs>
 			<tab title="TypeScript">
 			<pre><code class="typescript">
-				import * as App from "carbonldp/App";
 				import * as HTTP from "carbonldp/HTTP";
 
-				let appContext:App.Context;
-				// ... get context
+				let carbon:Carbon;
 
-				appContext.documents.executeRawCONSTRUCTQuery( "projects/project-01/", `
-					BASE        &lt;http://localhost:8083/apps/my-app/>
+				// ... initialize your Carbon object
+
+				// ... authenticate if needed
+
+				carbon.documents.executeRawCONSTRUCTQuery( "projects/project-01/", `
+					BASE        &lt;http://localhost:8083/>
 					PREFIX schema:  &lt;https://schema.org/>
 					CONSTRUCT   {
 						&lt;projects/project-01/> schema:name ?projectName ;
@@ -1000,11 +1067,14 @@ date: 2017-02-08 11:57:36
 			</tab>
 			<tab title="JavaScript ES2015">
 			<pre><code class="javascript">
-				let appContext;
-				// ... get context
+				let carbon;
 
-				appContext.documents.executeRawCONSTRUCTQuery( "projects/project-01/", `
-					BASE        &lt;http://localhost:8083/apps/my-app/>
+				// ... initialize your Carbon object
+
+				// ... authenticate if needed
+
+				carbon.documents.executeRawCONSTRUCTQuery( "projects/project-01/", `
+					BASE        &lt;http://localhost:8083/>
 					PREFIX schema:  &lt;https://schema.org/>
 					CONSTRUCT   {
 						&lt;projects/project-01/> schema:name ?projectName ;
@@ -1023,11 +1093,14 @@ date: 2017-02-08 11:57:36
 			</tab>
 			<tab title="JavaScript ES5">
 			<pre><code class="javascript">
-				var appContext;
-				// ... get context
+				var carbon;
 
-				appContext.documents.executeRawCONSTRUCTQuery( "projects/project-01/", "" +
-					"BASE        &lt;http://localhost:8083/apps/my-app/>" +
+				// ... initialize your Carbon object
+
+				// ... authenticate if needed
+
+				carbon.documents.executeRawCONSTRUCTQuery( "projects/project-01/", "" +
+					"BASE        &lt;http://localhost:8083/>" +
 					"PREFIX schema:  &lt;https://schema.org/>" +
 					"CONSTRUCT   {" +
 					"	&lt;projects/project-01/> schema:name ?projectName ;" +
@@ -1053,7 +1126,7 @@ date: 2017-02-08 11:57:36
 		<pre><code class="javascript">
 			// Representation of the string returned
 			{
-				"id": "http://localhost:8083/apps/my-app/projects/project-01/",
+				"id": "http://localhost:8083/projects/project-01/",
 
 				// Properties
 				"https://schema.org/name": "Project X",
@@ -1075,14 +1148,16 @@ date: 2017-02-08 11:57:36
 		<tabs>
 			<tab title="TypeScript">
 			<pre><code class="typescript">
-				import * as App from "carbonldp/App";
 				import * as HTTP from "carbonldp/HTTP";
 
-				let appContext:App.Context;
-				// ... get context
+				let carbon:Carbon;
 
-				appContext.documents.executeRawDESCRIBEQuery( "projects/project-01/", `
-					BASE     &lt;http://localhost:8083/apps/my-app/>
+				// ... initialize your Carbon object
+
+				// ... authenticate if needed
+
+				carbon.documents.executeRawDESCRIBEQuery( "projects/project-01/", `
+					BASE     &lt;http://localhost:8083/>
 					DESCRIBE &lt;projects/project-01/>
 				` )
 					.then( ( [ result, response ]:[ string, HTTP.Response.Class ] ) => {
@@ -1093,11 +1168,14 @@ date: 2017-02-08 11:57:36
 			</tab>
 			<tab title="JavaScript ES2015">
 			<pre><code class="javascript">
-				let appContext;
-				// ... get context
+				let carbon;
 
-				appContext.documents.executeRawDESCRIBEQuery( "projects/project-01/", `
-					BASE     &lt;http://localhost:8083/apps/my-app/>
+				// ... initialize your Carbon object
+
+				// ... authenticate if needed
+
+				carbon.documents.executeRawDESCRIBEQuery( "projects/project-01/", `
+					BASE     &lt;http://localhost:8083/>
 					DESCRIBE &lt;projects/project-01/>
 				` )
 					.then( ( [ result, response ] ) => {
@@ -1108,11 +1186,14 @@ date: 2017-02-08 11:57:36
 			</tab>
 			<tab title="JavaScript ES5">
 			<pre><code class="javascript">
-				var appContext;
-				// ... get context
+				var carbon;
 
-				appContext.documents.executeRawDESCRIBEQuery( "projects/project-01/", "" +
-					"BASE     &lt;http://localhost:8083/apps/my-app/>" +
+				// ... initialize your Carbon object
+
+				// ... authenticate if needed
+
+				carbon.documents.executeRawDESCRIBEQuery( "projects/project-01/", "" +
+					"BASE     &lt;http://localhost:8083/>" +
 					"DESCRIBE &lt;projects/project-01/>"
 				)
 					.then( function( [ result, response ] ) {
@@ -1137,14 +1218,16 @@ date: 2017-02-08 11:57:36
 		<tabs>
 			<tab title="TypeScript">
 			<pre><code class="typescript">
-				import * as App from "carbonldp/App";
 				import * as HTTP from "carbonldp/HTTP";
 
-				let appContext:App.Context;
-				// ... get context
+				let carbon:Carbon;
 
-				appContext.documents.executeUPDATE( "projects/project-01/", `
-					BASE     &lt;http://localhost:8083/apps/my-app/>
+				// ... initialize your Carbon object
+
+				// ... authenticate if needed
+
+				carbon.documents.executeUPDATE( "projects/project-01/", `
+					BASE     &lt;http://localhost:8083/>
 					DELETE {
 						&lt;projects/project-01/> &lt;vocabulary/#name> "Project X"
 					}
@@ -1163,11 +1246,14 @@ date: 2017-02-08 11:57:36
 			</tab>
 			<tab title="JavaScript ES2015">
 			<pre><code class="javascript">
-				let appContext;
-				// ... get context
+				let carbon;
 
-				appContext.documents.executeUPDATE( "projects/project-01/", `
-					BASE     &lt;http://localhost:8083/apps/my-app/>
+				// ... initialize your Carbon object
+
+				// ... authenticate if needed
+
+				carbon.documents.executeUPDATE( "projects/project-01/", `
+					BASE     &lt;http://localhost:8083/>
 					DELETE {
 						&lt;projects/project-01/> &lt;vocabulary/#name> "Project X"
 					}
@@ -1186,11 +1272,14 @@ date: 2017-02-08 11:57:36
 			</tab>
 			<tab title="JavaScript ES5">
 			<pre><code class="javascript">
-				var appContext;
-				// ... get context
+				var carbon;
 
-				appContext.documents.executeUPDATE( "projects/project-01/", "" +
-					"BASE     &lt;http://localhost:8083/apps/my-app/>" +
+				// ... initialize your Carbon object
+
+				// ... authenticate if needed
+
+				carbon.documents.executeUPDATE( "projects/project-01/", "" +
+					"BASE     &lt;http://localhost:8083/>" +
 					"DELETE {" +
 					"	&lt;projects/project-01/> &lt;vocabulary/#name> \"Project X\"" +
 					"}" +
