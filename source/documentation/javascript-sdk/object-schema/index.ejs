@@ -34,7 +34,7 @@ date: 2017-02-08 12:08:58
 		<p>For convenience, the SDK does its best to try to guess your desired outcome when saving and retrieving documents. It tries to parse known data types into
 			native JavaScript types and vice-versa. But sometimes there is not enough data for the SDK to correctly guess the expected behavior. To make sure the SDK behaves as
 			expected, a web application can give more information about properties and objects to the SDK through an object schema.</p>
-		<p>Any carbon instance has an object schema that can be <em>extended</em> through the <code>extendObjectSchema</code> method.</p>
+		<p>Any <code>carbon</code> object has an object schema that can be <em>extended</em> through the <code>extendObjectSchema</code> method.</p>
 	</div>
 </div>
 <div class="ui mobile only grid">
@@ -92,7 +92,7 @@ date: 2017-02-08 12:08:58
 	<h2>What is an object schema?</h2>
 	<p>An object schema provides information about the properties the SDK can expect. On it, a web application can force the SDK to treat values as arrays, force arrays to be
 		ordered, tell the SDK to ignore values of unknown types, etc.</p>
-	<p>The object schema is stored inside of our platform instance, and it applies to all your stored documents.
+	<p>The object schema is stored inside of your <code>carbon</code> object, and it applies to all your stored documents.
 	</p>
 	<p>To provide new information to the object schema the <code>carbon.extendObjectSchema</code> method can be used:</p>
 	
@@ -112,7 +112,7 @@ date: 2017-02-08 12:08:58
 	<p>To provide information about the properties your application objects will have, a property with the same name needs to be defined on the object schema:</p>
 	
 		<pre><code class="javascript">
-			appContext.extendObjectSchema( &#123;
+			carbon.extendObjectSchema( &#123;
 				"labels": &#123;
 					// Metadata of the "labels" property
 				&#125;
@@ -154,7 +154,7 @@ date: 2017-02-08 12:08:58
 		<p>The object schema should be extended as follows:</p>
 		
 			<pre><code class="javascript">
-				appContext.extendObjectSchema( &#123;
+				carbon.extendObjectSchema( &#123;
 					"labels": &#123;
 						"@container": "@set"
 					&#125;,
@@ -171,7 +171,7 @@ date: 2017-02-08 12:08:58
 		<p>The SDK does a really good job on saving values with the right data type. Strings will be saved as strings, booleans will be saved as booleans, etc. But imagine
 			the following scenario:</p>
 		<ol>
-			<li>Application A and B are developed using the same Carbon application to store their data</li>
+			<li>Application A and B are developed using the same platform instance to store their data</li>
 			<li>Both applications are programmed to understand Project objects with a property "content" that holds a string</li>
 			<li>Later on complex "content" properties are added to application B. Now app B understands "content" properties that hold objects (with a type, and other
 				properties).
@@ -184,7 +184,7 @@ date: 2017-02-08 12:08:58
 		</p>
 		
 			<pre><code class="javascript">
-				appContext.extendObjectSchema( &#123;
+				carbon.extendObjectSchema( &#123;
 					"content": &#123;
 						"@type": "string"
 					&#125;
@@ -212,7 +212,7 @@ date: 2017-02-08 12:08:58
 		<h3>IDs (@id)</h3>
 		<p>So far we have solved all of the problems we stated at the start of this document. But there's another problem lurking around. Imagine the following scenario:</p>
 		<ul>
-			<li>Application <strong>A</strong> and application <strong>B</strong> want to share data by using the same Carbon app</li>
+			<li>Application <strong>A</strong> and application <strong>B</strong> want to share data by using the same platform instance</li>
 			<li>
 				<p>Application <strong>A</strong> handles objects like the following one:</p>
 				
@@ -248,7 +248,7 @@ date: 2017-02-08 12:08:58
 				<p>Application <strong>A</strong> extends its object schema like this:</p>
 				
 				<pre><code class="javascript">
-					appContext.extendObjectSchema( &#123;
+					carbon.extendObjectSchema( &#123;
 						"name": &#123;
 							"@id": "lastName",
 							"@type": "string"
@@ -261,7 +261,7 @@ date: 2017-02-08 12:08:58
 				<p>Application <strong>B</strong> extends its this way:</p>
 				
 				<pre><code class="javascript">
-					appContext.extendObjectSchema( &#123;
+					carbon.extendObjectSchema( &#123;
 						"lastName": &#123;
 							"@id": "lastName",
 							"@type": "string"
@@ -276,37 +276,33 @@ date: 2017-02-08 12:08:58
 	</section>
 	<section class="mainContent-subSection">
 		<h3>Vocabularies</h3>
-		<p>Storing properties with names like <code>name</code> or <code>title</code> is meant to cause collisions. A Carbon application could use "name" to define people's
+		<p>Storing properties with names like <code>name</code> or <code>title</code> is meant to cause collisions. An application could use "name" to define people's
 			first names while another one could use it to define their complete name. Or even worse, they could use it to define the name of a country.</p>
-		<p>That's why by default each time a new property is saved to a Carbon app it is saved as a uniform resource identifier (URI). For example, if your JavaScript
+		<p>That's why by default each time a new property is saved to your platform it is saved as a uniform resource identifier (URI). For example, if your JavaScript
 			application saves an object with a property <code>title</code>, the property will actually be saved as something like:</p>
-		<p><code>http://localhost:8083/apps/your-app-slug/vocabulary/#title</code></p>
+		<p><code>http://localhost:8083/vocabulary/#title</code></p>
 		<p>Let's decompose that URI:</p>
 		<ul>
-			<li><code>http://</code>: The protocol your Carbon platform is configured with</li>
-			<li><code>localhost</code>: The address of your Carbon platform</li>
-			<li><code>:8083</code>: The port the Carbon platform is listening on</li>
-			<li><code>apps/your-app-slug/</code>: Your Carbon app slug</li>
+			<li><code>http://</code>: The protocol your platform instance is configured with</li>
+			<li><code>localhost</code>: The address of your platform instance</li>
+			<li><code>:8083</code>: The port the platform instance is listening on</li>
 			<li><code>vocabulary/</code>: A document inside of your Carbon app</li>
 			<li><code>#title</code>: The slug of a fragment inside of the <code>vocabulary/</code> document</li>
 		</ul>
-		<p>This means that the property is saved using the id of a fragment, inside of a document called <code>vocabulary/</code> from your application.</p>
+		<p>This means that the property is saved using the id of a fragment, inside of a document called <code>vocabulary/</code> from your platform instance.</p>
 		<p>By doing this, you are able to go and save data about the property itself. You could for example go and add a description to the property by modifying the
 			<code>vocabulary/</code> document:</p>
 		<tabs>
 			<tab title="TypeScript">
 				
 				<pre><code class="typescript">
-					import * as App from "carbonldp/App";
 					import * as HTTP from "carbonldp/HTTP";
 					import * as PersistedDocument from "carbonldp/PersistedDocument";
 					import * as PersistedFragment from "carbonldp/PersistedFragment";
 
-					let appContext:App.Context;
+					// ... initialize your carbon object
 
-					// ... retrieve appContext
-
-					appContext.get( "vocabulary/" ).then(
+					carbon.get( "vocabulary/" ).then(
 						( [ vocabulary, response ]:[ PersistedDocument.Class, HTTP.Response.Class ] ) => &#123;
 							let title:PersistedFragment.Class = vocabulary.getFragment( "title" );
 
@@ -326,11 +322,10 @@ date: 2017-02-08 12:08:58
 			<tab title="JavaScript ES2015">
 				
 				<pre><code class="javascript">
-					let appContext;
 
-					// ... retrieve appContext
+					// ... initialize your carbon object
 
-					appContext.get( "vocabulary/" ).then(
+					carbon.get( "vocabulary/" ).then(
 						( [ vocabulary, response ] ) => &#123;
 							let title = vocabulary.getFragment( "title" );
 
@@ -350,11 +345,10 @@ date: 2017-02-08 12:08:58
 			<tab title="JavaScript ES5">
 				
 				<pre><code class="javascript">
-					var appContext;
 
-					// ... retrieve appContext
+					// ... initialize your carbon object
 
-					appContext.get( "vocabulary/" ).then(
+					carbon.get( "vocabulary/" ).then(
 						function( result ) &#123;
 							var vocabulary = result[ 0 ];
 							var title = vocabulary.getFragment( "title" );
@@ -383,14 +377,14 @@ date: 2017-02-08 12:08:58
 		
 		<pre><code class="javascript">
 			// In application B
-			appBContext.extendObjectSchema( &#123;
+			carbon.extendObjectSchema( &#123;
 				"title": &#123;
-					"@id": "http://localhost:8083/apps/application-a-slug/vocabulary/#title"
+					"@id": "http://{platform-A-host}/vocabulary/#title"
 				&#125;
 			&#125; );
 		</code></pre>
 		
-		<p><strong>Note</strong>: This is only needed if your applications are not sharing a Carbon application.</p>
+		<p><strong>Note</strong>: This is only needed if your applications are not sharing a platform instance.</p>
 		<p>Sharing vocabularies opens a lot of interesting possibilities. For example, you could create your own vocabulary that only contains terms about social connections.
 			Or one that is only about geo location terms. Later on you could make those vocabularies public so other people could use them and make their data compatible with
 			each other!</p>
