@@ -16,7 +16,6 @@ date: 2017-02-08 11:57:18
 		</div>
 	</a>
 	<div class="active step">
-		<!--<i class="payment icon"></i>-->
 		<div class="content">
 			<div class="title">Files</div>
 		</div>
@@ -52,7 +51,6 @@ date: 2017-02-08 11:57:18
 			<tab title="TypeScript">
 				
 				<pre><code class="typescript">
-					import * as App from "carbonldp/App";
 					import * as HTTP from "carbonldp/HTTP";
 					import * as PersistedDocument from "carbonldp/PersistedDocument";
 					import * as RDFRepresentation from "carbonldp/RDFRepresentation";
@@ -61,11 +59,11 @@ date: 2017-02-08 11:57:18
 
 					// ... get file
 
-					let appContext:App.Context;
+					let carbon:Carbon;
 
-					// ... get context
+					// ... initialize your Carbon object
 
-					appContext.documents.upload( "parent-document/", file, "Optional Slug" ).then(
+					carbon.documents.upload( "parent-document/", file, "Optional Slug" ).then(
 						( [ fileMetadata, response ]:[ PersistedDocument.Class, HTTP.Response.Class ] ) => &#123;
 							console.log( fileMetadata.isResolved() ); // false
 
@@ -88,11 +86,11 @@ date: 2017-02-08 11:57:18
 
 					// ... get file
 
-					let appContext;
+					let carbon;
 
-					// ... get context
+					// ... initialize your Carbon object
 
-					appContext.documents.upload( "parent-document/", file, "Optional Slug" ).then(
+					carbon.documents.upload( "parent-document/", file, "Optional Slug" ).then(
 						( [ fileMetadata, response ] ) => &#123;
 							console.log( fileMetadata.isResolved() ); // false
 
@@ -115,11 +113,11 @@ date: 2017-02-08 11:57:18
 
 					// ... get file
 
-					var appContext;
+					var carbon;
 
-					// ... get context
+					// ... initialize your Carbon object
 
-					appContext.documents.upload( "parent-document/", file, "Optional Slug" ).then(
+					carbon.documents.upload( "parent-document/", file, "Optional Slug" ).then(
 						function( result ) &#123;
 							var fileMetadata = result[ 0 ];
 							var response = result[ 1 ];
@@ -142,10 +140,10 @@ date: 2017-02-08 11:57:18
 				
 			</tab>
 		</tabs>
-		<p>The promise returned by the method will contain an array with the file's metadata as its first item (pretty much like the <code>createChild</code> method). Each time
+		<p>The promise returned by the method will contain an array with the file's metadata as its first item (pretty much like the <code>createChild</code> method). Every time
 			you upload a file a document gets created with the file's metadata. The object you'll receive will be an unresolved pointer to it, which you can resolve with the
 			<code>resolve</code> method.</p>
-		<p>This document acts like a normal document. It can have children, members and even be a parent of other files. You can also add new data to it like you'd to any
+		<p>This document acts like a normal document. It can have children, members and even be a parent of other files. You can also add new data to it like you'd do to any
 			other document.</p>
 	</section>
 	<section class="mainContent-subSection">
@@ -157,7 +155,6 @@ date: 2017-02-08 11:57:18
 			<tab title="TypeScript">
 				
 				<pre><code class="typescript">
-					import * as App from "carbonldp/App";
 					import * as HTTP from "carbonldp/HTTP";
 					import * as PersistedDocument from "carbonldp/PersistedDocument";
 					import * as RDFRepresentation from "carbonldp/RDFRepresentation";
@@ -166,9 +163,9 @@ date: 2017-02-08 11:57:18
 
 					// ... get file
 
-					let appContext:App.Context;
+					let carbon:Carbon;
 
-					// ... get context
+					// ... initialize your Carbon object
 
 					let xhr:XMLHttpRequest = new XMLHttpRequest();
 					xhr.upload.addEventListener( "progress", ( event:ProgressEvent ) => &#123;
@@ -179,7 +176,7 @@ date: 2017-02-08 11:57:18
 						console.log( decrementingPercentage );
 					&#125; );
 
-					appContext.upload( "parent-document/", file, "Optional Slug", &#123; request: xhr &#125; ).then(
+					carbon.upload( "parent-document/", file, "Optional Slug", &#123; request: xhr &#125; ).then(
 						( [ fileMetadata, response ]:[ PersistedDocument.Class, HTTP.Response.Class ] ) => &#123;
 							// ...
 						&#125;
@@ -194,9 +191,9 @@ date: 2017-02-08 11:57:18
 
 					// ... get file
 
-					let appContext;
+					let carbon;
 
-					// ... get context
+					// ... initialize your Carbon object
 
 					let xhr = new XMLHttpRequest();
 					xhr.upload.addEventListener( "progress", ( event ) => &#123;
@@ -207,7 +204,7 @@ date: 2017-02-08 11:57:18
 						console.log( decrementingPercentage );
 					&#125; );
 
-					appContext.upload( "parent-document/", file, "Optional Slug", &#123; request: xhr &#125; ).then(
+					carbon.upload( "parent-document/", file, "Optional Slug", &#123; request: xhr &#125; ).then(
 						( [ fileMetadata, response ] ) => &#123;
 							// ...
 						&#125;
@@ -222,9 +219,9 @@ date: 2017-02-08 11:57:18
 
 					// ... get file
 
-					var appContext;
+					var carbon;
 
-					// ... get context
+					// ... initialize your Carbon object
 
 					var xhr = new XMLHttpRequest();
 					xhr.upload.addEventListener( "progress", function( event ) &#123;
@@ -235,7 +232,7 @@ date: 2017-02-08 11:57:18
 						console.log( decrementingPercentage );
 					&#125; );
 
-					appContext.upload( "parent-document/", file, "Optional Slug", &#123; request: xhr &#125; ).then(
+					carbon.upload( "parent-document/", file, "Optional Slug", &#123; request: xhr &#125; ).then(
 						function( result ) &#123;
 							// ...
 						&#125;
@@ -256,18 +253,17 @@ date: 2017-02-08 11:57:18
 			<tab title="TypeScript">
 				
 				<pre><code class="typescript">
-					import * as App from "carbonldp/App";
 					import * as PersistedDocument from "carbonldp/PersistedDocument";
 
 					let fileMetadata:PersistedDocument.Class;
 
 					// ... get a pointer to the file's metadata
 
-					let appContext:App.Context;
+					let carbon:Carbon;
 
-					// ... get app context
+					// ... initialize your Carbon object
 
-					appContext.auth.getAuthenticatedURL( fileMetadata.id ).then(
+					carbon.auth.getAuthenticatedURL( fileMetadata.id ).then(
 						( authenticatedFileURL:string ) => &#123;
 							window.open( authenticatedFileURL, "_blank" ); // Open the URL in another window to start the download
 						&#125;
@@ -282,9 +278,9 @@ date: 2017-02-08 11:57:18
 
 					// ... get a pointer to the file's metadata
 
-					let appContext;
+					let carbon;
 
-					// ... get app context
+					// ... initialize your Carbon object
 
 					appContext.auth.getAuthenticatedURL( fileMetadata.id ).then(
 						( authenticatedFileURL ) => &#123;
@@ -301,11 +297,11 @@ date: 2017-02-08 11:57:18
 
 					// ... get a pointer to the file's metadata
 
-					var appContext;
+					var carbon;
 
-					// ... get app context
+					// ... initialize your Carbon object
 
-					appContext.auth.getAuthenticatedURL( fileMetadata.id ).then(
+					carbon.auth.getAuthenticatedURL( fileMetadata.id ).then(
 						function( authenticatedFileURL ) &#123;
 							window.open( authenticatedFileURL, "_blank" ); // Open the URL in another window to start the download
 						&#125;
