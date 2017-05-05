@@ -396,23 +396,23 @@ date: 2017-02-08 12:08:58
 </section>
 <section class="mainContent-section">
 	<h2>Prefixes</h2>
-	<p>If you start using other vocabularies (either from other Carbon apps, or from well established vocabularies), you might find it cumbersome to have to write complete URIs
+	<p>If you start using other vocabularies (either from other platform instances, or from well established vocabularies), you might find it cumbersome to have to write complete URIs
 		when extending object schemas.</p>
 	<p>Prefixes come to the rescue! A prefix is a short keyword that can be used as a base of a URI. For example, having the following URI:</p>
-	<p><code>http://localhost:8083/apps/application-a-slug/vocabulary/#title</code></p>
-	<p>You could define the prefix <code>appA</code> and make it equivalent to <code>http://localhost:8083/apps/application-a-slug/vocabulary/#</code>. That way each time you
-		wanted to use that vocabulary you would only need to write <code>appA:title</code>.</p>
+	<p><code>http://localhost:8083/vocabulary/#title</code></p>
+	<p>You could define the prefix <code>platformA</code> and make it equivalent to <code>http://localhost:8083/vocabulary/#</code>. That way each time you
+		want to use that vocabulary you would only need to write <code>platformA:title</code>.</p>
 	<p>Prefixes can be defined in the object schema by defining a property with a string value. The previous example could be defined like this:</p>
 	
 	<pre><code class="javascript">
-		appContext.extendObjectSchema( &#123;
-			"appA": "http://localhost:8083/apps/application-a-slug/vocabulary/#",
+		carbon.extendObjectSchema( &#123;
+			"platformA": "http://localhost:8083/vocabulary/#",
 			"title": &#123;
-				"@id": "appA:title",
+				"@id": "platformA:title",
 				"@type": "string"
 			&#125;,
 			"content": &#123;
-				"@id": "appA:content",
+				"@id": "platformA:content",
 				"@type": "string"
 			&#125;
 		&#125; );
