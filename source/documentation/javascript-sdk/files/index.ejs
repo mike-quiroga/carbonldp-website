@@ -63,6 +63,8 @@ date: 2017-02-08 11:57:18
 
 					// ... initialize your Carbon object
 
+					// ... authenticate if needed
+
 					carbon.documents.upload( "parent-document/", file, "Optional Slug" ).then(
 						( [ fileMetadata, response ]:[ PersistedDocument.Class, HTTP.Response.Class ] ) => &#123;
 							console.log( fileMetadata.isResolved() ); // false
@@ -90,6 +92,8 @@ date: 2017-02-08 11:57:18
 
 					// ... initialize your Carbon object
 
+					// ... authenticate if needed
+
 					carbon.documents.upload( "parent-document/", file, "Optional Slug" ).then(
 						( [ fileMetadata, response ] ) => &#123;
 							console.log( fileMetadata.isResolved() ); // false
@@ -116,6 +120,8 @@ date: 2017-02-08 11:57:18
 					var carbon;
 
 					// ... initialize your Carbon object
+
+					// ... authenticate if needed
 
 					carbon.documents.upload( "parent-document/", file, "Optional Slug" ).then(
 						function( result ) &#123;
@@ -167,6 +173,8 @@ date: 2017-02-08 11:57:18
 
 					// ... initialize your Carbon object
 
+					// ... authenticate if needed
+
 					let xhr:XMLHttpRequest = new XMLHttpRequest();
 					xhr.upload.addEventListener( "progress", ( event:ProgressEvent ) => &#123;
 						let incrementingPercentage:number = parseInt( event.loaded / event.total * 100 );
@@ -195,6 +203,8 @@ date: 2017-02-08 11:57:18
 
 					// ... initialize your Carbon object
 
+					// ... authenticate if needed
+
 					let xhr = new XMLHttpRequest();
 					xhr.upload.addEventListener( "progress", ( event ) => &#123;
 						let incrementingPercentage:number = parseInt( event.loaded / event.total * 100 );
@@ -222,6 +232,8 @@ date: 2017-02-08 11:57:18
 					var carbon;
 
 					// ... initialize your Carbon object
+
+					// ... authenticate if needed
 
 					var xhr = new XMLHttpRequest();
 					xhr.upload.addEventListener( "progress", function( event ) &#123;
@@ -263,6 +275,8 @@ date: 2017-02-08 11:57:18
 
 					// ... initialize your Carbon object
 
+					// ... authenticate if needed
+
 					carbon.auth.getAuthenticatedURL( fileMetadata.id ).then(
 						( authenticatedFileURL:string ) => &#123;
 							window.open( authenticatedFileURL, "_blank" ); // Open the URL in another window to start the download
@@ -282,6 +296,8 @@ date: 2017-02-08 11:57:18
 
 					// ... initialize your Carbon object
 
+					// ... authenticate if needed
+
 					appContext.auth.getAuthenticatedURL( fileMetadata.id ).then(
 						( authenticatedFileURL ) => &#123;
 							window.open( authenticatedFileURL, "_blank" ); // Open the URL in another window to start the download
@@ -300,6 +316,8 @@ date: 2017-02-08 11:57:18
 					var carbon;
 
 					// ... initialize your Carbon object
+
+					// ... authenticate if needed
 
 					carbon.auth.getAuthenticatedURL( fileMetadata.id ).then(
 						function( authenticatedFileURL ) &#123;
