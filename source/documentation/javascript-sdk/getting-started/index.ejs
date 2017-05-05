@@ -438,6 +438,8 @@ date: 2017-02-08 11:56:44
 
 				// ... initialize your Carbon object
 
+				// ... authenticate if needed
+
 				// JavaScript object to be persisted as a Carbon document
 				let project:Project = &#123; // Project being a business specific interface defined somewhere
 					name: "Project X",
@@ -471,6 +473,8 @@ date: 2017-02-08 11:56:44
 
 				// ... initialize your Carbon object
 
+				// ... authenticate if needed
+
 				// JavaScript object to be persisted as a Carbon document
 				let project = &#123;
 					name: "Project X",
@@ -501,6 +505,8 @@ date: 2017-02-08 11:56:44
 				var carbon;
 
 				// ... initialize your Carbon object
+
+				// ... authenticate if needed
 
 				// JavaScript object to be persisted as a Carbon document
 				var project = &#123;
@@ -659,6 +665,8 @@ date: 2017-02-08 11:56:44
 
 				// ... initialize your Carbon object
 
+				// ... authenticate if needed
+
 				// ID of the Carbon document you want to retrieve
 				let projectID:string = "https://example.com/your-document-id/";
 
@@ -679,6 +687,8 @@ date: 2017-02-08 11:56:44
 
 				// ... initialize your Carbon object
 
+				// ... authenticate if needed
+
 				// ID of the Carbon document you want to retrieve
 				let projectID = "https://example.com/your-document-id/";
 
@@ -696,6 +706,8 @@ date: 2017-02-08 11:56:44
 				var carbon;
 
 				// ... initialize your Carbon object
+
+				// ... authenticate if needed
 
 				// ID of the Carbon document you want to retrieve
 				var projectID = "https://example.com/your-document-id/";
@@ -949,6 +961,8 @@ date: 2017-02-08 11:56:44
 
 				// ... initialize your Carbon object
 
+				// ... authenticate if needed
+
 				// ID of the Carbon document you want to delete
 				let projectID:string = "https://example.com/your-document-id/";
 
@@ -969,6 +983,8 @@ date: 2017-02-08 11:56:44
 
 				// ... initialize your Carbon object
 
+				// ... authenticate if needed
+
 				// ID of the Carbon document you want to delete
 				let projectID = "https://example.com/your-document-id/";
 
@@ -986,6 +1002,8 @@ date: 2017-02-08 11:56:44
 				var carbon;
 
 				// ... initialize your Carbon object
+
+				// ... authenticate if needed
 
 				// ID of the Carbon document you want to delete
 				var projectID = "https://example.com/your-document-id/";
@@ -1143,6 +1161,8 @@ date: 2017-02-08 11:56:44
 
 					// ... initialize your Carbon object
 
+					// ... authenticate if needed
+
 					carbon.documents.listChildren&lt;Project&gt;( "projects/" ).then(
 						( [ unresolvedProjects, response ] : [ ( Project & PersistedDocument.Class )[], HTTP.Response.Class]) => &#123;
 					        console.log( unresolvedProjects ); // array of unresolved pointers
@@ -1166,6 +1186,8 @@ date: 2017-02-08 11:56:44
 
 					// ... initialize your Carbon object
 
+					// ... authenticate if needed
+
 					carbon.documents.listChildren( "projects/" ).then(
 						( [ unresolvedProjects, response ] ) => &#123;
 					        console.log( projectPointers ); // array of unresolved pointers
@@ -1186,6 +1208,8 @@ date: 2017-02-08 11:56:44
 					var carbon;
 
 					// ... initialize your Carbon object
+
+					// ... authenticate if needed
 
 					carbon.documents.listChildren( "projects/" ).then(
 						function( [ unresolvedProjects, response ] ) &#123;
@@ -1289,6 +1313,8 @@ date: 2017-02-08 11:56:44
 
 					// ... initialize your Carbon object
 
+					// ... authenticate if needed
+
 					let project:Project = &#123;
 						name: "Important project",
 
@@ -1345,6 +1371,8 @@ date: 2017-02-08 11:56:44
 
 					// ... initialize your Carbon object
 
+					// ... authenticate if needed
+
 					let project = &#123;
 						name: "Important project",
 
@@ -1398,6 +1426,8 @@ date: 2017-02-08 11:56:44
 					var carbon;
 
 					// ... initialize your Carbon object
+
+					// ... authenticate if needed
 
 					var project = &#123;
 						name: "Important project",
