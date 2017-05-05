@@ -302,6 +302,8 @@ date: 2017-02-08 12:08:58
 
 					// ... initialize your Carbon object
 
+					// ... authenticate if needed
+
 					carbon.get( "vocabulary/" ).then(
 						( [ vocabulary, response ]:[ PersistedDocument.Class, HTTP.Response.Class ] ) => &#123;
 							let title:PersistedFragment.Class = vocabulary.getFragment( "title" );
@@ -325,6 +327,8 @@ date: 2017-02-08 12:08:58
 
 					// ... initialize your Carbon object
 
+					// ... authenticate if needed
+
 					carbon.get( "vocabulary/" ).then(
 						( [ vocabulary, response ] ) => &#123;
 							let title = vocabulary.getFragment( "title" );
@@ -347,6 +351,8 @@ date: 2017-02-08 12:08:58
 				<pre><code class="javascript">
 
 					// ... initialize your Carbon object
+
+					// ... authenticate if needed
 
 					carbon.get( "vocabulary/" ).then(
 						function( result ) &#123;
@@ -462,6 +468,8 @@ date: 2017-02-08 12:08:58
 
 				// ... initialize your Carbon object
 
+				// ... authenticate if needed
+
 				carbon.documents.createChild( &#123;
 					types: [
 						"Book"
@@ -481,6 +489,8 @@ date: 2017-02-08 12:08:58
 
 				// ... initialize your Carbon object
 
+				// ... authenticate if needed
+
 				carbon.documents.createChild( &#123;
 					types: [
 						"Book"
@@ -499,6 +509,8 @@ date: 2017-02-08 12:08:58
 				var carbon;
 
 				// ... initialize your Carbon object
+
+				// ... authenticate if needed
 
 				carbon.documents.createChild( &#123;
 					types: [
@@ -525,6 +537,8 @@ date: 2017-02-08 12:08:58
 
 				// ... initialize your Carbon object
 
+				// ... authenticate if needed
+
 				carbon.documents.get&#60;Book&#62;( "books/awesome-book/" ).then(
 					( [ book, response ]:[ Book & PersistedDocument.Class, HTTP.Response.Class ] ) => &#123;
 						book.addType( "Book" );
@@ -546,6 +560,8 @@ date: 2017-02-08 12:08:58
 				let carbon;
 
 				// ... initialize your Carbon object
+
+				// ... authenticate if needed
 
 				carbon.documents.get( "books/awesome-book/" ).then(
 					( [ book, response ] ) => &#123;
@@ -569,7 +585,9 @@ date: 2017-02-08 12:08:58
 
 				// ... initialize your Carbon object
 
-				appContext.documents.get( "books/awesome-book/" ).then(
+				// ... authenticate if needed
+
+				carbon.documents.get( "books/awesome-book/" ).then(
 					function( result ) &#123;
 						var book = result[ 0 ];
 						book.addType( "Book" );
