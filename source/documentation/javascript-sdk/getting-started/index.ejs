@@ -278,7 +278,7 @@ date: 2017-02-08 11:56:44
 </section>
 
 <section class="mainContent-section">
-	<h2>Creating a platform instance</h2>
+	<h2>Creating a Carbon object</h2>
 	<div class="ui icon yellow message">
 		<i class="warning sign icon"></i>
 		<div class="content">
@@ -292,30 +292,30 @@ date: 2017-02-08 11:56:44
 		Let's start with some basic things you can do, like creating, saving and linking documents; among other things.
 	</p>
 	<p>
-		First of all, you need to create a <span class="highlight">Carbon platform instance</span>. This is the
-		<span class="highlight">instance</span> you will be working with.
+		First of all, you need to create a <span class="highlight">Carbon object</span>. This is the
+		<span class="highlight">instance</span> you will be working with, and it will help you communicate directly with your platform instance.
 	</p>
 	<tabs>
 		<tab title="TypeScript" name="typescript">
 			<pre><code class="typescript">
 				import Carbon from "carbonldp/Carbon";
 
-				let carbon:Carbon = new Carbon(); // platform instance
+				let carbon:Carbon = new Carbon(); // initialize your Carbon object
 			</code></pre>
 		</tab>
 		<tab title="JavaScript ES2015" name="javascript-es2015">
 			<pre><code class="javascript">
-				let carbon = new Carbon(); // platform instance
+				let carbon = new Carbon(); // initialize your Carbon object
 			</code></pre>
 		</tab>
 		<tab title="JavaScript ES5" name="javascript-es5">
 			<pre><code class="javascript">
-				var carbon = new Carbon(); // platform instance
+				var carbon = new Carbon(); // initialize your Carbon object
 			</code></pre>
 		</tab>
 	</tabs>
 	<p>
-		By default, platform instances point to <code>carbonldp.com</code>. If you need to change this,
+		By default, a Carbon object points to <code>carbonldp.com</code>. If you need to change this,
 		you can do it by changing the <code>domain</code> setting:
 	</p>
 	<tabs>
@@ -324,24 +324,24 @@ date: 2017-02-08 11:56:44
 			<pre><code class="typescript">
 				import Carbon from "carbonldp/Carbon";
 
-				let carbon:Carbon = new Carbon(); // platform instance
-				carbon.setSetting( "domain", "my-carbon-instance.com:8080" );
+				let carbon:Carbon = new Carbon(); // initialize your Carbon object
+				carbon.setSetting( "domain", "my-carbon-instance.com:8080" ); // set the domain where your platform lives
 			</code></pre>
 
 		</tab>
 		<tab title="JavaScript ES2015">
 
 			<pre><code class="javascript">
-				let carbon = new Carbon(); // platform instance
-				carbon.setSetting( "domain", "my-carbon-instance.com:8080" );
+				let carbon = new Carbon(); // initialize your Carbon object
+				carbon.setSetting( "domain", "my-carbon-instance.com:8080" ); // set the domain where your platform lives
 			</code></pre>
 
 		</tab>
 		<tab title="JavaScript ES5">
 
 			<pre><code class="javascript">
-				var carbon = new Carbon(); // platform instance
-				carbon.setSetting( "domain", "my-carbon-instance.com:8080" );
+				var carbon = new Carbon(); // initialize your Carbon object
+				carbon.setSetting( "domain", "my-carbon-instance.com:8080" ); // set the domain where your platform lives
 			</code></pre>
 
 		</tab>
@@ -350,7 +350,7 @@ date: 2017-02-08 11:56:44
 <section class="mainContent-section">
 	<h2>Authenticating</h2>
 	<p>
-		After creating the platform instance you need to tell it who you are by authenticating
+		After creating the Carbon object you need to tell it who you are by authenticating
 		yourself (if you haven't created an account yet, follow the steps in the section <em>create a user</em> of the  <a href="/documentation/quick-start-guide">quick start guide
 		</a> ).
 	</p>
@@ -369,7 +369,7 @@ date: 2017-02-08 11:56:44
 
 				let carbon:Carbon;
 
-				// ... platform instance creation
+				// ... initialize your Carbon object
 
 				carbon.auth.authenticate( "your@email.com", "YouRP455word" ).then(
 					( token:Token.Class ) => &#123;
@@ -386,7 +386,7 @@ date: 2017-02-08 11:56:44
 
 				let carbon;
 
-				// ... platform context creation
+				// ... initialize your Carbon object
 
 				carbon.auth.authenticate( "your@email.com", "YouRP455word" ).then(
 					( token ) => &#123;
@@ -401,7 +401,7 @@ date: 2017-02-08 11:56:44
 			<pre><code class="javascript">
 				var carbon;
 
-				// ... platform instance creation
+				// ... initialize your Carbon object
 
 				carbon.auth.authenticate( "your@email.com", "YouRP455word" ).then(
 					function( token ) &#123;
@@ -436,7 +436,7 @@ date: 2017-02-08 11:56:44
 
 				let carbon:Carbon;
 
-				// ... platform instance
+				// ... initialize your Carbon object
 
 				// JavaScript object to be persisted as a Carbon document
 				let project:Project = &#123; // Project being a business specific interface defined somewhere
@@ -469,7 +469,7 @@ date: 2017-02-08 11:56:44
 
 				let carbon;
 
-				// ... platform instance
+				// ... initialize your Carbon object
 
 				// JavaScript object to be persisted as a Carbon document
 				let project = &#123;
@@ -500,7 +500,7 @@ date: 2017-02-08 11:56:44
 			<pre><code class="javascript">
 				var carbon;
 
-				// ... platform instance
+				// ... initialize your Carbon object
 
 				// JavaScript object to be persisted as a Carbon document
 				var project = &#123;
@@ -604,7 +604,7 @@ date: 2017-02-08 11:56:44
 
 				let carbon:Carbon;
 
-				// ... platform instance
+				// ... initialize your Carbon object
 
 				console.log( carbon.resolve( "" ) ); // https://your-domain.com/
 			</code></pre>
@@ -617,7 +617,7 @@ date: 2017-02-08 11:56:44
 
 				let carbon;
 
-				// ... platform instance
+				// ... initialize your Carbon object
 
 				console.log( carbon.resolve( "" ) ); // https://your-domain.com/
 			</code></pre>
@@ -628,7 +628,7 @@ date: 2017-02-08 11:56:44
 			<pre><code class="javascript">
 				var carbon;
 
-				// ... platform instance
+				// ... initialize your Carbon object
 
 				console.log( carbon.resolve( "" ) ); // https://your-domain.com/
 			</code></pre>
@@ -657,7 +657,7 @@ date: 2017-02-08 11:56:44
 
 				let carbon:Carbon;
 
-				// ... platform instance
+				// ... initialize your Carbon object
 
 				// ID of the Carbon document you want to retrieve
 				let projectID:string = "https://example.com/your-document-id/";
@@ -677,7 +677,7 @@ date: 2017-02-08 11:56:44
 
 				let carbon;
 
-				// ... platform instance
+				// ... initialize your Carbon object
 
 				// ID of the Carbon document you want to retrieve
 				let projectID = "https://example.com/your-document-id/";
@@ -695,7 +695,7 @@ date: 2017-02-08 11:56:44
 			<pre><code class="javascript">
 				var carbon;
 
-				// ... platform instance
+				// ... initialize your Carbon object
 
 				// ID of the Carbon document you want to retrieve
 				var projectID = "https://example.com/your-document-id/";
@@ -947,7 +947,7 @@ date: 2017-02-08 11:56:44
 
 				let carbon:Carbon;
 
-				// ... platform instance
+				// ... initialize your Carbon object
 
 				// ID of the Carbon document you want to delete
 				let projectID:string = "https://example.com/your-document-id/";
@@ -967,7 +967,7 @@ date: 2017-02-08 11:56:44
 
 				let carbon;
 
-				// ... platform instance
+				// ... initialize your Carbon object
 
 				// ID of the Carbon document you want to delete
 				let projectID = "https://example.com/your-document-id/";
@@ -985,7 +985,7 @@ date: 2017-02-08 11:56:44
 			<pre><code class="javascript">
 				var carbon;
 
-				// ... platform instance
+				// ... initialize your Carbon object
 
 				// ID of the Carbon document you want to delete
 				var projectID = "https://example.com/your-document-id/";
@@ -1141,7 +1141,7 @@ date: 2017-02-08 11:56:44
 
 					let carbon:Carbon;
 
-					// ... platform instance
+					// ... initialize your Carbon object
 
 					carbon.documents.listChildren&lt;Project&gt;( "projects/" ).then(
 						( [ unresolvedProjects, response ] : [ ( Project & PersistedDocument.Class )[], HTTP.Response.Class]) => &#123;
@@ -1164,7 +1164,7 @@ date: 2017-02-08 11:56:44
 
 					let carbon
 
-					// ... platform instance
+					// ... initialize your Carbon object
 
 					carbon.documents.listChildren( "projects/" ).then(
 						( [ unresolvedProjects, response ] ) => &#123;
@@ -1185,7 +1185,7 @@ date: 2017-02-08 11:56:44
 				<pre><code class="javascript">
 					var carbon;
 
-					// ... platform instance
+					// ... initialize your Carbon object
 
 					carbon.documents.listChildren( "projects/" ).then(
 						function( [ unresolvedProjects, response ] ) &#123;
@@ -1287,7 +1287,7 @@ date: 2017-02-08 11:56:44
 
 					let carbon:Carbon;
 
-					// ... platform instance
+					// ... initialize your Carbon object
 
 					let project:Project = &#123;
 						name: "Important project",
@@ -1343,7 +1343,7 @@ date: 2017-02-08 11:56:44
 
 					let carbon;
 
-					// ... platform instance
+					// ... initialize your Carbon object
 
 					let project = &#123;
 						name: "Important project",
@@ -1397,7 +1397,7 @@ date: 2017-02-08 11:56:44
 				<pre><code class="javascript">
 					var carbon;
 
-					// ... platform instance
+					// ... initialize your Carbon object
 
 					var project = &#123;
 						name: "Important project",
