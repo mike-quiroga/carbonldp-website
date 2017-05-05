@@ -298,7 +298,7 @@ date: 2017-02-08 11:57:18
 
 					// ... authenticate if needed
 
-					appContext.auth.getAuthenticatedURL( fileMetadata.id ).then(
+					carbon.auth.getAuthenticatedURL( fileMetadata.id ).then(
 						( authenticatedFileURL ) => &#123;
 							window.open( authenticatedFileURL, "_blank" ); // Open the URL in another window to start the download
 						&#125;
