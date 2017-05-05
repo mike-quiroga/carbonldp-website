@@ -621,8 +621,8 @@ date: 2017-02-08 12:08:58
 	<h2>Conclusion</h2>
 	<p>The SDK does its best to try to guess the desired outcome of retrieving documents or saving new ones. It tries to parse known data types into
 		native JavaScript types and vice versa. But sometimes there is not enough data for the SDK to correctly guess the expected behavior. To make sure the SDK behaves as
-		expected, a web application can give more information about properties and objects to the SDK through a context's object schema.</p>
-	<p>Any context has an object schema that can be <em>extended</em> through the <code>extendObjectSchema</code> method.</p>
+		expected, a web application can give more information about properties and objects to the SDK through an object schema.</p>
+	<p>Any <code>carbon</code> object has an object schema that can be <em>extended</em> through the <code>extendObjectSchema</code> method.</p>
 	<p>When extending object schemas properties can be described by declaring a property with an object value. The following properties can be inside that object:</p>
 	<ul>
 		<li><code>@id</code>: To specify the URI to use for the property</li>
