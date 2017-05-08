@@ -36,13 +36,13 @@ date: 2017-02-08 11:58:11
 </div>
 <section class="mainContent-section">
 	<h2 class="hidden">Introduction</h2>
-	<p>Authorization refers to the rules that dictate whether an agent can or can't do certain actions. This rules take the form of: <strong>someone</strong> can <strong>do
+	<p>Authorization refers to the rules that dictate whether a user can or can't do certain actions. This rules take the form of: <strong>someone</strong> can <strong>do
 			something</strong>, <strong>somewhere</strong>, or more generically: a <strong>subject</strong> has a <strong>permission</strong> on an <strong>object</strong>.</p>
 </section>
 <section class="mainContent-section">
-	<h2>Application roles</h2>
-	<p>We've talked about one of the possible objects that can act as a subject: agents. But creating rules for a single agent would be too specific for most use cases.
-		Normally, rules are created by stating that a <strong>group</strong> of agents can or can't do something. E.g. "The <em>editors</em> can edit these documents", "The
+	<h2>Roles</h2>
+	<p>We've talked about one of the possible objects that can act as a subject: users. But creating rules for a single user would be too specific for most use cases.
+		Normally, rules are created by stating that a <strong>group</strong> of users can or can't do something. E.g. "The <em>editors</em> can edit these documents", "The
 		<em>readers</em> can read these other documents", etc.</p>
 	<p>These groups are commonly named after their "role" on the application and they are only meaningful in the context of the application itself.</p>
 	<p>In Carbon, application roles have a hierarchical structure. This structure starts with the <code>app-admin/</code> role which is created automatically by the platform
@@ -51,9 +51,9 @@ date: 2017-02-08 11:58:11
 	<section class="mainContent-subSection">
 		<h3>Creating an app role</h3>
 		<p>The first thing to do when structuring your application's security scheme, is identify and create all the roles needed for your application.</p>
-		<p>Once the roles are identified, they can be created with the <a href="https://carbonldp.github.io/carbonldp-js-sdk/#Carbon-App-Roles-Class-createChild" target="_blank"
+		<p>Once the roles are identified, they can be created with the <a href="https://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Auth-Roles-Class-createChild" target="_blank"
 		                                                                  rel="noopener"><code>createChild</code></a> method of the
-			<a href="https://carbonldp.github.io/carbonldp-js-sdk/#Carbon-App-Roles-Class" target="_blank" rel="noopener"><code>auth.roles</code></a> service
+			<a href="https://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Auth-Roles-Class" target="_blank" rel="noopener"><code>auth.roles</code></a> service
 			of the application context. This method is very similar to the
 			<a href="https://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Documents-Class" target="_blank" rel="noopener"><code>documents</code></a> service's
 			<a href="https://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Documents-Class-createChild" target="_blank" rel="noopener"><code>createChild</code></a> method (which we
@@ -63,19 +63,18 @@ date: 2017-02-08 11:58:11
 			<tab title="TypeScript">
 
 				<pre><code class="typescript">
-					import * as App from "carbonldp/App";
 					import * as HTTP from "carbonldp/HTTP";
 
-					let appContext:App.Context;
+					let carbon:Carbon;
 
-					// ... app context retrieval
+					// ... initialize your Carbon object
 
 					// Provide a human friendly name for the role
-					let role:App.Role.Class = App.Role.Factory.create( "Editors" );
+					let role:Auth.Role.Class = Auth.Role.Factory.create( "Editors" );
 
 
-					appContext.auth.roles.createChild( "app-admin/", role, "editors/" ).then(
-						( [ editorsRole, responses ]:[ App.PersistedRole.Class, HTTP.Response.Class[] ] ) => &#123;
+					carbon.auth.roles.createChild( "app-admin/", role, "editors/" ).then(
+						( [ editorsRole, responses ]:[ Auth.PersistedRole.Class, HTTP.Response.Class[] ] ) => &#123;
 							// ...
 						&#125;
 					).catch( console.error );
@@ -85,14 +84,14 @@ date: 2017-02-08 11:58:11
 			<tab title="JavaScript ES2015">
 
 				<pre><code class="javascript">
-					let appContext;
+					let carbon;
 
-					// ... app context retrieval
+					// ... initialize your Carbon object
 
 					// Provide a human friendly name for the role
-					let role = App.Role.Factory.create( "Editors" );
+					let role = Auth.Role.Factory.create( "Editors" );
 
-					appContext.auth.roles.createChild( "app-admin/", role, "editors/" ).then(
+					carbon.auth.roles.createChild( "app-admin/", role, "editors/" ).then(
 						( [ editorsRole, responses ] ) => &#123;
 							// ...
 						&#125;
@@ -103,14 +102,14 @@ date: 2017-02-08 11:58:11
 			<tab title="JavaScript ES5">
 
 				<pre><code class="javascript">
-					var appContext;
+					var carbon;
 
-					// ... app context retrieval
+					// ... initialize your Carbon object
 
 					// Provide a human friendly name for the role
-					var role = App.Role.Factory.create( "Editors" );
+					var role = Auth.Role.Factory.create( "Editors" );
 
-					appContext.auth.roles.createChild( "app-admin/", role, "editors/" ).then(
+					carbon.auth.roles.createChild( "app-admin/", role, "editors/" ).then(
 						function( [ editorsRole, responses ] ) &#123;
 							// ...
 						&#125;
@@ -120,35 +119,34 @@ date: 2017-02-08 11:58:11
 			</tab>
 		</tabs>
 		<p>As you can see, the previous example is very similar to how a normal document is created. All patterns that applied there apply here too. For example, if you
-			retrieve a <a href="https://carbonldp.github.io/carbonldp-js-sdk/#Carbon-App-PersistedRole-Class" target="_blank" rel="noopener"><code>PersistedRole</code></a>
-			document, you can call its <a href="https://carbonldp.github.io/carbonldp-js-sdk/#Carbon-App-PersistedRole-Class-createChild" target="_blank"
+			retrieve a <a href="https://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Auth-PersistedRole-Class" target="_blank" rel="noopener"><code>PersistedRole</code></a>
+			document, you can call its <a href="https://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Auth-PersistedRole-Class-createChild" target="_blank"
 			                              rel="noopener"><code>createChild
 				</code></a> method just like you would do it with the
-			<a href="https://carbonldp.github.io/carbonldp-js-sdk/#Carbon-App-Roles-Class" target="_blank" rel="noopener"><code>auth.roles</code></a> service (without
+			<a href="https://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Auth-Roles-Class" target="_blank" rel="noopener"><code>auth.roles</code></a> service (without
 			specifying the parent).
 		</p>
 	</section>
 	<section class="mainContent-subSection">
-		<h3>Adding agents to a role</h3>
-		<p>An application role is just a group of agents that represents a functional "role" in the application. Therefore, the roles won't do much unless we add agents to them
-			. This can be done through the method <a href="https://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Auth-Roles-Class-addAgent" target="_blank"
-			                                         rel="noopener"><code>addAgent</code></a> or <a
-				href="https://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Auth-Roles-Class-addAgents" target="_blank" rel="noopener"><code>addAgents</code></a> of the
+		<h3>Adding users to a role</h3>
+		<p>An application role is just a group of users that represents a functional "role" in the application. Therefore, the roles won't do much unless we add users to them
+			. This can be done through the method <a href="https://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Auth-Roles-Class-addUser" target="_blank"
+			                                         rel="noopener"><code>addUser</code></a> or <a
+				href="https://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Auth-Roles-Class-addUsers" target="_blank" rel="noopener"><code>addUsers</code></a> of the
 			<a href="https://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Auth-Roles-Class" target="_blank" rel="noopener"><code>auth.roles</code></a> service (or of a
-			<a href="https://carbonldp.github.io/carbonldp-js-sdk/#Carbon-App-PersistedRole-Class" target="_blank" rel="noopener"><code>PersistedRole</code></a> document):
+			<a href="https://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Auth-PersistedRole-Class" target="_blank" rel="noopener"><code>PersistedRole</code></a> document):
 		</p>
 		<tabs>
 			<tab title="TypeScript">
 
 				<pre><code class="typescript">
-					import * as App from "carbonldp/App";
 					import * as HTTP from "carbonldp/HTTP";
 
-					let appContext:App.Context;
+					let carbon:Carbon;
 
-					// ... app context retrieval
+					// ... initialize your Carbon object
 
-					appContext.auth.roles.addAgent( "editors/", "john-smith/" ).then(
+					carbon.auth.roles.addUser( "editors/", "john-smith/" ).then(
 						( response:HTTP.Response.Class ) => &#123;
 							// ...
 						&#125;
@@ -161,11 +159,11 @@ date: 2017-02-08 11:58:11
 				<pre><code class="javascript">
 					// ... imports
 
-					let appContext;
+					let carbon;
 
-					// ... app context retrieval
+					// ... initialize your Carbon object
 
-					appContext.auth.roles.addAgent( "editors/", "john-smith/" ).then(
+					carbon.auth.roles.addUser( "editors/", "john-smith/" ).then(
 						( response ) => &#123;
 							// ...
 						&#125;
@@ -178,11 +176,11 @@ date: 2017-02-08 11:58:11
 				<pre><code class="javascript">
 					// ... imports
 
-					var appContext;
+					var carbon;
 
-					// ... app context retrieval
+					// ... initialize your Carbon object
 
-					appContext.auth.roles.addAgent( "editors/", "john-smith/" ).then(
+					appContext.auth.roles.addUser( "editors/", "john-smith/" ).then(
 						function( response ) &#123;
 							// ...
 						&#125;
@@ -191,7 +189,7 @@ date: 2017-02-08 11:58:11
 
 			</tab>
 		</tabs>
-		<p>Like almost all methods in the SDK, to reference a document (in this case an agent), you can use its relative id, its absolute id, or the actual document object
+		<p>Like almost all methods in the SDK, to reference a document (in this case an user), you can use its relative id, its absolute id, or the actual document object
 			(resolved or unresolved).</p>
 	</section>
 </section>
@@ -288,15 +286,14 @@ date: 2017-02-08 11:58:11
 			<tab title="TypeScript">
 
 				<pre><code class="typescript">
-					import * as App from "carbonldp/App";
 					import * as HTTP from "carbonldp/HTTP";
 					import * as PersistedACL from "carbonldp/PersistedACL";
 
-					let appContext:App.Context;
+					let carbon:Carbon;
 
-					// ... app context retrieval
+					// ... initialize your Carbon object
 
-					appContext.documents.getACL( "some-document/" ).then(
+					carbon.documents.getACL( "some-document/" ).then(
 						( [ acl, response ]:[ PersistedACL.Class, HTTP.Response.Class ] ) => &#123;
 							// ...
 						&#125;
@@ -309,11 +306,11 @@ date: 2017-02-08 11:58:11
 				<pre><code class="javascript">
 					// ... imports
 
-					let appContext;
+					let carbon;
 
-					// ... app context retrieval
+					// ... initialize your Carbon object
 
-					appContext.documents.getACL( "some-document/" ).then(
+					carbon.documents.getACL( "some-document/" ).then(
 						( [ acl, response ] ) => &#123;
 							// ...
 						&#125;
@@ -326,11 +323,11 @@ date: 2017-02-08 11:58:11
 				<pre><code class="javascript">
 					// ... imports
 
-					var appContext;
+					var carbon;
 
-					// ... app context retrieval
+					// ... initialize your Carbon object
 
-					appContext.documents.getACL( "some-document/" ).then(
+					carbon.documents.getACL( "some-document/" ).then(
 						function( [ acl, response ] ) &#123;
 							// ...
 						&#125;
@@ -350,16 +347,15 @@ date: 2017-02-08 11:58:11
 			<tab title="TypeScript">
 
 				<pre><code class="typescript">
-					import * as App from "carbonldp/App";
 					import * as HTTP from "carbonldp/HTTP";
 					import * as PersistedACL from "carbonldp/PersistedACL";
 					import * as PersistedProtectedDocument from "carbonldp/PersistedProtectedDocument";
 
-					let appContext:App.Context;
+					let carbon:Carbon;
 
-					// ... app context retrieval
+					// ... initialize your Carbon object
 
-					appContext.documents.get( "some-document/" ).then(
+					carbon.documents.get( "some-document/" ).then(
 						( [ someDocument, response ]:[ PersistedProtectedDocument.Class, HTTP.Response.Class ] ) => &#123;
 							return someDocument.getACL();
 						&#125;
@@ -376,11 +372,11 @@ date: 2017-02-08 11:58:11
 				<pre><code class="javascript">
 					// ... imports
 
-					let appContext;
+					let carbon;
 
-					// ... app context retrieval
+					// ... initialize your Carbon object
 
-					appContext.documents.get( "some-document/" ).then(
+					carbon.documents.get( "some-document/" ).then(
 						( [ someDocument, response ] ) => &#123;
 							return someDocument.getACL();
 						&#125;
@@ -395,11 +391,11 @@ date: 2017-02-08 11:58:11
 			<tab title="JavaScript ES5">
 
 				<pre><code class="javascript">
-					var appContext;
+					var carbon;
 
-					// ... app context retrieval
+					// ... initialize your Carbon object
 
-					appContext.documents.get( "some-document/" ).then(
+					carbon.documents.get( "some-document/" ).then(
 						function( [ someDocument, response ] ) &#123;
 							return someDocument.getACL();
 						&#125;
@@ -427,8 +423,8 @@ date: 2017-02-08 11:58:11
 		</p>
 		<p>
 			In these methods both the subject and permission(s) need to be specified, along with the subject's type:
-			<a href="https://carbonldp.github.io/carbonldp-js-sdk/#Carbon-NS-CS-Class+Agent"><code>Carbon.NS.CS.Class.Agent</code></a> or
-			<a href="https://carbonldp.github.io/carbonldp-js-sdk/#Carbon-NS-CS-Class+AppRole"><code>Carbon.NS.CS.Class.AppRole</code></a>
+			<a href="https://carbonldp.github.io/carbonldp-js-sdk/#Carbon-NS-CS-Class+User"><code>Carbon.NS.CS.Class.User</code></a> or
+			<a href="https://carbonldp.github.io/carbonldp-js-sdk/#Carbon-NS-CS-Class+Role"><code>Carbon.NS.CS.Class.Role</code></a>
 		</p>
 		<p>Like with any other document, don't forget to save the ACL's state after modifying it:</p>
 		<tabs>
@@ -451,7 +447,7 @@ date: 2017-02-08 11:58:11
 					console.log( blogPostACL.grants( editorsRole, CS.Class.Upload ) ); // null, the ACL doesn't have a specific rule about this combination
 					console.log( blogPostACL.denies( editorsRole, CS.Class.Upload ) ); // null, same
 
-					blogPostACL.grant( editorsRole, CS.Class.AppRole, [
+					blogPostACL.grant( editorsRole, CS.Class.Role, [
 						CS.Class.Read,
 						CS.Class.Update,
 						CS.Class.Delete,
@@ -461,7 +457,7 @@ date: 2017-02-08 11:58:11
 					console.log( blogPostACL.grants( editorsRole, CS.Class.Upload ) ); // true
 					console.log( blogPostACL.denies( editorsRole, CS.Class.Upload ) ); // false
 
-					blogPostACL.deny( editorsRole, CS.Class.AppRole, CS.Class.Upload ); // We won't allow editors to upload files directly to the blog post
+					blogPostACL.deny( editorsRole, CS.Class.Role, CS.Class.Upload ); // We won't allow editors to upload files directly to the blog post
 
 					console.log( blogPostACL.grants( editorsRole, CS.Class.Upload ) ); // false
 					console.log( blogPostACL.denies( editorsRole, CS.Class.Upload ) ); // true
@@ -490,7 +486,7 @@ date: 2017-02-08 11:58:11
 					console.log( blogPostACL.grants( editorsRole, CS.Class.Upload ) ); // null, the ACL doesn't have a specific rule about this combination
 					console.log( blogPostACL.denies( editorsRole, CS.Class.Upload ) ); // null, same
 
-					blogPostACL.grant( editorsRole, CS.Class.AppRole, [
+					blogPostACL.grant( editorsRole, CS.Class.Role, [
 						CS.Class.Read,
 						CS.Class.Update,
 						CS.Class.Delete,
@@ -500,7 +496,7 @@ date: 2017-02-08 11:58:11
 					console.log( blogPostACL.grants( editorsRole, CS.Class.Upload ) ); // true
 					console.log( blogPostACL.denies( editorsRole, CS.Class.Upload ) ); // false
 
-					blogPostACL.deny( editorsRole, CS.Class.AppRole, CS.Class.Upload ); // We won't allow editors to upload files directly to the blog post
+					blogPostACL.deny( editorsRole, CS.Class.Role, CS.Class.Upload ); // We won't allow editors to upload files directly to the blog post
 
 					console.log( blogPostACL.grants( editorsRole, CS.Class.Upload ) ); // false
 					console.log( blogPostACL.denies( editorsRole, CS.Class.Upload ) ); // true
@@ -527,7 +523,7 @@ date: 2017-02-08 11:58:11
 					console.log( blogPostACL.grants( editorsRole, CS.Class.Upload ) ); // null, the ACL doesn't have a specific rule about this combination
 					console.log( blogPostACL.denies( editorsRole, CS.Class.Upload ) ); // null, same
 
-					blogPostACL.grant( editorsRole, CS.Class.AppRole, [
+					blogPostACL.grant( editorsRole, CS.Class.Role, [
 						CS.Class.Read,
 						CS.Class.Update,
 						CS.Class.Delete,
@@ -537,7 +533,7 @@ date: 2017-02-08 11:58:11
 					console.log( blogPostACL.grants( editorsRole, CS.Class.Upload ) ); // true
 					console.log( blogPostACL.denies( editorsRole, CS.Class.Upload ) ); // false
 
-					blogPostACL.deny( editorsRole, CS.Class.AppRole, CS.Class.Upload ); // We won't allow editors to upload files directly to the blog post
+					blogPostACL.deny( editorsRole, CS.Class.Role, CS.Class.Upload ); // We won't allow editors to upload files directly to the blog post
 
 					console.log( blogPostACL.grants( editorsRole, CS.Class.Upload ) ); // false
 					console.log( blogPostACL.denies( editorsRole, CS.Class.Upload ) ); // true
@@ -586,14 +582,14 @@ date: 2017-02-08 11:58:11
 
 					console.log( blogPostACL.getChildInheritance( editorsRole, CS.Class.Read ) ); // null, the ACL doesn't have a rule for this combination
 
-					blogPostACL.configureChildInheritance( true, editorsRole, CS.Class.AppRole, [
+					blogPostACL.configureChildInheritance( true, editorsRole, CS.Class.Role, [
 						CS.Class.Read,
 						CS.Class.Update,
 						CS.Class.Delete
 					] );
 
 					// We won't allow editors to upload files directly to blog posts
-					blogPostACL.configureChildInheritance( false, editorsRole, CS.Class.AppRole, CS.Class.Upload );
+					blogPostACL.configureChildInheritance( false, editorsRole, CS.Class.Role, CS.Class.Upload );
 
 					console.log( blogPostACL.getChildInheritance( editorsRole, CS.Class.Read ) ); // true, the ACL is granting the permission
 					console.log( blogPostACL.getChildInheritance( editorsRole, CS.Class.Upload ) ); // false, the ACL is denying the permission
@@ -622,14 +618,14 @@ date: 2017-02-08 11:58:11
 
 					console.log( blogPostACL.getChildInheritance( editorsRole, CS.Class.Read ) ); // null, the ACL doesn't have a rule for this combination
 
-					blogPostACL.configureChildInheritance( true, editorsRole, CS.Class.AppRole, [
+					blogPostACL.configureChildInheritance( true, editorsRole, CS.Class.Role, [
 						CS.Class.Read,
 						CS.Class.Update,
 						CS.Class.Delete
 					] );
 
 					// We won't allow editors to upload files directly to blog posts
-					blogPostACL.configureChildInheritance( false, editorsRole, CS.Class.AppRole, CS.Class.Upload );
+					blogPostACL.configureChildInheritance( false, editorsRole, CS.Class.Role, CS.Class.Upload );
 
 					console.log( blogPostACL.getChildInheritance( editorsRole, CS.Class.Read ) ); // true, the ACL is granting the permission
 					console.log( blogPostACL.getChildInheritance( editorsRole, CS.Class.Upload ) ); // false, the ACL is denying the permission
@@ -656,14 +652,14 @@ date: 2017-02-08 11:58:11
 
 					console.log( blogPostACL.getChildInheritance( editorsRole, CS.Class.Read ) ); // null, the ACL doesn't have a rule for this combination
 
-					blogPostACL.configureChildInheritance( true, editorsRole, CS.Class.AppRole, [
+					blogPostACL.configureChildInheritance( true, editorsRole, CS.Class.Role, [
 						CS.Class.Read,
 						CS.Class.Update,
 						CS.Class.Delete
 					] );
 
 					// We won't allow editors to upload files directly to blog posts
-					blogPostACL.configureChildInheritance( false, editorsRole, CS.Class.AppRole, CS.Class.Upload );
+					blogPostACL.configureChildInheritance( false, editorsRole, CS.Class.Role, CS.Class.Upload );
 
 					console.log( blogPostACL.getChildInheritance( editorsRole, CS.Class.Read ) ); // true, the ACL is granting the permission
 					console.log( blogPostACL.getChildInheritance( editorsRole, CS.Class.Upload ) ); // false, the ACL is denying the permission
