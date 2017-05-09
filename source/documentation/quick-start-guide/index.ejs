@@ -33,8 +33,7 @@ script: quick-start-guide
         <li>Install Docker</li>
         <li>Configure and run the Carbon platform</li>
         <li>Run the Carbon workbench</li>
-        <li>Create an agent</li>
-        <li>Create a new application</li>
+        <li>Create a user</li>
         <li>Develop with the JavaScript SDK, REST API, and optional tools</li>
         <li>Provide feedback to help improve Carbon LDP</li>
         <li>Update your instances when new versions are released</li>
@@ -123,10 +122,10 @@ script: quick-start-guide
         platform.domain = localhost:8083
         platform.protocol = http
 
-        # These credentials will be used to create the system agent, similar to the root user of linux
+        # These credentials will be used to create the system user, similar to the root user of linux
         # Please note them down somewhere safe as they will be removed from the configuration file as soon as you run your instance
-        platform.system-agent.username = system-agent@example.com
-        platform.system-agent.password = system
+        platform.system-user.username = system-user@example.com
+        platform.system-user.password = system
 
         # The name of your instance
         authentication.realm-name = Your Carbon LDP Instance
@@ -135,7 +134,7 @@ script: quick-start-guide
         </code></pre>
         
 
-        <p>It is important to make note of the <code>platform.system-agent.username</code> and <code>platform.system-agent.password</code> because, for security, those
+        <p>It is important to make note of the <code>platform.system-user.username</code> and <code>platform.system-user.password</code> because, for security, those
             properties will be automatically removed from the file when the platform is started for the first time.</p>
         <p>For the <code>authentication.realm-name</code>, you can put any unique name for your server instance. &quot;Local Dev&quot;, for example.</p>
         <p>For the <code>token.key</code>, you can put any random alpha-numeric string. You can use this one that we have just generated for you:</p>
@@ -164,7 +163,7 @@ script: quick-start-guide
         <p><img class="ui bordered image" src="/assets/images/carbon-platform-api-response.jpg"/></p>
         <p><strong>Notes:</strong></p>
         <ul>
-            <li>What you'll see actually see in the browser may depend on the configuration you created and the browser you are using.</li>
+            <li>What you'll actually see in the browser may depend on the configuration you created and the browser you are using.</li>
             <li>It may take a while for carbon to start. Keep refreshing the page. If after 5 minutes, the XML response still doesn't display, something went wrong.</li>
             <li>If you can't load the page, check the URL. It MUST end with a slash /. All URLs handled by the platform will follow this rule.</li>
         </ul>
@@ -194,10 +193,11 @@ script: quick-start-guide
     <ul>
         <li>Document Explorer - a GUI for visualizing and editing Carbon documents</li>
         <li>SPARQL Client - a GUI for entering and execute SPARQL queries and SPARQL updates with results displayed in a friendly format</li>
-        <li>App Creator - a GUI for creating and editing Carbon Applications</li>
-    </ul>
+        <li>Security Management - a GIU for managing your and roles</li>
+        <li>Backup Management - a GIU for creating backups of your information</li>
+
     <p>Using the Carbon Workbench will aid your development process, especially in the beginning, because it allows you quick, visual verification of the data you create
-        using either the JavaScript SDK or REST API. It also provides an easy way to query and inspect or modify data with SPARQL.</p>
+        using either the JavaScript SDK or REST API. It also provides an easy way to query, inspect and modify data with the SPARQL Client.</p>
 
     <p>To run the Carbon workbench, execute the following command (replacing the configured host, port, and protocol where appropriate).</p>
 
@@ -218,62 +218,31 @@ script: quick-start-guide
 
 </section>
 
-<section class="mainContent-section" id="create-an-agent">
-    <h2>Create an agent</h2>
-    <p>At this point, you can login to the Workbench using the platform.system-agent credentials you used when creating the config.properties file. Generally, however, you
-        will want to reserve that Agent for special administrative operations only. The Platform System Agent isn't restricted by security. It can do anything inside of your
+<section class="mainContent-section" id="create-a-user">
+    <h2>Create a user</h2>
+    <p>At this point, you can login to the Workbench using the platform.system-user credentials you used when creating the config.properties file. Generally, however, you
+        will want to reserve that User for special administrative operations only. The Platform System User isn't restricted by security. It can do anything inside of your
         instance - even destroy it. That's why it is not recommended to use it for normal actions (think of it like the root user on a Linux machine, which you shouldn't
-        use for day-to-day work). Following are the steps required to create a new Agent that you can use for day-to-day work:
+        use for day-to-day work). Following are the steps required to create a new User that you can use for day-to-day work:
     </p>
     <ul>
         <li>Navigate to <code>http://localhost:8000/login</code> in your web browser.</li>
         <li>Click the hyperlink where it says, &quot;Don't have an account? Create one&quot;.</li>
         <li>Enter name, e-mail address, password, and profile ID and then click "Register".</li>
     </ul>
-    <p>You should now be able to login with the e-mail address and password you used to register your new agent.</p>
-</section>
-
-<section class="mainContent-section" id="create-a-new-application">
-    <h2>Create a new application</h2>
-    <p>&quot;Applications&quot; are the data spaces where Carbon helps you manage the data for a given solution. Multiple applications can exist on a single platform instance.
-        If you are planning to store data for a blog, for example, you can create an application for it (e.g. &quot;My Blog&quot;). Now you'll create a discussion forum? Great,
-        another application it is (e.g. &quot;My Discussion Forum&quot;). And so on.</p>
-
-    <p>Applications separate not only your data, but your security scheme and configuration too.</p>
-
-    <p>To create your first application, login to the workbench. The dashboard will appear empty (it's a placeholder for some future features). Click on &quot;Apps&quot; in
-        the left-hand sidebar menu as shown below.</p>
-
-
-    <p><img class="ui bordered image" src="/assets/images/click-apps-in-workbench.png" alt="Click Apps in the Workbench left-hand sidebar menu."/></p>
-
-    <p>Next, click the "Create app" button as shown below...</p>
-
-    <p><img class="ui bordered image" src="/assets/images/creat-app-btn-workbench.jpg" alt="Click Create App button in the Workbench"/></p>
-
-    <p>Fill out the resulting form with basic information about your app. This information is used to display your app in the applications list. The <code>slug</code> will
-        be used in a unique identifier for your app and will appear in a root position of all Carbon URLs used with your app. Following is an example:</p>
-
-    <p><img class="ui bordered image" src="/assets/images/new-app-form-example.jpg" alt="Example New App form populated in the Workbench"/></p>
-
-    <p>Once you've successfully created your first app, you can click on Apps in the left-hand sidebar menu to see it in the applications list as shown below. Clicking on the
-        name of the application in the applications list, will navigate into the application space where you can then use the Document Explorer, the SPARQL Client, and other
-        features of the Workbench.</p>
-
-    <p><img class="ui bordered image" src="/assets/images/apps-list-workbench.jpg" alt="Listing Apps in the Workbench"/></p>
-
+    <p>You should now be able to login with the e-mail address and password you used to register your new user.</p>
 </section>
 
 <section class="mainContent-section">
     <h2>Develop with the JavaScript SDK, REST API, and optional tools</h2>
 
     <!-- TODO: Change this instructions to a more generic list of how to use the platform (through the REST API, for example) -->
-    <p>Of course, the app you created is not a functioning app; it's just the data space in Carbon for the application you now need to build. The next step is
+    <p>Of course, the platform instance you just created is just the data space in Carbon for the application you now need to build. The next step is
         to use the JavaScript SDK with your client-side code to build a client application. Head over to
         <a class="item" href="/documentation/javascript-sdk/getting-started">Getting Started with the JavaScript SDK</a> to learn how.</p>
 
     <p>Note: If you are running your own local instance of the platform, you'll likely need to turn off https in the SDK. To do that configure the following setting
-        when creating your platform context (you'll understand what this means after reading the JavaScript SDK Getting Started guide):</p>
+        when creating your Carbon object (you'll understand what this means after reading the JavaScript SDK Getting Started guide):</p>
 
     <pre><code class="actionscript">
         carbon.setSetting( &quot;http.ssl&quot;, false );
@@ -289,8 +258,8 @@ script: quick-start-guide
 
         <ul>
             <li><strong><a class="item" href="/documentation">Documentation</a></strong> - The Carbon LDP product documentation for developers.</li>
-            <li><strong><a class="item" href="/documentation/rest-api/getting-started">Getting Started with the REST API</a></strong> - You can do anything with
-                the REST API that you can do with the JavaScript SDK. However, the REST API is for lower-level programming that is generally more tedious than using the
+            <li><strong><a class="item" href="/documentation/rest-api/getting-started">Getting Started with the REST API</a></strong> - Everything you can do with the
+                REST API you can also do with the JavaScript SDK. However, the REST API is for lower-level programming that is generally more tedious than using the
                 JavaScript SDK. Most developers prefer to work primarily with the JavaScript SDK.
             </li>
             <li><strong><a href="https://github.com/CarbonLDP/angular-carbonldp">angular-carbonldp</a></strong> - helper classes that simplify the integration between Angular
