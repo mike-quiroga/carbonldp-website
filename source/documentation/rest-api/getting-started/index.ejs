@@ -280,7 +280,7 @@ date: 2017-02-07 19:01:07
 			  {
 			    "@graph": [
 			      {
-			        "@id": "http://localhost:8083/platform/agents/jane-doe/",
+			        "@id": "http://localhost:8083/users/jane-doe/",
 			        "@type": [
 			          "http://www.w3.org/ns/ldp#BasicContainer",
 			          "https://carbonldp.com/ns/v1/security#ProtectedDocument",
@@ -295,7 +295,7 @@ date: 2017-02-07 19:01:07
 			        ],
 			        "http://www.w3.org/ns/ldp#contains": [
 			          {
-			            "@id": "http://localhost:8083/platform/agents/jane-doe/app-role-map/"
+			            "@id": "http://localhost:8083/users/jane-doe/app-role-map/"
 			          }
 			        ],
 			        "http://www.w3.org/ns/ldp#hasMemberRelation": [
@@ -305,12 +305,12 @@ date: 2017-02-07 19:01:07
 			        ],
 			        "http://www.w3.org/ns/ldp#member": [
 			          {
-			            "@id": "http://localhost:8083/platform/agents/jane-doe/app-role-map/"
+			            "@id": "http://localhost:8083/users/jane-doe/app-role-map/"
 			          }
 			        ],
 			        "https://carbonldp.com/ns/v1/platform#appRoleMap": [
 			          {
-			            "@id": "http://localhost:8083/platform/agents/jane-doe/app-role-map/"
+			            "@id": "http://localhost:8083/users/jane-doe/app-role-map/"
 			          }
 			        ],
 			        "https://carbonldp.com/ns/v1/platform#created": [
@@ -332,7 +332,7 @@ date: 2017-02-07 19:01:07
 			        ],
 			        "https://carbonldp.com/ns/v1/security#accessControlList": [
 			          {
-			            "@id": "http://localhost:8083/platform/agents/jane-doe/~acl/"
+			            "@id": "http://localhost:8083/users/jane-doe/.acl/"
 			          }
 			        ],
 			        "https://carbonldp.com/ns/v1/security#enabled": [
@@ -353,7 +353,7 @@ date: 2017-02-07 19:01:07
 			        ],
 			        "https://carbonldp.com/ns/v1/security#platformRole": [
 			          {
-			            "@id": "http://localhost:8083/platform/roles/app-developer/"
+			            "@id": "http://localhost:8083/.system/roles/app-developer/"
 			          }
 			        ],
 			        "https://carbonldp.com/ns/v1/security#salt": [
@@ -363,7 +363,7 @@ date: 2017-02-07 19:01:07
 			        ]
 			      }
 			    ],
-			    "@id": "http://localhost:8083/platform/agents/jane-doe/"
+			    "@id": "http://localhost:8083/users/jane-doe/"
 			  }
 			]
 		</code></pre>
@@ -527,7 +527,7 @@ date: 2017-02-07 19:01:07
 		</ul>
 		<p>Though Carbon enforces no restriction on doing this, there are a few reasons why we might not want to.</p>
 		<p>First, as the depth of your taxonomy increases, so too does the length of your concept URIs. In this model, just one level deeper from the top concept could produce the following URI:</p>
-		<p><code>http://localhost:8083/platform/apps/taxonomy-hub/topics/technology/javascript/</code></p>
+		<p><code>http://localhost:8083/topics/technology/javascript/</code></p>
 		<p>You can see how the addition of just a few more levels could lengthen the URI significantly.</p>
 		<p>Another possible problem is that it creates a tight coupling between the URI for each concept and the location of the concept in a hierarchy. When you move categories around, you'd have to revise the URIs for several other concepts to keep the implication in tact. Furthermore, if you ever wanted to share concepts between branches of a taxonomy, or across multiple taxonomies, the implication of the URI would only be logical in one of the cases.</p>
 		<p>Following is a more elegant approach for the container layout that can reduce the work required to manage taxonomies.</p>
@@ -1131,7 +1131,7 @@ date: 2017-02-07 19:01:07
 		<section class="mainContent-subSection">
 			<h4>Create the editor role</h4>
 			<p>Issue the following HTTP request to create the editor role.</p>
-			<p><span class="ui blue horizontal label">POST</span> <code>http://localhost:8083/roles/</code></p>
+			<p><span class="ui blue horizontal label">POST</span> <code>http://localhost:8083/.system/roles/</code></p>
 			<table class="ui celled table">
 				<thead>
 					<tr>
@@ -1181,7 +1181,7 @@ date: 2017-02-07 19:01:07
 		<section class="mainContent-subSection">
 			<h4>Create the user role</h4>
 			<p>Issue the following HTTP request to create the user role.</p>
-			<p><span class="ui blue horizontal label">POST</span> <code>http://localhost:8083/roles/</code></p>
+			<p><span class="ui blue horizontal label">POST</span> <code>http://localhost:8083/.system/roles/</code></p>
 			<table class="ui celled table">
 				<thead>
 					<tr>
@@ -1328,7 +1328,7 @@ date: 2017-02-07 19:01:07
 			PUT the user to the membership of the <code>users</code> container that exists within the container of the role.</p>
 		<h4>Add test user 1 to the editor role</h4>
 		<p>Issue the following HTTP request to add testuser1 to the editor role.</p>
-		<p><span class="ui blue horizontal label">PUT</span> <code>http://localhost:8083/roles/editor/users/</code></p>
+		<p><span class="ui blue horizontal label">PUT</span> <code>http://localhost:8083/.system/roles/editor/users/</code></p>
 		<table class="ui celled table">
 			<thead>
 				<tr>
@@ -1366,7 +1366,7 @@ date: 2017-02-07 19:01:07
 		<p>A successful PUT request results in HTTP status <code>200 OK</code>.</p>
 		<h4>Add test user 2 to the user role</h4>
 		<p>Issue the following HTTP request to add testuser2 to the user role.</p>
-		<p><span class="ui blue horizontal label">PUT</span> <code>http://localhost:8083/roles/user/users/</code></p>
+		<p><span class="ui blue horizontal label">PUT</span> <code>http://localhost:8083/.system/roles/user/users/</code></p>
 		<table class="ui celled table">
 			<thead>
 				<tr>
@@ -1414,7 +1414,7 @@ date: 2017-02-07 19:01:07
 
 		<h4>Put the editor and user roles into the role hierarchy</h4>
 
-		<p><span class="ui blue horizontal label">PUT</span> <code>http://localhost:8083/roles/admin/</code></p>
+		<p><span class="ui blue horizontal label">PUT</span> <code>http://localhost:8083/.system/roles/admin/</code></p>
 		<table class="ui celled table">
 			<thead>
 				<tr>
@@ -1452,7 +1452,7 @@ date: 2017-02-07 19:01:07
 		</code></pre>
 		<p>A successful PUT should result in HTTP status <code>200 OK</code>.</p>
 		<p>If you inspect, the <code>admin/</code> container, you should see the child roles linked with a triple like this:</p>
-		<p><code>&lt;http://localhost:8083/roles/admin/&gt; &lt;https://carbonldp.com/ns/v1/security#childRole&gt; &lt;http://localhost:8083/roles/editor/&gt;</code></p>
+		<p><code>&lt;http://localhost:8083/.system/roles/admin/&gt; &lt;https://carbonldp.com/ns/v1/security#childRole&gt; &lt;http://localhost:8083/.system/roles/editor/&gt;</code></p>
 
 		<p>Conversely, if you inspect either the child roles, you will see a link back to the parent <code>admin/</code> role by way of the property identified by the URI, <code>https://carbonldp.com/ns/v1/security#parentRole</code>.</p>
 	</section>
@@ -1466,7 +1466,7 @@ date: 2017-02-07 19:01:07
 		<p>Issue the following request to get the ACL for the root container, take notice that the interaction model used in this
 			request is RDFSource, as shown in the Prefer header.</p>
 
-		<p><span class="ui blue horizontal label">GET</span> <code>http://localhost:8083/~acl/</code></p>
+		<p><span class="ui blue horizontal label">GET</span> <code>http://localhost:8083/.acl/</code></p>
 
 		<table class="ui celled table">
 			<thead>
@@ -1496,17 +1496,17 @@ date: 2017-02-07 19:01:07
 		</table>
 		<p>The resulting ACL is shown below.</p>
 		<pre><code class="turtle">
-			&lt;http://localhost:8083/~acl/&gt; {
-				&lt;http://localhost:8083/~acl/&gt; a &lt;https://carbonldp.com/ns/v1/security#AccessControlList&gt; .
+			&lt;http://localhost:8083/.acl/&gt; {
+				&lt;http://localhost:8083/.acl/&gt; a &lt;https://carbonldp.com/ns/v1/security#AccessControlList&gt; .
 
 				_:node1be13fi05x169 a &lt;https://carbonldp.com/ns/v1/security#AccessControlEntry&gt; ;
 					&lt;https://carbonldp.com/ns/v1/platform#bNodeIdentifier&gt; "fb95eee6-b2c6-46a0-af0b-ac8b1d50bf25" ;
 					&lt;https://carbonldp.com/ns/v1/security#granting&gt; true ;
 					&lt;https://carbonldp.com/ns/v1/security#permission&gt; &lt;https://carbonldp.com/ns/v1/security#AddMember&gt; , &lt;https://carbonldp.com/ns/v1/security#CreateAccessPoint&gt; , &lt;https://carbonldp.com/ns/v1/security#CreateChild&gt; , &lt;https://carbonldp.com/ns/v1/security#Download&gt; , &lt;https://carbonldp.com/ns/v1/security#Extend&gt; , &lt;https://carbonldp.com/ns/v1/security#ManageSecurity&gt; , &lt;https://carbonldp.com/ns/v1/security#Read&gt; , &lt;https://carbonldp.com/ns/v1/security#RemoveMember&gt; , &lt;https://carbonldp.com/ns/v1/security#Update&gt; , &lt;https://carbonldp.com/ns/v1/security#Upload&gt; ;
-					&lt;https://carbonldp.com/ns/v1/security#subject&gt; &lt;http://localhost:8083/roles/admin/&gt; ;
+					&lt;https://carbonldp.com/ns/v1/security#subject&gt; &lt;http://localhost:8083/.system/roles/admin/&gt; ;
 					&lt;https://carbonldp.com/ns/v1/security#subjectClass&gt; &lt;https://carbonldp.com/ns/v1/security#AppRole&gt; .
 
-				&lt;http://localhost:8083/apps/taxonomy-hub/~acl/&gt; &lt;https://carbonldp.com/ns/v1/security#accessTo&gt; &lt;http://localhost:8083/apps/taxonomy-hub/&gt; ;
+				&lt;http://localhost:8083/.acl/&gt; &lt;https://carbonldp.com/ns/v1/security#accessTo&gt; &lt;http://localhost:8083/&gt; ;
 					&lt;https://carbonldp.com/ns/v1/security#accessControlEntry&gt; _:node1be13fi05x169 ;
 					&lt;https://carbonldp.com/ns/v1/security#inheritableEntry&gt; _:node1be13fi05x170 .
 
@@ -1514,7 +1514,7 @@ date: 2017-02-07 19:01:07
 					&lt;https://carbonldp.com/ns/v1/platform#bNodeIdentifier&gt; "70a3d1c2-5b65-435a-8717-e78d6f70512c" ;
 					&lt;https://carbonldp.com/ns/v1/security#granting&gt; true ;
 					&lt;https://carbonldp.com/ns/v1/security#permission&gt; &lt;https://carbonldp.com/ns/v1/security#AddMember&gt; , &lt;https://carbonldp.com/ns/v1/security#CreateAccessPoint&gt; , &lt;https://carbonldp.com/ns/v1/security#CreateChild&gt; , &lt;https://carbonldp.com/ns/v1/security#Download&gt; , &lt;https://carbonldp.com/ns/v1/security#Extend&gt; , &lt;https://carbonldp.com/ns/v1/security#ManageSecurity&gt; , &lt;https://carbonldp.com/ns/v1/security#Read&gt; , &lt;https://carbonldp.com/ns/v1/security#RemoveMember&gt; , &lt;https://carbonldp.com/ns/v1/security#Update&gt; , &lt;https://carbonldp.com/ns/v1/security#Upload&gt; , &lt;https://carbonldp.com/ns/v1/security#Delete&gt; ;
-					&lt;https://carbonldp.com/ns/v1/security#subject&gt; &lt;http://localhost:8083/roles/admin/&gt; ;
+					&lt;https://carbonldp.com/ns/v1/security#subject&gt; &lt;http://localhost:8083/.system/roles/admin/&gt; ;
 					&lt;https://carbonldp.com/ns/v1/security#subjectClass&gt; &lt;https://carbonldp.com/ns/v1/security#AppRole&gt; .
 			}
 		</code></pre>
@@ -1538,7 +1538,7 @@ date: 2017-02-07 19:01:07
 		_:user-ace a &lt;https://carbonldp.com/ns/v1/security#AccessControlEntry&gt; ;
 				&lt;https://carbonldp.com/ns/v1/security#granting&gt; true ;
 				&lt;https://carbonldp.com/ns/v1/security#permission&gt; &lt;https://carbonldp.com/ns/v1/security#Read&gt; ;
-				&lt;https://carbonldp.com/ns/v1/security#subject&gt; &lt;http://localhost:8083/roles/user/&gt; ;
+				&lt;https://carbonldp.com/ns/v1/security#subject&gt; &lt;http://localhost:8083/.system/roles/user/&gt; ;
 				&lt;https://carbonldp.com/ns/v1/security#subjectClass&gt; &lt;https://carbonldp.com/ns/v1/security#AppRole&gt; .
 		</code></pre>
 		<p>Also add the following AccessControlEntry, which will put the several more permissions on the <code>editor/</code> role.</p>
@@ -1557,7 +1557,7 @@ date: 2017-02-07 19:01:07
 				&lt;https://carbonldp.com/ns/v1/security#RemoveMember&gt; ,
 				&lt;https://carbonldp.com/ns/v1/security#Update&gt; ,
 				&lt;https://carbonldp.com/ns/v1/security#Upload&gt; ;
-			&lt;https://carbonldp.com/ns/v1/security#subject&gt; &lt;http://localhost:8083/roles/editor/&gt; ;
+			&lt;https://carbonldp.com/ns/v1/security#subject&gt; &lt;http://localhost:8083/.system/roles/editor/&gt; ;
 			&lt;https://carbonldp.com/ns/v1/security#subjectClass&gt; &lt;https://carbonldp.com/ns/v1/security#AppRole&gt; .
 		</code></pre>
 
@@ -1575,7 +1575,7 @@ date: 2017-02-07 19:01:07
 		</code></pre>
 
 		<p>When you are done, you should end up with something similar to what is shown in the body of the following request. To update the ACL, you then issue a <code>PUT</code>request to replace the ACL.</p>
-		<p><span class="ui blue horizontal label">PUT</span> <code>http://localhost:8083/~acl/</code></p>
+		<p><span class="ui blue horizontal label">PUT</span> <code>http://localhost:8083/.acl/</code></p>
 		<table class="ui celled table">
 			<thead>
 				<tr>
@@ -1603,8 +1603,8 @@ date: 2017-02-07 19:01:07
 			</tbody>
 		</table>
 		<pre><code class="turtle">
-			&lt;http://localhost:8083/apps/taxonomy-hub/~acl/&gt; {
-				&lt;http://localhost:8083/apps/taxonomy-hub/~acl/&gt; a &lt;https://carbonldp.com/ns/v1/security#AccessControlList&gt; .
+			&lt;http://localhost:8083/.acl/&gt; {
+				&lt;http://localhost:8083/.acl/&gt; a &lt;https://carbonldp.com/ns/v1/security#AccessControlList&gt; .
 
 				_:node1be13fi05x169 a &lt;https://carbonldp.com/ns/v1/security#AccessControlEntry&gt; ;
 					&lt;https://carbonldp.com/ns/v1/platform#bNodeIdentifier&gt; "fb95eee6-b2c6-46a0-af0b-ac8b1d50bf25" ;
@@ -1620,10 +1620,10 @@ date: 2017-02-07 19:01:07
 						&lt;https://carbonldp.com/ns/v1/security#RemoveMember&gt; ,
 						&lt;https://carbonldp.com/ns/v1/security#Update&gt; ,
 						&lt;https://carbonldp.com/ns/v1/security#Upload&gt; ;
-					&lt;https://carbonldp.com/ns/v1/security#subject&gt; &lt;http://localhost:8083/roles/admin/&gt; ;
+					&lt;https://carbonldp.com/ns/v1/security#subject&gt; &lt;http://localhost:8083/.system/roles/admin/&gt; ;
 					&lt;https://carbonldp.com/ns/v1/security#subjectClass&gt; &lt;https://carbonldp.com/ns/v1/security#AppRole&gt; .
 
-				&lt;http://localhost:8083/apps/taxonomy-hub/~acl/&gt; &lt;https://carbonldp.com/ns/v1/security#accessTo&gt; &lt;http://localhost:8083/&gt; ;
+				&lt;http://localhost:8083/.acl/&gt; &lt;https://carbonldp.com/ns/v1/security#accessTo&gt; &lt;http://localhost:8083/&gt; ;
 					&lt;https://carbonldp.com/ns/v1/security#accessControlEntry&gt;
 						_:node1be13fi05x169 ,
 						_:editor-ace ,
@@ -1648,13 +1648,13 @@ date: 2017-02-07 19:01:07
 						&lt;https://carbonldp.com/ns/v1/security#Update&gt; ,
 						&lt;https://carbonldp.com/ns/v1/security#Upload&gt; ,
 						&lt;https://carbonldp.com/ns/v1/security#Delete&gt; ;
-					&lt;https://carbonldp.com/ns/v1/security#subject&gt; &lt;http://localhost:8083/roles/admin/&gt; ;
+					&lt;https://carbonldp.com/ns/v1/security#subject&gt; &lt;http://localhost:8083/.system/roles/admin/&gt; ;
 					&lt;https://carbonldp.com/ns/v1/security#subjectClass&gt; &lt;https://carbonldp.com/ns/v1/security#AppRole&gt; .
 
 				_:user-ace a &lt;https://carbonldp.com/ns/v1/security#AccessControlEntry&gt; ;
 					&lt;https://carbonldp.com/ns/v1/security#granting&gt; true ;
 					&lt;https://carbonldp.com/ns/v1/security#permission&gt; &lt;https://carbonldp.com/ns/v1/security#Read&gt; ;
-					&lt;https://carbonldp.com/ns/v1/security#subject&gt; &lt;http://localhost:8083/apps/taxonomy-hub/roles/user/&gt; ;
+					&lt;https://carbonldp.com/ns/v1/security#subject&gt; &lt;http://localhost:8083/.system/roles/user/&gt; ;
 					&lt;https://carbonldp.com/ns/v1/security#subjectClass&gt; &lt;https://carbonldp.com/ns/v1/security#AppRole&gt; .
 
 				_:editor-ace a &lt;https://carbonldp.com/ns/v1/security#AccessControlEntry&gt; ;
@@ -1670,7 +1670,7 @@ date: 2017-02-07 19:01:07
 						&lt;https://carbonldp.com/ns/v1/security#RemoveMember&gt; ,
 						&lt;https://carbonldp.com/ns/v1/security#Update&gt; ,
 						&lt;https://carbonldp.com/ns/v1/security#Upload&gt; ;
-					&lt;https://carbonldp.com/ns/v1/security#subject&gt; &lt;http://localhost:8083/roles/editor/&gt; ;
+					&lt;https://carbonldp.com/ns/v1/security#subject&gt; &lt;http://localhost:8083/.system/roles/editor/&gt; ;
 					&lt;https://carbonldp.com/ns/v1/security#subjectClass&gt; &lt;https://carbonldp.com/ns/v1/security#AppRole&gt; .
 
 			}
