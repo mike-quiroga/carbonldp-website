@@ -45,11 +45,10 @@ date: 2017-02-08 11:58:11
 		Normally, rules are created by stating that a <strong>group</strong> of users can or can't do something. E.g. "The <em>editors</em> can edit these documents", "The
 		<em>readers</em> can read these other documents", etc.</p>
 	<p>These groups are commonly named after their "role" on the application and they are only meaningful in the context of the application itself.</p>
-	<p>In Carbon, application roles have a hierarchical structure. This structure starts with the <code>app-admin/</code> role which is created automatically by the platform
-		whenever a new application is created.</p>
+	<p>In Carbon, roles have a hierarchical structure. This structure starts with the <code>admin/</code> role which is created automatically by the platform.</p>
 	<p>This role should only be used by developers, as being a member of it gives access to every document the application contains.</p>
 	<section class="mainContent-subSection">
-		<h3>Creating an app role</h3>
+		<h3>Creating a role</h3>
 		<p>The first thing to do when structuring your application's security scheme, is identify and create all the roles needed for your application.</p>
 		<p>Once the roles are identified, they can be created with the <a href="https://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Auth-Roles-Class-createChild" target="_blank"
 		                                                                  rel="noopener"><code>createChild</code></a> method of the
@@ -58,7 +57,7 @@ date: 2017-02-08 11:58:11
 			<a href="https://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Documents-Class" target="_blank" rel="noopener"><code>documents</code></a> service's
 			<a href="https://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Documents-Class-createChild" target="_blank" rel="noopener"><code>createChild</code></a> method (which we
 			already covered). It accepts the parent role (its slug, complete id or the actual role document) as the first parameter, the object that will be used to
-			create the new app role's document (remember, everything's a document!), and an optional slug:</p>
+			create the new role's document (remember, everything's a document!), and an optional slug:</p>
 		<tabs>
 			<tab title="TypeScript">
 
@@ -73,7 +72,7 @@ date: 2017-02-08 11:58:11
 					let role:Auth.Role.Class = Auth.Role.Factory.create( "Editors" );
 
 
-					carbon.auth.roles.createChild( "app-admin/", role, "editors/" ).then(
+					carbon.auth.roles.createChild( "admin/", role, "editors/" ).then(
 						( [ editorsRole, responses ]:[ Auth.PersistedRole.Class, HTTP.Response.Class[] ] ) => &#123;
 							// ...
 						&#125;
@@ -91,7 +90,7 @@ date: 2017-02-08 11:58:11
 					// Provide a human friendly name for the role
 					let role = Auth.Role.Factory.create( "Editors" );
 
-					carbon.auth.roles.createChild( "app-admin/", role, "editors/" ).then(
+					carbon.auth.roles.createChild( "admin/", role, "editors/" ).then(
 						( [ editorsRole, responses ] ) => &#123;
 							// ...
 						&#125;
@@ -109,7 +108,7 @@ date: 2017-02-08 11:58:11
 					// Provide a human friendly name for the role
 					var role = Auth.Role.Factory.create( "Editors" );
 
-					carbon.auth.roles.createChild( "app-admin/", role, "editors/" ).then(
+					carbon.auth.roles.createChild( "admin/", role, "editors/" ).then(
 						function( [ editorsRole, responses ] ) &#123;
 							// ...
 						&#125;
@@ -129,7 +128,7 @@ date: 2017-02-08 11:58:11
 	</section>
 	<section class="mainContent-subSection">
 		<h3>Adding users to a role</h3>
-		<p>An application role is just a group of users that represents a functional "role" in the application. Therefore, the roles won't do much unless we add users to them
+		<p>A role is just a group of users that represents a functional "role" in the application. Therefore, the roles won't do much unless we add users to them
 			. This can be done through the method <a href="https://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Auth-Roles-Class-addUser" target="_blank"
 			                                         rel="noopener"><code>addUser</code></a> or <a
 				href="https://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Auth-Roles-Class-addUsers" target="_blank" rel="noopener"><code>addUsers</code></a> of the
