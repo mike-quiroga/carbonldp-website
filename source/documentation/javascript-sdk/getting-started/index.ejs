@@ -373,7 +373,7 @@ date: 2017-02-08 11:56:44
 
 				carbon.auth.authenticate( "your@email.com", "YouRP455word" ).then(
 					( token:Token.Class ) => &#123;
-						console.log( carbon.auth.authenticatedAgent ); // Yourself!
+						console.log( carbon.auth.authenticatedUser ); // Yourself!
 					&#125;
 				);
 			</code></pre>
@@ -390,7 +390,7 @@ date: 2017-02-08 11:56:44
 
 				carbon.auth.authenticate( "your@email.com", "YouRP455word" ).then(
 					( token ) => &#123;
-						console.log( carbon.auth.authenticatedAgent ); // Yourself!
+						console.log( carbon.auth.authenticatedUser ); // Yourself!
 					&#125;
 				);
 			</code></pre>
@@ -405,7 +405,7 @@ date: 2017-02-08 11:56:44
 
 				carbon.auth.authenticate( "your@email.com", "YouRP455word" ).then(
 					function( token ) &#123;
-						console.log( carbon.auth.authenticatedAgent ); // Yourself!
+						console.log( carbon.auth.authenticatedUser ); // Yourself!
 					&#125;
 				);
 			</code></pre>
@@ -1689,7 +1689,7 @@ date: 2017-02-08 11:56:44
 
 				carbon.auth.authenticate( &quot;your@email.com&quot;, &quot;YouRP455word&quot; ).then(
 					( token:Token.Class ) =&gt; &#123;
-						console.log( `Hello $&#123; carbon.auth.authenticatedAgent.name &#125;!` );
+						console.log( `Hello $&#123; carbon.auth.authenticatedUser.name &#125;!` );
 
 						// Creating a document
 						return carbon.documents.createChild&lt;Project&gt;( &quot;/&quot;, project );
@@ -1803,7 +1803,7 @@ date: 2017-02-08 11:56:44
 
 				carbon.auth.authenticate( &quot;your@email.com&quot;, &quot;YouRP455word&quot; ).then(
 					( token ) =&gt; &#123;
-						console.log( `Hello $&#123; carbon.auth.authenticatedAgent.name &#125;!` );
+						console.log( `Hello $&#123; carbon.auth.authenticatedUser.name &#125;!` );
 
 						// Creating a document
 						return carbon.documents.createChild( &quot;/&quot;, project );
@@ -1915,7 +1915,7 @@ date: 2017-02-08 11:56:44
 
 				carbon.auth.authenticate( &quot;your@email.com&quot;, &quot;YouRP455word&quot; ).then(
 					function ( token ) &#123;
-						console.log( `Hello $&#123; carbon.auth.authenticatedAgent.name &#125;!` );
+						console.log( `Hello $&#123; carbon.auth.authenticatedUser.name &#125;!` );
 
 						// Creating a document
 						return carbon.documents.createChild( &quot;/&quot;, project );
