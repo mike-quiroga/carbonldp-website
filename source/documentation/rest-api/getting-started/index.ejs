@@ -41,12 +41,12 @@ date: 2017-02-07 19:01:07
 
 <section class="mainContent-section">
 	<h2 class="ui header">Create a user account</h2>
-	<p>To interact with Carbon through the REST API, we'll need a user account. This can be done through the Workbench GUI, but since this is a guide on using the REST API, we'll do it by issuing a POST request through HTTP. The resource that comprises a Carbon account is known as an <em>Agent</em> - a <em>platform agent</em> to be precise. Later, you will learn about <em>application agents</em>, which represent accounts specifically for users of the applications you build.
+	<p>To interact with Carbon through the REST API, we'll need a user account. This can be done through the Workbench GUI, but since this is a guide on using the REST API, we'll do it by issuing a POST request through HTTP. The resource that comprises a Carbon account is known as a <em>User</em>.
 	</p>
 	<section class="mainContent-subSection">
 		<h3 class="ui header">Create the request</h3>
 		<p>Create the following HTTP request to create a platform account.</p>
-		<p><span class="ui blue horizontal label">POST</span> <code>http://localhost:8083/platform/agents/</code></p>
+		<p><span class="ui blue horizontal label">POST</span> <code>http://localhost:8083/users/</code></p>
 		<table class="ui celled table">
 			<thead>
 				<tr>
@@ -78,7 +78,7 @@ date: 2017-02-07 19:01:07
 			@prefix vcard:&lt;http://www.w3.org/2001/vcard-rdf/3.0#&gt;.
 			&lt;&gt;{
 			    &lt;&gt;
-			        a cs:Agent;
+			        a cs:User;
 			        cs:name "Jane Doe";
 			        vcard:email "jane.doe@example.org";
 			        cs:password "jane123".
@@ -105,7 +105,7 @@ date: 2017-02-07 19:01:07
 				<i class="dropdown icon"></i> Prefer
 			</div>
 			<div class="content">
-				<p>The <code>Prefer</code> header uses a link relation to specify the <em>interaction model</em> of the target resource, which is the resource we're posting to - the <code>/platform/agents/</code> container. By using this header, we're specifying the desired behavior of the container. Because we're adding a member resource to the container, we need it to behave like a container as opposed to an <code>RDFSource</code> or a <code>NonRDFSource</code> . Carbon supports the following interaction model values for the <code>Prefer</code> header:
+				<p>The <code>Prefer</code> header uses a link relation to specify the <em>interaction model</em> of the target resource, which is the resource we're posting to - the <code>/users/</code> container. By using this header, we're specifying the desired behavior of the container. Because we're adding a member resource to the container, we need it to behave like a container as opposed to an <code>RDFSource</code> or a <code>NonRDFSource</code> . Carbon supports the following interaction model values for the <code>Prefer</code> header:
 				</p>
 				<ul>
 					<li><code>http://www.w3.org/ns/ldp#Container; rel=interaction-model</code></li>
@@ -119,7 +119,7 @@ date: 2017-02-07 19:01:07
 			<div class="content">
 				<p>The <code>Slug</code> header is intended to give the server a hint about how to mint a new URI for the resource being created. If a slug is not provided, Carbon will generate a random number when minting the URI. In this case, however, we're specifying a preference to use <code>jane-doe</code>. Therefore, if it is available for use, the server will mint the following URI:
 				</p>
-				<p><code>http://localhost:8083/platform/agents/jane-doe/</code></p>
+				<p><code>http://localhost:8083/users/jane-doe/</code></p>
 			</div>
 			<div class="title">
 				<i class="dropdown icon"></i> Body
@@ -145,7 +145,7 @@ date: 2017-02-07 19:01:07
 								<pre>a</pre>
 							</td>
 							<td>
-								<pre>cs:Agent</pre>
+								<pre>cs:User</pre>
 							</td>
 						</tr>
 						<tr>
@@ -153,7 +153,7 @@ date: 2017-02-07 19:01:07
 								<p>The subject specifies an empty value relative to the base URI. In Turtle, URIs are written enclosed in '&lt;' and '&gt;' and may be absolute RDF URIs or relative to the current base URI.</p>
 								<p>The token 'a' in the predicate position always specifies the RDF type of the resource, which is a short way of writing: <code>http://www.w3.org/1999/02/22-rdf-syntax-ns#type</code></p>
 
-								<p>In the object position, we specify the RDF type as being an Agent from the Carbon LDP security vocabulary.</p>
+								<p>In the object position, we specify the RDF type as being a User from the Carbon LDP security vocabulary.</p>
 							</td>
 						</tr>
 						<tr>
@@ -208,7 +208,7 @@ date: 2017-02-07 19:01:07
 		<h3 class="ui header">Issue the request</h3>
 		<p>Issue the POST request.</p>
 		<p>A successful request will result in HTTP status code 201 Created. The ETag header in the response will confirm the time of creation and the Location header will provide
-			the server minted URI for the new Agent resource. For example:</p>
+			the server minted URI for the new User resource. For example:</p>
 		<table class="ui celled table">
 			<thead>
 				<tr>
@@ -223,7 +223,7 @@ date: 2017-02-07 19:01:07
 				</tr>
 				<tr>
 					<td>Location</td>
-					<td><span>http://localhost:8083/platform/agents/jane-doe/</span></td>
+					<td><span>http://localhost:8083/users/jane-doe/</span></td>
 				</tr>
 			</tbody>
 		</table>
@@ -232,8 +232,8 @@ date: 2017-02-07 19:01:07
 	<section class="mainContent-subSection">
 		<h3 class="ui header">Examine the new resource</h3>
 		<p>You can now examine the newly created resource by issuing a <code>GET</code> request to the URI that was minted for it.</p>
-		<p>Create the following HTTP request to get the Platform Agent.</p>
-		<p><span class="ui blue horizontal label">GET</span> <code>http://localhost:8083/platform/agents/jane-doe/</code></p>
+		<p>Create the following HTTP request to get the User.</p>
+		<p><span class="ui blue horizontal label">GET</span> <code>http://localhost:8083/users/jane-doe/</code></p>
 		<p>Note the trailing slash in the URI. An RDFSource created in Carbon is automatically also a Container (a feature Carbon manages for you), so the
 			server-minted URI always ends with a trailing slash.</p>
 		<p>You will need to authorize the request using the username and password of the agent that was defined in the body of the former POST request. Both the username and
@@ -370,116 +370,12 @@ date: 2017-02-07 19:01:07
 		<p>JSON-LD is great response format to process JavaScript, but as you can see, it can be a tad verbose. You can issue the same <code>GET</code> request using <code>application/trig</code> or any other supported RDF syntax for the <code>Accept</code> header.</p>
 	</section>
 </section>
-<section class="mainContent-section">
-	<h2 class="ui header">Create an application</h2>
-	<p>With your newly created platform account, you can now create an Application.</p>
-	<p>To create an application, issue the following request. Be sure to use your own unique name for the Slug or omit the Slug. You should also provide a unique name for the
-		application in the body of the request.</p>
-	<p><span class="ui blue horizontal label">POST</span> <code>http://localhost:8083/platform/apps/</code></p>
-	<table class="ui celled table">
-		<thead>
-			<tr>
-				<th>HTTP Header</th>
-				<th>Value</th>
-				<th colspan="1">Required?</th>
-			</tr>
-		</thead>
-		<tbody>
-			<tr>
-				<td>Authorization</td>
-				<td>Basic (jane.doe@example.org, jane123)</td>
-				<td>Yes</td>
-			</tr>
-			<tr>
-				<td>Prefer</td>
-				<td>http://www.w3.org/ns/ldp#Container; rel=interaction-model</td>
-				<td>Yes</td>
-			</tr>
-			<tr>
-				<td>Content-Type</td>
-				<td>application/trig</td>
-				<td>Yes</td>
-			</tr>
-			<tr>
-				<td>Slug</td>
-				<td>taxonomy-hub</td>
-				<td>No</td>
-			</tr>
-		</tbody>
-	</table>
-	<p><strong>Body (required)</strong></p>
-	<pre><code class="turtle">
-		@prefix c:	&lt;https://carbonldp.com/ns/v1/platform#&gt;.
-		@prefix cs:	&lt;https://carbonldp.com/ns/v1/security#&gt;.
-
-		&lt;&gt;{
-		    &lt;&gt;
-		        a cs:Application;
-		        cs:name "Taxonomy Hub".
-		}
-	</code></pre>
-	<p>Issue the POST request.</p>
-	<p>A successful request will result in HTTP status code <code>201 Created</code>. It will also respond with the server-minted <code>Location</code> URI for the Application resource, which in the case of our example is:</p>
-	<p><code>http://localhost:8083/platform/apps/taxonomy-hub/</code></p>
-	<section class="mainContent-subSection">
-		<h3 class="ui header">Examine the application root container</h3>
-		<p>You can always verify a newly created resource by issuing a GET request to its <code>Location</code> URI, but it's important to keep in mind that the URI created for the Application only references the metadata resource for your application. When a new Application is created, Carbon also creates an access point at the following URI:</p>
-		<p><code>http://localhost:8083/apps/&lt;app-slug&gt;/</code></p>
-		<p>So, in the case of our example, the application's access point or root URI would be:</p>
-		<p><code>http://localhost:8083/apps/taxonomy-hub/</code></p>
-		<p>The difference between this access point URI and the URI of the Application metadata resource is the absence of the <code>/platform</code> segment after the host name.</p>
-		<p>Issue the following request to examine the root container that Carbon created for you.</p>
-		<p><span class="ui blue horizontal label">GET</span> <code>http://localhost:8083/apps/taxonomy-hub/</code></p>
-		<table class="ui celled table">
-			<thead>
-				<tr>
-					<th>HTTP Header</th>
-					<th>Value</th>
-					<th colspan="1">Required?</th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr>
-					<td>Authorization</td>
-					<td>Basic (jane.doe@example.org, jane123)</td>
-					<td>Yes</td>
-				</tr>
-				<tr>
-					<td>Accept</td>
-					<td>application/trig</td>
-					<td>No</td>
-				</tr>
-				<tr>
-					<td>Prefer</td>
-					<td><span class="nolink">http://www.w3.org/ns/ldp#RDFSource</span>; rel=interaction-model</td>
-					<td>No</td>
-				</tr>
-			</tbody>
-		</table>
-		<p><strong>Example root container for an app</strong></p>
-		<pre><code class="turtle">
-			&lt;http://localhost:8083/apps/taxonomy-hub/&gt; {
-				&lt;http://localhost:8083/apps/taxonomy-hub/&gt; a &lt;http://www.w3.org/ns/ldp#BasicContainer&gt; , &lt;http://www.w3.org/ns/ldp#Container&gt; , &lt;http://www.w3.org/ns/ldp#RDFSource&gt; , &lt;https://carbonldp.com/ns/v1/security#ProtectedDocument&gt; ;
-					&lt;http://www.w3.org/ns/ldp#contains&gt; &lt;http://localhost:8083/apps/taxonomy-hub/agents/&gt; , &lt;http://localhost:8083/apps/taxonomy-hub/auth-tickets/&gt; , &lt;http://localhost:8083/apps/taxonomy-hub/auth-tokens/&gt; , &lt;http://localhost:8083/apps/taxonomy-hub/roles/&gt; ;
-					&lt;http://www.w3.org/ns/ldp#hasMemberRelation&gt; &lt;http://www.w3.org/ns/ldp#member&gt; ;
-					&lt;http://www.w3.org/ns/ldp#member&gt; &lt;http://localhost:8083/apps/taxonomy-hub/agents/&gt; , &lt;http://localhost:8083/apps/taxonomy-hub/auth-tickets/&gt; , &lt;http://localhost:8083/apps/taxonomy-hub/auth-tokens/&gt; , &lt;http://localhost:8083/apps/taxonomy-hub/roles/&gt; ;
-					&lt;https://carbonldp.com/ns/v1/platform#created&gt; "2017-04-18T20:01:52.104Z"^^&lt;http://www.w3.org/2001/XMLSchema#dateTime&gt; ;
-					&lt;https://carbonldp.com/ns/v1/platform#modified&gt; "2017-04-18T20:01:52.104Z"^^&lt;http://www.w3.org/2001/XMLSchema#dateTime&gt; ;
-					&lt;https://carbonldp.com/ns/v1/security#accessControlList&gt; &lt;http://localhost:8083/apps/taxonomy-hub/~acl/&gt; .
-			}
-		</code></pre>
-		<p><strong>Example root container for an app</strong></p>
-		<p>Although this guide is all about using the REST API, you can still also use the Carbon LDP Workbench to verify your data. Now, for example, you can login to the workbench using the example user <code>jane.doe@example.org</code> with password, <code>jane123</code>. You should see the newly created Taxonomy Hub application in the list of applications as shown below.</p>
-		<img class="ui fluid image" src="/assets/images/workbench-taxonomy-hub-app.jpg" alt="Newly created app in Workbench">
-		<p><em>Note: Since the app was created through the REST API and not directly through the Workbench, you may not be able to use the Document Explorer until you edit the app in the Workbench, give it a description, and turn on the Allow all origins option.</em></p>
-	</section>
-</section>
 
 <section class="mainContent-section">
 	<h2 class="ui header">Model the application (vocabulary, resources, containers)</h2>
-	<p>Now that you have an application root created, you can begin to create RDF documents in the application. Before you start posting arbitrary RDF documents, however, it's a good idea to design a general model for the application. Answering the following questions can help you determine what the model should be.</p>
+	<p>After you have your platform instance running, you can begin to create RDF documents in it. Before you start posting arbitrary RDF documents, however, it's a good idea to design a general model for the application. Answering the following questions can help you determine what the model should be.</p>
 	<ul>
-		<li>What entities will the resources in our application represent?</li>
+		<li>What entities will the resources in our platform instance represent?</li>
 		<li>What data attributes (or triples) will they have?</li>
 		<li>Are there existing RDF vocabularies we can leverage for those attributes?</li>
 		<li>What kinds of relationships (links) will we make in our data or with data in other sources?</li>
@@ -487,7 +383,7 @@ date: 2017-02-07 19:01:07
 	</ul>
 	<p>Answering these questions up-front will help provide a logical and structured way to build your application. One way to think about this is to think about the most common use cases for the data and the following six areas of consideration:</p>
 	<ol>
-		<li><strong>Classes/Entities</strong> - The taxonomy terms are the main item of interest or <em>entity</em> we'll be working with - the main resource we'll be managing in the Carbon app.</li>
+		<li><strong>Classes/Entities</strong> - The taxonomy terms are the main item of interest or <em>entity</em> we'll be working with - the main resource we'll be managing in the Carbon instance.</li>
 		<li><strong>Class/Entity Properties</strong> - Taxonomy terms are pretty simple; they're just concepts or labels. Perhaps they can be expressed in multiple languages.</li>
 		<li><strong> <strong>Class/Entity</strong> Relationships
 			</strong> - A taxonomy implies that these terms are organized in a hierarchy, so we need to think about how to use container behavior to support that structure.</li>
@@ -657,12 +553,12 @@ date: 2017-02-07 19:01:07
 </section>
 
 <section class="mainContent-section">
-	<h2 class="ui header">Create application resources</h2>
+	<h2 class="ui header">Create resources</h2>
 	<section class="mainContent-subSection">
 		<h3 class="ui header">Create the schemes/ container</h3>
 		<p>Let's start by creating the <code>schemes/</code> container. Since the application will always have only one <code>schemes/</code> container, this will be a one-time affair.</p>
 		<p>Create the following request.</p>
-		<p><span class="ui blue horizontal label">POST</span> <code>http://localhost:8083/apps/taxonomy-hub/</code></p>
+		<p><span class="ui blue horizontal label">POST</span> <code>http://localhost:8083/</code></p>
 		<table class="ui celled table">
 			<thead>
 				<tr>
@@ -712,7 +608,7 @@ date: 2017-02-07 19:01:07
 	<section class="mainContent-subSection">
 		<h3 class="ui header">Create example concept scheme</h3>
 		<p>Now that we have the <code>schemes/</code> container, we can create one or more Concept Scheme containers within it. Since this is an action that would likely be repeated by end-users, it would make sense to incorporate the capability into a user interface. For now, however, let's be clear on what would be required for the underlying HTTP request.</p>
-		<p><span class="ui blue horizontal label">POST</span> <code>http://localhost:8083/apps/taxonomy-hub/schemes/</code></p>
+		<p><span class="ui blue horizontal label">POST</span> <code>http://localhost:8083/schemes/</code></p>
 		<table class="ui celled table">
 			<thead>
 				<tr>
@@ -762,7 +658,7 @@ date: 2017-02-07 19:01:07
 		<p><code>&lt;&gt; ldp:memberOfRelation skos:inScheme</code></p>
 		<p>This configures the container to automatically add a link in each member that is added to the container. Whenever we POST a new concept into this scheme, Carbon will
 			automatically add the following triple to the concept document:</p>
-		<p><code>&lt;concept-uri&gt; skos:inScheme &lt;http://localhost:8083/apps/taxonomy-hub/schemes/&gt;</code></p>
+		<p><code>&lt;concept-uri&gt; skos:inScheme &lt;http://localhost:8083/schemes/&gt;</code></p>
 		<p>Create and issue the request. A successful request should result in HTTP status <code>201 Created</code>.</p>
 		<p>This illustrates an interesting use of BasicContainer behavior. In the next step, we'll see another interesting use of container behavior with a DirectContainer.</p>
 	</section>
@@ -772,7 +668,7 @@ date: 2017-02-07 19:01:07
 		<p>As stated earlier, the <code>top-concepts/</code> container will give us an easy way to list the root concepts in a taxonomy. Our application should therefore create a <code>top-concepts/</code> container in every scheme created. You'd likely want to automate the creation of this container in the function that creates the scheme container, but for now, we'll do it by hand to complete the exercise. That is to say, for now, we're only supporting one concept scheme (taxonomy).</p>
 		<p>This time, we'll make use of a Direct Container. A Direct Container creates an access point that helps you manage membership triples in another container.</p>
 		<p>Create the following request.</p>
-		<p><span class="ui blue horizontal label">POST</span> <code>http://localhost:8083/apps/taxonomy-hub/schemes/topics/</code></p>
+		<p><span class="ui blue horizontal label">POST</span> <code>http://localhost:8083/schemes/topics/</code></p>
 		<table class="ui celled table">
 			<thead>
 				<tr>
@@ -811,13 +707,13 @@ date: 2017-02-07 19:01:07
 
 			&#60;&#62;
 				a ldp:DirectContainer;
-				ldp:membershipResource &#60;http://localhost:8083/apps/taxonomy-hub/schemes/topics/&#62;;
+				ldp:membershipResource &#60;http://localhost:8083/schemes/topics/&#62;;
 				ldp:hasMemberRelation skos:hasTopConcept.
 		</code></pre>
 		<p>Notice, this time, we use the Prefer header to set the interaction model to RDF Source instead of Container. This keeps the <code>topics/</code> container that we're posting to from recognizing the <code>top-concepts/</code> container as a member. That is to say, it keeps it from recording a membership triple for the <code>top-concepts/</code> container. The outcome we want is for all concepts to be listed as members of the <code>topics/</code> container, but not the <code>top-concepts/</code> container itself.</p>
 		<p>The <code>ldp:membershipResource</code> predicate of this Direct Container specifies an entirely different resource where membership triples should be written. Whenever we post to this container (the <code>top-concepts/</code> container), a membership triple will be written to the specified resource, which is the <code>topics/</code> container. In other words, if we later put a Concept to the <code>top-concepts/</code> container, that concept will become a member of the <code>topics/</code> container. Why would we want to do this? To understand, we have to consider the <code>ldp:hasMemberRelation</code> predicate, which is also used.</p>
 		<p>Whenever the <code>top-concepts/</code> container writes a membership triple to the container specified by <code>ldp:membershipResource</code> , it will use the predicate <code>skos:hasTopConcept</code> to represent that membership relationship because of what's defined by <code>ldp:hasMemberRelation</code> . This feature exists so that we can use a different vocabulary other than the standard LDP vocabulary to represent membership relations. When we post to <code>top-concepts/</code> , for example, the following statement will be added to the <code>topics/</code> container:</p>
-		<p><code>&lt;http://localhost:8083/apps/taxonomy-hub/schemes/topics/&gt; skos:hasTopConcept &lt;member-URI&gt;</code></p>
+		<p><code>&lt;http://localhost:8083/schemes/topics/&gt; skos:hasTopConcept &lt;member-URI&gt;</code></p>
 		<p>We will not be posting to the <code>top-concepts/</code> container to create new documents. Instead, we'll post new concepts to the <code>topics/</code> container to create them and then later put the top concepts into the <code>top-concepts/</code> container. If you POST a new resource to a container, the container creates a membership triple and a containment triple, but if you PUT an existing resource to a container, the container creates only a membership triple.</p>
 		<p>Issue the request. A successful response should provide the HTTP status code 201 Created.</p>
 	</section>
@@ -827,7 +723,7 @@ date: 2017-02-07 19:01:07
 		<p>Now, we're ready to start creating concepts in our Topics taxonomy. This, of course, is a function that the GUI of our app would probably handle, but doing this manually is important to this learning exercise.</p>
 		<p><strong>Create the Top Concept, Design</strong></p>
 		<p>For our first Top Concept, Design, create the following request.</p>
-		<p><span class="ui blue horizontal label">POST</span> <code>http://localhost:8083/apps/taxonomy-hub/schemes/topics/</code></p>
+		<p><span class="ui blue horizontal label">POST</span> <code>http://localhost:8083/schemes/topics/</code></p>
 		<table class="ui celled table">
 			<thead>
 				<tr>
@@ -880,7 +776,7 @@ date: 2017-02-07 19:01:07
 		<p>Issue the request. A successful response should provide the HTTP status code <code>201 Created</code>.</p>
 		<p><strong>Create the Top Concept, Technology</strong></p>
 		<p>In the same way, let's add the other top concept, Technology. Create and issue the following request.</p>
-		<p><span class="ui blue horizontal label">POST</span> <code>http://localhost:8083/apps/taxonomy-hub/schemes/topics/</code></p>
+		<p><span class="ui blue horizontal label">POST</span> <code>http://localhost:8083/schemes/topics/</code></p>
 		<table class="ui celled table">
 			<thead>
 				<tr>
@@ -932,12 +828,12 @@ date: 2017-02-07 19:01:07
 	<section class="mainContent-section">
 		<h2 class="ui header">Add top concepts as members of the scheme</h2>
 		<p>Now that the root concepts are created, they are members of their parent container. For example, the parent container, <code>topics</code>, links to <code>design/</code> with the following membership triple:</p>
-		<p><code>&lt;&gt; &lt;http://www.w3.org/ns/ldp#member&gt; &lt;http://localhost:8083/apps/taxonomy-hub/schemes/topics/design/&gt;</code></p>
+		<p><code>&lt;&gt; &lt;http://www.w3.org/ns/ldp#member&gt; &lt;http://localhost:8083/schemes/topics/design/&gt;</code></p>
 		<p>Since the parent container is a Basic Container, the concept is also contained by it. The parent container expresses this relationship with the following containment triple:</p>
-		<p><code>&lt;&gt; &lt;http://www.w3.org/ns/ldp#contains&gt; &lt;http://localhost:8083/apps/taxonomy-hub/schemes/topics/design/&gt;</code></p>
+		<p><code>&lt;&gt; &lt;http://www.w3.org/ns/ldp#contains&gt; &lt;http://localhost:8083/schemes/topics/design/&gt;</code></p>
 		<p>What's needed now is to identify the concept as a member of the topics scheme with the <code>skos:hasTopConcept</code> relation. This will be done when we PUT the two concepts to the <code>top-concepts/</code> container, which can be done in a single HTTP request.</p>
 		<p><span>Create the following request.</span></p>
-		<p><span class="ui blue horizontal label">PUT</span> <code>http://localhost:8083/apps/taxonomy-hub/schemes/topics/top-concepts/</code></p>
+		<p><span class="ui blue horizontal label">PUT</span> <code>http://localhost:8083/schemes/topics/top-concepts/</code></p>
 		<table class="ui celled table">
 			<thead>
 				<tr>
@@ -970,13 +866,13 @@ date: 2017-02-07 19:01:07
 			&lt;&gt;{
 				_:b0
 			        a c:AddMemberAction;
-			        c:targetMember &lt;http://localhost:8083/apps/taxonomy-hub/schemes/topics/design/&gt;,
-			            &lt;http://localhost:8083/apps/taxonomy-hub/schemes/topics/technology/&gt;.
+			        c:targetMember &lt;http://localhost:8083/schemes/topics/design/&gt;,
+			            &lt;http://localhost:8083/schemes/topics/technology/&gt;.
 			}
 		</code></pre>
 		<p>Notice that the Carbon vocabulary is used. The class of the resource is a Carbon <code>AddMemberAction</code> with the specified members to add to the container we're putting it to.</p>
 		<p>Issue the request. A successful response should provide <code>200 OK</code>.</p>
-		<p>Now, if you examine the <code>http://localhost:8083/apps/taxonomy-hub/schemes/topics/</code> container (GET), you'll see the membership triples link to the <code>design/</code> and <code>technology/</code> concepts written as <code>skos:hasTopConcept</code>.</p>
+		<p>Now, if you examine the <code>http://localhost:8083/schemes/topics/</code> container (GET), you'll see the membership triples link to the <code>design/</code> and <code>technology/</code> concepts written as <code>skos:hasTopConcept</code>.</p>
 	</section>
 
 	<section class="mainContent-section">
@@ -984,7 +880,7 @@ date: 2017-02-07 19:01:07
 
 		<p>Next, let's create one of the second-level concepts, Information Architecture (Concept 1.1), which is a narrower concept of the Design top concept we already created. Create and issue the following request.</p>
 
-		<p><span class="ui blue horizontal label">POST</span> <code>http://localhost:8083/apps/taxonomy-hub/schemes/topics/</code></p>
+		<p><span class="ui blue horizontal label">POST</span> <code>http://localhost:8083/schemes/topics/</code></p>
 		<table class="ui celled table">
 			<thead>
 				<tr>
@@ -1032,7 +928,7 @@ date: 2017-02-07 19:01:07
 		<p>A successful POST should result in HTTP status <code>201 Created</code>.</p>
 		<p><strong>Create Concept 2.1</strong></p>
 		<p>Next, let's create the HTML5 concept (Concept 2.1), which will be a narrower concept of the Technology top concept we already created. Create and issue the following request.</p>
-		<p><span class="ui blue horizontal label">POST</span> <code>http://localhost:8083/apps/taxonomy-hub/schemes/topics/</code></p>
+		<p><span class="ui blue horizontal label">POST</span> <code>http://localhost:8083/schemes/topics/</code></p>
 		<table class="ui celled table">
 			<thead>
 				<tr>
@@ -1080,7 +976,7 @@ date: 2017-02-07 19:01:07
 		<p>A successful request will result in HTTP status code <code>201 Created</code>.</p>
 
 		<p><strong>Create Concept 2.2</strong></p>
-		<p><span class="ui blue horizontal label">POST</span> <code>http://localhost:8083/apps/taxonomy-hub/schemes/topics/</code></p>
+		<p><span class="ui blue horizontal label">POST</span> <code>http://localhost:8083/schemes/topics/</code></p>
 		<table class="ui celled table">
 			<thead>
 				<tr>
@@ -1130,7 +1026,7 @@ date: 2017-02-07 19:01:07
 		<p><strong>Make Concept 1.1 Narrower</strong></p>
 		<p>Next, we must make <span>Information Architecture (Concept 1.1) a narrower concept of Design (Concept 1) by adding it to the Design concept's container membership.</span></p>
 		<p><span>Create and issue the following request:</span></p>
-		<p><span class="ui blue horizontal label">PUT</span> <code>http://localhost:8083/apps/taxonomy-hub/schemes/topics/design/</code></p>
+		<p><span class="ui blue horizontal label">PUT</span> <code>http://localhost:8083/schemes/topics/design/</code></p>
 		<table class="ui celled table">
 			<thead>
 				<tr>
@@ -1163,7 +1059,7 @@ date: 2017-02-07 19:01:07
 			&lt;&gt;{
 				_:b0
 			        a c:AddMemberAction;
-			        c:targetMember &lt;http://localhost:8083/apps/taxonomy-hub/schemes/topics/information-architecture/&gt;.
+			        c:targetMember &lt;http://localhost:8083/schemes/topics/information-architecture/&gt;.
 			}
 		</code></pre>
 		<p>A successful PUT request will result in HTTP status <code>200 OK</code>.</p>
@@ -1174,7 +1070,7 @@ date: 2017-02-07 19:01:07
 
 		<p>Similarly, we will make Concept 2.1 and 2.2 narrower than the parent Concept 2. Since both have the same parent, we can do this in a single request.</p>
 
-		<p><span class="ui blue horizontal label">PUT</span> <code>http://localhost:8083/apps/taxonomy-hub/schemes/topics/technology/</code></p>
+		<p><span class="ui blue horizontal label">PUT</span> <code>http://localhost:8083/schemes/topics/technology/</code></p>
 		<table class="ui celled table">
 			<thead>
 				<tr>
@@ -1207,8 +1103,8 @@ date: 2017-02-07 19:01:07
 			&lt;&gt;{
 				_:b0
 			        a c:AddMemberAction;
-			        c:targetMember &lt;http://localhost:8083/apps/taxonomy-hub/schemes/topics/html5/&gt;,
-			            &lt;http://localhost:8083/apps/taxonomy-hub/schemes/topics/javascript/&gt;.
+			        c:targetMember &lt;http://localhost:8083/schemes/topics/html5/&gt;,
+			            &lt;http://localhost:8083/schemes/topics/javascript/&gt;.
 			}
 		</code></pre>
 		<p>A successful PUT request will result in HTTP status <code>200 OK</code>.</p>
@@ -1219,15 +1115,15 @@ date: 2017-02-07 19:01:07
 	<h2 class="ui header">Secure the application</h2>
 	<p>Setting up security for a Carbon application involves the following general steps:</p>
 	<ul>
-		<li>Create application roles</li>
-		<li>Create application users</li>
+		<li>Create roles</li>
+		<li>Create users</li>
 		<li>Assign users to roles</li>
 		<li>Put roles into the role-hierarchy</li>
-		<li>Assign permissions on your application structure to the application roles</li>
+		<li>Assign permissions on your application structure to the roles</li>
 	</ul>
 	<section class="mainContent-subSection">
-		<h3 class="ui header">Create application roles</h3>
-		<p>Roles allow us to control access to application resources. A role defines what kind of access a group of users have on one or more resources. For this app, we'll create the two roles:</p>
+		<h3 class="ui header">Create roles</h3>
+		<p>Roles allow us to control access to your resources. A role defines what kind of access a group of users have on one or more resources. For this app, we'll create the two roles:</p>
 		<ul>
 			<li><strong>editor</strong> - Role for all available operations.</li>
 			<li><strong>user</strong> - Role for read-only operations.</li>
@@ -1235,7 +1131,7 @@ date: 2017-02-07 19:01:07
 		<section class="mainContent-subSection">
 			<h4>Create the editor role</h4>
 			<p>Issue the following HTTP request to create the editor role.</p>
-			<p><span class="ui blue horizontal label">POST</span> <code>http://localhost:8083/apps/taxonomy-hub/roles/</code></p>
+			<p><span class="ui blue horizontal label">POST</span> <code>http://localhost:8083/roles/</code></p>
 			<table class="ui celled table">
 				<thead>
 					<tr>
@@ -1285,7 +1181,7 @@ date: 2017-02-07 19:01:07
 		<section class="mainContent-subSection">
 			<h4>Create the user role</h4>
 			<p>Issue the following HTTP request to create the user role.</p>
-			<p><span class="ui blue horizontal label">POST</span> <code>http://localhost:8083/apps/taxonomy-hub/roles/</code></p>
+			<p><span class="ui blue horizontal label">POST</span> <code>http://localhost:8083/roles/</code></p>
 			<table class="ui celled table">
 				<thead>
 					<tr>
@@ -1335,11 +1231,11 @@ date: 2017-02-07 19:01:07
 
 
 	<section class="mainContent-subSection">
-		<h3 class="ui header">Create application users</h3>
-		<p>For this exercise, we'll create just two users - one to add to the editor role and another to add to the user role. In Carbon, a user is also referred to as an <em>agent</em>.</p>
-		<h4>Create Agent, testuser1</h4>
-		<p>Issue the following HTTP request to create the first user (an Agent).</p>
-		<p><span class="ui blue horizontal label">POST</span> <code>http://localhost:8083/apps/taxonomy-hub/agents/</code></p>
+		<h3 class="ui header">Create users</h3>
+		<p>For this exercise, we'll create just two users - one to add to the editor role and another to add to the user role.</p>
+		<h4>Create User, testuser1</h4>
+		<p>Issue the following HTTP request to create the first user.</p>
+		<p><span class="ui blue horizontal label">POST</span> <code>http://localhost:8083/users/</code></p>
 		<table class="ui celled table">
 			<thead>
 				<tr>
@@ -1380,9 +1276,9 @@ date: 2017-02-07 19:01:07
 		<p>A successful POST request results in HTTP status <code>201 Created</code>.</p>
 
 
-		<h4>Create Agent, testuser2</h4>
-		<p>Issue the following HTTP request to create the second user (an agent).</p>
-		<p><span class="ui blue horizontal label">POST</span> <code>http://localhost:8083/apps/taxonomy-hub/agents/</code></p>
+		<h4>Create User, testuser2</h4>
+		<p>Issue the following HTTP request to create the second user.</p>
+		<p><span class="ui blue horizontal label">POST</span> <code>http://localhost:8083/users/</code></p>
 		<table class="ui celled table">
 			<thead>
 				<tr>
@@ -1427,12 +1323,12 @@ date: 2017-02-07 19:01:07
 
 	<section class="mainContent-subSection">
 		<h3 class="ui header">Assign users to roles</h3>
-		<p>In Carbon a role is similar to a user group. Roles are resources that can have one or more agents (users) as members.
-			In this step, we will assign testuser1 to the Editor role and testuser2 to the User role. To add an agent to a role, we
-			PUT the agent to the membership of the <code>agents</code> container that exists within the container of the role.</p>
+		<p>In Carbon a role is similar to a user group. Roles are resources that can have one or more users as members.
+			In this step, we will assign testuser1 to the Editor role and testuser2 to the User role. To add a user to a role, we
+			PUT the user to the membership of the <code>users</code> container that exists within the container of the role.</p>
 		<h4>Add test user 1 to the editor role</h4>
 		<p>Issue the following HTTP request to add testuser1 to the editor role.</p>
-		<p><span class="ui blue horizontal label">PUT</span> <code>http://localhost:8083/apps/taxonomy-hub/roles/editor/agents/</code></p>
+		<p><span class="ui blue horizontal label">PUT</span> <code>http://localhost:8083/roles/editor/users/</code></p>
 		<table class="ui celled table">
 			<thead>
 				<tr>
@@ -1464,13 +1360,13 @@ date: 2017-02-07 19:01:07
 			&lt;&gt;{
 				_:b0
 			        a c:AddMemberAction;
-			        c:targetMember &lt;http://localhost:8083/apps/taxonomy-hub/agents/testuser1/&gt;.
+			        c:targetMember &lt;http://localhost:8083/users/testuser1/&gt;.
 			}
 		</code></pre>
 		<p>A successful PUT request results in HTTP status <code>200 OK</code>.</p>
 		<h4>Add test user 2 to the user role</h4>
 		<p>Issue the following HTTP request to add testuser2 to the user role.</p>
-		<p><span class="ui blue horizontal label">PUT</span> <code>http://localhost:8083/apps/taxonomy-hub/roles/user/agents/</code></p>
+		<p><span class="ui blue horizontal label">PUT</span> <code>http://localhost:8083/roles/user/users/</code></p>
 		<table class="ui celled table">
 			<thead>
 				<tr>
@@ -1502,7 +1398,7 @@ date: 2017-02-07 19:01:07
 			&lt;&gt;{
 				_:b0
 			        a c:AddMemberAction;
-			        c:targetMember &lt;http://localhost:8083/apps/taxonomy-hub/agents/testuser2/&gt;.
+			        c:targetMember &lt;http://localhost:8083/users/testuser2/&gt;.
 			}
 		</code></pre>
 		<p>A successful PUT request results in HTTP status <code>200 OK</code>.</p>
@@ -1513,12 +1409,12 @@ date: 2017-02-07 19:01:07
 
 		<p>We'll need to give permissions to our roles on resources. But we cannot assign permissions for the roles yet because the roles have not been positioned in the role
 			hierarchy. Carbon has a role hierarchy so that permissions can be inherited from the parent in any place within the hierarchy. The hierarchy always starts at
-			<code>/apps/&lt;app-name&gt;/roles/app-admin/</code>. So, in order to be able to apply permissions (ACLs - Access Control Lists) on any resource, the roles that will
+			<code>/roles/admin/</code>. So, in order to be able to apply permissions (ACLs - Access Control Lists) on any resource, the roles that will
 			be part of an ACL will need to exist within the role hierarchy. We can PUT both the Editor and User roles into to the role hierarchy with a single request.</p>
 
 		<h4>Put the editor and user roles into the role hierarchy</h4>
 
-		<p><span class="ui blue horizontal label">PUT</span> <code>http://localhost:8083/apps/taxonomy-hub/roles/app-admin/</code></p>
+		<p><span class="ui blue horizontal label">PUT</span> <code>http://localhost:8083/roles/admin/</code></p>
 		<table class="ui celled table">
 			<thead>
 				<tr>
@@ -1550,27 +1446,27 @@ date: 2017-02-07 19:01:07
 			&lt;&gt;{
 				_:b0
 				    a c:AddMemberAction;
-				    c:targetMember &lt;/apps/taxonomy-hub/roles/editor/&gt;,
-						&lt;/apps/taxonomy-hub/roles/user/&gt;.
+				    c:targetMember &lt;/roles/editor/&gt;,
+						&lt;/roles/user/&gt;.
 			}
 		</code></pre>
 		<p>A successful PUT should result in HTTP status <code>200 OK</code>.</p>
-		<p>If you inspect, the <code>app-admin/</code> container, you should see the child roles linked with a triple like this:</p>
-		<p><code>&lt;http://localhost:8083/apps/taxonomy-hub/roles/app-admin/&gt; &lt;https://carbonldp.com/ns/v1/security#childRole&gt; &lt;http://localhost:8083/apps/taxonomy-hub/roles/editor/&gt;</code></p>
+		<p>If you inspect, the <code>admin/</code> container, you should see the child roles linked with a triple like this:</p>
+		<p><code>&lt;http://localhost:8083/roles/admin/&gt; &lt;https://carbonldp.com/ns/v1/security#childRole&gt; &lt;http://localhost:8083/roles/editor/&gt;</code></p>
 
-		<p>Conversely, if you inspect either the child roles, you will see a link back to the parent <code>app-admin/</code> role by way of the property identified by the URI, <code>https://carbonldp.com/ns/v1/security#parentRole</code>.</p>
+		<p>Conversely, if you inspect either the child roles, you will see a link back to the parent <code>admin/</code> role by way of the property identified by the URI, <code>https://carbonldp.com/ns/v1/security#parentRole</code>.</p>
 	</section>
 	<section class="mainContent-subSection">
 
-		<h3 class="ui header">Assign permissions to the application roles</h3>
+		<h3 class="ui header">Assign permissions to the roles</h3>
 
-		<p>Next, we need to assign permissions to the application roles we've created. In Carbon, resources can have an AccessControlList (ACL),
+		<p>Next, we need to assign permissions to the roles we've created. In Carbon, resources can have an AccessControlList (ACL),
 			which defines what permissions roles have on the given resource. Let's take a look.</p>
 
-		<p>Issue the following request to get the ACL for the application's root container, take notice that the interaction model used in this
+		<p>Issue the following request to get the ACL for the root container, take notice that the interaction model used in this
 			request is RDFSource, as shown in the Prefer header.</p>
 
-		<p><span class="ui blue horizontal label">GET</span> <code>http://localhost:8083/apps/taxonomy-hub/~acl/</code></p>
+		<p><span class="ui blue horizontal label">GET</span> <code>http://localhost:8083/~acl/</code></p>
 
 		<table class="ui celled table">
 			<thead>
@@ -1600,14 +1496,14 @@ date: 2017-02-07 19:01:07
 		</table>
 		<p>The resulting ACL is shown below.</p>
 		<pre><code class="turtle">
-			&lt;http://localhost:8083/apps/taxonomy-hub/~acl/&gt; {
-				&lt;http://localhost:8083/apps/taxonomy-hub/~acl/&gt; a &lt;https://carbonldp.com/ns/v1/security#AccessControlList&gt; .
+			&lt;http://localhost:8083/~acl/&gt; {
+				&lt;http://localhost:8083/~acl/&gt; a &lt;https://carbonldp.com/ns/v1/security#AccessControlList&gt; .
 
 				_:node1be13fi05x169 a &lt;https://carbonldp.com/ns/v1/security#AccessControlEntry&gt; ;
 					&lt;https://carbonldp.com/ns/v1/platform#bNodeIdentifier&gt; "fb95eee6-b2c6-46a0-af0b-ac8b1d50bf25" ;
 					&lt;https://carbonldp.com/ns/v1/security#granting&gt; true ;
 					&lt;https://carbonldp.com/ns/v1/security#permission&gt; &lt;https://carbonldp.com/ns/v1/security#AddMember&gt; , &lt;https://carbonldp.com/ns/v1/security#CreateAccessPoint&gt; , &lt;https://carbonldp.com/ns/v1/security#CreateChild&gt; , &lt;https://carbonldp.com/ns/v1/security#Download&gt; , &lt;https://carbonldp.com/ns/v1/security#Extend&gt; , &lt;https://carbonldp.com/ns/v1/security#ManageSecurity&gt; , &lt;https://carbonldp.com/ns/v1/security#Read&gt; , &lt;https://carbonldp.com/ns/v1/security#RemoveMember&gt; , &lt;https://carbonldp.com/ns/v1/security#Update&gt; , &lt;https://carbonldp.com/ns/v1/security#Upload&gt; ;
-					&lt;https://carbonldp.com/ns/v1/security#subject&gt; &lt;http://localhost:8083/apps/taxonomy-hub/roles/app-admin/&gt; ;
+					&lt;https://carbonldp.com/ns/v1/security#subject&gt; &lt;http://localhost:8083/roles/admin/&gt; ;
 					&lt;https://carbonldp.com/ns/v1/security#subjectClass&gt; &lt;https://carbonldp.com/ns/v1/security#AppRole&gt; .
 
 				&lt;http://localhost:8083/apps/taxonomy-hub/~acl/&gt; &lt;https://carbonldp.com/ns/v1/security#accessTo&gt; &lt;http://localhost:8083/apps/taxonomy-hub/&gt; ;
@@ -1618,7 +1514,7 @@ date: 2017-02-07 19:01:07
 					&lt;https://carbonldp.com/ns/v1/platform#bNodeIdentifier&gt; "70a3d1c2-5b65-435a-8717-e78d6f70512c" ;
 					&lt;https://carbonldp.com/ns/v1/security#granting&gt; true ;
 					&lt;https://carbonldp.com/ns/v1/security#permission&gt; &lt;https://carbonldp.com/ns/v1/security#AddMember&gt; , &lt;https://carbonldp.com/ns/v1/security#CreateAccessPoint&gt; , &lt;https://carbonldp.com/ns/v1/security#CreateChild&gt; , &lt;https://carbonldp.com/ns/v1/security#Download&gt; , &lt;https://carbonldp.com/ns/v1/security#Extend&gt; , &lt;https://carbonldp.com/ns/v1/security#ManageSecurity&gt; , &lt;https://carbonldp.com/ns/v1/security#Read&gt; , &lt;https://carbonldp.com/ns/v1/security#RemoveMember&gt; , &lt;https://carbonldp.com/ns/v1/security#Update&gt; , &lt;https://carbonldp.com/ns/v1/security#Upload&gt; , &lt;https://carbonldp.com/ns/v1/security#Delete&gt; ;
-					&lt;https://carbonldp.com/ns/v1/security#subject&gt; &lt;http://localhost:8083/apps/taxonomy-hub/roles/app-admin/&gt; ;
+					&lt;https://carbonldp.com/ns/v1/security#subject&gt; &lt;http://localhost:8083/roles/admin/&gt; ;
 					&lt;https://carbonldp.com/ns/v1/security#subjectClass&gt; &lt;https://carbonldp.com/ns/v1/security#AppRole&gt; .
 			}
 		</code></pre>
@@ -1642,7 +1538,7 @@ date: 2017-02-07 19:01:07
 		_:user-ace a &lt;https://carbonldp.com/ns/v1/security#AccessControlEntry&gt; ;
 				&lt;https://carbonldp.com/ns/v1/security#granting&gt; true ;
 				&lt;https://carbonldp.com/ns/v1/security#permission&gt; &lt;https://carbonldp.com/ns/v1/security#Read&gt; ;
-				&lt;https://carbonldp.com/ns/v1/security#subject&gt; &lt;http://localhost:8083/apps/taxonomy-hub/roles/user/&gt; ;
+				&lt;https://carbonldp.com/ns/v1/security#subject&gt; &lt;http://localhost:8083/roles/user/&gt; ;
 				&lt;https://carbonldp.com/ns/v1/security#subjectClass&gt; &lt;https://carbonldp.com/ns/v1/security#AppRole&gt; .
 		</code></pre>
 		<p>Also add the following AccessControlEntry, which will put the several more permissions on the <code>editor/</code> role.</p>
@@ -1661,7 +1557,7 @@ date: 2017-02-07 19:01:07
 				&lt;https://carbonldp.com/ns/v1/security#RemoveMember&gt; ,
 				&lt;https://carbonldp.com/ns/v1/security#Update&gt; ,
 				&lt;https://carbonldp.com/ns/v1/security#Upload&gt; ;
-			&lt;https://carbonldp.com/ns/v1/security#subject&gt; &lt;http://localhost:8083/apps/taxonomy-hub/roles/editor/&gt; ;
+			&lt;https://carbonldp.com/ns/v1/security#subject&gt; &lt;http://localhost:8083/roles/editor/&gt; ;
 			&lt;https://carbonldp.com/ns/v1/security#subjectClass&gt; &lt;https://carbonldp.com/ns/v1/security#AppRole&gt; .
 		</code></pre>
 
@@ -1679,7 +1575,7 @@ date: 2017-02-07 19:01:07
 		</code></pre>
 
 		<p>When you are done, you should end up with something similar to what is shown in the body of the following request. To update the ACL, you then issue a <code>PUT</code>request to replace the ACL.</p>
-		<p><span class="ui blue horizontal label">PUT</span> <code>http://localhost:8083/apps/taxonomy-hub/~acl/</code></p>
+		<p><span class="ui blue horizontal label">PUT</span> <code>http://localhost:8083/~acl/</code></p>
 		<table class="ui celled table">
 			<thead>
 				<tr>
@@ -1724,10 +1620,10 @@ date: 2017-02-07 19:01:07
 						&lt;https://carbonldp.com/ns/v1/security#RemoveMember&gt; ,
 						&lt;https://carbonldp.com/ns/v1/security#Update&gt; ,
 						&lt;https://carbonldp.com/ns/v1/security#Upload&gt; ;
-					&lt;https://carbonldp.com/ns/v1/security#subject&gt; &lt;http://localhost:8083/apps/taxonomy-hub/roles/app-admin/&gt; ;
+					&lt;https://carbonldp.com/ns/v1/security#subject&gt; &lt;http://localhost:8083/roles/admin/&gt; ;
 					&lt;https://carbonldp.com/ns/v1/security#subjectClass&gt; &lt;https://carbonldp.com/ns/v1/security#AppRole&gt; .
 
-				&lt;http://localhost:8083/apps/taxonomy-hub/~acl/&gt; &lt;https://carbonldp.com/ns/v1/security#accessTo&gt; &lt;http://localhost:8083/apps/taxonomy-hub/&gt; ;
+				&lt;http://localhost:8083/apps/taxonomy-hub/~acl/&gt; &lt;https://carbonldp.com/ns/v1/security#accessTo&gt; &lt;http://localhost:8083/&gt; ;
 					&lt;https://carbonldp.com/ns/v1/security#accessControlEntry&gt;
 						_:node1be13fi05x169 ,
 						_:editor-ace ,
@@ -1752,7 +1648,7 @@ date: 2017-02-07 19:01:07
 						&lt;https://carbonldp.com/ns/v1/security#Update&gt; ,
 						&lt;https://carbonldp.com/ns/v1/security#Upload&gt; ,
 						&lt;https://carbonldp.com/ns/v1/security#Delete&gt; ;
-					&lt;https://carbonldp.com/ns/v1/security#subject&gt; &lt;http://localhost:8083/apps/taxonomy-hub/roles/app-admin/&gt; ;
+					&lt;https://carbonldp.com/ns/v1/security#subject&gt; &lt;http://localhost:8083/roles/admin/&gt; ;
 					&lt;https://carbonldp.com/ns/v1/security#subjectClass&gt; &lt;https://carbonldp.com/ns/v1/security#AppRole&gt; .
 
 				_:user-ace a &lt;https://carbonldp.com/ns/v1/security#AccessControlEntry&gt; ;
@@ -1774,7 +1670,7 @@ date: 2017-02-07 19:01:07
 						&lt;https://carbonldp.com/ns/v1/security#RemoveMember&gt; ,
 						&lt;https://carbonldp.com/ns/v1/security#Update&gt; ,
 						&lt;https://carbonldp.com/ns/v1/security#Upload&gt; ;
-					&lt;https://carbonldp.com/ns/v1/security#subject&gt; &lt;http://localhost:8083/apps/taxonomy-hub/roles/editor/&gt; ;
+					&lt;https://carbonldp.com/ns/v1/security#subject&gt; &lt;http://localhost:8083/roles/editor/&gt; ;
 					&lt;https://carbonldp.com/ns/v1/security#subjectClass&gt; &lt;https://carbonldp.com/ns/v1/security#AppRole&gt; .
 
 			}
