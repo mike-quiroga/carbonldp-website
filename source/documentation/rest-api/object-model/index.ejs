@@ -67,23 +67,6 @@ date: 2017-02-08 11:01:03
 			inherited by child resources when the child resources do not override them.</p>
 	</div>
 	<div class="ui vertical segment">
-		<h3>Agent</h3>
-		<p>An RDFSource document that represents a user or system account that can authenticate with the Carbon platform or a
-			Carbon application.</p>
-	</div>
-	<div class="ui vertical segment">
-		<h3>Application</h3>
-		<p>An RDSource document that represents an application in the Carbon platform. In order to create a new Carbon application, you
-			must post an Application RDFSource document. Doing so creates the root container for your new application, under which you
-			can begin posting application-specific resources.</p>
-	</div>
-	<div class="ui vertical segment">
-		<h3>AppRole</h3>
-		<p>An RDFSource document that is used to control access to application resources. An AppRole defines what kind of access a group of agents have on one or more
-			resources.</p>
-		<p>An AppRole is defined by the <code>rdf:type</code> of <code>https://carbonldp.com/ns/v1/security#AppRole</code> (or <code>cs:AppRole</code>, for short).</p>
-	</div>
-	<div class="ui vertical segment">
 		<h3>Backup</h3>
 		<p>An RDFRepresentation that describes the zip archive created by an ExportBackup job; it contains information such as the archive's format, size, and cretaion time, for
 			example.</p>
@@ -134,9 +117,9 @@ date: 2017-02-08 11:01:03
 		<p>A type of Job that, when executed, will replace a Carbon application's resources with the resources created by an ExportBackup job.</p>
 	</div>
 	<div class="ui vertical segment">
-		<h3>ImportLDAPAgentsJob</h3>
-		<p>A type of Job that, when executed, creates LDAPAgents that contain properties that can be used as credentials for authentication. This Job can be configured so only
-			certain user properties are copied from the LDAP server when the representative LDAPAgent is created.</p>
+		<h3>ImportLDAPUsersJob</h3>
+		<p>A type of Job that, when executed, creates LDAPUsers that contain properties that can be used as credentials for authentication. This Job can be configured so only
+			certain user properties are copied from the LDAP server when the representative LDAPUser is created.</p>
 	</div>
 	<div class="ui vertical segment">
 		<h3>IndirectContainer</h3>
@@ -151,12 +134,12 @@ date: 2017-02-08 11:01:03
 		</p>
 	</div>
 	<div class="ui vertical segment">
-		<h3>LDAPAgent</h3>
-		<p>A special type of Agent that is created based on the information retrieved from an LDAP server when an ImportLDAPAgentsJob is executed.</p>
-	</div>
-	<div class="ui vertical segment">
 		<h3>LDAPServer</h3>
 		<p>An LDP RDFSource that contains the required configuration information to connect to an LDAP server.</p>
+	</div>
+	<div class="ui vertical segment">
+		<h3>LDAPUser</h3>
+		<p>A special type of User that is created based on the information retrieved from an LDAP server when an ImportLDAPAgentsJob is executed.</p>
 	</div>
 	<div class="ui vertical segment">
 		<h3>RDFRepresentation</h3>
@@ -177,6 +160,16 @@ date: 2017-02-08 11:01:03
 			<li><a href="https://www.w3.org/TR/ldp/#ldpr">Linked Data Platform Resources</a> [LDP]</li>
 			<li><a href="https://www.w3.org/TR/ldp/#ldprs">RDF Source</a> [LDP]</li>
 		</ul>
+	</div>
+	<div class="ui vertical segment">
+		<h3>Role</h3>
+		<p>An RDFSource document that is used to control access to resources. A Role defines what kind of access a group of users have on one or more
+			resources.</p>
+		<p>A Role is defined by the <code>rdf:type</code> of <code>https://carbonldp.com/ns/v1/security#Role</code> (or <code>cs:Role</code>, for short).</p>
+	</div>
+	<div class="ui vertical segment">
+		<h3>User</h3>
+		<p>An RDFSource document that represents a user or system account that can authenticate with the Carbon platform.</p>
 	</div>
 
 
