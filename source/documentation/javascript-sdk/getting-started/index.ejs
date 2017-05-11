@@ -294,29 +294,8 @@ date: 2017-02-08 11:56:44
 	<p>
 		First of all, you need to create a <span class="highlight">Carbon object</span>. This is the
 		<span class="highlight">instance</span> you will be working with, and it will help you communicate directly with your platform instance.
-	</p>
-	<tabs>
-		<tab title="TypeScript" name="typescript">
-			<pre><code class="typescript">
-				import Carbon from "carbonldp/Carbon";
-
-				let carbon:Carbon = new Carbon(); // initialize your Carbon object
-			</code></pre>
-		</tab>
-		<tab title="JavaScript ES2015" name="javascript-es2015">
-			<pre><code class="javascript">
-				let carbon = new Carbon(); // initialize your Carbon object
-			</code></pre>
-		</tab>
-		<tab title="JavaScript ES5" name="javascript-es5">
-			<pre><code class="javascript">
-				var carbon = new Carbon(); // initialize your Carbon object
-			</code></pre>
-		</tab>
-	</tabs>
-	<p>
-		By default, a Carbon object points to <code>carbonldp.com</code>. If you need to change this,
-		you can do it by changing the <code>domain</code> setting:
+		When creating this object you need to specify the domain where your platform lives, and pass it as a parameter of the <code>Carbon</code>, other settings maybe passed as parameters
+		you can review the <a>API</a> documentation for more information
 	</p>
 	<tabs>
 		<tab title="TypeScript">
@@ -324,24 +303,22 @@ date: 2017-02-08 11:56:44
 			<pre><code class="typescript">
 				import Carbon from "carbonldp/Carbon";
 
-				let carbon:Carbon = new Carbon(); // initialize your Carbon object
-				carbon.setSetting( "domain", "my-carbon-instance.com:8080" ); // set the domain where your platform lives
+				let carbon:Carbon = new Carbon( "my-carbon-instance.com:8080" ); // initialize your Carbon object with the domain where your platform lives
+
 			</code></pre>
 
 		</tab>
 		<tab title="JavaScript ES2015">
 
 			<pre><code class="javascript">
-				let carbon = new Carbon(); // initialize your Carbon object
-				carbon.setSetting( "domain", "my-carbon-instance.com:8080" ); // set the domain where your platform lives
+				let carbon = new Carbon( "my-carbon-instance.com:8080" ); // initialize your Carbon object with the domain where your platform lives
 			</code></pre>
 
 		</tab>
 		<tab title="JavaScript ES5">
 
 			<pre><code class="javascript">
-				var carbon = new Carbon(); // initialize your Carbon object
-				carbon.setSetting( "domain", "my-carbon-instance.com:8080" ); // set the domain where your platform lives
+				var carbon = new Carbon( "my-carbon-instance.com:8080" ); // initialize your Carbon object with the domain where your platform lives
 			</code></pre>
 
 		</tab>
@@ -1682,9 +1659,7 @@ date: 2017-02-08 11:56:44
 				let persistedTask1:Task &amp; PersistedDocument.Class;
 				let persistedTask2:Task &amp; PersistedDocument.Class;
 
-				let carbon:Carbon = new Carbon();
-				carbon.setSetting( &quot;domain&quot;, &quot;localhost:8083&quot; );
-				carbon.setSetting( &quot;http.ssl&quot;, false ); // Turning off HTTPS (only needed if your server isn't using it)
+				let carbon:Carbon = new Carbon( &quot;localhost:8083&quot;, false ); // Turning off HTTPS (only needed if your server isn't using it)
 
 
 				carbon.auth.authenticate( &quot;your@email.com&quot;, &quot;YouRP455word&quot; ).then(
@@ -1797,9 +1772,7 @@ date: 2017-02-08 11:56:44
 				let persistedTask1;
 				let persistedTask2;
 
-				let carbon = new Carbon();
-				carbon.setSetting( &quot;domain&quot;, &quot;localhost:8083&quot; );
-				carbon.setSetting( &quot;http.ssl&quot;, false ); // Turning off HTTPS (only needed if your server isn't using it)
+				let carbon = new Carbon( &quot;localhost:8083&quot;, false ); // Turning off HTTPS (only needed if your server isn't using it)
 
 				carbon.auth.authenticate( &quot;your@email.com&quot;, &quot;YouRP455word&quot; ).then(
 					( token ) =&gt; &#123;
@@ -1909,9 +1882,7 @@ date: 2017-02-08 11:56:44
 				var persistedTask1;
 				var persistedTask2;
 
-				var carbon = new Carbon();
-				carbon.setSetting( &quot;domain&quot;, &quot;localhost:8083&quot; );
-				carbon.setSetting( &quot;http.ssl&quot;, false ); // Turning off HTTPS (only needed if your server isn't using it)
+				var carbon = new Carbon( &quot;localhost:8083&quot;, false ); // Turning off HTTPS (only needed if your server isn't using it)
 
 				carbon.auth.authenticate( &quot;your@email.com&quot;, &quot;YouRP455word&quot; ).then(
 					function ( token ) &#123;
