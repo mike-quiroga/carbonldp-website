@@ -1,73 +1,78 @@
 <header class="header">
 	<div class="ui grid removeSideMargins">
 		<div class="computer only row">
-				<div class="ui top fixed borderless menu">
-					<div class="ui container navMenu">
-						<a class="item transparentBG" href="/">
-							<%- svg("assets/images/carbon-logo-header.svg", "ui navMenu-carbonLogo image")%>
-						</a>
+			<div class="ui top fixed borderless menu">
+				<div class="ui container navMenu">
+					<a class="item transparentBG" href="/">
+						<%- svg( "assets/images/carbon-logo-header.svg", "ui navMenu-carbonLogo image" ) %>
+					</a>
 
-						<% for (var i in theme.nav){
-							if (theme.nav[i].children === null ){%>
-
-								<a class="item" href="<%- url_for(theme.nav[i].path) %>"><%=theme.nav[i].name%></a>
-
-							<% } else { %>
-
-								<div class="ui dropdown link item navMenu-dropdownButton"><a class="item navMenu-dropdownLink" href="<%- url_for(theme.nav[i].path) %>">Documentation</a><i class="dropdown icon"></i>
-									<div class="menu">
-									<%for (var j in theme.nav[i].children){%>
-										<% var childitem = theme.nav[i].children[j] %>
-										<a class="item navMenu-item" href="<%- url_for(childitem.path) %>"><%=childitem.name%></a>
-										<%if ( childitem.children !== null ){%>
-											<%for (var k in childitem.children){%>
-											<a class="item navMenu-subItem" href="<%- url_for(childitem.children[k].path) %>"><%=childitem.children[k].name%></a>
-											<%}%>
-										<%}%>
-									<%}%>
-									</div>
+					<% for (var i in theme.nav){
+						if (theme.nav[i].name === "Documentation") var path = theme.nav[i].path? theme.nav[i].path+theme.currentVersionPath : theme.nav[i].url;
+						else var path = theme.nav[i].path? theme.nav[i].path : theme.nav[i].url;
+						if (theme.nav[ i ].children === null ){ %>
+							<a class="item" href="<%- url_for( path ) %>"><%= theme.nav[i].name %></a>
+							<%
+							} else { %>
+							<div class="ui dropdown link item navMenu-dropdownButton"><a class="item navMenu-dropdownLink" href="<%- url_for( path )%>"><%= theme.nav[i].name %></a><i class="dropdown icon"></i>
+								<div class="menu">
+									<% for (var j in theme.nav[ i ].children){ %>
+									<% var childitem = theme.nav[ i ].children[ j ];var childitemPath = childitem.path? path+childitem.path : childitem.url%>
+									<a class="item navMenu-item" href="<%- url_for( childitemPath ) %>"><%= childitem.name %></a>
+									<% if ( childitem.children !== null ){ %>
+									<% for (var k in childitem.children){
+										var childitemChildrenPath = childitem.children[ k ].path? path+childitem.children[ k ].path : childitem.children[ k ].url; %>
+									<a class="item navMenu-subItem" href="<%- url_for( childitemChildrenPath ) %>"><%= childitem.children[k].name %></a>
+									<% } %>
+									<% } %>
+									<% } %>
 								</div>
-							<%}
-						} %>
-					</div>
+							</div>
+						<%  }
+					} %>
+				</div>
 			</div>
 		</div>
 		<div class="mobile tablet only row">
 			<div class="ui top fixed borderless menu navMenu">
 				<div class="ui container navMenu">
 					<a class="item navMenu-carbonLogoButton transparentBG" href="/">
-						<%- svg("assets/images/carbon-logo-header.svg", "ui navMenu-carbonLogo image")%>
+						<%- svg( "assets/images/carbon-logo-header.svg", "ui navMenu-carbonLogo image" ) %>
 					</a>
 					<div class="ui right icon item navMenu-openerButton">
-							<i class="content icon"></i>
+						<i class="content icon"></i>
 					</div>
 				</div>
 			</div>
 			<div class="ui fixed fluid vertical menu navMenu-verticalMenu" style="display: none;">
-			<% for (var i in theme.nav){
-				if (theme.nav[i].children === null ){%>
+				<% for (var i in theme.nav){
+					if (theme.nav[i].name === "Documentation") var path = theme.nav[i].path? theme.nav[i].path+theme.currentVersionPath : theme.nav[i].url;
+					else var path = theme.nav[i].path? theme.nav[i].path : theme.nav[i].url;
+				if (theme.nav[ i ].children === null ){ %>
 
-					<a class="item" href="<%- url_for(theme.nav[i].path) %>"><%=theme.nav[i].name%></a>
+				<a class="item" href="<%- url_for( path ) %>"><%= theme.nav[i].name %></a>
 
 				<% } else { %>
 
-					<div class="ui dropdown link item navMenu-dropdownButton--mobile"><a class="item navMenu-dropdownText">Documentation<i class="dropdown icon"></i></a>
-						<div class="menu navMenu-dropdownMenu">
-							<%for (var j in theme.nav[i].children){%>
-								<% var childitem = theme.nav[i].children[j] %>
-								<a class="item navMenu-item" href="<%- url_for(childitem.path) %>"><%=childitem.name%></a>
-								<% if ( childitem.children !== null ){%>
-									<%for (var k in childitem.children){%>
-										<a class="item navMenu-subItem" href="<%- url_for(childitem.children[k].path) %>"><%=childitem.children[k].name%></a>
-									<%}%>
-								<%}%>
-							<%}%>
+				<div class="ui dropdown link item navMenu-dropdownButton--mobile"><a class="item navMenu-dropdownText"><%= theme.nav[i].name %><i class="dropdown icon"></i></a>
+					<div class="menu navMenu-dropdownMenu">
+						<% for (var j in theme.nav[ i ].children){ %>
+						<% var childitem = theme.nav[ i ].children[ j ]
+						   var childitemPath = childitem.path? path+childitem.path : childitem.url%>
+						<a class="item navMenu-item" href="<%- url_for( childitemPath) %>"><%= childitem.name %></a>
+						<% if ( childitem.children !== null ){ %>
+						<% for (var k in childitem.children){
+						   var childitemChildrenPath = childitem.children[ k ].path? path+childitem.children[ k ].path : childitem.children[ k ].url;%>
+						<a class="item navMenu-subItem" href="<%- url_for( childitemChildrenPath ) %>"><%= childitem.children[k].name %></a>
+						<% } %>
+						<% } %>
+						<% } %>
 						<div class="divider"></div>
-							<a class="item" href="/documentation">All documents...</a>
-						</div>
+						<a class="item" href="/documentation">All documents...</a>
 					</div>
-				<%}%>
-			<%}%>
+				</div>
+				<% } %>
+				<% } %>
 			</div>
 		</div>
 	</div>
