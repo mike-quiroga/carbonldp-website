@@ -1,10 +1,14 @@
 .sidebar{
-    margin: 10em 1em 6em 0;
+    margin: 0 1em 6em 0;
 }
 
 /* Give sidebar a z-index greater than header */
 .sidebar .ui.sticky{
     z-index: 0;
+}
+
+.ui.sticky.segment.fixed.top > .ui.header{
+    margin-top: 30px;
 }
 
 /* Remove box-shadow and border */

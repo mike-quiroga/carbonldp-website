@@ -1,3 +1,6 @@
+<%var versionSelected = page.version? page.version: theme.versions.current %>
+<%var versionsPerDocument = site.data["versions-per-document"];
+  var versionsThatApply = versionsPerDocument[page.title]%>
 <div class="ui container grid">
     <div class="row">
         <div class="twelve wide computer only twelve wide tablet only sixteen wide mobile only column">
@@ -12,10 +15,27 @@
 
                 </div>
             </div>
-        <%if ( !(page.sidebar || page.notDocumented) ) {%>
+
         <div class="four wide computer tablet only column">
+            <%if ( !( page.notDocumented ) ) {%>
+            <div class="versionsMenu--document">
+                <div class="ui sticky versionsMenu-sticky">
+                    <div class="ui dropdown versionsMenu-dropdown versionsMenu-dropdown--document">
+                        <button class="default text ui button versionsMenu-button"><%= versionSelected %></button>
+                        <!--<button class="ui button versionsMenu-button"></button>-->
+                        <div class="menu versionsMenu">
+                            <% for ( var i in versionsThatApply ){ %>
+
+                            <a class="item" href="<%-url_for("documentation/"+versionsThatApply[i]+"/"+page.pathPartialURL)%>"><%=versionsThatApply[i]%></a>
+                            <% } %>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <%}%>
+            <%if ( !(page.sidebar || page.notDocumented ) ) {%>
             <sidebar content="mainContent"></sidebar>
+            <%}%>
         </div>
-        <%}%>
     </div>
 </div>
