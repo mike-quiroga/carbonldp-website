@@ -1,138 +1,83 @@
+<%var versionSelected = page.version? page.version: theme.versions.current %>
 <div class="categoriesMenuContainer bigStoneBG">
-    <div class="ui container">
-        <div class="ui four column center aligned padded stackable grid">
-            <div class="row">
-                <div class="ten wide column">
-                    <h1 class="categoriesMenu-title"> Carbon LDP documentation</h1>
-                </div>
-            </div>
+	<div class="ui container">
+		<div class="ui four column center aligned padded stackable grid">
+			<div class="row">
+				<div class="ten wide column">
+					<h1 class="categoriesMenu-title"> Carbon LDP documentation</h1>
+					<div class="ui dropdown versionsMenu-dropdown">
+						<button class="default text ui button versionsMenu-button"><%= versionSelected %></button>
+						<!--<button class="ui button versionsMenu-button"></button>-->
+						<div class="menu versionsMenu">
+							<% for ( var i in theme.versions.allVersions ){ %>
 
-            <div class="row categoriesMenu">
-                <a href="#quick-guide" class="column categoriesMenu-button">
-                    <%- svg("assets/images/ico-open-book.svg", "ui centered circular image categoriesMenu-icon")%>
-                    <div class="categoriesMenu-categoryTitle">Quick start</div>
-                </a>
-                <a href="#essential-concepts" class="column categoriesMenu-button">
-                    <%- svg("assets/images/ico-books.svg", "ui centered circular image categoriesMenu-icon")%>
-                    <div class="categoriesMenu-categoryTitle">Essential concepts</div>
-                </a>
-                <a href="#javascript-sdk" class="column categoriesMenu-button">
-                    <%- svg("assets/images/ico-javascript.svg", "ui centered circular image categoriesMenu-icon")%>
-                    <div class="categoriesMenu-categoryTitle">JavaScript SDK</div>
-                </a>
-                <a href="#rest-api" class="column categoriesMenu-button">
-                    <%- svg("assets/images/ico-rest-api.svg", "ui centered circular image categoriesMenu-icon")%>
-                    <div class="categoriesMenu-categoryTitle">REST API</div>
-                </a>
+							<a class="item" href="<%-url_for("documentation/"+theme.versions.allVersions[i]+"/")%>"><%= theme.versions.allVersions[i]%></a>
+							<% } %>
+						</div>
+					</div>
+				</div>
+			</div>
 
-            </div>
-        </div>
-    </div>
+			<div class="row categoriesMenu">
+				<a href="#quick-guide" class="column categoriesMenu-button">
+					<%- svg( "assets/images/ico-open-book.svg", "ui centered circular image categoriesMenu-icon" ) %>
+					<div class="categoriesMenu-categoryTitle">Quick start</div>
+				</a>
+				<a href="#essential-concepts" class="column categoriesMenu-button">
+					<%- svg( "assets/images/ico-books.svg", "ui centered circular image categoriesMenu-icon" ) %>
+					<div class="categoriesMenu-categoryTitle">Essential concepts</div>
+				</a>
+				<a href="#javascript-sdk" class="column categoriesMenu-button">
+					<%- svg( "assets/images/ico-javascript.svg", "ui centered circular image categoriesMenu-icon" ) %>
+					<div class="categoriesMenu-categoryTitle">JavaScript SDK</div>
+				</a>
+				<a href="#rest-api" class="column categoriesMenu-button">
+					<%- svg( "assets/images/ico-rest-api.svg", "ui centered circular image categoriesMenu-icon" ) %>
+					<div class="categoriesMenu-categoryTitle">REST API</div>
+				</a>
+
+			</div>
+		</div>
+	</div>
 </div>
 
 <div class="ui container">
-    <div class="mainContent">
 
-        <section class="mainContent-section" id="quick-guide">
+	<div class="mainContent">
+		<%var documentationCategories = site.data["documentation-list"].categories %>
+		<% for (var i in documentationCategories){%>
+			<section class="mainContent-section" id="<%=documentationCategories[i].id%>">
+				<div class="category-titleContainer">
+					<%- svg( documentationCategories[i].iconPath , "ui left floated image category-icon" ) %>
+					<h2 class="category-title"><%=documentationCategories[i].title%></h2>
+				</div>
 
-            <div class="category-titleContainer">
-                <%- svg("assets/images/ico-open-book.svg", "ui left floated image category-icon")%>
-                <h2 class="category-title">Quick start</h2>
-            </div>
-
-            <div class="category-description">
-                <p>Start now!</p>
-                <div class="ui bulleted list">
-                    <div class="item category-item">
-                        <div><a class="category-itemTitle" href="quick-start-guide">Quick start guide</a></div>
-                        <p>Get started now, with this easy to follow, quick start guide</p>
-                    </div>
-                </div>
-            </div>
-
-        </section>
-
-        <section class="mainContent-section" id="essential-concepts">
-
-            <div class="category-titleContainer">
-                <%- svg("assets/images/ico-books.svg", "ui left floated image category-icon")%>
-                <h2 class="category-title">Essential concepts</h2>
-            </div>
-
-            <div class="category-description">
-                <p>Basic Linked Data knowledge.</p>
-                <div class="ui bulleted list">
-                    <div class="item category-item">
-                        <div class="header"><a class="category-itemTitle" href="essential-concepts">Linked data concepts</a></div>
-                        <p>General overview of the basic idea behind Linked Data and why it can make your applications more powerful.</p>
-                    </div>
-                </div>
-            </div>
-
-        </section>
-
-        <section class="mainContent-section" id="javascript-sdk">
-
-            <div class="category-titleContainer">
-                <%- svg("assets/images/ico-javascript.svg", "ui left floated image category-icon")%>
-                <h2 class="category-title">JavScript SDK</h2>
-            </div>
-
-            <div class="category-description">
-                <p>The JavaScript Software Developer's Kit, available from the npm package manager, allows you to manage RDF data using familiar JavaScript and
-                    TypeScript programming techniques and tools. Build for execution within a web browser or Node.js.</p>
-                <div class="ui bulleted list">
-                    <div class="item category-item">
-                        <div class="header"><a class="category-itemTitle" href="javascript-sdk/getting-started">Getting started</a></div>
-                        <div class="summary">Guide to install Carbon JavaScriptSDK and start creating and manipulating data with its basic methods.</div>
-                    </div>
-                    <div class="item category-item">
-                        <div class="header"><a class="category-itemTitle" href="javascript-sdk/object-model">Object model</a></div>
-                        <div class="summary">An in depth description of the Carbon Object Model.</div>
-                    </div>
-                    <div class="item category-item">
-                        <div class="header"><a class="category-itemTitle"href="javascript-sdk/contexts">Contexts</a></div>
-                        <div class="summary"> What is a context in Carbon JS SDK, how to declare,
-                            access and modify it.
-                        </div>
-                    </div>
-                </div>
-                <div class="category-unbulletedItem">
-                    <div class="header"><a class=category-itemTitle href="javascript-sdk">More...</a></div>
-                </div>
-            </div>
-
-        </section>
-
-        <section class="mainContent-section" id="rest-api">
-
-            <div class="category-titleContainer">
-                <%- svg("assets/images/ico-rest-api.svg", "ui left floated image category-icon")%>
-                <h2 class="category-title">REST API</h2>
-            </div>
-
-            <div class="category-description">
-                <p>Access and manage applications and data by URIs using RESTful requests over HTTP (GET, POST, PUT, DELETE). Configure apps, schedule server-side jobs, execute queries - <em>
-                        everything</em> in Carbon is RESTful.</p>
-                <div class="ui bulleted list">
-                    <div class="item category-item">
-                        <div class="header"><a class="category-itemTitle" href="rest-api/getting-started">Getting started</a></div>
-                        <div class="summary">How to build an example application using the Carbon LDP REST API.</div>
-                    </div>
-                    <div class="item category-item">
-                        <div class="header"><a class="category-itemTitle" href="rest-api/object-model">Object model</a></div>
-                        <div>A summary of the various types of resources you can manage and interact with using REST.
-                        </div>
-                    </div>
-                    <div class="item category-item">
-                        <div class="header"><a class="category-itemTitle" href="rest-api/interaction-models">Interaction models</a></div>
-                        <div class="summary">An explanation of the way you can interact with the resources on the Carbon Server.</div>
-                    </div>
-                </div>
-                <div class="category-unbulletedItem">
-                    <div class="header"><a class="category-itemTitle" href="rest-api">More...</a></div>
-                </div>
-            </div>
-        </section>
-    </div>
+				<div class="category-description">
+					<p><%=documentationCategories[i].description%></p>
+					<%for ( var j in documentationCategories[i].versions){
+						var version = documentationCategories[i].versions[j].version;
+						var documents = documentationCategories[i].versions[j].documents;%>
+						<div class="documentationVersionList <%=version===versionSelected? "":"hidden"%>" data-version="<%=version%>">
+							<div class="ui bulleted list">
+								<%for ( var k in documents){%>
+								<%if( k > 2) break;%>
+								<div class="item category-item">
+									<%var pathToDocument = documentationCategories[i].link? version+"/"+documentationCategories[i].link+"/"+documents[k].link:version+"/"+documents[k].link%>
+									<div><a class="category-itemTitle" href="<%-url_for("/documentation/"+pathToDocument)%>"><%=documents[k].title%></a></div>
+									<p>Get started now, with this easy to follow, quick start guide</p>
+								</div>
+								<%}%>
+							</div>
+							<%if( documents.length > 3 ){%>
+							<%var pathToCategoryHome = version+"/"+documentationCategories[i].link;%>
+							<div class="category-unbulletedItem">
+								<div class="header"><a class="category-itemTitle" href="<%-url_for("/documentation/"+pathToCategoryHome)%>">More...</a></div>
+							</div>
+							<%}%>
+						</div>
+					<%}%>
+				</div>
+			</section>
+		<%}%>
+	</div>
 </div>
