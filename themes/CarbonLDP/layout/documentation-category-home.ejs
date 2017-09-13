@@ -1,3 +1,4 @@
+<%var versionSelected = page.version? page.version: theme.versions.current %>
 <div class="ui container grid">
 	<div class="row">
 		<div class="twelve wide computer only sixteen wide tablet mobile only column">
@@ -5,9 +6,19 @@
 				<%- partial("_partial/breadcrumb", {shortBreadcrumb: false})%>
 				<div class="category-titleContainer">
 					<%-svg( `assets/images/${page.icon}`, "ui left floated image category-icon")%><h1 class="category-title"><%= page.title %></h1>
-				</div>
+					<div class="ui dropdown versionsMenu-dropdown versionsMenu-dropdown--document">
+						<button class="default text ui button versionsMenu-button"><%= versionSelected %></button>
+						<!--<button class="ui button versionsMenu-button"></button>-->
+						<div class="menu versionsMenu">
+							<% for ( var i in theme.versions.allVersions ){ %>
 
+							<a class="item" href="<%-url_for("documentation/"+theme.versions.allVersions[i]+"/"+page.pathPartialURL)%>"><%= theme.versions.allVersions[i]%></a>
+							<% } %>
+						</div>
+					</div>
+				</div>
 				<div class="category-description">
+
 					<p><%- page.description %></p>
 
 					<% if ( page.documents ){ %>
