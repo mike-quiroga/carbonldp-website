@@ -86,19 +86,30 @@ i.icon.scrollTop-icon {
 	background: transparent none;
 	color: rgba(208, 200, 200, 1);
 	text-shadow: none;
-
+}
+.ui.dropdown > .menu.versionsMenu {
+		min-width: 100px;
 }
 
 .ui.button.versionsMenu-button:hover {
-	min-width: 100px;
-	font-weight: normal;
-	height: 30px;
-	padding: 0;
-	margin: 0;
-	box-shadow: 0 0 0 1px rgba(208, 200, 200, 0.5) inset;
-	background: #ffffff;
+	 min-width: 100px;
+	 font-weight: normal;
+	 height: 30px;
+	 padding: 0;
+	 margin: 0;
+	 background: #ffffff;
+	 color: rgba(0, 0, 0, .8);
+	 text-shadow: none;
+ }
+
+// makes text black on hover
+.ui.dropdown.versionsMenu-dropdown > .default.text:hover {
 	color: rgba(0, 0, 0, .8);
-	text-shadow: none;
+}
+
+//versions Menu on light background, makes hover background gray
+.ui.button.versionsMenu-button.versionsMenu-button--grayHover:hover {
+	background: #f8f8f9;
 }
 
 .versionsMenu--document{
@@ -106,14 +117,8 @@ i.icon.scrollTop-icon {
 	margin-top :9em;
 }
 
-.ui.dropdown.versionsMenu-dropdown.versionsMenu-dropdown--document > .default.text {
+//versions Menu on light background, makes initial text black
+.ui.dropdown.versionsMenu-dropdown.versionsMenu-dropdown--blackText > .default.text {
 	color: rgba(0, 0, 0, .8);
 }
 
-.ui.dropdown.versionsMenu-dropdown > .default.text:hover {
-	color: rgba(0, 0, 0, .8);
-}
-
-.ui.dropdown > .menu.versionsMenu {
-	min-width: 100px;
-}

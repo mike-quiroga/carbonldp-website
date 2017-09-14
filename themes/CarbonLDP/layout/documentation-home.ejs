@@ -5,16 +5,7 @@
 			<div class="row">
 				<div class="ten wide column">
 					<h1 class="categoriesMenu-title"> Carbon LDP documentation</h1>
-					<div class="ui dropdown versionsMenu-dropdown">
-						<button class="default text ui button versionsMenu-button"><%= versionSelected %></button>
-						<!--<button class="ui button versionsMenu-button"></button>-->
-						<div class="menu versionsMenu">
-							<% for ( var i in theme.versions.allVersions ){ %>
-
-							<a class="item" href="<%-url_for("documentation/"+theme.versions.allVersions[i]+"/")%>"><%= theme.versions.allVersions[i]%></a>
-							<% } %>
-						</div>
-					</div>
+					<%- partial("_partial/versions-menu", {containerDarkBackground:true})%>
 				</div>
 			</div>
 

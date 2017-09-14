@@ -6,16 +6,7 @@
 				<%- partial("_partial/breadcrumb", {shortBreadcrumb: false})%>
 				<div class="category-titleContainer">
 					<%-svg( `assets/images/${page.icon}`, "ui left floated image category-icon")%><h1 class="category-title"><%= page.title %></h1>
-					<div class="ui dropdown versionsMenu-dropdown versionsMenu-dropdown--document">
-						<button class="default text ui button versionsMenu-button"><%= versionSelected %></button>
-						<!--<button class="ui button versionsMenu-button"></button>-->
-						<div class="menu versionsMenu">
-							<% for ( var i in theme.versions.allVersions ){ %>
-
-							<a class="item" href="<%-url_for("documentation/"+theme.versions.allVersions[i]+"/"+page.pathPartialURL)%>"><%= theme.versions.allVersions[i]%></a>
-							<% } %>
-						</div>
-					</div>
+					<%- partial("_partial/versions-menu", {containerDarkBackground:false})%>
 				</div>
 				<div class="category-description">
 
