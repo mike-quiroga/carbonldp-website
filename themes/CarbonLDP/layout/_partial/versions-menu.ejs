@@ -6,8 +6,8 @@ var versionsThatApply = versionsPerDocument[page.title]? versionsPerDocument[pag
 	<button class="default text ui button versionsMenu-button <%=containerDarkBackground? "" : "versionsMenu-button--grayHover"%>"><%= versionSelected %></button>
 	<div class="menu versionsMenu">
 		<% for ( var i in versionsThatApply ){ %>
-
-		<a class="item" href="<%-url_for("documentation/"+versionsThatApply[i]+"/"+page.pathPartialURL)%>"><%= versionsThatApply[i]%></a>
+		<% var path = page.pathPartialURL?page.pathPartialURL:""%>
+		<a class="item" href="<%-url_for("documentation/"+versionsThatApply[i]+"/"+path)%>"><%= versionsThatApply[i]%></a>
 		<% } %>
 	</div>
 </div>
