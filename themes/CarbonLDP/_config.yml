@@ -16,7 +16,7 @@ nav:
 	  path: /javascript-sdk
 	  children:
 	    - name: Guide
-	      path: /javascript-sdk/getting-started
+	      path: /getting-started
 	      children: null
 	    - name: API Reference
 	      url: https://carbonldp.github.io/carbonldp-js-sdk/
@@ -36,7 +36,6 @@ nav:
 rss: /atom.xml
 
 #Versions
-currentVersionPath: /v0.x.x/
 versions:
    current: v0.x.x
    allVersions:

@@ -8,7 +8,7 @@
 					</a>
 
 					<% for (var i in theme.nav){
-						if (theme.nav[i].name === "Documentation") var path = theme.nav[i].path? theme.nav[i].path+theme.currentVersionPath : theme.nav[i].url;
+						if (theme.nav[i].name === "Documentation") var path = theme.nav[i].path? theme.nav[i].path+"/"+theme.versions.current+"/" : theme.nav[i].url;
 						else var path = theme.nav[i].path? theme.nav[i].path : theme.nav[i].url;
 						if (theme.nav[ i ].children === null ){ %>
 							<a class="item" href="<%- url_for( path ) %>"><%= theme.nav[i].name %></a>
@@ -46,7 +46,7 @@
 			</div>
 			<div class="ui fixed fluid vertical menu navMenu-verticalMenu" style="display: none;">
 				<% for (var i in theme.nav){
-					if (theme.nav[i].name === "Documentation") var path = theme.nav[i].path? theme.nav[i].path+theme.currentVersionPath : theme.nav[i].url;
+					if (theme.nav[i].name === "Documentation") var path = theme.nav[i].path? theme.nav[i].path+"/"+theme.versions.current+"/" : theme.nav[i].url;
 					else var path = theme.nav[i].path? theme.nav[i].path : theme.nav[i].url;
 				if (theme.nav[ i ].children === null ){ %>
 

@@ -287,6 +287,8 @@ i.icon.scrollTop-icon {
 
 .ui.dropdown > .menu.versionsMenu {
   min-width: 100px; }
+  .ui.dropdown > .menu.versionsMenu > .item {
+    text-align: center; }
 
 .ui.button.versionsMenu-button:hover {
   min-width: 100px;

@@ -1,35 +1,49 @@
-<%var versionSelected = page.version? page.version: theme.versions.current %>
+<%var categoriesList = site.data["documentation-list"].categories%>
+<%var documentsToList, category, relatedLinks%>
+<%for( var i in categoriesList){
+	if(categoriesList[i].title === page.title){
+		category = categoriesList[i];
+		for( var j in categoriesList[i].versions){
+			if( categoriesList[i].versions[j].version == page.version ){
+				documentsToList = categoriesList[i].versions[j].documents;
+				relatedLinks =  categoriesList[i].versions[j].otherRelatedLinks;
+			}
+		}
+	}
+}%>
+
+
 <div class="ui container grid">
 	<div class="row">
 		<div class="twelve wide computer only sixteen wide tablet mobile only column">
 			<div class="mainContent">
 				<%- partial("_partial/breadcrumb", {shortBreadcrumb: false})%>
 				<div class="category-titleContainer">
-					<%-svg( `assets/images/${page.icon}`, "ui left floated image category-icon")%><h1 class="category-title"><%= page.title %></h1>
+					<%-svg( category.iconPath, "ui left floated image category-icon")%><h1 class="category-title"><%= category.title %></h1>
 					<%- partial("_partial/versions-menu", {containerDarkBackground:false})%>
 				</div>
 				<div class="category-description">
 
-					<p><%- page.description %></p>
+					<p><%- category.description %></p>
 
-					<% if ( page.documents ){ %>
+					<% if ( documentsToList ){ %>
 						<div class="ui bulleted list">
-							<% for (var i in page.documents ){ %>
+							<% for (var i in documentsToList ){ %>
 								<div class="item category-item">
-									<div class="header"><a class="category-itemTitle" href="<%= page.documents[i].link %>"> <%= page.documents[i].title %></a></div>
-									<div class="summary"><%= page.documents[i].summary%></div>
+									<div class="header"><a class="category-itemTitle" href="<%=documentsToList[i].link%>"> <%= documentsToList[i].title %></a></div>
+									<div class="summary"><%= documentsToList[i].summary%></div>
 								</div>
 							<% } %>
 						</div>
 					<%}%>
 
-					<% if( page.otherRelatedLinks) {%>
+					<% if( relatedLinks) {%>
 						<hr>
 						<div class="ui bulleted list">
-							<% for (var i in page.otherRelatedLinks ){ %>
+							<% for (var i in relatedLinks){ %>
 								<div class="item category-item">
-									<div class="header"><a class="category-itemTitle" href="<%= page.otherRelatedLinks[i].link %>"><%=page.otherRelatedLinks[i].title%></a></div>
-									<div class="summary"><%= page.otherRelatedLinks[i].summary%></div>
+									<div class="header"><a class="category-itemTitle" href="<%= relatedLinks[i].link %>"><%=relatedLinks[i].title%></a></div>
+									<div class="summary"><%= relatedLinks[i].summary%></div>
 								</div>
 							<%}%>
 						</div>
