@@ -14,7 +14,7 @@ categories:
           - title: Quick start guide
             link: quick-start-guide
             summary: Get started now, with this easy to follow, quick start guide
-  - title: Essential Conpets
+  - title: Essential concepts
     description: Basic Linked Data knowledge.
     id: essential-concepts
     link: essential-concepts
@@ -38,7 +38,7 @@ categories:
     versions:
       - version: v0.x.x
         documents:
-          - title: Getting started
+          - title: Getting Started with the JavasScript SDK
             link: getting-started
             summary: Guide to install Carbon JavaScriptSDK and start creating and manipulating data with its basic methods.
           - title: Object model
@@ -65,6 +65,10 @@ categories:
           - title: Access points
             link: access-points
             summary: Not yet documented
+        otherRelatedLinks:
+          - title: API reference
+            link: https://carbonldp.github.io/carbonldp-js-sdk"
+            summary: Classes and methods available in the JavaScript SDK, API reference maintained on Github.
       - version: v1.0.x
         documents:
           - title: Getting started
@@ -91,6 +95,10 @@ categories:
           - title: Access points
             link: access-points
             summary: Not yet documented
+        otherRelatedLinks:
+          - title: API reference
+            link: https://carbonldp.github.io/carbonldp-js-sdk"
+            summary: Classes and methods available in the JavaScript SDK, API reference maintained on Github.
   - title: REST API
     description: Access and manage applications and data by URIs using RESTful requests over HTTP (GET, POST, PUT, DELETE). Configure apps, schedule server-side jobs, execute queries - everything in Carbon is RESTful.
     id: rest-api

@@ -88,7 +88,10 @@ i.icon.scrollTop-icon {
 	text-shadow: none;
 }
 .ui.dropdown > .menu.versionsMenu {
-		min-width: 100px;
+	min-width: 100px;
+		> .item{
+			text-align: center;
+		}
 }
 
 .ui.button.versionsMenu-button:hover {
