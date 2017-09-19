@@ -1,9 +1,9 @@
 <%var categoriesList = site.data["documentation-list"].categories%>
 <%var documentsToList, category, relatedLinks%>
-<%for( var i in categoriesList){
+<%for( var i=0; i<categoriesList.length; i++){
 	if(categoriesList[i].title === page.title){
 		category = categoriesList[i];
-		for( var j in categoriesList[i].versions){
+		for( var j=0; j<categoriesList[i].versions.length; j++){
 			if( categoriesList[i].versions[j].version == page.version ){
 				documentsToList = categoriesList[i].versions[j].documents;
 				relatedLinks =  categoriesList[i].versions[j].otherRelatedLinks;
@@ -18,6 +18,10 @@
 		<div class="twelve wide computer only sixteen wide tablet mobile only column">
 			<div class="mainContent">
 				<%- partial("_partial/breadcrumb", {shortBreadcrumb: false})%>
+				<div class="ui warning message documentDoesntExistMessage">
+					<i class="close icon"></i>
+					<p></p>
+				</div>
 				<div class="category-titleContainer">
 					<%-svg( category.iconPath, "ui left floated image category-icon")%><h1 class="category-title"><%= category.title %></h1>
 					<%- partial("_partial/versions-menu", {containerDarkBackground:false})%>

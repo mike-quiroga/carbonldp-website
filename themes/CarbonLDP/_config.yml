@@ -37,11 +37,10 @@ rss: /atom.xml
 
 #Versions
 versions:
-   current: v0.x.x
-   allVersions:
-    - v0.x.x
-    - v1.0.x
-
+- version: v0.x.x
+  label: current
+- version: v1.0.x
+  label: alpha
 
 #Excerpt Link
 excerpt_link: Read More

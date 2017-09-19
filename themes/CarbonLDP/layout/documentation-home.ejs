@@ -1,4 +1,14 @@
-<%var versionSelected = page.version? page.version: theme.versions.current %>
+<%var currentVersion;
+for (var i=0; i<theme.versions.length; i++){
+	if( theme.versions[i].label === "current" ){
+		currentVersion = theme.versions[i].version;
+	}
+}
+if( typeof currentVersion === "undefined") {
+	currentVersion = theme.versions[ theme.versions.length - 1 ].version;
+}
+%>
+<%var fileVersion = page.version? page.version: currentVersion%>
 <div class="categoriesMenuContainer bigStoneBG">
 	<div class="ui container">
 		<div class="ui four column center aligned padded stackable grid">
@@ -36,7 +46,7 @@
 
 	<div class="mainContent">
 		<%var documentationCategories = site.data["documentation-list"].categories %>
-		<% for (var i in documentationCategories){%>
+		<% for (var i=0; i<documentationCategories.length; i++){%>
 			<section class="mainContent-section" id="<%=documentationCategories[i].id%>">
 				<div class="category-titleContainer">
 					<%- svg( documentationCategories[i].iconPath , "ui left floated image category-icon" ) %>
@@ -45,12 +55,13 @@
 
 				<div class="category-description">
 					<p><%=documentationCategories[i].description%></p>
-					<%for ( var j in documentationCategories[i].versions){
+
+					<% for ( var j=0; j<documentationCategories[i].versions.length; j++){
 						var version = documentationCategories[i].versions[j].version;
 						var documents = documentationCategories[i].versions[j].documents;%>
-						<div class="documentationVersionList <%=version===versionSelected? "":"hidden"%>" data-version="<%=version%>">
+						<div class="documentationVersionList <%=version===fileVersion? "":"hidden"%>" data-version="<%=version%>">
 							<div class="ui bulleted list">
-								<%for ( var k in documents){%>
+								<% for ( var k in documents){%>
 								<%if( k > 2) break;%>
 								<div class="item category-item">
 									<%var pathToDocument = documentationCategories[i].link? version+"/"+documentationCategories[i].link+"/"+documents[k].link:version+"/"+documents[k].link%>

@@ -1,17 +1,34 @@
-<%var versionSelected = page.version? page.version: theme.versions.current; %>
+<%var currentVersion, fileVersionLabel;
+for (var i=0; i<theme.versions.length; i++){
+	if( theme.versions[i].label === "current" ){
+		currentVersion = theme.versions[i].version;
+	}
+}
+if( typeof currentVersion === "undefined") {
+	currentVersion = theme.versions[ theme.versions.length - 1 ].version;
+}
+%>
+<%var fileVersion = page.version? page.version: currentVersion;
+for (var i=0; i<theme.versions.length; i++){
+	if( theme.versions[i].version === fileVersion ){
+		fileVersionLabel = theme.versions[i].label? " ( "+theme.versions[i].label+" )": "";
+	}
+}%>
+
+
 <%var categoriesList = site.data["documentation-list"].categories;%>
 <%var path, categorySlug;%>
 <%var versionsPerDocument = site.data["versions-per-document"];%>
-<%var versionsThatApply = versionsPerDocument[page.title]? versionsPerDocument[page.title]:theme.versions.allVersions;%>
+<%var versionsThatApply = versionsPerDocument[page.title]? versionsPerDocument[page.title]:theme.versions;%>
 
-<%for( var i in categoriesList){
+<%for( var i=0; i<categoriesList.length; i++){
 	if( categoriesList[i].title === page.title ){
 		path = categoriesList[i].link?categoriesList[i].link+"/":"";
 		break;
 	} else {
-		for( var j in categoriesList[ i ].versions ) {
-			if( categoriesList[ i ].versions[ j ].version == versionSelected ) {
-				for( var k in categoriesList[ i ].versions[ j ].documents ) {
+		for( var j=0; j<categoriesList[ i ].versions.length;j++ ) {
+			if( categoriesList[ i ].versions[ j ].version == fileVersion ) {
+				for( var k=0; k<categoriesList[ i ].versions[ j ].documents.length; k++ ) {
 					if( categoriesList[ i ].versions[ j ].documents[ k ].title === page.title ) {
 						categorySlug = categoriesList[i].link? categoriesList[i].link+"/":"";
 						path = categorySlug+ "/" + categoriesList[ i ].versions[ j ].documents[ k ].link+"/";
@@ -25,13 +42,14 @@
 if(typeof path === "undefined") path = ""; %>
 
 <div class="ui dropdown versionsMenu-dropdown <%=containerDarkBackground? "" : "versionsMenu-dropdown--blackText"%>">
-	<button class="default text ui button versionsMenu-button <%=containerDarkBackground? "" : "versionsMenu-button--grayHover"%>"><%= versionSelected %></button>
+	<button class="default text ui button versionsMenu-button <%=containerDarkBackground? "" : "versionsMenu-button--grayHover"%>"><%= fileVersion+fileVersionLabel%></button>
 	<div class="ui menu versionsMenu">
-	<%for ( var i in theme.versions.allVersions ){%>
+	<%for ( var i=0; i<theme.versions.length; i++ ){%>
+			<%var label= theme.versions[i].label? " ( "+theme.versions[i].label+" )" : "";%>
 			<%var itemAdded=false;%>
-			<%for ( var j in versionsThatApply ){
-				if( theme.versions.allVersions[i] === versionsThatApply[j] ){%>
-					<a class="item" href="<%-url_for("documentation/"+theme.versions.allVersions[j]+"/"+path)%>"><%= versionsThatApply[j]%></a>
+			<%for ( var j=0; j<versionsThatApply.length; j++ ){
+				if( theme.versions[i].version === versionsThatApply[j].version ){%>
+					<a class="item" href="<%-url_for("documentation/"+theme.versions[i].version+"/"+path)%>"><%=theme.versions[i].version+label%></a>
 					<%
 					itemAdded=true;
 					continue;
@@ -39,7 +57,7 @@ if(typeof path === "undefined") path = ""; %>
 			<%}
 			if (!itemAdded){
 				path = categorySlug? categorySlug: "";%>
-				<a class="item" href="<%-url_for("documentation/"+theme.versions.allVersions[j]+"/"+path)%>"><%= theme.versions.allVersions[i]%></a>
+				<a class="item" href="<%-url_for("documentation/"+theme.versions[i].version+"/"+path+"?document="+page.title+"&version="+theme.versions[i].version+"&exists=false")%>"><%=theme.versions[i].version+label%></a>
 			<%}
 		 }%>
 	</div>

@@ -3,6 +3,10 @@
         <div class="twelve wide computer only twelve wide tablet only sixteen wide mobile only column">
                 <div class="mainContent">
                     <%- partial("_partial/breadcrumb", {shortBreadcrumb:false})%>
+                    <div class="document-titleContainer">
+                    <h1 class="document-title"><%=page.title%></h1>
+                       <div class="ui grid versionsMenu-grid mobile only"> <%- partial("_partial/versions-menu", {containerDarkBackground: false})%></div>
+                    </div>
                     <% if ( page.notDocumented ) {%>
                         <%- partial("_partial/not-yet-documented")%>
                     <% } else { %>
