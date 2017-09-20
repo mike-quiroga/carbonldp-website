@@ -32,15 +32,32 @@ TODO: Describe each file/directory
 
     .
     ├── .idea                               
-    ├── build                               
-    ├── carbonldp-panel                     
+    ├── build
     ├── hooks                       
     ├── node_modules                        
     ├── public                       
-    ├── scaffolds                         
+    ├── scaffolds - files used by Hexo as template to build files in the using the command "hexo new scaffold-name"
     ├── server                        
-    ├── source
-    ├── themes                       
+    ├── source - source files for the content used to generate the static wbesite files
+    │    ├── _data - files containing raw data used to generate landing pages
+    │    ├── _post - all post published on carbonldp.com/blog
+    │    ├── about
+    │    ├── blog
+    │    ├── community-and-support
+    │    ├── documentation - all directories for versions of all the CarbonLDP documentation files
+    │    ├── get-started
+    │    └── license
+    ├── themes
+    │    └── CarbonLDP
+    │               ├── .gitignore
+    │           	├── .travis.yml
+    │           	├── _config.yml
+    │           	├── CHANGELOG.md
+    │           	├── db.json
+    │           	├── Dockerfile
+    │           	├── gulpfile.js
+    │           	├── LICENSE
+    │           	├── package.json
     ├── .gitignore 
 	├── .travis.yml
 	├── _config.yml
