@@ -5,8 +5,9 @@
                     <%- partial("_partial/breadcrumb", {shortBreadcrumb:false})%>
                     <div class="document-titleContainer">
                     <h1 class="document-title"><%=page.title%></h1>
-                       <div class="ui grid versionsMenu-grid mobile only"> <%- partial("_partial/versions-menu", {containerDarkBackground: false})%></div>
                     </div>
+                   <div class="ui centered aligned grid versionsMenu-grid mobile only"> <%- partial("_partial/versions-menu", {containerDarkBackground: false})%></div>
+
                     <% if ( page.notDocumented ) {%>
                         <%- partial("_partial/not-yet-documented")%>
                     <% } else { %>
