@@ -314,16 +314,3 @@ i.icon.scrollTop-icon {
   margin: 0; }
   .ui.grid.versionsMenu-grid > * {
     padding: 0; }
-
-.highlight {
-  font-family: "Lucida Console", Monaco, monospace;
-  font-size: .9rem;
-  line-height: 1.4rem;
-
-  padding: 0 4px;
-  background-color: #f2f2f2;
-  border-radius: 3px;
-  overflow-wrap: break-word;
-  word-wrap: break-word;
-  word-spacing: 0;
-}
