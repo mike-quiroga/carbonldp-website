@@ -36,11 +36,11 @@ TODO: Describe each file/directory
     ├── hooks                       
     ├── node_modules                        
     ├── public - files of generated site
-    ├── scaffolds - files used by Hexo as template to build files in the source directory using the command "hexo new scaffold-name"
+    ├── scaffolds - files used by Hexo as template to build files in the source using the command "hexo new scaffold-name"
     ├── server                        
     ├── source - source files of the content to generate files and directory ithe public site
-    │    ├── _data - files containing raw data used to generate landing pages, available in themes/CarbonLDP/layout through "data["file-name"]"
-    │    ├── _post - all posts published on carbonldp.com/blog, available themes/CarbonLDP/layout through "post.variable-name"
+    │    ├── _data - files containing raw data used to generate landing pages, available layout - "data["file-name"]"
+    │    ├── _post - all posts published on carbonldp.com/blog, available themes/CarbonLDP/layout - "post.variable-name"
     │    ├── about
     │    ├── blog
     │    ├── community-and-support
@@ -53,25 +53,25 @@ TODO: Describe each file/directory
     │    │    ├── scripts - helpers that can be used in the layout
     │    │    ├── semantic - semantic ui files
     │    │    ├── source
-	│	 │    │	   └── assets - files used to generate public/assets directory
+    │	 │    │	   └── assets - files used to generate public/assets directory
     │    │    │         ├── images - images used in the public site
     │    │    │         ├── scripts - scripts used in public site
     │    │    │         ├── semantic - semantic ui files
     │    │    │         └── styles - styles used in public site
     │    │    ├── widgets - scripts and styles of widgets used by hexo-widgets package to generate widgets in public site.
-    │    │    └── config.yml - configuration file holds variables available in themes/CarbonLDOP/layout through "theme.variable-name"
-	│	 └── landscape - hexo default theme
+    │    │    └── config.yml - configuration file holds variables, available in layout - "theme.variable-name"
+    │	 └── landscape - hexo default theme
     ├── .gitignore 
-	├── .travis.yml
-	├── _config.yml - general hexo configuration file
-	├── CHANGELOG.md
-	├── db.json
-	├── Dockerfile
-	├── gulpfile.js
-	├── LICENSE
-	├── package.json
-	├── package-lock.json
-	├── README.md
+    ├── .travis.yml
+    ├── _config.yml - general hexo configuration file
+    ├── CHANGELOG.md
+    ├── db.json
+    ├── Dockerfile
+    ├── gulpfile.js
+    ├── LICENSE
+    ├── package.json
+    ├── package-lock.json
+    ├── README.md
     └── semantic.json
     
 ### Contributing
