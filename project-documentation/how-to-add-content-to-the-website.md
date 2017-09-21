@@ -1,15 +1,11 @@
-# Website documentation
-
-## Edit the home page
-
 ## Add a principal page
 
-A principal page, is page that can be found at the top level of the navigation menu
+A principal page, is a page that can be found at the top level of the navigation menu
 
 1. Add the directory and file in source/
 There are two options to creating the new page:
     a. Manually:
-        - Create a new directory in source/ and create a
+        - Create a new directory in `source/` and create a
         - Create a file .ejs in the new directory with the name "index"
 
     b. In the terminal run the command `hexo new page "directory-name"`
@@ -21,27 +17,27 @@ There are two options to creating the new page:
 	front-matter: block of YAML or JSON at the beginning of the file that is used to configure settings for your writings.[hexo - front-matter documentation](https://hexo.io/docs/front-matter.html)
 
 	- Add this three settings, they are mandatory.
-	`
+	```
 	---
 	layout: layout-name, from the available layouts in themes/CarbonLDP/layout
 	title: page title, will be used to create metatags for SEO
 	description: small description, will be used to create metatags for SEO
 	---
-	`
+	```
 
 	Other optional settings:
 	cover: will display an image as a cover or banner, as seen in carbonldp.com/blog
 	script: will add a script to this page in the published site.
-	`
+	```
 	---
 	cover:
     	image: image-name.extension, image to be used
     	alt: description to be added to the image
     script: script-name, script in themes/CarbonLDP/source/assets/scripts
 	---
-	`
+	```
 
-### Add link to page in navigation menu
+## Add link to page in navigation menu
 
 To show the page in the navigation menu follow this steps:
 
@@ -50,17 +46,19 @@ To show the page in the navigation menu follow this steps:
 3. Add the page with the following information:
     - Add this information in the order you wish it to appear in the navigation bar (left - right)
 	- If there are children directories you can add up to two sub directories using the key "children"
-`- name: directory name
+```
+- name: directory name
    path: directory path
    children: children directories or null
-`
+```
 or
-`- name: directory name
+```
+- name: directory name
    url: external url
-`
+```
 
 e.g.:
-`
+```
 - name: Documentation
   path: /documentation
   children:
@@ -79,7 +77,7 @@ e.g.:
 	    - name: API Reference
 	      url: https://carbonldp.github.io/carbonldp-js-sdk/
 	      children: null
-`
+```
 ## Add head for the principal page
 The head files contains the styles that will be used by this particular page
 
