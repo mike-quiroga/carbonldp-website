@@ -31,7 +31,7 @@ The footer is rendered in all the pages of the site by the footer.ejs partial la
 1. Go to `themes/CarbonLDP/layout/ _partial/`
 2. Edit the file `footer.ejs`
 
-## Edit principal pages
+### Edit principal pages
 A principal page, is a page that can be found at the top level of the navigation menu. All principal pages have their own layout.
 
 In the `source/` directory, the first level of directeroy are principal pages, inside each directory you can find a `index.ejs` file. Inside this file in the front matter the layout used by the principal page is defined, the layout used will be named after the directory the file is in. 
