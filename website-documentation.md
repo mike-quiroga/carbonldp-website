@@ -1,10 +1,58 @@
 # Website documentation
 
-## Edit the home page
+## How the pages are rendered?
+All the pages in carbonldp.com are build through hexo.js
 
-## Add a principal page
+Hexo.js is a fast, simple & powerful blog framework, that allows us to create static pages through the use of layout templates, source files and other tools.
 
-A principal page, is page that can be found at the top level of the navigation menu
+All the layouts in `themes/CarbonLDP/layout` are called through layout.ejs that renders:
+ - header.js
+ - other layouts: these layouts can render other partial layouts.
+ - footer.js
+
+## Edit carbonldp.com content
+
+### Edit the home page
+
+The home page is rendered by the home.ejs partial layout that is called by the index.ejs layout
+
+ 1. Go to `themes/CarbonLDP/layout/_partial/`
+ 2. Edit the file `home.ejs`
+
+### Edit the header
+The header is rendered in all the pages of the site by the header.ejs partial layout that is called by the layout.ejs
+
+1. Go to `themes/CarbonLDP/layout_partial/`
+2. Edit the file `header.ejs`
+
+### Edit the footer
+The footer is rendered in all the pages of the site by the footer.ejs partial layout that is called by the layout.ejs
+
+1. Go to `themes/CarbonLDP/layout/ _partial/`
+2. Edit the file `footer.ejs`
+
+## Edit principal pages
+A principal page, is a page that can be found at the top level of the navigation menu. All principal pages have their own layout.
+
+In the `source/` directory, the first level of directeroy are principal pages, inside each directory you can find a `index.ejs` file. Inside this file in the front matter the layout used by the principal page is defined, the layout used will be named after the directory the file is in. 
+```
+	---
+	layout: layout-name, from the available layouts in themes/CarbonLDP/layout
+	title: page title, will be used to create metatags for SEO
+	description: small description, will be used to create metatags for SEO
+	---
+```
+
+1. Go to `themes/CarbonLDP/layout`
+2. Search for the correspondent `.ejs` layout file and edit it.
+
+### Edit documentation
+
+
+## Add content to carbonldp.com
+### Add a principal page
+
+A principal page, is a page that can be found at the top level of the navigation menu
 
 1. Add the directory and file in source/
 There are two options to creating the new page:
@@ -62,7 +110,7 @@ or
 ```
 
 e.g.:
-`
+```
 - name: Documentation
   path: /documentation
   children:
@@ -81,7 +129,7 @@ e.g.:
 	    - name: API Reference
 	      url: https://carbonldp.github.io/carbonldp-js-sdk/
 	      children: null
-`
+```
 ## Add head for the principal page
 The head files contains the styles that will be used by this particular page
 
