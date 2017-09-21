@@ -53,14 +53,14 @@ TODO: Describe each file/directory
     │    │    ├── scripts - helpers that can be used in the layout
     │    │    ├── semantic - semantic ui files
     │    │    ├── source
-    │	 │    │	   └── assets - files used to generate public/assets directory
+    │    │    │    └── assets - files used to generate public/assets directory
     │    │    │         ├── images - images used in the public site
     │    │    │         ├── scripts - scripts used in public site
     │    │    │         ├── semantic - semantic ui files
     │    │    │         └── styles - styles used in public site
     │    │    ├── widgets - scripts and styles of widgets used by hexo-widgets package to generate widgets in public site.
     │    │    └── config.yml - configuration file holds variables, available in layout - "theme.variable-name"
-    │	 └── landscape - hexo default theme
+    │    └── landscape - hexo default theme
     ├── .gitignore 
     ├── .travis.yml
     ├── _config.yml - general hexo configuration file
