@@ -66,7 +66,7 @@ if( typeof currentVersion === "undefined") {
 								<div class="item category-item">
 									<%var pathToDocument = documentationCategories[i].link? version+"/"+documentationCategories[i].link+"/"+documents[k].link:version+"/"+documents[k].link%>
 									<div><a class="category-itemTitle" href="<%-url_for("/documentation/"+pathToDocument)%>"><%=documents[k].title%></a></div>
-									<p>Get started now, with this easy to follow, quick start guide</p>
+									<p><%= documents[k].summary %></p>
 								</div>
 								<%}%>
 							</div>

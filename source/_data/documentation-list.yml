@@ -82,22 +82,22 @@ categories:
             summary: What is the object schema, how to define and use it.
           - title: Files
             link: files
-            summary: How to upload, download and describe files.
+            summary: Not yet documented
           - title: Querying
             link: querying
-            summary: How to make queries with SPARQLER
+            summary: How to make queries with SPARQLer
           - title: Authentication
             link: authentication
-            summary: Logging in, logging out and everything you need to know about it.
+            summary: Not yet documented
           - title: Authorization
             link: authorization
-            summary: Granting or denying permissions to subjects on documents.
+            summary: Not yet documented
           - title: Access points
             link: access-points
             summary: Not yet documented
         otherRelatedLinks:
           - title: API reference
-            link: https://carbonldp.github.io/carbonldp-js-sdk"
+            link: https://carbonldp.github.io/carbonldp-js-sdk
             summary: Classes and methods available in the JavaScript SDK, API reference maintained on Github.
   - title: REST API
     description: Access and manage applications and data by URIs using RESTful requests over HTTP (GET, POST, PUT, DELETE). Configure apps, schedule server-side jobs, execute queries - everything in Carbon is RESTful.
@@ -126,13 +126,13 @@ categories:
         documents:
           - title: Getting started with the REST API
             link: getting-started
-            summary: How to build an example application using the Carbon LDP REST API.
+            summary: Not yet documented
           - title: REST API object model
             link: object-model
-            summary: A summary of the various types of resources you can manage and interact with using REST.
+            summary: Not yet documented
           - title: Interaction models
             link: interaction-models
-            summary: An explanation of the way you can interact with the resources on the Carbon Server.
+            summary: Not yet documented
           - title: Containers
             link: containers
             summary: Not yet documented
