@@ -1,0 +1,18 @@
+announcements:
+  - title: Carbon LDP at NG-Conf
+    date: 30 march 2017
+    image: ngConf-logo.png
+    content: >
+      This year, we’re taking Carbon LDP to NG-Conf, the World’s Original Angular Conference,
+      in Salt Lake City, UT (April 5th-7th). Come to learn about Carbon LDP, a back-end to your Angular App,
+      and how you can build data-centric apps using the power of linked data.
+      If you’re planning to attend, we hope you’ll find us at stand #24, or you can get a glimpse of the
+      action on the conference Livestream or at one of the many NG-Conf Extended events taking part across the globe.
+      Join us and see how Carbon LDP could be the hottest new addition to your Angular application stack.
+  - title: New Workbench v0.7.1 released
+    date: March 6, 2017
+    image: carbonldp-workbench-0.7.1.png
+    content: >
+      The Workbench now allows you to manage your user agents' role.  Create, list, view, update, delete roles
+      and populate them with user agents.
+      Follow the steps in the quick start guide, to update or download a new instance.
