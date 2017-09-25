@@ -1,0 +1,512 @@
+---
+layout: documentation/document
+title: Quick start guide
+description: Quick start instructions to help you get up and running everything you need to work with CarbonLDP.
+date: 2017-01-27 16:44:11
+script: quick-start-guide
+version: v1.0.x
+pathPartialURL: quick-start-guide
+---
+
+<div class="ui message registrationSuccessMessage">
+	<div class="successMessage">
+		<p><strong>Thank you!</strong> Your registration was successful</p>
+	</div>
+	<div>
+		<p>
+			This guide describes how to download, install, and run all the components necessary
+			to get started with application development using Carbon LDP as quickly as possible.
+		</p>
+	</div>
+</div>
+
+<div class="ui mobile only grid">
+	<div class="row">
+		<staticContentMenu content="mainContent"></staticContentMenu>
+	</div>
+</div>
+
+
+<!-- START: Overview -->
+<section class="mainContent-section">
+	<h2>Overview</h2>
+
+	<p>
+		This guide will cover the following steps, which are commonly required to setup a
+		new development environment and to get started building a new application quickly.
+	</p>
+
+	<ol>
+		<li>Installing Docker</li>
+		<li>Running the Carbon platform</li>
+		<li>Running the Carbon workbench</li>
+		<li>Developing against Carbon</li>
+		<li>Keeping up-to-date</li>
+		<li>Providing feedback</li>
+	</ol>
+
+	<p>
+		This guide will also cover subsequent steps, after the initial setup, such as starting and stopping
+		instances, troubleshooting, and updating software when new versions are available.
+	</p>
+
+	<div class="ui message">
+		<div class="content">
+			<div class="header">LICENSE Information</div>
+			<p>
+				Please review the <a class="item" href="/license">Carbon LDP Software License Agreement</a> before accessing or using the software.
+				Downloading, installing, copying, or otherwise using the software constitutes your agreement to the terms of the license.
+			</p>
+		</div>
+	</div>
+</section>
+<!-- END: Overview-->
+
+
+<!-- START: Installing Docker-->
+<section class="mainContent-section">
+	<h2>Installing Docker</h2>
+	<p>
+		The Carbon Platform and Workbench are packaged in <a rel="noopener" href="https://www.docker.com/what-container">Docker containers</a>, which ensure the software will always run the same,
+		regardless of its environment (Mac, Windows, or Linux). Docker allows you to spin up a Carbon platform (server) and
+		a workbench (GUI), with just a single command for each.
+	</p>
+	<p>
+		To get started, you will first need to install Docker on your computer. Download the binaries and get
+		basic installation instructions for Docker here:
+	</p>
+	<p><a rel="noopener" href="https://www.docker.com/products/overview#/install_the_platform">https://www.docker.com/products/overview#/install_the_platform</a></p>
+	<p>After installing Docker, execute the following command to validate that it was correctly installed and is running in your machine.</p>
+
+
+	<pre><code class="bash">
+        docker run hello-world
+    </code></pre>
+
+	<p>If all went well, you should see a message similar to the following in your terminal.</p>
+
+
+	<pre><code class="bash">
+        Hello from Docker!
+        This message shows that your installation appears to be working correctly.
+    </code></pre>
+</section>
+<!-- END: Installing Docker-->
+
+
+<!-- START: Running the Carbon platform -->
+<section class="mainContent-section">
+	<h2>Running the Carbon platform</h2>
+	<p>
+		Carbon LDP runs as a server that listens for, and responds to RESTful HTTP requests for managing resources. This is the essential platform, which provides an authentication
+		server, a database and security management. It's where all the data of your application will be stored and managed.
+	</p>
+
+
+	<!-- START: Register for updates -->
+	<section class="ui message mainContent-subSection">
+		<h3 class="header">Register for updates and community support</h3>
+		<p>
+			You should register before running an instance of the platform.
+			<br>
+			Registration allows us to notify you with important information such as when new features or bug fixes are released. It is also a suggested prerequisite for getting better community support through GitHub issue tracking; we prioritize our
+			registered users first.
+			<br>
+			What's more, registration qualifies you to receive Valued Feedback Rewards for providing useful feedback
+			<br>
+			If you haven't already registered, please <a class="item" href="/get-started">Get Started</a>. After filling out a very brief form, you'll be returned to this guide.
+		</p>
+	</section>
+	<!-- END: Register for updates -->
+
+	<p>
+		Now that you have Docker up and running, you can run the platform by following the steps below:
+	</p>
+
+	<!-- START: STEP 1 -->
+	<section class="transition mainContent-subSection">
+		<h3>1. Create the platform's home directory</h3>
+		<p>
+			In a folder on your machine, create a directory for the platform to store its data, e.g.: <code>carbonldp/</code>
+		</p>
+		<p>
+			If you want to configure your platform ports, credentials, etc. rather than using the default values, you can do so by following the steps listed below:
+		</p>
+		<!-- START: Advanced steps -->
+		<div class="ui styled fluid accordion">
+			<div class="title">
+				<i class="dropdown icon"></i>
+				How to configure my instance?
+			</div>
+			<div class="content">
+
+
+				<!-- START: Defining the config.yaml -->
+				<section class="transition">
+					<h3>1.1 Create the platform's configuration file</h3>
+					<hr>
+					<p>
+						The platform's configuration is initialized from the properties contained in a file called <code>config.yaml</code>, which you will need to create inside the
+						<code>carbonldp</code> directory which you previously created.<br>Leaving the directory like this:
+					</p>
+					<ul>
+						<li>carbonldp
+							<ul>
+								<li>config.yaml</li>
+							</ul>
+						</li>
+					</ul>
+					<p>
+
+						<strong>config.yaml</strong>
+					</p>
+					<pre><code class="yaml">
+						%YAML 1.2
+						---
+
+						platform:
+						  ssl: false
+						  host: localhost:8083
+
+						repository:
+						  # Type of repository to use (can be 'local' or 'remote')
+						  type: local
+
+						  # Directory where the platform will store its triplestore data
+						  directory: ./data
+
+						# To configure a remote repository you can change the above object for the following one
+						#repository:
+						#  # Type of repository to use (can be 'local' or 'remote')
+						#  type: remote
+						#
+						#  # URL of the remote repository
+						#  url: http://localhost:7200/
+						#
+						#  # Username to authenticate with the remote repository (optional)
+						#  username:
+						#
+						#  # Password to authenticate with the remote repository (optional)
+						#  password:
+						#
+						#  # Remote repository's identifier
+						#  id: carbonldp
+
+						files:
+						  # Directory where the platform will store ldp:NonRDFSource files
+						  directory: ./data/files
+
+						zoo-keeper:
+						  # Type of zoo-keeper to use (can be 'embedded' or 'remote')
+						  type: embedded
+
+						  host: zookeeper
+						  port: 2181
+
+						messaging:
+						  broker:
+						    host: rabbitmq
+						    port: 61613
+					</code></pre>
+					<p>
+						Feel free to modify this document to fit your needs (ports, data directory, etc)
+					</p>
+				</section>
+				<!-- END: Defining the config.yaml -->
+			</div>
+		</div>
+		<!-- END: Advanced steps -->
+	</section>
+	<!-- END: STEP 1 -->
+
+
+	<!-- START: STEP 2 -->
+	<section class="mainContent-subSection">
+		<h3>2. Run a platform instance</h3>
+		<p>
+			Run the following command to start your own platform instance for the first time. The command will fetch the image from a Docker repository and will run
+			the an instance.
+		</p>
+
+		<p>
+			<strong>Note:</strong> You must replace <code>/your/directory/path/carbonldp</code> with the absolute path to the directory you just created. Leave the portions after the colon near the path
+			intact (<code>:/opt/carbonldp/shared</code>)
+		</p>
+		<pre><code class="bash">
+			docker run -d --name carbonldp-platform -p 8083:8083 \
+				-v /your/directory/path/carbonldp:/opt/carbonldp/shared \
+				carbonldp/carbonldp-platform:1.0.x-alpha
+        </code></pre>
+		<p>
+			If you want to learn what each of this parameters are indicating you can read the following section:
+		</p>
+		<!-- START: Docker command explanation -->
+		<div class="ui styled fluid accordion">
+			<div class="title">
+				<i class="dropdown icon"></i>
+				Command explanation
+			</div>
+			<div class="content">
+				<!-- START: Defining the config.yaml -->
+				<section class="transition">
+					<pre><code class="bash">
+						docker run \                                                    # The 'run' command creates a container and starts it based on a docker image
+							-d \                                                        # Detached (meaning don't attach the instance's output to this command line)
+							--name carbonldp-platform \                                 # The name of the docker container
+							-p 8083:8083 \                                              # Expose port 8083
+							-v /your/directory/path/carbonldp:/opt/carbonldp/shared \   # Map the local directory '/your/directory/path/carbonldp' to the container's '/opt/carbonldp/shared'
+							carbonldp/carbonldp-platform:1.0.x-alpha                    # The docker image to use to create the container
+					</code></pre>
+					<p>
+						More information can be found on Docker's official documentation: <a rel="noopener" href="https://docs.docker.com/engine/reference/run/">Docker run reference</a>
+					</p>
+				</section>
+				<!-- END: Defining the config.yaml -->
+			</div>
+		</div>
+		<!-- END: Docker command explanation -->
+		<p>
+			After executing the command, open <code>localhost:8083/.system/platform/</code>. If everything went well you should see a response in XML similar to the
+			following:
+		</p>
+		<p>
+			<img class="ui bordered image" alt="Carbon platform's API response example" src="/assets/images/carbon-platform-api-response.png"/>
+		</p>
+		<p>
+			<strong>Notes:</strong>
+		</p>
+		<ul>
+			<li>What you'll actually see in the browser may depend on the configuration you created and the browser you are using.</li>
+			<li>It may take a while for the platform to start. Keep refreshing the page. If after 5 minutes, the XML response still doesn't display, something went wrong.</li>
+			<li>If you can't load the page, check the URL. It MUST end with a slash /. All URLs handled by the platform will follow this rule.</li>
+		</ul>
+		<div class="ui success icon message">
+			<i class="check circle icon"></i>
+			<div class="content">
+				<p>Congratulations! You have a Carbon platform instance up and running!</p>
+			</div>
+		</div>
+		<section class="maincontent-subSection">
+			<h4>Useful Docker commands</h4>
+			<p>If you have problems running the instance, the following Docker commands may help you troubleshoot your situation.</p>
+
+			<ul>
+				<li><code>docker ps --all</code> - Will give you a list of all the containers you have and their status</li>
+				<li><code>docker stop carbonldp-platform</code> - Will stop the carbonldp-platform container</li>
+				<li><code>docker start carbonldp-platform</code> - Will start the carbonldp-platform container</li>
+				<li><code>docker rm carbonldp-platform</code> - Will remove the carbonldp-platform container (so you can recreate it for example)</li>
+				<li><code>docker logs carbonldp-platform</code> - Will output the logs of the carbonldp-platform container</li>
+				<li><code>docker logs -f carbonldp-platform</code> - Will output the logs of the carbonldp-platform container and will continue to do so until stopped</li>
+			</ul>
+		</section>
+	</section>
+	<!-- END: STEP 2 -->
+</section>
+<!-- END: Running the Carbon platform-->
+
+
+<!-- START: Run the Workbench -->
+<section class="mainContent-section">
+	<h2>Running the Carbon workbench</h2>
+	<p>The Carbon workbench is a web app that helps you interact with the Carbon platform through a graphical user interface (GUI). Among the features it provides are:</p>
+	<ul>
+		<li>Document Explorer - a GUI for visualizing and editing Carbon documents</li>
+		<li>SPARQL Client - a GUI for entering and executing SPARQL queries and SPARQL updates with results displayed in a friendly format</li>
+	</ul>
+	<p>
+		Using the Carbon Workbench will aid your development process, especially in the beginning, because it allows you to quickly have a visual verification of the data you create
+		using either the JavaScript SDK or REST API. It also provides an easy way to query, inspect and modify data with the SPARQL Client.
+	</p>
+	<p>To run the Carbon workbench, execute the following command (replacing the configured host, port, and protocol where appropriate).</p>
+
+	<pre><code class="bash">
+        docker run -d --name carbonldp-workbench -p 8000:80 \
+            -e &quot;CARBON_HOST=localhost:8083&quot; \
+            -e &quot;CARBON_PROTOCOL=http&quot; \
+            carbonldp/carbonldp-workbench:1.0.x-alpha
+    </code></pre>
+
+	<p>
+		If you want to learn what each of this parameters are indicating you can read the following section:
+	</p>
+	<!-- START: Docker command explanation -->
+	<div class="ui styled fluid accordion">
+		<div class="title">
+			<i class="dropdown icon"></i>
+			Command explanation
+		</div>
+		<div class="content">
+			<!-- START: Defining the config.yaml -->
+			<section class="transition">
+				<pre><code class="bash">
+					docker run \                                                    # The 'run' command creates a container and starts it based on a docker image
+						-d \                                                        # Detached (meaning don't attach the instance's output to this command line)
+						--name carbonldp-workbench \                                # The name of the docker container
+						-p 8000:80 \                                                # Map container's port 80 to local port 8000
+						-e &quot;CARBON_HOST=localhost:8083&quot; \                           # Set env variable 'CARBON_HOST' to 'localhost:8083'
+						-e &quot;CARBON_PROTOCOL=http&quot; \                                 # Set env variable 'CARBON_PROTOCOL' to 'http'
+						carbonldp/carbonldp-workbench:1.0.x-alpha                   # The docker image to use to create the container
+				</code></pre>
+				<p>
+					More information can be found on Docker's official documentation: <a rel="noopener" href="https://docs.docker.com/engine/reference/run/">Docker run reference</a>
+				</p>
+			</section>
+			<!-- END: Defining the config.yaml -->
+		</div>
+	</div>
+	<!-- END: Docker command explanation -->
+
+	<p>After executing the command, open <code>localhost:8000</code> in your web browser. If the workbench is running, you should be presented with the dashboard page like this one:</p>
+
+	<p><img class="ui centered bordered image" alt="Workbench's dashboard snapshot" src="/assets/images/workbench-dashboard.png"/></p>
+
+	<p>
+		In this page you'll be able to view the specifics of your platform, such as its version, the number of documents stored on it and the number of triples the platform has stored so far.
+		Feel free to navigate through the Workbench so you can start to store your own data.
+	</p>
+
+	<p><strong>Note:</strong> It may take a while for the workbench to start. Keep refreshing the page. If, after 5 minutes, the page still doesn't load, something went wrong.</p>
+</section>
+<!-- END: Run the Workbench -->
+
+
+<!-- START: Developing against the Carbon platform -->
+<section class="mainContent-section">
+	<h2>Developing against Carbon</h2>
+
+	<!-- TODO: Change this instructions to a more generic list of how to use the platform (through the REST API, for example) -->
+	<p>
+		Of course, the platform instance you just created is just the space in which Carbon will store the data for the application you now need to build. The next step is
+		to use the JavaScript SDK with your client-side code to build a client application.
+	</p>
+
+	<!-- START: STEP 2 -->
+	<section class="mainContent-subSection">
+		<h3>REST API</h3>
+		<p>
+			Everything that the platform does is exposed through its REST API. This API is an implementation of the <a rel="noopener" href="https://www.w3.org/TR/ldp/">W3C LDP recommendation</a>.
+			Head over to the <a class="item" href="/documentation/v1.0.x/rest-api/getting-started">Getting Started with the REST API</a>
+		</p>
+	</section>
+	<section class="mainContent-subSection">
+		<h3>JavaScript/TypeScript</h3>
+		<p>
+			To ease development against the REST API in a JavaScript/TypeScript environment we have created an SDK compatible with all the major web browsers and Node.js.
+			Head over to <a class="item" href="/documentation/v1.0.x/javascript-sdk/getting-started">Getting Started with the JavaScript SDK</a> to learn how use it.
+		</p>
+		<p>
+			You should also bookmark the <a rel="noopener" href="https://carbonldp.github.io/carbonldp-js-sdk">Carbon LDP JavaScript SDK API Reference</a> on GitHub, which lists
+			all the API objects and methods you can use.
+		</p>
+		<section class="mainContent-subSection">
+			<h4>Additional resources</h4>
+			<ul>
+				<li>
+					<strong><a rel="noopener" href="https://github.com/CarbonLDP/angular-carbonldp">angular-carbonldp</a></strong> - helper classes that simplify the integration between Angular
+					and CarbonLDP.
+				</li>
+				<li>
+					<strong><a rel="noopener" href="https://github.com/CarbonLDP/angular-carbonldp-boilerplate">angular-carbonldp-boilerplate</a></strong> - Boilerplate project to use as a
+					starting point for building applications with Angular 2/4 + CarbonLDP.
+				</li>
+				<li>
+					<strong><a rel="noopener" href="https://github.com/CarbonLDP/carbon-typescript-boilerplate">carbon-typescript-boilerplate</a></strong> - Boilerplate project that shows how to
+					setup a TypeScript application with the Carbon LDP SDK.
+				</li>
+				<li>
+					<strong><a rel="noopener" href="https://github.com/CarbonLDP/carbon-js-es2015-boilerplate">carbon-js-es2015-boilerplate</a></strong> - Boilerplate that shows how to setup a
+					JavaScript ES2015 application with the Carbon LDP SDK.
+				</li>
+				<li>
+					<strong><a rel="noopener" href="https://github.com/CarbonLDP/carbon-js-es5-boilerplate">carbon-js-es5-boilerplate</a></strong> - Boilerplate that shows how to setup the Carbon
+					LDP SDK in a JavaScript ES5 application.
+				</li>
+			</ul>
+		</section>
+	</section>
+	<section class="mainContent-subSection">
+		<h3>Java (and other JVM languages)</h3>
+		<p>
+			We are developing a Java SDK to ease the usage of Carbon LDP from a JVM environment. You can track its development on the following project: <a rel="noopener" href="https://github.com/CarbonLDP/carbonldp-java-sdk">carbonldp-java-sdk</a>
+		</p>
+	</section>
+</section>
+<!-- END: Develop with the JavaScript SDK and REST API
+
+<!-- START: Update instances-->
+<section class="mainContent-section">
+	<h2>Keeping up-to-date</h2>
+	<p>
+		Whenever we release a new version of the platform or the workbench, you should update your instances so you benefit from the new features and bug fixes. To be notified
+		when new versions are available, please be sure to register. If you haven't already registered, please <a class="item" href="/get-started">Get Started</a>.
+	</p>
+
+	<p>To update the platform and workbench you need to follow the steps below:</p>
+
+	<ol class="ui list">
+		<li>
+			<p>Stop your running instances and delete them with the following commands:</p>
+
+			<pre><code class="bash">
+		       docker stop carbonldp-platform && docker rm carbonldp-platform
+		    </code></pre>
+
+			<pre><code class="bash">
+		        docker stop carbonldp-workbench && docker rm carbonldp-workbench
+		    </code></pre>
+		</li>
+		<li>
+			<p>Pull the remote newest images again by running the following commands:</p>
+			<pre><code class="bash">
+                docker pull carbonldp/carbonldp-platform:1.0.x-alpha
+            </code></pre>
+			<pre><code class="bash">
+                docker pull carbonldp/carbonldp-workbench:1.0.x-alpha
+            </code></pre>
+		</li>
+		<li>
+			<p>
+				You should then create a data backup just in case something goes wrong with the new version.<br>
+				To do that, copy and rename the carbon folder containing your config and data.<br>
+			</p>
+		</li>
+
+		<li>
+			<p>You can then spin your instances again with the same commands you used before:</p>
+			<pre><code class="bash">
+				docker run -d --name carbonldp-platform -p 8083:8083 \
+					-v /your/directory/path/carbonldp:/opt/carbonldp/shared \
+					carbonldp/carbonldp-platform:1.0.x-alpha
+		    </code></pre>
+
+			<pre><code class="bash">
+				docker run -d --name carbonldp-workbench -p 8000:80 \
+					-e &quot;CARBON_HOST=localhost:8083&quot; \
+					-e &quot;CARBON_PROTOCOL=http&quot; \
+					carbonldp/carbonldp-workbench:1.0.x-alpha
+	        </code></pre>
+		</li>
+	</ol>
+</section>
+<!-- END: Update instances -->
+
+<!-- START: Providing feedback -->
+<section class="mainContent-section">
+	<h2>Providing feedback</h2>
+	<p>
+		Carbon LDP's version <code>1.0.x</code> is currently in <span class="highlight">alpha</span>. As such, we urge you to provide feedback as you evaluate the product so that we can improve it. Both positive and negative feedback are
+		welcome; we love it all. In fact, we even give Valued Feedback Rewards to registered users who provide feedback (feature requests, identified defects, etc).
+	</p>
+
+	<p>
+		Please provide feedback by opening issues in Carbon LDP's general wiki and issue tracking project,
+		<a rel="noopener" href="https://github.com/CarbonLDP/carbonldp">carbonldp on GitHub</a>.
+	</p>
+
+	<p>
+		To learn more about how we use GitHub to track project issues and feedback submitted by the user community, see:
+		<a rel="noopener" href="https://github.com/CarbonLDP/carbonldp/wiki/GitHub-Conventions-and-Workflow-for-Carbon-LDP">GitHub Conventions and Workflow for Carbon LDP</a>.
+	</p>
+</section>
+<!-- END: Providing feedback -->
+

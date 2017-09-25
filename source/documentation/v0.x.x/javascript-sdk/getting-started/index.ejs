@@ -1,0 +1,2148 @@
+---
+layout: documentation/document
+title: Getting Started with the JavasScript SDK
+description: Guide to install Carbon JavaScriptSDK and start creating and manipulating data with its basic methods.
+date: 2017-02-08 11:56:44
+version: v0.x.x
+---
+<div class="documentation-steps ui fluid steps">
+	<div class="active step">
+		<!--<i class="payment icon"></i>-->
+		<div class="content">
+			<div class="title">Getting started</div>
+		</div>
+	</div>
+	<a class="step" href="../object-model">
+		<i class="arrow right icon"></i>
+		<div class="content">
+			<div class="title">Next</div>
+			<div class="description">Object model</div>
+		</div>
+	</a>
+</div>
+
+
+<div class="ui message">
+	<div class="content">
+		<p>
+			This guide introduces you to the use of the Carbon JavaScript SDK. In it you will find an
+			installation guide and the basic methods needed to start using our platform.
+		</p>
+	</div>
+</div>
+
+
+<div class="ui mobile only grid">
+	<div class="row">
+		<staticContentMenu content="mainContent"></staticContentMenu>
+	</div>
+</div>
+
+
+<section class="mainContent-section">
+	<h2>Prerequisite knowledge</h2>
+	<p>
+		To better understand this guide and its code examples, a working knowledge of the following prerequisite topics is required.
+	</p>
+	<ul>
+		<li>
+			<strong>HTML, CSS, JavaScript:</strong> See: <a href="https://developer.mozilla.org/en-US/docs/Web">Mozilla Developer
+				Network</a>.
+		</li>
+		<li>
+			<strong>Promises:</strong> A standard-based way of handling asynchronous JavaScript logic.
+			See: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise">Promise
+				object</a> (Mozilla
+			Developer Network).
+		</li>
+	</ul>
+	<p>
+		Additionally, knowledge on the following topics is highly recommended:
+	</p>
+	<ul>
+		<li>
+			<strong>TypeScript:</strong> Carbon's JavaScript SDK is written in TypeScript, a JavaScript
+			superset language, maintained by Microsoft. See: <a href="http://www.typescriptlang.org/">TypeScript</a>.
+		</li>
+		<li>
+			<strong>Package Managers:</strong> Carbon recommends <a href="http://jspm.io/">JSPM</a>
+		</li>
+		<li>
+			<strong>ES2015 Modules:</strong> ES2015 modules let you "import" a file from another one so you can modularize
+			your application. See: <a href="http://exploringjs.com/es6/ch_modules.html">Modules</a> (Exploring ES6, by Dr. Axel
+			Rauschmayer)
+		</li>
+	</ul>
+</section>
+
+<div class="ui icon yellow message">
+	<i class="warning sign icon"></i>
+	<div class="content">
+		<p>
+			Before starting this guide, please <a href="/get-started">register</a> and follow the steps in the
+			<a href="/documentation/quick-start-guide">quick start guide</a> to install your Carbon platform and Workbench, if you have already done so, let the fun begin.
+		</p>
+	</div>
+</div>
+<section class="mainContent-section">
+	<h2>Installing the SDK</h2>
+	<p>
+		Installing the SDK depends on what package manager you are using:
+	</p>
+
+	<div class="ui styled fluid accordion">
+		<div class="title">
+			<i class="dropdown icon"></i>
+			Package manager?
+		</div>
+		<div class="content">
+			<p>If you are not using a package manager you can clone the source code with the following command:</p>
+
+			<pre><code class="bash">
+			git clone https://github.com/CarbonLDP/CarbonLDP-JS-SDK.git
+			</code></pre>
+
+			<p>It already includes a pre-compiled version of the source code so you can just jump right in.</p>
+		</div>
+		<div class="active title">
+			<i class="dropdown icon"></i>
+			npm
+		</div>
+		<div class="active content">
+			<pre><code class="bash">
+			npm install carbonldp --save
+			</code></pre>
+		</div>
+		<div class="title">
+			<i class="dropdown icon"></i>
+			jspm
+		</div>
+		<div class="content">
+			<pre><code class="bash">
+			jspm install npm:carbonldp
+			# We also need to install one of carbonldp's dependencies
+			jspm install npm:jsonld
+			</code></pre>
+
+		</div>
+	</div>
+
+	<p>After it has been installed, the way you'll use it will depend on your development environment:</p>
+
+	<div class="ui styled fluid accordion">
+		<div class="title">
+			<i class="dropdown icon"></i>
+				Browser - Global Window Object
+			</div>
+			<div class="content">
+				<p>The SDK comes with a bundled version that you can import directly into your html:</p>
+
+				<pre><code class="html">
+					&lt;script src="--sdk-directory--/dist/bundles/Carbon.sfx.js"&gt;&lt;/script&gt;
+				</code></pre>
+
+				<p>
+					After that, a variable named <code>Carbon</code> will be accessible in the global scope. This variable will serve as both a class constructor
+					and a namespace. It's usage as a class constructor is the same as when using ES2015 Modules, but its namespace nature is unique to the Global
+					approach.
+				</p>
+				<h3>Carbon Variable as a Namespace</h3>
+				<p>
+					The <code>Carbon</code> object chains together all the Carbon modules, so you can access them even if you are using the Global approach.
+					Each time you see in an example something like:
+				</p>
+
+				<pre><code class="javascript">
+					import * as Errors from "carbonldp/HTTP/Errors";
+				</code></pre>
+
+				<p>
+					You can take the portion after <code>carbonldp/</code>, replace the <code>/</code>s with <code>.</code> and append that to the Carbon namespace
+					to access the same module. For example, accessing that module using the global namespace would be:
+				</p>
+
+				<pre><code class="javascript">
+					Carbon.HTTP.Errors
+				</code></pre>
+
+			</div>
+
+	<div class="active title">
+		<i class="dropdown icon"></i>
+				Browser - ES2015 Modules
+			</div>
+			<div class="active content">
+				<p>
+					To be able to use ES2015 modules a transpiler like Babel, Traceur or TypeScript needs to be used. This documentation won't cover the details of
+					setting one up, but we recommend using <a class="outsidelink" target="_blank" rel="noopener" href="http://jspm.io/">JSPM</a> as a package manager, configured to
+					use
+					<a class="outsidelink" target="_blank" rel="noopener" href="http://www.typescriptlang.org/">TypeScript</a> as a transpiler. That way you can use ES2015 features
+					and bundle
+					your dependencies together!
+				</p>
+				<p>
+					Each module in Carbon will export at least one named export. Some of the modules will also export a <code>default</code> export containing the "main"
+					export of the module. That export will also be available as the named export <code>Class</code>. For example:
+				</p>
+
+				<pre><code class="typescript">
+					// This:
+					import Document from "carbonldp/Document";
+					let myDocument:Document = new Document();
+
+					// Is the same as this:
+					import * as Document from "carbonldp/Document";
+					let myDocument:Document.Class = new Document.Class();
+				</code></pre>
+
+				<p>We recommend not using default exports, but we provide them in case you are only using the "main" export of a file.</p>
+				<p>
+					The semantics behind Carbon's modules are based on the usage of the import all statement. Still, you can use selective
+					imports but you'll likely need to rename the import variables like:
+				</p>
+
+				<pre><code class="javascript">
+					import &#123; Factory as DocumentFactory, Class as Document &#125; from "carbonldp/Document";
+				</code></pre>
+
+				<p>
+					For each folder inside the Carbon source, there is a module at the same level with the same name that exports everything contained by the folder.
+					Example:
+				</p>
+
+				<pre><code class="javascript">
+					import * as Errors from "carbonldp/HTTP/Errors";
+					import * as Request from "carbonldp/HTTP/Request";
+
+					import * as HTTP from "carbonldp/HTTP";
+
+					HTTP.Errors === Errors; // true
+					HTTP.Request === Request; // true
+				</code></pre>
+
+			</div>
+		</div>
+
+	<p>
+		Next, you need to decide what language (and what version) you are going to use. The SDK can be used with the following ones:
+	</p>
+	<ul>
+		<li>
+			<strong>TypeScript:</strong> a JavaScript superset language, maintained by Microsoft. See:
+			<a class="outsidelink" target="_blank" rel="noopener" href="http://www.typescriptlang.org/">TypeScript</a>.
+		</li>
+		<li>
+			<strong>JavaScript ES2015+:</strong> JavaScript with the new features introduced in the ES2015 standard. In order for you to use it, you'll
+			likely need a transpiler like
+			<a class="outsidelink" target="_blank" rel="noopener" href="https://babeljs.io/">BabelJS</a> or
+			<a class="outsidelink" target="_blank" rel="noopener" href="https://github.com/google/traceur-compiler">Traceur</a>
+		</li>
+		<li>
+			<strong>JavaScript ES5:</strong> The good old JS, no arrow functions, let declarations or any of that magic. To use the SDK with this
+			JavaScript version you'll need to include the following polyfill before including the SDK:
+
+			<pre><code class="html">
+				&lt;script src="https://cdnjs.cloudflare.com/ajax/libs/es6-shim/0.35.1/es6-shim.min.js"&gt;&lt;/script&gt;
+			</code></pre>
+
+		</li>
+	</ul>
+	<!-- TODO: Add collective language selection of all tabs -->
+	<p>
+		Our code examples are written in all of these languages. <!-- so before continuing please select which one you'll use:-->
+	</p>
+	<!--<div class="ui compact buttons">-->
+		<!--<button class="ui button" (click)="selectLanguage( 0 )" [class.active]="selectedLanguage === 0">TypeScript</button>-->
+		<!--<div class="or"></div>-->
+		<!--<button class="ui button" (click)="selectLanguage( 1 )" [class.active]="selectedLanguage === 1">JS ES2015+</button>-->
+		<!--<div class="or"></div>-->
+		<!--<button class="ui button" (click)="selectLanguage( 2 )" [class.active]="selectedLanguage === 2">JS ES5</button>-->
+	<!--</div>-->
+	<p>
+
+	</p>
+	<div class="ui icon info message">
+		<i class="info circle icon"></i>
+		<div class="content">
+			<p>
+				We created boilerplate projects for each of the supported languages. They can serve as a good starting point:
+			</p>
+			<ul>
+				<li><a class="outsidelink" target="_blank" rel="noopener" href="https://github.com/CarbonLDP/carbon-typescript-boilerplate">TypeScript</a></li>
+				<li><a class="outsidelink" target="_blank" rel="noopener" href="https://github.com/CarbonLDP/carbon-js-es2015-boilerplate">JavaScript ES2015+</a></li>
+				<li><a class="outsidelink" target="_blank" rel="noopener" href="https://github.com/CarbonLDP/carbon-js-es5-boilerplate">JavaScript ES5</a></li>
+			</ul>
+		</div>
+	</div>
+</section>
+
+<section class="mainContent-section">
+	<h2>Creating a platform context</h2>
+	<div class="ui icon yellow message">
+		<i class="warning sign icon"></i>
+		<div class="content">
+			<p>
+				Before you can save data in your platform, you need to create an account. If you haven't done it, follow the steps in section <em>create an agent</em> of the
+				<a href="/documentation/quick-start-guide" fragment="create-an-agent" href="#create-an-agent">quick start guide</a>.
+			</p>
+		</div>
+	</div>
+	<p>
+		Let's start with some basic things you can do, like creating, saving and linking documents; among other things.
+	</p>
+	<p>
+		First of all, you need to create a <span class="highlight">Carbon platform context</span>. This
+		<span class="highlight">context</span> will provide a reference to the
+		<span class="highlight">Carbon platform instance</span> you are working with (for more
+		about Carbon contexts see: <a href="../contexts">Contexts</a>).
+	</p>
+	<tabs>
+		<tab title="TypeScript" name="typescript">
+			<pre><code class="typescript">
+				import Carbon from "carbonldp/Carbon";
+
+				let carbon:Carbon = new Carbon(); // platform context
+			</code></pre>
+		</tab>
+		<tab title="JavaScript ES2015" name="javascript-es2015">
+			<pre><code class="javascript">
+				let carbon = new Carbon(); // platform context
+			</code></pre>
+		</tab>
+		<tab title="JavaScript ES5" name="javascript-es5">
+			<pre><code class="javascript">
+				var carbon = new Carbon(); // platform context
+			</code></pre>
+		</tab>
+	</tabs>
+	<p>
+		By default, platform contexts point to the instance in <code>carbonldp.com</code>. If you need to change this,
+		you can do it by changing the <code>domain</code> setting:
+	</p>
+	<tabs>
+		<tab title="TypeScript">
+
+			<pre><code class="typescript">
+				import Carbon from "carbonldp/Carbon";
+
+				let carbon:Carbon = new Carbon(); // platform context
+				carbon.setSetting( "domain", "my-carbon-instance.com:8080" );
+			</code></pre>
+
+		</tab>
+		<tab title="JavaScript ES2015">
+
+			<pre><code class="javascript">
+				let carbon = new Carbon(); // platform context
+				carbon.setSetting( "domain", "my-carbon-instance.com:8080" );
+			</code></pre>
+
+		</tab>
+		<tab title="JavaScript ES5">
+
+			<pre><code class="javascript">
+				var carbon = new Carbon(); // platform context
+				carbon.setSetting( "domain", "my-carbon-instance.com:8080" );
+			</code></pre>
+
+		</tab>
+	</tabs>
+</section>
+<section class="mainContent-section">
+	<h2>Authenticating</h2>
+	<p>
+		After creating the platform context you need to tell the platform who you are by authenticating
+		yourself (if you haven't created an account yet, follow the steps in the section <em>create an agent</em> of the  <a href="/documentation/quick-start-guide">quick start guide
+		</a> ).
+	</p>
+	<p>
+		All authentication/authorization related actions are done through the <code>auth</code> service
+		every context has. This service provides an <code>authenticate</code> method where you can pass
+		your credentials:
+	</p>
+	<tabs>
+		<tab title="TypeScript">
+
+			<pre><code class="typescript">
+				// ... additional imports
+				import Carbon from "carbonldp/Carbon";
+				import * as Token from "carbonldp/Auth/Token";
+
+				let carbon:Carbon;
+
+				// ... platform context creation
+
+				carbon.auth.authenticate( "your@email.com", "YouRP455word" ).then(
+					( token:Token.Class ) => &#123;
+						console.log( carbon.auth.authenticatedAgent ); // Yourself!
+					&#125;
+				);
+			</code></pre>
+
+		</tab>
+		<tab title="JavaScript ES2015">
+
+			<pre><code class="javascript">
+				// ... imports
+
+				let carbon;
+
+				// ... platform context creation
+
+				carbon.auth.authenticate( "your@email.com", "YouRP455word" ).then(
+					( token ) => &#123;
+						console.log( carbon.auth.authenticatedAgent ); // Yourself!
+					&#125;
+				);
+			</code></pre>
+
+		</tab>
+		<tab title="JavaScript ES5">
+
+			<pre><code class="javascript">
+				var carbon;
+
+				// ... platform context creation
+
+				carbon.auth.authenticate( "your@email.com", "YouRP455word" ).then(
+					function( token ) &#123;
+						console.log( carbon.auth.authenticatedAgent ); // Yourself!
+					&#125;
+				);
+			</code></pre>
+
+		</tab>
+	</tabs>
+	<p>
+		It's important to notice that you are authenticated in that specific context (and its child contexts).
+		You could create additional platform contexts (or other type of contexts) and authenticate on them with
+		other credentials.
+	</p>
+</section>
+<section class="mainContent-section">
+	<h2>Retrieving an app context</h2>
+	<p>
+		Carbon stores your data in "applications" which are separate containers of information.
+		Data can be linked between applications, but its management is treated separately.
+	</p>
+	<div class="ui icon yellow message">
+		<i class="warning sign icon"></i>
+
+		<div class="content">
+			<p>
+				Before continuing, you need to create your first application, if you haven't done it, follow the steps in the section <em>create an application</em> of the
+				<a href="/documentation/quick-start-guide" fragment="create-a-new-application" href="#create-a-new-application">quick start guide</a> (remember to note your
+				application slug, because we'll use it later).
+			</p>
+		</div>
+	</div>
+	<p>
+		To access your application data, you need an <span class="highlight">application</span>
+		<a href="../contexts">context</a> that references it, on which you will be working on.
+		To retrieve it, you can use the <code>apps</code> service of the platform context:
+	</p>
+	<tabs>
+		<tab title="TypeScript">
+
+			<pre><code class="typescript">
+				// ... additional imports
+				import Carbon from "carbonldp/Carbon"
+				import * as App from "carbonldp/App";
+
+				let carbon:Carbon;
+
+				// ... platform context creation and authentication
+
+				let myAppContext:App.Context;
+
+				carbon.apps.getContext( "your-app-slug-here/" ).then(
+					( appContext:App.Context ) => &#123;
+				        myAppContext = appContext; // retrieving your app context
+					&#125;
+				).catch( console.error );
+			</code></pre>
+
+		</tab>
+		<tab title="JavaScript ES2015">
+
+			<pre><code class="javascript">
+				// ... imports
+
+				let carbon;
+
+				// ... platform context creation and authentication
+
+				let myAppContext;
+
+				carbon.apps.getContext( "your-app-slug-here/" ).then(
+					( appContext ) => &#123;
+				        myAppContext = appContext; // retrieving your app context
+					&#125;
+				).catch( console.error );
+			</code></pre>
+
+		</tab>
+		<tab title="JavaScript ES2015">
+
+			<pre><code class="javascript">
+				var carbon;
+
+				// ... platform context creation and authentication
+
+				var myAppContext;
+
+				carbon.apps.getContext( "your-app-slug-here/" ).then(
+					function( appContext ) &#123;
+				        myAppContext = appContext; // retrieving your app context
+					&#125;
+				).catch( console.error );
+			</code></pre>
+
+		</tab>
+	</tabs>
+	<p>
+		The <code>apps.getContext()</code> method returns a promise that when resolved, will give you the
+		<a href="../contexts"><span class="highlight">app context</span>
+		</a> you need. Be sure to replace <code>your-app-slug-here/</code> with your app slug.
+	</p>
+	<p>
+		This context is a child of the platform context you created. Because of that, any setting
+		or authentication information you saved in your platform context, is accessible
+		(and will be used) by this application context (for more see the Inheritance section of
+		<a href="../contexts">Contexts</a>).
+	</p>
+</section>
+
+<section class="mainContent-section">
+	<h2>Creating a document</h2>
+	<p>
+		Now that you have your app context, you can start working with your app's data. Carbon stores data
+		in documents, which are basically normal JavaScript objects identified by a URI (Unique Resource Identifier).
+		These documents are composed by properties, <span class="highlight">fragments</span> and <span class="highlight">named fragments</span>.
+		For more information see: <a href="../object-model">JavaScript SDK Object model</a>.
+	</p>
+	<p>
+		Any carbon <span class="highlight">context</span> has a <code>documents</code> service that
+		helps you manage your documents. To create one you need to call the method <code>createChild</code> of this service:
+	</p>
+	<tabs>
+		<tab title="TypeScript">
+
+			<pre><code class="typescript">
+				// ... additional imports
+				import * as App from "carbonldp/App";
+				import * as Response from "carbonldp/HTTP/Response";
+				import * as PersistedDocument from "carbonldp/PersistedDocument";
+
+				let myAppContext:App.Context;
+
+				// ... app context retrieval
+
+				// JavaScript object to be persisted as a Carbon document
+				let project:Project = &#123; // Project being a business specific interface defined somewhere
+					name: "Project X",
+					tasks: [
+						&#123;
+							name: "Task 1",
+							dueDate: new Date( "2016-04-02" )
+						&#125;,
+						&#123;
+							name: "Task 2",
+							dueDate: new Date( "2016-04-08" )
+						&#125;
+					]
+				&#125;;
+
+				myAppContext.documents.createChild&lt;Project&gt;( "/", project ).then(
+					( [ persistedProject, response ]:[ Project & PersistedDocument.Class, Response.Class ] ) => &#123;
+						console.log( project === persistedProject ); // true
+						console.log( persistedProject.id ); // document's URI
+					&#125;
+				).catch( console.error );
+			</code></pre>
+
+		</tab>
+		<tab title="JavaScript ES2015">
+
+			<pre><code class="javascript">
+				// ... imports
+
+				let myAppContext;
+
+				// ... app context retrieval
+
+				// JavaScript object to be persisted as a Carbon document
+				let project = &#123;
+					name: "Project X",
+					tasks: [
+						&#123;
+							name: "Task 1",
+							dueDate: new Date( "2016-04-02" )
+						&#125;,
+						&#123;
+							name: "Task 2",
+							dueDate: new Date( "2016-04-08" )
+						&#125;
+					]
+				&#125;;
+
+				myAppContext.documents.createChild( "/", project ).then(
+					( [ persistedProject, response ] ) => &#123;
+						console.log( project === persistedProject ); // true
+						console.log( project.id ); // document's URI
+					&#125;
+				).catch( console.error );
+			</code></pre>
+
+		</tab>
+		<tab title="JavaScript ES5">
+
+			<pre><code class="javascript">
+				var myAppContext;
+
+				// ... app context retrieval
+
+				// JavaScript object to be persisted as a Carbon document
+				var project = &#123;
+					name: "Project X",
+					tasks: [
+						&#123;
+							name: "Task 1",
+							dueDate: new Date( "2016-04-02" )
+						&#125;,
+						&#123;
+							name: "Task 2",
+							dueDate: new Date( "2016-04-08" )
+						&#125;
+					]
+				&#125;;
+
+				myAppContext.documents.createChild( "/", project ).then(
+					function( result ) &#123;
+						var persistedProject = result[ 0 ];
+						var response = result[ 1 ];
+
+						console.log( project === persistedProject ); // true
+						console.log( project.id ); // document's URI
+					&#125;
+				).catch( console.error );
+			</code></pre>
+
+		</tab>
+	</tabs>
+	<p>
+		After executing that, the information inside of <code>project</code> will have been persisted in Carbon. Nested objects
+		will also be saved inside of the document, so pretty much any JSON object can be saved as a Carbon document (as long as
+		the JSON's information is contained inside of an object, not an array).
+	</p>
+	<p>
+		Notice that the promise returned by <code>createChild</code> is returning a <code>PersistedDocument.Class</code> object.
+		This type of object represent a saved document in Carbon. It may or may not have the latest server information. You can make sure
+		that you have its latest changes by using its <code>refresh</code> method.
+	</p>
+	<p>
+		If you've just executed this, you'll notice that the document's id (or URI) ends with something like <code>1264563453436/</code>.
+		Carbon automatically assigns URIs to newly created documents. If you want to customize the ending portion of the URI,
+		a third parameter can be passed to the <code>createChild</code> method. This parameter is called <code>slug</code>
+		and it serves as a suggestion for Carbon when forging the document's URI:
+	</p>
+	<tabs>
+		<tab title="TypeScript">
+
+			<pre><code class="typescript">
+				// ...
+
+				myAppContext.documents.createChild&lt;Project&gt;( "/", project, "My sUp4 Project!" ).then(
+					( [ persistedProject, response ]:[ Project & PersistedDocument.Class, Response.Class ] ) => &#123;
+						console.log( persistedProject.id ); // .../my-supa-project/
+					&#125;
+				).catch( console.error );
+			</code></pre>
+
+		</tab>
+		<tab title="JavaScript ES2015">
+
+			<pre><code class="javascript">
+				// ...
+
+				myAppContext.documents.createChild( "/", project, "My sUp4 Project!" ).then(
+					( [ persistedProject, response ] ) => &#123;
+						console.log( persistedProject.id ); // .../my-supa-project/
+					&#125;
+				).catch( console.error );
+			</code></pre>
+
+		</tab>
+		<tab title="JavaScript ES5">
+
+			<pre><code class="javascript">
+				// ...
+
+				myAppContext.documents.createChild( "/", project, "My sUp4 Project!" ).then(
+					function( result ) &#123;
+						var persistedProject = result[ 0 ];
+						var response = result[ 1 ];
+
+						console.log( persistedProject.id ); // .../my-supa-project/
+					&#125;
+				).catch( console.error );
+			</code></pre>
+
+		</tab>
+	</tabs>
+	<p>
+		Another thing to notice is that the method is called create<strong>Child</strong>. All documents stored in Carbon are children of
+		another document. In this case we are specifying our newly created document's parent through the first parameter <code>"/"</code>.
+		That string represents a relative URI, one that can be resolved against something else. In this case it is being resolved to the
+		base URI the context has. To see to what that would resolve you can use a <code>context</code> <code>resolve</code> method:
+	</p>
+	<tabs>
+		<tab title="TypeScript">
+
+			<pre><code class="typescript">
+				// ... additional imports
+				import * as App from "carbonldp/App";
+
+				let myAppContext:App.Context;
+
+				// ... app context retrieval
+
+				console.log( myAppContext.resolve( "" ) ); // https://.../your-app-slug/
+			</code></pre>
+
+		</tab>
+		<tab title="JavaScript ES2015">
+
+			<pre><code class="javascript">
+				// ... imports
+
+				let myAppContext;
+
+				// ... app context retrieval
+
+				console.log( myAppContext.resolve( "" ) ); // https://.../your-app-slug/
+			</code></pre>
+
+		</tab>
+		<tab title="JavaScript ES5">
+
+			<pre><code class="javascript">
+				var myAppContext;
+
+				// ... app context retrieval
+
+				console.log( myAppContext.resolve( "" ) ); // https://.../your-app-slug/
+			</code></pre>
+
+		</tab>
+	</tabs>
+</section>
+<section class="mainContent-section">
+	<h2>Retrieving a document</h2>
+	<p>
+		Documents can be retrieved by their URIs or by following other documents' links. In fact, you can paste the <code>id</code>
+		you just retrieved when persisting your first document in your browser and you should see an <code>XML</code>
+		representation of it.
+	</p>
+	<p>
+		Like creating documents, retrieving them can be done using the <code>documents</code> service inside of any Carbon context.
+		To do so, you can use its <code>get</code> method:
+	</p>
+	<tabs>
+		<tab title="TypeScript">
+
+			<pre><code class="typescript">
+				// ... additional imports
+				import * as App from "carbonldp/App";
+				import * as Response from "carbonldp/HTTP/Response";
+				import * as PersistedDocument from "carbonldp/PersistedDocument";
+
+				let myAppContext:App.Context;
+
+				// ... app context retrieval
+
+				// ID of the Carbon document you want to retrieve
+				let projectID:string = "https://example.com/your-document-id/";
+
+				myAppContext.documents.get&lt;Project&gt;( projectID ).then(
+					( [ project, response ]:[ Project & PersistedDocument.Class, Response.Class ] ) => &#123;
+						console.log( project.name ); // "Project X"
+					&#125;
+				).catch( console.error );
+			</code></pre>
+
+		</tab>
+		<tab title="JavaScript ES2015">
+
+			<pre><code class="javascript">
+				// ... imports
+
+				let myAppContext;
+
+				// ... app context retrieval
+
+				// ID of the Carbon document you want to retrieve
+				let projectID = "https://example.com/your-document-id/";
+
+				myAppContext.documents.get( projectID ).then(
+					( [ project, response ] ) => &#123;
+						console.log( project.name ); // "Project X"
+					&#125;
+				).catch( console.error );
+			</code></pre>
+
+		</tab>
+		<tab title="JavaScript ES5">
+
+			<pre><code class="javascript">
+				var myAppContext;
+
+				// ... app context retrieval
+
+				// ID of the Carbon document you want to retrieve
+				var projectID = "https://example.com/your-document-id/";
+
+				myAppContext.documents.get( projectID ).then(
+					function( result ) &#123;
+						var project = result[ 0 ];
+						var response = result[ 1 ];
+
+						console.log( project.name ); // "Project X"
+					&#125;
+				).catch( console.error );
+			</code></pre>
+
+		</tab>
+	</tabs>
+	<p>
+		In this example we used the id of the document, but there are times that instead of having the id, you have a
+		<code>Pointer.Class</code> object. This can happen for example when a document points to another document through a property,
+		or as soon as you create a document and receive a pointer back (<code>PersistedDocument.Class</code> extends <code>Pointer.Class</code>).
+		These pointers have a <code>resolve</code> method that helps you retrieve their information:
+	</p>
+	<tabs>
+		<tab title="TypeScript">
+
+			<pre><code class="typescript">
+				// ... additional imports
+				import * as Response from "carbonldp/HTTP/Response";
+				import * as PersistedDocument from "carbonldp/PersistedDocument";
+				import * as Pointer from "carbonldp/Pointer";
+
+				let projectPointer:Pointer.Class;
+
+				// ... document pointer acquisition
+
+				projectPointer.resolve&lt;Project&gt;().then(
+					( [ project, response ]:[ Project & PersistedDocument.Class, Response.Class ] ) => &#123;
+						console.log( project.name ); // "Project X"
+					&#125;
+				).catch( console.error );
+			</code></pre>
+
+		</tab>
+		<tab title="JavaScript ES2015">
+
+			<pre><code class="javascript">
+				// ... imports
+
+				let projectPointer;
+
+				// ... document pointer acquisition
+
+				projectPointer.resolve().then(
+					( [ project, response ] ) => &#123;
+						console.log( project.name ); // "Project X"
+					&#125;
+				).catch( console.error );
+			</code></pre>
+
+		</tab>
+		<tab title="JavaScript ES5">
+
+			<pre><code class="javascript">
+				var projectPointer;
+
+				// ... document pointer acquisition
+
+				projectPointer.resolve().then(
+					function( result ) &#123;
+						var project = result[ 0 ];
+						var response = result[ 1 ];
+
+						console.log( project.name ); // "Project X"
+					&#125;
+				).catch( console.error );
+			</code></pre>
+
+		</tab>
+	</tabs>
+	<p>
+		As you can see, <code>Pointer.Class</code> objects have two states, resolved and unresolved. When a pointer
+		isn't resolved it doesn't contain the document's information (or it may be just out of sync with the server)
+		but it can be used to link other documents to it as we'll see later. You can also use its
+		<code>resolve</code> method to retrieve its information.
+	</p>
+</section>
+
+<section class="mainContent-section">
+	<h2>Modifying and saving a document</h2>
+
+	<p>
+		All <span class="highlight">documents</span> in <span class="highlight">Carbon</span> can
+		be modified. However all the changes done to a <span class="highlight">document</span>,
+		are done in memory. To persist the modifications the <span class="highlight">document</span> needs to be saved.
+	</p>
+
+	<p>
+		To modify a document you should:
+	</p>
+	<ol>
+		<li>Retrieve the <span class="highlight">document</span>:
+			<ol>
+				<li><code>get</code> using the <span class="highlight">document</span> id as
+					described in <span class="sectionlink">retrieving a document</span>
+				</li>
+			</ol>
+		</li>
+		<li>Modify the <span class="highlight">document</span>: Add, modify or delete
+			<span class="highlight">properties</span>,
+			<span class="highlight">fragments</span>,
+			<span class="highlight">named fragments</span>.
+		</li>
+		<li>Save the changes through <code>document.save</code> method.</li>
+	</ol>
+	<p>
+		Document properties can be added/modified/removed as with any normal JavaScript object.
+	</p>
+	<tabs>
+		<tab title="TypeScript">
+
+			<pre><code class="typescript">
+				// ... additional imports
+				import * as PersistedDocument from "carbonldp/PersistedDocument";
+
+				let project:Project & PersistedDocument.Class;
+
+				// ... document retrieval
+
+				project.name = "Project's New Name";
+				project.task.push( &#123;
+					name: "Task 3",
+					dueDate: new Date( "2016-05-02" )
+				&#125; );
+				project.description = &#123;
+					type: "markdown",
+					content: "# Some description here"
+				&#125;;
+
+				project.save&lt;Project&gt;().then(
+					( [ savedProject, response ]:[ Project & PersistedDocument.Class, Response.Class ] ) => &#123;
+						console.log( savedProject === project ); // true
+						return savedProject.refresh&lt;Project&gt;();
+					&#125;
+				).then(
+					( [ refreshedProject, response ]:[ Project & PersistedDocument.Class, Response.Class ] ) => &#123;
+						console.log( refreshedProject === project ); // true
+						// Continue doing stuff...
+					&#125;
+				).catch( console.error );
+			</code></pre>
+
+		</tab>
+		<tab title="JavaScript ES2015">
+
+			<pre><code class="javascript">
+				// ... imports
+
+				let project;
+
+				// ... document retrieval
+
+				project.name = "Project's New Name";
+				project.task.push( &#123;
+					name: "Task 3",
+					dueDate: new Date( "2016-05-02" )
+				&#125; );
+				project.description = &#123;
+					type: "markdown",
+					content: "# Some description here"
+				&#125;;
+
+				project.save().then(
+					( [ savedProject, response ] ) => &#123;
+						console.log( savedProject === project ); // true
+						return savedProject.refresh();
+					&#125;
+				).then(
+					( [ refreshedProject, response ] ) => &#123;
+						console.log( refreshedProject === project ); // true
+						// Continue doing stuff...
+					&#125;
+				).catch( console.error );
+			</code></pre>
+
+		</tab>
+		<tab title="JavaScript ES5">
+
+			<pre><code class="javascript">
+				var project;
+
+				// ... document retrieval
+
+				project.name = "Project's New Name";
+				project.task.push( &#123;
+					name: "Task 3",
+					dueDate: new Date( "2016-05-02" )
+				&#125; );
+				project.description = &#123;
+					type: "markdown",
+					content: "# Some description here"
+				&#125;;
+
+				project.save().then(
+					function( result ) => &#123;
+						var savedProject = result[ 0 ];
+						var response = result[ 0 ];
+
+						console.log( savedProject === project ); // true
+						return savedProject.refresh();
+					&#125;
+				).then(
+					function( result ) => &#123;
+						var refreshedProject = result[ 0 ];
+						var response = result[ 0 ];
+
+						console.log( refreshedProject === project ); // true
+						// Continue doing stuff...
+					&#125;
+				).catch( console.error );
+			</code></pre>
+
+		</tab>
+	</tabs>
+	<p>
+		Notice that we used the <code>save</code> method and immediately after, we called <code>refresh</code>.
+		Remember that every persisted document has this method and it helps you sync the in memory
+		representation of the document with the server's information. In this case we used it because after the document was
+		saved, Carbon could have added or modified some of its properties (noticeably properties like <code>modified</code>).
+	</p>
+	<p>
+		This is a very common thing to do, therefore persisted documents also have the method <code>saveAndRefresh</code>
+		which does both things at once.
+	</p>
+</section>
+
+<section class="mainContent-section">
+	<h2>Deleting a document</h2>
+	<p>
+		As when creating and retrieving documents, the <code>documents</code> service can help you
+		delete a persisted document through its <code>delete</code> method. To do so, you need to
+		provide the document's URI:
+	</p>
+	<tabs>
+		<tab title="TypeScript">
+
+			<pre><code class="typescript">
+				// ... additional imports
+				import * as App from "carbonldp/App";
+				import * as Response from "carbonldp/HTTP/Response";
+
+				let myAppContext:App.Context;
+
+				// ... app context retrieval
+
+				// ID of the Carbon document you want to delete
+				let projectID:string = "https://example.com/your-document-id/";
+
+				myAppContext.documents.delete( projectID ).then(
+					( response:Response.Class ) => &#123;
+						// continue doing stuff...
+					&#125;
+				).catch( console.error );
+			</code></pre>
+
+		</tab>
+		<tab title="JavaScript ES2015">
+
+			<pre><code class="javascript">
+				// ... imports
+
+				let myAppContext;
+
+				// ... app context retrieval
+
+				// ID of the Carbon document you want to delete
+				let projectID = "https://example.com/your-document-id/";
+
+				myAppContext.documents.delete( projectID ).then(
+					( response ) => &#123;
+						// continue doing stuff...
+					&#125;
+				).catch( console.error );
+			</code></pre>
+
+		</tab>
+		<tab title="JavaScript ES5">
+
+			<pre><code class="javascript">
+				var myAppContext;
+
+				// ... app context retrieval
+
+				// ID of the Carbon document you want to delete
+				var projectID = "https://example.com/your-document-id/";
+
+				myAppContext.documents.delete( projectID ).then(
+					function( response ) &#123;
+						// continue doing stuff...
+					&#125;
+				).catch( console.error );
+			</code></pre>
+
+		</tab>
+	</tabs>
+	<p>
+		Like in "Retrieving a document", a document can also be deleted through the <code>PersistedDocument.Class</code>'s
+		<code>delete</code> method:
+	</p>
+	<tabs>
+		<tab title="TypeScript">
+
+			<pre><code class="typescript">
+				// ... additional imports
+				import * as PersistedDocument from "carbonldp/PersistedDocument";
+				import * as Response from "carbonldp/HTTP/Response";
+
+				let project:Project & PersistedDocument.Class;
+
+				// persisted document retrieval
+
+				project.delete().then(
+					( response:Response.Class ) => &#123;
+						// continue doing stuff...
+					&#125;
+				).catch( console.error );
+			</code></pre>
+
+		</tab>
+		<tab title="JavaScript ES2015">
+
+			<pre><code class="javascript">
+				// ... imports
+
+				let project;
+
+				// persisted document retrieval
+
+				project.delete().then(
+					( response ) => &#123;
+						// continue doing stuff...
+					&#125;
+				).catch( console.error );
+			</code></pre>
+
+		</tab>
+		<tab title="JavaScript ES5">
+
+			<pre><code class="javascript">
+				var project;
+
+				// persisted document retrieval
+
+				project.delete().then(
+					function( response ) &#123;
+						// continue doing stuff...
+					&#125;
+				).catch( console.error );
+			</code></pre>
+
+		</tab>
+	</tabs>
+	<p>
+		In fact, this pattern can be seen across several methods, where both the <code>documents</code> service
+		and <code>PersistedDocument.Class</code> expose similar methods. For example, <code>createChild</code> is also exposed by a
+		<code>PersistedDocument.Class</code> object and allows you to create a direct child of that document. Basically, if you don't have
+		a resolved reference of the document, use <code>documents</code> service. But if you already have one, you
+		can call the action through the <code>PersistedDocument.Class</code> directly (which may make code more readable, and in some cases more efficient).
+	</p>
+</section>
+
+<section class="mainContent-section">
+	<h2>Linking documents</h2>
+	<p>
+		One of the core features of Carbon LDP, is linking data (after all, it's a Linked Data Platform). Documents can
+		be linked to other documents through normal JavaScript properties:
+	</p>
+	<tabs>
+		<tab title="TypeScript">
+
+			<pre><code class="typescript">
+				// ... additional imports
+				import * as PersistedDocument from "carbonldp/PersistedDocument";
+
+				let project1:Project & PersistedDocument.Class;
+				let project2:Project & PersistedDocument.Class;
+
+				// ... persisted documents retrieval
+
+				project1.relatedProject = project2;
+			</code></pre>
+
+		</tab>
+		<tab title="JavaScript ES2015">
+
+			<pre><code class="javascript">
+				// ... imports
+
+				let project1;
+				let project2;
+
+				// ... persisted documents retrieval
+
+				project1.relatedProject = project2;
+			</code></pre>
+
+		</tab>
+		<tab title="JavaScript ES5">
+
+			<pre><code class="javascript">
+				var project1;
+				var project2;
+
+				// ... persisted documents retrieval
+
+				project1.relatedProject = project2;
+			</code></pre>
+
+		</tab>
+	</tabs>
+	<p>
+		There are also special properties Carbon handles for you. The most important ones are <code>contains</code>,
+		which represents the document parent-child relation, and <code>members</code> which represents membership relation.
+	</p>
+	<section class="mainContent-subSection">
+		<h3>Parent-child relation</h3>
+		<p>
+			Like we said before, every document that is saved in Carbon must have a parent. When a document gets
+			created it's automatically added to the array contained in its parent <code>contains</code> property.
+			The SDK gives you convenient methods to handle this array, such as:
+		</p>
+		<ul>
+			<li>
+				<code>documents.listChildren</code>: Returns a list of unresolved <code>PersistedDocument.Class</code> objects for each of the document children
+			</li>
+			<li>
+				<code>documents.getChildren</code>: Returns a list of RESOLVED <code>PersistedDocument.Class</code> objects for each of the document children
+			</li>
+		</ul>
+		<tabs>
+			<tab title="TypeScript">
+
+				<pre><code class="typescript">
+					// ... additional imports
+					import * as App from "carbonldp/App";
+
+					let myAppContext:App.Context;
+
+					// ... app context retrieval
+
+					myAppContext.documents.listChildren&lt;Project&gt;( "projects/" ).then(
+						( [ unresolvedProjects, response ] : [ ( Project & PersistedDocument.Class )[], HTTP.Response.Class]) => &#123;
+					        console.log( unresolvedProjects ); // array of unresolved pointers
+						&#125;
+					);
+
+					myAppContext.documents.getChildren&lt;Project&gt;( "projects/" ).then(
+						( [ resolvedProjects, response ] : [ ( Project & PersistedDocument.Class )[], HTTP.Response.Class] ) => &#123;
+					        console.log( resolvedProjects ); // array of resolved pointers
+						&#125;
+					);
+				</code></pre>
+
+			</tab>
+			<tab title="JavaScript ES2015">
+
+				<pre><code class="javascript">
+					// ... imports
+
+					let myAppContext;
+
+					// ... app context retrieval
+
+					myAppContext.documents.listChildren( "projects/" ).then(
+						( [ unresolvedProjects, response ] ) => &#123;
+					        console.log( projectPointers ); // array of unresolved pointers
+						&#125;
+					);
+
+					myAppContext.documents.getChildren( "projects/" ).then(
+						( [ resolvedProjects, response ] ) => &#123;
+					        console.log( projects ); // array of resolved pointers
+						&#125;
+					);
+				</code></pre>
+
+			</tab>
+			<tab title="JavaScript ES5">
+
+				<pre><code class="javascript">
+					var myAppContext;
+
+					// ... app context retrieval
+
+					myAppContext.documents.listChildren( "projects/" ).then(
+						function( [ unresolvedProjects, response ] ) &#123;
+							var unresolvedProjects = result[ 0 ];
+							var response = result[ 1 ];
+
+					        console.log( projectPointers ); // array of unresolved pointers
+						&#125;
+					);
+
+					myAppContext.documents.getChildren( "projects/" ).then(
+						function( [ resolvedProjects, response ] ) &#123;
+							var resolvedProjects = result[ 0 ];
+							var response = result[ 1 ];
+
+					        console.log( projects ); // array of resolved pointers
+						&#125;
+					);
+				</code></pre>
+
+			</tab>
+		</tabs>
+		<p>
+			Like <code>createChild</code> and <code>delete</code>, <code>listChildren</code> and <code>getChildren</code>
+			are also accessible through a <code>PersistedDocument.Class</code>. See, there's a pattern!
+		</p>
+		<div class="ui info icon message">
+			<i class="info circle icon"></i>
+			<div class="content">
+				<p>
+					The last example could show you weird results. The <code>documents</code> service
+					caches pointers, so listing children of a document while at the same time retrieving them will return
+					you the same objects.
+				</p>
+			</div>
+		</div>
+		<p>
+			It's worth mentioning that parent-child relations are considered <span class="highlight">hard links</span>.
+			They are directly related to the structure of the data. Meaning, if you delete the relation,
+			the child gets deleted too. By consequence, if you delete a parent, all of its children will also be
+			deleted (and the children of its children, and so on).
+		</p>
+	</section>
+	<section class="mainContent-subSection">
+		<h3>Membership Relation</h3>
+		<p>
+			Because parent-child relations are <span class="highlight">hard links</span>, it is not recommended
+			to use them in your app logic. Instead, Carbon helps you manage another type of relation, considered as
+			a <span class="highlight">soft link</span>, membership relations.
+		</p>
+		<p>
+			The meaning of a membership relation is up to your application logic to define it. It can mean things like,
+			a project's list of tasks, a person's friends, a person's assets, etc. You must be thinking
+			<!-- TODO: Use a css class instead of an <i> block -->
+			<i>"well I can already do that with normal JavaScript properties, what are the advantages of treating them as 'membership relations'?"</i>.
+			It's true that you can manually manage lists, but to do so, you would need to manage the whole document. By configuring
+			a property to act as a "membership relation", you enable things like retrieving the list without retrieving the complete document,
+			adding new elements without retrieving the list, etc.
+		</p>
+		<p>
+			All carbon documents can maintain a list of members. The relation between the document and its members can be
+			configured, through the properties:
+		</p>
+		<ul>
+			<li>
+				<code>hasMemberRelation</code>: Configures the property that will hold the array of members
+				(by default <code>members</code>)
+			</li>
+			<li>
+				<code>isMemberOfRelation</code>: Configures the property that each member will have, that links back to the
+				document they are member of (none by default)
+			</li>
+		</ul>
+		<p>
+			These properties are configured in the document that will maintain the member array. Members can be added, removed,
+			listed or retrieved, through the following methods in the <code>documents</code> service (and the document itself too):
+		</p>
+		<ul>
+			<li>
+				<code>addMember/addMembers</code>: Adds the provided pointers as members of the document
+			</li>
+			<li>
+				<code>listMembers</code>: Like <code>listChildren</code>, returns an array of unresolved <code>PersistedDocument.Class</code> objects for each member
+			</li>
+			<li>
+				<code>getMembers</code>: Like <code>getChildren</code>, returns an array of RESOLVED <code>PersistedDocument.Class</code> objects for each member
+			</li>
+			<li>
+				<code>removeMember/removeMembers/removeAllMembers</code>: Removes the specified members (without deleting them)
+			</li>
+		</ul>
+		<tabs>
+			<tab title="TypeScript">
+
+				<pre><code class="typescript">
+					// ... additional imports
+					import * as App from "carbonldp/App";
+					import * as PersistedDocument from "carbonldp/PersistedDocument";
+					import * as Response from "carbonldp/HTTP/Response";
+
+					let myAppContext:App.Context;
+
+					// ... app context retrieval
+
+					let project:Project = &#123;
+						name: "Important project",
+
+						hasMemberRelation: "tasks",
+						isMemberOfRelation: "project"
+					&#125;;
+
+					let task1:Task = &#123; name: "Task 1" &#125;; // Being "Task" a business specific interface defined somewhere
+					let task2:Task = &#123; name: "Task 2" &#125;;
+					let task3:Task = &#123; name: "Task 3" &#125;;
+
+					// ... project, task1, task2 and task3 persistence (createChild, etc)
+
+					project.addMembers( [ task1, task2, task3 ] ).then(
+						( response:Response.Class ) => &#123;
+							return project.resolve&lt;Project&gt;();
+						&#125;
+					).then(
+						( [ project, response ]:[ Project & PersistedDocument.Class, Response.Class ] ) => &#123;
+							console.log( project.tasks ); // Pointers for task1, task2 and task3. Added because of the configured hasMemberRelation
+							console.log( project.tasks.indexOf( task1 ) !== -1 ); // true (remember, pointers are cached and reused)
+							console.log( project.tasks.indexOf( task2 ) !== -1 ); // true
+							console.log( project.tasks.indexOf( task3 ) !== -1 ); // true
+
+							return project.listMembers&lt;Task&gt;();
+						&#125;
+					).then(
+						( [ unresolvedTasks, response ]:[ Task & PersistedDocument.Class, Response.Class ] ) => &#123;
+							console.log( unresolvedTasks ); // Pointers for task1, task2 and task3
+
+							return project.removeMember( task2 );
+						&#125;
+					).then(
+						( response:Response.Class ) => &#123;
+							console.log( "Task 2 is no longer a member of the project" );
+
+							return project.getMembers&lt;Task&gt;();
+						&#125;
+					).then(
+						( [ resolvedTasks, response ]:[ Task & PersistedDocument.Class, Response.Class ] ) => &#123;
+							console.log( resolvedTasks ); // task1 and task3 documents
+							console.log( task[0].project ); // pointer to project. Added due to the configured isMemberOfRelation
+						&#125;
+					).catch( console.error );
+				</code></pre>
+
+			</tab>
+			<tab title="JavaScript ES2015">
+
+				<pre><code class="javascript">
+					// ... imports
+
+					let myAppContext;
+
+					// ... app context retrieval
+
+					let project = &#123;
+						name: "Important project",
+
+						hasMemberRelation: tasks,
+						isMemberOfRelation: project
+					&#125;;
+
+					let task1 = &#123; name: "Task 1" &#125;;
+					let task2 = &#123; name: "Task 2" &#125;;
+					let task3 = &#123; name: "Task 3" &#125;;
+
+					// ... project, task1, task2 and task3 persistence (createChild, etc)
+
+					project.addMembers( [ task1, task2, task3 ] ).then(
+						( response ) => &#123;
+							return project.resolve();
+						&#125;
+					).then(
+						( [ project, response ] ) => &#123;
+							console.log( project.tasks ); // Pointers for task1, task2 and task3. Added because of the configured hasMemberRelation
+							console.log( project.tasks.indexOf( task1 ) !== -1 ); // true (remember, pointers are cached and reused)
+							console.log( project.tasks.indexOf( task2 ) !== -1 ); // true
+							console.log( project.tasks.indexOf( task3 ) !== -1 ); // true
+
+							return project.listMembers();
+						&#125;
+					).then(
+						( [ unresolvedTasks, response ] ) => &#123;
+							console.log( unresolvedTasks ); // Pointers for task1, task2 and task3
+
+							return project.removeMember( task2 );
+						&#125;
+					).then(
+						( response ) => &#123;
+							console.log( "Task 2 is no longer a member of the project" );
+
+							return project.getMembers();
+						&#125;
+					).then(
+						( [ resolvedTasks, response ] ) => &#123;
+							console.log( resolvedTasks ); // task1 and task3 documents
+							console.log( task[0].project ); // pointer to project. Added due to the configured isMemberOfRelation
+						&#125;
+					).catch( console.error );
+				</code></pre>
+
+			</tab>
+			<tab title="JavaScript ES5">
+
+				<pre><code class="javascript">
+					var myAppContext;
+
+					// ... app context retrieval
+
+					var project = &#123;
+						name: "Important project",
+
+						hasMemberRelation: tasks,
+						isMemberOfRelation: project
+					&#125;;
+
+					var task1 = &#123; name: "Task 1" &#125;;
+					var task2 = &#123; name: "Task 2" &#125;;
+					var task3 = &#123; name: "Task 3" &#125;;
+
+					// ... project, task1, task2 and task3 persistence (createChild, etc)
+
+					project.addMembers( [ task1, task2, task3 ] ).then(
+						function( response ) &#123;
+							return project.resolve();
+						&#125;
+					).then(
+						function( result ) &#123;
+							var project = result[ 0 ];
+							var response = result[ 1 ];
+
+							console.log( project.tasks ); // Pointers for task1, task2 and task3. Added because of the configured hasMemberRelation
+							console.log( project.tasks.indexOf( task1 ) !== -1 ); // true (remember, pointers are cached and reused)
+							console.log( project.tasks.indexOf( task2 ) !== -1 ); // true
+							console.log( project.tasks.indexOf( task3 ) !== -1 ); // true
+
+							return project.listMembers();
+						&#125;
+					).then(
+						function( result ) &#123;
+							var unresolvedTasks = result[ 0 ];
+							var response = result[ 1 ];
+
+							console.log( unresolvedTasks ); // Pointers for task1, task2 and task3
+
+							return project.removeMember( task2 );
+						&#125;
+					).then(
+						function( response ) &#123;
+							console.log( "Task 2 is no longer a member of the project" );
+
+							return project.getMembers();
+						&#125;
+					).then(
+						function( result ) &#123;
+							var resolvedTasks = result[ 0 ];
+							var response = result[ 1 ];
+
+							console.log( resolvedTasks ); // task1 and task3 documents
+							console.log( task[0].project ); // pointer to project. Added due to the configured isMemberOfRelation
+						&#125;
+					).catch( console.error );
+				</code></pre>
+
+			</tab>
+		</tabs>
+	</section>
+</section>
+<section class="mainContent-section">
+	<h2>Creating an access point</h2>
+	<p>
+		Membership relations have a limitation though, a document can only maintain one list through one property. So what happens when
+		you want to manage members of another property? For example, what happens if you want to manage a list of people that are members
+		of the project? Well, this can be accomplished using access points.
+	</p>
+	<p>
+		Access points are special documents whose purpose is to maintain a list of members of another document. Any document can have
+		any number of access points, removing the limitation we talked about.
+	</p>
+	<p>
+		Like normal documents, access points can be customized by specifying a <code>hasMemberRelation</code> and an
+		<code>isMemberOfRelation</code>. To create an access point for a document you can use the <code>createAccessPoint</code> method
+		of the <code>documents</code> service or of a <code>PersistedDocument.Class</code> object.
+	</p>
+	<tabs>
+		<tab title="TypeScript">
+
+			<pre><code class="typescript">
+				// ... additional imports
+				import * as AccessPoint from "carbonldp/AccessPoint";
+				import * as PersistedAccessPoint from "carbonldp/PersistedAccessPoint";
+				import * as PersistedDocument from "carbonldp/PersistedDocument";
+
+				let project:Project & PersistedDocument.Class;
+				let person1:Person & PersistedDocument.Class;
+				let person2:Person & PersistedDocument.Class;
+
+				// ... project, person1 and person2 document retrieval
+
+				let projectMembersAccessPoint:AccessPoint = &#123;
+					hasMemberRelation: "people", // property used to store the member list in the accessPoint's document
+					isMemberOfRelation: "projects" // property used to link back members to the document they are members of
+				&#125;;
+
+				project.createAccessPoint( "people", projectMembersAccessPoint ).then(
+					( [ persistedProjectMembersAccessPoint, response ]:[ PersistedAccessPoint.Class, Response.Class ] ) => &#123;
+						console.log( projectMembersAccessPoint === persistedProjectMembersAccessPoint ); // true
+
+						return persistedProjectMembersAccessPoint.addMembers( [ person1, person2 ] );
+					&#125;
+				).then(
+					( response:Response.Class ) => &#123;
+						return project.refresh&lt;Project&gt;();
+					&#125;
+				).then(
+					( [ refreshedProject, response ]:[ Project & PersistedDocument.Class, Response.Class ] ) => &#123;
+						console.log( project === refreshedProject ); // true
+						console.log( refreshedProject.people ); // Pointers to person1 and person2
+
+						return person1.refresh&lt;Person&gt;();
+					&#125;
+				).then(
+					( [ refreshedPerson1, response ]:[ Person & PersistedDocument.Class, Response.Class ] ) => &#123;
+						console.log( person1 === refreshedPerson1 ); // true
+						console.log( refreshedPerson1.projects ); // Pointer to project
+					&#125;
+				).catch( console.error );
+			</code></pre>
+
+		</tab>
+		<tab title="JavaScript ES2015">
+
+			<pre><code class="javascript">
+				// ... imports
+
+				let project;
+				let person1;
+				let person2;
+
+				// ... project, person1 and person2 document retrieval
+
+				let projectMembersAccessPoint = &#123;
+					hasMemberRelation: "people", // property used to store the member list in the accessPoint's document
+					isMemberOfRelation: "projects" // property used to link back members to the document they are members of
+				&#125;;
+
+				project.createAccessPoint( "people", projectMembersAccessPoint ).then(
+					( [ persistedProjectMembersAccessPoint, response ] ) => &#123;
+						console.log( projectMembersAccessPoint === persistedProjectMembersAccessPoint ); // true
+
+						return persistedProjectMembersAccessPoint.addMembers( [ person1, person2 ] );
+					&#125;
+				).then(
+					( response ) => &#123;
+						return project.refresh&lt;Project&gt;();
+					&#125;
+				).then(
+					( [ refreshedProject, response ] ) => &#123;
+						console.log( project === refreshedProject ); // true
+						console.log( refreshedProject.people ); // Pointers to person1 and person2
+
+						return person1.refresh&lt;Person&gt;();
+					&#125;
+				).then(
+					( [ refreshedPerson1, response ] ) => &#123;
+						console.log( person1 === refreshedPerson1 ); // true
+						console.log( refreshedPerson1.projects ); // Pointer to project
+					&#125;
+				).catch( console.error );
+			</code></pre>
+
+		</tab>
+		<tab title="JavaScript ES5">
+
+			<pre><code class="javascript">
+				// ... imports
+
+				var project;
+				var person1;
+				var person2;
+
+				// ... project, person1 and person2 document retrieval
+
+				var projectMembersAccessPoint = &#123;
+					hasMemberRelation: "people", // property used to store the member list in the accessPoint's document
+					isMemberOfRelation: "projects" // property used to link back members to the document they are members of
+				&#125;;
+
+				project.createAccessPoint( "people", projectMembersAccessPoint ).then(
+					function( result ) &#123;
+						var persistedProjectMembersAccessPoint = result[ 0 ];
+						var response = result[ 1 ];
+
+						console.log( projectMembersAccessPoint === persistedProjectMembersAccessPoint ); // true
+
+						return persistedProjectMembersAccessPoint.addMembers( [ person1, person2 ] );
+					&#125;
+				).then(
+					function( response ) &#123;
+						return project.refresh&lt;Project&gt;();
+					&#125;
+				).then(
+					function( result ) &#123;
+						var refreshedProject = result[ 0 ];
+						var response = result[ 1 ];
+
+						console.log( project === refreshedProject ); // true
+						console.log( refreshedProject.people ); // Pointers to person1 and person2
+
+						return person1.refresh&lt;Person&gt;();
+					&#125;
+				).then(
+					function( result ) &#123;
+						var refreshedPerson1 = result[ 0 ];
+						var response = result[ 1 ];
+
+						console.log( person1 === refreshedPerson1 ); // true
+						console.log( refreshedPerson1.projects ); // Pointer to project
+					&#125;
+				).catch( console.error );
+			</code></pre>
+
+		</tab>
+	</tabs>
+</section>
+<section class="mainContent-section">
+	<h2>Putting it all together</h2>
+	<p>
+		Here's an example of all the actions we talked about joined together into a single script:
+	</p>
+	<tabs>
+		<tab title="TypeScript">
+
+			<pre><code class="typescript">
+				import Carbon from &quot;carbonldp/Carbon&quot;;
+				import * as Token from &quot;carbonldp/Auth/Token&quot;;
+				import * as App from &quot;carbonldp/App&quot;;
+				import * as Response from &quot;carbonldp/HTTP/Response&quot;;
+				import * as PersistedAccessPoint from &quot;carbonldp/PersistedAccessPoint&quot;;
+				import * as PersistedDocument from &quot;carbonldp/PersistedDocument&quot;;
+
+				interface Task &#123;
+					name:string;
+					dueDate:Date;
+				&#125;
+
+				interface Project &#123;
+					name:string;
+					description?:&#123;
+						type:string;
+						content:string;
+					&#125;;
+					tasks?:Task[];  // If there are no tasks this property won't exist
+				&#125;
+
+				let project:Project = &#123;
+					name: &quot;Project X&quot;
+				&#125;;
+				let persistedProject:Project &amp; PersistedDocument.Class;
+				let tasksAccessPoint:PersistedAccessPoint.Class;
+				let persistedTask1:Task &amp; PersistedDocument.Class;
+				let persistedTask2:Task &amp; PersistedDocument.Class;
+
+				let carbon:Carbon = new Carbon();
+				carbon.setSetting( &quot;domain&quot;, &quot;localhost:8083&quot; );
+				carbon.setSetting( &quot;http.ssl&quot;, false ); // Turning off HTTPS (only needed if your server isn't using it)
+
+				let appContext:App.Context;
+
+				carbon.auth.authenticate( &quot;your@email.com&quot;, &quot;YouRP455word&quot; ).then(
+					( token:Token.Class ) =&gt; &#123;
+						console.log( `Hello $&#123; carbon.auth.authenticatedAgent.name &#125;!` );
+
+						// Retrieving the application context
+						return carbon.apps.getContext( &quot;your-app-slug-here/&quot; );
+					&#125;
+				).then(
+					( _appContext:App.Context ) =&gt; &#123;
+						appContext = _appContext;
+
+						// Creating a document
+						return appContext.documents.createChild&lt;Project&gt;( &quot;/&quot;, project );
+					&#125;
+				).then(
+					( [ _persistedProject, response ]:[ Project &amp; PersistedDocument.Class, Response.Class ] ) =&gt; &#123;
+						persistedProject = _persistedProject;
+
+						console.log( project === persistedProject ); // true
+						console.log( persistedProject.id ); // document's URI
+						console.log( &quot;created&quot; in persistedProject ); // false - The project was persisted but it's latest state hasn't been retrieved from the server
+
+						// Read the just created document
+						return appContext.documents.get&lt;Project&gt;( persistedProject.id ); // Can also be `return persistedProject.refresh();`
+					&#125;
+				).then(
+					( [ persistedProject, response ]:[ Project &amp; PersistedDocument.Class, Response.Class ] ) =&gt; &#123;
+						console.log( project === persistedProject ); // true - The same object was updated with its latest properties
+						console.log( persistedProject.created ); // Creation date
+
+						persistedProject.description = &#123;
+							type: &quot;markdown&quot;,
+							content: &quot;# Some description here&quot;
+						&#125;;
+
+						// Save the latest state to the server
+						return persistedProject.save&lt;Project&gt;(); // Can also be `appContext.documents.save&lt;Project&gt;( persistedProject );`
+					&#125;
+				).then(
+					( [ persistedProject, response ]:[ Project &amp; PersistedDocument.Class, Response.Class ] ) =&gt; &#123;
+						console.log( project === persistedProject ); // true
+
+						// Creating an access point for the project to manage tasks
+						return persistedProject.createAccessPoint( &#123;
+							hasMemberRelation: &quot;tasks&quot;
+						&#125;, &quot;tasks&quot; );
+					&#125;
+				).then(
+					( [ _tasksAccessPoint, response ]:[ PersistedAccessPoint.Class, Response.Class ] ) =&gt; &#123;
+						tasksAccessPoint = _tasksAccessPoint;
+
+						// Creating a task so we can add it to the project later on
+						return appContext.documents.createChild&lt;Task&gt;( &quot;/&quot;, &#123;
+							name: &quot;Do something&quot;,
+							dueDate: new Date()
+						&#125; );
+					&#125;
+				).then(
+					( [ persistedTask, response ]:[ Task &amp; PersistedDocument.Class, Response.Class ] ) =&gt; &#123;
+						persistedTask1 = persistedTask;
+
+						// Creating another task so we can add it to the project later on
+						return appContext.documents.createChild&lt;Task&gt;( &quot;/&quot;, &#123;
+							name: &quot;Do something else&quot;,
+							dueDate: new Date()
+						&#125; );
+					&#125;
+				).then(
+					( [ persistedTask, response ]:[ Task &amp; PersistedDocument.Class, Response.Class ] ) =&gt; &#123;
+						persistedTask2 = persistedTask;
+
+						// Adding them to the project through the AccessPoint
+						return tasksAccessPoint.addMembers( [ persistedTask1, persistedTask2 ] );
+					&#125;
+				).then(
+					( response:Response.Class ) =&gt; &#123;
+
+						// Refreshing the project so we can check if the tasks were added
+						return persistedProject.refresh&lt;Project&gt;();
+					&#125;
+				).then(
+					( [ persistedProject, response ]:[ Project &amp; PersistedDocument.Class, Response.Class ] ) =&gt; &#123;
+						console.log( project === persistedProject ); // true - Still the same object
+						console.log( &quot;tasks&quot; in persistedProject ); // true
+						console.log( persistedProject.tasks.indexOf( persistedTask1 ) !== - 1 ); // true - There's the first task
+						console.log( persistedProject.tasks.indexOf( persistedTask2 ) !== - 1 ); // true - There's the other task
+
+						// Deleting everything
+						let promises:Promise&lt;Response.Class&gt;[] = [];
+						promises.push( persistedProject.delete() );
+						promises.push( persistedTask1.delete() );
+						promises.push( persistedTask2.delete() );
+
+						return Promise.all( promises );
+					&#125;
+				).then(
+					( responses:Response.Class[] ) =&gt; &#123;
+
+						console.log( &quot;All done!&quot; );
+					&#125;
+				).catch( console.error );
+			</code></pre>
+
+		</tab>
+		<tab title="JavaScript ES2015">
+
+			<pre><code class="javascript">
+				import Carbon from &quot;carbonldp/Carbon&quot;;
+
+				let project = &#123;
+					name: &quot;Project X&quot;
+				&#125;;
+				let persistedProject;
+				let tasksAccessPoint;
+				let persistedTask1;
+				let persistedTask2;
+
+				let carbon = new Carbon();
+				carbon.setSetting( &quot;domain&quot;, &quot;localhost:8083&quot; );
+				carbon.setSetting( &quot;http.ssl&quot;, false ); // Turning off HTTPS (only needed if your server isn't using it)
+
+				let appContext;
+
+				carbon.auth.authenticate( &quot;your@email.com&quot;, &quot;YouRP455word&quot; ).then(
+					( token ) =&gt; &#123;
+						console.log( `Hello $&#123; carbon.auth.authenticatedAgent.name &#125;!` );
+
+						// Retrieving the application context
+						return carbon.apps.getContext( &quot;your-app-slug-here/&quot; );
+					&#125;
+				).then(
+					( _appContext ) =&gt; &#123;
+						appContext = _appContext;
+
+						// Creating a document
+						return appContext.documents.createChild( &quot;/&quot;, project );
+					&#125;
+				).then(
+					( [ _persistedProject, response ] ) =&gt; &#123;
+						persistedProject = _persistedProject;
+
+						console.log( project === persistedProject ); // true
+						console.log( persistedProject.id ); // document's URI
+						console.log( &quot;created&quot; in persistedProject ); // false - The project was persisted but it's latest state hasn't been retrieved from the server
+
+						// Read the just created document
+						return appContext.documents.get( persistedProject.id ); // Can also be `return persistedProject.refresh();`
+					&#125;
+				).then(
+					( [ persistedProject, response ] ) =&gt; &#123;
+						console.log( project === persistedProject ); // true - The same object was updated with its latest properties
+						console.log( persistedProject.created ); // Creation date
+
+						persistedProject.description = &#123;
+							type: &quot;markdown&quot;,
+							content: &quot;# Some description here&quot;
+						&#125;;
+
+						// Save the latest state to the server
+						return persistedProject.save(); // Can also be `appContext.documents.save&lt;Project&gt;( persistedProject );`
+					&#125;
+				).then(
+					( [ persistedProject, response ] ) =&gt; &#123;
+						console.log( project === persistedProject ); // true
+
+						// Creating an access point for the project to manage tasks
+						return persistedProject.createAccessPoint( &#123;
+							hasMemberRelation: &quot;tasks&quot;
+						&#125;, &quot;tasks&quot; );
+					&#125;
+				).then(
+					( [ _tasksAccessPoint, response ] ) =&gt; &#123;
+						tasksAccessPoint = _tasksAccessPoint;
+
+						// Creating a task so we can add it to the project later on
+						return appContext.documents.createChild( &quot;/&quot;, &#123;
+							name: &quot;Do something&quot;,
+							dueDate: new Date()
+						&#125; );
+					&#125;
+				).then(
+					( [ persistedTask, response ] ) =&gt; &#123;
+						persistedTask1 = persistedTask;
+
+						// Creating another task so we can add it to the project later on
+						return appContext.documents.createChild( &quot;/&quot;, &#123;
+							name: &quot;Do something else&quot;,
+							dueDate: new Date()
+						&#125; );
+					&#125;
+				).then(
+					( [ persistedTask, response ] ) =&gt; &#123;
+						persistedTask2 = persistedTask;
+
+						// Adding them to the project through the AccessPoint
+						return tasksAccessPoint.addMembers( [ persistedTask1, persistedTask2 ] );
+					&#125;
+				).then(
+					( response ) =&gt; &#123;
+
+						// Refreshing the project so we can check if the tasks were added
+						return persistedProject.refresh();
+					&#125;
+				).then(
+					( [ persistedProject, response ] ) =&gt; &#123;
+						console.log( project === persistedProject ); // true - Still the same object
+						console.log( &quot;tasks&quot; in persistedProject ); // true
+						console.log( persistedProject.tasks.indexOf( persistedTask1 ) !== - 1 ); // true - There's the first task
+						console.log( persistedProject.tasks.indexOf( persistedTask2 ) !== - 1 ); // true - There's the other task
+
+						// Deleting everything
+						let promises = [];
+						promises.push( persistedProject.delete() );
+						promises.push( persistedTask1.delete() );
+						promises.push( persistedTask2.delete() );
+
+						return Promise.all( promises );
+					&#125;
+				).then(
+					( responses ) =&gt; &#123;
+
+						console.log( &quot;All done!&quot; );
+					&#125;
+				).catch( console.error );
+			</code></pre>
+
+		</tab>
+		<tab title="JavaScript ES5">
+
+			<pre><code class="javascript">
+				var project = &#123;
+					name: &quot;Project X&quot;
+				&#125;;
+				var persistedProject;
+				var tasksAccessPoint;
+				var persistedTask1;
+				var persistedTask2;
+
+				var carbon = new Carbon();
+				carbon.setSetting( &quot;domain&quot;, &quot;localhost:8083&quot; );
+				carbon.setSetting( &quot;http.ssl&quot;, false ); // Turning off HTTPS (only needed if your server isn't using it)
+
+				var appContext;
+
+				carbon.auth.authenticate( &quot;your@email.com&quot;, &quot;YouRP455word&quot; ).then(
+					function ( token ) &#123;
+						console.log( `Hello $&#123; carbon.auth.authenticatedAgent.name &#125;!` );
+
+						// Retrieving the application context
+						return carbon.apps.getContext( &quot;your-app-slug-here/&quot; );
+					&#125;
+				).then(
+					function ( _appContext ) &#123;
+						appContext = _appContext;
+
+						// Creating a document
+						return appContext.documents.createChild( &quot;/&quot;, project );
+					&#125;
+				).then(
+					function ( results ) &#123;
+						persistedProject = results[ 0 ];
+						var response = results[ 1 ]
+
+						console.log( project === persistedProject ); // true
+						console.log( persistedProject.id ); // document's URI
+						console.log( &quot;created&quot; in persistedProject ); // false - The project was persisted but it's latest state hasn't been retrieved from the server
+
+						// Read the just created document
+						return appContext.documents.get( persistedProject.id ); // Can also be `return persistedProject.refresh();`
+					&#125;
+				).then(
+					function ( results ) &#123;
+						persistedProject = results[ 0 ]; // This is not actually needed because the reference will be the same
+						var response = results[ 1 ];
+
+						console.log( project === persistedProject ); // true - The same object was updated with its latest properties
+						console.log( persistedProject.created ); // Creation date
+
+						persistedProject.description = &#123;
+							type: &quot;markdown&quot;,
+							content: &quot;# Some description here&quot;
+						&#125;;
+
+						// Save the latest state to the server
+						return persistedProject.save(); // Can also be `appContext.documents.save&lt;Project&gt;( persistedProject );`
+					&#125;
+				).then(
+					function ( results ) &#123;
+						persistedProject = results[ 0 ]; // This is not actually needed because the reference will be the same
+						var response = results[ 1 ];
+
+						console.log( project === persistedProject ); // true
+
+						// Creating an access point for the project to manage tasks
+						return persistedProject.createAccessPoint( &#123;
+							hasMemberRelation: &quot;tasks&quot;
+						&#125;, &quot;tasks&quot; );
+					&#125;
+				).then(
+					function ( results ) &#123;
+						tasksAccessPoint = results[ 0 ];
+						var response = results[ 1 ];
+
+						// Creating a task so we can add it to the project later on
+						return appContext.documents.createChild( &quot;/&quot;, &#123;
+							name: &quot;Do something&quot;,
+							dueDate: new Date()
+						&#125; );
+					&#125;
+				).then(
+					function ( results ) &#123;
+						persistedTask1 = results[ 0 ];
+						var response = results[ 1 ];
+
+						// Creating another task so we can add it to the project later on
+						return appContext.documents.createChild( &quot;/&quot;, &#123;
+							name: &quot;Do something else&quot;,
+							dueDate: new Date()
+						&#125; );
+					&#125;
+				).then(
+					function ( results ) &#123;
+						persistedTask2 = results[ 0 ];
+						var response = results[ 1 ];
+
+						// Adding them to the project through the AccessPoint
+						return tasksAccessPoint.addMembers( [ persistedTask1, persistedTask2 ] );
+					&#125;
+				).then(
+					function ( response ) &#123;
+
+						// Refreshing the project so we can check if the tasks were added
+						return persistedProject.refresh();
+					&#125;
+				).then(
+					function ( results ) &#123;
+						persistedProject = results[ 0 ]; // This is not actually needed because the reference will be the same
+						var response = results[ 1 ];
+
+						console.log( project === persistedProject ); // true - Still the same object
+						console.log( &quot;tasks&quot; in persistedProject ); // true
+						console.log( persistedProject.tasks.indexOf( persistedTask1 ) !== - 1 ); // true - There's the first task
+						console.log( persistedProject.tasks.indexOf( persistedTask2 ) !== - 1 ); // true - There's the other task
+
+						// Deleting everything
+						var promises = [];
+						promises.push( persistedProject.delete() );
+						promises.push( persistedTask1.delete() );
+						promises.push( persistedTask2.delete() );
+
+						return Promise.all( promises );
+					&#125;
+				).then(
+					function ( responses ) &#123;
+
+						console.log( &quot;All done!&quot; );
+					&#125;
+				).catch( console.error );
+			</code></pre>
+
+		</tab>
+	</tabs>
+</section>
+<p>
+	This was a short introduction to what the SDK and Carbon can do. You should be able to develop simple applications
+	after reading this document, but to really master the inner works of the SDK you can continue reading about the Object Model.
+</p>
+<div class="documentation-steps ui fluid steps">
+	<div class="active completed step">
+		<!--<i class="payment icon"></i>-->
+		<div class="content">
+			<div class="title">Getting started</div>
+		</div>
+	</div>
+	<a class="step" href="../object-model">
+		<i class="arrow right icon"></i>
+		<div class="content">
+			<div class="title">Next</div>
+			<div class="description">Object model</div>
+		</div>
+	</a>
+</div>

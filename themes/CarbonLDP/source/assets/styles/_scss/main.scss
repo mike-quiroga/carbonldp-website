@@ -2,75 +2,142 @@
 @import "_partial/footer";
 @import "./palletColor";
 
-
 //TODO: implement a css for the license page, after talks with Cody - jimena Jan 19, 2017
-.site{
-  display: flex;
-  flex-direction: column;
+.site {
+	display: flex;
+	flex-direction: column;
 }
 
 .site-content {
-  flex: 1 0 auto;
-  align-items: center;
-  margin-top: 74px;
+	flex: 1 0 auto;
+	align-items: center;
+	margin-top: 74px;
 }
 
-.cover{
-  max-width:100%;
-  width: 100%;
+.cover {
+	max-width: 100%;
+	width: 100%;
 }
 
-a{
-  word-wrap: break-word;
+a {
+	word-wrap: break-word;
 }
 
-.ui.grid.removeSideMargins{
-  margin: -1rem 0;
+.ui.grid.removeSideMargins {
+	margin: -1rem 0;
 }
 
-@media only screen and (max-width: 992px){
-  .site-content {
-    margin-top: 64px;
-  }
+@media only screen and (max-width: 992px) {
+	.site-content {
+		margin-top: 64px;
+	}
 }
 
-@media only screen and (max-width: 767px){
+@media only screen and (max-width: 767px) {
 
-  .site-content {
-    margin-top: 54px;
-  }
+	.site-content {
+		margin-top: 54px;
+	}
 
-  .ui.stackable.grid>.column.column--getStarted {
-    padding: 0.214285rem 1rem !important;
-  }
+	.ui.stackable.grid > .column.column--getStarted {
+		padding: 0.214285rem 1rem !important;
+	}
 
-  .ui.huge.message{
-    font-size: 1.2rem;
+	.ui.huge.message {
+		font-size: 1.2rem;
 
-  }
+	}
 
 }
 
 .scrollTop {
-  position: fixed;
-  bottom: 0;
-  right: 0;
-  z-index: 101;
-  display: none;
+	position: fixed;
+	bottom: 0;
+	right: 0;
+	z-index: 101;
+	display: none;
 }
 
 .ui.button.scrollTop-button {
-  margin: 30px 40px;
-  padding: 0;
-  background-color: #363f48;
-  opacity: 0.7;
-  height:50px;
-  width:50px;
-  border-radius: 50px;
-  display: none;
+	margin: 30px 40px;
+	padding: 0;
+	background-color: #363f48;
+	opacity: 0.7;
+	height: 50px;
+	width: 50px;
+	border-radius: 50px;
+	display: none;
 }
 
 i.icon.scrollTop-icon {
-  font-size: 28px;
-  color: #19B7FB;
+	font-size: 28px;
+	color: #19B7FB;
+}
+
+//styles for versions menu
+
+.ui.button.versionsMenu-button {
+	min-width: 135px;
+	min-height: 30px;
+	padding: 0 16px;
+	margin: 0;
+	box-shadow: 0 0 0 1px rgba(208, 200, 200, 0.5) inset;
+	background: transparent none;
+	font-weight: normal;
+	color: rgba(208, 200, 200, 1);
+	text-shadow: none;
+}
+.ui.dropdown > .menu.versionsMenu {
+	min-width: 135px;
+	border: 0;
+		> .item{
+			text-align: center;
+		}
+}
+
+.ui.button.versionsMenu-button:hover {
+	 font-weight: normal;
+	 background: #ffffff;
+	 color: rgba(0, 0, 0, .8);
+	 text-shadow: none;
+ }
+
+// makes text black on hover
+.ui.dropdown.versionsMenu-dropdown > .default.text:hover {
+	color: rgba(0, 0, 0, .8);
+}
+
+//versions Menu on light background, makes hover background gray
+.ui.button.versionsMenu-button.versionsMenu-button--grayHover:hover {
+	background: #f8f8f9;
+}
+
+.versionsMenu--document{
+	text-align: center;
+	margin-top :9em;
+}
+
+//versions Menu on light background, makes initial text black
+.ui.dropdown.versionsMenu-dropdown.versionsMenu-dropdown--blackText > .default.text {
+	color: rgba(0, 0, 0, .8);
+}
+
+.ui.grid.versionsMenu-grid{
+	margin: 0;
+	> *{
+		padding: 0;
+	}
+}
+
+.highlight {
+	font-family: "Lucida Console", Monaco, monospace;
+	font-size: .9rem;
+	line-height: 1.4rem;
+
+	padding: 0 4px;
+	background-color: #f2f2f2;
+	border-radius: 3px;
+	overflow-wrap: break-word;
+	word-wrap: break-word;
+	word-spacing: 0;
 }

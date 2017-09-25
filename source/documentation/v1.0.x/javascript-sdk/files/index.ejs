@@ -1,0 +1,364 @@
+---
+layout: documentation/document
+title: Files
+description: How to upload, download and describe files.
+date: 2017-02-08 11:57:18
+sidebar: disabled
+version: v1.0.x
+---
+<div class="documentation-steps ui fluid steps">
+	<a class="step" href="../object-schema">
+		<i class="arrow left icon"></i>
+		<div class="content">
+			<div class="title">Previous</div>
+			<div class="description">Object schema</div>
+		</div>
+	</a>
+	<div class="active step">
+		<div class="content">
+			<div class="title">Files</div>
+		</div>
+	</div>
+	<a class="step" href="../querying">
+		<i class="arrow right icon"></i>
+		<div class="content">
+			<div class="title">Next</div>
+			<div class="description">Querying</div>
+		</div>
+	</a>
+</div>
+<div class="soon-to-be-documented">
+	<p>Sorry, this topic hasn't been documented :(</p>
+</div>
+<p>
+	We are doing our best to catch up quickly with the documentation. If you have questions regarding
+	this topic you can always ask us directly through our community. See how <a href="/community-and-support">here</a>
+</p>
+<!--<div class="ui mobile only grid">-->
+	<!--<div class="row">-->
+		<!--<staticContentMenu content="mainContent"></staticContentMenu>-->
+	<!--</div>-->
+<!--</div>-->
+<!--<section class="mainContent-section">-->
+	<!--<h2 class="hidden">Introduction</h2>-->
+	<!--<p>So far we've covered how to save JavaScript objects in the platform. But the platform supports saving (and retrieving) files too. This functionality isn't intended to-->
+		<!--replace a CDN or static asset repository but it can serve as a dynamic asset repository.</p>-->
+<!--</section>-->
+<!--<section class="mainContent-section">-->
+	<!--<h2>Browser</h2>-->
+	<!--<section class="mainContent-subSection">-->
+		<!--<h3>Uploading</h3>-->
+		<!--<p>The SDK uses the File API to access files on the browser. It is highly recommended that you read this very well documented article about how to use it:</p>-->
+		<!--<p><a href="https://developer.mozilla.org/en-US/docs/Using_files_from_web_applications" target="_blank" rel="noopener">MDN: Using files from web applications</a></p>-->
+		<!--<p>Once you get your hands on a <a href="https://developer.mozilla.org/en-US/docs/Web/API/File" target="_blank" rel="noopener">File</a> object you can use the-->
+			<!--<code>upload</code> method of the <code>Documents</code> service or of a <code>PersistedDocument</code> object. This method is very similar to the-->
+			<!--<code>createChild</code> method that we've already covered:</p>-->
+		<!--<tabs>-->
+			<!--<tab title="TypeScript">-->
+				<!---->
+				<!--<pre><code class="typescript">-->
+					<!--import * as HTTP from "carbonldp/HTTP";-->
+					<!--import * as PersistedDocument from "carbonldp/PersistedDocument";-->
+					<!--import * as RDFRepresentation from "carbonldp/RDFRepresentation";-->
+
+					<!--let file:File;-->
+
+					<!--// ... get file-->
+
+					<!--let carbon:Carbon;-->
+
+					<!--// ... initialize your Carbon object-->
+
+					<!--// ... authenticate if needed-->
+
+					<!--carbon.documents.upload( "parent-document/", file, "Optional Slug" ).then(-->
+						<!--( [ fileMetadata, response ]:[ PersistedDocument.Class, HTTP.Response.Class ] ) => &#123;-->
+							<!--console.log( fileMetadata.isResolved() ); // false-->
+
+							<!--// Resolve document with file's metadata-->
+							<!--return fileMetadata.resolve&#60;RDFRepresentation.Class&#62;();-->
+						<!--&#125;-->
+					<!--).then(-->
+						<!--( [ fileMetadata, response ]:[ RDFRepresentation.Class & PersistedDocument.Class, HTTP.Response.Class ] ) => &#123;-->
+							<!--console.log( fileMetadata.size ); // E.g. 100634-->
+							<!--console.log( fileMetadata.mediaType ); // E.g. image/png-->
+						<!--&#125;-->
+					<!--).catch( console.error );-->
+				<!--</code></pre>-->
+				<!---->
+			<!--</tab>-->
+			<!--<tab title="JavaScript ES2015">-->
+				<!---->
+				<!--<pre><code class="javascript">-->
+					<!--let file;-->
+
+					<!--// ... get file-->
+
+					<!--let carbon;-->
+
+					<!--// ... initialize your Carbon object-->
+
+					<!--// ... authenticate if needed-->
+
+					<!--carbon.documents.upload( "parent-document/", file, "Optional Slug" ).then(-->
+						<!--( [ fileMetadata, response ] ) => &#123;-->
+							<!--console.log( fileMetadata.isResolved() ); // false-->
+
+							<!--// Resolve document with file's metadata-->
+							<!--return fileMetadata.resolve();-->
+						<!--&#125;-->
+					<!--).then(-->
+						<!--( [ fileMetadata, response ] ) => &#123;-->
+							<!--console.log( fileMetadata.size ); // E.g. 100634-->
+							<!--console.log( fileMetadata.mediaType ); // E.g. image/png-->
+						<!--&#125;-->
+					<!--).catch( console.error );-->
+				<!--</code></pre>-->
+				<!---->
+			<!--</tab>-->
+			<!--<tab title="JavaScript ES5">-->
+				<!---->
+				<!--<pre><code class="javascript">-->
+					<!--var file;-->
+
+					<!--// ... get file-->
+
+					<!--var carbon;-->
+
+					<!--// ... initialize your Carbon object-->
+
+					<!--// ... authenticate if needed-->
+
+					<!--carbon.documents.upload( "parent-document/", file, "Optional Slug" ).then(-->
+						<!--function( result ) &#123;-->
+							<!--var fileMetadata = result[ 0 ];-->
+							<!--var response = result[ 1 ];-->
+
+							<!--console.log( fileMetadata.isResolved() ); // false-->
+
+							<!--// Resolve document with file's metadata-->
+							<!--return fileMetadata.resolve();-->
+						<!--&#125;-->
+					<!--).then(-->
+						<!--function( result ) &#123;-->
+							<!--var fileMetadata = result[ 0 ];-->
+							<!--var response = result[ 1 ];-->
+
+							<!--console.log( fileMetadata.size ); // E.g. 100634-->
+							<!--console.log( fileMetadata.mediaType ); // E.g. image/png-->
+						<!--&#125;-->
+					<!--).catch( console.error );-->
+				<!--</code></pre>-->
+				<!---->
+			<!--</tab>-->
+		<!--</tabs>-->
+		<!--<p>The promise returned by the method will contain an array with the file's metadata as its first item (pretty much like the <code>createChild</code> method). Every time-->
+			<!--you upload a file a document gets created with the file's metadata. The object you'll receive will be an unresolved pointer to it, which you can resolve with the-->
+			<!--<code>resolve</code> method.</p>-->
+		<!--<p>This document acts like a normal document. It can have children, members and even be a parent of other files. You can also add new data to it like you'd do to any-->
+			<!--other document.</p>-->
+	<!--</section>-->
+	<!--<section class="mainContent-subSection">-->
+		<!--<h3>Tracking upload progress</h3>-->
+		<!--<p>Upload progress can be tracked using the optional <code>options</code> argument. You can pass an-->
+			<!--<a href="https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest" target="_blank" rel="noopener">XMLHttpRequest</a> through-->
+			<!--this argument with the <code>request</code> property:</p>-->
+		<!--<tabs>-->
+			<!--<tab title="TypeScript">-->
+				<!---->
+				<!--<pre><code class="typescript">-->
+					<!--import * as HTTP from "carbonldp/HTTP";-->
+					<!--import * as PersistedDocument from "carbonldp/PersistedDocument";-->
+					<!--import * as RDFRepresentation from "carbonldp/RDFRepresentation";-->
+
+					<!--let file:File;-->
+
+					<!--// ... get file-->
+
+					<!--let carbon:Carbon;-->
+
+					<!--// ... initialize your Carbon object-->
+
+					<!--// ... authenticate if needed-->
+
+					<!--let xhr:XMLHttpRequest = new XMLHttpRequest();-->
+					<!--xhr.upload.addEventListener( "progress", ( event:ProgressEvent ) => &#123;-->
+						<!--let incrementingPercentage:number = parseInt( event.loaded / event.total * 100 );-->
+						<!--let decrementingPercentage:number = 100 - incrementingPercentage;-->
+
+						<!--console.log( incrementingPercentage );-->
+						<!--console.log( decrementingPercentage );-->
+					<!--&#125; );-->
+
+					<!--carbon.upload( "parent-document/", file, "Optional Slug", &#123; request: xhr &#125; ).then(-->
+						<!--( [ fileMetadata, response ]:[ PersistedDocument.Class, HTTP.Response.Class ] ) => &#123;-->
+							<!--// ...-->
+						<!--&#125;-->
+					<!--).catch( console.error );-->
+				<!--</code></pre>-->
+				<!---->
+			<!--</tab>-->
+			<!--<tab title="JavaScript ES2015">-->
+				<!---->
+				<!--<pre><code class="javascript">-->
+					<!--let file;-->
+
+					<!--// ... get file-->
+
+					<!--let carbon;-->
+
+					<!--// ... initialize your Carbon object-->
+
+					<!--// ... authenticate if needed-->
+
+					<!--let xhr = new XMLHttpRequest();-->
+					<!--xhr.upload.addEventListener( "progress", ( event ) => &#123;-->
+						<!--let incrementingPercentage:number = parseInt( event.loaded / event.total * 100 );-->
+						<!--let decrementingPercentage:number = 100 - incrementingPercentage;-->
+
+						<!--console.log( incrementingPercentage );-->
+						<!--console.log( decrementingPercentage );-->
+					<!--&#125; );-->
+
+					<!--carbon.upload( "parent-document/", file, "Optional Slug", &#123; request: xhr &#125; ).then(-->
+						<!--( [ fileMetadata, response ] ) => &#123;-->
+							<!--// ...-->
+						<!--&#125;-->
+					<!--).catch( console.error );-->
+				<!--</code></pre>-->
+				<!---->
+			<!--</tab>-->
+			<!--<tab title="JavaScript ES5">-->
+				<!---->
+				<!--<pre><code class="javascript">-->
+					<!--var file;-->
+
+					<!--// ... get file-->
+
+					<!--var carbon;-->
+
+					<!--// ... initialize your Carbon object-->
+
+					<!--// ... authenticate if needed-->
+
+					<!--var xhr = new XMLHttpRequest();-->
+					<!--xhr.upload.addEventListener( "progress", function( event ) &#123;-->
+						<!--var incrementingPercentage:number = parseInt( event.loaded / event.total * 100 );-->
+						<!--var decrementingPercentage:number = 100 - incrementingPercentage;-->
+
+						<!--console.log( incrementingPercentage );-->
+						<!--console.log( decrementingPercentage );-->
+					<!--&#125; );-->
+
+					<!--carbon.upload( "parent-document/", file, "Optional Slug", &#123; request: xhr &#125; ).then(-->
+						<!--function( result ) &#123;-->
+							<!--// ...-->
+						<!--&#125;-->
+					<!--).catch( console.error );-->
+				<!--</code></pre>-->
+				<!---->
+			<!--</tab>-->
+		<!--</tabs>-->
+	<!--</section>-->
+	<!--<section class="mainContent-subSection">-->
+		<!--<h3>Downloading</h3>-->
+		<!--<p>Files uploaded will get an id assigned. This id, like the one of any document, is going to be a resolvable URI. If you open it in a browser you'll be able to-->
+			<!--download it.</p>-->
+		<!--<p>However, if the file is protected by the security scheme, opening it on a browser will prompt for credentials. If you want to provide a link that uses the-->
+			<!--authentication you may already have in your application you can use the <code>Auth</code> service's <code>getAuthenticatedURL</code> method.</p>-->
+		<!--<p>This method will return a promise that when resolved will give you a URL with a temporary ticket to authenticate the current user for that request:</p>-->
+		<!--<tabs>-->
+			<!--<tab title="TypeScript">-->
+				<!---->
+				<!--<pre><code class="typescript">-->
+					<!--import * as PersistedDocument from "carbonldp/PersistedDocument";-->
+
+					<!--let fileMetadata:PersistedDocument.Class;-->
+
+					<!--// ... get a pointer to the file's metadata-->
+
+					<!--let carbon:Carbon;-->
+
+					<!--// ... initialize your Carbon object-->
+
+					<!--// ... authenticate if needed-->
+
+					<!--carbon.auth.getAuthenticatedURL( fileMetadata.id ).then(-->
+						<!--( authenticatedFileURL:string ) => &#123;-->
+							<!--window.open( authenticatedFileURL, "_blank" ); // Open the URL in another window to start the download-->
+						<!--&#125;-->
+					<!--);-->
+				<!--</code></pre>-->
+				<!---->
+			<!--</tab>-->
+			<!--<tab title="JavaScript ES2015">-->
+				<!---->
+				<!--<pre><code class="javascript">-->
+					<!--let fileMetadata;-->
+
+					<!--// ... get a pointer to the file's metadata-->
+
+					<!--let carbon;-->
+
+					<!--// ... initialize your Carbon object-->
+
+					<!--// ... authenticate if needed-->
+
+					<!--carbon.auth.getAuthenticatedURL( fileMetadata.id ).then(-->
+						<!--( authenticatedFileURL ) => &#123;-->
+							<!--window.open( authenticatedFileURL, "_blank" ); // Open the URL in another window to start the download-->
+						<!--&#125;-->
+					<!--);-->
+				<!--</code></pre>-->
+				<!---->
+			<!--</tab>-->
+			<!--<tab title="JavaScript ES5">-->
+				<!---->
+				<!--<pre><code class="javascript">-->
+					<!--var fileMetadata;-->
+
+					<!--// ... get a pointer to the file's metadata-->
+
+					<!--var carbon;-->
+
+					<!--// ... initialize your Carbon object-->
+
+					<!--// ... authenticate if needed-->
+
+					<!--carbon.auth.getAuthenticatedURL( fileMetadata.id ).then(-->
+						<!--function( authenticatedFileURL ) &#123;-->
+							<!--window.open( authenticatedFileURL, "_blank" ); // Open the URL in another window to start the download-->
+						<!--&#125;-->
+					<!--);-->
+				<!--</code></pre>-->
+				<!---->
+			<!--</tab>-->
+		<!--</tabs>-->
+	<!--</section>-->
+<!--</section>-->
+<!--<section class="mainContent-section">-->
+	<!--<h2>NodeJS</h2>-->
+	<!--<p>TO BE DOCUMENTED</p>-->
+<!--</section>-->
+<!--<div class="documentation-steps ui fluid steps">-->
+	<!--<a class="step" href="../object-schema">-->
+		<!--<i class="arrow left icon"></i>-->
+		<!--<div class="content">-->
+			<!--<div class="title">Previous</div>-->
+			<!--<div class="description">Object schema</div>-->
+		<!--</div>-->
+	<!--</a>-->
+	<!--<div class="active completed step">-->
+		<!--&lt;!&ndash;<i class="payment icon"></i>&ndash;&gt;-->
+		<!--<div class="content">-->
+			<!--<div class="title">Files</div>-->
+		<!--</div>-->
+	<!--</div>-->
+	<!--<a class="step" href="../querying">-->
+		<!--<i class="arrow right icon"></i>-->
+		<!--<div class="content">-->
+			<!--<div class="title">Next</div>-->
+			<!--<div class="description">Querying</div>-->
+		<!--</div>-->
+	<!--</a>-->
+<!--</div>-->

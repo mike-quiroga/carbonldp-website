@@ -7,22 +7,22 @@ nav:
   path: /documentation
   children:
 	- name: Quick Start Guide
-	  path: /documentation/quick-start-guide
+	  path: /quick-start-guide
 	  children: null
 	- name: Essential Concepts
-	  path: /documentation/essential-concepts
+	  path: /essential-concepts
 	  children: null
 	- name: JavaScript SDK
-	  path: /documentation/javascript-sdk
+	  path: /javascript-sdk
 	  children:
 	    - name: Guide
-	      path: /documentation/javascript-sdk/getting-started
+	      path: /getting-started
 	      children: null
 	    - name: API Reference
-	      path: https://carbonldp.github.io/carbonldp-js-sdk/
+	      url: https://carbonldp.github.io/carbonldp-js-sdk/
 	      children: null
 	- name: REST API
-	  path: /documentation/rest-api
+	  path: /rest-api
 	  children: null
 - name: Community & Support
   path: /community-and-support
@@ -36,5 +36,13 @@ nav:
 rss: /atom.xml
 
 
-#Excerpt Link
+# TODO: Remove this and use _data/documentation.yml instead
+# Versions
+versions:
+- version: v0.x.x
+  label: current
+- version: v1.0.x
+  label: alpha
+
+# Excerpt Link
 excerpt_link: Read More

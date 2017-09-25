@@ -115,3 +115,7 @@ gulp.task( "minify:scripts", () => {
 		.pipe( scriptsMinifier( config.dist.scripts.minify ) )
 		.pipe( gulp.dest( config.dist.scripts.dir ) );
 } );
+
+gulp.task("clean:styles",()=>{
+	return del([config.dist.styles.pattern]);
+});

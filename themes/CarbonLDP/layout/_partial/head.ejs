@@ -4,7 +4,6 @@
   <meta charset="utf-8">
   <%
   var title = page.title;
-
   if (is_archive()){
     title = __('archive_a');
 
@@ -28,7 +27,7 @@
   <meta name="theme-color" content="#ffffff">
 
   <title><% if (title){ %><%= title %> | <% } %><%= config.title %></title>
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5, user-scalable=yes">
   <meta name="google-site-verification" content="gz0ah_pGpAlB4Q5a_bxykr1Zdo_CfXHyAb2tJiADVhE" />
 
   <%- open_graph({twitter_id: theme.twitter, google_plus: theme.google_plus, fb_admins: theme.fb_admins, fb_app_id: theme.fb_app_id}) %>

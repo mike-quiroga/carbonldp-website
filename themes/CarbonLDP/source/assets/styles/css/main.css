@@ -273,3 +273,55 @@ a {
 i.icon.scrollTop-icon {
   font-size: 28px;
   color: #19B7FB; }
+
+.ui.button.versionsMenu-button {
+  min-width: 135px;
+  min-height: 30px;
+  padding: 0 16px;
+  margin: 0;
+  box-shadow: 0 0 0 1px rgba(208, 200, 200, 0.5) inset;
+  background: transparent none;
+  font-weight: normal;
+  color: #d0c8c8;
+  text-shadow: none; }
+
+.ui.dropdown > .menu.versionsMenu {
+  min-width: 135px;
+  border: 0; }
+  .ui.dropdown > .menu.versionsMenu > .item {
+    text-align: center; }
+
+.ui.button.versionsMenu-button:hover {
+  font-weight: normal;
+  background: #ffffff;
+  color: rgba(0, 0, 0, 0.8);
+  text-shadow: none; }
+
+.ui.dropdown.versionsMenu-dropdown > .default.text:hover {
+  color: rgba(0, 0, 0, 0.8); }
+
+.ui.button.versionsMenu-button.versionsMenu-button--grayHover:hover {
+  background: #f8f8f9; }
+
+.versionsMenu--document {
+  text-align: center;
+  margin-top: 9em; }
+
+.ui.dropdown.versionsMenu-dropdown.versionsMenu-dropdown--blackText > .default.text {
+  color: rgba(0, 0, 0, 0.8); }
+
+.ui.grid.versionsMenu-grid {
+  margin: 0; }
+  .ui.grid.versionsMenu-grid > * {
+    padding: 0; }
+
+.highlight {
+  font-family: "Lucida Console", Monaco, monospace;
+  font-size: .9rem;
+  line-height: 1.4rem;
+  padding: 0 4px;
+  background-color: #f2f2f2;
+  border-radius: 3px;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  word-spacing: 0; }
