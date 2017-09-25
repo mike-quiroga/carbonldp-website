@@ -1,18 +1,11 @@
-## Add a principal page
+## Add a page
 
-A principal page, is a page that can be found at the top level of the navigation menu
-
-1. Add the directory and file in source/
-There are two options to creating the new page:
-    a. Manually:
-        - Create a new directory in `source/` and create a
-        - Create a file .ejs in the new directory with the name "index"
-
-    b. In the terminal run the command `hexo new page "directory-name"`
-        - Rename "index.md" file to change extension "index.ejs"
-        "
-    - naming the directory: the name of the directory will be part of the link of the publish site
-    - hexo will create the page using the page scaffold
+1. Add the directory and file in `source/`
+  
+	- Create a new directory in the desired directory in `source/`
+	- Create a file .ejs in the new directory with the name "index"
+	- naming the directory: the name of the directory will be part of the link of the publish site
+    
 2. Edit index.ejs" front-matter
 	front-matter: block of YAML or JSON at the beginning of the file that is used to configure settings for your writings.[hexo - front-matter documentation](https://hexo.io/docs/front-matter.html)
 
@@ -28,12 +21,28 @@ There are two options to creating the new page:
 	Other optional settings:
 	cover: will display an image as a cover or banner, as seen in carbonldp.com/blog
 	script: will add a script to this page in the published site.
+	
 	```
 	---
 	cover:
     	image: image-name.extension, image to be used
     	alt: description to be added to the image
-    script: script-name, script in themes/CarbonLDP/source/assets/scripts
+    	script: script-name, script in themes/CarbonLDP/source/assets/scripts
+	---
+	```
+	
+	Optional settings for documentation:
+	version: version number to which the document belongs
+	notDocumented: if the document is not documented shows an alternate html
+	icon: use in documentation category landing page, define the icon of the category.
+	sidebar: disables the sidebar from the document 
+	
+	```
+	---
+	icon: ico-rest-api.svg
+	version: v0.x.x
+	notDocumented: true
+	sidebar: disabled
 	---
 	```
 
@@ -78,6 +87,7 @@ e.g.:
 	      url: https://carbonldp.github.io/carbonldp-js-sdk/
 	      children: null
 ```
+
 ## Add head for the principal page
 The head files contains the styles that will be used by this particular page
 
