@@ -1,4 +1,4 @@
-# Website pages structure
+# Website structure
 
 A detailed file structure of the entire project can be found [README.md](https://github.com/CarbonLDP/carbonldp-website/blob/develop/README.md)
 
@@ -21,7 +21,7 @@ Ater the pages are processed by hexo a package hexo-widgets further processes th
 Hexo Widgets
 - `themes/CarbonLDP/widgets/` files
 
-### Page structure
+# Page structure
 All html pages will be formed by the layout template in `themes/CarbonLDP/layout/layout.ejs` using the following layouts and partial layouts. :
 
 |layouts call by all pages|function|
@@ -33,7 +33,7 @@ All html pages will be formed by the layout template in `themes/CarbonLDP/layout
 |_partial/footer.ejs|contains de template of the footer|
 |_partial/after-footer.ejs|always imports scripts: jquery, semantic ui, widgets, main.js, and other scripts if defined in front-matter of `source/<page-name>/index.ejs`|
 
-## Page styles
+# Page styles
 Styles are defined in `themes/CarbonLDP/source/assets/styles/`. The css styles are built from the scss files defined by the user, and are imported by the partial layout `themes/CarbonLDP/layout/_partial/head.js`
 
 The styles of the website are closely related to the layouts in `themes/CarbonLDP/layout` directory
@@ -50,7 +50,7 @@ You can add specific styles to a particular layout:
 2. In the file `themes/CarbonLDP/layout/head/<layout-name>-head.ejs`
     - Add helper to import styles `<%-css("assets/styles/css/<css-file-name>)`, the file to be imported should be in `themes/CarbonLDP/source/assets/styles/`
 
-### styles file structure
+## styles file structure
     .
     ├── themes
     │    ├── CarbonLDP
@@ -68,7 +68,7 @@ You can add specific styles to a particular layout:
 
 
 
-## Page scripts
+# Page scripts
 Scripts are defined in `themes/CarbonLDP/source/assets/scripts/` and are imported by the partial layout `themes/CarbonLDP/layout/_partial/after-footer.js`
 
 There is one general script that affects the entire website, and that is always iported by `after-footer.js`
@@ -86,7 +86,7 @@ You can add specific sscripts to a particular page:
 
 There are other styles imported such as widget styles, got to widgets sections to know more about this
 
-### styles file structure
+## styles file structure
     .
     ├── source
     │    └── <page-name>
@@ -98,9 +98,9 @@ There are other styles imported such as widget styles, got to widgets sections t
     │    │    │         └── scripts
     │    │    │              └── <page-name>.js
 
-## Page content
+# Page content
 
-### Principal pages
+## Principal pages
 The content of all pages present in the navigation menu and in the first level of directories in `source/` directory is defined in the layouts of the same name in `themes/CarbonLDP/layout`. Some of this pages may have defined particular `head` layouts and may use partial layouts and specific scripts as well.
 
 |Principal Pages|Layouts * -> head layouts ** |Partial layouts|Scripts *** |
@@ -113,20 +113,23 @@ The content of all pages present in the navigation menu and in the first level o
 |license/index.ejs| license.ejs|
 |index.ejs|index.ejs|_partial/home.ejs|
 
-* All layout templates are called from the `layout.ejs` where the head, header, footer and after-footer are also called
-** All pages use a general `head.ejs` file that can be foun in `themes/CarbonLDP/layout/_partial`
+\* All layout templates are called from the `layout.ejs` where the head, header, footer and after-footer are also called
 
-### Documentation pages
+\** All pages use a general `head.ejs` file that can be found in `themes/CarbonLDP/layout/_partial`
+
+\*** All pages use a general `main.js` file that can be found in `themes/CarbonLDP/source/assets/scripts`
+
+## Documentation pages
 
 Restructured by Miguel Aragon in PR #162
 
-## Tools avalible 
+# Tools avalible 
 
-### Helpers and partial layouts
+## Helpers and partial layouts
 
 Helpers are functions that can be use in the layout templates, Hexo has [predefined helpers](https://hexo.io/docs/helpers.html) that you can use  or you can define your own helpers in `themes/CarbonLDP/scripts`
 
-#### breadcrumb.js and breadcrumb.ejs
+### breadcrumb.js and breadcrumb.ejs
 
 Returns the elements needed to form a breadcrumb from the path of the page where it is being called.
 The partial helper imports a partial layout `breadcrumb.ejs` renders a breadcrumb using the `breacrumb` helper to build it.
@@ -149,7 +152,7 @@ e.g.
 
 ```
 
-#### inline_css.js
+### inline_css.js
 Returns an inline minify style that is inserted where the helpers was called.
 
 e.g.
@@ -158,7 +161,7 @@ e.g.
 <%- inline_css("assets/styles/css/main.css")%>
 ```
 
-#### svg.js
+### svg.js
 
 Returns the content of a file inside a div. Used to read the content of svg vector images
 
@@ -172,7 +175,7 @@ e.g.
 `<div class="ui small centered circular image"> content of ico-rest-api.svg </div>`
 ```
 
-### hexo-widgets
+## hexo-widgets
 
 [hexo-widgets](https://github.com/MiguelAraCo/hexo-widgets) package, allows you to create custom widgets that can be used while writing new posts/pages/anything. hexo-widgets must be imported in the project by npm.
 
@@ -180,36 +183,47 @@ hexo-widgets registers the helper render-widgets, that allows you to further pro
 
 This helper is used in `themes/CarbonLDP/layout/layout.ejs`
 
-e.g.
+**e.g.**
 
 `<%- render-widgets(htmlToProcess, page )%>`
 
-#### async-background
+### async-background
 Adds a script to load a background image asynchronously when attribute "data-sync-background" is defined
 
-e.g. 
+**Basic widget structure**
+
+```
+<div data-async-backgroun="filepath"></div>
+```
+
+**e.g.** 
+
 ```
 // night-sky.jpg will be loaded asynchronously
 <div class="cover cover--home" data-async-background="/assets/images/night-sky.jpg"></div>
 ```
 
-#### highlight
-Applies highlight.js to all elements inside "pre > code"
+### highlight
+Applies highlight.js to all elements inside `pre > code`
 Adds inline styles:
     -  highlight.js/styles/tomorrow-night.css,
 	-  highlight.css"
 
-#### sidebar
+### sidebar
 Creates a two level deep sidebar menu that serves as an index of the document, only visible in computer, tablet view. 
 
 It uses the content attribute to define the content from which the sidebar will be created, and generates the sidebar using the HTML tags <section> and header tags to obtain the titles of the sections of the document. It also adds styles and scripts for the sidebar.
 
-e.g
+**Basic widget structure**
+
 ```
-// widget use
 //<div class="mainContent"> everything in here will be processed to build the sidebar </div>
 //<sidebar content="mainContent"> the sidebar will be rendered here </sidebar>
+```
 
+**e.g**
+
+```
 <div class="mainContent">
     <section><h1>First Section</h1>
         <section><h2>Subsection</h2></section>
@@ -221,7 +235,7 @@ e.g
 <sidebar content="mainContent></sidebar>
 ```
 
-Resulting html with sidebar
+**Resulting html with sidebar**
 
 ```
 <div class="mainContent">
@@ -250,17 +264,19 @@ Resulting html with sidebar
 </div>
 ```
 
-#### staticContentMenu
+### staticContentMenu
 It works the same as the sidebar widget, but it creates a static menu from the content it process. Only visible in mobile view
 
-e.g.
-
+**Basic widget structure**
 
 ```
-// widget use
-//<div class="mainContent"> everything in here will be processed to build the sidebar </div>
-//<staticContentMenu content="mainContent"> the sidebar will be rendered here </staticContentMenu>
+<div class="mainContent"> everything in here will be processed to build the sidebar </div>
+<staticContentMenu content="mainContent"> the sidebar will be rendered here </staticContentMenu>
+```
 
+**e.g.**
+
+```
 <div class="mainContent">
     <section><h1>First Section</h1>
         <section><h2>Subsection</h2></section>
@@ -275,7 +291,7 @@ e.g.
 </div>
 ```
 
-Resulting html with staticMenu
+**Resulting html with staticMenu**
 
 ```
 <div class="mainContent">
@@ -309,7 +325,7 @@ Resulting html with staticMenu
 </div>
 ```
 
-#### tabs
+### tabs
 
 Process tabs selector to create a tabs widgets for computer and mobile views. 
 In computer and tablet view:
@@ -322,7 +338,8 @@ In mobile view:
     - The title attribute is tha name that will be displayed in each tab. 
     - The name attribute is the data-tab or tab id use to identify each tab if it is not provided a random id will be generated.
 
-Basic html structure
+**Basic widget structure**
+
 ```
 <tabs>
 	<tab title="tab Title">
@@ -334,7 +351,8 @@ Basic html structure
 </tabs>
 ```
 
-e.g
+**e.g**
+
 ```
 <tabs>
 		<tab title="TypeScript" name="typescript">
@@ -356,7 +374,7 @@ e.g
 
 ```
 
-Resulting tabs html
+**Resulting tabs html**
 
 ```
 <div class="ui grid tabsComponent">
