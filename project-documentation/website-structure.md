@@ -1,4 +1,3 @@
-# Website structure
 
 A detailed file structure of the entire project can be found [README.md](https://github.com/CarbonLDP/carbonldp-website/blob/develop/README.md)
 
