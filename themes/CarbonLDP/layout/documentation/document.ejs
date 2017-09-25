@@ -1,0 +1,33 @@
+<div class="ui container grid">
+	<div class="row">
+		<div class="twelve wide computer only twelve wide tablet only sixteen wide mobile only column">
+			<div class="mainContent">
+				<%- partial( "_partial/breadcrumb", { shortBreadcrumb: false } ) %>
+				<div class="document-titleContainer">
+					<h1 class="document-title"><%= page.title %></h1>
+				</div>
+				<div class="ui centered aligned grid versionsMenu-grid mobile only"> <%- partial( "documentation/_partial/versions-menu", { containerDarkBackground: false } ) %></div>
+
+				<% if ( page.notDocumented ) { %>
+				<%- partial( "documentation/_partial/not-yet-documented" ) %>
+				<% } else { %>
+				<%- page.content %>
+				<% } %>
+
+			</div>
+		</div>
+
+		<div class="four wide computer tablet only column">
+			<% if ( ! ( page.notDocumented ) ) { %>
+			<div class="versionsMenu--document">
+				<div class="ui sticky versionsMenu-sticky">
+					<%- partial( "documentation/_partial/versions-menu", { containerDarkBackground: false } ) %>
+				</div>
+			</div>
+			<% } %>
+			<% if ( ! (page.sidebar || page.notDocumented ) ) { %>
+			<sidebar content="mainContent"></sidebar>
+			<% } %>
+		</div>
+	</div>
+</div>

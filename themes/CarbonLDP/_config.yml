@@ -35,12 +35,14 @@ nav:
   children: null
 rss: /atom.xml
 
-#Versions
+
+# TODO: Remove this and use _data/documentation.yml instead
+# Versions
 versions:
 - version: v0.x.x
   label: current
 - version: v1.0.x
   label: alpha
 
-#Excerpt Link
+# Excerpt Link
 excerpt_link: Read More
