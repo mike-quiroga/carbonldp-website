@@ -6,14 +6,16 @@
 				<div class="document-titleContainer">
 					<h1 class="document-title"><%= page.title %></h1>
 				</div>
-				<div class="ui centered aligned grid versionsMenu-grid mobile only"> <%- partial( "documentation/_partial/versions-menu", { containerDarkBackground: false } ) %></div>
+				<div class="ui centered aligned grid versionsMenu-grid mobile only">
+					<%- partial( "documentation/_partial/versions-menu", { containerDarkBackground: false } ) %>
+				</div>
 
 				<% if ( page.notDocumented ) { %>
 				<%- partial( "documentation/_partial/not-yet-documented" ) %>
 				<% } else { %>
+				<%- partial( "documentation/_partial/edit-document", { page: page } ) %>
 				<%- page.content %>
 				<% } %>
-
 			</div>
 		</div>
 
