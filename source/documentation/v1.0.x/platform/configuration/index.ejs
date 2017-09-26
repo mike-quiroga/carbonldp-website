@@ -1,0 +1,309 @@
+---
+layout: documentation/document
+title: Platform's configuration
+date: 2017-09-26 13:48:00
+version: v1.0.x
+script: documentation-home
+---
+<div class="ui mobile only grid">
+	<div class="row">
+		<staticContentMenu content="mainContent"></staticContentMenu>
+	</div>
+</div>
+<section class="mainContent-section">
+	<h2>Changing the configuration</h2>
+	<p>
+		The platform stores its configuration in a file called <code>config.yaml</code> inside the platform's work directory. The location of the work
+		directory depends on how you are running the platform:
+	</p>
+	<ul>
+		<li>
+			<p>
+				<strong>Using Docker</strong>
+			</p>
+			<p>
+				The docker image specifies the platform's work directory as <code>/opt/carbonldp/shared</code> so in order to change the configuration you need
+				to map that directory to a volume to access the file on Docker's host.
+			</p>
+			<p>
+				On a normal installation this is already done since the work directory also specifies where the platform will store all of its data.
+			</p>
+			<p>
+				For example, if you ran the platform with the following command:
+			</p>
+			<pre><code class="bash">
+				docker run -d --name carbonldp-platform -p 8083:8083 \
+				    -v /your/directory/path/carbonldp:/opt/carbonldp/shared \
+				    carbonldp/carbonldp-platform:1.0.x-alpha
+			</code></pre>
+			<p>
+				The platform will look for the configuration file in <code>/your/directory/path/carbonldp/config.yaml</code>.
+			</p>
+		</li>
+		<li>
+			<p>
+				<strong>Executing the jar</strong>
+			</p>
+			<p>
+				If you are running the platform directly from the jar, the default work directory is the directory of the jar itself.
+			</p>
+		</li>
+	</ul>
+	<p>
+		When booting for the first time if the platform doesn't find a configuration file it will create one with the default configuration parameters.
+	</p>
+	<p>
+		Must of the times the default parameters are ok for a development environment, but for production or for complex setups, changing them may be required.
+	</p>
+	<p>
+		Here's the default contents of the <code>config.yaml</code> file so you can create your own before booting the platform for the first time:
+	</p>
+	<pre><code class="yaml">
+		%YAML 1.2
+		---
+
+		platform:
+		  ssl: false
+		  host: localhost:8083
+
+		repository:
+		  # Type of repository to use (can be 'local', 'remote' or 'stardog')
+		  type: local
+
+		  # Directory where the platform will store its triplestore data
+		  directory: ./data
+
+		# To configure a remote repository you can change the above object for the following one
+		#repository:
+		#  # Type of repository to use (can be 'local', 'remote' or 'stardog')
+		#  type: remote
+		#
+		#  # URL of the remote repository
+		#  url: http://localhost:7200/
+		#
+		#  # Username to authenticate with the remote repository (optional)
+		#  username:
+		#
+		#  # Password to authenticate with the remote repository (optional)
+		#  password:
+		#
+		#  # Remote repository's identifier
+		#  id: carbonldp
+
+		files:
+		  # Directory where the platform will store ldp:NonRDFSource files
+		  directory: ./data/files
+
+		zoo-keeper:
+		  # Type of zoo-keeper to use (can be 'embedded' or 'remote')
+		  type: embedded
+
+		  host: zookeeper
+		  port: 2181
+
+		messaging:
+		  broker:
+		    host: rabbitmq
+		    port: 61613
+	</code></pre>
+</section>
+<section class="mainContent-section">
+	<h2>Parameters reference</h2>
+	<table class="ui celled padded striped table">
+		<thead>
+			<tr>
+				<th>Parameter</th>
+				<th>Type</th>
+				<th>Description</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td class="left aligned single line">
+					<code>platform.ssl</code>
+				</td>
+				<td class="center aligned">
+					<code>boolean</code>
+				</td>
+				<td>
+					Whether the platform will be exposed through https or not
+				</td>
+			</tr>
+			<tr>
+				<td class="left aligned single line">
+					<code>platform.host</code>
+				</td>
+				<td class="center aligned">
+					<code>String</code>
+				</td>
+				<td>
+					The host where the platform will be exposed
+				</td>
+			</tr>
+			<tr>
+				<td class="left aligned single line">
+					<code>repository.type</code>
+				</td>
+				<td class="center aligned">
+					<code>Enum</code>
+				</td>
+				<td>
+					Type of repository to use. Accepted values are:
+					<br>
+					<ul>
+						<li><code>local</code> - To use a native file-based repository</li>
+						<li><code>remote</code> - To use an RDF4J compatible remote repository (e.g. GraphDB)</li>
+						<li><code>stardog</code> - to use a Stardog repository</li>
+					</ul>
+				</td>
+			</tr>
+			<tr>
+				<td class="left aligned single line">
+					<code>repository.directory</code>
+				</td>
+				<td class="center aligned">
+					<code>String</code>
+				</td>
+				<td>
+					Directory where the file-based repository will be stored.
+					<br>
+					<br>
+					Only needed if <code>repository.type</code> is set to <code>local</code>.
+				</td>
+			</tr>
+			<tr>
+				<td class="left aligned single line">
+					<code>repository.url</code>
+				</td>
+				<td class="center aligned">
+					<code>String</code>
+				</td>
+				<td>
+					URL of the repository to use
+					<br>
+					<br>
+					Only needed if <code>repository.type</code> is set to <code>remote</code> or <code>stardog</code>.
+				</td>
+			</tr>
+			<tr>
+				<td class="left aligned single line">
+					<code>repository.username</code>
+				</td>
+				<td class="center aligned">
+					<code>String</code>
+				</td>
+				<td>
+					Username to use for repositories that require authentication
+					<br>
+					<br>
+					Only needed if <code>repository.type</code> is set to <code>remote</code> or <code>stardog</code>.
+				</td>
+			</tr>
+			<tr>
+				<td class="left aligned single line">
+					<code>repository.password</code>
+				</td>
+				<td class="center aligned">
+					<code>String</code>
+				</td>
+				<td>
+					Password to use for repositories that require authentication
+					<br>
+					<br>
+					Only needed if <code>repository.type</code> is set to <code>remote</code> or <code>stardog</code>
+				</td>
+			</tr>
+			<tr>
+				<td class="left aligned single line">
+					<code>repository.id</code>
+				</td>
+				<td class="center aligned">
+					<code>String</code>
+				</td>
+				<td>
+					ID of the repository to connect to
+					<br>
+					<br>
+					Only needed if <code>repository.type</code> is set to <code>remote</code> or <code>stardog</code>
+				</td>
+			</tr>
+			<tr>
+				<td class="left aligned single line">
+					<code>files.directory</code>
+				</td>
+				<td class="center aligned">
+					<code>String</code>
+				</td>
+				<td>
+					Directory to store <code>ldp:NonRDFSource</code>s
+				</td>
+			</tr>
+			<tr>
+				<td class="left aligned single line">
+					<code>zoo-keeper.type</code>
+				</td>
+				<td class="center aligned">
+					<code>Enum</code>
+				</td>
+				<td>
+					Type of ZooKeeper instance to use. Accepted values are:
+					<br>
+					<ul>
+						<li><code>embedded</code> - To use an embedded instance</li>
+						<li><code>remote</code> - To use a remote instance</li>
+					</ul>
+				</td>
+			</tr>
+			<tr>
+				<td class="left aligned single line">
+					<code>zoo-keeper.host</code>
+				</td>
+				<td class="center aligned">
+					<code>String</code>
+				</td>
+				<td>
+					Host of the <code>remote</code> ZooKeeper instance
+					<br>
+					<br>
+					Only needed if <code>zoo-keeper.type</code> is set to <code>remote</code>
+				</td>
+			</tr>
+			<tr>
+				<td class="left aligned single line">
+					<code>zoo-keeper.port</code>
+				</td>
+				<td class="center aligned">
+					<code>Integer</code>
+				</td>
+				<td>
+					Port of the ZooKeeper instance
+					<br>
+					<br>
+					If <code>zoo-keeper.type</code> is set to <code>embedded</code> this port will be the one where the embedded instance will be listening
+				</td>
+			</tr>
+			<tr>
+				<td class="left aligned single line">
+					<code>messaging.broker.host</code>
+				</td>
+				<td class="center aligned">
+					<code>String</code>
+				</td>
+				<td>
+					Host of the relay messaging broker
+				</td>
+			</tr>
+			<tr>
+				<td class="left aligned single line">
+					<code>messaging.broker.port</code>
+				</td>
+				<td class="center aligned">
+					<code>Integer</code>
+				</td>
+				<td>
+					Port of the relay messaging broker
+				</td>
+			</tr>
+		</tbody>
+	</table>
+</section>

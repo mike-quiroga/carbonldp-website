@@ -85,9 +85,9 @@ versions:
           - title: Startup arguments
             link: startup
             description: Reference for all arguments accepted by the platform upon startup
-#          - title: Configuration
-#            link: configuration
-#            description: How to configure an instance and reference of the accepted configuration parameters
+          - title: Configuration
+            link: configuration
+            description: How to configure an instance and reference of the accepted configuration parameters
 #          - title: Error codes
 #            link: error-codes
 #            description: Reference for all error codes the platform can return
