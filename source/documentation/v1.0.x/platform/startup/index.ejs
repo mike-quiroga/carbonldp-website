@@ -1,0 +1,136 @@
+---
+layout: documentation/document
+title: Platform's startup
+date: 2017-09-25 15:03:00
+version: v1.0.x
+script: documentation-home
+---
+<div class="ui mobile only grid">
+	<div class="row">
+		<staticContentMenu content="mainContent"></staticContentMenu>
+	</div>
+</div>
+<section class="mainContent-section">
+	<h2>Passing arguments to the platform</h2>
+	<p>
+		The platform can be run in two ways. Passing arguments to it is done differently depending on which method you are using:
+	</p>
+	<section class="mainContent-subSection">
+		<h3>Using Docker</h3>
+		<p>
+			The Docker image is configured with an entrypoint so any arguments passed after specifying the image are passed directly to the platform.
+		</p>
+		<p>
+			Example:
+		</p>
+		<pre><code class="bash">
+			docker run -d --name carbonldp -p 8083:8083 carbonldp/carbonldp-platform:1.0.x-alpha.x --specify-arguments here
+		</code></pre>
+		<section class="mainContent-subSection">
+			<h4>Specifying java options</h4>
+			<p>
+				Java options can be specified by setting the environment variable <code>JAVA_OPTS</code> when running the container.
+			</p>
+			<p>
+				Example:
+			</p>
+			<pre><code class="bash">
+				docker run -d --name carbonldp -p 8083:8083 \
+					-e JAVA_OPTS="-Xms1g -Xmx2g" \                      # -e tells Docker to set an environment variable
+					carbonldp/carbonldp-platform:1.0.x-alpha.x
+			</code></pre>
+		</section>
+	</section>
+	<section class="mainContent-subSection">
+		<h3>Executing the jar</h3>
+		<p>
+			If you are running the platform directly from the jar, passing the arguments is done the same way as with any other jar.
+		</p>
+		<p>
+			Example:
+		</p>
+		<pre><code class="bash">
+			java -jar carbonldp-platform.jar --specify-arguments here
+		</code></pre>
+	</section>
+</section>
+<section class="mainContent-section">
+	<h2>Arguments reference</h2>
+	<table class="ui celled padded striped table">
+		<thead>
+			<tr>
+				<th>Argument</th>
+				<th>Default</th>
+				<th>Description</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td class="center aligned single line">
+					<code>--local-port</code>
+				</td>
+				<td class="center aligned">
+					8083
+				</td>
+				<td>Port to listen to. It can be different than the port in the exposed host</td>
+			</tr>
+			<tr>
+				<td class="center aligned single line">
+					<code>--ssl</code>
+				</td>
+				<td class="center aligned">
+					false
+				</td>
+				<td>Flag if the platform will be exposed through https</td>
+			</tr>
+			<tr>
+				<td class="center aligned single line">
+					<code>--host</code>
+				</td>
+				<td class="center aligned single line">
+					localhost:${--local-port}
+				</td>
+				<td>
+					Host where the server is going to be exposed.
+					<br>
+					Example:
+					<br>
+					<code>my-host.com:8080</code>
+				</td>
+			</tr>
+			<tr>
+				<td class="center aligned single line">
+					<code>--work-dir</code>
+				</td>
+				<td class="center aligned">
+					jar directory
+				</td>
+				<td>Directory where the platform will read/write all of its data and configuration</td>
+			</tr>
+			<tr>
+				<td class="center aligned single line">
+					<code>--config</code>
+				</td>
+				<td class="center aligned">
+					-
+				</td>
+				<td>Configuration file to use (instead of the default one in the work directory)</td>
+			</tr>
+			<tr>
+				<td class="center aligned single line">
+					<code>-C</code>
+				</td>
+				<td class="center aligned">
+					-
+				</td>
+				<td>
+					Prefix any configuration property with <code>-C</code> to override it.
+					<br>
+					Example:
+					<br>
+					<code>-Crepository.type=remote</code>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+</section>

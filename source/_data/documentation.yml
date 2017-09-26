@@ -77,22 +77,14 @@ versions:
         description: Start now!
         link: quick-start-guide
         iconPath: assets/images/ico-open-book.svg
-      - title: Essential concepts
-        description: Basic Linked Data knowledge
-        link: essential-concepts
-        iconPath: assets/images/ico-books.svg
+      - title: Platform
+        description: The main component of the Carbon suite
+        link: platform
+        iconPath: assets/images/ico-motor.svg
         documents:
-          - title: Linked Data concepts
-            link: linked-data-concepts
-            description: General overview of the basic idea behind Linked Data and why it can make your applications more powerful.
-#      - title: Platform
-#        description: The main component of the Carbon suite
-#        link: platform
-#        iconPath: assets/images/ico-motor.svg
-#        documents:
-#          - title: Startup arguments
-#            link: startup
-#            description: Reference for all arguments accepted by the platform upon startup
+          - title: Startup arguments
+            link: startup
+            description: Reference for all arguments accepted by the platform upon startup
 #          - title: Configuration
 #            link: configuration
 #            description: How to configure an instance and reference of the accepted configuration parameters
