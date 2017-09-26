@@ -1,0 +1,153 @@
+versions:
+  - name: v0.x.x
+    label: current
+    categories:
+      - title: Quick Start
+        description: Start now!
+        link: quick-start-guide
+        iconPath: assets/images/ico-open-book.svg
+      - title: Essential concepts
+        description: Basic Linked Data knowledge
+        link: essential-concepts
+        iconPath: assets/images/ico-books.svg
+        documents:
+          - title: Linked Data concepts
+            link: linked-data-concepts
+            description: General overview of the basic idea behind Linked Data and why it can make your applications more powerful.
+      - title: JavaScript SDK
+        description: The JavaScript Software Developer's Kit, available from the npm package manager, allows you to manage RDF data using familiar JavaScript and TypeScript programming techniques and tools. Build for execution within a web browser or Node.js.
+        link: javascript-sdk
+        iconPath: assets/images/ico-javascript.svg
+        documents:
+          - title: Getting Started with the JavaScript SDK
+            link: getting-started
+            description: Guide to install Carbon JavaScript SDK and start creating and manipulating data with its basic methods.
+          - title: Object model
+            link: object-model
+            description: An in depth description of the Carbon Object Model.
+          - title: Contexts
+            link: contexts
+            description: What is a context, how to declare, access and modify it.
+          - title: Object schema
+            link: object-schema
+            description: What is the object schema, how to define and use it.
+          - title: Files
+            link: files
+            description: How to upload, download and describe files.
+          - title: Querying
+            link: querying
+            description: How to make queries with SPARQLER
+          - title: Authentication
+            link: authentication
+            description: Logging in, logging out and everything you need to know about it.
+          - title: Authorization
+            link: authorization
+            description: Granting or denying permissions to subjects on documents.
+          - title: Access points
+            link: access-points
+            description: Not yet documented
+        links:
+          - title: API reference
+            link: https://carbonldp.github.io/carbonldp-js-sdk
+            description: Classes and methods available in the JavaScript SDK, API reference maintained on Github
+      - title: REST API
+        description: Access and manage applications and data by URIs using RESTful requests over HTTP (GET, POST, PUT, DELETE). Configure apps, schedule server-side jobs, execute queries - everything in Carbon is RESTful.
+        link: rest-api
+        iconPath: assets/images/ico-rest-api.svg
+        documents:
+          - title: Getting started with the REST API
+            link: getting-started
+            description: How to build an example application using the Carbon LDP REST API.
+          - title: REST API object model
+            link: object-model
+            description: A description of the various types of resources you can manage and interact with using REST.
+          - title: Interaction models
+            link: interaction-models
+            description: An explanation of the way you can interact with the resources on the Carbon Server.
+          - title: Containers
+            link: containers
+            description: Not yet documented
+          - title: RDF Source
+            link: rdf-source
+            description: Not yet documented
+  - name: v1.0.x
+    label: alpha
+    categories:
+      - title: Quick Start
+        description: Start now!
+        link: quick-start-guide
+        iconPath: assets/images/ico-open-book.svg
+      - title: Platform
+        description: The main component of the Carbon suite
+        link: platform
+        iconPath: assets/images/ico-motor.svg
+        documents:
+          - title: Startup arguments
+            link: startup
+            description: Reference for all arguments accepted by the platform upon startup
+          - title: Configuration
+            link: configuration
+            description: How to configure an instance and reference of the accepted configuration parameters
+#          - title: Error codes
+#            link: error-codes
+#            description: Reference for all error codes the platform can return
+#          - title: Clusterization
+#            link: cluster
+#            description: How to setup a scalable, fault tolerant CarbonLDP cluster
+#          - title: Enterprise-class repositories
+#            link: enterprise-class-repository
+#            description: Configuring a platform instance so it is backed up by a third-party enterprise-class repository
+      - title: REST API
+        description: Access and manage applications and data by URIs using RESTful requests over HTTP (GET, POST, PUT, DELETE). Configure apps, schedule server-side jobs, execute queries - everything in Carbon is RESTful.
+        id: rest-api
+        link: rest-api
+        iconPath: assets/images/ico-rest-api.svg
+        documents:
+          - title: Getting started
+            link: getting-started
+            description: Not yet documented
+          - title: Object model
+            link: object-model
+            description: Not yet documented
+          - title: Interaction models
+            link: interaction-models
+            description: Not yet documented
+          - title: Containers
+            link: containers
+            description: Not yet documented
+          - title: RDF Source
+            link: rdf-source
+            description: Not yet documented
+      - title: JavaScript SDK
+        description: The JavaScript Software Development Kit, available from the npm package manager, allows you to manage RDF data using familiar JavaScript and TypeScript programming techniques and tools. Build for execution within a web browser or Node.js.
+        link: javascript-sdk
+        iconPath: assets/images/ico-javascript.svg
+        documents:
+          - title: Getting started
+            link: getting-started
+            description: Guide to install the SDK and start creating and manipulating data with it
+          - title: Object model
+            link: object-model
+            description: An in depth description of the Carbon Object Model.
+          - title: Object schema
+            link: object-schema
+            description: What is the object schema, how to define and use it.
+          - title: Files
+            link: files
+            description: Not yet documented
+          - title: Querying
+            link: querying
+            description: How to make queries with SPARQLer
+          - title: Authentication
+            link: authentication
+            description: Not yet documented
+          - title: Authorization
+            link: authorization
+            description: Not yet documented
+          - title: Access points
+            link: access-points
+            description: Not yet documented
+#      - title: Java SDK
+#        description: Software Development Kit for Java (and other JVM languages)
+#        link: java-sdk
+#        iconPath: assets/images/ico-java.svg

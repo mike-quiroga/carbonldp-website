@@ -1,0 +1,97 @@
+<%
+let versions = site.data[ "documentation" ].versions;
+
+let currentDocumentationPage = getCurrentDocumentationPageInformation();
+let currentVersion = versions.find( version => version.name === currentDocumentationPage.version );
+
+let documentationPageVersionsMap = getClosestDocumentationPageForEachVersion( currentDocumentationPage );
+
+function getCurrentDocumentationPageInformation() {
+	let path = page.path;
+	let pathPieces = path.split( "/" );
+
+	// FIXME: Use configuration to specify documentation base path instead of hard-coding it
+	if( pathPieces.length === 0 || pathPieces[ 0 ].toLowerCase() !== "documentation" ) throw new Error( "Partial 'versions-menu' was used outside a documentation page" );
+	// Remove first element as it will be "documentation"
+	pathPieces.splice( 0, 1 );
+	// Remove last element as it will always be "index.html"
+	pathPieces.pop();
+
+	let version;
+	if( pathPieces.length >= 1 && pathPieces[ 0 ].match( /v[\dx]\.[\dx]\.[\dx]/i ) ) {
+		version = pathPieces[ 0 ];
+		pathPieces.splice( 0, 1 );
+	} else version = versions.find( version => version.label === "current" ).name;
+
+	let category = pathPieces.length >= 1 ? pathPieces[ 0 ] : null;
+	let document = pathPieces.length >= 2 ? pathPieces[ 1 ] : null;
+
+	return {
+		version: version,
+		category: category,
+		document: document,
+	};
+}
+
+function getPathForDocumentationPage( currentDocumentationPage, closestDocumentationPage ) {
+	let missingPageQueryParameters = null;
+	if( currentDocumentationPage.category && currentDocumentationPage.category !== closestDocumentationPage.category ) {
+		let category = currentVersion.categories.find( category => category.link === currentDocumentationPage.category );
+		missingPageQueryParameters = `?exists=false&page=${category.title}`;
+	} else if( currentDocumentationPage.document && currentDocumentationPage.document !== closestDocumentationPage.document ) {
+		let category = currentVersion.categories.find( category => category.link === currentDocumentationPage.category );
+		let document = category.documents.find( document => document.link === currentDocumentationPage.document );
+		missingPageQueryParameters = `?exists=false&page=${document.title}`;
+	}
+
+	let path = `documentation/${closestDocumentationPage.version}/`;
+	path += closestDocumentationPage.category !== null ? `${closestDocumentationPage.category}/` : "";
+	path += closestDocumentationPage.document !== null ? `${closestDocumentationPage.document}/` : "";
+
+	path += missingPageQueryParameters !== null ? missingPageQueryParameters : "";
+	return path;
+}
+
+function getClosestDocumentationPageForEachVersion( currentDocumentationPage ) {
+	let documentationPageVersionsMap = new Map();
+	for( let version of versions ) {
+		let documentationPage;
+
+		if( version.name === currentDocumentationPage.version ) {
+			documentationPage = currentDocumentationPage;
+		} else if( currentDocumentationPage.category !== null ) {
+			let category = version.categories.find( category => category.link === currentDocumentationPage.category );
+
+			let document = null;
+			if( category && "documents" in category ) {
+				document = category.documents.find( document => document.link === currentDocumentationPage.document );
+			}
+
+			documentationPage = {
+				version: version.name,
+				category: category ? category.link : null,
+				document: document ? document.link : null,
+			};
+		} else {
+			documentationPage = {
+				version: version.name,
+				category: null,
+				document: null,
+			};
+		}
+
+		documentationPageVersionsMap.set( version.name, documentationPage );
+	}
+	return documentationPageVersionsMap;
+}
+%>
+
+<div class="ui dropdown versionsMenu-dropdown <%= containerDarkBackground ? "" : "versionsMenu-dropdown--blackText" %>">
+	<button class="default text ui button versionsMenu-button <%= containerDarkBackground ? "" : "versionsMenu-button--grayHover" %>"><%= currentVersion.name + ( currentVersion.label ? ` (${currentVersion.label})` : "" ) %></button>
+	<div class="ui menu versionsMenu">
+		<% for( let version of versions ){ %>
+		<% let closestDocumentationPage = documentationPageVersionsMap.get( version.name ); %>
+		<a class="item" href="<%- url_for( getPathForDocumentationPage( currentDocumentationPage, closestDocumentationPage ) ) %>"><%= version.name + ( version.label ? ` (${version.label})` : "" ) %></a>
+		<% } %>
+	</div>
+</div>

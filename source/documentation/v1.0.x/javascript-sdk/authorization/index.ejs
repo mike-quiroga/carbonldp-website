@@ -1,8 +1,9 @@
 ---
-layout: document
+layout: documentation/document
 title: Authorization
 description: Granting or denying permissions to subjects on documents.
 date: 2017-02-08 11:58:11
+sidebar: disabled
 version: v1.0.x
 ---
 <div class="documentation-steps ui fluid steps">
@@ -27,683 +28,690 @@ version: v1.0.x
 		</div>
 	</a>
 </div>
-<div class="ui mobile only grid">
-	<div class="row">
-		<staticContentMenu content="mainContent"></staticContentMenu>
-	</div>
+<div class="soon-to-be-documented">
+	<p>Sorry, this topic hasn't been documented :(</p>
 </div>
-<section class="mainContent-section">
-	<h2 class="hidden">Introduction</h2>
-	<p>Authorization refers to the rules that dictate whether a user can or can't do certain actions. This rules take the form of: <strong>someone</strong> can <strong>do
-			something</strong>, <strong>somewhere</strong>, or more generically: a <strong>subject</strong> has a <strong>permission</strong> on an <strong>object</strong>.</p>
-</section>
-<section class="mainContent-section">
-	<h2>Roles</h2>
-	<p>We've talked about one of the possible objects that can act as a subject: users. But creating rules for a single user would be too specific for most use cases.
-		Normally, rules are created by stating that a <strong>group</strong> of users can or can't do something. E.g. "The <em>editors</em> can edit these documents", "The
-		<em>readers</em> can read these other documents", etc.</p>
-	<p>These groups are commonly named after their "role" on the application and they are only meaningful in the context of the application itself.</p>
-	<p>In Carbon, roles have a hierarchical structure. This structure starts with the <code>admin/</code> role which is created automatically by the platform.</p>
-	<p>This role should only be used by developers, as being a member of it gives access to every document the application contains.</p>
-	<section class="mainContent-subSection">
-		<h3>Creating a role</h3>
-		<p>The first thing to do when structuring your application's security scheme, is identify and create all the roles needed for your application.</p>
-		<p>Once the roles are identified, they can be created with the <a href="https://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Auth-Roles-Class-createChild" target="_blank"
-		                                                                  rel="noopener"><code>createChild</code></a> method of the
-			<a href="https://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Auth-Roles-Class" target="_blank" rel="noopener"><code>auth.roles</code></a> service
-			of the application context. This method is very similar to the
-			<a href="https://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Documents-Class" target="_blank" rel="noopener"><code>documents</code></a> service's
-			<a href="https://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Documents-Class-createChild" target="_blank" rel="noopener"><code>createChild</code></a> method (which we
-			already covered). It accepts the parent role (its slug, complete id or the actual role document) as the first parameter, the object that will be used to
-			create the new role's document (remember, everything's a document!), and an optional slug:</p>
-		<tabs>
-			<tab title="TypeScript">
-
-				<pre><code class="typescript">
-					import * as HTTP from "carbonldp/HTTP";
-
-					let carbon:Carbon;
-
-					// ... initialize your Carbon object
-
-					// Provide a human friendly name for the role
-					let role:Auth.Role.Class = Auth.Role.Factory.create( "Editors" );
-
-
-					carbon.auth.roles.createChild( "admin/", role, "editors/" ).then(
-						( [ editorsRole, responses ]:[ Auth.PersistedRole.Class, HTTP.Response.Class[] ] ) => &#123;
-							// ...
-						&#125;
-					).catch( console.error );
-				</code></pre>
-
-			</tab>
-			<tab title="JavaScript ES2015">
-
-				<pre><code class="javascript">
-					let carbon;
-
-					// ... initialize your Carbon object
-
-					// Provide a human friendly name for the role
-					let role = Auth.Role.Factory.create( "Editors" );
-
-					carbon.auth.roles.createChild( "admin/", role, "editors/" ).then(
-						( [ editorsRole, responses ] ) => &#123;
-							// ...
-						&#125;
-					).catch( console.error );
-				</code></pre>
-
-			</tab>
-			<tab title="JavaScript ES5">
-
-				<pre><code class="javascript">
-					var carbon;
-
-					// ... initialize your Carbon object
-
-					// Provide a human friendly name for the role
-					var role = Auth.Role.Factory.create( "Editors" );
-
-					carbon.auth.roles.createChild( "admin/", role, "editors/" ).then(
-						function( [ editorsRole, responses ] ) &#123;
-							// ...
-						&#125;
-					).catch( console.error );
-				</code></pre>
-
-			</tab>
-		</tabs>
-		<p>As you can see, the previous example is very similar to how a normal document is created. All patterns that applied there apply here too. For example, if you
-			retrieve a <a href="https://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Auth-PersistedRole-Class" target="_blank" rel="noopener"><code>PersistedRole</code></a>
-			document, you can call its <a href="https://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Auth-PersistedRole-Class-createChild" target="_blank"
-			                              rel="noopener"><code>createChild
-				</code></a> method just like you would do it with the
-			<a href="https://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Auth-Roles-Class" target="_blank" rel="noopener"><code>auth.roles</code></a> service (without
-			specifying the parent).
-		</p>
-	</section>
-	<section class="mainContent-subSection">
-		<h3>Adding users to a role</h3>
-		<p>A role is just a group of users that represents a functional "role" in the application. Therefore, the roles won't do much unless we add users to them
-			. This can be done through the method <a href="https://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Auth-Roles-Class-addUser" target="_blank"
-			                                         rel="noopener"><code>addUser</code></a> or <a
-				href="https://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Auth-Roles-Class-addUsers" target="_blank" rel="noopener"><code>addUsers</code></a> of the
-			<a href="https://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Auth-Roles-Class" target="_blank" rel="noopener"><code>auth.roles</code></a> service (or of a
-			<a href="https://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Auth-PersistedRole-Class" target="_blank" rel="noopener"><code>PersistedRole</code></a> document):
-		</p>
-		<tabs>
-			<tab title="TypeScript">
-
-				<pre><code class="typescript">
-					import * as HTTP from "carbonldp/HTTP";
-
-					let carbon:Carbon;
-
-					// ... initialize your Carbon object
-
-					carbon.auth.roles.addUser( "editors/", "john-smith/" ).then(
-						( response:HTTP.Response.Class ) => &#123;
-							// ...
-						&#125;
-					).catch( console.error );
-				</code></pre>
-
-			</tab>
-			<tab title="JavaScript ES2015">
-
-				<pre><code class="javascript">
-					// ... imports
-
-					let carbon;
-
-					// ... initialize your Carbon object
-
-					carbon.auth.roles.addUser( "editors/", "john-smith/" ).then(
-						( response ) => &#123;
-							// ...
-						&#125;
-					).catch( console.error );
-				</code></pre>
-
-			</tab>
-			<tab title="JavaScript ES5">
-
-				<pre><code class="javascript">
-					// ... imports
-
-					var carbon;
-
-					// ... initialize your Carbon object
-
-					appContext.auth.roles.addUser( "editors/", "john-smith/" ).then(
-						function( response ) &#123;
-							// ...
-						&#125;
-					).catch( console.error );
-				</code></pre>
-
-			</tab>
-		</tabs>
-		<p>Like almost all methods in the SDK, to reference a document (in this case an user), you can use its relative id, its absolute id, or the actual document object
-			(resolved or unresolved).</p>
-	</section>
-</section>
-<section class="mainContent-section">
-	<h2>Permissions</h2>
-	<p>Now that we've talked about the possible subjects, it's time to talk about the possible actions. These actions are represented by <strong>permissions</strong> in Carbon.</p>
-	<p>They can be referenced in code through the <a href="https://carbonldp.github.io/carbonldp-js-sdk/#Carbon-NS-CS-Class"><code>Carbon.NS.CS.Class</code></a> object:</p>
-	<tabs>
-		<tab title="TypeScript">
-
-			<pre><code class="typescript">
-				import * as CS from "carbonldp/NS/CS";
-
-				console.log( CS.Class.Read ); // id of the Read permission
-			</code></pre>
-
-		</tab>
-		<tab title="JavaScript ES2015">
-
-			<pre><code class="javascript">
-				import * as CS from "carbonldp/NS/CS";
-
-				console.log( CS.Class.Read ); // id of the Read permission
-			</code></pre>
-
-		</tab>
-		<tab title="JavaScript ES5">
-
-			<pre><code class="javascript">
-				console.log( Carbon.NS.CS.Class.Read ); // id of the Read permission
-			</code></pre>
-
-		</tab>
-	</tabs>
-	<p>Here's a list of all the permissions in Carbon:</p>
-	<ul>
-		<li>
-			<strong>Read</strong>: Retrieve a document through methods like
-			<a href="https://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Documents-Class" target="_blank" rel="noopener"><code>documents</code></a> service's
-			<a href="https://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Documents-Class-get" target="_blank" rel="noopener"><code>get</code></a> method
-		</li>
-		<li><strong>Download</strong>: Download a file</li>
-		<li>
-			<strong>Update</strong>: Modify a document and persist the changes, for example with the
-			<a href="https://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Documents-Class" target="_blank" rel="noopener"><code>documents</code></a> service's
-			<a href="https://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Documents-Class-save" target="_blank" rel="noopener"><code>save</code></a> method
-		</li>
-		<li><strong>ManageSecurity</strong>: Modify a document's ACL (read ACL section)</li>
-		<li>
-			<strong>CreateChild</strong>: Create children of a document, for example with the
-			<a href="https://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Documents-Class" target="_blank" rel="noopener"><code>documents</code></a> service's
-			<a href="https://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Documents-Class-createChild" target="_blank" rel="noopener"><code>createChild</code></a> method
-		</li>
-		<li>
-			<strong>CreateAccessPoint</strong>: Create access points of a document, for example with the
-			<a href="https://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Documents-Class" target="_blank" rel="noopener"><code>documents</code></a> service's
-			<a href="https://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Documents-Class-createAccessPoint" target="_blank" rel="noopener"><code>createAccessPoint</code></a> method
-		</li>
-		<li>
-			<strong>Upload</strong>: Upload a file on a document, for example with the
-			<a href="https://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Documents-Class" target="_blank" rel="noopener"><code>documents</code></a> service's
-			<a href="https://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Documents-Class-upload" target="_blank" rel="noopener"><code>upload</code></a> method
-		</li>
-		<li>
-			<strong>AddMember</strong>: Add a member to a document, for example with the
-			<a href="https://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Documents-Class" target="_blank" rel="noopener"><code>documents</code></a> service's
-			<a href="https://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Documents-Class-addMember" target="_blank" rel="noopener"><code>addMember</code></a> method
-		</li>
-		<li>
-			<strong>RemoveMember</strong>: Remove a member of a document, for example with the
-			<a href="https://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Documents-Class" target="_blank" rel="noopener"><code>documents</code></a> service's
-			<a href="https://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Documents-Class-removeMember" target="_blank" rel="noopener"><code>removeMember</code></a> method
-		</li>
-		<li>
-			<strong>Delete</strong>: Delete a document, for example with the
-			<a href="https://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Documents-Class" target="_blank" rel="noopener"><code>documents</code></a> service's
-			<a href="https://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Documents-Class-delete" target="_blank" rel="noopener"><code>delete</code></a> method
-		</li>
-	</ul>
-</section>
-<section class="mainContent-section">
-	<h2>ACLs</h2>
-	<p>Finally, its time to talk about the <strong>objects</strong> where the <strong>subjects</strong> have <strong>permissions</strong> on. These objects as you may have
-		guessed are any Carbon document available in an application.</p>
-	<p>These documents store their security schema in what's called ACLs (or Access Control List). Which store the rules we've been talking about that apply to the document
-		itself and to its children.</p>
-	<section class="mainContent-subSection">
-		<h3>Retrieving an ACL</h3>
-		<p>To retrieve a document's ACL you can use the
-			<a href="https://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Documents-Class" target="_blank" rel="noopener"><code>documents</code></a> service's
-			<a href="https://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Documents-Class-getACL" target="_blank" rel="noopener"><code>getACL</code></a> method:
-		</p>
-		<tabs>
-			<tab title="TypeScript">
-
-				<pre><code class="typescript">
-					import * as HTTP from "carbonldp/HTTP";
-					import * as PersistedACL from "carbonldp/PersistedACL";
-
-					let carbon:Carbon;
-
-					// ... initialize your Carbon object
-
-					carbon.documents.getACL( "some-document/" ).then(
-						( [ acl, response ]:[ PersistedACL.Class, HTTP.Response.Class ] ) => &#123;
-							// ...
-						&#125;
-					).catch( console.error );
-				</code></pre>
-
-			</tab>
-			<tab title="JavaScript ES2015">
-
-				<pre><code class="javascript">
-					// ... imports
-
-					let carbon;
-
-					// ... initialize your Carbon object
-
-					carbon.documents.getACL( "some-document/" ).then(
-						( [ acl, response ] ) => &#123;
-							// ...
-						&#125;
-					).catch( console.error );
-				</code></pre>
-
-			</tab>
-			<tab title="JavaScript ES5">
-
-				<pre><code class="javascript">
-					// ... imports
-
-					var carbon;
-
-					// ... initialize your Carbon object
-
-					carbon.documents.getACL( "some-document/" ).then(
-						function( [ acl, response ] ) &#123;
-							// ...
-						&#125;
-					).catch( console.error );
-				</code></pre>
-
-			</tab>
-		</tabs>
-		<p>
-			Or you can also use the <a href="https://carbonldp.github.io/carbonldp-js-sdk/#Carbon-PersistedProtectedDocument-Class" target="_blank"
-			                           rel="noopener"><code>PersistedProtectedDocument</code></a>
-			<a href="https://carbonldp.github.io/carbonldp-js-sdk/#Carbon-PersistedProtectedDocument-Class-getACL" target="_blank" rel="noopener"><code>getACL</code></a> method.
-			Any document is a <a href="https://carbonldp.github.io/carbonldp-js-sdk/#Carbon-PersistedProtectedDocument-Class" target="_blank"
-			                     rel="noopener"><code>PersistedProtectedDocument</code></a> (except for ACLs).
-		</p>
-		<tabs>
-			<tab title="TypeScript">
-
-				<pre><code class="typescript">
-					import * as HTTP from "carbonldp/HTTP";
-					import * as PersistedACL from "carbonldp/PersistedACL";
-					import * as PersistedProtectedDocument from "carbonldp/PersistedProtectedDocument";
-
-					let carbon:Carbon;
-
-					// ... initialize your Carbon object
-
-					carbon.documents.get( "some-document/" ).then(
-						( [ someDocument, response ]:[ PersistedProtectedDocument.Class, HTTP.Response.Class ] ) => &#123;
-							return someDocument.getACL();
-						&#125;
-					).then(
-						( [ someDocumentACL, response ]:[ PersistedACL.Class, HTTP.Response.Class ] ) => &#123;
-							// ...
-						&#125;
-					).catch( console.error );
-				</code></pre>
-
-			</tab>
-			<tab title="JavaScript ES2015">
-
-				<pre><code class="javascript">
-					// ... imports
-
-					let carbon;
-
-					// ... initialize your Carbon object
-
-					carbon.documents.get( "some-document/" ).then(
-						( [ someDocument, response ] ) => &#123;
-							return someDocument.getACL();
-						&#125;
-					).then(
-						( [ someDocumentACL, response ] ) => &#123;
-							// ...
-						&#125;
-					).catch( console.error );
-				</code></pre>
-
-			</tab>
-			<tab title="JavaScript ES5">
-
-				<pre><code class="javascript">
-					var carbon;
-
-					// ... initialize your Carbon object
-
-					carbon.documents.get( "some-document/" ).then(
-						function( [ someDocument, response ] ) &#123;
-							return someDocument.getACL();
-						&#125;
-					).then(
-						function( [ someDocumentACL, response ] ) &#123;
-							// ...
-						&#125;
-					).catch( console.error );
-				</code></pre>
-
-			</tab>
-		</tabs>
-		<p>This can be more expensive or cheaper depending on if you have already retrieved the document or not.</p>
-	</section>
-	<section class="mainContent-subSection">
-		<h3>Granting or denying permissions</h3>
-		<p>
-			Once you have retrieved a document's ACL you can start granting permissions to subjects or denying them. This can be done with the
-			<a href="https://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Auth-PersistedACL-Class" target="_blank"
-			   rel="noopener"><code>PersistedACL</code></a>'s
-			<a href="https://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Auth-PersistedACL-Class-grant" target="_blank" rel="noopener"><code>grant</code></a> method and
-			<a href="https://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Auth-PersistedACL-Class" target="_blank"
-			   rel="noopener"><code>PersistedACL</code></a>'s
-			<a href="https://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Auth-PersistedACL-Class-deny" target="_blank" rel="noopener"><code>deny</code></a> method respectively.
-		</p>
-		<p>
-			In these methods both the subject and permission(s) need to be specified, along with the subject's type:
-			<a href="https://carbonldp.github.io/carbonldp-js-sdk/#Carbon-NS-CS-Class+User"><code>Carbon.NS.CS.Class.User</code></a> or
-			<a href="https://carbonldp.github.io/carbonldp-js-sdk/#Carbon-NS-CS-Class+Role"><code>Carbon.NS.CS.Class.Role</code></a>
-		</p>
-		<p>Like with any other document, don't forget to save the ACL's state after modifying it:</p>
-		<tabs>
-			<tab title="TypeScript">
-
-				<pre><code class="typescript">
-					import * as CS from "carbonldp/NS/CS";
-					import * as HTTP from "carbonldp/HTTP";
-					import * as PersistedACL from "carbonldp/Auth/PersistedACL";
-					import * as PersistedRole from "carbonldp/Auth/PersistedRole";
-
-					let editorsRole:PersistedRole.Class;
-
-					// .. role retrieval
-
-					let blogPostACL:PersistedACL.Class;
-
-					// ... ACL retrieval
-
-					console.log( blogPostACL.grants( editorsRole, CS.Class.Upload ) ); // null, the ACL doesn't have a specific rule about this combination
-					console.log( blogPostACL.denies( editorsRole, CS.Class.Upload ) ); // null, same
-
-					blogPostACL.grant( editorsRole, CS.Class.Role, [
-						CS.Class.Read,
-						CS.Class.Update,
-						CS.Class.Delete,
-						CS.Class.Upload
-					] );
-
-					console.log( blogPostACL.grants( editorsRole, CS.Class.Upload ) ); // true
-					console.log( blogPostACL.denies( editorsRole, CS.Class.Upload ) ); // false
-
-					blogPostACL.deny( editorsRole, CS.Class.Role, CS.Class.Upload ); // We won't allow editors to upload files directly to the blog post
-
-					console.log( blogPostACL.grants( editorsRole, CS.Class.Upload ) ); // false
-					console.log( blogPostACL.denies( editorsRole, CS.Class.Upload ) ); // true
-
-					blogPostACL.save().then(
-						( response:HTTP.Response.Class ) => &#123;
-							// ...
-						&#125;
-					).catch( console.error );
-				</code></pre>
-
-			</tab>
-			<tab title="JavaScript ES2015">
-
-				<pre><code class="javascript">
-					import * as CS from "carbonldp/NS/CS";
-
-					let editorsRole;
-
-					// .. role retrieval
-
-					let blogPostACL;
-
-					// ... ACL retrieval
-
-					console.log( blogPostACL.grants( editorsRole, CS.Class.Upload ) ); // null, the ACL doesn't have a specific rule about this combination
-					console.log( blogPostACL.denies( editorsRole, CS.Class.Upload ) ); // null, same
-
-					blogPostACL.grant( editorsRole, CS.Class.Role, [
-						CS.Class.Read,
-						CS.Class.Update,
-						CS.Class.Delete,
-						CS.Class.Upload
-					] );
-
-					console.log( blogPostACL.grants( editorsRole, CS.Class.Upload ) ); // true
-					console.log( blogPostACL.denies( editorsRole, CS.Class.Upload ) ); // false
-
-					blogPostACL.deny( editorsRole, CS.Class.Role, CS.Class.Upload ); // We won't allow editors to upload files directly to the blog post
-
-					console.log( blogPostACL.grants( editorsRole, CS.Class.Upload ) ); // false
-					console.log( blogPostACL.denies( editorsRole, CS.Class.Upload ) ); // true
-
-					blogPostACL.save().then(
-						( response ) => &#123;
-							// ...
-						&#125;
-					).catch( console.error );
-				</code></pre>
-
-			</tab>
-			<tab title="JavaScript ES5">
-
-				<pre><code class="javascript">
-					var editorsRole;
-
-					// .. role retrieval
-
-					var blogPostACL;
-
-					// ... ACL retrieval
-
-					console.log( blogPostACL.grants( editorsRole, CS.Class.Upload ) ); // null, the ACL doesn't have a specific rule about this combination
-					console.log( blogPostACL.denies( editorsRole, CS.Class.Upload ) ); // null, same
-
-					blogPostACL.grant( editorsRole, CS.Class.Role, [
-						CS.Class.Read,
-						CS.Class.Update,
-						CS.Class.Delete,
-						CS.Class.Upload
-					] );
-
-					console.log( blogPostACL.grants( editorsRole, CS.Class.Upload ) ); // true
-					console.log( blogPostACL.denies( editorsRole, CS.Class.Upload ) ); // false
-
-					blogPostACL.deny( editorsRole, CS.Class.Role, CS.Class.Upload ); // We won't allow editors to upload files directly to the blog post
-
-					console.log( blogPostACL.grants( editorsRole, CS.Class.Upload ) ); // false
-					console.log( blogPostACL.denies( editorsRole, CS.Class.Upload ) ); // true
-
-					blogPostACL.save().then(
-						function( response ) &#123;
-							// ...
-						&#125;
-					).catch( console.error );
-				</code></pre>
-
-			</tab>
-		</tabs>
-	</section>
-	<section class="mainContent-subSection">
-		<h3>Inheritance</h3>
-		<p>
-			<a href="https://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Auth-PersistedACL-Class-grant" target="_blank" rel="noopener"><code>grant</code></a> and
-			<a href="https://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Auth-PersistedACL-Class-deny" target="_blank" rel="noopener"><code>deny</code></a> will only apply rules
-			where the <strong>object</strong> is the document owner of the ACL. But an ACL can also contain rules that will apply to all of the document's children (and the
-			children of its children, and so on).
-		</p>
-		<p>
-			This can be done by using the
-			<a href="https://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Auth-PersistedACL-Class-configureChildInheritance" target="_blank" rel="noopener"><code>
-					configureChildInheritance</code></a> method. It's usage is basically the same, except that we need to specify whether the inheritance will grant or deny the
-			permissions:
-		</p>
-		<tabs>
-			<tab title="TypeScript">
-
-				<pre><code class="typescript">
-					import * as CS from "carbonldp/NS/CS";
-					import * as HTTP from "carbonldp/HTTP";
-					import * as PersistedACL from "carbonldp/Auth/PersistedACL";
-					import * as PersistedRole from "carbonldp/Auth/PersistedRole";
-
-					let editorsRole:PersistedRole.Class;
-
-					// .. role retrieval
-
-					// Instead of affecting only one blog post, we'll set the permissions on the parent of all blog posts to apply rules to all of them
-					let blogPostsACL:PersistedACL.Class;
-
-					// ... ACL retrieval
-
-					console.log( blogPostACL.getChildInheritance( editorsRole, CS.Class.Read ) ); // null, the ACL doesn't have a rule for this combination
-
-					blogPostACL.configureChildInheritance( true, editorsRole, CS.Class.Role, [
-						CS.Class.Read,
-						CS.Class.Update,
-						CS.Class.Delete
-					] );
-
-					// We won't allow editors to upload files directly to blog posts
-					blogPostACL.configureChildInheritance( false, editorsRole, CS.Class.Role, CS.Class.Upload );
-
-					console.log( blogPostACL.getChildInheritance( editorsRole, CS.Class.Read ) ); // true, the ACL is granting the permission
-					console.log( blogPostACL.getChildInheritance( editorsRole, CS.Class.Upload ) ); // false, the ACL is denying the permission
-
-					blogPostACL.save().then(
-						( response:HTTP.Response.Class ) => &#123;
-							// ...
-						&#125;
-					).catch( console.error );
-				</code></pre>
-
-			</tab>
-			<tab title="JavaScript ES2015">
-
-				<pre><code class="javascript">
-					import * as CS from "carbonldp/NS/CS";
-
-					let editorsRole;
-
-					// .. role retrieval
-
-					// Instead of affecting only one blog post, we'll set the permissions on the parent of all blog posts to apply rules to all of them
-					let blogPostsACL;
-
-					// ... ACL retrieval
-
-					console.log( blogPostACL.getChildInheritance( editorsRole, CS.Class.Read ) ); // null, the ACL doesn't have a rule for this combination
-
-					blogPostACL.configureChildInheritance( true, editorsRole, CS.Class.Role, [
-						CS.Class.Read,
-						CS.Class.Update,
-						CS.Class.Delete
-					] );
-
-					// We won't allow editors to upload files directly to blog posts
-					blogPostACL.configureChildInheritance( false, editorsRole, CS.Class.Role, CS.Class.Upload );
-
-					console.log( blogPostACL.getChildInheritance( editorsRole, CS.Class.Read ) ); // true, the ACL is granting the permission
-					console.log( blogPostACL.getChildInheritance( editorsRole, CS.Class.Upload ) ); // false, the ACL is denying the permission
-
-					blogPostACL.save().then(
-						( response ) => &#123;
-							// ...
-						&#125;
-					).catch( console.error );
-				</code></pre>
-
-			</tab>
-			<tab title="JavaScript ES5">
-
-				<pre><code class="javascript">
-					var editorsRole;
-
-					// .. role retrieval
-
-					// Instead of affecting only one blog post, we'll set the permissions on the parent of all blog posts to apply rules to all of them
-					var blogPostsACL;
-
-					// ... ACL retrieval
-
-					console.log( blogPostACL.getChildInheritance( editorsRole, CS.Class.Read ) ); // null, the ACL doesn't have a rule for this combination
-
-					blogPostACL.configureChildInheritance( true, editorsRole, CS.Class.Role, [
-						CS.Class.Read,
-						CS.Class.Update,
-						CS.Class.Delete
-					] );
-
-					// We won't allow editors to upload files directly to blog posts
-					blogPostACL.configureChildInheritance( false, editorsRole, CS.Class.Role, CS.Class.Upload );
-
-					console.log( blogPostACL.getChildInheritance( editorsRole, CS.Class.Read ) ); // true, the ACL is granting the permission
-					console.log( blogPostACL.getChildInheritance( editorsRole, CS.Class.Upload ) ); // false, the ACL is denying the permission
-
-					blogPostACL.save().then(
-						function( response ) &#123;
-							// ...
-						&#125;
-					).catch( console.error );
-				</code></pre>
-
-			</tab>
-		</tabs>
-	</section>
-	<div class="ui info message">
-		<div class="header">Note</div>
-		<div class="content">
-			<p>
-				The methods: <a href="https://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Auth-PersistedACL-Class-grant" target="_blank" rel="noopener"><code>grant</code></a>,
-				<a href="https://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Auth-PersistedACL-Class-deny" target="_blank" rel="noopener"><code>deny</code></a> or
-				<a href="https://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Auth-PersistedACL-Class-getChildInheritance" target="_blank" rel="noopener"><code>
-						getChildInheritance</code></a> will only give you information about the rules that ACL has about the document. <strong>Their output won't be affected by
-					inheritance</strong>.
-			</p>
-			<p>We are working on an API to ease retrieving what permissions are granted on a document independently on why they are granted.</p>
-		</div>
-	</div>
-</section>
-<div class="documentation-steps ui fluid steps">
-	<a class="step" href="../authentication">
-		<i class="arrow left icon"></i>
-		<div class="content">
-			<div class="title">Previous</div>
-			<div class="description">Authentication</div>
-		</div>
-	</a>
-	<div class="active completed step">
-		<!--<i class="payment icon"></i>-->
-		<div class="content">
-			<div class="title">Authorization</div>
-		</div>
-	</div>
-	<a class="step" href="../access-points">
-		<i class="arrow right icon"></i>
-		<div class="content">
-			<div class="title">Next</div>
-			<div class="description">Access points</div>
-		</div>
-	</a>
-</div>
+<p>
+	We are doing our best to catch up quickly with the documentation. If you have questions regarding
+	this topic you can always ask us directly through our community. See how <a href="/community-and-support">here</a>
+</p>
+<!--<div class="ui mobile only grid">-->
+	<!--<div class="row">-->
+		<!--<staticContentMenu content="mainContent"></staticContentMenu>-->
+	<!--</div>-->
+<!--</div>-->
+<!--<section class="mainContent-section">-->
+	<!--<h2 class="hidden">Introduction</h2>-->
+	<!--<p>Authorization refers to the rules that dictate whether a user can or can't do certain actions. This rules take the form of: <strong>someone</strong> can <strong>do-->
+			<!--something</strong>, <strong>somewhere</strong>, or more generically: a <strong>subject</strong> has a <strong>permission</strong> on an <strong>object</strong>.</p>-->
+<!--</section>-->
+<!--<section class="mainContent-section">-->
+	<!--<h2>Roles</h2>-->
+	<!--<p>We've talked about one of the possible objects that can act as a subject: users. But creating rules for a single user would be too specific for most use cases.-->
+		<!--Normally, rules are created by stating that a <strong>group</strong> of users can or can't do something. E.g. "The <em>editors</em> can edit these documents", "The-->
+		<!--<em>readers</em> can read these other documents", etc.</p>-->
+	<!--<p>These groups are commonly named after their "role" on the application and they are only meaningful in the context of the application itself.</p>-->
+	<!--<p>In Carbon, roles have a hierarchical structure. This structure starts with the <code>admin/</code> role which is created automatically by the platform.</p>-->
+	<!--<p>This role should only be used by developers, as being a member of it gives access to every document the application contains.</p>-->
+	<!--<section class="mainContent-subSection">-->
+		<!--<h3>Creating a role</h3>-->
+		<!--<p>The first thing to do when structuring your application's security scheme, is identify and create all the roles needed for your application.</p>-->
+		<!--<p>Once the roles are identified, they can be created with the <a href="https://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Auth-Roles-Class-createChild" target="_blank"-->
+		                                                                  <!--rel="noopener"><code>createChild</code></a> method of the-->
+			<!--<a href="https://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Auth-Roles-Class" target="_blank" rel="noopener"><code>auth.roles</code></a> service-->
+			<!--of the application context. This method is very similar to the-->
+			<!--<a href="https://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Documents-Class" target="_blank" rel="noopener"><code>documents</code></a> service's-->
+			<!--<a href="https://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Documents-Class-createChild" target="_blank" rel="noopener"><code>createChild</code></a> method (which we-->
+			<!--already covered). It accepts the parent role (its slug, complete id or the actual role document) as the first parameter, the object that will be used to-->
+			<!--create the new role's document (remember, everything's a document!), and an optional slug:</p>-->
+		<!--<tabs>-->
+			<!--<tab title="TypeScript">-->
+
+				<!--<pre><code class="typescript">-->
+					<!--import * as HTTP from "carbonldp/HTTP";-->
+
+					<!--let carbon:Carbon;-->
+
+					<!--// ... initialize your Carbon object-->
+
+					<!--// Provide a human friendly name for the role-->
+					<!--let role:Auth.Role.Class = Auth.Role.Factory.create( "Editors" );-->
+
+
+					<!--carbon.auth.roles.createChild( "admin/", role, "editors/" ).then(-->
+						<!--( [ editorsRole, responses ]:[ Auth.PersistedRole.Class, HTTP.Response.Class[] ] ) => &#123;-->
+							<!--// ...-->
+						<!--&#125;-->
+					<!--).catch( console.error );-->
+				<!--</code></pre>-->
+
+			<!--</tab>-->
+			<!--<tab title="JavaScript ES2015">-->
+
+				<!--<pre><code class="javascript">-->
+					<!--let carbon;-->
+
+					<!--// ... initialize your Carbon object-->
+
+					<!--// Provide a human friendly name for the role-->
+					<!--let role = Auth.Role.Factory.create( "Editors" );-->
+
+					<!--carbon.auth.roles.createChild( "admin/", role, "editors/" ).then(-->
+						<!--( [ editorsRole, responses ] ) => &#123;-->
+							<!--// ...-->
+						<!--&#125;-->
+					<!--).catch( console.error );-->
+				<!--</code></pre>-->
+
+			<!--</tab>-->
+			<!--<tab title="JavaScript ES5">-->
+
+				<!--<pre><code class="javascript">-->
+					<!--var carbon;-->
+
+					<!--// ... initialize your Carbon object-->
+
+					<!--// Provide a human friendly name for the role-->
+					<!--var role = Auth.Role.Factory.create( "Editors" );-->
+
+					<!--carbon.auth.roles.createChild( "admin/", role, "editors/" ).then(-->
+						<!--function( [ editorsRole, responses ] ) &#123;-->
+							<!--// ...-->
+						<!--&#125;-->
+					<!--).catch( console.error );-->
+				<!--</code></pre>-->
+
+			<!--</tab>-->
+		<!--</tabs>-->
+		<!--<p>As you can see, the previous example is very similar to how a normal document is created. All patterns that applied there apply here too. For example, if you-->
+			<!--retrieve a <a href="https://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Auth-PersistedRole-Class" target="_blank" rel="noopener"><code>PersistedRole</code></a>-->
+			<!--document, you can call its <a href="https://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Auth-PersistedRole-Class-createChild" target="_blank"-->
+			                              <!--rel="noopener"><code>createChild-->
+				<!--</code></a> method just like you would do it with the-->
+			<!--<a href="https://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Auth-Roles-Class" target="_blank" rel="noopener"><code>auth.roles</code></a> service (without-->
+			<!--specifying the parent).-->
+		<!--</p>-->
+	<!--</section>-->
+	<!--<section class="mainContent-subSection">-->
+		<!--<h3>Adding users to a role</h3>-->
+		<!--<p>A role is just a group of users that represents a functional "role" in the application. Therefore, the roles won't do much unless we add users to them-->
+			<!--. This can be done through the method <a href="https://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Auth-Roles-Class-addUser" target="_blank"-->
+			                                         <!--rel="noopener"><code>addUser</code></a> or <a-->
+				<!--href="https://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Auth-Roles-Class-addUsers" target="_blank" rel="noopener"><code>addUsers</code></a> of the-->
+			<!--<a href="https://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Auth-Roles-Class" target="_blank" rel="noopener"><code>auth.roles</code></a> service (or of a-->
+			<!--<a href="https://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Auth-PersistedRole-Class" target="_blank" rel="noopener"><code>PersistedRole</code></a> document):-->
+		<!--</p>-->
+		<!--<tabs>-->
+			<!--<tab title="TypeScript">-->
+
+				<!--<pre><code class="typescript">-->
+					<!--import * as HTTP from "carbonldp/HTTP";-->
+
+					<!--let carbon:Carbon;-->
+
+					<!--// ... initialize your Carbon object-->
+
+					<!--carbon.auth.roles.addUser( "editors/", "john-smith/" ).then(-->
+						<!--( response:HTTP.Response.Class ) => &#123;-->
+							<!--// ...-->
+						<!--&#125;-->
+					<!--).catch( console.error );-->
+				<!--</code></pre>-->
+
+			<!--</tab>-->
+			<!--<tab title="JavaScript ES2015">-->
+
+				<!--<pre><code class="javascript">-->
+					<!--// ... imports-->
+
+					<!--let carbon;-->
+
+					<!--// ... initialize your Carbon object-->
+
+					<!--carbon.auth.roles.addUser( "editors/", "john-smith/" ).then(-->
+						<!--( response ) => &#123;-->
+							<!--// ...-->
+						<!--&#125;-->
+					<!--).catch( console.error );-->
+				<!--</code></pre>-->
+
+			<!--</tab>-->
+			<!--<tab title="JavaScript ES5">-->
+
+				<!--<pre><code class="javascript">-->
+					<!--// ... imports-->
+
+					<!--var carbon;-->
+
+					<!--// ... initialize your Carbon object-->
+
+					<!--appContext.auth.roles.addUser( "editors/", "john-smith/" ).then(-->
+						<!--function( response ) &#123;-->
+							<!--// ...-->
+						<!--&#125;-->
+					<!--).catch( console.error );-->
+				<!--</code></pre>-->
+
+			<!--</tab>-->
+		<!--</tabs>-->
+		<!--<p>Like almost all methods in the SDK, to reference a document (in this case an user), you can use its relative id, its absolute id, or the actual document object-->
+			<!--(resolved or unresolved).</p>-->
+	<!--</section>-->
+<!--</section>-->
+<!--<section class="mainContent-section">-->
+	<!--<h2>Permissions</h2>-->
+	<!--<p>Now that we've talked about the possible subjects, it's time to talk about the possible actions. These actions are represented by <strong>permissions</strong> in Carbon.</p>-->
+	<!--<p>They can be referenced in code through the <a href="https://carbonldp.github.io/carbonldp-js-sdk/#Carbon-NS-CS-Class"><code>Carbon.NS.CS.Class</code></a> object:</p>-->
+	<!--<tabs>-->
+		<!--<tab title="TypeScript">-->
+
+			<!--<pre><code class="typescript">-->
+				<!--import * as CS from "carbonldp/NS/CS";-->
+
+				<!--console.log( CS.Class.Read ); // id of the Read permission-->
+			<!--</code></pre>-->
+
+		<!--</tab>-->
+		<!--<tab title="JavaScript ES2015">-->
+
+			<!--<pre><code class="javascript">-->
+				<!--import * as CS from "carbonldp/NS/CS";-->
+
+				<!--console.log( CS.Class.Read ); // id of the Read permission-->
+			<!--</code></pre>-->
+
+		<!--</tab>-->
+		<!--<tab title="JavaScript ES5">-->
+
+			<!--<pre><code class="javascript">-->
+				<!--console.log( Carbon.NS.CS.Class.Read ); // id of the Read permission-->
+			<!--</code></pre>-->
+
+		<!--</tab>-->
+	<!--</tabs>-->
+	<!--<p>Here's a list of all the permissions in Carbon:</p>-->
+	<!--<ul>-->
+		<!--<li>-->
+			<!--<strong>Read</strong>: Retrieve a document through methods like-->
+			<!--<a href="https://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Documents-Class" target="_blank" rel="noopener"><code>documents</code></a> service's-->
+			<!--<a href="https://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Documents-Class-get" target="_blank" rel="noopener"><code>get</code></a> method-->
+		<!--</li>-->
+		<!--<li><strong>Download</strong>: Download a file</li>-->
+		<!--<li>-->
+			<!--<strong>Update</strong>: Modify a document and persist the changes, for example with the-->
+			<!--<a href="https://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Documents-Class" target="_blank" rel="noopener"><code>documents</code></a> service's-->
+			<!--<a href="https://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Documents-Class-save" target="_blank" rel="noopener"><code>save</code></a> method-->
+		<!--</li>-->
+		<!--<li><strong>ManageSecurity</strong>: Modify a document's ACL (read ACL section)</li>-->
+		<!--<li>-->
+			<!--<strong>CreateChild</strong>: Create children of a document, for example with the-->
+			<!--<a href="https://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Documents-Class" target="_blank" rel="noopener"><code>documents</code></a> service's-->
+			<!--<a href="https://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Documents-Class-createChild" target="_blank" rel="noopener"><code>createChild</code></a> method-->
+		<!--</li>-->
+		<!--<li>-->
+			<!--<strong>CreateAccessPoint</strong>: Create access points of a document, for example with the-->
+			<!--<a href="https://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Documents-Class" target="_blank" rel="noopener"><code>documents</code></a> service's-->
+			<!--<a href="https://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Documents-Class-createAccessPoint" target="_blank" rel="noopener"><code>createAccessPoint</code></a> method-->
+		<!--</li>-->
+		<!--<li>-->
+			<!--<strong>Upload</strong>: Upload a file on a document, for example with the-->
+			<!--<a href="https://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Documents-Class" target="_blank" rel="noopener"><code>documents</code></a> service's-->
+			<!--<a href="https://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Documents-Class-upload" target="_blank" rel="noopener"><code>upload</code></a> method-->
+		<!--</li>-->
+		<!--<li>-->
+			<!--<strong>AddMember</strong>: Add a member to a document, for example with the-->
+			<!--<a href="https://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Documents-Class" target="_blank" rel="noopener"><code>documents</code></a> service's-->
+			<!--<a href="https://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Documents-Class-addMember" target="_blank" rel="noopener"><code>addMember</code></a> method-->
+		<!--</li>-->
+		<!--<li>-->
+			<!--<strong>RemoveMember</strong>: Remove a member of a document, for example with the-->
+			<!--<a href="https://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Documents-Class" target="_blank" rel="noopener"><code>documents</code></a> service's-->
+			<!--<a href="https://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Documents-Class-removeMember" target="_blank" rel="noopener"><code>removeMember</code></a> method-->
+		<!--</li>-->
+		<!--<li>-->
+			<!--<strong>Delete</strong>: Delete a document, for example with the-->
+			<!--<a href="https://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Documents-Class" target="_blank" rel="noopener"><code>documents</code></a> service's-->
+			<!--<a href="https://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Documents-Class-delete" target="_blank" rel="noopener"><code>delete</code></a> method-->
+		<!--</li>-->
+	<!--</ul>-->
+<!--</section>-->
+<!--<section class="mainContent-section">-->
+	<!--<h2>ACLs</h2>-->
+	<!--<p>Finally, its time to talk about the <strong>objects</strong> where the <strong>subjects</strong> have <strong>permissions</strong> on. These objects as you may have-->
+		<!--guessed are any Carbon document available in an application.</p>-->
+	<!--<p>These documents store their security schema in what's called ACLs (or Access Control List). Which store the rules we've been talking about that apply to the document-->
+		<!--itself and to its children.</p>-->
+	<!--<section class="mainContent-subSection">-->
+		<!--<h3>Retrieving an ACL</h3>-->
+		<!--<p>To retrieve a document's ACL you can use the-->
+			<!--<a href="https://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Documents-Class" target="_blank" rel="noopener"><code>documents</code></a> service's-->
+			<!--<a href="https://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Documents-Class-getACL" target="_blank" rel="noopener"><code>getACL</code></a> method:-->
+		<!--</p>-->
+		<!--<tabs>-->
+			<!--<tab title="TypeScript">-->
+
+				<!--<pre><code class="typescript">-->
+					<!--import * as HTTP from "carbonldp/HTTP";-->
+					<!--import * as PersistedACL from "carbonldp/PersistedACL";-->
+
+					<!--let carbon:Carbon;-->
+
+					<!--// ... initialize your Carbon object-->
+
+					<!--carbon.documents.getACL( "some-document/" ).then(-->
+						<!--( [ acl, response ]:[ PersistedACL.Class, HTTP.Response.Class ] ) => &#123;-->
+							<!--// ...-->
+						<!--&#125;-->
+					<!--).catch( console.error );-->
+				<!--</code></pre>-->
+
+			<!--</tab>-->
+			<!--<tab title="JavaScript ES2015">-->
+
+				<!--<pre><code class="javascript">-->
+					<!--// ... imports-->
+
+					<!--let carbon;-->
+
+					<!--// ... initialize your Carbon object-->
+
+					<!--carbon.documents.getACL( "some-document/" ).then(-->
+						<!--( [ acl, response ] ) => &#123;-->
+							<!--// ...-->
+						<!--&#125;-->
+					<!--).catch( console.error );-->
+				<!--</code></pre>-->
+
+			<!--</tab>-->
+			<!--<tab title="JavaScript ES5">-->
+
+				<!--<pre><code class="javascript">-->
+					<!--// ... imports-->
+
+					<!--var carbon;-->
+
+					<!--// ... initialize your Carbon object-->
+
+					<!--carbon.documents.getACL( "some-document/" ).then(-->
+						<!--function( [ acl, response ] ) &#123;-->
+							<!--// ...-->
+						<!--&#125;-->
+					<!--).catch( console.error );-->
+				<!--</code></pre>-->
+
+			<!--</tab>-->
+		<!--</tabs>-->
+		<!--<p>-->
+			<!--Or you can also use the <a href="https://carbonldp.github.io/carbonldp-js-sdk/#Carbon-PersistedProtectedDocument-Class" target="_blank"-->
+			                           <!--rel="noopener"><code>PersistedProtectedDocument</code></a>-->
+			<!--<a href="https://carbonldp.github.io/carbonldp-js-sdk/#Carbon-PersistedProtectedDocument-Class-getACL" target="_blank" rel="noopener"><code>getACL</code></a> method.-->
+			<!--Any document is a <a href="https://carbonldp.github.io/carbonldp-js-sdk/#Carbon-PersistedProtectedDocument-Class" target="_blank"-->
+			                     <!--rel="noopener"><code>PersistedProtectedDocument</code></a> (except for ACLs).-->
+		<!--</p>-->
+		<!--<tabs>-->
+			<!--<tab title="TypeScript">-->
+
+				<!--<pre><code class="typescript">-->
+					<!--import * as HTTP from "carbonldp/HTTP";-->
+					<!--import * as PersistedACL from "carbonldp/PersistedACL";-->
+					<!--import * as PersistedProtectedDocument from "carbonldp/PersistedProtectedDocument";-->
+
+					<!--let carbon:Carbon;-->
+
+					<!--// ... initialize your Carbon object-->
+
+					<!--carbon.documents.get( "some-document/" ).then(-->
+						<!--( [ someDocument, response ]:[ PersistedProtectedDocument.Class, HTTP.Response.Class ] ) => &#123;-->
+							<!--return someDocument.getACL();-->
+						<!--&#125;-->
+					<!--).then(-->
+						<!--( [ someDocumentACL, response ]:[ PersistedACL.Class, HTTP.Response.Class ] ) => &#123;-->
+							<!--// ...-->
+						<!--&#125;-->
+					<!--).catch( console.error );-->
+				<!--</code></pre>-->
+
+			<!--</tab>-->
+			<!--<tab title="JavaScript ES2015">-->
+
+				<!--<pre><code class="javascript">-->
+					<!--// ... imports-->
+
+					<!--let carbon;-->
+
+					<!--// ... initialize your Carbon object-->
+
+					<!--carbon.documents.get( "some-document/" ).then(-->
+						<!--( [ someDocument, response ] ) => &#123;-->
+							<!--return someDocument.getACL();-->
+						<!--&#125;-->
+					<!--).then(-->
+						<!--( [ someDocumentACL, response ] ) => &#123;-->
+							<!--// ...-->
+						<!--&#125;-->
+					<!--).catch( console.error );-->
+				<!--</code></pre>-->
+
+			<!--</tab>-->
+			<!--<tab title="JavaScript ES5">-->
+
+				<!--<pre><code class="javascript">-->
+					<!--var carbon;-->
+
+					<!--// ... initialize your Carbon object-->
+
+					<!--carbon.documents.get( "some-document/" ).then(-->
+						<!--function( [ someDocument, response ] ) &#123;-->
+							<!--return someDocument.getACL();-->
+						<!--&#125;-->
+					<!--).then(-->
+						<!--function( [ someDocumentACL, response ] ) &#123;-->
+							<!--// ...-->
+						<!--&#125;-->
+					<!--).catch( console.error );-->
+				<!--</code></pre>-->
+
+			<!--</tab>-->
+		<!--</tabs>-->
+		<!--<p>This can be more expensive or cheaper depending on if you have already retrieved the document or not.</p>-->
+	<!--</section>-->
+	<!--<section class="mainContent-subSection">-->
+		<!--<h3>Granting or denying permissions</h3>-->
+		<!--<p>-->
+			<!--Once you have retrieved a document's ACL you can start granting permissions to subjects or denying them. This can be done with the-->
+			<!--<a href="https://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Auth-PersistedACL-Class" target="_blank"-->
+			   <!--rel="noopener"><code>PersistedACL</code></a>'s-->
+			<!--<a href="https://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Auth-PersistedACL-Class-grant" target="_blank" rel="noopener"><code>grant</code></a> method and-->
+			<!--<a href="https://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Auth-PersistedACL-Class" target="_blank"-->
+			   <!--rel="noopener"><code>PersistedACL</code></a>'s-->
+			<!--<a href="https://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Auth-PersistedACL-Class-deny" target="_blank" rel="noopener"><code>deny</code></a> method respectively.-->
+		<!--</p>-->
+		<!--<p>-->
+			<!--In these methods both the subject and permission(s) need to be specified, along with the subject's type:-->
+			<!--<a href="https://carbonldp.github.io/carbonldp-js-sdk/#Carbon-NS-CS-Class+User"><code>Carbon.NS.CS.Class.User</code></a> or-->
+			<!--<a href="https://carbonldp.github.io/carbonldp-js-sdk/#Carbon-NS-CS-Class+Role"><code>Carbon.NS.CS.Class.Role</code></a>-->
+		<!--</p>-->
+		<!--<p>Like with any other document, don't forget to save the ACL's state after modifying it:</p>-->
+		<!--<tabs>-->
+			<!--<tab title="TypeScript">-->
+
+				<!--<pre><code class="typescript">-->
+					<!--import * as CS from "carbonldp/NS/CS";-->
+					<!--import * as HTTP from "carbonldp/HTTP";-->
+					<!--import * as PersistedACL from "carbonldp/Auth/PersistedACL";-->
+					<!--import * as PersistedRole from "carbonldp/Auth/PersistedRole";-->
+
+					<!--let editorsRole:PersistedRole.Class;-->
+
+					<!--// .. role retrieval-->
+
+					<!--let blogPostACL:PersistedACL.Class;-->
+
+					<!--// ... ACL retrieval-->
+
+					<!--console.log( blogPostACL.grants( editorsRole, CS.Class.Upload ) ); // null, the ACL doesn't have a specific rule about this combination-->
+					<!--console.log( blogPostACL.denies( editorsRole, CS.Class.Upload ) ); // null, same-->
+
+					<!--blogPostACL.grant( editorsRole, CS.Class.Role, [-->
+						<!--CS.Class.Read,-->
+						<!--CS.Class.Update,-->
+						<!--CS.Class.Delete,-->
+						<!--CS.Class.Upload-->
+					<!--] );-->
+
+					<!--console.log( blogPostACL.grants( editorsRole, CS.Class.Upload ) ); // true-->
+					<!--console.log( blogPostACL.denies( editorsRole, CS.Class.Upload ) ); // false-->
+
+					<!--blogPostACL.deny( editorsRole, CS.Class.Role, CS.Class.Upload ); // We won't allow editors to upload files directly to the blog post-->
+
+					<!--console.log( blogPostACL.grants( editorsRole, CS.Class.Upload ) ); // false-->
+					<!--console.log( blogPostACL.denies( editorsRole, CS.Class.Upload ) ); // true-->
+
+					<!--blogPostACL.save().then(-->
+						<!--( response:HTTP.Response.Class ) => &#123;-->
+							<!--// ...-->
+						<!--&#125;-->
+					<!--).catch( console.error );-->
+				<!--</code></pre>-->
+
+			<!--</tab>-->
+			<!--<tab title="JavaScript ES2015">-->
+
+				<!--<pre><code class="javascript">-->
+					<!--import * as CS from "carbonldp/NS/CS";-->
+
+					<!--let editorsRole;-->
+
+					<!--// .. role retrieval-->
+
+					<!--let blogPostACL;-->
+
+					<!--// ... ACL retrieval-->
+
+					<!--console.log( blogPostACL.grants( editorsRole, CS.Class.Upload ) ); // null, the ACL doesn't have a specific rule about this combination-->
+					<!--console.log( blogPostACL.denies( editorsRole, CS.Class.Upload ) ); // null, same-->
+
+					<!--blogPostACL.grant( editorsRole, CS.Class.Role, [-->
+						<!--CS.Class.Read,-->
+						<!--CS.Class.Update,-->
+						<!--CS.Class.Delete,-->
+						<!--CS.Class.Upload-->
+					<!--] );-->
+
+					<!--console.log( blogPostACL.grants( editorsRole, CS.Class.Upload ) ); // true-->
+					<!--console.log( blogPostACL.denies( editorsRole, CS.Class.Upload ) ); // false-->
+
+					<!--blogPostACL.deny( editorsRole, CS.Class.Role, CS.Class.Upload ); // We won't allow editors to upload files directly to the blog post-->
+
+					<!--console.log( blogPostACL.grants( editorsRole, CS.Class.Upload ) ); // false-->
+					<!--console.log( blogPostACL.denies( editorsRole, CS.Class.Upload ) ); // true-->
+
+					<!--blogPostACL.save().then(-->
+						<!--( response ) => &#123;-->
+							<!--// ...-->
+						<!--&#125;-->
+					<!--).catch( console.error );-->
+				<!--</code></pre>-->
+
+			<!--</tab>-->
+			<!--<tab title="JavaScript ES5">-->
+
+				<!--<pre><code class="javascript">-->
+					<!--var editorsRole;-->
+
+					<!--// .. role retrieval-->
+
+					<!--var blogPostACL;-->
+
+					<!--// ... ACL retrieval-->
+
+					<!--console.log( blogPostACL.grants( editorsRole, CS.Class.Upload ) ); // null, the ACL doesn't have a specific rule about this combination-->
+					<!--console.log( blogPostACL.denies( editorsRole, CS.Class.Upload ) ); // null, same-->
+
+					<!--blogPostACL.grant( editorsRole, CS.Class.Role, [-->
+						<!--CS.Class.Read,-->
+						<!--CS.Class.Update,-->
+						<!--CS.Class.Delete,-->
+						<!--CS.Class.Upload-->
+					<!--] );-->
+
+					<!--console.log( blogPostACL.grants( editorsRole, CS.Class.Upload ) ); // true-->
+					<!--console.log( blogPostACL.denies( editorsRole, CS.Class.Upload ) ); // false-->
+
+					<!--blogPostACL.deny( editorsRole, CS.Class.Role, CS.Class.Upload ); // We won't allow editors to upload files directly to the blog post-->
+
+					<!--console.log( blogPostACL.grants( editorsRole, CS.Class.Upload ) ); // false-->
+					<!--console.log( blogPostACL.denies( editorsRole, CS.Class.Upload ) ); // true-->
+
+					<!--blogPostACL.save().then(-->
+						<!--function( response ) &#123;-->
+							<!--// ...-->
+						<!--&#125;-->
+					<!--).catch( console.error );-->
+				<!--</code></pre>-->
+
+			<!--</tab>-->
+		<!--</tabs>-->
+	<!--</section>-->
+	<!--<section class="mainContent-subSection">-->
+		<!--<h3>Inheritance</h3>-->
+		<!--<p>-->
+			<!--<a href="https://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Auth-PersistedACL-Class-grant" target="_blank" rel="noopener"><code>grant</code></a> and-->
+			<!--<a href="https://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Auth-PersistedACL-Class-deny" target="_blank" rel="noopener"><code>deny</code></a> will only apply rules-->
+			<!--where the <strong>object</strong> is the document owner of the ACL. But an ACL can also contain rules that will apply to all of the document's children (and the-->
+			<!--children of its children, and so on).-->
+		<!--</p>-->
+		<!--<p>-->
+			<!--This can be done by using the-->
+			<!--<a href="https://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Auth-PersistedACL-Class-configureChildInheritance" target="_blank" rel="noopener"><code>-->
+					<!--configureChildInheritance</code></a> method. It's usage is basically the same, except that we need to specify whether the inheritance will grant or deny the-->
+			<!--permissions:-->
+		<!--</p>-->
+		<!--<tabs>-->
+			<!--<tab title="TypeScript">-->
+
+				<!--<pre><code class="typescript">-->
+					<!--import * as CS from "carbonldp/NS/CS";-->
+					<!--import * as HTTP from "carbonldp/HTTP";-->
+					<!--import * as PersistedACL from "carbonldp/Auth/PersistedACL";-->
+					<!--import * as PersistedRole from "carbonldp/Auth/PersistedRole";-->
+
+					<!--let editorsRole:PersistedRole.Class;-->
+
+					<!--// .. role retrieval-->
+
+					<!--// Instead of affecting only one blog post, we'll set the permissions on the parent of all blog posts to apply rules to all of them-->
+					<!--let blogPostsACL:PersistedACL.Class;-->
+
+					<!--// ... ACL retrieval-->
+
+					<!--console.log( blogPostACL.getChildInheritance( editorsRole, CS.Class.Read ) ); // null, the ACL doesn't have a rule for this combination-->
+
+					<!--blogPostACL.configureChildInheritance( true, editorsRole, CS.Class.Role, [-->
+						<!--CS.Class.Read,-->
+						<!--CS.Class.Update,-->
+						<!--CS.Class.Delete-->
+					<!--] );-->
+
+					<!--// We won't allow editors to upload files directly to blog posts-->
+					<!--blogPostACL.configureChildInheritance( false, editorsRole, CS.Class.Role, CS.Class.Upload );-->
+
+					<!--console.log( blogPostACL.getChildInheritance( editorsRole, CS.Class.Read ) ); // true, the ACL is granting the permission-->
+					<!--console.log( blogPostACL.getChildInheritance( editorsRole, CS.Class.Upload ) ); // false, the ACL is denying the permission-->
+
+					<!--blogPostACL.save().then(-->
+						<!--( response:HTTP.Response.Class ) => &#123;-->
+							<!--// ...-->
+						<!--&#125;-->
+					<!--).catch( console.error );-->
+				<!--</code></pre>-->
+
+			<!--</tab>-->
+			<!--<tab title="JavaScript ES2015">-->
+
+				<!--<pre><code class="javascript">-->
+					<!--import * as CS from "carbonldp/NS/CS";-->
+
+					<!--let editorsRole;-->
+
+					<!--// .. role retrieval-->
+
+					<!--// Instead of affecting only one blog post, we'll set the permissions on the parent of all blog posts to apply rules to all of them-->
+					<!--let blogPostsACL;-->
+
+					<!--// ... ACL retrieval-->
+
+					<!--console.log( blogPostACL.getChildInheritance( editorsRole, CS.Class.Read ) ); // null, the ACL doesn't have a rule for this combination-->
+
+					<!--blogPostACL.configureChildInheritance( true, editorsRole, CS.Class.Role, [-->
+						<!--CS.Class.Read,-->
+						<!--CS.Class.Update,-->
+						<!--CS.Class.Delete-->
+					<!--] );-->
+
+					<!--// We won't allow editors to upload files directly to blog posts-->
+					<!--blogPostACL.configureChildInheritance( false, editorsRole, CS.Class.Role, CS.Class.Upload );-->
+
+					<!--console.log( blogPostACL.getChildInheritance( editorsRole, CS.Class.Read ) ); // true, the ACL is granting the permission-->
+					<!--console.log( blogPostACL.getChildInheritance( editorsRole, CS.Class.Upload ) ); // false, the ACL is denying the permission-->
+
+					<!--blogPostACL.save().then(-->
+						<!--( response ) => &#123;-->
+							<!--// ...-->
+						<!--&#125;-->
+					<!--).catch( console.error );-->
+				<!--</code></pre>-->
+
+			<!--</tab>-->
+			<!--<tab title="JavaScript ES5">-->
+
+				<!--<pre><code class="javascript">-->
+					<!--var editorsRole;-->
+
+					<!--// .. role retrieval-->
+
+					<!--// Instead of affecting only one blog post, we'll set the permissions on the parent of all blog posts to apply rules to all of them-->
+					<!--var blogPostsACL;-->
+
+					<!--// ... ACL retrieval-->
+
+					<!--console.log( blogPostACL.getChildInheritance( editorsRole, CS.Class.Read ) ); // null, the ACL doesn't have a rule for this combination-->
+
+					<!--blogPostACL.configureChildInheritance( true, editorsRole, CS.Class.Role, [-->
+						<!--CS.Class.Read,-->
+						<!--CS.Class.Update,-->
+						<!--CS.Class.Delete-->
+					<!--] );-->
+
+					<!--// We won't allow editors to upload files directly to blog posts-->
+					<!--blogPostACL.configureChildInheritance( false, editorsRole, CS.Class.Role, CS.Class.Upload );-->
+
+					<!--console.log( blogPostACL.getChildInheritance( editorsRole, CS.Class.Read ) ); // true, the ACL is granting the permission-->
+					<!--console.log( blogPostACL.getChildInheritance( editorsRole, CS.Class.Upload ) ); // false, the ACL is denying the permission-->
+
+					<!--blogPostACL.save().then(-->
+						<!--function( response ) &#123;-->
+							<!--// ...-->
+						<!--&#125;-->
+					<!--).catch( console.error );-->
+				<!--</code></pre>-->
+
+			<!--</tab>-->
+		<!--</tabs>-->
+	<!--</section>-->
+	<!--<div class="ui info message">-->
+		<!--<div class="header">Note</div>-->
+		<!--<div class="content">-->
+			<!--<p>-->
+				<!--The methods: <a href="https://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Auth-PersistedACL-Class-grant" target="_blank" rel="noopener"><code>grant</code></a>,-->
+				<!--<a href="https://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Auth-PersistedACL-Class-deny" target="_blank" rel="noopener"><code>deny</code></a> or-->
+				<!--<a href="https://carbonldp.github.io/carbonldp-js-sdk/#Carbon-Auth-PersistedACL-Class-getChildInheritance" target="_blank" rel="noopener"><code>-->
+						<!--getChildInheritance</code></a> will only give you information about the rules that ACL has about the document. <strong>Their output won't be affected by-->
+					<!--inheritance</strong>.-->
+			<!--</p>-->
+			<!--<p>We are working on an API to ease retrieving what permissions are granted on a document independently on why they are granted.</p>-->
+		<!--</div>-->
+	<!--</div>-->
+<!--</section>-->
+<!--<div class="documentation-steps ui fluid steps">-->
+	<!--<a class="step" href="../authentication">-->
+		<!--<i class="arrow left icon"></i>-->
+		<!--<div class="content">-->
+			<!--<div class="title">Previous</div>-->
+			<!--<div class="description">Authentication</div>-->
+		<!--</div>-->
+	<!--</a>-->
+	<!--<div class="active completed step">-->
+		<!--&lt;!&ndash;<i class="payment icon"></i>&ndash;&gt;-->
+		<!--<div class="content">-->
+			<!--<div class="title">Authorization</div>-->
+		<!--</div>-->
+	<!--</div>-->
+	<!--<a class="step" href="../access-points">-->
+		<!--<i class="arrow right icon"></i>-->
+		<!--<div class="content">-->
+			<!--<div class="title">Next</div>-->
+			<!--<div class="description">Access points</div>-->
+		<!--</div>-->
+	<!--</a>-->
+<!--</div>-->
