@@ -38,15 +38,13 @@ let currentVersion = versions.find( version => version.name === currentVersionNa
 			<div class="category-description">
 				<p><%= category.description %></p>
 
-				<div class="documentationVersionList">
-					<div class="ui bulleted list">
-						<% for ( let document of category.documents ) { %>
-						<div class="item category-item">
-							<div><a class="category-itemTitle" href="<%- url_for( `/documentation/${currentVersion.name}/${category.link}/${document.link}` ) %>"><%= document.title %></a></div>
-							<p><%= document.description %></p>
-						</div>
-						<% } %>
+				<div class="ui bulleted list">
+					<% for ( let document of category.documents ) { %>
+					<div class="item category-item">
+						<div><a class="category-itemTitle" href="<%- url_for( `/documentation/${currentVersion.name}/${category.link}/${document.link}` ) %>"><%= document.title %></a></div>
+						<p><%= document.description %></p>
 					</div>
+					<% } %>
 				</div>
 			</div>
 		</section>
