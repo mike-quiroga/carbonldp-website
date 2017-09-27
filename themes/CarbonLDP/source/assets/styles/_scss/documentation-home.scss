@@ -1,3 +1,4 @@
+//----- START Categories menu styles ----
 .categoriesMenuContainer{
   max-width:100%;
   min-height: 77.2vh;
@@ -10,13 +11,6 @@ h1.categoriesMenu-title{
   text-align: center;
   letter-spacing: 0.7px;
 }
-
-.categoriesMenu-categoryTitle{
-    font-size: 1.35rem;
-    color: white;
-    padding-top: 2rem;
-}
-
 
 .ui.grid .categoriesMenu{
   padding: 4em 3em 2em 3em;
@@ -33,45 +27,23 @@ h1.categoriesMenu-title{
 }
 
 .ui.image.categoriesMenu-icon{
-    height: 200px;
-    width: 200px;
-    background: white;
-    display: flex;
-    align-items: center;
-    svg{
-      margin: 0 auto;
-      display: block;
-      height: auto;
-      width: 150px
-    }
-}
-
-
-.ui.image.category-icon{
-  height: auto;
-  width: 50px;
-  margin:0;
-}
-
-.category-titleContainer{
+  height: 200px;
+  width: 200px;
+  background: white;
+  display: flex;
+  align-items: center;
+  svg{
+    margin: 0 auto;
+    display: block;
     height: auto;
-    display: flex;
-    align-items: center;
-}
-//addition to h1 style, overwrites margin-top:0
-
-h2.category-title{
-  margin: 0;
-  color: #363f48;
-  height: auto;
+    width: 150px
+  }
 }
 
-.category-unbulletedItem{
-  padding-left: 1.22rem;
-}
-
-.documentationVersionList.hidden{
-  display: none;
+.categoriesMenu-categoryTitle{
+    font-size: 1.35rem;
+    color: white;
+    padding-top: 2rem;
 }
 
 @media (max-width: 1200px){
@@ -155,7 +127,17 @@ h2.category-title{
     padding: 1em 3em;
   }
 }
+//----- END Categories menu styles --------
 
-ol, ul{
-  line-height: 1.7rem;
+//----- START Categories lists styles -----
+h2.category-title{
+  margin: 0;
+  color: #363f48;
+  height: auto;
 }
+
+.category-unbulletedItem{
+  padding-left: 1.22rem;
+}
+
+//----- END Categories lists styles -----
