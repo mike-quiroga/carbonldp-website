@@ -293,19 +293,21 @@ version: v1.0.x
 		Like normal documents, access points can be customized by specifying a <code>hasMemberRelation</code> and an
 		<code>isMemberOfRelation</code>.
 	</p>
+</section>
+<!-- END: What is an Access Point? -->
 
 
-	<!-- START: Creating an access point-->
-	<section class="mainContent-subSection">
-		<h3 class="hidden">Creating an Access Point</h3>
-		<p>
-			To create an access point for a document you can use the <code>createAccessPoint</code> method
-			of the <code>documents</code> service or of a <code>PersistedDocument.Class</code> object.
-		</p>
+<!-- START: Creating an access point-->
+<section class="mainContent-subSection">
+	<h3 class="hidden">Creating an Access Point</h3>
+	<p>
+		To create an access point for a document you can use the <code>createAccessPoint</code> method
+		of the <code>documents</code> service or of a <code>PersistedDocument.Class</code> object.
+	</p>
 
-		<!-- START: Code example of creating an access point-->
-		<tabs>
-			<tab title="TypeScript">
+	<!-- START: Code example of creating an access point-->
+	<tabs>
+		<tab title="TypeScript">
 
 				<pre><code class="typescript">
 					// ... additional imports
@@ -354,8 +356,8 @@ version: v1.0.x
 					).catch( console.error );
 				</code></pre>
 
-			</tab>
-			<tab title="JavaScript ES2015">
+		</tab>
+		<tab title="JavaScript ES2015">
 
 				<pre><code class="javascript">
 					// ... imports
@@ -400,8 +402,8 @@ version: v1.0.x
 					).catch( console.error );
 				</code></pre>
 
-			</tab>
-			<tab title="JavaScript ES5">
+		</tab>
+		<tab title="JavaScript ES5">
 
 				<pre><code class="javascript">
 					// ... imports
@@ -454,29 +456,29 @@ version: v1.0.x
 						&#125;
 					).catch( console.error );
 				</code></pre>
-			</tab>
-		</tabs>
-		<!-- END: Code example of creating an access point-->
+		</tab>
+	</tabs>
+	<!-- END: Code example of creating an access point-->
 
-	</section>
-	<!-- END: Creating an access point-->
-
-
-	<!-- START: Deleting an access point-->
-	<section class="mainContent-subSection">
-		<h3 class="hidden">Deleting an Access Point</h3>
-		<p>
-			At the end, an access point is a <span class="highlight">document</span> with added functionality; because it's a <span class="highlight">document</span> it behaves by the rules of a regular <span class="highlight">document</span>
-			giving you access to the same methods a regular document already has. <br>
-			One of such methods is the <code>delete</code> method of the <span class="highlight">persistedDocument</span> class.
-			To delete an access point you can use the <code>delete</code> method
-			of the <code>documents</code> service or of a <code>PersistedDocument.Class</code> object.
-		</p>
+</section>
+<!-- END: Creating an access point-->
 
 
-		<!-- START: Code example of deleting an access point-->
-		<tabs>
-			<tab title="TypeScript">
+<!-- START: Deleting an access point-->
+<section class="mainContent-subSection">
+	<h3 class="hidden">Deleting an Access Point</h3>
+	<p>
+		At the end, an access point is a <span class="highlight">document</span> with added functionality; because it's a <span class="highlight">document</span> it behaves by the rules of a regular <span class="highlight">document</span>
+		giving you access to the same methods a regular document already has. <br>
+		One of such methods is the <code>delete</code> method of the <span class="highlight">persistedDocument</span> class.
+		To delete an access point you can use the <code>delete</code> method
+		of the <code>documents</code> service or of a <code>PersistedDocument.Class</code> object.
+	</p>
+
+
+	<!-- START: Code example of deleting an access point-->
+	<tabs>
+		<tab title="TypeScript">
 
 				<pre><code class="typescript">
 					// ... additional imports
@@ -531,8 +533,8 @@ version: v1.0.x
 					).catch( console.error );
 				</code></pre>
 
-			</tab>
-			<tab title="JavaScript ES2015">
+		</tab>
+		<tab title="JavaScript ES2015">
 
 				<pre><code class="javascript">
 					// ... imports
@@ -583,8 +585,8 @@ version: v1.0.x
 					).catch( console.error );
 				</code></pre>
 
-			</tab>
-			<tab title="JavaScript ES5">
+		</tab>
+		<tab title="JavaScript ES5">
 
 				<pre><code class="javascript">
 					// ... imports
@@ -643,38 +645,34 @@ version: v1.0.x
 					    }
 					).catch( console.error );
 				</code></pre>
-			</tab>
-		</tabs>
-		<!-- END: Code example of deleting an access point-->
+		</tab>
+	</tabs>
+	<!-- END: Code example of deleting an access point-->
 
 
-		<p>
-			Because access points create soft links between documents, the members (person1 and person2) will still exist, but the property
-			that linked back to the document they were members of will also be deleted from them.
-		</p>
-
-	</section>
-	<!-- END: Deleting an access point-->
-
-
-	<!-- START: Conclusion -->
-	<section class="mainContent-section">
-		<h2>Conclusion</h2>
-		<p>
-			There are two types of links between documents, <u>hard links</u> (direct parent-child relation) and <u>soft links</u> (document referencing other documents).
-
-			You can set a soft link relationship with the membership relation. You can configure the membership relation by using the <span class="highlight">hasMemberRelation</span>
-			and the <span class="highlight">isMemberOfRelation</span>.
-		</p>
-		<p>
-			A document can only maintain <u>one list</u> through <u>one property</u>. If you want to add more members through another property you can use access points.
-			Access points are special documents whose purpose is to maintain a list of members of another document.
-			Because access points are special documents, they can still use the same methods of a document, so you can <code>createAccessPoints</code> or <code>delete</code> them using
-			the <code>documents</code> service or the <code>PersistedDocument.Class</code>.
-		</p>
-	</section>
-	<!-- END: Conclusion -->
-
+	<p>
+		Because access points create soft links between documents, the members (person1 and person2) will still exist, but the property
+		that linked back to the document they were members of will also be deleted from them.
+	</p>
 
 </section>
-<!-- END: What is an Access Point? -->
+<!-- END: Deleting an access point-->
+
+
+<!-- START: Conclusion -->
+<section class="mainContent-section">
+	<h2>Conclusion</h2>
+	<p>
+		There are two types of links between documents, <u>hard links</u> (direct parent-child relation) and <u>soft links</u> (document referencing other documents).
+
+		You can set a soft link relationship with the membership relation. You can configure the membership relation by using the <span class="highlight">hasMemberRelation</span>
+		and the <span class="highlight">isMemberOfRelation</span>.
+	</p>
+	<p>
+		A document can only maintain <u>one list</u> through <u>one property</u>. If you want to add more members through another property you can use access points.
+		Access points are special documents whose purpose is to maintain a list of members of another document.
+		Because access points are special documents, they can still use the same methods of a document, so you can <code>createAccessPoints</code> or <code>delete</code> them using
+		the <code>documents</code> service or the <code>PersistedDocument.Class</code>.
+	</p>
+</section>
+<!-- END: Conclusion -->
