@@ -2,7 +2,7 @@
 @import "_partial/footer";
 @import "./palletColor";
 
-//TODO: implement a css for the license page, after talks with Cody - jimena Jan 19, 2017
+//---- START General website styles ----
 .site {
 	display: flex;
 	flex-direction: column;
@@ -14,18 +14,20 @@
 	margin-top: 74px;
 }
 
+a {
+	word-wrap: break-word;
+}
+
+//remove side margins from header and grids in home
+.ui.grid.removeSideMargins {
+	margin: -1rem 0;
+}
+
 .cover {
 	max-width: 100%;
 	width: 100%;
 }
 
-a {
-	word-wrap: break-word;
-}
-
-.ui.grid.removeSideMargins {
-	margin: -1rem 0;
-}
 
 @media only screen and (max-width: 992px) {
 	.site-content {
@@ -39,17 +41,23 @@ a {
 		margin-top: 54px;
 	}
 
-	.ui.stackable.grid > .column.column--getStarted {
-		padding: 0.214285rem 1rem !important;
-	}
-
-	.ui.huge.message {
-		font-size: 1.2rem;
-
-	}
-
 }
 
+//----- START highlight styles -----
+// for reserved CarbonLDP words
+.highlight {
+	font-family: "Lucida Console", Monaco, monospace;
+	font-size: .9rem;
+	line-height: 1.4rem;
+	padding: 0 4px;
+	background-color: #f2f2f2;
+	border-radius: 3px;
+	overflow-wrap: break-word;
+	word-wrap: break-word;
+	word-spacing: 0;
+}
+//------ END highlight styles ----------------------
+//------ START mobile scroll-top button styles -----
 .scrollTop {
 	position: fixed;
 	bottom: 0;
@@ -73,71 +81,5 @@ i.icon.scrollTop-icon {
 	font-size: 28px;
 	color: #19B7FB;
 }
-
-//styles for versions menu
-
-.ui.button.versionsMenu-button {
-	min-width: 135px;
-	min-height: 30px;
-	padding: 0 16px;
-	margin: 0;
-	box-shadow: 0 0 0 1px rgba(208, 200, 200, 0.5) inset;
-	background: transparent none;
-	font-weight: normal;
-	color: rgba(208, 200, 200, 1);
-	text-shadow: none;
-}
-.ui.dropdown > .menu.versionsMenu {
-	min-width: 135px;
-	border: 0;
-		> .item{
-			text-align: center;
-		}
-}
-
-.ui.button.versionsMenu-button:hover {
-	 font-weight: normal;
-	 background: #ffffff;
-	 color: rgba(0, 0, 0, .8);
-	 text-shadow: none;
- }
-
-// makes text black on hover
-.ui.dropdown.versionsMenu-dropdown > .default.text:hover {
-	color: rgba(0, 0, 0, .8);
-}
-
-//versions Menu on light background, makes hover background gray
-.ui.button.versionsMenu-button.versionsMenu-button--grayHover:hover {
-	background: #f8f8f9;
-}
-
-.versionsMenu--document{
-	text-align: center;
-	margin-top :9em;
-}
-
-//versions Menu on light background, makes initial text black
-.ui.dropdown.versionsMenu-dropdown.versionsMenu-dropdown--blackText > .default.text {
-	color: rgba(0, 0, 0, .8);
-}
-
-.ui.grid.versionsMenu-grid{
-	margin: 0;
-	> *{
-		padding: 0;
-	}
-}
-
-.highlight {
-	font-family: "Lucida Console", Monaco, monospace;
-	font-size: .9rem;
-	line-height: 1.4rem;
-
-	padding: 0 4px;
-	background-color: #f2f2f2;
-	border-radius: 3px;
-	overflow-wrap: break-word;
-	word-wrap: break-word;
-	word-spacing: 0;
-}
+//----- END mobile scroll-top button styles -----
+//----- General website styles ------------------
