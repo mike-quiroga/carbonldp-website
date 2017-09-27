@@ -1,3 +1,14 @@
 .bulletedList--getStarted {
   font-size: 16px;
 }
+
+@media only screen and (max-width: 767px) {
+  .ui.stackable.grid > .column.column--getStarted {
+    padding: 0.214285rem 1rem !important;
+  }
+
+  .ui.huge.message {
+    font-size: 1.2rem;
+
+  }
+}
