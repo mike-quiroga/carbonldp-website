@@ -1,0 +1,245 @@
+---
+layout: documentation/document
+title: Enterprise-class repositories
+date: 2017-09-27 09:27:00
+version: v1.0.x
+script: documentation-home
+---
+<div class="ui mobile only grid">
+	<div class="row">
+		<staticContentMenu content="mainContent"></staticContentMenu>
+	</div>
+</div>
+<section class="mainContent-section">
+	<h2 class="ui hidden message">Introduction</h2>
+	<p>
+		The platform's repository is the database that stores all of its data.
+	</p>
+	<p>
+		Out of the box the platform comes with a file-based repository that is suitable for development and low-demand usage. This repository doesn't offer
+		high availability (HA) nor disaster recovery (DR) procedures. That's why we don't recommend it for production environments (although in theory some basic DR
+		procedures could be configured).
+	</p>
+	<p>
+		For production environments (especially with high-loads) we recommend configuring an external repository for the platform.
+	</p>
+	<p>
+		There are several options to choose from, in this document we'll cover them along with their configuration.
+	</p>
+</section>
+<!--<section class="mainContent-section">-->
+<!--<h2>RDF4J</h2>-->
+<!--<p>-->
+<!--RDF4J is a library to use RDF in Java. But it also provides a repository that can be used by the platform. This repository is <strong>not recommended for critical applications</strong>-->
+<!--as it basically offers the same as the default file-based repository regarding HA and DR. Still, configuring an RDF4J server as the platform's external repository enables the-->
+<!--platform to be configured as a cluster.-->
+<!--</p>-->
+<!--<p>-->
+<!--More instructions to come...-->
+<!--</p>-->
+<!--</section>-->
+<!-- Start: Stardog -->
+<section class="mainContent-section">
+	<h2>Stardog</h2>
+	<p>
+		Stardog is a leading repository used by multiple enterprise organizations. You can read more about it on their website: <a title="Stardog's website" href="http://www.stardog.com/">stardog.com</a>.
+	</p>
+	<p>
+		To configure a Stardog server as the platform's repository you need to follow these steps:
+	</p>
+	<ol>
+		<li>
+			Create a database in the Stardog server for the platform to use
+		</li>
+		<li>
+			<p>
+				Set <code>query.all.graphs</code> to <code>true</code> for the database you created. This can be achieved running the following command in the Stardog's <code>bin</code> directory:
+			</p>
+			<pre><code class="bash">
+				./stardog-admin metadata set --option "query.all.graphs=true" name-of-the-database-you-created
+			</code></pre>
+			<p>
+				Note that you need to replace <code>name-of-the-database-you-created</code> with the name of the database you created on the previous step.
+			</p>
+		</li>
+		<li>
+			Configure the following platform's configuration parameters:
+			<ul>
+				<li><code>repository.type</code> => <code>stardog</code></li>
+				<li><code>repository.url</code> => Stardog's server url (by default it listens on <code>http://localhost:5820/</code></li>
+				<li><code>repository.username</code> => Stardog's user username (if you are only testing you can use Stardog's default username <code>admin</code></li>
+				<li><code>repository.password</code> => Stardog's user password (if you are only testing you can use Stardog's default password <code>admin</code></li>
+				<li><code>repository.id</code> => The id of the database you created on the previous step</li>
+			</ul>
+			<p>
+				Here's an example of a command to run a platform instance configured to use a Stardog server:
+			</p>
+			<pre><code class="bash">
+				docker run -d --name carbonldp -p 8083:8083 carbonldp/carbonldp-platform:1.0.x-alpha \
+					-Crepository.type=stardog \
+					-Crepository.url="http://stardog-instance:5820/" \
+					-Crepository.username=admin \
+					-Crepository.password=admin \
+					-Crepository.id=carbonldp
+			</code></pre>
+			<p>
+				Note that this can also be achieved by changing the <code>config.yaml</code> file. See: <a href="../configuration">Platform's configuration</a>.
+			</p>
+		</li>
+	</ol>
+	<!-- Start: Common pitfalls -->
+	<section class="mainContent-subSection">
+		<h3>Common pitfalls</h3>
+		<!-- START: The platform can't connect to the Stardog server -->
+		<div class="ui styled fluid accordion">
+			<div class="title">
+				<i class="dropdown icon"></i>
+				Unable to obtain a connection to the Stardog database
+			</div>
+			<div class="content">
+				<p>
+					If you are running the platform as a Docker container and the Stardog server as a service of the Docker host (accessing it as <code>http://localhost:5820/</code>
+					or something similar), the platform will not be able to access the server.
+				</p>
+				<p>
+					Docker containers are "somewhat" independent systems from the host. They are their own localhost. So by telling the platform to connect to
+					<code>http://localhost:5820/</code> the platform will actually look for that service inside of the container.
+				</p>
+				<p>
+					We won't offer a solution here as it greatly depends on your Docker installation and most of the times the steps required are os-specific.
+				</p>
+				<p>
+					To get more information you can try to search for: <em>docker container accessing host service</em>
+				</p>
+				<p>
+					Although we won't detail a solution, there are a couple of workarounds you can take to avoid the problem all together:
+				</p>
+				<ul>
+					<li>
+						<strong>Option 1:</strong>
+						<br>
+						Configure the Stardog server so it is accessible through a resolvable hostname.
+						<br>
+						E.g. <code>http://my-stardog-instance:5820/</code>
+					</li>
+					<li>
+						<strong>Option 2:</strong>
+						<br>
+						Run the Stardog server as a container and link it to the platform's container
+						<br>
+						<pre><code class="bash">
+							docker run -d --name carbonldp -p 8083:8083 \
+								--link stardog:stardog \                                 # Stardog's container name
+								carbonldp/carbonldp-platform:1.0.x-alpha \
+									-Crepository.type=stardog \
+									-Crepository.url="http://stardog:5820/" \
+									-Crepository.username=admin \
+									-Crepository.password=admin \
+									-Crepository.id=carbonldp
+						</code></pre>
+					</li>
+				</ul>
+			</div>
+		</div>
+		<!-- END: The platform can't connect to the Stardog server -->
+	</section>
+	<!-- END: Common pitfalls -->
+</section>
+<!-- END: Stardog -->
+<!-- Start: GraphDB -->
+<section class="mainContent-section">
+	<h2>GraphDB</h2>
+	<p>
+		GraphDB is an enterprise ready repository developed by Ontotext. You can read more about it on their website: <a title="GraphDB's website" href="https://ontotext.com/products/graphdb/">ontotext.com</a>.
+	</p>
+	<p>
+		To configure a GraphDB server as the platform's repository you need to follow these steps:
+	</p>
+	<ol>
+		<li>
+			Create a "repository" in the GraphDB server for the platform to use
+		</li>
+		<li>
+			Configure the following platform's configuration parameters:
+			<ul>
+				<li><code>repository.type</code> => <code>remote</code></li>
+				<li><code>repository.url</code> => GraphDB's server url (by default it listens on <code>http://localhost:7200/</code></li>
+				<li><code>repository.username</code> => GraphDB's user username (if you are only testing you can use GraphDB's default username <code>admin</code></li>
+				<li><code>repository.password</code> => GraphDB's user password (if you are only testing you can use GraphDB's default password <code>admin</code></li>
+				<li><code>repository.id</code> => The id of the database you created on the previous step</li>
+			</ul>
+			<p>
+				Here's an example of a command to run a platform instance configured to use a GraphDB server:
+			</p>
+			<pre><code class="bash">
+				docker run -d --name carbonldp -p 8083:8083 carbonldp/carbonldp-platform:1.0.x-alpha \
+					-Crepository.type=remote \
+					-Crepository.url="http://graphdb-instance:7200/" \
+					-Crepository.username=admin \
+					-Crepository.password=admin \
+					-Crepository.id=carbonldp
+			</code></pre>
+			<p>
+				Note that this can also be achieved by changing the <code>config.yaml</code> file. See: <a href="../configuration">Platform's configuration</a>.
+			</p>
+		</li>
+	</ol>
+	<!-- Start: Common pitfalls -->
+	<section class="mainContent-subSection">
+		<h3>Common pitfalls</h3>
+		<!-- START: The platform can't connect to the Stardog server -->
+		<div class="ui styled fluid accordion">
+			<div class="title">
+				<i class="dropdown icon"></i>
+				Unable to obtain a connection to the remote database
+			</div>
+			<div class="content">
+				<p>
+					If you are running the platform as a Docker container and the GraphDB server as a service of the Docker host (accessing it as <code>http://localhost:7200/</code>
+					or something similar, the platform will not be able to access the server.
+				</p>
+				<p>
+					Docker containers are "somewhat" independent systems from the host. They are their own localhost. So by telling the platform to connect to
+					<code>http://localhost:7200/</code> the platform will actually look for that service inside of the container.
+				</p>
+				<p>
+					We won't offer a solution here as it greatly depends on your Docker installation and most of the times the steps required are os-specific.
+				</p>
+				<p>
+					To get more information you can try to search for: <em>docker container accessing host service</em>
+				</p>
+				<p>
+					Although we won't detail a solution, there are a couple workarounds you can take to avoid the problem all together:
+				</p>
+				<ul>
+					<li>
+						<strong>Option 1:</strong>
+						<br>
+						Configure the GraphDB server so it is accessible through a resolvable hostname.
+						<br>
+						E.g. <code>http://my-graphdb-instance:7200/</code>
+					</li>
+					<li>
+						<strong>Option 2:</strong>
+						<br>
+						Run the GraphDB server as a container and link it to the platform's container
+						<br>
+						<pre><code class="bash">
+							docker run -d --name carbonldp -p 8083:8083 \
+								--link graphdb:graphdb \                                 # GraphDB's container name
+								carbonldp/carbonldp-platform:1.0.x-alpha \
+									-Crepository.type=stardog \
+									-Crepository.url="http://stardog:7200/" \
+									-Crepository.username=admin \
+									-Crepository.password=admin \
+									-Crepository.id=carbonldp
+						</code></pre>
+					</li>
+				</ul>
+			</div>
+		</div>
+		<!-- END: The platform can't connect to the Stardog server -->
+	</section>
+	<!-- END: Common pitfalls -->
+</section>
+<!-- END: Stardog -->
