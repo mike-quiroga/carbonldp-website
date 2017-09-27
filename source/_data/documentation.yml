@@ -137,7 +137,7 @@ versions:
             description: Not yet documented
           - title: Querying
             link: querying
-            description: How to make queries with SPARQLer
+            description: How to make queries with SPARQLer.
           - title: Authentication
             link: authentication
             description: Not yet documented
@@ -146,7 +146,7 @@ versions:
             description: Not yet documented
           - title: Access points
             link: access-points
-            description: Not yet documented
+            description: What is an Access Point and how to use them.
 #      - title: Java SDK
 #        description: Software Development Kit for Java (and other JVM languages)
 #        link: java-sdk
