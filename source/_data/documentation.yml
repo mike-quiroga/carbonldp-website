@@ -94,9 +94,9 @@ versions:
 #          - title: Clusterization
 #            link: cluster
 #            description: How to setup a scalable, fault tolerant CarbonLDP cluster
-#          - title: Enterprise-class repositories
-#            link: enterprise-class-repository
-#            description: Configuring a platform instance so it is backed up by a third-party enterprise-class repository
+          - title: Enterprise-class repositories
+            link: enterprise-class-repositories
+            description: Configuring a platform instance so it is backed up by a third-party enterprise-class repository
       - title: REST API
         description: Access and manage applications and data by URIs using RESTful requests over HTTP (GET, POST, PUT, DELETE). Configure apps, schedule server-side jobs, execute queries - everything in Carbon is RESTful.
         id: rest-api
