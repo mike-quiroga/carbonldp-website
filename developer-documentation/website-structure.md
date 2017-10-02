@@ -417,14 +417,14 @@ e.g.
 	    - The title attribute is tha name that will be displayed in each tab. 
 	    - The name attribute is the data-tab or tab id use to identify each tab if it is not provided a random id will be generated.
 
-	![tabs in comouter/tablet view]( https://github.com/CarbonLDP/carbonldp-website/tree/task/%23161_website-developer-documentation/developer-documentation/images/tabs-computer-tablet.png)
+	![tabs in comouter/tablet view](/images/tabs-computer-tablet.png)
 
 	In mobile view:
 	    - It will create a selection menu, for each `<tab>` in `<tabs>` an option will be found in the menu.
 	    - The title attribute is the name that will be displayed in each tab. 
 	    - The name attribute is the data-tab or tab id use to identify each tab if it is not provided a random id will be generated.
 
-	![tabs in mobile view]( https://github.com/CarbonLDP/carbonldp-website/tree/task/%23161_website-developer-documentation/developer-documentation/images/tabs-mobile.png)
+	![tabs in mobile view](/images/tabs-mobile.png)
 
 	**Basic widget structure**
 
