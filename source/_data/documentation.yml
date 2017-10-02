@@ -46,7 +46,7 @@ versions:
           - title: Access points
             link: access-points
             description: Not yet documented
-        links:
+        relatedLinks:
           - title: API reference
             link: https://carbonldp.github.io/carbonldp-js-sdk
             description: Classes and methods available in the JavaScript SDK, API reference maintained on Github
