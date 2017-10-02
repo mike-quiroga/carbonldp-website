@@ -62,7 +62,7 @@ You can add specific styles to a particular layout:
     │    │    ├── source
     │    │    │     └── assets
     │    │    │         └── styles
-    │    │    │              └── scss
+    │    │    │              ├── scss
     │    │    │              │   └── <style-file-name>.scss
     │    │    │              └── css
     │    │    │                  └── <style-file-name>.css  (this file is generated from the scss file, run `gulp build`)
@@ -180,15 +180,15 @@ Partial layouts allow you to add cetain features to the pages, specific to the d
     │    ├── documentation
     │    │    ├── vx.x.x
     │    │    │    ├── category1     
-    │    │    │    │	├── document1 
+    │    │    │    │    ├── document1 
     │    │    │    │    │    └── index.ejs
-    │    │    │    │	├── document2 
+    │    │    │    │    ├── document2 
     │    │    │    │    │    └── index.ejs
     │    │    │    │    └── index.ejs
     │    │    │    ├── category2    
-    │    │    │    │	├── document1 
+    │    │    │    │    ├── document1 
     │    │    │    │    │    └── index.ejs
-    │    │    │    │	├── document2 
+    │    │    │    │    ├── document2 
     │    │    │    │    │    └── index.ejs
     │    │    │    │    └── index.ejs
     │    │    │    └── index.ejs
