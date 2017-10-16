@@ -1,4 +1,3 @@
-//----- START post excerpt styles -----
 .post{
 	margin: 2rem 1rem;
 }
@@ -7,14 +6,14 @@ a.post-titleLink{
 	color: black;
 }
 
-.post-info{
-	color: gray;
-	font-size: 1rem;
-}
-
 .post-content{
 	margin: 1rem 0;
 	padding: 20px 0;
+}
+
+.post-info{
+	color: gray;
+	font-size: 1rem;
 }
 
 .post-footer{
@@ -33,8 +32,7 @@ a.post-titleLink{
 .ui.divider.post-divider{
 	clear:both;
 }
-//----- END post excerpt styles -----
-//----- START sidebar styles --------
+
 .ui.divider.blog-sidebarDivider{
 	margin: 2.2rem 0;
 }
@@ -50,4 +48,3 @@ a.post-titleLink{
 .blog-sidebarTitle{
 	font-weight: normal;
 }
-//----- END sidebar styles -----
