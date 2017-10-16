@@ -35,7 +35,6 @@
     "postinstall": "node build/force-semantic-ui-to-install-correctly.js && npm explore semantic-ui -- npm run-script install"
   },
   "dependencies": {
-    "gray-matter": "^3.0.8", //package to obtain front matter from files.
     "hexo": "3.2.0",
     "hexo-generator-archive": "0.1.4",
     "hexo-generator-category": "0.1.3",
