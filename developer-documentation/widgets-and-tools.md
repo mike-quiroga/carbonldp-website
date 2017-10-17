@@ -1,4 +1,6 @@
-# Website tools
+# Website developer tools
+
+For more information on the general structure of the website refer to website-structure.md
 
 ## Helpers and partial layouts
 
