@@ -1,3 +1,4 @@
+# Website Project structure
 
 A detailed file structure of the entire project can be found [README.md](https://github.com/CarbonLDP/carbonldp-website/blob/develop/README.md)
 
@@ -22,7 +23,7 @@ After the pages are processed by hexo a package hexo-widgets further processes t
 Hexo Widgets
 - `themes/CarbonLDP/widgets/` files
 
-# Page structure
+## Page structure
 All html pages will be formed by the layout template in `themes/CarbonLDP/layout/layout.ejs` using the following layouts and partial layouts. :
 
 |layouts call by all pages|function|
@@ -34,7 +35,7 @@ All html pages will be formed by the layout template in `themes/CarbonLDP/layout
 |_partial/footer.ejs|contains de template of the footer|
 |_partial/after-footer.ejs|always imports scripts: jquery, semantic ui, widgets, main.js, and other scripts if defined in front-matter of `source/<page-name>/index.ejs`|
 
-# Page styles
+## Page styles
 Styles are defined in `themes/CarbonLDP/source/assets/styles/`. The css styles are built from the scss files defined by the user, and are imported by the partial layout `themes/CarbonLDP/layout/_partial/head.js`
 
 The styles of the website are closely related to the layouts in `themes/CarbonLDP/layout` directory
@@ -51,7 +52,7 @@ You can add specific styles to a particular layout:
 2. In the file `themes/CarbonLDP/layout/head/<layout-name>-head.ejs`
     - Add helper to import styles `<%-css("assets/styles/css/<css-file-name>)`, the file to be imported should be in `themes/CarbonLDP/source/assets/styles/`
 
-## styles file structure
+### styles file structure
     .
     ├── themes
     │    ├── CarbonLDP
@@ -69,7 +70,7 @@ You can add specific styles to a particular layout:
 
 
 
-# Page scripts
+## Page scripts
 Scripts are defined in `themes/CarbonLDP/source/assets/scripts/` and are imported by the partial layout `themes/CarbonLDP/layout/_partial/after-footer.js`
 
 There is one general script that affects the entire website, and that is always iported by `after-footer.js`
@@ -87,7 +88,7 @@ You can add specific sscripts to a particular page:
 
 There are other styles imported such as widget styles, got to widgets sections to know more about this
 
-## scripts file structure
+### scripts file structure
     .
     ├── source
     │    └── <page-name>
@@ -99,7 +100,7 @@ There are other styles imported such as widget styles, got to widgets sections t
     │    │    │         └── scripts
     │    │    │              └── <page-name>.js
 
-# Page content
+## Page content
 
 ## Principal pages
 The content of all pages present in the navigation menu and in the first level of directories in `source/` directory is defined in the layouts of the same name in `themes/CarbonLDP/layout`. Some of this pages may have defined particular `head` layouts and may use partial layouts and specific scripts as well.
