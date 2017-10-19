@@ -32,7 +32,7 @@ version: v1.0.x
 	<p>
 		In the current world, accessibility to information is crucial; so crucial that not only accessibility to information
 		matters, but rather the time in which that information is available. The time to access to new information is a key factor that
-		many companies heavily rely on, and to address this issue, Carbon provides real-time capabilities with its platform.
+		many companies heavily rely on, and to address this issue, Carbon provides real-time capabilities in its platform.
 	</p>
 </section>
 <!-- END: Introduction -->
@@ -43,7 +43,7 @@ version: v1.0.x
 	<i class="warning icon"></i>
 	<div class="content">
 		<p>
-			To use real-time features the platform instance must have access to a message broker.<br>
+			To use real-time features, the platform instance must have access to a message broker.<br>
 			If you haven't configured your instance to do so, read this guide to learn how to do it:<br>
 			<!-- TODO change link to configure a message broker -->
 			<a target="_blank" href="../../platform/configuration">Configuring the platform</a>
@@ -199,7 +199,7 @@ version: v1.0.x
 		<!-- END: Code example defining the subject -->
 
 		<p>
-			And that's how you retrieve the subject you want to subscribe to; now we need to identify the events to which we can subscribe.
+			And that's how we retrieve the subject we want to subscribe to; now we need to identify the events to which we can subscribe.
 		</p>
 	</section>
 	<!-- END: The Subject -->
@@ -209,66 +209,140 @@ version: v1.0.x
 	<section class="mainContent-subSection">
 		<h3 class="hidden">The Event</h3>
 		<p>
-			Now that you've identified and retrieved the subject, you have to specify the event you want to subscribe to.<br>
+			Now that we've identified and retrieved the subject, we have to specify the event we want to subscribe to.<br>
 			To specify the event, Carbon provides a series of predefined events that it can subscribe to; such events are defined
 			in the <span class="highlight">Carbon/Messaging/Event</span> file.<br>
 			The list of events we can subscribe to are the following:
 		</p>
+		<table class="ui collapsed striped compact small celled table">
+			<thead>
+				<tr>
+					<th colspan="2">Event</th>
+					<th>Return type</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td class="collapsing">
+						<i class="lightning icon"></i>
+					</td>
+					<td>
 
-		<div class="ui list">
-			<div class="item">
-				<i class="lightning icon"></i>
-				<div class="content">
-					<div class="header"><code>CHILD_CREATED</code></div>
-					<div class="description">Whenever a subject's child is created</div>
-				</div>
-			</div>
-			<div class="item">
-				<i class="lightning icon"></i>
-				<div class="content">
-					<div class="header"><code>ACCESS_POINT_CREATED</code></div>
-					<div class="description">Whenever an <a target="_blank" href="../access-points#creating-an-access-point">access point</a> is created</div>
-				</div>
-			</div>
-			<div class="item">
-				<i class="lightning icon"></i>
-				<div class="content">
-					<div class="header"><code>DOCUMENT_CREATED</code></div>
-					<div class="description">Whenever a new document is created</div>
-				</div>
-			</div>
-			<div class="item">
-				<i class="lightning icon"></i>
-				<div class="content">
-					<div class="header"><code>DOCUMENT_MODIFIED</code></div>
-					<div class="description">Whenever any of a document's properties are modified</div>
-				</div>
-			</div>
-			<div class="item">
-				<i class="lightning icon"></i>
-				<div class="content">
-					<div class="header"><code>DOCUMENT_DELETED</code></div>
-					<div class="description">Whenever an existing document is deleted</div>
-				</div>
-			</div>
-			<div class="item">
-				<i class="lightning icon"></i>
-				<div class="content">
-					<div class="header"><code>MEMBER_ADDED</code></div>
-					<div class="description">Whenever a new <a href="../access-points#membership-relation" target="_blank">member</a> is added to a document</div>
-				</div>
-			</div>
-			<div class="item">
-				<i class="lightning icon"></i>
-				<div class="content">
-					<div class="header"><code>MEMBER_REMOVED</code></div>
-					<div class="description">Whenever an existing <a href="../access-points#membership-relation" target="_blank">member</a> is removed from a document</div>
-				</div>
-			</div>
-		</div>
+						<code>CHILD_CREATED</code><br>
+						<span>Whenever a subject's child is created</span>
+					</td>
+					<td>
+						<code>ChildCreated.Class</code><br><br>
+						<span>With properties:</span><br>
+						- <code>target</code>:<code>Pointer.Class</code><br>
+						- <code>details</code>:<code>DocumentCreatedDetails.Class</code>
+					</td>
+				</tr>
+				<tr>
+					<td class="collapsing">
+						<i class="lightning icon"></i>
+					</td>
+					<td>
+						<code>ACCESS_POINT_CREATED</code><br>
+						<span>Whenever an <a target="_blank" href="../access-points#creating-an-access-point">access point</a> is created</span>
+					</td>
+					<td>
+						<code>AccessPointCreated.Class</code><br>
+						<span>With properties:</span><br>
+						- <code>target</code>:<code>Pointer.Class</code><br>
+						- <code>details</code>:<code>DocumentCreatedDetails.Class</code>
+					</td>
+				</tr>
+				<tr>
+					<td class="collapsing">
+						<i class="lightning icon"></i>
+					</td>
+					<td>
+						<code>DOCUMENT_CREATED</code><br>
+						<span>Whenever a new document is created</span>
+					</td>
+					<td>
+						<code>DocumentCreated.Class</code><br><br>
+						<span>With properties:</span><br>
+						- <code>target</code>:<code>Pointer.Class</code><br>
+						- <code>details</code>:<code>DocumentCreatedDetails.Class</code>
+					</td>
+				</tr>
+				<tr>
+					<td class="collapsing">
+						<i class="lightning icon"></i>
+					</td>
+					<td>
+						<code>DOCUMENT_MODIFIED</code><br>
+						<span>Whenever any of a document's properties are modified</span>
+					</td>
+					<td>
+						<code>DocumentModified.Class</code><br><br>
+						<span>With property:</span><br>
+						- <code>target</code>:<code>Pointer.Class</code>
+					</td>
+				</tr>
+				<tr>
+					<td class="collapsing">
+						<i class="lightning icon"></i>
+					</td>
+					<td>
+						<code>DOCUMENT_DELETED</code><br>
+						<span>Whenever an existing document is deleted</span>
+					</td>
+					<td>
+						<code>DocumentDeleted.Class</code><br>
+						<span>With property:</span><br>
+						- <code>target</code>:<code>Pointer.Class</code>
+					</td>
+				</tr>
+				<tr>
+					<td class="collapsing">
+						<i class="lightning icon"></i>
+					</td>
+					<td>
+						<code>MEMBER_ADDED</code><br>
+						<span>Whenever a new <a href="../access-points#membership-relation" target="_blank">member</a> is added to a document</span>
+					</td>
+					<td>
+						<code>MemberAdded.Class</code><br><br>
+						<span>With properties:</span><br>
+						- <code>target</code>:<code>Pointer.Class</code><br>
+						- <code>details</code>:<code>MemberAddedDetails.Class</code>
+					</td>
+				</tr>
+				<tr>
+					<td class="collapsing">
+						<i class="lightning icon"></i>
+					</td>
+					<td>
+						<code>MEMBER_REMOVED</code><br>
+						<span>Whenever an existing <a href="../access-points#membership-relation" target="_blank">member</a> is removed from a document</span>
+					</td>
+					<td>
+						<code>MemberRemoved.Class</code><br><br>
+						<span>With properties:</span><br>
+						- <code>target</code>:<code>Pointer.Class</code><br>
+						- <code>details</code>:<code>MemberRemovedDetails.Class</code>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+		<p>
+			Each one of these methods returns a special object of the type of the event that was triggered, and as you can see, every one of
+			them has a property called <code>target</code>, which is basically a <code>pointer</code> to the document originating the event.
+			This property is added to each of the return types because they inherit it from the <code>Carbon/Messaging/Message.Class</code>
+		</p>
+		<p>
+			But as you may have noticed, some methods also return a property called <code>details</code>. This property gives you more information
+			of the documents produced by the event, for example, in the cases in which the <code>details</code> properties are of the type
+			<code>DocumentCreatedDetails.Class</code>, it returns an array of pointers of the documents that were created.
+			Something similar occurs with the <code>MemberAddedDetails.Class</code> and <code>MemberDeletedDetails.Class</code>, with the difference
+			that they return the pointers of the members that were added/removed.
+		</p>
 		<p>
 			To subscribe to any of these events, the <span class="highlight">documents</span> service as well as the
-			<span class="highlight">PersistedDocument.Class</span>, provide three main methods to handle event subscriptions.
+			<span class="highlight">PersistedDocument.Class</span> provide three main methods to handle event subscriptions.
 			Such methods are the following:
 		</p>
 
@@ -294,7 +368,7 @@ version: v1.0.x
 		</div>
 
 		<p>
-			Along with the above methods, you can make use of the following ones to avoid having to import the <code>Carbon/Messaging/Event</code> enum
+			Along with the above methods, we can make use of the following ones to avoid having to import the <code>Carbon/Messaging/Event</code> enum
 			to state the desired event:
 		</p>
 		<ul class="ui list">
@@ -308,9 +382,9 @@ version: v1.0.x
 		</ul>
 
 		<p>
-			In our example, we identified the <span class="highlight">clients/</span> as the subject and we want to know whenever a client is added or removed from the company.
-			Because the <span class="highlight">clients/</span> document contains all the clients as its <span class="highlight">children</span> and
-			we want to know whenever a client is added or removed, we can portrait this rule by saying:
+			Going back to our example, we have identified the <span class="highlight">clients/</span> document as the <strong>subject</strong>, and now suppose that we want
+			to know whenever a client is added or removed from the company. Because the <span class="highlight">clients/</span> document contains all the clients
+			as its <span class="highlight">children</span> and we want to know whenever a client is added or removed, we can portrait this rule by saying:
 			Whenever a <span class="highlight">client/</span> (child of <span class="highlight">clients/</span>) is created, <code>CHILD_CREATED</code>,
 			or a <span class="highlight">client/</span> is deleted, <code>DOCUMENT_DELETED</code>, we want to adjust the budget of the company.<br>
 		</p>
@@ -338,8 +412,11 @@ version: v1.0.x
 					// ... initialize your Carbon object
 
 					// Function to execute whenever the event happens
-					function adjustBudget():void {
-						// ...
+					function adjustBudget( event:ChildCreated.Class | DocumentDeleted.Class ):void {
+
+						if( event.details ) {   // If it's a ChildCreated event
+							console.log( event.details.createdDocuments.length );
+						}
 						console.log( "The budget has been updated" );
 					}
 
@@ -370,7 +447,7 @@ version: v1.0.x
 					).then(
 					    ( [ persistedClient, response ]:[ Client & PersistedDocument.Class, Response.Class ] ) => {
 
-						    // Will print "The budget has been updated"
+						    // Will print: 1 "The budget has been updated"
 
 					        console.log( persistedClient.name ); // "Nikola"
 
@@ -378,7 +455,7 @@ version: v1.0.x
 					    }
 					).then(
 					    ( response:Response.Class ) => {
-						    // Will print "The budget has been updated"
+						    // Will print: "The budget has been updated"
 					    }
 					).catch( console.error );
 				</code></pre>
@@ -396,8 +473,11 @@ version: v1.0.x
 					// ... initialize your Carbon object
 
 					// Function to execute whenever the event happens
-					function adjustBudget() {
-						// ...
+					function adjustBudget( event ):void {
+
+						if( event.details ) {   // If it's a ChildCreated event
+							console.log( event.details.createdDocuments.length );
+						}
 						console.log( "The budget has been updated" );
 					}
 
@@ -428,7 +508,7 @@ version: v1.0.x
 					).then(
 					    ( [ persistedClient, response ] ) => {
 
-						    // Will print "The budget has been updated"
+						    // Will print: 1 "The budget has been updated"
 
 					        console.log( persistedClient.name ); // "Nikola"
 
@@ -436,7 +516,7 @@ version: v1.0.x
 					    }
 					).then(
 					    ( response ) => {
-						    // Will print "The budget has been updated"
+						    // Will print: "The budget has been updated"
 					    }
 					).catch( console.error );
 				</code></pre>
@@ -450,8 +530,11 @@ version: v1.0.x
 					// ... initialize your Carbon object
 
 					// Function to execute whenever the event happens
-					function adjustBudget() {
-						// ...
+					function adjustBudget( event ):void {
+
+						if( event.details ) {   // If it's a ChildCreated event
+							console.log( event.details.createdDocuments.length );
+						}
 						console.log( "The budget has been updated" );
 					}
 
@@ -488,7 +571,7 @@ version: v1.0.x
 							var persistedClient = result[ 0 ];
 							var response = result[ 1 ];
 
-						    // Will print "The budget has been updated"
+						    // Will print: 1 "The budget has been updated"
 
 					        console.log( persistedClient.name ); // "Nikola"
 
@@ -496,7 +579,7 @@ version: v1.0.x
 					    }
 					).then(
 					    ( response ) => {
-						    // Will print "The budget has been updated"
+						    // Will print: "The budget has been updated"
 					    }
 					).catch( console.error );
 				</code></pre>
@@ -504,7 +587,7 @@ version: v1.0.x
 		</tabs>
 		<!-- END: Code example defining the subscription to an event -->
 
-		<p>And that's it, you have successfully created two subscriptions to handle events using the <span class="highlight">PersistedDocument.Class</span>.</p>
+		<p>And that's it, we have successfully created two subscriptions to handle events using the <span class="highlight">PersistedDocument.Class</span>.</p>
 
 	</section>
 	<!-- END: Putting it all together -->
@@ -527,14 +610,14 @@ version: v1.0.x
 		To do so, you've decided to store every project as a child of a <span class="highlight">client/</span>. If we look at the list of
 		<a href="#the-event">available events</a>, someone could say:<br>
 		<i>"Because every project will be a <u>children</u> of a client,
-			perhaps I could subscribe to <code>CHILD_CREATED</code> events for every client"</i> and then he/she proceed to code those subscriptions.<br>
+			perhaps I could subscribe to <code>CHILD_CREATED</code> events for every client"</i> and then proceeds to code those subscriptions.<br>
 		Well, this approach introduces a lot of issues because the number of clients will vary and for every client you'll also have to create
 		a subscription, which could easily result in a massive amount of requests just to keep the subscriptions alive. This of course is not efficient aside
 		of also being very cumbersome to maintain and by no means is recommended when developing any application.<br>
 		So, how could we create a subscription that handles that requirement?<br>
 	</p>
 	<p>
-		If we look at the <a href="#subscribing">structure</a> of your platform, every <span class="highlight">client/</span> is a child of
+		If we look at the <a href="#subscribing">structure</a> of the example platform, every <span class="highlight">client/</span> is a child of
 		<span class="highlight">clients/</span> and because we decided that every <span class="highlight">project/</span> will be stored as a child of <span class="highlight">client/</span>,
 		this means that every <span class="highlight">project/</span> will be a <i>grandchild</i> of the <span class="highlight">clients/</span> document.<br>
 		If we look again at the list of events, there isn't a <code>GRANDCHILD_CREATED</code> event to subscribe from <span class="highlight">clients/</span>,
@@ -543,9 +626,9 @@ version: v1.0.x
 		Well, there is another powerful way to create subscriptions with the SDK and is by using the <span class="highlight">documents</span> service.
 	</p>
 	<p>
-		As said in the <a href="#the-event">events</a> section, the <span class="highlight">documents</span> service allows you to use the same methods that
+		As said in the <a href="#the-event">events</a> section, the <span class="highlight">documents</span> service allows us to use the same methods that
 		<span class="highlight">PersistedDocument.Class</span> provides to subscribe to events, the difference with using the <span class="highlight">documents</span>
-		service is that it also lets you specify an <a href="https://ant.apache.org/manual/dirtasks.html" target="_blank">Ant pattern</a> to work with hierarchical subscriptions.<br>
+		service is that it also lets us specify an <a href="https://ant.apache.org/manual/dirtasks.html" target="_blank">Ant pattern</a> to work with hierarchical subscriptions.<br>
 		The patterns that can be used are the following:
 	</p>
 	<table class="ui collapsed striped compact small table">
@@ -588,13 +671,18 @@ version: v1.0.x
 					// ... initialize your Carbon object
 
 					// Function to execute whenever the event happens
-					function adjustBudget():void {
-						// ...
+					function adjustBudget( event:ChildCreated.Class | DocumentDeleted.Class ):void {
+
+						if( event.details ) {   // If it's a ChildCreated event
+							console.log( event.details.createdDocuments.length );
+						}
 						console.log( "The budget has been updated" );
 					}
 
 					// Function to execute whenever a project of an client is created/deleted
-					function updateSalesForecast():void {
+					function updateSalesForecast( event:ChildCreated.Class ):void {
+
+						console.log( event.details.createdDocuments.length );
 						// ...
 						console.log( "The Sales forecast has been updated" );
 					}
@@ -632,7 +720,7 @@ version: v1.0.x
 					).then(
 					    ( [ persistedClient, response ]:[ Client & PersistedDocument.Class, Response.Class ] ) => {
 
-						    // Will print "The budget has been updated"
+						    // Will print: 1 "The budget has been updated"
 
 					        console.log( persistedClient.name ); // "Nikola"
 
@@ -647,7 +735,7 @@ version: v1.0.x
 					).then(
 					    ( [ persistedProject, response ]:[ Project & PersistedDocument.Class, Response.Class ] ) => {
 
-							// Will print "The Sales forecast has been updated"
+							// Will print: 1 "The Sales forecast has been updated"
 
 					        console.log( persistedRelative.name); // "Brand Renovation"
 							console.log( persistedRelative.duration ); // "90 days"
@@ -668,13 +756,18 @@ version: v1.0.x
 					// ... initialize your Carbon object
 
 					// Function to execute whenever the event happens
-					function adjustBudget() {
-						// ...
+					function adjustBudget( event ):void {
+
+						if( event.details ) {   // If it's a ChildCreated event
+							console.log( event.details.createdDocuments.length );
+						}
 						console.log( "The budget has been updated" );
 					}
 
 					// Function to execute whenever a project of an client is created/deleted
-					function updateSalesForecast() {
+					function updateSalesForecast( event ):void {
+
+						console.log( event.details.createdDocuments.length );
 						// ...
 						console.log( "The Sales forecast has been updated" );
 					}
@@ -712,7 +805,7 @@ version: v1.0.x
 					).then(
 					    ( [ persistedClient, response ] ) => {
 
-						    // Will print "The budget has been updated"
+						    // Will print: 1 "The budget has been updated"
 
 					        console.log( persistedClient.name ); // "Nikola"
 
@@ -727,7 +820,7 @@ version: v1.0.x
 					).then(
 					    ( [ persistedProject, response ] ) => {
 
-							// Will print "The Sales forecast has been updated"
+							// Will print: 1 "The Sales forecast has been updated"
 
 					        console.log( persistedRelative.name); // "Brand Renovation"
 							console.log( persistedRelative.duration ); // "90 days"
@@ -744,13 +837,18 @@ version: v1.0.x
 					// ... initialize your Carbon object
 
 					// Function to execute whenever the event happens
-					function adjustBudget() {
-						// ...
+					function adjustBudget( event ):void {
+
+						if( event.details ) {   // If it's a ChildCreated event
+							console.log( event.details.createdDocuments.length );
+						}
 						console.log( "The budget has been updated" );
 					}
 
 					// Function to execute whenever a project of an client is created/deleted
-					function updateSalesForecast() {
+					function updateSalesForecast( event ):void {
+
+						console.log( event.details.createdDocuments.length );
 						// ...
 						console.log( "The Sales forecast has been updated" );
 					}
@@ -795,7 +893,7 @@ version: v1.0.x
 							var persistedClient = result[ 0 ];
 							var response = result[ 1 ];
 
-						    // Will print "The budget has been updated"
+						    // Will print: 1 "The budget has been updated"
 
 					        console.log( persistedClient.name ); // "Nikola"
 
@@ -810,7 +908,7 @@ version: v1.0.x
 					).then(
 					    ( result ) => {
 
-							// Will print "The Sales forecast has been updated"
+							// Will print: 1 "The Sales forecast has been updated"
 
 							var persistedProject = result[ 0 ];
 							var response = result[ 1 ];
@@ -849,7 +947,7 @@ version: v1.0.x
 		<div class="item">
 			<div class="content">
 				<div class="header"><code>setOptions</code></div>
-				<div class="description">You can specify the maxReconnectAttempts, and the reconnectDelay when a connection fails</div>
+				<div class="description">You can specify the maxReconnectAttempts (10 attemps), and the reconnectDelay (1000ms) when a connection fails</div>
 			</div>
 		</div>
 
@@ -874,7 +972,7 @@ version: v1.0.x
 		Whenever you subscribe to an event, if you haven't called the <code>connect</code> or <code>reconnect</code> methods, the SDK will automatically
 		connect to the <span class="highlight">broker/</span> endpoint and will actively poll that connection. That gives you the flexibility to just dive into
 		code the subscriptions without worrying about opening and closing connections.<br>
-		If you ever want to change the default options (maxReconnectAttempts, reconnectDelay) of the connection, you can do so whenever you want,
+		If you ever want to change the default options -maxReconnectAttempts (10 attemps), -reconnectDelay (1000ms) of the connection, you can do so whenever you want,
 		even if the service is already connected.
 	</p>
 </section>
@@ -891,7 +989,7 @@ version: v1.0.x
 	<p>
 		A subscription can be created using the <code>on</code> method of the <span class="highlight">PersistedDocument.Class</span> or the <span class="highlight">documents</span> service.<br>
 		The difference between <span class="highlight">PersistedDocument.Class</span> and the <span class="highlight">documents</span> service is that <span class="highlight">documents</span> service
-		let's you specify <a href="https://ant.apache.org/manual/dirtasks.html" target="_blank">Ant patterns</a> to subscribe to multiple levels of an endpoint whereas the
+		lets you specify <a href="https://ant.apache.org/manual/dirtasks.html" target="_blank">Ant patterns</a> to subscribe to multiple levels of an endpoint whereas the
 		<span class="highlight">PersistedDocument.Class</span> don't.<br>
 	</p>
 	<p>
