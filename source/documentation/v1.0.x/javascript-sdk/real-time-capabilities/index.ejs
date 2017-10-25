@@ -1,7 +1,7 @@
 ---
 layout: documentation/document
 title: Real-time capabilities
-description: Discover the capabilities of a real time linked data platform.
+description: Discover the capabilities of a real-time linked data platform.
 date: 2017-29-09 11:57:18
 version: v1.0.x
 ---
@@ -30,9 +30,9 @@ version: v1.0.x
 <section class="mainContent-section">
 	<h2 class="hidden">Introduction</h2>
 	<p>
-		In the current world, accessibility to information is crucial; so crucial that not only accessibility to information
-		matters, but rather the time in which that information is available. The time to access to new information is a key factor that
-		many companies heavily rely on, and to address this issue, Carbon provides real-time capabilities in its platform.
+		In the current world, accessibility to information is crucial. Moreover, it's not only important to have the information available,
+		but when it's available has gained great importance; the time to access new information is a key factor that many companies heavily rely on.
+		To address this issue, Carbon provides real-time capabilities in its platform.
 	</p>
 </section>
 <!-- END: Introduction -->
@@ -57,7 +57,7 @@ version: v1.0.x
 <section class="mainContent-section">
 	<h2 class="hidden">Subscribing</h2>
 	<p>
-		The real-time capabilities that carbon provides come in the form of subscriptions to events that occur within the platform.
+		The real-time capabilities that Carbon provides come in the form of subscriptions to events that occur within the platform.
 		To start subscribing to events with the SDK, first and foremost, you need to know three things: the <strong>subject</strong> (document) you are interested in,
 		the <strong>event</strong> you're going to subscribe to, and the <strong>action</strong> that will be triggered after the event takes place.
 		<br>
@@ -65,7 +65,7 @@ version: v1.0.x
 	</p>
 	<p>
 		Let's start this guide by using an example to subscribe to: Imagine that you have a company and you want to know whenever a client is added or removed from your company
-		so you can perform some adjustments to the company's budget; you have defined the following structure in your platform instance:
+		so that you can perform some adjustments to the company's budget; you have defined the following structure in your platform instance:
 	</p>
 	<div class="ui list">
 		<div class="item">
@@ -124,7 +124,7 @@ version: v1.0.x
 		</div>
 	</div>
 	<p>
-		With this in mind we can start to define our subscription.
+		With this in mind, we can start to define our subscription.
 	</p>
 
 
@@ -199,7 +199,7 @@ version: v1.0.x
 		<!-- END: Code example defining the subject -->
 
 		<p>
-			And that's how we retrieve the subject we want to subscribe to; now we need to identify the events to which we can subscribe.
+			Now that we have retrieved the subject we want to subscribe to, we need to identify the events to which we can subscribe.
 		</p>
 	</section>
 	<!-- END: The Subject -->
@@ -210,136 +210,61 @@ version: v1.0.x
 		<h3 class="hidden">The Event</h3>
 		<p>
 			Now that we've identified and retrieved the subject, we have to specify the event we want to subscribe to.<br>
-			To specify the event, Carbon provides a series of predefined events that it can subscribe to; such events are defined
+			To specify the event, Carbon provides a series of predefined events that it can subscribe; such events are defined
 			in the <span class="highlight">Carbon/Messaging/Event</span> file.<br>
 			The list of events we can subscribe to are the following:
 		</p>
-		<table class="ui collapsed striped compact small celled table">
-			<thead>
-				<tr>
-					<th colspan="2">Event</th>
-					<th>Return type</th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr>
-					<td class="collapsing">
-						<i class="lightning icon"></i>
-					</td>
-					<td>
-
-						<code>CHILD_CREATED</code><br>
-						<span>Whenever a subject's child is created</span>
-					</td>
-					<td>
-						<code>ChildCreated.Class</code><br><br>
-						<span>With properties:</span><br>
-						- <code>target</code>:<code>Pointer.Class</code><br>
-						- <code>details</code>:<code>DocumentCreatedDetails.Class</code>
-					</td>
-				</tr>
-				<tr>
-					<td class="collapsing">
-						<i class="lightning icon"></i>
-					</td>
-					<td>
-						<code>ACCESS_POINT_CREATED</code><br>
-						<span>Whenever an <a target="_blank" href="../access-points#creating-an-access-point">access point</a> is created</span>
-					</td>
-					<td>
-						<code>AccessPointCreated.Class</code><br>
-						<span>With properties:</span><br>
-						- <code>target</code>:<code>Pointer.Class</code><br>
-						- <code>details</code>:<code>DocumentCreatedDetails.Class</code>
-					</td>
-				</tr>
-				<tr>
-					<td class="collapsing">
-						<i class="lightning icon"></i>
-					</td>
-					<td>
-						<code>DOCUMENT_CREATED</code><br>
-						<span>Whenever a new document is created</span>
-					</td>
-					<td>
-						<code>DocumentCreated.Class</code><br><br>
-						<span>With properties:</span><br>
-						- <code>target</code>:<code>Pointer.Class</code><br>
-						- <code>details</code>:<code>DocumentCreatedDetails.Class</code>
-					</td>
-				</tr>
-				<tr>
-					<td class="collapsing">
-						<i class="lightning icon"></i>
-					</td>
-					<td>
-						<code>DOCUMENT_MODIFIED</code><br>
-						<span>Whenever any of a document's properties are modified</span>
-					</td>
-					<td>
-						<code>DocumentModified.Class</code><br><br>
-						<span>With property:</span><br>
-						- <code>target</code>:<code>Pointer.Class</code>
-					</td>
-				</tr>
-				<tr>
-					<td class="collapsing">
-						<i class="lightning icon"></i>
-					</td>
-					<td>
-						<code>DOCUMENT_DELETED</code><br>
-						<span>Whenever an existing document is deleted</span>
-					</td>
-					<td>
-						<code>DocumentDeleted.Class</code><br>
-						<span>With property:</span><br>
-						- <code>target</code>:<code>Pointer.Class</code>
-					</td>
-				</tr>
-				<tr>
-					<td class="collapsing">
-						<i class="lightning icon"></i>
-					</td>
-					<td>
-						<code>MEMBER_ADDED</code><br>
-						<span>Whenever a new <a href="../access-points#membership-relation" target="_blank">member</a> is added to a document</span>
-					</td>
-					<td>
-						<code>MemberAdded.Class</code><br><br>
-						<span>With properties:</span><br>
-						- <code>target</code>:<code>Pointer.Class</code><br>
-						- <code>details</code>:<code>MemberAddedDetails.Class</code>
-					</td>
-				</tr>
-				<tr>
-					<td class="collapsing">
-						<i class="lightning icon"></i>
-					</td>
-					<td>
-						<code>MEMBER_REMOVED</code><br>
-						<span>Whenever an existing <a href="../access-points#membership-relation" target="_blank">member</a> is removed from a document</span>
-					</td>
-					<td>
-						<code>MemberRemoved.Class</code><br><br>
-						<span>With properties:</span><br>
-						- <code>target</code>:<code>Pointer.Class</code><br>
-						- <code>details</code>:<code>MemberRemovedDetails.Class</code>
-					</td>
-				</tr>
-			</tbody>
-		</table>
-		<p>
-			Each one of these methods returns a special object of the type of the event that was triggered, and as you can see, every one of
-			them has a property called <code>target</code>, which is basically a <code>pointer</code> to the document originating the event.
-			This property is added to each of the return types because they inherit it from the <code>Carbon/Messaging/Message.Class</code>
-		</p>
-		<p>
-			But as you may have noticed, some methods also return a property called <code>details</code>. This property gives you more information
-			of the documents produced by the event, for example, in the cases in which the <code>details</code> properties are of the type
-			<code>DocumentCreatedDetails.Class</code>, it returns an array of pointers of the documents that were created.
-			Something similar occurs with the <code>MemberAddedDetails.Class</code> and <code>MemberDeletedDetails.Class</code>, with the difference
-			that they return the pointers of the members that were added/removed.
-		</p>
+		<div class="ui list">
+			<div class="item">
+				<i class="lightning icon"></i>
+				<div class="content">
+					<div class="header">CHILD_CREATED</div>
+					<div class="description">Whenever a subject's child is created</div>
+				</div>
+			</div>
+			<div class="item">
+				<i class="lightning icon"></i>
+				<div class="content">
+					<div class="header">ACCESS_POINT_CREATED</div>
+					<div class="description">Whenever an <a target="_blank" href="../access-points#creating-an-access-point">access point</a> is created</div>
+				</div>
+			</div>
+			<div class="item">
+				<i class="lightning icon"></i>
+				<div class="content">
+					<div class="header">DOCUMENT_CREATED</div>
+					<div class="description">Whenever a new document is created</div>
+				</div>
+			</div>
+			<div class="item">
+				<i class="lightning icon"></i>
+				<div class="content">
+					<div class="header">DOCUMENT_MODIFIED</div>
+					<div class="description">Whenever any of a document's properties are modified</div>
+				</div>
+			</div>
+			<div class="item">
+				<i class="lightning icon"></i>
+				<div class="content">
+					<div class="header">DOCUMENT_DELETED</div>
+					<div class="description">Whenever an existing document is deleted</div>
+				</div>
+			</div>
+			<div class="item">
+				<i class="lightning icon"></i>
+				<div class="content">
+					<div class="header">MEMBER_ADDED</div>
+					<div class="description">Whenever a new <a href="../access-points#membership-relation" target="_blank">member</a> is added to a document</div>
+				</div>
+			</div>
+			<div class="item">
+				<i class="lightning icon"></i>
+				<div class="content">
+					<div class="header">MEMBER_REMOVED</div>
+					<div class="description">Whenever an existing <a href="../access-points#membership-relation" target="_blank">member</a> is removed from a document</div>
+				</div>
+			</div>
+		</div>
 		<p>
 			To subscribe to any of these events, the <span class="highlight">documents</span> service as well as the
 			<span class="highlight">PersistedDocument.Class</span> provide three main methods to handle event subscriptions.
@@ -368,21 +293,109 @@ version: v1.0.x
 		</div>
 
 		<p>
-			Along with the above methods, we can make use of the following ones to avoid having to import the <code>Carbon/Messaging/Event</code> enum
+			Along with the methods mentioned above, we can make use of the following ones to avoid having to import the <code>Carbon/Messaging/Event</code> enum
 			to state the desired event:
 		</p>
-		<ul class="ui list">
-			<li class="item"><span class="highlight">onDocumentCreated</span></li>
-			<li class="item"><span class="highlight">onChildCreated</span></li>
-			<li class="item"><span class="highlight">onAccessPointCreated</span></li>
-			<li class="item"><span class="highlight">onDocumentModified</span></li>
-			<li class="item"><span class="highlight">onDocumentDeleted</span></li>
-			<li class="item"><span class="highlight">onMemberAdded</span></li>
-			<li class="item"><span class="highlight">onMemberRemoved</span></li>
-		</ul>
+		<table class="ui collapsed striped compact small celled table">
+			<thead>
+				<tr>
+					<th>Event</th>
+					<th>Return type</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td>
+						<code>onChildCreated</code><br>
+					</td>
+					<td>
+						<code>ChildCreated.Class</code><br><br>
+						<span>With properties:</span><br>
+						- <code>target</code>:<code>Pointer.Class</code><br>
+						- <code>details</code>:<code>DocumentCreatedDetails.Class</code>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<code>onAccessPointCreated</code><br>
+					</td>
+					<td>
+						<code>AccessPointCreated.Class</code><br><br>
+						<span>With properties:</span><br>
+						- <code>target</code>:<code>Pointer.Class</code><br>
+						- <code>details</code>:<code>DocumentCreatedDetails.Class</code>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<code>onDocumentCreated</code><br>
+					</td>
+					<td>
+						<code>DocumentCreated.Class</code><br><br>
+						<span>With properties:</span><br>
+						- <code>target</code>:<code>Pointer.Class</code><br>
+						- <code>details</code>:<code>DocumentCreatedDetails.Class</code>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<code>onDocumentModified</code><br>
+					</td>
+					<td>
+						<code>DocumentModified.Class</code><br><br>
+						<span>With property:</span><br>
+						- <code>target</code>:<code>Pointer.Class</code>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<code>onDocumentDeleted</code><br>
+					</td>
+					<td>
+						<code>DocumentDeleted.Class</code><br><br>
+						<span>With property:</span><br>
+						- <code>target</code>:<code>Pointer.Class</code>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<code>onMemberAdded</code><br>
+					</td>
+					<td>
+						<code>MemberAdded.Class</code><br><br>
+						<span>With properties:</span><br>
+						- <code>target</code>:<code>Pointer.Class</code><br>
+						- <code>details</code>:<code>MemberAddedDetails.Class</code>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<code>onMemberRemoved</code><br>
+					</td>
+					<td>
+						<code>MemberRemoved.Class</code><br><br>
+						<span>With properties:</span><br>
+						- <code>target</code>:<code>Pointer.Class</code><br>
+						- <code>details</code>:<code>MemberRemovedDetails.Class</code>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+		<p>
+			Each one of these methods returns a special object of the type of the event that was triggered.
+			As you can see, every one of them has a property called <code>target</code>, which is basically a <code>pointer</code> to the document originating the event.
+			This property is added to each of the return types because they inherit it from the <code>Carbon/Messaging/Message.Class</code>
+		</p>
+		<p>
+			As you may have noticed, some methods also return a property called <code>details</code>. This property gives you more information
+			of the documents produced by the event. For example, in the cases in which the <code>details</code> properties are of the type
+			<code>DocumentCreatedDetails.Class</code>, it returns an array of pointers of the documents that were created.
+			Something similar occurs with the <code>MemberAddedDetails.Class</code> and <code>MemberDeletedDetails.Class</code>, with the difference
+			that they return the pointers of the members that were added/removed.
+		</p>
 
 		<p>
-			Going back to our example, we have identified the <span class="highlight">clients/</span> document as the <strong>subject</strong>, and now suppose that we want
+			Going back to our example, we have identified the <span class="highlight">clients/</span> document as the <strong>subject</strong>, and now we want
 			to know whenever a client is added or removed from the company. Because the <span class="highlight">clients/</span> document contains all the clients
 			as its <span class="highlight">children</span> and we want to know whenever a client is added or removed, we can portrait this rule by saying:
 			Whenever a <span class="highlight">client/</span> (child of <span class="highlight">clients/</span>) is created, <code>CHILD_CREATED</code>,
@@ -605,15 +618,15 @@ version: v1.0.x
 		First, we had to retrieve the subject, then identify the events and their respective actions and finally we proceeded to code the subscriptions.
 	</p>
 	<p>
-		Now, suppose that you want to know whenever a <span class="highlight">client/</span> signs a contract for a new project so you can update the sales
-		forecast of your company.
+		Now, suppose that you want to know whenever a <span class="highlight">client/</span> signs a contract for a new project so that you can update the company's
+		sales forecast.
 		To do so, you've decided to store every project as a child of a <span class="highlight">client/</span>. If we look at the list of
 		<a href="#the-event">available events</a>, someone could say:<br>
 		<i>"Because every project will be a <u>children</u> of a client,
-			perhaps I could subscribe to <code>CHILD_CREATED</code> events for every client"</i> and then proceeds to code those subscriptions.<br>
+			perhaps I could subscribe to <code>CHILD_CREATED</code> events for every client"</i> and then proceed to code those subscriptions.<br>
 		Well, this approach introduces a lot of issues because the number of clients will vary and for every client you'll also have to create
 		a subscription, which could easily result in a massive amount of requests just to keep the subscriptions alive. This of course is not efficient aside
-		of also being very cumbersome to maintain and by no means is recommended when developing any application.<br>
+		from also being very cumbersome to maintain. Therefore, it is by no means recommended when developing any application.<br>
 		So, how could we create a subscription that handles that requirement?<br>
 	</p>
 	<p>
@@ -626,8 +639,8 @@ version: v1.0.x
 		Well, there is another powerful way to create subscriptions with the SDK and is by using the <span class="highlight">documents</span> service.
 	</p>
 	<p>
-		As said in the <a href="#the-event">events</a> section, the <span class="highlight">documents</span> service allows us to use the same methods that
-		<span class="highlight">PersistedDocument.Class</span> provides to subscribe to events, the difference with using the <span class="highlight">documents</span>
+		As mentioned in the <a href="#the-event">events</a> section, the <span class="highlight">documents</span> service allows us to use the same methods that
+		<span class="highlight">PersistedDocument.Class</span> provides to subscribe to events. Nevertheless, the difference with using the <span class="highlight">documents</span>
 		service is that it also lets us specify an <a href="https://ant.apache.org/manual/dirtasks.html" target="_blank">Ant pattern</a> to work with hierarchical subscriptions.<br>
 		The patterns that can be used are the following:
 	</p>
@@ -650,9 +663,9 @@ version: v1.0.x
 		</tbody>
 	</table>
 	<p>
-		Typically, <a href="https://ant.apache.org/manual/dirtasks.html" target="_blank">Ant patterns</a> allow us to search for something in a given directory (*) or in any sub-level of a directory (**), but with Carbon, they
-		are being used with subscriptions to specify <span class="highlight">document</span>s to subscribe to,
-		so the patterns allows us to subscribe to whatever happens in a given <span class="highlight">document</span> (*) or in any sub-level of that <span class="highlight">document</span> (**).
+		Typically, <a href="https://ant.apache.org/manual/dirtasks.html" target="_blank">Ant patterns</a> allow us to search for something in a given directory (*) or in any sub-level of a directory (**). However, with Carbon they
+		are being used with subscriptions to specify <span class="highlight">document</span>s to subscribe to.
+		Therefore, the patterns allow us to subscribe to whatever happens in a given <span class="highlight">document</span> (*) or in any sub-level of that <span class="highlight">document</span> (**).
 		With that in mind, now we can create the subscriptions to meet the requirement successfully:
 	</p>
 
@@ -930,8 +943,8 @@ version: v1.0.x
 <section class="mainContent-subSection">
 	<h3 class="hidden">Messaging Service</h3>
 	<p>
-		We just saw how to subscribe to an event and execute a function depending on the event we subscribed to,
-		but if you noticed, we didn't have to configure anything to actively check for events that occurred in the platform, we just had
+		We just saw how to subscribe to an event and execute a function depending on the event we subscribed to.<br>
+		If you noticed, we didn't have to configure anything to actively check for events that occurred in the platform, we just had
 		to code our desired subscriptions and that was it.
 		So, how did the SDK know an event happened in the platform?<br>
 	</p>
@@ -971,7 +984,7 @@ version: v1.0.x
 	<p>
 		Whenever you subscribe to an event, if you haven't called the <code>connect</code> or <code>reconnect</code> methods, the SDK will automatically
 		connect to the <span class="highlight">broker/</span> endpoint and will actively poll that connection. That gives you the flexibility to just dive into
-		code the subscriptions without worrying about opening and closing connections.<br>
+		coding the subscriptions without worrying about opening and closing connections.<br>
 		If you ever want to change the default options -maxReconnectAttempts (10 attemps), -reconnectDelay (1000ms) of the connection, you can do so whenever you want,
 		even if the service is already connected.
 	</p>
@@ -983,17 +996,17 @@ version: v1.0.x
 <section class="mainContent-section">
 	<h2>Conclusion</h2>
 	<p>
-		The SDK immediately notifies whenever an event occurs thanks to subscriptions.<br>
-		A subscription is formed of a <u>subject</u> (<span class="highlight">document</span>), and <u>event</u> and and <u>action</u> to trigger when the event occurs.<br>
+		The SDK immediately notifies you whenever an event occurs thanks to subscriptions.<br>
+		A subscription is formed of a <u>subject</u> (<span class="highlight">document</span>), an <u>event</u> and an <u>action</u> to trigger when the event occurs.<br>
 	</p>
 	<p>
 		A subscription can be created using the <code>on</code> method of the <span class="highlight">PersistedDocument.Class</span> or the <span class="highlight">documents</span> service.<br>
-		The difference between <span class="highlight">PersistedDocument.Class</span> and the <span class="highlight">documents</span> service is that <span class="highlight">documents</span> service
+		The difference between <span class="highlight">PersistedDocument.Class</span> and the <span class="highlight">documents</span> service is that the <span class="highlight">documents</span> service
 		lets you specify <a href="https://ant.apache.org/manual/dirtasks.html" target="_blank">Ant patterns</a> to subscribe to multiple levels of an endpoint whereas the
-		<span class="highlight">PersistedDocument.Class</span> don't.<br>
+		<span class="highlight">PersistedDocument.Class</span> doesn't.<br>
 	</p>
 	<p>
-		The <code>Carbon.Messaging.Service</code> is the responsible to handle the connections to the <span class="highlight">broker/</span> endpoint of the platform and with it, you can configure
+		The <code>Carbon.Messaging.Service</code> is the responsible of handling the connections to the <span class="highlight">broker/</span> endpoint of the platform and with it, you can configure
 		the maxReconnectAttempts and the reconnectDelay of the active connection to that endpoint.
 	</p>
 </section>

@@ -142,7 +142,7 @@ version: v1.0.x
 	<section class="mainContent-subSection">
 		<h3>Collections (@container)</h3>
 		<p>
-			Properties by default are assumed to be one value only unless proven otherwise. That's why if you save a document with a property that holds an array with one
+			Properties are assumed to be single-valued by default unless proven otherwise. That's why if you save a document with a property that holds an array with one
 			value, once you retrieve it you'll receive only the value, not the array.
 		</p>
 		<p>To specify that a property is always going to hold an array, you can declare the <code>@container</code> property on the object that describes the property.</p>
@@ -399,7 +399,7 @@ version: v1.0.x
 				&#125; );
 			</code></pre>
 
-		<p>If application <strong>A</strong> has its object schema defined this way, there won't be a problem. The SDK will filter any "content" non string value when retrieving the project.</p>
+		<p>If application <strong>A</strong> has its object schema defined this way, there won't be a problem. The SDK will filter any "content" non-string value when retrieving the project.</p>
 		<p>The most common accepted types are:</p>
 		<ul>
 			<li><code>@id</code>: When the value type is a pointer to another object</li>
@@ -525,7 +525,7 @@ version: v1.0.x
 		<p>This means that the property is saved using the id of a fragment, inside of a document called <code>vocabulary/</code> from your platform instance.</p>
 		<p>
 			By doing this, you are able to go and save data about the property itself.
-			You could for example go and add a description to the property by modifying the
+			You could, for example, go and add a description to the property by modifying the
 			<code>vocabulary/</code> document:
 		</p>
 		<tabs>
@@ -604,7 +604,7 @@ version: v1.0.x
 			</tab>
 		</tabs>
 		<div class="ui message">
-			The default document into which those fragments are being saved in is called <code>vocabulary</code> because it collects all of the terms you use in your application. By developing an
+			The default document in which those fragments are being saved is called <code>vocabulary</code> because it collects all of the terms you use in your application. By developing an
 			application you are essentially creating a new vocabulary.
 		</div>
 		<p>
